@@ -1571,18 +1571,20 @@
       "caminho_imagem": "CARDS/ARES/ARES.png",
       "custo": null,
       "unidade_custo": null,
-      "soul": null,
-      "attack": null,
-      "awaken": null,
+      "soul": 30,
+      "attack": 5,
+      "awaken": 5,
       "power": null,
       "resistance": null,
       "equipar_custo": null,
       "damage_cloth": null,
       "keywords_en": [],
-      "habilidades_en": [],
-      "habilidade_awaken_en": "",
-      "ultimate_en": "",
-      "notas_pt": "Deus presente em arte, mas ainda sem texto mecanico estruturado."
+      "habilidades_en": [
+        "Bloodlust — Cost: 3 Cosmo. Choose a Devotee. It gets +1/+0 and Prepare until end of turn."
+      ],
+      "habilidade_awaken_en": "Butchery — Whenever one of your Devotees destroys another Devotee in combat, the enemy God loses 1 Soul.",
+      "ultimate_en": "Obliteration — Until end of turn, all your Devotees get +2/+0, Prepared, Pierce and Long Range. Sacrifice all your Devotees at the end of the turn.",
+      "notas_pt": "Texto, Soul, Attack e Awaken extraidos de FRAMES/ARES/ARES.psd em 2026-10-22; revisar."
     },
     {
       "id": "artemis-001",
@@ -1597,18 +1599,20 @@
       "caminho_imagem": "CARDS/ARTEMIS/ARTEMIS.png",
       "custo": null,
       "unidade_custo": null,
-      "soul": null,
-      "attack": null,
-      "awaken": null,
+      "soul": 24,
+      "attack": 3,
+      "awaken": 3,
       "power": null,
       "resistance": null,
       "equipar_custo": null,
       "damage_cloth": null,
       "keywords_en": [],
-      "habilidades_en": [],
-      "habilidade_awaken_en": "",
-      "ultimate_en": "",
-      "notas_pt": "Deus presente em arte, mas ainda sem texto mecanico estruturado."
+      "habilidades_en": [
+        "Moon Harvest — You may ignore the Base Cosmo symbol requirement when placing a card as Base Cosmo. If you do, you lose 2 Soul."
+      ],
+      "habilidade_awaken_en": "Moonlight Blessing — Your Base Cosmo produces 2 Cosmo instead of 1. Your Latent Cosmo does not disappear at the end of the turn.",
+      "ultimate_en": "Moon Awakening — Cost: 15 Cosmo. Choose any number of your Base Cosmos. They become 3/3 Moon Spirits with Long Range and Pierce.",
+      "notas_pt": "Texto, Soul, Attack e Awaken extraidos de FRAMES/ARTEMIS/ARTEMIS.psd em 2026-10-22; revisar."
     },
     {
       "id": "hades-001",
@@ -1623,18 +1627,20 @@
       "caminho_imagem": "CARDS/HADES/HADES.png",
       "custo": null,
       "unidade_custo": null,
-      "soul": null,
-      "attack": null,
-      "awaken": null,
+      "soul": 32,
+      "attack": 3,
+      "awaken": 7,
       "power": null,
       "resistance": null,
       "equipar_custo": null,
       "damage_cloth": null,
       "keywords_en": [],
-      "habilidades_en": [],
-      "habilidade_awaken_en": "",
-      "ultimate_en": "",
-      "notas_pt": "Deus presente em arte, mas ainda sem texto mecanico estruturado."
+      "habilidades_en": [
+        "Offering of Life — Whenever a Devotee is destroyed, you may pay 2 Soul. If you do, draw 1 card and generate 1 Cosmo."
+      ],
+      "habilidade_awaken_en": "Soul Filter — Cost: 1 Soul, Tap. Gain 2 Cosmo. King of Tartarus — Whenever a Devotee returns from Tartarus to the battlefield, the enemy God loses 1 Soul and you gain 1 Soul.",
+      "ultimate_en": "Great Eclipse — Cost: 15 Cosmo. Return all Devotees from all Tartarus to the battlefield under your control. They enter the battlefield with a Seal counter.",
+      "notas_pt": "Texto, Soul, Attack e Awaken extraidos de FRAMES/HADES/HADES.psd em 2026-10-22; revisar."
     },
     {
       "id": "poseidon-001",
@@ -1649,18 +1655,20 @@
       "caminho_imagem": "CARDS/POSEIDON/POSEIDON.png",
       "custo": null,
       "unidade_custo": null,
-      "soul": null,
-      "attack": null,
-      "awaken": null,
+      "soul": 27,
+      "attack": 2,
+      "awaken": 4,
       "power": null,
       "resistance": null,
       "equipar_custo": null,
       "damage_cloth": null,
       "keywords_en": [],
-      "habilidades_en": [],
-      "habilidade_awaken_en": "",
-      "ultimate_en": "",
-      "notas_pt": "Deus presente em arte, mas ainda sem texto mecanico estruturado."
+      "habilidades_en": [
+        "Water Prision — When an enemy Devotee declares an attack, you may pay 2 Cosmo. If you do, that Devotee gains a Seal counter."
+      ],
+      "habilidade_awaken_en": "Pressure of the Deep — Whenever a Seal token is placed on a Devotee, that Devotee's controller mills 3 cards, and you draw 1 card.",
+      "ultimate_en": "Great Flood — Return all cards in play from all opponents to their owners' hands. Then, each opponent sends all cards from their hand to Tartarus and draws 3 cards. After that, each opponent mills 3 cards for each card they sent to Tartarus this way.",
+      "notas_pt": "Texto, Soul, Attack e Awaken extraidos de FRAMES/POSEIDON/POSEIDON.psd em 2026-10-22; revisar."
     }
   ]
 }
