@@ -1268,6 +1268,73 @@ button.primary:hover:not(:disabled) {
   padding: 12px 14px;
 }
 
+/* Modals live outside the scaled 1920x1080 shell, so on small windows they must
+   fit the viewport themselves: shrink the gutters, scroll the middle, keep the footer. */
+.new-game-overlay,
+.mulligan-overlay,
+.payment-overlay,
+.spell-overlay,
+.equip-overlay,
+.zone-browser-overlay {
+  padding: clamp(8px, 3vh, 48px) clamp(8px, 3vw, 64px);
+}
+
+.mulligan-modal {
+  max-height: 100%;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: clamp(8px, 2vh, 18px);
+  padding: clamp(12px, 2.4vh, 22px) clamp(12px, 2vw, 24px);
+}
+
+.mulligan-modal__header h2 {
+  font-size: clamp(1.2rem, 3.2vh, 2rem);
+}
+
+.mulligan-modal__copy {
+  font-size: clamp(0.72rem, 1.6vh, 1rem);
+}
+
+.mulligan-modal__cards {
+  min-height: 0;
+  overflow-y: auto;
+  padding: 14px 4px 18px;
+  gap: clamp(6px, 1vw, 14px);
+}
+
+.mulligan-card {
+  width: clamp(88px, min(11.5vw, 22vh), 184px);
+  grid-template-rows: auto auto;
+}
+
+.mulligan-card__art {
+  aspect-ratio: 0.7142857;
+}
+
+.mulligan-card__meta {
+  padding: clamp(5px, 1vh, 10px) clamp(6px, 1vw, 12px);
+}
+
+.mulligan-card__meta strong {
+  font-size: clamp(0.62rem, 1.4vh, 0.84rem);
+}
+
+.mulligan-card__meta span {
+  font-size: clamp(0.56rem, 1.2vh, 0.74rem);
+}
+
+.mulligan-modal__footer {
+  flex-wrap: wrap;
+}
+
+.equip-modal,
+.spell-resolution-modal,
+.zone-browser-modal,
+.payment-modal,
+.new-game-modal {
+  max-height: 100%;
+  overflow-y: auto;
+}
+
 /* Card-like tiles in modals get the same 3D tilt as table cards. */
 .mulligan-card,
 .zone-browser-card,
