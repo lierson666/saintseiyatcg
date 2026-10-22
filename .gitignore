@@ -30,3 +30,8 @@ CARDS/**/*.txt
 # card-forge: artes enviadas pelo editor ficam só no Drive
 card-forge/art/
 card-forge/out/
+
+# Jogos de referência (ISOs/APKs): nunca versionar
+MOBILE GAMES/
+*.iso
+*.apk

@@ -5,6 +5,15 @@
 const THREE_URL = "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
 const EASE = (t) => 1 - Math.pow(1 - t, 3);
 
+// Anime cloth look (studied from Soldiers' Soul): flat toon bands plus a sphere-map (matcap) for metal shine.
+// Matcap stops, centre to rim: highlight, base, dark ring, bright rim.
+const METALS = {
+  gold: ["#fff7cf", "#e2b23c", "#3b2500", "#fff0a8"],
+  blue: ["#eaf7ff", "#4c9ee6", "#061f40", "#cdeaff"],
+  silver: ["#ffffff", "#b9c2ce", "#1b2130", "#f2f7ff"]
+};
+export const metalFor = (name = "") => (/gold/i.test(name) ? "gold" : /silver/i.test(name) ? "silver" : "blue");
+
 export async function createFx() {
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     return null;
@@ -55,16 +64,48 @@ export async function createFx() {
     return textures.get(src);
   };
 
+  // Three hard light bands (shadow, mid, lit) like the game's 1D colour ramps.
+  const gradientMap = new THREE.DataTexture(new Uint8Array([110, 110, 110, 255, 185, 185, 185, 255, 255, 255, 255, 255]), 3, 1);
+  gradientMap.minFilter = gradientMap.magFilter = THREE.NearestFilter;
+  gradientMap.generateMipmaps = false;
+  gradientMap.needsUpdate = true;
+
+  const matcaps = {};
+  for (const [metal, [hi, base, ring, rim]] of Object.entries(METALS)) {
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = 256;
+    const ctx = canvas.getContext("2d");
+    const g = ctx.createRadialGradient(108, 100, 4, 128, 128, 128);
+    g.addColorStop(0, hi);
+    g.addColorStop(0.45, base);
+    g.addColorStop(0.78, ring);
+    g.addColorStop(0.9, base);
+    g.addColorStop(1, rim);
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, 256, 256);
+    matcaps[metal] = new THREE.CanvasTexture(canvas);
+    matcaps[metal].colorSpace = THREE.SRGBColorSpace;
+  }
+
   const tweens = new Set();
   const tween = (duration, step) =>
     new Promise((resolve) => {
       tweens.add({ start: performance.now(), duration, step, resolve });
     });
 
-  const makeCard = (rect, src) => {
+  // Card = toon-lit art plus an additive matcap sheen that glints as the card tilts.
+  const makeCard = (rect, src, metal) => {
     const map = textureFor(src);
-    const material = new THREE.MeshStandardMaterial({ map, color: map ? 0xffffff : 0x1a1440, roughness: 0.45, metalness: 0.1, transparent: true });
-    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(rect.width, rect.height), material);
+    const material = new THREE.MeshToonMaterial({ map, color: map ? 0xffffff : 0x1a1440, gradientMap, transparent: true });
+    const geometry = new THREE.PlaneGeometry(rect.width, rect.height);
+    const mesh = new THREE.Mesh(geometry, material);
+    const sheen = new THREE.Mesh(
+      geometry,
+      new THREE.MeshMatcapMaterial({ matcap: matcaps[metal], transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false })
+    );
+    sheen.position.z = 0.5;
+    mesh.add(sheen);
+    mesh.userData.sheen = sheen.material;
     mesh.position.copy(centerOf(rect));
     scene.add(mesh);
     return mesh;
@@ -72,7 +113,28 @@ export async function createFx() {
   const dispose = (mesh) => {
     scene.remove(mesh);
     mesh.geometry.dispose();
-    mesh.material.dispose();
+    mesh.traverse((node) => node.material?.dispose());
+  };
+
+  // Cloth shards: faceted matcap pieces that fly out and spin on impacts.
+  const shardGeometry = new THREE.OctahedronGeometry(7);
+  const shatters = new Set();
+  const shatter = (x, y, metal, count = 14) => {
+    const material = new THREE.MeshMatcapMaterial({ matcap: matcaps[metal], flatShading: true, transparent: true });
+    const origin = toWorld(x, y);
+    const pieces = [];
+    for (let i = 0; i < count; i += 1) {
+      const mesh = new THREE.Mesh(shardGeometry, material);
+      mesh.position.set(origin.x, origin.y, 30);
+      mesh.scale.set(0.5 + Math.random(), 0.3 + Math.random() * 0.5, 0.5 + Math.random());
+      const angle = Math.random() * Math.PI * 2;
+      const speed = 160 + Math.random() * 320;
+      mesh.userData.v = new THREE.Vector3(Math.cos(angle) * speed, Math.sin(angle) * speed + 120, 80 + Math.random() * 260);
+      mesh.userData.spin = new THREE.Vector3(Math.random() * 12 - 6, Math.random() * 12 - 6, Math.random() * 12 - 6);
+      scene.add(mesh);
+      pieces.push(mesh);
+    }
+    shatters.add({ pieces, material, born: performance.now() });
   };
 
   // Ambient cosmo motes drifting upward.
@@ -142,6 +204,23 @@ export async function createFx() {
       }
     });
 
+    shatters.forEach((entry) => {
+      const age = (now - entry.born) / 1000;
+      entry.pieces.forEach((mesh) => {
+        mesh.userData.v.y -= 900 * dt;
+        mesh.position.addScaledVector(mesh.userData.v, dt);
+        mesh.rotation.x += mesh.userData.spin.x * dt;
+        mesh.rotation.y += mesh.userData.spin.y * dt;
+        mesh.rotation.z += mesh.userData.spin.z * dt;
+      });
+      entry.material.opacity = Math.max(0, 1 - Math.max(0, age - 0.5) / 0.4);
+      if (age > 0.9) {
+        entry.pieces.forEach((mesh) => scene.remove(mesh));
+        entry.material.dispose();
+        shatters.delete(entry);
+      }
+    });
+
     tweens.forEach((entry) => {
       const t = Math.min(1, (now - entry.start) / entry.duration);
       entry.step(t);
@@ -156,8 +235,9 @@ export async function createFx() {
 
   return {
     // Card arcs off the table toward the camera, flips upright and lands on its slot (450 ms).
-    async flyCard(fromRect, toRect, src) {
-      const card = makeCard(toRect, src);
+    async flyCard(fromRect, toRect, src, name) {
+      const metal = metalFor(name);
+      const card = makeCard(toRect, src, metal);
       const from = centerOf(fromRect);
       const to = centerOf(toRect);
       const scaleFrom = fromRect.width / toRect.width;
@@ -168,14 +248,17 @@ export async function createFx() {
         card.rotation.x = (1 - e) * -0.9;
         card.rotation.z = (1 - e) * 0.25;
         card.scale.setScalar(scaleFrom + (1 - scaleFrom) * e);
+        card.userData.sheen.opacity = Math.sin(e * Math.PI) * 0.55;
       });
       burst(toRect.left + toRect.width / 2, toRect.top + toRect.height, 0xffd98a, 36);
+      shatter(toRect.left + toRect.width / 2, toRect.top + toRect.height, metal, 8);
       dispose(card);
     },
 
     // Attacker lunges to the target (300 ms), impact burst, then returns (200 ms).
-    async lunge(fromRect, toRect, src) {
-      const card = makeCard(fromRect, src);
+    async lunge(fromRect, toRect, src, name) {
+      const metal = metalFor(name);
+      const card = makeCard(fromRect, src, metal);
       const from = centerOf(fromRect);
       const to = centerOf(toRect);
       const hit = from.clone().lerp(to, 0.82);
@@ -184,17 +267,21 @@ export async function createFx() {
         card.position.lerpVectors(from, hit, e);
         card.position.z = Math.sin(e * Math.PI * 0.5) * 140;
         card.rotation.x = e * 0.35 * Math.sign(to.y - from.y || 1);
+        card.userData.sheen.opacity = e * 0.6;
       });
       burst(toRect.left + toRect.width / 2, toRect.top + toRect.height / 2, 0xff6a3c, 80);
+      shatter(toRect.left + toRect.width / 2, toRect.top + toRect.height / 2, metal, 16);
       await tween(200, (t) => {
         const e = EASE(t);
         card.position.lerpVectors(hit, from, e);
         card.position.z = (1 - e) * 140;
         card.rotation.x = (1 - e) * 0.35 * Math.sign(to.y - from.y || 1);
+        card.userData.sheen.opacity = (1 - e) * 0.6;
       });
       dispose(card);
     },
 
-    burst
+    burst,
+    shatter
   };
 }

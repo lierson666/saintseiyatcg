@@ -167,7 +167,7 @@ async function init() {
   bindStaticControls();
   bindCardTilt();
   bindArenaInput();
-  import("./fx3d.js?v=13")
+  import("./fx3d.js?v=14")
     .then((module) => module.createFx())
     .then((layer) => {
       fx = layer;
@@ -744,7 +744,7 @@ function renderFeedback() {
       return;
     }
     stack.style.visibility = "hidden";
-    fx.flyCard(from, stack.getBoundingClientRect(), stack.querySelector("img")?.src).then(() => {
+    fx.flyCard(from, stack.getBoundingClientRect(), stack.querySelector("img")?.src, stack.querySelector("img")?.alt).then(() => {
       document.querySelector(`.battlefield-stack[data-battlefield-root="${uid}"]`)?.style.removeProperty("visibility");
     });
   });
@@ -768,7 +768,7 @@ async function playAttackLunge(combat) {
   }
   const size = 60;
   attacker.style.visibility = "hidden";
-  await fx.lunge(attacker.getBoundingClientRect(), { left: anchor.x - size / 2, top: anchor.y - size / 2, width: size, height: size }, attacker.querySelector("img")?.src);
+  await fx.lunge(attacker.getBoundingClientRect(), { left: anchor.x - size / 2, top: anchor.y - size / 2, width: size, height: size }, attacker.querySelector("img")?.src, attacker.querySelector("img")?.alt);
   attacker.style.removeProperty("visibility");
 }
 
