@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "High Tide",
+  "flavour": "“The oceans are eternal. Humanity is not.”",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "../ARTS/POSEIDON.png",
+    "x": -172,
+    "y": -357,
+    "w": 1832,
+    "zoom": 1,
+    "baseW": 1832
+  }
+}

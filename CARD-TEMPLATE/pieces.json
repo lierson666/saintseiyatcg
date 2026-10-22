@@ -137,6 +137,20 @@
       "h": 223,
       "src": "FRAMES/ATHENA/ATHENA.psd :: Arte 6"
     },
+    "icons/soul": {
+      "x": 1171,
+      "y": 1105,
+      "w": 42,
+      "h": 48,
+      "src": "FRAMES/HADES/HADES.psd :: Arte 12"
+    },
+    "icons/tap": {
+      "x": 654,
+      "y": 1439,
+      "w": 32,
+      "h": 40,
+      "src": "FRAMES/HADES/HADES.psd :: TAP"
+    },
     "symbols/athena": {
       "x": 1168,
       "y": 90,
@@ -151,6 +165,13 @@
       "h": 278,
       "src": "FRAMES/ARES/ARES.psd :: Arte 13"
     },
+    "symbols/hades": {
+      "x": 995,
+      "y": 77,
+      "w": 355,
+      "h": 346,
+      "src": "FRAMES/HADES/HADES.psd :: SIMBOL"
+    },
     "symbols/artemis": {
       "x": 910,
       "y": 86,
@@ -164,6 +185,224 @@
       "w": 230,
       "h": 343,
       "src": "FRAMES/POSEIDON/POSEIDON.psd :: Arte 4"
+    },
+    "hades/frame_1": {
+      "x": 0,
+      "y": 0,
+      "w": 1488,
+      "h": 2091,
+      "src": "FRAMES/HADES/HADES.psd :: Camada 9"
+    },
+    "hades/frame_2": {
+      "x": 0,
+      "y": 0,
+      "w": 1488,
+      "h": 2091,
+      "src": "FRAMES/HADES/HADES.psd :: Camada 8 copiar"
+    },
+    "hades/box_name": {
+      "x": 151,
+      "y": 116,
+      "w": 803,
+      "h": 122,
+      "src": "FRAMES/HADES/HADES.psd :: box_flavour copiar"
+    },
+    "hades/box_subtitle": {
+      "x": 151,
+      "y": 247,
+      "w": 803,
+      "h": 70,
+      "src": "FRAMES/HADES/HADES.psd :: box_flavour copiar 3"
+    },
+    "hades/box_type": {
+      "x": 67,
+      "y": 936,
+      "w": 1363,
+      "h": 70,
+      "src": "FRAMES/HADES/HADES.psd :: box_flavour copiar 4"
+    },
+    "hades/gem_power": {
+      "x": 47,
+      "y": 887,
+      "w": 179,
+      "h": 179,
+      "src": "FRAMES/HADES/HADES.psd :: Arte 16"
+    },
+    "hades/gem_soul": {
+      "x": 1230,
+      "y": 866,
+      "w": 220,
+      "h": 220,
+      "src": "FRAMES/HADES/HADES.psd :: Arte 6"
+    },
+    "hades/divider": {
+      "x": 243,
+      "y": 1907,
+      "w": 1002,
+      "h": 2,
+      "src": "FRAMES/HADES/HADES.psd :: LINHAN AWAKEN 1 copiar 2"
+    },
+    "ares/frame_1": {
+      "x": 0,
+      "y": 0,
+      "w": 1488,
+      "h": 2091,
+      "src": "FRAMES/ARES/ARES.psd :: Camada 7"
+    },
+    "ares/frame_2": {
+      "x": 0,
+      "y": 0,
+      "w": 1488,
+      "h": 2091,
+      "src": "FRAMES/ARES/ARES.psd :: FRAME"
+    },
+    "ares/box_name": {
+      "x": 156,
+      "y": 130,
+      "w": 823,
+      "h": 103,
+      "src": "FRAMES/ARES/ARES.psd :: box_flavour copiar 6"
+    },
+    "ares/box_subtitle": {
+      "x": 156,
+      "y": 250,
+      "w": 745,
+      "h": 61,
+      "src": "FRAMES/ARES/ARES.psd :: box_flavour copiar 7"
+    },
+    "ares/box_type": {
+      "x": 67,
+      "y": 1066,
+      "w": 1363,
+      "h": 70,
+      "src": "FRAMES/ARES/ARES.psd :: box_flavour copiar 4"
+    },
+    "ares/gem_power": {
+      "x": 46,
+      "y": 1020,
+      "w": 179,
+      "h": 179,
+      "src": "FRAMES/ARES/ARES.psd :: Arte 16"
+    },
+    "ares/gem_soul": {
+      "x": 1230,
+      "y": 996,
+      "w": 220,
+      "h": 220,
+      "src": "FRAMES/ARES/ARES.psd :: Arte 6"
+    },
+    "ares/divider": {
+      "x": 244,
+      "y": 1906,
+      "w": 1000,
+      "h": 1,
+      "src": "FRAMES/ARES/ARES.psd :: LINHAN AWAKEN 1 copiar 2"
+    },
+    "artemis/frame_1": {
+      "x": 0,
+      "y": 0,
+      "w": 1488,
+      "h": 2091,
+      "src": "FRAMES/ARTEMIS/ARTEMIS.psd :: Camada 5"
+    },
+    "artemis/frame_2": {
+      "x": 0,
+      "y": 0,
+      "w": 1488,
+      "h": 2091,
+      "src": "FRAMES/ARTEMIS/ARTEMIS.psd :: Camada 8",
+      "blend": "exclusion"
+    },
+    "artemis/box_type": {
+      "x": 67,
+      "y": 1046,
+      "w": 1363,
+      "h": 70,
+      "src": "FRAMES/ARTEMIS/ARTEMIS.psd :: box_flavour copiar 4"
+    },
+    "artemis/gem_power": {
+      "x": 43,
+      "y": 999,
+      "w": 178,
+      "h": 178,
+      "src": "FRAMES/ARTEMIS/ARTEMIS.psd :: Arte 16"
+    },
+    "artemis/gem_soul": {
+      "x": 1231,
+      "y": 977,
+      "w": 219,
+      "h": 219,
+      "src": "FRAMES/ARTEMIS/ARTEMIS.psd :: Arte 6"
+    },
+    "artemis/divider": {
+      "x": 244,
+      "y": 1878,
+      "w": 1000,
+      "h": 1,
+      "src": "FRAMES/ARTEMIS/ARTEMIS.psd :: LINHAN AWAKEN 1 copiar 2"
+    },
+    "poseidon/frame_1": {
+      "x": 0,
+      "y": 0,
+      "w": 1488,
+      "h": 2091,
+      "src": "FRAMES/POSEIDON/POSEIDON.psd :: Camada 2"
+    },
+    "poseidon/frame_2": {
+      "x": 0,
+      "y": 0,
+      "w": 1488,
+      "h": 1355,
+      "src": "FRAMES/POSEIDON/POSEIDON.psd :: Camada 2 copiar"
+    },
+    "poseidon/frame_3": {
+      "x": 0,
+      "y": 0,
+      "w": 1488,
+      "h": 2091,
+      "src": "FRAMES/POSEIDON/POSEIDON.psd :: Camada 9"
+    },
+    "poseidon/box_name": {
+      "x": 151,
+      "y": 116,
+      "w": 803,
+      "h": 122,
+      "src": "FRAMES/POSEIDON/POSEIDON.psd :: box_flavour copiar"
+    },
+    "poseidon/box_subtitle": {
+      "x": 151,
+      "y": 247,
+      "w": 803,
+      "h": 70,
+      "src": "FRAMES/POSEIDON/POSEIDON.psd :: box_flavour copiar 3"
+    },
+    "poseidon/box_type": {
+      "x": 67,
+      "y": 974,
+      "w": 1363,
+      "h": 70,
+      "src": "FRAMES/POSEIDON/POSEIDON.psd :: box_flavour copiar 4"
+    },
+    "poseidon/gem_power": {
+      "x": 43,
+      "y": 925,
+      "w": 179,
+      "h": 179,
+      "src": "FRAMES/POSEIDON/POSEIDON.psd :: Arte 16"
+    },
+    "poseidon/gem_soul": {
+      "x": 1230,
+      "y": 904,
+      "w": 220,
+      "h": 220,
+      "src": "FRAMES/POSEIDON/POSEIDON.psd :: Arte 6"
+    },
+    "poseidon/divider": {
+      "x": 244,
+      "y": 1920,
+      "w": 1000,
+      "h": 1,
+      "src": "FRAMES/POSEIDON/POSEIDON.psd :: LINHAN AWAKEN 1 copiar 2"
     }
   },
   "linked_missing": [
@@ -228,6 +467,16 @@
       "note": "arquivo vinculado ausente; exportado da prévia raster salva no PSD"
     },
     {
+      "piece": "icons/soul",
+      "file": "Arte 12.ai",
+      "note": "arquivo vinculado ausente; exportado da prévia raster salva no PSD"
+    },
+    {
+      "piece": "icons/tap",
+      "file": "TAP.ai",
+      "note": "arquivo vinculado ausente; exportado da prévia raster salva no PSD"
+    },
+    {
       "piece": "symbols/ares",
       "file": "Arte 13.ai",
       "note": "arquivo vinculado ausente; exportado da prévia raster salva no PSD"
@@ -240,6 +489,46 @@
     {
       "piece": "symbols/poseidon",
       "file": "Arte 4.ai",
+      "note": "arquivo vinculado ausente; exportado da prévia raster salva no PSD"
+    },
+    {
+      "piece": "hades/gem_power",
+      "file": "Arte 16.ai",
+      "note": "arquivo vinculado ausente; exportado da prévia raster salva no PSD"
+    },
+    {
+      "piece": "hades/gem_soul",
+      "file": "Arte 6.ai",
+      "note": "arquivo vinculado ausente; exportado da prévia raster salva no PSD"
+    },
+    {
+      "piece": "ares/gem_power",
+      "file": "Arte 16.ai",
+      "note": "arquivo vinculado ausente; exportado da prévia raster salva no PSD"
+    },
+    {
+      "piece": "ares/gem_soul",
+      "file": "Arte 6.ai",
+      "note": "arquivo vinculado ausente; exportado da prévia raster salva no PSD"
+    },
+    {
+      "piece": "artemis/gem_power",
+      "file": "Arte 16.ai",
+      "note": "arquivo vinculado ausente; exportado da prévia raster salva no PSD"
+    },
+    {
+      "piece": "artemis/gem_soul",
+      "file": "Arte 6.ai",
+      "note": "arquivo vinculado ausente; exportado da prévia raster salva no PSD"
+    },
+    {
+      "piece": "poseidon/gem_power",
+      "file": "Arte 16.ai",
+      "note": "arquivo vinculado ausente; exportado da prévia raster salva no PSD"
+    },
+    {
+      "piece": "poseidon/gem_soul",
+      "file": "Arte 6.ai",
       "note": "arquivo vinculado ausente; exportado da prévia raster salva no PSD"
     }
   ]

@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "Deathbringer",
+  "flavour": "“I am the end of all things.”",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "../ARTS/HADES3.png",
+    "x": -118,
+    "y": -106,
+    "w": 1724,
+    "zoom": 1,
+    "baseW": 1724
+  }
+}

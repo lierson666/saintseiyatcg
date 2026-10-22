@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "Moonlight Lullaby",
+  "flavour": "“Look at the sky… that is the realm you will never reach.”",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "../ARTS/ARTHEMIS.png",
+    "x": -155,
+    "y": -235,
+    "w": 1787,
+    "zoom": 1,
+    "baseW": 1787
+  }
+}

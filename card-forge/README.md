@@ -17,7 +17,8 @@ Depois abra `http://localhost:8765/card-forge/` (ou `?card=athena-021` para abri
 - Carrega qualquer carta de `data/cards.json`, ou cria uma nova (botão "Nova carta").
 - Edita nome, título, subtítulo, custo, tipo, subtipos, regras, Power/Resistance, bônus, Equip/Damage, Soul/Attack/Awaken, raridade, facção e flavour.
 - Arte: envie ou solte uma imagem sobre a carta, arraste para mover e use a roda do mouse para zoom. Se existir `ARTS/<mesmo nome do PNG>`, a arte entra sozinha.
-- Regras: linha em branco separa habilidades. `**negrito**`. `{C}` Cosmo, `{B}` Base Cosmo e `{L}` Latent Cosmo viram ícones. Keywords de uma palavra (Pierce, Nimble…) saem em negrito maiúsculo.
+- Regras: a barra acima do texto insere símbolos no cursor (`{C}` Cosmo, `{B}` Base Cosmo, `{L}` Latent Cosmo, `{S}` Soul, `{T}` Tap). O dropdown "+ Keyword" insere uma keyword. Keywords (Pierce, Long Range, Seal…) saem em negrito maiúsculo sozinhas. Linha em branco separa habilidades; `**negrito**` força negrito.
+- Facção: cada facção usa o pacote do PSD do seu Deus (moldura, caixas, gemas de Power/Soul, divisória, cor do texto e do brilho). Peças que o Deus não tem (gema de custo, Resistance, Equip, Damage e ícones) vêm de Athena, tingidas na cor da facção.
 - "Sobrepor PNG original" põe o PNG de `CARDS/` por cima para comparar.
 - Export: PNG alta 1488×2091 e PNG web 1100×1546.
 - "Salvar projeto" grava em `card-forge/projects/<id>.json` o que não existe no cards.json: título na carta, subtítulo, flavour e enquadramento da arte. Arte enviada vai para `card-forge/art/` (fora do git).
@@ -25,7 +26,7 @@ Depois abra `http://localhost:8765/card-forge/` (ou `?card=athena-021` para abri
 
 ## Templates
 
-- `CARD-TEMPLATE/templates.json`: layouts por tipo (devotee, relic_cloth, relic_weapon, relic para Relic/Technique/Moment/Domain, e god). Cada layout tem a posição de cada região.
+- `CARD-TEMPLATE/templates.json`: pacotes de facção (`factions`) e layouts por tipo (devotee, relic_cloth, relic_weapon, relic para Relic/Technique/Moment/Domain, e god). Cada layout tem a posição de cada região.
 - `CARD-TEMPLATE/pieces.json`: posição de cada peça PNG e de qual PSD/camada ela saiu.
 - Re-extrair as peças (só lê `FRAMES/`):
 
@@ -44,5 +45,5 @@ python3 card-forge/serve.py --selftest
 - Fontes: o PSD usa Futura100 LXT BoldOblique e ITC Avant Garde Pro, que não estão instaladas. O editor cai em Futura/Avenir do macOS, e o título sai um pouco mais estreito.
 - Efeitos de camada (brilho, sombra, bevel) são aproximados no canvas. O bevel não é reproduzido.
 - 14 smart objects vinculados (`.ai`) não existem no disco: `SlksHc.tif.ai`, `tbpBDu.tif.ai`, `Arte 3/4/6/7/8/9/10/11/13/16/24/27.ai`. As peças saíram da prévia raster salva dentro do PSD, então são bitmap, não vetor. A lista fica em `pieces.json → linked_missing`.
-- Hades: o `HADES.psd` não tem símbolo próprio (só o capacete de Ares, oculto). Falta o símbolo de Hades.
-- God: layout simplificado; o bloco Awaken entra no texto de regras.
+- God: layout simplificado; o bloco Awaken entra no texto de regras. Ares, Artemis, Hades e Poseidon ainda estão sem números e texto no cards.json; o texto deles existe só nos PSDs.
+- `card-forge/projects/` traz arte, subtítulo e flavour de Ares, Artemis, Hades, Poseidon e do Seiya, com a arte no enquadramento do PSD.

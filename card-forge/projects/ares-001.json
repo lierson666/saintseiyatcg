@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "Driven by Hate",
+  "flavour": "“Kneel before the god of war”",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "../ARTS/ARES.png",
+    "x": -202,
+    "y": -197,
+    "w": 1800,
+    "zoom": 1,
+    "baseW": 1800
+  }
+}

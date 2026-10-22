@@ -60,13 +60,13 @@ export function toMarkup(text) {
 
 export function fromMarkup(md) {
   let s = md.trim();
-  const UNIT = { L: 'Latent Cosmo', B: 'Base Cosmo', C: 'Cosmo' };
+  const UNIT = { L: 'Latent Cosmo', B: 'Base Cosmo', C: 'Cosmo', S: 'Soul', T: 'Tap' };
   let m = s.match(/^\*\*(\d+) \{([BCL])\} (.+?):\*\*\s*\n?([\s\S]*)$/);
   if (m) s = `${titleCase(m[3])} — Cost: ${m[1]} ${UNIT[m[2]]}. ${m[4]}`;
   else if ((m = s.match(/^\*\*([^*—]{2,30}) — ([^*—]{1,25}):\*\*\s*\n?([\s\S]*)$/))) s = `${m[1]} — ${m[2]}. ${m[3]}`;
   else if ((m = s.match(/^\*\*([^*]{2,40}):\*\*\s*\n?([\s\S]*)$/))) s = `${m[1]} — ${m[2]}`;
   return s
-    .replace(/\{([BCL])\}/g, (_, k) => UNIT[k])
+    .replace(/\s*\{([BCLST])\}/g, (_, k) => ` ${UNIT[k]}`)
     .replace(/\*\*/g, '').replace(/\s*\n\s*/g, ' ').replace(/\s{2,}/g, ' ').trim();
 }
 
@@ -88,14 +88,48 @@ function typeLine(s, fmt) {
 
 // ---------- desenho ----------
 const font = (style, size) => T.styles[style].font.replace('{s}', size.toFixed(1));
+const fac = () => T.factions[String(S.faccao).toLowerCase()] || T.factions.athena;
+const facKey = () => (T.factions[String(S.faccao).toLowerCase()] ? String(S.faccao).toLowerCase() : 'athena');
 
-// Aproxima os efeitos de camada dos PSDs: Outer Glow amarelo em Screen (35%, 57px) e
+// Peça da facção: '<facção>/x' se existir no pacote do Deus; senão a de Athena tingida na cor da facção.
+// Devolve { key, tint } ou null (peça omitida pela facção).
+function resolvePiece(key) {
+  const name = key.split('/').pop(), f = facKey();
+  if (P[`${f}/${name}`]) return { key: `${f}/${name}`, tint: false };
+  if ((fac().omit || []).includes(name)) return null;
+  return { key, tint: !name.startsWith('rarity_') && (f !== 'athena' || !key.startsWith('athena/')) };
+}
+
+// Tinge uma peça clara na cor da facção mantendo o sombreado (luminância relativa).
+const tintCache = new Map();
+async function pieceImage(key, tint) {
+  const im = await loadImg(pieceSrc(key));
+  if (!im || !tint) return im;
+  const color = fac().color, id = `${key}|${color}`;
+  if (tintCache.has(id)) return tintCache.get(id);
+  const c = Object.assign(document.createElement('canvas'), { width: im.naturalWidth, height: im.naturalHeight });
+  const g = c.getContext('2d');
+  g.drawImage(im, 0, 0);
+  const d = g.getImageData(0, 0, c.width, c.height), px = d.data;
+  const [tr, tg, tb] = [1, 3, 5].map((i) => parseInt(color.slice(i, i + 2), 16));
+  let max = 1;
+  for (let i = 0; i < px.length; i += 4) if (px[i + 3] > 40) max = Math.max(max, 0.299 * px[i] + 0.587 * px[i + 1] + 0.114 * px[i + 2]);
+  for (let i = 0; i < px.length; i += 4) {
+    const k = (0.299 * px[i] + 0.587 * px[i + 1] + 0.114 * px[i + 2]) / max;
+    px[i] = tr * k; px[i + 1] = tg * k; px[i + 2] = tb * k;
+  }
+  g.putImageData(d, 0, 0);
+  tintCache.set(id, c);
+  return c;
+}
+
+// Aproxima os efeitos de camada dos PSDs: Outer Glow da cor da facção em Screen (35%, 57px) e
 // Drop Shadow preto com choke 94 (vira um contorno duro de ~6px). `outline` desenha esse contorno.
 function paint(glow, shadowAlpha, draw, outline) {
   if (glow) {
     ctx.save();
     ctx.globalCompositeOperation = 'screen';
-    ctx.shadowColor = 'rgba(255,252,0,0.55)';
+    ctx.shadowColor = fac().glow;
     ctx.shadowBlur = 57;
     draw();
     ctx.restore();
@@ -104,7 +138,7 @@ function paint(glow, shadowAlpha, draw, outline) {
   ctx.shadowColor = `rgba(0,0,0,${shadowAlpha})`;
   ctx.shadowBlur = 6;
   if (outline) {
-    ctx.strokeStyle = `rgba(42,36,6,${shadowAlpha})`; // preto em Multiply sobre o brilho = oliva
+    ctx.strokeStyle = `rgba(20,16,8,${shadowAlpha})`; // preto em Multiply sobre o brilho
     ctx.lineJoin = 'round';
     ctx.lineWidth = 11;
     outline();
@@ -124,47 +158,63 @@ function fitText(text, style, size, maxW) {
 function drawText(text, style, x, y, size, maxW) {
   if (!text) return;
   const s = fitText(text, style, size, maxW);
-  ctx.fillStyle = T.color;
+  ctx.fillStyle = fac().color;
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   paint(T.styles[style].glow, 0.92, () => ctx.fillText(text, x, y),
     () => { ctx.lineWidth = Math.min(11, s * 0.16); ctx.strokeText(text, x, y); });
 }
 
-async function drawPiece(key, el = {}) {
+// Retângulo de destino: el.rect, ou a posição da peça de Athena (+dx/dy). Peça de outra facção é
+// desenhada nesse mesmo lugar, para todos os layouts continuarem valendo.
+function pieceRect(key, el) {
   const p = P[key];
-  const im = await loadImg(pieceSrc(key));
-  if (!p || !im) return null;
-  const [x, y, w, h] = el.rect || [p.x + (el.dx || 0), p.y + (el.dy || 0), p.w, p.h];
-  ctx.drawImage(im, x, y, w, h);
-  return { x, y, w, h, cx: x + w / 2, cy: y + h / 2 };
+  return el.rect || [p.x + (el.dx || 0), p.y + (el.dy || 0), p.w, p.h];
 }
 
-async function drawGlowPiece(key, el = {}) {
-  const p = P[key];
-  const im = await loadImg(pieceSrc(key));
-  if (!p || !im) return null;
-  const x = p.x + (el.dx || 0), y = p.y + (el.dy || 0);
-  paint(true, 0.92, () => ctx.drawImage(im, x, y));
-  return { cx: x + p.w / 2, cy: y + p.h / 2 };
+async function drawPiece(key, el = {}, glow = false) {
+  const r = resolvePiece(key);
+  if (!r || !P[key] && !P[r.key]) return null;
+  const im = await pieceImage(r.key, r.tint);
+  if (!im) return null;
+  const [x, y, w, h] = pieceRect(P[key] ? key : r.key, el);
+  if (glow) paint(true, 0.92, () => ctx.drawImage(im, x, y, w, h));
+  else ctx.drawImage(im, x, y, w, h);
+  return { x, y, w, h, cx: x + w / 2, cy: y + h / 2 };
 }
+const drawGlowPiece = (key, el) => drawPiece(key, el, true);
+
+async function drawFrame() {
+  for (const key of fac().frame) {
+    const p = P[key], im = await loadImg(pieceSrc(key));
+    if (!p || !im) continue;
+    ctx.save();
+    ctx.globalCompositeOperation = p.blend || 'source-over';
+    ctx.drawImage(im, p.x, p.y, p.w, p.h);
+    ctx.restore();
+  }
+}
+
+// Símbolos de texto: token -> peça. {C}/{B} usam o mesmo ícone de Cosmo.
+const ICONS = { '{C}': 'athena/icon_cosmo', '{B}': 'athena/icon_cosmo', '{L}': 'athena/icon_latent', '{S}': 'icons/soul', '{T}': 'icons/tap' };
+// Keywords (docs/guia-do-jogo.md §24 + ações dos Deuses) saem em NEGRITO MAIÚSCULO no texto de regras, como nos PSDs.
+export const KEYWORDS = ['Guardian', 'Nimble', 'Cheater', 'Long Range', 'Pierce', 'Impulse', 'Sealed', 'Unfaith', 'Prepare', 'Prepared', 'Seal'];
+const KW_RE = new RegExp(`\\b(${[...KEYWORDS].sort((a, b) => b.length - a.length).join('|')})\\b`, 'gi');
+const boldKeywords = (para) => para.split(/(\*\*[^*]*\*\*)/).map((seg, i) => (i % 2 ? seg : seg.replace(KW_RE, (m) => `**${m.toUpperCase()}**`))).join('');
 
 function tokenize(para) {
   const toks = [];
   let bold = false;
-  for (const part of para.split(/(\*\*|\{[BCL]\}|\n|[ \t]+)/)) {
+  for (const part of boldKeywords(para).split(/(\*\*|\{[BCLST]\}|\n|[ \t]+)/)) {
     if (!part) continue;
     if (part === '**') bold = !bold;
     else if (part === '\n') toks.push({ t: 'br' });
     else if (/^[ \t]+$/.test(part)) toks.push({ t: 'sp' });
-    else if (/^\{[BCL]\}$/.test(part)) toks.push({ t: 'icon', key: part === '{L}' ? 'athena/icon_latent' : 'athena/icon_cosmo', bold });
-    else if (KEYWORDS.has(part.replace(/[^A-Za-z]/g, '').toLowerCase())) toks.push({ t: 'w', text: part.toUpperCase(), bold: true });
+    else if (ICONS[part]) toks.push({ t: 'icon', key: ICONS[part], bold });
     else toks.push({ t: 'w', text: part, bold });
   }
   return toks;
 }
-// keywords de uma palavra (docs/guia-do-jogo.md §24) saem em NEGRITO MAIÚSCULO no texto de regras, como nos PSDs
-const KEYWORDS = new Set(['guardian', 'nimble', 'cheater', 'pierce', 'impulse', 'sealed', 'unfaith']);
 
 function layoutRules(paras, size, maxW) {
   const lh = size * 1.13, gap = size * 0.55, iconW = size * 1.05;
@@ -207,8 +257,9 @@ async function drawRules(el, s) {
   let size = el.size, L;
   // encolhe até caber na caixa
   for (; size >= 22; size -= 1) { L = layoutRules(paras, size, rw); if (L.h <= rh) break; }
-  const icons = { 'athena/icon_cosmo': await loadImg(pieceSrc('athena/icon_cosmo')), 'athena/icon_latent': await loadImg(pieceSrc('athena/icon_latent')) };
-  ctx.fillStyle = T.color;
+  const icons = {};
+  for (const k of new Set(Object.values(ICONS))) icons[k] = await pieceImage(k, facKey() !== 'athena' || !k.startsWith('athena/'));
+  ctx.fillStyle = fac().color;
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
   let y = ry;
@@ -219,7 +270,10 @@ async function drawRules(el, s) {
       for (const it of ln.items) {
         if (it.t === 'icon') {
           const im = icons[it.key], d = size * 1.0;
-          if (im) ctx.drawImage(im, x0 + it.x + (it.w - d) / 2, cy - d / 2, d, d);
+          if (im) {
+            const iw = d * Math.min(1, im.width / im.height), ih = d * Math.min(1, im.height / im.width);
+            ctx.drawImage(im, x0 + it.x + (it.w - iw) / 2, cy - ih / 2, iw, ih);
+          }
         } else {
           ctx.font = it.bold ? L.fBold : L.fNorm;
           (stroke ? ctx.strokeText : ctx.fillText).call(ctx, it.text, x0 + it.x, cy);
@@ -255,6 +309,7 @@ async function render() {
   for (const el of L.elements) {
     switch (el.kind) {
       case 'art': await drawArt(S); break;
+      case 'frame': await drawFrame(); break;
       case 'piece': await drawPiece(el.piece, el); break;
       case 'symbol': {
         const im = await loadImg(pieceSrc(symbolKey(S.faccao)));
@@ -561,6 +616,29 @@ $('#diffConfirm').addEventListener('click', async () => {
   } catch (e) { say(e.message, true); }
 });
 
+// ---------- barra de símbolos e keywords ----------
+let lastText = form.elements.rules;
+form.querySelectorAll('textarea').forEach((t) => t.addEventListener('focus', () => { lastText = t; }));
+function insertAtCursor(text) {
+  const t = lastText, a = t.selectionStart ?? t.value.length, b = t.selectionEnd ?? a;
+  const pre = t.value.slice(0, a), sp = pre && !/\s$/.test(pre) && /^\w/.test(text) ? ' ' : '';
+  t.value = pre + sp + text + t.value.slice(b);
+  t.focus();
+  t.selectionStart = t.selectionEnd = a + sp.length + text.length;
+  t.dispatchEvent(new Event('input', { bubbles: true }));
+}
+for (const [token, label] of [['{C}', 'Cosmo'], ['{B}', 'Base Cosmo'], ['{L}', 'Latent Cosmo'], ['{S}', 'Soul'], ['{T}', 'Tap']]) {
+  const b = Object.assign(document.createElement('button'), { type: 'button', title: `${label} ${token}` });
+  b.setAttribute('aria-label', `Inserir ${label}`);
+  b.append(Object.assign(new Image(), { src: pieceSrc(ICONS[token]), alt: '' }), label);
+  b.addEventListener('mousedown', (e) => e.preventDefault()); // não tira o foco/cursor do texto
+  b.addEventListener('click', () => insertAtCursor(token));
+  $('#symbar').insertBefore(b, $('#kwSelect'));
+}
+const kwSel = $('#kwSelect');
+kwSel.append(...KEYWORDS.map((k) => new Option(k, k)));
+kwSel.addEventListener('change', () => { if (kwSel.value) insertAtCursor(kwSel.value); kwSel.value = ''; });
+
 // ---------- início ----------
 function fillCardSelect(selected) {
   const sel = $('#cardSelect');
@@ -579,4 +657,4 @@ try {
   say(`falha ao carregar cards.json: ${e.message}`, true);
 }
 
-window.forge = { S: () => S, render, toMarkup, fromMarkup, buildCard };
+window.forge = { S: () => S, render, toMarkup, fromMarkup, buildCard, selectCard };

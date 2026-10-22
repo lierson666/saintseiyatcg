@@ -28,6 +28,10 @@ button:hover { border-color: var(--gold); }
 button.primary { background: #4a3d16; border-color: var(--gold); }
 .row { display: flex; gap: 8px; }
 .row:empty { display: none; }
+.symbar { display: flex; flex-wrap: wrap; gap: 6px; }
+.symbar button { display: inline-flex; align-items: center; gap: 5px; padding: 4px 8px; font-size: 12px; }
+.symbar img { width: 20px; height: 20px; object-fit: contain; }
+.symbar select { font-size: 12px; padding: 4px 6px; }
 .hint { margin: 0; color: var(--muted); font-size: 12px; }
 code { color: var(--gold); }
 .actions { flex-direction: row; flex-wrap: wrap; }
