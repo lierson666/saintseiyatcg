@@ -55,6 +55,8 @@ let attackQueue = [];
 let shiftHeld = false;
 let pointerClient = { x: 0, y: 0 };
 let renderMemory = null;
+// Optional Three.js effects layer (fx3d.js); null means the CSS fallback is used.
+let fx = null;
 
 const SETTINGS_KEY = "ssTcgSettings";
 const AI_SPEED_MULTIPLIERS = { slow: 5, normal: 2.5, fast: 1 };
@@ -163,6 +165,14 @@ async function init() {
   bindStaticControls();
   bindCardTilt();
   bindArenaInput();
+  import("./fx3d.js?v=12")
+    .then((module) => module.createFx())
+    .then((layer) => {
+      fx = layer;
+    })
+    .catch(() => {
+      fx = null;
+    });
   updateViewportScale();
   newGameState = createNewGameState();
   renderEmptyBoards();
@@ -666,13 +676,18 @@ function renderFeedback() {
     turnKey: `${gameState.turnNumber}:${gameState.currentPlayer}`,
     soul: { A: gameState.players.A.god.soul, B: gameState.players.B.god.soul },
     damage: {},
-    battlefield: new Set()
+    battlefield: new Set(),
+    // Last on-screen rects, so the 3D layer can fly cards from the hand and burst where cards died.
+    rects: {}
   };
   PLAYER_ORDER.forEach((playerKey) => {
     gameState.players[playerKey].zones.battlefield.forEach((instance) => {
       snapshot.battlefield.add(instance.uid);
       snapshot.damage[instance.uid] = instance.damageCounters;
     });
+  });
+  document.querySelectorAll(".seat--bottom .card.zone--hand[data-card-uid], .battlefield-stack[data-battlefield-root]").forEach((node) => {
+    snapshot.rects[node.dataset.cardUid || node.dataset.battlefieldRoot] = node.getBoundingClientRect();
   });
 
   const previous = renderMemory;
@@ -700,10 +715,49 @@ function renderFeedback() {
   });
 
   snapshot.battlefield.forEach((uid) => {
-    if (!previous.battlefield.has(uid)) {
-      document.querySelector(`.battlefield-stack[data-battlefield-root="${uid}"]`)?.classList.add("is-entering");
+    if (previous.battlefield.has(uid)) {
+      return;
+    }
+    const stack = document.querySelector(`.battlefield-stack[data-battlefield-root="${uid}"]`);
+    if (!stack) {
+      return;
+    }
+    if (!fx) {
+      stack.classList.add("is-entering");
+      return;
+    }
+    const owner = stack.querySelector("[data-player]")?.dataset.player;
+    const from = previous.rects[uid] || document.querySelector(`.seat--${owner === "A" ? "bottom" : "top"} .seat__hand`)?.getBoundingClientRect();
+    if (!from) {
+      return;
+    }
+    stack.style.visibility = "hidden";
+    fx.flyCard(from, stack.getBoundingClientRect(), stack.querySelector("img")?.src).then(() => {
+      document.querySelector(`.battlefield-stack[data-battlefield-root="${uid}"]`)?.style.removeProperty("visibility");
+    });
+  });
+
+  previous.battlefield.forEach((uid) => {
+    const rect = previous.rects[uid];
+    if (fx && rect && !snapshot.battlefield.has(uid)) {
+      fx.burst(rect.left + rect.width / 2, rect.top + rect.height / 2, 0xb9a6ff, 90);
     }
   });
+}
+
+async function playAttackLunge(combat) {
+  if (!fx || !combat?.attacker || !combat.target) {
+    return;
+  }
+  const attacker = document.querySelector(`.card[data-card-uid="${combat.attacker.uid}"]`);
+  const anchor = getCombatAnchor(combat.target, { left: 0, top: 0 });
+  if (!attacker || !anchor) {
+    return;
+  }
+  const size = 60;
+  attacker.style.visibility = "hidden";
+  await fx.lunge(attacker.getBoundingClientRect(), { left: anchor.x - size / 2, top: anchor.y - size / 2, width: size, height: size }, attacker.querySelector("img")?.src);
+  attacker.style.removeProperty("visibility");
 }
 
 function spawnFloatText(anchor, text, kind) {
@@ -718,6 +772,7 @@ function spawnFloatText(anchor, text, kind) {
   node.style.top = `${rect.top + rect.height / 2}px`;
   document.body.appendChild(node);
   window.setTimeout(() => node.remove(), 1300);
+  fx?.burst(rect.left + rect.width / 2, rect.top + rect.height / 2, kind === "heal" ? 0x7dffb0 : 0xff5a4e, 40);
 }
 
 function showTurnBanner(text, local) {
@@ -4073,6 +4128,7 @@ async function resolveCombatFromPriority(fromAi = false) {
   combat.responseActive = false;
   renderGame();
   await waitCombatBeat();
+  await playAttackLunge(combat);
   resolveCombatSequence();
   const shouldResumeAi = Boolean(gameState?.combat?.resumeAiAfterResolution);
   clearCombatState();

@@ -1837,3 +1837,11 @@ button.primary:hover:not(:disabled) {
     animation-duration: 0.01ms;
   }
 }
+
+/* Three.js effects layer (fx3d.js): above the table, under floating numbers and every modal. */
+.fx3d-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 8500;
+  pointer-events: none;
+}
