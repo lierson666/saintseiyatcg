@@ -54,6 +54,8 @@ let attackDeclare = null;
 let attackQueue = [];
 let shiftHeld = false;
 let pointerClient = { x: 0, y: 0 };
+// Hand card under the pointer; re-renders recreate the card, so it is born lifted instead of re-animating.
+let hoveredHandUid = null;
 let renderMemory = null;
 // Optional Three.js effects layer (fx3d.js); null means the CSS fallback is used.
 let fx = null;
@@ -165,7 +167,7 @@ async function init() {
   bindStaticControls();
   bindCardTilt();
   bindArenaInput();
-  import("./fx3d.js?v=12")
+  import("./fx3d.js?v=13")
     .then((module) => module.createFx())
     .then((layer) => {
       fx = layer;
@@ -198,6 +200,16 @@ function bindArenaInput() {
   }, { passive: true });
   document.addEventListener("keyup", (event) => {
     if (event.key === "Shift") shiftHeld = false;
+  });
+  document.addEventListener("pointerover", (event) => {
+    const card = event.target.closest?.(".seat--bottom .card.zone--hand[data-card-uid]");
+    if (card) hoveredHandUid = card.dataset.cardUid;
+  });
+  document.addEventListener("pointerout", (event) => {
+    const card = event.target.closest?.(".seat--bottom .card.zone--hand[data-card-uid]");
+    if (!card || card.contains(event.relatedTarget)) return;
+    card.classList.remove("is-hovered");
+    if (hoveredHandUid === card.dataset.cardUid) hoveredHandUid = null;
   });
   window.addEventListener("blur", () => {
     shiftHeld = false;
@@ -6736,9 +6748,10 @@ function getArenaCardState(playerKey, zoneId, instance) {
 
   if (zoneId === "hand" && playerKey === "A" && !isAiPlayer("A")) {
     const located = findCardInstance("A", instance.uid);
-    if (canPlayFromHandNow("A", located)) return { cls: "is-playable", title: "" };
-    if (canSetAsBaseNow("A", located)) return { cls: "is-base-ok", title: "Double-click to set as Cosmo Base" };
-    return { cls: "is-unplayable", title: "" };
+    const hovered = instance.uid === hoveredHandUid && !dragState ? " is-hovered" : "";
+    if (canPlayFromHandNow("A", located)) return { cls: `is-playable${hovered}`, title: "" };
+    if (canSetAsBaseNow("A", located)) return { cls: `is-base-ok${hovered}`, title: "Double-click to set as Cosmo Base" };
+    return { cls: `is-unplayable${hovered}`, title: "" };
   }
 
   if (zoneId !== "battlefield" || !attackDeclare || !isDevoteeCard(instance.cardId)) {

@@ -443,10 +443,23 @@ button.primary:hover:not(:disabled) {
 #playmat .seat--bottom .card-lane .card.zone--hand:first-child { margin-left: 0; }
 
 #playmat .seat--bottom .card.zone--hand:hover,
+#playmat .seat--bottom .card.zone--hand.is-hovered,
 #playmat .seat--bottom .card.zone--hand.selected {
   z-index: 300;
   transform: translateY(-150px) perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) scale(1.42);
   box-shadow: var(--card-depth-lift);
+}
+
+/* The lifted card leaves its slot; this strip covers the slot so the pointer
+   stays "on" the card instead of flickering between lifted and resting. */
+#playmat .seat--bottom .card.zone--hand:hover::after,
+#playmat .seat--bottom .card.zone--hand.is-hovered::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 90%;
 }
 
 #playmat .seat--bottom .card.zone--hand.selected:not(:hover) {
