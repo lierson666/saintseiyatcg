@@ -25,3 +25,4 @@ CARDS/**/pattern/
 CARDS/**/*.jpg
 CARDS/**/*.pdf
 CARDS/**/*.txt
+.omc/
