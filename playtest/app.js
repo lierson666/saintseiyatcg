@@ -49,11 +49,21 @@ let logPopupOpen = false;
 let battlefieldSelection = createEmptyBattlefieldSelection();
 let battlefieldLayoutSyncFrame = null;
 let lastBattlefieldMoveAt = 0;
+// Arena-style declare-attackers step: [{ uid, target }] for player A, plus the attacker awaiting a target.
+let attackDeclare = null;
+let attackQueue = [];
+let shiftHeld = false;
+let pointerClient = { x: 0, y: 0 };
+let renderMemory = null;
 
-const AI_SPEED_SLOWDOWN_MULTIPLIER = 5;
-const AI_DELAY_MS = 340 * AI_SPEED_SLOWDOWN_MULTIPLIER;
-const AI_SHORT_DELAY_MS = 260 * AI_SPEED_SLOWDOWN_MULTIPLIER;
-const COMBAT_STEP_DELAY_MS = 460 * AI_SPEED_SLOWDOWN_MULTIPLIER;
+const SETTINGS_KEY = "ssTcgSettings";
+const AI_SPEED_MULTIPLIERS = { slow: 5, normal: 2.5, fast: 1 };
+const uiSettings = loadUiSettings();
+
+let AI_DELAY_MS = 0;
+let AI_SHORT_DELAY_MS = 0;
+let COMBAT_STEP_DELAY_MS = 0;
+applyAiSpeed();
 
 const DESIGN_WIDTH = 1920;
 const DESIGN_HEIGHT = 1080;
@@ -152,6 +162,7 @@ async function init() {
   renderCoverage();
   bindStaticControls();
   bindCardTilt();
+  bindArenaInput();
   updateViewportScale();
   newGameState = createNewGameState();
   renderEmptyBoards();
@@ -161,6 +172,42 @@ async function init() {
   renderActionBar();
   renderLog();
   renderNewGameOverlay();
+}
+
+function bindArenaInput() {
+  let arrowFrame = 0;
+  document.addEventListener("pointermove", (event) => {
+    pointerClient = { x: event.clientX, y: event.clientY };
+    const aiming = attackDeclare?.focusUid || targetingState?.source || gameState?.combat?.mode === "target";
+    if (aiming && !arrowFrame) {
+      arrowFrame = window.requestAnimationFrame(() => {
+        arrowFrame = 0;
+        renderCombatOverlay();
+      });
+    }
+  }, { passive: true });
+  document.addEventListener("keyup", (event) => {
+    if (event.key === "Shift") shiftHeld = false;
+  });
+  window.addEventListener("blur", () => {
+    shiftHeld = false;
+  });
+  document.addEventListener("pointerdown", (event) => {
+    shiftHeld = event.shiftKey;
+  }, { capture: true });
+
+  document.addEventListener("change", (event) => {
+    const id = event.target?.id;
+    if (id === "setting-full-control") uiSettings.fullControl = event.target.checked;
+    else if (id === "setting-auto-pass") uiSettings.autoPass = event.target.checked;
+    else if (id === "setting-ai-speed") {
+      uiSettings.aiSpeed = event.target.value;
+      applyAiSpeed();
+    } else return;
+    saveUiSettings();
+    if (gameState) renderGame();
+  });
+  syncSettingsControls();
 }
 
 // Pointer-driven 3D tilt and glare on hovered cards; purely visual, arena.css reads the vars.
@@ -202,6 +249,554 @@ function bindCardTilt() {
   }, { passive: true });
 
   document.addEventListener("pointerleave", reset);
+}
+
+// ---------- Arena-style usability layer (interaction only, rules untouched) ----------
+
+function loadUiSettings() {
+  const defaults = { fullControl: false, autoPass: true, aiSpeed: "normal" };
+  try {
+    return { ...defaults, ...JSON.parse(window.localStorage.getItem(SETTINGS_KEY) || "{}") };
+  } catch {
+    return defaults;
+  }
+}
+
+function saveUiSettings() {
+  try {
+    window.localStorage.setItem(SETTINGS_KEY, JSON.stringify(uiSettings));
+  } catch {
+    // Private windows can block storage; settings then last for this session only.
+  }
+}
+
+function applyAiSpeed() {
+  const multiplier = AI_SPEED_MULTIPLIERS[uiSettings.aiSpeed] || AI_SPEED_MULTIPLIERS.normal;
+  AI_DELAY_MS = 340 * multiplier;
+  AI_SHORT_DELAY_MS = 260 * multiplier;
+  COMBAT_STEP_DELAY_MS = 460 * multiplier;
+}
+
+function syncSettingsControls() {
+  const fullControl = document.querySelector("#setting-full-control");
+  const autoPass = document.querySelector("#setting-auto-pass");
+  const aiSpeed = document.querySelector("#setting-ai-speed");
+  if (fullControl) fullControl.checked = uiSettings.fullControl;
+  if (autoPass) autoPass.checked = uiSettings.autoPass;
+  if (aiSpeed) aiSpeed.value = uiSettings.aiSpeed;
+}
+
+function isAutoPassOn() {
+  return uiSettings.autoPass && !uiSettings.fullControl;
+}
+
+function canPlayFromHandNow(playerKey, located) {
+  if (!gameState || gameState.victory || !located || located.zone !== "hand" || attackDeclare) {
+    return false;
+  }
+  if (isOverlayBlockingInput() || targetingState) {
+    return false;
+  }
+
+  const player = gameState.players[playerKey];
+  const card = located.cardData;
+  const amount = typeof card.custo === "number" ? card.custo : 0;
+  const affordable = getAvailableCosmo(player, card.unidade_custo || "cosmo") >= amount;
+
+  if (card.tipo === "Technique" || card.tipo === "Moment") {
+    const timingOk = card.tipo === "Moment" ? canCastMomentNow(playerKey) : canCastTechniqueNow(playerKey);
+    return timingOk && affordable && !getSpellAvailabilityError(player, located);
+  }
+
+  if (card.tipo !== "Devotee" && card.tipo !== "Relic") {
+    return false;
+  }
+
+  return gameState.currentPlayer === playerKey && gameState.currentPhase === "main" && !isPriorityWindowOpen() && affordable;
+}
+
+function canSetAsBaseNow(playerKey, located) {
+  return Boolean(gameState && !attackDeclare && !isOverlayBlockingInput() && !isPriorityWindowOpen() && canRelocateCard(playerKey, located, "cosmo_base"));
+}
+
+// Double-click on a hand card: play it if possible, otherwise set it as Cosmo Base.
+function playHandCard(playerKey, uid) {
+  const located = findCardInstance(playerKey, uid);
+  if (!located || located.zone !== "hand") {
+    return;
+  }
+
+  const playable = canPlayFromHandNow(playerKey, located);
+  const target = !playable && canSetAsBaseNow(playerKey, located) ? "cosmo_base" : "battlefield";
+  const logLength = gameState.log.length;
+  moveCard(playerKey, uid, target);
+
+  const stillInHand = findCardInstance(playerKey, uid)?.zone === "hand";
+  if (stillInHand && !paymentState && !spellResolutionState && !targetingState && gameState.log.length > logLength) {
+    showCombatToast(gameState.log[gameState.log.length - 1]);
+  }
+}
+
+// Arena auto-pay: choose the default plan unless the player asked to pick (Shift or Full control).
+// Order is Latent -> Pool -> Cosmo Base ("mixed"); identical plans are deduped, so fall back by id.
+function maybeAutoPay() {
+  if (!paymentState) {
+    return { pending: true };
+  }
+  if ((uiSettings.fullControl || shiftHeld) && paymentState.plans.length > 1) {
+    return { pending: true };
+  }
+
+  const plan = ["mixed", "latent", "base"].map((id) => paymentState.plans.find((entry) => entry.id === id)).find(Boolean) || paymentState.plans[0];
+  resolvePaymentChoice(plan.id);
+  return { pending: true };
+}
+
+function canDeclareAttacker(playerKey, instance) {
+  if (!instance || !isDevoteeCard(instance.cardId)) {
+    return false;
+  }
+  const card = getCard(instance.cardId);
+  return (
+    !instance.tapped &&
+    !instance.enteredCombatThisTurn &&
+    !(instance.summoningSick && !hasKeyword(card, "Impulse", instance)) &&
+    !hasKeyword(card, "Sealed", instance) &&
+    Boolean(gameState.players[playerKey].zones.battlefield.find((entry) => entry.uid === instance.uid))
+  );
+}
+
+function getEligibleAttackers(playerKey) {
+  return gameState.players[playerKey].zones.battlefield.filter((instance) => canDeclareAttacker(playerKey, instance));
+}
+
+function getLegalAttackTargets(attacker) {
+  const enemyKey = otherPlayerKey(attacker.card.owner);
+  const targets = gameState.players[enemyKey].zones.battlefield
+    .map((instance) => findCardInstance(enemyKey, instance.uid))
+    .filter((located) => located && isAttackableCardTargetForAttacker(attacker, enemyKey, located.zone, located.card, located.cardData))
+    .map((located) => ({ kind: "card", playerKey: enemyKey, uid: located.card.uid }));
+  if (isAttackableGodTargetForAttacker(attacker, enemyKey)) {
+    targets.unshift({ kind: "god", playerKey: enemyKey });
+  }
+  return targets;
+}
+
+// Like Arena, attackers default to the enemy God; with Guardian up, to the only legal Guardian.
+function getDefaultAttackTarget(attacker) {
+  const targets = getLegalAttackTargets(attacker);
+  return targets[0]?.kind === "god" ? targets[0] : targets.length === 1 ? targets[0] : null;
+}
+
+function isLegalAttackTarget(attacker, target) {
+  return getLegalAttackTargets(attacker).some((entry) => entry.kind === target.kind && entry.playerKey === target.playerKey && entry.uid === target.uid);
+}
+
+function getAttackBlockReason(attacker, target) {
+  if (!attacker || isLegalAttackTarget(attacker, target)) {
+    return "";
+  }
+  if (defendingPlayerHasGuardian(target.playerKey) && !hasKeyword(attacker.cardData, "Cheater")) {
+    return "Guardian: a Guardian Devotee must be attacked first.";
+  }
+  return "Not a valid attack target.";
+}
+
+function getDeclareFocusAttacker() {
+  if (!attackDeclare?.focusUid) {
+    return null;
+  }
+  return findCardInstance("A", attackDeclare.focusUid);
+}
+
+function startAttackDeclare(preselectUid = null) {
+  if (!gameState || gameState.currentPlayer !== "A" || gameState.currentPhase !== "main" || !canPlayerActNow("A")) {
+    return;
+  }
+  attackDeclare = { entries: [], focusUid: null, history: [] };
+  if (preselectUid) {
+    toggleDeclareAttacker(preselectUid);
+  }
+}
+
+function toggleDeclareAttacker(uid) {
+  const index = attackDeclare.entries.findIndex((entry) => entry.uid === uid);
+  if (index >= 0) {
+    if (attackDeclare.focusUid !== uid) {
+      attackDeclare.focusUid = uid;
+      return;
+    }
+    const [removed] = attackDeclare.entries.splice(index, 1);
+    attackDeclare.history.push({ type: "remove", entry: removed, index });
+    attackDeclare.focusUid = attackDeclare.entries.find((entry) => !entry.target)?.uid || null;
+    return;
+  }
+
+  const located = findCardInstance("A", uid);
+  if (!located || !canDeclareAttacker("A", located.card)) {
+    showCombatToast(`${located?.cardData.nome_exibicao_en || "That card"} cannot attack right now.`);
+    return;
+  }
+
+  attackDeclare.entries.push({ uid, target: getDefaultAttackTarget(located) });
+  attackDeclare.history.push({ type: "add", uid });
+  attackDeclare.focusUid = uid;
+}
+
+function assignDeclareTarget(target) {
+  const attacker = getDeclareFocusAttacker();
+  const entry = attackDeclare.entries.find((item) => item.uid === attackDeclare.focusUid);
+  if (!attacker || !entry) {
+    showCombatToast("Select one of your attacking Devotees first.");
+    return;
+  }
+  const reason = getAttackBlockReason(attacker, target);
+  if (reason) {
+    showCombatToast(reason);
+    return;
+  }
+  attackDeclare.history.push({ type: "target", uid: entry.uid, previous: entry.target });
+  entry.target = target;
+  attackDeclare.focusUid = attackDeclare.entries.find((item) => !item.target)?.uid || entry.uid;
+}
+
+function declareAllAttackers() {
+  getEligibleAttackers("A").forEach((instance) => {
+    if (!attackDeclare.entries.some((entry) => entry.uid === instance.uid)) {
+      toggleDeclareAttacker(instance.uid);
+    }
+  });
+  attackDeclare.focusUid = attackDeclare.entries.find((entry) => !entry.target)?.uid || attackDeclare.focusUid;
+}
+
+function undoDeclareStep() {
+  const step = attackDeclare?.history.pop();
+  if (!step) {
+    return;
+  }
+  if (step.type === "add") {
+    attackDeclare.entries = attackDeclare.entries.filter((entry) => entry.uid !== step.uid);
+  } else if (step.type === "remove") {
+    attackDeclare.entries.splice(step.index, 0, step.entry);
+  } else if (step.type === "target") {
+    const entry = attackDeclare.entries.find((item) => item.uid === step.uid);
+    if (entry) entry.target = step.previous;
+  }
+  attackDeclare.focusUid = attackDeclare.entries.find((entry) => !entry.target)?.uid || attackDeclare.entries.at(-1)?.uid || null;
+}
+
+function handleDeclareClick(cardElement, inspectElement) {
+  if (inspectElement?.dataset.inspectKind === "god" && inspectElement.dataset.player === "B") {
+    assignDeclareTarget({ kind: "god", playerKey: "B" });
+    return true;
+  }
+  if (!cardElement) {
+    return false;
+  }
+  const located = findCardInstance(cardElement.dataset.player, cardElement.dataset.cardUid);
+  if (!located || located.zone !== "battlefield") {
+    return false;
+  }
+  const rootUid = getBattlefieldRootUid(located.card);
+  const root = findCardInstance(located.card.owner, rootUid);
+  if (!root || !isDevoteeCard(root.cardId)) {
+    return false;
+  }
+  if (root.card.owner === "A") {
+    toggleDeclareAttacker(root.card.uid);
+  } else {
+    assignDeclareTarget({ kind: "card", playerKey: "B", uid: root.card.uid });
+  }
+  return true;
+}
+
+function confirmAttackDeclare() {
+  if (!attackDeclare) {
+    return;
+  }
+  attackQueue = attackDeclare.entries.filter((entry) => entry.target).map((entry) => ({ ...entry }));
+  attackDeclare = null;
+  if (attackQueue.length) {
+    addLog(`Player A declares ${attackQueue.length} attacker${attackQueue.length > 1 ? "s" : ""}.`);
+  }
+  runNextQueuedAttack();
+}
+
+// The rules engine resolves one attack at a time, each with its own response window.
+function runNextQueuedAttack() {
+  while (attackQueue.length && gameState && !gameState.victory) {
+    const next = attackQueue.shift();
+    const attacker = findCardInstance("A", next.uid);
+    if (!attacker || attacker.zone !== "battlefield" || !canDeclareAttacker("A", attacker.card)) {
+      addLog("A declared attacker can no longer attack and is skipped.");
+      continue;
+    }
+    if (!isLegalAttackTarget(attacker, next.target)) {
+      addLog(`${attacker.cardData.nome_exibicao_en}'s attack is canceled: its target is no longer valid.`);
+      showCombatToast(`${attacker.cardData.nome_exibicao_en}: target no longer valid.`);
+      continue;
+    }
+    resolveEnterCombat("A", next.uid);
+    gameState.combat.target = next.target;
+    openCombatPriorityWindow();
+    return;
+  }
+  attackQueue = [];
+}
+
+function passTurnFromMain() {
+  if (gameState.currentPhase === "main") {
+    advanceToNextPhase();
+  }
+  if (gameState.currentPhase === "end") {
+    nextTurn();
+  }
+}
+
+function goToPhase(phase) {
+  const order = TURN_PHASES.map(([id]) => id);
+  if (!gameState || gameState.currentPlayer !== "A" || order.indexOf(phase) <= order.indexOf(gameState.currentPhase)) {
+    return;
+  }
+  let guard = 4;
+  while (gameState.currentPhase !== phase && guard-- > 0 && advanceToNextPhase()) {
+    // advance one phase per step so draw and triggers still happen in order
+  }
+}
+
+// Contextual main button, like Arena's bottom-right button.
+function getPrimaryAction() {
+  if (!gameState || gameState.victory) {
+    return { label: "Waiting", disabled: true, tone: "idle" };
+  }
+  if (newGameState?.open || mulliganState || paymentState || spellResolutionState || equipSelectionState || zoneBrowserState) {
+    return { label: "Waiting", disabled: true, tone: "idle" };
+  }
+  if (isPriorityWindowOpen()) {
+    const defenderIsLocal = !isAiPlayer(gameState.combat.priorityPlayerKey);
+    return defenderIsLocal && !gameState.combat.resolving
+      ? { label: "OK", sub: "Pass priority • combat resolves", action: "combat-priority-ok", tone: "blue" }
+      : { label: "Resolving", sub: "Combat in progress", disabled: true, tone: "idle" };
+  }
+  if (targetingState) {
+    return { label: "Cancel", sub: targetingState.prompt, action: "clear-targeting", tone: "grey" };
+  }
+  if (gameState.combat.attacker) {
+    return { label: "Cancel", sub: "Cancel the attack", action: "clear-combat", tone: "grey" };
+  }
+  if (gameState.currentPlayer !== "A") {
+    return { label: "Opponent's Turn", sub: "Techniques glow when you can respond", disabled: true, tone: "idle" };
+  }
+  if (attackDeclare) {
+    const ready = attackDeclare.entries.filter((entry) => entry.target).length;
+    if (!attackDeclare.entries.length) {
+      return { label: "No Attacks", sub: "Back to Main", action: "declare-cancel", tone: "grey" };
+    }
+    if (ready < attackDeclare.entries.length) {
+      return { label: "Choose Target", sub: "Click the enemy God or a Devotee", disabled: true, tone: "idle" };
+    }
+    return { label: `Confirm Attack (${ready})`, sub: "Enter to confirm • Z to undo", action: "declare-confirm", tone: "orange" };
+  }
+  if (gameState.currentPhase === "upkeep" || gameState.currentPhase === "draw") {
+    const next = gameState.currentPhase === "upkeep" ? "Draw" : "Main";
+    return { label: "Next", sub: `To ${next}`, action: "next-phase", tone: "orange" };
+  }
+  if (gameState.currentPhase === "main") {
+    if (!attackQueue.length && getEligibleAttackers("A").length) {
+      return { label: "Attack", sub: "Declare attackers", action: "declare-start", tone: "orange", secondary: [["End Turn", "pass-turn"]] };
+    }
+    return { label: "End Turn", sub: "Pass to the opponent", action: "pass-turn", tone: "orange" };
+  }
+  return { label: "End Turn", sub: "Pass to the opponent", action: "end-turn", tone: "orange" };
+}
+
+function triggerPrimaryAction() {
+  const primary = getPrimaryAction();
+  if (!primary.disabled && primary.action) {
+    handleAction({ dataset: { action: primary.action } });
+  }
+}
+
+// Auto-pass: skip your Upkeep/Draw and pass priority when no Technique is playable.
+let autoPassTimer = null;
+function scheduleAutoPassIfNeeded() {
+  window.clearTimeout(autoPassTimer);
+  autoPassTimer = null;
+  if (!gameState || gameState.victory || !isAutoPassOn() || isAiPlayer("A")) {
+    return;
+  }
+
+  if (isPriorityWindowOpen() && gameState.combat.priorityPlayerKey === "A" && !gameState.combat.resolving) {
+    const canRespond = gameState.players.A.zones.hand.some((instance) => {
+      const located = findCardInstance("A", instance.uid);
+      return located?.cardData.tipo === "Technique" && canPlayFromHandNow("A", located);
+    });
+    if (!canRespond) {
+      autoPassTimer = window.setTimeout(() => {
+        if (isPriorityWindowOpen() && gameState.combat.priorityPlayerKey === "A") {
+          resolveCombatFromPriority();
+        }
+      }, 700);
+    }
+    return;
+  }
+
+  const getsAutoAdvance =
+    gameState.currentPlayer === "A" &&
+    (gameState.currentPhase === "upkeep" || gameState.currentPhase === "draw") &&
+    getPrimaryAction().action === "next-phase";
+  if (getsAutoAdvance) {
+    autoPassTimer = window.setTimeout(() => {
+      if (gameState?.currentPlayer === "A" && getPrimaryAction().action === "next-phase") {
+        advanceToNextPhase();
+        renderGame();
+      }
+    }, 650);
+  }
+}
+
+// Turn banner, floating damage numbers and enter-the-battlefield flights, driven by state diffs.
+function renderFeedback() {
+  if (!gameState) {
+    renderMemory = null;
+    return;
+  }
+
+  const snapshot = {
+    turnKey: `${gameState.turnNumber}:${gameState.currentPlayer}`,
+    soul: { A: gameState.players.A.god.soul, B: gameState.players.B.god.soul },
+    damage: {},
+    battlefield: new Set()
+  };
+  PLAYER_ORDER.forEach((playerKey) => {
+    gameState.players[playerKey].zones.battlefield.forEach((instance) => {
+      snapshot.battlefield.add(instance.uid);
+      snapshot.damage[instance.uid] = instance.damageCounters;
+    });
+  });
+
+  const previous = renderMemory;
+  renderMemory = snapshot;
+  if (!previous || mulliganState) {
+    return;
+  }
+
+  if (previous.turnKey !== snapshot.turnKey) {
+    showTurnBanner(gameState.currentPlayer === "A" ? "Your Turn" : "Opponent's Turn", gameState.currentPlayer === "A");
+  }
+
+  PLAYER_ORDER.forEach((playerKey) => {
+    const delta = snapshot.soul[playerKey] - previous.soul[playerKey];
+    if (delta !== 0) {
+      spawnFloatText(document.querySelector(`.arena-avatar[data-player="${playerKey}"] .arena-avatar__portrait`), delta > 0 ? `+${delta}` : `${delta}`, delta > 0 ? "heal" : "damage");
+    }
+  });
+
+  Object.entries(snapshot.damage).forEach(([uid, damage]) => {
+    const before = previous.damage[uid] ?? 0;
+    if (damage > before) {
+      spawnFloatText(document.querySelector(`.card[data-card-uid="${uid}"]`), `-${damage - before}`, "damage");
+    }
+  });
+
+  snapshot.battlefield.forEach((uid) => {
+    if (!previous.battlefield.has(uid)) {
+      document.querySelector(`.battlefield-stack[data-battlefield-root="${uid}"]`)?.classList.add("is-entering");
+    }
+  });
+}
+
+function spawnFloatText(anchor, text, kind) {
+  if (!anchor) {
+    return;
+  }
+  const rect = anchor.getBoundingClientRect();
+  const node = document.createElement("div");
+  node.className = `float-text float-text--${kind}`;
+  node.textContent = text;
+  node.style.left = `${rect.left + rect.width / 2}px`;
+  node.style.top = `${rect.top + rect.height / 2}px`;
+  document.body.appendChild(node);
+  window.setTimeout(() => node.remove(), 1300);
+}
+
+function showTurnBanner(text, local) {
+  const banner = document.querySelector("#turn-banner");
+  if (!banner) {
+    return;
+  }
+  banner.textContent = text;
+  banner.className = `turn-banner ${local ? "is-local" : "is-opponent"} is-visible`;
+  window.clearTimeout(showTurnBanner.timeoutId);
+  showTurnBanner.timeoutId = window.setTimeout(() => {
+    banner.className = "turn-banner hidden";
+  }, 1500);
+}
+
+// Respond prompt plus a small stack panel describing what is resolving.
+function renderPriorityAndStack() {
+  const prompt = document.querySelector("#respond-prompt");
+  const stack = document.querySelector("#stack-panel");
+  if (!prompt || !stack) {
+    return;
+  }
+
+  const combat = gameState?.combat;
+  const describe = (entity) => {
+    if (!entity) return "";
+    if (entity.kind === "god") return `${playerLabel(entity.playerKey)}'s God`;
+    return findCardInstance(entity.playerKey, entity.uid)?.cardData.nome_exibicao_en || "a card";
+  };
+
+  const localMustAnswer = isPriorityWindowOpen() && !isAiPlayer(combat.priorityPlayerKey) && !combat.resolving;
+  if (localMustAnswer) {
+    const responder = combat.priorityPlayerKey;
+    const playable = gameState.players[responder].zones.hand.filter((instance) => {
+      const located = findCardInstance(responder, instance.uid);
+      return located?.cardData.tipo === "Technique" && canPlayFromHandNow(responder, located);
+    }).length;
+    prompt.innerHTML = `
+      <span class="respond-prompt__title">Respond?</span>
+      <span class="respond-prompt__copy">${escapeHtml(describe(combat.attacker))} attacks ${escapeHtml(describe(combat.target))}. ${playable ? `${playable} Technique${playable > 1 ? "s" : ""} can respond.` : "No Technique can respond."}</span>
+      <button class="primary" data-action="combat-priority-ok">OK</button>
+    `;
+    prompt.classList.remove("hidden");
+  } else {
+    prompt.classList.add("hidden");
+    prompt.innerHTML = "";
+  }
+
+  const items = [];
+  if (combat?.attacker && combat.target) {
+    const attacker = findCardInstance(combat.attacker.playerKey, combat.attacker.uid);
+    items.push({
+      image: attacker?.cardData.caminho_imagem,
+      title: attacker?.cardData.nome_exibicao_en || "Attack",
+      detail: `Attacks ${describe(combat.target)}${combat.resolving ? " • resolving" : ""}`
+    });
+  }
+  if (spellResolutionState) {
+    items.push({ image: null, title: spellResolutionState.cardName || "Spell", detail: spellResolutionState.stageLabel || "Resolving" });
+  }
+  attackQueue.forEach((entry) => {
+    const attacker = findCardInstance("A", entry.uid);
+    items.push({ image: attacker?.cardData.caminho_imagem, title: attacker?.cardData.nome_exibicao_en || "Attacker", detail: `Queued • ${describe(entry.target)}` });
+  });
+
+  if (!items.length) {
+    stack.classList.add("hidden");
+    stack.innerHTML = "";
+    return;
+  }
+  stack.innerHTML = `
+    <div class="stack-panel__title">Stack</div>
+    ${items.map((item) => `
+      <div class="stack-panel__item">
+        ${item.image ? `<img src="../${escapeHtml(item.image)}" alt="">` : '<span class="stack-panel__blank"></span>'}
+        <div><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.detail)}</span></div>
+      </div>`).join("")}
+  `;
+  stack.classList.remove("hidden");
 }
 
 function populateDeckSelectors() {
@@ -922,6 +1517,11 @@ function handleGlobalClick(event) {
     return;
   }
 
+  if (attackDeclare && handleDeclareClick(cardElement, inspectElement)) {
+    renderGame();
+    return;
+  }
+
   if (gameState?.combat?.mode && tryHandleCombatSelection(cardElement, inspectElement)) {
     renderGame();
     return;
@@ -1028,6 +1628,12 @@ function handleDoubleClick(event) {
   }
 
   const located = findCardInstance(cardElement.dataset.player, cardElement.dataset.cardUid);
+  if (located?.zone === "hand" && located.card.owner === "A" && !isAiPlayer("A")) {
+    event.preventDefault();
+    playHandCard("A", located.card.uid);
+    renderGame();
+    return;
+  }
   if (!located || (located.zone !== "battlefield" && located.zone !== "cosmo_base")) {
     return;
   }
@@ -1099,7 +1705,13 @@ function handleContextMenu(event) {
 }
 
 function handleKeyDown(event) {
+  if (event.key === "Shift") {
+    shiftHeld = true;
+    return;
+  }
+
   if (event.key === "Escape") {
+    attackDeclare = null;
     hoverPreview = null;
     clearPaymentState(true);
     clearEquipSelection(true);
@@ -1122,7 +1734,8 @@ function handleKeyDown(event) {
   }
 
   const isSpaceKey = event.key === " " || event.code === "Space" || event.key === "Spacebar";
-  if (!isSpaceKey) {
+  const key = event.key.toLowerCase();
+  if (!isSpaceKey && key !== "enter" && key !== "z") {
     return;
   }
 
@@ -1134,17 +1747,25 @@ function handleKeyDown(event) {
     return;
   }
 
-  if (!gameState || isOverlayBlockingInput() || isPriorityWindowOpen() || gameState.currentPlayer !== "A") {
+  if (!gameState || event.metaKey || event.ctrlKey || event.altKey) {
+    return;
+  }
+
+  if (key === "z") {
+    if (attackDeclare) {
+      event.preventDefault();
+      undoDeclareStep();
+      renderGame();
+    }
+    return;
+  }
+
+  if (key === "enter" && attackDeclare && getPrimaryAction().action !== "declare-confirm") {
     return;
   }
 
   event.preventDefault();
-  if (gameState.currentPhase === "end") {
-    nextTurn();
-  } else {
-    advanceToNextPhase();
-  }
-  renderGame();
+  triggerPrimaryAction();
 }
 
 function handleViewportResize() {
@@ -1336,6 +1957,23 @@ function handleAction(element) {
     resolveCombatFromPriority();
   } else if (action === "clear-combat") {
     clearCombatState(true);
+    attackQueue = [];
+  } else if (action === "declare-start") {
+    startAttackDeclare();
+  } else if (action === "declare-all") {
+    if (!attackDeclare) startAttackDeclare();
+    if (attackDeclare) declareAllAttackers();
+  } else if (action === "declare-confirm") {
+    confirmAttackDeclare();
+  } else if (action === "declare-cancel") {
+    attackDeclare = null;
+  } else if (action === "declare-undo") {
+    if (attackDeclare) undoDeclareStep();
+  } else if (action === "pass-turn") {
+    attackDeclare = null;
+    passTurnFromMain();
+  } else if (action === "goto-phase") {
+    goToPhase(element.dataset.phase);
   }
 
   closeContextMenu();
@@ -2113,7 +2751,7 @@ function moveCard(playerKey, uid, targetZone, options = {}) {
   }
 
   if (!options.skipPaymentPrompt) {
-    const handPlayResult = maybeStartHandPlay(playerKey, located, targetZone);
+    const handPlayResult = maybeStartHandPlay(playerKey, located, targetZone, options);
     if (handPlayResult?.pending || handPlayResult?.blocked) {
       return;
     }
@@ -2499,7 +3137,9 @@ function resolveSpellTargetSelection(kind, playerKey, uid = "") {
     return;
   }
 
-  const target = descriptor.kind === "god" ? descriptor : findCardInstance(descriptor.playerKey, descriptor.uid);
+  const targetLocated = descriptor.kind === "god" ? null : findCardInstance(descriptor.playerKey, descriptor.uid);
+  // Effects read target.playerKey / target.uid, which findCardInstance does not carry.
+  const target = descriptor.kind === "god" ? descriptor : targetLocated && { ...targetLocated, playerKey: descriptor.playerKey, uid: descriptor.uid };
   if (!target) {
     clearSpellResolution(false);
     addLog("The chosen target is no longer available.");
@@ -2670,7 +3310,7 @@ function startSpellCastFromHand(playerKey, located) {
   hoverPreview = null;
   closeContextMenu();
   closeFloatingInfo();
-  return { pending: true };
+  return maybeAutoPay();
 }
 
 function beginSpellResolution(playerKey, uid, options = {}) {
@@ -2686,7 +3326,7 @@ function beginSpellResolution(playerKey, uid, options = {}) {
   return resolveSpellCard(player, located, lines, options);
 }
 
-function maybeStartHandPlay(playerKey, located, targetZone) {
+function maybeStartHandPlay(playerKey, located, targetZone, relocateOptions = {}) {
   if (!located || located.zone !== "hand" || targetZone !== "battlefield") {
     return null;
   }
@@ -2734,6 +3374,7 @@ function maybeStartHandPlay(playerKey, located, targetZone) {
     playerKey,
     uid: located.card.uid,
     targetZone,
+    relocateOptions,
     cardName: card.nome_exibicao_en,
     amount,
     unit,
@@ -2743,7 +3384,7 @@ function maybeStartHandPlay(playerKey, located, targetZone) {
   closeContextMenu();
   closeFloatingInfo();
 
-  return { pending: true };
+  return maybeAutoPay();
 }
 
 function buildCostPaymentPlans(playerKey, amount, unit = "cosmo") {
@@ -2883,7 +3524,7 @@ function resolvePaymentChoice(planId) {
     return;
   }
 
-  const moved = relocateCard(paymentState.playerKey, paymentState.uid, paymentState.targetZone);
+  const moved = relocateCard(paymentState.playerKey, paymentState.uid, paymentState.targetZone, paymentState.relocateOptions || {});
   if (!moved) {
     addLog(`${paymentState.cardName} could not be moved after the payment was chosen.`);
     clearPaymentState(false);
@@ -3439,6 +4080,12 @@ async function resolveCombatFromPriority(fromAi = false) {
 
   if (shouldResumeAi && gameState?.currentPlayer && isAiPlayer(gameState.currentPlayer)) {
     scheduleAiTurnIfNeeded();
+  }
+
+  if (attackQueue.length && gameState?.currentPlayer === "A") {
+    await waitCombatBeat();
+    runNextQueuedAttack();
+    renderGame();
   }
 }
 
@@ -5352,6 +5999,9 @@ function renderGame() {
   renderCombatToast();
   renderLogPopup();
   renderVictoryOverlay();
+  renderPriorityAndStack();
+  renderFeedback();
+  scheduleAutoPassIfNeeded();
   scheduleAiTurnIfNeeded();
 }
 
@@ -5783,13 +6433,14 @@ function renderArenaAvatar(player) {
   const targetable = isAttackableGodTarget(player.key);
   const targeted = gameState?.combat?.target?.kind === "god" && gameState.combat.target.playerKey === player.key;
   const selectionTargetable = isEffectTargetableGod(player.key);
+  const arena = getArenaGodState(player.key);
   const soulRatio = Math.max(0, Math.min(1, player.god.soul / Math.max(1, god.soul || player.god.soul)));
   const portrait = god.caminho_imagem
     ? `<img src="../${escapeHtml(god.caminho_imagem)}" alt="${escapeHtml(god.nome_exibicao_en)}">`
     : `<span>${escapeHtml(god.nome_exibicao_en.slice(0, 1))}</span>`;
 
   return `
-    <article class="arena-avatar ${player.god.awakened ? "is-awakened" : ""} ${targetable ? "attack-targetable" : ""} ${targeted ? "attack-targeted" : ""} ${selectionTargetable ? "selection-targetable" : ""}" data-inspect-kind="god" data-player="${player.key}" style="--soul-ratio:${soulRatio.toFixed(3)}">
+    <article class="arena-avatar ${player.god.awakened ? "is-awakened" : ""} ${targetable ? "attack-targetable" : ""} ${targeted ? "attack-targeted" : ""} ${selectionTargetable ? "selection-targetable" : ""} ${arena.cls}" data-inspect-kind="god" data-player="${player.key}"${arena.title ? ` title="${escapeHtml(arena.title)}"` : ""} style="--soul-ratio:${soulRatio.toFixed(3)}">
       <div class="arena-avatar__halo" aria-hidden="true"></div>
       <div class="arena-avatar__portrait">${portrait}</div>
       <div class="arena-avatar__soul" title="Soul">
@@ -6021,10 +6672,52 @@ function renderGodAbilityButtons(player) {
   `;
 }
 
+// Arena cues: playable glow in hand, declared attackers, and valid/invalid targets while declaring.
+function getArenaCardState(playerKey, zoneId, instance) {
+  if (!gameState) {
+    return { cls: "", title: "" };
+  }
+
+  if (zoneId === "hand" && playerKey === "A" && !isAiPlayer("A")) {
+    const located = findCardInstance("A", instance.uid);
+    if (canPlayFromHandNow("A", located)) return { cls: "is-playable", title: "" };
+    if (canSetAsBaseNow("A", located)) return { cls: "is-base-ok", title: "Double-click to set as Cosmo Base" };
+    return { cls: "is-unplayable", title: "" };
+  }
+
+  if (zoneId !== "battlefield" || !attackDeclare || !isDevoteeCard(instance.cardId)) {
+    return { cls: "", title: "" };
+  }
+
+  if (playerKey === "A") {
+    const entry = attackDeclare.entries.find((item) => item.uid === instance.uid);
+    if (entry) return { cls: `is-declared-attacker ${entry.uid === attackDeclare.focusUid ? "is-declare-focus" : ""}`, title: "Click again to remove" };
+    return canDeclareAttacker("A", instance) ? { cls: "is-attack-eligible", title: "Click to attack with this Devotee" } : { cls: "", title: "" };
+  }
+
+  const attacker = getDeclareFocusAttacker();
+  if (!attacker) {
+    return { cls: "", title: "" };
+  }
+  const reason = getAttackBlockReason(attacker, { kind: "card", playerKey, uid: instance.uid });
+  return reason ? { cls: "is-invalid-target", title: reason } : { cls: "is-valid-target", title: "" };
+}
+
+function getArenaGodState(playerKey) {
+  const attacker = playerKey === "B" ? getDeclareFocusAttacker() : null;
+  if (!attacker) {
+    return { cls: "", title: "" };
+  }
+  const reason = getAttackBlockReason(attacker, { kind: "god", playerKey });
+  return reason ? { cls: "is-invalid-target", title: reason } : { cls: "is-valid-target", title: "" };
+}
+
 function renderFullCard(playerKey, zoneId, instance, options = {}) {
   const player = gameState.players[playerKey];
   const card = getCard(instance.cardId);
-  const { extraClasses = "", attachmentIndex = 0, style = "" } = options;
+  const { attachmentIndex = 0, style = "" } = options;
+  const arena = getArenaCardState(playerKey, zoneId, instance);
+  const extraClasses = `${options.extraClasses || ""} ${arena.cls}`;
   const selected = selectedInspector?.kind === "card" && selectedInspector.uid === instance.uid;
   const snippet = getCardSnippet(card);
   const showCosmoBack = zoneId === "cosmo_base";
@@ -6081,7 +6774,7 @@ function renderFullCard(playerKey, zoneId, instance, options = {}) {
       `;
 
   return `
-    <article class="card zone--${zoneId} ${selected ? "selected" : ""} ${instance.tapped ? "tapped" : ""} ${targetable ? "attack-targetable" : ""} ${guardianForcedTarget ? "guardian-forced-target" : ""} ${targeted ? "attack-targeted" : ""} ${selectionTargetable ? "selection-targetable" : ""} ${attackSource || selectionSource ? "selection-source" : ""} ${abilityState ? "card--activatable" : ""} ${summoningSick ? "card--summoning-sick" : ""} ${costFocus ? "card--cost-focus" : ""} ${extraClasses}" data-card-uid="${instance.uid}" data-player="${playerKey}" data-attachment-index="${attachmentIndex}"${style ? ` style="${style}"` : ""}>
+    <article class="card zone--${zoneId} ${selected ? "selected" : ""} ${instance.tapped ? "tapped" : ""} ${targetable ? "attack-targetable" : ""} ${guardianForcedTarget ? "guardian-forced-target" : ""} ${targeted ? "attack-targeted" : ""} ${selectionTargetable ? "selection-targetable" : ""} ${attackSource || selectionSource ? "selection-source" : ""} ${abilityState ? "card--activatable" : ""} ${summoningSick ? "card--summoning-sick" : ""} ${costFocus ? "card--cost-focus" : ""} ${extraClasses}" data-card-uid="${instance.uid}" data-player="${playerKey}" data-attachment-index="${attachmentIndex}"${arena.title ? ` title="${escapeHtml(arena.title)}"` : ""}${style ? ` style="${style}"` : ""}>
       <div class="card-frame">
         <div class="card-art ${showCosmoBack ? "card-art--cosmo-back" : ""} ${!showCosmoBack && !card.caminho_imagem ? "proxy" : ""}">
           ${artMarkup}
@@ -6361,27 +7054,34 @@ const TURN_PHASES = [
 // Arena-style phase ladder plus the single big pass button in the bottom-right corner.
 function renderTurnControls(flow) {
   const phase = gameState?.currentPhase || null;
-  const ladder = TURN_PHASES.map(
-    ([id, label]) => `<span class="phase-pip ${phase === id ? "is-active" : ""}">${label}</span>`
-  ).join("");
+  const order = TURN_PHASES.map(([id]) => id);
+  const canJump = Boolean(flow?.localTurn && flow.canControlPhaseFlow && !attackDeclare);
+  const ladder = TURN_PHASES.map(([id, label]) => {
+    const ahead = canJump && order.indexOf(id) > order.indexOf(phase);
+    return ahead
+      ? `<button class="phase-pip is-jump" data-action="goto-phase" data-phase="${id}" title="Skip to ${label}">${label}</button>`
+      : `<span class="phase-pip ${phase === id ? "is-active" : ""}">${label}</span>`;
+  }).join("");
 
-  let passMarkup = `<button class="pass-button" disabled><span class="pass-button__label">Waiting</span></button>`;
-  if (flow) {
-    const atEnd = phase === "end";
-    const nextLabel = TURN_PHASES[TURN_PHASES.findIndex(([id]) => id === phase) + 1]?.[1];
-    const label = !flow.localTurn ? "Opponent's Turn" : atEnd ? "End Turn" : `To ${nextLabel}`;
-    passMarkup = `
-      <button class="pass-button ${flow.localTurn ? "is-ready" : ""} ${atEnd ? "is-end" : ""}" data-action="${atEnd ? "end-turn" : "next-phase"}" ${flow.canControlPhaseFlow ? "" : "disabled"}>
-        <span class="pass-button__label">${escapeHtml(label)}</span>
-        <span class="pass-button__sub">${flow.localTurn ? `Pool ${flow.localPlayer.cosmo} • Latent ${flow.localPlayer.latentCosmo}` : "Hold for Techniques"}</span>
-      </button>
-    `;
+  const primary = getPrimaryAction();
+  const secondary = [...(primary.secondary || [])];
+  if (attackDeclare) {
+    secondary.unshift(["All Attack", "declare-all"]);
+    if (attackDeclare.history.length) secondary.push(["Undo (Z)", "declare-undo"]);
+    if (attackDeclare.entries.length) secondary.push(["Cancel", "declare-cancel"]);
+  } else if (primary.action === "declare-start") {
+    secondary.unshift(["All Attack", "declare-all"]);
   }
 
+  const sub = primary.sub || (flow?.localTurn ? `Pool ${flow.localPlayer.cosmo} • Latent ${flow.localPlayer.latentCosmo}` : "");
   return `
     <div class="turn-controls">
       <div class="phase-ladder">${ladder}</div>
-      ${passMarkup}
+      ${secondary.length ? `<div class="pass-secondary">${secondary.map(([label, action]) => `<button class="pass-secondary__button" data-action="${action}">${escapeHtml(label)}</button>`).join("")}</div>` : ""}
+      <button class="pass-button pass-button--${primary.tone} ${primary.disabled ? "" : "is-ready"}" ${primary.action ? `data-action="${primary.action}"` : ""} ${primary.disabled ? "disabled" : ""} title="Space">
+        <span class="pass-button__label">${escapeHtml(primary.label)}</span>
+        ${sub ? `<span class="pass-button__sub">${escapeHtml(sub)}</span>` : ""}
+      </button>
       <button class="log-button ${logPopupOpen ? "is-active" : ""}" data-action="toggle-log-popup" ${gameState ? "" : "disabled"} aria-label="Open log">Log</button>
     </div>
   `;
@@ -6482,37 +7182,54 @@ function renderCombatOverlay() {
   }
 
   const playmatRect = elements.combatOverlay.parentElement.getBoundingClientRect();
-  elements.combatOverlay.setAttribute("viewBox", `0 0 ${playmatRect.width} ${playmatRect.height}`);
-
   const combat = gameState?.combat;
-  if (!combat?.attacker) {
-    elements.combatOverlay.innerHTML = "";
-    return;
-  }
   const lines = [];
+  // The playmat is scaled with --ui-scale; convert client pixels into its unscaled viewBox units.
+  const scale = playmatRect.width / Math.max(1, elements.combatOverlay.parentElement.offsetWidth || playmatRect.width);
+  const pointer = { x: (pointerClient.x - playmatRect.left) / scale, y: (pointerClient.y - playmatRect.top) / scale };
+  const toView = (point) => point && { x: point.x / scale, y: point.y / scale };
+  elements.combatOverlay.setAttribute("viewBox", `0 0 ${playmatRect.width / scale} ${playmatRect.height / scale}`);
 
-  const attackerPoint = getCombatAnchor(combat.attacker, playmatRect);
-  const targetPoint = combat.target ? getCombatAnchor(combat.target, playmatRect) : null;
-
-  if (attackerPoint && targetPoint) {
-    lines.push(renderCombatLine(attackerPoint, targetPoint, "attack"));
+  if (combat?.attacker) {
+    const attackerPoint = toView(getCombatAnchor(combat.attacker, playmatRect));
+    const targetPoint = combat.target ? toView(getCombatAnchor(combat.target, playmatRect)) : null;
+    if (attackerPoint && (targetPoint || combat.mode === "target")) {
+      lines.push(renderCombatLine(attackerPoint, targetPoint || pointer, targetPoint ? "attack" : "aim"));
+    }
   }
 
-  elements.combatOverlay.innerHTML = `
+  attackDeclare?.entries.forEach((entry) => {
+    const from = toView(getCombatAnchor({ kind: "card", playerKey: "A", uid: entry.uid }, playmatRect));
+    const to = entry.target ? toView(getCombatAnchor(entry.target, playmatRect)) : entry.uid === attackDeclare.focusUid ? pointer : null;
+    if (from && to) {
+      lines.push(renderCombatLine(from, to, entry.target ? "declare" : "aim"));
+    }
+  });
+
+  if (targetingState?.source) {
+    const from = toView(getCombatAnchor(targetingState.source, playmatRect));
+    if (from) {
+      lines.push(renderCombatLine(from, pointer, "target"));
+    }
+  }
+
+  elements.combatOverlay.innerHTML = lines.length
+    ? `
     <defs>
       <marker id="attack-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
-        <path d="M0,0 L10,5 L0,10 z" fill="#d4b15a"></path>
+        <path d="M0,0 L10,5 L0,10 z" fill="context-stroke"></path>
       </marker>
     </defs>
     ${lines.join("")}
-  `;
+  `
+    : "";
 }
 
 function getCombatAnchor(entity, playmatRect) {
   let targetElement = null;
 
-  if (entity.kind === "god") {
-    targetElement = document.querySelector(`[data-inspect-kind="god"][data-player="${entity.playerKey}"]`);
+  if (!entity.uid) {
+    targetElement = document.querySelector(`[data-inspect-kind="${entity.kind}"][data-player="${entity.playerKey}"]`);
   } else {
     targetElement = document.querySelector(`[data-card-uid="${entity.uid}"][data-player="${entity.playerKey}"]`);
   }
@@ -6529,9 +7246,8 @@ function getCombatAnchor(entity, playmatRect) {
 }
 
 function renderCombatLine(from, to, type) {
-  const stroke = type === "attack" ? "#d4b15a" : "#6cc3ff";
-  const marker = "url(#attack-arrow)";
-  return `<line x1="${from.x}" y1="${from.y}" x2="${to.x}" y2="${to.y}" stroke="${stroke}" stroke-width="4" stroke-linecap="round" marker-end="${marker}" opacity="0.9"></line>`;
+  const stroke = { attack: "#ff5a3c", declare: "#ff5a3c", aim: "#ff8a5c", target: "#6cc3ff" }[type] || "#d4b15a";
+  return `<line class="combat-line combat-line--${type}" x1="${from.x}" y1="${from.y}" x2="${to.x}" y2="${to.y}" stroke="${stroke}" stroke-width="5" stroke-linecap="round" marker-end="url(#attack-arrow)"></line>`;
 }
 
 function renderInspector() {

@@ -27,8 +27,8 @@
     <meta property="og:image:alt" content="Saint Seiya TCG logo over a space nebula">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="https://saintseiyatcg.com/LOGO/og-image.jpg">
-    <link rel="stylesheet" href="./styles.css?v=7">
-    <link rel="stylesheet" href="./arena.css?v=7">
+    <link rel="stylesheet" href="./styles.css?v=11">
+    <link rel="stylesheet" href="./arena.css?v=11">
   </head>
   <body>
     <div class="viewport">
@@ -66,6 +66,27 @@
               </label>
             </div>
 
+            <section class="options-menu__section settings-panel" aria-label="Gameplay settings">
+              <p class="eyebrow">Gameplay</p>
+              <label class="toggle-field">
+                <input id="setting-full-control" type="checkbox">
+                <span>Full Control <small>always choose how to pay and stop at every response</small></span>
+              </label>
+              <label class="toggle-field">
+                <input id="setting-auto-pass" type="checkbox" checked>
+                <span>Auto-pass <small>skip Upkeep/Draw and responses with nothing to play</small></span>
+              </label>
+              <label class="field">
+                <span>AI speed</span>
+                <select id="setting-ai-speed">
+                  <option value="slow">Slow</option>
+                  <option value="normal">Normal</option>
+                  <option value="fast">Fast</option>
+                </select>
+              </label>
+              <p class="settings-panel__keys">Space: main button • Enter: confirm attack • Esc: cancel • Z: undo • Shift + play: choose payment • Double-click: play card</p>
+            </section>
+
             <section class="options-menu__section">
               <div class="dock-tabs">
                 <button class="dock-tab is-active" data-action="dock-tab" data-tab="log" data-dock-tab="log">Log</button>
@@ -79,6 +100,10 @@
           <p id="turn-indicator" class="turn-indicator arena-turn-indicator">Load a match to begin.</p>
 
           <svg id="combat-overlay" class="combat-overlay" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
+
+          <div id="turn-banner" class="turn-banner hidden" aria-live="polite"></div>
+          <div id="respond-prompt" class="respond-prompt hidden" role="alertdialog" aria-label="Respond to attack"></div>
+          <aside id="stack-panel" class="stack-panel hidden" aria-label="Stack"></aside>
 
           <main id="playmat" class="playmat">
             <section id="player-a-board" class="board-slot board-slot--top"></section>
@@ -113,6 +138,6 @@
     <div id="combat-toast" class="combat-toast hidden" aria-hidden="true"></div>
     <div id="zone-selection-overlay" class="zone-selection-overlay hidden" aria-hidden="true"></div>
 
-    <script type="module" src="./app.js?v=7"></script>
+    <script type="module" src="./app.js?v=11"></script>
   </body>
 </html>
