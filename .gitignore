@@ -26,3 +26,6 @@ CARDS/**/*.jpg
 CARDS/**/*.pdf
 CARDS/**/*.txt
 .omc/
+
+# card-forge: artes enviadas pelo editor ficam só no Drive
+card-forge/art/

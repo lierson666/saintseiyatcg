@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Card Forge</title>
+  <link rel="icon" href="../LOGO/favicon.png">
+  <link rel="stylesheet" href="forge.css">
+</head>
+<body>
+  <header>
+    <h1>Card Forge <small>Saint Seiya TCG</small></h1>
+    <label>Carta
+      <select id="cardSelect"><option value="">— carregando —</option></select>
+    </label>
+    <button id="newCard" type="button">Nova carta</button>
+    <span id="status" role="status"></span>
+  </header>
+
+  <main>
+    <form id="form" autocomplete="off">
+      <fieldset>
+        <legend>Identidade</legend>
+        <label>ID <input name="id" readonly></label>
+        <label>Nome (cards.json) <input name="nome_exibicao_en"></label>
+        <label>Título na carta <input name="title" placeholder="= nome"></label>
+        <label data-for="devotee relic_cloth relic_weapon god">Subtítulo <input name="subtitle"></label>
+        <label>Tipo
+          <select name="tipo">
+            <option>Devotee</option><option>Relic</option><option>Technique</option>
+            <option>Moment</option><option>Domain</option><option>God</option>
+          </select>
+        </label>
+        <label>Subtipos <input name="subtipos" placeholder="Bronze Saint, Cloth…"></label>
+        <label>Facção
+          <select name="faccao">
+            <option>Athena</option><option>Ares</option><option>Artemis</option>
+            <option>Hades</option><option>Poseidon</option>
+          </select>
+        </label>
+        <label>Raridade
+          <select name="raridade">
+            <option>Common</option><option>Uncommon</option><option>Mythic</option><option>Divine</option>
+          </select>
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Números</legend>
+        <div class="row">
+          <label data-for="devotee relic_cloth relic_weapon relic">Custo <input name="custo" type="number" min="0"></label>
+          <label data-for="devotee relic_cloth relic_weapon relic">Unidade
+            <select name="unidade_custo"><option value="cosmo">cosmo</option><option value="base_cosmo">base_cosmo</option></select>
+          </label>
+        </div>
+        <div class="row">
+          <label data-for="devotee">Power <input name="power" type="number"></label>
+          <label data-for="devotee">Resistance <input name="resistance" type="number"></label>
+          <label data-for="relic_cloth relic_weapon">Bônus P <input name="bonusPower" placeholder="+2"></label>
+          <label data-for="relic_cloth relic_weapon">Bônus R <input name="bonusResistance" placeholder="+0"></label>
+        </div>
+        <div class="row">
+          <label data-for="relic_cloth relic_weapon relic">Equip <input name="equipar_custo" type="number" min="0"></label>
+          <label data-for="relic_cloth relic_weapon relic">Damage <input name="damage_cloth" type="number" min="0"></label>
+        </div>
+        <div class="row">
+          <label data-for="god">Soul <input name="soul" type="number"></label>
+          <label data-for="god">Attack <input name="attack" type="number"></label>
+          <label data-for="god">Awaken <input name="awaken" type="number"></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Texto</legend>
+        <label>Keywords <input name="keywords" placeholder="Long Range, Pierce"></label>
+        <label>Regras
+          <textarea name="rules" rows="9" spellcheck="true"></textarea>
+        </label>
+        <p class="hint">Linha em branco separa habilidades. <code>**negrito**</code>, <code>{C}</code> Cosmo, <code>{B}</code> Base Cosmo, <code>{L}</code> Latent Cosmo (viram ícones).</p>
+        <label data-for="god">Awaken (texto) <textarea name="habilidade_awaken_en" rows="4"></textarea></label>
+        <label>Flavour <input name="flavour" placeholder="“Burn cosmo, burn!”"></label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Arte</legend>
+        <input id="artFile" type="file" accept="image/png,image/jpeg,image/webp">
+        <p class="hint">Ou solte a imagem sobre a carta. Arraste para mover, roda do mouse para zoom.</p>
+        <label>Zoom <input id="artZoom" type="range" min="0.3" max="3" step="0.01" value="1"></label>
+        <button id="artCover" type="button">Cobrir a carta</button>
+      </fieldset>
+
+      <fieldset class="actions">
+        <legend>Salvar</legend>
+        <button id="exportHi" type="button">PNG alta (1488×2091)</button>
+        <button id="exportWeb" type="button">PNG web (1100px)</button>
+        <button id="saveProject" type="button">Salvar projeto</button>
+        <button id="saveCards" type="button" class="primary">Gravar no cards.json…</button>
+      </fieldset>
+    </form>
+
+    <section id="stage">
+      <div class="toolbar">
+        <label>Tamanho
+          <select id="viewSize">
+            <option value="real">Real (2.5 × 3.5 in)</option>
+            <option value="fit" selected>Ajustar à tela</option>
+          </select>
+        </label>
+        <label><input id="refToggle" type="checkbox"> Sobrepor PNG original</label>
+        <input id="refOpacity" type="range" min="0" max="1" step="0.05" value="0.5" aria-label="Opacidade do original">
+      </div>
+      <div id="cardWrap">
+        <canvas id="card" width="1488" height="2091" aria-label="Prévia da carta"></canvas>
+        <img id="ref" alt="" hidden>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="diffDialog">
+    <h2>Mudanças em data/cards.json</h2>
+    <p id="diffTarget"></p>
+    <pre id="diffBody"></pre>
+    <div class="row">
+      <button id="diffCancel" type="button">Cancelar</button>
+      <button id="diffConfirm" type="button" class="primary">Gravar</button>
+    </div>
+  </dialog>
+
+  <script type="module" src="forge.js"></script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+{
+  "_notas_pt": "Spec dos templates do card-forge. Coordenadas no canvas nativo 1488x2091 (2.5x3.5 in, ~595 dpi), medidas dos PSDs em FRAMES/. Peças vêm de pieces.json; 'dy' desloca a peça na vertical, 'rect' estica/move. Textos: x,y = centro.",
+  "canvas": { "w": 1488, "h": 2091 },
+  "styles": {
+    "title":    { "font": "italic 700 {s}px Futura, 'Futura PT', 'Century Gothic', sans-serif", "glow": true },
+    "subtitle": { "font": "300 {s}px Avenir, 'Avenir Next', 'Nunito Sans', sans-serif", "glow": false },
+    "typeline": { "font": "700 {s}px Futura, 'Futura PT', 'Century Gothic', sans-serif", "glow": true },
+    "number":   { "font": "italic 700 {s}px Futura, 'Futura PT', 'Century Gothic', sans-serif", "glow": true },
+    "label":    { "font": "900 {s}px Avenir, 'Avenir Next', sans-serif", "glow": true },
+    "rules":    { "font": "300 {s}px Avenir, 'Avenir Next', 'Nunito Sans', sans-serif", "bold": "900 {s}px Avenir, 'Avenir Next', sans-serif", "glow": false },
+    "flavour":  { "font": "italic 400 {s}px 'ITC Avant Garde Gothic Pro', 'ITC Avant Garde Gothic', 'Century Gothic', Avenir, sans-serif", "glow": false }
+  },
+  "color": "#FFF0BF",
+  "typeToLayout": {
+    "Devotee": "devotee",
+    "Relic:Cloth": "relic_cloth",
+    "Relic:Weapon": "relic_weapon",
+    "Relic": "relic",
+    "Technique": "relic",
+    "Moment": "relic",
+    "Domain": "relic",
+    "God": "god"
+  },
+  "layouts": {
+    "devotee": {
+      "label": "Devotee (Saint) — base: FRAMES/ATHENA/BRONZE/PEGASUSV1.psd",
+      "typeLine": "{tipo} — {subtipos} — {faccao}",
+      "elements": [
+        { "kind": "art" },
+        { "kind": "piece", "piece": "athena/vignette" },
+        { "kind": "piece", "piece": "athena/frame" },
+        { "kind": "piece", "piece": "athena/box_name" },
+        { "kind": "piece", "piece": "athena/box_subtitle" },
+        { "kind": "cost", "x": 218, "y": 222, "size": 162 },
+        { "kind": "symbol", "rect": [1168, 90, 263, 257] },
+        { "kind": "text", "field": "name", "style": "title", "x": 744, "y": 182, "size": 95, "maxW": 800, "upper": true },
+        { "kind": "text", "field": "subtitle", "style": "subtitle", "x": 745, "y": 282, "size": 42, "maxW": 960, "upper": true },
+        { "kind": "piece", "piece": "athena/box_type" },
+        { "kind": "gem", "piece": "athena/gem_power", "field": "power", "size": 99 },
+        { "kind": "gem", "piece": "athena/gem_resistance", "field": "resistance", "size": 99 },
+        { "kind": "text", "field": "typeLine", "style": "typeline", "x": 744, "y": 1255, "size": 42, "maxW": 1000, "upper": true },
+        { "kind": "rules", "rect": [230, 1330, 1030, 505], "size": 42 },
+        { "kind": "piece", "piece": "athena/divider" },
+        { "kind": "text", "field": "flavour", "style": "flavour", "x": 758, "y": 1890, "size": 43, "maxW": 1100 },
+        { "kind": "rarity", "x": 744, "y": 2013, "h": 72 }
+      ]
+    },
+    "relic_cloth": {
+      "label": "Relic — Cloth — base: FRAMES/ATHENA/CLOTH/SAGGITARIUS-CLOTH.psd",
+      "typeLine": "{tipo} - {faccao} - {subtipos}",
+      "elements": [
+        { "kind": "art" },
+        { "kind": "piece", "piece": "athena/vignette" },
+        { "kind": "piece", "piece": "athena/frame" },
+        { "kind": "piece", "piece": "athena/box_name" },
+        { "kind": "piece", "piece": "athena/box_subtitle" },
+        { "kind": "cost", "x": 203, "y": 227, "size": 162 },
+        { "kind": "symbol", "rect": [1155, 78, 263, 257] },
+        { "kind": "text", "field": "name", "style": "title", "x": 745, "y": 188, "size": 75, "maxW": 780, "upper": true },
+        { "kind": "text", "field": "subtitle", "style": "subtitle", "x": 745, "y": 282, "size": 42, "maxW": 960, "upper": true },
+        { "kind": "piece", "piece": "athena/box_type" },
+        { "kind": "gem", "piece": "athena/gem_power", "field": "bonusPower", "size": 99, "dx": 6, "dy": -6 },
+        { "kind": "gem", "piece": "athena/gem_resistance", "field": "bonusResistance", "size": 99, "dx": 8, "dy": -6 },
+        { "kind": "text", "field": "typeLine", "style": "typeline", "x": 744, "y": 1255, "size": 42, "maxW": 1000, "upper": true },
+        { "kind": "rules", "rect": [221, 1310, 1046, 515], "size": 42 },
+        { "kind": "piece", "piece": "athena/divider", "dy": 3 },
+        { "kind": "text", "field": "flavour", "style": "flavour", "x": 753, "y": 1895, "size": 42, "maxW": 1100 },
+        { "kind": "gem", "piece": "athena/gem_equip", "field": "equip", "label": "EQUIP", "size": 80 },
+        { "kind": "gem", "piece": "athena/gem_damage", "field": "damage", "label": "DAMAGE", "size": 80 },
+        { "kind": "rarity", "x": 744, "y": 2013, "h": 72 }
+      ]
+    },
+    "relic_weapon": {
+      "label": "Relic — Weapon — base: FRAMES/ATHENA/RELICS/LIBRA-SWORD.psd",
+      "typeLine": "{tipo} - {faccao} - {subtipos}",
+      "elements": [
+        { "kind": "art" },
+        { "kind": "piece", "piece": "athena/vignette" },
+        { "kind": "piece", "piece": "athena/frame" },
+        { "kind": "piece", "piece": "athena/box_name" },
+        { "kind": "piece", "piece": "athena/box_subtitle" },
+        { "kind": "cost", "x": 203, "y": 227, "size": 162 },
+        { "kind": "symbol", "rect": [1155, 78, 263, 257] },
+        { "kind": "text", "field": "name", "style": "title", "x": 745, "y": 188, "size": 75, "maxW": 780, "upper": true },
+        { "kind": "text", "field": "subtitle", "style": "subtitle", "x": 745, "y": 282, "size": 42, "maxW": 960, "upper": true },
+        { "kind": "piece", "piece": "athena/box_type", "dy": 320 },
+        { "kind": "gem", "piece": "athena/gem_power", "field": "bonusPower", "size": 99, "dx": 6, "dy": 314 },
+        { "kind": "gem", "piece": "athena/gem_resistance", "field": "bonusResistance", "size": 99, "dx": 8, "dy": 314 },
+        { "kind": "text", "field": "typeLine", "style": "typeline", "x": 744, "y": 1575, "size": 42, "maxW": 1000, "upper": true },
+        { "kind": "rules", "rect": [221, 1640, 1046, 190], "size": 42 },
+        { "kind": "piece", "piece": "athena/divider", "dy": 3 },
+        { "kind": "text", "field": "flavour", "style": "flavour", "x": 753, "y": 1893, "size": 42, "maxW": 1100 },
+        { "kind": "gem", "piece": "athena/gem_equip", "field": "equip", "label": "EQUIP", "size": 80 },
+        { "kind": "gem", "piece": "athena/gem_damage", "field": "damage", "label": "DAMAGE", "size": 80 },
+        { "kind": "rarity", "x": 744, "y": 2013, "h": 72 }
+      ]
+    },
+    "relic": {
+      "label": "Relic / Technique / Moment / Domain — base: FRAMES/ATHENA/RELICS/STAFFOFATHENA.psd e TECHNIQUE|MOMENT/ATHENSJUDGMENT.psd",
+      "typeLine": "{tipo} - {faccao}",
+      "elements": [
+        { "kind": "art" },
+        { "kind": "piece", "piece": "athena/vignette" },
+        { "kind": "piece", "piece": "athena/frame" },
+        { "kind": "piece", "piece": "athena/box_name", "dy": 40 },
+        { "kind": "cost", "x": 203, "y": 222, "size": 162 },
+        { "kind": "symbol", "rect": [1155, 78, 263, 257] },
+        { "kind": "text", "field": "name", "style": "title", "x": 745, "y": 219, "size": 75, "maxW": 780, "upper": true },
+        { "kind": "piece", "piece": "athena/box_type", "dy": 258 },
+        { "kind": "text", "field": "typeLine", "style": "typeline", "x": 744, "y": 1515, "size": 42, "maxW": 1000, "upper": true },
+        { "kind": "rules", "rect": [184, 1580, 1120, 250], "size": 42 },
+        { "kind": "piece", "piece": "athena/divider", "dy": 3 },
+        { "kind": "text", "field": "flavour", "style": "flavour", "x": 753, "y": 1894, "size": 42, "maxW": 1100 },
+        { "kind": "gem", "piece": "athena/gem_equip", "field": "equip", "label": "EQUIP", "size": 80 },
+        { "kind": "gem", "piece": "athena/gem_damage", "field": "damage", "label": "DAMAGE", "size": 80 },
+        { "kind": "rarity", "x": 744, "y": 2013, "h": 72 }
+      ]
+    },
+    "god": {
+      "label": "God — base: FRAMES/ATHENA/ATHENA.psd (layout simplificado: Awaken vai no bloco de regras)",
+      "typeLine": "{tipo} — {faccao} — {subtipos}",
+      "elements": [
+        { "kind": "art" },
+        { "kind": "piece", "piece": "athena/vignette" },
+        { "kind": "piece", "piece": "athena/frame" },
+        { "kind": "piece", "piece": "athena/box_name", "rect": [149, 116, 807, 122] },
+        { "kind": "piece", "piece": "athena/box_subtitle", "rect": [149, 247, 807, 70] },
+        { "kind": "symbol", "rect": [993, 65, 315, 308] },
+        { "kind": "text", "field": "name", "style": "title", "x": 552, "y": 184, "size": 84, "maxW": 760, "upper": true },
+        { "kind": "text", "field": "subtitle", "style": "subtitle", "x": 552, "y": 282, "size": 42, "maxW": 760, "upper": true },
+        { "kind": "piece", "piece": "athena/box_type", "dy": -366 },
+        { "kind": "gem", "piece": "athena/gem_power", "field": "attack", "size": 99, "dx": 4, "dy": -368 },
+        { "kind": "gem", "piece": "athena/gem_soul", "field": "soul", "size": 99 },
+        { "kind": "text", "field": "typeLine", "style": "typeline", "x": 744, "y": 891, "size": 42, "maxW": 980, "upper": true },
+        { "kind": "rules", "rect": [155, 990, 1178, 900], "size": 42 },
+        { "kind": "piece", "piece": "athena/divider", "dy": 70 },
+        { "kind": "text", "field": "flavour", "style": "flavour", "x": 752, "y": 1958, "size": 42, "maxW": 1100 },
+        { "kind": "rarity", "x": 744, "y": 2013, "h": 72 }
+      ]
+    }
+  }
+}

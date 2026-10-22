@@ -1,0 +1,246 @@
+{
+  "canvas": [
+    1488,
+    2091
+  ],
+  "pieces": {
+    "athena/vignette": {
+      "x": 0,
+      "y": 0,
+      "w": 1488,
+      "h": 2091,
+      "src": "FRAMES/ATHENA/BRONZE/PEGASUSV1.psd :: Camada 9"
+    },
+    "athena/frame": {
+      "x": 0,
+      "y": 226,
+      "w": 1488,
+      "h": 1865,
+      "src": "FRAMES/ATHENA/BRONZE/PEGASUSV1.psd :: FRAME"
+    },
+    "athena/box_name": {
+      "x": 281,
+      "y": 116,
+      "w": 939,
+      "h": 122,
+      "src": "FRAMES/ATHENA/BRONZE/PEGASUSV1.psd :: box_flavour copiar"
+    },
+    "athena/box_subtitle": {
+      "x": 281,
+      "y": 247,
+      "w": 1007,
+      "h": 70,
+      "src": "FRAMES/ATHENA/BRONZE/PEGASUSV1.psd :: box_flavour copiar 3"
+    },
+    "athena/box_type": {
+      "x": 69,
+      "y": 1220,
+      "w": 1361,
+      "h": 70,
+      "src": "FRAMES/ATHENA/BRONZE/PEGASUSV1.psd :: box_flavour copiar 4"
+    },
+    "athena/divider": {
+      "x": 171,
+      "y": 1847,
+      "w": 1146,
+      "h": 1,
+      "src": "FRAMES/ATHENA/BRONZE/PEGASUSV1.psd :: LINHAN AWAKEN 1"
+    },
+    "athena/gem_cost": {
+      "x": 88,
+      "y": 90,
+      "w": 260,
+      "h": 259,
+      "src": "FRAMES/ATHENA/BRONZE/PEGASUSV1.psd :: COSMO"
+    },
+    "athena/gem_power": {
+      "x": 40,
+      "y": 1172,
+      "w": 178,
+      "h": 178,
+      "src": "FRAMES/ATHENA/BRONZE/PEGASUSV1.psd :: Arte 16"
+    },
+    "athena/gem_resistance": {
+      "x": 1254,
+      "y": 1160,
+      "w": 194,
+      "h": 195,
+      "src": "FRAMES/ATHENA/BRONZE/PEGASUSV1.psd :: Arte 11"
+    },
+    "athena/icon_cosmo": {
+      "x": 1058,
+      "y": 1413,
+      "w": 42,
+      "h": 42,
+      "src": "FRAMES/ATHENA/BRONZE/PEGASUSV1.psd :: COSMO copiar 2"
+    },
+    "athena/icon_latent": {
+      "x": 1066,
+      "y": 1534,
+      "w": 46,
+      "h": 47,
+      "src": "FRAMES/ATHENA/BRONZE/PEGASUSV1.psd :: LATENT COSMO copiar 2"
+    },
+    "athena/gem_cost_base": {
+      "x": 72,
+      "y": 93,
+      "w": 253,
+      "h": 253,
+      "src": "FRAMES/ATHENA/RELICS/STAFFOFATHENA.psd :: Camada 11"
+    },
+    "athena/gem_equip": {
+      "x": 48,
+      "y": 1848,
+      "w": 177,
+      "h": 177,
+      "src": "FRAMES/ATHENA/RELICS/LIBRA-SWORD.psd :: Arte 24"
+    },
+    "athena/gem_damage": {
+      "x": 1270,
+      "y": 1856,
+      "w": 169,
+      "h": 169,
+      "src": "FRAMES/ATHENA/CLOTH/SAGGITARIUS-CLOTH.psd :: Arte 27"
+    },
+    "athena/rarity_common": {
+      "x": 715,
+      "y": 1988,
+      "w": 59,
+      "h": 58,
+      "src": "FRAMES/ATHENA/RELICS/LIBRA-SWORD.psd :: COMMON"
+    },
+    "athena/rarity_uncommon": {
+      "x": 715,
+      "y": 1989,
+      "w": 58,
+      "h": 58,
+      "src": "FRAMES/ATHENA/RELICS/LIBRA-SWORD.psd :: INCOMMON"
+    },
+    "athena/rarity_mythic": {
+      "x": 715,
+      "y": 1989,
+      "w": 59,
+      "h": 58,
+      "src": "FRAMES/ATHENA/RELICS/LIBRA-SWORD.psd :: MITIC"
+    },
+    "athena/rarity_divine": {
+      "x": 713,
+      "y": 1986,
+      "w": 62,
+      "h": 58,
+      "src": "FRAMES/ATHENA/RELICS/LIBRA-SWORD.psd :: DIVINE"
+    },
+    "athena/gem_soul": {
+      "x": 1227,
+      "y": 782,
+      "w": 223,
+      "h": 223,
+      "src": "FRAMES/ATHENA/ATHENA.psd :: Arte 6"
+    },
+    "symbols/athena": {
+      "x": 1168,
+      "y": 90,
+      "w": 263,
+      "h": 257,
+      "src": "FRAMES/ATHENA/BRONZE/PEGASUSV1.psd :: Objeto Inteligente de Vetor"
+    },
+    "symbols/ares": {
+      "x": 1066,
+      "y": 99,
+      "w": 240,
+      "h": 278,
+      "src": "FRAMES/ARES/ARES.psd :: Arte 13"
+    },
+    "symbols/artemis": {
+      "x": 910,
+      "y": 86,
+      "w": 485,
+      "h": 288,
+      "src": "FRAMES/ARTEMIS/ARTEMIS.psd :: SIMBOL"
+    },
+    "symbols/poseidon": {
+      "x": 1083,
+      "y": 80,
+      "w": 230,
+      "h": 343,
+      "src": "FRAMES/POSEIDON/POSEIDON.psd :: Arte 4"
+    }
+  },
+  "linked_missing": [
+    {
+      "piece": "athena/gem_cost",
+      "file": "SlksHc.tif.ai",
+      "note": "arquivo vinculado ausente; exportado da prévia raster salva no PSD"
+    },
+    {
+      "piece": "athena/gem_power",
+      "file": "Arte 16.ai",
+      "note": "arquivo vinculado ausente; exportado da prévia raster salva no PSD"
+    },
+    {
+      "piece": "athena/gem_resistance",
+      "file": "Arte 11.ai",
+      "note": "arquivo vinculado ausente; exportado da prévia raster salva no PSD"
+    },
+    {
+      "piece": "athena/icon_cosmo",
+      "file": "SlksHc.tif.ai",
+      "note": "arquivo vinculado ausente; exportado da prévia raster salva no PSD"
+    },
+    {
+      "piece": "athena/icon_latent",
+      "file": "tbpBDu.tif.ai",
+      "note": "arquivo vinculado ausente; exportado da prévia raster salva no PSD"
+    },
+    {
+      "piece": "athena/gem_equip",
+      "file": "Arte 24.ai",
+      "note": "arquivo vinculado ausente; exportado da prévia raster salva no PSD"
+    },
+    {
+      "piece": "athena/gem_damage",
+      "file": "Arte 27.ai",
+      "note": "arquivo vinculado ausente; exportado da prévia raster salva no PSD"
+    },
+    {
+      "piece": "athena/rarity_common",
+      "file": "Arte 10.ai",
+      "note": "arquivo vinculado ausente; exportado da prévia raster salva no PSD"
+    },
+    {
+      "piece": "athena/rarity_uncommon",
+      "file": "Arte 7.ai",
+      "note": "arquivo vinculado ausente; exportado da prévia raster salva no PSD"
+    },
+    {
+      "piece": "athena/rarity_mythic",
+      "file": "Arte 8.ai",
+      "note": "arquivo vinculado ausente; exportado da prévia raster salva no PSD"
+    },
+    {
+      "piece": "athena/rarity_divine",
+      "file": "Arte 9.ai",
+      "note": "arquivo vinculado ausente; exportado da prévia raster salva no PSD"
+    },
+    {
+      "piece": "athena/gem_soul",
+      "file": "Arte 6.ai",
+      "note": "arquivo vinculado ausente; exportado da prévia raster salva no PSD"
+    },
+    {
+      "piece": "symbols/ares",
+      "file": "Arte 13.ai",
+      "note": "arquivo vinculado ausente; exportado da prévia raster salva no PSD"
+    },
+    {
+      "piece": "symbols/artemis",
+      "file": "Arte 3.ai",
+      "note": "arquivo vinculado ausente; exportado da prévia raster salva no PSD"
+    },
+    {
+      "piece": "symbols/poseidon",
+      "file": "Arte 4.ai",
+      "note": "arquivo vinculado ausente; exportado da prévia raster salva no PSD"
+    }
+  ]
+}

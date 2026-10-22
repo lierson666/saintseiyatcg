@@ -1,6 +1,23 @@
 {
   "version": "0.0.1",
   "configurations": [
-    { "name": "playtest", "runtimeExecutable": "python3", "runtimeArgs": ["-m", "http.server", "8000"], "port": 8000 }
+    {
+      "name": "playtest",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "-m",
+        "http.server",
+        "8000"
+      ],
+      "port": 8000
+    },
+    {
+      "name": "card-forge",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": [
+        "card-forge/serve.py"
+      ],
+      "port": 8765
+    }
   ]
 }

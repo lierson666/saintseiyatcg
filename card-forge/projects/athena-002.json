@@ -1,0 +1,15 @@
+{
+  "title": "Pegasus Seiya",
+  "subtitle": "Athena’s Last Stand",
+  "flavour": "“Burn cosmo, burn!”",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "../ARTS/PEGASUSV1.png",
+    "x": -320.1,
+    "y": -416.6,
+    "w": 2250.26,
+    "zoom": 1,
+    "baseW": 2250.26
+  }
+}

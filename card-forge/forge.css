@@ -1,0 +1,51 @@
+:root {
+  --bg: #121117;
+  --panel: #1c1b23;
+  --line: #34323f;
+  --text: #ece8dc;
+  --muted: #9c97a8;
+  --gold: #f2d27a;
+  --danger: #ff8a7a;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.4 -apple-system, "Avenir Next", system-ui, sans-serif; }
+header { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--line); }
+h1 { font-size: 18px; margin: 0 12px 0 0; color: var(--gold); }
+h1 small { color: var(--muted); font-weight: 400; font-size: 13px; }
+#status { color: var(--muted); }
+#status.error { color: var(--danger); }
+main { display: grid; grid-template-columns: minmax(300px, 420px) 1fr; gap: 16px; padding: 16px; }
+form { display: flex; flex-direction: column; gap: 12px; max-height: calc(100vh - 90px); overflow: auto; padding-right: 4px; }
+fieldset { border: 1px solid var(--line); border-radius: 8px; background: var(--panel); padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; margin: 0; }
+legend { color: var(--gold); padding: 0 4px; }
+label { display: flex; flex-direction: column; gap: 3px; color: var(--muted); font-size: 12px; flex: 1; }
+input, select, textarea, button { font: inherit; color: var(--text); background: #262430; border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; }
+textarea { resize: vertical; font-family: ui-monospace, Menlo, monospace; font-size: 12.5px; }
+input:focus-visible, select:focus-visible, textarea:focus-visible, button:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
+button { cursor: pointer; }
+button:hover { border-color: var(--gold); }
+button.primary { background: #4a3d16; border-color: var(--gold); }
+.row { display: flex; gap: 8px; }
+.row:empty { display: none; }
+.hint { margin: 0; color: var(--muted); font-size: 12px; }
+code { color: var(--gold); }
+.actions { flex-direction: row; flex-wrap: wrap; }
+[hidden] { display: none !important; }
+#stage { display: flex; flex-direction: column; gap: 8px; align-items: center; min-width: 0; }
+.toolbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.toolbar label { flex-direction: row; align-items: center; gap: 6px; }
+#cardWrap { position: relative; line-height: 0; }
+#card { display: block; border-radius: 3.2%/2.3%; box-shadow: 0 8px 30px #000a; cursor: grab; touch-action: none; }
+#card.dragging { cursor: grabbing; }
+#card.drop { outline: 3px dashed var(--gold); }
+#ref { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; border-radius: 3.2%/2.3%; }
+.view-real #card { width: 2.5in; height: 3.5in; }
+.view-fit #card { height: calc(100vh - 140px); width: auto; aspect-ratio: 1488 / 2091; max-width: 100%; }
+dialog { background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 10px; max-width: min(900px, 94vw); }
+dialog::backdrop { background: #0009; }
+dialog h2 { margin: 0 0 6px; font-size: 16px; color: var(--gold); }
+#diffBody { max-height: 60vh; overflow: auto; background: #111; padding: 10px; border-radius: 6px; font-size: 12px; white-space: pre-wrap; }
+#diffBody .del { color: #ff9b8f; }
+#diffBody .add { color: #9fe39a; }
+@media (max-width: 800px) { main { grid-template-columns: 1fr; } form { max-height: none; } .view-fit #card { height: auto; width: 100%; } }
