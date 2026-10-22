@@ -32,6 +32,17 @@ button.primary { background: #4a3d16; border-color: var(--gold); }
 .symbar button { display: inline-flex; align-items: center; gap: 5px; padding: 4px 8px; font-size: 12px; }
 .symbar img { width: 20px; height: 20px; object-fit: contain; }
 .symbar select { font-size: 12px; padding: 4px 6px; }
+.batch { border: 1px solid var(--gold); border-radius: 8px; background: var(--panel); padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
+.batch summary { color: var(--gold); cursor: pointer; }
+.batch[open] { gap: 8px; }
+.batch[open] > * + * { margin-top: 8px; }
+.batch a { color: var(--gold); }
+.batch-list { margin: 0; padding-left: 22px; max-height: 260px; overflow: auto; font-size: 12.5px; }
+.batch-list li { padding: 3px 0; }
+.batch-list button { background: none; border: 0; padding: 0; color: var(--text); text-align: left; text-decoration: underline dotted; }
+.batch-list .tag { color: var(--muted); }
+.batch-list .err { color: var(--danger); display: block; }
+.batch-list .done { color: #9fe39a; }
 .hint { margin: 0; color: var(--muted); font-size: 12px; }
 code { color: var(--gold); }
 .actions { flex-direction: row; flex-wrap: wrap; }

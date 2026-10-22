@@ -29,3 +29,4 @@ CARDS/**/*.txt
 
 # card-forge: artes enviadas pelo editor ficam só no Drive
 card-forge/art/
+card-forge/out/

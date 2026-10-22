@@ -1,0 +1,51 @@
+# Modelo de lote do Card Forge. Uma carta por bloco; cartas separadas por uma linha com ---
+# Linhas que começam com # são ignoradas. Campos podem ser em inglês ou português (Name/Nome, Type/Tipo…).
+# Campos de várias linhas: Text (regras), Awaken Text e Ultimate — vão até o próximo campo.
+# No texto: linha em branco separa habilidades; {C} Cosmo, {B} Base Cosmo, {L} Latent Cosmo, {S} Soul, {T} Tap;
+# **negrito**. Keywords (Pierce, Long Range, Seal…) saem em negrito sozinhas.
+# Se o Id (ou o Name) já existir no cards.json, a carta é atualizada; senão vira carta nova com id automático.
+# Art: nome do arquivo em ARTS/ (ex.: HYOGA.png) ou em card-forge/art/.
+
+Name: Example Saint
+Title: Example Saint
+Subtitle: Diamond Dust
+Type: Devotee
+Subtypes: Bronze Saint
+Faction: Athena
+Rarity: Mythic
+Cost: 4
+Unit: cosmo
+Power: 3
+Resistance: 2
+Keywords: Nimble
+Art: HYOGA.png
+Flavour: “Freeze, my cosmo!”
+Text:
+When Example Saint attacks, you may pay 2 {L}. If you do, target Devotee gets -2/+0 until end of turn.
+
+**4 {B} DIAMOND DUST:**
+Tap target Devotee. It gains Sealed until your next turn.
+---
+Name: Example Cloth
+Type: Relic
+Subtypes: Cloth
+Faction: Athena
+Rarity: Uncommon
+Cost: 3
+Bonus: +1/+2
+Equip: 2
+Damage: 3
+Text:
+Equipped Devotee gets +1/+2.
+
+Resonance — Seiya:
+Equipped Devotee gains Nimble.
+---
+Name: Example Toll
+Type: Technique
+Faction: Hades
+Rarity: Common
+Cost: 2
+Unit: base cosmo
+Text:
+Target Devotee loses 1 {S}. You gain 1 {S}.

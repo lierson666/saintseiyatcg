@@ -5,6 +5,8 @@ Auto-teste do formatador:  python3 card-forge/serve.py --selftest
 
 Endpoints (só 127.0.0.1):
   POST /api/card              {card}  substitui a carta pelo id em data/cards.json (ou adiciona se nova)
+  POST /api/cards             [cards] o mesmo para um lote, numa escrita só
+  POST /api/export/<nome>     PNG     grava card-forge/out/<nome>.png (fora do git)
   POST /api/project/<id>      {...}   grava card-forge/projects/<id>.json (subtítulo, flavour, enquadramento da arte)
   POST /api/art/<id>          PNG/JPG grava card-forge/art/<id>.<ext> (fica fora do git)
 """
@@ -108,6 +110,20 @@ class Handler(SimpleHTTPRequestHandler):
                 text = CARDS.read_text(encoding="utf-8")
                 atomic_write(CARDS, upsert_card(text, card).encode("utf-8"))
                 return self.reply(200, {"ok": True})
+            if parts == ["api", "cards"]:
+                cards = json.loads(raw)
+                if not isinstance(cards, list) or not all(isinstance(c, dict) and ID_RE.match(str(c.get("id", ""))) for c in cards):
+                    return self.reply(400, {"erro": "lista de cartas inválida"})
+                text = CARDS.read_text(encoding="utf-8")
+                for c in cards:
+                    text = upsert_card(text, c)
+                atomic_write(CARDS, text.encode("utf-8"))
+                return self.reply(200, {"ok": True, "n": len(cards)})
+            if len(parts) == 3 and parts[:2] == ["api", "export"] and ID_RE.match(parts[2]):
+                if not raw.startswith(b"\x89PNG"):
+                    return self.reply(415, {"erro": "só PNG"})
+                atomic_write(FORGE / "out" / f"{parts[2]}.png", raw)
+                return self.reply(200, {"ok": True, "path": f"card-forge/out/{parts[2]}.png"})
             if len(parts) == 3 and parts[:2] == ["api", "project"] and ID_RE.match(parts[2]):
                 proj = json.loads(raw)
                 atomic_write(FORGE / "projects" / f"{parts[2]}.json",

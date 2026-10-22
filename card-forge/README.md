@@ -24,6 +24,14 @@ Depois abra `http://localhost:8765/card-forge/` (ou `?card=athena-021` para abri
 - "Salvar projeto" grava em `card-forge/projects/<id>.json` o que não existe no cards.json: título na carta, subtítulo, flavour e enquadramento da arte. Arte enviada vai para `card-forge/art/` (fora do git).
 - "Gravar no cards.json…" mostra o diff campo a campo e só grava depois de confirmar. Só o bloco daquela carta muda no arquivo. Habilidades que você não editou mantêm o texto original.
 
+## Lote (várias cartas de um arquivo de texto)
+
+No topo do editor, abra "Lote", escolha um `.txt` ou cole o texto, e clique em "Ler lote". O formato está em [`import/modelo.txt`](import/modelo.txt): um bloco `Campo: valor` por carta, cartas separadas por `---`, e `Text:` / `Awaken Text:` / `Ultimate:` em várias linhas.
+
+- A lista mostra cada carta: id, se é nova ou atualiza uma existente (pelo `Id` ou pelo `Name`), e erros linha a linha. Clicar numa carta abre ela no editor para ajustar a arte e o texto.
+- "Exportar PNGs de todas" grava `card-forge/out/<id>.png` (1488×2091) e `<id>-web.png` (1100px). Essa pasta fica fora do git.
+- "Gravar todas no cards.json…" mostra o diff de todas e só grava depois de confirmar. Junto, salva o projeto de cada carta (título, subtítulo, flavour e arte).
+
 ## Templates
 
 - `CARD-TEMPLATE/templates.json`: pacotes de facção (`factions`) e layouts por tipo (devotee, relic_cloth, relic_weapon, relic para Relic/Technique/Moment/Domain, e god). Cada layout tem a posição de cada região.

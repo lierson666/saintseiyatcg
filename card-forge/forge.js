@@ -40,7 +40,7 @@ function blankState() {
     id: '', nome_exibicao_en: '', title: '', subtitle: '', tipo: 'Devotee', subtipos: '', faccao: 'Athena',
     raridade: 'Common', custo: '', unidade_custo: 'cosmo', power: '', resistance: '', bonusPower: '', bonusResistance: '',
     equipar_custo: '', damage_cloth: '', soul: '', attack: '', awaken: '', keywords: '', rules: '',
-    habilidade_awaken_en: '', flavour: '', art: null,
+    habilidade_awaken_en: '', ultimate_en: '', flavour: '', art: null,
   };
 }
 
@@ -260,7 +260,11 @@ async function drawRules(el, s) {
   if (has(s.keywords)) paras.push(`**${list(s.keywords).join(', ').toUpperCase()}.**`);
   paras.push(...splitParas(s.rules));
   if (layoutKey(s) === 'god' && has(s.habilidade_awaken_en)) {
-    paras.push(`**AWAKEN${has(s.awaken) ? ` ${s.awaken} {L}` : ''}:**\n${s.habilidade_awaken_en}`);
+    paras.push(`**AWAKEN${has(s.awaken) ? ` ${s.awaken}` : ''}**`, ...s.habilidade_awaken_en.split(/(?<=\.) (?=[A-Z][^.—]{1,30} — )/).map(toMarkup));
+  }
+  if (layoutKey(s) === 'god' && has(s.ultimate_en)) {
+    const u = toMarkup(s.ultimate_en);
+    paras.push(u.startsWith('**') ? `**ULTIMATE: ${u.slice(2)}` : `**ULTIMATE:**\n${u}`);
   }
   if (!paras.length) return;
   let size = el.size, L;
@@ -441,14 +445,14 @@ function newCard() {
 }
 
 // ---------- arte: upload, pan, zoom ----------
-function coverArt(im) {
+function coverArt(im, art = S.art) {
   const k = Math.max(W / im.naturalWidth, H / im.naturalHeight);
-  S.art.w = im.naturalWidth * k;
-  S.art.x = (W - S.art.w) / 2;
-  S.art.y = (H - im.naturalHeight * k) / 2;
-  S.art.zoom = 1;
-  S.art.baseW = S.art.w;
-  $('#artZoom').value = 1;
+  art.w = im.naturalWidth * k;
+  art.x = (W - art.w) / 2;
+  art.y = (H - im.naturalHeight * k) / 2;
+  art.zoom = 1;
+  art.baseW = art.w;
+  if (art === S.art) $('#artZoom').value = 1;
 }
 
 function readArt(file) {
@@ -583,7 +587,9 @@ function buildCard() {
   });
   if (!orig) Object.assign(base, { nome_interno_pt: '', status: 'needs-review', cosmoble: false, caminho_imagem: null, habilidade_awaken_en: '', ultimate_en: '', notas_pt: '' });
   for (const k of NUM) base[k] = n(S[k]);
-  if (S.tipo === 'God') base.habilidade_awaken_en = S.habilidade_awaken_en;
+  // texto com marcação ({L}, **) volta para o formato do cards.json; texto intacto fica como está
+  const plain = (v) => (/[{*]/.test(v || '') ? fromMarkup(v) : (v || '').trim());
+  if (S.tipo === 'God') Object.assign(base, { habilidade_awaken_en: plain(S.habilidade_awaken_en), ultimate_en: plain(S.ultimate_en) });
   if (has(base.custo)) base.unidade_custo = S.unidade_custo; else base.unidade_custo = null;
   return base;
 }
@@ -600,6 +606,7 @@ function diffCards(a, b) {
 let pending = null;
 $('#saveCards').addEventListener('click', () => {
   if (!S.id) return say('carta sem id', true);
+  pendingBatch = null;
   pending = buildCard();
   const d = diffCards(orig, pending);
   if (!d.length) return say('nada mudou em relação ao cards.json');
@@ -612,10 +619,11 @@ $('#saveCards').addEventListener('click', () => {
   }));
   $('#diffDialog').showModal();
 });
-$('#diffCancel').addEventListener('click', () => $('#diffDialog').close());
+$('#diffCancel').addEventListener('click', () => { pendingBatch = null; $('#diffDialog').close(); });
 $('#diffConfirm').addEventListener('click', async () => {
   $('#diffDialog').close();
   try {
+    if (pendingBatch) return await saveBatch();
     await post('/api/card', JSON.stringify(pending));
     db = await (await fetch('../data/cards.json')).json();
     orig = db.cartas.find((c) => c.id === pending.id);
@@ -648,6 +656,173 @@ const kwSel = $('#kwSelect');
 kwSel.append(...KEYWORDS.map((k) => new Option(k, k)));
 kwSel.addEventListener('change', () => { if (kwSel.value) insertAtCursor(kwSel.value); kwSel.value = ''; });
 
+// ---------- lote: várias cartas de um arquivo de texto ----------
+// Formato (card-forge/import/modelo.txt): blocos "Campo: valor", cartas separadas por uma linha "---".
+// Texto, Awaken Text e Ultimate aceitam várias linhas até o próximo campo.
+const fold = (k) => k.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/\s+/g, ' ').trim();
+const FIELDS = {
+  id: 'id', name: 'nome_exibicao_en', nome: 'nome_exibicao_en', title: 'title', titulo: 'title',
+  subtitle: 'subtitle', subtitulo: 'subtitle', type: 'tipo', tipo: 'tipo', subtypes: 'subtipos', subtipos: 'subtipos',
+  faction: 'faccao', faccao: 'faccao', rarity: 'raridade', raridade: 'raridade', cost: 'custo', custo: 'custo',
+  unit: 'unidade_custo', unidade: 'unidade_custo', power: 'power', resistance: 'resistance', resistencia: 'resistance',
+  bonus: 'bonus', equip: 'equipar_custo', damage: 'damage_cloth', dano: 'damage_cloth', soul: 'soul',
+  attack: 'attack', ataque: 'attack', awaken: 'awaken', keywords: 'keywords', flavour: 'flavour', flavor: 'flavour',
+  art: 'art', arte: 'art', text: 'rules', texto: 'rules', rules: 'rules', regras: 'rules',
+  'awaken text': 'habilidade_awaken_en', 'texto awaken': 'habilidade_awaken_en', ultimate: 'ultimate_en',
+};
+const MULTI = new Set(['rules', 'habilidade_awaken_en', 'ultimate_en']);
+const pick = (v, opts) => opts.find((o) => fold(o) === fold(v));
+const TIPOS = ['Devotee', 'Relic', 'Technique', 'Moment', 'Domain', 'God'];
+const FACCOES = ['Athena', 'Ares', 'Artemis', 'Hades', 'Poseidon'];
+const RARIDADES = ['Common', 'Uncommon', 'Mythic', 'Divine'];
+
+export function parseBatch(text) {
+  const out = [];
+  for (const block of text.replace(/\r\n?/g, '\n').split(/^\s*-{3,}\s*$/m)) {
+    if (!block.trim()) continue;
+    const raw = {}, errors = [];
+    let cur = null;
+    for (const line of block.split('\n')) {
+      if (/^\s*#/.test(line)) continue; // comentário
+      const m = line.match(/^\s*([\p{L} ]{2,20}?)\s*:\s?(.*)$/u);
+      const key = m && FIELDS[fold(m[1])];
+      if (key) { cur = key; raw[key] = m[2].trim(); continue; }
+      if (cur && MULTI.has(cur)) raw[cur] += `\n${line}`;
+      else if (line.trim()) errors.push(`linha sem campo: “${line.trim().slice(0, 40)}”`);
+    }
+    for (const k of MULTI) if (k in raw) raw[k] = raw[k].replace(/^\n+|\s+$/g, '');
+    if (!raw.nome_exibicao_en && !raw.id) errors.push('falta Name');
+    if (raw.tipo && !(raw.tipo = pick(raw.tipo, TIPOS))) errors.push(`Type inválido (use ${TIPOS.join(', ')})`);
+    if (raw.faccao && !(raw.faccao = pick(raw.faccao, FACCOES))) errors.push(`Faction inválida (use ${FACCOES.join(', ')})`);
+    if (raw.raridade && !(raw.raridade = pick(raw.raridade, RARIDADES))) errors.push(`Rarity inválida (use ${RARIDADES.join(', ')})`);
+    if ('unidade_custo' in raw) raw.unidade_custo = /base/i.test(raw.unidade_custo) ? 'base_cosmo' : 'cosmo';
+    for (const k of NUM) if (has(raw[k]) && !/^-?\d+$/.test(raw[k])) errors.push(`${k} não é número: ${raw[k]}`);
+    if ('bonus' in raw) {
+      const b = raw.bonus.match(/^([+-]?\d+)\s*\/\s*([+-]?\d+)$/);
+      if (b) [raw.bonusPower, raw.bonusResistance] = [b[1], b[2]].map((x) => (x.startsWith('-') || x.startsWith('+') ? x : `+${x}`));
+      else errors.push(`Bonus deve ser +P/+R: ${raw.bonus}`);
+      delete raw.bonus;
+    }
+    out.push({ raw, errors });
+  }
+  return out;
+}
+
+// Junta o texto com a carta existente (por Id ou Name) e devolve o estado pronto do editor.
+async function prepareItem(raw, used) {
+  const o = db.cartas.find((c) => (raw.id && c.id === raw.id) || (!raw.id && fold(c.nome_exibicao_en) === fold(raw.nome_exibicao_en || '')));
+  let proj = {};
+  if (o) try { const r = await fetch(`projects/${o.id}.json`); if (r.ok) proj = await r.json(); } catch { /* sem projeto */ }
+  const s = o ? fromCard(o, proj) : blankState();
+  const g = gen;
+  const { art, ...fields } = raw;
+  Object.assign(s, fields);
+  if (!o) {
+    const f = s.faccao.toLowerCase();
+    const nums = [...db.cartas.map((c) => c.id), ...used].map((id) => id.match(new RegExp(`^${f}-(\\d+)$`))?.[1]).filter(Boolean).map(Number);
+    s.id = raw.id || `${f}-${String(Math.max(0, ...nums) + 1).padStart(3, '0')}`;
+  }
+  used.add(s.id);
+  const artFile = art || (!s.art && o?.caminho_imagem ? o.caminho_imagem.split('/').pop() : '');
+  if (artFile) {
+    for (const src of [`../ARTS/${artFile}`, `art/${artFile}`, `../${artFile}`]) {
+      const im = await loadImg(src);
+      if (im) { s.art = { src }; coverArt(im, s.art); break; }
+    }
+  }
+  return { orig: o || null, gen: o ? g : [], state: s, artMissing: !!artFile && !s.art };
+}
+
+let batch = [];
+function useItem(it) { orig = it.orig; gen = it.gen; S = it.state; }
+
+function renderBatchList() {
+  const ol = $('#batchList');
+  ol.replaceChildren(...batch.map((it, i) => {
+    const li = document.createElement('li');
+    const b = Object.assign(document.createElement('button'), { type: 'button', textContent: it.state ? `${it.state.id} · ${it.state.nome_exibicao_en || '(sem nome)'}` : `#${i + 1}` });
+    b.addEventListener('click', () => {
+      if (!it.state) return;
+      useItem(it); fillForm(); setRef(it.orig?.caminho_imagem ? `../${it.orig.caminho_imagem}` : null); render();
+      say(`lote: editando ${it.state.id} (as mudanças valem para o lote)`);
+    });
+    const tag = Object.assign(document.createElement('span'), { className: 'tag', textContent: ` — ${it.state?.tipo || '?'}, ${it.orig ? 'atualiza' : 'nova'}${it.artMissing ? ', arte não achada' : ''}${it.state && !it.state.art ? ', sem arte' : ''}` });
+    li.append(b, tag);
+    if (it.done) li.append(Object.assign(document.createElement('span'), { className: 'done', textContent: ` ✓ ${it.done}` }));
+    for (const e of it.errors) li.append(Object.assign(document.createElement('span'), { className: 'err', textContent: e }));
+    return li;
+  }));
+  const ok = batch.length && batch.every((it) => !it.errors.length);
+  $('#batchExport').disabled = $('#batchSave').disabled = !ok;
+}
+
+$('#batchFile').addEventListener('change', async (e) => { const f = e.target.files[0]; if (f) { $('#batchText').value = await f.text(); $('#batchRead').click(); } });
+$('#batchRead').addEventListener('click', async () => {
+  const parsed = parseBatch($('#batchText').value);
+  const used = new Set();
+  const keep = { orig, gen, S };
+  batch = [];
+  for (const p of parsed) batch.push(p.errors.length ? { ...p, state: null } : { ...p, ...(await prepareItem(p.raw, used)) });
+  ({ orig, gen, S } = keep);
+  renderBatchList();
+  const bad = batch.filter((it) => it.errors.length).length;
+  say(bad ? `lote: ${batch.length} cartas, ${bad} com erro — corrija o texto e leia de novo` : `lote: ${batch.length} cartas prontas`, !!bad);
+  if (!bad && batch.length) batch[0] && $('#batchList button').click();
+});
+
+async function canvasBlob(c) { return new Promise((ok) => c.toBlob(ok, 'image/png')); }
+$('#batchExport').addEventListener('click', async () => {
+  const keep = { orig, gen, S };
+  try {
+    for (const [i, it] of batch.entries()) {
+      useItem(it);
+      say(`exportando ${i + 1}/${batch.length}: ${S.id}`);
+      await render();
+      await post(`/api/export/${S.id}`, await canvasBlob(canvas), 'image/png');
+      const w = 1100, h = Math.round(w * H / W);
+      const c = Object.assign(document.createElement('canvas'), { width: w, height: h });
+      const g = c.getContext('2d'); g.imageSmoothingQuality = 'high'; g.drawImage(canvas, 0, 0, w, h);
+      await post(`/api/export/${S.id}-web`, await canvasBlob(c), 'image/png');
+      it.done = 'PNG';
+    }
+    say(`${batch.length} cartas exportadas em card-forge/out/ (alta + web)`);
+  } catch (e) { say(e.message, true); }
+  ({ orig, gen, S } = keep);
+  renderBatchList();
+  render();
+});
+
+let pendingBatch = null;
+$('#batchSave').addEventListener('click', () => {
+  const keep = { orig, gen, S };
+  pendingBatch = batch.map((it) => { useItem(it); return { it, card: buildCard() }; }).filter(({ it, card }) => diffCards(it.orig, card).length);
+  ({ orig, gen, S } = keep);
+  if (!pendingBatch.length) return say('lote: nada muda no cards.json');
+  $('#diffTarget').textContent = `${pendingBatch.length} cartas: ${pendingBatch.filter((p) => !p.it.orig).length} novas, ${pendingBatch.filter((p) => p.it.orig).length} atualizadas`;
+  $('#diffBody').replaceChildren(...pendingBatch.flatMap(({ it, card }) => [
+    Object.assign(document.createElement('div'), { textContent: `\n== ${card.id} · ${card.nome_exibicao_en} (${it.orig ? 'substitui' : 'nova'})` }),
+    ...diffCards(it.orig, card).flatMap(({ k, x, y }) => [
+      ...(it.orig ? [Object.assign(document.createElement('div'), { className: 'del', textContent: `- ${k}: ${x}` })] : []),
+      Object.assign(document.createElement('div'), { className: 'add', textContent: `+ ${k}: ${y}` })]),
+  ]));
+  pending = null;
+  $('#diffDialog').showModal();
+});
+
+async function saveBatch() {
+  await post('/api/cards', JSON.stringify(pendingBatch.map((p) => p.card)));
+  for (const { it } of pendingBatch) {
+    const s = it.state;
+    await post(`/api/project/${s.id}`, JSON.stringify({ title: s.title, subtitle: s.subtitle, flavour: s.flavour, bonusPower: s.bonusPower, bonusResistance: s.bonusResistance, art: s.art }));
+  }
+  db = await (await fetch('../data/cards.json')).json();
+  for (const it of batch) { it.orig = db.cartas.find((c) => c.id === it.state.id) || null; it.gen = (it.orig?.habilidades_en || []).map((text) => ({ text, markup: toMarkup(text) })); it.done = `${it.done ? `${it.done} + ` : ''}cards.json`; }
+  fillCardSelect(S.id);
+  renderBatchList();
+  say(`cards.json gravado: ${pendingBatch.length} cartas`);
+  pendingBatch = null;
+}
+
 // ---------- início ----------
 function fillCardSelect(selected) {
   const sel = $('#cardSelect');
@@ -666,4 +841,4 @@ try {
   say(`falha ao carregar cards.json: ${e.message}`, true);
 }
 
-window.forge = { S: () => S, render, toMarkup, fromMarkup, buildCard, selectCard };
+window.forge = { S: () => S, render, toMarkup, fromMarkup, buildCard, selectCard, parseBatch };

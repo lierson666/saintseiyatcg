@@ -19,6 +19,18 @@
 
   <main>
     <form id="form" autocomplete="off">
+      <details class="batch" id="batch">
+        <summary>Lote — criar várias cartas de um arquivo de texto</summary>
+        <p class="hint">Uma carta por bloco <code>Campo: valor</code>, cartas separadas por <code>---</code>. Veja o <a href="import/modelo.txt" target="_blank">modelo</a>. Se o <code>Id</code> ou o <code>Nome</code> já existir, a carta é atualizada; senão vira carta nova.</p>
+        <input id="batchFile" type="file" accept=".txt,text/plain" aria-label="Arquivo de texto com as cartas">
+        <textarea id="batchText" rows="8" spellcheck="false" aria-label="Texto das cartas" placeholder="Name: Hyoga, Cygnus Saint&#10;Type: Devotee&#10;…&#10;---"></textarea>
+        <div class="row">
+          <button id="batchRead" type="button">Ler lote</button>
+          <button id="batchExport" type="button" disabled>Exportar PNGs de todas</button>
+          <button id="batchSave" type="button" class="primary" disabled>Gravar todas no cards.json…</button>
+        </div>
+        <ol id="batchList" class="batch-list"></ol>
+      </details>
       <fieldset>
         <legend>Identidade</legend>
         <label>ID <input name="id" readonly></label>
@@ -81,6 +93,7 @@
         </label>
         <p class="hint">Clique num símbolo ou keyword para inserir no cursor. Linha em branco separa habilidades; <code>**negrito**</code>. Keywords saem em negrito maiúsculo sozinhas.</p>
         <label data-for="god">Awaken (texto) <textarea name="habilidade_awaken_en" rows="4"></textarea></label>
+        <label data-for="god">Ultimate <textarea name="ultimate_en" rows="3"></textarea></label>
         <label>Flavour <input name="flavour" placeholder="“Burn cosmo, burn!”"></label>
       </fieldset>
 
