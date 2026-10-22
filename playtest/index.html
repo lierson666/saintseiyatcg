@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Saint Seiya TCG</title>
+    <link rel="icon" type="image/png" href="../LOGO/favicon.png">
+    <link rel="stylesheet" href="./styles.css?v=6">
+    <link rel="stylesheet" href="./arena.css?v=6">
+  </head>
+  <body>
+    <div class="viewport">
+      <div class="playtest-shell">
+        <section class="arena-stage panel">
+          <button id="toggle-options" class="options-toggle" aria-expanded="false" aria-controls="options-menu" aria-label="Open options menu">
+            <span class="options-toggle__icon">⚙</span>
+          </button>
+
+          <section id="options-menu" class="options-menu hidden panel" aria-hidden="true">
+            <div class="options-menu__header">
+              <img class="brand-logo brand-logo--menu" src="../LOGO/logo-web.webp" alt="Saint Seiya TCG">
+              <h1>Athena Beta v0.1</h1>
+              <p class="topbar-subtitle">Arena-style digital playtest board for Athena mirror testing.</p>
+            </div>
+
+            <div class="toolbar panel">
+              <label class="field">
+                <span>Player A</span>
+                <select id="deck-a"></select>
+              </label>
+              <label class="field">
+                <span>Player B</span>
+                <select id="deck-b"></select>
+              </label>
+              <div class="toolbar-actions">
+                <button id="start-match" class="primary">Start Match</button>
+                <button id="swap-decks">Swap</button>
+                <button id="next-turn">Next Turn</button>
+                <button id="reset-match">Reset</button>
+              </div>
+              <label class="toggle-field">
+                <input id="ai-player-b" type="checkbox" checked>
+                <span>AI controls Player B</span>
+              </label>
+            </div>
+
+            <section class="options-menu__section">
+              <div class="dock-tabs">
+                <button class="dock-tab is-active" data-action="dock-tab" data-tab="log" data-dock-tab="log">Log</button>
+                <button class="dock-tab" data-action="dock-tab" data-tab="help" data-dock-tab="help">Help</button>
+                <button class="dock-tab" data-action="dock-tab" data-tab="coverage" data-dock-tab="coverage">Coverage</button>
+              </div>
+              <div id="dock-tab-content" class="dock-tab-content"></div>
+            </section>
+          </section>
+
+          <p id="turn-indicator" class="turn-indicator arena-turn-indicator">Load a match to begin.</p>
+
+          <svg id="combat-overlay" class="combat-overlay" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"></svg>
+
+          <main id="playmat" class="playmat">
+            <section id="player-a-board" class="board-slot board-slot--top"></section>
+            <section id="center-hud-slot" class="board-slot board-slot--center">
+              <section id="action-bar" class="center-hud-bar"></section>
+            </section>
+            <section id="player-b-board" class="board-slot board-slot--bottom"></section>
+          </main>
+
+          <aside class="hero-column">
+            <section id="player-a-domain-slot" class="hero-slot"></section>
+            <section id="player-a-god-slot" class="hero-slot"></section>
+            <section id="player-b-god-slot" class="hero-slot"></section>
+            <section id="player-b-domain-slot" class="hero-slot"></section>
+          </aside>
+
+        </section>
+      </div>
+    </div>
+
+    <div id="hover-preview" class="floating-card-preview hidden" aria-hidden="true"></div>
+    <div id="floating-info" class="floating-info hidden" aria-hidden="true"></div>
+    <div id="log-popup" class="log-popup hidden" aria-hidden="true"></div>
+    <div id="victory-overlay" class="victory-overlay hidden" aria-hidden="true"></div>
+    <div id="context-menu" class="context-menu hidden" aria-hidden="true"></div>
+    <div id="new-game-overlay" class="new-game-overlay hidden" aria-hidden="true"></div>
+    <div id="mulligan-overlay" class="mulligan-overlay hidden" aria-hidden="true"></div>
+    <div id="payment-overlay" class="payment-overlay hidden" aria-hidden="true"></div>
+    <div id="spell-overlay" class="spell-overlay hidden" aria-hidden="true"></div>
+    <div id="equip-overlay" class="equip-overlay hidden" aria-hidden="true"></div>
+    <div id="zone-browser-overlay" class="zone-browser-overlay hidden" aria-hidden="true"></div>
+    <div id="combat-toast" class="combat-toast hidden" aria-hidden="true"></div>
+    <div id="zone-selection-overlay" class="zone-selection-overlay hidden" aria-hidden="true"></div>
+
+    <script type="module" src="./app.js?v=6"></script>
+  </body>
+</html>

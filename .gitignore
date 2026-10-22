@@ -1,0 +1,27 @@
+# Sistema / ferramentas
+.DS_Store
+.tmp-video-thumb/
+.claude/settings.local.json
+graphify-out/
+
+# Originais pesados de arte ficam só no Google Drive
+FRAMES/
+TEST/
+MUSIC/
+sacred-geometry-black-set/
+*.zip
+*.psd
+*.ai
+*.eps
+simbolos*.png
+
+# ARTS: só o fundo usado pelo jogo entra no Git
+ARTS/*
+!ARTS/BOARD.png
+
+# CARDS: só as PNGs exportadas; molduras/licenças da Vecteezy ficam fora
+CARDS/**/vecteezy_*/
+CARDS/**/pattern/
+CARDS/**/*.jpg
+CARDS/**/*.pdf
+CARDS/**/*.txt
