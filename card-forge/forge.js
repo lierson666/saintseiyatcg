@@ -155,12 +155,21 @@ function fitText(text, style, size, maxW) {
   return size;
 }
 
-function drawText(text, style, x, y, size, maxW) {
+// center=true: centra a TINTA do glifo (não a caixa da fonte) em x,y — números sempre no meio exato da gema.
+function drawText(text, style, x, y, size, maxW, center = false) {
   if (!text) return;
   const s = fitText(text, style, size, maxW);
   ctx.fillStyle = fac().color;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
+  if (center) {
+    ctx.textAlign = 'left'; // antes de medir: as medidas dependem do alinhamento atual
+    ctx.textBaseline = 'alphabetic';
+    const m = ctx.measureText(text);
+    x -= (m.actualBoundingBoxRight - m.actualBoundingBoxLeft) / 2;
+    y += (m.actualBoundingBoxAscent - m.actualBoundingBoxDescent) / 2;
+  } else {
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+  }
   paint(T.styles[style].glow, 0.92, () => ctx.fillText(text, x, y),
     () => { ctx.lineWidth = Math.min(11, s * 0.16); ctx.strokeText(text, x, y); });
 }
@@ -323,8 +332,8 @@ async function render() {
         if (!has(S.custo) || S.tipo === 'Domain' || S.tipo === 'God') break;
         const key = S.unidade_custo === 'base_cosmo' ? 'athena/gem_cost_base' : 'athena/gem_cost';
         const p = P[key];
-        await drawGlowPiece(key, { dx: el.x - p.w / 2 - p.x, dy: el.y - p.h / 2 - p.y });
-        drawText(String(S.custo), 'number', el.x - 3, el.y + 4, el.size, 200);
+        const g = await drawGlowPiece(key, { dx: el.x - p.w / 2 - p.x, dy: el.y - p.h / 2 - p.y });
+        if (g) drawText(String(S.custo), 'number', g.cx, g.cy, el.size, 200, true);
         break;
       }
       case 'gem': {
@@ -334,8 +343,8 @@ async function render() {
         if (!g) break;
         if (el.label) {
           drawText(el.label, 'label', g.cx, g.cy - 46, 24, 140);
-          drawText(String(v), 'number', g.cx - 2, g.cy + 17, el.size, 120);
-        } else drawText(String(v), 'number', g.cx - 3, g.cy, el.size, 150);
+          drawText(String(v), 'number', g.cx, g.cy + 17, el.size, 120, true);
+        } else drawText(String(v), 'number', g.cx, g.cy, el.size, 150, true);
         break;
       }
       case 'text': {
