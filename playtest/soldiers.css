@@ -1,0 +1,485 @@
+/*
+  Saint Seiya TCG — console-port skin. Loaded after arena.css.
+  Original art in the spirit of the Saint Seiya fighting games: bronze-gold
+  arabesque frames, light flares, hot gradient lettering, and the title/main menu.
+  Everything is drawn in CSS/SVG here; no assets from other games.
+*/
+
+:root {
+  /* Gold double rule with scroll corners, used through border-image. */
+  --ss-frame-img: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='48'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23ffe9ad'/%3E%3Cstop offset='.5' stop-color='%23c99a3e'/%3E%3Cstop offset='1' stop-color='%236e4c16'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cg fill='none' stroke='url(%23g)'%3E%3Crect x='1.5' y='1.5' width='45' height='45' stroke-width='2'/%3E%3Crect x='6' y='6' width='36' height='36' stroke-width='1' stroke='%238a6a2c'/%3E%3Cpath stroke-width='1.6' d='M2 14C2 7 7 2 14 2M9 13a3 3 0 1 1 4-4M46 14C46 7 41 2 34 2M39 13a3 3 0 1 0-4-4M2 34c0 7 5 12 12 12M9 35a3 3 0 1 0 4 4M46 34c0 7-5 12-12 12M39 35a3 3 0 1 1-4 4'/%3E%3C/g%3E%3C/svg%3E");
+  --ss-hot: linear-gradient(180deg, #fffbe0 0%, #ffe066 30%, #ffa21f 58%, #e2400f 80%, #8e1205 100%);
+  --ss-cold: linear-gradient(180deg, #ffffff 0%, #ffd6e0 35%, #ff6f8e 65%, #a3123a 100%);
+  --ss-panel: linear-gradient(180deg, rgba(20, 16, 10, 0.94), rgba(6, 7, 11, 0.97));
+}
+
+.ss-frame,
+#playmat .center-hud,
+.options-menu,
+.respond-prompt,
+.stack-panel,
+.new-game-modal,
+.mulligan-modal,
+.payment-modal,
+.equip-modal,
+.spell-resolution-modal,
+.zone-browser-modal {
+  border: 12px solid transparent;
+  border-image: var(--ss-frame-img) 16 / 12px stretch;
+  border-radius: 0;
+}
+
+/* The arena.css top hairline doubles up with the frame; turn it into a flare instead. */
+.new-game-modal::before,
+.mulligan-modal::before,
+.payment-modal::before,
+.equip-modal::before,
+.spell-resolution-modal::before,
+.zone-browser-modal::before,
+.ss-frame::before {
+  content: "";
+  position: absolute;
+  left: 15%;
+  right: 15%;
+  top: -14px;
+  height: 14px;
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, rgba(255, 246, 214, 0.95), rgba(255, 196, 92, 0.35) 40%, transparent 72%);
+  filter: blur(0.5px);
+  pointer-events: none;
+}
+
+/* ---------- Hot lettering (turn banner, damage, K.O.-style titles) ---------- */
+
+.turn-banner > span,
+.float-text--damage,
+.victory-overlay__title,
+.combat-toast__label {
+  background: var(--ss-hot);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-stroke: 1.5px #2a0800;
+  text-shadow: none;
+  filter: drop-shadow(0 3px 0 #1a0500) drop-shadow(0 0 14px rgba(255, 140, 40, 0.55));
+}
+
+.turn-banner {
+  font-size: 64px;
+  font-style: italic;
+  background: linear-gradient(90deg, transparent, rgba(10, 8, 6, 0.9) 22%, rgba(10, 8, 6, 0.9) 78%, transparent);
+}
+
+.turn-banner.is-local,
+.turn-banner.is-opponent {
+  background: linear-gradient(90deg, transparent, rgba(10, 8, 6, 0.9) 22%, rgba(10, 8, 6, 0.9) 78%, transparent);
+}
+
+.turn-banner > span {
+  padding: 0 0.2em;
+}
+
+.turn-banner.is-opponent > span {
+  background-image: var(--ss-cold);
+  filter: drop-shadow(0 3px 0 #1a0005) drop-shadow(0 0 14px rgba(255, 60, 100, 0.5));
+}
+
+/* Light streak along the band's lower edge. */
+.turn-banner::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  pointer-events: none;
+  background: radial-gradient(ellipse 45% 100% at 50% 50%, #fff6d6, rgba(255, 190, 80, 0.6) 40%, transparent 75%);
+}
+
+.turn-banner.is-opponent::after {
+  background: radial-gradient(ellipse 45% 100% at 50% 50%, #ffe0e6, rgba(255, 70, 110, 0.6) 40%, transparent 75%);
+}
+
+.float-text--damage {
+  font-size: 56px;
+  font-style: italic;
+}
+
+.victory-overlay__title {
+  font-style: italic;
+  -webkit-text-stroke-width: 2.5px;
+}
+
+.combat-toast__label {
+  background-color: transparent;
+}
+
+/* ---------- Title screen and main menu ---------- */
+
+.front-end {
+  position: fixed;
+  inset: 0;
+  z-index: 20000;
+  overflow: hidden;
+  color: var(--text);
+  font-family: var(--ui-font);
+  background:
+    radial-gradient(ellipse 60% 50% at 70% 40%, rgba(90, 60, 180, 0.35), transparent 70%),
+    radial-gradient(ellipse 50% 45% at 25% 70%, rgba(30, 110, 200, 0.28), transparent 70%),
+    linear-gradient(180deg, rgba(3, 4, 9, 0.7), rgba(3, 4, 9, 0.92)),
+    var(--ink) url("../ARTS/BOARD.png") center / cover no-repeat;
+}
+
+.front-end[hidden] {
+  display: none;
+}
+
+/* Slow light rays behind everything. */
+.front-end::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 45%;
+  width: 180vmax;
+  height: 180vmax;
+  transform: translate(-50%, -50%);
+  background: repeating-conic-gradient(from 0deg, rgba(255, 220, 150, 0.07) 0deg 4deg, transparent 4deg 15deg);
+  mask-image: radial-gradient(circle, #000 0%, transparent 55%);
+  animation: haloSpin 90s linear infinite;
+  pointer-events: none;
+}
+
+.fe-title {
+  position: relative;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 4vh;
+  cursor: pointer;
+  text-align: center;
+  padding: 16px;
+}
+
+.fe-title__logo {
+  width: min(720px, 86vw);
+  filter: drop-shadow(0 0 40px rgba(255, 200, 110, 0.45));
+  animation: feRise 1.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+.fe-title__press {
+  font-family: var(--header-font);
+  font-size: clamp(18px, 2.6vw, 30px);
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--gold-hi);
+  text-shadow: 0 0 18px rgba(255, 200, 110, 0.7);
+  animation: fePulse 1.6s ease-in-out infinite;
+}
+
+.fe-title__legal {
+  position: absolute;
+  bottom: 16px;
+  left: 0;
+  right: 0;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+}
+
+@keyframes feRise {
+  from { opacity: 0; transform: translateY(30px) scale(0.96); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes fePulse {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+
+.fe-menu {
+  position: relative;
+  height: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-rows: auto 1fr auto;
+  gap: 2vh 4vw;
+  padding: 4vh 6vw;
+}
+
+.fe-menu__logo {
+  grid-column: 1 / -1;
+  width: min(380px, 60vw);
+  filter: drop-shadow(0 0 24px rgba(255, 200, 110, 0.35));
+}
+
+.fe-menu__list {
+  display: grid;
+  align-content: center;
+  gap: 1.2vh;
+}
+
+.fe-item {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  padding: 1.2vh 0 1.2vh 48px;
+  border: 0;
+  background: none;
+  box-shadow: none;
+  text-align: left;
+  cursor: pointer;
+  font-family: var(--header-font);
+  font-size: clamp(20px, min(3.4vh, 3.4vw), 40px);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #c3cad8;
+  transition: color 160ms ease, transform 160ms ease;
+}
+
+.fe-item:focus {
+  outline: none;
+}
+
+/* Focus follows the selection, so the streak and chevron are the focus indicator. */
+.fe-item:focus-visible {
+  outline: none;
+}
+
+.fe-item__label {
+  white-space: nowrap;
+}
+
+/* Light streak behind the selected entry and a glowing chevron cursor. */
+.fe-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: -10%;
+  top: 50%;
+  height: 70%;
+  transform: translateY(-50%) scaleX(0);
+  transform-origin: left center;
+  background: radial-gradient(ellipse 55% 50% at 30% 50%, rgba(255, 236, 190, 0.32), rgba(255, 190, 90, 0.12) 45%, transparent 75%);
+  transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.fe-item::after {
+  content: "";
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  border-top: 3px solid #fff;
+  border-right: 3px solid #fff;
+  transform: translateY(-50%) rotate(45deg) scale(0);
+  filter: drop-shadow(0 0 6px #b98cff) drop-shadow(0 0 12px #8a5cff);
+  transition: transform 180ms ease;
+}
+
+.fe-item.is-active {
+  color: transparent;
+  background: var(--ss-hot);
+  -webkit-background-clip: text;
+  background-clip: text;
+  transform: translateX(10px);
+}
+
+.fe-item.is-active .fe-item__label {
+  filter: drop-shadow(0 2px 0 #1a0500);
+}
+
+.fe-item.is-active::before {
+  transform: translateY(-50%) scaleX(1);
+}
+
+.fe-item.is-active::after {
+  transform: translateY(-50%) rotate(45deg) scale(1);
+}
+
+.fe-item.is-soon {
+  opacity: 0.55;
+}
+
+.fe-item__soon {
+  font-family: var(--ui-font);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 3px 8px;
+  border: 1px solid rgba(227, 189, 106, 0.5);
+  color: var(--gold);
+  -webkit-text-fill-color: var(--gold);
+}
+
+.fe-hint {
+  position: relative;
+  align-self: center;
+  padding: 3vh 2.4vw;
+  background: var(--ss-panel);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+}
+
+.fe-hint__title {
+  font-family: var(--header-font);
+  font-size: clamp(20px, 3vh, 30px);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold-hi);
+  margin: 0 0 1.4vh;
+}
+
+.fe-hint__text {
+  margin: 0;
+  font-size: clamp(15px, 2vh, 19px);
+  line-height: 1.5;
+  color: #dfe4ee;
+}
+
+.fe-keys {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.fe-panel {
+  position: relative;
+  margin: 4vh auto;
+  width: min(1280px, calc(100% - 32px));
+  height: calc(100% - 8vh);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 16px;
+  padding: 20px 24px;
+  background: var(--ss-panel);
+}
+
+.fe-panel--small {
+  width: min(560px, calc(100% - 32px));
+  height: auto;
+  grid-template-rows: none;
+  align-self: center;
+  margin-top: 18vh;
+}
+
+.fe-panel__header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.fe-panel__header h2 {
+  margin: 0;
+  flex: 1;
+  font-family: var(--header-font);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold-hi);
+}
+
+.fe-panel__count,
+.fe-panel__note {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.fe-collection {
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 14px;
+  padding: 4px;
+}
+
+.fe-card {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+  border-radius: 8px;
+  box-shadow: var(--card-depth);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.fe-card img {
+  display: block;
+  width: 100%;
+  border-radius: 8px;
+}
+
+.fe-card:hover,
+.fe-card:focus-visible {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: var(--card-depth-lift), 0 0 0 2px var(--gold);
+  outline: none;
+}
+
+.fe-zoom {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.82);
+  cursor: zoom-out;
+}
+
+.fe-zoom[hidden] {
+  display: none;
+}
+
+.fe-zoom img {
+  max-width: 92vw;
+  max-height: 92vh;
+  border-radius: 14px;
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.8);
+}
+
+.fe-slider {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  align-items: center;
+  gap: 16px;
+  font-family: var(--header-font);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #e8ecf4;
+}
+
+.fe-slider input {
+  accent-color: var(--gold);
+}
+
+@media (max-width: 760px) {
+  .fe-menu {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+    padding: 3vh 16px;
+  }
+
+  .fe-item {
+    padding-left: 40px;
+  }
+
+  .fe-slider {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .front-end::before,
+  .fe-title__press,
+  .fe-title__logo {
+    animation: none;
+  }
+}

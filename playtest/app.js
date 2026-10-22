@@ -1,3 +1,6 @@
+import { sfx, playMusic } from "./audio.js?v=1";
+import { initMenu } from "./menu.js?v=1";
+
 const PLAYER_ORDER = ["A", "B"];
 const CARD_ZONES = ["hand", "battlefield", "cosmo_base", "tartarus", "void"];
 const DROP_ZONES = new Set(CARD_ZONES);
@@ -184,6 +187,14 @@ async function init() {
   renderActionBar();
   renderLog();
   renderNewGameOverlay();
+  initMenu({
+    cards: cardsData.cartas,
+    onStart: (ai) => {
+      elements.aiPlayerB.checked = ai;
+      handleAiToggleChange();
+      openNewGameOverlay();
+    }
+  });
 }
 
 function bindArenaInput() {
@@ -735,6 +746,7 @@ function renderFeedback() {
       return;
     }
     if (!fx) {
+      sfx("play");
       stack.classList.add("is-entering");
       return;
     }
@@ -744,6 +756,7 @@ function renderFeedback() {
       return;
     }
     stack.style.visibility = "hidden";
+    sfx("play");
     fx.flyCard(from, stack.getBoundingClientRect(), stack.querySelector("img")?.src, stack.querySelector("img")?.alt).then(() => {
       document.querySelector(`.battlefield-stack[data-battlefield-root="${uid}"]`)?.style.removeProperty("visibility");
     });
@@ -784,6 +797,7 @@ function spawnFloatText(anchor, text, kind) {
   node.style.top = `${rect.top + rect.height / 2}px`;
   document.body.appendChild(node);
   window.setTimeout(() => node.remove(), 1300);
+  sfx(kind === "heal" ? "cosmo" : "impact");
   fx?.burst(rect.left + rect.width / 2, rect.top + rect.height / 2, kind === "heal" ? 0x7dffb0 : 0xff5a4e, 40);
 }
 
@@ -792,8 +806,10 @@ function showTurnBanner(text, local) {
   if (!banner) {
     return;
   }
-  banner.textContent = text;
+  // Span so the gradient lettering can sit on top of the banner's dark band.
+  banner.replaceChildren(Object.assign(document.createElement("span"), { textContent: text }));
   banner.className = `turn-banner ${local ? "is-local" : "is-opponent"} is-visible`;
+  sfx("turn");
   window.clearTimeout(showTurnBanner.timeoutId);
   showTurnBanner.timeoutId = window.setTimeout(() => {
     banner.className = "turn-banner hidden";
@@ -963,6 +979,7 @@ function startMatch(config = {}) {
   logPopupOpen = false;
   battlefieldSelection = createEmptyBattlefieldSelection();
   closeContextMenu();
+  playMusic("battle");
 
   const deckAId = config.deckAId || elements.deckA.value;
   const deckBId = config.deckBId || elements.deckB.value;
@@ -1481,6 +1498,9 @@ function declareVictory(winnerKey, loserKey, reason) {
     reason,
     message: `PLAYER ${winnerKey} WINS!`
   };
+  // Against the AI, Player B winning is a defeat for the human.
+  sfx(winnerKey === "B" && elements.aiPlayerB?.checked ? "defeat" : "victory");
+  playMusic("menu");
 
   const loser = gameState.players[loserKey];
   const reasonText = reason === "deckout"
