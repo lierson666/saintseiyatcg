@@ -5,13 +5,14 @@ Data: 23/10/2026. Escopo: primeiro conjunto de 300 cartas, arena local, motor, I
 ## Verificações reproduzíveis
 
 ```bash
-node --test tools/test-rules-v2.mjs tools/test-card-presentation.mjs tools/test-battle-guide.mjs
+node --test tools/test-rules-v2.mjs tools/test-card-presentation.mjs tools/test-battle-guide.mjs tools/test-presentation.mjs
 python3 card-forge/serve.py --selftest
 python3 tools/test-ui-v2.py
 python3 tools/test-arena-ui.py
+python3 tools/test-engage-god-ui.py
 ```
 
-- **50 testes automatizados, todos aprovados.** Incluem rodadas/compras, AÇÕES/ENG, prioridade, Engage, Guardian/Nimble, dano persistente, Long Range/Cheater, Pierce, Unfaith, Latent por AÇÃO, substituição de armadura, múltiplas armas, Owner/evolução, Multiguard com redução de capacidade, Awaken/Ultimate, Afterlife, unicidade por efeito, correção de SST-03-010 e textos que exigem revisão de efeitos. Sete cenários cobrem orientação contextual, privacidade, histórico completo, ordem das entradas e escape de HTML.
+- **61 testes automatizados, todos aprovados.** Incluem rodadas/compras, AÇÕES/ENG, prioridade, Engage, Guardian/Nimble, dano persistente, Long Range/Cheater, Pierce, Unfaith, Latent por AÇÃO, substituição de armadura, múltiplas armas, Owner/evolução, Multiguard com redução de capacidade, Awaken/Ultimate, Afterlife, unicidade por efeito, correção de SST-03-010 e textos que exigem revisão de efeitos. Oito cenários cobrem orientação contextual, privacidade, histórico completo, ordem das entradas e escape de HTML.
 - Um cenário percorre **cada uma das 300 definições** para resolver sua entrada ou sua resposta, fornecendo recursos e zonas apropriados. Não substitui a cobertura combinatória de todos os efeitos e interações.
 - Seis confrontos automáticos entre os decks iniciais chegam a uma vitória sem laços de ações inválidas. São testes determinísticos de funcionamento, não uma amostra de equilíbrio entre facções.
 - Testes de apresentação verificam EQUIP em todas as cartas equipáveis, Owners/Resonance/estágios em blocos próprios, números de evolução derivados dos campos editáveis, escape de HTML, carta viva sem PNG completo e token seguindo a iniciativa.
@@ -32,6 +33,19 @@ Capturas locais, fora do Git:
 - `card-forge/out/qa-arena/desktop-playing.png`
 - `card-forge/out/qa-arena/mobile-playing.png`
 - `card-forge/out/qa-arena/mobile-guide.png`
+
+## Exceção de Engage contra Unprepared vinculado a God
+
+Confirmada pelo autor em 23/10/2026. Os cenários adicionais verificam:
+
+- Prepared/Unprepared não restringe Engage livre, em nenhuma combinação de atacante e defensor.
+- Um alvo Unprepared vinculado a God aparece no seletor e recebe uma vaga adicional, em ambos os lados; o vínculo com God e o estado permanecem, sem dano ou ENG adicional.
+- Alvo Prepared ocupado, alvo ocupado apenas com Devotee e uma terceira vaga sem Multiguard continuam bloqueados.
+- Preparar depois mantém os vínculos; Strike escolhe um oponente e somente ele retalia. Preparar em resposta antes do novo vínculo impede sua criação.
+- Guardian e IA usam a nova elegibilidade. Multiguard soma a vaga excepcional; troca preserva o marcador mesmo Prepared. Encerrar o vínculo com God elimina a vaga e seu marcador.
+- O navegador desenvolve recursos, joga os Devotees, estabelece o confronto com God e realiza Strike por comandos legais; a interface então permite escolher o Devotee Unprepared como novo alvo. O resultado tem dois vínculos, sem dano adicional. Desktop e mobile sem erros de JavaScript ou alteração do catálogo.
+
+Capturas: `card-forge/out/qa-engage-god/engage-adicional-desktop.png` e `engage-adicional-mobile.png`.
 
 ## Integridade e aprovação
 

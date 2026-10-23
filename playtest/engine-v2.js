@@ -65,15 +65,31 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     return{power:Math.max(0,power),maxHP,hp:Math.max(0,maxHP-i.damage),damage:i.damage,keywords:[...new Set(keywords)],prepared:i.prepared,stage:i.stage||0};
   }
   const has=(uid,k)=>stats(uid)?.keywords.includes(k)||false;
-  const capacity=uid=>uid.startsWith('god-')?Infinity:Math.max(1,...(stats(uid)?.keywords||[]).map(k=>Number(k.match(/^Multiguard\s+(\d+)$/i)?.[1]||0)));
+  const linkedToGod=(uid,except=null)=>relation(uid).some(link=>link.id!==except?.id&&peer(link,uid)?.startsWith('god-'));
+  // A vaga concedida ao receber Engage persiste ao preparar, enquanto os dois vínculos existirem.
+  const extraGodCapacity=uid=>linkedToGod(uid)&&relation(uid).some(link=>link.vagasExtrasGod?.includes(uid))?1:0;
+  const capacity=uid=>uid.startsWith('god-')?Infinity:Math.max(1,...(stats(uid)?.keywords||[]).map(k=>Number(k.match(/^Multiguard\s+(\d+)$/i)?.[1]||0)))+extraGodCapacity(uid);
   const free=uid=>relation(uid).length<capacity(uid);
+  const canReceiveEngage=uid=>free(uid)||(locate(uid)?.card.prepared===false&&linkedToGod(uid)&&!extraGodCapacity(uid));
+  function clearExtraGodLinks(){
+    for(const link of state.links)if(link.vagasExtrasGod){
+      link.vagasExtrasGod=link.vagasExtrasGod.filter(uid=>linkedToGod(uid));
+      if(!link.vagasExtrasGod.length)delete link.vagasExtrasGod;
+    }
+  }
+  function engageLink(uid,target,oldLink=null){
+    const targetUid=target.kind==='god'?godUid(target.playerKey):target.uid,vagasExtrasGod=[];
+    if(!free(targetUid)&&canReceiveEngage(targetUid))vagasExtrasGod.push(targetUid);
+    if(oldLink?.vagasExtrasGod?.includes(uid)&&target.kind==='card'&&linkedToGod(uid,oldLink))vagasExtrasGod.push(uid);
+    return{id:nextId('engage'),a:uid,b:targetUid,...(vagasExtrasGod.length?{vagasExtrasGod}:{})};
+  }
   const enemyTarget=(uid,t)=>t.kind==='god'?locate(uid)?.playerKey!==t.playerKey:locate(uid)?.playerKey!==locate(t.uid)?.playerKey;
   const validEngage=(uid,t,oldLink=null)=>{
     const l=locate(uid);if(l?.zone!=='battlefield'||l.cardData.tipo!=='Devotee'||!enemyTarget(uid,t))return false;
     const target=t.kind==='god'?godUid(t.playerKey):t.uid,tl=locate(target);
     if(t.kind!=='god'&&(tl?.zone!=='battlefield'||tl.cardData.tipo!=='Devotee'))return false;
     if(relation(uid).some(link=>link.id!==oldLink?.id&&peer(link,uid)===target))return false;
-    return target!==peer(oldLink||{a:uid,b:null},uid)&&((oldLink&&peer(oldLink,uid)===target)||free(target));
+    return target!==peer(oldLink||{a:uid,b:null},uid)&&canReceiveEngage(target);
   };
   function available(key,unit='cosmo'){
     const bases=player(key).zones.cosmo_base.filter(i=>i.prepared).length;
@@ -205,6 +221,7 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
         if(a?.zone!=='battlefield'||b?.zone!=='battlefield'||a.playerKey===b.playerKey){state.links=state.links.filter(l=>l.id!==link.id);repeat=true;}
       }
     }
+    clearExtraGodLinks();
     const losers=PLAYERS.filter(k=>player(k).god.soul<=0||player(k).deckFailed);
     if(losers.length){state.victory={winnerKey:losers.length===2?null:other(losers[0]),loserKey:losers.length===2?null:losers[0],reason:losers.some(k=>player(k).deckFailed)?'deckout':'soul',draw:losers.length===2};stack=[];triggers=[];choice=null;state.priority=null;log(losers.length===2?'The duel is a draw.':`Player ${other(losers[0])} wins.`);}
   }
@@ -348,7 +365,7 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
         const selected=bound||target;
         if(!selected?.uid){next();return;}
         chooseLink(selected.uid,link=>{
-          if(!link){next();return;}askTarget(ctx.playerKey,'Choose a new legal Engage target',engageTargets(selected.uid,link),t=>{if(t&&validEngage(selected.uid,t,link)){state.links=state.links.filter(x=>x.id!==link.id);state.links.push({id:nextId('engage'),a:selected.uid,b:t.kind==='god'?godUid(t.playerKey):t.uid});}change();});
+          if(!link){next();return;}askTarget(ctx.playerKey,'Choose a new legal Engage target',engageTargets(selected.uid,link),t=>{if(t&&validEngage(selected.uid,t,link)){const nextLink=engageLink(selected.uid,t,link);state.links=state.links.filter(x=>x.id!==link.id);state.links.push(nextLink);}change();});
         });return;
       }
       if(e.op==='dano_area'){
@@ -410,6 +427,7 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     });
   }
   function enforceCapacity(done){
+    clearExtraGodLinks();
     const over=field().find(l=>l.cardData.tipo==='Devotee'&&relation(l.card.uid).length>capacity(l.card.uid));
     if(!over){done();return;}
     const links=relation(over.card.uid);
@@ -457,7 +475,7 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
   }
   function intercept(command,done){
     if(has(command.uid,'Nimble')){done();return;}
-    const defender=other(command.playerKey),guardians=field().filter(l=>l.playerKey===defender&&l.cardData.tipo==='Devotee'&&l.card.uid!==command.target.uid&&has(l.card.uid,'Guardian')&&free(l.card.uid)&&!relation(command.uid).some(link=>peer(link,command.uid)===l.card.uid));
+    const defender=other(command.playerKey),guardians=field().filter(l=>l.playerKey===defender&&l.cardData.tipo==='Devotee'&&l.card.uid!==command.target.uid&&has(l.card.uid,'Guardian')&&canReceiveEngage(l.card.uid)&&!relation(command.uid).some(link=>peer(link,command.uid)===l.card.uid));
     if(!guardians.length){done();return;}
     ask(defender,'Intercept this Engage with Guardian?',[{id:'no',label:'Let the Engage continue'},...guardians.map(l=>({id:l.card.uid,label:`Guardian: ${l.cardData.nome_exibicao_en}`,target:desc(l)}))],v=>{if(v?.target){command.target=v.target;log(`${targetLabel(v.target)} intercepts the Engage.`);}done();});
   }
@@ -602,8 +620,9 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     if(cmd.type==='engage'||cmd.type==='change-engage'){
       const old=state.links.find(v=>v.id===cmd.linkId);
       if(validEngage(cmd.uid,cmd.target,old)&&(cmd.type!=='engage'||!relation(cmd.uid).length)){
+        const nextLink=engageLink(cmd.uid,cmd.target,old);
         if(old)state.links=state.links.filter(v=>v.id!==old.id);
-        state.links.push({id:nextId('engage'),a:cmd.uid,b:cmd.target.kind==='god'?godUid(cmd.target.playerKey):cmd.target.uid});
+        state.links.push(nextLink);
       }done();return;
     }
     if(cmd.type==='disengage'){if(l?.zone==='battlefield')state.links=state.links.filter(v=>v.id!==cmd.linkId);done();return;}
