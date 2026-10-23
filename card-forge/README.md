@@ -2,6 +2,8 @@
 
 Editor de cartas no navegador (vanilla JS, sem build). Monta a carta no canvas nativo 1488×2091 (2.5×3.5 in, ~595 dpi) com as peças extraídas dos PSDs.
 
+**Rulebook 2.0:** o [novo livro](../docs/guia-do-jogo.md) é a referência desde 23/10/2026. O editor e o formato de lote abaixo ainda são da versão anterior: não suportam estruturalmente HP, Owners e estágios de Cloth Evolution. A atualização aguarda as novas cartas do autor. Veja [o mapa da migração](../docs/migracao-rulebook-2.0.md) antes de preparar um lote no formato novo.
+
 ## Abrir
 
 Na raiz do projeto:

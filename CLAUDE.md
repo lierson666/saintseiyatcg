@@ -6,13 +6,16 @@ Tudo que for criado neste projeto (cartas, decks, engine do playtest, IA, UI, Ca
 
 | O quê | Fonte oficial |
 | --- | --- |
-| Regras do jogo | `docs/guia-do-jogo.md` (manual Vanilla 1.0) |
+| Regras do jogo | `docs/guia-do-jogo.md` (Rulebook 2.0, base para playtest) |
+| Migração para o Rulebook 2.0 | `docs/migracao-rulebook-2.0.md` (impactos e pendências; não cria regras) |
 | Mudanças de regra | `docs/CHANGELOG-regras.md` |
 | Cartas (dados, custos, textos) | `data/cards.json` |
 | Beta Athena (decks, domains, proxies) | `docs/beta-athena.md` + `data/beta-athena.json` |
 | Representações de carta para impressão e jogo | `docs/cartas-print-e-interativas.md` |
 
 Ordem de precedência quando houver conflito: `guia-do-jogo.md` > `cards.json` > `beta-athena` > código (`playtest/`, `card-forge/`). O código implementa a regra; não define regra.
+
+O Rulebook 2.0 foi fornecido pelo autor em 23/10/2026 e é a referência vigente. O catálogo, a beta e a implementação existentes ainda precisam ser migrados. Pontos que o novo livro deixa pendentes devem continuar explícitos; regras da Vanilla 1.0 não preenchem essas lacunas automaticamente.
 
 ## Como mudar uma regra
 

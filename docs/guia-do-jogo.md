@@ -1,527 +1,793 @@
-# Saint Seiya Card Game
+# SAINT SEIYA TCG
 
-Por Lierson Mattenhauer Jr
+OFFICIAL RULEBOOK — VERSION 2.0
 
-Manual de Regras Oficial - Vanilla 1.0
+Core Rules · Combat · Cosmo · Cloth Evolution · Tartarus
 
-## 1. Objetivo do jogo
+Status: versão-base para playtest e implementação.
 
-O objetivo do jogo e reduzir o Soul do Deus inimigo a 0.
+Princípio fundamental: Saint Seiya TCG é um jogo de cartas estratégico em que cada jogador controla um God e seus Devotees. Os jogadores desenvolvem Cosmo, estabelecem confrontos individuais, despertam o poder de seus Cavaleiros e procuram derrotar o God adversário.
 
-Voce tambem perde o jogo se precisar comprar uma carta do seu Baralho e nao houver cartas para comprar.
+O jogo deve transmitir quatro sensações:
 
-## 2. Componentes do jogo
+1. Cada confronto importa.
+2. Personagens poderosos podem ser contidos por sacrifícios.
+3. O Cosmo e as armaduras permitem superar adversários superiores.
+4. Derrotar um God é uma conquista extraordinária.
 
-Cada jogador precisa de:
+---
 
-- 1 carta de Deus
-- 1 carta de Dominio
-- 1 Baralho com 60 cartas
+## CAPÍTULO I — FUNDAMENTOS
 
-O jogo nao precisa de marcadores obrigatorios, porem e recomendado usar:
+### 1. Objetivo do jogo
 
-- Dado D6 para marcar `+1/+1`
-- Dado D6 para marcar `Damage em Cloths`
-- Dado D20 para marcar `Latent Cosmo`
+Cada jogador controla um God.
 
-## 3. Estrutura do jogo
+O objetivo principal é reduzir o Soul do God adversário a zero.
 
-Cada jogador possui:
+Quando o Soul de um God chega a zero, seu controlador perde a partida.
 
-| Elemento | Funcao |
-| --- | --- |
-| Deus | Representa o jogador |
-| Dominio | Base e segunda cor |
-| Baralho | Deck de compra |
-| Mao | Cartas jogaveis |
-| Campo | Onde ficam Devotees, Cloths e Reliquias |
-| Tartarus | Cartas destruidas |
-| Void | Cartas removidas do jogo |
-| Cosmo Base | Fonte permanente de Cosmo |
-| Cosmo | Recurso principal |
-| Latent Cosmo | Recurso temporario |
-| Soul | Vida do Deus |
+Se ambos os Gods chegarem a zero simultaneamente, a partida termina empatada, salvo efeito que determine outro resultado.
 
-## 4. Construcao do baralho
+### 2. Construção do deck
 
-Regras:
+Cada jogador utiliza:
 
-- O Baralho deve ter exatamente 60 cartas
-- Maximo de 4 copias de cada carta
-- O Baralho deve respeitar a cor do Deus
-- O Baralho deve respeitar a cor do Dominio
-- Cartas cinza podem ser usadas em qualquer Baralho
+* 1 God;
+* 1 Domain;
+* 1 deck principal com 60 cartas.
 
-### Cartas cinza
+O God e o Domain começam a partida em suas respectivas posições de jogo, fora do deck principal.
 
-Cartas cinza:
+O jogador começa com uma mão de 7 cartas.
 
-- Podem ser usadas por qualquer Deus
-- Fazem efeitos que outras cores fazem
-- Sao mais fracas ou custam mais caro
-- Servem para cobrir fraquezas das faccoes
+As regras de limite de cópias, mulligan e critérios de construção por facção permanecem pendentes de consolidação.
 
-## 5. Tipos de carta
+### 3. Tipos de cartas
 
-| Tipo | Quando pode usar | Descricao |
-| --- | --- | --- |
-| Deus | Comeca em jogo | Seu personagem principal |
-| Dominio | Comeca em jogo | Sua base |
-| Devotee | Seu turno | Unidades |
-| Cloth | Seu turno | Armaduras |
-| Reliquia | Seu turno | Itens e artefatos |
-| Momento | Apenas no seu turno | Feiticos |
-| Tecnica | Qualquer momento | Respostas e golpes |
+God
 
-### Escopo da beta Athena v0.1
+Representa a divindade comandada pelo jogador.
 
-Na beta Athena v0.1:
+Possui, entre outras propriedades:
 
-- `Sanctuary`, `Star Hill` e `Coliseum` sao tratados como `Dominio`
-- o tipo `Local` nao faz parte do escopo ativo
-- cada deck beta comeca a partida com 1 `God` e 1 `Dominio` fixos
+* Soul;
+* Attack;
+* facção;
+* habilidades próprias.
 
-## 6. Setup da partida
+Domain
 
-Cada jogador:
+Representa o domínio associado ao God.
 
-- Escolhe 1 Deus
-- Escolhe 1 Dominio
-- Coloca ambos em campo
-- Embaralha o Baralho
-- Compra 7 cartas
-- Pode fazer Mulligan
+Começa em jogo e possui habilidades específicas.
 
-Depois disso, decide-se quem comeca.
+Devotee
 
-## 7. Mulligan
+Representa Cavaleiros, Marinas, Specters e outros personagens.
 
-Voce pode trocar qualquer numero de cartas da sua mao inicial.
+Possui:
 
-Como funciona:
+* Power;
+* HP;
+* facção;
+* habilidades;
+* possíveis keywords.
 
-- Escolha quantas cartas quiser trocar
-- Embaralhe essas cartas no Baralho
-- Compre a mesma quantidade
+Cloth / Scale
 
-Penalidade:
+Equipamentos que modificam os atributos e as habilidades de um Devotee.
 
-- Se voce fizer mulligan, o oponente comeca o jogo com `+1 Latent Cosmo`, independentemente da quantidade de cartas trocadas
+Alguns equipamentos podem evoluir quando utilizados por seus Owners.
 
-## 8. O Deus
+Technique
 
-O Deus representa o jogador.
+Carta que representa uma técnica ou habilidade especial.
 
-Cada Deus possui:
+Moment
 
-- Soul
-- Attack
-- Awaken
-- Passivas
-- Awaken Ability
-- Ultimate
+Carta que representa um acontecimento ou intervenção.
 
-O Deus:
+Nota de desenvolvimento: as janelas exatas de utilização de Techniques e Moments ainda precisam ser padronizadas.
 
-- Nao pode atacar
-- Nao pode virar
-- Nao pode equipar Cloth
-- Nao pode equipar Reliquias
-- Apenas causa dano quando e atacado
+---
 
-### Quando um Devotee ataca o Deus
+## CAPÍTULO II — COSMO
 
-- O Devotee vira e fica Unprepared
-- O Devotee causa dano ao Deus igual ao seu Power
-- O Deus causa dano de volta igual ao seu Attack
-- O Devotee pode morrer
+### 4. Cosmo Base
 
-Se o Soul do Deus chegar a 0, o jogador perde o jogo.
+O Cosmo é o principal recurso utilizado para jogar cartas e pagar habilidades.
 
-## 9. O Dominio
+Cartas com a propriedade Cosmoble podem ser utilizadas como Cosmo Base.
 
-O Dominio:
+Uma vez por rodada, durante uma oportunidade apropriada de jogo, o jogador pode colocar uma carta Cosmoble como Cosmo Base.
 
-- Comeca o jogo em campo
-- Nao faz parte do Baralho
-- Nao possui custo
-- Nao pode ser destruido
-- Nao pode ser descartado
-- Nao pode voltar para a mao
-- Define a segunda cor do Baralho
-- Possui uma habilidade
+Colocar uma Cosmo Base não consome uma AÇÃO.
 
-### Tipos de Dominio
+Uma carta utilizada como Cosmo Base deixa de funcionar como sua carta original enquanto permanecer nessa zona, salvo efeito explícito.
 
-- Comum: apenas habilita cor
-- Incomum: habilidade leve
-- Raro: habilidade forte, 1 vez por jogo
+### 5. Utilização de Cosmo
 
-Se a habilidade for `1 vez por jogo`, vire o Dominio para marcar que foi usada.
+O jogador utiliza Cosmo disponível para pagar os custos de:
 
-### Domains oficiais de Athena na beta v0.1
+* Devotees;
+* Cloths e Scales;
+* Techniques;
+* Moments;
+* habilidades;
+* evolução de equipamentos.
 
-- `Sanctuary`: Devotees you control get `+0/+1`.
-- `Star Hill`: At the beginning of your turn, generate `1 Latent Cosmo`.
-- `Coliseum`: Once per game, choose target Devotee you control. It gets `+1/+0` and gains `Pierce` until end of turn.
+O Cosmo utilizado fica indisponível até ser renovado.
 
-## 10. Areas do jogo
+No início de cada rodada, as Cosmo Bases são renovadas.
 
-| Area | Funcao |
-| --- | --- |
-| Baralho | Comprar cartas |
-| Mao | Cartas jogaveis |
-| Campo | Devotees, Cloths e Reliquias |
-| Tartarus | Cartas destruidas |
-| Void | Cartas removidas |
-| Cosmo Base | Fonte de Cosmo |
-| Deus | Sua base |
-| Dominio | Sua base |
+### 6. Limite de Cosmo Base
 
-## 11. Recursos
+Cada jogador pode adicionar normalmente uma Cosmo Base por rodada.
 
-O jogo possui 4 recursos:
+Efeitos específicos podem modificar esse limite.
 
-| Recurso | Funcao |
-| --- | --- |
-| Cosmo Base | Geracao de Cosmo |
-| Cosmo | Recurso para pagar custos |
-| Latent Cosmo | Recurso temporario |
-| Soul | Vida do Deus |
+---
 
-## 12. Cosmo Base
+## CAPÍTULO III — RODADAS E AÇÕES
 
-Uma vez por turno, durante sua Fase Principal:
+### 7. Estrutura geral
 
-- Voce pode colocar 1 carta da mao virada para baixo na area de Cosmo Base
+Saint Seiya TCG utiliza um sistema de AÇÕES alternadas.
 
-Apenas cartas com simbolo de Cosmo Base podem ser usadas como Cosmo Base, exceto se uma habilidade permitir.
+Os jogadores não executam turnos completos e independentes.
 
-### Gerar Cosmo
+Em vez disso, alternam oportunidades de realizar uma AÇÃO.
 
-- Vire 1 Cosmo Base para gerar 1 Cosmo
-- Ele permanece virado ate sua proxima Manutencao
+Estrutura de uma rodada
 
-### Desvirar Cosmo Base
+1. Início da rodada
 
-- Todos os seus Cosmos Base desviram durante sua Fase de Manutencao
+* Renovar Cosmo.
+* Renovar ENG.
+* Preparar os Devotees elegíveis.
+* Resolver efeitos de início da rodada.
 
-## 13. Latent Cosmo
+2. Fase de ações
 
-Voce ganha Latent Cosmo quando:
+Os jogadores alternam uma AÇÃO por vez.
 
-- Um Devotee seu recebe dano durante o turno do oponente
+3. Encerramento
 
-Cada vez que isso acontece:
+Quando ambos os jogadores terminam suas ações, a rodada se encerra.
 
-- Ganhe 1 Latent Cosmo
+Resolvem-se os efeitos de fim da rodada e começa uma nova rodada.
 
-Latent Cosmo:
+A definição completa de iniciativa, prioridade, passe e encerramento será estabelecida no capítulo de timing.
 
-- Pode ser usado como Cosmo normal
-- Desaparece no final do seu turno
+### 8. AÇÕES disponíveis
 
-## 14. Soul
+Entre as ações possíveis estão:
 
-Soul e a vida do Deus.
+* Jogar um Devotee.
+* Jogar uma Cloth ou Scale.
+* Estabelecer Engage.
+* Alterar Engage.
+* Realizar Disengage.
+* Realizar Strike.
+* Evoluir uma Cloth.
+* Utilizar uma habilidade que exija AÇÃO.
+* Jogar uma Technique ou Moment cuja regra exija AÇÃO.
+* Passar.
 
-Algumas habilidades pedem para pagar Soul. Isso significa que o Deus esta gastando sua propria vida.
+Cada jogador realiza apenas uma AÇÃO por oportunidade, salvo efeitos específicos.
 
-Se o Soul chegar a 0, voce perde o jogo.
+### 9. Prepared e Unprepared
 
-## 15. Devotees
+Um Devotee pode estar em dois estados:
 
-Devotees sao as unidades do jogo.
+Prepared: disponível para realizar ações que exigem esse estado.
 
-Eles possuem:
+Unprepared: indisponível para ações que exigem Prepared.
 
-- Custo
-- Power
-- Resistance
-- Habilidades
-- Keywords
+Realizar Strike deixa o atacante Unprepared.
 
-Devotees podem:
+Um Devotee Unprepared continua podendo:
 
-- Atacar Devotees inimigos
-- Atacar o Deus inimigo
-- Equipar Cloth
-- Equipar Reliquias
-- Usar habilidades
+* permanecer em Engage;
+* receber Engage;
+* causar dano de retaliação;
+* receber dano;
+* beneficiar-se de habilidades passivas.
 
-### Regra de combate
+Engage, Disengage e Cloth Evolution não alteram Prepared por si mesmos.
 
-Sempre que um Devotee entra em combate:
+---
 
-- Ele vira
-- Ele fica Unprepared
+## CAPÍTULO IV — ENGAGE
 
-Um Devotee Unprepared nao pode atacar novamente no mesmo turno.
+### 10. Conceito
 
-## 16. Reliquias
+Engage representa um confronto direto entre personagens.
 
-Reliquias permanecem em campo.
+Engage não causa dano.
 
-Elas podem ser:
+Ele estabelece uma ligação persistente entre dois combatentes.
 
-- Equipamentos
-- Artefatos com efeito continuo
+Um Devotee normalmente pode participar de apenas um Engage por vez.
 
-Reliquias:
+### 11. Estabelecer Engage
 
-- Nao sao destruidas quando o portador morre
-- Permanecem em campo
-- So saem de campo se forem destruidas
-- Quando destruidas, vao para o Void
+Para estabelecer Engage:
 
-Um Devotee pode ter varias Reliquias.
+1. Escolha um Devotee seu que não esteja em Engage.
+2. Escolha um alvo válido.
+3. Utilize uma AÇÃO.
+4. Estabeleça o vínculo.
 
-## 17. Cloths
+O primeiro Engage de um Devotee livre custa 0 ENG.
 
-Cada Devotee pode equipar apenas 1 Cloth.
+Engage não exige Prepared.
 
-A Cloth permanece em campo quando o portador morre.
+O Devotee não fica Unprepared ao estabelecer Engage.
 
-### Damage nas Cloths
+### 12. Persistência
 
-Cada Cloth possui um valor de Damage.
+Engage permanece ativo:
 
-Quando o Devotee equipado morre:
+* após um Strike;
+* entre rodadas;
+* enquanto os participantes permanecerem válidos.
 
-- Coloque marcadores de Damage na Cloth igual ao valor de Damage dela
+Engage não termina automaticamente quando um participante fica Unprepared.
 
-Enquanto a Cloth tiver Damage:
+Se um participante deixar o campo, o Engage termina.
 
-- Nao pode ser equipada
-- Nao concede bonus
-- Nao pode usar habilidades
+O Devotee sobrevivente fica livre para estabelecer um novo Engage.
 
-### Recuperacao
+### 13. Restrição de alvo
 
-Na Fase de Manutencao:
+Um Devotee em Engage deve realizar Strike contra o oponente ao qual está vinculado.
 
-- Remova 1 marcador de Damage de cada Cloth
+Ele não pode simplesmente ignorar esse confronto e atacar outro alvo.
 
-Quando nao houver mais Damage, a Cloth pode ser equipada novamente.
+Efeitos específicos podem modificar essa restrição.
 
-## 18. Estrutura do turno
+### 14. Alterar Engage
 
-Cada turno possui 3 fases:
+Um Devotee já em Engage pode trocar seu alvo.
 
-| Fase | Nome |
-| --- | --- |
-| 1 | Manutencao |
-| 2 | Fase Principal |
-| 3 | Fim do Turno |
+Custo:
 
-## 19. Fase de Manutencao
+1 AÇÃO + 1 ENG.
 
-Durante a Manutencao:
+O Engage anterior termina e um novo Engage é estabelecido com um alvo válido.
 
-- Desvire todas as cartas viradas
-- Desvire todos os Cosmos Base
-- Remova efeitos temporarios
-- Cure 1 Damage de cada Cloth
-- Resolva efeitos de Manutencao
+A troca não exige Prepared e não altera esse estado.
 
-## 20. Fase Principal
+### 15. Disengage
 
-Durante a Fase Principal voce pode, em qualquer ordem:
+Um Devotee pode encerrar seu Engage sem selecionar um novo alvo.
 
-- Comprar carta do turno
-- Baixar 1 Cosmo Base
-- Gerar Cosmo
-- Jogar Devotees
-- Jogar Cloths
-- Jogar Reliquias
-- Jogar Momento
-- Usar Tecnicas
-- Usar habilidades
-- Usar Awaken Ability
-- Atacar Devotees
-- Atacar o Deus
+Custo:
 
-## 21. Fim do turno
+1 AÇÃO + 1 ENG.
 
-No fim do turno:
+O Devotee fica livre.
 
-- Todo Latent Cosmo desaparece
-- Efeitos ate o fim do turno terminam
-- Todos os Devotees recuperam toda a Resistance
-- O turno passa para o oponente
+### 16. ENG
 
-Isso significa que:
+ENG é um recurso tático compartilhado pelos Devotees de um mesmo God.
 
-- O dano em Devotees nao e permanente
-- O combate e resolvido por turno, nao por dano acumulado
+Ele representa a capacidade de reposicionar confrontos.
 
-## 22. Combate
+Valor inicial para playtest: 3 ENG por God, por rodada.
 
-### Devotee vs Devotee
+ENG é renovado no início de cada rodada.
 
-Quando um Devotee ataca outro Devotee:
+ENG não utilizado não se acumula.
 
-- O atacante vira
-- Se houver Long Range, ele causa dano primeiro
-- Ambos causam dano igual ao Power
-- Se a Resistance chegar a 0, o Devotee morre e vai para o Tartarus
+Esse valor é experimental e deverá ser validado em partidas.
 
-### Devotee vs Deus
+### 17. Engage contra Gods
 
-Quando um Devotee ataca o Deus:
+Um God pode receber múltiplos Engage simultaneamente.
 
-- O Devotee vira
-- O Devotee causa dano ao Deus igual ao Power
-- O Deus causa dano de volta igual ao Attack
-- O Devotee pode morrer
+Diferentemente dos Devotees, o God não fica limitado a um único confronto.
 
-## 23. Momento e Tecnica
+### 18. Engage e bloqueio
 
-### Momento
+Um Devotee normalmente não pode estabelecer Engage contra outro Devotee que já esteja vinculado a um oponente.
 
-- So pode ser usado no seu turno
-- Vai para o Tartarus apos resolver
+Essa restrição pode ser modificada por habilidades específicas.
 
-### Tecnica
+Multiguard X permite exceções conforme o valor indicado.
 
-- Pode ser usada a qualquer momento
-- Pode ser usada durante combate
-- Pode ser usada no turno do oponente
-- Pode ser usada em resposta a cartas ou habilidades
-- Vai para o Tartarus apos resolver
+### 19. Guardian
 
-### Regra de resposta
+Guardian representa a capacidade de proteger aliados ou o próprio God.
 
-Sempre que:
+A keyword permite interferir em determinadas declarações de Engage.
 
-- Um ataque e declarado
-- Uma carta e jogada
-- Uma habilidade e usada
+Pendente: definir exatamente quando Guardian pode intervir, quais alvos protege e se essa intervenção exige Prepared ou algum custo.
 
-O oponente pode responder com Tecnica.
+---
 
-A Tecnica resolve primeiro.
+## CAPÍTULO V — STRIKE E COMBATE
 
-## 24. Keywords
+### 20. Strike
 
-| Keyword | Efeito |
-| --- | --- |
-| Guardian | Deve ser escolhido como alvo antes do Deus ou de outros Devotees, exceto por atacantes com Nimble |
-| Nimble | Ignora Guardian ao escolher o alvo do ataque. Pode ser atacado normalmente |
-| Cheater | Nao permite ignorar Guardian; a unica excecao de evasao e Nimble |
-| Long Range | Causa dano primeiro |
-| Pierce | Dano excedente vai para o Deus |
-| Impulse | Pode agir no turno que entra |
-| Sealed | Nao pode atacar nem usar habilidades |
-| Unfaith | Remove Latent Cosmo, ou a criatura com Unfaith nao ataca o Soul inimigo, removendo Latent Cosmo em vez disso |
+Strike é a ação utilizada para causar dano durante um Engage.
 
-## 25. Regra de lendario
+Para realizar Strike, o Devotee deve:
 
-Devotees e Reliquias so podem ter 1 carta com o mesmo nome em campo.
+1. Estar Prepared.
+2. Estar em Engage com um alvo válido.
+3. Utilizar uma AÇÃO.
 
-Se jogar outra copia:
+Após declarar Strike, o atacante fica Unprepared.
 
-- A habilidade de entrada acontece
-- Voce escolhe qual permanece
-- A outra vai para o Tartarus
+### 21. Dano simultâneo
 
-Nao se aplica a cartas cinza.
+Quando um Devotee realiza Strike contra outro Devotee:
 
-## 26. Evolucao
+* O atacante causa dano igual ao seu Power.
+* O defensor causa dano igual ao seu Power.
 
-Se voce jogar um Devotee com o mesmo nome de um Devotee seu em campo:
+O dano é simultâneo.
 
-- Ele custa 2 Cosmo a menos
+O defensor não precisa estar Prepared.
 
-Isso representa evolucao do personagem.
+O defensor não utiliza AÇÃO para retaliar.
 
-## 27. Awaken
+Mesmo que um combatente seja destruído durante o confronto, ele ainda causa o dano simultâneo correspondente.
 
-Cada Deus possui um valor de Awaken.
+### 22. Dano persistente
 
-Quando o Soul do seu Deus chega ao valor de Awaken ou menos, o Deus desperta.
+O dano recebido por Devotees permanece marcado.
+
+Ele não desaparece automaticamente ao final da rodada.
+
+O dano também permanece quando:
+
+* o Devotee muda de Engage;
+* o Devotee fica Prepared;
+* o Devotee fica Unprepared;
+* uma Cloth evolui.
+
+Efeitos de cura ou remoção de dano podem alterar essa condição.
+
+### 23. Destruição
+
+Um Devotee é destruído quando o dano acumulado sobre ele é igual ou superior ao seu HP máximo.
+
+Devotees destruídos são enviados ao Tartarus, salvo efeito que determine outro destino.
+
+### 24. Strike contra Gods
+
+Quando um Devotee realiza Strike contra um God:
+
+* O Devotee causa dano ao Soul do God igual ao seu Power.
+* O God causa dano ao Devotee igual ao seu Attack.
+
+Esse dano é simultâneo.
+
+A retaliação do God:
+
+* não consome AÇÃO;
+* não exige Prepared;
+* acontece mesmo que o God esteja Unprepared.
+
+Gods não utilizam HP como os Devotees.
+
+Sua condição de derrota é determinada pelo Soul.
+
+### 25. Long Range
+
+Quando um Devotee com Long Range inicia um Strike, seu dano é resolvido antes da retaliação do alvo.
+
+Se o alvo for destruído por esse dano, ele não causa a retaliação daquele Strike.
+
+Long Range não concede essa vantagem quando o Devotee está defendendo um Strike.
+
+---
+
+## CAPÍTULO VI — CLOTHS E SCALES
+
+### 26. Equipamentos
+
+Cloths e Scales são equipamentos que podem ser anexados a Devotees elegíveis.
+
+Um equipamento concede os benefícios indicados em seu texto.
+
+O equipamento e o Devotee são cartas distintas.
+
+### 27. Owner
+
+Algumas Cloths possuem a propriedade Owner.
+
+Owner identifica quais personagens podem despertar a evolução daquele equipamento.
+
+Uma Cloth pode possuir:
+
+* um Owner;
+* dois Owners;
+* ou outra quantidade explicitamente indicada.
+
+Owner não impede que outros Devotees elegíveis equipem a Cloth.
+
+Um Devotee que não seja Owner recebe apenas os benefícios Vanilla.
+
+### 28. Vanilla
+
+Vanilla é o estado básico de uma Cloth.
+
+Toda Cloth entra em jogo no estado Vanilla, salvo efeito explícito.
+
+Os benefícios Vanilla são os benefícios básicos do equipamento.
+
+### 29. Cloth Evolution
+
+Determinadas Cloths possuem estágios de evolução.
+
+Os estágios disponíveis são definidos individualmente em cada carta.
+
+A evolução não é obrigatória para todos os equipamentos.
+
+Estrutura experimental
+
+Vanilla → 7th Sense → God Cloth
+
+Esses nomes representam estágios mecânicos da Cloth.
+
+O Sétimo Sentido, narrativamente, continua sendo um despertar do Cosmo do personagem, e não uma transformação física obrigatória da armadura.
+
+### 30. Evolve
+
+Para evoluir uma Cloth:
+
+1. A Cloth deve estar equipada em um Owner válido.
+2. Os requisitos impressos devem ser cumpridos.
+3. O jogador utiliza uma AÇÃO.
+4. O jogador paga o Cosmo indicado.
+5. A Cloth avança um estágio.
+
+Evolve não exige Prepared.
+
+Evolve não deixa o Devotee Unprepared.
+
+Evolve não encerra Engage.
+
+Regra experimental: cada Cloth pode evoluir normalmente uma vez por rodada.
+
+### 31. Vínculo de evolução
+
+A evolução pertence à combinação específica:
+
+Cloth + Owner equipado.
+
+A evolução não é permanente no equipamento.
+
+Se a Cloth deixar de estar equipada naquele Owner, retorna imediatamente ao Vanilla.
+
+Isso acontece quando:
+
+* o Owner morre;
+* o equipamento é removido;
+* o equipamento é transferido;
+* o Owner deixa o campo.
+
+Mesmo que a Cloth seja transferida diretamente para outro Owner listado, retorna ao Vanilla.
+
+O novo Owner precisa desenvolver seu próprio vínculo.
+
+### 32. Morte do Owner
+
+Quando o Owner equipado morre:
+
+1. O Devotee é enviado ao Tartarus.
+2. A Cloth perde sua evolução.
+3. A Cloth retorna ao Vanilla.
+4. A Cloth permanece em jogo sem portador, salvo efeito que determine outro destino.
+
+O procedimento para reequipar uma Cloth sem portador será definido nas regras de equipamento.
+
+### 33. Resonance
+
+Resonance representa habilidades especiais associadas a personagens específicos.
+
+Owner e Resonance são propriedades diferentes.
+
+Owner determina quem pode evoluir.
+
+Resonance determina quem pode utilizar uma habilidade específica.
+
+Uma Cloth com dois Owners pode apresentar habilidades de Resonance diferentes para cada um.
+
+O texto de Resonance deve sempre identificar expressamente o personagem exigido.
+
+### 34. Bônus de atributos
+
+Os bônus de estágios diferentes substituem os anteriores, salvo indicação expressa.
+
+Eles não se acumulam automaticamente.
+
+Quando uma Cloth aumenta o HP máximo de um Devotee, o dano já marcado permanece inalterado.
+
+Quando uma Cloth perde seu bônus de HP, o HP máximo é recalculado.
+
+Se o dano acumulado for igual ou superior ao novo HP máximo, o Devotee é destruído.
+
+### 35. God Cloth
+
+God Cloth representa uma evolução divina disponível apenas para equipamentos específicos.
+
+Nem toda Cloth possui God Cloth.
+
+God Cloth pode conceder:
+
+* bônus de Power;
+* bônus de HP;
+* habilidades especiais;
+* proteção contra Gods;
+* novas interações de combate;
+* acesso a Ultimates específicas.
+
+O estágio God Cloth não torna o Devotee automaticamente invencível.
+
+---
+
+## CAPÍTULO VII — AWAKEN E ULTIMATE
+
+### 36. Awaken
+
+Awaken representa o despertar de habilidades próprias de um Devotee.
+
+Awaken pertence ao personagem, não ao equipamento.
+
+Um Devotee pode possuir Awaken mesmo sem estar equipado com uma Cloth.
+
+Os requisitos e efeitos são determinados pelo texto da carta.
+
+### 37. 7th Sense
+
+7th Sense é o nome do primeiro estágio evoluído das Cloths que possuem essa progressão.
+
+O uso desse nome não significa que todo Devotee precise equipar uma Cloth para despertar seu Sétimo Sentido.
+
+Pendente: consolidar a relação exata entre Awaken e 7th Sense para evitar mecânicas redundantes.
+
+### 38. Ultimate
+
+Ultimate representa uma habilidade extraordinária.
+
+As condições de utilização são determinadas pela carta.
+
+Algumas Ultimates podem exigir:
+
+* Awaken;
+* uma Cloth específica;
+* 7th Sense;
+* God Cloth;
+* outra condição especial.
+
+Ultimate não exige universalmente uma God Cloth.
+
+---
+
+## CAPÍTULO VIII — TARTARUS
+
+### 39. Tartarus
+
+Tartarus é a zona para onde Devotees destruídos são enviados normalmente.
+
+Cartas e habilidades podem interagir com Devotees nessa zona.
+
+### 40. Afterlife
+
+AFTERLIFE é a keyword universal que identifica Devotees enquanto estiverem no Tartarus.
+
+Todo Devotee no Tartarus possui Afterlife, independentemente da facção.
+
+Afterlife não concede habilidades automaticamente.
+
+A keyword permite que cartas e efeitos identifiquem e interajam com Devotees presentes no Tartarus.
+
+Um Devotee deixa de possuir Afterlife quando sai do Tartarus.
+
+Não são necessários marcadores.
+
+Nomenclatura oficial
+
+* Afterlife: keyword universal.
+* Arayashiki: não é keyword da engine.
+* Meikai: não é keyword da engine.
+
+### 41. Retorno do Tartarus
+
+Devotees podem retornar do Tartarus apenas por efeitos que permitam essa movimentação.
+
+O custo, as condições e o estado de entrada são determinados pelo efeito.
+
+A keyword Afterlife, isoladamente, não permite retornar ao campo.
+
+---
+
+## CAPÍTULO IX — KEYWORDS DE COMBATE
+
+### 42. Guardian
+
+Permite proteger determinados alvos contra Engage, conforme suas regras específicas.
+
+### 43. Nimble
+
+Keyword existente no sistema.
+
+Seu texto normativo será incorporado após revisão da definição canônica.
+
+### 44. Cheater
+
+Keyword existente no sistema.
+
+Seu texto normativo será incorporado após revisão da definição canônica.
+
+### 45. Long Range
+
+O dano do Devotee atacante é resolvido antes da retaliação.
+
+Se o defensor for destruído, não retaliará.
+
+### 46. Pierce
+
+Keyword existente no sistema.
+
+Seu texto normativo será incorporado após revisão da definição canônica.
+
+### 47. Impulse
+
+Keyword existente no sistema.
+
+Seu texto normativo será incorporado após revisão da definição canônica.
+
+### 48. Sealed
+
+Keyword existente no sistema.
+
+Seu texto normativo será incorporado após revisão da definição canônica.
+
+### 49. Unfaith
+
+Keyword existente no sistema.
+
+Seu texto normativo será incorporado após revisão da definição canônica.
+
+### 50. Multiguard X
+
+Permite que um Devotee participe de múltiplos Engage, até o limite X, conforme as regras da habilidade.
+
+---
+
+## CAPÍTULO X — REGRAS GERAIS
+
+### 51. Texto das cartas
+
+Quando o texto de uma carta contradiz uma regra geral, o texto da carta prevalece, desde que o efeito seja válido e não viole uma proibição expressa.
+
+### 52. Identidade das cartas
+
+Uma carta só é considerada um personagem específico quando corresponde à identidade exigida pelo efeito.
 
 Exemplo:
 
-- Athena Awaken 5
-- Quando Athena chega a 5 Soul ou menos, ela desperta
+Uma habilidade que exige Pegasus Seiya não é ativada por outro Devotee que esteja equipado com Pegasus Cloth.
 
-O Awaken:
+### 53. Efeitos de entrada
 
-- Acontece automaticamente
-- Nao pode ser impedido
-- Dura ate o fim do jogo
-- Libera habilidades Awaken
+Habilidades ativadas quando uma carta entra em jogo devem aparecer antes das informações de atributos e keywords no padrão de Card Craft.
 
-## 28. Ultimate
+Essa é uma regra de apresentação das cartas, não uma alteração da ordem de resolução.
 
-Cada Deus possui uma Ultimate:
+### 54. Facções
 
-- So pode ser usada 1 vez por jogo
-- Possui custo alto
-- Normalmente muda o jogo
+As principais identidades estratégicas previstas são:
 
-## 29. Condicoes de vitoria
+Athena: proteção, evolução e superação.
 
-Voce vence se:
+Poseidon: controle de confrontos e domínio do campo.
 
-- O Soul do Deus inimigo chegar a 0
-- O oponente tentar comprar carta e nao tiver Baralho
+Hades: interação com Tartarus e retorno de Devotees.
 
-## 30. Identidade das faccoes
+Ares: pressão ofensiva e combate agressivo.
 
-| Deus | Estilo |
-| --- | --- |
-| Athena | Defesa e sobrevivencia |
-| Poseidon | Controle |
-| Ares | Agressivo |
-| Hades | Cemiterio |
-| Artemis | Ramp |
+Artemis: desenvolvimento de recursos e aceleração.
 
-## 31. Duracao da partida
+Essas identidades orientam o Card Craft, mas não proíbem efeitos de outras categorias.
 
-Tempo medio esperado:
+---
 
-- 15 a 25 minutos
+## CAPÍTULO XI — PARÂMETROS DE PLAYTEST
 
-## 32. Resumo do turno
+Os valores desta seção são hipóteses iniciais, não resultados de testes concluídos.
 
-1. Manutencao
-2. Comprar carta
-3. Baixar Cosmo Base
-4. Jogar cartas
-5. Combater
-6. Fim do turno
+Parâmetro	Valor experimental
+Deck principal	60 cartas
+Mão inicial	7 cartas
+Cosmo Base por rodada	1
+ENG por God	3
+Engage inicial	1 AÇÃO / 0 ENG
+Trocar Engage	1 AÇÃO / 1 ENG
+Disengage	1 AÇÃO / 1 ENG
+Strike	1 AÇÃO
+Evolve	1 AÇÃO + Cosmo
+Evoluções por Cloth/rodada	1
+Dano entre rodadas	Persistente
+Duração média desejada	8–10 rodadas
 
-## Conclusao
+Os custos de Evolution e God Cloth serão determinados no balanceamento das cartas.
 
-O jogo agora possui:
+---
 
-- Sistema de recurso
-- Sistema de combate
-- Sistema de Deus
-- Sistema de Dominio
-- Sistema de Cloth
-- Sistema de Reliquias
-- Sistema de Awaken
-- Sistema de Ultimate
-- Sistema de Keywords
-- Sistema de Timing
-- Sistema de Evolucao
-- Sistema de Latent Cosmo
+## CAPÍTULO XII — PONTOS QUE PRECISAM SER FECHADOS
 
-Isso e oficialmente um TCG completo e jogavel.
+Este Rulebook reúne as decisões atuais, mas ainda não é um regulamento completo para torneios.
 
-## Proximo passo
+Os seguintes pontos precisam de definição antes da implementação definitiva:
 
-Agora comeca a parte mais dificil e importante: balanceamento.
+A. Timing e prioridade
 
-Precisamos criar:
+* Quem realiza a primeira AÇÃO?
+* Como funciona passar?
+* Quando uma rodada termina?
+* Como funcionam respostas e interrupções?
 
-- Tabela de Power e Resistance
-- Custo das Keywords
-- Devotees comuns
-- Cloths base
-- Tecnicas base
-- Momentos base
-- Playtest
+B. Engage
+
+* Funcionamento exato de Guardian.
+* Resolução de múltiplos Engage.
+* Regras de Multiguard X.
+* Efeitos de controle e mudança de alvo.
+
+C. Equipamentos
+
+* Custo e timing para reequipar.
+* Limite de equipamentos por Devotee.
+* Interação entre Cloth e Scale.
+* Destruição e remoção de equipamentos.
+* Como representar fisicamente os estágios.
+
+D. Despertar
+
+* Relação definitiva entre Awaken e 7th Sense.
+* Condições para God Cloth.
+* Requisitos de Ultimate.
+
+E. Card Craft
+
+* Textos normativos de todas as keywords.
+* Padronização dos custos.
+* Identidade dos Owners.
+* Regras de construção e cópias.
+
+F. Balanceamento
+
+* Valores de Soul e Attack dos Gods.
+* Curvas de custo dos Devotees.
+* Quantidade de ENG.
+* Eficiência de Long Range.
+* Ritmo de evolução.
+* Recursão de Afterlife.
+
+---
+
+## PRINCÍPIO FINAL DO JOGO
+
+Saint Seiya TCG não deve ser decidido apenas pelo personagem com os maiores atributos.
+
+Um Devotee fraco pode conter um adversário poderoso.
+
+Um Cavaleiro ferido pode despertar seu Cosmo.
+
+Uma Cloth pode reconhecer seu verdadeiro dono.
+
+Um personagem derrotado pode continuar influenciando a partida através do Afterlife.
+
+E um God pode ser derrotado quando seus adversários conseguem produzir o impossível.
+
+Esse é o coração do Saint Seiya TCG.
+
+Fim do Rulebook 2.0 — Core Rules, versão-base para playtest.
