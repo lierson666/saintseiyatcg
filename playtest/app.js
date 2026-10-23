@@ -588,7 +588,7 @@ function passTurnFromMain() {
 
 function goToPhase(phase) {
   const order = TURN_PHASES.map(([id]) => id);
-  if (!gameState || gameState.currentPlayer !== "A" || order.indexOf(phase) <= order.indexOf(gameState.currentPhase)) {
+  if (!gameState || isAiPlayer(gameState.currentPlayer) || order.indexOf(phase) <= order.indexOf(gameState.currentPhase)) {
     return;
   }
   let guard = 4;
@@ -617,7 +617,7 @@ function getPrimaryAction() {
   if (gameState.combat.attacker) {
     return { label: "Cancel", sub: "Cancel the attack", action: "clear-combat", tone: "grey" };
   }
-  if (gameState.currentPlayer !== "A") {
+  if (isAiPlayer(gameState.currentPlayer)) {
     return { label: "Opponent's Turn", sub: "Techniques glow when you can respond", disabled: true, tone: "idle" };
   }
   if (attackDeclare) {
@@ -635,7 +635,7 @@ function getPrimaryAction() {
     return { label: "Next", sub: `To ${next}`, action: "next-phase", tone: "orange" };
   }
   if (gameState.currentPhase === "main") {
-    if (!attackQueue.length && getEligibleAttackers("A").length) {
+    if (gameState.currentPlayer === "A" && !attackQueue.length && getEligibleAttackers("A").length) {
       return { label: "Attack", sub: "Declare attackers", action: "declare-start", tone: "orange", secondary: [["End Turn", "pass-turn"]] };
     }
     return { label: "End Turn", sub: "Pass to the opponent", action: "pass-turn", tone: "orange" };
@@ -1310,7 +1310,7 @@ function advanceToNextPhase(fromAi = false) {
     return false;
   }
 
-  if (!fromAi && gameState.currentPlayer !== "A") {
+  if (!fromAi && isAiPlayer(gameState.currentPlayer)) {
     addLog("Only the active local player can advance the phase manually.");
     return false;
   }
@@ -7090,10 +7090,10 @@ function renderActionBar() {
 
   const previewTarget = hoverPreview || selectedInspector;
   const activePlayer = gameState.players[gameState.currentPlayer];
-  const localPlayer = gameState.players.A;
+  const localPlayer = activePlayer;
   const latestLog = gameState.log?.[gameState.log.length - 1] || "Ready for the next action.";
   const canControlPhaseFlow =
-    gameState.currentPlayer === "A" &&
+    !isAiPlayer(gameState.currentPlayer) &&
     !gameState.victory &&
     !mulliganState &&
     !paymentState &&
@@ -7112,7 +7112,7 @@ function renderActionBar() {
         : infoLine;
   const contextMarkup = renderActionBarContext(previewTarget);
 
-  const localTurn = gameState.currentPlayer === "A";
+  const localTurn = !isAiPlayer(gameState.currentPlayer);
 
   renderStatusMarkup(`
     <div class="center-hud ${localTurn ? "is-local-turn" : "is-opponent-turn"}">
