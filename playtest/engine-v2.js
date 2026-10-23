@@ -13,7 +13,7 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
   let stack=[],triggers=[],rootAction=null,timer=null,disposed=false,resolving=false,afterEffects=null;
   const card=id=>byId.get(id);
   const program=c=>c?.motor||emptyProgram();
-  const log=text=>{state.log.push(text);if(state.log.length>500)state.log.shift();};
+  const log=text=>{state.log.push(text);};
   const nextId=prefix=>`${prefix}-${++sequence}`;
   const player=key=>state.players[key];
   const leaders=()=>PLAYERS.flatMap(k=>[{kind:'god',playerKey:k,zone:'god',card:player(k).god,cardData:card(player(k).god.cardId)},{kind:'domain',playerKey:k,zone:'domain',card:player(k).domain,cardData:card(player(k).domainId)}]);

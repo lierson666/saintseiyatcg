@@ -14,6 +14,20 @@ A integração atual é local. Loja, inventário remoto, monetização, áudio d
 
 ## Legibilidade por dispositivo
 
-Ajuste solicitado pelo autor em 23/10/2026: no PC, a HUD deve ser maior e mais clara. A escala padrão de desktop usa textos de 16 px, rótulos de recursos de 13 px, Soul de 46 px e ação principal de 24 px. O painel lateral ganhou largura e acompanha a rolagem. Os fundos dos indicadores têm mais opacidade e os textos secundários, mais contraste. O controle pessoal de tamanho da HUD continua disponível e independente das cartas.
+Ajuste solicitado pelo autor em 23/10/2026: no PC, a HUD deve ser maior e mais clara. Na mesa atual, o guia usa texto de 16 px, histórico de 14 px, recursos de 30 px, Soul de 34 px e ação principal de 23 px, antes da escala pessoal. Fundos escuros e contraste preservam a leitura sobre o cenário. O controle de tamanho da HUD continua independente das cartas.
 
-Tablets e celulares usam pontos de adaptação próprios; não recebem a escala completa do desktop. A versão móvel também ganhou rótulos mais legíveis e botões de ferramentas com área de 44 px. Conferido de 375 a 1920 px, em orientação horizontal e com HUD em 125%, sem transbordamento horizontal nem indicadores cortados. Capturas comparativas ficam em `card-forge/out/qa-hud/` (fora do Git).
+Tablets e celulares usam pontos de adaptação próprios; não recebem a escala completa do desktop. O guia vira um painel aberto pelo botão de histórico. A mesa estreita reserva espaço para os dois campos, recursos, zonas, God e AÇÃO; telas baixas podem rolar verticalmente. Conferido de 375 a 1920 px, incluindo orientação horizontal e HUD de PC em 125%, sem transbordamento horizontal. Capturas atuais ficam em `card-forge/out/qa-arena/` (fora do Git).
+
+## Interação da mesa e guia flutuante
+
+Pedido do autor em 23/10/2026: aproximar a experiência de consulta, mão e disposição da HUD do Magic Arena, mantendo as regras de Saint Seiya. Referência de interação: [State of the Game — January 2021, Wizards](https://magic.wizards.com/en/news/mtg-arena/mtg-arena-state-game-january-2021-01-21). O motor continua sendo `engine-v2.js`; a apresentação é própria, em DOM/CSS e com os assets do projeto.
+
+- A mão forma um leque. Hover ou foco de teclado mostra uma prévia; clicar abre a carta com texto completo e somente as ações permitidas pelo motor. As setas Previous/Next e o botão Your hand permitem consultar cartas sobrepostas.
+- Arrastar uma carta jogável da mão para o campo envia o comando normal de jogar. Custos, alvos e prioridade seguem a mesma validação usada nos botões. Clicar para consultar não joga a carta.
+- Os Gods ficam junto de seus recursos e zonas. Cartas no campo mostram Power, HP, dano, Prepared, confrontos e equipamentos; linhas conectam os confrontos. Os sleeves ocultam a mão adversária.
+- No PC, o box flutuante à direita permanece visível, inclusive ao abrir uma carta ou escolher um alvo. Exibe rodada, jogador ativo, janela atual, instrução contextual, pilha e histórico em ordem cronológica. A oportunidade de ACTION e a prioridade têm contadores de passes separados.
+- O guia consulta ações legais e escolhas do estado atual. Ele explica Base gratuita, Engage, Strike, EQUIP, evolução e respostas sem acrescentar fases do Magic ao Rulebook 2.0. Escolhas privadas do adversário não revelam seu conteúdo no guia.
+- O histórico completo permanece na memória da partida. A interface começa com as últimas 120 entradas e permite carregar as anteriores; novas jogadas não deslocam a leitura de quem voltou no histórico. Jump to latest action retoma o acompanhamento. Ao terminar o duelo, View battle history mantém a consulta disponível também no celular. Sair do duelo descarta esse histórico local.
+- No celular, o guia abre sobre a mesa, com fechamento por botão/Escape e foco contido. Ao mudar entre PC e celular, o acesso à mesa acompanha o layout. Teclado, toque, redução de movimento e escala pessoal continuam disponíveis.
+
+`playtest/battle-guide.js` deriva a orientação e classifica os registros; não decide regras. `playtest/arena.css` contém o layout. A única alteração no armazenamento do motor nesta etapa remove o descarte automático das entradas anteriores a 500.

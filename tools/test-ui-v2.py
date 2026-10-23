@@ -32,10 +32,12 @@ with sync_playwright() as p:
     page.get_by_role('button', name='Keep hand', exact=True).click()
     page.get_by_role('button', name='Keep hand', exact=True).click()
     assert page.locator('.advantage-token--lunar').get_attribute('data-owner') == 'A'
-    assert page.locator('.card-sleeve--ocean').count() == 7
+    assert page.locator('.arena-opponent-hand .card-sleeve--ocean').count() == 7
     card = page.evaluate('sstcg.game.state.players.A.zones.hand.find(i=>sstcg.game.canBase("A",i.uid))')
     assert card
-    page.locator(f'[data-action="select"][data-uid="{card["uid"]}"]').click()
+    page.get_by_role('button', name='Your hand').click()
+    page.locator(f'[role=dialog] [data-action="select"][data-uid="{card["uid"]}"]').click()
+    assert page.locator('.arena-inspector').is_visible()
     page.get_by_role('button', name='Cosmo Base', exact=True).click()
     assert page.evaluate('sstcg.game.actingPlayer') == 'A'
     assert page.evaluate('sstcg.game.state.players.A.zones.cosmo_base.length') == 1
