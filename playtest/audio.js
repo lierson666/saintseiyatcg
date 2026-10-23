@@ -1,6 +1,9 @@
-// Procedural audio: no audio files ship with the game. Music and sound effects are
-// synthesized with WebAudio, so everything is original and nothing needs licensing.
-// The AudioContext only starts after a user gesture (browser autoplay rules): call unlock().
+// Trilhas locais por tela; efeitos sonoros continuam sintetizados com WebAudio.
+// O áudio começa após um gesto do jogador, conforme a política do navegador.
+
+const TRACKS = {
+  menu: new URL('../MUSIC/PEGASUS TYU SEI KEN.mp3', import.meta.url).href
+};
 
 const read = (key, fallback) => {
   try {
@@ -62,6 +65,7 @@ export function unlock() {
     if (wantedTheme) playMusic(wantedTheme);
   }
   if (ctx.state === "suspended") ctx.resume();
+  if (music?.audio?.paused) music.audio.play().catch(() => {});
 }
 
 export function setVolume(kind, value) {
@@ -69,6 +73,7 @@ export function setVolume(kind, value) {
   save(`ss-${kind}`, value);
   const bus = kind === "music" ? musicBus : sfxBus;
   bus?.gain.setTargetAtTime(value, ctx.currentTime, 0.05);
+  if (kind === "music" && music?.audio) music.audio.volume = value;
 }
 
 // One enveloped oscillator note.
@@ -196,12 +201,26 @@ export function playMusic(name) {
   wantedTheme = name;
   if (!ctx || music?.name === name) return;
   if (music) {
-    // Fade the old theme on its own gain so already-queued notes die out with it.
     const old = music;
-    window.clearInterval(old.timer);
-    old.bus.gain.setTargetAtTime(0.0001, ctx.currentTime, 0.4);
-    window.setTimeout(() => old.bus.disconnect(), 4000);
+    if (old.audio) {
+      old.audio.pause();
+      old.audio.removeAttribute('src');
+      old.audio.load();
+    } else {
+      // Suaviza as notas já agendadas antes de desconectar o tema anterior.
+      window.clearInterval(old.timer);
+      old.bus.gain.setTargetAtTime(0.0001, ctx.currentTime, 0.4);
+      window.setTimeout(() => old.bus.disconnect(), 4000);
+    }
     music = null;
+  }
+  if (TRACKS[name]) {
+    const audio = new Audio(TRACKS[name]);
+    audio.loop = true;
+    audio.volume = volume.music;
+    music = { name, audio };
+    audio.play().catch(() => {});
+    return;
   }
   const theme = THEMES[name];
   if (!theme) return;

@@ -21,7 +21,7 @@ const engineSettings=()=>Object.fromEntries(['autoPass','fullControl','aiSpeed']
 function save(){try{localStorage.setItem(storageKey,JSON.stringify(settings));}catch{/* Sem persistência disponível. */}}
 function scale(){for(const key of ['hudScale','cardScale']){settings[key]=Math.max(75,Math.min(125,Number(settings[key])||100));document.documentElement.style.setProperty(key==='hudScale'?'--hud-scale':'--card-scale',settings[key]/100);}document.documentElement.classList.toggle('reduce-effects',!settings.effects);}
 function message(text){notice.textContent=text;clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>notice.textContent='',3500);}
-async function init(){const r=await fetch('../data/cards.json');if(!r.ok)throw Error('The card library is unavailable.');cards=(await r.json()).cartas;beta=createStarterDecks(cards);registerDeckIdentities(beta.decks);scale();setVolume('music',settings.music);setVolume('sfx',settings.sfx);render();}
+async function init(){const r=await fetch('../data/cards.json');if(!r.ok)throw Error('The card library is unavailable.');cards=(await r.json()).cartas;beta=createStarterDecks(cards);registerDeckIdentities(beta.decks);scale();setVolume('music',settings.music);setVolume('sfx',settings.sfx);playMusic('menu');render();}
 function render(){
   dismissPreview();
   const oldLog=root.querySelector('.arena-log'),logHadFocus=oldLog===document.activeElement;const logCount=game?.state?.log.length||0;if(!ui.logPinned&&logCount>ui.lastLogCount)ui.logLimit+=logCount-ui.lastLogCount;ui.lastLogCount=logCount;if(oldLog&&!restoringLog){ui.logScroll=oldLog.scrollTop;ui.logHeight=oldLog.scrollHeight;}
@@ -95,6 +95,7 @@ function handle(node){const d=node.dataset;
   }
 }
 document.addEventListener('pointerdown',()=>unlock(),{once:true});
+document.addEventListener('keydown',()=>unlock(),{once:true});
 document.addEventListener('click',e=>{if(Date.now()<suppressClickUntil&&e.target.closest('.arena-card'))return;if(e.target.classList.contains('modal-backdrop')&&modal){close();return;}const n=e.target.closest('[data-command],[data-action]');if(n&&!n.disabled){sfx('click');handle(n);}});
 document.addEventListener('contextmenu',e=>{const n=e.target.closest('.arena-card');if(n){e.preventDefault();show({type:'inspect',uid:n.dataset.uid});}});
 document.addEventListener('change',e=>{const t=e.target;if(t.dataset.setting){change({[t.dataset.setting]:t.type==='checkbox'?t.checked:t.value});return;}if(t.id==='setup-first')setup.first=t.value;if(t.id.startsWith('setup-deck-')){setup[t.id.endsWith('A')?'deckAId':'deckBId']=t.value;render();}if(t.id==='collection-type'){collectionType=t.value;collectionPage=0;render();}});
