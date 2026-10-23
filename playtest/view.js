@@ -1,5 +1,5 @@
 // Projeção do estado canônico. Nenhuma regra ou custo é decidido aqui.
-import {escape,cardFace,shortName,icon,portraitFace,renderSettings,DECK_IDENTITIES} from './menu.js?v=2';
+import {escape,cardFace,shortName,icon,portraitFace,renderSettings,DECK_IDENTITIES} from './menu.js?v=3';
 const phaseNames={upkeep:'Upkeep',draw:'Draw',main:'Main',combat:'Combat',end:'End'};
 export function renderDuel(game,viewer,selection){
   const state=game.state,opponent=viewer==='A'?'B':'A';

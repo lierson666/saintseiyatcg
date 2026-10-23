@@ -1,5 +1,5 @@
 // Fila visual independente do motor: animações observam revisões sem alterar o resultado.
-import {cardImage} from './menu.js?v=2';
+import {cardImage} from './menu.js?v=3';
 import {sfx,playMusic} from './audio.js?v=1';
 export function createPresentation(){
   let enabled=true,layer=null,loading=null,previous=null,queue=Promise.resolve(),generation=0,noticeTimer=null;

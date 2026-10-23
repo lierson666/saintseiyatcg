@@ -1,17 +1,25 @@
 // Coordena navegação, comandos e projeções; o motor é independente do DOM.
 import {createGame} from './engine.js?v=1';
-import {renderMenu,escape,cardFace,shortName,icon,DECK_IDENTITIES} from './menu.js?v=2';
-import {renderDuel,renderChoice,renderInspector,renderPause,renderVictory,dialog} from './view.js?v=1';
-import {createPresentation} from './presentation.js?v=1';
+import {renderMenu,escape,cardFace,shortName,icon,DECK_IDENTITIES} from './menu.js?v=3';
+import {renderDuel,renderChoice,renderInspector,renderPause,renderVictory,dialog} from './view.js?v=2';
+import {createPresentation} from './presentation.js?v=2';
 import {unlock,sfx,playMusic,setVolume,volume} from './audio.js?v=1';
 const root=document.querySelector('#game-root'),modalRoot=document.querySelector('#modal-root'),previewRoot=document.querySelector('#preview-root');
 const presentation=createPresentation(),STORAGE_KEY='ssTcgSanctuary';
-let settings={autoPass:true,fullControl:false,aiSpeed:'normal',phaseStops:['main','combat'],effects:true,hotseatPrivacy:true,music:.28,sfx:.58};
+let settings={autoPass:true,fullControl:false,aiSpeed:'normal',phaseStops:['main','combat'],effects:true,hotseatPrivacy:true,music:.28,sfx:.58,hudScale:100,cardScale:100};
 try{settings={...settings,...JSON.parse(localStorage.getItem(STORAGE_KEY)||'{}')};}catch{}
 let cards=[],beta=null,game=null,screen='title',viewer='A',selection=null,modal=null,privacy=null,lastFocus=null,lastModalKind=null;
 let collectionQuery='',collectionType='All',collectionPage=0,hoverTimer=null,searchTimer=null,drag=null,suppressClickUntil=0;
 let setup={ai:true,deckAId:'athena-beta-seiya',deckBId:'athena-beta-hyoga',first:'random'};
 const byId=id=>cards.find(c=>c.id===id);
+function applyDisplayScale(){
+  for(const key of ['hudScale','cardScale']){
+    const value=Number(settings[key]);
+    settings[key]=Number.isFinite(value)?Math.min(125,Math.max(75,value)):100;
+    document.documentElement.style.setProperty(key==='hudScale'?'--hud-scale':'--card-scale',settings[key]/100);
+  }
+}
+applyDisplayScale();
 function save(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(settings));}catch{}}
 function changeSettings(patch){settings={...settings,...patch};save();presentation.settings(settings);if(game)game.dispatch({type:'settings',settings:patch});else render();}
 async function init(){
@@ -135,6 +143,7 @@ document.addEventListener('change',event=>{
 });
 document.addEventListener('input',event=>{
   const t=event.target;
+  if(t.dataset.displayScale){const key=t.dataset.displayScale;settings[key]=Number(t.value);applyDisplayScale();save();const output=document.getElementById(`scale-${key}`);if(output)output.textContent=`${settings[key]}%`;return;}
   if(t.dataset.volume){const value=Number(t.value)/100;settings[t.dataset.volume]=value;setVolume(t.dataset.volume,value);save();const output=document.querySelector(`#volume-${t.dataset.volume}`);if(output)output.textContent=`${t.value}%`;return;}
   if(t.id==='collection-search'){collectionQuery=t.value;collectionPage=0;clearTimeout(searchTimer);searchTimer=setTimeout(()=>{const caret=t.selectionStart;render();const field=document.querySelector('#collection-search');field?.focus();if(field&&field.type!=='search')field.setSelectionRange(caret,caret);},180);}
 });
