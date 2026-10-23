@@ -228,7 +228,7 @@ O primeiro Engage de um Devotee livre custa 0 ENG.
 
 Engage não exige Prepared.
 
-O alvo também pode estar Prepared ou Unprepared. Um Devotee Unprepared já vinculado a um God pode receber um confronto adicional de um Devotee adversário, conforme a exceção da seção 58.
+O alvo também pode estar Prepared ou Unprepared. Se o inimigo estiver engajado com seu God, seu Devotee pode assumir esse confronto: o vínculo com o God é substituído pelo vínculo entre os dois Devotees, conforme a seção 58.
 
 O Devotee não fica Unprepared ao estabelecer Engage.
 
@@ -300,7 +300,7 @@ Diferentemente dos Devotees, o God não fica limitado a um único confronto.
 
 Um Devotee normalmente não pode estabelecer Engage contra outro Devotee que já esteja vinculado a um oponente.
 
-**Exceção:** um alvo Unprepared que esteja engajado com um God pode receber um Engage adicional de outro Devotee. O vínculo com o God permanece. Os limites e a persistência dessa vaga adicional estão na seção 58.
+**Proteção do God:** seu Devotee pode estabelecer Engage contra um inimigo já vinculado ao seu God, assumindo esse confronto. O vínculo inimigo–God termina e é substituído por inimigo–Devotee, sem exigir Prepared de nenhum dos Devotees. A capacidade normal continua valendo; veja a seção 58.
 
 Essa restrição pode ser modificada por habilidades específicas.
 
@@ -312,7 +312,7 @@ Guardian representa a capacidade de proteger aliados ou o próprio God.
 
 A keyword permite interferir em determinadas declarações de Engage.
 
-Guardian pode interceptar uma declaração de Engage contra um aliado ou seu God quando tem capacidade livre, incluindo a vaga adicional da seção 58, sem gastar Prepared, AÇÃO ou ENG. Nimble ignora essa intervenção. O procedimento completo está no capítulo XII.
+Guardian pode interceptar uma declaração de Engage contra um aliado ou seu God quando tem capacidade livre, sem Prepared, AÇÃO ou ENG. Nimble ignora essa intervenção. O procedimento completo está no capítulo XII.
 
 ---
 
@@ -771,22 +771,23 @@ O autor aprovou a aplicação das recomendações de fechamento ao sistema do jo
 - Trocar Engage substitui um vínculo escolhido por outro, por 1 AÇÃO + 1 ENG. Disengage remove um vínculo escolhido pelo mesmo custo. Uma troca resolve de forma atômica: se o novo alvo se tornar inválido, a troca falha e o vínculo anterior permanece, se ainda válido; o custo já pago não retorna.
 - Os alvos e a capacidade disponível são reavaliados na resolução. Um vínculo acaba quando um participante sai do campo, quando deixam de ser adversários ou quando um efeito o encerra.
 
-#### Devotee Unprepared engajado com um God
+#### Assumir um confronto para proteger seu God
 
-- Um Devotee **Unprepared que tenha um vínculo com um God** pode receber um Engage adicional de um Devotee adversário, mesmo com a capacidade normal ocupada. O atacante usa uma AÇÃO para estabelecer ou trocar Engage, com os custos normais; o alvo não precisa gastar AÇÃO ou ENG.
-- Essa exceção concede **uma única vaga adicional**, além da capacidade normal ou de Multiguard X. Ela não permite receber uma sequência ilimitada de novos confrontos nem declarar Engage inicial enquanto já estiver vinculado.
-- A condição de estar Unprepared e vinculado ao God precisa existir na declaração e na resolução do novo Engage. Guardian também pode interceptar usando essa vaga, respeitando as demais condições de intercepção.
-- O vínculo com o God não é removido nem redirecionado. O novo vínculo registra a vaga adicional; **preparar o Devotee depois não encerra nenhum dos dois vínculos**. Strike continua exigindo Prepared e escolhe somente um oponente vinculado; apenas esse oponente retalia.
-- Trocar o vínculo adicional por outro Devotee preserva essa vaga enquanto o vínculo com o God continuar existindo, sem precisar estar Unprepared novamente. Continuam valendo os custos de troca e a legalidade do novo alvo.
-- Quando o vínculo adicional ou o vínculo com o God terminar, a vaga adicional deixa de existir. Se os vínculos restantes excederem a capacidade normal, o controlador escolhe quais encerrar, pelo procedimento usual de capacidade.
+- Se um Devotee inimigo estiver engajado com **seu God**, um Devotee seu pode escolher esse inimigo como alvo de Engage para **assumir o confronto e proteger o God**. Nenhum dos Devotees precisa estar Prepared; estar Unprepared não impede essa proteção.
+- Na resolução, o vínculo desse inimigo com seu God é **removido e substituído** pelo vínculo entre os dois Devotees. O inimigo deixa de poder realizar Strike contra seu God por aquele vínculo; seus próximos Strikes devem respeitar seus vínculos atuais.
+- O novo vínculo é persistente pelas regras normais. Preparar os Devotees ou iniciar outra rodada não restaura o vínculo com o God. O inimigo pode voltar a escolher o God por uma troca legal, pagando os custos normais; a proteção não cria uma proibição permanente de escolher o God.
+- Um Devotee seu livre usa **1 AÇÃO e 0 ENG**, como Engage inicial. Se já estiver vinculado, usa uma troca legal de **1 AÇÃO e 1 ENG**, substituindo um vínculo próprio. A proteção não exige Guardian, não causa dano e não prepara nem esgota os participantes.
+- A capacidade é conferida **depois de descontar o vínculo com o God que será substituído**. Não há vaga adicional nem aumento de Multiguard. Outros vínculos válidos do inimigo e os vínculos dos demais inimigos com seu God permanecem.
+- Declaração, prioridade, Guardian, alvos e resolução seguem o procedimento normal de Engage. A substituição ocorre somente quando o novo confronto resolve com alvo válido; falha ou anulação não remove o vínculo com o God nem o vínculo anterior de uma troca.
+- A mesma substituição vale quando um efeito explicitamente estabelece ou troca Engage com esse inimigo. Assumir um confronto já existente é diferente da intercepção de Guardian, que participa da declaração de um novo Engage.
 
-**Por quê:** decisão do autor em 23/10/2026: permitir enfrentar um Devotee virado que já esteja engajado com um God, sem liberar múltiplos confrontos indiscriminadamente.
+**Por quê:** esclarecimento do autor em 23/10/2026: Shion deve poder “tankar” um dos inimigos que estejam engajados com seu God, assumindo o confronto para protegê-lo. Isso substitui a interpretação anterior de manter os dois vínculos e exigir Unprepared.
 
 #### Guardian: intercepção por capacidade
 
 - Ao declarar estabelecer ou trocar Engage contra um God ou outro Devotee, o defensor pode escolher **um Guardian com capacidade livre** para receber esse Engage no lugar do alvo.
 - A intervenção não exige Prepared, AÇÃO ou ENG. Ela faz parte da declaração: registrar o alvo final e então abrir a janela de respostas. Se esse alvo ficar inválido, a declaração falha; não retorna automaticamente ao alvo original.
-- Guardian com capacidade normal ocupada só pode proteger um novo alvo se puder usar a exceção de Unprepared vinculado a God descrita acima. Um Guardian já vinculado ao mesmo atacante não intercepta a troca daquele vínculo para mantê-lo preso. Outro Guardian disponível pode interceptar.
+- Guardian com capacidade ocupada não intercepta novas declarações. Um Guardian já vinculado ao mesmo atacante não intercepta a troca daquele vínculo para mantê-lo preso. Outro Guardian disponível pode interceptar.
 - Apenas uma intervenção de Guardian é feita por declaração; o defensor escolhe entre os elegíveis. Isso impede cadeias de redirecionamento entre Guardians.
 - **Nimble ignora essa intervenção.** Continua sujeito às capacidades de Engage e pode ser escolhido como alvo normalmente. Ganhar Nimble depois da intercepção não reescreve retroativamente a declaração.
 - Intercepção vale para declarações de Engage, inclusive troca. Um efeito que apenas move ou encerra um vínculo não é automaticamente uma nova declaração; a carta deve dizer se estabelece um novo Engage.
@@ -795,7 +796,7 @@ O autor aprovou a aplicação das recomendações de fechamento ao sistema do jo
 
 #### Multiguard X
 
-- X é a capacidade **total normal** de vínculos, não X vínculos adicionais. Se houver vários valores de Multiguard, usar o maior, sem somar. A exceção de Unprepared vinculado a God pode conceder uma vaga além dessa capacidade, conforme descrito acima.
+- X é a capacidade **total** de vínculos, não X vínculos adicionais. Se houver vários valores de Multiguard, usar o maior, sem somar. Assumir um confronto para proteger um God substitui um vínculo existente e não aumenta essa capacidade.
 - Multiguard permite receber outros Engage enquanto houver vagas. Estabelecer ativamente um Engage inicial continua exigindo estar livre; a keyword amplia a capacidade defensiva, sem criar uma sequência gratuita de vínculos ofensivos.
 - Ao realizar Strike, o portador escolhe **um** oponente vinculado. Apenas esse oponente retalia. Os demais vínculos permanecem.
 - Ao receber Strikes diferentes, o portador retalia em cada um, mesmo Unprepared, enquanto sobreviver.

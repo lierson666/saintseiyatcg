@@ -48,7 +48,7 @@ test('Prepared não restringe quem inicia ou recebe Engage livre, inclusive na e
 });
 test('dano e Engage persistem entre rodadas',()=>{const {game:g,a,b}=fixture([unit('a',2,6),unit('b',1,6)],({add,link})=>{const a=add('A','a','battlefield',{damage:2}),b=add('B','b');link(a,b);return{a,b};});g.dispatch({type:'pass'});g.dispatch({type:'pass'});assert.equal(pos(g,a.uid).card.damage,2);assert.equal(g.links(a.uid).length,1);assert.equal(pos(g,a.uid).card.prepared,true);g.dispose();});
 test('Guardian Unprepared intercepta e fica ocupado',()=>{const {game:g,a,b,guard}=fixture([unit('a',2,5),unit('b',2,5),unit('guard',1,5,['Guardian'])],({add})=>({a:add('A','a'),b:add('A','b'),guard:add('B','guard','battlefield',{prepared:false})}));assert.ok(g.dispatch({type:'engage',uid:a.uid,target:{kind:'god',playerKey:'B'}}));assert.equal(g.choice.playerKey,'B');g.dispatch({type:'choose',optionId:guard.uid});drain(g);assert.equal(g.links(a.uid)[0].b,guard.uid);g.dispatch({type:'pass'});command(g,'engage',b.uid,{target:{kind:'god',playerKey:'B'}});assert.equal(g.links(b.uid)[0].b,'god-B');g.dispose();});
-test('Nimble ignora intervenção de Guardian e continua alvo normal',()=>{const {game:g,a,b}=fixture([unit('a',2,5,['Nimble','Multiguard 2']),unit('b',2,5,['Guardian'])],({add})=>({a:add('A','a'),b:add('B','b')}));command(g,'engage',a.uid,{target:{kind:'god',playerKey:'B'}});assert.equal(g.links(a.uid)[0].b,'god-B');command(g,'engage',b.uid,{target:{kind:'card',playerKey:'A',uid:a.uid}});assert.equal(g.links(a.uid).length,2);assert.ok(g.links(a.uid).some(l=>l.a===b.uid&&l.b===a.uid));g.dispose();});
+test('Nimble ignora intervenção de Guardian e continua alvo normal',()=>{const {game:g,a,b}=fixture([unit('a',2,5,['Nimble','Multiguard 2']),unit('b',2,5,['Guardian'])],({add})=>({a:add('A','a'),b:add('B','b')}));command(g,'engage',a.uid,{target:{kind:'god',playerKey:'B'}});assert.equal(g.links(a.uid)[0].b,'god-B');command(g,'engage',b.uid,{target:{kind:'card',playerKey:'A',uid:a.uid}});assert.equal(g.links(a.uid).length,1);assert.equal(g.links('god-B').length,0);assert.ok(g.links(a.uid).some(l=>l.a===b.uid&&l.b===a.uid));g.dispose();});
 test('troca e Disengage custam ENG sem usar Prepared',()=>{const {game:g,a,b}=fixture([unit('a',2,5),unit('b',2,5)],({add,link})=>{const a=add('A','a','battlefield',{prepared:false}),b=add('B','b');link(a,b);return{a,b};});command(g,'change-engage',a.uid,{target:{kind:'god',playerKey:'B'}});assert.equal(g.state.players.A.eng,2);assert.equal(pos(g,a.uid).card.prepared,false);g.dispatch({type:'pass'});command(g,'disengage',a.uid);assert.equal(g.state.players.A.eng,1);assert.equal(g.links(a.uid).length,0);g.dispose();});
 test('Long Range ofensivo evita retaliação letal; Cheater devolve simultaneidade',()=>{for(const cheat of [false,true]){const {game:g,a,b}=fixture([unit('a',4,5,['Long Range']),unit('b',3,4,cheat?['Cheater']:[])],({add,link})=>{const a=add('A','a','battlefield',{damage:2}),b=add('B','b','battlefield',{damage:1});link(a,b);return{a,b};});command(g,'strike',a.uid);assert.equal(pos(g,b.uid).zone,'tartarus');assert.equal(pos(g,a.uid).zone,cheat?'tartarus':'battlefield');g.dispose();}});
 test('Long Range no defensor não antecipa a retaliação',()=>{const {game:g,a,b}=fixture([unit('a',4,3),unit('b',3,4,['Long Range'])],({add,link})=>{const a=add('A','a'),b=add('B','b');link(a,b);return{a,b};});command(g,'strike',a.uid);assert.equal(pos(g,a.uid).zone,'tartarus');assert.equal(pos(g,b.uid).zone,'tartarus');g.dispose();});
@@ -91,74 +91,103 @@ test('as 300 definições resolvem entrada ou resposta sem operações desconhec
  }finally{g.dispose();}
 }});
 
-test('Unprepared ligado ao God recebe um Engage adicional pelo seletor, preservando o vínculo anterior',()=>{
-  for(const defender of ['A','B']){
-    const attacker=defender==='A'?'B':'A';
-    const {game:g,a,b,third}=fixture([unit('a',2,6),unit('b',3,7)],({state,add,link})=>{
-      state.currentPlayer=attacker;const a=add(attacker,'a'),third=add(attacker,'a'),b=add(defender,'b','battlefield',{prepared:false});link(b,`god-${attacker}`);return{a,b,third};
+test('tankar substitui o vínculo com God, dos dois lados e em todos os estados Prepared',()=>{
+  for(const owner of ['A','B'])for(const preparedA of [true,false])for(const preparedB of [true,false]){
+    const enemy=owner==='A'?'B':'A';
+    const {game:g,a,b,third}=fixture([unit('a',2,7),unit('b',3,7)],({state,add,link})=>{
+      state.currentPlayer=owner;const a=add(owner,'a','battlefield',{prepared:preparedA}),third=add(owner,'a'),b=add(enemy,'b','battlefield',{prepared:preparedB});link(b,`god-${owner}`);return{a,b,third};
     });
     assert.ok(g.dispatch({type:'engage',uid:a.uid}));
     const target=g.choice.options.find(v=>v.target?.uid===b.uid);assert.ok(target);
-    assert.ok(g.dispatch({type:'choose',optionId:target.id}));drain(g);
-    assert.equal(g.links(b.uid).length,2);assert.ok(g.links(b.uid).some(l=>l.b===`god-${attacker}`));
-    assert.ok(g.links(b.uid).some(l=>l.vagasExtrasGod?.includes(b.uid)));
-    assert.equal(pos(g,b.uid).card.prepared,false);assert.equal(g.state.players[attacker].eng,3);
-    assert.equal(g.state.players[attacker].god.soul,30);
-    g.dispatch({type:'pass'});assert.ok(g.dispatch({type:'engage',uid:third.uid}));
-    assert.ok(!g.choice.options.some(v=>v.target?.uid===b.uid),'A exceção libera uma vaga, não uma sequência ilimitada.');
-    g.dispose();
+    g.dispatch({type:'choose',optionId:target.id});drain(g);
+    assert.equal(g.links(b.uid).length,1);assert.equal(g.links(`god-${owner}`).length,0);
+    assert.ok(g.links(b.uid).some(link=>[link.a,link.b].includes(a.uid)));
+    assert.equal(pos(g,a.uid).card.prepared,preparedA);assert.equal(pos(g,b.uid).card.prepared,preparedB);
+    assert.equal(g.state.players[owner].eng,3);assert.equal(g.state.players[owner].god.soul,30);
+    g.dispatch({type:'pass'});g.dispatch({type:'engage',uid:third.uid});
+    assert.ok(!g.choice.options.some(v=>v.target?.uid===b.uid),'O confronto com Devotee ocupa a capacidade normal.');g.dispose();
   }
 });
-test('a exceção não libera alvo Prepared ligado ao God nem Unprepared ligado só a Devotee',()=>{
-  for(const god of [true,false]){
-    const {game:g,a,b}=fixture([unit('a',1,6),unit('b',1,6)],({add,link})=>{
-      const a=add('A','a'),other=add('A','a'),b=add('B','b','battlefield',{prepared:god});link(b,god?'god-A':other);return{a,b};
-    });
-    assert.ok(g.dispatch({type:'engage',uid:a.uid}));assert.ok(!g.choice.options.some(v=>v.target?.uid===b.uid));g.dispose();
-  }
-});
-test('preparar na rodada seguinte preserva o Engage adicional e Strike escolhe somente um oponente',()=>{
-  const {game:g,a,b}=fixture([unit('a',2,8),unit('b',3,8)],({add,link})=>{const a=add('A','a'),b=add('B','b','battlefield',{prepared:false});link(b,'god-A');return{a,b};});
-  command(g,'engage',a.uid,{target:{kind:'card',playerKey:'B',uid:b.uid}});
-  g.dispatch({type:'pass'});g.dispatch({type:'pass'});
-  assert.equal(g.state.round,2);assert.equal(pos(g,b.uid).card.prepared,true);assert.equal(g.links(b.uid).length,2);assert.equal(g.choice,null);
-  assert.ok(g.dispatch({type:'strike',uid:b.uid}));
-  const againstUnit=g.choice.options.find(v=>v.link&&[v.link.a,v.link.b].includes(a.uid));assert.ok(againstUnit);
-  g.dispatch({type:'choose',optionId:againstUnit.id});drain(g);
-  assert.equal(pos(g,a.uid).card.damage,3);assert.equal(pos(g,b.uid).card.damage,2);
-  assert.equal(g.state.players.A.god.soul,30);assert.equal(g.links(b.uid).length,2);g.dispose();
-});
-test('preparar o alvo em resposta impede a criação da vaga adicional na resolução',()=>{
-  const ready={motor:{habilidades:[{id:'ready',nome_en:'Ready',custo:0,resposta:true,efeitos:[{op:'preparar',alvo:'self'}]}]}};
-  const {game:g,a,b}=fixture([unit('a',1,7),unit('b',1,7,[],ready)],({add,link})=>{const a=add('A','a'),b=add('B','b','battlefield',{prepared:false});link(b,'god-A');return{a,b};});
-  assert.ok(g.dispatch({type:'engage',uid:a.uid,target:{kind:'card',playerKey:'B',uid:b.uid}}));
-  assert.ok(g.dispatch({type:'ability',uid:b.uid,abilityId:'ready'}));drain(g);
-  assert.equal(pos(g,b.uid).card.prepared,true);assert.equal(g.links(a.uid).length,0);assert.equal(g.links(b.uid).length,1);g.dispose();
-});
-test('Guardian Unprepared ligado ao God pode interceptar usando a vaga adicional, inclusive pela IA',()=>{
-  const {game:g,a,b}=fixture([unit('a',1,7),unit('b',1,7,['Guardian'])],({add,link})=>{const a=add('A','a'),b=add('B','b','battlefield',{prepared:false});link(b,'god-A');return{a,b};});
-  assert.ok(g.dispatch({type:'engage',uid:a.uid,target:{kind:'god',playerKey:'B'}}));
-  assert.match(g.choice.prompt,/Intercept/);assert.ok(g.choice.options.some(v=>v.target?.uid===b.uid));
-  assert.ok(g.stepAI());drain(g);
-  assert.equal(g.links(b.uid).length,2);assert.ok(g.links(a.uid).some(l=>l.b===b.uid));g.dispose();
-});
-test('a vaga adicional soma uma a Multiguard e não desaparece ao trocar o confronto com Devotee',()=>{
-  const {game:g,a,b,other}=fixture([unit('a',1,8),unit('b',1,8,['Multiguard 2'])],({add,link})=>{
-    const a=add('A','a'),old=add('A','a'),other=add('A','a'),b=add('B','b','battlefield',{prepared:false});link(b,'god-A');link(old,b);return{a,b,other};
+test('com três inimigos no God, tankar um deixa os outros dois vínculos intactos',()=>{
+  const {game:g,a,b,c,d}=fixture([unit('a',2,8),unit('b',2,8)],({add,link})=>{
+    const a=add('A','a'),b=add('B','b','battlefield',{prepared:false}),c=add('B','b','battlefield',{prepared:false}),d=add('B','b');
+    for(const enemy of [b,c,d])link(enemy,'god-A');return{a,b,c,d};
   });
   command(g,'engage',a.uid,{target:{kind:'card',playerKey:'B',uid:b.uid}});
-  assert.equal(g.links(b.uid).length,3);
-  g.dispatch({type:'pass'});g.dispatch({type:'pass'});
-  assert.equal(pos(g,b.uid).card.prepared,true);
-  const extra=g.links(b.uid).find(l=>l.vagasExtrasGod?.includes(b.uid));assert.ok(extra);
-  command(g,'change-engage',b.uid,{linkId:extra.id,target:{kind:'card',playerKey:'A',uid:other.uid}});
-  assert.equal(g.state.players.B.eng,2);assert.equal(g.links(b.uid).length,3);
-  assert.ok(g.links(b.uid).some(l=>l.vagasExtrasGod?.includes(b.uid)&&[l.a,l.b].includes(other.uid)));g.dispose();
+  assert.equal(g.links('god-A').length,2);assert.equal(g.links(b.uid).length,1);
+  assert.ok(g.links(c.uid).some(l=>l.b==='god-A'));assert.ok(g.links(d.uid).some(l=>l.b==='god-A'));
+  assert.ok(g.state.log.some(line=>line.includes('takes over the Engage')));g.dispose();
 });
-test('encerrar o vínculo com God remove a vaga adicional e impede reaproveitar o marcador',()=>{
-  const {game:g,a,b,third}=fixture([unit('a',1,8),unit('b',1,8)],({add,link})=>{const a=add('A','a'),third=add('A','a'),b=add('B','b','battlefield',{prepared:false});link(b,'god-A');return{a,b,third};});
+test('depois de tankar, Strike do inimigo atinge apenas o protetor e não volta ao God na rodada seguinte',()=>{
+  const {game:g,a,b}=fixture([unit('a',2,8),unit('b',3,8)],({add,link})=>{const a=add('A','a','battlefield',{prepared:false}),b=add('B','b');link(b,'god-A');return{a,b};});
   command(g,'engage',a.uid,{target:{kind:'card',playerKey:'B',uid:b.uid}});
-  const godLink=g.links(b.uid).find(l=>l.b==='god-A');command(g,'disengage',b.uid,{linkId:godLink.id});
-  assert.equal(g.links(b.uid).length,1);assert.ok(g.links(b.uid).every(l=>!l.vagasExtrasGod));
-  assert.ok(g.dispatch({type:'engage',uid:third.uid}));assert.ok(!g.choice.options.some(v=>v.target?.uid===b.uid));g.dispose();
+  command(g,'strike',b.uid);
+  assert.equal(pos(g,a.uid).card.damage,3);assert.equal(pos(g,b.uid).card.damage,2);assert.equal(g.state.players.A.god.soul,30);
+  g.dispatch({type:'pass'});g.dispatch({type:'pass'});
+  assert.equal(g.state.round,2);assert.equal(g.links('god-A').length,0);assert.equal(g.links(b.uid).length,1);g.dispose();
+});
+test('inimigo ocupado apenas com outro Devotee continua bloqueado sem capacidade livre',()=>{
+  for(const prepared of [true,false]){
+    const {game:g,a,b}=fixture([unit('a',1,7),unit('b',1,7)],({add,link})=>{const a=add('A','a'),other=add('A','a'),b=add('B','b','battlefield',{prepared});link(other,b);return{a,b};});
+    g.dispatch({type:'engage',uid:a.uid});assert.ok(!g.choice.options.some(v=>v.target?.uid===b.uid));g.dispose();
+  }
+});
+test('preparar o inimigo em resposta não impede assumir o confronto com God',()=>{
+  const ready={motor:{habilidades:[{id:'ready',nome_en:'Ready',custo:0,resposta:true,efeitos:[{op:'preparar',alvo:'self'}]}]}};
+  const {game:g,a,b}=fixture([unit('a',1,7),unit('b',1,7,[],ready)],({add,link})=>{const a=add('A','a'),b=add('B','b','battlefield',{prepared:false});link(b,'god-A');return{a,b};});
+  g.dispatch({type:'engage',uid:a.uid,target:{kind:'card',playerKey:'B',uid:b.uid}});
+  assert.ok(g.dispatch({type:'ability',uid:b.uid,abilityId:'ready'}));drain(g);
+  assert.equal(pos(g,b.uid).card.prepared,true);assert.equal(g.links('god-A').length,0);assert.equal(g.links(a.uid).length,1);g.dispose();
+});
+test('Guardian ocupado com God não ganha capacidade para interceptar outras declarações',()=>{
+  const {game:g,a,b}=fixture([unit('a',1,7),unit('b',1,7,['Guardian'])],({add,link})=>{const a=add('A','a'),b=add('B','b','battlefield',{prepared:false});link(b,'god-A');return{a,b};});
+  g.dispatch({type:'engage',uid:a.uid,target:{kind:'god',playerKey:'B'}});
+  assert.equal(g.choice,null);drain(g);assert.equal(g.links('god-B').length,1);assert.equal(g.links(b.uid).length,1);g.dispose();
+});
+test('tankar preserva outros vínculos de Multiguard e não aumenta sua capacidade',()=>{
+  const {game:g,a,b,third,old}=fixture([unit('a',1,8),unit('b',1,8,['Multiguard 2'])],({add,link})=>{
+    const a=add('A','a'),old=add('A','a'),third=add('A','a'),b=add('B','b');link(b,'god-A');link(old,b);return{a,b,third,old};
+  });
+  command(g,'engage',a.uid,{target:{kind:'card',playerKey:'B',uid:b.uid}});
+  assert.equal(g.links(b.uid).length,2);assert.equal(g.links('god-A').length,0);assert.equal(g.links(old.uid).length,1);
+  g.dispatch({type:'pass'});g.dispatch({type:'engage',uid:third.uid});assert.ok(!g.choice.options.some(v=>v.target?.uid===b.uid));g.dispose();
+});
+test('Devotee já engajado pode trocar para tankar, pagando 1 ENG e encerrando seu vínculo anterior',()=>{
+  const {game:g,a,b,c,old}=fixture([unit('a',1,8),unit('b',1,8)],({add,link})=>{
+    const a=add('A','a','battlefield',{prepared:false}),b=add('B','b'),c=add('B','b'),old=link(a,c);link(b,'god-A');return{a,b,c,old};
+  });
+  command(g,'change-engage',a.uid,{linkId:old.id,target:{kind:'card',playerKey:'B',uid:b.uid}});
+  assert.equal(g.state.players.A.eng,2);assert.equal(g.links(c.uid).length,0);assert.equal(g.links('god-A').length,0);
+  assert.equal(g.links(a.uid).length,1);assert.equal(pos(g,a.uid).card.prepared,false);g.dispose();
+});
+test('efeito que troca Engage também substitui o vínculo do inimigo com God',()=>{
+  const swap={motor:{habilidades:[{id:'swap',nome_en:'Swap',custo:0,efeitos:[{op:'trocar_engage',alvo:'self'}]}]}};
+  const {game:g,a,b,c}=fixture([unit('a',1,8,[],swap),unit('b',1,8)],({add,link})=>{const a=add('A','a'),b=add('B','b'),c=add('B','b');link(a,c);link(b,'god-A');return{a,b,c};});
+  assert.ok(g.dispatch({type:'ability',uid:a.uid,abilityId:'swap'}));
+  drain(g,choice=>choice.options.find(v=>v.target?.uid===b.uid));
+  assert.equal(g.links('god-A').length,0);assert.equal(g.links(c.uid).length,0);assert.equal(g.links(a.uid).length,1);g.dispose();
+});
+test('troca que perde a elegibilidade na resposta falha sem apagar o vínculo anterior do protetor',()=>{
+  const swap={motor:{habilidades:[{id:'swap',nome_en:'Swap',custo:0,resposta:true,efeitos:[{op:'trocar_engage',alvo:'self'}]}]}};
+  const {game:g,a,b,c,d,old}=fixture([unit('a',1,8),unit('b',1,8,[],swap)],({add,link})=>{
+    const a=add('A','a'),d=add('A','a'),b=add('B','b'),c=add('B','b'),old=link(a,c);link(b,'god-A');return{a,b,c,d,old};
+  });
+  g.dispatch({type:'change-engage',uid:a.uid,linkId:old.id,target:{kind:'card',playerKey:'B',uid:b.uid}});
+  assert.ok(g.dispatch({type:'ability',uid:b.uid,abilityId:'swap'}));
+  drain(g,choice=>choice.options.find(v=>v.target?.uid===d.uid));
+  assert.ok(g.links(a.uid).some(l=>l.id===old.id));assert.ok(g.links(b.uid).some(l=>[l.a,l.b].includes(d.uid)));
+  assert.equal(g.state.players.A.eng,2);g.dispose();
+});
+test('IA escolhe um alvo legal que ameaça seu God para assumir o confronto',()=>{
+  const {game:g,a,b}=fixture([unit('a',1,8),unit('b',1,8)],({add,link})=>{const a=add('A','a'),b=add('B','b');link(b,'god-A');return{a,b};});
+  assert.ok(g.stepAI());assert.match(g.choice.prompt,/Engage target/);assert.ok(g.stepAI());drain(g);
+  assert.equal(g.links('god-A').length,0);assert.ok(g.links(a.uid).some(l=>[l.a,l.b].includes(b.uid)));g.dispose();
+});
+test('IA equipa um portador sem armadura e não alterna equipamentos já anexados em ciclo',()=>{
+  const {game:g,a,b,e1,e2}=fixture([unit('a',1,8),equipment('one'),equipment('two')],({state,add,link})=>{
+    state.players.A.eng=0;const a=add('A','a','battlefield',{prepared:false}),b=add('A','a','battlefield',{prepared:false});link(a,'god-B');link(b,'god-B');
+    return{a,b,e1:add('A','one','battlefield',{attachedToUid:a.uid}),e2:add('A','two')};
+  });
+  assert.ok(g.stepAI());drain(g);assert.equal(pos(g,e1.uid).card.attachedToUid,a.uid);assert.equal(pos(g,e2.uid).card.attachedToUid,b.uid);
+  g.dispatch({type:'pass'});assert.ok(g.stepAI());assert.equal(g.state.round,2);assert.equal(g.stack.length,0);g.dispose();
 });

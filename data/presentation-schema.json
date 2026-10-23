@@ -548,7 +548,8 @@
     "resolucao:evolve": "Resolução · Evoluir armadura",
     "resolucao:awaken": "Resolução · Despertar",
     "resolucao:ability": "Resolução · Ativar habilidade",
-    "resolucao:ultimate": "Resolução · Ultimate"
+    "resolucao:ultimate": "Resolução · Ultimate",
+    "combat:protect-god": "Proteger God · assumir Engage"
   },
   "animacoes": {
     "none": "Sem animação",

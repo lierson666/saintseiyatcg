@@ -12,7 +12,7 @@ python3 tools/test-arena-ui.py
 python3 tools/test-engage-god-ui.py
 ```
 
-- **61 testes automatizados, todos aprovados.** Incluem rodadas/compras, AÇÕES/ENG, prioridade, Engage, Guardian/Nimble, dano persistente, Long Range/Cheater, Pierce, Unfaith, Latent por AÇÃO, substituição de armadura, múltiplas armas, Owner/evolução, Multiguard com redução de capacidade, Awaken/Ultimate, Afterlife, unicidade por efeito, correção de SST-03-010 e textos que exigem revisão de efeitos. Oito cenários cobrem orientação contextual, privacidade, histórico completo, ordem das entradas e escape de HTML.
+- **66 testes automatizados, todos aprovados.** Incluem rodadas/compras, AÇÕES/ENG, prioridade, Engage, Guardian/Nimble, dano persistente, Long Range/Cheater, Pierce, Unfaith, Latent por AÇÃO, substituição de armadura, múltiplas armas, Owner/evolução, Multiguard com redução de capacidade, Awaken/Ultimate, Afterlife, unicidade por efeito, correção de SST-03-010 e textos que exigem revisão de efeitos. Oito cenários cobrem orientação contextual, privacidade, histórico completo, ordem das entradas e escape de HTML.
 - Um cenário percorre **cada uma das 300 definições** para resolver sua entrada ou sua resposta, fornecendo recursos e zonas apropriados. Não substitui a cobertura combinatória de todos os efeitos e interações.
 - Seis confrontos automáticos entre os decks iniciais chegam a uma vitória sem laços de ações inválidas. São testes determinísticos de funcionamento, não uma amostra de equilíbrio entre facções.
 - Testes de apresentação verificam EQUIP em todas as cartas equipáveis, Owners/Resonance/estágios em blocos próprios, números de evolução derivados dos campos editáveis, escape de HTML, carta viva sem PNG completo e token seguindo a iniciativa.
@@ -34,18 +34,18 @@ Capturas locais, fora do Git:
 - `card-forge/out/qa-arena/mobile-playing.png`
 - `card-forge/out/qa-arena/mobile-guide.png`
 
-## Exceção de Engage contra Unprepared vinculado a God
+## Assumir o confronto para proteger God
 
-Confirmada pelo autor em 23/10/2026. Os cenários adicionais verificam:
+Esclarecido pelo autor em 23/10/2026. A regra vigente substitui o vínculo com God; a interpretação de adicionar uma vaga foi removida.
 
-- Prepared/Unprepared não restringe Engage livre, em nenhuma combinação de atacante e defensor.
-- Um alvo Unprepared vinculado a God aparece no seletor e recebe uma vaga adicional, em ambos os lados; o vínculo com God e o estado permanecem, sem dano ou ENG adicional.
-- Alvo Prepared ocupado, alvo ocupado apenas com Devotee e uma terceira vaga sem Multiguard continuam bloqueados.
-- Preparar depois mantém os vínculos; Strike escolhe um oponente e somente ele retalia. Preparar em resposta antes do novo vínculo impede sua criação.
-- Guardian e IA usam a nova elegibilidade. Multiguard soma a vaga excepcional; troca preserva o marcador mesmo Prepared. Encerrar o vínculo com God elimina a vaga e seu marcador.
-- O navegador desenvolve recursos, joga os Devotees, estabelece o confronto com God e realiza Strike por comandos legais; a interface então permite escolher o Devotee Unprepared como novo alvo. O resultado tem dois vínculos, sem dano adicional. Desktop e mobile sem erros de JavaScript ou alteração do catálogo.
+- O seletor aceita um inimigo engajado com seu God, em ambos os lados e em todas as combinações de Prepared/Unprepared. O novo vínculo substitui o antigo, sem dano ou alteração de Prepared.
+- Com três inimigos no God, assumir um mantém os outros dois vínculos. O próximo Strike do inimigo atinge seu protetor e não o God; a rodada seguinte não restaura o vínculo antigo.
+- Multiguard mantém sua capacidade e os demais confrontos. Um alvo ocupado apenas com Devotee continua bloqueado quando não há vaga. Guardian mantém sua intercepção por capacidade.
+- Engage inicial custa 1 AÇÃO / 0 ENG; troca custa 1 AÇÃO / 1 ENG. Efeitos de troca usam a mesma resolução. Resposta que torna o alvo inválido não apaga o vínculo anterior da troca; preparar em resposta não bloqueia a proteção.
+- IA seleciona inimigos que ameaçam seu God. Seu uso de equipamento preenche portadores livres e evita alternar armaduras já anexadas em ciclo. Os seis confrontos de regressão terminam dentro do limite anterior de comandos.
+- O navegador cria a situação por comandos legais e escolhe o novo alvo por clique, tanto Prepared quanto Unprepared. O resultado tem apenas o confronto com o protetor e nenhum vínculo desse inimigo com God. Desktop e mobile sem erros de JavaScript ou alteração do catálogo.
 
-Capturas: `card-forge/out/qa-engage-god/engage-adicional-desktop.png` e `engage-adicional-mobile.png`.
+Capturas em `card-forge/out/qa-engage-god/`: `tankar-desktop-prepared.png`, `tankar-desktop-unprepared.png` e as versões mobile.
 
 ## Integridade e aprovação
 

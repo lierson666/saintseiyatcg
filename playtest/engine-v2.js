@@ -65,23 +65,18 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     return{power:Math.max(0,power),maxHP,hp:Math.max(0,maxHP-i.damage),damage:i.damage,keywords:[...new Set(keywords)],prepared:i.prepared,stage:i.stage||0};
   }
   const has=(uid,k)=>stats(uid)?.keywords.includes(k)||false;
-  const linkedToGod=(uid,except=null)=>relation(uid).some(link=>link.id!==except?.id&&peer(link,uid)?.startsWith('god-'));
-  // A vaga concedida ao receber Engage persiste ao preparar, enquanto os dois vínculos existirem.
-  const extraGodCapacity=uid=>linkedToGod(uid)&&relation(uid).some(link=>link.vagasExtrasGod?.includes(uid))?1:0;
-  const capacity=uid=>uid.startsWith('god-')?Infinity:Math.max(1,...(stats(uid)?.keywords||[]).map(k=>Number(k.match(/^Multiguard\s+(\d+)$/i)?.[1]||0)))+extraGodCapacity(uid);
+  const capacity=uid=>uid.startsWith('god-')?Infinity:Math.max(1,...(stats(uid)?.keywords||[]).map(k=>Number(k.match(/^Multiguard\s+(\d+)$/i)?.[1]||0)));
   const free=uid=>relation(uid).length<capacity(uid);
-  const canReceiveEngage=uid=>free(uid)||(locate(uid)?.card.prepared===false&&linkedToGod(uid)&&!extraGodCapacity(uid));
-  function clearExtraGodLinks(){
-    for(const link of state.links)if(link.vagasExtrasGod){
-      link.vagasExtrasGod=link.vagasExtrasGod.filter(uid=>linkedToGod(uid));
-      if(!link.vagasExtrasGod.length)delete link.vagasExtrasGod;
+  const godLinkToProtect=(uid,target)=>target.kind==='card'?relation(target.uid).find(link=>peer(link,target.uid)===godUid(locate(uid)?.playerKey)):null;
+  function establishEngage(uid,target,oldLink=null){
+    const protectedLink=godLinkToProtect(uid,target),key=locate(uid).playerKey;
+    // Retira os vínculos substituídos e cria o confronto como uma única resolução.
+    state.links=state.links.filter(link=>link.id!==oldLink?.id&&link.id!==protectedLink?.id);
+    state.links.push({id:nextId('engage'),a:uid,b:target.kind==='god'?godUid(target.playerKey):target.uid});
+    if(protectedLink){
+      log(`${targetLabel(selfTarget(uid,key))} takes over the Engage with ${targetLabel(target)} to protect Player ${key}'s God. That Devotee is no longer engaged with the God.`);
+      present('combat:protect-god',{uid,playerKey:key,target});
     }
-  }
-  function engageLink(uid,target,oldLink=null){
-    const targetUid=target.kind==='god'?godUid(target.playerKey):target.uid,vagasExtrasGod=[];
-    if(!free(targetUid)&&canReceiveEngage(targetUid))vagasExtrasGod.push(targetUid);
-    if(oldLink?.vagasExtrasGod?.includes(uid)&&target.kind==='card'&&linkedToGod(uid,oldLink))vagasExtrasGod.push(uid);
-    return{id:nextId('engage'),a:uid,b:targetUid,...(vagasExtrasGod.length?{vagasExtrasGod}:{})};
   }
   const enemyTarget=(uid,t)=>t.kind==='god'?locate(uid)?.playerKey!==t.playerKey:locate(uid)?.playerKey!==locate(t.uid)?.playerKey;
   const validEngage=(uid,t,oldLink=null)=>{
@@ -89,7 +84,8 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     const target=t.kind==='god'?godUid(t.playerKey):t.uid,tl=locate(target);
     if(t.kind!=='god'&&(tl?.zone!=='battlefield'||tl.cardData.tipo!=='Devotee'))return false;
     if(relation(uid).some(link=>link.id!==oldLink?.id&&peer(link,uid)===target))return false;
-    return target!==peer(oldLink||{a:uid,b:null},uid)&&canReceiveEngage(target);
+    const protectedLink=godLinkToProtect(uid,t);
+    return target!==peer(oldLink||{a:uid,b:null},uid)&&relation(target).filter(link=>link.id!==protectedLink?.id).length<capacity(target);
   };
   function available(key,unit='cosmo'){
     const bases=player(key).zones.cosmo_base.filter(i=>i.prepared).length;
@@ -221,7 +217,6 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
         if(a?.zone!=='battlefield'||b?.zone!=='battlefield'||a.playerKey===b.playerKey){state.links=state.links.filter(l=>l.id!==link.id);repeat=true;}
       }
     }
-    clearExtraGodLinks();
     const losers=PLAYERS.filter(k=>player(k).god.soul<=0||player(k).deckFailed);
     if(losers.length){state.victory={winnerKey:losers.length===2?null:other(losers[0]),loserKey:losers.length===2?null:losers[0],reason:losers.some(k=>player(k).deckFailed)?'deckout':'soul',draw:losers.length===2};stack=[];triggers=[];choice=null;state.priority=null;log(losers.length===2?'The duel is a draw.':`Player ${other(losers[0])} wins.`);}
   }
@@ -365,7 +360,7 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
         const selected=bound||target;
         if(!selected?.uid){next();return;}
         chooseLink(selected.uid,link=>{
-          if(!link){next();return;}askTarget(ctx.playerKey,'Choose a new legal Engage target',engageTargets(selected.uid,link),t=>{if(t&&validEngage(selected.uid,t,link)){const nextLink=engageLink(selected.uid,t,link);state.links=state.links.filter(x=>x.id!==link.id);state.links.push(nextLink);}change();});
+          if(!link){next();return;}askTarget(ctx.playerKey,'Choose a new legal Engage target',engageTargets(selected.uid,link),t=>{if(t&&validEngage(selected.uid,t,link)){establishEngage(selected.uid,t,link);}change();});
         });return;
       }
       if(e.op==='dano_area'){
@@ -427,7 +422,6 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     });
   }
   function enforceCapacity(done){
-    clearExtraGodLinks();
     const over=field().find(l=>l.cardData.tipo==='Devotee'&&relation(l.card.uid).length>capacity(l.card.uid));
     if(!over){done();return;}
     const links=relation(over.card.uid);
@@ -475,7 +469,7 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
   }
   function intercept(command,done){
     if(has(command.uid,'Nimble')){done();return;}
-    const defender=other(command.playerKey),guardians=field().filter(l=>l.playerKey===defender&&l.cardData.tipo==='Devotee'&&l.card.uid!==command.target.uid&&has(l.card.uid,'Guardian')&&canReceiveEngage(l.card.uid)&&!relation(command.uid).some(link=>peer(link,command.uid)===l.card.uid));
+    const defender=other(command.playerKey),guardians=field().filter(l=>l.playerKey===defender&&l.cardData.tipo==='Devotee'&&l.card.uid!==command.target.uid&&has(l.card.uid,'Guardian')&&free(l.card.uid)&&!relation(command.uid).some(link=>peer(link,command.uid)===l.card.uid));
     if(!guardians.length){done();return;}
     ask(defender,'Intercept this Engage with Guardian?',[{id:'no',label:'Let the Engage continue'},...guardians.map(l=>({id:l.card.uid,label:`Guardian: ${l.cardData.nome_exibicao_en}`,target:desc(l)}))],v=>{if(v?.target){command.target=v.target;log(`${targetLabel(v.target)} intercepts the Engage.`);}done();});
   }
@@ -620,9 +614,7 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     if(cmd.type==='engage'||cmd.type==='change-engage'){
       const old=state.links.find(v=>v.id===cmd.linkId);
       if(validEngage(cmd.uid,cmd.target,old)&&(cmd.type!=='engage'||!relation(cmd.uid).length)){
-        const nextLink=engageLink(cmd.uid,cmd.target,old);
-        if(old)state.links=state.links.filter(v=>v.id!==old.id);
-        state.links.push(nextLink);
+        establishEngage(cmd.uid,cmd.target,old);
       }done();return;
     }
     if(cmd.type==='disengage'){if(l?.zone==='battlefield')state.links=state.links.filter(v=>v.id!==cmd.linkId);done();return;}
@@ -749,7 +741,7 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
       const choices=choice.options;
       let selection=choices.find(v=>v.id==='keep')||choices.find(v=>v.id==='yes')||choices.find(v=>v.target?.kind==='card'&&locate(v.target.uid)?.cardData.tipo==='Devotee')||choices[0];
       if(choice.prompt.includes('Intercept'))selection=choices.find(v=>v.target)||choices[0];
-      if(choice.prompt.includes('Engage target'))selection=choices.find(v=>v.target?.kind==='god')||choices[0];
+      if(choice.prompt.includes('Engage target'))selection=choices.find(v=>v.target?.kind==='card'&&relation(v.target.uid).some(link=>peer(link,v.target.uid)===godUid(key)))||choices.find(v=>v.target?.kind==='god')||choices[0];
       if(choice.prompt.includes('Unfaith')||choice.prompt==='Choose Strike mode')selection=choices.find(v=>v.id==='soul')||choices[0];
       if(choice.prompt==='Choose a target')selection=choices.find(v=>v.target?.playerKey!==key)||choices[0];
       if(choice.prompt==='Choose opening initiative')selection=choices.find(v=>v.id===key)||choices[0];
@@ -761,7 +753,14 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     if(!player(key).basePlaced){const candidates=hand.filter(i=>canBase(key,i.uid)).sort((a,b)=>(card(b.cardId).custo||0)-(card(a.cardId).custo||0));if(candidates.length)return perform({type:'base',uid:candidates[0].uid,playerKey:key});}
     const legal=all().filter(l=>l.playerKey===key).flatMap(l=>actions(key,l.card.uid));
     for(const type of ['strike','evolve','play','engage','equip','ability','change-engage']){
-      const candidates=legal.filter(a=>a.type===type);if(!candidates.length)continue;
+      let candidates=legal.filter(a=>a.type===type);
+      if(type==='equip')candidates=candidates.flatMap(command=>{
+        const equipment=locate(command.uid);if(equipment.card.attachedToUid)return[];
+        // A IA preenche um portador disponível, sem alternar armaduras já equipadas em ciclo.
+        const bearer=field().find(l=>l.playerKey===key&&l.cardData.tipo==='Devotee'&&(!isArmor(equipment.cardData)||!armor(l.card.uid)));
+        return bearer?[{...command,target:desc(bearer)}]:[];
+      });
+      if(!candidates.length)continue;
       if(type==='play')candidates.sort((a,b)=>(card(locate(a.uid).card.cardId).tipo==='Devotee'?-1:1)-(card(locate(b.uid).card.cardId).tipo==='Devotee'?-1:1));
       const result=perform({...candidates[0],playerKey:key});if(result)return true;
     }
