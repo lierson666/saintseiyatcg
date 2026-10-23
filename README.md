@@ -24,7 +24,10 @@ Athena agora ja esta catalogada de forma muito mais completa no banco de dados, 
 - `/docs/beta-athena.md`: gauntlet oficial da beta Athena
 - `/data/beta-athena.json`: decks, domains, proxies e cobertura da beta
 - `/playtest/index.html`: versao jogavel manual da beta Athena
-- `/playtest/arena.css`: camada visual 3D estilo MTG Arena (mesa, mao em leque, avatares, HUD, popups)
+- `/playtest/engine.js`: motor independente, comandos validados, prioridade, pilha e IA
+- `/playtest/game.css`: arena responsiva e visual de console inspirado no PS3
+- `/docs/rebuild-sanctuary.md`: arquitetura e verificação da reconstrução
+- `/docs/keyword-matchups.md`: proposta de contrajogo das keywords
 - `/docs/asset-map.md`: mapa das pastas de arte, arquivos nao usados e reorganizacao proposta
 
 ## Como abrir a versao jogavel
@@ -38,6 +41,22 @@ python3 -m http.server 8000
 Depois abra:
 
 - `http://localhost:8000/playtest/`
+
+## Testes da versão jogável
+
+Contrato de regras e comandos, sem instalar dependências:
+
+```bash
+node tools/test-rules.mjs
+```
+
+Regressão de navegador (requer Playwright no ambiente de desenvolvimento e o servidor HTTP acima):
+
+```bash
+python3 tools/test-playtest.py --channel chrome --ai-matches
+```
+
+O script informa a pasta temporária com screenshots. As partidas automatizadas aceleram apenas os intervalos de apresentação/IA na resposta interceptada pelo teste.
 
 ## Convencao de idioma
 

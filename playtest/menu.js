@@ -1,227 +1,56 @@
-// Console-style front end: title screen ("press any key"), main menu, collection and
-// sound options. It sits above the match and hands control back through onStart(ai).
-
-import { unlock, sfx, playMusic, volume, setVolume } from "./audio.js?v=1";
-
-const ITEMS = [
-  { id: "ai", label: "Battle vs AI", hint: "Duel the machine's Cosmo. You command Player A; the AI plays Player B." },
-  { id: "local", label: "Local Battle", hint: "Two players on the same screen, taking turns as Player A and Player B." },
-  { id: "online", label: "Online Battle", hint: "Duel other Saints over the internet.", soon: true },
-  { id: "collection", label: "Collection", hint: "Browse every card in the Athena set." },
-  { id: "options", label: "Options", hint: "Music and sound effect volume." }
-];
-
-const LOGO = "../LOGO/logo-web.webp";
-const escape = (text) => String(text ?? "").replace(/[&<>"']/g, (ch) => `&#${ch.charCodeAt(0)};`);
-
-let root;
-let screen = "title";
-let index = 0;
-let config;
-
-export function initMenu(options) {
-  config = options;
-  root = document.createElement("div");
-  root.id = "front-end";
-  root.className = "front-end";
-  root.setAttribute("role", "dialog");
-  root.setAttribute("aria-label", "Main menu");
-  document.body.appendChild(root);
-
-  root.addEventListener("click", onClick);
-  root.addEventListener("input", onInput);
-  // pointermove, not pointerover: re-rendering under a resting pointer must not steal keyboard selection.
-  root.addEventListener("pointermove", onHover);
-  // Capture phase so the match's own shortcuts (Space, Esc, Z) never fire behind the menu.
-  window.addEventListener("keydown", onKey, true);
-  bindUiSounds();
-  document.querySelector("#main-menu")?.addEventListener("click", () => showMenu());
-  render();
+// Navegação da experiência de console. Só produz interface; não altera regras.
+export const escape = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+export const cardImage = card => card?.caminho_imagem ? `./assets/cards/${card.id}.webp` : null;
+export const portraitFace = (id,alt='') => `<img class="card-art portrait-art" src="./assets/portraits/${id}.webp" alt="${escape(alt)}" draggable="false">`;
+export const shortName = card => (card?.nome_exibicao_en || '').split(',')[0];
+export const icon = name => {
+  const paths = {
+    back:'m14 5-7 7 7 7', play:'m8 5 11 7-11 7Z', close:'m6 6 12 12M18 6 6 18',
+    options:'M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8ZM12 2v3m0 14v3M2 12h3m14 0h3M5 5l2 2m10 10 2 2M5 19l2-2M17 7l2-2',
+    book:'M12 5v15M3 3l9 2 9-2v15l-9 2-9-2Z', log:'M5 5h14M5 12h14M5 19h10',
+    sound:'m4 9 5 0 5-5v16l-5-5H4ZM18 8q5 4 0 8', sword:'m4 20 4-4m-3-3 6 6M9 15 20 4l-1 7-6 6',
+    shield:'M12 2 21 6v7q-1 6-9 9-8-3-9-9V6ZM8 12l3 3 6-6', soul:'M12 21C-4 12 3 0 12 7 21 0 28 12 12 21Z', spark:'m12 2 3 7 7 3-7 3-3 7-3-7-7-3 7-3Z',
+    fullscreen:'M3 9V3h6m6 0h6v6M3 15v6h6m6 0h6v-6', arrow:'M4 12h16m-6-6 6 6-6 6', eye:'M2 12q10-14 20 0-10 14-20 0Zm10-3a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z'
+  };
+  return `<svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="${paths[name]||paths.spark}"/></svg>`;
+};
+export function cardFace(card, className='') {
+  card ||= {nome_exibicao_en:'Unknown card',tipo:'Card',habilidades_en:[]};
+  const src=cardImage(card);
+  if(src)return `<img class="card-art ${className}" src="${src}" alt="${escape(card.nome_exibicao_en)}" draggable="false" loading="lazy">`;
+  return `<span class="proxy-face ${className}"><span class="proxy-emblem">✧</span><strong>${escape(shortName(card))}</strong><span>${escape(card.tipo)}</span><small>${escape((card.habilidades_en||[])[0]||'Athena sanctuary')}</small></span>`;
 }
-
-export function showMenu() {
-  screen = "menu";
-  root.hidden = false;
-  playMusic("menu");
-  render();
-}
-
-function hide() {
-  root.hidden = true;
-  root.innerHTML = "";
-}
-
-function go(next) {
-  screen = next;
-  render();
-}
-
-function choose(item) {
-  if (item.soon) {
-    sfx("back");
-    return;
+export const DECK_IDENTITIES = {
+  'athena-beta-seiya':{card:'athena-002',title:'Pegasus',role:'Relentless offense',description:'Strike first with Impulse. Turn Latent Cosmo into pressure.',color:'#65bbef'},
+  'athena-beta-shiryu':{card:'athena-003',title:'Dragon',role:'Enduring defense',description:'Hold the line with Guardian. Let Sanctuary strengthen your Saints.',color:'#61bd9b'},
+  'athena-beta-hyoga':{card:'athena-004',title:'Cygnus',role:'Ice and control',description:'Seal your enemies. Build your Cosmo beneath the stars.',color:'#a4dbf5'},
+  'athena-beta-shun':{card:'athena-005',title:'Andromeda',role:'Protect and outlast',description:'Protect your Devotees and decide when the fight begins.',color:'#e8a6c9'},
+  'athena-beta-ikki':{card:'athena-006',title:'Phoenix',role:'Rise from the ashes',description:'Trade boldly. Bring your Saints back from Tartarus.',color:'#f3a167'}
+};
+export function renderMenu({screen,cards,beta,settings,collectionQuery='',collectionType='All',collectionPage=0,setup}) {
+  const byId=Object.fromEntries(cards.map(c=>[c.id,c]));
+  const logo='<img class="console-logo" src="../LOGO/logo-web.webp" alt="Saint Seiya TCG">';
+  const back='<button class="text-button" data-action="menu" data-screen="home">'+icon('back')+'Main menu</button>';
+  let body='';
+  if(screen==='title')body=`<div class="title-screen">${logo}<p class="title-subtitle">A battle written in the stars</p><button class="title-begin" data-action="menu" data-screen="home">Press to begin <span>${icon('play')}</span></button><p class="fan-note">An original fan-made card game</p></div>`;
+  if(screen==='home')body=`<div class="main-menu"><div class="menu-brand">${logo}<p>Awaken your seventh sense</p></div><nav class="console-nav" aria-label="Main menu">${[
+    ['setup-ai','Battle vs AI','Challenge a rival Saint','sword'],['setup-local','Local battle','Two players. One sanctuary.','soul'],['decks','The five paths','Explore the Athena decks','book'],['collection','Collection',`${cards.length} cards of the sanctuary`,'spark'],['options','Options','Sound and duel preferences','options']
+  ].map(([screen,label,hint,symbol])=>`<button class="console-choice" data-action="menu" data-screen="${screen}">${icon(symbol)}<span><strong>${label}</strong><small>${hint}</small></span><i>${icon('arrow')}</i></button>`).join('')}<div class="console-choice unavailable">${icon('spark')}<span><strong>Online battle</strong><small>Coming soon</small></span></div></nav><p class="menu-footnote">Athena edition <span>Vanilla rules 1.0</span></p></div><div class="menu-character" aria-hidden="true"><div class="character-halo"></div>${portraitFace('athena-001','Athena')}<div class="character-caption"><span>The goddess of hope</span><strong>Athena</strong><p>Let your Cosmo burn.</p></div></div>`;
+  if(screen?.startsWith('setup'))body=`<section class="console-page setup-page">${back}<header><p class="section-label">${setup.ai?'Battle vs AI':'Local battle'}</p><h1>Choose your path</h1><p>Five Saints. Five ways to fight for Athena.</p></header><div class="setup-versus"><div><span class="player-label">Player A</span>${renderDeckSelection('A',setup.deckAId,beta,byId)}</div><div class="versus-word">VS</div><div><span class="player-label">${setup.ai?'Your rival · AI':'Player B'}</span>${renderDeckSelection('B',setup.deckBId,beta,byId)}</div></div><footer class="setup-footer"><label class="field-label">First turn<select id="setup-first"><option value="random" ${setup.first==='random'?'selected':''}>Random</option><option value="A" ${setup.first==='A'?'selected':''}>Player A</option><option value="B" ${setup.first==='B'?'selected':''}>Player B</option></select></label><p>60 cards per deck. 30 Soul. One victory.</p><button class="gold-button" data-action="start-match">Begin duel ${icon('sword')}</button></footer></section>`;
+  if(screen==='decks')body=`<section class="console-page deck-page">${back}<header><p class="section-label">Athena’s Saints</p><h1>The five paths</h1><p>Every deck follows the same rules. Find the rhythm that feels like yours.</p></header><div class="deck-gallery">${beta.decks.map(d=>{const id=DECK_IDENTITIES[d.id];return `<button class="deck-banner" style="--saint-color:${id.color}" data-action="deck-details" data-deck="${d.id}">${portraitFace(id.card,id.title)}<span><small>${escape(id.role)}</small><strong>${id.title}</strong><p>${id.description}</p><em>60 cards · ${escape(shortName(byId[d.domain_id]))}</em></span></button>`;}).join('')}</div></section>`;
+  if(screen==='collection'){
+    const query=collectionQuery.trim().toLowerCase();
+    const filtered=cards.filter(c=>(collectionType==='All'||c.tipo===collectionType)&&(!query||`${c.nome_exibicao_en} ${c.keywords_en.join(' ')} ${c.habilidades_en.join(' ')}`.toLowerCase().includes(query)));
+    const pages=Math.max(1,Math.ceil(filtered.length/15)),page=Math.min(collectionPage,pages-1);
+    body=`<section class="console-page collection-page">${back}<header><h1>Collection</h1><p>The Saints, armors and miracles of Athena.</p></header><div class="collection-tools"><label class="search-label"><span>Find a card</span><input id="collection-search" type="search" placeholder="Name, keyword or ability" value="${escape(collectionQuery)}"></label><label class="field-label">Card type<select id="collection-type">${['All','God','Domain','Devotee','Relic','Moment','Technique'].map(t=>`<option ${collectionType===t?'selected':''}>${t}</option>`).join('')}</select></label><span>${filtered.length} cards</span></div><div class="collection-grid">${filtered.slice(page*15,page*15+15).map(c=>`<button class="collection-card" data-action="inspect-card" data-card-id="${c.id}">${cardFace(c)}<span>${escape(shortName(c))}</span></button>`).join('')||'<p class="empty-message">No cards found. Try another name or keyword.</p>'}</div><nav class="pagination" aria-label="Collection pages"><button data-action="collection-page" data-delta="-1" ${page===0?'disabled':''}>Previous</button><span>${page+1} / ${pages}</span><button data-action="collection-page" data-delta="1" ${page===pages-1?'disabled':''}>Next</button></nav></section>`;
   }
-  sfx("confirm");
-  if (item.id === "ai" || item.id === "local") {
-    hide();
-    config.onStart(item.id === "ai");
-    return;
-  }
-  go(item.id);
+  if(screen==='options')body=`<section class="console-page options-page">${back}<header><p class="section-label">Make it yours</p><h1>Options</h1></header>${renderSettings(settings)}<p class="keyboard-guide"><kbd>Space</kbd> main action <kbd>Esc</kbd> cancel <kbd>Z</kbd> undo attack <kbd>Shift</kbd> choose payment <kbd>F</kbd> full control</p></section>`;
+  return `<section id="front-end" class="front-end screen-${escape(screen)}" aria-label="${screen==='title'?'Title screen':'Main menu'}"><div class="console-sky" aria-hidden="true"></div>${body}</section>`;
 }
-
-function onClick(event) {
-  if (screen === "title") {
-    enter();
-    return;
-  }
-  const target = event.target.closest("[data-menu]");
-  if (!target) return;
-  const action = target.dataset.menu;
-  if (action === "item") {
-    index = Number(target.dataset.index);
-    choose(ITEMS[index]);
-  } else if (action === "back") {
-    sfx("back");
-    go("menu");
-  } else if (action === "zoom") {
-    root.querySelector(".fe-zoom").innerHTML = `<img src="${escape(target.dataset.src)}" alt="${escape(target.dataset.name)}">`;
-    root.querySelector(".fe-zoom").hidden = false;
-    sfx("click");
-  } else if (action === "unzoom") {
-    root.querySelector(".fe-zoom").hidden = true;
-  }
+function renderDeckSelection(key,id,beta,cards){
+  const deck=beta.decks.find(d=>d.id===id)||beta.decks[0],identity=DECK_IDENTITIES[deck.id];
+  return `<div class="deck-select" style="--saint-color:${identity.color}"><div class="deck-select__portrait">${portraitFace(identity.card,identity.title)}</div><div class="deck-select__copy"><small>${identity.role}</small><h2>${identity.title}</h2><p>${identity.description}</p><label class="field-label"><span class="sr-only">Player ${key} deck</span><select id="setup-deck-${key}">${beta.decks.map(d=>`<option value="${d.id}" ${d.id===deck.id?'selected':''}>${escape(d.nome)}</option>`).join('')}</select></label><span class="deck-domain">${escape(shortName(cards[deck.domain_id]))} · 60 cards</span></div></div>`;
 }
-
-function onInput(event) {
-  const kind = event.target.dataset.volume;
-  if (!kind) return;
-  setVolume(kind, Number(event.target.value) / 100);
-  if (kind === "sfx") sfx("click");
-}
-
-function onHover(event) {
-  const item = event.target.closest("[data-menu='item']");
-  if (!item || Number(item.dataset.index) === index) return;
-  index = Number(item.dataset.index);
-  sfx("hover");
-  render();
-}
-
-function enter() {
-  unlock();
-  sfx("confirm");
-  showMenu();
-}
-
-function onKey(event) {
-  if (root.hidden) return;
-  event.stopImmediatePropagation();
-  if (screen === "title") {
-    if (!event.repeat) enter();
-    event.preventDefault();
-    return;
-  }
-  if (event.key === "Escape" || event.key === "Backspace") {
-    if (screen !== "menu") {
-      sfx("back");
-      go("menu");
-    }
-  } else if (screen === "menu" && (event.key === "ArrowDown" || event.key === "ArrowUp")) {
-    index = (index + (event.key === "ArrowDown" ? 1 : ITEMS.length - 1)) % ITEMS.length;
-    sfx("hover");
-    render();
-  } else if (screen === "menu" && (event.key === "Enter" || event.key === " ")) {
-    choose(ITEMS[index]);
-  } else {
-    return;
-  }
-  event.preventDefault();
-}
-
-// Hover and click sounds for every button and hand card in the match, not only the menu.
-function bindUiSounds() {
-  let lastHover = null;
-  document.addEventListener("pointerover", (event) => {
-    if (!root.hidden) return;
-    const target = event.target.closest?.("button, .card.zone--hand");
-    if (target && target !== lastHover) sfx("hover");
-    lastHover = target;
-  });
-  document.addEventListener("click", (event) => {
-    if (root.hidden || !event.target.closest) return;
-    if (event.target.closest("button")) sfx("click");
-  });
-}
-
-function render() {
-  if (root.hidden) return;
-  root.dataset.screen = screen;
-  if (screen === "title") {
-    root.innerHTML = `
-      <div class="fe-title">
-        <img class="fe-title__logo" src="${LOGO}" alt="Saint Seiya TCG">
-        <p class="fe-title__press">Press any key</p>
-        <p class="fe-title__legal">Fan-made playtest · Athena Beta</p>
-      </div>`;
-    return;
-  }
-  if (screen === "menu") {
-    const item = ITEMS[index];
-    root.innerHTML = `
-      <div class="fe-menu">
-        <img class="fe-menu__logo" src="${LOGO}" alt="Saint Seiya TCG">
-        <nav class="fe-menu__list" aria-label="Game modes">
-          ${ITEMS.map((entry, i) => `
-            <button type="button" class="fe-item${i === index ? " is-active" : ""}${entry.soon ? " is-soon" : ""}" data-menu="item" data-index="${i}" ${entry.soon ? 'aria-disabled="true"' : ""}>
-              <span class="fe-item__label">${escape(entry.label)}</span>
-              ${entry.soon ? '<span class="fe-item__soon">Coming soon</span>' : ""}
-            </button>`).join("")}
-        </nav>
-        <aside class="fe-hint ss-frame">
-          <p class="fe-hint__title">${escape(item.label)}</p>
-          <p class="fe-hint__text">${escape(item.hint)}</p>
-        </aside>
-        <p class="fe-keys">↑ ↓ Select · Enter Confirm · Esc Back</p>
-      </div>`;
-    root.querySelector(".fe-item.is-active")?.focus({ preventScroll: true });
-    return;
-  }
-  if (screen === "collection") {
-    const cards = config.cards.filter((card) => card.caminho_imagem);
-    root.innerHTML = `
-      <div class="fe-panel ss-frame">
-        <header class="fe-panel__header">
-          <h2>Collection</h2>
-          <span class="fe-panel__count">${cards.length} cards</span>
-          <button type="button" class="ghost" data-menu="back">Back</button>
-        </header>
-        <div class="fe-collection">
-          ${cards.map((card) => `
-            <button type="button" class="fe-card" data-menu="zoom" data-src="../${escape(card.caminho_imagem)}" data-name="${escape(card.nome_exibicao_en)}">
-              <img src="../${escape(card.caminho_imagem)}" alt="${escape(card.nome_exibicao_en)}" loading="lazy">
-            </button>`).join("")}
-        </div>
-      </div>
-      <div class="fe-zoom" data-menu="unzoom" hidden></div>`;
-    return;
-  }
-  if (screen === "options") {
-    root.innerHTML = `
-      <div class="fe-panel fe-panel--small ss-frame">
-        <header class="fe-panel__header">
-          <h2>Options</h2>
-          <button type="button" class="ghost" data-menu="back">Back</button>
-        </header>
-        <label class="fe-slider">
-          <span>Music</span>
-          <input type="range" min="0" max="100" value="${Math.round(volume.music * 100)}" data-volume="music">
-        </label>
-        <label class="fe-slider">
-          <span>Sound effects</span>
-          <input type="range" min="0" max="100" value="${Math.round(volume.sfx * 100)}" data-volume="sfx">
-        </label>
-        <p class="fe-panel__note">Gameplay settings (Full Control, auto-pass, AI speed) are in the ⚙ menu during a match.</p>
-      </div>`;
-  }
-}
+export function renderSettings(settings){return `<div class="settings-layout"><section><h2>Duel</h2>${[
+  ['autoPass','Auto-pass','Skip steps and responses when there is nothing to do.'],['fullControl','Full control','Choose payment and pause at every response.'],['hotseatPrivacy','Pass-the-device screen','Keep each hand private during local battles.'],['effects','Cosmo effects','Card flights, particles and battle impacts.']
+].map(([key,label,description])=>`<label class="setting-row"><span><strong>${label}</strong><small>${description}</small></span><input type="checkbox" data-setting="${key}" ${settings[key]?'checked':''}></label>`).join('')}<label class="setting-row"><span><strong>AI speed</strong><small>The pace of your opponent’s actions.</small></span><select data-setting="aiSpeed">${['slow','normal','fast'].map(s=>`<option value="${s}" ${settings.aiSpeed===s?'selected':''}>${s[0].toUpperCase()+s.slice(1)}</option>`).join('')}</select></label></section><section><h2>Sound</h2>${[['music','Music'],['sfx','Sound effects']].map(([key,label])=>`<label class="volume-row"><span>${label}<output id="volume-${key}">${Math.round(settings[key]*100)}%</output></span><input aria-label="${label} volume" type="range" min="0" max="100" value="${settings[key]*100}" data-volume="${key}"></label>`).join('')}<p class="settings-note">Music and effects are synthesized for this game.</p><h2>Phase stops</h2><p class="settings-note">Right-click a phase during a duel to toggle its stop.</p><div class="stop-settings">${['upkeep','draw','main','combat','end'].map(p=>`<button data-action="toggle-stop" data-phase="${p}" aria-pressed="${settings.phaseStops.includes(p)}">${p}</button>`).join('')}</div></section></div>`;}

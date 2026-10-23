@@ -29,7 +29,7 @@ Escopo: tela de partida do `playtest/`. Textos visíveis ao jogador em inglês; 
 
 **Diferença crítica de combate:** no Arena o defensor declara bloqueios. **No nosso jogo não existe
 bloqueio** — o atacante escolhe o alvo (God ou Devotee). Guardian obriga a atacar o Guardian antes do
-God; Cheater ignora Guardian; Nimble só pode ser alvo de Nimble/Guardian (regra a confirmar no manual).
+God; somente Nimble ignora Guardian e pode escolher o God ou outro Devotee. Nimble pode ser atacado normalmente (regra corrigida e confirmada pelo autor em 22/10/2026).
 Por isso o fluxo de "declare blockers" do Arena vira **"declare alvo por atacante"**.
 
 ---

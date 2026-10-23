@@ -406,9 +406,9 @@ A Tecnica resolve primeiro.
 
 | Keyword | Efeito |
 | --- | --- |
-| Guardian | Deve ser atacado antes do Deus |
-| Nimble | So pode ser bloqueado por Nimble ou Guardian |
-| Cheater | Ignora Guardian |
+| Guardian | Deve ser escolhido como alvo antes do Deus ou de outros Devotees, exceto por atacantes com Nimble |
+| Nimble | Ignora Guardian ao escolher o alvo do ataque. Pode ser atacado normalmente |
+| Cheater | Nao permite ignorar Guardian; a unica excecao de evasao e Nimble |
 | Long Range | Causa dano primeiro |
 | Pierce | Dano excedente vai para o Deus |
 | Impulse | Pode agir no turno que entra |
