@@ -1,0 +1,47 @@
+[
+  {
+    "checagem": "engine",
+    "comando": [
+      "node",
+      "tools/test-rules.mjs",
+      "--runtime=/tmp/sstcg-audit-engine.mjs"
+    ],
+    "exit_code": 0,
+    "resumo": "34 passaram; 0 falharam; 2 cenários omitidos ou pendentes do legado.",
+    "sha256_runtime": "94343e2f87e1efcca1b7b562fc71a25a3d03b68fe38d571684fc3552d4ff61d6"
+  },
+  {
+    "checagem": "engine-estrito",
+    "comando": [
+      "node",
+      "tools/test-rules.mjs",
+      "--runtime=/tmp/sstcg-audit-engine.mjs",
+      "--strict-rules"
+    ],
+    "exit_code": 1,
+    "resumo": "35 passaram; 1 falharam; 0 cenários omitidos ou pendentes do legado.",
+    "sha256_runtime": "94343e2f87e1efcca1b7b562fc71a25a3d03b68fe38d571684fc3552d4ff61d6"
+  },
+  {
+    "checagem": "legado",
+    "comando": [
+      "node",
+      "tools/test-rules.mjs",
+      "--runtime=/tmp/sstcg-audit-legacy.js"
+    ],
+    "exit_code": 0,
+    "resumo": "29 passaram; 0 falharam; 7 cenários omitidos ou pendentes do legado.",
+    "sha256_runtime": "a0d38fe49564939488292e00f5300873e106d34342a59f3a299f8b3ec002bcd8"
+  },
+  {
+    "checagem": "gravador",
+    "comando": [
+      "python3",
+      "card-forge/serve.py",
+      "--selftest"
+    ],
+    "exit_code": 0,
+    "resumo": "selftest ok: 57 cartas regravadas sem diff; append ok",
+    "sha256_runtime": "77884412b63c4df02cab93de41203fa44b7d364e47b9a246f57af90671cd9e89"
+  }
+]

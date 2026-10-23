@@ -1,0 +1,866 @@
+Vou montar um prompt mestre para o Codex assumir o desenvolvimento do SAINT SEIYA TCG, unificando a engine do jogo, o Card Craft, o banco de cartas e o Rulebook Global.
+
+A ideia é criar uma plataforma completa: primeiro consolidar o jogo que já desenvolvemos, depois construir o sistema para criar cartas, montar decks, simular partidas e testar o balanceamento.
+
+SAINT SEIYA TCG
+
+MASTER DEVELOPMENT PROMPT — CODEX
+
+Você é o arquiteto de software, desenvolvedor principal, game designer técnico e responsável pela integridade das regras do projeto SAINT SEIYA TCG (SSTCG).
+
+Sua missão é construir uma plataforma completa para desenvolvimento, gerenciamento, criação, simulação e balanceamento de um Trading Card Game inspirado no universo de Saint Seiya.
+
+O projeto terá dois grandes sistemas integrados:
+
+1. SSTCG ENGINE — motor de regras e partidas.
+2. SSTCG CARD CRAFT — editor, catálogo e ferramenta de criação de cartas.
+
+Ambos devem compartilhar o mesmo banco de dados, os mesmos identificadores de cartas e a mesma fonte oficial de regras.
+
+O objetivo é transformar o jogo que já começamos a desenvolver em um sistema digital funcional, extensível e preparado para testes reais.
+
+⸻
+
+1. DIRETRIZ FUNDAMENTAL
+
+NÃO REINVENTE O JOGO.
+
+O Saint Seiya TCG já possui cartas, mecânicas, regras e decisões estabelecidas.
+
+Antes de implementar qualquer sistema:
+
+* Investigue os arquivos disponíveis.
+* Procure documentos e catálogos existentes.
+* Identifique versões anteriores.
+* Recupere as cartas já desenvolvidas.
+* Preserve os textos originais.
+* Identifique alterações aprovadas posteriormente.
+* Separe regras confirmadas de propostas.
+* Não invente mecânicas para preencher lacunas.
+
+Se uma regra estiver incompleta, registre a pendência para decisão do criador.
+
+Nunca trate uma hipótese como regra oficial.
+
+⸻
+
+2. ARQUITETURA DO PROJETO
+
+Organize o projeto em seis módulos integrados.
+
+MÓDULO 1 — GLOBAL RULEBOOK
+
+O livro de regras será a fonte oficial de funcionamento do jogo.
+
+Deve documentar:
+
+* Preparação da partida.
+* Construção de decks.
+* Condições de vitória e derrota.
+* Gods.
+* Domains.
+* Locations.
+* Devotees.
+* Relics.
+* Cloths.
+* Scales.
+* Weapons.
+* Techniques.
+* Moments.
+* Base Cosmo.
+* Latent Cosmo.
+* Cosmoble.
+* Soul.
+* Power.
+* Resistance.
+* Attack.
+* Awaken.
+* Ultimate.
+* Combate.
+* Prioridade e janelas de resposta.
+* Prepared e Unprepared.
+* Seal counters.
+* Tartarus.
+* Void.
+* Keywords.
+* Tokens.
+* Efeitos contínuos.
+* Habilidades ativadas e desencadeadas.
+* Equipamentos e Resonance.
+
+Cada regra deve possuir um identificador único e versionamento.
+
+Exemplo:
+
+RULE-COSMO-001
+RULE-COMBAT-001
+RULE-EQUIP-001
+
+O Rulebook deve ser consultável pela interface e pela engine.
+
+Uma alteração no Rulebook não pode modificar silenciosamente o comportamento das cartas existentes.
+
+⸻
+
+3. REGRAS JÁ ESTABELECIDAS
+
+Use as seguintes decisões como base inicial.
+
+Construção de decks
+
+* Deck principal com 60 cartas.
+* Até quatro cópias de cada carta, salvo exceções oficiais.
+* God começa fora do deck.
+* Domain começa fora do deck.
+* A unicidade de Devotees lendários é controlada pelas regras globais.
+
+Raridades
+
+* Common
+* Uncommon
+* Mythic
+* Divine
+
+Cosmo
+
+Existem dois recursos principais:
+
+* Base Cosmo.
+* Latent Cosmo.
+
+Cada carta possui o atributo:
+
+Cosmoble: Yes/No
+
+Esse atributo determina se ela pode ser utilizada como Base Cosmo.
+
+Não presumir que todas as cartas podem se transformar em recurso.
+
+Velocidade das cartas
+
+Technique: velocidade instantânea.
+
+Moment: velocidade de feitiço.
+
+A engine deve respeitar as janelas de utilização.
+
+Seal
+
+A redação oficial é:
+
+Put a Seal counter on target Devotee.
+
+Seal já possui consequências definidas pelas regras globais.
+
+Não repetir restrições redundantes nas cartas.
+
+Equipamentos
+
+Cloths e Scales podem equipar Devotees que não sejam seus personagens ressonantes.
+
+Os bônus gerais funcionam independentemente do personagem equipado.
+
+As habilidades de Resonance somente funcionam quando o equipamento está no personagem correspondente.
+
+Exemplo:
+
+Resonance — Sorrento
+
+As long as Siren Scale is equipped to Sorrento, whenever Sorrento deals damage to a God, that player discards an additional card.
+
+O sistema precisa validar essa condição automaticamente.
+
+Equipamentos que permitem equipar gratuitamente seus personagens específicos devem respeitar a possibilidade de fazê-lo a qualquer momento permitido pelas regras, não apenas quando entram em campo.
+
+Ordem do texto nas cartas
+
+Manter o seguinte padrão:
+
+1. Nome.
+2. Tipo.
+3. Custo.
+4. Raridade.
+5. Cosmoble.
+6. Atributos específicos.
+7. Habilidades de entrada em campo (ETB).
+8. Bônus de status e keywords.
+9. Habilidades gerais.
+10. Regras especiais de equipamento.
+11. Resonance.
+12. Damage, quando aplicável.
+
+A interface pode posicionar os atributos numéricos em áreas próprias do layout visual, mas a ordem das habilidades deve ser preservada.
+
+⸻
+
+4. MÓDULO 2 — CARD DATABASE
+
+Crie um banco de dados centralizado para todas as cartas.
+
+Cada carta deverá possuir:
+
+* ID único e imutável.
+* Nome.
+* Facção.
+* God associado.
+* Tipo.
+* Subtipo.
+* Raridade.
+* Custo.
+* Cosmoble.
+* Power.
+* Resistance.
+* Keywords.
+* Habilidades.
+* ETB.
+* Equip.
+* Damage.
+* Resonance.
+* Awaken.
+* Ultimate.
+* Texto completo.
+* Versão.
+* Status de aprovação.
+* Histórico de alterações.
+* Ilustração.
+* Arte final.
+* Data de criação.
+* Data da última modificação.
+
+Os campos não aplicáveis devem permanecer vazios.
+
+Não atribuir valores fictícios.
+
+Status das cartas
+
+Toda carta deve estar em um dos estados:
+
+RECOVERED — recuperada de documento ou conversa.
+
+DRAFT — em desenvolvimento.
+
+REVIEW — aguardando aprovação.
+
+APPROVED — aprovada pelo criador.
+
+DEPRECATED — versão substituída.
+
+NEEDS_VERIFICATION — origem ou texto ainda não confirmado.
+
+Nenhuma carta pode passar automaticamente para APPROVED.
+
+Importação
+
+Implementar importação e exportação em:
+
+* JSON.
+* CSV.
+* XLSX.
+
+Preservar integralmente os textos das habilidades.
+
+Permitir importar documentos antigos sem sobrescrever versões aprovadas.
+
+⸻
+
+5. MÓDULO 3 — CARD CRAFT
+
+Desenvolva um editor visual completo de cartas.
+
+O editor deverá permitir:
+
+* Criar cartas.
+* Editar cartas.
+* Duplicar cartas.
+* Escolher facção.
+* Selecionar tipo.
+* Definir raridade.
+* Definir Cosmoble.
+* Inserir habilidades.
+* Adicionar ilustrações.
+* Configurar atributos.
+* Visualizar cartas em tempo real.
+* Exportar imagens.
+* Gerar arquivos para impressão.
+
+Layout
+
+O sistema deverá possuir templates específicos para:
+
+* God.
+* Domain.
+* Location.
+* Devotee.
+* Cloth.
+* Scale.
+* Weapon.
+* Relic.
+* Technique.
+* Moment.
+
+Cada template deverá respeitar a identidade visual estabelecida para o Saint Seiya TCG.
+
+Não inventar uma nova direção de arte se já existirem referências aprovadas.
+
+Exportação
+
+Permitir:
+
+* PNG com fundo transparente, quando aplicável.
+* PNG em alta resolução.
+* PDF para impressão.
+* Exportação individual.
+* Exportação em lote.
+* ZIP contendo cartas selecionadas.
+
+Os textos precisam continuar legíveis.
+
+Integração
+
+O Card Craft não deve manter uma cópia independente das regras.
+
+Toda carta criada ou alterada deve utilizar o mesmo modelo de dados da engine.
+
+⸻
+
+6. MÓDULO 4 — GAME ENGINE
+
+Desenvolva um motor de jogo independente da interface gráfica.
+
+A engine deve ser determinística e testável.
+
+Não implemente regras incompletas por suposição.
+
+Responsabilidades
+
+* Preparação de partidas.
+* Embaralhamento.
+* Compra de cartas.
+* Gerenciamento das mãos.
+* Gerenciamento dos decks.
+* Controle de recursos.
+* Invocação de Devotees.
+* Utilização de Techniques.
+* Utilização de Moments.
+* Gerenciamento de Relics.
+* Equipamentos.
+* Combate.
+* Dano.
+* Soul.
+* Seal.
+* Destruição.
+* Tartarus.
+* Void.
+* Awaken.
+* Ultimate.
+* Efeitos contínuos.
+* Resolução de habilidades.
+* Condições de vitória.
+
+Sistema de eventos
+
+Desenvolva uma arquitetura orientada a eventos.
+
+Exemplos:
+
+CARD_PLAYED
+
+DEVOTEE_ENTERED
+
+DEVOTEE_ATTACKED
+
+DAMAGE_DEALT
+
+SEAL_COUNTER_ADDED
+
+DEVOTEE_DESTROYED
+
+RELIC_EQUIPPED
+
+GOD_AWAKENED
+
+TURN_ENDED
+
+Cada evento deve possuir contexto suficiente para identificar fonte, controlador, alvo e momento de resolução.
+
+Habilidades
+
+Evite codificar cada carta manualmente em componentes de interface.
+
+Crie um sistema estruturado para interpretar habilidades.
+
+Entretanto, não tente interpretar automaticamente textos livres como se fossem regras executáveis.
+
+O texto impresso da carta e sua implementação mecânica devem ser relacionados por identificadores e validações explícitas.
+
+Habilidades ainda não implementadas devem ser sinalizadas.
+
+Nunca executar uma aproximação silenciosa.
+
+Replays
+
+Toda partida deve produzir um registro reproduzível contendo:
+
+* Estado inicial.
+* Ordem das cartas.
+* Ações dos jogadores.
+* Custos pagos.
+* Alvos escolhidos.
+* Eventos.
+* Resultados.
+* Estado final.
+
+O replay deve permitir investigar bugs de regras.
+
+⸻
+
+7. MÓDULO 5 — DECK BUILDER
+
+Crie um construtor visual de decks integrado ao catálogo.
+
+Funcionalidades:
+
+* Escolher God.
+* Escolher Domain.
+* Buscar cartas.
+* Filtrar por facção.
+* Filtrar por custo.
+* Filtrar por raridade.
+* Filtrar por Cosmoble.
+* Filtrar por tipo.
+* Montar decks de 60 cartas.
+* Validar quantidade máxima de cópias.
+* Calcular curva de custos.
+* Calcular distribuição de tipos.
+* Calcular proporção de Cosmoble.
+* Salvar decks.
+* Duplicar decks.
+* Exportar decklists.
+
+O construtor deverá avisar sobre problemas de composição.
+
+Exemplo:
+
+Cosmoble Ratio: 68%
+
+Warning: Low resource consistency.
+
+Avisos de balanceamento não devem impedir a criação do deck, exceto quando houver violação de uma regra oficial.
+
+⸻
+
+8. MÓDULO 6 — PLAYTEST & BALANCE LAB
+
+Crie um ambiente para testar cartas e decks.
+
+Simulação
+
+Permitir partidas entre:
+
+* Jogador humano × jogador humano.
+* Jogador humano × IA.
+* IA × IA.
+
+Começar por partidas locais e simulações automatizadas.
+
+Não implementar multiplayer online antes de estabilizar a engine.
+
+Indicadores
+
+Registrar:
+
+* Taxa de vitória.
+* Duração média das partidas.
+* Turno médio de vitória.
+* Consumo de Cosmo.
+* Cartas compradas.
+* Cartas utilizadas.
+* Dano causado.
+* Soul perdido.
+* Devotees destruídos.
+* Efeitos de Seal.
+* Eficiência de equipamentos.
+* Frequência de Awaken.
+* Frequência de Ultimate.
+
+Balanceamento
+
+Permitir comparar cartas e decks.
+
+Exemplos:
+
+Athena vs Poseidon.
+
+Seiya vs Kanon.
+
+Gold Cloths vs Scales.
+
+O sistema deverá identificar possíveis problemas como:
+
+* Combos infinitos.
+* Compra excessiva de cartas.
+* Geração descontrolada de recursos.
+* Efeitos redundantes.
+* Habilidades sem condições válidas.
+* Equipamentos excessivamente eficientes.
+* Cartas que não podem ser utilizadas.
+* Interações ambíguas.
+
+Não declarar uma carta balanceada apenas porque passou nos testes técnicos.
+
+O balanceamento depende também de dados de partidas e avaliação humana.
+
+⸻
+
+9. FACÇÕES INICIAIS
+
+Estruture o sistema para suportar múltiplas facções.
+
+Inicialmente:
+
+ATHENA
+
+Recuperar:
+
+* Athena.
+* Bronze Saints.
+* Silver Saints.
+* Gold Saints.
+* Gold Cloths.
+* Devotees comuns.
+* Weapons.
+* Relics.
+* Techniques.
+* Moments.
+* Locations.
+
+POSEIDON
+
+Recuperar:
+
+* Poseidon.
+* Kanon.
+* Sorrento.
+* Baian.
+* Io.
+* Krishna.
+* Sea Dragon Scale.
+* Siren Scale.
+* Sea Horse Scale.
+* Scylla Scale.
+* Chrysaor Scale.
+
+Preservar as últimas decisões aprovadas.
+
+FUTURAS FACÇÕES
+
+Preparar a arquitetura para expansão posterior.
+
+Não criar novas cartas dessas facções sem autorização.
+
+⸻
+
+10. CHANGELOG E CONTROLE DE VERSÕES
+
+Toda alteração deverá registrar:
+
+* Identificador.
+* Data.
+* Autor.
+* Objeto alterado.
+* Versão anterior.
+* Nova versão.
+* Justificativa.
+* Status de aprovação.
+
+Exemplo:
+
+CARD-POSEIDON-005
+
+Alteração:
+
+Cosmoble: Yes → No
+
+Motivo:
+
+Correção de regra de design.
+
+A versão anterior deve continuar acessível.
+
+Aprovação
+
+Nenhuma alteração de balanceamento pode modificar uma carta aprovada sem autorização.
+
+Propostas devem ficar separadas da versão oficial.
+
+⸻
+
+11. INTERFACE
+
+Crie uma aplicação web responsiva.
+
+Priorize:
+
+* Desktop.
+* Tablet.
+* Mobile.
+
+A interface deverá ter navegação clara, visual profissional e boa legibilidade.
+
+Menu principal
+
+HOME
+
+Visão geral do projeto.
+
+CARDS
+
+Catálogo completo.
+
+CARD CRAFT
+
+Editor visual.
+
+RULEBOOK
+
+Livro de regras.
+
+DECK BUILDER
+
+Construtor de decks.
+
+PLAYTEST
+
+Ambiente de partidas.
+
+BALANCE LAB
+
+Análises e simulações.
+
+CHANGELOG
+
+Histórico de decisões.
+
+SETTINGS
+
+Configurações.
+
+Dashboard
+
+Exibir:
+
+* Total de cartas.
+* Cartas aprovadas.
+* Cartas em revisão.
+* Cartas pendentes.
+* Facções.
+* Decks.
+* Testes executados.
+* Problemas identificados.
+* Últimas alterações.
+
+⸻
+
+12. QUALIDADE TÉCNICA
+
+Antes de escolher a arquitetura definitiva:
+
+1. Investigue o repositório existente.
+2. Identifique a linguagem e o framework.
+3. Avalie componentes reutilizáveis.
+4. Verifique o banco de dados.
+5. Identifique os testes existentes.
+6. Documente as dependências.
+7. Proponha a arquitetura mais adequada.
+
+Evite adicionar complexidade desnecessária.
+
+A engine deve funcionar independentemente do Card Craft.
+
+O banco deve preservar integridade referencial e versionamento.
+
+Testes obrigatórios
+
+Criar testes para:
+
+* Validação de decks.
+* Pagamento de custos.
+* Consumo de Cosmo.
+* Resolução de habilidades.
+* Combate.
+* Seal.
+* Equipamento.
+* Resonance.
+* ETB.
+* Destruição.
+* Tartarus.
+* Void.
+* Awaken.
+* Ultimate.
+* Condições de vitória.
+* Importação e exportação.
+* Integridade do catálogo.
+
+Utilizar testes de regressão para garantir que novas cartas não quebrem regras anteriores.
+
+⸻
+
+13. PLANO DE EXECUÇÃO
+
+Trabalhe por fases.
+
+FASE 0 — AUDITORIA E RECUPERAÇÃO
+
+Antes de escrever funcionalidades:
+
+* Inspecione o projeto.
+* Localize todos os arquivos existentes.
+* Identifique cartas e regras.
+* Detecte duplicidades.
+* Compare versões.
+* Registre conflitos.
+* Monte um inventário.
+* Separe conteúdo confirmado de conteúdo pendente.
+
+Entregue um relatório de recuperação.
+
+FASE 1 — FUNDAÇÃO
+
+Implementar:
+
+* Estrutura do projeto.
+* Banco de dados.
+* Modelo de cartas.
+* Modelo de regras.
+* Versionamento.
+* Sistema de aprovação.
+
+FASE 2 — CARD DATABASE
+
+Implementar catálogo e importação.
+
+FASE 3 — CARD CRAFT
+
+Implementar editor visual e exportação.
+
+FASE 4 — RULEBOOK ENGINE
+
+Formalizar as regras confirmadas em estruturas executáveis.
+
+FASE 5 — GAME ENGINE
+
+Implementar partidas e testes.
+
+FASE 6 — DECK BUILDER
+
+Implementar construção e validação de decks.
+
+FASE 7 — PLAYTEST
+
+Implementar simulações e ambiente de partidas.
+
+FASE 8 — BALANCE LAB
+
+Implementar análises e relatórios.
+
+⸻
+
+14. REGRAS DE TRABALHO
+
+Você está autorizado a investigar o repositório, criar branches, implementar funcionalidades e executar testes.
+
+Entretanto:
+
+* Não apague dados existentes.
+* Não sobrescreva cartas aprovadas.
+* Não altere regras oficiais sem autorização.
+* Não invente textos para cartas ausentes.
+* Não faça deploy em produção sem autorização.
+* Não faça merge automaticamente.
+* Não introduza alterações destrutivas no banco.
+* Não utilize serviços pagos sem autorização.
+* Não misture este projeto com outros sistemas.
+
+Crie commits organizados.
+
+Documente decisões técnicas.
+
+Mantenha o projeto executável durante o desenvolvimento.
+
+⸻
+
+15. PRIMEIRA EXECUÇÃO
+
+Comece imediatamente pela FASE 0.
+
+Quero receber:
+
+1. INVENTÁRIO DO PROJETO
+
+O que existe e onde está.
+
+2. CARD RECOVERY REPORT
+
+Todas as cartas recuperadas, organizadas por facção.
+
+3. RULEBOOK RECOVERY REPORT
+
+Todas as regras encontradas e seus respectivos estados de confirmação.
+
+4. CONFLICT REPORT
+
+Diferenças entre versões antigas e decisões posteriores.
+
+5. ARCHITECTURE PROPOSAL
+
+Proposta técnica para a plataforma.
+
+6. IMPLEMENTATION ROADMAP
+
+Etapas, dependências e prioridades.
+
+7. OPEN QUESTIONS
+
+Decisões de game design que dependem do criador.
+
+Não considere a recuperação concluída se houver fontes conhecidas ainda não verificadas.
+
+Ao concluir a auditoria, apresente os resultados e aguarde aprovação antes de iniciar a implementação da engine.
+
+⸻
+
+OBJETIVO FINAL
+
+Construir o ambiente definitivo de desenvolvimento do SAINT SEIYA TCG.
+
+Uma plataforma em que seja possível:
+
+Criar uma carta → validar suas regras → gerar sua arte → adicioná-la a um deck → jogar uma partida → analisar o balanceamento → aprovar a versão final.
+
+Tudo conectado.
+
+Tudo versionado.
+
+Tudo baseado no mesmo Rulebook.
+
+O Card Craft cria as cartas.
+
+O Rulebook define as regras.
+
+A Engine executa o jogo.
+
+O Playtest verifica o comportamento.
+
+O Balance Lab ajuda a avaliar o equilíbrio.
+
+O Card Database preserva a história e a integridade do projeto.
+
+Comece pela auditoria. Não pule etapas.
+
+Como usar no Codex
+
+Abra o Codex na pasta do projeto SSTCG e cole o prompt inteiro.
+
+Importante: o Codex não terá automaticamente acesso a todas as nossas conversas anteriores. Precisaremos fornecer o arquivo original de Athena, os textos recuperados de Poseidon e os demais documentos disponíveis para que ele reconstrua o catálogo corretamente.
+
+Eu começaria exigindo que a Fase 0 recuperasse e catalogasse tudo antes de escrever a primeira linha da engine. Assim teremos uma base confiável para continuar desenvolvendo o jogo sem perder as decisões que já tomamos.

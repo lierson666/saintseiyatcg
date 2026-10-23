@@ -1,0 +1,209 @@
+[
+  {
+    "revisao": "1",
+    "data": "2026-04-04T05:41:13.644Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "b42f2099187886def637d6aa840022266e05cb6c987a9394e708e23cd505eb46",
+    "arquivo": "fontes/revisoes/drive-1.txt"
+  },
+  {
+    "revisao": "7",
+    "data": "2026-04-04T05:41:45.354Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "0ff2bfc4377aab34260d146faa864118650e7de8c96d0e8b9423198786ae48aa",
+    "arquivo": "fontes/revisoes/drive-7.txt"
+  },
+  {
+    "revisao": "47",
+    "data": "2026-04-04T15:31:08.388Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "677ef07aaae5f95c0a848e3f28c786d3a0d2fbb1226e8597ac60059f45dd8680",
+    "arquivo": "fontes/revisoes/drive-47.txt"
+  },
+  {
+    "revisao": "49",
+    "data": "2026-04-04T17:42:19.300Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "6b3678252bebecccc113e55840f1db1edc0c44777918e9546f4284646be3f1b0",
+    "arquivo": "fontes/revisoes/drive-49.txt"
+  },
+  {
+    "revisao": "82",
+    "data": "2026-04-04T19:37:10.917Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "e49b9a0a526fb76417d6cf23c91b565504e5e7dee5609d5e6e4fc4e7d0c7ad06",
+    "arquivo": "fontes/revisoes/drive-82.txt"
+  },
+  {
+    "revisao": "88",
+    "data": "2026-04-04T20:10:56.828Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "e49b9a0a526fb76417d6cf23c91b565504e5e7dee5609d5e6e4fc4e7d0c7ad06",
+    "arquivo": "fontes/revisoes/drive-88.txt"
+  },
+  {
+    "revisao": "111",
+    "data": "2026-04-04T21:47:30.342Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "738976399d4d12550e5cc4347a9789feda20924f97f0c9c12f9e4b2a81387167",
+    "arquivo": "fontes/revisoes/drive-111.txt"
+  },
+  {
+    "revisao": "118",
+    "data": "2026-04-04T23:14:47.028Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "45d62fdae1e838f1a9fd59eb14332500903c51a188dcaf051401f88aa5fde6f9",
+    "arquivo": "fontes/revisoes/drive-118.txt"
+  },
+  {
+    "revisao": "609",
+    "data": "2026-04-05T02:10:37.225Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "9a6979fa82410d56c0d1a9d6ad26eacfa928dcacc2844173bdaa94857562d622",
+    "arquivo": "fontes/revisoes/drive-609.txt"
+  },
+  {
+    "revisao": "631",
+    "data": "2026-04-05T13:33:55.366Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "68f84d4e4be34e8358da4539518ab3bcf0a3ed615249160b6400d9c005891425",
+    "arquivo": "fontes/revisoes/drive-631.txt"
+  },
+  {
+    "revisao": "633",
+    "data": "2026-04-05T15:17:46.872Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "68f84d4e4be34e8358da4539518ab3bcf0a3ed615249160b6400d9c005891425",
+    "arquivo": "fontes/revisoes/drive-633.txt"
+  },
+  {
+    "revisao": "635",
+    "data": "2026-04-05T18:02:46.463Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "68f84d4e4be34e8358da4539518ab3bcf0a3ed615249160b6400d9c005891425",
+    "arquivo": "fontes/revisoes/drive-635.txt"
+  },
+  {
+    "revisao": "638",
+    "data": "2026-04-05T18:38:15.797Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "51b88f2ec6b45321ef9cd3eecaefde6d303647f89cc3167268a4c3136ff2b434",
+    "arquivo": "fontes/revisoes/drive-638.txt"
+  },
+  {
+    "revisao": "641",
+    "data": "2026-04-05T19:55:56.150Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "77e209927eb31fca8d74f1cf204bf57f57992e19850a77d9be231978d2955feb",
+    "arquivo": "fontes/revisoes/drive-641.txt"
+  },
+  {
+    "revisao": "658",
+    "data": "2026-04-05T22:36:16.562Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "2e2011fd7ddbf28911fa95d2dd07123a30ddb6890d6361aa30ba993dee016b33",
+    "arquivo": "fontes/revisoes/drive-658.txt"
+  },
+  {
+    "revisao": "683",
+    "data": "2026-04-06T03:21:44.009Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "e6ac3158d38894566bcb28d0f431f0013471b54a146f4ab38e6bf3d2b2899c39",
+    "arquivo": "fontes/revisoes/drive-683.txt"
+  },
+  {
+    "revisao": "703",
+    "data": "2026-04-06T05:17:38.058Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "16c070a4b772ef7c53acc62401b8b2fc3d8f7412907f15a5adc6d1b1fa5ae64b",
+    "arquivo": "fontes/revisoes/drive-703.txt"
+  },
+  {
+    "revisao": "712",
+    "data": "2026-04-06T20:15:39.185Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "e8cba2c2aee514625c5bd82d2bdb3bc9aaee607da7b482dca4e3653a8405862a",
+    "arquivo": "fontes/revisoes/drive-712.txt"
+  },
+  {
+    "revisao": "1117",
+    "data": "2026-04-07T01:16:57.930Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "e3371ef2602d54f8804594151b2ecb61a5bc87e160c394662d47e9384dfe0dc6",
+    "arquivo": "fontes/revisoes/drive-1117.txt"
+  },
+  {
+    "revisao": "1126",
+    "data": "2026-04-08T00:51:25.922Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "b09b8a33cc3df567aec6dcfd45dc7352433ca78269bd98d83dd87899971b9953",
+    "arquivo": "fontes/revisoes/drive-1126.txt"
+  },
+  {
+    "revisao": "1178",
+    "data": "2026-04-08T03:24:37.791Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "909ab3ef31042cafff2c326a1462bc7dbcdf368786d9bab613ef0c475587cac7",
+    "arquivo": "fontes/revisoes/drive-1178.txt"
+  },
+  {
+    "revisao": "1191",
+    "data": "2026-04-08T14:29:01.942Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "c5e9c53e02c16d792ae0469b21cb52f7caaf1a068c8ac40be74c44afccc38ced",
+    "arquivo": "fontes/drive-rules-revisao-1191.txt"
+  },
+  {
+    "revisao": "1192",
+    "data": "2026-04-09T15:41:43.443Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "5375a206977e0e0d95381f832a264badd2c4fbd7a91acd86b539a36fd08361fa",
+    "arquivo": "fontes/drive-rules-original.txt"
+  }
+]

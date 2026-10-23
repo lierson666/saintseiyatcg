@@ -1,0 +1,11 @@
+{
+  "textos_verificados": 114,
+  "falhas": [
+    {
+      "id": "athena-001",
+      "campo": "habilidade_awaken_en",
+      "original": "Seventh Sense — Athena Devotees you control get +1/+1. Awaken Ability — Cost: 5 Cosmo. If an Athena Devotee would be destroyed, you may pay 5 Cosmo. If you do, it is not destroyed and its Resistance becomes 1 instead.",
+      "retorno": "Seventh Sense — Athena Devotees You Control Get +1/+1. Awaken Ability — Cost: 5 Cosmo. If an Athena Devotee would be destroyed, you may pay 5 Cosmo. If you do, it is not destroyed and its Resistance becomes 1 instead."
+    }
+  ]
+}

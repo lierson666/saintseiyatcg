@@ -1,0 +1,1231 @@
+{
+  "beta_version": "athena-beta-v0.1",
+  "descricao_pt": "Gauntlet oficial Athena vs Athena para validar estrutura de turno, combate, timing, keywords, Cloths, Relics e recursao.",
+  "god_id": "athena-001",
+  "normalizacoes_pt": [
+    "Shina, Silver Saint vira Shaina, Silver Saint.",
+    "Coliseu permanece como nome interno em portugues, mas o nome publico em ingles e Coliseum."
+  ],
+  "domains": [
+    {
+      "id": "athena-051",
+      "nome_exibicao_en": "Sanctuary",
+      "status": "design-ready",
+      "deck_ids": [
+        "athena-beta-shiryu",
+        "athena-beta-shun"
+      ],
+      "texto_regras_en": [
+        "Devotees you control get +0/+1."
+      ]
+    },
+    {
+      "id": "athena-052",
+      "nome_exibicao_en": "Star Hill",
+      "status": "design-ready",
+      "deck_ids": [
+        "athena-beta-hyoga"
+      ],
+      "texto_regras_en": [
+        "At the beginning of your turn, generate 1 Latent Cosmo."
+      ]
+    },
+    {
+      "id": "athena-053",
+      "nome_exibicao_en": "Coliseum",
+      "status": "design-ready",
+      "deck_ids": [
+        "athena-beta-seiya",
+        "athena-beta-ikki"
+      ],
+      "texto_regras_en": [
+        "Whenever a Devotee you control enters combat, it gets +1/+0 until end of turn."
+      ]
+    }
+  ],
+  "decks": [
+    {
+      "id": "athena-beta-seiya",
+      "nome": "Seiya Aggro",
+      "arquetipo": "Aggro",
+      "god_id": "athena-001",
+      "domain_id": "athena-053",
+      "main_deck_total": 60,
+      "main_deck": [
+        {
+          "card_id": "athena-002",
+          "quantity": 4
+        },
+        {
+          "card_id": "athena-007",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-008",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-020",
+          "quantity": 4
+        },
+        {
+          "card_id": "athena-016",
+          "quantity": 4
+        },
+        {
+          "card_id": "athena-015",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-019",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-010",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-009",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-021",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-024",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-022",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-025",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-026",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-033",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-030",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-031",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-034",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-042",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-048",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-036",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-035",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-038",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-039",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-043",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-050",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-045",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-046",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-044",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-047",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-049",
+          "quantity": 2
+        }
+      ],
+      "notas_pt": "Pressao constante, scaling com Cloth e finalizacao rapida.",
+      "foco_validacao_pt": [
+        "pressao",
+        "Long Range",
+        "Pierce",
+        "Cloth burst"
+      ]
+    },
+    {
+      "id": "athena-beta-shiryu",
+      "nome": "Shiryu Tank",
+      "arquetipo": "Control Value",
+      "god_id": "athena-001",
+      "domain_id": "athena-051",
+      "main_deck_total": 60,
+      "main_deck": [
+        {
+          "card_id": "athena-003",
+          "quantity": 4
+        },
+        {
+          "card_id": "athena-007",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-008",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-014",
+          "quantity": 4
+        },
+        {
+          "card_id": "athena-017",
+          "quantity": 4
+        },
+        {
+          "card_id": "athena-018",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-019",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-015",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-011",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-009",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-022",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-025",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-021",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-023",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-024",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-026",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-027",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-028",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-029",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-030",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-031",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-032",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-035",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-038",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-039",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-037",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-036",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-046",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-045",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-043",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-050",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-047",
+          "quantity": 2
+        }
+      ],
+      "notas_pt": "Sobrevive, ganha valor com Cloth e controla a mesa pelo attrition.",
+      "foco_validacao_pt": [
+        "Guardian",
+        "tank",
+        "Cloth damage",
+        "repair",
+        "value"
+      ]
+    },
+    {
+      "id": "athena-beta-hyoga",
+      "nome": "Hyoga Control",
+      "arquetipo": "Control",
+      "god_id": "athena-001",
+      "domain_id": "athena-052",
+      "main_deck_total": 60,
+      "main_deck": [
+        {
+          "card_id": "athena-004",
+          "quantity": 4
+        },
+        {
+          "card_id": "athena-007",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-008",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-019",
+          "quantity": 4
+        },
+        {
+          "card_id": "athena-015",
+          "quantity": 4
+        },
+        {
+          "card_id": "athena-014",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-017",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-013",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-009",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-023",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-025",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-022",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-024",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-028",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-027",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-029",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-030",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-031",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-032",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-036",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-035",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-037",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-038",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-040",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-039",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-049",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-044",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-043",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-045",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-046",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-047",
+          "quantity": 2
+        }
+      ],
+      "notas_pt": "Trava a mesa com Seal e fecha a partida com controle progressivo.",
+      "foco_validacao_pt": [
+        "Seal",
+        "controle",
+        "travamento progressivo"
+      ]
+    },
+    {
+      "id": "athena-beta-shun",
+      "nome": "Shun Control",
+      "arquetipo": "Control Defense",
+      "god_id": "athena-001",
+      "domain_id": "athena-051",
+      "main_deck_total": 60,
+      "main_deck": [
+        {
+          "card_id": "athena-005",
+          "quantity": 4
+        },
+        {
+          "card_id": "athena-007",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-008",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-014",
+          "quantity": 4
+        },
+        {
+          "card_id": "athena-017",
+          "quantity": 4
+        },
+        {
+          "card_id": "athena-019",
+          "quantity": 4
+        },
+        {
+          "card_id": "athena-015",
+          "quantity": 4
+        },
+        {
+          "card_id": "athena-009",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-013",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-011",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-025",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-023",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-022",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-024",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-029",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-028",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-027",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-030",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-031",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-032",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-036",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-035",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-038",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-040",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-039",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-037",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-049",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-047",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-043",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-045",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-050",
+          "quantity": 2
+        }
+      ],
+      "notas_pt": "Atraso de jogo, negacao de mesa e jogo longo com defesa alta.",
+      "foco_validacao_pt": [
+        "Nimble",
+        "bounce",
+        "defesa",
+        "jogo longo"
+      ]
+    },
+    {
+      "id": "athena-beta-ikki",
+      "nome": "Ikki Midrange",
+      "arquetipo": "Midrange",
+      "god_id": "athena-001",
+      "domain_id": "athena-053",
+      "main_deck_total": 60,
+      "main_deck": [
+        {
+          "card_id": "athena-006",
+          "quantity": 4
+        },
+        {
+          "card_id": "athena-007",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-008",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-016",
+          "quantity": 4
+        },
+        {
+          "card_id": "athena-020",
+          "quantity": 4
+        },
+        {
+          "card_id": "athena-015",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-019",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-010",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-009",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-012",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-024",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-021",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-022",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-023",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-026",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-033",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-027",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-030",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-031",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-034",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-035",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-036",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-040",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-038",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-037",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-050",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-043",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-045",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-046",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-047",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-044",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-049",
+          "quantity": 1
+        }
+      ],
+      "notas_pt": "Pressiona, recursa e fecha a partida com burst e reciclagem do Tartarus.",
+      "foco_validacao_pt": [
+        "Tartarus",
+        "retorno",
+        "burst",
+        "pressao de finalizacao"
+      ]
+    }
+  ],
+  "proxy_cards": [
+    {
+      "id": "athena-035",
+      "nome_exibicao_en": "Athena's Protection",
+      "tipo": "Technique",
+      "subtipos": [],
+      "custo": 3,
+      "unidade_custo": "base_cosmo",
+      "cosmoble": true,
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "resistance": null,
+      "equipar_custo": null,
+      "damage_cloth": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "Target Devotee cannot be destroyed this turn."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": ""
+    },
+    {
+      "id": "athena-036",
+      "nome_exibicao_en": "Seal of Athena",
+      "tipo": "Technique",
+      "subtipos": [],
+      "custo": 3,
+      "unidade_custo": "base_cosmo",
+      "cosmoble": true,
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "resistance": null,
+      "equipar_custo": null,
+      "damage_cloth": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "Put a Seal counter on target Devotee."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": ""
+    },
+    {
+      "id": "athena-037",
+      "nome_exibicao_en": "Shatter Faith",
+      "tipo": "Technique",
+      "subtipos": [],
+      "custo": 3,
+      "unidade_custo": "base_cosmo",
+      "cosmoble": true,
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "resistance": null,
+      "equipar_custo": null,
+      "damage_cloth": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "Destroy target Relic."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": ""
+    },
+    {
+      "id": "athena-038",
+      "nome_exibicao_en": "Divine Barrier",
+      "tipo": "Technique",
+      "subtipos": [],
+      "custo": 3,
+      "unidade_custo": "base_cosmo",
+      "cosmoble": true,
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "resistance": null,
+      "equipar_custo": null,
+      "damage_cloth": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "Prevent all damage that would be dealt to your God this turn."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": ""
+    },
+    {
+      "id": "athena-039",
+      "nome_exibicao_en": "Relic Blessing",
+      "tipo": "Technique",
+      "subtipos": [],
+      "custo": 2,
+      "unidade_custo": "base_cosmo",
+      "cosmoble": true,
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "resistance": null,
+      "equipar_custo": null,
+      "damage_cloth": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "Target Relic cannot be destroyed this turn."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": ""
+    },
+    {
+      "id": "athena-040",
+      "nome_exibicao_en": "Smite the Evil",
+      "tipo": "Technique",
+      "subtipos": [],
+      "custo": 3,
+      "unidade_custo": "base_cosmo",
+      "cosmoble": true,
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "resistance": null,
+      "equipar_custo": null,
+      "damage_cloth": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "Destroy target Devotee that attacked this turn."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": ""
+    },
+    {
+      "id": "athena-043",
+      "nome_exibicao_en": "Sanctuary Blessing",
+      "tipo": "Moment",
+      "subtipos": [],
+      "custo": 4,
+      "unidade_custo": "base_cosmo",
+      "cosmoble": true,
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "resistance": null,
+      "equipar_custo": null,
+      "damage_cloth": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "Devotees you control get +1/+1 until end of turn."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": ""
+    },
+    {
+      "id": "athena-044",
+      "nome_exibicao_en": "Exile Evil",
+      "tipo": "Moment",
+      "subtipos": [],
+      "custo": 5,
+      "unidade_custo": "base_cosmo",
+      "cosmoble": true,
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "resistance": null,
+      "equipar_custo": null,
+      "damage_cloth": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "Exile target Devotee with cost 4 or greater."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": ""
+    },
+    {
+      "id": "athena-045",
+      "nome_exibicao_en": "Call the Cloth",
+      "tipo": "Moment",
+      "subtipos": [],
+      "custo": 2,
+      "unidade_custo": "base_cosmo",
+      "cosmoble": true,
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "resistance": null,
+      "equipar_custo": null,
+      "damage_cloth": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "Search your deck for a Cloth Relic, reveal it, put it into your hand, then shuffle your deck."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": ""
+    },
+    {
+      "id": "athena-046",
+      "nome_exibicao_en": "Repair Cloth",
+      "tipo": "Moment",
+      "subtipos": [],
+      "custo": 2,
+      "unidade_custo": "base_cosmo",
+      "cosmoble": true,
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "resistance": null,
+      "equipar_custo": null,
+      "damage_cloth": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "Restore 3 Damage from target Cloth."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": ""
+    },
+    {
+      "id": "athena-047",
+      "nome_exibicao_en": "Return from Tartarus",
+      "tipo": "Moment",
+      "subtipos": [],
+      "custo": 5,
+      "unidade_custo": "base_cosmo",
+      "cosmoble": true,
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "resistance": null,
+      "equipar_custo": null,
+      "damage_cloth": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "Return target Devotee from Tartarus to the battlefield Unprepared."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": ""
+    },
+    {
+      "id": "athena-048",
+      "nome_exibicao_en": "Sanctuary Guardians",
+      "tipo": "Moment",
+      "subtipos": [],
+      "custo": 2,
+      "unidade_custo": "base_cosmo",
+      "cosmoble": true,
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "resistance": null,
+      "equipar_custo": null,
+      "damage_cloth": null,
+      "keywords_en": [
+        "Guardian"
+      ],
+      "habilidades_en": [
+        "Target Devotee gains Guardian until end of turn."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": ""
+    },
+    {
+      "id": "athena-049",
+      "nome_exibicao_en": "Unfaith Purge",
+      "tipo": "Moment",
+      "subtipos": [],
+      "custo": 3,
+      "unidade_custo": "base_cosmo",
+      "cosmoble": true,
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "resistance": null,
+      "equipar_custo": null,
+      "damage_cloth": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "Remove all Latent Cosmo from target opponent."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": ""
+    },
+    {
+      "id": "athena-050",
+      "nome_exibicao_en": "Rise, Saint!",
+      "tipo": "Moment",
+      "subtipos": [],
+      "custo": 4,
+      "unidade_custo": "base_cosmo",
+      "cosmoble": true,
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "resistance": null,
+      "equipar_custo": null,
+      "damage_cloth": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "Target Devotee gets +2/+2. If it is equipped with a Cloth, it gets +4/+4 instead."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": ""
+    },
+    {
+      "id": "athena-051",
+      "nome_exibicao_en": "Sanctuary",
+      "tipo": "Domain",
+      "subtipos": [],
+      "custo": null,
+      "unidade_custo": null,
+      "cosmoble": null,
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "resistance": null,
+      "equipar_custo": null,
+      "damage_cloth": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "Devotees you control get +0/+1."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": ""
+    },
+    {
+      "id": "athena-052",
+      "nome_exibicao_en": "Star Hill",
+      "tipo": "Domain",
+      "subtipos": [],
+      "custo": null,
+      "unidade_custo": null,
+      "cosmoble": null,
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "resistance": null,
+      "equipar_custo": null,
+      "damage_cloth": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "At the beginning of your turn, generate 1 Latent Cosmo."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": ""
+    },
+    {
+      "id": "athena-053",
+      "nome_exibicao_en": "Coliseum",
+      "tipo": "Domain",
+      "subtipos": [],
+      "custo": null,
+      "unidade_custo": null,
+      "cosmoble": null,
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "resistance": null,
+      "equipar_custo": null,
+      "damage_cloth": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "Whenever a Devotee you control enters combat, it gets +1/+0 until end of turn."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": ""
+    }
+  ],
+  "mechanic_coverage": {
+    "tipos_ativos": [
+      "God",
+      "Domain",
+      "Devotee",
+      "Relic",
+      "Technique",
+      "Moment"
+    ],
+    "keywords_ativas": [
+      "Guardian",
+      "Nimble",
+      "Long Range",
+      "Pierce",
+      "Impulse",
+      "Sealed",
+      "Unfaith"
+    ],
+    "regras_obrigatorias": [
+      "Devotee vs Devotee",
+      "Devotee vs God",
+      "Prepared / Unprepared",
+      "Latent Cosmo",
+      "Tartarus",
+      "Void",
+      "Legendary rule",
+      "Evolution",
+      "Awaken",
+      "Awaken Ability",
+      "Ultimate",
+      "Cloth damage",
+      "Cloth recovery",
+      "Relic persistence after bearer death"
+    ],
+    "gauntlet_pairings": [
+      {
+        "a": "athena-beta-seiya",
+        "b": "athena-beta-shiryu"
+      },
+      {
+        "a": "athena-beta-seiya",
+        "b": "athena-beta-hyoga"
+      },
+      {
+        "a": "athena-beta-seiya",
+        "b": "athena-beta-shun"
+      },
+      {
+        "a": "athena-beta-seiya",
+        "b": "athena-beta-ikki"
+      },
+      {
+        "a": "athena-beta-shiryu",
+        "b": "athena-beta-hyoga"
+      },
+      {
+        "a": "athena-beta-shiryu",
+        "b": "athena-beta-shun"
+      },
+      {
+        "a": "athena-beta-shiryu",
+        "b": "athena-beta-ikki"
+      },
+      {
+        "a": "athena-beta-hyoga",
+        "b": "athena-beta-shun"
+      },
+      {
+        "a": "athena-beta-hyoga",
+        "b": "athena-beta-ikki"
+      },
+      {
+        "a": "athena-beta-shun",
+        "b": "athena-beta-ikki"
+      }
+    ],
+    "partidas_extras_dirigidas": [
+      "Mulligan e Latent Cosmo",
+      "Cloth damage e Repair",
+      "Respostas com Technique",
+      "Awaken e Awaken Ability",
+      "Ultimate e finalizacao"
+    ],
+    "criterios_aceite": [
+      "Os 5 decks vencem ao menos 1 partida no ciclo inicial.",
+      "Todos os 3 Domains aparecem em jogo.",
+      "Pelo menos 1 partida chega em Awaken.",
+      "Pelo menos 1 Ultimate resolve.",
+      "Nenhuma interacao central depende de regra implicita fora da documentacao.",
+      "Pelo menos 1 proxy e usado sem bloquear a partida."
+    ]
+  }
+}

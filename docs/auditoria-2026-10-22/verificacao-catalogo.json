@@ -1,0 +1,135 @@
+{
+  "catalogo": {
+    "cartas": 57,
+    "ids_unicos": 57,
+    "faccoes": {
+      "Athena": 53,
+      "Ares": 1,
+      "Artemis": 1,
+      "Hades": 1,
+      "Poseidon": 1
+    },
+    "tipos": {
+      "God": 5,
+      "Devotee": 19,
+      "Relic": 14,
+      "Technique": 6,
+      "Moment": 10,
+      "Domain": 3
+    },
+    "estado_visual": {
+      "art-ready": 40,
+      "design-ready": 17
+    },
+    "imagens_referenciadas": 40,
+    "imagens_ausentes": []
+  },
+  "assets": {
+    "pngs_cartas": 45,
+    "pngs_sem_referencia": [
+      "CARDS/ATHENA/ARES.png",
+      "CARDS/ATHENA/BRONZE/ANDROMEDAv1.png",
+      "CARDS/ATHENA/BRONZE/ATHENA.png",
+      "CARDS/ATHENA/TECHNIQUES/ATHENASJUDGMENT.png",
+      "CARDS/ATHENA/UNCOMMON/LIBRA-SWORD-WEAPON.png"
+    ],
+    "psds": 48,
+    "camadas_texto": 630,
+    "linked_missing_ocorrencias": 25,
+    "linked_missing_arquivos": [
+      "Arte 10.ai",
+      "Arte 11.ai",
+      "Arte 12.ai",
+      "Arte 13.ai",
+      "Arte 16.ai",
+      "Arte 24.ai",
+      "Arte 27.ai",
+      "Arte 3.ai",
+      "Arte 4.ai",
+      "Arte 6.ai",
+      "Arte 7.ai",
+      "Arte 8.ai",
+      "Arte 9.ai",
+      "SlksHc.tif.ai",
+      "TAP.ai",
+      "tbpBDu.tif.ai"
+    ]
+  },
+  "duplicatas_bytes": [
+    [
+      "ARTS/HEALER.png",
+      "ARTS/SANCTUMHEALER.png"
+    ],
+    [
+      "FRAMES/ATHENA/BRONZE/PHOENIX.psd",
+      "FRAMES/ATHENA/CLOTH/CLOTH.psd"
+    ]
+  ],
+  "decks": [
+    {
+      "id": "athena-beta-seiya",
+      "total": 60,
+      "max_copias": 4,
+      "referencias_ausentes": [],
+      "god_id": "athena-001",
+      "domain_id": "athena-053",
+      "copias_cosmoble": 48,
+      "proporcao_cosmoble": 0.8
+    },
+    {
+      "id": "athena-beta-shiryu",
+      "total": 60,
+      "max_copias": 4,
+      "referencias_ausentes": [],
+      "god_id": "athena-001",
+      "domain_id": "athena-051",
+      "copias_cosmoble": 52,
+      "proporcao_cosmoble": 0.8666666666666667
+    },
+    {
+      "id": "athena-beta-hyoga",
+      "total": 60,
+      "max_copias": 4,
+      "referencias_ausentes": [],
+      "god_id": "athena-001",
+      "domain_id": "athena-052",
+      "copias_cosmoble": 51,
+      "proporcao_cosmoble": 0.85
+    },
+    {
+      "id": "athena-beta-shun",
+      "total": 60,
+      "max_copias": 4,
+      "referencias_ausentes": [],
+      "god_id": "athena-001",
+      "domain_id": "athena-051",
+      "copias_cosmoble": 51,
+      "proporcao_cosmoble": 0.85
+    },
+    {
+      "id": "athena-beta-ikki",
+      "total": 60,
+      "max_copias": 4,
+      "referencias_ausentes": [],
+      "god_id": "athena-001",
+      "domain_id": "athena-053",
+      "copias_cosmoble": 51,
+      "proporcao_cosmoble": 0.85
+    }
+  ],
+  "proxies_divergentes": [
+    {
+      "id": "athena-053",
+      "campos": {
+        "habilidades_en": {
+          "catalogo": [
+            "Once per game, choose target Devotee you control. It gets +1/+0 and gains Pierce until end of turn."
+          ],
+          "proxy": [
+            "Whenever a Devotee you control enters combat, it gets +1/+0 until end of turn."
+          ]
+        }
+      }
+    }
+  ]
+}

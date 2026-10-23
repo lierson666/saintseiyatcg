@@ -1,0 +1,4698 @@
+// Motor do Saint Seiya TCG. Regras próprias; arquitetura de comandos e projeções inspirada no REA do Arena.
+// Os resolvers existentes foram isolados da interface para preservar custos, efeitos e combate.
+export function createGame({ cards, beta, settings = {}, onChange = () => {}, onEvent = () => {} }) {
+const PLAYER_ORDER = ["A", "B"];
+const CARD_ZONES = ["hand", "battlefield", "cosmo_base", "tartarus", "void"];
+const DROP_ZONES = new Set(CARD_ZONES);
+const ZONE_LABELS = {deck:"Deck",hand:"Hand",battlefield:"Battlefield",cosmo_base:"Cosmo Base",tartarus:"Tartarus",void:"Void"};
+const ATHENA_GOD_ID="athena-001", SANCTUARY_DOMAIN_ID="athena-051", STAR_HILL_DOMAIN_ID="athena-052", COLISEUM_DOMAIN_ID="athena-053";
+const cardsData = Array.isArray(cards) ? {cartas:cards} : cards;
+const betaData = beta;
+const cardsById = Object.fromEntries(cardsData.cartas.map(c=>[c.id,c]));
+const decksById = Object.fromEntries(betaData.decks.map(d=>[d.id,d]));
+const uiSettings = {ai:true,autoPass:true,fullControl:false,aiSpeed:"normal",phaseStops:["main","combat"],...settings};
+let gameState=null, nextInstanceId=1, selectedInspector=null, hoverPreview=null;
+let targetingState=null, paymentState=null, spellResolutionState=null, equipSelectionState=null, zoneBrowserState=null, mulliganState=null, newGameState=null;
+let attackDeclare=null, attackQueue=[], actionStack=[], transactionChoice=null, shiftHeld=false;
+let aiTurnTimer=null, priorityTimer=null, autoPassTimer=null, aiTurnInProgress=false;
+let battlefieldSelection={A:new Set(),B:new Set()}, epoch=0, revision=0, actionId=0, disposed=false;
+let AI_DELAY_MS=350, AI_SHORT_DELAY_MS=180, COMBAT_STEP_DELAY_MS=240;
+const TURN_PHASES=[["upkeep","Upkeep"],["draw","Draw"],["main","Main"],["end","End"]];
+const sfx = name => onEvent({type:"sound",name});
+const playMusic = name => onEvent({type:"music",name});
+const showCombatToast = message => onEvent({type:"notice",message});
+const closeContextMenu=()=>{}, closeFloatingInfo=()=>{};
+const ensureBattlefieldPosition=()=>{}, resolveBattlefieldRootSpacing=()=>{};
+const isAiPlayer = playerKey => playerKey === "B" && Boolean(uiSettings.ai);
+const getSelectedOwnedCard = playerKey => selectedInspector?.playerKey === playerKey ? findCardInstance(playerKey,selectedInspector.uid) : null;
+const playAttackLunge = async combat => { await onEvent({type:"attack",...combat}); };
+const waitCombatBeat = (multiplier=1) => new Promise(resolve=>globalThis.setTimeout(resolve,COMBAT_STEP_DELAY_MS*multiplier));
+
+function canPlayFromHandNow(playerKey, located) {
+  if (!gameState || gameState.victory || !located || located.zone !== "hand" || attackDeclare) {
+    return false;
+  }
+  if (isOverlayBlockingInput() || targetingState) {
+    return false;
+  }
+
+  const player = gameState.players[playerKey];
+  const card = located.cardData;
+  const amount = getPlayCost(playerKey, card);
+  const affordable = getAvailableCosmo(player, card.unidade_custo || "cosmo") >= amount;
+
+  if (card.tipo === "Technique" || card.tipo === "Moment") {
+    const timingOk = card.tipo === "Moment" ? canCastMomentNow(playerKey) : canCastTechniqueNow(playerKey);
+    return timingOk && affordable && !getSpellAvailabilityError(player, located);
+  }
+
+  if (actionStack.length) return false;
+
+  if (card.tipo !== "Devotee" && card.tipo !== "Relic") {
+    return false;
+  }
+
+  return gameState.currentPlayer === playerKey && gameState.currentPhase === "main" && !isPriorityWindowOpen() && affordable;
+}
+
+function canSetAsBaseNow(playerKey, located) {
+  return Boolean(gameState && !attackDeclare && !isOverlayBlockingInput() && !isPriorityWindowOpen() && canRelocateCard(playerKey, located, "cosmo_base"));
+}
+
+function maybeAutoPay() {
+  if (!paymentState) {
+    return { pending: true };
+  }
+  if ((uiSettings.fullControl || shiftHeld) && paymentState.plans.length > 1) {
+    return { pending: true };
+  }
+
+  const plan = ["mixed", "latent", "base"].map((id) => paymentState.plans.find((entry) => entry.id === id)).find(Boolean) || paymentState.plans[0];
+  resolvePaymentChoice(plan.id);
+  return { pending: true };
+}
+
+function canDeclareAttacker(playerKey, instance) {
+  if (!instance || !isDevoteeCard(instance.cardId)) {
+    return false;
+  }
+  const card = getCard(instance.cardId);
+  return (
+    !instance.tapped &&
+    !instance.enteredCombatThisTurn &&
+    !(instance.summoningSick && !hasKeyword(card, "Impulse", instance)) &&
+    !hasKeyword(card, "Sealed", instance) &&
+    Boolean(gameState.players[playerKey].zones.battlefield.find((entry) => entry.uid === instance.uid))
+  );
+}
+
+function getEligibleAttackers(playerKey) {
+  return gameState.players[playerKey].zones.battlefield.filter((instance) => canDeclareAttacker(playerKey, instance));
+}
+
+function getLegalAttackTargets(attacker) {
+  const enemyKey = otherPlayerKey(attacker.card.owner);
+  const targets = gameState.players[enemyKey].zones.battlefield
+    .map((instance) => findCardInstance(enemyKey, instance.uid))
+    .filter((located) => located && isAttackableCardTargetForAttacker(attacker, enemyKey, located.zone, located.card, located.cardData))
+    .map((located) => ({ kind: "card", playerKey: enemyKey, uid: located.card.uid }));
+  if (isAttackableGodTargetForAttacker(attacker, enemyKey)) {
+    targets.unshift({ kind: "god", playerKey: enemyKey });
+  }
+  return targets;
+}
+
+function getDefaultAttackTarget(attacker) {
+  const targets = getLegalAttackTargets(attacker);
+  return targets[0]?.kind === "god" ? targets[0] : targets.length === 1 ? targets[0] : null;
+}
+
+function isLegalAttackTarget(attacker, target) {
+  return getLegalAttackTargets(attacker).some((entry) => entry.kind === target.kind && entry.playerKey === target.playerKey && entry.uid === target.uid);
+}
+
+function getAttackBlockReason(attacker, target) {
+  if (!attacker || isLegalAttackTarget(attacker, target)) {
+    return "";
+  }
+  if (defendingPlayerHasGuardian(target.playerKey) && !hasKeyword(attacker.cardData, "Cheater")) {
+    return "Guardian: a Guardian Devotee must be attacked first.";
+  }
+  return "Not a valid attack target.";
+}
+
+function toggleDeclareAttacker(uid) {
+  const index = attackDeclare.entries.findIndex((entry) => entry.uid === uid);
+  if (index >= 0) {
+    if (attackDeclare.focusUid !== uid) {
+      attackDeclare.focusUid = uid;
+      return;
+    }
+    const [removed] = attackDeclare.entries.splice(index, 1);
+    attackDeclare.history.push({ type: "remove", entry: removed, index });
+    attackDeclare.focusUid = attackDeclare.entries.find((entry) => !entry.target)?.uid || null;
+    return;
+  }
+
+  const located = findCardInstance(attackDeclare.playerKey, uid);
+  if (!located || !canDeclareAttacker(attackDeclare.playerKey, located.card)) {
+    showCombatToast(`${located?.cardData.nome_exibicao_en || "That card"} cannot attack right now.`);
+    return;
+  }
+
+  attackDeclare.entries.push({ uid, target: getDefaultAttackTarget(located) });
+  attackDeclare.history.push({ type: "add", uid });
+  attackDeclare.focusUid = uid;
+}
+
+function assignDeclareTarget(target) {
+  const attacker = getDeclareFocusAttacker();
+  const entry = attackDeclare.entries.find((item) => item.uid === attackDeclare.focusUid);
+  if (!attacker || !entry) {
+    showCombatToast("Select one of your attacking Devotees first.");
+    return;
+  }
+  const reason = getAttackBlockReason(attacker, target);
+  if (reason) {
+    showCombatToast(reason);
+    return;
+  }
+  attackDeclare.history.push({ type: "target", uid: entry.uid, previous: entry.target });
+  entry.target = target;
+  attackDeclare.focusUid = attackDeclare.entries.find((item) => !item.target)?.uid || entry.uid;
+}
+
+function declareAllAttackers() {
+  getEligibleAttackers(attackDeclare.playerKey).forEach((instance) => {
+    if (!attackDeclare.entries.some((entry) => entry.uid === instance.uid)) {
+      toggleDeclareAttacker(instance.uid);
+    }
+  });
+  attackDeclare.focusUid = attackDeclare.entries.find((entry) => !entry.target)?.uid || attackDeclare.focusUid;
+}
+
+function undoDeclareStep() {
+  const step = attackDeclare?.history.pop();
+  if (!step) {
+    return;
+  }
+  if (step.type === "add") {
+    attackDeclare.entries = attackDeclare.entries.filter((entry) => entry.uid !== step.uid);
+  } else if (step.type === "remove") {
+    attackDeclare.entries.splice(step.index, 0, step.entry);
+  } else if (step.type === "target") {
+    const entry = attackDeclare.entries.find((item) => item.uid === step.uid);
+    if (entry) entry.target = step.previous;
+  }
+  attackDeclare.focusUid = attackDeclare.entries.find((entry) => !entry.target)?.uid || attackDeclare.entries.at(-1)?.uid || null;
+}
+
+function handleDeclareClick(cardElement, inspectElement) {
+  if (inspectElement?.dataset.inspectKind === "god" && inspectElement.dataset.player === "B") {
+    assignDeclareTarget({ kind: "god", playerKey: "B" });
+    return true;
+  }
+  if (!cardElement) {
+    return false;
+  }
+  const located = findCardInstance(cardElement.dataset.player, cardElement.dataset.cardUid);
+  if (!located || located.zone !== "battlefield") {
+    return false;
+  }
+  const rootUid = getBattlefieldRootUid(located.card);
+  const root = findCardInstance(located.card.owner, rootUid);
+  if (!root || !isDevoteeCard(root.cardId)) {
+    return false;
+  }
+  if (root.card.owner === "A") {
+    toggleDeclareAttacker(root.card.uid);
+  } else {
+    assignDeclareTarget({ kind: "card", playerKey: "B", uid: root.card.uid });
+  }
+  return true;
+}
+
+function createPlayerState(playerKey, deckDefinition) {
+  const godCard = clone(getCard(betaData.god_id));
+  const deckInstances = [];
+
+  deckDefinition.main_deck.forEach((entry) => {
+    for (let copyIndex = 0; copyIndex < entry.quantity; copyIndex += 1) {
+      deckInstances.push(createCardInstance(playerKey, deckDefinition.id, entry.card_id));
+    }
+  });
+
+  shuffle(deckInstances);
+
+  const player = {
+    key: playerKey,
+    label: `Player ${playerKey}`,
+    deckId: deckDefinition.id,
+    deckName: deckDefinition.nome,
+    archetype: deckDefinition.arquetipo,
+    notesPt: deckDefinition.notas_pt,
+    validationFocus: deckDefinition.foco_validacao_pt,
+    lostByDeckOut: false,
+    god: {
+      cardId: godCard.id,
+      soul: godCard.soul,
+      attack: godCard.attack,
+      awaken: godCard.awaken,
+      awakened: false,
+      preventDamageUntilEnd: false
+    },
+    domainId: deckDefinition.domain_id,
+    domainUsed: false,
+    cosmo: 0,
+    latentCosmo: 0,
+    playedBaseThisTurn: false,
+    freeEquipTargetUid: null,
+    zones: {
+      deck: deckInstances,
+      hand: [],
+      battlefield: [],
+      cosmo_base: [],
+      tartarus: [],
+      void: []
+    }
+  };
+
+  drawCards(player, 7, false);
+  return player;
+}
+
+function createCardInstance(playerKey, deckId, cardId) {
+  return {
+    uid: `card-${nextInstanceId++}`,
+    owner: playerKey,
+    sourceDeckId: deckId,
+    cardId,
+    tapped: false,
+    plusOneCounters: 0,
+    minusOneCounters: 0,
+    sealCounters: 0,
+    damageCounters: 0,
+    turnPowerBonus: 0,
+    turnResistanceBonus: 0,
+    tempKeywords: [],
+    generatedCosmoWhenTapped: false,
+    preventDamageShield: 0,
+    cannotBeDestroyedUntilEnd: false,
+    enteredCombatThisTurn: false,
+    summoningSick: false,
+    sealLocked: false,
+    attachedToUid: null,
+    battlefieldPositionX: null,
+    battlefieldPositionY: null,
+    battlefieldPositionPinned: false
+  };
+}
+
+function createEmptyCombatState() {
+  return {
+    attacker: null,
+    target: null,
+    mode: null,
+    priorityPlayerKey: null,
+    responseActive: false,
+    resolving: false,
+    resumeAiAfterResolution: false,
+    cosmoOfHopeTriggeredFor: {
+      A: false,
+      B: false
+    }
+  };
+}
+
+function createMulliganState(playerKey) {
+  return {
+    playerKey,
+    selectedUids: []
+  };
+}
+
+function drawCards(player, count, writeLog = true) {
+  let drawn = 0;
+
+  while (drawn < count && player.zones.deck.length > 0) {
+    const nextCard = player.zones.deck.shift();
+    player.zones.hand.push(nextCard);
+    drawn += 1;
+  }
+
+  if (writeLog && drawn > 0) {
+    addLog(`${player.label} draws ${drawn} card${drawn > 1 ? "s" : ""}.`);
+  }
+
+  if (drawn < count) {
+    addLog(`${player.label} cannot draw enough cards. Deck is empty.`);
+    player.lostByDeckOut = true;
+  }
+}
+
+function toggleMulliganSelection(uid) {
+  if (!mulliganState) {
+    return;
+  }
+
+  const selected = new Set(mulliganState.selectedUids);
+  if (selected.has(uid)) {
+    selected.delete(uid);
+  } else {
+    selected.add(uid);
+  }
+  mulliganState.selectedUids = [...selected];
+}
+
+function nextTurn(force = false) {
+  if (!gameState || gameState.victory) {
+    return;
+  }
+
+  if (!force && gameState.currentPhase !== "end") {
+    addLog("Use Next Phase until End Step before passing the turn.");
+    return;
+  }
+
+  attackDeclare = null;
+  attackQueue = [];
+  clearCombatState();
+  const previousPlayerKey = gameState.currentPlayer;
+  const previousPlayer = gameState.players[previousPlayerKey];
+  if (previousPlayer.cosmo > 0) {
+    addLog(`${previousPlayer.label} loses ${previousPlayer.cosmo} unspent Cosmo at end of turn.`);
+    previousPlayer.cosmo = 0;
+  }
+  if (previousPlayer.latentCosmo > 0) {
+    previousPlayer.latentCosmo = 0;
+    addLog(`${previousPlayer.label} loses all Latent Cosmo at end of turn.`);
+  }
+
+  [previousPlayerKey, otherPlayerKey(previousPlayerKey)].forEach((playerKey) => {
+    clearEndOfTurn(gameState.players[playerKey]);
+  });
+
+  const nextPlayerKey = otherPlayerKey(previousPlayerKey);
+  if (nextPlayerKey === "A") {
+    gameState.turnNumber += 1;
+  }
+
+  gameState.currentPlayer = nextPlayerKey;
+  beginTurn(gameState.players[nextPlayerKey]);
+  renderGame();
+}
+
+function beginTurn(player) {
+  untapPlayer(player);
+  const healed = healCloths(player);
+  resolveStartOfTurnTriggers(player);
+  syncAwakenState(player);
+  player.playedBaseThisTurn = false;
+  gameState.currentPhase = "upkeep";
+  addLog(`Turn ${gameState.turnNumber} begins for ${player.label}. Entering Upkeep.`);
+  showCombatToast(`TURN ${gameState.turnNumber} • ${player.label} • UPKEEP`);
+  if (healed > 0) {
+    addLog(`${player.label} restores 1 Damage from ${healed} Cloth${healed > 1 ? "s" : ""}.`);
+  }
+}
+
+function advanceToNextPhase(fromAi = false) {
+  if (!gameState || gameState.victory) {
+    return false;
+  }
+
+  if (!fromAi && isAiPlayer(gameState.currentPlayer)) {
+    addLog("Only the active local player can advance the phase manually.");
+    return false;
+  }
+
+  if (gameState.currentPhase === "upkeep") {
+    setPhase("draw");
+    const activePlayer = gameState.players[gameState.currentPlayer];
+    const skipOpeningDraw =
+      !gameState.openingDrawSkipped &&
+      gameState.turnNumber === 1 &&
+      gameState.currentPlayer === gameState.startingPlayer;
+
+    if (skipOpeningDraw) {
+      gameState.openingDrawSkipped = true;
+      addLog(`${activePlayer.label} skips the first Draw Step for starting the game.`);
+    } else {
+      drawCards(activePlayer, 1);
+      syncAwakenState(activePlayer);
+    }
+    showCombatToast("DRAW STEP");
+    return true;
+  }
+
+  if (gameState.currentPhase === "draw") {
+    setPhase("main");
+    showCombatToast("MAIN PHASE");
+    return true;
+  }
+
+  if (gameState.currentPhase === "main") {
+    setPhase("end");
+    showCombatToast("END STEP");
+    return true;
+  }
+
+  addLog("You are already in End Step. Use End Turn to pass the turn.");
+  return false;
+}
+
+function untapPlayer(player) {
+  let untapped = 0;
+  const sealedHeld = [];
+  player.cosmo = 0;
+
+  ["battlefield", "cosmo_base"].forEach((zoneId) => {
+    player.zones[zoneId].forEach((instance) => {
+      if (zoneId === "battlefield" && isDevoteeCard(instance.cardId) && instance.sealCounters > 0) {
+        instance.sealCounters = Math.max(0, instance.sealCounters - 1);
+        instance.tapped = true;
+        instance.sealLocked = true;
+        instance.generatedCosmoWhenTapped = false;
+        sealedHeld.push(getCard(instance.cardId).nome_exibicao_en);
+        return;
+      }
+
+      if (zoneId === "battlefield" && isDevoteeCard(instance.cardId) && instance.sealLocked) {
+        instance.sealLocked = false;
+      }
+
+      if (instance.tapped) {
+        instance.tapped = false;
+        instance.generatedCosmoWhenTapped = false;
+        untapped += 1;
+      }
+    });
+  });
+
+  if (untapped > 0) {
+    addLog(`${player.label} untaps ${untapped} card${untapped > 1 ? "s" : ""}.`);
+  }
+
+  sealedHeld.forEach((cardName) => {
+    addLog(`${player.label} removes 1 Seal counter from ${cardName} during Upkeep. It stays tapped until the next Upkeep.`);
+  });
+}
+
+function healCloths(player) {
+  let healed = 0;
+
+  player.zones.battlefield.forEach((instance) => {
+    if (isClothCard(instance.cardId) && instance.damageCounters > 0) {
+      instance.damageCounters -= 1;
+      healed += 1;
+    }
+  });
+
+  return healed;
+}
+
+function resolveStartOfTurnTriggers(player) {
+  const sources = [
+    { kind: "domain", cardData: getCard(player.domainId), instance: null },
+    ...player.zones.battlefield.map((instance) => ({
+      kind: "battlefield",
+      cardData: getCard(instance.cardId),
+      instance
+    }))
+  ];
+
+  sources.forEach((source) => {
+    const rules = getCardRulesLines(source.cardData).filter((line) => /at the beginning of your turn/i.test(line));
+    rules.forEach((line) => {
+      resolveStartOfTurnRule(player, source, line);
+    });
+  });
+}
+
+function resolveStartOfTurnRule(player, source, line) {
+  if (/at the beginning of your turn,\s*generate 1 latent cosmo/i.test(line)) {
+    player.latentCosmo += 1;
+    addLog(`${player.label} gains 1 Latent Cosmo from ${source.cardData.nome_exibicao_en}.`);
+    return;
+  }
+
+  addLog(`${source.cardData.nome_exibicao_en} has a start-of-turn trigger that still needs automation.`);
+}
+
+function clearEndOfTurn(player) {
+  let cleared = 0;
+  let recoveredDevotees = 0;
+  player.god.preventDamageUntilEnd = false;
+  player.freeEquipTargetUid = null;
+
+  for (const zoneId of CARD_ZONES) {
+    player.zones[zoneId].forEach((instance) => {
+      const hadTemporaryState =
+        instance.turnPowerBonus !== 0 ||
+        instance.turnResistanceBonus !== 0 ||
+        instance.enteredCombatThisTurn ||
+        instance.summoningSick ||
+        instance.preventDamageShield > 0 ||
+        instance.tempKeywords.length > 0 ||
+        instance.cannotBeDestroyedUntilEnd ||
+        (!isClothCard(instance.cardId) && instance.damageCounters > 0);
+
+      if (!isClothCard(instance.cardId) && isDevoteeCard(instance.cardId) && instance.damageCounters > 0) {
+        recoveredDevotees += 1;
+      }
+
+      instance.turnPowerBonus = 0;
+      instance.turnResistanceBonus = 0;
+      instance.enteredCombatThisTurn = false;
+      instance.summoningSick = false;
+      instance.preventDamageShield = 0;
+      instance.tempKeywords = [];
+      instance.cannotBeDestroyedUntilEnd = false;
+      if (!isClothCard(instance.cardId)) {
+        instance.damageCounters = 0;
+      }
+
+      if (hadTemporaryState) {
+        cleared += 1;
+      }
+    });
+  }
+
+  if (cleared > 0) {
+    addLog(`${player.label} clears ${cleared} temporary combat effect${cleared > 1 ? "s" : ""}.`);
+  }
+
+  if (recoveredDevotees > 0) {
+    addLog(`${player.label} removes all marked damage from ${recoveredDevotees} Devotee${recoveredDevotees > 1 ? "s" : ""} at end of turn.`);
+  }
+}
+
+function syncAwakenState(player) {
+  if (!player.god.awakened && player.god.soul <= player.god.awaken) {
+    player.god.awakened = true;
+    addLog(`${player.label} enters Awaken.`);
+  }
+}
+
+function declareVictory(winnerKey, loserKey, reason) {
+  if (!gameState || gameState.victory) {
+    return;
+  }
+
+  clearAiTurnTimer();
+  actionStack = [];
+  transactionChoice = null;
+  clearPriorityTimer();
+  aiTurnInProgress = false;
+  clearCombatState();
+  gameState.victory = {
+    winnerKey,
+    loserKey,
+    reason,
+    message: `PLAYER ${winnerKey} WINS!`
+  };
+  // Against the AI, Player B winning is a defeat for the human.
+  sfx(winnerKey === "B" && isAiPlayer("B") ? "defeat" : "victory");
+  playMusic("menu");
+
+  const loser = gameState.players[loserKey];
+  const reasonText = reason === "deckout"
+    ? `${loser.label} loses by trying to draw from an empty Deck.`
+    : `${loser.label}'s God reaches 0 Soul.`;
+  addLog(`${gameState.players[winnerKey].label} wins the match. ${reasonText}`);
+}
+
+function evaluateVictoryState() {
+  if (!gameState || gameState.victory) {
+    return gameState?.victory || null;
+  }
+
+  const soulLoser = PLAYER_ORDER.find((playerKey) => gameState.players[playerKey].god.soul <= 0);
+  if (soulLoser) {
+    declareVictory(otherPlayerKey(soulLoser), soulLoser, "soul");
+    return gameState.victory;
+  }
+
+  const deckLoser = PLAYER_ORDER.find((playerKey) => gameState.players[playerKey].lostByDeckOut);
+  if (deckLoser) {
+    declareVictory(otherPlayerKey(deckLoser), deckLoser, "deckout");
+    return gameState.victory;
+  }
+
+  return null;
+}
+
+function isPriorityWindowOpen() {
+  return Boolean(gameState?.combat?.mode === "priority" && gameState?.combat?.attacker && gameState?.combat?.target);
+}
+
+function isPriorityPlayer(playerKey) {
+  return Boolean(isPriorityWindowOpen() && gameState.combat.priorityPlayerKey === playerKey);
+}
+
+function getBattlefieldSelectionSet(playerKey) {
+  return battlefieldSelection[playerKey] || new Set();
+}
+
+function setBattlefieldSelection(playerKey, uids) {
+  battlefieldSelection[playerKey] = new Set(uids);
+}
+
+function clearBattlefieldSelection(playerKey = null) {
+  if (playerKey) {
+    battlefieldSelection[playerKey] = new Set();
+    return;
+  }
+  battlefieldSelection = createEmptyBattlefieldSelection();
+}
+
+function getBattlefieldRootUid(instance) {
+  return instance?.attachedToUid || instance?.uid || null;
+}
+
+function isBattlefieldRootInstance(instance) {
+  return Boolean(instance && !instance.attachedToUid);
+}
+
+function getBattlefieldDisplayCount(playerKey) {
+  const player = gameState?.players?.[playerKey];
+  if (!player) {
+    return 0;
+  }
+  return player.zones.battlefield.filter((instance) => !instance.attachedToUid).length;
+}
+
+function adjustPlayerCounter(playerKey, metric, delta) {
+  const player = gameState.players[playerKey];
+
+  if (metric === "soul") {
+    player.god.soul = Math.max(0, player.god.soul + delta);
+    syncAwakenState(player);
+    addLog(`${playerLabel(playerKey)} Soul is now ${player.god.soul}.`);
+  } else if (metric === "latent") {
+    player.latentCosmo = Math.max(0, player.latentCosmo + delta);
+    addLog(`${playerLabel(playerKey)} Latent Cosmo is now ${player.latentCosmo}.`);
+  }
+}
+
+function toggleAwaken(playerKey) {
+  const player = gameState.players[playerKey];
+  player.god.awakened = !player.god.awakened;
+  addLog(`${playerLabel(playerKey)} manually toggles Awaken ${player.god.awakened ? "on" : "off"}.`);
+}
+
+function toggleTap(playerKey, uid) {
+  const located = findCardInstance(playerKey, uid);
+  if (!located) {
+    return;
+  }
+
+  if (located.zone === "battlefield" && isDevoteeCard(located.cardId) && located.card.tapped && (located.card.sealCounters > 0 || located.card.sealLocked)) {
+    addLog(`${located.cardData.nome_exibicao_en} is sealed and cannot untap until a future Upkeep.`);
+    return;
+  }
+
+  const player = gameState.players[playerKey];
+  const wasTapped = located.card.tapped;
+  located.card.tapped = !located.card.tapped;
+
+  if (located.zone === "cosmo_base") {
+    if (!wasTapped && located.card.tapped) {
+      located.card.generatedCosmoWhenTapped = true;
+      player.cosmo += 1;
+      addLog(`${playerLabel(playerKey)} taps ${located.cardData.nome_exibicao_en} in Cosmo Base and generates 1 Cosmo.`);
+      return;
+    }
+
+    if (wasTapped && !located.card.tapped) {
+      if (located.card.generatedCosmoWhenTapped && player.cosmo > 0) {
+        player.cosmo = Math.max(0, player.cosmo - 1);
+      }
+      located.card.generatedCosmoWhenTapped = false;
+      addLog(`${playerLabel(playerKey)} untaps ${located.cardData.nome_exibicao_en} in Cosmo Base.`);
+      return;
+    }
+  }
+
+  addLog(`${playerLabel(playerKey)} ${located.cardData.nome_exibicao_en} is ${located.card.tapped ? "tapped" : "untapped"}.`);
+}
+
+function adjustCardCounter(playerKey, uid, counter, delta) {
+  const located = findCardInstance(playerKey, uid);
+  if (!located) {
+    return;
+  }
+
+  if (counter === "sealCounters" && delta > 0) {
+    applySealCounter(located, playerLabel(playerKey));
+    return;
+  }
+
+  located.card[counter] = Math.max(0, located.card[counter] + delta);
+  addLog(
+    `${playerLabel(playerKey)} updates ${located.cardData.nome_exibicao_en}: ${humanCounterLabel(counter)} is now ${located.card[counter]}.`
+  );
+}
+
+function applySealCounter(located, sourceLabel = null) {
+  if (!located || located.zone !== "battlefield" || !isDevoteeCard(located.cardId)) {
+    return false;
+  }
+
+  located.card.sealCounters += 1;
+  located.card.tapped = true;
+  located.card.generatedCosmoWhenTapped = false;
+  const sourcePrefix = sourceLabel ? `${sourceLabel} ` : "";
+  addLog(`${sourcePrefix}puts a Seal counter on ${located.cardData.nome_exibicao_en}. ${located.cardData.nome_exibicao_en} is tapped immediately.`);
+  showCombatToast(`${located.cardData.nome_exibicao_en} is sealed and tapped.`);
+  return true;
+}
+
+function moveCard(playerKey, uid, targetZone, options = {}) {
+  const located = findCardInstance(playerKey, uid);
+  if (!located) {
+    return;
+  }
+
+  if (!options.skipPaymentPrompt) {
+    const handPlayResult = maybeStartHandPlay(playerKey, located, targetZone, options);
+    if (handPlayResult?.pending || handPlayResult?.blocked) {
+      return;
+    }
+  }
+
+  const moved = relocateCard(playerKey, uid, targetZone, options);
+  if (!moved) {
+    return;
+  }
+
+  addLog(
+    `${playerLabel(playerKey)} moves ${moved.cardData.nome_exibicao_en} from ${zoneLabel(moved.fromZone)} to ${zoneLabel(moved.toZone)}.`
+  );
+}
+
+function relocateCard(playerKey, uid, targetZone, options = {}) {
+  const player = gameState.players[playerKey];
+  const located = findCardInstance(playerKey, uid);
+  const {
+    force = false,
+    tapped = null,
+    skipEnterBattlefieldTriggers = false,
+    skipSummoningSickness = false,
+    battlefieldPosition = null
+  } = options;
+
+  if (!located || located.zone === targetZone || !DROP_ZONES.has(targetZone)) {
+    return null;
+  }
+
+  if (!force && !canRelocateCard(playerKey, located, targetZone, { writeLog: true })) {
+    return null;
+  }
+
+  const fromZone = located.zone;
+  player.zones[located.zone] = player.zones[located.zone].filter((card) => card.uid !== uid);
+  if (fromZone === "battlefield" && isBattlefieldRootInstance(located.card)) {
+    const selection = getBattlefieldSelectionSet(playerKey);
+    if (selection.has(located.card.uid)) {
+      selection.delete(located.card.uid);
+    }
+  }
+  normalizeCardStateForZone(located.card, targetZone);
+  player.zones[targetZone].push(located.card);
+
+  if (targetZone === "cosmo_base" && fromZone === "hand") {
+    player.playedBaseThisTurn = true;
+  }
+
+  if (targetZone === "battlefield" && fromZone !== "battlefield") {
+    if (battlefieldPosition) {
+      located.card.battlefieldPositionX = battlefieldPosition.x;
+      located.card.battlefieldPositionY = battlefieldPosition.y;
+    } else {
+      ensureBattlefieldPosition(playerKey, located.card);
+    }
+    resolveBattlefieldRootSpacing(playerKey);
+    if (isDevoteeCard(located.cardId) && !skipSummoningSickness && !hasKeyword(located.cardData, "Impulse", located.card)) {
+      located.card.summoningSick = true;
+    }
+    if (typeof tapped === "boolean") {
+      located.card.tapped = tapped;
+    }
+    if (!skipEnterBattlefieldTriggers) {
+      resolveEnterBattlefieldTriggers(playerKey, located.card);
+    }
+    enforceNamedSaintLegendaryRule(playerKey, located.card.uid);
+  } else if (typeof tapped === "boolean") {
+    located.card.tapped = tapped;
+  }
+
+  if (fromZone === "battlefield" && targetZone !== "battlefield" && isBattlefieldRootInstance(located.card)) {
+    resolveBattlefieldRootSpacing(playerKey);
+  }
+
+  return {
+    ...located,
+    fromZone,
+    toZone: targetZone
+  };
+}
+
+function canRelocateCard(playerKey, located, targetZone, options = {}) {
+  if (!located || !DROP_ZONES.has(targetZone) || located.zone === targetZone) {
+    return false;
+  }
+
+  if (targetZone !== "cosmo_base") {
+    return true;
+  }
+
+  const { writeLog = false } = options;
+  const player = gameState?.players?.[playerKey];
+  const fail = (message) => {
+    if (writeLog) {
+      addLog(message);
+    }
+    return false;
+  };
+
+  if (!located.cardData.cosmoble) {
+    return fail(`${located.cardData.nome_exibicao_en} is not Cosmoble and cannot be moved to Cosmo Base.`);
+  }
+
+  if (located.zone !== "hand") {
+    return fail("Only cards in hand can be moved to Cosmo Base.");
+  }
+
+  if (!gameState || gameState.currentPlayer !== playerKey) {
+    return fail("You can only play a Cosmo Base during your own turn.");
+  }
+
+  if (gameState.currentPhase !== "main") {
+    return fail("Cosmo Base can only be played during Main Phase.");
+  }
+
+  if (player?.playedBaseThisTurn) {
+    return fail(`${playerLabel(playerKey)} has already played a Cosmo Base this turn.`);
+  }
+
+  return true;
+}
+
+function openZoneBrowser(config) {
+  if (!gameState) {
+    return false;
+  }
+
+  const {
+    playerKey,
+    zone,
+    title,
+    prompt,
+    filter,
+    cancelMessage = "Zone browsing canceled.",
+    allowCancel = true,
+    onCancel = null,
+    onSelect
+  } = config;
+  const player = gameState.players[playerKey];
+  if (!player) {
+    return false;
+  }
+
+  const predicate = typeof filter === "function" ? filter : () => true;
+  const entries = player.zones[zone]
+    .filter((instance) => predicate({
+      playerKey,
+      uid: instance.uid,
+      zone,
+      card: instance,
+      cardId: instance.cardId,
+      cardData: getCard(instance.cardId)
+    }))
+    .map((instance) => instance.uid);
+
+  if (!entries.length) {
+    addLog(`${player.label} has no valid cards in ${zoneLabel(zone)} for ${title}.`);
+    return false;
+  }
+
+  if (isAiPlayer(playerKey)) {
+    onSelect(entries[0]);
+    return true;
+  }
+
+  zoneBrowserState = {
+    playerKey,
+    zone,
+    title,
+    prompt,
+    entries,
+    selectedUid: null,
+    cancelMessage,
+    allowCancel,
+    onCancel,
+    onSelect
+  };
+  return true;
+}
+
+function selectZoneBrowserEntry(uid) {
+  if (!zoneBrowserState) {
+    return;
+  }
+
+  zoneBrowserState.selectedUid = uid || null;
+}
+
+function resolveZoneBrowserSelection() {
+  if (!zoneBrowserState?.onSelect) {
+    return;
+  }
+
+  const selectedUid = zoneBrowserState.selectedUid;
+  if (!selectedUid) {
+    addLog("Choose a card before confirming.");
+    return;
+  }
+  const callback = zoneBrowserState.onSelect;
+  zoneBrowserState = null;
+  callback(selectedUid);
+}
+
+function closeZoneBrowser(writeLog = false) {
+  if (!zoneBrowserState) {
+    return;
+  }
+
+  if (writeLog && zoneBrowserState.allowCancel === false) {
+    return;
+  }
+
+  if (writeLog && zoneBrowserState.cancelMessage) {
+    addLog(zoneBrowserState.cancelMessage);
+  }
+
+  if (typeof zoneBrowserState.onCancel === "function") {
+    zoneBrowserState.onCancel();
+  }
+
+  zoneBrowserState = null;
+}
+
+function moveCardByEffect(playerKey, uid, targetZone, options = {}) {
+  const {
+    tapped = null,
+    skipSummoningSickness = false
+  } = options;
+  if (targetZone === "deck") {
+    const player = gameState.players[playerKey];
+    const located = findCardInstance(playerKey, uid);
+    if (!player || !located) {
+      return null;
+    }
+    player.zones[located.zone] = player.zones[located.zone].filter((card) => card.uid !== uid);
+    normalizeCardStateForZone(located.card, "deck");
+    if (typeof tapped === "boolean") {
+      located.card.tapped = tapped;
+    }
+    player.zones.deck.unshift(located.card);
+    return {
+      ...located,
+      fromZone: located.zone,
+      toZone: "deck"
+    };
+  }
+
+  return relocateCard(playerKey, uid, targetZone, {
+    force: true,
+    tapped,
+    skipSummoningSickness
+  });
+}
+
+function inferDestinationZoneFromText(text, fallback = "hand") {
+  if (/into your hand|to its owner's hand/i.test(text)) {
+    return "hand";
+  }
+  if (/to the battlefield|onto the battlefield/i.test(text)) {
+    return "battlefield";
+  }
+  if (/into your cosmo base|to your cosmo base|into cosmo base/i.test(text)) {
+    return "cosmo_base";
+  }
+  if (/into your deck|on top of your deck|to your deck/i.test(text)) {
+    return "deck";
+  }
+  return fallback;
+}
+
+function getZoneBrowserEntry(playerKey, uid) {
+  return uid ? findCardInstance(playerKey, uid) : null;
+}
+
+function openSpellResolution(config) {
+  spellResolutionState = {
+    playerKey: config.playerKey,
+    uid: config.uid,
+    title: config.title,
+    prompt: config.prompt,
+    stageLabel: config.stageLabel || "Resolve Spell",
+    cardType: config.cardType || "Spell",
+    unit: config.unit || "cosmo",
+    amount: typeof config.amount === "number" ? config.amount : 0,
+    allowCancel: config.allowCancel !== false,
+    cancelMessage: config.cancelMessage || `${config.title} resolution canceled.`,
+    targetValidator: typeof config.targetValidator === "function" ? config.targetValidator : null,
+    targetEffect: typeof config.targetEffect === "function" ? config.targetEffect : null
+  };
+}
+
+function clearSpellResolution(writeLog = false) {
+  if (!spellResolutionState) {
+    return;
+  }
+
+  if (writeLog && spellResolutionState.allowCancel && spellResolutionState.cancelMessage) {
+    addLog(spellResolutionState.cancelMessage);
+  }
+
+  spellResolutionState = null;
+}
+
+function getSpellTargetDescriptors(validator) {
+  if (!gameState || typeof validator !== "function") {
+    return [];
+  }
+
+  const descriptors = [];
+  PLAYER_ORDER.forEach((playerKey) => {
+    const player = gameState.players[playerKey];
+    if (!player) {
+      return;
+    }
+
+    const godDescriptor = {
+      kind: "god",
+      playerKey
+    };
+    if (validator(godDescriptor)) {
+      descriptors.push(godDescriptor);
+    }
+
+    player.zones.battlefield.forEach((instance) => {
+      const descriptor = {
+        kind: "card",
+        playerKey,
+        uid: instance.uid,
+        zone: "battlefield",
+        card: instance,
+        cardId: instance.cardId,
+        cardData: getCard(instance.cardId)
+      };
+      if (validator(descriptor)) {
+        descriptors.push(descriptor);
+      }
+    });
+  });
+
+  return descriptors;
+}
+
+function resolveSpellTargetSelection(kind, playerKey, uid = "") {
+  if (!spellResolutionState || typeof spellResolutionState.targetValidator !== "function" || typeof spellResolutionState.targetEffect !== "function") {
+    return;
+  }
+
+  const descriptor = kind === "god"
+    ? { kind: "god", playerKey }
+    : (() => {
+      const located = findCardInstance(playerKey, uid);
+      if (!located) {
+        return null;
+      }
+      return {
+        kind: "card",
+        playerKey,
+        uid: located.card.uid,
+        zone: located.zone,
+        card: located.card,
+        cardId: located.cardId,
+        cardData: located.cardData
+      };
+    })();
+
+  if (!descriptor || !spellResolutionState.targetValidator(descriptor)) {
+    addLog("That target is no longer valid for this spell.");
+    return;
+  }
+
+  const player = gameState.players[spellResolutionState.playerKey];
+  const located = findCardInstance(spellResolutionState.playerKey, spellResolutionState.uid);
+  if (!player || !located || located.zone !== "hand") {
+    clearSpellResolution(false);
+    addLog("The spell is no longer available in hand.");
+    return;
+  }
+
+  const fresh = ensureSpellCostPaid(player, located, { costAlreadyPaid: true, allowCancel: spellResolutionState.allowCancel });
+  if (!fresh) {
+    clearSpellResolution(false);
+    return;
+  }
+
+  const targetLocated = descriptor.kind === "god" ? null : findCardInstance(descriptor.playerKey, descriptor.uid);
+  // Effects read target.playerKey / target.uid, which findCardInstance does not carry.
+  const target = descriptor.kind === "god" ? descriptor : targetLocated && { ...targetLocated, playerKey: descriptor.playerKey, uid: descriptor.uid };
+  if (!target) {
+    clearSpellResolution(false);
+    addLog("The chosen target is no longer available.");
+    return;
+  }
+
+  spellResolutionState.targetEffect(target);
+  finalizeSpellCard(player, fresh, `${player.label} resolves ${fresh.cardData.nome_exibicao_en}.`);
+}
+
+function cancelSpellResolution() {
+  if (targetingState) {
+    clearTargetingState(true);
+    return;
+  }
+
+  if (zoneBrowserState) {
+    closeZoneBrowser(true);
+    return;
+  }
+
+  clearSpellResolution(true);
+}
+
+function ensureSpellCostPaid(player, located, options = {}) {
+  const fresh = findCardInstance(player.key, located.card.uid);
+  if (!fresh) {
+    return null;
+  }
+
+  if (options.costAlreadyPaid) {
+    return fresh;
+  }
+
+  if (!spendCosmo(player, fresh.cardData.custo, fresh.cardData.nome_exibicao_en, { unit: fresh.cardData.unidade_custo || "cosmo" })) {
+    return null;
+  }
+
+  return fresh;
+}
+
+function anyZoneCardMatches(playerKey, zone, predicate) {
+  const player = gameState?.players?.[playerKey];
+  if (!player) {
+    return false;
+  }
+
+  return player.zones[zone].some((instance) => predicate({
+    kind: "card",
+    playerKey,
+    uid: instance.uid,
+    zone,
+    card: instance,
+    cardId: instance.cardId,
+    cardData: getCard(instance.cardId)
+  }));
+}
+
+function hasAnyBattlefieldMatch(predicate) {
+  return PLAYER_ORDER.some((playerKey) => anyZoneCardMatches(playerKey, "battlefield", predicate));
+}
+
+function getSpellAvailabilityError(player, located) {
+  const lines = getCardRulesLines(located.cardData);
+
+  if (lines.some((line) => /Target Devotee cannot be destroyed this turn\./i.test(line)) && !hasAnyBattlefieldMatch(isBattlefieldDevoteeTarget)) {
+    return "There is no Devotee on the battlefield for that spell.";
+  }
+
+  if (lines.some((line) => /Put a Seal counter on target Devotee\./i.test(line)) && !hasAnyBattlefieldMatch(isBattlefieldDevoteeTarget)) {
+    return "There is no Devotee on the battlefield for that spell.";
+  }
+
+  if (lines.some((line) => /Destroy target Relic\./i.test(line)) && !hasAnyBattlefieldMatch(isBattlefieldRelicTarget)) {
+    return "There is no Relic on the battlefield for that spell.";
+  }
+
+  if (lines.some((line) => /Target Relic cannot be destroyed this turn\./i.test(line)) && !hasAnyBattlefieldMatch(isBattlefieldRelicTarget)) {
+    return "There is no Relic on the battlefield for that spell.";
+  }
+
+  if (lines.some((line) => /Destroy target Devotee that attacked this turn\./i.test(line)) && !hasAnyBattlefieldMatch((descriptor) => isBattlefieldDevoteeTarget(descriptor) && descriptor.card.enteredCombatThisTurn)) {
+    return "No Devotee that attacked this turn is available.";
+  }
+
+  if (lines.some((line) => /Target Devotee gets \+2\/\+2/i.test(line)) && !hasAnyBattlefieldMatch(isBattlefieldDevoteeTarget)) {
+    return "There is no Devotee on the battlefield for that spell.";
+  }
+
+  if (lines.some((line) => /Exile target Devotee with cost 4 or greater\./i.test(line)) && !hasAnyBattlefieldMatch((descriptor) => isBattlefieldDevoteeTarget(descriptor) && getCard(descriptor.cardId).custo >= 4)) {
+    return "There is no Devotee with cost 4 or greater to exile.";
+  }
+
+  if (lines.some((line) => /Restore 3 Damage from target Cloth\./i.test(line)) && !hasAnyBattlefieldMatch((descriptor) => descriptor.kind === "card" && descriptor.zone === "battlefield" && isClothCard(descriptor.cardId))) {
+    return "There is no Cloth on the battlefield for that spell.";
+  }
+
+  if (lines.some((line) => /Target Devotee gains Guardian until end of turn\./i.test(line)) && !hasAnyBattlefieldMatch(isBattlefieldDevoteeTarget)) {
+    return "There is no Devotee on the battlefield for that spell.";
+  }
+
+  if (lines.some((line) => /Search your deck for a Cloth Relic/i.test(line)) && !anyZoneCardMatches(player.key, "deck", (descriptor) => isClothCard(descriptor.cardId))) {
+    return "There is no Cloth Relic left in your deck.";
+  }
+
+  if (lines.some((line) => /Return .* from Tartarus/i.test(line)) && !anyZoneCardMatches(player.key, "tartarus", (descriptor) => isDevoteeCard(descriptor.cardId))) {
+    return "There is no Devotee in Tartarus for that spell.";
+  }
+
+  return "";
+}
+
+function startSpellCastFromHand(playerKey, located) {
+  if (!gameState || !located || located.zone !== "hand") {
+    return null;
+  }
+
+  const player = gameState.players[playerKey];
+  const card = located.cardData;
+  const fail = (message) => {
+    addLog(message);
+    return { blocked: true };
+  };
+
+  if (card.tipo !== "Technique" && card.tipo !== "Moment") {
+    return null;
+  }
+
+  if (card.tipo === "Moment" && !canCastMomentNow(playerKey)) {
+    return fail(`${card.nome_exibicao_en} can only be played during your Main Phase.`);
+  }
+
+  if (card.tipo === "Technique" && !canCastTechniqueNow(playerKey)) {
+    return fail(`${card.nome_exibicao_en} can only be played while you have priority to respond.`);
+  }
+
+  const availabilityError = getSpellAvailabilityError(player, located);
+  if (availabilityError) {
+    return fail(`${card.nome_exibicao_en} cannot be cast right now. ${availabilityError}`);
+  }
+
+  const amount = typeof card.custo === "number" ? card.custo : 0;
+  const unit = card.unidade_custo || "cosmo";
+  if (getAvailableCosmo(player, unit) < amount) {
+    return fail(`${player.label} does not have enough ${unit === "base_cosmo" ? "Base Cosmo" : "Cosmo"} to cast ${card.nome_exibicao_en}.`);
+  }
+
+  if (amount <= 0) {
+    beginSpellResolution(playerKey, located.card.uid, { costAlreadyPaid: true, allowCancel: false });
+    return { pending: true };
+  }
+
+  const plans = buildCostPaymentPlans(playerKey, amount, unit);
+  if (!plans.length) {
+    return fail(`${player.label} cannot assemble the required payment for ${card.nome_exibicao_en}.`);
+  }
+
+  paymentState = {
+    mode: "spell",
+    playerKey,
+    uid: located.card.uid,
+    targetZone: "battlefield",
+    cardName: card.nome_exibicao_en,
+    amount,
+    unit,
+    plans
+  };
+  hoverPreview = null;
+  closeContextMenu();
+  closeFloatingInfo();
+  return maybeAutoPay();
+}
+
+function beginSpellResolution(playerKey, uid, options = {}) {
+  const located = findCardInstance(playerKey, uid);
+  if (!located || located.zone !== "hand") {
+    clearSpellResolution(false);
+    addLog("The selected spell is no longer in hand.");
+    return false;
+  }
+
+  const player = gameState.players[playerKey];
+  const lines = getCardRulesLines(located.cardData);
+  return resolveSpellCard(player, located, lines, options);
+}
+
+function maybeStartHandPlay(playerKey, located, targetZone, relocateOptions = {}) {
+  if (!located || located.zone !== "hand" || targetZone !== "battlefield") {
+    return null;
+  }
+
+  const player = gameState.players[playerKey];
+  const card = located.cardData;
+  const fail = (message) => {
+    addLog(message);
+    return { blocked: true };
+  };
+
+  if (card.tipo === "Technique" || card.tipo === "Moment") {
+    return startSpellCastFromHand(playerKey, located);
+  }
+
+  if (gameState.currentPlayer !== playerKey) {
+    return fail("You can only play cards from your hand during your own turn.");
+  }
+
+  if (gameState.currentPhase !== "main") {
+    return fail("Cards can only be played from your hand during Main Phase.");
+  }
+
+  if (card.tipo !== "Devotee" && card.tipo !== "Relic") {
+    return fail(`${card.nome_exibicao_en} cannot be played onto the battlefield from hand.`);
+  }
+
+  const amount = getPlayCost(playerKey, card);
+  const unit = card.unidade_custo || "cosmo";
+
+  if (getAvailableCosmo(player, unit) < amount) {
+    return fail(`${player.label} does not have enough ${unit === "base_cosmo" ? "Base Cosmo" : "Cosmo"} to play ${card.nome_exibicao_en}.`);
+  }
+
+  if (amount <= 0) {
+    return null;
+  }
+
+  const plans = buildCostPaymentPlans(playerKey, amount, unit);
+  if (!plans.length) {
+    return fail(`${player.label} cannot assemble the required payment for ${card.nome_exibicao_en}.`);
+  }
+
+  paymentState = {
+    playerKey,
+    uid: located.card.uid,
+    targetZone,
+    relocateOptions,
+    cardName: card.nome_exibicao_en,
+    amount,
+    unit,
+    plans
+  };
+  hoverPreview = null;
+  closeContextMenu();
+  closeFloatingInfo();
+
+  return maybeAutoPay();
+}
+
+function buildCostPaymentPlans(playerKey, amount, unit = "cosmo") {
+  const player = gameState.players[playerKey];
+  if (!player) {
+    return [];
+  }
+
+  const plans = [];
+  const seen = new Set();
+  const pushPlan = (id, title, emphasis, breakdown) => {
+    if (!breakdown) {
+      return;
+    }
+    const signature = `${breakdown.latent}:${breakdown.pooled}:${breakdown.tappedBase}:${breakdown.unit}`;
+    if (seen.has(signature)) {
+      return;
+    }
+    seen.add(signature);
+    plans.push({
+      id,
+      title,
+      emphasis,
+      detail: describeCostPlan(breakdown),
+      breakdown
+    });
+  };
+
+  pushPlan("base", "Pay with Cosmo Base", "Tap Cosmo Base cards to cover the cost.", createCostPaymentPlan(player, amount, "base", unit));
+
+  if (unit !== "base_cosmo") {
+    pushPlan("latent", "Pay with Latent Cosmo", "Spend only temporary Latent Cosmo.", createCostPaymentPlan(player, amount, "latent", unit));
+    const mixed = createCostPaymentPlan(player, amount, "mixed", unit);
+    const mixedUsesMultipleSources = mixed && [mixed.latent > 0, mixed.pooled > 0, mixed.tappedBase > 0].filter(Boolean).length > 1;
+    if (mixedUsesMultipleSources) {
+      pushPlan("mixed", "Mixed Payment", "Combine pool, Latent Cosmo, and Cosmo Base.", mixed);
+    }
+  }
+
+  return plans;
+}
+
+function createCostPaymentPlan(player, amount, strategy = "auto", unit = "cosmo") {
+  const pool = Math.max(0, player.cosmo);
+  const latent = Math.max(0, player.latentCosmo);
+  const untappedBase = countUntappedBase(player);
+  const plan = {
+    amount,
+    unit,
+    strategy,
+    latent: 0,
+    pooled: 0,
+    tappedBase: 0
+  };
+
+  let remaining = amount;
+
+  if (strategy === "latent") {
+    if (unit === "base_cosmo" || latent < amount) {
+      return null;
+    }
+    plan.latent = amount;
+    return plan;
+  }
+
+  if (strategy === "base" || unit === "base_cosmo") {
+    plan.pooled = Math.min(pool, remaining);
+    remaining -= plan.pooled;
+    plan.tappedBase = Math.min(untappedBase, remaining);
+    remaining -= plan.tappedBase;
+    return remaining === 0 ? plan : null;
+  }
+
+  if (strategy === "mixed" || strategy === "auto") {
+    plan.latent = Math.min(latent, remaining);
+    remaining -= plan.latent;
+    plan.pooled = Math.min(pool, remaining);
+    remaining -= plan.pooled;
+    plan.tappedBase = Math.min(untappedBase, remaining);
+    remaining -= plan.tappedBase;
+    return remaining === 0 ? plan : null;
+  }
+
+  return null;
+}
+
+function describeCostPlan(plan) {
+  if (!plan) {
+    return "";
+  }
+
+  const parts = [];
+  if (plan.latent > 0) {
+    parts.push(`${plan.latent} Latent`);
+  }
+  if (plan.pooled > 0) {
+    parts.push(`${plan.pooled} stored Cosmo`);
+  }
+  if (plan.tappedBase > 0) {
+    parts.push(`tap ${plan.tappedBase} Cosmo Base`);
+  }
+
+  if (!parts.length) {
+    return "No resource payment is needed.";
+  }
+
+  return parts.join(" • ");
+}
+
+function resolvePaymentChoice(planId) {
+  if (!paymentState || !gameState) {
+    return;
+  }
+
+  const plan = paymentState.plans.find((entry) => entry.id === planId);
+  if (!plan) {
+    return;
+  }
+
+  const located = findCardInstance(paymentState.playerKey, paymentState.uid);
+  if (!located || located.zone !== "hand") {
+    clearPaymentState(false);
+    addLog("The selected card is no longer in hand.");
+    return;
+  }
+
+  const player = gameState.players[paymentState.playerKey];
+  if (!applyCostPaymentPlan(paymentState.playerKey, plan.breakdown, paymentState.cardName)) {
+    return;
+  }
+
+  if (paymentState.mode === "spell") {
+    const playerKey = paymentState.playerKey;
+    const uid = paymentState.uid;
+    clearPaymentState(false);
+    beginSpellResolution(playerKey, uid, { costAlreadyPaid: true, allowCancel: false });
+    return;
+  }
+
+  const moved = relocateCard(paymentState.playerKey, paymentState.uid, paymentState.targetZone, paymentState.relocateOptions || {});
+  if (!moved) {
+    addLog(`${paymentState.cardName} could not be moved after the payment was chosen.`);
+    clearPaymentState(false);
+    return;
+  }
+
+  addLog(`${playerLabel(paymentState.playerKey)} plays ${moved.cardData.nome_exibicao_en} onto the battlefield.`);
+  clearPaymentState(false);
+}
+
+function clearPaymentState(writeLog = false) {
+  if (!paymentState) {
+    return;
+  }
+
+  if (writeLog) {
+    addLog(`Payment canceled for ${paymentState.cardName}.`);
+  }
+
+  paymentState = null;
+}
+
+function applyCostPaymentPlan(playerKey, plan, label) {
+  const player = gameState.players[playerKey];
+  if (!player || !plan) {
+    return false;
+  }
+
+  const resolvedPlan = createCostPaymentPlan(player, plan.amount, plan.strategy, plan.unit);
+  if (!resolvedPlan) {
+    addLog(`${player.label} no longer has the resources to pay for ${label}.`);
+    return false;
+  }
+
+  if (resolvedPlan.latent > 0) {
+    player.latentCosmo = Math.max(0, player.latentCosmo - resolvedPlan.latent);
+  }
+
+  if (resolvedPlan.pooled > 0) {
+    player.cosmo = Math.max(0, player.cosmo - resolvedPlan.pooled);
+  }
+
+  if (resolvedPlan.tappedBase > 0) {
+    tapUntappedBaseCardsForPayment(playerKey, resolvedPlan.tappedBase);
+  }
+
+  const parts = [];
+  if (resolvedPlan.latent > 0) parts.push(`${resolvedPlan.latent} Latent`);
+  if (resolvedPlan.pooled > 0) parts.push(`${resolvedPlan.pooled} stored Cosmo`);
+  if (resolvedPlan.tappedBase > 0) parts.push(`${resolvedPlan.tappedBase} Cosmo Base`);
+  addLog(`${player.label} pays ${formatValue(resolvedPlan.amount, resolvedPlan.unit) || resolvedPlan.amount} for ${label}${parts.length ? ` (${parts.join(", ")})` : ""}.`);
+  return true;
+}
+
+function tapUntappedBaseCardsForPayment(playerKey, amount) {
+  const player = gameState.players[playerKey];
+  player.zones.cosmo_base
+    .filter((instance) => !instance.tapped)
+    .slice(0, amount)
+    .forEach((instance) => {
+      instance.tapped = true;
+      instance.generatedCosmoWhenTapped = false;
+    });
+}
+
+function normalizeCardStateForZone(instance, zoneId) {
+  if (zoneId !== "battlefield") {
+    instance.turnPowerBonus = 0;
+    instance.turnResistanceBonus = 0;
+    instance.enteredCombatThisTurn = false;
+    instance.summoningSick = false;
+    instance.sealLocked = false;
+    instance.attachedToUid = null;
+    instance.battlefieldPositionX = null;
+    instance.battlefieldPositionY = null;
+  }
+
+  if (zoneId === "cosmo_base") {
+    instance.tapped = false;
+    instance.generatedCosmoWhenTapped = false;
+    instance.sealLocked = false;
+    instance.attachedToUid = null;
+  }
+
+  if (zoneId !== "battlefield" && zoneId !== "cosmo_base") {
+    instance.tapped = false;
+    instance.generatedCosmoWhenTapped = false;
+    instance.sealLocked = false;
+    instance.attachedToUid = null;
+  }
+}
+
+function resolveEnterBattlefieldTriggers(playerKey, instance) {
+  const player = gameState.players[playerKey];
+  const enemy = gameState.players[otherPlayerKey(playerKey)];
+  const card = getCard(instance.cardId);
+  const lines = getCardRulesLines(card);
+
+  if (lines.some((line) => /When Marin enters the battlefield, another target Devotee you control gets \+1\/\+1 until end of turn\./i.test(line))) {
+    const target = player.zones.battlefield.find((entry) => entry.uid !== instance.uid && isDevoteeCard(entry.cardId));
+    if (target) {
+      target.turnPowerBonus += 1;
+      target.turnResistanceBonus += 1;
+      addLog(`${card.nome_exibicao_en} gives ${getCard(target.cardId).nome_exibicao_en} +1/+1 until end of turn.`);
+    }
+  }
+
+  if (lines.some((line) => /When Sanctuary Soldier enters the battlefield, another target Devotee gets \+0\/\+1 until end of turn\./i.test(line))) {
+    const target = player.zones.battlefield.find((entry) => entry.uid !== instance.uid && isDevoteeCard(entry.cardId));
+    if (target) {
+      target.turnResistanceBonus += 1;
+      addLog(`${card.nome_exibicao_en} gives ${getCard(target.cardId).nome_exibicao_en} +0/+1 until end of turn.`);
+    }
+  }
+
+  if (lines.some((line) => /When Shun enters the battlefield, return target enemy Devotee with cost 1 or less to its owner's hand\./i.test(line))) {
+    const target = enemy.zones.battlefield.find((entry) => isDevoteeCard(entry.cardId) && getCard(entry.cardId).custo <= 1);
+    if (target) {
+      relocateCard(enemy.key, target.uid, "hand");
+      addLog(`${card.nome_exibicao_en} returns ${getCard(target.cardId).nome_exibicao_en} to its owner's hand.`);
+    }
+  }
+
+  if (lines.some((line) => /When Sagittarius Cloth enters the battlefield, it deals 3 damage to target Devotee\./i.test(line))) {
+    const target = enemy.zones.battlefield.find((entry) => isDevoteeCard(entry.cardId));
+    if (target) {
+      const located = findCardInstance(enemy.key, target.uid);
+      if (located) {
+        applyDamageToDevotee(located, 3);
+      }
+    }
+  }
+
+  if (lines.some((line) => /When Libra Cloth enters the battlefield, search your deck for a Weapon Relic, reveal it, and put it into your hand\./i.test(line))) {
+    openZoneBrowser({
+      playerKey,
+      zone: "deck",
+      title: card.nome_exibicao_en,
+      prompt: "Choose a Weapon Relic in your library to reveal and put into your hand.",
+      cancelMessage: `${card.nome_exibicao_en} search canceled.`,
+      filter: (descriptor) => descriptor.cardData.subtipos.includes("Weapon"),
+      onSelect: (selectedUid) => {
+        const chosen = getZoneBrowserEntry(playerKey, selectedUid);
+        if (!chosen || chosen.zone !== "deck") {
+          return;
+        }
+        const moved = moveCardByEffect(playerKey, selectedUid, "hand");
+        if (!moved) {
+          return;
+        }
+        addLog(`${player.label} reveals ${moved.cardData.nome_exibicao_en} and puts it into their hand.`);
+        shuffle(player.zones.deck);
+        addLog(`${player.label} shuffles their deck.`);
+      }
+    });
+  }
+
+  if (lines.some((line) => /When Aquarius Cloth enters the battlefield, put a Seal counter on target Devotee\./i.test(line))) {
+    const target = enemy.zones.battlefield.find((entry) => isDevoteeCard(entry.cardId)) || player.zones.battlefield.find((entry) => entry.uid !== instance.uid && isDevoteeCard(entry.cardId));
+    if (target) {
+      applySealCounter(findCardInstance(target.owner || player.key, target.uid) || {
+        card: target,
+        zone: "battlefield",
+        cardId: target.cardId,
+        cardData: getCard(target.cardId)
+      }, card.nome_exibicao_en);
+    }
+  }
+
+  if (lines.some((line) => /When Leo Cloth enters the battlefield, deal 1 damage to all enemy Devotees\./i.test(line))) {
+    enemy.zones.battlefield
+      .filter((entry) => isDevoteeCard(entry.cardId))
+      .forEach((entry) => {
+        const located = findCardInstance(enemy.key, entry.uid);
+        if (located) {
+          applyDamageToDevotee(located, 1);
+        }
+      });
+  }
+
+  if (lines.some((line) => /When Virgo Cloth enters the battlefield, remove all Latent Cosmo from target opponent\./i.test(line))) {
+    enemy.latentCosmo = 0;
+    addLog(`${card.nome_exibicao_en} removes all Latent Cosmo from ${enemy.label}.`);
+  }
+}
+
+function isNamedSaintLegendaryCard(card) {
+  if (!card || card.tipo !== "Devotee") {
+    return false;
+  }
+
+  const saintRanks = new Set(["Bronze Saint", "Silver Saint", "Gold Saint"]);
+  const hasSaintRank = (card.subtipos || []).some((subtype) => saintRanks.has(subtype));
+  const hasProperName = /,/.test(card.nome_exibicao_en || "");
+
+  return hasSaintRank && hasProperName;
+}
+
+function getNamedSaintLegendaryGroup(playerKey, name) {
+  const player = gameState?.players?.[playerKey];
+  if (!player || !name) {
+    return [];
+  }
+
+  return player.zones.battlefield
+    .map((instance) => findCardInstance(playerKey, instance.uid))
+    .filter(Boolean)
+    .filter((located) => {
+      const card = located.cardData;
+      return isNamedSaintLegendaryCard(card) && card.nome_exibicao_en === name;
+    });
+}
+
+function chooseLegendarySaintKeepTarget(playerKey, duplicates, preferredUid) {
+  const player = gameState.players[playerKey];
+  if (!duplicates.length) {
+    return null;
+  }
+
+  if (!isAiPlayer(playerKey)) {
+    return preferredUid || duplicates[0].card.uid;
+  }
+
+  const sorted = [...duplicates].sort((left, right) => {
+    const leftStats = getComputedStats(player, left.card, left.cardData, left.zone);
+    const rightStats = getComputedStats(player, right.card, right.cardData, right.zone);
+    const leftScore = (leftStats.power ?? 0) + (leftStats.resistance ?? 0) + left.card.plusOneCounters;
+    const rightScore = (rightStats.power ?? 0) + (rightStats.resistance ?? 0) + right.card.plusOneCounters;
+    if (rightScore !== leftScore) {
+      return rightScore - leftScore;
+    }
+    if (right.card.uid === preferredUid) return 1;
+    if (left.card.uid === preferredUid) return -1;
+    return 0;
+  });
+
+  return sorted[0]?.card.uid || preferredUid || duplicates[0].card.uid;
+}
+
+function resolveNamedSaintLegendaryChoice(playerKey, cardName, keepUid) {
+  const duplicates = getNamedSaintLegendaryGroup(playerKey, cardName);
+  if (duplicates.length <= 1) {
+    return;
+  }
+
+  duplicates
+    .filter((located) => located.card.uid !== keepUid)
+    .forEach((located) => {
+      addLog(`${located.cardData.nome_exibicao_en} is put into Tartarus by the legendary rule.`);
+      const moved = relocateCard(located.card.owner, located.card.uid, "tartarus", { force: true });
+      if (moved) {
+        handleDevoteeDestroyed(moved);
+      }
+    });
+
+  const kept = findCardInstance(playerKey, keepUid);
+  if (kept) {
+    addLog(`${gameState.players[playerKey].label} keeps ${kept.cardData.nome_exibicao_en} on the battlefield under the legendary rule.`);
+  }
+}
+
+function enforceNamedSaintLegendaryRule(playerKey, enteredUid) {
+  const entered = findCardInstance(playerKey, enteredUid);
+  if (!entered || entered.zone !== "battlefield" || !isNamedSaintLegendaryCard(entered.cardData)) {
+    return;
+  }
+
+  const duplicates = getNamedSaintLegendaryGroup(playerKey, entered.cardData.nome_exibicao_en);
+  if (duplicates.length <= 1) {
+    return;
+  }
+
+  if (isAiPlayer(playerKey)) {
+    const keepUid = chooseLegendarySaintKeepTarget(playerKey, duplicates, enteredUid);
+    resolveNamedSaintLegendaryChoice(playerKey, entered.cardData.nome_exibicao_en, keepUid);
+    return;
+  }
+
+  openZoneBrowser({
+    playerKey,
+    zone: "battlefield",
+    title: "Legendary Rule",
+    prompt: `Choose which copy of ${entered.cardData.nome_exibicao_en} stays on the battlefield.`,
+    cancelMessage: "Legendary choice canceled.",
+    allowCancel: false,
+    filter: (descriptor) =>
+      descriptor.zone === "battlefield" &&
+      descriptor.cardData.nome_exibicao_en === entered.cardData.nome_exibicao_en &&
+      isNamedSaintLegendaryCard(descriptor.cardData),
+    onSelect: (selectedUid) => {
+      resolveNamedSaintLegendaryChoice(playerKey, entered.cardData.nome_exibicao_en, selectedUid);
+    }
+  });
+}
+
+function resolveEnterCombat(playerKey, uid) {
+  const player = gameState.players[playerKey];
+  const located = findCardInstance(playerKey, uid);
+
+  if (!located || located.zone !== "battlefield" || !isDevoteeCard(located.cardId)) {
+    addLog("Select one of your Devotees on the battlefield to attack.");
+    return;
+  }
+
+  if (playerKey !== gameState.currentPlayer) {
+    addLog("Only the active player can attack.");
+    return;
+  }
+
+  if (gameState.currentPhase !== "main") {
+    addLog("Attacks can only be declared during Main Phase.");
+    return;
+  }
+
+  if (located.card.summoningSick && !hasKeyword(located.cardData, "Impulse", located.card)) {
+    addLog(`${located.cardData.nome_exibicao_en} has summoning sickness and cannot attack this turn.`);
+    return;
+  }
+
+  if (hasKeyword(located.cardData, "Sealed", located.card)) {
+    addLog(`${located.cardData.nome_exibicao_en} is Sealed and cannot attack.`);
+    return;
+  }
+
+  if (located.card.tapped || located.card.enteredCombatThisTurn) {
+    addLog(`${located.cardData.nome_exibicao_en} cannot attack again this turn.`);
+    return;
+  }
+
+  clearCombatState();
+  gameState.combat.attacker = {
+    playerKey,
+    uid
+  };
+  gameState.combat.mode = "target";
+  addLog(`${player.label} prepares ${located.cardData.nome_exibicao_en} to attack. Select an enemy Devotee or the enemy God.`);
+}
+
+function resolveSurvivedCombat(playerKey, uid) {
+  const located = findCardInstance(playerKey, uid);
+
+  if (!located || located.zone !== "battlefield" || !isDevoteeCard(located.cardId)) {
+    addLog("Select a Devotee on the battlefield to mark survived combat.");
+    return;
+  }
+
+  markSurvivedCombat(playerKey, uid);
+}
+
+function setPhase(phase) {
+  if (!gameState) {
+    return;
+  }
+
+  gameState.currentPhase = phase;
+  if (phase !== "main") {
+    clearCombatState(false, true);
+  }
+  addLog(`Phase set to ${phaseLabel(phase)}.`);
+}
+
+function clearCombatState(writeLog = false, revertAttack = false) {
+  if (!gameState) {
+    return;
+  }
+
+  clearPriorityTimer();
+  const combat = gameState.combat;
+  const hadCombat = combat?.attacker || combat?.target;
+
+  if (revertAttack && combat?.attacker && combat.mode === "target") {
+    addLog("Attack selection canceled.");
+  }
+
+  gameState.combat = createEmptyCombatState();
+  if (writeLog && hadCombat) {
+    addLog("Combat selection cleared.");
+  }
+}
+
+function startTargetingState(config) {
+  targetingState = config;
+}
+
+function clearTargetingState(writeLog = false) {
+  if (writeLog && targetingState?.allowCancel === false) {
+    return;
+  }
+  if (writeLog && targetingState?.cancelMessage) {
+    addLog(targetingState.cancelMessage);
+  }
+  if (typeof targetingState?.onCancel === "function") {
+    targetingState.onCancel();
+  }
+  targetingState = null;
+}
+
+function openCombatPriorityWindow() {
+  const combat = gameState?.combat;
+  if (!combat?.attacker || !combat?.target) {
+    return;
+  }
+
+  const attacker = findCardInstance(combat.attacker.playerKey, combat.attacker.uid);
+  if (!attacker || attacker.zone !== "battlefield") {
+    addLog("The attacking Devotee is no longer on the battlefield.");
+    clearCombatState();
+    return;
+  }
+
+  finalizeAttackDeclaration(attacker);
+  combat.mode = "priority";
+  combat.priorityPlayerKey = combat.target.playerKey;
+  combat.responseActive = !isAiPlayer(combat.priorityPlayerKey);
+  combat.resolving = false;
+  if (combat.responseActive) {
+    addLog(`${gameState.players[combat.priorityPlayerKey].label} may respond to the attack now.`);
+  } else {
+    addLog(`${gameState.players[combat.priorityPlayerKey].label} has priority to respond to the attack.`);
+  }
+  renderGame();
+  maybeHandleAiCombatPriority();
+}
+
+function enterCombatResponseWindow() {
+  if (!isPriorityWindowOpen()) {
+    return;
+  }
+
+  const combat = gameState.combat;
+  if (isAiPlayer(combat.priorityPlayerKey)) {
+    return;
+  }
+
+  combat.responseActive = true;
+  addLog(`${gameState.players[combat.priorityPlayerKey].label} chooses to respond before combat damage.`);
+}
+
+function resolveCombatSequence() {
+  const combat = gameState?.combat;
+  if (!combat?.attacker || !combat?.target) {
+    addLog("Attack needs an attacker and a target.");
+    return;
+  }
+
+  const attacker = findCardInstance(combat.attacker.playerKey, combat.attacker.uid);
+  if (!attacker || attacker.zone !== "battlefield") {
+    addLog("The attacking Devotee is no longer on the battlefield.");
+    return;
+  }
+
+  if (combat.target.kind === "god") {
+    resolveAttackAgainstGod(attacker, combat.target.playerKey);
+    return;
+  }
+
+  const defender = findCardInstance(combat.target.playerKey, combat.target.uid);
+  if (!defender || defender.zone !== "battlefield") {
+    addLog("The selected target is no longer on the battlefield.");
+    return;
+  }
+
+  resolveAttackAgainstDevotee(attacker, defender);
+}
+
+function finalizeAttackDeclaration(attacker) {
+  const player = gameState.players[attacker.card.owner];
+  const attachedEquipment = getAttachedEquipment(player, attacker.card.uid);
+
+  attacker.card.tapped = true;
+  if (!attacker.card.enteredCombatThisTurn) {
+    attacker.card.enteredCombatThisTurn = true;
+  }
+
+  if (attacker.cardData.nome_exibicao_en === "Seiya, Pegasus Saint" && player.latentCosmo >= 1) {
+    player.latentCosmo -= 1;
+    attacker.card.turnPowerBonus += 1;
+    addLog(`${player.label} pays 1 Latent Cosmo for Seiya and ${attacker.cardData.nome_exibicao_en} gets +1/+0 until end of turn.`);
+  }
+
+  attachedEquipment.forEach(({ cardData }) => {
+    if (cardData.nome_exibicao_en === "Libra Sword" && !attacker.card.tempKeywords.includes("Pierce")) {
+      attacker.card.tempKeywords.push("Pierce");
+      addLog(`${cardData.nome_exibicao_en} gives Pierce to ${attacker.cardData.nome_exibicao_en} for this combat.`);
+    }
+
+    if (cardData.nome_exibicao_en === "Leo Cloth" && attacker.cardData.nome_exibicao_en === "Aiolia, Leo Gold Saint") {
+      attacker.card.turnPowerBonus += 1;
+      addLog(`${cardData.nome_exibicao_en} gives ${attacker.cardData.nome_exibicao_en} +1/+0 when attacking.`);
+    }
+  });
+}
+
+function resolveAttackAgainstGod(attacker, defenderPlayerKey) {
+  const attackingPlayer = gameState.players[attacker.card.owner];
+  const defendingPlayer = gameState.players[defenderPlayerKey];
+  const attackerStats = getComputedStats(attackingPlayer, attacker.card, attacker.cardData, attacker.zone);
+  const attackPower = Math.max(0, attackerStats.power ?? 0);
+  const attackerHasUnfaith = hasKeyword(attacker.cardData, "Unfaith", attacker.card);
+
+  if (defendingPlayer.god.preventDamageUntilEnd) {
+    addLog(`${defendingPlayer.label} prevents all damage to their God this turn.`);
+    showCombatToast(`${defendingPlayer.label}'s God prevents all damage.`);
+  } else {
+    if (attackerHasUnfaith) {
+      const removed = Math.min(defendingPlayer.latentCosmo, attackPower);
+      defendingPlayer.latentCosmo = Math.max(0, defendingPlayer.latentCosmo - attackPower);
+      addLog(`${attackingPlayer.label} attacks ${defendingPlayer.label}'s God with ${attacker.cardData.nome_exibicao_en} and removes ${removed} Latent Cosmo thanks to Unfaith.`);
+      showCombatToast(`${attacker.cardData.nome_exibicao_en} removes ${removed} Latent Cosmo from ${defendingPlayer.label}.`);
+    } else {
+      defendingPlayer.god.soul = Math.max(0, defendingPlayer.god.soul - attackPower);
+      syncAwakenState(defendingPlayer);
+      addLog(`${attackingPlayer.label} attacks ${defendingPlayer.label}'s God with ${attacker.cardData.nome_exibicao_en} for ${attackPower} damage.`);
+      showCombatToast(`${attacker.cardData.nome_exibicao_en} dealt ${attackPower} damage to ${defendingPlayer.label}'s God.`);
+      if (hasAttachedCardByName(attackingPlayer, attacker.card.uid, "Pope Dagger") && attackPower > 0) {
+        defendingPlayer.god.soul = Math.max(0, defendingPlayer.god.soul - 1);
+        syncAwakenState(defendingPlayer);
+        addLog(`${attacker.cardData.nome_exibicao_en} deals 1 additional Soul damage to ${defendingPlayer.label}'s God because of Pope Dagger.`);
+      }
+    }
+  }
+
+  resolveGodCounterattackAgainstDevotee(attacker, defendingPlayer);
+
+  if (findCardInstance(attacker.card.owner, attacker.card.uid)?.zone === "battlefield") {
+    markSurvivedCombat(attacker.card.owner, attacker.card.uid);
+  }
+}
+
+function getCurrentResistanceForLocated(located) {
+  if (!located) {
+    return null;
+  }
+
+  const player = gameState.players[located.card.owner];
+  const computed = getComputedStats(player, located.card, located.cardData, located.zone);
+  return computed.resistance;
+}
+
+function resolveGodCounterattackAgainstDevotee(attacker, defendingPlayer) {
+  const godAttack = Math.max(0, defendingPlayer.god.attack ?? 0);
+  if (godAttack <= 0) {
+    return;
+  }
+
+  const resistanceBefore = Math.max(0, getCurrentResistanceForLocated(attacker) ?? 0);
+  addLog(`${defendingPlayer.label}'s God counterattacks ${attacker.cardData.nome_exibicao_en} for ${godAttack} damage.`);
+  showCombatToast(`${defendingPlayer.label}'s God dealt ${godAttack} damage to ${attacker.cardData.nome_exibicao_en}.`);
+
+  const destroyed = applyDamageToDevotee(attacker, godAttack);
+  if (destroyed || resistanceBefore <= godAttack) {
+    addLog(`${attacker.cardData.nome_exibicao_en} is destroyed by the God's counterattack.`);
+    return;
+  }
+
+  const refreshed = findCardInstance(attacker.card.owner, attacker.card.uid);
+  const remainingResistance = Math.max(0, getCurrentResistanceForLocated(refreshed) ?? 0);
+  addLog(`${attacker.cardData.nome_exibicao_en} survives the God's counterattack and stays with ${remainingResistance} Resistance until end of turn.`);
+}
+
+function resolveAttackAgainstDevotee(attacker, defender) {
+  const attackingPlayer = gameState.players[attacker.card.owner];
+  const defendingPlayer = gameState.players[defender.card.owner];
+  const attackerStats = getComputedStats(attackingPlayer, attacker.card, attacker.cardData, attacker.zone);
+  const defenderStats = getComputedStats(defendingPlayer, defender.card, defender.cardData, defender.zone);
+  const attackerPower = Math.max(0, attackerStats.power ?? 0);
+  const defenderPower = Math.max(0, defenderStats.power ?? 0);
+  const attackerLongRange = hasKeyword(attacker.cardData, "Long Range", attacker.card);
+  const defenderLongRange = hasKeyword(defender.cardData, "Long Range", defender.card);
+  let attackerDealtCombatDamage = false;
+
+  addLog(`${attackingPlayer.label} attacks ${defender.cardData.nome_exibicao_en} with ${attacker.cardData.nome_exibicao_en}.`);
+  showCombatToast(`${attacker.cardData.nome_exibicao_en} attacks ${defender.cardData.nome_exibicao_en}.`);
+
+  const defenderStartingResistance = Math.max(0, defenderStats.resistance ?? 0);
+
+  if (attackerLongRange && !defenderLongRange) {
+    addLog(`${attacker.cardData.nome_exibicao_en} has Long Range and strikes first.`);
+    const defenderDestroyed = applyDamageToDevotee(defender, attackerPower);
+    attackerDealtCombatDamage = attackerPower > 0;
+    handleCombatDamageTriggers(attacker, defender, attackerPower);
+    if (!defenderDestroyed) {
+      applyDamageToDevotee(attacker, defenderPower);
+      handleCombatDamageTriggers(defender, attacker, defenderPower);
+    }
+  } else if (defenderLongRange && !attackerLongRange) {
+    addLog(`${defender.cardData.nome_exibicao_en} has Long Range and strikes first.`);
+    const attackerDestroyed = applyDamageToDevotee(attacker, defenderPower);
+    handleCombatDamageTriggers(defender, attacker, defenderPower);
+    if (!attackerDestroyed) {
+      applyDamageToDevotee(defender, attackerPower);
+      attackerDealtCombatDamage = attackerPower > 0;
+      handleCombatDamageTriggers(attacker, defender, attackerPower);
+    }
+  } else {
+    applySimultaneousCombatDamage(attacker, attackerPower, defender, defenderPower);
+    attackerDealtCombatDamage = attackerPower > 0;
+  }
+
+  const defenderStillThere = findCardInstance(defender.card.owner, defender.card.uid)?.zone === "battlefield";
+  if (
+    attackerDealtCombatDamage &&
+    hasKeyword(attacker.cardData, "Pierce", attacker.card) &&
+    attackerPower > defenderStartingResistance &&
+    !defendingPlayer.god.preventDamageUntilEnd
+  ) {
+    const excess = attackerPower - defenderStartingResistance;
+    defendingPlayer.god.soul = Math.max(0, defendingPlayer.god.soul - excess);
+    syncAwakenState(defendingPlayer);
+    addLog(`${attacker.cardData.nome_exibicao_en} deals ${excess} Pierce damage to ${defendingPlayer.label}'s God.`);
+    showCombatToast(`${attacker.cardData.nome_exibicao_en} pierced ${excess} damage to ${defendingPlayer.label}'s God.`);
+  }
+
+  if (findCardInstance(attacker.card.owner, attacker.card.uid)?.zone === "battlefield") {
+    markSurvivedCombat(attacker.card.owner, attacker.card.uid);
+  }
+
+  if (findCardInstance(defender.card.owner, defender.card.uid)?.zone === "battlefield") {
+    markSurvivedCombat(defender.card.owner, defender.card.uid);
+  }
+
+  handlePostCombatTriggers(attacker, defender, defenderStillThere);
+}
+
+function applySimultaneousCombatDamage(attacker, attackerPower, defender, defenderPower) {
+  if (attackerPower > 0) {
+    defender.card.damageCounters += attackerPower;
+    maybeGainLatentCosmoFromDamage(defender.card.owner);
+    addLog(`${attacker.cardData.nome_exibicao_en} deals ${attackerPower} damage to ${defender.cardData.nome_exibicao_en}.`);
+    showCombatToast(`${attacker.cardData.nome_exibicao_en} dealt ${attackerPower} damage to ${defender.cardData.nome_exibicao_en}.`);
+    handleCombatDamageTriggers(attacker, defender, attackerPower);
+  }
+
+  if (defenderPower > 0) {
+    attacker.card.damageCounters += defenderPower;
+    maybeGainLatentCosmoFromDamage(attacker.card.owner);
+    addLog(`${defender.cardData.nome_exibicao_en} deals ${defenderPower} damage to ${attacker.cardData.nome_exibicao_en}.`);
+    showCombatToast(`${defender.cardData.nome_exibicao_en} dealt ${defenderPower} damage to ${attacker.cardData.nome_exibicao_en}.`);
+    handleCombatDamageTriggers(defender, attacker, defenderPower);
+  }
+
+  checkDevoteeDestroyed(defender);
+  checkDevoteeDestroyed(attacker);
+}
+
+function handleCombatDamageTriggers(source, target, amount) {
+  if (!source || !target || amount <= 0) {
+    return;
+  }
+
+  if (source.cardData.nome_exibicao_en === "Hyoga, Cygnus Saint") {
+    applySealCounter(target, source.cardData.nome_exibicao_en);
+  }
+
+  const sourcePlayer = gameState.players[source.card.owner];
+  if (hasAttachedCardByName(sourcePlayer, source.card.uid, "Aquarius Cloth")) {
+    if (source.cardData.nome_exibicao_en === "Camus, Aquarius Gold Saint") {
+      applySealCounter(target, "Aquarius Cloth");
+    }
+    if (source.cardData.nome_exibicao_en === "Hyoga, Cygnus Saint") {
+      sourcePlayer.latentCosmo += 1;
+      addLog(`Aquarius Cloth generates 1 Latent Cosmo for ${sourcePlayer.label}.`);
+    }
+  }
+}
+
+function handlePostCombatTriggers(attacker, defender, defenderStillThere) {
+  const attackerLive = findCardInstance(attacker.card.owner, attacker.card.uid);
+  const defenderLive = findCardInstance(defender.card.owner, defender.card.uid);
+
+  if (defender.cardData.nome_exibicao_en === "Shun, Andromeda Saint" && attackerLive?.zone === "battlefield") {
+    relocateCard(attacker.card.owner, attacker.card.uid, "hand");
+    addLog(`${defender.cardData.nome_exibicao_en} returns ${attacker.cardData.nome_exibicao_en} to its owner's hand after combat.`);
+  }
+
+  if (attacker.cardData.nome_exibicao_en === "Aldebaran, Taurus Gold Saint" && attackerLive?.zone === "battlefield") {
+    triggerAldebaranSurvivalDamage(attackerLive, defender.card.owner);
+  }
+
+  if (defender.cardData.nome_exibicao_en === "Aldebaran, Taurus Gold Saint" && defenderLive?.zone === "battlefield") {
+    triggerAldebaranSurvivalDamage(defenderLive, attacker.card.owner);
+  }
+
+  if (attackerLive?.zone === "battlefield" && hasAttachedCardByName(gameState.players[attacker.card.owner], attacker.card.uid, "Virgo Cloth") && attacker.cardData.nome_exibicao_en === "Shaka, Virgo Gold Saint") {
+    const enemyGod = gameState.players[defender.card.owner].god;
+    enemyGod.soul = Math.max(0, enemyGod.soul - 1);
+    addLog(`Virgo Cloth makes ${gameState.players[defender.card.owner].label} lose 1 Soul.`);
+  }
+}
+
+function triggerAldebaranSurvivalDamage(aldebaran, enemyPlayerKey) {
+  if (!aldebaran || aldebaran.zone !== "battlefield") {
+    return;
+  }
+
+  const enemy = gameState.players[enemyPlayerKey];
+  const validTargets = enemy.zones.battlefield.filter((instance) => isDevoteeCard(instance.cardId));
+  if (validTargets.length === 0) {
+    addLog(`${aldebaran.cardData.nome_exibicao_en} survived combat, but there is no enemy Devotee to take 1 damage.`);
+    return;
+  }
+
+  const resolveAldebaranDamage = (targetDescriptor) => {
+    const target = findCardInstance(targetDescriptor.playerKey, targetDescriptor.uid);
+    if (!target || target.zone !== "battlefield") {
+      return;
+    }
+
+    addLog(`${aldebaran.cardData.nome_exibicao_en} survived combat and deals 1 damage to ${target.cardData.nome_exibicao_en}.`);
+    showCombatToast(`${aldebaran.cardData.nome_exibicao_en} deals 1 damage to ${target.cardData.nome_exibicao_en}.`);
+    applyDamageToDevotee(target, 1);
+  };
+
+  if (isAiPlayer(aldebaran.card.owner)) {
+    const preferredTarget = validTargets
+      .map((instance) => findCardInstance(enemyPlayerKey, instance.uid))
+      .filter(Boolean)
+      .sort((left, right) => (getCurrentResistanceForLocated(left) ?? 99) - (getCurrentResistanceForLocated(right) ?? 99))[0];
+
+    if (preferredTarget) {
+      resolveAldebaranDamage({
+        kind: "card",
+        playerKey: enemyPlayerKey,
+        uid: preferredTarget.card.uid
+      });
+    }
+    return;
+  }
+
+  startTargetingState({
+    source: { kind: "card", playerKey: aldebaran.card.owner, uid: aldebaran.card.uid },
+    prompt: "Aldebaran survived combat. Choose an enemy Devotee to take 1 damage.",
+    statusLabel: "Choose Devotee for Aldebaran",
+    allowCancel: false,
+    isValidTarget: (descriptor) =>
+      isBattlefieldDevoteeTarget(descriptor) &&
+      descriptor.playerKey === enemyPlayerKey,
+    resolve: resolveAldebaranDamage
+  });
+}
+
+function applyDamageToDevotee(located, amount) {
+  if (!located || amount <= 0) {
+    return false;
+  }
+
+  if (located.card.preventDamageShield > 0) {
+    const prevented = Math.min(located.card.preventDamageShield, amount);
+    located.card.preventDamageShield -= prevented;
+    amount -= prevented;
+    addLog(`${located.cardData.nome_exibicao_en} prevents ${prevented} damage.`);
+  }
+
+  if (amount <= 0) {
+    return false;
+  }
+
+  located.card.damageCounters += amount;
+  maybeGainLatentCosmoFromDamage(located.card.owner);
+  addLog(`${located.cardData.nome_exibicao_en} takes ${amount} damage.`);
+  showCombatToast(`${located.cardData.nome_exibicao_en} takes ${amount} damage.`);
+  return checkDevoteeDestroyed(located);
+}
+
+function checkDevoteeDestroyed(located) {
+  const refreshed = findCardInstance(located.card.owner, located.card.uid);
+  if (!refreshed || refreshed.zone !== "battlefield") {
+    return true;
+  }
+
+  const player = gameState.players[refreshed.card.owner];
+  const computed = getComputedStats(player, refreshed.card, refreshed.cardData, refreshed.zone);
+  if (computed.resistance !== null && computed.resistance <= 0) {
+    if (refreshed.card.cannotBeDestroyedUntilEnd) {
+      addLog(`${refreshed.cardData.nome_exibicao_en} would be destroyed, but survives because it cannot be destroyed this turn.`);
+      return false;
+    }
+    relocateCard(refreshed.card.owner, refreshed.card.uid, "tartarus");
+    addLog(`${refreshed.cardData.nome_exibicao_en} is destroyed and sent to Tartarus.`);
+    handleDevoteeDestroyed(refreshed);
+    return true;
+  }
+
+  return false;
+}
+
+function maybeGainLatentCosmoFromDamage(playerKey) {
+  if (gameState.currentPlayer === playerKey) {
+    return;
+  }
+
+  const player = gameState.players[playerKey];
+  player.latentCosmo += 1;
+  addLog(`${player.label} gains 1 Latent Cosmo because one of their Devotees took damage during the opponent's turn.`);
+}
+
+function handleDevoteeDestroyed(located) {
+  detachEquipmentFromDevotee(located.card.owner, located.card.uid);
+
+  PLAYER_ORDER.forEach((playerKey) => {
+    const controller = gameState.players[playerKey];
+    const deathmaskCount = controller.zones.battlefield.filter(
+      (instance) => getCard(instance.cardId).nome_exibicao_en === "Deathmask, Cancer Gold Saint"
+    ).length;
+
+    if (deathmaskCount > 0) {
+      const owner = gameState.players[located.card.owner];
+      owner.god.soul = Math.max(0, owner.god.soul - deathmaskCount);
+      syncAwakenState(owner);
+      addLog(`${owner.label} loses ${deathmaskCount} Soul because a Devotee was destroyed while Deathmask is on the battlefield.`);
+    }
+  });
+}
+
+function markSurvivedCombat(playerKey, uid) {
+  const player = gameState.players[playerKey];
+  const located = findCardInstance(playerKey, uid);
+
+  if (!located || located.zone !== "battlefield" || !isDevoteeCard(located.cardId)) {
+    return;
+  }
+
+  if (
+    player.god.cardId === ATHENA_GOD_ID &&
+    isAthenaCard(located.cardData) &&
+    gameState.currentPlayer !== playerKey &&
+    !gameState.combat.cosmoOfHopeTriggeredFor[playerKey]
+  ) {
+    player.latentCosmo += 1;
+    gameState.combat.cosmoOfHopeTriggeredFor[playerKey] = true;
+    addLog(`${player.label} triggers Cosmo of Hope because ${located.cardData.nome_exibicao_en} survived combat during the opponent's turn and gains 1 Latent Cosmo.`);
+    return;
+  }
+
+  addLog(`${player.label} marks ${located.cardData.nome_exibicao_en} as having survived combat.`);
+}
+
+function resolveGodAbility(playerKey, abilityId) {
+  const player = gameState.players[playerKey];
+  const godCard = getCard(player.god.cardId);
+
+  if (godCard.id !== ATHENA_GOD_ID) {
+    addLog(`${player.label}'s God automation is not implemented yet.`);
+    return;
+  }
+
+  if (abilityId === "hope") {
+    addLog("Cosmo of Hope is now a passive ability and triggers automatically only when one or more Athena Devotees survive combat during the opponent's turn.");
+    return;
+  }
+
+  if (abilityId === "prayer") {
+    openZoneBrowser({
+      playerKey,
+      zone: "tartarus",
+      title: "Athena's Prayer",
+      prompt: "Choose one of your Athena Devotees in Tartarus to return to the battlefield Unprepared.",
+      cancelMessage: "Athena's Prayer canceled.",
+      filter: (descriptor) => isDevoteeCard(descriptor.cardId) && isAthenaCard(descriptor.cardData),
+      onSelect: (selectedUid) => {
+        const target = getZoneBrowserEntry(playerKey, selectedUid);
+        if (!target || target.zone !== "tartarus") {
+          return;
+        }
+        if (!spendCosmo(player, 5, "Athena's Prayer")) {
+          return;
+        }
+
+        const moved = moveCardByEffect(playerKey, target.card.uid, "battlefield", { tapped: true });
+        if (!moved) {
+          addLog("Athena's Prayer could not move the selected Devotee.");
+          return;
+        }
+
+        moved.card.plusOneCounters += 1;
+        player.freeEquipTargetUid = moved.card.uid;
+        addLog(`${player.label} returns ${moved.cardData.nome_exibicao_en} from Tartarus to the battlefield Unprepared with a +1/+1 counter.`);
+        addLog("You may equip a Cloth to that Devotee ignoring equip cost this turn.");
+        selectedInspector = { kind: "card", playerKey, uid: moved.card.uid };
+        renderGame();
+      }
+    });
+    return;
+  }
+
+  if (abilityId === "awaken-save") {
+    if (!player.god.awakened) {
+      addLog("Awaken Save can only be used while Athena is awakened.");
+      return;
+    }
+
+    startTargetingState({
+      source: { kind: "god", playerKey },
+      prompt: "Select one of your Devotees to survive and set its Resistance to 1.",
+      statusLabel: "Choose Devotee for Awaken Save",
+      cancelMessage: "Awaken Save canceled.",
+      isValidTarget: (descriptor) => descriptor.kind === "card" && descriptor.playerKey === playerKey && descriptor.zone === "battlefield" && isDevoteeCard(descriptor.cardId),
+      resolve: (descriptor) => {
+        const target = findCardInstance(descriptor.playerKey, descriptor.uid);
+        if (!target || !spendCosmo(player, 5, "Athena Awaken Ability")) {
+          return;
+        }
+        const computed = getComputedStats(player, target.card, target.cardData, target.zone);
+        const effectiveResistance = Math.max(1, computed.resistance ?? 1);
+        target.card.damageCounters = Math.max(0, effectiveResistance - 1);
+        addLog(`${player.label} prevents ${target.cardData.nome_exibicao_en} from being destroyed and sets its Resistance to 1.`);
+      }
+    });
+    return;
+  }
+
+  if (abilityId === "ultimate") {
+    if (player.god.ultimateUsed) { addLog("Ultimate has already been used this match."); return; }
+    if (!spendCosmo(player, 15, "Athena Exclamation")) {
+      return;
+    }
+
+    player.god.ultimateUsed = true;
+    const enemy = gameState.players[otherPlayerKey(playerKey)];
+    const enemyDevotees = enemy.zones.battlefield.filter((instance) => isDevoteeCard(instance.cardId));
+
+    enemyDevotees.forEach((instance) => {
+      const destroyed = relocateCard(enemy.key, instance.uid, "tartarus");
+      if (destroyed) handleDevoteeDestroyed(destroyed);
+    });
+
+    enemy.god.soul = Math.max(0, enemy.god.soul - enemyDevotees.length);
+    syncAwakenState(enemy);
+    addLog(`${player.label} resolves Athena Exclamation and destroys ${enemyDevotees.length} enemy Devotee${enemyDevotees.length === 1 ? "" : "s"}.`);
+    if (enemyDevotees.length > 0) {
+      addLog(`${enemy.label} loses ${enemyDevotees.length} Soul from Athena Exclamation.`);
+    }
+  }
+}
+
+function resolveDomainAbility(playerKey, abilityId) {
+  const player = gameState.players[playerKey];
+  const domainCard = getCard(player.domainId);
+  if (!player || !domainCard) {
+    return;
+  }
+
+  if (!(canPlayerActNow(playerKey) || canPlayerUsePriorityActions(playerKey))) {
+    addLog("You cannot use a Domain ability right now.");
+    return;
+  }
+
+  if (abilityId === "coliseum-burst") {
+    if (player.domainId !== COLISEUM_DOMAIN_ID) {
+      addLog(`${player.label}'s Domain does not support that ability.`);
+      return;
+    }
+
+    if (player.domainUsed) {
+      addLog("Coliseum has already been used this game.");
+      return;
+    }
+
+    startTargetingState({
+      source: { kind: "domain", playerKey },
+      prompt: "Choose one of your Devotees to get +1/+0 and Pierce until end of turn.",
+      statusLabel: "Choose Devotee for Coliseum",
+      cancelMessage: "Coliseum ability canceled.",
+      isValidTarget: (descriptor) => descriptor.kind === "card" && descriptor.playerKey === playerKey && descriptor.zone === "battlefield" && isDevoteeCard(descriptor.cardId),
+      resolve: (descriptor) => {
+        const target = findCardInstance(descriptor.playerKey, descriptor.uid);
+        if (!target || target.zone !== "battlefield") {
+          return;
+        }
+
+        player.domainUsed = true;
+        target.card.turnPowerBonus += 1;
+        if (!target.card.tempKeywords.includes("Pierce")) {
+          target.card.tempKeywords.push("Pierce");
+        }
+        addLog(`${player.label} uses Coliseum on ${target.cardData.nome_exibicao_en}. It gets +1/+0 and Pierce until end of turn.`);
+      }
+    });
+    return;
+  }
+
+  addLog(`${domainCard.nome_exibicao_en} has no supported activated ability.`);
+}
+
+function resolveCardText(playerKey, uid) {
+  const located = findCardInstance(playerKey, uid);
+  if (!located) {
+    return;
+  }
+
+  const player = gameState.players[playerKey];
+  const card = located.cardData;
+  const lines = getCardRulesLines(card);
+
+  if (located.zone === "hand" && (card.tipo === "Technique" || card.tipo === "Moment")) {
+    startSpellCastFromHand(playerKey, located);
+    return;
+  }
+
+  if (located.zone === "battlefield") {
+    if (isClothCard(located.cardId) && located.card.damageCounters > 0) {
+      addLog(`${card.nome_exibicao_en} is damaged and its abilities are inactive until repaired.`);
+      return;
+    }
+
+    if (!(canPlayerActNow(playerKey) || canPlayerUsePriorityActions(playerKey))) {
+      addLog(`${card.nome_exibicao_en} cannot be activated right now.`);
+      return;
+    }
+
+    if (
+      located.card.summoningSick &&
+      !hasKeyword(card, "Impulse", located.card) &&
+      lines.some((line) => /^Tap:/i.test(line))
+    ) {
+      addLog(`${card.nome_exibicao_en} has summoning sickness and cannot use Tap abilities this turn.`);
+      return;
+    }
+
+    if (located.card.tapped && lines.some((line) => /^Tap:/i.test(line))) {
+      addLog(`${card.nome_exibicao_en} is tapped and cannot use its tap ability.`);
+      return;
+    }
+
+    if (lines.some((line) => /^Tap:\s*Generate 1 Latent Cosmo/i.test(line))) {
+      located.card.tapped = true;
+      player.latentCosmo += 1;
+      addLog(`${player.label} taps ${card.nome_exibicao_en} and generates 1 Latent Cosmo.`);
+      return;
+    }
+
+    if (lines.some((line) => /^Tap:\s*Prevent the next 2 damage that would be dealt to target Devotee this turn\./i.test(line))) {
+      startTargetingState({
+        source: { kind: "card", playerKey, uid },
+        prompt: "Select a Devotee to receive a 2 damage shield.",
+        statusLabel: "Choose protected Devotee",
+        cancelMessage: "Protection ability canceled.",
+        isValidTarget: (descriptor) => descriptor.kind === "card" && descriptor.zone === "battlefield" && isDevoteeCard(descriptor.cardId),
+        resolve: (descriptor) => {
+          const source = findCardInstance(playerKey, uid);
+          const target = findCardInstance(descriptor.playerKey, descriptor.uid);
+          if (!source || !target) {
+            return;
+          }
+          source.card.tapped = true;
+          target.card.preventDamageShield += 2;
+          addLog(`${player.label} uses ${source.cardData.nome_exibicao_en} to shield ${target.cardData.nome_exibicao_en} for 2 damage this turn.`);
+        }
+      });
+      return;
+    }
+
+    if (lines.some((line) => /^Tap:\s*Restore 2 Damage from target Cloth\./i.test(line))) {
+      startTargetingState({
+        source: { kind: "card", playerKey, uid },
+        prompt: "Select a Cloth to restore 2 Damage.",
+        statusLabel: "Choose Cloth",
+        cancelMessage: "Cloth repair canceled.",
+        isValidTarget: (descriptor) => descriptor.kind === "card" && descriptor.zone === "battlefield" && isClothCard(descriptor.cardId),
+        resolve: (descriptor) => {
+          const source = findCardInstance(playerKey, uid);
+          const target = findCardInstance(descriptor.playerKey, descriptor.uid);
+          if (!source || !target) {
+            return;
+          }
+          source.card.tapped = true;
+          target.card.damageCounters = Math.max(0, target.card.damageCounters - 2);
+          addLog(`${player.label} restores 2 Damage from ${target.cardData.nome_exibicao_en}.`);
+        }
+      });
+      return;
+    }
+
+    if (lines.some((line) => /^Tap:\s*Put a Seal counter on target Devotee\./i.test(line))) {
+      startTargetingState({
+        source: { kind: "card", playerKey, uid },
+        prompt: "Select a Devotee to receive a Seal counter.",
+        statusLabel: "Choose Devotee",
+        cancelMessage: "Seal ability canceled.",
+        isValidTarget: (descriptor) => descriptor.kind === "card" && descriptor.zone === "battlefield" && isDevoteeCard(descriptor.cardId),
+        resolve: (descriptor) => {
+          const source = findCardInstance(playerKey, uid);
+          const target = findCardInstance(descriptor.playerKey, descriptor.uid);
+          if (!source || !target) {
+            return;
+          }
+          source.card.tapped = true;
+          applySealCounter(target, source.cardData.nome_exibicao_en);
+        }
+      });
+      return;
+    }
+
+    if (lines.some((line) => /^Tap:\s*Equipped Devotee deals 1 damage to target Devotee\./i.test(line))) {
+      if (!located.card.attachedToUid) {
+        addLog(`${card.nome_exibicao_en} needs to be equipped to a Devotee first.`);
+        return;
+      }
+      startTargetingState({
+        source: { kind: "card", playerKey, uid },
+        prompt: "Select a Devotee to take 1 damage from the equipped bearer.",
+        statusLabel: "Choose damaged Devotee",
+        cancelMessage: `${card.nome_exibicao_en} ability canceled.`,
+        isValidTarget: isBattlefieldDevoteeTarget,
+        resolve: (descriptor) => {
+          const source = findCardInstance(playerKey, uid);
+          const target = findCardInstance(descriptor.playerKey, descriptor.uid);
+          if (!source || !target) {
+            return;
+          }
+          source.card.tapped = true;
+          applyDamageToDevotee(target, 1);
+          addLog(`${source.cardData.nome_exibicao_en} makes its equipped Devotee deal 1 damage to ${target.cardData.nome_exibicao_en}.`);
+        }
+      });
+      return;
+    }
+
+    if (lines.some((line) => /^Tap:\s*Put a Seal counter on target Devotee that was dealt damage this turn\./i.test(line))) {
+      startTargetingState({
+        source: { kind: "card", playerKey, uid },
+        prompt: "Select a Devotee that was dealt damage this turn.",
+        statusLabel: "Choose damaged Devotee",
+        cancelMessage: `${card.nome_exibicao_en} ability canceled.`,
+        isValidTarget: (descriptor) => isBattlefieldDevoteeTarget(descriptor) && descriptor.card.damageCounters > 0,
+        resolve: (descriptor) => {
+          const source = findCardInstance(playerKey, uid);
+          const target = findCardInstance(descriptor.playerKey, descriptor.uid);
+          if (!source || !target) {
+            return;
+          }
+          source.card.tapped = true;
+          applySealCounter(target, source.cardData.nome_exibicao_en);
+        }
+      });
+      return;
+    }
+
+    if (lines.some((line) => /^Tap:\s*Equipped Devotee deals 4 damage to target Devotee or God\./i.test(line))) {
+      if (!located.card.attachedToUid) {
+        addLog(`${card.nome_exibicao_en} needs to be equipped to a Devotee first.`);
+        return;
+      }
+      startTargetingState({
+        source: { kind: "card", playerKey, uid },
+        prompt: "Select a Devotee or God to take 4 damage.",
+        statusLabel: "Choose target",
+        cancelMessage: `${card.nome_exibicao_en} ability canceled.`,
+        isValidTarget: (descriptor) => descriptor.kind === "god" || isBattlefieldDevoteeTarget(descriptor),
+        resolve: (descriptor) => {
+          const source = findCardInstance(playerKey, uid);
+          if (!source) {
+            return;
+          }
+          source.card.tapped = true;
+          if (descriptor.kind === "god") {
+            const godOwner = gameState.players[descriptor.playerKey];
+            godOwner.god.soul = Math.max(0, godOwner.god.soul - 4);
+            syncAwakenState(godOwner);
+            addLog(`${source.cardData.nome_exibicao_en} deals 4 damage to ${godOwner.label}'s God.`);
+            return;
+          }
+          const target = findCardInstance(descriptor.playerKey, descriptor.uid);
+          if (!target) {
+            return;
+          }
+          applyDamageToDevotee(target, 4);
+          addLog(`${source.cardData.nome_exibicao_en} deals 4 damage to ${target.cardData.nome_exibicao_en}.`);
+        }
+      });
+      return;
+    }
+  }
+
+  addLog(`No supported text automation is available yet for ${card.nome_exibicao_en}.`);
+}
+
+function resolveCardAbility(playerKey, uid, lineIndex = 0) {
+  const located = findCardInstance(playerKey, uid);
+  if (!located || located.zone !== "battlefield") {
+    return;
+  }
+
+  const abilityLines = getActivatedBattlefieldAbilityLines(located.cardData);
+  const line = abilityLines[lineIndex] || abilityLines[0];
+  if (!line) {
+    addLog(`No activated ability is available on ${located.cardData.nome_exibicao_en}.`);
+    return;
+  }
+
+  const player = gameState.players[playerKey];
+  const card = located.cardData;
+  const requiresTap = abilityLineRequiresTap(line);
+
+  if (isClothCard(located.cardId) && located.card.damageCounters > 0) {
+    addLog(`${card.nome_exibicao_en} is damaged and its abilities are inactive until repaired.`);
+    return;
+  }
+
+  if (!(canPlayerActNow(playerKey) || canPlayerUsePriorityActions(playerKey))) {
+    addLog(`${card.nome_exibicao_en} cannot be activated right now.`);
+    return;
+  }
+
+  if (requiresTap && located.card.summoningSick && !hasKeyword(card, "Impulse", located.card)) {
+    addLog(`${card.nome_exibicao_en} has summoning sickness and cannot use Tap abilities this turn.`);
+    return;
+  }
+
+  if (requiresTap && located.card.tapped) {
+    addLog(`${card.nome_exibicao_en} is tapped and cannot use its tap ability.`);
+    return;
+  }
+
+  if (/^Tap:\s*Generate 1 Latent Cosmo/i.test(line)) {
+    located.card.tapped = true;
+    player.latentCosmo += 1;
+    addLog(`${player.label} taps ${card.nome_exibicao_en} and generates 1 Latent Cosmo.`);
+    return;
+  }
+
+  if (/^Tap:\s*Prevent the next 2 damage that would be dealt to target Devotee this turn\./i.test(line)) {
+    startTargetingState({
+      source: { kind: "card", playerKey, uid },
+      prompt: "Select a Devotee to receive a 2 damage shield.",
+      statusLabel: "Choose protected Devotee",
+      cancelMessage: "Protection ability canceled.",
+      isValidTarget: (descriptor) => descriptor.kind === "card" && descriptor.zone === "battlefield" && isDevoteeCard(descriptor.cardId),
+      resolve: (descriptor) => {
+        const source = findCardInstance(playerKey, uid);
+        const target = findCardInstance(descriptor.playerKey, descriptor.uid);
+        if (!source || !target) {
+          return;
+        }
+        source.card.tapped = true;
+        target.card.preventDamageShield += 2;
+        addLog(`${player.label} uses ${source.cardData.nome_exibicao_en} to shield ${target.cardData.nome_exibicao_en} for 2 damage this turn.`);
+      }
+    });
+    return;
+  }
+
+  if (/^Tap:\s*Restore 2 Damage from target Cloth\./i.test(line)) {
+    startTargetingState({
+      source: { kind: "card", playerKey, uid },
+      prompt: "Select a Cloth to restore 2 Damage.",
+      statusLabel: "Choose Cloth",
+      cancelMessage: "Cloth repair canceled.",
+      isValidTarget: (descriptor) => descriptor.kind === "card" && descriptor.zone === "battlefield" && isClothCard(descriptor.cardId),
+      resolve: (descriptor) => {
+        const source = findCardInstance(playerKey, uid);
+        const target = findCardInstance(descriptor.playerKey, descriptor.uid);
+        if (!source || !target) {
+          return;
+        }
+        source.card.tapped = true;
+        target.card.damageCounters = Math.max(0, target.card.damageCounters - 2);
+        addLog(`${player.label} restores 2 Damage from ${target.cardData.nome_exibicao_en}.`);
+      }
+    });
+    return;
+  }
+
+  if (/^Tap:\s*Put a Seal counter on target Devotee\./i.test(line)) {
+    startTargetingState({
+      source: { kind: "card", playerKey, uid },
+      prompt: "Select a Devotee to receive a Seal counter.",
+      statusLabel: "Choose Devotee",
+      cancelMessage: "Seal ability canceled.",
+      isValidTarget: (descriptor) => descriptor.kind === "card" && descriptor.zone === "battlefield" && isDevoteeCard(descriptor.cardId),
+      resolve: (descriptor) => {
+        const source = findCardInstance(playerKey, uid);
+        const target = findCardInstance(descriptor.playerKey, descriptor.uid);
+        if (!source || !target) {
+          return;
+        }
+        source.card.tapped = true;
+        applySealCounter(target, source.cardData.nome_exibicao_en);
+      }
+    });
+    return;
+  }
+
+  if (/^Tap:\s*Equipped Devotee deals 1 damage to target Devotee\./i.test(line)) {
+    if (!located.card.attachedToUid) {
+      addLog(`${card.nome_exibicao_en} needs to be equipped to a Devotee first.`);
+      return;
+    }
+    startTargetingState({
+      source: { kind: "card", playerKey, uid },
+      prompt: "Select a Devotee to take 1 damage from the equipped bearer.",
+      statusLabel: "Choose damaged Devotee",
+      cancelMessage: `${card.nome_exibicao_en} ability canceled.`,
+      isValidTarget: isBattlefieldDevoteeTarget,
+      resolve: (descriptor) => {
+        const source = findCardInstance(playerKey, uid);
+        const target = findCardInstance(descriptor.playerKey, descriptor.uid);
+        if (!source || !target) {
+          return;
+        }
+        source.card.tapped = true;
+        applyDamageToDevotee(target, 1);
+        addLog(`${source.cardData.nome_exibicao_en} makes its equipped Devotee deal 1 damage to ${target.cardData.nome_exibicao_en}.`);
+      }
+    });
+    return;
+  }
+
+  if (/^Tap:\s*Put a Seal counter on target Devotee that was dealt damage this turn\./i.test(line)) {
+    startTargetingState({
+      source: { kind: "card", playerKey, uid },
+      prompt: "Select a Devotee that was dealt damage this turn.",
+      statusLabel: "Choose damaged Devotee",
+      cancelMessage: `${card.nome_exibicao_en} ability canceled.`,
+      isValidTarget: (descriptor) => isBattlefieldDevoteeTarget(descriptor) && descriptor.card.damageCounters > 0,
+      resolve: (descriptor) => {
+        const source = findCardInstance(playerKey, uid);
+        const target = findCardInstance(descriptor.playerKey, descriptor.uid);
+        if (!source || !target) {
+          return;
+        }
+        source.card.tapped = true;
+        applySealCounter(target, source.cardData.nome_exibicao_en);
+      }
+    });
+    return;
+  }
+
+  if (/^Tap:\s*Equipped Devotee deals 4 damage to target Devotee or God\./i.test(line)) {
+    if (!located.card.attachedToUid) {
+      addLog(`${card.nome_exibicao_en} needs to be equipped to a Devotee first.`);
+      return;
+    }
+    startTargetingState({
+      source: { kind: "card", playerKey, uid },
+      prompt: "Select a Devotee or God to take 4 damage.",
+      statusLabel: "Choose target",
+      cancelMessage: `${card.nome_exibicao_en} ability canceled.`,
+      isValidTarget: (descriptor) => descriptor.kind === "god" || isBattlefieldDevoteeTarget(descriptor),
+      resolve: (descriptor) => {
+        const source = findCardInstance(playerKey, uid);
+        if (!source) {
+          return;
+        }
+        source.card.tapped = true;
+        if (descriptor.kind === "god") {
+          const godOwner = gameState.players[descriptor.playerKey];
+          godOwner.god.soul = Math.max(0, godOwner.god.soul - 4);
+          syncAwakenState(godOwner);
+          addLog(`${source.cardData.nome_exibicao_en} deals 4 damage to ${godOwner.label}'s God.`);
+          return;
+        }
+        const target = findCardInstance(descriptor.playerKey, descriptor.uid);
+        if (!target) {
+          return;
+        }
+        applyDamageToDevotee(target, 4);
+        addLog(`${source.cardData.nome_exibicao_en} deals 4 damage to ${target.cardData.nome_exibicao_en}.`);
+      }
+    });
+    return;
+  }
+
+  if (/Pegasus Ryuseiken/i.test(line)) {
+    if (!spendCosmo(player, 5, "Pegasus Ryuseiken", { unit: "base_cosmo" })) {
+      return;
+    }
+    located.card.turnPowerBonus += 3;
+    located.card.turnResistanceBonus += 2;
+    if (getAttachedEquipment(player, uid).some(({ cardData }) => isClothCard(cardData.id)) && !located.card.tempKeywords.includes("Pierce")) {
+      located.card.tempKeywords.push("Pierce");
+    }
+    addLog(`${player.label} uses Pegasus Ryuseiken on ${card.nome_exibicao_en}.`);
+    return;
+  }
+
+  if (/Rozan Shoryuha/i.test(line)) {
+    if (!spendCosmo(player, 6, "Rozan Shoryuha", { unit: "base_cosmo" })) {
+      return;
+    }
+    startTargetingState({
+      source: { kind: "card", playerKey, uid },
+      prompt: "Select a Devotee to take 4 damage.",
+      statusLabel: "Choose Devotee",
+      cancelMessage: "Rozan Shoryuha canceled.",
+      isValidTarget: isBattlefieldDevoteeTarget,
+      resolve: (descriptor) => {
+        const target = findCardInstance(descriptor.playerKey, descriptor.uid);
+        if (!target) {
+          return;
+        }
+        applyDamageToDevotee(target, 4);
+        addLog(`${card.nome_exibicao_en} uses Rozan Shoryuha on ${target.cardData.nome_exibicao_en}.`);
+      }
+    });
+    return;
+  }
+
+  if (/Diamond Dust/i.test(line)) {
+    if (!spendCosmo(player, 4, "Diamond Dust", { unit: "base_cosmo" })) {
+      return;
+    }
+    const enemy = gameState.players[otherPlayerKey(playerKey)];
+    enemy.zones.battlefield
+      .filter((instance) => isDevoteeCard(instance.cardId))
+      .forEach((instance) => {
+        const fresh = findCardInstance(enemy.key, instance.uid);
+        if (!fresh) {
+          return;
+        }
+        applyDamageToDevotee(fresh, 1);
+        const afterDamage = findCardInstance(enemy.key, instance.uid);
+        if (afterDamage?.zone === "battlefield") {
+          applySealCounter(afterDamage, card.nome_exibicao_en);
+        }
+      });
+    addLog(`${player.label} resolves Diamond Dust.`);
+    return;
+  }
+
+  if (/Hoyoku Tensho/i.test(line)) {
+    if (!spendCosmo(player, 5, "Hoyoku Tensho")) {
+      return;
+    }
+    startTargetingState({
+      source: { kind: "card", playerKey, uid },
+      prompt: "Select a Devotee or God to take 3 damage.",
+      statusLabel: "Choose target",
+      cancelMessage: "Hoyoku Tensho canceled.",
+      isValidTarget: (descriptor) => descriptor.kind === "god" || isBattlefieldDevoteeTarget(descriptor),
+      resolve: (descriptor) => {
+        const source = findCardInstance(playerKey, uid);
+        if (!source) {
+          return;
+        }
+        source.card.tapped = true;
+        if (descriptor.kind === "god") {
+          const godOwner = gameState.players[descriptor.playerKey];
+          godOwner.god.soul = Math.max(0, godOwner.god.soul - 3);
+          syncAwakenState(godOwner);
+          addLog(`${card.nome_exibicao_en} deals 3 damage to ${godOwner.label}'s God.`);
+          return;
+        }
+        const target = findCardInstance(descriptor.playerKey, descriptor.uid);
+        if (!target) {
+          return;
+        }
+        applyDamageToDevotee(target, 3);
+        addLog(`${card.nome_exibicao_en} deals 3 damage to ${target.cardData.nome_exibicao_en}.`);
+      }
+    });
+    return;
+  }
+
+  if (/Great Horn/i.test(line)) {
+    if (!spendCosmo(player, 4, "Great Horn", { unit: "base_cosmo" })) {
+      return;
+    }
+    located.card.turnPowerBonus += 3;
+    if (!located.card.tempKeywords.includes("Pierce")) {
+      located.card.tempKeywords.push("Pierce");
+    }
+    addLog(`${player.label} uses Great Horn on ${card.nome_exibicao_en}.`);
+    return;
+  }
+
+  if (/Aurora Execution/i.test(line)) {
+    if (!spendCosmo(player, 6, "Aurora Execution", { unit: "base_cosmo" })) {
+      return;
+    }
+    const enemy = gameState.players[otherPlayerKey(playerKey)];
+    enemy.zones.battlefield
+      .filter((instance) => isDevoteeCard(instance.cardId))
+      .forEach((instance) => {
+        const fresh = findCardInstance(enemy.key, instance.uid);
+        if (fresh) {
+          applyDamageToDevotee(fresh, 1);
+        }
+      });
+
+    enemy.zones.battlefield
+      .filter((instance) => isDevoteeCard(instance.cardId) && instance.sealCounters > 0)
+      .slice()
+      .forEach((instance) => relocateCard(enemy.key, instance.uid, "tartarus"));
+
+    addLog(`${player.label} resolves Aurora Execution.`);
+    return;
+  }
+
+  if (/Sagittarius Arrow/i.test(line)) {
+    if (!player.god.awakened) {
+      addLog(`${card.nome_exibicao_en} can only use Sagittarius Arrow while awakened.`);
+      return;
+    }
+    const amount = Math.max(0, player.god.soul);
+    if (!spendCosmo(player, amount, "Sagittarius Arrow", { unit: "base_cosmo" })) {
+      return;
+    }
+    startTargetingState({
+      source: { kind: "card", playerKey, uid },
+      prompt: `Select a Devotee or God to take ${amount} damage.`,
+      statusLabel: "Choose target",
+      cancelMessage: "Sagittarius Arrow canceled.",
+      isValidTarget: (descriptor) => descriptor.kind === "god" || isBattlefieldDevoteeTarget(descriptor),
+      resolve: (descriptor) => {
+        if (descriptor.kind === "god") {
+          const godOwner = gameState.players[descriptor.playerKey];
+          godOwner.god.soul = Math.max(0, godOwner.god.soul - amount);
+          syncAwakenState(godOwner);
+          addLog(`${card.nome_exibicao_en} deals ${amount} damage to ${godOwner.label}'s God.`);
+          return;
+        }
+        const target = findCardInstance(descriptor.playerKey, descriptor.uid);
+        if (!target) {
+          return;
+        }
+        applyDamageToDevotee(target, amount);
+        addLog(`${card.nome_exibicao_en} deals ${amount} damage to ${target.cardData.nome_exibicao_en}.`);
+      }
+    });
+    return;
+  }
+
+  if (/Underworld Waves/i.test(line)) {
+    if (!spendCosmo(player, 5, "Underworld Waves", { unit: "base_cosmo" })) {
+      return;
+    }
+    let exiled = 0;
+    PLAYER_ORDER.forEach((key) => {
+      const owner = gameState.players[key];
+      owner.zones.tartarus
+        .filter((instance) => isDevoteeCard(instance.cardId))
+        .slice()
+        .forEach((instance) => {
+          relocateCard(key, instance.uid, "void");
+          exiled += 1;
+        });
+    });
+    player.latentCosmo += exiled;
+    addLog(`${player.label} exiles ${exiled} Devotee${exiled === 1 ? "" : "s"} from Tartarus and gains ${exiled} Latent Cosmo.`);
+    return;
+  }
+
+  addLog(`No supported activated ability automation is available yet for ${card.nome_exibicao_en}.`);
+}
+
+function canEquipToTarget(playerKey, equipmentLocated, descriptor) {
+  if (!equipmentLocated || descriptor.kind !== "card" || descriptor.playerKey !== playerKey || descriptor.zone !== "battlefield" || !isDevoteeCard(descriptor.cardId)) {
+    return false;
+  }
+
+  if (isClothCard(equipmentLocated.cardId) && equipmentLocated.card.damageCounters > 0) {
+    return false;
+  }
+
+  if (isClothCard(equipmentLocated.cardId)) {
+    const alreadyEquippedCloth = getAttachedEquipment(gameState.players[playerKey], descriptor.uid).some(({ cardData }) => isClothCard(cardData.id));
+    if (alreadyEquippedCloth && equipmentLocated.card.attachedToUid !== descriptor.uid) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+function startEquipSelection(playerKey, uid, ignoreCost = false) {
+  const player = gameState.players[playerKey];
+  const equipment = findCardInstance(playerKey, uid);
+  if (!equipment || equipment.zone !== "battlefield" || !isEquipCard(equipment.cardId)) {
+    addLog("Select an equipment card on the battlefield to equip.");
+    return;
+  }
+
+  if (!(canPlayerActNow(playerKey) || canPlayerUsePriorityActions(playerKey))) {
+    addLog("You cannot equip cards right now.");
+    return;
+  }
+
+  if (isClothCard(equipment.cardId) && equipment.card.damageCounters > 0) {
+    addLog(`${equipment.cardData.nome_exibicao_en} is damaged and cannot be equipped yet.`);
+    return;
+  }
+
+  const targets = getEquipTargetOptions(playerKey, uid, ignoreCost);
+  if (!targets.length) {
+    addLog(`${equipment.cardData.nome_exibicao_en} has no valid Devotee to equip right now.`);
+    return;
+  }
+
+  hoverPreview = null;
+  closeContextMenu();
+  closeFloatingInfo();
+  equipSelectionState = {
+    playerKey,
+    uid,
+    ignoreCost,
+    cardName: equipment.cardData.nome_exibicao_en
+  };
+
+  renderGame();
+}
+
+function getEquipTargetOptions(playerKey, uid, ignoreCost = false) {
+  const player = gameState.players[playerKey];
+  const equipment = findCardInstance(playerKey, uid);
+  if (!player || !equipment) {
+    return [];
+  }
+
+  return player.zones.battlefield
+    .map((instance) => ({
+      kind: "card",
+      playerKey,
+      uid: instance.uid,
+      zone: "battlefield",
+      card: instance,
+      cardId: instance.cardId,
+      cardData: getCard(instance.cardId)
+    }))
+    .filter((descriptor) => canEquipToTarget(playerKey, equipment, descriptor))
+    .map((descriptor) => {
+      const freeEquip = ignoreCost || (player.freeEquipTargetUid === descriptor.uid && isClothCard(equipment.cardId));
+      const equipCost = freeEquip ? 0 : (equipment.cardData.equipar_custo || 0);
+      return {
+        uid: descriptor.uid,
+        freeEquip,
+        equipCost,
+        payable: equipCost === 0 || getAvailableCosmo(player, "cosmo") >= equipCost
+      };
+    });
+}
+
+function clearEquipSelection(writeLog = false) {
+  if (!equipSelectionState) {
+    return;
+  }
+
+  if (writeLog) {
+    addLog(`${equipSelectionState.cardName} equip canceled.`);
+  }
+
+  equipSelectionState = null;
+}
+
+function resolveEquipSelection(targetUid) {
+  if (!equipSelectionState || !gameState) {
+    return;
+  }
+
+  const { playerKey, uid, ignoreCost } = equipSelectionState;
+  const player = gameState.players[playerKey];
+  const freshEquipment = findCardInstance(playerKey, uid);
+  const target = findCardInstance(playerKey, targetUid);
+  if (!freshEquipment || !target) {
+    clearEquipSelection(true);
+    return;
+  }
+
+  if (!canEquipToTarget(playerKey, freshEquipment, {
+    kind: "card",
+    playerKey,
+    uid: target.card.uid,
+    zone: target.zone,
+    card: target.card,
+    cardId: target.cardId,
+    cardData: target.cardData
+  })) {
+    addLog("That Devotee is no longer a valid equip target.");
+    return;
+  }
+
+  const freeEquip = ignoreCost || (player.freeEquipTargetUid === target.card.uid && isClothCard(freshEquipment.cardId));
+  const equipCost = freeEquip ? 0 : (freshEquipment.cardData.equipar_custo || 0);
+
+  if (equipCost > 0 && !spendCosmo(player, equipCost, `${freshEquipment.cardData.nome_exibicao_en} equip cost`)) {
+    return;
+  }
+
+  freshEquipment.card.attachedToUid = target.card.uid;
+  if (freeEquip && player.freeEquipTargetUid === target.card.uid) {
+    player.freeEquipTargetUid = null;
+  }
+
+  addLog(`${freshEquipment.cardData.nome_exibicao_en} equips ${target.cardData.nome_exibicao_en}${freeEquip ? " without paying equip cost" : ""}.`);
+  selectedInspector = { kind: "card", playerKey, uid: target.card.uid };
+  equipSelectionState = null;
+}
+
+function getCardTextActionLabel(located) {
+  if (!located) {
+    return "";
+  }
+
+  const lines = getCardRulesLines(located.cardData);
+  if (located.zone === "hand" && (located.cardData.tipo === "Technique" || located.cardData.tipo === "Moment")) {
+    return lines[0] || "";
+  }
+
+  if (located.zone === "battlefield") {
+    const abilityLine = getActivatedBattlefieldAbilityLines(located.cardData)[0];
+    if (abilityLine) {
+      return abilityLine;
+    }
+  }
+
+  if (located.zone === "battlefield" && isEquipCard(located.cardId)) {
+    return `Equip ${located.cardData.equipar_custo}`;
+  }
+
+  return "";
+}
+
+function getActivatedBattlefieldAbilityLines(cardData) {
+  return getCardRulesLines(cardData).filter((line) => /^Tap:/i.test(line) || /—\s*(Awakened\s*—\s*)?Cost:/i.test(line));
+}
+
+function abilityLineRequiresTap(line) {
+  return /^Tap:/i.test(line) || /,\s*Tap\b/i.test(line);
+}
+
+function getCardAbilityState(playerKey, zoneId, instance, cardData) {
+  if (!gameState || targetingState || isAiPlayer(playerKey) || zoneBrowserState) {
+    return null;
+  }
+
+  const located = {
+    card: instance,
+    zone: zoneId,
+    cardId: instance.cardId,
+    cardData
+  };
+
+  const label = getCardTextActionLabel(located);
+  if (!label) {
+    return null;
+  }
+
+  const player = gameState.players[playerKey];
+  if (!player) {
+    return null;
+  }
+
+  if (zoneId === "hand") {
+    if (cardData.tipo === "Moment" && !canCastMomentNow(playerKey)) {
+      return null;
+    }
+
+    if (cardData.tipo === "Technique" && !canCastTechniqueNow(playerKey)) {
+      return null;
+    }
+
+    if (typeof cardData.custo === "number" && getAvailableCosmo(player, cardData.unidade_custo || "cosmo") < cardData.custo) {
+      return null;
+    }
+
+    return {
+      label: cardData.tipo === "Moment" ? "Cast Moment" : cardData.tipo === "Technique" ? "Use Technique" : label
+    };
+  }
+
+  if (zoneId === "battlefield") {
+    const abilityLines = getActivatedBattlefieldAbilityLines(cardData);
+    const hasTapAbility = abilityLines.some((line) => abilityLineRequiresTap(line));
+    const isEquipAction = isEquipCard(instance.cardId);
+    if (isClothCard(instance.cardId) && instance.damageCounters > 0) {
+      return null;
+    }
+    if (
+      (!abilityLines.length && !isEquipAction) ||
+      (instance.tapped && hasTapAbility) ||
+      !(canPlayerActNow(playerKey) || canPlayerUsePriorityActions(playerKey)) ||
+      (hasTapAbility && instance.summoningSick && !hasKeyword(cardData, "Impulse", instance))
+    ) {
+      return null;
+    }
+
+    if (isEquipAction) {
+      return {
+        label: `Equip ${cardData.equipar_custo}`,
+        mode: "equip"
+      };
+    }
+
+    return {
+      label: abilityLines.length > 1 ? `Abilities ${abilityLines.length}` : "Activate",
+      mode: abilityLines.length > 1 ? "menu" : "ability",
+      lineIndex: 0
+    };
+  }
+
+  return null;
+}
+
+function parseLibrarySearchInstruction(line) {
+  if (!/search your (deck|library)/i.test(line)) {
+    return null;
+  }
+
+  let filter = null;
+  let label = "matching card";
+  if (/a Cloth Relic/i.test(line)) {
+    filter = (descriptor) => isClothCard(descriptor.cardId);
+    label = "Cloth Relic";
+  } else if (/a Weapon Relic/i.test(line)) {
+    filter = (descriptor) => descriptor.cardData.subtipos?.includes("Weapon");
+    label = "Weapon Relic";
+  } else if (/a Devotee/i.test(line)) {
+    filter = (descriptor) => isDevoteeCard(descriptor.cardId);
+    label = "Devotee";
+  }
+
+  if (!filter) {
+    return null;
+  }
+
+  return {
+    label,
+    filter,
+    destination: inferDestinationZoneFromText(line, "hand"),
+    shuffleAfter: /shuffle/i.test(line),
+    tapped: /unprepared/i.test(line)
+  };
+}
+
+function parseTartarusReturnInstruction(line) {
+  if (!/return .* from tartarus/i.test(line)) {
+    return null;
+  }
+
+  let filter = null;
+  let label = "card";
+  if (/Devotee/i.test(line)) {
+    filter = (descriptor) => isDevoteeCard(descriptor.cardId);
+    label = "Devotee";
+  }
+
+  return {
+    label,
+    filter: filter || (() => true),
+    destination: inferDestinationZoneFromText(line, "battlefield"),
+    tapped: /unprepared/i.test(line)
+  };
+}
+
+function startLibrarySearchForSpell(player, located, line, options = {}) {
+  const spec = parseLibrarySearchInstruction(line);
+  if (!spec) {
+    return false;
+  }
+
+  openSpellResolution({
+    playerKey: player.key,
+    uid: located.card.uid,
+    title: located.cardData.nome_exibicao_en,
+    prompt: `Search your library for a ${spec.label}, then move it to ${zoneLabel(spec.destination)}.`,
+    stageLabel: "Search Library",
+    cardType: located.cardData.tipo,
+    unit: located.cardData.unidade_custo || "cosmo",
+    amount: located.cardData.custo || 0,
+    allowCancel: options.allowCancel !== false,
+    cancelMessage: `${located.cardData.nome_exibicao_en} search canceled.`
+  });
+
+  const opened = openZoneBrowser({
+    playerKey: player.key,
+    zone: "deck",
+    title: located.cardData.nome_exibicao_en,
+    prompt: `Search your library for a ${spec.label}. Choose the card to reveal and resolve.`,
+    cancelMessage: `${located.cardData.nome_exibicao_en} search canceled.`,
+    allowCancel: options.allowCancel !== false,
+    onCancel: () => clearSpellResolution(false),
+    filter: spec.filter,
+    onSelect: (selectedUid) => {
+      const fresh = ensureSpellCostPaid(player, located, options);
+      const chosen = getZoneBrowserEntry(player.key, selectedUid);
+      if (!fresh || !chosen || chosen.zone !== "deck") {
+        return;
+      }
+      const moved = moveCardByEffect(player.key, selectedUid, spec.destination, { tapped: spec.tapped });
+      if (!moved) {
+        addLog(`${fresh.cardData.nome_exibicao_en} could not move the chosen ${spec.label}.`);
+        return;
+      }
+      addLog(`${player.label} reveals ${moved.cardData.nome_exibicao_en} and moves it to ${zoneLabel(spec.destination)}.`);
+      if (spec.shuffleAfter) {
+        shuffle(player.zones.deck);
+        addLog(`${player.label} shuffles their deck.`);
+      }
+      finalizeSpellCard(player, fresh, `${player.label} resolves ${fresh.cardData.nome_exibicao_en}.`);
+    }
+  });
+
+  if (!opened) {
+    clearSpellResolution(false);
+    return false;
+  }
+
+  return true;
+}
+
+function startTartarusReturnForSpell(player, located, line, options = {}) {
+  const spec = parseTartarusReturnInstruction(line);
+  if (!spec) {
+    return false;
+  }
+
+  openSpellResolution({
+    playerKey: player.key,
+    uid: located.card.uid,
+    title: located.cardData.nome_exibicao_en,
+    prompt: `Choose a ${spec.label} in Tartarus and move it to ${zoneLabel(spec.destination)}.`,
+    stageLabel: "Choose from Tartarus",
+    cardType: located.cardData.tipo,
+    unit: located.cardData.unidade_custo || "cosmo",
+    amount: located.cardData.custo || 0,
+    allowCancel: options.allowCancel !== false,
+    cancelMessage: `${located.cardData.nome_exibicao_en} return canceled.`
+  });
+
+  const opened = openZoneBrowser({
+    playerKey: player.key,
+    zone: "tartarus",
+    title: located.cardData.nome_exibicao_en,
+    prompt: `Choose a ${spec.label} in Tartarus and resolve the return effect.`,
+    cancelMessage: `${located.cardData.nome_exibicao_en} return canceled.`,
+    allowCancel: options.allowCancel !== false,
+    onCancel: () => clearSpellResolution(false),
+    filter: spec.filter,
+    onSelect: (selectedUid) => {
+      const fresh = ensureSpellCostPaid(player, located, options);
+      const chosen = getZoneBrowserEntry(player.key, selectedUid);
+      if (!fresh || !chosen || chosen.zone !== "tartarus") {
+        return;
+      }
+      const moved = moveCardByEffect(player.key, selectedUid, spec.destination, { tapped: spec.tapped });
+      if (!moved) {
+        addLog(`${fresh.cardData.nome_exibicao_en} could not move the chosen ${spec.label}.`);
+        return;
+      }
+      addLog(`${player.label} returns ${moved.cardData.nome_exibicao_en} from Tartarus to ${zoneLabel(spec.destination)}.`);
+      finalizeSpellCard(player, fresh, `${player.label} resolves ${fresh.cardData.nome_exibicao_en}.`);
+    }
+  });
+
+  if (!opened) {
+    clearSpellResolution(false);
+    return false;
+  }
+
+  return true;
+}
+
+function resolveSpellCard(player, located, lines, options = {}) {
+  const card = located.cardData;
+
+  if (card.tipo === "Moment" && !canCastMomentNow(player.key)) {
+    addLog(`${card.nome_exibicao_en} can only be played during your Main Phase.`);
+    return;
+  }
+
+  if (card.tipo === "Technique" && !canCastTechniqueNow(player.key)) {
+    addLog(`${card.nome_exibicao_en} can only be played while you have priority to respond.`);
+    return;
+  }
+
+  const searchLine = lines.find((line) => /search your (deck|library)/i.test(line));
+  if (searchLine && startLibrarySearchForSpell(player, located, searchLine, options)) {
+    return;
+  }
+
+  const tartarusLine = lines.find((line) => /return .* from tartarus/i.test(line));
+  if (tartarusLine && startTartarusReturnForSpell(player, located, tartarusLine, options)) {
+    return;
+  }
+
+  if (lines.some((line) => /Target Devotee cannot be destroyed this turn\./i.test(line))) {
+    startSpellTargeting(player, located, "Select a Devotee to make indestructible this turn.", "Choose Devotee", isBattlefieldDevoteeTarget, (target) => {
+      target.card.cannotBeDestroyedUntilEnd = true;
+      addLog(`${target.cardData.nome_exibicao_en} cannot be destroyed this turn.`);
+    }, options);
+    return;
+  }
+
+  if (lines.some((line) => /Put a Seal counter on target Devotee\./i.test(line))) {
+    startSpellTargeting(player, located, "Select a Devotee to receive a Seal counter.", "Choose Devotee", isBattlefieldDevoteeTarget, (target) => {
+      applySealCounter(target, located.cardData.nome_exibicao_en);
+    }, options);
+    return;
+  }
+
+  if (lines.some((line) => /Destroy target Relic\./i.test(line))) {
+    startSpellTargeting(player, located, "Select a Relic to destroy.", "Choose Relic", isBattlefieldRelicTarget, (target) => {
+      if (target.card.cannotBeDestroyedUntilEnd) {
+        addLog(`${target.cardData.nome_exibicao_en} cannot be destroyed this turn.`);
+        return;
+      }
+      relocateCard(target.playerKey, target.uid, "void");
+      addLog(`${target.cardData.nome_exibicao_en} is destroyed and sent to Void.`);
+    }, options);
+    return;
+  }
+
+  if (lines.some((line) => /Prevent all damage that would be dealt to your God this turn\./i.test(line))) {
+    const fresh = ensureSpellCostPaid(player, located, options);
+    if (!fresh) {
+      return;
+    }
+    player.god.preventDamageUntilEnd = true;
+    finalizeSpellCard(player, fresh, `${player.label} casts ${card.nome_exibicao_en} and protects their God from all damage this turn.`);
+    return;
+  }
+
+  if (lines.some((line) => /Target Relic cannot be destroyed this turn\./i.test(line))) {
+    startSpellTargeting(player, located, "Select a Relic to protect this turn.", "Choose Relic", isBattlefieldRelicTarget, (target) => {
+      target.card.cannotBeDestroyedUntilEnd = true;
+      addLog(`${target.cardData.nome_exibicao_en} cannot be destroyed this turn.`);
+    }, options);
+    return;
+  }
+
+  if (lines.some((line) => /Destroy target Devotee that attacked this turn\./i.test(line))) {
+    startSpellTargeting(
+      player,
+      located,
+      "Select a Devotee that attacked this turn.",
+      "Choose attacking Devotee",
+      (descriptor) => isBattlefieldDevoteeTarget(descriptor) && descriptor.card.enteredCombatThisTurn,
+      (target) => {
+        if (target.card.cannotBeDestroyedUntilEnd) {
+          addLog(`${target.cardData.nome_exibicao_en} cannot be destroyed this turn.`);
+          return;
+        }
+        relocateCard(target.playerKey, target.uid, "tartarus");
+        addLog(`${target.cardData.nome_exibicao_en} is destroyed and sent to Tartarus.`);
+        handleDevoteeDestroyed(target);
+      },
+      options
+    );
+    return;
+  }
+
+  if (lines.some((line) => /Destroy all Devotees\. Gold Saints you control are not destroyed\./i.test(line))) {
+    const fresh = ensureSpellCostPaid(player, located, options);
+    if (!fresh) {
+      return;
+    }
+    PLAYER_ORDER.forEach((playerKey) => {
+      const owner = gameState.players[playerKey];
+      [...owner.zones.battlefield].forEach((instance) => {
+        const entryCard = getCard(instance.cardId);
+        const isProtectedGold = playerKey === player.key && entryCard.subtipos.includes("Gold Saint");
+        if (isDevoteeCard(instance.cardId) && !isProtectedGold) {
+          relocateCard(playerKey, instance.uid, "tartarus");
+          addLog(`${entryCard.nome_exibicao_en} is destroyed by ${card.nome_exibicao_en}.`);
+          handleDevoteeDestroyed({ card: instance, cardData: entryCard });
+        }
+      });
+    });
+    finalizeSpellCard(player, fresh, `${player.label} resolves ${card.nome_exibicao_en}.`);
+    return;
+  }
+
+  if (lines.some((line) => /Target Devotee gets \+2\/\+2\. If it is equipped with a Cloth, it gets \+4\/\+4 instead\./i.test(line))) {
+    startSpellTargeting(
+      player,
+      located,
+      "Select a Devotee. If it is equipped with a Cloth, it gets +4/+4 instead of +2/+2.",
+      "Choose Devotee",
+      isBattlefieldDevoteeTarget,
+      (target) => {
+        const owner = gameState.players[target.playerKey];
+        const hasCloth = getAttachedEquipment(owner, target.uid).some((entry) => isClothCard(entry.cardId));
+        const bonus = hasCloth ? 4 : 2;
+        target.card.turnPowerBonus += bonus;
+        target.card.turnResistanceBonus += bonus;
+        addLog(`${target.cardData.nome_exibicao_en} gets +${bonus}/+${bonus} until end of turn${hasCloth ? " because it is equipped with a Cloth" : ""}.`);
+      },
+      options
+    );
+    return;
+  }
+
+  if (lines.some((line) => /Target Devotee gets \+2\/\+2 until end of turn\./i.test(line))) {
+    startSpellTargeting(player, located, "Select a Devotee to get +2/+2.", "Choose Devotee", isBattlefieldDevoteeTarget, (target) => {
+      target.card.turnPowerBonus += 2;
+      target.card.turnResistanceBonus += 2;
+      addLog(`${target.cardData.nome_exibicao_en} gets +2/+2 until end of turn.`);
+    }, options);
+    return;
+  }
+
+  if (lines.some((line) => /Devotees you control get \+1\/\+1 until end of turn\./i.test(line))) {
+    const fresh = ensureSpellCostPaid(player, located, options);
+    if (!fresh) {
+      return;
+    }
+    player.zones.battlefield.forEach((instance) => {
+      if (isDevoteeCard(instance.cardId)) {
+        instance.turnPowerBonus += 1;
+        instance.turnResistanceBonus += 1;
+      }
+    });
+    finalizeSpellCard(player, fresh, `${player.label} gives all their Devotees +1/+1 until end of turn.`);
+    return;
+  }
+
+  if (lines.some((line) => /Exile target Devotee with cost 4 or greater\./i.test(line))) {
+    startSpellTargeting(
+      player,
+      located,
+      "Select a Devotee with cost 4 or greater to exile.",
+      "Choose Devotee to exile",
+      (descriptor) => isBattlefieldDevoteeTarget(descriptor) && getCard(descriptor.cardId).custo >= 4,
+      (target) => {
+        relocateCard(target.playerKey, target.uid, "void");
+        addLog(`${target.cardData.nome_exibicao_en} is exiled.`);
+      },
+      options
+    );
+    return;
+  }
+
+  if (lines.some((line) => /Restore 3 Damage from target Cloth\./i.test(line))) {
+    startSpellTargeting(player, located, "Select a Cloth to restore 3 Damage.", "Choose Cloth", (descriptor) => descriptor.kind === "card" && descriptor.zone === "battlefield" && isClothCard(descriptor.cardId), (target) => {
+      target.card.damageCounters = Math.max(0, target.card.damageCounters - 3);
+      addLog(`${target.cardData.nome_exibicao_en} restores 3 Damage.`);
+    }, options);
+    return;
+  }
+
+  if (lines.some((line) => /Target Devotee gains Guardian until end of turn\./i.test(line))) {
+    startSpellTargeting(player, located, "Select a Devotee to gain Guardian until end of turn.", "Choose Devotee", isBattlefieldDevoteeTarget, (target) => {
+      if (!target.card.tempKeywords.includes("Guardian")) {
+        target.card.tempKeywords.push("Guardian");
+      }
+      addLog(`${target.cardData.nome_exibicao_en} gains Guardian until end of turn.`);
+    }, options);
+    return;
+  }
+
+  if (lines.some((line) => /Remove all Latent Cosmo from target opponent\./i.test(line))) {
+    const fresh = ensureSpellCostPaid(player, located, options);
+    if (!fresh) {
+      return;
+    }
+    const opponent = gameState.players[otherPlayerKey(player.key)];
+    opponent.latentCosmo = 0;
+    finalizeSpellCard(player, fresh, `${player.label} removes all Latent Cosmo from ${opponent.label}.`);
+    return;
+  }
+
+  clearSpellResolution(false);
+  addLog(`No supported spell automation is available yet for ${card.nome_exibicao_en}.`);
+}
+
+function startSpellTargeting(player, located, prompt, statusLabel, validator, effect, options = {}) {
+  const legalTargets = getSpellTargetDescriptors(validator);
+  if (!legalTargets.length) {
+    addLog(`${located.cardData.nome_exibicao_en} has no legal targets right now.`);
+    clearSpellResolution(false);
+    return;
+  }
+
+  openSpellResolution({
+    playerKey: player.key,
+    uid: located.card.uid,
+    title: located.cardData.nome_exibicao_en,
+    prompt,
+    stageLabel: statusLabel,
+    cardType: located.cardData.tipo,
+    unit: located.cardData.unidade_custo || "cosmo",
+    amount: located.cardData.custo || 0,
+    allowCancel: options.allowCancel !== false,
+    cancelMessage: `${located.cardData.nome_exibicao_en} targeting canceled.`,
+    targetValidator: validator,
+    targetEffect: effect
+  });
+}
+
+function finalizeSpellCard(player, located, logMessage) {
+  clearSpellResolution(false);
+  relocateCard(player.key, located.card.uid, "tartarus");
+  addLog(logMessage);
+}
+
+function isBattlefieldDevoteeTarget(descriptor) {
+  return descriptor.kind === "card" && descriptor.zone === "battlefield" && isDevoteeCard(descriptor.cardId);
+}
+
+function isBattlefieldRelicTarget(descriptor) {
+  return descriptor.kind === "card" && descriptor.zone === "battlefield" && isRelicCard(descriptor.cardId);
+}
+
+function spendCosmo(player, amount, label, options = {}) {
+  const unit = options.unit || "cosmo";
+  if (getAvailableCosmo(player, unit) < amount) {
+    addLog(`${player.label} does not have enough ${unit === "base_cosmo" ? "Base Cosmo" : "Cosmo"} for ${label}.`);
+    return false;
+  }
+
+  const plan = createCostPaymentPlan(player, amount, options.strategy || "auto", unit);
+  if (!plan) {
+    addLog(`${player.label} cannot assemble the required payment for ${label}.`);
+    return false;
+  }
+
+  return applyCostPaymentPlan(player.key, plan, label);
+}
+
+function getAvailableCosmo(player, unit = "cosmo") {
+  const pool = player.latentCosmo + player.cosmo + countUntappedBase(player);
+  if (unit === "base_cosmo") {
+    return player.cosmo + countUntappedBase(player);
+  }
+  return pool;
+}
+
+function countUntappedBase(player) {
+  return player.zones.cosmo_base.filter((instance) => !instance.tapped).length;
+}
+
+function findCardInstance(playerKey, uid) {
+  const player = gameState.players[playerKey];
+
+  for (const zoneId of ["deck", ...CARD_ZONES]) {
+    const card = player.zones[zoneId].find((entry) => entry.uid === uid);
+    if (card) {
+      return {
+        card,
+        zone: zoneId,
+        cardId: card.cardId,
+        cardData: getCard(card.cardId)
+      };
+    }
+  }
+
+  return null;
+}
+
+function getCardRulesLines(card) {
+  const lines = [];
+  if (card.keywords_en?.length) {
+    lines.push(`Keywords: ${card.keywords_en.join(", ")}`);
+  }
+  if (card.habilidades_en?.length) {
+    lines.push(...card.habilidades_en);
+  }
+  if (card.habilidade_awaken_en) {
+    lines.push(card.habilidade_awaken_en);
+  }
+  if (card.ultimate_en) {
+    lines.push(card.ultimate_en);
+  }
+  return lines;
+}
+
+function addLog(message) {
+  if (!gameState) {
+    return;
+  }
+  gameState.log.push(message);
+}
+
+function getCard(cardId) {
+  return cardsById[cardId];
+}
+
+function getPreviewDescriptor(element) {
+  if (element.dataset.cardUid) {
+    return {
+      kind: "card",
+      playerKey: element.dataset.player,
+      uid: element.dataset.cardUid
+    };
+  }
+
+  return {
+    kind: element.dataset.inspectKind,
+    playerKey: element.dataset.player
+  };
+}
+
+function getCardSnippet(card) {
+  if (card.keywords_en?.length) {
+    return `Keywords: ${card.keywords_en.join(", ")}`;
+  }
+  if (card.habilidades_en?.length) {
+    return card.habilidades_en[0];
+  }
+  if (card.habilidade_awaken_en) {
+    return card.habilidade_awaken_en;
+  }
+  if (card.ultimate_en) {
+    return card.ultimate_en;
+  }
+  return "No rules text.";
+}
+
+function isEquipCard(cardId) {
+  const card = getCard(cardId);
+  return isRelicCard(cardId) && typeof card.equipar_custo === "number";
+}
+
+function getAttachedEquipment(player, devoteeUid) {
+  if (!player || !devoteeUid) {
+    return [];
+  }
+
+  return player.zones.battlefield
+    .filter((instance) => instance.attachedToUid === devoteeUid && isRelicCard(instance.cardId))
+    .map((instance) => ({
+      instance,
+      cardData: getCard(instance.cardId)
+    }));
+}
+
+function hasAttachedCardByName(player, devoteeUid, cardName) {
+  return getAttachedEquipment(player, devoteeUid).some(({ cardData, instance }) => {
+    if (isClothCard(cardData.id) && instance.damageCounters > 0) {
+      return false;
+    }
+    return cardData.nome_exibicao_en === cardName;
+  });
+}
+
+function detachEquipmentFromDevotee(playerKey, devoteeUid) {
+  const player = gameState.players[playerKey];
+  if (!player) {
+    return;
+  }
+
+  player.zones.battlefield.forEach((instance) => {
+    if (instance.attachedToUid !== devoteeUid || !isRelicCard(instance.cardId)) {
+      return;
+    }
+
+    const cardData = getCard(instance.cardId);
+    instance.attachedToUid = null;
+    if (isClothCard(instance.cardId) && typeof cardData.damage_cloth === "number" && cardData.damage_cloth > 0) {
+      instance.damageCounters += cardData.damage_cloth;
+      addLog(`${cardData.nome_exibicao_en} gains ${cardData.damage_cloth} Cloth Damage because its bearer was destroyed.`);
+    } else {
+      addLog(`${cardData.nome_exibicao_en} remains on the battlefield after its bearer is destroyed.`);
+    }
+  });
+}
+
+function collectEquipmentKeywords(text, keywords) {
+  ["Guardian", "Nimble", "Cheater", "Long Range", "Pierce", "Impulse", "Sealed", "Unfaith"].forEach((keyword) => {
+    if (new RegExp(`\\b${keyword}\\b`, "i").test(text)) {
+      keywords.add(keyword);
+    }
+  });
+}
+
+function bearerMatchesResonance(bearerName, resonanceName) {
+  if (!bearerName || !resonanceName) {
+    return false;
+  }
+
+  const normalizedBearer = bearerName.toLowerCase();
+  const normalizedResonance = resonanceName.toLowerCase();
+  return normalizedBearer.includes(normalizedResonance);
+}
+
+function applyEquipmentStaticLine(line, effects, cardData) {
+  const statMatch = line.match(/([+-]\d+)\/([+-]\d+)/);
+  if (statMatch) {
+    effects.power += Number(statMatch[1]);
+    effects.resistance += Number(statMatch[2]);
+  }
+
+  collectEquipmentKeywords(line, effects.keywordSet);
+
+  if (/can block Nimble/i.test(line)) {
+    effects.notes.push(`${cardData.nome_exibicao_en}: can block Nimble`);
+  }
+}
+
+function getRelevantEquipmentLines(cardData, bearerName) {
+  const relevant = [];
+  let currentResonance = null;
+
+  getCardRulesLines(cardData).forEach((line) => {
+    const resonanceMatch = line.match(/^Resonance\s+[—-]\s+(.+)$/i);
+    if (resonanceMatch) {
+      currentResonance = resonanceMatch[1].trim();
+      return;
+    }
+
+    if (/^When .* enters the battlefield/i.test(line) || /^You may equip /i.test(line)) {
+      return;
+    }
+
+    if (currentResonance) {
+      if (bearerMatchesResonance(bearerName, currentResonance)) {
+        relevant.push({ line, resonance: currentResonance });
+      }
+      return;
+    }
+
+    relevant.push({ line, resonance: null });
+  });
+
+  return relevant;
+}
+
+function getEquipmentEffectsForDevotee(player, devoteeInstance, devoteeCardData) {
+  const effects = {
+    power: 0,
+    resistance: 0,
+    keywords: [],
+    notes: [],
+    keywordSet: new Set()
+  };
+  const attachments = getAttachedEquipment(player, devoteeInstance.uid);
+  const bearer = devoteeCardData.nome_exibicao_en;
+
+  attachments.forEach(({ instance, cardData }) => {
+    if (isClothCard(cardData.id) && instance.damageCounters > 0) {
+      effects.notes.push(`${cardData.nome_exibicao_en} is damaged and inactive`);
+      return;
+    }
+
+    getRelevantEquipmentLines(cardData, bearer).forEach(({ line, resonance }) => {
+      if (/^Equipped Devotee (gets|gains)/i.test(line)) {
+        applyEquipmentStaticLine(line, effects, cardData);
+      } else if (resonance) {
+        effects.notes.push(`${cardData.nome_exibicao_en}: ${line}`);
+      }
+    });
+  });
+
+  effects.keywords = [...effects.keywordSet];
+  delete effects.keywordSet;
+  if (attachments.length) {
+    effects.notes.push(`Equipped with ${attachments.map(({ cardData }) => cardData.nome_exibicao_en).join(", ")}`);
+  }
+  return effects;
+}
+
+function getComputedStats(player, instance, cardData, zoneId) {
+  const card = cardData || getCard(instance.cardId);
+  const activeNotes = [];
+  let power = card.power;
+  let resistance = card.resistance;
+
+  if (power !== null && instance.plusOneCounters) {
+    power += instance.plusOneCounters;
+  }
+
+  if (resistance !== null && instance.plusOneCounters) {
+    resistance += instance.plusOneCounters;
+  }
+
+  if (instance.plusOneCounters) {
+    activeNotes.push(`+1/+1 counters x${instance.plusOneCounters}`);
+  }
+
+  if (power !== null && instance.minusOneCounters) {
+    power -= instance.minusOneCounters;
+  }
+
+  if (resistance !== null && instance.minusOneCounters) {
+    resistance -= instance.minusOneCounters;
+  }
+
+  if (instance.minusOneCounters) {
+    activeNotes.push(`-1/-1 counters x${instance.minusOneCounters}`);
+  }
+
+  if (zoneId === "battlefield" && isDevoteeCard(card.id || instance.cardId) && player.domainId === SANCTUARY_DOMAIN_ID) {
+    if (resistance !== null) {
+      resistance += 1;
+    }
+    activeNotes.push("Sanctuary +0/+1");
+  }
+
+  if (
+    zoneId === "battlefield" &&
+    isDevoteeCard(card.id || instance.cardId) &&
+    isAthenaCard(card) &&
+    player.god.cardId === ATHENA_GOD_ID &&
+    player.god.awakened
+  ) {
+    if (power !== null) {
+      power += 1;
+    }
+    if (resistance !== null) {
+      resistance += 1;
+    }
+    activeNotes.push("Seventh Sense +1/+1");
+  }
+
+  if (zoneId === "battlefield" && isDevoteeCard(card.id || instance.cardId)) {
+    const equipmentEffects = getEquipmentEffectsForDevotee(player, instance, card);
+    if (power !== null) {
+      power += equipmentEffects.power;
+    }
+    if (resistance !== null) {
+      resistance += equipmentEffects.resistance;
+    }
+    activeNotes.push(...equipmentEffects.notes);
+  }
+
+  if (instance.turnPowerBonus || instance.turnResistanceBonus) {
+    if (power !== null) {
+      power += instance.turnPowerBonus;
+    }
+    if (resistance !== null) {
+      resistance += instance.turnResistanceBonus;
+    }
+    activeNotes.push(`Temporary ${formatBonus(instance.turnPowerBonus, instance.turnResistanceBonus)}`);
+  }
+
+  if (instance.sealCounters) {
+    activeNotes.push(`Sealed ⛓ x${instance.sealCounters}`);
+  }
+
+  if (instance.sealLocked) {
+    activeNotes.push("Seal lock until next Upkeep");
+  }
+
+  if (instance.tempKeywords.length) {
+    activeNotes.push(`Temporary keywords: ${instance.tempKeywords.join(", ")}`);
+  }
+
+  if (instance.preventDamageShield) {
+    activeNotes.push(`Prevent next ${instance.preventDamageShield} damage`);
+  }
+
+  if (instance.cannotBeDestroyedUntilEnd) {
+    activeNotes.push("Cannot be destroyed this turn");
+  }
+
+  if (instance.summoningSick) {
+    activeNotes.push("Summoning sickness");
+  }
+
+  if (instance.sealCounters && zoneId === "battlefield" && isDevoteeCard(card.id || instance.cardId)) {
+    const hyogaPrepared = player.zones.battlefield.some((entry) => {
+      const entryCard = getCard(entry.cardId);
+      return entryCard.nome_exibicao_en === "Hyoga, Cygnus Saint" && !entry.tapped;
+    });
+
+    if (hyogaPrepared && power !== null) {
+      power -= 1;
+      activeNotes.push("Hyoga -1/-0");
+    }
+
+    const camusPresent = PLAYER_ORDER.some((playerKey) =>
+      gameState.players[playerKey].zones.battlefield.some((entry) => getCard(entry.cardId).nome_exibicao_en === "Camus, Aquarius Gold Saint")
+    );
+
+    if (camusPresent) {
+      if (power !== null) {
+        power -= 1;
+      }
+      if (resistance !== null) {
+        resistance -= 1;
+      }
+      activeNotes.push("Camus -1/-1");
+    }
+  }
+
+  if (instance.damageCounters && isClothCard(card.id || instance.cardId)) {
+    activeNotes.push(`Cloth damage x${instance.damageCounters}`);
+  } else if (instance.damageCounters && isDevoteeCard(card.id || instance.cardId)) {
+    if (resistance !== null) {
+      resistance -= instance.damageCounters;
+    }
+    activeNotes.push(`Damage x${instance.damageCounters}`);
+  }
+
+  return { power, resistance, activeNotes };
+}
+
+function formatBonus(power, resistance) {
+  const powerText = power >= 0 ? `+${power}` : `${power}`;
+  const resistanceText = resistance >= 0 ? `+${resistance}` : `${resistance}`;
+  return `${powerText}/${resistanceText}`;
+}
+
+function isClothCard(cardId) {
+  const card = getCard(cardId);
+  return card.subtipos?.includes("Cloth");
+}
+
+function isRelicCard(cardId) {
+  const card = getCard(cardId);
+  return card.tipo === "Relic";
+}
+
+function isDevoteeCard(cardId) {
+  const card = getCard(cardId);
+  return card.tipo === "Devotee";
+}
+
+function isAthenaCard(card) {
+  return card.faccao === "Athena";
+}
+
+function hasKeyword(card, keyword, instance = null) {
+  const baseKeywords = card?.keywords_en || [];
+  const tempKeywords = instance?.tempKeywords || [];
+  const attachedKeywords =
+    instance?.owner && instance?.uid && isDevoteeCard(card?.id || instance.cardId)
+      ? getEquipmentEffectsForDevotee(gameState?.players?.[instance.owner], instance, card || getCard(instance.cardId)).keywords
+      : [];
+  return [...baseKeywords, ...tempKeywords, ...attachedKeywords].some((entry) => entry.toLowerCase() === keyword.toLowerCase());
+}
+
+function getCombatAttacker() {
+  if (!gameState?.combat?.attacker) {
+    return null;
+  }
+
+  return findCardInstance(gameState.combat.attacker.playerKey, gameState.combat.attacker.uid);
+}
+
+function isSelectionModeActive() {
+  return Boolean(gameState?.combat?.mode === "target" || targetingState);
+}
+
+function defendingPlayerHasGuardian(playerKey) {
+  const player = gameState?.players?.[playerKey];
+  if (!player) {
+    return false;
+  }
+
+  return player.zones.battlefield.some((instance) => {
+    const card = getCard(instance.cardId);
+    return isDevoteeCard(instance.cardId) && hasKeyword(card, "Guardian", instance);
+  });
+}
+
+function getForcedGuardianTargets(playerKey) {
+  const player = gameState?.players?.[playerKey];
+  const attacker = getCombatAttacker();
+  if (!player || !attacker || hasKeyword(attacker.cardData, "Cheater")) {
+    return [];
+  }
+
+  return player.zones.battlefield.filter((instance) => {
+    const card = getCard(instance.cardId);
+    return isDevoteeCard(instance.cardId) && hasKeyword(card, "Guardian", instance);
+  });
+}
+
+function isForcedGuardianTarget(playerKey, zoneId, instance, cardData) {
+  const attacker = getCombatAttacker();
+  if (!attacker || gameState?.combat?.mode !== "target") {
+    return false;
+  }
+
+  if (playerKey === attacker.card.owner || zoneId !== "battlefield" || !isDevoteeCard(cardData.id || instance.cardId)) {
+    return false;
+  }
+
+  const forcedGuardians = getForcedGuardianTargets(playerKey);
+  if (!forcedGuardians.length) {
+    return false;
+  }
+
+  return forcedGuardians.some((entry) => entry.uid === instance.uid);
+}
+
+function isAttackableGodTarget(playerKey) {
+  const attacker = getCombatAttacker();
+  if (!attacker || gameState.combat.mode !== "target") {
+    return false;
+  }
+
+  return isAttackableGodTargetForAttacker(attacker, playerKey);
+}
+
+function isAttackableCardTarget(playerKey, zoneId, instance, cardData) {
+  const attacker = getCombatAttacker();
+  if (!attacker || gameState?.combat?.mode !== "target") {
+    return false;
+  }
+
+  return isAttackableCardTargetForAttacker(attacker, playerKey, zoneId, instance, cardData);
+}
+
+function isAttackableGodTargetForAttacker(attacker, playerKey) {
+  if (!attacker || attacker.card.owner === playerKey) {
+    return false;
+  }
+
+  if (defendingPlayerHasGuardian(playerKey) && !hasKeyword(attacker.cardData, "Cheater")) {
+    return false;
+  }
+
+  return true;
+}
+
+function isAttackableCardTargetForAttacker(attacker, playerKey, zoneId, instance, cardData) {
+  if (!attacker) {
+    return false;
+  }
+
+  if (zoneId !== "battlefield" || playerKey === attacker.card.owner || !isDevoteeCard(cardData.id || instance.cardId)) {
+    return false;
+  }
+
+  if (defendingPlayerHasGuardian(playerKey) && !hasKeyword(attacker.cardData, "Cheater") && !hasKeyword(cardData, "Guardian")) {
+    return false;
+  }
+
+  return true;
+}
+
+function isEffectTargetableGod(playerKey) {
+  if (!targetingState) {
+    return false;
+  }
+
+  return targetingState.isValidTarget({
+    kind: "god",
+    playerKey
+  });
+}
+
+function isEffectTargetableCard(playerKey, zoneId, instance, cardData) {
+  if (!targetingState) {
+    return false;
+  }
+
+  return targetingState.isValidTarget({
+    kind: "card",
+    playerKey,
+    uid: instance.uid,
+    zone: zoneId,
+    card: instance,
+    cardId: instance.cardId,
+    cardData
+  });
+}
+
+function prettyDeckName(deckId) {
+  return decksById[deckId]?.nome || deckId;
+}
+
+function playerLabel(playerKey) {
+  return `Player ${playerKey}`;
+}
+
+function otherPlayerKey(playerKey) {
+  return playerKey === "A" ? "B" : "A";
+}
+
+function zoneLabel(zoneId) {
+  return ZONE_LABELS[zoneId] || zoneId;
+}
+
+function moveLabel(zoneId) {
+  if (zoneId === "battlefield") return "Move to Battlefield";
+  if (zoneId === "cosmo_base") return "Move to Base";
+  if (zoneId === "tartarus") return "Send to Tartarus";
+  if (zoneId === "void") return "Send to Void";
+  return "Move to Hand";
+}
+
+function phaseLabel(phase) {
+  if (phase === "upkeep") return "Upkeep";
+  if (phase === "draw") return "Draw";
+  if (phase === "main") return "Main Phase";
+  if (phase === "end") return "End Step";
+  return phase;
+}
+
+function humanCounterLabel(counter) {
+  if (counter === "plusOneCounters") return "+1/+1";
+  if (counter === "sealCounters") return "Chain";
+  if (counter === "damageCounters") return "Damage";
+  return counter;
+}
+
+function formatValue(value, unit = null) {
+  if (value === null || value === undefined) {
+    return null;
+  }
+
+  if (unit === "base_cosmo") {
+    return `${value} Base`;
+  }
+
+  return String(value);
+}
+
+function shuffle(array) {
+  for (let index = array.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [array[index], array[swapIndex]] = [array[swapIndex], array[index]];
+  }
+}
+
+function clone(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
+function camelToKebab(value) {
+  return String(value).replace(/[A-Z]/g, (match) => `-${match.toLowerCase()}`);
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
+function aiPlaceCosmoBase(playerKey) {
+  const player = gameState.players[playerKey];
+  if (player.playedBaseThisTurn) {
+    return false;
+  }
+
+  const candidate = [...player.zones.hand]
+    .filter((instance) => getCard(instance.cardId).cosmoble)
+    .sort((left, right) => (getCard(right.cardId).custo ?? 0) - (getCard(left.cardId).custo ?? 0))[0];
+
+  if (!candidate) {
+    return false;
+  }
+
+  moveCard(playerKey, candidate.uid, "cosmo_base");
+  return true;
+}
+
+function aiUseLatentSources(playerKey) {
+  const player = gameState.players[playerKey];
+  player.zones.battlefield.forEach((instance) => {
+    if (instance.tapped) {
+      return;
+    }
+    const card = getCard(instance.cardId);
+    if (instance.summoningSick && !hasKeyword(card, "Impulse", instance)) {
+      return;
+    }
+    const lines = getCardRulesLines(card);
+    if (lines.some((line) => /^Tap:\s*Generate 1 Latent Cosmo/i.test(line))) {
+      instance.tapped = true;
+      player.latentCosmo += 1;
+      addLog(`${player.label} AI taps ${card.nome_exibicao_en} to generate 1 Latent Cosmo.`);
+    }
+  });
+}
+
+function aiTapAllCosmoBase(playerKey) {
+  const player = gameState.players[playerKey];
+  player.zones.cosmo_base
+    .filter((instance) => !instance.tapped)
+    .forEach((instance) => toggleTap(playerKey, instance.uid));
+}
+
+function aiCardPriority(card) {
+  if (card.tipo === "Devotee") return 3;
+  if (card.subtipos.includes("Cloth")) return 2;
+  return 1;
+}
+
+function pickAiAttackTarget(attacker) {
+  const enemyPlayerKey = otherPlayerKey(attacker.card.owner);
+  const enemy = gameState.players[enemyPlayerKey];
+  const enemyDevotees = enemy.zones.battlefield
+    .map((instance) => findCardInstance(enemyPlayerKey, instance.uid))
+    .filter(Boolean)
+    .filter((located) =>
+      isAttackableCardTargetForAttacker(attacker, enemyPlayerKey, located.zone, located.card, located.cardData)
+    );
+
+  if (enemyDevotees.length > 0) {
+    enemyDevotees.sort((left, right) => {
+      const leftStats = getComputedStats(enemy, left.card, left.cardData, left.zone);
+      const rightStats = getComputedStats(enemy, right.card, right.cardData, right.zone);
+      return (leftStats.resistance ?? 0) - (rightStats.resistance ?? 0);
+    });
+    return {
+      kind: "card",
+      playerKey: enemyPlayerKey,
+      uid: enemyDevotees[0].card.uid
+    };
+  }
+
+  if (isAttackableGodTargetForAttacker(attacker, enemyPlayerKey)) {
+    return {
+      kind: "god",
+      playerKey: enemyPlayerKey
+    };
+  }
+
+  return null;
+}
+
+// Comandos são a única entrada da interface. A projeção não decide regras.
+function getPlayCost(playerKey, card) {
+  const amount = typeof card.custo === 'number' ? card.custo : 0;
+  const evolution = card.tipo === 'Devotee' && gameState?.players[playerKey].zones.battlefield.some(i=>getCard(i.cardId).nome_exibicao_en===card.nome_exibicao_en);
+  return Math.max(0, amount-(evolution?2:0));
+}
+function clearAiTurnTimer(){ if(aiTurnTimer!==null) globalThis.clearTimeout(aiTurnTimer); aiTurnTimer=null; }
+function clearPriorityTimer(){ if(priorityTimer!==null) globalThis.clearTimeout(priorityTimer); priorityTimer=null; }
+function clearTimers(){ clearAiTurnTimer(); clearPriorityTimer(); globalThis.clearTimeout(autoPassTimer); autoPassTimer=null; }
+function hasChoice(){ return Boolean(mulliganState||paymentState||transactionChoice||spellResolutionState||equipSelectionState||zoneBrowserState||targetingState); }
+function isOverlayBlockingInput(){return Boolean(hasChoice()||gameState?.victory||gameState?.combat?.resolving);}
+function canPlayerActNow(key){return Boolean(gameState&&!isOverlayBlockingInput()&&!actionStack.length&&!isPriorityWindowOpen()&&gameState.currentPlayer===key);}
+function canPlayerUsePriorityActions(key){return Boolean(actionStack.length ? actionStack.at(-1).priorityPlayer===key&&!hasChoice() : isPriorityWindowOpen()&&gameState.combat.priorityPlayerKey===key&&gameState.combat.responseActive);}
+function canCastMomentNow(key){return Boolean(gameState&&gameState.currentPlayer===key&&gameState.currentPhase==='main'&&!actionStack.length&&!isPriorityWindowOpen());}
+function canCastTechniqueNow(key){return Boolean(gameState&&(actionStack.length?canPlayerUsePriorityActions(key):isPriorityWindowOpen()?canPlayerUsePriorityActions(key):gameState.currentPlayer===key));}
+function renderGame(){
+  if(disposed)return;
+  evaluateVictoryState(); revision++;
+  onChange(api);
+  schedule();
+}
+function startMatch(config={}){
+  epoch++; clearTimers(); disposed=false; aiTurnInProgress=false;
+  nextInstanceId=1; selectedInspector=hoverPreview=targetingState=paymentState=spellResolutionState=equipSelectionState=zoneBrowserState=transactionChoice=null;
+  attackDeclare=null; attackQueue=[]; actionStack=[]; battlefieldSelection={A:new Set(),B:new Set()};
+  if(typeof config.ai==='boolean')uiSettings.ai=config.ai;
+  const first=config.startingPlayer==='random'||!config.startingPlayer?(Math.random()<.5?'A':'B'):config.startingPlayer;
+  const deckA=decksById[config.deckAId]||betaData.decks[0];
+  const deckB=decksById[config.deckBId]||betaData.decks[2]||betaData.decks[0];
+  if(!['A','B'].includes(first)) throw new Error('Invalid starting player.');
+  gameState={turnNumber:1,currentPlayer:first,startingPlayer:first,startingPlayerChoice:config.startingPlayer||'random',openingDrawSkipped:false,currentPhase:'upkeep',victory:null,combat:createEmptyCombatState(),aiResume:null,log:[],players:{A:createPlayerState('A',deckA),B:createPlayerState('B',deckB)}};
+  addLog(`Match started: ${deckA.nome} vs ${deckB.nome}.`);
+  addLog('Each player draws 7 cards.');
+  mulliganState=createMulliganState('A');
+  playMusic('battle'); renderGame();
+}
+function finishMulligan(){
+  if(!mulliganState)return;
+  const key=mulliganState.playerKey;
+  if(key==='A'&&!uiSettings.ai){mulliganState=createMulliganState('B');return;}
+  mulliganState=null; beginTurn(gameState.players[gameState.currentPlayer]);
+}
+function keepOpeningHand(){if(!mulliganState)return;addLog(`${playerLabel(mulliganState.playerKey)} keeps the opening hand.`);finishMulligan();}
+function resolveOpeningMulligan(){
+  if(!mulliganState)return;
+  const player=gameState.players[mulliganState.playerKey], opponent=gameState.players[otherPlayerKey(player.key)];
+  const selected=player.zones.hand.filter(i=>mulliganState.selectedUids.includes(i.uid));
+  if(!selected.length){addLog('Select at least one card to exchange.');return;}
+  player.zones.hand=player.zones.hand.filter(i=>!mulliganState.selectedUids.includes(i.uid));
+  player.zones.deck.push(...selected); shuffle(player.zones.deck); drawCards(player,selected.length,false);
+  opponent.latentCosmo=Math.max(opponent.latentCosmo,1);
+  addLog(`${player.label} exchanges ${selected.length} cards. ${opponent.label} starts with 1 Latent Cosmo.`);
+  finishMulligan();
+}
+function getDeclareFocusAttacker(){return attackDeclare?.focusUid?findCardInstance(attackDeclare.playerKey,attackDeclare.focusUid):null;}
+function startAttackDeclare(uid=null){
+  const key=gameState?.currentPlayer;
+  if(!key||isAiPlayer(key)||!canPlayerActNow(key)||gameState.currentPhase!=='main')return;
+  attackDeclare={playerKey:key,entries:[],focusUid:null,history:[]};
+  if(uid)toggleDeclareAttacker(uid);
+}
+function confirmAttackDeclare(){
+  if(!attackDeclare)return;
+  const key=attackDeclare.playerKey;
+  attackQueue=attackDeclare.entries.filter(e=>e.target).map(e=>({...e,playerKey:key}));
+  if(attackQueue.length!==attackDeclare.entries.length){showCombatToast('Choose a target for every attacker.');attackQueue=[];return;}
+  addLog(`${playerLabel(key)} declares ${attackQueue.length} attackers.`);
+  attackDeclare=null; runNextQueuedAttack();
+}
+function runNextQueuedAttack(){
+  while(attackQueue.length&&gameState&&!gameState.victory){
+    const next=attackQueue.shift(), attacker=findCardInstance(next.playerKey,next.uid);
+    if(!attacker||attacker.zone!=='battlefield'||!canDeclareAttacker(next.playerKey,attacker.card))continue;
+    if(!isLegalAttackTarget(attacker,next.target)){addLog('Attack canceled: its target is no longer valid.');continue;}
+    resolveEnterCombat(next.playerKey,next.uid); gameState.combat.target=next.target;openCombatPriorityWindow();return;
+  }
+}
+async function resolveCombatFromPriority(fromAi=false){
+  if(!isPriorityWindowOpen()||gameState.combat.resolving||actionStack.length||hasChoice())return;
+  const version=epoch, combat=gameState.combat;
+  addLog(`${playerLabel(combat.priorityPlayerKey)} passes priority.`);
+  combat.resolving=true;combat.responseActive=false;renderGame();
+  await waitCombatBeat();await playAttackLunge(combat);
+  if(version!==epoch||disposed||gameState.victory)return;
+  resolveCombatSequence();clearCombatState();renderGame();
+  if(attackQueue.length&&!gameState.victory){await waitCombatBeat();if(version!==epoch||disposed)return;runNextQueuedAttack();renderGame();}
+}
+function maybeHandleAiCombatPriority(){schedule();}
+function goToPhase(phase){
+  if(!gameState||!canPlayerActNow(gameState.currentPlayer)||isAiPlayer(gameState.currentPlayer)||attackDeclare)return;
+  const order=TURN_PHASES.map(([id])=>id);if(order.indexOf(phase)<=order.indexOf(gameState.currentPhase))return;
+  let limit=4;while(gameState.currentPhase!==phase&&limit-->0&&!gameState.victory&&advanceToNextPhase()){}
+}
+function passTurnFromMain(){
+  if(!gameState||!canPlayerActNow(gameState.currentPlayer)||isAiPlayer(gameState.currentPlayer)||attackDeclare)return;
+  if(gameState.currentPhase==='main')advanceToNextPhase();
+  if(gameState.currentPhase==='end'&&!(uiSettings.phaseStops||[]).includes('end'))nextTurn();
+}
+function enqueueAction(item,hold=false){
+  item.id=++actionId;item.priorityPlayer=hold?item.playerKey:otherPlayerKey(item.playerKey);item.passes=hold?0:1;
+  actionStack.push(item);addLog(`${playerLabel(item.playerKey)} puts ${item.label} on the stack.`);
+}
+function queuePlay(key,uid,manual=false,hold=false){
+  const located=findCardInstance(key,uid);
+  if(!located||!canPlayFromHandNow(key,located)||actionStack.some(a=>a.uid===uid))return;
+  const card=located.cardData,amount=getPlayCost(key,card),unit=card.unidade_custo||'cosmo';
+  const commit=plan=>{
+    if(!applyCostPaymentPlan(key,plan,card.nome_exibicao_en))return;
+    enqueueAction({kind:'card',playerKey:key,uid,cardId:card.id,label:card.nome_exibicao_en,resolve:()=>{
+      const fresh=findCardInstance(key,uid);
+      if(!fresh||fresh.zone!=='hand'){addLog('The source card is no longer available.');return;}
+      if(card.tipo==='Moment'||card.tipo==='Technique')beginSpellResolution(key,uid,{costAlreadyPaid:true,allowCancel:false});
+      else{relocateCard(key,uid,'battlefield');sfx('play');}
+    }},hold);
+  };
+  const plans=buildCostPaymentPlans(key,amount,unit);
+  if((manual||uiSettings.fullControl)&&plans.length>1){transactionChoice={playerKey:key,uid,cardName:card.nome_exibicao_en,amount,plans,commit};return;}
+  const plan=createCostPaymentPlan(gameState.players[key],amount,'auto',unit);if(plan)commit(plan);
+}
+function passStackPriority(){
+  const top=actionStack.at(-1);if(!top||hasChoice())return;
+  if(++top.passes<2){top.priorityPlayer=otherPlayerKey(top.priorityPlayer);return;}
+  actionStack.pop();
+  addLog(`${top.label} resolves.`);top.resolve();
+  if(actionStack.length){actionStack.at(-1).priorityPlayer=otherPlayerKey(actionStack.at(-1).playerKey);actionStack.at(-1).passes=1;}
+}
+function primaryAction(){
+  if(!gameState||gameState.victory)return {label:'Waiting',disabled:true};
+  if(hasChoice())return {label:'Choose',disabled:true};
+  const top=actionStack.at(-1);
+  if(top)return isAiPlayer(top.priorityPlayer)?{label:'Resolving',disabled:true}:{label:'Pass priority',action:'pass-priority',sub:`${playerLabel(top.priorityPlayer)} · ${top.label}`,tone:'blue'};
+  if(isPriorityWindowOpen())return gameState.combat.resolving||isAiPlayer(gameState.combat.priorityPlayerKey)?{label:'Resolving',disabled:true}:{label:'Resolve combat',action:'resolve-combat',sub:`${playerLabel(gameState.combat.priorityPlayerKey)} may respond`,tone:'blue'};
+  if(gameState.combat.mode==='target')return {label:'Cancel attack',action:'cancel',sub:'Choose an enemy target'};
+  if(isAiPlayer(gameState.currentPlayer))return {label:"Opponent's turn",disabled:true};
+  if(attackDeclare){
+    const ready=attackDeclare.entries.filter(e=>e.target).length;
+    if(!attackDeclare.entries.length)return {label:'No attacks',action:'cancel',sub:'Return to the main phase'};
+    return {label:ready===attackDeclare.entries.length?`Confirm ${ready} attack${ready===1?'':'s'}`:'Choose targets',disabled:ready!==attackDeclare.entries.length,action:'confirm-attacks',sub:'Select an attacker, then an enemy'};
+  }
+  if(gameState.currentPhase==='upkeep'||gameState.currentPhase==='draw')return {label:'Next',action:'next-phase',sub:gameState.currentPhase==='upkeep'?'Draw step':'Main phase'};
+  if(gameState.currentPhase==='main'&&getEligibleAttackers(gameState.currentPlayer).length)return {label:'Attack',action:'declare',sub:'Choose your attackers',secondary:'End turn'};
+  return {label:'End turn',action:gameState.currentPhase==='end'?'end-turn':'pass-turn',sub:'Pass to the other player'};
+}
+function hasResponse(key){return gameState.players[key].zones.hand.some(i=>getCard(i.cardId).tipo==='Technique'&&canPlayFromHandNow(key,findCardInstance(key,i.uid)));}
+function schedule(){
+  clearAiTurnTimer();globalThis.clearTimeout(autoPassTimer);autoPassTimer=null;
+  if(disposed||!gameState||gameState.victory||hasChoice()||gameState.combat.resolving)return;
+  const delay=uiSettings.aiSpeed==='fast'?90:uiSettings.aiSpeed==='slow'?850:350;
+  const top=actionStack.at(-1);
+  if(top){
+    if(isAiPlayer(top.priorityPlayer)||(!uiSettings.fullControl&&uiSettings.autoPass&&!hasResponse(top.priorityPlayer))){autoPassTimer=globalThis.setTimeout(()=>{passStackPriority();renderGame();},delay);}
+    return;
+  }
+  if(isPriorityWindowOpen()){
+    const key=gameState.combat.priorityPlayerKey;
+    if(isAiPlayer(key)||(!uiSettings.fullControl&&uiSettings.autoPass&&!hasResponse(key)))autoPassTimer=globalThis.setTimeout(()=>resolveCombatFromPriority(isAiPlayer(key)),delay);
+    return;
+  }
+  if(attackDeclare||attackQueue.length)return;
+  if(isAiPlayer(gameState.currentPlayer)){aiTurnTimer=globalThis.setTimeout(aiStep,delay);return;}
+  if(!uiSettings.fullControl&&uiSettings.autoPass&&!(uiSettings.phaseStops||[]).includes(gameState.currentPhase)){
+    if(['upkeep','draw'].includes(gameState.currentPhase))autoPassTimer=globalThis.setTimeout(()=>{advanceToNextPhase();renderGame();},delay);
+    else if(gameState.currentPhase==='end')autoPassTimer=globalThis.setTimeout(()=>nextTurn(),delay);
+  }
+}
+function aiStep(){
+  aiTurnTimer=null;if(disposed||!gameState||gameState.victory||hasChoice()||actionStack.length||isPriorityWindowOpen()||!isAiPlayer(gameState.currentPlayer))return;
+  const player=gameState.players.B;
+  if(['upkeep','draw'].includes(gameState.currentPhase)){advanceToNextPhase(true);renderGame();return;}
+  if(gameState.currentPhase==='end'){nextTurn();return;}
+  if(!player.playedBaseThisTurn&&player.zones.hand.some(i=>getCard(i.cardId).cosmoble)){aiPlaceCosmoBase('B');renderGame();return;}
+  aiUseLatentSources('B');
+  const best=player.zones.hand.map(i=>findCardInstance('B',i.uid)).filter(l=>['Devotee','Relic'].includes(l.cardData.tipo)&&canPlayFromHandNow('B',l))
+    .filter(l=>!player.zones.battlefield.some(i=>getCard(i.cardId).nome_exibicao_en===l.cardData.nome_exibicao_en))
+    .sort((a,b)=>aiCardPriority(b.cardData)-aiCardPriority(a.cardData)||(b.cardData.custo||0)-(a.cardData.custo||0))[0];
+  if(best){queuePlay('B',best.card.uid);renderGame();return;}
+  const equipment=player.zones.battlefield.find(i=>isEquipCard(i.cardId)&&!i.attachedToUid&&(!isClothCard(i.cardId)||!i.damageCounters)&&getEquipTargetOptions('B',i.uid).some(t=>t.payable));
+  if(equipment){const target=getEquipTargetOptions('B',equipment.uid).find(t=>t.payable);equipSelectionState={playerKey:'B',uid:equipment.uid,ignoreCost:false};resolveEquipSelection(target.uid);renderGame();return;}
+  const attacker=getEligibleAttackers('B').map(i=>findCardInstance('B',i.uid)).find(l=>pickAiAttackTarget(l));
+  if(attacker){resolveEnterCombat('B',attacker.card.uid);gameState.combat.target=pickAiAttackTarget(attacker);openCombatPriorityWindow();return;}
+  setPhase('end');renderGame();
+}
+function cancel(){
+  if(transactionChoice){transactionChoice=null;return;}
+  if(zoneBrowserState){closeZoneBrowser(true);return;}
+  if(spellResolutionState&&!spellResolutionState.allowCancel)return;
+  if(targetingState?.allowCancel===false)return;
+  clearPaymentState(true);cancelSpellResolution();clearEquipSelection(true);clearTargetingState(true);
+  attackDeclare=null;
+  if(gameState?.combat.mode==='target')clearCombatState(true,true);
+}
+function descriptor(target){
+  if(target.kind==='god')return {kind:'god',playerKey:target.playerKey};
+  const l=findCardInstance(target.playerKey,target.uid);return l?{kind:'card',playerKey:target.playerKey,uid:target.uid,zone:l.zone,...l}:null;
+}
+function chooseTarget(target){
+  const d=descriptor(target);if(!d)return;
+  if(spellResolutionState){resolveSpellTargetSelection(d.kind,d.playerKey,d.uid);return;}
+  if(targetingState){if(targetingState.isValidTarget(d)){const choice=targetingState;targetingState=null;choice.resolve(d);}return;}
+  if(equipSelectionState){if(d.playerKey===equipSelectionState.playerKey)resolveEquipSelection(d.uid);return;}
+  if(attackDeclare){if(d.kind==='card'&&d.playerKey===attackDeclare.playerKey)toggleDeclareAttacker(d.uid);else assignDeclareTarget(d);return;}
+  if(gameState.combat.mode==='target'){const a=getCombatAttacker();if(a&&isLegalAttackTarget(a,d)){gameState.combat.target=d;openCombatPriorityWindow();}}
+}
+function validTargets(){
+  if(spellResolutionState)return getSpellTargetDescriptors(spellResolutionState.targetValidator);
+  if(targetingState)return getSpellTargetDescriptors(targetingState.isValidTarget);
+  if(equipSelectionState)return getEquipTargetOptions(equipSelectionState.playerKey,equipSelectionState.uid,equipSelectionState.ignoreCost).filter(t=>t.payable).map(t=>({kind:'card',playerKey:equipSelectionState.playerKey,uid:t.uid}));
+  const a=attackDeclare?getDeclareFocusAttacker():getCombatAttacker();return a?getLegalAttackTargets(a):[];
+}
+function dispatch(command){
+  if(!command||typeof command.type!=='string')return false;
+  const type=command.type,key=command.playerKey||gameState?.currentPlayer;
+  if(type==='start'){startMatch(command);return true;}
+  if(type==='settings'){Object.assign(uiSettings,command.settings);renderGame();return true;}
+  if(!gameState||gameState.victory)return false;
+  if(type==='concede'){declareVictory(otherPlayerKey(key),key,'concede');renderGame();return true;}
+  if(isAiPlayer(key)&&!['pass-priority','resolve-combat'].includes(type))return false;
+  shiftHeld=Boolean(command.manualPayment);
+  if(hasChoice()&&!['mulligan-toggle','mulligan-keep','mulligan-exchange','payment','target','zone-select','zone-confirm','cancel'].includes(type))return false;
+  switch(type){
+    case 'primary': return dispatch({...command,type:primaryAction().action||'none'});
+    case 'play':queuePlay(key,command.uid,command.manualPayment,command.holdPriority);break;
+    case 'base':{const l=findCardInstance(key,command.uid);if(l&&canSetAsBaseNow(key,l)&&!actionStack.length)moveCard(key,command.uid,'cosmo_base');break;}
+    case 'tap':{const l=findCardInstance(key,command.uid);if(l?.zone==='cosmo_base'&&!l.card.tapped&&(canPlayerActNow(key)||canPlayerUsePriorityActions(key)))toggleTap(key,command.uid);break;}
+    case 'next-phase':if(canPlayerActNow(key))advanceToNextPhase();break;
+    case 'goto-phase':goToPhase(command.phase);break;
+    case 'pass-turn':passTurnFromMain();break;
+    case 'end-turn':if(canPlayerActNow(key))nextTurn();break;
+    case 'declare':startAttackDeclare(command.uid);break;
+    case 'all-attacks':if(!attackDeclare)startAttackDeclare();if(attackDeclare)declareAllAttackers();break;
+    case 'confirm-attacks':confirmAttackDeclare();break;
+    case 'undo':undoDeclareStep();break;
+    case 'target':chooseTarget(command.target);break;
+    case 'resolve-combat':if(!isAiPlayer(gameState.combat.priorityPlayerKey))resolveCombatFromPriority();break;
+    case 'pass-priority':if(!isAiPlayer(actionStack.at(-1)?.priorityPlayer))passStackPriority();break;
+    case 'mulligan-toggle':toggleMulliganSelection(command.uid);break;
+    case 'mulligan-keep':keepOpeningHand();break;
+    case 'mulligan-exchange':resolveOpeningMulligan();break;
+    case 'payment':if(transactionChoice){const choice=transactionChoice,plan=choice.plans.find(p=>p.id===command.planId);if(plan){transactionChoice=null;choice.commit(plan.breakdown);}}else resolvePaymentChoice(command.planId);break;
+    case 'zone-select':selectZoneBrowserEntry(command.uid);break;
+    case 'zone-confirm':resolveZoneBrowserSelection();break;
+    case 'ability':{const l=findCardInstance(key,command.uid);if(!l||!getCardAbilityState(key,l.zone,l.card,l.cardData)||!(canPlayerActNow(key)||canPlayerUsePriorityActions(key)))break;selectedInspector={kind:'card',playerKey:key,uid:command.uid};if(isEquipCard(l.cardId))startEquipSelection(key,command.uid);else enqueueAction({kind:'ability',playerKey:key,uid:command.uid,cardId:l.cardId,label:l.cardData.nome_exibicao_en,resolve:()=>resolveCardAbility(key,command.uid,command.lineIndex||0)},command.holdPriority);break;}
+    case 'god-ability':if(canPlayerActNow(key)||canPlayerUsePriorityActions(key))enqueueAction({kind:'ability',playerKey:key,cardId:gameState.players[key].god.cardId,label:command.abilityId==='ultimate'?'Athena Exclamation':command.abilityId==='prayer'?"Athena’s Prayer":'Awaken ability',resolve:()=>resolveGodAbility(key,command.abilityId)},command.holdPriority);break;
+    case 'domain-ability':if(canPlayerActNow(key))enqueueAction({kind:'ability',playerKey:key,cardId:gameState.players[key].domainId,label:'Domain ability',resolve:()=>resolveDomainAbility(key,command.abilityId||'coliseum-burst')},command.holdPriority);break;
+    case 'cancel':cancel();break;
+    default:return false;
+  }
+  shiftHeld=false;renderGame();return true;
+}
+const api={
+  dispatch,
+  get state(){return gameState;}, get revision(){return revision;},get settings(){return {...uiSettings};},
+  get pending(){return {mulligan:mulliganState,payment:transactionChoice||paymentState,spell:spellResolutionState,equip:equipSelectionState,zone:zoneBrowserState,target:targetingState,declare:attackDeclare};},
+  get stack(){return actionStack.map(({resolve,...item})=>item);},
+  get primary(){return primaryAction();},
+  get actingPlayer(){return mulliganState?.playerKey||transactionChoice?.playerKey||paymentState?.playerKey||spellResolutionState?.playerKey||zoneBrowserState?.playerKey||targetingState?.source?.playerKey||actionStack.at(-1)?.priorityPlayer||(isPriorityWindowOpen()?gameState.combat.priorityPlayerKey:gameState?.currentPlayer);},
+  card:getCard,locate:findCardInstance,rules:getCardRulesLines,
+  stats:(key,instance,zone='battlefield')=>getComputedStats(gameState.players[key],instance,getCard(instance.cardId),zone),
+  canPlay:(key,uid)=>canPlayFromHandNow(key,findCardInstance(key,uid))&&!actionStack.some(a=>a.uid===uid),
+  canBase:(key,uid)=>canSetAsBaseNow(key,findCardInstance(key,uid))&&!actionStack.length,
+  canAttack:canDeclareAttacker,targets:validTargets,cost:getPlayCost,
+  abilityLines:getActivatedBattlefieldAbilityLines,
+  ability:(key,instance,zone='battlefield')=>getCardAbilityState(key,zone,instance,getCard(instance.cardId)),
+  equipment:(key,uid)=>getAttachedEquipment(gameState.players[key],uid),
+  dispose(){disposed=true;epoch++;clearTimers();},
+};
+return api;
+
+}

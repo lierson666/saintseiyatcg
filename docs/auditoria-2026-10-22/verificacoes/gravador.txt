@@ -1,0 +1,1 @@
+selftest ok: 57 cartas regravadas sem diff; append ok

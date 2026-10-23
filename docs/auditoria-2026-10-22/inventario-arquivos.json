@@ -1,0 +1,2290 @@
+[
+  {
+    "arquivo": ".DS_Store",
+    "bytes": 8196
+  },
+  {
+    "arquivo": ".claude/launch.json",
+    "bytes": 391,
+    "sha256": "96c968c1edfce93d7dc50a75a71f8794cdefe44fdc8abdaf8d82c472b2abece6"
+  },
+  {
+    "arquivo": ".gitignore",
+    "bytes": 645
+  },
+  {
+    "arquivo": ".omc/project-memory.json",
+    "bytes": 5597
+  },
+  {
+    "arquivo": ".omc/sessions/ca812887-68a9-4d8a-ac36-0219851b636c.json",
+    "bytes": 189
+  },
+  {
+    "arquivo": ".omc/sessions/f3018251-f2c3-465c-8222-4fb036775815.json",
+    "bytes": 189
+  },
+  {
+    "arquivo": ".omc/state/checkpoints/checkpoint-2026-10-22T22-38-26-768Z.json",
+    "bytes": 339
+  },
+  {
+    "arquivo": ".omc/state/checkpoints/checkpoint-2026-10-22T23-19-40-333Z.json",
+    "bytes": 339
+  },
+  {
+    "arquivo": ".omc/state/checkpoints/checkpoint-2026-10-22T23-20-01-792Z.json",
+    "bytes": 339
+  },
+  {
+    "arquivo": ".omc/state/checkpoints-restored/9a933b11-9d30-45d2-b24d-be1bf9da4b06/.restored-stage-claim-accc9309-b9f8-4b4c-8fbd-b088e8a3a761",
+    "bytes": 503
+  },
+  {
+    "arquivo": ".omc/state/checkpoints-restored/9a933b11-9d30-45d2-b24d-be1bf9da4b06/restored-076b4d074d09ce122496cb613173a37dc852ae792d84f7343b978ff57b39bc03.json",
+    "bytes": 503
+  },
+  {
+    "arquivo": ".omc/state/checkpoints-restored/9a933b11-9d30-45d2-b24d-be1bf9da4b06/restored.json",
+    "bytes": 503
+  },
+  {
+    "arquivo": ".omc/state/checkpoints-restored/ca812887-68a9-4d8a-ac36-0219851b636c/.restored-stage-claim-b7b92bdd-8eb6-40bd-989d-895427fd922d",
+    "bytes": 503
+  },
+  {
+    "arquivo": ".omc/state/checkpoints-restored/ca812887-68a9-4d8a-ac36-0219851b636c/restored-757db74a3723abb7681ae571092f27b608b294c4b45b0df8d4fbcba68eec387a.json",
+    "bytes": 503
+  },
+  {
+    "arquivo": ".omc/state/checkpoints-restored/ca812887-68a9-4d8a-ac36-0219851b636c/restored.json",
+    "bytes": 503
+  },
+  {
+    "arquivo": ".omc/state/checkpoints-restored/f3018251-f2c3-465c-8222-4fb036775815/.restored-stage-claim-6dd0ae28-7e9d-452d-a847-87b7c6e0153c",
+    "bytes": 503
+  },
+  {
+    "arquivo": ".omc/state/checkpoints-restored/f3018251-f2c3-465c-8222-4fb036775815/restored-f50d6480ac578438d7369c9e396f29063efea2e477daf590b082f17aeb884882.json",
+    "bytes": 503
+  },
+  {
+    "arquivo": ".omc/state/checkpoints-restored/f3018251-f2c3-465c-8222-4fb036775815/restored.json",
+    "bytes": 503
+  },
+  {
+    "arquivo": ".omc/state/idle-notif-cooldown.json",
+    "bytes": 46
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/ca812887-68a9-4d8a-ac36-0219851b636c.json",
+    "bytes": 18939
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/discovery.json",
+    "bytes": 430
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/f3018251-f2c3-465c-8222-4fb036775815.json",
+    "bytes": 18777
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/callback/1/103ce81e-4772-45b7-b9d4-74689d936a8e/arm.json",
+    "bytes": 156
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/callback/1/103ce81e-4772-45b7-b9d4-74689d936a8e/control.json",
+    "bytes": 419
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/callback/1/103ce81e-4772-45b7-b9d4-74689d936a8e/result.json",
+    "bytes": 70
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/callback/1/103ce81e-4772-45b7-b9d4-74689d936a8e/watchdog.json",
+    "bytes": 151
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/foreground-cleanup/1/5e36cc21-c98e-4452-90fc-7c30a13be124/arm.json",
+    "bytes": 156
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/foreground-cleanup/1/5e36cc21-c98e-4452-90fc-7c30a13be124/control.json",
+    "bytes": 429
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/foreground-cleanup/1/5e36cc21-c98e-4452-90fc-7c30a13be124/result.json",
+    "bytes": 70
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/foreground-cleanup/1/5e36cc21-c98e-4452-90fc-7c30a13be124/watchdog.json",
+    "bytes": 151
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/notification/1/1b0b473e-f8f4-4b41-b044-fa06033e71ec/arm.json",
+    "bytes": 156
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/notification/1/1b0b473e-f8f4-4b41-b044-fa06033e71ec/control.json",
+    "bytes": 423
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/notification/1/1b0b473e-f8f4-4b41-b044-fa06033e71ec/result.json",
+    "bytes": 70
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/notification/1/1b0b473e-f8f4-4b41-b044-fa06033e71ec/watchdog.json",
+    "bytes": 151
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/openclaw/1/ba88ccc6-c827-4d1b-9b35-88ee39d198d6/arm.json",
+    "bytes": 156
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/openclaw/1/ba88ccc6-c827-4d1b-9b35-88ee39d198d6/control.json",
+    "bytes": 419
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/openclaw/1/ba88ccc6-c827-4d1b-9b35-88ee39d198d6/result.json",
+    "bytes": 70
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/openclaw/1/ba88ccc6-c827-4d1b-9b35-88ee39d198d6/watchdog.json",
+    "bytes": 151
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/python-cleanup/1/fa96ae4c-9ca3-468a-a717-ae318969eff9/arm.json",
+    "bytes": 156
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/python-cleanup/1/fa96ae4c-9ca3-468a-a717-ae318969eff9/control.json",
+    "bytes": 425
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/python-cleanup/1/fa96ae4c-9ca3-468a-a717-ae318969eff9/result.json",
+    "bytes": 70
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/python-cleanup/1/fa96ae4c-9ca3-468a-a717-ae318969eff9/watchdog.json",
+    "bytes": 151
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/reply-cleanup/1/e9f38259-a14d-4f4d-8e4d-75ca42a6ed2a/arm.json",
+    "bytes": 156
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/reply-cleanup/1/e9f38259-a14d-4f4d-8e4d-75ca42a6ed2a/control.json",
+    "bytes": 424
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/reply-cleanup/1/e9f38259-a14d-4f4d-8e4d-75ca42a6ed2a/result.json",
+    "bytes": 70
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/reply-cleanup/1/e9f38259-a14d-4f4d-8e4d-75ca42a6ed2a/watchdog.json",
+    "bytes": 151
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/spawn-next/1/99c4e0ca-fbbd-4b02-b37b-9e875ff0ca20/arm.json",
+    "bytes": 156
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/spawn-next/1/99c4e0ca-fbbd-4b02-b37b-9e875ff0ca20/control.json",
+    "bytes": 421
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/spawn-next/1/99c4e0ca-fbbd-4b02-b37b-9e875ff0ca20/result.json",
+    "bytes": 70
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/spawn-next/1/99c4e0ca-fbbd-4b02-b37b-9e875ff0ca20/watchdog.json",
+    "bytes": 151
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/team-cleanup/1/79afb295-1469-43b9-9555-69a4e4ad0d6a/arm.json",
+    "bytes": 156
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/team-cleanup/1/79afb295-1469-43b9-9555-69a4e4ad0d6a/control.json",
+    "bytes": 423
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/team-cleanup/1/79afb295-1469-43b9-9555-69a4e4ad0d6a/result.json",
+    "bytes": 70
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/4a320e2b-99c2-4995-b873-47a6d1602830/team-cleanup/1/79afb295-1469-43b9-9555-69a4e4ad0d6a/watchdog.json",
+    "bytes": 151
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/callback/1/2de0f3eb-6387-4ee9-9e08-9f862cd28a38/arm.json",
+    "bytes": 156
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/callback/1/2de0f3eb-6387-4ee9-9e08-9f862cd28a38/control.json",
+    "bytes": 418
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/callback/1/2de0f3eb-6387-4ee9-9e08-9f862cd28a38/result.json",
+    "bytes": 70
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/callback/1/2de0f3eb-6387-4ee9-9e08-9f862cd28a38/watchdog.json",
+    "bytes": 150
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/foreground-cleanup/1/71484647-c1b3-4fc9-bc92-b0467f0e347b/arm.json",
+    "bytes": 156
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/foreground-cleanup/1/71484647-c1b3-4fc9-bc92-b0467f0e347b/control.json",
+    "bytes": 428
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/foreground-cleanup/1/71484647-c1b3-4fc9-bc92-b0467f0e347b/result.json",
+    "bytes": 70
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/foreground-cleanup/1/71484647-c1b3-4fc9-bc92-b0467f0e347b/watchdog.json",
+    "bytes": 150
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/notification/1/45f5b35c-5701-4aeb-82f8-c8d717dae1ae/arm.json",
+    "bytes": 156
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/notification/1/45f5b35c-5701-4aeb-82f8-c8d717dae1ae/control.json",
+    "bytes": 422
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/notification/1/45f5b35c-5701-4aeb-82f8-c8d717dae1ae/result.json",
+    "bytes": 70
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/notification/1/45f5b35c-5701-4aeb-82f8-c8d717dae1ae/watchdog.json",
+    "bytes": 150
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/openclaw/1/cb04e056-1a58-45df-b2fa-070a1027b1c6/arm.json",
+    "bytes": 156
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/openclaw/1/cb04e056-1a58-45df-b2fa-070a1027b1c6/control.json",
+    "bytes": 418
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/openclaw/1/cb04e056-1a58-45df-b2fa-070a1027b1c6/result.json",
+    "bytes": 70
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/openclaw/1/cb04e056-1a58-45df-b2fa-070a1027b1c6/watchdog.json",
+    "bytes": 150
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/python-cleanup/1/5eccdd1f-4d67-41e9-92a2-072a5ee35020/arm.json",
+    "bytes": 156
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/python-cleanup/1/5eccdd1f-4d67-41e9-92a2-072a5ee35020/control.json",
+    "bytes": 424
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/python-cleanup/1/5eccdd1f-4d67-41e9-92a2-072a5ee35020/result.json",
+    "bytes": 70
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/python-cleanup/1/5eccdd1f-4d67-41e9-92a2-072a5ee35020/watchdog.json",
+    "bytes": 150
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/reply-cleanup/1/2d1832a2-aba9-453e-a273-b2ca08fa447d/arm.json",
+    "bytes": 156
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/reply-cleanup/1/2d1832a2-aba9-453e-a273-b2ca08fa447d/control.json",
+    "bytes": 423
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/reply-cleanup/1/2d1832a2-aba9-453e-a273-b2ca08fa447d/result.json",
+    "bytes": 70
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/reply-cleanup/1/2d1832a2-aba9-453e-a273-b2ca08fa447d/watchdog.json",
+    "bytes": 150
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/spawn-next/1/5f9cbd5f-09fa-413f-a2af-bb25ca0270ba/arm.json",
+    "bytes": 156
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/spawn-next/1/5f9cbd5f-09fa-413f-a2af-bb25ca0270ba/control.json",
+    "bytes": 420
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/spawn-next/1/5f9cbd5f-09fa-413f-a2af-bb25ca0270ba/result.json",
+    "bytes": 70
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/spawn-next/1/5f9cbd5f-09fa-413f-a2af-bb25ca0270ba/watchdog.json",
+    "bytes": 150
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/team-cleanup/1/6fa99655-35a4-45d3-a87b-25fc618d2256/arm.json",
+    "bytes": 156
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/team-cleanup/1/6fa99655-35a4-45d3-a87b-25fc618d2256/control.json",
+    "bytes": 422
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/team-cleanup/1/6fa99655-35a4-45d3-a87b-25fc618d2256/result.json",
+    "bytes": 70
+  },
+  {
+    "arquivo": ".omc/state/session-end-jobs/runs/dc10637f-eaf9-4444-aab3-8dd0895d3b35/team-cleanup/1/6fa99655-35a4-45d3-a87b-25fc618d2256/watchdog.json",
+    "bytes": 150
+  },
+  {
+    "arquivo": ".omc/state/sessions/9a933b11-9d30-45d2-b24d-be1bf9da4b06/last-tool-error-state.json",
+    "bytes": 675
+  },
+  {
+    "arquivo": ".omc/state/sessions/9a933b11-9d30-45d2-b24d-be1bf9da4b06/pre-tool-advisory-throttle.json",
+    "bytes": 774
+  },
+  {
+    "arquivo": ".omc/state/sessions/9a933b11-9d30-45d2-b24d-be1bf9da4b06/session-started.json",
+    "bytes": 235
+  },
+  {
+    "arquivo": ".omc/state/sessions/9a933b11-9d30-45d2-b24d-be1bf9da4b06/subagent-tracking-state.json",
+    "bytes": 588
+  },
+  {
+    "arquivo": ".omc/state/sessions/aac62801-e84b-487a-80de-46059f29c3a5/pre-tool-advisory-throttle.json",
+    "bytes": 564
+  },
+  {
+    "arquivo": ".omc/state/sessions/aac62801-e84b-487a-80de-46059f29c3a5/session-started.json",
+    "bytes": 235
+  },
+  {
+    "arquivo": ".omc/state/sessions/ca812887-68a9-4d8a-ac36-0219851b636c/pre-tool-advisory-throttle.json",
+    "bytes": 564
+  },
+  {
+    "arquivo": ".omc/state/sessions/ca812887-68a9-4d8a-ac36-0219851b636c/subagent-tracking-state.json",
+    "bytes": 588
+  },
+  {
+    "arquivo": ".omc/state/sessions/f3018251-f2c3-465c-8222-4fb036775815/last-tool-error-state.json",
+    "bytes": 400
+  },
+  {
+    "arquivo": ".omc/state/sessions/f3018251-f2c3-465c-8222-4fb036775815/pre-tool-advisory-throttle.json",
+    "bytes": 774
+  },
+  {
+    "arquivo": ".omc/state/sessions/f3018251-f2c3-465c-8222-4fb036775815/subagent-tracking-state.json",
+    "bytes": 588
+  },
+  {
+    "arquivo": ".omc/state/sessions/f30722ca-44bb-40c8-9785-df81dfe4a00b/last-tool-error-state.json",
+    "bytes": 434
+  },
+  {
+    "arquivo": ".omc/state/sessions/f30722ca-44bb-40c8-9785-df81dfe4a00b/pre-tool-advisory-throttle.json",
+    "bytes": 1417
+  },
+  {
+    "arquivo": ".omc/state/sessions/f30722ca-44bb-40c8-9785-df81dfe4a00b/session-started.json",
+    "bytes": 235
+  },
+  {
+    "arquivo": ".tmp-video-thumb/WhatsApp Video 2026-04-10 at 14.08.12.mp4.png",
+    "bytes": 541546,
+    "sha256": "ea0a4319d3ce47dae6ec463cf4823227975145005f3aa3607d0c46ba686f2af2"
+  },
+  {
+    "arquivo": "ARTS/AIOLOS.png",
+    "bytes": 10255550,
+    "sha256": "debd2a7736bea8247c9ccb16c052dad609801985ad3c5329824ba911f7f22cb1"
+  },
+  {
+    "arquivo": "ARTS/AIOROS3.png",
+    "bytes": 10519136,
+    "sha256": "96248e283bc06d23357768fdd37a5df4fdba7fb9f30788b89e26aea1d24e8fc5"
+  },
+  {
+    "arquivo": "ARTS/ALDEBARAN.png",
+    "bytes": 9358763,
+    "sha256": "e60341a6c484b9b60f2bf70a8b42489f5eb1627779a8365920754fb3af72d932"
+  },
+  {
+    "arquivo": "ARTS/ALDEBARAN2.png",
+    "bytes": 9362483,
+    "sha256": "8859f75229d4c1b3c72605a3ecc00a27b90ae258b6b4baaa39da29b9d75b78a4"
+  },
+  {
+    "arquivo": "ARTS/ALDEBARAN3.png",
+    "bytes": 9519475,
+    "sha256": "e620c7a8dbc8f068a4387857c5ac5757ab4c145e43b52957897cd638a3a983cd"
+  },
+  {
+    "arquivo": "ARTS/ALDEBARAN4.png",
+    "bytes": 9395266,
+    "sha256": "188b67ad68aa82e32027d079d694cd5b43518993336b2f9ed821ca58bae61a13"
+  },
+  {
+    "arquivo": "ARTS/ALDEBARAN5.png",
+    "bytes": 10187221,
+    "sha256": "9ecf9046785d905cb61156059c4ca9248c111d2c301d690cfa71864890bfa206"
+  },
+  {
+    "arquivo": "ARTS/ANDROMEDA_V1.png",
+    "bytes": 8773894,
+    "sha256": "f89f6e3647328639dd78f7b429564e2162f95f49a32c033853b6f01a84c248ac"
+  },
+  {
+    "arquivo": "ARTS/ANDROMEDAv1.png",
+    "bytes": 8660929,
+    "sha256": "6d4be0997c249083aba3af9ad98d1fbff49226abc9e0e3e9142f03db7333372f"
+  },
+  {
+    "arquivo": "ARTS/AQUARIUS-ARMORY.png",
+    "bytes": 8978391,
+    "sha256": "e113d3fcae9304ba33936ed6190d6665f44972397b61c8a7a28152d09732efd0"
+  },
+  {
+    "arquivo": "ARTS/ARES.png",
+    "bytes": 9324900,
+    "sha256": "7659b053697e58c29e6d10f15f06e43d9aad2657781b5ac934b0233d15c17c86"
+  },
+  {
+    "arquivo": "ARTS/ARTHEMIS.png",
+    "bytes": 9718794,
+    "sha256": "1b8ba947f2eb855dcf337a0f512edbd07ed46a0afd95bb8d233ab5d2f89aff3f"
+  },
+  {
+    "arquivo": "ARTS/ATHENA2.png",
+    "bytes": 10683844,
+    "sha256": "2a66774278f28703f147a9aa03b8ceaacc86537c2fc446090d4737119db97ef5"
+  },
+  {
+    "arquivo": "ARTS/ATHENA4.png",
+    "bytes": 10712581,
+    "sha256": "243625e3dc62df75d3b54661d5d236070f215c41bb8b1db0568b8c4c2fef9964"
+  },
+  {
+    "arquivo": "ARTS/ATHENASAMPHORA.png",
+    "bytes": 2300312,
+    "sha256": "b1cdce5459b533eb50956dc7a983ac11003b6620de196d44d269d77220714ae4"
+  },
+  {
+    "arquivo": "ARTS/ATHENASANPHORA.webp",
+    "bytes": 86748,
+    "sha256": "c4ad26613f6b25c014c0fea8c98f08ff86a6c79ab2cd3da6987021ccfdc18be3"
+  },
+  {
+    "arquivo": "ARTS/ATHENASEAL.png",
+    "bytes": 2384497,
+    "sha256": "446cd79478b1fb34b90265c130de43fe84ba1a0d1eebe9d36fb832b0452f5494"
+  },
+  {
+    "arquivo": "ARTS/ATHENASJUDGMENT.png",
+    "bytes": 3037647,
+    "sha256": "8e55cbe59f3c3da5418c48bff79bf3fbc6f7eb27158d5adf397284bcbc640b2a"
+  },
+  {
+    "arquivo": "ARTS/BOARD.png",
+    "bytes": 3529946,
+    "sha256": "84abf10686f0fad9fd71dffe86a4fcee2b09cbc53c12d94db3df670140804e81"
+  },
+  {
+    "arquivo": "ARTS/CAMUS.png",
+    "bytes": 9604118,
+    "sha256": "cd8b1043c3fb9840c0cbfedb36dbefbb61a05ca7c1ebe566f8cb999f03d8f1e1"
+  },
+  {
+    "arquivo": "ARTS/CAMUS2.png",
+    "bytes": 9361183,
+    "sha256": "a52e04214bacd4c716f96c31d6b19b8f26ac05a84f6155624a4d4b8cf5d13027"
+  },
+  {
+    "arquivo": "ARTS/CAMUS4.png",
+    "bytes": 11112784,
+    "sha256": "21f65e0b353e5926dbfabe65e0cd04833818c228691d871faa56b86f3a79f000"
+  },
+  {
+    "arquivo": "ARTS/CAMUS5.png",
+    "bytes": 10706120,
+    "sha256": "cf33dde4815262acf2bb28755cb6ac47943dbd0c269f4fb7f174e8ba88de41b9"
+  },
+  {
+    "arquivo": "ARTS/CAMUS6.png",
+    "bytes": 9446774,
+    "sha256": "837b758ddcd2e87f8a84581bb0506b2a8176e3ab8f8b6fd571255a08e354c25e"
+  },
+  {
+    "arquivo": "ARTS/CAMUS7.png",
+    "bytes": 9743160,
+    "sha256": "d7509dbf65ab1c540d859886f3f5c513d57a8f2c86ee7d696cb450a44f4fe8e0"
+  },
+  {
+    "arquivo": "ARTS/CAMUS8.png",
+    "bytes": 10219469,
+    "sha256": "f7600e31b27a06b62316bb7d4bae453c7ae9234d324faa7b6546eb4816a32aa2"
+  },
+  {
+    "arquivo": "ARTS/CLOTHREPAIRER.png",
+    "bytes": 7099459,
+    "sha256": "45a3c3b2f0b5984c940afe18d6557362adb858c5f2a8b6d51fa66f402be1b665"
+  },
+  {
+    "arquivo": "ARTS/COSMOAPPRENDICE.png",
+    "bytes": 8300593,
+    "sha256": "cf7847a8bedcf612de7de342b1deae0d3641d5688e3a1e1b91f99ca060eec5c5"
+  },
+  {
+    "arquivo": "ARTS/COSMOBLESSING.png",
+    "bytes": 2167018,
+    "sha256": "d3814c9f6d6e3762c8f2c37a0764b94c9d8b5151f13d03a7af01b313e36b551c"
+  },
+  {
+    "arquivo": "ARTS/DEATHMASK.png",
+    "bytes": 10897503,
+    "sha256": "b114f9c2a6bf6a42af216c30d0818140749e9ddb32b7c7dcec850090e37f1b81"
+  },
+  {
+    "arquivo": "ARTS/HADES1.png",
+    "bytes": 9152405,
+    "sha256": "2e5d23abb7a540cbc60a6511360b3697826876217265e639352624bc66fdf1b5"
+  },
+  {
+    "arquivo": "ARTS/HADES2.png",
+    "bytes": 8728382,
+    "sha256": "2e97a85e605760288ac3892f18902d024e5610d7c2747c82e716480c928ed095"
+  },
+  {
+    "arquivo": "ARTS/HADES3.png",
+    "bytes": 9191750,
+    "sha256": "ed53193ca84679842d6dbea099185831702f5a89a02fe0e6e4edb1093962ea71"
+  },
+  {
+    "arquivo": "ARTS/HEALER.png",
+    "bytes": 5815199,
+    "sha256": "572964c30a8d453f50fad1d88c132b13771750db7714f37556bd7d92412aa90a"
+  },
+  {
+    "arquivo": "ARTS/HYOGA.png",
+    "bytes": 9042847,
+    "sha256": "814898cec317a8c07a095d80233161d5f1012523834ef54362d2f7213cfee7f1"
+  },
+  {
+    "arquivo": "ARTS/LBRA-ARMORY.png",
+    "bytes": 10384978,
+    "sha256": "357673036e81b5cd76dfb0f57c653310782dc4ccd00d35c0096e0feafbdfc897"
+  },
+  {
+    "arquivo": "ARTS/LEO-ARMORY.png",
+    "bytes": 9242446,
+    "sha256": "254efbb088f7a3f35b68b6a69a9fe139a11169b6f09cd34ea5f2496616bcaa35"
+  },
+  {
+    "arquivo": "ARTS/LIBRAS-SWORD.png",
+    "bytes": 5127601,
+    "sha256": "23c1bb296a051348ff4efada96400eb045ab6fa01b151691da36273f3b7cef8e"
+  },
+  {
+    "arquivo": "ARTS/LIBRASHIELD.png",
+    "bytes": 3248410,
+    "sha256": "323437ba76de8bf1a40e7121e170d50c9f469b3f23c5d539ab67e6dd3008576b"
+  },
+  {
+    "arquivo": "ARTS/LIBRASPEAR.png",
+    "bytes": 3182553,
+    "sha256": "3d954adaa6577cfd0fed939e72c0f224f1a6d826ba0b0ac230e1ca48384670f3"
+  },
+  {
+    "arquivo": "ARTS/LIBRASPEAR2.png",
+    "bytes": 5179474,
+    "sha256": "5685f8cddf5a14578fb1b341d0e20b2498180d3bb2f2829949c222de3dfb9f76"
+  },
+  {
+    "arquivo": "ARTS/LIBRATONFA.png",
+    "bytes": 4313222,
+    "sha256": "35f6b01bbc9ac5e9b02b83cb7f4c93cc6c8e1090a1f80d608e4d9bf71eec7136"
+  },
+  {
+    "arquivo": "ARTS/LIBRA_SWORD.png",
+    "bytes": 4580175,
+    "sha256": "f79c0144ad2f947d635647da6223c656c6ed123a60d9d8c1c6c50a283dc5baf4"
+  },
+  {
+    "arquivo": "ARTS/MARIN2.png",
+    "bytes": 10742762,
+    "sha256": "aa5191dc51db40864b1d9c99d881a3baf1253d3b5a520516defa0396ac5f166f"
+  },
+  {
+    "arquivo": "ARTS/MARIN3.png",
+    "bytes": 10543765,
+    "sha256": "ffe36702d747fa1fba3b0bcdf90f9ac67447f127021df30db6b2b8522bb3ab65"
+  },
+  {
+    "arquivo": "ARTS/MARINV1.png",
+    "bytes": 8541828,
+    "sha256": "69de5096a2c3adf6c139e3c896ae8395f4bc044aba0bb0ca9045569dff26d74e"
+  },
+  {
+    "arquivo": "ARTS/PEGASUSV1.png",
+    "bytes": 8438509,
+    "sha256": "761e2de0e140723a61e9ff764f6a6b69bdd1374e67bca3eccb002db9540ea006"
+  },
+  {
+    "arquivo": "ARTS/PHOENIXv1.png",
+    "bytes": 9133913,
+    "sha256": "3cdd87f31e1b2ef5b8cecdb59ea8decf6a972d4b6d0e834d8c71d818f936316f"
+  },
+  {
+    "arquivo": "ARTS/PHOENIZv1.png",
+    "bytes": 8490994,
+    "sha256": "ad592a23ae5dcc8ee8c324eb778de6e2fa16f079d4f690187d841cb0e4e29568"
+  },
+  {
+    "arquivo": "ARTS/PISEIDON_BOARD.png",
+    "bytes": 3375381,
+    "sha256": "df1ec604b6a129fc240eca2169706e254f711dc487fc401d4dd29b871ebfc128"
+  },
+  {
+    "arquivo": "ARTS/POSEIDON.png",
+    "bytes": 9962446,
+    "sha256": "b927f05c2f54760391ededf849763181816e1fd5f9d8ec8cc9d6407f4a372203"
+  },
+  {
+    "arquivo": "ARTS/SACNTUARYELITE.png",
+    "bytes": 1883765,
+    "sha256": "d06bb0f69747d65e91ba8e449f4e879d68496026ffb3a54620e77e3b71ea9eb8"
+  },
+  {
+    "arquivo": "ARTS/SAGA.png",
+    "bytes": 9810983,
+    "sha256": "b14dcf419d01de65f68f493585854bd4f5a09a786a6dc96c3f381137d67a6e16"
+  },
+  {
+    "arquivo": "ARTS/SAGA2.png",
+    "bytes": 11621275,
+    "sha256": "a2daabfad3c1f5df071c7ad19ad9b988f410bb83d82e43b7f7afc3a8c9f525af"
+  },
+  {
+    "arquivo": "ARTS/SAGITARIUSBOWL.jpg",
+    "bytes": 142981
+  },
+  {
+    "arquivo": "ARTS/SAGITARIUSBOWL.png",
+    "bytes": 5533604,
+    "sha256": "685f5eb0343f1b7e828515fdd2458c72178ef12d9f87e7b1beadfafae246faab"
+  },
+  {
+    "arquivo": "ARTS/SAGITARIUS_ARMORY.png",
+    "bytes": 9278252,
+    "sha256": "5ad1b2b7a7ef4f21c9b13e504e2d2672c37e4c80ea40fd7666cab80fdaf2d5a4"
+  },
+  {
+    "arquivo": "ARTS/SANCTUARYARCHER1.png",
+    "bytes": 9795434,
+    "sha256": "8d4b44548c519bb9619389f8463336395d40fd3d9abcb0d05253dafa750e2622"
+  },
+  {
+    "arquivo": "ARTS/SANCTUARYGUARD.png",
+    "bytes": 9515788,
+    "sha256": "472618d4e2fcf23073918e6e66a9fb609044d84fb0b7ad48ef7888f28c5907e3"
+  },
+  {
+    "arquivo": "ARTS/SANCTUARYSOLDIER.png",
+    "bytes": 1444547,
+    "sha256": "cef55c7980645d6a0cc52a28d64abdcffe608b2cd37d30799813b1fdb9f03b87"
+  },
+  {
+    "arquivo": "ARTS/SANCTUMHEALER.png",
+    "bytes": 5815199,
+    "sha256": "572964c30a8d453f50fad1d88c132b13771750db7714f37556bd7d92412aa90a"
+  },
+  {
+    "arquivo": "ARTS/SAORI1.png",
+    "bytes": 9986296,
+    "sha256": "8772489545fb14bb48b09b9490781213d3d9e0679f51d12f4f0ad086c5149cfa"
+  },
+  {
+    "arquivo": "ARTS/SEIYA_v1.png",
+    "bytes": 8515244,
+    "sha256": "8e18df13cd7feabbe63e17216568f43fb112e2ab2a6055138b56357f9199970f"
+  },
+  {
+    "arquivo": "ARTS/SEIYVA_V2.png",
+    "bytes": 9202682,
+    "sha256": "b5e15322f6aa92d949109c938d9abce73bf700dad774ed7fcefd45c449333eae"
+  },
+  {
+    "arquivo": "ARTS/SHAINA.png",
+    "bytes": 9244044,
+    "sha256": "9d2d07d398cd512a10ab05f54f5d9e5f1385c8e6e9edf78b28ade889825cd89e"
+  },
+  {
+    "arquivo": "ARTS/SHIRYU_v1.png",
+    "bytes": 8730606,
+    "sha256": "096ff3361ed4ea4c77dc2f2fefd4fd2ed699257b1742c2247fdee62643128668"
+  },
+  {
+    "arquivo": "ARTS/SHIRYUv1.png",
+    "bytes": 8769461,
+    "sha256": "3b06f30793f9227dd230ac9cbc46ccfd7c1174eb7ab515ac3c9b5f4ea0da74d4"
+  },
+  {
+    "arquivo": "ARTS/STAFFOFATHENA.png",
+    "bytes": 2960113,
+    "sha256": "10ce2e1c746f5012df9957b0675a2a586057010a38bcd49f654b07abc4766949"
+  },
+  {
+    "arquivo": "ARTS/STARHILLMOK.png",
+    "bytes": 1758470,
+    "sha256": "3188eb6776c7a1f279678ba7104487c9aff83293df8478942e744dc19067069a"
+  },
+  {
+    "arquivo": "ARTS/VIRGOARMORY.png",
+    "bytes": 9717634,
+    "sha256": "da932156504f597374b845d3610e3642966de12eac9dd709f967cd74485399f3"
+  },
+  {
+    "arquivo": "ARTS/aioros.png",
+    "bytes": 10442358,
+    "sha256": "9c351dfcacb0bb9e39478e6ca664b890058fcfb1652163357c0c0f6c69f0a8df"
+  },
+  {
+    "arquivo": "ARTS/deathmask2.png",
+    "bytes": 11065041,
+    "sha256": "da98e7d064b5ae87c8ddfb8498e2706612d98f236e64184312f3bbcee81f736c"
+  },
+  {
+    "arquivo": "ARTS/lierson_espada_de_libra_quero_um_desenho_que_mostre_toda_gran_92cc3309-e53d-45a6-ae19-788075510d44_2.png",
+    "bytes": 1492421,
+    "sha256": "93d739971cf61bb6fc033520da58b775cd15e3c8ec4ea706ea2f9893c4a21bd8"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/.omc/state/sessions/f30722ca-44bb-40c8-9785-df81dfe4a00b/pre-tool-advisory-throttle.json",
+    "bytes": 774
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/ares/box_name.png",
+    "bytes": 973,
+    "sha256": "dfb464d3367512734dd4e9a54b45e50b890917d68b839330d9609da57afef1ba"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/ares/box_subtitle.png",
+    "bytes": 762,
+    "sha256": "c437a0e78a03b8e70fd8ac72f1f07c9109f3e6654805bdacaca233954b7eda12"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/ares/box_type.png",
+    "bytes": 994,
+    "sha256": "37f65f0f453d99768c4736c804a3202956af669cd2ad7e4a87dbb621086c8025"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/ares/divider.png",
+    "bytes": 479,
+    "sha256": "6ed366fc517bf917ead56abe820872beaedc979812ac8d1190b184115e81fdb3"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/ares/frame_1.png",
+    "bytes": 929625,
+    "sha256": "417db0ed1c330966cbf46b204f2dffbc3824577f892901d6d43a7bd098fcc8d5"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/ares/frame_2.png",
+    "bytes": 475172,
+    "sha256": "e8f9b1c9fab29cdee91e698825626d7279196fe2d91488cd673be692cbaeb052"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/ares/gem_power.png",
+    "bytes": 14661,
+    "sha256": "9a3c98193e6ba29f731d4af09d74958db3bc6a1251d1f22997968f13752ae6c1"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/ares/gem_soul.png",
+    "bytes": 23906,
+    "sha256": "d1cac747160e4ef4a57f303519d8ae6a84a9d617e7b661b3d143a7bc57500264"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/artemis/box_type.png",
+    "bytes": 995,
+    "sha256": "a17284bf85b9ba7ed608861b23cd5774018e5487703afd676ed8a356a494955c"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/artemis/divider.png",
+    "bytes": 483,
+    "sha256": "54d12846aff33f10936e5f92bd3dbc6fa15ab47a7615ab211cdae9b01f5ee19a"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/artemis/frame_1.png",
+    "bytes": 780117,
+    "sha256": "4d6839047c6186e90a4ff07c3757ad1f4a6b6763f258cc6edf466a4c00499f67"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/artemis/frame_2.png",
+    "bytes": 1691227,
+    "sha256": "6812e950a9bd68684d5e9e66df8bee87f59323d101041c053e7ac0da37a6ba06"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/artemis/gem_power.png",
+    "bytes": 15052,
+    "sha256": "2afd58f9d01a3d2d5511d9fca77e9d2875f84b1bad0152f95781e60991127cee"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/artemis/gem_soul.png",
+    "bytes": 24813,
+    "sha256": "61db7e9dad5a9f7b49fea1155c93e85b5b5de6b714cf2a8c0cd737b76edea117"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/athena/box_name.png",
+    "bytes": 1116,
+    "sha256": "ff6765cab41a003c4fb43a50db2dc0526ecb5e904a2dc1a1bd0ab70b59d9d790"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/athena/box_subtitle.png",
+    "bytes": 873,
+    "sha256": "6065474c45d7da06e3040f19cbe0775b2a8c8535afe8fdd42a8b7ea828661dcf"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/athena/box_type.png",
+    "bytes": 997,
+    "sha256": "ccb7465a1fc44b2f01d9a29b2e33f97912775daf503eb85298d9d08c77fb5843"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/athena/divider.png",
+    "bytes": 484,
+    "sha256": "1ed6fe52a637052e02b13bed3f6fc4a935789b663d19f889bffc81ace13652d0"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/athena/frame.png",
+    "bytes": 1487606,
+    "sha256": "de72bfab346625d99b674dba84dfbea9c3dce50ddefcc00c9b6f6a8194c5452c"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/athena/gem_cost.png",
+    "bytes": 11503,
+    "sha256": "87454795e4f037b3c152f6bc7b46ace02534b5be527713feaf334b6caf6a784d"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/athena/gem_cost_base.png",
+    "bytes": 18196,
+    "sha256": "fdc96339600c0b4f74bf606e907df4dd2a66ce53cc11a37a77b6301b2373eb97"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/athena/gem_damage.png",
+    "bytes": 12831,
+    "sha256": "4ee5d48872baf235c322d08c704a3634ef73aaea5b91388075199160821027c4"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/athena/gem_equip.png",
+    "bytes": 13972,
+    "sha256": "d488141f99d27eb7d3c29c1065ef16de006e836bde9990102117a3406f66623f"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/athena/gem_power.png",
+    "bytes": 14634,
+    "sha256": "19b4a68f595badd13d6a421dc47a80460f5264f8c62149cb74a91f61baa34e5f"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/athena/gem_resistance.png",
+    "bytes": 19864,
+    "sha256": "e6c8c12ac27e705909a98da09e942b37abd2b5f79d74f33717c4c5338bd61978"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/athena/gem_soul.png",
+    "bytes": 24633,
+    "sha256": "62ca63c1e123c4f0a1db66ace12cf84097772ba58b0e202b4ac3681a2f4e42f0"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/athena/icon_cosmo.png",
+    "bytes": 2010,
+    "sha256": "0ca147223b58645119106652d08e1aff1658a335249da6d7c80a0762aa702c67"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/athena/icon_latent.png",
+    "bytes": 1956,
+    "sha256": "825a20f9adab76e91eef61a8c9680c0fbc1475d7951d9ffc97bdc4300ad80082"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/athena/rarity_common.png",
+    "bytes": 1501,
+    "sha256": "43a83de27f79d9ce9ccec91d67b4f7d2cf7e0f5a75e4294b0c2ffc32295e394d"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/athena/rarity_divine.png",
+    "bytes": 1772,
+    "sha256": "6f2b390d1d87302e59357a9030f28d415df5719fa459799045d304808c4dfe38"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/athena/rarity_mythic.png",
+    "bytes": 1560,
+    "sha256": "c578b2b0000a32ea253f21b9f665b705033ba03cae3e8a419645ee7ee5770853"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/athena/rarity_uncommon.png",
+    "bytes": 1497,
+    "sha256": "c05a18d481a5f475a24ba63bfb0f80cdb0821a6017e86135d2e0598d0db82350"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/athena/vignette.png",
+    "bytes": 1263868,
+    "sha256": "790f147b1c33ecfa579e0d2c3d145a30d41f5de15976dfe04e3c246ca62aff37"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/hades/box_name.png",
+    "bytes": 1170,
+    "sha256": "6de3b4f840bb981f2d0dee91a031c886b717cd26caba69c5e8f5711193975adb"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/hades/box_subtitle.png",
+    "bytes": 889,
+    "sha256": "fc2b8bcbfc5479048713db17add052917a080898ebe559a71999788e462032d6"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/hades/box_type.png",
+    "bytes": 995,
+    "sha256": "7b0d9d71880e0547b3f72ac6f773cdf7a58e21a727e4130da7ae6788ceb5471d"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/hades/divider.png",
+    "bytes": 489,
+    "sha256": "2c07725acb0ffacf758e7370c671204ff58527ad1c5bfa598c35af84ec5e3164"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/hades/frame_1.png",
+    "bytes": 1273100,
+    "sha256": "1b2741b01e4bbb5a23062e93d757516a5c3176678282e40c8a830e1d09201894"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/hades/frame_2.png",
+    "bytes": 801882,
+    "sha256": "44533b70d7001836c633410d05b29b5bcae6a84b5714d84bbb2f25224fd5af52"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/hades/gem_power.png",
+    "bytes": 14790,
+    "sha256": "623ef8c34624a841d0357d18eac83143fc1c68cef5c02225e6350ec48ecc87e8"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/hades/gem_soul.png",
+    "bytes": 24101,
+    "sha256": "dd120b8ddf9d7d2e2eba446e70d570f86cf190f01937668c5ef692f57dc075d1"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/icons/soul.png",
+    "bytes": 2703,
+    "sha256": "1c46d151106b6d1fba35e8a2c87b362689e20a642e5389dbb16b4d1089d8771d"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/icons/tap.png",
+    "bytes": 1161,
+    "sha256": "f446cad37edf10480c0f231013c913e645e7d3fc2f61012db6c466e7b2bed61d"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/pieces.json",
+    "bytes": 12980,
+    "sha256": "c5d4e0816f7f993596dbd8c607cd9ce9fa27dbe720bb28976dc6b15dab3d6231"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/poseidon/box_name.png",
+    "bytes": 1055,
+    "sha256": "2355f6ce37726ccb4078018e2fcfa8d1cf5ed63036e7055a1944976741d0a1b3"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/poseidon/box_subtitle.png",
+    "bytes": 821,
+    "sha256": "f5fe3a597f8cdca87b31fd9d027f574f8899adc7c4173b640cfe8a1a8e44c546"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/poseidon/box_type.png",
+    "bytes": 1003,
+    "sha256": "f577f55eb418cc98de07aaec2ba45c5c5f605b362d568a961570d3845b8f329f"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/poseidon/divider.png",
+    "bytes": 482,
+    "sha256": "61b5cebf66d475b3e5a3adc84a56300c2a630ecbf5db5b74a0a0f7bf1ae4fb62"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/poseidon/frame_1.png",
+    "bytes": 579347,
+    "sha256": "0ba42dbfb9e4ef0517f7835faddd66520a9a07162f64c6bf455afe3053199c0b"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/poseidon/frame_2.png",
+    "bytes": 247031,
+    "sha256": "4e4ded343924ed7f7c79019d4000468b7cf7159f5f6f5ea1cde82472e3c78a85"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/poseidon/frame_3.png",
+    "bytes": 2842364,
+    "sha256": "d44485e0092c0484f0846d4c088ed8c5c99d538e438be00a6d05a27d9444d189"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/poseidon/gem_power.png",
+    "bytes": 14785,
+    "sha256": "de92e4e0cd679d093762b378cdf013bc5adb4d26772193e1af651bb7febf2679"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/poseidon/gem_soul.png",
+    "bytes": 24066,
+    "sha256": "fa77ed63718d6890dbd95547cb466f42efce1c37fb8a7fdee355515afd82f037"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/symbols/ares.png",
+    "bytes": 16861,
+    "sha256": "fb5f1ab6a155a9cddd5c83eb88564e736da823750f2a1e19610a7042067d0399"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/symbols/artemis.png",
+    "bytes": 25423,
+    "sha256": "37380087cadbd795b4116c108a151c000e83bd98dc2809b9df9922fda86a158e"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/symbols/athena.png",
+    "bytes": 18180,
+    "sha256": "46c7e40475450ecd4e04b12b953c15fbdcf2a0feb807a5cbdab4d49e4d769c8d"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/symbols/hades.png",
+    "bytes": 32279,
+    "sha256": "e16ef0e29c85fa49f311a297de1bc52b4b01aa4c866d01c42cea9e33f1c6863e"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/symbols/poseidon.png",
+    "bytes": 6403,
+    "sha256": "1aef72dac7b507e2d2ad1dbb06c7e7db5c06b719c0b12139135e0c2dff4eb3a4"
+  },
+  {
+    "arquivo": "CARD-TEMPLATE/templates.json",
+    "bytes": 9892,
+    "sha256": "eb21356f8d1cf83d07e12abbe6cb21f2a6ff1d81595291bf60ed9df59aea4b64"
+  },
+  {
+    "arquivo": "CARDS/.DS_Store",
+    "bytes": 8196
+  },
+  {
+    "arquivo": "CARDS/ARES/.DS_Store",
+    "bytes": 6148
+  },
+  {
+    "arquivo": "CARDS/ARES/ARES.png",
+    "bytes": 4324226,
+    "sha256": "ea2e78d5638bd46a6b962ea7875120ab3383eed3f878c9997f29063681fe338f"
+  },
+  {
+    "arquivo": "CARDS/ARES/vecteezy_glass-with-realistic-broken-edges-holes-in-windowpane-in_78823542/Vecteezy-License-Information.pdf",
+    "bytes": 83983
+  },
+  {
+    "arquivo": "CARDS/ARES/vecteezy_glass-with-realistic-broken-edges-holes-in-windowpane-in_78823542/vecteezy_glass-with-realistic-broken-edges-holes-in-windowpane-in_78823542.eps",
+    "bytes": 4608221
+  },
+  {
+    "arquivo": "CARDS/ARES/vecteezy_glass-with-realistic-broken-edges-holes-in-windowpane-in_78823542/vecteezy_glass-with-realistic-broken-edges-holes-in-windowpane-in_78823542.jpg",
+    "bytes": 168891
+  },
+  {
+    "arquivo": "CARDS/ARES/vecteezy_glass-with-realistic-broken-edges-holes-in-windowpane-in_78823542.zip",
+    "bytes": 3320800
+  },
+  {
+    "arquivo": "CARDS/ARTEMIS/.DS_Store",
+    "bytes": 8196
+  },
+  {
+    "arquivo": "CARDS/ARTEMIS/ARTEMIS.png",
+    "bytes": 5082881,
+    "sha256": "96c03a5fe7780191884352ed08d16cd141cedcd8474d58bfd8312a7c0be88d63"
+  },
+  {
+    "arquivo": "CARDS/ARTEMIS/vecteezy_celestial-frame-with-moons-and-stars-decorative-illustration_67272146_766/Vecteezy-License-Information.pdf",
+    "bytes": 83983
+  },
+  {
+    "arquivo": "CARDS/ARTEMIS/vecteezy_celestial-frame-with-moons-and-stars-decorative-illustration_67272146_766/vecteezy_celestial-frame-with-moons-and-stars-decorative-illustration_67272146.eps",
+    "bytes": 17141
+  },
+  {
+    "arquivo": "CARDS/ARTEMIS/vecteezy_celestial-frame-with-moons-and-stars-decorative-illustration_67272146_766/vecteezy_celestial-frame-with-moons-and-stars-decorative-illustration_67272146.jpg",
+    "bytes": 226865
+  },
+  {
+    "arquivo": "CARDS/ARTEMIS/vecteezy_celestial-frame-with-moons-and-stars-decorative-illustration_67272146_766.zip",
+    "bytes": 261484
+  },
+  {
+    "arquivo": "CARDS/ARTEMIS/vecteezy_elegant-black-and-white-vintage-baroque-border-floral-and_36177610_78/Vecteezy-License-Information.pdf",
+    "bytes": 83983
+  },
+  {
+    "arquivo": "CARDS/ARTEMIS/vecteezy_elegant-black-and-white-vintage-baroque-border-floral-and_36177610_78/vecteezy_elegant-black-and-white-vintage-baroque-border-floral-and_36177610.eps",
+    "bytes": 8157758
+  },
+  {
+    "arquivo": "CARDS/ARTEMIS/vecteezy_elegant-black-and-white-vintage-baroque-border-floral-and_36177610_78/vecteezy_elegant-black-and-white-vintage-baroque-border-floral-and_36177610.jpg",
+    "bytes": 794088
+  },
+  {
+    "arquivo": "CARDS/ARTEMIS/vecteezy_elegant-black-and-white-vintage-baroque-border-floral-and_36177610_78.zip",
+    "bytes": 2858816
+  },
+  {
+    "arquivo": "CARDS/ATHENA/.DS_Store",
+    "bytes": 10244
+  },
+  {
+    "arquivo": "CARDS/ATHENA/ARES.png",
+    "bytes": 4383689,
+    "sha256": "85937af39305584c59da3f0634e49a6673022b6e0cb5b7aad505d739ca105673"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/ATHENA.png",
+    "bytes": 3709240,
+    "sha256": "80a6153392d769c945614c901c93ac0911a3fd6dc7dac9d4543e1bb0f5144d1d"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/BRONZE/ANDROMEDAv1.png",
+    "bytes": 4690901,
+    "sha256": "0e9a6f49897abd1f7f3548853546448ecfbef26095212f1c501bf7c96c9ed3af"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/BRONZE/ANDROMEDAv2.png",
+    "bytes": 4499849,
+    "sha256": "bd6c4a9f17075dc6233e750c381926b1e405a28bcc9c38ead88b39a4033b8a74"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/BRONZE/ATHENA.png",
+    "bytes": 3708906,
+    "sha256": "2db00fdb46a0c9bb7fc4b85c3b0f0ee16fb6242fdc8493a327931d433169c521"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/BRONZE/CYGNUSv1.png",
+    "bytes": 4612487,
+    "sha256": "a3748255b350553ef47410708a5cf413ecf66971d63d0d73056bf58df86beb6f"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/BRONZE/DRAGONv1.png",
+    "bytes": 4031499,
+    "sha256": "9933145a9309c9ccdf5187107dab96329fa7b98c28bab76617844c9946eeb6b7"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/BRONZE/PEGASUSV1.png",
+    "bytes": 4618799,
+    "sha256": "855073da6e29345557d0ae34c8885d57f5e6d334056165b3f7219f987a3d2172"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/BRONZE/PHOENIX.png",
+    "bytes": 4523529,
+    "sha256": "dea9101b68fcdde720d6c691aab45ca500bfa359cba98644fc88a1e20008e920"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/CLOTH/.DS_Store",
+    "bytes": 6148
+  },
+  {
+    "arquivo": "CARDS/ATHENA/CLOTH/AQUARIUS-CLOTH.png",
+    "bytes": 5245735,
+    "sha256": "ed9a72384bb59525d2aa346b22aad94df20b0da132f8d5bc8278b44bd429940e"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/CLOTH/LEO-CLOTH.png",
+    "bytes": 5287697,
+    "sha256": "79f7d31fe5780e1fdb7150f0d71978e91c17a43bb522493a87b7d849e4a683b6"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/CLOTH/LIBRA-CLOTH.png",
+    "bytes": 5746866,
+    "sha256": "23857037f4ae76666f5fb008b478c146f9375bae35bfc56d569b6bed97742ceb"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/CLOTH/SAGGITARIUS-CLOTH.png",
+    "bytes": 5875385,
+    "sha256": "54a79a7ae82f77fce43c5c8002c3917b2cd47e339b0b5d7cd16d3769361e6e46"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/CLOTH/VIRGO-CLOTH.png",
+    "bytes": 5446399,
+    "sha256": "461c2fe6fcb387f3221c89db8f14d7357e6b6fc741eb7523267ce656e162248d"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/COMMON/CLOTHREPAIRER.png",
+    "bytes": 4551045,
+    "sha256": "9fe329361bccc45ef36f3938d5a9993ee4b742b47f7999578f79c1b6ef01376e"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/COMMON/COSMOAPPRENTICE.png",
+    "bytes": 3920704,
+    "sha256": "d76904cb9f9850a43bf6e43cda3ffc29621897fc030d52028e48a1546fa7223a"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/COMMON/SANCTUARY-GUARD.png",
+    "bytes": 4602778,
+    "sha256": "e427b94fc35a5f345e8c35e61f5d7e5703a02cc6425ecc13340a84dcafbe413c"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/COMMON/SANCTUARYARCHER.png",
+    "bytes": 4783900,
+    "sha256": "aab5ca38e0f5f41149887ad25fb0e257a7d0c1d8caee1bdb2678c824607cc433"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/COMMON/SANCTUARYSOLDIER.png",
+    "bytes": 3823571,
+    "sha256": "5d2b9f824d2ad2fdd162ad8f30cf74ba881d001084a8ba9952ccba7365bad8a9"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/COMMON/SANCTUMHEALER.png",
+    "bytes": 4149905,
+    "sha256": "2f16944da7042b0ec213aaf5f9048998a4a5b79571c996e71f58f54ea9d5be94"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/COMMON/STARHILLMONK.png",
+    "bytes": 4077995,
+    "sha256": "089988fb433e4b68c519c3a2600e25c561648ccf094cd7e6fdad99bc1967cb5a"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/GOLD/.DS_Store",
+    "bytes": 6148
+  },
+  {
+    "arquivo": "CARDS/ATHENA/GOLD/AIOLOS.png",
+    "bytes": 5069503,
+    "sha256": "0268eee9c7ca08bad6220e5be5039d402d10fca6f97024518184d4d4a8afcad9"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/GOLD/ALDEBARAN.png",
+    "bytes": 4961841,
+    "sha256": "65c9850e55e49a963dc275329a5415e350fe953f5e4e9ce9b2ceedc7163839ee"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/GOLD/CAMUS.png",
+    "bytes": 4983960,
+    "sha256": "06a37b586fca9a4ec13ad48dfe41360911b9afa1099e5e7d635f54b1978a7774"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/GOLD/DEATHMASK.png",
+    "bytes": 4999365,
+    "sha256": "bce29205a7057fc78be49ade59bb07075e0fff63d476a0526332c166e4dfe5bd"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/GOLD/SAGA.png",
+    "bytes": 5498671,
+    "sha256": "7e3142993a1db2ba3dbbb73709c4399c4fa616e1416db8fafc4e019bfde98d45"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/MOMENT/ATHENSJUDGMENT.png",
+    "bytes": 4554412,
+    "sha256": "f388db1365ec6f3013b37194f83132bddf6d56bf7c8c46191c81942d24a5838b"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/MOMENT/COMOBLESSING.png",
+    "bytes": 3897092,
+    "sha256": "32bfe0df299a97262ca8acabb6ed73c79bb0d5b65b97e64967f6371ce2f62474"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/RELICS/.DS_Store",
+    "bytes": 6148
+  },
+  {
+    "arquivo": "CARDS/ATHENA/RELICS/ATHENASANPHORA.png",
+    "bytes": 3541412,
+    "sha256": "b7318d15e52b5a8c8c1fe271b31290fbc1b20430d41248127bc526b4093e3124"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/RELICS/ATHENASEAL.png",
+    "bytes": 3811034,
+    "sha256": "4f930ab081d6ec949f2cfeb4327e7c2d3da77fdb284a22c0db8edb12ef2c7ab0"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/RELICS/POPEDAGGER.png",
+    "bytes": 4659135,
+    "sha256": "4916ea618b2606359b3132a232b7ed34ee3e0eb28fc18aad65a34cca607e5430"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/RELICS/SAGITTARIUSBOWL.png",
+    "bytes": 4376743,
+    "sha256": "41870d510dec31ebb4074c2e83869e885d09dc0dd2a7d2a2400185ae7e5d14f5"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/RELICS/STAFFOFATHENA.png",
+    "bytes": 4263103,
+    "sha256": "adbc0706615738f7692b34761eebe9666c072b0eaf3a81ca3ac9389bdb1371dc"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/SILVER/MARIN.png",
+    "bytes": 5799699,
+    "sha256": "b629ca462363bc8fbc253787c279e80fa6523fec4549c849740160d2bd59bcee"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/SILVER/SHAINA.png",
+    "bytes": 5065985,
+    "sha256": "bc6b0c9a15f5099bc09f2e66a55613609adbeaf4ae61a71adfd7c82501ef2e2f"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/TECHNIQUES/ATHENASJUDGMENT.png",
+    "bytes": 4551173,
+    "sha256": "031324925126d41e9fff5f22dc55093862e7d5224aac05ea7e07a45a4749907b"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/UNCOMMON/LIBRA-SHIELD.png",
+    "bytes": 3347662,
+    "sha256": "e5594a31ced9c3a7d2b555ce22085b3584ae8f042bbbb1646384bacbc7a2fde5"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/UNCOMMON/LIBRA-SPEAR.png",
+    "bytes": 4007160,
+    "sha256": "b67ea2ac826b8207f89a3c03cb1f63e2abbc45175bde5df1dfea5fd66cf134ee"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/UNCOMMON/LIBRA-SWORD-WEAPON.png",
+    "bytes": 3831630,
+    "sha256": "6653e1638dc4ded63672929e3036694bd5b6e4dbef0cccac7ed60b09e778397b"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/UNCOMMON/LIBRA-SWORD.png",
+    "bytes": 3910392,
+    "sha256": "2fab9ff0616a66cc9dfb26e73ceaf67518d973c8f4992a83cda014af89630901"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/UNCOMMON/LIBRA-TONFA.png",
+    "bytes": 3863745,
+    "sha256": "8cd3a4b8bcb9b8f1753b0654f604d54baa82ab250724bd1fbaf226c629942177"
+  },
+  {
+    "arquivo": "CARDS/ATHENA/pattern/.DS_Store",
+    "bytes": 6148
+  },
+  {
+    "arquivo": "CARDS/ATHENA/pattern/black-decorative-ornaments/License free.txt",
+    "bytes": 1511
+  },
+  {
+    "arquivo": "CARDS/ATHENA/pattern/black-decorative-ornaments/License premium.txt",
+    "bytes": 1115
+  },
+  {
+    "arquivo": "CARDS/ATHENA/pattern/black-decorative-ornaments/O614E70.jpg",
+    "bytes": 312900
+  },
+  {
+    "arquivo": "CARDS/ATHENA/pattern/black-decorative-ornaments/O614E71.eps",
+    "bytes": 5730678
+  },
+  {
+    "arquivo": "CARDS/ATHENA/pattern/black-decorative-ornaments.zip",
+    "bytes": 551445
+  },
+  {
+    "arquivo": "CARDS/ATHENA/vecteezy_ornament-border-decoration_46983609_584/Vecteezy-License-Information.pdf",
+    "bytes": 83983
+  },
+  {
+    "arquivo": "CARDS/ATHENA/vecteezy_ornament-border-decoration_46983609_584/vecteezy_ornament-border-decoration_46983609.eps",
+    "bytes": 786375
+  },
+  {
+    "arquivo": "CARDS/ATHENA/vecteezy_ornament-border-decoration_46983609_584/vecteezy_ornament-border-decoration_46983609.jpg",
+    "bytes": 461953
+  },
+  {
+    "arquivo": "CARDS/ATHENA/vecteezy_ornament-border-decoration_46983609_584 2/Vecteezy-License-Information.pdf",
+    "bytes": 83983
+  },
+  {
+    "arquivo": "CARDS/ATHENA/vecteezy_ornament-border-decoration_46983609_584 2/vecteezy_ornament-border-decoration_46983609.eps",
+    "bytes": 786375
+  },
+  {
+    "arquivo": "CARDS/ATHENA/vecteezy_ornament-border-decoration_46983609_584 2/vecteezy_ornament-border-decoration_46983609.jpg",
+    "bytes": 461953
+  },
+  {
+    "arquivo": "CARDS/ATHENA/vecteezy_ornament-border-decoration_46983609_584.zip",
+    "bytes": 830577
+  },
+  {
+    "arquivo": "CARDS/ATHENA/vecteezy_rectangle-frame-with-seamless-pattern_26149724_12/Vecteezy-License-Information.pdf",
+    "bytes": 83983
+  },
+  {
+    "arquivo": "CARDS/ATHENA/vecteezy_rectangle-frame-with-seamless-pattern_26149724_12/vecteezy_rectangle-frame-with-seamless-pattern_26149724.eps",
+    "bytes": 5971606
+  },
+  {
+    "arquivo": "CARDS/ATHENA/vecteezy_rectangle-frame-with-seamless-pattern_26149724_12/vecteezy_rectangle-frame-with-seamless-pattern_26149724.jpg",
+    "bytes": 222441
+  },
+  {
+    "arquivo": "CARDS/ATHENA/vecteezy_rectangle-frame-with-seamless-pattern_26149724_12.zip",
+    "bytes": 640059
+  },
+  {
+    "arquivo": "CARDS/ATHENA/vecteezy_rectangular-greek-frame-with-copy-space-for-text-or-design_25548027_380/Vecteezy-License-Information.pdf",
+    "bytes": 83983
+  },
+  {
+    "arquivo": "CARDS/ATHENA/vecteezy_rectangular-greek-frame-with-copy-space-for-text-or-design_25548027_380/vecteezy_rectangular-greek-frame-with-copy-space-for-text-or-design_25548027.eps",
+    "bytes": 596767
+  },
+  {
+    "arquivo": "CARDS/ATHENA/vecteezy_rectangular-greek-frame-with-copy-space-for-text-or-design_25548027_380/vecteezy_rectangular-greek-frame-with-copy-space-for-text-or-design_25548027.jpg",
+    "bytes": 165510
+  },
+  {
+    "arquivo": "CARDS/ATHENA/vecteezy_rectangular-greek-frame-with-copy-space-for-text-or-design_25548027_380.zip",
+    "bytes": 471284
+  },
+  {
+    "arquivo": "CARDS/HADES/HADES.png",
+    "bytes": 4946672,
+    "sha256": "66db9ba14fd86bdc33d98279d44f96fdf48dc98f555052250eab46911ebc2c79"
+  },
+  {
+    "arquivo": "CARDS/POSEIDON/.DS_Store",
+    "bytes": 8196
+  },
+  {
+    "arquivo": "CARDS/POSEIDON/POSEIDON.png",
+    "bytes": 5035340,
+    "sha256": "296373168125c53f6987491a073bd1adb66acf688f479899ff3e6b8979693880"
+  },
+  {
+    "arquivo": "CARDS/POSEIDON/vecteezy_board-of-water-waves-transparent-with-drops-watercolor_25753721_518/Vecteezy-License-Information.pdf",
+    "bytes": 83983
+  },
+  {
+    "arquivo": "CARDS/POSEIDON/vecteezy_board-of-water-waves-transparent-with-drops-watercolor_25753721_518/vecteezy_board-of-water-waves-transparent-with-drops-watercolor_25753721.eps",
+    "bytes": 18419366
+  },
+  {
+    "arquivo": "CARDS/POSEIDON/vecteezy_board-of-water-waves-transparent-with-drops-watercolor_25753721_518/vecteezy_board-of-water-waves-transparent-with-drops-watercolor_25753721.jpg",
+    "bytes": 520244
+  },
+  {
+    "arquivo": "CARDS/POSEIDON/vecteezy_board-of-water-waves-transparent-with-drops-watercolor_25753721_518.zip",
+    "bytes": 7985951
+  },
+  {
+    "arquivo": "CLAUDE.md",
+    "bytes": 1356,
+    "sha256": "03e0434d7815b7fbbee83bd0350e8ccefd4615af07f847de3d4f8f1570da3138"
+  },
+  {
+    "arquivo": "FRAMES/.DS_Store",
+    "bytes": 6148
+  },
+  {
+    "arquivo": "FRAMES/ARES/ARES.psd",
+    "bytes": 45177061,
+    "sha256": "0a82a9f31446d591ec1c34f33375243c64d0bebeebc749d7e3e92be91300bd7b"
+  },
+  {
+    "arquivo": "FRAMES/ARTEMIS/ARTEMIS.psd",
+    "bytes": 66244305,
+    "sha256": "0061926677c7d5e670b2f904b7448d32d0dabd75729eb8b9cdbebadfb1e1ac46"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/.DS_Store",
+    "bytes": 8196
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/ATHENA.psd",
+    "bytes": 34768879,
+    "sha256": "a057f3f90abd616e538852b0314845b72ab9caa65205acf9b94450fd8deb599b"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/BRONZE/ANDROMEDAv1.psd",
+    "bytes": 50210499,
+    "sha256": "befdd311d696e7a5ed86ead0aab4c6fe5e245202c157af9b35a18c47ae654a91"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/BRONZE/ANDROMEDAv2.psd",
+    "bytes": 78618023,
+    "sha256": "b6df25c3f1fe674be5123e6e597c5811496bb4a323b370f104b85ad9e6062947"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/BRONZE/CYGNUSv1.psd",
+    "bytes": 99805117,
+    "sha256": "a3b3b0da223e7fb432699b1992985892e4960ed496c07a76cc5aaab94c73f6e1"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/BRONZE/DRAGONv1.psd",
+    "bytes": 62973955,
+    "sha256": "b67c118f2eae74f766da208d571472131955a16910041159667b9511b1157069"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/BRONZE/PEGASUSV1.psd",
+    "bytes": 43009324,
+    "sha256": "a7ec7479ce26b4d77c0e3efa954b0d6c1dcce46941b8f030e14666d4aa64904c"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/BRONZE/PHOENIX.psd",
+    "bytes": 44743235,
+    "sha256": "51872847f274b306958d624fdd1f68b5b517159d60c5ca9f546cb5094f99f858"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/CLOTH/AQUARIUS-CLOTH.psd",
+    "bytes": 34308661,
+    "sha256": "d1131c96c3d352815a3497a46e4d8cd68619c009e470ec9602087d62ee54a8d6"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/CLOTH/CLOTH.psd",
+    "bytes": 44743235,
+    "sha256": "51872847f274b306958d624fdd1f68b5b517159d60c5ca9f546cb5094f99f858"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/CLOTH/LEO-CLOTH.psd",
+    "bytes": 52068400,
+    "sha256": "45dfab2f23e0c5f5088e54ab805d408f59061c2bc8c91d8e26fdacd34dd0369f"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/CLOTH/LIBRA-CLOTH.psd",
+    "bytes": 34269569,
+    "sha256": "280cd1b2ac4552baf6aae9a4905812573df63d68e64630ff087fdcdeb6db602c"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/CLOTH/SAGGITARIUS-CLOTH.psd",
+    "bytes": 33582591,
+    "sha256": "6af4df42a1c49dc0c85dbe24c5ab2b4f46b6d4f3534292181ced2fe8da46cd34"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/CLOTH/VIRGO-CLOTH.psd",
+    "bytes": 32875737,
+    "sha256": "ea79ee6acded8807573c0a80451e2b12cdf06d9d0b00a1f0d280716b39b9ed9c"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/COMMON/CLOTHREPAIRER.psd",
+    "bytes": 115818367,
+    "sha256": "5f9d125cc316853f72b45452f9a48abb679671533c0fedee88b55f440a490b83"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/COMMON/COSMOAPPRENTICE.psd",
+    "bytes": 40525887,
+    "sha256": "ff67480cd6ba7f134c10165aa0f98419664d68fb0ed6e4c87346594f59bf2b1d"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/COMMON/SANCTUARY GUARD.psd",
+    "bytes": 52909081,
+    "sha256": "401e577079cadc5637789c43f4695ad6ae17489b84fdede65c589c16d6786b30"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/COMMON/SANCTUARYARCHER.psd",
+    "bytes": 86969793,
+    "sha256": "054776ad622521620a93e6a30cc29154d696ed7292a344c6987bdf6edcdd0ced"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/COMMON/SANCTUARYSOLDIER.psd",
+    "bytes": 27684033,
+    "sha256": "44eadc951afe40d745ab9f9f17ebe7a4b773490d91c13c08f9e0b017278c3001"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/COMMON/SANCTUMHEALER.psd",
+    "bytes": 100675864,
+    "sha256": "a48e183080e17ce2a9a8515043324043e6ee24658dd457e9bd14375eafbd9b01"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/COMMON/STARHILLMONK.psd",
+    "bytes": 31058051,
+    "sha256": "57c51689d5dfe53c3abebedc89b1a92383d698859a3a3af1505e14c91fa451ab"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/GOLD/AIOLOS.psd",
+    "bytes": 86196625,
+    "sha256": "8912d07ee9385b0d4b5cb59bdebfbef97b4db417ffcb7dcbb74aa6dc6b6c5f9b"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/GOLD/ALDEBARAN.psd",
+    "bytes": 54503613,
+    "sha256": "2ea9bfb5a22bbc7515fbcc5e7040e4f9ffd5c4e8e12376fa151e4af8ff121532"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/GOLD/CAMUS.psd",
+    "bytes": 44047764,
+    "sha256": "e4f5d6b9b3c195384cd6104e5bab91e66a037da693ddc2481616d4d5908d9a82"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/GOLD/DEATHMASK.psd",
+    "bytes": 86015497,
+    "sha256": "c93dbd48a64c8c98f6eeca3a00d2ff3702fb41e7067c66c3323f87fde5be16c3"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/GOLD/SAGA.psd",
+    "bytes": 65790551,
+    "sha256": "3d1361e05ba33e8fe56f1761e849da9a958696ac4db9ebea1ac06ebc16d739d7"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/MOMENT/ATHENSJUDGMENT.psd",
+    "bytes": 65824488,
+    "sha256": "cd757f755f091fbafea2689c299fb2298c664ffc8b69637408ece58bc1b562b1"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/MOMENT/COSMOBLESSING.psd",
+    "bytes": 34539331,
+    "sha256": "31e5b0729be1c211d46757a491c3ce6cb10c69a746e1b7e296a6071453be3dcc"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/PHOENIX.psd",
+    "bytes": 44743185,
+    "sha256": "9614487e7b62e084e21d2b1a8a9aa0ff56afbcf7f3b4ccf10db7dfaff993b314"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/RELICS/.DS_Store",
+    "bytes": 6148
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/RELICS/ATHENASANPHORA.psd",
+    "bytes": 38893270,
+    "sha256": "d09327dbd71273073455b8efb89913b8df10b9db78200fef36a8b6ba8f590721"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/RELICS/ATHENASEAL.psd",
+    "bytes": 35354394,
+    "sha256": "6c152935468412dfecb8088bb2cbb488109e027ee0b9e3a1139247982e80dbbc"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/RELICS/LIBRA-NUNCHAKU.psd",
+    "bytes": 30891911,
+    "sha256": "b0c70360ad1e52f286f94866af41234273cb6b4b4677681874e9d5de8137b7d6"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/RELICS/LIBRA-SHIELD.psd",
+    "bytes": 59677671,
+    "sha256": "8be7d271f9dd47f50cbcc578d6de7881446467310f6447dba3f32cca5a5a793b"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/RELICS/LIBRA-SPEAR.psd",
+    "bytes": 32888789,
+    "sha256": "562b34e1dcdc9e2d6dc1755c0e0fcfe88d2bd3534c8d7e5b1bae065ac70d2c93"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/RELICS/LIBRA-SWORD - cópia.psd",
+    "bytes": 30901377,
+    "sha256": "79b8736e1e12643f6bd5f7bee8f481d8200f51a58c08d4fe22b340c265bcc307"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/RELICS/LIBRA-SWORD.psd",
+    "bytes": 75519444,
+    "sha256": "00e7e5ff64ef709c214157c862260daf38d41019d2bb1feb6e6cf35a783db9cf"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/RELICS/LIBRA-TONFA.psd",
+    "bytes": 33664131,
+    "sha256": "0a31e525081c2c8a1d56b1c32298eb3e69363929e7eedbb5cae05ed06098d15c"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/RELICS/LIBRA-TRIDENT.psd",
+    "bytes": 30901321,
+    "sha256": "852d9c917a4243e0f05e6017094ff63a8f2d677e1a6c4267761820516c635d76"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/RELICS/POPEDAGGER.psd",
+    "bytes": 37175044,
+    "sha256": "de82e1bfd489efa92eaf51f56a514116ff1979ea17e71b107940959396a2818b"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/RELICS/SAGITTARIUSBOWL.psd",
+    "bytes": 33064973,
+    "sha256": "11c6371d79b1ef30147a6c23d9c2e5a7f151b7dd2931126bec58683c827cd143"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/RELICS/SEALOFATHENA.psd",
+    "bytes": 53034512,
+    "sha256": "b77aee9f9b22306b91cfa36f48b281ab152eceffc0c40a90aeb35d05b8c8d840"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/RELICS/STAFFOFATHENA.psd",
+    "bytes": 53034564,
+    "sha256": "85b7ab2ab1ccc36a605d2450a3d2598066d8616dbd3a12d6881120dcee3dd7c8"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/SILVER/MARIN.psd",
+    "bytes": 31585070,
+    "sha256": "328dc8a9ea405c38574ae3c5035d30ac08f2c7854635f080a7e787a6e474443e"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/SILVER/SHAINA.psd",
+    "bytes": 44576559,
+    "sha256": "e07b8a84bd6caf93876ac3e62ca7f93b68fcee2ab8503afc68378de2c17ad885"
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/TECHNIQUE/.DS_Store",
+    "bytes": 6148
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/TECHNIQUE/ATHENSJUDGMENT.psd",
+    "bytes": 36953362,
+    "sha256": "95567d6236c2bfbbc341accdf8211a744729b58c3435d5e82b429f6c5cd355be"
+  },
+  {
+    "arquivo": "FRAMES/CARDFRAME/gold-texture-background-wallpaper-2560x1080_14.jpg",
+    "bytes": 789267
+  },
+  {
+    "arquivo": "FRAMES/CARDFRAME/old-paper-texture-background-illustration-original.jpeg",
+    "bytes": 461437
+  },
+  {
+    "arquivo": "FRAMES/HADES/HADES.psd",
+    "bytes": 45772539,
+    "sha256": "462e137fd8c6a3abc27cd86d9b2b4b732f6dc9f0658dbf107a4cec0317d44224"
+  },
+  {
+    "arquivo": "FRAMES/POSEIDON/POSEIDON.psd",
+    "bytes": 71656910,
+    "sha256": "b59b9a47558dbcdc7e8c87483f79805915e5078e9d6e9879bfc9fc705324b295"
+  },
+  {
+    "arquivo": "LOGO/SAINTSEIYA TCG.png",
+    "bytes": 1700113,
+    "sha256": "ccabe58c96d3f4fb13482347316ee572704a33b876cba99af4b782a51823d395"
+  },
+  {
+    "arquivo": "LOGO/app-icon-192.png",
+    "bytes": 48249,
+    "sha256": "9c3e36281374735743af96dd3056f38a6bccf05ef36f652336f4a6cd9191255f"
+  },
+  {
+    "arquivo": "LOGO/app-icon-512.png",
+    "bytes": 231864,
+    "sha256": "d6ad7147e09aae9be0b2ab478c774a313741440e2fdfc0c96d422c0b58b9052a"
+  },
+  {
+    "arquivo": "LOGO/app-icon-maskable-512.png",
+    "bytes": 206686,
+    "sha256": "4479bfc5f2c91ff79e899655898a4c8959206363e8ab9536dd3023be690618b7"
+  },
+  {
+    "arquivo": "LOGO/apple-touch-icon.png",
+    "bytes": 43174,
+    "sha256": "2a24f09e4902dd5d05c7c23e0d4dd38d9c151eede0e50bb08a52933cb33b80a9"
+  },
+  {
+    "arquivo": "LOGO/favicon.png",
+    "bytes": 10898,
+    "sha256": "be326aba7b789e0cd30a199f4ee40e23048a05204b7f54b7c25572d617014b28"
+  },
+  {
+    "arquivo": "LOGO/logo-web.png",
+    "bytes": 448849,
+    "sha256": "9edf3bbf6d623f86fd9358ba4717594a626f83f0d870407670fc47c7e6d0b7bc"
+  },
+  {
+    "arquivo": "LOGO/logo-web.webp",
+    "bytes": 84610,
+    "sha256": "aa89bad3818eb9c3cfbec878fc2283e74af3270f7f670eefdf6a06d0ce27e9a8"
+  },
+  {
+    "arquivo": "LOGO/og-image.jpg",
+    "bytes": 102810
+  },
+  {
+    "arquivo": "MOBILE GAMES/.omc/state/idle-notif-cooldown.json",
+    "bytes": 46
+  },
+  {
+    "arquivo": "MOBILE GAMES/.omc/state/sessions/f3018251-f2c3-465c-8222-4fb036775815/last-tool-error-state.json",
+    "bytes": 448
+  },
+  {
+    "arquivo": "MOBILE GAMES/.omc/state/sessions/f3018251-f2c3-465c-8222-4fb036775815/pre-tool-advisory-throttle.json",
+    "bytes": 342
+  },
+  {
+    "arquivo": "MOBILE GAMES/Cavaleiros do Zodiaco Os - Alma dos Soldados (Latin America) (EnFrEsPt).zip",
+    "bytes": 6984137743
+  },
+  {
+    "arquivo": "MOBILE GAMES/saint-seiya-ex-official.apk",
+    "bytes": 22995439
+  },
+  {
+    "arquivo": "MUSIC/GLIDESACRIFICE.mp3",
+    "bytes": 4423188
+  },
+  {
+    "arquivo": "MUSIC/PEGASUS TYU SEI KEN",
+    "bytes": 5153606
+  },
+  {
+    "arquivo": "MUSIC/SEIYAxRADAMANTYS.mp3",
+    "bytes": 6497728
+  },
+  {
+    "arquivo": "MUSIC/TENKAIHEN.mp3",
+    "bytes": 6043491
+  },
+  {
+    "arquivo": "MUSIC/UNDERTHEWOODOFTHEWORLDTREE.mp3",
+    "bytes": 5000452
+  },
+  {
+    "arquivo": "README.md",
+    "bytes": 3468,
+    "sha256": "91ccd301f9daf0f796b0f013a0eb97aabac18bbb3e469bcc874eb1bf44adba68"
+  },
+  {
+    "arquivo": "TEST/BF.ai",
+    "bytes": 1955262
+  },
+  {
+    "arquivo": "TEST/BF.png",
+    "bytes": 199010,
+    "sha256": "c633c4e7e6f9ebabac86ebb2da6e8e7d2834eab2401854d53de2aeb700709e81"
+  },
+  {
+    "arquivo": "card-forge/AGENTS.md",
+    "bytes": 2918,
+    "sha256": "5cf4874b504cd300855d73a51220d245dfdb1975c863482d18c107dbe98f7991"
+  },
+  {
+    "arquivo": "card-forge/README.md",
+    "bytes": 4226,
+    "sha256": "00472fae8d1e3cce737ae2a349e6736996a79af7852a82d0eba076377efb0704"
+  },
+  {
+    "arquivo": "card-forge/art/.omc/state/sessions/f30722ca-44bb-40c8-9785-df81dfe4a00b/pre-tool-advisory-throttle.json",
+    "bytes": 774
+  },
+  {
+    "arquivo": "card-forge/forge.css",
+    "bytes": 4366,
+    "sha256": "f5a0cf679e4cf200749765971078065f4b03f700340902e939361d50b0692859"
+  },
+  {
+    "arquivo": "card-forge/forge.js",
+    "bytes": 38892,
+    "sha256": "91f79fbf164265be2b9d17aea6aa97eb3002e32c8f6b2f8f0a8708ccf21c9e64"
+  },
+  {
+    "arquivo": "card-forge/import/modelo.txt",
+    "bytes": 1472,
+    "sha256": "9a529fedf6d4b25746ba80e0c2e56af266894d9b3dd4b58791db4e43ba5b2fe2"
+  },
+  {
+    "arquivo": "card-forge/index.html",
+    "bytes": 7212,
+    "sha256": "4bf5461a946697902fcc8855082a53e1932dc566dd022bc096454fafeca77902"
+  },
+  {
+    "arquivo": "card-forge/projects/ares-001.json",
+    "bytes": 270,
+    "sha256": "d4d418c202285be20b77d7d4b96da3947ffff186b2071ee902f9d6b9f0ab891c"
+  },
+  {
+    "arquivo": "card-forge/projects/artemis-001.json",
+    "bytes": 308,
+    "sha256": "b4ec0de0d91728c7269374c639f7f84f40efbd68df3cd1c272f150b16380f87f"
+  },
+  {
+    "arquivo": "card-forge/projects/athena-002.json",
+    "bytes": 295,
+    "sha256": "fff74c2a467b69244a7a828c36c8d8a9f6bdaa8bdb40889e9a7f09ec0641f0ba"
+  },
+  {
+    "arquivo": "card-forge/projects/hades-001.json",
+    "bytes": 270,
+    "sha256": "e22ae8b50123c4c053b755793aee8ff1af5efbf3210e8d9cc8c1fbca992cb383"
+  },
+  {
+    "arquivo": "card-forge/projects/poseidon-001.json",
+    "bytes": 282,
+    "sha256": "eab7e59f1e0b0754c6b6f0206be84c19a5339ef2fc9aa3b6ca64df153996e3a5"
+  },
+  {
+    "arquivo": "card-forge/serve.py",
+    "bytes": 7551,
+    "sha256": "77884412b63c4df02cab93de41203fa44b7d364e47b9a246f57af90671cd9e89"
+  },
+  {
+    "arquivo": "card-forge/tools/extract_template.py",
+    "bytes": 8132,
+    "sha256": "0b5037dd940f0beace94836260f2985c63a74066023b271d3d8662422b92fc79"
+  },
+  {
+    "arquivo": "data/beta-athena.json",
+    "bytes": 27640,
+    "sha256": "ce199af00846318d427fcc8212cbabee8b20eeb6881f3d2f2199134b733667fc"
+  },
+  {
+    "arquivo": "data/cards.json",
+    "bytes": 54098,
+    "sha256": "349c8c88d8dae9d77cad331adcfd648c123fa1d01e3eeb9edffa5e6990d8afa0"
+  },
+  {
+    "arquivo": "docs/CHANGELOG-regras.md",
+    "bytes": 315,
+    "sha256": "b94bbba36136ec63d117bdda9f2c6e430fcaaf76bfd4c4a35f9992257a071be9"
+  },
+  {
+    "arquivo": "docs/HANDOFF-codex.md",
+    "bytes": 4902,
+    "sha256": "6ee6fed5f2f6456558d44e24a7e6587a64579afeac0cc544beac314be932c11d"
+  },
+  {
+    "arquivo": "docs/asset-map.md",
+    "bytes": 3635,
+    "sha256": "92325ddc01fcf889e6ce564fcd9144f4e4865165bdc8bc3c87ea69829d944169"
+  },
+  {
+    "arquivo": "docs/beta-athena.md",
+    "bytes": 7084,
+    "sha256": "c05e4392067743874a2c7786f3b4d10964370a469c1072438408c110794310d4"
+  },
+  {
+    "arquivo": "docs/guia-do-jogo.md",
+    "bytes": 10856,
+    "sha256": "b3e7b3ef05690f0c86ac9397ac6f4eea54975d8ad258d02b017c8e60505c62e3"
+  },
+  {
+    "arquivo": "docs/rea-arena-engine.md",
+    "bytes": 13159,
+    "sha256": "1c2b171235166d6c44762e04d7c0a7a0530ef28f5df1c1a55283b12ac62eed8d"
+  },
+  {
+    "arquivo": "docs/rea-soldiers-soul.md",
+    "bytes": 4922,
+    "sha256": "a381f448215cdf5223c21618512b2bdfafc8936070899aa190decd169a5cc765"
+  },
+  {
+    "arquivo": "docs/ux-arena-rea.md",
+    "bytes": 12866,
+    "sha256": "f56a932a37a0e21cf7cf3b3900de59492e3a996099aad2e29f7db0e2e72bc535"
+  },
+  {
+    "arquivo": "playtest/.omc/state/idle-notif-cooldown.json",
+    "bytes": 46
+  },
+  {
+    "arquivo": "playtest/.omc/state/sessions/9a933b11-9d30-45d2-b24d-be1bf9da4b06/pre-tool-advisory-throttle.json",
+    "bytes": 564
+  },
+  {
+    "arquivo": "playtest/.omc/state/sessions/ca812887-68a9-4d8a-ac36-0219851b636c/last-tool-error-state.json",
+    "bytes": 484
+  },
+  {
+    "arquivo": "playtest/.omc/state/sessions/ca812887-68a9-4d8a-ac36-0219851b636c/pre-tool-advisory-throttle.json",
+    "bytes": 774
+  },
+  {
+    "arquivo": "playtest/.omc/state/sessions/f3018251-f2c3-465c-8222-4fb036775815/last-tool-error-state.json",
+    "bytes": 488
+  },
+  {
+    "arquivo": "playtest/.omc/state/sessions/f3018251-f2c3-465c-8222-4fb036775815/pre-tool-advisory-throttle.json",
+    "bytes": 774
+  },
+  {
+    "arquivo": "playtest/app.js",
+    "bytes": 22138,
+    "sha256": "74d748962e0d1cbbfa8dcaa4bc5ee2b6074f9f2c5a9122226b6daac973e7e309"
+  },
+  {
+    "arquivo": "playtest/arena.css",
+    "bytes": 46545,
+    "sha256": "5941879155d6015ccdbe2358b4082ce299c9cb723dd74cc08ccedb0f99dfcbe3"
+  },
+  {
+    "arquivo": "playtest/assets/cards/ares-001.webp",
+    "bytes": 73138
+  },
+  {
+    "arquivo": "playtest/assets/cards/artemis-001.webp",
+    "bytes": 82124
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-001.webp",
+    "bytes": 69668
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-002.webp",
+    "bytes": 89042
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-003.webp",
+    "bytes": 80664
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-004.webp",
+    "bytes": 85154
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-005.webp",
+    "bytes": 82090
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-006.webp",
+    "bytes": 83664
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-007.webp",
+    "bytes": 104930
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-008.webp",
+    "bytes": 76864
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-009.webp",
+    "bytes": 114184
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-010.webp",
+    "bytes": 91316
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-011.webp",
+    "bytes": 85398
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-012.webp",
+    "bytes": 105008
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-013.webp",
+    "bytes": 82918
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-014.webp",
+    "bytes": 81878
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-015.webp",
+    "bytes": 57408
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-016.webp",
+    "bytes": 80450
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-017.webp",
+    "bytes": 59582
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-018.webp",
+    "bytes": 70370
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-019.webp",
+    "bytes": 58890
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-020.webp",
+    "bytes": 61336
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-021.webp",
+    "bytes": 100122
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-022.webp",
+    "bytes": 104616
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-023.webp",
+    "bytes": 104040
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-024.webp",
+    "bytes": 92378
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-025.webp",
+    "bytes": 101996
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-026.webp",
+    "bytes": 58234
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-027.webp",
+    "bytes": 52604
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-028.webp",
+    "bytes": 60148
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-029.webp",
+    "bytes": 52072
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-030.webp",
+    "bytes": 77860
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-031.webp",
+    "bytes": 52236
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-032.webp",
+    "bytes": 47478
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-033.webp",
+    "bytes": 84428
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-034.webp",
+    "bytes": 67536
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-041.webp",
+    "bytes": 86186
+  },
+  {
+    "arquivo": "playtest/assets/cards/athena-042.webp",
+    "bytes": 54090
+  },
+  {
+    "arquivo": "playtest/assets/cards/hades-001.webp",
+    "bytes": 70238
+  },
+  {
+    "arquivo": "playtest/assets/cards/poseidon-001.webp",
+    "bytes": 82536
+  },
+  {
+    "arquivo": "playtest/assets/portraits/athena-001.webp",
+    "bytes": 286880
+  },
+  {
+    "arquivo": "playtest/assets/portraits/athena-002.webp",
+    "bytes": 148886
+  },
+  {
+    "arquivo": "playtest/assets/portraits/athena-003.webp",
+    "bytes": 164570
+  },
+  {
+    "arquivo": "playtest/assets/portraits/athena-004.webp",
+    "bytes": 176980
+  },
+  {
+    "arquivo": "playtest/assets/portraits/athena-005.webp",
+    "bytes": 194412
+  },
+  {
+    "arquivo": "playtest/assets/portraits/athena-006.webp",
+    "bytes": 178108
+  },
+  {
+    "arquivo": "playtest/assets/sanctuary.webp",
+    "bytes": 396370
+  },
+  {
+    "arquivo": "playtest/audio.js",
+    "bytes": 8708,
+    "sha256": "e8e1f8aa8119642d0148968bd124008a301c33dcdc12f644e1dac067fe62376e"
+  },
+  {
+    "arquivo": "playtest/engine.js",
+    "bytes": 171395,
+    "sha256": "efdd27838bd2e3e94980fb3ad44e96c69cf83cbee2e42b40a68e016016ff7851"
+  },
+  {
+    "arquivo": "playtest/fx3d.js",
+    "bytes": 11628,
+    "sha256": "f87fcf58bf264efcc61bcfa2cc0b4a6eb8bcc5df6eb66040a096a4f1e539dcd0"
+  },
+  {
+    "arquivo": "playtest/game.css",
+    "bytes": 59194,
+    "sha256": "cefcd57b1fde4c5d565fc86978be92e44d5421f2e7dfa37b2fd486e2bb3bc532"
+  },
+  {
+    "arquivo": "playtest/index.html",
+    "bytes": 1520,
+    "sha256": "92573e63e2f4ad5b1f38af1a31f9b55c9b63ddfb0ab4e793f02337267f1b5512"
+  },
+  {
+    "arquivo": "playtest/manifest.webmanifest",
+    "bytes": 636
+  },
+  {
+    "arquivo": "playtest/menu.js",
+    "bytes": 11174,
+    "sha256": "d71a72522874663f94490ba95be7f3b08eb6f67f5939e20303f184b925f2b5c0"
+  },
+  {
+    "arquivo": "playtest/presentation.js",
+    "bytes": 6251,
+    "sha256": "d3da0edf550714621f7c9fe41f8d9560be2bd7874a607a3e1742831708c9eb76"
+  },
+  {
+    "arquivo": "playtest/soldiers.css",
+    "bytes": 11393,
+    "sha256": "e2f9b91e5bdf448906f1f526a56f1bfde3d4be396c8a4a61a77a1a4fe32e1fdb"
+  },
+  {
+    "arquivo": "playtest/styles.css",
+    "bytes": 64433,
+    "sha256": "8288f7b4700039b7d721043979bd397a15394d1dc63b26930d74522fac393be5"
+  },
+  {
+    "arquivo": "playtest/view.js",
+    "bytes": 21821,
+    "sha256": "d9c63883019f938c110a410d330139c7d423d3693ad0739ebe3d3ae1e0472390"
+  },
+  {
+    "arquivo": "sacred-geometry-black-set/64.eps",
+    "bytes": 995087
+  },
+  {
+    "arquivo": "sacred-geometry-black-set/64.jpg",
+    "bytes": 2861216
+  },
+  {
+    "arquivo": "sacred-geometry-black-set/License free.txt",
+    "bytes": 1531,
+    "sha256": "a581de7860b844500b09e1669e5f01cfbec114d554d9468d67bd2bed6a80a94b"
+  },
+  {
+    "arquivo": "sacred-geometry-black-set/License premium.txt",
+    "bytes": 1116,
+    "sha256": "75c8078c7bee981eab705fefd05e7523db501beaa01c3908938fb9ed372244c3"
+  },
+  {
+    "arquivo": "sacred-geometry-black-set.zip",
+    "bytes": 2847742
+  },
+  {
+    "arquivo": "simbolos.png",
+    "bytes": 4403030,
+    "sha256": "5108b1c8f156892288a52f5ca6f436fb8f6e80c477823843895bf1653613097b"
+  },
+  {
+    "arquivo": "simbolos2.png",
+    "bytes": 1975545,
+    "sha256": "3281386c614f9eaae0ad88ced6bc154c00955cbec3f4fd1cf6346b6eb0c12b7c"
+  },
+  {
+    "arquivo": "tools/rea-ps3/cpk.py",
+    "bytes": 4407,
+    "sha256": "1b9767addd328dd31f9bd24609a7654931147f36581fc0eb0cf381f58904652c"
+  },
+  {
+    "arquivo": "tools/rea-ps3/emb2png.py",
+    "bytes": 2588,
+    "sha256": "32c8ee7051b914e3c1aaaf24126849110ee8564b994554a3e00826d54bb238a3"
+  },
+  {
+    "arquivo": "tools/rea-ps3/sheet.py",
+    "bytes": 675,
+    "sha256": "a87bf445d013bea67714fdbe67dba315b12762aeecbf0334bc49a3a60d9f2986"
+  },
+  {
+    "arquivo": "tools/test-rules.mjs",
+    "bytes": 33668,
+    "sha256": "230b5ae5044533b516e22c14eb1d7ca6e319aacb619be0bbd0e7a056307e57f3"
+  }
+]

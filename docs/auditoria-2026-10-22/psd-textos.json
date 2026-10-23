@@ -1,0 +1,7364 @@
+[
+  {
+    "arquivo": "FRAMES/ARES/ARES.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          -106,
+          1205,
+          -68,
+          1212
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "ARES",
+        "visivel": true,
+        "texto": "ARES",
+        "bbox": [
+          181,
+          149,
+          398,
+          214
+        ]
+      },
+      {
+        "camada": "DRIVEN BY HATE",
+        "visivel": true,
+        "texto": "DRIVEN BY HATE",
+        "bbox": [
+          187,
+          266,
+          507,
+          296
+        ]
+      },
+      {
+        "camada": "“Kneel before the god of war”",
+        "visivel": true,
+        "texto": "“Kneel before the god of war”",
+        "bbox": [
+          448,
+          1930,
+          1055,
+          1971
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "BUTCHERY   Whenever one of your Devotees destroys another Devot",
+        "visivel": true,
+        "texto": "BUTCHERY\u0003  Whenever one of your Devotees destroys another Devotee in combat, the enemy God loses 1    .\r",
+        "bbox": [
+          186,
+          1484,
+          1313,
+          1624
+        ]
+      },
+      {
+        "camada": "ULTIMATE - OBLITERATION   Until end of turn, all your Devotees ",
+        "visivel": true,
+        "texto": "ULTIMATE - OBLITERATION\u0003  Until end of turn, all your Devotees get \u0003+2/+0, Prepared, Pierce and Long Range. \u0003Sacrifice all your Devotees at the end of the turn. \r",
+        "bbox": [
+          288,
+          1664,
+          1193,
+          1854
+        ]
+      },
+      {
+        "camada": "Awaken",
+        "visivel": true,
+        "texto": "Awaken",
+        "bbox": [
+          521,
+          1335,
+          984,
+          1431
+        ]
+      },
+      {
+        "camada": "5",
+        "visivel": true,
+        "texto": "5",
+        "bbox": [
+          432,
+          1347,
+          494,
+          1425
+        ]
+      },
+      {
+        "camada": "        BLOODLUST Choose a Devotee. It gets +1/+0 and Prepare u",
+        "visivel": true,
+        "texto": "        BLOODLUST\u0003Choose a Devotee. It gets +1/+0 and Prepare until end of turn.",
+        "bbox": [
+          141,
+          1183,
+          1339,
+          1273
+        ]
+      },
+      {
+        "camada": "30",
+        "visivel": true,
+        "texto": "30",
+        "bbox": [
+          1276,
+          1067,
+          1416,
+          1145
+        ]
+      },
+      {
+        "camada": "GOD — ARES",
+        "visivel": true,
+        "texto": "GOD — ARES",
+        "bbox": [
+          602,
+          1086,
+          886,
+          1120
+        ]
+      },
+      {
+        "camada": "5",
+        "visivel": true,
+        "texto": "5",
+        "bbox": [
+          101,
+          1065,
+          163,
+          1143
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ARTEMIS/ARTEMIS.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "ARTEMIS",
+        "visivel": true,
+        "texto": "ARTEMIS",
+        "bbox": [
+          181,
+          149,
+          549,
+          214
+        ]
+      },
+      {
+        "camada": "MOONLIGHT LULLABY",
+        "visivel": true,
+        "texto": "MOONLIGHT LULLABY",
+        "bbox": [
+          187,
+          265,
+          623,
+          297
+        ]
+      },
+      {
+        "camada": "“Look at the sky… that is the realm  you will never reach.”",
+        "visivel": true,
+        "texto": "“Look at the sky… that is the realm \u0003you will never reach.”",
+        "bbox": [
+          412,
+          1897,
+          1097,
+          1977
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "Moonlight Blessing         Your Base Cosmo produces 2 Cosmo ins",
+        "visivel": true,
+        "texto": "Moonlight Blessing \u0003       Your Base Cosmo produces 2 Cosmo instead of 1. \u0003Your Latent Cosmo does not disappear at the end of the turn.",
+        "bbox": [
+          171,
+          1530,
+          1306,
+          1670
+        ]
+      },
+      {
+        "camada": "ULTIMATE: MOON AWAKENING        15     :Choose any number of yo",
+        "visivel": true,
+        "texto": "ULTIMATE: MOON AWAKENING\u0003       15     :Choose any number of your Base Cosmos. \u0003They become 3/3 Moon Spirits with LONG RANGE and PIERCE. \r",
+        "bbox": [
+          142,
+          1698,
+          1340,
+          1838
+        ]
+      },
+      {
+        "camada": "GOD — ARTEMIS",
+        "visivel": true,
+        "texto": "GOD — ARTEMIS",
+        "bbox": [
+          562,
+          1065,
+          927,
+          1099
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          103,
+          1044,
+          164,
+          1122
+        ]
+      },
+      {
+        "camada": "24",
+        "visivel": true,
+        "texto": "24",
+        "bbox": [
+          1278,
+          1047,
+          1408,
+          1123
+        ]
+      },
+      {
+        "camada": "Awaken",
+        "visivel": true,
+        "texto": "Awaken",
+        "bbox": [
+          518,
+          1389,
+          980,
+          1485
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          429,
+          1400,
+          490,
+          1478
+        ]
+      },
+      {
+        "camada": "MOON HARVEST You may ignore the Base Cosmo symbol  requirement ",
+        "visivel": true,
+        "texto": "MOON HARVEST\u0003You may ignore the Base Cosmo symbol \u0003requirement when placing a card as Base Cosmo.\u0003If you do, you lose 2     .\r",
+        "bbox": [
+          271,
+          1157,
+          1176,
+          1347
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/ATHENA.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          -106,
+          1205,
+          -68,
+          1212
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "GOD — Athena — SAORI KIDO",
+        "visivel": true,
+        "texto": "GOD — Athena — SAORI KIDO",
+        "bbox": [
+          396,
+          878,
+          1090,
+          912
+        ]
+      },
+      {
+        "camada": "ATHENA",
+        "visivel": true,
+        "texto": "ATHENA",
+        "bbox": [
+          181,
+          153,
+          527,
+          216
+        ]
+      },
+      {
+        "camada": "FOR LOVE AND JUSTICE",
+        "visivel": true,
+        "texto": "FOR LOVE AND JUSTICE",
+        "bbox": [
+          187,
+          265,
+          655,
+          297
+        ]
+      },
+      {
+        "camada": "“For Athena, for love and justice”",
+        "visivel": true,
+        "texto": "“For Athena, for love and justice”",
+        "bbox": [
+          421,
+          1938,
+          1083,
+          1978
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          99,
+          854,
+          163,
+          930
+        ]
+      },
+      {
+        "camada": "30",
+        "visivel": true,
+        "texto": "30",
+        "bbox": [
+          1269,
+          854,
+          1409,
+          932
+        ]
+      },
+      {
+        "camada": "2 copiar",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          99,
+          854,
+          163,
+          930
+        ]
+      },
+      {
+        "camada": "ATHENA’S PRAYER When an Athena Saint you control is defeated an",
+        "visivel": true,
+        "texto": "ATHENA’S PRAYER\u0003When an Athena Saint you control is defeated and sent \u0003to Tartarus, you may pay 5     . If you do, return that \u0003Devotee to the battlefield Unprepared with a +1/+1 token on it. \u0003You may equip a Cloth to it ignoring equip cost.",
+        "bbox": [
+          155,
+          986,
+          1326,
+          1226
+        ]
+      },
+      {
+        "camada": "WAKE        If an Athena Saint you control would be destroyed d",
+        "visivel": true,
+        "texto": "WAKE\u0003       If an Athena Saint you control would be destroyed during combat, you may pay 3     . If you do, it survives.",
+        "bbox": [
+          177,
+          1519,
+          1389,
+          1659
+        ]
+      },
+      {
+        "camada": "ULTIMATE: Athena Exclamation        15     Destroy all enemy De",
+        "visivel": true,
+        "texto": "ULTIMATE: Athena Exclamation\u0003       15     Destroy all enemy Devotees that are in combat. \u0003Your Devotees are not destroyed this way. For each Devotee \u0003destroyed this way, its controller loses 1    .\r",
+        "bbox": [
+          186,
+          1691,
+          1297,
+          1881
+        ]
+      },
+      {
+        "camada": "Seventh Sense  All Athena Saints you control get +1/+1.",
+        "visivel": true,
+        "texto": "Seventh Sense \u0003All Athena Saints you control get +1/+1.",
+        "bbox": [
+          370,
+          1408,
+          1108,
+          1498
+        ]
+      },
+      {
+        "camada": "Awaken",
+        "visivel": true,
+        "texto": "Awaken",
+        "bbox": [
+          517,
+          1283,
+          979,
+          1379
+        ]
+      },
+      {
+        "camada": "5",
+        "visivel": true,
+        "texto": "5",
+        "bbox": [
+          428,
+          1295,
+          490,
+          1373
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/BRONZE/ANDROMEDAv1.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "Devotee — Bronze Saint — Athena",
+        "visivel": true,
+        "texto": "Devotee — Bronze Saint — Athena",
+        "bbox": [
+          323,
+          1238,
+          1167,
+          1272
+        ]
+      },
+      {
+        "camada": "ANDROMEDA SHUN",
+        "visivel": true,
+        "texto": "ANDROMEDA SHUN",
+        "bbox": [
+          365,
+          158,
+          1122,
+          217
+        ]
+      },
+      {
+        "camada": "THE PUREST ONE",
+        "visivel": true,
+        "texto": "THE PUREST ONE",
+        "bbox": [
+          574,
+          265,
+          914,
+          297
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          149,
+          158,
+          253,
+          283
+        ]
+      },
+      {
+        "camada": "When Andromeda Shun enters the battlefield, you may return targ",
+        "visivel": true,
+        "texto": "When Andromeda Shun enters the battlefield, you may return target enemy Devotee with cost 2 or less to its owner's hand.",
+        "bbox": [
+          111,
+          1416,
+          1370,
+          1508
+        ]
+      },
+      {
+        "camada": "NIMBLE.",
+        "visivel": true,
+        "texto": "NIMBLE.",
+        "bbox": [
+          657,
+          1347,
+          826,
+          1377
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "When an enemy Devotee engage Shun, you may spend 2      . If yo",
+        "visivel": true,
+        "texto": "When an enemy Devotee engage Shun, you may spend 2      . If you do, return that Devotee to its owner’s hand.",
+        "bbox": [
+          115,
+          1533,
+          1363,
+          1621
+        ]
+      },
+      {
+        "camada": "      5    NEBULA CHAIN: Return up to two enemy Devotees to the",
+        "visivel": true,
+        "texto": "      5    NEBULA CHAIN:\u0003Return up to two enemy Devotees to their owner’s hand.\u0003They can not be played again on the enemy’s next turn.\rThey\u0003 ",
+        "bbox": [
+          225,
+          1672,
+          1258,
+          1814
+        ]
+      },
+      {
+        "camada": "0",
+        "visivel": true,
+        "texto": "0",
+        "bbox": [
+          96,
+          1215,
+          168,
+          1293
+        ]
+      },
+      {
+        "camada": "4",
+        "visivel": true,
+        "texto": "4",
+        "bbox": [
+          1315,
+          1213,
+          1380,
+          1288
+        ]
+      },
+      {
+        "camada": "“Kindness is not weaknes” vs.”",
+        "visivel": true,
+        "texto": "“Kindness is not weaknes”\rvs.”",
+        "bbox": [
+          497,
+          1880,
+          1009,
+          1912
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/BRONZE/ANDROMEDAv2.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "When Andromeda Shun enters the battlefield, you may return targ",
+        "visivel": true,
+        "texto": "When Andromeda Shun enters the battlefield, you may return target enemy Devotee with cost 2 or less to its owner's hand.",
+        "bbox": [
+          136,
+          1467,
+          1320,
+          1606
+        ]
+      },
+      {
+        "camada": "When a Devotee attacks Shun, return that Devotee to its owner’s",
+        "visivel": true,
+        "texto": "When a Devotee attacks Shun, return that Devotee to its owner’s hand after combat.\r",
+        "bbox": [
+          136,
+          1636,
+          1353,
+          1725
+        ]
+      },
+      {
+        "camada": "4    : Nebula Chain — Return up to 2 target enemy Devotees to t",
+        "visivel": true,
+        "texto": "4    : Nebula Chain — Return up to 2 target enemy Devotees to thetir owners’ hands. Those Devotees cannot be played again this turn.\r",
+        "bbox": [
+          137,
+          1753,
+          1365,
+          1906
+        ]
+      },
+      {
+        "camada": "PUREST ONE",
+        "visivel": true,
+        "texto": "PUREST ONE",
+        "bbox": [
+          135,
+          1247,
+          386,
+          1279
+        ]
+      },
+      {
+        "camada": "DEVOTEE - BRONZE SAINT - ATHENA",
+        "visivel": true,
+        "texto": "DEVOTEE - BRONZE SAINT - ATHENA",
+        "bbox": [
+          134,
+          1309,
+          859,
+          1340
+        ]
+      },
+      {
+        "camada": "NIMBLE. t",
+        "visivel": true,
+        "texto": "NIMBLE.\rt",
+        "bbox": [
+          139,
+          1409,
+          318,
+          1444
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          148,
+          172,
+          252,
+          297
+        ]
+      },
+      {
+        "camada": "“Kindness is not weaknes” vs.”",
+        "visivel": true,
+        "texto": "“Kindness is not weaknes”\rvs.”",
+        "bbox": [
+          492,
+          2017,
+          1005,
+          2049
+        ]
+      },
+      {
+        "camada": "ANDROMEDA SHUN",
+        "visivel": true,
+        "texto": "ANDROMEDA SHUN",
+        "bbox": [
+          138,
+          1130,
+          683,
+          1212
+        ]
+      },
+      {
+        "camada": "4",
+        "visivel": true,
+        "texto": "4",
+        "bbox": [
+          1243,
+          1111,
+          1340,
+          1225
+        ]
+      },
+      {
+        "camada": "0",
+        "visivel": true,
+        "texto": "0",
+        "bbox": [
+          1016,
+          1110,
+          1114,
+          1231
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/BRONZE/CYGNUSv1.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          -106,
+          1205,
+          -68,
+          1212
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "Devotee — Bronze Saint — Athena",
+        "visivel": true,
+        "texto": "Devotee — Bronze Saint — Athena",
+        "bbox": [
+          323,
+          1238,
+          1167,
+          1272
+        ]
+      },
+      {
+        "camada": "CYGNUS HYOGA",
+        "visivel": true,
+        "texto": "CYGNUS HYOGA",
+        "bbox": [
+          398,
+          152,
+          1092,
+          217
+        ]
+      },
+      {
+        "camada": "DEVOTED SON",
+        "visivel": true,
+        "texto": "DEVOTED SON",
+        "bbox": [
+          600,
+          265,
+          889,
+          297
+        ]
+      },
+      {
+        "camada": "Whenever Hyoga deals damage to a Devotee,  put a Seal marker on",
+        "visivel": true,
+        "texto": "Whenever Hyoga deals damage to a Devotee, \u0003put a Seal marker on that Devotee.",
+        "bbox": [
+          313,
+          1522,
+          1165,
+          1614
+        ]
+      },
+      {
+        "camada": "1",
+        "visivel": true,
+        "texto": "1",
+        "bbox": [
+          116,
+          1208,
+          148,
+          1283
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          1317,
+          1204,
+          1378,
+          1282
+        ]
+      },
+      {
+        "camada": "Whenever Hyoga deals damage to a Devotee, put a  Seal marker on",
+        "visivel": false,
+        "texto": "Whenever Hyoga deals damage to a Devotee, put a \u0003Seal marker on that Devotee.",
+        "bbox": [
+          260,
+          1308,
+          1218,
+          1391
+        ]
+      },
+      {
+        "camada": " Devotees with SEAL counters get -1/-0  while Hyoga is prepared",
+        "visivel": true,
+        "texto": " Devotees with SEAL counters get -1/-0 \u0003while Hyoga is prepared.",
+        "bbox": [
+          387,
+          1401,
+          1108,
+          1493
+        ]
+      },
+      {
+        "camada": "CHEATER.",
+        "visivel": true,
+        "texto": "CHEATER.",
+        "bbox": [
+          641,
+          1331,
+          839,
+          1362
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          149,
+          152,
+          253,
+          277
+        ]
+      },
+      {
+        "camada": "       5    DIAMOND DUST Deal 1 damage to all enemy Devotees.  ",
+        "visivel": true,
+        "texto": "       5    DIAMOND DUST\u0003Deal 1 damage to all enemy Devotees. \u0003Devotees damaged this way gains a Seal counter.\r\u0003 ",
+        "bbox": [
+          274,
+          1651,
+          1207,
+          1793
+        ]
+      },
+      {
+        "camada": "‘MOTHER!”",
+        "visivel": true,
+        "texto": "‘MOTHER!”",
+        "bbox": [
+          649,
+          1868,
+          858,
+          1901
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/BRONZE/DRAGONv1.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          -106,
+          1205,
+          -68,
+          1212
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "Devotee — Bronze Saint — Athena",
+        "visivel": true,
+        "texto": "Devotee — Bronze Saint — Athena",
+        "bbox": [
+          323,
+          1238,
+          1167,
+          1272
+        ]
+      },
+      {
+        "camada": "DRAGON SHIRYU",
+        "visivel": true,
+        "texto": "DRAGON SHIRYU",
+        "bbox": [
+          386,
+          152,
+          1106,
+          217
+        ]
+      },
+      {
+        "camada": "TIRELESS GUARDIAN",
+        "visivel": true,
+        "texto": "TIRELESS GUARDIAN",
+        "bbox": [
+          543,
+          265,
+          943,
+          297
+        ]
+      },
+      {
+        "camada": "GUARDIAN. While Dragon Shiryu is equipped with a Cloth, he gets",
+        "visivel": true,
+        "texto": "GUARDIAN.\u0003While Dragon Shiryu is equipped with a Cloth, he gets +1/+1.",
+        "bbox": [
+          168,
+          1352,
+          1310,
+          1442
+        ]
+      },
+      {
+        "camada": "You may destroy a Cloth equipped to Shiryu: Prevent all damage ",
+        "visivel": true,
+        "texto": "You may destroy a Cloth equipped to Shiryu: Prevent all damage that would be dealt this turn to target Devotee or your God.",
+        "bbox": [
+          103,
+          1492,
+          1377,
+          1584
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "        2    Rozan Shoryu Ha Deal 5 damage to target Devotee. I",
+        "visivel": true,
+        "texto": "        2    Rozan Shoryu Ha\u0003Deal 5 damage to target Devotee. If Dragon Shiryu has no Cloth equipped, this Technique costs 2 less Cosmo.\r\u0003 ",
+        "bbox": [
+          151,
+          1633,
+          1330,
+          1776
+        ]
+      },
+      {
+        "camada": "“To protect Athena, I do not fear death .”",
+        "visivel": true,
+        "texto": "“To protect Athena, I do not fear death\r.”",
+        "bbox": [
+          360,
+          1877,
+          1142,
+          1917
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          154,
+          150,
+          253,
+          278
+        ]
+      },
+      {
+        "camada": "1",
+        "visivel": true,
+        "texto": "1",
+        "bbox": [
+          114,
+          1212,
+          146,
+          1287
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          1315,
+          1208,
+          1376,
+          1286
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/BRONZE/PEGASUSV1.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          -106,
+          1205,
+          -68,
+          1212
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "Devotee — Bronze Saint — Athena",
+        "visivel": true,
+        "texto": "Devotee — Bronze Saint — Athena",
+        "bbox": [
+          323,
+          1238,
+          1167,
+          1272
+        ]
+      },
+      {
+        "camada": "LONG RANGE.",
+        "visivel": true,
+        "texto": "LONG RANGE.",
+        "bbox": [
+          597,
+          1346,
+          891,
+          1378
+        ]
+      },
+      {
+        "camada": "PEGASUS SEIYA ",
+        "visivel": true,
+        "texto": "PEGASUS SEIYA\r",
+        "bbox": [
+          395,
+          145,
+          1094,
+          218
+        ]
+      },
+      {
+        "camada": "ATHENA’S LAST STAND",
+        "visivel": true,
+        "texto": "ATHENA’S LAST STAND",
+        "bbox": [
+          520,
+          265,
+          968,
+          297
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          166,
+          158,
+          265,
+          286
+        ]
+      },
+      {
+        "camada": "5    PEGASUS RYUSEIKEN: Seiya gets +3/+2. If Seiya is equipped ",
+        "visivel": true,
+        "texto": "5    PEGASUS RYUSEIKEN:\u0003Seiya gets +3/+2. If Seiya is equipped with a Cloth, \u0003he gains PIERCE this combat.\r\u0003 ",
+        "bbox": [
+          279,
+          1660,
+          1221,
+          1802
+        ]
+      },
+      {
+        "camada": "When Seiya would die, you may pay 3      .  If you do, return S",
+        "visivel": true,
+        "texto": "When Seiya would die, you may pay 3      . \u0003If you do, return Seiya to the battlefield Unprepared.",
+        "bbox": [
+          268,
+          1536,
+          1228,
+          1628
+        ]
+      },
+      {
+        "camada": "Whenever Seiya attacks, you may pay      . Pegasus Seiya gets +",
+        "visivel": true,
+        "texto": "Whenever Seiya attacks, you may pay      .\u0003Pegasus Seiya gets +1/+0. Activate only once per turn.\rPegasus Seiya gets +1/+0 for each Cosmo spent.\rActivate only once per turn.",
+        "bbox": [
+          237,
+          1417,
+          1246,
+          1509
+        ]
+      },
+      {
+        "camada": "“Burn cosmo, burn!” vs.”",
+        "visivel": true,
+        "texto": "“Burn cosmo, burn!”\rvs.”",
+        "bbox": [
+          558,
+          1873,
+          958,
+          1907
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          93,
+          1221,
+          157,
+          1297
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          1311,
+          1218,
+          1375,
+          1294
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/BRONZE/PHOENIX.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          -106,
+          1205,
+          -68,
+          1212
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "Devotee — Bronze Saint — Athena",
+        "visivel": true,
+        "texto": "Devotee — Bronze Saint — Athena",
+        "bbox": [
+          323,
+          1238,
+          1167,
+          1272
+        ]
+      },
+      {
+        "camada": "PHOENIX IKKI",
+        "visivel": true,
+        "texto": "PHOENIX IKKI",
+        "bbox": [
+          481,
+          158,
+          1010,
+          217
+        ]
+      },
+      {
+        "camada": "IMMORTAL",
+        "visivel": true,
+        "texto": "IMMORTAL",
+        "bbox": [
+          640,
+          265,
+          853,
+          297
+        ]
+      },
+      {
+        "camada": "PIERCE.  On your turn, If you used 3 or more Abilities or Momen",
+        "visivel": true,
+        "texto": "PIERCE.\u0003 On your turn, If you used 3 or more Abilities or Moments this turn, return Phoenix Ikki from Tartarus Prepared. \u0003Use this hability once per turn.",
+        "bbox": [
+          230,
+          1339,
+          1269,
+          1504
+        ]
+      },
+      {
+        "camada": "4",
+        "visivel": true,
+        "texto": "4",
+        "bbox": [
+          147,
+          166,
+          253,
+          288
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          105,
+          1215,
+          166,
+          1293
+        ]
+      },
+      {
+        "camada": "1",
+        "visivel": true,
+        "texto": "1",
+        "bbox": [
+          1340,
+          1213,
+          1372,
+          1288
+        ]
+      },
+      {
+        "camada": "      3      :Hōyoku Tenshō: Deal 3 damage to target Devotee or",
+        "visivel": true,
+        "texto": "      3      :Hōyoku Tenshō:\u0003Deal 3 damage to target Devotee or God.\rIf that Devotee would be defeated this turn, exile it instead.\rThey\u0003 ",
+        "bbox": [
+          356,
+          1724,
+          1126,
+          1821
+        ]
+      },
+      {
+        "camada": "  Houou Genma-Ken: If Ikki deals damage to a Devotee, you may p",
+        "visivel": true,
+        "texto": "  Houou Genma-Ken:\u0003If Ikki deals damage to a Devotee, you may pay 6 \u0003If you do, gain control of target Devotee until end of turn. \u0003Prepare that Devotee.\u0003 ",
+        "bbox": [
+          203,
+          1532,
+          1257,
+          1697
+        ]
+      },
+      {
+        "camada": "“You cannot kill someone who has already died.”  ",
+        "visivel": true,
+        "texto": "“You cannot kill someone who has already died.”\r\r",
+        "bbox": [
+          259,
+          1878,
+          1248,
+          1917
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/CLOTH/AQUARIUS-CLOTH.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          -106,
+          1205,
+          -68,
+          1212
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "RELIC - ATHENA - GOLD CLOTH",
+        "visivel": true,
+        "texto": "RELIC - ATHENA - GOLD CLOTH",
+        "bbox": [
+          411,
+          1238,
+          1076,
+          1272
+        ]
+      },
+      {
+        "camada": "AQUARIUS CLOTH",
+        "visivel": true,
+        "texto": "AQUARIUS CLOTH",
+        "bbox": [
+          408,
+          159,
+          1078,
+          221
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          1812,
+          444,
+          1858,
+          452
+        ]
+      },
+      {
+        "camada": "THE ICE",
+        "visivel": true,
+        "texto": "THE ICE",
+        "bbox": [
+          668,
+          265,
+          820,
+          297
+        ]
+      },
+      {
+        "camada": "When Aquarius Cloth enters the battlefield,  put a Seal counter",
+        "visivel": true,
+        "texto": "When Aquarius Cloth enters the battlefield, \u0003put a Seal counter on target Devotee.",
+        "bbox": [
+          343,
+          1329,
+          1143,
+          1413
+        ]
+      },
+      {
+        "camada": "You may equip Aquarius Cloth to Camus or  Hyoga at any time wit",
+        "visivel": true,
+        "texto": "You may equip Aquarius Cloth to Camus or \u0003Hyoga at any time without paying its equip cost.",
+        "bbox": [
+          304,
+          1438,
+          1186,
+          1522
+        ]
+      },
+      {
+        "camada": "4",
+        "visivel": true,
+        "texto": "4",
+        "bbox": [
+          147,
+          166,
+          253,
+          288
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "+2",
+        "visivel": true,
+        "texto": "+2",
+        "bbox": [
+          79,
+          1215,
+          194,
+          1291
+        ]
+      },
+      {
+        "camada": "+2",
+        "visivel": true,
+        "texto": "+2",
+        "bbox": [
+          1297,
+          1212,
+          1412,
+          1288
+        ]
+      },
+      {
+        "camada": "  Resonance — CAMUS: When this Devotee deals combat damage to a",
+        "visivel": true,
+        "texto": "  Resonance — CAMUS:\u0003When this Devotee deals combat damage to a Devotee, \u0003put a Seal counter on target Devotee.\u0003 ",
+        "bbox": [
+          224,
+          1558,
+          1261,
+          1682
+        ]
+      },
+      {
+        "camada": "  Resonance — HYOGA: When this Devotee deals combat damage  to ",
+        "visivel": true,
+        "texto": "  Resonance — HYOGA:\u0003When this Devotee deals combat damage \u0003to a Devotee, generate 1    .\u0003 ",
+        "bbox": [
+          355,
+          1710,
+          1132,
+          1834
+        ]
+      },
+      {
+        "camada": "“Ice stops everything. Even time.”",
+        "visivel": true,
+        "texto": "“Ice stops everything. Even time.”",
+        "bbox": [
+          418,
+          1878,
+          1088,
+          1918
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          1323,
+          1915,
+          1384,
+          1993
+        ]
+      },
+      {
+        "camada": "DAMAGE",
+        "visivel": true,
+        "texto": "DAMAGE",
+        "bbox": [
+          1299,
+          1879,
+          1422,
+          1901
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          102,
+          1913,
+          166,
+          1989
+        ]
+      },
+      {
+        "camada": "EQUIP",
+        "visivel": true,
+        "texto": "EQUIP",
+        "bbox": [
+          96,
+          1879,
+          181,
+          1901
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/CLOTH/CLOTH.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          -106,
+          1205,
+          -68,
+          1212
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "Devotee — Bronze Saint — Athena",
+        "visivel": true,
+        "texto": "Devotee — Bronze Saint — Athena",
+        "bbox": [
+          323,
+          1238,
+          1167,
+          1272
+        ]
+      },
+      {
+        "camada": "PHOENIX IKKI",
+        "visivel": true,
+        "texto": "PHOENIX IKKI",
+        "bbox": [
+          481,
+          158,
+          1010,
+          217
+        ]
+      },
+      {
+        "camada": "IMMORTAL",
+        "visivel": true,
+        "texto": "IMMORTAL",
+        "bbox": [
+          640,
+          265,
+          853,
+          297
+        ]
+      },
+      {
+        "camada": "PIERCE.  On your turn, If you used 3 or more Abilities or Momen",
+        "visivel": true,
+        "texto": "PIERCE.\u0003 On your turn, If you used 3 or more Abilities or Moments this turn, return Phoenix Ikki from Tartarus Prepared. \u0003Use this hability once per turn.",
+        "bbox": [
+          230,
+          1339,
+          1269,
+          1504
+        ]
+      },
+      {
+        "camada": "4",
+        "visivel": true,
+        "texto": "4",
+        "bbox": [
+          147,
+          166,
+          253,
+          288
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          105,
+          1215,
+          166,
+          1293
+        ]
+      },
+      {
+        "camada": "1",
+        "visivel": true,
+        "texto": "1",
+        "bbox": [
+          1340,
+          1213,
+          1372,
+          1288
+        ]
+      },
+      {
+        "camada": "      3      :Hōyoku Tenshō: Deal 3 damage to target Devotee or",
+        "visivel": true,
+        "texto": "      3      :Hōyoku Tenshō:\u0003Deal 3 damage to target Devotee or God.\rIf that Devotee would be defeated this turn, exile it instead.\rThey\u0003 ",
+        "bbox": [
+          356,
+          1724,
+          1126,
+          1821
+        ]
+      },
+      {
+        "camada": "  Houou Genma-Ken: If Ikki deals damage to a Devotee, you may p",
+        "visivel": true,
+        "texto": "  Houou Genma-Ken:\u0003If Ikki deals damage to a Devotee, you may pay 6 \u0003If you do, gain control of target Devotee until end of turn. \u0003Prepare that Devotee.\u0003 ",
+        "bbox": [
+          203,
+          1532,
+          1257,
+          1697
+        ]
+      },
+      {
+        "camada": "“You cannot kill someone who has already died.”  ",
+        "visivel": true,
+        "texto": "“You cannot kill someone who has already died.”\r\r",
+        "bbox": [
+          259,
+          1878,
+          1248,
+          1917
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/CLOTH/LEO-CLOTH.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          -106,
+          1205,
+          -68,
+          1212
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "RELIC - ATHENA - GOLD CLOTH",
+        "visivel": true,
+        "texto": "RELIC - ATHENA - GOLD CLOTH",
+        "bbox": [
+          411,
+          1238,
+          1076,
+          1272
+        ]
+      },
+      {
+        "camada": "LEO CLOTH",
+        "visivel": true,
+        "texto": "LEO CLOTH",
+        "bbox": [
+          545,
+          158,
+          946,
+          217
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          1812,
+          444,
+          1858,
+          452
+        ]
+      },
+      {
+        "camada": "THE SPARK",
+        "visivel": true,
+        "texto": "THE SPARK",
+        "bbox": [
+          639,
+          265,
+          853,
+          297
+        ]
+      },
+      {
+        "camada": "Equipped Devotee have LONG RANGE.",
+        "visivel": true,
+        "texto": "Equipped Devotee have LONG RANGE.",
+        "bbox": [
+          369,
+          1433,
+          1121,
+          1474
+        ]
+      },
+      {
+        "camada": "You may equip Sagittarius Cloth to Aiolia or Ikki at any time w",
+        "visivel": true,
+        "texto": "You may equip Sagittarius Cloth to Aiolia or Ikki at any time without paying its equip cost.",
+        "bbox": [
+          197,
+          1502,
+          1289,
+          1586
+        ]
+      },
+      {
+        "camada": "When Leo Cloth enters the battlefield, deal  1 damage to all en",
+        "visivel": true,
+        "texto": "When Leo Cloth enters the battlefield, deal \u00031 damage to all enemy Devotees.",
+        "bbox": [
+          345,
+          1325,
+          1141,
+          1409
+        ]
+      },
+      {
+        "camada": "4",
+        "visivel": true,
+        "texto": "4",
+        "bbox": [
+          147,
+          166,
+          253,
+          288
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "+2",
+        "visivel": true,
+        "texto": "+2",
+        "bbox": [
+          79,
+          1215,
+          194,
+          1291
+        ]
+      },
+      {
+        "camada": "+2",
+        "visivel": true,
+        "texto": "+2",
+        "bbox": [
+          1297,
+          1212,
+          1412,
+          1288
+        ]
+      },
+      {
+        "camada": "  Resonance — AIOLIA: When this Devotee attacks, it gets +1/+0 ",
+        "visivel": true,
+        "texto": "  Resonance — AIOLIA:\u0003When this Devotee attacks, it gets +1/+0 until end of turn.\r\u0003 ",
+        "bbox": [
+          204,
+          1617,
+          1281,
+          1700
+        ]
+      },
+      {
+        "camada": "  Resonance — Ikki: Equipped Devotee gets +1/+0 and PIERCE.  ",
+        "visivel": true,
+        "texto": "  Resonance — Ikki:\u0003Equipped Devotee gets +1/+0 and PIERCE.\u0003 ",
+        "bbox": [
+          334,
+          1730,
+          1154,
+          1812
+        ]
+      },
+      {
+        "camada": "“The roar of the lion shakes the battlefield.”",
+        "visivel": true,
+        "texto": "“The roar of the lion shakes the battlefield.”",
+        "bbox": [
+          324,
+          1877,
+          1183,
+          1910
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          1323,
+          1915,
+          1384,
+          1993
+        ]
+      },
+      {
+        "camada": "DAMAGE",
+        "visivel": true,
+        "texto": "DAMAGE",
+        "bbox": [
+          1299,
+          1879,
+          1422,
+          1901
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          102,
+          1913,
+          166,
+          1989
+        ]
+      },
+      {
+        "camada": "EQUIP",
+        "visivel": true,
+        "texto": "EQUIP",
+        "bbox": [
+          96,
+          1879,
+          181,
+          1901
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/CLOTH/LIBRA-CLOTH.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          -106,
+          1205,
+          -68,
+          1212
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "RELIC - ATHENA - GOLD CLOTH",
+        "visivel": true,
+        "texto": "RELIC - ATHENA - GOLD CLOTH",
+        "bbox": [
+          411,
+          1238,
+          1076,
+          1272
+        ]
+      },
+      {
+        "camada": "LIBRA CLOTH",
+        "visivel": true,
+        "texto": "LIBRA CLOTH",
+        "bbox": [
+          507,
+          158,
+          984,
+          217
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          1812,
+          444,
+          1858,
+          452
+        ]
+      },
+      {
+        "camada": "THE ARMORY",
+        "visivel": true,
+        "texto": "THE ARMORY",
+        "bbox": [
+          614,
+          265,
+          877,
+          297
+        ]
+      },
+      {
+        "camada": "You may equip Libra Cloth to Dohko or Shiryu at any time withou",
+        "visivel": true,
+        "texto": "You may equip Libra Cloth to Dohko or Shiryu at any time without paying its equip cost.\r",
+        "bbox": [
+          214,
+          1472,
+          1273,
+          1556
+        ]
+      },
+      {
+        "camada": "When Libra Cloth enters the battlefield, search your  deck for ",
+        "visivel": true,
+        "texto": "When Libra Cloth enters the battlefield, search your \u0003deck for a Weapon Relic, reveal it, and put it into \u0003your hand. Then shuffle your deck.",
+        "bbox": [
+          268,
+          1315,
+          1221,
+          1440
+        ]
+      },
+      {
+        "camada": "4",
+        "visivel": true,
+        "texto": "4",
+        "bbox": [
+          147,
+          166,
+          253,
+          288
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "+2",
+        "visivel": true,
+        "texto": "+2",
+        "bbox": [
+          79,
+          1215,
+          194,
+          1291
+        ]
+      },
+      {
+        "camada": "+2",
+        "visivel": true,
+        "texto": "+2",
+        "bbox": [
+          1297,
+          1212,
+          1412,
+          1288
+        ]
+      },
+      {
+        "camada": "  Resonance — DOHKO: : Destroy target Relic.   ",
+        "visivel": true,
+        "texto": "  Resonance — DOHKO:\u0003: Destroy target Relic.\r\u0003 ",
+        "bbox": [
+          506,
+          1598,
+          1008,
+          1680
+        ]
+      },
+      {
+        "camada": "  Resonance — SHIRYU: Equipped Devotee gets +0/+2 and LONG RANG",
+        "visivel": true,
+        "texto": "  Resonance — SHIRYU:\u0003Equipped Devotee gets +0/+2 and LONG RANGE.\r\u0003 ",
+        "bbox": [
+          265,
+          1730,
+          1223,
+          1812
+        ]
+      },
+      {
+        "camada": "\"Weapons are not meant for conquest, but for justice.\"",
+        "visivel": true,
+        "texto": "\"Weapons are not meant for conquest, but for justice.\"",
+        "bbox": [
+          318,
+          1877,
+          1183,
+          1908
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          1323,
+          1915,
+          1384,
+          1993
+        ]
+      },
+      {
+        "camada": "DAMAGE",
+        "visivel": true,
+        "texto": "DAMAGE",
+        "bbox": [
+          1299,
+          1879,
+          1422,
+          1901
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          102,
+          1913,
+          166,
+          1989
+        ]
+      },
+      {
+        "camada": "EQUIP",
+        "visivel": true,
+        "texto": "EQUIP",
+        "bbox": [
+          96,
+          1879,
+          181,
+          1901
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/CLOTH/SAGGITARIUS-CLOTH.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          -106,
+          1205,
+          -68,
+          1212
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "RELIC - ATHENA - GOLD CLOTH",
+        "visivel": true,
+        "texto": "RELIC - ATHENA - GOLD CLOTH",
+        "bbox": [
+          411,
+          1238,
+          1076,
+          1272
+        ]
+      },
+      {
+        "camada": "SAGITTARIUS CLOTH",
+        "visivel": true,
+        "texto": "SAGITTARIUS CLOTH",
+        "bbox": [
+          369,
+          158,
+          1121,
+          217
+        ]
+      },
+      {
+        "camada": "THE ARROW",
+        "visivel": true,
+        "texto": "THE ARROW",
+        "bbox": [
+          624,
+          265,
+          866,
+          297
+        ]
+      },
+      {
+        "camada": "Equipped Devotee can block Nimble.",
+        "visivel": true,
+        "texto": "Equipped Devotee can block Nimble.",
+        "bbox": [
+          388,
+          1432,
+          1102,
+          1474
+        ]
+      },
+      {
+        "camada": "You may equip Sagittarius Cloth to Aiolos or Seiya at any time ",
+        "visivel": true,
+        "texto": "You may equip Sagittarius Cloth to Aiolos or Seiya at any time without paying its equip cost.",
+        "bbox": [
+          221,
+          1502,
+          1267,
+          1586
+        ]
+      },
+      {
+        "camada": "When Sagittarius Cloth enters the battlefield,  it deals 3 dama",
+        "visivel": true,
+        "texto": "When Sagittarius Cloth enters the battlefield, \u0003it deals 3 damage to target Devotee.",
+        "bbox": [
+          327,
+          1325,
+          1158,
+          1409
+        ]
+      },
+      {
+        "camada": "4",
+        "visivel": true,
+        "texto": "4",
+        "bbox": [
+          147,
+          166,
+          253,
+          288
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "+2",
+        "visivel": true,
+        "texto": "+2",
+        "bbox": [
+          79,
+          1215,
+          194,
+          1291
+        ]
+      },
+      {
+        "camada": "+2",
+        "visivel": true,
+        "texto": "+2",
+        "bbox": [
+          1297,
+          1212,
+          1412,
+          1288
+        ]
+      },
+      {
+        "camada": "  Resonance — Aiolos: Equipped Devotee gains Pierce and gets +1",
+        "visivel": true,
+        "texto": "  Resonance — Aiolos:\u0003Equipped Devotee gains Pierce and gets +1/+1.\u0003 ",
+        "bbox": [
+          281,
+          1618,
+          1208,
+          1700
+        ]
+      },
+      {
+        "camada": "  Resonance — SEIYA: Equipped Devotee gains Impulse and gets +1",
+        "visivel": true,
+        "texto": "  Resonance — SEIYA:\u0003Equipped Devotee gains Impulse and gets +1/+1.\u0003 ",
+        "bbox": [
+          263,
+          1730,
+          1225,
+          1812
+        ]
+      },
+      {
+        "camada": "“Fly, arrow of Athena.”",
+        "visivel": true,
+        "texto": "“Fly, arrow of Athena.”",
+        "bbox": [
+          528,
+          1877,
+          978,
+          1917
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          1323,
+          1915,
+          1384,
+          1993
+        ]
+      },
+      {
+        "camada": "DAMAGE",
+        "visivel": true,
+        "texto": "DAMAGE",
+        "bbox": [
+          1299,
+          1879,
+          1422,
+          1901
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          102,
+          1913,
+          166,
+          1989
+        ]
+      },
+      {
+        "camada": "EQUIP",
+        "visivel": true,
+        "texto": "EQUIP",
+        "bbox": [
+          96,
+          1879,
+          181,
+          1901
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/CLOTH/VIRGO-CLOTH.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          -106,
+          1205,
+          -68,
+          1212
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "RELIC - ATHENA - GOLD CLOTH",
+        "visivel": true,
+        "texto": "RELIC - ATHENA - GOLD CLOTH",
+        "bbox": [
+          411,
+          1238,
+          1076,
+          1272
+        ]
+      },
+      {
+        "camada": "VIRGO CLOTH",
+        "visivel": true,
+        "texto": "VIRGO CLOTH",
+        "bbox": [
+          490,
+          158,
+          1004,
+          217
+        ]
+      },
+      {
+        "camada": "THE PRAYER",
+        "visivel": true,
+        "texto": "THE PRAYER",
+        "bbox": [
+          626,
+          266,
+          863,
+          296
+        ]
+      },
+      {
+        "camada": "You may equip Virgo Cloth to Shaka or Shun at any time without ",
+        "visivel": true,
+        "texto": "You may equip Virgo Cloth to Shaka or Shun at any time without paying its equip cost.\r",
+        "bbox": [
+          227,
+          1443,
+          1259,
+          1527
+        ]
+      },
+      {
+        "camada": "When Virgo Cloth enters the battlefield,  remove all Latent Cos",
+        "visivel": true,
+        "texto": "When Virgo Cloth enters the battlefield, \u0003remove all Latent Cosmo from target opponent.",
+        "bbox": [
+          304,
+          1326,
+          1184,
+          1410
+        ]
+      },
+      {
+        "camada": "4",
+        "visivel": true,
+        "texto": "4",
+        "bbox": [
+          147,
+          166,
+          253,
+          288
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "+2",
+        "visivel": true,
+        "texto": "+2",
+        "bbox": [
+          79,
+          1215,
+          194,
+          1291
+        ]
+      },
+      {
+        "camada": "+2",
+        "visivel": true,
+        "texto": "+2",
+        "bbox": [
+          1297,
+          1212,
+          1412,
+          1288
+        ]
+      },
+      {
+        "camada": "  Resonance — SHAKA: Whenever this Devotee deals combat damage ",
+        "visivel": true,
+        "texto": "  Resonance — SHAKA:\u0003Whenever this Devotee deals combat damage to a \u0003Devotee, the enemy God loses 1    .\r\u0003 ",
+        "bbox": [
+          274,
+          1568,
+          1211,
+          1692
+        ]
+      },
+      {
+        "camada": "  Resonance — SHUN: Equipped Devotee gets +0/+2, Guardian, and ",
+        "visivel": true,
+        "texto": "  Resonance — SHUN:\u0003Equipped Devotee gets +0/+2, Guardian, and Unfaith.\r\u0003 ",
+        "bbox": [
+          184,
+          1720,
+          1304,
+          1802
+        ]
+      },
+      {
+        "camada": "“Your senses are illusions.”",
+        "visivel": true,
+        "texto": "“Your senses are illusions.”",
+        "bbox": [
+          500,
+          1878,
+          1006,
+          1910
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          1323,
+          1915,
+          1384,
+          1993
+        ]
+      },
+      {
+        "camada": "DAMAGE",
+        "visivel": true,
+        "texto": "DAMAGE",
+        "bbox": [
+          1299,
+          1879,
+          1422,
+          1901
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          102,
+          1913,
+          166,
+          1989
+        ]
+      },
+      {
+        "camada": "EQUIP",
+        "visivel": true,
+        "texto": "EQUIP",
+        "bbox": [
+          96,
+          1879,
+          181,
+          1901
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/COMMON/CLOTHREPAIRER.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "CLOTH REPAIRER",
+        "visivel": true,
+        "texto": "CLOTH REPAIRER",
+        "bbox": [
+          441,
+          158,
+          1049,
+          217
+        ]
+      },
+      {
+        "camada": "MU’S PUPIL",
+        "visivel": true,
+        "texto": "MU’S PUPIL",
+        "bbox": [
+          639,
+          265,
+          854,
+          297
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          149,
+          158,
+          253,
+          283
+        ]
+      },
+      {
+        "camada": ":Remove 2 counters from target Cloth. ",
+        "visivel": true,
+        "texto": ":Remove 2 counters from target Cloth.\r",
+        "bbox": [
+          394,
+          1686,
+          1094,
+          1728
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "1",
+        "visivel": true,
+        "texto": "1",
+        "bbox": [
+          117,
+          1524,
+          149,
+          1599
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          1314,
+          1520,
+          1378,
+          1596
+        ]
+      },
+      {
+        "camada": "Devotee — MAGE — Athena",
+        "visivel": true,
+        "texto": "Devotee — MAGE — Athena",
+        "bbox": [
+          424,
+          1547,
+          1066,
+          1581
+        ]
+      },
+      {
+        "camada": "“I’m learning with the best!”",
+        "visivel": true,
+        "texto": "“I’m learning with the best!”",
+        "bbox": [
+          476,
+          1880,
+          1027,
+          1920
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/COMMON/COSMOAPPRENTICE.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "COSMO APPRENTICE",
+        "visivel": true,
+        "texto": "COSMO APPRENTICE",
+        "bbox": [
+          361,
+          158,
+          1132,
+          217
+        ]
+      },
+      {
+        "camada": "STUDENT",
+        "visivel": true,
+        "texto": "STUDENT",
+        "bbox": [
+          653,
+          265,
+          839,
+          297
+        ]
+      },
+      {
+        "camada": "1",
+        "visivel": true,
+        "texto": "1",
+        "bbox": [
+          183,
+          161,
+          235,
+          283
+        ]
+      },
+      {
+        "camada": "   :Generate 1     .",
+        "visivel": true,
+        "texto": "   :Generate 1     .",
+        "bbox": [
+          622,
+          1702,
+          899,
+          1732
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "0",
+        "visivel": true,
+        "texto": "0",
+        "bbox": [
+          96,
+          1523,
+          168,
+          1601
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          1314,
+          1520,
+          1378,
+          1596
+        ]
+      },
+      {
+        "camada": "Devotee — APPRENTICE — Athena",
+        "visivel": true,
+        "texto": "Devotee — APPRENTICE — Athena",
+        "bbox": [
+          357,
+          1547,
+          1133,
+          1581
+        ]
+      },
+      {
+        "camada": "“To dominate the Cosmos, let your heart feel the universe insid",
+        "visivel": true,
+        "texto": "“To dominate the Cosmos, let your heart feel the universe inside”  - Marin",
+        "bbox": [
+          216,
+          1880,
+          1280,
+          1909
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/COMMON/SANCTUARY GUARD.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "SANCTUARY GUARD",
+        "visivel": true,
+        "texto": "SANCTUARY GUARD",
+        "bbox": [
+          366,
+          158,
+          1123,
+          217
+        ]
+      },
+      {
+        "camada": "SANCTUARY’S FIRST STAND",
+        "visivel": true,
+        "texto": "SANCTUARY’S FIRST STAND",
+        "bbox": [
+          477,
+          265,
+          1013,
+          297
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          149,
+          158,
+          253,
+          283
+        ]
+      },
+      {
+        "camada": "When Sanctuary Guard enters the battlefield, you may equip a Cl",
+        "visivel": true,
+        "texto": "When Sanctuary Guard enters the battlefield, you may equip a Cloth with equip cost 1 or less to it without paying its equip cost.\r",
+        "bbox": [
+          288,
+          1691,
+          1197,
+          1833
+        ]
+      },
+      {
+        "camada": "GUARDIAN.",
+        "visivel": true,
+        "texto": "GUARDIAN.",
+        "bbox": [
+          624,
+          1624,
+          864,
+          1655
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "1",
+        "visivel": true,
+        "texto": "1",
+        "bbox": [
+          117,
+          1524,
+          149,
+          1599
+        ]
+      },
+      {
+        "camada": "1",
+        "visivel": true,
+        "texto": "1",
+        "bbox": [
+          1335,
+          1521,
+          1367,
+          1596
+        ]
+      },
+      {
+        "camada": "Devotee — SOLDIER — Athena",
+        "visivel": true,
+        "texto": "Devotee — SOLDIER — Athena",
+        "bbox": [
+          398,
+          1547,
+          1093,
+          1581
+        ]
+      },
+      {
+        "camada": "“One day, i will become a Saint!”",
+        "visivel": true,
+        "texto": "“One day, i will become a Saint!”",
+        "bbox": [
+          487,
+          1879,
+          1014,
+          1910
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/COMMON/SANCTUARYARCHER.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "SANCTUARY ARCHER",
+        "visivel": true,
+        "texto": "SANCTUARY ARCHER",
+        "bbox": [
+          356,
+          158,
+          1132,
+          217
+        ]
+      },
+      {
+        "camada": "LONG RANGE UNIT",
+        "visivel": true,
+        "texto": "LONG RANGE UNIT",
+        "bbox": [
+          558,
+          265,
+          935,
+          297
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          155,
+          158,
+          254,
+          286
+        ]
+      },
+      {
+        "camada": "LONG RANGE. Sanctuary Archer can attack Devotees with Nimble. ",
+        "visivel": true,
+        "texto": "LONG RANGE.\u0003Sanctuary Archer can attack Devotees with Nimble.\r",
+        "bbox": [
+          275,
+          1688,
+          1213,
+          1778
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          96,
+          1523,
+          160,
+          1599
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          1314,
+          1520,
+          1378,
+          1596
+        ]
+      },
+      {
+        "camada": "Devotee — ARCHER — Athena",
+        "visivel": true,
+        "texto": "Devotee — ARCHER — Athena",
+        "bbox": [
+          402,
+          1547,
+          1088,
+          1581
+        ]
+      },
+      {
+        "camada": "“Aim with Cosmo instead the eye”",
+        "visivel": true,
+        "texto": "“Aim with Cosmo instead the eye”",
+        "bbox": [
+          497,
+          1880,
+          1002,
+          1909
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/COMMON/SANCTUARYSOLDIER.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "SANCTUARY SOLDIER",
+        "visivel": true,
+        "texto": "SANCTUARY SOLDIER",
+        "bbox": [
+          392,
+          164,
+          1097,
+          217
+        ]
+      },
+      {
+        "camada": "LOYAL TO ATHENA",
+        "visivel": true,
+        "texto": "LOYAL TO ATHENA",
+        "bbox": [
+          562,
+          265,
+          931,
+          297
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          149,
+          158,
+          253,
+          283
+        ]
+      },
+      {
+        "camada": "When Sanctuary Soldier enters the battlefield, another target D",
+        "visivel": true,
+        "texto": "When Sanctuary Soldier enters the battlefield, another target Devotee gets +0/+1 until end of turn",
+        "bbox": [
+          243,
+          1688,
+          1246,
+          1780
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          96,
+          1523,
+          160,
+          1599
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          1314,
+          1520,
+          1378,
+          1596
+        ]
+      },
+      {
+        "camada": "Devotee — SOLDIER — Athena",
+        "visivel": true,
+        "texto": "Devotee — SOLDIER — Athena",
+        "bbox": [
+          398,
+          1547,
+          1093,
+          1581
+        ]
+      },
+      {
+        "camada": "“For Athena!”",
+        "visivel": true,
+        "texto": "“For Athena!”",
+        "bbox": [
+          618,
+          1880,
+          884,
+          1912
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/COMMON/SANCTUMHEALER.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "SANCTUM HEALER",
+        "visivel": true,
+        "texto": "SANCTUM HEALER",
+        "bbox": [
+          404,
+          158,
+          1084,
+          217
+        ]
+      },
+      {
+        "camada": "COSMO PROTECTOR",
+        "visivel": true,
+        "texto": "COSMO PROTECTOR",
+        "bbox": [
+          539,
+          265,
+          951,
+          297
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          149,
+          158,
+          253,
+          283
+        ]
+      },
+      {
+        "camada": ":Prevent the next 2 damage that  would be dealt to target Devot",
+        "visivel": true,
+        "texto": ":Prevent the next 2 damage that \u0003would be dealt to target Devotee this turn.",
+        "bbox": [
+          350,
+          1687,
+          1136,
+          1778
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "1",
+        "visivel": true,
+        "texto": "1",
+        "bbox": [
+          117,
+          1524,
+          149,
+          1599
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          1318,
+          1520,
+          1379,
+          1598
+        ]
+      },
+      {
+        "camada": "Devotee — MAGE — Athena",
+        "visivel": true,
+        "texto": "Devotee — MAGE — Athena",
+        "bbox": [
+          424,
+          1547,
+          1066,
+          1581
+        ]
+      },
+      {
+        "camada": "“Athena’s love can cure all wounds”",
+        "visivel": true,
+        "texto": "“Athena’s love can cure all wounds”",
+        "bbox": [
+          388,
+          1880,
+          1115,
+          1912
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/COMMON/STARHILLMONK.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "STAR HILL MONK",
+        "visivel": true,
+        "texto": "STAR HILL MONK",
+        "bbox": [
+          431,
+          158,
+          1062,
+          217
+        ]
+      },
+      {
+        "camada": "TURNING FAITH INTO COSMO",
+        "visivel": true,
+        "texto": "TURNING FAITH INTO COSMO",
+        "bbox": [
+          448,
+          265,
+          1040,
+          297
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          155,
+          158,
+          254,
+          286
+        ]
+      },
+      {
+        "camada": "At the beginning of your turn, generate 1     .  ",
+        "visivel": true,
+        "texto": "At the beginning of your turn, generate 1     .\r\r",
+        "bbox": [
+          332,
+          1698,
+          1154,
+          1740
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "1",
+        "visivel": true,
+        "texto": "1",
+        "bbox": [
+          117,
+          1524,
+          149,
+          1599
+        ]
+      },
+      {
+        "camada": "4",
+        "visivel": true,
+        "texto": "4",
+        "bbox": [
+          1315,
+          1521,
+          1380,
+          1596
+        ]
+      },
+      {
+        "camada": "Devotee — MAGE — Athena",
+        "visivel": true,
+        "texto": "Devotee — MAGE — Athena",
+        "bbox": [
+          424,
+          1547,
+          1066,
+          1581
+        ]
+      },
+      {
+        "camada": "“ATHENA, CAN YOU HEAR MY VOICE?”",
+        "visivel": true,
+        "texto": "“ATHENA, CAN YOU HEAR MY VOICE?”",
+        "bbox": [
+          369,
+          1879,
+          1133,
+          1914
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/GOLD/AIOLOS.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "SAGGITARIUS AIOLOS",
+        "visivel": true,
+        "texto": "SAGGITARIUS AIOLOS",
+        "bbox": [
+          381,
+          165,
+          1107,
+          218
+        ]
+      },
+      {
+        "camada": "THE SAVIOR",
+        "visivel": true,
+        "texto": "THE SAVIOR",
+        "bbox": [
+          628,
+          265,
+          861,
+          297
+        ]
+      },
+      {
+        "camada": "5",
+        "visivel": true,
+        "texto": "5",
+        "bbox": [
+          151,
+          161,
+          252,
+          287
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          100,
+          1193,
+          161,
+          1271
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          1318,
+          1190,
+          1379,
+          1268
+        ]
+      },
+      {
+        "camada": "Devotee — GOLD Saint — Athena",
+        "visivel": true,
+        "texto": "Devotee — GOLD Saint — Athena",
+        "bbox": [
+          352,
+          1217,
+          1138,
+          1251
+        ]
+      },
+      {
+        "camada": "\"Justice is not power. Justice is sacrifice.\"",
+        "visivel": true,
+        "texto": "\"Justice is not power. Justice is sacrifice.\"",
+        "bbox": [
+          430,
+          1879,
+          1066,
+          1910
+        ]
+      },
+      {
+        "camada": ":Generate      1. erate 1    .",
+        "visivel": false,
+        "texto": ":Generate      1.\rerate 1    .",
+        "bbox": [
+          606,
+          1779,
+          883,
+          1809
+        ]
+      },
+      {
+        "camada": "LONG RANGE. v    If that Devotee would be defeated this turn, e",
+        "visivel": true,
+        "texto": "LONG RANGE.\rv\u0003\u0003\r\rIf that Devotee would be defeated this turn, exile it instead.\rThey\u0003 ",
+        "bbox": [
+          584,
+          1329,
+          905,
+          1363
+        ]
+      },
+      {
+        "camada": "Aiolos can block Nimble Devotees.  Other Athena Devotees you co",
+        "visivel": true,
+        "texto": "Aiolos can block Nimble Devotees.\u0003\u0003Other Athena Devotees you control get +0/+1. \u0003If they are equipped with a Cloth, they get +1/+1 instead.",
+        "bbox": [
+          420,
+          1402,
+          1065,
+          1434
+        ]
+      },
+      {
+        "camada": "Other Athena Devotees you control get +0/+1.  If they are equip",
+        "visivel": true,
+        "texto": "Other Athena Devotees you control get +0/+1. \u0003If they are equipped with a Cloth, they get +1/+1 instead.",
+        "bbox": [
+          217,
+          1477,
+          1272,
+          1569
+        ]
+      },
+      {
+        "camada": "AWAKENED TECHNIQUE: Sagittarius Arrow Deal X damage to target D",
+        "visivel": true,
+        "texto": "AWAKENED TECHNIQUE: Sagittarius Arrow\u0003Deal X damage to target Devotee or God, \u0003where X equals your God current Soul.\r\rIf that Devotee would be defeated this turn, exile it instead.\rThey\u0003 ",
+        "bbox": [
+          254,
+          1631,
+          1235,
+          1771
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/GOLD/ALDEBARAN.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "TAURUS ALDEBARAN",
+        "visivel": true,
+        "texto": "TAURUS ALDEBARAN",
+        "bbox": [
+          360,
+          159,
+          1134,
+          218
+        ]
+      },
+      {
+        "camada": "Camada 10",
+        "visivel": true,
+        "texto": "",
+        "bbox": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "camada": "5",
+        "visivel": true,
+        "texto": "5",
+        "bbox": [
+          151,
+          161,
+          252,
+          287
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          96,
+          1193,
+          160,
+          1269
+        ]
+      },
+      {
+        "camada": "6",
+        "visivel": true,
+        "texto": "6",
+        "bbox": [
+          1317,
+          1191,
+          1381,
+          1268
+        ]
+      },
+      {
+        "camada": "Devotee — GOLD Saint — Athena",
+        "visivel": true,
+        "texto": "Devotee — GOLD Saint — Athena",
+        "bbox": [
+          352,
+          1217,
+          1138,
+          1251
+        ]
+      },
+      {
+        "camada": "\"I do not move for the weak.\"",
+        "visivel": true,
+        "texto": "\"I do not move for the weak.\"",
+        "bbox": [
+          516,
+          1879,
+          981,
+          1905
+        ]
+      },
+      {
+        "camada": ":Generate      1. erate 1    .",
+        "visivel": false,
+        "texto": ":Generate      1.\rerate 1    .",
+        "bbox": [
+          606,
+          1779,
+          883,
+          1809
+        ]
+      },
+      {
+        "camada": "GUARDIAN. v    If that Devotee would be defeated this turn, exi",
+        "visivel": true,
+        "texto": "GUARDIAN.\rv\u0003\u0003\r\rIf that Devotee would be defeated this turn, exile it instead.\rThey\u0003 ",
+        "bbox": [
+          613,
+          1329,
+          875,
+          1363
+        ]
+      },
+      {
+        "camada": "Enemy Devotees with Power 3  or less cannot attack your God.   ",
+        "visivel": true,
+        "texto": "Enemy Devotees with Power 3 \u0003or less cannot attack your God.\r\u0003\u0003Other Athena Devotees you control get +0/+1. \u0003If they are equipped with a Cloth, they get +1/+1 instead.",
+        "bbox": [
+          459,
+          1403,
+          1028,
+          1494
+        ]
+      },
+      {
+        "camada": "Whenever Aldebaran survives combat,  deal 1 damage to the enemy",
+        "visivel": true,
+        "texto": "Whenever Aldebaran survives combat, \u0003deal 1 damage to the enemy Devotee.",
+        "bbox": [
+          389,
+          1537,
+          1097,
+          1629
+        ]
+      },
+      {
+        "camada": "4    :GREAT HORN Aldebaran gets +3/+0 and PIERCE until end of t",
+        "visivel": true,
+        "texto": "4    :GREAT HORN\u0003Aldebaran gets +3/+0 and PIERCE until end of turn.\r\rIf that Devotee would be defeated this turn, exile it instead.\rThey\u0003 ",
+        "bbox": [
+          258,
+          1667,
+          1228,
+          1757
+        ]
+      },
+      {
+        "camada": "impenetrable sentinel",
+        "visivel": true,
+        "texto": "impenetrable sentinel",
+        "bbox": [
+          492,
+          266,
+          995,
+          298
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/GOLD/CAMUS.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "AQUARIUS CAMUS",
+        "visivel": true,
+        "texto": "AQUARIUS CAMUS",
+        "bbox": [
+          391,
+          159,
+          1093,
+          221
+        ]
+      },
+      {
+        "camada": "Camada 10",
+        "visivel": true,
+        "texto": "",
+        "bbox": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "camada": "5",
+        "visivel": true,
+        "texto": "5",
+        "bbox": [
+          151,
+          161,
+          252,
+          287
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          100,
+          1193,
+          161,
+          1271
+        ]
+      },
+      {
+        "camada": "4",
+        "visivel": true,
+        "texto": "4",
+        "bbox": [
+          1315,
+          1191,
+          1380,
+          1266
+        ]
+      },
+      {
+        "camada": "Devotee — GOLD Saint — Athena",
+        "visivel": true,
+        "texto": "Devotee — GOLD Saint — Athena",
+        "bbox": [
+          352,
+          1217,
+          1138,
+          1251
+        ]
+      },
+      {
+        "camada": "\"Freeze your heart, and your Cosmo will grow stronger.\"",
+        "visivel": true,
+        "texto": "\"Freeze your heart, and your Cosmo will grow stronger.\"",
+        "bbox": [
+          311,
+          1879,
+          1186,
+          1910
+        ]
+      },
+      {
+        "camada": ":Generate      1. erate 1    .",
+        "visivel": false,
+        "texto": ":Generate      1.\rerate 1    .",
+        "bbox": [
+          606,
+          1779,
+          883,
+          1809
+        ]
+      },
+      {
+        "camada": "CHEATER.",
+        "visivel": true,
+        "texto": "CHEATER.",
+        "bbox": [
+          641,
+          1309,
+          846,
+          1343
+        ]
+      },
+      {
+        "camada": "Devotees with SEAL counters get -1/-1. ",
+        "visivel": true,
+        "texto": "Devotees with SEAL counters get -1/-1.\r",
+        "bbox": [
+          379,
+          1392,
+          1109,
+          1434
+        ]
+      },
+      {
+        "camada": "Once per turn, when you put a SEAL counter on a Devotee,  you m",
+        "visivel": true,
+        "texto": "Once per turn, when you put a SEAL counter on a Devotee, \u0003you may put a SEAL counter on another target Devotee.\r",
+        "bbox": [
+          195,
+          1488,
+          1292,
+          1579
+        ]
+      },
+      {
+        "camada": "6     :AURORA EXECUTION Deal 1 damage to all enemy Devotees.  D",
+        "visivel": true,
+        "texto": "6     :AURORA EXECUTION\u0003Deal 1 damage to all enemy Devotees. \u0003Destroy all Devotees with a SEAL counter.\r\r\rIf that Devotee would be defeated this turn, exile it instead.\rThey\u0003 ",
+        "bbox": [
+          358,
+          1647,
+          1130,
+          1787
+        ]
+      },
+      {
+        "camada": "ABSOLUT ZERO",
+        "visivel": true,
+        "texto": "ABSOLUT ZERO",
+        "bbox": [
+          590,
+          266,
+          892,
+          298
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/GOLD/DEATHMASK.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "CANCER DEATHMASK",
+        "visivel": true,
+        "texto": "CANCER DEATHMASK",
+        "bbox": [
+          347,
+          159,
+          1148,
+          218
+        ]
+      },
+      {
+        "camada": "Camada 10",
+        "visivel": true,
+        "texto": "",
+        "bbox": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "camada": "4",
+        "visivel": true,
+        "texto": "4",
+        "bbox": [
+          150,
+          161,
+          256,
+          283
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          100,
+          1193,
+          161,
+          1271
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          1318,
+          1190,
+          1379,
+          1268
+        ]
+      },
+      {
+        "camada": "Devotee — GOLD Saint — Athena",
+        "visivel": true,
+        "texto": "Devotee — GOLD Saint — Athena",
+        "bbox": [
+          352,
+          1217,
+          1138,
+          1251
+        ]
+      },
+      {
+        "camada": "“Cry, scream, despair… it makes no difference.\"",
+        "visivel": true,
+        "texto": "“Cry, scream, despair… it makes no difference.\"",
+        "bbox": [
+          373,
+          1879,
+          1129,
+          1910
+        ]
+      },
+      {
+        "camada": ":Generate      1. erate 1    .",
+        "visivel": false,
+        "texto": ":Generate      1.\rerate 1    .",
+        "bbox": [
+          606,
+          1779,
+          883,
+          1809
+        ]
+      },
+      {
+        "camada": "PIERCE",
+        "visivel": true,
+        "texto": "PIERCE",
+        "bbox": [
+          674,
+          1340,
+          816,
+          1371
+        ]
+      },
+      {
+        "camada": "Whenever a Devotee is destroyed,  its controller loses 1 Soul. ",
+        "visivel": true,
+        "texto": "Whenever a Devotee is destroyed, \u0003its controller loses 1 Soul.\r",
+        "bbox": [
+          433,
+          1452,
+          1066,
+          1533
+        ]
+      },
+      {
+        "camada": "5    : Seki Shiki Meikai Ha Exile all Devotees from Tartarus. F",
+        "visivel": true,
+        "texto": "5    : Seki Shiki Meikai Ha\u0003Exile all Devotees from Tartarus. For each \u0003Devotee exiled this way, generate 1    .\r\r\r\rIf that Devotee would be defeated this turn, exile it instead.\rThey\u0003 ",
+        "bbox": [
+          367,
+          1624,
+          1122,
+          1764
+        ]
+      },
+      {
+        "camada": "YOMOTSU GUARDIAN",
+        "visivel": true,
+        "texto": "YOMOTSU GUARDIAN",
+        "bbox": [
+          524,
+          266,
+          955,
+          298
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/GOLD/SAGA.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "GEMINI SAGA",
+        "visivel": true,
+        "texto": "GEMINI SAGA",
+        "bbox": [
+          489,
+          159,
+          1001,
+          218
+        ]
+      },
+      {
+        "camada": "ATHENA’S TRAITOR ",
+        "visivel": true,
+        "texto": "ATHENA’S TRAITOR ",
+        "bbox": [
+          550,
+          265,
+          928,
+          297
+        ]
+      },
+      {
+        "camada": "5",
+        "visivel": true,
+        "texto": "5",
+        "bbox": [
+          151,
+          161,
+          252,
+          287
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          100,
+          1193,
+          161,
+          1271
+        ]
+      },
+      {
+        "camada": "4",
+        "visivel": true,
+        "texto": "4",
+        "bbox": [
+          1315,
+          1191,
+          1380,
+          1266
+        ]
+      },
+      {
+        "camada": "Devotee — GOLD Saint — Athena",
+        "visivel": true,
+        "texto": "Devotee — GOLD Saint — Athena",
+        "bbox": [
+          352,
+          1217,
+          1138,
+          1251
+        ]
+      },
+      {
+        "camada": "\"Your rebellion ends here.\"",
+        "visivel": true,
+        "texto": "\"Your rebellion ends here.\"",
+        "bbox": [
+          542,
+          1879,
+          955,
+          1905
+        ]
+      },
+      {
+        "camada": ":Generate      1. erate 1    .",
+        "visivel": false,
+        "texto": ":Generate      1.\rerate 1    .",
+        "bbox": [
+          606,
+          1779,
+          883,
+          1809
+        ]
+      },
+      {
+        "camada": "         Gemini Illusion Once per turn, when an enemy Technique",
+        "visivel": true,
+        "texto": "         Gemini Illusion\u0003Once per turn, when an enemy Technique targets a Devotee, you may change the target to another valid Devotee.\r\rIf that Devotee would be defeated this turn, exile it instead.\rThey\u0003 ",
+        "bbox": [
+          190,
+          1302,
+          1309,
+          1442
+        ]
+      },
+      {
+        "camada": "  3       Gemini Illusion Exile target Devotee with cost 3 or l",
+        "visivel": true,
+        "texto": "  3       Gemini Illusion\u0003Exile target Devotee with cost 3 or less. Return that Devotee to the battlefield under its owner control at the end of the next turn Unprepared.\r\rIf that Devotee would be defeated this turn, exile it instead.\rThey\u0003 ",
+        "bbox": [
+          106,
+          1458,
+          1418,
+          1601
+        ]
+      },
+      {
+        "camada": "  8      GALAXIAN EXPLOSION Choose target opponent. Deal damage",
+        "visivel": true,
+        "texto": "  8      GALAXIAN EXPLOSION\u0003Choose target opponent. Deal damage to all other Devotees equal \u0003to that player Latent Cosmo. Devotees destroyed this way are exiled \u0003instead of going to Tartarus\r\rIf that Devotee would be defeated this turn, exile it instead.\rThey\u0003 ",
+        "bbox": [
+          131,
+          1638,
+          1387,
+          1831
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/MOMENT/ATHENSJUDGMENT.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          -106,
+          1205,
+          -68,
+          1212
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "ATHENA’S JUDGMENT",
+        "visivel": true,
+        "texto": "ATHENA’S JUDGMENT",
+        "bbox": [
+          382,
+          191,
+          1111,
+          248
+        ]
+      },
+      {
+        "camada": "Destroy all Devotees.  Gold Saints you control are not destroye",
+        "visivel": true,
+        "texto": "Destroy all Devotees. \u0003Gold Saints you control are not destroyed.",
+        "bbox": [
+          356,
+          1636,
+          1132,
+          1720
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "MOMENT - ATHENA",
+        "visivel": true,
+        "texto": "MOMENT - ATHENA",
+        "bbox": [
+          528,
+          1498,
+          961,
+          1532
+        ]
+      },
+      {
+        "camada": "“When light descends, all resistance ends.”",
+        "visivel": true,
+        "texto": "“When light descends, all resistance ends.”",
+        "bbox": [
+          328,
+          1878,
+          1178,
+          1918
+        ]
+      },
+      {
+        "camada": "8",
+        "visivel": true,
+        "texto": "8",
+        "bbox": [
+          150,
+          154,
+          249,
+          282
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/MOMENT/COSMOBLESSING.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          -106,
+          1205,
+          -68,
+          1212
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "COSMO BLEESING",
+        "visivel": true,
+        "texto": "COSMO BLEESING",
+        "bbox": [
+          412,
+          189,
+          1079,
+          248
+        ]
+      },
+      {
+        "camada": "Target Devotee gets +2/+2 until end of turn. ",
+        "visivel": true,
+        "texto": "Target Devotee gets +2/+2 until end of turn.\r",
+        "bbox": [
+          198,
+          1657,
+          1287,
+          1790
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          145,
+          163,
+          249,
+          288
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "MOMENT - ATHENA",
+        "visivel": true,
+        "texto": "MOMENT - ATHENA",
+        "bbox": [
+          442,
+          1485,
+          1047,
+          1533
+        ]
+      },
+      {
+        "camada": "“Even the smallest Cosmo can change fate.”",
+        "visivel": true,
+        "texto": "“Even the smallest Cosmo can change fate.”",
+        "bbox": [
+          304,
+          1877,
+          1202,
+          1918
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/PHOENIX.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          -106,
+          1205,
+          -68,
+          1212
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "Devotee — Bronze Saint — Athena",
+        "visivel": true,
+        "texto": "Devotee — Bronze Saint — Athena",
+        "bbox": [
+          323,
+          1238,
+          1167,
+          1272
+        ]
+      },
+      {
+        "camada": "PHOENIX IKKI",
+        "visivel": true,
+        "texto": "PHOENIX IKKI",
+        "bbox": [
+          481,
+          158,
+          1010,
+          217
+        ]
+      },
+      {
+        "camada": "IMMORTAL",
+        "visivel": true,
+        "texto": "IMMORTAL",
+        "bbox": [
+          640,
+          265,
+          853,
+          297
+        ]
+      },
+      {
+        "camada": "PIERCE.  On your turn, If you used 3 or more Abilities or Momen",
+        "visivel": true,
+        "texto": "PIERCE.\u0003 On your turn, If you used 3 or more Abilities or Moments this turn, return Phoenix Ikki from Tartarus Prepared. \u0003Use this hability once per turn.",
+        "bbox": [
+          230,
+          1339,
+          1269,
+          1504
+        ]
+      },
+      {
+        "camada": "4",
+        "visivel": true,
+        "texto": "4",
+        "bbox": [
+          147,
+          166,
+          253,
+          288
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          105,
+          1215,
+          166,
+          1293
+        ]
+      },
+      {
+        "camada": "1",
+        "visivel": true,
+        "texto": "1",
+        "bbox": [
+          1340,
+          1213,
+          1372,
+          1288
+        ]
+      },
+      {
+        "camada": "      3      :Hōyoku Tenshō: Deal 3 damage to target Devotee or",
+        "visivel": true,
+        "texto": "      3      :Hōyoku Tenshō:\u0003Deal 3 damage to target Devotee or God.\rIf that Devotee would be defeated this turn, exile it instead.\rThey\u0003 ",
+        "bbox": [
+          356,
+          1724,
+          1126,
+          1821
+        ]
+      },
+      {
+        "camada": "  Houou Genma-Ken: If Ikki deals damage to a Devotee, you may p",
+        "visivel": true,
+        "texto": "  Houou Genma-Ken:\u0003If Ikki deals damage to a Devotee, you may pay 6 \u0003If you do, gain control of target Devotee until end of turn. \u0003Prepare that Devotee.\u0003 ",
+        "bbox": [
+          203,
+          1532,
+          1257,
+          1697
+        ]
+      },
+      {
+        "camada": "“You cannot kill someone who has already died.”  ",
+        "visivel": true,
+        "texto": "“You cannot kill someone who has already died.”\r\r",
+        "bbox": [
+          259,
+          1878,
+          1248,
+          1917
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/RELICS/ATHENASANPHORA.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          -106,
+          1205,
+          -68,
+          1212
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "ATHENA’S AMPHORA",
+        "visivel": true,
+        "texto": "ATHENA’S AMPHORA",
+        "bbox": [
+          342,
+          184,
+          1142,
+          248
+        ]
+      },
+      {
+        "camada": "When a Devotee with a SEAL counter would be  sent to Tartarus, ",
+        "visivel": true,
+        "texto": "When a Devotee with a SEAL counter would be \u0003sent to Tartarus, exile it instead.",
+        "bbox": [
+          303,
+          1648,
+          1184,
+          1728
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          152,
+          163,
+          251,
+          291
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "RELIC - ATHENA",
+        "visivel": true,
+        "texto": "RELIC - ATHENA",
+        "bbox": [
+          575,
+          1498,
+          915,
+          1532
+        ]
+      },
+      {
+        "camada": "“Within this vessel, even the gods are silenced.”",
+        "visivel": true,
+        "texto": "“Within this vessel, even the gods are silenced.”",
+        "bbox": [
+          284,
+          1878,
+          1223,
+          1918
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/RELICS/ATHENASEAL.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          -106,
+          1205,
+          -68,
+          1212
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "ATHENA SEAL",
+        "visivel": true,
+        "texto": "ATHENA SEAL",
+        "bbox": [
+          488,
+          189,
+          996,
+          248
+        ]
+      },
+      {
+        "camada": "Devotees in Tartarus cannot return to the battlefield. ",
+        "visivel": true,
+        "texto": "Devotees in Tartarus cannot return to the battlefield.\r",
+        "bbox": [
+          264,
+          1658,
+          1224,
+          1690
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          145,
+          163,
+          249,
+          288
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "RELIC - ATHENA",
+        "visivel": true,
+        "texto": "RELIC - ATHENA",
+        "bbox": [
+          575,
+          1498,
+          915,
+          1532
+        ]
+      },
+      {
+        "camada": "“Within this vessel, even the gods are silenced.”",
+        "visivel": true,
+        "texto": "“Within this vessel, even the gods are silenced.”",
+        "bbox": [
+          284,
+          1878,
+          1223,
+          1918
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/RELICS/LIBRA-NUNCHAKU.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          -106,
+          1205,
+          -68,
+          1212
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "LIBRA’S TONFA",
+        "visivel": true,
+        "texto": "LIBRA’S TONFA",
+        "bbox": [
+          472,
+          153,
+          1017,
+          217
+        ]
+      },
+      {
+        "camada": "PIERCE THE EVIL",
+        "visivel": true,
+        "texto": "PIERCE THE EVIL",
+        "bbox": [
+          588,
+          265,
+          905,
+          297
+        ]
+      },
+      {
+        "camada": ": Equipped Devotee deals  1 damage to target Devotee.",
+        "visivel": true,
+        "texto": ": Equipped Devotee deals \u00031 damage to target Devotee.",
+        "bbox": [
+          480,
+          1668,
+          1010,
+          1752
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          152,
+          163,
+          251,
+          291
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "+1",
+        "visivel": true,
+        "texto": "+1",
+        "bbox": [
+          92,
+          1536,
+          184,
+          1611
+        ]
+      },
+      {
+        "camada": "+1",
+        "visivel": true,
+        "texto": "+1",
+        "bbox": [
+          1310,
+          1533,
+          1402,
+          1608
+        ]
+      },
+      {
+        "camada": "RELIC - ATHENA - WEAPON",
+        "visivel": true,
+        "texto": "RELIC - ATHENA - WEAPON",
+        "bbox": [
+          450,
+          1558,
+          1037,
+          1592
+        ]
+      },
+      {
+        "camada": "“Find the evil and pierce it to the end”",
+        "visivel": true,
+        "texto": "“Find the evil and pierce it to the end”",
+        "bbox": [
+          370,
+          1878,
+          1137,
+          1917
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          102,
+          1913,
+          166,
+          1989
+        ]
+      },
+      {
+        "camada": "EQUIP",
+        "visivel": true,
+        "texto": "EQUIP",
+        "bbox": [
+          96,
+          1879,
+          181,
+          1901
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/RELICS/LIBRA-SHIELD.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          -106,
+          1205,
+          -68,
+          1212
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "LIBRA’S SHIELD",
+        "visivel": true,
+        "texto": "LIBRA’S SHIELD",
+        "bbox": [
+          470,
+          153,
+          1021,
+          217
+        ]
+      },
+      {
+        "camada": "ULTIMATE GUARD",
+        "visivel": true,
+        "texto": "ULTIMATE GUARD",
+        "bbox": [
+          574,
+          265,
+          917,
+          297
+        ]
+      },
+      {
+        "camada": "Equipped Devotee gets Guardian.",
+        "visivel": true,
+        "texto": "Equipped Devotee gets Guardian.",
+        "bbox": [
+          401,
+          1701,
+          1089,
+          1742
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          152,
+          163,
+          251,
+          291
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "+0",
+        "visivel": true,
+        "texto": "+0",
+        "bbox": [
+          70,
+          1535,
+          204,
+          1613
+        ]
+      },
+      {
+        "camada": "+3",
+        "visivel": true,
+        "texto": "+3",
+        "bbox": [
+          1294,
+          1532,
+          1415,
+          1610
+        ]
+      },
+      {
+        "camada": "RELIC - ATHENA - WEAPON",
+        "visivel": true,
+        "texto": "RELIC - ATHENA - WEAPON",
+        "bbox": [
+          450,
+          1558,
+          1037,
+          1592
+        ]
+      },
+      {
+        "camada": "“Unbreakable.”",
+        "visivel": true,
+        "texto": "“Unbreakable.”",
+        "bbox": [
+          599,
+          1878,
+          907,
+          1910
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          102,
+          1913,
+          166,
+          1989
+        ]
+      },
+      {
+        "camada": "EQUIP",
+        "visivel": true,
+        "texto": "EQUIP",
+        "bbox": [
+          96,
+          1879,
+          181,
+          1901
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/RELICS/LIBRA-SPEAR.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          -106,
+          1205,
+          -68,
+          1212
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "LIBRA SPEAR",
+        "visivel": true,
+        "texto": "LIBRA SPEAR",
+        "bbox": [
+          508,
+          158,
+          981,
+          217
+        ]
+      },
+      {
+        "camada": "PIERCE THE EVIL",
+        "visivel": true,
+        "texto": "PIERCE THE EVIL",
+        "bbox": [
+          588,
+          265,
+          905,
+          297
+        ]
+      },
+      {
+        "camada": ": Equipped Devotee deals  1 damage to target Devotee.",
+        "visivel": true,
+        "texto": ": Equipped Devotee deals \u00031 damage to target Devotee.",
+        "bbox": [
+          480,
+          1668,
+          1010,
+          1752
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          152,
+          163,
+          251,
+          291
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "+1",
+        "visivel": true,
+        "texto": "+1",
+        "bbox": [
+          92,
+          1536,
+          184,
+          1611
+        ]
+      },
+      {
+        "camada": "+1",
+        "visivel": true,
+        "texto": "+1",
+        "bbox": [
+          1310,
+          1533,
+          1402,
+          1608
+        ]
+      },
+      {
+        "camada": "RELIC - ATHENA - WEAPON",
+        "visivel": true,
+        "texto": "RELIC - ATHENA - WEAPON",
+        "bbox": [
+          450,
+          1558,
+          1037,
+          1592
+        ]
+      },
+      {
+        "camada": "“Where evil stands, justice will pierce it to its end.”",
+        "visivel": true,
+        "texto": "“Where evil stands, justice will pierce it to its end.”",
+        "bbox": [
+          259,
+          1878,
+          1248,
+          1917
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          102,
+          1913,
+          166,
+          1989
+        ]
+      },
+      {
+        "camada": "EQUIP",
+        "visivel": true,
+        "texto": "EQUIP",
+        "bbox": [
+          96,
+          1879,
+          181,
+          1901
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/RELICS/LIBRA-SWORD - cópia.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          -106,
+          1205,
+          -68,
+          1212
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "LIBRA SWORD",
+        "visivel": true,
+        "texto": "LIBRA SWORD",
+        "bbox": [
+          481,
+          158,
+          1010,
+          217
+        ]
+      },
+      {
+        "camada": "JUSTICE’S EDGE",
+        "visivel": true,
+        "texto": "JUSTICE’S EDGE",
+        "bbox": [
+          586,
+          265,
+          902,
+          297
+        ]
+      },
+      {
+        "camada": "When equipped Devotee attacks, it  gains PIERCE until end of tu",
+        "visivel": true,
+        "texto": "When equipped Devotee attacks, it \u0003gains PIERCE until end of turn.\u0003\u0003\r\rWhen equipped Devotee attacks, it gains Pierce until end of turn.\r\r",
+        "bbox": [
+          417,
+          1678,
+          1071,
+          1762
+        ]
+      },
+      {
+        "camada": "4",
+        "visivel": true,
+        "texto": "4",
+        "bbox": [
+          147,
+          166,
+          253,
+          288
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "+2",
+        "visivel": true,
+        "texto": "+2",
+        "bbox": [
+          79,
+          1535,
+          194,
+          1611
+        ]
+      },
+      {
+        "camada": "0",
+        "visivel": true,
+        "texto": "0",
+        "bbox": [
+          1318,
+          1532,
+          1390,
+          1610
+        ]
+      },
+      {
+        "camada": "RELIC - ATHENA - WEAPON",
+        "visivel": true,
+        "texto": "RELIC - ATHENA - WEAPON",
+        "bbox": [
+          450,
+          1558,
+          1037,
+          1592
+        ]
+      },
+      {
+        "camada": "“Your senses are illusions.”",
+        "visivel": true,
+        "texto": "“Your senses are illusions.”",
+        "bbox": [
+          500,
+          1878,
+          1006,
+          1910
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          102,
+          1913,
+          166,
+          1989
+        ]
+      },
+      {
+        "camada": "EQUIP",
+        "visivel": true,
+        "texto": "EQUIP",
+        "bbox": [
+          96,
+          1879,
+          181,
+          1901
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/RELICS/LIBRA-SWORD.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          -106,
+          1205,
+          -68,
+          1212
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "LIBRA SWORD",
+        "visivel": true,
+        "texto": "LIBRA SWORD",
+        "bbox": [
+          481,
+          158,
+          1010,
+          217
+        ]
+      },
+      {
+        "camada": "JUSTICE’S EDGE",
+        "visivel": true,
+        "texto": "JUSTICE’S EDGE",
+        "bbox": [
+          586,
+          265,
+          902,
+          297
+        ]
+      },
+      {
+        "camada": "When equipped Devotee attacks, it  gains PIERCE until end of tu",
+        "visivel": true,
+        "texto": "When equipped Devotee attacks, it \u0003gains PIERCE until end of turn.\u0003\u0003\r\rWhen equipped Devotee attacks, it gains Pierce until end of turn.\r\r",
+        "bbox": [
+          417,
+          1678,
+          1071,
+          1762
+        ]
+      },
+      {
+        "camada": "4",
+        "visivel": true,
+        "texto": "4",
+        "bbox": [
+          147,
+          166,
+          253,
+          288
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "+2",
+        "visivel": true,
+        "texto": "+2",
+        "bbox": [
+          79,
+          1535,
+          194,
+          1611
+        ]
+      },
+      {
+        "camada": "0",
+        "visivel": true,
+        "texto": "0",
+        "bbox": [
+          1318,
+          1532,
+          1390,
+          1610
+        ]
+      },
+      {
+        "camada": "RELIC - ATHENA - WEAPON",
+        "visivel": true,
+        "texto": "RELIC - ATHENA - WEAPON",
+        "bbox": [
+          450,
+          1558,
+          1037,
+          1592
+        ]
+      },
+      {
+        "camada": "“Forged in Cosmo, guided by light, executed by justice.”",
+        "visivel": true,
+        "texto": "“Forged in Cosmo, guided by light, executed by justice.”",
+        "bbox": [
+          302,
+          1877,
+          1203,
+          1908
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          102,
+          1913,
+          166,
+          1989
+        ]
+      },
+      {
+        "camada": "EQUIP",
+        "visivel": true,
+        "texto": "EQUIP",
+        "bbox": [
+          96,
+          1879,
+          181,
+          1901
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/RELICS/LIBRA-TONFA.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          -106,
+          1205,
+          -68,
+          1212
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "LIBRA’S TONFA",
+        "visivel": true,
+        "texto": "LIBRA’S TONFA",
+        "bbox": [
+          472,
+          153,
+          1017,
+          217
+        ]
+      },
+      {
+        "camada": "BRUTAL IMPACT",
+        "visivel": true,
+        "texto": "BRUTAL IMPACT",
+        "bbox": [
+          592,
+          265,
+          901,
+          297
+        ]
+      },
+      {
+        "camada": ": Put a SEAL counter on target  Devotee that was dealt damage t",
+        "visivel": true,
+        "texto": ": Put a SEAL counter on target \u0003Devotee that was dealt damage this turn.",
+        "bbox": [
+          367,
+          1670,
+          1122,
+          1752
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          152,
+          163,
+          251,
+          291
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "+0",
+        "visivel": true,
+        "texto": "+0",
+        "bbox": [
+          70,
+          1535,
+          204,
+          1613
+        ]
+      },
+      {
+        "camada": "+2",
+        "visivel": true,
+        "texto": "+2",
+        "bbox": [
+          1297,
+          1532,
+          1412,
+          1608
+        ]
+      },
+      {
+        "camada": "RELIC - ATHENA - WEAPON",
+        "visivel": true,
+        "texto": "RELIC - ATHENA - WEAPON",
+        "bbox": [
+          450,
+          1558,
+          1037,
+          1592
+        ]
+      },
+      {
+        "camada": "“In the crucible of brutality, justice is born.”",
+        "visivel": true,
+        "texto": "“In the crucible of brutality, justice is born.”",
+        "bbox": [
+          327,
+          1877,
+          1179,
+          1917
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          102,
+          1913,
+          166,
+          1989
+        ]
+      },
+      {
+        "camada": "EQUIP",
+        "visivel": true,
+        "texto": "EQUIP",
+        "bbox": [
+          96,
+          1879,
+          181,
+          1901
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/RELICS/LIBRA-TRIDENT.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          -106,
+          1205,
+          -68,
+          1212
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "LIBRA SWORD",
+        "visivel": true,
+        "texto": "LIBRA SWORD",
+        "bbox": [
+          481,
+          158,
+          1010,
+          217
+        ]
+      },
+      {
+        "camada": "JUSTICE’S EDGE",
+        "visivel": true,
+        "texto": "JUSTICE’S EDGE",
+        "bbox": [
+          586,
+          265,
+          902,
+          297
+        ]
+      },
+      {
+        "camada": "When equipped Devotee attacks, it  gains PIERCE until end of tu",
+        "visivel": true,
+        "texto": "When equipped Devotee attacks, it \u0003gains PIERCE until end of turn.\u0003\u0003\r\rWhen equipped Devotee attacks, it gains Pierce until end of turn.\r\r",
+        "bbox": [
+          417,
+          1678,
+          1071,
+          1762
+        ]
+      },
+      {
+        "camada": "4",
+        "visivel": true,
+        "texto": "4",
+        "bbox": [
+          147,
+          166,
+          253,
+          288
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "+2",
+        "visivel": true,
+        "texto": "+2",
+        "bbox": [
+          79,
+          1535,
+          194,
+          1611
+        ]
+      },
+      {
+        "camada": "0",
+        "visivel": true,
+        "texto": "0",
+        "bbox": [
+          1318,
+          1532,
+          1390,
+          1610
+        ]
+      },
+      {
+        "camada": "RELIC - ATHENA - WEAPON",
+        "visivel": true,
+        "texto": "RELIC - ATHENA - WEAPON",
+        "bbox": [
+          450,
+          1558,
+          1037,
+          1592
+        ]
+      },
+      {
+        "camada": "“Your senses are illusions.”",
+        "visivel": true,
+        "texto": "“Your senses are illusions.”",
+        "bbox": [
+          500,
+          1878,
+          1006,
+          1910
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          102,
+          1913,
+          166,
+          1989
+        ]
+      },
+      {
+        "camada": "EQUIP",
+        "visivel": true,
+        "texto": "EQUIP",
+        "bbox": [
+          96,
+          1879,
+          181,
+          1901
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/RELICS/POPEDAGGER.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          -106,
+          1205,
+          -68,
+          1212
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "POPE’S DAGGER",
+        "visivel": true,
+        "texto": "POPE’S DAGGER",
+        "bbox": [
+          442,
+          153,
+          1047,
+          217
+        ]
+      },
+      {
+        "camada": "ETERNAL SADNESS",
+        "visivel": true,
+        "texto": "ETERNAL SADNESS",
+        "bbox": [
+          559,
+          265,
+          932,
+          297
+        ]
+      },
+      {
+        "camada": "If equipped Devotee deals damage to a  God, that God loses 1 ad",
+        "visivel": true,
+        "texto": "If equipped Devotee deals damage to a \u0003God, that God loses 1 additional     .",
+        "bbox": [
+          379,
+          1668,
+          1111,
+          1748
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          145,
+          163,
+          249,
+          288
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "+1",
+        "visivel": true,
+        "texto": "+1",
+        "bbox": [
+          92,
+          1536,
+          184,
+          1611
+        ]
+      },
+      {
+        "camada": "+0",
+        "visivel": true,
+        "texto": "+0",
+        "bbox": [
+          1288,
+          1532,
+          1422,
+          1610
+        ]
+      },
+      {
+        "camada": "RELIC - ATHENA - WEAPON",
+        "visivel": true,
+        "texto": "RELIC - ATHENA - WEAPON",
+        "bbox": [
+          450,
+          1558,
+          1037,
+          1592
+        ]
+      },
+      {
+        "camada": "“Forged for protection… turned against the one I was meant to p",
+        "visivel": true,
+        "texto": "“Forged for protection… turned against the one I was meant to protect.”",
+        "bbox": [
+          244,
+          1877,
+          1259,
+          1905
+        ]
+      },
+      {
+        "camada": "1",
+        "visivel": true,
+        "texto": "1",
+        "bbox": [
+          123,
+          1914,
+          155,
+          1989
+        ]
+      },
+      {
+        "camada": "EQUIP",
+        "visivel": true,
+        "texto": "EQUIP",
+        "bbox": [
+          96,
+          1879,
+          181,
+          1901
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/RELICS/SAGITTARIUSBOWL.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          -106,
+          1205,
+          -68,
+          1212
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "SAGITTARIUS BOWL",
+        "visivel": true,
+        "texto": "SAGITTARIUS BOWL",
+        "bbox": [
+          375,
+          158,
+          1113,
+          217
+        ]
+      },
+      {
+        "camada": "LIGHT IN DESPAIR",
+        "visivel": true,
+        "texto": "LIGHT IN DESPAIR",
+        "bbox": [
+          575,
+          265,
+          917,
+          297
+        ]
+      },
+      {
+        "camada": ": Equipped Devotee deals  4 damage to target Devotee or God.",
+        "visivel": true,
+        "texto": ": Equipped Devotee deals \u00034 damage to target Devotee or God.",
+        "bbox": [
+          406,
+          1668,
+          1081,
+          1752
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          152,
+          163,
+          251,
+          291
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "+2",
+        "visivel": true,
+        "texto": "+2",
+        "bbox": [
+          79,
+          1535,
+          194,
+          1611
+        ]
+      },
+      {
+        "camada": "+0",
+        "visivel": true,
+        "texto": "+0",
+        "bbox": [
+          1288,
+          1532,
+          1422,
+          1610
+        ]
+      },
+      {
+        "camada": "RELIC - ATHENA - WEAPON",
+        "visivel": true,
+        "texto": "RELIC - ATHENA - WEAPON",
+        "bbox": [
+          450,
+          1558,
+          1037,
+          1592
+        ]
+      },
+      {
+        "camada": "“Light the arrow. End the darkness.”",
+        "visivel": true,
+        "texto": "“Light the arrow. End the darkness.”",
+        "bbox": [
+          398,
+          1878,
+          1108,
+          1918
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          102,
+          1913,
+          166,
+          1989
+        ]
+      },
+      {
+        "camada": "EQUIP",
+        "visivel": true,
+        "texto": "EQUIP",
+        "bbox": [
+          96,
+          1879,
+          181,
+          1901
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/RELICS/SEALOFATHENA.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          -106,
+          1205,
+          -68,
+          1212
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "STAFF OF ATHENA",
+        "visivel": true,
+        "texto": "STAFF OF ATHENA",
+        "bbox": [
+          419,
+          189,
+          1069,
+          248
+        ]
+      },
+      {
+        "camada": "When Staff of Athena enters the battlefield, put target Devotee",
+        "visivel": true,
+        "texto": "When Staff of Athena enters the battlefield, put target Devotee with costs 4 or more into the Void until Staff of Athena leaves the battlefield. When it leaves the battlefield, return that Devotee to the battlefield under its owner’s control.\r",
+        "bbox": [
+          184,
+          1618,
+          1304,
+          1775
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "RELIC - ATHENA",
+        "visivel": true,
+        "texto": "RELIC - ATHENA",
+        "bbox": [
+          575,
+          1498,
+          915,
+          1532
+        ]
+      },
+      {
+        "camada": "“The will of Athena, made manifest.”",
+        "visivel": true,
+        "texto": "“The will of Athena, made manifest.”",
+        "bbox": [
+          393,
+          1877,
+          1114,
+          1912
+        ]
+      },
+      {
+        "camada": "5",
+        "visivel": true,
+        "texto": "5",
+        "bbox": [
+          146,
+          157,
+          247,
+          283
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/RELICS/STAFFOFATHENA.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          -106,
+          1205,
+          -68,
+          1212
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "STAFF OF ATHENA",
+        "visivel": true,
+        "texto": "STAFF OF ATHENA",
+        "bbox": [
+          419,
+          189,
+          1069,
+          248
+        ]
+      },
+      {
+        "camada": "When Staff of Athena enters the battlefield, put target Devotee",
+        "visivel": true,
+        "texto": "When Staff of Athena enters the battlefield, put target Devotee with costs 4 or more into the Void until Staff of Athena leaves the battlefield. When it leaves the battlefield, return that Devotee to the battlefield under its owner’s control.\r",
+        "bbox": [
+          184,
+          1618,
+          1304,
+          1775
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "RELIC - ATHENA",
+        "visivel": true,
+        "texto": "RELIC - ATHENA",
+        "bbox": [
+          575,
+          1498,
+          915,
+          1532
+        ]
+      },
+      {
+        "camada": "“The will of Athena, made manifest.”",
+        "visivel": true,
+        "texto": "“The will of Athena, made manifest.”",
+        "bbox": [
+          393,
+          1877,
+          1114,
+          1912
+        ]
+      },
+      {
+        "camada": "5",
+        "visivel": true,
+        "texto": "5",
+        "bbox": [
+          146,
+          157,
+          247,
+          283
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/SILVER/MARIN.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "AQUILA MARIN",
+        "visivel": true,
+        "texto": "AQUILA MARIN",
+        "bbox": [
+          452,
+          158,
+          1035,
+          220
+        ]
+      },
+      {
+        "camada": "COSMO MASTER",
+        "visivel": true,
+        "texto": "COSMO MASTER",
+        "bbox": [
+          580,
+          265,
+          910,
+          297
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          155,
+          158,
+          254,
+          286
+        ]
+      },
+      {
+        "camada": "When Marin enters the battlefield, another target Devotee you c",
+        "visivel": true,
+        "texto": "When Marin enters the battlefield, another target Devotee you control gets +1/+1.",
+        "bbox": [
+          289,
+          1638,
+          1198,
+          1730
+        ]
+      },
+      {
+        "camada": ":Generate      1. erate 1    .",
+        "visivel": true,
+        "texto": ":Generate      1.\rerate 1    .",
+        "bbox": [
+          606,
+          1779,
+          883,
+          1809
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          96,
+          1523,
+          160,
+          1599
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          1318,
+          1520,
+          1379,
+          1598
+        ]
+      },
+      {
+        "camada": "Devotee — Silver Saint — Athena",
+        "visivel": true,
+        "texto": "Devotee — Silver Saint — Athena",
+        "bbox": [
+          344,
+          1547,
+          1147,
+          1581
+        ]
+      },
+      {
+        "camada": "\"Fear is natural. Surrender is a choice.\"",
+        "visivel": true,
+        "texto": "\"Fear is natural. Surrender is a choice.\"",
+        "bbox": [
+          446,
+          1879,
+          1050,
+          1905
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/SILVER/SHAINA.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "OPHIUCHUS SHAINA",
+        "visivel": true,
+        "texto": "OPHIUCHUS SHAINA",
+        "bbox": [
+          357,
+          158,
+          1134,
+          217
+        ]
+      },
+      {
+        "camada": "NOT LOSE TWICE",
+        "visivel": true,
+        "texto": "NOT LOSE TWICE",
+        "bbox": [
+          576,
+          265,
+          915,
+          297
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          155,
+          158,
+          254,
+          286
+        ]
+      },
+      {
+        "camada": "When Shina enters the battlefield , target  enemy Devotee gets ",
+        "visivel": true,
+        "texto": "When Shina enters the battlefield , target \u0003enemy Devotee gets -1/-1 counter.",
+        "bbox": [
+          364,
+          1680,
+          1124,
+          1772
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          100,
+          1523,
+          161,
+          1601
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          1314,
+          1520,
+          1378,
+          1596
+        ]
+      },
+      {
+        "camada": "Devotee — Silver Saint — Athena",
+        "visivel": true,
+        "texto": "Devotee — Silver Saint — Athena",
+        "bbox": [
+          344,
+          1547,
+          1147,
+          1581
+        ]
+      },
+      {
+        "camada": "“I am Shaina of Ophiuchus. I do not lose twice”",
+        "visivel": true,
+        "texto": "“I am Shaina of Ophiuchus. I do not lose twice”",
+        "bbox": [
+          376,
+          1879,
+          1124,
+          1910
+        ]
+      },
+      {
+        "camada": ":Generate      1. erate 1    .",
+        "visivel": false,
+        "texto": ":Generate      1.\rerate 1    .",
+        "bbox": [
+          606,
+          1779,
+          883,
+          1809
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/ATHENA/TECHNIQUE/ATHENSJUDGMENT.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          -106,
+          1205,
+          -68,
+          1212
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "ATHENA’S JUDMENT",
+        "visivel": true,
+        "texto": "ATHENA’S JUDMENT",
+        "bbox": [
+          367,
+          184,
+          1126,
+          248
+        ]
+      },
+      {
+        "camada": "If equipped Devotee deals damage to a  God, that God loses 1 ad",
+        "visivel": true,
+        "texto": "If equipped Devotee deals damage to a \u0003God, that God loses 1 additional     .",
+        "bbox": [
+          379,
+          1648,
+          1111,
+          1728
+        ]
+      },
+      {
+        "camada": "8",
+        "visivel": true,
+        "texto": "8",
+        "bbox": [
+          152,
+          163,
+          251,
+          291
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "TECHNIQUE - ATHENA",
+        "visivel": true,
+        "texto": "TECHNIQUE - ATHENA",
+        "bbox": [
+          502,
+          1498,
+          986,
+          1534
+        ]
+      },
+      {
+        "camada": "“Forged for protection… turned against the one I was meant to p",
+        "visivel": true,
+        "texto": "“Forged for protection… turned against the one I was meant to protect.”",
+        "bbox": [
+          244,
+          1877,
+          1259,
+          1905
+        ]
+      },
+      {
+        "camada": "1",
+        "visivel": true,
+        "texto": "1",
+        "bbox": [
+          123,
+          1914,
+          155,
+          1989
+        ]
+      },
+      {
+        "camada": "EQUIP",
+        "visivel": true,
+        "texto": "EQUIP",
+        "bbox": [
+          96,
+          1879,
+          181,
+          1901
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/HADES/HADES.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          -106,
+          1205,
+          -68,
+          1212
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "HADES",
+        "visivel": true,
+        "texto": "HADES",
+        "bbox": [
+          186,
+          149,
+          469,
+          214
+        ]
+      },
+      {
+        "camada": "DEATHBRINGER",
+        "visivel": true,
+        "texto": "DEATHBRINGER",
+        "bbox": [
+          187,
+          265,
+          494,
+          297
+        ]
+      },
+      {
+        "camada": "\"I am the end of all things.\"",
+        "visivel": true,
+        "texto": "\"I am the end of all things.\"",
+        "bbox": [
+          483,
+          1940,
+          1018,
+          1981
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "KING OF TARTARUS Whenever a Devotee returns from Tartarus to th",
+        "visivel": true,
+        "texto": "KING OF TARTARUS\u0003Whenever a Devotee returns from Tartarus to the battlefield, the enemy God lose      and you gain     .\r",
+        "bbox": [
+          149,
+          1525,
+          1331,
+          1665
+        ]
+      },
+      {
+        "camada": "ULTIMATE: GREAT ECLIPSE 15     Return all Devotees from all Tar",
+        "visivel": true,
+        "texto": "ULTIMATE: GREAT ECLIPSE\u000315     Return all Devotees from all Tartarus to the battlefield under your \u0003control. They enter the battlefield with a SEAL counter.\r\r",
+        "bbox": [
+          97,
+          1698,
+          1388,
+          1838
+        ]
+      },
+      {
+        "camada": "SOUL FILTER           :Gain          .",
+        "visivel": true,
+        "texto": "SOUL FILTER\u0003          :Gain          .",
+        "bbox": [
+          612,
+          1395,
+          900,
+          1475
+        ]
+      },
+      {
+        "camada": "32",
+        "visivel": true,
+        "texto": "32",
+        "bbox": [
+          1284,
+          937,
+          1407,
+          1015
+        ]
+      },
+      {
+        "camada": "3",
+        "visivel": true,
+        "texto": "3",
+        "bbox": [
+          103,
+          934,
+          164,
+          1012
+        ]
+      },
+      {
+        "camada": "GOD — HADES",
+        "visivel": true,
+        "texto": "GOD — HADES",
+        "bbox": [
+          583,
+          953,
+          905,
+          987
+        ]
+      },
+      {
+        "camada": "offering of life Whenever a Devotee is destroyed, you may pay 2",
+        "visivel": true,
+        "texto": "offering of life\u0003Whenever a Devotee is destroyed, you may pay 2     . \u0003If you do, draw 1 card and generate 1     .",
+        "bbox": [
+          252,
+          1062,
+          1226,
+          1202
+        ]
+      },
+      {
+        "camada": "Awaken",
+        "visivel": true,
+        "texto": "Awaken",
+        "bbox": [
+          518,
+          1247,
+          980,
+          1343
+        ]
+      },
+      {
+        "camada": "7",
+        "visivel": true,
+        "texto": "7",
+        "bbox": [
+          427,
+          1259,
+          501,
+          1334
+        ]
+      }
+    ]
+  },
+  {
+    "arquivo": "FRAMES/POSEIDON/POSEIDON.psd",
+    "canvas": [
+      1488,
+      2091
+    ],
+    "camadas_texto": [
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": true,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          -106,
+          1205,
+          -68,
+          1212
+        ]
+      },
+      {
+        "camada": "HERÓI",
+        "visivel": false,
+        "texto": "HERÓI",
+        "bbox": [
+          1219,
+          1454,
+          1420,
+          1513
+        ]
+      },
+      {
+        "camada": "POSEIDON",
+        "visivel": true,
+        "texto": "POSEIDON",
+        "bbox": [
+          186,
+          152,
+          637,
+          217
+        ]
+      },
+      {
+        "camada": "HIGH TIDE",
+        "visivel": true,
+        "texto": "HIGH TIDE",
+        "bbox": [
+          187,
+          265,
+          387,
+          297
+        ]
+      },
+      {
+        "camada": "\"The oceans are eternal. Humanity is not.\"",
+        "visivel": true,
+        "texto": "\"The oceans are eternal. Humanity is not.\"",
+        "bbox": [
+          334,
+          1940,
+          1167,
+          1979
+        ]
+      },
+      {
+        "camada": "Lorem Ipsum",
+        "visivel": false,
+        "texto": "Lorem Ipsum",
+        "bbox": [
+          784,
+          1409,
+          874,
+          1425
+        ]
+      },
+      {
+        "camada": "Pressure of the Deep Whenever a SEAL token is placed on a Devot",
+        "visivel": true,
+        "texto": "Pressure of the Deep\u0003Whenever a SEAL token is placed on a Devotee, that \u0003Devotee’s controller mills 3 cards, and you draw 1 card.",
+        "bbox": [
+          238,
+          1443,
+          1243,
+          1583
+        ]
+      },
+      {
+        "camada": "GREAT FLOOD Return all cards in play from all opponents to thei",
+        "visivel": true,
+        "texto": "GREAT FLOOD\u0003Return all cards in play from all opponents to their owners’ hands. Then, each opponent sends all cards from their hand to \u0003Tartarus and draws 3 cards. After that, each opponent mills \u00033 cards for each card they sent to Tartarus this way.",
+        "bbox": [
+          141,
+          1616,
+          1341,
+          1856
+        ]
+      },
+      {
+        "camada": "27",
+        "visivel": true,
+        "texto": "27",
+        "bbox": [
+          1279,
+          975,
+          1416,
+          1051
+        ]
+      },
+      {
+        "camada": "2",
+        "visivel": true,
+        "texto": "2",
+        "bbox": [
+          96,
+          972,
+          160,
+          1048
+        ]
+      },
+      {
+        "camada": "GOD — POSEIDON — JuLIAN SOLO",
+        "visivel": true,
+        "texto": "GOD — POSEIDON — JuLIAN SOLO",
+        "bbox": [
+          354,
+          994,
+          1134,
+          1028
+        ]
+      },
+      {
+        "camada": "WATER PRISION When an enemy Devotee declares an attack, you may",
+        "visivel": true,
+        "texto": "WATER PRISION\u0003When an enemy Devotee declares an attack, you may pay          . \u0003If you do, that Devotee gains a SEAL counter. ",
+        "bbox": [
+          149,
+          1097,
+          1330,
+          1237
+        ]
+      },
+      {
+        "camada": "Awaken",
+        "visivel": true,
+        "texto": "Awaken",
+        "bbox": [
+          518,
+          1292,
+          980,
+          1388
+        ]
+      },
+      {
+        "camada": "4",
+        "visivel": true,
+        "texto": "4",
+        "bbox": [
+          422,
+          1304,
+          487,
+          1379
+        ]
+      }
+    ]
+  }
+]

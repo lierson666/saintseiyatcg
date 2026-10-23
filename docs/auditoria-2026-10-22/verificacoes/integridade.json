@@ -1,0 +1,17 @@
+{
+  "catalogo_sha256": "349c8c88d8dae9d77cad331adcfd648c123fa1d01e3eeb9edffa5e6990d8afa0",
+  "catalogo_igual_snapshot": true,
+  "fontes_graficas_verificadas": 165,
+  "fontes_graficas_alteradas": [],
+  "arquivos_concorrentes_alterados_desde_coleta": [
+    "playtest/app.js",
+    "playtest/arena.css",
+    "playtest/engine.js",
+    "playtest/game.css",
+    "playtest/menu.js",
+    "playtest/soldiers.css",
+    "playtest/styles.css",
+    "playtest/view.js"
+  ],
+  "nota_pt": "Outras alterações de playtest/ e docs/ pertencem à frente concorrente; a auditoria não as escreveu."
+}

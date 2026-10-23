@@ -1,0 +1,209 @@
+{
+  "node_count": 1203,
+  "unverified_node_count": 0,
+  "raw_edge_count": 3855,
+  "non_object_edges": 0,
+  "missing_endpoint_edges": 0,
+  "dangling_endpoint_edges": 35,
+  "external_reference_edges": 8,
+  "self_loop_edges": 3,
+  "valid_candidate_edges": 3812,
+  "exact_duplicate_edges": 0,
+  "directed_unique_endpoint_pairs": 3758,
+  "directed_same_endpoint_collapsed_edges": 54,
+  "undirected_unique_endpoint_pairs": 3754,
+  "undirected_same_endpoint_collapsed_edges": 58,
+  "same_endpoint_group_count": 53,
+  "relation_variant_groups": 52,
+  "source_file_variant_groups": 0,
+  "source_location_variant_groups": 1,
+  "context_variant_groups": 0,
+  "post_build_graph_type": "Graph",
+  "post_build_node_count": 1222,
+  "post_build_edge_count": 3797,
+  "post_build_error": "",
+  "producer_suppression": {
+    "path": "/Users/mac/.local/share/uv/tools/graphifyy/lib/python3.12/site-packages/graphify/extract.py",
+    "total_sites": 12,
+    "sites": [
+      {
+        "line": 1789,
+        "name": "seen_ids",
+        "tuple_arity": 0,
+        "sample": "seen_ids = {n[\"id\"] for n in nodes}"
+      },
+      {
+        "line": 2353,
+        "name": "seen_ids",
+        "tuple_arity": 0,
+        "sample": "seen_ids = {n[\"id\"] for n in nodes}"
+      },
+      {
+        "line": 2355,
+        "name": "seen_doc_refs",
+        "tuple_arity": 0,
+        "sample": "seen_doc_refs: set[str] = set()"
+      },
+      {
+        "line": 3022,
+        "name": "seen_ids",
+        "tuple_arity": 0,
+        "sample": "seen_ids: set[str] = {n[\"id\"] for n in nodes}"
+      },
+      {
+        "line": 3169,
+        "name": "seen_ids",
+        "tuple_arity": 0,
+        "sample": "seen_ids = {n.get(\"id\") for n in nodes}"
+      },
+      {
+        "line": 4179,
+        "name": "seen_keys",
+        "tuple_arity": 0,
+        "sample": "seen_keys: set[tuple] = set()"
+      },
+      {
+        "line": 4365,
+        "name": "seen_keys",
+        "tuple_arity": 0,
+        "sample": "seen_keys: set[tuple] = set()"
+      },
+      {
+        "line": 7608,
+        "name": "seen_ids",
+        "tuple_arity": 0,
+        "sample": "seen_ids: set[str] = set()"
+      },
+      {
+        "line": 7716,
+        "name": "seen_ids",
+        "tuple_arity": 0,
+        "sample": "seen_ids: set[str] = set()"
+      },
+      {
+        "line": 7795,
+        "name": "seen_ids",
+        "tuple_arity": 0,
+        "sample": "seen_ids: set[str] = set()"
+      },
+      {
+        "line": 8310,
+        "name": "seen_ids",
+        "tuple_arity": 0,
+        "sample": "seen_ids: set[str] = set()"
+      },
+      {
+        "line": 8311,
+        "name": "seen_edges",
+        "tuple_arity": 4,
+        "sample": "seen_edges: set[tuple[str, str, str, str | None]] = set()"
+      }
+    ],
+    "error": ""
+  },
+  "examples": [
+    {
+      "source": "playtest_engine_creategame",
+      "target": "playtest_engine_creategame_getcard",
+      "edge_count": 3,
+      "relations": [
+        "calls",
+        "contains",
+        "indirect_call"
+      ],
+      "source_files": [
+        "playtest/engine.js"
+      ],
+      "source_locations": [
+        "L3795",
+        "L4686",
+        "L4687"
+      ],
+      "contexts": [
+        "",
+        "call",
+        "collection"
+      ]
+    },
+    {
+      "source": "card_forge_forge",
+      "target": "card_forge_forge_say",
+      "edge_count": 2,
+      "relations": [
+        "calls",
+        "contains"
+      ],
+      "source_files": [
+        "card-forge/forge.js"
+      ],
+      "source_locations": [
+        "L14",
+        "L536"
+      ],
+      "contexts": [
+        "",
+        "call"
+      ]
+    },
+    {
+      "source": "card_forge_forge",
+      "target": "card_forge_forge_loadimg",
+      "edge_count": 2,
+      "relations": [
+        "calls",
+        "contains"
+      ],
+      "source_files": [
+        "card-forge/forge.js"
+      ],
+      "source_locations": [
+        "L18",
+        "L513"
+      ],
+      "contexts": [
+        "",
+        "call"
+      ]
+    },
+    {
+      "source": "card_forge_forge",
+      "target": "card_forge_forge_tomarkup",
+      "edge_count": 2,
+      "relations": [
+        "calls",
+        "contains"
+      ],
+      "source_files": [
+        "card-forge/forge.js"
+      ],
+      "source_locations": [
+        "L51",
+        "L630"
+      ],
+      "contexts": [
+        "",
+        "call"
+      ]
+    },
+    {
+      "source": "card_forge_forge",
+      "target": "card_forge_forge_frommarkup",
+      "edge_count": 2,
+      "relations": [
+        "contains",
+        "indirect_call"
+      ],
+      "source_files": [
+        "card-forge/forge.js"
+      ],
+      "source_locations": [
+        "L61",
+        "L844"
+      ],
+      "contexts": [
+        "",
+        "collection"
+      ]
+    }
+  ]
+}

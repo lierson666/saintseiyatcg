@@ -1,0 +1,81 @@
+{
+  "checagens": [
+    {
+      "checagem": "visao-inicial",
+      "ok": true
+    },
+    {
+      "checagem": "67-cartas",
+      "ok": true
+    },
+    {
+      "checagem": "11-poseidon",
+      "ok": true
+    },
+    {
+      "checagem": "10-recuperadas",
+      "ok": true
+    },
+    {
+      "checagem": "busca-precisa",
+      "ok": true
+    },
+    {
+      "checagem": "detalhes-e-fonte",
+      "ok": true
+    },
+    {
+      "checagem": "estado-vazio",
+      "ok": true
+    },
+    {
+      "checagem": "81-enunciados",
+      "ok": true
+    },
+    {
+      "checagem": "busca-regras",
+      "ok": true
+    },
+    {
+      "checagem": "28-achados",
+      "ok": true
+    },
+    {
+      "checagem": "expandir-achado",
+      "ok": true
+    },
+    {
+      "checagem": "5-decks",
+      "ok": true
+    },
+    {
+      "checagem": "deck-60-copias",
+      "ok": true
+    },
+    {
+      "checagem": "6-modulos",
+      "ok": true
+    },
+    {
+      "checagem": "9-fases",
+      "ok": true
+    },
+    {
+      "checagem": "cobertura-historica",
+      "ok": true
+    },
+    {
+      "checagem": "mobile-sem-overflow",
+      "ok": true,
+      "dimensoes": {
+        "scroll": 356,
+        "client": 356
+      }
+    }
+  ],
+  "erros_javascript": [],
+  "adendo_keywords_finais": {
+    "guardian_nimble_cheater": "definições finais verificadas no painel",
+    "erros_javascript": []
+  }
+}

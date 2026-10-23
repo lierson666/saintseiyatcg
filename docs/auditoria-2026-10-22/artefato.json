@@ -1,0 +1,22 @@
+{
+  "nome": "STAR HILL",
+  "tipo": "protótipo navegável da recuperação",
+  "arquivo": "/Users/mac/.codex/visualizations/2026/10/23/01a16618-547f-7d41-93b1-58f0fc129d05/star-hill.html",
+  "sha256": "21474a4a2c78325b78baabcbcd31193d1525fc143a1c551130ef0e9cd65bc643",
+  "bytes": 767538,
+  "data_referencia": "2026-10-22",
+  "estado": "Fase 0; engine não implementada nesta tarefa",
+  "validacao": "17 verificações de interação; desktop e mobile; sem erros de JavaScript",
+  "fontes": [
+    "fontes/cards-snapshot.json",
+    "cartas-fontes-documentais.json",
+    "03-regras.md",
+    "04-conflitos.md",
+    "fontes/beta-athena-snapshot.json",
+    "fontes/guia-local-fechamento.md"
+  ],
+  "decisao_nome": {
+    "origem": "usuário neste chat",
+    "texto": "essa ferramenta de controle vai chamar STAR HILL ok?"
+  }
+}

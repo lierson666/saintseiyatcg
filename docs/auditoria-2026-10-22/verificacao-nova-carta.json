@@ -1,0 +1,32 @@
+[
+  {
+    "faccao_solicitada": "Athena",
+    "faccao_resultante": "Athena",
+    "id_gerado": "athena-054",
+    "colide_com_catalogo": false
+  },
+  {
+    "faccao_solicitada": "Poseidon",
+    "faccao_resultante": "Athena",
+    "id_gerado": "athena-002",
+    "colide_com_catalogo": true
+  },
+  {
+    "faccao_solicitada": "Ares",
+    "faccao_resultante": "Athena",
+    "id_gerado": "athena-002",
+    "colide_com_catalogo": true
+  },
+  {
+    "faccao_solicitada": "Artemis",
+    "faccao_resultante": "Athena",
+    "id_gerado": "athena-002",
+    "colide_com_catalogo": true
+  },
+  {
+    "faccao_solicitada": "Hades",
+    "faccao_resultante": "Athena",
+    "id_gerado": "athena-002",
+    "colide_com_catalogo": true
+  }
+]

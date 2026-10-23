@@ -1,0 +1,1562 @@
+﻿SAINT SEIYA CARD GAME
+Por Lierson Mattenhauer Jr
+MANUAL DE REGRAS OFICIAL — VANILLA 1.0
+________________
+
+
+1. OBJETIVO DO JOGO
+O objetivo do jogo é reduzir o Soul do Deus inimigo a 0.
+Você também perde o jogo se precisar comprar uma carta do seu Baralho e não houver cartas para comprar.
+________________
+
+
+2. COMPONENTES DO JOGO
+Cada jogador precisa de:
+* 1 carta de Deus
+
+* 1 carta de Domínio
+
+* 1 Baralho com 60 cartas
+
+O jogo não precisa de marcadores obrigatórios, porém é recomendado usar:
+   * Dado D6 para marcar:
+
+      * +1/+1
+
+      * Damage em Cloths
+
+         * Dado D20 para marcar:
+
+            * Latent Cosmo
+
+________________
+
+
+3. ESTRUTURA DO JOGO
+Cada jogador possui:
+Elemento
+	Função
+	Deus
+	Representa o jogador
+	Domínio
+	Base e segunda cor
+	Baralho
+	Deck de compra
+	Mão
+	Cartas jogáveis
+	Campo
+	Onde ficam Devotees, Cloths e Relíquias
+	Tartarus
+	Cartas destruídas
+	Void
+	Cartas removidas do jogo
+	Cosmo Base
+	Fonte permanente de Cosmo
+	Cosmo
+	Recurso principal
+	Latent Cosmo
+	Recurso temporário
+	Soul
+	Vida do Deus
+	________________
+
+
+4. CONSTRUÇÃO DO BARALHO
+Regras:
+               * O Baralho deve ter exatamente 60 cartas
+
+               * Máximo de 4 cópias de cada carta
+
+               * O Baralho deve respeitar:
+
+                  * A cor do Deus
+
+                  * A cor do Domínio
+
+                     * Cartas cinza podem ser usadas em qualquer Baralho
+
+Cartas cinza
+Cartas cinza:
+                        * Podem ser usadas por qualquer Deus
+
+                        * Fazem efeitos que outras cores fazem
+
+                        * Porém são mais fracas ou custam mais caro
+
+                        * Servem para cobrir fraquezas das facções
+
+________________
+
+
+5. TIPOS DE CARTA
+Tipo
+	Quando pode usar
+	Descrição
+	Deus
+	Começa em jogo
+	Seu personagem principal
+	Domínio
+	Começa em jogo
+	Sua base
+	Devotee
+	Seu turno
+	Unidades
+	Cloth
+	Seu turno
+	Armaduras
+	Relíquia
+	Seu turno
+	Itens e artefatos
+	Momento
+	Apenas no seu turno
+	Feitiços
+	Técnica
+	Qualquer momento
+	Respostas e golpes
+	________________
+
+
+6. SETUP DA PARTIDA
+                           1. Cada jogador escolhe:
+
+                              * 1 Deus
+
+                              * 1 Domínio
+
+                                 2. Coloque ambos em campo
+
+                                 3. Embaralhe o Baralho
+
+                                 4. Cada jogador compra 7 cartas
+
+                                 5. Os jogadores podem fazer Mulligan
+
+                                 6. Decide-se quem começa
+
+________________
+
+
+7. MULLIGAN
+Você pode trocar qualquer número de cartas da sua mão inicial.
+Como funciona:
+                                    1. Escolha quantas cartas quiser trocar
+
+                                    2. Embaralhe essas cartas no Baralho
+
+                                    3. Compre a mesma quantidade
+
+Penalidade:
+Para cada carta trocada, o oponente começa o jogo com +1 Latent Cosmo.
+________________
+
+
+8. O DEUS
+O Deus representa o jogador.
+Cada Deus possui:
+                                       * Soul (vida)
+
+                                       * Attack (dano que causa quando é atacado)
+
+                                       * Awaken
+
+                                       * Passivas
+
+                                       * Awaken Ability
+
+                                       * Ultimate
+
+O Deus:
+                                          * Não pode atacar
+
+                                          * Não pode virar
+
+                                          * Não pode equipar Cloth
+
+                                          * Não pode equipar Relíquias
+
+                                          * Apenas causa dano quando é atacado
+
+Quando um Devotee ataca o Deus
+                                             1. O Devotee vira e fica Unprepared
+
+                                             2. O Devotee causa dano ao Deus igual ao seu Power
+
+                                             3. O Deus causa dano de volta igual ao seu Attack
+
+                                             4. O Devotee pode morrer
+
+Se o Soul do Deus chegar a 0, o jogador perde o jogo.
+________________
+
+
+9. O DOMÍNIO
+O Domínio:
+                                                * Começa o jogo em campo
+
+                                                * Não faz parte do Baralho
+
+                                                * Não possui custo
+
+                                                * Não pode ser destruído
+
+                                                * Não pode ser descartado
+
+                                                * Não pode voltar para a mão
+
+                                                * Define a segunda cor do Baralho
+
+                                                * Possui uma habilidade
+
+Tipos de Domínio:
+                                                   * Comum — apenas habilita cor
+
+                                                   * Incomum — habilidade leve
+
+                                                   * Raro — habilidade forte (1 vez por jogo)
+
+Se a habilidade for 1 vez por jogo:
+                                                      * Vire o Domínio para marcar que foi usada
+
+________________
+
+
+10. ÁREAS DO JOGO
+Área
+	Função
+	Baralho
+	Comprar cartas
+	Mão
+	Cartas jogáveis
+	Campo
+	Devotees, Cloths e Relíquias
+	Tartarus
+	Cartas destruídas
+	Void
+	Cartas removidas
+	Cosmo Base
+	Fonte de Cosmo
+	Deus
+	Sua base
+	Domínio
+	Sua base
+	________________
+
+
+11. RECURSOS
+O jogo possui 4 recursos:
+Recurso
+	Função
+	Cosmo Base
+	Geração de Cosmo
+	Cosmo
+	Recurso para pagar custos
+	Latent Cosmo
+	Recurso temporário
+	Soul
+	Vida do Deus
+	________________
+
+
+12. COSMO BASE
+Uma vez por turno, durante sua Fase Principal:
+                                                         * Você pode colocar 1 carta da mão virada para baixo na área de Cosmo Base
+
+                                                         * Apenas cartas com símbolo de Cosmo Base podem ser usadas como Cosmo Base, exceto se uma habilidade permitir
+
+Gerar Cosmo
+                                                            * Vire 1 Cosmo Base → gera 1 Cosmo
+
+                                                            * Ele permanece virado até sua próxima Manutenção
+
+Desvirar Cosmo Base
+Todos os seus Cosmos Base desviram durante sua Fase de Manutenção.
+________________
+
+
+13. LATENT COSMO
+Você ganha Latent Cosmo quando:
+                                                               * Um Devotee seu recebe dano durante o turno do oponente
+
+Cada vez que isso acontece:
+                                                                  * Ganhe 1 Latent Cosmo
+
+Latent Cosmo:
+                                                                     * Pode ser usado como Cosmo normal
+
+                                                                     * Desaparece no final do seu turno
+
+________________
+
+
+14. SOUL
+Soul é a vida do Deus.
+Algumas habilidades pedem para pagar Soul.
+Isso significa que o Deus está gastando sua própria vida.
+Se o Soul chegar a 0, você perde o jogo.
+________________
+
+
+15. DEVOTEES
+Devotees são as unidades do jogo.
+Eles possuem:
+                                                                        * Custo
+
+                                                                        * Power
+
+                                                                        * Resistance
+
+                                                                        * Habilidades
+
+                                                                        * Keywords
+
+Devotees podem:
+                                                                           * Atacar Devotees inimigos
+
+                                                                           * Atacar o Deus inimigo
+
+                                                                           * Equipar Cloth
+
+                                                                           * Equipar Relíquias
+
+                                                                           * Usar habilidades
+
+Regra de combate
+Sempre que um Devotee entra em combate:
+                                                                              * Ele vira
+
+                                                                              * Ele fica Unprepared
+
+Um Devotee Unprepared:
+                                                                                 * Não pode atacar novamente no mesmo turno
+
+________________
+
+
+16. RELÍQUIAS
+Relíquias permanecem em campo.
+Elas podem ser:
+                                                                                    * Equipamentos
+
+                                                                                    * Artefatos com efeito contínuo
+
+Relíquias:
+                                                                                       * Não são destruídas quando o portador morre
+
+                                                                                       * Permanecem em campo
+
+                                                                                       * Só saem de campo se forem destruídas
+
+                                                                                       * Quando destruídas, vão para o Void
+
+Um Devotee pode ter várias Relíquias.
+________________
+
+
+17. CLOTHS
+                                                                                          * Cada Devotee pode equipar apenas 1 Cloth
+
+                                                                                          * A Cloth permanece em campo quando o portador morre
+
+DAMAGE NAS CLOTHS
+Cada Cloth possui um valor de Damage.
+Quando o Devotee equipado morre:
+                                                                                             * Coloque marcadores de Damage na Cloth igual ao valor de Damage dela
+
+Enquanto a Cloth tiver Damage:
+                                                                                                * Não pode ser equipada
+
+                                                                                                * Não concede bônus
+
+                                                                                                * Não pode usar habilidades
+
+Recuperação
+Na Fase de Manutenção:
+                                                                                                   * Remova 1 marcador de Damage de cada Cloth
+
+Quando não houver mais Damage:
+                                                                                                      * A Cloth pode ser equipada novamente
+
+________________
+
+
+18. ESTRUTURA DO TURNO
+Cada turno possui 3 fases:
+Fase
+	Nome
+	1
+	Manutenção
+	2
+	Fase Principal
+	3
+	Fim do Turno
+	________________
+
+
+19. FASE DE MANUTENÇÃO
+Durante a Manutenção:
+                                                                                                         * Desvire todas as cartas viradas
+
+                                                                                                         * Desvire todos os Cosmos Base
+
+                                                                                                         * Remova efeitos temporários
+
+                                                                                                         * Cure 1 Damage de cada Cloth
+
+                                                                                                         * Resolva efeitos de Manutenção
+
+________________
+
+
+20. FASE PRINCIPAL
+Durante a Fase Principal você pode, em qualquer ordem:
+                                                                                                            * Comprar carta do turno
+
+                                                                                                            * Baixar 1 Cosmo Base
+
+                                                                                                            * Gerar Cosmo
+
+                                                                                                            * Jogar Devotees
+
+                                                                                                            * Jogar Cloths
+
+                                                                                                            * Jogar Relíquias
+
+                                                                                                            * Jogar Momento
+
+                                                                                                            * Usar Técnicas
+
+                                                                                                            * Usar habilidades
+
+                                                                                                            * Usar Awaken Ability
+
+                                                                                                            * Atacar Devotees
+
+                                                                                                            * Atacar o Deus
+
+________________
+
+
+21. FIM DO TURNO
+No fim do turno:
+                                                                                                               * Todo Latent Cosmo desaparece
+
+                                                                                                               * Efeitos até o fim do turno terminam
+
+                                                                                                               * Todos os Devotees recuperam toda a Resistance
+
+                                                                                                               * O turno passa para o oponente
+
+Isso significa que:
+                                                                                                                  * O dano em Devotees não é permanente
+
+                                                                                                                  * O combate é resolvido por turno, não por dano acumulado
+
+________________
+
+
+22. COMBATE
+Devotee vs Devotee
+Quando um Devotee ataca outro Devotee:
+                                                                                                                     1. O atacante vira
+
+                                                                                                                     2. Se houver Long Range, ele causa dano primeiro
+
+                                                                                                                     3. Ambos causam dano igual ao Power
+
+                                                                                                                     4. Se a Resistance chegar a 0, o Devotee morre e vai para o Tartarus
+
+________________
+
+
+Devotee vs Deus
+Quando um Devotee ataca o Deus:
+                                                                                                                        1. O Devotee vira
+
+                                                                                                                        2. O Devotee causa dano ao Deus igual ao Power
+
+                                                                                                                        3. O Deus causa dano de volta igual ao Attack
+
+                                                                                                                        4. O Devotee pode morrer
+
+________________
+
+
+23. MOMENTO E TÉCNICA
+Momento
+                                                                                                                           * Só pode ser usado no seu turno
+
+                                                                                                                           * Vai para o Tartarus após resolver
+
+Técnica
+                                                                                                                              * Pode ser usada a qualquer momento
+
+                                                                                                                              * Pode ser usada:
+
+                                                                                                                                 * Durante combate
+
+                                                                                                                                 * No turno do oponente
+
+                                                                                                                                 * Em resposta a cartas ou habilidades
+
+                                                                                                                                    * Vai para o Tartarus após resolver
+
+Regra de resposta
+Sempre que:
+                                                                                                                                       * Um ataque é declarado
+
+                                                                                                                                       * Uma carta é jogada
+
+                                                                                                                                       * Uma habilidade é usada
+
+O oponente pode responder com Técnica.
+A Técnica resolve primeiro.
+________________
+
+
+24. KEYWORDS
+Keyword
+	Efeito
+	Guardian
+	Deve ser atacado antes do Deus
+	Nimble
+	Só pode ser bloqueado por Nimble ou Guardian
+	Cheater
+	Ignora Guardian
+	Long Range
+	Causa dano primeiro
+	Pierce
+	Dano excedente vai para o Deus
+	Impulse
+	Pode agir no turno que entra
+	Sealed
+	Não pode atacar nem usar habilidades
+	Unfaith
+	Remove Latent Cosmo
+	________________
+
+
+25. REGRA DE LENDÁRIO
+Devotees e Reliquias só podem ter 1 carta com o mesmo nome em campo.
+Se jogar outra cópia:
+                                                                                                                                          * A habilidade de entrada acontece
+
+                                                                                                                                          * Você escolhe qual permanece
+
+                                                                                                                                          * A outra vai para o Tartarus
+
+Não se aplica a cartas cinza.
+________________
+
+
+26. EVOLUÇÃO
+Se você jogar um Devotee com o mesmo nome de um Devotee seu em campo:
+                                                                                                                                             * Ele custa 2 Cosmo a menos
+
+Isso representa evolução do personagem.
+________________
+
+
+27. AWAKEN
+Cada Deus possui um valor de Awaken.
+Quando o Soul do seu Deus chega ao valor de Awaken ou menos, o Deus desperta.
+Exemplo:
+                                                                                                                                                * Athena Awaken 5
+
+                                                                                                                                                * Quando Athena chega a 5 Soul ou menos → ela desperta
+
+O Awaken:
+                                                                                                                                                   * Acontece automaticamente
+
+                                                                                                                                                   * Não pode ser impedido
+
+                                                                                                                                                   * Dura até o fim do jogo
+
+                                                                                                                                                   * Libera habilidades Awaken
+
+________________
+
+
+28. ULTIMATE
+Cada Deus possui uma Ultimate:
+                                                                                                                                                      * Só pode ser usada 1 vez por jogo
+
+                                                                                                                                                      * Possui custo alto
+
+                                                                                                                                                      * Normalmente muda o jogo
+
+________________
+
+
+29. CONDIÇÕES DE VITÓRIA
+Você vence se:
+                                                                                                                                                         * O Soul do Deus inimigo chegar a 0
+
+                                                                                                                                                         * O oponente tentar comprar carta e não tiver Baralho
+
+________________
+
+
+30. IDENTIDADE DAS FACÇÕES
+Deus
+	Estilo
+	Athena
+	Defesa e sobrevivência
+	Poseidon
+	Controle
+	Ares
+	Agressivo
+	Hades
+	Cemitério
+	Artemis
+	Ramp
+	________________
+
+
+31. DURAÇÃO DA PARTIDA
+Tempo médio esperado:
+15 a 25 minutos
+________________
+
+
+32. RESUMO DO TURNO
+                                                                                                                                                            1. Manutenção
+
+                                                                                                                                                            2. Comprar carta
+
+                                                                                                                                                            3. Baixar Cosmo Base
+
+                                                                                                                                                            4. Jogar cartas
+
+                                                                                                                                                            5. Combater
+
+                                                                                                                                                            6. Fim do turno
+
+________________
+
+
+CONCLUSÃO
+O jogo agora possui:
+                                                                                                                                                               * Sistema de recurso
+
+                                                                                                                                                               * Sistema de combate
+
+                                                                                                                                                               * Sistema de Deus
+
+                                                                                                                                                               * Sistema de Domínio
+
+                                                                                                                                                               * Sistema de Cloth
+
+                                                                                                                                                               * Sistema de Relíquias
+
+                                                                                                                                                               * Sistema de Awaken
+
+                                                                                                                                                               * Sistema de Ultimate
+
+                                                                                                                                                               * Sistema de Keywords
+
+                                                                                                                                                               * Sistema de Timing
+
+                                                                                                                                                               * Sistema de Evolução
+
+                                                                                                                                                               * Sistema de Latent Cosmo
+
+Isso é oficialmente um TCG completo e jogável.
+________________
+
+
+PRÓXIMO PASSO
+Agora começa a parte mais difícil e importante:
+BALANCEAMENTO.
+Precisamos criar:
+                                                                                                                                                                  * Tabela Power / Resistance
+
+                                                                                                                                                                  * Custo das Keywords
+
+                                                                                                                                                                  * Devotees comuns
+
+                                                                                                                                                                  * Cloths base
+
+                                                                                                                                                                  * Técnicas base
+
+                                                                                                                                                                  * Momentos base
+
+                                                                                                                                                                  * Playtest
+
+Agora o jogo sai do papel e vira jogo de verdade.
+
+
+1. Estrutura fixa (fora da raridade normal)
+Essas cartas existem no set, mas não entram na lógica de raridade de booster:
+Tipo
+	Quantidade
+	Deuses Base
+	5
+	Domínios
+	15
+	Locais
+	16
+	Subtotal
+	36
+	Essas 36 cartas são estruturais do jogo.
+Então sobra:
+400 - 36 = 364 cartas
+Essas 364 cartas sim entram nas raridades:
+                                                                                                                                                                     * Comum
+
+                                                                                                                                                                     * Incomum
+
+                                                                                                                                                                     * Mítica
+
+                                                                                                                                                                     * Divina
+
+________________
+
+
+2. Distribuição de raridade (364 cartas jogáveis)
+Eu recomendo:
+Raridade
+	Quantidade
+	Comum
+	182
+	Incomum
+	109
+	Mítica
+	55
+	Divina
+	18
+	Total
+	364
+	Isso mantém mais ou menos a proporção:
+                                                                                                                                                                        * 50% comum
+
+                                                                                                                                                                        * 30% incomum
+
+                                                                                                                                                                        * 15% mítica
+
+                                                                                                                                                                        * 5% divina
+
+Padrão saudável de TCG.
+________________
+
+
+3. Distribuição por tipo (somente cartas jogáveis)
+Temos:
+Tipo
+	Quantidade
+	Devotees
+	180
+	Cloths
+	50
+	Relíquias
+	40
+	Técnicas
+	60
+	Momentos
+	34
+	Total
+	364
+	Agora distribuindo isso nas raridades:
+Tipo
+	Comum
+	Incomum
+	Mítica
+	Divina
+	Total
+	Devotees
+	95
+	50
+	25
+	10
+	180
+	Cloths
+	25
+	15
+	8
+	2
+	50
+	Relíquias
+	20
+	10
+	8
+	2
+	40
+	Técnicas
+	27
+	20
+	10
+	3
+	60
+	Momentos
+	15
+	14
+	4
+	1
+	34
+	Total
+	182
+	109
+	55
+	18
+	364
+	Fechou perfeito.
+________________
+
+
+4. Então o set fica assim
+Cartas estruturais
+Tipo
+	Qtde
+	Deuses base
+	5
+	Domínios
+	15
+	Locais
+	16
+	Subtotal
+	36
+	Cartas do set (raridades)
+Raridade
+	Qtde
+	Comum
+	182
+	Incomum
+	109
+	Mítica
+	55
+	Divina
+	18
+	Subtotal
+	364
+	Total geral
+36 + 364 = 400
+________________
+
+
+5. O que são as DIVINAS agora
+Já que os Deuses base são comuns, as Divinas viram:
+Eu faria algo assim:
+Tipo
+	Divinas
+	Devotees
+	10
+	Cloths
+	2
+	Relíquias
+	2
+	Técnicas
+	3
+	Momentos
+	1
+	Total
+	18
+	Exemplos de Divinas (conceito)
+                                                                                                                                                                           * God Cloths
+
+                                                                                                                                                                           * Kamui
+
+                                                                                                                                                                           * Athena Exclamation
+
+                                                                                                                                                                           * Great Eclipse
+
+                                                                                                                                                                           * Great Flood
+
+                                                                                                                                                                           * Forma final de personagens
+
+                                                                                                                                                                           * Relíquias máximas
+
+                                                                                                                                                                           * Técnicas absurdas
+
+                                                                                                                                                                           * Eventos que mudam o jogo
+
+Divina tem que ser carta que quando abre o booster o cara fala:
+CARALHO
+________________
+
+
+6. Estrutura por facção (agora correta)
+Cada facção continua com:
+Tipo
+	Qtde por facção
+	Deus base
+	1
+	Domínios
+	3
+	Locais
+	3
+	Devotees
+	30
+	Cloths
+	8
+	Relíquias
+	6
+	Técnicas
+	10
+	Momentos
+	5
+	Isso dá 66 cartas por facção.
+66 x 5 = 330
+Depois adiciona:
+Incolor / cinza
+Tipo
+	Qtde
+	Local
+	1
+	Devotees
+	30
+	Cloths
+	10
+	Relíquias
+	10
+	Técnicas
+	10
+	Momentos
+	9
+	Total
+	70
+	330 + 70 = 400
+Fechou perfeitamente.
+________________
+
+
+7. Próximo passo (agora é design mesmo)
+Agora a ordem correta de criação de cartas é:
+                                                                                                                                                                              1. Devotees comuns de cada facção
+
+                                                                                                                                                                              2. Cloths comuns
+
+                                                                                                                                                                              3. Relíquias comuns
+
+                                                                                                                                                                              4. Técnicas comuns
+
+                                                                                                                                                                              5. Momentos comuns
+
+                                                                                                                                                                              6. Depois Incomuns
+
+                                                                                                                                                                              7. Depois Míticas
+
+                                                                                                                                                                              8. Por último Divinas
+
+Se você começar pelas Divinas, você quebra o balanceamento sem perceber.
+________________
+
+
+Resumo estrutural final do jogo
+Bloco
+	Qtde
+	Deuses base
+	5
+	Domínios
+	15
+	Locais
+	16
+	Devotees
+	180
+	Cloths
+	50
+	Relíquias
+	40
+	Técnicas
+	60
+	Momentos
+	34
+	Total
+	400
+	
+
+Raridade
+	Qtde
+	Comum
+	182
+	Incomum
+	109
+	Mítica
+	55
+	Divina
+	18
+	Total jogáveis
+	364
+	
+
+ATHENA — CARD TEXT FILE (VERSÃO FINAL)
+GOD 
+✅ Athena, Goddess of Hope
+Type: God
+Soul: 30
+Attack: 3
+Awaken: 5
+Cosmo of Hope
+Whenever one of your Devotees survives combat, generate 1 Latent Cosmo.
+Athena’s Prayer — Cost: 5 Cosmo
+When an Athena Devotee is destroyed and sent to Tartarus, you may pay 5 Cosmo. If you do, return that Devotee to the battlefield Unprepared. That Devotee gets +1/+1. You may equip a Cloth to it ignoring equip cost.
+Awaken — Seventh Sense
+All Athena Devotees you control get +1/+1.
+Awaken Ability — Cost: 5 Cosmo
+If an Athena Devotee would be destroyed, you may pay 5 Cosmo. If you do, it is not destroyed and its Resistance becomes 1 instead.
+Ultimate — Athena Exclamation — Cost: 15 Cosmo
+Destroy all enemy Devotees. For each Devotee destroyed this way, its controller loses 1 Soul.
+________________
+
+
+BRONZE SAINTS — DIVINA
+✅ Seiya, Pegasus Saint
+Type: Devotee — Bronze Saint
+Cost: 3
+Power: 2
+Resistance: 2
+Keyword: Long Range
+When Seiya attacks, you may pay 1 Latent Cosmo. If you do, Seiya gets +1/+0 until end of turn.
+If Seiya would be destroyed, you may pay 3 Latent Cosmo. If you do, return Seiya to the battlefield Unprepared.
+Technique — Pegasus Ryuseiken — Cost: 5 Base Cosmo
+Seiya gets +3/+2 until end of turn. If Seiya is equipped with a Cloth, he gains Pierce this combat.
+________________
+
+
+✅ Shiryu, Dragon Saint
+Type: Devotee — Bronze Saint
+Cost: 3
+Power: 1
+Resistance: 3
+Keyword: Guardian
+If Shiryu is equipped with a Cloth, Shiryu gets +1/+1.
+If Shiryu would be destroyed, you may destroy a Cloth equipped to Shiryu instead.
+Technique — Rozan Shoryuha — Cost: 6 Base Cosmo
+Shiryu deals 4 damage to target Devotee. You may destroy a Cloth equipped to Shiryu. If you do, this Technique costs 0 instead. Use this ability only once each turn.
+________________
+
+
+✅ Hyoga, Cygnus Saint
+Type: Devotee — Bronze Saint
+Cost: 2
+Power: 1
+Resistance: 3
+When Hyoga deals combat damage to a Devotee, Seal that Devotee.
+Devotees with Seal counters get -1/-0 while Hyoga is Prepared.
+Technique — Diamond Dust — Cost: 4 Base Cosmo
+Deal 1 damage to all enemy Devotees. Seal all Devotees damaged this way.
+________________
+
+
+✅Shun, Andromeda Saint
+Type: Devotee — Bronze Saint
+Cost: 2
+Power: 0
+Resistance: 4
+Keyword: Nimble
+When Shun enters the battlefield, return target enemy Devotee with cost 1 or less to its owner hand.
+When a Devotee attacks Shun, return that Devotee to its owner hand after combat.
+Technique — Nebula Chain — Cost: 4 Base Cosmo
+Return up to 2 target enemy Devotees to their owners hand. Those Devotees cannot be played again this turn.
+________________
+
+
+✅ Ikki, Phoenix Saint
+Type: Devotee — Bronze Saint
+Cost: 4
+Power: 3
+Resistance: 1
+Keyword: Pierce
+If you used 3 or more Abilities, Moments, or Techniques this turn, you may return Ikki from Tartarus to the battlefield Unprepared.
+Houou Genma-Ken
+Whenever Ikki deals combat damage to a Devotee, you may pay 6 Cosmo. If you do, gain control of that Devotee until end of turn. Prepare that Devotee.
+Hōyoku Tenshō — Cost: 5 Cosmo, Tap Ikki
+Deal 3 damage to target Devotee or God.
+________________
+
+
+SILVER SAINTS
+Marin, Silver Saint
+Type: Devotee — Silver Saint
+Cost: 3
+Power: 2
+Resistance: 3
+When Marin enters the battlefield, another target Devotee you control gets +1/+1.
+Tap: Generate 1 Latent Cosmo.
+________________
+
+
+Shina, Silver Saint
+Type: Devotee — Silver Saint
+Cost: 3
+Power: 3
+Resistance: 2
+Whenever Shina enters combat, target enemy Devotee gets -1/-0 until end of turn.
+________________
+
+
+GOLD SAINTS — MÍTICA
+Saga, Gemini Gold Saint
+Type: Devotee — Gold Saint
+Cost: 5
+Power: 3
+Resistance: 4
+Gemini Illusion
+Once per turn, when an enemy Technique targets a Devotee, you may change the target to another valid Devotee.
+Another Dimension — Cost: 3 Latent Cosmo, Tap Saga
+Exile target Devotee with cost 3 or less. Return that Devotee to the battlefield under its owner control at the end of the next turn Unprepared.
+Awakened Technique — Galaxian Explosion — Cost: 8 Base Cosmo
+Choose target opponent. Deal damage to all other Devotees equal to that player Latent Cosmo. Devotees destroyed this way are exiled instead of going to Tartarus.
+________________
+
+
+Aiolos, Sagittarius Gold Saint
+Type: Devotee — Gold Saint
+Cost: 5
+Power: 3
+Resistance: 3
+Keyword: Long Range
+Other Athena Devotees you control get +0/+1. If they are equipped with a Cloth, they get +1/+1 instead.
+Aiolos can block Nimble Devotees.
+Awakened Technique — Sagittarius Arrow — Cost: X Base Cosmo
+Deal X damage to target Devotee or God, where X equals your God current Soul.
+________________
+
+
+Aldebaran, Taurus Gold Saint
+Type: Devotee — Gold Saint
+Cost: 5
+Power: 2
+Resistance: 6
+Keyword: Guardian
+Enemy Devotees with Power 3 or less cannot attack your God.
+Whenever Aldebaran survives combat, deal 1 damage to the enemy Devotee.
+Technique — Great Horn — Cost: 4 Base Cosmo
+Aldebaran gets +3/+0 and Pierce this combat.
+________________
+
+
+Deathmask, Cancer Gold Saint
+Type: Devotee — Gold Saint
+Cost: 4
+Power: 3
+Resistance: 3
+Whenever a Devotee is destroyed, its controller loses 1 Soul.
+Technique — Underworld Waves — Cost: 5 Base Cosmo
+Exile all Devotees from Tartarus. For each Devotee exiled this way, generate 1 Latent Cosmo.
+________________
+
+
+Camus, Aquarius Gold Saint
+Type: Devotee — Gold Saint
+Cost: 5
+Power: 3
+Resistance: 4
+Devotees with Seal counters get -1/-1.
+Once per turn, when you put a Seal counter on a Devotee, you may put a Seal counter on another target Devotee.
+Technique — Aurora Execution — Cost: 6 Base Cosmo
+Deal 1 damage to all enemy Devotees. Destroy all Sealed Devotees.
+________________
+
+
+GOLD CLOTHS
+(Esse texto é padrão e MUITO IMPORTANTE pro jogo funcionar)
+Sagittarius Cloth
+Type: Relic — Cloth
+Cost: 4
+Equip: 2
+Equipped Devotee gets +2/+2 and can block Nimble.
+You may equip Sagittarius Cloth to Aiolos or Seiya at any time without paying its equip cost.
+Resonance — Aiolos
+Equipped Devotee gains Pierce and gets +1/+1.
+Resonance — Seiya
+Equipped Devotee gains Impulse and gets +1/+1.
+When Sagittarius Cloth enters the battlefield, it deals 3 damage to target Devotee.
+Damage: 3
+________________
+
+
+Libra Cloth
+Type: Relic — Cloth
+Cost: 4
+Equip: 2
+Equipped Devotee gets +2/+2.
+You may equip Libra Cloth to Dohko or Shiryu at any time without paying its equip cost.
+Resonance — Dohko
+Tap: Destroy target Relic.
+Resonance — Shiryu
+Equipped Devotee gets +0/+2 and Guardian.
+When Libra Cloth enters the battlefield, search your deck for a Weapon Relic, reveal it, and put it into your hand. Then shuffle your deck.
+Damage: 3
+________________
+
+
+Aquarius Cloth
+Type: Relic — Cloth
+Cost: 4
+Equip: 2
+Equipped Devotee gets +2/+2.
+You may equip Aquarius Cloth to Camus or Hyoga at any time without paying its equip cost.
+Resonance — Camus
+When this Devotee deals combat damage to a Devotee, Seal that Devotee.
+Resonance — Hyoga
+When this Devotee deals combat damage to a Devotee, generate 1 Latent Cosmo.
+When Aquarius Cloth enters the battlefield, Seal target Devotee.
+Damage: 3
+________________
+
+
+Leo Cloth
+Type: Relic — Cloth
+Cost: 4
+Equip: 2
+Equipped Devotee gets +2/+2 and Long Range.
+You may equip Leo Cloth to Aiolia or Ikki at any time without paying its equip cost.
+Resonance — Aiolia
+When this Devotee attacks, it gets +1/+0 until end of turn.
+Resonance — Ikki
+Equipped Devotee gets +1/+0 and Long Range.
+When Leo Cloth enters the battlefield, deal 1 damage to all enemy Devotees.
+Damage: 3
+________________
+
+
+Virgo Cloth
+Type: Relic — Cloth
+Cost: 4
+Equip: 2
+Equipped Devotee gets +2/+2.
+When Virgo Cloth enters the battlefield, remove all Latent Cosmo from target opponent.
+You may equip Virgo Cloth to Shaka or Shun at any time without paying its equip cost.
+Resonance — Shaka
+Whenever this Devotee deals combat damage to a Devotee, the enemy God loses 1 Soul.
+Resonance — Shun
+Equipped Devotee gets +0/+2, Guardian, and Unfaith.
+Damage: 3
+
+
+
+
+________________
+
+
+DEVOTEES COMUNS — ATHENA
+Sanctuary Guard
+Type: Devotee
+Cost: 2
+Power: 1
+Resistance: 1
+Keyword: Guardian
+When Sanctuary Guard enters the battlefield, you may equip a Cloth with equip cost 1 or less to it without paying its equip cost.
+________________
+
+
+Cosmo Apprentice
+Type: Devotee
+Cost: 1
+Power: 0
+Resistance: 2
+Tap: Generate 1 Latent Cosmo.
+________________
+
+
+Sanctuary Archer
+Type: Devotee
+Cost: 3
+Power: 2
+Resistance: 2
+Keyword: Long Range
+Sanctuary Archer can attack Devotees with Nimble.
+________________
+
+
+Sanctuary Healer
+Type: Devotee
+Cost: 2
+Power: 1
+Resistance: 3
+Tap: Prevent the next 2 damage that would be dealt to target Devotee this turn.
+________________
+
+
+Cloth Repairer
+Type: Devotee
+Cost: 2
+Power: 1
+Resistance: 2
+Tap: Restore 2 Damage from target Cloth.
+________________
+
+
+Star Hill Monk
+Type: Devotee
+Cost: 3
+Power: 1
+Resistance: 4
+At the beginning of your turn, generate 1 Latent Cosmo.
+________________
+
+
+Sanctuary Soldier
+Type: Devotee
+Cost: 2
+Power: 2
+Resistance: 2
+When Sanctuary Soldier enters the battlefield, another target Devotee gets +0/+1 until end of turn.
+________________
+
+
+WEAPONS — LIBRA
+(Armas buscáveis pela Libra Cloth)
+Libra Sword
+Type: Relic — Weapon
+Cost: 3
+Equip: 2
+Equipped Devotee gets +2/+0.
+When equipped Devotee attacks, it gains Pierce until end of turn.
+Damage: 2
+________________
+
+
+Libra Spear
+Type: Relic — Weapon
+Cost: 3
+Equip: 2
+Equipped Devotee gets +1/+1.
+Tap: Equipped Devotee deals 1 damage to target Devotee.
+Damage: 2
+________________
+
+
+Libra Staff
+Type: Relic — Weapon
+Cost: 3
+Equip: 2
+Equipped Devotee gets +0/+2.
+Tap: Seal target Devotee that was dealt damage this turn.
+Damage: 2
+________________
+
+
+Libra Shield
+Type: Relic — Weapon
+Cost: 3
+Equip: 2
+Equipped Devotee gets +0/+3 and Guardian.
+Damage: 3
+________________
+
+
+RELÍQUIAS ESPECIAIS — ATHENA
+Staff of Athena
+Type: Relic
+Cost: 4
+Tap: Seal target Devotee.
+If that Devotee is a Specter, it does not Ready during its controller next turn.
+Damage: 3
+________________
+
+
+Athena Amphora
+Type: Relic
+Cost: 3
+When a Sealed Devotee would be sent to Tartarus, exile it instead.
+Tap: Seal target Devotee.
+Damage: 3
+________________
+
+
+Athena Seal
+Type: Relic
+Cost: 2
+Devotees in Tartarus cannot return to the battlefield.
+Damage: 2
+________________
+
+
+Golden Arrow
+Type: Relic — Weapon
+Cost: 4
+Equip: 2
+Tap: Equipped Devotee deals 4 damage to target Devotee or God.
+Damage: 2
+________________
+
+
+Pope Dagger
+Type: Relic — Weapon
+Cost: 2
+Equip: 1
+If equipped Devotee deals damage to a God, that God loses 1 additional Soul.
+Damage: 2
+________________
+
+
+TÉCNICAS — ATHENA
+Athena’s Judgment
+Type: Technique
+Cost: 8 Base Cosmo
+Destroy all Devotees. Gold Saints you control are not destroyed.
+________________
+
+
+Athena’s Protection
+Type: Technique
+Cost: 3 Base Cosmo
+Target Devotee cannot be destroyed this turn.
+________________
+
+
+Cosmo Blessing
+Type: Technique
+Cost: 2 Base Cosmo
+Target Devotee gets +2/+2 until end of turn.
+________________
+
+
+Sanctuary Blessing
+Type: Technique
+Cost: 4 Base Cosmo
+All Devotees you control get +1/+1 until end of turn.
+________________
+
+
+Seal of Athena
+Type: Technique
+Cost: 3 Base Cosmo
+Seal target Devotee.
+________________
+
+
+Exile Evil
+Type: Technique
+Cost: 5 Base Cosmo
+Exile target Devotee with cost 4 or greater.
+________________
+
+
+Call the Cloth
+Type: Technique
+Cost: 2 Base Cosmo
+Search your deck for a Cloth Relic, reveal it, put it into your hand, then shuffle your deck.
+________________
+
+
+Repair Cloth
+Type: Technique
+Cost: 2 Base Cosmo
+Restore 3 Damage from target Cloth.
+________________
+
+
+Shatter Faith
+Type: Technique
+Cost: 3 Base Cosmo
+Destroy target Relic.
+________________
+
+
+Return from Tartarus
+Type: Technique
+Cost: 5 Base Cosmo
+Return target Devotee from Tartarus to the battlefield Unprepared.
+________________
+
+
+Sanctuary Guardians
+Type: Technique
+Cost: 2 Base Cosmo
+Target Devotee gains Guardian until end of turn.
+________________
+
+
+Divine Barrier
+Type: Technique
+Cost: 3 Base Cosmo
+Prevent all damage that would be dealt to your God this turn.
+________________
+
+
+Unfaith Purge
+Type: Technique
+Cost: 3 Base Cosmo
+Remove all Latent Cosmo from target opponent.
+________________
+
+
+Relic Blessing
+Type: Technique
+Cost: 2 Base Cosmo
+Target Relic cannot be destroyed this turn.
+________________
+
+
+Smite the Evil
+Type: Technique
+Cost: 3 Base Cosmo
+Destroy target Devotee that attacked this turn.
+________________
+
+
+Rise, Saint!
+Type: Technique
+Cost: 4 Base Cosmo
+Target Devotee gets +2/+2.
+If it is equipped with a Cloth, it gets +4/+4 instead.
+________________
+
+
+LOCAIS — ATHENA
+Sanctuary
+Type: Domain — Location
+Cost: 3
+Devotees you control get +0/+1.
+________________
+
+
+Star Hill
+Type: Domain — Location
+Cost: 2
+At the beginning of your turn, generate 1 Latent Cosmo.
+________________
+
+
+Coliseu
+Type: Domain — Location
+Cost: 2
+Whenever a Devotee you control enters combat, it gets +1/+0 until end of turn.
+________________
+
+
+
+
+  
+
+
+  
+
+Lotis de Lâmina - É a líder do exército do Medo, sádica e bastante cruel para com suas vítimas, Lotis adora mexer com o psicológico delas, trazendo-lhes a tona seus piores medos. Sua capacidade de perceber presenças vem do seu enorme potencial em detectar a energia negativa provinda do terror de suas vítimas.
+
+
+________________
+
+
+  
+
+Alcmenes de Ethon - É um dos 4 comandantes que regem os exércitos de Ares, ele é o Berserker de Ethon, a lendária ave que sempre volta para comer as vísceras de Prometeu na era mitológica.
+
+
+________________
+
+
+
+  
+
+Ofir de Ourobouros - É o comandante do exército da Chama! Ofir é o comandante mais inteligente e o menos cruel entre os 4 comandantes do exército de Ares, ele ouve seus subordinados e tem um ótimo senso estratégico, assim como Jehuh, porém em termos de força é muito mais poderoso! Ofir possui o poder das chamas divinas da guerra, oferecidas a ele pelo próprio Ares em detrimento de sua inteligência e enorme sabedoria!
+See less
+
+
+________________
+
+
+  
+
+PHOBOS
+
+
+________________
+
+
+  
+
+DEIMOS
+
+________________

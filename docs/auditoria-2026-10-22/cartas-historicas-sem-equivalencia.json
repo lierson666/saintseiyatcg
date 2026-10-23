@@ -1,0 +1,202 @@
+[
+  {
+    "nome": "Libra Staff",
+    "arquivo": "docs/auditoria-2026-10-22/fontes/revisoes/drive-609.txt",
+    "linha_inicio": 1319,
+    "linha_fim": 1325,
+    "texto_original": "Libra Staff\nType: Relic — Weapon\nCost: 3\nEquip: 2\nEquipped Devotee gets +0/+2.\nTap: Seal target Devotee that was dealt damage this turn.\nDamage: 2",
+    "id_atual": null,
+    "estado_recuperacao": "NEEDS_VERIFICATION",
+    "nota_pt": "Fronteira pela próxima ficha Type ou separador; categoria solta no fim permanece literal, sem assumir raridade."
+  },
+  {
+    "nome": "Golden Arrow",
+    "arquivo": "docs/auditoria-2026-10-22/fontes/revisoes/drive-609.txt",
+    "linha_inicio": 1365,
+    "linha_fim": 1370,
+    "texto_original": "Golden Arrow\nType: Relic — Weapon\nCost: 4\nEquip: 2\nTap: Equipped Devotee deals 4 damage to target Devotee or God.\nDamage: 2",
+    "id_atual": null,
+    "estado_recuperacao": "NEEDS_VERIFICATION",
+    "nota_pt": "Fronteira pela próxima ficha Type ou separador; categoria solta no fim permanece literal, sem assumir raridade."
+  },
+  {
+    "nome": "Libra Staff",
+    "arquivo": "docs/auditoria-2026-10-22/fontes/revisoes/drive-631.txt",
+    "linha_inicio": 1319,
+    "linha_fim": 1325,
+    "texto_original": "Libra Staff\nType: Relic — Weapon\nCost: 3\nEquip: 2\nEquipped Devotee gets +0/+2.\nTap: Seal target Devotee that was dealt damage this turn.\nDamage: 2",
+    "id_atual": null,
+    "estado_recuperacao": "NEEDS_VERIFICATION",
+    "nota_pt": "Fronteira pela próxima ficha Type ou separador; categoria solta no fim permanece literal, sem assumir raridade."
+  },
+  {
+    "nome": "Golden Arrow",
+    "arquivo": "docs/auditoria-2026-10-22/fontes/revisoes/drive-631.txt",
+    "linha_inicio": 1365,
+    "linha_fim": 1370,
+    "texto_original": "Golden Arrow\nType: Relic — Weapon\nCost: 4\nEquip: 2\nTap: Equipped Devotee deals 4 damage to target Devotee or God.\nDamage: 2",
+    "id_atual": null,
+    "estado_recuperacao": "NEEDS_VERIFICATION",
+    "nota_pt": "Fronteira pela próxima ficha Type ou separador; categoria solta no fim permanece literal, sem assumir raridade."
+  },
+  {
+    "nome": "Libra Staff",
+    "arquivo": "docs/auditoria-2026-10-22/fontes/revisoes/drive-633.txt",
+    "linha_inicio": 1319,
+    "linha_fim": 1325,
+    "texto_original": "Libra Staff\nType: Relic — Weapon\nCost: 3\nEquip: 2\nEquipped Devotee gets +0/+2.\nTap: Seal target Devotee that was dealt damage this turn.\nDamage: 2",
+    "id_atual": null,
+    "estado_recuperacao": "NEEDS_VERIFICATION",
+    "nota_pt": "Fronteira pela próxima ficha Type ou separador; categoria solta no fim permanece literal, sem assumir raridade."
+  },
+  {
+    "nome": "Golden Arrow",
+    "arquivo": "docs/auditoria-2026-10-22/fontes/revisoes/drive-633.txt",
+    "linha_inicio": 1365,
+    "linha_fim": 1370,
+    "texto_original": "Golden Arrow\nType: Relic — Weapon\nCost: 4\nEquip: 2\nTap: Equipped Devotee deals 4 damage to target Devotee or God.\nDamage: 2",
+    "id_atual": null,
+    "estado_recuperacao": "NEEDS_VERIFICATION",
+    "nota_pt": "Fronteira pela próxima ficha Type ou separador; categoria solta no fim permanece literal, sem assumir raridade."
+  },
+  {
+    "nome": "Libra Staff",
+    "arquivo": "docs/auditoria-2026-10-22/fontes/revisoes/drive-635.txt",
+    "linha_inicio": 1319,
+    "linha_fim": 1325,
+    "texto_original": "Libra Staff\nType: Relic — Weapon\nCost: 3\nEquip: 2\nEquipped Devotee gets +0/+2.\nTap: Seal target Devotee that was dealt damage this turn.\nDamage: 2",
+    "id_atual": null,
+    "estado_recuperacao": "NEEDS_VERIFICATION",
+    "nota_pt": "Fronteira pela próxima ficha Type ou separador; categoria solta no fim permanece literal, sem assumir raridade."
+  },
+  {
+    "nome": "Golden Arrow",
+    "arquivo": "docs/auditoria-2026-10-22/fontes/revisoes/drive-635.txt",
+    "linha_inicio": 1365,
+    "linha_fim": 1370,
+    "texto_original": "Golden Arrow\nType: Relic — Weapon\nCost: 4\nEquip: 2\nTap: Equipped Devotee deals 4 damage to target Devotee or God.\nDamage: 2",
+    "id_atual": null,
+    "estado_recuperacao": "NEEDS_VERIFICATION",
+    "nota_pt": "Fronteira pela próxima ficha Type ou separador; categoria solta no fim permanece literal, sem assumir raridade."
+  },
+  {
+    "nome": "Libra Staff",
+    "arquivo": "docs/auditoria-2026-10-22/fontes/revisoes/drive-638.txt",
+    "linha_inicio": 1319,
+    "linha_fim": 1325,
+    "texto_original": "Libra Staff\nType: Relic — Weapon\nCost: 3\nEquip: 2\nEquipped Devotee gets +0/+2.\nTap: Seal target Devotee that was dealt damage this turn.\nDamage: 2",
+    "id_atual": null,
+    "estado_recuperacao": "NEEDS_VERIFICATION",
+    "nota_pt": "Fronteira pela próxima ficha Type ou separador; categoria solta no fim permanece literal, sem assumir raridade."
+  },
+  {
+    "nome": "Golden Arrow",
+    "arquivo": "docs/auditoria-2026-10-22/fontes/revisoes/drive-638.txt",
+    "linha_inicio": 1365,
+    "linha_fim": 1370,
+    "texto_original": "Golden Arrow\nType: Relic — Weapon\nCost: 4\nEquip: 2\nTap: Equipped Devotee deals 4 damage to target Devotee or God.\nDamage: 2",
+    "id_atual": null,
+    "estado_recuperacao": "NEEDS_VERIFICATION",
+    "nota_pt": "Fronteira pela próxima ficha Type ou separador; categoria solta no fim permanece literal, sem assumir raridade."
+  },
+  {
+    "nome": "Libra Staff",
+    "arquivo": "docs/auditoria-2026-10-22/fontes/revisoes/drive-641.txt",
+    "linha_inicio": 1319,
+    "linha_fim": 1325,
+    "texto_original": "Libra Staff\nType: Relic — Weapon\nCost: 3\nEquip: 2\nEquipped Devotee gets +0/+2.\nTap: Seal target Devotee that was dealt damage this turn.\nDamage: 2",
+    "id_atual": null,
+    "estado_recuperacao": "NEEDS_VERIFICATION",
+    "nota_pt": "Fronteira pela próxima ficha Type ou separador; categoria solta no fim permanece literal, sem assumir raridade."
+  },
+  {
+    "nome": "Golden Arrow",
+    "arquivo": "docs/auditoria-2026-10-22/fontes/revisoes/drive-641.txt",
+    "linha_inicio": 1365,
+    "linha_fim": 1370,
+    "texto_original": "Golden Arrow\nType: Relic — Weapon\nCost: 4\nEquip: 2\nTap: Equipped Devotee deals 4 damage to target Devotee or God.\nDamage: 2",
+    "id_atual": null,
+    "estado_recuperacao": "NEEDS_VERIFICATION",
+    "nota_pt": "Fronteira pela próxima ficha Type ou separador; categoria solta no fim permanece literal, sem assumir raridade."
+  },
+  {
+    "nome": "Libra Staff",
+    "arquivo": "docs/auditoria-2026-10-22/fontes/revisoes/drive-658.txt",
+    "linha_inicio": 1278,
+    "linha_fim": 1285,
+    "texto_original": "Libra Staff\nType: Relic — Weapon\nCost: 3\nEquip: 2\nEquipped Devotee gets +0/+2.\nTap: Seal target Devotee that was dealt damage this turn.\nDamage: 2\nIncomum",
+    "id_atual": null,
+    "estado_recuperacao": "NEEDS_VERIFICATION",
+    "nota_pt": "Fronteira pela próxima ficha Type ou separador; categoria solta no fim permanece literal, sem assumir raridade."
+  },
+  {
+    "nome": "Golden Arrow",
+    "arquivo": "docs/auditoria-2026-10-22/fontes/revisoes/drive-658.txt",
+    "linha_inicio": 1317,
+    "linha_fim": 1323,
+    "texto_original": "Golden Arrow\nType: Relic — Weapon\nCost: 4\nEquip: 2\nTap: Equipped Devotee deals 4 damage to target Devotee or God.\nDamage: 2\nIncomum",
+    "id_atual": null,
+    "estado_recuperacao": "NEEDS_VERIFICATION",
+    "nota_pt": "Fronteira pela próxima ficha Type ou separador; categoria solta no fim permanece literal, sem assumir raridade."
+  },
+  {
+    "nome": "Libra Staff",
+    "arquivo": "docs/auditoria-2026-10-22/fontes/revisoes/drive-683.txt",
+    "linha_inicio": 1278,
+    "linha_fim": 1285,
+    "texto_original": "Libra Staff\nType: Relic — Weapon\nCost: 3\nEquip: 2\nEquipped Devotee gets +0/+2.\nTap: Seal target Devotee that was dealt damage this turn.\nDamage: 2\nIncomum",
+    "id_atual": null,
+    "estado_recuperacao": "NEEDS_VERIFICATION",
+    "nota_pt": "Fronteira pela próxima ficha Type ou separador; categoria solta no fim permanece literal, sem assumir raridade."
+  },
+  {
+    "nome": "Golden Arrow",
+    "arquivo": "docs/auditoria-2026-10-22/fontes/revisoes/drive-683.txt",
+    "linha_inicio": 1317,
+    "linha_fim": 1323,
+    "texto_original": "Golden Arrow\nType: Relic — Weapon\nCost: 4\nEquip: 2\nTap: Equipped Devotee deals 4 damage to target Devotee or God.\nDamage: 2\nIncomum",
+    "id_atual": null,
+    "estado_recuperacao": "NEEDS_VERIFICATION",
+    "nota_pt": "Fronteira pela próxima ficha Type ou separador; categoria solta no fim permanece literal, sem assumir raridade."
+  },
+  {
+    "nome": "Libra Staff",
+    "arquivo": "docs/auditoria-2026-10-22/fontes/revisoes/drive-703.txt",
+    "linha_inicio": 1278,
+    "linha_fim": 1285,
+    "texto_original": "Libra Staff\nType: Relic — Weapon\nCost: 3\nEquip: 2\nEquipped Devotee gets +0/+2.\nTap: Seal target Devotee that was dealt damage this turn.\nDamage: 2\nIncomum",
+    "id_atual": null,
+    "estado_recuperacao": "NEEDS_VERIFICATION",
+    "nota_pt": "Fronteira pela próxima ficha Type ou separador; categoria solta no fim permanece literal, sem assumir raridade."
+  },
+  {
+    "nome": "Golden Arrow",
+    "arquivo": "docs/auditoria-2026-10-22/fontes/revisoes/drive-703.txt",
+    "linha_inicio": 1317,
+    "linha_fim": 1323,
+    "texto_original": "Golden Arrow\nType: Relic — Weapon\nCost: 4\nEquip: 2\nTap: Equipped Devotee deals 4 damage to target Devotee or God.\nDamage: 2\nIncomum",
+    "id_atual": null,
+    "estado_recuperacao": "NEEDS_VERIFICATION",
+    "nota_pt": "Fronteira pela próxima ficha Type ou separador; categoria solta no fim permanece literal, sem assumir raridade."
+  },
+  {
+    "nome": "Libra Staff",
+    "arquivo": "docs/auditoria-2026-10-22/fontes/revisoes/drive-712.txt",
+    "linha_inicio": 1280,
+    "linha_fim": 1288,
+    "texto_original": "Libra Staff\nType: Relic — Weapon\nCost: 3\nEquip: 2\nEquipped Devotee gets +0/+2.\nTap: Seal target Devotee that was dealt damage this turn.\n\n\nIncomum",
+    "id_atual": null,
+    "estado_recuperacao": "NEEDS_VERIFICATION",
+    "nota_pt": "Fronteira pela próxima ficha Type ou separador; categoria solta no fim permanece literal, sem assumir raridade."
+  },
+  {
+    "nome": "Golden Arrow",
+    "arquivo": "docs/auditoria-2026-10-22/fontes/revisoes/drive-712.txt",
+    "linha_inicio": 1324,
+    "linha_fim": 1329,
+    "texto_original": "Golden Arrow\nType: Relic — Weapon\nCost: 4\nEquip: 2\nTap: Equipped Devotee deals 4 damage to target Devotee or God.\nIncomum",
+    "id_atual": null,
+    "estado_recuperacao": "NEEDS_VERIFICATION",
+    "nota_pt": "Fronteira pela próxima ficha Type ou separador; categoria solta no fim permanece literal, sem assumir raridade."
+  }
+]

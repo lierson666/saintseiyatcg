@@ -1,0 +1,180 @@
+﻿ATHENA — Goddess of Hope
+Soul: 30
+Attack: 3
+Awaken: 5
+________________
+
+
+Passive — Cosmo of Hope
+Whenever one of your Devotees survives an enemy combat, generate 1 Latent Cosmo.
+________________
+
+
+Passive — Athena’s Prayer
+Cost: 5 Cosmo
+When an Athena Saint you control is destroyed and sent to Tartarus, you may pay 5 Cosmo. If you do, return that Devotee to the battlefield Unprepared with a +1/+1 token on it. You may equip a Cloth to it ignoring equip cost.
+________________
+
+
+Awaken — Seventh Sense (Passive)
+All Athena Saints you control get +1/+1.
+________________
+
+
+Awaken Ability — Seventh Sense Protection
+Cost: 5 Cosmo
+If an Athena Saint you control would be destroyed during combat, you may pay 5 Cosmo. If you do, it survives with 1 Resistance instead.
+________________
+
+
+Ultimate — Athena Exclamation
+Cost: 15 Cosmo — Once per game
+Destroy all enemy Devotees that are in combat. Your Devotees are not destroyed this way. For each Devotee destroyed this way, its controller loses 1 Soul.
+________________
+
+
+POSEIDON — God of the Seas
+Soul: 28
+Attack: 3
+Awaken: 4
+________________
+
+
+Passive — Frozen Ocean
+Cost: 2 Cosmo
+When an enemy Devotee declares an attack, you may pay 2 Cosmo. If you do, Sealed that Devotee until the beginning of its controller’s next turn.
+________________
+
+
+Passive — Pressure of the Deep
+Whenever you Sealed an enemy Devotee, its controller mills 1 card.
+________________
+
+
+Awaken — Eternal Ice
+While Poseidon is Awakened:
+Whenever a Sealed enemy Devotee exists, you may pay 2 Cosmo. If you do, choose one:
+* Mill 2 cards
+
+* Draw 1 card
+
+________________
+
+
+Ultimate — Great Flood
+Cost: 18 Cosmo — Once per game
+Return all Devotees without Cloth to their owners’ hands. Then all players discard their hands and mill 5 cards.
+________________
+
+
+ARES — God of War
+Soul: 26
+Attack: 4
+Awaken: 6
+________________
+
+
+Passive — Bloodlust
+Cost: 3 Soul
+Choose a Devotee. It gets +1/+0 and Impulse until end of turn.
+________________
+
+
+Passive — Never Ending War
+Cost: 8 Soul
+All your Devotees get +1/+0 and gain Pierce until end of turn.
+________________
+
+
+Awaken — God of Slaughter (Passive)
+Whenever one of your Devotees destroys another Devotee in combat, the enemy God loses 1 Soul.
+________________
+
+
+Ultimate — Total War
+Cost: 15 Cosmo — Once per game
+All your Devotees get:
+   * +2/+0
+
+   * Pierce
+
+   * Impulse
+
+   * Long Range
+
+Until end of turn.
+________________
+
+
+HADES — King of the Underworld
+Soul: 32
+Attack: 2
+Awaken: 7
+________________
+
+
+Passive — Realm of the Dead
+Cost: 2 Soul
+Whenever a Devotee is destroyed, you may pay 2 Soul. If you do, draw 1 card and generate 1 Latent Cosmo.
+________________
+
+
+Passive — Soul is Power
+Cost: 3 Soul — Once per turn
+Gain 1 Base Cosmo.
+________________
+
+
+Awaken — King of Tartarus (Passive)
+Whenever a Devotee returns from Tartarus to the battlefield, the enemy God loses 1 Soul and you gain 1 Soul.
+________________
+
+
+Ultimate — Great Eclipse
+Cost: 15 Cosmo — Once per game
+Return all Devotees from all Tartarus to the battlefield under your control. They enter the battlefield Sealed.
+________________
+
+
+ARTEMIS — Goddess of the Moon
+Soul: 24
+Attack: 3
+Awaken: 3
+________________
+
+
+Passive — Moon Harvest
+Cost: 2 Soul
+Choose one:
+      * Draw 1 card, then discard 1 card
+
+      * Gain 1 Base Cosmo
+
+________________
+
+
+Passive — Nature’s Domain
+Devotees you control without Cloth cost 1 Cosmo less to play.
+________________
+
+
+Awaken — Moonlight Blessing
+While Artemis is Awakened:
+         * Your Base Cosmo produces 2 Cosmo instead of 1
+
+         * Your Latent Cosmo does not disappear at the end of turn
+
+________________
+
+
+Ultimate — Moon Awakening
+Cost: 15 Cosmo — Once per game
+Choose any number of your Base Cosmos. They become 3/3 Moon Spirits with:
+            * Nimble
+
+            * Long Range
+
+            * Pierce
+
+They are still considered Base Cosmos.
+________________

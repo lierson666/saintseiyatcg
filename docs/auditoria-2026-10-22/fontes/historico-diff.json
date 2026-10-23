@@ -1,0 +1,4108 @@
+[
+  {
+    "revisao": "1",
+    "data": "2026-04-04T05:41:13.644Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "b42f2099187886def637d6aa840022266e05cb6c987a9394e708e23cd505eb46",
+    "arquivo": "fontes/revisoes/drive-1.txt",
+    "palavras": 1,
+    "fichas_Type": 0,
+    "mudancas_desde_anterior": []
+  },
+  {
+    "revisao": "7",
+    "data": "2026-04-04T05:41:45.354Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "0ff2bfc4377aab34260d146faa864118650e7de8c96d0e8b9423198786ae48aa",
+    "arquivo": "fontes/revisoes/drive-7.txt",
+    "palavras": 639,
+    "fichas_Type": 0,
+    "mudancas_desde_anterior": [
+      {
+        "tipo": "replace",
+        "antes": [
+          "﻿"
+        ],
+        "depois": [
+          "﻿ATHENA — Goddess of Hope",
+          "Soul: 30",
+          "Attack: 3",
+          "Awaken: 5",
+          "________________",
+          "Passive — Cosmo of Hope",
+          "Whenever one of your Devotees survives an enemy combat, generate 1 Latent Cosmo.",
+          "________________",
+          "Passive — Athena’s Prayer",
+          "Cost: 5 Cosmo",
+          "When an Athena Saint you control is destroyed and sent to Tartarus, you may pay 5 Cosmo. If you do, return that Devotee to the battlefield Unprepared with a +1/+1 token on it. You may equip a Cloth to it ignoring equip cost.",
+          "________________",
+          "Awaken — Seventh Sense (Passive)",
+          "All Athena Saints you control get +1/+1.",
+          "________________",
+          "Awaken Ability — Seventh Sense Protection",
+          "Cost: 5 Cosmo",
+          "If an Athena Saint you control would be destroyed during combat, you may pay 5 Cosmo. If you do, it survives with 1 Resistance instead.",
+          "________________",
+          "Ultimate — Athena Exclamation",
+          "Cost: 15 Cosmo — Once per game",
+          "Destroy all enemy Devotees that are in combat. Your Devotees are not destroyed this way. For each Devotee destroyed this way, its controller loses 1 Soul.",
+          "________________",
+          "POSEIDON — God of the Seas",
+          "Soul: 28",
+          "Attack: 3",
+          "Awaken: 4",
+          "________________",
+          "Passive — Frozen Ocean",
+          "Cost: 2 Cosmo",
+          "When an enemy Devotee declares an attack, you may pay 2 Cosmo. If you do, Sealed that Devotee until the beginning of its controller’s next turn.",
+          "________________",
+          "Passive — Pressure of the Deep",
+          "Whenever you Sealed an enemy Devotee, its controller mills 1 card.",
+          "________________",
+          "Awaken — Eternal Ice",
+          "While Poseidon is Awakened:",
+          "Whenever a Sealed enemy Devotee exists, you may pay 2 Cosmo. If you do, choose one:",
+          "* Mill 2 cards",
+          "* Draw 1 card",
+          "________________",
+          "Ultimate — Great Flood",
+          "Cost: 18 Cosmo — Once per game",
+          "Return all Devotees without Cloth to their owners’ hands. Then all players discard their hands and mill 5 cards.",
+          "________________",
+          "ARES — God of War",
+          "Soul: 26",
+          "Attack: 4",
+          "Awaken: 6",
+          "________________",
+          "Passive — Bloodlust",
+          "Cost: 3 Soul",
+          "Choose a Devotee. It gets +1/+0 and Impulse until end of turn.",
+          "________________",
+          "Passive — Never Ending War",
+          "Cost: 8 Soul",
+          "All your Devotees get +1/+0 and gain Pierce until end of turn.",
+          "________________",
+          "Awaken — God of Slaughter (Passive)",
+          "Whenever one of your Devotees destroys another Devotee in combat, the enemy God loses 1 Soul.",
+          "________________",
+          "Ultimate — Total War",
+          "Cost: 15 Cosmo — Once per game",
+          "All your Devotees get:",
+          "* +2/+0",
+          "* Pierce",
+          "* Impulse",
+          "* Long Range",
+          "Until end of turn.",
+          "________________",
+          "HADES — King of the Underworld",
+          "Soul: 32",
+          "Attack: 2",
+          "Awaken: 7",
+          "________________",
+          "Passive — Realm of the Dead",
+          "Cost: 2 Soul",
+          "Whenever a Devotee is destroyed, you may pay 2 Soul. If you do, draw 1 card and generate 1 Latent Cosmo.",
+          "________________",
+          "Passive — Soul is Power",
+          "Cost: 3 Soul — Once per turn",
+          "Gain 1 Base Cosmo.",
+          "________________",
+          "Awaken — King of Tartarus (Passive)",
+          "Whenever a Devotee returns from Tartarus to the battlefield, the enemy God loses 1 Soul and you gain 1 Soul.",
+          "________________",
+          "Ultimate — Great Eclipse",
+          "Cost: 15 Cosmo — Once per game",
+          "Return all Devotees from all Tartarus to the battlefield under your control. They enter the battlefield Sealed.",
+          "________________",
+          "ARTEMIS — Goddess of the Moon",
+          "Soul: 24",
+          "Attack: 3",
+          "Awaken: 3",
+          "________________",
+          "Passive — Moon Harvest",
+          "Cost: 2 Soul",
+          "Choose one:",
+          "* Draw 1 card, then discard 1 card",
+          "* Gain 1 Base Cosmo",
+          "________________",
+          "Passive — Nature’s Domain",
+          "Devotees you control without Cloth cost 1 Cosmo less to play.",
+          "________________",
+          "Awaken — Moonlight Blessing",
+          "While Artemis is Awakened:",
+          "* Your Base Cosmo produces 2 Cosmo instead of 1",
+          "* Your Latent Cosmo does not disappear at the end of turn",
+          "________________",
+          "Ultimate — Moon Awakening",
+          "Cost: 15 Cosmo — Once per game",
+          "Choose any number of your Base Cosmos. They become 3/3 Moon Spirits with:",
+          "* Nimble",
+          "* Long Range",
+          "* Pierce",
+          "They are still considered Base Cosmos.",
+          "________________"
+        ]
+      }
+    ]
+  },
+  {
+    "revisao": "47",
+    "data": "2026-04-04T15:31:08.388Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "677ef07aaae5f95c0a848e3f28c786d3a0d2fbb1226e8597ac60059f45dd8680",
+    "arquivo": "fontes/revisoes/drive-47.txt",
+    "palavras": 633,
+    "fichas_Type": 0,
+    "mudancas_desde_anterior": [
+      {
+        "tipo": "replace",
+        "antes": [
+          "Choose one:",
+          "* Draw 1 card, then discard 1 card",
+          "* Gain 1 Base Cosmo"
+        ],
+        "depois": [
+          "You can ignore the cosmo rule on all cards"
+        ]
+      }
+    ]
+  },
+  {
+    "revisao": "49",
+    "data": "2026-04-04T17:42:19.300Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "6b3678252bebecccc113e55840f1db1edc0c44777918e9546f4284646be3f1b0",
+    "arquivo": "fontes/revisoes/drive-49.txt",
+    "palavras": 633,
+    "fichas_Type": 0,
+    "mudancas_desde_anterior": [
+      {
+        "tipo": "replace",
+        "antes": [
+          "Cost: 3 Soul — Once per turn",
+          "Gain 1 Base Cosmo."
+        ],
+        "depois": [
+          "Cost: 1 Soul — Once per turn",
+          "Gain 2 Base Cosmo."
+        ]
+      }
+    ]
+  },
+  {
+    "revisao": "82",
+    "data": "2026-04-04T19:37:10.917Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "e49b9a0a526fb76417d6cf23c91b565504e5e7dee5609d5e6e4fc4e7d0c7ad06",
+    "arquivo": "fontes/revisoes/drive-82.txt",
+    "palavras": 805,
+    "fichas_Type": 0,
+    "mudancas_desde_anterior": [
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Lotis de Lâmina - É a líder do exército do Medo, sádica e bastante cruel para com suas vítimas, Lotis adora mexer com o psicológico delas, trazendo-lhes a tona seus piores medos. Sua capacidade de perceber presenças vem do seu enorme potencial em detectar a energia negativa provinda do terror de suas vítimas.",
+          "________________",
+          "Alcmenes de Ethon - É um dos 4 comandantes que regem os exércitos de Ares, ele é o Berserker de Ethon, a lendária ave que sempre volta para comer as vísceras de Prometeu na era mitológica.",
+          "________________",
+          "Ofir de Ourobouros - É o comandante do exército da Chama! Ofir é o comandante mais inteligente e o menos cruel entre os 4 comandantes do exército de Ares, ele ouve seus subordinados e tem um ótimo senso estratégico, assim como Jehuh, porém em termos de força é muito mais poderoso! Ofir possui o poder das chamas divinas da guerra, oferecidas a ele pelo próprio Ares em detrimento de sua inteligência e enorme sabedoria!",
+          "See less",
+          "________________",
+          "PHOBOS",
+          "________________",
+          "DEIMOS",
+          "________________"
+        ]
+      }
+    ]
+  },
+  {
+    "revisao": "88",
+    "data": "2026-04-04T20:10:56.828Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "e49b9a0a526fb76417d6cf23c91b565504e5e7dee5609d5e6e4fc4e7d0c7ad06",
+    "arquivo": "fontes/revisoes/drive-88.txt",
+    "palavras": 805,
+    "fichas_Type": 0,
+    "mudancas_desde_anterior": []
+  },
+  {
+    "revisao": "111",
+    "data": "2026-04-04T21:47:30.342Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "738976399d4d12550e5cc4347a9789feda20924f97f0c9c12f9e4b2a81387167",
+    "arquivo": "fontes/revisoes/drive-111.txt",
+    "palavras": 1946,
+    "fichas_Type": 0,
+    "mudancas_desde_anterior": [
+      {
+        "tipo": "replace",
+        "antes": [
+          "﻿ATHENA — Goddess of Hope",
+          "Soul: 30",
+          "Attack: 3",
+          "Awaken: 5",
+          "________________",
+          "Passive — Cosmo of Hope",
+          "Whenever one of your Devotees survives an enemy combat, generate 1 Latent Cosmo.",
+          "________________",
+          "Passive — Athena’s Prayer",
+          "Cost: 5 Cosmo",
+          "When an Athena Saint you control is destroyed and sent to Tartarus, you may pay 5 Cosmo. If you do, return that Devotee to the battlefield Unprepared with a +1/+1 token on it. You may equip a Cloth to it ignoring equip cost.",
+          "________________",
+          "Awaken — Seventh Sense (Passive)",
+          "All Athena Saints you control get +1/+1.",
+          "________________",
+          "Awaken Ability — Seventh Sense Protection",
+          "Cost: 5 Cosmo",
+          "If an Athena Saint you control would be destroyed during combat, you may pay 5 Cosmo. If you do, it survives with 1 Resistance instead.",
+          "________________",
+          "Ultimate — Athena Exclamation",
+          "Cost: 15 Cosmo — Once per game",
+          "Destroy all enemy Devotees that are in combat. Your Devotees are not destroyed this way. For each Devotee destroyed this way, its controller loses 1 Soul.",
+          "________________",
+          "POSEIDON — God of the Seas",
+          "Soul: 28",
+          "Attack: 3",
+          "Awaken: 4",
+          "________________",
+          "Passive — Frozen Ocean",
+          "Cost: 2 Cosmo",
+          "When an enemy Devotee declares an attack, you may pay 2 Cosmo. If you do, Sealed that Devotee until the beginning of its controller’s next turn.",
+          "________________",
+          "Passive — Pressure of the Deep",
+          "Whenever you Sealed an enemy Devotee, its controller mills 1 card.",
+          "________________",
+          "Awaken — Eternal Ice",
+          "While Poseidon is Awakened:",
+          "Whenever a Sealed enemy Devotee exists, you may pay 2 Cosmo. If you do, choose one:",
+          "* Mill 2 cards",
+          "* Draw 1 card",
+          "________________",
+          "Ultimate — Great Flood",
+          "Cost: 18 Cosmo — Once per game",
+          "Return all Devotees without Cloth to their owners’ hands. Then all players discard their hands and mill 5 cards.",
+          "________________",
+          "ARES — God of War",
+          "Soul: 26",
+          "Attack: 4",
+          "Awaken: 6",
+          "________________",
+          "Passive — Bloodlust",
+          "Cost: 3 Soul",
+          "Choose a Devotee. It gets +1/+0 and Impulse until end of turn.",
+          "________________",
+          "Passive — Never Ending War",
+          "Cost: 8 Soul",
+          "All your Devotees get +1/+0 and gain Pierce until end of turn.",
+          "________________",
+          "Awaken — God of Slaughter (Passive)",
+          "Whenever one of your Devotees destroys another Devotee in combat, the enemy God loses 1 Soul.",
+          "________________",
+          "Ultimate — Total War",
+          "Cost: 15 Cosmo — Once per game",
+          "All your Devotees get:",
+          "* +2/+0",
+          "* Pierce",
+          "* Impulse",
+          "* Long Range",
+          "Until end of turn.",
+          "________________",
+          "HADES — King of the Underworld",
+          "Soul: 32",
+          "Attack: 2",
+          "Awaken: 7",
+          "________________",
+          "Passive — Realm of the Dead",
+          "Cost: 2 Soul",
+          "Whenever a Devotee is destroyed, you may pay 2 Soul. If you do, draw 1 card and generate 1 Latent Cosmo.",
+          "________________",
+          "Passive — Soul is Power",
+          "Cost: 1 Soul — Once per turn",
+          "Gain 2 Base Cosmo.",
+          "________________",
+          "Awaken — King of Tartarus (Passive)",
+          "Whenever a Devotee returns from Tartarus to the battlefield, the enemy God loses 1 Soul and you gain 1 Soul.",
+          "________________",
+          "Ultimate — Great Eclipse",
+          "Cost: 15 Cosmo — Once per game",
+          "Return all Devotees from all Tartarus to the battlefield under your control. They enter the battlefield Sealed.",
+          "________________",
+          "ARTEMIS — Goddess of the Moon",
+          "Soul: 24",
+          "Attack: 3",
+          "Awaken: 3",
+          "________________",
+          "Passive — Moon Harvest",
+          "Cost: 2 Soul",
+          "You can ignore the cosmo rule on all cards",
+          "________________",
+          "Passive — Nature’s Domain",
+          "Devotees you control without Cloth cost 1 Cosmo less to play.",
+          "________________",
+          "Awaken — Moonlight Blessing",
+          "While Artemis is Awakened:",
+          "* Your Base Cosmo produces 2 Cosmo instead of 1",
+          "* Your Latent Cosmo does not disappear at the end of turn",
+          "________________",
+          "Ultimate — Moon Awakening",
+          "Cost: 15 Cosmo — Once per game",
+          "Choose any number of your Base Cosmos. They become 3/3 Moon Spirits with:",
+          "* Nimble",
+          "* Long Range",
+          "* Pierce",
+          "They are still considered Base Cosmos.",
+          "________________"
+        ],
+        "depois": [
+          "﻿SAINT SEIYA CARD GAME",
+          "Por Lierson Mattenhauer Jr",
+          "MANUAL DE REGRAS OFICIAL — VANILLA 1.0",
+          "________________",
+          "1. OBJETIVO DO JOGO",
+          "O objetivo do jogo é reduzir o Soul do Deus inimigo a 0.",
+          "Você também perde o jogo se precisar comprar uma carta do seu Baralho e não houver cartas para comprar.",
+          "________________",
+          "2. COMPONENTES DO JOGO",
+          "Cada jogador precisa de:",
+          "* 1 carta de Deus",
+          "* 1 carta de Domínio",
+          "* 1 Baralho com 60 cartas",
+          "O jogo não precisa de marcadores obrigatórios, porém é recomendado usar:",
+          "* Dado D6 para marcar:",
+          "* +1/+1",
+          "* Damage em Cloths",
+          "* Dado D20 para marcar:",
+          "* Latent Cosmo",
+          "________________",
+          "3. ESTRUTURA DO JOGO",
+          "Cada jogador possui:",
+          "Elemento",
+          "Função",
+          "Deus",
+          "Representa o jogador",
+          "Domínio",
+          "Base e segunda cor",
+          "Baralho",
+          "Deck de compra",
+          "Mão",
+          "Cartas jogáveis",
+          "Campo",
+          "Onde ficam Devotees, Cloths e Relíquias",
+          "Tartarus",
+          "Cartas destruídas",
+          "Void",
+          "Cartas removidas do jogo",
+          "Cosmo Base",
+          "Fonte permanente de Cosmo",
+          "Cosmo",
+          "Recurso principal",
+          "Latent Cosmo",
+          "Recurso temporário",
+          "Soul",
+          "Vida do Deus",
+          "________________",
+          "4. CONSTRUÇÃO DO BARALHO",
+          "Regras:",
+          "* O Baralho deve ter exatamente 60 cartas",
+          "* Máximo de 4 cópias de cada carta",
+          "* O Baralho deve respeitar:",
+          "* A cor do Deus",
+          "* A cor do Domínio",
+          "* Cartas cinza podem ser usadas em qualquer Baralho",
+          "Cartas cinza",
+          "Cartas cinza:",
+          "* Podem ser usadas por qualquer Deus",
+          "* Fazem efeitos que outras cores fazem",
+          "* Porém são mais fracas ou custam mais caro",
+          "* Servem para cobrir fraquezas das facções",
+          "________________",
+          "5. TIPOS DE CARTA",
+          "Tipo",
+          "Quando pode usar",
+          "Descrição",
+          "Deus",
+          "Começa em jogo",
+          "Seu personagem principal",
+          "Domínio",
+          "Começa em jogo",
+          "Sua base",
+          "Devotee",
+          "Seu turno",
+          "Unidades",
+          "Cloth",
+          "Seu turno",
+          "Armaduras",
+          "Relíquia",
+          "Seu turno",
+          "Itens e artefatos",
+          "Momento",
+          "Apenas no seu turno",
+          "Feitiços",
+          "Técnica",
+          "Qualquer momento",
+          "Respostas e golpes",
+          "________________",
+          "6. SETUP DA PARTIDA",
+          "1. Cada jogador escolhe:",
+          "* 1 Deus",
+          "* 1 Domínio",
+          "2. Coloque ambos em campo",
+          "3. Embaralhe o Baralho",
+          "4. Cada jogador compra 7 cartas",
+          "5. Os jogadores podem fazer Mulligan",
+          "6. Decide-se quem começa",
+          "________________",
+          "7. MULLIGAN",
+          "Você pode trocar qualquer número de cartas da sua mão inicial.",
+          "Como funciona:",
+          "1. Escolha quantas cartas quiser trocar",
+          "2. Embaralhe essas cartas no Baralho",
+          "3. Compre a mesma quantidade",
+          "Penalidade:",
+          "Para cada carta trocada, o oponente começa o jogo com +1 Latent Cosmo.",
+          "________________",
+          "8. O DEUS",
+          "O Deus representa o jogador.",
+          "Cada Deus possui:",
+          "* Soul (vida)",
+          "* Attack (dano que causa quando é atacado)",
+          "* Awaken",
+          "* Passivas",
+          "* Awaken Ability",
+          "* Ultimate",
+          "O Deus:",
+          "* Não pode atacar",
+          "* Não pode virar",
+          "* Não pode equipar Cloth",
+          "* Não pode equipar Relíquias",
+          "* Apenas causa dano quando é atacado",
+          "Quando um Devotee ataca o Deus",
+          "1. O Devotee vira e fica Unprepared",
+          "2. O Devotee causa dano ao Deus igual ao seu Power",
+          "3. O Deus causa dano de volta igual ao seu Attack",
+          "4. O Devotee pode morrer",
+          "Se o Soul do Deus chegar a 0, o jogador perde o jogo.",
+          "________________",
+          "9. O DOMÍNIO",
+          "O Domínio:",
+          "* Começa o jogo em campo",
+          "* Não faz parte do Baralho",
+          "* Não possui custo",
+          "* Não pode ser destruído",
+          "* Não pode ser descartado",
+          "* Não pode voltar para a mão",
+          "* Define a segunda cor do Baralho",
+          "* Possui uma habilidade",
+          "Tipos de Domínio:",
+          "* Comum — apenas habilita cor",
+          "* Incomum — habilidade leve",
+          "* Raro — habilidade forte (1 vez por jogo)",
+          "Se a habilidade for 1 vez por jogo:",
+          "* Vire o Domínio para marcar que foi usada",
+          "________________",
+          "10. ÁREAS DO JOGO",
+          "Área",
+          "Função",
+          "Baralho",
+          "Comprar cartas",
+          "Mão",
+          "Cartas jogáveis",
+          "Campo",
+          "Devotees, Cloths e Relíquias",
+          "Tartarus",
+          "Cartas destruídas",
+          "Void",
+          "Cartas removidas",
+          "Cosmo Base",
+          "Fonte de Cosmo",
+          "Deus",
+          "Sua base",
+          "Domínio",
+          "Sua base",
+          "________________",
+          "11. RECURSOS",
+          "O jogo possui 4 recursos:",
+          "Recurso",
+          "Função",
+          "Cosmo Base",
+          "Geração de Cosmo",
+          "Cosmo",
+          "Recurso para pagar custos",
+          "Latent Cosmo",
+          "Recurso temporário",
+          "Soul",
+          "Vida do Deus",
+          "________________",
+          "12. COSMO BASE",
+          "Uma vez por turno, durante sua Fase Principal:",
+          "* Você pode colocar 1 carta da mão virada para baixo na área de Cosmo Base",
+          "* Apenas cartas com símbolo de Cosmo Base podem ser usadas como Cosmo Base, exceto se uma habilidade permitir",
+          "Gerar Cosmo",
+          "* Vire 1 Cosmo Base → gera 1 Cosmo",
+          "* Ele permanece virado até sua próxima Manutenção",
+          "Desvirar Cosmo Base",
+          "Todos os seus Cosmos Base desviram durante sua Fase de Manutenção.",
+          "________________",
+          "13. LATENT COSMO",
+          "Você ganha Latent Cosmo quando:",
+          "* Um Devotee seu recebe dano durante o turno do oponente",
+          "Cada vez que isso acontece:",
+          "* Ganhe 1 Latent Cosmo",
+          "Latent Cosmo:",
+          "* Pode ser usado como Cosmo normal",
+          "* Desaparece no final do seu turno",
+          "________________",
+          "14. SOUL",
+          "Soul é a vida do Deus.",
+          "Algumas habilidades pedem para pagar Soul.",
+          "Isso significa que o Deus está gastando sua própria vida.",
+          "Se o Soul chegar a 0, você perde o jogo.",
+          "________________",
+          "15. DEVOTEES",
+          "Devotees são as unidades do jogo.",
+          "Eles possuem:",
+          "* Custo",
+          "* Power",
+          "* Resistance",
+          "* Habilidades",
+          "* Keywords",
+          "Devotees podem:",
+          "* Atacar Devotees inimigos",
+          "* Atacar o Deus inimigo",
+          "* Equipar Cloth",
+          "* Equipar Relíquias",
+          "* Usar habilidades",
+          "Regra de combate",
+          "Sempre que um Devotee entra em combate:",
+          "* Ele vira",
+          "* Ele fica Unprepared",
+          "Um Devotee Unprepared:",
+          "* Não pode atacar novamente no mesmo turno",
+          "________________",
+          "16. RELÍQUIAS",
+          "Relíquias permanecem em campo.",
+          "Elas podem ser:",
+          "* Equipamentos",
+          "* Artefatos com efeito contínuo",
+          "Relíquias:",
+          "* Não são destruídas quando o portador morre",
+          "* Permanecem em campo",
+          "* Só saem de campo se forem destruídas",
+          "* Quando destruídas, vão para o Void",
+          "Um Devotee pode ter várias Relíquias.",
+          "________________",
+          "17. CLOTHS",
+          "* Cada Devotee pode equipar apenas 1 Cloth",
+          "* A Cloth permanece em campo quando o portador morre",
+          "DAMAGE NAS CLOTHS",
+          "Cada Cloth possui um valor de Damage.",
+          "Quando o Devotee equipado morre:",
+          "* Coloque marcadores de Damage na Cloth igual ao valor de Damage dela",
+          "Enquanto a Cloth tiver Damage:",
+          "* Não pode ser equipada",
+          "* Não concede bônus",
+          "* Não pode usar habilidades",
+          "Recuperação",
+          "Na Fase de Manutenção:",
+          "* Remova 1 marcador de Damage de cada Cloth",
+          "Quando não houver mais Damage:",
+          "* A Cloth pode ser equipada novamente",
+          "________________",
+          "18. ESTRUTURA DO TURNO",
+          "Cada turno possui 3 fases:",
+          "Fase",
+          "Nome",
+          "1",
+          "Manutenção",
+          "2",
+          "Fase Principal",
+          "3",
+          "Fim do Turno",
+          "________________",
+          "19. FASE DE MANUTENÇÃO",
+          "Durante a Manutenção:",
+          "* Desvire todas as cartas viradas",
+          "* Desvire todos os Cosmos Base",
+          "* Remova efeitos temporários",
+          "* Cure 1 Damage de cada Cloth",
+          "* Resolva efeitos de Manutenção",
+          "________________",
+          "20. FASE PRINCIPAL",
+          "Durante a Fase Principal você pode, em qualquer ordem:",
+          "* Comprar carta do turno",
+          "* Baixar 1 Cosmo Base",
+          "* Gerar Cosmo",
+          "* Jogar Devotees",
+          "* Jogar Cloths",
+          "* Jogar Relíquias",
+          "* Jogar Momento",
+          "* Usar Técnicas",
+          "* Usar habilidades",
+          "* Usar Awaken Ability",
+          "* Atacar Devotees",
+          "* Atacar o Deus",
+          "________________",
+          "21. FIM DO TURNO",
+          "No fim do turno:",
+          "* Todo Latent Cosmo desaparece",
+          "* Efeitos até o fim do turno terminam",
+          "* Todos os Devotees recuperam toda a Resistance",
+          "* O turno passa para o oponente",
+          "Isso significa que:",
+          "* O dano em Devotees não é permanente",
+          "* O combate é resolvido por turno, não por dano acumulado",
+          "________________",
+          "22. COMBATE",
+          "Devotee vs Devotee",
+          "Quando um Devotee ataca outro Devotee:",
+          "1. O atacante vira",
+          "2. Se houver Long Range, ele causa dano primeiro",
+          "3. Ambos causam dano igual ao Power",
+          "4. Se a Resistance chegar a 0, o Devotee morre e vai para o Tartarus",
+          "________________",
+          "Devotee vs Deus",
+          "Quando um Devotee ataca o Deus:",
+          "1. O Devotee vira",
+          "2. O Devotee causa dano ao Deus igual ao Power",
+          "3. O Deus causa dano de volta igual ao Attack",
+          "4. O Devotee pode morrer",
+          "________________",
+          "23. MOMENTO E TÉCNICA",
+          "Momento",
+          "* Só pode ser usado no seu turno",
+          "* Vai para o Tartarus após resolver",
+          "Técnica",
+          "* Pode ser usada a qualquer momento",
+          "* Pode ser usada:",
+          "* Durante combate",
+          "* No turno do oponente",
+          "* Em resposta a cartas ou habilidades",
+          "* Vai para o Tartarus após resolver",
+          "Regra de resposta",
+          "Sempre que:",
+          "* Um ataque é declarado",
+          "* Uma carta é jogada",
+          "* Uma habilidade é usada",
+          "O oponente pode responder com Técnica.",
+          "A Técnica resolve primeiro.",
+          "________________",
+          "24. KEYWORDS",
+          "Keyword",
+          "Efeito",
+          "Guardian",
+          "Deve ser atacado antes do Deus",
+          "Nimble",
+          "Só pode ser bloqueado por Nimble ou Guardian",
+          "Cheater",
+          "Ignora Guardian",
+          "Long Range",
+          "Causa dano primeiro",
+          "Pierce",
+          "Dano excedente vai para o Deus",
+          "Impulse",
+          "Pode agir no turno que entra",
+          "Sealed",
+          "Não pode atacar nem usar habilidades",
+          "Unfaith",
+          "Remove Latent Cosmo",
+          "________________",
+          "25. REGRA DE LENDÁRIO",
+          "Você só pode ter 1 carta com o mesmo nome em campo.",
+          "Se jogar outra cópia:",
+          "* A habilidade de entrada acontece",
+          "* Você escolhe qual permanece",
+          "* A outra vai para o Tartarus",
+          "Não se aplica a cartas cinza.",
+          "________________",
+          "26. EVOLUÇÃO",
+          "Se você jogar um Devotee com o mesmo nome de um Devotee seu em campo:",
+          "* Ele custa 2 Cosmo a menos",
+          "Isso representa evolução do personagem.",
+          "________________",
+          "27. AWAKEN",
+          "Cada Deus possui um valor de Awaken.",
+          "Quando o Soul do seu Deus chega ao valor de Awaken ou menos, o Deus desperta.",
+          "Exemplo:",
+          "* Athena Awaken 5",
+          "* Quando Athena chega a 5 Soul ou menos → ela desperta",
+          "O Awaken:",
+          "* Acontece automaticamente",
+          "* Não pode ser impedido",
+          "* Dura até o fim do jogo",
+          "* Libera habilidades Awaken",
+          "________________",
+          "28. ULTIMATE",
+          "Cada Deus possui uma Ultimate:",
+          "* Só pode ser usada 1 vez por jogo",
+          "* Possui custo alto",
+          "* Normalmente muda o jogo",
+          "________________",
+          "29. CONDIÇÕES DE VITÓRIA",
+          "Você vence se:",
+          "* O Soul do Deus inimigo chegar a 0",
+          "* O oponente tentar comprar carta e não tiver Baralho",
+          "________________",
+          "30. IDENTIDADE DAS FACÇÕES",
+          "Deus",
+          "Estilo",
+          "Athena",
+          "Defesa e sobrevivência",
+          "Poseidon",
+          "Controle",
+          "Ares",
+          "Agressivo",
+          "Hades",
+          "Cemitério",
+          "Artemis",
+          "Ramp",
+          "________________",
+          "31. DURAÇÃO DA PARTIDA",
+          "Tempo médio esperado:",
+          "15 a 25 minutos",
+          "________________",
+          "32. RESUMO DO TURNO",
+          "1. Manutenção",
+          "2. Comprar carta",
+          "3. Baixar Cosmo Base",
+          "4. Jogar cartas",
+          "5. Combater",
+          "6. Fim do turno",
+          "________________",
+          "CONCLUSÃO",
+          "O jogo agora possui:",
+          "* Sistema de recurso",
+          "* Sistema de combate",
+          "* Sistema de Deus",
+          "* Sistema de Domínio",
+          "* Sistema de Cloth",
+          "* Sistema de Relíquias",
+          "* Sistema de Awaken",
+          "* Sistema de Ultimate",
+          "* Sistema de Keywords",
+          "* Sistema de Timing",
+          "* Sistema de Evolução",
+          "* Sistema de Latent Cosmo",
+          "Isso é oficialmente um TCG completo e jogável.",
+          "________________",
+          "PRÓXIMO PASSO",
+          "Agora começa a parte mais difícil e importante:",
+          "BALANCEAMENTO.",
+          "Precisamos criar:",
+          "* Tabela Power / Resistance",
+          "* Custo das Keywords",
+          "* Devotees comuns",
+          "* Cloths base",
+          "* Técnicas base",
+          "* Momentos base",
+          "* Playtest",
+          "Agora o jogo sai do papel e vira jogo de verdade."
+        ]
+      }
+    ]
+  },
+  {
+    "revisao": "118",
+    "data": "2026-04-04T23:14:47.028Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "45d62fdae1e838f1a9fd59eb14332500903c51a188dcaf051401f88aa5fde6f9",
+    "arquivo": "fontes/revisoes/drive-118.txt",
+    "palavras": 2420,
+    "fichas_Type": 0,
+    "mudancas_desde_anterior": [
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "1. Estrutura fixa (fora da raridade normal)",
+          "Essas cartas existem no set, mas não entram na lógica de raridade de booster:",
+          "Tipo",
+          "Quantidade",
+          "Deuses Base",
+          "5",
+          "Domínios",
+          "15",
+          "Locais",
+          "16",
+          "Subtotal",
+          "36",
+          "Essas 36 cartas são estruturais do jogo.",
+          "Então sobra:",
+          "400 - 36 = 364 cartas",
+          "Essas 364 cartas sim entram nas raridades:",
+          "* Comum",
+          "* Incomum",
+          "* Mítica",
+          "* Divina",
+          "________________",
+          "2. Distribuição de raridade (364 cartas jogáveis)",
+          "Eu recomendo:",
+          "Raridade",
+          "Quantidade",
+          "Comum",
+          "182",
+          "Incomum",
+          "109",
+          "Mítica",
+          "55",
+          "Divina",
+          "18",
+          "Total",
+          "364",
+          "Isso mantém mais ou menos a proporção:",
+          "* 50% comum",
+          "* 30% incomum",
+          "* 15% mítica",
+          "* 5% divina",
+          "Padrão saudável de TCG.",
+          "________________",
+          "3. Distribuição por tipo (somente cartas jogáveis)",
+          "Temos:",
+          "Tipo",
+          "Quantidade",
+          "Devotees",
+          "180",
+          "Cloths",
+          "50",
+          "Relíquias",
+          "40",
+          "Técnicas",
+          "60",
+          "Momentos",
+          "34",
+          "Total",
+          "364",
+          "Agora distribuindo isso nas raridades:",
+          "Tipo",
+          "Comum",
+          "Incomum",
+          "Mítica",
+          "Divina",
+          "Total",
+          "Devotees",
+          "95",
+          "50",
+          "25",
+          "10",
+          "180",
+          "Cloths",
+          "25",
+          "15",
+          "8",
+          "2",
+          "50",
+          "Relíquias",
+          "20",
+          "10",
+          "8",
+          "2",
+          "40",
+          "Técnicas",
+          "27",
+          "20",
+          "10",
+          "3",
+          "60",
+          "Momentos",
+          "15",
+          "14",
+          "4",
+          "1",
+          "34",
+          "Total",
+          "182",
+          "109",
+          "55",
+          "18",
+          "364",
+          "Fechou perfeito.",
+          "________________",
+          "4. Então o set fica assim",
+          "Cartas estruturais",
+          "Tipo",
+          "Qtde",
+          "Deuses base",
+          "5",
+          "Domínios",
+          "15",
+          "Locais",
+          "16",
+          "Subtotal",
+          "36",
+          "Cartas do set (raridades)",
+          "Raridade",
+          "Qtde",
+          "Comum",
+          "182",
+          "Incomum",
+          "109",
+          "Mítica",
+          "55",
+          "Divina",
+          "18",
+          "Subtotal",
+          "364",
+          "Total geral",
+          "36 + 364 = 400",
+          "________________",
+          "5. O que são as DIVINAS agora",
+          "Já que os Deuses base são comuns, as Divinas viram:",
+          "Eu faria algo assim:",
+          "Tipo",
+          "Divinas",
+          "Devotees",
+          "10",
+          "Cloths",
+          "2",
+          "Relíquias",
+          "2",
+          "Técnicas",
+          "3",
+          "Momentos",
+          "1",
+          "Total",
+          "18",
+          "Exemplos de Divinas (conceito)",
+          "* God Cloths",
+          "* Kamui",
+          "* Athena Exclamation",
+          "* Great Eclipse",
+          "* Great Flood",
+          "* Forma final de personagens",
+          "* Relíquias máximas",
+          "* Técnicas absurdas",
+          "* Eventos que mudam o jogo",
+          "Divina tem que ser carta que quando abre o booster o cara fala:",
+          "CARALHO",
+          "________________",
+          "6. Estrutura por facção (agora correta)",
+          "Cada facção continua com:",
+          "Tipo",
+          "Qtde por facção",
+          "Deus base",
+          "1",
+          "Domínios",
+          "3",
+          "Locais",
+          "3",
+          "Devotees",
+          "30",
+          "Cloths",
+          "8",
+          "Relíquias",
+          "6",
+          "Técnicas",
+          "10",
+          "Momentos",
+          "5",
+          "Isso dá 66 cartas por facção.",
+          "66 x 5 = 330",
+          "Depois adiciona:",
+          "Incolor / cinza",
+          "Tipo",
+          "Qtde",
+          "Local",
+          "1",
+          "Devotees",
+          "30",
+          "Cloths",
+          "10",
+          "Relíquias",
+          "10",
+          "Técnicas",
+          "10",
+          "Momentos",
+          "9",
+          "Total",
+          "70",
+          "330 + 70 = 400",
+          "Fechou perfeitamente.",
+          "________________",
+          "7. Próximo passo (agora é design mesmo)",
+          "Agora a ordem correta de criação de cartas é:",
+          "1. Devotees comuns de cada facção",
+          "2. Cloths comuns",
+          "3. Relíquias comuns",
+          "4. Técnicas comuns",
+          "5. Momentos comuns",
+          "6. Depois Incomuns",
+          "7. Depois Míticas",
+          "8. Por último Divinas",
+          "Se você começar pelas Divinas, você quebra o balanceamento sem perceber.",
+          "________________",
+          "Resumo estrutural final do jogo",
+          "Bloco",
+          "Qtde",
+          "Deuses base",
+          "5",
+          "Domínios",
+          "15",
+          "Locais",
+          "16",
+          "Devotees",
+          "180",
+          "Cloths",
+          "50",
+          "Relíquias",
+          "40",
+          "Técnicas",
+          "60",
+          "Momentos",
+          "34",
+          "Total",
+          "400",
+          "Raridade",
+          "Qtde",
+          "Comum",
+          "182",
+          "Incomum",
+          "109",
+          "Mítica",
+          "55",
+          "Divina",
+          "18",
+          "Total jogáveis",
+          "364"
+        ]
+      }
+    ]
+  },
+  {
+    "revisao": "609",
+    "data": "2026-04-05T02:10:37.225Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "9a6979fa82410d56c0d1a9d6ad26eacfa928dcacc2844173bdaa94857562d622",
+    "arquivo": "fontes/revisoes/drive-609.txt",
+    "palavras": 4503,
+    "fichas_Type": 53,
+    "mudancas_desde_anterior": [
+      {
+        "tipo": "replace",
+        "antes": [
+          "Você só pode ter 1 carta com o mesmo nome em campo."
+        ],
+        "depois": [
+          "Devotees e Reliquias só podem ter 1 carta com o mesmo nome em campo."
+        ]
+      },
+      {
+        "tipo": "delete",
+        "antes": [
+          "Lotis de Lâmina - É a líder do exército do Medo, sádica e bastante cruel para com suas vítimas, Lotis adora mexer com o psicológico delas, trazendo-lhes a tona seus piores medos. Sua capacidade de perceber presenças vem do seu enorme potencial em detectar a energia negativa provinda do terror de suas vítimas.",
+          "________________",
+          "Alcmenes de Ethon - É um dos 4 comandantes que regem os exércitos de Ares, ele é o Berserker de Ethon, a lendária ave que sempre volta para comer as vísceras de Prometeu na era mitológica.",
+          "________________",
+          "Ofir de Ourobouros - É o comandante do exército da Chama! Ofir é o comandante mais inteligente e o menos cruel entre os 4 comandantes do exército de Ares, ele ouve seus subordinados e tem um ótimo senso estratégico, assim como Jehuh, porém em termos de força é muito mais poderoso! Ofir possui o poder das chamas divinas da guerra, oferecidas a ele pelo próprio Ares em detrimento de sua inteligência e enorme sabedoria!",
+          "See less",
+          "________________",
+          "PHOBOS",
+          "________________",
+          "DEIMOS",
+          "________________"
+        ],
+        "depois": []
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "ATHENA — CARD TEXT FILE (VERSÃO FINAL)",
+          "GOD",
+          "✅ Athena, Goddess of Hope",
+          "Type: God",
+          "Soul: 30",
+          "Attack: 3",
+          "Awaken: 5",
+          "Cosmo of Hope",
+          "Whenever one of your Devotees survives combat, generate 1 Latent Cosmo.",
+          "Athena’s Prayer — Cost: 5 Cosmo",
+          "When an Athena Devotee is destroyed and sent to Tartarus, you may pay 5 Cosmo. If you do, return that Devotee to the battlefield Unprepared. That Devotee gets +1/+1. You may equip a Cloth to it ignoring equip cost.",
+          "Awaken — Seventh Sense",
+          "All Athena Devotees you control get +1/+1.",
+          "Awaken Ability — Cost: 5 Cosmo",
+          "If an Athena Devotee would be destroyed, you may pay 5 Cosmo. If you do, it is not destroyed and its Resistance becomes 1 instead.",
+          "Ultimate — Athena Exclamation — Cost: 15 Cosmo",
+          "Destroy all enemy Devotees. For each Devotee destroyed this way, its controller loses 1 Soul.",
+          "________________",
+          "BRONZE SAINTS — DIVINA",
+          "✅ Seiya, Pegasus Saint",
+          "Type: Devotee — Bronze Saint",
+          "Cost: 3",
+          "Power: 2",
+          "Resistance: 2",
+          "Keyword: Long Range",
+          "When Seiya attacks, you may pay 1 Latent Cosmo. If you do, Seiya gets +1/+0 until end of turn.",
+          "If Seiya would be destroyed, you may pay 3 Latent Cosmo. If you do, return Seiya to the battlefield Unprepared.",
+          "Technique — Pegasus Ryuseiken — Cost: 5 Base Cosmo",
+          "Seiya gets +3/+2 until end of turn. If Seiya is equipped with a Cloth, he gains Pierce this combat.",
+          "________________",
+          "✅ Shiryu, Dragon Saint",
+          "Type: Devotee — Bronze Saint",
+          "Cost: 3",
+          "Power: 1",
+          "Resistance: 3",
+          "Keyword: Guardian",
+          "If Shiryu is equipped with a Cloth, Shiryu gets +1/+1.",
+          "If Shiryu would be destroyed, you may destroy a Cloth equipped to Shiryu instead.",
+          "Technique — Rozan Shoryuha — Cost: 6 Base Cosmo",
+          "Shiryu deals 4 damage to target Devotee. You may destroy a Cloth equipped to Shiryu. If you do, this Technique costs 0 instead. Use this ability only once each turn.",
+          "________________",
+          "✅ Hyoga, Cygnus Saint",
+          "Type: Devotee — Bronze Saint",
+          "Cost: 2",
+          "Power: 1",
+          "Resistance: 3",
+          "When Hyoga deals combat damage to a Devotee, Seal that Devotee.",
+          "Devotees with Seal counters get -1/-0 while Hyoga is Prepared.",
+          "Technique — Diamond Dust — Cost: 4 Base Cosmo",
+          "Deal 1 damage to all enemy Devotees. Seal all Devotees damaged this way.",
+          "________________",
+          "✅Shun, Andromeda Saint",
+          "Type: Devotee — Bronze Saint",
+          "Cost: 2",
+          "Power: 0",
+          "Resistance: 4",
+          "Keyword: Nimble",
+          "When Shun enters the battlefield, return target enemy Devotee with cost 1 or less to its owner hand.",
+          "When a Devotee attacks Shun, return that Devotee to its owner hand after combat.",
+          "Technique — Nebula Chain — Cost: 4 Base Cosmo",
+          "Return up to 2 target enemy Devotees to their owners hand. Those Devotees cannot be played again this turn.",
+          "________________",
+          "✅ Ikki, Phoenix Saint",
+          "Type: Devotee — Bronze Saint",
+          "Cost: 4",
+          "Power: 3",
+          "Resistance: 1",
+          "Keyword: Pierce",
+          "If you used 3 or more Abilities, Moments, or Techniques this turn, you may return Ikki from Tartarus to the battlefield Unprepared.",
+          "Houou Genma-Ken",
+          "Whenever Ikki deals combat damage to a Devotee, you may pay 6 Cosmo. If you do, gain control of that Devotee until end of turn. Prepare that Devotee.",
+          "Hōyoku Tenshō — Cost: 5 Cosmo, Tap Ikki",
+          "Deal 3 damage to target Devotee or God.",
+          "________________",
+          "SILVER SAINTS",
+          "Marin, Silver Saint",
+          "Type: Devotee — Silver Saint",
+          "Cost: 3",
+          "Power: 2",
+          "Resistance: 3",
+          "When Marin enters the battlefield, another target Devotee you control gets +1/+1.",
+          "Tap: Generate 1 Latent Cosmo.",
+          "________________",
+          "Shina, Silver Saint",
+          "Type: Devotee — Silver Saint",
+          "Cost: 3",
+          "Power: 3",
+          "Resistance: 2",
+          "Whenever Shina enters combat, target enemy Devotee gets -1/-0 until end of turn.",
+          "________________",
+          "GOLD SAINTS — MÍTICA",
+          "Saga, Gemini Gold Saint",
+          "Type: Devotee — Gold Saint",
+          "Cost: 5",
+          "Power: 3",
+          "Resistance: 4",
+          "Gemini Illusion",
+          "Once per turn, when an enemy Technique targets a Devotee, you may change the target to another valid Devotee.",
+          "Another Dimension — Cost: 3 Latent Cosmo, Tap Saga",
+          "Exile target Devotee with cost 3 or less. Return that Devotee to the battlefield under its owner control at the end of the next turn Unprepared.",
+          "Awakened Technique — Galaxian Explosion — Cost: 8 Base Cosmo",
+          "Choose target opponent. Deal damage to all other Devotees equal to that player Latent Cosmo. Devotees destroyed this way are exiled instead of going to Tartarus.",
+          "________________",
+          "Aiolos, Sagittarius Gold Saint",
+          "Type: Devotee — Gold Saint",
+          "Cost: 5",
+          "Power: 3",
+          "Resistance: 3",
+          "Keyword: Long Range",
+          "Other Athena Devotees you control get +0/+1. If they are equipped with a Cloth, they get +1/+1 instead.",
+          "Aiolos can block Nimble Devotees.",
+          "Awakened Technique — Sagittarius Arrow — Cost: X Base Cosmo",
+          "Deal X damage to target Devotee or God, where X equals your God current Soul.",
+          "________________",
+          "Aldebaran, Taurus Gold Saint",
+          "Type: Devotee — Gold Saint",
+          "Cost: 5",
+          "Power: 2",
+          "Resistance: 6",
+          "Keyword: Guardian",
+          "Enemy Devotees with Power 3 or less cannot attack your God.",
+          "Whenever Aldebaran survives combat, deal 1 damage to the enemy Devotee.",
+          "Technique — Great Horn — Cost: 4 Base Cosmo",
+          "Aldebaran gets +3/+0 and Pierce this combat.",
+          "________________",
+          "Deathmask, Cancer Gold Saint",
+          "Type: Devotee — Gold Saint",
+          "Cost: 4",
+          "Power: 3",
+          "Resistance: 3",
+          "Whenever a Devotee is destroyed, its controller loses 1 Soul.",
+          "Technique — Underworld Waves — Cost: 5 Base Cosmo",
+          "Exile all Devotees from Tartarus. For each Devotee exiled this way, generate 1 Latent Cosmo.",
+          "________________",
+          "Camus, Aquarius Gold Saint",
+          "Type: Devotee — Gold Saint",
+          "Cost: 5",
+          "Power: 3",
+          "Resistance: 4",
+          "Devotees with Seal counters get -1/-1.",
+          "Once per turn, when you put a Seal counter on a Devotee, you may put a Seal counter on another target Devotee.",
+          "Technique — Aurora Execution — Cost: 6 Base Cosmo",
+          "Deal 1 damage to all enemy Devotees. Destroy all Sealed Devotees.",
+          "________________",
+          "GOLD CLOTHS",
+          "(Esse texto é padrão e MUITO IMPORTANTE pro jogo funcionar)",
+          "Sagittarius Cloth",
+          "Type: Relic — Cloth",
+          "Cost: 4",
+          "Equip: 2",
+          "Equipped Devotee gets +2/+2 and can block Nimble.",
+          "You may equip Sagittarius Cloth to Aiolos or Seiya at any time without paying its equip cost.",
+          "Resonance — Aiolos",
+          "Equipped Devotee gains Pierce and gets +1/+1.",
+          "Resonance — Seiya",
+          "Equipped Devotee gains Impulse and gets +1/+1.",
+          "When Sagittarius Cloth enters the battlefield, it deals 3 damage to target Devotee.",
+          "Damage: 3",
+          "________________",
+          "Libra Cloth",
+          "Type: Relic — Cloth",
+          "Cost: 4",
+          "Equip: 2",
+          "Equipped Devotee gets +2/+2.",
+          "You may equip Libra Cloth to Dohko or Shiryu at any time without paying its equip cost.",
+          "Resonance — Dohko",
+          "Tap: Destroy target Relic.",
+          "Resonance — Shiryu",
+          "Equipped Devotee gets +0/+2 and Guardian.",
+          "When Libra Cloth enters the battlefield, search your deck for a Weapon Relic, reveal it, and put it into your hand. Then shuffle your deck.",
+          "Damage: 3",
+          "________________",
+          "Aquarius Cloth",
+          "Type: Relic — Cloth",
+          "Cost: 4",
+          "Equip: 2",
+          "Equipped Devotee gets +2/+2.",
+          "You may equip Aquarius Cloth to Camus or Hyoga at any time without paying its equip cost.",
+          "Resonance — Camus",
+          "When this Devotee deals combat damage to a Devotee, Seal that Devotee.",
+          "Resonance — Hyoga",
+          "When this Devotee deals combat damage to a Devotee, generate 1 Latent Cosmo.",
+          "When Aquarius Cloth enters the battlefield, Seal target Devotee.",
+          "Damage: 3",
+          "________________",
+          "Leo Cloth",
+          "Type: Relic — Cloth",
+          "Cost: 4",
+          "Equip: 2",
+          "Equipped Devotee gets +2/+2 and Long Range.",
+          "You may equip Leo Cloth to Aiolia or Ikki at any time without paying its equip cost.",
+          "Resonance — Aiolia",
+          "When this Devotee attacks, it gets +1/+0 until end of turn.",
+          "Resonance — Ikki",
+          "Equipped Devotee gets +1/+0 and Long Range.",
+          "When Leo Cloth enters the battlefield, deal 1 damage to all enemy Devotees.",
+          "Damage: 3",
+          "________________",
+          "Virgo Cloth",
+          "Type: Relic — Cloth",
+          "Cost: 4",
+          "Equip: 2",
+          "Equipped Devotee gets +2/+2.",
+          "When Virgo Cloth enters the battlefield, remove all Latent Cosmo from target opponent.",
+          "You may equip Virgo Cloth to Shaka or Shun at any time without paying its equip cost.",
+          "Resonance — Shaka",
+          "Whenever this Devotee deals combat damage to a Devotee, the enemy God loses 1 Soul.",
+          "Resonance — Shun",
+          "Equipped Devotee gets +0/+2, Guardian, and Unfaith.",
+          "Damage: 3",
+          "________________",
+          "DEVOTEES COMUNS — ATHENA",
+          "Sanctuary Guard",
+          "Type: Devotee",
+          "Cost: 2",
+          "Power: 1",
+          "Resistance: 1",
+          "Keyword: Guardian",
+          "When Sanctuary Guard enters the battlefield, you may equip a Cloth with equip cost 1 or less to it without paying its equip cost.",
+          "________________",
+          "Cosmo Apprentice",
+          "Type: Devotee",
+          "Cost: 1",
+          "Power: 0",
+          "Resistance: 2",
+          "Tap: Generate 1 Latent Cosmo.",
+          "________________",
+          "Sanctuary Archer",
+          "Type: Devotee",
+          "Cost: 3",
+          "Power: 2",
+          "Resistance: 2",
+          "Keyword: Long Range",
+          "Sanctuary Archer can attack Devotees with Nimble.",
+          "________________",
+          "Sanctuary Healer",
+          "Type: Devotee",
+          "Cost: 2",
+          "Power: 1",
+          "Resistance: 3",
+          "Tap: Prevent the next 2 damage that would be dealt to target Devotee this turn.",
+          "________________",
+          "Cloth Repairer",
+          "Type: Devotee",
+          "Cost: 2",
+          "Power: 1",
+          "Resistance: 2",
+          "Tap: Restore 2 Damage from target Cloth.",
+          "________________",
+          "Star Hill Monk",
+          "Type: Devotee",
+          "Cost: 3",
+          "Power: 1",
+          "Resistance: 4",
+          "At the beginning of your turn, generate 1 Latent Cosmo.",
+          "________________",
+          "Sanctuary Soldier",
+          "Type: Devotee",
+          "Cost: 2",
+          "Power: 2",
+          "Resistance: 2",
+          "When Sanctuary Soldier enters the battlefield, another target Devotee gets +0/+1 until end of turn.",
+          "________________",
+          "WEAPONS — LIBRA",
+          "(Armas buscáveis pela Libra Cloth)",
+          "Libra Sword",
+          "Type: Relic — Weapon",
+          "Cost: 3",
+          "Equip: 2",
+          "Equipped Devotee gets +2/+0.",
+          "When equipped Devotee attacks, it gains Pierce until end of turn.",
+          "Damage: 2",
+          "________________",
+          "Libra Spear",
+          "Type: Relic — Weapon",
+          "Cost: 3",
+          "Equip: 2",
+          "Equipped Devotee gets +1/+1.",
+          "Tap: Equipped Devotee deals 1 damage to target Devotee.",
+          "Damage: 2",
+          "________________",
+          "Libra Staff",
+          "Type: Relic — Weapon",
+          "Cost: 3",
+          "Equip: 2",
+          "Equipped Devotee gets +0/+2.",
+          "Tap: Seal target Devotee that was dealt damage this turn.",
+          "Damage: 2",
+          "________________",
+          "Libra Shield",
+          "Type: Relic — Weapon",
+          "Cost: 3",
+          "Equip: 2",
+          "Equipped Devotee gets +0/+3 and Guardian.",
+          "Damage: 3",
+          "________________",
+          "RELÍQUIAS ESPECIAIS — ATHENA",
+          "Staff of Athena",
+          "Type: Relic",
+          "Cost: 4",
+          "Tap: Seal target Devotee.",
+          "If that Devotee is a Specter, it does not Ready during its controller next turn.",
+          "Damage: 3",
+          "________________",
+          "Athena Amphora",
+          "Type: Relic",
+          "Cost: 3",
+          "When a Sealed Devotee would be sent to Tartarus, exile it instead.",
+          "Tap: Seal target Devotee.",
+          "Damage: 3",
+          "________________",
+          "Athena Seal",
+          "Type: Relic",
+          "Cost: 2",
+          "Devotees in Tartarus cannot return to the battlefield.",
+          "Damage: 2",
+          "________________",
+          "Golden Arrow",
+          "Type: Relic — Weapon",
+          "Cost: 4",
+          "Equip: 2",
+          "Tap: Equipped Devotee deals 4 damage to target Devotee or God.",
+          "Damage: 2",
+          "________________",
+          "Pope Dagger",
+          "Type: Relic — Weapon",
+          "Cost: 2",
+          "Equip: 1",
+          "If equipped Devotee deals damage to a God, that God loses 1 additional Soul.",
+          "Damage: 2",
+          "________________",
+          "TÉCNICAS — ATHENA",
+          "Athena’s Judgment",
+          "Type: Technique",
+          "Cost: 8 Base Cosmo",
+          "Destroy all Devotees. Gold Saints you control are not destroyed.",
+          "________________",
+          "Athena’s Protection",
+          "Type: Technique",
+          "Cost: 3 Base Cosmo",
+          "Target Devotee cannot be destroyed this turn.",
+          "________________",
+          "Cosmo Blessing",
+          "Type: Technique",
+          "Cost: 2 Base Cosmo",
+          "Target Devotee gets +2/+2 until end of turn.",
+          "________________",
+          "Sanctuary Blessing",
+          "Type: Technique",
+          "Cost: 4 Base Cosmo",
+          "All Devotees you control get +1/+1 until end of turn.",
+          "________________",
+          "Seal of Athena",
+          "Type: Technique",
+          "Cost: 3 Base Cosmo",
+          "Seal target Devotee.",
+          "________________",
+          "Exile Evil",
+          "Type: Technique",
+          "Cost: 5 Base Cosmo",
+          "Exile target Devotee with cost 4 or greater.",
+          "________________",
+          "Call the Cloth",
+          "Type: Technique",
+          "Cost: 2 Base Cosmo",
+          "Search your deck for a Cloth Relic, reveal it, put it into your hand, then shuffle your deck.",
+          "________________",
+          "Repair Cloth",
+          "Type: Technique",
+          "Cost: 2 Base Cosmo",
+          "Restore 3 Damage from target Cloth.",
+          "________________",
+          "Shatter Faith",
+          "Type: Technique",
+          "Cost: 3 Base Cosmo",
+          "Destroy target Relic.",
+          "________________",
+          "Return from Tartarus",
+          "Type: Technique",
+          "Cost: 5 Base Cosmo",
+          "Return target Devotee from Tartarus to the battlefield Unprepared.",
+          "________________",
+          "Sanctuary Guardians",
+          "Type: Technique",
+          "Cost: 2 Base Cosmo",
+          "Target Devotee gains Guardian until end of turn.",
+          "________________",
+          "Divine Barrier",
+          "Type: Technique",
+          "Cost: 3 Base Cosmo",
+          "Prevent all damage that would be dealt to your God this turn.",
+          "________________",
+          "Unfaith Purge",
+          "Type: Technique",
+          "Cost: 3 Base Cosmo",
+          "Remove all Latent Cosmo from target opponent.",
+          "________________",
+          "Relic Blessing",
+          "Type: Technique",
+          "Cost: 2 Base Cosmo",
+          "Target Relic cannot be destroyed this turn.",
+          "________________",
+          "Smite the Evil",
+          "Type: Technique",
+          "Cost: 3 Base Cosmo",
+          "Destroy target Devotee that attacked this turn.",
+          "________________",
+          "Rise, Saint!",
+          "Type: Technique",
+          "Cost: 4 Base Cosmo",
+          "Target Devotee gets +2/+2.",
+          "If it is equipped with a Cloth, it gets +4/+4 instead.",
+          "________________",
+          "LOCAIS — ATHENA",
+          "Sanctuary",
+          "Type: Domain — Location",
+          "Cost: 3",
+          "Devotees you control get +0/+1.",
+          "________________",
+          "Star Hill",
+          "Type: Domain — Location",
+          "Cost: 2",
+          "At the beginning of your turn, generate 1 Latent Cosmo.",
+          "________________",
+          "Coliseu",
+          "Type: Domain — Location",
+          "Cost: 2",
+          "Whenever a Devotee you control enters combat, it gets +1/+0 until end of turn.",
+          "________________",
+          "Lotis de Lâmina - É a líder do exército do Medo, sádica e bastante cruel para com suas vítimas, Lotis adora mexer com o psicológico delas, trazendo-lhes a tona seus piores medos. Sua capacidade de perceber presenças vem do seu enorme potencial em detectar a energia negativa provinda do terror de suas vítimas.",
+          "________________",
+          "Alcmenes de Ethon - É um dos 4 comandantes que regem os exércitos de Ares, ele é o Berserker de Ethon, a lendária ave que sempre volta para comer as vísceras de Prometeu na era mitológica.",
+          "________________",
+          "Ofir de Ourobouros - É o comandante do exército da Chama! Ofir é o comandante mais inteligente e o menos cruel entre os 4 comandantes do exército de Ares, ele ouve seus subordinados e tem um ótimo senso estratégico, assim como Jehuh, porém em termos de força é muito mais poderoso! Ofir possui o poder das chamas divinas da guerra, oferecidas a ele pelo próprio Ares em detrimento de sua inteligência e enorme sabedoria!",
+          "See less",
+          "________________",
+          "PHOBOS",
+          "________________",
+          "DEIMOS",
+          "________________"
+        ]
+      }
+    ]
+  },
+  {
+    "revisao": "631",
+    "data": "2026-04-05T13:33:55.366Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "68f84d4e4be34e8358da4539518ab3bcf0a3ed615249160b6400d9c005891425",
+    "arquivo": "fontes/revisoes/drive-631.txt",
+    "palavras": 4502,
+    "fichas_Type": 53,
+    "mudancas_desde_anterior": [
+      {
+        "tipo": "replace",
+        "antes": [
+          "Marin, Silver Saint"
+        ],
+        "depois": [
+          "✅ Marin, Silver Saint"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Shina, Silver Saint"
+        ],
+        "depois": [
+          "✅ Shina, Silver Saint"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Whenever Shina enters combat, target enemy Devotee gets -1/-0 until end of turn."
+        ],
+        "depois": [
+          "Whenever Shina enters combat, target enemy Devotee gets -1/-1 counter."
+        ]
+      }
+    ]
+  },
+  {
+    "revisao": "633",
+    "data": "2026-04-05T15:17:46.872Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "68f84d4e4be34e8358da4539518ab3bcf0a3ed615249160b6400d9c005891425",
+    "arquivo": "fontes/revisoes/drive-633.txt",
+    "palavras": 4502,
+    "fichas_Type": 53,
+    "mudancas_desde_anterior": []
+  },
+  {
+    "revisao": "635",
+    "data": "2026-04-05T18:02:46.463Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "68f84d4e4be34e8358da4539518ab3bcf0a3ed615249160b6400d9c005891425",
+    "arquivo": "fontes/revisoes/drive-635.txt",
+    "palavras": 4502,
+    "fichas_Type": 53,
+    "mudancas_desde_anterior": []
+  },
+  {
+    "revisao": "638",
+    "data": "2026-04-05T18:38:15.797Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "51b88f2ec6b45321ef9cd3eecaefde6d303647f89cc3167268a4c3136ff2b434",
+    "arquivo": "fontes/revisoes/drive-638.txt",
+    "palavras": 4505,
+    "fichas_Type": 53,
+    "mudancas_desde_anterior": [
+      {
+        "tipo": "replace",
+        "antes": [
+          "Saga, Gemini Gold Saint"
+        ],
+        "depois": [
+          "✅ Saga, Gemini Gold Saint"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Aiolos, Sagittarius Gold Saint"
+        ],
+        "depois": [
+          "✅ Aiolos, Sagittarius Gold Saint"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Aldebaran, Taurus Gold Saint"
+        ],
+        "depois": [
+          "✅ Aldebaran, Taurus Gold Saint"
+        ]
+      }
+    ]
+  },
+  {
+    "revisao": "641",
+    "data": "2026-04-05T19:55:56.150Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "77e209927eb31fca8d74f1cf204bf57f57992e19850a77d9be231978d2955feb",
+    "arquivo": "fontes/revisoes/drive-641.txt",
+    "palavras": 4506,
+    "fichas_Type": 53,
+    "mudancas_desde_anterior": [
+      {
+        "tipo": "replace",
+        "antes": [
+          "Camus, Aquarius Gold Saint"
+        ],
+        "depois": [
+          "✅ Camus, Aquarius Gold Saint"
+        ]
+      }
+    ]
+  },
+  {
+    "revisao": "658",
+    "data": "2026-04-05T22:36:16.562Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "2e2011fd7ddbf28911fa95d2dd07123a30ddb6890d6361aa30ba993dee016b33",
+    "arquivo": "fontes/revisoes/drive-658.txt",
+    "palavras": 4492,
+    "fichas_Type": 53,
+    "mudancas_desde_anterior": [
+      {
+        "tipo": "replace",
+        "antes": [
+          "ATHENA — CARD TEXT FILE (VERSÃO FINAL)"
+        ],
+        "depois": [
+          "ATHENA — CARD TEXT FILE (VERSÃO FINAL COM RARIDADE)"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "✅ Athena, Goddess of Hope"
+        ],
+        "depois": [
+          "✅Comum",
+          "Athena, Goddess of Hope"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "✅ Seiya, Pegasus Saint"
+        ],
+        "depois": [
+          "✅Divina",
+          "Seiya, Pegasus Saint"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________",
+          "✅ Shiryu, Dragon Saint"
+        ],
+        "depois": [
+          "✅Divina",
+          "Shiryu, Dragon Saint"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________",
+          "✅ Hyoga, Cygnus Saint"
+        ],
+        "depois": [
+          "✅Divina",
+          "Hyoga, Cygnus Saint"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________",
+          "✅Shun, Andromeda Saint"
+        ],
+        "depois": [
+          "✅Divina",
+          "Shun, Andromeda Saint"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________",
+          "✅ Ikki, Phoenix Saint"
+        ],
+        "depois": [
+          "✅Divina",
+          "Ikki, Phoenix Saint"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "✅ Marin, Silver Saint"
+        ],
+        "depois": [
+          "✅Incomum",
+          "Marin, Silver Saint"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________",
+          "✅ Shina, Silver Saint"
+        ],
+        "depois": [
+          "✅Incomum",
+          "Shina, Silver Saint"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "✅ Saga, Gemini Gold Saint"
+        ],
+        "depois": [
+          "✅Mítica",
+          "Saga, Gemini Gold Saint"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________",
+          "✅ Aiolos, Sagittarius Gold Saint"
+        ],
+        "depois": [
+          "✅Mítica",
+          "Aiolos, Sagittarius Gold Saint"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________",
+          "✅ Aldebaran, Taurus Gold Saint"
+        ],
+        "depois": [
+          "✅Mítica",
+          "Aldebaran, Taurus Gold Saint"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "✅Mítica"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________",
+          "✅ Camus, Aquarius Gold Saint"
+        ],
+        "depois": [
+          "✅Mítica",
+          "Camus, Aquarius Gold Saint"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "(Esse texto é padrão e MUITO IMPORTANTE pro jogo funcionar)"
+        ],
+        "depois": [
+          "Mítica"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Mítica"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Mítica"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Mítica"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Mítica"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Comum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Comum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Comum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Comum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Comum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Comum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Comum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "(Armas buscáveis pela Libra Cloth)"
+        ],
+        "depois": [
+          "Incomum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Incomum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Incomum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Incomum"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Incomum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Incomum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Incomum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Mítica"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Incomum"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Mítica"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Incomum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Comum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Incomum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Comum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Incomum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Comum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Comum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Incomum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Incomum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Comum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Incomum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Incomum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Comum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Incomum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Incomum"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Comum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Incomum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "________________"
+        ],
+        "depois": [
+          "Incomum"
+        ]
+      }
+    ]
+  },
+  {
+    "revisao": "683",
+    "data": "2026-04-06T03:21:44.009Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "e6ac3158d38894566bcb28d0f431f0013471b54a146f4ab38e6bf3d2b2899c39",
+    "arquivo": "fontes/revisoes/drive-683.txt",
+    "palavras": 4492,
+    "fichas_Type": 53,
+    "mudancas_desde_anterior": [
+      {
+        "tipo": "replace",
+        "antes": [
+          "Mítica"
+        ],
+        "depois": [
+          "✅Mítica"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Mítica"
+        ],
+        "depois": [
+          "✅Mítica"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Equipped Devotee gets +0/+2 and Guardian."
+        ],
+        "depois": [
+          "Equipped Devotee gets +0/+2 and LONG RANGE."
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Mítica"
+        ],
+        "depois": [
+          "✅Mítica"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Mítica"
+        ],
+        "depois": [
+          "✅Mítica"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Equipped Devotee gets +1/+0 and Long Range."
+        ],
+        "depois": [
+          "Equipped Devotee gets +1/+0 and Pierce."
+        ]
+      }
+    ]
+  },
+  {
+    "revisao": "703",
+    "data": "2026-04-06T05:17:38.058Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "16c070a4b772ef7c53acc62401b8b2fc3d8f7412907f15a5adc6d1b1fa5ae64b",
+    "arquivo": "fontes/revisoes/drive-703.txt",
+    "palavras": 4491,
+    "fichas_Type": 53,
+    "mudancas_desde_anterior": [
+      {
+        "tipo": "replace",
+        "antes": [
+          "Mítica"
+        ],
+        "depois": [
+          "✅Mítica"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Comum"
+        ],
+        "depois": [
+          "✅Comum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Comum"
+        ],
+        "depois": [
+          "✅Comum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Comum"
+        ],
+        "depois": [
+          "✅Comum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Comum",
+          "Sanctuary Healer"
+        ],
+        "depois": [
+          "✅ComumSanctuary Healer"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Comum"
+        ],
+        "depois": [
+          "✅Comum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Comum"
+        ],
+        "depois": [
+          "✅Comum"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Comum"
+        ],
+        "depois": [
+          "✅Comum"
+        ]
+      }
+    ]
+  },
+  {
+    "revisao": "712",
+    "data": "2026-04-06T20:15:39.185Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "e8cba2c2aee514625c5bd82d2bdb3bc9aaee607da7b482dca4e3653a8405862a",
+    "arquivo": "fontes/revisoes/drive-712.txt",
+    "palavras": 4473,
+    "fichas_Type": 53,
+    "mudancas_desde_anterior": [
+      {
+        "tipo": "delete",
+        "antes": [
+          "Damage: 2"
+        ],
+        "depois": []
+      },
+      {
+        "tipo": "delete",
+        "antes": [
+          "Damage: 2"
+        ],
+        "depois": []
+      },
+      {
+        "tipo": "delete",
+        "antes": [
+          "Damage: 2"
+        ],
+        "depois": []
+      },
+      {
+        "tipo": "delete",
+        "antes": [
+          "Damage: 3"
+        ],
+        "depois": []
+      },
+      {
+        "tipo": "delete",
+        "antes": [
+          "Damage: 3"
+        ],
+        "depois": []
+      },
+      {
+        "tipo": "delete",
+        "antes": [
+          "Damage: 3"
+        ],
+        "depois": []
+      },
+      {
+        "tipo": "delete",
+        "antes": [
+          "Damage: 2"
+        ],
+        "depois": []
+      },
+      {
+        "tipo": "delete",
+        "antes": [
+          "Damage: 2"
+        ],
+        "depois": []
+      },
+      {
+        "tipo": "delete",
+        "antes": [
+          "Damage: 2"
+        ],
+        "depois": []
+      }
+    ]
+  },
+  {
+    "revisao": "1117",
+    "data": "2026-04-07T01:16:57.930Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "e3371ef2602d54f8804594151b2ecb61a5bc87e160c394662d47e9384dfe0dc6",
+    "arquivo": "fontes/revisoes/drive-1117.txt",
+    "palavras": 5525,
+    "fichas_Type": 53,
+    "mudancas_desde_anterior": [
+      {
+        "tipo": "replace",
+        "antes": [
+          "ATHENA — CARD TEXT FILE (VERSÃO FINAL COM RARIDADE)"
+        ],
+        "depois": [
+          "ATHENA"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "✅Comum",
+          "Athena, Goddess of Hope"
+        ],
+        "depois": [
+          "✅Athena, Goddess of Hope"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Cost: —",
+          "Rarity: Common",
+          "Cosmoble: No"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "When an Athena Devotee is destroyed and sent to Tartarus, you may pay 5 Cosmo. If you do, return that Devotee to the battlefield Unprepared. That Devotee gets +1/+1. You may equip a Cloth to it ignoring equip cost."
+        ],
+        "depois": [
+          "When an Athena Devotee is destroyed and sent to Tartarus, you may pay 5 Cosmo. If you do, return that Devotee to the battlefield Unprepared. Put a +1/+1 counter on that Devotee. You may equip a Cloth to it ignoring equip cost."
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "All Athena Devotees you control get +1/+1."
+        ],
+        "depois": [
+          "Athena Devotees you control get +1/+1."
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "BRONZE SAINTS — DIVINA",
+          "✅Divina"
+        ],
+        "depois": [
+          "BRONZE SAINTS"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Divine",
+          "Cosmoble: No"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Technique — Pegasus Ryuseiken — Cost: 5 Base Cosmo"
+        ],
+        "depois": [
+          "Pegasus Ryuseiken — Cost: 5 Base Cosmo"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "✅Divina"
+        ],
+        "depois": [
+          "________________"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Divine",
+          "Cosmoble: No"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Technique — Rozan Shoryuha — Cost: 6 Base Cosmo"
+        ],
+        "depois": [
+          "Rozan Shoryuha — Cost: 6 Base Cosmo"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "✅Divina"
+        ],
+        "depois": [
+          "________________"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Divine",
+          "Cosmoble: No"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "When Hyoga deals combat damage to a Devotee, Seal that Devotee."
+        ],
+        "depois": [
+          "When Hyoga deals combat damage to a Devotee, put a Seal counter on that Devotee."
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Technique — Diamond Dust — Cost: 4 Base Cosmo",
+          "Deal 1 damage to all enemy Devotees. Seal all Devotees damaged this way.",
+          "✅Divina"
+        ],
+        "depois": [
+          "Diamond Dust — Cost: 4 Base Cosmo",
+          "Deal 1 damage to all enemy Devotees. Put a Seal counter on each Devotee damaged this way.",
+          "________________"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Divine",
+          "Cosmoble: No"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "When Shun enters the battlefield, return target enemy Devotee with cost 1 or less to its owner hand.",
+          "When a Devotee attacks Shun, return that Devotee to its owner hand after combat.",
+          "Technique — Nebula Chain — Cost: 4 Base Cosmo",
+          "Return up to 2 target enemy Devotees to their owners hand. Those Devotees cannot be played again this turn.",
+          "✅Divina"
+        ],
+        "depois": [
+          "When Shun enters the battlefield, return target enemy Devotee with cost 1 or less to its owner’s hand.",
+          "When a Devotee attacks Shun, return that Devotee to its owner’s hand after combat.",
+          "Nebula Chain — Cost: 4 Base Cosmo",
+          "Return up to 2 target enemy Devotees to their owners’ hands. Those Devotees cannot be played again this turn.",
+          "________________"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Divine",
+          "Cosmoble: No"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "✅Incomum",
+          "Marin, Silver Saint"
+        ],
+        "depois": [
+          "✅Marin, Silver Saint"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Uncommon",
+          "Cosmoble: Yes"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "When Marin enters the battlefield, another target Devotee you control gets +1/+1."
+        ],
+        "depois": [
+          "When Marin enters the battlefield, another target Devotee you control gets +1/+1 until end of turn."
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "✅Incomum",
+          "Shina, Silver Saint"
+        ],
+        "depois": [
+          "________________",
+          "✅Shina, Silver Saint"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Uncommon",
+          "Cosmoble: Yes"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Whenever Shina enters combat, target enemy Devotee gets -1/-1 counter.",
+          "________________",
+          "GOLD SAINTS — MÍTICA",
+          "✅Mítica"
+        ],
+        "depois": [
+          "Whenever Shina enters combat, put a -1/-1 counter on target enemy Devotee.",
+          "________________",
+          "GOLD SAINTS"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Mythic",
+          "Cosmoble: No"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Exile target Devotee with cost 3 or less. Return that Devotee to the battlefield under its owner control at the end of the next turn Unprepared.",
+          "Awakened Technique — Galaxian Explosion — Cost: 8 Base Cosmo",
+          "Choose target opponent. Deal damage to all other Devotees equal to that player Latent Cosmo. Devotees destroyed this way are exiled instead of going to Tartarus.",
+          "✅Mítica"
+        ],
+        "depois": [
+          "Exile target Devotee with cost 3 or less. Return that Devotee to the battlefield under its owner’s control at the end of the next turn Unprepared.",
+          "Galaxian Explosion — Awakened — Cost: 8 Base Cosmo",
+          "Choose target opponent. Deal damage to all other Devotees equal to that player’s Latent Cosmo. Devotees destroyed this way are exiled instead of going to Tartarus.",
+          "________________"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Mythic",
+          "Cosmoble: No"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Awakened Technique — Sagittarius Arrow — Cost: X Base Cosmo",
+          "Deal X damage to target Devotee or God, where X equals your God current Soul.",
+          "✅Mítica",
+          "Aldebaran, Taurus Gold Saint"
+        ],
+        "depois": [
+          "Sagittarius Arrow — Awakened — Cost: X Base Cosmo",
+          "Deal X damage to target Devotee or God, where X equals your God’s current Soul.",
+          "________________",
+          "✅Aldebaran, Taurus Gold Saint"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Mythic",
+          "Cosmoble: Yes"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Technique — Great Horn — Cost: 4 Base Cosmo"
+        ],
+        "depois": [
+          "Great Horn — Cost: 4 Base Cosmo"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "✅Mítica",
+          "Deathmask, Cancer Gold Saint"
+        ],
+        "depois": [
+          "________________",
+          "✅Deathmask, Cancer Gold Saint"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Mythic",
+          "Cosmoble: Yes"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Technique — Underworld Waves — Cost: 5 Base Cosmo"
+        ],
+        "depois": [
+          "Underworld Waves — Cost: 5 Base Cosmo"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "✅Mítica"
+        ],
+        "depois": [
+          "________________"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Mythic",
+          "Cosmoble: No"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Technique — Aurora Execution — Cost: 6 Base Cosmo",
+          "Deal 1 damage to all enemy Devotees. Destroy all Sealed Devotees."
+        ],
+        "depois": [
+          "Aurora Execution — Cost: 6 Base Cosmo",
+          "Deal 1 damage to all enemy Devotees. Destroy all Devotees with a Seal counter.",
+          "________________",
+          "DEVOTEES COMUNS",
+          "✅Sanctuary Guard",
+          "Type: Devotee",
+          "Cost: 2",
+          "Rarity: Common",
+          "Cosmoble: Yes",
+          "Power: 1",
+          "Resistance: 1",
+          "Keyword: Guardian",
+          "When Sanctuary Guard enters the battlefield, you may equip a Cloth with equip cost 1 or less to it without paying its equip cost.",
+          "________________",
+          "✅Cosmo Apprentice",
+          "Type: Devotee",
+          "Cost: 1",
+          "Rarity: Common",
+          "Cosmoble: Yes",
+          "Power: 0",
+          "Resistance: 2",
+          "Tap: Generate 1 Latent Cosmo.",
+          "________________",
+          "✅Sanctuary Archer",
+          "Type: Devotee",
+          "Cost: 3",
+          "Rarity: Common",
+          "Cosmoble: Yes",
+          "Power: 2",
+          "Resistance: 2",
+          "Keyword: Long Range",
+          "Sanctuary Archer can attack Devotees with Nimble.",
+          "________________",
+          "✅Sanctuary Healer",
+          "Type: Devotee",
+          "Cost: 2",
+          "Rarity: Common",
+          "Cosmoble: Yes",
+          "Power: 1",
+          "Resistance: 3",
+          "Tap: Prevent the next 2 damage that would be dealt to target Devotee this turn.",
+          "________________",
+          "✅Cloth Repairer",
+          "Type: Devotee",
+          "Cost: 2",
+          "Rarity: Common",
+          "Cosmoble: Yes",
+          "Power: 1",
+          "Resistance: 2",
+          "Tap: Restore 2 Damage from target Cloth.",
+          "________________",
+          "✅Star Hill Monk",
+          "Type: Devotee",
+          "Cost: 3",
+          "Rarity: Common",
+          "Cosmoble: Yes",
+          "Power: 1",
+          "Resistance: 4",
+          "At the beginning of your turn, generate 1 Latent Cosmo.",
+          "________________",
+          "✅Sanctuary Soldier",
+          "Type: Devotee",
+          "Cost: 2",
+          "Rarity: Common",
+          "Cosmoble: Yes",
+          "Power: 2",
+          "Resistance: 2",
+          "When Sanctuary Soldier enters the battlefield, another target Devotee gets +0/+1 until end of turn."
+        ]
+      },
+      {
+        "tipo": "delete",
+        "antes": [
+          "✅Mítica"
+        ],
+        "depois": []
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Mythic",
+          "Cosmoble: No"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Damage: 3"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Damage: 3",
+          "✅Mítica"
+        ],
+        "depois": [
+          "________________"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Mythic",
+          "Cosmoble: Yes"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Damage: 3"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Equipped Devotee gets +0/+2 and LONG RANGE."
+        ],
+        "depois": [
+          "Equipped Devotee gets +0/+2 and Long Range."
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Damage: 3",
+          "✅Mítica",
+          "Aquarius Cloth"
+        ],
+        "depois": [
+          "________________",
+          "✅Aquarius Cloth"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Mythic",
+          "Cosmoble: Yes"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Damage: 3"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "When this Devotee deals combat damage to a Devotee, Seal that Devotee."
+        ],
+        "depois": [
+          "When this Devotee deals combat damage to a Devotee, put a Seal counter on that Devotee."
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "When Aquarius Cloth enters the battlefield, Seal target Devotee.",
+          "Damage: 3",
+          "✅Mítica",
+          "Leo Cloth"
+        ],
+        "depois": [
+          "When Aquarius Cloth enters the battlefield, put a Seal counter on target Devotee.",
+          "________________",
+          "✅Leo Cloth"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Mythic",
+          "Cosmoble: Yes"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Damage: 3"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Damage: 3",
+          "✅Mítica"
+        ],
+        "depois": [
+          "________________"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Mythic",
+          "Cosmoble: No"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Damage: 3"
+        ]
+      },
+      {
+        "tipo": "delete",
+        "antes": [
+          "Damage: 3",
+          "________________",
+          "DEVOTEES COMUNS — ATHENA",
+          "✅Comum",
+          "Sanctuary Guard",
+          "Type: Devotee",
+          "Cost: 2",
+          "Power: 1",
+          "Resistance: 1",
+          "Keyword: Guardian",
+          "When Sanctuary Guard enters the battlefield, you may equip a Cloth with equip cost 1 or less to it without paying its equip cost.",
+          "✅Comum",
+          "Cosmo Apprentice",
+          "Type: Devotee",
+          "Cost: 1",
+          "Power: 0",
+          "Resistance: 2",
+          "Tap: Generate 1 Latent Cosmo.",
+          "✅Comum",
+          "Sanctuary Archer",
+          "Type: Devotee",
+          "Cost: 3",
+          "Power: 2",
+          "Resistance: 2",
+          "Keyword: Long Range",
+          "Sanctuary Archer can attack Devotees with Nimble.",
+          "✅ComumSanctuary Healer",
+          "Type: Devotee",
+          "Cost: 2",
+          "Power: 1",
+          "Resistance: 3",
+          "Tap: Prevent the next 2 damage that would be dealt to target Devotee this turn.",
+          "✅Comum",
+          "Cloth Repairer",
+          "Type: Devotee",
+          "Cost: 2",
+          "Power: 1",
+          "Resistance: 2",
+          "Tap: Restore 2 Damage from target Cloth.",
+          "✅Comum",
+          "Star Hill Monk",
+          "Type: Devotee",
+          "Cost: 3",
+          "Power: 1",
+          "Resistance: 4",
+          "At the beginning of your turn, generate 1 Latent Cosmo.",
+          "✅Comum",
+          "Sanctuary Soldier",
+          "Type: Devotee",
+          "Cost: 2",
+          "Power: 2",
+          "Resistance: 2",
+          "When Sanctuary Soldier enters the battlefield, another target Devotee gets +0/+1 until end of turn."
+        ],
+        "depois": []
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Incomum",
+          "Libra Sword"
+        ],
+        "depois": [
+          "✅Libra Sword"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Uncommon",
+          "Cosmoble: Yes"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Incomum",
+          "Libra Spear"
+        ],
+        "depois": [
+          "________________",
+          "✅Libra Spear"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Uncommon",
+          "Cosmoble: Yes"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Incomum",
+          "Libra Staff"
+        ],
+        "depois": [
+          "________________",
+          "✅Libra Tonfa"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Uncommon",
+          "Cosmoble: Yes"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Tap: Seal target Devotee that was dealt damage this turn.",
+          "Incomum"
+        ],
+        "depois": [
+          "Tap: Put a Seal counter on target Devotee that was dealt damage this turn.",
+          "________________"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Uncommon",
+          "Cosmoble: Yes"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "RELÍQUIAS ESPECIAIS — ATHENA",
+          "Incomum",
+          "Staff of Athena"
+        ],
+        "depois": [
+          "RELÍQUIAS ESPECIAIS",
+          "✅Staff of Athena"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Cost: 4",
+          "Tap: Seal target Devotee.",
+          "If that Devotee is a Specter, it does not Ready during its controller next turn.",
+          "Incomum",
+          "Athena Amphora"
+        ],
+        "depois": [
+          "Cost: 5",
+          "Rarity: Uncommon",
+          "Cosmoble: No",
+          "When Staff of Athena enters the battlefield, exile target Devotee with cost 4 or more until Staff of Athena leaves the battlefield. When Staff of Athena leaves the battlefield, return that Devotee to the battlefield under its owner’s control.",
+          "________________",
+          "✅Athena Amphora"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Uncommon",
+          "Cosmoble: Yes"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Tap: Seal target Devotee.",
+          "Incomum",
+          "Athena Seal"
+        ],
+        "depois": [
+          "Tap: Put a Seal counter on target Devotee.",
+          "________________",
+          "✅Athena Seal"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Uncommon",
+          "Cosmoble: Yes"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Mítica",
+          "Golden Arrow"
+        ],
+        "depois": [
+          "________________",
+          "✅Sagittarius Bowl"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Mythic",
+          "Cosmoble: No"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Equipped Devotee gains +2/+0 and Long Range."
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Incomum",
+          "Pope Dagger"
+        ],
+        "depois": [
+          "________________",
+          "✅Pope Dagger"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Uncommon",
+          "Cosmoble: Yes"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Equipped Devotee gains +1/+0."
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "TÉCNICAS — ATHENA",
+          "Mítica",
+          "Athena’s Judgment",
+          "Type: Technique",
+          "Cost: 8 Base Cosmo",
+          "Destroy all Devotees. Gold Saints you control are not destroyed.",
+          "Incomum"
+        ],
+        "depois": [
+          "⚡ TECHNIQUES — ATHENA (INSTANT SPEED)"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Uncommon",
+          "Cosmoble: Yes"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Comum",
+          "Cosmo Blessing",
+          "Type: Technique",
+          "Cost: 2 Base Cosmo",
+          "Target Devotee gets +2/+2 until end of turn.",
+          "Incomum",
+          "Sanctuary Blessing",
+          "Type: Technique",
+          "Cost: 4 Base Cosmo",
+          "All Devotees you control get +1/+1 until end of turn.",
+          "Comum"
+        ],
+        "depois": [
+          "________________"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Seal target Devotee.",
+          "Incomum",
+          "Exile Evil",
+          "Type: Technique",
+          "Cost: 5 Base Cosmo",
+          "Exile target Devotee with cost 4 or greater.",
+          "Comum",
+          "Call the Cloth",
+          "Type: Technique",
+          "Cost: 2 Base Cosmo",
+          "Search your deck for a Cloth Relic, reveal it, put it into your hand, then shuffle your deck.",
+          "Comum",
+          "Repair Cloth",
+          "Type: Technique",
+          "Cost: 2 Base Cosmo",
+          "Restore 3 Damage from target Cloth.",
+          "Incomum"
+        ],
+        "depois": [
+          "Rarity: Common",
+          "Cosmoble: Yes",
+          "Put a Seal counter on target Devotee.",
+          "________________"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Uncommon",
+          "Cosmoble: Yes"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Incomum",
+          "Return from Tartarus",
+          "Type: Technique",
+          "Cost: 5 Base Cosmo",
+          "Return target Devotee from Tartarus to the battlefield Unprepared.",
+          "Comum",
+          "Sanctuary Guardians",
+          "Type: Technique",
+          "Cost: 2 Base Cosmo",
+          "Target Devotee gains Guardian until end of turn.",
+          "Incomum"
+        ],
+        "depois": [
+          "________________"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Uncommon",
+          "Cosmoble: Yes"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Incomum",
+          "Unfaith Purge",
+          "Type: Technique",
+          "Cost: 3 Base Cosmo",
+          "Remove all Latent Cosmo from target opponent.",
+          "Comum"
+        ],
+        "depois": [
+          "________________"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Common",
+          "Cosmoble: Yes"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Incomum"
+        ],
+        "depois": [
+          "________________"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Uncommon",
+          "Cosmoble: Yes"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Incomum"
+        ],
+        "depois": [
+          "________________",
+          "🌕 MOMENTS — ATHENA (SORCERY SPEED)",
+          "✅ Athena’s Judgment",
+          "Type: Moment",
+          "Cost: 8 Base Cosmo",
+          "Rarity: Mythic",
+          "Cosmoble: No",
+          "Destroy all Devotees. Gold Saints you control are not destroyed.",
+          "________________",
+          "✅ Cosmo Blessing",
+          "Type: Moment",
+          "Cost: 2 Base Cosmo",
+          "Rarity: Common",
+          "Cosmoble: Yes",
+          "Target Devotee gets +2/+2 until end of turn.",
+          "________________",
+          "Sanctuary Blessing",
+          "Type: Moment",
+          "Cost: 4 Base Cosmo",
+          "Rarity: Uncommon",
+          "Cosmoble: Yes",
+          "Devotees you control get +1/+1 until end of turn.",
+          "________________",
+          "Exile Evil",
+          "Type: Moment",
+          "Cost: 5 Base Cosmo",
+          "Rarity: Uncommon",
+          "Cosmoble: Yes",
+          "Exile target Devotee with cost 4 or greater.",
+          "________________",
+          "Call the Cloth",
+          "Type: Moment",
+          "Cost: 2 Base Cosmo",
+          "Rarity: Common",
+          "Cosmoble: Yes",
+          "Search your deck for a Cloth Relic, reveal it, put it into your hand, then shuffle your deck.",
+          "________________",
+          "Repair Cloth",
+          "Type: Moment",
+          "Cost: 2 Base Cosmo",
+          "Rarity: Common",
+          "Cosmoble: Yes",
+          "Restore 3 Damage from target Cloth.",
+          "________________",
+          "Return from Tartarus",
+          "Type: Moment",
+          "Cost: 5 Base Cosmo",
+          "Rarity: Uncommon",
+          "Cosmoble: Yes",
+          "Return target Devotee from Tartarus to the battlefield Unprepared.",
+          "________________",
+          "Sanctuary Guardians",
+          "Type: Moment",
+          "Cost: 2 Base Cosmo",
+          "Rarity: Common",
+          "Cosmoble: Yes",
+          "Target Devotee gains Guardian until end of turn.",
+          "________________",
+          "Unfaith Purge",
+          "Type: Moment",
+          "Cost: 3 Base Cosmo",
+          "Rarity: Uncommon",
+          "Cosmoble: Yes",
+          "Remove all Latent Cosmo from target opponent.",
+          "________________"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Type: Technique"
+        ],
+        "depois": [
+          "Type: Moment"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Target Devotee gets +2/+2.",
+          "If it is equipped with a Cloth, it gets +4/+4 instead.",
+          "________________",
+          "LOCAIS — ATHENA",
+          "Comum"
+        ],
+        "depois": [
+          "Rarity: Uncommon",
+          "Cosmoble: Yes",
+          "Target Devotee gets +2/+2. If it is equipped with a Cloth, it gets +4/+4 instead.",
+          "________________",
+          "LOCAIS"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Type: Domain — Location"
+        ],
+        "depois": [
+          "Type: Local"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Common",
+          "Cosmoble: Yes"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Incomum"
+        ],
+        "depois": [
+          "________________"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Type: Domain — Location"
+        ],
+        "depois": [
+          "Type: Local"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Uncommon",
+          "Cosmoble: Yes"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Incomum"
+        ],
+        "depois": [
+          "________________"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "Type: Domain — Location"
+        ],
+        "depois": [
+          "Type: Local"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Rarity: Uncommon",
+          "Cosmoble: Yes"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "🟡 DECK 1 — SEIYA (AGGRO / PRESSURE / CLOTH BURST)",
+          "Plano: pressão constante + scaling com Cloth + finalizar rápido",
+          "Devotees (22)",
+          "* 4x Seiya",
+          "* 2x Marin",
+          "* 2x Shina",
+          "* 4x Sanctuary Soldier",
+          "* 4x Sanctuary Archer",
+          "* 3x Cosmo Apprentice",
+          "* 3x Star Hill Monk",
+          "Gold Saints (3)",
+          "* 2x Aiolos",
+          "* 1x Saga",
+          "Cloths (5)",
+          "* 2x Sagittarius Cloth",
+          "* 1x Leo Cloth",
+          "* 1x Libra Cloth",
+          "* 1x Virgo Cloth",
+          "Weapons (3)",
+          "* 2x Libra Sword",
+          "* 1x Sagittarius Bowl",
+          "Relics (3)",
+          "* 1x Staff of Athena",
+          "* 1x Athena Amphora",
+          "* 1x Pope Dagger",
+          "Techniques (10)",
+          "* 2x Cosmo Blessing",
+          "* 2x Sanctuary Guardians",
+          "* 2x Seal of Athena",
+          "* 2x Athena’s Protection",
+          "* 1x Divine Barrier",
+          "* 1x Relic Blessing",
+          "Moments (14)",
+          "* 2x Sanctuary Blessing",
+          "* 2x Rise, Saint!",
+          "* 2x Call the Cloth",
+          "* 2x Repair Cloth",
+          "* 2x Exile Evil",
+          "* 2x Return from Tartarus",
+          "* 2x Unfaith Purge",
+          "________________",
+          "🟢 DECK 2 — SHIRYU (TANK / CLOTH CONTROL / VALUE)",
+          "Plano: sobreviver + ganhar valor com Cloth + controle de mesa",
+          "Devotees (24)",
+          "* 4x Shiryu",
+          "* 2x Marin",
+          "* 2x Shina",
+          "* 4x Sanctuary Guard",
+          "* 4x Sanctuary Healer",
+          "* 3x Cloth Repairer",
+          "* 3x Star Hill Monk",
+          "* 2x Cosmo Apprentice",
+          "Gold Saints (3)",
+          "* 2x Aldebaran",
+          "* 1x Saga",
+          "Cloths (6)",
+          "* 2x Libra Cloth",
+          "* 1x Virgo Cloth",
+          "* 1x Sagittarius Cloth",
+          "* 1x Aquarius Cloth",
+          "* 1x Leo Cloth",
+          "Weapons (4)",
+          "* 1x Libra Sword",
+          "* 1x Libra Spear",
+          "* 1x Libra Tonfa",
+          "* 1x Libra Shield",
+          "Relics (3)",
+          "* 1x Staff of Athena",
+          "* 1x Athena Amphora",
+          "* 1x Athena Seal",
+          "Techniques (10)",
+          "* 2x Athena’s Protection",
+          "* 2x Divine Barrier",
+          "* 2x Relic Blessing",
+          "* 2x Shatter Faith",
+          "* 2x Seal of Athena",
+          "Moments (10)",
+          "* 2x Repair Cloth",
+          "* 2x Call the Cloth",
+          "* 2x Sanctuary Blessing",
+          "* 2x Rise, Saint!",
+          "* 2x Return from Tartarus",
+          "________________",
+          "🔵 DECK 3 — HYOGA (CONTROL / SEAL / FREEZE)",
+          "Plano: travar mesa + executar com Camus",
+          "Devotees (22)",
+          "* 4x Hyoga",
+          "* 2x Marin",
+          "* 2x Shina",
+          "* 4x Star Hill Monk",
+          "* 4x Cosmo Apprentice",
+          "* 3x Sanctuary Guard",
+          "* 3x Sanctuary Healer",
+          "Gold Saints (3)",
+          "* 2x Camus",
+          "* 1x Saga",
+          "Cloths (5)",
+          "* 2x Aquarius Cloth",
+          "* 1x Virgo Cloth",
+          "* 1x Libra Cloth",
+          "* 1x Leo Cloth",
+          "Weapons (3)",
+          "* 1x Libra Tonfa",
+          "* 1x Libra Spear",
+          "* 1x Libra Shield",
+          "Relics (3)",
+          "* 1x Staff of Athena",
+          "* 1x Athena Amphora",
+          "* 1x Athena Seal",
+          "Techniques (12)",
+          "* 3x Seal of Athena",
+          "* 2x Athena’s Protection",
+          "* 2x Shatter Faith",
+          "* 2x Divine Barrier",
+          "* 2x Smite the Evil",
+          "* 1x Relic Blessing",
+          "Moments (12)",
+          "* 2x Unfaith Purge",
+          "* 2x Exile Evil",
+          "* 2x Sanctuary Blessing",
+          "* 2x Call the Cloth",
+          "* 2x Repair Cloth",
+          "* 2x Return from Tartarus",
+          "________________",
+          "🟣 DECK 4 — SHUN (CONTROL / BOUNCE / DEFENSE)",
+          "Plano: atrasar o jogo + negar mesa + grind",
+          "Devotees (24)",
+          "* 4x Shun",
+          "* 2x Marin",
+          "* 2x Shina",
+          "* 4x Sanctuary Guard",
+          "* 4x Sanctuary Healer",
+          "* 4x Star Hill Monk",
+          "* 4x Cosmo Apprentice",
+          "Gold Saints (3)",
+          "* 1x Saga",
+          "* 1x Camus",
+          "* 1x Aldebaran",
+          "Cloths (5)",
+          "* 2x Virgo Cloth",
+          "* 1x Aquarius Cloth",
+          "* 1x Libra Cloth",
+          "* 1x Leo Cloth",
+          "Weapons (3)",
+          "* 1x Libra Shield",
+          "* 1x Libra Tonfa",
+          "* 1x Libra Spear",
+          "Relics (3)",
+          "* 1x Staff of Athena",
+          "* 1x Athena Amphora",
+          "* 1x Athena Seal",
+          "Techniques (12)",
+          "* 2x Seal of Athena",
+          "* 2x Athena’s Protection",
+          "* 2x Divine Barrier",
+          "* 2x Smite the Evil",
+          "* 2x Relic Blessing",
+          "* 2x Shatter Faith",
+          "Moments (10)",
+          "* 2x Unfaith Purge",
+          "* 2x Return from Tartarus",
+          "* 2x Sanctuary Blessing",
+          "* 2x Call the Cloth",
+          "* 2x Rise, Saint!",
+          "________________",
+          "🔥 DECK 5 — IKKI (MIDRANGE / RECURSION / BURST)",
+          "Plano: pressão + volta do cemitério + explosão de dano",
+          "Devotees (22)",
+          "* 4x Ikki",
+          "* 2x Marin",
+          "* 2x Shina",
+          "* 4x Sanctuary Archer",
+          "* 4x Sanctuary Soldier",
+          "* 3x Cosmo Apprentice",
+          "* 3x Star Hill Monk",
+          "Gold Saints (3)",
+          "* 1x Aiolos",
+          "* 1x Saga",
+          "* 1x Deathmask",
+          "Cloths (5)",
+          "* 2x Leo Cloth",
+          "* 1x Sagittarius Cloth",
+          "* 1x Libra Cloth",
+          "* 1x Aquarius Cloth",
+          "Weapons (4)",
+          "* 2x Libra Sword",
+          "* 1x Sagittarius Bowl",
+          "* 1x Libra Spear",
+          "Relics (3)",
+          "* 1x Staff of Athena",
+          "* 1x Athena Amphora",
+          "* 1x Pope Dagger",
+          "Techniques (10)",
+          "* 2x Athena’s Protection",
+          "* 2x Seal of Athena",
+          "* 2x Smite the Evil",
+          "* 2x Divine Barrier",
+          "* 2x Shatter Faith",
+          "Moments (13)",
+          "* 2x Rise, Saint!",
+          "* 2x Sanctuary Blessing",
+          "* 2x Call the Cloth",
+          "* 2x Repair Cloth",
+          "* 2x Return from Tartarus",
+          "* 2x Exile Evil",
+          "* 1x Unfaith Purge"
+        ]
+      }
+    ]
+  },
+  {
+    "revisao": "1126",
+    "data": "2026-04-08T00:51:25.922Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "b09b8a33cc3df567aec6dcfd45dc7352433ca78269bd98d83dd87899971b9953",
+    "arquivo": "fontes/revisoes/drive-1126.txt",
+    "palavras": 6018,
+    "fichas_Type": 58,
+    "mudancas_desde_anterior": [
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "🔱 MARINA GENERALS — FINAL SET VERSION",
+          "________________",
+          "🔱 Kanon, Sea Dragon General",
+          "Type: Devotee — Marina General",
+          "Cost: 5",
+          "Rarity: Mythic",
+          "Cosmoble: No",
+          "Power: 3",
+          "Resistance: 4",
+          "Keyword: Pierce",
+          "________________",
+          "Once per turn, when an enemy Technique targets a Devotee, you may change its target to another valid Devotee.",
+          "________________",
+          "When Kanon deals damage to a God, draw 1 card.",
+          "________________",
+          "Golden Triangle — Cost: 4 Base Cosmo",
+          "Return target Devotee to its owner’s hand.",
+          "That Devotee cannot be played during its controller’s next turn.",
+          "________________",
+          "🔱 Sorrento, Siren General",
+          "Type: Devotee — Marina General",
+          "Cost: 4",
+          "Rarity: Mythic",
+          "Cosmoble: No",
+          "Power: 2",
+          "Resistance: 4",
+          "Keyword: Nimble",
+          "________________",
+          "Deadly Symphony",
+          "The first time each turn a Devotee attacks your God during its controller’s turn, it attacks the Devotee you control with the highest Power instead.",
+          "________________",
+          "Melody of the Abyss",
+          "Whenever Sorrento deals damage to a God, that player discards 1 card.",
+          "________________",
+          "Dead End Symphony — Cost: 5 Base Cosmo",
+          "Choose up to 2 enemy Devotees.",
+          "Put a Seal counter on them.",
+          "________________",
+          "🔱 Baian, Sea Horse General",
+          "Type: Devotee — Marina General",
+          "Cost: 4",
+          "Rarity: Mythic",
+          "Cosmoble: No",
+          "Power: 2",
+          "Resistance: 5",
+          "Keyword: Long Range",
+          "________________",
+          "Reduce all damage dealt to Baian by 1.",
+          "________________",
+          "The first time each turn a Devotee attacks Baian during your opponent’s turn, put a Seal counter on that Devotee.",
+          "________________",
+          "Rising Tide Wall — Cost: 6 Base Cosmo, Tap Baian",
+          "Prevent all damage that would be dealt to your Devotees this turn.",
+          "________________",
+          "🔱 Io, Scylla General",
+          "Type: Devotee — Marina General",
+          "Cost: 4",
+          "Rarity: Mythic",
+          "Cosmoble: No",
+          "Power: 3",
+          "Resistance: 3",
+          "Keyword: Impulse",
+          "________________",
+          "Six Beasts of Scylla",
+          "Once per turn, when Io attacks, choose one:",
+          "Create one of the following Beast Devotees:",
+          "• Wolf (1/1) — Impulse",
+          "When this Devotee deals combat damage to a Devotee, put a Seal counter on that Devotee",
+          "• Serpent (1/1) — Impulse, Nimble",
+          "• Eagle (1/1) — Impulse, Long Range",
+          "• Bee (1/1) — Impulse",
+          "When this Devotee dies, deal 1 damage to target Devotee",
+          "________________",
+          "Beast Nature",
+          "Sacrifice all Beast Devotees you control at the end of your turn.",
+          "________________",
+          "Predator Instinct",
+          "When a Beast you control deals damage to a God, choose one:",
+          "• Draw 1 card",
+          "• That player mills 2 cards",
+          "________________",
+          "Scylla Assault — Cost: 5 Base Cosmo",
+          "Create two different Beast Devotees.",
+          "Beast Devotees you control get +1/+0 until end of turn.",
+          "________________",
+          "🔱 Krishna, Chrysaor General",
+          "Type: Devotee — Marina General",
+          "Cost: 5",
+          "Rarity: Mythic",
+          "Cosmoble: No",
+          "Power: 3",
+          "Resistance: 5",
+          "________________",
+          "Krishna cannot be the target of enemy Moments or Techniques.",
+          "________________",
+          "Devotees with Seal counters cannot be equipped with Relics.",
+          "________________",
+          "The first time each turn Krishna deals damage to a God, return target Relic to its owner’s hand.",
+          "________________",
+          "Maha Roshi — Cost: 6 Base Cosmo",
+          "Return target Devotee to its owner’s hand.",
+          "If that Devotee had a Seal counter, its controller mills 4 cards.",
+          "________________"
+        ]
+      }
+    ]
+  },
+  {
+    "revisao": "1178",
+    "data": "2026-04-08T03:24:37.791Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "909ab3ef31042cafff2c326a1462bc7dbcdf368786d9bab613ef0c475587cac7",
+    "arquivo": "fontes/revisoes/drive-1178.txt",
+    "palavras": 6429,
+    "fichas_Type": 63,
+    "mudancas_desde_anterior": [
+      {
+        "tipo": "replace",
+        "antes": [
+          "Remove Latent Cosmo"
+        ],
+        "depois": [
+          "Remove Latent Cosmo, or creature with Unfaith doesnt attack enemy Soul, but remove latet cosmo instead."
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "🔱 SCALES — VERSÃO FINAL (ORDEM CORRETA)",
+          "________________",
+          "🔱 Sea Dragon Scale",
+          "Type: Relic — Scale",
+          "Cost: 4",
+          "Rarity: Mythic",
+          "Cosmoble: No",
+          "Equip: 2",
+          "________________",
+          "When Sea Dragon Scale enters the battlefield, return target Devotee to its owner’s hand.",
+          "________________",
+          "Equipped Devotee gets +2/+2 and Pierce.",
+          "You may equip Sea Dragon Scale to Kanon at any time without paying its equip cost.",
+          "________________",
+          "Resonance — Kanon",
+          "If this Scale is equipped to Kanon, whenever Kanon deals damage to a God, draw 1 additional card.",
+          "________________",
+          "Damage: 3",
+          "________________",
+          "🔱 Siren Scale",
+          "Type: Relic — Scale",
+          "Cost: 4",
+          "Rarity: Mythic",
+          "Cosmoble: No",
+          "Equip: 2",
+          "________________",
+          "When Siren Scale enters the battlefield, choose target Devotee. It cannot attack your God during its controller’s next turn.",
+          "________________",
+          "Equipped Devotee gets +2/+2 and Nimble.",
+          "You may equip Siren Scale to Sorrento at any time without paying its equip cost.",
+          "________________",
+          "Resonance — Sorrento",
+          "If this Scale is equipped to Sorrento, whenever Sorrento deals damage to a God, that player discards an additional card.",
+          "________________",
+          "Damage: 3",
+          "________________",
+          "🔱 Sea Horse Scale",
+          "Type: Relic — Scale",
+          "Cost: 4",
+          "Rarity: Mythic",
+          "Cosmoble: No",
+          "Equip: 2",
+          "________________",
+          "When Sea Horse Scale enters the battlefield, put a Seal counter on target Devotee.",
+          "________________",
+          "Equipped Devotee gets +2/+3.",
+          "You may equip Sea Horse Scale to Baian at any time without paying its equip cost.",
+          "________________",
+          "Resonance — Baian",
+          "If this Scale is equipped to Baian, reduce all damage dealt to Baian by 1.",
+          "________________",
+          "Damage: 3",
+          "________________",
+          "🔱 Scylla Scale",
+          "Type: Relic — Scale",
+          "Cost: 4",
+          "Rarity: Mythic",
+          "Cosmoble: No",
+          "Equip: 2",
+          "________________",
+          "When Scylla Scale enters the battlefield, create one Beast Devotee token.",
+          "________________",
+          "Equipped Devotee gets +2/+2.",
+          "You may equip Scylla Scale to Io at any time without paying its equip cost.",
+          "________________",
+          "Resonance — Io",
+          "If this Scale is equipped to Io, when Io attacks, create one additional Beast Devotee.",
+          "________________",
+          "Damage: 3",
+          "________________",
+          "🔱 Chrysaor Scale",
+          "Type: Relic — Scale",
+          "Cost: 4",
+          "Rarity: Mythic",
+          "Cosmoble: No",
+          "Equip: 2",
+          "________________",
+          "When Chrysaor Scale enters the battlefield, return target Relic to its owner’s hand.",
+          "________________",
+          "Equipped Devotee gets +2/+2.",
+          "You may equip Chrysaor Scale to Krishna at any time without paying its equip cost.",
+          "________________",
+          "Resonance — Krishna",
+          "If this Scale is equipped to Krishna, whenever Krishna deals damage to a God, return up to one additional Relic to its owner’s hand.",
+          "________________",
+          "Damage: 3"
+        ]
+      }
+    ]
+  },
+  {
+    "revisao": "1191",
+    "data": "2026-04-08T14:29:01.942Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "c5e9c53e02c16d792ae0469b21cb52f7caaf1a068c8ac40be74c44afccc38ced",
+    "arquivo": "fontes/drive-rules-revisao-1191.txt",
+    "palavras": 6430,
+    "fichas_Type": 63,
+    "mudancas_desde_anterior": [
+      {
+        "tipo": "replace",
+        "antes": [
+          "Para cada carta trocada, o oponente começa o jogo com +1 Latent Cosmo."
+        ],
+        "depois": [
+          "Se você fez algum mulligan, o oponente começa o jogo com +1 Latent Cosmo."
+        ]
+      }
+    ]
+  },
+  {
+    "revisao": "1192",
+    "data": "2026-04-09T15:41:43.443Z",
+    "autor": "Lierson Mattenhauer Jr",
+    "estado": "LIDA",
+    "erro": null,
+    "sha256": "5375a206977e0e0d95381f832a264badd2c4fbd7a91acd86b539a36fd08361fa",
+    "arquivo": "fontes/drive-rules-original.txt",
+    "palavras": 6444,
+    "fichas_Type": 63,
+    "mudancas_desde_anterior": [
+      {
+        "tipo": "replace",
+        "antes": [
+          "﻿SAINT SEIYA CARD GAME"
+        ],
+        "depois": [
+          "﻿REGRAS",
+          "SAINT SEIYA CARD GAME"
+        ]
+      },
+      {
+        "tipo": "replace",
+        "antes": [
+          "1. Estrutura fixa (fora da raridade normal)"
+        ],
+        "depois": [
+          "GRADE DE CARTAS",
+          "x1. Estrutura fixa (fora da raridade normal)"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "ATHENA CARDS"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "ESTUDO BERSEKERS"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "ATHENA PRECONS"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "POSEIDON CARDS"
+        ]
+      },
+      {
+        "tipo": "insert",
+        "antes": [],
+        "depois": [
+          "Guia 7"
+        ]
+      }
+    ]
+  }
+]

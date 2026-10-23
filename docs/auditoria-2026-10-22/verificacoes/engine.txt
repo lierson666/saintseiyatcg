@@ -1,0 +1,38 @@
+Regras: ../../../../../../../../tmp/sstcg-audit-engine.mjs
+OK Setup: 7 cartas, 53 no baralho, Deus e Domain separados
+OK Fases: A e B avançam em hotseat; primeiro jogador pula só a primeira compra
+OK Mulligan: trocar uma ou sete preserva tamanho e dá só 1 Latent ao oponente
+OK Hotseat: A e B podem manter ou trocar a mão antes do início
+OK Deckout exige tentativa de compra; esvaziar baralho por si só não perde
+OK Uma única Cosmo Base Cosmoble da mão, durante Main do dono
+OK Custo: Latent, pool e Bases pagam sem duplicar recurso
+OK Base Cosmo não aceita Latent; pagamento insuficiente não consome recursos
+OK Guardian obriga atacar Guardian antes de Deus ou outras unidades; Cheater ignora
+OK Impulso, invocação, Sealed e Unprepared restringem novo ataque
+OK Combate comum é simultâneo, inclusive quando ambos morrem
+OK Long Range mata antes do contra-ataque; dos dois lados é simultâneo
+OK Pierce envia só o excesso à Soul; proteção do Deus impede excesso
+OK Deus perde Soul e contra-ataca com Attack, podendo destruir atacante
+OK Unfaith remove Latent em vez de Soul e ainda recebe contra-ataque
+OK Latent por evento de dano no turno adversário; dano prevenido não gera
+OK Cosmo of Hope gera 1 Latent por combate sobrevivido, não por Devotee
+OK Awaken automático no limiar, permanente e Seventh Sense +1/+1
+OK Manutenção desvira Base, cura 1 Cloth e mantém Seal pelo ciclo correto
+OK Fim limpa dano das unidades e bônus de ambos; Cloth conserva dano
+OK Domains: Sanctuary +0/+1, Star Hill gera 1 Latent no início
+OK Coliseum concede +1/+0 e Pierce temporários, só uma vez por partida
+OK Equipar só Devotee aliado; uma Cloth e várias Relics
+OK Morte conserva equipamentos; Cloth recebe Damage e fica inativa até curar
+OK Equipar paga custo sem mover da battlefield; duas Relics podem coexistir
+OK Shatter Faith destrói Relic para Void, paga uma vez e resolve para Tartarus
+OK Legendary conserva cópia escolhida e envia a outra ao Tartarus
+OK Moment só em Main próprio; Technique responde com prioridade do defensor
+OK Comandos: Technique responde à carta, resolve primeiro e paga só uma vez
+OK Comandos: manter prioridade exige passes dos dois lados antes da resolução
+OK Soul zero encerra e bloqueia avanço de fase
+OK Partida hotseat completa até deckout, com ambos os jogadores iniciando
+PENDENTE Nimble exige Nimble/Guardian ou exceção explícita para combate
+PENDENTE Long Range concedido por equipamento também antecipa o dano
+OK Ultimate só uma vez por partida
+OK Evolution reduz em 2 o custo de Devotee com mesmo nome em campo
+34 passaram; 0 falharam; 2 cenários omitidos ou pendentes do legado.
