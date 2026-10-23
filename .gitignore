@@ -8,6 +8,7 @@ graphify-out/
 FRAMES/
 TEST/
 MUSIC/
+star-hill/historico/
 sacred-geometry-black-set/
 *.zip
 *.psd
@@ -35,3 +36,6 @@ card-forge/out/
 MOBILE GAMES/
 *.iso
 *.apk
+
+# FX visuais enviados ao STAR HILL
+star-hill/assets/

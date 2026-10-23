@@ -14,6 +14,10 @@ python3 card-forge/serve.py
 
 Depois abra `http://localhost:8765/card-forge/` (ou `?card=athena-021` para abrir direto numa carta). O servidor só escuta em 127.0.0.1. Ele não faz parte do site público.
 
+## STAR HILL
+
+O painel local em `http://localhost:8765/star-hill/` usa este mesmo servidor e reúne áudio/FX, decks, cosméticos, editores de HUD e telas, interações e livro de regras. Veja a [documentação](../docs/star-hill.md). A edição do catálogo continua neste Card Forge, com revisão de diff antes de gravar.
+
 ## Aplicativo no macOS
 
 O aplicativo **Card Forge** abre o editor em uma janela própria e inicia o servidor local quando necessário. Compilar e instalar na pasta Aplicativos do usuário:

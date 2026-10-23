@@ -28,6 +28,9 @@ CARDS = ROOT / "data" / "cards.json"
 FORGE = ROOT / "card-forge"
 ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,63}$")
 MAX_BODY = 40 * 1024 * 1024
+_hill_spec = importlib.util.spec_from_file_location('star_hill', Path(__file__).with_name('star_hill.py'))
+star_hill = importlib.util.module_from_spec(_hill_spec)
+_hill_spec.loader.exec_module(star_hill)
 
 
 def fmt(value, indent, expand=False):
@@ -101,12 +104,25 @@ class Handler(SimpleHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
+    def do_GET(self):
+        path = self.path.split('?', 1)[0]
+        if path.startswith('/api/star-hill/'):
+            try:
+                return star_hill.get(self, path)
+            except (ValueError, KeyError, TypeError) as error:
+                return self.reply(400, {'erro': str(error)})
+            except OSError:
+                return self.reply(500, {'erro': 'Não foi possível ler os arquivos locais.'})
+        return super().do_GET()
+
     def do_POST(self):
         try:
             n = int(self.headers.get("Content-Length", 0))
             if n <= 0 or n > MAX_BODY:
                 return self.reply(413, {"erro": "corpo vazio ou grande demais"})
             raw = self.rfile.read(n)
+            if self.path.startswith('/api/star-hill/'):
+                return star_hill.post(self, self.path.split('?', 1)[0], raw, atomic_write)
             parts = self.path.strip("/").split("/")
             if parts == ["api", "import-xlsx"]:
                 # Leitura em memória; o arquivo de origem e o catálogo não são gravados.
@@ -152,8 +168,10 @@ class Handler(SimpleHTTPRequestHandler):
                 atomic_write(FORGE / "art" / f"{parts[2]}.{kind}", raw)
                 return self.reply(200, {"ok": True, "path": f"card-forge/art/{parts[2]}.{kind}"})
             return self.reply(404, {"erro": "rota desconhecida"})
-        except (ValueError, KeyError, AssertionError) as e:
+        except (ValueError, KeyError, AssertionError, TypeError) as e:
             return self.reply(400, {"erro": str(e)})
+        except OSError:
+            return self.reply(500, {'erro': 'Não foi possível gravar o arquivo local. Verifique o acesso à pasta.'})
 
 
 def selftest():

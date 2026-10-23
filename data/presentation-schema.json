@@ -1,0 +1,567 @@
+{
+  "hud": {
+    "vantagem": {
+      "nome": "Token de vantagem",
+      "seletor": ".advantage-token"
+    },
+    "rodada": {
+      "nome": "Rodada e ação atual",
+      "seletor": ".arena-round"
+    },
+    "ferramentas": {
+      "nome": "Ferramentas e áudio",
+      "seletor": ".arena-toolbar nav"
+    },
+    "god-rival": {
+      "nome": "God adversário",
+      "seletor": ".arena-player--rival .arena-god"
+    },
+    "god-local": {
+      "nome": "Seu God",
+      "seletor": ".arena-player--local .arena-god"
+    },
+    "soul-rival": {
+      "nome": "Soul adversário",
+      "seletor": ".arena-player--rival .arena-soul"
+    },
+    "soul-local": {
+      "nome": "Seu Soul",
+      "seletor": ".arena-player--local .arena-soul"
+    },
+    "recursos-rival": {
+      "nome": "Recursos adversários",
+      "seletor": ".arena-player--rival .arena-resource-bank"
+    },
+    "recursos-local": {
+      "nome": "Seus recursos",
+      "seletor": ".arena-player--local .arena-resource-bank"
+    },
+    "zonas-rival": {
+      "nome": "Zonas adversárias",
+      "seletor": ".arena-player--rival .arena-zones"
+    },
+    "zonas-local": {
+      "nome": "Suas zonas",
+      "seletor": ".arena-player--local .arena-zones"
+    },
+    "mao-rival": {
+      "nome": "Versos da mão adversária",
+      "seletor": ".arena-opponent-hand"
+    },
+    "campo": {
+      "nome": "Área de confrontos",
+      "seletor": ".arena-combat"
+    },
+    "campo-rival": {
+      "nome": "Campo adversário",
+      "seletor": ".arena-battlefield:first-of-type"
+    },
+    "campo-local": {
+      "nome": "Seu campo",
+      "seletor": ".arena-battlefield:last-of-type"
+    },
+    "mao": {
+      "nome": "Mão em leque",
+      "seletor": ".arena-hand"
+    },
+    "consulta-mao": {
+      "nome": "Botão de consulta da mão",
+      "seletor": ".arena-hand-browser"
+    },
+    "nota-base": {
+      "nome": "Aviso de Cosmo Base",
+      "seletor": ".arena-base-note"
+    },
+    "acao": {
+      "nome": "Botão principal de ação",
+      "seletor": ".arena-action-dock"
+    },
+    "guia": {
+      "nome": "Painel completo de guia e histórico",
+      "seletor": ".arena-journal"
+    },
+    "guia-titulo": {
+      "nome": "Título do guia",
+      "seletor": ".arena-journal>header"
+    },
+    "fase": {
+      "nome": "Indicador de fase",
+      "seletor": ".arena-step-track"
+    },
+    "instrucao": {
+      "nome": "Orientação da próxima ação",
+      "seletor": ".arena-guidance"
+    },
+    "pilha": {
+      "nome": "Pilha de resolução",
+      "seletor": ".arena-stack"
+    },
+    "historico": {
+      "nome": "Histórico de jogo",
+      "seletor": ".arena-log"
+    },
+    "linhas": {
+      "nome": "Linhas de Engage",
+      "seletor": "#target-lines"
+    },
+    "fundo": {
+      "nome": "Fundo da arena",
+      "seletor": ".arena-floor"
+    },
+    "arena": {
+      "nome": "Arena completa",
+      "seletor": ".arena-board"
+    },
+    "domain-local": {
+      "nome": "Seu Domain",
+      "seletor": ".arena-player--local .arena-domain"
+    },
+    "eng-local": {
+      "nome": "Seu ENG",
+      "seletor": ".arena-player--local .arena-resource:nth-child(1)"
+    },
+    "latent-local": {
+      "nome": "Seu Latent",
+      "seletor": ".arena-player--local .arena-resource:nth-child(2)"
+    },
+    "bases-local": {
+      "nome": "Seu Bases",
+      "seletor": ".arena-player--local [data-zone=\"cosmo_base\"]"
+    },
+    "deck-local": {
+      "nome": "Seu Deck",
+      "seletor": ".arena-player--local .arena-zones [data-zone=\"deck\"]"
+    },
+    "tartarus-local": {
+      "nome": "Seu Tartarus",
+      "seletor": ".arena-player--local .arena-zones [data-zone=\"tartarus\"]"
+    },
+    "void-local": {
+      "nome": "Seu Void",
+      "seletor": ".arena-player--local .arena-zones [data-zone=\"void\"]"
+    },
+    "nome-god-local": {
+      "nome": "Seu Nome do God",
+      "seletor": ".arena-player--local .arena-god__name"
+    },
+    "domain-rival": {
+      "nome": "Adversário · Domain",
+      "seletor": ".arena-player--rival .arena-domain"
+    },
+    "eng-rival": {
+      "nome": "Adversário · ENG",
+      "seletor": ".arena-player--rival .arena-resource:nth-child(1)"
+    },
+    "latent-rival": {
+      "nome": "Adversário · Latent",
+      "seletor": ".arena-player--rival .arena-resource:nth-child(2)"
+    },
+    "bases-rival": {
+      "nome": "Adversário · Bases",
+      "seletor": ".arena-player--rival [data-zone=\"cosmo_base\"]"
+    },
+    "deck-rival": {
+      "nome": "Adversário · Deck",
+      "seletor": ".arena-player--rival .arena-zones [data-zone=\"deck\"]"
+    },
+    "tartarus-rival": {
+      "nome": "Adversário · Tartarus",
+      "seletor": ".arena-player--rival .arena-zones [data-zone=\"tartarus\"]"
+    },
+    "void-rival": {
+      "nome": "Adversário · Void",
+      "seletor": ".arena-player--rival .arena-zones [data-zone=\"void\"]"
+    },
+    "nome-god-rival": {
+      "nome": "Adversário · Nome do God",
+      "seletor": ".arena-player--rival .arena-god__name"
+    }
+  },
+  "telas": {
+    "title": {
+      "nome": "Abertura",
+      "seletor": ".title-screen",
+      "elementos": {
+        "logo": {
+          "nome": "Logo",
+          "seletor": ".console-logo"
+        },
+        "subtitulo": {
+          "nome": "Subtítulo",
+          "seletor": ".title-subtitle",
+          "texto": true
+        },
+        "iniciar": {
+          "nome": "Botão de início",
+          "seletor": ".title-begin",
+          "texto": true
+        },
+        "nota": {
+          "nome": "Nota de rodapé",
+          "seletor": ".fan-note",
+          "texto": true
+        }
+      }
+    },
+    "home": {
+      "nome": "Menu principal",
+      "seletor": ".screen-home",
+      "elementos": {
+        "menu": {
+          "nome": "Menu completo",
+          "seletor": ".main-menu"
+        },
+        "marca": {
+          "nome": "Marca e slogan",
+          "seletor": ".menu-brand"
+        },
+        "navegacao": {
+          "nome": "Navegação",
+          "seletor": ".console-nav"
+        },
+        "personagem": {
+          "nome": "Personagem",
+          "seletor": ".menu-character"
+        },
+        "legenda": {
+          "nome": "Legenda do personagem",
+          "seletor": ".character-caption"
+        },
+        "rodape": {
+          "nome": "Rodapé",
+          "seletor": ".menu-footnote",
+          "texto": true
+        }
+      }
+    },
+    "setup": {
+      "nome": "Preparação do duelo",
+      "seletor": ".setup-page",
+      "elementos": {
+        "cabecalho": {
+          "nome": "Cabeçalho",
+          "seletor": "header"
+        },
+        "confronto": {
+          "nome": "Seleção dos decks",
+          "seletor": ".setup-versus"
+        },
+        "rodape": {
+          "nome": "Iniciativa e início",
+          "seletor": ".setup-footer"
+        },
+        "inicio": {
+          "nome": "Começar duelo",
+          "seletor": "[data-action=\"start-match\"]"
+        }
+      }
+    },
+    "decks": {
+      "nome": "Catálogo de decks",
+      "seletor": ".deck-page",
+      "elementos": {
+        "cabecalho": {
+          "nome": "Cabeçalho",
+          "seletor": "header"
+        },
+        "galeria": {
+          "nome": "Galeria",
+          "seletor": ".deck-gallery"
+        },
+        "voltar": {
+          "nome": "Voltar",
+          "seletor": "[data-action=\"menu\"]"
+        }
+      }
+    },
+    "collection": {
+      "nome": "Coleção",
+      "seletor": ".collection-page",
+      "elementos": {
+        "cabecalho": {
+          "nome": "Cabeçalho",
+          "seletor": "header"
+        },
+        "filtros": {
+          "nome": "Busca e filtros",
+          "seletor": ".collection-tools"
+        },
+        "cartas": {
+          "nome": "Grade de cartas",
+          "seletor": ".collection-grid"
+        },
+        "paginacao": {
+          "nome": "Paginação",
+          "seletor": ".pagination"
+        }
+      }
+    },
+    "options": {
+      "nome": "Opções",
+      "seletor": ".options-page",
+      "elementos": {
+        "cabecalho": {
+          "nome": "Cabeçalho",
+          "seletor": "header"
+        },
+        "opcoes": {
+          "nome": "Controles",
+          "seletor": ".settings-layout"
+        },
+        "atalhos": {
+          "nome": "Atalhos",
+          "seletor": ".keyboard-guide"
+        }
+      }
+    },
+    "opening": {
+      "nome": "Mão inicial / mulligan",
+      "seletor": ".opening-dialog",
+      "elementos": {
+        "cabecalho": {
+          "nome": "Título",
+          "seletor": ".dialog-heading"
+        },
+        "orientacao": {
+          "nome": "Orientação",
+          "seletor": ".opening-help"
+        },
+        "cartas": {
+          "nome": "Sete cartas",
+          "seletor": ".opening-hand-grid"
+        },
+        "acoes": {
+          "nome": "Manter / trocar",
+          "seletor": ".opening-actions"
+        }
+      }
+    },
+    "inspector": {
+      "nome": "Carta ampliada",
+      "seletor": ".arena-inspector",
+      "elementos": {
+        "arte": {
+          "nome": "Carta viva",
+          "seletor": ".details-art"
+        },
+        "dados": {
+          "nome": "Dados e texto",
+          "seletor": ".details-copy"
+        },
+        "regras": {
+          "nome": "Regras",
+          "seletor": ".rules-text"
+        },
+        "acoes": {
+          "nome": "Ações disponíveis",
+          "seletor": ".detail-actions"
+        },
+        "navegacao": {
+          "nome": "Navegação",
+          "seletor": ".arena-card-cycle"
+        }
+      }
+    },
+    "pause": {
+      "nome": "Pausa / opções do duelo",
+      "seletor": ".pause-dialog",
+      "elementos": {
+        "titulo": {
+          "nome": "Título",
+          "seletor": "h1"
+        },
+        "opcoes": {
+          "nome": "Controles",
+          "seletor": ".settings-layout"
+        },
+        "acoes": {
+          "nome": "Ações",
+          "seletor": ".dialog-actions"
+        }
+      }
+    },
+    "victory": {
+      "nome": "Resultado do duelo",
+      "seletor": ".victory-dialog",
+      "elementos": {
+        "titulo": {
+          "nome": "Resultado",
+          "seletor": "h1"
+        },
+        "motivo": {
+          "nome": "Motivo",
+          "seletor": "p:not(.section-label)"
+        },
+        "acoes": {
+          "nome": "Ações",
+          "seletor": ".dialog-actions"
+        }
+      }
+    },
+    "help": {
+      "nome": "Ajuda",
+      "seletor": ".help-dialog",
+      "elementos": {
+        "titulo": {
+          "nome": "Título",
+          "seletor": "h1"
+        },
+        "regras": {
+          "nome": "Resumo das regras",
+          "seletor": ".help-columns"
+        }
+      }
+    },
+    "privacy": {
+      "nome": "Troca de jogador",
+      "seletor": ".privacy-dialog",
+      "elementos": {
+        "titulo": {
+          "nome": "Título",
+          "seletor": "h1"
+        },
+        "descricao": {
+          "nome": "Orientação",
+          "seletor": "p"
+        },
+        "acao": {
+          "nome": "Continuar",
+          "seletor": "button"
+        }
+      }
+    },
+    "hand": {
+      "nome": "Consulta da mão",
+      "seletor": ".hand-dialog",
+      "elementos": {
+        "titulo": {
+          "nome": "Título",
+          "seletor": "h1"
+        },
+        "cartas": {
+          "nome": "Cartas",
+          "seletor": ".arena-hand-grid"
+        }
+      }
+    },
+    "pile": {
+      "nome": "Consulta de zonas",
+      "seletor": ".zone-dialog",
+      "elementos": {
+        "titulo": {
+          "nome": "Título",
+          "seletor": "h1"
+        },
+        "cartas": {
+          "nome": "Cartas",
+          "seletor": ".zone-choice-grid"
+        }
+      }
+    },
+    "emotes": {
+      "nome": "Emotes do God",
+      "seletor": ".emotes-dialog",
+      "elementos": {
+        "titulo": {
+          "nome": "Título",
+          "seletor": "h1"
+        },
+        "emotes": {
+          "nome": "Opções de emote",
+          "seletor": ".emote-picker"
+        }
+      }
+    }
+  },
+  "eventos": {
+    "ui:hover": "Foco na carta",
+    "ui:click": "Clique",
+    "ui:confirm": "Confirmar",
+    "ui:back": "Voltar",
+    "ui:turn": "Nova rodada",
+    "ui:victory": "Vitória",
+    "ui:defeat": "Derrota",
+    "acao:play": "Jogar carta",
+    "acao:base": "Colocar Cosmo Base",
+    "acao:pass": "Passar oportunidade",
+    "acao:pass-priority": "Passar prioridade",
+    "acao:engage": "Criar Engage",
+    "acao:change-engage": "Trocar Engage",
+    "acao:disengage": "Desengajar",
+    "acao:strike": "Declarar Strike",
+    "acao:equip": "Equipar",
+    "acao:unequip": "Desequipar",
+    "acao:evolve": "Evoluir armadura",
+    "acao:awaken": "Despertar",
+    "acao:ability": "Ativar habilidade",
+    "acao:ultimate": "Ultimate",
+    "acao:choose": "Confirmar escolha",
+    "acao:concede": "Conceder",
+    "efeito:comprar": "Comprar carta",
+    "efeito:alma": "Alterar Soul",
+    "efeito:curar": "Curar dano",
+    "efeito:dano": "Causar dano",
+    "efeito:atributo": "Alterar atributos",
+    "efeito:keyword": "Conceder keyword",
+    "efeito:remover_guardian": "Remover Guardian",
+    "efeito:prevenir": "Prevenir dano",
+    "efeito:preparar": "Preparar",
+    "efeito:esgotar": "Esgotar",
+    "efeito:mover": "Mover entre zonas",
+    "efeito:controlar": "Mudar controle",
+    "efeito:retornar": "Retornar do Tartarus",
+    "efeito:descartar": "Descartar",
+    "efeito:desconto": "Aplicar desconto",
+    "efeito:opcional": "Opção de custo",
+    "efeito:anular": "Anular",
+    "efeito:olhar": "Olhar / ordenar deck",
+    "efeito:base_extra": "Base adicional",
+    "efeito:mover_dano": "Mover dano",
+    "efeito:trocar_engage": "Alterar confronto por efeito",
+    "efeito:dano_area": "Dano em área",
+    "efeito:dano_engage": "Dano no Engage",
+    "evento:entrada": "Entrada",
+    "evento:retorno": "Retorno",
+    "evento:tartarus": "Tartarus",
+    "evento:destruido": "Destruido",
+    "evento:matou": "Matou",
+    "evento:dano_recebido": "Dano recebido",
+    "evento:base_colocada": "Base colocada",
+    "evento:strike_declarado": "Strike declarado",
+    "evento:esgotou": "Esgotou",
+    "evento:alvo_technique": "Alvo technique",
+    "evento:strike_fim": "Strike fim",
+    "evento:strike_sobreviveu": "Strike sobreviveu",
+    "evento:jogar": "Jogar",
+    "evento:evoluiu": "Evoluiu",
+    "evento:inicio_rodada": "Inicio rodada",
+    "evento:fim_rodada": "Fim rodada",
+    "combat:attack": "Ataque em resolução",
+    "acao:cancel": "Cancelar escolha",
+    "resolucao:play": "Resolução · Jogar carta",
+    "resolucao:engage": "Resolução · Criar Engage",
+    "resolucao:change-engage": "Resolução · Trocar Engage",
+    "resolucao:disengage": "Resolução · Desengajar",
+    "resolucao:strike": "Resolução · Declarar Strike",
+    "resolucao:equip": "Resolução · Equipar",
+    "resolucao:unequip": "Resolução · Desequipar",
+    "resolucao:evolve": "Resolução · Evoluir armadura",
+    "resolucao:awaken": "Resolução · Despertar",
+    "resolucao:ability": "Resolução · Ativar habilidade",
+    "resolucao:ultimate": "Resolução · Ultimate"
+  },
+  "animacoes": {
+    "none": "Sem animação",
+    "pulse": "Pulso de Cosmo",
+    "glow": "Brilho",
+    "shake": "Impacto",
+    "lift": "Elevar",
+    "flip": "Virar carta",
+    "flash": "Flash",
+    "sweep": "Deslocamento",
+    "fade": "Aparecer",
+    "zoom": "Zoom",
+    "spin": "Giro",
+    "ripple": "Onda de Cosmo"
+  }
+}

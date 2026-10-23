@@ -16,7 +16,7 @@ export function renderDuel(game,viewer,selected,cosmetics={},ui={}){
   return `<div class="duel-board arena-board ${ui.journalOpen?'is-journal-open':''}" data-viewer="${viewer}" data-revision="${game.revision}">
     <div class="arena-floor" aria-hidden="true"><div class="arena-sigil"></div></div>
     <main class="arena-table" aria-label="Battlefield">
-      <header class="arena-toolbar">${renderAdvantage(state,cosmetics.tokenSkin)}<nav aria-label="Battle tools"><button class="icon-button" data-action="emote-menu" aria-label="God emotes">${icon('sound')}</button><button class="icon-button" data-action="help" aria-label="How to play">${icon('book')}</button><button class="icon-button arena-guide-toggle" data-action="toggle-guide" aria-label="Open battle guide and log" aria-expanded="${Boolean(ui.journalOpen)}">${icon('log')}</button><button class="icon-button" data-action="pause" aria-label="Duel options">${icon('options')}</button></nav></header>
+      <header class="arena-toolbar">${renderAdvantage(state,cosmetics.tokenSkin)}<nav aria-label="Battle tools"><button class="icon-button" popovertarget="audio-panel" aria-label="Audio controls">${icon('sound')}</button><button class="icon-button" data-action="emote-menu" aria-label="God emotes">${icon('chat')}</button><button class="icon-button" data-action="help" aria-label="How to play">${icon('book')}</button><button class="icon-button arena-guide-toggle" data-action="toggle-guide" aria-label="Open battle guide and log" aria-expanded="${Boolean(ui.journalOpen)}">${icon('log')}</button><button class="icon-button" data-action="pause" aria-label="Duel options">${icon('options')}</button></nav></header>
       <div class="arena-round"><span>Round ${state.round}</span><b>${escape(guide.phase)}</b><small>Player ${actor}${priority?' has priority':' acts'}</small></div>
       ${renderArenaSeat(game,opposite(viewer),viewer,selected,cosmetics)}
       <div class="arena-combat"><div class="arena-confrontation" aria-hidden="true"><span></span><b>Engage</b><span></span></div>${renderBattlefield(game,opposite(viewer),selected)}${renderBattlefield(game,viewer,selected)}</div>
@@ -57,10 +57,13 @@ export function renderJournal(game,viewer,selected,ui={},guide=battleGuide(game,
 export function renderChoice(game,viewer){
   const c=game.choice;if(!c)return '';
   if(game.settings.ai&&c.playerKey!==viewer)return '';
-  return dialog(`<div class="dialog-heading"><span class="section-label">Player ${c.playerKey}</span><h1>${escape(c.prompt)}</h1></div><div class="v2-choice-options">${c.options.map(o=>{
+  const opening=c.prompt==='Choose your opening hand'||c.prompt==='Select cards to exchange, then confirm',exchanging=c.prompt.startsWith('Select cards to exchange');
+  const hand=opening?game.state.players[c.playerKey].zones.hand:[],available=new Map(c.options.filter(o=>o.uid).map(o=>[o.uid,o]));
+  const gallery=opening?`<p class="opening-help">Your ${hand.length} opening cards. ${exchanging?'Choose the cards you want to exchange, then confirm.':'Click a card to read it before keeping or exchanging your hand.'}</p><div class="opening-hand-grid">${hand.map(i=>{const card=game.card(i.cardId),option=available.get(i.uid),chosen=exchanging&&!option;return `<button class="opening-card ${chosen?'is-marked':''}" ${exchanging?(option?`data-command="${encode({type:'choose',playerKey:c.playerKey,optionId:option.id})}"`:'disabled'):`data-action="inspect" data-uid="${i.uid}"`} aria-label="${escape(card.nome_exibicao_en)}${chosen?', selected for exchange':''}">${renderLiveCard(card,{compact:true})}<span>${chosen?'Selected for exchange':escape(card.nome_exibicao_en)}</span></button>`;}).join('')}</div>`:'';
+  return dialog(`<div class="dialog-heading"><span class="section-label">Player ${c.playerKey}</span><h1>${escape(c.prompt)}</h1></div>${gallery}<div class="v2-choice-options ${opening?'opening-actions':''}">${c.options.filter(o=>!opening||!o.uid).map(o=>{
     const location=o.target?.kind==='card'?game.locate(o.target.uid):o.uid?game.locate(o.uid):null,card=location?.cardData;
     return `<button class="v2-choice-option" data-command="${encode({type:'choose',playerKey:c.playerKey,optionId:o.id})}">${card?`<span class="card-art">${renderLiveCard(card,{compact:true,stats:game.stats(location.card.uid),instance:location.card})}</span>`:''}<strong>${escape(o.label)}</strong></button>`;
-  }).join('')}</div>${c.allowCancel?button({type:'cancel',playerKey:c.playerKey},'Cancel'):''}`,'choice-dialog');
+  }).join('')}</div>${c.allowCancel?button({type:'cancel',playerKey:c.playerKey},'Cancel'):''}`,opening?'choice-dialog opening-dialog':'choice-dialog');
 }
 export function renderInspector(card,game,uid=null,viewer='A'){
   const l=uid?game?.locate(uid):null,s=l?game.stats(uid):null;

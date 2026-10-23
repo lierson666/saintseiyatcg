@@ -1,0 +1,46 @@
+{
+  "versao": 1,
+  "audio": {
+    "menu": "MUSIC/PEGASUS TYU SEI KEN.mp3",
+    "inicio_batalha": "MUSIC/battle",
+    "playlist": [
+      "MUSIC/GLIDESACRIFICE.mp3",
+      "MUSIC/PEGASUS TYU SEI KEN.mp3",
+      "MUSIC/SEIYAxRADAMANTYS.mp3",
+      "MUSIC/TENKAIHEN.mp3",
+      "MUSIC/UNDERTHEWOODOFTHEWORLDTREE.mp3"
+    ],
+    "volume_musica": 0.28,
+    "volume_fx": 0.58,
+    "efeitos": {
+      "hover": null,
+      "click": null,
+      "confirm": null,
+      "back": null,
+      "play": null,
+      "impact": null,
+      "cosmo": null,
+      "turn": null,
+      "victory": null,
+      "defeat": null
+    }
+  },
+  "visual": {
+    "hud": 100,
+    "cartas": 100,
+    "token": "constellation",
+    "sleeve": "sanctuary",
+    "efeitos": true
+  },
+  "baralhos": [],
+  "apresentacao": {
+    "hud": {
+      "desktop": {},
+      "mobile": {}
+    },
+    "telas": {},
+    "interacoes": {},
+    "cartas": {},
+    "pares": {}
+  }
+}

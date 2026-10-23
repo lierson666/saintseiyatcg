@@ -7,6 +7,8 @@ const targetId=t=>`${t.kind}:${t.playerKey}:${t.uid||''}`;
 const emptyProgram=()=>({efeitos:[],gatilhos:[],passivas:[],habilidades:[]});
 
 export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{},random=Math.random,initialState=null}){
+  // Observadores visuais recebem descritores, sem acesso mutável ao motor.
+  function present(type, payload={}){try{onEvent(copy({type,...payload}));}catch{/* FX não interrompe uma regra. */}}
   const library=Array.isArray(cards)?cards:cards.cartas,byId=new Map(library.map(c=>[c.id,c]));
   const options={ai:true,autoPass:true,fullControl:false,aiSpeed:'normal',...settings};
   let state=initialState?copy(initialState):null,revision=0,sequence=0,choice=null,choiceHandler=null;
@@ -225,6 +227,7 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     if(amount)log(`${targetLabel(target)} takes ${amount} damage.`);return amount;
   }
   function event(name,ev){
+    present('evento:'+name,{uid:ev.uid,playerKey:ev.playerKey,target:ev.target});
     const sources=[...field(),...leaders()];if(ev.deadSource&&!sources.some(s=>s.card.uid===ev.uid))sources.push(ev.deadSource);
     for(const source of sources){
       if(['inicio_rodada','fim_rodada'].includes(name)&&source.card.uid!==ev.uid)continue;
@@ -253,6 +256,7 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
       if(e.semAlvo){next();return;}
       if(bound&&e.seletor&&!targetOptions(e.seletor,ctx).some(t=>targetId(t)===targetId(bound))){next();return;}
       const target=bound||resolveTarget(e.alvo,ctx),l=target?.kind==='card'?locate(target.uid):null;
+      present('efeito:'+e.op,{uid:ctx.sourceUid,playerKey:ctx.playerKey,target});
       const forKey=()=>e.alvo==='oponente'?other(ctx.playerKey):ctx.playerKey;
       const change=()=>next();
       if(e.op==='comprar'){for(const k of e.alvo==='ambos'?PLAYERS:[forKey()])draw(k,e.n);change();return;}
@@ -575,12 +579,13 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     if(!state.victory){
       event('strike_fim',{uid:a.card.uid,playerKey:a.playerKey,target,initiator:true,strikeId:item.id});
       for(const v of [a,b].filter(Boolean))if(locate(v.card.uid)?.zone==='battlefield')event('strike_sobreviveu',{uid:v.card.uid,playerKey:v.playerKey,target:desc(v),strikeId:item.id});
-      onEvent({type:'attack',attacker:desc(a),target});
+      present('attack',{attacker:desc(a),uid:a.card.uid,target});
     }
     done();
   }
   function resolveCommand(item,done){
     const cmd=item.command,l=locate(cmd.uid),c=l?.cardData;
+    present('resolucao:'+cmd.type,{uid:cmd.uid,playerKey:item.playerKey,target:cmd.target||(cmd.bearerUid?selfTarget(cmd.bearerUid,item.playerKey):null)});
     if(cmd.type==='play'){
       if(!l||l.zone!=='stack'){done();return;}
       if(['Devotee','Equipment','Support','Relic'].includes(c.tipo)){
@@ -663,7 +668,7 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     if(state.priority!==key)return false;
     state.priorityPasses++;if(state.priorityPasses>=2)resolveTop();else state.priority=other(key);return true;
   }
-  function perform(command){
+  function performCommand(command){
     if(!command||typeof command.type!=='string'||command.expectedRevision!==undefined&&command.expectedRevision!==revision)return false;
     if(command.type==='settings'){Object.assign(options,command.settings);notify();return true;}
     if(command.type==='start'){start(command);return true;}
@@ -683,6 +688,12 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
       if(state.passes===2)endRound();else state.currentPlayer=other(key);notify();return true;
     }
     const result=requestCommand(command);if(result)notify();return result;
+  }
+  function perform(command){
+    const playerKey=command?.playerKey||actor();
+    const result=performCommand(command);
+    if(result&&!['settings','start'].includes(command.type))present('acao:'+command.type,{uid:command.uid,playerKey,target:command.target});
+    return result;
   }
   function actions(key,uid){
     const l=locate(uid);if(!l||l.playerKey!==key||key!==actor()||choice)return [];

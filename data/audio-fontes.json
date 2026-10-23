@@ -1,0 +1,328 @@
+[
+  {
+    "id": "soldiers-soul",
+    "nome": "Saint Seiya: Soldiers’ Soul",
+    "plataforma": "PC / Computer (fonte identificada)",
+    "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/",
+    "status": "115 FX comuns importados; fonte identificada como PC",
+    "pacotes": [
+      {
+        "id": "common",
+        "nome": "Common Sounds",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/444581/",
+        "itens": 115,
+        "tipo": "FX comuns"
+      },
+      {
+        "id": "441269",
+        "nome": "Andromeda Shun",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441269/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441270",
+        "nome": "Cygnus Hyoga",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441270/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441271",
+        "nome": "Dragon Shiryu",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441271/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441272",
+        "nome": "Hydra Ichi",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441272/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441273",
+        "nome": "Pegasus Seiya",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441273/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441274",
+        "nome": "Phoenix Ikki",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441274/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441275",
+        "nome": "Unicorn Jabu",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441275/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441276",
+        "nome": "Eagle Marin",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441276/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441277",
+        "nome": "Lyra Orphée",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441277/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441278",
+        "nome": "Ophiucus Shaina",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441278/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441279",
+        "nome": "Aquarius Camus",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441279/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441280",
+        "nome": "Aries Mu",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441280/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441281",
+        "nome": "Aries Shion",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441281/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441282",
+        "nome": "Cancer Deathmask",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441282/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441283",
+        "nome": "Capricorn Shura",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441283/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441284",
+        "nome": "Gemini Saga",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441284/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441285",
+        "nome": "Leo Aiolia",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441285/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441286",
+        "nome": "Libra Dohko",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441286/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441287",
+        "nome": "Pisces Aphrodite",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441287/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441288",
+        "nome": "Sagittarius Aiolos",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441288/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441289",
+        "nome": "Sagittarius Seiya",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441289/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441290",
+        "nome": "Scorpio Milo",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441290/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441291",
+        "nome": "Taurus Aldebaran",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441291/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441292",
+        "nome": "Virgo Shaka",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441292/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441293",
+        "nome": "Alcor Bud",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441293/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441294",
+        "nome": "Alioth Fenrir",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441294/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441295",
+        "nome": "Benetnasch Mime",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441295/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441296",
+        "nome": "Dubhe Siegfried",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441296/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441297",
+        "nome": "Megrez Alberich",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441297/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441298",
+        "nome": "Merak Hägen",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441298/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441299",
+        "nome": "Mizar Syd",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441299/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441300",
+        "nome": "Odin Cloth Seiya",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441300/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441301",
+        "nome": "Phecda Thor",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441301/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441302",
+        "nome": "Polaris Hilda",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441302/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441303",
+        "nome": "Chrysaor Krishna",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441303/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441304",
+        "nome": "Kraken Isaac",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441304/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441305",
+        "nome": "Limnades Caça",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441305/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441306",
+        "nome": "Scylla Io",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441306/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441307",
+        "nome": "Sea Dragon Kanon",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441307/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441308",
+        "nome": "Sea Horse Baian",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441308/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441309",
+        "nome": "Siren Sorrento",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441309/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441310",
+        "nome": "Garuda Aiacos",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441310/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441311",
+        "nome": "Griffin Minos",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441311/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441312",
+        "nome": "Wyvern Rhadamanthys",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441312/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441313",
+        "nome": "Athena",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441313/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441314",
+        "nome": "Hades",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441314/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441315",
+        "nome": "Hypnos",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441315/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441316",
+        "nome": "Poseidon",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441316/",
+        "tipo": "FX e vozes; pacote para importar"
+      },
+      {
+        "id": "441317",
+        "nome": "Thanatos",
+        "pagina": "https://sounds.spriters-resource.com/pc_computer/saintseiyasoldierssoul/asset/441317/",
+        "tipo": "FX e vozes; pacote para importar"
+      }
+    ]
+  },
+  {
+    "id": "brave-soldiers",
+    "nome": "Saint Seiya: Brave Soldiers",
+    "plataforma": "PS3",
+    "pagina": "https://www.youtube.com/watch?v=HT37LuzbdXw",
+    "status": "referência de FX encontrada; pacote de arquivos ainda não importado",
+    "pacotes": []
+  },
+  {
+    "id": "sanctuary-battle",
+    "nome": "Saint Seiya: Sanctuary Battle",
+    "plataforma": "PS3",
+    "pagina": "https://www.zophar.net/music/playstation3-psf3/saint-seiya-sanctuary-battle",
+    "status": "fonte encontrada contém música; FX ainda não importados",
+    "pacotes": []
+  }
+]

@@ -27,8 +27,8 @@ Em 23/10/2026, o **Rulebook 2.0** foi consolidado e integrado à arena local e a
 - `/docs/beta-athena.md`: gauntlet oficial da beta Athena
 - `/data/beta-athena.json`: decks, domains, proxies e cobertura da beta
 - `/playtest/index.html`: arena local do Rulebook 2.0
-- `/playtest/engine.js`: motor independente, comandos validados, prioridade, pilha e IA
-- `/playtest/game.css`: arena responsiva e visual de console inspirado no PS3
+- `/playtest/engine-v2.js`: motor independente, comandos validados, prioridade, pilha e IA
+- `/playtest/arena.css`: arena responsiva e visual de console inspirado no PS3
 - `/docs/rebuild-sanctuary.md`: arquitetura e verificação da reconstrução
 - `/docs/keyword-matchups.md`: proposta de contrajogo das keywords
 - `/docs/asset-map.md`: mapa das pastas de arte, arquivos nao usados e reorganizacao proposta
@@ -44,6 +44,7 @@ python3 card-forge/serve.py
 Depois abra:
 
 - `http://localhost:8765/playtest/`
+- `http://localhost:8765/star-hill/` — áudio, FX, decks, HUD, telas e interações; [documentação](docs/star-hill.md).
 
 ## Testes da versão jogável
 

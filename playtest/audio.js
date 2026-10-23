@@ -1,17 +1,32 @@
-// Trilhas locais por tela; efeitos sonoros continuam sintetizados com WebAudio.
+// Trilhas locais por tela e FX da biblioteca, com síntese como padrão.
 // O áudio começa após um gesto do jogador, conforme a política do navegador.
 
 const TRACKS = {
   menu: new URL('../MUSIC/PEGASUS TYU SEI KEN.mp3', import.meta.url).href,
   battle: new URL('../MUSIC/battle', import.meta.url).href
 };
-const BATTLE_PLAYLIST = [
+let BATTLE_PLAYLIST = [
   'GLIDESACRIFICE.mp3',
   'PEGASUS TYU SEI KEN.mp3',
   'SEIYAxRADAMANTYS.mp3',
   'TENKAIHEN.mp3',
   'UNDERTHEWOODOFTHEWORLDTREE.mp3'
 ].map(file => new URL(`../MUSIC/${file}`, import.meta.url).href);
+let recordedEffects = {};
+const playingEffects = new Set();
+const effectGains = new WeakMap();
+const localMedia = path => new URL('../'+path.split('/').map(encodeURIComponent).join('/'), import.meta.url).href;
+export function configureAudio(config) {
+  if (!config) return;
+  TRACKS.menu = localMedia(config.menu);
+  TRACKS.battle = localMedia(config.inicio_batalha);
+  BATTLE_PLAYLIST = config.playlist.map(localMedia).filter(path=>path!==TRACKS.battle);
+  recordedEffects = Object.fromEntries(Object.entries(config.efeitos).filter(([,path])=>path).map(([name,path])=>[name,localMedia(path)]));
+}
+export function stopEffects() {
+  for (const audio of playingEffects) audio.pause();
+  playingEffects.clear();
+}
 
 function shuffledBattleTracks(previous) {
   const queue = [...BATTLE_PLAYLIST];
@@ -93,6 +108,7 @@ export function setVolume(kind, value) {
   const bus = kind === "music" ? musicBus : sfxBus;
   bus?.gain.setTargetAtTime(value, ctx.currentTime, 0.05);
   if (kind === "music" && music?.audio) music.audio.volume = value;
+  if (kind === "sfx") for (const audio of playingEffects) audio.volume = value * (effectGains.get(audio) ?? 1);
 }
 
 // One enveloped oscillator note.
@@ -172,8 +188,25 @@ const SFX = {
   }
 };
 
+// Caminhos vêm da biblioteca validada pelo backend local.
+export function playFxFile(path,gain=1){
+  unlock();if(!path)return;
+  if(playingEffects.size>=8){const first=playingEffects.values().next().value;first.pause();playingEffects.delete(first);}
+  const audio=new Audio(localMedia(path));effectGains.set(audio,gain);audio.volume=volume.sfx*gain;
+  playingEffects.add(audio);audio.addEventListener('ended',()=>playingEffects.delete(audio),{once:true});
+  audio.play().catch(()=>playingEffects.delete(audio));
+}
 export function sfx(name) {
   if (!ctx || ctx.state !== "running" || !SFX[name]) return;
+  if (recordedEffects[name]) {
+    if (playingEffects.size >= 8) { const oldest=playingEffects.values().next().value;oldest.pause();playingEffects.delete(oldest); }
+    const audio = new Audio(recordedEffects[name]);
+    audio.volume = volume.sfx;
+    playingEffects.add(audio);
+    audio.addEventListener('ended',()=>playingEffects.delete(audio),{once:true});
+    audio.play().catch(()=>{if(playingEffects.delete(audio)&&ctx.state==='running')SFX[name]();});
+    return;
+  }
   SFX[name]();
 }
 
@@ -241,6 +274,7 @@ export function playMusic(name, { restart = false } = {}) {
     if (name === 'battle') audio.addEventListener('ended', () => {
       if (music !== state) return;
       if (!state.queue.length) state.queue = shuffledBattleTracks(audio.src);
+      if (!state.queue.length) return;
       audio.src = state.queue.shift();
       audio.play().catch(() => {});
     });
