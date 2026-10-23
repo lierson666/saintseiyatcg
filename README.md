@@ -18,6 +18,8 @@ Athena agora ja esta catalogada de forma muito mais completa no banco de dados, 
 ## Documentacao principal
 
 - `/docs/guia-do-jogo.md`: manual oficial `Vanilla 1.0`
+- `/docs/CHANGELOG-regras.md`: historico de mudancas de regra
+- `/CLAUDE.md`: repositorio de regras (fontes oficiais e como mudar uma regra)
 - `/data/cards.json`: banco inicial das cartas ja exportadas
 - `/docs/beta-athena.md`: gauntlet oficial da beta Athena
 - `/data/beta-athena.json`: decks, domains, proxies e cobertura da beta
