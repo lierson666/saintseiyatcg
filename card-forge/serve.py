@@ -11,12 +11,17 @@ Endpoints (só 127.0.0.1):
   POST /api/art/<id>          PNG/JPG grava card-forge/art/<id>.<ext> (fica fora do git)
 """
 import json
+import io
+import importlib.util
 import os
 import re
 import sys
 import tempfile
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from zipfile import BadZipFile
+from urllib.parse import unquote
+from xml.etree.ElementTree import ParseError
 
 ROOT = Path(__file__).resolve().parents[1]
 CARDS = ROOT / "data" / "cards.json"
@@ -103,6 +108,16 @@ class Handler(SimpleHTTPRequestHandler):
                 return self.reply(413, {"erro": "corpo vazio ou grande demais"})
             raw = self.rfile.read(n)
             parts = self.path.strip("/").split("/")
+            if parts == ["api", "import-xlsx"]:
+                # Leitura em memória; o arquivo de origem e o catálogo não são gravados.
+                spec = importlib.util.spec_from_file_location("forge_xlsx", ROOT / "tools/import-playtest-xlsx.py")
+                reader = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(reader)
+                try:
+                    result = reader.extract(io.BytesIO(raw), filename=Path(unquote(self.headers.get("X-File-Name", "cartas.xlsx"))).name)
+                except (BadZipFile, ParseError, ValueError, KeyError, IndexError) as error:
+                    return self.reply(400, {"erro": f"Planilha inválida: {error}"})
+                return self.reply(200, result)
             if parts == ["api", "card"]:
                 card = json.loads(raw)
                 if not isinstance(card, dict) or not ID_RE.match(str(card.get("id", ""))):

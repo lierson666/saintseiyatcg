@@ -1,0 +1,50 @@
+{
+  "catalogo_original_sha256": "349c8c88d8dae9d77cad331adcfd648c123fa1d01e3eeb9edffa5e6990d8afa0",
+  "catalogo_candidato_sha256": "ece32b3638eed797624104fe57c193a56c2adb3e5aef082c9e1b9c0de908a625",
+  "diff_sha256": "a7ed949cbd181c64c58f5cfad1da9cddf17458ce7ed4f2996b5830e0c2fd3262",
+  "antes": 57,
+  "depois": 357,
+  "adicionadas": 300,
+  "alteradas": 0,
+  "removidas": 0,
+  "por_tipo": {
+    "Devotee": 60,
+    "Equipment": 60,
+    "Technique": 60,
+    "Moment": 60,
+    "Support": 60
+  },
+  "por_faccao": {
+    "Athena": 50,
+    "Poseidon": 50,
+    "Hades": 50,
+    "Ares": 50,
+    "Artemis": 50,
+    "Neutral": 50
+  },
+  "slots": {
+    "armadura": 36,
+    "arma": 8,
+    "acessorio": 16
+  },
+  "evolucoes": [
+    "sst-01-011",
+    "sst-01-012",
+    "sst-01-013",
+    "sst-01-014",
+    "sst-01-015",
+    "sst-01-016",
+    "sst-01-017",
+    "sst-01-018",
+    "sst-01-019",
+    "sst-01-020"
+  ],
+  "correcoes_confirmadas": [
+    "SST-03-010: após comprar, exilar a própria carta para o Void"
+  ],
+  "pendencias": [
+    "Todas as cartas de fonte são provisórias; balanceamento não testado",
+    "Não há God Cloth, Awaken ou Ultimate novos na planilha; não foram inventados",
+    "Nenhuma ilustração foi fornecida na planilha"
+  ]
+}

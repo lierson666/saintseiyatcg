@@ -1,6 +1,8 @@
-# Rulebook 2.0 — compreensão e preparação da migração
+# Rulebook 2.0 — histórico da preparação da migração
 
-Registro de 23/10/2026. A fonte normativa é [guia-do-jogo.md](guia-do-jogo.md), integralmente substituído pelo livro fornecido pelo autor. Este documento organiza a leitura e os impactos; não completa regras pendentes nem define novos valores de cartas.
+**Atualização:** o fechamento foi aprovado e a implementação local foi integrada. O estado atual está em [implementacao-rulebook-2.0.md](implementacao-rulebook-2.0.md) e [validacao-rulebook-2.0.md](validacao-rulebook-2.0.md). A análise abaixo registra o diagnóstico anterior à aprovação; suas “pendências” não substituem o guia vigente.
+
+Registro inicial de 23/10/2026. A fonte normativa é [guia-do-jogo.md](guia-do-jogo.md), integralmente substituído pelo livro fornecido pelo autor. Este documento organiza a leitura e os impactos; não completa regras pendentes nem define novos valores de cartas.
 
 Após pedido do autor por recomendações, cada categoria aberta recebeu uma [proposta concreta de fechamento](proposta-fechamento-rulebook-2.0.md). Ela contém opiniões de design e valores iniciais para avaliação; o livro oficial continua distinguindo o que já foi confirmado.
 

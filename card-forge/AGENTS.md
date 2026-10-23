@@ -37,7 +37,7 @@ uv run --with psd-tools --with pillow --with scipy python card-forge/tools/extra
 
 - **Nunca edite, mova ou renomeie** nada em `FRAMES/`, `ARTS/` ou `CARDS/`. Os PSDs têm smart objects vinculados que quebram se as pastas mudarem.
 - **`data/cards.json`:** só grave depois que o usuário aprovar um diff. Use `serve.py` (`upsert_card`): ele mantém o formato do arquivo e muda só o bloco da carta.
-- **Não toque em `playtest/`:** é o jogo publicado em saintseiyatcg.com, cuidado por outra frente.
+- **`playtest/`:** em 23/10/2026, o autor autorizou expressamente aplicar o Rulebook 2.0 e modificar o jogo neste chat. Essa autorização permite a migração local; não inclui publicar no domínio nem fazer push/deploy sem pedido específico.
 - **O editor não vai para o site público** sem o usuário pedir.
 - **Idioma:** notas e comentários em português; texto visível na carta em inglês.
 - **Saídas fora do git:** `card-forge/out/` (PNGs exportados) e `card-forge/art/` (artes enviadas). Arte pesada e PSD também ficam só no Google Drive (veja `.gitignore`).
@@ -49,7 +49,8 @@ uv run --with psd-tools --with pillow --with scipy python card-forge/tools/extra
 - No jogo, use a ilustração como fundo. Nome, tipo, custo, regras, atributos e estados são camadas próprias, renderizadas a partir dos dados da carta e do estado da partida. Não use o PNG completo de impressão como corpo da carta jogável.
 - Molduras, ornamentos e ícones podem continuar usando as peças visuais existentes. As duas representações compartilham ID, revisão, dados e ilustração; não mantenha duas cópias independentes do texto ou das regras.
 - Mudanças válidas de atributos e estados devem aparecer durante a partida sem reexportar a imagem. A engine calcula o resultado; a apresentação apenas o exibe.
-- Esta diretriz não autoriza alterar `playtest/`, gravar `data/cards.json` sem diff aprovado ou mudar regras do jogo.
+- A autorização local de migração de `playtest/` está registrada acima. A diretriz de representação não dispensa diff aprovado para `data/cards.json` nem aprovação para novas regras.
+- Hierarquia visual é obrigatória nas duas representações: identidade/custo, tipo, keywords, blocos de habilidade com títulos e custos, Owners/Resonance/estágios e indicadores. EQUIP nunca deve sumir em uma carta equipável. A sintaxe visual compartilhada fica em `shared/card-text.js`; nenhuma formatação pode inventar efeitos ou mudar o texto salvo silenciosamente.
 
 ## Convenções do texto de regras
 

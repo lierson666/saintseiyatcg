@@ -6,6 +6,7 @@
   <title>Card Forge</title>
   <link rel="icon" href="../LOGO/favicon.png">
   <link rel="stylesheet" href="forge.css">
+  <link rel="stylesheet" href="../shared/live-card.css">
 </head>
 <body>
   <header>
@@ -20,9 +21,9 @@
   <main>
     <form id="form" autocomplete="off">
       <details class="batch" id="batch">
-        <summary>Lote — criar várias cartas de um arquivo de texto</summary>
+        <summary>Lote — importar TXT, JSON ou XLSX</summary>
         <p class="hint">Uma carta por bloco <code>Campo: valor</code>, cartas separadas por <code>---</code>. Veja o <a href="import/modelo.txt" target="_blank">modelo</a>. Se o <code>Id</code> ou o <code>Nome</code> já existir, a carta é atualizada; senão vira carta nova.</p>
-        <input id="batchFile" type="file" accept=".txt,text/plain" aria-label="Arquivo de texto com as cartas">
+        <input id="batchFile" type="file" accept=".txt,.json,.xlsx,text/plain,application/json,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" aria-label="Arquivo com as cartas">
         <textarea id="batchText" rows="8" spellcheck="false" aria-label="Texto das cartas" placeholder="Name: Hyoga, Cygnus Saint&#10;Type: Devotee&#10;…&#10;---"></textarea>
         <div class="row">
           <button id="batchRead" type="button">Ler lote</button>
@@ -39,7 +40,7 @@
         <label data-for="devotee relic_cloth relic_weapon god">Subtítulo <input name="subtitle"></label>
         <label>Tipo
           <select name="tipo">
-            <option>Devotee</option><option>Relic</option><option>Technique</option>
+            <option>Devotee</option><option>Equipment</option><option>Support</option><option>Relic</option><option>Technique</option>
             <option>Moment</option><option>Domain</option><option>God</option>
           </select>
         </label>
@@ -47,12 +48,12 @@
         <label>Facção
           <select name="faccao">
             <option>Athena</option><option>Ares</option><option>Artemis</option>
-            <option>Hades</option><option>Poseidon</option>
+            <option>Hades</option><option>Poseidon</option><option>Neutral</option>
           </select>
         </label>
         <label>Raridade
           <select name="raridade">
-            <option>Common</option><option>Uncommon</option><option>Mythic</option><option>Divine</option>
+            <option>Common</option><option>Uncommon</option><option>Mythic</option><option>Divine</option><option>Playtest</option>
           </select>
         </label>
       </fieldset>
@@ -67,13 +68,13 @@
         </div>
         <div class="row">
           <label data-for="devotee">Power <input name="power" type="number"></label>
-          <label data-for="devotee">Resistance <input name="resistance" type="number"></label>
+          <label data-for="devotee">HP <input name="vida" type="number" min="1"></label><label data-for="devotee" id="legacyResistance">Resistance (legado) <input name="resistance" type="number"></label>
           <label data-for="relic_cloth relic_weapon">Bônus P <input name="bonusPower" placeholder="+2"></label>
-          <label data-for="relic_cloth relic_weapon">Bônus R <input name="bonusResistance" placeholder="+0"></label>
+          <label data-for="relic_cloth relic_weapon">Bônus HP <input name="bonusResistance" placeholder="+0"></label>
         </div>
         <div class="row">
           <label data-for="relic_cloth relic_weapon relic">Equip <input name="equipar_custo" type="number" min="0"></label>
-          <label data-for="relic_cloth relic_weapon relic">Damage <input name="damage_cloth" type="number" min="0"></label>
+          <label data-for="relic_cloth relic_weapon relic">Damage (legado) <input name="damage_cloth" type="number" min="0"></label>
         </div>
         <div class="row">
           <label data-for="god">Soul <input name="soul" type="number"></label>
@@ -82,6 +83,17 @@
         </div>
       </fieldset>
 
+      <fieldset id="rulesV2">
+        <legend>Rulebook 2.0</legend>
+        <label class="check"><input name="cosmoble" type="checkbox"> Cosmoble — pode virar Base</label>
+        <div id="characterFields"><label>Identidade do personagem <input name="personagem_id" placeholder="pegasus-seiya"></label><label class="check"><input name="personagem_unico" type="checkbox"> Personagem único no campo</label></div>
+        <div id="equipmentFields"><label>Slot do equipamento<select name="slot_equipamento"><option value="">— selecionar —</option><option value="armadura">Armadura (uma por Devotee)</option><option value="arma">Arma</option><option value="acessorio">Acessório</option></select></label>
+        <label>Owners (IDs separados por vírgula)<input name="donos" placeholder="pegasus-seiya, sagittarius-aiolos"></label>
+        <p class="hint">EQUIP é separado do custo de jogar. Ao trocar de portador, a armadura retorna a Vanilla.</p>
+        <div id="stageEditor"></div><button id="addStage" type="button">Adicionar estágio</button>
+        <label>Ressonâncias (uma por linha: ID | texto em inglês)<textarea name="resonanceText" rows="3"></textarea></label></div>
+        <p id="rulesReview" class="hint" role="status"></p>
+      </fieldset>
       <fieldset>
         <legend>Texto</legend>
         <label>Keywords <input name="keywords" placeholder="Long Range, Pierce"></label>
@@ -116,7 +128,7 @@
 
     <section id="stage">
       <div class="toolbar">
-        <label>Tamanho
+        <label>Representação<select id="representation"><option value="print">Impressão</option><option value="live">Carta interativa</option></select></label><label>Tamanho
           <select id="viewSize">
             <option value="real">Real (2.5 × 3.5 in)</option>
             <option value="fit" selected>Ajustar à tela</option>
@@ -125,6 +137,8 @@
         <label><input id="refToggle" type="checkbox"> Sobrepor PNG original</label>
         <input id="refOpacity" type="range" min="0" max="1" step="0.05" value="0.5" aria-label="Opacidade do original">
       </div>
+      <div id="liveControls" hidden><label>Dano marcado <input id="previewDamage" type="number" value="0" min="0" max="100"></label><label><input id="previewPrepared" type="checkbox" checked> Prepared</label><label>Estágio<select id="previewStage"><option value="0">Vanilla</option></select></label></div>
+      <div id="livePreview" class="forge-live" hidden></div>
       <div id="cardWrap">
         <canvas id="card" width="1488" height="2091" aria-label="Prévia da carta"></canvas>
         <img id="ref" alt="" hidden>

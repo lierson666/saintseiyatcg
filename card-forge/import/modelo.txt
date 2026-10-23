@@ -1,51 +1,48 @@
-# Modelo de lote do Card Forge. Uma carta por bloco; cartas separadas por uma linha com ---
-# Linhas que começam com # são ignoradas. Campos podem ser em inglês ou português (Name/Nome, Type/Tipo…).
-# Campos de várias linhas: Text (regras), Awaken Text e Ultimate — vão até o próximo campo.
-# No texto: linha em branco separa habilidades; {C} Cosmo, {B} Base Cosmo, {L} Latent Cosmo, {S} Soul, {T} Tap;
-# **negrito**. Keywords (Pierce, Long Range, Seal…) saem em negrito sozinhas.
-# Se o Id (ou o Name) já existir no cards.json, a carta é atualizada; senão vira carta nova com id automático.
-# Art: nome do arquivo em ARTS/ (ex.: HYOGA.png) ou em card-forge/art/.
+# Modelo de lote do Card Forge — Rulebook 2.0.
+# Um bloco por carta, separados por ---. Linhas com # são comentários.
+# TXT/JSON podem conter conceitos novos; habilidades novas precisam de revisão dos efeitos jogáveis.
+# Para a planilha do primeiro conjunto, importe o XLSX diretamente. Ela não é alterada.
+# Campos de várias linhas: Text, Awaken Text e Ultimate.
+# Ícones: {C} Cosmo, {B} Base Cosmo, {L} Latent Cosmo, {S} Soul, {T} Tap.
+# Custos de jogar e EQUIP são campos distintos. Damage não faz parte da regra-base 2.0.
+# Owners usa identidades de personagem. Estágios e ressonâncias podem ser editados na interface
+# ou preservados ao importar JSON estruturado; não inferir efeitos de exemplos livres.
 
 Name: Example Saint
-Title: Example Saint
-Subtitle: Diamond Dust
 Type: Devotee
 Subtypes: Bronze Saint
 Faction: Athena
-Rarity: Mythic
-Cost: 4
+Rarity: Playtest
+Cost: 2
 Unit: cosmo
-Power: 3
-Resistance: 2
-Keywords: Nimble
-Art: HYOGA.png
-Flavour: “Freeze, my cosmo!”
+Power: 2
+HP: 4
+Cosmoble: true
+Character: example-saint
+Unique: true
+Keywords: Guardian
 Text:
-When Example Saint attacks, you may pay 2 {L}. If you do, target Devotee gets -2/+0 until end of turn.
-
-**4 {B} DIAMOND DUST:**
-Tap target Devotee. It gains Sealed until your next turn.
+When played: Heal 1 damage from another friendly Devotee.
 ---
 Name: Example Cloth
-Type: Relic
+Type: Equipment
 Subtypes: Cloth
 Faction: Athena
-Rarity: Uncommon
-Cost: 3
-Bonus: +1/+2
-Equip: 2
-Damage: 3
-Text:
-Equipped Devotee gets +1/+2.
-
-Resonance — Seiya:
-Equipped Devotee gains Nimble.
----
-Name: Example Toll
-Type: Technique
-Faction: Hades
-Rarity: Common
+Rarity: Playtest
 Cost: 2
-Unit: base cosmo
+Equip: 1
+Slot: armadura
+Owners: example-saint
 Text:
-Target Devotee loses 1 {S}. You gain 1 {S}.
+Equip: +1 Power / +2 HP.
+
+Owner: Example Saint.
+---
+Name: Example Support
+Type: Support
+Faction: Neutral
+Rarity: Playtest
+Cost: 2
+Cosmoble: true
+Text:
+Activation: Pay 1 {C}: Heal 1 damage from a friendly Devotee. Once per round.

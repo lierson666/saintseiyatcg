@@ -1,0 +1,5192 @@
+{
+  "arquivo_fonte": "SSTCG_300_cartas_playtest.xlsx",
+  "sha256_fonte": "afaf8dcb4eebad418e4e94690f2a774eb3dc24452cb133c6461d5a5b66326f5a",
+  "total": 300,
+  "por_faccao": {
+    "Athena": 50,
+    "Poseidon": 50,
+    "Hades": 50,
+    "Ares": 50,
+    "Artemis": 50,
+    "Neutral": 50
+  },
+  "por_tipo": {
+    "Devotee": 60,
+    "Equipment": 60,
+    "Technique": 60,
+    "Moment": 60,
+    "Support": 60
+  },
+  "overview": [
+    [
+      "Faction",
+      "Devotees",
+      "Equipment",
+      "Techniques + Moments + Supports"
+    ],
+    [
+      "Athena",
+      10,
+      10,
+      30
+    ],
+    [
+      "Poseidon",
+      10,
+      10,
+      30
+    ],
+    [
+      "Hades",
+      10,
+      10,
+      30
+    ],
+    [
+      "Ares",
+      10,
+      10,
+      30
+    ],
+    [
+      "Artemis",
+      10,
+      10,
+      30
+    ],
+    [
+      "Neutral",
+      10,
+      10,
+      30
+    ],
+    [
+      "TOTAL",
+      60,
+      60,
+      180
+    ],
+    [
+      "Scope",
+      "300 original playtest concepts"
+    ],
+    [
+      "Language",
+      "English rules text; Portuguese project"
+    ],
+    [
+      "Neutral",
+      "Legal in any deck; faction restrictions pending"
+    ],
+    [
+      "Balance",
+      "Not tested; costs/effects provisional"
+    ],
+    [
+      "Canon",
+      "Ares and Artemis roster original placeholders"
+    ]
+  ],
+  "cartas": [
+    {
+      "ID": "SST-01-001",
+      "Faction": "Athena",
+      "Type": "Devotee",
+      "Name": "Pegasus Seiya",
+      "Cosmo Cost": 1,
+      "Power": 1,
+      "HP": 3,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "When played: Remove 1 damage from another Devotee.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 2,
+        "intervalo": "A2:J2"
+      }
+    },
+    {
+      "ID": "SST-01-002",
+      "Faction": "Athena",
+      "Type": "Devotee",
+      "Name": "Dragon Shiryu",
+      "Cosmo Cost": 2,
+      "Power": 2,
+      "HP": 4,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Guardian.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 3,
+        "intervalo": "A3:J3"
+      }
+    },
+    {
+      "ID": "SST-01-003",
+      "Faction": "Athena",
+      "Type": "Devotee",
+      "Name": "Cygnus Hyoga",
+      "Cosmo Cost": 2,
+      "Power": 2,
+      "HP": 4,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "When played: Ready another Devotee that did not Strike this round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 4,
+        "intervalo": "A4:J4"
+      }
+    },
+    {
+      "ID": "SST-01-004",
+      "Faction": "Athena",
+      "Type": "Devotee",
+      "Name": "Andromeda Shun",
+      "Cosmo Cost": 3,
+      "Power": 3,
+      "HP": 5,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "When this Devotee survives a Strike: Remove 1 damage from it.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 5,
+        "intervalo": "A5:J5"
+      }
+    },
+    {
+      "ID": "SST-01-005",
+      "Faction": "Athena",
+      "Type": "Devotee",
+      "Name": "Phoenix Ikki",
+      "Cosmo Cost": 3,
+      "Power": 4,
+      "HP": 5,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "When destroyed: Give another friendly Devotee +1 Power this round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 6,
+        "intervalo": "A6:J6"
+      }
+    },
+    {
+      "ID": "SST-01-006",
+      "Faction": "Athena",
+      "Type": "Devotee",
+      "Name": "Virgo Shaka",
+      "Cosmo Cost": 4,
+      "Power": 4,
+      "HP": 7,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Guardian. When this Devotee enters play, heal 2 damage from your God.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 7,
+        "intervalo": "A7:J7"
+      }
+    },
+    {
+      "ID": "SST-01-007",
+      "Faction": "Athena",
+      "Type": "Devotee",
+      "Name": "Libra Dohko",
+      "Cosmo Cost": 4,
+      "Power": 4,
+      "HP": 6,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "When played: Return a friendly Cloth from play to your hand.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 8,
+        "intervalo": "A8:J8"
+      }
+    },
+    {
+      "ID": "SST-01-008",
+      "Faction": "Athena",
+      "Type": "Devotee",
+      "Name": "Aries Mu",
+      "Cosmo Cost": 5,
+      "Power": 6,
+      "HP": 7,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "When played: Reduce the cost of your next Cloth by 1 this round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 9,
+        "intervalo": "A9:J9"
+      }
+    },
+    {
+      "ID": "SST-01-009",
+      "Faction": "Athena",
+      "Type": "Devotee",
+      "Name": "Leo Aiolia",
+      "Cosmo Cost": 6,
+      "Power": 6,
+      "HP": 9,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "When this Devotee Strikes a God: Prevent 2 retaliation damage.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 10,
+        "intervalo": "A10:J10"
+      }
+    },
+    {
+      "ID": "SST-01-010",
+      "Faction": "Athena",
+      "Type": "Devotee",
+      "Name": "Sagittarius Aiolos",
+      "Cosmo Cost": 7,
+      "Power": 7,
+      "HP": 9,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Guardian. When destroyed: Draw 1 card.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 11,
+        "intervalo": "A11:J11"
+      }
+    },
+    {
+      "ID": "SST-01-011",
+      "Faction": "Athena",
+      "Type": "Equipment",
+      "Name": "Pegasus Cloth",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Equip: +1 Power / +1 HP. Owner: Pegasus Seiya. 7th Sense — ACTION, pay 2 Cosmo: This equipment grants +2 Power / +3 HP instead. Only its Owner may evolve it.",
+      "Design Status": "PROVISIONAL — balance/timing; God Cloth stage pending",
+      "origem": {
+        "aba": "Athena",
+        "linha": 12,
+        "intervalo": "A12:J12"
+      }
+    },
+    {
+      "ID": "SST-01-012",
+      "Faction": "Athena",
+      "Type": "Equipment",
+      "Name": "Dragon Cloth",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +1 Power / +1 HP. Owner: Dragon Shiryu. 7th Sense — ACTION, pay 2 Cosmo: This equipment grants +2 Power / +3 HP instead. Only its Owner may evolve it.",
+      "Design Status": "PROVISIONAL — balance/timing; God Cloth stage pending",
+      "origem": {
+        "aba": "Athena",
+        "linha": 13,
+        "intervalo": "A13:J13"
+      }
+    },
+    {
+      "ID": "SST-01-013",
+      "Faction": "Athena",
+      "Type": "Equipment",
+      "Name": "Cygnus Cloth",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +1 Power / +1 HP. Owner: Cygnus Hyoga. 7th Sense — ACTION, pay 2 Cosmo: This equipment grants +2 Power / +3 HP instead. Only its Owner may evolve it.",
+      "Design Status": "PROVISIONAL — balance/timing; God Cloth stage pending",
+      "origem": {
+        "aba": "Athena",
+        "linha": 14,
+        "intervalo": "A14:J14"
+      }
+    },
+    {
+      "ID": "SST-01-014",
+      "Faction": "Athena",
+      "Type": "Equipment",
+      "Name": "Andromeda Cloth",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Equip: +1 Power / +2 HP. Owner: Andromeda Shun. 7th Sense — ACTION, pay 2 Cosmo: This equipment grants +2 Power / +4 HP instead. Only its Owner may evolve it.",
+      "Design Status": "PROVISIONAL — balance/timing; God Cloth stage pending",
+      "origem": {
+        "aba": "Athena",
+        "linha": 15,
+        "intervalo": "A15:J15"
+      }
+    },
+    {
+      "ID": "SST-01-015",
+      "Faction": "Athena",
+      "Type": "Equipment",
+      "Name": "Phoenix Cloth",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +2 Power / +2 HP. Owner: Phoenix Ikki. 7th Sense — ACTION, pay 2 Cosmo: This equipment grants +3 Power / +4 HP instead. Only its Owner may evolve it.",
+      "Design Status": "PROVISIONAL — balance/timing; God Cloth stage pending",
+      "origem": {
+        "aba": "Athena",
+        "linha": 16,
+        "intervalo": "A16:J16"
+      }
+    },
+    {
+      "ID": "SST-01-016",
+      "Faction": "Athena",
+      "Type": "Equipment",
+      "Name": "Virgo Gold Cloth",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +2 Power / +2 HP. Owner: Virgo Shaka. 7th Sense — ACTION, pay 3 Cosmo: This equipment grants +3 Power / +4 HP instead. Only its Owner may evolve it.",
+      "Design Status": "PROVISIONAL — balance/timing; God Cloth stage pending",
+      "origem": {
+        "aba": "Athena",
+        "linha": 17,
+        "intervalo": "A17:J17"
+      }
+    },
+    {
+      "ID": "SST-01-017",
+      "Faction": "Athena",
+      "Type": "Equipment",
+      "Name": "Libra Gold Cloth",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Equip: +2 Power / +3 HP. Owner: Libra Dohko. 7th Sense — ACTION, pay 3 Cosmo: This equipment grants +3 Power / +5 HP instead. Only its Owner may evolve it.",
+      "Design Status": "PROVISIONAL — balance/timing; God Cloth stage pending",
+      "origem": {
+        "aba": "Athena",
+        "linha": 18,
+        "intervalo": "A18:J18"
+      }
+    },
+    {
+      "ID": "SST-01-018",
+      "Faction": "Athena",
+      "Type": "Equipment",
+      "Name": "Aries Gold Cloth",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +2 Power / +3 HP. Owner: Aries Mu. 7th Sense — ACTION, pay 3 Cosmo: This equipment grants +3 Power / +5 HP instead. Only its Owner may evolve it.",
+      "Design Status": "PROVISIONAL — balance/timing; God Cloth stage pending",
+      "origem": {
+        "aba": "Athena",
+        "linha": 19,
+        "intervalo": "A19:J19"
+      }
+    },
+    {
+      "ID": "SST-01-019",
+      "Faction": "Athena",
+      "Type": "Equipment",
+      "Name": "Leo Gold Cloth",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +3 Power / +3 HP. Owner: Leo Aiolia. 7th Sense — ACTION, pay 3 Cosmo: This equipment grants +4 Power / +5 HP instead. Only its Owner may evolve it.",
+      "Design Status": "PROVISIONAL — balance/timing; God Cloth stage pending",
+      "origem": {
+        "aba": "Athena",
+        "linha": 20,
+        "intervalo": "A20:J20"
+      }
+    },
+    {
+      "ID": "SST-01-020",
+      "Faction": "Athena",
+      "Type": "Equipment",
+      "Name": "Sagittarius Gold Cloth",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Equip: +3 Power / +4 HP. Owner: Sagittarius Aiolos. 7th Sense — ACTION, pay 3 Cosmo: This equipment grants +4 Power / +6 HP instead. Only its Owner may evolve it.",
+      "Design Status": "PROVISIONAL — balance/timing; God Cloth stage pending",
+      "origem": {
+        "aba": "Athena",
+        "linha": 21,
+        "intervalo": "A21:J21"
+      }
+    },
+    {
+      "ID": "SST-01-021",
+      "Faction": "Athena",
+      "Type": "Technique",
+      "Name": "Pegasus Ryuseiken",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Prevent 2 damage to a Devotee this Strike. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 22,
+        "intervalo": "A22:J22"
+      }
+    },
+    {
+      "ID": "SST-01-022",
+      "Faction": "Athena",
+      "Type": "Technique",
+      "Name": "Rozan Shoryuha",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "A friendly Devotee gets +2 Power this Strike. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 23,
+        "intervalo": "A23:J23"
+      }
+    },
+    {
+      "ID": "SST-01-023",
+      "Faction": "Athena",
+      "Type": "Technique",
+      "Name": "Diamond Dust",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Remove 2 damage from a friendly Devotee. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 24,
+        "intervalo": "A24:J24"
+      }
+    },
+    {
+      "ID": "SST-01-024",
+      "Faction": "Athena",
+      "Type": "Technique",
+      "Name": "Nebula Chain",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "A friendly Devotee gets Guardian until end of round. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 25,
+        "intervalo": "A25:J25"
+      }
+    },
+    {
+      "ID": "SST-01-025",
+      "Faction": "Athena",
+      "Type": "Technique",
+      "Name": "Hoyoku Tensho",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Ready a friendly Devotee that did not Strike this round. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 26,
+        "intervalo": "A26:J26"
+      }
+    },
+    {
+      "ID": "SST-01-026",
+      "Faction": "Athena",
+      "Type": "Technique",
+      "Name": "Tenbu Horin",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Prevent 2 damage to a Devotee this Strike. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 27,
+        "intervalo": "A27:J27"
+      }
+    },
+    {
+      "ID": "SST-01-027",
+      "Faction": "Athena",
+      "Type": "Technique",
+      "Name": "Crystal Wall",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "A friendly Devotee gets +2 Power this Strike. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 28,
+        "intervalo": "A28:J28"
+      }
+    },
+    {
+      "ID": "SST-01-028",
+      "Faction": "Athena",
+      "Type": "Technique",
+      "Name": "Lightning Plasma",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Remove 2 damage from a friendly Devotee. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 29,
+        "intervalo": "A29:J29"
+      }
+    },
+    {
+      "ID": "SST-01-029",
+      "Faction": "Athena",
+      "Type": "Technique",
+      "Name": "Athena Exclamation",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "A friendly Devotee gets Guardian until end of round. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 30,
+        "intervalo": "A30:J30"
+      }
+    },
+    {
+      "ID": "SST-01-030",
+      "Faction": "Athena",
+      "Type": "Technique",
+      "Name": "Cosmo of Hope",
+      "Cosmo Cost": 6,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Ready a friendly Devotee that did not Strike this round. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 31,
+        "intervalo": "A31:J31"
+      }
+    },
+    {
+      "ID": "SST-01-031",
+      "Faction": "Athena",
+      "Type": "Moment",
+      "Name": "The Sanctuary Alarm",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Heal 2 Soul from your God. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 32,
+        "intervalo": "A32:J32"
+      }
+    },
+    {
+      "ID": "SST-01-032",
+      "Faction": "Athena",
+      "Type": "Moment",
+      "Name": "The Twelve Temples",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Draw 2 cards, then discard 1. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 33,
+        "intervalo": "A33:J33"
+      }
+    },
+    {
+      "ID": "SST-01-033",
+      "Faction": "Athena",
+      "Type": "Moment",
+      "Name": "A Saint’s Sacrifice",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Return a friendly Cloth from your discard to your hand. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 34,
+        "intervalo": "A34:J34"
+      }
+    },
+    {
+      "ID": "SST-01-034",
+      "Faction": "Athena",
+      "Type": "Moment",
+      "Name": "Athena’s Prayer",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "A friendly Devotee gets +2 HP this round. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 35,
+        "intervalo": "A35:J35"
+      }
+    },
+    {
+      "ID": "SST-01-035",
+      "Faction": "Athena",
+      "Type": "Moment",
+      "Name": "The Bronze Resolve",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Your next Cloth costs 2 less this round. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 36,
+        "intervalo": "A36:J36"
+      }
+    },
+    {
+      "ID": "SST-01-036",
+      "Faction": "Athena",
+      "Type": "Moment",
+      "Name": "A Golden Intervention",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Heal 2 Soul from your God. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 37,
+        "intervalo": "A37:J37"
+      }
+    },
+    {
+      "ID": "SST-01-037",
+      "Faction": "Athena",
+      "Type": "Moment",
+      "Name": "The Last Meteor",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Draw 2 cards, then discard 1. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 38,
+        "intervalo": "A38:J38"
+      }
+    },
+    {
+      "ID": "SST-01-038",
+      "Faction": "Athena",
+      "Type": "Moment",
+      "Name": "Blood of Athena",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Return a friendly Cloth from your discard to your hand. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 39,
+        "intervalo": "A39:J39"
+      }
+    },
+    {
+      "ID": "SST-01-039",
+      "Faction": "Athena",
+      "Type": "Moment",
+      "Name": "A Promise to Protect",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "A friendly Devotee gets +2 HP this round. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 40,
+        "intervalo": "A40:J40"
+      }
+    },
+    {
+      "ID": "SST-01-040",
+      "Faction": "Athena",
+      "Type": "Moment",
+      "Name": "Miracle at Dawn",
+      "Cosmo Cost": 6,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Your next Cloth costs 2 less this round. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 41,
+        "intervalo": "A41:J41"
+      }
+    },
+    {
+      "ID": "SST-01-041",
+      "Faction": "Athena",
+      "Type": "Support",
+      "Name": "Sanctuary Gate",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Once per round, when a friendly Devotee survives Strike: Heal 1 damage from it. Activation: Pay 1 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 42,
+        "intervalo": "A42:J42"
+      }
+    },
+    {
+      "ID": "SST-01-042",
+      "Faction": "Athena",
+      "Type": "Support",
+      "Name": "House of Aries",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Your first Cloth each round costs 1 less. Activation: Pay 1 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 43,
+        "intervalo": "A43:J43"
+      }
+    },
+    {
+      "ID": "SST-01-043",
+      "Faction": "Athena",
+      "Type": "Support",
+      "Name": "House of Virgo",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "When a friendly Devotee with Guardian is destroyed: Draw 1 card. Activation: Pay 1 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 44,
+        "intervalo": "A44:J44"
+      }
+    },
+    {
+      "ID": "SST-01-044",
+      "Faction": "Athena",
+      "Type": "Support",
+      "Name": "House of Leo",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Once per round, when you evolve a Cloth: Heal 1 Soul. Activation: Pay 1 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 45,
+        "intervalo": "A45:J45"
+      }
+    },
+    {
+      "ID": "SST-01-045",
+      "Faction": "Athena",
+      "Type": "Support",
+      "Name": "House of Sagittarius",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Friendly Devotees with Cloths get +1 HP. Activation: Pay 2 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 46,
+        "intervalo": "A46:J46"
+      }
+    },
+    {
+      "ID": "SST-01-046",
+      "Faction": "Athena",
+      "Type": "Support",
+      "Name": "The Golden Zodiac",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Once per round, when a friendly Devotee survives Strike: Heal 1 damage from it. Activation: Pay 2 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 47,
+        "intervalo": "A47:J47"
+      }
+    },
+    {
+      "ID": "SST-01-047",
+      "Faction": "Athena",
+      "Type": "Support",
+      "Name": "Athena’s Staff",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Your first Cloth each round costs 1 less. Activation: Pay 2 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 48,
+        "intervalo": "A48:J48"
+      }
+    },
+    {
+      "ID": "SST-01-048",
+      "Faction": "Athena",
+      "Type": "Support",
+      "Name": "The Holy Altar",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "When a friendly Devotee with Guardian is destroyed: Draw 1 card. Activation: Pay 2 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 49,
+        "intervalo": "A49:J49"
+      }
+    },
+    {
+      "ID": "SST-01-049",
+      "Faction": "Athena",
+      "Type": "Support",
+      "Name": "Training at Rozan",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Once per round, when you evolve a Cloth: Heal 1 Soul. Activation: Pay 3 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 50,
+        "intervalo": "A50:J50"
+      }
+    },
+    {
+      "ID": "SST-01-050",
+      "Faction": "Athena",
+      "Type": "Support",
+      "Name": "The Twelve Flames",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Friendly Devotees with Cloths get +1 HP. Activation: Pay 3 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Athena",
+        "linha": 51,
+        "intervalo": "A51:J51"
+      }
+    },
+    {
+      "ID": "SST-02-001",
+      "Faction": "Poseidon",
+      "Type": "Devotee",
+      "Name": "Sea Dragon Kanon",
+      "Cosmo Cost": 1,
+      "Power": 1,
+      "HP": 3,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Pierce.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 2,
+        "intervalo": "A2:J2"
+      }
+    },
+    {
+      "ID": "SST-02-002",
+      "Faction": "Poseidon",
+      "Type": "Devotee",
+      "Name": "Siren Sorrento",
+      "Cosmo Cost": 2,
+      "Power": 2,
+      "HP": 4,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Nimble.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 3,
+        "intervalo": "A3:J3"
+      }
+    },
+    {
+      "ID": "SST-02-003",
+      "Faction": "Poseidon",
+      "Type": "Devotee",
+      "Name": "Seahorse Baian",
+      "Cosmo Cost": 2,
+      "Power": 2,
+      "HP": 4,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Long Range.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 4,
+        "intervalo": "A4:J4"
+      }
+    },
+    {
+      "ID": "SST-02-004",
+      "Faction": "Poseidon",
+      "Type": "Devotee",
+      "Name": "Scylla Io",
+      "Cosmo Cost": 3,
+      "Power": 3,
+      "HP": 5,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Impulse.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 5,
+        "intervalo": "A5:J5"
+      }
+    },
+    {
+      "ID": "SST-02-005",
+      "Faction": "Poseidon",
+      "Type": "Devotee",
+      "Name": "Chrysaor Krishna",
+      "Cosmo Cost": 3,
+      "Power": 4,
+      "HP": 5,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Enemy Techniques cannot target this Devotee.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 6,
+        "intervalo": "A6:J6"
+      }
+    },
+    {
+      "ID": "SST-02-006",
+      "Faction": "Poseidon",
+      "Type": "Devotee",
+      "Name": "Kraken Isaac",
+      "Cosmo Cost": 4,
+      "Power": 4,
+      "HP": 7,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "When played: An enemy Devotee becomes Unprepared.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 7,
+        "intervalo": "A7:J7"
+      }
+    },
+    {
+      "ID": "SST-02-007",
+      "Faction": "Poseidon",
+      "Type": "Devotee",
+      "Name": "Lymnades Kasa",
+      "Cosmo Cost": 4,
+      "Power": 4,
+      "HP": 6,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "When played: Move 1 damage from a friendly Devotee to an enemy Devotee.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 8,
+        "intervalo": "A8:J8"
+      }
+    },
+    {
+      "ID": "SST-02-008",
+      "Faction": "Poseidon",
+      "Type": "Devotee",
+      "Name": "Mermaid Thetis",
+      "Cosmo Cost": 5,
+      "Power": 6,
+      "HP": 7,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Guardian.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 9,
+        "intervalo": "A9:J9"
+      }
+    },
+    {
+      "ID": "SST-02-009",
+      "Faction": "Poseidon",
+      "Type": "Devotee",
+      "Name": "Poseidon Julian",
+      "Cosmo Cost": 6,
+      "Power": 6,
+      "HP": 9,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "When played: Opponent exhausts 1 Cosmo Base.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 10,
+        "intervalo": "A10:J10"
+      }
+    },
+    {
+      "ID": "SST-02-010",
+      "Faction": "Poseidon",
+      "Type": "Devotee",
+      "Name": "Marina Sentinel",
+      "Cosmo Cost": 7,
+      "Power": 7,
+      "HP": 9,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "When played: Change a friendly Engage without paying ENG.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 11,
+        "intervalo": "A11:J11"
+      }
+    },
+    {
+      "ID": "SST-02-011",
+      "Faction": "Poseidon",
+      "Type": "Equipment",
+      "Name": "Sea Dragon Scale",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Equip: +1 Power / +1 HP. Resonance — Sea Dragon Kanon: When this Devotee initiates Strike, it gets +1 Power this Strike.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 12,
+        "intervalo": "A12:J12"
+      }
+    },
+    {
+      "ID": "SST-02-012",
+      "Faction": "Poseidon",
+      "Type": "Equipment",
+      "Name": "Siren Scale",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +1 Power / +1 HP. Resonance — Siren Sorrento: When this Devotee initiates Strike, it gets +1 Power this Strike.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 13,
+        "intervalo": "A13:J13"
+      }
+    },
+    {
+      "ID": "SST-02-013",
+      "Faction": "Poseidon",
+      "Type": "Equipment",
+      "Name": "Seahorse Scale",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +1 Power / +1 HP. Resonance — Seahorse Baian: When this Devotee initiates Strike, it gets +1 Power this Strike.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 14,
+        "intervalo": "A14:J14"
+      }
+    },
+    {
+      "ID": "SST-02-014",
+      "Faction": "Poseidon",
+      "Type": "Equipment",
+      "Name": "Scylla Scale",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Equip: +1 Power / +2 HP. Resonance — Scylla Io: When this Devotee initiates Strike, it gets +1 Power this Strike.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 15,
+        "intervalo": "A15:J15"
+      }
+    },
+    {
+      "ID": "SST-02-015",
+      "Faction": "Poseidon",
+      "Type": "Equipment",
+      "Name": "Chrysaor Scale",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +2 Power / +2 HP. Resonance — Chrysaor Krishna: When this Devotee initiates Strike, it gets +1 Power this Strike.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 16,
+        "intervalo": "A16:J16"
+      }
+    },
+    {
+      "ID": "SST-02-016",
+      "Faction": "Poseidon",
+      "Type": "Equipment",
+      "Name": "Kraken Scale",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +2 Power / +2 HP. Resonance — Kraken Isaac: When this Devotee initiates Strike, it gets +1 Power this Strike.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 17,
+        "intervalo": "A17:J17"
+      }
+    },
+    {
+      "ID": "SST-02-017",
+      "Faction": "Poseidon",
+      "Type": "Equipment",
+      "Name": "Lymnades Scale",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Equip: +2 Power / +3 HP. Resonance — Lymnades Kasa: When this Devotee initiates Strike, it gets +1 Power this Strike.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 18,
+        "intervalo": "A18:J18"
+      }
+    },
+    {
+      "ID": "SST-02-018",
+      "Faction": "Poseidon",
+      "Type": "Equipment",
+      "Name": "Mermaid Scale",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +2 Power / +3 HP. Resonance — Mermaid Thetis: When this Devotee initiates Strike, it gets +1 Power this Strike.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 19,
+        "intervalo": "A19:J19"
+      }
+    },
+    {
+      "ID": "SST-02-019",
+      "Faction": "Poseidon",
+      "Type": "Equipment",
+      "Name": "Oceanic Armor",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +3 Power / +3 HP. Resonance — Poseidon Julian: When this Devotee initiates Strike, it gets +1 Power this Strike.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 20,
+        "intervalo": "A20:J20"
+      }
+    },
+    {
+      "ID": "SST-02-020",
+      "Faction": "Poseidon",
+      "Type": "Equipment",
+      "Name": "Trident Guard",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Equip: +3 Power / +4 HP. Resonance — Marina Sentinel: When this Devotee initiates Strike, it gets +1 Power this Strike.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 21,
+        "intervalo": "A21:J21"
+      }
+    },
+    {
+      "ID": "SST-02-021",
+      "Faction": "Poseidon",
+      "Type": "Technique",
+      "Name": "Golden Triangle",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Change an enemy Engage to a legal target; its controller pays no ENG. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 22,
+        "intervalo": "A22:J22"
+      }
+    },
+    {
+      "ID": "SST-02-022",
+      "Faction": "Poseidon",
+      "Type": "Technique",
+      "Name": "Dead End Symphony",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "An enemy Devotee gets -2 Power this Strike. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 23,
+        "intervalo": "A23:J23"
+      }
+    },
+    {
+      "ID": "SST-02-023",
+      "Faction": "Poseidon",
+      "Type": "Technique",
+      "Name": "God Breath",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Exhaust an enemy Devotee. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 24,
+        "intervalo": "A24:J24"
+      }
+    },
+    {
+      "ID": "SST-02-024",
+      "Faction": "Poseidon",
+      "Type": "Technique",
+      "Name": "Big Tornado",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Deal 2 damage to a Devotee. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 25,
+        "intervalo": "A25:J25"
+      }
+    },
+    {
+      "ID": "SST-02-025",
+      "Faction": "Poseidon",
+      "Type": "Technique",
+      "Name": "Maharoshini",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Return an unbound equipment to its owner’s hand. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 26,
+        "intervalo": "A26:J26"
+      }
+    },
+    {
+      "ID": "SST-02-026",
+      "Faction": "Poseidon",
+      "Type": "Technique",
+      "Name": "Aurora Borealis",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Change an enemy Engage to a legal target; its controller pays no ENG. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 27,
+        "intervalo": "A27:J27"
+      }
+    },
+    {
+      "ID": "SST-02-027",
+      "Faction": "Poseidon",
+      "Type": "Technique",
+      "Name": "Salamander Shock",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "An enemy Devotee gets -2 Power this Strike. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 28,
+        "intervalo": "A28:J28"
+      }
+    },
+    {
+      "ID": "SST-02-028",
+      "Faction": "Poseidon",
+      "Type": "Technique",
+      "Name": "Coral Trap",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Exhaust an enemy Devotee. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 29,
+        "intervalo": "A29:J29"
+      }
+    },
+    {
+      "ID": "SST-02-029",
+      "Faction": "Poseidon",
+      "Type": "Technique",
+      "Name": "Tidal Prison",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Deal 2 damage to a Devotee. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 30,
+        "intervalo": "A30:J30"
+      }
+    },
+    {
+      "ID": "SST-02-030",
+      "Faction": "Poseidon",
+      "Type": "Technique",
+      "Name": "Pillar Breaker",
+      "Cosmo Cost": 6,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Return an unbound equipment to its owner’s hand. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 31,
+        "intervalo": "A31:J31"
+      }
+    },
+    {
+      "ID": "SST-02-031",
+      "Faction": "Poseidon",
+      "Type": "Moment",
+      "Name": "The Seven Pillars",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Exhaust 1 enemy Cosmo Base. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 32,
+        "intervalo": "A32:J32"
+      }
+    },
+    {
+      "ID": "SST-02-032",
+      "Faction": "Poseidon",
+      "Type": "Moment",
+      "Name": "Rising Tide",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Draw 1 card; opponent discards 1 card. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 33,
+        "intervalo": "A33:J33"
+      }
+    },
+    {
+      "ID": "SST-02-033",
+      "Faction": "Poseidon",
+      "Type": "Moment",
+      "Name": "Oceanic Judgment",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Change one friendly Engage without paying ENG. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 34,
+        "intervalo": "A34:J34"
+      }
+    },
+    {
+      "ID": "SST-02-034",
+      "Faction": "Poseidon",
+      "Type": "Moment",
+      "Name": "Song of the Siren",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "An enemy Devotee gets -2 Power this round. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 35,
+        "intervalo": "A35:J35"
+      }
+    },
+    {
+      "ID": "SST-02-035",
+      "Faction": "Poseidon",
+      "Type": "Moment",
+      "Name": "Undersea Ambush",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Deal 2 damage to an enemy Devotee. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 36,
+        "intervalo": "A36:J36"
+      }
+    },
+    {
+      "ID": "SST-02-036",
+      "Faction": "Poseidon",
+      "Type": "Moment",
+      "Name": "Poseidon Awakens",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Exhaust 1 enemy Cosmo Base. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 37,
+        "intervalo": "A37:J37"
+      }
+    },
+    {
+      "ID": "SST-02-037",
+      "Faction": "Poseidon",
+      "Type": "Moment",
+      "Name": "Flood the Sanctuary",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Draw 1 card; opponent discards 1 card. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 38,
+        "intervalo": "A38:J38"
+      }
+    },
+    {
+      "ID": "SST-02-038",
+      "Faction": "Poseidon",
+      "Type": "Moment",
+      "Name": "The Main Breadwinner",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Change one friendly Engage without paying ENG. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 39,
+        "intervalo": "A39:J39"
+      }
+    },
+    {
+      "ID": "SST-02-039",
+      "Faction": "Poseidon",
+      "Type": "Moment",
+      "Name": "The Deepest Current",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "An enemy Devotee gets -2 Power this round. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 40,
+        "intervalo": "A40:J40"
+      }
+    },
+    {
+      "ID": "SST-02-040",
+      "Faction": "Poseidon",
+      "Type": "Moment",
+      "Name": "Storm over Atlantis",
+      "Cosmo Cost": 6,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Deal 2 damage to an enemy Devotee. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 41,
+        "intervalo": "A41:J41"
+      }
+    },
+    {
+      "ID": "SST-02-041",
+      "Faction": "Poseidon",
+      "Type": "Support",
+      "Name": "Atlantic Pillar",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Once per round, change a friendly Engage for 0 ENG; still costs an ACTION. Activation: Pay 1 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 42,
+        "intervalo": "A42:J42"
+      }
+    },
+    {
+      "ID": "SST-02-042",
+      "Faction": "Poseidon",
+      "Type": "Support",
+      "Name": "Pacific Pillar",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Enemy Devotees in Engage with your Marinas get -1 Power. Activation: Pay 1 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 43,
+        "intervalo": "A43:J43"
+      }
+    },
+    {
+      "ID": "SST-02-043",
+      "Faction": "Poseidon",
+      "Type": "Support",
+      "Name": "Indian Pillar",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Your first Scale each round costs 1 less. Activation: Pay 1 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 44,
+        "intervalo": "A44:J44"
+      }
+    },
+    {
+      "ID": "SST-02-044",
+      "Faction": "Poseidon",
+      "Type": "Support",
+      "Name": "Arctic Pillar",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Once per round, when an enemy Devotee becomes Unprepared: Draw 1, then discard 1. Activation: Pay 1 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 45,
+        "intervalo": "A45:J45"
+      }
+    },
+    {
+      "ID": "SST-02-045",
+      "Faction": "Poseidon",
+      "Type": "Support",
+      "Name": "Antarctic Pillar",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Your first Technique each round costs 1 less. Activation: Pay 2 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 46,
+        "intervalo": "A46:J46"
+      }
+    },
+    {
+      "ID": "SST-02-046",
+      "Faction": "Poseidon",
+      "Type": "Support",
+      "Name": "South Atlantic Pillar",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Once per round, change a friendly Engage for 0 ENG; still costs an ACTION. Activation: Pay 2 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 47,
+        "intervalo": "A47:J47"
+      }
+    },
+    {
+      "ID": "SST-02-047",
+      "Faction": "Poseidon",
+      "Type": "Support",
+      "Name": "North Pacific Pillar",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Enemy Devotees in Engage with your Marinas get -1 Power. Activation: Pay 2 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 48,
+        "intervalo": "A48:J48"
+      }
+    },
+    {
+      "ID": "SST-02-048",
+      "Faction": "Poseidon",
+      "Type": "Support",
+      "Name": "Temple of Poseidon",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Your first Scale each round costs 1 less. Activation: Pay 2 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 49,
+        "intervalo": "A49:J49"
+      }
+    },
+    {
+      "ID": "SST-02-049",
+      "Faction": "Poseidon",
+      "Type": "Support",
+      "Name": "The Main Pillar",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Once per round, when an enemy Devotee becomes Unprepared: Draw 1, then discard 1. Activation: Pay 3 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 50,
+        "intervalo": "A50:J50"
+      }
+    },
+    {
+      "ID": "SST-02-050",
+      "Faction": "Poseidon",
+      "Type": "Support",
+      "Name": "Undersea Sanctuary",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Your first Technique each round costs 1 less. Activation: Pay 3 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Poseidon",
+        "linha": 51,
+        "intervalo": "A51:J51"
+      }
+    },
+    {
+      "ID": "SST-03-001",
+      "Faction": "Hades",
+      "Type": "Devotee",
+      "Name": "Wyvern Rhadamanthys",
+      "Cosmo Cost": 1,
+      "Power": 1,
+      "HP": 3,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Afterlife — Pay 2 Cosmo and use an ACTION: Return this card to play Unprepared. Once per game.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 2,
+        "intervalo": "A2:J2"
+      }
+    },
+    {
+      "ID": "SST-03-002",
+      "Faction": "Hades",
+      "Type": "Devotee",
+      "Name": "Griffon Minos",
+      "Cosmo Cost": 2,
+      "Power": 2,
+      "HP": 4,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "When played: An enemy Devotee gets -1 Power this round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 3,
+        "intervalo": "A3:J3"
+      }
+    },
+    {
+      "ID": "SST-03-003",
+      "Faction": "Hades",
+      "Type": "Devotee",
+      "Name": "Garuda Aiacos",
+      "Cosmo Cost": 2,
+      "Power": 2,
+      "HP": 4,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "When destroyed: Draw 1 card, then discard 1 card.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 4,
+        "intervalo": "A4:J4"
+      }
+    },
+    {
+      "ID": "SST-03-004",
+      "Faction": "Hades",
+      "Type": "Devotee",
+      "Name": "Gemini Saga Surplice",
+      "Cosmo Cost": 3,
+      "Power": 3,
+      "HP": 5,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Afterlife — Pay 3 Cosmo and use an ACTION: Return this card to play Unprepared. Once per game.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 5,
+        "intervalo": "A5:J5"
+      }
+    },
+    {
+      "ID": "SST-03-005",
+      "Faction": "Hades",
+      "Type": "Devotee",
+      "Name": "Aquarius Camus Surplice",
+      "Cosmo Cost": 3,
+      "Power": 4,
+      "HP": 5,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "When played: Deal 1 damage to a Devotee.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 6,
+        "intervalo": "A6:J6"
+      }
+    },
+    {
+      "ID": "SST-03-006",
+      "Faction": "Hades",
+      "Type": "Devotee",
+      "Name": "Capricorn Shura Surplice",
+      "Cosmo Cost": 4,
+      "Power": 4,
+      "HP": 7,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "When destroyed: Your next Devotee costs 1 less this round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 7,
+        "intervalo": "A7:J7"
+      }
+    },
+    {
+      "ID": "SST-03-007",
+      "Faction": "Hades",
+      "Type": "Devotee",
+      "Name": "Aries Shion Surplice",
+      "Cosmo Cost": 4,
+      "Power": 4,
+      "HP": 6,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Afterlife — Pay 4 Cosmo and use an ACTION: Return this card to play Unprepared. Once per game.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 8,
+        "intervalo": "A8:J8"
+      }
+    },
+    {
+      "ID": "SST-03-008",
+      "Faction": "Hades",
+      "Type": "Devotee",
+      "Name": "Specter Niobe",
+      "Cosmo Cost": 5,
+      "Power": 6,
+      "HP": 7,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "When played: Deal 1 damage to a Prepared Devotee.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 9,
+        "intervalo": "A9:J9"
+      }
+    },
+    {
+      "ID": "SST-03-009",
+      "Faction": "Hades",
+      "Type": "Devotee",
+      "Name": "Specter Myu",
+      "Cosmo Cost": 6,
+      "Power": 6,
+      "HP": 9,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "When destroyed: Look at the top 2 cards of your deck; keep 1 on top.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 10,
+        "intervalo": "A10:J10"
+      }
+    },
+    {
+      "ID": "SST-03-010",
+      "Faction": "Hades",
+      "Type": "Devotee",
+      "Name": "Specter Pharaoh",
+      "Cosmo Cost": 7,
+      "Power": 7,
+      "HP": 9,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Afterlife — Pay 2 Cosmo: Draw 1 card, then discard this card from Tartarus. Once per game.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 11,
+        "intervalo": "A11:J11"
+      }
+    },
+    {
+      "ID": "SST-03-011",
+      "Faction": "Hades",
+      "Type": "Equipment",
+      "Name": "Wyvern Surplice",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Equip: +1 Power / +1 HP. When the equipped Devotee is destroyed: Return this equipment to your hand.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 12,
+        "intervalo": "A12:J12"
+      }
+    },
+    {
+      "ID": "SST-03-012",
+      "Faction": "Hades",
+      "Type": "Equipment",
+      "Name": "Griffon Surplice",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +1 Power / +1 HP. When the equipped Devotee is destroyed: Return this equipment to your hand.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 13,
+        "intervalo": "A13:J13"
+      }
+    },
+    {
+      "ID": "SST-03-013",
+      "Faction": "Hades",
+      "Type": "Equipment",
+      "Name": "Garuda Surplice",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +1 Power / +1 HP. When the equipped Devotee is destroyed: Return this equipment to your hand.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 14,
+        "intervalo": "A14:J14"
+      }
+    },
+    {
+      "ID": "SST-03-014",
+      "Faction": "Hades",
+      "Type": "Equipment",
+      "Name": "Gemini Surplice",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Equip: +1 Power / +2 HP. When the equipped Devotee is destroyed: Return this equipment to your hand.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 15,
+        "intervalo": "A15:J15"
+      }
+    },
+    {
+      "ID": "SST-03-015",
+      "Faction": "Hades",
+      "Type": "Equipment",
+      "Name": "Aquarius Surplice",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +2 Power / +2 HP. When the equipped Devotee is destroyed: Return this equipment to your hand.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 16,
+        "intervalo": "A16:J16"
+      }
+    },
+    {
+      "ID": "SST-03-016",
+      "Faction": "Hades",
+      "Type": "Equipment",
+      "Name": "Capricorn Surplice",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +2 Power / +2 HP. When the equipped Devotee is destroyed: Return this equipment to your hand.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 17,
+        "intervalo": "A17:J17"
+      }
+    },
+    {
+      "ID": "SST-03-017",
+      "Faction": "Hades",
+      "Type": "Equipment",
+      "Name": "Aries Surplice",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Equip: +2 Power / +3 HP. When the equipped Devotee is destroyed: Return this equipment to your hand.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 18,
+        "intervalo": "A18:J18"
+      }
+    },
+    {
+      "ID": "SST-03-018",
+      "Faction": "Hades",
+      "Type": "Equipment",
+      "Name": "Deep Fragrance Mantle",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +2 Power / +3 HP. When the equipped Devotee is destroyed: Return this equipment to your hand.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 19,
+        "intervalo": "A19:J19"
+      }
+    },
+    {
+      "ID": "SST-03-019",
+      "Faction": "Hades",
+      "Type": "Equipment",
+      "Name": "Papillon Surplice",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +3 Power / +3 HP. When the equipped Devotee is destroyed: Return this equipment to your hand.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 20,
+        "intervalo": "A20:J20"
+      }
+    },
+    {
+      "ID": "SST-03-020",
+      "Faction": "Hades",
+      "Type": "Equipment",
+      "Name": "Sphinx Surplice",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Equip: +3 Power / +4 HP. When the equipped Devotee is destroyed: Return this equipment to your hand.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 21,
+        "intervalo": "A21:J21"
+      }
+    },
+    {
+      "ID": "SST-03-021",
+      "Faction": "Hades",
+      "Type": "Technique",
+      "Name": "Greatest Caution",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Return a Devotee with cost 2 or less from Tartarus to play Unprepared. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 22,
+        "intervalo": "A22:J22"
+      }
+    },
+    {
+      "ID": "SST-03-022",
+      "Faction": "Hades",
+      "Type": "Technique",
+      "Name": "Cosmic Marionation",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Deal 2 damage to a Devotee; take 1 damage to your God Soul. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 23,
+        "intervalo": "A23:J23"
+      }
+    },
+    {
+      "ID": "SST-03-023",
+      "Faction": "Hades",
+      "Type": "Technique",
+      "Name": "Galactica Illusion",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "An enemy Devotee gets -2 Power this Strike. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 24,
+        "intervalo": "A24:J24"
+      }
+    },
+    {
+      "ID": "SST-03-024",
+      "Faction": "Hades",
+      "Type": "Technique",
+      "Name": "Another Dimension",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Put a Devotee from your Tartarus on the bottom of your deck; draw 1. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 25,
+        "intervalo": "A25:J25"
+      }
+    },
+    {
+      "ID": "SST-03-025",
+      "Faction": "Hades",
+      "Type": "Technique",
+      "Name": "Aurora Execution",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Destroy an equipment attached to a Devotee with 3 or more marked damage. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 26,
+        "intervalo": "A26:J26"
+      }
+    },
+    {
+      "ID": "SST-03-026",
+      "Faction": "Hades",
+      "Type": "Technique",
+      "Name": "Excalibur of the Dead",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Return a Devotee with cost 2 or less from Tartarus to play Unprepared. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 27,
+        "intervalo": "A27:J27"
+      }
+    },
+    {
+      "ID": "SST-03-027",
+      "Faction": "Hades",
+      "Type": "Technique",
+      "Name": "Stardust Revolution",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Deal 2 damage to a Devotee; take 1 damage to your God Soul. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 28,
+        "intervalo": "A28:J28"
+      }
+    },
+    {
+      "ID": "SST-03-028",
+      "Faction": "Hades",
+      "Type": "Technique",
+      "Name": "Deep Fragrance",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "An enemy Devotee gets -2 Power this Strike. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 29,
+        "intervalo": "A29:J29"
+      }
+    },
+    {
+      "ID": "SST-03-029",
+      "Faction": "Hades",
+      "Type": "Technique",
+      "Name": "Fairy Thronging",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Put a Devotee from your Tartarus on the bottom of your deck; draw 1. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 30,
+        "intervalo": "A30:J30"
+      }
+    },
+    {
+      "ID": "SST-03-030",
+      "Faction": "Hades",
+      "Type": "Technique",
+      "Name": "Balance of Curse",
+      "Cosmo Cost": 6,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Destroy an equipment attached to a Devotee with 3 or more marked damage. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 31,
+        "intervalo": "A31:J31"
+      }
+    },
+    {
+      "ID": "SST-03-031",
+      "Faction": "Hades",
+      "Type": "Moment",
+      "Name": "The 108 Stars",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Return a cost-2-or-less Devotee from Tartarus to your hand. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 32,
+        "intervalo": "A32:J32"
+      }
+    },
+    {
+      "ID": "SST-03-032",
+      "Faction": "Hades",
+      "Type": "Moment",
+      "Name": "Judgment of the Dead",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Draw 2 cards; discard 1 card. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 33,
+        "intervalo": "A33:J33"
+      }
+    },
+    {
+      "ID": "SST-03-033",
+      "Faction": "Hades",
+      "Type": "Moment",
+      "Name": "The Wailing Wall",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Put a Devotee from either Tartarus on bottom of its owner’s deck. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 34,
+        "intervalo": "A34:J34"
+      }
+    },
+    {
+      "ID": "SST-03-034",
+      "Faction": "Hades",
+      "Type": "Moment",
+      "Name": "A Specter Returns",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Your next Afterlife ability costs 1 less this round. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 35,
+        "intervalo": "A35:J35"
+      }
+    },
+    {
+      "ID": "SST-03-035",
+      "Faction": "Hades",
+      "Type": "Moment",
+      "Name": "Hades Eclipse",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Deal 1 damage to each Devotee in one Engage. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 36,
+        "intervalo": "A36:J36"
+      }
+    },
+    {
+      "ID": "SST-03-036",
+      "Faction": "Hades",
+      "Type": "Moment",
+      "Name": "The Last Requiem",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Return a cost-2-or-less Devotee from Tartarus to your hand. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 37,
+        "intervalo": "A37:J37"
+      }
+    },
+    {
+      "ID": "SST-03-037",
+      "Faction": "Hades",
+      "Type": "Moment",
+      "Name": "The River Acheron",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Draw 2 cards; discard 1 card. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 38,
+        "intervalo": "A38:J38"
+      }
+    },
+    {
+      "ID": "SST-03-038",
+      "Faction": "Hades",
+      "Type": "Moment",
+      "Name": "Death Is Not the End",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Put a Devotee from either Tartarus on bottom of its owner’s deck. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 39,
+        "intervalo": "A39:J39"
+      }
+    },
+    {
+      "ID": "SST-03-039",
+      "Faction": "Hades",
+      "Type": "Moment",
+      "Name": "Pandora’s Command",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Your next Afterlife ability costs 1 less this round. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 40,
+        "intervalo": "A40:J40"
+      }
+    },
+    {
+      "ID": "SST-03-040",
+      "Faction": "Hades",
+      "Type": "Moment",
+      "Name": "The Underworld Gate",
+      "Cosmo Cost": 6,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Deal 1 damage to each Devotee in one Engage. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 41,
+        "intervalo": "A41:J41"
+      }
+    },
+    {
+      "ID": "SST-03-041",
+      "Faction": "Hades",
+      "Type": "Support",
+      "Name": "Giudecca",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Your first Afterlife return each round costs 1 less Cosmo. Activation: Pay 1 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 42,
+        "intervalo": "A42:J42"
+      }
+    },
+    {
+      "ID": "SST-03-042",
+      "Faction": "Hades",
+      "Type": "Support",
+      "Name": "Judgment Hall",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Once per round, when a friendly Devotee enters Tartarus: Draw 1, then discard 1. Activation: Pay 1 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 43,
+        "intervalo": "A43:J43"
+      }
+    },
+    {
+      "ID": "SST-03-043",
+      "Faction": "Hades",
+      "Type": "Support",
+      "Name": "River Acheron",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Devotees returning from Tartarus get +1 HP this round. Activation: Pay 1 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 44,
+        "intervalo": "A44:J44"
+      }
+    },
+    {
+      "ID": "SST-03-044",
+      "Faction": "Hades",
+      "Type": "Support",
+      "Name": "Cocytus",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Once per round, you may look at the top card of your deck. Activation: Pay 1 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 45,
+        "intervalo": "A45:J45"
+      }
+    },
+    {
+      "ID": "SST-03-045",
+      "Faction": "Hades",
+      "Type": "Support",
+      "Name": "First Prison",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Your first Devotee returned from Tartarus each round costs 1 less. Activation: Pay 2 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 46,
+        "intervalo": "A46:J46"
+      }
+    },
+    {
+      "ID": "SST-03-046",
+      "Faction": "Hades",
+      "Type": "Support",
+      "Name": "Second Prison",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Your first Afterlife return each round costs 1 less Cosmo. Activation: Pay 2 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 47,
+        "intervalo": "A47:J47"
+      }
+    },
+    {
+      "ID": "SST-03-047",
+      "Faction": "Hades",
+      "Type": "Support",
+      "Name": "Third Prison",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Once per round, when a friendly Devotee enters Tartarus: Draw 1, then discard 1. Activation: Pay 2 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 48,
+        "intervalo": "A48:J48"
+      }
+    },
+    {
+      "ID": "SST-03-048",
+      "Faction": "Hades",
+      "Type": "Support",
+      "Name": "Fourth Prison",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Devotees returning from Tartarus get +1 HP this round. Activation: Pay 2 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 49,
+        "intervalo": "A49:J49"
+      }
+    },
+    {
+      "ID": "SST-03-049",
+      "Faction": "Hades",
+      "Type": "Support",
+      "Name": "Wailing Wall",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Once per round, you may look at the top card of your deck. Activation: Pay 3 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 50,
+        "intervalo": "A50:J50"
+      }
+    },
+    {
+      "ID": "SST-03-050",
+      "Faction": "Hades",
+      "Type": "Support",
+      "Name": "Pandora’s Box",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Your first Devotee returned from Tartarus each round costs 1 less. Activation: Pay 3 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Hades",
+        "linha": 51,
+        "intervalo": "A51:J51"
+      }
+    },
+    {
+      "ID": "SST-04-001",
+      "Faction": "Ares",
+      "Type": "Devotee",
+      "Name": "Berserker of Flame",
+      "Cosmo Cost": 1,
+      "Power": 1,
+      "HP": 3,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Impulse.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 2,
+        "intervalo": "A2:J2"
+      }
+    },
+    {
+      "ID": "SST-04-002",
+      "Faction": "Ares",
+      "Type": "Devotee",
+      "Name": "Berserker of Steel",
+      "Cosmo Cost": 2,
+      "Power": 2,
+      "HP": 4,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "When this Devotee Strikes: It gets +1 Power for this Strike.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 3,
+        "intervalo": "A3:J3"
+      }
+    },
+    {
+      "ID": "SST-04-003",
+      "Faction": "Ares",
+      "Type": "Devotee",
+      "Name": "Berserker of Blood",
+      "Cosmo Cost": 2,
+      "Power": 2,
+      "HP": 4,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Pierce.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 4,
+        "intervalo": "A4:J4"
+      }
+    },
+    {
+      "ID": "SST-04-004",
+      "Faction": "Ares",
+      "Type": "Devotee",
+      "Name": "Berserker of Ash",
+      "Cosmo Cost": 3,
+      "Power": 3,
+      "HP": 5,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "When played: Deal 1 damage to this Devotee and an enemy Devotee.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 5,
+        "intervalo": "A5:J5"
+      }
+    },
+    {
+      "ID": "SST-04-005",
+      "Faction": "Ares",
+      "Type": "Devotee",
+      "Name": "Berserker of Fury",
+      "Cosmo Cost": 3,
+      "Power": 4,
+      "HP": 5,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "When damaged: It gets +1 Power this round.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 6,
+        "intervalo": "A6:J6"
+      }
+    },
+    {
+      "ID": "SST-04-006",
+      "Faction": "Ares",
+      "Type": "Devotee",
+      "Name": "Warrior of Discord",
+      "Cosmo Cost": 4,
+      "Power": 4,
+      "HP": 7,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "When played: Another friendly Devotee gets +2 Power this round.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 7,
+        "intervalo": "A7:J7"
+      }
+    },
+    {
+      "ID": "SST-04-007",
+      "Faction": "Ares",
+      "Type": "Devotee",
+      "Name": "Warrior of Ruin",
+      "Cosmo Cost": 4,
+      "Power": 4,
+      "HP": 6,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "When destroyed: Deal 1 damage to an enemy Devotee.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 8,
+        "intervalo": "A8:J8"
+      }
+    },
+    {
+      "ID": "SST-04-008",
+      "Faction": "Ares",
+      "Type": "Devotee",
+      "Name": "Warrior of Carnage",
+      "Cosmo Cost": 5,
+      "Power": 6,
+      "HP": 7,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "When this Devotee destroys another Devotee: Ready it. Once per round.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 9,
+        "intervalo": "A9:J9"
+      }
+    },
+    {
+      "ID": "SST-04-009",
+      "Faction": "Ares",
+      "Type": "Devotee",
+      "Name": "Warrior of Vengeance",
+      "Cosmo Cost": 6,
+      "Power": 6,
+      "HP": 9,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Impulse. When it Strikes, it takes 1 additional damage.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 10,
+        "intervalo": "A10:J10"
+      }
+    },
+    {
+      "ID": "SST-04-010",
+      "Faction": "Ares",
+      "Type": "Devotee",
+      "Name": "Ares War Champion",
+      "Cosmo Cost": 7,
+      "Power": 7,
+      "HP": 9,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "When played: All friendly Devotees get +1 Power this round.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 11,
+        "intervalo": "A11:J11"
+      }
+    },
+    {
+      "ID": "SST-04-011",
+      "Faction": "Ares",
+      "Type": "Equipment",
+      "Name": "Flame Warplate",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Equip: +1 Power / +1 HP. When equipped Devotee initiates Strike: It gets +1 Power this Strike and takes 1 damage after combat.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 12,
+        "intervalo": "A12:J12"
+      }
+    },
+    {
+      "ID": "SST-04-012",
+      "Faction": "Ares",
+      "Type": "Equipment",
+      "Name": "Steel Warplate",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +1 Power / +1 HP. When equipped Devotee initiates Strike: It gets +1 Power this Strike and takes 1 damage after combat.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 13,
+        "intervalo": "A13:J13"
+      }
+    },
+    {
+      "ID": "SST-04-013",
+      "Faction": "Ares",
+      "Type": "Equipment",
+      "Name": "Blood Warplate",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +1 Power / +1 HP. When equipped Devotee initiates Strike: It gets +1 Power this Strike and takes 1 damage after combat.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 14,
+        "intervalo": "A14:J14"
+      }
+    },
+    {
+      "ID": "SST-04-014",
+      "Faction": "Ares",
+      "Type": "Equipment",
+      "Name": "Ash Warplate",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Equip: +1 Power / +2 HP. When equipped Devotee initiates Strike: It gets +1 Power this Strike and takes 1 damage after combat.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 15,
+        "intervalo": "A15:J15"
+      }
+    },
+    {
+      "ID": "SST-04-015",
+      "Faction": "Ares",
+      "Type": "Equipment",
+      "Name": "Fury Warplate",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +2 Power / +2 HP. When equipped Devotee initiates Strike: It gets +1 Power this Strike and takes 1 damage after combat.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 16,
+        "intervalo": "A16:J16"
+      }
+    },
+    {
+      "ID": "SST-04-016",
+      "Faction": "Ares",
+      "Type": "Equipment",
+      "Name": "Discord Blade",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +2 Power / +2 HP. When equipped Devotee initiates Strike: It gets +1 Power this Strike and takes 1 damage after combat.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 17,
+        "intervalo": "A17:J17"
+      }
+    },
+    {
+      "ID": "SST-04-017",
+      "Faction": "Ares",
+      "Type": "Equipment",
+      "Name": "Ruin Shield",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Equip: +2 Power / +3 HP. When equipped Devotee initiates Strike: It gets +1 Power this Strike and takes 1 damage after combat.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 18,
+        "intervalo": "A18:J18"
+      }
+    },
+    {
+      "ID": "SST-04-018",
+      "Faction": "Ares",
+      "Type": "Equipment",
+      "Name": "Carnage Helm",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +2 Power / +3 HP. When equipped Devotee initiates Strike: It gets +1 Power this Strike and takes 1 damage after combat.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 19,
+        "intervalo": "A19:J19"
+      }
+    },
+    {
+      "ID": "SST-04-019",
+      "Faction": "Ares",
+      "Type": "Equipment",
+      "Name": "Vengeance Spear",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +3 Power / +3 HP. When equipped Devotee initiates Strike: It gets +1 Power this Strike and takes 1 damage after combat.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 20,
+        "intervalo": "A20:J20"
+      }
+    },
+    {
+      "ID": "SST-04-020",
+      "Faction": "Ares",
+      "Type": "Equipment",
+      "Name": "War Champion Armor",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Equip: +3 Power / +4 HP. When equipped Devotee initiates Strike: It gets +1 Power this Strike and takes 1 damage after combat.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 21,
+        "intervalo": "A21:J21"
+      }
+    },
+    {
+      "ID": "SST-04-021",
+      "Faction": "Ares",
+      "Type": "Technique",
+      "Name": "Furious Onslaught",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "A friendly Devotee gets +3 Power this Strike. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 22,
+        "intervalo": "A22:J22"
+      }
+    },
+    {
+      "ID": "SST-04-022",
+      "Faction": "Ares",
+      "Type": "Technique",
+      "Name": "Crimson Cleave",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Deal 2 damage to a Devotee; deal 1 damage to your God Soul. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 23,
+        "intervalo": "A23:J23"
+      }
+    },
+    {
+      "ID": "SST-04-023",
+      "Faction": "Ares",
+      "Type": "Technique",
+      "Name": "War Cry",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Ready a friendly Devotee that has not Struck this round. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 24,
+        "intervalo": "A24:J24"
+      }
+    },
+    {
+      "ID": "SST-04-024",
+      "Faction": "Ares",
+      "Type": "Technique",
+      "Name": "Battle Frenzy",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "An enemy Devotee cannot use Guardian this round. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 25,
+        "intervalo": "A25:J25"
+      }
+    },
+    {
+      "ID": "SST-04-025",
+      "Faction": "Ares",
+      "Type": "Technique",
+      "Name": "Break Formation",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "A friendly Devotee gains Pierce this Strike. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 26,
+        "intervalo": "A26:J26"
+      }
+    },
+    {
+      "ID": "SST-04-026",
+      "Faction": "Ares",
+      "Type": "Technique",
+      "Name": "Merciless Pursuit",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "A friendly Devotee gets +3 Power this Strike. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 27,
+        "intervalo": "A27:J27"
+      }
+    },
+    {
+      "ID": "SST-04-027",
+      "Faction": "Ares",
+      "Type": "Technique",
+      "Name": "Scorched Earth",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Deal 2 damage to a Devotee; deal 1 damage to your God Soul. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 28,
+        "intervalo": "A28:J28"
+      }
+    },
+    {
+      "ID": "SST-04-028",
+      "Faction": "Ares",
+      "Type": "Technique",
+      "Name": "Violent Charge",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Ready a friendly Devotee that has not Struck this round. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 29,
+        "intervalo": "A29:J29"
+      }
+    },
+    {
+      "ID": "SST-04-029",
+      "Faction": "Ares",
+      "Type": "Technique",
+      "Name": "Last Stand",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "An enemy Devotee cannot use Guardian this round. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 30,
+        "intervalo": "A30:J30"
+      }
+    },
+    {
+      "ID": "SST-04-030",
+      "Faction": "Ares",
+      "Type": "Technique",
+      "Name": "No Quarter",
+      "Cosmo Cost": 6,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "A friendly Devotee gains Pierce this Strike. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 31,
+        "intervalo": "A31:J31"
+      }
+    },
+    {
+      "ID": "SST-04-031",
+      "Faction": "Ares",
+      "Type": "Moment",
+      "Name": "The Drums of War",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Deal 2 damage to an enemy Devotee. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 32,
+        "intervalo": "A32:J32"
+      }
+    },
+    {
+      "ID": "SST-04-032",
+      "Faction": "Ares",
+      "Type": "Moment",
+      "Name": "The First Blood",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Friendly Devotees get +1 Power this round. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 33,
+        "intervalo": "A33:J33"
+      }
+    },
+    {
+      "ID": "SST-04-033",
+      "Faction": "Ares",
+      "Type": "Moment",
+      "Name": "Unending Conflict",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Draw 2 cards; lose 2 Soul. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 34,
+        "intervalo": "A34:J34"
+      }
+    },
+    {
+      "ID": "SST-04-034",
+      "Faction": "Ares",
+      "Type": "Moment",
+      "Name": "A Battlefield Oath",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Your next Devotee costs 2 less this round. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 35,
+        "intervalo": "A35:J35"
+      }
+    },
+    {
+      "ID": "SST-04-035",
+      "Faction": "Ares",
+      "Type": "Moment",
+      "Name": "Glory in Ruin",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Deal 1 damage to all engaged Devotees. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 36,
+        "intervalo": "A36:J36"
+      }
+    },
+    {
+      "ID": "SST-04-036",
+      "Faction": "Ares",
+      "Type": "Moment",
+      "Name": "The Final Charge",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Deal 2 damage to an enemy Devotee. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 37,
+        "intervalo": "A37:J37"
+      }
+    },
+    {
+      "ID": "SST-04-037",
+      "Faction": "Ares",
+      "Type": "Moment",
+      "Name": "Berserker’s Rage",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Friendly Devotees get +1 Power this round. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 38,
+        "intervalo": "A38:J38"
+      }
+    },
+    {
+      "ID": "SST-04-038",
+      "Faction": "Ares",
+      "Type": "Moment",
+      "Name": "Broken Truce",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Draw 2 cards; lose 2 Soul. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 39,
+        "intervalo": "A39:J39"
+      }
+    },
+    {
+      "ID": "SST-04-039",
+      "Faction": "Ares",
+      "Type": "Moment",
+      "Name": "The Price of Victory",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Your next Devotee costs 2 less this round. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 40,
+        "intervalo": "A40:J40"
+      }
+    },
+    {
+      "ID": "SST-04-040",
+      "Faction": "Ares",
+      "Type": "Moment",
+      "Name": "The Red Horizon",
+      "Cosmo Cost": 6,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Deal 1 damage to all engaged Devotees. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 41,
+        "intervalo": "A41:J41"
+      }
+    },
+    {
+      "ID": "SST-04-041",
+      "Faction": "Ares",
+      "Type": "Support",
+      "Name": "War Camp",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Friendly Devotees get +1 Power while initiating Strike. Activation: Pay 1 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 42,
+        "intervalo": "A42:J42"
+      }
+    },
+    {
+      "ID": "SST-04-042",
+      "Faction": "Ares",
+      "Type": "Support",
+      "Name": "Field of Spears",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Once per round, when a friendly Devotee is destroyed: Deal 1 damage to an enemy Devotee. Activation: Pay 1 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 43,
+        "intervalo": "A43:J43"
+      }
+    },
+    {
+      "ID": "SST-04-043",
+      "Faction": "Ares",
+      "Type": "Support",
+      "Name": "Crimson Arena",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Your first attacking Technique each round costs 1 less. Activation: Pay 1 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 44,
+        "intervalo": "A44:J44"
+      }
+    },
+    {
+      "ID": "SST-04-044",
+      "Faction": "Ares",
+      "Type": "Support",
+      "Name": "Burning Standard",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Once per round, when your Devotee destroys another: Heal 1 Soul. Activation: Pay 1 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 45,
+        "intervalo": "A45:J45"
+      }
+    },
+    {
+      "ID": "SST-04-045",
+      "Faction": "Ares",
+      "Type": "Support",
+      "Name": "Hall of Conquest",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Your first Devotee each round costs 1 less. Activation: Pay 2 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 46,
+        "intervalo": "A46:J46"
+      }
+    },
+    {
+      "ID": "SST-04-046",
+      "Faction": "Ares",
+      "Type": "Support",
+      "Name": "Forge of War",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Friendly Devotees get +1 Power while initiating Strike. Activation: Pay 2 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 47,
+        "intervalo": "A47:J47"
+      }
+    },
+    {
+      "ID": "SST-04-047",
+      "Faction": "Ares",
+      "Type": "Support",
+      "Name": "Siege Lines",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Once per round, when a friendly Devotee is destroyed: Deal 1 damage to an enemy Devotee. Activation: Pay 2 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 48,
+        "intervalo": "A48:J48"
+      }
+    },
+    {
+      "ID": "SST-04-048",
+      "Faction": "Ares",
+      "Type": "Support",
+      "Name": "Bloodied Banner",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Your first attacking Technique each round costs 1 less. Activation: Pay 2 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 49,
+        "intervalo": "A49:J49"
+      }
+    },
+    {
+      "ID": "SST-04-049",
+      "Faction": "Ares",
+      "Type": "Support",
+      "Name": "Arena of Discord",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Once per round, when your Devotee destroys another: Heal 1 Soul. Activation: Pay 3 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 50,
+        "intervalo": "A50:J50"
+      }
+    },
+    {
+      "ID": "SST-04-050",
+      "Faction": "Ares",
+      "Type": "Support",
+      "Name": "Throne of Ares",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Your first Devotee each round costs 1 less. Activation: Pay 3 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Ares",
+        "linha": 51,
+        "intervalo": "A51:J51"
+      }
+    },
+    {
+      "ID": "SST-05-001",
+      "Faction": "Artemis",
+      "Type": "Devotee",
+      "Name": "Artemis Huntress",
+      "Cosmo Cost": 1,
+      "Power": 1,
+      "HP": 3,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "When played: Look at the top 2 cards; put 1 on top and 1 on bottom.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 2,
+        "intervalo": "A2:J2"
+      }
+    },
+    {
+      "ID": "SST-05-002",
+      "Faction": "Artemis",
+      "Type": "Devotee",
+      "Name": "Moonlit Archer",
+      "Cosmo Cost": 2,
+      "Power": 2,
+      "HP": 4,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Long Range.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 3,
+        "intervalo": "A3:J3"
+      }
+    },
+    {
+      "ID": "SST-05-003",
+      "Faction": "Artemis",
+      "Type": "Devotee",
+      "Name": "Lunar Sentinel",
+      "Cosmo Cost": 2,
+      "Power": 2,
+      "HP": 4,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Guardian.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 4,
+        "intervalo": "A4:J4"
+      }
+    },
+    {
+      "ID": "SST-05-004",
+      "Faction": "Artemis",
+      "Type": "Devotee",
+      "Name": "Silver Tracker",
+      "Cosmo Cost": 3,
+      "Power": 3,
+      "HP": 5,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "When played: Your next Technique costs 1 less this round.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 5,
+        "intervalo": "A5:J5"
+      }
+    },
+    {
+      "ID": "SST-05-005",
+      "Faction": "Artemis",
+      "Type": "Devotee",
+      "Name": "Sacred Huntress",
+      "Cosmo Cost": 3,
+      "Power": 4,
+      "HP": 5,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "When this Devotee Strikes: You may pay 1 Cosmo to give it +2 Power.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 6,
+        "intervalo": "A6:J6"
+      }
+    },
+    {
+      "ID": "SST-05-006",
+      "Faction": "Artemis",
+      "Type": "Devotee",
+      "Name": "Moon Priestess",
+      "Cosmo Cost": 4,
+      "Power": 4,
+      "HP": 7,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "When played: Ready 1 Cosmo Base.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 7,
+        "intervalo": "A7:J7"
+      }
+    },
+    {
+      "ID": "SST-05-007",
+      "Faction": "Artemis",
+      "Type": "Devotee",
+      "Name": "Forest Warden",
+      "Cosmo Cost": 4,
+      "Power": 4,
+      "HP": 6,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "When played: Look at the top 3 cards; put them back in any order.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 8,
+        "intervalo": "A8:J8"
+      }
+    },
+    {
+      "ID": "SST-05-008",
+      "Faction": "Artemis",
+      "Type": "Devotee",
+      "Name": "Starlight Scout",
+      "Cosmo Cost": 5,
+      "Power": 6,
+      "HP": 7,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Nimble.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 9,
+        "intervalo": "A9:J9"
+      }
+    },
+    {
+      "ID": "SST-05-009",
+      "Faction": "Artemis",
+      "Type": "Devotee",
+      "Name": "Nightwatch Guardian",
+      "Cosmo Cost": 6,
+      "Power": 6,
+      "HP": 9,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "When this Devotee is targeted by a Technique: You may pay 1 Cosmo to cancel it.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 10,
+        "intervalo": "A10:J10"
+      }
+    },
+    {
+      "ID": "SST-05-010",
+      "Faction": "Artemis",
+      "Type": "Devotee",
+      "Name": "Artemis Chosen",
+      "Cosmo Cost": 7,
+      "Power": 7,
+      "HP": 9,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "When played: You may put a Cosmoble card from your hand as a Cosmo Base exhausted; it does not count toward your normal limit.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 11,
+        "intervalo": "A11:J11"
+      }
+    },
+    {
+      "ID": "SST-05-011",
+      "Faction": "Artemis",
+      "Type": "Equipment",
+      "Name": "Lunar Bow",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Equip: +1 Power / +1 HP. When equipped Devotee initiates Strike: You may pay 1 Cosmo to prevent 1 retaliation damage.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 12,
+        "intervalo": "A12:J12"
+      }
+    },
+    {
+      "ID": "SST-05-012",
+      "Faction": "Artemis",
+      "Type": "Equipment",
+      "Name": "Moonlit Quiver",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +1 Power / +1 HP. When equipped Devotee initiates Strike: You may pay 1 Cosmo to prevent 1 retaliation damage.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 13,
+        "intervalo": "A13:J13"
+      }
+    },
+    {
+      "ID": "SST-05-013",
+      "Faction": "Artemis",
+      "Type": "Equipment",
+      "Name": "Silver Mantle",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +1 Power / +1 HP. When equipped Devotee initiates Strike: You may pay 1 Cosmo to prevent 1 retaliation damage.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 14,
+        "intervalo": "A14:J14"
+      }
+    },
+    {
+      "ID": "SST-05-014",
+      "Faction": "Artemis",
+      "Type": "Equipment",
+      "Name": "Huntress Guard",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Equip: +1 Power / +2 HP. When equipped Devotee initiates Strike: You may pay 1 Cosmo to prevent 1 retaliation damage.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 15,
+        "intervalo": "A15:J15"
+      }
+    },
+    {
+      "ID": "SST-05-015",
+      "Faction": "Artemis",
+      "Type": "Equipment",
+      "Name": "Sacred Crescent",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +2 Power / +2 HP. When equipped Devotee initiates Strike: You may pay 1 Cosmo to prevent 1 retaliation damage.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 16,
+        "intervalo": "A16:J16"
+      }
+    },
+    {
+      "ID": "SST-05-016",
+      "Faction": "Artemis",
+      "Type": "Equipment",
+      "Name": "Moon Priestess Robe",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +2 Power / +2 HP. When equipped Devotee initiates Strike: You may pay 1 Cosmo to prevent 1 retaliation damage.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 17,
+        "intervalo": "A17:J17"
+      }
+    },
+    {
+      "ID": "SST-05-017",
+      "Faction": "Artemis",
+      "Type": "Equipment",
+      "Name": "Forest Ward",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Equip: +2 Power / +3 HP. When equipped Devotee initiates Strike: You may pay 1 Cosmo to prevent 1 retaliation damage.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 18,
+        "intervalo": "A18:J18"
+      }
+    },
+    {
+      "ID": "SST-05-018",
+      "Faction": "Artemis",
+      "Type": "Equipment",
+      "Name": "Starlight Cloak",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +2 Power / +3 HP. When equipped Devotee initiates Strike: You may pay 1 Cosmo to prevent 1 retaliation damage.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 19,
+        "intervalo": "A19:J19"
+      }
+    },
+    {
+      "ID": "SST-05-019",
+      "Faction": "Artemis",
+      "Type": "Equipment",
+      "Name": "Nightwatch Armor",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +3 Power / +3 HP. When equipped Devotee initiates Strike: You may pay 1 Cosmo to prevent 1 retaliation damage.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 20,
+        "intervalo": "A20:J20"
+      }
+    },
+    {
+      "ID": "SST-05-020",
+      "Faction": "Artemis",
+      "Type": "Equipment",
+      "Name": "Chosen Moonplate",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Equip: +3 Power / +4 HP. When equipped Devotee initiates Strike: You may pay 1 Cosmo to prevent 1 retaliation damage.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 21,
+        "intervalo": "A21:J21"
+      }
+    },
+    {
+      "ID": "SST-05-021",
+      "Faction": "Artemis",
+      "Type": "Technique",
+      "Name": "Moon Arrow",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Look at the top 3 cards; add 1 Cosmoble card to your hand and bottom the rest. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 22,
+        "intervalo": "A22:J22"
+      }
+    },
+    {
+      "ID": "SST-05-022",
+      "Faction": "Artemis",
+      "Type": "Technique",
+      "Name": "Silent Hunt",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "A friendly Devotee gains Long Range for this Strike. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 23,
+        "intervalo": "A23:J23"
+      }
+    },
+    {
+      "ID": "SST-05-023",
+      "Faction": "Artemis",
+      "Type": "Technique",
+      "Name": "Lunar Blessing",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Ready 1 Cosmo Base. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 24,
+        "intervalo": "A24:J24"
+      }
+    },
+    {
+      "ID": "SST-05-024",
+      "Faction": "Artemis",
+      "Type": "Technique",
+      "Name": "Starlight Volley",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Prevent 2 damage to a friendly Devotee this Strike. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 25,
+        "intervalo": "A25:J25"
+      }
+    },
+    {
+      "ID": "SST-05-025",
+      "Faction": "Artemis",
+      "Type": "Technique",
+      "Name": "Crescent Strike",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Return a friendly Devotee to your hand. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 26,
+        "intervalo": "A26:J26"
+      }
+    },
+    {
+      "ID": "SST-05-026",
+      "Faction": "Artemis",
+      "Type": "Technique",
+      "Name": "Tracking Shot",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Look at the top 3 cards; add 1 Cosmoble card to your hand and bottom the rest. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 27,
+        "intervalo": "A27:J27"
+      }
+    },
+    {
+      "ID": "SST-05-027",
+      "Faction": "Artemis",
+      "Type": "Technique",
+      "Name": "Celestial Alignment",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "A friendly Devotee gains Long Range for this Strike. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 28,
+        "intervalo": "A28:J28"
+      }
+    },
+    {
+      "ID": "SST-05-028",
+      "Faction": "Artemis",
+      "Type": "Technique",
+      "Name": "Moonlight Veil",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Ready 1 Cosmo Base. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 29,
+        "intervalo": "A29:J29"
+      }
+    },
+    {
+      "ID": "SST-05-029",
+      "Faction": "Artemis",
+      "Type": "Technique",
+      "Name": "Hunter’s Precision",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Prevent 2 damage to a friendly Devotee this Strike. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 30,
+        "intervalo": "A30:J30"
+      }
+    },
+    {
+      "ID": "SST-05-030",
+      "Faction": "Artemis",
+      "Type": "Technique",
+      "Name": "Call of the Moon",
+      "Cosmo Cost": 6,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Return a friendly Devotee to your hand. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 31,
+        "intervalo": "A31:J31"
+      }
+    },
+    {
+      "ID": "SST-05-031",
+      "Faction": "Artemis",
+      "Type": "Moment",
+      "Name": "Full Moon",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Put a Cosmoble card from hand into Cosmo Base exhausted; beyond normal limit. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 32,
+        "intervalo": "A32:J32"
+      }
+    },
+    {
+      "ID": "SST-05-032",
+      "Faction": "Artemis",
+      "Type": "Moment",
+      "Name": "The Sacred Hunt",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Draw 2 cards, then put 1 card from hand on bottom of deck. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 33,
+        "intervalo": "A33:J33"
+      }
+    },
+    {
+      "ID": "SST-05-033",
+      "Faction": "Artemis",
+      "Type": "Moment",
+      "Name": "Under Silver Skies",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Ready up to 2 Cosmo Bases. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 34,
+        "intervalo": "A34:J34"
+      }
+    },
+    {
+      "ID": "SST-05-034",
+      "Faction": "Artemis",
+      "Type": "Moment",
+      "Name": "Nightfall",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Look at the top 4 cards; add 1 to hand and bottom the rest. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 35,
+        "intervalo": "A35:J35"
+      }
+    },
+    {
+      "ID": "SST-05-035",
+      "Faction": "Artemis",
+      "Type": "Moment",
+      "Name": "A Quiet Pursuit",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Prevent the next 3 damage to your God this round. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 36,
+        "intervalo": "A36:J36"
+      }
+    },
+    {
+      "ID": "SST-05-036",
+      "Faction": "Artemis",
+      "Type": "Moment",
+      "Name": "Moonrise",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Put a Cosmoble card from hand into Cosmo Base exhausted; beyond normal limit. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 37,
+        "intervalo": "A37:J37"
+      }
+    },
+    {
+      "ID": "SST-05-037",
+      "Faction": "Artemis",
+      "Type": "Moment",
+      "Name": "The Hidden Path",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Draw 2 cards, then put 1 card from hand on bottom of deck. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 38,
+        "intervalo": "A38:J38"
+      }
+    },
+    {
+      "ID": "SST-05-038",
+      "Faction": "Artemis",
+      "Type": "Moment",
+      "Name": "Stars in Alignment",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Ready up to 2 Cosmo Bases. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 39,
+        "intervalo": "A39:J39"
+      }
+    },
+    {
+      "ID": "SST-05-039",
+      "Faction": "Artemis",
+      "Type": "Moment",
+      "Name": "The Moon’s Favor",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Look at the top 4 cards; add 1 to hand and bottom the rest. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 40,
+        "intervalo": "A40:J40"
+      }
+    },
+    {
+      "ID": "SST-05-040",
+      "Faction": "Artemis",
+      "Type": "Moment",
+      "Name": "Dawn Approaches",
+      "Cosmo Cost": 6,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Prevent the next 3 damage to your God this round. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 41,
+        "intervalo": "A41:J41"
+      }
+    },
+    {
+      "ID": "SST-05-041",
+      "Faction": "Artemis",
+      "Type": "Support",
+      "Name": "Lunar Shrine",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Your first Technique each round costs 1 less. Activation: Pay 1 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 42,
+        "intervalo": "A42:J42"
+      }
+    },
+    {
+      "ID": "SST-05-042",
+      "Faction": "Artemis",
+      "Type": "Support",
+      "Name": "Moonlit Grove",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Once per round, after placing a Cosmo Base: Look at the top card of your deck. Activation: Pay 1 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 43,
+        "intervalo": "A43:J43"
+      }
+    },
+    {
+      "ID": "SST-05-043",
+      "Faction": "Artemis",
+      "Type": "Support",
+      "Name": "Sacred Forest",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Your first Devotee each round gets +1 HP this round. Activation: Pay 1 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 44,
+        "intervalo": "A44:J44"
+      }
+    },
+    {
+      "ID": "SST-05-044",
+      "Faction": "Artemis",
+      "Type": "Support",
+      "Name": "Hunter’s Lookout",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Once per round, when you ready Cosmo outside refresh: Draw 1, then discard 1. Activation: Pay 1 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 45,
+        "intervalo": "A45:J45"
+      }
+    },
+    {
+      "ID": "SST-05-045",
+      "Faction": "Artemis",
+      "Type": "Support",
+      "Name": "Silver Observatory",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Once per round, prevent 1 damage to your God. Activation: Pay 2 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 46,
+        "intervalo": "A46:J46"
+      }
+    },
+    {
+      "ID": "SST-05-046",
+      "Faction": "Artemis",
+      "Type": "Support",
+      "Name": "Moonwell",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Your first Technique each round costs 1 less. Activation: Pay 2 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 47,
+        "intervalo": "A47:J47"
+      }
+    },
+    {
+      "ID": "SST-05-047",
+      "Faction": "Artemis",
+      "Type": "Support",
+      "Name": "Crescent Altar",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Once per round, after placing a Cosmo Base: Look at the top card of your deck. Activation: Pay 2 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 48,
+        "intervalo": "A48:J48"
+      }
+    },
+    {
+      "ID": "SST-05-048",
+      "Faction": "Artemis",
+      "Type": "Support",
+      "Name": "Star Chart",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Your first Devotee each round gets +1 HP this round. Activation: Pay 2 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 49,
+        "intervalo": "A49:J49"
+      }
+    },
+    {
+      "ID": "SST-05-049",
+      "Faction": "Artemis",
+      "Type": "Support",
+      "Name": "Artemis Sanctuary",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Once per round, when you ready Cosmo outside refresh: Draw 1, then discard 1. Activation: Pay 3 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 50,
+        "intervalo": "A50:J50"
+      }
+    },
+    {
+      "ID": "SST-05-050",
+      "Faction": "Artemis",
+      "Type": "Support",
+      "Name": "Night Garden",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Once per round, prevent 1 damage to your God. Activation: Pay 3 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — lore/name",
+      "origem": {
+        "aba": "Artemis",
+        "linha": 51,
+        "intervalo": "A51:J51"
+      }
+    },
+    {
+      "ID": "SST-06-001",
+      "Faction": "Neutral",
+      "Type": "Devotee",
+      "Name": "Wandering Disciple",
+      "Cosmo Cost": 1,
+      "Power": 1,
+      "HP": 3,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "When played: Draw 1 card, then discard 1 card.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 2,
+        "intervalo": "A2:J2"
+      }
+    },
+    {
+      "ID": "SST-06-002",
+      "Faction": "Neutral",
+      "Type": "Devotee",
+      "Name": "Traveling Healer",
+      "Cosmo Cost": 2,
+      "Power": 2,
+      "HP": 4,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "When played: Remove 2 damage from a Devotee.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 3,
+        "intervalo": "A3:J3"
+      }
+    },
+    {
+      "ID": "SST-06-003",
+      "Faction": "Neutral",
+      "Type": "Devotee",
+      "Name": "Arena Challenger",
+      "Cosmo Cost": 2,
+      "Power": 2,
+      "HP": 4,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "When this Devotee Strikes: It gets +1 Power this Strike.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 4,
+        "intervalo": "A4:J4"
+      }
+    },
+    {
+      "ID": "SST-06-004",
+      "Faction": "Neutral",
+      "Type": "Devotee",
+      "Name": "Temple Messenger",
+      "Cosmo Cost": 3,
+      "Power": 3,
+      "HP": 5,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "When played: Look at the top card of your deck.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 5,
+        "intervalo": "A5:J5"
+      }
+    },
+    {
+      "ID": "SST-06-005",
+      "Faction": "Neutral",
+      "Type": "Devotee",
+      "Name": "Cosmo Apprentice",
+      "Cosmo Cost": 3,
+      "Power": 4,
+      "HP": 5,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "When played: Ready 1 Cosmo Base.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 6,
+        "intervalo": "A6:J6"
+      }
+    },
+    {
+      "ID": "SST-06-006",
+      "Faction": "Neutral",
+      "Type": "Devotee",
+      "Name": "Veteran Trainer",
+      "Cosmo Cost": 4,
+      "Power": 4,
+      "HP": 7,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Guardian.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 7,
+        "intervalo": "A7:J7"
+      }
+    },
+    {
+      "ID": "SST-06-007",
+      "Faction": "Neutral",
+      "Type": "Devotee",
+      "Name": "Lone Pilgrim",
+      "Cosmo Cost": 4,
+      "Power": 4,
+      "HP": 6,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "When played: A friendly Devotee gets +1 HP this round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 8,
+        "intervalo": "A8:J8"
+      }
+    },
+    {
+      "ID": "SST-06-008",
+      "Faction": "Neutral",
+      "Type": "Devotee",
+      "Name": "Silent Observer",
+      "Cosmo Cost": 5,
+      "Power": 6,
+      "HP": 7,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "When played: Both players draw 1 card.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 9,
+        "intervalo": "A9:J9"
+      }
+    },
+    {
+      "ID": "SST-06-009",
+      "Faction": "Neutral",
+      "Type": "Devotee",
+      "Name": "Mountain Hermit",
+      "Cosmo Cost": 6,
+      "Power": 6,
+      "HP": 9,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "When destroyed: Draw 1 card, then discard 1 card.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 10,
+        "intervalo": "A10:J10"
+      }
+    },
+    {
+      "ID": "SST-06-010",
+      "Faction": "Neutral",
+      "Type": "Devotee",
+      "Name": "Unaligned Guardian",
+      "Cosmo Cost": 7,
+      "Power": 7,
+      "HP": 9,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Guardian. When played: Heal 1 Soul from your God.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 11,
+        "intervalo": "A11:J11"
+      }
+    },
+    {
+      "ID": "SST-06-011",
+      "Faction": "Neutral",
+      "Type": "Equipment",
+      "Name": "Traveler Cloak",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Equip: +1 Power / +1 HP. Any faction may equip this card.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 12,
+        "intervalo": "A12:J12"
+      }
+    },
+    {
+      "ID": "SST-06-012",
+      "Faction": "Neutral",
+      "Type": "Equipment",
+      "Name": "Training Bracers",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +1 Power / +1 HP. Any faction may equip this card.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 13,
+        "intervalo": "A13:J13"
+      }
+    },
+    {
+      "ID": "SST-06-013",
+      "Faction": "Neutral",
+      "Type": "Equipment",
+      "Name": "Bronze Buckler",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +1 Power / +1 HP. Any faction may equip this card.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 14,
+        "intervalo": "A14:J14"
+      }
+    },
+    {
+      "ID": "SST-06-014",
+      "Faction": "Neutral",
+      "Type": "Equipment",
+      "Name": "Cosmo Pendant",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Equip: +1 Power / +2 HP. Any faction may equip this card.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 15,
+        "intervalo": "A15:J15"
+      }
+    },
+    {
+      "ID": "SST-06-015",
+      "Faction": "Neutral",
+      "Type": "Equipment",
+      "Name": "Meditation Beads",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +2 Power / +2 HP. Any faction may equip this card.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 16,
+        "intervalo": "A16:J16"
+      }
+    },
+    {
+      "ID": "SST-06-016",
+      "Faction": "Neutral",
+      "Type": "Equipment",
+      "Name": "Worn Greaves",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +2 Power / +2 HP. Any faction may equip this card.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 17,
+        "intervalo": "A17:J17"
+      }
+    },
+    {
+      "ID": "SST-06-017",
+      "Faction": "Neutral",
+      "Type": "Equipment",
+      "Name": "Temple Shield",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Equip: +2 Power / +3 HP. Any faction may equip this card.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 18,
+        "intervalo": "A18:J18"
+      }
+    },
+    {
+      "ID": "SST-06-018",
+      "Faction": "Neutral",
+      "Type": "Equipment",
+      "Name": "Pilgrim Mantle",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +2 Power / +3 HP. Any faction may equip this card.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 19,
+        "intervalo": "A19:J19"
+      }
+    },
+    {
+      "ID": "SST-06-019",
+      "Faction": "Neutral",
+      "Type": "Equipment",
+      "Name": "Sparring Gloves",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Equip: +3 Power / +3 HP. Any faction may equip this card.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 20,
+        "intervalo": "A20:J20"
+      }
+    },
+    {
+      "ID": "SST-06-020",
+      "Faction": "Neutral",
+      "Type": "Equipment",
+      "Name": "Ancient Charm",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Equip: +3 Power / +4 HP. Any faction may equip this card.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 21,
+        "intervalo": "A21:J21"
+      }
+    },
+    {
+      "ID": "SST-06-021",
+      "Faction": "Neutral",
+      "Type": "Technique",
+      "Name": "Focused Strike",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "A Devotee gets +1 Power this Strike. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 22,
+        "intervalo": "A22:J22"
+      }
+    },
+    {
+      "ID": "SST-06-022",
+      "Faction": "Neutral",
+      "Type": "Technique",
+      "Name": "Emergency Guard",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Prevent 1 damage to a Devotee this Strike. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 23,
+        "intervalo": "A23:J23"
+      }
+    },
+    {
+      "ID": "SST-06-023",
+      "Faction": "Neutral",
+      "Type": "Technique",
+      "Name": "Second Wind",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Draw 1 card, then discard 1 card. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 24,
+        "intervalo": "A24:J24"
+      }
+    },
+    {
+      "ID": "SST-06-024",
+      "Faction": "Neutral",
+      "Type": "Technique",
+      "Name": "Calculated Retreat",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Remove 1 damage from a Devotee. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 25,
+        "intervalo": "A25:J25"
+      }
+    },
+    {
+      "ID": "SST-06-025",
+      "Faction": "Neutral",
+      "Type": "Technique",
+      "Name": "Cosmo Meditation",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "A Devotee gets +2 HP this round. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 26,
+        "intervalo": "A26:J26"
+      }
+    },
+    {
+      "ID": "SST-06-026",
+      "Faction": "Neutral",
+      "Type": "Technique",
+      "Name": "Open Challenge",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "A Devotee gets +1 Power this Strike. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 27,
+        "intervalo": "A27:J27"
+      }
+    },
+    {
+      "ID": "SST-06-027",
+      "Faction": "Neutral",
+      "Type": "Technique",
+      "Name": "Steady Defense",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Prevent 1 damage to a Devotee this Strike. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 28,
+        "intervalo": "A28:J28"
+      }
+    },
+    {
+      "ID": "SST-06-028",
+      "Faction": "Neutral",
+      "Type": "Technique",
+      "Name": "Tactical Feint",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Draw 1 card, then discard 1 card. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 29,
+        "intervalo": "A29:J29"
+      }
+    },
+    {
+      "ID": "SST-06-029",
+      "Faction": "Neutral",
+      "Type": "Technique",
+      "Name": "Recover Balance",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Remove 1 damage from a Devotee. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 30,
+        "intervalo": "A30:J30"
+      }
+    },
+    {
+      "ID": "SST-06-030",
+      "Faction": "Neutral",
+      "Type": "Technique",
+      "Name": "Final Effort",
+      "Cosmo Cost": 6,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "A Devotee gets +2 HP this round. Timing: during your action opportunity or an applicable Strike window (provisional).",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 31,
+        "intervalo": "A31:J31"
+      }
+    },
+    {
+      "ID": "SST-06-031",
+      "Faction": "Neutral",
+      "Type": "Moment",
+      "Name": "A Chance Encounter",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Draw 1 card. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 32,
+        "intervalo": "A32:J32"
+      }
+    },
+    {
+      "ID": "SST-06-032",
+      "Faction": "Neutral",
+      "Type": "Moment",
+      "Name": "Unexpected Ally",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Heal 1 Soul from your God. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 33,
+        "intervalo": "A33:J33"
+      }
+    },
+    {
+      "ID": "SST-06-033",
+      "Faction": "Neutral",
+      "Type": "Moment",
+      "Name": "A Sudden Opening",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Remove 1 damage from a Devotee. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 34,
+        "intervalo": "A34:J34"
+      }
+    },
+    {
+      "ID": "SST-06-034",
+      "Faction": "Neutral",
+      "Type": "Moment",
+      "Name": "The Long Journey",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Ready 1 Cosmo Base. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 35,
+        "intervalo": "A35:J35"
+      }
+    },
+    {
+      "ID": "SST-06-035",
+      "Faction": "Neutral",
+      "Type": "Moment",
+      "Name": "Quiet Before Battle",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Both players draw 1 card. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 36,
+        "intervalo": "A36:J36"
+      }
+    },
+    {
+      "ID": "SST-06-036",
+      "Faction": "Neutral",
+      "Type": "Moment",
+      "Name": "A Test of Courage",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Draw 1 card. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 37,
+        "intervalo": "A37:J37"
+      }
+    },
+    {
+      "ID": "SST-06-037",
+      "Faction": "Neutral",
+      "Type": "Moment",
+      "Name": "The Turning Point",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Heal 1 Soul from your God. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 38,
+        "intervalo": "A38:J38"
+      }
+    },
+    {
+      "ID": "SST-06-038",
+      "Faction": "Neutral",
+      "Type": "Moment",
+      "Name": "An Honorable Duel",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Remove 1 damage from a Devotee. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 39,
+        "intervalo": "A39:J39"
+      }
+    },
+    {
+      "ID": "SST-06-039",
+      "Faction": "Neutral",
+      "Type": "Moment",
+      "Name": "A Fleeting Hope",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Ready 1 Cosmo Base. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 40,
+        "intervalo": "A40:J40"
+      }
+    },
+    {
+      "ID": "SST-06-040",
+      "Faction": "Neutral",
+      "Type": "Moment",
+      "Name": "The Road Ahead",
+      "Cosmo Cost": 6,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Both players draw 1 card. Play only during your action opportunity.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 41,
+        "intervalo": "A41:J41"
+      }
+    },
+    {
+      "ID": "SST-06-041",
+      "Faction": "Neutral",
+      "Type": "Support",
+      "Name": "Training Grounds",
+      "Cosmo Cost": 1,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Once per round, when you play a Devotee: You may look at the top card of your deck. Activation: Pay 1 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 42,
+        "intervalo": "A42:J42"
+      }
+    },
+    {
+      "ID": "SST-06-042",
+      "Faction": "Neutral",
+      "Type": "Support",
+      "Name": "Mountain Pass",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Once per round, after a Devotee is destroyed: Its controller may draw 1, then discard 1. Activation: Pay 1 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 43,
+        "intervalo": "A43:J43"
+      }
+    },
+    {
+      "ID": "SST-06-043",
+      "Faction": "Neutral",
+      "Type": "Support",
+      "Name": "Village Shrine",
+      "Cosmo Cost": 2,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Your first neutral Equipment each round costs 1 less. Activation: Pay 1 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 44,
+        "intervalo": "A44:J44"
+      }
+    },
+    {
+      "ID": "SST-06-044",
+      "Faction": "Neutral",
+      "Type": "Support",
+      "Name": "Crossroads",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Once per round, you may pay 1 Cosmo to remove 1 damage from a Devotee. Activation: Pay 1 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 45,
+        "intervalo": "A45:J45"
+      }
+    },
+    {
+      "ID": "SST-06-045",
+      "Faction": "Neutral",
+      "Type": "Support",
+      "Name": "Arena Steps",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Once per round, after you play a neutral card: Heal 1 Soul. Activation: Pay 2 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 46,
+        "intervalo": "A46:J46"
+      }
+    },
+    {
+      "ID": "SST-06-046",
+      "Faction": "Neutral",
+      "Type": "Support",
+      "Name": "Hidden Spring",
+      "Cosmo Cost": 3,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Once per round, when you play a Devotee: You may look at the top card of your deck. Activation: Pay 2 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 47,
+        "intervalo": "A47:J47"
+      }
+    },
+    {
+      "ID": "SST-06-047",
+      "Faction": "Neutral",
+      "Type": "Support",
+      "Name": "Old Watchtower",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Once per round, after a Devotee is destroyed: Its controller may draw 1, then discard 1. Activation: Pay 2 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 48,
+        "intervalo": "A48:J48"
+      }
+    },
+    {
+      "ID": "SST-06-048",
+      "Faction": "Neutral",
+      "Type": "Support",
+      "Name": "Pilgrim Camp",
+      "Cosmo Cost": 4,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Your first neutral Equipment each round costs 1 less. Activation: Pay 2 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 49,
+        "intervalo": "A49:J49"
+      }
+    },
+    {
+      "ID": "SST-06-049",
+      "Faction": "Neutral",
+      "Type": "Support",
+      "Name": "Stone Bridge",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "Yes",
+      "Rules Text (EN draft)": "Once per round, you may pay 1 Cosmo to remove 1 damage from a Devotee. Activation: Pay 3 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 50,
+        "intervalo": "A50:J50"
+      }
+    },
+    {
+      "ID": "SST-06-050",
+      "Faction": "Neutral",
+      "Type": "Support",
+      "Name": "Cosmo Observatory",
+      "Cosmo Cost": 5,
+      "Power": null,
+      "HP": null,
+      "Cosmoble": "No",
+      "Rules Text (EN draft)": "Once per round, after you play a neutral card: Heal 1 Soul. Activation: Pay 3 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
+      "Design Status": "PROVISIONAL — balance/timing",
+      "origem": {
+        "aba": "Neutral",
+        "linha": 51,
+        "intervalo": "A51:J51"
+      }
+    }
+  ]
+}

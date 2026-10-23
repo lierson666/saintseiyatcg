@@ -15,7 +15,7 @@ O projeto agora ja possui uma base visual forte e um documento de regras oficial
 
 Athena agora ja esta catalogada de forma muito mais completa no banco de dados, incluindo God, Domains, Bronze Saints, Silver Saints, Gold Saints, Cloths, Weapons, Relics, Techniques e Moments. A gauntlet `Athena Beta v0.1` tambem ja esta documentada.
 
-Em 23/10/2026, o autor forneceu o **Rulebook 2.0**, agora registrado como referência oficial. O jogo, o catálogo e o Card Forge ainda usam a implementação anterior. A migração aguarda as novas cartas e a consolidação dos pontos que o livro deixa em aberto; consulte [o mapa da migração](docs/migracao-rulebook-2.0.md).
+Em 23/10/2026, o **Rulebook 2.0** foi consolidado e integrado à arena local e ao Card Forge. O catálogo tem 357 cartas (57 históricas + 300 novas aprovadas), seis decks iniciais e cartas interativas. A HUD distingue o token de vantagem/iniciativa da oportunidade de AÇÃO e da prioridade. Veja [a implementação](docs/implementacao-rulebook-2.0.md) e [a validação](docs/validacao-rulebook-2.0.md).
 
 ## Documentacao principal
 
@@ -26,7 +26,7 @@ Em 23/10/2026, o autor forneceu o **Rulebook 2.0**, agora registrado como refer�
 - `/data/cards.json`: banco inicial das cartas ja exportadas
 - `/docs/beta-athena.md`: gauntlet oficial da beta Athena
 - `/data/beta-athena.json`: decks, domains, proxies e cobertura da beta
-- `/playtest/index.html`: versao jogavel manual da beta Athena
+- `/playtest/index.html`: arena local do Rulebook 2.0
 - `/playtest/engine.js`: motor independente, comandos validados, prioridade, pilha e IA
 - `/playtest/game.css`: arena responsiva e visual de console inspirado no PS3
 - `/docs/rebuild-sanctuary.md`: arquitetura e verificação da reconstrução
@@ -38,28 +38,28 @@ Em 23/10/2026, o autor forneceu o **Rulebook 2.0**, agora registrado como refer�
 No terminal, a partir da raiz do projeto:
 
 ```bash
-python3 -m http.server 8000
+python3 card-forge/serve.py
 ```
 
 Depois abra:
 
-- `http://localhost:8000/playtest/`
+- `http://localhost:8765/playtest/`
 
 ## Testes da versão jogável
 
 Contrato de regras e comandos, sem instalar dependências:
 
 ```bash
-node tools/test-rules.mjs
+node --test tools/test-rules-v2.mjs tools/test-card-presentation.mjs
 ```
 
 Regressão de navegador (requer Playwright no ambiente de desenvolvimento e o servidor HTTP acima):
 
 ```bash
-python3 tools/test-playtest.py --channel chrome --ai-matches
+python3 tools/test-ui-v2.py
 ```
 
-O script informa a pasta temporária com screenshots. As partidas automatizadas aceleram apenas os intervalos de apresentação/IA na resposta interceptada pelo teste.
+As capturas ficam em `card-forge/out/qa-v2/` (fora do Git). O teste de regras inclui seis partidas completas entre facções. O script de navegador da antiga beta é histórico; a validação vigente é `test-ui-v2.py`.
 
 ## Convencao de idioma
 

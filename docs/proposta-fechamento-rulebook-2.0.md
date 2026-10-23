@@ -1,6 +1,6 @@
 # Rulebook 2.0 — proposta para fechar as regras
 
-**Proposta de design de 23/10/2026, solicitada pelo autor. Ainda não aprovada nem implementada.** O livro oficial continua em [guia-do-jogo.md](guia-do-jogo.md). Os números abaixo são pontos de partida para playtest, não resultados de testes.
+**Proposta de design de 23/10/2026, aprovada pelo autor no mesmo dia:** “pode aplicar isso no sistema do jogo e modificar todo o jogo”. O conteúdo foi incorporado ao capítulo XII de [guia-do-jogo.md](guia-do-jogo.md), que é a referência normativa. Este arquivo preserva o histórico da recomendação. Os números abaixo são pontos de partida para playtest, não resultados de testes.
 
 Minha recomendação é preservar o confronto individual como centro do jogo: gastar AÇÕES para prender, escapar, preparar uma evolução ou golpear deve ser uma escolha relevante. As definições abaixo fecham as lacunas identificadas na [análise da migração](migracao-rulebook-2.0.md).
 

@@ -1,3 +1,7 @@
+import {compilePlaytest} from '../shared/import-playtest.js';
+import {textBlocks,blocksMarkup,presentationRules} from '../shared/card-text.js';
+import {renderLiveCard,illustration} from '../shared/live-card.js';
+import {isEquipment,validateCard} from '../shared/card-model.js';
 // Card Forge — editor de cartas em vanilla JS. Renderiza no canvas nativo 1488x2091 usando
 // as peças de CARD-TEMPLATE/ (extraídas dos PSDs) e o spec CARD-TEMPLATE/templates.json.
 
@@ -38,7 +42,8 @@ let S = blankState();
 function blankState() {
   return {
     id: '', nome_exibicao_en: '', title: '', subtitle: '', tipo: 'Devotee', subtipos: '', faccao: 'Athena',
-    raridade: 'Common', custo: '', unidade_custo: 'cosmo', power: '', resistance: '', bonusPower: '', bonusResistance: '',
+    revisao_regras: '2.0', cosmoble: false, personagem_unico: false, personagem_id: '', slot_equipamento: '', donos: '', estagios: [], resonanceText: '',
+    raridade: 'Common', custo: '', unidade_custo: 'cosmo', power: '', vida: '', resistance: '', bonusPower: '', bonusResistance: '',
     equipar_custo: '', damage_cloth: '', soul: '', attack: '', awaken: '', keywords: '', rules: '',
     habilidade_awaken_en: '', ultimate_en: '', flavour: '', art: null,
   };
@@ -75,6 +80,8 @@ const splitParas = (md) => md.split(/\n\s*\n/).map((p) => p.trim()).filter(Boole
 // ---------- layout ----------
 function layoutKey(s) {
   const subs = list(s.subtipos);
+  if(s.tipo==='Support')return 'relic';
+  if(s.tipo==='Equipment')return subs.some(x=>['Cloth','Scale','Surplice','Warplate'].includes(x))?'relic_cloth':subs.includes('Weapon')?'relic_weapon':'relic';
   const sub = subs.find((x) => T.typeToLayout[`${s.tipo}:${x}`]);
   return T.typeToLayout[sub ? `${s.tipo}:${sub}` : s.tipo] || 'devotee';
 }
@@ -88,7 +95,7 @@ function typeLine(s, fmt) {
 
 // ---------- desenho ----------
 const font = (style, size) => T.styles[style].font.replace('{s}', size.toFixed(1));
-const fac = () => T.factions[String(S.faccao).toLowerCase()] || T.factions.athena;
+const fac = () => S.faccao==='Neutral'?{...T.factions.athena,color:'#ddd9c9'}:T.factions[String(S.faccao).toLowerCase()] || T.factions.athena;
 const facKey = () => (T.factions[String(S.faccao).toLowerCase()] ? String(S.faccao).toLowerCase() : 'athena');
 
 // Peça da facção: '<facção>/x' se existir no pacote do Deus; senão a de Athena tingida na cor da facção.
@@ -207,7 +214,7 @@ async function drawFrame() {
 // Símbolos de texto: token -> peça. {C}/{B} usam o mesmo ícone de Cosmo.
 const ICONS = { '{C}': 'athena/icon_cosmo', '{B}': 'athena/icon_cosmo', '{L}': 'athena/icon_latent', '{S}': 'icons/soul', '{T}': 'icons/tap' };
 // Keywords (docs/guia-do-jogo.md §24 + ações dos Deuses) saem em NEGRITO MAIÚSCULO no texto de regras, como nos PSDs.
-export const KEYWORDS = ['Guardian', 'Nimble', 'Cheater', 'Long Range', 'Pierce', 'Impulse', 'Sealed', 'Unfaith', 'Prepare', 'Prepared', 'Seal'];
+export const KEYWORDS = ['Guardian', 'Nimble', 'Cheater', 'Long Range', 'Pierce', 'Impulse', 'Sealed', 'Unfaith', 'Prepare', 'Prepared', 'Afterlife', 'Multiguard', 'Seal'];
 const KW_RE = new RegExp(`\\b(${[...KEYWORDS].sort((a, b) => b.length - a.length).join('|')})\\b`, 'gi');
 const boldKeywords = (para) => para.split(/(\*\*[^*]*\*\*)/).map((seg, i) => (i % 2 ? seg : seg.replace(KW_RE, (m) => `**${m.toUpperCase()}**`))).join('');
 
@@ -258,7 +265,8 @@ async function drawRules(el, s) {
   const [rx, ry, rw, rh] = el.rect;
   const paras = [];
   if (has(s.keywords)) paras.push(`**${list(s.keywords).join(', ').toUpperCase()}.**`);
-  paras.push(...splitParas(s.rules));
+  const text=s.estagios.length?presentationRules(buildCard()).map(toMarkup):splitParas(s.rules);
+  paras.push(...splitParas(blocksMarkup(textBlocks(text))));
   if (layoutKey(s) === 'god' && has(s.habilidade_awaken_en)) {
     paras.push(`**AWAKEN${has(s.awaken) ? ` ${s.awaken}` : ''}**`, ...s.habilidade_awaken_en.split(/(?<=\.) (?=[A-Z][^.—]{1,30} — )/).map(toMarkup));
   }
@@ -313,7 +321,8 @@ async function render() {
   const seq = ++renderSeq;
   await document.fonts.ready;
   // pré-carrega tudo antes de desenhar, para o frame sair inteiro
-  const L = T.layouts[layoutKey(S)];
+  const L = structuredClone(T.layouts[layoutKey(S)]);
+  if(isEquipment({...S,subtipos:list(S.subtipos)})&&!L.elements.some(e=>e.field==='equip'))L.elements.push({kind:'gem',piece:'athena/gem_equip',field:'equip',label:'EQUIP',size:80});
   await Promise.all([S.art?.src && loadImg(S.art.src), loadImg(pieceSrc(symbolKey(S.faccao))),
     ...Object.keys(P).map((k) => loadImg(pieceSrc(k)))]);
   if (seq !== renderSeq) return;
@@ -341,7 +350,9 @@ async function render() {
         break;
       }
       case 'gem': {
-        const v = S[{ equip: 'equipar_custo', damage: 'damage_cloth' }[el.field] || el.field];
+        const field={equip:'equipar_custo',damage:'damage_cloth'}[el.field]||el.field;
+        if(field==='damage_cloth'&&S.revisao_regras==='2.0')break;
+        const v=field==='resistance'&&has(S.vida)?S.vida:S[field];
         if (!has(v)) break;
         const g = await drawGlowPiece(el.piece, el);
         if (!g) break;
@@ -370,30 +381,54 @@ async function render() {
     if (seq !== renderSeq) { ctx.restore(); return; }
   }
   ctx.restore();
+  updateLivePreview();
 }
 
 // ---------- formulário ----------
-const NUM = ['custo', 'power', 'resistance', 'equipar_custo', 'damage_cloth', 'soul', 'attack', 'awaken'];
+const NUM = ['custo', 'power', 'vida', 'resistance', 'equipar_custo', 'damage_cloth', 'soul', 'attack', 'awaken'];
+
+function renderStageEditor(){
+  const host=$('#stageEditor');host.replaceChildren();
+  S.estagios.forEach((stage,index)=>{
+    const row=document.createElement('div');row.className='stage-row';
+    for(const [key,label] of [['nome','Estágio'],['custo','Evolve'],['bonus_poder','Bônus Power'],['bonus_vida','Bônus HP']]){
+      const l=document.createElement('label');l.textContent=label;const input=document.createElement('input');input.type=key==='nome'?'text':'number';input.value=stage[key]??'';input.disabled=index===0&&['nome','custo'].includes(key);input.setAttribute('aria-label',`${label} ${index+1}`);
+      input.addEventListener('input',()=>{stage[key]=key==='nome'?input.value:input.value===''?null:Number(input.value);if(index===0){S.bonusPower=`+${stage.bonus_poder||0}`;S.bonusResistance=`+${stage.bonus_vida||0}`;}render();});l.append(input);row.append(l);
+    }host.append(row);
+  });
+  $('#previewStage').replaceChildren(...(S.estagios.length?S.estagios:[{nome:'Vanilla'}]).map((s,i)=>new Option(s.nome,String(i))));
+}
+$('#addStage').addEventListener('click',()=>{S.estagios.push({nome:S.estagios.length?'New stage':'Vanilla',custo:S.estagios.length?1:null,bonus_poder:0,bonus_vida:0,keywords_en:[],habilidades_en:[]});renderStageEditor();render();});
+function updateLivePreview(){
+  const live=$('#representation').value==='live';$('#livePreview').hidden=!live;$('#liveControls').hidden=!live;$('#cardWrap').hidden=live;
+  const c=buildCard(),damage=Number($('#previewDamage').value)||0,stage=Number($('#previewStage').value)||0;
+  $('#livePreview').innerHTML=renderLiveCard(c,{art:S.art?.src,stats:{power:Number(c.power)||0,hp:Math.max(0,Number(c.vida??c.resistance)-damage),maxHP:Number(c.vida??c.resistance),damage,keywords:c.keywords_en},instance:{prepared:$('#previewPrepared').checked,damage,stage}});
+  $('#rulesReview').textContent=c.motor_revisao_pendente?'Texto alterado: os efeitos jogáveis precisam de revisão antes de usar esta carta numa partida.':validateCard(c).join(' · ');
+}
+for(const id of ['representation','previewDamage','previewPrepared','previewStage'])$('#'+id).addEventListener('input',updateLivePreview);
 
 function fillForm() {
   for (const [k, v] of Object.entries(S)) {
     const f = form.elements[k];
-    if (f) f.value = v ?? '';
+    if(f){if(f.type==='checkbox')f.checked=Boolean(v);else f.value=v??'';}
   }
   $('#artZoom').value = S.art?.zoom ?? 1;
-  syncVisibility();
+  syncVisibility();renderStageEditor();
 }
 
 function syncVisibility() {
   const lk = layoutKey(S);
   form.querySelectorAll('[data-for]').forEach((el) => { el.hidden = !el.dataset.for.split(' ').includes(lk); });
+  $('#legacyResistance').hidden=S.revisao_regras==='2.0';
+  $('#characterFields').hidden=S.tipo!=='Devotee';$('#equipmentFields').hidden=!isEquipment({...S,subtipos:list(S.subtipos)});
 }
 
 form.addEventListener('input', (e) => {
   const f = e.target;
   if (!(f.name in S)) return;
-  S[f.name] = f.value;
-  if (f.name === 'tipo' || f.name === 'subtipos') syncVisibility();
+  S[f.name] = f.type==='checkbox'?f.checked:f.value;
+  if(S.estagios.length&&['bonusPower','bonusResistance'].includes(f.name))S.estagios[0][f.name==='bonusPower'?'bonus_poder':'bonus_vida']=Number(f.value)||0;
+  if(['tipo','subtipos'].includes(f.name)){if(isEquipment({...S,subtipos:list(S.subtipos)})&&!has(S.equipar_custo)){S.equipar_custo='1';form.elements.equipar_custo.value='1';}syncVisibility();}
   render();
 });
 
@@ -401,6 +436,9 @@ form.addEventListener('input', (e) => {
 function fromCard(c, proj = {}) {
   const s = blankState();
   for (const k of Object.keys(s)) if (k in c && c[k] !== null) s[k] = c[k];
+  s.revisao_regras=c.revisao_regras||'1.0';
+  s.donos=(c.donos||[]).join(', ');s.estagios=structuredClone(c.estagios||[]);s.resonanceText=(c.ressonancias||[]).map(r=>`${r.personagem_id} | ${r.habilidade_en}`).join('\n');
+  const stage=c.estagios?.[0];if(stage){s.bonusPower=`+${stage.bonus_poder}`;s.bonusResistance=`+${stage.bonus_vida}`;}
   s.subtipos = (c.subtipos || []).join(', ');
   s.keywords = (c.keywords_en || []).join(', ');
   gen = (c.habilidades_en || []).map((text) => ({ text, markup: toMarkup(text) }));
@@ -417,6 +455,7 @@ async function selectCard(id) {
   let proj = {};
   try { const r = await fetch(`projects/${id}.json`); if (r.ok) proj = await r.json(); } catch { /* sem projeto */ }
   S = fromCard(c, proj);
+  if(!S.art&&illustration(c)){const im=await loadImg(illustration(c));if(im){S.art={src:illustration(c)};coverArt(im);}}
   if (!S.art && c.caminho_imagem) {
     const src = `../ARTS/${c.caminho_imagem.split('/').pop()}`;
     const im = await loadImg(src);
@@ -577,7 +616,8 @@ $('#saveProject').addEventListener('click', async () => {
 });
 
 function buildCard() {
-  const base = orig ? structuredClone(orig) : Object.fromEntries(Object.keys(db.cartas[0]).map((k) => [k, null]));
+  const source=S.importBase||orig;
+  const base = source ? structuredClone(source) : Object.fromEntries(Object.keys(db.cartas[0]).map((k) => [k, null]));
   const n = (v) => (has(v) ? Number(v) : null);
   const paras = splitParas(S.rules);
   const habilidades = paras.map((md, i) => (gen[i] && gen[i].markup === md ? gen[i].text : fromMarkup(md)));
@@ -585,8 +625,16 @@ function buildCard() {
     id: S.id, nome_exibicao_en: S.nome_exibicao_en.trim(), faccao: S.faccao, tipo: S.tipo,
     subtipos: list(S.subtipos), raridade: S.raridade, keywords_en: list(S.keywords), habilidades_en: habilidades,
   });
-  if (!orig) Object.assign(base, { nome_interno_pt: '', status: 'needs-review', cosmoble: false, caminho_imagem: null, habilidade_awaken_en: '', ultimate_en: '', notas_pt: '' });
-  for (const k of NUM) base[k] = n(S[k]);
+  if (!source) Object.assign(base, { nome_interno_pt: '', status: 'needs-review', cosmoble: false, caminho_imagem: null, habilidade_awaken_en: '', ultimate_en: '', notas_pt: '' });
+  for(const k of NUM)if(!source||k in source||has(S[k]))base[k]=n(S[k]);
+  base.cosmoble=source&&source.cosmoble===null&&!S.cosmoble?null:Boolean(S.cosmoble);
+  if(S.revisao_regras==='2.0'){
+    base.revisao_regras='2.0';base.personagem_id=S.personagem_id||null;if(!source||'personagem_unico' in source||S.personagem_unico)base.personagem_unico=Boolean(S.personagem_unico);base.slot_equipamento=S.slot_equipamento||null;base.donos=list(S.donos);base.estagios=structuredClone(S.estagios);
+    base.ressonancias=S.resonanceText.split(/\n/).map(t=>t.trim()).filter(Boolean).map(t=>{const [id,...parts]=t.split('|'),text=parts.join('|').trim(),old=source?.ressonancias?.find(r=>r.personagem_id===id.trim());return {...(old||{}),personagem_id:id.trim(),habilidade_en:text};});
+    if(source&&['estagios','donos'].some(k=>JSON.stringify(base[k])!==JSON.stringify(source[k])))base.habilidades_en=presentationRules(base);
+    const mechanicalTextChanged=source&&(JSON.stringify(habilidades)!==JSON.stringify(source.habilidades_en)||JSON.stringify(base.keywords_en)!==JSON.stringify(source.keywords_en)||S.resonanceText!==(source.ressonancias||[]).map(r=>`${r.personagem_id} | ${r.habilidade_en}`).join('\n'));
+    if(mechanicalTextChanged||!source)base.motor_revisao_pendente=true;
+  }
   // texto com marcação ({L}, **) volta para o formato do cards.json; texto intacto fica como está
   const plain = (v) => (/[{*]/.test(v || '') ? fromMarkup(v) : (v || '').trim());
   if (S.tipo === 'God') Object.assign(base, { habilidade_awaken_en: plain(S.habilidade_awaken_en), ultimate_en: plain(S.ultimate_en) });
@@ -661,10 +709,11 @@ kwSel.addEventListener('change', () => { if (kwSel.value) insertAtCursor(kwSel.v
 // Texto, Awaken Text e Ultimate aceitam várias linhas até o próximo campo.
 const fold = (k) => k.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/\s+/g, ' ').trim();
 const FIELDS = {
+  cosmoble: 'cosmoble', owners: 'donos', donos: 'donos', personagem: 'personagem_id', character: 'personagem_id', unique: 'personagem_unico', slot: 'slot_equipamento',
   id: 'id', name: 'nome_exibicao_en', nome: 'nome_exibicao_en', title: 'title', titulo: 'title',
   subtitle: 'subtitle', subtitulo: 'subtitle', type: 'tipo', tipo: 'tipo', subtypes: 'subtipos', subtipos: 'subtipos',
   faction: 'faccao', faccao: 'faccao', rarity: 'raridade', raridade: 'raridade', cost: 'custo', custo: 'custo',
-  unit: 'unidade_custo', unidade: 'unidade_custo', power: 'power', resistance: 'resistance', resistencia: 'resistance',
+  unit: 'unidade_custo', unidade: 'unidade_custo', power: 'power', hp: 'vida', vida: 'vida', resistance: 'resistance', resistencia: 'resistance',
   bonus: 'bonus', equip: 'equipar_custo', damage: 'damage_cloth', dano: 'damage_cloth', soul: 'soul',
   attack: 'attack', ataque: 'attack', awaken: 'awaken', keywords: 'keywords', flavour: 'flavour', flavor: 'flavour',
   art: 'art', arte: 'art', text: 'rules', texto: 'rules', rules: 'rules', regras: 'rules',
@@ -672,9 +721,9 @@ const FIELDS = {
 };
 const MULTI = new Set(['rules', 'habilidade_awaken_en', 'ultimate_en']);
 const pick = (v, opts) => opts.find((o) => fold(o) === fold(v));
-const TIPOS = ['Devotee', 'Relic', 'Technique', 'Moment', 'Domain', 'God'];
-const FACCOES = ['Athena', 'Ares', 'Artemis', 'Hades', 'Poseidon'];
-const RARIDADES = ['Common', 'Uncommon', 'Mythic', 'Divine'];
+const TIPOS = ['Devotee', 'Equipment', 'Support', 'Relic', 'Technique', 'Moment', 'Domain', 'God'];
+const FACCOES = ['Athena', 'Ares', 'Artemis', 'Hades', 'Poseidon', 'Neutral'];
+const RARIDADES = ['Common', 'Uncommon', 'Mythic', 'Divine', 'Playtest'];
 
 export function parseBatch(text) {
   const out = [];
@@ -697,6 +746,7 @@ export function parseBatch(text) {
     if (raw.raridade && !(raw.raridade = pick(raw.raridade, RARIDADES))) errors.push(`Rarity inválida (use ${RARIDADES.join(', ')})`);
     if ('unidade_custo' in raw) raw.unidade_custo = /base/i.test(raw.unidade_custo) ? 'base_cosmo' : 'cosmo';
     for (const k of NUM) if (has(raw[k]) && !/^-?\d+$/.test(raw[k])) errors.push(`${k} não é número: ${raw[k]}`);
+    for(const k of ['cosmoble','personagem_unico'])if(k in raw){if(!/^(true|false|yes|no|sim|nao|não|1|0)$/i.test(raw[k]))errors.push(`${k}: use true ou false`);raw[k]=/^(true|yes|sim|1)$/i.test(raw[k]);}
     if ('bonus' in raw) {
       const b = raw.bonus.match(/^([+-]?\d+)\s*\/\s*([+-]?\d+)$/);
       if (b) [raw.bonusPower, raw.bonusResistance] = [b[1], b[2]].map((x) => (x.startsWith('-') || x.startsWith('+') ? x : `+${x}`));
@@ -734,7 +784,7 @@ async function prepareItem(raw, used) {
 }
 
 let batch = [];
-function useItem(it) { orig = it.orig; gen = it.gen; S = it.state; }
+function useItem(it) { orig = it.orig; gen = it.gen; S = it.state;S.importBase=it.imported||null; }
 
 function renderBatchList() {
   const ol = $('#batchList');
@@ -756,7 +806,21 @@ function renderBatchList() {
   $('#batchExport').disabled = $('#batchSave').disabled = !ok;
 }
 
-$('#batchFile').addEventListener('change', async (e) => { const f = e.target.files[0]; if (f) { $('#batchText').value = await f.text(); $('#batchRead').click(); } });
+$('#batchFile').addEventListener('change',async e=>{
+  const f=e.target.files[0];if(!f)return;
+  try{
+    if(!/\.(xlsx|json)$/i.test(f.name)){$('#batchText').value=await f.text();$('#batchRead').click();return;}
+    let imported;
+    if(/\.xlsx$/i.test(f.name)){
+      say('Lendo planilha sem alterar o arquivo…');const r=await fetch('/api/import-xlsx',{method:'POST',headers:{'X-File-Name':encodeURIComponent(f.name)},body:f});const source=await r.json();if(!r.ok)throw Error(source.erro||'Reinicie o servidor local para habilitar a leitura XLSX.');imported=await compilePlaytest(source);
+    }else{const source=JSON.parse(await f.text());imported=Array.isArray(source)?source:source.cartas;}
+    if(!Array.isArray(imported)||!imported.length)throw Error('Arquivo sem cartas.');
+    const keep={orig,gen,S};
+    try{batch=imported.map(c=>{const errors=validateCard(c);const state=fromCard(c);const generated=gen;const previous=db.cartas.find(x=>x.id===c.id);return{orig:previous||null,gen:generated,state,errors,imported:structuredClone(c)};});}finally{({orig,gen,S}=keep);}
+    renderBatchList();say(`Lote carregado: ${batch.length} cartas. Revise os dados e o diff antes de gravar.`);$('#batch').open=true;
+    if(!batch.some(i=>i.errors.length))$('#batchList button')?.click();
+  }catch(error){say(error.message,true);}
+});
 $('#batchRead').addEventListener('click', async () => {
   const parsed = parseBatch($('#batchText').value);
   const used = new Set();
@@ -841,4 +905,6 @@ try {
   say(`falha ao carregar cards.json: ${e.message}`, true);
 }
 
-window.forge = { S: () => S, render, toMarkup, fromMarkup, buildCard, selectCard, parseBatch };
+function checkCatalog(){const keep={orig,gen,S};try{return db.cartas.map(c=>{orig=c;S=fromCard(c);return {id:c.id,diff:diffCards(c,buildCard())};}).filter(r=>r.diff.length);}finally{({orig,gen,S}=keep);}}
+function layoutReport(){const keep={orig,gen,S};try{return db.cartas.map(c=>{orig=c;S=fromCard(c);const el=T.layouts[layoutKey(S)].elements.find(e=>e.kind==='rules');const paras=[...(has(S.keywords)?[`**${list(S.keywords).join(', ')}.**`]:[]),...splitParas(blocksMarkup(textBlocks(splitParas(S.rules))))];let size=el.size,L;for(;size>=22;size--){L=layoutRules(paras,size,el.rect[2]);if(L.h<=el.rect[3])break;}return{id:c.id,size,overflow:L.h>el.rect[3]};});}finally{({orig,gen,S}=keep);}}
+window.forge = { checkCatalog,layoutReport,S: () => S, render, toMarkup, fromMarkup, buildCard, selectCard, parseBatch };
