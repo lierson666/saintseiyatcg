@@ -11,3 +11,9 @@ Os sleeves são usados no verso das cartas ocultas; nunca revelam a identidade d
 A hierarquia de cartas é obrigatória nas duas representações. Nome e custo; tipo; keywords; habilidades separadas; títulos, custos e requisitos; Owners, Resonance e estágios; atributos e EQUIP. O custo de EQUIP deve estar sempre visível nas cartas equipáveis. Os números estruturados alimentam a impressão e a carta viva, inclusive depois de editar os estágios.
 
 A integração atual é local. Loja, inventário remoto, monetização, áudio de personagens e sincronização online são etapas futuras e não foram simulados como funcionalidades prontas.
+
+## Legibilidade por dispositivo
+
+Ajuste solicitado pelo autor em 23/10/2026: no PC, a HUD deve ser maior e mais clara. A escala padrão de desktop usa textos de 16 px, rótulos de recursos de 13 px, Soul de 46 px e ação principal de 24 px. O painel lateral ganhou largura e acompanha a rolagem. Os fundos dos indicadores têm mais opacidade e os textos secundários, mais contraste. O controle pessoal de tamanho da HUD continua disponível e independente das cartas.
+
+Tablets e celulares usam pontos de adaptação próprios; não recebem a escala completa do desktop. A versão móvel também ganhou rótulos mais legíveis e botões de ferramentas com área de 44 px. Conferido de 375 a 1920 px, em orientação horizontal e com HUD em 125%, sem transbordamento horizontal nem indicadores cortados. Capturas comparativas ficam em `card-forge/out/qa-hud/` (fora do Git).

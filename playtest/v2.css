@@ -4,3 +4,96 @@
 @media(max-width:1000px){.v2-board{grid-template-columns:minmax(0,1fr) 205px}.v2-topbar{gap:16px;padding:12px 16px}.v2-topbar>p{font-size:11px}.advantage-token{min-width:180px;padding-right:16px}.v2-seat{padding:12px}.v2-domain{display:none}.v2-seat-header{gap:9px}.v2-unit-stack{flex-basis:calc(105px * var(--card-scale,1))}.v2-resource{min-width:42px}.v2-piles{margin-left:0}.v2-field{min-height:165px}.v2-controls{padding:16px 12px}}
 @media(max-width:700px){.v2-board{display:flex;flex-direction:column;min-height:100dvh}.v2-topbar{flex-wrap:wrap;gap:12px;padding:12px}.v2-topbar>div:not(.advantage-token){display:none}.advantage-token{min-width:180px;gap:10px;padding-right:12px}.advantage-token__seal{width:42px;height:42px;font-size:32px}.advantage-token__orbit{width:52px;height:52px}.advantage-token__copy b{font-size:9px}.v2-topbar>p{font-size:10px}.v2-topbar nav{gap:4px;margin-left:0}.v2-topbar .icon-button{width:30px;height:30px}.v2-god{min-width:170px;padding:7px 9px;gap:9px}.v2-god b{font-size:13px}.v2-god .v2-soul{font-size:25px}.v2-resource b{font-size:21px}.v2-resource small{font-size:8px}.v2-seat{padding:12px}.v2-seat-header{gap:8px}.v2-piles{margin-left:auto}.v2-piles button{min-width:37px}.v2-field{min-height:155px}.v2-seat--local .v2-hand>.v2-game-card{flex-basis:calc(112px * var(--card-scale,1))}.v2-controls{border-left:0;border-top:1px solid #d9b76244;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;padding:16px;zoom:1}.v2-controls h2{font-size:22px}.v2-controls .v2-opportunity{grid-column:1}.v2-controls .v2-selection{grid-column:1/-1;grid-row:2}.v2-action-list{grid-template-columns:repeat(2,minmax(0,1fr))}.v2-controls .primary-action{grid-column:2;grid-row:1;margin:0}.v2-stack{grid-column:1/-1}.v2-feed{grid-column:1/-1;min-height:0}.v2-dialog .card-details{grid-template-columns:1fr}.v2-dialog .details-art{max-width:310px;margin:auto}.v2-choice-options{grid-template-columns:repeat(2,minmax(0,1fr))}.v2-hidden-hand{gap:5px}.god-emote{bottom:auto;top:calc(100% + 6px);left:5px}.settings-layout{grid-template-columns:1fr}.cosmetic-settings select{max-width:145px}}
 html:has(body.battle-v2),body.battle-v2{height:auto;min-height:100%;overflow:auto}body.battle-v2 #game-root{height:auto;min-height:100dvh}.v2-hidden-hand{max-width:100%;flex-wrap:wrap}.v2-dialog .zone-choice .card-art{display:block;height:auto;aspect-ratio:1488/2091}.v2-dialog .details-art .live-card__footer{gap:5px}
+
+/* A mesa no computador tem sua própria escala de leitura. O ajuste pessoal de
+   HUD continua multiplicando essa base; a escala das cartas é independente. */
+@media (min-width:701px) {
+  .v2-board {
+    --hud-secondary:#c5c8d5;
+    --hud-panel-width:calc(clamp(260px,23vw,344px) * var(--hud-scale,1));
+    grid-template-columns:minmax(0,1fr) var(--hud-panel-width);
+  }
+  .v2-board .arena-floor {right:var(--hud-panel-width)}
+  .v2-topbar {flex-wrap:wrap;gap:20px;padding:18px 24px;zoom:var(--hud-scale,1)}
+  .v2-topbar h1 {font-size:32px}
+  .v2-topbar>p {font-size:16px;line-height:1.5}
+  .v2-topbar small {font-size:13px;line-height:1.5;color:var(--hud-secondary)}
+  .v2-topbar .section-label,.v2-controls .section-label {font-size:13px;letter-spacing:.12em}
+  .v2-topbar .icon-button {width:44px;height:44px}
+  .v2-topbar .icon-button svg {width:22px;height:22px}
+  .advantage-token {min-width:240px;gap:16px}
+  .advantage-token__seal {width:64px;height:64px;font-size:48px;flex-shrink:0}
+  .advantage-token__orbit {width:74px;height:74px}
+  .advantage-token__copy b {font-size:13px;letter-spacing:.08em}
+  .advantage-token__copy small {font-size:12px!important}
+  .v2-seat {padding:16px 24px}
+  .v2-seat-header {gap:12px}
+  .v2-god,.v2-domain {min-height:80px;padding:12px 16px;background:#111827f5;border-color:#626a8066}
+  .v2-god {min-width:248px;gap:16px}
+  .v2-god small,.v2-domain small,.v2-god em {font-size:12px;line-height:1.5;color:var(--hud-secondary)}
+  .v2-god b {font-size:20px;line-height:1.25;margin:5px 0}
+  .v2-god .v2-soul {font-size:42px;line-height:1.1}
+  .v2-soul small {font-size:12px;margin-top:4px}
+  .v2-domain {max-width:160px}
+  .v2-domain b {font-size:15px;line-height:1.4}
+  .v2-resource {min-width:68px;min-height:76px;display:flex;flex-direction:column;justify-content:center;gap:5px;padding:8px;background:#111827eb;border:1px solid #626a8044;border-radius:5px}
+  .v2-resource b {font-size:32px;line-height:1.1;color:#e0eaff}
+  .v2-resource small {font-size:12px;line-height:1.4;color:var(--hud-secondary)}
+  .v2-resource i {font-size:16px;color:var(--hud-secondary)}
+  .v2-piles {gap:8px}
+  .v2-piles button {min-width:58px;min-height:66px;padding:8px;background:#111827f5}
+  .v2-piles b {font-size:22px;line-height:1.2}
+  .v2-piles small {font-size:12px;line-height:1.5;color:var(--hud-secondary);margin-top:4px}
+  .v2-controls {position:sticky;top:0;align-self:start;min-width:0;min-height:calc(100dvh - 108px * var(--hud-scale,1));padding:24px;gap:24px;background:#101522f5}
+  .v2-controls h2 {font-size:30px;line-height:1.2}
+  .v2-controls h3 {font-size:23px;line-height:1.3}
+  .v2-controls p {font-size:15px;line-height:1.6;color:var(--hud-secondary)}
+  .v2-controls small {font-size:13px;line-height:1.4;color:#d0c1a2}
+  .v2-action-list {gap:10px}
+  .v2-action-list button {min-height:46px;padding:12px;font-size:15px;line-height:1.4}
+  .v2-stack {padding-top:16px}
+  .v2-stack p b {font-size:15px;line-height:1.4}
+  .v2-stack p small {font-size:12px;line-height:1.5}
+  .v2-controls .primary-action {min-height:84px;padding:14px 12px}
+  .v2-controls .primary-action strong {font-size:23px;line-height:1.3}
+  .v2-controls .primary-action small {font-size:12px;line-height:1.5;margin-top:5px;color:#302819}
+  .v2-controls .v2-feed {font-size:13px;line-height:1.5}
+  .v2-hidden-hand>small,.v2-base-note,.v2-link-badge {font-size:12px;line-height:1.5;color:var(--hud-secondary)}
+  .v2-attached button {font-size:12px;padding:8px;line-height:1.4}
+  .v2-attached b {font-size:12px;color:var(--hud-secondary)}
+  .v2-empty-field {font-size:16px;color:#c2b9ad}
+  .god-emote {width:272px;padding:16px}
+  .god-emote small {font-size:12px}
+  .god-emote p {font-size:16px;line-height:1.5}
+}
+@media (min-width:1101px) {
+  .v2-god .v2-soul {font-size:46px}
+  .v2-god small,.v2-domain small,.v2-god em,.v2-resource small,.v2-piles small {font-size:13px}
+  .v2-controls p,.v2-action-list button {font-size:16px}
+  .v2-controls h2 {font-size:clamp(27px,2.2vw,32px)}
+  .v2-controls .primary-action strong {font-size:24px}
+  .v2-controls .primary-action small {font-size:13px}
+  .advantage-token__seal {width:70px;height:70px;font-size:52px}
+  .advantage-token__orbit {width:80px;height:80px}
+}
+@media (min-width:701px) and (max-width:1100px) {
+  .v2-topbar {gap:16px;padding:16px}
+  .v2-seat {padding:14px 16px}
+  .v2-controls {padding:20px 16px}
+  .v2-topbar>p {font-size:15px}
+  .advantage-token {min-width:224px;padding-right:16px}
+}
+@media (max-width:700px) {
+  .v2-controls p {font-size:14px;line-height:1.55}
+  .v2-controls small,.v2-controls .section-label {font-size:12px}
+  .v2-controls .primary-action strong {font-size:20px}
+  .v2-controls .primary-action small {font-size:11px;line-height:1.4;color:#302819}
+  .v2-controls .v2-feed {font-size:12px}
+  .v2-topbar .icon-button {width:44px;height:44px}
+  .v2-topbar>p {font-size:12px;line-height:1.5}
+  .v2-topbar small,.advantage-token__copy small {font-size:11px!important;line-height:1.4}
+  .advantage-token__copy b {font-size:11px}
+  .v2-resource small,.v2-piles small,.v2-god small,.v2-god em {font-size:11px}
+  .v2-piles button {min-width:44px;min-height:44px}
+  .v2-base-note,.v2-hidden-hand>small {font-size:11px;line-height:1.4}
+}
