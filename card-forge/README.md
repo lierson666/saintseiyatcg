@@ -12,6 +12,19 @@ python3 card-forge/serve.py
 
 Depois abra `http://localhost:8765/card-forge/` (ou `?card=athena-021` para abrir direto numa carta). O servidor só escuta em 127.0.0.1. Ele não faz parte do site público.
 
+## Aplicativo no macOS
+
+O aplicativo **Card Forge** abre o editor em uma janela própria e inicia o servidor local quando necessário. Compilar e instalar na pasta Aplicativos do usuário:
+
+```bash
+python3 card-forge/macos/install.py
+open "$HOME/Applications/Card Forge.app"
+```
+
+Requer macOS 13 ou superior em Apple Silicon e as ferramentas de linha de comando do Xcode para compilar. Depois da instalação, o aplicativo usa o Python e a pasta deste projeto; mantenha a pasta disponível no Google Drive. A instalação existente é preservada se já houver um aplicativo com o mesmo nome.
+
+Upload de artes usa o seletor de arquivos do macOS; exportação individual abre o painel Salvar. Ao fechar, o aplicativo encerra somente o servidor que ele próprio iniciou. Se o servidor já estava aberto, ele é reutilizado.
+
 ## O que faz
 
 - Carrega qualquer carta de `data/cards.json`, ou cria uma nova (botão "Nova carta").
