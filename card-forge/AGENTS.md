@@ -42,6 +42,15 @@ uv run --with psd-tools --with pillow --with scipy python card-forge/tools/extra
 - **Idioma:** notas e comentários em português; texto visível na carta em inglês.
 - **Saídas fora do git:** `card-forge/out/` (PNGs exportados) e `card-forge/art/` (artes enviadas). Arte pesada e PSD também ficam só no Google Drive (veja `.gitignore`).
 
+## Representações da carta
+
+- **Diretriz confirmada pelo autor em 2026-10-23:** cada carta tem uma representação final para impressão e uma representação interativa para o jogo. Consulte `../docs/cartas-print-e-interativas.md`.
+- A versão de impressão pode ser uma composição achatada em PNG/PDF, produzida pelo canvas.
+- No jogo, use a ilustração como fundo. Nome, tipo, custo, regras, atributos e estados são camadas próprias, renderizadas a partir dos dados da carta e do estado da partida. Não use o PNG completo de impressão como corpo da carta jogável.
+- Molduras, ornamentos e ícones podem continuar usando as peças visuais existentes. As duas representações compartilham ID, revisão, dados e ilustração; não mantenha duas cópias independentes do texto ou das regras.
+- Mudanças válidas de atributos e estados devem aparecer durante a partida sem reexportar a imagem. A engine calcula o resultado; a apresentação apenas o exibe.
+- Esta diretriz não autoriza alterar `playtest/`, gravar `data/cards.json` sem diff aprovado ou mudar regras do jogo.
+
 ## Convenções do texto de regras
 
 - Linha em branco separa habilidades. `**negrito**` força negrito.

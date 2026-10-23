@@ -24,6 +24,17 @@ Depois abra `http://localhost:8765/card-forge/` (ou `?card=athena-021` para abri
 - "Salvar projeto" grava em `card-forge/projects/<id>.json` o que não existe no cards.json: título na carta, subtítulo, flavour e enquadramento da arte. Arte enviada vai para `card-forge/art/` (fora do git).
 - "Gravar no cards.json…" mostra o diff campo a campo e só grava depois de confirmar. Só o bloco daquela carta muda no arquivo. Habilidades que você não editou mantêm o texto original.
 
+## Impressão e carta interativa no jogo
+
+Diretriz confirmada pelo autor em **23/10/2026**: o Card Forge deve preparar duas representações da mesma carta, compartilhando ID, revisão, ilustração e dados.
+
+- **Impressão:** composição final da arte, moldura e textos, exportada em PNG/PDF conforme os formatos implementados.
+- **Jogo:** ilustração como fundo; nome, tipo, custo, habilidades, números e estados em camadas renderizadas pela interface. A carta jogável deve refletir os dados atuais da partida, com áreas de interação e feedback visual.
+
+Power/Resistance, dano, marcadores e estados mudam visualmente conforme o resultado fornecido pela engine, sem gerar outro PNG. Molduras e ícones podem reutilizar os assets existentes. O PNG completo da carta serve à impressão ou à consulta da versão impressa; não é o corpo da carta interativa.
+
+O editor atual já compõe a versão estática no canvas. A integração da representação interativa é um requisito de desenvolvimento, **ainda não implementado por esta documentação**. O contrato e os critérios de aceitação estão em [cartas-print-e-interativas.md](../docs/cartas-print-e-interativas.md).
+
 ## Lote (várias cartas de um arquivo de texto)
 
 No topo do editor, abra "Lote", escolha um `.txt` ou cole o texto, e clique em "Ler lote". O formato está em [`import/modelo.txt`](import/modelo.txt): um bloco `Campo: valor` por carta, cartas separadas por `---`, e `Text:` / `Awaken Text:` / `Ultimate:` em várias linhas.

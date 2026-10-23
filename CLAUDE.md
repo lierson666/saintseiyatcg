@@ -10,6 +10,7 @@ Tudo que for criado neste projeto (cartas, decks, engine do playtest, IA, UI, Ca
 | Mudanças de regra | `docs/CHANGELOG-regras.md` |
 | Cartas (dados, custos, textos) | `data/cards.json` |
 | Beta Athena (decks, domains, proxies) | `docs/beta-athena.md` + `data/beta-athena.json` |
+| Representações de carta para impressão e jogo | `docs/cartas-print-e-interativas.md` |
 
 Ordem de precedência quando houver conflito: `guia-do-jogo.md` > `cards.json` > `beta-athena` > código (`playtest/`, `card-forge/`). O código implementa a regra; não define regra.
 
