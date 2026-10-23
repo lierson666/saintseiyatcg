@@ -8,6 +8,7 @@ Tudo que for criado neste projeto (cartas, decks, engine do playtest, IA, UI, Ca
 | --- | --- |
 | Regras do jogo | `docs/guia-do-jogo.md` (Rulebook 2.0, base para playtest) |
 | Migração para o Rulebook 2.0 | `docs/migracao-rulebook-2.0.md` (impactos e pendências; não cria regras) |
+| Propostas para pontos abertos | `docs/proposta-fechamento-rulebook-2.0.md` (opinião solicitada pelo autor; ainda não aprovada) |
 | Mudanças de regra | `docs/CHANGELOG-regras.md` |
 | Cartas (dados, custos, textos) | `data/cards.json` |
 | Beta Athena (decks, domains, proxies) | `docs/beta-athena.md` + `data/beta-athena.json` |
