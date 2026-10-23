@@ -2,8 +2,27 @@
 // O áudio começa após um gesto do jogador, conforme a política do navegador.
 
 const TRACKS = {
-  menu: new URL('../MUSIC/PEGASUS TYU SEI KEN.mp3', import.meta.url).href
+  menu: new URL('../MUSIC/PEGASUS TYU SEI KEN.mp3', import.meta.url).href,
+  battle: new URL('../MUSIC/battle', import.meta.url).href
 };
+const BATTLE_PLAYLIST = [
+  'GLIDESACRIFICE.mp3',
+  'PEGASUS TYU SEI KEN.mp3',
+  'SEIYAxRADAMANTYS.mp3',
+  'TENKAIHEN.mp3',
+  'UNDERTHEWOODOFTHEWORLDTREE.mp3'
+].map(file => new URL(`../MUSIC/${file}`, import.meta.url).href);
+
+function shuffledBattleTracks(previous) {
+  const queue = [...BATTLE_PLAYLIST];
+  for (let i = queue.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [queue[i], queue[j]] = [queue[j], queue[i]];
+  }
+  // Evita repetir a última faixa na passagem entre dois ciclos.
+  if (queue.length > 1 && queue[0] === previous) [queue[0], queue[1]] = [queue[1], queue[0]];
+  return queue;
+}
 
 const read = (key, fallback) => {
   try {
@@ -197,9 +216,9 @@ function scheduleBar(theme, bus, bar, at) {
   }
 }
 
-export function playMusic(name) {
+export function playMusic(name, { restart = false } = {}) {
   wantedTheme = name;
-  if (!ctx || music?.name === name) return;
+  if (!ctx || (music?.name === name && !restart)) return;
   if (music) {
     const old = music;
     if (old.audio) {
@@ -216,9 +235,16 @@ export function playMusic(name) {
   }
   if (TRACKS[name]) {
     const audio = new Audio(TRACKS[name]);
-    audio.loop = true;
+    const state = { name, audio, queue: [] };
+    audio.loop = name !== 'battle';
     audio.volume = volume.music;
-    music = { name, audio };
+    if (name === 'battle') audio.addEventListener('ended', () => {
+      if (music !== state) return;
+      if (!state.queue.length) state.queue = shuffledBattleTracks(audio.src);
+      audio.src = state.queue.shift();
+      audio.play().catch(() => {});
+    });
+    music = state;
     audio.play().catch(() => {});
     return;
   }
