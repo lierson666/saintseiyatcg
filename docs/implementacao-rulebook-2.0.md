@@ -1,3 +1,5 @@
+> **Nota (24/10/2026):** documento histórico. Engage, ENG, Disengage e Multiguard foram removidos; vale o capítulo IV do `guia-do-jogo.md` (Guarda e Rivalidade) e o `CHANGELOG-regras.md`.
+
 # Implementação do Rulebook 2.0
 
 Trabalho autorizado pelo autor em 23/10/2026: aplicar as recomendações de fechamento, modificar o jogo inteiro e ajustar o Card Forge. A entrega inclui engine, interface, IA, cartas vivas, importação/editor, testes e documentação. Não inclui deploy remoto.

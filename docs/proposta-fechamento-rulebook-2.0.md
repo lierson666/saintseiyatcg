@@ -1,3 +1,5 @@
+> **Nota (24/10/2026):** documento histórico. Engage, ENG, Disengage e Multiguard foram removidos; vale o capítulo IV do `guia-do-jogo.md` (Guarda e Rivalidade) e o `CHANGELOG-regras.md`.
+
 # Rulebook 2.0 — proposta para fechar as regras
 
 **Proposta de design de 23/10/2026, aprovada pelo autor no mesmo dia:** “pode aplicar isso no sistema do jogo e modificar todo o jogo”. O conteúdo foi incorporado ao capítulo XII de [guia-do-jogo.md](guia-do-jogo.md), que é a referência normativa. Este arquivo preserva o histórico da recomendação. Os números abaixo são pontos de partida para playtest, não resultados de testes.

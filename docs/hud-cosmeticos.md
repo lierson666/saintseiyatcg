@@ -1,3 +1,5 @@
+> **Nota (24/10/2026):** documento histórico. Engage, ENG, Disengage e Multiguard foram removidos; vale o capítulo IV do `guia-do-jogo.md` (Guarda e Rivalidade) e o `CHANGELOG-regras.md`.
+
 # HUD e cosméticos — diretriz do autor
 
 Pedido de 23/10/2026: a vantagem deve ser reconhecível por um token, e sua aparência poderá ser cosmética, assim como sleeves e emotes do God.

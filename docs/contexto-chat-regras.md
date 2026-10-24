@@ -1,3 +1,5 @@
+> **Nota (24/10/2026):** documento histórico. Engage, ENG, Disengage e Multiguard foram removidos; vale o capítulo IV do `guia-do-jogo.md` (Guarda e Rivalidade) e o `CHANGELOG-regras.md`.
+
 # Contexto para chat de regras — Saint Seiya TCG
 
 Cole este arquivo (ou o pacote completo gerado por `tools/contexto-chat.sh`) no início de um chat novo.

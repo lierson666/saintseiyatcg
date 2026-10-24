@@ -1,3 +1,5 @@
+> **Nota (24/10/2026):** documento histórico. Engage, ENG, Disengage e Multiguard foram removidos; vale o capítulo IV do `guia-do-jogo.md` (Guarda e Rivalidade) e o `CHANGELOG-regras.md`.
+
 # Validação local — Rulebook 2.0
 
 Data: 23/10/2026. Escopo: primeiro conjunto de 300 cartas, arena local, motor, IA e Card Forge. Não é certificação de balanceamento nem publicação remota.
