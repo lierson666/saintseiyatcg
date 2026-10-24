@@ -20,7 +20,7 @@ import tempfile
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from zipfile import BadZipFile
-from urllib.parse import unquote
+from urllib.parse import unquote, urlsplit
 from xml.etree.ElementTree import ParseError
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -28,6 +28,7 @@ CARDS = ROOT / "data" / "cards.json"
 FORGE = ROOT / "card-forge"
 ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,63}$")
 MAX_BODY = 40 * 1024 * 1024
+LOCAL_HOSTS = {"localhost", "127.0.0.1"}
 _hill_spec = importlib.util.spec_from_file_location('star_hill', Path(__file__).with_name('star_hill.py'))
 star_hill = importlib.util.module_from_spec(_hill_spec)
 _hill_spec.loader.exec_module(star_hill)
@@ -104,7 +105,21 @@ class Handler(SimpleHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
+    def local_host(self):
+        """Recusa nomes de fora (DNS rebinding): só localhost/127.0.0.1 leem a pasta do projeto."""
+        host = self.headers.get("Host", "")
+        if urlsplit("//" + host).hostname in LOCAL_HOSTS:
+            return True
+        self.reply(403, {"erro": "Acesse pelo endereço local (localhost ou 127.0.0.1)."})
+        return False
+
+    def do_HEAD(self):
+        if self.local_host():
+            super().do_HEAD()
+
     def do_GET(self):
+        if not self.local_host():
+            return
         path = self.path.split('?', 1)[0]
         if path.startswith('/api/star-hill/'):
             try:
@@ -116,6 +131,11 @@ class Handler(SimpleHTTPRequestHandler):
         return super().do_GET()
 
     def do_POST(self):
+        if not self.local_host():
+            return
+        # Outro site aberto no navegador não pode gravar: o pedido tem de vir da própria página local.
+        if self.headers.get("Origin") != "http://" + self.headers.get("Host", ""):
+            return self.reply(403, {"erro": "Gravações só são aceitas pela interface local."})
         try:
             n = int(self.headers.get("Content-Length", 0))
             if n <= 0 or n > MAX_BODY:
@@ -185,6 +205,25 @@ def selftest():
     assert len(d2["cartas"]) == len(data["cartas"]) + 1 and d2["cartas"][-1]["id"] == "zz-teste"
     assert d2["total_cartas"] == len(d2["cartas"])
     print(f"selftest ok: {len(data['cartas'])} cartas regravadas sem diff; append ok")
+    import http.client, threading
+    server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+    threading.Thread(target=server.serve_forever, daemon=True).start()
+    port = server.server_address[1]
+    def status(method, headers, body=None):
+        conn = http.client.HTTPConnection("127.0.0.1", port)
+        conn.request(method, "/README.md" if method == "GET" else "/api/card", body=body, headers=headers)
+        code = conn.getresponse().status
+        conn.close()
+        return code
+    local = f"127.0.0.1:{port}"
+    assert status("GET", {"Host": local}) == 200
+    assert status("GET", {"Host": f"evil.example:{port}"}) == 403, "DNS rebinding"
+    card = json.dumps(dict(data["cartas"][0], id="zz-teste"))
+    assert status("POST", {"Host": local, "Content-Type": "text/plain"}, card) == 403, "POST sem Origin"
+    assert status("POST", {"Host": local, "Origin": "https://evil.example"}, card) == 403, "POST de outro site"
+    server.shutdown()
+    assert CARDS.read_text(encoding="utf-8") == text, "cards.json mudou no teste"
+    print("selftest ok: Host e Origin externos recusados")
 
 
 if __name__ == "__main__":

@@ -48,11 +48,13 @@ A verificação de navegador cobre menu, hotseat, alvos Guardian/Nimble, combate
 
 ## Publicação — somente após OK do autor
 
-A lista antiga de arquivos de deploy não cobre a nova arquitetura. A partir de `playtest/`, a publicação deve incluir módulos e assets:
+O `index.html` carrega `app-v2.js`, que importa módulos de `playtest/` e de `../shared/`, e busca `../data/`, `../CARD-TEMPLATE/`, `../LOGO/`, `../MUSIC/` e as imagens de `caminho_imagem` (`../CARDS/`). Publique a pasta `playtest/` inteira e as pastas irmãs que ela usa. A partir da raiz do projeto:
 
 ```bash
-rsync -az -e "ssh -o BatchMode=yes" index.html app.js engine.js view.js menu.js presentation.js fx3d.js audio.js game.css manifest.webmanifest assets mamaco-dev:/home/dev/saintseiyatcg/playtest/
-ssh mamaco-dev 'chmod -R a+rX /home/dev/saintseiyatcg/playtest'
+rsync -az -e "ssh -o BatchMode=yes" playtest shared data CARD-TEMPLATE LOGO MUSIC CARDS mamaco-dev:/home/dev/saintseiyatcg/
+ssh mamaco-dev 'chmod -R a+rX /home/dev/saintseiyatcg'
 ```
+
+Antes de rodar, confira o que vai subir com `rsync -azn --itemize-changes` (simulação). `CARDS/` e `MUSIC/` podem conter arquivos fora do Git; não publique o que não tiver licença para o site.
 
 Sem `--delete`. Conferir hashes locais/remotos e o console do site depois. Commit local não autoriza push nem publicação.
