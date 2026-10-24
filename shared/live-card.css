@@ -14,3 +14,36 @@
 @media(prefers-reduced-motion:reduce){.live-card{transition:none}}
 .rule-block{margin:0 0 .65em}.rule-block:last-child{margin-bottom:0}.rule-heading{display:block;font-weight:800;color:inherit;line-height:1.25}.rule-block p{margin:.12em 0 0!important}.rule-block--keywords .rule-heading{text-transform:uppercase}.rule-block--owner,.rule-block--evolution,.rule-block--resonance{padding-top:.2em}.rule-symbol{display:inline-block;color:var(--card-accent,#eddda6);font-weight:800;white-space:nowrap}.live-card__type{font-weight:800;text-transform:uppercase;border-top:1px solid #e9d7a744;border-bottom:1px solid #e9d7a744;padding:4px 0}.live-card__equip{display:flex;flex-direction:column;align-items:center;min-width:28px;color:var(--card-accent);border:1px solid #d9b76277;padding:3px 5px}.live-card__equip small{font-size:8px;font-weight:800}.live-card__equip b{font-size:19px;line-height:1}.live-card--compact .rule-block{margin-bottom:.35em}.live-card--compact .live-card__equip{padding:2px 4px;min-width:24px}.live-card--compact .live-card__equip b{font-size:16px}
 .details-art .live-card,.forge-live .live-card{height:auto;min-height:500px}.details-art .live-card__heading,.forge-live .live-card__heading{font-size:21px;padding:16px}.details-art .live-card__body,.forge-live .live-card__body{font-size:13px;line-height:1.45;padding:16px;margin-top:220px}.details-art .live-card__type,.forge-live .live-card__type{font-size:11px}.details-art .live-card__rules,.forge-live .live-card__rules{text-align:center}.details-art .live-card__keywords,.forge-live .live-card__keywords{text-align:center;font-size:14px}
+
+/* Layout do PSD: posições em % do canvas 1488×2091 e fontes em cqw, então escala do card da mão ao inspetor.
+   Seletor reforçado para vencer as regras de tamanho da arena/inspetor, que mudariam a proporção. */
+.live-card.live-card--psd[data-live-card]{container-type:inline-size;display:block;height:auto;min-height:0;aspect-ratio:1488/2091;border-radius:3.2%/2.3%;border:0;box-shadow:none;background:#05060c}
+.live-card--psd .lc-psd{position:absolute;inset:0;z-index:0;pointer-events:none}
+.live-card--psd .lc-piece{position:absolute;display:block;max-width:none}
+.live-card--psd .lc-piece--tint{background:var(--psd-ink);-webkit-mask:var(--m) center/100% 100% no-repeat;mask:var(--m) center/100% 100% no-repeat}
+.live-card--psd .lc-symbol,.live-card--psd .lc-gem>.lc-piece{filter:drop-shadow(0 0 1.6cqw var(--psd-glow)) drop-shadow(0 0 .25cqw #000)}
+.live-card--psd .lc-symbol{object-fit:contain}
+.live-card.live-card--psd .lc-gem{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;border:0;padding:0;min-width:0;background:none;border-radius:0;color:var(--psd-ink)}
+.live-card--psd .lc-gem>.lc-piece{left:0;top:0;width:100%;height:100%}
+.live-card--psd .lc-gem b,.live-card--psd .lc-gem small{position:relative;line-height:1;font-family:Futura,'Futura PT','Century Gothic',sans-serif;color:var(--psd-ink);text-shadow:0 0 .2cqw #000,0 0 .45cqw #000,0 0 3cqw var(--psd-glow)}
+.live-card--psd .lc-gem b{font-style:italic;font-weight:700}
+.live-card--psd .lc-gem small{font-family:Avenir,'Avenir Next',sans-serif;font-weight:900;margin-bottom:.3cqw}
+.live-card.live-card--psd .lc-text{position:absolute;transform:translate(-50%,-50%);white-space:nowrap;margin:0;padding:0;border:0;min-height:0;display:block;line-height:1.1;color:var(--psd-ink);text-shadow:0 0 .2cqw #000,0 0 .45cqw #000,0 0 3cqw var(--psd-glow)}
+.live-card--psd .lc-text--title{font:italic 700 1em Futura,'Futura PT','Century Gothic',sans-serif;font-size:inherit}
+.live-card--psd .lc-text--typeline{font-family:Futura,'Futura PT','Century Gothic',sans-serif;font-weight:700}
+.live-card--psd .lc-text--subtitle{font-family:Avenir,'Avenir Next',sans-serif;font-weight:300;text-shadow:0 0 .3cqw #000}
+.live-card--psd .lc-text--flavour{font-family:'ITC Avant Garde Gothic Pro','Century Gothic',Avenir,sans-serif;font-style:italic;text-shadow:0 0 .3cqw #000}
+.live-card.live-card--psd .lc-rules{position:absolute;margin:0;padding:0;overflow:hidden;text-align:center;line-height:1.18;color:var(--psd-ink);font-family:Avenir,'Avenir Next',sans-serif;font-weight:300;text-shadow:0 0 .25cqw #000,0 0 .5cqw #000;display:block;-webkit-line-clamp:unset}
+.live-card--psd .lc-rules p{margin:0 0 .5em}
+.live-card--psd .lc-rules .rule-block{margin:0 0 .5em}
+.live-card--psd .lc-rules strong,.live-card--psd .lc-rules .rule-heading,.live-card--psd .lc-rules .live-card__keywords{font-weight:900;color:var(--psd-ink)}
+.live-card--psd .lc-rules .live-card__keywords{text-transform:uppercase;font-size:1em;margin:0 0 .5em}
+.live-card--psd .lc-rules .live-card__owners{font-size:.9em;color:var(--psd-ink);opacity:.9}
+.live-card--psd .lc-rules .rule-symbol{color:var(--psd-ink)}
+.live-card.live-card--psd .live-card__damage,.live-card.live-card--psd .live-card__state{position:absolute;left:5%;bottom:6.5%;padding:.6cqw 1.6cqw;font-size:3.2cqw;border-radius:.8cqw;background:#080d18ee}
+.live-card.live-card--psd .live-card__state{left:auto;right:5%}
+.live-card--compact.live-card--psd .lc-rules,.live-card--compact.live-card--psd .lc-text--flavour,.live-card--compact.live-card--psd .lc-text--subtitle{display:none}
+/* Contorno duro do PSD (Drop Shadow com choke 94): traço escuro por baixo do preenchimento. */
+.live-card--psd .lc-gem b,.live-card--psd .lc-gem small,.live-card--psd .lc-text--title,.live-card--psd .lc-text--typeline{-webkit-text-stroke:.09em #141008;paint-order:stroke fill}
+.live-card--psd .live-card__placeholder small{display:none}
+.live-card--psd .lc-gem b.is-wounded{color:#ffa38e}

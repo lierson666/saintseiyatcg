@@ -7,6 +7,77 @@ export function illustration(card){
   if(card?.ilustracao)return card.ilustracao;
   const id=portraits[card?.id];return id?new URL(`../playtest/assets/portraits/${id}.webp`,import.meta.url).href:null;
 }
+// Layout do PSD (mesmo spec e peças do Card Forge). Sem eles (Node, testes) a carta usa o layout simples.
+let PSD=null;
+try{
+  const url=p=>new URL(`../CARD-TEMPLATE/${p}`,import.meta.url);
+  const [T,pieces]=await Promise.all(['templates.json','pieces.json'].map(f=>fetch(url(f)).then(r=>{if(!r.ok)throw r.status;return r.json();})));
+  PSD={T,P:pieces.pieces,src:k=>url(`${k}.png`).href};
+}catch{/* sem spec: layout simples */}
+const NEUTRAL={color:'#ECE7DA',glow:'rgba(255,255,255,0.35)',frame:['athena/vignette','athena/frame']};
+// Mesmo mapeamento do layoutKey() do card-forge/forge.js.
+function psdLayoutKey(card){
+  const subs=card.subtipos||[];
+  if(card.tipo==='Support')return 'relic';
+  if(card.tipo==='Equipment')return subs.some(x=>['Cloth','Scale','Surplice','Warplate'].includes(x))?'relic_cloth':subs.includes('Weapon')?'relic_weapon':'relic';
+  const sub=subs.find(x=>PSD.T.typeToLayout[`${card.tipo}:${x}`]);
+  return PSD.T.typeToLayout[sub?`${card.tipo}:${sub}`:card.tipo]||'devotee';
+}
+const pct=(x,y,w,h)=>`left:${x/14.88}%;top:${y/20.91}%;width:${w/14.88}%;height:${h/20.91}%`;
+const cqw=px=>`${(px/14.88).toFixed(3)}cqw`;
+// Encolhe o texto de regras até caber na caixa (estimativa: Avenir ≈ 0,5em por caractere).
+function rulesSize(texts,base,w,h){
+  for(let s=base;s>22;s--){const per=w/(s*.5);let lines=0;for(const t of texts)lines+=Math.max(1,Math.ceil(t.length/per));if(lines*s*1.18+(texts.length-1)*s*.5<=h)return s;}
+  return 22;
+}
+function renderPsdCard(card,{src,stage,hp,power,keywords,damage,rules,equipment,equip,ownerLine,instance,compact}){
+  const {T,P}=PSD,f=String(card.faccao||'').toLowerCase(),pack=T.factions[f]||NEUTRAL,L=T.layouts[psdLayoutKey(card)];
+  // Peça da facção quando o Deus dela tem; senão a de Athena tingida pela máscara na cor da facção.
+  const piece=(key,rect,cls='')=>{
+    const name=key.split('/').pop(),own=P[`${f}/${name}`],base=P[key];
+    if(!own&&(pack.omit||[]).includes(name))return '';
+    const k=own?`${f}/${name}`:key,r=rect||(base?[base.x,base.y,base.w,base.h]:null);
+    if(!r||!P[k])return '';
+    return own||f==='athena'||name.startsWith('rarity_')?`<img class="lc-piece ${cls}" src="${escape(PSD.src(k))}" alt="" style="${pct(...r)}">`:`<i class="lc-piece lc-piece--tint ${cls}" style="${pct(...r)};--m:url('${escape(PSD.src(k))}')"></i>`;
+  };
+  const at=(key,el)=>{const p=P[key];return p?[p.x+(el.dx||0),p.y+(el.dy||0),p.w,p.h]:null;};
+  const gem=(key,rect,value,label,cls='',size=label?80:99,stat='')=>`<span class="lc-gem ${cls}" style="${pct(...rect)}">${piece(key,[0,0,1488,2091])}${label?`<small style="font-size:${cqw(24)}">${label}</small>`:''}<b style="font-size:${cqw(size)}"${stat}>${escape(value)}</b></span>`;
+  const text=(v,el,cls='')=>{const t=el.upper?String(v).toUpperCase():String(v),fs=Math.min(el.size,(el.maxW||1400)/(t.length*.62));return `<span class="lc-text lc-text--${el.style} ${cls}" style="left:${el.x/14.88}%;top:${el.y/20.91}%;font-size:${cqw(fs)}">${escape(t)}</span>`;};
+  const values={power,resistance:hp,attack:card.attack,soul:instance?.soul??card.soul,equip,damage:card.damage_cloth,
+    bonusPower:stage?`+${stage.bonus_poder}`:null,bonusResistance:stage?`+${stage.bonus_vida}`:null};
+  const has=v=>v!==null&&v!==undefined&&v!=='';
+  const elements=[...L.elements];
+  if(equipment&&!elements.some(e=>e.field==='equip'))elements.push({kind:'gem',piece:'athena/gem_equip',field:'equip',label:'EQUIP'});
+  let out='';
+  for(const el of elements){
+    if(el.kind==='frame')out+=pack.frame.map(k=>P[k]?`<img class="lc-piece" src="${escape(PSD.src(k))}" alt="" style="${pct(P[k].x,P[k].y,P[k].w,P[k].h)}${P[k].blend?`;mix-blend-mode:${P[k].blend}`:''}">`:'').join('');
+    else if(el.kind==='piece')out+=piece(el.piece,el.rect||at(el.piece,el));
+    else if(el.kind==='cost'&&has(card.custo)&&!['God','Domain'].includes(card.tipo)){
+      const key=card.unidade_custo==='base_cosmo'?'athena/gem_cost_base':'athena/gem_cost',p=P[key];
+      out+=gem(key,[el.x-p.w/2,el.y-p.h/2,p.w,p.h],card.custo,'','live-card__cost',el.size);
+    }
+    else if(el.kind==='symbol'&&P[`symbols/${f}`])out+=`<img class="lc-piece lc-symbol" src="${escape(PSD.src(`symbols/${f}`))}" alt="${escape(card.faccao)}" style="${pct(...el.rect)}">`;
+    else if(el.kind==='gem'&&(el.field==='equip'?equipment:has(values[el.field]))){
+      const v=el.field==='equip'?(equip??'?'):values[el.field];
+      const stat=el.field==='power'?' data-stat="power"':el.field==='resistance'?` data-stat="hp"${damage?' class="is-wounded"':''}`:'';
+      out+=gem(el.piece,at(el.piece,el),v,el.label,el.field==='equip'?'live-card__equip':`lc-gem--${el.field}`,undefined,stat);
+    }
+    else if(el.kind==='text'){
+      const v=el.field==='name'?card.nome_exibicao_en:el.field==='typeLine'?L.typeLine.replace('{tipo}',card.tipo).replace('{faccao}',card.faccao||'').replace('{subtipos}',(card.subtipos||[]).join(' — ')).replace(/(\s*[—-]\s*)+$/,'').replace(/\s*[—-]\s*(?=[—-])/g,''):el.field==='flavour'?(card.flavour_en||card.flavour):el.field==='subtitle'?card.subtitulo_en:null;
+      if(has(v))out+=text(v,el,el.field==='name'?'live-card__heading':el.field==='typeLine'?'live-card__type':'');
+    }
+    else if(el.kind==='rules'){
+      const [x,y,w,h]=el.rect,kw=keywords.length?`${keywords.join(', ').toUpperCase()}.`:'';
+      const fs=rulesSize([kw,...rules,ownerLine].filter(Boolean),el.size,w,h);
+      out+=`<div class="lc-rules live-card__rules" style="${pct(x,y,w,h)};font-size:${cqw(fs)}">${kw?`<p class="live-card__keywords">${keywords.map(k=>inlineMarkup(k)).join(', ')}</p>`:''}${renderRules(rules)}${ownerLine?`<p class="live-card__owners">${ownerLine}</p>`:''}</div>`;
+    }
+    else if(el.kind==='rarity'){const p=P[`athena/rarity_${String(card.raridade||'').toLowerCase()}`];if(p){const hh=el.h||p.h,ww=p.w*hh/p.h;out+=piece(`athena/rarity_${card.raridade.toLowerCase()}`,[el.x-ww/2,el.y-hh/2,ww,hh],'lc-rarity');}}
+  }
+  return `<div class="live-card live-card--psd live-card--${escape(f||'neutral')} ${compact?'live-card--compact':''} ${instance&&!instance.prepared&&card.tipo==='Devotee'?'live-card--unprepared':''}" data-live-card="${escape(card.id)}" style="--psd-ink:${pack.color};--psd-glow:${pack.glow}">
+    <div class="live-card__illustration" aria-hidden="true">${src?`<img src="${escape(src)}" alt="" draggable="false" loading="lazy">`:'<span class="live-card__placeholder">✧<small>Illustration pending</small></span>'}</div>
+    <div class="lc-psd">${out}</div>${damage?`<span class="live-card__damage">${damage} damage · ${escape(hp)} HP left</span>`:''}${instance&&card.tipo==='Devotee'?`<span class="live-card__state">${instance.prepared?'Prepared':'Unprepared'}${instance.awakened?' · Awakened':''}</span>`:''}
+  </div>`;
+}
 export function renderLiveCard(card,{stats=null,instance=null,art=null,compact=false}={}){
   if(!card)return '<div class="live-card live-card--missing">Unknown card</div>';
   const src=art||illustration(card),stage=card.estagios?.[instance?.stage||0],hp=stats?.hp??card.vida??card.resistance;
@@ -14,6 +85,10 @@ export function renderLiveCard(card,{stats=null,instance=null,art=null,compact=f
   const ownerName=id=>id.split('-').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
   const rules=presentationRules(card).map(t=>{for(const k of keywords){const prefix=k+'.';if(t.toLowerCase().startsWith(prefix.toLowerCase()))t=t.slice(prefix.length).trim();}return t;}).filter(Boolean),equipment=isEquipment(card),equip=card.equipar_custo;
   const ownerAlready=rules.some(t=>/Owner:/i.test(t)),resonanceAlready=rules.some(t=>/Resonance\s*[—-]/i.test(t));
+  if(PSD){
+    const ownerLine=[card.donos?.length&&!ownerAlready?`Owner: ${card.donos.map(ownerName).map(escape).join(' / ')}`:'',card.ressonancias?.length&&!resonanceAlready?`Resonance: ${card.ressonancias.map(r=>escape(ownerName(r.personagem_id))).join(' / ')}`:''].filter(Boolean).join('<br>');
+    return renderPsdCard(card,{src,stage,hp,power,keywords,damage,rules,equipment,equip,ownerLine,instance,compact});
+  }
   return `<div class="live-card live-card--${escape(card.faccao?.toLowerCase()||'neutral')} ${compact?'live-card--compact':''} ${instance&&!instance.prepared&&card.tipo==='Devotee'?'live-card--unprepared':''}" data-live-card="${escape(card.id)}">
     <div class="live-card__illustration" aria-hidden="true">${src?`<img src="${escape(src)}" alt="" draggable="false" loading="lazy">`:'<span class="live-card__placeholder">✧<small>Illustration pending</small></span>'}</div>
     <div class="live-card__surface"></div><header class="live-card__heading"><strong>${escape(card.nome_exibicao_en)}</strong>${card.custo!==null&&card.custo!==undefined?`<b class="live-card__cost" title="Cosmo cost">${escape(card.custo)}</b>`:''}</header>
