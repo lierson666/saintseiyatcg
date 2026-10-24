@@ -153,9 +153,6 @@ with sync_playwright() as p:
   for width,height in [(1600,900),(800,600)]:
    context=browser.new_context(viewport={'width':width,'height':height},reduced_motion='reduce')
    context.add_init_script("if(location.origin==="+json.dumps(BASE)+")localStorage.setItem('ssTcgSanctuary',JSON.stringify({autoPass:false,hotseatPrivacy:false,effects:false,aiSpeed:'fast'}));")
-   def speed(route):
-    response=route.fetch();body=response.text().replace("uiSettings.aiSpeed==='fast'?90","uiSettings.aiSpeed==='fast'?5").replace('COMBAT_STEP_DELAY_MS=240','COMBAT_STEP_DELAY_MS=5');route.fulfill(response=response,body=body)
-   context.route('**/playtest/engine.js?*',speed)
    page=boot(context,local=False,first='A')
    last_revision=-1;stalled=0;steps=0
    for steps in range(5000):
