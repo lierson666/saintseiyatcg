@@ -734,6 +734,17 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     if(ordinaryAction&&l.cardData.ultimate&&!player(key).ultimatesUsed.includes(l.cardData.personagem_id||l.cardData.id))result.push({type:'ultimate',uid,label:'Ultimate'});
     return result;
   }
+  // A IA só gasta ENG trocando Engage com motivo: proteger o God ou trocar um confronto que não vence por um alvo que destrói.
+  function engageGoal(uid){
+    const link=relation(uid)[0];if(!link)return null;
+    const key=locate(uid).playerKey,now=peer(link,uid),power=stats(uid).power;
+    const targets=engageTargets(uid,link).filter(t=>t.kind==='card'&&t.uid!==now);
+    const protect=targets.find(t=>relation(t.uid).some(v=>peer(v,t.uid)===godUid(key)));
+    if(protect)return{linkId:link.id,target:protect};
+    if(now.startsWith('god-')||power>=stats(now).hp)return null;
+    const kill=targets.find(t=>stats(t.uid).hp<=power);
+    return kill?{linkId:link.id,target:kill}:null;
+  }
   function aiStep(){
     if(!state||state.victory||options.paused)return false;
     const key=actor();
@@ -760,6 +771,7 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
         const bearer=field().find(l=>l.playerKey===key&&l.cardData.tipo==='Devotee'&&(!isArmor(equipment.cardData)||!armor(l.card.uid)));
         return bearer?[{...command,target:desc(bearer)}]:[];
       });
+      if(type==='change-engage')candidates=candidates.flatMap(command=>{const goal=engageGoal(command.uid);return goal?[{...command,...goal}]:[];});
       if(!candidates.length)continue;
       if(type==='play')candidates.sort((a,b)=>(card(locate(a.uid).card.cardId).tipo==='Devotee'?-1:1)-(card(locate(b.uid).card.cardId).tipo==='Devotee'?-1:1));
       const result=perform({...candidates[0],playerKey:key});if(result)return true;

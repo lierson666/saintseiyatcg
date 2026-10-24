@@ -191,3 +191,5 @@ test('IA equipa um portador sem armadura e não alterna equipamentos já anexado
   assert.ok(g.stepAI());drain(g);assert.equal(pos(g,e1.uid).card.attachedToUid,a.uid);assert.equal(pos(g,e2.uid).card.attachedToUid,b.uid);
   g.dispatch({type:'pass'});assert.ok(g.stepAI());assert.equal(g.state.round,2);assert.equal(g.stack.length,0);g.dispose();
 });
+test('IA não troca Engage sem motivo',()=>{const {game:g,a,b}=fixture([unit('a',1,5),unit('b',2,5),unit('c',2,5)],({add,link})=>{const a=add('A','a','battlefield',{prepared:false}),b=add('B','b');add('B','c');link(a,b);return{a,b};});assert.ok(g.stepAI());drain(g);assert.equal(g.state.players.A.eng,3);assert.equal(g.links(a.uid)[0].b===b.uid||g.links(a.uid)[0].a===b.uid,true);g.dispose();});
+test('IA troca Engage para proteger o God',()=>{const {game:g,a,c}=fixture([unit('a',1,5),unit('b',2,5),unit('c',2,5)],({add,link})=>{const a=add('A','a','battlefield',{prepared:false}),b=add('B','b'),c=add('B','c');link(a,b);link(c,'god-A');return{a,c};});assert.ok(g.stepAI());drain(g);assert.equal(g.state.players.A.eng,2);assert.ok(g.links(a.uid).some(l=>l.a===c.uid||l.b===c.uid));g.dispose();});
