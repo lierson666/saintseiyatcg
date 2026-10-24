@@ -148,7 +148,6 @@ Estrutura de uma rodada
 1. Início da rodada
 
 * Renovar Cosmo.
-* Renovar ENG.
 * Preparar os Devotees elegíveis.
 * Resolver efeitos de início da rodada.
 
@@ -170,9 +169,6 @@ Entre as ações possíveis estão:
 
 * Jogar um Devotee.
 * Jogar uma Cloth ou Scale.
-* Estabelecer Engage.
-* Alterar Engage.
-* Realizar Disengage.
 * Realizar Strike.
 * Evoluir uma Cloth.
 * Utilizar uma habilidade que exija AÇÃO.
@@ -185,134 +181,67 @@ Cada jogador realiza apenas uma AÇÃO por oportunidade, salvo efeitos específi
 
 Um Devotee pode estar em dois estados:
 
-Prepared: disponível para realizar ações que exigem esse estado.
+Prepared (em guarda): disponível para realizar Strike e protegido contra ser escolhido como alvo, salvo as exceções do capítulo IV.
 
-Unprepared: indisponível para ações que exigem Prepared.
+Unprepared (aberto): indisponível para Strike e vulnerável a Strikes inimigos.
 
 Realizar Strike deixa o atacante Unprepared.
 
 Um Devotee Unprepared continua podendo:
 
-* permanecer em Engage;
-* receber Engage;
 * causar dano de retaliação;
 * receber dano;
 * beneficiar-se de habilidades passivas.
 
-Engage, Disengage e Cloth Evolution não alteram Prepared por si mesmos.
+Cloth Evolution não altera Prepared por si mesma.
 
 ---
 
-## CAPÍTULO IV — ENGAGE
+## CAPÍTULO IV — GUARDA E RIVALIDADE
+
+O Engage foi removido do jogo em 24/10/2026. Os confrontos agora nascem do próprio Strike: o atacante escolhe o alvo ao declarar, e quem sobrevive a um duelo pode virar Rival do adversário.
 
 ### 10. Conceito
 
-Engage representa um confronto direto entre personagens.
+Um Devotee **Prepared** está em guarda: protege-se e protege o seu God. Um Devotee **Unprepared** está aberto. Quem ataca se expõe; quem se mantém em guarda não pode ser atingido por qualquer um.
 
-Engage não causa dano.
+Não existe vínculo prévio nem recurso para estabelecê-lo: o alvo é escolhido no momento do Strike.
 
-Ele estabelece uma ligação persistente entre dois combatentes.
+### 11. Alvos de Strike
 
-Um Devotee normalmente pode participar de apenas um Engage por vez.
+Ao declarar Strike, o atacante escolhe um alvo entre os **alvos abertos**:
 
-### 11. Estabelecer Engage
+* Um God inimigo é sempre um alvo aberto.
+* Um Devotee inimigo é alvo aberto somente se estiver **Unprepared**, tiver **Guardian** ou for **Rival** do atacante.
 
-Para estabelecer Engage:
+Se não houver alvo aberto, o Devotee não pode declarar Strike.
 
-1. Escolha um Devotee seu que não esteja em Engage.
-2. Escolha um alvo válido.
-3. Utilize uma AÇÃO.
-4. Estabeleça o vínculo.
+### 12. Guardian
 
-O primeiro Engage de um Devotee livre custa 0 ENG.
+Se existir ao menos um Devotee inimigo com Guardian que seja alvo aberto, o Strike deve escolher um Guardian. Exceções:
 
-Engage não exige Prepared.
+* O atacante pode escolher um **Rival**, mesmo estando protegido por Guardian.
+* **Nimble** ignora essa exigência e pode escolher qualquer alvo aberto.
 
-O alvo também pode estar Prepared ou Unprepared. Se o inimigo estiver engajado com seu God, seu Devotee pode assumir esse confronto: o vínculo com o God é substituído pelo vínculo entre os dois Devotees, conforme a seção 58.
+Cheater **não** ignora Guardian.
 
-O Devotee não fica Unprepared ao estabelecer Engage.
+### 13. Rivalidade
 
-### 12. Persistência
+Quando um Strike entre dois Devotees termina com **ambos vivos**, eles se tornam **Rivals** (vínculo mútuo).
 
-Engage permanece ativo:
+* A Rivalidade persiste entre rodadas.
+* Um Devotee pode atacar seu Rival mesmo em guarda e ignorando Guardian.
+* A Rivalidade termina quando um dos dois deixa o campo, quando uma mudança de controle os coloca sob o mesmo controlador ou quando um efeito a encerra.
+* Rivalidade não limita o número de Strikes nem impede atacar outros alvos abertos.
+* Efeitos de cartas podem criar ou encerrar Rivalidades expressamente.
 
-* após um Strike;
-* entre rodadas;
-* enquanto os participantes permanecerem válidos.
+### 14–18. (reservado)
 
-Engage não termina automaticamente quando um participante fica Unprepared.
+Seções do Engage, ENG, Disengage e Multiguard removidas; a numeração foi mantida para preservar as referências.
 
-Se um participante deixar o campo, o Engage termina.
+### 19. Entrada em campo
 
-O Devotee sobrevivente fica livre para estabelecer um novo Engage.
-
-### 13. Restrição de alvo
-
-Um Devotee em Engage deve realizar Strike contra o oponente ao qual está vinculado.
-
-Ele não pode simplesmente ignorar esse confronto e atacar outro alvo.
-
-Efeitos específicos podem modificar essa restrição.
-
-### 14. Alterar Engage
-
-Um Devotee já em Engage pode trocar seu alvo.
-
-Custo:
-
-1 AÇÃO + 1 ENG.
-
-O Engage anterior termina e um novo Engage é estabelecido com um alvo válido.
-
-A troca não exige Prepared e não altera esse estado.
-
-### 15. Disengage
-
-Um Devotee pode encerrar seu Engage sem selecionar um novo alvo.
-
-Custo:
-
-1 AÇÃO + 1 ENG.
-
-O Devotee fica livre.
-
-### 16. ENG
-
-ENG é um recurso tático compartilhado pelos Devotees de um mesmo God.
-
-Ele representa a capacidade de reposicionar confrontos.
-
-Valor inicial para playtest: 3 ENG por God, por rodada.
-
-ENG é renovado no início de cada rodada.
-
-ENG não utilizado não se acumula.
-
-Esse valor é experimental e deverá ser validado em partidas.
-
-### 17. Engage contra Gods
-
-Um God pode receber múltiplos Engage simultaneamente.
-
-Diferentemente dos Devotees, o God não fica limitado a um único confronto.
-
-### 18. Engage e bloqueio
-
-Um Devotee normalmente não pode estabelecer Engage contra outro Devotee que já esteja vinculado a um oponente.
-
-**Proteção do God:** seu Devotee pode estabelecer Engage contra um inimigo já vinculado ao seu God, assumindo esse confronto. O vínculo inimigo–God termina e é substituído por inimigo–Devotee, sem exigir Prepared de nenhum dos Devotees. A capacidade normal continua valendo; veja a seção 58.
-
-Essa restrição pode ser modificada por habilidades específicas.
-
-Multiguard X permite exceções conforme o valor indicado.
-
-### 19. Guardian
-
-Guardian representa a capacidade de proteger aliados ou o próprio God.
-
-A keyword permite interferir em determinadas declarações de Engage.
-
-Guardian pode interceptar uma declaração de Engage contra um aliado ou seu God quando tem capacidade livre, sem Prepared, AÇÃO ou ENG. Nimble ignora essa intervenção. O procedimento completo está no capítulo XII.
+Devotees entram **Prepared**, em guarda, mas **não podem declarar Strike na rodada em que entraram**. **Impulse** remove essa restrição.
 
 ---
 
@@ -320,15 +249,16 @@ Guardian pode interceptar uma declaração de Engage contra um aliado ou seu God
 
 ### 20. Strike
 
-Strike é a ação utilizada para causar dano durante um Engage.
+Strike é a ação utilizada para causar dano.
 
 Para realizar Strike, o Devotee deve:
 
 1. Estar Prepared.
-2. Estar em Engage com um alvo válido.
-3. Utilizar uma AÇÃO.
+2. Não ter entrado em campo nesta rodada (salvo Impulse).
+3. Não estar Sealed.
+4. Escolher um alvo aberto (capítulo IV) e utilizar uma AÇÃO.
 
-Após declarar Strike, o atacante fica Unprepared.
+O alvo é escolhido na declaração. Após declarar Strike, o atacante fica Unprepared. Se o alvo deixar de ser válido antes da resolução, o Strike não causa dano.
 
 ### 21. Dano simultâneo
 
@@ -353,7 +283,7 @@ Ele não desaparece automaticamente ao final da rodada.
 
 O dano também permanece quando:
 
-* o Devotee muda de Engage;
+* o Devotee entra ou sai de uma Rivalidade;
 * o Devotee fica Prepared;
 * o Devotee fica Unprepared;
 * uma Cloth evolui.
@@ -459,7 +389,7 @@ Evolve não exige Prepared.
 
 Evolve não deixa o Devotee Unprepared.
 
-Evolve não encerra Engage.
+Evolve não encerra Rivalidades.
 
 Regra experimental: cada Cloth pode evoluir normalmente uma vez por rodada.
 
@@ -620,11 +550,11 @@ A keyword Afterlife, isoladamente, não permite retornar ao campo.
 
 ### 42. Guardian
 
-Permite proteger determinados alvos contra Engage, conforme suas regras específicas.
+Enquanto houver Guardian inimigo como alvo aberto, os Strikes devem escolhê-lo (exceto contra Rivals ou com Nimble).
 
 ### 43. Nimble
 
-Ignora a intervenção de Guardian ao declarar Engage. Não ignora a capacidade de Engage e pode ser atacado normalmente.
+Ignora a exigência de escolher um Guardian ao declarar Strike. Pode ser atacado normalmente.
 
 ### 44. Cheater
 
@@ -642,19 +572,19 @@ Ao iniciar Strike contra um Devotee, o dano excedente ao HP restante do alvo é 
 
 ### 47. Impulse
 
-O Devotee entra Prepared. Ainda precisa de Engage e uma AÇÃO para iniciar Strike.
+Pode declarar Strike na rodada em que entra em campo.
 
 ### 48. Sealed
 
-Impede novas declarações de Strike e ativação das próprias habilidades. Preserva passivas, Engage e retaliação. Dura até o fim da rodada, salvo duração expressa diferente.
+Impede novas declarações de Strike e ativação das próprias habilidades. Preserva passivas, Rivalidades e retaliação. Dura até o fim da rodada, salvo duração expressa diferente.
 
 ### 49. Unfaith
 
 Ao declarar Strike contra um God, o atacante pode escolher remover até 2 Latent Cosmo do adversário em lugar do dano ao Soul. O God retalia normalmente.
 
-### 50. Multiguard X
+### 50. (reservado)
 
-Permite que um Devotee participe de múltiplos Engage, até o limite X, conforme as regras da habilidade.
+Multiguard foi removida do jogo junto com o Engage.
 
 ---
 
@@ -704,10 +634,6 @@ Parâmetro	Valor experimental
 Deck principal	60 cartas
 Mão inicial	7 cartas
 Cosmo Base por rodada	1
-ENG por God	3
-Engage inicial	1 AÇÃO / 0 ENG
-Trocar Engage	1 AÇÃO / 1 ENG
-Disengage	1 AÇÃO / 1 ENG
 Strike	1 AÇÃO
 Evolve	1 AÇÃO + Cosmo
 Evoluções por Cloth/rodada	1
@@ -726,7 +652,7 @@ O autor aprovou a aplicação das recomendações de fechamento ao sistema do jo
 
 - Sortear a iniciativa inicial. O vencedor escolhe quem começa. A iniciativa alterna entre os jogadores a cada rodada, independentemente de quem realizou a última AÇÃO.
 - Ambos começam com 7 cartas. Não há compra normal na primeira rodada. A partir da segunda, ambos compram **2 cartas** no início da rodada.
-- Ordem do início: renovar as Bases e o ENG dos dois jogadores; preparar seus Devotees; renovar limites por rodada; realizar as compras; resolver os gatilhos de início. O jogador com iniciativa recebe a primeira oportunidade de AÇÃO após essa preparação.
+- Ordem do início: renovar as Bases dos dois jogadores; preparar seus Devotees; renovar limites por rodada; realizar as compras; resolver os gatilhos de início. O jogador com iniciativa recebe a primeira oportunidade de AÇÃO após essa preparação.
 - Cada jogador pode colocar uma Base Cosmoble durante sua própria oportunidade, antes da AÇÃO e com a pilha vazia, uma vez por rodada. Isso não consome a AÇÃO e não abre uma janela de resposta por si só. Gatilhos causados pela colocação são resolvidos antes da AÇÃO.
 - Passar entrega a oportunidade ao adversário, sem impedir ações posteriores na mesma rodada. **Dois passes consecutivos**, com a pilha vazia, encerram a fase de ações. Realizar uma AÇÃO ou colocar uma Base zera essa contagem; passes de prioridade da pilha não contam como passes da rodada.
 - No encerramento, resolver os gatilhos de fim; remover efeitos “até o fim da rodada”; verificar destruições/derrotas; expirar Latent Cosmo; avançar a rodada. Gatilhos produzidos por essas etapas são resolvidos antes de avançar. O encerramento não reabre AÇÕES comuns, salvo texto explícito.
@@ -737,7 +663,7 @@ O autor aprovou a aplicação das recomendações de fechamento ao sistema do jo
 
 ### 56. Timing, respostas e resolução
 
-- Uma AÇÃO comum só é declarada na própria oportunidade e com a pilha vazia. Jogar Devotee, equipamento ou Moment; Engage, troca, Disengage, Strike, Evolve e habilidades marcadas como AÇÃO seguem essa regra.
+- Uma AÇÃO comum só é declarada na própria oportunidade e com a pilha vazia. Jogar Devotee, equipamento ou Moment; Strike, Evolve e habilidades marcadas como AÇÃO seguem essa regra.
 - **Technique** pode ser jogada como AÇÃO na própria oportunidade ou como resposta em uma janela de prioridade. Como resposta, não gasta a próxima AÇÃO, mas paga integralmente seus custos. **Moment** exige AÇÃO, salvo texto explícito.
 - Habilidades ativadas exigem AÇÃO por padrão; apenas as expressamente permitidas como resposta podem ser ativadas na prioridade. Passivas e gatilhos não gastam AÇÃO. Uma carta que disser como e quando a habilidade funciona fornece a exceção.
 - Ao declarar uma AÇÃO, anunciar escolhas e alvos e pagar custos. Strike deixa o atacante Unprepared nesse momento. O adversário recebe a primeira prioridade para responder.
@@ -745,67 +671,28 @@ O autor aprovou a aplicação das recomendações de fechamento ao sistema do jo
 - Quando a AÇÃO e suas consequências terminam, a próxima oportunidade pertence ao adversário de quem declarou a AÇÃO original. Respostas não invertem nem consomem essa alternância.
 - Gatilhos simultâneos entram primeiro na ordem escolhida pelo jogador da oportunidade e depois na ordem escolhida pelo adversário. Fora da fase de ações, usar o jogador com iniciativa como referência. O último colocado resolve primeiro.
 - Ao resolver, verificar novamente os alvos. Um efeito com todos os alvos inválidos não produz efeito; custos não são devolvidos. Com alvos válidos restantes, resolver o que for possível, salvo exigência expressa de todos os alvos.
-- Verificar HP, Soul, vínculos inválidos e derrotas após cada resolução e cada etapa de dano. Processar destruições simultâneas em conjunto; depois colocar seus gatilhos na pilha. Repetir verificações até estabilizar.
+- Verificar HP, Soul, Rivalidades inválidas e derrotas após cada resolução e cada etapa de dano. Processar destruições simultâneas em conjunto; depois colocar seus gatilhos na pilha. Repetir verificações até estabilizar.
 - Strike resolve como uma sequência única, sem jogar Techniques entre dano inicial e retaliação. As respostas acontecem antes da resolução. Prevenção e substituição já aplicáveis continuam funcionando durante essa resolução.
-- Perder Prepared depois de declarar não cancela um Strike já pago. Sair do campo ou perder o Engage com o alvo antes da resolução impede o combate. Sealed impede novas declarações, sem cancelar automaticamente uma já declarada.
+- Perder Prepared depois de declarar não cancela um Strike já pago. Sair do campo ou deixar de ser alvo válido antes da resolução impede o combate. Sealed impede novas declarações, sem cancelar automaticamente uma já declarada.
 
 **Por quê:** uma única lógica de resposta atende cartas, habilidades e combate. Separar passe da rodada e passe da pilha evita encerrar a rodada enquanto alguém apenas está deixando uma habilidade resolver.
 
 ### 57. Entrada em campo e Prepared
 
-- Devotees entram **Unprepared**, salvo texto contrário. Podem estabelecer ou receber Engage imediatamente, equipar e participar de evolução; para iniciar Strike precisam de Prepared.
-- **Impulse** faz o Devotee entrar Prepared. Ainda é necessário estabelecer Engage e gastar uma AÇÃO para Strike. Impulse não concede uma AÇÃO extra.
+- Devotees entram **Prepared** (em guarda), mas não podem declarar Strike na rodada em que entraram. **Impulse** remove essa restrição; não concede AÇÃO extra.
 - A preparação normal acontece no início da rodada seguinte. Efeitos explícitos podem preparar antes disso ou impedir a preparação.
-- Engage, troca, Disengage e Evolve não usam Prepared. Retaliação também não usa Prepared.
-- Um efeito que prepara pode permitir outro Strike na mesma rodada. O limite natural é Prepared mais AÇÕES disponíveis; não há proibição adicional de “um ataque por rodada”.
+- Evolve e retaliação não usam Prepared.
+- Um efeito que prepara pode permitir outro Strike na mesma rodada. O limite natural é Prepared mais AÇÕES disponíveis.
 
-**Por quê:** até um recém-chegado pode conter um adversário, enquanto causar dano imediatamente exige Impulse ou um efeito de preparo.
+**Por quê:** quem entra protege o campo de imediato, mas atacar exige esperar a rodada seguinte ou ter Impulse.
 
-### 58. Engage, Guardian, Multiguard e controle
+### 58. Alvos, Guardian, Rivalidade e controle
 
-#### Alvos e vínculos
-
-- Engage é sempre entre combatentes adversários: Devotee contra Devotee ou Devotee contra God. Gods recebem vínculos, mas não iniciam Engage nem Strike.
-- Um vínculo é compartilhado pelos dois participantes. Qualquer Devotee participante pode fazer seu próprio Strike contra um oponente vinculado, respeitando Prepared e a alternância de AÇÕES.
-- Existe no máximo um vínculo entre o mesmo par de combatentes. Não se declara troca para um alvo já vinculado ao mesmo Devotee; um efeito que tente duplicar o vínculo mantém apenas o existente.
-- Trocar Engage substitui um vínculo escolhido por outro, por 1 AÇÃO + 1 ENG. Disengage remove um vínculo escolhido pelo mesmo custo. Uma troca resolve de forma atômica: se o novo alvo se tornar inválido, a troca falha e o vínculo anterior permanece, se ainda válido; o custo já pago não retorna.
-- Os alvos e a capacidade disponível são reavaliados na resolução. Um vínculo acaba quando um participante sai do campo, quando deixam de ser adversários ou quando um efeito o encerra.
-
-#### Assumir um confronto para proteger seu God
-
-- Se um Devotee inimigo estiver engajado com **seu God**, um Devotee seu pode escolher esse inimigo como alvo de Engage para **assumir o confronto e proteger o God**. Nenhum dos Devotees precisa estar Prepared; estar Unprepared não impede essa proteção.
-- Na resolução, o vínculo desse inimigo com seu God é **removido e substituído** pelo vínculo entre os dois Devotees. O inimigo deixa de poder realizar Strike contra seu God por aquele vínculo; seus próximos Strikes devem respeitar seus vínculos atuais.
-- O novo vínculo é persistente pelas regras normais. Preparar os Devotees ou iniciar outra rodada não restaura o vínculo com o God. O inimigo pode voltar a escolher o God por uma troca legal, pagando os custos normais; a proteção não cria uma proibição permanente de escolher o God.
-- Um Devotee seu livre usa **1 AÇÃO e 0 ENG**, como Engage inicial. Se já estiver vinculado, usa uma troca legal de **1 AÇÃO e 1 ENG**, substituindo um vínculo próprio. A proteção não exige Guardian, não causa dano e não prepara nem esgota os participantes.
-- A capacidade é conferida **depois de descontar o vínculo com o God que será substituído**. Não há vaga adicional nem aumento de Multiguard. Outros vínculos válidos do inimigo e os vínculos dos demais inimigos com seu God permanecem.
-- Declaração, prioridade, Guardian, alvos e resolução seguem o procedimento normal de Engage. A substituição ocorre somente quando o novo confronto resolve com alvo válido; falha ou anulação não remove o vínculo com o God nem o vínculo anterior de uma troca.
-- A mesma substituição vale quando um efeito explicitamente estabelece ou troca Engage com esse inimigo. Assumir um confronto já existente é diferente da intercepção de Guardian, que participa da declaração de um novo Engage.
-
-**Por quê:** esclarecimento do autor em 23/10/2026: Shion deve poder “tankar” um dos inimigos que estejam engajados com seu God, assumindo o confronto para protegê-lo. Isso substitui a interpretação anterior de manter os dois vínculos e exigir Unprepared.
-
-#### Guardian: intercepção por capacidade
-
-- Ao declarar estabelecer ou trocar Engage contra um God ou outro Devotee, o defensor pode escolher **um Guardian com capacidade livre** para receber esse Engage no lugar do alvo.
-- A intervenção não exige Prepared, AÇÃO ou ENG. Ela faz parte da declaração: registrar o alvo final e então abrir a janela de respostas. Se esse alvo ficar inválido, a declaração falha; não retorna automaticamente ao alvo original.
-- Guardian com capacidade ocupada não intercepta novas declarações. Um Guardian já vinculado ao mesmo atacante não intercepta a troca daquele vínculo para mantê-lo preso. Outro Guardian disponível pode interceptar.
-- Apenas uma intervenção de Guardian é feita por declaração; o defensor escolhe entre os elegíveis. Isso impede cadeias de redirecionamento entre Guardians.
-- **Nimble ignora essa intervenção.** Continua sujeito às capacidades de Engage e pode ser escolhido como alvo normalmente. Ganhar Nimble depois da intercepção não reescreve retroativamente a declaração.
-- Intercepção vale para declarações de Engage, inclusive troca. Um efeito que apenas move ou encerra um vínculo não é automaticamente uma nova declaração; a carta deve dizer se estabelece um novo Engage.
-
-**Por quê:** Guardian protege enquanto consegue sustentar confrontos. Isso evita que um único Guardian ocupado continue bloqueando todos os outros combatentes e dá função clara a Multiguard. É a definição consolidada para o 2.0, diferente da proteção global da Vanilla 1.0.
-
-#### Multiguard X
-
-- X é a capacidade **total** de vínculos, não X vínculos adicionais. Se houver vários valores de Multiguard, usar o maior, sem somar. Assumir um confronto para proteger um God substitui um vínculo existente e não aumenta essa capacidade.
-- Multiguard permite receber outros Engage enquanto houver vagas. Estabelecer ativamente um Engage inicial continua exigindo estar livre; a keyword amplia a capacidade defensiva, sem criar uma sequência gratuita de vínculos ofensivos.
-- Ao realizar Strike, o portador escolhe **um** oponente vinculado. Apenas esse oponente retalia. Os demais vínculos permanecem.
-- Ao receber Strikes diferentes, o portador retalia em cada um, mesmo Unprepared, enquanto sobreviver.
-- Troca e Disengage afetam um vínculo por AÇÃO. Se a capacidade diminuir abaixo do número atual, o controlador escolhe quais vínculos mantém; os excedentes terminam sem custo.
-
-#### Mudança de controle
-
+- Alvos e exigência de Guardian: capítulo IV. A validade do alvo é reavaliada na resolução.
+- Retaliação: o defensor retalia mesmo Unprepared, enquanto sobreviver ao dano simultâneo.
+- **Rivalidade:** criada quando ambos sobrevivem a um Strike entre Devotees ou por efeito de carta. É mútua e persistente; não pode existir mais de uma entre o mesmo par. Termina nas condições da seção 13.
+- **Mudança de controle:** deixa o Devotee Unprepared, sem curar dano nem apagar Awaken. Rivalidades que passem a ligar aliados terminam; as demais permanecem.
 - Uma carta vai para as zonas de seu proprietário, salvo efeito explícito. “Owner” da Cloth significa personagem elegível; não significa proprietário da carta.
-- Mudar o controle de um Devotee deixa-o Unprepared, sem curar dano nem apagar seu Awaken. Os vínculos que passaram a ligar aliados terminam; vínculos ainda válidos permanecem.
 - Equipamentos não mudam de controlador automaticamente. Como a ligação normal exige equipamento e portador do mesmo controlador, um equipamento incompatível fica em campo sem portador e perde a evolução. Um efeito pode transferir expressamente ambos.
 
 ### 59. Combate e textos das keywords
@@ -814,15 +701,14 @@ O dano é marcado separadamente do HP máximo. Power negativo causa zero dano. H
 
 | Keyword | Definição |
 | --- | --- |
-| Guardian | Intercepta declarações de Engage conforme a capacidade e o procedimento acima. |
-| Nimble | Ignora a intervenção de Guardian ao declarar Engage; não ignora capacidade nem fica protegido contra ser alvo. |
+| Guardian | Strikes inimigos devem escolher um Guardian que seja alvo aberto, exceto contra Rivals ou com Nimble. |
+| Nimble | Ignora a exigência de escolher Guardian ao declarar Strike; não fica protegido contra ser alvo. |
 | Cheater | Durante um Strike contra este Devotee, o Devotee adversário não se beneficia de Long Range. Não ignora Guardian. |
 | Long Range | Ao iniciar Strike, causa seu dano primeiro. Verificar destruição/derrota antes da retaliação; alvo destruído não retalia. Defender com Long Range não concede dano primeiro. |
 | Pierce | Ao iniciar Strike contra um Devotee, o dano excedente ao HP restante daquele alvo é causado ao Soul do God que o controla. Não funciona por retaliação. Calcular depois de prevenção/modificação do dano e sem contar dano antigo como dano novo. |
-| Impulse | Entra Prepared; precisa de Engage e AÇÃO para Strike, como qualquer atacante. |
-| Sealed | Não pode declarar Strike nem ativar suas próprias habilidades, inclusive habilidades concedidas por equipamento. Mantém passivas, Engage e retaliação; pode mudar vínculos e receber Evolve, que pertence à Cloth. Dura até o fim da rodada, salvo duração expressa diferente. |
+| Impulse | Pode declarar Strike na rodada em que entra em campo. |
+| Sealed | Não pode declarar Strike nem ativar suas próprias habilidades, inclusive habilidades concedidas por equipamento. Mantém passivas, Rivalidades e retaliação; pode receber Evolve, que pertence à Cloth. Dura até o fim da rodada, salvo duração expressa diferente. |
 | Unfaith | Ao declarar Strike contra um God, pode escolher remover até 2 Latent Cosmo daquele jogador em lugar de causar dano ao Soul. A escolha é anunciada antes das respostas. O God retalia normalmente; sem Latent, o modo não causa dano ao Soul. |
-| Multiguard X | Capacidade defensiva total de X Engage, com um alvo por Strike e as demais regras acima. |
 
 **Cheater e Unfaith foram confirmadas pelo autor com este complemento.** A primeira dá uma resposta específica a Long Range; a segunda cria uma decisão entre pressão no Soul e negação de recurso.
 
@@ -833,7 +719,7 @@ Se um Strike normal causar Soul zero aos dois Gods simultaneamente por efeitos a
 ### 60. Cosmo, Latent e custos
 
 - Uma Base disponível paga 1 Cosmo e fica indisponível até a renovação. Gastar Bases para pagar é parte do pagamento; não cria uma AÇÃO adicional nem exige guardar um estoque de Cosmo gerado sem uso.
-- Custo de **Cosmo** aceita Bases e Latent. Custo explicitamente de **Base Cosmo** aceita apenas Bases; custo de **Latent Cosmo** aceita apenas Latent. Soul e ENG são recursos distintos e não substituem Cosmo.
+- Custo de **Cosmo** aceita Bases e Latent. Custo explicitamente de **Base Cosmo** aceita apenas Bases; custo de **Latent Cosmo** aceita apenas Latent. Soul é recurso distinto e não substitui Cosmo.
 - Manter Latent como recurso de superação: **uma vez por AÇÃO adversária**, se um ou mais Devotees seus receberem dano efetivo de fontes adversárias, ganhar 1 Latent. As respostas e consequências daquela AÇÃO contam na mesma ocorrência. Dano zero ou totalmente prevenido não gera; o Devotee pode ter sido destruído pelo dano.
 - Limite experimental: **3 Latent por jogador**. Efeitos que geram mais respeitam esse limite, salvo exceção expressa. Latent expira no fim da rodada, depois dos efeitos de encerramento.
 - Dano de retaliação sofrido durante sua própria AÇÃO não gera esse ganho geral. Cartas podem criar suas próprias fontes de Latent.
@@ -864,7 +750,7 @@ Se um Strike normal causar Soul zero aos dois Gods simultaneamente por efeitos a
 - Retirar o antigo limiar universal de Awaken dos Gods. Uma nova carta de God pode ter seu próprio despertar, inteiramente descrito no texto, sem depender de uma regra herdada.
 - **Ultimate usa AÇÃO e uma utilização por identidade de personagem, por jogador e por partida**, além dos custos e requisitos impressos. Na ausência de personagem nomeado, usar a identidade da carta. Ressuscitar ou trocar a versão do mesmo personagem não recarrega essa utilização. Não exige God Cloth universalmente nem consome Prepared se isso não estiver no custo.
 - Afterlife é derivado de ser Devotee no Tartarus, inclusive se chegou lá por descarte. Não precisa estar impresso em todo Devotee, não oferece ativação por si só e não concede retorno.
-- Retornar do Tartarus exige um efeito. Por padrão, a carta retorna sob controle de seu proprietário, Unprepared, sem Engage, sem dano, sem seu Awaken anterior e sem equipamentos automaticamente anexados; o efeito pode especificar exceções.
+- Retornar do Tartarus exige um efeito. Por padrão, a carta retorna sob controle de seu proprietário, Prepared, sem Rivalidades, sem dano, sem seu Awaken anterior e sem equipamentos automaticamente anexados; o efeito pode especificar exceções.
 - Limite experimental para evitar ciclos: **cada carta física pode retornar do Tartarus ao campo uma vez por rodada**. Hades pode retornar vários Devotees diferentes; exceções ao limite precisam estar explícitas. Sair de novo não renova o limite.
 
 **Por quê:** três progressões distintas, com papéis claros: despertar do personagem, vínculo com a armadura e golpe extraordinário. O retorno continua relevante sem reciclar infinitamente a mesma entrada em campo.
@@ -877,7 +763,7 @@ Se um Strike normal causar Soul zero aos dois Gods simultaneamente por efeitos a
 - Cada jogador pode controlar um Devotee de cada **personagem nomeado**, mesmo que existam versões diferentes da carta. Unidades genéricas não têm essa exclusividade. Usar identidade estável de personagem para essa regra, Owner e Resonance; título e ilustração não bastam.
 - Não permitir jogar da mão uma segunda versão de personagem que já controla. Se um efeito produzir duplicidade, o controlador escolhe um para manter e envia os outros ao Tartarus, sem considerar isso destruição. Habilidades de entrada continuam seguindo o fato de a carta ter entrado; essa interação deve ser considerada no custo do efeito que a trouxe.
 - Relics só são únicas se isso estiver expresso. Retirar o desconto geral de 2 Cosmo por repetir nome; evolução de Cloth passa a ser a progressão geral, e uma carta específica pode autorizar substituir sua versão anterior.
-- Gods não iniciam Engage/Strike nem equipam armaduras. Possuem Soul e Attack; retaliação permanece disponível independentemente de Prepared. Custos de habilidades do God devem estar impressos, inclusive eventual esgotamento.
+- Gods não iniciam Strike nem equipam armaduras. Possuem Soul e Attack; retaliação permanece disponível independentemente de Prepared. Custos de habilidades do God devem estar impressos, inclusive eventual esgotamento.
 - Domains permanecem em jogo, fora do deck, sem custo de entrada e protegidos de ataque, destruição, exílio, retorno à mão e mudança de controle adversária nesta base. Seus efeitos e limites de uso vêm do texto da carta.
 - Manter Tartarus e Void distintos. Void representa exílio e não concede Afterlife. Efeitos só alcançam as zonas e tipos que identificam; “target Devotee” não alcança automaticamente uma carta no Tartarus.
 
@@ -888,7 +774,7 @@ Se um Strike normal causar Soul zero aos dois Gods simultaneamente por efeitos a
 - Cada texto antigo precisa de revisão contextual: “during your opponent's turn” pode virar “during an opponent's action”, mas isso não é substituição automática segura para todas as habilidades.
 - Habilidades de entrada aparecem primeiro na carta. A posição gráfica não antecipa a resolução de um gatilho em relação à pilha.
 - No Card Forge, separar: identidade e versão; custo e Cosmoble; Power/HP ou Soul/Attack; entrada; keywords; habilidades; Awaken/Ultimate; Owners; Resonance; estágios com bônus totais, requisitos e custos. Cloth e Scale precisam de identificação mecânica própria, ainda que reutilizem uma moldura.
-- Dados de partida como dano, Prepared, vínculos, ENG, estágio atual e limites usados ficam fora da definição-base. A carta interativa recebe esses estados da engine. Impressão e jogo compartilham os mesmos textos, identidade e revisão.
+- Dados de partida como dano, Prepared, Rivalidades, estágio atual e limites usados ficam fora da definição-base. A carta interativa recebe esses estados da engine. Impressão e jogo compartilham os mesmos textos, identidade e revisão.
 - São obrigatórios os textos que definem alvos, custo, duração e limite das habilidades, evitando que o importador complete esses elementos silenciosamente. O editor deve sinalizar conflitos entre texto e campos estruturados.
 
 ### 65. Valores iniciais e o que medir
@@ -898,7 +784,6 @@ Se um Strike normal causar Soul zero aos dois Gods simultaneamente por efeitos a
 | Soul / Attack de God de referência | 30 / 3; variar por facção apenas com compensação no restante da carta |
 | Compras | 2 por rodada a partir da segunda |
 | Bases | 1 por jogador/rodada, sem AÇÃO |
-| ENG | 3 por God/rodada, sem acumular |
 | Latent | Limite de 3; ganho geral uma vez por AÇÃO adversária com dano elegível; expira no fim da rodada |
 | Evolve | Uma vez por Cloth/rodada |
 | Retorno do Tartarus | Uma vez por carta física/rodada |
@@ -920,7 +805,7 @@ Guardian, Nimble, Impulse e, sobretudo, Long Range devem consumir parte dessa ef
 
 Exemplo de Cloth para testar, sem impor esses valores a todas: custo de entrada 2, Equip 1; Vanilla +1/+1; Evolve por 2 para bônus total +2/+2; Evolve por 4 para bônus total +4/+4. As duas evoluções ocupam rodadas diferentes. A carta só terá os estágios que seu design realmente definir.
 
-Medir pelo menos: duração e vencedor com iniciativa; cartas disponíveis na mão e uso de Bases; proporção de AÇÕES gastas reposicionando; dano evitado por Long Range; intervenções de Guardian e uso de ENG; frequência de evolução/God Cloth/Ultimate; quantidade de retornos e vantagem de cartas de Hades. Usar partidas espelhadas com iniciativa invertida antes de atribuir uma diferença à facção.
+Medir pelo menos: duração e vencedor com iniciativa; cartas disponíveis na mão e uso de Bases; duração das partidas e partidas travadas por “tartaruga” (todos em guarda); Strikes por rodada; Rivalidades formadas; dano evitado por Long Range; Strikes forçados em Guardian; frequência de evolução/God Cloth/Ultimate; quantidade de retornos e vantagem de cartas de Hades. Usar partidas espelhadas com iniciativa invertida antes de atribuir uma diferença à facção.
 
 
 ---

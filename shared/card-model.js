@@ -3,7 +3,7 @@ export const RULES_VERSION = '2.0';
 export const TYPES = ['God','Domain','Devotee','Equipment','Support','Relic','Technique','Moment'];
 export const FACTIONS = ['Athena','Poseidon','Hades','Ares','Artemis','Neutral'];
 export const KEYWORDS = ['Guardian','Nimble','Cheater','Long Range','Pierce','Impulse','Sealed','Unfaith','Afterlife'];
-export const OPERATIONS = new Set(['curar','alma','comprar','descartar','atributo','keyword','prevenir','preparar','esgotar','mover','dano','dano_area','mover_dano','trocar_engage','desconto','olhar','base_extra','anular','opcional','retornar','remover_guardian','dano_engage','controlar']);
+export const OPERATIONS = new Set(['curar','alma','comprar','descartar','atributo','keyword','prevenir','preparar','esgotar','mover','dano','dano_area','mover_dano','rivalizar','encerrar_rivalidade','redirecionar_strike','desconto','olhar','base_extra','anular','opcional','retornar','remover_guardian','dano_rivais','controlar']);
 export const slug = value => String(value||'').normalize('NFD').replace(/\p{M}/gu,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 export const isArmor = card => card?.slot_equipamento === 'armadura' || (card?.subtipos||[]).some(s=>['Cloth','Scale','Surplice','Warplate'].includes(s));
 export const isEquipment = card => card?.tipo === 'Equipment' || (card?.tipo === 'Relic' && (card?.subtipos||[]).some(s=>['Cloth','Scale','Surplice','Weapon','Equipment'].includes(s)));
