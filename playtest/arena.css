@@ -72,3 +72,10 @@
 
 /* O alvo deixa explícito que assumir o confronto protege o God. */
 .engage-protection-note{display:block;margin-top:10px;color:#efcf82;font-size:12px;line-height:1.5}
+/* Símbolo do recurso atrás do número (peças do Card Forge): Cosmo, Latent Cosmo e Base Cosmo. */
+.arena-resource{position:relative;isolation:isolate}
+.arena-resource::before{content:'';position:absolute;left:50%;top:calc(15px * var(--hud-scale,1));width:calc(52px * var(--hud-scale,1));height:calc(52px * var(--hud-scale,1));transform:translate(-50%,-50%);z-index:-1;background:center/contain no-repeat;opacity:.42;filter:drop-shadow(0 0 6px #e8c86a66)}
+.arena-resource--eng::before{background-image:url(../CARD-TEMPLATE/athena/icon_cosmo.png)}
+.arena-resource--latent::before{background-image:url(../CARD-TEMPLATE/athena/icon_latent.png)}
+.arena-resource--base::before{background-image:url(../CARD-TEMPLATE/athena/gem_cost_base.png);opacity:.7;filter:brightness(1.5) drop-shadow(0 0 6px #e8c86a66)}
+.arena-resource strong{text-shadow:0 0 3px #000,0 1px 2px #000}
