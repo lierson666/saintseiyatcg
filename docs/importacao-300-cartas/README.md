@@ -1,3 +1,5 @@
+> **Nota (24/10/2026):** registro histórico da importação. Os arquivos aqui citam Engage; ele foi removido do jogo (capítulo IV do `guia-do-jogo.md`, Guarda e Rivalidade). As 13 cartas afetadas foram revisadas em `shared/card-revisions.js`.
+
 # Importação das 300 cartas — diff para aprovação
 
 Catálogo: **57 → 357 cartas**. Adicionadas: 300; alteradas: 0; removidas: 0.
