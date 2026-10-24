@@ -69,3 +69,12 @@ dialog h2 { margin: 0 0 6px; font-size: 16px; color: var(--gold); }
 
 /* Histórico da carta atual, sem gravação automática. */
 .forge-history{display:flex;gap:6px;flex-wrap:wrap}.forge-history button:disabled{opacity:.4;cursor:default}
+
+/* Dentro do STAR HILL a lista de cartas e o desfazer/refazer já ficam no painel de fora. */
+.embedded header h1, .embedded header > label, .embedded .forge-history { display: none; }
+.embedded header { padding: 8px 16px; }
+@media (max-width: 800px) {
+  .embedded main { grid-template-columns: minmax(240px, 320px) 1fr; }
+  .embedded form { max-height: calc(100vh - 70px); }
+  .embedded .view-fit #card { height: calc(100vh - 130px); width: auto; }
+}

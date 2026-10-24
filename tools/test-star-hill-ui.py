@@ -55,8 +55,8 @@ with sync_playwright() as p:
     page.get_by_role('link',name='Cartas · Card Forge',exact=True).click()
     page.wait_for_selector('#card-search')
     page.locator('#card-search').fill('SST-01-001')
-    assert page.locator('#card-list tbody tr').count()==1
-    page.get_by_role('button',name='Editar no Forge').click()
+    assert page.locator('#card-list .card-row').count()==1
+    page.locator('#card-list .card-row').click()
     assert 'sst-01-001' in page.locator('#forge').get_attribute('src')
     for width,height in [(1920,1080),(1024,768),(390,844),(375,812)]:
         page.set_viewport_size({'width':width,'height':height})

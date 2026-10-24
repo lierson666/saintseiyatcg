@@ -22,3 +22,27 @@ main.deck-mode{max-width:none;padding:28px 28px 0}.deck-mode .page-header{margin
 @media(max-width:1200px){main.deck-mode{padding:24px 20px 0}.deck-workspace{gap:16px;grid-template-columns:minmax(0,1fr) 280px}.collection-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:16px 12px}.collection-caption small{display:none}.deck-toolbar{align-items:flex-start;flex-direction:column}.deck-toolbar>label{width:100%;max-width:none}.deck-list-caption small{display:none}}
 @media(max-width:950px){.deck-workspace{grid-template-columns:minmax(0,1fr) 260px}.collection-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.collection-filters{grid-template-columns:1fr}.collection-factions button{padding:5px 8px;font-size:10px}.deck-view-switch{display:none}.deck-row{gap:3px;padding-left:5px}.deck-row .deck-row-name{font-size:11px}.deck-row button{padding:2px 4px}.is-horizontal .deck-panel{grid-template-columns:1fr}.is-horizontal .deck-rows{grid-column:1;grid-row:auto}.is-horizontal #deck-collection-body{max-height:none}}
 @media(max-width:700px){main.deck-mode{padding:24px 16px 0}.deck-workspace{display:block}.deck-toolbar{gap:12px;margin-bottom:12px}.deck-toolbar-actions{width:100%}.deck-toolbar-actions>button{flex:1}.deck-mobile-tabs{display:flex;gap:0;margin:16px 0}.deck-mobile-tabs button{flex:1;border-radius:0;font-size:13px}.deck-builder[data-mobile=collection] .deck-panel,.deck-builder[data-mobile=deck] .deck-collection{display:none}.deck-panel{position:relative;top:0}.collection-filters{grid-template-columns:1fr 1fr}.collection-filters select:last-child{grid-column:1/-1}.collection-grid{gap:16px 12px;grid-template-columns:repeat(2,minmax(0,1fr))}.collection-factions{gap:5px}.collection-factions button{font-size:11px;padding:6px 10px;min-height:36px}.deck-rows{max-height:600px;min-height:280px}.deck-row .deck-row-name{font-size:13px}.deck-row{min-height:44px}.deck-row button{min-height:44px;padding:4px 8px}.deck-list-caption small{display:block}.deck-preview-card .live-card__body{margin-top:120px;font-size:12px}.deck-preview-card .live-card{min-height:450px}.deck-preview-card .live-card__heading{font-size:20px}.collection-toggles{gap:6px 12px}}
+
+/* Cartas: lista ao lado do editor, altura presa à janela. */
+.cards-workbench{display:grid;grid-template-columns:280px minmax(0,1fr);gap:16px;height:calc(100dvh - 190px);min-height:560px}
+.card-browser{display:flex;flex-direction:column;min-height:0;background:var(--panel);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.card-browser-head{display:grid;gap:10px;padding:14px;border-bottom:1px solid var(--line)}
+.card-browser .search{max-width:none;min-height:40px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:transparent;color:var(--muted);border-radius:999px;padding:4px 11px;font-size:12px;cursor:pointer}
+.chip:hover{color:var(--ink);border-color:#9aa9c366}
+.chip[aria-pressed=true]{background:#d9b76220;border-color:var(--gold);color:var(--gold)}
+.card-count{color:var(--muted);font-size:12px}
+#card-list{flex:1;min-height:0;overflow:auto}
+.card-row{--tone:var(--muted);display:grid;grid-template-columns:8px minmax(0,1fr) auto;gap:12px;align-items:center;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:10px 14px;color:var(--ink);cursor:pointer;font:inherit}
+.card-row:hover{background:var(--raised)}
+.card-row[aria-current=true]{background:#d9b76218;box-shadow:inset 3px 0 var(--gold)}
+.card-row i{width:8px;height:8px;border-radius:50%;background:var(--tone)}
+.card-row b{display:block;font-weight:600;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card-row small{color:var(--muted);font-size:11px}
+.card-row em{font-style:normal;color:var(--muted);font-size:11px}
+[data-tone=Athena]{--tone:#8dcde9}[data-tone=Ares]{--tone:#e0605a}[data-tone=Artemis]{--tone:#c7d3ef}[data-tone=Hades]{--tone:#a07ad6}[data-tone=Poseidon]{--tone:#4aa3d9}[data-tone=Neutral]{--tone:#aab5c5}
+.chip[data-tone]::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--tone);margin-right:6px}
+.card-empty{padding:18px 14px}
+.cards-workbench .forge-frame{height:100%;min-height:0;margin:0}
+@media(max-width:900px){.cards-workbench{grid-template-columns:1fr;height:auto}.card-browser{max-height:280px}.cards-workbench .forge-frame{height:820px}}
