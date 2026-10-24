@@ -67,6 +67,9 @@ def upsert_card(text, card):
     data = json.loads(text)
     span = card_span(text, card["id"])
     if span:
+        # Sem alteração de dados, preserva também a formatação original do bloco.
+        if json.loads(text[span[0]:span[1]]) == card:
+            return text
         indent = len(text[: span[0]]) - len(text[: span[0]].rstrip(" "))
         new = text[: span[0]] + fmt(card, indent) + text[span[1]:]
     else:
@@ -199,12 +202,20 @@ def selftest():
     data = json.loads(text)
     for c in data["cartas"]:
         assert upsert_card(text, c) == text, f"formatador mudou {c['id']}"
+    original = data["cartas"][0]
+    edited = dict(original, nome_exibicao_en=original["nome_exibicao_en"] + " · teste")
+    changed = upsert_card(text, edited)
+    start, end = card_span(text, original["id"])
+    new_start, new_end = card_span(changed, original["id"])
+    assert json.loads(changed[new_start:new_end]) == edited, "edição não aplicada"
+    assert changed[:new_start] == text[:start] and changed[new_end:] == text[end:], "edição fora da carta"
+    assert upsert_card(changed, edited) == changed, "edição repetida gerou diff"
     novo = dict(data["cartas"][0], id="zz-teste")
     t2 = upsert_card(text, novo)
     d2 = json.loads(t2)
     assert len(d2["cartas"]) == len(data["cartas"]) + 1 and d2["cartas"][-1]["id"] == "zz-teste"
     assert d2["total_cartas"] == len(d2["cartas"])
-    print(f"selftest ok: {len(data['cartas'])} cartas regravadas sem diff; append ok")
+    print(f"selftest ok: {len(data['cartas'])} cartas preservadas sem diff; edição e append ok")
     import http.client, threading
     server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
     threading.Thread(target=server.serve_forever, daemon=True).start()
