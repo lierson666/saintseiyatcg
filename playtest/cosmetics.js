@@ -1,5 +1,5 @@
 // Preferências de aparência. Não são enviadas ao motor nem concedem vantagens mecânicas.
-import {escapeText as escape} from '../shared/card-text.js';
+import {escapeText as escape} from '../shared/card-text.js?v=20261024-3';
 export const TOKENS=[{id:'constellation',name:'Star Hill',glyph:'✧'},{id:'solar',name:'Solar seal',glyph:'☉'},{id:'lunar',name:'Lunar crystal',glyph:'◇'}];
 export const SLEEVES=[{id:'sanctuary',name:'Sanctuary gold'},{id:'ocean',name:'Ocean depths'},{id:'underworld',name:'Underworld'}];
 export const EMOTES=[{id:'greeting',text:'May the stars guide you.'},{id:'respect',text:'A worthy opponent.'},{id:'cosmo',text:'Let your Cosmo burn!'},{id:'thinking',text:'The stars are still speaking…'},{id:'played',text:'A remarkable move.'},{id:'farewell',text:'Until our paths cross again.'}];

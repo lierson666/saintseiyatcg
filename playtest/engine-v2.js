@@ -1,5 +1,5 @@
 // Motor 2.0 independente do DOM. As escolhas humanas e a apresentação não decidem regras.
-import {isArmor,isEquipment,validateDeck} from '../shared/card-model.js';
+import {isArmor,isEquipment,validateDeck} from '../shared/card-model.js?v=20261024-3';
 const PLAYERS=['A','B'],other=k=>k==='A'?'B':'A';
 const copy=value=>structuredClone(value);
 const zones=['deck','hand','battlefield','cosmo_base','tartarus','void','stack'];

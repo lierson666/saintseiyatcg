@@ -1,5 +1,5 @@
 // Decks iniciais do conjunto novo. A fonte original da beta permanece histórica.
-import {validateDeck} from './card-model.js';
+import {validateDeck} from './card-model.js?v=20261024-3';
 export function createStarterDecks(cards,overrides=[]){
   const factions=['Athena','Poseidon','Hades','Ares','Artemis','Neutral'];
   const gods={Athena:'athena-001',Poseidon:'poseidon-001',Hades:'hades-001',Ares:'ares-001',Artemis:'artemis-001',Neutral:'athena-001'};

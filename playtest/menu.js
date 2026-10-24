@@ -1,6 +1,6 @@
 // Navegação da experiência de console. Só produz interface; não altera regras.
-import {cosmeticSettings} from './cosmetics.js';
-import {renderLiveCard,illustration} from '../shared/live-card.js';
+import {cosmeticSettings} from './cosmetics.js?v=20261024-3';
+import {renderLiveCard,illustration} from '../shared/live-card.js?v=20261024-3';
 export const escape = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 export const cardImage = card => illustration(card);
 export const portraitFace = (id,alt='') => illustration({id})?`<img class="card-art portrait-art" src="${escape(illustration({id}))}" alt="${escape(alt)}" draggable="false">`:`<span class="card-art portrait-art portrait-placeholder" role="img" aria-label="${escape(alt)}">✧</span>`;

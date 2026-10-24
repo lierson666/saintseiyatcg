@@ -1,7 +1,7 @@
 // Compilação explícita do primeiro conjunto. A engine consome operações estruturadas, não inglês.
-import {slug,validateCard} from './card-model.js';
-import {PLAYTEST_SIGNATURES} from './playtest-signatures.js';
-import {reviseCard} from './card-revisions.js';
+import {slug,validateCard} from './card-model.js?v=20261024-3';
+import {PLAYTEST_SIGNATURES} from './playtest-signatures.js?v=20261024-3';
+import {reviseCard} from './card-revisions.js?v=20261024-3';
 const unit=(lado='qualquer',extra={})=>({zona:'battlefield',tipo:'Devotee',lado,...extra});
 const equip=(lado='qualquer',extra={})=>({zona:'battlefield',equipamento:true,lado,...extra});
 const base=(lado='aliado',extra={})=>({zona:'cosmo_base',lado,...extra});

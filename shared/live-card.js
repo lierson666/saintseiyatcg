@@ -1,5 +1,5 @@
-import {renderRules,inlineMarkup,presentationRules} from './card-text.js';
-import {isEquipment} from './card-model.js';
+import {renderRules,inlineMarkup,presentationRules} from './card-text.js?v=20261024-3';
+import {isEquipment} from './card-model.js?v=20261024-3';
 // A ilustração é apenas fundo. Letras, números e estados são dados independentes no DOM.
 const escape=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const portraits={'athena-001':'athena-001','athena-002':'athena-002','athena-003':'athena-003','athena-004':'athena-004','athena-005':'athena-005','athena-006':'athena-006','sst-01-001':'athena-002','sst-01-002':'athena-003','sst-01-003':'athena-004','sst-01-004':'athena-005','sst-01-005':'athena-006'};

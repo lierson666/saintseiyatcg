@@ -1,9 +1,9 @@
 // Arena de AÇÕES: foco no confronto e no estado atual, com o tema visual já existente.
-import {escape,icon,cardFace,renderSettings} from './menu.js';
-import {battleGuide,journalEntries} from './battle-guide.js';
-import {renderLiveCard,illustration} from '../shared/live-card.js';
-import {renderAdvantage,sleeve} from './cosmetics.js';
-import {renderRules,presentationRules} from '../shared/card-text.js';
+import {escape,icon,cardFace,renderSettings} from './menu.js?v=20261024-3';
+import {battleGuide,journalEntries} from './battle-guide.js?v=20261024-3';
+import {renderLiveCard,illustration} from '../shared/live-card.js?v=20261024-3';
+import {renderAdvantage,sleeve} from './cosmetics.js?v=20261024-3';
+import {renderRules,presentationRules} from '../shared/card-text.js?v=20261024-3';
 const opposite=k=>k==='A'?'B':'A';
 const encode=command=>escape(JSON.stringify(command));
 const button=(command,label,cls='quiet-button')=>`<button class="${cls}" data-command="${encode(command)}">${escape(label)}</button>`;

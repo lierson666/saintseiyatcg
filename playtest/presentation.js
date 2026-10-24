@@ -1,12 +1,12 @@
 // Fila visual independente do motor: animações observam revisões sem alterar o resultado.
-import {cardImage} from './menu.js?v=3';
-import {sfx,playMusic} from './audio.js?v=1';
+import {cardImage} from './menu.js?v=20261024-3';
+import {sfx,playMusic} from './audio.js?v=20261024-3';
 export function createPresentation(){
   let enabled=true,layer=null,loading=null,previous=null,queue=Promise.resolve(),generation=0,noticeTimer=null;
   const reduced=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
   const overlay=document.querySelector('#effects-root');
   const enqueue=task=>{const version=generation;queue=queue.then(()=>version===generation?task():undefined).catch(()=>{});return queue;};
-  function warm(){if(!enabled||reduced()||loading)return;loading=import('./fx3d.js?v=15').then(m=>m.createFx()).then(fx=>{layer=fx;}).catch(()=>{layer=null;});}
+  function warm(){if(!enabled||reduced()||loading)return;loading=import('./fx3d.js?v=20261024-3').then(m=>m.createFx()).then(fx=>{layer=fx;}).catch(()=>{layer=null;});}
   function find(target){return target?.kind==='god'?document.querySelector(`.god-portrait[data-player="${target.playerKey}"]`):document.querySelector(`.game-card[data-uid="${target?.uid}"]`);}
   function burst(rect){const node=document.createElement('i');node.className='cosmo-burst';node.style.left=`${rect.left+rect.width/2}px`;node.style.top=`${rect.top+rect.height/2}px`;overlay.appendChild(node);setTimeout(()=>node.remove(),450);}
   async function cssFlight(from,to,src,attack=false){
