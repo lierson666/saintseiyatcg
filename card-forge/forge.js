@@ -1,3 +1,4 @@
+import {createHistory} from '../shared/editor-history.js';
 import {compilePlaytest} from '../shared/import-playtest.js';
 import {textBlocks,blocksMarkup,presentationRules} from '../shared/card-text.js';
 import {renderLiveCard,illustration} from '../shared/live-card.js';
@@ -38,6 +39,25 @@ let db = null;          // cards.json inteiro
 let orig = null;        // carta original (null = nova)
 let gen = [];           // [{markup, text}] — habilidades geradas no load, para não reescrever texto intacto
 let S = blankState();
+let editHistory;
+function syncEditHistory(){
+  $('#forgeUndo').disabled=!editHistory?.canUndo;$('#forgeRedo').disabled=!editHistory?.canRedo;
+  if(parent!==window)parent.postMessage({tipo:'card-forge:history'},location.origin);
+}
+function resetEditHistory(){editHistory=createHistory(S,{limit:50});syncEditHistory();}
+function rememberEdit(key=null){editHistory?.record(S,key);syncEditHistory();}
+function travelEdit(direction){
+  if(document.querySelector('dialog[open]'))return false;
+  if(drag)endDrag();const value=editHistory?.[direction]();if(!value)return false;
+  // Preserva a referência de estado usada pela lista de importação em lote.
+  for(const key of Object.keys(S))delete S[key];Object.assign(S,value);
+  fillForm();render();syncEditHistory();say(direction==='undo'?'Alteração desfeita no rascunho':'Alteração refeita no rascunho');return true;
+}
+$('#forgeUndo').addEventListener('click',()=>travelEdit('undo'));
+$('#forgeRedo').addEventListener('click',()=>travelEdit('redo'));
+form.addEventListener('focusout',()=>editHistory?.breakGroup());
+window.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&!e.altKey&&!document.querySelector('dialog[open]')&&['z','y'].includes(e.key.toLowerCase())){e.preventDefault();travelEdit(e.shiftKey||e.key.toLowerCase()==='y'?'redo':'undo');}});
+
 
 function blankState() {
   return {
@@ -393,12 +413,12 @@ function renderStageEditor(){
     const row=document.createElement('div');row.className='stage-row';
     for(const [key,label] of [['nome','Estágio'],['custo','Evolve'],['bonus_poder','Bônus Power'],['bonus_vida','Bônus HP']]){
       const l=document.createElement('label');l.textContent=label;const input=document.createElement('input');input.type=key==='nome'?'text':'number';input.value=stage[key]??'';input.disabled=index===0&&['nome','custo'].includes(key);input.setAttribute('aria-label',`${label} ${index+1}`);
-      input.addEventListener('input',()=>{stage[key]=key==='nome'?input.value:input.value===''?null:Number(input.value);if(index===0){S.bonusPower=`+${stage.bonus_poder||0}`;S.bonusResistance=`+${stage.bonus_vida||0}`;}render();});l.append(input);row.append(l);
+      input.addEventListener('input',()=>{stage[key]=key==='nome'?input.value:input.value===''?null:Number(input.value);if(index===0){S.bonusPower=`+${stage.bonus_poder||0}`;S.bonusResistance=`+${stage.bonus_vida||0}`;}rememberEdit('stage:'+index+':'+key);render();});l.append(input);row.append(l);
     }host.append(row);
   });
   $('#previewStage').replaceChildren(...(S.estagios.length?S.estagios:[{nome:'Vanilla'}]).map((s,i)=>new Option(s.nome,String(i))));
 }
-$('#addStage').addEventListener('click',()=>{S.estagios.push({nome:S.estagios.length?'New stage':'Vanilla',custo:S.estagios.length?1:null,bonus_poder:0,bonus_vida:0,keywords_en:[],habilidades_en:[]});renderStageEditor();render();});
+$('#addStage').addEventListener('click',()=>{S.estagios.push({nome:S.estagios.length?'New stage':'Vanilla',custo:S.estagios.length?1:null,bonus_poder:0,bonus_vida:0,keywords_en:[],habilidades_en:[]});renderStageEditor();rememberEdit();render();});
 function updateLivePreview(){
   const live=$('#representation').value==='live';$('#livePreview').hidden=!live;$('#liveControls').hidden=!live;$('#cardWrap').hidden=live;
   const c=buildCard(),damage=Number($('#previewDamage').value)||0,stage=Number($('#previewStage').value)||0;
@@ -429,7 +449,7 @@ form.addEventListener('input', (e) => {
   S[f.name] = f.type==='checkbox'?f.checked:f.value;
   if(S.estagios.length&&['bonusPower','bonusResistance'].includes(f.name))S.estagios[0][f.name==='bonusPower'?'bonus_poder':'bonus_vida']=Number(f.value)||0;
   if(['tipo','subtipos'].includes(f.name)){if(isEquipment({...S,subtipos:list(S.subtipos)})&&!has(S.equipar_custo)){S.equipar_custo='1';form.elements.equipar_custo.value='1';}syncVisibility();}
-  render();
+  rememberEdit('field:'+f.name);render();
 });
 
 // ---------- carregar carta ----------
@@ -461,7 +481,7 @@ async function selectCard(id) {
     const im = await loadImg(src);
     if (im) { S.art = { src }; coverArt(im); }
   }
-  fillForm();
+  fillForm();resetEditHistory();
   setRef(c.caminho_imagem ? `../${c.caminho_imagem}` : null);
   say(S.art ? `${c.id} carregada` : `${c.id} carregada — sem arte, envie uma imagem`);
   render();
@@ -477,7 +497,7 @@ function newCard() {
   S.id = `${S.faccao.toLowerCase()}-${String(Math.max(0, ...nums) + 1).padStart(3, '0')}`;
   S.nome_exibicao_en = 'New Card';
   $('#cardSelect').value = '';
-  fillForm();
+  fillForm();resetEditHistory();
   setRef(null);
   say(`nova carta ${S.id}`);
   render();
@@ -500,7 +520,7 @@ function readArt(file) {
   r.onload = async () => {
     S.art = { src: r.result, uploaded: true };
     coverArt(await loadImg(r.result));
-    render();
+    rememberEdit();render();
     say(`arte: ${file.name}`);
   };
   r.readAsDataURL(file);
@@ -523,7 +543,7 @@ function zoomArt(factor, cx = W / 2, cy = H / 2) {
   a.w = nw;
   a.zoom = a.w / (a.baseW || a.w);
   $('#artZoom').value = a.zoom;
-  render();
+  rememberEdit('art:zoom');render();
 }
 
 let drag = null;
@@ -540,7 +560,7 @@ canvas.addEventListener('pointermove', (e) => {
   S.art.y = drag.y + y - drag.p[1];
   render();
 });
-const endDrag = () => { drag = null; canvas.classList.remove('dragging'); };
+const endDrag = () => { if(!drag)return;drag = null; canvas.classList.remove('dragging');rememberEdit(); };
 canvas.addEventListener('pointerup', endDrag);
 canvas.addEventListener('pointercancel', endDrag);
 canvas.addEventListener('wheel', (e) => { e.preventDefault(); zoomArt(Math.exp(-e.deltaY * 0.0015), ...toCanvas(e)); }, { passive: false });
@@ -549,7 +569,7 @@ $('#artZoom').addEventListener('input', (e) => {
   if (!S.art.baseW) S.art.baseW = S.art.w / (S.art.zoom || 1);
   zoomArt((S.art.baseW * Number(e.target.value)) / S.art.w);
 });
-$('#artCover').addEventListener('click', async () => { if (S.art?.src) { coverArt(await loadImg(S.art.src)); render(); } });
+$('#artCover').addEventListener('click', async () => { if (S.art?.src) { coverArt(await loadImg(S.art.src));rememberEdit(); render(); } });
 
 // ---------- referência ----------
 function setRef(src) {
@@ -793,7 +813,7 @@ function renderBatchList() {
     const b = Object.assign(document.createElement('button'), { type: 'button', textContent: it.state ? `${it.state.id} · ${it.state.nome_exibicao_en || '(sem nome)'}` : `#${i + 1}` });
     b.addEventListener('click', () => {
       if (!it.state) return;
-      useItem(it); fillForm(); setRef(it.orig?.caminho_imagem ? `../${it.orig.caminho_imagem}` : null); render();
+      useItem(it); fillForm();resetEditHistory(); setRef(it.orig?.caminho_imagem ? `../${it.orig.caminho_imagem}` : null); render();
       say(`lote: editando ${it.state.id} (as mudanças valem para o lote)`);
     });
     const tag = Object.assign(document.createElement('span'), { className: 'tag', textContent: ` — ${it.state?.tipo || '?'}, ${it.orig ? 'atualiza' : 'nova'}${it.artMissing ? ', arte não achada' : ''}${it.state && !it.state.art ? ', sem arte' : ''}` });
@@ -907,4 +927,4 @@ try {
 
 function checkCatalog(){const keep={orig,gen,S};try{return db.cartas.map(c=>{orig=c;S=fromCard(c);return {id:c.id,diff:diffCards(c,buildCard())};}).filter(r=>r.diff.length);}finally{({orig,gen,S}=keep);}}
 function layoutReport(){const keep={orig,gen,S};try{return db.cartas.map(c=>{orig=c;S=fromCard(c);const el=T.layouts[layoutKey(S)].elements.find(e=>e.kind==='rules');const paras=[...(has(S.keywords)?[`**${list(S.keywords).join(', ')}.**`]:[]),...splitParas(blocksMarkup(textBlocks(splitParas(S.rules))))];let size=el.size,L;for(;size>=22;size--){L=layoutRules(paras,size,el.rect[2]);if(L.h<=el.rect[3])break;}return{id:c.id,size,overflow:L.h>el.rect[3]};});}finally{({orig,gen,S}=keep);}}
-window.forge = { checkCatalog,layoutReport,S: () => S, render, toMarkup, fromMarkup, buildCard, selectCard, parseBatch };
+window.forge = { history:{undo:()=>travelEdit('undo'),redo:()=>travelEdit('redo'),get canUndo(){return !!editHistory?.canUndo;},get canRedo(){return !!editHistory?.canRedo;}},checkCatalog,layoutReport,S: () => S, render, toMarkup, fromMarkup, buildCard, selectCard, parseBatch };

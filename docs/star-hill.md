@@ -8,6 +8,19 @@ python3 card-forge/serve.py
 
 A implementação é vanilla JS e Python stdlib, sem build. O painel administra os arquivos locais; não publica o editor na internet.
 
+## Aplicativo macOS · 24/10/2026
+
+O **STAR HILL.app** reúne os módulos em uma janela AppKit/WebKit, com Card Forge embutido, ícone próprio, menus em português, seleção nativa de arquivos e painel Salvar nas exportações. Instalação em `~/Applications/STAR HILL.app`:
+
+```bash
+python3 star-hill/macos/install.py
+open "$HOME/Applications/STAR HILL.app"
+```
+
+O instalador compila e verifica a assinatura local. Requer macOS 13+, Apple Silicon e ferramentas de linha de comando do Xcode; o aplicativo usa o Python do sistema e a pasta original do projeto. Se o servidor da porta 8765 já está aberto, ele é reutilizado. Fechar o aplicativo encerra apenas um servidor iniciado por ele próprio. O Card Forge.app existente permanece disponível separadamente.
+
+O menu **Visualizar** oferece os módulos por `⌘1` a `⌘8`. **Editar** encaminha Desfazer/Refazer ao editor ativo. Para atualizar o executável, feche o aplicativo e rode `python3 star-hill/macos/install.py --update`; a instalação anterior fica em `~/Applications/.star-hill-backups/`. Atualizações dos arquivos web do projeto aparecem ao recarregar o editor.
+
 ## Módulos
 
 - **Música e FX:** escolher menu, abertura de cada duelo, playlist posterior, volumes iniciais e sons das ações; ouvir os arquivos e importar WAV, OGG, MP3 ou ZIP.
@@ -18,6 +31,25 @@ A implementação é vanilla JS e Python stdlib, sem build. O painel administra 
 - **Interações e animações:** eventos de interface, declaração de ações, início de resolução, efeitos e gatilhos. Configuração geral, por carta de origem ou por par origem → alvo.
 - **Cosméticos:** escala inicial de HUD/cartas, token de vantagem, verso e preferência de efeitos.
 - **Livro de regras:** revisão do texto oficial com motivo, histórico e changelog. Salvar texto não reprograma automaticamente o motor; mudanças mecânicas precisam de implementação e validação próprias.
+
+## Editor de decks
+
+A composição segue a referência do [editor do MTG Arena](https://magic.wizards.com/en/news/mtg-arena/upcoming-improvements-to-reprints): coleção de cartas à esquerda, filtros no topo, marcadores de cópias e deck na lateral. O STAR HILL usa a identidade visual e as regras do Saint Seiya. A opção **Horizontal** organiza o deck abaixo da coleção, por custo em Cosmo.
+
+- Clique na carta da coleção para adicionar uma cópia; clique no nome da carta no deck para remover. Botões de quantidade e arraste entre as áreas oferecem as mesmas operações.
+- **Ampliar** ou botão direito abre a carta com texto completo. Todas as cartas usam a representação interativa compartilhada com a arena: ilustração no fundo e informações em camadas próprias. Cartas sem ilustração têm fundo provisório; nenhuma arte é inventada ou reexportada.
+- Busque por nome, ID, texto, subtipo ou keyword; filtre facção, tipo, custo e Cosmoble. As facções permitidas pelo God/Domain aparecem por padrão. Mostrar as demais permite consultar, com a inclusão bloqueada.
+- God e Domain ficam na liderança. A curva mostra custos, média, tipos e Cosmoble. O painel sinaliza composição incompleta e facções inválidas. O limite de quatro cópias é por identidade, inclusive entre variantes; gravar exige 60 cartas válidas.
+- Importe e exporte listas de texto com `God: ID`, `Domain: ID` e `quantidade ID` por linha. A importação valida tudo antes de substituir o rascunho. Os seis decks iniciais continuam sendo os baralhos configuráveis usados pelo jogo.
+- No mobile, os botões **Coleção** e **Deck** alternam as áreas, preservando os filtros e o rascunho.
+
+## Desfazer e Refazer
+
+Os botões do cabeçalho e os atalhos `⌘Z` / `⌘⇧Z` (`Ctrl+Z` / `Ctrl+Shift+Z`, ou `Ctrl+Y`) percorrem o histórico em memória. Configuração de áudio, decks, HUD, telas, interações e cosméticos compartilham até 100 passos. Texto e motivo do livro de regras têm histórico separado. Cada arraste constitui um passo; digitação contínua no mesmo campo é agrupada. Uma nova edição após desfazer descarta a sequência de refazer.
+
+O Card Forge tem também botões próprios e até 50 passos por carta, cobrindo campos, estágios e enquadramento/zoom/upload da arte. Trocar de carta começa um novo histórico. O estado do item de um lote mantém sua referência ao desfazer.
+
+Desfazer altera o rascunho e a prévia. Não reverte arquivos gravados automaticamente: para gravar um estado anterior, desfaça, revise o novo diff e aprove. Uploads já importados permanecem na biblioteca. O histórico da sessão se encerra ao recarregar a página; os backups de gravações aprovadas continuam em disco.
 
 ## Prévia e edição
 
@@ -67,6 +99,8 @@ Gravações são aceitas apenas pela origem local do servidor ligado a 127.0.0.1
 python3 card-forge/serve.py --selftest
 python3 tools/test-star-hill.py
 node --test tools/test-presentation.mjs tools/test-rules-v2.mjs tools/test-card-presentation.mjs tools/test-battle-guide.mjs
+node --test tools/test-star-hill-editors.mjs
+python3 tools/test-star-hill-editors-ui.py
 python3 tools/test-star-hill-ui.py
 python3 tools/test-designers-ui.py
 python3 tools/test-audio-playlist.py

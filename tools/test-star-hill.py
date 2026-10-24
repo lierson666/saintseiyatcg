@@ -37,8 +37,10 @@ class Backend(unittest.TestCase):
         for path in [hill.CONFIG, hill.RULES, 'docs/CHANGELOG-regras.md', 'data/cards.json', 'data/presentation-schema.json']:
             write(self.root / path, (ROOT / path).read_bytes())
         config = json.loads((self.root / hill.CONFIG).read_text())
-        for path in {config['audio']['menu'], config['audio']['inicio_batalha'], *config['audio']['playlist']}:
-            write(self.root / path, b'ID3' + b'\0' * 10)
+        # A biblioteca temporária inclui também os FX escolhidos pelo autor.
+        for path in {config['audio']['menu'], config['audio']['inicio_batalha'], *config['audio']['playlist'],
+                     *(p for p in config['audio']['efeitos'].values() if p)}:
+            write(self.root / path, wav() if path.lower().endswith('.wav') else b'ID3' + b'\0' * 10)
 
     def tearDown(self):
         self.temp.cleanup()
@@ -113,13 +115,15 @@ class Backend(unittest.TestCase):
         self.assertFalse((self.root / 'fx.wav').exists())
 
     def test_zip_invalido_nao_importa_parcialmente(self):
+        before = {p.relative_to(self.root): p.read_bytes() for p in (self.root / 'MUSIC').rglob('*') if p.is_file()}
         output = io.BytesIO()
         with zipfile.ZipFile(output, 'w') as z:
             z.writestr('valido.wav', wav())
             z.writestr('falso.mp3', '<script>sem áudio</script>')
         with self.assertRaises(ValueError):
             hill.upload(output.getvalue(), 'fx.zip', 'autor', write, self.root)
-        self.assertFalse((self.root / 'MUSIC/fx').exists())
+        after = {p.relative_to(self.root): p.read_bytes() for p in (self.root / 'MUSIC').rglob('*') if p.is_file()}
+        self.assertEqual(before, after)
 
     def test_regras_exigem_motivo_e_geram_changelog(self):
         doc = hill.read_document('regras', self.root)

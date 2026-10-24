@@ -18,6 +18,8 @@ Depois abra `http://localhost:8765/card-forge/` (ou `?card=athena-021` para abri
 
 O painel local em `http://localhost:8765/star-hill/` usa este mesmo servidor e reúne áudio/FX, decks, cosméticos, editores de HUD e telas, interações e livro de regras. Veja a [documentação](../docs/star-hill.md). A edição do catálogo continua neste Card Forge, com revisão de diff antes de gravar.
 
+O [aplicativo STAR HILL para Mac](../star-hill/README.md) inclui o Card Forge na própria janela. **Desfazer / Refazer** fica disponível no editor e no cabeçalho do painel: campos, estágios e enquadramento da arte têm histórico de rascunho por carta, com `⌘Z` / `⌘⇧Z`. A gravação de arquivos continua exigindo a ação de salvar e, para o catálogo, a revisão do diff.
+
 ## Aplicativo no macOS
 
 O aplicativo **Card Forge** abre o editor em uma janela própria e inicia o servidor local quando necessário. Compilar e instalar na pasta Aplicativos do usuário:
