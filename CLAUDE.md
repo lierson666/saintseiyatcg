@@ -6,7 +6,7 @@ Tudo que for criado neste projeto (cartas, decks, engine do playtest, IA, UI, Ca
 
 | O quê | Fonte oficial |
 | --- | --- |
-| Regras do jogo | `docs/guia-do-jogo.md` (Rulebook 2.0, base para playtest) |
+| Regras do jogo | `docs/guia-do-jogo.md` (Rulebook 2.0 + Guarda e Rivalidade, 24/10/2026) |
 | Migração para o Rulebook 2.0 | `docs/migracao-rulebook-2.0.md` (impactos e pendências; não cria regras) |
 | Histórico do fechamento do 2.0 | `docs/proposta-fechamento-rulebook-2.0.md` (aprovado em 23/10/2026 e incorporado ao guia) |
 | Mudanças de regra | `docs/CHANGELOG-regras.md` |

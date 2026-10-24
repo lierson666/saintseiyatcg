@@ -1,6 +1,7 @@
 // Compilação explícita do primeiro conjunto. A engine consome operações estruturadas, não inglês.
 import {slug,validateCard} from './card-model.js';
 import {PLAYTEST_SIGNATURES} from './playtest-signatures.js';
+import {reviseCard} from './card-revisions.js';
 const unit=(lado='qualquer',extra={})=>({zona:'battlefield',tipo:'Devotee',lado,...extra});
 const equip=(lado='qualquer',extra={})=>({zona:'battlefield',equipamento:true,lado,...extra});
 const base=(lado='aliado',extra={})=>({zona:'cosmo_base',lado,...extra});
@@ -13,7 +14,8 @@ const discount=(tipo,n,extra={})=>effect('desconto',n,'jogador',{tipo,...extra})
 const trigger=(evento,efeitos,extra={})=>({evento,efeitos,...extra});
 const optional=(custo,efeitos)=>({op:'opcional',custo,efeitos});
 const spy=(n,modo='espiar')=>effect('olhar',n,'jogador',{modo});
-const change=lado=>effect('trocar_engage',null,unit(lado,{vinculado:true}));
+// Posições que mexiam em Engage: o programa final vem de card-revisions.js (24/10/2026).
+const revised=[];
 const keyword=(nome,alvo,duracao='strike')=>effect('keyword',null,alvo,{nome,duracao});
 const damage=(n,alvo,extra={})=>effect('dano',n,alvo,extra);
 const ready=(alvo,extra={})=>effect('preparar',null,alvo,extra);
@@ -21,9 +23,9 @@ const armorNames=new Set(['Pegasus Cloth','Dragon Cloth','Cygnus Cloth','Androme
 const weapons=new Set(['Trident Guard','Discord Blade','Ruin Shield','Vengeance Spear','Lunar Bow','Bronze Buckler','Temple Shield','Sparring Gloves']);
 const spells={
   Athena:{Technique:[ [effect('prevenir',2,unit(),{duracao:'strike'})],[buff(2,0,unit('aliado'),'strike')],[effect('curar',2,unit('aliado'))],[keyword('Guardian',unit('aliado'),'rodada')],[ready(unit('aliado',{nao_strike:true}))] ],Moment:[[effect('alma',2,'jogador')],loot(2),[effect('mover',null,{zona:'tartarus',equipamento:true,subtipo:'Cloth',lado:'aliado'},{destino:'hand'})],[buff(0,2)],[discount('Cloth',2)]]},
-  Poseidon:{Technique:[[change('inimigo')],[buff(-2,0,unit('inimigo'),'strike')],[effect('esgotar',null,unit('inimigo'))],[damage(2,unit())],[effect('mover',null,equip('qualquer',{sem_portador:true}),{destino:'hand'})]],Moment:[[effect('esgotar',null,base('inimigo'))],[draw(1),effect('descartar',1,'oponente')],[change('aliado')],[buff(-2,0,unit('inimigo'))],[damage(2,unit('inimigo'))]]},
-  Hades:{Technique:[[effect('retornar',null,dead('aliado',{custo_max:2}))],[damage(2,unit()),effect('alma',-1,'jogador')],[buff(-2,0,unit('inimigo'),'strike')],[effect('mover',null,dead(),{destino:'deck_bottom'}),draw(1)],[effect('mover',null,equip('qualquer',{dano_portador_min:3}),{destino:'tartarus',destruicao:true})]],Moment:[[effect('mover',null,dead('aliado',{custo_max:2}),{destino:'hand'})],loot(2),[effect('mover',null,dead('qualquer'),{destino:'deck_bottom'})],[discount('Afterlife',1)],[effect('dano_engage',1)]]},
-  Ares:{Technique:[[buff(3,0,unit('aliado'),'strike')],[damage(2,unit()),effect('alma',-1,'jogador')],[ready(unit('aliado',{nao_strike:true}))],[effect('remover_guardian',null,unit('inimigo'),{duracao:'rodada'})],[keyword('Pierce',unit('aliado'))]],Moment:[[damage(2,unit('inimigo'))],[buff(1,0,'aliados')],[draw(2),effect('alma',-2,'jogador')],[discount('Devotee',2)],[effect('dano_area',1,'vinculados')]]},
+  Poseidon:{Technique:[revised,[buff(-2,0,unit('inimigo'),'strike')],[effect('esgotar',null,unit('inimigo'))],[damage(2,unit())],[effect('mover',null,equip('qualquer',{sem_portador:true}),{destino:'hand'})]],Moment:[[effect('esgotar',null,base('inimigo'))],[draw(1),effect('descartar',1,'oponente')],revised,[buff(-2,0,unit('inimigo'))],[damage(2,unit('inimigo'))]]},
+  Hades:{Technique:[[effect('retornar',null,dead('aliado',{custo_max:2}))],[damage(2,unit()),effect('alma',-1,'jogador')],[buff(-2,0,unit('inimigo'),'strike')],[effect('mover',null,dead(),{destino:'deck_bottom'}),draw(1)],[effect('mover',null,equip('qualquer',{dano_portador_min:3}),{destino:'tartarus',destruicao:true})]],Moment:[[effect('mover',null,dead('aliado',{custo_max:2}),{destino:'hand'})],loot(2),[effect('mover',null,dead('qualquer'),{destino:'deck_bottom'})],[discount('Afterlife',1)],revised]},
+  Ares:{Technique:[[buff(3,0,unit('aliado'),'strike')],[damage(2,unit()),effect('alma',-1,'jogador')],[ready(unit('aliado',{nao_strike:true}))],[effect('remover_guardian',null,unit('inimigo'),{duracao:'rodada'})],[keyword('Pierce',unit('aliado'))]],Moment:[[damage(2,unit('inimigo'))],[buff(1,0,'aliados')],[draw(2),effect('alma',-2,'jogador')],[discount('Devotee',2)],revised]},
   Artemis:{Technique:[[spy(3,'cosmoble')],[keyword('Long Range',unit('aliado'))],[ready(base())],[effect('prevenir',2,unit('aliado'),{duracao:'strike'})],[effect('mover',null,unit('aliado'),{destino:'hand'})]],Moment:[[effect('base_extra',null)],[draw(2),effect('descartar',1,'jogador',{destino:'deck_bottom'})],[ready(base(),{max:2})],[spy(4,'escolher_mao')],[effect('prevenir',3,'god_aliado',{duracao:'rodada'})]]},
   Neutral:{Technique:[[buff(1,0,unit(),'strike')],[effect('prevenir',1,unit(),{duracao:'strike'})],loot(1),[effect('curar',1,unit())],[buff(0,2,unit())]],Moment:[[draw(1)],[effect('alma',1,'jogador')],[effect('curar',1,unit())],[ready(base())],[effect('comprar',1,'ambos')]]},
 };
@@ -45,7 +47,7 @@ function unitProgram(faction,n) {
     if(n===9)own('strike_declarado',[effect('prevenir',2,'self',{duracao:'strike',retaliacao:true})],{contra_god:true});
     if(n===10){kw('Guardian');death([draw(1)]);}
   }else if(faction==='Poseidon'){
-    ({1:()=>kw('Pierce'),2:()=>kw('Nimble'),3:()=>kw('Long Range'),4:()=>kw('Impulse'),5:()=>m.passivas.push({tipo:'protecao_technique'}),6:()=>entry([effect('esgotar',null,unit('inimigo'))]),7:()=>entry([{op:'mover_dano',n:1,origem:unit('aliado'),destino:unit('inimigo')}]),8:()=>kw('Guardian'),9:()=>entry([effect('esgotar',null,base('inimigo'),{escolhe:'oponente'})]),10:()=>entry([change('aliado')])})[n]?.();
+    ({1:()=>kw('Pierce'),2:()=>kw('Nimble'),3:()=>kw('Long Range'),4:()=>kw('Impulse'),5:()=>m.passivas.push({tipo:'protecao_technique'}),6:()=>entry([effect('esgotar',null,unit('inimigo'))]),7:()=>entry([{op:'mover_dano',n:1,origem:unit('aliado'),destino:unit('inimigo')}]),8:()=>kw('Guardian'),9:()=>entry([effect('esgotar',null,base('inimigo'),{escolhe:'oponente'})]),10:()=>entry(revised)})[n]?.();
   }else if(faction==='Hades'){
     if([1,4,7].includes(n))m.habilidades.push({id:'afterlife',nome_en:'Afterlife',zona:'tartarus',custo:({1:2,4:3,7:4})[n],limite_partida:1,efeitos:[effect('retornar',null,'self')]});
     if(n===2)entry([buff(-1,0,unit('inimigo'))]);
@@ -102,7 +104,7 @@ function supportProgram(faction,n,cost) {
     if(k===3)trig('evoluiu',[effect('alma',1,'jogador')],{limite_rodada:1});
     if(k===4)pass('aura_cloth',{vida:1});
   }else if(faction==='Poseidon'){
-    if(k===0)pass('troca_gratis',{limite_rodada:1});
+    if(k===0)pass('troca_gratis',{limite_rodada:1}); // substituída em card-revisions.js
     if(k===1)pass('reduzir_engajados_marinas',{poder:-1});
     if(k===2)pass('desconto_primeiro',{carta:'Scale',n:1});
     if(k===3)trig('esgotou',loot(),{escopo:'inimigo',limite_rodada:1});
@@ -167,8 +169,9 @@ export async function compilePlaytestRow(row,source={}) {
     const index=c.tipo==='Technique'?(n-21)%5:(n-31)%5;
     c.motor={efeitos:structuredClone(spells[f][c.tipo][index]),gatilhos:[],passivas:[],habilidades:[]};
   }
-  const errors=validateCard(c);if(errors.length)throw new Error(`${row.ID}: ${errors.join('; ')}`);
-  return c;
+  const revisedCard=reviseCard(c);
+  const errors=validateCard(revisedCard);if(errors.length)throw new Error(`${row.ID}: ${errors.join('; ')}`);
+  return revisedCard;
 }
 export async function compilePlaytest(source){
   const cards=await Promise.all(source.cartas.map(row=>compilePlaytestRow(row,source)));

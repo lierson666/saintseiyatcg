@@ -24,14 +24,16 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
   const locate=uid=>all().find(l=>l.card.uid===uid);
   const desc=l=>({kind:'card',playerKey:l.playerKey,uid:l.card.uid});
   const actor=()=>choice?.playerKey||state?.priority||state?.currentPlayer;
-  const relation=uid=>state.links.filter(l=>l.a===uid||l.b===uid);
+  // Rivalidade (guia §12): par persistente criado por um Strike entre Devotees em que ambos sobrevivem.
+  const relation=uid=>state.rivals.filter(l=>l.a===uid||l.b===uid);
   const peer=(link,uid)=>link.a===uid?link.b:link.a;
+  const isRival=(a,b)=>relation(a).some(link=>peer(link,a)===b);
   const godUid=key=>`god-${key}`;
   const attachments=uid=>field().filter(l=>l.card.attachedToUid===uid);
   const armor=uid=>attachments(uid).find(l=>isArmor(l.cardData));
   const named=c=>c?.personagem_unico&&c.personagem_id;
   const selfTarget=(uid,key)=>uid?.startsWith('god-')?{kind:'god',playerKey:uid.slice(4)}:{kind:'card',playerKey:locate(uid)?.playerKey||key,uid};
-  function instance(id,key){return{uid:nextId('card'),cardId:id,owner:key,prepared:false,damage:0,stage:0,attachedToUid:null,awakened:false,struckRound:0,evolvedRound:0,returnedRound:0,modifiers:[],usedRound:{},usedGame:{}};}
+  function instance(id,key){return{uid:nextId('card'),cardId:id,owner:key,prepared:false,damage:0,stage:0,attachedToUid:null,awakened:false,struckRound:0,evolvedRound:0,returnedRound:0,enteredRound:0,modifiers:[],usedRound:{},usedGame:{}};}
   function shuffle(list){const result=[...list];for(let i=result.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[result[i],result[j]]=[result[j],result[i]];}return result;}
   const unlockedStages=l=>(l.cardData.estagios||[]).slice(0,(l.card.stage||0)+1).filter((s,index)=>!s.exclusivo_estagio||index===l.card.stage);
   function abilities(l){
@@ -57,7 +59,7 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
       for(const source of field())for(const p of program(source.cardData).passivas||[]){
         if(source.playerKey===l.playerKey&&p.tipo==='aura_cloth'&&armor(i.uid)?.cardData.subtipos.includes('Cloth'))maxHP+=p.vida||0;
         if(source.playerKey===l.playerKey&&p.tipo==='aura_strike'&&combat?.uid===i.uid)power+=p.poder||0;
-        if(source.playerKey!==l.playerKey&&p.tipo==='reduzir_engajados_marinas'&&relation(i.uid).some(link=>card(locate(peer(link,i.uid))?.card.cardId)?.subtipos?.includes('Marina')))power+=p.poder||0;
+        if(source.playerKey!==l.playerKey&&p.tipo==='reduzir_rivais_marinas'&&relation(i.uid).some(link=>{const v=locate(peer(link,i.uid));return v?.playerKey===source.playerKey&&v.cardData.subtipos?.includes('Marina');}))power+=p.poder||0;
       }
       if(i.awakened){power+=c.despertar?.bonus_poder||0;maxHP+=c.despertar?.bonus_vida||0;keywords.push(...(c.despertar?.keywords_en||[]));}
       keywords=keywords.filter(k=>!i.modifiers.some(m=>m.removeKeyword===k));
@@ -65,28 +67,31 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     return{power:Math.max(0,power),maxHP,hp:Math.max(0,maxHP-i.damage),damage:i.damage,keywords:[...new Set(keywords)],prepared:i.prepared,stage:i.stage||0};
   }
   const has=(uid,k)=>stats(uid)?.keywords.includes(k)||false;
-  const capacity=uid=>uid.startsWith('god-')?Infinity:Math.max(1,...(stats(uid)?.keywords||[]).map(k=>Number(k.match(/^Multiguard\s+(\d+)$/i)?.[1]||0)));
-  const free=uid=>relation(uid).length<capacity(uid);
-  const godLinkToProtect=(uid,target)=>target.kind==='card'?relation(target.uid).find(link=>peer(link,target.uid)===godUid(locate(uid)?.playerKey)):null;
-  function establishEngage(uid,target,oldLink=null){
-    const protectedLink=godLinkToProtect(uid,target),key=locate(uid).playerKey;
-    // Retira os vínculos substituídos e cria o confronto como uma única resolução.
-    state.links=state.links.filter(link=>link.id!==oldLink?.id&&link.id!==protectedLink?.id);
-    state.links.push({id:nextId('engage'),a:uid,b:target.kind==='god'?godUid(target.playerKey):target.uid});
-    if(protectedLink){
-      log(`${targetLabel(selfTarget(uid,key))} takes over the Engage with ${targetLabel(target)} to protect Player ${key}'s God. That Devotee is no longer engaged with the God.`);
-      present('combat:protect-god',{uid,playerKey:key,target});
-    }
+  // Guarda (guia §§9–12, 19): o God é sempre alvo; um Devotee só quando aberto, Guardian ou Rival do atacante.
+  function openTarget(uid,t){
+    const l=locate(uid);if(l?.zone!=='battlefield'||l.cardData.tipo!=='Devotee')return false;
+    if(t.kind==='god')return t.playerKey!==l.playerKey;
+    const tl=locate(t.uid);if(tl?.zone!=='battlefield'||tl.cardData.tipo!=='Devotee'||tl.playerKey===l.playerKey)return false;
+    return !tl.card.prepared||has(t.uid,'Guardian')||isRival(uid,t.uid);
   }
-  const enemyTarget=(uid,t)=>t.kind==='god'?locate(uid)?.playerKey!==t.playerKey:locate(uid)?.playerKey!==locate(t.uid)?.playerKey;
-  const validEngage=(uid,t,oldLink=null)=>{
-    const l=locate(uid);if(l?.zone!=='battlefield'||l.cardData.tipo!=='Devotee'||!enemyTarget(uid,t))return false;
-    const target=t.kind==='god'?godUid(t.playerKey):t.uid,tl=locate(target);
-    if(t.kind!=='god'&&(tl?.zone!=='battlefield'||tl.cardData.tipo!=='Devotee'))return false;
-    if(relation(uid).some(link=>link.id!==oldLink?.id&&peer(link,uid)===target))return false;
-    const protectedLink=godLinkToProtect(uid,t);
-    return target!==peer(oldLink||{a:uid,b:null},uid)&&relation(target).filter(link=>link.id!==protectedLink?.id).length<capacity(target);
-  };
+  function strikeTargets(uid){
+    const l=locate(uid);if(!l)return [];
+    const enemy=other(l.playerKey);
+    const open=[{kind:'god',playerKey:enemy},...field().filter(v=>v.playerKey===enemy&&v.cardData.tipo==='Devotee').map(desc)].filter(t=>openTarget(uid,t));
+    if(has(uid,'Nimble'))return open;
+    // Enquanto houver Guardian alvejável, só Guardians e Rivals podem ser escolhidos.
+    const guardians=open.filter(t=>t.kind==='card'&&has(t.uid,'Guardian'));
+    return guardians.length?open.filter(t=>t.kind==='card'&&(has(t.uid,'Guardian')||isRival(uid,t.uid))):open;
+  }
+  const justEntered=l=>l.card.enteredRound===state.round&&!has(l.card.uid,'Impulse');
+  const canStrike=(key,uid)=>{const l=locate(uid);return ordinary(key)&&l?.playerKey===key&&l.zone==='battlefield'&&l.cardData.tipo==='Devotee'&&l.card.prepared&&!has(uid,'Sealed')&&!justEntered(l)&&strikeTargets(uid).length>0;};
+  function addRival(a,b){
+    const la=locate(a),lb=locate(b);
+    if(la?.zone!=='battlefield'||lb?.zone!=='battlefield'||la.playerKey===lb.playerKey||la.cardData.tipo!=='Devotee'||lb.cardData.tipo!=='Devotee'||isRival(a,b))return false;
+    state.rivals.push({id:nextId('rival'),a,b});
+    log(`${la.cardData.nome_exibicao_en} and ${lb.cardData.nome_exibicao_en} are now Rivals.`);
+    present('combat:rivals',{uid:a,playerKey:la.playerKey,target:desc(lb)});return true;
+  }
   function available(key,unit='cosmo'){
     const bases=player(key).zones.cosmo_base.filter(i=>i.prepared).length;
     return unit==='latent_cosmo'?player(key).latent:unit==='base_cosmo'?bases:bases+player(key).latent;
@@ -139,7 +144,7 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
       if(selector.outro&&i.uid===ctx.sourceUid||selector.prepared&&!i.prepared||selector.nao_strike&&i.struckRound===state.round)return false;
       if(selector.sem_portador&&i.attachedToUid||selector.custo_max!==undefined&&(c.custo||0)>selector.custo_max)return false;
       if(selector.dano_portador_min!==undefined&&(!i.attachedToUid||(locate(i.attachedToUid)?.card.damage||0)<selector.dano_portador_min))return false;
-      if(selector.vinculado&&!relation(i.uid).length)return false;
+      if(selector.rival&&!relation(i.uid).length)return false;
       if(selector.zona==='battlefield'&&ctx.technique&&l.playerKey!==ctx.playerKey&&program(c).passivas?.some(p=>p.tipo==='protecao_technique'))return false;
       if(selector.zona==='cosmo_base'&&selector.preparada!==undefined&&i.prepared!==selector.preparada)return false;
       return Boolean(st);
@@ -147,6 +152,8 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
   }
   function targetsExist(effects,ctx){
     if(effects.some(e=>e.duracao==='strike')&&!stack.some(s=>s.command?.type==='strike'))return false;
+    if(effects.some(e=>e.op==='redirecionar_strike')&&!stack.some(s=>s.command?.type==='strike'&&s.playerKey!==ctx.playerKey))return false;
+    if(effects.some(e=>e.op==='rivalizar'&&e.com&&typeof e.com==='object'&&!targetOptions(e.com,ctx).length))return false;
     return effects.every(e=>!e.alvo||typeof e.alvo==='string'||e.max>1||effectTargets(e,ctx).length>0);
   }
   function effectTargets(e,ctx){return targetOptions(e.alvo,ctx).filter(t=>e.op!=='retornar'||canReturn(locate(t.uid)));}
@@ -179,7 +186,7 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     const l=locate(uid);if(!l||['god','domain'].includes(l.zone))return null;
     const i=l.card,owner=i.owner||l.playerKey;
     if(l.zone==='battlefield'){
-      state.links=state.links.filter(link=>link.a!==uid&&link.b!==uid);
+      state.rivals=state.rivals.filter(link=>link.a!==uid&&link.b!==uid);
       for(const a of attachments(uid)){a.card.attachedToUid=null;a.card.stage=0;}
       i.attachedToUid=null;i.stage=0;
     }
@@ -187,11 +194,12 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     const zone=destination==='deck_bottom'?'deck':destination;
     const newOwner=ctx.controller||owner;
     if(zone==='battlefield'){
-      i.prepared=has(uid,'Impulse');i.damage=0;i.awakened=false;i.modifiers=[];i.stage=0;i.attachedToUid=null;i.usedRound={};
+      i.damage=0;i.awakened=false;i.modifiers=[];i.stage=0;i.attachedToUid=null;i.usedRound={};
     }
     if(zone==='deck'&&destination!=='deck_bottom')player(newOwner).zones[zone].unshift(i);else player(newOwner).zones[zone].push(i);
     if(zone==='battlefield'){
-      i.prepared=(card(i.cardId).keywords_en||[]).includes('Impulse')||Boolean(ctx.prepared);
+      // Guia §57: entra em guarda (Prepared), mas só declara Strike na rodada seguinte, salvo Impulse.
+      i.prepared=card(i.cardId).tipo==='Devotee'?ctx.prepared!==false:Boolean(ctx.prepared);i.enteredRound=state.round;
       event('entrada',{uid,playerKey:newOwner,from:l.zone,target:selfTarget(uid,newOwner)});
       if(l.zone==='tartarus'){i.returnedRound=state.round;event('retorno',{uid,playerKey:newOwner,target:selfTarget(uid,newOwner)});}
     }
@@ -212,9 +220,9 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
         if(l.card.lastDamageBy){const killer=locate(l.card.lastDamageBy);if(killer)event('matou',{uid:killer.card.uid,playerKey:killer.playerKey,target:desc(killer),victim:l.card.uid});}
       }
       if(deadUnits.length)repeat=true;
-      for(const link of [...state.links]){
-        const a=locate(link.a),b=link.b.startsWith('god-')?{playerKey:link.b.slice(4),zone:'battlefield'}:locate(link.b);
-        if(a?.zone!=='battlefield'||b?.zone!=='battlefield'||a.playerKey===b.playerKey){state.links=state.links.filter(l=>l.id!==link.id);repeat=true;}
+      for(const link of [...state.rivals]){
+        const a=locate(link.a),b=locate(link.b);
+        if(a?.zone!=='battlefield'||b?.zone!=='battlefield'||a.playerKey===b.playerKey){state.rivals=state.rivals.filter(l=>l.id!==link.id);repeat=true;}
       }
     }
     const losers=PLAYERS.filter(k=>player(k).god.soul<=0||player(k).deckFailed);
@@ -356,19 +364,34 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
           if(!from){next();return;}askTarget(ctx.playerKey,'Choose where to move the damage',targetOptions(e.destino,ctx),to=>{if(to){const origin=locate(from.uid);if(origin?.card.damage){origin.card.damage--;hit(to,1,ctx);}}change();});
         });return;
       }
-      if(e.op==='trocar_engage'){
-        const selected=bound||target;
-        if(!selected?.uid){next();return;}
-        chooseLink(selected.uid,link=>{
-          if(!link){next();return;}askTarget(ctx.playerKey,'Choose a new legal Engage target',engageTargets(selected.uid,link),t=>{if(t&&validEngage(selected.uid,t,link)){establishEngage(selected.uid,t,link);}change();});
-        });return;
+      if(e.op==='rivalizar'){
+        // Um Devotee inimigo escolhido e um aliado (a própria carta ou outro escolhido) tornam-se Rivals.
+        const enemy=bound||target;if(!enemy?.uid||locate(enemy.uid)?.zone!=='battlefield'){next();return;}
+        if(e.com==='self'){addRival(ctx.sourceUid,enemy.uid);change();return;}
+        const allies=targetOptions(e.com,ctx).filter(t=>!isRival(t.uid,enemy.uid));
+        askTarget(ctx.playerKey,'Choose a friendly Devotee to become its Rival',allies,t=>{if(t)addRival(t.uid,enemy.uid);change();});return;
+      }
+      if(e.op==='encerrar_rivalidade'){
+        const selected=bound||target;if(!selected?.uid){next();return;}
+        const links=relation(selected.uid);if(!links.length){next();return;}
+        const end=link=>{if(link){state.rivals=state.rivals.filter(v=>v.id!==link.id);log(`The Rivalry between ${targetLabel(selfTarget(link.a))} and ${targetLabel(selfTarget(link.b))} ends.`);}change();};
+        if(links.length===1){end(links[0]);return;}
+        ask(ctx.playerKey,'Choose a Rivalry to end',links.map(link=>({id:link.id,label:targetLabel(selfTarget(peer(link,selected.uid))),link})),v=>end(v?.link));return;
+      }
+      if(e.op==='redirecionar_strike'){
+        const item=[...stack].reverse().find(s=>s.command?.type==='strike'&&s.playerKey!==ctx.playerKey);
+        if(!item){next();return;}
+        const current=targetId(item.command.target),options=[{kind:'god',playerKey:other(item.playerKey)},...field().filter(v=>v.playerKey!==item.playerKey&&v.cardData.tipo==='Devotee').map(desc)].filter(t=>targetId(t)!==current&&openTarget(item.command.uid,t));
+        askTarget(ctx.playerKey,'Choose the new target of that Strike',options,t=>{if(t){item.command.target=t;log(`The Strike is redirected to ${targetLabel(t)}.`);}change();});return;
       }
       if(e.op==='dano_area'){
-        const recipients=field().filter(v=>v.cardData.tipo==='Devotee'&&(e.alvo==='vinculados'?relation(v.card.uid).length:v.playerKey!==ctx.playerKey));
+        const recipients=field().filter(v=>v.cardData.tipo==='Devotee'&&(e.alvo==='esgotados'?!v.card.prepared:v.playerKey!==ctx.playerKey));
         for(const v of recipients)hit(desc(v),e.n,ctx);change();return;
       }
-      if(e.op==='dano_engage'){
-        if(!state.links.length){next();return;}ask(ctx.playerKey,'Choose an Engage',state.links.map(link=>({id:link.id,label:`${targetLabel(selfTarget(link.a))} / ${targetLabel(selfTarget(link.b))}`,link})),v=>{if(v)for(const uid of [v.link.a,v.link.b])if(!uid.startsWith('god-'))hit(selfTarget(uid),e.n,ctx);change();});return;
+      if(e.op==='dano_rivais'){
+        const selected=bound||target;if(!selected?.uid||locate(selected.uid)?.zone!=='battlefield'){next();return;}
+        const recipients=[selected.uid,...relation(selected.uid).map(link=>peer(link,selected.uid))];
+        for(const uid of recipients)hit(selfTarget(uid),e.n,ctx);change();return;
       }
       throw new Error(`Unsupported operation: ${e.op}`);
     };next();
@@ -398,19 +421,19 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     }
     state.priority=null;resolving=false;settle();
     // Expirar um bônus de HP pode destruir uma unidade e criar novas habilidades.
-    enforceUniqueness(()=>enforceCapacity(()=>flushTriggers(()=>{
+    enforceUniqueness(()=>flushTriggers(()=>{
       if(state.victory)return;
       if(stack.length){openPriority(action?.playerKey||state.initiative);notify();return;}
       if(action){state.currentPlayer=other(action.playerKey);rootAction=null;state.passes=0;}
-    })));
+    }));
   }
   function afterResolution(){
-    settle();enforceUniqueness(()=>enforceCapacity(()=>flushTriggers(()=>{
+    settle();enforceUniqueness(()=>flushTriggers(()=>{
       if(stack.length)openPriority(state.currentPlayer);
       else if(afterEffects){const done=afterEffects;afterEffects=null;done();}
       else finishAction();
       notify();
-    })));
+    }));
   }
   function enforceUniqueness(done){
     const duplicate=field().find(l=>named(l.cardData)&&field().filter(v=>v.playerKey===l.playerKey&&named(v.cardData)===named(l.cardData)).length>1);
@@ -420,12 +443,6 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
       for(const l of copies)if(l.card.uid!==v.uid)move(l.card.uid,'tartarus');
       enforceUniqueness(done);
     });
-  }
-  function enforceCapacity(done){
-    const over=field().find(l=>l.cardData.tipo==='Devotee'&&relation(l.card.uid).length>capacity(l.card.uid));
-    if(!over){done();return;}
-    const links=relation(over.card.uid);
-    ask(over.playerKey,'Capacity reduced: choose an Engage to end',links.map(link=>({id:link.id,label:targetLabel(selfTarget(peer(link,over.card.uid))),link})),v=>{if(v)state.links=state.links.filter(l=>l.id!==v.link.id);enforceCapacity(done);});
   }
   function resolveTop(){
     const item=stack.pop();if(!item)return;
@@ -451,14 +468,6 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     log(`Player ${command.playerKey}: ${label}.`);
     flushTriggers(()=>{openPriority(other(command.playerKey));notify();});
   }
-  function engageTargets(uid,oldLink=null){
-    const l=locate(uid);if(!l)return [];
-    return [{kind:'god',playerKey:other(l.playerKey)},...field().filter(v=>v.playerKey!==l.playerKey&&v.cardData.tipo==='Devotee').map(desc)].filter(t=>validEngage(uid,t,oldLink));
-  }
-  function chooseLink(uid,done,cancelable=false){
-    const links=relation(uid);if(links.length<2){done(links[0]||null);return;}
-    ask(locate(uid)?.playerKey||state.currentPlayer,'Choose an Engage',links.map(link=>({id:link.id,label:targetLabel(selfTarget(peer(link,uid))),link})),v=>done(v?.link||null),cancelable);
-  }
   function canReturn(l){return l.zone==='tartarus'&&l.cardData.tipo==='Devotee'&&l.card.returnedRound!==state.round;}
   function choosePayment(key,amount,unit,done){
     if(available(key,unit)<amount){done(false);return;}
@@ -466,12 +475,6 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     const plans=[];for(let latent=0;latent<=Math.min(player(key).latent,amount);latent++)if(amount-latent<=player(key).zones.cosmo_base.filter(i=>i.prepared).length)plans.push({id:String(latent),label:`${amount-latent} Base + ${latent} Latent`,latent});
     if(plans.length===1){done(pay(key,amount,unit,plans[0]));return;}
     ask(key,'Choose payment',plans,v=>done(Boolean(v)&&pay(key,amount,unit,v)),true);
-  }
-  function intercept(command,done){
-    if(has(command.uid,'Nimble')){done();return;}
-    const defender=other(command.playerKey),guardians=field().filter(l=>l.playerKey===defender&&l.cardData.tipo==='Devotee'&&l.card.uid!==command.target.uid&&has(l.card.uid,'Guardian')&&free(l.card.uid)&&!relation(command.uid).some(link=>peer(link,command.uid)===l.card.uid));
-    if(!guardians.length){done();return;}
-    ask(defender,'Intercept this Engage with Guardian?',[{id:'no',label:'Let the Engage continue'},...guardians.map(l=>({id:l.card.uid,label:`Guardian: ${l.cardData.nome_exibicao_en}`,target:desc(l)}))],v=>{if(v?.target){command.target=v.target;log(`${targetLabel(v.target)} intercepts the Engage.`);}done();});
   }
   function requestCommand(command){
     const key=command.playerKey,l=locate(command.uid),c=l?.cardData;
@@ -500,34 +503,18 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
       flushTriggers(()=>{if(stack.length){afterEffects=()=>{};openPriority(other(key));}notify();});return true;
     }
     if(!l||l.playerKey!==key)return false;
-    if(['engage','change-engage','disengage','strike'].includes(command.type)){
-      if(l.zone!=='battlefield'||c.tipo!=='Devotee')return false;
-      if(command.type==='engage'&&relation(l.card.uid).length)return false;
-      if(command.type!=='engage'&&!relation(l.card.uid).length)return false;
-      if(command.type==='strike'&&(!l.card.prepared||has(l.card.uid,'Sealed')))return false;
-      const withLink=done=>{
-        if(command.type==='engage'){done(null);return;}
-        const chosen=command.linkId?relation(command.uid).find(v=>v.id===command.linkId):null;
-        if(chosen){done(chosen);return;}chooseLink(command.uid,done,true);
+    if(command.type==='strike'){
+      // Guia §§11 e 20: Strike escolhe o alvo na declaração; Guardian restringe as escolhas.
+      if(!canStrike(key,l.card.uid))return false;
+      if(command.target&&!strikeTargets(command.uid).some(v=>targetId(v)===targetId(command.target)))return false;
+      const finish=t=>{
+        if(!t||!strikeTargets(command.uid).some(v=>targetId(v)===targetId(t))){notify();return;}
+        command.target=t.kind==='god'?{kind:'god',playerKey:t.playerKey}:desc(locate(t.uid));
+        const go=()=>declare(command,`Strike: ${c.nome_exibicao_en} → ${targetLabel(command.target)}`);
+        if(has(command.uid,'Unfaith')&&command.target.kind==='god'&&!command.mode)ask(key,'Choose Strike mode',[{id:'soul',label:'Damage Soul'},{id:'unfaith',label:'Unfaith: remove up to 2 Latent'}],v=>{if(!v){notify();return;}command.mode=v.id;go();},true);else go();
       };
-      withLink(link=>{
-        if(command.type!=='engage'&&!link){notify();return;}command.linkId=link?.id;
-        if(command.type==='strike'){
-          const target=selfTarget(peer(link,command.uid));command.target=target;
-          const go=()=>declare(command,`Strike: ${c.nome_exibicao_en}`);
-          if(has(command.uid,'Unfaith')&&target.kind==='god'&&!command.mode)ask(key,'Choose Strike mode',[{id:'soul',label:'Damage Soul'},{id:'unfaith',label:'Unfaith: remove up to 2 Latent'}],v=>{if(!v){notify();return;}command.mode=v.id;go();},true);else go();return;
-        }
-        let eng=command.type==='engage'?0:1,freeSource=null;
-        if(command.type==='change-engage')for(const source of field().filter(v=>v.playerKey===key))if(program(source.cardData).passivas.some(p=>p.tipo==='troca_gratis')&&!source.card.usedRound.freeEngage){freeSource=source;eng=0;break;}
-        if(player(key).eng<eng){notify();return;}
-        const finish=t=>{
-          if(command.type!=='disengage'&&(!t||!validEngage(command.uid,t,link))){notify();return;}
-          command.target=t;player(key).eng-=eng;if(freeSource)freeSource.card.usedRound.freeEngage=1;
-          if(command.type==='disengage')declare(command,`Disengage: ${c.nome_exibicao_en}`);
-          else intercept(command,()=>declare(command,`${command.type==='engage'?'Engage':'Change Engage'}: ${c.nome_exibicao_en}`));
-        };
-        if(command.type==='disengage')finish(null);else if(command.target)finish(command.target);else askTarget(key,'Choose an Engage target',engageTargets(command.uid,link),finish,true);
-      });return true;
+      if(command.target)finish(command.target);else askTarget(key,'Choose a Strike target',strikeTargets(command.uid),finish,true);
+      return true;
     }
     if(command.type==='equip'||command.type==='unequip'){
       if(l.zone!=='battlefield'||!isEquipment(c))return false;
@@ -573,9 +560,10 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     if(e.card.attachedToUid!==bearerUid)e.card.stage=0;e.card.attachedToUid=bearerUid;return true;
   }
   function strike(item,done){
-    const cmd=item.command,a=locate(cmd.uid),target=cmd.target,link=state.links.find(v=>v.id===cmd.linkId);
-    if(a?.zone!=='battlefield'||!link||peer(link,a.card.uid)!==(target.kind==='god'?godUid(target.playerKey):target.uid)){done();return;}
-    const b=target.kind==='card'?locate(target.uid):null;if(target.kind==='card'&&b?.zone!=='battlefield'){done();return;}
+    const cmd=item.command,a=locate(cmd.uid),target=cmd.target;
+    // Guia §58: o alvo é conferido de novo; Guardian já foi aplicado na declaração.
+    if(a?.zone!=='battlefield'||!openTarget(a.card.uid,target)){if(a)log(`${a.cardData.nome_exibicao_en}'s Strike finds no opening.`);done();return;}
+    const b=target.kind==='card'?locate(target.uid):null;
     const ac={playerKey:a.playerKey,sourceUid:a.card.uid,strikeId:item.id},bc={playerKey:target.playerKey,sourceUid:b?.card.uid||godUid(target.playerKey),strikeId:item.id};
     const as=stats(a.card.uid,{uid:a.card.uid}),bs=b?stats(b.card.uid):null;
     const offense=()=>{
@@ -588,6 +576,7 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     if(ranged){offense();settle();if(!state.victory&&(!b||locate(b.card.uid)?.zone==='battlefield'))retaliation();}
     else{offense();retaliation();}
     settle();
+    if(!state.victory&&b&&locate(a.card.uid)?.zone==='battlefield'&&locate(b.card.uid)?.zone==='battlefield')addRival(a.card.uid,b.card.uid);
     if(!state.victory){
       event('strike_fim',{uid:a.card.uid,playerKey:a.playerKey,target,initiator:true,strikeId:item.id});
       for(const v of [a,b].filter(Boolean))if(locate(v.card.uid)?.zone==='battlefield')event('strike_sobreviveu',{uid:v.card.uid,playerKey:v.playerKey,target:desc(v),strikeId:item.id});
@@ -611,13 +600,6 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
       }return;
     }
     if(cmd.type==='strike'){strike(item,done);return;}
-    if(cmd.type==='engage'||cmd.type==='change-engage'){
-      const old=state.links.find(v=>v.id===cmd.linkId);
-      if(validEngage(cmd.uid,cmd.target,old)&&(cmd.type!=='engage'||!relation(cmd.uid).length)){
-        establishEngage(cmd.uid,cmd.target,old);
-      }done();return;
-    }
-    if(cmd.type==='disengage'){if(l?.zone==='battlefield')state.links=state.links.filter(v=>v.id!==cmd.linkId);done();return;}
     if(cmd.type==='equip'){attach(cmd.uid,cmd.target.uid);done();return;}
     if(cmd.type==='unequip'){if(l?.zone==='battlefield'){l.card.attachedToUid=null;l.card.stage=0;}done();return;}
     if(cmd.type==='evolve'){
@@ -631,7 +613,7 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
   function beginRound(first=false){
     state.phase='actions';state.currentPhase='actions';state.passes=0;state.currentPlayer=state.initiative;state.turnNumber=state.round;
     for(const key of PLAYERS){
-      const p=player(key);p.eng=3;p.basePlaced=false;p.discounts=[];
+      const p=player(key);p.basePlaced=false;p.discounts=[];
       for(const l of [...Object.values(p.zones).flat(),p.god,p.domain]){l.usedRound={};}
       for(const l of [...p.zones.battlefield,...p.zones.cosmo_base,p.god,p.domain])l.prepared=true;
       if(!first)draw(key,2);
@@ -641,7 +623,7 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     if(!state.victory){for(const source of [...field(),...leaders()])event('inicio_rodada',{uid:source.card.uid,playerKey:source.playerKey,target:selfTarget(source.card.uid,source.playerKey)});flushTriggers(()=>{if(stack.length){afterEffects=()=>{};openPriority(state.initiative);}notify();});}
   }
   function roundWindow(done){
-    settle();enforceUniqueness(()=>enforceCapacity(()=>flushTriggers(()=>{if(state.victory)return;if(stack.length){afterEffects=done;openPriority(state.initiative);}else done();notify();})));
+    settle();enforceUniqueness(()=>flushTriggers(()=>{if(state.victory)return;if(stack.length){afterEffects=done;openPriority(state.initiative);}else done();notify();}));
   }
   function endRound(){
     state.phase='end';state.currentPhase='end';
@@ -658,8 +640,8 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     const defs={};for(const key of PLAYERS){const id=key==='A'?config.deckAId:config.deckBId;defs[key]=(beta?.decks||[]).find(d=>d.id===id)||config.decks?.[key];if(!defs[key])throw new Error('Deck not found');const errors=validateDeck(defs[key],library);if(errors.length)throw new Error(errors.join('; '));}
     sequence=0;stack=[];triggers=[];rootAction=null;choice=null;resolving=false;afterEffects=null;
     const first=['A','B'].includes(config.startingPlayer)?config.startingPlayer:random()<.5?'A':'B';
-    state={rulesVersion:'2.0',round:1,turnNumber:1,phase:'mulligan',currentPhase:'setup',initiative:first,currentPlayer:first,priority:null,priorityPasses:0,passes:0,links:[],players:{},log:[],victory:null};
-    for(const key of PLAYERS){const d=defs[key],g=card(d.god_id);state.players[key]={key,deckId:d.id,domainId:d.domain_id,god:{...instance(g.id,key),uid:godUid(key),prepared:true,soul:g.soul??30,attack:g.attack??3,prevent:0},domain:{...instance(d.domain_id,key),uid:`domain-${key}`,prepared:true},zones:Object.fromEntries(zones.map(z=>[z,[]])),latent:0,eng:3,basePlaced:false,discounts:[],ultimatesUsed:[],deckFailed:false};const p=player(key);p.zones.deck=shuffle(d.main_deck.flatMap(e=>Array.from({length:e.quantity},()=>instance(e.card_id,key))));draw(key,7);}
+    state={rulesVersion:'2.0',round:1,turnNumber:1,phase:'mulligan',currentPhase:'setup',initiative:first,currentPlayer:first,priority:null,priorityPasses:0,passes:0,rivals:[],players:{},log:[],victory:null};
+    for(const key of PLAYERS){const d=defs[key],g=card(d.god_id);state.players[key]={key,deckId:d.id,domainId:d.domain_id,god:{...instance(g.id,key),uid:godUid(key),prepared:true,soul:g.soul??30,attack:g.attack??3,prevent:0},domain:{...instance(d.domain_id,key),uid:`domain-${key}`,prepared:true},zones:Object.fromEntries(zones.map(z=>[z,[]])),latent:0,basePlaced:false,discounts:[],ultimatesUsed:[],deckFailed:false};const p=player(key);p.zones.deck=shuffle(d.main_deck.flatMap(e=>Array.from({length:e.quantity},()=>instance(e.card_id,key))));draw(key,7);}
     options.ai=config.ai??options.ai;
     const mulligan=key=>ask(key,'Choose your opening hand', [{id:'keep',label:'Keep hand'},{id:'exchange',label:'Choose cards to exchange'}],v=>{
       const advance=()=>key==='A'?mulligan('B'):(beginRound(true),notify());
@@ -716,12 +698,7 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     const ordinaryAction=ordinary(key);
     if(!ordinaryAction&&state.priority!==key)return result;
     if(ordinaryAction&&l.zone==='battlefield'&&l.cardData.tipo==='Devotee'){
-      const links=relation(uid);
-      if(!links.length&&engageTargets(uid).length)result.push({type:'engage',uid,label:'Engage · 0 ENG'});
-      if(links.length){
-        if(l.card.prepared&&!has(uid,'Sealed'))result.push({type:'strike',uid,label:'Strike'});
-        if(player(key).eng>0){if(links.some(link=>engageTargets(uid,link).length))result.push({type:'change-engage',uid,label:'Change Engage · 1 ENG'});result.push({type:'disengage',uid,label:'Disengage · 1 ENG'});}
-      }
+      if(canStrike(key,uid))result.push({type:'strike',uid,label:'Strike'});
       if(l.cardData.despertar&&!l.card.awakened&&!has(uid,'Sealed')&&available(key)>=l.cardData.despertar.custo)result.push({type:'awaken',uid,label:'Awaken'});
     }
     if(ordinaryAction&&l.zone==='battlefield'&&isEquipment(l.cardData)){
@@ -734,16 +711,22 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     if(ordinaryAction&&l.cardData.ultimate&&!player(key).ultimatesUsed.includes(l.cardData.personagem_id||l.cardData.id))result.push({type:'ultimate',uid,label:'Ultimate'});
     return result;
   }
-  // A IA só gasta ENG trocando Engage com motivo: proteger o God ou trocar um confronto que não vence por um alvo que destrói.
-  function engageGoal(uid){
-    const link=relation(uid)[0];if(!link)return null;
-    const key=locate(uid).playerKey,now=peer(link,uid),power=stats(uid).power;
-    const targets=engageTargets(uid,link).filter(t=>t.kind==='card'&&t.uid!==now);
-    const protect=targets.find(t=>relation(t.uid).some(v=>peer(v,t.uid)===godUid(key)));
-    if(protect)return{linkId:link.id,target:protect};
-    if(now.startsWith('god-')||power>=stats(now).hp)return null;
-    const kill=targets.find(t=>stats(t.uid).hp<=power);
-    return kill?{linkId:link.id,target:kill}:null;
+  // A IA escolhe o Strike de maior valor: matar sem morrer, pressionar o God sem suicídio, evitar trocas perdidas.
+  function strikeScore(uid,t){
+    const me=stats(uid),ranged=me.keywords.includes('Long Range');
+    if(t.kind==='god'){
+      const p=player(t.playerKey);if(p.god.soul<=me.power)return 1000;
+      return p.god.attack>=me.hp?me.power*0.4-2:me.power*1.2;
+    }
+    const them=stats(t.uid),kill=me.power>=them.hp,ignoresRanged=them.keywords.includes('Cheater');
+    const die=!(kill&&ranged&&!ignoresRanged)&&them.power>=me.hp,value=(card(locate(t.uid).card.cardId).custo||0)+them.power;
+    if(kill)return die?value*0.6:value*1.5+2;
+    return die?-1:me.power*0.8;
+  }
+  function bestStrike(uid){
+    let best=null,score=0;
+    for(const t of strikeTargets(uid)){const v=strikeScore(uid,t);if(v>score){score=v;best=t;}}
+    return best;
   }
   function aiStep(){
     if(!state||state.victory||options.paused)return false;
@@ -751,8 +734,7 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     if(choice){
       const choices=choice.options;
       let selection=choices.find(v=>v.id==='keep')||choices.find(v=>v.id==='yes')||choices.find(v=>v.target?.kind==='card'&&locate(v.target.uid)?.cardData.tipo==='Devotee')||choices[0];
-      if(choice.prompt.includes('Intercept'))selection=choices.find(v=>v.target)||choices[0];
-      if(choice.prompt.includes('Engage target'))selection=choices.find(v=>v.target?.kind==='card'&&relation(v.target.uid).some(link=>peer(link,v.target.uid)===godUid(key)))||choices.find(v=>v.target?.kind==='god')||choices[0];
+      if(choice.prompt==='Choose the new target of that Strike')selection=[...choices].sort((x,y)=>(x.target?.kind==='god'?99:stats(x.target.uid)?.hp||0)-(y.target?.kind==='god'?99:stats(y.target.uid)?.hp||0)).reverse().find(v=>v.target?.kind==='card')||choices[0];
       if(choice.prompt.includes('Unfaith')||choice.prompt==='Choose Strike mode')selection=choices.find(v=>v.id==='soul')||choices[0];
       if(choice.prompt==='Choose a target')selection=choices.find(v=>v.target?.playerKey!==key)||choices[0];
       if(choice.prompt==='Choose opening initiative')selection=choices.find(v=>v.id===key)||choices[0];
@@ -763,15 +745,15 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     const hand=player(key).zones.hand;
     if(!player(key).basePlaced){const candidates=hand.filter(i=>canBase(key,i.uid)).sort((a,b)=>(card(b.cardId).custo||0)-(card(a.cardId).custo||0));if(candidates.length)return perform({type:'base',uid:candidates[0].uid,playerKey:key});}
     const legal=all().filter(l=>l.playerKey===key).flatMap(l=>actions(key,l.card.uid));
-    for(const type of ['strike','evolve','play','engage','equip','ability','change-engage']){
+    for(const type of ['strike','evolve','play','equip','ability']){
       let candidates=legal.filter(a=>a.type===type);
+      if(type==='strike')candidates=candidates.flatMap(command=>{const target=bestStrike(command.uid);return target?[{...command,target}]:[];});
       if(type==='equip')candidates=candidates.flatMap(command=>{
         const equipment=locate(command.uid);if(equipment.card.attachedToUid)return[];
         // A IA preenche um portador disponível, sem alternar armaduras já equipadas em ciclo.
         const bearer=field().find(l=>l.playerKey===key&&l.cardData.tipo==='Devotee'&&(!isArmor(equipment.cardData)||!armor(l.card.uid)));
         return bearer?[{...command,target:desc(bearer)}]:[];
       });
-      if(type==='change-engage')candidates=candidates.flatMap(command=>{const goal=engageGoal(command.uid);return goal?[{...command,...goal}]:[];});
       if(!candidates.length)continue;
       if(type==='play')candidates.sort((a,b)=>(card(locate(a.uid).card.cardId).tipo==='Devotee'?-1:1)-(card(locate(b.uid).card.cardId).tipo==='Devotee'?-1:1));
       const result=perform({...candidates[0],playerKey:key});if(result)return true;
@@ -787,12 +769,12 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
   function notify(){if(disposed)return;revision++;onChange();schedule();}
   const api={dispatch:perform,stepAI:aiStep,card,stats,actions,canPlay,canBase,available,cost,hasKeyword:has,
     locate:(key,uid)=>{const l=locate(uid||key);return l?copy(l):null;},
-    links:uid=>copy(relation(uid)),equipment:uid=>copy(attachments(uid)),
+    rivals:uid=>copy(relation(uid)),strikeTargets:uid=>copy(strikeTargets(uid)),equipment:uid=>copy(attachments(uid)),
     get state(){return state?copy(state):null;},get revision(){return revision;},get actingPlayer(){return actor();},get settings(){return{...options};},
     get choice(){return choice?copy(choice):null;},get stack(){return stack.map(({context,...item})=>copy(item));},
     get resolving(){return resolving;},
     dispose(){disposed=true;clearTimeout(timer);stack=[];triggers=[];choice=null;},
   };
-  if(initialState){sequence=Math.max(0,...all().map(l=>Number(l.card.uid.split('-').at(-1))||0));settle();}
+  if(initialState){if(!state.rivals)state.rivals=[];delete state.links;for(const p of Object.values(state.players))delete p.eng;sequence=Math.max(0,...all().map(l=>Number(l.card.uid.split('-').at(-1))||0));settle();}
   return api;
 }

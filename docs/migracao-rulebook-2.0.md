@@ -1,3 +1,5 @@
+> **Nota (24/10/2026):** documento histórico. Engage, ENG, Disengage e Multiguard foram removidos; vale o capítulo IV do `guia-do-jogo.md` (Guarda e Rivalidade) e o `CHANGELOG-regras.md`.
+
 # Rulebook 2.0 — histórico da preparação da migração
 
 **Atualização:** o fechamento foi aprovado e a implementação local foi integrada. O estado atual está em [implementacao-rulebook-2.0.md](implementacao-rulebook-2.0.md) e [validacao-rulebook-2.0.md](validacao-rulebook-2.0.md). A análise abaixo registra o diagnóstico anterior à aprovação; suas “pendências” não substituem o guia vigente.

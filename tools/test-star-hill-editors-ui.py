@@ -30,7 +30,7 @@ with sync_playwright() as p:
  page.keyboard.press('Control+z');expect(page.locator('.deck-total')).to_have_text('60 / 60')
  page.locator('.collection-card-actions [data-db=inspect]').click()
  expect(page.locator('#deck-preview')).to_be_visible()
- assert page.locator('#deck-preview .live-card__heading').inner_text().startswith('Pegasus Seiya')
+ assert page.locator('#deck-preview .live-card__heading').inner_text().lower().startswith('pegasus seiya')
  assert page.locator('#deck-preview .live-card__rules').inner_text()
  page.keyboard.press('Escape')
  page.locator('.collection-add').click(button='right');expect(page.locator('#deck-preview')).to_be_visible();page.keyboard.press('Escape')

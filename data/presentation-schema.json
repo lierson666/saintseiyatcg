@@ -101,7 +101,7 @@
       "seletor": ".arena-log"
     },
     "linhas": {
-      "nome": "Linhas de Engage",
+      "nome": "Linhas de Rivalidade",
       "seletor": "#target-lines"
     },
     "fundo": {
@@ -485,9 +485,6 @@
     "acao:base": "Colocar Cosmo Base",
     "acao:pass": "Passar oportunidade",
     "acao:pass-priority": "Passar prioridade",
-    "acao:engage": "Criar Engage",
-    "acao:change-engage": "Trocar Engage",
-    "acao:disengage": "Desengajar",
     "acao:strike": "Declarar Strike",
     "acao:equip": "Equipar",
     "acao:unequip": "Desequipar",
@@ -517,9 +514,11 @@
     "efeito:olhar": "Olhar / ordenar deck",
     "efeito:base_extra": "Base adicional",
     "efeito:mover_dano": "Mover dano",
-    "efeito:trocar_engage": "Alterar confronto por efeito",
+    "efeito:rivalizar": "Criar Rivalidade",
+    "efeito:encerrar_rivalidade": "Encerrar Rivalidade",
+    "efeito:redirecionar_strike": "Redirecionar Strike",
     "efeito:dano_area": "Dano em área",
-    "efeito:dano_engage": "Dano no Engage",
+    "efeito:dano_rivais": "Dano em Rivals",
     "evento:entrada": "Entrada",
     "evento:retorno": "Retorno",
     "evento:tartarus": "Tartarus",
@@ -539,9 +538,6 @@
     "combat:attack": "Ataque em resolução",
     "acao:cancel": "Cancelar escolha",
     "resolucao:play": "Resolução · Jogar carta",
-    "resolucao:engage": "Resolução · Criar Engage",
-    "resolucao:change-engage": "Resolução · Trocar Engage",
-    "resolucao:disengage": "Resolução · Desengajar",
     "resolucao:strike": "Resolução · Declarar Strike",
     "resolucao:equip": "Resolução · Equipar",
     "resolucao:unequip": "Resolução · Desequipar",
@@ -549,7 +545,7 @@
     "resolucao:awaken": "Resolução · Despertar",
     "resolucao:ability": "Resolução · Ativar habilidade",
     "resolucao:ultimate": "Resolução · Ultimate",
-    "combat:protect-god": "Proteger God · assumir Engage"
+    "combat:rivals": "Rivalidade criada"
   },
   "animacoes": {
     "none": "Sem animação",
