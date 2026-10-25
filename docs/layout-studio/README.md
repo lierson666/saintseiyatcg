@@ -76,7 +76,7 @@ Somente o usuário publica na biblioteca real. Partidas leem bases + publicados;
 ## Verificação e evidências
 
 ```bash
-node --test tools/test-layout-studio.mjs
+node --test tools/test-card-presentation.mjs tools/test-layout-studio.mjs
 python3 tools/test-layout-studio.py
 python3 card-forge/serve.py --selftest
 python3 tools/test-layout-studio-ui.py
@@ -110,4 +110,4 @@ Casos adicionais: God, Devotee, Spell, Domain, Kamui, pendências editoriais, in
 - O PNG transparente omite fundo/moldura. Pixels opacos da ilustração enviada continuam opacos.
 - Autoajuste não substitui prova física de impressão. Overflow bloqueia exportação; fonte muito pequena avisa somente no editor. Novas cartas ou fontes podem exigir ajustes nas bases.
 - As artes dos novos registros dependem dos projetos/imagens realmente disponíveis. Não usamos o PNG completo de uma carta como ilustração de fundo.
-- Não há execução de regras novas por texto de layout; publicação é exclusivamente visual. Não houve merge, push ou deploy desta implementação.
+- Não há execução de regras novas por texto de layout; publicação é exclusivamente visual. O envio da branch ao GitHub foi autorizado pelo autor em 25/10/2026; merge e deploy não fazem parte desta entrega.

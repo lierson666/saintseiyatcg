@@ -85,9 +85,9 @@ function armorStatus(card,hp,damage){
   const max=Number.isFinite(card.vida)&&card.vida>0?card.vida:null,broken=max!==null&&damage>=max;
   return `<span class="live-card__armor-status ${broken?'is-broken':''}" data-armor-state="${broken?'broken':max===null?'pending':'active'}">${max===null?'ARMOR HP · review pending':`${broken?'BROKEN · ':''}ARMOR HP ${Math.max(0,max-damage)} / ${max}`}</span>`;
 }
-export function renderLiveCard(card,{stats=null,instance=null,art=null,compact=false}={}){
+export function renderLiveCard(card,{stats=null,instance=null,art=null,compact=false,equipment:attachedEquipment=[],mode=null}={}){
   if(!card)return '<div class="live-card live-card--missing">Unknown card</div>';
-  const studio=renderPublishedCard(card,{stats,instance,art:art||illustration(card),mode:instance?'playtest':'print',assetRects:PSD?.P});
+  const studio=renderPublishedCard(card,{stats,instance,art:art||illustration(card),equipment:attachedEquipment,mode:mode||(instance?'playtest':'print'),assetRects:PSD?.P});
   if(studio)return studio;
   const src=art||illustration(card),stage=card.estagios?.[instance?.stage||0],hp=stats?.hp??card.vida??card.resistance;
   const power=stats?.power??card.power,keywords=stats?.keywords??card.keywords_en??[],damage=stats?.damage??instance?.damage??0;

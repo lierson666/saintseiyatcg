@@ -874,8 +874,26 @@
           "visible": true,
           "locked": false,
           "conditions": {
-            "binding": "runtime.status",
-            "op": "exists"
+            "all": [
+              {
+                "binding": "runtime.status",
+                "op": "exists"
+              },
+              {
+                "any": [
+                  {
+                    "binding": "context.mode",
+                    "op": "eq",
+                    "value": "playtest"
+                  },
+                  {
+                    "binding": "context.mode",
+                    "op": "eq",
+                    "value": "inspector"
+                  }
+                ]
+              }
+            ]
           },
           "style": {
             "fontFamily": "Avenir",

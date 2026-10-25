@@ -29,7 +29,7 @@ export function makeDefaults(legacy,cards=[]){
     layer('awaken','Awaken','AwakenBadge','card.awaken',1165,1880,230,140,{label:'AWAKEN',conditions:eq('card.type','God'),style:{fontSize:86,fontWeight:700,align:'center'}}),
     layer('rarity','Rarity','RarityMark','card.rarity',530,2030,430,46,{style:{fontSize:26,fontWeight:700,align:'center'}}),
     layer('counters','Counters','CounterBadge','runtime.counters',230,360,1030,70,{conditions:all({binding:'runtime.counters',op:'exists'},{binding:'context.mode',op:'neq',value:'print'}),style:{fontSize:30,background:'#100e16e8',align:'center'}}),
-    layer('status','Status','StatusBadge','runtime.status',450,480,590,65,{conditions:exists('runtime.status'),style:{fontSize:30,fontWeight:700,background:'#100e16ee',align:'center'}}),
+    layer('status','Status','StatusBadge','runtime.status',450,480,590,65,{conditions:all(exists('runtime.status'),{any:[eq('context.mode','playtest'),eq('context.mode','inspector')]}),style:{fontSize:30,fontWeight:700,background:'#100e16ee',align:'center'}}),
     layer('divider','Divider','Divider','',230,1328,1030,2,{zIndex:9,style:{background:'#bfa66e'}}),
     layer('ornaments','Ornaments','DecorativeLayer','',60,60,1368,1971,{zIndex:3,locked:true,style:{borderColor:'#bfa66e',borderWidth:2,borderRadius:12}}),
     layer('glow','Glow','GlowEffect','',60,60,1368,1971,{zIndex:4,locked:true,visible:false,style:{borderColor:'#e6cc84',borderWidth:2,glow:18,borderRadius:12}}),
