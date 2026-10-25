@@ -22,6 +22,7 @@
     "docs/rulebook-2.1/decisoes-aprovadas.md",
     "docs/rulebook-2.1/implementacao.md",
     "docs/rulebook-2.1/migracao-catalogo.md",
+    "docs/rulebook-2.1/pr.md",
     "docs/rulebook-2.1/simulacoes.json",
     "docs/star-hill.md",
     "playtest/app-v2.js",
@@ -48,6 +49,7 @@
     "tools/rules-fixture.mjs",
     "tools/simulate-rulebook-21.mjs",
     "tools/test-ai-progress-ui.py",
+    "tools/test-audio-playlist.py",
     "tools/test-battle-guide.mjs",
     "tools/test-designers-ui.py",
     "tools/test-engine-updates-ui.py",
@@ -65,5 +67,6 @@
     "CONTEXT/",
     "contexto-chat-regras-completo.md"
   ],
-  "publicacao": "branch e PR, sem merge/deploy"
+  "publicacao": "branch e PR, sem merge/deploy",
+  "pr": "Criação recusada pelo conector GitHub: must be a collaborator (422). Push SSH concluído."
 }

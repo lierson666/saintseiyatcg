@@ -47,6 +47,7 @@ node tools/simulate-rulebook-21.mjs
 python3 tools/test-star-hill.py
 python3 tools/test-engine-updates.py
 python3 card-forge/serve.py --selftest
+python3 tools/test-audio-playlist.py
 python3 tools/test-living-armor-ui.py
 python3 tools/test-ui-v2.py
 python3 tools/test-ai-progress-ui.py
@@ -58,7 +59,7 @@ python3 tools/test-star-hill-editors-ui.py
 python3 tools/test-designers-ui.py
 ```
 
-Testes de navegador requerem Playwright + Chrome e a biblioteca local de áudio; não são dependências da aplicação. Capturas ficam em `card-forge/out/`, fora do Git. O teste do atualizador usa projeto temporário; o teste de simulação gera somente seu relatório.
+Testes de navegador requerem Playwright + Chrome e a biblioteca local de áudio; não são dependências da aplicação. Capturas ficam em `card-forge/out/`, fora do Git. O teste de áudio isola FX pessoais na cópia HTTP para conferir os canais de música e importa a revisão efetiva do módulo, preservando reprodução/decodificação reais. O teste do atualizador usa projeto temporário; o teste de simulação gera somente seu relatório.
 
 ## Catálogo, pendências e limites
 
@@ -67,3 +68,12 @@ O autor aprovou explicitamente `catalogo.diff`: apenas 41 registros receberam `c
 Pendências deliberadas de Card Craft: HP/resistência das Armor; distribuição de dano de combate; contribuição da Armor V1 nos atributos do Devotee; custos/valores de Repair de Aries Mu; revisão de nomes/versões e afinidades faltantes; subtipo de Chosen Moonplate; estágios adicionais; definição final de God Armor/Divine Artifact e das outras quatro facções. Nenhum personagem ou item divino foi gerado automaticamente.
 
 `FRAMES/`, `ARTS/`, `CARDS/`, planilha original, configurações pessoais e projetos de arte do usuário foram preservados. O servidor local do Mac foi atualizado; o aplicativo usa esses arquivos sem recompilação. Reabrir/recarregar o jogo para carregar módulos novos e iniciar uma nova partida. O envio solicitado é branch + PR para `main`, sem merge nem deploy.
+
+## Publicação
+
+Branch enviada por SSH ao GitHub. O conector recusou a criação do PR com HTTP 422, `must be a collaborator`; `gh` não está instalado no Mac. Não houve merge/deploy. Para abrir o PR em um ambiente autenticado como colaborador:
+
+```sh
+git push -u origin codex/rulebook-2-1-engine
+gh pr create --repo lierson666/saintseiyatcg --base main --head codex/rulebook-2-1-engine --title "Rulebook 2.1 e Living Armor" --body-file docs/rulebook-2.1/pr.md
+```
