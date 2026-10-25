@@ -1,10 +1,10 @@
 # SAINT SEIYA TCG
 
-OFFICIAL RULEBOOK — VERSION 2.0
+OFFICIAL RULEBOOK — VERSION 2.1
 
-Core Rules · Combat · Cosmo · Cloth Evolution · Tartarus
+Core Rules · Combat · Cosmo · Armor · Resonance · Tartarus
 
-Status: regras consolidadas para implementação e playtest. Complemento aprovado pelo autor em 23/10/2026; valores experimentais continuam sujeitos a balanceamento.
+Status: regras aprovadas em 23–24/10/2026, consolidadas na versão 2.1. Valores de cartas continuam sujeitos a balanceamento. O registro integral da aprovação 2.1 está em [decisoes-aprovadas.md](rulebook-2.1/decisoes-aprovadas.md); esse registro é histórico, e este guia integrado é a referência vigente.
 
 Princípio fundamental: Saint Seiya TCG é um jogo de cartas estratégico em que cada jogador controla um God e seus Devotees. Os jogadores desenvolvem Cosmo, estabelecem confrontos individuais, despertam o poder de seus Cavaleiros e procuram derrotar o God adversário.
 
@@ -74,7 +74,7 @@ Possui:
 * habilidades;
 * possíveis keywords.
 
-Equipment — Cloth / Scale / Surplice / Warplate, armas e acessórios
+Equipment — Armor (Cloth / Scale / Surplice / Warplate / Moonplate), armas e acessórios
 
 Equipamentos que modificam os atributos e as habilidades de um Devotee.
 
@@ -112,18 +112,21 @@ Uma carta utilizada como Cosmo Base deixa de funcionar como sua carta original e
 
 ### 5. Utilização de Cosmo
 
-O jogador utiliza Cosmo disponível para pagar os custos de:
+Uma Base Prepared paga 1 Base Cosmo e fica indisponível até a renovação. Soul não substitui Cosmo.
 
-* Devotees;
-* Cloths e Scales;
-* Techniques;
-* Moments;
-* habilidades;
-* evolução de equipamentos.
+| Utilização | Base | Latent |
+| --- | --- | --- |
+| Jogar Devotee | Sim | Não |
+| Jogar qualquer Armor | Sim | Não |
+| Ativar Ultimate | Sim | Não |
+| Technique como AÇÃO | Sim | Sim |
+| Technique como resposta | Não | Sim |
+| Moment e Equipment que não seja Armor | Sim | Sim |
+| Equip, transferência, evolução e habilidades comuns | Sim | Sim |
 
-O Cosmo utilizado fica indisponível até ser renovado.
+Custos expressamente restritos na carta continuam restritos. A proibição de usar Latent para jogar Devotee/Armor ou Ultimate não pode ser contornada por um custo genérico de Cosmo.
 
-No início de cada rodada, as Cosmo Bases são renovadas.
+Latent Cosmo é um banco persistente com limite de 3. No encerramento, após os efeitos de fim, cada jogador pode converter de zero até o número de Bases não utilizadas, limitado ao espaço livre no banco. Essas Bases ficam indisponíveis apenas até a renovação normal seguinte; não são sacrificadas. Cosmo temporário não é Base armazenável, salvo efeito explícito. O ganho por dano da seção 60 permanece válido.
 
 ### 6. Limite de Cosmo Base
 
@@ -161,7 +164,7 @@ Quando ambos os jogadores terminam suas ações, a rodada se encerra.
 
 Resolvem-se os efeitos de fim da rodada e começa uma nova rodada.
 
-A iniciativa alterna entre jogadores a cada rodada. Dois passes consecutivos com a pilha vazia encerram a fase de ações. O procedimento completo de timing está no capítulo XII.
+A iniciativa alterna entre jogadores a cada rodada. Quando ambos declararem Pass com a pilha vazia, a fase de ações termina. Pass encerra as AÇÕES comuns daquele jogador até a rodada seguinte; ele ainda pode responder. O adversário continua agindo enquanto não passar. O procedimento completo de timing está no capítulo XII.
 
 ### 8. AÇÕES disponíveis
 
@@ -325,15 +328,27 @@ Long Range não concede essa vantagem quando o Devotee está defendendo um Strik
 
 ---
 
-## CAPÍTULO VI — CLOTHS E SCALES
+## CAPÍTULO VI — ARMOR, EQUIPMENT E RESONANCE
 
-### 26. Equipamentos
+### 26. Armor e equipamentos
 
-Cloths e Scales são equipamentos que podem ser anexados a Devotees elegíveis.
+Armor é a categoria universal de armadura: Athena — Cloth; Poseidon — Scale; Hades — Surplice; Ares — Warplate; Artemis — Moonplate. Moonplate é nomenclatura original do TCG; o exército de Artemis é formado pelas Satellites.
 
-Um equipamento concede os benefícios indicados em seu texto.
+Cada Devotee possui um slot de Armor. Armas e acessórios usam slots separados e mantêm suas regras anteriores. Qualquer Devotee elegível pode equipar Armor de estágio superior, independentemente de patente; custos e requisitos expressos continuam obrigatórios.
 
-O equipamento e o Devotee são cartas distintas.
+A V1 está incorporada à identidade do Devotee: não é Equipment independente, não ocupa slot, não pode ser transferida nem destruída separadamente. V2 e posteriores são cartas independentes. O Vanilla Set prioriza V2; não exige criar todas as versões de todas as armaduras.
+
+### 26A. Living Armor, persistência e Repair
+
+Todas as Armor (Cloth, Scale, Surplice, Warplate e Moonplate) são entidades vivas com HP próprio. Dano de Armor e Devotee são marcadores distintos. Trocar de portador, desequipar, renovar rodada ou retornar ao estágio Vanilla não repara Armor.
+
+Quando o portador morre, ele vai ao Tartarus; a Armor fica no Battlefield sem portador, com o dano preservado e evolução vinculada reiniciada. Outro Devotee elegível pode herdar a Armor mediante AÇÃO e Equip.
+
+Ao atingir HP máximo, a Armor fica **Broken**, sem destruição automática. Conforme esclarecimento aprovado, **todos os bônus e habilidades concedidos por ela ficam suspensos até Repair**. A redução de bônus de HP do portador segue a verificação normal de dano persistente. A nomenclatura formal de Broken continua sujeita a balanceamento.
+
+Repair restaura somente HP de Armor, limitado ao máximo impresso. Cura de Devotee não repara Armor. Aries Mu deve ter uma função de reparação, com custos e valores definidos na revisão de sua carta, preservando habilidades já aprovadas.
+
+**Revisão pendente:** HP/resistência das cartas e distribuição exata do dano de combate entre Armor e Devotee. Até sua aprovação, a engine não inventa absorção ou redirecionamento automático de dano: combate preserva a atribuição atual; dano direcionado e Repair de Armor podem ser testados com definições de HP explícitas. Armor sem HP aprovado aparece como pendente, sem um número inventado. A V1 continua incorporada ao Devotee, sem Equipment transferível independente; sua separação numérica depende da revisão da identidade-base.
 
 ### 27. Owner
 
@@ -359,39 +374,19 @@ Toda Cloth entra em jogo no estado Vanilla, salvo efeito explícito.
 
 Os benefícios Vanilla são os benefícios básicos do equipamento.
 
-### 29. Cloth Evolution
+### 29. Progressão universal de Armor
 
-Determinadas Cloths possuem estágios de evolução.
+Todas as facções têm caminhos Voltron em quatro estágios de poder. São níveis de poder, sem bloqueio automático por patente. Cada carta define os estágios e requisitos disponíveis; não se criam versões automaticamente.
 
-Os estágios disponíveis são definidos individualmente em cada carta.
+Não é necessário possuir ou equipar versões anteriores para jogar uma Armor avançada, salvo requisito expresso na carta. Evolve pode alcançar um estágio posterior disponível pagando seu custo e cumprindo seus requisitos; sequência obrigatória só existe quando expressa na carta. Bônus numéricos são totais do estágio, sem somar os anteriores.
 
-A evolução não é obrigatória para todos os equipamentos.
-
-Estrutura experimental
-
-Vanilla → 7th Sense → God Cloth
-
-Esses nomes representam estágios mecânicos da Cloth.
-
-O Sétimo Sentido, narrativamente, continua sendo um despertar do Cosmo do personagem, e não uma transformação física obrigatória da armadura.
+Athena progride por proteção, superação e transcendência; Poseidon por controle e domínio; Hades por persistência, morte e retorno; Ares por agressividade e conquista; Artemis por precisão e caça.
 
 ### 30. Evolve
 
-Para evoluir uma Cloth:
+A Armor precisa estar equipada. Quando a carta exigir Owner, a identidade deve corresponder exatamente. Pagar uma AÇÃO e o custo em Base e/ou Latent do estágio escolhido, respeitando requisitos expressos e limite de uma evolução por carta física por rodada. A sequência não é obrigatória por regra geral.
 
-1. A Cloth deve estar equipada em um Owner válido.
-2. Os requisitos impressos devem ser cumpridos.
-3. O jogador utiliza uma AÇÃO.
-4. O jogador paga o Cosmo indicado.
-5. A Cloth avança um estágio.
-
-Evolve não exige Prepared.
-
-Evolve não deixa o Devotee Unprepared.
-
-Evolve não encerra Rivalidades.
-
-Regra experimental: cada Cloth pode evoluir normalmente uma vez por rodada.
+Evolve não exige nem altera Prepared e não encerra Rivalidades. Transferência e saída do campo mantêm o reset do vínculo para Vanilla.
 
 ### 31. Vínculo de evolução
 
@@ -421,23 +416,17 @@ Quando o Owner equipado morre:
 1. O Devotee é enviado ao Tartarus.
 2. A Cloth perde sua evolução.
 3. A Cloth retorna ao Vanilla.
-4. A Cloth permanece em jogo sem portador, salvo efeito que determine outro destino.
+4. A Cloth permanece em jogo sem portador, conservando todo o dano próprio, salvo efeito que determine outro destino.
 
-Reequipar exige uma AÇÃO e o custo Equip da carta, com padrão de 1 Cosmo se não estiver especificado. O procedimento de equipamentos está no capítulo XII.
+Reequipar exige uma AÇÃO e o custo Equip da carta: Armor usa o padrão Resonant Wearer 1 / outros 5, salvo valores específicos. O procedimento de equipamentos está no capítulo XII.
 
-### 33. Resonance
+### 33. Resonance e Equip
 
-Resonance representa habilidades especiais associadas a personagens específicos.
+Resonance representa afinidade exata com personagens indicados. Uma Armor pode ter vários portadores designados, com habilidades distintas; o nome/identidade precisa corresponder exatamente. Equipar a Armor não transforma outro Devotee naquele personagem.
 
-Owner e Resonance são propriedades diferentes.
+Padrão inicial para Armor: Equip {1} para Resonant Wearer; Equip {5} para outros Devotees. Campos específicos da carta podem balancear esses valores. O custo de jogar é separado e Base-only; Equip e transferência aceitam Base e/ou Latent. Armas e acessórios mantêm o Equip impresso.
 
-Owner determina quem pode evoluir.
-
-Resonance determina quem pode utilizar uma habilidade específica.
-
-Uma Cloth com dois Owners pode apresentar habilidades de Resonance diferentes para cada um.
-
-O texto de Resonance deve sempre identificar expressamente o personagem exigido.
+Owners continuam identificando requisitos de evolução quando impressos e também contam como portadores designados para Equip reduzido. Habilidades universais funcionam com qualquer portador elegível; apenas as habilidades específicas de Resonance exigem seu personagem. Use “Equipped Devotee”, “This Armor” e “Resonance — Pegasus Seiya”, sem presumir que o portador é o personagem original.
 
 ### 34. Bônus de atributos
 
@@ -451,7 +440,7 @@ Quando uma Cloth perde seu bônus de HP, o HP máximo é recalculado.
 
 Se o dano acumulado for igual ou superior ao novo HP máximo, o Devotee é destruído.
 
-### 35. God Cloth
+### 35. God Armor e God Cloth
 
 God Cloth representa uma evolução divina disponível apenas para equipamentos específicos.
 
@@ -482,13 +471,9 @@ Um Devotee pode possuir Awaken mesmo sem estar equipado com uma Cloth.
 
 Os requisitos e efeitos são determinados pelo texto da carta.
 
-### 37. 7th Sense
+### 37. Seventh Sense
 
-7th Sense é o nome do primeiro estágio evoluído das Cloths que possuem essa progressão.
-
-O uso desse nome não significa que todo Devotee precise equipar uma Cloth para despertar seu Sétimo Sentido.
-
-Awaken e 7th Sense são independentes. Um não concede o outro automaticamente; uma carta pode especificar essa relação. Os requisitos completos estão no capítulo XII.
+Seventh Sense é uma habilidade temática individual, não uma keyword universal obrigatória. Cartas já definidas podem usar o nome em um estágio, sem impor a mesma estrutura a todos os personagens. Awaken e evolução de Armor são independentes, salvo relação expressa na carta.
 
 ### 38. Ultimate
 
@@ -504,7 +489,7 @@ Algumas Ultimates podem exigir:
 * God Cloth;
 * outra condição especial.
 
-Ultimate não exige universalmente uma God Cloth.
+Ultimate exige exclusivamente Base Cosmo e não exige universalmente uma God Cloth.
 
 ---
 
@@ -608,21 +593,19 @@ Habilidades ativadas quando uma carta entra em jogo devem aparecer antes das inf
 
 Essa é uma regra de apresentação das cartas, não uma alteração da ordem de resolução.
 
-### 54. Facções
+### 54. Facções e Card Craft
 
-As principais identidades estratégicas previstas são:
+Athena — **THE UNBREAKABLE WILL**. “No Saint fights alone.” Pilares: Voltron, Anthem, Brotherhood e Miracle. Anthems tribais priorizam Saint, sem beneficiar genericamente todos os Devotees.
 
-Athena: proteção, evolução e superação.
+Afinidades aprovadas: Pegasus Seiya → Sagittarius; Dragon Shiryu → Libra; Cygnus Hyoga → Aquarius; Andromeda Shun → Virgo; Phoenix Ikki → Leo. Cada um também tem afinidade com sua própria Cloth; essas relações serão materializadas nas cartas após revisão do catálogo.
 
-Poseidon: controle de confrontos e domínio do campo.
+Poseidon: controle, pressão progressiva e domínio. Hades: persistência, sacrifício e retorno. Ares: agressividade, combate e conquista. Artemis: caça, precisão e eliminação estratégica. Estas quatro identidades são preliminares; desenvolvimento e aprovação seguem uma facção por vez, começando por Athena.
 
-Hades: interação com Tartarus e retorno de Devotees.
+No Vanilla Set haverá exatamente uma God Armor e um Divine Artifact por facção: cinco de cada. Trata-se de composição editorial do conjunto, não de limite de decks. Seleções de trabalho de God Armor: Athena — Pegasus Seiya; Poseidon — Sea Dragon Kanon; Hades — Wyvern Rhadamanthys; Ares — a definir; Artemis — Callisto. Nomes finais e cartas dependem do Card Craft; não criar automaticamente os dez itens. Respeitar a distinção narrativa entre God Cloth e Kamui e documentar criações do TCG.
 
-Ares: pressão ofensiva e combate agressivo.
+Personagens usam classificação de origem: CANON — KURUMADA; SAINT SEIYA — OUTRAS OBRAS; MITOLOGIA ADAPTADA; ORIGINAL TCG. Referências mitológicas devem ser documentadas e não tornam personagens canônicos. Priorizar personagens disponíveis nas obras antes de criar originais; nenhum novo personagem é aprovado por este guia.
 
-Artemis: desenvolvimento de recursos e aceleração.
-
-Essas identidades orientam o Card Craft, mas não proíbem efeitos de outras categorias.
+Card Craft: identidade e flavor; mecânica; habilidades; cartas e progressão; revisão de custos; balanceamento; aprovação; registro no catálogo. Propostas não são definitivas antes da aprovação.
 
 ---
 
@@ -644,18 +627,18 @@ Os custos de Evolution e God Cloth serão determinados no balanceamento das cart
 
 ---
 
-## CAPÍTULO XII — COMPLEMENTO APROVADO EM 23/10/2026
+## CAPÍTULO XII — TIMING E CONSOLIDAÇÃO 2.1
 
 O autor aprovou a aplicação das recomendações de fechamento ao sistema do jogo. As seções seguintes consolidam as definições de timing, combate, recursos, equipamentos e construção. Exemplos de curva e custos são referências de playtest; não substituem valores impressos das cartas.
 
 ### 55. Rodada, iniciativa, compras e passe
 
-- Sortear a iniciativa inicial. O vencedor escolhe quem começa. A iniciativa alterna entre os jogadores a cada rodada, independentemente de quem realizou a última AÇÃO.
+- Sortear a iniciativa inicial. O vencedor escolhe quem começa e o perdedor do sorteio recebe 1 Latent, independentemente dessa escolha. A iniciativa alterna entre os jogadores a cada rodada, independentemente de quem realizou a última AÇÃO.
 - Ambos começam com 7 cartas. Não há compra normal na primeira rodada. A partir da segunda, ambos compram **2 cartas** no início da rodada.
 - Ordem do início: renovar as Bases dos dois jogadores; preparar seus Devotees; renovar limites por rodada; realizar as compras; resolver os gatilhos de início. O jogador com iniciativa recebe a primeira oportunidade de AÇÃO após essa preparação.
 - Cada jogador pode colocar uma Base Cosmoble durante sua própria oportunidade, antes da AÇÃO e com a pilha vazia, uma vez por rodada. Isso não consome a AÇÃO e não abre uma janela de resposta por si só. Gatilhos causados pela colocação são resolvidos antes da AÇÃO.
-- Passar entrega a oportunidade ao adversário, sem impedir ações posteriores na mesma rodada. **Dois passes consecutivos**, com a pilha vazia, encerram a fase de ações. Realizar uma AÇÃO ou colocar uma Base zera essa contagem; passes de prioridade da pilha não contam como passes da rodada.
-- No encerramento, resolver os gatilhos de fim; remover efeitos “até o fim da rodada”; verificar destruições/derrotas; expirar Latent Cosmo; avançar a rodada. Gatilhos produzidos por essas etapas são resolvidos antes de avançar. O encerramento não reabre AÇÕES comuns, salvo texto explícito.
+- Pass encerra as AÇÕES comuns daquele jogador na rodada. O adversário pode realizar AÇÕES sucessivas até passar. Ambos terem passado encerra a fase. O jogador que passou ainda pode responder; passes de prioridade são separados e nunca declaram Pass da rodada.
+- No encerramento, resolver os gatilhos de fim; remover efeitos “até o fim da rodada”; verificar destruições/derrotas; oferecer conversão opcional das Bases não utilizadas em Latent (limite 3); expirar Cosmo temporário; avançar a rodada. Gatilhos produzidos por essas etapas são resolvidos antes de avançar. O encerramento não reabre AÇÕES comuns, salvo texto explícito.
 - Não há limite máximo de cartas na mão nesta base de regras.
 - Tentar comprar sem cartas suficientes causa derrota: comprar o que houver e registrar a falha na quantidade restante. Se os dois falharem na mesma compra simultânea, o resultado é empate.
 
@@ -664,11 +647,11 @@ O autor aprovou a aplicação das recomendações de fechamento ao sistema do jo
 ### 56. Timing, respostas e resolução
 
 - Uma AÇÃO comum só é declarada na própria oportunidade e com a pilha vazia. Jogar Devotee, equipamento ou Moment; Strike, Evolve e habilidades marcadas como AÇÃO seguem essa regra.
-- **Technique** pode ser jogada como AÇÃO na própria oportunidade ou como resposta em uma janela de prioridade. Como resposta, não gasta a próxima AÇÃO, mas paga integralmente seus custos. **Moment** exige AÇÃO, salvo texto explícito.
+- **Technique** pode ser jogada como AÇÃO na própria oportunidade ou como resposta em uma janela de prioridade. Como resposta, não gasta a próxima AÇÃO, mas paga integralmente seus custos exclusivamente em Latent Cosmo. **Moment** exige AÇÃO, salvo texto explícito.
 - Habilidades ativadas exigem AÇÃO por padrão; apenas as expressamente permitidas como resposta podem ser ativadas na prioridade. Passivas e gatilhos não gastam AÇÃO. Uma carta que disser como e quando a habilidade funciona fornece a exceção.
 - Ao declarar uma AÇÃO, anunciar escolhas e alvos e pagar custos. Strike deixa o atacante Unprepared nesse momento. O adversário recebe a primeira prioridade para responder.
 - Cada resposta entra no topo da pilha e entrega prioridade ao adversário. Dois passes de prioridade resolvem apenas o item do topo. Havendo itens restantes, a prioridade volta ao jogador da oportunidade atual; o processo continua até esvaziar a pilha e resolver os gatilhos produzidos.
-- Quando a AÇÃO e suas consequências terminam, a próxima oportunidade pertence ao adversário de quem declarou a AÇÃO original. Respostas não invertem nem consomem essa alternância.
+- Quando a AÇÃO e suas consequências terminam, a próxima oportunidade pertence ao adversário de quem declarou a AÇÃO original. Se o adversário já passou, quem declarou continua recebendo oportunidades. Respostas não consomem AÇÃO nem desfazem Pass.
 - Gatilhos simultâneos entram primeiro na ordem escolhida pelo jogador da oportunidade e depois na ordem escolhida pelo adversário. Fora da fase de ações, usar o jogador com iniciativa como referência. O último colocado resolve primeiro.
 - Ao resolver, verificar novamente os alvos. Um efeito com todos os alvos inválidos não produz efeito; custos não são devolvidos. Com alvos válidos restantes, resolver o que for possível, salvo exigência expressa de todos os alvos.
 - Verificar HP, Soul, Rivalidades inválidas e derrotas após cada resolução e cada etapa de dano. Processar destruições simultâneas em conjunto; depois colocar seus gatilhos na pilha. Repetir verificações até estabilizar.
@@ -719,36 +702,36 @@ Se um Strike normal causar Soul zero aos dois Gods simultaneamente por efeitos a
 ### 60. Cosmo, Latent e custos
 
 - Uma Base disponível paga 1 Cosmo e fica indisponível até a renovação. Gastar Bases para pagar é parte do pagamento; não cria uma AÇÃO adicional nem exige guardar um estoque de Cosmo gerado sem uso.
-- Custo de **Cosmo** aceita Bases e Latent. Custo explicitamente de **Base Cosmo** aceita apenas Bases; custo de **Latent Cosmo** aceita apenas Latent. Soul é recurso distinto e não substitui Cosmo.
+- Aplicar a matriz da seção 5: Devotee, Armor e Ultimate usam somente Base; Technique como resposta usa somente Latent; os demais custos aceitam ambos, respeitando restrições expressas. Cosmo temporário só paga custos genéricos, salvo texto específico, e não é armazenado automaticamente.
 - Manter Latent como recurso de superação: **uma vez por AÇÃO adversária**, se um ou mais Devotees seus receberem dano efetivo de fontes adversárias, ganhar 1 Latent. As respostas e consequências daquela AÇÃO contam na mesma ocorrência. Dano zero ou totalmente prevenido não gera; o Devotee pode ter sido destruído pelo dano.
-- Limite experimental: **3 Latent por jogador**. Efeitos que geram mais respeitam esse limite, salvo exceção expressa. Latent expira no fim da rodada, depois dos efeitos de encerramento.
+- Limite de **3 Latent por jogador**, persistente entre rodadas. Após os efeitos de fim, converter opcionalmente Bases disponíveis até esse limite; a capacidade de Bases renova normalmente na próxima rodada.
 - Dano de retaliação sofrido durante sua própria AÇÃO não gera esse ganho geral. Cartas podem criar suas próprias fontes de Latent.
 - Escolhas e custos são validados antes de gastar; pagamento insuficiente não produz gasto parcial. Recursos pagos em uma declaração válida não retornam se o efeito depois falhar.
 
-**Por quê:** preservar o despertar pelo sofrimento sem gerar recurso repetidamente de cada alvo de um dano em área. O limite e a expiração limitam explosões e tornam Unfaith útil sem decidir a partida sozinho.
+**Por quê:** preservar o despertar pelo sofrimento sem gerar recurso repetidamente de cada alvo de um dano em área. O limite do banco limita explosões e torna Unfaith útil sem decidir a partida sozinho.
 
 ### 61. Equipamentos, estágios e remoção
 
-- Cada Devotee tem **um espaço de armadura**, ocupado por uma Cloth, Scale, Surplice ou Warplate. Essas armaduras não se acumulam. Armas, acessórios e outras Relics não têm limite geral de quantidade, respeitando restrições impressas e cartas únicas.
-- Jogar uma Cloth/Scale custa uma AÇÃO e seu custo de entrada. Pode entrar sem portador ou entrar equipada pagando também seu custo de Equip, na mesma AÇÃO, com alvo elegível anunciado. Se apenas o portador ficar inválido, ela entra sem portador e não devolve o custo de Equip.
-- Equipar uma armadura em campo, reequipar ou transferir custa uma AÇÃO mais Equip. Usar **Equip padrão de 1 Cosmo** quando a carta não indicar outro valor. Trocar de armadura deixa a anterior em campo sem portador, em Vanilla; não a destrói.
+- Cada Devotee tem **um espaço de armadura**, ocupado por uma Cloth, Scale, Surplice, Warplate ou Moonplate. Essas armaduras não se acumulam. Armas, acessórios e outras Relics não têm limite geral de quantidade, respeitando restrições impressas e cartas únicas.
+- Jogar qualquer Armor custa uma AÇÃO e seu custo de entrada exclusivamente em Base. Pode entrar sem portador ou entrar equipada pagando também seu custo de Equip, na mesma AÇÃO, com alvo elegível anunciado. Se apenas o portador ficar inválido, ela entra sem portador e não devolve o custo de Equip.
+- Equipar uma armadura em campo, reequipar ou transferir custa uma AÇÃO mais Equip. Usar **Equip 1 para portador designado / 5 para os outros** em Armor, salvo custos específicos; armas/acessórios usam o custo impresso ou 1. Equip pode ser pago com Base e/ou Latent. Trocar de armadura deixa a anterior em campo sem portador, em Vanilla; não a destrói.
 - Desequipar voluntariamente custa uma AÇÃO e zero Cosmo. Não exige Prepared. Transferência e troca são concluídas antes de recalcular os atributos e verificar destruição, evitando mortes por um estado intermediário de interface.
 - Destruir equipamento envia ao Tartarus; exilar envia ao Void; desequipar mantém no campo. Apenas Devotees ganham Afterlife no Tartarus. Equipamentos anexados não são enviados junto com o portador quando ele morre, retorna à mão ou é exilado, salvo texto explícito.
-- **Retirar Damage de Cloth da regra-base.** Sem marcadores e recuperação automática de Cloth. Uma carta específica ainda pode criar seu próprio sistema de dano/reparo, descrito integralmente no texto.
+- **Living Armor:** todas as Armor possuem HP próprio e dano independente do Devotee. O dano persiste entre rodadas, transferência, desequipamento e reset para Vanilla. Ao atingir HP máximo, a Armor permanece no Battlefield em estado Broken. Todos os bônus e habilidades concedidos por ela ficam suspensos até ser reparada (esclarecimento aprovado em 24/10/2026).
 - Evolução pertence a Cloth + Owner atual. Desanexar, transferir ou sair do campo reseta para Vanilla. A armadura continua tendo seus benefícios Vanilla quando equipada em um não Owner elegível.
-- Cada Evolve avança um estágio e exige AÇÃO, requisitos e Cosmo. Manter uma evolução por carta física por rodada; transferir, desequipar ou sair e voltar não renova esse limite na mesma rodada.
+- Cada Evolve escolhe um estágio posterior disponível e exige AÇÃO, requisitos e Base e/ou Latent. Sequência obrigatória apenas se expressa na carta. Manter uma evolução por carta física por rodada; transferir, desequipar ou sair e voltar não renova esse limite na mesma rodada.
 - Os bônus numéricos indicados para cada estágio são **totais daquele estágio**, sem somar os anteriores. Habilidades desbloqueadas anteriormente permanecem, salvo texto contrário; uma habilidade escrita como exclusiva de um estágio só funciona nele. O padrão de Card Craft deve distinguir bônus numéricos de habilidades.
-- Para a mesa física, usar um único indicador de estágio junto à Cloth, com as posições Vanilla / 7th Sense / God Cloth. Não exige outra cópia da carta nem uma carta de personagem adicional.
+- Para a mesa física, usar um único indicador de estágio junto à Cloth, com as posições dos até quatro estágios definidos na carta. Não exige outra cópia da carta nem uma carta de personagem adicional.
 
-**Por quê:** manter a armadura recuperável e o vínculo com o personagem como risco principal. O dano persistente já exige controle suficiente; outro dano acumulado na Cloth tornaria a manutenção mais lenta.
+**Por quê:** manter a armadura recuperável e o vínculo com o personagem como risco principal. O dano persistente de Armor e Devotee é registrado separadamente; a Armor pode ser herdada sem apagar suas marcas.
 
 ### 62. Awaken, God Cloth, Ultimate e Afterlife
 
 - **Awaken é do Devotee.** Padronizar o despertar ativável como uma AÇÃO mais o custo/requisito impresso, sem exigir ou alterar Prepared por regra geral. Um gatilho automático impresso é uma exceção e não paga AÇÃO adicional. O estado dura enquanto a instância permanecer em campo, salvo texto diferente.
-- **7th Sense é estágio da Cloth.** Não concede Awaken automaticamente, e Awaken não evolui a Cloth automaticamente. Uma carta pode exigir ou produzir a relação explicitamente.
-- God Cloth exige o estágio anterior e os requisitos da própria carta. Nem toda armadura tem God Cloth, e o estágio não concede imunidade implícita contra Gods.
+- **Seventh Sense é temático e individual**, não uma keyword universal. Awaken e evolução continuam independentes, salvo relação impressa.
+- God Armor exige os custos e requisitos da própria carta; estágio anterior somente quando expressamente exigido. Nem toda armadura tem God Cloth, e o estágio não concede imunidade implícita contra Gods.
 - Retirar o antigo limiar universal de Awaken dos Gods. Uma nova carta de God pode ter seu próprio despertar, inteiramente descrito no texto, sem depender de uma regra herdada.
-- **Ultimate usa AÇÃO e uma utilização por identidade de personagem, por jogador e por partida**, além dos custos e requisitos impressos. Na ausência de personagem nomeado, usar a identidade da carta. Ressuscitar ou trocar a versão do mesmo personagem não recarrega essa utilização. Não exige God Cloth universalmente nem consome Prepared se isso não estiver no custo.
+- **Ultimate usa AÇÃO e uma utilização por identidade de personagem, por jogador e por partida**, além do pagamento exclusivamente em Base e dos requisitos impressos. Na ausência de personagem nomeado, usar a identidade da carta. Ressuscitar ou trocar a versão do mesmo personagem não recarrega essa utilização. Não exige God Cloth universalmente nem consome Prepared se isso não estiver no custo.
 - Afterlife é derivado de ser Devotee no Tartarus, inclusive se chegou lá por descarte. Não precisa estar impresso em todo Devotee, não oferece ativação por si só e não concede retorno.
 - Retornar do Tartarus exige um efeito. Por padrão, a carta retorna sob controle de seu proprietário, Prepared, sem Rivalidades, sem dano, sem seu Awaken anterior e sem equipamentos automaticamente anexados; o efeito pode especificar exceções.
 - Limite experimental para evitar ciclos: **cada carta física pode retornar do Tartarus ao campo uma vez por rodada**. Hades pode retornar vários Devotees diferentes; exceções ao limite precisam estar explícitas. Sair de novo não renova o limite.
@@ -784,7 +767,7 @@ Se um Strike normal causar Soul zero aos dois Gods simultaneamente por efeitos a
 | Soul / Attack de God de referência | 30 / 3; variar por facção apenas com compensação no restante da carta |
 | Compras | 2 por rodada a partir da segunda |
 | Bases | 1 por jogador/rodada, sem AÇÃO |
-| Latent | Limite de 3; ganho geral uma vez por AÇÃO adversária com dano elegível; expira no fim da rodada |
+| Latent | Limite de 3; ganho geral uma vez por AÇÃO adversária com dano elegível; persiste e aceita conversão opcional de Bases no encerramento |
 | Evolve | Uma vez por Cloth/rodada |
 | Retorno do Tartarus | Uma vez por carta física/rodada |
 | Ultimate | Uma vez por personagem/jogador/partida |
@@ -803,7 +786,7 @@ Para Devotees **sem habilidades nem keywords**, usaria esta régua provisória; 
 
 Guardian, Nimble, Impulse e, sobretudo, Long Range devem consumir parte dessa eficiência ou aumentar o custo. Não considero um Devotee com Long Range equivalente ao mesmo corpo sem a keyword: impedir retaliação conserva HP para rodadas futuras. Começaria comparando +1 Cosmo ou redução de atributo, e mediria antes de fixar uma tabela universal de preços.
 
-Exemplo de Cloth para testar, sem impor esses valores a todas: custo de entrada 2, Equip 1; Vanilla +1/+1; Evolve por 2 para bônus total +2/+2; Evolve por 4 para bônus total +4/+4. As duas evoluções ocupam rodadas diferentes. A carta só terá os estágios que seu design realmente definir.
+Exemplo de Cloth para testar, sem impor esses valores a todas: custo de entrada 2, Equip 1; Vanilla +1/+1; Evolve por 2 para bônus total +2/+2; Evolve por 4 para bônus total +4/+4. Cada Evolve respeita o limite de uma evolução por rodada; pode escolher o estágio final diretamente se a carta não exigir sequência. A carta só terá os estágios que seu design realmente definir.
 
 Medir pelo menos: duração e vencedor com iniciativa; cartas disponíveis na mão e uso de Bases; duração das partidas e partidas travadas por “tartaruga” (todos em guarda); Strikes por rodada; Rivalidades formadas; dano evitado por Long Range; Strikes forçados em Guardian; frequência de evolução/God Cloth/Ultimate; quantidade de retornos e vantagem de cartas de Hades. Usar partidas espelhadas com iniciativa invertida antes de atribuir uma diferença à facção.
 
@@ -826,4 +809,4 @@ E um God pode ser derrotado quando seus adversários conseguem produzir o imposs
 
 Esse é o coração do Saint Seiya TCG.
 
-Fim do Rulebook 2.0 — Core Rules, versão-base para playtest.
+Fim do Rulebook 2.1 — Core Rules, versão-base para playtest.
