@@ -1,3 +1,4 @@
+import {printedEquipmentBonuses,signedBonus,equipmentCostText} from '../card-visual-values.js';
 import {isArmor,isEquipment} from '../card-model.js';
 import {textBlocks} from '../card-text.js';
 
@@ -14,13 +15,23 @@ export const validId=value=>typeof value==='string'&&/^[a-z0-9][a-z0-9-]{0,79}$/
 export const color=value=>typeof value==='string'&&/^(#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{4}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})|transparent)$/.test(value);
 const present=value=>value!==undefined&&value!==null&&value!==''&&(!Array.isArray(value)||value.length>0);
 const owner=id=>String(id).split('-').map(v=>v.charAt(0).toUpperCase()+v.slice(1)).join(' ');
+const pendingDesign=body=>/^Pending design and approval\.?$/i.test(String(body).trim());
+function namedRule(text,fallback){
+  if(!text)return [];
+  const [first,...rest]=String(text).split('\n');
+  return rest.length&&/ — /.test(first)?[{heading:first,body:rest.join('\n')}]:[{heading:fallback,body:text}];
+}
 export function ruleParts(card){
-  const blocks=textBlocks(card.habilidades_en||[]);
-  return {rules:[...blocks.filter(b=>!['resonance','owner','keywords'].includes(b.kind)),...(card.habilidade_awaken_en?[{heading:'AWAKEN',body:card.habilidade_awaken_en}]:[]),...(card.ultimate_en?[{heading:'ULTIMATE',body:card.ultimate_en}]:[])],resonance:[...blocks.filter(b=>b.kind==='resonance'),...(card.ressonancias||[]).map(r=>({heading:`RESONANCE — ${owner(r.personagem_id)}`,body:r.habilidade_en}))],owners:blocks.filter(b=>b.kind==='owner').map(b=>b.body).join(' / ')||(card.donos||[]).map(owner).join(' / ')};
+  const blocks=textBlocks(card.habilidades_en||[]).filter(b=>!pendingDesign(b.body)).map(block=>{if(block.heading)return block;const lines=block.body.split('\n');if(lines.length>1&&/ — (?:Divine Power|Awaken \d+|Ultimate)$/.test(lines[0]))return {...block,heading:lines[0],body:lines.slice(1).join('\n')};const m=block.body.match(/^([^—.\n]{2,60})\s*—\s*([\s\S]+)$/);return m&&!/^(Once|When|Whenever|If|At)\b/i.test(m[1])?{...block,heading:m[1],body:m[2]}:block;});
+  const equip=equipmentCostText(card),divinePower=blocks.filter(b=>!['resonance','owner','keywords'].includes(b.kind)),awakenRules=namedRule(card.habilidade_awaken_en,'AWAKEN'),ultimateRules=namedRule(card.ultimate_en,'ULTIMATE');
+  return {rules:[...divinePower,...(equip&&!blocks.some(b=>/Equip \d|Equip cost:/i.test(b.body))?[{heading:'EQUIP',body:equip}]:[]),...awakenRules,...ultimateRules],divinePower,awakenRules,ultimateRules,resonance:[...blocks.filter(b=>b.kind==='resonance'),...(card.ressonancias||[]).filter(r=>!pendingDesign(r.habilidade_en)).map(r=>({heading:`RESONANCE — ${owner(r.personagem_id)}`,body:r.habilidade_en}))],owners:blocks.filter(b=>b.kind==='owner').map(b=>b.body).join(' / ')||(card.donos||[]).map(owner).join(' / ')};
+}
+export function editorialWarnings(card){
+  return textBlocks(card.habilidades_en||[]).filter(b=>pendingDesign(b.body)).map(b=>({layer:'resonance',kind:'pending',message:`${b.heading}: design pendente no catálogo; bloco sem efeito aprovado omitido da arte.`}));
 }
 export const BINDINGS={
   'card.name':{label:'Nome',read:c=>c.project?.title||c.card.nome_exibicao_en},
-  'card.tagline':{label:'Tagline',read:c=>c.project?.subtitle||c.card.tagline_en||c.card.subtitulo_en},
+  'card.tagline':{label:'Tagline',read:c=>c.project?.subtitle?.trim()||c.card.tagline_en||c.card.subtitulo_en},
   'card.faction':{label:'Facção',read:c=>c.card.faccao},
   'card.rarity':{label:'Raridade',read:c=>c.card.raridade},
   'card.type':{label:'Tipo',read:c=>c.card.tipo},
@@ -29,11 +40,16 @@ export const BINDINGS={
   'card.cost':{label:'Custo impresso',read:c=>c.card.custo},
   'card.cosmoble':{label:'Cosmoble',read:c=>c.card.cosmoble},
   'card.rules':{label:'Habilidades aprovadas',read:c=>ruleParts(c.card).rules},
+  'card.divinePower':{label:'God — Divine Power',read:c=>ruleParts(c.card).divinePower},
+  'card.awakenRules':{label:'God — Awaken',read:c=>ruleParts(c.card).awakenRules},
+  'card.ultimateRules':{label:'God — Ultimate',read:c=>ruleParts(c.card).ultimateRules},
   'card.resonance':{label:'Resonance',read:c=>ruleParts(c.card).resonance},
   'card.owner':{label:'Owner',read:c=>ruleParts(c.card).owners},
   'card.flavor':{label:'Flavour',read:c=>c.project?.flavour||c.card.flavour_en||c.card.flavour},
   'card.reminder':{label:'Reminder aprovado',read:c=>c.card.reminder_en},
-  'card.equipCost':{label:'Equip / Auto-Equip',read:c=>isEquipment(c.card)?[c.card.auto_equip_en||'',`EQUIP ${c.card.equipar_custo??'—'}`,c.card.equipar_custo_outros!=null?`Other Devotees: ${c.card.equipar_custo_outros}`:''].filter(Boolean).join('\n'):null},
+  'card.equipCost':{label:'Equip / Auto-Equip',read:c=>equipmentCostText(c.card)},
+  'card.equippedPowerBonus':{label:'Bônus impresso de ATK do portador',read:c=>signedBonus(printedEquipmentBonuses(c.card,c.instance?.stage||0).power)},
+  'card.equippedHPBonus':{label:'Bônus impresso de HP do portador',read:c=>signedBonus(printedEquipmentBonuses(c.card,c.instance?.stage||0).hp)},
   'card.armorHP':{label:'HP próprio da Armor',read:c=>isArmor(c.card)?c.card.damage_cloth??c.card.vida:null},
   'card.isArmor':{label:'Reconhecida como Armor',read:c=>isArmor(c.card)},
   'card.isEquipment':{label:'Reconhecida como Equipment',read:c=>isEquipment(c.card)},
@@ -53,7 +69,7 @@ export const BINDINGS={
   'runtime.prepared':{label:'Prepared',read:c=>c.instance?.prepared??true},
   'runtime.awakened':{label:'Awakened',read:c=>c.instance?.awakened??false},
   'runtime.equipped':{label:'Equipada',read:c=>Boolean(c.instance?.attachedToUid||c.equipment?.length)},
-  'runtime.status':{label:'Estado atual',read:c=>c.instance?[c.instance.prepared?'Prepared':'Unprepared',c.instance.awakened?'Awakened':'',c.stats?.armor&&c.stats.protectionActive===false?'Broken':''].filter(Boolean).join(' · '):''},
+  'runtime.status':{label:'Estado atual',read:c=>c.instance?[c.instance.prepared?'Prepared':'Unprepared',c.instance.awakened?'Awakened':''].filter(Boolean).join(' · '):''},
   'runtime.soul':{label:'Soul atual',read:c=>c.instance?.soul??c.card.soul},
   'runtime.modifiers':{label:'Modificadores da engine',read:c=>c.instance?.modifiers||[]},
   'inspector.original':{label:'Valores originais',read:c=>c.card.tipo==='God'?`Printed: ${c.card.soul} SOUL / ${c.card.attack} ATTACK / ${c.card.awaken} AWAKEN`:`Printed: ${c.card.power??'—'} ATK / ${c.card.damage_cloth??c.card.vida??c.card.resistance??'—'} HP`},
@@ -114,7 +130,7 @@ function matches(template,card,surface){const s=template.scope;if(s.surface!==su
 export function resolveLayout(templates,card,{surface='card',through=4,previewId=null}={}){
   const byId=new Map(templates.map(t=>[t.id,t])),active=templates.filter(t=>matches(t,card,surface)&&LEVELS.indexOf(t.scope.level)<=through).sort((a,b)=>LEVELS.indexOf(a.scope.level)-LEVELS.indexOf(b.scope.level)||Number(Boolean(a.scope.subtype))-Number(Boolean(b.scope.subtype))||Number(a.id===previewId)-Number(b.id===previewId)||(a.revision||0)-(b.revision||0)||a.id.localeCompare(b.id));
   const out={canvas:{width:1488,height:2091,safe:72,bleed:36},theme:{ink:'#fff0bf',accent:'#d5b665',background:'#111019',frames:[],symbol:null},elements:[],sources:{},chain:[]},layers=new Map(),applied=new Set();
-  function apply(t,trail=[]){if(trail.includes(t.id))throw Error('Ciclo de herança.');if(applied.has(t.id))return;if(t.extends){const parent=byId.get(t.extends);if(!parent)throw Error('Template pai ausente.');if(LEVELS.indexOf(parent.scope.level)>LEVELS.indexOf(t.scope.level)||parent.scope.surface!==surface)throw Error('Herança fora da hierarquia.');apply(parent,[...trail,t.id]);}applied.add(t.id);out.chain.push({id:t.id,name:t.name,level:t.scope.level,revision:t.revision});Object.assign(out.canvas,t.canvas);Object.assign(out.theme,t.theme);for(const patch of t.elements){const existing=layers.get(patch.id)||{id:patch.id,component:'TextBlock',name:patch.id,x:0,y:0,width:300,height:100,zIndex:0,rotation:0,opacity:1,visible:true,locked:false,style:{}};const next={...existing,...clone(patch),style:{...existing.style,...clone(patch.style||{})}};layers.set(patch.id,next);for(const k of Object.keys(patch)){if(k==='style'){for(const sk of Object.keys(patch.style))out.sources[`${patch.id}.style.${sk}`]=t.id;}else out.sources[`${patch.id}.${k}`]=t.id;}}}
+  function apply(t,trail=[]){if(trail.includes(t.id))throw Error('Ciclo de herança.');if(applied.has(t.id))return;if(t.extends){const parent=byId.get(t.extends);if(!parent)throw Error('Template pai ausente.');if(LEVELS.indexOf(parent.scope.level)>LEVELS.indexOf(t.scope.level)||parent.scope.surface!==surface)throw Error('Herança fora da hierarquia.');apply(parent,[...trail,t.id]);}applied.add(t.id);out.chain.push({id:t.id,name:t.name,level:t.scope.level,revision:t.revision});Object.assign(out.canvas,t.canvas);Object.assign(out.theme,t.theme);for(const k of Object.keys(t.canvas||{}))out.sources['canvas.'+k]=t.id;for(const k of Object.keys(t.theme||{}))out.sources['theme.'+k]=t.id;for(const patch of t.elements){const existing=layers.get(patch.id)||{id:patch.id,component:'TextBlock',name:patch.id,x:0,y:0,width:300,height:100,zIndex:0,rotation:0,opacity:1,visible:true,locked:false,style:{}};const next={...existing,...clone(patch),style:{...existing.style,...clone(patch.style||{})}};layers.set(patch.id,next);for(const k of Object.keys(patch)){if(k==='style'){for(const sk of Object.keys(patch.style))out.sources[`${patch.id}.style.${sk}`]=t.id;}else out.sources[`${patch.id}.${k}`]=t.id;}}}
   active.forEach(t=>apply(t));out.elements=[...layers.values()].filter(l=>!l.removed).sort((a,b)=>a.zIndex-b.zIndex||a.id.localeCompare(b.id));return out;
 }
 export function evaluateLayer(layer,context){return layer.visible!==false&&conditionMatches(layer.conditions,context);}

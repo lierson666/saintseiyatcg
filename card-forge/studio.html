@@ -33,7 +33,7 @@
         <input id="cardSearch" type="search" aria-label="Buscar cartas" placeholder="Buscar por nome ou ID…">
         <div class="filter-row"><select id="filterFaction" aria-label="Filtrar facção"></select><select id="filterType" aria-label="Filtrar tipo"></select><select id="filterRarity" aria-label="Filtrar raridade"></select></div>
         <div id="cardList" class="card-library" aria-label="Cartas disponíveis"></div>
-        <a id="editCardData" class="subtle-link" href="index.html" target="_blank" rel="noopener">Editar dados da carta ↗</a>
+        <a id="editCardData" class="subtle-link" href="index.html">Editar dados da carta ↗</a>
       </section>
       <section class="library-pane" data-panel="layouts" hidden>
         <h2>Template e herança</h2>
@@ -70,7 +70,7 @@
         <p id="engineReport" class="hint">Simulações são isoladas de partidas reais.</p>
         <button id="resetLab">Restaurar estado normal</button>
         <hr><h3>Exportar carta</h3>
-        <label>Formato<select id="exportFormat"><option value="png">PNG · 1488×2091</option><option value="png-transparent">PNG · fundo transparente</option><option value="svg">SVG · vetorial</option><option value="pdf">PDF · impressão 2,5×3,5 pol</option></select></label>
+        <label>Formato<select id="exportFormat"><option value="png">PNG · 1488×2091</option><option value="png-transparent">PNG · fundo transparente</option><option value="svg">SVG · vetorial</option><option value="pdf">PDF · impressão (~595 dpi)</option></select></label>
         <button id="exportCard" class="primary">Exportar em alta qualidade</button>
       </section>
       <section class="layers-pane">
@@ -95,6 +95,6 @@
   </main>
   <footer class="studio-status" role="status" id="studioStatus">Carregando…</footer>
   <dialog id="studioDialog"><button class="dialog-x" data-close-dialog aria-label="Fechar janela">×</button><div id="dialogBody"></div></dialog>
-  <script type="module" src="studio.js?v=1"></script>
+  <script type="module" src="studio.js?v=20261025-subtitle-v6"></script>
 </body>
 </html>

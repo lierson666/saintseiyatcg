@@ -18,23 +18,24 @@ function conditionNode(c,path=[]){
 }
 export function createPropertyInspector({root,getState,onPatch,onReset,onCommit,onError}){
   function render(){
-    const {layout,draft,selected,assets=[]}=getState(),layer=layout?.elements.find(l=>l.id===selected[0]);
+    const openStates=new Map([...root.querySelectorAll('details')].map(d=>[d.querySelector('summary')?.textContent,d.open]));
+    const {layout,draft,selected,assets=[]}=getState(),base=layout?.elements.find(l=>l.id===selected[0]),patch=draft?.elements.find(l=>l.id===base?.id)||{},layer=base?{...base,...patch,style:{...base.style,...patch.style}}:null;
     if(!layer){root.innerHTML='<p class="empty-hint">Selecione uma layer no Canvas ou na lista.</p>';return;}
-    const patch=draft.elements.find(l=>l.id===layer.id)||{};
-    const input=(path,label,kind)=>field(path,label,kind,read(layer,path),layout.sources[`${layer.id}.${path.join('.')}`],read(patch,path)!==undefined);
+    const input=(path,label,kind)=>field(path,label,kind,read(layer,path)??(path.join('.')==='style.color'?layout.theme.ink:undefined),layout.sources[`${layer.id}.${path.join('.')}`]||(path.join('.')==='style.color'?layout.sources['theme.ink']:undefined),read(patch,path)!==undefined);
     root.innerHTML=`<details class="property-group" open><summary>${esc(layer.name)} ${selected.length>1?`· ${selected.length} selecionadas`:''}</summary><div class="property-grid"><div class="full">${input(['name'],'Nome da layer','text')}</div><div class="full">${input(['component'],'Componente',COMPONENTS)}</div>${numeric.map(([k,label,step])=>input([k],label,step)).join('')}${input(['visible'],'Visibility','bool')}${input(['locked'],'Bloqueada','bool')}</div></details>
       <details class="property-group" open><summary>Texto e tipografia</summary><div class="property-grid">${typography.map(([k,label,kind])=>input(['style',k],label,kind)).join('')}</div></details>
       <details class="property-group"><summary>Aparência</summary><div class="property-grid">${appearance.map(([k,label,kind])=>input(['style',k],label,kind)).join('')}</div></details>
       <details class="property-group" open><summary>Binding</summary><div class="property-grid"><div class="full">${input(['binding'],'Dado dinâmico',[['','Texto decorativo'],...Object.entries(BINDINGS).map(([k,v])=>[k,`${v.label} · ${k}`])])}</div><div class="full">${input(['label'],'Rótulo visual','text')}</div>${!layer.binding?`<div class="full">${input(['text'],'Texto decorativo','text')}</div>`:''}<div class="full">${input(['asset'],'Imagem local',[['','Do binding / tema'],...assets.map(a=>[a.path,a.path])])}</div></div><p class="hint">Nome, habilidades e números vêm do catálogo ou da engine. Editar o layout não grava esses dados.</p></details>
       <details class="property-group"><summary>Visibilidade condicional</summary><div id="conditionsEditor">${layer.conditions?conditionNode(layer.conditions):'<button data-cond-action="start">+ Adicionar condição</button>'}</div></details>`;
+    for(const detail of root.querySelectorAll('details'))if(openStates.has(detail.querySelector('summary')?.textContent))detail.open=openStates.get(detail.querySelector('summary').textContent);
   }
   function sync(){
     const {layout,selected,draft}=getState(),layer=layout?.elements.find(l=>l.id===selected[0]);if(!layer)return;
     const patch=draft.elements.find(l=>l.id===layer.id)||{};
     for(const el of root.querySelectorAll('[data-prop]')){
-      const path=JSON.parse(el.dataset.prop),value=read(layer,path)??defaults[path.at(-1)]??'';
+      const path=JSON.parse(el.dataset.prop),value=read(layer,path)??(path.join('.')==='style.color'?layout.theme.ink:defaults[path.at(-1)])??'';
       if(document.activeElement!==el){if(el.type==='checkbox')el.checked=Boolean(value);else el.value=typeof value==='number'?Math.round(value*100)/100:value;}
-      const box=el.closest('.property-field'),source=box.querySelector('.property-source'),own=read(patch,path)!==undefined,name=layout.sources[`${layer.id}.${path.join('.')}`]||'Padrão do componente';
+      const box=el.closest('.property-field'),source=box.querySelector('.property-source'),own=read(patch,path)!==undefined,name=layout.sources[`${layer.id}.${path.join('.')}`]||(path.join('.')==='style.color'?layout.sources['theme.ink']:null)||'Padrão do componente';
       source.textContent=(own?'Override · ':'')+name;source.classList.toggle('is-own',own);source.title=name;
       let reset=box.querySelector('.property-reset');
       if(own&&!reset){reset=document.createElement('button');reset.className='property-reset';reset.textContent='↶';reset.dataset.reset=JSON.stringify(path);const label=box.querySelector('label > span').textContent;reset.setAttribute('aria-label',`Restaurar ${label} herdado`);reset.title='Restaurar valor herdado';box.append(reset);}else if(!own)reset?.remove();
@@ -49,15 +50,15 @@ export function createPropertyInspector({root,getState,onPatch,onReset,onCommit,
   });
   root.addEventListener('change',e=>{
     const el=e.target,pathText=el.dataset.path||el.dataset.condGroup;if(!pathText)return;
-    const state=getState(),layer=state.layout.elements.find(l=>l.id===state.selected[0]),condition=clone(layer.conditions),path=JSON.parse(pathText),node=read(condition,path);
+    const state=getState(),layer=state.layout.elements.find(l=>l.id===state.selected[0]),condition=clone(state.draft.elements.find(l=>l.id===layer.id)?.conditions??layer.conditions),path=JSON.parse(pathText),node=read(condition,path);
     if(el.dataset.condGroup){const old=node.all||node.any;delete node.all;delete node.any;node[el.value]=old;}
     else{const key=el.dataset.condField;node[key]=key==='value'?(el.value==='true'?true:el.value==='false'?false:node.op==='gt'?Number(el.value):el.value):el.value;}
     for(const id of state.selected)onPatch(id,{conditions:condition});onCommit();render();
   });
   root.addEventListener('click',e=>{
-    const reset=e.target.closest('[data-reset]');if(reset){for(const id of getState().selected)onReset(id,JSON.parse(reset.dataset.reset));onCommit();render();return;}
+    const reset=e.target.closest('[data-reset]');if(reset){for(const id of getState().selected)onReset(id,JSON.parse(reset.dataset.reset));onCommit();requestAnimationFrame(render);return;}
     const button=e.target.closest('[data-cond-action]');if(!button)return;
-    const state=getState(),layer=state.layout.elements.find(l=>l.id===state.selected[0]),path=JSON.parse(button.dataset.path||'[]'),action=button.dataset.condAction;let condition=clone(layer.conditions||{all:[]});
+    const state=getState(),layer=state.layout.elements.find(l=>l.id===state.selected[0]),path=JSON.parse(button.dataset.path||'[]'),action=button.dataset.condAction;let condition=clone(state.draft.elements.find(l=>l.id===layer.id)?.conditions??layer.conditions??{all:[]});
     if(action==='start')condition={all:[{binding:'context.mode',op:'exists'}]};
     else if(action==='remove'){if(!path.length){for(const id of state.selected)onPatch(id,{conditions:{all:[]}});onCommit();render();return;}const parent=read(condition,path.slice(0,-1));parent.splice(path.at(-1),1);}
     else{const node=read(condition,path),k=node.all?'all':'any';node[k].push(action==='group'?{all:[]}:{binding:'context.mode',op:'exists'});}

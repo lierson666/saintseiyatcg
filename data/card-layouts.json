@@ -150,6 +150,10 @@
           "opacity": 1,
           "visible": true,
           "locked": false,
+          "conditions": {
+            "binding": "card.tagline",
+            "op": "exists"
+          },
           "style": {
             "fontFamily": "Avenir",
             "fontSize": 36,
@@ -164,10 +168,6 @@
             "autoFit": true,
             "minFontSize": 24,
             "overflow": "visible"
-          },
-          "conditions": {
-            "binding": "card.tagline",
-            "op": "exists"
           }
         },
         {
@@ -184,6 +184,10 @@
           "opacity": 1,
           "visible": true,
           "locked": false,
+          "conditions": {
+            "binding": "card.cost",
+            "op": "exists"
+          },
           "style": {
             "fontFamily": "Futura",
             "fontSize": 145,
@@ -191,18 +195,14 @@
             "lineHeight": 1.2,
             "letterSpacing": 0,
             "align": "center",
-            "background": "#15111de8",
-            "borderWidth": 4,
-            "borderRadius": 115,
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
             "padding": 8,
             "autoFit": true,
             "minFontSize": 24,
             "overflow": "visible",
-            "borderColor": "#bfa66e"
-          },
-          "conditions": {
-            "binding": "card.cost",
-            "op": "exists"
+            "borderColor": "transparent"
           }
         },
         {
@@ -279,6 +279,10 @@
           "opacity": 1,
           "visible": true,
           "locked": false,
+          "conditions": {
+            "binding": "runtime.keywords",
+            "op": "exists"
+          },
           "style": {
             "fontFamily": "Avenir",
             "fontSize": 34,
@@ -293,10 +297,6 @@
             "autoFit": true,
             "minFontSize": 24,
             "overflow": "visible"
-          },
-          "conditions": {
-            "binding": "runtime.keywords",
-            "op": "exists"
           }
         },
         {
@@ -307,7 +307,7 @@
           "x": 205,
           "y": 1345,
           "width": 1078,
-          "height": 400,
+          "height": 340,
           "zIndex": 10,
           "rotation": 0,
           "opacity": 1,
@@ -335,14 +335,18 @@
           "component": "RulesBox",
           "binding": "card.resonance",
           "x": 205,
-          "y": 1755,
+          "y": 1695,
           "width": 1078,
-          "height": 150,
+          "height": 220,
           "zIndex": 10,
           "rotation": 0,
           "opacity": 1,
           "visible": true,
           "locked": false,
+          "conditions": {
+            "binding": "card.resonance",
+            "op": "exists"
+          },
           "style": {
             "fontFamily": "Avenir",
             "fontSize": 34,
@@ -357,10 +361,6 @@
             "autoFit": true,
             "minFontSize": 23,
             "overflow": "visible"
-          },
-          "conditions": {
-            "binding": "card.resonance",
-            "op": "exists"
           }
         },
         {
@@ -377,6 +377,11 @@
           "opacity": 1,
           "visible": true,
           "locked": false,
+          "label": "OWNER",
+          "conditions": {
+            "binding": "card.owner",
+            "op": "exists"
+          },
           "style": {
             "fontFamily": "Avenir",
             "fontSize": 26,
@@ -391,11 +396,6 @@
             "autoFit": true,
             "minFontSize": 24,
             "overflow": "visible"
-          },
-          "label": "OWNER",
-          "conditions": {
-            "binding": "card.owner",
-            "op": "exists"
           }
         },
         {
@@ -412,6 +412,10 @@
           "opacity": 1,
           "visible": true,
           "locked": false,
+          "conditions": {
+            "binding": "card.flavor",
+            "op": "exists"
+          },
           "style": {
             "fontFamily": "Avenir",
             "fontSize": 28,
@@ -426,10 +430,6 @@
             "autoFit": true,
             "minFontSize": 24,
             "overflow": "visible"
-          },
-          "conditions": {
-            "binding": "card.flavor",
-            "op": "exists"
           }
         },
         {
@@ -446,6 +446,20 @@
           "opacity": 1,
           "visible": true,
           "locked": false,
+          "label": "ATK",
+          "conditions": {
+            "all": [
+              {
+                "binding": "card.type",
+                "op": "eq",
+                "value": "Devotee"
+              },
+              {
+                "binding": "runtime.currentPower",
+                "op": "exists"
+              }
+            ]
+          },
           "style": {
             "fontFamily": "Avenir",
             "fontSize": 90,
@@ -461,20 +475,6 @@
             "minFontSize": 24,
             "overflow": "visible",
             "borderColor": "#bfa66e"
-          },
-          "label": "ATK",
-          "conditions": {
-            "all": [
-              {
-                "binding": "card.type",
-                "op": "eq",
-                "value": "Devotee"
-              },
-              {
-                "binding": "runtime.currentPower",
-                "op": "exists"
-              }
-            ]
           }
         },
         {
@@ -491,6 +491,20 @@
           "opacity": 1,
           "visible": true,
           "locked": false,
+          "label": "HP",
+          "conditions": {
+            "all": [
+              {
+                "binding": "card.type",
+                "op": "eq",
+                "value": "Devotee"
+              },
+              {
+                "binding": "runtime.currentHP",
+                "op": "exists"
+              }
+            ]
+          },
           "style": {
             "fontFamily": "Avenir",
             "fontSize": 90,
@@ -506,20 +520,80 @@
             "minFontSize": 24,
             "overflow": "visible",
             "borderColor": "#bfa66e"
-          },
-          "label": "HP",
+          }
+        },
+        {
+          "id": "equipment-power-bonus",
+          "name": "Equipped ATK Bonus",
+          "component": "StatBadge",
+          "binding": "card.equippedPowerBonus",
+          "x": 40,
+          "y": 1172,
+          "width": 178,
+          "height": 178,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "asset": "CARD-TEMPLATE/athena/gem_power.png",
           "conditions": {
-            "all": [
-              {
-                "binding": "card.type",
-                "op": "eq",
-                "value": "Devotee"
-              },
-              {
-                "binding": "runtime.currentHP",
-                "op": "exists"
-              }
-            ]
+            "binding": "card.equippedPowerBonus",
+            "op": "exists"
+          },
+          "style": {
+            "fontFamily": "Futura",
+            "fontSize": 99,
+            "fontWeight": 700,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 0,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible",
+            "stroke": "#141008",
+            "strokeWidth": 3
+          }
+        },
+        {
+          "id": "equipment-hp-bonus",
+          "name": "Equipped HP Bonus",
+          "component": "StatBadge",
+          "binding": "card.equippedHPBonus",
+          "x": 1254,
+          "y": 1160,
+          "width": 194,
+          "height": 195,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "asset": "CARD-TEMPLATE/athena/gem_resistance.png",
+          "conditions": {
+            "binding": "card.equippedHPBonus",
+            "op": "exists"
+          },
+          "style": {
+            "fontFamily": "Futura",
+            "fontSize": 99,
+            "fontWeight": 700,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 0,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible",
+            "stroke": "#141008",
+            "strokeWidth": 3
           }
         },
         {
@@ -534,8 +608,23 @@
           "zIndex": 10,
           "rotation": 0,
           "opacity": 1,
-          "visible": true,
+          "visible": false,
           "locked": false,
+          "label": "ARMOR HP",
+          "conditions": {
+            "all": [
+              {
+                "binding": "card.isArmor",
+                "op": "eq",
+                "value": true
+              },
+              {
+                "binding": "card.armorHP",
+                "op": "gt",
+                "value": 0
+              }
+            ]
+          },
           "style": {
             "fontFamily": "Avenir",
             "fontSize": 78,
@@ -551,21 +640,6 @@
             "minFontSize": 24,
             "overflow": "visible",
             "borderColor": "#bfa66e"
-          },
-          "label": "ARMOR HP",
-          "conditions": {
-            "all": [
-              {
-                "binding": "card.isArmor",
-                "op": "eq",
-                "value": true
-              },
-              {
-                "binding": "card.armorHP",
-                "op": "gt",
-                "value": 0
-              }
-            ]
           }
         },
         {
@@ -580,8 +654,13 @@
           "zIndex": 10,
           "rotation": 0,
           "opacity": 1,
-          "visible": true,
+          "visible": false,
           "locked": false,
+          "conditions": {
+            "binding": "card.isEquipment",
+            "op": "eq",
+            "value": true
+          },
           "style": {
             "fontFamily": "Avenir",
             "fontSize": 30,
@@ -597,11 +676,6 @@
             "minFontSize": 24,
             "overflow": "visible",
             "borderColor": "#bfa66e"
-          },
-          "conditions": {
-            "binding": "card.isEquipment",
-            "op": "eq",
-            "value": true
           }
         },
         {
@@ -618,6 +692,12 @@
           "opacity": 1,
           "visible": true,
           "locked": false,
+          "label": "SOUL",
+          "conditions": {
+            "binding": "card.type",
+            "op": "eq",
+            "value": "God"
+          },
           "style": {
             "fontFamily": "Avenir",
             "fontSize": 86,
@@ -632,12 +712,6 @@
             "autoFit": true,
             "minFontSize": 24,
             "overflow": "visible"
-          },
-          "label": "SOUL",
-          "conditions": {
-            "binding": "card.type",
-            "op": "eq",
-            "value": "God"
           }
         },
         {
@@ -654,6 +728,12 @@
           "opacity": 1,
           "visible": true,
           "locked": false,
+          "label": "ATTACK",
+          "conditions": {
+            "binding": "card.type",
+            "op": "eq",
+            "value": "God"
+          },
           "style": {
             "fontFamily": "Avenir",
             "fontSize": 86,
@@ -668,12 +748,6 @@
             "autoFit": true,
             "minFontSize": 24,
             "overflow": "visible"
-          },
-          "label": "ATTACK",
-          "conditions": {
-            "binding": "card.type",
-            "op": "eq",
-            "value": "God"
           }
         },
         {
@@ -690,6 +764,12 @@
           "opacity": 1,
           "visible": true,
           "locked": false,
+          "label": "AWAKEN",
+          "conditions": {
+            "binding": "card.type",
+            "op": "eq",
+            "value": "God"
+          },
           "style": {
             "fontFamily": "Avenir",
             "fontSize": 86,
@@ -704,12 +784,6 @@
             "autoFit": true,
             "minFontSize": 24,
             "overflow": "visible"
-          },
-          "label": "AWAKEN",
-          "conditions": {
-            "binding": "card.type",
-            "op": "eq",
-            "value": "God"
           }
         },
         {
@@ -756,6 +830,19 @@
           "opacity": 1,
           "visible": true,
           "locked": false,
+          "conditions": {
+            "all": [
+              {
+                "binding": "runtime.counters",
+                "op": "exists"
+              },
+              {
+                "binding": "context.mode",
+                "op": "neq",
+                "value": "print"
+              }
+            ]
+          },
           "style": {
             "fontFamily": "Avenir",
             "fontSize": 30,
@@ -770,19 +857,6 @@
             "autoFit": true,
             "minFontSize": 24,
             "overflow": "visible"
-          },
-          "conditions": {
-            "all": [
-              {
-                "binding": "runtime.counters",
-                "op": "exists"
-              },
-              {
-                "binding": "context.mode",
-                "op": "neq",
-                "value": "print"
-              }
-            ]
           }
         },
         {
@@ -799,6 +873,10 @@
           "opacity": 1,
           "visible": true,
           "locked": false,
+          "conditions": {
+            "binding": "runtime.status",
+            "op": "exists"
+          },
           "style": {
             "fontFamily": "Avenir",
             "fontSize": 30,
@@ -813,10 +891,6 @@
             "autoFit": true,
             "minFontSize": 24,
             "overflow": "visible"
-          },
-          "conditions": {
-            "binding": "runtime.status",
-            "op": "exists"
           }
         },
         {
@@ -926,6 +1000,10 @@
           "opacity": 1,
           "visible": false,
           "locked": false,
+          "conditions": {
+            "binding": "card.reminder",
+            "op": "exists"
+          },
           "style": {
             "fontFamily": "Avenir",
             "fontSize": 25,
@@ -940,10 +1018,6 @@
             "autoFit": true,
             "minFontSize": 24,
             "overflow": "visible"
-          },
-          "conditions": {
-            "binding": "card.reminder",
-            "op": "exists"
           }
         }
       ],
@@ -1064,11 +1138,72 @@
         },
         {
           "id": "rules",
+          "binding": "card.divinePower",
           "y": 530,
-          "height": 1250,
+          "height": 210,
           "style": {
-            "fontSize": 39,
-            "minFontSize": 24
+            "fontSize": 42,
+            "minFontSize": 32
+          }
+        },
+        {
+          "id": "god-awaken",
+          "name": "God · Awaken",
+          "component": "RulesBox",
+          "binding": "card.awakenRules",
+          "x": 205,
+          "y": 755,
+          "width": 1078,
+          "height": 300,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 42,
+            "fontWeight": 400,
+            "lineHeight": 1.18,
+            "letterSpacing": 0,
+            "align": "left",
+            "background": "#100e16e8",
+            "borderWidth": 0,
+            "borderRadius": 8,
+            "padding": 18,
+            "autoFit": true,
+            "minFontSize": 32,
+            "overflow": "visible"
+          }
+        },
+        {
+          "id": "god-ultimate",
+          "name": "God · Ultimate",
+          "component": "RulesBox",
+          "binding": "card.ultimateRules",
+          "x": 205,
+          "y": 1070,
+          "width": 1078,
+          "height": 780,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 40,
+            "fontWeight": 400,
+            "lineHeight": 1.18,
+            "letterSpacing": 0,
+            "align": "left",
+            "background": "#100e16e8",
+            "borderWidth": 0,
+            "borderRadius": 8,
+            "padding": 18,
+            "autoFit": true,
+            "minFontSize": 32,
+            "overflow": "visible"
           }
         },
         {
@@ -1095,7 +1230,38 @@
         "value": "Equipment",
         "surface": "card"
       },
-      "elements": [],
+      "elements": [
+        {
+          "id": "type",
+          "y": 1040
+        },
+        {
+          "id": "equipment-power-bonus",
+          "y": 1045
+        },
+        {
+          "id": "equipment-hp-bonus",
+          "y": 1033
+        },
+        {
+          "id": "keywords",
+          "y": 1140
+        },
+        {
+          "id": "divider",
+          "y": 1202
+        },
+        {
+          "id": "rules",
+          "y": 1220,
+          "height": 425
+        },
+        {
+          "id": "resonance",
+          "y": 1655,
+          "height": 255
+        }
+      ],
       "revision": 0
     },
     {
@@ -1637,6 +1803,120 @@
         "ink": "#fff0bf",
         "background": "#14121c"
       }
+    },
+    {
+      "id": "base-reading-god-armor",
+      "schemaVersion": 1,
+      "name": "Base · Leitura · God Armor",
+      "scope": {
+        "level": "type",
+        "value": "Equipment",
+        "surface": "card",
+        "subtype": "God Armor"
+      },
+      "elements": [
+        {
+          "id": "type",
+          "y": 950
+        },
+        {
+          "id": "equipment-power-bonus",
+          "y": 925
+        },
+        {
+          "id": "equipment-hp-bonus",
+          "y": 913
+        },
+        {
+          "id": "divider",
+          "y": 1080
+        },
+        {
+          "id": "rules",
+          "x": 160,
+          "y": 1100,
+          "width": 1168,
+          "height": 630,
+          "style": {
+            "fontSize": 44,
+            "minFontSize": 32
+          }
+        },
+        {
+          "id": "resonance",
+          "x": 160,
+          "y": 1740,
+          "width": 1168,
+          "height": 200,
+          "style": {
+            "fontSize": 40,
+            "minFontSize": 32
+          }
+        },
+        {
+          "id": "flavor",
+          "visible": false
+        }
+      ],
+      "revision": 0,
+      "extends": "base-type-equipment"
+    },
+    {
+      "id": "base-reading-divine-artifact",
+      "schemaVersion": 1,
+      "name": "Base · Leitura · Divine Artifact",
+      "scope": {
+        "level": "type",
+        "value": "Equipment",
+        "surface": "card",
+        "subtype": "Divine Artifact"
+      },
+      "elements": [
+        {
+          "id": "type",
+          "y": 950
+        },
+        {
+          "id": "equipment-power-bonus",
+          "y": 925
+        },
+        {
+          "id": "equipment-hp-bonus",
+          "y": 913
+        },
+        {
+          "id": "divider",
+          "y": 1080
+        },
+        {
+          "id": "rules",
+          "x": 160,
+          "y": 1100,
+          "width": 1168,
+          "height": 630,
+          "style": {
+            "fontSize": 44,
+            "minFontSize": 32
+          }
+        },
+        {
+          "id": "resonance",
+          "x": 160,
+          "y": 1740,
+          "width": 1168,
+          "height": 200,
+          "style": {
+            "fontSize": 40,
+            "minFontSize": 32
+          }
+        },
+        {
+          "id": "flavor",
+          "visible": false
+        }
+      ],
+      "revision": 0,
+      "extends": "base-type-equipment"
     }
   ],
   "drafts": [
@@ -1899,6 +2179,34 @@
       "elements": [],
       "revision": 0,
       "extends": "base-inspector"
+    },
+    {
+      "id": "layout-reading-god-armor",
+      "schemaVersion": 1,
+      "name": "Leitura · God Armor",
+      "scope": {
+        "level": "type",
+        "value": "Equipment",
+        "surface": "card",
+        "subtype": "God Armor"
+      },
+      "elements": [],
+      "revision": 0,
+      "extends": "base-reading-god-armor"
+    },
+    {
+      "id": "layout-reading-divine-artifact",
+      "schemaVersion": 1,
+      "name": "Leitura · Divine Artifact",
+      "scope": {
+        "level": "type",
+        "value": "Equipment",
+        "surface": "card",
+        "subtype": "Divine Artifact"
+      },
+      "elements": [],
+      "revision": 0,
+      "extends": "base-reading-divine-artifact"
     }
   ],
   "published": [],

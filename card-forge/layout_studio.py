@@ -226,6 +226,7 @@ def image_dimensions(path):
 
 def project_artwork(root=ROOT):
     """Publica apenas metadados visuais já existentes, com enquadramento e proporção."""
+    root = root.resolve()
     result = {}
     for path in (root / 'card-forge/projects').glob('*.json'):
         if not ID.fullmatch(path.stem) or not path.resolve().is_relative_to((root / 'card-forge/projects').resolve()):
