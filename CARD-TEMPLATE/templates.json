@@ -1,5 +1,5 @@
 {
-  "_notas_pt": "Spec dos templates do card-forge. Coordenadas no canvas nativo 1488x2091 (2.5x3.5 in, ~595 dpi), medidas dos PSDs em FRAMES/. Peças vêm de pieces.json; 'dy' desloca a peça na vertical, 'rect' estica/move. Textos: x,y = centro.",
+  "_notas_pt": "Spec dos templates do card-forge. Coordenadas no canvas nativo 1488x2091 (2.5x3.5 in, ~595 dpi), medidas dos PSDs em FRAMES/. Peças vêm de pieces.json; 'dy' desloca a peça na vertical, 'rect' estica/move. Textos: x,y = centro. Diretriz visual de 25/10/2026: rodapé sem badges EQUIP/DAMAGE/Armor HP; bônus equipados ficam na linha central. Símbolo circular de Cosmo indica Cosmoble.",
   "canvas": { "w": 1488, "h": 2091 },
   "styles": {
     "title":    { "font": "italic 700 {s}px Futura, 'Futura PT', 'Century Gothic', sans-serif", "glow": true },
@@ -71,8 +71,6 @@
         { "kind": "rules", "rect": [221, 1310, 1046, 515], "size": 42 },
         { "kind": "piece", "piece": "athena/divider", "dy": 3 },
         { "kind": "text", "field": "flavour", "style": "flavour", "x": 753, "y": 1895, "size": 42, "maxW": 1100 },
-        { "kind": "gem", "piece": "athena/gem_equip", "field": "equip", "label": "EQUIP", "size": 80 },
-        { "kind": "gem", "piece": "athena/gem_damage", "field": "damage", "label": "DAMAGE", "size": 80 },
         { "kind": "rarity", "x": 744, "y": 2013, "h": 72 }
       ]
     },
@@ -95,8 +93,6 @@
         { "kind": "rules", "rect": [221, 1640, 1046, 190], "size": 42 },
         { "kind": "piece", "piece": "athena/divider", "dy": 3 },
         { "kind": "text", "field": "flavour", "style": "flavour", "x": 753, "y": 1893, "size": 42, "maxW": 1100 },
-        { "kind": "gem", "piece": "athena/gem_equip", "field": "equip", "label": "EQUIP", "size": 80 },
-        { "kind": "gem", "piece": "athena/gem_damage", "field": "damage", "label": "DAMAGE", "size": 80 },
         { "kind": "rarity", "x": 744, "y": 2013, "h": 72 }
       ]
     },
@@ -115,8 +111,6 @@
         { "kind": "rules", "rect": [184, 1580, 1120, 250], "size": 42 },
         { "kind": "piece", "piece": "athena/divider", "dy": 3 },
         { "kind": "text", "field": "flavour", "style": "flavour", "x": 753, "y": 1894, "size": 42, "maxW": 1100 },
-        { "kind": "gem", "piece": "athena/gem_equip", "field": "equip", "label": "EQUIP", "size": 80 },
-        { "kind": "gem", "piece": "athena/gem_damage", "field": "damage", "label": "DAMAGE", "size": 80 },
         { "kind": "rarity", "x": 744, "y": 2013, "h": 72 }
       ]
     },

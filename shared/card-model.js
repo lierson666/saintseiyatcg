@@ -1,7 +1,7 @@
 // Contrato comum entre importador, editor e motor. Texto de carta não executa código.
 import {armorCard,ARMOR_SUBTYPES,CHARACTER_ORIGINS} from './rules-policy.js';
 export const RULES_VERSION = '2.1';
-export const TYPES = ['God','Domain','Devotee','Equipment','Support','Relic','Technique','Moment'];
+export const TYPES = ['God','Domain','Devotee','Equipment','Support','Relic','Spell','Technique','Moment'];
 export const FACTIONS = ['Athena','Poseidon','Hades','Ares','Artemis','Neutral'];
 export const KEYWORDS = ['Guardian','Nimble','Cheater','Long Range','Pierce','Impulse','Sealed','Unfaith','Afterlife'];
 export const OPERATIONS = new Set(['curar','alma','comprar','descartar','atributo','keyword','prevenir','preparar','esgotar','mover','dano','dano_area','mover_dano','rivalizar','encerrar_rivalidade','redirecionar_strike','desconto','olhar','base_extra','anular','opcional','retornar','remover_guardian','dano_rivais','controlar','cosmo_temporario','reparar']);

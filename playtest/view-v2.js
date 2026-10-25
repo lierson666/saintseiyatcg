@@ -4,6 +4,7 @@ import {battleGuide,journalEntries} from './battle-guide.js?v=20261024-4';
 import {renderLiveCard,illustration} from '../shared/live-card.js?v=20261024-4';
 import {renderAdvantage,sleeve} from './cosmetics.js?v=20261024-4';
 import {renderRules,presentationRules} from '../shared/card-text.js?v=20261024-4';
+import {renderPublishedInspector} from '../shared/layout-studio/runtime.js';
 const opposite=k=>k==='A'?'B':'A';
 const encode=command=>escape(JSON.stringify(command));
 const button=(command,label,cls='quiet-button')=>`<button class="${cls}" data-command="${encode(command)}">${escape(label)}</button>`;
@@ -68,6 +69,13 @@ export function renderChoice(game,viewer){
 }
 export function renderInspector(card,game,uid=null,viewer='A'){
   const l=uid?game?.locate(uid):null,s=l?game.stats(uid):null;
+  const studio=renderPublishedInspector(card,{stats:l?.zone==='battlefield'?s:null,instance:l?.card||null,art:illustration(card),equipment:l&&card.tipo==='Devotee'?game.equipment(uid):[]});
+  if(studio){
+    const legal=l?.playerKey===viewer?game.actions(viewer,uid):[];
+    const equipment=l&&card.tipo==='Devotee'?game.equipment(uid):[];
+    const rivalNote=l&&game.rivals(uid).length?'<p class="rule-callout">Rivalry: these Devotees may Strike each other while in guard.</p>':'';
+    return dialog(`${studio}${rivalNote}<p class="arena-card-instruction">${l?escape(battleGuide(game,viewer,uid).instruction):''}</p><div class="detail-actions">${legal.map(a=>button({...a,playerKey:l.playerKey},a.label)).join('')}${equipment.map(e=>`<button class="quiet-button" data-action="inspect" data-uid="${escape(e.card.uid)}">Inspect ${escape(e.cardData.nome_exibicao_en)}</button>`).join('')}</div>${l?.zone==='hand'&&l.playerKey===viewer?'<nav class="arena-card-cycle" aria-label="Browse your hand"><button data-action="cycle-card" data-direction="-1">Previous card</button><button data-action="cycle-card" data-direction="1">Next card</button></nav>':''}`,'inspector-dialog arena-inspector');
+  }
   const actions=l?.playerKey===viewer?game.actions(viewer,uid):[];
   const rivalLinks=l?.zone==='battlefield'&&card.tipo==='Devotee'?game.rivals(uid):[];
   const rivalNote=rivalLinks.length?"Rivals can Strike each other even in guard, and Guardian cannot step between them. The Rivalry lasts until one of them leaves the battlefield.":'';

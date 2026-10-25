@@ -1,4 +1,5 @@
 import {armorCard} from './rules-policy.js';
+import {equipmentCostText} from './card-visual-values.js';
 // A sintaxe visual é compartilhada entre impressão e jogo; nunca altera as regras salvas.
 export const escapeText=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const words=['Long Range','Multiguard(?: \\d+)?','Guardian','Nimble','Cheater','Pierce','Impulse','Sealed','Unfaith','Afterlife','Prepare','Prepared'];
@@ -38,7 +39,7 @@ export function textBlocks(texts){
 export function blocksMarkup(blocks){return blocks.map(b=>[b.heading?`**${b.heading.replace(/:$/,'')}:**`:'',b.body].filter(Boolean).join('\n')).join('\n\n');}
 export function presentationRules(card){
   const raw=card.habilidades_en||[];
-  const equipLine=armorCard(card)?`Equip cost: ${card.equipar_custo_ressonante??card.equipar_custo??1} Cosmo — Resonant Wearer / ${card.equipar_custo_outros??5} Cosmo — Other Devotees.`:null;
+  const equipLine=equipmentCostText(card);
   const armorHP=armorCard(card)&&card.vida>0?`Armor HP: ${card.vida}.`:null;
   if(!card.estagios?.length)return [...raw,...(equipLine?[equipLine]:[]),...(armorHP?[armorHP]:[])];
   const stages=card.estagios,sign=n=>`${n<0?'':'+'}${n||0}`,bonus=s=>`${sign(s.bonus_poder)} Power / ${sign(s.bonus_vida)} HP`;
