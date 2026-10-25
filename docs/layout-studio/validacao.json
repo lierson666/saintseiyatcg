@@ -1,0 +1,49 @@
+{
+  "data": "2026-10-25",
+  "node": {
+    "aprovados": 31,
+    "falhas": 0,
+    "comando": "node --test tools/test-card-presentation.mjs tools/test-layout-studio.mjs"
+  },
+  "python": {
+    "aprovados": 8,
+    "falhas": 0,
+    "comando": "python3 tools/test-layout-studio.py"
+  },
+  "servidor_selftest": "95 cartas preservadas; edição, append, catálogo vazio e Host/Origin verificados",
+  "navegador": {
+    "ok": true,
+    "evidencias": [
+      "Biblioteca real de 95 cartas; Pegasus Cloth V2 lê Armor HP 4 sem avisos.",
+      "Nome movido por drag e Inspector; undo, redo e restauração herdada verificados.",
+      "Resize visual do custo; regras, Armor HP, Equip e Resonance editados independentemente.",
+      "Renomeação, bloqueio, ordem e condições declarativas editados pelos controles visuais.",
+      "Layers, seleção múltipla, duplicação, ocultação e remoção; rascunho reaberto e publicado em QA.",
+      "Card Forge usa publicação e engine na prévia; Armor HP 4 → 2 com dano simulado.",
+      "PNG nativo, PNG transparente, SVG com assets incorporados e PDF exportados.",
+      "Laboratório usa game.stats(): Seiya com Cloth, bônus, dano, counters e keywords resulta em 5 ATK / 4 de 5 HP.",
+      "Temas Athena e Poseidon independentes, descobertos da biblioteca.",
+      "Partida real no Playtest de QA: layouts publicados na mão, botão direito abre Inspector publicado e X continua funcional; mulligan obrigatório mantém X bloqueado.",
+      "Segunda publicação e rollback real em biblioteca isolada.",
+      "Variação Uncommon publicada; override da Pegasus não modifica a Dragon Cloth.",
+      "Exportação e reimportação JSON pelo seletor de arquivos; template reaberto como rascunho.",
+      "God, Devotee, Spell e Domain reais revisados no mesmo editor, além de Pegasus Cloth V2.",
+      "Desktop e tablets 1024/768 sem overflow horizontal; reduced motion."
+    ],
+    "erros_js": [],
+    "hashes_preservados": {
+      "data/cards.json": "e26cdd4befdea0a13b58043ea0450ab7807f1ff6257f4428a72cad14f3eceb53",
+      "data/game-settings.json": "a23ff4b5c623d41feb7e95e11368c703f4898ddff7f342d5b4009c88774fe2e1",
+      "docs/guia-do-jogo.md": "7d975dbd0a6d3fa4ed4911313df893d9367da4f5b1be92101a74ef311466077c",
+      "playtest/engine-v2.js": "de02d21395b40765ffd4ac46a60a010977c61a675a3018a50e12f59e0f63758d",
+      "data/card-layouts.json": "6f90ad15b4b993047e7caa5bd14ec91e7aec39742033863dc1d52b7e436017c8"
+    }
+  },
+  "auditoria_tipografica": {
+    "cartas": 95,
+    "overflow": 0,
+    "fontes_menores_32px_em_rules": 0,
+    "pendencias_editoriais": 3
+  },
+  "publicacoes_na_biblioteca_real": 0
+}

@@ -2,7 +2,9 @@
 import copy
 import importlib.util
 import json
+import struct
 import tempfile
+import threading
 import unittest
 from pathlib import Path
 
@@ -84,6 +86,55 @@ class LayoutStoreTests(unittest.TestCase):
         saved = self.change('draft', template=self.draft)
         restored = self.change('restore', id=self.draft['id'], version=saved['revision'])
         self.assertEqual(restored['published'], [])
+
+    def test_project_crop_is_read_only_and_uses_image_dimensions(self):
+        folder = self.root / 'card-forge/projects'
+        folder.mkdir(parents=True)
+        art = self.root / 'card-forge/art'
+        art.mkdir()
+        (art / 'sample.png').write_bytes(b'\x89PNG\r\n\x1a\n' + b'\x00\x00\x00\rIHDR' + struct.pack('>II', 100, 200))
+        path = folder / 'example.json'
+        path.write_text(json.dumps({'subtitle': 'Visual only', 'art': {'src': 'art/sample.png', 'w': 150, 'x': -10, 'y': -20}}))
+        before = path.read_bytes()
+        result = studio.project_artwork(self.root)
+        self.assertEqual(result['example']['art']['h'], 300)
+        self.assertEqual(result['example']['art']['src'], 'card-forge/art/sample.png')
+        self.assertEqual(path.read_bytes(), before)
+
+
+class LayoutHTTPTests(unittest.TestCase):
+    def test_host_origin_conflict_and_bad_binding(self):
+        qa_spec = importlib.util.spec_from_file_location('studio_qa', ROOT / 'tools/serve-layout-studio-qa.py')
+        qa = importlib.util.module_from_spec(qa_spec)
+        qa_spec.loader.exec_module(qa)
+        server = qa.make_server()
+        threading.Thread(target=server.serve_forever, daemon=True).start()
+        import http.client
+        host = f'127.0.0.1:{server.server_port}'
+        def request(method, headers, value=None):
+            conn = http.client.HTTPConnection('127.0.0.1', server.server_port)
+            conn.request(method, '/api/layout-studio/draft' if method == 'POST' else '/api/layout-studio', body=json.dumps(value) if value is not None else None, headers=headers)
+            response = conn.getresponse()
+            result = response.status, json.loads(response.read())
+            conn.close()
+            return result
+        try:
+            self.assertEqual(request('GET', {'Host': 'evil.example'})[0], 403)
+            code, lib = request('GET', {'Host': host})
+            self.assertEqual(code, 200)
+            payload = {'template': lib['drafts'][0], 'expectedRevision': lib['revision']}
+            headers = {'Host': host, 'Origin': 'http://' + host, 'Content-Type': 'application/json'}
+            self.assertEqual(request('POST', {'Host': host}, payload)[0], 403)
+            self.assertEqual(request('POST', dict(headers, Origin='https://evil.example'), payload)[0], 403)
+            self.assertEqual(request('POST', headers, payload)[0], 200)
+            self.assertEqual(request('POST', headers, payload)[0], 409)
+            payload['expectedRevision'] += 1
+            payload['template']['elements'] = [{'id': 'name', 'binding': 'window.alert(1)'}]
+            self.assertEqual(request('POST', headers, payload)[0], 400)
+        finally:
+            server.shutdown()
+            server.server_close()
+            server.qa_temp.cleanup()
 
 
 if __name__ == '__main__':

@@ -2,7 +2,14 @@
 
 Editor de cartas no navegador (vanilla JS, sem build). Monta a carta no canvas nativo 1488×2091 (2.5×3.5 in, ~595 dpi) com as peças extraídas dos PSDs.
 
-**Rulebook 2.1:** o [novo livro](../docs/guia-do-jogo.md) e o primeiro conjunto de 300 cartas estão integrados ao editor e à arena local. A matriz de pagamentos, Pass, banco de Latent e Armor seguem o [guia 2.1](../docs/rulebook-2.1/implementacao.md). O catálogo tem 357 cartas: 300 novas e 57 anteriores preservadas. O histórico da importação e a aprovação do diff estão em [importacao-300-cartas](../docs/importacao-300-cartas/README.md).
+O catálogo local recebido nesta revisão contém **90 cartas Athena V6 e cinco Gods**. Dados e efeitos seguem o [livro de regras vigente](../docs/guia-do-jogo.md). O histórico dos conjuntos anteriores continua em [importacao-300-cartas](../docs/importacao-300-cartas/README.md).
+
+## Layout Studio
+
+O botão **Layout Studio** abre o editor visual adicional: layers, drag/resize, propriedades, condições, temas, layouts por tipo/subtipo/facção/raridade/carta e Inspector do jogo. **Salvar rascunho** e **Publicar** são ações separadas; partidas só usam versões publicadas. Há histórico/rollback, prévia via engine e exportação PNG/SVG/PDF. No STAR HILL o módulo abre dentro da mesma janela.
+
+Abra `http://localhost:8765/card-forge/studio.html`. Consulte a [documentação e os critérios verificados](../docs/layout-studio/README.md) e a [análise de layout das cartas V6](../docs/layout-studio/analise-v6.md). Nenhuma publicação é aplicada automaticamente.
+
 
 ## Abrir
 
@@ -67,7 +74,7 @@ No topo do editor, abra "Lote", escolha `.txt`, `.json` ou `.xlsx`, ou cole o te
 ### Dados novos e revisão
 
 - HP, Cosmoble, identidade de personagem, unicidade, slot, Owners, ressonâncias e estágios têm campos próprios. Cloth, Scale, Surplice, Warplate e Moonplate ocupam o mesmo slot de armadura; armas e acessórios são separados.
-- O custo no topo é o custo de jogar. **EQUIP** tem um indicador próprio em toda carta equipável, inclusive acessórios. Bônus Vanilla e de evolução são totais do estágio, nunca uma soma automática.
+- O custo no topo é o custo de jogar. **EQUIP** continua nas regras e no Inspector. Pela orientação visual de 25/10/2026, os badges EQUIP e DAMAGE/Armor HP saem do rodapé padrão; os valores laterais de Equipment mostram os bônus concedidos ao portador. Bônus Vanilla e de evolução são totais do estágio, nunca uma soma automática.
 - Importação XLSX lê valores literais em memória, sem executar fórmulas ou modificar o original. O compilador reconhece os textos do primeiro conjunto; texto sem mapeamento pede revisão em vez de inventar efeitos.
 - Alterar texto de habilidade sinaliza revisão dos efeitos jogáveis e bloqueia seu uso na arena até revisão. A edição numérica mantém a estrutura de efeitos; alterações de estágios/Owners atualizam o texto correspondente no diff.
 - "Gravar" continua exigindo a revisão do diff no diálogo. Carregar planilha, trocar representação e simular dano não gravam `data/cards.json`.
@@ -80,7 +87,7 @@ python3 card-forge/serve.py --selftest
 python3 tools/test-ui-v2.py
 ```
 
-O teste de navegador usa o pacote Python Playwright e Chrome em modo headless. Não é dependência do editor. As capturas ficam em `card-forge/out/qa-v2/`, fora do Git. `forge.checkCatalog()` verifica o roundtrip das 357 cartas e `forge.layoutReport()` verifica o encaixe tipográfico.
+O teste de navegador usa o pacote Python Playwright e Chrome em modo headless. Não é dependência do editor. As capturas ficam em `card-forge/out/qa-v2/`, fora do Git. `forge.checkCatalog()` verifica o roundtrip do catálogo carregado e `forge.layoutReport()` verifica o encaixe tipográfico.
 
 ## Templates
 
@@ -103,6 +110,6 @@ python3 card-forge/serve.py --selftest
 - Fontes: o PSD usa Futura100 LXT BoldOblique e ITC Avant Garde Pro, que não estão instaladas. O editor cai em Futura/Avenir do macOS, e o título sai um pouco mais estreito.
 - Efeitos de camada (brilho, sombra, bevel) são aproximados no canvas. O bevel não é reproduzido.
 - 14 smart objects vinculados (`.ai`) não existem no disco: `SlksHc.tif.ai`, `tbpBDu.tif.ai`, `Arte 3/4/6/7/8/9/10/11/13/16/24/27.ai`. As peças saíram da prévia raster salva dentro do PSD, então são bitmap, não vetor. A lista fica em `pieces.json → linked_missing`.
-- As 57 cartas anteriores mantêm seus textos históricos para revisão posterior. Na arena 2.0, Gods usam os atributos existentes e Domains suportados; habilidades legadas não são traduzidas automaticamente. Os seis decks iniciais usam as 300 cartas novas.
-- God: layout simplificado; o bloco Awaken entra no texto de regras. Ares, Artemis, Hades e Poseidon ainda estão sem números e texto no cards.json; o texto deles existe só nos PSDs.
+- Cartas legadas e decks dependem do catálogo e dos efeitos disponíveis na revisão local. Publicar um layout não compila nem cria habilidades na engine.
+- O renderer tradicional mantém sua composição de God; no Layout Studio há regiões independentes de Divine Power, Awaken e Ultimate para os cinco Gods do catálogo.
 - `card-forge/projects/` traz arte, subtítulo e flavour de Ares, Artemis, Hades, Poseidon e do Seiya, com a arte no enquadramento do PSD.
