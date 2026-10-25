@@ -1,0 +1,399 @@
+{
+  "versao": "2.1",
+  "partidas": 24,
+  "totais": {
+    "responses": 1,
+    "evolutions": 7,
+    "equips": 135,
+    "strikes": 404,
+    "banked": 124,
+    "anthemPlays": 8
+  },
+  "resultados": [
+    {
+      "estrategias": {
+        "A": "voltron",
+        "B": "anthem"
+      },
+      "iniciativa": "A",
+      "semente": 1,
+      "rodadas": 9,
+      "comandos": 224,
+      "vitoria": {
+        "winnerKey": "A",
+        "loserKey": "B",
+        "reason": "soul",
+        "draw": false
+      }
+    },
+    {
+      "estrategias": {
+        "A": "voltron",
+        "B": "anthem"
+      },
+      "iniciativa": "A",
+      "semente": 2,
+      "rodadas": 9,
+      "comandos": 263,
+      "vitoria": {
+        "winnerKey": "A",
+        "loserKey": "B",
+        "reason": "soul",
+        "draw": false
+      }
+    },
+    {
+      "estrategias": {
+        "A": "voltron",
+        "B": "anthem"
+      },
+      "iniciativa": "B",
+      "semente": 1,
+      "rodadas": 13,
+      "comandos": 397,
+      "vitoria": {
+        "winnerKey": "A",
+        "loserKey": "B",
+        "reason": "soul",
+        "draw": false
+      }
+    },
+    {
+      "estrategias": {
+        "A": "voltron",
+        "B": "anthem"
+      },
+      "iniciativa": "B",
+      "semente": 2,
+      "rodadas": 10,
+      "comandos": 345,
+      "vitoria": {
+        "winnerKey": "A",
+        "loserKey": "B",
+        "reason": "soul",
+        "draw": false
+      }
+    },
+    {
+      "estrategias": {
+        "A": "anthem",
+        "B": "control"
+      },
+      "iniciativa": "A",
+      "semente": 1,
+      "rodadas": 11,
+      "comandos": 372,
+      "vitoria": {
+        "winnerKey": "B",
+        "loserKey": "A",
+        "reason": "soul",
+        "draw": false
+      }
+    },
+    {
+      "estrategias": {
+        "A": "anthem",
+        "B": "control"
+      },
+      "iniciativa": "A",
+      "semente": 2,
+      "rodadas": 9,
+      "comandos": 294,
+      "vitoria": {
+        "winnerKey": "A",
+        "loserKey": "B",
+        "reason": "soul",
+        "draw": false
+      }
+    },
+    {
+      "estrategias": {
+        "A": "anthem",
+        "B": "control"
+      },
+      "iniciativa": "B",
+      "semente": 1,
+      "rodadas": 11,
+      "comandos": 295,
+      "vitoria": {
+        "winnerKey": "B",
+        "loserKey": "A",
+        "reason": "soul",
+        "draw": false
+      }
+    },
+    {
+      "estrategias": {
+        "A": "anthem",
+        "B": "control"
+      },
+      "iniciativa": "B",
+      "semente": 2,
+      "rodadas": 8,
+      "comandos": 214,
+      "vitoria": {
+        "winnerKey": "A",
+        "loserKey": "B",
+        "reason": "soul",
+        "draw": false
+      }
+    },
+    {
+      "estrategias": {
+        "A": "control",
+        "B": "aggro"
+      },
+      "iniciativa": "A",
+      "semente": 1,
+      "rodadas": 9,
+      "comandos": 229,
+      "vitoria": {
+        "winnerKey": "B",
+        "loserKey": "A",
+        "reason": "soul",
+        "draw": false
+      }
+    },
+    {
+      "estrategias": {
+        "A": "control",
+        "B": "aggro"
+      },
+      "iniciativa": "A",
+      "semente": 2,
+      "rodadas": 10,
+      "comandos": 281,
+      "vitoria": {
+        "winnerKey": "B",
+        "loserKey": "A",
+        "reason": "soul",
+        "draw": false
+      }
+    },
+    {
+      "estrategias": {
+        "A": "control",
+        "B": "aggro"
+      },
+      "iniciativa": "B",
+      "semente": 1,
+      "rodadas": 9,
+      "comandos": 228,
+      "vitoria": {
+        "winnerKey": "B",
+        "loserKey": "A",
+        "reason": "soul",
+        "draw": false
+      }
+    },
+    {
+      "estrategias": {
+        "A": "control",
+        "B": "aggro"
+      },
+      "iniciativa": "B",
+      "semente": 2,
+      "rodadas": 9,
+      "comandos": 228,
+      "vitoria": {
+        "winnerKey": "B",
+        "loserKey": "A",
+        "reason": "soul",
+        "draw": false
+      }
+    },
+    {
+      "estrategias": {
+        "A": "aggro",
+        "B": "resource"
+      },
+      "iniciativa": "A",
+      "semente": 1,
+      "rodadas": 11,
+      "comandos": 290,
+      "vitoria": {
+        "winnerKey": "A",
+        "loserKey": "B",
+        "reason": "soul",
+        "draw": false
+      }
+    },
+    {
+      "estrategias": {
+        "A": "aggro",
+        "B": "resource"
+      },
+      "iniciativa": "A",
+      "semente": 2,
+      "rodadas": 11,
+      "comandos": 388,
+      "vitoria": {
+        "winnerKey": "A",
+        "loserKey": "B",
+        "reason": "soul",
+        "draw": false
+      }
+    },
+    {
+      "estrategias": {
+        "A": "aggro",
+        "B": "resource"
+      },
+      "iniciativa": "B",
+      "semente": 1,
+      "rodadas": 13,
+      "comandos": 323,
+      "vitoria": {
+        "winnerKey": "A",
+        "loserKey": "B",
+        "reason": "soul",
+        "draw": false
+      }
+    },
+    {
+      "estrategias": {
+        "A": "aggro",
+        "B": "resource"
+      },
+      "iniciativa": "B",
+      "semente": 2,
+      "rodadas": 11,
+      "comandos": 370,
+      "vitoria": {
+        "winnerKey": "A",
+        "loserKey": "B",
+        "reason": "soul",
+        "draw": false
+      }
+    },
+    {
+      "estrategias": {
+        "A": "resource",
+        "B": "response"
+      },
+      "iniciativa": "A",
+      "semente": 1,
+      "rodadas": 10,
+      "comandos": 385,
+      "vitoria": {
+        "winnerKey": "A",
+        "loserKey": "B",
+        "reason": "soul",
+        "draw": false
+      }
+    },
+    {
+      "estrategias": {
+        "A": "resource",
+        "B": "response"
+      },
+      "iniciativa": "A",
+      "semente": 2,
+      "rodadas": 10,
+      "comandos": 311,
+      "vitoria": {
+        "winnerKey": "A",
+        "loserKey": "B",
+        "reason": "soul",
+        "draw": false
+      }
+    },
+    {
+      "estrategias": {
+        "A": "resource",
+        "B": "response"
+      },
+      "iniciativa": "B",
+      "semente": 1,
+      "rodadas": 7,
+      "comandos": 283,
+      "vitoria": {
+        "winnerKey": "B",
+        "loserKey": "A",
+        "reason": "soul",
+        "draw": false
+      }
+    },
+    {
+      "estrategias": {
+        "A": "resource",
+        "B": "response"
+      },
+      "iniciativa": "B",
+      "semente": 2,
+      "rodadas": 7,
+      "comandos": 182,
+      "vitoria": {
+        "winnerKey": "B",
+        "loserKey": "A",
+        "reason": "soul",
+        "draw": false
+      }
+    },
+    {
+      "estrategias": {
+        "A": "response",
+        "B": "voltron"
+      },
+      "iniciativa": "A",
+      "semente": 1,
+      "rodadas": 10,
+      "comandos": 303,
+      "vitoria": {
+        "winnerKey": "A",
+        "loserKey": "B",
+        "reason": "soul",
+        "draw": false
+      }
+    },
+    {
+      "estrategias": {
+        "A": "response",
+        "B": "voltron"
+      },
+      "iniciativa": "A",
+      "semente": 2,
+      "rodadas": 9,
+      "comandos": 256,
+      "vitoria": {
+        "winnerKey": "A",
+        "loserKey": "B",
+        "reason": "soul",
+        "draw": false
+      }
+    },
+    {
+      "estrategias": {
+        "A": "response",
+        "B": "voltron"
+      },
+      "iniciativa": "B",
+      "semente": 1,
+      "rodadas": 10,
+      "comandos": 284,
+      "vitoria": {
+        "winnerKey": "A",
+        "loserKey": "B",
+        "reason": "soul",
+        "draw": false
+      }
+    },
+    {
+      "estrategias": {
+        "A": "response",
+        "B": "voltron"
+      },
+      "iniciativa": "B",
+      "semente": 2,
+      "rodadas": 12,
+      "comandos": 417,
+      "vitoria": {
+        "winnerKey": "A",
+        "loserKey": "B",
+        "reason": "soul",
+        "draw": false
+      }
+    }
+  ],
+  "limite": "Perfis heurísticos e catálogo provisório: regressão de fluxo, não prova de balanceamento competitivo."
+}

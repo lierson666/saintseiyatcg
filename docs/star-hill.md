@@ -109,3 +109,24 @@ python3 tools/test-ui-v2.py
 ```
 
 Os testes de navegador requerem Python Playwright e Chrome. Capturas ficam em `card-forge/out/qa-star-hill/`, fora do Git. Os testes do backend usam diretório temporário; os de interface revisam e cancelam os diffs. Nenhum teste modifica o catálogo real, as regras oficiais ou a configuração real.
+
+## Atualizar o motor a partir do texto aprovado
+
+Na seção **Regras**, salvar e aprovar o livro mantém o texto oficial. O painel **Atualizar o jogo pelas regras** prepara a implementação separadamente:
+
+1. **Gerar atualização pelo texto** envia o livro já gravado, código necessário e exemplos estruturados ao Claude Code/Sonnet, usando a conta conectada no Mac. Rascunhos não gravados são recusados.
+2. **Revisar proposta e testes** mostra resumo, arquivos, diff integral e pendências. A geração não muda a engine.
+3. **Validar testes** aplica a proposta somente em uma cópia temporária e executa sintaxe e cenários Node no sandbox do macOS, sem rede nem acesso aos arquivos pessoais/projeto original.
+4. Após revisar, marcar a aprovação e **Aplicar atualização**. Testes falhando, decisão de regra bloqueante ou alterações concorrentes impedem a gravação. Abrir novamente o jogo e iniciar uma partida para carregar os módulos atualizados.
+
+Requer Node e Claude Code autenticado; não usa uma chave de API no navegador. Claude não recebe ferramentas, MCP, acesso ao Chrome, habilidades ou arquivos pessoais de áudio/HUD. Os textos recebidos são dados, não instruções de execução. A geração tem tempo e saída limitados e pode ser cancelada.
+
+Catálogo, livro, configurações, assets e backend ficam fora da lista de arquivos que o gerador pode alterar. O histórico em `star-hill/historico/motor/` preserva diff, testes e originais. A aplicação restaura os arquivos anteriores se uma gravação falhar. Reiniciar o servidor marca trabalhos ativos como interrompidos; nunca os aplica automaticamente. Atualização não faz commit, push, merge ou deploy.
+
+O indicador **Texto e motor sincronizados** corresponde ao hash do livro e dos arquivos efetivamente aplicados pelo painel; alterações manuais posteriores invalidam o recibo. Esse indicador não substitui revisão de regras ou balanceamento.
+
+## Contrato Rulebook 2.1
+
+A arena e as prévias dos editores usam o mesmo `createGame` de `playtest/engine-v2.js`. `shared/rules-policy.js` centraliza Base-only, Latent-only, custos de Equip por portador e conversão elegível. A interface recebe ações e pagamentos públicos do motor. Pass de rodada encerra ações comuns; prioridade continua separada. Latent persiste e o banco opcional aparece no encerramento.
+
+Card Forge oferece HP próprio de Living Armor, custos distintos de Equip, até quatro estágios e sequência explícita, origem de personagem e referências. Armor Broken permanece no campo com benefícios suspensos até Repair; distribuição de dano de combate e números das cartas aguardam revisão. Reimportar uma planilha preserva metadados existentes ausentes na fonte. Nenhuma prévia ou simulação regrava o catálogo. Veja [implementação e evidências](rulebook-2.1/implementacao.md).

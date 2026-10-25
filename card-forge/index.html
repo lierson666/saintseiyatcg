@@ -70,7 +70,7 @@
         </div>
         <div class="row">
           <label data-for="devotee">Power <input name="power" type="number"></label>
-          <label data-for="devotee">HP <input name="vida" type="number" min="1"></label><label data-for="devotee" id="legacyResistance">Resistance (legado) <input name="resistance" type="number"></label>
+          <label data-for="devotee relic_cloth">HP próprio <input name="vida" type="number" min="1"></label><label data-for="devotee" id="legacyResistance">Resistance (legado) <input name="resistance" type="number"></label>
           <label data-for="relic_cloth relic_weapon">Bônus P <input name="bonusPower" placeholder="+2"></label>
           <label data-for="relic_cloth relic_weapon">Bônus HP <input name="bonusResistance" placeholder="+0"></label>
         </div>
@@ -86,12 +86,13 @@
       </fieldset>
 
       <fieldset id="rulesV2">
-        <legend>Rulebook 2.0</legend>
+        <legend>Rulebook 2.1</legend>
         <label class="check"><input name="cosmoble" type="checkbox"> Cosmoble — pode virar Base</label>
-        <div id="characterFields"><label>Identidade do personagem <input name="personagem_id" placeholder="pegasus-seiya"></label><label class="check"><input name="personagem_unico" type="checkbox"> Personagem único no campo</label></div>
+        <div id="characterFields"><label>Origem do personagem<select name="origem_personagem"><option value="">— revisar no Card Craft —</option><option>CANON — KURUMADA</option><option>SAINT SEIYA — OUTRAS OBRAS</option><option>MITOLOGIA ADAPTADA</option><option>ORIGINAL TCG</option></select></label><label>Referências mitológicas (uma por linha)<textarea name="referencias_mitologicas_texto" rows="2"></textarea></label><label>Identidade do personagem <input name="personagem_id" placeholder="pegasus-seiya"></label><label class="check"><input name="personagem_unico" type="checkbox"> Personagem único no campo</label></div>
         <div id="equipmentFields"><label>Slot do equipamento<select name="slot_equipamento"><option value="">— selecionar —</option><option value="armadura">Armadura (uma por Devotee)</option><option value="arma">Arma</option><option value="acessorio">Acessório</option></select></label>
         <label>Owners (IDs separados por vírgula)<input name="donos" placeholder="pegasus-seiya, sagittarius-aiolos"></label>
-        <p class="hint">EQUIP é separado do custo de jogar. Ao trocar de portador, a armadura retorna a Vanilla.</p>
+        <label>Equip para portador ressonante<input name="equipar_custo_ressonante" type="number" min="0" placeholder="1 (padrão)"></label><label>Equip para outros Devotees<input name="equipar_custo_outros" type="number" min="0" placeholder="5 (padrão Armor)"></label>
+        <p class="hint">Armor: Cloth, Scale, Surplice, Warplate ou Moonplate. V1 está no Devotee; versões independentes começam em V2. Living Armor: HP próprio, dano persistente e Repair separado de cura. HP pendente deve permanecer em branco até revisão. EQUIP é separado do custo de jogar. Ao trocar de portador, a armadura retorna a Vanilla.</p>
         <div id="stageEditor"></div><button id="addStage" type="button">Adicionar estágio</button>
         <label>Ressonâncias (uma por linha: ID | texto em inglês)<textarea name="resonanceText" rows="3"></textarea></label></div>
         <p id="rulesReview" class="hint" role="status"></p>
@@ -158,6 +159,6 @@
     </div>
   </dialog>
 
-  <script type="module" src="forge.js"></script>
+  <script type="module" src="forge.js?v=20261024-4"></script>
 </body>
 </html>

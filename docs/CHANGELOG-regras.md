@@ -4,6 +4,25 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-24 — Living Armor & Persistence (seções 26A e 61)
+
+- **Antes → depois:** equipamentos sem dano próprio na regra-base → Armor viva com HP e dano próprios, persistentes entre rodadas/portadores/desequipamento/reset Vanilla. Morte do portador deixa a Armor no Battlefield, sem portador e com dano preservado.
+- **Broken:** ao atingir HP máximo permanece no Battlefield. O autor confirmou neste chat: suspender todos os bônus e habilidades concedidos pela Armor até Repair. Nomenclatura final sujeita a balanceamento.
+- **Repair:** restaura HP próprio de Armor até o máximo impresso; cura de Devotee é separada. Engine suporta dano direcionado/Repair e estado Broken sem destruir automaticamente a Armor.
+- **Pendências aprovadas para revisão:** valores de HP/resistência, distribuição do dano de combate, separação numérica da V1 na identidade do Devotee e custo/valor de Repair em Aries Mu. Nenhum número ou habilidade de carta foi inventado, e o diff anterior das 41 armaduras não foi ampliado.
+
+## 2026-10-24 — Rulebook 2.1 integrado (caps. II, III, VI, VII, X e XII)
+
+- **Antes → depois:** custos genéricos → Devotee/Armor/Ultimate Base-only; Technique resposta Latent-only; outros usos conforme matriz. Latent que expirava → banco persistente até 3, com conversão opcional de Bases não usadas no encerramento, sem perda das Bases; Cosmo temporário não é armazenado.
+- **Pass:** entrega provisória da oportunidade → encerra AÇÕES comuns do jogador até a rodada seguinte, preservando respostas. O adversário pode continuar agindo. Pass de prioridade permanece separado.
+- **Iniciativa:** vencedor escolhe quem começa; perdedor do sorteio recebe 1 Latent. Alternância e compras preservadas.
+- **Armor:** categoria universal, incluindo Moonplate/Satellites; V1 incorporada no Devotee, V2+ independentes; um slot de armadura, armas/acessórios separados. Equip por portador exato (padrão ressonante 1 / outros 5), custos específicos preservados. Quatro estágios suportados por todas as facções, sequência apenas expressa; requisitos de Owner impressos preservados.
+- **Catálogo:** o autor aprovou explicitamente o diff `rulebook-2.1/catalogo.diff` neste chat: 41 armaduras receberam categoria e custos explícitos de Equip. Os 357 IDs, nomes, textos, artes e programas foram preservados. Versões, afinidades faltantes, Moonplates e itens divinos aguardam Card Craft, sem criação automática.
+- **Identidades:** Athena e afinidades Bronze/Gold documentadas; outras facções preliminares. Origem de personagem e referências mitológicas suportadas. Limites de God Armor/Divine Artifact validam composição editorial do conjunto, nunca decks.
+- **Engine/STAR HILL:** política central de pagamentos, escolhas de banco e Equip, guia/log/ajuda e Card Forge integrados. Corrigido agendador da IA que impedia escolhas durante a resolução. Atualizador por texto aprovado gera diff pelo Claude Code, testa em cópia isolada e exige revisão/aprovação antes de aplicar; não publica sozinho.
+- **Compatibilidade:** Guarda, Rivalidade, God, Domain, Soul, Guardian, Nimble, Long Range, Pierce, Sealed, retaliação e derrota preservados. Definição canônica de Sealed verificada nas seções 48/59; nenhuma alteração.
+- **Evidências e pendências:** `rulebook-2.1/implementacao.md`, `rulebook-2.1/migracao-catalogo.md` e `rulebook-2.1/simulacoes.json`. Registro integral da aprovação preservado em `rulebook-2.1/decisoes-aprovadas.md`. Publicação restrita a branch/PR; sem merge/deploy.
+
 ## 2026-10-24 — Fim do Engage; Guarda e Rivalidade (caps. III, IV, V, IX, XI, XII)
 
 - **Antes:** Engage persistente entre combatentes, ENG compartilhado (3 por God/rodada), Disengage, troca de Engage, Multiguard X e Guardian por intercepção de declarações de Engage. Strike só contra o oponente vinculado.
@@ -68,3 +87,10 @@ Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências
 ## 2026-10-22 — Vanilla 1.0
 
 Base oficial: `docs/guia-do-jogo.md` vira a fonte da verdade das regras do projeto.
+
+
+## 24/10/2026 — STAR HILL
+
+Motivo: Atualização do Rulebook 2.0 para 2.1, consolidando as decisões aprovadas sobre Base Cosmo, banco persistente de Latent Cosmo, iniciativa, Pass, Techniques como resposta, categoria universal Armor, Resonance, progressão Voltron de quatro estágios, nomenclatura Moonplate/Satellites e limites de uma God Armor e um Divine Artifact por facção no Vanilla Set. Inclui também diretrizes de identidade das facções e criação de personagens mitologicamente fundamentados para Ares e Artemis.
+
+Diff integral preservado em `star-hill/historico/1792867524450714000.json`. Mudança aprovada no painel; revisar implementação do motor antes de considerar o comportamento atualizado.

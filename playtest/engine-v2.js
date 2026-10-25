@@ -1,5 +1,6 @@
-// Motor 2.0 independente do DOM. As escolhas humanas e a apresentação não decidem regras.
-import {isArmor,isEquipment,validateDeck} from '../shared/card-model.js';
+// Motor 2.1 independente do DOM. As escolhas humanas e a apresentação não decidem regras.
+import {isArmor,isEquipment,validateDeck} from '../shared/card-model.js?v=20261024-4';
+import {LATENT_CAP,paymentUnit,paymentPlans,unitLabel,equipCost,bankable} from '../shared/rules-policy.js';
 const PLAYERS=['A','B'],other=k=>k==='A'?'B':'A';
 const copy=value=>structuredClone(value);
 const zones=['deck','hand','battlefield','cosmo_base','tartarus','void','stack'];
@@ -36,27 +37,32 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
   function instance(id,key){return{uid:nextId('card'),cardId:id,owner:key,prepared:false,damage:0,stage:0,attachedToUid:null,awakened:false,struckRound:0,evolvedRound:0,returnedRound:0,enteredRound:0,modifiers:[],usedRound:{},usedGame:{}};}
   function shuffle(list){const result=[...list];for(let i=result.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[result[i],result[j]]=[result[j],result[i]];}return result;}
   const unlockedStages=l=>(l.cardData.estagios||[]).slice(0,(l.card.stage||0)+1).filter((s,index)=>!s.exclusivo_estagio||index===l.card.stage);
+  const armorLife=l=>{const maxHP=isArmor(l?.cardData)&&Number.isFinite(l.cardData.vida)&&l.cardData.vida>0?l.cardData.vida:null;return{maxHP,hp:maxHP===null?null:Math.max(0,maxHP-l.card.damage),broken:maxHP!==null&&l.card.damage>=maxHP};};
+  const active=l=>!isArmor(l?.cardData)||!armorLife(l).broken;
   function abilities(l){
+    if(!active(l))return [];
     const list=[...(program(l.cardData).habilidades||[])];
     for(const stage of unlockedStages(l))list.push(...(stage.habilidades||[]));
     for(const resonance of l.cardData.ressonancias||[])if(locate(l.card.attachedToUid)?.cardData.personagem_id===resonance.personagem_id)list.push(...(resonance.habilidades||[]));
     if(l.card.awakened)list.push(...(l.cardData.despertar?.habilidades||[]));
-    for(const e of attachments(l.card.uid))list.push(...(program(e.cardData).habilidades_portador||[]));
+    for(const e of attachments(l.card.uid).filter(active))list.push(...(program(e.cardData).habilidades_portador||[]));
     return list.filter(a=>(a.zona||'battlefield')===l.zone);
   }
   function stats(uid,combat=null){
     const l=locate(typeof uid==='string'?uid:uid.uid);if(!l)return null;
-    const c=l.cardData,i=l.card;let power=Number(c.power||0),maxHP=Number(c.vida??c.resistance??0);
+    const c=l.cardData,i=l.card;
+    if(isArmor(c))return{power:0,...armorLife(l),damage:i.damage,keywords:active(l)?[...(c.keywords_en||[])]:[],prepared:i.prepared,stage:i.stage||0,protectionActive:active(l),armor:true};
+    let power=Number(c.power||0),maxHP=Number(c.vida??c.resistance??0);
     let keywords=[...(c.keywords_en||[])];
     if(l.zone==='tartarus'&&c.tipo==='Devotee')keywords.push('Afterlife');
     if(l.zone==='battlefield'){
       for(const m of i.modifiers||[]){power+=m.power||0;maxHP+=m.hp||0;if(m.keyword)keywords.push(m.keyword);}
-      for(const e of attachments(i.uid)){
+      for(const e of attachments(i.uid).filter(active)){
         const stage=e.cardData.estagios?.[e.card.stage||0];
         if(stage){power+=stage.bonus_poder||0;maxHP+=stage.bonus_vida||0;keywords.push(...unlockedStages(e).flatMap(s=>s.keywords_en||[]));}
       }
       if(player(l.playerKey).domainId==='athena-051'&&c.tipo==='Devotee')maxHP++;
-      for(const source of field())for(const p of program(source.cardData).passivas||[]){
+      for(const source of field().filter(active))for(const p of program(source.cardData).passivas||[]){
         if(source.playerKey===l.playerKey&&p.tipo==='aura_cloth'&&armor(i.uid)?.cardData.subtipos.includes('Cloth'))maxHP+=p.vida||0;
         if(source.playerKey===l.playerKey&&p.tipo==='aura_strike'&&combat?.uid===i.uid)power+=p.poder||0;
         if(source.playerKey!==l.playerKey&&p.tipo==='reduzir_rivais_marinas'&&relation(i.uid).some(link=>{const v=locate(peer(link,i.uid));return v?.playerKey===source.playerKey&&v.cardData.subtipos?.includes('Marina');}))power+=p.poder||0;
@@ -92,15 +98,21 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     log(`${la.cardData.nome_exibicao_en} and ${lb.cardData.nome_exibicao_en} are now Rivals.`);
     present('combat:rivals',{uid:a,playerKey:la.playerKey,target:desc(lb)});return true;
   }
+  function resources(key){return{base:player(key).zones.cosmo_base.filter(i=>i.prepared&&!i.temporary&&!i.temporaria).length,latent:player(key).latent,temporary:player(key).temporaryCosmo||0};}
   function available(key,unit='cosmo'){
-    const bases=player(key).zones.cosmo_base.filter(i=>i.prepared).length;
-    return unit==='latent_cosmo'?player(key).latent:unit==='base_cosmo'?bases:bases+player(key).latent;
+    const r=resources(key);return unit==='latent_cosmo'?r.latent:unit==='base_cosmo'?r.base:r.base+r.latent+r.temporary;
+  }
+  const castUnit=(key,c)=>paymentUnit('play',c,state.priority===key,c.unidade_custo);
+  function payment(key,uid,type='play'){
+    const c=locate(uid)?.cardData;if(!c)return null;
+    const unit=paymentUnit(type,c,type==='play'&&state.priority===key,c.unidade_custo),amount=cost(key,c,null,type==='ultimate'?c.ultimate?.custo||0:c.custo||0);
+    return{unit,amount,available:available(key,unit),legal:available(key,unit)>=amount,label:unitLabel(unit)};
   }
   const matchType=(c,type)=>type==='Afterlife'?false:type==='Retorno'?program(c).efeitos?.some(e=>e.op==='retornar'):c.tipo===type||c.subtipos?.includes(type);
   function discounts(key,c,kind=null){
     const list=[];
     for(const d of player(key).discounts)if((kind&&d.type===kind)||matchType(c,d.type))list.push({n:d.n,discount:d});
-    for(const l of field().filter(l=>l.playerKey===key))for(const [index,p] of (program(l.cardData).passivas||[]).entries()){
+    for(const l of field().filter(l=>l.playerKey===key&&active(l)))for(const [index,p] of (program(l.cardData).passivas||[]).entries()){
       if(p.tipo!=='desconto_primeiro'||l.card.usedRound[`discount-${index}`])continue;
       if(!((kind&&p.carta===kind)||(kind==='Afterlife'&&p.carta==='Retorno')||matchType(c,p.carta)))continue;
       if(p.faccao&&p.faccao!==c.faccao)continue;
@@ -110,24 +122,28 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     return list;
   }
   const cost=(key,c,kind=null,baseCost=c.custo||0)=>Math.max(0,baseCost-discounts(key,c,kind).reduce((n,d)=>n+d.n,0));
+  function spend(key,plan){
+    const p=player(key),r=resources(key);
+    if(!plan||plan.base>r.base||plan.latent>r.latent||plan.temporary>r.temporary)return false;
+    p.latent-=plan.latent;p.temporaryCosmo=(p.temporaryCosmo||0)-plan.temporary;
+    p.zones.cosmo_base.filter(i=>i.prepared&&!i.temporary&&!i.temporaria).slice(0,plan.base).forEach(i=>i.prepared=false);
+    log(`Player ${key} pays ${plan.base} Base + ${plan.latent} Latent${plan.temporary?` + ${plan.temporary} temporary Cosmo`:''}.`);return true;
+  }
   function pay(key,amount,unit='cosmo',plan=null){
-    if(amount<0||available(key,unit)<amount)return false;
-    const latent=unit==='base_cosmo'?0:unit==='latent_cosmo'?amount:plan?.latent??Math.min(player(key).latent,amount);
-    const bases=amount-latent,ready=player(key).zones.cosmo_base.filter(i=>i.prepared);
-    if(!Number.isInteger(latent)||latent<0||latent>player(key).latent||bases>ready.length||unit==='latent_cosmo'&&bases)return false;
-    player(key).latent-=latent;ready.slice(0,bases).forEach(i=>i.prepared=false);return true;
+    const plans=paymentPlans(resources(key),[{amount,unit}]);
+    return spend(key,plan?plans.find(p=>p.latent===plan.latent&&p.temporary===(plan.temporary||0)):plans[0]);
   }
   function consumeDiscounts(key,c,kind=null){
     const ds=discounts(key,c,kind);
     for(const d of ds)if(d.source)d.source.usedRound[`discount-${d.index}`]=1;
     player(key).discounts=player(key).discounts.filter(d=>!ds.some(x=>x.discount===d));
   }
-  function ordinary(key){return state&&!state.victory&&!choice&&!resolving&&!stack.length&&!state.priority&&state.phase==='actions'&&state.currentPlayer===key;}
+  function ordinary(key){return state&&!state.victory&&!choice&&!resolving&&!stack.length&&!state.priority&&state.phase==='actions'&&state.currentPlayer===key&&!player(key).passed;}
   function canPlay(key,uid){
-    const l=locate(uid);if(!l||l.cardData.motor_revisao_pendente||l.playerKey!==key||l.zone!=='hand'||['God','Domain'].includes(l.cardData.tipo))return false;
+    const l=locate(uid);if(!l||isEquipment(l.cardData)&&l.cardData.versao_armadura===1||l.cardData.motor_revisao_pendente||l.playerKey!==key||l.zone!=='hand'||['God','Domain'].includes(l.cardData.tipo))return false;
     const response=state.priority===key&&l.cardData.tipo==='Technique'&&!choice;
     if(!ordinary(key)&&!response)return false;
-    if(available(key,l.cardData.unidade_custo)<cost(key,l.cardData))return false;
+    if(!paymentPlans(resources(key),[{amount:cost(key,l.cardData),unit:castUnit(key,l.cardData)}]).length)return false;
     if(named(l.cardData)&&field().some(v=>v.playerKey===key&&named(v.cardData)===named(l.cardData)))return false;
     return targetsExist(program(l.cardData).efeitos||[],{playerKey:key,sourceUid:uid});
   }
@@ -139,6 +155,8 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
       if(selector.zona&&l.zone!==selector.zona)return false;
       if(selector.tipo&&c.tipo!==selector.tipo)return false;
       if(selector.equipamento&&!isEquipment(c))return false;
+      if(selector.armadura&&!isArmor(c))return false;
+      if(selector.broken!==undefined&&(!isArmor(c)||armorLife(l).broken!==selector.broken))return false;
       if(selector.subtipo&&!c.subtipos?.includes(selector.subtipo))return false;
       if(selector.lado==='aliado'&&l.playerKey!==ctx.playerKey||selector.lado==='inimigo'&&l.playerKey===ctx.playerKey)return false;
       if(selector.outro&&i.uid===ctx.sourceUid||selector.prepared&&!i.prepared||selector.nao_strike&&i.struckRound===state.round)return false;
@@ -156,7 +174,7 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     if(effects.some(e=>e.op==='rivalizar'&&e.com&&typeof e.com==='object'&&!targetOptions(e.com,ctx).length))return false;
     return effects.every(e=>!e.alvo||typeof e.alvo==='string'||e.max>1||effectTargets(e,ctx).length>0);
   }
-  function effectTargets(e,ctx){return targetOptions(e.alvo,ctx).filter(t=>e.op!=='retornar'||canReturn(locate(t.uid)));}
+  function effectTargets(e,ctx){return targetOptions(e.alvo,ctx).filter(t=>{const l=locate(t.uid);return (e.op!=='retornar'||canReturn(l))&&(e.op!=='curar'||!isArmor(l.cardData))&&(e.op!=='reparar'||isArmor(l.cardData)&&armorLife(l).maxHP!==null&&l.card.damage>0);});}
   function ask(key,prompt,entries,handler,cancelable=false){
     if(!entries.length){handler(null);return;}
     choice={id:nextId('choice'),playerKey:key,prompt,options:entries,allowCancel:cancelable};choiceHandler=handler;
@@ -233,14 +251,15 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     const l=target.kind==='card'?locate(target.uid):null,i=l?.card;
     if(target.kind==='card'&&l?.zone!=='battlefield')return 0;
     let amount=n;
+    if(l&&isArmor(l.cardData)&&armorLife(l).maxHP!==null)amount=Math.min(amount,armorLife(l).hp);
     if(i)for(const m of i.modifiers){if(!m.prevent||m.retaliation&&!retaliation)continue;const used=Math.min(amount,m.prevent);amount-=used;m.prevent-=used;}
     if(target.kind==='god'){
       const p=player(target.playerKey);const prevent=Math.min(p.god.prevent||0,amount);p.god.prevent=(p.god.prevent||0)-prevent;amount-=prevent;
-      for(const source of field().filter(s=>s.playerKey===target.playerKey))for(const [index,passive] of (program(source.cardData).passivas||[]).entries())if(passive.tipo==='prevenir_god'&&!source.card.usedRound[`prevent-${index}`]&&amount>0){amount=Math.max(0,amount-passive.n);source.card.usedRound[`prevent-${index}`]=1;}
+      for(const source of field().filter(s=>s.playerKey===target.playerKey&&active(s)))for(const [index,passive] of (program(source.cardData).passivas||[]).entries())if(passive.tipo==='prevenir_god'&&!source.card.usedRound[`prevent-${index}`]&&amount>0){amount=Math.max(0,amount-passive.n);source.card.usedRound[`prevent-${index}`]=1;}
       p.god.soul-=amount;
     }else{
       i.damage+=amount;if(amount){i.lastDamageBy=ctx.sourceUid;event('dano_recebido',{uid:i.uid,playerKey:l.playerKey,target:desc(l),amount});}
-      if(amount&&rootAction&&rootAction.playerKey!==l.playerKey&&ctx.playerKey!==l.playerKey&&!rootAction.latentRecipients.includes(l.playerKey)){
+      if(amount&&l.cardData.tipo==='Devotee'&&rootAction&&rootAction.playerKey!==l.playerKey&&ctx.playerKey!==l.playerKey&&!rootAction.latentRecipients.includes(l.playerKey)){
         player(l.playerKey).latent=Math.min(3,player(l.playerKey).latent+1);rootAction.latentRecipients.push(l.playerKey);
       }
     }
@@ -250,6 +269,7 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     present('evento:'+name,{uid:ev.uid,playerKey:ev.playerKey,target:ev.target});
     const sources=[...field(),...leaders()];if(ev.deadSource&&!sources.some(s=>s.card.uid===ev.uid))sources.push(ev.deadSource);
     for(const source of sources){
+      if(!active(source))continue;
       if(['inicio_rodada','fim_rodada'].includes(name)&&source.card.uid!==ev.uid)continue;
       const ps=[...(program(source.cardData).gatilhos||[]),...unlockedStages(source).flatMap(s=>s.gatilhos||[])];
       if(source.card.awakened)ps.push(...(source.cardData.despertar?.gatilhos||[]));
@@ -281,7 +301,8 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
       const change=()=>next();
       if(e.op==='comprar'){for(const k of e.alvo==='ambos'?PLAYERS:[forKey()])draw(k,e.n);change();return;}
       if(e.op==='alma'){player(forKey()).god.soul+=e.n;change();return;}
-      if(e.op==='curar'){if(l?.zone==='battlefield')l.card.damage=Math.max(0,l.card.damage-e.n);change();return;}
+      if(e.op==='curar'){if(l?.zone==='battlefield'&&!isArmor(l.cardData))l.card.damage=Math.max(0,l.card.damage-e.n);change();return;}
+      if(e.op==='reparar'){if(l?.zone==='battlefield'&&isArmor(l.cardData)&&armorLife(l).maxHP!==null){l.card.damage=Math.max(0,Math.min(l.card.damage,armorLife(l).maxHP)-Math.max(0,e.n||0));log(`${l.cardData.nome_exibicao_en} is repaired. Armor HP: ${armorLife(l).hp}/${armorLife(l).maxHP}.`);}change();return;}
       if(e.op==='dano'){hit(target,e.n,ctx);change();return;}
       if(e.op==='atributo'){
         const recipients=e.alvo==='aliados'?field().filter(s=>s.playerKey===ctx.playerKey&&s.cardData.tipo==='Devotee').map(desc):[target];
@@ -353,6 +374,7 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
         if(!candidates.length){finish(null);return;}
         askTarget(key,e.modo==='top_bottom'?'Choose the card to keep on top':'Choose a card for your hand',candidates,finish);return;
       }
+      if(e.op==='cosmo_temporario'){player(ctx.playerKey).temporaryCosmo=(player(ctx.playerKey).temporaryCosmo||0)+Math.max(0,e.n||0);next();return;}
       if(e.op==='base_extra'){
         const candidates=player(ctx.playerKey).zones.hand.filter(i=>card(i.cardId).cosmoble).map(i=>selfTarget(i.uid,ctx.playerKey));
         if(!candidates.length){next();return;}
@@ -424,13 +446,13 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     enforceUniqueness(()=>flushTriggers(()=>{
       if(state.victory)return;
       if(stack.length){openPriority(action?.playerKey||state.initiative);notify();return;}
-      if(action){state.currentPlayer=other(action.playerKey);rootAction=null;state.passes=0;}
+      if(action){state.currentPlayer=player(other(action.playerKey)).passed?action.playerKey:other(action.playerKey);rootAction=null;}
     }));
   }
   function afterResolution(){
     settle();enforceUniqueness(()=>flushTriggers(()=>{
       if(stack.length)openPriority(state.currentPlayer);
-      else if(afterEffects){const done=afterEffects;afterEffects=null;done();}
+      else if(afterEffects){const done=afterEffects;afterEffects=null;rootAction=null;done();}
       else finishAction();
       notify();
     }));
@@ -453,9 +475,9 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     if(item.kind==='effect')runEffects(item.efeitos,item.context,done);else resolveCommand(item,done);
   }
   function declare(command,label,ctx={}){
-    const first=!rootAction;
+    const first=!rootAction&&!afterEffects;
     const item={id:nextId('action'),kind:'command',command:copy(command),playerKey:command.playerKey,label,cardId:ctx.cardId||locate(command.uid)?.card.cardId,context:ctx};
-    if(first){rootAction={id:item.id,playerKey:command.playerKey,latentRecipients:[]};state.passes=0;}
+    if(first){rootAction={id:item.id,playerKey:command.playerKey,latentRecipients:[]};}
     stack.push(item);
     if(command.type==='strike'){
       const l=locate(command.uid);l.card.prepared=false;l.card.struckRound=state.round;
@@ -469,12 +491,17 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     flushTriggers(()=>{openPriority(other(command.playerKey));notify();});
   }
   function canReturn(l){return l.zone==='tartarus'&&l.cardData.tipo==='Devotee'&&l.card.returnedRound!==state.round;}
-  function choosePayment(key,amount,unit,done){
-    if(available(key,unit)<amount){done(false);return;}
-    if(!options.fullControl||unit!=='cosmo'){done(pay(key,amount,unit));return;}
-    const plans=[];for(let latent=0;latent<=Math.min(player(key).latent,amount);latent++)if(amount-latent<=player(key).zones.cosmo_base.filter(i=>i.prepared).length)plans.push({id:String(latent),label:`${amount-latent} Base + ${latent} Latent`,latent});
-    if(plans.length===1){done(pay(key,amount,unit,plans[0]));return;}
-    ask(key,'Choose payment',plans,v=>done(Boolean(v)&&pay(key,amount,unit,v)),true);
+  function chooseCosts(key,items,done){
+    const plans=paymentPlans(resources(key),items);
+    if(!plans.length){done(false);return;}
+    if(!options.fullControl||plans.length===1){done(spend(key,plans[0]));return;}
+    ask(key,'Choose payment',plans.map((p,index)=>({...p,id:String(index),label:`${p.base} Base + ${p.latent} Latent${p.temporary?` + ${p.temporary} temporary`:''}`})),v=>done(Boolean(v)&&spend(key,v)),true);
+  }
+  function choosePayment(key,amount,unit,done){chooseCosts(key,[{amount,unit}],done);}
+  function evolutionStages(l){
+    const c=l.cardData,bearer=locate(l.card.attachedToUid);
+    if(l.zone!=='battlefield'||!bearer||c.donos?.length&&!c.donos.includes(bearer.cardData.personagem_id)||l.card.evolvedRound===state.round)return [];
+    return (c.estagios||[]).map((stage,index)=>({...stage,index})).filter(t=>t.index<4&&t.index>l.card.stage&&(!t.exige_sequencia||t.index===l.card.stage+1)&&(!t.exige_awaken||bearer.card.awakened)&&(!t.estagio_anterior||l.card.stage>=t.estagio_anterior)&&(!t.armadura_anterior_id||attachments(bearer.card.uid).some(e=>e.cardData.id===t.armadura_anterior_id))&&available(l.playerKey)>=(t.custo||0));
   }
   function requestCommand(command){
     const key=command.playerKey,l=locate(command.uid),c=l?.cardData;
@@ -483,22 +510,24 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
       const ctx={playerKey:key,sourceUid:command.uid,technique:c.tipo==='Technique',cardId:c.id};
       const proceed=()=>bindEffects(program(c).efeitos||[],ctx,effects=>{
         if(!effects){notify();return;}
-        const amount=cost(key,c)+(command.equipTo?(c.equipar_custo??1):0);
-        choosePayment(key,amount,c.unidade_custo||'cosmo',paid=>{
+        const bearer=command.equipTo?locate(command.equipTo):null;
+        if(command.equipTo&&(!isEquipment(c)||bearer?.zone!=='battlefield'||bearer.playerKey!==key||bearer.cardData.tipo!=='Devotee')){notify();return;}
+        const costs=[{amount:cost(key,c),unit:castUnit(key,c)},...(bearer?[{amount:equipCost(c,bearer.cardData),unit:'cosmo'}]:[])];
+        chooseCosts(key,costs,paid=>{
           if(!paid){notify();return;}consumeDiscounts(key,c);command.effects=effects;
           move(command.uid,'stack');declare(command,`Play ${c.nome_exibicao_en}`,ctx);
         });
       },true);
       if(isEquipment(c)&&!('equipTo'in command)){
         const choices=[{id:'none',label:'Play without bearer'}];
-        if(available(key,c.unidade_custo)>=cost(key,c)+(c.equipar_custo??1))for(const bearer of field().filter(v=>v.playerKey===key&&v.cardData.tipo==='Devotee'))choices.push({id:bearer.card.uid,label:`Equip ${bearer.cardData.nome_exibicao_en}`,uid:bearer.card.uid});
+        for(const bearer of field().filter(v=>v.playerKey===key&&v.cardData.tipo==='Devotee'))if(paymentPlans(resources(key),[{amount:cost(key,c),unit:castUnit(key,c)},{amount:equipCost(c,bearer.cardData),unit:'cosmo'}]).length)choices.push({id:bearer.card.uid,label:`Equip ${bearer.cardData.nome_exibicao_en} · ${equipCost(c,bearer.cardData)} Cosmo`,uid:bearer.card.uid});
         ask(key,'How should this equipment enter?',choices,v=>{if(!v){notify();return;}command.equipTo=v.uid||null;proceed();},true);
       }else proceed();return true;
     }
     if(!ordinary(key)&&!(command.type==='ability'&&state.priority===key))return false;
     if(command.type==='base'){
       if(!canBase(key,command.uid))return false;
-      const i=move(command.uid,'cosmo_base');i.prepared=true;player(key).basePlaced=true;state.passes=0;
+      const i=move(command.uid,'cosmo_base');i.prepared=true;player(key).basePlaced=true;
       log(`Player ${key} places a Cosmo Base.`);event('base_colocada',{uid:i.uid,playerKey:key,target:selfTarget(i.uid,key)});
       flushTriggers(()=>{if(stack.length){afterEffects=()=>{};openPriority(other(key));}notify();});return true;
     }
@@ -517,18 +546,20 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
       return true;
     }
     if(command.type==='equip'||command.type==='unequip'){
-      if(l.zone!=='battlefield'||!isEquipment(c))return false;
+      if(l.zone!=='battlefield'||!isEquipment(c)||c.versao_armadura===1)return false;
       if(command.type==='unequip'){
         if(!l.card.attachedToUid)return false;declare(command,`Unequip ${c.nome_exibicao_en}`);return true;
       }
-      const amount=c.equipar_custo??1;if(available(key)<amount)return false;
-      const finish=t=>{const bearer=locate(t?.uid);if(!bearer||bearer.playerKey!==key||bearer.zone!=='battlefield'||bearer.cardData.tipo!=='Devotee'||t.uid===l.card.attachedToUid){notify();return;}choosePayment(key,amount,'cosmo',paid=>{if(paid){command.target=t;declare(command,`Equip ${c.nome_exibicao_en}`);}else notify();});};
-      if(command.target)finish(command.target);else askTarget(key,'Choose a bearer',field().filter(v=>v.playerKey===key&&v.cardData.tipo==='Devotee'&&v.card.uid!==l.card.attachedToUid).map(desc),finish,true);return true;
+      const bearers=field().filter(v=>v.playerKey===key&&v.cardData.tipo==='Devotee'&&v.card.uid!==l.card.attachedToUid&&available(key)>=equipCost(c,v.cardData));
+      if(!bearers.length)return false;
+      const finish=t=>{const bearer=bearers.find(v=>v.card.uid===t?.uid);if(!bearer){notify();return;}choosePayment(key,equipCost(c,bearer.cardData),'cosmo',paid=>{if(paid){command.target=desc(bearer);declare(command,`Equip ${c.nome_exibicao_en} → ${bearer.cardData.nome_exibicao_en}`);}else notify();});};
+      if(command.target){if(!bearers.some(v=>v.card.uid===command.target.uid))return false;finish(command.target);}
+      else ask(key,'Choose a bearer',bearers.map(v=>({id:v.card.uid,target:desc(v),label:`${v.cardData.nome_exibicao_en} · Equip ${equipCost(c,v.cardData)} Cosmo`})),v=>finish(v?.target),true);return true;
     }
     if(command.type==='evolve'){
-      const bearer=locate(l.card.attachedToUid),next=c.estagios?.[l.card.stage+1];
-      if(l.zone!=='battlefield'||!next||!bearer||!c.donos?.includes(bearer.cardData.personagem_id)||l.card.evolvedRound===state.round||available(key)<(next.custo||0)||next.exige_awaken&&!bearer.card.awakened)return false;
-      choosePayment(key,next.custo||0,'cosmo',paid=>{if(paid){command.bearerUid=bearer.card.uid;command.stage=l.card.stage+1;declare(command,`Evolve ${c.nome_exibicao_en}: ${next.nome}`);}else notify();});return true;
+      const stages=evolutionStages(l),next=command.stage===undefined?stages[0]:stages.find(t=>t.index===command.stage);
+      if(!next)return false;
+      choosePayment(key,next.custo||0,'cosmo',paid=>{if(paid){command.bearerUid=l.card.attachedToUid;command.stage=next.index;declare(command,`Evolve ${c.nome_exibicao_en}: ${next.nome}`);}else notify();});return true;
     }
     if(command.type==='awaken'){
       const awakening=c.despertar;if(l.zone!=='battlefield'||c.tipo!=='Devotee'||!awakening||l.card.awakened||has(command.uid,'Sealed')||available(key)<(awakening.custo||0))return false;
@@ -540,11 +571,11 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
       const ultimateId=c.personagem_id||c.identidade_carta||c.id;
       if(!a||l.zone==='battlefield'&&has(command.uid,'Sealed')||a.limite_rodada&&(l.card.usedRound[`ability-${a.id}`]||0)>=a.limite_rodada||a.limite_partida&&(l.card.usedGame[`ability-${a.id}`]||0)>=a.limite_partida||command.type==='ultimate'&&player(key).ultimatesUsed.includes(ultimateId)||a.exige_awaken&&!l.card.awakened)return false;
       if(a.zona==='tartarus'&&a.efeitos.some(e=>e.op==='retornar')&&!canReturn(l))return false;
-      const kind=a.zona==='tartarus'?'Afterlife':null,amount=cost(key,c,kind,a.custo||0);
-      if(available(key,a.unidade_custo)<amount||a.exige_prepared&&!l.card.prepared)return false;
+      const kind=a.zona==='tartarus'?'Afterlife':null,amount=cost(key,c,kind,a.custo||0),unit=paymentUnit(command.type,c,false,a.unidade_custo);
+      if(available(key,unit)<amount||a.exige_prepared&&!l.card.prepared)return false;
       const ctx={playerKey:key,sourceUid:command.uid};
       bindEffects(a.efeitos||[],ctx,b=>{
-        if(!b){notify();return;}choosePayment(key,amount,a.unidade_custo||'cosmo',paid=>{
+        if(!b){notify();return;}choosePayment(key,amount,unit,paid=>{
           if(!paid){notify();return;}consumeDiscounts(key,c,kind);l.card.usedRound[`ability-${a.id}`]=(l.card.usedRound[`ability-${a.id}`]||0)+1;l.card.usedGame[`ability-${a.id}`]=(l.card.usedGame[`ability-${a.id}`]||0)+1;
           if(a.exige_prepared)l.card.prepared=false;
           if(command.type==='ultimate')player(key).ultimatesUsed.push(ultimateId);
@@ -604,7 +635,7 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     if(cmd.type==='unequip'){if(l?.zone==='battlefield'){l.card.attachedToUid=null;l.card.stage=0;}done();return;}
     if(cmd.type==='evolve'){
       const b=locate(cmd.bearerUid);
-      if(l?.zone==='battlefield'&&l.card.attachedToUid===cmd.bearerUid&&b&&c.donos.includes(b.cardData.personagem_id)&&cmd.stage===l.card.stage+1&&l.card.evolvedRound!==state.round){l.card.stage=cmd.stage;l.card.evolvedRound=state.round;event('evoluiu',{uid:cmd.uid,playerKey:l.playerKey,target:desc(l)});}done();return;
+      if(l?.zone==='battlefield'&&l.card.attachedToUid===cmd.bearerUid&&b&&(!c.donos?.length||c.donos.includes(b.cardData.personagem_id))&&cmd.stage>l.card.stage&&c.estagios?.[cmd.stage]&&(!c.estagios[cmd.stage].exige_awaken||b.card.awakened)&&(!c.estagios[cmd.stage].exige_sequencia||cmd.stage===l.card.stage+1)&&l.card.evolvedRound!==state.round){l.card.stage=cmd.stage;l.card.evolvedRound=state.round;event('evoluiu',{uid:cmd.uid,playerKey:l.playerKey,target:desc(l)});}done();return;
     }
     if(cmd.type==='awaken'){if(l?.zone==='battlefield')l.card.awakened=true;done();return;}
     if(cmd.type==='ability'||cmd.type==='ultimate'){runEffects(cmd.effects||[],{...item.context,strikeId:stack.find(s=>s.command?.type==='strike')?.id},done);return;}
@@ -613,7 +644,7 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
   function beginRound(first=false){
     state.phase='actions';state.currentPhase='actions';state.passes=0;state.currentPlayer=state.initiative;state.turnNumber=state.round;
     for(const key of PLAYERS){
-      const p=player(key);p.basePlaced=false;p.discounts=[];
+      const p=player(key);p.basePlaced=false;p.passed=false;p.discounts=[];
       for(const l of [...Object.values(p.zones).flat(),p.god,p.domain]){l.usedRound={};}
       for(const l of [...p.zones.battlefield,...p.zones.cosmo_base,p.god,p.domain])l.prepared=true;
       if(!first)draw(key,2);
@@ -631,8 +662,18 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     roundWindow(()=>{
       for(const l of all())l.card.modifiers=l.card.modifiers.filter(m=>m.duration!=='rodada'&&m.duration!=='strike');
       roundWindow(()=>{
-        for(const key of PLAYERS){player(key).latent=0;player(key).god.prevent=0;}
-        state.round++;state.initiative=other(state.initiative);beginRound();
+        const bank=index=>{
+          if(index===PLAYERS.length){
+            for(const key of PLAYERS){player(key).god.prevent=0;player(key).temporaryCosmo=0;}
+            state.round++;state.initiative=other(state.initiative);beginRound();return;
+          }
+          const key=PLAYERS[index],p=player(key),max=bankable(p.zones.cosmo_base,p.latent);
+          if(!max){bank(index+1);return;}
+          ask(key,'Bank unused Base Cosmo as Latent',Array.from({length:max+1},(_,n)=>({id:String(max-n),n:max-n,label:max-n?`Bank ${max-n} Base → Latent`:'Do not bank Cosmo'})),v=>{
+            const n=v.n;p.latent=Math.min(LATENT_CAP,p.latent+n);p.zones.cosmo_base.filter(i=>i.prepared&&!i.temporary&&!i.temporaria).slice(0,n).forEach(i=>i.prepared=false);
+            log(`Player ${key} banks ${n} unused Base Cosmo. Latent: ${p.latent}/${LATENT_CAP}.`);bank(index+1);
+          });
+        };bank(0);
       });
     });
   }
@@ -640,8 +681,9 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     const defs={};for(const key of PLAYERS){const id=key==='A'?config.deckAId:config.deckBId;defs[key]=(beta?.decks||[]).find(d=>d.id===id)||config.decks?.[key];if(!defs[key])throw new Error('Deck not found');const errors=validateDeck(defs[key],library);if(errors.length)throw new Error(errors.join('; '));}
     sequence=0;stack=[];triggers=[];rootAction=null;choice=null;resolving=false;afterEffects=null;
     const first=['A','B'].includes(config.startingPlayer)?config.startingPlayer:random()<.5?'A':'B';
-    state={rulesVersion:'2.0',round:1,turnNumber:1,phase:'mulligan',currentPhase:'setup',initiative:first,currentPlayer:first,priority:null,priorityPasses:0,passes:0,rivals:[],players:{},log:[],victory:null};
-    for(const key of PLAYERS){const d=defs[key],g=card(d.god_id);state.players[key]={key,deckId:d.id,domainId:d.domain_id,god:{...instance(g.id,key),uid:godUid(key),prepared:true,soul:g.soul??30,attack:g.attack??3,prevent:0},domain:{...instance(d.domain_id,key),uid:`domain-${key}`,prepared:true},zones:Object.fromEntries(zones.map(z=>[z,[]])),latent:0,basePlaced:false,discounts:[],ultimatesUsed:[],deckFailed:false};const p=player(key);p.zones.deck=shuffle(d.main_deck.flatMap(e=>Array.from({length:e.quantity},()=>instance(e.card_id,key))));draw(key,7);}
+    state={rulesVersion:'2.1',round:1,turnNumber:1,phase:'mulligan',currentPhase:'setup',initiative:first,currentPlayer:first,priority:null,priorityPasses:0,passes:0,rivals:[],players:{},log:[],victory:null};
+    for(const key of PLAYERS){const d=defs[key],g=card(d.god_id);state.players[key]={key,deckId:d.id,domainId:d.domain_id,god:{...instance(g.id,key),uid:godUid(key),prepared:true,soul:g.soul??30,attack:g.attack??3,prevent:0},domain:{...instance(d.domain_id,key),uid:`domain-${key}`,prepared:true},zones:Object.fromEntries(zones.map(z=>[z,[]])),latent:0,temporaryCosmo:0,passed:false,basePlaced:false,discounts:[],ultimatesUsed:[],deckFailed:false};const p=player(key);p.zones.deck=shuffle(d.main_deck.flatMap(e=>Array.from({length:e.quantity},()=>instance(e.card_id,key))));draw(key,7);}
+    const loser=other(first);player(loser).latent=1;state.openingWinner=first;log(`Player ${first} wins the opening draw. Player ${loser} gains 1 Latent Cosmo.`);
     options.ai=config.ai??options.ai;
     const mulligan=key=>ask(key,'Choose your opening hand', [{id:'keep',label:'Keep hand'},{id:'exchange',label:'Choose cards to exchange'}],v=>{
       const advance=()=>key==='A'?mulligan('B'):(beginRound(true),notify());
@@ -677,7 +719,7 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     }
     if(command.type==='pass-priority'){const result=passPriority(key);if(result)notify();return result;}
     if(command.type==='pass'){
-      if(!ordinary(key))return false;state.passes++;log(`Player ${key} passes.`);
+      if(!ordinary(key))return false;player(key).passed=true;state.passes=PLAYERS.filter(k=>player(k).passed).length;log(`Player ${key} passes for this round. Ordinary actions ended; responses remain legal.`);
       if(state.passes===2)endRound();else state.currentPlayer=other(key);notify();return true;
     }
     const result=requestCommand(command);if(result)notify();return result;
@@ -692,7 +734,7 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     const l=locate(uid);if(!l||l.playerKey!==key||key!==actor()||choice)return [];
     const result=[];
     if(l.zone==='hand'){
-      if(canPlay(key,uid))result.push({type:'play',uid,label:`Play · ${cost(key,l.cardData)}`});
+      if(canPlay(key,uid))result.push({type:'play',uid,label:`Play · ${cost(key,l.cardData)} ${unitLabel(castUnit(key,l.cardData))}`});
       if(canBase(key,uid))result.push({type:'base',uid,label:'Cosmo Base'});return result;
     }
     const ordinaryAction=ordinary(key);
@@ -702,13 +744,13 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
       if(l.cardData.despertar&&!l.card.awakened&&!has(uid,'Sealed')&&available(key)>=l.cardData.despertar.custo)result.push({type:'awaken',uid,label:'Awaken'});
     }
     if(ordinaryAction&&l.zone==='battlefield'&&isEquipment(l.cardData)){
-      if(available(key)>=(l.cardData.equipar_custo??1)&&field().some(v=>v.playerKey===key&&v.cardData.tipo==='Devotee'&&v.card.uid!==l.card.attachedToUid))result.push({type:'equip',uid,label:`Equip · ${l.cardData.equipar_custo??1}`});
+      const bearers=field().filter(v=>v.playerKey===key&&v.cardData.tipo==='Devotee'&&v.card.uid!==l.card.attachedToUid&&available(key)>=equipCost(l.cardData,v.cardData));
+      if(bearers.length)result.push({type:'equip',uid,label:`Equip · ${Math.min(...bearers.map(v=>equipCost(l.cardData,v.cardData)))}+ Cosmo`});
       if(l.card.attachedToUid)result.push({type:'unequip',uid,label:'Unequip'});
-      const next=l.cardData.estagios?.[l.card.stage+1],bearer=locate(l.card.attachedToUid);
-      if(next&&l.card.evolvedRound!==state.round&&l.cardData.donos.includes(bearer?.cardData.personagem_id)&&available(key)>=(next.custo||0))result.push({type:'evolve',uid,label:`Evolve: ${next.nome} · ${next.custo}`});
+      for(const next of evolutionStages(l))result.push({type:'evolve',uid,stage:next.index,label:`Evolve: ${next.nome} · ${next.custo||0} Cosmo`});
     }
-    if(!has(uid,'Sealed'))for(const a of abilities(l))if((ordinaryAction||a.resposta)&&(!a.exige_prepared||l.card.prepared)&&targetsExist(a.efeitos||[],{playerKey:key,sourceUid:uid})&&(!a.limite_rodada||(l.card.usedRound[`ability-${a.id}`]||0)<a.limite_rodada)&&(!a.limite_partida||(l.card.usedGame[`ability-${a.id}`]||0)<a.limite_partida)&&available(key,a.unidade_custo)>=cost(key,l.cardData,a.zona==='tartarus'?'Afterlife':null,a.custo||0)&&(!a.efeitos.some(e=>e.op==='retornar')||canReturn(l)))result.push({type:'ability',uid,abilityId:a.id,label:`${a.nome_en} · ${cost(key,l.cardData,a.zona==='tartarus'?'Afterlife':null,a.custo||0)}`});
-    if(ordinaryAction&&l.cardData.ultimate&&!player(key).ultimatesUsed.includes(l.cardData.personagem_id||l.cardData.id))result.push({type:'ultimate',uid,label:'Ultimate'});
+    if(!has(uid,'Sealed'))for(const a of abilities(l))if((ordinaryAction||a.resposta)&&(!a.exige_prepared||l.card.prepared)&&targetsExist(a.efeitos||[],{playerKey:key,sourceUid:uid})&&(!a.limite_rodada||(l.card.usedRound[`ability-${a.id}`]||0)<a.limite_rodada)&&(!a.limite_partida||(l.card.usedGame[`ability-${a.id}`]||0)<a.limite_partida)&&available(key,paymentUnit('ability',l.cardData,false,a.unidade_custo))>=cost(key,l.cardData,a.zona==='tartarus'?'Afterlife':null,a.custo||0)&&(!a.efeitos.some(e=>e.op==='retornar')||canReturn(l)))result.push({type:'ability',uid,abilityId:a.id,label:`${a.nome_en} · ${cost(key,l.cardData,a.zona==='tartarus'?'Afterlife':null,a.custo||0)}`});
+    if(ordinaryAction&&l.cardData.ultimate&&!has(uid,'Sealed')&&(!l.cardData.ultimate.exige_awaken||l.card.awakened)&&available(key,'base_cosmo')>=cost(key,l.cardData,null,l.cardData.ultimate.custo||0)&&!player(key).ultimatesUsed.includes(l.cardData.personagem_id||l.cardData.identidade_carta||l.cardData.id))result.push({type:'ultimate',uid,label:'Ultimate'});
     return result;
   }
   // A IA escolhe o Strike de maior valor: matar sem morrer, pressionar o God sem suicídio, evitar trocas perdidas.
@@ -730,7 +772,7 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
   }
   function aiStep(){
     if(!state||state.victory||options.paused)return false;
-    const key=actor();
+    const key=actor(),strategy=options.strategies?.[key]||options.aiStrategy||'balanced';
     if(choice){
       const choices=choice.options;
       let selection=choices.find(v=>v.id==='keep')||choices.find(v=>v.id==='yes')||choices.find(v=>v.target?.kind==='card'&&locate(v.target.uid)?.cardData.tipo==='Devotee')||choices[0];
@@ -740,34 +782,40 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
       if(choice.prompt==='Choose opening initiative')selection=choices.find(v=>v.id===key)||choices[0];
       return perform({type:'choose',playerKey:key,optionId:selection.id});
     }
-    if(state.priority===key)return perform({type:'pass-priority',playerKey:key});
+    if(state.priority===key){
+      if(['response','control'].includes(strategy)){const response=player(key).zones.hand.find(i=>card(i.cardId).tipo==='Technique'&&canPlay(key,i.uid));if(response)return perform({type:'play',uid:response.uid,playerKey:key});}
+      return perform({type:'pass-priority',playerKey:key});
+    }
     if(!ordinary(key))return false;
     const hand=player(key).zones.hand;
     if(!player(key).basePlaced){const candidates=hand.filter(i=>canBase(key,i.uid)).sort((a,b)=>(card(b.cardId).custo||0)-(card(a.cardId).custo||0));if(candidates.length)return perform({type:'base',uid:candidates[0].uid,playerKey:key});}
     const legal=all().filter(l=>l.playerKey===key).flatMap(l=>actions(key,l.card.uid));
-    for(const type of ['strike','evolve','play','equip','ability']){
+    const order=strategy==='voltron'?['evolve','equip','play','strike','ability']:['anthem','control','resource','response'].includes(strategy)?['play','ability','evolve','strike','equip']:['strike','evolve','play','equip','ability'];
+    for(const type of order){
       let candidates=legal.filter(a=>a.type===type);
       if(type==='strike')candidates=candidates.flatMap(command=>{const target=bestStrike(command.uid);return target?[{...command,target}]:[];});
       if(type==='equip')candidates=candidates.flatMap(command=>{
         const equipment=locate(command.uid);if(equipment.card.attachedToUid)return[];
         // A IA preenche um portador disponível, sem alternar armaduras já equipadas em ciclo.
-        const bearer=field().find(l=>l.playerKey===key&&l.cardData.tipo==='Devotee'&&(!isArmor(equipment.cardData)||!armor(l.card.uid)));
+        const bearer=field().find(l=>l.playerKey===key&&l.cardData.tipo==='Devotee'&&available(key)>=equipCost(equipment.cardData,l.cardData)&&(!isArmor(equipment.cardData)||!armor(l.card.uid)));
         return bearer?[{...command,target:desc(bearer)}]:[];
       });
       if(!candidates.length)continue;
-      if(type==='play')candidates.sort((a,b)=>(card(locate(a.uid).card.cardId).tipo==='Devotee'?-1:1)-(card(locate(b.uid).card.cardId).tipo==='Devotee'?-1:1));
+      if(type==='play'){const score=a=>{const c=card(locate(a.uid).card.cardId);return strategy==='voltron'&&isEquipment(c)?0:strategy==='anthem'&&program(c).passivas?.length?0:strategy==='control'&&c.tipo==='Moment'?0:c.tipo==='Devotee'?1:2;};candidates.sort((a,b)=>score(a)-score(b));}
       const result=perform({...candidates[0],playerKey:key});if(result)return true;
     }
     return perform({type:'pass',playerKey:key});
   }
   function schedule(){
-    clearTimeout(timer);if(disposed||!state||state.victory||options.paused||resolving)return;
+    // Uma resolução pode estar aguardando uma escolha da IA (custo, descarte, alvo).
+    // Nessa situação a escolha precisa avançar antes de retomar os efeitos.
+    clearTimeout(timer);if(disposed||!state||state.victory||options.paused||(resolving&&!choice))return;
     const key=actor(),ai=options.ai&&key==='B';
     const auto=state.priority&&options.autoPass&&!options.fullControl&&!choice&&!player(key).zones.hand.some(i=>canPlay(key,i.uid))&&!all().some(l=>l.playerKey===key&&actions(key,l.card.uid).some(a=>a.type==='ability'));
     if(ai||auto)timer=setTimeout(()=>{if(ai)aiStep();else perform({type:'pass-priority',playerKey:key});},options.aiSpeed==='fast'?30:options.aiSpeed==='slow'?800:280);
   }
   function notify(){if(disposed)return;revision++;onChange();schedule();}
-  const api={dispatch:perform,stepAI:aiStep,card,stats,actions,canPlay,canBase,available,cost,hasKeyword:has,
+  const api={dispatch:perform,stepAI:aiStep,card,stats,actions,canPlay,canBase,available,cost,payment,equipCost:(uid,bearerUid)=>equipCost(locate(uid)?.cardData||{},locate(bearerUid)?.cardData),hasKeyword:has,
     locate:(key,uid)=>{const l=locate(uid||key);return l?copy(l):null;},
     rivals:uid=>copy(relation(uid)),strikeTargets:uid=>copy(strikeTargets(uid)),equipment:uid=>copy(attachments(uid)),
     get state(){return state?copy(state):null;},get revision(){return revision;},get actingPlayer(){return actor();},get settings(){return{...options};},
@@ -775,6 +823,6 @@ export function createGame({cards,beta,settings={},onChange=()=>{},onEvent=()=>{
     get resolving(){return resolving;},
     dispose(){disposed=true;clearTimeout(timer);stack=[];triggers=[];choice=null;},
   };
-  if(initialState){if(!state.rivals)state.rivals=[];delete state.links;for(const p of Object.values(state.players))delete p.eng;sequence=Math.max(0,...all().map(l=>Number(l.card.uid.split('-').at(-1))||0));settle();}
+  if(initialState){if(state.rulesVersion!=='2.1'){state.passes=0;state.rulesVersion='2.1';}if(!state.rivals)state.rivals=[];delete state.links;for(const p of Object.values(state.players)){delete p.eng;p.passed??=false;p.temporaryCosmo??=0;p.latent=Math.min(LATENT_CAP,Math.max(0,p.latent||0));}sequence=Math.max(0,...all().map(l=>Number(l.card.uid.split('-').at(-1))||0));settle();}
   return api;
 }

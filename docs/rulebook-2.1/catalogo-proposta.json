@@ -1,0 +1,210 @@
+{
+  "sha256_fonte": "a0279e75cb844ad8a77a36e9e1c42d3644f80d6659494949aee6aa3bdc08ea90",
+  "atualizacoes": {
+    "athena-021": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 2,
+      "equipar_custo_outros": 5
+    },
+    "athena-022": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 2,
+      "equipar_custo_outros": 5
+    },
+    "athena-023": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 2,
+      "equipar_custo_outros": 5
+    },
+    "athena-024": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 2,
+      "equipar_custo_outros": 5
+    },
+    "athena-025": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 2,
+      "equipar_custo_outros": 5
+    },
+    "sst-01-011": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-01-012": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-01-013": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-01-014": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-01-015": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-01-016": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-01-017": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-01-018": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-01-019": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-01-020": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-02-011": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-02-012": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-02-013": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-02-014": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-02-015": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-02-016": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-02-017": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-02-018": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-02-019": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-03-011": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-03-012": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-03-013": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-03-014": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-03-015": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-03-016": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-03-017": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-03-019": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-03-020": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-04-011": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-04-012": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-04-013": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-04-014": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-04-015": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-04-020": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-05-019": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    },
+    "sst-05-020": {
+      "categoria_equipamento": "Armor",
+      "equipar_custo_ressonante": 1,
+      "equipar_custo_outros": 5
+    }
+  }
+}

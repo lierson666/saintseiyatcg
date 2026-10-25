@@ -36,7 +36,7 @@ export function importDeck(text,deck,cards){
 }
 function listCards(){
   const allowed=allowedFactions(ctx.currentDeck(),ctx.cards),q=filters.search.trim().toLocaleLowerCase();
-  return ctx.cards.filter(c=>!['God','Domain'].includes(c.tipo)&&c.revisao_regras==='2.0'&&
+  return ctx.cards.filter(c=>!['God','Domain'].includes(c.tipo)&&['2.0','2.1'].includes(c.revisao_regras)&&
     (filters.all||allowed.has(c.faccao))&&(!filters.faction||c.faccao===filters.faction)&&(!filters.type||c.tipo===filters.type)&&
     (!filters.cost||(filters.cost==='7+'?Number(c.custo)>=7:Number(c.custo)===Number(filters.cost)))&&(!filters.cosmoble||c.cosmoble)&&
     (!q||[name(c),c.id,c.faccao,...(c.keywords_en||[]),...(c.habilidades_en||[]),...(c.subtipos||[])].join(' ').toLocaleLowerCase().includes(q)))
@@ -61,7 +61,7 @@ function analysis(){
   const deck=ctx.currentDeck(),byId=new Map(ctx.cards.map(c=>[c.id,c])),curve=Array(8).fill(0),types=new Map();let total=0,cosmoble=0;
   for(const e of deck.main_deck){const c=byId.get(e.card_id);if(!c)continue;curve[Math.min(7,c.custo||0)]+=e.quantity;total+=(c.custo||0)*e.quantity;if(c.cosmoble)cosmoble+=e.quantity;types.set(c.tipo,(types.get(c.tipo)||0)+e.quantity);}
   const max=Math.max(1,...curve),errors=validateDeck(deck,ctx.cards);
-  return `<details class="deck-analysis"><summary>Curva de Cosmo e composição</summary><div class="cosmo-curve" role="img" aria-label="Curva de Cosmo: ${curve.map((n,i)=>`${i===7?'7+':i}: ${n}`).join(', ')}">${curve.map((n,i)=>`<div><b>${n}</b><i style="height:${Math.round(n/max*70)+2}px"></i><span>${i===7?'7+':i}</span></div>`).join('')}</div><p class="deck-analysis-line">Média <b>${(total/Math.max(1,deckCount(deck))).toFixed(1)}</b> · Cosmoble <b>${cosmoble}</b></p><p class="deck-analysis-line">${[...types].map(([t,n])=>`${t} ${n}`).join(' · ')}</p></details><div class="deck-validation ${errors.length?'has-errors':''}" role="status">${errors.length?`<b>Deck em edição</b><ul>${errors.map(e=>`<li>${esc(e)}</li>`).join('')}</ul>`:'<b>Deck válido · Rulebook 2.0</b><span>60 cartas · até 4 por identidade</span>'}</div>`;
+  return `<details class="deck-analysis"><summary>Curva de Cosmo e composição</summary><div class="cosmo-curve" role="img" aria-label="Curva de Cosmo: ${curve.map((n,i)=>`${i===7?'7+':i}: ${n}`).join(', ')}">${curve.map((n,i)=>`<div><b>${n}</b><i style="height:${Math.round(n/max*70)+2}px"></i><span>${i===7?'7+':i}</span></div>`).join('')}</div><p class="deck-analysis-line">Média <b>${(total/Math.max(1,deckCount(deck))).toFixed(1)}</b> · Cosmoble <b>${cosmoble}</b></p><p class="deck-analysis-line">${[...types].map(([t,n])=>`${t} ${n}`).join(' · ')}</p></details><div class="deck-validation ${errors.length?'has-errors':''}" role="status">${errors.length?`<b>Deck em edição</b><ul>${errors.map(e=>`<li>${esc(e)}</li>`).join('')}</ul>`:'<b>Deck válido · Rulebook 2.1</b><span>60 cartas · até 4 por identidade</span>'}</div>`;
 }
 function leaders(){const d=ctx.currentDeck();return `<div class="deck-leaders">${[['God','god_id'],['Domain','domain_id']].map(([type,key])=>`<label><span>${type}</span><select data-db-leader="${key}" aria-label="${type} do deck">${ctx.cards.filter(c=>c.tipo===type).map(c=>`<option value="${esc(c.id)}" ${c.id===d[key]?'selected':''}>${esc(name(c))}</option>`).join('')}</select></label>`).join('')}</div>`;}
 export function deckBuilder(context){

@@ -74,7 +74,7 @@ with sync_playwright() as p:
  page.screenshot(path=str(out/'interaction-editor.png'),full_page=True)
  runtime=reviewed[-1]
  # Nova abertura real do jogo recebe o rascunho revisado em memória, sem gravá-lo.
- page.route('**/data/game-settings.json',lambda r:r.fulfill(json=runtime))
+ page.route('**/data/game-settings.json*',lambda r:r.fulfill(json=runtime))
  page.add_init_script("localStorage.setItem('ssTcgSanctuary',JSON.stringify({autoPass:false,hotseatPrivacy:false,music:0,sfx:0}));")
  page.goto(URL+'/playtest/');page.get_by_role('button',name='Press to begin').click()
  page.get_by_role('button',name='Local battle').click();page.select_option('#setup-first','A');page.get_by_role('button',name='Begin duel').click()

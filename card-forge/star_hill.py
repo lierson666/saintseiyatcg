@@ -3,6 +3,7 @@ import copy
 import difflib
 import hashlib
 import io
+import importlib.util
 import json
 import re
 import secrets
@@ -19,6 +20,9 @@ SOURCES = 'data/audio-fontes.json'
 FX = {'hover', 'click', 'confirm', 'back', 'play', 'impact', 'cosmo', 'turn', 'victory', 'defeat'}
 PROPOSALS = {}
 LOCK = threading.Lock()
+_engine_spec = importlib.util.spec_from_file_location('star_hill_engine_updates', Path(__file__).with_name('engine_updates.py'))
+engine_updates = importlib.util.module_from_spec(_engine_spec)
+_engine_spec.loader.exec_module(engine_updates)
 
 
 def encoded(value):
@@ -339,7 +343,11 @@ def audio_signature(raw, suffix):
 
 
 def get(handler, path):
-    if path == '/api/star-hill/config':
+    if path == '/api/star-hill/motor':
+        handler.reply(200, engine_updates.manager(ROOT).info())
+    elif path.startswith('/api/star-hill/motor/trabalhos/'):
+        handler.reply(200, engine_updates.manager(ROOT).status(path.rsplit('/', 1)[1]))
+    elif path == '/api/star-hill/config':
         handler.reply(200, read_document('config'))
     elif path == '/api/star-hill/regras':
         handler.reply(200, read_document('regras'))
@@ -362,7 +370,20 @@ def post(handler, path, raw, atomic_write):
         body = json.loads(raw)
         if not isinstance(body, dict):
             raise ValueError('Pedido inválido.')
-        if path == '/api/star-hill/preview':
+        if path.startswith('/api/star-hill/motor/'):
+            motor = engine_updates.manager(ROOT, atomic_write)
+            action = path.rsplit('/', 1)[1]
+            if action == 'gerar':
+                result = motor.start(body)
+            elif action == 'validar':
+                result = motor.validate(body.get('trabalho'))
+            elif action == 'aplicar':
+                result = motor.apply(body.get('trabalho'), body.get('confirmar'))
+            elif action == 'cancelar':
+                result = motor.cancel(body.get('trabalho'))
+            else:
+                return handler.reply(404, {'erro': 'Operação do motor desconhecida.'})
+        elif path == '/api/star-hill/preview':
             result = preview(body)
         elif path == '/api/star-hill/apply':
             result = apply(body, atomic_write)
