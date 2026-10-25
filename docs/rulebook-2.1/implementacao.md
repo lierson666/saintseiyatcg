@@ -8,6 +8,8 @@ STAR HILL usa o mesmo servidor stdlib local (`card-forge/serve.py`), delegando a
 
 Auditoria inicial: `main` em `c093980`, um commit local à frente de `origin/main` (`9628b53`). O commit anterior de atualização de módulos foi preservado. Após `git fetch origin --prune`, não havia branch `codex/engine-rulebook-2-1`; `git ls-remote --heads` confirmou sua ausência. `69469ec` não estava no histórico disponível. Trabalho feito em `codex/rulebook-2-1-engine`, sem reconstruir a engine ou reintroduzir Engage.
 
+Lista integral de arquivos em `arquivos.json`. Commits de implementação: `3da3ef4` (motor/catálogo/guia) e `01aeeec` (atualizador STAR HILL).
+
 ## Comportamento implementado
 
 - Devotee, qualquer Armor e Ultimate exigem Base; Technique resposta exige Latent; demais custos seguem a matriz e restrições expressas. Jogar Armor + Equip paga os dois custos atomicamente, impedindo que Latent substitua o custo de entrada Base-only. Controle completo permite escolher planos legais antes de gastar.
