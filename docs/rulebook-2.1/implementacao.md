@@ -71,9 +71,4 @@ Pendências deliberadas de Card Craft: HP/resistência das Armor; distribuição
 
 ## Publicação
 
-Branch enviada por SSH ao GitHub. O conector recusou a criação do PR com HTTP 422, `must be a collaborator`; `gh` não está instalado no Mac. Não houve merge/deploy. Para abrir o PR em um ambiente autenticado como colaborador:
-
-```sh
-git push -u origin codex/rulebook-2-1-engine
-gh pr create --repo lierson666/saintseiyatcg --base main --head codex/rulebook-2-1-engine --title "Rulebook 2.1 e Living Armor" --body-file docs/rulebook-2.1/pr.md
-```
+Branch enviada por SSH ao GitHub. [PR #1](https://github.com/lierson666/saintseiyatcg/pull/1) aberto de `codex/rulebook-2-1-engine` para `main`, pela sessão do navegador autenticada como `lierson666`. O conector estava autenticado como `grupoxepa`, motivo da recusa inicial com HTTP 422, `must be a collaborator`. Não houve merge/deploy.
