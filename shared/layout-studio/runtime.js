@@ -1,10 +1,11 @@
 import {resolveLayout,validateTemplate} from './model.js';
 import {makeScene,renderScene} from './renderer.js';
 
-let library=null,inflight=null,lastRead=0;
+let library=null,inflight=null,lastRead=0,projects={},assetRects={};
 const publishedKey=value=>JSON.stringify((value?.published||[]).map(t=>[t.id,t.revision]));
 const matching=(t,c,surface)=>t.scope.surface===surface&&(!t.scope.subtype||c.subtipos?.includes(t.scope.subtype))&&(t.scope.level==='global'||t.scope.value===({type:c.tipo,faction:c.faccao,rarity:c.raridade,card:c.id})[t.scope.level]);
 export function layoutLibrary(){return library;}
+export function visualProject(id){return projects[id]||{};}
 export function installLibrary(value,{notify=false}={}){
   if(value?.schemaVersion!==1||!Array.isArray(value.bases)||!Array.isArray(value.published)||!Array.isArray(value.drafts))throw Error('Biblioteca de layouts inválida.');
   for(const template of [...value.bases,...value.published,...value.drafts])validateTemplate(template);
@@ -27,11 +28,12 @@ export function publishedScene(card,context={},surface='card'){
   const nested=surface==='inspector'?makeScene(resolveLayout(templates,card),{card,...context},{key:`nested-${card.id}`}):null;
   return makeScene(layout,{card,...context},{key:`published-${surface}-${card.id}`,nestedCard:nested});
 }
-export function renderPublishedCard(card,context={}){const scene=publishedScene(card,context);return scene?renderScene(scene):null;}
-export function renderPublishedInspector(card,context={}){const scene=publishedScene(card,{...context,mode:'inspector'},'inspector');return scene?renderScene(scene):null;}
+function artworkContext(card,context){const project=context.project||visualProject(card.id);return{...context,project,art:context.art&&typeof context.art==='object'?context.art:project.art||context.art,assetRects:context.assetRects||assetRects};}
+export function renderPublishedCard(card,context={}){const scene=publishedScene(card,artworkContext(card,context));return scene?renderScene(scene):null;}
+export function renderPublishedInspector(card,context={}){const scene=publishedScene(card,{...artworkContext(card,context),mode:'inspector'},'inspector');return scene?renderScene(scene):null;}
 if(typeof window!=='undefined'){
   if(typeof BroadcastChannel!=='undefined'){const channel=new BroadcastChannel('saint-seiya-layout-studio');channel.onmessage=()=>refreshLayouts({force:true});}
   window.addEventListener('focus',()=>refreshLayouts());
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')refreshLayouts();});
-  await refreshLayouts({force:true});
+  await Promise.all([refreshLayouts({force:true}),fetch(new URL('../../api/layout-studio/projects',import.meta.url),{signal:AbortSignal.timeout(4000)}).then(r=>r.ok?r.json():{}).then(data=>{projects=data.projects||{};}).catch(()=>{}),fetch(new URL('../../CARD-TEMPLATE/pieces.json',import.meta.url),{signal:AbortSignal.timeout(4000)}).then(r=>r.ok?r.json():{}).then(data=>{assetRects=data.pieces||{};}).catch(()=>{})]);
 }

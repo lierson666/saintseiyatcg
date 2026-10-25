@@ -27,7 +27,19 @@
           "visible": true,
           "locked": true,
           "style": {
-            "background": "#111019"
+            "fontFamily": "Avenir",
+            "fontSize": 42,
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "#111019",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
           }
         },
         {
@@ -35,16 +47,29 @@
           "name": "Artwork",
           "component": "ArtworkFrame",
           "binding": "card.artwork",
-          "x": 70,
-          "y": 60,
-          "width": 1348,
-          "height": 1970,
+          "x": 0,
+          "y": 0,
+          "width": 1488,
+          "height": 2091,
           "zIndex": 1,
           "rotation": 0,
           "opacity": 1,
           "visible": true,
           "locked": true,
           "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 42,
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible",
             "imageFit": "cover"
           }
         },
@@ -96,10 +121,19 @@
             "fontFamily": "Futura",
             "fontSize": 76,
             "fontWeight": 700,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible",
             "uppercase": true,
             "stroke": "#151018",
-            "strokeWidth": 2,
-            "align": "center"
+            "strokeWidth": 2
           }
         },
         {
@@ -117,8 +151,19 @@
           "visible": true,
           "locked": false,
           "style": {
+            "fontFamily": "Avenir",
             "fontSize": 36,
-            "align": "center"
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
           },
           "conditions": {
             "binding": "card.tagline",
@@ -141,13 +186,19 @@
           "locked": false,
           "style": {
             "fontFamily": "Futura",
-            "fontWeight": 700,
             "fontSize": 145,
+            "fontWeight": 700,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
             "background": "#15111de8",
-            "borderColor": "#bfa66e",
             "borderWidth": 4,
             "borderRadius": 115,
-            "align": "center"
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible",
+            "borderColor": "#bfa66e"
           },
           "conditions": {
             "binding": "card.cost",
@@ -202,8 +253,16 @@
             "fontFamily": "Futura",
             "fontSize": 40,
             "fontWeight": 700,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
             "background": "#100e16de",
-            "align": "center"
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
           }
         },
         {
@@ -221,9 +280,19 @@
           "visible": true,
           "locked": false,
           "style": {
+            "fontFamily": "Avenir",
             "fontSize": 34,
             "fontWeight": 700,
-            "align": "center"
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
           },
           "conditions": {
             "binding": "runtime.keywords",
@@ -245,14 +314,19 @@
           "visible": true,
           "locked": false,
           "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 38,
+            "fontWeight": 400,
+            "lineHeight": 1.18,
+            "letterSpacing": 0,
+            "align": "left",
             "background": "#100e16e8",
+            "borderWidth": 0,
             "borderRadius": 8,
             "padding": 18,
-            "fontSize": 38,
-            "align": "left",
             "autoFit": true,
             "minFontSize": 23,
-            "lineHeight": 1.18
+            "overflow": "visible"
           }
         },
         {
@@ -270,14 +344,19 @@
           "visible": true,
           "locked": false,
           "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 34,
+            "fontWeight": 400,
+            "lineHeight": 1.18,
+            "letterSpacing": 0,
+            "align": "left",
             "background": "#100e16e8",
+            "borderWidth": 0,
             "borderRadius": 8,
             "padding": 18,
-            "fontSize": 34,
-            "align": "left",
             "autoFit": true,
             "minFontSize": 23,
-            "lineHeight": 1.18
+            "overflow": "visible"
           },
           "conditions": {
             "binding": "card.resonance",
@@ -299,8 +378,19 @@
           "visible": true,
           "locked": false,
           "style": {
+            "fontFamily": "Avenir",
             "fontSize": 26,
-            "align": "center"
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
           },
           "label": "OWNER",
           "conditions": {
@@ -323,8 +413,19 @@
           "visible": true,
           "locked": false,
           "style": {
+            "fontFamily": "Avenir",
             "fontSize": 28,
-            "align": "center"
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
           },
           "conditions": {
             "binding": "card.flavor",
@@ -346,13 +447,20 @@
           "visible": true,
           "locked": false,
           "style": {
+            "fontFamily": "Avenir",
             "fontSize": 90,
             "fontWeight": 700,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
             "background": "#100e16ee",
-            "borderColor": "#bfa66e",
             "borderWidth": 2,
             "borderRadius": 30,
-            "align": "center"
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible",
+            "borderColor": "#bfa66e"
           },
           "label": "ATK",
           "conditions": {
@@ -384,13 +492,20 @@
           "visible": true,
           "locked": false,
           "style": {
+            "fontFamily": "Avenir",
             "fontSize": 90,
             "fontWeight": 700,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
             "background": "#100e16ee",
-            "borderColor": "#bfa66e",
             "borderWidth": 2,
             "borderRadius": 30,
-            "align": "center"
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible",
+            "borderColor": "#bfa66e"
           },
           "label": "HP",
           "conditions": {
@@ -422,13 +537,20 @@
           "visible": true,
           "locked": false,
           "style": {
+            "fontFamily": "Avenir",
             "fontSize": 78,
             "fontWeight": 700,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
             "background": "#100e16ee",
-            "borderColor": "#bfa66e",
             "borderWidth": 2,
             "borderRadius": 30,
-            "align": "center"
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible",
+            "borderColor": "#bfa66e"
           },
           "label": "ARMOR HP",
           "conditions": {
@@ -461,13 +583,20 @@
           "visible": true,
           "locked": false,
           "style": {
+            "fontFamily": "Avenir",
             "fontSize": 30,
             "fontWeight": 700,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
             "background": "#100e16ee",
-            "borderColor": "#bfa66e",
             "borderWidth": 2,
             "borderRadius": 12,
-            "align": "center"
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible",
+            "borderColor": "#bfa66e"
           },
           "conditions": {
             "binding": "card.isEquipment",
@@ -490,9 +619,19 @@
           "visible": true,
           "locked": false,
           "style": {
+            "fontFamily": "Avenir",
             "fontSize": 86,
             "fontWeight": 700,
-            "align": "center"
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
           },
           "label": "SOUL",
           "conditions": {
@@ -516,9 +655,19 @@
           "visible": true,
           "locked": false,
           "style": {
+            "fontFamily": "Avenir",
             "fontSize": 86,
             "fontWeight": 700,
-            "align": "center"
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
           },
           "label": "ATTACK",
           "conditions": {
@@ -542,9 +691,19 @@
           "visible": true,
           "locked": false,
           "style": {
+            "fontFamily": "Avenir",
             "fontSize": 86,
             "fontWeight": 700,
-            "align": "center"
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
           },
           "label": "AWAKEN",
           "conditions": {
@@ -568,9 +727,19 @@
           "visible": true,
           "locked": false,
           "style": {
+            "fontFamily": "Avenir",
             "fontSize": 26,
             "fontWeight": 700,
-            "align": "center"
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
           }
         },
         {
@@ -588,9 +757,19 @@
           "visible": true,
           "locked": false,
           "style": {
+            "fontFamily": "Avenir",
             "fontSize": 30,
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
             "background": "#100e16e8",
-            "align": "center"
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
           },
           "conditions": {
             "all": [
@@ -621,10 +800,19 @@
           "visible": true,
           "locked": false,
           "style": {
+            "fontFamily": "Avenir",
             "fontSize": 30,
             "fontWeight": 700,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
             "background": "#100e16ee",
-            "align": "center"
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
           },
           "conditions": {
             "binding": "runtime.status",
@@ -646,7 +834,19 @@
           "visible": true,
           "locked": false,
           "style": {
-            "background": "#bfa66e"
+            "fontFamily": "Avenir",
+            "fontSize": 42,
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "#bfa66e",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
           }
         },
         {
@@ -664,9 +864,20 @@
           "visible": true,
           "locked": true,
           "style": {
-            "borderColor": "#bfa66e",
+            "fontFamily": "Avenir",
+            "fontSize": 42,
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
             "borderWidth": 2,
-            "borderRadius": 12
+            "borderRadius": 12,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible",
+            "borderColor": "#bfa66e"
           }
         },
         {
@@ -684,10 +895,21 @@
           "visible": false,
           "locked": true,
           "style": {
-            "borderColor": "#e6cc84",
+            "fontFamily": "Avenir",
+            "fontSize": 42,
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
             "borderWidth": 2,
-            "glow": 18,
-            "borderRadius": 12
+            "borderRadius": 12,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible",
+            "borderColor": "#e6cc84",
+            "glow": 18
           }
         },
         {
@@ -705,8 +927,19 @@
           "visible": false,
           "locked": false,
           "style": {
+            "fontFamily": "Avenir",
             "fontSize": 25,
-            "align": "center"
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
           },
           "conditions": {
             "binding": "card.reminder",
@@ -1110,7 +1343,16 @@
             "fontFamily": "Futura",
             "fontSize": 62,
             "fontWeight": 700,
-            "align": "left"
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "left",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
           }
         },
         {
@@ -1128,8 +1370,19 @@
           "visible": true,
           "locked": false,
           "style": {
+            "fontFamily": "Avenir",
             "fontSize": 32,
-            "align": "left"
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "left",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
           }
         },
         {
@@ -1147,8 +1400,19 @@
           "visible": true,
           "locked": false,
           "style": {
+            "fontFamily": "Avenir",
             "fontSize": 35,
-            "align": "left"
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "left",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
           }
         },
         {
@@ -1166,9 +1430,19 @@
           "visible": true,
           "locked": false,
           "style": {
+            "fontFamily": "Avenir",
             "fontSize": 44,
             "fontWeight": 700,
-            "align": "left"
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "left",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
           }
         },
         {
@@ -1186,8 +1460,19 @@
           "visible": true,
           "locked": false,
           "style": {
+            "fontFamily": "Avenir",
             "fontSize": 31,
-            "align": "left"
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "left",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
           }
         },
         {
@@ -1205,8 +1490,19 @@
           "visible": true,
           "locked": false,
           "style": {
+            "fontFamily": "Avenir",
             "fontSize": 29,
-            "align": "left"
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "left",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
           }
         },
         {
@@ -1224,8 +1520,19 @@
           "visible": true,
           "locked": false,
           "style": {
+            "fontFamily": "Avenir",
             "fontSize": 30,
-            "align": "left"
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "left",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
           }
         },
         {
@@ -1243,8 +1550,19 @@
           "visible": true,
           "locked": false,
           "style": {
+            "fontFamily": "Avenir",
             "fontSize": 28,
-            "align": "left"
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "left",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
           }
         },
         {
@@ -1262,9 +1580,19 @@
           "visible": true,
           "locked": false,
           "style": {
+            "fontFamily": "Avenir",
             "fontSize": 30,
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "left",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
             "minFontSize": 22,
-            "align": "left"
+            "overflow": "visible"
           }
         },
         {
@@ -1282,8 +1610,19 @@
           "visible": true,
           "locked": false,
           "style": {
+            "fontFamily": "Avenir",
             "fontSize": 30,
-            "align": "left"
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "left",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
           }
         }
       ],

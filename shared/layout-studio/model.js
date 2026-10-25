@@ -43,7 +43,7 @@ export const BINDINGS={
   'card.attack':{label:'Attack impresso',read:c=>c.card.attack},
   'card.awaken':{label:'Awaken impresso',read:c=>c.card.awaken},
   'card.artwork':{label:'Ilustração',read:c=>c.art?.src||c.art||c.card.ilustracao},
-  'runtime.currentPower':{label:'Power da engine',read:c=>c.stats?.power??c.card.power??c.card.attack},
+  'runtime.currentPower':{label:'Power da engine',read:c=>c.card.tipo==='God'?c.instance?.attack??c.card.attack:c.stats?.power??c.card.power},
   'runtime.currentHP':{label:'HP da engine',read:c=>c.stats?.hp??(isArmor(c.card)?c.card.damage_cloth??c.card.vida:c.card.vida??c.card.resistance)},
   'runtime.maxHP':{label:'HP máximo da engine',read:c=>c.stats?.maxHP??(isArmor(c.card)?c.card.damage_cloth??c.card.vida:c.card.vida??c.card.resistance)},
   'runtime.markedDamage':{label:'Dano marcado',read:c=>c.stats?.damage??c.instance?.damage??0},
@@ -52,12 +52,12 @@ export const BINDINGS={
   'runtime.counters':{label:'Counters atuais',read:c=>c.counters??Object.fromEntries(Object.entries(c.instance||{}).filter(([k,v])=>/counter/i.test(k)&&typeof v==='number'&&v>0))},
   'runtime.prepared':{label:'Prepared',read:c=>c.instance?.prepared??true},
   'runtime.awakened':{label:'Awakened',read:c=>c.instance?.awakened??false},
-  'runtime.equipped':{label:'Equipada',read:c=>Boolean(c.instance?.attachedTo||c.equipment?.length)},
+  'runtime.equipped':{label:'Equipada',read:c=>Boolean(c.instance?.attachedToUid||c.equipment?.length)},
   'runtime.status':{label:'Estado atual',read:c=>c.instance?[c.instance.prepared?'Prepared':'Unprepared',c.instance.awakened?'Awakened':'',c.stats?.armor&&c.stats.protectionActive===false?'Broken':''].filter(Boolean).join(' · '):''},
   'runtime.soul':{label:'Soul atual',read:c=>c.instance?.soul??c.card.soul},
   'runtime.modifiers':{label:'Modificadores da engine',read:c=>c.instance?.modifiers||[]},
-  'inspector.original':{label:'Valores originais',read:c=>`Printed: ${c.card.power??c.card.attack??'—'} ATK / ${c.card.vida??c.card.resistance??c.card.damage_cloth??'—'} HP`},
-  'inspector.current':{label:'Valores atuais',read:c=>c.stats?`Current: ${c.stats.power??'—'} ATK / ${c.stats.hp??'—'} HP (${c.stats.maxHP??'—'} max)\nMarked damage: ${c.stats.damage??0}`:''},
+  'inspector.original':{label:'Valores originais',read:c=>c.card.tipo==='God'?`Printed: ${c.card.soul} SOUL / ${c.card.attack} ATTACK / ${c.card.awaken} AWAKEN`:`Printed: ${c.card.power??'—'} ATK / ${c.card.damage_cloth??c.card.vida??c.card.resistance??'—'} HP`},
+  'inspector.current':{label:'Valores atuais',read:c=>c.card.tipo==='God'?`Current: ${c.instance?.soul??c.card.soul} SOUL / ${c.instance?.attack??c.card.attack} ATTACK`:c.stats?`Current: ${c.stats.power??'—'} ATK / ${c.stats.hp??'—'} HP (${c.stats.maxHP??'—'} max)\nMarked damage: ${c.stats.damage??0}`:''},
   'inspector.modifiers':{label:'Relatório de modificadores',read:c=>(c.instance?.modifiers||[]).map(m=>Object.entries(m).map(([k,v])=>`${k}: ${v}`).join(' · ')).join('\n')},
   'context.mode':{label:'Contexto de visualização',read:c=>c.mode||'print'},
   'theme.frames':{label:'Molduras do tema',read:c=>c.theme?.frames||[]},
@@ -111,8 +111,8 @@ export function assetURL(value){
   try{const url=new URL(value,base);if(url.origin!==base.origin||!['http:','https:','file:'].includes(url.protocol))return null;return url.href;}catch{return null;}
 }
 function matches(template,card,surface){const s=template.scope;if(s.surface!==surface)return false;return(s.level==='global'||s.level==='type'&&s.value===card.tipo||s.level==='faction'&&s.value===card.faccao||s.level==='rarity'&&s.value===card.raridade||s.level==='card'&&s.value===card.id)&&(!s.subtype||card.subtipos?.includes(s.subtype));}
-export function resolveLayout(templates,card,{surface='card',through=4}={}){
-  const byId=new Map(templates.map(t=>[t.id,t])),active=templates.filter(t=>matches(t,card,surface)&&LEVELS.indexOf(t.scope.level)<=through).sort((a,b)=>LEVELS.indexOf(a.scope.level)-LEVELS.indexOf(b.scope.level)||Number(Boolean(a.scope.subtype))-Number(Boolean(b.scope.subtype))||a.id.localeCompare(b.id));
+export function resolveLayout(templates,card,{surface='card',through=4,previewId=null}={}){
+  const byId=new Map(templates.map(t=>[t.id,t])),active=templates.filter(t=>matches(t,card,surface)&&LEVELS.indexOf(t.scope.level)<=through).sort((a,b)=>LEVELS.indexOf(a.scope.level)-LEVELS.indexOf(b.scope.level)||Number(Boolean(a.scope.subtype))-Number(Boolean(b.scope.subtype))||Number(a.id===previewId)-Number(b.id===previewId)||(a.revision||0)-(b.revision||0)||a.id.localeCompare(b.id));
   const out={canvas:{width:1488,height:2091,safe:72,bleed:36},theme:{ink:'#fff0bf',accent:'#d5b665',background:'#111019',frames:[],symbol:null},elements:[],sources:{},chain:[]},layers=new Map(),applied=new Set();
   function apply(t,trail=[]){if(trail.includes(t.id))throw Error('Ciclo de herança.');if(applied.has(t.id))return;if(t.extends){const parent=byId.get(t.extends);if(!parent)throw Error('Template pai ausente.');if(LEVELS.indexOf(parent.scope.level)>LEVELS.indexOf(t.scope.level)||parent.scope.surface!==surface)throw Error('Herança fora da hierarquia.');apply(parent,[...trail,t.id]);}applied.add(t.id);out.chain.push({id:t.id,name:t.name,level:t.scope.level,revision:t.revision});Object.assign(out.canvas,t.canvas);Object.assign(out.theme,t.theme);for(const patch of t.elements){const existing=layers.get(patch.id)||{id:patch.id,component:'TextBlock',name:patch.id,x:0,y:0,width:300,height:100,zIndex:0,rotation:0,opacity:1,visible:true,locked:false,style:{}};const next={...existing,...clone(patch),style:{...existing.style,...clone(patch.style||{})}};layers.set(patch.id,next);for(const k of Object.keys(patch)){if(k==='style'){for(const sk of Object.keys(patch.style))out.sources[`${patch.id}.style.${sk}`]=t.id;}else out.sources[`${patch.id}.${k}`]=t.id;}}}
   active.forEach(t=>apply(t));out.elements=[...layers.values()].filter(l=>!l.removed).sort((a,b)=>a.zIndex-b.zIndex||a.id.localeCompare(b.id));return out;

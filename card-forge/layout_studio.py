@@ -4,6 +4,7 @@ import datetime
 import json
 import math
 import re
+import struct
 import threading
 from pathlib import Path
 from urllib.parse import unquote
@@ -191,6 +192,64 @@ def assets(root=ROOT):
     return result
 
 
+def image_dimensions(path):
+    with path.open('rb') as stream:
+        header = stream.read(24)
+        if header.startswith(b'\x89PNG') and len(header) == 24:
+            return struct.unpack('>II', header[16:24])
+        if header[:2] != b'\xff\xd8':
+            return None
+        stream.seek(2)
+        for _ in range(500):
+            if stream.read(1) != b'\xff':
+                break
+            marker = stream.read(1)
+            while marker == b'\xff':
+                marker = stream.read(1)
+            if not marker or marker[0] in [0xD8, 0xD9, 0xDA]:
+                break
+            raw = stream.read(2)
+            if len(raw) != 2:
+                break
+            size = struct.unpack('>H', raw)[0]
+            if size < 2:
+                break
+            if marker[0] in [0xC0, 0xC1, 0xC2, 0xC3, 0xC5, 0xC6, 0xC7, 0xC9, 0xCA, 0xCB, 0xCD, 0xCE, 0xCF]:
+                raw = stream.read(5)
+                if len(raw) == 5:
+                    h, w = struct.unpack('>HH', raw[1:])
+                    return w, h
+                break
+            stream.seek(size - 2, 1)
+    return None
+
+
+def project_artwork(root=ROOT):
+    """Publica apenas metadados visuais já existentes, com enquadramento e proporção."""
+    result = {}
+    for path in (root / 'card-forge/projects').glob('*.json'):
+        if not ID.fullmatch(path.stem) or not path.resolve().is_relative_to((root / 'card-forge/projects').resolve()):
+            continue
+        try:
+            data = json.loads(path.read_text())
+            item = {k: data[k] for k in ['title', 'subtitle', 'flavour'] if isinstance(data.get(k), str)}
+            art = data.get('art') or {}
+            src = art.get('src')
+            if isinstance(src, str) and len(src) < 300 and not re.search(r'[\x00-\x1f]', src):
+                image = (root / 'card-forge' / src).resolve()
+                if image.is_file() and any(image.is_relative_to((root / p).resolve()) for p in ['ARTS', 'card-forge/art', 'playtest/assets']):
+                    descriptor = {k: v for k, v in art.items() if k in ['w', 'x', 'y', 'zoom', 'baseW'] and number(v, -100000, 100000)}
+                    descriptor['src'] = image.relative_to(root).as_posix()
+                    dimensions = image_dimensions(image)
+                    if dimensions and dimensions[0]:
+                        descriptor['h'] = descriptor.get('w', dimensions[0]) * dimensions[1] / dimensions[0]
+                    item['art'] = descriptor
+            result[path.stem] = item
+        except (OSError, ValueError, TypeError):
+            continue
+    return result
+
+
 def handle(handler, path, raw=None, writer=None, root=ROOT):
     try:
         if raw is None:
@@ -198,6 +257,8 @@ def handle(handler, path, raw=None, writer=None, root=ROOT):
                 return handler.reply(200, read(root))
             if path == '/api/layout-studio/assets':
                 return handler.reply(200, {'assets': assets(root)})
+            if path == '/api/layout-studio/projects':
+                return handler.reply(200, {'projects': project_artwork(root)})
         else:
             if len(raw) > 3 * 1024 * 1024:
                 return handler.reply(413, {'erro': 'Template grande demais.'})

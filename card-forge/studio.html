@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'none'">
+  <title>CARD FORGE — LAYOUT STUDIO</title>
+  <link rel="icon" href="../LOGO/favicon.png">
+  <link rel="stylesheet" href="studio.css?v=1">
+</head>
+<body>
+  <header class="studio-top">
+    <a class="studio-brand" href="index.html"><span aria-hidden="true">✧</span><span>CARD FORGE<small>SAINT SEIYA TCG</small></span></a>
+    <h1>LAYOUT STUDIO</h1>
+    <nav aria-label="Áreas do Layout Studio" role="tablist">
+      <button role="tab" aria-selected="true" data-page="cards">Cards</button>
+      <button role="tab" aria-selected="false" data-page="layouts">Layouts</button>
+      <button role="tab" aria-selected="false" data-page="themes">Themes</button>
+      <button role="tab" aria-selected="false" data-page="preview">Preview</button>
+    </nav>
+    <div class="studio-actions"><button id="undo" disabled title="Desfazer · ⌘Z">↶ <span>Desfazer</span></button><button id="redo" disabled title="Refazer · ⌘⇧Z">↷ <span>Refazer</span></button><button id="saveDraft">Salvar rascunho</button><button class="primary" id="publish">Publicar</button></div>
+  </header>
+  <div class="context-bar">
+    <label>Template<select id="templateSelect" aria-label="Template ativo"></select></label>
+    <label>Superfície<select id="surfaceSelect"><option value="card">Carta</option><option value="inspector">Popup Inspector</option></select></label>
+    <span id="draftState">Carregando biblioteca…</span>
+    <button id="newTemplate">+ Template</button><button id="duplicateTemplate">Duplicar</button><button id="historyButton">Histórico</button>
+  </div>
+  <main class="studio-workspace">
+    <aside class="left-pane" aria-label="Biblioteca e layers">
+      <section class="library-pane" data-panel="cards">
+        <h2>Biblioteca <span id="cardCount"></span></h2>
+        <input id="cardSearch" type="search" aria-label="Buscar cartas" placeholder="Buscar por nome ou ID…">
+        <div class="filter-row"><select id="filterFaction" aria-label="Filtrar facção"></select><select id="filterType" aria-label="Filtrar tipo"></select><select id="filterRarity" aria-label="Filtrar raridade"></select></div>
+        <div id="cardList" class="card-library" aria-label="Cartas disponíveis"></div>
+        <a id="editCardData" class="subtle-link" href="index.html" target="_blank" rel="noopener">Editar dados da carta ↗</a>
+      </section>
+      <section class="library-pane" data-panel="layouts" hidden>
+        <h2>Template e herança</h2>
+        <label>Nome do template<input id="templateName" maxlength="120"></label>
+        <label>Nível<select id="scopeLevel"><option value="global">Global</option><option value="type">Tipo / subtipo</option><option value="faction">Facção</option><option value="rarity">Raridade</option><option value="card">Carta individual</option></select></label>
+        <label>Valor do escopo<select id="scopeValue"></select></label>
+        <label>Subtipo opcional<select id="scopeSubtype"></select></label>
+        <label>Herdar de<select id="parentTemplate"></select></label>
+        <div class="filter-row"><label>Safe area (px)<input type="number" id="safeArea" min="0" max="500"></label><label>Bleed (px)<input type="number" id="bleedArea" min="0" max="500"></label></div>
+        <p class="hint">Alterações são apenas visuais. O nível Carta prevalece sobre os demais.</p>
+        <button id="exportJSON">Exportar template JSON</button>
+        <label class="file-control">Importar template JSON<input type="file" id="importJSON" accept=".json,application/json"></label>
+      </section>
+      <section class="library-pane" data-panel="themes" hidden>
+        <h2>Identidade da facção</h2>
+        <label>Facção<select id="themeFaction"></select></label>
+        <label>Cor do texto<input id="themeInk" placeholder="#fff0bf"></label>
+        <label>Cor de destaque / glow<input id="themeAccent" placeholder="#d5b665"></label>
+        <label>Fundo da carta<input id="themeBackground" placeholder="#111019"></label>
+        <label>Símbolo<select id="themeSymbol"></select></label>
+        <label>Molduras e ornamentos<select id="themeFrames" multiple size="4"></select></label>
+        <label class="file-control">Enviar PNG / JPG<input type="file" id="themeUpload" accept="image/png,image/jpeg"></label>
+        <p class="hint">Use as layers para ajustar posição, escala, tipografia e ornamentos desta facção.</p>
+      </section>
+      <section class="library-pane" data-panel="preview" hidden>
+        <h2>Laboratório da engine</h2>
+        <label>Estado<select id="labMode"><option value="normal">Normal / impressão</option><option value="hand">Na mão</option><option value="battlefield">No Battlefield</option></select></label>
+        <div class="check-row"><label><input id="labPrepared" type="checkbox" checked>Prepared</label><label><input id="labAwakened" type="checkbox">Awakened</label></div>
+        <div class="filter-row"><label>Dano<input id="labDamage" type="number" min="0" max="100" value="0"></label><label>Seal counters<input id="labSeal" type="number" min="0" max="20" value="0"></label></div>
+        <div class="filter-row"><label>Bônus temporário ATK<input id="labPower" type="number" min="-30" max="30" value="0"></label><label>Bônus temporário HP<input id="labHP" type="number" min="-30" max="30" value="0"></label></div>
+        <label>Keywords adicionais<input id="labKeywords" placeholder="Pierce, Long Range"></label>
+        <div class="filter-row"><label>Counter especial<input id="labCounterName" value="trainingCounters"></label><label>Quantidade<input id="labCounterValue" type="number" min="0" max="30" value="0"></label></div>
+        <label>Equipamentos anexados<select id="labEquipment" multiple size="4"></select></label>
+        <p id="engineReport" class="hint">Simulações são isoladas de partidas reais.</p>
+        <button id="resetLab">Restaurar estado normal</button>
+        <hr><h3>Exportar carta</h3>
+        <label>Formato<select id="exportFormat"><option value="png">PNG · 1488×2091</option><option value="png-transparent">PNG · fundo transparente</option><option value="svg">SVG · vetorial</option><option value="pdf">PDF · impressão 2,5×3,5 pol</option></select></label>
+        <button id="exportCard" class="primary">Exportar em alta qualidade</button>
+      </section>
+      <section class="layers-pane">
+        <div class="pane-heading"><h2>Layers <span id="layerCount"></span></h2><button id="addLayer" title="Adicionar layer" aria-label="Adicionar layer">＋</button></div>
+        <div class="layer-tools"><button id="duplicateLayer">Duplicar</button><button id="removeLayer">Remover</button><button id="layerUp" title="Subir layer">↑</button><button id="layerDown" title="Descer layer">↓</button></div>
+        <div id="layerList" class="layer-list" role="listbox" aria-label="Layers do template" aria-multiselectable="true"></div>
+      </section>
+    </aside>
+    <section class="center-pane" aria-label="Editor visual da carta">
+      <div class="canvas-toolbar"><label><input id="showSafe" type="checkbox" checked>Safe</label><label><input id="showBleed" type="checkbox" checked>Bleed</label><label><input id="snapGrid" type="checkbox" checked>Grid</label><label>px<input id="gridSize" type="number" min="1" max="100" value="16"></label><label><input id="smartGuides" type="checkbox" checked>Guias</label><button id="fitCanvas">Ajustar</button><button id="realSize">Tamanho real</button><label class="zoom-control">Zoom<input id="zoom" type="range" min="8" max="150" value="28"><output id="zoomValue">28%</output></label></div>
+      <div id="inheritanceTrail" class="inheritance-trail" aria-label="Cadeia de herança"></div>
+      <div id="canvasViewport" class="canvas-viewport" tabindex="0" aria-label="Canvas: arraste layers; Espaço para pan; setas para mover">
+        <div id="paperHost"><div id="canvasPaper" class="canvas-paper"><div id="sceneRoot"></div><div id="guidesOverlay" aria-hidden="true"></div><div id="selectionOverlay" aria-hidden="true"></div></div></div>
+      </div>
+      <div class="canvas-footer"><span id="selectedCardName">Nenhuma carta</span><span>Shift: seleção múltipla · Espaço: pan · ⌘Z: desfazer</span></div>
+      <section id="warnings" aria-label="Avisos de composição" aria-live="polite"></section>
+    </section>
+    <aside class="inspector-pane" aria-label="Inspector de propriedades">
+      <div class="pane-heading"><h2>Inspector</h2><span id="selectionCount"></span></div>
+      <div id="propertyControls"><p class="empty-hint">Selecione uma layer no Canvas ou na lista.</p></div>
+    </aside>
+  </main>
+  <footer class="studio-status" role="status" id="studioStatus">Carregando…</footer>
+  <dialog id="studioDialog"><button class="dialog-x" data-close-dialog aria-label="Fechar janela">×</button><div id="dialogBody"></div></dialog>
+  <script type="module" src="studio.js?v=1"></script>
+</body>
+</html>

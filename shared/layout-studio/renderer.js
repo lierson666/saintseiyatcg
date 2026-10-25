@@ -50,20 +50,20 @@ export function makeScene(layout,context,{transparent=false,omitFrame=false,sele
     commands.push({layer,value,flow,label,badge,bodyLayer,nestedCard:layer.component==='CardPreview'?nestedCard:null});
   }
   if(context.card&&bindingValue('card.isArmor',ctx)&&!(Number(bindingValue('card.armorHP',ctx))>0)&&!warnings.some(w=>w.kind==='missing'))warnings.push({layer:'armor-hp',kind:'missing',message:'Armor sem HP próprio válido no catálogo; indicador omitido da arte final.'});
-  return{canvas:layout.canvas,theme:layout.theme,commands,warnings,transparent,selection,key,assetRects:context.assetRects||{},cardId:context.card?.id};
+  return{canvas:layout.canvas,theme:layout.theme,commands,warnings,transparent,selection,key,art:context.art,assetRects:context.assetRects||{},cardId:context.card?.id};
 }
 const safeKey=value=>String(value).replace(/[^a-zA-Z0-9-]/g,'-');
 function renderCommand(command,scene){
   const {layer:l,value,flow,label,badge,bodyLayer,nestedCard}=command,s={padding:8,...l.style},ink=s.color||scene.theme.ink,id=`ls-${safeKey(scene.key)}-${l.id}`;
-  const common=`data-layer="${l.id}" data-component="${l.component}" data-binding="${esc(l.binding||'')}"${flow?.overflow?' data-overflow="true"':''} opacity="${l.opacity??1}" transform="rotate(${l.rotation||0} ${l.x+l.width/2} ${l.y+l.height/2})"`;
+  const common=`data-layer="${l.id}" data-x="${l.x}" data-y="${l.y}" data-width="${l.width}" data-height="${l.height}" data-component="${l.component}" data-binding="${esc(l.binding||'')}"${flow?.overflow?' data-overflow="true"':''} opacity="${l.opacity??1}" transform="rotate(${l.rotation||0} ${l.x+l.width/2} ${l.y+l.height/2})"`;
   const fx=s.shadow||s.glow?`<defs><filter id="${id}-fx" x="-100%" y="-100%" width="300%" height="300%"><feDropShadow dx="0" dy="${s.shadow?3:0}" stdDeviation="${s.glow||s.shadow}" flood-color="${s.glow?scene.theme.accent:'#000000'}" flood-opacity="0.65"/></filter></defs>`:'';
   const rect=(fill=s.background||'transparent')=>`<rect x="${l.x}" y="${l.y}" width="${l.width}" height="${l.height}" rx="${s.borderRadius||0}" fill="${fill}" stroke="${s.borderColor||'transparent'}" stroke-width="${s.borderWidth||0}"/>`;
   let body=rect();
   if(['ArtworkFrame','FactionIcon','Frame','DecorativeLayer'].includes(l.component)){
     const paths=l.asset?[l.asset]:l.component==='Frame'?value:l.component==='ArtworkFrame'||l.component==='FactionIcon'?[value]:[];
-    for(const path of Array.isArray(paths)?paths:[]){const url=assetURL(path),r=l.component==='Frame'?scene.assetRects[String(path).replace(/^CARD-TEMPLATE\//,'').replace(/\.png$/,'')]:null;const imageRect=r?{x:r.x/1488*l.width,y:r.y/2091*l.height,width:r.w/1488*l.width,height:r.h/2091*l.height}:{x:0,y:0,width:l.width,height:l.height};if(url)body+=`<svg x="${l.x}" y="${l.y}" width="${l.width}" height="${l.height}" overflow="hidden"><image href="${esc(url)}" x="${imageRect.x}" y="${imageRect.y}" width="${imageRect.width}" height="${imageRect.height}" preserveAspectRatio="${s.imageFit==='contain'||l.component==='FactionIcon'?'xMidYMid meet':'xMidYMid slice'}"/></svg>`;}
+    for(const path of Array.isArray(paths)?paths:[]){const url=assetURL(path),r=l.component==='Frame'?scene.assetRects[String(path).replace(/^CARD-TEMPLATE\//,'').replace(/\.png$/,'')]:null,art=l.component==='ArtworkFrame'&&typeof scene.art==='object'&&scene.art?.w&&scene.art?.h?scene.art:null;const imageRect=r?{x:r.x/1488*l.width,y:r.y/2091*l.height,width:r.w/1488*l.width,height:r.h/2091*l.height}:art?{x:art.x/1488*l.width,y:art.y/2091*l.height,width:art.w/1488*l.width,height:art.h/2091*l.height}:{x:0,y:0,width:l.width,height:l.height};if(url)body+=`<svg x="${l.x}" y="${l.y}" width="${l.width}" height="${l.height}" overflow="hidden"><image href="${esc(url)}" x="${imageRect.x}" y="${imageRect.y}" width="${imageRect.width}" height="${imageRect.height}" preserveAspectRatio="${art?'none':s.imageFit==='contain'||l.component==='FactionIcon'?'xMidYMid meet':'xMidYMid slice'}"/></svg>`;}
   }
-  if(l.component==='CardPreview'&&nestedCard)body+=`<svg x="${l.x}" y="${l.y}" width="${l.width}" height="${l.height}" viewBox="0 0 ${nestedCard.canvas.width} ${nestedCard.canvas.height}">${svgBody(nestedCard)}</svg>`;
+  if(l.component==='CardPreview'&&nestedCard)body+=`<svg pointer-events="none" x="${l.x}" y="${l.y}" width="${l.width}" height="${l.height}" viewBox="0 0 ${nestedCard.canvas.width} ${nestedCard.canvas.height}">${svgBody(nestedCard)}</svg>`;
   if(flow){
     const font=esc(flow.style.fontFamily),anchor=flow.style.align==='left'?'start':flow.style.align==='right'?'end':'middle',x=flow.style.align==='left'?l.x+flow.style.padding:flow.style.align==='right'?l.x+l.width-flow.style.padding:l.x+l.width/2;
     const y=bodyLayer.y+flow.style.padding+(badge?Math.max(0,(bodyLayer.height-2*flow.style.padding-flow.height)/2):0);

@@ -1,12 +1,12 @@
 // Bases visuais independentes dos dados mecânicos. Nenhuma base é um novo tipo de carta.
 const exists=binding=>({binding,op:'exists'}),eq=(binding,value)=>({binding,op:'eq',value}),all=(...rules)=>({all:rules});
 export function makeDefaults(legacy,cards=[]){
-  const layer=(id,name,component,binding,x,y,width,height,extra={})=>({id,name,component,binding,x,y,width,height,zIndex:10,rotation:0,opacity:1,visible:true,locked:false,style:{fontFamily:'Avenir',fontSize:42,fontWeight:400,lineHeight:1.2,letterSpacing:0,align:'center',background:'transparent',borderWidth:0,borderRadius:0,padding:8,autoFit:true,minFontSize:24,overflow:'visible',...extra.style},...extra});
+  const layer=(id,name,component,binding,x,y,width,height,extra={})=>({id,name,component,binding,x,y,width,height,zIndex:10,rotation:0,opacity:1,visible:true,locked:false,style:{fontFamily:'Avenir',fontSize:42,fontWeight:400,lineHeight:1.2,letterSpacing:0,align:'center',background:'transparent',borderWidth:0,borderRadius:0,padding:8,autoFit:true,minFontSize:24,overflow:'visible',...extra.style},...extra,style:{fontFamily:'Avenir',fontSize:42,fontWeight:400,lineHeight:1.2,letterSpacing:0,align:'center',background:'transparent',borderWidth:0,borderRadius:0,padding:8,autoFit:true,minFontSize:24,overflow:'visible',...extra.style}});
   const template=(id,name,level,value,elements=[],extra={})=>({id,schemaVersion:1,name,scope:{level,value,surface:'card'},elements,revision:0,...extra});
   const textStyle={background:'#100e16e8',borderRadius:8,padding:18,fontSize:38,align:'left',autoFit:true,minFontSize:23,lineHeight:1.18};
   const common=[
     layer('background','Background','DecorativeLayer','',0,0,1488,2091,{zIndex:0,locked:true,style:{background:'#111019'}}),
-    layer('artwork','Artwork','ArtworkFrame','card.artwork',70,60,1348,1970,{zIndex:1,locked:true,style:{imageFit:'cover'}}),
+    layer('artwork','Artwork','ArtworkFrame','card.artwork',0,0,1488,2091,{zIndex:1,locked:true,style:{imageFit:'cover'}}),
     layer('frame','Frame','Frame','theme.frames',0,0,1488,2091,{zIndex:2,locked:true}),
     layer('name','Card Name','TextBlock','card.name',320,130,810,126,{style:{fontFamily:'Futura',fontSize:76,fontWeight:700,uppercase:true,stroke:'#151018',strokeWidth:2,align:'center'}}),
     layer('tagline','Tagline','TextBlock','card.tagline',320,260,810,80,{conditions:exists('card.tagline'),style:{fontSize:36,align:'center'}}),
