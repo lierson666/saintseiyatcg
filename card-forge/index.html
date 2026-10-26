@@ -98,16 +98,19 @@
         <label>Ressonâncias (uma por linha: ID | texto em inglês)<textarea name="resonanceText" rows="3"></textarea></label></div>
         <p id="rulesReview" class="hint" role="status"></p>
       </fieldset>
+      <fieldset id="keywordEditor">
+        <legend>Keywords</legend>
+        <label>Selecionadas <input name="keywords" placeholder="Long Range, Pierce"></label>
+        <select id="kwSelect" aria-label="Adicionar keyword à carta"><option value="">+ Keyword</option></select>
+        <p class="hint">As keywords ficam na área própria da carta. Selecione aqui; não é preciso repeti-las nas regras.</p>
+      </fieldset>
       <fieldset>
         <legend>Texto</legend>
-        <label>Keywords <input name="keywords" placeholder="Long Range, Pierce"></label>
-        <div class="symbar" id="symbar" role="toolbar" aria-label="Inserir símbolo no texto">
-          <select id="kwSelect" aria-label="Inserir keyword"><option value="">+ Keyword</option></select>
-        </div>
+        <div class="symbar" id="symbar" role="toolbar" aria-label="Inserir símbolo no texto"></div>
         <label>Regras
           <textarea name="rules" rows="9" spellcheck="true"></textarea>
         </label>
-        <p class="hint">Clique num símbolo ou keyword para inserir no cursor. Linha em branco separa habilidades; <code>**negrito**</code>. Keywords saem em negrito maiúsculo sozinhas.</p>
+        <p class="hint">Clique num símbolo para inserir no cursor. Linha em branco separa habilidades; <code>**negrito**</code>. Keywords saem em negrito maiúsculo sozinhas.</p>
         <label data-for="god">Awaken (texto) <textarea name="habilidade_awaken_en" rows="4"></textarea></label>
         <label data-for="god">Ultimate <textarea name="ultimate_en" rows="3"></textarea></label>
         <label>Flavour <input name="flavour" placeholder="“Burn cosmo, burn!”"></label>

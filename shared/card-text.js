@@ -19,7 +19,7 @@ export function textBlocks(texts){
     for(let chunk of chunks){
       chunk=chunk.trim();if(!chunk)continue;
       let m=chunk.match(/^\*\*([^*]+)\*\*\s*\n?([\s\S]*)$/);
-      if(m){result.push({heading:m[1],body:m[2],kind:'ability'});continue;}
+      if(m){result.push({heading:m[1].replace(/:$/,''),body:m[2],kind:'ability'});continue;}
       m=chunk.match(/^(Resonance\s*[—-]\s*[^.:]+)[.:]\s*([\s\S]*)$/i);
       if(m){result.push({heading:m[1],body:m[2],kind:'resonance'});continue;}
       m=chunk.match(/^(7th Sense|God Cloth)\s*[—-]\s*([^:]+):\s*([\s\S]*)$/i);
@@ -35,6 +35,15 @@ export function textBlocks(texts){
     }
   }
   return result;
+}
+// O campo próprio já exibe as keywords; só omitimos repetições isoladas na apresentação.
+export function ruleBlocksWithoutKeywords(texts,keywords=[]){
+  const normalize=value=>String(value).replace(/\*\*/g,'').trim().replace(/[.:;]+$/,'').trim().toLowerCase();
+  const selected=new Set(keywords.map(normalize));
+  return textBlocks(texts).filter(block=>{
+    const tokens=[block.heading,block.body].filter(Boolean).join('\n').split(/[,;\n]|\.\s+/).map(normalize).filter(Boolean);
+    return !tokens.length||!tokens.every(token=>selected.has(token));
+  });
 }
 export function blocksMarkup(blocks){return blocks.map(b=>[b.heading?`**${b.heading.replace(/:$/,'')}:**`:'',b.body].filter(Boolean).join('\n')).join('\n\n');}
 export function presentationRules(card){

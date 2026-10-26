@@ -1,6 +1,6 @@
 import {printedEquipmentBonuses,signedBonus,equipmentCostText} from '../card-visual-values.js';
 import {isArmor,isEquipment} from '../card-model.js';
-import {textBlocks} from '../card-text.js';
+import {textBlocks,ruleBlocksWithoutKeywords} from '../card-text.js';
 
 // Contrato visual puro: lê o catálogo e o resultado da engine, sem executar regras.
 export const SCHEMA_VERSION=1;
@@ -22,8 +22,8 @@ function namedRule(text,fallback){
   return rest.length&&/ — /.test(first)?[{heading:first,body:rest.join('\n')}]:[{heading:fallback,body:text}];
 }
 export function ruleParts(card){
-  const blocks=textBlocks(card.habilidades_en||[]).filter(b=>!pendingDesign(b.body)).map(block=>{if(block.heading)return block;const lines=block.body.split('\n');if(lines.length>1&&/ — (?:Divine Power|Awaken \d+|Ultimate)$/.test(lines[0]))return {...block,heading:lines[0],body:lines.slice(1).join('\n')};const m=block.body.match(/^([^—.\n]{2,60})\s*—\s*([\s\S]+)$/);return m&&!/^(Once|When|Whenever|If|At)\b/i.test(m[1])?{...block,heading:m[1],body:m[2]}:block;});
-  const equip=equipmentCostText(card),divinePower=blocks.filter(b=>!['resonance','owner','keywords'].includes(b.kind)),awakenRules=namedRule(card.habilidade_awaken_en,'AWAKEN'),ultimateRules=namedRule(card.ultimate_en,'ULTIMATE');
+  const blocks=ruleBlocksWithoutKeywords(card.habilidades_en||[],card.keywords_en||[]).filter(b=>!pendingDesign(b.body)).map(block=>{if(block.heading)return block;const lines=block.body.split('\n');if(lines.length>1&&/ — (?:Divine Power|Awaken \d+|Ultimate)$/.test(lines[0]))return {...block,heading:lines[0],body:lines.slice(1).join('\n')};const m=block.body.match(/^([^—.\n]{2,60})\s*—\s*([\s\S]+)$/);return m&&!/^(Once|When|Whenever|If|At)\b/i.test(m[1])?{...block,heading:m[1],body:m[2]}:block;});
+  const equip=equipmentCostText(card),divinePower=blocks.filter(b=>!['resonance','owner'].includes(b.kind)),awakenRules=namedRule(card.habilidade_awaken_en,'AWAKEN'),ultimateRules=namedRule(card.ultimate_en,'ULTIMATE');
   return {rules:[...divinePower,...(equip&&!blocks.some(b=>/Equip \d|Equip cost:/i.test(b.body))?[{heading:'EQUIP',body:equip}]:[]),...awakenRules,...ultimateRules],divinePower,awakenRules,ultimateRules,resonance:[...blocks.filter(b=>b.kind==='resonance'),...(card.ressonancias||[]).filter(r=>!pendingDesign(r.habilidade_en)).map(r=>({heading:`RESONANCE — ${owner(r.personagem_id)}`,body:r.habilidade_en}))],owners:blocks.filter(b=>b.kind==='owner').map(b=>b.body).join(' / ')||(card.donos||[]).map(owner).join(' / ')};
 }
 export function editorialWarnings(card){

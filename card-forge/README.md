@@ -45,7 +45,7 @@ Upload de artes usa o seletor de arquivos do macOS; exportação individual abre
 - Carrega qualquer carta de `data/cards.json`, ou cria uma nova (botão "Nova carta").
 - Edita nome, título, subtítulo, custo, tipo, subtipos, regras, Power/HP, bônus por estágio, Equip (Damage somente nas cartas legadas), Soul/Attack/Awaken, raridade, facção e flavour.
 - Arte: envie ou solte uma imagem sobre a carta, arraste para mover e use a roda do mouse para zoom. Se existir `ARTS/<mesmo nome do PNG>`, a arte entra sozinha.
-- Regras: a barra acima do texto insere símbolos no cursor (`{C}` Cosmo, `{B}` Base Cosmo, `{L}` Latent Cosmo, `{S}` Soul, `{T}` Tap). O dropdown "+ Keyword" insere uma keyword. Keywords (Pierce, Long Range, Seal…) saem em negrito maiúsculo sozinhas. Linha em branco separa habilidades; `**negrito**` força negrito.
+- Regras: a barra acima do texto insere símbolos no cursor (`{C}` Cosmo, `{B}` Base Cosmo, `{L}` Latent Cosmo, `{S}` Soul, `{T}` Tap). O seletor "+ Keyword" fica na seção Keywords e adiciona ao campo próprio, sem inserir nas regras nem repetir uma seleção existente. Keywords (Pierce, Long Range, Seal…) saem em negrito maiúsculo sozinhas. Linha em branco separa habilidades; `**negrito**` força negrito.
 - Facção: cada facção usa o pacote do PSD do seu Deus (moldura, caixas, gemas de Power/Soul, divisória, cor do texto e do brilho). Peças que o Deus não tem (gema de custo, Resistance, Equip, Damage e ícones) vêm de Athena, tingidas na cor da facção.
 - "Sobrepor PNG original" põe o PNG de `CARDS/` por cima para comparar.
 - Export: PNG alta 1488×2091 e PNG web 1100×1546.

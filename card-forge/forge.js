@@ -1,6 +1,6 @@
 import {createHistory} from '../shared/editor-history.js';
 import {compilePlaytest} from '../shared/import-playtest.js';
-import {textBlocks,blocksMarkup,presentationRules} from '../shared/card-text.js';
+import {textBlocks,blocksMarkup,presentationRules,ruleBlocksWithoutKeywords} from '../shared/card-text.js';
 import {renderLiveCard,illustration} from '../shared/live-card.js';
 import {isArmor,isEquipment,validateCard} from '../shared/card-model.js';
 // Card Forge — editor de cartas em vanilla JS. Renderiza no canvas nativo 1488x2091 usando
@@ -292,7 +292,7 @@ async function drawRules(el, s) {
   const paras = [];
   if (has(s.keywords)) paras.push(`**${list(s.keywords).join(', ').toUpperCase()}.**`);
   const text=s.estagios.length?presentationRules(buildCard()).map(toMarkup):splitParas(s.rules);
-  paras.push(...splitParas(blocksMarkup(textBlocks(text))));
+  paras.push(...splitParas(blocksMarkup(ruleBlocksWithoutKeywords(text,list(s.keywords)))));
   if (layoutKey(s) === 'god' && has(s.habilidade_awaken_en)) {
     paras.push(`**AWAKEN${has(s.awaken) ? ` ${s.awaken}` : ''}**`, ...s.habilidade_awaken_en.split(/(?<=\.) (?=[A-Z][^.—]{1,30} — )/).map(toMarkup));
   }
@@ -758,11 +758,18 @@ for (const [token, label] of [['{C}', 'Cosmo'], ['{B}', 'Base Cosmo'], ['{L}', '
   b.append(Object.assign(new Image(), { src: pieceSrc(ICONS[token]), alt: '' }), label);
   b.addEventListener('mousedown', (e) => e.preventDefault()); // não tira o foco/cursor do texto
   b.addEventListener('click', () => insertAtCursor(token));
-  $('#symbar').insertBefore(b, $('#kwSelect'));
+  $('#symbar').append(b);
 }
 const kwSel = $('#kwSelect');
 kwSel.append(...KEYWORDS.map((k) => new Option(k, k)));
-kwSel.addEventListener('change', () => { if (kwSel.value) insertAtCursor(kwSel.value); kwSel.value = ''; });
+kwSel.addEventListener('change', () => {
+  const keyword=kwSel.value,field=form.elements.keywords,selected=list(field.value);
+  if(keyword&&!selected.some(k=>k.toLowerCase()===keyword.toLowerCase())){
+    field.value=[...selected,keyword].join(', ');
+    field.dispatchEvent(new Event('input',{bubbles:true}));
+  }
+  kwSel.value='';
+});
 
 // ---------- lote: várias cartas de um arquivo de texto ----------
 // Formato (card-forge/import/modelo.txt): blocos "Campo: valor", cartas separadas por uma linha "---".
@@ -968,5 +975,5 @@ try {
 }
 
 function checkCatalog(){const keep={orig,gen,S};try{return db.cartas.map(c=>{orig=c;S=fromCard(c);return {id:c.id,diff:diffCards(c,buildCard())};}).filter(r=>r.diff.length);}finally{({orig,gen,S}=keep);}}
-function layoutReport(){const keep={orig,gen,S};try{return db.cartas.map(c=>{orig=c;S=fromCard(c);const el=T.layouts[layoutKey(S)].elements.find(e=>e.kind==='rules');const paras=[...(has(S.keywords)?[`**${list(S.keywords).join(', ')}.**`]:[]),...splitParas(blocksMarkup(textBlocks(splitParas(S.rules))))];let size=el.size,L;for(;size>=22;size--){L=layoutRules(paras,size,el.rect[2]);if(L.h<=el.rect[3])break;}return{id:c.id,size,overflow:L.h>el.rect[3]};});}finally{({orig,gen,S}=keep);}}
+function layoutReport(){const keep={orig,gen,S};try{return db.cartas.map(c=>{orig=c;S=fromCard(c);const el=T.layouts[layoutKey(S)].elements.find(e=>e.kind==='rules');const paras=[...(has(S.keywords)?[`**${list(S.keywords).join(', ')}.**`]:[]),...splitParas(blocksMarkup(ruleBlocksWithoutKeywords(splitParas(S.rules),list(S.keywords))))];let size=el.size,L;for(;size>=22;size--){L=layoutRules(paras,size,el.rect[2]);if(L.h<=el.rect[3])break;}return{id:c.id,size,overflow:L.h>el.rect[3]};});}finally{({orig,gen,S}=keep);}}
 window.forge = { history:{undo:()=>travelEdit('undo'),redo:()=>travelEdit('redo'),get canUndo(){return !!editHistory?.canUndo;},get canRedo(){return !!editHistory?.canRedo;}},checkCatalog,layoutReport,S: () => S, render, toMarkup, fromMarkup, buildCard, selectCard, parseBatch };
