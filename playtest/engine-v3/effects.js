@@ -1,0 +1,272 @@
+// Efeitos de carta da engine 3.0: valores em jogo, modificadores com duração e prevenção de dano de Strike.
+// Texto das cartas: snapshot D268, sem alteração. Durações: D191 ('this_round', 'next_round') e 'this_strike'.
+// Prevenção checada antes do evento (D199). Escolhas opcionais ("you may") vêm de `ctx.decide(player, pergunta)`;
+// sem `decide`, o jogador recusa.
+// Ordem de aplicação numa mesma porção de dano (escolhida na implementação; confirmar com o autor):
+// 1. prevenções obrigatórias de carta; 2. escudos criados por Spell; 3. prevenções opcionais pagas; 4. "would be defeated".
+import {RuleError, useOncePerRound, addEffect, destroyDevotee, draw} from './core.js';
+
+export const card = (ctx, uid) => ctx.cards.get(ctx.objects[uid].cardId);
+const id = (ctx, uid) => ctx.objects[uid].cardId.slice(-3);
+export const controllerOf = (state, uid) => state.order.find(k => state.players[k].battlefield.includes(uid));
+const devotees = (state, ctx, key) => state.players[key].battlefield.filter(uid => card(ctx, uid).kind === 'Devotee');
+const controls = (state, ctx, key, number) => devotees(state, ctx, key).some(uid => id(ctx, uid) === number);
+export const isSaint = (ctx, uid) => card(ctx, uid).kind === 'Devotee' && /Saint/.test(card(ctx, uid).type);
+export const isBronze = (ctx, uid) => isSaint(ctx, uid) && /Bronze Saint/.test(card(ctx, uid).type);
+const other = (state, key) => state.order.find(k => k !== key);
+const ask = (ctx, player, question) => Boolean(ctx.decide?.(player, question));
+
+// Equipment presos ao Devotee, na ordem em que foram equipados.
+export const gearOf = (ctx, uid) => Object.keys(ctx.attached).filter(e => ctx.attached[e] === uid);
+
+// Bônus que valem agora: fixo do Equipment, habilidades "While …" das cartas dos decks e efeitos com duração.
+function mods(state, ctx, uid) {
+  const list = gearOf(ctx, uid).map(e => card(ctx, e).equipped).filter(Boolean);
+  const key = controllerOf(state, uid);
+  if (key) {
+    const n = id(ctx, uid);
+    if (n === '034' && state.players[key].soul <= 5) list.push({atk: 0, hp: 2}); // Loyal Servant
+    if (n === '036' && controls(state, ctx, key, '001')) list.push({atk: 0, hp: 2}); // Sibling Bond
+    if (n === '037' && controls(state, ctx, key, '003')) list.push({atk: 0, hp: 1}); // Dragon's Promise
+  }
+  return [...list, ...state.effects.filter(e => e.target === uid && e.kind === 'mod')];
+}
+const sum = (list, field) => list.reduce((n, m) => n + (m[field] || 0), 0);
+export const atkOf = (state, ctx, uid) => card(ctx, uid).atk + sum(mods(state, ctx, uid), 'atk');
+export const hpOf = (state, ctx, uid) => card(ctx, uid).hp + sum(mods(state, ctx, uid), 'hp');
+export const keywordsOf = (state, ctx, uid) => [...card(ctx, uid).keywords, ...mods(state, ctx, uid).flatMap(m => m.keywords || []),
+  ...(state.units[uid]?.keywords || [])];
+
+export const modify = (state, target, {atk = 0, hp = 0, keywords = []}, duration = 'this_round') =>
+  addEffect(state, {kind: 'mod', target, atk, hp, keywords, duration});
+// Escudo "prevent the next N [Strike] damage": `target` é um uid ou 'god:A'; amount Infinity = todo o dano.
+export const shield = (state, target, amount, {strikeOnly = true, duration = 'this_round'} = {}) =>
+  addEffect(state, {kind: 'prevent', target, amount, strikeOnly, duration});
+// "When target … would be defeated by Strike damage this round, prevent that damage instead."
+export const save = (state, target, onSave) => addEffect(state, {kind: 'save', target, onSave, duration: 'this_round'});
+
+function useShields(state, target, amount, strike) {
+  for (const e of state.effects.filter(x => x.kind === 'prevent' && x.target === target && (strike || !x.strikeOnly))) {
+    const used = Math.min(e.amount, amount);
+    amount -= used;
+    e.amount -= used;
+  }
+  state.effects = state.effects.filter(e => !(e.kind === 'prevent' && e.amount <= 0));
+  return amount;
+}
+
+// Prevenção de dano de Strike num Devotee. Devolve o dano que sobra.
+function preventDevotee(state, ctx, uid, amount) {
+  if (amount <= 0) return 0;
+  const key = controllerOf(state, uid), gear = gearOf(ctx, uid), shiryu = id(ctx, uid) === '003';
+  // 1. Obrigatórias. Dragon Shield (003 e 004) não acumula: uma vez por Round por Devotee.
+  if ((shiryu || gear.some(e => id(ctx, e) === '004')) && useOncePerRound(state, `dragon-shield:${uid}`)) amount -= 1;
+  for (const e of gear) {
+    const n = id(ctx, e);
+    if (amount <= 0) break;
+    if ((n === '044' || n === '045' || n === '049') && useOncePerRound(state, `prevent:${e}`)) {
+      const before = amount;
+      amount = Math.max(0, amount - (n === '049' && shiryu ? 2 : 1)); // Libra Defense: 2 em Dragon Shiryu
+      // Dragon's Guard, Resonance: ao prevenir dano em Dragon Shiryu, 1 de escudo numa Armor dele até o fim do Round seguinte.
+      const armor = gear.find(g => card(ctx, g).armor);
+      if (n === '045' && shiryu && before > amount && armor) shield(state, armor, 1, {strikeOnly: false, duration: 'next_round'});
+    }
+  }
+  amount = Math.max(0, amount);
+  // 2. Escudos de Spell.
+  amount = useShields(state, uid, amount, true);
+  // 3. Opcionais, só para Saint.
+  if (amount > 0 && isSaint(ctx, uid)) amount = optionalPrevention(state, ctx, key, uid, amount);
+  // 4. "Would be defeated": conta a Armor que ainda absorve.
+  const armorRoom = gear.filter(e => card(ctx, e).armor).reduce((n, e) => n + card(ctx, e).hp - (state.units[e]?.damage || 0), 0);
+  const saver = state.effects.find(e => e.kind === 'save' && e.target === uid);
+  if (amount > 0 && saver && state.units[uid].damage + amount >= hpOf(state, ctx, uid) + armorRoom) {
+    state.effects = state.effects.filter(e => e !== saver);
+    saver.onSave?.(state, ctx);
+    return 0;
+  }
+  return amount;
+}
+
+function optionalPrevention(state, ctx, key, uid, amount) {
+  const p = state.players[key];
+  for (const source of devotees(state, ctx, key)) {
+    if (amount <= 0) break;
+    const n = id(ctx, source), once = `ability:${source}`;
+    // Prayer of Rozan: pay {1}{L}, prevent 1.
+    if (n === '037' && p.latent >= 1 && !state.roundUses.has(once) && ask(ctx, key, {ability: 'Prayer of Rozan', source, uid, amount})) {
+      useOncePerRound(state, once); p.latent -= 1; amount -= 1;
+    }
+    // Crystal Wall: another friendly Saint; pay {2}{L}, prevent up to 3.
+    if (n === '011' && source !== uid && p.latent >= 2 && !state.roundUses.has(once) && ask(ctx, key, {ability: 'Crystal Wall', source, uid, amount})) {
+      useOncePerRound(state, once); p.latent -= 2; amount -= Math.min(3, amount);
+    }
+    // Final Sacrifice: another friendly Saint; defeat Cassios, prevent up to 3 (sem limite por Round).
+    if (n === '027' && source !== uid && ask(ctx, key, {ability: 'Final Sacrifice', source, uid, amount})) {
+      destroyDevotee(state, source, ctx.objects, ctx.attached); amount -= Math.min(3, amount);
+    }
+  }
+  return amount;
+}
+
+// Prevenção de dano a um God. `strike`: se o dano vem de Strike. Crystal Wall também protege o God.
+export function preventGod(state, ctx, key, amount, strike = true) {
+  amount = useShields(state, `god:${key}`, amount, strike);
+  if (strike && amount > 0) {
+    const mu = devotees(state, ctx, key).find(uid => id(ctx, uid) === '011'), once = mu && `ability:${mu}`;
+    if (mu && state.players[key].latent >= 2 && !state.roundUses.has(once) && ask(ctx, key, {ability: 'Crystal Wall', source: mu, god: key, amount})) {
+      useOncePerRound(state, once); state.players[key].latent -= 2; amount -= Math.min(3, amount);
+    }
+  }
+  return amount;
+}
+
+// Dano de Strike num Devotee: prevenção, depois Armor na ordem de equipar (autor, 28/10/2026), depois o Devotee.
+// Devolve o dano que passou do HP restante do Devotee (base do Pierce).
+export function damageDevotee(state, ctx, uid, amount) {
+  amount = preventDevotee(state, ctx, uid, amount);
+  for (const armor of gearOf(ctx, uid).filter(e => card(ctx, e).armor)) {
+    const unit = state.units[armor] ??= {damage: 0};
+    const hit = useShields(state, armor, amount, true), absorbed = Math.min(hit, card(ctx, armor).hp - unit.damage);
+    unit.damage += absorbed;
+    amount = hit - absorbed;
+    if (unit.damage >= card(ctx, armor).hp) {
+      const owner = state.players[ctx.objects[armor].owner];
+      owner.battlefield = owner.battlefield.filter(x => x !== armor);
+      owner.tartarus.push(armor);
+      delete ctx.attached[armor];
+      delete state.units[armor];
+      state.effects = state.effects.filter(e => e.target !== armor);
+    }
+  }
+  const room = Math.max(0, hpOf(state, ctx, uid) - state.units[uid].damage);
+  state.units[uid].damage += amount;
+  return Math.max(0, amount - room);
+}
+
+// "Prepare it. It cannot declare another Strike this round.": o limite já vem da D22 (um Strike por Devotee por turno,
+// e o Round seguinte é outro turno); preparar só deixa o Devotee em guarda.
+const prepareNoStrike = (state, uid) => { state.units[uid].prepared = true; };
+const removeDamage = (state, uid, n) => { state.units[uid].damage = Math.max(0, state.units[uid].damage - n); };
+
+// Spells com efeito implementado, por número. `check` roda antes de pagar; `run` na resolução.
+// Alvo que saiu do campo antes da resolução: a parte que depende dele não faz nada (escolhido na implementação).
+const friendlySaint = (state, ctx, key, uid, bronze = false) => {
+  if (!uid || controllerOf(state, uid) !== key || !(bronze ? isBronze(ctx, uid) : isSaint(ctx, uid))) {
+    throw new RuleError('alvo', `alvo precisa ser um ${bronze ? 'Bronze Saint' : 'Saint'} seu no campo`);
+  }
+};
+const alive = (state, key, uid) => uid && controllerOf(state, uid) === key;
+
+export const SPELLS = {
+  // The Galaxian Wars: até dois Bronze Saints seus, +1 ATK; compra 1 se você controla ao menos três Bronze Saints.
+  '052': {
+    check: (s, c, k, {targets = []}) => {
+      if (targets.length > 2 || new Set(targets).size !== targets.length) throw new RuleError('alvo', 'até dois Bronze Saints distintos');
+      targets.forEach(t => friendlySaint(s, c, k, t, true));
+    },
+    run: (s, c, k, {targets = []}) => {
+      targets.filter(t => alive(s, k, t)).forEach(t => modify(s, t, {atk: 1}));
+      if (devotees(s, c, k).filter(u => isBronze(c, u)).length >= 3) draw(s, k, 1);
+    },
+  },
+  // Blood of the Dragon: +0/+2; em Dragon Shiryu, escudo de 2 contra Strike.
+  '058': {
+    check: (s, c, k, {target}) => friendlySaint(s, c, k, target),
+    run: (s, c, k, {target}) => {
+      if (!alive(s, k, target)) return;
+      modify(s, target, {hp: 2});
+      if (id(c, target) === '003') shield(s, target, 2);
+    },
+  },
+  // The Call of Athena: escolha um — +2 ATK num Saint seu, ou escudo de 3 no seu God.
+  '061': {
+    check: (s, c, k, {mode, target}) => {
+      if (mode === 'atk') friendlySaint(s, c, k, target);
+      else if (mode !== 'god') throw new RuleError('modo', "escolha 'atk' ou 'god'");
+    },
+    run: (s, c, k, {mode, target}) => {
+      if (mode === 'god') shield(s, `god:${k}`, 3);
+      else if (alive(s, k, target)) modify(s, target, {atk: 2});
+    },
+  },
+  // Shiryu's Sacrificed Sight: +2/+2; Pierce em Dragon Shiryu; no fim do Round, Unprepare e não prepara no próximo início.
+  '077': {
+    check: (s, c, k, {target}) => friendlySaint(s, c, k, target),
+    run: (s, c, k, {target}) => {
+      if (!alive(s, k, target)) return;
+      modify(s, target, {atk: 2, hp: 2, keywords: id(c, target) === '003' ? ['Pierce'] : []});
+      s.delayed.push({controller: k, run: st => {
+        if (!st.units[target] || controllerOf(st, target) !== k) return;
+        st.units[target].prepared = false;
+        st.units[target].skipPrepare = true;
+      }});
+    },
+  },
+  // The Testament of Aiolos: +2/+2 num Bronze Saint seu, ou escudo de 5 no seu God; os dois se você controla Pegasus Seiya.
+  '081': {
+    check: (s, c, k, {mode, target}) => {
+      if (!['atk', 'god', 'both'].includes(mode)) throw new RuleError('modo', "escolha 'atk', 'god' ou 'both'");
+      if (mode === 'both' && !controls(s, c, k, '001')) throw new RuleError('modo', "'both' exige Pegasus Seiya");
+      if (mode !== 'god') friendlySaint(s, c, k, target, true);
+    },
+    run: (s, c, k, {mode, target}) => {
+      if (mode !== 'god' && alive(s, k, target)) modify(s, target, {atk: 2, hp: 2});
+      if (mode !== 'atk') shield(s, `god:${k}`, 5);
+    },
+  },
+  // The Eighth Sense: +3/+3 e salvamento neste Round; se seu God tem menos Soul, pode Preparar (sem outro Strike).
+  '088': {
+    check: (s, c, k, {target}) => friendlySaint(s, c, k, target),
+    run: (s, c, k, {target, prepare}) => {
+      if (!alive(s, k, target)) return;
+      modify(s, target, {atk: 3, hp: 3});
+      save(s, target);
+      if (prepare && s.players[k].soul < s.players[other(s, k)].soul) prepareNoStrike(s, target);
+    },
+  },
+  // A Saint Never Surrenders: salvamento neste Round.
+  '054': {check: (s, c, k, {target}) => friendlySaint(s, c, k, target), run: (s, c, k, {target}) => { if (alive(s, k, target)) save(s, target); }},
+  // Protect Saori: escudo de 3 no God (5 se você controla um Saint com Guardian, na resolução).
+  '056': {
+    check: () => {},
+    run: (s, c, k) => shield(s, `god:${k}`, devotees(s, c, k).some(u => isSaint(c, u) && keywordsOf(s, c, u).includes('Guardian')) ? 5 : 3),
+  },
+  // Cassios's Sacrifice: salvamento; em Pegasus Seiya, ao salvar, pode Preparar (sem outro Strike).
+  '076': {
+    check: (s, c, k, {target}) => friendlySaint(s, c, k, target),
+    run: (s, c, k, {target}) => {
+      if (!alive(s, k, target)) return;
+      save(s, target, (st, cx) => {
+        if (id(cx, target) === '001' && ask(cx, k, {ability: "Cassios's Sacrifice", uid: target, prepare: true})) prepareNoStrike(st, target);
+      });
+    },
+  },
+  // Seiya Raises Athena's Shield: todo dano ao seu God neste Round é prevenido; com Pegasus Seiya, remove até 3 de dano
+  // de cada Saint seu; com Soul ≤ 5, pode Preparar até dois Saints seus (sem outro Strike).
+  '087': {
+    check: (s, c, k, {prepare = []}) => {
+      if (prepare.length > 2) throw new RuleError('alvo', 'até dois Saints');
+      prepare.forEach(t => friendlySaint(s, c, k, t));
+    },
+    run: (s, c, k, {prepare = []}) => {
+      shield(s, `god:${k}`, Infinity, {strikeOnly: false});
+      if (controls(s, c, k, '001')) devotees(s, c, k).filter(u => isSaint(c, u)).forEach(u => removeDamage(s, u, 3));
+      if (s.players[k].soul <= 5) prepare.filter(t => alive(s, k, t)).forEach(t => prepareNoStrike(s, t));
+    },
+  },
+};
+
+// Gatilhos de Strike das cartas dos decks que só mexem em valores.
+// Unicorn Gallop (028): uma vez por Round, ao declarar Strike contra Devotee, +1 ATK durante o Strike.
+export function onDeclare(state, ctx, attacker, target) {
+  if (id(ctx, attacker) === '028' && target.kind === 'devotee' && useOncePerRound(state, `ability:${attacker}`)) {
+    modify(state, attacker, {atk: 1}, 'this_strike');
+  }
+}
+// Rising Dragon (003): uma vez por Round, ao sobreviver a um Strike como defensor, +1 ATK até o fim do Round.
+export function afterStrike(state, ctx, strike) {
+  const t = strike.target.uid;
+  if (t && state.units[t] && id(ctx, t) === '003' && useOncePerRound(state, `rising-dragon:${t}`)) modify(state, t, {atk: 1});
+  state.effects = state.effects.filter(e => e.duration !== 'this_strike');
+}

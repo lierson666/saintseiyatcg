@@ -38,7 +38,7 @@ test('parser: bônus fixo de Equipment só nas linhas incondicionais', () => {
 test('Armor dá ATK e absorve o dano primeiro; destruída vai ao Tartarus do Owner e o excesso passa ao Devotee', () => {
   const {s, ctx, objects, field, equip, strike, next} = setup();
   const seiya = field('A', '001'), cloth = equip('A', '002', seiya); // 2/4 + Cloth (+1 ATK, HP 4)
-  assert.deepEqual([atkOf(ctx, seiya), hpOf(ctx, seiya)], [3, 4]);
+  assert.deepEqual([atkOf(s, ctx, seiya), hpOf(s, ctx, seiya)], [3, 4]);
   strike(seiya, {kind: 'god', player: 'B'});
   assert.equal(s.players.B.soul, 27);
   assert.deepEqual([s.units[cloth].damage, s.units[seiya].damage], [3, 0], 'retaliação 3 toda na Armor');
@@ -46,32 +46,35 @@ test('Armor dá ATK e absorve o dano primeiro; destruída vai ao Tartarus do Own
   strike(seiya, {kind: 'god', player: 'B'});
   assert.ok(s.players.A.tartarus.includes(cloth), 'Armor com 4 de dano sai');
   assert.equal(ctx.attached[cloth], undefined);
-  assert.deepEqual([s.units[seiya].damage, atkOf(ctx, seiya)], [2, 2], 'excesso 2 no Seiya; perde o +1');
+  assert.deepEqual([s.units[seiya].damage, atkOf(s, ctx, seiya)], [2, 2], 'excesso 2 no Seiya; perde o +1');
   assert.equal(s.players.B.soul, 24, 'o ATK foi lido antes do dano');
   checkInvariants(s, objects);
 });
 
 test('várias Armor: absorvem na ordem em que foram equipadas', () => {
-  const {s, ctx, field, equip, strike} = setup();
-  const jabu = field('A', '028'), first = equip('A', '044', jabu), second = equip('A', '044', jabu); // HP 2 cada, +1 ATK cada
-  assert.equal(atkOf(ctx, jabu), 4);
+  const {s, ctx, field, equip, strike, next} = setup();
+  const jabu = field('A', '028'), first = equip('A', '002', jabu), second = equip('A', '002', jabu); // HP 4 cada, +1 ATK cada
+  assert.equal(atkOf(s, ctx, jabu), 4);
+  strike(jabu, {kind: 'god', player: 'B'});
+  assert.deepEqual([s.units[first].damage, s.units[second].damage, s.units[jabu].damage], [3, 0, 0]);
+  next();
   strike(jabu, {kind: 'god', player: 'B'});
   assert.ok(s.players.A.tartarus.includes(first));
-  assert.deepEqual([s.units[second].damage, s.units[jabu].damage], [1, 0]);
+  assert.deepEqual([s.units[second].damage, s.units[jabu].damage], [2, 0]);
 });
 
 test('Divine Weapon com +HP (049) segura o Devotee; Pierce não passa do que a Armor absorveu', () => {
   const {s, ctx, field, equip, strike} = setup({A: fortress, B: rush});
   const cassios = field('A', '027');
-  equip('A', '049', cassios); // 2/3 com +0 ATK / +2 HP, não é Armor
+  equip('A', '049', cassios); // 2/3 com +0 ATK / +2 HP, não é Armor; Libra Defense previne 1
   strike(cassios, {kind: 'god', player: 'B'});
-  assert.deepEqual([s.units[cassios].damage, hpOf(ctx, cassios)], [3, 5]);
+  assert.deepEqual([s.units[cassios].damage, hpOf(s, ctx, cassios)], [2, 5]);
   const t = setup();
   const seiya = t.field('A', '001'), repairer = t.field('B', '042');
-  t.equip('B', '044', repairer); // Armor HP 2, +1 ATK
+  const cracked = t.equip('B', '044', repairer); // Armor HP 2, +1 ATK, Last Protection previne 1
   t.s.units[seiya].keywords = ['Pierce'];
   t.strike(seiya, {kind: 'devotee', uid: repairer});
-  assert.deepEqual([t.s.units[repairer].damage, t.s.players.B.soul, t.s.units[seiya].damage], [0, 30, 2]);
+  assert.deepEqual([t.s.units[cracked].damage, t.s.units[repairer].damage, t.s.players.B.soul, t.s.units[seiya].damage], [1, 0, 30, 2]);
 });
 
 test('019 equipada dá Cheater: ignora Guardian contra o God; texto da 019 intacto', () => {

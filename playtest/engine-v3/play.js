@@ -3,6 +3,7 @@
 // (as duas aprovadas pelo autor em 28/10/2026). Moment/Technique: D194. Janela: ALPHA-P06 A.
 // `ctx`: {cards (loadCanon), objects (uid -> {owner, cardId}), attached (uid do Equipment -> uid do portador)}.
 import {RuleError, NotSpecified, assertIdle, spendBase, spellCategory, respond} from './core.js';
+import {SPELLS} from './effects.js';
 
 // Custo impresso: Base (D4) ou Latent. Valida tudo antes de mexer no estado.
 export function payCost(state, key, cost) {
@@ -79,11 +80,15 @@ function equipCost(state, ctx, key, card, bearer) {
 
 // Spell: Technique é Sorcery e paga Base; Moment é Instant e paga Latent (D194). A carta fica em `stack`
 // enquanto está na cadeia e vai para o Tartarus do Owner depois de resolver (autor, 28/10/2026).
-// `effect(state)`: o efeito da carta; os efeitos ainda não estão na engine, então quem chama fornece.
-export function playSpell(state, ctx, key, uid, effect) {
+// `choice`: escolhas da carta ({target, targets, mode, prepare}); o efeito vem de SPELLS (effects.js).
+// Uma função no lugar de `choice` substitui o efeito (testes de procedimento).
+export function playSpell(state, ctx, key, uid, choice = {}) {
   const number = Number(ctx.objects[uid]?.cardId.slice(-3)), category = spellCategory(number);
   if (!category) throw new NotSpecified(`categoria de Spell da carta ${number} (D194 cobre 18 cartas)`);
-  if (typeof effect !== 'function') throw new NotSpecified(`efeito da carta ${number} ainda não implementado na engine 3.0`);
+  const spell = SPELLS[ctx.objects[uid].cardId.slice(-3)];
+  if (typeof choice !== 'function' && !spell) throw new NotSpecified(`efeito da carta ${number} ainda não implementado na engine 3.0`);
+  if (typeof choice !== 'function') spell.check(state, ctx, key, choice); // alvo e modo antes de pagar
+  const effect = typeof choice === 'function' ? choice : st => spell.run(st, ctx, key, choice);
   const p = state.players[key], owner = state.players[ctx.objects[uid].owner];
   const finish = st => { effect(st); st.players[key].stack.splice(st.players[key].stack.indexOf(uid), 1); owner.tartarus.push(uid); };
   if (category.speed === 'sorcery') {

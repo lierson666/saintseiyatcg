@@ -19,7 +19,7 @@ export class NotSpecified extends Error {
 export function createCore({first = 'A', second = 'B', soul, decks}) {
   const player = key => ({soul: soul[key], latent: 0, deck: [...decks[key]], hand: [], battlefield: [], tartarus: [], void: [], stack: [], bases: [], ownTurns: 0, baseTurn: 0, fatigue: 0});
   return {round: 1, turn: 0, turnInRound: 0, order: [first, second], active: first, victory: null,
-    players: {[first]: player(first), [second]: player(second)}, roundUses: new Set(), strikes: new Map(), effects: [], chain: [], window: null, units: {}};
+    players: {[first]: player(first), [second]: player(second)}, roundUses: new Set(), strikes: new Map(), effects: [], chain: [], window: null, units: {}, delayed: []};
 }
 
 const alive = state => { if (state.victory) throw new RuleError('D52', 'a partida já terminou'); };
@@ -38,7 +38,12 @@ export function startTurn(state, startOfTurn = []) {
   state.turn++;
   p.ownTurns++;
   for (const base of p.bases) base.prepared = true;
-  for (const uid of p.battlefield) if (state.units[uid]) state.units[uid].prepared = true;
+  for (const uid of p.battlefield) {
+    const unit = state.units[uid];
+    if (!unit) continue;
+    if (unit.skipPrepare) unit.skipPrepare = false; // "cannot be Prepared during your next Prepare Phase" (077)
+    else unit.prepared = true;
+  }
   const drawStep = () => { if (p.ownTurns > 1) draw(state, key, DRAWS_PER_TURN); };
   if (startOfTurn.length) pushTriggers(state, startOfTurn, drawStep);
   else drawStep();
@@ -132,6 +137,7 @@ export function destroyDevotee(state, uid, objects, attached) {
     state.players[objects[moved].owner].tartarus.push(moved);
     delete attached[moved];
     delete state.units[moved];
+    state.effects = state.effects.filter(e => e.target !== moved); // objeto novo se voltar
   }
 }
 
@@ -227,7 +233,9 @@ export function endTurn(state, {endOfTurn = [], endOfRound = []} = {}) {
 }
 
 // D204: gatilhos de fim de Round depois dos de fim de turno e antes do Cleanup.
+// Gatilhos atrasados de carta ("at the end of the round", em `state.delayed`) entram aqui também.
 function roundCheckpoint(state, triggers) {
+  if (state.turnInRound === 1) triggers = [...triggers, ...state.delayed.splice(0)];
   if (state.turnInRound === 1 && triggers.length) pushTriggers(state, triggers, () => cleanup(state));
   else cleanup(state);
 }

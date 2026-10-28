@@ -201,6 +201,9 @@ Nos decks aprovados (Pegasus Rush × Dragon Fortress), as keywords em uso são:
 - **Dano de Strike em Devotee com Armor:** passa primeiro pelas Armor. Armor com dano maior ou igual ao HP vai para o Tartarus do Owner e o excesso segue ao Devotee. O dano na Armor persiste (D34). Implementado em `damageDevotee` (`strike.js`).
 - **Quantidade de Armor:** sem limite por Devotee. Absorvem na ordem em que foram equipadas (ordem escolhida na implementação; confirmar).
 - **Equipment não-Armor quando o portador sai:** fica no campo, solto, e pode ser reequipado pagando Equip {N} (no Devotee nomeado em Auto-Equip, o Casting Cost). Implementado em `destroyDevotee` (`core.js`) e `reequip` (`play.js`).
+- **Ordem de prevenção numa mesma porção de dano de Strike** (escolhida na implementação; confirmar): 1) prevenções obrigatórias de carta (Dragon Shield, Last Protection, Dragon's Guard, Libra Defense); 2) escudos criados por Spell; 3) prevenções opcionais pagas (Prayer of Rozan, Crystal Wall, Final Sacrifice), perguntadas ao controlador; 4) "would be defeated" (054, 076, 088), que conta a Armor que ainda absorve. Depois a Armor, depois o Devotee.
+- **"Prepare it. It cannot declare another Strike this round."** (076, 087, 088): lido como já coberto pela D22 (um Strike por Devotee por turno); preparar só põe o Devotee em guarda. Confirmar.
+- **Alvo que saiu antes da resolução de uma Spell:** a parte que depende dele não faz nada. Confirmar.
 - **Spell depois de resolver:** vai para o Tartarus do Owner. Enquanto está na cadeia, fica na zona `stack`. Implementado em `playSpell`.
 
 ## Ordem sugerida para aprovar

@@ -127,7 +127,7 @@ test('Technique (052): Sorcery, paga Base, resolve sem janela e vai para o Tarta
   const wars = toHand('A', '052'), log = [];
   bases('A', 3);
   startTurn(s);
-  assert.throws(() => playSpell(s, ctx, 'A', wars), NotSpecified, 'sem efeito implementado não joga');
+  assert.throws(() => playSpell(s, ctx, 'A', wars, {targets: ['x', 'y', 'z']}), /até dois/, 'escolha inválida recusa antes de pagar');
   assert.equal(ready(s, 'A'), 3, 'nada pago');
   playSpell(s, ctx, 'A', wars, () => log.push('efeito'));
   assert.deepEqual([log, s.window, ready(s, 'A')], [['efeito'], null, 0]);

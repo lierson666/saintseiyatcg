@@ -4,6 +4,21 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — Modificadores com duração e prevenção de dano de Strike
+
+- **Antes:** a engine 3.0 não aplicava efeitos de texto das cartas.
+- **Depois:** implementados conforme o texto D268, sem alteração de carta:
+  - modificadores até o fim do Round ou durante o Strike: 052, 058, 061, 077 (com Sacrifice no fim do Round), 081, 088, Unicorn Gallop (028) e Rising Dragon (003);
+  - estáticas "While …": 034, 036, 037;
+  - prevenção de dano de Strike: Dragon Shield (003/004, sem acumular), 044, 045 (com o escudo de Armor da Resonance), 049 (2 em Shiryu), Prayer of Rozan (037), Crystal Wall (011, também no God), Final Sacrifice (027), escudos de God (056, 061, 081, 087) e salvamento "would be defeated" (054, 076, 088).
+- **Motivo:** pedido do autor de implementar os efeitos das cartas dos dois decks.
+- **Pendências (escolhidas na implementação; confirmar com o autor):**
+  - ordem de aplicação entre prevenções diferentes na mesma porção de dano;
+  - "cannot declare another Strike this round" tratado como coberto pela D22;
+  - parte de Spell cujo alvo saiu antes da resolução não faz nada;
+  - Resonance da 004 (redirecionar até 2 para Shiryu) e Cloth Restoration (011) ainda não estão; 053 continua sem categoria na D194.
+- Vale para a engine 3.0 (`playtest/engine-v3/`); o `docs/guia-do-jogo.md` (2.x) não muda.
+
 ## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — Bônus de Equipment e dano em Armor
 
 - **Antes:** D227 citava dano "absorbed by Armor" e "Armor priority", sem a regra (D1–D191 fora das fontes). Equipment não-Armor sem destino quando o portador sai.
