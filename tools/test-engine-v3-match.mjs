@@ -23,6 +23,9 @@ test('parser lê os 95 registros sem alterar texto e com os números impressos',
   assert.deepEqual(['athena', 'poseidon', 'hades', 'artemis', 'ares'].map(g => cards.get(`god-${g}`).soul), [30, 27, 32, 24, 30]);
   for (const n of ['062', '063', '064', '065']) assert.equal(cards.get(`athena-v6-${n}`).cost, null, 'D196');
   assert.deepEqual(cards.get('athena-v6-054').cost, {amount: 3, unit: 'latent'});
+  assert.deepEqual(cards.get('athena-v6-014').autoEquip, ['Gemini Saga', 'Dragon Shiryu']);
+  assert.deepEqual([cards.get('athena-v6-044').autoEquip, cards.get('athena-v6-044').equip], [[], {amount: 2, who: 'any'}]);
+  assert.deepEqual(cards.get('athena-v6-019').equip, {amount: 6, who: 'other'});
 });
 
 test('partida Athena × Athena: 60 objetos por deck, God e Domain fora, Soul do God', () => {

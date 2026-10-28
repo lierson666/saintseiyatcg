@@ -17,7 +17,7 @@ export class NotSpecified extends Error {
 }
 
 export function createCore({first = 'A', second = 'B', soul, decks}) {
-  const player = key => ({soul: soul[key], latent: 0, deck: [...decks[key]], hand: [], battlefield: [], tartarus: [], void: [], bases: [], ownTurns: 0, baseTurn: 0, fatigue: 0});
+  const player = key => ({soul: soul[key], latent: 0, deck: [...decks[key]], hand: [], battlefield: [], tartarus: [], void: [], stack: [], bases: [], ownTurns: 0, baseTurn: 0, fatigue: 0});
   return {round: 1, turn: 0, turnInRound: 0, order: [first, second], active: first, victory: null,
     players: {[first]: player(first), [second]: player(second)}, roundUses: new Set(), strikes: new Map(), effects: [], chain: [], window: null, units: {}};
 }
@@ -138,7 +138,7 @@ export function destroyDevotee(state, uid, objects, attached) {
 export function checkInvariants(state, objects) {
   const seen = new Map();
   for (const [key, p] of Object.entries(state.players)) {
-    for (const zone of ['deck', 'hand', 'battlefield', 'tartarus', 'void']) for (const uid of p[zone]) seen.set(uid, (seen.get(uid) || 0) + 1);
+    for (const zone of ['deck', 'hand', 'battlefield', 'tartarus', 'void', 'stack']) for (const uid of p[zone]) seen.set(uid, (seen.get(uid) || 0) + 1);
     for (const base of p.bases) seen.set(base.uid, (seen.get(base.uid) || 0) + 1);
     if (p.latent < 0 || p.latent > LATENT_CAP) throw new Error(`Latent fora do teto: ${key}=${p.latent}`);
   }

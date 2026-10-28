@@ -5,9 +5,9 @@ import {readFileSync} from 'node:fs';
 import {loadCanon} from '../shared/canon-cards.js';
 import {canonIndex} from '../shared/deck-v3.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
-import {startTurn, endTurn, passAll, placeBase, spendBase, respond, checkInvariants, RuleError} from '../playtest/engine-v3/core.js';
+import {startTurn, endTurn, passAll, placeBase, spendBase, respond, checkInvariants, RuleError, NotSpecified} from '../playtest/engine-v3/core.js';
 import {declareStrike} from '../playtest/engine-v3/strike.js';
-import {playDevotee} from '../playtest/engine-v3/play.js';
+import {playDevotee, playEquipment, playSpell} from '../playtest/engine-v3/play.js';
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json');
@@ -22,7 +22,8 @@ function setup(cardsMap = cards) {
   const toHand = (key, id) => { const uid = take(key, id); s.players[key].hand.push(uid); return uid; };
   const bases = (key, n) => { for (let i = 0; i < n; i++) s.players[key].bases.push({uid: s.players[key].deck.shift(), prepared: false}); };
   const end = () => { endTurn(s); passAll(s); };
-  return {s, ctx, objects: m.objects, toHand, bases, end};
+  const field = (key, id) => { const uid = take(key, id); s.players[key].battlefield.push(uid); s.units[uid] = {prepared: true, damage: 0}; return uid; };
+  return {s, ctx, objects: m.objects, toHand, bases, end, field};
 }
 
 test('Devotee jogado entra Unprepared, paga Base e não ataca no turno em que entra; no turno seguinte está Prepared', () => {
@@ -92,4 +93,84 @@ test('início do turno: prepara, depois gatilhos (APNAP/LIFO, com janela), depoi
   passAll(s);
   assert.deepEqual(log, ['base true mão 0', 'base true mão 0']);
   assert.equal(s.players.A.hand.length, 2);
+});
+
+const ready = (s, key) => s.players[key].bases.filter(b => b.prepared).length;
+
+test('Equipment: Auto-Equip paga o Casting Cost; outro Devotee paga Equip {N} no lugar; sem janela', () => {
+  const {s, ctx, objects, toHand, bases, field} = setup();
+  const seiya = field('A', '001'), jabu = field('A', '028');
+  const cloth = toHand('A', '002'), cloth2 = toHand('A', '002'); // Pegasus Cloth: 3 {B}, Auto-Equip Pegasus Seiya, Equip {5}
+  bases('A', 7);
+  startTurn(s);
+  assert.deepEqual(playEquipment(s, ctx, 'A', cloth, seiya), {cost: {amount: 3, unit: 'base'}});
+  assert.deepEqual([ctx.attached[cloth], ready(s, 'A'), s.window], [seiya, 4, null]);
+  assert.throws(() => playEquipment(s, ctx, 'A', cloth2, jabu), /insuficientes \(4\/5\)/);
+  assert.ok(s.players.A.hand.includes(cloth2), 'recusa não move a carta');
+  checkInvariants(s, objects);
+});
+
+test('Equipment: "Any friendly Devotee" (044) paga Equip {N}; portador inimigo ou fora do campo é recusado', () => {
+  const {s, ctx, toHand, bases, field} = setup();
+  const seiya = field('A', '001'), enemy = field('B', '043'), cracked = toHand('A', '044'), inHand = toHand('A', '028');
+  bases('A', 2);
+  startTurn(s);
+  assert.throws(() => playEquipment(s, ctx, 'A', cracked, enemy), /Devotee seu no campo/);
+  assert.throws(() => playEquipment(s, ctx, 'A', cracked, inHand), /Devotee seu no campo/);
+  playEquipment(s, ctx, 'A', cracked, seiya);
+  assert.equal(ctx.attached[cracked], seiya);
+  assert.equal(ready(s, 'A'), 0);
+});
+
+test('Technique (052): Sorcery, paga Base, resolve sem janela e vai para o Tartarus do Owner', () => {
+  const {s, ctx, objects, toHand, bases} = setup();
+  const wars = toHand('A', '052'), log = [];
+  bases('A', 3);
+  startTurn(s);
+  assert.throws(() => playSpell(s, ctx, 'A', wars), NotSpecified, 'sem efeito implementado não joga');
+  assert.equal(ready(s, 'A'), 3, 'nada pago');
+  playSpell(s, ctx, 'A', wars, () => log.push('efeito'));
+  assert.deepEqual([log, s.window, ready(s, 'A')], [['efeito'], null, 0]);
+  assert.ok(s.players.A.tartarus.includes(wars));
+  checkInvariants(s, objects);
+});
+
+test('Technique fora do próprio turno ou com janela aberta é recusada', () => {
+  const {s, ctx, toHand, bases} = setup();
+  const own = toHand('A', '052'), enemy = toHand('B', '059');
+  bases('A', 3);
+  startTurn(s);
+  assert.throws(() => playSpell(s, ctx, 'B', enemy, () => {}), /D1/);
+  respond(s, 'A', {speed: 'instant', run() {}});
+  assert.throws(() => playSpell(s, ctx, 'A', own, () => {}), e => e.decision === 'P06');
+});
+
+test('Moment (056) do defensor responde ao Strike, paga Latent, resolve antes do dano e vai para o Tartarus', () => {
+  const {s, ctx, objects, toHand, field} = setup();
+  const seiya = field('A', '001'), protect = toHand('B', '056'), log = [];
+  s.players.B.latent = 2;
+  startTurn(s);
+  assert.throws(() => playSpell(s, ctx, 'B', protect, () => {}), /não pode jogar Instant/);
+  assert.equal(s.players.B.latent, 2, 'nada pago');
+  declareStrike(s, ctx, seiya, {kind: 'god', player: 'B'});
+  playSpell(s, ctx, 'B', protect, st => log.push(`soul ${st.players.B.soul}`));
+  assert.deepEqual([s.players.B.latent, s.players.B.stack], [0, [protect]]);
+  checkInvariants(s, objects);
+  passAll(s);
+  assert.deepEqual(log, ['soul 30']);
+  assert.equal(s.players.B.soul, 28);
+  assert.ok(s.players.B.tartarus.includes(protect));
+  checkInvariants(s, objects);
+});
+
+test('Moment do ativo abre janela; Spell fora da D194 (053, 060) para com aviso', () => {
+  const {s, ctx, toHand} = setup();
+  const never = toHand('A', '054'), other = toHand('A', '053');
+  s.players.A.latent = 3;
+  startTurn(s);
+  playSpell(s, ctx, 'A', never, () => {});
+  assert.equal(s.window.priority, 'B');
+  passAll(s);
+  assert.ok(s.players.A.tartarus.includes(never));
+  assert.throws(() => playSpell(s, ctx, 'A', other, () => {}), e => e instanceof NotSpecified && /D194/.test(e.message));
 });

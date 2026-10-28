@@ -195,6 +195,11 @@ Nos decks aprovados (Pegasus Rush × Dragon Fortress), as keywords em uso são:
 
 ---
 
+## Decisões do autor fora das P01–P07 (28/10/2026)
+
+- **Equipment, custo alternativo:** no Devotee nomeado em Auto-Equip, paga o Casting Cost; em outro Devotee permitido por "Equip {N}" ("Other Devotees" ou "Any friendly Devotee"), paga N no lugar do Casting Cost, no mesmo recurso do Casting Cost. Sem portador legal, não pode ser jogado. Implementado em `playEquipment` (`playtest/engine-v3/play.js`).
+- **Spell depois de resolver:** vai para o Tartarus do Owner. Enquanto está na cadeia, fica na zona `stack`. Implementado em `playSpell`.
+
 ## Ordem sugerida para aprovar
 
 1. **P04 e P06**: travam o combate e a pilha.
