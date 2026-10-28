@@ -879,15 +879,15 @@ function previewCost(uid) {
   $$(`[data-bank="${key}"] [data-bank-unit="${c.cost.unit}"] .orb.ready`).slice(-c.cost.amount).forEach(o => o.classList.add('preview'));
 }
 
-// Campo dividido durante o arraste (como no sistema anterior): metade de cima CAST (jogar), metade de baixo COSMO BASE.
+// Durante o arraste, só a metade de baixo do campo (a de quem joga) se divide: COSMO BASE à esquerda, junto do medidor, e CAST à direita.
 // A zona só acende se a ação for possível agora; a engine ainda decide ao soltar.
 function showDragZones(uid) {
   const key = owner(uid), field = $('.arena-field');
   if (!field) return;
   const cast = !playableReason(key, uid), cosmo = canBase(key, uid);
   field.insertAdjacentHTML('beforeend', `<div class="drag-zones" aria-hidden="true">
-    <div class="drag-zone drag-zone--cast ${cast ? '' : 'is-off'}"><strong>CAST</strong><small>${cast ? 'Release to cast as Devotee, Armor or effect' : esc(playableReason(key, uid))}</small></div>
-    <div class="drag-zone drag-zone--cosmo ${cosmo ? '' : 'is-off'}"><strong>COSMO BASE</strong><small>${cosmo ? 'Release to set as Cosmo Base' : esc(baseReason(key, uid))}</small></div></div>`);
+    <div class="drag-zone drag-zone--cosmo ${cosmo ? '' : 'is-off'}"><strong>COSMO BASE</strong><small>${cosmo ? 'Release to set as Cosmo Base' : esc(baseReason(key, uid))}</small></div>
+    <div class="drag-zone drag-zone--cast ${cast ? '' : 'is-off'}"><strong>CAST</strong><small>${cast ? 'Release to cast as Devotee, Armor or effect' : esc(playableReason(key, uid))}</small></div></div>`);
   $('.olympus')?.classList.add('is-dragging');
 }
 function hideDragZones() {
@@ -899,7 +899,8 @@ function dragZoneAt(uid, x, y) {
   const r = $('.arena-field')?.getBoundingClientRect(), key = owner(uid);
   if (!r || x < r.left || x > r.right || y < r.top || y > r.bottom) return null;
   const overUnit = document.elementsFromPoint(x, y).some(d => d.dataset?.uid && S().players[key].battlefield.includes(d.dataset.uid));
-  if (y < r.top + r.height / 2 || overUnit) return playableReason(key, uid) ? (overUnit && canBase(key, uid) ? 'cosmo' : null) : 'cast';
+  if (y < r.top + r.height / 2) return null; // as zonas ficam só na metade de quem joga, embaixo
+  if (x >= r.left + r.width / 2 || overUnit) return playableReason(key, uid) ? (overUnit && canBase(key, uid) ? 'cosmo' : null) : 'cast';
   return canBase(key, uid) ? 'cosmo' : null;
 }
 // Arrastar da mão: soltar no campo joga; soltar num Devotee seu escolhe o portador/alvo; soltar na área de Cosmo vira Base.
