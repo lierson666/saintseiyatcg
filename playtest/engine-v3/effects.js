@@ -7,7 +7,7 @@
 // Decisões do autor em 28/10/2026 para esta parte: {C} se paga com Base preparada; Resonance de Equipment só vale
 // equipado no Devotee nomeado; dano que não é de Strike também passa pela Armor (prevenções "Strike damage" não valem);
 // dano redirecionado pela Resonance da 004 é dano de Strike em Shiryu.
-import {RuleError, useOncePerRound, addEffect, destroyDevotee, draw, spendBase, pushTriggers} from './core.js';
+import {RuleError, useOncePerRound, addEffect, destroyDevotee, draw, spendBase, pushTriggers, emit} from './core.js';
 
 export const card = (ctx, uid) => ctx.cards.get(ctx.objects[uid].cardId);
 const id = (ctx, uid) => ctx.objects[uid].cardId.slice(-3);
@@ -159,7 +159,9 @@ export function preventGod(state, ctx, key, amount, strike = true) {
 // Devolve o dano que passou do HP restante do Devotee (base do Pierce).
 export function damageDevotee(state, ctx, uid, amount, strike = true) {
   if (!state.units[uid]) return 0; // já saiu (ex.: Final Sacrifice)
+  const incoming = amount;
   amount = preventDevotee(state, ctx, uid, amount, strike);
+  const afterPrevention = amount;
   for (const armor of gearOf(ctx, uid).filter(e => card(ctx, e).armor)) {
     const unit = state.units[armor] ??= {damage: 0};
     const hit = useShields(state, armor, amount, strike), absorbed = Math.min(hit, card(ctx, armor).hp - unit.damage);
@@ -172,10 +174,12 @@ export function damageDevotee(state, ctx, uid, amount, strike = true) {
       delete ctx.attached[armor];
       delete state.units[armor];
       state.effects = state.effects.filter(e => e.target !== armor);
+      emit(state, 'destroyed', {uid: armor, owner: ctx.objects[armor].owner});
     }
   }
   const room = Math.max(0, hpOf(state, ctx, uid) - state.units[uid].damage);
   state.units[uid].damage += amount;
+  emit(state, 'damage', {uid, strike, incoming, prevented: incoming - afterPrevention, absorbed: afterPrevention - amount, dealt: amount});
   return Math.max(0, amount - room);
 }
 

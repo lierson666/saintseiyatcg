@@ -1,7 +1,7 @@
 // Monta uma partida 3.0 a partir de dois decks validados e do catálogo D268.
 // God e Domain ficam fora do deck (D196). Setup da ALPHA-P01 opção A (aprovada em 28/10/2026):
 // quem começa é sorteado, cada um compra 7 e faz um mulligan parcial, começando pelo jogador inicial.
-import {createCore, draw, RuleError} from './core.js';
+import {createCore, draw, RuleError, emit} from './core.js';
 import {validateDeck} from '../../shared/deck-v3.js';
 
 // Embaralhamento reproduzível (mulberry32 + Fisher–Yates): mesma seed, mesma partida.
@@ -44,6 +44,7 @@ export function mulligan(match, key, uids) {
   p.deck.push(...uids);
   shuffle(p.deck, random);
   draw(state, key, uids.length);
+  emit(state, 'mulligan', {player: key, count: uids.length});
   state.setup.shift();
   if (!state.setup.length) state.setup = null;
 }

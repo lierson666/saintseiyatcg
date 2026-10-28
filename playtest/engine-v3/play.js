@@ -2,7 +2,7 @@
 // Devotee: Sorcery (D173), entra Unprepared (ALPHA-P02 A). Equipment: custo alternativo, Spell: Tartarus do Owner
 // (as duas aprovadas pelo autor em 28/10/2026). Moment/Technique: D194. Janela: ALPHA-P06 A.
 // `ctx`: {cards (loadCanon), objects (uid -> {owner, cardId}), attached (uid do Equipment -> uid do portador)}.
-import {RuleError, NotSpecified, assertIdle, spendBase, spellCategory, respond} from './core.js';
+import {RuleError, NotSpecified, assertIdle, spendBase, spellCategory, respond, emit} from './core.js';
 import {SPELLS, ABILITIES, onEnter, onCastEquipment, checkDefeats} from './effects.js';
 
 // Custo impresso: Base (D4) ou Latent. Valida tudo antes de mexer no estado.
@@ -12,6 +12,7 @@ export function payCost(state, key, cost) {
   if (cost.unit === 'latent') {
     if (p.latent < cost.amount) throw new RuleError('custo', `Latent insuficiente (${p.latent}/${cost.amount})`);
     p.latent -= cost.amount;
+    emit(state, 'cosmo_spent', {player: key, unit: 'latent', amount: cost.amount});
   } else spendBase(state, key, cost.amount);
 }
 
@@ -37,6 +38,7 @@ export function playDevotee(state, ctx, key, uid, choice = {}) {
   leaveHand(state, key, uid);
   state.players[key].battlefield.push(uid);
   state.units[uid] = {prepared: false, damage: 0, entered: state.turn}; // P02: entra Unprepared
+  emit(state, 'card_played', {player: key, uid, kind: 'Devotee'});
   onEnter(state, ctx, key, uid, choice);
 }
 
@@ -51,6 +53,7 @@ export function playEquipment(state, ctx, key, uid, bearer, choice = {}) {
   leaveHand(state, key, uid);
   state.players[key].battlefield.push(uid);
   ctx.attached[uid] = bearer;
+  emit(state, 'card_played', {player: key, uid, kind: 'Equipment', bearer});
   onCastEquipment(state, ctx, key, uid, choice);
   return {cost};
 }
@@ -68,6 +71,7 @@ export function activate(state, ctx, key, uid, choice = {}) {
   spendBase(state, key, ability.cost); // {N}{C}: Base preparada (autor, 28/10/2026)
   if (ability.once) state.roundUses.add(`ability:${uid}`);
   state.units[uid].prepared = false;
+  emit(state, 'ability', {player: key, uid, name: ability.name, target: choice.target});
   ability.run(state, ctx, key, choice);
   checkDefeats(state, ctx);
 }
@@ -85,6 +89,7 @@ export function reequip(state, ctx, key, uid, bearer) {
   const cost = equipCost(state, ctx, key, card, bearer);
   payCost(state, key, cost);
   ctx.attached[uid] = bearer;
+  emit(state, 'equipped', {player: key, uid, bearer});
   return {cost};
 }
 
@@ -111,12 +116,13 @@ export function playSpell(state, ctx, key, uid, choice = {}) {
   if (typeof choice !== 'function') spell.check(state, ctx, key, choice); // alvo e modo antes de pagar
   const effect = typeof choice === 'function' ? choice : st => spell.run(st, ctx, key, choice);
   const p = state.players[key], owner = state.players[ctx.objects[uid].owner];
-  const finish = st => { effect(st); st.players[key].stack.splice(st.players[key].stack.indexOf(uid), 1); owner.tartarus.push(uid); checkDefeats(st, ctx); };
+  const finish = st => { emit(st, 'spell_resolved', {player: key, uid}); effect(st); st.players[key].stack.splice(st.players[key].stack.indexOf(uid), 1); owner.tartarus.push(uid); checkDefeats(st, ctx); };
   if (category.speed === 'sorcery') {
     const card = sorceryFromHand(state, ctx, key, uid, 'Spell');
     payCost(state, key, card.cost);
     leaveHand(state, key, uid);
     p.stack.push(uid);
+    emit(state, 'card_played', {player: key, uid, kind: 'Spell', category: category.category});
     finish(state); // Sorcery não abre janela (P06): resolve na hora
     return;
   }
@@ -127,5 +133,6 @@ export function playSpell(state, ctx, key, uid, choice = {}) {
   payCost(state, key, card.cost);
   leaveHand(state, key, uid);
   p.stack.push(uid);
-  respond(state, key, {speed: 'instant', run: finish}); // Moment jogado abre ou continua a janela
+  emit(state, 'card_played', {player: key, uid, kind: 'Spell', category: category.category});
+  respond(state, key, {speed: 'instant', uid, run: finish}); // Moment jogado abre ou continua a janela
 }

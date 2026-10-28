@@ -20,7 +20,13 @@ export class NotSpecified extends Error {
 export function createCore({first = 'A', second = 'B', soul, decks}) {
   const player = key => ({soul: soul[key], latent: 0, deck: [...decks[key]], hand: [], battlefield: [], tartarus: [], void: [], stack: [], bases: [], ownTurns: 0, baseTurn: 0, fatigue: 0});
   return {round: 1, turn: 0, turnInRound: 0, order: [first, second], active: first, victory: null,
-    players: {[first]: player(first), [second]: player(second)}, roundUses: new Set(), strikes: new Map(), effects: [], chain: [], window: null, units: {}, delayed: []};
+    players: {[first]: player(first), [second]: player(second)}, roundUses: new Set(), strikes: new Map(), effects: [], chain: [], window: null, units: {}, delayed: [], events: []};
+}
+
+// Fluxo de eventos para a apresentação (Divine Arena): só registra o que a regra já fez; nunca decide nada.
+// `seq` dá a ordem total; a apresentação lê `state.events` a partir do último seq que consumiu.
+export function emit(state, type, data = {}) {
+  state.events.push({seq: state.events.length + 1, type, round: state.round, turn: state.turn, ...data});
 }
 
 const alive = state => { if (state.victory) throw new RuleError('D52', 'a partida já terminou'); };
@@ -45,6 +51,7 @@ export function startTurn(state, startOfTurn = []) {
     if (unit.skipPrepare) unit.skipPrepare = false; // "cannot be Prepared during your next Prepare Phase" (077)
     else unit.prepared = true;
   }
+  emit(state, 'turn_start', {player: key});
   const drawStep = () => { if (p.ownTurns > 1) draw(state, key, DRAWS_PER_TURN); };
   if (startOfTurn.length) pushTriggers(state, startOfTurn, drawStep);
   else drawStep();
@@ -56,8 +63,8 @@ export function draw(state, key, n) {
   // D174 + ALPHA-P07 opção A (aprovada em 28/10/2026): cada compra com deck vazio tira Soul igual ao total
   // de compras falhas do jogador na partida (1, 2, 3…); o contador nunca zera. Soul 0 encerra na hora (D52).
   for (let i = 0; i < n && !state.victory; i++) {
-    if (p.deck.length) p.hand.push(p.deck.shift());
-    else loseSoul(state, {[key]: ++p.fatigue});
+    if (p.deck.length) { const uid = p.deck.shift(); p.hand.push(uid); emit(state, 'draw', {player: key, uid}); }
+    else { emit(state, 'fatigue', {player: key, amount: p.fatigue + 1}); loseSoul(state, {[key]: ++p.fatigue}); }
   }
 }
 
@@ -82,28 +89,32 @@ export function placeBase(state, key, uid, card) {
   // Leitura literal: só a D4 prepara Bases, no início do turno. Confirmar se a Base nova entra preparada.
   p.bases.push({uid, prepared: false});
   p.baseTurn = state.turn;
+  emit(state, 'base_placed', {player: key, uid});
 }
 
 export function spendBase(state, key, n) {
   const ready = state.players[key].bases.filter(b => b.prepared);
   if (ready.length < n) throw new RuleError('D4', `Bases preparadas insuficientes (${ready.length}/${n})`);
   ready.slice(0, n).forEach(b => { b.prepared = false; });
+  if (n > 0) emit(state, 'cosmo_spent', {player: key, unit: 'base', amount: n});
 }
 
 // Teto 3 (D198/D226); um ganho de N é um único evento. Devolve quanto entrou.
 export function gainLatent(state, key, n) {
   const p = state.players[key], gained = Math.max(0, Math.min(n, LATENT_CAP - p.latent));
   p.latent += gained;
+  if (gained) emit(state, 'latent_gained', {player: key, amount: gained});
   return gained;
 }
 
 // D52 + D174: Soul 0 encerra na hora; os dois Gods em 0 ao mesmo tempo empatam.
 export function loseSoul(state, losses) {
   alive(state);
-  for (const [key, n] of Object.entries(losses)) state.players[key].soul -= n;
+  for (const [key, n] of Object.entries(losses)) { state.players[key].soul -= n; emit(state, 'soul_lost', {player: key, amount: n, soul: state.players[key].soul}); }
   const dead = state.order.filter(k => state.players[k].soul <= 0);
   if (dead.length === 2) state.victory = {draw: true};
   else if (dead.length === 1) state.victory = {winner: other(state, dead[0])};
+  if (state.victory) emit(state, 'victory', state.victory);
   return state.victory;
 }
 
@@ -139,6 +150,7 @@ export function destroyDevotee(state, uid, objects, attached) {
     delete attached[moved];
     delete state.units[moved];
     state.effects = state.effects.filter(e => e.target !== moved); // objeto novo se voltar
+    emit(state, 'destroyed', {uid: moved, owner: objects[moved].owner});
   }
 }
 
@@ -167,6 +179,7 @@ export function spellCategory(number) {
 export function openWindow(state, onClose = () => null) {
   if (state.window) throw new RuleError('P06', 'já há uma janela aberta');
   state.window = {priority: other(state, state.active), passes: 0, onClose};
+  emit(state, 'window_open', {priority: state.window.priority});
 }
 const reopen = state => { state.window.passes = 0; state.window.priority = other(state, state.active); };
 
@@ -191,6 +204,7 @@ export function respond(state, key, item) {
     openWindow(state);
   } else if (state.window.priority !== key) throw new RuleError('P06', `${key} não tem prioridade`);
   state.chain.push({...item, controller: key});
+  emit(state, 'chain_add', {player: key, uid: item.uid});
   state.window.passes = 0;
   state.window.priority = other(state, key);
 }
@@ -200,13 +214,17 @@ export function pass(state, key) {
   const w = state.window;
   if (!w || w.priority !== key) throw new RuleError('P06', `${key} não tem prioridade para passar`);
   w.priority = other(state, key);
+  emit(state, 'pass', {player: key});
   if (++w.passes < 2) return undefined;
   if (state.chain.length) {
-    state.chain.pop().run(state);
+    const top = state.chain.pop();
+    emit(state, 'resolve', {player: top.controller, uid: top.uid});
+    top.run(state);
     if (state.victory) { state.window = null; state.chain = []; return state.victory; } // D52
     if (state.chain.length) { reopen(state); return undefined; }
   }
   state.window = null;
+  emit(state, 'window_close', {});
   return w.onClose(state);
 }
 
@@ -228,6 +246,7 @@ export function endTurn(state, {endOfTurn = [], endOfRound = []} = {}) {
   alive(state);
   assertIdle(state);
   const key = state.active;
+  emit(state, 'end_phase', {player: key});
   gainLatent(state, key, state.players[key].bases.filter(b => b.prepared).length);
   openWindow(state, () => roundCheckpoint(state, endOfRound));
   pushTriggers(state, endOfTurn);
@@ -253,6 +272,7 @@ function cleanup(state) {
     return;
   }
   state.roundUses.clear();
+  emit(state, 'round_end', {});
   state.round++;
   state.turnInRound = 0;
   state.active = state.order[0];
