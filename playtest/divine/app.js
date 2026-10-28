@@ -385,7 +385,7 @@ function piles(key, side) {
   return `<div class="piles piles--${side}"><span class="pile" data-deck="${key}" title="Deck"><i class="ico-deck"></i>${p.deck.length}</span><span class="pile" title="Tartarus"><i class="ico-tartarus"></i>${p.tartarus.length}</span>${p.fatigue ? `<span class="pile pile--fatigue" title="Fatigue">F${p.fatigue}</span>` : ''}</div>`;
 }
 
-// Bases de Cosmo como terrenos: cartas de face para cima numa faixa do lado do dono; Base gasta fica deitada (tapped)
+// Bases de Cosmo como terrenos: cartas viradas numa faixa do lado do dono; Base gasta fica deitada (tapped)
 // e levanta quando prepara. O pagamento escolhe as Bases sozinho (são equivalentes); a animação mostra quais viraram.
 const laneSeen = new Map(); // uid da Base -> prepared no último render (para animar só a mudança)
 function cosmoLane(key, side) {
@@ -393,7 +393,8 @@ function cosmoLane(key, side) {
   const slots = bases.map(b => {
     const was = laneSeen.get(b.uid), anim = was === undefined ? 'is-new' : was !== b.prepared ? (b.prepared ? 'is-untapping' : 'is-tapping') : '';
     laneSeen.set(b.uid, b.prepared);
-    const face = ctx.objects[b.uid] ? cardFace(b.uid, {size: 'dcard--land'}) : '<div class="dcard dcard--back dcard--land"><span></span></div>';
+    // Base fica virada (autor, 28/10/2026): o verso para todos; o dono consulta passando o mouse (data-base).
+    const face = `<div class="dcard dcard--back dcard--land" ${ctx.objects[b.uid] ? `data-base="${b.uid}"` : ''}><span></span></div>`;
     return `<div class="lane__base ${b.prepared ? '' : 'tapped'} ${anim}" title="${b.prepared ? 'Prepared Cosmo Base: taps to pay a cost' : 'Tapped Cosmo Base: readies at the start of your turn'}">${face}</div>`;
   }).join('');
   return `<section class="lane lane--${side}" data-lane="${key}" style="--n:${bases.length}" aria-label="Player ${key} Cosmo Bases">${slots || '<p class="lane__empty">Cosmo Bases</p>'}</section>`;
@@ -711,6 +712,8 @@ overlayRoot.addEventListener('change', e => {
 
 // Inspeção: passar o mouse 300 ms sobre uma carta aberta mostra a versão grande com o texto completo.
 document.addEventListener('pointerover', e => {
+  const base = e.target.closest?.('.dcard[data-base]');
+  if (base && owner(base.dataset.base) === viewer()) { clearTimeout(inspectTimer); inspectTimer = setTimeout(() => showInspect(base.dataset.base), 300); return; } // só o dono vê a própria Base
   const el = e.target.closest?.('.dcard[data-uid]:not(.dcard--back)');
   clearTimeout(inspectTimer);
   if (!el) return $('#inspector .godcard') ? undefined : hideInspect(); // painel do God fica até clicar fora
