@@ -19,7 +19,7 @@ export class NotSpecified extends Error {
 export function createCore({first = 'A', second = 'B', soul, decks}) {
   const player = key => ({soul: soul[key], latent: 0, deck: [...decks[key]], hand: [], battlefield: [], tartarus: [], void: [], bases: [], ownTurns: 0, baseTurn: 0});
   return {round: 1, turn: 0, turnInRound: 0, order: [first, second], active: first, victory: null,
-    players: {[first]: player(first), [second]: player(second)}, roundUses: new Set(), strikes: new Map(), effects: []};
+    players: {[first]: player(first), [second]: player(second)}, roundUses: new Set(), strikes: new Map(), effects: [], chain: [], window: null};
 }
 
 const alive = state => { if (state.victory) throw new RuleError('D52', 'a partida já terminou'); };
@@ -59,6 +59,7 @@ export function placeBase(state, key, uid, card) {
   alive(state);
   const p = state.players[key];
   if (key !== state.active) throw new RuleError('D1', 'só o jogador ativo age no turno');
+  assertIdle(state);
   if (!card.cosmoble) throw new RuleError('D4', 'a carta não é Cosmoble');
   if (p.baseTurn === state.turn) throw new RuleError('D4', 'já colocou uma Base neste turno');
   const at = p.hand.indexOf(uid);
@@ -106,7 +107,8 @@ export function useOncePerRound(state, id) {
   return true;
 }
 
-// D191: 'this_round' cobre os dois turnos; 'next_round' termina no fim do Round seguinte ao da criação.
+// 'this_turn' ("until end of turn") expira em todo Cleanup (P06); D191: 'this_round' cobre os dois turnos;
+// 'next_round' termina no fim do Round seguinte ao da criação.
 export function addEffect(state, effect) { state.effects.push({...effect, round: state.round}); }
 
 // Destroy (D197) de um Devotee: vai para o Tartarus do Owner, e a Armor presa a ele também (D40/D90).
@@ -142,38 +144,97 @@ export function spellCategory(number) {
   return null;
 }
 
-// D5: Cosmo de Base não usado vira Latent ao encerrar o turno (teto 3), 1 por Base preparada.
-// Posição exata em relação à End Phase (D60–D63) não tem texto; fica antes do checkpoint. Depois troca o ativo
-// ou, no 2º turno do Round, roda o checkpoint da D204.
-// `endOfRoundTriggers`: [{controller, run(state)}], na ordem que cada controlador escolheu.
-export function endTurn(state, endOfRoundTriggers = []) {
-  alive(state);
-  const key = state.active;
-  gainLatent(state, key, state.players[key].bases.filter(b => b.prepared).length);
-  if (state.turnInRound === 0) {
-    state.turnInRound = 1;
-    state.active = state.order[1];
-    return [];
-  }
-  return endOfRound(state, endOfRoundTriggers);
+// ALPHA-P06 opção A (aprovada em 28/10/2026): janelas mínimas de prioridade.
+// Ação comum não abre janela. Abre: gatilho na cadeia, Strike declarado, Moment jogado e End Phase.
+// O não ativo fala primeiro; dois passes seguidos resolvem o topo (LIFO, D186); cadeia vazia fecha a janela
+// e roda `onClose` (o passo seguinte: dano do Strike, checkpoint, Cleanup).
+export function openWindow(state, onClose = () => null) {
+  if (state.window) throw new RuleError('P06', 'já há uma janela aberta');
+  state.window = {priority: other(state, state.active), passes: 0, onClose};
+}
+const reopen = state => { state.window.passes = 0; state.window.priority = other(state, state.active); };
+
+export function assertIdle(state) {
+  if (state.window || state.chain.length) throw new RuleError('P06', 'ação comum só com a janela fechada e a cadeia vazia');
 }
 
-// D204: gatilhos de fim de Round entram em APNAP (ativo primeiro) e resolvem em LIFO; depois o Cleanup.
-// Respostas aos gatilhos dependem da D186, ainda sem texto: aqui só ordem e resolução.
-function endOfRound(state, triggers) {
-  const apnap = [state.active, other(state, state.active)];
-  const stack = apnap.flatMap(k => triggers.filter(t => t.controller === k));
-  const resolved = [];
-  while (stack.length) {
-    const trigger = stack.pop();
-    trigger.run(state);
-    resolved.push(trigger);
-    if (state.victory) return resolved; // D52: encerra antes dos pendentes
+// D187: gatilhos simultâneos entram em APNAP (ativo primeiro), então o não ativo resolve primeiro.
+// `triggers`: [{controller, run(state)}], na ordem que cada controlador escolheu.
+export function pushTriggers(state, triggers, onClose) {
+  if (!triggers.length) return;
+  for (const key of [state.active, other(state, state.active)]) state.chain.push(...triggers.filter(t => t.controller === key));
+  if (state.window) reopen(state); else openWindow(state, onClose);
+}
+
+// Instant ou habilidade reativa (`speed: 'instant'`). Fora de janela, só o ativo, e isso abre a janela (Moment jogado).
+export function respond(state, key, item) {
+  alive(state);
+  if (item.speed !== 'instant') throw new RuleError('P06', 'em janela só Instant e habilidades reativas');
+  if (!state.window) {
+    if (key !== state.active) throw new RuleError('D1', 'fora de janela só o jogador ativo age');
+    openWindow(state);
+  } else if (state.window.priority !== key) throw new RuleError('P06', `${key} não tem prioridade`);
+  state.chain.push({...item, controller: key});
+  state.window.passes = 0;
+  state.window.priority = other(state, key);
+}
+
+export function pass(state, key) {
+  alive(state);
+  const w = state.window;
+  if (!w || w.priority !== key) throw new RuleError('P06', `${key} não tem prioridade para passar`);
+  w.priority = other(state, key);
+  if (++w.passes < 2) return undefined;
+  if (state.chain.length) {
+    state.chain.pop().run(state);
+    if (state.victory) { state.window = null; state.chain = []; return state.victory; } // D52
+    if (state.chain.length) { reopen(state); return undefined; }
   }
-  state.effects = state.effects.filter(e => !(e.duration === 'this_round' || (e.duration === 'next_round' && e.round < state.round)));
+  state.window = null;
+  return w.onClose(state);
+}
+
+// Os dois passam até não haver janela; devolve o resultado do último passo (vitória ou retorno do onClose).
+export function passAll(state) {
+  let result;
+  while (state.window && !state.victory) result = pass(state, state.window.priority);
+  return result;
+}
+
+// End Phase (P06 item 5, no lugar de D60–D63):
+// 1. D5: Cosmo de Base não usado vira Latent (teto 3), 1 por Base preparada (detalhe na P03);
+// 2. gatilhos "at end of turn", com janela (a End Phase sempre abre uma);
+// 3. no 2º turno do Round, checkpoint da D204;
+// 4. Cleanup.
+// `triggers`: {endOfTurn: [...], endOfRound: [...]}, cada um [{controller, run(state)}].
+export function endTurn(state, {endOfTurn = [], endOfRound = []} = {}) {
+  alive(state);
+  assertIdle(state);
+  const key = state.active;
+  gainLatent(state, key, state.players[key].bases.filter(b => b.prepared).length);
+  openWindow(state, () => roundCheckpoint(state, endOfRound));
+  pushTriggers(state, endOfTurn);
+}
+
+// D204: gatilhos de fim de Round depois dos de fim de turno e antes do Cleanup.
+function roundCheckpoint(state, triggers) {
+  if (state.turnInRound === 1 && triggers.length) pushTriggers(state, triggers, () => cleanup(state));
+  else cleanup(state);
+}
+
+// Cleanup: expira "until end of turn"; no 2º turno, também "this round" e "next round" vencidos, e renova
+// o "once each round" (D191). O dano marcado não sai (P04). Depois passa o turno ou o Round.
+function cleanup(state) {
+  const last = state.turnInRound === 1;
+  state.effects = state.effects.filter(e => !(e.duration === 'this_turn'
+    || (last && (e.duration === 'this_round' || (e.duration === 'next_round' && e.round < state.round)))));
+  if (!last) {
+    state.turnInRound = 1;
+    state.active = state.order[1];
+    return;
+  }
   state.roundUses.clear();
   state.round++;
   state.turnInRound = 0;
   state.active = state.order[0];
-  return resolved;
 }

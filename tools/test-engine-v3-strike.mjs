@@ -5,8 +5,8 @@ import {readFileSync} from 'node:fs';
 import {loadCanon} from '../shared/canon-cards.js';
 import {canonIndex} from '../shared/deck-v3.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
-import {startTurn, endTurn, checkInvariants, RuleError, NotSpecified} from '../playtest/engine-v3/core.js';
-import {declareStrike, resolveStrike} from '../playtest/engine-v3/strike.js';
+import {startTurn, endTurn, passAll, checkInvariants, RuleError, NotSpecified} from '../playtest/engine-v3/core.js';
+import {declareStrike} from '../playtest/engine-v3/strike.js';
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json');
@@ -27,7 +27,8 @@ function setup() {
   startTurn(m.state);
   return {...m, ctx, field};
 }
-const strike = (s, attacker, target) => resolveStrike(s.state, s.ctx, declareStrike(s.state, s.ctx, attacker, target));
+const strike = (s, attacker, target) => { declareStrike(s.state, s.ctx, attacker, target); return passAll(s.state); }; // os dois passam
+const end = s => { endTurn(s.state); passAll(s.state); };
 
 test('Devotee × Devotee: dano simultâneo, defensor destruído vai ao Tartarus do Owner, dano do atacante persiste', () => {
   const s = setup();
@@ -36,7 +37,7 @@ test('Devotee × Devotee: dano simultâneo, defensor destruído vai ao Tartarus 
   assert.ok(s.state.players.B.tartarus.includes(repairer));
   assert.equal(s.state.units[seiya].damage, 1);
   assert.equal(s.state.units[seiya].prepared, false);
-  endTurn(s.state); startTurn(s.state); endTurn(s.state); startTurn(s.state);
+  end(s); startTurn(s.state); end(s); startTurn(s.state);
   assert.equal(s.state.units[seiya].damage, 1, 'o Cleanup não limpa dano');
   checkInvariants(s.state, s.objects);
 });
@@ -55,7 +56,7 @@ test('Strike no God: Soul cai 1:1 e o God retalia com ATTACK; segunda troca dest
   strike(s, seiya, {kind: 'god', player: 'B'});
   assert.equal(s.state.players.B.soul, 28);
   assert.equal(s.state.units[seiya].damage, 3); // Athena ATTACK 3
-  endTurn(s.state); startTurn(s.state); endTurn(s.state); startTurn(s.state);
+  end(s); startTurn(s.state); end(s); startTurn(s.state);
   s.state.units[seiya].prepared = true; // preparação do início do turno é a ALPHA-P02, ainda pendente
   strike(s, seiya, {kind: 'god', player: 'B'});
   assert.equal(s.state.players.B.soul, 26);

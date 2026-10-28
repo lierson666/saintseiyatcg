@@ -5,7 +5,7 @@ import {readFileSync} from 'node:fs';
 import {loadCanon} from '../shared/canon-cards.js';
 import {canonIndex} from '../shared/deck-v3.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
-import {startTurn, endTurn, placeBase, destroyDevotee, checkInvariants, NotSpecified} from '../playtest/engine-v3/core.js';
+import {startTurn, endTurn, passAll, placeBase, destroyDevotee, checkInvariants, NotSpecified} from '../playtest/engine-v3/core.js';
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json');
@@ -70,7 +70,7 @@ test('simulação reproduzível: 31 turnos próprios de compra e Base até a Fat
     const base = p.hand.find(uid => cards.get(objects[uid].cardId).cosmoble);
     if (base) placeBase(state, state.active, base, cards.get(objects[base].cardId));
     log.push(`R${state.round} ${state.active} mão ${p.hand.length} deck ${p.deck.length} bases ${p.bases.length} latent ${p.latent}`);
-    endTurn(state);
+    endTurn(state); passAll(state);
     checkInvariants(state, objects);
   }
   // Sem mão inicial (P01): 1º turno de cada um sem compra (D170), depois 2 por turno (D3): 60 cartas = 30 turnos próprios.

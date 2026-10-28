@@ -1,17 +1,19 @@
 // Strike da engine 3.0: ALPHA-P04 opção A, aprovada pelo autor em 28/10/2026.
-// Declaração → (janela de reação: P06, pendente) → dano simultâneo → verificação de destruição.
+// Declaração → janela de reação (P06 A) → dano simultâneo → verificação de destruição.
 // `ctx`: {cards (loadCanon), objects (uid -> {owner, cardId}), attached}. Estado de unidade em state.units[uid] = {prepared, damage}.
-import {RuleError, NotSpecified, recordStrike, loseSoul, destroyDevotee} from './core.js';
+import {RuleError, NotSpecified, recordStrike, loseSoul, destroyDevotee, assertIdle, openWindow, pushTriggers} from './core.js';
 
 const PENDING_KEYWORDS = ['Guardian', 'Cheater', 'Nimble', 'Pierce', 'Long Range']; // P05
 
 const card = (ctx, uid) => ctx.cards.get(ctx.objects[uid].cardId);
 const onField = (state, key, uid) => state.players[key].battlefield.includes(uid);
 
-export function declareStrike(state, ctx, attacker, target) {
+// Abre a janela (P06): gatilhos de declaração (D202) entram na cadeia; o dano roda quando a janela fecha.
+export function declareStrike(state, ctx, attacker, target, triggers = []) {
   if (state.victory) throw new RuleError('D52', 'a partida já terminou');
   const key = ctx.objects[attacker]?.owner, enemy = state.order.find(k => k !== key);
   if (key !== state.active) throw new RuleError('D1', 'só o jogador ativo declara Strike no próprio turno');
+  assertIdle(state);
   if (!onField(state, key, attacker) || card(ctx, attacker).kind !== 'Devotee') throw new RuleError('P04', 'o atacante precisa ser um Devotee seu no campo');
   if (state.units[attacker]?.prepared !== true) throw new RuleError('P04', 'o atacante precisa estar Prepared');
   const legal = target.kind === 'god' ? target.player === enemy
@@ -23,14 +25,17 @@ export function declareStrike(state, ctx, attacker, target) {
   if (keyword) throw new NotSpecified(`ALPHA-P05: efeito de ${keyword} na declaração e no dano do Strike`);
   recordStrike(state, attacker); // D22
   state.units[attacker].prepared = false;
-  return {attacker, target, player: key};
+  const strike = {attacker, target, player: key};
+  openWindow(state, () => resolveStrike(state, ctx, strike));
+  pushTriggers(state, triggers);
+  return strike;
 }
 
 // Dano simultâneo; God perde Soul 1:1 e retalia com ATTACK; dano persiste (sem limpeza no Cleanup).
 export function resolveStrike(state, ctx, strike) {
   const {attacker, target, player} = strike, enemy = state.order.find(k => k !== player);
   if (!onField(state, player, attacker) || (target.kind === 'devotee' && !onField(state, enemy, target.uid))) {
-    throw new NotSpecified('ALPHA-P06: Strike cujo atacante ou alvo saiu do campo antes do dano');
+    throw new NotSpecified('Strike cujo atacante ou alvo saiu do campo antes do dano (nem P04 nem P06 definem)');
   }
   const atk = card(ctx, attacker).atk;
   if (target.kind === 'devotee') {
