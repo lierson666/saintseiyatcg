@@ -427,7 +427,7 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .phasebar__turn strong { font: 600 clamp(16px, 1.35vw, 21px)/1.1 Georgia, serif; letter-spacing: .04em; color: #f4e7c4; }
 .phasebar__turn small { font: 600 10px/1 system-ui, sans-serif; letter-spacing: .14em; text-transform: uppercase; color: #a89a78; }
 .phasebar.is-theirs .phasebar__turn strong { color: #ffb4a0; }
-.phasebar__steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; margin: 0; padding: 0; list-style: none; }
+.phasebar__steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin: 0; padding: 0; list-style: none; }
 .phasebar__steps li { position: relative; padding: 5px 0 4px; text-align: center; border-radius: 6px; font: 700 9px/1 system-ui, sans-serif; letter-spacing: .1em; text-transform: uppercase;
   color: #7c7462; background: rgba(255, 255, 255, .04); border: 1px solid rgba(255, 255, 255, .06); }
 .phasebar__steps li.done { color: #b9ab86; }

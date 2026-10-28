@@ -457,14 +457,14 @@ function phaseText() {
 
 // Faixa de fases acima do End Turn (padrão de cliente digital de TCG): de quem é o turno, as fases do turno com a
 // atual acesa e, quando há, a janela de resposta. Prepare e Draw são automáticas; End = janela aberta pela End Phase.
-const PHASES = ['Prepare', 'Draw', 'Main', 'Strike', 'End'];
+const PHASES = ['Prepare', 'Draw', 'Main', 'End']; // Strike é ação da Main, não fase
 function currentPhase(s) {
   for (let i = s.events.length - 1; i >= 0; i--) {
     const t = s.events[i].type;
     if (t === 'turn_start') break;
     if (t === 'end_phase') return 'End';
   }
-  return pendingStrike(s) ? 'Strike' : 'Main';
+  return 'Main';
 }
 function phaseBar() {
   const s = S(), v = viewer();
