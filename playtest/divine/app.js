@@ -401,8 +401,7 @@ function godHud(key, side) {
         ${d.judgment ? `<span class="godhud__judgment" title="Divine Judgment: loses at the end of Round ${d.judgment.deadline}">⚖ R${d.judgment.deadline}</span>` : ''}
       </div>
       <span class="godhud__bar"><i style="width:${Math.round(p.soul / max * 100)}%"></i></span>
-      ${godZones(key)}
-    </div></section>`;
+    </div></section><div class="godzones-wrap godzones-wrap--${side}">${godZones(key)}</div>`; // zonas no canto, como o deck no Arena
 }
 // Zonas do jogador junto ao God: deck empilhado (a pilha engrossa com as cartas que restam), Tartarus e Void (exílio).
 function godZones(key) {

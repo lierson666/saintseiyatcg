@@ -442,3 +442,43 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 @keyframes prio-in { from { opacity: 0; } }
 @keyframes prio-pulse { 50% { opacity: .65; } }
 .reduce-motion .priority-glow { animation: prio-in .35s ease-out; }
+
+/* Proporção do MTG Arena (autor, 28/10/2026): tudo medido pela altura da tela (--u ≈ 1vh numa tela 16:9), então a mesa
+   cabe inteira em qualquer janela. Battlefields grandes no centro, Bases menores perto do dono, mão espiando embaixo
+   sem cobrir as Bases. */
+@media (min-width: 761px) {
+  .olympus { --u: min(1vh, .65vw); --card-w: calc(var(--u) * 9); }
+  .olympus .field--opp { align-items: flex-end; } .olympus .field--me { align-items: flex-start; } /* battlefields perto do meio, como no Arena */
+  .arena-field { top: 9%; bottom: calc(var(--u) * 12 + 4%); grid-template-rows: auto 1fr auto 1fr auto; row-gap: calc(var(--u) * .8); }
+  .olympus .field { --card-w: calc(var(--u) * 13.4); --card-h: calc(var(--card-w) * 1.4); gap: calc(var(--u) * 1.4); }
+  .arena-field .lane { --land-w: calc(var(--u) * 7.6); --land-h: calc(var(--land-w) * 1.4); margin: 0 auto; max-width: 70%; }
+  .olympus .hand--me { --hand-w: calc(var(--u) * 11.5); bottom: calc(var(--hand-w) * -.62); }
+  .olympus .hand--me .hand__slot:hover { transform: translateY(calc(var(--hand-w) * -.7)) scale(1.18); }
+  .olympus .hand--opp .dcard--sm { --card-w: calc(var(--u) * 6.4); }
+}
+
+/* HUD estilo Arena (autor, 28/10/2026): o God é o avatar no centro (oponente no topo, você embaixo, logo acima da mão),
+   com a Soul num selo sob o retrato; Bases à esquerda da faixa; deck, Tartarus e Void no canto (seu embaixo à esquerda,
+   do oponente no alto à direita). */
+.godzones-wrap { position: absolute; z-index: 6; }
+.godzones-wrap .godzones { margin: 0; padding: 6px 12px; border-radius: 10px; background: rgba(6, 9, 26, .78); border: 1px solid var(--line); }
+@media (max-width: 760px) { .godzones-wrap--opp { top: 8px; right: 8px; } .godzones-wrap--me { bottom: 8px; left: 8px; } }
+@media (min-width: 761px) {
+  .godhud { left: 50%; transform: translateX(-50%); flex-direction: column; align-items: center; }
+  .godhud--opp { top: calc(var(--u) * .8); }
+  .godhud--me { bottom: calc(var(--u) * 7); }
+  .godhud__portrait { width: calc(var(--u) * 10.5); }
+  .godhud__body { margin: calc(var(--u) * -1.6) 0 0; padding: 3px 10px 4px; min-width: 0; clip-path: none; border-radius: 999px; border: 1px solid rgba(232, 196, 106, .55);
+    background: linear-gradient(180deg, rgba(14, 18, 44, .96), rgba(6, 8, 24, .96)); box-shadow: 0 4px 14px rgba(0, 0, 0, .6); z-index: 3; }
+  .godhud__name, .godhud__bar { display: none; }
+  .godhud__row { gap: 6px; }
+  .godhud__soul { padding: 0 6px; background: none; border: 0; }
+  .godhud__soul b { font-size: calc(var(--u) * 3.2); }
+  .godhud.is-active .godhud__portrait { box-shadow: 0 0 0 2px #2a2108, 0 0 0 5px rgba(255, 200, 110, .7), 0 0 40px rgba(255, 170, 60, .7); }
+  .godzones-wrap--me { left: 14px; bottom: 14px; }
+  .godzones-wrap--opp { right: 14px; top: 14px; }
+  .arena-field .lane { margin: 0; max-width: 40%; justify-content: flex-start; }
+  .olympus .hand--opp { left: 72%; }
+  .cosmo--opp { left: 22px; top: calc(var(--u) * 2); transform: scale(.8); transform-origin: left top; }
+  .cosmo--me { left: 22px; top: auto; bottom: calc(var(--u) * 9); transform: scale(.8); transform-origin: left bottom; }
+}
