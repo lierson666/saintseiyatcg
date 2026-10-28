@@ -11,8 +11,8 @@ const PENDING_KEYWORDS = ['Long Range']; // fora da P05: sem definição 3.0
 const card = (ctx, uid) => ctx.cards.get(ctx.objects[uid].cardId);
 const onField = (state, key, uid) => state.players[key].battlefield.includes(uid);
 
-// Abre a janela (P06): gatilhos de declaração (D202) entram na cadeia; o dano roda quando a janela fecha.
-export function declareStrike(state, ctx, attacker, target, triggers = []) {
+// Legalidade da declaração, sem mexer no estado (a interface usa para destacar alvos legais).
+export function checkStrike(state, ctx, attacker, target) {
   if (state.victory) throw new RuleError('D52', 'a partida já terminou');
   const key = ctx.objects[attacker]?.owner, enemy = state.order.find(k => k !== key);
   if (key !== state.active) throw new RuleError('D1', 'só o jogador ativo declara Strike no próprio turno');
@@ -34,6 +34,20 @@ export function declareStrike(state, ctx, attacker, target, triggers = []) {
   if (guarded && !ignores && !(target.kind === 'devotee' && isGuardian(target.uid))) {
     throw new RuleError('P05', 'há Guardian Prepared: o Strike precisa mirar um Devotee com Guardian');
   }
+  if (state.strikes.get(attacker) === state.turn) throw new RuleError('D22', 'este Devotee já declarou Strike neste turno');
+  return {key, enemy};
+}
+
+// Alvos legais de um atacante agora: [] se ele não pode declarar Strike.
+export function strikeTargets(state, ctx, attacker) {
+  const key = ctx.objects[attacker]?.owner, enemy = state.order.find(k => k !== key);
+  const all = [{kind: 'god', player: enemy}, ...state.players[enemy].battlefield.filter(uid => card(ctx, uid).kind === 'Devotee').map(uid => ({kind: 'devotee', uid}))];
+  return all.filter(target => { try { checkStrike(state, ctx, attacker, target); return true; } catch { return false; } });
+}
+
+// Abre a janela (P06): gatilhos de declaração (D202) entram na cadeia; o dano roda quando a janela fecha.
+export function declareStrike(state, ctx, attacker, target, triggers = []) {
+  const {key} = checkStrike(state, ctx, attacker, target);
   recordStrike(state, attacker); // D22
   state.units[attacker].prepared = false;
   emit(state, 'strike_declared', {player: key, attacker, target});

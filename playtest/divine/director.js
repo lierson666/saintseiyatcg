@@ -1,0 +1,164 @@
+// Divine Arena · orquestrador de apresentação. Lê os eventos que a engine já registrou (state.events) e os
+// dramatiza em sequência. Nunca decide resultado: os números exibidos vêm dos próprios eventos.
+// `ui` é o adaptador do DOM (posições e textos); `fx` é a camada WebGL (pode faltar: tudo vira só DOM).
+import {wait} from './scene.js?v=20261028-3';
+
+// Hierarquia visual dos golpes (COMBAT_CINEMATICS.md): comum < Saint < assinatura < divino.
+// As assinaturas são só visuais e disparam pelo número da carta atacante; não criam regra.
+export const SIGNATURES = {
+  '001': {style: 'meteor', name: 'Pegasus Ryuseiken', color: '#9fd8ff'},
+  '003': {style: 'dragon', name: 'Rozan Shoryuha', color: '#6ff0b0'},
+};
+const STYLE_BY_TYPE = [[/Gold Saint/, 'energy', '#ffd36e'], [/Silver Saint/, 'energy', '#d8e4ff'], [/Bronze Saint/, 'physical', '#ffe0a0']];
+
+export function createDirector({ui, getFx, settings}) {
+  let skipping = false, busy = false;
+  const fx = () => (settings.reduceMotion ? null : getFx());
+  const t = ms => (skipping ? 0 : ms * ({fast: .55, normal: 1, cinematic: 1.35}[settings.speed] || 1));
+  const pause = ms => (t(ms) ? wait(t(ms)) : Promise.resolve());
+  const shake = amp => { const f = fx(); if (f && !skipping) { f.shake(amp * settings.shake); f.punch(amp * settings.shake * .05); } ui.shake(amp * settings.shake); };
+
+  function styleOf(uid) {
+    const sig = SIGNATURES[ui.number(uid)];
+    if (sig) return sig;
+    const type = ui.type(uid), hit = STYLE_BY_TYPE.find(([re]) => re.test(type));
+    return hit ? {style: hit[1], color: hit[2]} : {style: 'physical', color: '#ffe0a0'};
+  }
+
+  // Golpe do atacante até o alvo; resolve no momento do impacto.
+  async function strikeVfx(from, to, style) {
+    const f = fx();
+    if (!f || skipping) return;
+    f.charge(from.x, from.y, {color: style.color, count: style.style === 'physical' ? 30 : 60});
+    await pause(style.style === 'physical' ? 140 : 260);
+    if (style.style === 'meteor') {
+      // Pegasus Ryuseiken: rajada de meteoros com leve dispersão, todos convergindo no alvo.
+      const shots = [];
+      for (let i = 0; i < 9; i++) {
+        const jitter = {x: from.x + (Math.random() - .5) * 60, y: from.y + (Math.random() - .5) * 60};
+        shots.push(wait(i * 28).then(() => f.projectile(jitter, to, {color: style.color, duration: .22, size: 12, trail: 2})));
+      }
+      await Promise.all(shots);
+    } else if (style.style === 'dragon') {
+      // Rozan Shoryuha: espiral ascendente de Cosmo verde que mergulha no alvo.
+      await Promise.all([f.projectile(from, to, {color: style.color, duration: .42, size: 22, trail: 5, arc: 140}),
+        wait(60).then(() => f.projectile(from, to, {color: '#d6ffe9', duration: .42, size: 10, trail: 2, arc: -90}))]);
+    } else if (style.style === 'energy') {
+      await f.beam(from, to, {color: style.color, width: 22, duration: .3});
+    } else {
+      await f.projectile(from, to, {color: style.color, duration: .18, size: 14, trail: 2});
+    }
+  }
+
+  function impact(at, {color = '#fff2c4', strength = 1} = {}) {
+    const f = fx();
+    if (f && !skipping) {
+      f.burst(at.x, at.y, {color, count: Math.round(50 * strength), speed: 380 * strength});
+      f.shockwave(at.x, at.y, {color, size: 160 * strength});
+      if (strength > 1.2) f.flash(.25);
+    }
+    shake(strength * 6);
+  }
+
+  // Cada tipo de evento: o que mostrar e quanto tempo segurar a fila.
+  const handlers = {
+    async turn_start(e) { await ui.banner(ui.isViewer(e.player) ? 'Your turn' : `Player ${e.player}'s turn`, e.player, t(900)); },
+    async draw(e) { if (!settings.skipDraws) await ui.flyCard(e.uid, ui.deckRect(e.player), ui.handRect(e.player), t(220), !ui.isViewer(e.player)); },
+    async fatigue(e) {
+      const at = ui.center(ui.deckRect(e.player));
+      fx()?.burst(at.x, at.y, {color: '#8a5cff', count: 40});
+      ui.float(at, `Fatigue ${e.amount}`, 'damage');
+      await pause(500);
+    },
+    async mulligan() {},
+    async base_placed(e) {
+      const at = ui.center(ui.bankRect(e.player, 'base'));
+      await ui.flyCard(e.uid, ui.rect(e.uid) || ui.handRect(e.player), ui.bankRect(e.player, 'base'), t(260), false);
+      fx()?.burst(at.x, at.y, {color: '#ffd36e', count: 30, speed: 200});
+    },
+    async cosmo_spent(e) { ui.spendOrbs(e.player, e.unit, e.amount); await pause(160); },
+    async latent_gained(e) {
+      const at = ui.center(ui.bankRect(e.player, 'latent'));
+      fx()?.charge(at.x, at.y, {color: '#b58cff', count: 25 * e.amount, radius: 90});
+      ui.float(at, `+${e.amount} Latent`, 'gain');
+      await pause(380);
+    },
+    async card_played(e) {
+      const to = e.kind === 'Equipment' && e.bearer ? ui.rect(e.bearer) : ui.fieldRect(e.player);
+      await ui.flyCard(e.uid, ui.rect(e.uid) || ui.handRect(e.player), to, t(320), false, true);
+      const at = ui.center(to);
+      if (e.kind === 'Devotee') { fx()?.burst(at.x, at.y, {color: '#ffe7a8', count: 45, speed: 260}); fx()?.shockwave(at.x, at.y, {size: 140}); }
+      else if (e.kind === 'Equipment') fx()?.shockwave(at.x, at.y, {color: '#d8e4ff', size: 110});
+      else fx()?.charge(at.x, at.y, {color: e.category === 'Moment' ? '#c58cff' : '#ffd36e', count: 50});
+      ui.log(e);
+      await pause(e.kind === 'Spell' ? 280 : 120);
+    },
+    async spell_resolved(e) {
+      const at = ui.center(ui.fieldRect(e.player));
+      fx()?.burst(at.x, at.y, {color: '#f5e2ff', count: 40, speed: 300});
+      ui.log(e);
+      await pause(260);
+    },
+    async ability(e) { ui.pulse(e.uid, 'activate'); ui.log(e); await pause(260); },
+    async equipped(e) { ui.log(e); await pause(120); },
+    async strike_declared(e) {
+      ui.pulse(e.attacker, 'attacking', true);
+      ui.aim(e.attacker, e.target);
+      ui.log(e);
+      await pause(260);
+    },
+    async strike_resolve(e) {
+      const from = ui.center(ui.rect(e.attacker)), targetRect = e.target.kind === 'god' ? ui.godRect(e.target.player) : ui.rect(e.target.uid);
+      const to = ui.center(targetRect), style = styleOf(e.attacker);
+      if (style.name) await ui.callout(style.name, e.player, t(650));
+      ui.pulse(e.attacker, 'lunge');
+      await strikeVfx(from, to, style);
+      await pause(40); // hit stop
+      impact(to, {color: style.color, strength: style.name ? 1.4 : 1});
+      // Retaliação: do alvo de volta ao atacante (o God usa o raio divino).
+      await pause(140);
+      const back = e.target.kind === 'god' ? {style: 'energy', color: '#ffd36e'} : styleOf(e.target.uid);
+      if (fx() && !skipping) await fx().beam(to, from, {color: back.color, width: e.target.kind === 'god' ? 26 : 12, duration: .22});
+      ui.aim(null);
+      ui.pulse(e.attacker, 'attacking', false);
+    },
+    async damage(e) {
+      const at = ui.center(ui.rect(e.uid));
+      if (!at) return;
+      if (e.prevented) ui.float({x: at.x, y: at.y - 36}, `${e.prevented} prevented`, 'shield');
+      if (e.absorbed) ui.float({x: at.x, y: at.y - 18}, `${e.absorbed} to Armor`, 'armor');
+      if (e.dealt) { ui.float(at, `-${e.dealt}`, 'damage'); ui.pulse(e.uid, 'hit'); impact(at, {color: '#ff9a7a', strength: Math.min(1.3, .5 + e.dealt * .15)}); }
+      await pause(e.dealt ? 220 : 120);
+    },
+    async god_damage(e) { if (e.incoming > e.dealt) ui.float(ui.center(ui.godRect(e.player)), `${e.incoming - e.dealt} prevented`, 'shield'); },
+    async soul_lost(e) {
+      const at = ui.center(ui.godRect(e.player));
+      ui.setSoul(e.player, e.soul);
+      ui.float(at, `-${e.amount} Soul`, 'damage big');
+      impact(at, {color: '#ffcf6e', strength: Math.min(2, .8 + e.amount * .2)});
+      await pause(420);
+    },
+    async destroyed(e) {
+      const at = ui.center(ui.rect(e.uid));
+      ui.pulse(e.uid, 'shatter');
+      if (at) fx()?.burst(at.x, at.y, {color: '#cbbfa8', count: 70, speed: 300, grav: 600, life: .9});
+      ui.log(e);
+      await pause(380);
+    },
+    async round_end() {},
+    async victory(e) { await ui.banner(e.draw ? 'Draw' : ui.isViewer(e.winner) ? 'Victory' : `Player ${e.winner} wins`, e.winner, t(1200)); },
+    async window_open() {}, async window_close() {}, async pass(e) { ui.log(e); }, async chain_add() {}, async resolve() {}, async end_phase(e) { ui.log(e); },
+  };
+
+  return {
+    get busy() { return busy; },
+    skip() { skipping = true; },
+    // Toca os eventos em ordem. Retorna quando tudo terminou (ou foi pulado).
+    async play(events) {
+      busy = true; skipping = false;
+      try {
+        for (const e of events) await (handlers[e.type] || (async () => {}))(e);
+      } finally { busy = false; skipping = false; }
+    },
+  };
+}

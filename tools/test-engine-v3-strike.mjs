@@ -6,7 +6,7 @@ import {loadCanon} from '../shared/canon-cards.js';
 import {canonIndex} from '../shared/deck-v3.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
 import {startTurn, endTurn, passAll, checkInvariants, RuleError, NotSpecified} from '../playtest/engine-v3/core.js';
-import {declareStrike} from '../playtest/engine-v3/strike.js';
+import {declareStrike, strikeTargets} from '../playtest/engine-v3/strike.js';
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json');
@@ -91,7 +91,9 @@ test('P05 Guardian: com Guardian Prepared, Strike no God ou em Devotee sem Guard
     assert.throws(() => declareStrike(s.state, s.ctx, seiya, target), e => e instanceof RuleError && e.decision === 'P05');
   }
   assert.equal(s.state.units[seiya].prepared, true, 'declaração recusada não gasta nada');
+  assert.deepEqual(strikeTargets(s.state, s.ctx, seiya), [{kind: 'devotee', uid: guard}], 'a interface só destaca o Guardian');
   strike(s, seiya, {kind: 'devotee', uid: guard});
+  assert.deepEqual(strikeTargets(s.state, s.ctx, seiya), [], 'D22: já atacou');
   assert.equal(s.state.units[guard].damage, 2);
 });
 
