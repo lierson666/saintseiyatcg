@@ -4,6 +4,14 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — Categoria de 053, 060, 082 e 085
+
+- **Antes:** a D194 classificava 18 Spells; 053, 060, 082 e 085 ficavam sem categoria e não podiam ser jogadas.
+- **Depois:** as quatro são Technique: pagam Base e usam Sorcery Speed, como o custo {B} indica.
+- **Motivo:** decisão do autor nesta data.
+- **Pendências:** 057, 078 e 084 (fora dos decks D171) continuam sem categoria.
+- Vale para a engine 3.0 (`playtest/engine-v3/`); o `docs/guia-do-jogo.md` (2.x) não muda.
+
 ## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — Gatilhos, {T}, dano direto e Resonance
 
 - **Antes:** sem gatilhos de entrada, de cast e de sobreviver a Strike; sem habilidades {T}; sem dano que não é de Strike.
@@ -14,7 +22,6 @@ Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências
   - dano redirecionado pela Resonance da 004 é dano de Strike em Shiryu.
 - **Implementado conforme o texto D268:** Miracle e Seventh Sense (001); Resonance da 002, 004, 019 e 048; 019 (ao jogar, Divine Protection, Divine Cosmo); Eagle Marin (Training e Master's Guidance); Seika, Hope of Reunion; Star Hill Acolyte; {T} da 041, 042 e 011 (Cloth Restoration); Spells 059, e os efeitos de 053, 060, 082 e 085. Gatilhos entram na cadeia com janela (P06). Verificação de derrota roda depois de cada Strike, Spell e habilidade.
 - **Pendências:**
-  - 053, 060, 082 e 085 não têm categoria na D194: o efeito existe, mas `playSpell` recusa jogá-las até a categoria ser decidida;
   - Master's Guidance soma +1/+1 por Eagle Marin em campo (leitura da implementação).
 - Vale para a engine 3.0 (`playtest/engine-v3/`); o `docs/guia-do-jogo.md` (2.x) não muda.
 
@@ -28,7 +35,6 @@ Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências
 - **Motivo:** pedido do autor de implementar os efeitos das cartas dos dois decks.
 - **Leituras confirmadas pelo autor nesta data:** ordem de aplicação entre prevenções; "cannot declare another Strike this round" coberto pela D22; parte de Spell cujo alvo saiu antes da resolução não faz nada.
 - **Pendências:**
-  - 053 continua sem categoria na D194.
 - Vale para a engine 3.0 (`playtest/engine-v3/`); o `docs/guia-do-jogo.md` (2.x) não muda.
 
 ## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — Bônus de Equipment e dano em Armor

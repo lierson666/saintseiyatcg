@@ -2,7 +2,7 @@
 
 Gerado em 28/10/2026 do snapshot D268 (`approved_current_text_as_of_d268`), para as 35 identidades das decks D171. Rótulo heurístico: gatilho, ativada, estática, spell, outra. Já na engine 3.0: keywords (P05) e bônus fixo de Equipment. O resto abaixo ainda não.
 
-**Estado em 28/10/2026:** todos os efeitos das 34 cartas estão em `playtest/engine-v3/effects.js`, com testes em `tools/test-engine-v3-effects.mjs` e `tools/test-engine-v3-triggers.mjs`. 053, 060, 082 e 085 seguem bloqueadas por falta de categoria na D194.
+**Estado em 28/10/2026:** todos os efeitos das 34 cartas estão em `playtest/engine-v3/effects.js`, com testes em `tools/test-engine-v3-effects.mjs` e `tools/test-engine-v3-triggers.mjs`. 053, 060, 082 e 085 são Technique por decisão do autor (28/10/2026).
 
 Peças de engine (todas implementadas):
 

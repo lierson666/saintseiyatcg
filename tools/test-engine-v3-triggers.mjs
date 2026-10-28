@@ -135,16 +135,18 @@ test('A Promise to Shunrei (059): remove 2 de dano e, com Shunrei, prepara', () 
   assert.deepEqual([s.units[shiryu].damage, s.units[shiryu].prepared], [1, true]);
 });
 
-test('dano que não é de Strike (082) passa pela Armor e ignora prevenções de Strike; 082/085/053/060 seguem sem categoria D194', () => {
-  const {s, ctx, field, equip, hand} = setup();
+test('dano que não é de Strike (082) passa pela Armor e ignora prevenções de Strike; 082 e 085 são Technique', () => {
+  const {s, ctx, field, equip, hand, bases} = setup();
   const seiya = field('A', '001'), repairer = field('B', '042');
   const cracked = equip('B', '044', repairer); // Last Protection é só contra Strike
-  SPELLS['082'].run(s, ctx, 'A', {target: repairer});
-  assert.ok(s.players.B.tartarus.includes(cracked) && s.players.B.tartarus.includes(repairer), '6 com Seiya: Armor 2, Devotee 4');
   const arrow = hand('A', '082');
-  assert.throws(() => playSpell(s, ctx, 'A', arrow, {target: repairer}), e => e instanceof NotSpecified && /D194/.test(e.message));
+  bases('A', 5);
+  playSpell(s, ctx, 'A', arrow, {target: repairer});
+  assert.ok(s.players.B.tartarus.includes(cracked) && s.players.B.tartarus.includes(repairer), '6 com Seiya: Armor 2, Devotee 4');
+  assert.equal(s.window, null, 'Technique: Sorcery, sem janela');
   const t = setup({A: fortress, B: rush}), shiryu = t.field('A', '003'), guard = t.field('B', '040');
-  SPELLS['085'].run(t.s, t.ctx, 'A', {source: shiryu, target: guard});
+  t.bases('A', 6);
+  playSpell(t.s, t.ctx, 'A', t.hand('A', '085'), {source: shiryu, target: guard});
   assert.ok(t.s.players.A.tartarus.includes(shiryu) && t.s.players.B.tartarus.includes(guard));
   checkInvariants(t.s, t.objects);
 });

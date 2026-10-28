@@ -204,6 +204,7 @@ Nos decks aprovados (Pegasus Rush × Dragon Fortress), as keywords em uso são:
 - **Ordem de prevenção numa mesma porção de dano de Strike** (confirmada pelo autor em 28/10/2026): 1) prevenções obrigatórias de carta (Dragon Shield, Last Protection, Dragon's Guard, Libra Defense); 2) escudos criados por Spell; 3) prevenções opcionais pagas (Prayer of Rozan, Crystal Wall, Final Sacrifice), perguntadas ao controlador; 4) "would be defeated" (054, 076, 088), que conta a Armor que ainda absorve. Depois a Armor, depois o Devotee.
 - **"Prepare it. It cannot declare another Strike this round."** (076, 087, 088): lido como já coberto pela D22 (um Strike por Devotee por turno); preparar só põe o Devotee em guarda. Confirmado pelo autor em 28/10/2026.
 - **Alvo que saiu antes da resolução de uma Spell:** a parte que depende dele não faz nada. Confirmado pelo autor em 28/10/2026.
+- **053, 060, 082 e 085:** Technique (Base, Sorcery), fora da lista da D194.
 - **Spell depois de resolver:** vai para o Tartarus do Owner. Enquanto está na cadeia, fica na zona `stack`. Implementado em `playSpell`.
 
 ## Ordem sugerida para aprovar

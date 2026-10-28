@@ -7,7 +7,8 @@ export const LATENT_CAP = 3; // D198, D226
 export const DRAWS_PER_TURN = 2; // D3
 // D194: classificação Moment/Technique pelo número da carta Athena V6.
 const MOMENTS = new Set([54, 56, 58, 61, 76, 79]);
-const TECHNIQUES = new Set([52, 55, 59, 77, 80, 81, 83, 86, 87, 88, 89, 90]);
+// 53, 60, 82 e 85: Technique por decisão do autor em 28/10/2026 (custo {B}), fora da lista da D194.
+const TECHNIQUES = new Set([52, 53, 55, 59, 60, 77, 80, 81, 82, 83, 85, 86, 87, 88, 89, 90]);
 
 export class RuleError extends Error {
   constructor(decision, message) { super(`${decision}: ${message}`); this.decision = decision; }

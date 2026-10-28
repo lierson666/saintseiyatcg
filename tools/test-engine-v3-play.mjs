@@ -163,14 +163,16 @@ test('Moment (056) do defensor responde ao Strike, paga Latent, resolve antes do
   checkInvariants(s, objects);
 });
 
-test('Moment do ativo abre janela; Spell fora da D194 (053, 060) para com aviso', () => {
-  const {s, ctx, toHand} = setup();
+test('Moment do ativo abre janela; 053 é Technique (autor, 28/10/2026)', () => {
+  const {s, ctx, toHand, bases} = setup();
   const never = toHand('A', '054'), other = toHand('A', '053');
+  bases('A', 2);
   s.players.A.latent = 3;
   startTurn(s);
   playSpell(s, ctx, 'A', never, () => {});
   assert.equal(s.window.priority, 'B');
   passAll(s);
   assert.ok(s.players.A.tartarus.includes(never));
-  assert.throws(() => playSpell(s, ctx, 'A', other, () => {}), e => e instanceof NotSpecified && /D194/.test(e.message));
+  playSpell(s, ctx, 'A', other, () => {});
+  assert.deepEqual([s.window, s.players.A.tartarus.includes(other)], [null, true], 'Sorcery: resolve sem janela');
 });
