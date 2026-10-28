@@ -207,3 +207,19 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 /* Arrastar uma carta Cosmoble: a área de Cosmo do jogador vira alvo de soltar (vira Cosmo Base, D4). */
 .cosmo.drop-target { outline: 2px dashed rgba(159, 216, 255, .7); outline-offset: 6px; border-radius: 14px; }
 .cosmo.drop-hover { outline-style: solid; outline-color: #9fd8ff; box-shadow: 0 0 24px rgba(127, 212, 255, .6); }
+
+/* Campo dividido durante o arraste da mão: CAST (dourado, metade de cima) e COSMO BASE (azul, metade de baixo). */
+.drag-zones { position: absolute; inset: 0; z-index: 20; display: grid; grid-template-rows: 1fr 1fr; gap: 8px; pointer-events: none; animation: dz-in .18s ease; }
+.drag-zone { position: relative; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center; overflow: hidden; isolation: isolate; transition: filter .2s, box-shadow .2s, opacity .2s; }
+.drag-zone strong { font: 400 clamp(22px, 3vw, 40px) Palatino, Georgia, serif; letter-spacing: .08em; text-shadow: 0 2px 10px #050b17, 0 0 16px currentColor; }
+.drag-zone small { font: clamp(11px, 1.2vw, 15px) Palatino, Georgia, serif; max-width: 80%; text-shadow: 0 2px 8px #050b17; }
+.drag-zone--cast { color: #ffdfa0; border: 2px solid #f0c46a; background: radial-gradient(ellipse at center, #b0822a55, #3a2a0caa 70%); box-shadow: inset 0 0 40px #f6c45855, 0 0 18px #e2a63f66; animation: dz-breathe 2.4s ease-in-out infinite; }
+.drag-zone--cosmo { color: #d6edff; border: 2px solid #79c4ff; background: radial-gradient(circle at 18% 60%, #486bf078, transparent 30%), radial-gradient(circle at 78% 40%, #af4ed477, transparent 32%), linear-gradient(100deg, #081d57dd, #05102ddb, #12346add); box-shadow: inset 0 0 36px #67beff66, 0 0 21px #479eff77; animation: dz-breathe 2.7s ease-in-out infinite; }
+.drag-zone--cosmo::after { content: ''; position: absolute; inset: -70%; z-index: -1; background: repeating-conic-gradient(from 0deg, transparent 0deg 25deg, #7bbbff33 26deg 26.35deg, transparent 27deg 55deg); animation: dz-spin 40s linear infinite; }
+.drag-zone.is-off { opacity: .28; filter: grayscale(.8); animation: none; }
+.is-over-cast .drag-zone--cast { box-shadow: inset 0 0 75px #fbc96877, 0 0 40px #ffda81dd; filter: brightness(1.35); }
+.is-over-cosmo .drag-zone--cosmo { box-shadow: inset 0 0 70px #5cb8ffbb, 0 0 42px #5499ffdd; filter: brightness(1.3); }
+@keyframes dz-in { from { opacity: 0; } }
+@keyframes dz-breathe { 50% { filter: brightness(1.15); } }
+@keyframes dz-spin { to { transform: rotate(360deg); } }
+.reduce-motion .drag-zone, .reduce-motion .drag-zone::after, .reduce-motion .drag-zones { animation: none; }

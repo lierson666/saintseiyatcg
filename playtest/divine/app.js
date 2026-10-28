@@ -496,6 +496,7 @@ function render() {
       ${handRow(me, false)}
       ${command()}
     </div>${choiceBar()}`;
+  if (drag?.ghost) showDragZones(drag.uid); // re-render no meio do arraste não apaga as zonas
   const focused = document.activeElement?.closest?.('.decision [data-focus]')?.dataset.focus;
   overlayRoot.innerHTML = overlays();
   if (focused) $(`.decision [data-focus="${CSS.escape(focused)}"]`)?.focus();
@@ -712,6 +713,29 @@ function previewCost(uid) {
   $$(`[data-bank="${key}"] [data-bank-unit="${c.cost.unit}"] .orb.ready`).slice(-c.cost.amount).forEach(o => o.classList.add('preview'));
 }
 
+// Campo dividido durante o arraste (como no sistema anterior): metade de cima CAST (jogar), metade de baixo COSMO BASE.
+// A zona só acende se a ação for possível agora; a engine ainda decide ao soltar.
+function showDragZones(uid) {
+  const key = owner(uid), field = $('.arena-field');
+  if (!field) return;
+  const cast = !playableReason(key, uid), cosmo = canBase(key, uid);
+  field.insertAdjacentHTML('beforeend', `<div class="drag-zones" aria-hidden="true">
+    <div class="drag-zone drag-zone--cast ${cast ? '' : 'is-off'}"><strong>CAST</strong><small>${cast ? 'Release to cast as Devotee, Armor or effect' : esc(playableReason(key, uid))}</small></div>
+    <div class="drag-zone drag-zone--cosmo ${cosmo ? '' : 'is-off'}"><strong>COSMO BASE</strong><small>${cosmo ? 'Release to set as Cosmo Base' : esc(baseReason(key, uid))}</small></div></div>`);
+  $('.olympus')?.classList.add('is-dragging');
+}
+function hideDragZones() {
+  $('.drag-zones')?.remove();
+  $('.olympus')?.classList.remove('is-dragging', 'is-over-cast', 'is-over-cosmo');
+}
+// Zona sob o cursor: 'cast', 'cosmo' ou null (fora do campo ou ação impossível).
+function dragZoneAt(uid, x, y) {
+  const r = $('.arena-field')?.getBoundingClientRect(), key = owner(uid);
+  if (!r || x < r.left || x > r.right || y < r.top || y > r.bottom) return null;
+  const overUnit = document.elementsFromPoint(x, y).some(d => d.dataset?.uid && S().players[key].battlefield.includes(d.dataset.uid));
+  if (y < r.top + r.height / 2 || overUnit) return playableReason(key, uid) ? (overUnit && canBase(key, uid) ? 'cosmo' : null) : 'cast';
+  return canBase(key, uid) ? 'cosmo' : null;
+}
 // Arrastar da mão: soltar no campo joga; soltar num Devotee seu escolhe o portador/alvo; soltar na área de Cosmo vira Base.
 document.addEventListener('pointerdown', e => {
   const el = e.target.closest('.hand--me .dcard[data-uid]');
@@ -721,9 +745,12 @@ document.addEventListener('pointerdown', e => {
 document.addEventListener('pointermove', e => {
   if (!drag) return;
   if (!drag.ghost && Math.hypot(e.clientX - drag.x, e.clientY - drag.y) < 10) return;
-  if (!drag.ghost) { drag.ghost = drag.el.cloneNode(true); drag.ghost.classList.add('dragging'); document.body.append(drag.ghost); drag.el.classList.add('drag-source'); }
+  if (!drag.ghost) { drag.ghost = drag.el.cloneNode(true); drag.ghost.classList.add('dragging'); document.body.append(drag.ghost); drag.el.classList.add('drag-source'); showDragZones(drag.uid); }
   drag.ghost.style.left = `${e.clientX}px`; drag.ghost.style.top = `${e.clientY}px`;
   markBank(owner(drag.uid), drag.uid, e.clientX, e.clientY);
+  const zone = dragZoneAt(drag.uid, e.clientX, e.clientY), board = $('.olympus');
+  board?.classList.toggle('is-over-cast', zone === 'cast');
+  board?.classList.toggle('is-over-cosmo', zone === 'cosmo');
 });
 document.addEventListener('pointerup', e => {
   if (!drag) return;
@@ -732,9 +759,13 @@ document.addEventListener('pointerup', e => {
   if (!ghost) return;
   ghost.remove(); el.classList.remove('drag-source');
   $$('.cosmo.drop-target, .cosmo.drop-hover').forEach(b => b.classList.remove('drop-target', 'drop-hover'));
+  const zone = dragZoneAt(uid, e.clientX, e.clientY);
+  hideDragZones();
   const key = owner(uid), drop = document.elementsFromPoint(e.clientX, e.clientY);
-  if (bankAt(key, e.clientX, e.clientY)) return placeAsBase(key, uid); // soltar na área de Cosmo: vira Base
-  const onField = drop.some(d => d.dataset?.field === key), onUnit = drop.find(d => d.dataset?.uid && S().players[key].battlefield.includes(d.dataset.uid));
+  const onUnit = drop.find(d => d.dataset?.uid && S().players[key].battlefield.includes(d.dataset.uid));
+  // Área de Cosmo ou metade COSMO vira Base; sobre um Devotee seu com a carta jogável, vale o portador/alvo.
+  if (bankAt(key, e.clientX, e.clientY) || (zone === 'cosmo' && !(onUnit && !playableReason(key, uid)))) return placeAsBase(key, uid);
+  const onField = zone === 'cast' || drop.some(d => d.dataset?.field === key);
   if (!onField && !onUnit) return;
   const reason = playableReason(key, uid);
   if (reason) return warn(reason);
