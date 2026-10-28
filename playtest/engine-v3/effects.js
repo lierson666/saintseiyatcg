@@ -47,7 +47,8 @@ function mods(state, ctx, uid) {
     if (n === '001' && behind(state, key)) list.push({atk: 1, hp: 0}); // Miracle
     if (athenaAwaken(state, ctx, key, uid)) list.push({atk: 1, hp: 1}); // God Athena, Divine Protection (Awaken 5)
     if (n === '001' && wears(ctx, uid, '019') && behind(state, key)) list.push({atk: 2, hp: 2}); // 019 Resonance
-    // Master's Guidance: cada Eagle Marin dá +1/+1 aos Bronze Saints do controlador com Training counter.
+    // G3-039: cada Training counter é +1/+1 por si (acumula). Master's Guidance soma +1/+1 por Eagle Marin.
+    if (state.units[uid]?.training) list.push({atk: state.units[uid].training, hp: state.units[uid].training});
     if (state.units[uid]?.training && isBronze(ctx, uid)) {
       for (const m of devotees(state, ctx, key).filter(u => id(ctx, u) === '021')) list.push({atk: 1, hp: 1, source: m});
     }

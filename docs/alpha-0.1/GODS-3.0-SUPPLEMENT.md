@@ -48,6 +48,7 @@ Legenda de estado: **Impl** (implementado e testado), **Parcial**, **Pendente** 
 | G3-036 | **Strike anulado**: se o atacante ou o Devotee alvo sai do campo antes do dano (ex.: Moment na janela de resposta), o Strike é anulado — sem dano e sem retaliação; o Strike continua contado como usado | Autor, 28/10/2026 | P04, P06 | Impl | `strike.js resolveStrike` (`strike_fizzled`); teste "G3-036" |
 | G3-037 | **Compra de 1 carta por turno**: a partir do 2º turno próprio, o jogador compra 1 carta no início do turno (antes: 2). Sem compra no 1º turno, como antes | Autor, 28/10/2026 | D3 | Impl | `core.js DRAWS_PER_TURN`; teste "G3-037" |
 | G3-038 | **Guardian protege sempre**: qualquer Devotee inimigo com Guardian em campo, Prepared ou não, obriga o Strike a mirar um Guardian (antes, só Guardian Prepared). Nimble continua ignorando; Cheater ignora só contra God (P05 A) | Autor, 28/10/2026 | P05 A, guia §12 | Impl | `strike.js checkStrike`; teste "G3-038" |
+| G3-039 | **Training counter é +1/+1**: cada Training counter dá +1 ATK / +1 HP ao Devotee, acumulando (2 = +2/+2), com ou sem Eagle Marin. Master's Guidance (021) continua somando +1/+1 aos Bronze Saints com Training counter enquanto Marin estiver no campo | Autor, 28/10/2026 | guia §48A | Impl | `effects.js mods`; teste "G3-039" |
 
 ## Procedimentos canônicos implementados (God Athena)
 

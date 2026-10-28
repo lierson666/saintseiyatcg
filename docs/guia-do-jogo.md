@@ -563,6 +563,10 @@ Pode declarar Strike na rodada em que entra em campo.
 
 Impede novas declarações de Strike e ativação das próprias habilidades. Preserva passivas, Rivalidades e retaliação. Dura até o fim da rodada, salvo duração expressa diferente.
 
+### 48A. Training counter
+
+Cada Training counter num Devotee dá +1 ATK / +1 HP a ele. Os marcadores se acumulam (2 marcadores = +2/+2) e ficam enquanto o Devotee estiver no campo. Efeitos que citam Training counters (ex.: Master's Guidance, de Eagle Marin) somam ao bônus do próprio marcador.
+
 ### 49. Unfaith
 
 Ao declarar Strike contra um God, o atacante pode escolher remover até 2 Latent Cosmo do adversário em lugar do dano ao Soul. O God retalia normalmente.
