@@ -620,6 +620,7 @@ function logEvent(e) {
 // ---------- Entrada ----------
 
 boardRoot.addEventListener('click', e => {
+  if (Date.now() < noClickUntil) return; // fim de uma seta de ataque, não um clique
   if (director.busy) return director.skip();
   if (pending) return focusDecision();
   const s = S(), t = e.target;
@@ -754,10 +755,68 @@ function dragZoneAt(uid, x, y) {
 }
 // Arrastar da mão: soltar no campo joga; soltar num Devotee seu escolhe o portador/alvo; soltar na área de Cosmo vira Base.
 document.addEventListener('pointerdown', e => {
+  if (director.busy || mode) return;
+  const unit = e.target.closest('.field--me .dcard[data-uid]');
+  if (unit) return startAim(unit, e);
   const el = e.target.closest('.hand--me .dcard[data-uid]');
-  if (!el || director.busy || mode) return;
+  if (!el) return;
   drag = {uid: el.dataset.uid, x: e.clientX, y: e.clientY, el, ghost: null};
 });
+
+// Ataque por seta (estilo Hearthstone): segurar um Devotee seu Prepared, puxar a seta e soltar no alvo declara o
+// Strike. Os alvos legais vêm de strikeTargets (a engine valida de novo no declareStrike). Clique sem puxar abre o menu.
+let aim = null, noClickUntil = 0;
+function startAim(el, e) {
+  const uid = el.dataset.uid, key = owner(uid);
+  if (!idleFor(key) || info(uid).kind !== 'Devotee' || !S().units[uid]?.prepared) return;
+  const targets = strikeTargets(S(), ctx, uid);
+  if (!targets.length) return;
+  aim = {uid, el, x: e.clientX, y: e.clientY, on: false, targets, svg: null, hover: null};
+}
+const aimEls = () => aim.targets.flatMap(tg => (tg.kind === 'god' ? $$(`[data-god="${tg.player}"]`) : $$(`.field .dcard[data-uid="${tg.uid}"]`)));
+function aimTargetAt(x, y) {
+  const els = document.elementsFromPoint(x, y);
+  for (const tg of aim.targets) {
+    if (tg.kind === 'god' && els.some(d => d.closest?.(`[data-god="${tg.player}"]`))) return tg;
+    if (tg.kind === 'devotee' && els.some(d => d.closest?.(`.field .dcard[data-uid="${tg.uid}"]`))) return tg;
+  }
+  return null;
+}
+function moveAim(e) {
+  if (!aim.on) {
+    if (Math.hypot(e.clientX - aim.x, e.clientY - aim.y) < 10) return;
+    aim.on = true; closeQuick();
+    aim.el.classList.add('aiming');
+    aimEls().forEach(el => el.classList.add('pickable'));
+    aim.svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    aim.svg.setAttribute('class', 'aim-arrow');
+    aim.svg.innerHTML = '<defs><marker id="aim-head" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs><path class="aim-arrow__glow"/><path class="aim-arrow__line" marker-end="url(#aim-head)"/><circle class="aim-arrow__reticle" r="16"/>';
+    document.body.append(aim.svg);
+  }
+  const r = aim.el.getBoundingClientRect(), x0 = r.left + r.width / 2, y0 = r.top + r.height / 2, x1 = e.clientX, y1 = e.clientY;
+  const d = `M${x0},${y0} Q${(x0 + x1) / 2},${Math.min(y0, y1) - 80} ${x1},${y1}`; // arco para cima, como uma flecha lançada
+  $$('path:not([d^="M0"])', aim.svg).forEach(path => path.setAttribute('d', d));
+  const reticle = $('.aim-arrow__reticle', aim.svg);
+  reticle.setAttribute('cx', x1); reticle.setAttribute('cy', y1);
+  const tg = aimTargetAt(x1, y1);
+  aim.svg.classList.toggle('is-locked', !!tg);
+  $$('.aim-hover').forEach(el => el.classList.remove('aim-hover'));
+  if (tg) (tg.kind === 'god' ? $$(`[data-god="${tg.player}"]`) : $$(`.field .dcard[data-uid="${tg.uid}"]`)).forEach(el => el.classList.add('aim-hover'));
+}
+function endAim(e) {
+  const a = aim, tg = a.on && e ? aimTargetAt(e.clientX, e.clientY) : null;
+  aim = null;
+  if (!a.on) return; // clique simples: o menu do campo segue normal
+  noClickUntil = Date.now() + 400;
+  a.svg?.remove(); a.el.classList.remove('aiming');
+  $$('.aim-hover').forEach(el => el.classList.remove('aim-hover'));
+  $$('.pickable').forEach(el => el.classList.remove('pickable'));
+  if (tg) act(() => declareStrike(S(), ctx, a.uid, tg));
+}
+document.addEventListener('pointermove', e => { if (aim) moveAim(e); });
+document.addEventListener('pointerup', e => { if (aim) endAim(e); });
+document.addEventListener('pointercancel', () => { if (aim) endAim(null); });
+window.addEventListener('blur', () => { if (aim) endAim(null); });
 document.addEventListener('pointermove', e => {
   if (!drag) return;
   if (!drag.ghost && Math.hypot(e.clientX - drag.x, e.clientY - drag.y) < 10) return;
@@ -805,7 +864,7 @@ document.addEventListener('keydown', e => {
   if (e.target.matches?.('input, select, textarea')) return;
   if (pending && !director.busy) return decisionKey(e);
   if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); return primary(); }
-  if (e.code === 'Escape') { closeQuick(); cancelDrag(); if (mode) { mode = null; render(); } else if (settingsOpen || logOpen) { settingsOpen = logOpen = false; render(); } }
+  if (e.code === 'Escape') { closeQuick(); cancelDrag(); if (aim) endAim(null); if (mode) { mode = null; render(); } else if (settingsOpen || logOpen) { settingsOpen = logOpen = false; render(); } }
   if (e.key === 'l' || e.key === 'L') { logOpen = !logOpen; render(); }
 });
 document.addEventListener('click', e => { if (!e.target.closest('.quick') && !e.target.closest('.dcard')) closeQuick(); });
