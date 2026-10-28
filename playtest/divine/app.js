@@ -13,7 +13,7 @@ import {createScene, THEMES} from './scene.js?v=20261028-4';
 import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudgment, greatFloodBlock, announceGreatFlood, GREAT_FLOOD_COST} from '../engine-v3/gods.js';
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
-import {createDirector} from './director.js?v=3';
+import {createDirector} from './director.js?v=4';
 import {createAI} from './ai.js?v=2';
 import {findDeck} from '../deck-store.js';
 import {unlock, playMusic} from '../audio.js';
@@ -645,6 +645,7 @@ const ui = {
   handRect: key => rectOf($(`[data-hand="${key}"]`)),
   fieldRect: key => rectOf($(`[data-field="${key}"]`)),
   bankRect: (key, unit) => rectOf($(`[data-bank="${key}"] [data-bank-unit="${unit}"]`)),
+  readyBaseRects: (key, n) => $$(`[data-lane="${key}"] .lane__base:not(.tapped)`).slice(0, n).map(rectOf), // o motor usa as primeiras Bases prontas
   center: r => (r ? {x: r.left + r.width / 2, y: r.top + r.height / 2} : null),
   float(at, text, cls) {
     if (!at) return;

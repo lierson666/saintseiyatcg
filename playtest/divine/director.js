@@ -61,8 +61,9 @@ export function createDirector({ui, getFx, settings}) {
   }
 
   // Cada tipo de evento: o que mostrar e quanto tempo segurar a fila.
+  const pool = {A: 0, B: 0}; // Cosmo pago e ainda não entregue a uma carta
   const handlers = {
-    async turn_start(e) { await ui.banner(ui.isViewer(e.player) ? 'Your turn' : `Player ${e.player}'s turn`, e.player, t(900)); },
+    async turn_start(e) { pool.A = pool.B = 0; await ui.banner(ui.isViewer(e.player) ? 'Your turn' : `Player ${e.player}'s turn`, e.player, t(900)); },
     async draw(e) { if (!settings.skipDraws) await ui.flyCard(e.uid, ui.deckRect(e.player), ui.handRect(e.player), t(220), !ui.isViewer(e.player)); },
     async fatigue(e) {
       const at = ui.center(ui.deckRect(e.player));
@@ -76,7 +77,20 @@ export function createDirector({ui, getFx, settings}) {
       await ui.flyCard(e.uid, ui.rect(e.uid) || ui.handRect(e.player), ui.bankRect(e.player, 'base'), t(260), false);
       fx()?.burst(at.x, at.y, {color: '#ffd36e', count: 30, speed: 200});
     },
-    async cosmo_spent(e) { ui.spendOrbs(e.player, e.unit, e.amount); await pause(160); },
+    // Cosmo como pool (autor, 28/10/2026): a energia sai das Bases prontas (ou do Latent), junta-se no orbe de Cosmo
+    // do jogador e só depois corre até a carta conjurada em card_played.
+    async cosmo_spent(e) {
+      const poolAt = ui.center(ui.bankRect(e.player, 'base'));
+      const from = e.unit === 'base' ? ui.readyBaseRects(e.player, e.amount).map(ui.center) : [ui.center(ui.bankRect(e.player, 'latent'))];
+      ui.spendOrbs(e.player, e.unit, e.amount);
+      pool[e.player] = (pool[e.player] || 0) + e.amount;
+      const f = fx();
+      if (!f || skipping || !poolAt) return pause(160);
+      from.filter(Boolean).forEach((p, i) => setTimeout(() => f.beam(p, poolAt, {color: '#7fc8ff', width: 12, duration: .34}), t(i * 70)));
+      await pause(320 + from.length * 40);
+      f.charge(poolAt.x, poolAt.y, {color: '#9fd8ff', count: 16 * e.amount, radius: 55});
+      await pause(160);
+    },
     async latent_gained(e) {
       const at = ui.center(ui.bankRect(e.player, 'latent'));
       fx()?.charge(at.x, at.y, {color: '#b58cff', count: 25 * e.amount, radius: 90});
@@ -84,6 +98,13 @@ export function createDirector({ui, getFx, settings}) {
       await pause(380);
     },
     async card_played(e) {
+      const f = fx(), poolAt = ui.center(ui.bankRect(e.player, 'base')), src = ui.center(ui.rect(e.uid) || ui.handRect(e.player));
+      if (pool[e.player] && f && !skipping && poolAt && src) { // o pool encontra a carta e a energia a vira para o campo
+        f.beam(poolAt, src, {color: '#a8e4ff', width: 14 + 4 * Math.min(pool[e.player], 6), duration: .38});
+        await pause(300);
+        f.burst(src.x, src.y, {color: '#bfe6ff', count: 28, speed: 220});
+      }
+      pool[e.player] = 0;
       const to = e.kind === 'Equipment' && e.bearer ? ui.rect(e.bearer) : ui.fieldRect(e.player);
       await ui.flyCard(e.uid, ui.rect(e.uid) || ui.handRect(e.player), to, t(320), false, true);
       const at = ui.center(to);
