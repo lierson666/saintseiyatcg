@@ -261,8 +261,8 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .aim-arrow__line { stroke: #ffcf7a; stroke-width: 6; stroke-dasharray: 14 9; animation: aim-flow .5s linear infinite; }
 .aim-arrow marker path { fill: #ffcf7a; stroke: none; }
 .aim-arrow__reticle { fill: none; stroke: #ffcf7a; stroke-width: 2; opacity: .5; transition: r .15s, opacity .15s; }
-.aim-arrow.is-locked .aim-arrow__line, .aim-arrow.is-locked marker path { stroke: #ff6a4a; fill: #ff6a4a; }
-.aim-arrow.is-locked marker path { stroke: none; }
+.aim-arrow.is-locked .aim-arrow__line { stroke: #ff6a4a; }
+.aim-arrow.is-locked marker path { fill: #ff6a4a; stroke: none; }
 .aim-arrow.is-locked .aim-arrow__glow { stroke: rgba(255, 70, 50, .55); }
 .aim-arrow.is-locked .aim-arrow__reticle { stroke: #ff6a4a; opacity: 1; r: 26; }
 .dcard.aiming { box-shadow: 0 0 0 2px #ffcf7a, 0 0 26px rgba(255, 200, 110, .8); transform: translateY(-6px) scale(1.06); }
