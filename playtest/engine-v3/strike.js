@@ -36,7 +36,9 @@ export function checkStrike(state, ctx, attacker, target) {
     throw new RuleError('P05', 'há Guardian em campo: o Strike precisa mirar um Devotee com Guardian');
   }
   if (state.strikes.get(attacker) === state.turn) throw new RuleError('D22', 'este Devotee já declarou Strike neste turno');
-  return {key, enemy};
+  // Para a UI explicar quando um Strike passa por Guardian (Nimble sempre; Cheater contra God).
+  const bypass = guarded && !(target.kind === 'devotee' && isGuardian(target.uid)) ? (own.includes('Nimble') ? 'Nimble' : 'Cheater') : null;
+  return {key, enemy, bypass};
 }
 
 // Alvos legais de um atacante agora: [] se ele não pode declarar Strike.
@@ -48,12 +50,12 @@ export function strikeTargets(state, ctx, attacker) {
 
 // Abre a janela (P06): gatilhos de declaração (D202) entram na cadeia; o dano roda quando a janela fecha.
 export function declareStrike(state, ctx, attacker, target, triggers = []) {
-  const {key} = checkStrike(state, ctx, attacker, target);
+  const {key, bypass} = checkStrike(state, ctx, attacker, target);
   // Gatilhos "when an enemy Devotee declares a Strike" (Water Prison): montados antes de mudar o estado.
   const declared = hooks.strikeDeclared.flatMap(fn => fn(state, ctx, attacker, key));
   recordStrike(state, attacker); // D22
   state.units[attacker].prepared = false;
-  emit(state, 'strike_declared', {player: key, attacker, target});
+  emit(state, 'strike_declared', {player: key, attacker, target, ...(bypass && {bypass})});
   onDeclare(state, ctx, attacker, target);
   const strike = {attacker, target, player: key};
   openWindow(state, () => resolveStrike(state, ctx, strike));

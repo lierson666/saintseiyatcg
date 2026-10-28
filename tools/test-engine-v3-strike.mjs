@@ -147,3 +147,11 @@ test('G3-036: atacante ou alvo que sai do campo antes do dano anula o Strike (se
     checkInvariants(s.state, s.objects);
   }
 });
+
+test('Strike que passa por Guardian registra o motivo (Nimble) para a interface', () => {
+  const s = setup();
+  const marin = s.field('A', '021');
+  s.field('B', '040'); // 040: Guardian
+  declareStrike(s.state, s.ctx, marin, {kind: 'god', player: 'B'});
+  assert.equal(s.state.events.findLast(e => e.type === 'strike_declared').bypass, 'Nimble');
+});
