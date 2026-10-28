@@ -141,7 +141,7 @@ A Memória Mestre é um resumo de continuidade, nível **S**. Ela não muda nenh
 
 ## Proposta de decks com 3 cópias
 
-A proposta está em `data/alpha-0.1/decks-proposta-d171.json` e **não foi aprovada**. Nenhuma carta foi alterada.
+A proposta está em `data/alpha-0.1/decks-proposta-d171.json`. **Aprovada pelo autor em 28/10/2026, como está, incluindo Cassios ×3 na Dragon Fortress.** Nenhuma carta foi alterada.
 
 Critério usado:
 1. Retirar a 4ª cópia.

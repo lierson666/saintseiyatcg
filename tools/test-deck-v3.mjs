@@ -33,7 +33,7 @@ test('as duas listas experimentais excedem o limite de 3 (D171) só nas cartas c
   for (const d of decks) assert.deepEqual(validateDeck(d, index, {copyLimit: 4}), [], d.alpha_nome);
 });
 
-test('proposta D171 (não aprovada) fecha 60 com no máximo 3 cópias, sem 019 a mais e sem Kiki 026', () => {
+test('decks D171 aprovados fecham 60 com no máximo 3 cópias, sem 019 a mais e sem Kiki 026', () => {
   const proposal = read('../data/alpha-0.1/decks-proposta-d171.json').decks;
   for (const d of proposal) {
     assert.deepEqual(validateDeck(d, index), [], d.alpha_nome);

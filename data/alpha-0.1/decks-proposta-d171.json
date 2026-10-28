@@ -1,5 +1,5 @@
 {
- "status": "PROPOSTA — não aprovada. Critério: retirar a 4ª cópia; repor com +1 de carta da própria lista do mesmo tipo (Devotee/Equipment/Spell), menor custo primeiro; sem Sacred/Mythic, sem 019 e sem 026 (Kiki pendente no catálogo V6); se não houver, qualquer tipo da própria lista; por último carta Common Cosmoble do catálogo D268 do mesmo tipo.",
+ "status": "APROVADO pelo autor em 28/10/2026 como decks experimentais do Alpha 0.1 (Pegasus Rush × Dragon Fortress). Critério da proposta: retirar a 4ª cópia; repor com +1 de carta da própria lista do mesmo tipo (Devotee/Equipment/Spell), menor custo primeiro; sem Sacred/Mythic, sem 019 e sem 026 (Kiki pendente no catálogo V6); se não houver, qualquer tipo da própria lista; por último carta Common Cosmoble do catálogo D268 do mesmo tipo.",
  "origem": "data/alpha-0.1/decks-experimentais.json",
  "decks": [
   {
