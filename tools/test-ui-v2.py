@@ -41,8 +41,10 @@ with sync_playwright() as p:
     page.get_by_role('button', name='Cosmo Base', exact=True).click()
     assert page.evaluate('sstcg.game.actingPlayer') == 'A'
     assert page.evaluate('sstcg.game.state.players.A.zones.cosmo_base.length') == 1
-    page.get_by_role('button', name='Pass opportunity').click()
-    page.get_by_role('button', name='Pass opportunity').click()
+    page.get_by_role('button', name='Pass for round').click()
+    page.get_by_role('button', name='Pass for round').click()
+    if page.evaluate('sstcg.game.choice?.prompt') == 'Bank unused Base Cosmo as Latent':
+        page.get_by_role('button', name='Bank 1 Base → Latent',exact=True).click()
     assert page.evaluate('sstcg.game.state.round') == 2
     assert page.locator('.advantage-token').get_attribute('data-owner') == 'B'
     page.get_by_role('button', name='God emotes', exact=True).click()
@@ -51,8 +53,7 @@ with sync_playwright() as p:
     page.screenshot(path=str(output / 'arena-desktop.png'), full_page=True)
     page.set_viewport_size({'width': 390, 'height': 844})
     assert not page.evaluate('document.documentElement.scrollWidth>innerWidth')
-    page.get_by_role('button', name='Pass opportunity').scroll_into_view_if_needed()
-    assert page.get_by_role('button', name='Pass opportunity').is_visible()
+    assert page.get_by_role('button', name='Pass for round').is_visible()
     page.screenshot(path=str(output / 'arena-mobile.png'), full_page=True)
     page.set_viewport_size({'width': 1440, 'height': 1000})
     page.goto(args.url + '/card-forge/?card=sst-01-011')

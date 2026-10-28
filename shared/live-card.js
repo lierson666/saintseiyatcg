@@ -1,5 +1,5 @@
-import {renderRules,inlineMarkup,presentationRules} from './card-text.js?v=20261024-3';
-import {isEquipment} from './card-model.js?v=20261024-3';
+import {renderRules,inlineMarkup,presentationRules} from './card-text.js?v=20261024-4';
+import {isArmor,isEquipment} from './card-model.js?v=20261024-4';
 // A ilustração é apenas fundo. Letras, números e estados são dados independentes no DOM.
 const escape=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const portraits={'athena-001':'athena-001','athena-002':'athena-002','athena-003':'athena-003','athena-004':'athena-004','athena-005':'athena-005','athena-006':'athena-006','sst-01-001':'athena-002','sst-01-002':'athena-003','sst-01-003':'athena-004','sst-01-004':'athena-005','sst-01-005':'athena-006'};
@@ -19,7 +19,8 @@ const NEUTRAL={color:'#ECE7DA',glow:'rgba(255,255,255,0.35)',frame:['athena/vign
 function psdLayoutKey(card){
   const subs=card.subtipos||[];
   if(card.tipo==='Support')return 'relic';
-  if(card.tipo==='Equipment')return subs.some(x=>['Cloth','Scale','Surplice','Warplate'].includes(x))?'relic_cloth':subs.includes('Weapon')?'relic_weapon':'relic';
+  if(isArmor(card))return 'relic_cloth';
+  if(card.tipo==='Equipment')return subs.includes('Weapon')?'relic_weapon':'relic';
   const sub=subs.find(x=>PSD.T.typeToLayout[`${card.tipo}:${x}`]);
   return PSD.T.typeToLayout[sub?`${card.tipo}:${sub}`:card.tipo]||'devotee';
 }
@@ -75,8 +76,13 @@ function renderPsdCard(card,{src,stage,hp,power,keywords,damage,rules,equipment,
   }
   return `<div class="live-card live-card--psd live-card--${escape(f||'neutral')} ${compact?'live-card--compact':''} ${instance&&!instance.prepared&&card.tipo==='Devotee'?'live-card--unprepared':''}" data-live-card="${escape(card.id)}" style="--psd-ink:${pack.color};--psd-glow:${pack.glow}">
     <div class="live-card__illustration" aria-hidden="true">${src?`<img src="${escape(src)}" alt="" draggable="false" loading="lazy">`:'<span class="live-card__placeholder">✧<small>Illustration pending</small></span>'}</div>
-    <div class="lc-psd">${out}</div>${damage?`<span class="live-card__damage">${damage} damage · ${escape(hp)} HP left</span>`:''}${instance&&card.tipo==='Devotee'?`<span class="live-card__state">${instance.prepared?'Prepared':'Unprepared'}${instance.awakened?' · Awakened':''}</span>`:''}
+    <div class="lc-psd">${out}</div>${armorStatus(card,hp,damage)}${damage?`<span class="live-card__damage">${damage} damage · ${escape(hp)} HP left</span>`:''}${instance&&card.tipo==='Devotee'?`<span class="live-card__state">${instance.prepared?'Prepared':'Unprepared'}${instance.awakened?' · Awakened':''}</span>`:''}
   </div>`;
+}
+function armorStatus(card,hp,damage){
+  if(!isArmor(card))return '';
+  const max=Number.isFinite(card.vida)&&card.vida>0?card.vida:null,broken=max!==null&&damage>=max;
+  return `<span class="live-card__armor-status ${broken?'is-broken':''}" data-armor-state="${broken?'broken':max===null?'pending':'active'}">${max===null?'ARMOR HP · review pending':`${broken?'BROKEN · ':''}ARMOR HP ${Math.max(0,max-damage)} / ${max}`}</span>`;
 }
 export function renderLiveCard(card,{stats=null,instance=null,art=null,compact=false}={}){
   if(!card)return '<div class="live-card live-card--missing">Unknown card</div>';
@@ -99,6 +105,6 @@ export function renderLiveCard(card,{stats=null,instance=null,art=null,compact=f
     ${card.ressonancias?.length&&!resonanceAlready?`<p class="live-card__owners">Resonance: ${card.ressonancias.map(r=>escape(ownerName(r.personagem_id))).join(' / ')}</p>`:''}
     </div><footer class="live-card__footer">${equipment?`<span class="live-card__equip"><small>EQUIP</small><b>${equip??'?'}</b></span>`:''}<small>${escape(stage?.nome||card.faccao||'')}</small>
     ${card.tipo==='Devotee'?`<div class="live-card__stats" title="Power / remaining HP"><b data-stat="power">${escape(power)}</b><span>/</span><b data-stat="hp" class="${damage?'is-wounded':''}">${escape(hp)}</b></div>`:card.tipo==='God'?`<div class="live-card__stats"><b>${escape(card.attack)}</b><span>ATK</span><b>${escape(instance?.soul??card.soul)}</b><span>Soul</span></div>`:stage?`<div class="live-card__stats"><b>+${stage.bonus_poder}</b><span>/</span><b>+${stage.bonus_vida}</b></div>`:''}
-    </footer>${damage?`<span class="live-card__damage">${damage} damage · ${stats?.maxHP??card.vida} max HP</span>`:''}${instance&&card.tipo==='Devotee'?`<span class="live-card__state">${instance.prepared?'Prepared':'Unprepared'}${instance.awakened?' · Awakened':''}</span>`:''}
+    </footer>${armorStatus(card,hp,damage)}${damage?`<span class="live-card__damage">${damage} damage · ${stats?.maxHP??card.vida} max HP</span>`:''}${instance&&card.tipo==='Devotee'?`<span class="live-card__state">${instance.prepared?'Prepared':'Unprepared'}${instance.awakened?' · Awakened':''}</span>`:''}
   </div>`;
 }

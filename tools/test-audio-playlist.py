@@ -25,6 +25,20 @@ with sync_playwright() as p:
       };
       localStorage.setItem('ssTcgSanctuary',JSON.stringify({music:.28,sfx:.58,autoPass:false,hotseatPrivacy:false}));
     """)
+    # FX pessoais podem usar arquivos de MUSIC: isola a trilha sem alterar reprodução ou arquivos reais.
+    def config(route):
+        data = route.fetch().json()
+        data['audio']['efeitos'] = {key: '' for key in data['audio']['efeitos']}
+        def silence(value):
+            if isinstance(value, dict):
+                for key, item in value.items():
+                    if key == 'som': value[key] = ''
+                    else: silence(item)
+            elif isinstance(value, list):
+                for item in value: silence(item)
+        silence(data.get('apresentacao', {}))
+        route.fulfill(json=data)
+    page.route('**/data/game-settings.json*', config)
     page.goto(args.url + '/playtest/')
     page.get_by_role('button', name='Press to begin').click()
     page.wait_for_function('__qaAudio?.at(-1)?.currentTime>0')
@@ -50,9 +64,9 @@ with sync_playwright() as p:
     for start in range(0, len(played), len(expected)):
         assert set(played[start:start + len(expected)]) == expected, played
     assert all(a != b for a, b in zip(played, played[1:])), played
-    page.evaluate("async()=>{const a=await import('./audio.js');a.setVolume('music',0)}")
+    page.evaluate("""async()=>{const a=await import('./audio.js'+new URL(document.querySelector('script[src*="app-v2"]').src).search);a.setVolume('music',0)}""")
     assert page.evaluate('__qaAudio[1].volume') == 0
-    page.evaluate("async()=>{const a=await import('./audio.js');a.setVolume('music',.22);a.playMusic('battle')}")
+    page.evaluate("""async()=>{const a=await import('./audio.js'+new URL(document.querySelector('script[src*="app-v2"]').src).search);a.setVolume('music',.22);a.playMusic('battle')}""")
     assert page.evaluate('__qaAudio.length===2 && __qaAudio[1].volume===.22')
     page.get_by_role('button', name='Keep hand', exact=True).click()
     page.get_by_role('button', name='Keep hand', exact=True).click()

@@ -2,7 +2,7 @@
 
 Editor de cartas no navegador (vanilla JS, sem build). Monta a carta no canvas nativo 1488×2091 (2.5×3.5 in, ~595 dpi) com as peças extraídas dos PSDs.
 
-**Rulebook 2.0:** o [novo livro](../docs/guia-do-jogo.md) e o primeiro conjunto de 300 cartas estão integrados ao editor e à arena local. O catálogo tem 357 cartas: 300 novas e 57 anteriores preservadas. O histórico da importação e a aprovação do diff estão em [importacao-300-cartas](../docs/importacao-300-cartas/README.md).
+**Rulebook 2.1:** o [novo livro](../docs/guia-do-jogo.md) e o primeiro conjunto de 300 cartas estão integrados ao editor e à arena local. A matriz de pagamentos, Pass, banco de Latent e Armor seguem o [guia 2.1](../docs/rulebook-2.1/implementacao.md). O catálogo tem 357 cartas: 300 novas e 57 anteriores preservadas. O histórico da importação e a aprovação do diff estão em [importacao-300-cartas](../docs/importacao-300-cartas/README.md).
 
 ## Abrir
 
@@ -66,7 +66,7 @@ No topo do editor, abra "Lote", escolha `.txt`, `.json` ou `.xlsx`, ou cole o te
 
 ### Dados novos e revisão
 
-- HP, Cosmoble, identidade de personagem, unicidade, slot, Owners, ressonâncias e estágios têm campos próprios. Cloth, Scale, Surplice e Warplate ocupam o mesmo slot de armadura; armas e acessórios são separados.
+- HP, Cosmoble, identidade de personagem, unicidade, slot, Owners, ressonâncias e estágios têm campos próprios. Cloth, Scale, Surplice, Warplate e Moonplate ocupam o mesmo slot de armadura; armas e acessórios são separados.
 - O custo no topo é o custo de jogar. **EQUIP** tem um indicador próprio em toda carta equipável, inclusive acessórios. Bônus Vanilla e de evolução são totais do estágio, nunca uma soma automática.
 - Importação XLSX lê valores literais em memória, sem executar fórmulas ou modificar o original. O compilador reconhece os textos do primeiro conjunto; texto sem mapeamento pede revisão em vez de inventar efeitos.
 - Alterar texto de habilidade sinaliza revisão dos efeitos jogáveis e bloqueia seu uso na arena até revisão. A edição numérica mantém a estrutura de efeitos; alterações de estágios/Owners atualizam o texto correspondente no diff.

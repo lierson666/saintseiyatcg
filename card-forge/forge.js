@@ -2,7 +2,7 @@ import {createHistory} from '../shared/editor-history.js';
 import {compilePlaytest} from '../shared/import-playtest.js';
 import {textBlocks,blocksMarkup,presentationRules} from '../shared/card-text.js';
 import {renderLiveCard,illustration} from '../shared/live-card.js';
-import {isEquipment,validateCard} from '../shared/card-model.js';
+import {isArmor,isEquipment,validateCard} from '../shared/card-model.js';
 // Card Forge — editor de cartas em vanilla JS. Renderiza no canvas nativo 1488x2091 usando
 // as peças de CARD-TEMPLATE/ (extraídas dos PSDs) e o spec CARD-TEMPLATE/templates.json.
 
@@ -62,9 +62,9 @@ window.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&!e.altKey&&!doc
 function blankState() {
   return {
     id: '', nome_exibicao_en: '', title: '', subtitle: '', tipo: 'Devotee', subtipos: '', faccao: 'Athena',
-    revisao_regras: '2.0', cosmoble: false, personagem_unico: false, personagem_id: '', slot_equipamento: '', donos: '', estagios: [], resonanceText: '',
+    revisao_regras: '2.1', cosmoble: false, personagem_unico: false, personagem_id: '', origem_personagem: '', referencias_mitologicas_texto: '', slot_equipamento: '', donos: '', estagios: [], resonanceText: '',
     raridade: 'Common', custo: '', unidade_custo: 'cosmo', power: '', vida: '', resistance: '', bonusPower: '', bonusResistance: '',
-    equipar_custo: '', damage_cloth: '', soul: '', attack: '', awaken: '', keywords: '', rules: '',
+    equipar_custo: '', equipar_custo_ressonante: '', equipar_custo_outros: '', damage_cloth: '', soul: '', attack: '', awaken: '', keywords: '', rules: '',
     habilidade_awaken_en: '', ultimate_en: '', flavour: '', art: null,
   };
 }
@@ -101,7 +101,8 @@ const splitParas = (md) => md.split(/\n\s*\n/).map((p) => p.trim()).filter(Boole
 function layoutKey(s) {
   const subs = list(s.subtipos);
   if(s.tipo==='Support')return 'relic';
-  if(s.tipo==='Equipment')return subs.some(x=>['Cloth','Scale','Surplice','Warplate'].includes(x))?'relic_cloth':subs.includes('Weapon')?'relic_weapon':'relic';
+  if(isArmor({...s,subtipos:subs}))return 'relic_cloth';
+  if(s.tipo==='Equipment')return subs.includes('Weapon')?'relic_weapon':'relic';
   const sub = subs.find((x) => T.typeToLayout[`${s.tipo}:${x}`]);
   return T.typeToLayout[sub ? `${s.tipo}:${sub}` : s.tipo] || 'devotee';
 }
@@ -371,7 +372,7 @@ async function render() {
       }
       case 'gem': {
         const field={equip:'equipar_custo',damage:'damage_cloth'}[el.field]||el.field;
-        if(field==='damage_cloth'&&S.revisao_regras==='2.0')break;
+        if(field==='damage_cloth'&&['2.0','2.1'].includes(S.revisao_regras))break;
         const v=field==='resistance'&&has(S.vida)?S.vida:S[field];
         if (!has(v)) break;
         const g = await drawGlowPiece(el.piece, el);
@@ -405,7 +406,7 @@ async function render() {
 }
 
 // ---------- formulário ----------
-const NUM = ['custo', 'power', 'vida', 'resistance', 'equipar_custo', 'damage_cloth', 'soul', 'attack', 'awaken'];
+const NUM = ['custo', 'power', 'vida', 'resistance', 'equipar_custo', 'equipar_custo_ressonante', 'equipar_custo_outros', 'damage_cloth', 'soul', 'attack', 'awaken'];
 
 function renderStageEditor(){
   const host=$('#stageEditor');host.replaceChildren();
@@ -414,11 +415,13 @@ function renderStageEditor(){
     for(const [key,label] of [['nome','Estágio'],['custo','Evolve'],['bonus_poder','Bônus Power'],['bonus_vida','Bônus HP']]){
       const l=document.createElement('label');l.textContent=label;const input=document.createElement('input');input.type=key==='nome'?'text':'number';input.value=stage[key]??'';input.disabled=index===0&&['nome','custo'].includes(key);input.setAttribute('aria-label',`${label} ${index+1}`);
       input.addEventListener('input',()=>{stage[key]=key==='nome'?input.value:input.value===''?null:Number(input.value);if(index===0){S.bonusPower=`+${stage.bonus_poder||0}`;S.bonusResistance=`+${stage.bonus_vida||0}`;}rememberEdit('stage:'+index+':'+key);render();});l.append(input);row.append(l);
-    }host.append(row);
+    }
+    if(index){const label=document.createElement('label'),input=document.createElement('input');input.type='checkbox';input.checked=Boolean(stage.exige_sequencia);label.append(input,' Exigir estágio anterior');input.addEventListener('change',()=>{stage.exige_sequencia=input.checked;rememberEdit('stage-sequence:'+index);render();});row.append(label);}
+    host.append(row);
   });
   $('#previewStage').replaceChildren(...(S.estagios.length?S.estagios:[{nome:'Vanilla'}]).map((s,i)=>new Option(s.nome,String(i))));
 }
-$('#addStage').addEventListener('click',()=>{S.estagios.push({nome:S.estagios.length?'New stage':'Vanilla',custo:S.estagios.length?1:null,bonus_poder:0,bonus_vida:0,keywords_en:[],habilidades_en:[]});renderStageEditor();rememberEdit();render();});
+$('#addStage').addEventListener('click',()=>{if(S.estagios.length>=4)return;S.estagios.push({nome:S.estagios.length?'New stage':'Vanilla',custo:S.estagios.length?1:null,bonus_poder:0,bonus_vida:0,keywords_en:[],habilidades_en:[]});renderStageEditor();rememberEdit();render();});
 function updateLivePreview(){
   const live=$('#representation').value==='live';$('#livePreview').hidden=!live;$('#liveControls').hidden=!live;$('#cardWrap').hidden=live;
   const c=buildCard(),damage=Number($('#previewDamage').value)||0,stage=Number($('#previewStage').value)||0;
@@ -439,7 +442,7 @@ function fillForm() {
 function syncVisibility() {
   const lk = layoutKey(S);
   form.querySelectorAll('[data-for]').forEach((el) => { el.hidden = !el.dataset.for.split(' ').includes(lk); });
-  $('#legacyResistance').hidden=S.revisao_regras==='2.0';
+  $('#legacyResistance').hidden=['2.0','2.1'].includes(S.revisao_regras);
   $('#characterFields').hidden=S.tipo!=='Devotee';$('#equipmentFields').hidden=!isEquipment({...S,subtipos:list(S.subtipos)});
 }
 
@@ -457,6 +460,7 @@ function fromCard(c, proj = {}) {
   const s = blankState();
   for (const k of Object.keys(s)) if (k in c && c[k] !== null) s[k] = c[k];
   s.revisao_regras=c.revisao_regras||'1.0';
+  s.referencias_mitologicas_texto=(c.referencias_mitologicas||[]).join('\n');
   s.donos=(c.donos||[]).join(', ');s.estagios=structuredClone(c.estagios||[]);s.resonanceText=(c.ressonancias||[]).map(r=>`${r.personagem_id} | ${r.habilidade_en}`).join('\n');
   const stage=c.estagios?.[0];if(stage){s.bonusPower=`+${stage.bonus_poder}`;s.bonusResistance=`+${stage.bonus_vida}`;}
   s.subtipos = (c.subtipos || []).join(', ');
@@ -468,19 +472,24 @@ function fromCard(c, proj = {}) {
   return Object.assign(s, proj, { art: proj.art || null });
 }
 
+let selectionRevision=0;
 async function selectCard(id) {
+  const revision=++selectionRevision;
   const c = db.cartas.find((x) => x.id === id);
   if (!c) return;
-  orig = c;
   let proj = {};
   try { const r = await fetch(`projects/${id}.json`); if (r.ok) proj = await r.json(); } catch { /* sem projeto */ }
-  S = fromCard(c, proj);
-  if(!S.art&&illustration(c)){const im=await loadImg(illustration(c));if(im){S.art={src:illustration(c)};coverArt(im);}}
-  if (!S.art && c.caminho_imagem) {
+  if(revision!==selectionRevision)return;
+  const previousGenerated=gen,next=fromCard(c,proj),generated=gen;gen=previousGenerated;
+  if(!next.art&&illustration(c)){const im=await loadImg(illustration(c));if(im){next.art={src:illustration(c)};coverArt(im,next.art);}}
+  if (!next.art && c.caminho_imagem) {
     const src = `../ARTS/${c.caminho_imagem.split('/').pop()}`;
     const im = await loadImg(src);
-    if (im) { S.art = { src }; coverArt(im); }
+    if (im) { next.art = { src }; coverArt(im,next.art); }
   }
+  if(revision!==selectionRevision)return;
+  // Publicar seleção e histórico juntos evita apagar uma edição enquanto a arte carrega.
+  orig=c;gen=generated;S=next;
   fillForm();resetEditHistory();
   setRef(c.caminho_imagem ? `../${c.caminho_imagem}` : null);
   say(S.art ? `${c.id} carregada` : `${c.id} carregada — sem arte, envie uma imagem`);
@@ -488,6 +497,7 @@ async function selectCard(id) {
 }
 
 function newCard() {
+  selectionRevision++;
   orig = null;
   gen = [];
   const prefix = S.faccao.toLowerCase();
@@ -648,8 +658,10 @@ function buildCard() {
   if (!source) Object.assign(base, { nome_interno_pt: '', status: 'needs-review', cosmoble: false, caminho_imagem: null, habilidade_awaken_en: '', ultimate_en: '', notas_pt: '' });
   for(const k of NUM)if(!source||k in source||has(S[k]))base[k]=n(S[k]);
   base.cosmoble=source&&source.cosmoble===null&&!S.cosmoble?null:Boolean(S.cosmoble);
-  if(S.revisao_regras==='2.0'){
-    base.revisao_regras='2.0';base.personagem_id=S.personagem_id||null;if(!source||'personagem_unico' in source||S.personagem_unico)base.personagem_unico=Boolean(S.personagem_unico);base.slot_equipamento=S.slot_equipamento||null;base.donos=list(S.donos);base.estagios=structuredClone(S.estagios);
+  if(['2.0','2.1'].includes(S.revisao_regras)){
+    base.revisao_regras=S.revisao_regras;base.personagem_id=S.personagem_id||null;if(!source||'personagem_unico' in source||S.personagem_unico)base.personagem_unico=Boolean(S.personagem_unico);base.slot_equipamento=S.slot_equipamento||null;base.donos=list(S.donos);base.estagios=structuredClone(S.estagios);
+    if(S.origem_personagem||source?.origem_personagem)base.origem_personagem=S.origem_personagem||null;
+    if(S.referencias_mitologicas_texto||source?.referencias_mitologicas)base.referencias_mitologicas=S.referencias_mitologicas_texto.split(/\n/).map(t=>t.trim()).filter(Boolean);
     base.ressonancias=S.resonanceText.split(/\n/).map(t=>t.trim()).filter(Boolean).map(t=>{const [id,...parts]=t.split('|'),text=parts.join('|').trim(),old=source?.ressonancias?.find(r=>r.personagem_id===id.trim());return {...(old||{}),personagem_id:id.trim(),habilidade_en:text};});
     if(source&&['estagios','donos'].some(k=>JSON.stringify(base[k])!==JSON.stringify(source[k])))base.habilidades_en=presentationRules(base);
     const mechanicalTextChanged=source&&(JSON.stringify(habilidades)!==JSON.stringify(source.habilidades_en)||JSON.stringify(base.keywords_en)!==JSON.stringify(source.keywords_en)||S.resonanceText!==(source.ressonancias||[]).map(r=>`${r.personagem_id} | ${r.habilidade_en}`).join('\n'));
@@ -836,7 +848,7 @@ $('#batchFile').addEventListener('change',async e=>{
     }else{const source=JSON.parse(await f.text());imported=Array.isArray(source)?source:source.cartas;}
     if(!Array.isArray(imported)||!imported.length)throw Error('Arquivo sem cartas.');
     const keep={orig,gen,S};
-    try{batch=imported.map(c=>{const errors=validateCard(c);const state=fromCard(c);const generated=gen;const previous=db.cartas.find(x=>x.id===c.id);return{orig:previous||null,gen:generated,state,errors,imported:structuredClone(c)};});}finally{({orig,gen,S}=keep);}
+    try{batch=imported.map(c=>{const previous=db.cartas.find(x=>x.id===c.id),merged={...previous,...c};const errors=validateCard(merged);const state=fromCard(merged);const generated=gen;return{orig:previous||null,gen:generated,state,errors,imported:structuredClone(merged)};});}finally{({orig,gen,S}=keep);}
     renderBatchList();say(`Lote carregado: ${batch.length} cartas. Revise os dados e o diff antes de gravar.`);$('#batch').open=true;
     if(!batch.some(i=>i.errors.length))$('#batchList button')?.click();
   }catch(error){say(error.message,true);}

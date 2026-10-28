@@ -47,3 +47,6 @@
 .live-card--psd .lc-gem b,.live-card--psd .lc-gem small,.live-card--psd .lc-text--title,.live-card--psd .lc-text--typeline{-webkit-text-stroke:.09em #141008;paint-order:stroke fill}
 .live-card--psd .live-card__placeholder small{display:none}
 .live-card--psd .lc-gem b.is-wounded{color:#ffa38e}
+
+/* HP de Armor é independente dos bônus dados ao portador. */
+.live-card__armor-status{position:absolute;top:18%;left:14%;right:14%;z-index:4;padding:.25em .45em;border:1px solid #d9b762;background:#111827e8;color:#fff0b3;text-align:center;font:600 4cqw/1.2 sans-serif;pointer-events:none}.live-card__armor-status.is-broken{border-color:#e99587;color:#ffd4c9;background:#441d20ed}

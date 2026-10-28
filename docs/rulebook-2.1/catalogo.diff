@@ -1,0 +1,494 @@
+--- a/data/cards.json
++++ b/data/cards.json
+@@ -638,7 +638,10 @@
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+-      "notas_pt": ""
++      "notas_pt": "",
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 2,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "athena-022",
+@@ -670,7 +673,10 @@
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+-      "notas_pt": "Dohko ainda nao esta catalogado no set atual."
++      "notas_pt": "Dohko ainda nao esta catalogado no set atual.",
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 2,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "athena-023",
+@@ -702,7 +708,10 @@
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+-      "notas_pt": ""
++      "notas_pt": "",
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 2,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "athena-024",
+@@ -734,7 +743,10 @@
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+-      "notas_pt": "Aiolia ainda nao esta catalogado no set atual."
++      "notas_pt": "Aiolia ainda nao esta catalogado no set atual.",
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 2,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "athena-025",
+@@ -766,7 +778,10 @@
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+-      "notas_pt": "Shaka ainda nao esta catalogado no set atual."
++      "notas_pt": "Shaka ainda nao esta catalogado no set atual.",
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 2,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "athena-026",
+@@ -2379,7 +2394,10 @@
+         "gatilhos": [],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-01-012",
+@@ -2446,7 +2464,10 @@
+         "gatilhos": [],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-01-013",
+@@ -2513,7 +2534,10 @@
+         "gatilhos": [],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-01-014",
+@@ -2580,7 +2604,10 @@
+         "gatilhos": [],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-01-015",
+@@ -2647,7 +2674,10 @@
+         "gatilhos": [],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-01-016",
+@@ -2714,7 +2744,10 @@
+         "gatilhos": [],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-01-017",
+@@ -2781,7 +2814,10 @@
+         "gatilhos": [],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-01-018",
+@@ -2848,7 +2884,10 @@
+         "gatilhos": [],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-01-019",
+@@ -2915,7 +2954,10 @@
+         "gatilhos": [],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-01-020",
+@@ -2982,7 +3024,10 @@
+         "gatilhos": [],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-01-021",
+@@ -5658,7 +5703,10 @@
+         "gatilhos": [],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-02-012",
+@@ -5737,7 +5785,10 @@
+         "gatilhos": [],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-02-013",
+@@ -5816,7 +5867,10 @@
+         "gatilhos": [],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-02-014",
+@@ -5895,7 +5949,10 @@
+         "gatilhos": [],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-02-015",
+@@ -5974,7 +6031,10 @@
+         "gatilhos": [],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-02-016",
+@@ -6053,7 +6113,10 @@
+         "gatilhos": [],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-02-017",
+@@ -6132,7 +6195,10 @@
+         "gatilhos": [],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-02-018",
+@@ -6211,7 +6277,10 @@
+         "gatilhos": [],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-02-019",
+@@ -6290,7 +6359,10 @@
+         "gatilhos": [],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-02-020",
+@@ -9138,7 +9210,10 @@
+         ],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-03-012",
+@@ -9209,7 +9284,10 @@
+         ],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-03-013",
+@@ -9280,7 +9358,10 @@
+         ],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-03-014",
+@@ -9351,7 +9432,10 @@
+         ],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-03-015",
+@@ -9422,7 +9506,10 @@
+         ],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-03-016",
+@@ -9493,7 +9580,10 @@
+         ],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-03-017",
+@@ -9564,7 +9654,10 @@
+         ],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-03-018",
+@@ -9706,7 +9799,10 @@
+         ],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-03-020",
+@@ -9777,7 +9873,10 @@
+         ],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-03-021",
+@@ -12553,7 +12652,10 @@
+         ],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-04-012",
+@@ -12638,7 +12740,10 @@
+         ],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-04-013",
+@@ -12723,7 +12828,10 @@
+         ],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-04-014",
+@@ -12808,7 +12916,10 @@
+         ],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-04-015",
+@@ -12893,7 +13004,10 @@
+         ],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-04-016",
+@@ -13318,7 +13432,10 @@
+         ],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-04-021",
+@@ -16646,7 +16763,10 @@
+         ],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-05-020",
+@@ -16725,7 +16845,10 @@
+         ],
+         "passivas": [],
+         "habilidades": []
+-      }
++      },
++      "categoria_equipamento": "Armor",
++      "equipar_custo_ressonante": 1,
++      "equipar_custo_outros": 5
+     },
+     {
+       "id": "sst-05-021",
