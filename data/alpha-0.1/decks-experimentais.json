@@ -1,0 +1,229 @@
+{
+ "origem": "data/bronze-decks-v6.json (branch codex/arena-experience-v3), copiado em 28/10/2026 sem alteração das listas",
+ "status": "experimental — não aprovado; inválido sob D171 (limite 3) até o autor escolher as reposições",
+ "decks": [
+  {
+   "alpha_nome": "Pegasus Rush",
+   "id": "rulebook2-athena",
+   "nome": "PEGASUS SEIYA — Never Surrender",
+   "domain_id": "athena-v6-062",
+   "flavour": "milagres, Training e reviravoltas",
+   "main_deck": [
+    {
+     "card_id": "athena-v6-001",
+     "quantity": 4,
+     "name": "PEGASUS SEIYA"
+    },
+    {
+     "card_id": "athena-v6-002",
+     "quantity": 4,
+     "name": "PEGASUS CLOTH V2"
+    },
+    {
+     "card_id": "athena-v6-021",
+     "quantity": 4,
+     "name": "EAGLE MARIN"
+    },
+    {
+     "card_id": "athena-v6-028",
+     "quantity": 4,
+     "name": "UNICORN JABU"
+    },
+    {
+     "card_id": "athena-v6-027",
+     "quantity": 3,
+     "name": "CASSIOS, THE FALLEN RIVAL"
+    },
+    {
+     "card_id": "athena-v6-036",
+     "quantity": 2,
+     "name": "SEIKA, THE LOST SISTER"
+    },
+    {
+     "card_id": "athena-v6-040",
+     "quantity": 2,
+     "name": "SANCTUARY GUARD"
+    },
+    {
+     "card_id": "athena-v6-034",
+     "quantity": 2,
+     "name": "TATSUMI, SAORI’S GUARDIAN"
+    },
+    {
+     "card_id": "athena-v6-060",
+     "quantity": 4,
+     "name": "THE TRAINING OF PEGASUS"
+    },
+    {
+     "card_id": "athena-v6-053",
+     "quantity": 4,
+     "name": "THE FIRST BURN OF COSMO"
+    },
+    {
+     "card_id": "athena-v6-054",
+     "quantity": 4,
+     "name": "A SAINT NEVER SURRENDERS"
+    },
+    {
+     "card_id": "athena-v6-076",
+     "quantity": 3,
+     "name": "CASSIOS’S SACRIFICE"
+    },
+    {
+     "card_id": "athena-v6-081",
+     "quantity": 3,
+     "name": "THE TESTAMENT OF AIOLOS"
+    },
+    {
+     "card_id": "athena-v6-082",
+     "quantity": 2,
+     "name": "THE GOLDEN ARROW"
+    },
+    {
+     "card_id": "athena-v6-052",
+     "quantity": 3,
+     "name": "THE GALAXIAN WARS"
+    },
+    {
+     "card_id": "athena-v6-056",
+     "quantity": 3,
+     "name": "PROTECT SAORI"
+    },
+    {
+     "card_id": "athena-v6-061",
+     "quantity": 2,
+     "name": "THE CALL OF ATHENA"
+    },
+    {
+     "card_id": "athena-v6-019",
+     "quantity": 1,
+     "name": "PEGASUS GOD CLOTH (KAMUI)"
+    },
+    {
+     "card_id": "athena-v6-087",
+     "quantity": 1,
+     "name": "SEIYA RAISES ATHENA’S SHIELD"
+    },
+    {
+     "card_id": "athena-v6-043",
+     "quantity": 2,
+     "name": "STAR HILL ACOLYTE"
+    },
+    {
+     "card_id": "athena-v6-044",
+     "quantity": 2,
+     "name": "CRACKED BRONZE CLOTH"
+    },
+    {
+     "card_id": "athena-v6-088",
+     "quantity": 1,
+     "name": "THE EIGHTH SENSE"
+    }
+   ]
+  },
+  {
+   "alpha_nome": "Dragon Fortress",
+   "id": "rulebook2-shiryu",
+   "nome": "DRAGON SHIRYU — The Unbreakable Shield",
+   "domain_id": "athena-v6-064",
+   "flavour": "Guardian, redirecionamento e restauração de Armor",
+   "main_deck": [
+    {
+     "card_id": "athena-v6-003",
+     "quantity": 4,
+     "name": "DRAGON SHIRYU"
+    },
+    {
+     "card_id": "athena-v6-004",
+     "quantity": 4,
+     "name": "DRAGON CLOTH V2"
+    },
+    {
+     "card_id": "athena-v6-037",
+     "quantity": 4,
+     "name": "SHUNREI, THE PRAYER OF ROZAN"
+    },
+    {
+     "card_id": "athena-v6-040",
+     "quantity": 4,
+     "name": "SANCTUARY GUARD"
+    },
+    {
+     "card_id": "athena-v6-042",
+     "quantity": 4,
+     "name": "JAMIR CLOTH REPAIRER"
+    },
+    {
+     "card_id": "athena-v6-041",
+     "quantity": 4,
+     "name": "SANCTUARY HEALER"
+    },
+    {
+     "card_id": "athena-v6-011",
+     "quantity": 4,
+     "name": "ARIES MU"
+    },
+    {
+     "card_id": "athena-v6-045",
+     "quantity": 4,
+     "name": "DRAGON SHIELD"
+    },
+    {
+     "card_id": "athena-v6-048",
+     "quantity": 2,
+     "name": "LIBRA SWORD"
+    },
+    {
+     "card_id": "athena-v6-049",
+     "quantity": 3,
+     "name": "LIBRA SHIELD"
+    },
+    {
+     "card_id": "athena-v6-058",
+     "quantity": 4,
+     "name": "BLOOD OF THE DRAGON"
+    },
+    {
+     "card_id": "athena-v6-059",
+     "quantity": 3,
+     "name": "A PROMISE TO SHUNREI"
+    },
+    {
+     "card_id": "athena-v6-077",
+     "quantity": 3,
+     "name": "SHIRYU’S SACRIFICED SIGHT"
+    },
+    {
+     "card_id": "athena-v6-054",
+     "quantity": 3,
+     "name": "A SAINT NEVER SURRENDERS"
+    },
+    {
+     "card_id": "athena-v6-056",
+     "quantity": 3,
+     "name": "PROTECT SAORI"
+    },
+    {
+     "card_id": "athena-v6-044",
+     "quantity": 2,
+     "name": "CRACKED BRONZE CLOTH"
+    },
+    {
+     "card_id": "athena-v6-085",
+     "quantity": 2,
+     "name": "SHIRYU’S LAST DRAGON"
+    },
+    {
+     "card_id": "athena-v6-061",
+     "quantity": 2,
+     "name": "THE CALL OF ATHENA"
+    },
+    {
+     "card_id": "athena-v6-043",
+     "quantity": 1,
+     "name": "STAR HILL ACOLYTE"
+    }
+   ]
+  }
+ ]
+}
