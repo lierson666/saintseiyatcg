@@ -460,9 +460,6 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 /* HUD estilo Arena (autor, 28/10/2026): o God é o avatar no centro (oponente no topo, você embaixo, logo acima da mão),
    com a Soul num selo sob o retrato; Bases à esquerda da faixa; deck, Tartarus e Void no canto (seu embaixo à esquerda,
    do oponente no alto à direita). */
-.godzones-wrap { position: absolute; z-index: 6; }
-.godzones-wrap .godzones { margin: 0; padding: 6px 12px; border-radius: 10px; background: rgba(6, 9, 26, .78); border: 1px solid var(--line); }
-@media (max-width: 760px) { .godzones-wrap--opp { top: 8px; right: 8px; } .godzones-wrap--me { bottom: 8px; left: 8px; } }
 @media (min-width: 761px) {
   .godhud { left: 50%; transform: translateX(-50%); flex-direction: column; align-items: center; }
   .godhud--opp { top: calc(var(--u) * .8); }
@@ -475,10 +472,8 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
   .godhud__soul { padding: 0 6px; background: none; border: 0; }
   .godhud__soul b { font-size: calc(var(--u) * 3.2); }
   .godhud.is-active .godhud__portrait { box-shadow: 0 0 0 2px #2a2108, 0 0 0 5px rgba(255, 200, 110, .7), 0 0 40px rgba(255, 170, 60, .7); }
-  .godzones-wrap--me { left: 14px; bottom: 14px; }
-  .godzones-wrap--opp { right: 14px; top: 14px; }
   .arena-field .lane { margin: 0; max-width: 40%; justify-content: flex-start; }
-  .olympus .hand--opp { left: 72%; }
+  .olympus .hand--opp { left: 62%; }
   .cosmo--opp { left: 22px; top: calc(var(--u) * 2); transform: scale(.8); transform-origin: left top; }
   .cosmo--me { left: 22px; top: auto; bottom: calc(var(--u) * 9); transform: scale(.8); transform-origin: left bottom; }
 }
@@ -496,3 +491,50 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
   .godhud--me { bottom: calc(var(--u) * 14 * 1.4 * .48 + var(--u) * 1.2); }
   .godhud__portrait { width: calc(var(--u) * 9.5); }
 }
+
+/* Santuário do jogador (autor, 28/10/2026): Domain, Cosmo e zonas num relicário dourado no canto (o seu embaixo à
+   esquerda, o do oponente no alto à direita). O orbe de Cosmo leva o símbolo de Cosmo das cartas e arde mais conforme
+   as Bases crescem (--burn 0 → 1 em 10 Bases): brilho, aura de chamas e giro do símbolo aumentam juntos. */
+.sanctum { --s: var(--u, 8px); position: absolute; z-index: 6; display: flex; align-items: center; gap: calc(var(--s) * 1.3);
+  padding: calc(var(--s) * 1) calc(var(--s) * 1.5); border-radius: 16px; border: 1px solid rgba(232, 196, 106, .6);
+  background: radial-gradient(120% 140% at 35% 0%, rgba(80, 120, 255, .2), transparent 60%), linear-gradient(160deg, rgba(16, 20, 54, .95), rgba(5, 7, 22, .95));
+  box-shadow: 0 12px 34px rgba(0, 0, 0, .65), inset 0 1px 0 rgba(255, 255, 255, .08), inset 0 0 0 3px rgba(5, 7, 22, .9), inset 0 0 0 4px rgba(232, 196, 106, .18); }
+.sanctum::before, .sanctum::after { content: ""; position: absolute; width: 14px; height: 14px; border: 2px solid var(--gold); pointer-events: none; }
+.sanctum::before { top: -3px; left: -3px; border-right: 0; border-bottom: 0; border-radius: 6px 0 0 0; }
+.sanctum::after { bottom: -3px; right: -3px; border-left: 0; border-top: 0; border-radius: 0 0 6px 0; }
+.sanctum--me { left: 14px; bottom: 14px; }
+.sanctum--opp { right: 14px; top: 14px; }
+.sanctum__domain { position: relative; flex: none; width: calc(var(--s) * 6.6); aspect-ratio: 5 / 7; padding: 0; overflow: hidden; cursor: pointer; border-radius: 7px;
+  border: 1px solid var(--gold); background: var(--art) center 30% / cover, #141a3a; box-shadow: 0 4px 12px rgba(0, 0, 0, .6), 0 0 0 2px rgba(5, 7, 22, .9);
+  display: flex; flex-direction: column; justify-content: space-between; text-align: center; transition: transform .2s, box-shadow .2s; }
+.sanctum__domain::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(5, 7, 22, .85), transparent 30%, transparent 55%, rgba(5, 7, 22, .95)); }
+.sanctum__domain small, .sanctum__domain strong { position: relative; padding: 3px 3px; color: #f4ecd8; text-shadow: 0 1px 3px #000; }
+.sanctum__domain small { font: 700 calc(var(--s) * .85)/1 system-ui, sans-serif; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); }
+.sanctum__domain strong { font: 600 calc(var(--s) * 1)/1.1 Georgia, serif; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.sanctum__domain:hover { transform: translateY(-3px); box-shadow: 0 8px 18px rgba(0, 0, 0, .7), 0 0 18px rgba(232, 196, 106, .55); }
+.sanctum .cosmo { position: static; transform: none; flex-direction: column; gap: calc(var(--s) * .7); }
+.sanctum .cosmo__hex { width: calc(var(--s) * 8.6); height: auto; aspect-ratio: 1; clip-path: none; border-radius: 50%; background: none;
+  box-shadow: 0 0 0 2px #2a2108, 0 0 0 calc(2px + var(--s) * .3) rgba(232, 196, 106, .55),
+    0 0 calc(8px + var(--burn) * 34px) calc(var(--burn) * 6px) rgba(110, 185, 255, calc(.35 + var(--burn) * .55)); }
+.sanctum .cosmo__hex::before { clip-path: none; inset: 0; border-radius: 50%; background: radial-gradient(circle at 50% 40%, #3a7bff, #12348f 55%, #050c2e); }
+/* aura de chamas: aparece e cresce com o Cosmo */
+.sanctum .cosmo__hex::after { content: ""; position: absolute; inset: calc(var(--s) * -1.2); border-radius: 50%; pointer-events: none; z-index: -1;
+  background: conic-gradient(from 0deg, transparent, rgba(130, 200, 255, .9), transparent 20%, rgba(255, 220, 140, .8) 30%, transparent 45%, rgba(130, 200, 255, .9) 60%, transparent 75%, rgba(255, 220, 140, .8) 88%, transparent);
+  -webkit-mask: radial-gradient(circle, transparent 54%, #000 58%, transparent 72%); mask: radial-gradient(circle, transparent 54%, #000 58%, transparent 72%);
+  opacity: calc(var(--burn) * 1.1); filter: blur(calc(1px + var(--burn) * 2px)); animation: cosmo-burn calc(9s - var(--burn) * 6s) linear infinite; }
+.cosmo__sigil { position: absolute; inset: 12%; width: 76%; height: 76%; opacity: calc(.28 + var(--burn) * .35); filter: drop-shadow(0 0 calc(var(--burn) * 10px) #9fd8ff);
+  animation: cosmo-burn calc(26s - var(--burn) * 18s) linear infinite reverse; pointer-events: none; }
+.sanctum .cosmo__hex b { font-size: calc(var(--s) * 3.4); text-shadow: 0 0 10px #8fd0ff, 0 2px 4px #000; }
+.sanctum .cosmo__hex small { right: 18%; bottom: 20%; font-size: calc(var(--s) * 1.1); }
+.sanctum .cosmo__pips { bottom: 9%; }
+.sanctum .cosmo__flames { flex-direction: row; gap: calc(var(--s) * .6); padding: calc(var(--s) * .4) calc(var(--s) * .8); border-radius: 999px; border: 1px solid rgba(120, 170, 255, .35); }
+.sanctum .orb.flame { width: calc(var(--s) * 1.5); height: calc(var(--s) * 1.95); }
+.sanctum .orb.flame.ready { animation: flame-flicker 1.4s ease-in-out infinite alternate; }
+@keyframes cosmo-burn { to { transform: rotate(360deg); } }
+@keyframes flame-flicker { to { transform: scaleY(1.12) translateY(-1px); filter: brightness(1.25); } }
+.sanctum .godzones { flex-direction: column; align-items: stretch; gap: calc(var(--s) * .6); margin: 0; padding-left: calc(var(--s) * 1.2); border-left: 1px solid rgba(232, 196, 106, .3); }
+.sanctum .zdeck, .sanctum .zpile { padding: 0; border: 0; display: flex; align-items: center; gap: calc(var(--s) * .7); }
+.sanctum .zpile small { grid-column: auto; order: 3; }
+.sanctum .zdeck__back { width: calc(var(--s) * 2.6); }
+.sanctum .ico-tartarus, .sanctum .ico-void { width: calc(var(--s) * 1.8); height: calc(var(--s) * 1.8); }
+.reduce-motion .sanctum *, .reduce-motion .sanctum *::after { animation: none !important; }

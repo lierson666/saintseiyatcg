@@ -378,8 +378,11 @@ function cosmoGauge(key, side) {
   const p = S().players[key], ready = readyBases(key);
   const base = p.bases.map(b => `<i class="orb orb--base ${b.prepared ? 'ready' : 'spent'}"></i>`).join('');
   const latent = [0, 1, 2].map(i => `<i class="orb orb--latent flame ${i < p.latent ? 'ready' : 'empty'}"></i>`).join('');
-  return `<div class="cosmo cosmo--${side}" data-bank="${key}" aria-label="Player ${key} Cosmo: ${ready} of ${p.bases.length} Base prepared, ${p.latent} of 3 Latent">
-    <div class="cosmo__hex" data-bank-unit="base" title="Prepared Cosmo Base / total"><b>${ready}</b><small>/${p.bases.length}</small><span class="cosmo__pips">${base}</span></div>
+  // O Cosmo arde mais conforme as Bases crescem (autor, 28/10/2026): --burn vai de 0 a 1 em 10 Bases.
+  const burn = Math.min(1, p.bases.length / 10).toFixed(2);
+  return `<div class="cosmo cosmo--${side}" data-bank="${key}" style="--burn:${burn}" aria-label="Player ${key} Cosmo: ${ready} of ${p.bases.length} Base prepared, ${p.latent} of 3 Latent">
+    <div class="cosmo__hex" data-bank-unit="base" title="Prepared Cosmo Base / total"><img class="cosmo__sigil" src="../../CARD-TEMPLATE/athena/gem_cost.png" alt="">
+      <b>${ready}</b><small>/${p.bases.length}</small><span class="cosmo__pips">${base}</span></div>
     <div class="cosmo__flames" data-bank-unit="latent" title="Latent Cosmo (max 3)">${latent}</div></div>`;
 }
 
@@ -402,7 +405,26 @@ function godHud(key, side) {
         ${d.judgment ? `<span class="godhud__judgment" title="Divine Judgment: loses at the end of Round ${d.judgment.deadline}">⚖ R${d.judgment.deadline}</span>` : ''}
       </div>
       <span class="godhud__bar"><i style="width:${Math.round(p.soul / max * 100)}%"></i></span>
-    </div></section><div class="godzones-wrap godzones-wrap--${side}">${godZones(key)}</div>`; // zonas no canto, como o deck no Arena
+    </div></section>`;
+}
+// Santuário do jogador (canto, como o deck no Arena): miniatura do Domain, Cosmo (Bases e Latent) e zonas.
+function sanctum(key, side) {
+  const id = S().domains[key], dom = cards.get(id), f = FORGE.get(id);
+  return `<aside class="sanctum sanctum--${side}">
+    <button class="sanctum__domain" data-domain="${key}" style="--art:url('${f?.ilustracao ? FORGE_ART + f.ilustracao : ''}')" title="Domain: ${esc(dom?.name || '')}">
+      <small>Domain</small><strong>${esc(dom?.name || '—')}</strong></button>
+    ${cosmoGauge(key, side)}${godZones(key)}</aside>`;
+}
+function showDomainCard(key) {
+  const f = FORGE.get(S().domains[key]);
+  if (!f) return;
+  closeBigCard(); hideInspect();
+  const box = document.createElement('div');
+  box.id = 'bigcard'; box.className = 'bigcard';
+  box.innerHTML = `<div class="dcard dcard--big art-full">${renderLiveCard(f, {art: f.ilustracao && FORGE_ART + f.ilustracao})}</div>`;
+  box.addEventListener('pointerdown', closeBigCard);
+  box.addEventListener('contextmenu', e => { e.preventDefault(); closeBigCard(); });
+  document.body.append(box);
 }
 // Zonas do jogador junto ao God: deck empilhado (a pilha engrossa com as cartas que restam), Tartarus e Void (exílio).
 function godZones(key) {
@@ -566,10 +588,10 @@ function render() {
   if (mode) { const step = mode.steps[mode.i]; mode.options = step?.pick ? candidates(step, mode.key).filter(u => !mode.picked.includes(u)) : []; }
   boardRoot.innerHTML = `
     <div class="olympus ${mode ? 'is-choosing' : ''} ${pending ? 'is-deciding' : ''}" ${pending && !pending.peek ? 'inert' : ''}>
-      ${godHud(them, 'opp')}${cosmoGauge(them, 'opp')}
+      ${godHud(them, 'opp')}${sanctum(them, 'opp')}
       ${handRow(them, settings.hideOpponent || settings.ai === them)}
       <main class="arena-field">${cosmoLane(them, 'opp')}${fieldRow(them)}<div class="midline"></div>${fieldRow(me)}${cosmoLane(me, 'me')}</main>
-      ${cosmoGauge(me, 'me')}${godHud(me, 'me')}
+      ${sanctum(me, 'me')}${godHud(me, 'me')}
       ${handRow(me, false)}
       ${command()}
       ${s.window && !s.victory ? `<div class="priority-glow priority-glow--${s.window.priority === me ? 'me' : 'opp'}" aria-hidden="true"></div>` : ''}
@@ -700,6 +722,8 @@ boardRoot.addEventListener('click', e => {
   if (mode) return;
   const godEl = t.closest('[data-god]');
   if (godEl) return showGodPanel(godEl.dataset.god);
+  const domEl = t.closest('[data-domain]');
+  if (domEl) return showDomainCard(domEl.dataset.domain);
   const cardEl = t.closest('.dcard[data-uid]');
   if (!cardEl || cardEl.classList.contains('dcard--back')) return;
   const uid = cardEl.dataset.uid, key = owner(uid), me = viewer();
@@ -851,6 +875,8 @@ function showGodPanel(key) {
 document.addEventListener('contextmenu', e => {
   const god = e.target.closest?.('[data-god]');
   if (god) { e.preventDefault(); return showGodPanel(god.dataset.god); }
+  const dom = e.target.closest?.('[data-domain]');
+  if (dom) { e.preventDefault(); return showDomainCard(dom.dataset.domain); }
   // Clique direito numa carta aberta (ou na própria Base): a carta real grande no centro da tela.
   const base = e.target.closest?.('.dcard[data-base]'), el = e.target.closest?.('.dcard[data-uid]:not(.dcard--back)');
   const uid = base && owner(base.dataset.base) === viewer() ? base.dataset.base : el?.dataset.uid;
