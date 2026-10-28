@@ -616,3 +616,25 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
   .demo-tag { left: auto; right: 14px; transform: none; }
   .fixture-tag { top: 38px; }
 }
+
+/* Trono de cada jogador na coluna esquerda (autor, 28/10/2026): moldura do God no alto, placa de stats apoiada na borda
+   do box e, dentro dele, Domain | Cosmo | Deck, Tartarus e Void lado a lado. Oponente em cima, eu embaixo. */
+@media (min-width: 761px) {
+  .seat { --s: calc(var(--u, 8px) * 1.25); position: absolute; z-index: 6; left: 14px; display: flex; flex-direction: column; align-items: center; }
+  .seat--opp { top: 10px; --s: calc(var(--u, 8px) * 1.05); }
+  .seat--me { bottom: 12px; }
+  .seat .godhud { position: relative; z-index: 2; inset: auto; transform: none; --m: calc(var(--s) * 8.2); }
+  .seat .godhud--opp .gh-name { display: grid; }
+  .seat .sanctum { --s: inherit; position: relative; inset: auto; z-index: 1; flex-direction: row; align-items: center; width: auto;
+    margin-top: calc(var(--m, var(--s) * 8.2) * -.2 - var(--s) * 2.2); padding: calc(var(--s) * 3.4) calc(var(--s) * 1.2) calc(var(--s) * 1.2); gap: calc(var(--s) * 1.1); }
+  .seat .sanctum__domain { width: calc(var(--s) * 7); aspect-ratio: 4 / 5; }
+  .seat .sanctum__domain strong { font-size: calc(var(--s) * .8); -webkit-line-clamp: 3; }
+  /* sem o God no meio, o campo desce para o espaço livre entre os tronos */
+  .arena-field { bottom: calc(var(--u) * 20 + 2%); }
+  .seat .sanctum .cosmo__hex { width: calc(var(--s) * 7.6); }
+  .seat .sanctum .cosmo__hex b { font-size: calc(var(--s) * 3); }
+  .seat .sanctum .godzones { padding: 0 0 0 calc(var(--s) * 1); border-top: 0; border-left: 1px solid rgba(232, 196, 106, .3); }
+  .seat .sanctum .zicon { width: calc(var(--s) * 3); height: calc(var(--s) * 3); }
+  .seat .sanctum .zdeck, .seat .sanctum .zpile { grid-template-columns: calc(var(--s) * 3) auto; }
+  .seat .sanctum .zpile small { font-size: calc(var(--s) * .62); }
+}
