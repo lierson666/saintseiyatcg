@@ -6,7 +6,7 @@ import {canonIndex} from '../../shared/deck-v3.js';
 import {createMatch, mulligan} from '../engine-v3/match.js';
 import {startTurn, endTurn, pass, placeBase, spellCategory, runCheckpoint} from '../engine-v3/core.js';
 import {declareStrike, strikeTargets} from '../engine-v3/strike.js';
-import {playDevotee, playEquipment, playSpell, activate, reequip} from '../engine-v3/play.js';
+import {playDevotee, playEquipment, playSpell, activate, reequip, duplicateCharacter} from '../engine-v3/play.js';
 import {atkOf, hpOf, keywordsOf, gearOf, isSaint, isBronze, ABILITIES} from '../engine-v3/effects.js';
 import {STEPS, ABILITY_STEPS} from '../choices-v3.js?v=2';
 import {createScene, THEMES} from './scene.js?v=20261028-4';
@@ -29,7 +29,7 @@ const GOD_ART = {'god-athena': '../../CARDS/ATHENA/ATHENA.png', 'god-poseidon': 
 // Mensagens da engine (internas, em português) viram texto curto para o jogador.
 const WHY = {'G3-005': 'Athena Exclamation needs three Prepared Saints with different identities and enough prepared Bases.', D206: 'Sacrifice exactly three of your Devotees, on your turn.', D1: "It's not your turn.", D4: 'Not enough prepared Cosmo Bases.', custo: 'Not enough Latent Cosmo.', P06: 'Wait for the response window to close.',
   P05: 'A Prepared Guardian must be your target.', D22: 'This Devotee already struck this turn.', P04: 'Only a Prepared Devotee can Strike.',
-  D52: 'The match is over.', P01: 'Finish the mulligan first.', D192: 'It must be Prepared to use {T}.', D191: 'Already used this round.', Equip: 'That Devotee cannot wear it.', alvo: 'Choose a legal target.'};
+  D52: 'The match is over.', '§63': 'You already control that character: one Devotee per named character.', P01: 'Finish the mulligan first.', D192: 'It must be Prepared to use {T}.', D191: 'Already used this round.', Equip: 'That Devotee cannot wear it.', alvo: 'Choose a legal target.'};
 const why = e => WHY[e.decision] || (e.topic ? `Not in Alpha 0.1: ${e.topic}` : "That can't be done right now.");
 
 const SETTINGS_KEY = 'ssTcgOlympusArena';
@@ -88,6 +88,7 @@ function playableReason(key, uid) {
     const cheapest = Math.min(...devs.map(d => c.autoEquip.some(n => n.toUpperCase() === info(d).name.toUpperCase()) ? c.cost.amount : c.equip ? c.equip.amount : Infinity));
     return readyBases(key) >= cheapest ? null : `Needs ${cheapest === Infinity ? '—' : cheapest} prepared Base Cosmo.`;
   }
+  if (c.kind === 'Devotee' && duplicateCharacter(S(), ctx, key, uid)) return `You already control ${c.name.split(',')[0]}: one Devotee per named character.`;
   return affordable(key, c.cost) ? null : `Needs ${c.cost.amount} prepared Base Cosmo.`;
 }
 // D4: uma Base Cosmoble por turno, no próprio turno, com a janela fechada. Motivo em texto para o jogador.
@@ -103,7 +104,7 @@ function placeAsBase(key, uid) {
   const reason = baseReason(key, uid);
   if (reason) return warn(reason);
   act(() => placeBase(S(), key, uid, info(uid)));
-  warn('Cosmo Base placed. It readies at the start of your next turn.');
+  warn('Cosmo Base placed. It is ready to pay costs now.');
 }
 // Há resposta possível? (Auto-pass só passa quando não há nenhum Moment jogável na mão.)
 const hasResponse = key => S().players[key].hand.some(u => info(u).kind === 'Spell' && spellCategory(Number(num(u)))?.speed === 'instant' && !playableReason(key, u));
@@ -381,6 +382,19 @@ function piles(key, side) {
   return `<div class="piles piles--${side}"><span class="pile" data-deck="${key}" title="Deck"><i class="ico-deck"></i>${p.deck.length}</span><span class="pile" title="Tartarus"><i class="ico-tartarus"></i>${p.tartarus.length}</span>${p.fatigue ? `<span class="pile pile--fatigue" title="Fatigue">F${p.fatigue}</span>` : ''}</div>`;
 }
 
+// Bases de Cosmo como terrenos: cartas de face para cima numa faixa do lado do dono; Base gasta fica deitada (tapped)
+// e levanta quando prepara. O pagamento escolhe as Bases sozinho (são equivalentes); a animação mostra quais viraram.
+const laneSeen = new Map(); // uid da Base -> prepared no último render (para animar só a mudança)
+function cosmoLane(key, side) {
+  const bases = S().players[key].bases;
+  const slots = bases.map(b => {
+    const was = laneSeen.get(b.uid), anim = was === undefined ? 'is-new' : was !== b.prepared ? (b.prepared ? 'is-untapping' : 'is-tapping') : '';
+    laneSeen.set(b.uid, b.prepared);
+    const face = ctx.objects[b.uid] ? cardFace(b.uid, {size: 'dcard--land'}) : '<div class="dcard dcard--back dcard--land"><span></span></div>';
+    return `<div class="lane__base ${b.prepared ? '' : 'tapped'} ${anim}" title="${b.prepared ? 'Prepared Cosmo Base: taps to pay a cost' : 'Tapped Cosmo Base: readies at the start of your turn'}">${face}</div>`;
+  }).join('');
+  return `<section class="lane lane--${side}" data-lane="${key}" style="--n:${bases.length}" aria-label="Player ${key} Cosmo Bases">${slots || '<p class="lane__empty">Cosmo Bases</p>'}</section>`;
+}
 function fieldRow(key) {
   const s = S(), p = s.players[key];
   const units = p.battlefield.filter(u => !ctx.attached[u]).map(u => {
@@ -491,7 +505,7 @@ function render() {
     <div class="olympus ${mode ? 'is-choosing' : ''} ${pending ? 'is-deciding' : ''}" ${pending && !pending.peek ? 'inert' : ''}>
       ${godHud(them, 'opp')}${cosmoGauge(them, 'opp')}${piles(them, 'opp')}
       ${handRow(them, settings.hideOpponent || settings.ai === them)}
-      <main class="arena-field">${fieldRow(them)}<div class="midline"><span>${esc(phaseText())}</span></div>${fieldRow(me)}</main>
+      <main class="arena-field">${cosmoLane(them, 'opp')}${fieldRow(them)}<div class="midline"><span>${esc(phaseText())}</span></div>${fieldRow(me)}${cosmoLane(me, 'me')}</main>
       ${cosmoGauge(me, 'me')}${godHud(me, 'me')}${piles(me, 'me')}
       ${handRow(me, false)}
       ${command()}
@@ -575,7 +589,7 @@ const ui = {
   log(e) {
     const n = uid => (uid ? info(uid).name : '');
     const t = {card_played: `${e.player} plays ${n(e.uid)}${e.bearer ? ` on ${n(e.bearer)}` : ''}.`, spell_resolved: `${n(e.uid)} resolves.`, ability: `${e.player} uses ${e.name}.`,
-      strike_declared: `${e.player}: ${n(e.attacker)} strikes ${e.target?.kind === 'god' ? `God ${e.target.player}` : n(e.target?.uid)}.`, destroyed: `${n(e.uid)} is destroyed.`,
+      strike_declared: `${e.player}: ${n(e.attacker)} strikes ${e.target?.kind === 'god' ? `God ${e.target.player}` : n(e.target?.uid)}.`, strike_fizzled: `${n(e.attacker)}'s Strike fizzles: attacker or target left the battlefield.`, destroyed: `${n(e.uid)} is destroyed.`,
       pass: `${e.player} passes.`, end_phase: `${e.player} ends the turn.`, equipped: `${n(e.uid)} equipped to ${n(e.bearer)}.`}[e.type];
     if (t) say(t);
   },
@@ -650,7 +664,7 @@ function handMenu(uid, el) {
   quickMenu(el, items, {always: true}); // carta da mão nunca sai sem o jogador escolher o que fazer
 }
 // Área de Cosmo do jogador (hexágono e chamas) como alvo de soltar.
-const bankAt = (key, x, y) => document.elementsFromPoint(x, y).some(d => d.closest?.(`[data-bank="${key}"]`));
+const bankAt = (key, x, y) => document.elementsFromPoint(x, y).some(d => d.closest?.(`[data-bank="${key}"], [data-lane="${key}"]`));
 function markBank(key, uid, x, y) {
   const bank = $(`[data-bank="${key}"]`);
   if (!bank) return;
@@ -752,6 +766,17 @@ document.addEventListener('pointermove', e => {
   board?.classList.toggle('is-over-cast', zone === 'cast');
   board?.classList.toggle('is-over-cosmo', zone === 'cosmo');
 });
+// Cancela o arraste sem ação (Esc, pointercancel do navegador, janela perde o foco): a carta volta para a mão.
+function cancelDrag() {
+  if (!drag) return;
+  drag.ghost?.remove(); drag.el.classList.remove('drag-source');
+  $$('.cosmo.drop-target, .cosmo.drop-hover').forEach(b => b.classList.remove('drop-target', 'drop-hover'));
+  drag = null;
+  hideDragZones();
+}
+document.addEventListener('pointercancel', cancelDrag);
+window.addEventListener('blur', cancelDrag);
+document.addEventListener('dragstart', e => { if (e.target.closest?.('.hand--me')) e.preventDefault(); }); // sem arraste nativo de texto/imagem
 document.addEventListener('pointerup', e => {
   if (!drag) return;
   const {uid, ghost, el} = drag;
@@ -778,7 +803,7 @@ document.addEventListener('keydown', e => {
   if (e.target.matches?.('input, select, textarea')) return;
   if (pending && !director.busy) return decisionKey(e);
   if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); return primary(); }
-  if (e.code === 'Escape') { closeQuick(); if (mode) { mode = null; render(); } else if (settingsOpen || logOpen) { settingsOpen = logOpen = false; render(); } }
+  if (e.code === 'Escape') { closeQuick(); cancelDrag(); if (mode) { mode = null; render(); } else if (settingsOpen || logOpen) { settingsOpen = logOpen = false; render(); } }
   if (e.key === 'l' || e.key === 'L') { logOpen = !logOpen; render(); }
 });
 document.addEventListener('click', e => { if (!e.target.closest('.quick') && !e.target.closest('.dcard')) closeQuick(); });

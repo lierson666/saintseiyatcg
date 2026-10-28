@@ -4,6 +4,15 @@
 // `ctx`: {cards (loadCanon), objects (uid -> {owner, cardId}), attached (uid do Equipment -> uid do portador)}.
 import {RuleError, NotSpecified, assertIdle, spendBase, spellCategory, respond, emit} from './core.js';
 import {SPELLS, ABILITIES, onEnter, onCastEquipment, checkDefeats} from './effects.js';
+import {CHARACTER_IDENTITY, characterOf} from '../../shared/character-identity.js';
+
+// Guia §63: um Devotee de cada personagem nomeado por jogador (identidade estável da G3-029). Genérico (`null` na
+// tabela) não tem exclusividade; carta fora da tabela lança IdentityGap (lacuna, não palpite).
+function namedCharacter(ctx, uid) {
+  const id = ctx.objects[uid].cardId.toLowerCase();
+  if (!(ctx.identities && Object.hasOwn(ctx.identities, id)) && CHARACTER_IDENTITY[id] === null) return null;
+  return characterOf(id, ctx.identities);
+}
 
 // Custo impresso: Base (D4) ou Latent. Valida tudo antes de mexer no estado.
 export function payCost(state, key, cost) {
@@ -32,8 +41,16 @@ function fromHand(state, ctx, key, uid, kind) {
 const leaveHand = (state, key, uid) => { const hand = state.players[key].hand; hand.splice(hand.indexOf(uid), 1); };
 
 // `choice.target`: alvo do gatilho de entrada (Eagle Marin).
+// Personagem nomeado de `uid` que `key` já controla (§63), ou null.
+export function duplicateCharacter(state, ctx, key, uid) {
+  const who = namedCharacter(ctx, uid);
+  return who && state.players[key].battlefield.some(u => u !== uid && ctx.cards.get(ctx.objects[u].cardId).kind === 'Devotee' && namedCharacter(ctx, u) === who) ? who : null;
+}
+
 export function playDevotee(state, ctx, key, uid, choice = {}) {
   const card = sorceryFromHand(state, ctx, key, uid, 'Devotee');
+  const who = duplicateCharacter(state, ctx, key, uid);
+  if (who) throw new RuleError('§63', `${key} já controla um Devotee de ${who}`);
   payCost(state, key, card.cost);
   leaveHand(state, key, uid);
   state.players[key].battlefield.push(uid);
@@ -115,8 +132,8 @@ export function playSpell(state, ctx, key, uid, choice = {}) {
   if (typeof choice !== 'function' && !spell) throw new NotSpecified(`efeito da carta ${number} ainda não implementado na engine 3.0`);
   if (typeof choice !== 'function') spell.check(state, ctx, key, choice); // alvo e modo antes de pagar
   const effect = typeof choice === 'function' ? choice : st => spell.run(st, ctx, key, choice);
-  const p = state.players[key], owner = state.players[ctx.objects[uid].owner];
-  const finish = st => { emit(st, 'spell_resolved', {player: key, uid}); effect(st); st.players[key].stack.splice(st.players[key].stack.indexOf(uid), 1); owner.tartarus.push(uid); checkDefeats(st, ctx); };
+  const p = state.players[key];
+  const finish = st => { emit(st, 'spell_resolved', {player: key, uid}); effect(st); st.players[key].stack.splice(st.players[key].stack.indexOf(uid), 1); st.players[ctx.objects[uid].owner].tartarus.push(uid); checkDefeats(st, ctx); }; // `st`, não o estado capturado: o snapshot da decisão troca os objetos
   if (category.speed === 'sorcery') {
     const card = sorceryFromHand(state, ctx, key, uid, 'Spell');
     payCost(state, key, card.cost);

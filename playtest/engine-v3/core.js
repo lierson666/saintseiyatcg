@@ -130,8 +130,8 @@ export function placeBase(state, key, uid, card) {
   const at = p.hand.indexOf(uid);
   if (at < 0) throw new RuleError('D4', 'a carta não está na mão');
   p.hand.splice(at, 1);
-  // Leitura literal: só a D4 prepara Bases, no início do turno. Confirmar se a Base nova entra preparada.
-  p.bases.push({uid, prepared: false});
+  // G3-035 (autor, 28/10/2026): a Base nova entra Prepared e já paga custo no mesmo turno.
+  p.bases.push({uid, prepared: true});
   p.baseTurn = state.turn;
   emit(state, 'base_placed', {player: key, uid});
 }

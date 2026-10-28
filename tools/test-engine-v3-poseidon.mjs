@@ -110,10 +110,10 @@ test('D268: uso gasto com pagamento legal mesmo sem Seal efetivo; uma vez por Ro
   declareStrike(s, ctx, seiya, {kind: 'god', player: 'B'});
   destroyDevotee(s, seiya, ctx.objects, ctx.attached); // atacante sai antes da Water Prison resolver
   pass(s, 'B');
-  assert.throws(() => pass(s, 'A'), NotSpecified, 'Strike sem atacante: lacuna já conhecida da P04/P06');
+  pass(s, 'A');
+  assert.equal(count(s, 'strike_fizzled'), 1, 'G3-036: Strike sem atacante é anulado');
   assert.equal(count(s, 'seal_failed'), 1);
   assert.ok(s.roundUses.has('god:B:water-prison'));
-  s.window = null; s.chain = [];
   declareStrike(s, ctx, jabu, {kind: 'god', player: 'B'}); passAll(s);
   assert.equal(count(s, 'divine_power', 'WATER PRISON'), 1, 'sem segunda Water Prison no Round');
   assert.equal(s.players.B.latent, 1);

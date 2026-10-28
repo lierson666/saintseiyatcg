@@ -72,14 +72,16 @@ test('jogada ilegal não mexe no estado: sem Base suficiente, fora do turno, com
   assert.throws(() => playDevotee(s, ctx, 'A', seiya), e => e instanceof RuleError && e.decision === 'P06');
 });
 
-test('Base nova entra Unprepared: não gera Cosmo nem converte em Latent no turno em que entra', () => {
+test('G3-035: Base nova entra Prepared e paga no mesmo turno; Base não gasta converte em Latent no fim do turno', () => {
   const {s, toHand} = setup();
   const base = toHand('A', '053');
   startTurn(s);
   placeBase(s, 'A', base, cards.get('athena-v6-053'));
+  assert.equal(s.players.A.bases.at(-1).prepared, true);
+  spendBase(s, 'A', 1);
   assert.throws(() => spendBase(s, 'A', 1), /insuficientes/);
   endTurn(s); passAll(s);
-  assert.equal(s.players.A.latent, 0);
+  assert.equal(s.players.A.latent, 0, 'Base gasta não converte');
 });
 
 test('início do turno: prepara, depois gatilhos (APNAP/LIFO, com janela), depois compra', () => {
@@ -175,4 +177,16 @@ test('Moment do ativo abre janela; 053 é Technique (autor, 28/10/2026)', () => 
   assert.ok(s.players.A.tartarus.includes(never));
   playSpell(s, ctx, 'A', other, () => {});
   assert.deepEqual([s.window, s.players.A.tartarus.includes(other)], [null, true], 'Sorcery: resolve sem janela');
+});
+
+test('Guia §63: segunda versão de personagem nomeado que já controla não sai da mão; genérico pode repetir', () => {
+  const {s, ctx, toHand, bases, field} = setup();
+  field('A', '021'); // Eagle Marin em campo
+  const marin = toHand('A', '021'), guard = toHand('A', '040'), guard2 = toHand('A', '040');
+  bases('A', 10);
+  startTurn(s);
+  assert.throws(() => playDevotee(s, ctx, 'A', marin), e => e instanceof RuleError && e.decision === '§63');
+  assert.ok(s.players.A.hand.includes(marin), 'recusa não gasta nem move a carta');
+  playDevotee(s, ctx, 'A', guard); playDevotee(s, ctx, 'A', guard2); // Sanctuary Guard: genérico
+  assert.equal(s.players.A.battlefield.filter(u => u.includes(':040:')).length, 2);
 });

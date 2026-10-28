@@ -4,6 +4,22 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — G3-036, Strike anulado
+
+- **Seção:** `docs/alpha-0.1/GODS-3.0-SUPPLEMENT.md`, registro G3-036 (complementa P04/P06).
+- **Antes:** Strike cujo atacante ou alvo saía do campo antes do dano lançava `NotSpecified` (a partida travava na janela).
+- **Depois:** o Strike é anulado: sem dano, sem retaliação; continua contado como usado.
+- **Motivo:** decisão do autor em 28/10/2026 (opção recomendada), após o playtest simulado chegar ao caso.
+- **Pendências:** nenhuma. Na mesma data, a engine 3.0 passou a aplicar o guia §63 (um Devotee por personagem nomeado), que já estava no guia.
+
+## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — G3-035, Cosmo Base entra Prepared
+
+- **Seção:** `docs/alpha-0.1/GODS-3.0-SUPPLEMENT.md`, registro G3-035 (complementa a D4).
+- **Antes:** a engine 3.0 punha a Base nova Unprepared (leitura literal da D4: Bases preparam só no início do turno), com a dúvida anotada no código.
+- **Depois:** a Base nova entra Prepared e já paga custo no mesmo turno. Continua uma Base por turno.
+- **Motivo:** decisão do autor em 28/10/2026, durante o playtest do Olympus Arena.
+- **Pendências:** nenhuma.
+
 ## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — G3-032 a G3-034 (Seal e Great Flood)
 
 - **Antes:** P-SEAL-1, P-SEAL-2 e P-FLOOD-1 abertas; a engine lançava `NotSpecified` e os testes usavam parâmetros de fixture.

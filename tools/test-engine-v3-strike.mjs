@@ -5,7 +5,7 @@ import {readFileSync} from 'node:fs';
 import {loadCanon} from '../shared/canon-cards.js';
 import {canonIndex} from '../shared/deck-v3.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
-import {startTurn, endTurn, passAll, checkInvariants, RuleError, NotSpecified} from '../playtest/engine-v3/core.js';
+import {startTurn, endTurn, passAll, checkInvariants, destroyDevotee, RuleError, NotSpecified} from '../playtest/engine-v3/core.js';
 import {declareStrike, strikeTargets} from '../playtest/engine-v3/strike.js';
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
@@ -131,4 +131,19 @@ test('P05 Pierce: dano acima do HP restante do alvo vai para o Soul do God dele'
   t.state.units[shunrei].damage = 2;
   strike(t, jabu, {kind: 'devotee', uid: shunrei});
   assert.equal(t.state.players.B.soul, 30);
+});
+
+test('G3-036: atacante ou alvo que sai do campo antes do dano anula o Strike (sem dano nem retaliação; Strike usado)', () => {
+  for (const gone of ['attacker', 'target']) {
+    const s = setup();
+    const seiya = s.field('A', '001'), repairer = s.field('B', '042');
+    declareStrike(s.state, s.ctx, seiya, {kind: 'devotee', uid: repairer});
+    destroyDevotee(s.state, gone === 'attacker' ? seiya : repairer, s.objects, s.attached); // como um Moment na janela de resposta
+    passAll(s.state);
+    assert.ok(s.state.events.some(e => e.type === 'strike_fizzled'), gone);
+    assert.ok(!s.state.events.some(e => e.type === 'strike_resolve'), gone);
+    const left = gone === 'attacker' ? repairer : seiya;
+    assert.equal(s.state.units[left].damage, 0, `${gone}: sem dano no que ficou`);
+    checkInvariants(s.state, s.objects);
+  }
 });

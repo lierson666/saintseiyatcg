@@ -64,7 +64,9 @@ export function declareStrike(state, ctx, attacker, target, triggers = []) {
 export function resolveStrike(state, ctx, strike) {
   const {attacker, target, player} = strike, enemy = state.order.find(k => k !== player);
   if (!onField(state, player, attacker) || (target.kind === 'devotee' && !onField(state, enemy, target.uid))) {
-    throw new NotSpecified('Strike cujo atacante ou alvo saiu do campo antes do dano (nem P04 nem P06 definem)');
+    // G3-036 (autor, 28/10/2026): Strike anulado — sem dano nem retaliação; o Strike continua contado como usado.
+    emit(state, 'strike_fizzled', {player, attacker, target});
+    return null;
   }
   const atk = atkOf(state, ctx, attacker), pierce = keywordsOf(state, ctx, attacker).includes('Pierce'); // lidos antes do dano
   strike.atks = {[attacker]: atk};
