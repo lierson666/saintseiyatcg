@@ -351,8 +351,8 @@ function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
   const cls = ['dcard', size, forge ? 'art-full' : '', `kind-${c.kind.toLowerCase()}`, `rarity-${(c.rarity || 'common').toLowerCase()}`, c.armor ? 'is-armor' : '', cat ? `cat-${cat.category.toLowerCase()}` : '',
     field && c.kind === 'Devotee' && !unit?.prepared ? 'unprepared' : '', kws.includes('Guardian') && field ? 'guarding' : ''].join(' ');
   const statBuffed = (v, base) => (v > base ? 'up' : v < base ? 'down' : '');
-  const marks = `${dmg && field ? `<i class="dcard__damage" title="${dmg} damage">${dmg}</i>` : ''}
-    ${unit?.training ? `<i class="dcard__counter" title="Training counter">✦${unit.training}</i>` : ''}
+  // Dano não tem marcador: o HP impresso já mostra a vida restante, em vermelho.
+  const marks = `${unit?.training ? `<i class="dcard__counter" title="Training counter">✦${unit.training}</i>` : ''}
     ${unit?.seal ? `<i class="dcard__seal" title="${unit.seal} Seal counter${unit.seal > 1 ? 's' : ''}: each Prepare removes one instead">◈${unit.seal}</i>` : ''}`;
   if (forge) {
     // ATK e HP ao vivo no próprio número impresso: verde com bônus, vermelho com dano ou redução.
