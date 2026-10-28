@@ -753,5 +753,5 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .loadout__gear .dcard { --card-w: 120px; width: 120px; height: 168px; }
 .loadout__none { margin: 14px 0 0; opacity: .6; }
 
-/* CAST brilha no campo inteiro durante o arraste (autor, 28/10/2026); COSMO BASE fica na faixa do God. */
-.drag-zones { inset: 0; grid-template-rows: 1fr; }
+/* CAST brilha na minha metade inteira do campo, nunca no lado do oponente (autor, 28/10/2026); COSMO BASE fica na faixa do God. */
+.drag-zones { inset: 50% 0 0; grid-template-rows: 1fr; }
