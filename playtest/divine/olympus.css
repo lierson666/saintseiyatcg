@@ -203,3 +203,7 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
   .command .priority .chain { max-height: 64px; overflow: auto; }
   .decision-pill { top: 184px; }
 }
+
+/* Arrastar uma carta Cosmoble: a área de Cosmo do jogador vira alvo de soltar (vira Cosmo Base, D4). */
+.cosmo.drop-target { outline: 2px dashed rgba(159, 216, 255, .7); outline-offset: 6px; border-radius: 14px; }
+.cosmo.drop-hover { outline-style: solid; outline-color: #9fd8ff; box-shadow: 0 0 24px rgba(127, 212, 255, .6); }
