@@ -369,3 +369,52 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
   .cosmo--me { top: auto; bottom: calc(clamp(74px, 7.4vw, 118px) + 22px); transform: scale(.8); transform-origin: left bottom; flex-direction: column-reverse; }
   .cosmo--me .cosmo__flames { border-radius: 16px 16px 0 0; }
 }
+
+/* Painel do God: a carta do God à esquerda; status e poderes em blocos à direita. Cada poder tem cor do tipo
+   (Divine Power dourado, Awaken azul, Ultimate violeta); no hover, uma aura de cosmo percorre o bloco. */
+.godpanel-wrap { cursor: default; }
+.godpanel { position: relative; display: grid; grid-template-columns: minmax(220px, 34vh) minmax(320px, 560px); gap: 28px; align-items: start; max-height: 90vh; padding: 26px 30px;
+  border-radius: 20px; border: 1px solid rgba(232, 196, 106, .45); background: radial-gradient(120% 90% at 0% 0%, rgba(120, 90, 255, .18), transparent 60%), linear-gradient(160deg, rgba(14, 16, 44, .97), rgba(5, 6, 20, .97));
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .7), 0 0 60px rgba(232, 196, 106, .15), inset 0 1px 0 rgba(255, 255, 255, .06); }
+.godpanel.is-awaken { border-color: rgba(130, 200, 255, .7); box-shadow: 0 30px 80px rgba(0, 0, 0, .7), 0 0 70px rgba(110, 190, 255, .35); }
+.godpanel__card { position: relative; width: 100%; aspect-ratio: 1488 / 2091; border-radius: 14px; overflow: hidden; box-shadow: 0 16px 40px rgba(0, 0, 0, .7), 0 0 40px rgba(232, 196, 106, .25); }
+.godpanel__card > .live-card { position: absolute; inset: 0; width: 100%; height: 100%; }
+.godpanel__portrait { position: absolute; inset: 0; background: #111 center top / cover no-repeat; }
+.godpanel__info { display: grid; gap: 14px; min-width: 0; max-height: calc(90vh - 52px); overflow: auto; padding-right: 4px; }
+.godpanel header h2 { margin: 0; font: 600 34px/1 Georgia, serif; letter-spacing: .06em; color: var(--gold-hi); text-shadow: 0 0 18px rgba(232, 196, 106, .45); }
+.godpanel header small { font: 13px/1.4 system-ui, sans-serif; color: #9fb4d8; }
+.godpanel__stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.gstat { display: grid; gap: 2px; padding: 8px 10px; border-radius: 10px; background: rgba(255, 255, 255, .04); border: 1px solid rgba(255, 255, 255, .1); }
+.gstat small { font: 700 9px/1.2 system-ui; letter-spacing: .16em; text-transform: uppercase; color: #8d97b8; }
+.gstat b { font: 600 22px/1.1 Georgia, serif; color: #f4ecd8; } .gstat b span { font-size: 13px; color: #8d97b8; }
+.gstat em { font: 10px/1.2 system-ui; font-style: normal; color: #8d97b8; }
+.gstat.is-on b { color: var(--gold-hi); }
+.gstat--soul i { display: block; height: 3px; border-radius: 2px; background: rgba(255, 255, 255, .12); overflow: hidden; } .gstat--soul u { display: block; height: 100%; background: linear-gradient(90deg, #e0213a, #ffb070); }
+.godpanel__powers { display: grid; gap: 10px; }
+.power { --c: 232, 196, 106; position: relative; display: grid; grid-template-columns: 40px 1fr auto; column-gap: 12px; row-gap: 6px; align-items: center; width: 100%; padding: 12px 14px; text-align: left; color: #e8e2d4;
+  border-radius: 12px; border: 1px solid rgba(var(--c), .35); background: linear-gradient(120deg, rgba(var(--c), .12), rgba(10, 12, 32, .6) 55%); cursor: pointer; overflow: hidden; isolation: isolate;
+  transition: transform .2s ease, border-color .2s, box-shadow .2s; font: inherit; }
+.power--awaken { --c: 120, 190, 255; } .power--ultimate { --c: 190, 130, 255; } .power--judgment { --c: 255, 120, 90; }
+.power__icon { grid-row: span 2; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; color: rgb(var(--c));
+  background: radial-gradient(circle, rgba(var(--c), .35), rgba(var(--c), .05) 70%); box-shadow: 0 0 0 1px rgba(var(--c), .5), 0 0 16px rgba(var(--c), .35); }
+.power__head { display: grid; } .power__head strong { font: 600 16px/1.2 Georgia, serif; letter-spacing: .05em; color: rgb(var(--c)); } .power__head small { font: 700 9px/1.4 system-ui; letter-spacing: .16em; text-transform: uppercase; color: #8d97b8; }
+.power__state { justify-self: end; padding: 3px 8px; border-radius: 20px; font: 600 10px/1.2 system-ui; font-style: normal; white-space: nowrap; color: #c9d0e4; background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .12); max-width: 180px; overflow: hidden; text-overflow: ellipsis; }
+.power__text { grid-column: 2 / -1; display: grid; gap: 4px; font: 13px/1.45 system-ui, sans-serif; color: #d6d2c6; }
+.power.is-ready .power__state { color: #1a1204; background: rgb(var(--c)); border-color: transparent; box-shadow: 0 0 12px rgba(var(--c), .7); }
+.power.is-active .power__state { color: rgb(var(--c)); border-color: rgba(var(--c), .5); }
+.power.is-locked, .power.is-used { filter: saturate(.55); } .power.is-used { opacity: .55; }
+.power::before { content: ""; position: absolute; inset: -40%; z-index: -1; opacity: 0; background: conic-gradient(from 0deg, transparent 0 60%, rgba(var(--c), .55) 70%, transparent 80%); transition: opacity .25s; }
+.power::after { content: ""; position: absolute; inset: 0; z-index: -1; opacity: 0; background: radial-gradient(circle at var(--mx, 20%) 50%, rgba(var(--c), .35), transparent 55%); transition: opacity .25s; }
+.power:hover { transform: translateY(-2px) scale(1.01); border-color: rgba(var(--c), .9); box-shadow: 0 8px 26px rgba(0, 0, 0, .5), 0 0 26px rgba(var(--c), .45); }
+.power:hover::before { opacity: 1; animation: power-aura 2.4s linear infinite; } .power:hover::after { opacity: 1; }
+.power:hover .power__icon { animation: power-pulse 1s ease-in-out infinite; }
+.power.is-ready:hover .power__icon { box-shadow: 0 0 0 2px rgb(var(--c)), 0 0 30px rgba(var(--c), .9); }
+@keyframes power-aura { to { transform: rotate(360deg); } }
+@keyframes power-pulse { 50% { transform: scale(1.12); box-shadow: 0 0 0 1px rgba(var(--c), .8), 0 0 26px rgba(var(--c), .8); } }
+.godpanel__close { position: absolute; top: 10px; right: 14px; width: 30px; height: 30px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, .2); background: rgba(0, 0, 0, .4); color: #e8e2d4; font: 20px/1 system-ui; cursor: pointer; }
+.reduce-motion .power:hover::before, .reduce-motion .power:hover .power__icon { animation: none; }
+@media (max-width: 760px) { .godpanel { grid-template-columns: 1fr; padding: 18px; } .godpanel__card { width: 50%; justify-self: center; } .godpanel__stats { grid-template-columns: repeat(2, 1fr); } }
+
+/* Leitura: degradê preto de baixo para cima atrás do texto de regras (só sobre a arte; moldura e textos ficam acima). */
+.dcard.art-full .live-card__illustration::after, .godpanel__card .live-card__illustration::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(to top, rgba(0, 0, 0, .9) 0%, rgba(0, 0, 0, .78) 30%, rgba(0, 0, 0, .35) 48%, transparent 62%); }

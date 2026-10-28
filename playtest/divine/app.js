@@ -256,19 +256,17 @@ function confirmMulligan() {
 
 // ---------- Poderes divinos ----------
 
-function godMenu(key, el) {
-  const s = S(), d = s.divine[key], items = [];
-  if (key !== viewer() || s.victory || s.setup) return;
-  if (!ultimateBlock(s, ctx, key)) items.push(['Athena Exclamation · Ultimate', () => startExclamation(key)]);
-  if (!greatFloodBlock(s, key)) items.push([`Great Flood · Ultimate (${GREAT_FLOOD_COST} Base)`, () => act(() => announceGreatFlood(S(), ctx, key))]);
-  if (d.judgment && idleFor(key)) items.push(['Remove Divine Judgment (sacrifice 3)', () => begin('judgment', key, null,
-    [{key: 'devotees', pick: 'devotee', multi: 3, label: 'Sacrifice exactly three Devotees you control'}], ch => removeJudgment(S(), ctx, key, ch.devotees))]);
-  if (!items.length) {
-    const block = d.god === 'god-poseidon' ? greatFloodBlock(s, key) : ultimateBlock(s, ctx, key);
-    const why = {used: 'Ultimate already used this match.', sorcery: 'Ultimate: your turn, with no response pending.', cost: `Great Flood needs ${GREAT_FLOOD_COST} prepared Bases.`, 'only-athena': 'No Ultimate available.'}[block];
-    return warn(why || 'No divine action available now.');
-  }
-  quickMenu(el, items);
+// Ações divinas do jogador agora: Ultimate (pronto ou o motivo do bloqueio) e remover Divine Judgment.
+function godActions(key) {
+  const s = S(), d = s.divine[key], mine = key === viewer() && !s.victory && !s.setup;
+  const block = d.god === 'god-poseidon' ? greatFloodBlock(s, key) : ultimateBlock(s, ctx, key);
+  const run = d.god === 'god-poseidon' ? () => act(() => announceGreatFlood(S(), ctx, key)) : () => startExclamation(key);
+  const why = {used: 'Ultimate already used this match.', sorcery: 'Ultimate: your turn, with no response pending.', cost: `Great Flood needs ${GREAT_FLOOD_COST} prepared Bases.`, 'only-athena': 'No Ultimate available.'}[block] || (block ? 'Not available now.' : '');
+  return {
+    ultimate: {ok: mine && !block, why: mine ? why : "Only the God's controller uses it.", run},
+    judgment: mine && d.judgment && idleFor(key) ? () => begin('judgment', key, null,
+      [{key: 'devotees', pick: 'devotee', multi: 3, label: 'Sacrifice exactly three Devotees you control'}], ch => removeJudgment(S(), ctx, key, ch.devotees)) : null,
+  };
 }
 
 function startExclamation(key) {
@@ -676,7 +674,7 @@ boardRoot.addEventListener('click', e => {
   if (mode && pickEl) return choose(pickEl.dataset.pick || pickEl.dataset.uid);
   if (mode) return;
   const godEl = t.closest('[data-god]');
-  if (godEl) return godMenu(godEl.dataset.god, godEl);
+  if (godEl) return showGodPanel(godEl.dataset.god);
   const cardEl = t.closest('.dcard[data-uid]');
   if (!cardEl || cardEl.classList.contains('dcard--back')) return;
   const uid = cardEl.dataset.uid, key = owner(uid), me = viewer();
@@ -753,7 +751,7 @@ document.addEventListener('pointerover', e => {
   if (base && owner(base.dataset.base) === viewer()) { clearTimeout(inspectTimer); inspectTimer = setTimeout(() => showInspect(base.dataset.base), 300); return; } // só o dono vê a própria Base
   const el = e.target.closest?.('.dcard[data-uid]:not(.dcard--back)');
   clearTimeout(inspectTimer);
-  if (!el) return $('#inspector .godcard') ? undefined : hideInspect(); // painel do God fica até clicar fora
+  if (!el) return hideInspect();
   inspectTimer = setTimeout(() => showInspect(el.dataset.uid), 300);
   previewCost(el.dataset.uid);
 });
@@ -764,18 +762,70 @@ function showInspect(uid) {
   box.classList.add('show');
 }
 // Clique direito no retrato do God: status base e atuais (Soul, Attack, Awaken, Ultimate) e o texto completo.
-function showGodInspect(key) {
-  const s = S(), p = s.players[key], d = s.divine[key], god = cards.get(s.gods[key]), max = soulMax(s, key), box = $('#inspector');
-  const lines = god.text.split('\n').slice(3).filter(l => l && !/^SOUL \d/.test(l)); // stats já estão nos quadros
-  const stat = (label, value, note = '') => `<div class="godstat"><small>${label}</small><b>${value}</b>${note ? `<em>${note}</em>` : ''}</div>`;
-  box.innerHTML = `<div class="godcard"><div class="godhud__portrait" style="background-image:url('${GOD_ART[s.gods[key]] || ''}')"></div>
-      <div class="godstats">${stat('Soul', `${p.soul}<span>/${max}</span>`)}${stat('Attack', god.atk, 'retaliation')}${stat('Awaken', d.awakenAt, d.awaken ? 'active' : `at Soul ≤ ${d.awakenAt}`)}${stat('Ultimate', d.ultimateUsed ? 'Used' : 'Ready', 'once per match')}</div></div>
-    <div class="inspector__text"><strong>${esc(god.name)}</strong><small>${esc(god.type)} · Player ${key}</small>${lines.map(l => `<p>${esc(l)}</p>`).join('')}</div>`;
-  box.classList.add('show');
+// Painel do God (clique ou clique direito no retrato): a carta do God, os status atuais e cada poder num bloco.
+// Ultimate pronto é clicável e dispara o poder; passivos mostram se estão ativos. Fecha com clique fora ou Esc.
+function godPowers(god) {
+  const lines = god.text.split('\n').slice(4).map(l => l.trim()).filter(Boolean), out = [];
+  for (const l of lines) {
+    const h = l.match(/^([A-Z][A-Z' ]+?) — (Divine Power|Awaken \d+|Ultimate)$/);
+    if (h) out.push({name: h[1], tag: h[2], kind: h[2].split(' ')[0].toLowerCase(), text: []});
+    else out.at(-1)?.text.push(l);
+  }
+  return out;
+}
+function showGodPanel(key) {
+  closeBigCard();
+  hideInspect();
+  const s = S(), p = s.players[key], d = s.divine[key], god = cards.get(s.gods[key]), max = soulMax(s, key), acts = godActions(key);
+  const forge = FORGE.get(`${god.name.toLowerCase()}-001`);
+  const art = forge?.ilustracao ? renderLiveCard(forge, {art: FORGE_ART + forge.ilustracao}) : `<div class="godpanel__portrait" style="background-image:url('${GOD_ART[s.gods[key]] || ''}')"></div>`;
+  const state = pw => pw.kind === 'ultimate' ? (d.ultimateUsed ? ['used', 'Used'] : acts.ultimate.ok ? ['ready', 'Ready · click to use'] : ['locked', acts.ultimate.why])
+    : pw.kind === 'awaken' ? (d.awaken ? ['active', 'Active'] : ['locked', `Awakens at Soul ≤ ${d.awakenAt}`]) : ['active', 'Always on'];
+  const icon = {divine: '✦', awaken: '☀', ultimate: '⚡'};
+  const powers = godPowers(god).map((pw, i) => {
+    const [st, label] = state(pw), click = pw.kind === 'ultimate' && st === 'ready';
+    return `<button class="power power--${pw.kind} is-${st}" data-power="${i}" ${click ? '' : 'aria-disabled="true"'} title="${esc(label)}">
+      <span class="power__icon" aria-hidden="true">${icon[pw.kind]}</span>
+      <span class="power__head"><strong>${esc(pw.name)}</strong><small>${esc(pw.tag)}</small></span>
+      <em class="power__state">${esc(label)}</em>
+      <span class="power__text">${pw.text.map(t => `<span>${esc(t)}</span>`).join('')}</span>
+    </button>`;
+  });
+  if (acts.judgment) powers.push(`<button class="power power--judgment is-ready" data-power="judgment"><span class="power__icon" aria-hidden="true">⚖</span><span class="power__head"><strong>REMOVE DIVINE JUDGMENT</strong><small>Action</small></span><em class="power__state">Sacrifice three Devotees</em></button>`);
+  const box = document.createElement('div');
+  box.id = 'bigcard';
+  box.className = 'bigcard godpanel-wrap';
+  box.innerHTML = `<section class="godpanel godpanel--${god.name.toLowerCase()} ${d.awaken ? 'is-awaken' : ''}" role="dialog" aria-label="${esc(god.name)}, Player ${key}">
+    <div class="godpanel__card">${art}</div>
+    <div class="godpanel__info">
+      <header><h2>${esc(god.name)}</h2><small>${esc(god.text.split('\n')[1] || '')} · Player ${key}</small></header>
+      <div class="godpanel__stats">
+        <div class="gstat gstat--soul"><small>Soul</small><b>${p.soul}<span>/${max}</span></b><i><u style="width:${Math.round(p.soul / max * 100)}%"></u></i></div>
+        <div class="gstat"><small>Attack</small><b>${god.atk}</b><em>retaliation</em></div>
+        <div class="gstat ${d.awaken ? 'is-on' : ''}"><small>Awaken</small><b>${d.awakenAt}</b><em>${d.awaken ? 'active' : `at Soul ≤ ${d.awakenAt}`}</em></div>
+        <div class="gstat ${d.ultimateUsed ? '' : 'is-on'}"><small>Ultimate</small><b>${d.ultimateUsed ? 'Used' : 'Ready'}</b><em>once per match</em></div>
+      </div>
+      <div class="godpanel__powers">${powers.join('')}</div>
+    </div>
+    <button class="godpanel__close" aria-label="Close">×</button>
+  </section>`;
+  box.addEventListener('pointerdown', e => { if (e.target === box || e.target.closest('.godpanel__close')) closeBigCard(); });
+  box.addEventListener('contextmenu', e => { e.preventDefault(); closeBigCard(); });
+  box.addEventListener('click', e => {
+    const b = e.target.closest('[data-power]');
+    if (!b) return;
+    if (b.dataset.power === 'judgment') { closeBigCard(); return acts.judgment(); }
+    const pw = godPowers(god)[b.dataset.power];
+    if (pw.kind !== 'ultimate') return warn(`${pw.name}: ${state(pw)[1]}. It works automatically.`);
+    if (!acts.ultimate.ok) return warn(acts.ultimate.why);
+    closeBigCard();
+    acts.ultimate.run();
+  });
+  document.body.append(box);
 }
 document.addEventListener('contextmenu', e => {
   const god = e.target.closest?.('[data-god]');
-  if (god) { e.preventDefault(); return showGodInspect(god.dataset.god); }
+  if (god) { e.preventDefault(); return showGodPanel(god.dataset.god); }
   // Clique direito numa carta aberta (ou na própria Base): a carta real grande no centro da tela.
   const base = e.target.closest?.('.dcard[data-base]'), el = e.target.closest?.('.dcard[data-uid]:not(.dcard--back)');
   const uid = base && owner(base.dataset.base) === viewer() ? base.dataset.base : el?.dataset.uid;
@@ -795,7 +845,6 @@ function showBigCard(uid) {
   document.body.append(box);
 }
 function closeBigCard() { $('#bigcard')?.remove(); }
-document.addEventListener('pointerdown', e => { if (!e.target.closest?.('#inspector') && $('#inspector .godcard')) hideInspect(); });
 function hideInspect() { $('#inspector').classList.remove('show'); $$('.orb.preview').forEach(o => o.classList.remove('preview')); }
 // Prévia de pagamento: as esferas que esta carta gastaria piscam antes do clique.
 function previewCost(uid) {
