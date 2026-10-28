@@ -1,4 +1,4 @@
-import {renderRules,inlineMarkup,presentationRules,ruleBlocksWithoutKeywords,blocksMarkup} from './card-text.js?v=20261024-4';
+import {renderRules,inlineMarkup,presentationRules,ruleBlocksWithoutKeywords,blocksMarkup} from './card-text.js?v=20261028-1';
 import {isArmor,isEquipment} from './card-model.js?v=20261024-4';
 import {renderPublishedCard} from './layout-studio/runtime.js';
 import {printedEquipmentBonuses,signedBonus} from './card-visual-values.js';

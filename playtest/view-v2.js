@@ -3,7 +3,7 @@ import {escape,icon,cardFace,renderSettings} from './menu.js?v=20261024-4';
 import {battleGuide,journalEntries} from './battle-guide.js?v=20261024-4';
 import {renderLiveCard,illustration} from '../shared/live-card.js?v=20261024-4';
 import {renderAdvantage,sleeve} from './cosmetics.js?v=20261024-4';
-import {renderRules,presentationRules} from '../shared/card-text.js?v=20261024-4';
+import {renderRules,presentationRules} from '../shared/card-text.js?v=20261028-1';
 import {renderPublishedInspector} from '../shared/layout-studio/runtime.js';
 const opposite=k=>k==='A'?'B':'A';
 const encode=command=>escape(JSON.stringify(command));
