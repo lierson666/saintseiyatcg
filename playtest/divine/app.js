@@ -274,7 +274,7 @@ function startExclamation(key) {
     if ((ch.saints || []).length !== 3) throw Object.assign(new Error('saints'), {decision: 'G3-005'});
     announceExclamation(S(), ctx, key, ch.saints);
   });
-  mode.title = 'ATHENA EXCLAMATION';
+  if (mode) mode.title = 'ATHENA EXCLAMATION'; // sem escolha legal, begin não abre modo (já avisou)
   render();
 }
 
@@ -497,7 +497,7 @@ function command() {
     <div class="command__clock">${clockMarkup()}</div>
     ${phaseBar()}
     <button class="action-btn" data-primary ${s.victory || aiControls() ? 'disabled' : ''}><span>${esc(label)}</span><i aria-hidden="true">›</i></button>
-    <div class="command__tools"><button data-toggle-log aria-pressed="${logOpen}">Log</button><button data-toggle-settings>Settings</button><a href="../alpha3.html">Debug</a></div>
+    <div class="command__tools"><button data-toggle-log aria-pressed="${logOpen}">Log</button><button data-toggle-settings>Settings</button><a href="../">Menu</a></div>
   </aside>`;
 }
 
@@ -1261,14 +1261,15 @@ async function init() {
     return r.json();
   })));
   canon = canonData; cards = loadCanon(canon);
-  const [rush, fortress] = deckData.decks;
-  decks = {A: rush, B: fortress};
+  const [rush, fortress] = deckData.decks, deckOf = id => deckData.decks.find(d => d.id === id);
+  const query = new URLSearchParams(location.search);
+  decks = {A: deckOf(query.get('deckA')) || rush, B: deckOf(query.get('deckB')) || fortress}; // ?deckA=&deckB= vindos da seleção do menu
   director = createDirector({ui, getFx: () => scene?.fx, settings});
   const params = new URLSearchParams(location.search);
   if (params.get('godB')) settings.godB = `god-${params.get('godB')}`; // ?godB=poseidon
   if (params.get('ai')) settings.ai = params.get('ai'); // ?ai=B (padrão) ou ?ai=none (hot-seat)
   if (params.get('timeouts')) settings.timeouts = params.get('timeouts') === '1'; // ?timeouts=1 (QA)
-  newMatch(Number(params.get('seed')) || undefined, params.get('demo') ? 'A' : undefined);
+  newMatch(Number(params.get('seed')) || undefined, params.get('demo') ? 'A' : ['A', 'B'].includes(params.get('first')) ? params.get('first') : undefined);
   applyDemo(params.get('demo'));
   render();
   requestAnimationFrame(watchEvents);
