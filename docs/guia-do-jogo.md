@@ -41,7 +41,7 @@ O God e o Domain começam a partida em suas respectivas posições de jogo, fora
 
 O jogador começa com uma mão de 7 cartas.
 
-O limite é de 4 cópias por identidade de carta. O deck aceita as facções do God e do Domain e cartas neutras. Há um mulligan parcial gratuito; o procedimento completo está no capítulo XII.
+O limite é de 3 cópias por identidade de carta. O deck aceita as facções do God e do Domain e cartas neutras. Há um mulligan parcial gratuito; o procedimento completo está no capítulo XII.
 
 ### 3. Tipos de cartas
 
@@ -744,7 +744,7 @@ Se um Strike normal causar Soul zero aos dois Gods simultaneamente por efeitos a
 
 ### 63. Deck, identidade, mulligan, Gods e Domains
 
-- Deck principal com 60 cartas, até **4 cópias da mesma identidade de carta**; artes alternativas e revisões da mesma carta não aumentam o limite. God e Domain ficam fora dessas 60.
+- Deck principal com 60 cartas, até **3 cópias da mesma identidade de carta**; artes alternativas e revisões da mesma carta não aumentam o limite. God e Domain ficam fora dessas 60.
 - Permitir cartas da facção do God, da facção do Domain e neutras. Se God e Domain forem da mesma facção, o deck é monofacção mais neutras. Não criar cinco tipos de mana nesta base.
 - Um mulligan parcial gratuito: separar qualquer quantidade da mão inicial, comprar a mesma quantidade e só então embaralhar as separadas no deck. Apenas uma troca; sem penalidade de Latent ao adversário.
 - Cada jogador pode controlar um Devotee de cada **personagem nomeado**, mesmo que existam versões diferentes da carta. Essa regra de lendário vale só para as classes de guerreiros: **Saints, Marines, Satellites, Specters e Berserkers**. Devotees de classe baixa (Warrior, Support e sem classe) não são lendários e podem ter mais de uma cópia no campo. Unidades genéricas também não têm essa exclusividade. Usar identidade estável de personagem para essa regra, Owner e Resonance; título e ilustração não bastam.

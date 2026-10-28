@@ -4,6 +4,14 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-28 — §2 e §63 — limite de 3 cópias
+
+- **Seção:** `docs/guia-do-jogo.md`, §2 (Construção do deck) e §63 (Deck, identidade, mulligan, Gods e Domains).
+- **Antes:** até 4 cópias da mesma identidade de carta.
+- **Depois:** até 3 cópias da mesma identidade de carta; artes alternativas e revisões continuam sem aumentar o limite.
+- **Motivo:** decisão do autor em 28/10/2026 ("mantém 3 cópias e corrige o guia"); alinha o guia ao D171 e à validação da engine 3.0 (`shared/deck-v3.js`, `COPY_LIMIT = 3`), já usada pelo criador de decks.
+- **Pendências:** nenhuma carta alterada; engine 3.0 e criador de decks já usam 3; engine 2.x (só prévia do Card Forge) não alterada.
+
 ## 2026-10-28 — §63 e Handbook 3.0 G3-040 — lendário só para as classes de guerreiros
 
 - **Seção:** `docs/guia-do-jogo.md` §63 e `docs/alpha-0.1/GODS-3.0-SUPPLEMENT.md` G3-040.
