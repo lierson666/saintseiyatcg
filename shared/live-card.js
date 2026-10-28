@@ -35,6 +35,8 @@ function rulesSize(texts,base,w,h){
 }
 function renderPsdCard(card,{src,stage,hp,power,keywords,damage,rules,equipment,equip,ownerLine,instance,compact}){
   const {T,P}=PSD,f=String(card.faccao||'').toLowerCase(),pack=T.factions[f]||NEUTRAL,L=T.layouts[psdLayoutKey(card)];
+  // Enquadramento salvo no projeto do Card Forge (x, y, largura em px da carta 1488×2091), igual ao Forge.
+  const fr=card.ilustracao_enquadramento,frame=fr?.w?` style="position:absolute;max-width:none;left:${fr.x/14.88}%;top:${fr.y/20.91}%;width:${fr.w/14.88}%;height:auto;object-fit:fill"`:'';
   // Peça da facção quando o Deus dela tem; senão a de Athena tingida pela máscara na cor da facção.
   const piece=(key,rect,cls='')=>{
     const name=key.split('/').pop(),own=P[`${f}/${name}`],base=P[key];
@@ -76,7 +78,7 @@ function renderPsdCard(card,{src,stage,hp,power,keywords,damage,rules,equipment,
     else if(el.kind==='rarity'){const p=P[`athena/rarity_${String(card.raridade||'').toLowerCase()}`];if(p){const hh=el.h||p.h,ww=p.w*hh/p.h;out+=piece(`athena/rarity_${card.raridade.toLowerCase()}`,[el.x-ww/2,el.y-hh/2,ww,hh],'lc-rarity');}}
   }
   return `<div class="live-card live-card--psd live-card--${escape(f||'neutral')} ${compact?'live-card--compact':''} ${instance&&!instance.prepared&&card.tipo==='Devotee'?'live-card--unprepared':''}" data-live-card="${escape(card.id)}" style="--psd-ink:${pack.color};--psd-glow:${pack.glow}">
-    <div class="live-card__illustration" aria-hidden="true">${src?`<img src="${escape(src)}" alt="" draggable="false" loading="lazy">`:'<span class="live-card__placeholder">✧<small>Illustration pending</small></span>'}</div>
+    <div class="live-card__illustration" aria-hidden="true">${src?`<img src="${escape(src)}" alt="" draggable="false" loading="lazy"${frame}>`:'<span class="live-card__placeholder">✧<small>Illustration pending</small></span>'}</div>
     <div class="lc-psd">${out}</div>${damage?`<span class="live-card__damage">${damage} damage · ${escape(hp)} HP left</span>`:''}${instance&&card.tipo==='Devotee'?`<span class="live-card__state">${instance.prepared?'Prepared':'Unprepared'}${instance.awakened?' · Awakened':''}</span>`:''}
   </div>`;
 }
@@ -93,6 +95,11 @@ export function renderLiveCard(card,{stats=null,instance=null,art=null,compact=f
   const power=stats?.power??card.power,keywords=stats?.keywords??card.keywords_en??[],damage=stats?.damage??instance?.damage??0;
   const ownerName=id=>id.split('-').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
   const rules=ruleBlocksWithoutKeywords(presentationRules(card).map(t=>{for(const k of keywords){const prefix=k+'.';if(t.toLowerCase().startsWith(prefix.toLowerCase()))t=t.slice(prefix.length).trim();}return t;}).filter(Boolean),keywords).map(block=>blocksMarkup([block])),equipment=isEquipment(card),equip=card.equipar_custo;
+  // God: Awaken e Ultimate vêm de campos próprios, com os mesmos títulos do Card Forge (drawRules).
+  if(card.tipo==='God'){
+    if(card.habilidade_awaken_en)rules.push(`**AWAKEN${card.awaken?` ${card.awaken}`:''}**`,...card.habilidade_awaken_en.split('\n'));
+    if(card.ultimate_en)rules.push('**ULTIMATE:**',...card.ultimate_en.split('\n'));
+  }
   const ownerAlready=rules.some(t=>/Owner:/i.test(t)),resonanceAlready=rules.some(t=>/Resonance\s*[—-]/i.test(t));
   if(PSD){
     const ownerLine=[card.donos?.length&&!ownerAlready?`Owner: ${card.donos.map(ownerName).map(escape).join(' / ')}`:'',card.ressonancias?.length&&!resonanceAlready?`Resonance: ${card.ressonancias.map(r=>escape(ownerName(r.personagem_id))).join(' / ')}`:''].filter(Boolean).join('<br>');

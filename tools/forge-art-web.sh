@@ -23,6 +23,7 @@ for c in cards:
     proj = json.loads(p.read_text()) if p.exists() else {}
     if proj.get('subtitle'): c['subtitulo_en'] = proj['subtitle']
     if proj.get('flavour'): c['flavour_en'] = proj['flavour']
+    if (proj.get('art') or {}).get('w'): c['ilustracao_enquadramento'] = {k: proj['art'][k] for k in ('x', 'y', 'w')}
     if (dest / f"{c['id']}.jpg").exists(): c['ilustracao'] = f"{c['id']}.jpg"
 (dest / 'cards.json').write_text(json.dumps({'cartas': cards}, ensure_ascii=False))
 print(f"cartas: {len(cards)}, com arte: {sum('ilustracao' in c for c in cards)}")
