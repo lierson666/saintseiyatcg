@@ -568,30 +568,19 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .sanctum .zpile b { align-self: end; }
 .sanctum .zpile small { align-self: start; grid-column: 2; font-size: calc(var(--s) * .72); }
 
-/* HUD do God no layout do autor (referência de 28/10/2026): medalhão com anel dourado, tridente e asas douradas;
-   faixa do nome com louros; placa com quatro compartimentos, asas prateadas e Ω. Tudo escala por --m. */
+/* HUD do God no layout do autor (28/10/2026): moldura central do God (PNG do autor) com retrato no círculo e nome na placa;
+   embaixo, placa com Soul, Attack, Awaken e Ultimate. Tudo escala por --m. */
 .godhud { --m: calc(var(--u, 8px) * 11); gap: 0; filter: drop-shadow(0 10px 18px rgba(0, 0, 0, .6)); }
 .godhud--opp { --m: calc(var(--u, 8px) * 7); }
-.gh-medal { position: relative; width: var(--m); aspect-ratio: 1; margin-top: calc(var(--m) * .32); }
-.gh-ring { position: relative; z-index: 2; width: 100%; height: 100%; border-radius: 50%; padding: calc(var(--m) * .085);
-  background: radial-gradient(circle, transparent 58%, #1a1406 58.5%, #1a1406 61%, #6e5a3c 62%, #d8cfc0 66%, #8c7d64 71%, #1a1406 71.5%, transparent 72%),
-    conic-gradient(from 200deg, #8a6420, #fff4c8, #d9a43e, #6a4a14, #fbe3a0, #b07e2a, #8a6420);
-  box-shadow: 0 0 0 2px #2a1c06, 0 0 22px rgba(255, 210, 120, .45), inset 0 0 0 2px rgba(255, 244, 200, .5); }
-.gh-ring .godhud__portrait { width: 100%; height: 100%; border-radius: 50%; border: 2px solid #3a2a0a; background-color: #0b0e22; background-size: cover; background-position: center 18%;
-  box-shadow: inset 0 0 18px rgba(0, 0, 0, .5); }
-.gh-crest { position: absolute; z-index: 3; left: 50%; top: calc(var(--m) * -.42); width: calc(var(--m) * .48); transform: translateX(-50%); filter: drop-shadow(0 0 6px rgba(255, 220, 140, .8)); }
-.gh-wing { position: absolute; z-index: 1; width: calc(var(--m) * .62); top: 30%; right: 82%; filter: drop-shadow(0 3px 5px rgba(0, 0, 0, .6)); }
-.gh-wing--r { right: auto; left: 82%; transform: scaleX(-1); }
-.gh-name { position: relative; z-index: 4; display: flex; align-items: center; gap: calc(var(--m) * .04); margin-top: calc(var(--m) * -.08); padding: calc(var(--m) * .035) calc(var(--m) * .14);
-  background: linear-gradient(180deg, #2a2348, #0c0b20); border: 2px solid #e6c36a; clip-path: polygon(7% 0, 93% 0, 100% 50%, 93% 100%, 7% 100%, 0 50%);
-  box-shadow: inset 0 0 0 1px rgba(255, 240, 200, .25); }
-.gh-name span { font: 600 calc(var(--m) * .15)/1 "Cinzel", "Trajan Pro", Georgia, serif; letter-spacing: .12em; color: #f8e9c0; text-shadow: 0 1px 2px #000, 0 0 10px rgba(255, 210, 120, .55); }
-.gh-laurel { width: calc(var(--m) * .17); height: calc(var(--m) * .17); }
+.gh-frame { position: relative; z-index: 4; width: calc(var(--m) * 1.9); }
+.gh-frame__img { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.gh-hole { position: absolute; border-radius: 50%; background-color: #0b0e22; background-size: cover; background-position: center 18%;
+  box-shadow: inset 0 0 18px rgba(0, 0, 0, .55); transition: box-shadow .3s; }
+.gh-name { position: absolute; z-index: 2; display: grid; place-items: center; font: 600 calc(var(--m) * .15)/1 "Cinzel", "Trajan Pro", Georgia, serif;
+  letter-spacing: .12em; color: #f8e9c0; text-shadow: 0 1px 2px #000, 0 0 10px rgba(255, 210, 120, .55); }
 .godhud--opp .gh-name { display: none; }
-.gh-plate { position: relative; z-index: 3; width: calc(var(--m) * 2.7); aspect-ratio: 600 / 150; margin-top: calc(var(--m) * -.02); }
+.gh-plate { position: relative; z-index: 3; width: calc(var(--m) * 2.7); aspect-ratio: 600 / 150; margin-top: calc(var(--m) * -.1); }
 .gh-plate__bg { position: absolute; inset: 0; width: 100%; height: 100%; }
-.gh-wing--plate { width: calc(var(--m) * .5); top: -2%; right: 93%; z-index: -1; }
-.gh-wing--plate.gh-wing--r { right: auto; left: 93%; }
 .gh-cells { position: absolute; left: 6%; right: 6%; top: 13%; height: 54%; display: flex; align-items: center; justify-content: space-between; gap: 3%; }
 .gh-cell { flex: 1; height: 82%; display: flex; align-items: center; justify-content: center; gap: 10%; border-radius: calc(var(--m) * .08); }
 .gh-cell svg { height: 66%; width: auto; }
@@ -606,12 +595,12 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .gh-ult.ready { animation: ult-ready 2s ease-in-out infinite; }
 .gh-ult.used { filter: grayscale(1) brightness(.5); animation: none; }
 @keyframes ult-ready { 50% { box-shadow: 0 0 0 2px #2a1c06, 0 0 24px rgba(255, 214, 120, 1); } }
-.godhud.is-active .gh-ring { box-shadow: 0 0 0 2px #2a1c06, 0 0 40px rgba(255, 200, 90, .85), inset 0 0 0 2px rgba(255, 244, 200, .5); }
-.godhud.is-awaken .gh-ring { box-shadow: 0 0 0 2px #0a1430, 0 0 44px rgba(110, 190, 255, .85), inset 0 0 0 2px rgba(200, 235, 255, .6); }
+.godhud.is-active .gh-hole { box-shadow: 0 0 0 2px #2a1c06, 0 0 40px rgba(255, 200, 90, .85), inset 0 0 0 2px rgba(255, 244, 200, .5); }
+.godhud.is-awaken .gh-hole { box-shadow: 0 0 0 2px #0a1430, 0 0 44px rgba(110, 190, 255, .85), inset 0 0 0 2px rgba(200, 235, 255, .6); }
 .godhud.is-awaken .gh-cell--awk { box-shadow: 0 0 16px rgba(110, 190, 255, .7); border-color: #8fd6ff; }
 .godhud.is-low .gh-cell--soul svg { animation: heart-beat 1s ease-in-out infinite; }
 @keyframes heart-beat { 15% { transform: scale(1.22); } 30% { transform: scale(1); } 45% { transform: scale(1.14); } }
-.godhud.pickable .gh-ring, .godhud.aimed .gh-ring { box-shadow: 0 0 0 3px #ff6a5a, 0 0 40px rgba(255, 90, 70, .9); }
+.godhud.pickable .gh-hole, .godhud.aimed .gh-hole { box-shadow: 0 0 0 3px #ff6a5a, 0 0 40px rgba(255, 90, 70, .9); }
 .godhud .godhud__judgment { position: absolute; top: 0; left: 0; z-index: 5; }
 .reduce-motion .godhud * { animation: none !important; }
 
@@ -620,4 +609,10 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 @media (min-width: 761px) {
   .arena-field { bottom: calc(var(--u) * 27 + 2%); grid-template-rows: auto auto auto auto auto; align-content: center; row-gap: calc(var(--u) * 1.2); } /* Bases coladas no battlefield */
   .arena-field .lane { margin: 0 auto; max-width: 80%; justify-content: center; }
+}
+
+/* Etiquetas de demo/fixture no canto superior direito, para não tampar o retrato do God do oponente. */
+@media (min-width: 761px) {
+  .demo-tag { left: auto; right: 14px; transform: none; }
+  .fixture-tag { top: 38px; }
 }

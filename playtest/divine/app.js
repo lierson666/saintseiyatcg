@@ -392,13 +392,6 @@ function cosmoGauge(key, side) {
 // medalhão com anel dourado, tridente no topo e asas douradas; faixa com o nome entre louros; placa com Soul (coração),
 // ATTACK (espadas), Awaken (escudo) e selo U da Ultimate, asas prateadas nas pontas e medalhão Ω com ponta embaixo.
 const GOLD = id => `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6cf"/><stop offset=".35" stop-color="#f0cc6e"/><stop offset=".7" stop-color="#a8741f"/><stop offset="1" stop-color="#f6d98c"/></linearGradient>`;
-const WING = (id, fill) => `<svg class="gh-wing" viewBox="0 0 120 100" aria-hidden="true"><defs>${fill}</defs><g fill="url(#${id})" stroke="#5a3a0c" stroke-width="1.2">
-  <path d="M116 58 C86 48 46 34 4 4 C26 40 62 58 116 70Z"/><path d="M116 68 C84 64 44 56 10 34 C34 62 70 76 116 80Z"/>
-  <path d="M116 78 C86 80 52 80 22 64 C48 86 80 92 116 90Z"/><path d="M116 88 C92 92 66 96 42 88 C64 102 92 102 116 98Z"/></g></svg>`;
-const CREST = id => `<svg class="gh-crest" viewBox="0 0 100 130" aria-hidden="true"><defs>${GOLD(id)}</defs><g fill="url(#${id})" stroke="#5a3a0c" stroke-width="1.2">
-  <path d="M50 0 L58 70 L50 128 L42 70Z"/><path d="M8 34 Q14 92 50 98 Q86 92 92 34 Q80 80 50 84 Q20 80 8 34Z"/><path d="M26 74 L50 68 L74 74 L50 80Z"/></g></svg>`;
-const LAUREL = (id, flip) => `<svg class="gh-laurel" viewBox="0 0 40 40" aria-hidden="true" ${flip ? 'style="transform:scaleX(-1)"' : ''}><defs>${GOLD(id)}</defs><g fill="url(#${id})">
-  <path d="M30 36 Q10 30 8 6" fill="none" stroke="url(#${id})" stroke-width="2"/>${[[9,10,-30],[11,17,-40],[14,24,-50],[19,30,-60]].map(([x,y,r]) => `<ellipse cx="${x}" cy="${y}" rx="5" ry="2.2" transform="rotate(${r} ${x} ${y})"/><ellipse cx="${x + 5}" cy="${y - 3}" rx="5" ry="2.2" transform="rotate(${r + 70} ${x + 5} ${y - 3})"/>`).join('')}</g></svg>`;
 const HEART = id => `<svg viewBox="0 0 24 22" aria-hidden="true"><defs><radialGradient id="${id}" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffd0d6"/><stop offset=".35" stop-color="#ff2a48"/><stop offset="1" stop-color="#6a0418"/></radialGradient></defs>
   <path d="M12 21 C-4 11 1 -1 12 6 C23 -1 28 11 12 21Z" fill="url(#${id})" stroke="#3a0008" stroke-width=".8"/><path d="M6 6 Q9 3 11 7" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="1.2"/></svg>`;
 const SWORDS = id => `<svg viewBox="0 0 24 24" aria-hidden="true"><defs>${GOLD(id)}</defs><g stroke="url(#${id})" stroke-width="2.2" stroke-linecap="round">
@@ -410,26 +403,32 @@ const PLATE = (gid, sid) => `<svg class="gh-plate__bg" viewBox="0 0 600 150" pre
   <path d="M44 12 H556 Q588 12 598 56 Q588 100 556 100 H44 Q12 100 2 56 Q12 12 44 12Z" fill="url(#${sid})" stroke="url(#${gid})" stroke-width="5"/>
   <path d="M50 22 H550 Q576 22 584 56 Q576 90 550 90 H50 Q24 90 16 56 Q24 22 50 22Z" fill="none" stroke="url(#${gid})" stroke-opacity=".55" stroke-width="1.5"/>
   <path d="M300 0 L311 12 L300 24 L289 12Z" fill="url(#${gid})"/><path d="M300 148 L291 116 L309 116Z" fill="url(#${gid})"/>
-  <circle cx="300" cy="104" r="17" fill="url(#${gid})" stroke="#5a3a0c" stroke-width="1.5"/>
-  <text x="300" y="112" text-anchor="middle" font-family="Georgia, serif" font-weight="700" font-size="22" fill="#3a2406">Ω</text></svg>`;
-const SILVER = id => `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#c9c4b6"/><stop offset="1" stop-color="#77715f"/></linearGradient>`;
+</svg>`;
+// Moldura central de cada God (arte do autor, 28/10/2026): buraco do retrato e placa do nome em % da imagem [x, y, largura, altura].
+const FRAMES = {
+  athena: {ratio: .9655, hole: [23.5, 20.9, 55.7, 52.4], plate: [26.2, 75, 49.9, 10.7]},
+  poseidon: {ratio: 1.0078, hole: [21.8, 20.4, 56.8, 53.6], plate: [25, 75.7, 50.3, 10.1]},
+  hades: {ratio: .9703, hole: [20, 17.4, 60.8, 56.6], plate: [24.3, 76, 52, 10.9]},
+  artemis: {ratio: 1.1324, hole: [24.3, 12.2, 50.8, 56.3], plate: [26, 70.6, 48.2, 12]},
+  ares: {ratio: 1.1607, hole: [26.5, 20, 46, 51.8], plate: [28.4, 73.6, 42.2, 12.1]},
+};
+const box = ([x, y, w, h]) => `left:${x}%;top:${y}%;width:${w}%;height:${h}%`;
 function godHud(key, side) {
   const s = S(), p = s.players[key], d = s.divine[key], god = cards.get(s.gods[key]);
   const pick = mode?.options?.includes(`god:${key}`), max = soulMax(s, key);
   const ult = d.ultimateUsed ? 'used' : ['god-athena', 'god-poseidon'].includes(d.god) ? 'ready' : 'none';
   const f = FORGE.get(`${god.name.toLowerCase()}-001`), art = f?.ilustracao ? FORGE_ART + f.ilustracao : GOD_ART[s.gods[key]] || '';
   const low = p.soul <= Math.max(d.awakenAt, Math.ceil(max / 4)), k = `gh${key}`;
+  const frame = FRAMES[god.name.toLowerCase()] ? god.name.toLowerCase() : 'athena', fr = FRAMES[frame];
   return `<section class="godhud godhud--${side} ${pick ? 'pickable' : ''} ${s.active === key ? 'is-active' : ''} ${d.awaken ? 'is-awaken' : ''} ${low ? 'is-low' : ''}" data-god="${key}"
       ${pick ? `data-pick="god:${key}"` : ''} role="button" tabindex="0" aria-label="${esc(god.name)}, Soul ${p.soul} of ${max}${d.awaken ? ', Awaken' : ''}">
-    <div class="gh-medal">
-      ${WING(`${k}w`, GOLD(`${k}w`))}${WING(`${k}w2`, GOLD(`${k}w2`)).replace('class="gh-wing"', 'class="gh-wing gh-wing--r"')}
-      ${CREST(`${k}c`)}
-      <div class="gh-ring"><div class="godhud__portrait" style="background-image:url('${art}')"></div></div>
+    <div class="gh-frame" style="aspect-ratio:${fr.ratio}">
+      <div class="gh-hole godhud__portrait" style="${box(fr.hole)};background-image:url('${art}')"></div>
+      <img class="gh-frame__img" src="./assets/god-frames/${frame}.png" alt="">
+      <span class="gh-name" style="${box(fr.plate)}">${esc(god.name)}</span>
       ${d.judgment ? `<span class="godhud__judgment" title="Divine Judgment: loses at the end of Round ${d.judgment.deadline}">⚖ R${d.judgment.deadline}</span>` : ''}
     </div>
-    <div class="gh-name">${LAUREL(`${k}l`)}<span>${esc(god.name)}</span>${LAUREL(`${k}l2`, true)}</div>
     <div class="gh-plate">
-      ${WING(`${k}s`, SILVER(`${k}s`)).replace('class="gh-wing"', 'class="gh-wing gh-wing--plate"')}${WING(`${k}s2`, SILVER(`${k}s2`)).replace('class="gh-wing"', 'class="gh-wing gh-wing--plate gh-wing--r"')}
       ${PLATE(`${k}p`, `${k}q`)}
       <div class="gh-cells">
         <span class="gh-cell gh-cell--soul godhud__soul" data-soul="${key}" title="Soul ${p.soul} of ${max}">${HEART(`${k}h`)}<b>${p.soul}</b></span>
