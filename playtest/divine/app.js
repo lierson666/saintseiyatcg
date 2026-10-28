@@ -373,18 +373,6 @@ function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
   </div>`;
 }
 
-// Medidor de Cosmo (coluna esquerda da referência): hexágono com Bases preparadas, pips de Base e chamas de Latent.
-function cosmoGauge(key, side) {
-  const p = S().players[key], ready = readyBases(key);
-  const base = p.bases.map(b => `<i class="orb orb--base ${b.prepared ? 'ready' : 'spent'}"></i>`).join('');
-  const latent = [0, 1, 2].map(i => `<i class="orb orb--latent flame ${i < p.latent ? 'ready' : 'empty'}"></i>`).join('');
-  // O Cosmo arde mais conforme as Bases crescem (autor, 28/10/2026): --burn vai de 0 a 1 em 10 Bases.
-  const burn = Math.min(1, p.bases.length / 10).toFixed(2);
-  return `<div class="cosmo cosmo--${side}" data-bank="${key}" style="--burn:${burn}" aria-label="Player ${key} Cosmo: ${ready} of ${p.bases.length} Base prepared, ${p.latent} of 3 Latent">
-    <div class="cosmo__hex" data-bank-unit="base" title="Prepared Cosmo Base / total"><img class="cosmo__sigil" src="../../CARD-TEMPLATE/athena/gem_cost.png" alt="">
-      <b>${ready}</b><small>/${p.bases.length}</small><span class="cosmo__pips">${base}</span></div>
-    <div class="cosmo__flames" data-bank-unit="latent" title="Latent Cosmo (max 3)">${latent}</div></div>`;
-}
 
 // Retrato do God (cantos esquerdos da referência): nome, Soul com coração, escudo de Awaken, barra de Soul,
 // selos de Ultimate e Divine Judgment. O seu abre o menu dos poderes divinos.
@@ -422,7 +410,7 @@ function godHud(key, side) {
   const frame = FRAMES[god.name.toLowerCase()] ? god.name.toLowerCase() : 'athena', fr = FRAMES[frame];
   return `<section class="godhud godhud--${side} ${pick ? 'pickable' : ''} ${s.active === key ? 'is-active' : ''} ${d.awaken ? 'is-awaken' : ''} ${low ? 'is-low' : ''}" data-god="${key}"
       ${pick ? `data-pick="god:${key}"` : ''} role="button" tabindex="0" aria-label="${esc(god.name)}, Soul ${p.soul} of ${max}${d.awaken ? ', Awaken' : ''}">
-    <div class="gh-frame" style="aspect-ratio:${fr.ratio}">
+    <div class="gh-frame" style="aspect-ratio:${fr.ratio}" data-tip="${esc(`God|${god.name}, Player ${key}. Devotees can attack it.`)}">
       <div class="gh-hole godhud__portrait" style="${box(fr.hole)};background-image:url('${art}')"></div>
       <img class="gh-frame__img" src="./assets/god-frames/${frame}.png" alt="">
       <span class="gh-name" style="${box(fr.plate)}">${esc(god.name)}</span>
@@ -431,20 +419,37 @@ function godHud(key, side) {
     <div class="gh-plate">
       ${PLATE(`${k}p`, `${k}q`)}
       <div class="gh-cells">
-        <span class="gh-cell gh-cell--soul godhud__soul" data-soul="${key}" title="Soul ${p.soul} of ${max}">${HEART(`${k}h`)}<b>${p.soul}</b></span>
-        <span class="gh-cell gh-cell--atk" title="Attack ${god.atk}: damage the God deals back to a Devotee that strikes it">${SWORDS(`${k}x`)}<b>${god.atk}</b></span>
-        <span class="gh-cell gh-cell--awk" title="Awaken ${d.awakenAt}: active while Soul ≤ ${d.awakenAt}">${SHIELD(`${k}d`)}<b>${d.awakenAt}</b></span>
-        ${ult !== 'none' ? `<span class="gh-ult godhud__ult ${ult}" title="Ultimate ${ult === 'used' ? 'used' : 'ready · once per match'}"><b>U</b></span>` : ''}
+        <span class="gh-cell gh-cell--soul godhud__soul" data-soul="${key}" data-tip="Soul|${p.soul} of ${max}. When a God's Soul reaches 0, its player loses.">${HEART(`${k}h`)}<b>${p.soul}</b></span>
+        <span class="gh-cell gh-cell--atk" data-tip="Attack|${god.atk}. Damage the God deals back to a Devotee that strikes it.">${SWORDS(`${k}x`)}<b>${god.atk}</b></span>
+        <span class="gh-cell gh-cell--awk" data-tip="Awaken|Active while Soul ≤ ${d.awakenAt}${d.awaken ? ' — active now' : ''}.">${SHIELD(`${k}d`)}<b>${d.awakenAt}</b></span>
+        ${ult !== 'none' ? `<span class="gh-ult godhud__ult ${ult}" data-tip="Ultimate|Once per match. ${ult === 'used' ? 'Already used.' : 'Ready.'}"><b>U</b></span>` : ''}
       </div>
     </div></section>`;
 }
-// Santuário do jogador (canto, como o deck no Arena): miniatura do Domain, Cosmo (Bases e Latent) e zonas.
+// Trilho do jogador (autor, 28/10/2026): lista com nome escrito, pesada pelas regras. Cosmo pronto e Latent primeiro
+// (decidem o que se joga), depois Deck, mão, Tartarus e Void; o Domain é um selo que abre a carta. Tudo com dica no hover.
 function sanctum(key, side) {
-  const id = S().domains[key], dom = cards.get(id), f = FORGE.get(id);
-  return `<aside class="sanctum sanctum--${side}">
-    <button class="sanctum__domain" data-domain="${key}" style="--art:url('${f?.ilustracao ? FORGE_ART + f.ilustracao : ''}')" title="Domain: ${esc(dom?.name || '')}">
+  const s = S(), p = s.players[key], id = s.domains[key], dom = cards.get(id), f = FORGE.get(id), ready = readyBases(key), n = p.deck.length;
+  const burn = Math.min(1, p.bases.length / 10).toFixed(2); // o Cosmo arde mais conforme as Bases crescem (0 a 1 em 10 Bases)
+  const pips = p.bases.map(b => `<i class="orb orb--base ${b.prepared ? 'ready' : 'spent'}"></i>`).join('');
+  const flames = [0, 1, 2].map(i => `<i class="orb orb--latent flame ${i < p.latent ? 'ready' : 'empty'}"></i>`).join('');
+  const row = (cls, icon, label, value, tip, attrs = '') => `<div class="rail__row ${cls}" ${attrs} data-tip="${esc(tip)}"><span class="rail__ico">${icon}</span><span class="rail__label">${label}</span><b>${value}</b></div>`;
+  const plural = (k, w) => `${k} ${w}${k === 1 ? '' : 's'}`;
+  return `<section class="sanctum sanctum--${side}" aria-label="${side === 'me' ? 'Your' : 'Opponent'} resources">
+    <header class="rail__who">${side === 'me' ? 'You' : 'Opponent'} <small>Player ${key}</small></header>
+    <button class="sanctum__domain" data-domain="${key}" style="--art:url('${f?.ilustracao ? FORGE_ART + f.ilustracao : ''}')" data-tip="${esc(`Domain|${dom?.name || '—'}. Click to view the card.`)}">
       <small>Domain</small><strong>${esc(dom?.name || '—')}</strong></button>
-    ${cosmoGauge(key, side)}${godZones(key)}</aside>`;
+    <div class="cosmo" data-bank="${key}" style="--burn:${burn}">
+      ${row('rail__row--cosmo', `<img class="cosmo__sigil" src="../../CARD-TEMPLATE/athena/gem_cost.png" alt="">`, 'Cosmo Base', `${ready}<small>/${p.bases.length}</small><span class="cosmo__pips">${pips}</span>`,
+        `Cosmo Base|${ready} of ${p.bases.length} prepared. Prepared Bases pay card and ability costs. Once per round you may place a Cosmoble card as a Base.`, 'data-bank-unit="base"')}
+      ${row('rail__row--latent', flames, 'Latent', `${p.latent}<small>/3</small>`, `Latent Cosmo|${p.latent} of 3 stored. At round end, unused Bases can be stored here.`, 'data-bank-unit="latent"')}
+    </div>
+    ${row(`zdeck ${n ? '' : 'is-empty'}`, '<i class="zdeck__back"></i>', 'Deck', n, `Deck|${plural(n, 'card')} left. Each player draws 2 cards per turn.`, `data-deck="${key}"`)}
+    ${row('rail__row--hand', '<i class="rail__hand"></i>', 'Hand', p.hand.length, `Hand|${plural(p.hand.length, 'card')}.`)}
+    ${row('zpile zpile--tartarus', '<img class="zicon" src="./assets/tartarus.png" alt="">', 'Tartarus', p.tartarus.length, `Tartarus|${plural(p.tartarus.length, 'card')}. Destroyed Devotees go here and gain Afterlife.`)}
+    ${row('zpile zpile--void', '<img class="zicon" src="./assets/void.png" alt="">', 'Void', p.void.length, `Void|${plural(p.void.length, 'card')}. Exiled cards go here. No Afterlife.`)}
+    ${p.fatigue ? row('zpile--fatigue', '⚠', 'Fatigue', p.fatigue, 'Fatigue|Drawing from an empty deck.') : ''}
+  </section>`;
 }
 function showDomainCard(key) {
   const f = FORGE.get(S().domains[key]);
@@ -456,17 +461,6 @@ function showDomainCard(key) {
   box.addEventListener('pointerdown', closeBigCard);
   box.addEventListener('contextmenu', e => { e.preventDefault(); closeBigCard(); });
   document.body.append(box);
-}
-// Zonas do jogador junto ao God: deck empilhado (a pilha engrossa com as cartas que restam), Tartarus e Void (exílio).
-function godZones(key) {
-  const p = S().players[key], n = p.deck.length, depth = Math.min(7, Math.ceil(n / 8));
-  const edge = Array.from({length: depth}, (_, i) => `${i + 1}px ${i + 1}px 0 ${i % 2 ? '#5a4520' : '#2a2140'}`).join(', ');
-  return `<div class="godzones">
-    <span class="zdeck ${n ? '' : 'is-empty'}" data-deck="${key}" title="Deck: ${n} card${n === 1 ? '' : 's'}"><i class="zdeck__back" style="box-shadow:${edge || 'none'}, 0 3px 8px rgba(0,0,0,.6)"></i><b>${n}</b></span>
-    <span class="zpile zpile--tartarus" title="Tartarus: ${p.tartarus.length}"><img class="zicon" src="./assets/tartarus.png" alt=""><b>${p.tartarus.length}</b><small>Tartarus</small></span>
-    <span class="zpile zpile--void" title="Void (exile): ${p.void.length}"><img class="zicon" src="./assets/void.png" alt=""><b>${p.void.length}</b><small>Void</small></span>
-    ${p.fatigue ? `<span class="zpile zpile--fatigue" title="Fatigue">F${p.fatigue}</span>` : ''}
-  </div>`;
 }
 
 
@@ -621,7 +615,8 @@ function render() {
     <div class="olympus ${mode ? 'is-choosing' : ''} ${pending ? 'is-deciding' : ''}" ${pending && !pending.peek ? 'inert' : ''}>
       ${handRow(them, settings.hideOpponent || settings.ai === them)}
       <main class="arena-field">${cosmoLane(them, 'opp')}${fieldRow(them)}<div class="midline"></div>${fieldRow(me)}${cosmoLane(me, 'me')}</main>
-      <aside class="tower"><div class="seat seat--opp">${sanctum(them, 'opp')}${godHud(them, 'opp')}</div><div class="seat seat--me">${godHud(me, 'me')}${sanctum(me, 'me')}</div></aside>
+      <aside class="rail">${sanctum(them, 'opp')}${sanctum(me, 'me')}</aside>
+      ${godHud(them, 'opp')}${godHud(me, 'me')}
       ${handRow(me, false)}
       ${command()}
       ${s.window && !s.victory ? `<div class="priority-glow priority-glow--${s.window.priority === me ? 'me' : 'opp'}" aria-hidden="true"></div>` : ''}
@@ -1339,4 +1334,19 @@ async function init() {
   stage.classList.toggle('no-webgl', !scene);
   window.__divine = {get state() { return S(); }, get ctx() { return ctx; }, get scene() { return scene; }, get clock() { return clock; }, settings}; // inspeção no QA
 }
+// Dica flutuante (autor, 28/10/2026): tudo com data-tip="Título|texto" explica o que é ao passar o mouse ou focar.
+const tip = document.body.appendChild(Object.assign(document.createElement('div'), {className: 'tip', role: 'tooltip'}));
+function showTip(e) {
+  const t = e.target.closest?.('[data-tip]');
+  if (!t || drag) return tip.classList.remove('on');
+  const [title, body] = t.dataset.tip.split('|');
+  tip.innerHTML = body ? `<strong>${esc(title)}</strong>${esc(body)}` : esc(title);
+  const r = t.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight, room = r.right + 12 + w < innerWidth;
+  tip.style.left = `${room ? r.right + 12 : Math.max(8, r.left - 12 - w)}px`;
+  tip.style.top = `${Math.min(innerHeight - h - 8, Math.max(8, r.top + r.height / 2 - h / 2))}px`;
+  tip.classList.add('on');
+}
+document.addEventListener('pointerover', showTip);
+document.addEventListener('focusin', showTip);
+document.addEventListener('pointerdown', () => tip.classList.remove('on'));
 init().catch(e => { boardRoot.innerHTML = `<p class="fatal">${esc(e.message)}</p>`; console.error(e); });

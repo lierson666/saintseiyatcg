@@ -617,37 +617,63 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
   .fixture-tag { top: 38px; }
 }
 
-/* Torre de informações na coluna esquerda (autor, 28/10/2026): um painel da altura da tela. Metade de cima é do oponente
-   (santuário no topo, God embaixo), metade de baixo é minha (God no topo, santuário embaixo): os dois Gods ficam frente a frente no meio. */
+/* HUD pelo peso das regras (autor, 28/10/2026). 1) Soul: os Gods voltam ao centro, colados ao campo, porque são alvo de ataque,
+   e o Soul domina a placa. 2) Cosmo pronto e Latent: topo do trilho esquerdo, linha mais forte. 3) Deck, mão, Tartarus e Void: lista
+   rotulada. 4) Domain: selo pequeno que abre a carta. À direita, uma coluna só para o turno: timer, fase e End Turn. */
 @media (min-width: 761px) {
-  .tower { --s: min(calc(var(--u, 8px) * 1.15), calc((100vh - 40px) / 104)); position: absolute; z-index: 6; left: 12px; top: 10px; bottom: 10px; width: calc(var(--s) * 26);
-    display: grid; grid-template-rows: 1fr 1fr; padding: calc(var(--s) * 1) calc(var(--s) * .8); border-radius: 16px;
-    background: linear-gradient(180deg, rgba(14, 18, 50, .93), rgba(8, 10, 30, .9) 50%, rgba(14, 18, 50, .93));
-    border: 1px solid rgba(232, 196, 106, .5); box-shadow: 0 12px 34px rgba(0, 0, 0, .65), inset 0 0 0 1px rgba(255, 240, 200, .06), inset 0 0 40px rgba(60, 90, 200, .12); }
-  .tower::after { content: ""; position: absolute; left: 8%; right: 8%; top: 50%; height: 2px; pointer-events: none;
-    background: linear-gradient(90deg, transparent, #e8c46a, #fff4c8, #e8c46a, transparent); box-shadow: 0 0 12px rgba(255, 210, 120, .6); }
-  .seat { --s: inherit; position: relative; min-height: 0; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: calc(var(--s) * .6); }
-  .seat .godhud { position: relative; z-index: 2; inset: auto; transform: none; --m: calc(var(--s) * 9.3); }
-  .seat .godhud { align-self: stretch; }
-  .seat .gh-plate { width: 100%; max-width: calc(var(--m) * 2.7); }
-  .seat .godhud--opp .gh-name { display: grid; }
-  /* metade empilhada: God junto do meio, depois Cosmo, Domain em banner e zonas na borda; o espaço sobra entre os blocos, não num vão só */
-  .seat .sanctum { --s: inherit; position: relative; inset: auto; flex: 1; width: 100%; display: flex; flex-direction: column; align-items: stretch;
-    justify-content: space-evenly; gap: calc(var(--s) * .8); padding: 0; background: none; border: 0; box-shadow: none; }
-  .seat--opp .sanctum { flex-direction: column-reverse; }
-  .seat .sanctum::before, .seat .sanctum::after { display: none; }
-  .seat .sanctum .cosmo { order: 1; align-items: center; }
-  .seat .sanctum__domain { order: 2; width: 100%; aspect-ratio: 5 / 2; display: flex; flex-direction: column; justify-content: space-between; padding: calc(var(--s) * .5) calc(var(--s) * .7); text-align: left; }
-  .seat .sanctum__domain strong { font-size: calc(var(--s) * 1.15); -webkit-line-clamp: 2; }
-  .seat .sanctum .cosmo__hex { width: calc(var(--s) * 10); }
-  .seat .sanctum .cosmo__hex b { font-size: calc(var(--s) * 3.2); }
-  .seat .sanctum .godzones { order: 3; display: flex; flex-direction: row; justify-content: space-around; gap: 0;
-    padding: calc(var(--s) * .6) 0 0; border: 0; border-top: 1px solid rgba(232, 196, 106, .3); }
-  .seat--opp .sanctum .godzones { padding: 0 0 calc(var(--s) * .6); border-top: 0; border-bottom: 1px solid rgba(232, 196, 106, .3); }
-  .seat .sanctum .zdeck, .seat .sanctum .zpile { display: flex; align-items: center; gap: calc(var(--s) * .45); }
-  .seat .sanctum .zpile small { display: none; }
-  .seat .sanctum .zicon { width: calc(var(--s) * 2.6); height: calc(var(--s) * 2.6); }
-  .seat .sanctum .zdeck__back { width: calc(var(--s) * 2); }
-  /* o campo centraliza no espaço à direita da torre */
-  .arena-field { left: calc(min(calc(var(--u, 8px) * 1.15), calc((100vh - 40px) / 104)) * 26 + 28px); bottom: calc(var(--u) * 20 + 2%); }
+  .godhud { --m: calc(var(--u, 8px) * 7.5); }
+  .godhud--opp { --m: calc(var(--u, 8px) * 5.6); }
+  .godhud--opp .gh-name { display: grid; }
+  .gh-cell--soul { flex: 1.8; }
+  .gh-cell--soul b { font-size: calc(var(--m) * .36); color: #fff1f3; text-shadow: 0 2px 3px #000, 0 0 12px rgba(255, 60, 90, .55); }
+  .gh-cell--atk, .gh-cell--awk { flex: .85; }
+  .gh-cell--atk b, .gh-cell--awk b { font-size: calc(var(--m) * .2); }
+  .gh-cell--atk svg, .gh-cell--awk svg { height: 52%; }
+
+  .rail { --s: min(calc(var(--u, 8px) * 1.1), calc((100vh - 40px) / 78)); position: absolute; z-index: 6; left: 12px; top: 10px; bottom: 10px;
+    width: calc(var(--s) * 19); display: flex; flex-direction: column; justify-content: space-between; gap: var(--s); pointer-events: none; }
+  .rail .sanctum { --s: inherit; position: relative; inset: auto; transform: none; width: 100%; display: flex; flex-direction: column; align-items: stretch;
+    gap: calc(var(--s) * .4); padding: calc(var(--s) * .9); pointer-events: auto; }
+  .rail .rail__who { display: flex; justify-content: space-between; align-items: baseline; font: 700 calc(var(--s) * .85)/1 system-ui, sans-serif; letter-spacing: .2em;
+    text-transform: uppercase; color: var(--gold); padding: 0 calc(var(--s) * .2) calc(var(--s) * .2); }
+  .rail .rail__who small { font-size: .8em; letter-spacing: .12em; color: rgba(200, 210, 240, .55); }
+  .rail .sanctum__domain { width: 100%; aspect-ratio: auto; height: calc(var(--s) * 3.6); display: flex; align-items: center; gap: calc(var(--s) * .6);
+    padding: 0 calc(var(--s) * .7); text-align: left; }
+  .rail .sanctum__domain::before { background: linear-gradient(90deg, rgba(5, 7, 22, .95) 35%, rgba(5, 7, 22, .35)); }
+  .rail .sanctum__domain small { font-size: calc(var(--s) * .62); }
+  .rail .sanctum__domain strong { font-size: calc(var(--s) * .95); -webkit-line-clamp: 1; }
+  .rail .sanctum__domain:hover { transform: none; }
+  .rail .cosmo { position: static; inset: auto; transform: none; display: flex; flex-direction: column; align-items: stretch; gap: calc(var(--s) * .4); }
+  .rail .rail__row { display: grid; grid-template-columns: calc(var(--s) * 2.6) 1fr auto; align-items: center; column-gap: calc(var(--s) * .6); height: calc(var(--s) * 2.9);
+    padding: 0 calc(var(--s) * .7) 0 calc(var(--s) * .4); border-radius: calc(var(--s) * .5); background: rgba(255, 255, 255, .03);
+    border: 1px solid rgba(232, 196, 106, .14); cursor: help; transition: background .15s, border-color .15s; }
+  .rail .rail__row:hover { background: rgba(232, 196, 106, .1); border-color: rgba(232, 196, 106, .5); }
+  .rail .rail__ico { position: relative; width: calc(var(--s) * 2.4); height: calc(var(--s) * 2.4); display: grid; place-items: center; justify-self: center; }
+  .rail .rail__label { font: 700 calc(var(--s) * .78)/1 system-ui, sans-serif; letter-spacing: .14em; text-transform: uppercase; color: #cdb98a; }
+  .rail .rail__row b { align-self: center; grid-column: 3; font: 700 calc(var(--s) * 1.5)/1 Georgia, "Times New Roman", serif; color: #fff; text-shadow: 0 2px 3px #000; }
+  .rail .rail__row b small { font-size: .55em; color: rgba(200, 215, 255, .7); }
+  .rail .rail__row--cosmo { height: calc(var(--s) * 4); border-color: rgba(110, 170, 255, .45); background: linear-gradient(90deg, rgba(40, 90, 220, .32), rgba(10, 20, 60, .15)); }
+  .rail .rail__row--cosmo b { font-size: calc(var(--s) * 2.3); text-shadow: 0 0 10px #8fd0ff, 0 2px 4px #000; }
+  .rail .rail__row--cosmo .rail__ico { width: calc(var(--s) * 3.1); height: calc(var(--s) * 3.1); border-radius: 50%;
+    background: radial-gradient(circle at 50% 40%, #3a7bff, #12348f 55%, #050c2e);
+    box-shadow: 0 0 calc(var(--s) * (.5 + var(--burn) * 1.8)) rgba(90, 170, 255, calc(.45 + var(--burn) * .5)), inset 0 0 0 1px rgba(200, 230, 255, .4); }
+  .rail .cosmo__sigil { position: static; inset: auto; width: 74%; height: 74%; }
+  .rail .cosmo__pips { display: none; }
+  .rail .rail__row--latent .rail__ico { display: flex; gap: 2px; width: auto; }
+  .rail .orb.flame { width: calc(var(--s) * .75); height: calc(var(--s) * 1.05); }
+  .rail .zicon { width: calc(var(--s) * 2.2); height: calc(var(--s) * 2.2); }
+  .rail .zdeck__back { width: calc(var(--s) * 1.5); box-shadow: 2px 2px 0 #5a4520, 4px 4px 0 #2a2140; }
+  .rail .rail__hand { display: block; width: calc(var(--s) * 1.5); aspect-ratio: 150 / 210; border-radius: 3px; border: 1px solid #c9a24e; transform: rotate(-10deg);
+    background: linear-gradient(160deg, #2a2358, #0c0b20); box-shadow: 4px 1px 0 -1px rgba(201, 162, 78, .6); }
+
+  .command { top: 50%; bottom: auto; transform: translateY(-50%); width: clamp(190px, 15vw, 250px); justify-items: center; }
+  .command .action-btn { width: 100%; }
+  .command__clock { position: static; transform: none; }
+  .arena-field { left: calc(min(calc(var(--u, 8px) * 1.1), calc((100vh - 40px) / 78)) * 19 + 28px); right: calc(clamp(190px, 15vw, 250px) + 30px);
+    top: calc(var(--u) * 16.5); bottom: calc(var(--u) * 31); }
 }
+.tip { position: fixed; z-index: 90; max-width: 260px; padding: 8px 11px; border-radius: 8px; pointer-events: none; opacity: 0; transform: translateY(4px);
+  transition: opacity .12s, transform .12s; font: 12.5px/1.45 system-ui, sans-serif; color: #e6e9f6; background: rgba(8, 10, 28, .96);
+  border: 1px solid rgba(232, 196, 106, .55); box-shadow: 0 10px 26px rgba(0, 0, 0, .6); }
+.tip strong { display: block; margin-bottom: 2px; font: 700 11px/1.3 system-ui, sans-serif; letter-spacing: .14em; text-transform: uppercase; color: #e8c46a; }
+.tip.on { opacity: 1; transform: none; }
