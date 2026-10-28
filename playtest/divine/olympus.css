@@ -354,3 +354,18 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .zpile small { grid-column: 1 / -1; font: 600 8px/1.2 system-ui, sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #9aa3c3; }
 .ico-void { width: 16px; height: 16px; border-radius: 50%; background: radial-gradient(circle, #000 35%, #7a4dff 55%, transparent 72%); box-shadow: 0 0 6px rgba(140, 100, 255, .7); }
 .zpile--fatigue { color: var(--red); font: 700 13px/1 system-ui; }
+
+/* Layout do autor (28/10/2026): quatro faixas no centro — Cosmo do oponente, Battlefield do oponente,
+   seu Battlefield, seu Cosmo —; as faixas de Cosmo mais estreitas, entre os HUDs dos Gods.
+   Cada jogador agrupado no seu canto esquerdo: God, Cosmo (hexágono + Latent) e zonas (deck, Tartarus, Void). */
+@media (min-width: 761px) {
+  .arena-field { top: 10.5%; bottom: 15.4%; left: 10.3%; right: 7.6%; grid-template-rows: 13fr 23fr auto 23fr 13fr; align-items: stretch; }
+  .arena-field > * { min-height: 0; }
+  .arena-field .field { display: flex; align-items: center; justify-content: center; }
+  .arena-field .lane { margin: 0 14%; }
+  .midline { align-self: center; }
+  .cosmo--opp { left: 22px; top: calc(clamp(74px, 7.4vw, 118px) + 22px); transform: scale(.8); flex-direction: column; }
+  .cosmo--opp .cosmo__flames { flex-direction: column; border-radius: 0 0 16px 16px; }
+  .cosmo--me { top: auto; bottom: calc(clamp(74px, 7.4vw, 118px) + 22px); transform: scale(.8); transform-origin: left bottom; flex-direction: column-reverse; }
+  .cosmo--me .cosmo__flames { border-radius: 16px 16px 0 0; }
+}
