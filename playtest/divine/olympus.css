@@ -629,3 +629,9 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .godhud::after { content: "Ω"; position: relative; z-index: 4; margin-top: calc(var(--m) * -.09); display: grid; place-items: center; width: calc(var(--m) * .2); height: calc(var(--m) * .2);
   border-radius: 50%; font: 700 calc(var(--m) * .12)/1 Georgia, serif; color: #2a1800; background: radial-gradient(circle at 35% 30%, #fff3c4, #e6c36a 50%, #8a6420); box-shadow: 0 0 0 2px #1a1406, 0 0 10px rgba(255, 210, 120, .6); }
 .godhud--opp::after { display: none; }
+/* Bases de novo centralizadas sob o battlefield de cada um (autor, 28/10/2026); o campo sobe para o medalhão do God
+   caber embaixo, entre as Bases e a mão. */
+@media (min-width: 761px) {
+  .arena-field { bottom: calc(var(--u) * 27 + 2%); grid-template-rows: auto auto auto auto auto; align-content: center; row-gap: calc(var(--u) * 1.2); } /* Bases coladas no battlefield */
+  .arena-field .lane { margin: 0 auto; max-width: 80%; justify-content: center; }
+}
