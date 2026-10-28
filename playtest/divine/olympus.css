@@ -567,3 +567,65 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .sanctum .zpile .zicon { grid-row: 1 / span 2; }
 .sanctum .zpile b { align-self: end; }
 .sanctum .zpile small { align-self: start; grid-column: 2; font-size: calc(var(--s) * .72); }
+
+/* HUD do God no layout do autor (28/10/2026): medalhão com moldura dourada, ponta no topo e asas; faixa com o nome;
+   placa larga com Soul (coração), ATTACK (espadas), Awaken (escudo) e selo de Ultimate, asas nas pontas e Ω embaixo.
+   O do oponente é menor e sem faixa de nome, para não cobrir o campo. */
+.godhud { --m: calc(var(--u, 8px) * 11); --gold: #e6c36a; gap: 0; }
+.godhud--opp { --m: calc(var(--u, 8px) * 8); }
+.godhud .godhud__medal { position: relative; z-index: 2; width: var(--m); aspect-ratio: 1; border-radius: 50%; padding: calc(var(--m) * .055);
+  background: conic-gradient(from 200deg, #8a6420, #fff1c2, #c9962e, #6a4a14, #f6dd94, #8a6420);
+  box-shadow: 0 0 0 2px #1a1406, 0 0 0 calc(var(--m) * .06) rgba(26, 20, 6, .9), 0 0 0 calc(var(--m) * .075) #c9a24e, 0 14px 30px rgba(0, 0, 0, .75), 0 0 40px rgba(255, 200, 100, .35); }
+/* ponta (crista) no topo e asas dos lados */
+.godhud .godhud__medal::before { content: ""; position: absolute; left: 50%; top: calc(var(--m) * -.3); width: calc(var(--m) * .24); height: calc(var(--m) * .36); transform: translateX(-50%);
+  background: linear-gradient(90deg, #8a6420, #fff1c2 50%, #8a6420); clip-path: polygon(50% 0, 64% 55%, 100% 62%, 62% 72%, 50% 100%, 38% 72%, 0 62%, 36% 55%);
+  filter: drop-shadow(0 0 6px rgba(255, 210, 120, .8)); }
+.godhud .godhud__medal::after { content: ""; position: absolute; z-index: -1; left: calc(var(--m) * -.32); right: calc(var(--m) * -.32); top: 28%; height: 52%;
+  background: linear-gradient(180deg, #fff1c2, #c9962e 55%, #6a4a14);
+  clip-path: polygon(0 10%, 14% 30%, 6% 38%, 19% 50%, 10% 60%, 24% 70%, 28% 100%, 72% 100%, 76% 70%, 90% 60%, 81% 50%, 94% 38%, 86% 30%, 100% 10%, 70% 40%, 30% 40%);
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, .6)); }
+.godhud .godhud__portrait { width: 100%; height: 100%; border: 2px solid #1a1406; background-color: #0b0e22; background-size: cover; background-position: center 18%; box-shadow: inset 0 0 20px rgba(0, 0, 0, .55); }
+.godhud.is-active .godhud__medal { box-shadow: 0 0 0 2px #1a1406, 0 0 0 calc(var(--m) * .06) rgba(26, 20, 6, .9), 0 0 0 calc(var(--m) * .075) #ffd27a, 0 14px 30px rgba(0, 0, 0, .75), 0 0 56px rgba(255, 200, 90, .8); }
+.godhud.is-awaken .godhud__medal { box-shadow: 0 0 0 2px #0a1430, 0 0 0 calc(var(--m) * .06) rgba(6, 14, 40, .9), 0 0 0 calc(var(--m) * .075) #8fd6ff, 0 14px 30px rgba(0, 0, 0, .75), 0 0 56px rgba(110, 190, 255, .8); }
+.godhud.is-low .godhud__soul .heart { animation: heart-beat 1s ease-in-out infinite; }
+@keyframes heart-beat { 15% { transform: scale(1.25); } 30% { transform: scale(1); } 45% { transform: scale(1.18); } }
+.godhud .godhud__judgment { position: absolute; top: 0; left: 0; z-index: 3; }
+.godhud .godhud__name { display: block; position: relative; z-index: 3; margin-top: calc(var(--m) * -.1); padding: calc(var(--m) * .03) calc(var(--m) * .28);
+  background: linear-gradient(180deg, #2a2348, #0c0b20); border: 1px solid var(--gold);
+  clip-path: polygon(8% 0, 92% 0, 100% 50%, 92% 100%, 8% 100%, 0 50%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1); }
+.godhud .godhud__name span { font: 600 calc(var(--m) * .14)/1 "Cinzel", "Trajan Pro", Georgia, serif; letter-spacing: .14em; color: #f6e6b8; text-shadow: 0 1px 2px #000, 0 0 8px rgba(255, 210, 120, .5); }
+.godhud .godhud__name span::before, .godhud .godhud__name span::after { content: "❦"; margin: 0 .45em; font-size: .8em; color: var(--gold); }
+.godhud .godhud__name span::before { display: inline-block; transform: scaleX(-1); }
+.godhud--opp .godhud__name { display: none; }
+.godhud .godhud__plate { position: relative; z-index: 3; display: flex; align-items: center; gap: calc(var(--m) * .07); margin-top: calc(var(--m) * .02);
+  padding: calc(var(--m) * .05) calc(var(--m) * .12); border-radius: calc(var(--m) * .14); border: 2px solid var(--gold);
+  background: radial-gradient(120% 140% at 50% 0%, rgba(90, 70, 180, .35), transparent 60%), linear-gradient(180deg, #1c1840, #08081c);
+  box-shadow: 0 0 0 2px #1a1406, 0 8px 20px rgba(0, 0, 0, .75), 0 0 24px rgba(255, 200, 100, .25), inset 0 1px 0 rgba(255, 255, 255, .08); }
+/* asas nas pontas e Ω embaixo */
+.godhud .godhud__plate::before, .godhud .godhud__plate::after { content: ""; position: absolute; top: 15%; width: calc(var(--m) * .32); height: 85%;
+  background: linear-gradient(180deg, #f4f0e6, #b8b2a2 60%, #6e6858); filter: drop-shadow(0 3px 5px rgba(0, 0, 0, .6));
+  clip-path: polygon(100% 0, 0 30%, 30% 40%, 5% 55%, 35% 62%, 15% 80%, 55% 78%, 100% 100%); }
+.godhud .godhud__plate::before { right: 100%; }
+.godhud .godhud__plate::after { left: 100%; transform: scaleX(-1); }
+.godhud--me .godhud__plate { border-bottom-width: 3px; }
+.godhud .godhud__soul, .godhud .godhud__atk, .godhud .godhud__awaken { position: static; display: flex; align-items: center; gap: calc(var(--m) * .05); width: auto; height: auto; aspect-ratio: auto; margin: 0;
+  padding: calc(var(--m) * .02) calc(var(--m) * .07); border-radius: calc(var(--m) * .08); clip-path: none; box-shadow: none; border: 1px solid transparent; background: rgba(255, 255, 255, .03); }
+.godhud .godhud__soul { border-color: rgba(255, 90, 110, .3); }
+.godhud .godhud__atk { background: linear-gradient(180deg, #5a2a14, #2a1008); border-color: rgba(255, 170, 100, .45); }
+.godhud .godhud__awaken { border-color: rgba(110, 190, 255, .35); }
+.godhud .godhud__soul b, .godhud .godhud__atk b, .godhud .godhud__awaken b { font: 700 calc(var(--m) * .2)/1 Georgia, serif; color: #fff; text-shadow: 0 2px 3px #000; }
+.godhud .godhud__soul .heart { width: calc(var(--m) * .2); height: calc(var(--m) * .18); clip-path: path("M11 19 C-6 8 3 -3 11 4 C19 -3 28 8 11 19 Z"); transform-origin: center; }
+.godhud .godhud__atk i { font-style: normal; font-size: calc(var(--m) * .16); color: #ffcf7a; text-shadow: 0 0 6px rgba(255, 150, 60, .8); }
+.godhud .shield { width: calc(var(--m) * .17); height: calc(var(--m) * .2); background: linear-gradient(135deg, #bfe6ff, #2a8cff 45%, #0a3a9a);
+  clip-path: polygon(50% 0, 100% 15%, 92% 60%, 50% 100%, 8% 60%, 0 15%); filter: drop-shadow(0 0 4px rgba(90, 170, 255, .7)); }
+.godhud.is-awaken .godhud__awaken { background: radial-gradient(circle, rgba(110, 190, 255, .45), transparent 75%); border-color: #8fd6ff; }
+.godhud .godhud__ult { position: static; display: grid; place-items: center; width: calc(var(--m) * .26); height: calc(var(--m) * .26); border-radius: 50%;
+  font: 700 calc(var(--m) * .14)/1 Georgia, serif; color: #2a1800; background: radial-gradient(circle at 35% 30%, #fff3c4, #e6c36a 45%, #8a6420);
+  border: 2px solid #1a1406; box-shadow: 0 0 0 2px var(--gold), 0 3px 8px rgba(0, 0, 0, .6); }
+.godhud .godhud__ult.ready { animation: ult-ready 2s ease-in-out infinite; }
+.godhud .godhud__ult.used { filter: grayscale(1) brightness(.5); text-decoration: none; opacity: 1; animation: none; }
+@keyframes ult-ready { 50% { box-shadow: 0 0 0 2px var(--gold), 0 3px 8px rgba(0, 0, 0, .6), 0 0 20px rgba(255, 214, 120, .95); } }
+.reduce-motion .godhud * { animation: none !important; }
+.godhud::after { content: "Ω"; position: relative; z-index: 4; margin-top: calc(var(--m) * -.09); display: grid; place-items: center; width: calc(var(--m) * .2); height: calc(var(--m) * .2);
+  border-radius: 50%; font: 700 calc(var(--m) * .12)/1 Georgia, serif; color: #2a1800; background: radial-gradient(circle at 35% 30%, #fff3c4, #e6c36a 50%, #8a6420); box-shadow: 0 0 0 2px #1a1406, 0 0 10px rgba(255, 210, 120, .6); }
+.godhud--opp::after { display: none; }

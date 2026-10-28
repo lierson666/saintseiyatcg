@@ -388,23 +388,26 @@ function cosmoGauge(key, side) {
 
 // Retrato do God (cantos esquerdos da referência): nome, Soul com coração, escudo de Awaken, barra de Soul,
 // selos de Ultimate e Divine Judgment. O seu abre o menu dos poderes divinos.
+// Medalhão do God (estilo avatar do Arena): retrato com anel de Soul que esvazia conforme o God sofre dano; embaixo,
+// a placa com ATTACK (espada), Soul (gema da facção) e Awaken (sol), e o selo de Ultimate no medalhão.
 function godHud(key, side) {
   const s = S(), p = s.players[key], d = s.divine[key], god = cards.get(s.gods[key]);
-  const pick = mode?.options?.includes(`god:${key}`), max = soulMax(s, key);
+  const pick = mode?.options?.includes(`god:${key}`), max = soulMax(s, key), pct = Math.round(p.soul / max * 100);
   const ult = d.ultimateUsed ? 'used' : ['god-athena', 'god-poseidon'].includes(d.god) ? 'ready' : 'none';
-  return `<section class="godhud godhud--${side} ${pick ? 'pickable' : ''} ${s.active === key ? 'is-active' : ''} ${d.awaken ? 'is-awaken' : ''}" data-god="${key}"
+  const f = FORGE.get(`${god.name.toLowerCase()}-001`), art = f?.ilustracao ? FORGE_ART + f.ilustracao : GOD_ART[s.gods[key]] || '';
+  const faction = god.name.toLowerCase(), low = p.soul <= Math.max(d.awakenAt, Math.ceil(max / 4));
+  return `<section class="godhud godhud--${side} ${pick ? 'pickable' : ''} ${s.active === key ? 'is-active' : ''} ${d.awaken ? 'is-awaken' : ''} ${low ? 'is-low' : ''}" data-god="${key}"
       ${pick ? `data-pick="god:${key}"` : ''} role="button" tabindex="0" aria-label="${esc(god.name)}, Soul ${p.soul} of ${max}${d.awaken ? ', Awaken' : ''}">
-    <div class="godhud__portrait" style="background-image:url('${GOD_ART[s.gods[key]] || ''}')"></div>
-    <div class="godhud__body">
-      <strong class="godhud__name">${esc(god.name[0] + god.name.slice(1).toLowerCase())}</strong>
-      <div class="godhud__row">
-        <span class="godhud__soul" data-soul="${key}"><i class="heart" aria-hidden="true"></i><b>${p.soul}</b></span>
-        <span class="godhud__atk" title="Attack ${god.atk}: damage the God deals back to a Devotee that strikes it">⚔<b>${god.atk}</b></span>
-        <span class="godhud__awaken" title="Awaken ${d.awakenAt}: active while Soul ≤ ${d.awakenAt}">${d.awakenAt}</span>
-        ${ult !== 'none' ? `<span class="godhud__ult ${ult}" title="Ultimate ${ult === 'used' ? 'used' : 'available once per match'}">U</span>` : ''}
-        ${d.judgment ? `<span class="godhud__judgment" title="Divine Judgment: loses at the end of Round ${d.judgment.deadline}">⚖ R${d.judgment.deadline}</span>` : ''}
-      </div>
-      <span class="godhud__bar"><i style="width:${Math.round(p.soul / max * 100)}%"></i></span>
+    <div class="godhud__medal" style="--soul:${pct}">
+      <div class="godhud__portrait" style="background-image:url('${art}')"></div>
+      ${d.judgment ? `<span class="godhud__judgment" title="Divine Judgment: loses at the end of Round ${d.judgment.deadline}">⚖ R${d.judgment.deadline}</span>` : ''}
+    </div>
+    <div class="godhud__name"><span>${esc(god.name)}</span></div>
+    <div class="godhud__plate">
+      <span class="godhud__soul" data-soul="${key}" title="Soul ${p.soul} of ${max}"><i class="heart" aria-hidden="true"></i><b>${p.soul}</b></span>
+      <span class="godhud__atk" title="Attack ${god.atk}: damage the God deals back to a Devotee that strikes it"><i aria-hidden="true">⚔</i><b>${god.atk}</b></span>
+      <span class="godhud__awaken" title="Awaken ${d.awakenAt}: active while Soul ≤ ${d.awakenAt}"><i class="shield" aria-hidden="true"></i><b>${d.awakenAt}</b></span>
+      ${ult !== 'none' ? `<span class="godhud__ult ${ult}" title="Ultimate ${ult === 'used' ? 'used' : 'ready · once per match'}">U</span>` : ''}
     </div></section>`;
 }
 // Santuário do jogador (canto, como o deck no Arena): miniatura do Domain, Cosmo (Bases e Latent) e zonas.
