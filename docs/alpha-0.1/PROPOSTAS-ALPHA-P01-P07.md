@@ -1,6 +1,6 @@
 # Alpha 0.1 — propostas ALPHA-P01 a ALPHA-P07
 
-**Status: cada proposta precisa da confirmação individual do autor.** Aprovadas até agora: P01, P02, P04, P05 e P06 (todas opção A). As demais: NÃO APROVADAS. A numeração é provisória e não usa a faixa D. A D269 fica de fora.
+**Status: cada proposta precisa da confirmação individual do autor.** Aprovadas até agora: P01 a P06 (todas opção A). Falta a P07. As demais: NÃO APROVADAS. A numeração é provisória e não usa a faixa D. A D269 fica de fora.
 
 Se o autor achar o texto original (D1–D190) de algum item, esse texto substitui a proposta.
 
@@ -67,6 +67,8 @@ Nos decks aprovados (Pegasus Rush × Dragon Fortress), as keywords em uso são:
 - **Risco:** com 2 compras por turno, a curva fica mais lenta. Medir no playtest.
 
 ## ALPHA-P03 — Conversão de Base em Latent
+
+**Status: APROVADA, opção A, pelo autor em 28/10/2026.** O núcleo já fazia assim; `endTurn` em `playtest/engine-v3/core.js` agora cita a P03. Moonlight Blessing (D226) ainda não está na engine.
 
 - **Comprovado:**
   - D5: Base não usada vira Latent ao encerrar o turno.

@@ -207,7 +207,8 @@ export function passAll(state) {
 }
 
 // End Phase (P06 item 5, no lugar de D60–D63):
-// 1. D5: Cosmo de Base não usado vira Latent (teto 3), 1 por Base preparada (detalhe na P03);
+// 1. D5 + ALPHA-P03 opção A (aprovada em 28/10/2026): 1 Latent por Base ainda Prepared, num único evento de ganho
+//    (D226), antes de qualquer efeito de End Phase; o excesso acima de 3 se perde;
 // 2. gatilhos "at end of turn", com janela (a End Phase sempre abre uma);
 // 3. no 2º turno do Round, checkpoint da D204;
 // 4. Cleanup.

@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createCore, startTurn, endTurn, draw, mill, placeBase, spendBase, gainLatent, loseSoul, recordStrike,
-  useOncePerRound, addEffect, spellCategory, passAll, RuleError, NotSpecified} from '../playtest/engine-v3/core.js';
+  useOncePerRound, addEffect, spellCategory, passAll, respond, RuleError, NotSpecified} from '../playtest/engine-v3/core.js';
 
 const deck = n => Array.from({length: n}, (_, i) => `c${i}`);
 const core = (size = 20) => createCore({soul: {A: 30, B: 30}, decks: {A: deck(size), B: deck(size)}});
@@ -107,3 +107,15 @@ test('D194: Moment usa Latent e Instant; Technique usa Base e Sorcery', () => {
   assert.equal(spellCategory(1), null);
 });
 
+
+test('P03: 4 Bases não usadas com Latent 1 viram Latent 3 num só evento, antes dos efeitos de End Phase', () => {
+  const s = core(), seen = [];
+  s.players.A.bases = [1, 2, 3, 4].map(uid => ({uid, prepared: false}));
+  s.players.A.latent = 1;
+  startTurn(s);
+  endTurn(s, {endOfTurn: [{controller: 'A', run: st => seen.push(st.players.A.latent)}]});
+  assert.equal(s.players.A.latent, 3, 'o excesso de 2 se perde');
+  respond(s, 'B', {speed: 'instant', run: st => seen.push(st.players.A.latent)});
+  passAll(s);
+  assert.deepEqual(seen, [3, 3], 'resposta e gatilho de End Phase já veem o Latent convertido');
+});
