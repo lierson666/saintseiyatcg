@@ -14,6 +14,7 @@ import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudg
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {createDirector} from './director.js?v=3';
+import {createAI} from './ai.js?v=1';
 
 const $ = (s, el = document) => el.querySelector(s), $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -33,7 +34,7 @@ const why = e => WHY[e.decision] || (e.topic ? `Not in Alpha 0.1: ${e.topic}` : 
 
 const SETTINGS_KEY = 'ssTcgOlympusArena';
 const settings = {quality: 'high', theme: 'olympus', godB: 'god-athena', timeouts: false, speed: 'normal', skipDraws: false, reduceMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
-  reduceFlashes: false, shake: 1, hideOpponent: true, autoPass: true};
+  reduceFlashes: false, shake: 1, hideOpponent: true, autoPass: true, ai: 'B'};
 try { Object.assign(settings, JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}')); } catch { /* sem armazenamento */ }
 const saveSettings = () => { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch { /* sem armazenamento */ } };
 
@@ -48,7 +49,10 @@ const num = uid => ctx.objects[uid].cardId.slice(-3);
 const other = key => S().order.find(k => k !== key);
 const owner = uid => ctx.objects[uid].owner;
 // Quem está à frente da tela: o jogador que precisa agir agora (hot-seat local).
-const viewer = () => { const s = S(); return pending ? pending.pending.player : s.setup ? s.setup[0] : s.window ? s.window.priority : s.active; };
+// A IA está decidindo agora (setup, janela ou turno dela).
+const aiControls = () => { const s = S(); return settings.ai !== 'none' && (pending ? pending.pending.player : s.setup ? s.setup[0] : s.window ? s.window.priority : s.active) === settings.ai; };
+const human = () => S().order.find(k => k !== settings.ai);
+const viewer = () => { const s = S(); if (settings.ai !== 'none') return human(); return pending ? pending.pending.player : s.setup ? s.setup[0] : s.window ? s.window.priority : s.active; };
 const say = text => { logLines.push({round: S().round, text}); if (logLines.length > 400) logLines.shift(); };
 let noticeTimer;
 function warn(text) { notice.textContent = text; notice.classList.add('show'); clearTimeout(noticeTimer); noticeTimer = setTimeout(() => notice.classList.remove('show'), 3200); }
@@ -228,6 +232,7 @@ function primary() {
     return;
   }
   if (s.victory) return;
+  if (aiControls()) return; // vez da IA: o botão não age por ela
   if (s.setup) return confirmMulligan();
   if (s.window) return act(() => pass(s, s.window.priority));
   act(() => { ending = true; endTurn(s); });
@@ -406,6 +411,7 @@ function command() {
   const s = S(), v = viewer();
   let label = 'End Turn';
   if (s.victory) label = 'Match over';
+  else if (aiControls()) label = 'Opponent thinking…';
   else if (s.setup) label = marked.size ? `Return ${marked.size}` : 'Keep Hand';
   else if (s.window) label = s.chain.length ? 'Pass · Resolve' : 'Pass';
   // Cadeia de cima para baixo: o topo resolve primeiro (LIFO, D186); gatilhos simultâneos entram em APNAP (D187).
@@ -415,7 +421,7 @@ function command() {
   return `<aside class="command" aria-label="Turn actions">
     ${s.window ? `<div class="priority"><small>Priority</small><strong>Player ${s.window.priority}</strong>${chain}</div>` : ''}
     <div class="command__clock">${clockMarkup()}</div>
-    <button class="action-btn" data-primary ${s.victory ? 'disabled' : ''}><span>${esc(label)}</span><i aria-hidden="true">›</i></button>
+    <button class="action-btn" data-primary ${s.victory || aiControls() ? 'disabled' : ''}><span>${esc(label)}</span><i aria-hidden="true">›</i></button>
     <div class="command__tools"><button data-toggle-log aria-pressed="${logOpen}">Log</button><button data-toggle-settings>Settings</button><a href="../alpha3.html">Debug</a></div>
   </aside>`;
 }
@@ -457,7 +463,7 @@ function overlays() {
     html += `<div class="overlay victory"><h2>${s.victory.draw ? 'Draw' : `Player ${s.victory.winner} wins`}</h2><p>Round ${s.round} · Soul ${s.order.map(k => `${k} ${s.players[k].soul}`).join(' · ')}</p>
       <div class="row"><button class="primary-action" data-new>New match</button><a class="ghost" href="../">Main menu</a></div></div>`;
   }
-  if (pending && !s.victory) html += decisionModal();
+  if (pending && !s.victory && pending.pending.player !== settings.ai) html += decisionModal();
   if (logOpen) html += `<div class="drawer log" aria-label="Match log"><h3>Match log</h3>${logLines.slice(-150).reverse().map(l => `<p><small>R${l.round}</small> ${esc(l.text)}</p>`).join('')}</div>`;
   if (settingsOpen) {
     const sel = (key, opts) => `<select data-setting="${key}">${Object.entries(opts).map(([v, l]) => `<option value="${v}" ${settings[key] === v ? 'selected' : ''}>${l}</option>`).join('')}</select>`;
@@ -466,6 +472,7 @@ function overlays() {
       <label class="set"><span>Graphics</span>${sel('quality', {low: 'Low', medium: 'Medium', high: 'High', ultra: 'Ultra'})}</label>
       <label class="set"><span>Arena</span>${sel('theme', Object.fromEntries(Object.entries(THEMES).map(([k, t]) => [k, t.label])))}</label>
       <label class="set"><span>God of Player B (new match)</span>${sel('godB', {'god-athena': 'Athena', 'god-poseidon': 'Poseidon · fixture deck'})}</label>
+      <label class="set"><span>Opponent (new match)</span>${sel('ai', {B: 'AI plays Player B', none: 'Hot-seat (two humans)'})}</label>
       <label class="set"><span>Animation speed</span>${sel('speed', {fast: 'Fast', normal: 'Normal', cinematic: 'Cinematic'})}</label>
       ${chk('autoPass', 'Auto-pass when you have no response')}${chk('skipDraws', 'Skip draw animations')}${chk('reduceMotion', 'Reduce motion')}${chk('reduceFlashes', 'Reduce flashes')}${chk('hideOpponent', 'Hide the other hand (hot-seat)')}${chk('timeouts', 'Apply clock timeouts')}
       <label class="set"><span>Screen shake</span><input type="range" min="0" max="1.5" step=".25" value="${settings.shake}" data-setting="shake"></label>
@@ -483,7 +490,7 @@ function render() {
   boardRoot.innerHTML = `
     <div class="olympus ${mode ? 'is-choosing' : ''} ${pending ? 'is-deciding' : ''}" ${pending && !pending.peek ? 'inert' : ''}>
       ${godHud(them, 'opp')}${cosmoGauge(them, 'opp')}${piles(them, 'opp')}
-      ${handRow(them, settings.hideOpponent)}
+      ${handRow(them, settings.hideOpponent || settings.ai === them)}
       <main class="arena-field">${fieldRow(them)}<div class="midline"><span>${esc(phaseText())}</span></div>${fieldRow(me)}</main>
       ${cosmoGauge(me, 'me')}${godHud(me, 'me')}${piles(me, 'me')}
       ${handRow(me, false)}
@@ -678,7 +685,7 @@ overlayRoot.addEventListener('change', e => {
   if (key === 'quality') scene?.setQuality(settings.quality);
   if (key === 'theme') { scene?.setTheme(settings.theme); stage.dataset.theme = settings.theme; }
   if (key === 'reduceFlashes' && scene) scene.reduceFlashes = settings.reduceFlashes;
-  if (key === 'godB') { settingsOpen = false; return newMatch(); }
+  if (key === 'godB' || key === 'ai') { settingsOpen = false; return newMatch(); }
   render();
 });
 
@@ -912,6 +919,36 @@ function watchEvents() {
   requestAnimationFrame(watchEvents);
 }
 
+
+// ---------- Oponente IA (settings.ai: 'B' ou 'none') ----------
+// A IA só escolhe; cada ação passa pela engine 3.0 como a do humano (mesmo act/reply, mesmas regras e animações).
+const ai = createAI({
+  S, info, num, known: uid => !!ctx.objects[uid], candidates, playableReason, canBase, STEPS,
+  hp: uid => hpOf(S(), ctx, uid) - (S().units[uid]?.damage || 0), atk: uid => atkOf(S(), ctx, uid), isSaint: uid => isSaint(ctx, uid),
+  strikeTargets: uid => strikeTargets(S(), ctx, uid), ultimateBlock: (key, trio) => ultimateBlock(S(), ctx, key, trio), greatFloodBlock: key => greatFloodBlock(S(), key),
+  placeBase, playDevotee: (key, uid, ch) => playDevotee(S(), ctx, key, uid, ch), playEquipment: (key, uid, bearer, ch) => playEquipment(S(), ctx, key, uid, bearer, ch),
+  playSpell: (key, uid, ch) => playSpell(S(), ctx, key, uid, ch), declareStrike: (uid, target) => declareStrike(S(), ctx, uid, target),
+  announceExclamation: (key, trio) => announceExclamation(S(), ctx, key, trio), announceGreatFlood: key => announceGreatFlood(S(), ctx, key),
+});
+let aiBusy = false;
+async function aiTick() {
+  const key = settings.ai;
+  if (key === 'none' || aiBusy || !match || director.busy || mode || S().victory) return;
+  const s = S();
+  aiBusy = true;
+  try {
+    if (pending) { if (pending.pending.player === key) await reply({value: ai.answer(pending.pending)}); return; }
+    if (s.setup) { if (s.setup[0] === key) await act(() => { mulligan(match, key, []); if (!s.setup) startTurn(s); }); return; }
+    if (s.window) { if (s.window.priority === key) await act(() => pass(s, key)); return; }
+    if (!idleFor(key)) return;
+    const a = ai.next(key);
+    if (!a) { await act(() => { ending = true; endTurn(s); }); return; }
+    const before = s.events.length;
+    await act(a.run);
+    if (S().events.length === before && !pending) ai.refuse(a); // a engine recusou: não tenta de novo neste turno
+  } finally { aiBusy = false; }
+}
+
 async function init() {
   stage.dataset.theme = settings.theme;
   const [canonData, deckData] = await Promise.all(['../../data/canon/d268.json', '../../data/alpha-0.1/decks-proposta-d171.json'].map(u => fetch(u).then(r => {
@@ -924,12 +961,14 @@ async function init() {
   director = createDirector({ui, getFx: () => scene?.fx, settings});
   const params = new URLSearchParams(location.search);
   if (params.get('godB')) settings.godB = `god-${params.get('godB')}`; // ?godB=poseidon
+  if (params.get('ai')) settings.ai = params.get('ai'); // ?ai=B (padrão) ou ?ai=none (hot-seat)
   if (params.get('timeouts')) settings.timeouts = params.get('timeouts') === '1'; // ?timeouts=1 (QA)
   newMatch(Number(params.get('seed')) || undefined, params.get('demo') ? 'A' : undefined);
   applyDemo(params.get('demo'));
   render();
   requestAnimationFrame(watchEvents);
   setInterval(tickClock, 250);
+  setInterval(aiTick, 700);
   scene = await createScene($('#arena'), {quality: settings.quality, theme: settings.theme, reduceFlashes: settings.reduceFlashes});
   stage.classList.toggle('no-webgl', !scene);
   window.__divine = {get state() { return S(); }, get ctx() { return ctx; }, get scene() { return scene; }, get clock() { return clock; }, settings}; // inspeção no QA
