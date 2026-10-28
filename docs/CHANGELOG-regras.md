@@ -10,7 +10,7 @@ Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências
 - **Antes:** Strike cujo atacante ou alvo saía do campo antes do dano lançava `NotSpecified` (a partida travava na janela).
 - **Depois:** o Strike é anulado: sem dano, sem retaliação; continua contado como usado.
 - **Motivo:** decisão do autor em 28/10/2026 (opção recomendada), após o playtest simulado chegar ao caso.
-- **Pendências:** nenhuma. Na mesma data, a engine 3.0 passou a aplicar o guia §63 (um Devotee por personagem nomeado), que já estava no guia.
+- **Pendências:** nenhuma. Na mesma data, a engine 3.0 passou a aplicar o guia §63, que já estava no guia: segunda versão de personagem nomeado não sai da mão; duplicata vinda de efeito faz o controlador escolher qual manter, e as outras vão ao Tartarus sem ser destruição (a Armor presa acompanha, como na D40/D90).
 
 ## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — G3-035, Cosmo Base entra Prepared
 

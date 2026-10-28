@@ -3,16 +3,7 @@
 // (as duas aprovadas pelo autor em 28/10/2026). Moment/Technique: D194. Janela: ALPHA-P06 A.
 // `ctx`: {cards (loadCanon), objects (uid -> {owner, cardId}), attached (uid do Equipment -> uid do portador)}.
 import {RuleError, NotSpecified, assertIdle, spendBase, spellCategory, respond, emit} from './core.js';
-import {SPELLS, ABILITIES, onEnter, onCastEquipment, checkDefeats} from './effects.js';
-import {CHARACTER_IDENTITY, characterOf} from '../../shared/character-identity.js';
-
-// Guia §63: um Devotee de cada personagem nomeado por jogador (identidade estável da G3-029). Genérico (`null` na
-// tabela) não tem exclusividade; carta fora da tabela lança IdentityGap (lacuna, não palpite).
-function namedCharacter(ctx, uid) {
-  const id = ctx.objects[uid].cardId.toLowerCase();
-  if (!(ctx.identities && Object.hasOwn(ctx.identities, id)) && CHARACTER_IDENTITY[id] === null) return null;
-  return characterOf(id, ctx.identities);
-}
+import {SPELLS, ABILITIES, onEnter, onCastEquipment, checkDefeats, namedCharacter} from './effects.js';
 
 // Custo impresso: Base (D4) ou Latent. Valida tudo antes de mexer no estado.
 export function payCost(state, key, cost) {

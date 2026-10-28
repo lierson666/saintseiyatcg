@@ -7,6 +7,7 @@
 // Decisões do autor em 28/10/2026 para esta parte: {C} se paga com Base preparada; Resonance de Equipment só vale
 // equipado no Devotee nomeado; dano que não é de Strike também passa pela Armor (prevenções "Strike damage" não valem);
 // dano redirecionado pela Resonance da 004 é dano de Strike em Shiryu.
+import {CHARACTER_IDENTITY, characterOf} from '../../shared/character-identity.js';
 import {RuleError, useOncePerRound, addEffect, destroyDevotee, draw, spendBase, pushTriggers, emit, gainLatent, prepareUnit} from './core.js';
 
 export const card = (ctx, uid) => ctx.cards.get(ctx.objects[uid].cardId);
@@ -193,6 +194,29 @@ const prepareNoStrike = (state, uid) => { prepareUnit(state, uid); };
 const removeDamage = (state, uid, n) => { state.units[uid].damage = Math.max(0, state.units[uid].damage - n); };
 
 // Verificação de estado: todo Devotee com dano >= HP é derrotado (D197), depois de cada Strike, Spell ou habilidade.
+// Guia §63: personagem nomeado (identidade estável da G3-029); `null` = genérico, sem exclusividade.
+// Carta fora da tabela lança IdentityGap (lacuna, não palpite).
+export function namedCharacter(ctx, uid) {
+  const id = ctx.objects[uid].cardId.toLowerCase();
+  if (!(ctx.identities && Object.hasOwn(ctx.identities, id)) && CHARACTER_IDENTITY[id] === null) return null;
+  return characterOf(id, ctx.identities);
+}
+// Guia §63: se um efeito deixar um jogador com duas versões do mesmo personagem, ele escolhe uma para manter e as
+// outras vão ao Tartarus sem ser destruição (evento `unique_removed`, sem gatilho de destruição).
+export function enforceUniqueness(state, ctx) {
+  for (const key of state.order) {
+    for (;;) {
+      const groups = new Map();
+      for (const uid of devotees(state, ctx, key)) { const who = namedCharacter(ctx, uid); if (who) groups.set(who, [...(groups.get(who) || []), uid]); }
+      const copies = [...groups.values()].find(g => g.length > 1);
+      if (!copies) break;
+      const keep = ctx.decide?.(key, {ability: 'ONE PER CHARACTER', decision: '§63', choose: 'keep', options: [...copies]});
+      if (!copies.includes(keep)) throw new RuleError('§63', `${key} precisa escolher qual versão manter`);
+      for (const uid of copies.filter(u => u !== keep)) destroyDevotee(state, uid, ctx.objects, ctx.attached, 'unique_removed');
+    }
+  }
+}
+
 export function checkDefeats(state, ctx) {
   for (const key of state.order) {
     for (const uid of devotees(state, ctx, key)) {
@@ -209,6 +233,7 @@ export function checkDefeats(state, ctx) {
       destroyDevotee(state, uid, ctx.objects, ctx.attached);
     }
   }
+  enforceUniqueness(state, ctx);
 }
 const enemyDevotee = (state, ctx, key, uid) => {
   if (!uid || controllerOf(state, uid) !== other(state, key) || card(ctx, uid).kind !== 'Devotee') {

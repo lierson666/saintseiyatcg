@@ -8,6 +8,8 @@ import {createMatch} from '../playtest/engine-v3/match.js';
 import {startTurn, endTurn, passAll, placeBase, spendBase, respond, checkInvariants, RuleError, NotSpecified} from '../playtest/engine-v3/core.js';
 import {declareStrike} from '../playtest/engine-v3/strike.js';
 import {playDevotee, playEquipment, playSpell} from '../playtest/engine-v3/play.js';
+import {checkDefeats} from '../playtest/engine-v3/effects.js';
+import {runDecisions, resume} from '../playtest/engine-v3/decision.js';
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json');
@@ -189,4 +191,42 @@ test('Guia §63: segunda versão de personagem nomeado que já controla não sai
   assert.ok(s.players.A.hand.includes(marin), 'recusa não gasta nem move a carta');
   playDevotee(s, ctx, 'A', guard); playDevotee(s, ctx, 'A', guard2); // Sanctuary Guard: genérico
   assert.equal(s.players.A.battlefield.filter(u => u.includes(':040:')).length, 2);
+});
+
+test('Guia §63: duplicata vinda de efeito — o controlador escolhe qual manter; a outra vai ao Tartarus sem ser destruição', () => {
+  const {s, ctx, field} = setup();
+  const first = field('A', '021'), second = field('A', '021'); // como se um efeito trouxesse outra Marin
+  const asked = [];
+  ctx.decide = (player, q) => { asked.push({player, ...q}); return second; };
+  checkDefeats(s, ctx);
+  assert.equal(asked.length, 1);
+  assert.deepEqual([asked[0].player, asked[0].decision, asked[0].choose, asked[0].options], ['A', '§63', 'keep', [first, second]]);
+  assert.deepEqual(s.players.A.battlefield, [second]);
+  assert.ok(s.players.A.tartarus.includes(first));
+  assert.ok(s.events.some(e => e.type === 'unique_removed' && e.uid === first));
+  assert.ok(!s.events.some(e => e.type === 'destroyed'), 'não é destruição');
+  ctx.decide = () => 'fora';
+  field('A', '021');
+  assert.throws(() => checkDefeats(s, ctx), e => e instanceof RuleError && e.decision === '§63', 'escolha fora das opções é recusada');
+});
+
+test('Guia §63: genéricos repetidos e personagens diferentes não pedem escolha', () => {
+  const {s, ctx, field} = setup();
+  field('A', '040'); field('A', '040'); field('A', '021'); field('A', '028');
+  ctx.decide = () => { throw new Error('não devia perguntar'); };
+  checkDefeats(s, ctx);
+  assert.equal(s.players.A.battlefield.length, 4);
+});
+
+test('Guia §63 no protocolo de decisão: pergunta pendente ao controlador; timeout mantém o menor id estável (G3-030)', () => {
+  const {s, ctx, field} = setup();
+  const a = field('A', '021'), b = field('A', '021');
+  const fn = () => checkDefeats(s, ctx);
+  const r = runDecisions(s, ctx, fn);
+  assert.equal(r.pending.player, 'A');
+  assert.equal(r.pending.kind, 'choice');
+  assert.deepEqual(r.pending.options, [a, b]);
+  const done = resume(s, ctx, fn, r, {timeout: true});
+  assert.ok(done.done);
+  assert.deepEqual(s.players.A.battlefield, [[a, b].sort((x, y) => x.localeCompare(y, 'en', {numeric: true}))[0]]);
 });

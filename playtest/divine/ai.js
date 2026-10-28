@@ -77,6 +77,7 @@ export function createAI(h) {
   function answer(req) {
     if (req.kind === 'optional') return true;
     const sorted = [...req.options].sort((a, b) => cost(a) - cost(b));
+    if (req.choose === 'keep') return [...req.options].sort((a, b) => h.hp(b) - h.hp(a))[0]; // §63: mantém a versão mais inteira
     if (req.choose === 'top') return [...req.options].sort((a, b) => cost(b) - cost(a))[0];
     const picked = sorted.slice(0, req.count);
     return req.multiple ? picked : picked[0];

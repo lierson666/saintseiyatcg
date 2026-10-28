@@ -195,9 +195,10 @@ export function useOncePerRound(state, id) {
 export function addEffect(state, effect) { state.effects.push({...effect, round: state.round}); }
 
 // Destroy (D197) de um Devotee: vai para o Tartarus do Owner, e a Armor presa a ele também (D40/D90).
+// `event`: 'unique_removed' para a saída do guia §63, que move igual mas não é destruição.
 // Equipment que não é Armor fica no campo, solto, e pode ser reequipado (autor, 28/10/2026).
 // `objects`: uid -> {owner, armor}; `attached`: uid do Equipment -> uid do Devotee.
-export function destroyDevotee(state, uid, objects, attached) {
+export function destroyDevotee(state, uid, objects, attached, event = 'destroyed') {
   const zone = Object.values(state.players).find(p => p.battlefield.includes(uid));
   if (!zone) throw new RuleError('D197', `${uid} não está no campo`);
   const gear = Object.keys(attached).filter(e => attached[e] === uid);
@@ -208,7 +209,7 @@ export function destroyDevotee(state, uid, objects, attached) {
     delete attached[moved];
     delete state.units[moved];
     state.effects = state.effects.filter(e => e.target !== moved); // objeto novo se voltar
-    emit(state, 'destroyed', {uid: moved, owner: objects[moved].owner});
+    emit(state, event, {uid: moved, owner: objects[moved].owner});
   }
 }
 
