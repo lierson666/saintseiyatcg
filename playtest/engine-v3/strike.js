@@ -15,7 +15,9 @@ export function declareStrike(state, ctx, attacker, target, triggers = []) {
   if (key !== state.active) throw new RuleError('D1', 'só o jogador ativo declara Strike no próprio turno');
   assertIdle(state);
   if (!onField(state, key, attacker) || card(ctx, attacker).kind !== 'Devotee') throw new RuleError('P04', 'o atacante precisa ser um Devotee seu no campo');
-  if (state.units[attacker]?.prepared !== true) throw new RuleError('P04', 'o atacante precisa estar Prepared');
+  // P02: entra Unprepared; Impulse deixa declarar Strike no turno em que entrou.
+  const unit = state.units[attacker], impulse = unit?.entered === state.turn && card(ctx, attacker).keywords.includes('Impulse');
+  if (unit?.prepared !== true && !impulse) throw new RuleError('P04', 'o atacante precisa estar Prepared');
   const legal = target.kind === 'god' ? target.player === enemy
     : target.kind === 'devotee' && onField(state, enemy, target.uid) && card(ctx, target.uid).kind === 'Devotee';
   if (!legal) throw new RuleError('P04', 'alvo precisa ser o God inimigo ou um Devotee inimigo');

@@ -57,7 +57,7 @@ test('Strike no God: Soul cai 1:1 e o God retalia com ATTACK; segunda troca dest
   assert.equal(s.state.players.B.soul, 28);
   assert.equal(s.state.units[seiya].damage, 3); // Athena ATTACK 3
   end(s); startTurn(s.state); end(s); startTurn(s.state);
-  s.state.units[seiya].prepared = true; // preparação do início do turno é a ALPHA-P02, ainda pendente
+  assert.equal(s.state.units[seiya].prepared, true, 'P02: prepara no início do turno');
   strike(s, seiya, {kind: 'god', player: 'B'});
   assert.equal(s.state.players.B.soul, 26);
   assert.ok(s.state.players.A.tartarus.includes(seiya));

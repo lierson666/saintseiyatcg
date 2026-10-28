@@ -19,24 +19,29 @@ export class NotSpecified extends Error {
 export function createCore({first = 'A', second = 'B', soul, decks}) {
   const player = key => ({soul: soul[key], latent: 0, deck: [...decks[key]], hand: [], battlefield: [], tartarus: [], void: [], bases: [], ownTurns: 0, baseTurn: 0});
   return {round: 1, turn: 0, turnInRound: 0, order: [first, second], active: first, victory: null,
-    players: {[first]: player(first), [second]: player(second)}, roundUses: new Set(), strikes: new Map(), effects: [], chain: [], window: null};
+    players: {[first]: player(first), [second]: player(second)}, roundUses: new Set(), strikes: new Map(), effects: [], chain: [], window: null, units: {}};
 }
 
 const alive = state => { if (state.victory) throw new RuleError('D52', 'a partida já terminou'); };
 const other = (state, key) => state.order.find(k => k !== key);
 
-// D1: só o jogador ativo age no próprio turno; D170 e D3: sem compra no 1º turno próprio, 2 depois; D4: Bases preparadas.
-export function startTurn(state) {
+// Início do turno (ALPHA-P02 opção A, aprovada em 28/10/2026; D2, D4):
+// 1. o ativo prepara todos os seus Devotees, Equipment e Bases;
+// 2. gatilhos de início de turno, em APNAP e LIFO, com janela (P06);
+// 3. compra (D170 e D3: nada no 1º turno próprio, 2 depois).
+// `state.units[uid]` guarda {prepared, damage, entered} de cada objeto em campo.
+export function startTurn(state, startOfTurn = []) {
   alive(state);
-  const p = state.players[state.active];
+  assertIdle(state);
+  const key = state.active, p = state.players[key];
   state.turn++;
   p.ownTurns++;
   for (const base of p.bases) base.prepared = true;
-  if (p.ownTurns > 1) draw(state, state.active, DRAWS_PER_TURN);
+  for (const uid of p.battlefield) if (state.units[uid]) state.units[uid].prepared = true;
+  const drawStep = () => { if (p.ownTurns > 1) draw(state, key, DRAWS_PER_TURN); };
+  if (startOfTurn.length) pushTriggers(state, startOfTurn, drawStep);
+  else drawStep();
 }
-
-// D2 (preparação automática) foi confirmada sem dizer o que prepara além das Bases (D4).
-export function prepareDevotees() { throw new NotSpecified('D2: o que a preparação automática prepara e em que ordem'); }
 export function openingHand() { throw new NotSpecified('mão inicial e mulligan da 3.0'); }
 
 export function draw(state, key, n) {

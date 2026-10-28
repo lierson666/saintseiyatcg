@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createCore, startTurn, endTurn, draw, mill, placeBase, spendBase, gainLatent, loseSoul, recordStrike,
-  useOncePerRound, addEffect, spellCategory, prepareDevotees, openingHand, passAll, RuleError, NotSpecified} from '../playtest/engine-v3/core.js';
+  useOncePerRound, addEffect, spellCategory, openingHand, passAll, RuleError, NotSpecified} from '../playtest/engine-v3/core.js';
 
 const deck = n => Array.from({length: n}, (_, i) => `c${i}`);
 const core = (size = 20) => createCore({soul: {A: 30, B: 30}, decks: {A: deck(size), B: deck(size)}});
@@ -108,6 +108,5 @@ test('D194: Moment usa Latent e Instant; Technique usa Base e Sorcery', () => {
 });
 
 test('lacunas sem texto falham de forma explícita', () => {
-  assert.throws(prepareDevotees, NotSpecified);
   assert.throws(openingHand, NotSpecified);
 });

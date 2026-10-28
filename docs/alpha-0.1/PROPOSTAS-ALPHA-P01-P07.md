@@ -1,6 +1,6 @@
 # Alpha 0.1 — propostas ALPHA-P01 a ALPHA-P07
 
-**Status: cada proposta precisa da confirmação individual do autor.** Aprovadas até agora: P04 (opção A) e P06 (opção A). As demais: NÃO APROVADAS. A numeração é provisória e não usa a faixa D. A D269 fica de fora.
+**Status: cada proposta precisa da confirmação individual do autor.** Aprovadas até agora: P02, P04 e P06 (todas opção A). As demais: NÃO APROVADAS. A numeração é provisória e não usa a faixa D. A D269 fica de fora.
 
 Se o autor achar o texto original (D1–D190) de algum item, esse texto substitui a proposta.
 
@@ -38,6 +38,8 @@ Nos decks aprovados (Pegasus Rush × Dragon Fortress), as keywords em uso são:
 - **Risco:** baixo.
 
 ## ALPHA-P02 — Preparação, estado de entrada e ordem do início do turno
+
+**Status: APROVADA, opção A, pelo autor em 28/10/2026.** Implementada em `playtest/engine-v3/core.js` (`startTurn`), `play.js` (`playDevotee`, entrada Unprepared) e `strike.js` (Impulse).
 
 - **Comprovado:**
   - D2 confirma preparação automática, sem dizer o que prepara.
@@ -135,7 +137,7 @@ Nos decks aprovados (Pegasus Rush × Dragon Fortress), as keywords em uso são:
 
 ## ALPHA-P06 — Prioridade, LIFO, APNAP, End Phase e Cleanup (D60–D63, D186–D187)
 
-**Status: APROVADA, opção A, pelo autor em 28/10/2026.** Implementada em `playtest/engine-v3/core.js` (janela, cadeia, End Phase, Cleanup) e `strike.js` (janela entre a declaração e o dano). Jogar Technique ainda depende da P02. Atacante ou alvo que sai do campo antes do dano não é coberto por P04 nem por P06.
+**Status: APROVADA, opção A, pelo autor em 28/10/2026.** Implementada em `playtest/engine-v3/core.js` (janela, cadeia, End Phase, Cleanup) e `strike.js` (janela entre a declaração e o dano). Jogar Technique e Moment da mão ainda não está na engine. Atacante ou alvo que sai do campo antes do dano não é coberto por P04 nem por P06.
 
 - **Comprovado:**
   - LIFO (D186) e APNAP (D187), só por citação.
