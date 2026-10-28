@@ -619,10 +619,9 @@ function render() {
   if (mode) { const step = mode.steps[mode.i]; mode.options = step?.pick ? candidates(step, mode.key).filter(u => !mode.picked.includes(u)) : []; }
   boardRoot.innerHTML = `
     <div class="olympus ${mode ? 'is-choosing' : ''} ${pending ? 'is-deciding' : ''}" ${pending && !pending.peek ? 'inert' : ''}>
-      <div class="seat seat--opp">${godHud(them, 'opp')}${sanctum(them, 'opp')}</div>
       ${handRow(them, settings.hideOpponent || settings.ai === them)}
       <main class="arena-field">${cosmoLane(them, 'opp')}${fieldRow(them)}<div class="midline"></div>${fieldRow(me)}${cosmoLane(me, 'me')}</main>
-      <div class="seat seat--me">${godHud(me, 'me')}${sanctum(me, 'me')}</div>
+      <aside class="tower"><div class="seat seat--opp">${sanctum(them, 'opp')}${godHud(them, 'opp')}</div><div class="seat seat--me">${godHud(me, 'me')}${sanctum(me, 'me')}</div></aside>
       ${handRow(me, false)}
       ${command()}
       ${s.window && !s.victory ? `<div class="priority-glow priority-glow--${s.window.priority === me ? 'me' : 'opp'}" aria-hidden="true"></div>` : ''}

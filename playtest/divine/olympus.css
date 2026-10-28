@@ -617,24 +617,37 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
   .fixture-tag { top: 38px; }
 }
 
-/* Trono de cada jogador na coluna esquerda (autor, 28/10/2026): moldura do God no alto, placa de stats apoiada na borda
-   do box e, dentro dele, Domain | Cosmo | Deck, Tartarus e Void lado a lado. Oponente em cima, eu embaixo. */
+/* Torre de informações na coluna esquerda (autor, 28/10/2026): um painel da altura da tela. Metade de cima é do oponente
+   (santuário no topo, God embaixo), metade de baixo é minha (God no topo, santuário embaixo): os dois Gods ficam frente a frente no meio. */
 @media (min-width: 761px) {
-  .seat { --s: calc(var(--u, 8px) * 1.25); position: absolute; z-index: 6; left: 14px; display: flex; flex-direction: column; align-items: center; }
-  .seat--opp { top: 10px; --s: calc(var(--u, 8px) * 1.05); }
-  .seat--me { bottom: 12px; }
-  .seat .godhud { position: relative; z-index: 2; inset: auto; transform: none; --m: calc(var(--s) * 8.2); }
+  .tower { --s: min(calc(var(--u, 8px) * 1.15), calc((100vh - 40px) / 104)); position: absolute; z-index: 6; left: 12px; top: 10px; bottom: 10px; width: calc(var(--s) * 26);
+    display: grid; grid-template-rows: 1fr 1fr; padding: calc(var(--s) * 1) calc(var(--s) * .8); border-radius: 16px;
+    background: linear-gradient(180deg, rgba(14, 18, 50, .93), rgba(8, 10, 30, .9) 50%, rgba(14, 18, 50, .93));
+    border: 1px solid rgba(232, 196, 106, .5); box-shadow: 0 12px 34px rgba(0, 0, 0, .65), inset 0 0 0 1px rgba(255, 240, 200, .06), inset 0 0 40px rgba(60, 90, 200, .12); }
+  .tower::after { content: ""; position: absolute; left: 8%; right: 8%; top: 50%; height: 2px; pointer-events: none;
+    background: linear-gradient(90deg, transparent, #e8c46a, #fff4c8, #e8c46a, transparent); box-shadow: 0 0 12px rgba(255, 210, 120, .6); }
+  .seat { --s: inherit; position: relative; min-height: 0; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: calc(var(--s) * .6); }
+  .seat .godhud { position: relative; z-index: 2; inset: auto; transform: none; --m: calc(var(--s) * 9.3); }
+  .seat .godhud { align-self: stretch; }
+  .seat .gh-plate { width: 100%; max-width: calc(var(--m) * 2.7); }
   .seat .godhud--opp .gh-name { display: grid; }
-  .seat .sanctum { --s: inherit; position: relative; inset: auto; z-index: 1; flex-direction: row; align-items: center; width: auto;
-    margin-top: calc(var(--m, var(--s) * 8.2) * -.2 - var(--s) * 2.2); padding: calc(var(--s) * 3.4) calc(var(--s) * 1.2) calc(var(--s) * 1.2); gap: calc(var(--s) * 1.1); }
-  .seat .sanctum__domain { width: calc(var(--s) * 7); aspect-ratio: 4 / 5; }
-  .seat .sanctum__domain strong { font-size: calc(var(--s) * .8); -webkit-line-clamp: 3; }
-  /* sem o God no meio, o campo desce para o espaço livre entre os tronos */
-  .arena-field { bottom: calc(var(--u) * 20 + 2%); }
-  .seat .sanctum .cosmo__hex { width: calc(var(--s) * 7.6); }
-  .seat .sanctum .cosmo__hex b { font-size: calc(var(--s) * 3); }
-  .seat .sanctum .godzones { padding: 0 0 0 calc(var(--s) * 1); border-top: 0; border-left: 1px solid rgba(232, 196, 106, .3); }
-  .seat .sanctum .zicon { width: calc(var(--s) * 3); height: calc(var(--s) * 3); }
-  .seat .sanctum .zdeck, .seat .sanctum .zpile { grid-template-columns: calc(var(--s) * 3) auto; }
-  .seat .sanctum .zpile small { font-size: calc(var(--s) * .62); }
+  /* metade empilhada: God junto do meio, depois Cosmo, Domain em banner e zonas na borda; o espaço sobra entre os blocos, não num vão só */
+  .seat .sanctum { --s: inherit; position: relative; inset: auto; flex: 1; width: 100%; display: flex; flex-direction: column; align-items: stretch;
+    justify-content: space-evenly; gap: calc(var(--s) * .8); padding: 0; background: none; border: 0; box-shadow: none; }
+  .seat--opp .sanctum { flex-direction: column-reverse; }
+  .seat .sanctum::before, .seat .sanctum::after { display: none; }
+  .seat .sanctum .cosmo { order: 1; align-items: center; }
+  .seat .sanctum__domain { order: 2; width: 100%; aspect-ratio: 5 / 2; display: flex; flex-direction: column; justify-content: space-between; padding: calc(var(--s) * .5) calc(var(--s) * .7); text-align: left; }
+  .seat .sanctum__domain strong { font-size: calc(var(--s) * 1.15); -webkit-line-clamp: 2; }
+  .seat .sanctum .cosmo__hex { width: calc(var(--s) * 10); }
+  .seat .sanctum .cosmo__hex b { font-size: calc(var(--s) * 3.2); }
+  .seat .sanctum .godzones { order: 3; display: flex; flex-direction: row; justify-content: space-around; gap: 0;
+    padding: calc(var(--s) * .6) 0 0; border: 0; border-top: 1px solid rgba(232, 196, 106, .3); }
+  .seat--opp .sanctum .godzones { padding: 0 0 calc(var(--s) * .6); border-top: 0; border-bottom: 1px solid rgba(232, 196, 106, .3); }
+  .seat .sanctum .zdeck, .seat .sanctum .zpile { display: flex; align-items: center; gap: calc(var(--s) * .45); }
+  .seat .sanctum .zpile small { display: none; }
+  .seat .sanctum .zicon { width: calc(var(--s) * 2.6); height: calc(var(--s) * 2.6); }
+  .seat .sanctum .zdeck__back { width: calc(var(--s) * 2); }
+  /* o campo centraliza no espaço à direita da torre */
+  .arena-field { left: calc(min(calc(var(--u, 8px) * 1.15), calc((100vh - 40px) / 104)) * 26 + 28px); bottom: calc(var(--u) * 20 + 2%); }
 }
