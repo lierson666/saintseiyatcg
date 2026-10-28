@@ -10,9 +10,9 @@ import {playDevotee, playEquipment, playSpell, activate, reequip} from '../engin
 import {atkOf, hpOf, keywordsOf, gearOf, isSaint, isBronze, ABILITIES} from '../engine-v3/effects.js';
 import {STEPS} from '../choices-v3.js';
 import {createScene, THEMES} from './scene.js?v=20261028-4';
-import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudgment} from '../engine-v3/gods.js';
-import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, timeoutAction} from '../engine-v3/clock.js';
-import {createDirector} from './director.js?v=2';
+import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudgment, greatFloodBlock, announceGreatFlood, GREAT_FLOOD_COST} from '../engine-v3/gods.js';
+import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, timeoutAction, timeoutAutoChoice} from '../engine-v3/clock.js';
+import {createDirector} from './director.js?v=3';
 
 const $ = (s, el = document) => el.querySelector(s), $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -31,7 +31,7 @@ const WHY = {'G3-005': 'Athena Exclamation needs three Prepared Saints with diff
 const why = e => WHY[e.decision] || (e.topic ? `Not in Alpha 0.1: ${e.topic}` : "That can't be done right now.");
 
 const SETTINGS_KEY = 'ssTcgOlympusArena';
-const settings = {quality: 'high', theme: 'olympus', timeouts: false, speed: 'normal', skipDraws: false, reduceMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
+const settings = {quality: 'high', theme: 'olympus', godB: 'god-athena', timeouts: false, speed: 'normal', skipDraws: false, reduceMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
   reduceFlashes: false, shake: 1, hideOpponent: true, autoPass: true};
 try { Object.assign(settings, JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}')); } catch { /* sem armazenamento */ }
 const saveSettings = () => { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch { /* sem armazenamento */ } };
@@ -195,10 +195,12 @@ function godMenu(key, el) {
   const s = S(), d = s.divine[key], items = [];
   if (key !== viewer() || s.victory || s.setup) return;
   if (!ultimateBlock(s, ctx, key)) items.push(['Athena Exclamation · Ultimate', () => startExclamation(key)]);
+  if (!greatFloodBlock(s, key)) items.push([`Great Flood · Ultimate (${GREAT_FLOOD_COST} Base)`, () => act(() => announceGreatFlood(S(), ctx, key))]);
   if (d.judgment && idleFor(key)) items.push(['Remove Divine Judgment (sacrifice 3)', () => begin('judgment', key, null,
     [{key: 'devotees', pick: 'devotee', multi: 3, label: 'Sacrifice exactly three Devotees you control'}], ch => removeJudgment(S(), ctx, key, ch.devotees))]);
   if (!items.length) {
-    const why = {used: 'Ultimate already used this match.', sorcery: 'Ultimate: your turn, with no response pending.', 'only-athena': 'No Ultimate available.'}[ultimateBlock(s, ctx, key)];
+    const block = d.god === 'god-poseidon' ? greatFloodBlock(s, key) : ultimateBlock(s, ctx, key);
+    const why = {used: 'Ultimate already used this match.', sorcery: 'Ultimate: your turn, with no response pending.', cost: `Great Flood needs ${GREAT_FLOOD_COST} prepared Bases.`, 'only-athena': 'No Ultimate available.'}[block];
     return warn(why || 'No divine action available now.');
   }
   quickMenu(el, items);
@@ -269,6 +271,7 @@ function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
     ${c.armor && field ? `<div class="dcard__stats"><b class="hp">${c.hp - dmg}</b></div>` : ''}
     ${dmg && field ? `<i class="dcard__damage" title="${dmg} damage">${dmg}</i>` : ''}
     ${unit?.training ? `<i class="dcard__counter" title="Training counter">✦${unit.training}</i>` : ''}
+    ${unit?.seal ? `<i class="dcard__seal" title="${unit.seal} Seal counter${unit.seal > 1 ? 's' : ''}: each Prepare removes one instead">◈${unit.seal}</i>` : ''}
   </div>`;
 }
 
@@ -287,7 +290,7 @@ function cosmoGauge(key, side) {
 function godHud(key, side) {
   const s = S(), p = s.players[key], d = s.divine[key], god = cards.get(s.gods[key]);
   const pick = mode?.options?.includes(`god:${key}`), max = soulMax(s, key);
-  const ult = d.ultimateUsed ? 'used' : ultimateBlock(s, ctx, key) === 'only-athena' ? 'none' : 'ready';
+  const ult = d.ultimateUsed ? 'used' : ['god-athena', 'god-poseidon'].includes(d.god) ? 'ready' : 'none';
   return `<section class="godhud godhud--${side} ${pick ? 'pickable' : ''} ${s.active === key ? 'is-active' : ''} ${d.awaken ? 'is-awaken' : ''}" data-god="${key}"
       ${pick ? `data-pick="god:${key}"` : ''} role="button" tabindex="0" aria-label="${esc(god.name)}, Soul ${p.soul} of ${max}${d.awaken ? ', Awaken' : ''}">
     <div class="godhud__portrait" style="background-image:url('${GOD_ART[s.gods[key]] || ''}')"></div>
@@ -393,6 +396,7 @@ function overlays() {
     html += `<div class="drawer settings" role="dialog" aria-label="Settings"><h3>Settings</h3>
       <label class="set"><span>Graphics</span>${sel('quality', {low: 'Low', medium: 'Medium', high: 'High', ultra: 'Ultra'})}</label>
       <label class="set"><span>Arena</span>${sel('theme', Object.fromEntries(Object.entries(THEMES).map(([k, t]) => [k, t.label])))}</label>
+      <label class="set"><span>God of Player B (new match)</span>${sel('godB', {'god-athena': 'Athena', 'god-poseidon': 'Poseidon · fixture deck'})}</label>
       <label class="set"><span>Animation speed</span>${sel('speed', {fast: 'Fast', normal: 'Normal', cinematic: 'Cinematic'})}</label>
       ${chk('autoPass', 'Auto-pass when you have no response')}${chk('skipDraws', 'Skip draw animations')}${chk('reduceMotion', 'Reduce motion')}${chk('reduceFlashes', 'Reduce flashes')}${chk('hideOpponent', 'Hide the other hand (hot-seat)')}${chk('timeouts', 'Apply clock timeouts')}
       <label class="set"><span>Screen shake</span><input type="range" min="0" max="1.5" step=".25" value="${settings.shake}" data-setting="shake"></label>
@@ -506,9 +510,14 @@ function logEvent(e) {
     fatigue: `${e.player} suffers Fatigue ${e.amount}.`,
     awaken_changed: `God ${e.player} ${e.awaken ? 'AWAKENS' : 'leaves Awaken'} (Soul ${e.soul}).`, divine_power: `God ${e.player}: ${e.ability}.`,
     defeat_prevented: `${n(e.uid)} survives with 1 HP (${e.ability}).`, ultimate_announced: `${e.player} announces ${e.ability} (paid ${e.cost} Base).`,
-    ultimate_resolved: `${e.ability}: God loses ${e.loss} Soul.`, ultimate_failed: `${e.ability} fails: a chosen Saint is no longer valid. Cost not refunded.`,
+    ultimate_resolved: e.loss === undefined ? `${e.ability} resolves.` : `${e.ability}: God loses ${e.loss} Soul.`, ultimate_failed: `${e.ability} fails: a chosen Saint is no longer valid. Cost not refunded.`,
     judgment_placed: `Divine Judgment on God ${e.player}: loses at the end of Round ${e.deadline}.`, judgment_removed: `Divine Judgment removed from God ${e.player}.`,
-    soul_gained: `God ${e.player} recovers ${e.amount} Soul.`, mulligan: `${e.player} mulligans ${e.count}.`, victory: e.draw ? 'Draw.' : `Player ${e.winner} wins.`}[e.type];
+    soul_gained: `God ${e.player} recovers ${e.amount} Soul.`,
+    seal_added: `${n(e.uid)} gets ${e.added} Seal (${e.counters} total).`, seal_removed: `${n(e.uid)} stays Unprepared: 1 Seal removed (${e.counters} left).`,
+    seal_failed: `${e.source}: paid, but the Devotee is gone. No Seal.`, divine_power_declined: `God ${e.player} declines ${e.ability}.`,
+    mill: `${e.player} mills ${e.moved}${e.moved < e.requested ? ` of ${e.requested}` : ''}.`, discarded: `${e.player} discards ${e.uids?.length}.`,
+    base_returned: `${e.player}: a Cosmo Base returns to hand.`, returned_to_hand: `${e.ability}: ${e.uids?.length} cards return to their owners' hands.`,
+    TIMEOUT_AUTO_CHOICE: `TIMEOUT_AUTO_CHOICE (Player ${e.player}): ${e.result?.map(n).join(', ') || 'nothing'}.`, mulligan: `${e.player} mulligans ${e.count}.`, victory: e.draw ? 'Draw.' : `Player ${e.winner} wins.`}[e.type];
   if (t) say(t);
 }
 
@@ -587,6 +596,7 @@ overlayRoot.addEventListener('change', e => {
   if (key === 'quality') scene?.setQuality(settings.quality);
   if (key === 'theme') { scene?.setTheme(settings.theme); stage.dataset.theme = settings.theme; }
   if (key === 'reduceFlashes' && scene) scene.reduceFlashes = settings.reduceFlashes;
+  if (key === 'godB') { settingsOpen = false; return newMatch(); }
   render();
 });
 
@@ -652,16 +662,26 @@ document.addEventListener('click', e => { if (!e.target.closest('.quick') && !e.
 // ---------- Partida ----------
 
 function newMatch(seed = Date.now() % 100000, first) {
-  match = createMatch({cards, canonIndex: canonIndex(canon), decks, seed, first});
+  // Poseidon V6 não tem cartas canônicas: o God Poseidon pilota o deck Athena V6 do jogador B, como FIXTURE rotulada.
+  match = createMatch({cards, canonIndex: canonIndex(canon), decks, gods: {A: 'god-athena', B: settings.godB}, seed, first});
   ctx = {cards, objects: match.objects, attached: match.attached, decide};
   logLines = []; mode = null; marked = new Set(); ending = false; seenEvents = 0;
   clock = createClock(match.state.order);
   say(`Seed ${seed}. Player ${match.state.order[0]} goes first.`);
+  $('.fixture-tag')?.remove();
+  if (settings.godB === 'god-poseidon') {
+    const tag = document.createElement('div');
+    tag.className = 'demo-tag fixture-tag'; tag.textContent = 'Fixture · Poseidon with an Athena V6 deck — not an official deck';
+    stage.append(tag);
+    say('FIXTURE: God Poseidon (canonical) pilots the Dragon Fortress Athena V6 deck. Poseidon V6 has no canonical cards yet.');
+  }
   render();
 }
 // Fixture de demonstração (?demo=ultimate), identificada na tela: partida avançada com cartas do catálogo validado,
 // sem tocar em regra — só posiciona objetos que uma partida real poderia ter (Round 7, 13 Bases, três Saints Prepared).
+// ?demo=water-prison / ?demo=great-flood: mesma ideia com God Poseidon (Awaken, 3 Latent, 8 Bases) no lado B.
 function applyDemo(kind) {
+  if (kind === 'water-prison' || kind === 'great-flood') return poseidonDemo(kind);
   if (kind !== 'ultimate') return;
   const s = S();
   s.setup = null;
@@ -685,17 +705,68 @@ function applyDemo(kind) {
   say('DEMO FIXTURE: Round 7, Player A with 13 prepared Bases and Seiya, Jabu and Marin. Click your God to announce Athena Exclamation.');
 }
 
+function poseidonDemo(kind) {
+  const s = S();
+  if (s.gods.B !== 'god-poseidon') return;
+  s.setup = null;
+  const take = (key, id) => { const p = s.players[key], uid = [...p.deck, ...p.hand].find(u => u.includes(`:${id}:`)); for (const z of ['deck', 'hand']) { const i = p[z].indexOf(uid); if (i >= 0) p[z].splice(i, 1); } return uid; };
+  const field = (key, id) => { const uid = take(key, id); s.players[key].battlefield.push(uid); s.units[uid] = {prepared: true, damage: 0, entered: 0}; return uid; };
+  ['001', '028', '021'].forEach(id => field('A', id));
+  ['003', '040'].forEach(id => field('B', id));
+  for (const key of ['A', 'B']) {
+    const p = s.players[key];
+    p.bases = p.deck.splice(-8).map(uid => ({uid, prepared: true}));
+    while (p.hand.length < 5) p.hand.push(p.deck.shift());
+  }
+  s.players.B.soul = 4; s.players.B.latent = 3; s.players.A.soul = 18;
+  // startTurn conta o turno e o turno próprio de quem começa: Round 6, A no 11º turno ou B no 12º.
+  const flood = kind === 'great-flood';
+  s.round = 6; s.turn = flood ? 11 : 10; s.players.A.ownTurns = flood ? 6 : 5; s.players.B.ownTurns = 5;
+  if (flood) { s.active = 'B'; s.turnInRound = 1; }
+  startTurn(s);
+  runCheckpoint(s);
+  clockStartTurn(clock, s.active, now());
+  const tag = document.createElement('div');
+  tag.className = 'demo-tag'; tag.textContent = `Demo fixture · ${kind === 'great-flood' ? 'Great Flood' : 'Water Prison'}`;
+  stage.append(tag);
+  say(kind === 'great-flood' ? 'DEMO FIXTURE: Poseidon (Awaken) has 8 prepared Bases. Click your God to announce Great Flood.'
+    : 'DEMO FIXTURE: Poseidon (Awaken, 3 Latent). Strike with Player A to trigger Water Prison and Pressure of the Deep.');
+}
+
 // Perguntas "you may" da engine, síncronas: diálogo do navegador nesta fatia (UX final em GAMEPLAY_UX_SPEC.md).
 function decide(player, q) {
+  if (q.options) return pickFrom(player, q);
+  if (q.ability === 'WATER PRISON') return confirm(`Player ${player} · WATER PRISON (Divine Power)\n${info(q.uid).name} declared a Strike.\nPay 2 Latent Cosmo to Seal it? (1 Seal counter; the Strike still happens.)\nDeclining keeps this round's use.`);
   if (q.cards) return confirm(`Player ${player} · Sacred Knowledge\nKeep ${info(q.cards[0]).name} on top?\n(Cancel keeps ${info(q.cards[1]).name} on top.)`) ? q.cards[0] : q.cards[1];
   return confirm(`Player ${player} · ${q.ability}${q.uid ? `\n${info(q.uid).name}` : ''}${q.amount ? ` · ${q.amount} damage incoming` : ''}\nUse it?`);
+}
+
+// Escolha obrigatória (Great Flood: Base a devolver, cartas a descartar). Quem escolhe é o dono da decisão (D231, G3-034).
+// Cancelar = sem escolha: aplica o critério de timeout da G3-030 (menor id estável), registrado no histórico.
+function pickFrom(player, q) {
+  const count = q.count || 1, list = q.options.map((u, i) => `${i + 1}. ${info(u).name}`).join('\n');
+  const what = q.choose === 'base' ? 'Choose 1 Cosmo Base to return to your hand' : `Choose ${count} card${count > 1 ? 's' : ''} to discard`;
+  for (;;) {
+    const answer = prompt(`Player ${player} · ${q.ability}\n${what} (numbers, comma-separated):\n${list}\n\nCancel = automatic choice (lowest stable id, G3-030).`);
+    if (answer === null) {
+      const picked = timeoutAutoChoice(S(), {player, options: q.options, count});
+      return count === 1 && !q.count ? picked[0] : picked;
+    }
+    const idx = [...new Set(answer.split(/[\s,]+/).filter(Boolean).map(Number))];
+    if (idx.length === count && idx.every(i => Number.isInteger(i) && i >= 1 && i <= q.options.length)) {
+      const picked = idx.map(i => q.options[i - 1]);
+      return count === 1 && !q.count ? picked[0] : picked;
+    }
+  }
 }
 
 // O log também acompanha eventos que o orquestrador não descreve.
 function watchEvents() {
   const s = S();
-  for (const e of s.events.slice(watchEvents.seen || 0)) logEvent(e);
+  const fresh = s.events.slice(watchEvents.seen || 0);
+  for (const e of fresh) logEvent(e);
   watchEvents.seen = s.events.length;
+  if (fresh.length && logOpen && !render.lock) render(); // o log aberto mostra as linhas novas
   requestAnimationFrame(watchEvents);
 }
 
@@ -710,6 +781,7 @@ async function init() {
   decks = {A: rush, B: fortress};
   director = createDirector({ui, getFx: () => scene?.fx, settings});
   const params = new URLSearchParams(location.search);
+  if (params.get('godB')) settings.godB = `god-${params.get('godB')}`; // ?godB=poseidon
   newMatch(Number(params.get('seed')) || undefined, params.get('demo') ? 'A' : undefined);
   applyDemo(params.get('demo'));
   render();

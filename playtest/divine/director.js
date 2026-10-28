@@ -161,6 +161,18 @@ export function createDirector({ui, getFx, settings}) {
       ui.float(at, e.ability, 'gain');
       await pause(420);
     },
+    async seal_added(e) {
+      const at = ui.center(ui.rect(e.uid));
+      if (!at) return;
+      fx()?.shockwave(at.x, at.y, {color: '#7fd4ff', size: 130});
+      ui.float(at, `Seal ×${e.added}`, 'shield');
+      await pause(450);
+    },
+    async seal_removed(e) {
+      const at = ui.center(ui.rect(e.uid));
+      if (at) ui.float(at, 'Seal −1 · stays Unprepared', 'shield');
+      await pause(300);
+    },
     async defeat_prevented(e) {
       const at = ui.center(ui.rect(e.uid));
       if (!at) return;
@@ -171,7 +183,7 @@ export function createDirector({ui, getFx, settings}) {
     // Cinemática divina (nível mais alto da hierarquia): nome do Ultimate, Cosmo convergindo, raios dos Saints ao God.
     async ultimate_announced(e) {
       ui.cinematic?.(true);
-      for (const uid of e.saints) ui.pulse(uid, 'attacking', true);
+      for (const uid of e.saints || []) ui.pulse(uid, 'attacking', true);
       const god = ui.center(ui.godRect(e.player));
       fx()?.charge(god.x, god.y, {color: '#ffe4a0', count: 140, radius: 220});
       await ui.callout(e.ability, e.player, t(1300));
@@ -179,6 +191,14 @@ export function createDirector({ui, getFx, settings}) {
     },
     async ultimate_resolved(e) {
       ui.cinematic?.(true);
+      if (e.ability === 'GREAT FLOOD') { // onda sobre o campo inimigo; o retorno às mãos aparece no render seguinte
+        const enemy = ui.enemyOf(e.player), god = ui.center(ui.godRect(e.player)), to = ui.center(ui.godRect(enemy));
+        fx()?.beam(god, to, {color: '#7fd4ff', width: 44, duration: .7});
+        impact(to, {color: '#7fd4ff', strength: 2});
+        await ui.banner('Great Flood', e.player, t(1100));
+        ui.cinematic?.(false);
+        return;
+      }
       const enemy = ui.enemyOf(e.player), to = ui.center(ui.godRect(enemy));
       const shots = e.snapshot.map((s, i) => {
         const from = ui.center(ui.rect(s.uid));

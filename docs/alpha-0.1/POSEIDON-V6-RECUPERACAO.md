@@ -64,24 +64,20 @@ Nas fichas 091 e 092, o custo do Golden Triangle aparece como "2, :" e "3, :": o
 | Mill 2 de quem controlava no Seal; continua se o Devotee sair; compra 1 independe | D265, D266, D234 | gatilho guarda `millPlayer` | "D265/D266/D233…" |
 | Mill com deck curto: min(N, K), sem Fatigue | D233 | `core.js mill` | idem |
 | Marcadores somem quando o objeto sai do campo | regra geral de objeto novo (Memória Mestre §5) | `delete state.units[uid]` | implícito |
-| **Quantos marcadores "Seal that Devotee" coloca** | — | `NotSpecified` (P-SEAL-1) | "P-SEAL-1…" |
-| **Prepare redundante em Devotee Prepared e Sealed** | — | `NotSpecified` (P-SEAL-2) | "P-SEAL-2…" |
+| "Seal that Devotee" põe exatamente 1 marcador | G3-032 | `SEAL_THAT_DEVOTEE` | "G3-032…" |
+| Prepare redundante em Devotee já Prepared não remove marcador | G3-033 | `prepareUnit` | "G3-033…" |
+| Descarte do Great Flood: quem descarta escolhe; timeout pela G3-030 | G3-034 | `resolveGreatFlood` | "G3-034…" |
 | Water Prison em atacante já Sealed | D269, **não aprovada** | `NotSpecified` | "Seal não é stun…" |
 | Conflito: `guia-do-jogo.md` §48 (2.x) define Sealed como status até o fim da rodada, que impede Strike e habilidades | 2.x × D211/D212 | engine 3.0 segue D211/D212 (precedência do D268 na 3.0) | — |
 
-## 6. Perguntas fechadas ao autor
+## 6. Perguntas ao autor
 
-1. **P-SEAL-1:** "Seal that Devotee" (Water Prison) coloca quantos marcadores Seal?
-   - (A) 1 marcador. Recomendado: é o que as cartas históricas escrevem por extenso ("put 1 Seal counter"), e a D211 fala em "one or more".
-   - (B) outro número.
-2. **P-SEAL-2:** um evento de Prepare sobre um Devotee **já Prepared** e com Seal:
-   - (A) remove 1 marcador mesmo assim; ou
-   - (B) não é um "would-be Prepare event" e não remove nada.
-   - Hoje isso não ocorre no Alpha: só a Water Prison sela, e o atacante já está Unprepared.
-3. **P-FLOOD-1:** no Great Flood, quem escolhe as cartas descartadas da mão?
-   - (A) o próprio jogador que descarta; ou
-   - (B) Poseidon.
-   - A D232 diz só "ordinary discard rules", e as regras 3.0 não definem descarte.
+Respondidas em 28/10/2026 (opção A em todas):
+- P-SEAL-1 → G3-032;
+- P-SEAL-2 → G3-033;
+- P-FLOOD-1 → G3-034.
+
+Continua aberta a D269 (Water Prison em atacante já Sealed): não aprovada; a engine lança `NotSpecified`.
 
 ## 7. Integração feita
 
@@ -93,14 +89,13 @@ Nas fichas 091 e 092, o custo do Golden Triangle aparece como "2, :" e "3, :": o
   - Seal, Water Prison, Pressure e Great Flood;
   - loader e legalidade;
   - duelo FIXTURE Athena × Poseidon reproduzível por seed, que termina e mantém as invariantes.
-- **HUD Olympus:** não ligado a Poseidon nesta tarefa. O battlefield não mudou. A integração visual fica como pendência.
+- **HUD Olympus:** God Poseidon selecionável no lado B (deck FIXTURE rotulado na tela), prompts de Water Prison, Great Flood, escolha de Base e de descarte; battlefield sem redesenho.
 
 ## 8. Para aprovação humana
 
-1. Responder P-SEAL-1, P-SEAL-2 e P-FLOOD-1.
-2. Aprovar (ou corrigir) o texto das fichas 091–094 e o símbolo de custo perdido no Golden Triangle.
-3. Definir os outros 2 Marinas do Vanilla e criar as fichas de Baian/Krishna/Io, se forem eles.
-4. Definir o restante do set Poseidon V6 (até 90 cartas) e a numeração depois de 094.
-5. Confirmar que G3-023 (Cosmo de Ultimate pago com Base preparada) vale também para o Great Flood. A engine aplica assim.
-6. Revisar a tabela de identidades G3-029 (`shared/character-identity.js`). Os 4 Devotees genéricos estão sem personagem.
-7. Decidir a D269.
+1. Aprovar (ou corrigir) o texto das fichas 091–094 e o símbolo de custo perdido no Golden Triangle.
+2. Definir os outros 2 Marinas do Vanilla e criar as fichas de Baian/Krishna/Io, se forem eles.
+3. Definir o restante do set Poseidon V6 (até 90 cartas) e a numeração depois de 094.
+4. Confirmar que G3-023 (Cosmo de Ultimate pago com Base preparada) vale também para o Great Flood. A engine aplica assim.
+5. Revisar a tabela de identidades G3-029 (`shared/character-identity.js`). Os 4 Devotees genéricos estão sem personagem.
+6. Decidir a D269.

@@ -160,13 +160,8 @@ export function removeJudgment(state, ctx, key, devotees) {
 
 // ---------- Poseidon ----------
 // Textos D268 (correntes D198): Water Prison, Pressure of the Deep (Awaken 4), Great Flood (Ultimate, 8 Cosmo).
-// `ctx.rules.sealCounters`: quantos marcadores "Seal that Devotee" coloca. Sem decisão homologada (pergunta P-SEAL-1):
-// sem o parâmetro, a engine lança NotSpecified em vez de escolher um número.
-const sealCounters = ctx => {
-  const n = ctx.rules?.sealCounters;
-  if (!Number.isInteger(n) || n < 1) throw new NotSpecified('"Seal that Devotee" coloca quantos marcadores Seal (P-SEAL-1)');
-  return n;
-};
+// G3-032: "Seal that Devotee" põe exatamente 1 marcador Seal; aplicações sucessivas acumulam (D211).
+export const SEAL_THAT_DEVOTEE = 1;
 const poseidons = state => state.order.filter(k => state.divine?.[k]?.god === 'god-poseidon');
 const ask = (ctx, player, question) => Boolean(ctx.decide?.(player, question));
 
@@ -176,7 +171,6 @@ const ask = (ctx, player, question) => Boolean(ctx.decide?.(player, question));
 hooks.strikeDeclared.push((state, ctx, attacker, controller) => poseidons(state)
   .filter(key => key !== controller && !state.roundUses.has(`god:${key}:water-prison`))
   .map(key => {
-    sealCounters(ctx); // lacuna P-SEAL-1 antes de mexer no estado
     // Water Prison sobre atacante já Sealed é a proposta D269, não aprovada: nada aqui depende dela.
     if (state.units[attacker]?.seal) throw new NotSpecified('Water Prison em Devotee já Sealed (D269 pendente)');
     return {controller: key, uid: `water-prison:${attacker}`, ability: 'WATER PRISON', run: st => {
@@ -191,7 +185,7 @@ hooks.strikeDeclared.push((state, ctx, attacker, controller) => poseidons(state)
       useOncePerRound(st, once);
       emit(st, 'divine_power', {player: key, ability: 'WATER PRISON', uid: attacker});
       if (!st.units[attacker]) { emit(st, 'seal_failed', {uid: attacker, source: 'WATER PRISON'}); return; }
-      addSeal(st, ctx, [attacker], sealCounters(ctx), 'WATER PRISON');
+      addSeal(st, ctx, [attacker], SEAL_THAT_DEVOTEE, 'WATER PRISON');
     }};
   }));
 
@@ -221,14 +215,14 @@ export function greatFloodBlock(state, key) {
 export function announceGreatFlood(state, ctx, key) {
   const why = greatFloodBlock(state, key);
   if (why) throw new RuleError('G3-005', `Great Flood indisponível: ${why}`);
-  if (!ctx.rules?.floodDiscardChooser) throw new NotSpecified('quem escolhe as cartas descartadas pelo Great Flood (P-FLOOD-1)');
   spendBase(state, key, GREAT_FLOOD_COST);
   state.divine[key].ultimateUsed = true;
   emit(state, 'ultimate_announced', {player: key, ability: 'GREAT FLOOD', cost: GREAT_FLOOD_COST});
   pushTriggers(state, [{controller: key, uid: `ultimate:${key}`, ability: 'GREAT FLOOD', run: st => resolveGreatFlood(st, ctx, key)}]);
 }
 
-// Escolha de quem decide (D231, descarte): `ctx.decide` devolve a escolha; fora das opções legais é erro, não palpite.
+// Escolha de quem decide (D231; descarte pela G3-034): `ctx.decide` devolve a escolha; fora das opções legais é erro,
+// não palpite. No timeout, a interface responde com `timeoutAutoChoice` (G3-030).
 function choose(ctx, player, question, options, count) {
   const picked = count === 1 ? [ctx.decide?.(player, {...question, options})] : ctx.decide?.(player, {...question, options, count});
   if (!Array.isArray(picked) || picked.length !== count || new Set(picked).size !== count || !picked.every(o => options.includes(o))) {
@@ -261,9 +255,9 @@ function resolveGreatFlood(state, ctx, key) {
       state.players[ctx.objects[base].owner].hand.push(base);
       emit(state, 'base_returned', {player: owner, uid: base});
     }
-    // D232: metade da mão atual, para cima; Mill 3 por carta descartada de fato.
-    const need = Math.ceil(p.hand.length / 2), chooser = ctx.rules.floodDiscardChooser === 'owner' ? enemy : key;
-    const discarded = need ? choose(ctx, chooser, {ability: 'GREAT FLOOD', decision: 'D232', choose: 'discard', player: enemy}, [...p.hand], need) : [];
+    // D232: metade da mão atual, para cima; Mill 3 por carta descartada de fato. G3-034: quem descarta escolhe.
+    const need = Math.ceil(p.hand.length / 2);
+    const discarded = need ? choose(ctx, enemy, {ability: 'GREAT FLOOD', decision: 'D232', choose: 'discard', player: enemy}, [...p.hand], need) : [];
     p.hand = p.hand.filter(uid => !discarded.includes(uid));
     p.tartarus.push(...discarded);
     emit(state, 'discarded', {player: enemy, uids: discarded});

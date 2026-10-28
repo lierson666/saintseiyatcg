@@ -156,3 +156,8 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
   .cosmo--me { left: auto; right: 8px; bottom: 300px; }
   .demo-tag { top: 112px; font-size: 9px; }
 }
+
+/* Seal (D211): marcadores no Devotee; cada Prepare remove um em vez de preparar. */
+.dcard__seal { position: absolute; top: 46px; left: 4px; z-index: 2; padding: 1px 4px; border-radius: 8px; font: 700 10px/1.2 system-ui; font-style: normal; color: #e8f7ff; background: rgba(20, 80, 130, .85); box-shadow: 0 0 6px #7fd4ff; }
+.fixture-tag { top: 34px; background: #9fd8ff; }
+@media (max-width: 720px) { .fixture-tag { top: 134px; } }

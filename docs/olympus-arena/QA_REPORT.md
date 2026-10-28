@@ -63,3 +63,15 @@ Dois testes antigos mudaram de resultado esperado porque agora o God Athena age:
 - **Timeouts:** vêm desligados no playtest local (Settings → "Apply clock timeouts"). O caminho foi testado só na engine.
 - **Escolhas "you may"** (Divine Protection): ainda usam o diálogo do navegador.
 - **Ordenação de gatilhos pelo jogador:** sem interface.
+
+## Poseidon no HUD (28/10/2026)
+
+- God do jogador B em Settings ("Poseidon · fixture deck") ou `?godB=poseidon`. Etiqueta na tela: "Fixture · Poseidon with an Athena V6 deck — not an official deck".
+- Fixtures de demo: `?godB=poseidon&demo=water-prison` e `?godB=poseidon&demo=great-flood`.
+- Water Prison: diálogo pagar 2 Latent ou recusar. Seal aparece como contador ◈N no Devotee.
+- Great Flood: menu do God. Escolha de Base e de descarte pelo dono da mão (G3-034). Cancelar aplica a G3-030 (`TIMEOUT_AUTO_CHOICE` no log).
+- Verificado no navegador, sem erro de console:
+  - Water Prison → Seal → Pressure of the Deep (Mill 2, compra 1) → Strike segue;
+  - Great Flood: 3 Devotees à mão, 3 Bases, descarte de 7 em 13, Mill 21.
+- Capturas: `qa/06-water-prison-pressure-log.jpg`, `qa/07-seal-counter-on-board.jpg`, `qa/08-great-flood-log.jpg`.
+- Limite: as decisões síncronas da engine usam diálogo do navegador (`confirm`/`prompt`), como as já existentes.

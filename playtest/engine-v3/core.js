@@ -91,11 +91,10 @@ export function addSeal(state, ctx, uids, n, source) {
 }
 
 // Todo evento que prepara um Devotee passa por aqui. Com Seal, remove 1 marcador em vez de preparar (D211).
-// Devotee já Prepared e com Seal: a regra não diz se o Prepare redundante gasta marcador (pergunta P-SEAL-2).
+// G3-033: Prepare redundante em Devotee já Prepared não remove marcadores.
 export function prepareUnit(state, uid) {
   const unit = state.units[uid];
-  if (!unit?.seal) { unit.prepared = true; return true; }
-  if (unit.prepared) throw new NotSpecified('Prepare de Devotee já Prepared com Seal (P-SEAL-2)');
+  if (unit.prepared || !unit.seal) { unit.prepared = true; return true; }
   unit.seal--;
   emit(state, 'seal_removed', {uid, counters: unit.seal});
   return false;

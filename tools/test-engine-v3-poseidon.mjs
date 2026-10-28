@@ -1,7 +1,8 @@
 // Seal (D211/D212) e God Poseidon (Water Prison, Pressure of the Deep, Great Flood) na engine 3.0; loader Poseidon V6.
 // FIXTURE: não existe carta Poseidon V6 canônica (data/poseidon-v6/inventario.json). O God Poseidon é canônico (D268);
 // o deck que ele pilota aqui é o Dragon Fortress de Athena V6 (decks-proposta-d171), rotulado como fixture, não oficial.
-// `rules.sealCounters = 1` e `rules.floodDiscardChooser` são parâmetros de FIXTURE até o autor responder P-SEAL-1 e P-FLOOD-1.
+// Regras homologadas em 28/10/2026: G3-032 (1 marcador por "Seal that Devotee"), G3-033 (Prepare redundante não
+// remove Seal), G3-034 (quem descarta escolhe no Great Flood). Só o deck do Poseidon continua FIXTURE.
 // node --test tools/test-engine-v3-poseidon.mjs
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -14,18 +15,18 @@ import {startTurn, endTurn, passAll, pass, addSeal, destroyDevotee, placeBase, c
 import {declareStrike, strikeTargets} from '../playtest/engine-v3/strike.js';
 import {playDevotee} from '../playtest/engine-v3/play.js';
 import {refreshAwaken, announceGreatFlood, greatFloodBlock} from '../playtest/engine-v3/gods.js';
+import {timeoutAutoChoice} from '../playtest/engine-v3/clock.js';
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json');
 const cards = loadCanon(canon);
 const inventory = read('../data/poseidon-v6/inventario.json');
 const [rush, fortress] = read('../data/alpha-0.1/decks-proposta-d171.json').decks;
-const FIXTURE_RULES = {sealCounters: 1, floodDiscardChooser: 'owner'};
 
-function setup({decide = () => true, rules = FIXTURE_RULES} = {}) {
+function setup({decide = () => true} = {}) {
   const m = createMatch({cards, canonIndex: canonIndex(canon), decks: {A: rush, B: fortress}, gods: {A: 'god-athena', B: 'god-poseidon'}, first: 'A', seed: 5});
   for (const p of Object.values(m.state.players)) p.deck.push(...p.hand.splice(0)); m.state.setup = null;
-  const s = m.state, ctx = {cards, objects: m.objects, attached: m.attached, decide, rules};
+  const s = m.state, ctx = {cards, objects: m.objects, attached: m.attached, decide};
   const take = (key, id) => { const p = s.players[key], uid = p.deck.find(u => u.includes(`:${id}:`)); p.deck.splice(p.deck.indexOf(uid), 1); return uid; };
   const field = (key, id) => { const uid = take(key, id); s.players[key].battlefield.push(uid); s.units[uid] = {prepared: true, damage: 0}; return uid; };
   const bases = (key, n) => { s.players[key].bases.push(...s.players[key].deck.splice(-n).map(uid => ({uid, prepared: true}))); };
@@ -64,12 +65,15 @@ test('Seal não é stun: Devotee Sealed e Prepared ainda declara Strike', () => 
   assert.ok(types(s).includes('god_damage'));
 });
 
-test('P-SEAL-2: Prepare redundante em Devotee já Prepared com Seal é lacuna (NotSpecified), não palpite', () => {
+test('G3-033: Prepare redundante em Devotee já Prepared não remove Seal; Unprepared segue a D211', () => {
   const {s, ctx, field} = setup();
   const seiya = field('A', '001');
-  addSeal(s, ctx, [seiya], 1, 'fixture'); passAll(s);
-  endTurn(s); passAll(s); startTurn(s); endTurn(s); passAll(s);
-  assert.throws(() => startTurn(s), NotSpecified);
+  addSeal(s, ctx, [seiya], 2, 'fixture'); passAll(s);
+  endTurn(s); passAll(s); startTurn(s); endTurn(s); passAll(s); startTurn(s);
+  assert.deepEqual([s.units[seiya].prepared, s.units[seiya].seal], [true, 2], 'Prepared com 2 marcadores continua assim');
+  s.units[seiya].prepared = false;
+  endTurn(s); passAll(s); startTurn(s); endTurn(s); passAll(s); startTurn(s);
+  assert.deepEqual([s.units[seiya].prepared, s.units[seiya].seal], [false, 1]);
 });
 
 // ---------- Water Prison ----------
@@ -115,12 +119,14 @@ test('D268: uso gasto com pagamento legal mesmo sem Seal efetivo; uma vez por Ro
   assert.equal(s.players.B.latent, 1);
 });
 
-test('P-SEAL-1: sem número de marcadores homologado, Water Prison lança NotSpecified antes de mudar o estado', () => {
-  const {s, ctx, field} = setup({rules: {}});
+test('G3-032: "Seal that Devotee" põe exatamente 1 marcador; aplicações sucessivas acumulam', () => {
+  const {s, ctx, field} = setup();
   const seiya = field('A', '001');
-  assert.throws(() => declareStrike(s, ctx, seiya, {kind: 'god', player: 'B'}), NotSpecified);
-  assert.equal(s.units[seiya].prepared, true);
-  assert.equal(s.strikes.size, 0);
+  s.players.B.latent = 3;
+  declareStrike(s, ctx, seiya, {kind: 'god', player: 'B'}); passAll(s);
+  assert.deepEqual(s.events.filter(e => e.type === 'seal_added').map(e => [e.added, e.counters]), [[1, 1]]);
+  addSeal(s, ctx, [seiya], 1, 'fixture'); passAll(s);
+  assert.equal(s.units[seiya].seal, 2);
 });
 
 // ---------- Pressure of the Deep ----------
@@ -178,9 +184,9 @@ test('D265/D266/D233: Mill fica com quem controlava no Seal; gatilho resolve mes
 });
 
 // ---------- Great Flood ----------
-function floodSetup(rules = FIXTURE_RULES) {
+function floodSetup() {
   const picks = [];
-  const env = setup({rules, decide: (player, q) => {
+  const env = setup({decide: (player, q) => {
     if (q.choose === 'base') { picks.push(['base', player]); return q.options[0]; }
     if (q.choose === 'discard') { picks.push(['discard', player, q.count]); return q.options.slice(0, q.count); }
     return true;
@@ -195,7 +201,7 @@ function floodSetup(rules = FIXTURE_RULES) {
   return {...env, seiya, jabu, cloth, picks};
 }
 
-test('D207/D231/D232/D253: Great Flood devolve Devotees e Equipment juntos, uma Base por Devotee, descarta metade, Mill 3 por descarte', () => {
+test('D207/D231/D232/D253/G3-034: Great Flood devolve Devotees e Equipment juntos, uma Base por Devotee, descarta metade, Mill 3 por descarte', () => {
   const {s, ctx, seiya, jabu, cloth, picks} = floodSetup();
   const handBefore = s.players.A.hand.length, deck = s.players.A.deck.length;
   announceGreatFlood(s, ctx, 'B'); passAll(s);
@@ -206,7 +212,7 @@ test('D207/D231/D232/D253: Great Flood devolve Devotees e Equipment juntos, uma 
   assert.equal(s.players.A.hand.length, hand - discard);
   assert.equal(s.players.A.deck.length, deck - 3 * discard);
   assert.ok([seiya, jabu, cloth].every(uid => s.players.A.hand.includes(uid) || s.players.A.tartarus.includes(uid)));
-  assert.deepEqual(picks.map(p => p.slice(0, 2)), [['base', 'A'], ['base', 'A'], ['discard', 'A']], 'D231: quem controla as Bases escolhe');
+  assert.deepEqual(picks.map(p => p.slice(0, 2)), [['base', 'A'], ['base', 'A'], ['discard', 'A']], 'D231: quem controla as Bases escolhe; G3-034: quem descarta escolhe');
   assert.equal(s.divine.B.ultimateUsed, true);
 });
 
@@ -221,11 +227,26 @@ test('G3-005/006: Great Flood custo 8 em Base; anúncio ilegal não gasta nada; 
   assert.equal(greatFloodBlock(s, 'B'), 'used');
 });
 
-test('P-FLOOD-1: sem decisão de quem escolhe o descarte, Great Flood lança NotSpecified sem gastar nada', () => {
-  const {s, ctx} = floodSetup({sealCounters: 1});
-  assert.throws(() => announceGreatFlood(s, ctx, 'B'), NotSpecified);
-  assert.equal(s.players.B.bases.filter(b => b.prepared).length, 8);
-  assert.equal(s.divine.B.ultimateUsed, false);
+test('G3-034: Poseidon não escolhe a mão adversária; resposta fora das opções é recusada; timeout usa G3-030', () => {
+  const {s, ctx} = floodSetup();
+  const asked = [];
+  ctx.decide = (player, q) => {
+    asked.push([player, q.choose]);
+    if (q.choose === 'discard') return timeoutAutoChoice(s, {player, options: q.options, count: q.count, legal: o => s.players[player].hand.includes(o)});
+    return q.options[0];
+  };
+  announceGreatFlood(s, ctx, 'B'); passAll(s);
+  assert.ok(asked.every(([player]) => player === 'A'));
+  const auto = s.events.find(e => e.type === 'TIMEOUT_AUTO_CHOICE');
+  assert.deepEqual(s.events.find(e => e.type === 'discarded').uids, auto.result);
+  assert.deepEqual(auto.result, [...auto.eligible].slice(0, auto.count), 'menor id estável primeiro');
+});
+
+test('G3-034: descarte inválido (carta fora da mão) é erro de regra, não escolha automática', () => {
+  const {s, ctx} = floodSetup();
+  ctx.decide = (player, q) => (q.choose === 'discard' ? ['B:999:1'] : q.options[0]);
+  announceGreatFlood(s, ctx, 'B');
+  assert.throws(() => passAll(s), RuleError);
 });
 
 // ---------- Catálogo ----------
@@ -251,7 +272,7 @@ test('God Poseidon canônico: Soul 27, Attack 2, Awaken 4', () => {
 test('Duelo FIXTURE Athena × Poseidon: partida reproduzível até o fim, Water Prison e Seal acontecem, invariantes ok', () => {
   const run = seed => {
     const m = createMatch({cards, canonIndex: canonIndex(canon), decks: {A: rush, B: fortress}, gods: {A: 'god-athena', B: 'god-poseidon'}, first: 'A', seed});
-    const s = m.state, ctx = {cards, objects: m.objects, attached: m.attached, decide: () => true, rules: FIXTURE_RULES};
+    const s = m.state, ctx = {cards, objects: m.objects, attached: m.attached, decide: () => true};
     mulligan(m, 'A', []); mulligan(m, 'B', []);
     for (let turn = 0; turn < 60 && !s.victory; turn++) {
       startTurn(s); passAll(s);

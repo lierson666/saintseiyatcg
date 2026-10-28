@@ -4,6 +4,16 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — G3-032 a G3-034 (Seal e Great Flood)
+
+- **Antes:** P-SEAL-1, P-SEAL-2 e P-FLOOD-1 abertas; a engine lançava `NotSpecified` e os testes usavam parâmetros de fixture.
+- **Depois (autor, opção A nas três):**
+  - G3-032: "Seal that Devotee" adiciona exatamente 1 marcador; aplicações sucessivas acumulam;
+  - G3-033: Prepare redundante em Devotee já Prepared não remove marcadores Seal;
+  - G3-034: no Great Flood, quem tem a mão afetada escolhe o descarte; timeout pela G3-030.
+- **Motivo:** respostas homologadas do autor em 28/10/2026.
+- **Pendências:** D269 continua não aprovada (`NotSpecified`); catálogo Poseidon V6 continua PARCIAL.
+
 ## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — G3-029 a G3-031, Seal e God Poseidon
 
 - **Antes:** identidade de personagem pelo nome impresso (G3-022); timeout de escolha obrigatória sem critério; relógio fora do turno só por leitura literal (G3-026); sem Seal nem Poseidon na engine 3.0.

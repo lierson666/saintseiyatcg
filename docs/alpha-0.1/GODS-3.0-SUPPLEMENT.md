@@ -41,6 +41,9 @@ Legenda de estado: **Impl** (implementado e testado), **Parcial**, **Pendente** 
 | G3-029 | **Identidade de personagem** = personagem canônico, separado do ID da carta. Seiya V1/V2 são a mesma identidade; arte, subtítulo, Cloth ou reimpressão não criam identidade nova; personagens distintos nunca se fundem. Mapeamento explícito e verificável (não por remoção de palavras do título); identidade não confirmada = lacuna sinalizada | Homologação complementar, 28/10/2026 | D229, D230 | Impl | `shared/character-identity.js`; `gods.js identity`; testes "G3-029" |
 | G3-030 | **Timeout em escolha obrigatória**: lê as opções legais no momento, ordena pelo id estável do objeto (ordem natural) e escolhe o menor; em escolha múltipla repete sobre as restantes revalidando a legalidade a cada passo; registra `TIMEOUT_AUTO_CHOICE` com opções elegíveis, critério e resultado; sem avaliação estratégica | Homologação complementar, 28/10/2026 | G3-027 | Impl | `clock.js timeoutAutoChoice`; testes "G3-030" |
 | G3-031 | **Relógio fora do turno**: os 60 s básicos pertencem só ao turno próprio; responder no turno adversário consome só a reserva; não reduz o básico do turno seguinte; reserva máxima 180; reserva zerada aplica os timeouts homologados; sem decisão atribuída o relógio pausa; cinemáticas não são cobradas | Homologação complementar, 28/10/2026 | G3-024–G3-027 | Impl | `clock.js clockIdle`, `clockHandTo`; testes "G3-031" |
+| G3-032 | **"Seal that Devotee"** adiciona exatamente 1 marcador Seal; aplicações sucessivas acumulam (responde P-SEAL-1) | Autor, 28/10/2026 (opção A) | D211, D212 | Impl | `gods.js SEAL_THAT_DEVOTEE`; teste "G3-032" |
+| G3-033 | **Prepare redundante**: Devotee já Prepared que recebe Prepare não perde marcadores Seal (Prepared com 2 marcadores continua Prepared com 2). Unprepared segue a D211 (responde P-SEAL-2) | Autor, 28/10/2026 (opção A) | D211 | Impl | `core.js prepareUnit`; teste "G3-033" |
+| G3-034 | **Descarte do Great Flood**: o jogador cuja mão é afetada escolhe as cartas, na quantidade da D232; o controlador de Poseidon não escolhe. Timeout dessa escolha obrigatória: G3-030 (responde P-FLOOD-1) | Autor, 28/10/2026 (opção A) | D232, G3-030 | Impl | `gods.js resolveGreatFlood`; testes "G3-034" |
 
 ## Procedimentos canônicos implementados (God Athena)
 
@@ -55,7 +58,7 @@ Legenda de estado: **Impl** (implementado e testado), **Parcial**, **Pendente** 
 
 | # | Item | Tipo | Efeito no Alpha |
 | --- | --- | --- | --- |
-| 1 | Poseidon: God e Seal implementados; **catálogo Poseidon V6 não existe como canônico** (4 fichas PARCIAL). Ver `POSEIDON-V6-RECUPERACAO.md` | Pendente | God Poseidon jogável só com deck fixture rotulado e parâmetros P-SEAL-1 / P-FLOOD-1 |
+| 1 | Poseidon: God e Seal implementados; **catálogo Poseidon V6 não existe como canônico** (4 fichas PARCIAL). Ver `POSEIDON-V6-RECUPERACAO.md` | Pendente | God Poseidon jogável só com deck fixture rotulado |
 | 2 | Hades, Artemis, Ares | Fora do Alpha | Sem deck |
 | 3 | Identidade de personagem | Resolvido (G3-029) | Tabela explícita; Devotees genéricos sem personagem = lacuna |
 | 4 | Critério determinístico de `TIMEOUT_AUTO_CHOICE` | Resolvido (G3-030) | — |
@@ -75,4 +78,4 @@ Nenhum G3 contradiz D1–D268 nos pontos verificados (D52, D150, D186, D187, D19
 | Pressure of the Deep | Awaken 4 | D211, D233, D234, D264–D267 | Um gatilho por Devotee em transição 0 → ≥1 Seal, inimigo no instante; Mill 2 do controlador gravado; compra 1 |
 | Great Flood | Ultimate, 8 Cosmo (Base, G3-023) | D207, D231, D232, D253, G3-005/006 | Retorno simultâneo de Devotees e Equipment; uma Base por Devotee escolhida por quem a controla; descarta metade (para cima); Mill 3 por descarte |
 
-Lacunas reais (perguntas fechadas em `POSEIDON-V6-RECUPERACAO.md`): P-SEAL-1 (quantos marcadores "Seal that Devotee" coloca), P-SEAL-2 (Prepare redundante em Devotee Prepared e Sealed), P-FLOOD-1 (quem escolhe o descarte do Great Flood). A engine lança `NotSpecified` nesses pontos; os testes usam parâmetros de fixture rotulados. Water Prison em atacante já Sealed é a D269, não aprovada: também `NotSpecified`.
+P-SEAL-1, P-SEAL-2 e P-FLOOD-1 foram respondidas pelo autor (G3-032, G3-033, G3-034). Continua `NotSpecified`: Water Prison em atacante já Sealed (D269, não aprovada).
