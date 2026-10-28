@@ -4,6 +4,20 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — Gatilhos, {T}, dano direto e Resonance
+
+- **Antes:** sem gatilhos de entrada, de cast e de sobreviver a Strike; sem habilidades {T}; sem dano que não é de Strike.
+- **Depois (decisões do autor nesta data):**
+  - {C} se paga com Base preparada;
+  - Resonance de Equipment só vale com o Equipment preso ao Devotee nomeado;
+  - dano que não é de Strike também passa pela Armor; prevenções escritas "Strike damage" não se aplicam a ele;
+  - dano redirecionado pela Resonance da 004 é dano de Strike em Shiryu.
+- **Implementado conforme o texto D268:** Miracle e Seventh Sense (001); Resonance da 002, 004, 019 e 048; 019 (ao jogar, Divine Protection, Divine Cosmo); Eagle Marin (Training e Master's Guidance); Seika, Hope of Reunion; Star Hill Acolyte; {T} da 041, 042 e 011 (Cloth Restoration); Spells 059, e os efeitos de 053, 060, 082 e 085. Gatilhos entram na cadeia com janela (P06). Verificação de derrota roda depois de cada Strike, Spell e habilidade.
+- **Pendências:**
+  - 053, 060, 082 e 085 não têm categoria na D194: o efeito existe, mas `playSpell` recusa jogá-las até a categoria ser decidida;
+  - Master's Guidance soma +1/+1 por Eagle Marin em campo (leitura da implementação).
+- Vale para a engine 3.0 (`playtest/engine-v3/`); o `docs/guia-do-jogo.md` (2.x) não muda.
+
 ## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — Modificadores com duração e prevenção de dano de Strike
 
 - **Antes:** a engine 3.0 não aplicava efeitos de texto das cartas.
@@ -12,11 +26,9 @@ Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências
   - estáticas "While …": 034, 036, 037;
   - prevenção de dano de Strike: Dragon Shield (003/004, sem acumular), 044, 045 (com o escudo de Armor da Resonance), 049 (2 em Shiryu), Prayer of Rozan (037), Crystal Wall (011, também no God), Final Sacrifice (027), escudos de God (056, 061, 081, 087) e salvamento "would be defeated" (054, 076, 088).
 - **Motivo:** pedido do autor de implementar os efeitos das cartas dos dois decks.
-- **Pendências (escolhidas na implementação; confirmar com o autor):**
-  - ordem de aplicação entre prevenções diferentes na mesma porção de dano;
-  - "cannot declare another Strike this round" tratado como coberto pela D22;
-  - parte de Spell cujo alvo saiu antes da resolução não faz nada;
-  - Resonance da 004 (redirecionar até 2 para Shiryu) e Cloth Restoration (011) ainda não estão; 053 continua sem categoria na D194.
+- **Leituras confirmadas pelo autor nesta data:** ordem de aplicação entre prevenções; "cannot declare another Strike this round" coberto pela D22; parte de Spell cujo alvo saiu antes da resolução não faz nada.
+- **Pendências:**
+  - 053 continua sem categoria na D194.
 - Vale para a engine 3.0 (`playtest/engine-v3/`); o `docs/guia-do-jogo.md` (2.x) não muda.
 
 ## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — Bônus de Equipment e dano em Armor

@@ -2,7 +2,7 @@
 // Declaração → janela de reação (P06 A) → dano simultâneo → verificação de destruição.
 // `ctx`: {cards (loadCanon), objects (uid -> {owner, cardId}), attached}. Estado de unidade em state.units[uid] = {prepared, damage}.
 import {RuleError, NotSpecified, recordStrike, loseSoul, destroyDevotee, assertIdle, openWindow, pushTriggers} from './core.js';
-import {atkOf, hpOf, keywordsOf, damageDevotee, preventGod, onDeclare, afterStrike} from './effects.js';
+import {atkOf, keywordsOf, damageDevotee, preventGod, onDeclare, afterStrike, checkDefeats} from './effects.js';
 
 export {atkOf, hpOf, keywordsOf, gearOf} from './effects.js';
 
@@ -50,9 +50,12 @@ export function resolveStrike(state, ctx, strike) {
     throw new NotSpecified('Strike cujo atacante ou alvo saiu do campo antes do dano (nem P04 nem P06 definem)');
   }
   const atk = atkOf(state, ctx, attacker), pierce = keywordsOf(state, ctx, attacker).includes('Pierce'); // lidos antes do dano
+  strike.atks = {[attacker]: atk};
   if (target.kind === 'devotee') {
-    const back = atkOf(state, ctx, target.uid);
+    const back = atkOf(state, ctx, target.uid), before = state.units[target.uid].damage;
+    strike.atks[target.uid] = back;
     const excess = damageDevotee(state, ctx, target.uid, atk);
+    strike.dealt = (state.units[target.uid]?.damage ?? Infinity) - before; // dano que chegou ao Devotee (Libra Sword)
     damageDevotee(state, ctx, attacker, back);
     // P05 A: Pierce leva o dano acima do HP restante do alvo ao Soul do God dele (prevenível como dano de Strike ao God).
     const toGod = pierce && excess > 0 ? preventGod(state, ctx, enemy, excess) : 0;
@@ -62,9 +65,7 @@ export function resolveStrike(state, ctx, strike) {
     const toGod = preventGod(state, ctx, enemy, atk);
     if (toGod > 0 && loseSoul(state, {[enemy]: toGod})) return state.victory; // D52: encerra na hora
   }
-  for (const uid of [attacker, target.uid].filter(Boolean)) {
-    if (state.units[uid] && state.units[uid].damage >= hpOf(state, ctx, uid)) destroyDevotee(state, uid, ctx.objects, ctx.attached);
-  }
+  checkDefeats(state, ctx);
   afterStrike(state, ctx, strike);
   return null;
 }

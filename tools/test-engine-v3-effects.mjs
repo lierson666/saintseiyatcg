@@ -90,10 +90,10 @@ test('088 The Eighth Sense: +3/+3, salva de ser derrotado por Strike e prepara s
   s.units[seiya].prepared = false;
   s.players.A.soul = 20;
   cast('A', '088', {target: seiya, prepare: true});
-  assert.deepEqual([atkOf(s, ctx, seiya), hpOf(s, ctx, seiya), s.units[seiya].prepared], [5, 7, true]);
+  assert.deepEqual([atkOf(s, ctx, seiya), hpOf(s, ctx, seiya), s.units[seiya].prepared], [6, 7, true], '+1 do Miracle: Soul 20 < 30');
   s.units[seiya].damage = 6;
   strike(seiya, {kind: 'god', player: 'B'});
-  assert.deepEqual([s.players.B.soul, s.units[seiya].damage], [25, 6], 'retaliação 3 que derrotaria foi prevenida');
+  assert.deepEqual([s.players.B.soul, s.units[seiya].damage], [24, 6], 'retaliação 3 que derrotaria foi prevenida');
   s.units[seiya].prepared = true;
   assert.throws(() => declareStrike(s, ctx, seiya, {kind: 'god', player: 'B'}), /D22|outro Strike/);
 });

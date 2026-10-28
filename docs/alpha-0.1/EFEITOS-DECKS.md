@@ -2,7 +2,9 @@
 
 Gerado em 28/10/2026 do snapshot D268 (`approved_current_text_as_of_d268`), para as 35 identidades das decks D171. Rótulo heurístico: gatilho, ativada, estática, spell, outra. Já na engine 3.0: keywords (P05) e bônus fixo de Equipment. O resto abaixo ainda não.
 
-Peças de engine que faltam, em ordem de uso:
+**Estado em 28/10/2026:** todos os efeitos das 34 cartas estão em `playtest/engine-v3/effects.js`, com testes em `tools/test-engine-v3-effects.mjs` e `tools/test-engine-v3-triggers.mjs`. 053, 060, 082 e 085 seguem bloqueadas por falta de categoria na D194.
+
+Peças de engine (todas implementadas):
 
 1. **Modificadores com duração** (+ATK/+HP "until the end of the round"): 052, 053, 058, 061, 077, 081, 088, 028, 034, 036.
 2. **Prevenção e substituição de dano de Strike** (D199: checada antes do evento; "once each round"): 003, 004, 011, 027, 037, 044, 045, 049, 054, 056, 076, 087.

@@ -3,7 +3,7 @@
 // (as duas aprovadas pelo autor em 28/10/2026). Moment/Technique: D194. Janela: ALPHA-P06 A.
 // `ctx`: {cards (loadCanon), objects (uid -> {owner, cardId}), attached (uid do Equipment -> uid do portador)}.
 import {RuleError, NotSpecified, assertIdle, spendBase, spellCategory, respond} from './core.js';
-import {SPELLS} from './effects.js';
+import {SPELLS, ABILITIES, onEnter, onCastEquipment, checkDefeats} from './effects.js';
 
 // Custo impresso: Base (D4) ou Latent. Valida tudo antes de mexer no estado.
 export function payCost(state, key, cost) {
@@ -30,25 +30,46 @@ function fromHand(state, ctx, key, uid, kind) {
 }
 const leaveHand = (state, key, uid) => { const hand = state.players[key].hand; hand.splice(hand.indexOf(uid), 1); };
 
-export function playDevotee(state, ctx, key, uid) {
+// `choice.target`: alvo do gatilho de entrada (Eagle Marin).
+export function playDevotee(state, ctx, key, uid, choice = {}) {
   const card = sorceryFromHand(state, ctx, key, uid, 'Devotee');
   payCost(state, key, card.cost);
   leaveHand(state, key, uid);
   state.players[key].battlefield.push(uid);
   state.units[uid] = {prepared: false, damage: 0, entered: state.turn}; // P02: entra Unprepared
+  onEnter(state, ctx, key, uid, choice);
 }
 
 // Equipment (custo alternativo, autor 28/10/2026): no Devotee nomeado em Auto-Equip, paga o Casting Cost;
 // em outro Devotee permitido por "Equip {N}", paga N em vez do Casting Cost. Sem portador legal, não joga.
 // Ação comum: não abre janela (P06).
-export function playEquipment(state, ctx, key, uid, bearer) {
+// `choice.target`: alvo do gatilho "When you cast" (019).
+export function playEquipment(state, ctx, key, uid, bearer, choice = {}) {
   const card = sorceryFromHand(state, ctx, key, uid, 'Equipment');
   const cost = equipCost(state, ctx, key, card, bearer);
   payCost(state, key, cost);
   leaveHand(state, key, uid);
   state.players[key].battlefield.push(uid);
   ctx.attached[uid] = bearer;
+  onCastEquipment(state, ctx, key, uid, choice);
   return {cost};
+}
+
+// Habilidade ativada com {T} de um Devotee seu (ABILITIES em effects.js).
+export function activate(state, ctx, key, uid, choice = {}) {
+  if (state.victory) throw new RuleError('D52', 'a partida já terminou');
+  if (key !== state.active) throw new RuleError('D1', 'só o jogador ativo age, no próprio turno');
+  assertIdle(state); // D173: Sorcery
+  const ability = ABILITIES[ctx.objects[uid]?.cardId.slice(-3)];
+  if (!ability || !state.players[key].battlefield.includes(uid)) throw new RuleError('{T}', 'sem habilidade ativada implementada');
+  if (state.units[uid]?.prepared !== true) throw new RuleError('D192', 'o Devotee precisa estar Prepared para {T}');
+  if (ability.once && state.roundUses.has(`ability:${uid}`)) throw new RuleError('D191', `${ability.name} já foi usada neste Round`);
+  ability.check(state, ctx, key, choice);
+  spendBase(state, key, ability.cost); // {N}{C}: Base preparada (autor, 28/10/2026)
+  if (ability.once) state.roundUses.add(`ability:${uid}`);
+  state.units[uid].prepared = false;
+  ability.run(state, ctx, key, choice);
+  checkDefeats(state, ctx);
 }
 
 // Equipment solto no campo (não-Armor cujo portador saiu) volta a um Devotee seu pagando Equip {N}
@@ -90,7 +111,7 @@ export function playSpell(state, ctx, key, uid, choice = {}) {
   if (typeof choice !== 'function') spell.check(state, ctx, key, choice); // alvo e modo antes de pagar
   const effect = typeof choice === 'function' ? choice : st => spell.run(st, ctx, key, choice);
   const p = state.players[key], owner = state.players[ctx.objects[uid].owner];
-  const finish = st => { effect(st); st.players[key].stack.splice(st.players[key].stack.indexOf(uid), 1); owner.tartarus.push(uid); };
+  const finish = st => { effect(st); st.players[key].stack.splice(st.players[key].stack.indexOf(uid), 1); owner.tartarus.push(uid); checkDefeats(st, ctx); };
   if (category.speed === 'sorcery') {
     const card = sorceryFromHand(state, ctx, key, uid, 'Spell');
     payCost(state, key, card.cost);
