@@ -18,7 +18,7 @@ Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências
 - **Antes:** Soul impresso: Athena 30, Poseidon 27, Hades 32, Artemis 24, Ares 30.
 - **Depois:** Alpha usa Athena 20, Poseidon 18, Hades 22, Artemis 15, Ares 20 (escala proporcional escolhida pelo autor). Awaken e Attack não mudam.
 - **Motivo:** decisão do autor em 28/10/2026 ("está muito difícil matar; entre 15 e 22 de vida").
-- **Pendências:** o texto impresso do D268 (`data/canon/d268.json`) e as cartas de God no Card Forge ainda dizem o SOUL antigo; a engine aplica a G3-042 por cima. Atualizar as cartas impressas exige diff aprovado.
+- **Pendências:** cartas de God no Card Forge (`data/cards.json`) atualizadas com diff aprovado em 28/10/2026. O texto do D268 (`data/canon/d268.json`) mantém o SOUL antigo por decisão do autor; a engine aplica a G3-042 por cima.
 
 ## 2026-10-28 — §2 e §63 — limite de 3 cópias
 
