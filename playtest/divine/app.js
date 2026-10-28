@@ -432,8 +432,8 @@ function godZones(key) {
   const edge = Array.from({length: depth}, (_, i) => `${i + 1}px ${i + 1}px 0 ${i % 2 ? '#5a4520' : '#2a2140'}`).join(', ');
   return `<div class="godzones">
     <span class="zdeck ${n ? '' : 'is-empty'}" data-deck="${key}" title="Deck: ${n} card${n === 1 ? '' : 's'}"><i class="zdeck__back" style="box-shadow:${edge || 'none'}, 0 3px 8px rgba(0,0,0,.6)"></i><b>${n}</b></span>
-    <span class="zpile zpile--tartarus" title="Tartarus: ${p.tartarus.length}"><i class="ico-tartarus"></i><b>${p.tartarus.length}</b><small>Tartarus</small></span>
-    <span class="zpile zpile--void" title="Void (exile): ${p.void.length}"><i class="ico-void"></i><b>${p.void.length}</b><small>Void</small></span>
+    <span class="zpile zpile--tartarus" title="Tartarus: ${p.tartarus.length}"><img class="zicon" src="./assets/tartarus.png" alt=""><b>${p.tartarus.length}</b><small>Tartarus</small></span>
+    <span class="zpile zpile--void" title="Void (exile): ${p.void.length}"><img class="zicon" src="./assets/void.png" alt=""><b>${p.void.length}</b><small>Void</small></span>
     ${p.fatigue ? `<span class="zpile zpile--fatigue" title="Fatigue">F${p.fatigue}</span>` : ''}
   </div>`;
 }

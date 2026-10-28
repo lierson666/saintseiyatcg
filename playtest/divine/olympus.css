@@ -538,3 +538,7 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .sanctum .zdeck__back { width: calc(var(--s) * 2.6); }
 .sanctum .ico-tartarus, .sanctum .ico-void { width: calc(var(--s) * 1.8); height: calc(var(--s) * 1.8); }
 .reduce-motion .sanctum *, .reduce-motion .sanctum *::after { animation: none !important; }
+/* Símbolos de Tartarus e Void (arte do autor, 28/10/2026). */
+.zicon { width: 22px; height: 22px; object-fit: contain; filter: drop-shadow(0 0 4px rgba(170, 90, 255, .55)); }
+.sanctum .zicon { width: calc(var(--s) * 3.8); height: calc(var(--s) * 3.8); filter: brightness(1.35) drop-shadow(0 0 5px rgba(170, 90, 255, .7)); }
+.zpile:hover .zicon { filter: drop-shadow(0 0 8px rgba(190, 120, 255, .9)); }
