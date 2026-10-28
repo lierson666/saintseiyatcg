@@ -402,13 +402,21 @@ function godHud(key, side) {
         ${d.judgment ? `<span class="godhud__judgment" title="Divine Judgment: loses at the end of Round ${d.judgment.deadline}">⚖ R${d.judgment.deadline}</span>` : ''}
       </div>
       <span class="godhud__bar"><i style="width:${Math.round(p.soul / max * 100)}%"></i></span>
+      ${godZones(key)}
     </div></section>`;
 }
-
-function piles(key, side) {
-  const p = S().players[key];
-  return `<div class="piles piles--${side}"><span class="pile" data-deck="${key}" title="Deck"><i class="ico-deck"></i>${p.deck.length}</span><span class="pile" title="Tartarus"><i class="ico-tartarus"></i>${p.tartarus.length}</span>${p.fatigue ? `<span class="pile pile--fatigue" title="Fatigue">F${p.fatigue}</span>` : ''}</div>`;
+// Zonas do jogador junto ao God: deck empilhado (a pilha engrossa com as cartas que restam), Tartarus e Void (exílio).
+function godZones(key) {
+  const p = S().players[key], n = p.deck.length, depth = Math.min(7, Math.ceil(n / 8));
+  const edge = Array.from({length: depth}, (_, i) => `${i + 1}px ${i + 1}px 0 ${i % 2 ? '#5a4520' : '#2a2140'}`).join(', ');
+  return `<div class="godzones">
+    <span class="zdeck ${n ? '' : 'is-empty'}" data-deck="${key}" title="Deck: ${n} card${n === 1 ? '' : 's'}"><i class="zdeck__back" style="box-shadow:${edge || 'none'}, 0 3px 8px rgba(0,0,0,.6)"></i><b>${n}</b></span>
+    <span class="zpile zpile--tartarus" title="Tartarus: ${p.tartarus.length}"><i class="ico-tartarus"></i><b>${p.tartarus.length}</b><small>Tartarus</small></span>
+    <span class="zpile zpile--void" title="Void (exile): ${p.void.length}"><i class="ico-void"></i><b>${p.void.length}</b><small>Void</small></span>
+    ${p.fatigue ? `<span class="zpile zpile--fatigue" title="Fatigue">F${p.fatigue}</span>` : ''}
+  </div>`;
 }
+
 
 // Bases de Cosmo como terrenos: cartas viradas numa faixa do lado do dono; Base gasta fica deitada (tapped)
 // e levanta quando prepara. O pagamento escolhe as Bases sozinho (são equivalentes); a animação mostra quais viraram.
@@ -536,10 +544,10 @@ function render() {
   if (mode) { const step = mode.steps[mode.i]; mode.options = step?.pick ? candidates(step, mode.key).filter(u => !mode.picked.includes(u)) : []; }
   boardRoot.innerHTML = `
     <div class="olympus ${mode ? 'is-choosing' : ''} ${pending ? 'is-deciding' : ''}" ${pending && !pending.peek ? 'inert' : ''}>
-      ${godHud(them, 'opp')}${cosmoGauge(them, 'opp')}${piles(them, 'opp')}
+      ${godHud(them, 'opp')}${cosmoGauge(them, 'opp')}
       ${handRow(them, settings.hideOpponent || settings.ai === them)}
       <main class="arena-field">${cosmoLane(them, 'opp')}${fieldRow(them)}<div class="midline"><span>${esc(phaseText())}</span></div>${fieldRow(me)}${cosmoLane(me, 'me')}</main>
-      ${cosmoGauge(me, 'me')}${godHud(me, 'me')}${piles(me, 'me')}
+      ${cosmoGauge(me, 'me')}${godHud(me, 'me')}
       ${handRow(me, false)}
       ${command()}
     </div>${choiceBar()}`;

@@ -342,3 +342,15 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .chain__body strong { font: 600 13px/1.25 Georgia, serif; }
 .chain__body em { font: italic 11px/1.3 system-ui, sans-serif; color: #e6dcff; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
 .chain__body small { font-size: 10px; letter-spacing: .04em; color: var(--muted); }
+
+/* Zonas junto ao God: deck como pilha de versos (estilo Arena), Tartarus e Void com contagem. */
+.godzones { display: flex; align-items: center; gap: 12px; margin-top: 4px; }
+.zdeck { position: relative; display: flex; align-items: center; gap: 8px; }
+.zdeck__back { position: relative; width: clamp(26px, 2.3vw, 34px); aspect-ratio: 150 / 210; border-radius: 3px; border: 1px solid #c9a24e;
+  background: radial-gradient(circle at 50% 40%, rgba(120, 90, 255, .55), transparent 60%), url('../../LOGO/logo-web.webp') center / 82% auto no-repeat, linear-gradient(160deg, #1b1f4a, #07081c); transform: translate(-3px, -3px); }
+.zdeck b, .zpile b { font: 600 clamp(15px, 1.25vw, 19px)/1 Georgia, serif; color: #f4ecd8; }
+.zdeck.is-empty .zdeck__back { opacity: .25; }
+.zpile { display: grid; grid-template-columns: auto auto; column-gap: 5px; align-items: center; padding-left: 12px; border-left: 1px solid rgba(255, 255, 255, .15); }
+.zpile small { grid-column: 1 / -1; font: 600 8px/1.2 system-ui, sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #9aa3c3; }
+.ico-void { width: 16px; height: 16px; border-radius: 50%; background: radial-gradient(circle, #000 35%, #7a4dff 55%, transparent 72%); box-shadow: 0 0 6px rgba(140, 100, 255, .7); }
+.zpile--fatigue { color: var(--red); font: 700 13px/1 system-ui; }
