@@ -332,7 +332,7 @@ export const SPELLS = {
     run: (s, c, k, {target}) => {
       if (!alive(s, k, target)) return;
       modify(s, target, {atk: 2, hp: 2, keywords: id(c, target) === '003' ? ['Pierce'] : []});
-      s.delayed.push({controller: k, run: st => {
+      s.delayed.push({controller: k, uid: target, ability: 'Sacrifice', source: '077', run: st => {
         if (!st.units[target] || controllerOf(st, target) !== k) return;
         st.units[target].prepared = false;
         st.units[target].skipPrepare = true;
@@ -398,11 +398,11 @@ export function onEnter(state, ctx, key, uid, {target} = {}) {
   const n = id(ctx, uid);
   // Eagle Marin: 1 Training counter noutro Bronze Saint seu (sem alvo legal, não faz nada).
   if (n === '021' && target && target !== uid && alive(state, key, target) && isBronze(ctx, target)) {
-    pushTriggers(state, [{controller: key, run: st => { if (alive(st, key, target)) st.units[target].training = (st.units[target].training || 0) + 1; }}]);
+    pushTriggers(state, [{controller: key, uid, ability: 'enters the Battlefield', target, run: st => { if (alive(st, key, target)) st.units[target].training = (st.units[target].training || 0) + 1; }}]);
   }
   // Star Hill Acolyte: olha as 2 do topo; uma fica no topo, a outra vai para o fundo. `decide` devolve a que fica no topo.
   if (n === '043') {
-    pushTriggers(state, [{controller: key, run: st => {
+    pushTriggers(state, [{controller: key, uid, ability: 'Sacred Knowledge', run: st => {
       const deck = st.players[key].deck, look = deck.splice(0, 2);
       const pick = look.length === 2 ? ctx.decide?.(key, {ability: 'Sacred Knowledge', cards: look}) : look[0];
       const top = look.includes(pick) ? pick : look[0]; // resposta fora das 2 cartas = sem escolha (não cria objeto)
@@ -415,7 +415,7 @@ export function onEnter(state, ctx, key, uid, {target} = {}) {
 // Pegasus God Cloth (019), ao ser jogada: se seu God tem menos Soul, um Devotee seu ganha +3/+3 até o fim do Round e prepara.
 export function onCastEquipment(state, ctx, key, uid, {target} = {}) {
   if (id(ctx, uid) !== '019' || !behind(state, key) || !target || !alive(state, key, target)) return;
-  pushTriggers(state, [{controller: key, run: st => {
+  pushTriggers(state, [{controller: key, uid, ability: 'When you cast', target, run: st => {
     if (!alive(st, key, target)) return;
     modify(st, target, {atk: 3, hp: 3});
     prepareUnit(st, target);
@@ -456,13 +456,13 @@ export function afterStrike(state, ctx, strike) {
   state.effects = state.effects.filter(e => e.duration !== 'this_strike');
   const triggers = [], {attacker, target} = strike, t = target.uid;
   const survived = uid => uid && state.units[uid];
-  const add = (controller, run) => triggers.push({controller, run});
+  const add = (controller, run, meta) => triggers.push({controller, run, ...meta}); // meta: origem (uid), habilidade e alvo, para a cadeia na UI
   for (const uid of [attacker, t].filter(survived)) {
     const key = controllerOf(state, uid), foe = uid === attacker ? t : attacker;
     if (id(ctx, uid) !== '001') continue;
     // Seventh Sense: sobreviveu a um Strike contra Devotee inimigo de ATK maior: +1 ATK permanente.
     if (foe && strike.atks[foe] > strike.atks[uid] && useOncePerRound(state, `seventh-sense:${uid}`)) {
-      add(key, st => { if (st.units[uid]) modify(st, uid, {atk: 1}, 'permanent'); });
+      add(key, st => { if (st.units[uid]) modify(st, uid, {atk: 1}, 'permanent'); }, {uid, ability: 'Seventh Sense'});
     }
     // Pegasus Cloth (002), Resonance: pode Preparar Seiya.
     const cloth = wears(ctx, uid, '002');
@@ -471,7 +471,7 @@ export function afterStrike(state, ctx, strike) {
         if (st.units[uid] && !st.roundUses.has(`resonance:${cloth}`) && ask(ctx, key, {ability: 'Pegasus Cloth Resonance', uid, prepare: true})) {
           useOncePerRound(st, `resonance:${cloth}`); prepareNoStrike(st, uid);
         }
-      });
+      }, {uid: cloth, ability: 'Resonance', target: uid});
     }
     // Seika, Hope of Reunion: pode remover 1 de dano de Seiya.
     for (const seika of devotees(state, ctx, key).filter(u => id(ctx, u) === '036' && !state.roundUses.has(`ability:${u}`))) {
@@ -479,7 +479,7 @@ export function afterStrike(state, ctx, strike) {
         if (st.units[uid] && !st.roundUses.has(`ability:${seika}`) && ask(ctx, key, {ability: 'Hope of Reunion', source: seika, uid})) {
           useOncePerRound(st, `ability:${seika}`); removeDamage(st, uid, 1);
         }
-      });
+      }, {uid: seika, ability: 'Hope of Reunion', target: uid});
     }
   }
   // God Athena, Cosmo of Hope (D225): Athena Devotee que atacou ou defendeu e continua no campo do mesmo controlador;
@@ -488,11 +488,11 @@ export function afterStrike(state, ctx, strike) {
     const once = `god:${key}:cosmo-of-hope`;
     if (state.divine?.[key]?.god !== 'god-athena' || state.roundUses.has(once)) continue;
     if (![attacker, t].some(uid => survived(uid) && controllerOf(state, uid) === key && isAthenaDevotee(ctx, uid))) continue;
-    add(key, st => { if (useOncePerRound(st, once)) { emit(st, 'divine_power', {player: key, ability: 'COSMO OF HOPE'}); gainLatent(st, key, 1); } });
+    add(key, st => { if (useOncePerRound(st, once)) { emit(st, 'divine_power', {player: key, ability: 'COSMO OF HOPE'}); gainLatent(st, key, 1); } }, {uid: `god:${key}`, ability: 'COSMO OF HOPE'});
   }
   // Rising Dragon (003): sobreviveu como defensor, +1 ATK até o fim do Round.
   if (survived(t) && id(ctx, t) === '003' && useOncePerRound(state, `rising-dragon:${t}`)) {
-    add(controllerOf(state, t), st => { if (st.units[t]) modify(st, t, {atk: 1}); });
+    add(controllerOf(state, t), st => { if (st.units[t]) modify(st, t, {atk: 1}); }, {uid: t, ability: 'Rising Dragon'});
   }
   // Libra Sword (048), Resonance: Shiryu causou dano de Strike a Devotee inimigo; pode causar mais 1 a ele.
   const sword = wears(ctx, attacker, '048') && id(ctx, attacker) === '003' ? wears(ctx, attacker, '048') : null;
@@ -502,7 +502,7 @@ export function afterStrike(state, ctx, strike) {
       if (survived(t) && !st.roundUses.has(`resonance:${sword}`) && ask(ctx, key, {ability: 'Libra Sword Resonance', uid: t})) {
         useOncePerRound(st, `resonance:${sword}`); damageDevotee(st, ctx, t, 1, false); checkDefeats(st, ctx);
       }
-    });
+    }, {uid: sword, ability: 'Resonance', target: t});
   }
   pushTriggers(state, triggers);
 }

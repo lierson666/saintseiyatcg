@@ -33,6 +33,6 @@ export function resumeFor(state, viewer, lastSeq = 0) {
   }));
   return {round: state.round, turn: state.turn, active: state.active, victory: state.victory, window: state.window ? {priority: state.window.priority} : null,
     pending: pendingFor(state.pending, viewer),
-    chain: state.chain.map(c => ({controller: c.controller, uid: c.uid ?? null, ability: c.ability ?? null})), roundUses: [...state.roundUses], players: view,
+    chain: state.chain.map(c => ({controller: c.controller, uid: c.uid ?? null, ability: c.ability ?? null, target: c.target ?? null, source: c.source ?? null})), roundUses: [...state.roundUses], players: view,
     events: eventsFor(state, viewer, lastSeq).filter(e => e.seq > lastSeq)};
 }

@@ -123,7 +123,7 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .priority { position: relative; width: 100%; padding: 6px 10px; border-radius: 10px; text-align: center; background: rgba(28, 10, 48, .85); border: 1px solid #b98cff; box-shadow: 0 0 18px rgba(185, 140, 255, .4); }
 .priority small { display: block; font: 10px/1.2 system-ui; letter-spacing: .16em; text-transform: uppercase; color: #cbb8ff; }
 .priority strong { font-size: 16px; }
-.priority .chain { margin: 4px 0 0; text-align: left; border: 0; max-height: 20vh; }
+.priority .chain { margin: 4px 0 0; text-align: left; border: 0; max-height: 34vh; }
 
 /* ---------- Escolha, cinemática, fixture ---------- */
 .olympus.is-choosing ~ .choice, .choice { top: 46%; transform: translate(-50%, -50%); background: rgba(10, 12, 34, .94); border-color: var(--gold); box-shadow: 0 0 30px rgba(255, 200, 110, .35); }
@@ -333,3 +333,12 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 @keyframes bigcard-in { from { opacity: 0; transform: scale(.94); } }
 @media (prefers-reduced-motion: reduce) { .bigcard { animation: none; } }
 .dcard:not(.art-full) .dcard__stats .hurt { color: #ffb0a0; background: #a3221a; }
+
+/* Cadeia: cada item diz a carta, a habilidade, o efeito impresso e o alvo. */
+.priority .chain li { display: flex; gap: 6px; align-items: flex-start; padding: 4px 0; border-top: 1px solid rgba(197, 140, 255, .18); }
+.priority .chain li:first-child { border-top: 0; }
+.priority .chain li b { flex: none; margin-top: 2px; }
+.chain__body { display: grid; gap: 1px; min-width: 0; }
+.chain__body strong { font: 600 13px/1.25 Georgia, serif; }
+.chain__body em { font: italic 11px/1.3 system-ui, sans-serif; color: #e6dcff; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.chain__body small { font-size: 10px; letter-spacing: .04em; color: var(--muted); }

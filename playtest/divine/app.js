@@ -324,6 +324,23 @@ function tickClock() {
 // Cartas do Card Forge como dados (tools/forge-art-web.sh): shared/live-card.js desenha moldura, textos e números no DOM; a arte é só fundo.
 const FORGE_ART = '../../card-forge/art-web/';
 const FORGE = new Map((await fetch(`${FORGE_ART}cards.json`).then(r => (r.ok ? r.json() : {cartas: []})).catch(() => ({cartas: []}))).cartas.map(c => [c.id, c]));
+// Item da cadeia em texto de jogador: carta de origem, nome da habilidade, a linha impressa dela e o alvo.
+// `c.source` (número da carta) quando o texto vem de outra carta (gatilho atrasado de Spell); sem carta no jogo, o God do controlador.
+function chainLabel(c) {
+  const card = c.source ? [...cards.values()].find(x => x.id.endsWith(`-${c.source}`))
+    : c.uid && ctx.objects[c.uid] ? info(c.uid) : cards.get(S().gods[c.controller]);
+  const ability = c.ability || '', named = /^[A-Z]/.test(ability) && !/^When /.test(ability);
+  // Linha que começa com a habilidade ("NOME — efeito"); se depois do nome só há a etiqueta (Divine Power, Ultimate), o efeito
+  // está na linha seguinte (pula "Cost:"). Sem linha própria (gatilho sem nome), a primeira linha que cita a frase.
+  const lines = card?.text.split('\n').map(l => l.trim()) || [], low = ability.toLowerCase();
+  let i = ability ? lines.findIndex(l => l.toLowerCase().startsWith(low)) : -1, text = '';
+  if (i >= 0) {
+    text = named ? lines[i].slice(ability.length).replace(/^\s*[—:-]\s*/, '') : lines[i];
+    if (text.length < 25) text = lines.slice(i + 1).find(l => l && !/^Cost:/.test(l)) || text;
+  } else if (ability) text = lines.find(l => l.toLowerCase().includes(low)) || '';
+  const title = [card?.name, named && ability.toUpperCase() !== card?.name?.toUpperCase() ? ability : ''].filter(Boolean).join(' · ') || 'Triggered ability';
+  return {title, text, target: c.target && ctx.objects[c.target] ? info(c.target).name : ''};
+}
 function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
   if (hidden) return `<div class="dcard dcard--back ${size}" data-uid="${uid}" aria-label="Face-down card"><span></span></div>`;
   const s = S(), c = info(uid), n = num(uid), unit = s.units[uid];
@@ -442,7 +459,10 @@ function command() {
   else if (s.window) label = s.chain.length ? 'Pass · Resolve' : 'Pass';
   // Cadeia de cima para baixo: o topo resolve primeiro (LIFO, D186); gatilhos simultâneos entram em APNAP (D187).
   // A ordem entre gatilhos simultâneos do mesmo jogador ainda não é escolha dele (GODS-3.0-SUPPLEMENT, pendência 5).
-  const chain = s.chain.length ? `<ol class="chain" aria-label="Chain, top resolves first">${s.chain.map((c, i) => `<li data-chain="${i}"><b>${i + 1}</b> ${esc(c.ability || (c.uid && ctx.objects[c.uid] ? info(c.uid).name : 'Triggered ability'))} <small>Player ${c.controller}</small></li>`).reverse().join('')}</ol>
+  const chain = s.chain.length ? `<ol class="chain" aria-label="Chain, top resolves first">${s.chain.map((c, i) => {
+    const t = chainLabel(c);
+    return `<li data-chain="${i}"><b>${i + 1}</b><div class="chain__body"><strong>${esc(t.title)}</strong>${t.text ? `<em>${esc(t.text)}</em>` : ''}<small>${t.target ? `Target: ${esc(t.target)} · ` : ''}Player ${c.controller}</small></div></li>`;
+  }).reverse().join('')}</ol>
     <small class="chain__hint">${s.chain.length > 1 ? 'Top resolves first' : 'Resolves when both pass'}</small>` : '';
   return `<aside class="command" aria-label="Turn actions">
     ${s.window ? `<div class="priority"><small>Priority</small><strong>Player ${s.window.priority}</strong>${chain}</div>` : ''}
