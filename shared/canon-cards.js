@@ -4,6 +4,9 @@
 const UNITS = {B: 'base', L: 'latent'};
 const number = (text, pattern) => { const m = text.match(pattern); return m ? Number(m[1]) : null; };
 
+// G3-042 (autor, 28/10/2026): Soul dos Gods na Alpha entre 15 e 22, por cima do SOUL impresso no D268 (o snapshot não muda).
+const ALPHA_SOUL = {'god-athena': 20, 'god-poseidon': 18, 'god-hades': 22, 'god-artemis': 15, 'god-ares': 20};
+
 export function parseCard(record) {
   const text = record.approved_current_text_as_of_d268;
   const type = record.type;
@@ -27,7 +30,7 @@ export function parseCard(record) {
     cosmoble: cosmoble ? cosmoble[1] === 'Yes' : null,
     atk: number(text, /ATK: (\d+)/) ?? number(text, /ATTACK (\d+)/),
     hp: number(text, /HP: (\d+)/),
-    soul: number(text, /SOUL (\d+)/),
+    soul: ALPHA_SOUL[record.id.toLowerCase()] ?? number(text, /SOUL (\d+)/),
     awaken: number(text, /AWAKEN (\d+)/),
     autoEquip: auto && auto[1].trim() !== 'None' ? auto[1].split(' and/or ').map(n => n.trim()) : [],
     equip: equip ? {amount: Number(equip[1]), who: /^Other/.test(equip[2]) ? 'other' : 'any'} : null,

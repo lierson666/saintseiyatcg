@@ -35,5 +35,5 @@ test('eventos têm seq contínuo e seguem a ordem real: mulligan, turno, compra,
   for (const t of order) { const i = types.indexOf(t, at + 1); assert.ok(i > at, `${t} depois da posição ${at}`); at = i; }
   const hit = ev.find(e => e.type === 'damage' && e.uid === seiya);
   assert.deepEqual([hit.incoming, hit.dealt, hit.strike], [3, 3, true], 'retaliação do God');
-  assert.deepEqual(ev.find(e => e.type === 'soul_lost'), {...ev.find(e => e.type === 'soul_lost'), player: 'B', amount: 2, soul: 28});
+  assert.deepEqual(ev.find(e => e.type === 'soul_lost'), {...ev.find(e => e.type === 'soul_lost'), player: 'B', amount: 2, soul: 18});
 });

@@ -255,15 +255,15 @@ test('Loader Poseidon V6: nenhuma carta canônica; as 4 fichas recuperadas ficam
   assert.equal(catalog.official.size, 0);
   assert.deepEqual(catalog.blocked.map(b => [b.card_id, b.state]), [
     ['poseidon-v6-091', 'PARCIAL'], ['poseidon-v6-092', 'PARCIAL'], ['poseidon-v6-093', 'PARCIAL'], ['poseidon-v6-094', 'PARCIAL']]);
-  assert.equal(catalog.god.soul, cards.get('god-poseidon').soul);
+  assert.equal(catalog.god.soul, 27, 'inventário guarda o SOUL impresso; a Alpha usa 18 (G3-042)');
   const deck = {...fortress, main_deck: [...fortress.main_deck.slice(0, -1), {card_id: 'poseidon-v6-091', quantity: 3}]};
   assert.ok(officialDeckErrors(deck, canonIndex(canon), catalog).some(e => e.code === 'incomplete' && e.card_id === 'poseidon-v6-091'));
   assert.deepEqual(officialDeckErrors(fortress, canonIndex(canon), catalog), [], 'D171: deck só com cartas canônicas passa');
 });
 
-test('God Poseidon canônico: Soul 27, Attack 2, Awaken 4', () => {
+test('God Poseidon canônico: Soul 18 (G3-042; impresso 27), Attack 2, Awaken 4', () => {
   const g = cards.get('god-poseidon');
-  assert.deepEqual([g.soul, g.atk, g.awaken], [27, 2, 4]);
+  assert.deepEqual([g.soul, g.atk, g.awaken], [18, 2, 4]);
 });
 
 // ---------- Duelo ----------
@@ -274,7 +274,7 @@ test('Duelo FIXTURE Athena × Poseidon: partida reproduzível até o fim, Water 
     const m = createMatch({cards, canonIndex: canonIndex(canon), decks: {A: rush, B: fortress}, gods: {A: 'god-athena', B: 'god-poseidon'}, first: 'A', seed});
     const s = m.state, ctx = {cards, objects: m.objects, attached: m.attached, decide: () => true};
     mulligan(m, 'A', []); mulligan(m, 'B', []);
-    for (let turn = 0; turn < 160 && !s.victory; turn++) { // G3-037: 1 compra por turno alonga a partida
+    for (let turn = 0; turn < 160 && !s.victory; turn++) { // teto folgado para a partida terminar
       startTurn(s); passAll(s);
       if (s.victory) break;
       const key = s.active, p = s.players[key];
@@ -295,7 +295,7 @@ test('Duelo FIXTURE Athena × Poseidon: partida reproduzível até o fim, Water 
     }
     return s;
   };
-  const a = run(11), b = run(11);
+  const a = run(3), b = run(3); // seed 3: com Soul 20 (G3-042) a partida ainda chega a remover Seal
   assert.deepEqual(a.events.map(e => e.type), b.events.map(e => e.type), 'mesma seed, mesma partida');
   assert.ok(a.victory, 'a partida termina');
   assert.ok(count(a, 'divine_power', 'WATER PRISON') > 0);

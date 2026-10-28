@@ -4,6 +4,22 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-28 — §55 e Handbook 3.0 G3-041 — volta a compra de 2 cartas por turno
+
+- **Seção:** `docs/guia-do-jogo.md` §55 e `docs/alpha-0.1/GODS-3.0-SUPPLEMENT.md` G3-041 (revoga G3-037).
+- **Antes:** 1 carta por turno a partir da segunda rodada.
+- **Depois:** 2 cartas por turno a partir da segunda rodada.
+- **Motivo:** decisão do autor em 28/10/2026 ("a mão está acabando muito rápido e o jogo dá stall").
+- **Pendências:** nenhuma carta alterada; engine 3.0 e testes ajustados; engine 2.x não alterada.
+
+## 2026-10-28 — §65 e Handbook 3.0 G3-042 — Soul dos Gods entre 15 e 22
+
+- **Seção:** `docs/guia-do-jogo.md`, §65 (Valores iniciais, linha Soul / Attack de God) e `docs/alpha-0.1/GODS-3.0-SUPPLEMENT.md` G3-042.
+- **Antes:** Soul impresso: Athena 30, Poseidon 27, Hades 32, Artemis 24, Ares 30.
+- **Depois:** Alpha usa Athena 20, Poseidon 18, Hades 22, Artemis 15, Ares 20 (escala proporcional escolhida pelo autor). Awaken e Attack não mudam.
+- **Motivo:** decisão do autor em 28/10/2026 ("está muito difícil matar; entre 15 e 22 de vida").
+- **Pendências:** o texto impresso do D268 (`data/canon/d268.json`) e as cartas de God no Card Forge ainda dizem o SOUL antigo; a engine aplica a G3-042 por cima. Atualizar as cartas impressas exige diff aprovado.
+
 ## 2026-10-28 — §2 e §63 — limite de 3 cópias
 
 - **Seção:** `docs/guia-do-jogo.md`, §2 (Construção do deck) e §63 (Deck, identidade, mulligan, Gods e Domains).

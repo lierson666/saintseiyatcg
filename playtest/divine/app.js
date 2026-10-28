@@ -16,6 +16,7 @@ import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decis
 import {createDirector} from './director.js?v=3';
 import {createAI} from './ai.js?v=2';
 import {findDeck} from '../deck-store.js';
+import {unlock, playMusic} from '../audio.js';
 import {renderLiveCard} from '../../shared/live-card.js?v=20261028-5';
 
 const $ = (s, el = document) => el.querySelector(s), $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -1056,6 +1057,8 @@ function drawIntents() {
   document.body.append(svg);
 }
 addEventListener('resize', () => drawIntents());
+// Música de batalha (playlist de ../audio.js); só toca depois do primeiro gesto do jogador (política dos navegadores).
+addEventListener('pointerdown', () => { unlock(); playMusic('battle'); }, {once: true});
 
 // ---------- Partida ----------
 

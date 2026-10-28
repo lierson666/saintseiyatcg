@@ -40,14 +40,14 @@ test('Armor dá ATK e absorve o dano primeiro; destruída vai ao Tartarus do Own
   const seiya = field('A', '001'), cloth = equip('A', '002', seiya); // 2/4 + Cloth (+1 ATK, HP 4)
   assert.deepEqual([atkOf(s, ctx, seiya), hpOf(s, ctx, seiya)], [3, 4]);
   strike(seiya, {kind: 'god', player: 'B'});
-  assert.equal(s.players.B.soul, 27);
+  assert.equal(s.players.B.soul, 17);
   assert.deepEqual([s.units[cloth].damage, s.units[seiya].damage], [3, 0], 'retaliação 3 toda na Armor');
   next();
   strike(seiya, {kind: 'god', player: 'B'});
   assert.ok(s.players.A.tartarus.includes(cloth), 'Armor com 4 de dano sai');
   assert.equal(ctx.attached[cloth], undefined);
   assert.deepEqual([s.units[seiya].damage, atkOf(s, ctx, seiya)], [2, 2], 'excesso 2 no Seiya; perde o +1');
-  assert.equal(s.players.B.soul, 24, 'o ATK foi lido antes do dano');
+  assert.equal(s.players.B.soul, 14, 'o ATK foi lido antes do dano');
   checkInvariants(s, objects);
 });
 
@@ -74,7 +74,7 @@ test('Divine Weapon com +HP (049) segura o Devotee; Pierce não passa do que a A
   const cracked = t.equip('B', '044', repairer); // Armor HP 2, +1 ATK, Last Protection previne 1
   t.s.units[seiya].keywords = ['Pierce'];
   t.strike(seiya, {kind: 'devotee', uid: repairer});
-  assert.deepEqual([t.s.units[cracked].damage, t.s.units[repairer].damage, t.s.players.B.soul, t.s.units[seiya].damage], [1, 0, 30, 2]);
+  assert.deepEqual([t.s.units[cracked].damage, t.s.units[repairer].damage, t.s.players.B.soul, t.s.units[seiya].damage], [1, 0, 20, 2]);
 });
 
 test('019 equipada dá Cheater: ignora Guardian contra o God; texto da 019 intacto', () => {
@@ -84,7 +84,7 @@ test('019 equipada dá Cheater: ignora Guardian contra o God; texto da 019 intac
   equip('A', '019', seiya);
   assert.ok(keywordsOf(s, ctx, seiya).includes('Cheater'));
   strike(seiya, {kind: 'god', player: 'B'});
-  assert.equal(s.players.B.soul, 25);
+  assert.equal(s.players.B.soul, 15);
   const original = canon.cards.find(c => c.id.toLowerCase() === 'athena-v6-019');
   assert.equal(cards.get('athena-v6-019').text, original.original_text);
 });

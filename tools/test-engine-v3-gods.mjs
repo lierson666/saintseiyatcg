@@ -35,7 +35,7 @@ test('G3-004: Awaken liga com Soul ≤ 5, desliga acima e religa sozinho; sem cu
   const {s, ctx, field} = setup();
   const seiya = field('A', '001');
   assert.equal(s.divine.A.awaken, false);
-  loseSoul(s, {A: 25}); refreshAwaken(s);
+  loseSoul(s, {A: 15}); refreshAwaken(s);
   const on = [atkOf(s, ctx, seiya), hpOf(s, ctx, seiya)];
   gainSoul(s, 'A', 1); refreshAwaken(s);
   assert.equal(s.divine.A.awaken, false);
@@ -103,7 +103,7 @@ test('Athena Exclamation (D228/D230/D205): ATTACK fotografado antes da Defeat; S
   announceExclamation(s, ctx, 'A', saints);
   passAll(s);
   assert.ok(saints.every(u => s.players.A.tartarus.includes(u)), 'Defeat que não pode ser prevenida');
-  assert.deepEqual([s.players.B.soul, s.divine.B.judgment?.deadline], [30 - atk, s.round + 1]);
+  assert.deepEqual([s.players.B.soul, s.divine.B.judgment?.deadline], [20 - atk, s.round + 1]);
   const lost = s.events.find(e => e.type === 'soul_lost' && e.player === 'B');
   assert.equal(lost.cause, 'loss', 'Lose Soul, não dano (G3-013)');
   checkInvariants(s, ctx.objects);
@@ -115,13 +115,13 @@ test('G3-006/D230: Saint escolhido que sai antes da resolução → Ultimate sem
   announceExclamation(s, ctx, 'A', saints);
   s.units[saints[2]].prepared = false; // deixou de ser Prepared antes da resolução
   passAll(s);
-  assert.deepEqual([s.players.B.soul, s.divine.A.ultimateUsed, s.players.A.bases.filter(b => b.prepared).length, types(s).includes('ultimate_failed')], [30, true, 0, true]);
+  assert.deepEqual([s.players.B.soul, s.divine.A.ultimateUsed, s.players.A.bases.filter(b => b.prepared).length, types(s).includes('ultimate_failed')], [20, true, 0, true]);
 });
 
 test('G3-005: Ultimate independe de Awaken e só no próprio turno com cadeia vazia', () => {
   const {s, ctx, bases, saints} = exclamationSetup();
   bases('A', 13);
-  loseSoul(s, {A: 26}); refreshAwaken(s);
+  loseSoul(s, {A: 16}); refreshAwaken(s);
   assert.equal(ultimateBlock(s, ctx, 'A', saints), null, 'Awaken ativo não impede');
   endTurn(s);
   assert.equal(ultimateBlock(s, ctx, 'A', saints), 'sorcery', 'janela aberta');
@@ -156,9 +156,9 @@ test('G3-009/010/011: Soul máximo em camadas, mínimo 1; recuperação para no 
   const {s} = setup();
   assert.equal(gainSoul(s, 'A', 5), 0, 'já está no máximo');
   addSoulMaxEffect(s, 'A', {add: -4});
-  assert.deepEqual([soulMax(s, 'A'), s.players.A.soul, types(s).includes('soul_lost')], [26, 26, false]);
+  assert.deepEqual([soulMax(s, 'A'), s.players.A.soul, types(s).includes('soul_lost')], [16, 16, false]);
   addSoulMaxEffect(s, 'A', {add: 4});
-  assert.equal(s.players.A.soul, 26, 'aumentar o máximo não devolve Soul');
+  assert.equal(s.players.A.soul, 16, 'aumentar o máximo não devolve Soul');
 });
 
 test('G3-012/014: custo misto atômico; Soul letal pode ser pago e encerra a partida; Soul nunca negativo', () => {

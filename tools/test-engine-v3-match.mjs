@@ -15,12 +15,12 @@ const [rush, fortress] = read('../data/alpha-0.1/decks-proposta-d171.json').deck
 const match = (seed = 7, first = 'A') => createMatch({cards, canonIndex: index, decks: {A: rush, B: fortress}, seed, first});
 const keepAll = m => m.state.order.forEach(k => mulligan(m, k, []));
 
-test('parser lê os 95 registros sem alterar texto e com os números impressos', () => {
+test('parser lê os 95 registros sem alterar texto e com os números impressos (Soul da Alpha pela G3-042)', () => {
   assert.equal(cards.size, 95);
   for (const r of [...canon.cards, ...canon.gods]) assert.equal(cards.get(r.id.toLowerCase()).text, r.approved_current_text_as_of_d268);
   assert.deepEqual([...cards.values()].filter(c => c.kind === 'Devotee' && (c.atk == null || c.hp == null)), []);
   assert.equal(cards.get('athena-v6-019').cosmoble, false); // Kamui: Cosmoble No
-  assert.deepEqual(['athena', 'poseidon', 'hades', 'artemis', 'ares'].map(g => cards.get(`god-${g}`).soul), [30, 27, 32, 24, 30]);
+  assert.deepEqual(['athena', 'poseidon', 'hades', 'artemis', 'ares'].map(g => cards.get(`god-${g}`).soul), [20, 18, 22, 15, 20]); // G3-042 por cima do SOUL impresso
   for (const n of ['062', '063', '064', '065']) assert.equal(cards.get(`athena-v6-${n}`).cost, null, 'D196');
   assert.deepEqual(cards.get('athena-v6-054').cost, {amount: 3, unit: 'latent'});
   assert.deepEqual(cards.get('athena-v6-014').autoEquip, ['Gemini Saga', 'Dragon Shiryu']);
@@ -32,7 +32,7 @@ test('partida Athena × Athena: 60 objetos por deck, God e Domain fora, Soul do 
   const {state, objects} = match();
   assert.equal(Object.keys(objects).length, 120);
   assert.deepEqual([state.players.A.deck.length, state.players.B.deck.length, state.players.A.hand.length, state.players.B.hand.length], [53, 53, 7, 7]); // P01: mão de 7
-  assert.deepEqual([state.players.A.soul, state.players.B.soul], [30, 30]);
+  assert.deepEqual([state.players.A.soul, state.players.B.soul], [20, 20]); // G3-042
   assert.deepEqual(state.domains, {A: 'athena-v6-062', B: 'athena-v6-064'});
   assert.ok(![...state.players.A.deck, ...state.players.A.hand].some(uid => /:06[2-5]:/.test(uid)));
   checkInvariants(state, objects);
@@ -79,12 +79,12 @@ test('simulação reproduzível de compra e Base até a Fatigue (P07) encerrar a
     endTurn(state); passAll(state);
     checkInvariants(state, objects);
   }
-  // P01: deck 53; D170 + G3-037 (1 por turno): 53 compras completas esvaziam o deck. A partir do 55º turno próprio,
-  // cada compra falha tira 1, 2, 3… (P07). A, inicial, chega à 8ª falha (1+…+8 = 36 ≥ 30) no 62º turno, um antes de B.
+  // P01: deck 53; D170 + G3-041 (2 por turno): 26 compras completas deixam 1 carta. A partir do 28º turno próprio,
+  // cada compra falha tira 1, 2, 3… (P07). A, inicial, chega à 6ª falha (1+…+6 = 21 ≥ 20, G3-042) no 31º turno, um antes de B.
   assert.deepEqual(state.victory, {winner: 'B'});
-  assert.equal(log.length, 122);
+  assert.equal(log.length, 60);
   assert.match(log[0], /^R1 A mão 6 deck 53 bases 1/);
-  assert.match(log.at(-1), /^R61 B .* soul 2$/);
+  assert.match(log.at(-1), /^R30 B .* soul 5$/);
   assert.ok(state.players.A.latent <= 3 && state.players.B.latent <= 3);
 });
 

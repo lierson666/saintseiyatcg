@@ -55,12 +55,12 @@ test('Strike no God: Soul cai 1:1 e o God retalia com ATTACK; segunda troca dest
   const s = setup();
   const seiya = s.field('A', '001');
   strike(s, seiya, {kind: 'god', player: 'B'});
-  assert.equal(s.state.players.B.soul, 28);
+  assert.equal(s.state.players.B.soul, 18);
   assert.equal(s.state.units[seiya].damage, 3); // Athena ATTACK 3
   end(s); startTurn(s.state); end(s); startTurn(s.state);
   assert.equal(s.state.units[seiya].prepared, true, 'P02: prepara no início do turno');
   strike(s, seiya, {kind: 'god', player: 'B'});
-  assert.equal(s.state.players.B.soul, 26);
+  assert.equal(s.state.players.B.soul, 16);
   assert.ok(s.state.players.A.tartarus.includes(seiya));
 });
 
@@ -115,7 +115,7 @@ test('P05 Nimble (021) ignora Guardian; Cheater ignora só contra God', () => {
   const enemyDevotee = s.field('B', '042');
   assert.throws(() => declareStrike(s.state, s.ctx, seiya, {kind: 'devotee', uid: enemyDevotee}), /P05/);
   strike(s, seiya, {kind: 'god', player: 'B'});
-  assert.equal(s.state.players.B.soul, 28);
+  assert.equal(s.state.players.B.soul, 18);
 });
 
 test('P05 Pierce: dano acima do HP restante do alvo vai para o Soul do God dele', () => {
@@ -124,13 +124,13 @@ test('P05 Pierce: dano acima do HP restante do alvo vai para o Soul do God dele'
   s.state.units[repairer].damage = 1;
   s.state.units[seiya].keywords = ['Pierce'];
   strike(s, seiya, {kind: 'devotee', uid: repairer});
-  assert.equal(s.state.players.B.soul, 29);
+  assert.equal(s.state.players.B.soul, 19);
   assert.ok(s.state.players.B.tartarus.includes(repairer));
   const t = setup();
   const jabu = t.field('A', '028'), shunrei = t.field('B', '037'); // sem Pierce: excesso não passa
   t.state.units[shunrei].damage = 2;
   strike(t, jabu, {kind: 'devotee', uid: shunrei});
-  assert.equal(t.state.players.B.soul, 30);
+  assert.equal(t.state.players.B.soul, 20);
 });
 
 test('G3-036: atacante ou alvo que sai do campo antes do dano anula o Strike (sem dano nem retaliação; Strike usado)', () => {

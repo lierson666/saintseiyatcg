@@ -71,7 +71,7 @@ test('061 The Call of Athena (God) em resposta ao Strike previne 3 de dano ao Go
   declareStrike(s, ctx, seiya, {kind: 'god', player: 'B'});
   cast('B', '061', {mode: 'god'});
   passAll(s);
-  assert.equal(s.players.B.soul, 30);
+  assert.equal(s.players.B.soul, 20);
   assert.equal(s.effects.find(e => e.target === 'god:B').amount, 1, 'sobra 1 do escudo');
 });
 
@@ -88,12 +88,12 @@ test('088 The Eighth Sense: +3/+3, salva de ser derrotado por Strike e prepara s
   const {s, ctx, field, cast, strike} = setup();
   const seiya = field('A', '001');
   s.units[seiya].prepared = false;
-  s.players.A.soul = 20;
+  s.players.A.soul = 10;
   cast('A', '088', {target: seiya, prepare: true});
-  assert.deepEqual([atkOf(s, ctx, seiya), hpOf(s, ctx, seiya), s.units[seiya].prepared], [6, 7, true], '+1 do Miracle: Soul 20 < 30');
+  assert.deepEqual([atkOf(s, ctx, seiya), hpOf(s, ctx, seiya), s.units[seiya].prepared], [6, 7, true], '+1 do Miracle: Soul 10 < 20');
   s.units[seiya].damage = 6;
   strike(seiya, {kind: 'god', player: 'B'});
-  assert.deepEqual([s.players.B.soul, s.units[seiya].damage], [24, 6], 'retaliação 3 que derrotaria foi prevenida');
+  assert.deepEqual([s.players.B.soul, s.units[seiya].damage], [14, 6], 'retaliação 3 que derrotaria foi prevenida');
   s.units[seiya].prepared = true;
   assert.throws(() => declareStrike(s, ctx, seiya, {kind: 'god', player: 'B'}), /D22|outro Strike/);
 });
@@ -182,7 +182,7 @@ test('opcionais pagos: Prayer of Rozan (1 Latent), Crystal Wall (2 Latent, tamb�
   s.units[shiryu].prepared = false;
   s.players.B.latent = 3;
   strike(marin, {kind: 'god', player: 'B'});
-  assert.deepEqual([s.players.B.soul, s.players.B.latent, asked], [30, 1, ['Crystal Wall']], 'Crystal Wall previne os 2 no God');
+  assert.deepEqual([s.players.B.soul, s.players.B.latent, asked], [20, 1, ['Crystal Wall']], 'Crystal Wall previne os 2 no God');
   const jabu = field('A', '028'); // ATK 2 + Unicorn Gallop 1 contra Shiryu: Dragon Shield 1, Prayer 1, Final Sacrifice o resto
   strike(jabu, {kind: 'devotee', uid: shiryu});
   assert.deepEqual(asked, ['Crystal Wall', 'Prayer of Rozan', 'Final Sacrifice']);

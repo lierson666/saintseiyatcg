@@ -13,7 +13,7 @@ test('D170/D3: sem compra no 1º turno próprio; 2 cartas a partir do 2º', () =
   const s = core();
   startTurn(s); assert.equal(s.players.A.hand.length, 0);
   end(s); startTurn(s); assert.equal(s.players.B.hand.length, 0);
-  end(s); startTurn(s); assert.equal(s.players.A.hand.length, 1, 'G3-037: 1 carta por turno');
+  end(s); startTurn(s); assert.equal(s.players.A.hand.length, 2, 'G3-041: 2 cartas por turno');
 });
 
 test('D191: Round = um turno de cada jogador, na ordem do jogador inicial', () => {

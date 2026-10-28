@@ -89,10 +89,10 @@ test('Strike declarado abre janela; Moment do defensor resolve antes do dano', (
   startTurn(s);
   declareStrike(s, ctx, seiya, {kind: 'god', player: 'B'});
   assert.equal(s.window.priority, 'B');
-  assert.equal(s.players.B.soul, 30, 'dano só depois da janela');
+  assert.equal(s.players.B.soul, 20, 'dano só depois da janela');
   respond(s, 'B', instant(log, 'moment', st => log.push(`soul ${st.players.B.soul}`)));
   passAll(s);
-  assert.deepEqual(log, ['moment', 'soul 30']);
-  assert.equal(s.players.B.soul, 28);
+  assert.deepEqual(log, ['moment', 'soul 20']);
+  assert.equal(s.players.B.soul, 18);
   assert.equal(s.window, null);
 });

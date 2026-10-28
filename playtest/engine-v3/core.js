@@ -4,7 +4,7 @@
 // nada aqui vem da engine 2.2. Fonte da matriz: docs/alpha-0.1/MATRIZ-BLOQUEIOS-ENGINE-3.0.md.
 
 export const LATENT_CAP = 3; // D198, D226
-export const DRAWS_PER_TURN = 1; // D3, quantidade pela G3-037 (autor, 28/10/2026: antes 2)
+export const DRAWS_PER_TURN = 2; // D3; G3-037 tinha reduzido para 1, G3-041 (autor, 28/10/2026) volta a 2
 // D194: classificação Moment/Technique pelo número da carta Athena V6.
 const MOMENTS = new Set([54, 56, 58, 61, 76, 79]);
 // 53, 60, 82 e 85: Technique por decisão do autor em 28/10/2026 (custo {B}), fora da lista da D194.

@@ -44,7 +44,7 @@ test('Devotee jogado entra Unprepared, paga Base e não ataca no turno em que en
   assert.equal(s.units[seiya].prepared, true);
   declareStrike(s, ctx, seiya, {kind: 'god', player: 'B'});
   passAll(s);
-  assert.equal(s.players.B.soul, 30 - cards.get('athena-v6-001').atk);
+  assert.equal(s.players.B.soul, 20 - cards.get('athena-v6-001').atk);
 });
 
 test('Impulse deixa declarar Strike no turno em que entra', () => {
@@ -57,7 +57,7 @@ test('Impulse deixa declarar Strike no turno em que entra', () => {
   playDevotee(s, ctx, 'A', seiya);
   declareStrike(s, ctx, seiya, {kind: 'god', player: 'B'});
   passAll(s);
-  assert.equal(s.players.B.soul, 28);
+  assert.equal(s.players.B.soul, 18);
   assert.deepEqual(cards.get('athena-v6-001').keywords, []);
 });
 
@@ -96,7 +96,7 @@ test('início do turno: prepara, depois gatilhos (APNAP/LIFO, com janela), depoi
   assert.equal(s.players.A.hand.length, 0, 'compra espera os gatilhos');
   passAll(s);
   assert.deepEqual(log, ['base true mão 0', 'base true mão 0']);
-  assert.equal(s.players.A.hand.length, 1, 'G3-037');
+  assert.equal(s.players.A.hand.length, 2, 'G3-041');
 });
 
 const ready = (s, key) => s.players[key].bases.filter(b => b.prepared).length;
@@ -161,8 +161,8 @@ test('Moment (056) do defensor responde ao Strike, paga Latent, resolve antes do
   assert.deepEqual([s.players.B.latent, s.players.B.stack], [0, [protect]]);
   checkInvariants(s, objects);
   passAll(s);
-  assert.deepEqual(log, ['soul 30']);
-  assert.equal(s.players.B.soul, 28);
+  assert.deepEqual(log, ['soul 20']);
+  assert.equal(s.players.B.soul, 18);
   assert.ok(s.players.B.tartarus.includes(protect));
   checkInvariants(s, objects);
 });

@@ -36,11 +36,11 @@ test('Miracle (001) e Resonance da 019: só com o God atrás; a Resonance só va
   const seiya = field('A', '001'), jabu = field('A', '028');
   equip('A', '019', jabu);
   assert.equal(atkOf(s, ctx, seiya), 2);
-  s.players.A.soul = 29;
+  s.players.A.soul = 19;
   assert.deepEqual([atkOf(s, ctx, seiya), hpOf(s, ctx, jabu)], [3, 2], 'Miracle; 019 em Jabu não dá +2/+2');
   const t = setup(), seiya2 = t.field('A', '001');
   t.equip('A', '019', seiya2);
-  t.s.players.A.soul = 29;
+  t.s.players.A.soul = 19;
   assert.deepEqual([atkOf(t.s, t.ctx, seiya2), hpOf(t.s, t.ctx, seiya2)], [2 + 1 + 3 + 2, 6]);
 });
 
@@ -104,14 +104,14 @@ test('Pegasus God Cloth (019): ao jogar com o God atrás, +3/+3 e prepara; Divin
   const {s, ctx, field, hand, bases, strike} = setup({A: rush, B: fortress}, yes);
   const seiya = field('A', '001'), jabu = field('A', '028'), kamui = hand('A', '019');
   s.units[jabu].prepared = false;
-  s.players.A.soul = 15; // continua atrás depois do Strike (B cai para 20)
+  s.players.A.soul = 8; // continua atrás depois do Strike (B cai para 10) e sem Awaken (≤ 5)
   bases('A', 11);
   playEquipment(s, ctx, 'A', kamui, seiya, {target: jabu});
   passAll(s);
   assert.deepEqual([atkOf(s, ctx, jabu), s.units[jabu].prepared], [5, true]);
   s.units[seiya].damage = 5; s.units[kamui] = {damage: 6}; // HP 4 + 2 da Resonance; Armor com 1 de folga
   strike(seiya, {kind: 'god', player: 'B'}); // 2 + Miracle 1 + 019 3 + Resonance 2 + Divine Cosmo 2 = 10
-  assert.equal(s.players.B.soul, 20);
+  assert.equal(s.players.B.soul, 10);
   assert.equal(s.players.A.bases.filter(b => b.prepared).length, 0, '6 + 3 + 2 Bases');
   assert.deepEqual([s.units[seiya].damage, s.units[kamui].damage], [5, 6], 'Divine Protection preveniu a retaliação que derrotaria');
 });
