@@ -571,6 +571,7 @@ function render() {
       ${cosmoGauge(me, 'me')}${godHud(me, 'me')}
       ${handRow(me, false)}
       ${command()}
+      ${s.window && !s.victory ? `<div class="priority-glow priority-glow--${s.window.priority === me ? 'me' : 'opp'}" aria-hidden="true"></div>` : ''}
     </div>${choiceBar()}`;
   if (drag?.ghost) showDragZones(drag.uid); // re-render no meio do arraste não apaga as zonas
   const focused = document.activeElement?.closest?.('.decision [data-focus]')?.dataset.focus;
