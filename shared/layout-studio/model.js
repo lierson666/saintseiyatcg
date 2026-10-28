@@ -36,7 +36,7 @@ export const BINDINGS={
   'card.rarity':{label:'Raridade',read:c=>c.card.raridade},
   'card.type':{label:'Tipo',read:c=>c.card.tipo},
   'card.subtypes':{label:'Subtipos',read:c=>c.card.subtipos||[]},
-  'card.typeLine':{label:'Linha de tipo',read:c=>[c.card.tipo,...(c.card.subtipos||[]),c.card.faccao].filter(Boolean).join(' — ')},
+  'card.typeLine':{label:'Linha de tipo',read:c=>[c.card.tipo==='Spell'?null:c.card.tipo,...(c.card.subtipos||[]),c.card.faccao].filter(Boolean).join(' — ')},
   'card.cost':{label:'Custo impresso',read:c=>c.card.custo},
   'card.cosmoble':{label:'Cosmoble',read:c=>c.card.cosmoble},
   'card.rules':{label:'Habilidades aprovadas',read:c=>ruleParts(c.card).rules},

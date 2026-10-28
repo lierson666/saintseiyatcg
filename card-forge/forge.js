@@ -114,9 +114,10 @@ function layoutKey(s) {
 const list = (v) => (Array.isArray(v) ? v : String(v || '').split(',')).map((x) => x.trim()).filter(Boolean);
 const has = (v) => v !== null && v !== undefined && String(v).trim() !== '';
 
+// Spell não aparece na linha de tipo: Technique, Moment e Miracle já são os Spells (autor, 28/10/2026).
 function typeLine(s, fmt) {
-  return fmt.replace('{tipo}', s.tipo).replace('{faccao}', s.faccao).replace('{subtipos}', list(s.subtipos).join(' — '))
-    .replace(/\s*[—-]\s*$/, '').replace(/\s*[—-]\s*(?=\s*[—-])/g, '');
+  return fmt.replace('{tipo}', s.tipo === 'Spell' ? '' : s.tipo).replace('{faccao}', s.faccao).replace('{subtipos}', list(s.subtipos).join(' — '))
+    .replace(/^\s*[—-]\s*/, '').replace(/\s*[—-]\s*$/, '').replace(/\s*[—-]\s*(?=\s*[—-])/g, '');
 }
 
 // ---------- desenho ----------

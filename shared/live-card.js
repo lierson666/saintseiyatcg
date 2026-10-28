@@ -67,7 +67,7 @@ function renderPsdCard(card,{src,stage,hp,power,keywords,damage,rules,equipment,
       out+=gem(el.piece,at(el.piece,el),v,el.label,el.field==='equip'?'live-card__equip':`lc-gem--${el.field}`,undefined,stat);
     }
     else if(el.kind==='text'){
-      const v=el.field==='name'?card.nome_exibicao_en:el.field==='typeLine'?L.typeLine.replace('{tipo}',card.tipo).replace('{faccao}',card.faccao||'').replace('{subtipos}',(card.subtipos||[]).join(' — ')).replace(/(\s*[—-]\s*)+$/,'').replace(/\s*[—-]\s*(?=[—-])/g,''):el.field==='flavour'?(card.flavour_en||card.flavour):el.field==='subtitle'?card.subtitulo_en:null;
+      const v=el.field==='name'?card.nome_exibicao_en:el.field==='typeLine'?L.typeLine.replace('{tipo}',card.tipo==='Spell'?'':card.tipo).replace('{faccao}',card.faccao||'').replace('{subtipos}',(card.subtipos||[]).join(' — ')).replace(/^(\s*[—-]\s*)+/,'').replace(/(\s*[—-]\s*)+$/,'').replace(/\s*[—-]\s*(?=[—-])/g,''):el.field==='flavour'?(card.flavour_en||card.flavour):el.field==='subtitle'?card.subtitulo_en:null;
       if(has(v))out+=text(v,el,el.field==='name'?'live-card__heading':el.field==='typeLine'?'live-card__type':'');
     }
     else if(el.kind==='rules'){
