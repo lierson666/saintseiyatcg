@@ -8,7 +8,7 @@ import {startTurn, endTurn, pass, placeBase, spellCategory, runCheckpoint} from 
 import {declareStrike, strikeTargets} from '../engine-v3/strike.js';
 import {playDevotee, playEquipment, playSpell, activate, reequip} from '../engine-v3/play.js';
 import {atkOf, hpOf, keywordsOf, gearOf, isSaint, isBronze, ABILITIES} from '../engine-v3/effects.js';
-import {STEPS} from '../choices-v3.js';
+import {STEPS, ABILITY_STEPS} from '../choices-v3.js?v=2';
 import {createScene, THEMES} from './scene.js?v=20261028-4';
 import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudgment, greatFloodBlock, announceGreatFlood, GREAT_FLOOD_COST} from '../engine-v3/gods.js';
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout} from '../engine-v3/clock.js';
@@ -61,6 +61,12 @@ function affordable(key, cost) {
   return cost.unit === 'latent' ? S().players[key].latent >= cost.amount : readyBases(key) >= cost.amount;
 }
 const idleFor = key => { const s = S(); return !pending && !s.victory && !s.setup && !s.window && !s.chain.length && s.active === key; };
+// Primeira escolha obrigatória sem candidato (ex.: Spell que pede um Saint aliado sem nenhum em campo).
+const PICK_NEED = {saint: 'a friendly Saint', 'ready-saint': 'a Prepared friendly Saint', bronze: 'a friendly Bronze Saint', devotee: 'a friendly Devotee', armor: 'a friendly Armor', enemy: 'an enemy Devotee'};
+function missingTarget(key, uid) {
+  const step = (STEPS[num(uid)] || []).find(st => st.pick && !st.when);
+  return step && !step.optional && !candidates(step, key).length ? `Needs ${PICK_NEED[step.pick] || 'a legal target'}.` : null;
+}
 function playableReason(key, uid) {
   const s = S(), c = info(uid);
   if (s.victory || s.setup) return 'The match is not running.';
@@ -69,7 +75,7 @@ function playableReason(key, uid) {
     const cat = spellCategory(Number(num(uid)));
     if (!cat) return 'This Spell has no approved speed yet.';
     if (cat.speed === 'instant' ? !(s.window ? s.window.priority === key : s.active === key && !s.chain.length) : !idleFor(key)) return cat.speed === 'instant' ? 'You need priority to cast a Moment.' : 'Techniques are cast on your turn, with no response pending.';
-    return affordable(key, c.cost) ? null : `Needs ${c.cost.amount} ${c.cost.unit === 'base' ? 'prepared Base' : 'Latent'} Cosmo.`;
+    return affordable(key, c.cost) ? missingTarget(key, uid) : `Needs ${c.cost.amount} ${c.cost.unit === 'base' ? 'prepared Base' : 'Latent'} Cosmo.`;
   }
   if (!idleFor(key)) return s.active !== key ? "It's not your turn." : 'Wait for the response window to close.';
   if (c.kind === 'Equipment') {
@@ -161,6 +167,12 @@ function advance() {
   while (mode && mode.i < mode.steps.length) {
     const step = mode.steps[mode.i];
     if (step.when && !step.when(mode.choice)) { mode.i++; continue; }
+    // Escolha obrigatória sem nenhum candidato: avisa e cancela em vez de travar a barra de escolha.
+    if (step.pick && !step.optional && !mode.picked.length && !candidates(step, mode.key).length) {
+      mode = null;
+      warn('No legal choice for that right now.');
+      return render();
+    }
     if (step.confirm) return render(); // pergunta sim/não na barra de escolha
     return render();
   }
@@ -643,7 +655,7 @@ function fieldMenu(uid, el) {
   if (c.kind === 'Devotee') {
     if (strikeTargets(s, ctx, uid).length) items.push(['Strike', () => startStrike(uid)]);
     const ab = ABILITIES[num(uid)];
-    if (ab && s.units[uid]?.prepared) items.push([`${ab.name} ({T}, ${ab.cost} Base)`, () => begin('activate', key, uid, STEPS[num(uid)] || [], ch => activate(S(), ctx, key, uid, ch))]);
+    if (ab && s.units[uid]?.prepared) items.push([`${ab.name} ({T}, ${ab.cost} Base)`, () => begin('activate', key, uid, ABILITY_STEPS[num(uid)] || [], ch => activate(S(), ctx, key, uid, ch))]);
   } else if (c.kind === 'Equipment' && !ctx.attached[uid]) items.push(['Re-equip', () => begin('reequip', key, uid, [{key: 'bearer', pick: 'devotee', label: 'Re-equip to which Devotee?'}], ch => reequip(S(), ctx, key, uid, ch.bearer))]);
   if (!items.length) return warn(s.units[uid]?.prepared === false ? 'Unprepared: it readies at the start of your turn.' : 'No action available for this card.');
   quickMenu(el, items);

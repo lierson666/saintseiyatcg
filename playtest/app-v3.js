@@ -7,7 +7,7 @@ import {startTurn, endTurn, pass, placeBase, spellCategory} from './engine-v3/co
 import {declareStrike} from './engine-v3/strike.js';
 import {playDevotee, playEquipment, playSpell, activate, reequip} from './engine-v3/play.js';
 import {atkOf, hpOf, keywordsOf, gearOf, isSaint, isBronze, ABILITIES} from './engine-v3/effects.js';
-import {STEPS} from './choices-v3.js';
+import {STEPS, ABILITY_STEPS} from './choices-v3.js?v=2';
 
 const root = document.querySelector('#root'), notice = document.querySelector('#notice');
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -212,7 +212,7 @@ root.addEventListener('click', e => {
       say(`${key}: ${info(attacker).name} strikes ${target.kind === 'god' ? `God ${target.player}` : info(target.uid).name}.`);
     });
   }
-  if (d.activate) return begin('activate', s.active, d.activate, STEPS[num(d.activate)] || [], ch => { activate(s, ctx, s.active, d.activate, ch); say(`${s.active} uses ${ABILITIES[num(d.activate)].name}.`); });
+  if (d.activate) return begin('activate', s.active, d.activate, ABILITY_STEPS[num(d.activate)] || [], ch => { activate(s, ctx, s.active, d.activate, ch); say(`${s.active} uses ${ABILITIES[num(d.activate)].name}.`); });
   if (d.reequip) return begin('reequip', s.active, d.reequip, [{key: 'bearer', pick: 'devotee', label: 'Re-equip to which friendly Devotee?'}], ch => { reequip(s, ctx, s.active, d.reequip, ch.bearer); say(`${s.active} re-equips ${info(d.reequip).name}.`); });
 });
 
