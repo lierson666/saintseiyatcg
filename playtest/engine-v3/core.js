@@ -17,7 +17,7 @@ export class NotSpecified extends Error {
 }
 
 export function createCore({first = 'A', second = 'B', soul, decks}) {
-  const player = key => ({soul: soul[key], latent: 0, deck: [...decks[key]], hand: [], tartarus: [], bases: [], ownTurns: 0, baseTurn: 0});
+  const player = key => ({soul: soul[key], latent: 0, deck: [...decks[key]], hand: [], battlefield: [], tartarus: [], void: [], bases: [], ownTurns: 0, baseTurn: 0});
   return {round: 1, turn: 0, turnInRound: 0, order: [first, second], active: first, victory: null,
     players: {[first]: player(first), [second]: player(second)}, roundUses: new Set(), strikes: new Map(), effects: []};
 }
@@ -108,6 +108,33 @@ export function useOncePerRound(state, id) {
 
 // D191: 'this_round' cobre os dois turnos; 'next_round' termina no fim do Round seguinte ao da criação.
 export function addEffect(state, effect) { state.effects.push({...effect, round: state.round}); }
+
+// Destroy (D197) de um Devotee: vai para o Tartarus do Owner, e a Armor presa a ele também (D40/D90).
+// `objects`: uid -> {owner, armor}; `attached`: uid do Equipment -> uid do Devotee.
+export function destroyDevotee(state, uid, objects, attached) {
+  const zone = Object.values(state.players).find(p => p.battlefield.includes(uid));
+  if (!zone) throw new RuleError('D197', `${uid} não está no campo`);
+  const gear = Object.keys(attached).filter(e => attached[e] === uid);
+  // shortcut: só Armor tem destino canônico ao sair o portador; outro Equipment espera regra.
+  if (gear.some(e => !objects[e].armor)) throw new NotSpecified('destino de Equipment não-Armor quando o portador sai (D40/D90 cobrem só Armor)');
+  for (const moved of [uid, ...gear]) {
+    for (const p of Object.values(state.players)) p.battlefield = p.battlefield.filter(x => x !== moved);
+    state.players[objects[moved].owner].tartarus.push(moved);
+    delete attached[moved];
+  }
+}
+
+// Invariante: cada objeto de deck está em exatamente uma zona; Latent dentro do teto.
+export function checkInvariants(state, objects) {
+  const seen = new Map();
+  for (const [key, p] of Object.entries(state.players)) {
+    for (const zone of ['deck', 'hand', 'battlefield', 'tartarus', 'void']) for (const uid of p[zone]) seen.set(uid, (seen.get(uid) || 0) + 1);
+    for (const base of p.bases) seen.set(base.uid, (seen.get(base.uid) || 0) + 1);
+    if (p.latent < 0 || p.latent > LATENT_CAP) throw new Error(`Latent fora do teto: ${key}=${p.latent}`);
+  }
+  const missing = Object.keys(objects).filter(uid => seen.get(uid) !== 1);
+  if (missing.length || seen.size !== Object.keys(objects).length) throw new Error(`objetos fora de zona única: ${missing.slice(0, 5)}`);
+}
 
 export function spellCategory(number) {
   if (MOMENTS.has(number)) return {category: 'Moment', resource: 'latent', speed: 'instant'};

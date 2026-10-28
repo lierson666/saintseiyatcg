@@ -1,0 +1,37 @@
+// Leitura dos 95 registros do snapshot D268 para a engine 3.0.
+// Só lê `approved_current_text_as_of_d268`; nunca altera nem reescreve o texto.
+
+const UNITS = {B: 'base', L: 'latent'};
+const number = (text, pattern) => { const m = text.match(pattern); return m ? Number(m[1]) : null; };
+
+export function parseCard(record) {
+  const text = record.approved_current_text_as_of_d268;
+  const type = record.type;
+  const kind = type.startsWith('God') ? 'God' : type.startsWith('Domain') ? 'Domain'
+    : type.includes('Equipment') ? 'Equipment' : type.split(' — ')[0];
+  const cost = text.match(/Casting Cost: (\d+) \{([BL])\}/);
+  const cosmoble = text.match(/Cosmoble: (Yes|No)/);
+  return {
+    id: record.id.toLowerCase(),
+    name: record.name,
+    type,
+    kind,
+    armor: type.includes('Armor'),
+    rarity: text.match(/Rarity: (\w+)/)?.[1] ?? null,
+    // D196: Domains sem custo e sem Cosmoble no texto exibido.
+    cost: cost ? {amount: Number(cost[1]), unit: UNITS[cost[2]]} : null,
+    cosmoble: cosmoble ? cosmoble[1] === 'Yes' : null,
+    atk: number(text, /ATK: (\d+)/) ?? number(text, /ATTACK (\d+)/),
+    hp: number(text, /HP: (\d+)/),
+    soul: number(text, /SOUL (\d+)/),
+    awaken: number(text, /AWAKEN (\d+)/),
+    keywords: ['Guardian', 'Cheater', 'Nimble', 'Pierce', 'Impulse', 'Long Range']
+      .filter(k => new RegExp(`^\\s*${k}\\s*$`, 'm').test(text)),
+    text,
+  };
+}
+
+export const loadCanon = canon => new Map([...canon.cards, ...canon.gods].map(r => {
+  const card = parseCard(r);
+  return [card.id, card];
+}));

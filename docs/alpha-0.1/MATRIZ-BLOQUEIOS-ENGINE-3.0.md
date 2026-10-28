@@ -156,3 +156,29 @@ Critério usado:
 | Dragon Fortress | 003, 004, 011, 037, 040, 041, 042, 045, 058 | 043 ×2, 044, 048, 061, 085, **027 ×3 (Cassios, nova na lista)** |
 
 Cassios é uma carta Warrior agressiva dentro de um deck defensivo. O critério mecânico chegou a ela porque a lista Dragon não tinha mais Devotees elegíveis. A escolha final é do autor.
+
+## Atualização de 28/10/2026 (segunda rodada)
+
+- **Fatigue, linha 27:** a D233 traz uma citação canônica (**C\***): "failed Draw still follows pre-existing **cumulative** Soul Fatigue". Ela também fala em "missed-Draw progression". Logo, a Fatigue é cumulativa e tira Soul. O valor exato continua na ALPHA-P07.
+- **Evidência nas cartas** para a P02 e a P04:
+  - Hades: "They enter Unprepared and lose Impulse";
+  - Ares: "as though they had Impulse";
+  - 005 e Artemis: o God retalia ("retaliatory Strike damage", "retaliation damage from Gods");
+  - 041: "Remove up to 2 damage", o que indica que o dano persiste.
+- **Propostas:** `docs/alpha-0.1/PROPOSTAS-ALPHA-P01-P07.md`. Todas **NÃO APROVADAS**.
+
+### Entregas técnicas desta rodada
+
+| Arquivo | O que faz |
+| --- | --- |
+| `shared/canon-cards.js` | Lê os 95 registros (tipo, custo e unidade, ATK, HP, Soul, Cosmoble e keywords de linha própria) sem alterar o texto |
+| `playtest/engine-v3/match.js` | Partida a partir dos dois decks aprovados: valida os decks, gera 120 objetos, embaralha com seed, deixa God e Domain fora e tira o Soul do God |
+| `core.js` | Zonas de campo e Void, Destroy com Armor para o Tartarus do Owner (D197, D40/D90) e invariante de zona única com teto de Latent |
+| `tools/test-engine-v3-match.mjs` | 6 testes, incluindo uma simulação reproduzível (seed 42) de 62 turnos que roda até a Fatigue bloquear |
+
+Ficam em `NotSpecified`:
+- destino de Equipment que não é Armor quando o portador sai;
+- custo pago com {C};
+- mão inicial (P01);
+- Fatigue (P07);
+- preparação (P02).
