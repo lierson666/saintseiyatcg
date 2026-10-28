@@ -634,7 +634,7 @@ O autor aprovou a aplicação das recomendações de fechamento ao sistema do jo
 ### 55. Rodada, iniciativa, compras e passe
 
 - Sortear a iniciativa inicial. O vencedor escolhe quem começa e o perdedor do sorteio recebe 1 Latent, independentemente dessa escolha. A iniciativa alterna entre os jogadores a cada rodada, independentemente de quem realizou a última AÇÃO.
-- Ambos começam com 7 cartas. Não há compra normal na primeira rodada. A partir da segunda, ambos compram **2 cartas** no início da rodada.
+- Ambos começam com 7 cartas. Não há compra normal na primeira rodada. A partir da segunda, cada jogador compra **1 carta** no início do próprio turno.
 - Ordem do início: renovar as Bases dos dois jogadores; preparar seus Devotees; renovar limites por rodada; realizar as compras; resolver os gatilhos de início. O jogador com iniciativa recebe a primeira oportunidade de AÇÃO após essa preparação.
 - Cada jogador pode colocar uma Base Cosmoble durante sua própria oportunidade, antes da AÇÃO e com a pilha vazia, uma vez por rodada. Isso não consome a AÇÃO e não abre uma janela de resposta por si só. Gatilhos causados pela colocação são resolvidos antes da AÇÃO.
 - Pass encerra as AÇÕES comuns daquele jogador na rodada. O adversário pode realizar AÇÕES sucessivas até passar. Ambos terem passado encerra a fase. O jogador que passou ainda pode responder; passes de prioridade são separados e nunca declaram Pass da rodada.
@@ -642,7 +642,7 @@ O autor aprovou a aplicação das recomendações de fechamento ao sistema do jo
 - Não há limite máximo de cartas na mão nesta base de regras.
 - Tentar comprar sem cartas suficientes causa derrota: comprar o que houver e registrar a falha na quantidade restante. Se os dois falharem na mesma compra simultânea, o resultado é empate.
 
-**Por quê:** uma Base usa uma carta da mão. Duas compras sustentam desenvolvimento de recurso e novas jogadas na mesma rodada; com apenas uma, o jogador pode gastar sua compra inteira mantendo a curva. Alternar a iniciativa reduz a vantagem recorrente de agir primeiro. O ritmo precisa ser medido com as cartas novas.
+**Por quê:** comprar 2 cartas por turno gerava vantagem de cartas grande demais no playtest (autor, 28/10/2026). Com 1 compra, colocar Base passa a custar uma escolha real entre recurso e jogada.
 
 ### 56. Timing, respostas e resolução
 

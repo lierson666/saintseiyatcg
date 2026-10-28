@@ -21,7 +21,7 @@ Fontes primárias procuradas sem resultado: o repositório (todos os branches e 
 | 2 | Checkpoint de fim de Round | No 2º turno: após os efeitos normais da End Phase e antes do Cleanup, os gatilhos entram em APNAP e LIFO, com respostas normais; depois vem o Cleanup e o novo Round | D204 (resolve a nota em aberto da D191) | **C** | Não |
 | 3 | Turno livre (ações em sequência, sem microações alternadas) | Opção A, "Turno Livre" | D1 (doc 05) + princípio do Handbook 3.0 | **S** | **Sim**: falta o texto. A direção é clara, mas não há a regra exata |
 | 4 | Preparação no início do turno | "Preparação Automática", opção A. Não diz o que prepara (Devotees, Bases, Gods) nem em que ordem | D2 (doc 05) | **S** | **Sim** |
-| 5 | Compra no turno | 2 cartas por turno a partir do 2º turno próprio | D3 (doc 05) | **S** | **Sim** (falta confirmar) |
+| 5 | Compra no turno | 1 carta por turno a partir do 2º turno próprio | D3 + G3-037 (autor, 28/10/2026) | **S** | **Sim** |
 | 6 | Sem compra no 1º turno de cada jogador | Citada no texto integral da D191 | D170 | **C\*** | Não, para esse ponto específico |
 | 7 | Mão inicial e mulligan | Nada aprovado para a 3.0. A 2.0 tem procedimento, mas o doc 05 diz que isso não prova aprovação | — | **H** | **Sim** |
 | 8 | Cosmo Base | 1 Base Cosmoble por turno; Bases preparadas no início do turno | D4 (doc 05) | **S** | **Sim** (falta confirmar) |

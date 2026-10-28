@@ -213,7 +213,7 @@ function windowLoop(g) {
   }
 }
 
-function play(g, maxTurns = 120) {
+function play(g, maxTurns = 240) { // G3-037 (1 compra por turno): partidas mais longas
   const {s, m} = g;
   // Mulligan (P01): o bot devolve as cartas sem custo pagável no começo (custo ≥ 4), no máximo 2.
   while (s.setup) {

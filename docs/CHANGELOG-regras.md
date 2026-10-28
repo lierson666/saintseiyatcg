@@ -4,6 +4,14 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-28 — §(compra) e Handbook 3.0 G3-037 — compra de 1 carta por turno
+
+- **Seção:** `docs/guia-do-jogo.md` (início da partida e compra) e `docs/alpha-0.1/GODS-3.0-SUPPLEMENT.md` (G3-037, substitui a quantidade da D3).
+- **Antes:** a partir da segunda rodada, 2 cartas por turno.
+- **Depois:** 1 carta por turno, a partir do 2º turno próprio. Primeiro turno continua sem compra.
+- **Motivo:** decisão do autor em 28/10/2026: "2 cartas tá muito roubado".
+- **Pendências:** engine 3.0 ajustada; engine 2.x não foi alterada; ritmo a medir no playtest.
+
 ## 2026-10-28 — §63 Deck, identidade, mulligan, Gods e Domains — regra de personagem nomeado
 
 - **Antes:** "Não permitir jogar da mão uma segunda versão de personagem que já controla"; a escolha de qual manter só valia para duplicidade criada por efeito.

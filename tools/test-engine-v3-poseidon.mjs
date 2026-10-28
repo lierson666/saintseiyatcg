@@ -274,7 +274,7 @@ test('Duelo FIXTURE Athena × Poseidon: partida reproduzível até o fim, Water 
     const m = createMatch({cards, canonIndex: canonIndex(canon), decks: {A: rush, B: fortress}, gods: {A: 'god-athena', B: 'god-poseidon'}, first: 'A', seed});
     const s = m.state, ctx = {cards, objects: m.objects, attached: m.attached, decide: () => true};
     mulligan(m, 'A', []); mulligan(m, 'B', []);
-    for (let turn = 0; turn < 60 && !s.victory; turn++) {
+    for (let turn = 0; turn < 160 && !s.victory; turn++) { // G3-037: 1 compra por turno alonga a partida
       startTurn(s); passAll(s);
       if (s.victory) break;
       const key = s.active, p = s.players[key];
