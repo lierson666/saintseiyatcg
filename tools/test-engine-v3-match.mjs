@@ -48,7 +48,7 @@ test('deck inválido é recusado ao montar a partida', () => {
   assert.throws(() => createMatch({cards, canonIndex: index, decks: {A: bad, B: fortress}}), /Deck A inválido/);
 });
 
-test('Destroy leva Devotee e Armor para o Tartarus do Owner; Equipment não-Armor fica bloqueado', () => {
+test('Destroy leva Devotee e Armor para o Tartarus do Owner; Equipment não-Armor fica solto no campo', () => {
   const {state, objects, attached} = match();
   const take = id => { const p = state.players.A, uid = p.deck.find(u => u.includes(`:${id}:`)); p.deck.splice(p.deck.indexOf(uid), 1); p.battlefield.push(uid); return uid; };
   const seiya = take('001'), cloth = take('002');
@@ -61,7 +61,8 @@ test('Destroy leva Devotee e Armor para o Tartarus do Owner; Equipment não-Armo
   const p = s2.players.A, shiryu = p.deck.find(u => u.includes(':003:')), shield = p.deck.find(u => u.includes(':045:'));
   for (const u of [shiryu, shield]) { p.deck.splice(p.deck.indexOf(u), 1); p.battlefield.push(u); }
   a2[shield] = shiryu;
-  assert.throws(() => destroyDevotee(s2, shiryu, o2, a2), NotSpecified);
+  destroyDevotee(s2, shiryu, o2, a2);
+  assert.deepEqual([p.battlefield, p.tartarus, a2], [[shield], [shiryu], {}]);
 });
 
 test('simulação reproduzível de compra e Base até a Fatigue (P07) encerrar a partida, sem perder objetos', () => {

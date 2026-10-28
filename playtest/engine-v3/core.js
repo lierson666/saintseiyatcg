@@ -120,17 +120,18 @@ export function useOncePerRound(state, id) {
 export function addEffect(state, effect) { state.effects.push({...effect, round: state.round}); }
 
 // Destroy (D197) de um Devotee: vai para o Tartarus do Owner, e a Armor presa a ele também (D40/D90).
+// Equipment que não é Armor fica no campo, solto, e pode ser reequipado (autor, 28/10/2026).
 // `objects`: uid -> {owner, armor}; `attached`: uid do Equipment -> uid do Devotee.
 export function destroyDevotee(state, uid, objects, attached) {
   const zone = Object.values(state.players).find(p => p.battlefield.includes(uid));
   if (!zone) throw new RuleError('D197', `${uid} não está no campo`);
   const gear = Object.keys(attached).filter(e => attached[e] === uid);
-  // shortcut: só Armor tem destino canônico ao sair o portador; outro Equipment espera regra.
-  if (gear.some(e => !objects[e].armor)) throw new NotSpecified('destino de Equipment não-Armor quando o portador sai (D40/D90 cobrem só Armor)');
-  for (const moved of [uid, ...gear]) {
+  for (const loose of gear.filter(e => !objects[e].armor)) delete attached[loose];
+  for (const moved of [uid, ...gear.filter(e => objects[e].armor)]) {
     for (const p of Object.values(state.players)) p.battlefield = p.battlefield.filter(x => x !== moved);
     state.players[objects[moved].owner].tartarus.push(moved);
     delete attached[moved];
+    delete state.units[moved];
   }
 }
 

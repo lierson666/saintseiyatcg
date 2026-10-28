@@ -4,6 +4,21 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — Bônus de Equipment e dano em Armor
+
+- **Antes:** D227 citava dano "absorbed by Armor" e "Armor priority", sem a regra (D1–D191 fora das fontes). Equipment não-Armor sem destino quando o portador sai.
+- **Depois (decisões do autor nesta data):**
+  - O bônus fixo impresso ("Equipped Devotee gets +A ATK / +H HP and <Keyword>") vale enquanto o Equipment está preso.
+  - Dano de Strike num Devotee passa primeiro pelas Armor dele; Armor com dano maior ou igual ao HP vai para o Tartarus do Owner e o excesso segue ao Devotee. O dano na Armor persiste.
+  - Sem limite de Armor por Devotee; elas absorvem na ordem em que foram equipadas.
+  - Equipment que não é Armor fica no campo, solto, quando o portador sai; pode ser reequipado pagando Equip {N}.
+- **Motivo:** escolha do autor entre as opções apresentadas.
+- **Pendências:**
+  - a ordem de absorção entre várias Armor foi escolhida na implementação; confirmar;
+  - bônus condicionais (047, 051, Resonance) e demais efeitos de carta ainda não estão na engine 3.0;
+  - no Pierce, o excesso é o que passa da Armor e do HP restante do Devotee.
+- Vale para a engine 3.0 (`playtest/engine-v3/`); o `docs/guia-do-jogo.md` (2.x) não muda.
+
 ## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — Jogar Equipment e Spell da mão
 
 - **Antes:** D192–D268 não definiam a relação entre Casting Cost, Auto-Equip e Equip {N}, nem o destino de uma Spell resolvida.
@@ -14,7 +29,7 @@ Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências
 - **Pendências:**
   - Spells sem categoria na D194 (por exemplo 053 e 060 da Pegasus Rush) não podem ser jogadas; a engine para com aviso;
   - 020 não tem Auto-Equip nem Equip {N}; a engine para com aviso;
-  - os efeitos das cartas, incluindo "When you cast" (019), bônus de Equipment e HP de Armor, ainda não estão na engine 3.0;
+  - os efeitos das cartas, incluindo "When you cast" (019), ainda não estão na engine 3.0;
   - o recurso de Equip {N} segue o do Casting Cost (Base em todas as cartas atuais).
 - Vale para a engine 3.0 (`playtest/engine-v3/`); o `docs/guia-do-jogo.md` (2.x) não muda.
 

@@ -42,21 +42,39 @@ export function playDevotee(state, ctx, key, uid) {
 // Ação comum: não abre janela (P06).
 export function playEquipment(state, ctx, key, uid, bearer) {
   const card = sorceryFromHand(state, ctx, key, uid, 'Equipment');
-  const target = ctx.cards.get(ctx.objects[bearer]?.cardId);
-  if (!state.players[key].battlefield.includes(bearer) || target?.kind !== 'Devotee') {
-    throw new RuleError('Equip', 'o portador precisa ser um Devotee seu no campo');
-  }
-  const named = card.autoEquip.some(name => name.toUpperCase() === target.name.toUpperCase());
-  let cost;
-  if (named) cost = card.cost;
-  else if (card.equip) cost = {amount: card.equip.amount, unit: card.cost.unit}; // "Other" e "Any" cobrem quem não é nomeado
-  else if (!card.autoEquip.length) throw new NotSpecified(`${card.id}: Equipment sem Auto-Equip nem Equip {N}`);
-  else throw new RuleError('Equip', `${card.name} só equipa ${card.autoEquip.join(' ou ')}`);
+  const cost = equipCost(state, ctx, key, card, bearer);
   payCost(state, key, cost);
   leaveHand(state, key, uid);
   state.players[key].battlefield.push(uid);
   ctx.attached[uid] = bearer;
   return {cost};
+}
+
+// Equipment solto no campo (não-Armor cujo portador saiu) volta a um Devotee seu pagando Equip {N}
+// (autor, 28/10/2026); no Devotee nomeado em Auto-Equip vale o Casting Cost, como ao jogar. Sorcery.
+export function reequip(state, ctx, key, uid, bearer) {
+  if (state.victory) throw new RuleError('D52', 'a partida já terminou');
+  if (key !== state.active) throw new RuleError('D1', 'só o jogador ativo age, no próprio turno');
+  assertIdle(state);
+  const card = ctx.cards.get(ctx.objects[uid]?.cardId);
+  if (!state.players[key].battlefield.includes(uid) || card?.kind !== 'Equipment' || ctx.attached[uid]) {
+    throw new RuleError('Equip', 'só Equipment seu, solto no campo, pode ser reequipado');
+  }
+  const cost = equipCost(state, ctx, key, card, bearer);
+  payCost(state, key, cost);
+  ctx.attached[uid] = bearer;
+  return {cost};
+}
+
+function equipCost(state, ctx, key, card, bearer) {
+  const target = ctx.cards.get(ctx.objects[bearer]?.cardId);
+  if (!state.players[key].battlefield.includes(bearer) || target?.kind !== 'Devotee') {
+    throw new RuleError('Equip', 'o portador precisa ser um Devotee seu no campo');
+  }
+  if (card.autoEquip.some(name => name.toUpperCase() === target.name.toUpperCase())) return card.cost;
+  if (card.equip) return {amount: card.equip.amount, unit: card.cost.unit}; // "Other" e "Any" cobrem quem não é nomeado
+  if (!card.autoEquip.length) throw new NotSpecified(`${card.id}: Equipment sem Auto-Equip nem Equip {N}`);
+  throw new RuleError('Equip', `${card.name} só equipa ${card.autoEquip.join(' ou ')}`);
 }
 
 // Spell: Technique é Sorcery e paga Base; Moment é Instant e paga Latent (D194). A carta fica em `stack`
