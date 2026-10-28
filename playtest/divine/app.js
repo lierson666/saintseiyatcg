@@ -407,11 +407,13 @@ function godHud(key, side) {
   const ult = d.ultimateUsed ? 'used' : ['god-athena', 'god-poseidon'].includes(d.god) ? 'ready' : 'none';
   const f = FORGE.get(`${god.name.toLowerCase()}-001`), art = f?.ilustracao ? FORGE_ART + f.ilustracao : GOD_ART[s.gods[key]] || '';
   const low = p.soul <= Math.max(d.awakenAt, Math.ceil(max / 4)), k = `gh${key}`;
+  // Rosto escolhido no Card Forge (card-forge/god-hud.js): mesma conta da prévia de lá; sem escolha, a arte da carta.
+  const h = f?.hud_rosto, face = h ? `background-image:url('${FORGE_ART + h.imagem}');background-size:${h.zoom}% auto;background-position:${h.x}% ${h.y}%` : `background-image:url('${art}')`;
   const frame = FRAMES[god.name.toLowerCase()] ? god.name.toLowerCase() : 'athena', fr = FRAMES[frame];
   return `<section class="godhud godhud--${side} ${pick ? 'pickable' : ''} ${s.active === key ? 'is-active' : ''} ${d.awaken ? 'is-awaken' : ''} ${low ? 'is-low' : ''}" data-god="${key}"
       ${pick ? `data-pick="god:${key}"` : ''} role="button" tabindex="0" aria-label="${esc(god.name)}, Soul ${p.soul} of ${max}${d.awaken ? ', Awaken' : ''}">
     <div class="gh-frame" style="aspect-ratio:${fr.ratio}" data-tip="${esc(`God|${god.name}, Player ${key}. Devotees can attack it.`)}">
-      <div class="gh-hole godhud__portrait" style="${box(fr.hole)};background-image:url('${art}')"></div>
+      <div class="gh-hole godhud__portrait" style="${box(fr.hole)};${face}"></div>
       <img class="gh-frame__img" src="./assets/god-frames/${frame}.png" alt="">
       <span class="gh-name" style="${box(fr.plate)}">${esc(god.name)}</span>
       ${d.judgment ? `<span class="godhud__judgment" title="Divine Judgment: loses at the end of Round ${d.judgment.deadline}">⚖ R${d.judgment.deadline}</span>` : ''}

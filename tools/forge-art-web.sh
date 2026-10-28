@@ -25,6 +25,12 @@ for c in cards:
     if proj.get('flavour'): c['flavour_en'] = proj['flavour']
     if (proj.get('art') or {}).get('w'): c['ilustracao_enquadramento'] = {k: proj['art'][k] for k in ('x', 'y', 'w')}
     if (dest / f"{c['id']}.jpg").exists(): c['ilustracao'] = f"{c['id']}.jpg"
+    # rosto do God no HUD, escolhido no Card Forge (card-forge/god-hud.js): imagem própria ou a arte da carta
+    h = root / f"card-forge/projects/{c['id']}-hud.json"
+    if h.exists():
+        hud = json.loads(h.read_text())
+        img = f"{c['id']}-hud.jpg" if hud.get('image') and (dest / f"{c['id']}-hud.jpg").exists() else c.get('ilustracao')
+        if img: c['hud_rosto'] = {'imagem': img, 'zoom': hud.get('zoom', 260), 'x': hud.get('x', 50), 'y': hud.get('y', 16)}
 (dest / 'cards.json').write_text(json.dumps({'cartas': cards}, ensure_ascii=False))
 print(f"cartas: {len(cards)}, com arte: {sum('ilustracao' in c for c in cards)}")
 EOF
