@@ -452,8 +452,9 @@ function clockMarkup() {
     return `<i class="torch" data-torch="${i}" style="--a:${a}deg"><span></span></i>`;
   }).join('');
   const glyphs = [...SIGNS].map((g, i) => `<b style="--a:${(i + .5) / 12 * 360 - 90}deg">${g}&#xFE0E;</b>`).join('');
-  return `<div class="zclock" data-clock role="timer" aria-live="off"><div class="zclock__dial">${glyphs}</div>${torches}</div>
-    <div class="zclock__time"><b data-clock-time>--:--</b><small data-clock-label>Turn</small></div>`;
+  // Tempo no centro do mostrador, dentro do anel de signos e chamas.
+  return `<div class="zclock" data-clock role="timer" aria-live="off"><div class="zclock__dial">${glyphs}</div>${torches}
+    <div class="zclock__time"><b data-clock-time>--:--</b><small data-clock-label>Turn</small></div></div>`;
 }
 
 function choiceBar() {

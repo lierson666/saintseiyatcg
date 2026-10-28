@@ -298,3 +298,12 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .godstat small { font: 600 10px/1.2 system-ui; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
 .godstat b { font: 600 22px/1.1 Georgia, serif; color: var(--gold-hi); } .godstat b span { font-size: 13px; color: var(--muted); }
 .godstat em { font: 11px/1.2 system-ui; font-style: normal; color: #9fb4d8; }
+
+/* Tempo dentro do relógio de fogo: disco central sobre o mostrador. */
+.zclock .zclock__time { position: absolute; z-index: 3; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 34%; aspect-ratio: 1; padding: 0; border: 1px solid rgba(227, 194, 122, .55); border-radius: 50%;
+  display: grid; place-content: center; justify-items: center; gap: 2px; background: radial-gradient(circle, rgba(16, 20, 52, .96) 55%, rgba(8, 10, 30, .96)); box-shadow: 0 0 14px rgba(0, 0, 0, .7), inset 0 0 10px rgba(227, 194, 122, .18); pointer-events: none; }
+.zclock .zclock__time b { font: 500 calc(var(--r) * .27)/1 Georgia, serif; color: #f6efdc; letter-spacing: .01em; text-shadow: 0 0 8px rgba(120, 170, 255, .45); }
+.zclock .zclock__time small { font: 600 calc(var(--r) * .085)/1 system-ui, sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #c9c3dc; white-space: nowrap; }
+.zclock .zclock__dial::after { display: none; }
+.zclock.urgent .zclock__time { border-color: #ff8a60; } .zclock.urgent .zclock__time b { color: #ffd2c0; }
+@media (max-width: 760px) { .zclock .zclock__time { display: grid; } }
