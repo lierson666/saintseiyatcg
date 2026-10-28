@@ -139,8 +139,13 @@ export function placeBase(state, key, uid, card) {
 export function spendBase(state, key, n) {
   const ready = state.players[key].bases.filter(b => b.prepared);
   if (ready.length < n) throw new RuleError('D4', `Bases preparadas insuficientes (${ready.length}/${n})`);
-  ready.slice(0, n).forEach(b => { b.prepared = false; });
-  if (n > 0) emit(state, 'cosmo_spent', {player: key, unit: 'base', amount: n});
+  // Pool visual da interface: as Bases que o jogador separou pagam primeiro. Qualquer Base preparada paga igual;
+  // isto só escolhe quais viram (autor, 28/10/2026). Sem pool, paga as primeiras, como antes.
+  const p = state.players[key], pool = new Set(p.pool || []);
+  const paid = [...ready.filter(b => pool.has(b.uid)), ...ready.filter(b => !pool.has(b.uid))].slice(0, n);
+  paid.forEach(b => { b.prepared = false; });
+  if (p.pool) p.pool = p.pool.filter(uid => !paid.some(b => b.uid === uid));
+  if (n > 0) emit(state, 'cosmo_spent', {player: key, unit: 'base', amount: n, uids: paid.map(b => b.uid)});
 }
 
 // Teto 3 (D198/D226); um ganho de N é um único evento. Devolve quanto entrou.

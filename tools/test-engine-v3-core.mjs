@@ -133,3 +133,13 @@ test('P07: Fatigue cumulativa por compra falha; o contador não zera; Soul 0 enc
   draw(s, 'A', 2);
   assert.deepEqual([s.players.A.soul, s.players.A.fatigue, s.victory], [0, 4, {winner: 'B'}], 'para na compra que zerou');
 });
+
+test('Pool visual: spendBase paga primeiro as Bases separadas na pool e as tira dela', () => {
+  const s = core();
+  s.players.A.bases = [{uid: 'b1', prepared: true}, {uid: 'b2', prepared: true}, {uid: 'b3', prepared: true}];
+  s.players.A.pool = ['b3'];
+  spendBase(s, 'A', 2);
+  assert.deepEqual(s.players.A.bases.map(b => b.prepared), [false, true, false], 'b3 (pool) e depois b1');
+  assert.deepEqual(s.players.A.pool, []);
+  assert.deepEqual(s.events.at(-1).uids, ['b3', 'b1']);
+});

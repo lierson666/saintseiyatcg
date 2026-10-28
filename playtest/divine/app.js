@@ -13,7 +13,7 @@ import {createScene, THEMES} from './scene.js?v=20261028-4';
 import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudgment, greatFloodBlock, announceGreatFlood, GREAT_FLOOD_COST} from '../engine-v3/gods.js';
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
-import {createDirector} from './director.js?v=4';
+import {createDirector} from './director.js?v=5';
 import {createAI} from './ai.js?v=2';
 import {findDeck} from '../deck-store.js';
 import {unlock, playMusic} from '../audio.js';
@@ -430,6 +430,7 @@ function godHud(key, side) {
 // (decidem o que se joga), depois Deck, mão, Tartarus e Void; o Domain é um selo que abre a carta. Tudo com dica no hover.
 function sanctum(key, side) {
   const s = S(), p = s.players[key], id = s.domains[key], dom = cards.get(id), f = FORGE.get(id), ready = readyBases(key), n = p.deck.length;
+  const pooled = (p.pool || []).filter(u => p.bases.some(b => b.uid === u && b.prepared)).length;
   const burn = Math.min(1, p.bases.length / 10).toFixed(2); // o Cosmo arde mais conforme as Bases crescem (0 a 1 em 10 Bases)
   const pips = p.bases.map(b => `<i class="orb orb--base ${b.prepared ? 'ready' : 'spent'}"></i>`).join('');
   const flames = [0, 1, 2].map(i => `<i class="orb orb--latent flame ${i < p.latent ? 'ready' : 'empty'}"></i>`).join('');
@@ -440,8 +441,8 @@ function sanctum(key, side) {
     <button class="sanctum__domain" data-domain="${key}" style="--art:url('${f?.ilustracao ? FORGE_ART + f.ilustracao : ''}')" data-tip="${esc(`Domain|${dom?.name || '—'}. Click to view the card.`)}">
       <small>Domain</small><strong>${esc(dom?.name || '—')}</strong></button>
     <div class="cosmo" data-bank="${key}" style="--burn:${burn}">
-      ${row('rail__row--cosmo', `<img class="cosmo__sigil" src="../../CARD-TEMPLATE/athena/gem_cost.png" alt="">`, 'Cosmo Base', `${ready}<small>/${p.bases.length}</small><span class="cosmo__pips">${pips}</span>`,
-        `Cosmo Base|${ready} of ${p.bases.length} prepared. Prepared Bases pay card and ability costs. Once per round you may place a Cosmoble card as a Base.`, 'data-bank-unit="base"')}
+      ${row('rail__row--cosmo', `<img class="cosmo__sigil" src="../../CARD-TEMPLATE/athena/gem_cost.png" alt="">`, `Cosmo Base${pooled ? `<em class="rail__pool">Pool ${pooled}</em>` : ''}`, `${ready}<small>/${p.bases.length}</small><span class="cosmo__pips">${pips}</span>`,
+        `Cosmo Base|${ready} of ${p.bases.length} prepared${pooled ? `, ${pooled} burning in your pool` : ''}. Prepared Bases pay card and ability costs. Click a Base on the field to burn it into your pool. Once per round you may place a Cosmoble card as a Base.`, 'data-bank-unit="base"')}
       ${row('rail__row--latent', flames, 'Latent', `${p.latent}<small>/3</small>`, `Latent Cosmo|${p.latent} of 3 stored. At round end, unused Bases can be stored here.`, 'data-bank-unit="latent"')}
     </div>
     ${row(`zdeck ${n ? '' : 'is-empty'}`, '<i class="zdeck__back"></i>', 'Deck', n, `Deck|${plural(n, 'card')} left. Each player draws 2 cards per turn.`, `data-deck="${key}"`)}
@@ -468,13 +469,16 @@ function showDomainCard(key) {
 // e levanta quando prepara. O pagamento escolhe as Bases sozinho (são equivalentes); a animação mostra quais viraram.
 const laneSeen = new Map(); // uid da Base -> prepared no último render (para animar só a mudança)
 function cosmoLane(key, side) {
-  const bases = S().players[key].bases;
+  const bases = S().players[key].bases, pool = new Set(S().players[key].pool || []);
   const slots = bases.map(b => {
     const was = laneSeen.get(b.uid), anim = was === undefined ? 'is-new' : was !== b.prepared ? (b.prepared ? 'is-untapping' : 'is-tapping') : '';
     laneSeen.set(b.uid, b.prepared);
     // Base fica virada (autor, 28/10/2026): o verso para todos; o dono consulta passando o mouse (data-base).
     const face = `<div class="dcard dcard--back dcard--land" ${ctx.objects[b.uid] ? `data-base="${b.uid}"` : ''}><span></span></div>`;
-    return `<div class="lane__base ${b.prepared ? '' : 'tapped'} ${anim}" title="${b.prepared ? 'Prepared Cosmo Base: taps to pay a cost' : 'Tapped Cosmo Base: readies at the start of your turn'}">${face}</div>`;
+    const pooled = b.prepared && pool.has(b.uid), mine = key === viewer();
+    const tip = !b.prepared ? 'Cosmo Base|Used. Readies at the start of your turn.' : pooled ? 'Cosmo Base|Burning in your pool: your next cost uses it first. Click to take it back.'
+      : mine ? 'Cosmo Base|Prepared. Click to burn its Cosmo into your pool.' : 'Cosmo Base|Prepared.';
+    return `<div class="lane__base ${b.prepared ? '' : 'tapped'} ${pooled ? 'pooled' : ''} ${anim}" data-slot="${b.uid}" data-tip="${tip}">${face}</div>`;
   }).join('');
   return `<section class="lane lane--${side}" data-lane="${key}" style="--n:${bases.length}" aria-label="Player ${key} Cosmo Bases">${slots || '<p class="lane__empty">Cosmo Bases</p>'}</section>`;
 }
@@ -645,6 +649,8 @@ const ui = {
   handRect: key => rectOf($(`[data-hand="${key}"]`)),
   fieldRect: key => rectOf($(`[data-field="${key}"]`)),
   bankRect: (key, unit) => rectOf($(`[data-bank="${key}"] [data-bank-unit="${unit}"]`)),
+  baseRects: uids => uids.map(u => rectOf($(`[data-slot="${u}"]`))),
+  clearPool: () => { for (const k of ['A', 'B']) delete S().players[k].pool; },
   readyBaseRects: (key, n) => $$(`[data-lane="${key}"] .lane__base:not(.tapped)`).slice(0, n).map(rectOf), // o motor usa as primeiras Bases prontas
   center: r => (r ? {x: r.left + r.width / 2, y: r.top + r.height / 2} : null),
   float(at, text, cls) {
@@ -743,6 +749,8 @@ boardRoot.addEventListener('click', e => {
   if (btn?.dataset.done !== undefined) return choose(null);
   if (btn?.dataset.toggleLog !== undefined) { logOpen = !logOpen; return render(); }
   if (btn?.dataset.toggleSettings !== undefined) { settingsOpen = !settingsOpen; return render(); }
+  const slot = t.closest('.lane__base[data-slot]');
+  if (slot) return togglePool(slot);
   const pickEl = t.closest('[data-pick], .pickable');
   if (mode && pickEl) return choose(pickEl.dataset.pick || pickEl.dataset.uid);
   if (mode) return;
@@ -910,6 +918,17 @@ document.addEventListener('contextmenu', e => {
   e.preventDefault();
   showBigCard(uid);
 });
+// Pool de Cosmo só visual (autor, 28/10/2026): clicar numa Base pronta queima o Cosmo dela para a pool; clicar de novo devolve.
+// A Base só vira quando um custo é pago (spendBase usa primeiro as da pool); o que sobrar volta no começo do próximo turno.
+function togglePool(el) {
+  const key = viewer(), p = S().players[key], uid = el.dataset.slot, b = p.bases.find(x => x.uid === uid);
+  if (!b?.prepared || aiControls()) return; // só Bases prontas do próprio jogador
+  const adding = !p.pool?.includes(uid);
+  p.pool = adding ? [...(p.pool || []), uid] : p.pool.filter(u => u !== uid);
+  const f = settings.reduceMotion ? null : scene?.fx, a = ui.center(rectOf(el)), z = ui.center(ui.bankRect(key, 'base'));
+  if (f && a && z) { adding ? f.beam(a, z, {color: '#7fc8ff', width: 12, duration: .34}) : f.beam(z, a, {color: '#5a7bb8', width: 8, duration: .25}); }
+  render();
+}
 function showBigCard(uid) {
   closeBigCard();
   hideInspect();

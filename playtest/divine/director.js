@@ -63,7 +63,8 @@ export function createDirector({ui, getFx, settings}) {
   // Cada tipo de evento: o que mostrar e quanto tempo segurar a fila.
   const pool = {A: 0, B: 0}; // Cosmo pago e ainda não entregue a uma carta
   const handlers = {
-    async turn_start(e) { pool.A = pool.B = 0; await ui.banner(ui.isViewer(e.player) ? 'Your turn' : `Player ${e.player}'s turn`, e.player, t(900)); },
+    async turn_start(e) { pool.A = pool.B = 0; ui.clearPool(); // o que sobrou na pool volta sem perda
+      await ui.banner(ui.isViewer(e.player) ? 'Your turn' : `Player ${e.player}'s turn`, e.player, t(900)); },
     async draw(e) { if (!settings.skipDraws) await ui.flyCard(e.uid, ui.deckRect(e.player), ui.handRect(e.player), t(220), !ui.isViewer(e.player)); },
     async fatigue(e) {
       const at = ui.center(ui.deckRect(e.player));
@@ -81,7 +82,7 @@ export function createDirector({ui, getFx, settings}) {
     // do jogador e só depois corre até a carta conjurada em card_played.
     async cosmo_spent(e) {
       const poolAt = ui.center(ui.bankRect(e.player, 'base'));
-      const from = e.unit === 'base' ? ui.readyBaseRects(e.player, e.amount).map(ui.center) : [ui.center(ui.bankRect(e.player, 'latent'))];
+      const from = (e.unit === 'base' ? (e.uids ? ui.baseRects(e.uids) : ui.readyBaseRects(e.player, e.amount)) : [ui.bankRect(e.player, 'latent')]).map(ui.center);
       ui.spendOrbs(e.player, e.unit, e.amount);
       pool[e.player] = (pool[e.player] || 0) + e.amount;
       const f = fx();
