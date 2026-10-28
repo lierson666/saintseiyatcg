@@ -4,6 +4,140 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — Categoria de 053, 060, 082 e 085
+
+- **Antes:** a D194 classificava 18 Spells; 053, 060, 082 e 085 ficavam sem categoria e não podiam ser jogadas.
+- **Depois:** as quatro são Technique: pagam Base e usam Sorcery Speed, como o custo {B} indica.
+- **Motivo:** decisão do autor nesta data.
+- **Pendências:** 057, 078 e 084 (fora dos decks D171) continuam sem categoria.
+- Vale para a engine 3.0 (`playtest/engine-v3/`); o `docs/guia-do-jogo.md` (2.x) não muda.
+
+## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — Gatilhos, {T}, dano direto e Resonance
+
+- **Antes:** sem gatilhos de entrada, de cast e de sobreviver a Strike; sem habilidades {T}; sem dano que não é de Strike.
+- **Depois (decisões do autor nesta data):**
+  - {C} se paga com Base preparada;
+  - Resonance de Equipment só vale com o Equipment preso ao Devotee nomeado;
+  - dano que não é de Strike também passa pela Armor; prevenções escritas "Strike damage" não se aplicam a ele;
+  - dano redirecionado pela Resonance da 004 é dano de Strike em Shiryu.
+- **Implementado conforme o texto D268:** Miracle e Seventh Sense (001); Resonance da 002, 004, 019 e 048; 019 (ao jogar, Divine Protection, Divine Cosmo); Eagle Marin (Training e Master's Guidance); Seika, Hope of Reunion; Star Hill Acolyte; {T} da 041, 042 e 011 (Cloth Restoration); Spells 059, e os efeitos de 053, 060, 082 e 085. Gatilhos entram na cadeia com janela (P06). Verificação de derrota roda depois de cada Strike, Spell e habilidade.
+- **Pendências:**
+  - Master's Guidance soma +1/+1 por Eagle Marin em campo (leitura da implementação).
+- Vale para a engine 3.0 (`playtest/engine-v3/`); o `docs/guia-do-jogo.md` (2.x) não muda.
+
+## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — Modificadores com duração e prevenção de dano de Strike
+
+- **Antes:** a engine 3.0 não aplicava efeitos de texto das cartas.
+- **Depois:** implementados conforme o texto D268, sem alteração de carta:
+  - modificadores até o fim do Round ou durante o Strike: 052, 058, 061, 077 (com Sacrifice no fim do Round), 081, 088, Unicorn Gallop (028) e Rising Dragon (003);
+  - estáticas "While …": 034, 036, 037;
+  - prevenção de dano de Strike: Dragon Shield (003/004, sem acumular), 044, 045 (com o escudo de Armor da Resonance), 049 (2 em Shiryu), Prayer of Rozan (037), Crystal Wall (011, também no God), Final Sacrifice (027), escudos de God (056, 061, 081, 087) e salvamento "would be defeated" (054, 076, 088).
+- **Motivo:** pedido do autor de implementar os efeitos das cartas dos dois decks.
+- **Leituras confirmadas pelo autor nesta data:** ordem de aplicação entre prevenções; "cannot declare another Strike this round" coberto pela D22; parte de Spell cujo alvo saiu antes da resolução não faz nada.
+- **Pendências:**
+- Vale para a engine 3.0 (`playtest/engine-v3/`); o `docs/guia-do-jogo.md` (2.x) não muda.
+
+## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — Bônus de Equipment e dano em Armor
+
+- **Antes:** D227 citava dano "absorbed by Armor" e "Armor priority", sem a regra (D1–D191 fora das fontes). Equipment não-Armor sem destino quando o portador sai.
+- **Depois (decisões do autor nesta data):**
+  - O bônus fixo impresso ("Equipped Devotee gets +A ATK / +H HP and <Keyword>") vale enquanto o Equipment está preso.
+  - Dano de Strike num Devotee passa primeiro pelas Armor dele; Armor com dano maior ou igual ao HP vai para o Tartarus do Owner e o excesso segue ao Devotee. O dano na Armor persiste.
+  - Sem limite de Armor por Devotee; elas absorvem na ordem em que foram equipadas.
+  - Equipment que não é Armor fica no campo, solto, quando o portador sai; pode ser reequipado pagando Equip {N}.
+- **Motivo:** escolha do autor entre as opções apresentadas.
+- **Pendências:**
+  - a ordem de absorção entre várias Armor foi escolhida na implementação; confirmar;
+  - bônus condicionais (047, 051, Resonance) e demais efeitos de carta ainda não estão na engine 3.0;
+  - no Pierce, o excesso é o que passa da Armor e do HP restante do Devotee.
+- Vale para a engine 3.0 (`playtest/engine-v3/`); o `docs/guia-do-jogo.md` (2.x) não muda.
+
+## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — Jogar Equipment e Spell da mão
+
+- **Antes:** D192–D268 não definiam a relação entre Casting Cost, Auto-Equip e Equip {N}, nem o destino de uma Spell resolvida.
+- **Depois (decisões do autor nesta data):**
+  - Equipment: no Devotee nomeado em Auto-Equip, paga o Casting Cost; em outro Devotee permitido por "Equip {N}", paga N no lugar do Casting Cost. Sem portador legal, não pode ser jogado. É ação comum: não abre janela (P06).
+  - Spell: Technique é Sorcery e paga Base; Moment é Instant e paga Latent (D194). Depois de resolver, a Spell vai para o Tartarus do Owner.
+- **Motivo:** escolha do autor entre as opções apresentadas (custo alternativo; Tartarus do Owner).
+- **Pendências:**
+  - Spells sem categoria na D194 (por exemplo 053 e 060 da Pegasus Rush) não podem ser jogadas; a engine para com aviso;
+  - 020 não tem Auto-Equip nem Equip {N}; a engine para com aviso;
+  - os efeitos das cartas, incluindo "When you cast" (019), ainda não estão na engine 3.0;
+  - o recurso de Equip {N} segue o do Casting Cost (Base em todas as cartas atuais).
+- Vale para a engine 3.0 (`playtest/engine-v3/`); o `docs/guia-do-jogo.md` (2.x) não muda.
+
+## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — ALPHA-P07 opção A (Fatigue)
+
+- **Antes:** D174 dizia que deck vazio causa Fatigue, sem derrota automática; a D233 citava Fatigue cumulativa de Soul, sem valor.
+- **Depois:** toda vez que o jogador compraria de um deck vazio, o God dele perde Soul igual ao número de vezes que isso já lhe aconteceu na partida (1, 2, 3…). O contador nunca zera. Mill não causa Fatigue (D233). Soul 0 encerra na hora (D52).
+- **Motivo:** aprovação do autor, opção A de `docs/alpha-0.1/PROPOSTAS-ALPHA-P01-P07.md`.
+- **Pendências:** nenhuma deste item.
+- Vale para a engine 3.0 (`playtest/engine-v3/`); o `docs/guia-do-jogo.md` (2.x) não muda.
+
+## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — ALPHA-P03 opção A (conversão de Base em Latent)
+
+- **Antes:** D5 dizia que Base não usada vira Latent ao encerrar o turno, sem fixar o momento nem a forma do ganho.
+- **Depois:** no início da End Phase, antes de qualquer efeito de End Phase, o jogador ganha 1 Latent por Base ainda Prepared, num único evento de ganho (D226). O excesso acima de 3 se perde.
+- **Motivo:** aprovação do autor, opção A de `docs/alpha-0.1/PROPOSTAS-ALPHA-P01-P07.md`.
+- **Pendências:** a interação com Moonlight Blessing (D226) só pode ser testada quando os efeitos de carta entrarem na engine 3.0.
+- Vale para a engine 3.0 (`playtest/engine-v3/`); o `docs/guia-do-jogo.md` (2.x) não muda.
+
+## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — ALPHA-P01 opção A (setup)
+
+- **Antes:** a 3.0 não tinha texto para mão inicial, mulligan e jogador inicial; a D170 só pressupunha uma mão.
+- **Depois:** o jogador inicial é sorteado. Cada jogador compra 7. Começando pelo jogador inicial, cada um pode, uma vez, devolver ao deck quantas cartas quiser da mão, embaralhar e comprar o mesmo número. O 1º turno começa depois dos dois mulligans.
+- **Motivo:** aprovação do autor, opção A de `docs/alpha-0.1/PROPOSTAS-ALPHA-P01-P07.md`.
+- **Pendências:** nenhuma deste item. Com deck de 53 após a mão, a Fatigue chega no 28º turno próprio do jogador inicial.
+- Vale para a engine 3.0 (`playtest/engine-v3/`); o `docs/guia-do-jogo.md` (2.x) não muda.
+
+## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — ALPHA-P05 opção A (Guardian, Cheater, Nimble, Pierce)
+
+- **Antes:** as cartas só nomeavam as keywords; não havia definição 3.0.
+- **Depois:**
+  - **Guardian:** enquanto você controla um Devotee Prepared com Guardian, Strikes inimigos contra o seu God ou contra Devotees seus sem Guardian são ilegais; precisam mirar um Devotee com Guardian.
+  - **Cheater:** ao declarar Strike contra um God, ignora Guardian.
+  - **Nimble:** ao declarar Strike, ignora Guardian.
+  - **Pierce:** num Strike contra Devotee, o dano acima do HP restante do alvo vai para o Soul do God dele.
+- **Motivo:** aprovação do autor, opção A de `docs/alpha-0.1/PROPOSTAS-ALPHA-P01-P07.md`.
+- **Pendências:**
+  - os efeitos que concedem Cheater (019 equipada) e Pierce (077) ainda não estão na engine 3.0;
+  - Long Range segue sem definição; a engine para com aviso.
+- Nenhum texto de carta mudou, nem a 019. Vale para a engine 3.0 (`playtest/engine-v3/`); o `docs/guia-do-jogo.md` (2.x) não muda.
+
+## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — ALPHA-P02 opção A (início do turno e entrada)
+
+- **Antes:** D2 confirmava preparação automática sem dizer o que prepara. D4 preparava só as Bases. O estado de entrada de Devotee e de Base não tinha texto.
+- **Depois:** no início do turno, o ativo prepara todos os seus Devotees, Equipment e Bases. Depois resolvem os gatilhos de início de turno (APNAP, LIFO, com janela). Por último, a compra (D3). Devotee e Base entram Unprepared. Um Devotee só declara Strike no turno em que entrou se tiver Impulse.
+- **Motivo:** aprovação do autor, opção A de `docs/alpha-0.1/PROPOSTAS-ALPHA-P01-P07.md`.
+- **Pendências:**
+  - jogar Equipment, Technique e Moment da mão (a engine 3.0 só joga Devotee);
+  - nenhuma carta dos dois decks tem Impulse; o teste usa uma cópia de carta só em memória.
+- Esta entrada vale para a engine 3.0 (`playtest/engine-v3/`). O `docs/guia-do-jogo.md` (2.x) não muda.
+
+## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — ALPHA-P06 opção A (prioridade e End Phase)
+
+- **Antes:** a 3.0 tinha só citações de LIFO (D186), APNAP (D187) e do checkpoint de fim de Round (D204). Não havia texto para quando abre prioridade nem para a End Phase (D60–D63).
+- **Depois:**
+  - Ação comum (jogar carta Sorcery, colocar Base, equipar) não abre janela.
+  - Abre janela: gatilho que entra na cadeia, Strike declarado, Moment jogado e End Phase.
+  - Na janela, o não ativo fala primeiro, só com Instant e habilidades reativas. Dois passes seguidos resolvem o topo (LIFO). Se a cadeia não estiver vazia, abre nova rodada de passes.
+  - Gatilhos simultâneos entram em APNAP: o não ativo resolve primeiro.
+  - End Phase: conversão D5; gatilhos "at end of turn", com janela; no 2º turno do Round, o checkpoint D204; Cleanup. O Cleanup expira "until end of turn" e, no 2º turno, os efeitos "this round", e renova o "once each round" (D191).
+- **Motivo:** aprovação do autor, opção A de `docs/alpha-0.1/PROPOSTAS-ALPHA-P01-P07.md`.
+- **Pendências:**
+  - jogar Technique e Moment a partir da mão;
+  - Strike cujo atacante ou alvo sai do campo antes do dano: nem P04 nem P06 definem; a engine para com aviso.
+- Esta entrada vale para a engine 3.0 (`playtest/engine-v3/`). O `docs/guia-do-jogo.md` (2.x) não muda.
+
+## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — ALPHA-P04 opção A (Strike)
+
+- **Antes:** a 3.0 não tinha texto para declaração, dano e retaliação do Strike. Havia só citações (D22, D187, D199, D202, D248/D249) e as cartas.
+- **Depois:** um Devotee Prepared declara Strike contra o God inimigo ou contra um Devotee inimigo e fica Unprepared. O dano é simultâneo: o atacante causa dano igual ao seu ATK; o Devotee defensor retalia com o seu ATK; o God alvo perde Soul 1:1 e retalia com o seu ATTACK. Devotee com dano maior ou igual ao HP é destruído e vai para o Tartarus do Owner, junto com a Armor (D40/D90). O dano persiste até ser removido por efeito; o Cleanup não limpa dano.
+- **Motivo:** aprovação do autor, opção A de `docs/alpha-0.1/PROPOSTAS-ALPHA-P01-P07.md`.
+- **Pendências:**
+  - bônus de ATK e HP vindos de Equipment e de habilidades de carta, que ainda não estão na engine 3.0.
+- Esta entrada vale para a engine 3.0 (`playtest/engine-v3/`). O `docs/guia-do-jogo.md` (2.x) não muda.
+
 ## 2026-10-24 — Living Armor & Persistence (seções 26A e 61)
 
 - **Antes → depois:** equipamentos sem dano próprio na regra-base → Armor viva com HP e dano próprios, persistentes entre rodadas/portadores/desequipamento/reset Vanilla. Morte do portador deixa a Armor no Battlefield, sem portador e com dano preservado.
