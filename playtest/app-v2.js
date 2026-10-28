@@ -3,7 +3,7 @@ import {applyPresentation,presentationBounds,interactionBinding,animateInteracti
 import {renderLiveCard} from '../shared/live-card.js?v=20261024-4';
 import {createGame} from './engine-v2.js?v=20261024-4';
 import {createStarterDecks} from '../shared/starter-decks.js?v=20261024-4';
-import {renderMenu,renderAudioControls,escape,icon,cardFace,registerDeckIdentities,DECK_IDENTITIES} from './menu.js?v=20261024-4';
+import {renderMenu,renderAudioControls,escape,icon,cardFace,registerDeckIdentities,DECK_IDENTITIES} from './menu.js?v=20261028-1';
 import {renderDuel,renderChoice,renderInspector,renderPause,renderVictory,dialog} from './view-v2.js?v=20261024-4';
 import {EMOTES,renderEmotePicker} from './cosmetics.js?v=20261024-4';
 import {unlock,sfx,playMusic,setVolume,configureAudio,stopEffects,playFxFile} from './audio.js?v=20261024-4';
