@@ -6,34 +6,32 @@ import {canonIndex} from '../../shared/deck-v3.js';
 import {createMatch, mulligan} from '../engine-v3/match.js';
 import {startTurn, endTurn, pass, placeBase, spellCategory, runCheckpoint} from '../engine-v3/core.js';
 import {declareStrike, strikeTargets} from '../engine-v3/strike.js';
-import {playDevotee, playEquipment, playSpell, activate, reequip} from '../engine-v3/play.js';
+import {playDevotee, playEquipment, playSpell, activate, reequip, duplicateCharacter} from '../engine-v3/play.js';
 import {atkOf, hpOf, keywordsOf, gearOf, isSaint, isBronze, ABILITIES} from '../engine-v3/effects.js';
-import {STEPS} from '../choices-v3.js';
+import {STEPS, ABILITY_STEPS} from '../choices-v3.js?v=2';
 import {createScene, THEMES} from './scene.js?v=20261028-4';
 import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudgment, greatFloodBlock, announceGreatFlood, GREAT_FLOOD_COST} from '../engine-v3/gods.js';
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {createDirector} from './director.js?v=3';
+import {createAI} from './ai.js?v=2';
+import {renderLiveCard} from '../../shared/live-card.js?v=20261028-5';
 
 const $ = (s, el = document) => el.querySelector(s), $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const stage = $('#stage'), boardRoot = $('#board-root'), overlayRoot = $('#overlay-root'), notice = $('#notice');
 
-// Arte disponível no repositório; o resto usa placeholder com a cor do tipo (contrato em AAA_VISUAL_DIRECTION.md).
-const ART_ROOT = '../../CARDS/ATHENA/';
-const ART = {'001': 'BRONZE/PEGASUSV1.png', '003': 'BRONZE/DRAGONv1.png', '021': 'SILVER/MARIN.png', '040': 'COMMON/SANCTUARY-GUARD.png',
-  '041': 'COMMON/SANCTUMHEALER.png', '042': 'COMMON/CLOTHREPAIRER.png', '043': 'COMMON/STARHILLMONK.png', '048': 'UNCOMMON/LIBRA-SWORD.png', '049': 'UNCOMMON/LIBRA-SHIELD.png'};
 const GOD_ART = {'god-athena': '../../CARDS/ATHENA/ATHENA.png', 'god-poseidon': '../../CARDS/POSEIDON/POSEIDON.png'};
 
 // Mensagens da engine (internas, em português) viram texto curto para o jogador.
 const WHY = {'G3-005': 'Athena Exclamation needs three Prepared Saints with different identities and enough prepared Bases.', D206: 'Sacrifice exactly three of your Devotees, on your turn.', D1: "It's not your turn.", D4: 'Not enough prepared Cosmo Bases.', custo: 'Not enough Latent Cosmo.', P06: 'Wait for the response window to close.',
-  P05: 'A Prepared Guardian must be your target.', D22: 'This Devotee already struck this turn.', P04: 'Only a Prepared Devotee can Strike.',
-  D52: 'The match is over.', P01: 'Finish the mulligan first.', D192: 'It must be Prepared to use {T}.', D191: 'Already used this round.', Equip: 'That Devotee cannot wear it.', alvo: 'Choose a legal target.'};
+  P05: 'A Guardian must be your target.', D22: 'This Devotee already struck this turn.', P04: 'Only a Prepared Devotee can Strike.',
+  D52: 'The match is over.', '§63': 'Choose which version of that character to keep.', P01: 'Finish the mulligan first.', D192: 'It must be Prepared to use {T}.', D191: 'Already used this round.', Equip: 'That Devotee cannot wear it.', alvo: 'Choose a legal target.'};
 const why = e => WHY[e.decision] || (e.topic ? `Not in Alpha 0.1: ${e.topic}` : "That can't be done right now.");
 
 const SETTINGS_KEY = 'ssTcgOlympusArena';
 const settings = {quality: 'high', theme: 'olympus', godB: 'god-athena', timeouts: false, speed: 'normal', skipDraws: false, reduceMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
-  reduceFlashes: false, shake: 1, hideOpponent: true, autoPass: true};
+  reduceFlashes: false, shake: 1, hideOpponent: true, autoPass: true, ai: 'B'};
 try { Object.assign(settings, JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}')); } catch { /* sem armazenamento */ }
 const saveSettings = () => { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch { /* sem armazenamento */ } };
 
@@ -48,7 +46,10 @@ const num = uid => ctx.objects[uid].cardId.slice(-3);
 const other = key => S().order.find(k => k !== key);
 const owner = uid => ctx.objects[uid].owner;
 // Quem está à frente da tela: o jogador que precisa agir agora (hot-seat local).
-const viewer = () => { const s = S(); return pending ? pending.pending.player : s.setup ? s.setup[0] : s.window ? s.window.priority : s.active; };
+// A IA está decidindo agora (setup, janela ou turno dela).
+const aiControls = () => { const s = S(); return settings.ai !== 'none' && (pending ? pending.pending.player : s.setup ? s.setup[0] : s.window ? s.window.priority : s.active) === settings.ai; };
+const human = () => S().order.find(k => k !== settings.ai);
+const viewer = () => { const s = S(); if (settings.ai !== 'none') return human(); return pending ? pending.pending.player : s.setup ? s.setup[0] : s.window ? s.window.priority : s.active; };
 const say = text => { logLines.push({round: S().round, text}); if (logLines.length > 400) logLines.shift(); };
 let noticeTimer;
 function warn(text) { notice.textContent = text; notice.classList.add('show'); clearTimeout(noticeTimer); noticeTimer = setTimeout(() => notice.classList.remove('show'), 3200); }
@@ -61,6 +62,12 @@ function affordable(key, cost) {
   return cost.unit === 'latent' ? S().players[key].latent >= cost.amount : readyBases(key) >= cost.amount;
 }
 const idleFor = key => { const s = S(); return !pending && !s.victory && !s.setup && !s.window && !s.chain.length && s.active === key; };
+// Primeira escolha obrigatória sem candidato (ex.: Spell que pede um Saint aliado sem nenhum em campo).
+const PICK_NEED = {saint: 'a friendly Saint', 'ready-saint': 'a Prepared friendly Saint', bronze: 'a friendly Bronze Saint', devotee: 'a friendly Devotee', armor: 'a friendly Armor', enemy: 'an enemy Devotee'};
+function missingTarget(key, uid) {
+  const step = (STEPS[num(uid)] || []).find(st => st.pick && !st.when);
+  return step && !step.optional && !candidates(step, key).length ? `Needs ${PICK_NEED[step.pick] || 'a legal target'}.` : null;
+}
 function playableReason(key, uid) {
   const s = S(), c = info(uid);
   if (s.victory || s.setup) return 'The match is not running.';
@@ -69,7 +76,7 @@ function playableReason(key, uid) {
     const cat = spellCategory(Number(num(uid)));
     if (!cat) return 'This Spell has no approved speed yet.';
     if (cat.speed === 'instant' ? !(s.window ? s.window.priority === key : s.active === key && !s.chain.length) : !idleFor(key)) return cat.speed === 'instant' ? 'You need priority to cast a Moment.' : 'Techniques are cast on your turn, with no response pending.';
-    return affordable(key, c.cost) ? null : `Needs ${c.cost.amount} ${c.cost.unit === 'base' ? 'prepared Base' : 'Latent'} Cosmo.`;
+    return affordable(key, c.cost) ? missingTarget(key, uid) : `Needs ${c.cost.amount} ${c.cost.unit === 'base' ? 'prepared Base' : 'Latent'} Cosmo.`;
   }
   if (!idleFor(key)) return s.active !== key ? "It's not your turn." : 'Wait for the response window to close.';
   if (c.kind === 'Equipment') {
@@ -93,7 +100,7 @@ function placeAsBase(key, uid) {
   const reason = baseReason(key, uid);
   if (reason) return warn(reason);
   act(() => placeBase(S(), key, uid, info(uid)));
-  warn('Cosmo Base placed. It readies at the start of your next turn.');
+  warn('Cosmo Base placed. It is ready to pay costs now.');
 }
 // Há resposta possível? (Auto-pass só passa quando não há nenhum Moment jogável na mão.)
 const hasResponse = key => S().players[key].hand.some(u => info(u).kind === 'Spell' && spellCategory(Number(num(u)))?.speed === 'instant' && !playableReason(key, u));
@@ -161,6 +168,12 @@ function advance() {
   while (mode && mode.i < mode.steps.length) {
     const step = mode.steps[mode.i];
     if (step.when && !step.when(mode.choice)) { mode.i++; continue; }
+    // Escolha obrigatória sem nenhum candidato: avisa e cancela em vez de travar a barra de escolha.
+    if (step.pick && !step.optional && !mode.picked.length && !candidates(step, mode.key).length) {
+      mode = null;
+      warn('No legal choice for that right now.');
+      return render();
+    }
     if (step.confirm) return render(); // pergunta sim/não na barra de escolha
     return render();
   }
@@ -188,7 +201,10 @@ function candidates(step, key) {
 function playFromHand(key, uid) {
   const c = info(uid), n = num(uid), reason = playableReason(key, uid);
   if (reason) return warn(reason);
-  if (c.kind === 'Devotee') return begin('play', key, uid, STEPS[n] || [], ch => playDevotee(S(), ctx, key, uid, ch));
+  if (c.kind === 'Devotee') {
+    if (duplicateCharacter(S(), ctx, key, uid)) warn(`You already control ${c.name.split(',')[0]}: after it enters, choose which version stays.`);
+    return begin('play', key, uid, STEPS[n] || [], ch => playDevotee(S(), ctx, key, uid, ch));
+  }
   if (c.kind === 'Equipment') {
     const steps = [{key: 'bearer', pick: 'devotee', label: `Choose who wears ${c.name}`}];
     if (n === '019') steps.push({key: 'target', pick: 'devotee', optional: true, label: 'Pegasus God Cloth: which Devotee gets +3/+3 (if your God is behind)?'});
@@ -216,6 +232,7 @@ function primary() {
     return;
   }
   if (s.victory) return;
+  if (aiControls()) return; // vez da IA: o botão não age por ela
   if (s.setup) return confirmMulligan();
   if (s.window) return act(() => pass(s, s.window.priority));
   act(() => { ending = true; endTurn(s); });
@@ -239,19 +256,17 @@ function confirmMulligan() {
 
 // ---------- Poderes divinos ----------
 
-function godMenu(key, el) {
-  const s = S(), d = s.divine[key], items = [];
-  if (key !== viewer() || s.victory || s.setup) return;
-  if (!ultimateBlock(s, ctx, key)) items.push(['Athena Exclamation · Ultimate', () => startExclamation(key)]);
-  if (!greatFloodBlock(s, key)) items.push([`Great Flood · Ultimate (${GREAT_FLOOD_COST} Base)`, () => act(() => announceGreatFlood(S(), ctx, key))]);
-  if (d.judgment && idleFor(key)) items.push(['Remove Divine Judgment (sacrifice 3)', () => begin('judgment', key, null,
-    [{key: 'devotees', pick: 'devotee', multi: 3, label: 'Sacrifice exactly three Devotees you control'}], ch => removeJudgment(S(), ctx, key, ch.devotees))]);
-  if (!items.length) {
-    const block = d.god === 'god-poseidon' ? greatFloodBlock(s, key) : ultimateBlock(s, ctx, key);
-    const why = {used: 'Ultimate already used this match.', sorcery: 'Ultimate: your turn, with no response pending.', cost: `Great Flood needs ${GREAT_FLOOD_COST} prepared Bases.`, 'only-athena': 'No Ultimate available.'}[block];
-    return warn(why || 'No divine action available now.');
-  }
-  quickMenu(el, items);
+// Ações divinas do jogador agora: Ultimate (pronto ou o motivo do bloqueio) e remover Divine Judgment.
+function godActions(key) {
+  const s = S(), d = s.divine[key], mine = key === viewer() && !s.victory && !s.setup;
+  const block = d.god === 'god-poseidon' ? greatFloodBlock(s, key) : ultimateBlock(s, ctx, key);
+  const run = d.god === 'god-poseidon' ? () => act(() => announceGreatFlood(S(), ctx, key)) : () => startExclamation(key);
+  const why = {used: 'Ultimate already used this match.', sorcery: 'Ultimate: your turn, with no response pending.', cost: `Great Flood needs ${GREAT_FLOOD_COST} prepared Bases.`, 'only-athena': 'No Ultimate available.'}[block] || (block ? 'Not available now.' : '');
+  return {
+    ultimate: {ok: mine && !block, why: mine ? why : "Only the God's controller uses it.", run},
+    judgment: mine && d.judgment && idleFor(key) ? () => begin('judgment', key, null,
+      [{key: 'devotees', pick: 'devotee', multi: 3, label: 'Sacrifice exactly three Devotees you control'}], ch => removeJudgment(S(), ctx, key, ch.devotees)) : null,
+  };
 }
 
 function startExclamation(key) {
@@ -259,7 +274,7 @@ function startExclamation(key) {
     if ((ch.saints || []).length !== 3) throw Object.assign(new Error('saints'), {decision: 'G3-005'});
     announceExclamation(S(), ctx, key, ch.saints);
   });
-  mode.title = 'ATHENA EXCLAMATION';
+  if (mode) mode.title = 'ATHENA EXCLAMATION'; // sem escolha legal, begin não abre modo (já avisou)
   render();
 }
 
@@ -304,27 +319,55 @@ function tickClock() {
 
 // ---------- Render ----------
 
+// Cartas do Card Forge como dados (tools/forge-art-web.sh): shared/live-card.js desenha moldura, textos e números no DOM; a arte é só fundo.
+const FORGE_ART = '../../card-forge/art-web/';
+const FORGE = new Map((await fetch(`${FORGE_ART}cards.json`).then(r => (r.ok ? r.json() : {cartas: []})).catch(() => ({cartas: []}))).cartas.map(c => [c.id, c]));
+// Item da cadeia em texto de jogador: carta de origem, nome da habilidade, a linha impressa dela e o alvo.
+// `c.source` (número da carta) quando o texto vem de outra carta (gatilho atrasado de Spell); sem carta no jogo, o God do controlador.
+function chainLabel(c) {
+  const card = c.source ? [...cards.values()].find(x => x.id.endsWith(`-${c.source}`))
+    : c.uid && ctx.objects[c.uid] ? info(c.uid) : cards.get(S().gods[c.controller]);
+  const ability = c.ability || '', named = /^[A-Z]/.test(ability) && !/^When /.test(ability);
+  // Linha que começa com a habilidade ("NOME — efeito"); se depois do nome só há a etiqueta (Divine Power, Ultimate), o efeito
+  // está na linha seguinte (pula "Cost:"). Sem linha própria (gatilho sem nome), a primeira linha que cita a frase.
+  const lines = card?.text.split('\n').map(l => l.trim()) || [], low = ability.toLowerCase();
+  let i = ability ? lines.findIndex(l => l.toLowerCase().startsWith(low)) : -1, text = '';
+  if (i >= 0) {
+    text = named ? lines[i].slice(ability.length).replace(/^\s*[—:-]\s*/, '') : lines[i];
+    if (text.length < 25) text = lines.slice(i + 1).find(l => l && !/^Cost:/.test(l)) || text;
+  } else if (ability) text = lines.find(l => l.toLowerCase().includes(low)) || '';
+  const title = [card?.name, named && ability.toUpperCase() !== card?.name?.toUpperCase() ? ability : ''].filter(Boolean).join(' · ') || 'Triggered ability';
+  return {title, text, target: c.target && ctx.objects[c.target] ? info(c.target).name : ''};
+}
 function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
   if (hidden) return `<div class="dcard dcard--back ${size}" data-uid="${uid}" aria-label="Face-down card"><span></span></div>`;
   const s = S(), c = info(uid), n = num(uid), unit = s.units[uid];
   const cat = c.kind === 'Spell' ? spellCategory(Number(n)) : null;
   const subtype = cat ? cat.category : (c.type.split(' — ')[1] || c.kind);
-  const art = ART[n] ? `style="background-image:url('${ART_ROOT}${ART[n]}')"` : '';
+  const forge = FORGE.get(ctx.objects[uid].cardId);
   const atk = field ? atkOf(s, ctx, uid) : c.atk, hp = field ? hpOf(s, ctx, uid) : c.hp;
   const kws = [...new Set(field && c.kind === 'Devotee' ? keywordsOf(s, ctx, uid) : c.keywords)];
   const dmg = unit?.damage || 0;
-  const cls = ['dcard', size, `kind-${c.kind.toLowerCase()}`, `rarity-${(c.rarity || 'common').toLowerCase()}`, c.armor ? 'is-armor' : '', cat ? `cat-${cat.category.toLowerCase()}` : '',
-    field && c.kind === 'Devotee' && !unit?.prepared ? 'unprepared' : '', kws.includes('Guardian') && field && unit?.prepared ? 'guarding' : ''].join(' ');
+  const cls = ['dcard', size, forge ? 'art-full' : '', `kind-${c.kind.toLowerCase()}`, `rarity-${(c.rarity || 'common').toLowerCase()}`, c.armor ? 'is-armor' : '', cat ? `cat-${cat.category.toLowerCase()}` : '',
+    field && c.kind === 'Devotee' && !unit?.prepared ? 'unprepared' : '', kws.includes('Guardian') && field ? 'guarding' : ''].join(' ');
   const statBuffed = (v, base) => (v > base ? 'up' : v < base ? 'down' : '');
+  // Dano não tem marcador: o HP impresso já mostra a vida restante, em vermelho.
+  const marks = `${unit?.training ? `<i class="dcard__counter" title="Training counter">✦${unit.training}</i>` : ''}
+    ${unit?.seal ? `<i class="dcard__seal" title="${unit.seal} Seal counter${unit.seal > 1 ? 's' : ''}: each Prepare removes one instead">◈${unit.seal}</i>` : ''}`;
+  if (forge) {
+    // ATK e HP ao vivo no próprio número impresso: verde com bônus, vermelho com dano ou redução.
+    const live = renderLiveCard(forge, {stats: {power: atk ?? null, hp: hp == null ? null : hp - dmg, damage: dmg, keywords: kws}, art: forge.ilustracao && FORGE_ART + forge.ilustracao})
+      .replace('data-stat="power"', `data-stat="power" data-trend="${statBuffed(atk, c.atk)}"`)
+      .replace('data-stat="hp"', `data-stat="hp" data-trend="${dmg ? 'down' : statBuffed(hp, c.hp)}"`);
+    return `<div class="${cls}" data-uid="${uid}" tabindex="0" aria-label="${esc(c.name)}${c.kind === 'Devotee' ? `, ATK ${atk}, HP ${hp - dmg} of ${hp}` : ''}">${live}${marks}</div>`;
+  }
   return `<div class="${cls}" data-uid="${uid}" tabindex="0" aria-label="${esc(c.name)}">
-    <div class="dcard__art" ${art}><span class="dcard__glyph">${esc(c.name.split(/[ ,’']/)[0].slice(0, 2))}</span></div>
+    <div class="dcard__art"><span class="dcard__glyph">${esc(c.name.split(/[ ,’']/)[0].slice(0, 2))}</span></div>
     ${c.cost ? `<b class="dcard__cost ${c.cost.unit}" title="${c.cost.amount} ${c.cost.unit === 'base' ? 'Base' : 'Latent'} Cosmo">${c.cost.amount}</b>` : ''}
     <div class="dcard__plate"><strong>${esc(c.name)}</strong><small>${esc(subtype)}${kws.length ? ` · ${esc(kws.join(' · '))}` : ''}</small></div>
-    ${c.kind === 'Devotee' ? `<div class="dcard__stats"><b class="atk ${statBuffed(atk, c.atk)}">${atk}</b><b class="hp ${statBuffed(hp, c.hp)}">${hp - dmg}</b></div>` : ''}
+    ${c.kind === 'Devotee' ? `<div class="dcard__stats"><b class="atk ${statBuffed(atk, c.atk)}" title="ATK ${atk}">${atk}</b><b class="hp ${dmg ? 'hurt' : statBuffed(hp, c.hp)}" title="HP ${hp - dmg} of ${hp}">${hp - dmg}</b></div>` : ''}
     ${c.armor && field ? `<div class="dcard__stats"><b class="hp">${c.hp - dmg}</b></div>` : ''}
-    ${dmg && field ? `<i class="dcard__damage" title="${dmg} damage">${dmg}</i>` : ''}
-    ${unit?.training ? `<i class="dcard__counter" title="Training counter">✦${unit.training}</i>` : ''}
-    ${unit?.seal ? `<i class="dcard__seal" title="${unit.seal} Seal counter${unit.seal > 1 ? 's' : ''}: each Prepare removes one instead">◈${unit.seal}</i>` : ''}
+    ${marks}
   </div>`;
 }
 
@@ -351,19 +394,42 @@ function godHud(key, side) {
       <strong class="godhud__name">${esc(god.name[0] + god.name.slice(1).toLowerCase())}</strong>
       <div class="godhud__row">
         <span class="godhud__soul" data-soul="${key}"><i class="heart" aria-hidden="true"></i><b>${p.soul}</b></span>
+        <span class="godhud__atk" title="Attack ${god.atk}: damage the God deals back to a Devotee that strikes it">⚔<b>${god.atk}</b></span>
         <span class="godhud__awaken" title="Awaken ${d.awakenAt}: active while Soul ≤ ${d.awakenAt}">${d.awakenAt}</span>
         ${ult !== 'none' ? `<span class="godhud__ult ${ult}" title="Ultimate ${ult === 'used' ? 'used' : 'available once per match'}">U</span>` : ''}
         ${d.judgment ? `<span class="godhud__judgment" title="Divine Judgment: loses at the end of Round ${d.judgment.deadline}">⚖ R${d.judgment.deadline}</span>` : ''}
       </div>
       <span class="godhud__bar"><i style="width:${Math.round(p.soul / max * 100)}%"></i></span>
+      ${godZones(key)}
     </div></section>`;
 }
-
-function piles(key, side) {
-  const p = S().players[key];
-  return `<div class="piles piles--${side}"><span class="pile" data-deck="${key}" title="Deck"><i class="ico-deck"></i>${p.deck.length}</span><span class="pile" title="Tartarus"><i class="ico-tartarus"></i>${p.tartarus.length}</span>${p.fatigue ? `<span class="pile pile--fatigue" title="Fatigue">F${p.fatigue}</span>` : ''}</div>`;
+// Zonas do jogador junto ao God: deck empilhado (a pilha engrossa com as cartas que restam), Tartarus e Void (exílio).
+function godZones(key) {
+  const p = S().players[key], n = p.deck.length, depth = Math.min(7, Math.ceil(n / 8));
+  const edge = Array.from({length: depth}, (_, i) => `${i + 1}px ${i + 1}px 0 ${i % 2 ? '#5a4520' : '#2a2140'}`).join(', ');
+  return `<div class="godzones">
+    <span class="zdeck ${n ? '' : 'is-empty'}" data-deck="${key}" title="Deck: ${n} card${n === 1 ? '' : 's'}"><i class="zdeck__back" style="box-shadow:${edge || 'none'}, 0 3px 8px rgba(0,0,0,.6)"></i><b>${n}</b></span>
+    <span class="zpile zpile--tartarus" title="Tartarus: ${p.tartarus.length}"><i class="ico-tartarus"></i><b>${p.tartarus.length}</b><small>Tartarus</small></span>
+    <span class="zpile zpile--void" title="Void (exile): ${p.void.length}"><i class="ico-void"></i><b>${p.void.length}</b><small>Void</small></span>
+    ${p.fatigue ? `<span class="zpile zpile--fatigue" title="Fatigue">F${p.fatigue}</span>` : ''}
+  </div>`;
 }
 
+
+// Bases de Cosmo como terrenos: cartas viradas numa faixa do lado do dono; Base gasta fica deitada (tapped)
+// e levanta quando prepara. O pagamento escolhe as Bases sozinho (são equivalentes); a animação mostra quais viraram.
+const laneSeen = new Map(); // uid da Base -> prepared no último render (para animar só a mudança)
+function cosmoLane(key, side) {
+  const bases = S().players[key].bases;
+  const slots = bases.map(b => {
+    const was = laneSeen.get(b.uid), anim = was === undefined ? 'is-new' : was !== b.prepared ? (b.prepared ? 'is-untapping' : 'is-tapping') : '';
+    laneSeen.set(b.uid, b.prepared);
+    // Base fica virada (autor, 28/10/2026): o verso para todos; o dono consulta passando o mouse (data-base).
+    const face = `<div class="dcard dcard--back dcard--land" ${ctx.objects[b.uid] ? `data-base="${b.uid}"` : ''}><span></span></div>`;
+    return `<div class="lane__base ${b.prepared ? '' : 'tapped'} ${anim}" title="${b.prepared ? 'Prepared Cosmo Base: taps to pay a cost' : 'Tapped Cosmo Base: readies at the start of your turn'}">${face}</div>`;
+  }).join('');
+  return `<section class="lane lane--${side}" data-lane="${key}" style="--n:${bases.length}" aria-label="Player ${key} Cosmo Bases">${slots || '<p class="lane__empty">Cosmo Bases</p>'}</section>`;
+}
 function fieldRow(key) {
   const s = S(), p = s.players[key];
   const units = p.battlefield.filter(u => !ctx.attached[u]).map(u => {
@@ -389,26 +455,53 @@ function phaseText() {
   return `Round ${s.round} · Player ${s.active} · Main`;
 }
 
+// Faixa de fases acima do End Turn (padrão de cliente digital de TCG): de quem é o turno, as fases do turno com a
+// atual acesa e, quando há, a janela de resposta. Prepare e Draw são automáticas; End = janela aberta pela End Phase.
+const PHASES = ['Prepare', 'Draw', 'Main', 'End']; // Strike é ação da Main, não fase
+function currentPhase(s) {
+  for (let i = s.events.length - 1; i >= 0; i--) {
+    const t = s.events[i].type;
+    if (t === 'turn_start') break;
+    if (t === 'end_phase') return 'End';
+  }
+  return 'Main';
+}
+function phaseBar() {
+  const s = S(), v = viewer();
+  if (s.victory || s.setup) return `<div class="phasebar"><div class="phasebar__turn">${esc(phaseText())}</div></div>`;
+  const now = PHASES.indexOf(currentPhase(s)), mine = s.active === v;
+  return `<div class="phasebar ${mine ? 'is-mine' : 'is-theirs'}" aria-label="${esc(phaseText())}">
+    <div class="phasebar__turn"><small>Round ${s.round}</small><strong>${mine ? 'Your turn' : `Opponent's turn`}</strong><small>Player ${s.active}</small></div>
+    <ol class="phasebar__steps">${PHASES.map((p, i) => `<li class="${i < now ? 'done' : i === now ? 'on' : ''}">${p}</li>`).join('')}</ol>
+    ${s.window ? `<div class="phasebar__window">${s.chain.length ? `Chain of ${s.chain.length} · ` : ''}Response · Player ${s.window.priority} to act</div>` : ''}
+  </div>`;
+}
+
 // Comando (canto inferior direito): relógio das Doze Casas acima do botão de ações.
 function command() {
   const s = S(), v = viewer();
   let label = 'End Turn';
   if (s.victory) label = 'Match over';
+  else if (aiControls()) label = 'Opponent thinking…';
   else if (s.setup) label = marked.size ? `Return ${marked.size}` : 'Keep Hand';
   else if (s.window) label = s.chain.length ? 'Pass · Resolve' : 'Pass';
   // Cadeia de cima para baixo: o topo resolve primeiro (LIFO, D186); gatilhos simultâneos entram em APNAP (D187).
   // A ordem entre gatilhos simultâneos do mesmo jogador ainda não é escolha dele (GODS-3.0-SUPPLEMENT, pendência 5).
-  const chain = s.chain.length ? `<ol class="chain" aria-label="Chain, top resolves first">${s.chain.map((c, i) => `<li><b>${i + 1}</b> ${esc(c.ability || (c.uid && ctx.objects[c.uid] ? info(c.uid).name : 'Triggered ability'))} <small>Player ${c.controller}</small></li>`).reverse().join('')}</ol>
+  const chain = s.chain.length ? `<ol class="chain" aria-label="Chain, top resolves first">${s.chain.map((c, i) => {
+    const t = chainLabel(c);
+    return `<li data-chain="${i}"><b>${i + 1}</b><div class="chain__body"><strong>${esc(t.title)}</strong>${t.text ? `<em>${esc(t.text)}</em>` : ''}<small>${t.target ? `Target: ${esc(t.target)} · ` : ''}Player ${c.controller}</small></div></li>`;
+  }).reverse().join('')}</ol>
     <small class="chain__hint">${s.chain.length > 1 ? 'Top resolves first' : 'Resolves when both pass'}</small>` : '';
   return `<aside class="command" aria-label="Turn actions">
     ${s.window ? `<div class="priority"><small>Priority</small><strong>Player ${s.window.priority}</strong>${chain}</div>` : ''}
     <div class="command__clock">${clockMarkup()}</div>
-    <button class="action-btn" data-primary ${s.victory ? 'disabled' : ''}><span>${esc(label)}</span><i aria-hidden="true">›</i></button>
-    <div class="command__tools"><button data-toggle-log aria-pressed="${logOpen}">Log</button><button data-toggle-settings>Settings</button><a href="../alpha3.html">Debug</a></div>
+    ${phaseBar()}
+    <button class="action-btn" data-primary ${s.victory || aiControls() ? 'disabled' : ''}><span>${esc(label)}</span><i aria-hidden="true">›</i></button>
+    <div class="command__tools"><button data-toggle-log aria-pressed="${logOpen}">Log</button><button data-toggle-settings>Settings</button><a href="../">Menu</a></div>
   </aside>`;
 }
 
-// Relógio das Doze Casas: 12 tochas de 60 s; acesas = tempo restante de quem decide (mapeamento G3-028).
+// Relógio das Doze Casas: 12 tochas de 15 s (3 minutos); acesas = tempo restante de quem decide (mapeamento G3-028).
 const SIGNS = '♈♉♊♋♌♍♎♏♐♑♒♓';
 function clockMarkup() {
   const torches = Array.from({length: 12}, (_, i) => {
@@ -416,8 +509,9 @@ function clockMarkup() {
     return `<i class="torch" data-torch="${i}" style="--a:${a}deg"><span></span></i>`;
   }).join('');
   const glyphs = [...SIGNS].map((g, i) => `<b style="--a:${(i + .5) / 12 * 360 - 90}deg">${g}&#xFE0E;</b>`).join('');
-  return `<div class="zclock" data-clock role="timer" aria-live="off"><div class="zclock__dial">${glyphs}</div>${torches}</div>
-    <div class="zclock__time"><b data-clock-time>--:--</b><small data-clock-label>Turn</small></div>`;
+  // Tempo no centro do mostrador, dentro do anel de signos e chamas.
+  return `<div class="zclock" data-clock role="timer" aria-live="off"><div class="zclock__dial">${glyphs}</div>${torches}
+    <div class="zclock__time"><b data-clock-time>--:--</b><small data-clock-label>Turn</small></div></div>`;
 }
 
 function choiceBar() {
@@ -445,7 +539,7 @@ function overlays() {
     html += `<div class="overlay victory"><h2>${s.victory.draw ? 'Draw' : `Player ${s.victory.winner} wins`}</h2><p>Round ${s.round} · Soul ${s.order.map(k => `${k} ${s.players[k].soul}`).join(' · ')}</p>
       <div class="row"><button class="primary-action" data-new>New match</button><a class="ghost" href="../">Main menu</a></div></div>`;
   }
-  if (pending && !s.victory) html += decisionModal();
+  if (pending && !s.victory && pending.pending.player !== settings.ai) html += decisionModal();
   if (logOpen) html += `<div class="drawer log" aria-label="Match log"><h3>Match log</h3>${logLines.slice(-150).reverse().map(l => `<p><small>R${l.round}</small> ${esc(l.text)}</p>`).join('')}</div>`;
   if (settingsOpen) {
     const sel = (key, opts) => `<select data-setting="${key}">${Object.entries(opts).map(([v, l]) => `<option value="${v}" ${settings[key] === v ? 'selected' : ''}>${l}</option>`).join('')}</select>`;
@@ -454,6 +548,7 @@ function overlays() {
       <label class="set"><span>Graphics</span>${sel('quality', {low: 'Low', medium: 'Medium', high: 'High', ultra: 'Ultra'})}</label>
       <label class="set"><span>Arena</span>${sel('theme', Object.fromEntries(Object.entries(THEMES).map(([k, t]) => [k, t.label])))}</label>
       <label class="set"><span>God of Player B (new match)</span>${sel('godB', {'god-athena': 'Athena', 'god-poseidon': 'Poseidon · fixture deck'})}</label>
+      <label class="set"><span>Opponent (new match)</span>${sel('ai', {B: 'AI plays Player B', none: 'Hot-seat (two humans)'})}</label>
       <label class="set"><span>Animation speed</span>${sel('speed', {fast: 'Fast', normal: 'Normal', cinematic: 'Cinematic'})}</label>
       ${chk('autoPass', 'Auto-pass when you have no response')}${chk('skipDraws', 'Skip draw animations')}${chk('reduceMotion', 'Reduce motion')}${chk('reduceFlashes', 'Reduce flashes')}${chk('hideOpponent', 'Hide the other hand (hot-seat)')}${chk('timeouts', 'Apply clock timeouts')}
       <label class="set"><span>Screen shake</span><input type="range" min="0" max="1.5" step=".25" value="${settings.shake}" data-setting="shake"></label>
@@ -470,13 +565,15 @@ function render() {
   if (mode) { const step = mode.steps[mode.i]; mode.options = step?.pick ? candidates(step, mode.key).filter(u => !mode.picked.includes(u)) : []; }
   boardRoot.innerHTML = `
     <div class="olympus ${mode ? 'is-choosing' : ''} ${pending ? 'is-deciding' : ''}" ${pending && !pending.peek ? 'inert' : ''}>
-      ${godHud(them, 'opp')}${cosmoGauge(them, 'opp')}${piles(them, 'opp')}
-      ${handRow(them, settings.hideOpponent)}
-      <main class="arena-field">${fieldRow(them)}<div class="midline"><span>${esc(phaseText())}</span></div>${fieldRow(me)}</main>
-      ${cosmoGauge(me, 'me')}${godHud(me, 'me')}${piles(me, 'me')}
+      ${godHud(them, 'opp')}${cosmoGauge(them, 'opp')}
+      ${handRow(them, settings.hideOpponent || settings.ai === them)}
+      <main class="arena-field">${cosmoLane(them, 'opp')}${fieldRow(them)}<div class="midline"></div>${fieldRow(me)}${cosmoLane(me, 'me')}</main>
+      ${cosmoGauge(me, 'me')}${godHud(me, 'me')}
       ${handRow(me, false)}
       ${command()}
+      ${s.window && !s.victory ? `<div class="priority-glow priority-glow--${s.window.priority === me ? 'me' : 'opp'}" aria-hidden="true"></div>` : ''}
     </div>${choiceBar()}`;
+  if (drag?.ghost) showDragZones(drag.uid); // re-render no meio do arraste não apaga as zonas
   const focused = document.activeElement?.closest?.('.decision [data-focus]')?.dataset.focus;
   overlayRoot.innerHTML = overlays();
   if (focused) $(`.decision [data-focus="${CSS.escape(focused)}"]`)?.focus();
@@ -484,6 +581,7 @@ function render() {
   if (mode) $$('.dcard').forEach(el => { if (!el.classList.contains('pickable') && el.closest('.field')) el.classList.add('dimmed'); });
   if (scene) { const st = $('[data-stats]'); if (st) st.textContent = `WebGL on · ${JSON.stringify(scene.stats())}`; }
   updateClock();
+  drawIntents();
 }
 
 // ---------- Adaptador do DOM para o orquestrador ----------
@@ -555,7 +653,7 @@ const ui = {
   log(e) {
     const n = uid => (uid ? info(uid).name : '');
     const t = {card_played: `${e.player} plays ${n(e.uid)}${e.bearer ? ` on ${n(e.bearer)}` : ''}.`, spell_resolved: `${n(e.uid)} resolves.`, ability: `${e.player} uses ${e.name}.`,
-      strike_declared: `${e.player}: ${n(e.attacker)} strikes ${e.target?.kind === 'god' ? `God ${e.target.player}` : n(e.target?.uid)}.`, destroyed: `${n(e.uid)} is destroyed.`,
+      strike_declared: `${e.player}: ${n(e.attacker)} strikes ${e.target?.kind === 'god' ? `God ${e.target.player}` : n(e.target?.uid)}${e.bypass ? ` past Guardian (${e.bypass}${e.bypass === 'Cheater' ? ' ignores Guardian against the God' : ' ignores Guardian'})` : ''}.`, strike_fizzled: `${n(e.attacker)}'s Strike fizzles: attacker or target left the battlefield.`, destroyed: `${n(e.uid)} is destroyed.`, unique_removed: `${n(e.uid)} goes to the Tartarus: only one version of a character (not destroyed).`,
       pass: `${e.player} passes.`, end_phase: `${e.player} ends the turn.`, equipped: `${n(e.uid)} equipped to ${n(e.bearer)}.`}[e.type];
     if (t) say(t);
   },
@@ -584,6 +682,7 @@ function logEvent(e) {
 // ---------- Entrada ----------
 
 boardRoot.addEventListener('click', e => {
+  if (Date.now() < noClickUntil) return; // fim de uma seta de ataque, não um clique
   if (director.busy) return director.skip();
   if (pending) return focusDecision();
   const s = S(), t = e.target;
@@ -599,7 +698,7 @@ boardRoot.addEventListener('click', e => {
   if (mode && pickEl) return choose(pickEl.dataset.pick || pickEl.dataset.uid);
   if (mode) return;
   const godEl = t.closest('[data-god]');
-  if (godEl) return godMenu(godEl.dataset.god, godEl);
+  if (godEl) return showGodPanel(godEl.dataset.god);
   const cardEl = t.closest('.dcard[data-uid]');
   if (!cardEl || cardEl.classList.contains('dcard--back')) return;
   const uid = cardEl.dataset.uid, key = owner(uid), me = viewer();
@@ -630,7 +729,7 @@ function handMenu(uid, el) {
   quickMenu(el, items, {always: true}); // carta da mão nunca sai sem o jogador escolher o que fazer
 }
 // Área de Cosmo do jogador (hexágono e chamas) como alvo de soltar.
-const bankAt = (key, x, y) => document.elementsFromPoint(x, y).some(d => d.closest?.(`[data-bank="${key}"]`));
+const bankAt = (key, x, y) => document.elementsFromPoint(x, y).some(d => d.closest?.(`[data-bank="${key}"], [data-lane="${key}"]`));
 function markBank(key, uid, x, y) {
   const bank = $(`[data-bank="${key}"]`);
   if (!bank) return;
@@ -643,7 +742,7 @@ function fieldMenu(uid, el) {
   if (c.kind === 'Devotee') {
     if (strikeTargets(s, ctx, uid).length) items.push(['Strike', () => startStrike(uid)]);
     const ab = ABILITIES[num(uid)];
-    if (ab && s.units[uid]?.prepared) items.push([`${ab.name} ({T}, ${ab.cost} Base)`, () => begin('activate', key, uid, STEPS[num(uid)] || [], ch => activate(S(), ctx, key, uid, ch))]);
+    if (ab && s.units[uid]?.prepared) items.push([`${ab.name} ({T}, ${ab.cost} Base)`, () => begin('activate', key, uid, ABILITY_STEPS[num(uid)] || [], ch => activate(S(), ctx, key, uid, ch))]);
   } else if (c.kind === 'Equipment' && !ctx.attached[uid]) items.push(['Re-equip', () => begin('reequip', key, uid, [{key: 'bearer', pick: 'devotee', label: 'Re-equip to which Devotee?'}], ch => reequip(S(), ctx, key, uid, ch.bearer))]);
   if (!items.length) return warn(s.units[uid]?.prepared === false ? 'Unprepared: it readies at the start of your turn.' : 'No action available for this card.');
   quickMenu(el, items);
@@ -666,12 +765,14 @@ overlayRoot.addEventListener('change', e => {
   if (key === 'quality') scene?.setQuality(settings.quality);
   if (key === 'theme') { scene?.setTheme(settings.theme); stage.dataset.theme = settings.theme; }
   if (key === 'reduceFlashes' && scene) scene.reduceFlashes = settings.reduceFlashes;
-  if (key === 'godB') { settingsOpen = false; return newMatch(); }
+  if (key === 'godB' || key === 'ai') { settingsOpen = false; return newMatch(); }
   render();
 });
 
 // Inspeção: passar o mouse 300 ms sobre uma carta aberta mostra a versão grande com o texto completo.
 document.addEventListener('pointerover', e => {
+  const base = e.target.closest?.('.dcard[data-base]');
+  if (base && owner(base.dataset.base) === viewer()) { clearTimeout(inspectTimer); inspectTimer = setTimeout(() => showInspect(base.dataset.base), 300); return; } // só o dono vê a própria Base
   const el = e.target.closest?.('.dcard[data-uid]:not(.dcard--back)');
   clearTimeout(inspectTimer);
   if (!el) return hideInspect();
@@ -684,6 +785,90 @@ function showInspect(uid) {
   box.innerHTML = `${cardFace(uid, {size: 'dcard--xl', field: S().players[owner(uid)].battlefield.includes(uid)})}<div class="inspector__text"><strong>${esc(c.name)}</strong><small>${esc(c.type)}${c.cost ? ` · ${c.cost.amount} ${c.cost.unit === 'base' ? 'Base' : 'Latent'}` : ''}</small>${lines.map(l => `<p>${esc(l)}</p>`).join('')}</div>`;
   box.classList.add('show');
 }
+// Clique direito no retrato do God: status base e atuais (Soul, Attack, Awaken, Ultimate) e o texto completo.
+// Painel do God (clique ou clique direito no retrato): a carta do God, os status atuais e cada poder num bloco.
+// Ultimate pronto é clicável e dispara o poder; passivos mostram se estão ativos. Fecha com clique fora ou Esc.
+function godPowers(god) {
+  const lines = god.text.split('\n').slice(4).map(l => l.trim()).filter(Boolean), out = [];
+  for (const l of lines) {
+    const h = l.match(/^([A-Z][A-Z' ]+?) — (Divine Power|Awaken \d+|Ultimate)$/);
+    if (h) out.push({name: h[1], tag: h[2], kind: h[2].split(' ')[0].toLowerCase(), text: []});
+    else out.at(-1)?.text.push(l);
+  }
+  return out;
+}
+function showGodPanel(key) {
+  closeBigCard();
+  hideInspect();
+  const s = S(), p = s.players[key], d = s.divine[key], god = cards.get(s.gods[key]), max = soulMax(s, key), acts = godActions(key);
+  const forge = FORGE.get(`${god.name.toLowerCase()}-001`);
+  const art = forge?.ilustracao ? renderLiveCard(forge, {art: FORGE_ART + forge.ilustracao}) : `<div class="godpanel__portrait" style="background-image:url('${GOD_ART[s.gods[key]] || ''}')"></div>`;
+  const state = pw => pw.kind === 'ultimate' ? (d.ultimateUsed ? ['used', 'Used'] : acts.ultimate.ok ? ['ready', 'Ready · click to use'] : ['locked', acts.ultimate.why])
+    : pw.kind === 'awaken' ? (d.awaken ? ['active', 'Active'] : ['locked', `Awakens at Soul ≤ ${d.awakenAt}`]) : ['active', 'Always on'];
+  const icon = {divine: '✦', awaken: '☀', ultimate: '⚡'};
+  const powers = godPowers(god).map((pw, i) => {
+    const [st, label] = state(pw), click = pw.kind === 'ultimate' && st === 'ready';
+    return `<button class="power power--${pw.kind} is-${st}" data-power="${i}" ${click ? '' : 'aria-disabled="true"'} title="${esc(label)}">
+      <span class="power__icon" aria-hidden="true">${icon[pw.kind]}</span>
+      <span class="power__head"><strong>${esc(pw.name)}</strong><small>${esc(pw.tag)}</small></span>
+      <em class="power__state">${esc(label)}</em>
+      <span class="power__text">${pw.text.map(t => `<span>${esc(t)}</span>`).join('')}</span>
+    </button>`;
+  });
+  if (acts.judgment) powers.push(`<button class="power power--judgment is-ready" data-power="judgment"><span class="power__icon" aria-hidden="true">⚖</span><span class="power__head"><strong>REMOVE DIVINE JUDGMENT</strong><small>Action</small></span><em class="power__state">Sacrifice three Devotees</em></button>`);
+  const box = document.createElement('div');
+  box.id = 'bigcard';
+  box.className = 'bigcard godpanel-wrap';
+  box.innerHTML = `<section class="godpanel godpanel--${god.name.toLowerCase()} ${d.awaken ? 'is-awaken' : ''}" role="dialog" aria-label="${esc(god.name)}, Player ${key}">
+    <div class="godpanel__card">${art}</div>
+    <div class="godpanel__info">
+      <header><h2>${esc(god.name)}</h2><small>${esc(god.text.split('\n')[1] || '')} · Player ${key}</small></header>
+      <div class="godpanel__stats">
+        <div class="gstat gstat--soul"><small>Soul</small><b>${p.soul}<span>/${max}</span></b><i><u style="width:${Math.round(p.soul / max * 100)}%"></u></i></div>
+        <div class="gstat"><small>Attack</small><b>${god.atk}</b><em>retaliation</em></div>
+        <div class="gstat ${d.awaken ? 'is-on' : ''}"><small>Awaken</small><b>${d.awakenAt}</b><em>${d.awaken ? 'active' : `at Soul ≤ ${d.awakenAt}`}</em></div>
+        <div class="gstat ${d.ultimateUsed ? '' : 'is-on'}"><small>Ultimate</small><b>${d.ultimateUsed ? 'Used' : 'Ready'}</b><em>once per match</em></div>
+      </div>
+      <div class="godpanel__powers">${powers.join('')}</div>
+    </div>
+    <button class="godpanel__close" aria-label="Close">×</button>
+  </section>`;
+  box.addEventListener('pointerdown', e => { if (e.target === box || e.target.closest('.godpanel__close')) closeBigCard(); });
+  box.addEventListener('contextmenu', e => { e.preventDefault(); closeBigCard(); });
+  box.addEventListener('click', e => {
+    const b = e.target.closest('[data-power]');
+    if (!b) return;
+    if (b.dataset.power === 'judgment') { closeBigCard(); return acts.judgment(); }
+    const pw = godPowers(god)[b.dataset.power];
+    if (pw.kind !== 'ultimate') return warn(`${pw.name}: ${state(pw)[1]}. It works automatically.`);
+    if (!acts.ultimate.ok) return warn(acts.ultimate.why);
+    closeBigCard();
+    acts.ultimate.run();
+  });
+  document.body.append(box);
+}
+document.addEventListener('contextmenu', e => {
+  const god = e.target.closest?.('[data-god]');
+  if (god) { e.preventDefault(); return showGodPanel(god.dataset.god); }
+  // Clique direito numa carta aberta (ou na própria Base): a carta real grande no centro da tela.
+  const base = e.target.closest?.('.dcard[data-base]'), el = e.target.closest?.('.dcard[data-uid]:not(.dcard--back)');
+  const uid = base && owner(base.dataset.base) === viewer() ? base.dataset.base : el?.dataset.uid;
+  if (!uid) return;
+  e.preventDefault();
+  showBigCard(uid);
+});
+function showBigCard(uid) {
+  closeBigCard();
+  hideInspect();
+  const box = document.createElement('div');
+  box.id = 'bigcard';
+  box.className = 'bigcard';
+  box.innerHTML = cardFace(uid, {size: 'dcard--big', field: S().players[owner(uid)].battlefield.includes(uid)});
+  box.addEventListener('pointerdown', closeBigCard);
+  box.addEventListener('contextmenu', e => { e.preventDefault(); closeBigCard(); });
+  document.body.append(box);
+}
+function closeBigCard() { $('#bigcard')?.remove(); }
 function hideInspect() { $('#inspector').classList.remove('show'); $$('.orb.preview').forEach(o => o.classList.remove('preview')); }
 // Prévia de pagamento: as esferas que esta carta gastaria piscam antes do clique.
 function previewCost(uid) {
@@ -693,19 +878,114 @@ function previewCost(uid) {
   $$(`[data-bank="${key}"] [data-bank-unit="${c.cost.unit}"] .orb.ready`).slice(-c.cost.amount).forEach(o => o.classList.add('preview'));
 }
 
+// Campo dividido durante o arraste (como no sistema anterior): metade de cima CAST (jogar), metade de baixo COSMO BASE.
+// A zona só acende se a ação for possível agora; a engine ainda decide ao soltar.
+function showDragZones(uid) {
+  const key = owner(uid), field = $('.arena-field');
+  if (!field) return;
+  const cast = !playableReason(key, uid), cosmo = canBase(key, uid);
+  field.insertAdjacentHTML('beforeend', `<div class="drag-zones" aria-hidden="true">
+    <div class="drag-zone drag-zone--cast ${cast ? '' : 'is-off'}"><strong>CAST</strong><small>${cast ? 'Release to cast as Devotee, Armor or effect' : esc(playableReason(key, uid))}</small></div>
+    <div class="drag-zone drag-zone--cosmo ${cosmo ? '' : 'is-off'}"><strong>COSMO BASE</strong><small>${cosmo ? 'Release to set as Cosmo Base' : esc(baseReason(key, uid))}</small></div></div>`);
+  $('.olympus')?.classList.add('is-dragging');
+}
+function hideDragZones() {
+  $('.drag-zones')?.remove();
+  $('.olympus')?.classList.remove('is-dragging', 'is-over-cast', 'is-over-cosmo');
+}
+// Zona sob o cursor: 'cast', 'cosmo' ou null (fora do campo ou ação impossível).
+function dragZoneAt(uid, x, y) {
+  const r = $('.arena-field')?.getBoundingClientRect(), key = owner(uid);
+  if (!r || x < r.left || x > r.right || y < r.top || y > r.bottom) return null;
+  const overUnit = document.elementsFromPoint(x, y).some(d => d.dataset?.uid && S().players[key].battlefield.includes(d.dataset.uid));
+  if (y < r.top + r.height / 2 || overUnit) return playableReason(key, uid) ? (overUnit && canBase(key, uid) ? 'cosmo' : null) : 'cast';
+  return canBase(key, uid) ? 'cosmo' : null;
+}
 // Arrastar da mão: soltar no campo joga; soltar num Devotee seu escolhe o portador/alvo; soltar na área de Cosmo vira Base.
 document.addEventListener('pointerdown', e => {
+  if (director.busy || mode) return;
+  const unit = e.target.closest('.field--me .dcard[data-uid]');
+  if (unit) return startAim(unit, e);
   const el = e.target.closest('.hand--me .dcard[data-uid]');
-  if (!el || director.busy || mode) return;
+  if (!el) return;
   drag = {uid: el.dataset.uid, x: e.clientX, y: e.clientY, el, ghost: null};
 });
+
+// Ataque por seta (estilo Hearthstone): segurar um Devotee seu Prepared, puxar a seta e soltar no alvo declara o
+// Strike. Os alvos legais vêm de strikeTargets (a engine valida de novo no declareStrike). Clique sem puxar abre o menu.
+let aim = null, noClickUntil = 0;
+function startAim(el, e) {
+  const uid = el.dataset.uid, key = owner(uid);
+  if (!idleFor(key) || info(uid).kind !== 'Devotee' || !S().units[uid]?.prepared) return;
+  const targets = strikeTargets(S(), ctx, uid);
+  if (!targets.length) return;
+  aim = {uid, el, x: e.clientX, y: e.clientY, on: false, targets, svg: null, hover: null};
+}
+const aimEls = () => aim.targets.flatMap(tg => (tg.kind === 'god' ? $$(`[data-god="${tg.player}"]`) : $$(`.field .dcard[data-uid="${tg.uid}"]`)));
+function aimTargetAt(x, y) {
+  const els = document.elementsFromPoint(x, y);
+  for (const tg of aim.targets) {
+    if (tg.kind === 'god' && els.some(d => d.closest?.(`[data-god="${tg.player}"]`))) return tg;
+    if (tg.kind === 'devotee' && els.some(d => d.closest?.(`.field .dcard[data-uid="${tg.uid}"]`))) return tg;
+  }
+  return null;
+}
+function moveAim(e) {
+  if (!aim.on) {
+    if (Math.hypot(e.clientX - aim.x, e.clientY - aim.y) < 10) return;
+    aim.on = true; closeQuick();
+    aim.el.classList.add('aiming');
+    aimEls().forEach(el => el.classList.add('pickable'));
+    aim.svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    aim.svg.setAttribute('class', 'aim-arrow');
+    aim.svg.innerHTML = '<defs><marker id="aim-head" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs><path class="aim-arrow__glow"/><path class="aim-arrow__line" marker-end="url(#aim-head)"/><circle class="aim-arrow__reticle" r="16"/>';
+    document.body.append(aim.svg);
+  }
+  const r = aim.el.getBoundingClientRect(), x0 = r.left + r.width / 2, y0 = r.top + r.height / 2, x1 = e.clientX, y1 = e.clientY;
+  const d = `M${x0},${y0} Q${(x0 + x1) / 2},${Math.min(y0, y1) - 80} ${x1},${y1}`; // arco para cima, como uma flecha lançada
+  $$('path:not([d^="M0"])', aim.svg).forEach(path => path.setAttribute('d', d));
+  const reticle = $('.aim-arrow__reticle', aim.svg);
+  reticle.setAttribute('cx', x1); reticle.setAttribute('cy', y1);
+  const tg = aimTargetAt(x1, y1);
+  aim.svg.classList.toggle('is-locked', !!tg);
+  $$('.aim-hover').forEach(el => el.classList.remove('aim-hover'));
+  if (tg) (tg.kind === 'god' ? $$(`[data-god="${tg.player}"]`) : $$(`.field .dcard[data-uid="${tg.uid}"]`)).forEach(el => el.classList.add('aim-hover'));
+}
+function endAim(e) {
+  const a = aim, tg = a.on && e ? aimTargetAt(e.clientX, e.clientY) : null;
+  aim = null;
+  if (!a.on) return; // clique simples: o menu do campo segue normal
+  noClickUntil = Date.now() + 400;
+  a.svg?.remove(); a.el.classList.remove('aiming');
+  $$('.aim-hover').forEach(el => el.classList.remove('aim-hover'));
+  $$('.pickable').forEach(el => el.classList.remove('pickable'));
+  if (tg) act(() => declareStrike(S(), ctx, a.uid, tg));
+}
+document.addEventListener('pointermove', e => { if (aim) moveAim(e); });
+document.addEventListener('pointerup', e => { if (aim) endAim(e); });
+document.addEventListener('pointercancel', () => { if (aim) endAim(null); });
+window.addEventListener('blur', () => { if (aim) endAim(null); });
 document.addEventListener('pointermove', e => {
   if (!drag) return;
   if (!drag.ghost && Math.hypot(e.clientX - drag.x, e.clientY - drag.y) < 10) return;
-  if (!drag.ghost) { drag.ghost = drag.el.cloneNode(true); drag.ghost.classList.add('dragging'); document.body.append(drag.ghost); drag.el.classList.add('drag-source'); }
+  if (!drag.ghost) { drag.ghost = drag.el.cloneNode(true); drag.ghost.classList.add('dragging'); document.body.append(drag.ghost); drag.el.classList.add('drag-source'); showDragZones(drag.uid); }
   drag.ghost.style.left = `${e.clientX}px`; drag.ghost.style.top = `${e.clientY}px`;
   markBank(owner(drag.uid), drag.uid, e.clientX, e.clientY);
+  const zone = dragZoneAt(drag.uid, e.clientX, e.clientY), board = $('.olympus');
+  board?.classList.toggle('is-over-cast', zone === 'cast');
+  board?.classList.toggle('is-over-cosmo', zone === 'cosmo');
 });
+// Cancela o arraste sem ação (Esc, pointercancel do navegador, janela perde o foco): a carta volta para a mão.
+function cancelDrag() {
+  if (!drag) return;
+  drag.ghost?.remove(); drag.el.classList.remove('drag-source');
+  $$('.cosmo.drop-target, .cosmo.drop-hover').forEach(b => b.classList.remove('drop-target', 'drop-hover'));
+  drag = null;
+  hideDragZones();
+}
+document.addEventListener('pointercancel', cancelDrag);
+window.addEventListener('blur', cancelDrag);
+document.addEventListener('dragstart', e => { if (e.target.closest?.('.hand--me')) e.preventDefault(); }); // sem arraste nativo de texto/imagem
 document.addEventListener('pointerup', e => {
   if (!drag) return;
   const {uid, ghost, el} = drag;
@@ -713,9 +993,13 @@ document.addEventListener('pointerup', e => {
   if (!ghost) return;
   ghost.remove(); el.classList.remove('drag-source');
   $$('.cosmo.drop-target, .cosmo.drop-hover').forEach(b => b.classList.remove('drop-target', 'drop-hover'));
+  const zone = dragZoneAt(uid, e.clientX, e.clientY);
+  hideDragZones();
   const key = owner(uid), drop = document.elementsFromPoint(e.clientX, e.clientY);
-  if (bankAt(key, e.clientX, e.clientY)) return placeAsBase(key, uid); // soltar na área de Cosmo: vira Base
-  const onField = drop.some(d => d.dataset?.field === key), onUnit = drop.find(d => d.dataset?.uid && S().players[key].battlefield.includes(d.dataset.uid));
+  const onUnit = drop.find(d => d.dataset?.uid && S().players[key].battlefield.includes(d.dataset.uid));
+  // Área de Cosmo ou metade COSMO vira Base; sobre um Devotee seu com a carta jogável, vale o portador/alvo.
+  if (bankAt(key, e.clientX, e.clientY) || (zone === 'cosmo' && !(onUnit && !playableReason(key, uid)))) return placeAsBase(key, uid);
+  const onField = zone === 'cast' || drop.some(d => d.dataset?.field === key);
   if (!onField && !onUnit) return;
   const reason = playableReason(key, uid);
   if (reason) return warn(reason);
@@ -726,12 +1010,51 @@ document.addEventListener('pointerup', e => {
 
 document.addEventListener('keydown', e => {
   if (e.target.matches?.('input, select, textarea')) return;
+  if (e.code === 'Escape' && $('#bigcard')) return closeBigCard();
   if (pending && !director.busy) return decisionKey(e);
   if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); return primary(); }
-  if (e.code === 'Escape') { closeQuick(); if (mode) { mode = null; render(); } else if (settingsOpen || logOpen) { settingsOpen = logOpen = false; render(); } }
+  if (e.code === 'Escape') { closeQuick(); cancelDrag(); if (aim) endAim(null); if (mode) { mode = null; render(); } else if (settingsOpen || logOpen) { settingsOpen = logOpen = false; render(); } }
   if (e.key === 'l' || e.key === 'L') { logOpen = !logOpen; render(); }
 });
 document.addEventListener('click', e => { if (!e.target.closest('.quick') && !e.target.closest('.dcard')) closeQuick(); });
+
+// ---------- Setas de intenção (quem mira quem) ----------
+// Setas translúcidas e fixas enquanto algo espera resolver: Strike declarado (atacante → alvo) e cada item da cadeia
+// (número na lista de prioridade → alvo, ou → carta de origem do gatilho). Só leitura do estado; não decide nada.
+const elOf = ref => (!ref ? null : ref.startsWith?.('god:') ? $(`[data-god="${ref.slice(4)}"] .godhud__portrait`) : $(`.field .dcard[data-uid="${ref}"], .lane .dcard[data-uid="${ref}"]`));
+const center = el => { const r = el.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; };
+function pendingStrike(s) {
+  if (!s.window) return null;
+  for (let i = s.events.length - 1; i >= 0; i--) {
+    const e = s.events[i];
+    if (['strike_resolve', 'strike_fizzled', 'turn_start'].includes(e.type)) return null;
+    if (e.type === 'strike_declared') return e;
+  }
+  return null;
+}
+function drawIntents() {
+  $('.intent-arrows')?.remove();
+  if (!match || S().victory) return;
+  const s = S(), arrows = [];
+  const strike = pendingStrike(s);
+  if (strike) arrows.push({from: elOf(strike.attacker), to: elOf(strike.target.kind === 'god' ? `god:${strike.target.player}` : strike.target.uid), kind: 'strike', label: 'STRIKE'});
+  s.chain.forEach((c, i) => {
+    const from = $(`.chain [data-chain="${i}"] b`), target = c.target && ctx.objects[c.target] ? c.target : null;
+    if (target) arrows.push({from, to: elOf(target), kind: 'spell', label: String(i + 1)});
+    else if (c.uid && elOf(c.uid)) arrows.push({from, to: elOf(c.uid), kind: 'source', label: String(i + 1)});
+  });
+  const live = arrows.filter(a => a.from && a.to);
+  if (!live.length) return;
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('class', 'intent-arrows');
+  svg.innerHTML = '<defs>' + ['strike', 'spell', 'source'].map(k => `<marker id="ih-${k}" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path class="ih ih--${k}" d="M0,0 L10,5 L0,10 z"/></marker>`).join('') + '</defs>' +
+    live.map(a => {
+      const [x0, y0] = center(a.from), [x1, y1] = center(a.to), mx = (x0 + x1) / 2, my = (y0 + y1) / 2 - Math.min(120, Math.hypot(x1 - x0, y1 - y0) * .25);
+      return `<g class="intent intent--${a.kind}"><path d="M${x0},${y0} Q${mx},${my} ${x1},${y1}" marker-end="url(#ih-${a.kind})"/><circle cx="${x1}" cy="${y1}" r="22"/><text x="${mx}" y="${my + 4}">${esc(a.label)}</text></g>`;
+    }).join('');
+  document.body.append(svg);
+}
+addEventListener('resize', () => drawIntents());
 
 // ---------- Partida ----------
 
@@ -822,6 +1145,7 @@ function decisionText(req) {
     const title = req.ability === 'GREAT FLOOD' ? 'Great Flood' : req.ability;
     if (req.choose === 'base') return {who, title, kicker: 'Mandatory choice', body: `${n(req.for)} returned to its owner's hand. Choose 1 Cosmo Base you control to return to your hand.`};
     if (req.choose === 'discard') return {who, title, kicker: 'Mandatory choice', body: `Discard half of your hand, rounded up: choose ${req.count} card${req.count > 1 ? 's' : ''}. Each discarded card mills 3.`};
+    if (req.choose === 'keep') return {who, title: 'ONE PER CHARACTER', kicker: 'Mandatory choice', body: `You control two versions of ${info(req.options[0]).name.split(",")[0]}. Choose the one to keep; the other goes to the Tartarus (it is not destroyed).`};
     if (req.choose === 'top') return {who, title, kicker: 'Mandatory choice', body: 'Choose the card to keep on top of your deck. The other goes to the bottom.'};
     return {who, title, kicker: 'Mandatory choice', body: `Choose ${req.count}.`};
   }
@@ -900,6 +1224,36 @@ function watchEvents() {
   requestAnimationFrame(watchEvents);
 }
 
+
+// ---------- Oponente IA (settings.ai: 'B' ou 'none') ----------
+// A IA só escolhe; cada ação passa pela engine 3.0 como a do humano (mesmo act/reply, mesmas regras e animações).
+const ai = createAI({
+  S, info, num, known: uid => !!ctx.objects[uid], duplicate: (key, uid) => !!duplicateCharacter(S(), ctx, key, uid), candidates, playableReason, canBase, STEPS,
+  hp: uid => hpOf(S(), ctx, uid) - (S().units[uid]?.damage || 0), atk: uid => atkOf(S(), ctx, uid), isSaint: uid => isSaint(ctx, uid),
+  strikeTargets: uid => strikeTargets(S(), ctx, uid), ultimateBlock: (key, trio) => ultimateBlock(S(), ctx, key, trio), greatFloodBlock: key => greatFloodBlock(S(), key),
+  placeBase, playDevotee: (key, uid, ch) => playDevotee(S(), ctx, key, uid, ch), playEquipment: (key, uid, bearer, ch) => playEquipment(S(), ctx, key, uid, bearer, ch),
+  playSpell: (key, uid, ch) => playSpell(S(), ctx, key, uid, ch), declareStrike: (uid, target) => declareStrike(S(), ctx, uid, target),
+  announceExclamation: (key, trio) => announceExclamation(S(), ctx, key, trio), announceGreatFlood: key => announceGreatFlood(S(), ctx, key),
+});
+let aiBusy = false;
+async function aiTick() {
+  const key = settings.ai;
+  if (key === 'none' || aiBusy || !match || director.busy || mode || S().victory) return;
+  const s = S();
+  aiBusy = true;
+  try {
+    if (pending) { if (pending.pending.player === key) await reply({value: ai.answer(pending.pending)}); return; }
+    if (s.setup) { if (s.setup[0] === key) await act(() => { mulligan(match, key, []); if (!s.setup) startTurn(s); }); return; }
+    if (s.window) { if (s.window.priority === key) await act(() => pass(s, key)); return; }
+    if (!idleFor(key)) return;
+    const a = ai.next(key);
+    if (!a) { await act(() => { ending = true; endTurn(s); }); return; }
+    const before = s.events.length;
+    await act(a.run);
+    if (S().events.length === before && !pending) ai.refuse(a); // a engine recusou: não tenta de novo neste turno
+  } finally { aiBusy = false; }
+}
+
 async function init() {
   stage.dataset.theme = settings.theme;
   const [canonData, deckData] = await Promise.all(['../../data/canon/d268.json', '../../data/alpha-0.1/decks-proposta-d171.json'].map(u => fetch(u).then(r => {
@@ -907,17 +1261,20 @@ async function init() {
     return r.json();
   })));
   canon = canonData; cards = loadCanon(canon);
-  const [rush, fortress] = deckData.decks;
-  decks = {A: rush, B: fortress};
+  const [rush, fortress] = deckData.decks, deckOf = id => deckData.decks.find(d => d.id === id);
+  const query = new URLSearchParams(location.search);
+  decks = {A: deckOf(query.get('deckA')) || rush, B: deckOf(query.get('deckB')) || fortress}; // ?deckA=&deckB= vindos da seleção do menu
   director = createDirector({ui, getFx: () => scene?.fx, settings});
   const params = new URLSearchParams(location.search);
   if (params.get('godB')) settings.godB = `god-${params.get('godB')}`; // ?godB=poseidon
+  if (params.get('ai')) settings.ai = params.get('ai'); // ?ai=B (padrão) ou ?ai=none (hot-seat)
   if (params.get('timeouts')) settings.timeouts = params.get('timeouts') === '1'; // ?timeouts=1 (QA)
-  newMatch(Number(params.get('seed')) || undefined, params.get('demo') ? 'A' : undefined);
+  newMatch(Number(params.get('seed')) || undefined, params.get('demo') ? 'A' : ['A', 'B'].includes(params.get('first')) ? params.get('first') : undefined);
   applyDemo(params.get('demo'));
   render();
   requestAnimationFrame(watchEvents);
   setInterval(tickClock, 250);
+  setInterval(aiTick, 700);
   scene = await createScene($('#arena'), {quality: settings.quality, theme: settings.theme, reduceFlashes: settings.reduceFlashes});
   stage.classList.toggle('no-webgl', !scene);
   window.__divine = {get state() { return S(); }, get ctx() { return ctx; }, get scene() { return scene; }, get clock() { return clock; }, settings}; // inspeção no QA

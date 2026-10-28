@@ -1,10 +1,15 @@
 import {createHistory} from '../shared/editor-history.js';
 import {compilePlaytest} from '../shared/import-playtest.js';
-import {textBlocks,blocksMarkup,presentationRules} from '../shared/card-text.js';
+import {textBlocks,blocksMarkup,presentationRules,ruleBlocksWithoutKeywords} from '../shared/card-text.js';
 import {renderLiveCard,illustration} from '../shared/live-card.js';
 import {isArmor,isEquipment,validateCard} from '../shared/card-model.js';
 // Card Forge — editor de cartas em vanilla JS. Renderiza no canvas nativo 1488x2091 usando
 // as peças de CARD-TEMPLATE/ (extraídas dos PSDs) e o spec CARD-TEMPLATE/templates.json.
+
+import {publishedScene,visualProject} from '../shared/layout-studio/runtime.js';
+import {sceneCanvas} from '../shared/layout-studio/renderer.js';
+import {simulateCard} from './studio-preview.js';
+import {printedEquipmentBonuses,signedBonus} from '../shared/card-visual-values.js';
 
 const T = await (await fetch('../CARD-TEMPLATE/templates.json')).json();
 const P = (await (await fetch('../CARD-TEMPLATE/pieces.json')).json()).pieces;
@@ -109,9 +114,10 @@ function layoutKey(s) {
 const list = (v) => (Array.isArray(v) ? v : String(v || '').split(',')).map((x) => x.trim()).filter(Boolean);
 const has = (v) => v !== null && v !== undefined && String(v).trim() !== '';
 
+// Spell não aparece na linha de tipo: Technique, Moment e Miracle já são os Spells (autor, 28/10/2026).
 function typeLine(s, fmt) {
-  return fmt.replace('{tipo}', s.tipo).replace('{faccao}', s.faccao).replace('{subtipos}', list(s.subtipos).join(' — '))
-    .replace(/\s*[—-]\s*$/, '').replace(/\s*[—-]\s*(?=\s*[—-])/g, '');
+  return fmt.replace('{tipo}', s.tipo === 'Spell' ? '' : s.tipo).replace('{faccao}', s.faccao).replace('{subtipos}', list(s.subtipos).join(' — '))
+    .replace(/^\s*[—-]\s*/, '').replace(/\s*[—-]\s*$/, '').replace(/\s*[—-]\s*(?=\s*[—-])/g, '');
 }
 
 // ---------- desenho ----------
@@ -287,7 +293,7 @@ async function drawRules(el, s) {
   const paras = [];
   if (has(s.keywords)) paras.push(`**${list(s.keywords).join(', ').toUpperCase()}.**`);
   const text=s.estagios.length?presentationRules(buildCard()).map(toMarkup):splitParas(s.rules);
-  paras.push(...splitParas(blocksMarkup(textBlocks(text))));
+  paras.push(...splitParas(blocksMarkup(ruleBlocksWithoutKeywords(text,list(s.keywords)))));
   if (layoutKey(s) === 'god' && has(s.habilidade_awaken_en)) {
     paras.push(`**AWAKEN${has(s.awaken) ? ` ${s.awaken}` : ''}**`, ...s.habilidade_awaken_en.split(/(?<=\.) (?=[A-Z][^.—]{1,30} — )/).map(toMarkup));
   }
@@ -341,9 +347,20 @@ let renderSeq = 0;
 async function render() {
   const seq = ++renderSeq;
   await document.fonts.ready;
+  if (db) {
+    const illustration = S.art?.src ? await loadImg(S.art.src) : null;
+    const art = illustration ? {...S.art,src:new URL(S.art.src,location.href).href,h:S.art.w*illustration.naturalHeight/illustration.naturalWidth} : null;
+    const composed = publishedScene(buildCard(), {project:S,art,assetRects:P,mode:'print'});
+    if (composed) {
+      const rendered = await sceneCanvas(composed,{allowOverflow:true});
+      if (seq !== renderSeq) return;
+      ctx.clearRect(0,0,W,H);ctx.drawImage(rendered,0,0,W,H);updateLivePreview();
+      if(composed.warnings.length)say(composed.warnings.map(w=>w.message).join(' '),true);
+      return;
+    }
+  }
   // pré-carrega tudo antes de desenhar, para o frame sair inteiro
   const L = structuredClone(T.layouts[layoutKey(S)]);
-  if(isEquipment({...S,subtipos:list(S.subtipos)})&&!L.elements.some(e=>e.field==='equip'))L.elements.push({kind:'gem',piece:'athena/gem_equip',field:'equip',label:'EQUIP',size:80});
   await Promise.all([S.art?.src && loadImg(S.art.src), loadImg(pieceSrc(symbolKey(S.faccao))),
     ...Object.keys(P).map((k) => loadImg(pieceSrc(k)))]);
   if (seq !== renderSeq) return;
@@ -364,7 +381,7 @@ async function render() {
       }
       case 'cost': {
         if (!has(S.custo) || S.tipo === 'Domain' || S.tipo === 'God') break;
-        const key = S.unidade_custo === 'base_cosmo' ? 'athena/gem_cost_base' : 'athena/gem_cost';
+        const key = S.cosmoble ? 'athena/gem_cost' : 'athena/gem_cost_base';
         const p = P[key];
         const g = await drawGlowPiece(key, { dx: el.x - p.w / 2 - p.x, dy: el.y - p.h / 2 - p.y });
         if (g) drawText(String(S.custo), 'number', g.cx, g.cy, el.size, 200, true);
@@ -422,11 +439,21 @@ function renderStageEditor(){
   $('#previewStage').replaceChildren(...(S.estagios.length?S.estagios:[{nome:'Vanilla'}]).map((s,i)=>new Option(s.nome,String(i))));
 }
 $('#addStage').addEventListener('click',()=>{if(S.estagios.length>=4)return;S.estagios.push({nome:S.estagios.length?'New stage':'Vanilla',custo:S.estagios.length?1:null,bonus_poder:0,bonus_vida:0,keywords_en:[],habilidades_en:[]});renderStageEditor();rememberEdit();render();});
-function updateLivePreview(){
+let livePreviewRevision=0;
+async function updateLivePreview(){
+  const revision=++livePreviewRevision;
   const live=$('#representation').value==='live';$('#livePreview').hidden=!live;$('#liveControls').hidden=!live;$('#cardWrap').hidden=live;
-  const c=buildCard(),damage=Number($('#previewDamage').value)||0,stage=Number($('#previewStage').value)||0;
-  $('#livePreview').innerHTML=renderLiveCard(c,{art:S.art?.src,stats:{power:Number(c.power)||0,hp:Math.max(0,Number(c.vida??c.resistance)-damage),maxHP:Number(c.vida??c.resistance),damage,keywords:c.keywords_en},instance:{prepared:$('#previewPrepared').checked,damage,stage}});
+  const c=buildCard();
   $('#rulesReview').textContent=c.motor_revisao_pendente?'Texto alterado: os efeitos jogáveis precisam de revisão antes de usar esta carta numa partida.':validateCard(c).join(' · ');
+  if(!live)return;
+  const simulationCards=[...db.cartas.filter(card=>card.id!==c.id),c];
+  try{
+    const result=await simulateCard(simulationCards,c,{mode:'battlefield',damage:Number($('#previewDamage').value)||0,stage:Number($('#previewStage').value)||0,prepared:$('#previewPrepared').checked});
+    if(revision!==livePreviewRevision)return;
+    $('#livePreview').innerHTML=renderLiveCard(c,{art:S.art?.src,stats:result.stats,instance:result.instance});
+  }catch{
+    if(revision===livePreviewRevision)$('#livePreview').innerHTML=renderLiveCard(c,{art:S.art?.src});
+  }
 }
 for(const id of ['representation','previewDamage','previewPrepared','previewStage'])$('#'+id).addEventListener('input',updateLivePreview);
 
@@ -462,7 +489,7 @@ function fromCard(c, proj = {}) {
   s.revisao_regras=c.revisao_regras||'1.0';
   s.referencias_mitologicas_texto=(c.referencias_mitologicas||[]).join('\n');
   s.donos=(c.donos||[]).join(', ');s.estagios=structuredClone(c.estagios||[]);s.resonanceText=(c.ressonancias||[]).map(r=>`${r.personagem_id} | ${r.habilidade_en}`).join('\n');
-  const stage=c.estagios?.[0];if(stage){s.bonusPower=`+${stage.bonus_poder}`;s.bonusResistance=`+${stage.bonus_vida}`;}
+  const stage=c.estagios?.[0],printed=printedEquipmentBonuses(c);if(isEquipment(c)){s.bonusPower=signedBonus(printed.power)??'';s.bonusResistance=signedBonus(printed.hp)??'';}
   s.subtipos = (c.subtipos || []).join(', ');
   s.keywords = (c.keywords_en || []).join(', ');
   gen = (c.habilidades_en || []).map((text) => ({ text, markup: toMarkup(text) }));
@@ -478,7 +505,7 @@ async function selectCard(id) {
   const c = db.cartas.find((x) => x.id === id);
   if (!c) return;
   let proj = {};
-  try { const r = await fetch(`projects/${id}.json`); if (r.ok) proj = await r.json(); } catch { /* sem projeto */ }
+  try { const r = await fetch(`projects/${id}.json`); if (r.ok) proj = await r.json(); else await r.arrayBuffer(); } catch { /* sem projeto */ }
   if(revision!==selectionRevision)return;
   const previousGenerated=gen,next=fromCard(c,proj),generated=gen;gen=previousGenerated;
   if(!next.art&&illustration(c)){const im=await loadImg(illustration(c));if(im){next.art={src:illustration(c)};coverArt(im,next.art);}}
@@ -597,6 +624,8 @@ document.body.className = `view-${$('#viewSize').value}`;
 // ---------- export ----------
 const fileBase = () => (S.id || 'card');
 async function download(c, name) {
+  const composed=db?publishedScene(buildCard(),{project:S,mode:'print'}):null;
+  if(composed?.warnings.some(w=>w.kind==='overflow'))return say('Texto excede o layout publicado. Ajuste as caixas no Layout Studio antes de exportar.',true);
   const blob = await new Promise((ok) => c.toBlob(ok, 'image/png'));
   const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: name });
   a.click();
@@ -730,11 +759,18 @@ for (const [token, label] of [['{C}', 'Cosmo'], ['{B}', 'Base Cosmo'], ['{L}', '
   b.append(Object.assign(new Image(), { src: pieceSrc(ICONS[token]), alt: '' }), label);
   b.addEventListener('mousedown', (e) => e.preventDefault()); // não tira o foco/cursor do texto
   b.addEventListener('click', () => insertAtCursor(token));
-  $('#symbar').insertBefore(b, $('#kwSelect'));
+  $('#symbar').append(b);
 }
 const kwSel = $('#kwSelect');
 kwSel.append(...KEYWORDS.map((k) => new Option(k, k)));
-kwSel.addEventListener('change', () => { if (kwSel.value) insertAtCursor(kwSel.value); kwSel.value = ''; });
+kwSel.addEventListener('change', () => {
+  const keyword=kwSel.value,field=form.elements.keywords,selected=list(field.value);
+  if(keyword&&!selected.some(k=>k.toLowerCase()===keyword.toLowerCase())){
+    field.value=[...selected,keyword].join(', ');
+    field.dispatchEvent(new Event('input',{bubbles:true}));
+  }
+  kwSel.value='';
+});
 
 // ---------- lote: várias cartas de um arquivo de texto ----------
 // Formato (card-forge/import/modelo.txt): blocos "Campo: valor", cartas separadas por uma linha "---".
@@ -753,9 +789,9 @@ const FIELDS = {
 };
 const MULTI = new Set(['rules', 'habilidade_awaken_en', 'ultimate_en']);
 const pick = (v, opts) => opts.find((o) => fold(o) === fold(v));
-const TIPOS = ['Devotee', 'Equipment', 'Support', 'Relic', 'Technique', 'Moment', 'Domain', 'God'];
+const TIPOS = ['Devotee', 'Equipment', 'Support', 'Relic', 'Spell', 'Technique', 'Moment', 'Domain', 'God'];
 const FACCOES = ['Athena', 'Ares', 'Artemis', 'Hades', 'Poseidon', 'Neutral'];
-const RARIDADES = ['Common', 'Uncommon', 'Mythic', 'Divine', 'Playtest'];
+const RARIDADES = ['Common', 'Uncommon', 'Rare', 'Mythic', 'Sacred', 'Divine', 'Playtest'];
 
 export function parseBatch(text) {
   const out = [];
@@ -927,6 +963,8 @@ function fillCardSelect(selected) {
 }
 $('#cardSelect').addEventListener('change', (e) => (e.target.value ? selectCard(e.target.value) : newCard()));
 $('#newCard').addEventListener('click', newCard);
+$('#layoutStudioLink').addEventListener('click',e=>{e.currentTarget.href='studio.html?card='+encodeURIComponent(S.id||'');});
+window.addEventListener('card-layouts:published',()=>render());
 
 try {
   db = await (await fetch('../data/cards.json')).json();
@@ -938,5 +976,5 @@ try {
 }
 
 function checkCatalog(){const keep={orig,gen,S};try{return db.cartas.map(c=>{orig=c;S=fromCard(c);return {id:c.id,diff:diffCards(c,buildCard())};}).filter(r=>r.diff.length);}finally{({orig,gen,S}=keep);}}
-function layoutReport(){const keep={orig,gen,S};try{return db.cartas.map(c=>{orig=c;S=fromCard(c);const el=T.layouts[layoutKey(S)].elements.find(e=>e.kind==='rules');const paras=[...(has(S.keywords)?[`**${list(S.keywords).join(', ')}.**`]:[]),...splitParas(blocksMarkup(textBlocks(splitParas(S.rules))))];let size=el.size,L;for(;size>=22;size--){L=layoutRules(paras,size,el.rect[2]);if(L.h<=el.rect[3])break;}return{id:c.id,size,overflow:L.h>el.rect[3]};});}finally{({orig,gen,S}=keep);}}
+function layoutReport(){const keep={orig,gen,S};try{return db.cartas.map(c=>{orig=c;S=fromCard(c);const el=T.layouts[layoutKey(S)].elements.find(e=>e.kind==='rules');const paras=[...(has(S.keywords)?[`**${list(S.keywords).join(', ')}.**`]:[]),...splitParas(blocksMarkup(ruleBlocksWithoutKeywords(splitParas(S.rules),list(S.keywords))))];let size=el.size,L;for(;size>=22;size--){L=layoutRules(paras,size,el.rect[2]);if(L.h<=el.rect[3])break;}return{id:c.id,size,overflow:L.h>el.rect[3]};});}finally{({orig,gen,S}=keep);}}
 window.forge = { history:{undo:()=>travelEdit('undo'),redo:()=>travelEdit('redo'),get canUndo(){return !!editHistory?.canUndo;},get canRedo(){return !!editHistory?.canRedo;}},checkCatalog,layoutReport,S: () => S, render, toMarkup, fromMarkup, buildCard, selectCard, parseBatch };

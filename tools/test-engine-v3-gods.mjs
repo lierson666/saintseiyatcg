@@ -195,7 +195,7 @@ test('Relógio Alpha: 60 s básicos, reserva 90 (teto 180), 50% do básico não 
   assert.equal(clockEndTurn(full, 'A', 0), 1, 'teto 180');
   const out = createClock(['A']); clockStartTurn(out, 'A', 0);
   assert.equal(clockExpired(out, ALPHA_CLOCK.basic + ALPHA_CLOCK.reserveStart), 'A');
-  assert.deepEqual([torchesLit(240), torchesLit(61), torchesLit(60), torchesLit(0), torchesLit(9999)], [4, 2, 1, 0, 12]);
+  assert.deepEqual([torchesLit(180), torchesLit(165), torchesLit(61), torchesLit(60), torchesLit(15), torchesLit(1), torchesLit(0), torchesLit(9999)], [12, 11, 5, 4, 1, 1, 0, 12]);
 });
 
 test('Timeouts: janela passa prioridade; fase de ações encerra o turno; opcional recusa', () => {

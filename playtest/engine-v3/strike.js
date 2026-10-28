@@ -27,15 +27,18 @@ export function checkStrike(state, ctx, attacker, target) {
   const defenders = state.players[enemy].battlefield.filter(uid => card(ctx, uid).kind === 'Devotee');
   const keyword = [attacker, ...defenders].flatMap(uid => keywordsOf(state, ctx, uid)).find(k => PENDING_KEYWORDS.includes(k));
   if (keyword) throw new NotSpecified(`efeito de ${keyword} no Strike (fora da ALPHA-P05)`);
-  // P05 A: Guardian Prepared obriga a mirar um Guardian; Nimble ignora sempre; Cheater ignora contra God.
+  // P05 A + G3-038 (autor, 28/10/2026): qualquer Guardian em campo, Prepared ou não, obriga a mirar um Guardian;
+  // Nimble ignora sempre; Cheater ignora contra God.
   const own = keywordsOf(state, ctx, attacker), isGuardian = uid => keywordsOf(state, ctx, uid).includes('Guardian');
-  const guarded = defenders.some(uid => isGuardian(uid) && state.units[uid]?.prepared);
+  const guarded = defenders.some(isGuardian);
   const ignores = own.includes('Nimble') || (own.includes('Cheater') && target.kind === 'god');
   if (guarded && !ignores && !(target.kind === 'devotee' && isGuardian(target.uid))) {
-    throw new RuleError('P05', 'há Guardian Prepared: o Strike precisa mirar um Devotee com Guardian');
+    throw new RuleError('P05', 'há Guardian em campo: o Strike precisa mirar um Devotee com Guardian');
   }
   if (state.strikes.get(attacker) === state.turn) throw new RuleError('D22', 'este Devotee já declarou Strike neste turno');
-  return {key, enemy};
+  // Para a UI explicar quando um Strike passa por Guardian (Nimble sempre; Cheater contra God).
+  const bypass = guarded && !(target.kind === 'devotee' && isGuardian(target.uid)) ? (own.includes('Nimble') ? 'Nimble' : 'Cheater') : null;
+  return {key, enemy, bypass};
 }
 
 // Alvos legais de um atacante agora: [] se ele não pode declarar Strike.
@@ -47,12 +50,12 @@ export function strikeTargets(state, ctx, attacker) {
 
 // Abre a janela (P06): gatilhos de declaração (D202) entram na cadeia; o dano roda quando a janela fecha.
 export function declareStrike(state, ctx, attacker, target, triggers = []) {
-  const {key} = checkStrike(state, ctx, attacker, target);
+  const {key, bypass} = checkStrike(state, ctx, attacker, target);
   // Gatilhos "when an enemy Devotee declares a Strike" (Water Prison): montados antes de mudar o estado.
   const declared = hooks.strikeDeclared.flatMap(fn => fn(state, ctx, attacker, key));
   recordStrike(state, attacker); // D22
   state.units[attacker].prepared = false;
-  emit(state, 'strike_declared', {player: key, attacker, target});
+  emit(state, 'strike_declared', {player: key, attacker, target, ...(bypass && {bypass})});
   onDeclare(state, ctx, attacker, target);
   const strike = {attacker, target, player: key};
   openWindow(state, () => resolveStrike(state, ctx, strike));
@@ -64,7 +67,9 @@ export function declareStrike(state, ctx, attacker, target, triggers = []) {
 export function resolveStrike(state, ctx, strike) {
   const {attacker, target, player} = strike, enemy = state.order.find(k => k !== player);
   if (!onField(state, player, attacker) || (target.kind === 'devotee' && !onField(state, enemy, target.uid))) {
-    throw new NotSpecified('Strike cujo atacante ou alvo saiu do campo antes do dano (nem P04 nem P06 definem)');
+    // G3-036 (autor, 28/10/2026): Strike anulado — sem dano nem retaliação; o Strike continua contado como usado.
+    emit(state, 'strike_fizzled', {player, attacker, target});
+    return null;
   }
   const atk = atkOf(state, ctx, attacker), pierce = keywordsOf(state, ctx, attacker).includes('Pierce'); // lidos antes do dano
   strike.atks = {[attacker]: atk};

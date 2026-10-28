@@ -1,4 +1,5 @@
 import {armorCard} from './rules-policy.js';
+import {equipmentCostText} from './card-visual-values.js';
 // A sintaxe visual é compartilhada entre impressão e jogo; nunca altera as regras salvas.
 export const escapeText=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const words=['Long Range','Multiguard(?: \\d+)?','Guardian','Nimble','Cheater','Pierce','Impulse','Sealed','Unfaith','Afterlife','Prepare','Prepared'];
@@ -18,7 +19,7 @@ export function textBlocks(texts){
     for(let chunk of chunks){
       chunk=chunk.trim();if(!chunk)continue;
       let m=chunk.match(/^\*\*([^*]+)\*\*\s*\n?([\s\S]*)$/);
-      if(m){result.push({heading:m[1],body:m[2],kind:'ability'});continue;}
+      if(m){result.push({heading:m[1].replace(/:$/,''),body:m[2],kind:'ability'});continue;}
       m=chunk.match(/^(Resonance\s*[—-]\s*[^.:]+)[.:]\s*([\s\S]*)$/i);
       if(m){result.push({heading:m[1],body:m[2],kind:'resonance'});continue;}
       m=chunk.match(/^(7th Sense|God Cloth)\s*[—-]\s*([^:]+):\s*([\s\S]*)$/i);
@@ -35,10 +36,19 @@ export function textBlocks(texts){
   }
   return result;
 }
+// O campo próprio já exibe as keywords; só omitimos repetições isoladas na apresentação.
+export function ruleBlocksWithoutKeywords(texts,keywords=[]){
+  const normalize=value=>String(value).replace(/\*\*/g,'').trim().replace(/[.:;]+$/,'').trim().toLowerCase();
+  const selected=new Set(keywords.map(normalize));
+  return textBlocks(texts).filter(block=>{
+    const tokens=[block.heading,block.body].filter(Boolean).join('\n').split(/[,;\n]|\.\s+/).map(normalize).filter(Boolean);
+    return !tokens.length||!tokens.every(token=>selected.has(token));
+  });
+}
 export function blocksMarkup(blocks){return blocks.map(b=>[b.heading?`**${b.heading.replace(/:$/,'')}:**`:'',b.body].filter(Boolean).join('\n')).join('\n\n');}
 export function presentationRules(card){
   const raw=card.habilidades_en||[];
-  const equipLine=armorCard(card)?`Equip cost: ${card.equipar_custo_ressonante??card.equipar_custo??1} Cosmo — Resonant Wearer / ${card.equipar_custo_outros??5} Cosmo — Other Devotees.`:null;
+  const equipLine=equipmentCostText(card);
   const armorHP=armorCard(card)&&card.vida>0?`Armor HP: ${card.vida}.`:null;
   if(!card.estagios?.length)return [...raw,...(equipLine?[equipLine]:[]),...(armorHP?[armorHP]:[])];
   const stages=card.estagios,sign=n=>`${n<0?'':'+'}${n||0}`,bonus=s=>`${sign(s.bonus_poder)} Power / ${sign(s.bonus_vida)} HP`;

@@ -13,7 +13,7 @@ test('D170/D3: sem compra no 1º turno próprio; 2 cartas a partir do 2º', () =
   const s = core();
   startTurn(s); assert.equal(s.players.A.hand.length, 0);
   end(s); startTurn(s); assert.equal(s.players.B.hand.length, 0);
-  end(s); startTurn(s); assert.equal(s.players.A.hand.length, 2);
+  end(s); startTurn(s); assert.equal(s.players.A.hand.length, 1, 'G3-037: 1 carta por turno');
 });
 
 test('D191: Round = um turno de cada jogador, na ordem do jogador inicial', () => {
@@ -23,7 +23,7 @@ test('D191: Round = um turno de cada jogador, na ordem do jogador inicial', () =
   startTurn(s); end(s); assert.deepEqual([s.round, s.active, s.turnInRound], [2, 'A', 0]);
 });
 
-test('D4: uma Base Cosmoble por turno, só no próprio turno; Bases preparam no início do turno', () => {
+test('D4/G3-035: uma Base Cosmoble por turno, só no próprio turno; a Base nova entra Prepared e paga no mesmo turno', () => {
   const s = core();
   s.players.A.hand.push('x', 'y', 'z');
   startTurn(s);
@@ -31,11 +31,12 @@ test('D4: uma Base Cosmoble por turno, só no próprio turno; Bases preparam no 
   placeBase(s, 'A', 'x', cosmoble);
   assert.throws(() => placeBase(s, 'A', 'y', cosmoble), /D4: já colocou/);
   assert.throws(() => placeBase(s, 'B', 'y', cosmoble), /D1/);
-  assert.throws(() => spendBase(s, 'A', 1), /insuficientes/);
-  end(s); startTurn(s); end(s); startTurn(s);
-  assert.equal(s.players.A.bases[0].prepared, true);
+  assert.equal(s.players.A.bases[0].prepared, true, 'G3-035');
   spendBase(s, 'A', 1);
   assert.equal(s.players.A.bases[0].prepared, false);
+  assert.throws(() => spendBase(s, 'A', 1), /insuficientes/);
+  end(s); startTurn(s); end(s); startTurn(s);
+  assert.equal(s.players.A.bases[0].prepared, true, 'D4: prepara no início do turno');
 });
 
 test('D5 + teto 3: Base não usada vira Latent ao fim do turno; gasta não converte', () => {

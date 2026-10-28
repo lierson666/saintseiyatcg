@@ -32,3 +32,5 @@
 /* Preferências visuais independentes, sem alterar o estado da partida. */
 .duel-board :is(.duelist-hud,.resource-bank,.domain-medallion,.zone-piles,.turn-controls,.duel-status,.duel-tools){zoom:var(--hud-scale,1)}
 .duel-board :is(.unit-stack,.hand-card){zoom:var(--card-scale,1)}
+
+a.console-choice{text-decoration:none;color:inherit}

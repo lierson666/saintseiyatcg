@@ -8,6 +8,8 @@ import {createMatch} from '../playtest/engine-v3/match.js';
 import {startTurn, endTurn, passAll, placeBase, spendBase, respond, checkInvariants, RuleError, NotSpecified} from '../playtest/engine-v3/core.js';
 import {declareStrike} from '../playtest/engine-v3/strike.js';
 import {playDevotee, playEquipment, playSpell} from '../playtest/engine-v3/play.js';
+import {checkDefeats} from '../playtest/engine-v3/effects.js';
+import {runDecisions, resume} from '../playtest/engine-v3/decision.js';
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json');
@@ -72,14 +74,16 @@ test('jogada ilegal não mexe no estado: sem Base suficiente, fora do turno, com
   assert.throws(() => playDevotee(s, ctx, 'A', seiya), e => e instanceof RuleError && e.decision === 'P06');
 });
 
-test('Base nova entra Unprepared: não gera Cosmo nem converte em Latent no turno em que entra', () => {
+test('G3-035: Base nova entra Prepared e paga no mesmo turno; Base não gasta converte em Latent no fim do turno', () => {
   const {s, toHand} = setup();
   const base = toHand('A', '053');
   startTurn(s);
   placeBase(s, 'A', base, cards.get('athena-v6-053'));
+  assert.equal(s.players.A.bases.at(-1).prepared, true);
+  spendBase(s, 'A', 1);
   assert.throws(() => spendBase(s, 'A', 1), /insuficientes/);
   endTurn(s); passAll(s);
-  assert.equal(s.players.A.latent, 0);
+  assert.equal(s.players.A.latent, 0, 'Base gasta não converte');
 });
 
 test('início do turno: prepara, depois gatilhos (APNAP/LIFO, com janela), depois compra', () => {
@@ -92,7 +96,7 @@ test('início do turno: prepara, depois gatilhos (APNAP/LIFO, com janela), depoi
   assert.equal(s.players.A.hand.length, 0, 'compra espera os gatilhos');
   passAll(s);
   assert.deepEqual(log, ['base true mão 0', 'base true mão 0']);
-  assert.equal(s.players.A.hand.length, 2);
+  assert.equal(s.players.A.hand.length, 1, 'G3-037');
 });
 
 const ready = (s, key) => s.players[key].bases.filter(b => b.prepared).length;
@@ -175,4 +179,69 @@ test('Moment do ativo abre janela; 053 é Technique (autor, 28/10/2026)', () => 
   assert.ok(s.players.A.tartarus.includes(never));
   playSpell(s, ctx, 'A', other, () => {});
   assert.deepEqual([s.window, s.players.A.tartarus.includes(other)], [null, true], 'Sorcery: resolve sem janela');
+});
+
+test('Guia §63 (autor, 28/10/2026): segunda versão sai da mão, paga, entra e o controlador escolhe quem fica; genérico repete', () => {
+  const {s, ctx, toHand, bases, field} = setup();
+  const old = field('A', '021'); // Eagle Marin em campo
+  const marin = toHand('A', '021'), guard = toHand('A', '040'), guard2 = toHand('A', '040');
+  bases('A', 10);
+  startTurn(s);
+  const asked = [];
+  ctx.decide = (player, q) => { asked.push(q); return marin; }; // fica a nova
+  const ready = s.players.A.bases.filter(b => b.prepared).length;
+  playDevotee(s, ctx, 'A', marin);
+  assert.equal(s.players.A.bases.filter(b => b.prepared).length, ready - cards.get('athena-v6-021').cost.amount, 'pagou o custo');
+  assert.deepEqual(asked.map(q => [q.decision, q.choose, q.options]), [['§63', 'keep', [old, marin]]]);
+  assert.ok(s.players.A.battlefield.includes(marin) && !s.players.A.battlefield.includes(old));
+  assert.ok(s.players.A.tartarus.includes(old));
+  ctx.decide = () => { throw new Error('genérico não pergunta'); };
+  playDevotee(s, ctx, 'A', guard); playDevotee(s, ctx, 'A', guard2); // Sanctuary Guard: genérico
+  assert.equal(s.players.A.battlefield.filter(u => u.includes(':040:')).length, 2);
+});
+
+test('G3-040: personagem nomeado de classe baixa (Support) repete no campo; lendário só para guerreiros', () => {
+  const {s, ctx, field} = setup();
+  const a = field('A', '036'), b = field('A', '036'); // Seika: Devotee — Support
+  ctx.decide = () => { throw new Error('classe baixa não pergunta'); };
+  checkDefeats(s, ctx);
+  assert.deepEqual(s.players.A.battlefield.filter(u => u === a || u === b).length, 2);
+});
+
+test('Guia §63: duplicata vinda de efeito — o controlador escolhe qual manter; a outra vai ao Tartarus sem ser destruição', () => {
+  const {s, ctx, field} = setup();
+  const first = field('A', '021'), second = field('A', '021'); // como se um efeito trouxesse outra Marin
+  const asked = [];
+  ctx.decide = (player, q) => { asked.push({player, ...q}); return second; };
+  checkDefeats(s, ctx);
+  assert.equal(asked.length, 1);
+  assert.deepEqual([asked[0].player, asked[0].decision, asked[0].choose, asked[0].options], ['A', '§63', 'keep', [first, second]]);
+  assert.deepEqual(s.players.A.battlefield, [second]);
+  assert.ok(s.players.A.tartarus.includes(first));
+  assert.ok(s.events.some(e => e.type === 'unique_removed' && e.uid === first));
+  assert.ok(!s.events.some(e => e.type === 'destroyed'), 'não é destruição');
+  ctx.decide = () => 'fora';
+  field('A', '021');
+  assert.throws(() => checkDefeats(s, ctx), e => e instanceof RuleError && e.decision === '§63', 'escolha fora das opções é recusada');
+});
+
+test('Guia §63: genéricos repetidos e personagens diferentes não pedem escolha', () => {
+  const {s, ctx, field} = setup();
+  field('A', '040'); field('A', '040'); field('A', '021'); field('A', '028');
+  ctx.decide = () => { throw new Error('não devia perguntar'); };
+  checkDefeats(s, ctx);
+  assert.equal(s.players.A.battlefield.length, 4);
+});
+
+test('Guia §63 no protocolo de decisão: pergunta pendente ao controlador; timeout mantém o menor id estável (G3-030)', () => {
+  const {s, ctx, field} = setup();
+  const a = field('A', '021'), b = field('A', '021');
+  const fn = () => checkDefeats(s, ctx);
+  const r = runDecisions(s, ctx, fn);
+  assert.equal(r.pending.player, 'A');
+  assert.equal(r.pending.kind, 'choice');
+  assert.deepEqual(r.pending.options, [a, b]);
+  const done = resume(s, ctx, fn, r, {timeout: true});
+  assert.ok(done.done);
+  assert.deepEqual(s.players.A.battlefield, [[a, b].sort((x, y) => x.localeCompare(y, 'en', {numeric: true}))[0]]);
 });

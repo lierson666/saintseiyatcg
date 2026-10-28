@@ -1,0 +1,2232 @@
+{
+  "schemaVersion": 1,
+  "revision": 0,
+  "bases": [
+    {
+      "id": "base-global",
+      "schemaVersion": 1,
+      "name": "Base · composição de carta",
+      "scope": {
+        "level": "global",
+        "value": "",
+        "surface": "card"
+      },
+      "elements": [
+        {
+          "id": "background",
+          "name": "Background",
+          "component": "DecorativeLayer",
+          "binding": "",
+          "x": 0,
+          "y": 0,
+          "width": 1488,
+          "height": 2091,
+          "zIndex": 0,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": true,
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 42,
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "#111019",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
+          }
+        },
+        {
+          "id": "artwork",
+          "name": "Artwork",
+          "component": "ArtworkFrame",
+          "binding": "card.artwork",
+          "x": 0,
+          "y": 0,
+          "width": 1488,
+          "height": 2091,
+          "zIndex": 1,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": true,
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 42,
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible",
+            "imageFit": "cover"
+          }
+        },
+        {
+          "id": "frame",
+          "name": "Frame",
+          "component": "Frame",
+          "binding": "theme.frames",
+          "x": 0,
+          "y": 0,
+          "width": 1488,
+          "height": 2091,
+          "zIndex": 2,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": true,
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 42,
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
+          }
+        },
+        {
+          "id": "name",
+          "name": "Card Name",
+          "component": "TextBlock",
+          "binding": "card.name",
+          "x": 320,
+          "y": 130,
+          "width": 810,
+          "height": 126,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "style": {
+            "fontFamily": "Futura",
+            "fontSize": 76,
+            "fontWeight": 700,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible",
+            "uppercase": true,
+            "stroke": "#151018",
+            "strokeWidth": 2
+          }
+        },
+        {
+          "id": "tagline",
+          "name": "Tagline",
+          "component": "TextBlock",
+          "binding": "card.tagline",
+          "x": 320,
+          "y": 260,
+          "width": 810,
+          "height": 80,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "conditions": {
+            "binding": "card.tagline",
+            "op": "exists"
+          },
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 36,
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
+          }
+        },
+        {
+          "id": "cost",
+          "name": "Casting Cost",
+          "component": "CastingCost",
+          "binding": "card.cost",
+          "x": 96,
+          "y": 98,
+          "width": 232,
+          "height": 235,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "conditions": {
+            "binding": "card.cost",
+            "op": "exists"
+          },
+          "style": {
+            "fontFamily": "Futura",
+            "fontSize": 145,
+            "fontWeight": 700,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible",
+            "borderColor": "transparent"
+          }
+        },
+        {
+          "id": "faction",
+          "name": "Faction Symbol",
+          "component": "FactionIcon",
+          "binding": "theme.symbol",
+          "x": 1155,
+          "y": 80,
+          "width": 265,
+          "height": 265,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 42,
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
+          }
+        },
+        {
+          "id": "type",
+          "name": "Type Line",
+          "component": "TypeLine",
+          "binding": "card.typeLine",
+          "x": 250,
+          "y": 1165,
+          "width": 985,
+          "height": 100,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "style": {
+            "fontFamily": "Futura",
+            "fontSize": 40,
+            "fontWeight": 700,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "#100e16de",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
+          }
+        },
+        {
+          "id": "keywords",
+          "name": "Keywords",
+          "component": "KeywordList",
+          "binding": "runtime.keywords",
+          "x": 240,
+          "y": 1270,
+          "width": 1000,
+          "height": 62,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "conditions": {
+            "binding": "runtime.keywords",
+            "op": "exists"
+          },
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 34,
+            "fontWeight": 700,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
+          }
+        },
+        {
+          "id": "rules",
+          "name": "Rules Text",
+          "component": "RulesBox",
+          "binding": "card.rules",
+          "x": 205,
+          "y": 1345,
+          "width": 1078,
+          "height": 340,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 38,
+            "fontWeight": 400,
+            "lineHeight": 1.18,
+            "letterSpacing": 0,
+            "align": "left",
+            "background": "#100e16e8",
+            "borderWidth": 0,
+            "borderRadius": 8,
+            "padding": 18,
+            "autoFit": true,
+            "minFontSize": 23,
+            "overflow": "visible"
+          }
+        },
+        {
+          "id": "resonance",
+          "name": "Resonance",
+          "component": "RulesBox",
+          "binding": "card.resonance",
+          "x": 205,
+          "y": 1695,
+          "width": 1078,
+          "height": 220,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "conditions": {
+            "binding": "card.resonance",
+            "op": "exists"
+          },
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 34,
+            "fontWeight": 400,
+            "lineHeight": 1.18,
+            "letterSpacing": 0,
+            "align": "left",
+            "background": "#100e16e8",
+            "borderWidth": 0,
+            "borderRadius": 8,
+            "padding": 18,
+            "autoFit": true,
+            "minFontSize": 23,
+            "overflow": "visible"
+          }
+        },
+        {
+          "id": "owner",
+          "name": "Owner",
+          "component": "TextBlock",
+          "binding": "card.owner",
+          "x": 340,
+          "y": 1920,
+          "width": 800,
+          "height": 50,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "label": "OWNER",
+          "conditions": {
+            "binding": "card.owner",
+            "op": "exists"
+          },
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 26,
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
+          }
+        },
+        {
+          "id": "flavor",
+          "name": "Flavor Text",
+          "component": "FlavorText",
+          "binding": "card.flavor",
+          "x": 340,
+          "y": 1970,
+          "width": 800,
+          "height": 55,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "conditions": {
+            "binding": "card.flavor",
+            "op": "exists"
+          },
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 28,
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
+          }
+        },
+        {
+          "id": "power",
+          "name": "Attack",
+          "component": "StatBadge",
+          "binding": "runtime.currentPower",
+          "x": 72,
+          "y": 1168,
+          "width": 165,
+          "height": 140,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "label": "ATK",
+          "conditions": {
+            "all": [
+              {
+                "binding": "card.type",
+                "op": "eq",
+                "value": "Devotee"
+              },
+              {
+                "binding": "runtime.currentPower",
+                "op": "exists"
+              }
+            ]
+          },
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 90,
+            "fontWeight": 700,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "#100e16ee",
+            "borderWidth": 2,
+            "borderRadius": 30,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible",
+            "borderColor": "#bfa66e"
+          }
+        },
+        {
+          "id": "hp",
+          "name": "HP",
+          "component": "StatBadge",
+          "binding": "runtime.currentHP",
+          "x": 1250,
+          "y": 1168,
+          "width": 165,
+          "height": 140,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "label": "HP",
+          "conditions": {
+            "all": [
+              {
+                "binding": "card.type",
+                "op": "eq",
+                "value": "Devotee"
+              },
+              {
+                "binding": "runtime.currentHP",
+                "op": "exists"
+              }
+            ]
+          },
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 90,
+            "fontWeight": 700,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "#100e16ee",
+            "borderWidth": 2,
+            "borderRadius": 30,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible",
+            "borderColor": "#bfa66e"
+          }
+        },
+        {
+          "id": "equipment-power-bonus",
+          "name": "Equipped ATK Bonus",
+          "component": "StatBadge",
+          "binding": "card.equippedPowerBonus",
+          "x": 40,
+          "y": 1172,
+          "width": 178,
+          "height": 178,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "asset": "CARD-TEMPLATE/athena/gem_power.png",
+          "conditions": {
+            "binding": "card.equippedPowerBonus",
+            "op": "exists"
+          },
+          "style": {
+            "fontFamily": "Futura",
+            "fontSize": 99,
+            "fontWeight": 700,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 0,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible",
+            "stroke": "#141008",
+            "strokeWidth": 3
+          }
+        },
+        {
+          "id": "equipment-hp-bonus",
+          "name": "Equipped HP Bonus",
+          "component": "StatBadge",
+          "binding": "card.equippedHPBonus",
+          "x": 1254,
+          "y": 1160,
+          "width": 194,
+          "height": 195,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "asset": "CARD-TEMPLATE/athena/gem_resistance.png",
+          "conditions": {
+            "binding": "card.equippedHPBonus",
+            "op": "exists"
+          },
+          "style": {
+            "fontFamily": "Futura",
+            "fontSize": 99,
+            "fontWeight": 700,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 0,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible",
+            "stroke": "#141008",
+            "strokeWidth": 3
+          }
+        },
+        {
+          "id": "armor-hp",
+          "name": "Armor HP",
+          "component": "ArmorHPBadge",
+          "binding": "runtime.currentHP",
+          "x": 1155,
+          "y": 1880,
+          "width": 245,
+          "height": 140,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": false,
+          "locked": false,
+          "label": "ARMOR HP",
+          "conditions": {
+            "all": [
+              {
+                "binding": "card.isArmor",
+                "op": "eq",
+                "value": true
+              },
+              {
+                "binding": "card.armorHP",
+                "op": "gt",
+                "value": 0
+              }
+            ]
+          },
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 78,
+            "fontWeight": 700,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "#100e16ee",
+            "borderWidth": 2,
+            "borderRadius": 30,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible",
+            "borderColor": "#bfa66e"
+          }
+        },
+        {
+          "id": "equip",
+          "name": "Equip Cost",
+          "component": "EquipCostBlock",
+          "binding": "card.equipCost",
+          "x": 80,
+          "y": 1880,
+          "width": 240,
+          "height": 140,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": false,
+          "locked": false,
+          "conditions": {
+            "binding": "card.isEquipment",
+            "op": "eq",
+            "value": true
+          },
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 30,
+            "fontWeight": 700,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "#100e16ee",
+            "borderWidth": 2,
+            "borderRadius": 12,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible",
+            "borderColor": "#bfa66e"
+          }
+        },
+        {
+          "id": "soul",
+          "name": "Soul",
+          "component": "SoulBadge",
+          "binding": "runtime.soul",
+          "x": 90,
+          "y": 1880,
+          "width": 230,
+          "height": 140,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "label": "SOUL",
+          "conditions": {
+            "binding": "card.type",
+            "op": "eq",
+            "value": "God"
+          },
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 86,
+            "fontWeight": 700,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
+          }
+        },
+        {
+          "id": "attack",
+          "name": "God Attack",
+          "component": "StatBadge",
+          "binding": "card.attack",
+          "x": 625,
+          "y": 1880,
+          "width": 230,
+          "height": 140,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "label": "ATTACK",
+          "conditions": {
+            "binding": "card.type",
+            "op": "eq",
+            "value": "God"
+          },
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 86,
+            "fontWeight": 700,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
+          }
+        },
+        {
+          "id": "awaken",
+          "name": "Awaken",
+          "component": "AwakenBadge",
+          "binding": "card.awaken",
+          "x": 1165,
+          "y": 1880,
+          "width": 230,
+          "height": 140,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "label": "AWAKEN",
+          "conditions": {
+            "binding": "card.type",
+            "op": "eq",
+            "value": "God"
+          },
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 86,
+            "fontWeight": 700,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
+          }
+        },
+        {
+          "id": "rarity",
+          "name": "Rarity",
+          "component": "RarityMark",
+          "binding": "card.rarity",
+          "x": 530,
+          "y": 2030,
+          "width": 430,
+          "height": 46,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 26,
+            "fontWeight": 700,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
+          }
+        },
+        {
+          "id": "counters",
+          "name": "Counters",
+          "component": "CounterBadge",
+          "binding": "runtime.counters",
+          "x": 230,
+          "y": 360,
+          "width": 1030,
+          "height": 70,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "conditions": {
+            "all": [
+              {
+                "binding": "runtime.counters",
+                "op": "exists"
+              },
+              {
+                "binding": "context.mode",
+                "op": "neq",
+                "value": "print"
+              }
+            ]
+          },
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 30,
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "#100e16e8",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
+          }
+        },
+        {
+          "id": "status",
+          "name": "Status",
+          "component": "StatusBadge",
+          "binding": "runtime.status",
+          "x": 450,
+          "y": 480,
+          "width": 590,
+          "height": 65,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "conditions": {
+            "all": [
+              {
+                "binding": "runtime.status",
+                "op": "exists"
+              },
+              {
+                "any": [
+                  {
+                    "binding": "context.mode",
+                    "op": "eq",
+                    "value": "playtest"
+                  },
+                  {
+                    "binding": "context.mode",
+                    "op": "eq",
+                    "value": "inspector"
+                  }
+                ]
+              }
+            ]
+          },
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 30,
+            "fontWeight": 700,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "#100e16ee",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
+          }
+        },
+        {
+          "id": "divider",
+          "name": "Divider",
+          "component": "Divider",
+          "binding": "",
+          "x": 230,
+          "y": 1328,
+          "width": 1030,
+          "height": 2,
+          "zIndex": 9,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 42,
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "#bfa66e",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
+          }
+        },
+        {
+          "id": "ornaments",
+          "name": "Ornaments",
+          "component": "DecorativeLayer",
+          "binding": "",
+          "x": 60,
+          "y": 60,
+          "width": 1368,
+          "height": 1971,
+          "zIndex": 3,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": true,
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 42,
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 2,
+            "borderRadius": 12,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible",
+            "borderColor": "#bfa66e"
+          }
+        },
+        {
+          "id": "glow",
+          "name": "Glow",
+          "component": "GlowEffect",
+          "binding": "",
+          "x": 60,
+          "y": 60,
+          "width": 1368,
+          "height": 1971,
+          "zIndex": 4,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": false,
+          "locked": true,
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 42,
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 2,
+            "borderRadius": 12,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible",
+            "borderColor": "#e6cc84",
+            "glow": 18
+          }
+        },
+        {
+          "id": "reminder",
+          "name": "Reminder Text",
+          "component": "TextBlock",
+          "binding": "card.reminder",
+          "x": 340,
+          "y": 1960,
+          "width": 800,
+          "height": 55,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": false,
+          "locked": false,
+          "conditions": {
+            "binding": "card.reminder",
+            "op": "exists"
+          },
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 25,
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
+          }
+        }
+      ],
+      "revision": 0,
+      "canvas": {
+        "width": 1488,
+        "height": 2091,
+        "safe": 72,
+        "bleed": 36
+      },
+      "theme": {
+        "ink": "#fff0bf",
+        "accent": "#d5b665",
+        "background": "#111019",
+        "frames": []
+      }
+    },
+    {
+      "id": "base-type-devotee",
+      "schemaVersion": 1,
+      "name": "Base · Devotee",
+      "scope": {
+        "level": "type",
+        "value": "Devotee",
+        "surface": "card"
+      },
+      "elements": [],
+      "revision": 0
+    },
+    {
+      "id": "base-type-relic",
+      "schemaVersion": 1,
+      "name": "Base · Relic",
+      "scope": {
+        "level": "type",
+        "value": "Relic",
+        "surface": "card"
+      },
+      "elements": [],
+      "revision": 0
+    },
+    {
+      "id": "base-type-technique",
+      "schemaVersion": 1,
+      "name": "Base · Technique",
+      "scope": {
+        "level": "type",
+        "value": "Technique",
+        "surface": "card"
+      },
+      "elements": [
+        {
+          "id": "rules",
+          "height": 540
+        },
+        {
+          "id": "resonance",
+          "visible": false
+        }
+      ],
+      "revision": 0
+    },
+    {
+      "id": "base-type-moment",
+      "schemaVersion": 1,
+      "name": "Base · Moment",
+      "scope": {
+        "level": "type",
+        "value": "Moment",
+        "surface": "card"
+      },
+      "elements": [
+        {
+          "id": "rules",
+          "height": 540
+        },
+        {
+          "id": "resonance",
+          "visible": false
+        }
+      ],
+      "revision": 0
+    },
+    {
+      "id": "base-type-domain",
+      "schemaVersion": 1,
+      "name": "Base · Domain",
+      "scope": {
+        "level": "type",
+        "value": "Domain",
+        "surface": "card"
+      },
+      "elements": [
+        {
+          "id": "rules",
+          "height": 540
+        },
+        {
+          "id": "resonance",
+          "visible": false
+        }
+      ],
+      "revision": 0
+    },
+    {
+      "id": "base-type-god",
+      "schemaVersion": 1,
+      "name": "Base · God",
+      "scope": {
+        "level": "type",
+        "value": "God",
+        "surface": "card"
+      },
+      "elements": [
+        {
+          "id": "type",
+          "y": 395
+        },
+        {
+          "id": "rules",
+          "binding": "card.divinePower",
+          "y": 530,
+          "height": 210,
+          "style": {
+            "fontSize": 42,
+            "minFontSize": 32
+          }
+        },
+        {
+          "id": "god-awaken",
+          "name": "God · Awaken",
+          "component": "RulesBox",
+          "binding": "card.awakenRules",
+          "x": 205,
+          "y": 755,
+          "width": 1078,
+          "height": 300,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 42,
+            "fontWeight": 400,
+            "lineHeight": 1.18,
+            "letterSpacing": 0,
+            "align": "left",
+            "background": "#100e16e8",
+            "borderWidth": 0,
+            "borderRadius": 8,
+            "padding": 18,
+            "autoFit": true,
+            "minFontSize": 32,
+            "overflow": "visible"
+          }
+        },
+        {
+          "id": "god-ultimate",
+          "name": "God · Ultimate",
+          "component": "RulesBox",
+          "binding": "card.ultimateRules",
+          "x": 205,
+          "y": 1070,
+          "width": 1078,
+          "height": 780,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 40,
+            "fontWeight": 400,
+            "lineHeight": 1.18,
+            "letterSpacing": 0,
+            "align": "left",
+            "background": "#100e16e8",
+            "borderWidth": 0,
+            "borderRadius": 8,
+            "padding": 18,
+            "autoFit": true,
+            "minFontSize": 32,
+            "overflow": "visible"
+          }
+        },
+        {
+          "id": "resonance",
+          "visible": false
+        },
+        {
+          "id": "divider",
+          "y": 510
+        },
+        {
+          "id": "flavor",
+          "visible": false
+        }
+      ],
+      "revision": 0
+    },
+    {
+      "id": "base-type-equipment",
+      "schemaVersion": 1,
+      "name": "Base · Equipment",
+      "scope": {
+        "level": "type",
+        "value": "Equipment",
+        "surface": "card"
+      },
+      "elements": [
+        {
+          "id": "type",
+          "y": 1040
+        },
+        {
+          "id": "equipment-power-bonus",
+          "y": 1045
+        },
+        {
+          "id": "equipment-hp-bonus",
+          "y": 1033
+        },
+        {
+          "id": "keywords",
+          "y": 1140
+        },
+        {
+          "id": "divider",
+          "y": 1202
+        },
+        {
+          "id": "rules",
+          "y": 1220,
+          "height": 425
+        },
+        {
+          "id": "resonance",
+          "y": 1655,
+          "height": 255
+        }
+      ],
+      "revision": 0
+    },
+    {
+      "id": "base-type-spell",
+      "schemaVersion": 1,
+      "name": "Base · Spell",
+      "scope": {
+        "level": "type",
+        "value": "Spell",
+        "surface": "card"
+      },
+      "elements": [
+        {
+          "id": "rules",
+          "height": 540
+        },
+        {
+          "id": "resonance",
+          "visible": false
+        }
+      ],
+      "revision": 0
+    },
+    {
+      "id": "base-faction-athena",
+      "schemaVersion": 1,
+      "name": "Tema · Athena",
+      "scope": {
+        "level": "faction",
+        "value": "Athena",
+        "surface": "card"
+      },
+      "elements": [],
+      "revision": 0,
+      "theme": {
+        "ink": "#FFF0BF",
+        "accent": "#FFF0BF",
+        "frames": [
+          "CARD-TEMPLATE/athena/vignette.png",
+          "CARD-TEMPLATE/athena/frame.png"
+        ],
+        "symbol": "CARD-TEMPLATE/symbols/athena.png"
+      }
+    },
+    {
+      "id": "base-faction-hades",
+      "schemaVersion": 1,
+      "name": "Tema · Hades",
+      "scope": {
+        "level": "faction",
+        "value": "Hades",
+        "surface": "card"
+      },
+      "elements": [],
+      "revision": 0,
+      "theme": {
+        "ink": "#C07CFF",
+        "accent": "#C07CFF",
+        "frames": [
+          "CARD-TEMPLATE/hades/frame_1.png",
+          "CARD-TEMPLATE/hades/frame_2.png"
+        ],
+        "symbol": "CARD-TEMPLATE/symbols/hades.png"
+      }
+    },
+    {
+      "id": "base-faction-ares",
+      "schemaVersion": 1,
+      "name": "Tema · Ares",
+      "scope": {
+        "level": "faction",
+        "value": "Ares",
+        "surface": "card"
+      },
+      "elements": [],
+      "revision": 0,
+      "theme": {
+        "ink": "#FF6D6D",
+        "accent": "#FF6D6D",
+        "frames": [
+          "CARD-TEMPLATE/ares/frame_1.png",
+          "CARD-TEMPLATE/ares/frame_2.png"
+        ],
+        "symbol": "CARD-TEMPLATE/symbols/ares.png"
+      }
+    },
+    {
+      "id": "base-faction-artemis",
+      "schemaVersion": 1,
+      "name": "Tema · Artemis",
+      "scope": {
+        "level": "faction",
+        "value": "Artemis",
+        "surface": "card"
+      },
+      "elements": [],
+      "revision": 0,
+      "theme": {
+        "ink": "#BFFFCD",
+        "accent": "#BFFFCD",
+        "frames": [
+          "CARD-TEMPLATE/artemis/frame_1.png",
+          "CARD-TEMPLATE/artemis/frame_2.png"
+        ],
+        "symbol": "CARD-TEMPLATE/symbols/artemis.png"
+      }
+    },
+    {
+      "id": "base-faction-poseidon",
+      "schemaVersion": 1,
+      "name": "Tema · Poseidon",
+      "scope": {
+        "level": "faction",
+        "value": "Poseidon",
+        "surface": "card"
+      },
+      "elements": [],
+      "revision": 0,
+      "theme": {
+        "ink": "#8FEEFF",
+        "accent": "#8FEEFF",
+        "frames": [
+          "CARD-TEMPLATE/poseidon/frame_1.png",
+          "CARD-TEMPLATE/poseidon/frame_2.png",
+          "CARD-TEMPLATE/poseidon/frame_3.png"
+        ],
+        "symbol": "CARD-TEMPLATE/symbols/poseidon.png"
+      }
+    },
+    {
+      "id": "base-rarity-common",
+      "schemaVersion": 1,
+      "name": "Base · Common",
+      "scope": {
+        "level": "rarity",
+        "value": "Common",
+        "surface": "card"
+      },
+      "elements": [],
+      "revision": 0
+    },
+    {
+      "id": "base-rarity-mythic",
+      "schemaVersion": 1,
+      "name": "Base · Mythic",
+      "scope": {
+        "level": "rarity",
+        "value": "Mythic",
+        "surface": "card"
+      },
+      "elements": [],
+      "revision": 0
+    },
+    {
+      "id": "base-rarity-rare",
+      "schemaVersion": 1,
+      "name": "Base · Rare",
+      "scope": {
+        "level": "rarity",
+        "value": "Rare",
+        "surface": "card"
+      },
+      "elements": [],
+      "revision": 0
+    },
+    {
+      "id": "base-rarity-sacred",
+      "schemaVersion": 1,
+      "name": "Base · Sacred",
+      "scope": {
+        "level": "rarity",
+        "value": "Sacred",
+        "surface": "card"
+      },
+      "elements": [],
+      "revision": 0
+    },
+    {
+      "id": "base-rarity-uncommon",
+      "schemaVersion": 1,
+      "name": "Base · Uncommon",
+      "scope": {
+        "level": "rarity",
+        "value": "Uncommon",
+        "surface": "card"
+      },
+      "elements": [],
+      "revision": 0
+    },
+    {
+      "id": "base-inspector",
+      "schemaVersion": 1,
+      "name": "Base · Inspector",
+      "scope": {
+        "level": "global",
+        "value": "",
+        "surface": "inspector"
+      },
+      "elements": [
+        {
+          "id": "card-preview",
+          "name": "Carta principal",
+          "component": "CardPreview",
+          "binding": "",
+          "x": 80,
+          "y": 70,
+          "width": 950,
+          "height": 1335,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 42,
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "center",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
+          }
+        },
+        {
+          "id": "name",
+          "name": "Nome",
+          "component": "TextBlock",
+          "binding": "card.name",
+          "x": 1120,
+          "y": 80,
+          "width": 1120,
+          "height": 130,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "style": {
+            "fontFamily": "Futura",
+            "fontSize": 62,
+            "fontWeight": 700,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "left",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
+          }
+        },
+        {
+          "id": "type",
+          "name": "Tipo",
+          "component": "TypeLine",
+          "binding": "card.typeLine",
+          "x": 1120,
+          "y": 220,
+          "width": 1120,
+          "height": 90,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 32,
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "left",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
+          }
+        },
+        {
+          "id": "printed",
+          "name": "Valores originais",
+          "component": "TextBlock",
+          "binding": "inspector.original",
+          "x": 1120,
+          "y": 330,
+          "width": 1120,
+          "height": 90,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 35,
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "left",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
+          }
+        },
+        {
+          "id": "current",
+          "name": "Valores da engine",
+          "component": "TextBlock",
+          "binding": "inspector.current",
+          "x": 1120,
+          "y": 430,
+          "width": 1120,
+          "height": 145,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 44,
+            "fontWeight": 700,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "left",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
+          }
+        },
+        {
+          "id": "keywords",
+          "name": "Keywords",
+          "component": "KeywordList",
+          "binding": "runtime.keywords",
+          "x": 1120,
+          "y": 585,
+          "width": 1120,
+          "height": 80,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 31,
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "left",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
+          }
+        },
+        {
+          "id": "counters",
+          "name": "Counters",
+          "component": "CounterBadge",
+          "binding": "runtime.counters",
+          "x": 1120,
+          "y": 670,
+          "width": 1120,
+          "height": 80,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 29,
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "left",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
+          }
+        },
+        {
+          "id": "status",
+          "name": "Estado",
+          "component": "StatusBadge",
+          "binding": "runtime.status",
+          "x": 1120,
+          "y": 755,
+          "width": 1120,
+          "height": 60,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 30,
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "left",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
+          }
+        },
+        {
+          "id": "modifiers",
+          "name": "Modificadores",
+          "component": "TextBlock",
+          "binding": "inspector.modifiers",
+          "x": 1120,
+          "y": 830,
+          "width": 1120,
+          "height": 120,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 28,
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "left",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
+          }
+        },
+        {
+          "id": "rules",
+          "name": "Habilidades",
+          "component": "RulesBox",
+          "binding": "card.rules",
+          "x": 1120,
+          "y": 965,
+          "width": 1120,
+          "height": 425,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 30,
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "left",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 22,
+            "overflow": "visible"
+          }
+        },
+        {
+          "id": "equipment",
+          "name": "Equipamentos anexados",
+          "component": "TextBlock",
+          "binding": "runtime.equipment",
+          "x": 80,
+          "y": 1430,
+          "width": 2160,
+          "height": 130,
+          "zIndex": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "visible": true,
+          "locked": false,
+          "style": {
+            "fontFamily": "Avenir",
+            "fontSize": 30,
+            "fontWeight": 400,
+            "lineHeight": 1.2,
+            "letterSpacing": 0,
+            "align": "left",
+            "background": "transparent",
+            "borderWidth": 0,
+            "borderRadius": 0,
+            "padding": 8,
+            "autoFit": true,
+            "minFontSize": 24,
+            "overflow": "visible"
+          }
+        }
+      ],
+      "revision": 0,
+      "canvas": {
+        "width": 2400,
+        "height": 1600,
+        "safe": 40,
+        "bleed": 0
+      },
+      "theme": {
+        "ink": "#fff0bf",
+        "background": "#14121c"
+      }
+    },
+    {
+      "id": "base-reading-god-armor",
+      "schemaVersion": 1,
+      "name": "Base · Leitura · God Armor",
+      "scope": {
+        "level": "type",
+        "value": "Equipment",
+        "surface": "card",
+        "subtype": "God Armor"
+      },
+      "elements": [
+        {
+          "id": "type",
+          "y": 950
+        },
+        {
+          "id": "equipment-power-bonus",
+          "y": 925
+        },
+        {
+          "id": "equipment-hp-bonus",
+          "y": 913
+        },
+        {
+          "id": "divider",
+          "y": 1080
+        },
+        {
+          "id": "rules",
+          "x": 160,
+          "y": 1100,
+          "width": 1168,
+          "height": 630,
+          "style": {
+            "fontSize": 44,
+            "minFontSize": 32
+          }
+        },
+        {
+          "id": "resonance",
+          "x": 160,
+          "y": 1740,
+          "width": 1168,
+          "height": 200,
+          "style": {
+            "fontSize": 40,
+            "minFontSize": 32
+          }
+        },
+        {
+          "id": "flavor",
+          "visible": false
+        }
+      ],
+      "revision": 0,
+      "extends": "base-type-equipment"
+    },
+    {
+      "id": "base-reading-divine-artifact",
+      "schemaVersion": 1,
+      "name": "Base · Leitura · Divine Artifact",
+      "scope": {
+        "level": "type",
+        "value": "Equipment",
+        "surface": "card",
+        "subtype": "Divine Artifact"
+      },
+      "elements": [
+        {
+          "id": "type",
+          "y": 950
+        },
+        {
+          "id": "equipment-power-bonus",
+          "y": 925
+        },
+        {
+          "id": "equipment-hp-bonus",
+          "y": 913
+        },
+        {
+          "id": "divider",
+          "y": 1080
+        },
+        {
+          "id": "rules",
+          "x": 160,
+          "y": 1100,
+          "width": 1168,
+          "height": 630,
+          "style": {
+            "fontSize": 44,
+            "minFontSize": 32
+          }
+        },
+        {
+          "id": "resonance",
+          "x": 160,
+          "y": 1740,
+          "width": 1168,
+          "height": 200,
+          "style": {
+            "fontSize": 40,
+            "minFontSize": 32
+          }
+        },
+        {
+          "id": "flavor",
+          "visible": false
+        }
+      ],
+      "revision": 0,
+      "extends": "base-type-equipment"
+    }
+  ],
+  "drafts": [
+    {
+      "id": "layout-global",
+      "schemaVersion": 1,
+      "name": "composição de carta",
+      "scope": {
+        "level": "global",
+        "value": "",
+        "surface": "card"
+      },
+      "elements": [],
+      "revision": 0,
+      "extends": "base-global"
+    },
+    {
+      "id": "layout-type-devotee",
+      "schemaVersion": 1,
+      "name": "Devotee",
+      "scope": {
+        "level": "type",
+        "value": "Devotee",
+        "surface": "card"
+      },
+      "elements": [],
+      "revision": 0,
+      "extends": "base-type-devotee"
+    },
+    {
+      "id": "layout-type-relic",
+      "schemaVersion": 1,
+      "name": "Relic",
+      "scope": {
+        "level": "type",
+        "value": "Relic",
+        "surface": "card"
+      },
+      "elements": [],
+      "revision": 0,
+      "extends": "base-type-relic"
+    },
+    {
+      "id": "layout-type-technique",
+      "schemaVersion": 1,
+      "name": "Technique",
+      "scope": {
+        "level": "type",
+        "value": "Technique",
+        "surface": "card"
+      },
+      "elements": [],
+      "revision": 0,
+      "extends": "base-type-technique"
+    },
+    {
+      "id": "layout-type-moment",
+      "schemaVersion": 1,
+      "name": "Moment",
+      "scope": {
+        "level": "type",
+        "value": "Moment",
+        "surface": "card"
+      },
+      "elements": [],
+      "revision": 0,
+      "extends": "base-type-moment"
+    },
+    {
+      "id": "layout-type-domain",
+      "schemaVersion": 1,
+      "name": "Domain",
+      "scope": {
+        "level": "type",
+        "value": "Domain",
+        "surface": "card"
+      },
+      "elements": [],
+      "revision": 0,
+      "extends": "base-type-domain"
+    },
+    {
+      "id": "layout-type-god",
+      "schemaVersion": 1,
+      "name": "God",
+      "scope": {
+        "level": "type",
+        "value": "God",
+        "surface": "card"
+      },
+      "elements": [],
+      "revision": 0,
+      "extends": "base-type-god"
+    },
+    {
+      "id": "layout-type-equipment",
+      "schemaVersion": 1,
+      "name": "Equipment",
+      "scope": {
+        "level": "type",
+        "value": "Equipment",
+        "surface": "card"
+      },
+      "elements": [],
+      "revision": 0,
+      "extends": "base-type-equipment"
+    },
+    {
+      "id": "layout-type-spell",
+      "schemaVersion": 1,
+      "name": "Spell",
+      "scope": {
+        "level": "type",
+        "value": "Spell",
+        "surface": "card"
+      },
+      "elements": [],
+      "revision": 0,
+      "extends": "base-type-spell"
+    },
+    {
+      "id": "layout-faction-athena",
+      "schemaVersion": 1,
+      "name": "Tema de Athena",
+      "scope": {
+        "level": "faction",
+        "value": "Athena",
+        "surface": "card"
+      },
+      "elements": [],
+      "revision": 0,
+      "extends": "base-faction-athena"
+    },
+    {
+      "id": "layout-faction-hades",
+      "schemaVersion": 1,
+      "name": "Tema de Hades",
+      "scope": {
+        "level": "faction",
+        "value": "Hades",
+        "surface": "card"
+      },
+      "elements": [],
+      "revision": 0,
+      "extends": "base-faction-hades"
+    },
+    {
+      "id": "layout-faction-ares",
+      "schemaVersion": 1,
+      "name": "Tema de Ares",
+      "scope": {
+        "level": "faction",
+        "value": "Ares",
+        "surface": "card"
+      },
+      "elements": [],
+      "revision": 0,
+      "extends": "base-faction-ares"
+    },
+    {
+      "id": "layout-faction-artemis",
+      "schemaVersion": 1,
+      "name": "Tema de Artemis",
+      "scope": {
+        "level": "faction",
+        "value": "Artemis",
+        "surface": "card"
+      },
+      "elements": [],
+      "revision": 0,
+      "extends": "base-faction-artemis"
+    },
+    {
+      "id": "layout-faction-poseidon",
+      "schemaVersion": 1,
+      "name": "Tema de Poseidon",
+      "scope": {
+        "level": "faction",
+        "value": "Poseidon",
+        "surface": "card"
+      },
+      "elements": [],
+      "revision": 0,
+      "extends": "base-faction-poseidon"
+    },
+    {
+      "id": "layout-rarity-common",
+      "schemaVersion": 1,
+      "name": "Common",
+      "scope": {
+        "level": "rarity",
+        "value": "Common",
+        "surface": "card"
+      },
+      "elements": [],
+      "revision": 0,
+      "extends": "base-rarity-common"
+    },
+    {
+      "id": "layout-rarity-mythic",
+      "schemaVersion": 1,
+      "name": "Mythic",
+      "scope": {
+        "level": "rarity",
+        "value": "Mythic",
+        "surface": "card"
+      },
+      "elements": [],
+      "revision": 0,
+      "extends": "base-rarity-mythic"
+    },
+    {
+      "id": "layout-rarity-rare",
+      "schemaVersion": 1,
+      "name": "Rare",
+      "scope": {
+        "level": "rarity",
+        "value": "Rare",
+        "surface": "card"
+      },
+      "elements": [],
+      "revision": 0,
+      "extends": "base-rarity-rare"
+    },
+    {
+      "id": "layout-rarity-sacred",
+      "schemaVersion": 1,
+      "name": "Sacred",
+      "scope": {
+        "level": "rarity",
+        "value": "Sacred",
+        "surface": "card"
+      },
+      "elements": [],
+      "revision": 0,
+      "extends": "base-rarity-sacred"
+    },
+    {
+      "id": "layout-rarity-uncommon",
+      "schemaVersion": 1,
+      "name": "Uncommon",
+      "scope": {
+        "level": "rarity",
+        "value": "Uncommon",
+        "surface": "card"
+      },
+      "elements": [],
+      "revision": 0,
+      "extends": "base-rarity-uncommon"
+    },
+    {
+      "id": "layout-inspector",
+      "schemaVersion": 1,
+      "name": "Inspector",
+      "scope": {
+        "level": "global",
+        "value": "",
+        "surface": "inspector"
+      },
+      "elements": [],
+      "revision": 0,
+      "extends": "base-inspector"
+    },
+    {
+      "id": "layout-reading-god-armor",
+      "schemaVersion": 1,
+      "name": "Leitura · God Armor",
+      "scope": {
+        "level": "type",
+        "value": "Equipment",
+        "surface": "card",
+        "subtype": "God Armor"
+      },
+      "elements": [],
+      "revision": 0,
+      "extends": "base-reading-god-armor"
+    },
+    {
+      "id": "layout-reading-divine-artifact",
+      "schemaVersion": 1,
+      "name": "Leitura · Divine Artifact",
+      "scope": {
+        "level": "type",
+        "value": "Equipment",
+        "surface": "card",
+        "subtype": "Divine Artifact"
+      },
+      "elements": [],
+      "revision": 0,
+      "extends": "base-reading-divine-artifact"
+    }
+  ],
+  "published": [],
+  "history": []
+}

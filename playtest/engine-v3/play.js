@@ -3,7 +3,7 @@
 // (as duas aprovadas pelo autor em 28/10/2026). Moment/Technique: D194. Janela: ALPHA-P06 A.
 // `ctx`: {cards (loadCanon), objects (uid -> {owner, cardId}), attached (uid do Equipment -> uid do portador)}.
 import {RuleError, NotSpecified, assertIdle, spendBase, spellCategory, respond, emit} from './core.js';
-import {SPELLS, ABILITIES, onEnter, onCastEquipment, checkDefeats} from './effects.js';
+import {SPELLS, ABILITIES, onEnter, onCastEquipment, checkDefeats, namedCharacter, enforceUniqueness} from './effects.js';
 
 // Custo impresso: Base (D4) ou Latent. Valida tudo antes de mexer no estado.
 export function payCost(state, key, cost) {
@@ -32,6 +32,12 @@ function fromHand(state, ctx, key, uid, kind) {
 const leaveHand = (state, key, uid) => { const hand = state.players[key].hand; hand.splice(hand.indexOf(uid), 1); };
 
 // `choice.target`: alvo do gatilho de entrada (Eagle Marin).
+// Personagem nomeado de `uid` que `key` já controla (§63), ou null: jogar essa carta vai pedir a escolha de quem fica.
+export function duplicateCharacter(state, ctx, key, uid) {
+  const who = namedCharacter(ctx, uid);
+  return who && state.players[key].battlefield.some(u => u !== uid && ctx.cards.get(ctx.objects[u].cardId).kind === 'Devotee' && namedCharacter(ctx, u) === who) ? who : null;
+}
+
 export function playDevotee(state, ctx, key, uid, choice = {}) {
   const card = sorceryFromHand(state, ctx, key, uid, 'Devotee');
   payCost(state, key, card.cost);
@@ -40,6 +46,7 @@ export function playDevotee(state, ctx, key, uid, choice = {}) {
   state.units[uid] = {prepared: false, damage: 0, entered: state.turn}; // P02: entra Unprepared
   emit(state, 'card_played', {player: key, uid, kind: 'Devotee'});
   onEnter(state, ctx, key, uid, choice);
+  enforceUniqueness(state, ctx); // §63 (autor, 28/10/2026): pode jogar a segunda versão; o controlador escolhe quem fica
 }
 
 // Equipment (custo alternativo, autor 28/10/2026): no Devotee nomeado em Auto-Equip, paga o Casting Cost;
@@ -115,8 +122,8 @@ export function playSpell(state, ctx, key, uid, choice = {}) {
   if (typeof choice !== 'function' && !spell) throw new NotSpecified(`efeito da carta ${number} ainda não implementado na engine 3.0`);
   if (typeof choice !== 'function') spell.check(state, ctx, key, choice); // alvo e modo antes de pagar
   const effect = typeof choice === 'function' ? choice : st => spell.run(st, ctx, key, choice);
-  const p = state.players[key], owner = state.players[ctx.objects[uid].owner];
-  const finish = st => { emit(st, 'spell_resolved', {player: key, uid}); effect(st); st.players[key].stack.splice(st.players[key].stack.indexOf(uid), 1); owner.tartarus.push(uid); checkDefeats(st, ctx); };
+  const p = state.players[key];
+  const finish = st => { emit(st, 'spell_resolved', {player: key, uid}); effect(st); st.players[key].stack.splice(st.players[key].stack.indexOf(uid), 1); st.players[ctx.objects[uid].owner].tartarus.push(uid); checkDefeats(st, ctx); }; // `st`, não o estado capturado: o snapshot da decisão troca os objetos
   if (category.speed === 'sorcery') {
     const card = sorceryFromHand(state, ctx, key, uid, 'Spell');
     payCost(state, key, card.cost);
@@ -134,5 +141,6 @@ export function playSpell(state, ctx, key, uid, choice = {}) {
   leaveHand(state, key, uid);
   p.stack.push(uid);
   emit(state, 'card_played', {player: key, uid, kind: 'Spell', category: category.category});
-  respond(state, key, {speed: 'instant', uid, run: finish}); // Moment jogado abre ou continua a janela
+  // `target` só informa a interface (seta do alvo); a resolução usa `choice`.
+  respond(state, key, {speed: 'instant', uid, run: finish, target: typeof choice === 'object' ? choice.target ?? null : null}); // Moment jogado abre ou continua a janela
 }

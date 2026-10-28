@@ -12,6 +12,7 @@
 <body>
   <header>
     <h1>Card Forge <small>Saint Seiya TCG</small></h1>
+    <a id="layoutStudioLink" href="studio.html" style="color:var(--gold);font-weight:600">✧ Layout Studio</a>
     <label>Carta
       <select id="cardSelect"><option value="">— carregando —</option></select>
     </label>
@@ -42,7 +43,7 @@
         <label data-for="devotee relic_cloth relic_weapon god">Subtítulo <input name="subtitle"></label>
         <label>Tipo
           <select name="tipo">
-            <option>Devotee</option><option>Equipment</option><option>Support</option><option>Relic</option><option>Technique</option>
+            <option>Devotee</option><option>Equipment</option><option>Support</option><option>Relic</option><option>Spell</option><option>Technique</option>
             <option>Moment</option><option>Domain</option><option>God</option>
           </select>
         </label>
@@ -55,7 +56,7 @@
         </label>
         <label>Raridade
           <select name="raridade">
-            <option>Common</option><option>Uncommon</option><option>Mythic</option><option>Divine</option><option>Playtest</option>
+            <option>Common</option><option>Uncommon</option><option>Rare</option><option>Sacred</option><option>Mythic</option><option>Divine</option><option>Playtest</option>
           </select>
         </label>
       </fieldset>
@@ -76,7 +77,7 @@
         </div>
         <div class="row">
           <label data-for="relic_cloth relic_weapon relic">Equip <input name="equipar_custo" type="number" min="0"></label>
-          <label data-for="relic_cloth relic_weapon relic">Damage (legado) <input name="damage_cloth" type="number" min="0"></label>
+          <label data-for="relic_cloth relic_weapon relic">HP da Armor <input name="damage_cloth" type="number" min="0"></label>
         </div>
         <div class="row">
           <label data-for="god">Soul <input name="soul" type="number"></label>
@@ -97,16 +98,19 @@
         <label>Ressonâncias (uma por linha: ID | texto em inglês)<textarea name="resonanceText" rows="3"></textarea></label></div>
         <p id="rulesReview" class="hint" role="status"></p>
       </fieldset>
+      <fieldset id="keywordEditor">
+        <legend>Keywords</legend>
+        <label>Selecionadas <input name="keywords" placeholder="Long Range, Pierce"></label>
+        <select id="kwSelect" aria-label="Adicionar keyword à carta"><option value="">+ Keyword</option></select>
+        <p class="hint">As keywords ficam na área própria da carta. Selecione aqui; não é preciso repeti-las nas regras.</p>
+      </fieldset>
       <fieldset>
         <legend>Texto</legend>
-        <label>Keywords <input name="keywords" placeholder="Long Range, Pierce"></label>
-        <div class="symbar" id="symbar" role="toolbar" aria-label="Inserir símbolo no texto">
-          <select id="kwSelect" aria-label="Inserir keyword"><option value="">+ Keyword</option></select>
-        </div>
+        <div class="symbar" id="symbar" role="toolbar" aria-label="Inserir símbolo no texto"></div>
         <label>Regras
           <textarea name="rules" rows="9" spellcheck="true"></textarea>
         </label>
-        <p class="hint">Clique num símbolo ou keyword para inserir no cursor. Linha em branco separa habilidades; <code>**negrito**</code>. Keywords saem em negrito maiúsculo sozinhas.</p>
+        <p class="hint">Clique num símbolo para inserir no cursor. Linha em branco separa habilidades; <code>**negrito**</code>. Keywords saem em negrito maiúsculo sozinhas.</p>
         <label data-for="god">Awaken (texto) <textarea name="habilidade_awaken_en" rows="4"></textarea></label>
         <label data-for="god">Ultimate <textarea name="ultimate_en" rows="3"></textarea></label>
         <label>Flavour <input name="flavour" placeholder="“Burn cosmo, burn!”"></label>

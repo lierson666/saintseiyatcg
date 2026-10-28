@@ -4,6 +4,69 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-28 — §63 e Handbook 3.0 G3-040 — lendário só para as classes de guerreiros
+
+- **Seção:** `docs/guia-do-jogo.md` §63 e `docs/alpha-0.1/GODS-3.0-SUPPLEMENT.md` G3-040.
+- **Antes:** todo personagem nomeado era único por jogador (ex.: só um Tatsumi ou um Sanctuary Guard nomeado em campo).
+- **Depois:** a unicidade vale só para Saints, Marines, Satellites, Specters e Berserkers; Warrior, Support e Devotees sem classe podem repetir no campo.
+- **Motivo:** decisão do autor em 28/10/2026 ("os minions de classe baixa não recebem lei de lendário").
+- **Pendências:** nenhuma carta alterada; engine 3.0 ajustada; engine 2.x não alterada.
+
+## 2026-10-28 — §48A e Handbook 3.0 G3-039 — Training counter é +1/+1
+
+- **Seção:** `docs/guia-do-jogo.md` §48A (nova) e `docs/alpha-0.1/GODS-3.0-SUPPLEMENT.md` G3-039.
+- **Antes:** Training counter não tinha efeito próprio; só Master's Guidance (Eagle Marin no campo) dava +1/+1 aos Bronze Saints com o marcador.
+- **Depois:** cada Training counter dá +1 ATK / +1 HP, acumulando (2 = +2/+2), com ou sem Marin. Master's Guidance soma mais +1/+1 enquanto Marin estiver no campo (texto impresso inalterado).
+- **Motivo:** decisão do autor em 28/10/2026 ("esse Training counter é um marcador +1/+1"); acumular e manter a Marin escolhidos no questionário.
+- **Pendências:** nenhuma carta alterada; engine 3.0 ajustada; engine 2.x não alterada.
+
+## 2026-10-28 — Handbook 3.0 G3-028 (revisto) — 12 tochas dividem os 3 minutos
+
+- **Seção:** `docs/alpha-0.1/GODS-3.0-SUPPLEMENT.md`, G3-028.
+- **Antes:** 1 tocha acesa por 60 s restantes (12 tochas só acendiam com 12 minutos).
+- **Depois:** 1 tocha acesa por 15 s restantes, arredondando para cima, teto 12 (12 tochas = 180 s, o teto do relógio).
+- **Motivo:** pedido do autor em 28/10/2026 ("divida os 12 fogos pelos 3 minutos do timing"), repassado pela sessão XEPA OS.
+- **Pendências:** nenhuma. Só exibição; os tempos do relógio (G3-024..G3-031) não mudam.
+
+## 2026-10-28 — Handbook 3.0 G3-038 — Guardian protege sempre
+
+- **Seção:** `docs/alpha-0.1/GODS-3.0-SUPPLEMENT.md`, registro G3-038 (altera a P05 A; alinha com o guia §12).
+- **Antes:** só Guardian Prepared obrigava a mirá-lo; Guardian recém-entrado ou que já atacou não protegia.
+- **Depois:** qualquer Guardian em campo, Prepared ou não, obriga o Strike a mirar um Guardian. Nimble ignora; Cheater ignora só contra God.
+- **Motivo:** decisão do autor em 28/10/2026, no playtest ("Guardian não está seguindo a regra de tank").
+- **Pendências:** a 3.0 continua permitindo mirar Devotee inimigo Prepared sem Guardian (P05 A); o guia §11 da 2.1 restringe a alvos abertos. Não alterado.
+
+## 2026-10-28 — §(compra) e Handbook 3.0 G3-037 — compra de 1 carta por turno
+
+- **Seção:** `docs/guia-do-jogo.md` (início da partida e compra) e `docs/alpha-0.1/GODS-3.0-SUPPLEMENT.md` (G3-037, substitui a quantidade da D3).
+- **Antes:** a partir da segunda rodada, 2 cartas por turno.
+- **Depois:** 1 carta por turno, a partir do 2º turno próprio. Primeiro turno continua sem compra.
+- **Motivo:** decisão do autor em 28/10/2026: "2 cartas tá muito roubado".
+- **Pendências:** engine 3.0 ajustada; engine 2.x não foi alterada; ritmo a medir no playtest.
+
+## 2026-10-28 — §63 Deck, identidade, mulligan, Gods e Domains — regra de personagem nomeado
+
+- **Antes:** "Não permitir jogar da mão uma segunda versão de personagem que já controla"; a escolha de qual manter só valia para duplicidade criada por efeito.
+- **Depois:** a segunda versão pode ser jogada da mão normalmente (paga custo; habilidades de entrada valem). Em qualquer duplicidade, o controlador escolhe qual manter; as outras vão ao Tartarus sem ser destruição.
+- **Motivo:** decisão do autor em 28/10/2026, no playtest do Olympus Arena (modelo de regra de lendário).
+- **Pendências:** engine 3.0, HUD e IA ajustados na mesma data; engine 2.x não foi alterada.
+
+## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — G3-036, Strike anulado
+
+- **Seção:** `docs/alpha-0.1/GODS-3.0-SUPPLEMENT.md`, registro G3-036 (complementa P04/P06).
+- **Antes:** Strike cujo atacante ou alvo saía do campo antes do dano lançava `NotSpecified` (a partida travava na janela).
+- **Depois:** o Strike é anulado: sem dano, sem retaliação; continua contado como usado.
+- **Motivo:** decisão do autor em 28/10/2026 (opção recomendada), após o playtest simulado chegar ao caso.
+- **Pendências:** nenhuma. Na mesma data, a engine 3.0 passou a aplicar o guia §63, que já estava no guia: segunda versão de personagem nomeado não sai da mão; duplicata vinda de efeito faz o controlador escolher qual manter, e as outras vão ao Tartarus sem ser destruição (a Armor presa acompanha, como na D40/D90).
+
+## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — G3-035, Cosmo Base entra Prepared
+
+- **Seção:** `docs/alpha-0.1/GODS-3.0-SUPPLEMENT.md`, registro G3-035 (complementa a D4).
+- **Antes:** a engine 3.0 punha a Base nova Unprepared (leitura literal da D4: Bases preparam só no início do turno), com a dúvida anotada no código.
+- **Depois:** a Base nova entra Prepared e já paga custo no mesmo turno. Continua uma Base por turno.
+- **Motivo:** decisão do autor em 28/10/2026, durante o playtest do Olympus Arena.
+- **Pendências:** nenhuma.
+
 ## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — G3-032 a G3-034 (Seal e Great Flood)
 
 - **Antes:** P-SEAL-1, P-SEAL-2 e P-FLOOD-1 abertas; a engine lançava `NotSpecified` e os testes usavam parâmetros de fixture.

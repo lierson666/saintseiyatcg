@@ -79,7 +79,15 @@ test('Eagle Marin: Training counter ao entrar; Master\'s Guidance dá +1/+1 enqu
   playDevotee(s, ctx, 'A', marin, {target: seiya});
   assert.ok(s.window, 'gatilho de entrada abre janela');
   passAll(s);
-  assert.deepEqual([s.units[seiya].training, atkOf(s, ctx, seiya), hpOf(s, ctx, seiya)], [1, 3, 5]);
+  // G3-039: o marcador dá +1/+1 e Master's Guidance soma mais +1/+1 (Seiya 2/4 → 4/6).
+  assert.deepEqual([s.units[seiya].training, atkOf(s, ctx, seiya), hpOf(s, ctx, seiya)], [1, 4, 6]);
+});
+
+test('G3-039: Training counter é +1/+1 por si e acumula, sem Eagle Marin', () => {
+  const {s, ctx, field} = setup();
+  const seiya = field('A', '001');
+  s.units[seiya].training = 2;
+  assert.deepEqual([atkOf(s, ctx, seiya), hpOf(s, ctx, seiya)], [4, 6]);
 });
 
 test('Star Hill Acolyte: olha as 2 do topo, uma fica e a outra vai ao fundo', () => {
@@ -154,10 +162,10 @@ test('dano que não é de Strike (082) passa pela Armor e ignora prevenções de
 
 test('Dragon Cloth (004) Resonance: redireciona até 2 de outro Saint para Shiryu, como dano de Strike nele', () => {
   const {s, ctx, field, equip, strike} = setup({A: rush, B: fortress}, (k, q) => q.ability === 'Dragon Cloth Resonance');
-  const seiya = field('A', '001'), mu = field('B', '011'), shiryu = field('B', '003');
+  const marin = field('A', '021'), mu = field('B', '011'), shiryu = field('B', '003'); // Marin: Nimble ignora o Guardian (G3-038)
   const cloth = equip('B', '004', shiryu);
-  s.units[shiryu].prepared = false; // sem Guardian em guarda
-  strike(seiya, {kind: 'devotee', uid: mu});
+  s.units[shiryu].prepared = false;
+  strike(marin, {kind: 'devotee', uid: mu});
   assert.equal(s.units[mu].damage, 0, '2 redirecionados');
   assert.deepEqual([s.units[cloth].damage, s.units[shiryu].damage], [1, 0], 'Dragon Shield de Shiryu previne 1 dos 2');
 });

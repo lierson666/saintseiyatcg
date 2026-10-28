@@ -16,6 +16,10 @@ export const STEPS = {
   '087': [{key: 'prepare', pick: 'saint', multi: 2, optional: true, label: 'If your God has 5 or less Soul, Prepare up to two friendly Saints'}],
   '088': [SAINT, {key: 'prepare', confirm: 'Prepare that Saint if your God is behind?'}],
   '021': [{key: 'target', pick: 'bronze', optional: true, label: 'Training counter on which friendly Bronze Saint?'}],
+};
+
+// Habilidades {T} (ABILITIES da engine): escolhas ao ativar, não ao jogar a carta.
+export const ABILITY_STEPS = {
   '041': [{key: 'target', pick: 'devotee', label: 'Remove up to 2 damage from which friendly Devotee?'}],
   '042': [{key: 'target', pick: 'armor', label: 'Shield which friendly Armor?'}],
   '011': [{key: 'target', pick: 'armor', label: 'Shield which friendly Armor?'}],

@@ -69,7 +69,7 @@ test('simulação reproduzível de compra e Base até a Fatigue (P07) encerrar a
   const m = match(42), {state, objects} = m;
   keepAll(m);
   const log = [];
-  for (let turn = 0; turn < 80 && !state.victory; turn++) {
+  for (let turn = 0; turn < 200 && !state.victory; turn++) {
     startTurn(state);
     if (state.victory) break;
     const p = state.players[state.active];
@@ -79,12 +79,12 @@ test('simulação reproduzível de compra e Base até a Fatigue (P07) encerrar a
     endTurn(state); passAll(state);
     checkInvariants(state, objects);
   }
-  // P01: deck 53; D170 + D3: 26 compras completas deixam 1 carta. A partir do 28º turno próprio, cada compra falha
-  // tira 1, 2, 3… (P07). A, inicial, chega à 8ª falha (1+…+8 = 36 ≥ 30) no 32º turno, um antes de B.
+  // P01: deck 53; D170 + G3-037 (1 por turno): 53 compras completas esvaziam o deck. A partir do 55º turno próprio,
+  // cada compra falha tira 1, 2, 3… (P07). A, inicial, chega à 8ª falha (1+…+8 = 36 ≥ 30) no 62º turno, um antes de B.
   assert.deepEqual(state.victory, {winner: 'B'});
-  assert.equal(log.length, 62);
+  assert.equal(log.length, 122);
   assert.match(log[0], /^R1 A mão 6 deck 53 bases 1/);
-  assert.match(log.at(-1), /^R31 B .* soul 2$/);
+  assert.match(log.at(-1), /^R61 B .* soul 2$/);
   assert.ok(state.players.A.latent <= 3 && state.players.B.latent <= 3);
 });
 

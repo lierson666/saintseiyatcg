@@ -13,7 +13,7 @@ import {loadPoseidonCatalog, officialDeckErrors} from '../shared/poseidon-v6.js'
 import {createMatch, mulligan} from '../playtest/engine-v3/match.js';
 import {startTurn, endTurn, passAll, pass, addSeal, destroyDevotee, placeBase, checkInvariants, NotSpecified, RuleError} from '../playtest/engine-v3/core.js';
 import {declareStrike, strikeTargets} from '../playtest/engine-v3/strike.js';
-import {playDevotee} from '../playtest/engine-v3/play.js';
+import {playDevotee, duplicateCharacter} from '../playtest/engine-v3/play.js';
 import {refreshAwaken, announceGreatFlood, greatFloodBlock} from '../playtest/engine-v3/gods.js';
 import {timeoutAutoChoice} from '../playtest/engine-v3/clock.js';
 
@@ -110,10 +110,10 @@ test('D268: uso gasto com pagamento legal mesmo sem Seal efetivo; uma vez por Ro
   declareStrike(s, ctx, seiya, {kind: 'god', player: 'B'});
   destroyDevotee(s, seiya, ctx.objects, ctx.attached); // atacante sai antes da Water Prison resolver
   pass(s, 'B');
-  assert.throws(() => pass(s, 'A'), NotSpecified, 'Strike sem atacante: lacuna já conhecida da P04/P06');
+  pass(s, 'A');
+  assert.equal(count(s, 'strike_fizzled'), 1, 'G3-036: Strike sem atacante é anulado');
   assert.equal(count(s, 'seal_failed'), 1);
   assert.ok(s.roundUses.has('god:B:water-prison'));
-  s.window = null; s.chain = [];
   declareStrike(s, ctx, jabu, {kind: 'god', player: 'B'}); passAll(s);
   assert.equal(count(s, 'divine_power', 'WATER PRISON'), 1, 'sem segunda Water Prison no Round');
   assert.equal(s.players.B.latent, 1);
@@ -274,13 +274,14 @@ test('Duelo FIXTURE Athena × Poseidon: partida reproduzível até o fim, Water 
     const m = createMatch({cards, canonIndex: canonIndex(canon), decks: {A: rush, B: fortress}, gods: {A: 'god-athena', B: 'god-poseidon'}, first: 'A', seed});
     const s = m.state, ctx = {cards, objects: m.objects, attached: m.attached, decide: () => true};
     mulligan(m, 'A', []); mulligan(m, 'B', []);
-    for (let turn = 0; turn < 60 && !s.victory; turn++) {
+    for (let turn = 0; turn < 160 && !s.victory; turn++) { // G3-037: 1 compra por turno alonga a partida
       startTurn(s); passAll(s);
       if (s.victory) break;
       const key = s.active, p = s.players[key];
       const base = p.hand.find(uid => cards.get(m.objects[uid].cardId).cosmoble);
       if (base) placeBase(s, key, base, cards.get(m.objects[base].cardId));
       for (const uid of [...p.hand].filter(u => cards.get(m.objects[u].cardId).kind === 'Devotee').sort()) {
+        if (duplicateCharacter(s, ctx, key, uid)) continue; // bot não troca um personagem por ele mesmo (§63)
         try { playDevotee(s, ctx, key, uid); passAll(s); } catch (e) { if (!(e instanceof RuleError)) throw e; }
       }
       for (const uid of p.battlefield.filter(u => cards.get(m.objects[u].cardId).kind === 'Devotee')) {

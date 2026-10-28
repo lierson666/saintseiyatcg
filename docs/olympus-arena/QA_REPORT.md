@@ -75,3 +75,14 @@ Dois testes antigos mudaram de resultado esperado porque agora o God Athena age:
   - Great Flood: 3 Devotees à mão, 3 Bases, descarte de 7 em 13, Mill 21.
 - Capturas: `qa/06-water-prison-pressure-log.jpg`, `qa/07-seal-counter-on-board.jpg`, `qa/08-great-flood-log.jpg`.
 - Limite: as decisões síncronas da engine usam diálogo do navegador (`confirm`/`prompt`), como as já existentes.
+
+## Partida inteira Athena × Athena pelo HUD (28/10/2026)
+
+- Jogada por um roteiro que só clica no DOM, como um jogador: Base, cartas, Strikes, decisões e End Turn.
+- Seed 44: do mulligan ao Round 18, vitória do Player B, sem erro de console (`qa/09-full-match-athena-victory.jpg`).
+- Corrigido:
+  - Jamir Cloth Repairer (e Sanctuary Healer, Aries Mu) pedia o alvo da habilidade {T} ao ser **jogado** e travava sem Armor. As escolhas de ativação agora ficam em `ABILITY_STEPS`.
+  - Escolha obrigatória sem candidato cancela com aviso, em vez de travar a barra de escolha.
+  - Spell que exige alvo (Saint aliado, inimigo…) não aparece como jogável sem alvo; o motivo vira aviso.
+  - Cosmo Base: arrastar para a área de Cosmo, menu explícito e aviso (commit 663ba70).
+- Sem correção: clique durante animação é ignorado sem aviso (entrada travada de propósito).

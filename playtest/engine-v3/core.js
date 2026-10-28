@@ -4,7 +4,7 @@
 // nada aqui vem da engine 2.2. Fonte da matriz: docs/alpha-0.1/MATRIZ-BLOQUEIOS-ENGINE-3.0.md.
 
 export const LATENT_CAP = 3; // D198, D226
-export const DRAWS_PER_TURN = 2; // D3
+export const DRAWS_PER_TURN = 1; // D3, quantidade pela G3-037 (autor, 28/10/2026: antes 2)
 // D194: classificação Moment/Technique pelo número da carta Athena V6.
 const MOMENTS = new Set([54, 56, 58, 61, 76, 79]);
 // 53, 60, 82 e 85: Technique por decisão do autor em 28/10/2026 (custo {B}), fora da lista da D194.
@@ -130,8 +130,8 @@ export function placeBase(state, key, uid, card) {
   const at = p.hand.indexOf(uid);
   if (at < 0) throw new RuleError('D4', 'a carta não está na mão');
   p.hand.splice(at, 1);
-  // Leitura literal: só a D4 prepara Bases, no início do turno. Confirmar se a Base nova entra preparada.
-  p.bases.push({uid, prepared: false});
+  // G3-035 (autor, 28/10/2026): a Base nova entra Prepared e já paga custo no mesmo turno.
+  p.bases.push({uid, prepared: true});
   p.baseTurn = state.turn;
   emit(state, 'base_placed', {player: key, uid});
 }
@@ -195,9 +195,10 @@ export function useOncePerRound(state, id) {
 export function addEffect(state, effect) { state.effects.push({...effect, round: state.round}); }
 
 // Destroy (D197) de um Devotee: vai para o Tartarus do Owner, e a Armor presa a ele também (D40/D90).
+// `event`: 'unique_removed' para a saída do guia §63, que move igual mas não é destruição.
 // Equipment que não é Armor fica no campo, solto, e pode ser reequipado (autor, 28/10/2026).
 // `objects`: uid -> {owner, armor}; `attached`: uid do Equipment -> uid do Devotee.
-export function destroyDevotee(state, uid, objects, attached) {
+export function destroyDevotee(state, uid, objects, attached, event = 'destroyed') {
   const zone = Object.values(state.players).find(p => p.battlefield.includes(uid));
   if (!zone) throw new RuleError('D197', `${uid} não está no campo`);
   const gear = Object.keys(attached).filter(e => attached[e] === uid);
@@ -208,7 +209,7 @@ export function destroyDevotee(state, uid, objects, attached) {
     delete attached[moved];
     delete state.units[moved];
     state.effects = state.effects.filter(e => e.target !== moved); // objeto novo se voltar
-    emit(state, 'destroyed', {uid: moved, owner: objects[moved].owner});
+    emit(state, event, {uid: moved, owner: objects[moved].owner});
   }
 }
 

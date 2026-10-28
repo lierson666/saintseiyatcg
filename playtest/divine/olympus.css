@@ -123,7 +123,7 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .priority { position: relative; width: 100%; padding: 6px 10px; border-radius: 10px; text-align: center; background: rgba(28, 10, 48, .85); border: 1px solid #b98cff; box-shadow: 0 0 18px rgba(185, 140, 255, .4); }
 .priority small { display: block; font: 10px/1.2 system-ui; letter-spacing: .16em; text-transform: uppercase; color: #cbb8ff; }
 .priority strong { font-size: 16px; }
-.priority .chain { margin: 4px 0 0; text-align: left; border: 0; max-height: 20vh; }
+.priority .chain { margin: 4px 0 0; text-align: left; border: 0; max-height: 34vh; }
 
 /* ---------- Escolha, cinemática, fixture ---------- */
 .olympus.is-choosing ~ .choice, .choice { top: 46%; transform: translate(-50%, -50%); background: rgba(10, 12, 34, .94); border-color: var(--gold); box-shadow: 0 0 30px rgba(255, 200, 110, .35); }
@@ -207,3 +207,238 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 /* Arrastar uma carta Cosmoble: a área de Cosmo do jogador vira alvo de soltar (vira Cosmo Base, D4). */
 .cosmo.drop-target { outline: 2px dashed rgba(159, 216, 255, .7); outline-offset: 6px; border-radius: 14px; }
 .cosmo.drop-hover { outline-style: solid; outline-color: #9fd8ff; box-shadow: 0 0 24px rgba(127, 212, 255, .6); }
+
+/* Campo dividido durante o arraste da mão: CAST (dourado, metade de cima) e COSMO BASE (azul, metade de baixo). */
+.drag-zones { position: absolute; inset: 0; z-index: 20; display: grid; grid-template-rows: 1fr 1fr; gap: 8px; pointer-events: none; animation: dz-in .18s ease; }
+.drag-zone { position: relative; border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center; overflow: hidden; isolation: isolate; transition: filter .2s, box-shadow .2s, opacity .2s; }
+.drag-zone strong { font: 400 clamp(22px, 3vw, 40px) Palatino, Georgia, serif; letter-spacing: .08em; text-shadow: 0 2px 10px #050b17, 0 0 16px currentColor; }
+.drag-zone small { font: clamp(11px, 1.2vw, 15px) Palatino, Georgia, serif; max-width: 80%; text-shadow: 0 2px 8px #050b17; }
+.drag-zone--cast { color: #ffdfa0; border: 2px solid #f0c46a; background: radial-gradient(ellipse at center, #b0822a55, #3a2a0caa 70%); box-shadow: inset 0 0 40px #f6c45855, 0 0 18px #e2a63f66; animation: dz-breathe 2.4s ease-in-out infinite; }
+.drag-zone--cosmo { color: #d6edff; border: 2px solid #79c4ff; background: radial-gradient(circle at 18% 60%, #486bf078, transparent 30%), radial-gradient(circle at 78% 40%, #af4ed477, transparent 32%), linear-gradient(100deg, #081d57dd, #05102ddb, #12346add); box-shadow: inset 0 0 36px #67beff66, 0 0 21px #479eff77; animation: dz-breathe 2.7s ease-in-out infinite; }
+.drag-zone--cosmo::after { content: ''; position: absolute; inset: -70%; z-index: -1; background: repeating-conic-gradient(from 0deg, transparent 0deg 25deg, #7bbbff33 26deg 26.35deg, transparent 27deg 55deg); animation: dz-spin 40s linear infinite; }
+.drag-zone.is-off { opacity: .28; filter: grayscale(.8); animation: none; }
+.is-over-cast .drag-zone--cast { box-shadow: inset 0 0 75px #fbc96877, 0 0 40px #ffda81dd; filter: brightness(1.35); }
+.is-over-cosmo .drag-zone--cosmo { box-shadow: inset 0 0 70px #5cb8ffbb, 0 0 42px #5499ffdd; filter: brightness(1.3); }
+@keyframes dz-in { from { opacity: 0; } }
+@keyframes dz-breathe { 50% { filter: brightness(1.15); } }
+@keyframes dz-spin { to { transform: rotate(360deg); } }
+.reduce-motion .drag-zone, .reduce-motion .drag-zone::after, .reduce-motion .drag-zones { animation: none; }
+
+/* Cosmo Bases como terrenos: faixa de cartas do lado de cada jogador; tapped = deitada 90°. */
+.arena-field { grid-template-rows: auto 1fr auto 1fr auto; }
+.lane { --land-w: calc(var(--card-w) * .68); --land-h: calc(var(--land-w) * 1.4); display: flex; justify-content: center; align-items: center; min-height: calc(var(--land-h) + 6px); padding: 0 8px; pointer-events: auto; }
+.lane__base { flex: 0 1 calc(var(--land-h) + 4px); min-width: 14px; height: var(--land-h); display: grid; place-items: center; transition: transform .35s cubic-bezier(.2, .8, .2, 1); }
+.lane__base .dcard--land { --card-w: var(--land-w); width: var(--land-w); height: var(--land-h); flex: none; border-radius: 5px; box-shadow: 0 3px 8px rgba(0, 0, 0, .6), 0 0 10px rgba(110, 180, 255, .35); transition: transform .35s cubic-bezier(.2, .8, .2, 1), filter .35s; }
+.lane__base .dcard--land .dcard__plate { padding: 1px 3px; } .lane__base .dcard--land .dcard__plate strong { font-size: 7px; } .lane__base .dcard--land .dcard__plate small, .lane__base .dcard--land .dcard__stats { display: none; }
+.lane__base .dcard--land .dcard__cost { transform: scale(.7); transform-origin: top left; }
+.lane__base.tapped .dcard--land { transform: rotate(90deg); filter: brightness(.55) saturate(.6); box-shadow: 0 3px 8px rgba(0, 0, 0, .6); }
+.lane__base.is-tapping .dcard--land { animation: land-tap .35s cubic-bezier(.2, .8, .2, 1); }
+.lane__base.is-untapping .dcard--land { animation: land-untap .45s cubic-bezier(.2, .8, .2, 1); }
+.lane__base.is-new .dcard--land { animation: land-in .4s cubic-bezier(.2, .8, .2, 1); }
+.lane__base:hover { z-index: 6; } .lane__base:hover .dcard--land:not(.dcard--back) { filter: none; }
+.lane__empty { margin: 0; font: italic 11px Georgia, serif; letter-spacing: .1em; color: rgba(160, 200, 255, .35); }
+@keyframes land-tap { from { transform: rotate(0); filter: none; } }
+@keyframes land-untap { from { transform: rotate(90deg); filter: brightness(.55); } 60% { box-shadow: 0 0 18px #8fd6ff; } }
+@keyframes land-in { from { transform: translateY(30px) scale(.6); opacity: 0; } }
+.reduce-motion .lane__base .dcard--land { animation: none !important; transition: none; }
+
+/* Verso das cartas: espaço profundo, nebulosa e o logo Saint Seiya TCG, moldura dourada dupla. */
+.dcard.dcard--back { border: 2px solid #b8913f; background:
+  url('../../LOGO/logo-web.webp') center 50% / 86% auto no-repeat,
+  radial-gradient(1px 1px at 18% 22%, #fff 50%, transparent), radial-gradient(1px 1px at 72% 14%, #cfe4ff 50%, transparent),
+  radial-gradient(1.5px 1.5px at 84% 70%, #fff 50%, transparent), radial-gradient(1px 1px at 30% 82%, #ffe9c2 50%, transparent),
+  radial-gradient(1px 1px at 55% 38%, #fff 50%, transparent), radial-gradient(1px 1px at 10% 60%, #bcd6ff 50%, transparent),
+  radial-gradient(ellipse 70% 45% at 30% 35%, rgba(120, 70, 200, .55), transparent 70%),
+  radial-gradient(ellipse 60% 50% at 75% 70%, rgba(40, 90, 210, .5), transparent 70%),
+  radial-gradient(circle at 50% 50%, rgba(255, 210, 130, .18), transparent 45%),
+  linear-gradient(160deg, #0b0a24, #050614 55%, #0d0b2a); box-shadow: 0 6px 16px rgba(0, 0, 0, .6), inset 0 0 18px rgba(80, 60, 160, .5); }
+.dcard.dcard--back span { position: absolute; inset: 4px; border: 1px solid rgba(232, 196, 106, .55); border-radius: 5px; box-shadow: inset 0 0 0 2px rgba(10, 8, 30, .6), inset 0 0 0 3px rgba(232, 196, 106, .22); }
+
+/* Seta de ataque (arrastar Devotee até o alvo). */
+.aim-arrow { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 60; pointer-events: none; overflow: visible; }
+.aim-arrow path { fill: none; stroke-linecap: round; }
+.aim-arrow__glow { stroke: rgba(255, 120, 70, .35); stroke-width: 18; filter: blur(4px); }
+.aim-arrow__line { stroke: #ffcf7a; stroke-width: 6; stroke-dasharray: 14 9; animation: aim-flow .5s linear infinite; }
+.aim-arrow marker path { fill: #ffcf7a; stroke: none; }
+.aim-arrow__reticle { fill: none; stroke: #ffcf7a; stroke-width: 2; opacity: .5; transition: r .15s, opacity .15s; }
+.aim-arrow.is-locked .aim-arrow__line { stroke: #ff6a4a; }
+.aim-arrow.is-locked marker path { fill: #ff6a4a; stroke: none; }
+.aim-arrow.is-locked .aim-arrow__glow { stroke: rgba(255, 70, 50, .55); }
+.aim-arrow.is-locked .aim-arrow__reticle { stroke: #ff6a4a; opacity: 1; r: 26; }
+.dcard.aiming { box-shadow: 0 0 0 2px #ffcf7a, 0 0 26px rgba(255, 200, 110, .8); transform: translateY(-6px) scale(1.06); }
+.dcard.aim-hover, .godhud.aim-hover .godhud__portrait { box-shadow: 0 0 0 3px #ff3a2a, 0 0 40px rgba(255, 60, 40, 1); transform: scale(1.08); }
+.field--me .dcard:not(.unprepared) { cursor: grab; }
+@keyframes aim-flow { to { stroke-dashoffset: -23; } }
+.reduce-motion .aim-arrow__line { animation: none; }
+
+/* Inspeção: a arte já é a carta impressa inteira (proporção 1,4); mostra sem cortar e sem repetir nome/custo. */
+.inspector .dcard--xl { flex: none; width: 260px; height: 364px; }
+.inspector .dcard--xl .dcard__art[style] { background-size: 100% 100%; background-position: center; }
+
+
+/* Setas de intenção: translúcidas, fixas enquanto o Strike ou a cadeia esperam resolver. */
+.intent-arrows { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 30; pointer-events: none; overflow: visible; }
+.intent path { fill: none; stroke-width: 5; stroke-linecap: round; stroke-dasharray: 12 8; opacity: .55; animation: aim-flow .9s linear infinite; }
+.intent circle { fill: none; stroke-width: 2; opacity: .5; animation: intent-pulse 1.4s ease-in-out infinite; }
+.intent text { font: 700 12px/1 system-ui, sans-serif; letter-spacing: .08em; text-anchor: middle; paint-order: stroke; stroke: rgba(4, 6, 20, .85); stroke-width: 4px; }
+.intent--strike path, .intent--strike circle { stroke: #ff5a40; } .intent--strike text, .ih--strike { fill: #ff8a70; }
+.intent--spell path, .intent--spell circle { stroke: #c79bff; } .intent--spell text, .ih--spell { fill: #dcc2ff; }
+.intent--source path, .intent--source circle { stroke: #7fc8ff; } .intent--source text, .ih--source { fill: #b8e2ff; }
+.ih { opacity: .7; }
+@keyframes intent-pulse { 50% { opacity: .15; r: 28; } }
+.reduce-motion .intent path, .reduce-motion .intent circle { animation: none; }
+
+/* God: Attack no HUD e painel de status (clique direito). */
+.godhud__atk { display: flex; align-items: center; gap: 3px; padding: 2px 9px; border-radius: 14px; font: 600 15px/1 Georgia, serif; color: #ffd9a0; background: rgba(60, 20, 10, .65); border: 1px solid rgba(255, 170, 110, .45); }
+.godhud__atk b { font-size: 20px; color: #fff3e0; }
+.godcard { flex: none; display: grid; gap: 10px; justify-items: center; width: 200px; }
+.godcard .godhud__portrait { width: 140px; }
+.godstats { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; width: 100%; }
+.godstat { display: grid; gap: 1px; padding: 6px 8px; border-radius: 8px; background: rgba(255, 255, 255, .05); border: 1px solid rgba(227, 194, 122, .25); text-align: center; }
+.godstat small { font: 600 10px/1.2 system-ui; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.godstat b { font: 600 22px/1.1 Georgia, serif; color: var(--gold-hi); } .godstat b span { font-size: 13px; color: var(--muted); }
+.godstat em { font: 11px/1.2 system-ui; font-style: normal; color: #9fb4d8; }
+
+/* Tempo dentro do relógio de fogo: disco central sobre o mostrador. */
+.zclock .zclock__time { position: absolute; z-index: 3; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 34%; aspect-ratio: 1; padding: 0; border: 1px solid rgba(227, 194, 122, .55); border-radius: 50%;
+  display: grid; place-content: center; justify-items: center; gap: 2px; background: radial-gradient(circle, rgba(16, 20, 52, .96) 55%, rgba(8, 10, 30, .96)); box-shadow: 0 0 14px rgba(0, 0, 0, .7), inset 0 0 10px rgba(227, 194, 122, .18); pointer-events: none; }
+.zclock .zclock__time b { font: 500 calc(var(--r) * .27)/1 Georgia, serif; color: #f6efdc; letter-spacing: .01em; text-shadow: 0 0 8px rgba(120, 170, 255, .45); }
+.zclock .zclock__time small { font: 600 calc(var(--r) * .085)/1 system-ui, sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #c9c3dc; white-space: nowrap; }
+.zclock .zclock__dial::after { display: none; }
+.zclock.urgent .zclock__time { border-color: #ff8a60; } .zclock.urgent .zclock__time b { color: #ffd2c0; }
+@media (max-width: 760px) { .zclock .zclock__time { display: grid; } }
+
+/* Mão inicial: todas as cartas numa linha só, ocupando 100% da largura (sem quebrar); a altura da tela limita o tamanho */
+.overlay.mulligan { grid-template-columns: 100%; justify-content: stretch; }
+.overlay.mulligan .mulligan__cards { flex-wrap: nowrap; width: 100%; max-width: none; gap: clamp(6px, 1vw, 16px); }
+.overlay.mulligan .mull { flex: 1 1 0; min-width: 0; max-width: calc((100vh - 300px) * 150 / 210); }
+.overlay.mulligan .mull .dcard.dcard--lg { width: 100%; height: auto; aspect-ratio: 150 / 210; }
+
+/* Carta do Forge desenhada ao vivo (art-full, shared/live-card.js): ATK e HP no próprio número impresso, maiores no jogo;
+   verde com bônus, vermelho com dano ou redução. */
+.dcard.art-full { background: none; }
+.dcard.art-full > .live-card { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: inherit; }
+.dcard.art-full .live-card__state, .dcard.art-full .live-card__damage, .dcard.art-full .live-card__armor-status { display: none; }
+.dcard.art-full .lc-gem b[data-stat] { font-size: 15cqw !important; font-style: normal; -webkit-text-stroke: .1em #120a04; transition: color .25s, transform .25s; }
+.dcard.art-full .lc-gem b[data-stat="power"] { color: #7fd8ff; text-shadow: 0 0 .5cqw #000, 0 0 3cqw #2aa8ff, 0 0 6cqw #1a7bff; }
+.dcard.art-full .lc-gem b[data-stat="hp"] { color: #ffb347; text-shadow: 0 0 .5cqw #000, 0 0 3cqw #ff7a1a, 0 0 6cqw #ff5a00; }
+.dcard.art-full .lc-gem b[data-trend="up"] { color: #8dffa6; text-shadow: 0 0 .5cqw #000, 0 0 3cqw #3ad06a, 0 0 6cqw #1fbf4f; }
+.dcard.art-full .lc-gem b[data-trend="down"] { color: #ff5a4a; text-shadow: 0 0 .5cqw #000, 0 0 3cqw #ff2a1a, 0 0 6cqw #d00; transform: scale(1.1); }
+/* Campo: cartas 20% maiores que a base da mesa. */
+.olympus .field { --card-w: calc(clamp(70px, 6.2vw, 110px) * 1.2); --card-h: calc(var(--card-w) * 1.4); }
+@media (max-width: 760px) { .olympus .field { --card-w: 65px; } }
+/* Clique direito: a carta real grande no centro; clique, clique direito ou Esc fecha. */
+.bigcard { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; background: rgba(4, 6, 14, .72); backdrop-filter: blur(3px); cursor: zoom-out; animation: bigcard-in .18s ease-out; }
+.bigcard .dcard--big { --card-w: min(62vh, 92vw); width: var(--card-w); height: calc(var(--card-w) * 1.405); border-radius: 18px; transform: none; filter: none; box-shadow: 0 20px 60px rgba(0, 0, 0, .8), 0 0 40px rgba(232, 196, 106, .25); }
+@keyframes bigcard-in { from { opacity: 0; transform: scale(.94); } }
+@media (prefers-reduced-motion: reduce) { .bigcard { animation: none; } }
+.dcard:not(.art-full) .dcard__stats .hurt { color: #ffb0a0; background: #a3221a; }
+
+/* Cadeia: cada item diz a carta, a habilidade, o efeito impresso e o alvo. */
+.priority .chain li { display: flex; gap: 6px; align-items: flex-start; padding: 4px 0; border-top: 1px solid rgba(197, 140, 255, .18); }
+.priority .chain li:first-child { border-top: 0; }
+.priority .chain li b { flex: none; margin-top: 2px; }
+.chain__body { display: grid; gap: 1px; min-width: 0; }
+.chain__body strong { font: 600 13px/1.25 Georgia, serif; }
+.chain__body em { font: italic 11px/1.3 system-ui, sans-serif; color: #e6dcff; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.chain__body small { font-size: 10px; letter-spacing: .04em; color: var(--muted); }
+
+/* Zonas junto ao God: deck como pilha de versos (estilo Arena), Tartarus e Void com contagem. */
+.godzones { display: flex; align-items: center; gap: 12px; margin-top: 4px; }
+.zdeck { position: relative; display: flex; align-items: center; gap: 8px; }
+.zdeck__back { position: relative; width: clamp(26px, 2.3vw, 34px); aspect-ratio: 150 / 210; border-radius: 3px; border: 1px solid #c9a24e;
+  background: radial-gradient(circle at 50% 40%, rgba(120, 90, 255, .55), transparent 60%), url('../../LOGO/logo-web.webp') center / 82% auto no-repeat, linear-gradient(160deg, #1b1f4a, #07081c); transform: translate(-3px, -3px); }
+.zdeck b, .zpile b { font: 600 clamp(15px, 1.25vw, 19px)/1 Georgia, serif; color: #f4ecd8; }
+.zdeck.is-empty .zdeck__back { opacity: .25; }
+.zpile { display: grid; grid-template-columns: auto auto; column-gap: 5px; align-items: center; padding-left: 12px; border-left: 1px solid rgba(255, 255, 255, .15); }
+.zpile small { grid-column: 1 / -1; font: 600 8px/1.2 system-ui, sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #9aa3c3; }
+.ico-void { width: 16px; height: 16px; border-radius: 50%; background: radial-gradient(circle, #000 35%, #7a4dff 55%, transparent 72%); box-shadow: 0 0 6px rgba(140, 100, 255, .7); }
+.zpile--fatigue { color: var(--red); font: 700 13px/1 system-ui; }
+
+/* Layout do autor (28/10/2026): quatro faixas no centro — Cosmo do oponente, Battlefield do oponente,
+   seu Battlefield, seu Cosmo —; as faixas de Cosmo mais estreitas, entre os HUDs dos Gods.
+   Cada jogador agrupado no seu canto esquerdo: God, Cosmo (hexágono + Latent) e zonas (deck, Tartarus, Void). */
+@media (min-width: 761px) {
+  .arena-field { top: 10.5%; bottom: 15.4%; left: 10.3%; right: 7.6%; grid-template-rows: 13fr 23fr auto 23fr 13fr; align-items: stretch; }
+  .arena-field > * { min-height: 0; }
+  .arena-field .field { display: flex; align-items: center; justify-content: center; }
+  .arena-field .lane { margin: 0 14%; }
+  .midline { align-self: center; }
+  .cosmo--opp { left: 22px; top: calc(clamp(74px, 7.4vw, 118px) + 22px); transform: scale(.8); flex-direction: column; }
+  .cosmo--opp .cosmo__flames { flex-direction: column; border-radius: 0 0 16px 16px; }
+  .cosmo--me { top: auto; bottom: calc(clamp(74px, 7.4vw, 118px) + 22px); transform: scale(.8); transform-origin: left bottom; flex-direction: column-reverse; }
+  .cosmo--me .cosmo__flames { border-radius: 16px 16px 0 0; }
+}
+
+/* Painel do God: a carta do God à esquerda; status e poderes em blocos à direita. Cada poder tem cor do tipo
+   (Divine Power dourado, Awaken azul, Ultimate violeta); no hover, uma aura de cosmo percorre o bloco. */
+.godpanel-wrap { cursor: default; }
+.godpanel { position: relative; display: grid; grid-template-columns: minmax(220px, 34vh) minmax(320px, 560px); gap: 28px; align-items: start; max-height: 90vh; padding: 26px 30px;
+  border-radius: 20px; border: 1px solid rgba(232, 196, 106, .45); background: radial-gradient(120% 90% at 0% 0%, rgba(120, 90, 255, .18), transparent 60%), linear-gradient(160deg, rgba(14, 16, 44, .97), rgba(5, 6, 20, .97));
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .7), 0 0 60px rgba(232, 196, 106, .15), inset 0 1px 0 rgba(255, 255, 255, .06); }
+.godpanel.is-awaken { border-color: rgba(130, 200, 255, .7); box-shadow: 0 30px 80px rgba(0, 0, 0, .7), 0 0 70px rgba(110, 190, 255, .35); }
+.godpanel__card { position: relative; width: 100%; aspect-ratio: 1488 / 2091; border-radius: 14px; overflow: hidden; box-shadow: 0 16px 40px rgba(0, 0, 0, .7), 0 0 40px rgba(232, 196, 106, .25); }
+.godpanel__card > .live-card { position: absolute; inset: 0; width: 100%; height: 100%; }
+.godpanel__portrait { position: absolute; inset: 0; background: #111 center top / cover no-repeat; }
+.godpanel__info { display: grid; gap: 14px; min-width: 0; max-height: calc(90vh - 52px); overflow: auto; padding-right: 4px; }
+.godpanel header h2 { margin: 0; font: 600 34px/1 Georgia, serif; letter-spacing: .06em; color: var(--gold-hi); text-shadow: 0 0 18px rgba(232, 196, 106, .45); }
+.godpanel header small { font: 13px/1.4 system-ui, sans-serif; color: #9fb4d8; }
+.godpanel__stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.gstat { display: grid; gap: 2px; padding: 8px 10px; border-radius: 10px; background: rgba(255, 255, 255, .04); border: 1px solid rgba(255, 255, 255, .1); }
+.gstat small { font: 700 9px/1.2 system-ui; letter-spacing: .16em; text-transform: uppercase; color: #8d97b8; }
+.gstat b { font: 600 22px/1.1 Georgia, serif; color: #f4ecd8; } .gstat b span { font-size: 13px; color: #8d97b8; }
+.gstat em { font: 10px/1.2 system-ui; font-style: normal; color: #8d97b8; }
+.gstat.is-on b { color: var(--gold-hi); }
+.gstat--soul i { display: block; height: 3px; border-radius: 2px; background: rgba(255, 255, 255, .12); overflow: hidden; } .gstat--soul u { display: block; height: 100%; background: linear-gradient(90deg, #e0213a, #ffb070); }
+.godpanel__powers { display: grid; gap: 10px; }
+.power { --c: 232, 196, 106; position: relative; display: grid; grid-template-columns: 40px 1fr auto; column-gap: 12px; row-gap: 6px; align-items: center; width: 100%; padding: 12px 14px; text-align: left; color: #e8e2d4;
+  border-radius: 12px; border: 1px solid rgba(var(--c), .35); background: linear-gradient(120deg, rgba(var(--c), .12), rgba(10, 12, 32, .6) 55%); cursor: pointer; overflow: hidden; isolation: isolate;
+  transition: transform .2s ease, border-color .2s, box-shadow .2s; font: inherit; }
+.power--awaken { --c: 120, 190, 255; } .power--ultimate { --c: 190, 130, 255; } .power--judgment { --c: 255, 120, 90; }
+.power__icon { grid-row: span 2; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; font-size: 20px; color: rgb(var(--c));
+  background: radial-gradient(circle, rgba(var(--c), .35), rgba(var(--c), .05) 70%); box-shadow: 0 0 0 1px rgba(var(--c), .5), 0 0 16px rgba(var(--c), .35); }
+.power__head { display: grid; } .power__head strong { font: 600 16px/1.2 Georgia, serif; letter-spacing: .05em; color: rgb(var(--c)); } .power__head small { font: 700 9px/1.4 system-ui; letter-spacing: .16em; text-transform: uppercase; color: #8d97b8; }
+.power__state { justify-self: end; padding: 3px 8px; border-radius: 20px; font: 600 10px/1.2 system-ui; font-style: normal; white-space: nowrap; color: #c9d0e4; background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .12); max-width: 180px; overflow: hidden; text-overflow: ellipsis; }
+.power__text { grid-column: 2 / -1; display: grid; gap: 4px; font: 13px/1.45 system-ui, sans-serif; color: #d6d2c6; }
+.power.is-ready .power__state { color: #1a1204; background: rgb(var(--c)); border-color: transparent; box-shadow: 0 0 12px rgba(var(--c), .7); }
+.power.is-active .power__state { color: rgb(var(--c)); border-color: rgba(var(--c), .5); }
+.power.is-locked, .power.is-used { filter: saturate(.55); } .power.is-used { opacity: .55; }
+.power::before { content: ""; position: absolute; inset: -40%; z-index: -1; opacity: 0; background: conic-gradient(from 0deg, transparent 0 60%, rgba(var(--c), .55) 70%, transparent 80%); transition: opacity .25s; }
+.power::after { content: ""; position: absolute; inset: 0; z-index: -1; opacity: 0; background: radial-gradient(circle at var(--mx, 20%) 50%, rgba(var(--c), .35), transparent 55%); transition: opacity .25s; }
+.power:hover { transform: translateY(-2px) scale(1.01); border-color: rgba(var(--c), .9); box-shadow: 0 8px 26px rgba(0, 0, 0, .5), 0 0 26px rgba(var(--c), .45); }
+.power:hover::before { opacity: 1; animation: power-aura 2.4s linear infinite; } .power:hover::after { opacity: 1; }
+.power:hover .power__icon { animation: power-pulse 1s ease-in-out infinite; }
+.power.is-ready:hover .power__icon { box-shadow: 0 0 0 2px rgb(var(--c)), 0 0 30px rgba(var(--c), .9); }
+@keyframes power-aura { to { transform: rotate(360deg); } }
+@keyframes power-pulse { 50% { transform: scale(1.12); box-shadow: 0 0 0 1px rgba(var(--c), .8), 0 0 26px rgba(var(--c), .8); } }
+.godpanel__close { position: absolute; top: 10px; right: 14px; width: 30px; height: 30px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, .2); background: rgba(0, 0, 0, .4); color: #e8e2d4; font: 20px/1 system-ui; cursor: pointer; }
+.reduce-motion .power:hover::before, .reduce-motion .power:hover .power__icon { animation: none; }
+@media (max-width: 760px) { .godpanel { grid-template-columns: 1fr; padding: 18px; } .godpanel__card { width: 50%; justify-self: center; } .godpanel__stats { grid-template-columns: repeat(2, 1fr); } }
+
+/* Leitura: degradê preto de baixo para cima atrás do texto de regras (só sobre a arte; moldura e textos ficam acima). */
+.dcard.art-full .live-card__illustration::after, .godpanel__card .live-card__illustration::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(to top, rgba(0, 0, 0, .9) 0%, rgba(0, 0, 0, .78) 30%, rgba(0, 0, 0, .35) 48%, transparent 62%); }
+
+/* Faixa de fases: logo acima do End Turn, mesma largura; turno de quem, fases do turno (atual acesa) e janela de resposta. */
+.midline { height: 10px; }
+.phasebar { width: 100%; display: grid; gap: 6px; padding: 8px 14px 10px; border-radius: 18px; border: 1px solid rgba(232, 196, 106, .45);
+  background: linear-gradient(180deg, rgba(30, 22, 8, .92), rgba(10, 8, 4, .92)); box-shadow: 0 0 0 3px rgba(0, 0, 0, .5), inset 0 0 18px rgba(232, 196, 106, .08); }
+.phasebar__turn { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.phasebar__turn strong { font: 600 clamp(16px, 1.35vw, 21px)/1.1 Georgia, serif; letter-spacing: .04em; color: #f4e7c4; }
+.phasebar__turn small { font: 600 10px/1 system-ui, sans-serif; letter-spacing: .14em; text-transform: uppercase; color: #a89a78; }
+.phasebar.is-theirs .phasebar__turn strong { color: #ffb4a0; }
+.phasebar__steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin: 0; padding: 0; list-style: none; }
+.phasebar__steps li { position: relative; padding: 5px 0 4px; text-align: center; border-radius: 6px; font: 700 9px/1 system-ui, sans-serif; letter-spacing: .1em; text-transform: uppercase;
+  color: #7c7462; background: rgba(255, 255, 255, .04); border: 1px solid rgba(255, 255, 255, .06); }
+.phasebar__steps li.done { color: #b9ab86; }
+.phasebar__steps li.on { color: #1a1204; background: linear-gradient(180deg, #ffe7a8, #d9a94a); border-color: transparent; box-shadow: 0 0 12px rgba(255, 200, 110, .7); }
+.phasebar.is-theirs .phasebar__steps li.on { background: linear-gradient(180deg, #ffc2b0, #d95a3a); box-shadow: 0 0 12px rgba(255, 120, 90, .7); }
+.phasebar__window { text-align: center; font: 600 11px/1.2 system-ui, sans-serif; letter-spacing: .06em; color: #d9c4ff; padding: 3px 0 0; border-top: 1px solid rgba(197, 140, 255, .3); }
+
+/* Janela de resposta: glow na borda do jogador que tem prioridade (rodapé = você, teto = oponente). */
+.priority-glow { position: fixed; left: 0; right: 0; height: 22vh; z-index: 2; pointer-events: none; animation: prio-in .35s ease-out, prio-pulse 1.8s ease-in-out .35s infinite; }
+.priority-glow--me { bottom: 0; background: linear-gradient(to top, rgba(190, 140, 255, .95), rgba(150, 100, 255, .45) 18%, rgba(120, 80, 255, .15) 45%, transparent); box-shadow: inset 0 -4px 0 #e6d4ff, inset 0 -14px 24px rgba(200, 160, 255, .9); mix-blend-mode: screen; }
+.priority-glow--opp { top: 0; background: linear-gradient(to bottom, rgba(255, 130, 90, .95), rgba(255, 100, 70, .45) 18%, rgba(255, 90, 60, .15) 45%, transparent); box-shadow: inset 0 4px 0 #ffd6c4, inset 0 14px 24px rgba(255, 150, 110, .9); mix-blend-mode: screen; }
+@keyframes prio-in { from { opacity: 0; } }
+@keyframes prio-pulse { 50% { opacity: .65; } }
+.reduce-motion .priority-glow { animation: prio-in .35s ease-out; }

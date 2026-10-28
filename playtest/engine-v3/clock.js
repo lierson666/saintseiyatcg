@@ -56,8 +56,9 @@ export function clockExpired(clock, now) {
   return r && clockRemaining(clock, r.key, now).total <= 0 ? r.key : null;
 }
 
-// Mapeamento aprovado pelo autor (28/10/2026): 1 tocha acesa por 60 s restantes, arredondando para cima, teto 12.
-export const torchesLit = seconds => Math.max(0, Math.min(12, Math.ceil(seconds / 60)));
+// Mapeamento do autor (28/10/2026, revisto): 1 tocha acesa por 15 s restantes, arredondando para cima, teto 12.
+export const TORCH_SECONDS = 15;   // 12 tochas dividem os 3 minutos do relógio (G3-028, autor 28/10/2026)
+export const torchesLit = seconds => Math.max(0, Math.min(12, Math.ceil(seconds / TORCH_SECONDS)));
 
 // O que o timeout faz (G3-027). Escolha obrigatória: `timeoutAutoChoice` (G3-030).
 export function timeoutAction(state, pending = null) {
