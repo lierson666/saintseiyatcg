@@ -15,7 +15,7 @@ import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, cloc
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {createDirector} from './director.js?v=3';
 import {createAI} from './ai.js?v=2';
-import {renderLiveCard} from '../../shared/live-card.js?v=20261024-4';
+import {renderLiveCard} from '../../shared/live-card.js?v=20261028-1';
 
 const $ = (s, el = document) => el.querySelector(s), $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -746,11 +746,27 @@ function showGodInspect(key) {
   box.classList.add('show');
 }
 document.addEventListener('contextmenu', e => {
-  const el = e.target.closest?.('[data-god]');
-  if (!el) return;
+  const god = e.target.closest?.('[data-god]');
+  if (god) { e.preventDefault(); return showGodInspect(god.dataset.god); }
+  // Clique direito numa carta aberta (ou na própria Base): a carta real grande no centro da tela.
+  const base = e.target.closest?.('.dcard[data-base]'), el = e.target.closest?.('.dcard[data-uid]:not(.dcard--back)');
+  const uid = base && owner(base.dataset.base) === viewer() ? base.dataset.base : el?.dataset.uid;
+  if (!uid) return;
   e.preventDefault();
-  showGodInspect(el.dataset.god);
+  showBigCard(uid);
 });
+function showBigCard(uid) {
+  closeBigCard();
+  hideInspect();
+  const box = document.createElement('div');
+  box.id = 'bigcard';
+  box.className = 'bigcard';
+  box.innerHTML = cardFace(uid, {size: 'dcard--big', field: S().players[owner(uid)].battlefield.includes(uid)});
+  box.addEventListener('pointerdown', closeBigCard);
+  box.addEventListener('contextmenu', e => { e.preventDefault(); closeBigCard(); });
+  document.body.append(box);
+}
+function closeBigCard() { $('#bigcard')?.remove(); }
 document.addEventListener('pointerdown', e => { if (!e.target.closest?.('#inspector') && $('#inspector .godcard')) hideInspect(); });
 function hideInspect() { $('#inspector').classList.remove('show'); $$('.orb.preview').forEach(o => o.classList.remove('preview')); }
 // Prévia de pagamento: as esferas que esta carta gastaria piscam antes do clique.
@@ -893,6 +909,7 @@ document.addEventListener('pointerup', e => {
 
 document.addEventListener('keydown', e => {
   if (e.target.matches?.('input, select, textarea')) return;
+  if (e.code === 'Escape' && $('#bigcard')) return closeBigCard();
   if (pending && !director.busy) return decisionKey(e);
   if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); return primary(); }
   if (e.code === 'Escape') { closeQuick(); cancelDrag(); if (aim) endAim(null); if (mode) { mode = null; render(); } else if (settingsOpen || logOpen) { settingsOpen = logOpen = false; render(); } }

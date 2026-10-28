@@ -319,7 +319,17 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .dcard.art-full { background: none; }
 .dcard.art-full > .live-card { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: inherit; }
 .dcard.art-full .live-card__state, .dcard.art-full .live-card__damage, .dcard.art-full .live-card__armor-status { display: none; }
-.dcard.art-full .lc-gem b[data-stat] { font-size: 10cqw !important; transition: color .25s, transform .25s; }
-.dcard.art-full .lc-gem b[data-trend="up"] { color: #8dffa6; text-shadow: 0 0 .4cqw #000, 0 0 3cqw #3ad06a; }
-.dcard.art-full .lc-gem b[data-trend="down"] { color: #ff6b5a; text-shadow: 0 0 .4cqw #000, 0 0 3cqw #ff2a1a; transform: scale(1.08); }
+.dcard.art-full .lc-gem b[data-stat] { font-size: 15cqw !important; font-style: normal; -webkit-text-stroke: .1em #120a04; transition: color .25s, transform .25s; }
+.dcard.art-full .lc-gem b[data-stat="power"] { color: #ffb347; text-shadow: 0 0 .5cqw #000, 0 0 3cqw #ff7a1a, 0 0 6cqw #ff5a00; }
+.dcard.art-full .lc-gem b[data-stat="hp"] { color: #7fd8ff; text-shadow: 0 0 .5cqw #000, 0 0 3cqw #2aa8ff, 0 0 6cqw #1a7bff; }
+.dcard.art-full .lc-gem b[data-trend="up"] { color: #8dffa6; text-shadow: 0 0 .5cqw #000, 0 0 3cqw #3ad06a, 0 0 6cqw #1fbf4f; }
+.dcard.art-full .lc-gem b[data-trend="down"] { color: #ff5a4a; text-shadow: 0 0 .5cqw #000, 0 0 3cqw #ff2a1a, 0 0 6cqw #d00; transform: scale(1.1); }
+/* Campo: cartas 20% maiores que a base da mesa. */
+.olympus .field { --card-w: calc(clamp(70px, 6.2vw, 110px) * 1.2); --card-h: calc(var(--card-w) * 1.4); }
+@media (max-width: 760px) { .olympus .field { --card-w: 65px; } }
+/* Clique direito: a carta real grande no centro; clique, clique direito ou Esc fecha. */
+.bigcard { position: fixed; inset: 0; z-index: 120; display: grid; place-items: center; background: rgba(4, 6, 14, .72); backdrop-filter: blur(3px); cursor: zoom-out; animation: bigcard-in .18s ease-out; }
+.bigcard .dcard--big { --card-w: min(62vh, 92vw); width: var(--card-w); height: calc(var(--card-w) * 1.405); border-radius: 18px; transform: none; filter: none; box-shadow: 0 20px 60px rgba(0, 0, 0, .8), 0 0 40px rgba(232, 196, 106, .25); }
+@keyframes bigcard-in { from { opacity: 0; transform: scale(.94); } }
+@media (prefers-reduced-motion: reduce) { .bigcard { animation: none; } }
 .dcard:not(.art-full) .dcard__stats .hurt { color: #ffb0a0; background: #a3221a; }

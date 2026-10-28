@@ -54,7 +54,7 @@ function renderPsdCard(card,{src,stage,hp,power,keywords,damage,rules,equipment,
     if(el.kind==='frame')out+=pack.frame.map(k=>P[k]?`<img class="lc-piece" src="${escape(PSD.src(k))}" alt="" style="${pct(P[k].x,P[k].y,P[k].w,P[k].h)}${P[k].blend?`;mix-blend-mode:${P[k].blend}`:''}">`:'').join('');
     else if(el.kind==='piece')out+=piece(el.piece,el.rect||at(el.piece,el));
     else if(el.kind==='cost'&&has(card.custo)&&!['God','Domain'].includes(card.tipo)){
-      const key=card.unidade_custo==='base_cosmo'?'athena/gem_cost_base':'athena/gem_cost',p=P[key];
+      const key=card.cosmoble?'athena/gem_cost':'athena/gem_cost_base',p=P[key];
       out+=gem(key,[el.x-p.w/2,el.y-p.h/2,p.w,p.h],card.custo,'','live-card__cost',el.size);
     }
     else if(el.kind==='symbol'&&P[`symbols/${f}`])out+=`<img class="lc-piece lc-symbol" src="${escape(PSD.src(`symbols/${f}`))}" alt="${escape(card.faccao)}" style="${pct(...el.rect)}">`;
@@ -89,7 +89,7 @@ export function renderLiveCard(card,{stats=null,instance=null,art=null,compact=f
   const src=art||illustration(card),stage=card.estagios?.[instance?.stage||0],hp=stats?.hp??card.vida??card.resistance;
   const power=stats?.power??card.power,keywords=stats?.keywords??card.keywords_en??[],damage=stats?.damage??instance?.damage??0;
   const ownerName=id=>id.split('-').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
-  const rules=presentationRules(card).map(t=>{for(const k of keywords){const prefix=k+'.';if(t.toLowerCase().startsWith(prefix.toLowerCase()))t=t.slice(prefix.length).trim();}return t;}).filter(Boolean),equipment=isEquipment(card),equip=card.equipar_custo;
+  const rules=presentationRules(card).map(t=>{for(const k of keywords){const prefix=k+'.';if(t.trim().toLowerCase()===k.toLowerCase())return '';if(t.toLowerCase().startsWith(prefix.toLowerCase()))t=t.slice(prefix.length).trim();}return t;}).filter(Boolean),equipment=isEquipment(card),equip=card.equipar_custo;
   const ownerAlready=rules.some(t=>/Owner:/i.test(t)),resonanceAlready=rules.some(t=>/Resonance\s*[—-]/i.test(t));
   if(PSD){
     const ownerLine=[card.donos?.length&&!ownerAlready?`Owner: ${card.donos.map(ownerName).map(escape).join(' / ')}`:'',card.ressonancias?.length&&!resonanceAlready?`Resonance: ${card.ressonancias.map(r=>escape(ownerName(r.personagem_id))).join(' / ')}`:''].filter(Boolean).join('<br>');
