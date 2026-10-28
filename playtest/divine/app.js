@@ -978,7 +978,7 @@ function previewCost(uid) {
   $$(`[data-bank="${key}"] [data-bank-unit="${c.cost.unit}"] .orb.ready`).slice(-c.cost.amount).forEach(o => o.classList.add('preview'));
 }
 
-// Durante o arraste: CAST cobre a metade de baixo do campo; COSMO BASE acende na área das Bases, à esquerda do God.
+// Durante o arraste: CAST cobre o campo inteiro (autor, 28/10/2026); COSMO BASE acende na área das Bases, à esquerda do God.
 // A zona só acende se a ação for possível agora; a engine ainda decide ao soltar.
 function showDragZones(uid) {
   const key = owner(uid), field = $('.arena-field');
@@ -998,7 +998,6 @@ function dragZoneAt(uid, x, y) {
   const r = $('.arena-field')?.getBoundingClientRect(), key = owner(uid), b = $('.band--me .lane')?.getBoundingClientRect();
   if (b && x >= b.left && x <= b.right && y >= b.top && y <= b.bottom) return canBase(key, uid) ? 'cosmo' : null; // área das Bases, à esquerda do God
   if (!r || x < r.left || x > r.right || y < r.top || y > r.bottom) return null;
-  if (y < r.top + r.height / 2) return null; // as zonas ficam só na metade de quem joga, embaixo
   return playableReason(key, uid) ? null : 'cast';
 }
 // Arrastar da mão: soltar no campo joga; soltar num Devotee seu escolhe o portador/alvo; soltar na área de Cosmo vira Base.

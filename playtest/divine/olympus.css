@@ -752,3 +752,6 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .loadout__gear { display: flex; flex-wrap: wrap; gap: 10px; }
 .loadout__gear .dcard { --card-w: 120px; width: 120px; height: 168px; }
 .loadout__none { margin: 14px 0 0; opacity: .6; }
+
+/* CAST brilha no campo inteiro durante o arraste (autor, 28/10/2026); COSMO BASE fica na faixa do God. */
+.drag-zones { inset: 0; grid-template-rows: 1fr; }
