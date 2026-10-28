@@ -13,7 +13,7 @@ import {loadPoseidonCatalog, officialDeckErrors} from '../shared/poseidon-v6.js'
 import {createMatch, mulligan} from '../playtest/engine-v3/match.js';
 import {startTurn, endTurn, passAll, pass, addSeal, destroyDevotee, placeBase, checkInvariants, NotSpecified, RuleError} from '../playtest/engine-v3/core.js';
 import {declareStrike, strikeTargets} from '../playtest/engine-v3/strike.js';
-import {playDevotee} from '../playtest/engine-v3/play.js';
+import {playDevotee, duplicateCharacter} from '../playtest/engine-v3/play.js';
 import {refreshAwaken, announceGreatFlood, greatFloodBlock} from '../playtest/engine-v3/gods.js';
 import {timeoutAutoChoice} from '../playtest/engine-v3/clock.js';
 
@@ -281,6 +281,7 @@ test('Duelo FIXTURE Athena × Poseidon: partida reproduzível até o fim, Water 
       const base = p.hand.find(uid => cards.get(m.objects[uid].cardId).cosmoble);
       if (base) placeBase(s, key, base, cards.get(m.objects[base].cardId));
       for (const uid of [...p.hand].filter(u => cards.get(m.objects[u].cardId).kind === 'Devotee').sort()) {
+        if (duplicateCharacter(s, ctx, key, uid)) continue; // bot não troca um personagem por ele mesmo (§63)
         try { playDevotee(s, ctx, key, uid); passAll(s); } catch (e) { if (!(e instanceof RuleError)) throw e; }
       }
       for (const uid of p.battlefield.filter(u => cards.get(m.objects[u].cardId).kind === 'Devotee')) {

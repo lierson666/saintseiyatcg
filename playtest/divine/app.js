@@ -14,7 +14,7 @@ import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudg
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {createDirector} from './director.js?v=3';
-import {createAI} from './ai.js?v=1';
+import {createAI} from './ai.js?v=2';
 
 const $ = (s, el = document) => el.querySelector(s), $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -29,7 +29,7 @@ const GOD_ART = {'god-athena': '../../CARDS/ATHENA/ATHENA.png', 'god-poseidon': 
 // Mensagens da engine (internas, em português) viram texto curto para o jogador.
 const WHY = {'G3-005': 'Athena Exclamation needs three Prepared Saints with different identities and enough prepared Bases.', D206: 'Sacrifice exactly three of your Devotees, on your turn.', D1: "It's not your turn.", D4: 'Not enough prepared Cosmo Bases.', custo: 'Not enough Latent Cosmo.', P06: 'Wait for the response window to close.',
   P05: 'A Prepared Guardian must be your target.', D22: 'This Devotee already struck this turn.', P04: 'Only a Prepared Devotee can Strike.',
-  D52: 'The match is over.', '§63': 'You already control that character: one Devotee per named character.', P01: 'Finish the mulligan first.', D192: 'It must be Prepared to use {T}.', D191: 'Already used this round.', Equip: 'That Devotee cannot wear it.', alvo: 'Choose a legal target.'};
+  D52: 'The match is over.', '§63': 'Choose which version of that character to keep.', P01: 'Finish the mulligan first.', D192: 'It must be Prepared to use {T}.', D191: 'Already used this round.', Equip: 'That Devotee cannot wear it.', alvo: 'Choose a legal target.'};
 const why = e => WHY[e.decision] || (e.topic ? `Not in Alpha 0.1: ${e.topic}` : "That can't be done right now.");
 
 const SETTINGS_KEY = 'ssTcgOlympusArena';
@@ -88,7 +88,6 @@ function playableReason(key, uid) {
     const cheapest = Math.min(...devs.map(d => c.autoEquip.some(n => n.toUpperCase() === info(d).name.toUpperCase()) ? c.cost.amount : c.equip ? c.equip.amount : Infinity));
     return readyBases(key) >= cheapest ? null : `Needs ${cheapest === Infinity ? '—' : cheapest} prepared Base Cosmo.`;
   }
-  if (c.kind === 'Devotee' && duplicateCharacter(S(), ctx, key, uid)) return `You already control ${c.name.split(',')[0]}: one Devotee per named character.`;
   return affordable(key, c.cost) ? null : `Needs ${c.cost.amount} prepared Base Cosmo.`;
 }
 // D4: uma Base Cosmoble por turno, no próprio turno, com a janela fechada. Motivo em texto para o jogador.
@@ -205,7 +204,10 @@ function candidates(step, key) {
 function playFromHand(key, uid) {
   const c = info(uid), n = num(uid), reason = playableReason(key, uid);
   if (reason) return warn(reason);
-  if (c.kind === 'Devotee') return begin('play', key, uid, STEPS[n] || [], ch => playDevotee(S(), ctx, key, uid, ch));
+  if (c.kind === 'Devotee') {
+    if (duplicateCharacter(S(), ctx, key, uid)) warn(`You already control ${c.name.split(',')[0]}: after it enters, choose which version stays.`);
+    return begin('play', key, uid, STEPS[n] || [], ch => playDevotee(S(), ctx, key, uid, ch));
+  }
   if (c.kind === 'Equipment') {
     const steps = [{key: 'bearer', pick: 'devotee', label: `Choose who wears ${c.name}`}];
     if (n === '019') steps.push({key: 'target', pick: 'devotee', optional: true, label: 'Pegasus God Cloth: which Devotee gets +3/+3 (if your God is behind)?'});
@@ -980,7 +982,7 @@ function watchEvents() {
 // ---------- Oponente IA (settings.ai: 'B' ou 'none') ----------
 // A IA só escolhe; cada ação passa pela engine 3.0 como a do humano (mesmo act/reply, mesmas regras e animações).
 const ai = createAI({
-  S, info, num, known: uid => !!ctx.objects[uid], candidates, playableReason, canBase, STEPS,
+  S, info, num, known: uid => !!ctx.objects[uid], duplicate: (key, uid) => !!duplicateCharacter(S(), ctx, key, uid), candidates, playableReason, canBase, STEPS,
   hp: uid => hpOf(S(), ctx, uid) - (S().units[uid]?.damage || 0), atk: uid => atkOf(S(), ctx, uid), isSaint: uid => isSaint(ctx, uid),
   strikeTargets: uid => strikeTargets(S(), ctx, uid), ultimateBlock: (key, trio) => ultimateBlock(S(), ctx, key, trio), greatFloodBlock: key => greatFloodBlock(S(), key),
   placeBase, playDevotee: (key, uid, ch) => playDevotee(S(), ctx, key, uid, ch), playEquipment: (key, uid, bearer, ch) => playEquipment(S(), ctx, key, uid, bearer, ch),

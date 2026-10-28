@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-28 — §63 Deck, identidade, mulligan, Gods e Domains — regra de personagem nomeado
+
+- **Antes:** "Não permitir jogar da mão uma segunda versão de personagem que já controla"; a escolha de qual manter só valia para duplicidade criada por efeito.
+- **Depois:** a segunda versão pode ser jogada da mão normalmente (paga custo; habilidades de entrada valem). Em qualquer duplicidade, o controlador escolhe qual manter; as outras vão ao Tartarus sem ser destruição.
+- **Motivo:** decisão do autor em 28/10/2026, no playtest do Olympus Arena (modelo de regra de lendário).
+- **Pendências:** engine 3.0, HUD e IA ajustados na mesma data; engine 2.x não foi alterada.
+
 ## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — G3-036, Strike anulado
 
 - **Seção:** `docs/alpha-0.1/GODS-3.0-SUPPLEMENT.md`, registro G3-036 (complementa P04/P06).

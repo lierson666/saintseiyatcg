@@ -181,14 +181,21 @@ test('Moment do ativo abre janela; 053 é Technique (autor, 28/10/2026)', () => 
   assert.deepEqual([s.window, s.players.A.tartarus.includes(other)], [null, true], 'Sorcery: resolve sem janela');
 });
 
-test('Guia §63: segunda versão de personagem nomeado que já controla não sai da mão; genérico pode repetir', () => {
+test('Guia §63 (autor, 28/10/2026): segunda versão sai da mão, paga, entra e o controlador escolhe quem fica; genérico repete', () => {
   const {s, ctx, toHand, bases, field} = setup();
-  field('A', '021'); // Eagle Marin em campo
+  const old = field('A', '021'); // Eagle Marin em campo
   const marin = toHand('A', '021'), guard = toHand('A', '040'), guard2 = toHand('A', '040');
   bases('A', 10);
   startTurn(s);
-  assert.throws(() => playDevotee(s, ctx, 'A', marin), e => e instanceof RuleError && e.decision === '§63');
-  assert.ok(s.players.A.hand.includes(marin), 'recusa não gasta nem move a carta');
+  const asked = [];
+  ctx.decide = (player, q) => { asked.push(q); return marin; }; // fica a nova
+  const ready = s.players.A.bases.filter(b => b.prepared).length;
+  playDevotee(s, ctx, 'A', marin);
+  assert.equal(s.players.A.bases.filter(b => b.prepared).length, ready - cards.get('athena-v6-021').cost.amount, 'pagou o custo');
+  assert.deepEqual(asked.map(q => [q.decision, q.choose, q.options]), [['§63', 'keep', [old, marin]]]);
+  assert.ok(s.players.A.battlefield.includes(marin) && !s.players.A.battlefield.includes(old));
+  assert.ok(s.players.A.tartarus.includes(old));
+  ctx.decide = () => { throw new Error('genérico não pergunta'); };
   playDevotee(s, ctx, 'A', guard); playDevotee(s, ctx, 'A', guard2); // Sanctuary Guard: genérico
   assert.equal(s.players.A.battlefield.filter(u => u.includes(':040:')).length, 2);
 });

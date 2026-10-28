@@ -14,7 +14,7 @@ import {STEPS} from '../playtest/choices-v3.js';
 import {createMatch, mulligan, seeded} from '../playtest/engine-v3/match.js';
 import {startTurn, endTurn, pass, placeBase, spellCategory, checkInvariants, NotSpecified, RuleError} from '../playtest/engine-v3/core.js';
 import {declareStrike, strikeTargets, keywordsOf} from '../playtest/engine-v3/strike.js';
-import {playDevotee, playEquipment, playSpell} from '../playtest/engine-v3/play.js';
+import {playDevotee, playEquipment, playSpell, duplicateCharacter} from '../playtest/engine-v3/play.js';
 import {isSaint, isBronze} from '../playtest/engine-v3/effects.js';
 import {ultimateBlock, announceExclamation, greatFloodBlock, announceGreatFlood} from '../playtest/engine-v3/gods.js';
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockExpired, clockPause, clockResume, applyTimeout} from '../playtest/engine-v3/clock.js';
@@ -164,7 +164,8 @@ function turn(g) {
     if (out()) return;
     const c = card(g, uid), choice = choiceFor(g, key, uid);
     if (!choice) continue;
-    if (c.kind === 'Devotee' && act(g, () => playDevotee(s, ctx, key, uid, choice))) mark(g, 'devotee-played');
+    // Bot não troca um personagem por ele mesmo (§63 permitiria; seria só desperdício de Cosmo).
+    if (c.kind === 'Devotee' && !duplicateCharacter(s, ctx, key, uid) && act(g, () => playDevotee(s, ctx, key, uid, choice))) mark(g, 'devotee-played');
     else if (c.kind === 'Equipment') { for (const bearer of p.battlefield.filter(u => card(g, u).kind === 'Devotee')) if (act(g, () => playEquipment(s, ctx, key, uid, bearer, choice))) { mark(g, 'equipment'); break; } }
     else if (c.kind === 'Spell' && spellCategory(Number(uid.split(':')[1]))?.speed === 'sorcery' && act(g, () => playSpell(s, ctx, key, uid, choice))) mark(g, 'technique');
     if (s.window) windowLoop(g);

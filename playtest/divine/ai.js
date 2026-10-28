@@ -49,7 +49,7 @@ export function createAI(h) {
     if (god === 'god-poseidon' && !h.greatFloodBlock(key) && devotees(enemyOf(key)).length >= 2 && fresh('flood')) return {id: id('flood'), run: () => h.announceGreatFlood(key)};
     // 3–5. Cartas da mão jogáveis, da mais cara para a mais barata: Devotee, Equipment, Spell.
     const order = {Devotee: 0, Equipment: 1, Spell: 2};
-    for (const uid of hand.filter(u => !h.playableReason(key, u)).sort((a, b) => order[h.info(a).kind] - order[h.info(b).kind] || cost(b) - cost(a))) {
+    for (const uid of hand.filter(u => !h.playableReason(key, u) && !(h.info(u).kind === 'Devotee' && h.duplicate(key, u))).sort((a, b) => order[h.info(a).kind] - order[h.info(b).kind] || cost(b) - cost(a))) {
       if (!fresh(`play:${uid}`)) continue;
       const c = h.info(uid);
       if (c.kind === 'Equipment') {

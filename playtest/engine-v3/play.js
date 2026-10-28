@@ -3,7 +3,7 @@
 // (as duas aprovadas pelo autor em 28/10/2026). Moment/Technique: D194. Janela: ALPHA-P06 A.
 // `ctx`: {cards (loadCanon), objects (uid -> {owner, cardId}), attached (uid do Equipment -> uid do portador)}.
 import {RuleError, NotSpecified, assertIdle, spendBase, spellCategory, respond, emit} from './core.js';
-import {SPELLS, ABILITIES, onEnter, onCastEquipment, checkDefeats, namedCharacter} from './effects.js';
+import {SPELLS, ABILITIES, onEnter, onCastEquipment, checkDefeats, namedCharacter, enforceUniqueness} from './effects.js';
 
 // Custo impresso: Base (D4) ou Latent. Valida tudo antes de mexer no estado.
 export function payCost(state, key, cost) {
@@ -32,7 +32,7 @@ function fromHand(state, ctx, key, uid, kind) {
 const leaveHand = (state, key, uid) => { const hand = state.players[key].hand; hand.splice(hand.indexOf(uid), 1); };
 
 // `choice.target`: alvo do gatilho de entrada (Eagle Marin).
-// Personagem nomeado de `uid` que `key` já controla (§63), ou null.
+// Personagem nomeado de `uid` que `key` já controla (§63), ou null: jogar essa carta vai pedir a escolha de quem fica.
 export function duplicateCharacter(state, ctx, key, uid) {
   const who = namedCharacter(ctx, uid);
   return who && state.players[key].battlefield.some(u => u !== uid && ctx.cards.get(ctx.objects[u].cardId).kind === 'Devotee' && namedCharacter(ctx, u) === who) ? who : null;
@@ -40,14 +40,13 @@ export function duplicateCharacter(state, ctx, key, uid) {
 
 export function playDevotee(state, ctx, key, uid, choice = {}) {
   const card = sorceryFromHand(state, ctx, key, uid, 'Devotee');
-  const who = duplicateCharacter(state, ctx, key, uid);
-  if (who) throw new RuleError('§63', `${key} já controla um Devotee de ${who}`);
   payCost(state, key, card.cost);
   leaveHand(state, key, uid);
   state.players[key].battlefield.push(uid);
   state.units[uid] = {prepared: false, damage: 0, entered: state.turn}; // P02: entra Unprepared
   emit(state, 'card_played', {player: key, uid, kind: 'Devotee'});
   onEnter(state, ctx, key, uid, choice);
+  enforceUniqueness(state, ctx); // §63 (autor, 28/10/2026): pode jogar a segunda versão; o controlador escolhe quem fica
 }
 
 // Equipment (custo alternativo, autor 28/10/2026): no Devotee nomeado em Auto-Equip, paga o Casting Cost;
