@@ -15,6 +15,14 @@ export function createCursor() {
   };
 }
 
+// Decisão pendente na reconexão: quem decide recebe a pergunta inteira; o outro só sabe quem decide e o quê
+// (as opções podem ser cartas da mão ou do topo do deck, informação oculta).
+function pendingFor(pending, viewer) {
+  if (!pending) return null;
+  if (pending.player === viewer) return {...pending, options: pending.options ? [...pending.options] : undefined};
+  return {player: pending.player, kind: pending.kind, ability: pending.ability, count: pending.count};
+}
+
 // O que um jogador recebe ao reconectar: eventos depois de `lastSeq`, já filtrados pela visibilidade dele,
 // mais o resumo do estado oficial que a tela precisa para se redesenhar (sem mão nem deck do adversário).
 export function resumeFor(state, viewer, lastSeq = 0) {
@@ -24,6 +32,7 @@ export function resumeFor(state, viewer, lastSeq = 0) {
       battlefield: [...p.battlefield], tartarus: [...p.tartarus], awaken: d?.awaken ?? false, ultimateUsed: d?.ultimateUsed ?? false, judgment: d?.judgment ? {...d.judgment} : null}];
   }));
   return {round: state.round, turn: state.turn, active: state.active, victory: state.victory, window: state.window ? {priority: state.window.priority} : null,
+    pending: pendingFor(state.pending, viewer),
     chain: state.chain.map(c => ({controller: c.controller, uid: c.uid ?? null, ability: c.ability ?? null})), roundUses: [...state.roundUses], players: view,
     events: eventsFor(state, viewer, lastSeq).filter(e => e.seq > lastSeq)};
 }

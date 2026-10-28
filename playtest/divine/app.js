@@ -11,7 +11,8 @@ import {atkOf, hpOf, keywordsOf, gearOf, isSaint, isBronze, ABILITIES} from '../
 import {STEPS} from '../choices-v3.js';
 import {createScene, THEMES} from './scene.js?v=20261028-4';
 import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudgment, greatFloodBlock, announceGreatFlood, GREAT_FLOOD_COST} from '../engine-v3/gods.js';
-import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, timeoutAction, timeoutAutoChoice} from '../engine-v3/clock.js';
+import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout} from '../engine-v3/clock.js';
+import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {createDirector} from './director.js?v=3';
 
 const $ = (s, el = document) => el.querySelector(s), $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -38,6 +39,7 @@ const saveSettings = () => { try { localStorage.setItem(SETTINGS_KEY, JSON.strin
 
 let canon, cards, decks, match, ctx, scene = null, director, clock;
 let mode = null;           // escolha em andamento: {kind, key, uid, steps, i, choice, picked, options, run}
+let pending = null;        // decisão pedida pela engine no meio da resolução (decision.js): {pending, snap, answers, run, shown, picked, peek}
 let marked = new Set(), logLines = [], logOpen = false, settingsOpen = false, ending = false, inspectTimer, seenEvents = 0, drag = null;
 
 const S = () => match.state;
@@ -46,7 +48,7 @@ const num = uid => ctx.objects[uid].cardId.slice(-3);
 const other = key => S().order.find(k => k !== key);
 const owner = uid => ctx.objects[uid].owner;
 // Quem está à frente da tela: o jogador que precisa agir agora (hot-seat local).
-const viewer = () => { const s = S(); return s.setup ? s.setup[0] : s.window ? s.window.priority : s.active; };
+const viewer = () => { const s = S(); return pending ? pending.pending.player : s.setup ? s.setup[0] : s.window ? s.window.priority : s.active; };
 const say = text => { logLines.push({round: S().round, text}); if (logLines.length > 400) logLines.shift(); };
 let noticeTimer;
 function warn(text) { notice.textContent = text; notice.classList.add('show'); clearTimeout(noticeTimer); noticeTimer = setTimeout(() => notice.classList.remove('show'), 3200); }
@@ -58,10 +60,11 @@ function affordable(key, cost) {
   if (!cost) return true;
   return cost.unit === 'latent' ? S().players[key].latent >= cost.amount : readyBases(key) >= cost.amount;
 }
-const idleFor = key => { const s = S(); return !s.victory && !s.setup && !s.window && !s.chain.length && s.active === key; };
+const idleFor = key => { const s = S(); return !pending && !s.victory && !s.setup && !s.window && !s.chain.length && s.active === key; };
 function playableReason(key, uid) {
   const s = S(), c = info(uid);
   if (s.victory || s.setup) return 'The match is not running.';
+  if (pending) return 'Answer the pending decision first.';
   if (c.kind === 'Spell') {
     const cat = spellCategory(Number(num(uid)));
     if (!cat) return 'This Spell has no approved speed yet.';
@@ -83,19 +86,34 @@ const hasResponse = key => S().players[key].hand.some(u => info(u).kind === 'Spe
 
 // ---------- Execução de ações ----------
 
+// A ação e os avanços automáticos rodam dentro do protocolo de decisão: pergunta da engine sem resposta suspende tudo
+// no ponto da pergunta (modal), e a resposta continua do mesmo snapshot (decision.js), sem repetir custo nem gatilho.
 async function act(fn) {
-  if (director.busy) return;
-  const s = S(), from = s.events.length;
-  try { fn(); } catch (e) { warn(why(e)); console.debug(e); render(); return; }
-  try {
-    // Avança o que não precisa de escolha: início do turno seguinte e passes automáticos.
-    for (let guard = 0; guard < 60; guard++) {
-      if (ending && !s.window && !s.victory) { ending = false; startTurn(s); continue; }
-      if (settings.autoPass && s.window && !s.victory && !hasResponse(s.window.priority)) { pass(s, s.window.priority); continue; }
-      break;
-    }
-  } catch (e) { warn(why(e)); }
-  const events = s.events.slice(from);
+  if (director.busy || pending) return;
+  const s = S(), from = s.events.length, wasEnding = ending;
+  const run = () => {
+    ending = wasEnding;
+    fn();
+    try { autoAdvance(); } catch (e) { if (e instanceof PendingDecision) throw e; warn(why(e)); }
+  };
+  let r;
+  try { r = runDecisions(s, ctx, run); } catch (e) { ending = wasEnding; warn(why(e)); console.debug(e); render(); return; }
+  return present(r, run, from);
+}
+// Avança o que não precisa de escolha: início do turno seguinte e passes automáticos.
+function autoAdvance() {
+  const s = S();
+  for (let guard = 0; guard < 60; guard++) {
+    if (ending && !s.window && !s.victory) { ending = false; startTurn(s); continue; }
+    if (settings.autoPass && s.window && !s.victory && !hasResponse(s.window.priority)) { pass(s, s.window.priority); continue; }
+    break;
+  }
+}
+// Mostra só os eventos ainda não animados (o replay repete o prefixo já visto, idêntico) e, se houver pergunta, abre o modal.
+async function present(r, run, from) {
+  const s = S(), shown = pending && pending.shown <= s.events.length ? pending.shown : from;
+  pending = r.pending ? {...r, run, shown: s.events.length, picked: [], peek: false} : null;
+  const events = s.events.slice(shown);
   seenEvents = s.events.length;
   syncClock(events);
   render.lock = true;
@@ -103,7 +121,22 @@ async function act(fn) {
   await director.play(events);
   clockResume(clock, now());
   render.lock = false;
+  if (pending) clockHandTo(clock, pending.pending.player, now()); // G3-026: a decisão usa o relógio de quem decide
   render();
+  focusDecision();
+}
+// Resposta à decisão pendente: {value} ou {timeout: true}. Resposta recusada pela engine volta ao ponto da pergunta.
+function reply(answer) {
+  if (!pending || director.busy) return;
+  const p = pending, s = S();
+  let r;
+  try { r = resume(s, ctx, p.run, p, answer); } catch (e) {
+    warn(why(e)); console.debug(e);
+    restore(s, ctx, p.snap);
+    runDecisions(s, ctx, p.run, p.answers, p.snap);
+    return render();
+  }
+  return present(r, p.run, p.shown);
 }
 
 function begin(kind, key, uid, steps, run) {
@@ -162,6 +195,7 @@ function startStrike(uid) {
 function primary() {
   const s = S();
   if (director.busy) return director.skip();
+  if (pending) return focusDecision();
   if (mode) {
     const step = mode.steps[mode.i];
     if (step?.multi || step?.optional) return choose(null);
@@ -224,7 +258,8 @@ function syncClock(events) {
     if (e.type === 'end_phase') clockEndTurn(clock, e.player, now());
     if (e.type === 'turn_start') clockStartTurn(clock, e.player, now());
   }
-  if (s.victory || s.setup || !clock.running && !events.some(e => e.type === 'turn_start')) return;
+  // Quem decide agora tem o relógio correndo, inclusive na janela da End Phase depois do END TURN (G3-026/031).
+  if (s.victory || s.setup || !s.turn) return;
   clockHandTo(clock, s.window ? s.window.priority : s.active, now());
 }
 function updateClock() {
@@ -237,16 +272,20 @@ function updateClock() {
   const t = Math.max(0, Math.ceil(r.total)), time = $('[data-clock-time]'), label = $('[data-clock-label]');
   if (time) time.textContent = key ? `${String(Math.floor(t / 60)).padStart(2, '0')}:${String(t % 60).padStart(2, '0')}` : '--:--';
   if (label) label.textContent = !key ? 'Clock' : r.basic > 0 ? `Turn · ${key}` : `Reserve · ${key}`;
+  const dc = $('[data-decision-clock]');
+  if (dc && key) { dc.textContent = `${t}s left`; dc.classList.toggle('urgent', r.total <= 20); }
 }
-// Timeout (desligado por padrão no playtest local; Settings liga). Nunca escolhe por ninguém (G3-027).
+// Timeout (desligado por padrão no playtest local; Settings ou ?timeouts=1 ligam). G3-027: escolha opcional pendente →
+// TIMEOUT_DECLINED; obrigatória → TIMEOUT_AUTO_CHOICE (G3-030, na engine); janela → TIMEOUT_PASS_PRIORITY; fase de
+// ações → TIMEOUT_END_TURN. Uma escolha de alvo começada pela interface (mode) não é decisão da engine: é cancelada e
+// o timeout da janela ou do turno vale. Fechar o modal (View board) não é timeout.
 function tickClock() {
   updateClock();
   const s = S(), key = clock && !clock.paused && clockExpired(clock, now());
-  if (!settings.timeouts || !key || director.busy || mode || s.victory) return;
-  const code = timeoutAction(s);
-  say(`${code} (Player ${key})`);
-  if (code === 'TIMEOUT_PASS_PRIORITY') act(() => pass(s, s.window.priority));
-  else if (code === 'TIMEOUT_END_TURN') act(() => { ending = true; endTurn(s); });
+  if (!settings.timeouts || !key || director.busy || s.victory || s.setup) return;
+  if (pending) { if (pending.pending.player === key) reply({timeout: true}); return; }
+  if (mode) { mode = null; closeQuick(); }
+  act(() => { if (applyTimeout(S(), key) === 'TIMEOUT_END_TURN') ending = true; });
 }
 
 // ---------- Render ----------
@@ -343,7 +382,10 @@ function command() {
   if (s.victory) label = 'Match over';
   else if (s.setup) label = marked.size ? `Return ${marked.size}` : 'Keep Hand';
   else if (s.window) label = s.chain.length ? 'Pass · Resolve' : 'Pass';
-  const chain = s.chain.length ? `<ol class="chain">${s.chain.map(c => `<li>${esc(c.ability || (c.uid && ctx.objects[c.uid] ? info(c.uid).name : 'Triggered ability'))} <small>${c.controller}</small></li>`).reverse().join('')}</ol>` : '';
+  // Cadeia de cima para baixo: o topo resolve primeiro (LIFO, D186); gatilhos simultâneos entram em APNAP (D187).
+  // A ordem entre gatilhos simultâneos do mesmo jogador ainda não é escolha dele (GODS-3.0-SUPPLEMENT, pendência 5).
+  const chain = s.chain.length ? `<ol class="chain" aria-label="Chain, top resolves first">${s.chain.map((c, i) => `<li><b>${i + 1}</b> ${esc(c.ability || (c.uid && ctx.objects[c.uid] ? info(c.uid).name : 'Triggered ability'))} <small>Player ${c.controller}</small></li>`).reverse().join('')}</ol>
+    <small class="chain__hint">${s.chain.length > 1 ? 'Top resolves first' : 'Resolves when both pass'}</small>` : '';
   return `<aside class="command" aria-label="Turn actions">
     ${s.window ? `<div class="priority"><small>Priority</small><strong>Player ${s.window.priority}</strong>${chain}</div>` : ''}
     <div class="command__clock">${clockMarkup()}</div>
@@ -389,6 +431,7 @@ function overlays() {
     html += `<div class="overlay victory"><h2>${s.victory.draw ? 'Draw' : `Player ${s.victory.winner} wins`}</h2><p>Round ${s.round} · Soul ${s.order.map(k => `${k} ${s.players[k].soul}`).join(' · ')}</p>
       <div class="row"><button class="primary-action" data-new>New match</button><a class="ghost" href="../">Main menu</a></div></div>`;
   }
+  if (pending && !s.victory) html += decisionModal();
   if (logOpen) html += `<div class="drawer log" aria-label="Match log"><h3>Match log</h3>${logLines.slice(-150).reverse().map(l => `<p><small>R${l.round}</small> ${esc(l.text)}</p>`).join('')}</div>`;
   if (settingsOpen) {
     const sel = (key, opts) => `<select data-setting="${key}">${Object.entries(opts).map(([v, l]) => `<option value="${v}" ${settings[key] === v ? 'selected' : ''}>${l}</option>`).join('')}</select>`;
@@ -412,7 +455,7 @@ function render() {
   const s = S(), me = viewer(), them = other(me);
   if (mode) { const step = mode.steps[mode.i]; mode.options = step?.pick ? candidates(step, mode.key).filter(u => !mode.picked.includes(u)) : []; }
   boardRoot.innerHTML = `
-    <div class="olympus ${mode ? 'is-choosing' : ''}">
+    <div class="olympus ${mode ? 'is-choosing' : ''} ${pending ? 'is-deciding' : ''}" ${pending && !pending.peek ? 'inert' : ''}>
       ${godHud(them, 'opp')}${cosmoGauge(them, 'opp')}${piles(them, 'opp')}
       ${handRow(them, settings.hideOpponent)}
       <main class="arena-field">${fieldRow(them)}<div class="midline"><span>${esc(phaseText())}</span></div>${fieldRow(me)}</main>
@@ -420,7 +463,9 @@ function render() {
       ${handRow(me, false)}
       ${command()}
     </div>${choiceBar()}`;
+  const focused = document.activeElement?.closest?.('.decision [data-focus]')?.dataset.focus;
   overlayRoot.innerHTML = overlays();
+  if (focused) $(`.decision [data-focus="${CSS.escape(focused)}"]`)?.focus();
   for (const uid of mode?.options || []) $$(`[data-uid="${uid}"]`).forEach(el => el.classList.add('pickable'));
   if (mode) $$('.dcard').forEach(el => { if (!el.classList.contains('pickable') && el.closest('.field')) el.classList.add('dimmed'); });
   if (scene) { const st = $('[data-stats]'); if (st) st.textContent = `WebGL on · ${JSON.stringify(scene.stats())}`; }
@@ -517,7 +562,8 @@ function logEvent(e) {
     seal_failed: `${e.source}: paid, but the Devotee is gone. No Seal.`, divine_power_declined: `God ${e.player} declines ${e.ability}.`,
     mill: `${e.player} mills ${e.moved}${e.moved < e.requested ? ` of ${e.requested}` : ''}.`, discarded: `${e.player} discards ${e.uids?.length}.`,
     base_returned: `${e.player}: a Cosmo Base returns to hand.`, returned_to_hand: `${e.ability}: ${e.uids?.length} cards return to their owners' hands.`,
-    TIMEOUT_AUTO_CHOICE: `TIMEOUT_AUTO_CHOICE (Player ${e.player}): ${e.result?.map(n).join(', ') || 'nothing'}.`, mulligan: `${e.player} mulligans ${e.count}.`, victory: e.draw ? 'Draw.' : `Player ${e.winner} wins.`}[e.type];
+    TIMEOUT_AUTO_CHOICE: `TIMEOUT_AUTO_CHOICE (Player ${e.player}): ${e.result?.map(n).join(', ') || 'nothing'}.`, TIMEOUT_DECLINED: `TIMEOUT_DECLINED (Player ${e.player}): ${e.ability}.`,
+    TIMEOUT_PASS_PRIORITY: `TIMEOUT_PASS_PRIORITY (Player ${e.player}).`, TIMEOUT_END_TURN: `TIMEOUT_END_TURN (Player ${e.player}).`, mulligan: `${e.player} mulligans ${e.count}.`, victory: e.draw ? 'Draw.' : `Player ${e.winner} wins.`}[e.type];
   if (t) say(t);
 }
 
@@ -525,6 +571,7 @@ function logEvent(e) {
 
 boardRoot.addEventListener('click', e => {
   if (director.busy) return director.skip();
+  if (pending) return focusDecision();
   const s = S(), t = e.target;
   const btn = t.closest('button');
   if (btn?.dataset.primary !== undefined) return primary();
@@ -583,6 +630,7 @@ function fieldMenu(uid, el) {
 overlayRoot.addEventListener('click', e => {
   const btn = e.target.closest('button');
   if (!btn) return;
+  if (btn.closest('.decision, .decision-pill')) return decisionClick(btn);
   if (btn.dataset.mull) { marked.has(btn.dataset.mull) ? marked.delete(btn.dataset.mull) : marked.add(btn.dataset.mull); return render(); }
   if (btn.dataset.primary !== undefined) return primary();
   if (btn.dataset.new !== undefined) return newMatch();
@@ -653,6 +701,7 @@ document.addEventListener('pointerup', e => {
 
 document.addEventListener('keydown', e => {
   if (e.target.matches?.('input, select, textarea')) return;
+  if (pending && !director.busy) return decisionKey(e);
   if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); return primary(); }
   if (e.code === 'Escape') { closeQuick(); if (mode) { mode = null; render(); } else if (settingsOpen || logOpen) { settingsOpen = logOpen = false; render(); } }
   if (e.key === 'l' || e.key === 'L') { logOpen = !logOpen; render(); }
@@ -664,8 +713,8 @@ document.addEventListener('click', e => { if (!e.target.closest('.quick') && !e.
 function newMatch(seed = Date.now() % 100000, first) {
   // Poseidon V6 não tem cartas canônicas: o God Poseidon pilota o deck Athena V6 do jogador B, como FIXTURE rotulada.
   match = createMatch({cards, canonIndex: canonIndex(canon), decks, gods: {A: 'god-athena', B: settings.godB}, seed, first});
-  ctx = {cards, objects: match.objects, attached: match.attached, decide};
-  logLines = []; mode = null; marked = new Set(); ending = false; seenEvents = 0;
+  ctx = {cards, objects: match.objects, attached: match.attached}; // ctx.decide vem do protocolo de decisão (act)
+  logLines = []; mode = null; pending = null; marked = new Set(); ending = false; seenEvents = 0;
   clock = createClock(match.state.order);
   say(`Seed ${seed}. Player ${match.state.order[0]} goes first.`);
   $('.fixture-tag')?.remove();
@@ -733,33 +782,89 @@ function poseidonDemo(kind) {
     : 'DEMO FIXTURE: Poseidon (Awaken, 3 Latent). Strike with Player A to trigger Water Prison and Pressure of the Deep.');
 }
 
-// Perguntas "you may" da engine, síncronas: diálogo do navegador nesta fatia (UX final em GAMEPLAY_UX_SPEC.md).
-function decide(player, q) {
-  if (q.options) return pickFrom(player, q);
-  if (q.ability === 'WATER PRISON') return confirm(`Player ${player} · WATER PRISON (Divine Power)\n${info(q.uid).name} declared a Strike.\nPay 2 Latent Cosmo to Seal it? (1 Seal counter; the Strike still happens.)\nDeclining keeps this round's use.`);
-  if (q.cards) return confirm(`Player ${player} · Sacred Knowledge\nKeep ${info(q.cards[0]).name} on top?\n(Cancel keeps ${info(q.cards[1]).name} on top.)`) ? q.cards[0] : q.cards[1];
-  return confirm(`Player ${player} · ${q.ability}${q.uid ? `\n${info(q.uid).name}` : ''}${q.amount ? ` · ${q.amount} damage incoming` : ''}\nUse it?`);
-}
+// ---------- Decisão pendente (modal do Olympus Arena; substitui confirm/prompt) ----------
+// Pergunta da engine no meio da resolução: quem decide fica à frente da tela (viewer), só as opções legais que a engine
+// mandou aparecem, e a resposta volta para a engine validar (decision.js). "View board" só esconde o modal.
 
-// Escolha obrigatória (Great Flood: Base a devolver, cartas a descartar). Quem escolhe é o dono da decisão (D231, G3-034).
-// Cancelar = sem escolha: aplica o critério de timeout da G3-030 (menor id estável), registrado no histórico.
-function pickFrom(player, q) {
-  const count = q.count || 1, list = q.options.map((u, i) => `${i + 1}. ${info(u).name}`).join('\n');
-  const what = q.choose === 'base' ? 'Choose 1 Cosmo Base to return to your hand' : `Choose ${count} card${count > 1 ? 's' : ''} to discard`;
-  for (;;) {
-    const answer = prompt(`Player ${player} · ${q.ability}\n${what} (numbers, comma-separated):\n${list}\n\nCancel = automatic choice (lowest stable id, G3-030).`);
-    if (answer === null) {
-      const picked = timeoutAutoChoice(S(), {player, options: q.options, count});
-      return count === 1 && !q.count ? picked[0] : picked;
-    }
-    const idx = [...new Set(answer.split(/[\s,]+/).filter(Boolean).map(Number))];
-    if (idx.length === count && idx.every(i => Number.isInteger(i) && i >= 1 && i <= q.options.length)) {
-      const picked = idx.map(i => q.options[i - 1]);
-      return count === 1 && !q.count ? picked[0] : picked;
-    }
+function decisionText(req) {
+  const n = uid => (uid && ctx.objects[uid] ? info(uid).name : '');
+  const p = S().players[req.player], god = cards.get(S().gods[req.player]).name;
+  const who = `Player ${req.player} · ${god[0] + god.slice(1).toLowerCase()}`;
+  if (req.ability === 'WATER PRISON') return {who, title: 'Water Prison', kicker: 'Divine Power · once each Round',
+    body: `${n(req.uid)} declared a Strike. Pay 2 Latent Cosmo to Seal it? It gets 1 Seal counter; the Strike still happens. Declining keeps this Round's use.`,
+    note: `You have ${p.latent} Latent Cosmo.`, yes: 'Pay 2 Latent · Seal', no: 'Decline'};
+  if (req.kind === 'choice') {
+    const title = req.ability === 'GREAT FLOOD' ? 'Great Flood' : req.ability;
+    if (req.choose === 'base') return {who, title, kicker: 'Mandatory choice', body: `${n(req.for)} returned to its owner's hand. Choose 1 Cosmo Base you control to return to your hand.`};
+    if (req.choose === 'discard') return {who, title, kicker: 'Mandatory choice', body: `Discard half of your hand, rounded up: choose ${req.count} card${req.count > 1 ? 's' : ''}. Each discarded card mills 3.`};
+    if (req.choose === 'top') return {who, title, kicker: 'Mandatory choice', body: 'Choose the card to keep on top of your deck. The other goes to the bottom.'};
+    return {who, title, kicker: 'Mandatory choice', body: `Choose ${req.count}.`};
   }
+  const parts = [req.source && n(req.source) ? `Source: ${n(req.source)}.` : '', req.uid && n(req.uid) ? `Affects: ${n(req.uid)}.` : '',
+    req.amount ? `${req.amount} damage incoming.` : '', req.cost ? `Cost: ${typeof req.cost === 'string' ? req.cost : `${req.cost.latent} Latent`}.` : ''].filter(Boolean);
+  return {who, title: req.ability, kicker: 'Optional ability', body: `${parts.join(' ')} Use it?`.trim(), yes: 'Use', no: 'Decline'};
 }
 
+function decisionModal() {
+  const req = pending.pending, t = decisionText(req);
+  if (pending.peek) return `<button class="decision-pill" data-dec="peek" data-focus="peek">Back to decision · ${esc(t.title)} <kbd>Esc</kbd></button>`;
+  const timeout = settings.timeouts ? `<small class="decision__timeout">On timeout: ${req.kind === 'optional' ? 'declined' : 'automatic choice, lowest stable ID'}</small>` : '';
+  let body;
+  if (req.kind === 'optional') {
+    body = `<div class="decision__actions"><button class="primary-action" data-dec="yes" data-focus="yes">${esc(t.yes)}</button><button class="ghost" data-dec="no" data-focus="no">${esc(t.no)}</button></div>`;
+  } else {
+    const picked = pending.picked;
+    const opts = req.options.map((uid, i) => `<button class="decision__opt ${picked.includes(uid) ? 'picked' : ''}" data-dec="opt" data-opt="${esc(uid)}" data-focus="opt:${esc(uid)}" aria-pressed="${picked.includes(uid)}" aria-label="${esc(info(uid).name)}${i < 9 ? `, key ${i + 1}` : ''}">${cardFace(uid).replace('tabindex="0"', 'tabindex="-1"')}${i < 9 ? `<kbd>${i + 1}</kbd>` : ''}</button>`).join('');
+    body = `<div class="decision__opts" role="group" aria-label="Options">${opts}</div>
+      <div class="decision__actions"><button class="primary-action" data-dec="confirm" data-focus="confirm" ${picked.length === req.count ? '' : 'disabled'}>Confirm · ${picked.length}/${req.count}</button></div>`;
+  }
+  return `<div class="decision-veil"></div><section class="decision decision--${req.kind}" role="dialog" aria-modal="true" aria-labelledby="decision-title" aria-describedby="decision-body">
+    <header class="decision__head"><span class="decision__who">${esc(t.who)} decides</span><span class="decision__clock" data-decision-clock></span></header>
+    <small class="decision__kicker">${esc(t.kicker)}</small><h2 id="decision-title">${esc(t.title)}</h2>
+    <p id="decision-body">${esc(t.body)}</p>${t.note ? `<p class="decision__note">${esc(t.note)}</p>` : ''}${body}
+    <footer class="decision__foot">${timeout}<button class="ghost" data-dec="peek" data-focus="peek">View board <kbd>Esc</kbd></button></footer></section>`;
+}
+
+function togglePick(uid) {
+  const req = pending.pending, picked = pending.picked;
+  if (!req.options.includes(uid)) return;
+  if (picked.includes(uid)) picked.splice(picked.indexOf(uid), 1);
+  else if (req.count === 1) picked.splice(0, picked.length, uid);
+  else if (picked.length < req.count) picked.push(uid);
+  render();
+}
+function decisionClick(btn) {
+  if (!pending || director.busy) return;
+  const req = pending.pending, a = btn.dataset.dec;
+  if (a === 'peek') { pending.peek = !pending.peek; render(); return focusDecision(); }
+  if (a === 'yes' || a === 'no') return reply({value: a === 'yes'});
+  if (a === 'opt') return togglePick(btn.dataset.opt);
+  if (a === 'confirm' && pending.picked.length === req.count) return reply({value: req.multiple ? [...pending.picked] : pending.picked[0]});
+}
+// Teclado: Esc alterna View board; 1–9 marcam opções; setas andam entre opções; Tab fica preso no modal.
+function decisionKey(e) {
+  if (e.code === 'Escape') { e.preventDefault(); pending.peek = !pending.peek; render(); return focusDecision(); }
+  if (e.key === 'l' || e.key === 'L') { logOpen = !logOpen; return render(); }
+  if (pending.peek) return;
+  const box = $('.decision'), focusables = box ? $$('button:not([disabled])', box) : [];
+  if (/^[1-9]$/.test(e.key) && pending.pending.options) { const uid = pending.pending.options[Number(e.key) - 1]; if (uid) { e.preventDefault(); togglePick(uid); $(`.decision [data-focus="opt:${CSS.escape(uid)}"]`)?.focus(); } return; }
+  if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+    const opts = $$('.decision__opt', box), i = opts.indexOf(document.activeElement);
+    if (opts.length) { e.preventDefault(); opts[(i + (e.key === 'ArrowRight' ? 1 : -1) + opts.length) % opts.length].focus(); }
+    return;
+  }
+  if (e.key === 'Tab' && focusables.length) {
+    const i = focusables.indexOf(document.activeElement);
+    if (e.shiftKey ? i <= 0 : i === focusables.length - 1) { e.preventDefault(); focusables[e.shiftKey ? focusables.length - 1 : 0].focus(); }
+    return;
+  }
+  // Espaço/Enter fora de um botão do modal não passam o turno: devolvem o foco à decisão.
+  if ((e.code === 'Space' || e.code === 'Enter') && !document.activeElement?.closest?.('.decision, .decision-pill')) { e.preventDefault(); focusDecision(); }
+}
+function focusDecision() {
+  if (!pending || document.activeElement?.closest?.('.decision, .decision-pill')) return;
+  $('.decision [data-focus="yes"], .decision .decision__opt, .decision-pill')?.focus();
+}
 // O log também acompanha eventos que o orquestrador não descreve.
 function watchEvents() {
   const s = S();
@@ -782,6 +887,7 @@ async function init() {
   director = createDirector({ui, getFx: () => scene?.fx, settings});
   const params = new URLSearchParams(location.search);
   if (params.get('godB')) settings.godB = `god-${params.get('godB')}`; // ?godB=poseidon
+  if (params.get('timeouts')) settings.timeouts = params.get('timeouts') === '1'; // ?timeouts=1 (QA)
   newMatch(Number(params.get('seed')) || undefined, params.get('demo') ? 'A' : undefined);
   applyDemo(params.get('demo'));
   render();
@@ -789,6 +895,6 @@ async function init() {
   setInterval(tickClock, 250);
   scene = await createScene($('#arena'), {quality: settings.quality, theme: settings.theme, reduceFlashes: settings.reduceFlashes});
   stage.classList.toggle('no-webgl', !scene);
-  window.__divine = {get state() { return S(); }, get ctx() { return ctx; }, get scene() { return scene; }, settings}; // inspeção no QA
+  window.__divine = {get state() { return S(); }, get ctx() { return ctx; }, get scene() { return scene; }, get clock() { return clock; }, settings}; // inspeção no QA
 }
 init().catch(e => { boardRoot.innerHTML = `<p class="fatal">${esc(e.message)}</p>`; console.error(e); });

@@ -4,7 +4,7 @@
 // no turno próprio, básico e depois reserva; fora dele (janela de resposta), só a reserva (G3-026, G3-031).
 // G3-031: o básico só existe no turno próprio (zera no END TURN e volta cheio no próximo turno próprio); responder no
 // turno adversário nunca reduz o básico seguinte; reserva no teto 180; sem decisão atribuída, nenhum relógio corre.
-import {emit} from './core.js';
+import {emit, pass, endTurn, RuleError} from './core.js';
 
 export const ALPHA_CLOCK = Object.freeze({basic: 60, reserveStart: 90, reserveMax: 180, carry: 0.5});
 
@@ -65,6 +65,18 @@ export function timeoutAction(state, pending = null) {
   if (pending) return 'TIMEOUT_AUTO_CHOICE';
   if (state.window) return 'TIMEOUT_PASS_PRIORITY';
   return 'TIMEOUT_END_TURN';
+}
+
+// Timeout fora de escolha (G3-027): passa a prioridade de quem a tem ou encerra o turno do ativo; registra o código.
+// Escolha pendente (opcional ou obrigatória) é respondida por `decision.js` com {timeout: true}.
+export function applyTimeout(state, key, endOfTurn) {
+  const code = timeoutAction(state);
+  const owner = state.window ? state.window.priority : state.active;
+  if (owner !== key) throw new RuleError('P06', `${key} não está decidindo agora`);
+  emit(state, code, {player: key});
+  if (code === 'TIMEOUT_PASS_PRIORITY') pass(state, key);
+  else endTurn(state, endOfTurn);
+  return code;
 }
 
 // G3-030: timeout numa escolha obrigatória. Lê as opções legais agora, ordena pelo id estável do objeto (ordem natural:

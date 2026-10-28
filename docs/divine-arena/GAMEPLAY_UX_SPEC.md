@@ -16,7 +16,7 @@ Topo: God, banco e pilhas do oponente; mão do oponente (verso). Centro: campo d
 | Log | Botão ou L |
 
 ## Escolhas
-Barra central com o nome da carta, a pergunta e botões (opções, Sim/Não, Done, Skip, Cancel). Candidatos vêm de `choices-v3.js` (mesma fonte da mesa de depuração) e de `strikeTargets`. Perguntas "you may" da engine durante a resolução usam o diálogo do navegador neste slice (pendente: diálogo próprio).
+Barra central com o nome da carta, a pergunta e botões (opções, Sim/Não, Done, Skip, Cancel). Candidatos vêm de `choices-v3.js` (mesma fonte da mesa de depuração) e de `strikeTargets`. Perguntas da engine durante a resolução (Water Prison, "you may", Base e descarte do Great Flood, Sacred Knowledge) usam o modal de decisão do Olympus Arena (`decisionModal` em `app.js`), alimentado pelo protocolo de decisão pendente (`engine-v3/decision.js`): a ação suspende na pergunta, a tela mostra quem decide e só as opções legais, e a resposta continua do snapshot sem repetir custo nem gatilho. Teclado: 1–9 marcam opções, setas andam, Tab fica preso no modal, Esc alterna "View board" (esconder o modal não é timeout). Com timeouts ligados: opcional → `TIMEOUT_DECLINED`; obrigatória → `TIMEOUT_AUTO_CHOICE` (G3-030). A cadeia no painel de prioridade numera os itens e o topo resolve primeiro; a ordem entre gatilhos simultâneos do mesmo jogador ainda não é escolha dele (pendência 5 do suplemento).
 
 ## Hot-seat
 A tela mostra o jogador que precisa agir: mulligan → quem decide; janela → quem tem prioridade; fora disso → jogador ativo. "Hide the other hand" vem ligado.
