@@ -542,3 +542,17 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .zicon { width: 22px; height: 22px; object-fit: contain; filter: drop-shadow(0 0 4px rgba(170, 90, 255, .55)); }
 .sanctum .zicon { width: calc(var(--s) * 3.8); height: calc(var(--s) * 3.8); filter: brightness(1.35) drop-shadow(0 0 5px rgba(170, 90, 255, .7)); }
 .zpile:hover .zicon { filter: drop-shadow(0 0 8px rgba(190, 120, 255, .9)); }
+/* Santuário na vertical (autor, 28/10/2026): Domain no topo, Cosmo no meio, zonas embaixo; sem as bolinhas de Base
+   (as Bases já aparecem como cartas no board). */
+.sanctum { flex-direction: column; align-items: stretch; width: calc(var(--s) * 12.5); padding: calc(var(--s) * 1.2) calc(var(--s) * 1); gap: calc(var(--s) * 1); }
+.sanctum__domain { width: 100%; aspect-ratio: 4 / 3; }
+.sanctum__domain strong { font-size: calc(var(--s) * 1.15); }
+.sanctum .cosmo { align-items: center; }
+.sanctum .cosmo__hex { width: calc(var(--s) * 9.4); }
+.sanctum .cosmo__pips { display: none; }
+.sanctum .cosmo__hex small { right: 16%; bottom: 18%; }
+.sanctum .godzones { padding: calc(var(--s) * 1) 0 0; border-left: 0; border-top: 1px solid rgba(232, 196, 106, .3); gap: calc(var(--s) * .5); }
+.sanctum .zdeck, .sanctum .zpile { display: grid; grid-template-columns: calc(var(--s) * 3.8) auto 1fr; align-items: center; column-gap: calc(var(--s) * .8); }
+.sanctum .zdeck { grid-template-columns: calc(var(--s) * 3.8) auto; }
+.sanctum .zdeck__back { justify-self: center; width: calc(var(--s) * 2.6); }
+.sanctum .zpile small { order: 0; font-size: calc(var(--s) * .8); letter-spacing: .1em; }
