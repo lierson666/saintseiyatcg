@@ -226,7 +226,7 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 
 /* Cosmo Bases como terrenos: faixa de cartas do lado de cada jogador; tapped = deitada 90°. */
 .arena-field { grid-template-rows: auto 1fr auto 1fr auto; }
-.lane { --land-w: calc(var(--card-w) * .68); --land-h: calc(var(--land-w) * 1.4); display: flex; justify-content: center; align-items: center; min-height: calc(var(--land-h) + 6px); padding: 0 8px; pointer-events: auto; }
+.lane { --land-w: calc(var(--card-w) * 1.2); /* Base no tamanho das cartas do campo (autor, 28/10/2026) */ --land-h: calc(var(--land-w) * 1.4); display: flex; justify-content: center; align-items: center; min-height: calc(var(--land-h) + 6px); padding: 0 8px; pointer-events: auto; }
 .lane__base { flex: 0 1 calc(var(--land-h) + 4px); min-width: 14px; height: var(--land-h); display: grid; place-items: center; transition: transform .35s cubic-bezier(.2, .8, .2, 1); }
 .lane__base .dcard--land { --card-w: var(--land-w); width: var(--land-w); height: var(--land-h); flex: none; border-radius: 5px; box-shadow: 0 3px 8px rgba(0, 0, 0, .6), 0 0 10px rgba(110, 180, 255, .35); transition: transform .35s cubic-bezier(.2, .8, .2, 1), filter .35s; }
 .lane__base .dcard--land .dcard__plate { padding: 1px 3px; } .lane__base .dcard--land .dcard__plate strong { font-size: 7px; } .lane__base .dcard--land .dcard__plate small, .lane__base .dcard--land .dcard__stats { display: none; }
