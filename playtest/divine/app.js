@@ -15,15 +15,12 @@ import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, cloc
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {createDirector} from './director.js?v=3';
 import {createAI} from './ai.js?v=2';
+import {renderLiveCard} from '../../shared/live-card.js?v=20261024-4';
 
 const $ = (s, el = document) => el.querySelector(s), $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const stage = $('#stage'), boardRoot = $('#board-root'), overlayRoot = $('#overlay-root'), notice = $('#notice');
 
-// Arte disponível no repositório; o resto usa placeholder com a cor do tipo (contrato em AAA_VISUAL_DIRECTION.md).
-const ART_ROOT = '../../CARDS/ATHENA/';
-const ART = {'001': 'BRONZE/PEGASUSV1.png', '003': 'BRONZE/DRAGONv1.png', '021': 'SILVER/MARIN.png', '040': 'COMMON/SANCTUARY-GUARD.png',
-  '041': 'COMMON/SANCTUMHEALER.png', '042': 'COMMON/CLOTHREPAIRER.png', '043': 'COMMON/STARHILLMONK.png', '048': 'UNCOMMON/LIBRA-SWORD.png', '049': 'UNCOMMON/LIBRA-SHIELD.png'};
 const GOD_ART = {'god-athena': '../../CARDS/ATHENA/ATHENA.png', 'god-poseidon': '../../CARDS/POSEIDON/POSEIDON.png'};
 
 // Mensagens da engine (internas, em português) viram texto curto para o jogador.
@@ -324,27 +321,38 @@ function tickClock() {
 
 // ---------- Render ----------
 
+// Cartas do Card Forge como dados (tools/forge-art-web.sh): shared/live-card.js desenha moldura, textos e números no DOM; a arte é só fundo.
+const FORGE_ART = '../../card-forge/art-web/';
+const FORGE = new Map((await fetch(`${FORGE_ART}cards.json`).then(r => (r.ok ? r.json() : {cartas: []})).catch(() => ({cartas: []}))).cartas.map(c => [c.id, c]));
 function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
   if (hidden) return `<div class="dcard dcard--back ${size}" data-uid="${uid}" aria-label="Face-down card"><span></span></div>`;
   const s = S(), c = info(uid), n = num(uid), unit = s.units[uid];
   const cat = c.kind === 'Spell' ? spellCategory(Number(n)) : null;
   const subtype = cat ? cat.category : (c.type.split(' — ')[1] || c.kind);
-  const art = ART[n] ? `style="background-image:url('${ART_ROOT}${ART[n]}')"` : '';
+  const forge = FORGE.get(ctx.objects[uid].cardId);
   const atk = field ? atkOf(s, ctx, uid) : c.atk, hp = field ? hpOf(s, ctx, uid) : c.hp;
   const kws = [...new Set(field && c.kind === 'Devotee' ? keywordsOf(s, ctx, uid) : c.keywords)];
   const dmg = unit?.damage || 0;
-  const cls = ['dcard', size, `kind-${c.kind.toLowerCase()}`, `rarity-${(c.rarity || 'common').toLowerCase()}`, c.armor ? 'is-armor' : '', cat ? `cat-${cat.category.toLowerCase()}` : '',
+  const cls = ['dcard', size, forge ? 'art-full' : '', `kind-${c.kind.toLowerCase()}`, `rarity-${(c.rarity || 'common').toLowerCase()}`, c.armor ? 'is-armor' : '', cat ? `cat-${cat.category.toLowerCase()}` : '',
     field && c.kind === 'Devotee' && !unit?.prepared ? 'unprepared' : '', kws.includes('Guardian') && field ? 'guarding' : ''].join(' ');
   const statBuffed = (v, base) => (v > base ? 'up' : v < base ? 'down' : '');
+  const marks = `${dmg && field ? `<i class="dcard__damage" title="${dmg} damage">${dmg}</i>` : ''}
+    ${unit?.training ? `<i class="dcard__counter" title="Training counter">✦${unit.training}</i>` : ''}
+    ${unit?.seal ? `<i class="dcard__seal" title="${unit.seal} Seal counter${unit.seal > 1 ? 's' : ''}: each Prepare removes one instead">◈${unit.seal}</i>` : ''}`;
+  if (forge) {
+    // ATK e HP ao vivo no próprio número impresso: verde com bônus, vermelho com dano ou redução.
+    const live = renderLiveCard(forge, {stats: {power: atk ?? null, hp: hp == null ? null : hp - dmg, damage: dmg, keywords: kws}, art: forge.ilustracao && FORGE_ART + forge.ilustracao})
+      .replace('data-stat="power"', `data-stat="power" data-trend="${statBuffed(atk, c.atk)}"`)
+      .replace('data-stat="hp"', `data-stat="hp" data-trend="${dmg ? 'down' : statBuffed(hp, c.hp)}"`);
+    return `<div class="${cls}" data-uid="${uid}" tabindex="0" aria-label="${esc(c.name)}${c.kind === 'Devotee' ? `, ATK ${atk}, HP ${hp - dmg} of ${hp}` : ''}">${live}${marks}</div>`;
+  }
   return `<div class="${cls}" data-uid="${uid}" tabindex="0" aria-label="${esc(c.name)}">
-    <div class="dcard__art" ${art}><span class="dcard__glyph">${esc(c.name.split(/[ ,’']/)[0].slice(0, 2))}</span></div>
+    <div class="dcard__art"><span class="dcard__glyph">${esc(c.name.split(/[ ,’']/)[0].slice(0, 2))}</span></div>
     ${c.cost ? `<b class="dcard__cost ${c.cost.unit}" title="${c.cost.amount} ${c.cost.unit === 'base' ? 'Base' : 'Latent'} Cosmo">${c.cost.amount}</b>` : ''}
     <div class="dcard__plate"><strong>${esc(c.name)}</strong><small>${esc(subtype)}${kws.length ? ` · ${esc(kws.join(' · '))}` : ''}</small></div>
-    ${c.kind === 'Devotee' ? `<div class="dcard__stats"><b class="atk ${statBuffed(atk, c.atk)}">${atk}</b><b class="hp ${statBuffed(hp, c.hp)}">${hp - dmg}</b></div>` : ''}
+    ${c.kind === 'Devotee' ? `<div class="dcard__stats"><b class="atk ${statBuffed(atk, c.atk)}" title="ATK ${atk}">${atk}</b><b class="hp ${dmg ? 'hurt' : statBuffed(hp, c.hp)}" title="HP ${hp - dmg} of ${hp}">${hp - dmg}</b></div>` : ''}
     ${c.armor && field ? `<div class="dcard__stats"><b class="hp">${c.hp - dmg}</b></div>` : ''}
-    ${dmg && field ? `<i class="dcard__damage" title="${dmg} damage">${dmg}</i>` : ''}
-    ${unit?.training ? `<i class="dcard__counter" title="Training counter">✦${unit.training}</i>` : ''}
-    ${unit?.seal ? `<i class="dcard__seal" title="${unit.seal} Seal counter${unit.seal > 1 ? 's' : ''}: each Prepare removes one instead">◈${unit.seal}</i>` : ''}
+    ${marks}
   </div>`;
 }
 
