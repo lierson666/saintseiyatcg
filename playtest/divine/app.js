@@ -484,9 +484,14 @@ function cosmoLane(key, side) {
   }).join('');
   return `<section class="lane lane--${side}" data-lane="${key}" style="--n:${bases.length}" aria-label="Player ${key} Cosmo Bases">${slots || '<p class="lane__empty">Cosmo Bases</p>'}</section>`;
 }
+// Faixa do God (autor, 28/10/2026): Bases à esquerda, God no meio, Equipments/Cloths ainda não equipados à direita.
+function gearLane(key) {
+  const loose = S().players[key].battlefield.filter(u => !ctx.attached[u] && info(u).kind === 'Equipment');
+  return `<section class="gearlane" data-gear-lane="${key}" aria-label="Player ${key} unequipped Equipment">${loose.map(u => `<div class="gearlane__slot">${cardFace(u, {field: true})}</div>`).join('')}</section>`;
+}
 function fieldRow(key) {
   const s = S(), p = s.players[key];
-  const units = p.battlefield.filter(u => !ctx.attached[u]).map(u => {
+  const units = p.battlefield.filter(u => !ctx.attached[u] && info(u).kind !== 'Equipment').map(u => {
     const gear = gearOf(ctx, u).map(g => `<div class="gear" data-uid="${g}" title="${esc(info(g).name)}">${esc(info(g).name)}${s.units[g]?.damage ? ` · ${s.units[g].damage} dmg` : ''}</div>`).join('');
     return `<div class="slot">${cardFace(u, {field: true})}${gear ? `<div class="gears">${gear}</div>` : ''}</div>`;
   }).join('');
@@ -620,7 +625,9 @@ function render() {
   boardRoot.innerHTML = `
     <div class="olympus ${mode ? 'is-choosing' : ''} ${pending ? 'is-deciding' : ''}" ${pending && !pending.peek ? 'inert' : ''}>
       ${handRow(them, settings.hideOpponent || settings.ai === them)}
-      <main class="arena-field">${cosmoLane(them, 'opp')}${fieldRow(them)}<div class="midline"></div>${fieldRow(me)}${cosmoLane(me, 'me')}</main>
+      <main class="arena-field">${fieldRow(them)}<div class="midline"></div>${fieldRow(me)}</main>
+      <div class="band band--opp">${cosmoLane(them, 'opp')}<i class="band__god"></i>${gearLane(them)}</div>
+      <div class="band band--me">${cosmoLane(me, 'me')}<i class="band__god"></i>${gearLane(me)}</div>
       <aside class="rail">${sanctum(them, 'opp')}${sanctum(me, 'me')}</aside>
       ${godHud(them, 'opp')}${godHud(me, 'me')}
       ${handRow(me, false)}
@@ -931,13 +938,32 @@ function togglePool(el) {
   if (f && a && z) { adding ? f.beam(a, z, {color: '#7fc8ff', width: 12, duration: .34}) : f.beam(z, a, {color: '#5a7bb8', width: 8, duration: .25}); }
   render();
 }
+// Clique direito num Devotee em campo (autor, 28/10/2026): tudo que ele tem equipado e os status somados,
+// separando o impresso, o bônus de cada Equipment/Cloth e o resto (Awaken, Training, efeitos).
+function loadout(uid) {
+  const s = S(), c = info(uid), gear = gearOf(ctx, uid), atk = atkOf(s, ctx, uid), hp = hpOf(s, ctx, uid), dmg = s.units[uid]?.damage || 0;
+  const sign = n => (n >= 0 ? `+${n}` : `${n}`), bonus = g => info(g).equipped || {};
+  const gearAtk = gear.reduce((n, g) => n + (bonus(g).atk || 0), 0), gearHp = gear.reduce((n, g) => n + (bonus(g).hp || 0), 0);
+  const otherAtk = atk - c.atk - gearAtk, otherHp = hp - c.hp - gearHp;
+  const line = (label, a, h, cls = '') => `<li class="${cls}"><span>${label}</span><b>${a}</b><b>${h}</b></li>`;
+  return `<aside class="loadout" aria-label="${esc(c.name)} loadout">
+    <h3>${esc(c.name)}</h3>
+    <ul class="loadout__stats"><li class="loadout__head"><span></span><b>ATK</b><b>HP</b></li>
+      ${line('Printed', c.atk, c.hp)}
+      ${gear.map(g => line(esc(info(g).name), sign(bonus(g).atk || 0), sign(bonus(g).hp || 0), 'is-gear')).join('')}
+      ${otherAtk || otherHp ? line('Other effects', sign(otherAtk), sign(otherHp), 'is-other') : ''}
+      ${line('Total', atk, dmg ? `${hp - dmg}<small>/${hp}</small>` : hp, 'is-total')}</ul>
+    ${gear.length ? `<h4>Equipped</h4><div class="loadout__gear">${gear.map(g => cardFace(g, {field: true})).join('')}</div>` : '<p class="loadout__none">Nothing equipped.</p>'}
+  </aside>`;
+}
 function showBigCard(uid) {
   closeBigCard();
   hideInspect();
   const box = document.createElement('div');
   box.id = 'bigcard';
   box.className = 'bigcard';
-  box.innerHTML = cardFace(uid, {size: 'dcard--big', field: S().players[owner(uid)].battlefield.includes(uid)});
+  const field = S().players[owner(uid)].battlefield.includes(uid);
+  box.innerHTML = cardFace(uid, {size: 'dcard--big', field}) + (field && info(uid).kind === 'Devotee' ? loadout(uid) : '');
   box.addEventListener('pointerdown', closeBigCard);
   box.addEventListener('contextmenu', e => { e.preventDefault(); closeBigCard(); });
   document.body.append(box);
@@ -952,29 +978,28 @@ function previewCost(uid) {
   $$(`[data-bank="${key}"] [data-bank-unit="${c.cost.unit}"] .orb.ready`).slice(-c.cost.amount).forEach(o => o.classList.add('preview'));
 }
 
-// Durante o arraste, só a metade de baixo do campo (a de quem joga) se divide em faixas: CAST em cima e COSMO BASE embaixo.
+// Durante o arraste: CAST cobre a metade de baixo do campo; COSMO BASE acende na área das Bases, à esquerda do God.
 // A zona só acende se a ação for possível agora; a engine ainda decide ao soltar.
 function showDragZones(uid) {
   const key = owner(uid), field = $('.arena-field');
   if (!field) return;
   const cast = !playableReason(key, uid), cosmo = canBase(key, uid);
   field.insertAdjacentHTML('beforeend', `<div class="drag-zones" aria-hidden="true">
-    <div class="drag-zone drag-zone--cast ${cast ? '' : 'is-off'}"><strong>CAST</strong><small>${cast ? 'Release to cast as Devotee, Armor or effect' : esc(playableReason(key, uid))}</small></div>
-    <div class="drag-zone drag-zone--cosmo ${cosmo ? '' : 'is-off'}"><strong>COSMO BASE</strong><small>${cosmo ? 'Release to set as Cosmo Base' : esc(baseReason(key, uid))}</small></div></div>`);
+    <div class="drag-zone drag-zone--cast ${cast ? '' : 'is-off'}"><strong>CAST</strong><small>${cast ? 'Release to cast as Devotee, Armor or effect' : esc(playableReason(key, uid))}</small></div></div>`);
+  $('.band--me .lane')?.insertAdjacentHTML('beforeend', `<div class="drag-zone drag-zone--cosmo drag-zone--band ${cosmo ? '' : 'is-off'}" aria-hidden="true"><strong>COSMO BASE</strong><small>${cosmo ? 'Release to set as Cosmo Base' : esc(baseReason(key, uid))}</small></div>`);
   $('.olympus')?.classList.add('is-dragging');
 }
 function hideDragZones() {
-  $('.drag-zones')?.remove();
+  $('.drag-zones')?.remove(); $('.drag-zone--band')?.remove();
   $('.olympus')?.classList.remove('is-dragging', 'is-over-cast', 'is-over-cosmo');
 }
 // Zona sob o cursor: 'cast', 'cosmo' ou null (fora do campo ou ação impossível).
 function dragZoneAt(uid, x, y) {
-  const r = $('.arena-field')?.getBoundingClientRect(), key = owner(uid);
+  const r = $('.arena-field')?.getBoundingClientRect(), key = owner(uid), b = $('.band--me .lane')?.getBoundingClientRect();
+  if (b && x >= b.left && x <= b.right && y >= b.top && y <= b.bottom) return canBase(key, uid) ? 'cosmo' : null; // área das Bases, à esquerda do God
   if (!r || x < r.left || x > r.right || y < r.top || y > r.bottom) return null;
-  const overUnit = document.elementsFromPoint(x, y).some(d => d.dataset?.uid && S().players[key].battlefield.includes(d.dataset.uid));
   if (y < r.top + r.height / 2) return null; // as zonas ficam só na metade de quem joga, embaixo
-  if (y < r.top + r.height * .75 || overUnit) return playableReason(key, uid) ? (overUnit && canBase(key, uid) ? 'cosmo' : null) : 'cast';
-  return canBase(key, uid) ? 'cosmo' : null;
+  return playableReason(key, uid) ? null : 'cast';
 }
 // Arrastar da mão: soltar no campo joga; soltar num Devotee seu escolhe o portador/alvo; soltar na área de Cosmo vira Base.
 document.addEventListener('pointerdown', e => {
