@@ -444,7 +444,7 @@ function command() {
   </aside>`;
 }
 
-// Relógio das Doze Casas: 12 tochas de 60 s; acesas = tempo restante de quem decide (mapeamento G3-028).
+// Relógio das Doze Casas: 12 tochas de 15 s (3 minutos); acesas = tempo restante de quem decide (mapeamento G3-028).
 const SIGNS = '♈♉♊♋♌♍♎♏♐♑♒♓';
 function clockMarkup() {
   const torches = Array.from({length: 12}, (_, i) => {

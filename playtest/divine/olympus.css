@@ -307,3 +307,9 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .zclock .zclock__dial::after { display: none; }
 .zclock.urgent .zclock__time { border-color: #ff8a60; } .zclock.urgent .zclock__time b { color: #ffd2c0; }
 @media (max-width: 760px) { .zclock .zclock__time { display: grid; } }
+
+/* Mão inicial: todas as cartas numa linha só, ocupando 100% da largura (sem quebrar); a altura da tela limita o tamanho */
+.overlay.mulligan { grid-template-columns: 100%; justify-content: stretch; }
+.overlay.mulligan .mulligan__cards { flex-wrap: nowrap; width: 100%; max-width: none; gap: clamp(6px, 1vw, 16px); }
+.overlay.mulligan .mull { flex: 1 1 0; min-width: 0; max-width: calc((100vh - 300px) * 150 / 210); }
+.overlay.mulligan .mull .dcard.dcard--lg { width: 100%; height: auto; aspect-ratio: 150 / 210; }
