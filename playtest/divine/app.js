@@ -455,6 +455,28 @@ function phaseText() {
   return `Round ${s.round} · Player ${s.active} · Main`;
 }
 
+// Faixa de fases acima do End Turn (padrão de cliente digital de TCG): de quem é o turno, as fases do turno com a
+// atual acesa e, quando há, a janela de resposta. Prepare e Draw são automáticas; End = janela aberta pela End Phase.
+const PHASES = ['Prepare', 'Draw', 'Main', 'Strike', 'End'];
+function currentPhase(s) {
+  for (let i = s.events.length - 1; i >= 0; i--) {
+    const t = s.events[i].type;
+    if (t === 'turn_start') break;
+    if (t === 'end_phase') return 'End';
+  }
+  return pendingStrike(s) ? 'Strike' : 'Main';
+}
+function phaseBar() {
+  const s = S(), v = viewer();
+  if (s.victory || s.setup) return `<div class="phasebar"><div class="phasebar__turn">${esc(phaseText())}</div></div>`;
+  const now = PHASES.indexOf(currentPhase(s)), mine = s.active === v;
+  return `<div class="phasebar ${mine ? 'is-mine' : 'is-theirs'}" aria-label="${esc(phaseText())}">
+    <div class="phasebar__turn"><small>Round ${s.round}</small><strong>${mine ? 'Your turn' : `Opponent's turn`}</strong><small>Player ${s.active}</small></div>
+    <ol class="phasebar__steps">${PHASES.map((p, i) => `<li class="${i < now ? 'done' : i === now ? 'on' : ''}">${p}</li>`).join('')}</ol>
+    ${s.window ? `<div class="phasebar__window">${s.chain.length ? `Chain of ${s.chain.length} · ` : ''}Response · Player ${s.window.priority} to act</div>` : ''}
+  </div>`;
+}
+
 // Comando (canto inferior direito): relógio das Doze Casas acima do botão de ações.
 function command() {
   const s = S(), v = viewer();
@@ -473,6 +495,7 @@ function command() {
   return `<aside class="command" aria-label="Turn actions">
     ${s.window ? `<div class="priority"><small>Priority</small><strong>Player ${s.window.priority}</strong>${chain}</div>` : ''}
     <div class="command__clock">${clockMarkup()}</div>
+    ${phaseBar()}
     <button class="action-btn" data-primary ${s.victory || aiControls() ? 'disabled' : ''}><span>${esc(label)}</span><i aria-hidden="true">›</i></button>
     <div class="command__tools"><button data-toggle-log aria-pressed="${logOpen}">Log</button><button data-toggle-settings>Settings</button><a href="../alpha3.html">Debug</a></div>
   </aside>`;
@@ -544,7 +567,7 @@ function render() {
     <div class="olympus ${mode ? 'is-choosing' : ''} ${pending ? 'is-deciding' : ''}" ${pending && !pending.peek ? 'inert' : ''}>
       ${godHud(them, 'opp')}${cosmoGauge(them, 'opp')}
       ${handRow(them, settings.hideOpponent || settings.ai === them)}
-      <main class="arena-field">${cosmoLane(them, 'opp')}${fieldRow(them)}<div class="midline"><span>${esc(phaseText())}</span></div>${fieldRow(me)}${cosmoLane(me, 'me')}</main>
+      <main class="arena-field">${cosmoLane(them, 'opp')}${fieldRow(them)}<div class="midline"></div>${fieldRow(me)}${cosmoLane(me, 'me')}</main>
       ${cosmoGauge(me, 'me')}${godHud(me, 'me')}
       ${handRow(me, false)}
       ${command()}
