@@ -80,7 +80,21 @@ function playableReason(key, uid) {
   }
   return affordable(key, c.cost) ? null : `Needs ${c.cost.amount} prepared Base Cosmo.`;
 }
-const canBase = (key, uid) => idleFor(key) && info(uid).cosmoble && S().players[key].baseTurn !== S().turn;
+// D4: uma Base Cosmoble por turno, no próprio turno, com a janela fechada. Motivo em texto para o jogador.
+function baseReason(key, uid) {
+  if (!info(uid).cosmoble) return 'This card is not Cosmoble: it cannot become a Cosmo Base.';
+  if (!idleFor(key)) return S().active !== key ? "It's not your turn." : 'Wait for the response window to close.';
+  if (S().players[key].baseTurn === S().turn) return 'You already placed a Cosmo Base this turn.';
+  return null;
+}
+const canBase = (key, uid) => !baseReason(key, uid);
+// A Base nova entra Unprepared (D4: Bases preparam no início do turno); o aviso explica por que o hexágono não sobe agora.
+function placeAsBase(key, uid) {
+  const reason = baseReason(key, uid);
+  if (reason) return warn(reason);
+  act(() => placeBase(S(), key, uid, info(uid)));
+  warn('Cosmo Base placed. It readies at the start of your next turn.');
+}
 // Há resposta possível? (Auto-pass só passa quando não há nenhum Moment jogável na mão.)
 const hasResponse = key => S().players[key].hand.some(u => info(u).kind === 'Spell' && spellCategory(Number(num(u)))?.speed === 'instant' && !playableReason(key, u));
 
@@ -595,9 +609,9 @@ boardRoot.addEventListener('click', e => {
 });
 
 // Menu curto quando a carta tem mais de um uso (jogar ou virar Base; Strike ou habilidade).
-function quickMenu(anchor, items) {
+function quickMenu(anchor, items, {always = false} = {}) {
   closeQuick();
-  if (items.length === 1) return items[0][1]();
+  if (items.length === 1 && !always) return items[0][1]();
   const r = anchor.getBoundingClientRect(), menu = document.createElement('div');
   menu.className = 'quick'; menu.style.left = `${r.left + r.width / 2}px`; menu.style.top = `${r.top - 8}px`;
   menu.innerHTML = items.map(([label], i) => `<button data-q="${i}">${esc(label)}</button>`).join('');
@@ -611,9 +625,17 @@ function handMenu(uid, el) {
   const key = owner(uid), items = [];
   const reason = playableReason(key, uid);
   if (!reason) items.push([`Play ${info(uid).name}`, () => playFromHand(key, uid)]);
-  if (canBase(key, uid)) items.push(['Place as Cosmo Base', () => act(() => placeBase(S(), key, uid, info(uid)))]);
+  if (canBase(key, uid)) items.push(['Place as Cosmo Base', () => placeAsBase(key, uid)]);
   if (!items.length) return warn(reason || 'Not playable now.');
-  quickMenu(el, items);
+  quickMenu(el, items, {always: true}); // carta da mão nunca sai sem o jogador escolher o que fazer
+}
+// Área de Cosmo do jogador (hexágono e chamas) como alvo de soltar.
+const bankAt = (key, x, y) => document.elementsFromPoint(x, y).some(d => d.closest?.(`[data-bank="${key}"]`));
+function markBank(key, uid, x, y) {
+  const bank = $(`[data-bank="${key}"]`);
+  if (!bank) return;
+  bank.classList.toggle('drop-target', canBase(key, uid));
+  bank.classList.toggle('drop-hover', canBase(key, uid) && bankAt(key, x, y));
 }
 function fieldMenu(uid, el) {
   const s = S(), key = owner(uid), c = info(uid), items = [];
@@ -671,7 +693,7 @@ function previewCost(uid) {
   $$(`[data-bank="${key}"] [data-bank-unit="${c.cost.unit}"] .orb.ready`).slice(-c.cost.amount).forEach(o => o.classList.add('preview'));
 }
 
-// Arrastar da mão: soltar no campo joga; soltar num Devotee seu escolhe o portador/alvo.
+// Arrastar da mão: soltar no campo joga; soltar num Devotee seu escolhe o portador/alvo; soltar na área de Cosmo vira Base.
 document.addEventListener('pointerdown', e => {
   const el = e.target.closest('.hand--me .dcard[data-uid]');
   if (!el || director.busy || mode) return;
@@ -682,6 +704,7 @@ document.addEventListener('pointermove', e => {
   if (!drag.ghost && Math.hypot(e.clientX - drag.x, e.clientY - drag.y) < 10) return;
   if (!drag.ghost) { drag.ghost = drag.el.cloneNode(true); drag.ghost.classList.add('dragging'); document.body.append(drag.ghost); drag.el.classList.add('drag-source'); }
   drag.ghost.style.left = `${e.clientX}px`; drag.ghost.style.top = `${e.clientY}px`;
+  markBank(owner(drag.uid), drag.uid, e.clientX, e.clientY);
 });
 document.addEventListener('pointerup', e => {
   if (!drag) return;
@@ -689,7 +712,9 @@ document.addEventListener('pointerup', e => {
   drag = null;
   if (!ghost) return;
   ghost.remove(); el.classList.remove('drag-source');
+  $$('.cosmo.drop-target, .cosmo.drop-hover').forEach(b => b.classList.remove('drop-target', 'drop-hover'));
   const key = owner(uid), drop = document.elementsFromPoint(e.clientX, e.clientY);
+  if (bankAt(key, e.clientX, e.clientY)) return placeAsBase(key, uid); // soltar na área de Cosmo: vira Base
   const onField = drop.some(d => d.dataset?.field === key), onUnit = drop.find(d => d.dataset?.uid && S().players[key].battlefield.includes(d.dataset.uid));
   if (!onField && !onUnit) return;
   const reason = playableReason(key, uid);
