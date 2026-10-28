@@ -27,12 +27,13 @@ export function checkStrike(state, ctx, attacker, target) {
   const defenders = state.players[enemy].battlefield.filter(uid => card(ctx, uid).kind === 'Devotee');
   const keyword = [attacker, ...defenders].flatMap(uid => keywordsOf(state, ctx, uid)).find(k => PENDING_KEYWORDS.includes(k));
   if (keyword) throw new NotSpecified(`efeito de ${keyword} no Strike (fora da ALPHA-P05)`);
-  // P05 A: Guardian Prepared obriga a mirar um Guardian; Nimble ignora sempre; Cheater ignora contra God.
+  // P05 A + G3-038 (autor, 28/10/2026): qualquer Guardian em campo, Prepared ou não, obriga a mirar um Guardian;
+  // Nimble ignora sempre; Cheater ignora contra God.
   const own = keywordsOf(state, ctx, attacker), isGuardian = uid => keywordsOf(state, ctx, uid).includes('Guardian');
-  const guarded = defenders.some(uid => isGuardian(uid) && state.units[uid]?.prepared);
+  const guarded = defenders.some(isGuardian);
   const ignores = own.includes('Nimble') || (own.includes('Cheater') && target.kind === 'god');
   if (guarded && !ignores && !(target.kind === 'devotee' && isGuardian(target.uid))) {
-    throw new RuleError('P05', 'há Guardian Prepared: o Strike precisa mirar um Devotee com Guardian');
+    throw new RuleError('P05', 'há Guardian em campo: o Strike precisa mirar um Devotee com Guardian');
   }
   if (state.strikes.get(attacker) === state.turn) throw new RuleError('D22', 'este Devotee já declarou Strike neste turno');
   return {key, enemy};

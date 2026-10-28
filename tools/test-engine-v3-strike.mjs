@@ -84,7 +84,7 @@ test('ilegais: Unprepared, segundo Strike no turno (D22), turno alheio, alvo ali
   assert.throws(() => declareStrike(s.state, s.ctx, seiya, {kind: 'god', player: 'B'}), /D22/);
 });
 
-test('P05 Guardian: com Guardian Prepared, Strike no God ou em Devotee sem Guardian é recusado e nada é gasto', () => {
+test('P05 Guardian: com Guardian em campo, Strike no God ou em Devotee sem Guardian é recusado e nada é gasto', () => {
   const s = setup();
   const seiya = s.field('A', '001'), acolyte = s.field('B', '043'), guard = s.field('B', '040'); // 040: Guardian
   for (const target of [{kind: 'god', player: 'B'}, {kind: 'devotee', uid: acolyte}]) {
@@ -97,12 +97,12 @@ test('P05 Guardian: com Guardian Prepared, Strike no God ou em Devotee sem Guard
   assert.equal(s.state.units[guard].damage, 2);
 });
 
-test('P05 Guardian Unprepared não protege', () => {
+test('G3-038: Guardian Unprepared também protege (o Strike precisa mirá-lo)', () => {
   const s = setup();
   const seiya = s.field('A', '001');
-  s.field('B', '040', false);
-  strike(s, seiya, {kind: 'god', player: 'B'});
-  assert.equal(s.state.players.B.soul, 28);
+  const guard = s.field('B', '040', false);
+  assert.throws(() => declareStrike(s.state, s.ctx, seiya, {kind: 'god', player: 'B'}), e => e instanceof RuleError && e.decision === 'P05');
+  assert.deepEqual(strikeTargets(s.state, s.ctx, seiya), [{kind: 'devotee', uid: guard}]);
 });
 
 test('P05 Nimble (021) ignora Guardian; Cheater ignora só contra God', () => {

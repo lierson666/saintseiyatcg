@@ -176,12 +176,12 @@ test('opcionais pagos: Prayer of Rozan (1 Latent), Crystal Wall (2 Latent, tamb√
   const asked = [];
   const yes = (player, q) => { asked.push(q.ability); return true; };
   const {s, ctx, field, strike, end} = setup({A: rush, B: fortress}, yes);
-  const seiya = field('A', '001');
+  const marin = field('A', '021'); // Nimble: ignora Guardian (G3-038: Guardian protege mesmo Unprepared)
   const shunrei = field('B', '037'), mu = field('B', '011'), cassios = field('B', '027'), shiryu = field('B', '003');
   s.units[shunrei].prepared = s.units[mu].prepared = s.units[cassios].prepared = false;
-  s.units[shiryu].prepared = false; // Guardian Unprepared n√£o protege
+  s.units[shiryu].prepared = false;
   s.players.B.latent = 3;
-  strike(seiya, {kind: 'god', player: 'B'});
+  strike(marin, {kind: 'god', player: 'B'});
   assert.deepEqual([s.players.B.soul, s.players.B.latent, asked], [30, 1, ['Crystal Wall']], 'Crystal Wall previne os 2 no God');
   const jabu = field('A', '028'); // ATK 2 + Unicorn Gallop 1 contra Shiryu: Dragon Shield 1, Prayer 1, Final Sacrifice o resto
   strike(jabu, {kind: 'devotee', uid: shiryu});
