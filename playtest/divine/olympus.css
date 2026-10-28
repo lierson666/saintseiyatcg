@@ -325,7 +325,7 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .dcard.art-full .lc-gem b[data-trend="up"] { color: #8dffa6; text-shadow: 0 0 .5cqw #000, 0 0 3cqw #3ad06a, 0 0 6cqw #1fbf4f; }
 .dcard.art-full .lc-gem b[data-trend="down"] { color: #ff5a4a; text-shadow: 0 0 .5cqw #000, 0 0 3cqw #ff2a1a, 0 0 6cqw #d00; transform: scale(1.1); }
 /* Campo: cartas 20% maiores que a base da mesa. */
-.olympus .field { --card-w: calc(clamp(70px, 6.2vw, 110px) * 1.2); --card-h: calc(var(--card-w) * 1.4); }
+.olympus .field { --card-w: calc(clamp(70px, 6.2vw, 110px) * 1.56); /* +30% sobre o ×1.2 (autor, 28/10/2026) */ --card-h: calc(var(--card-w) * 1.4); }
 @media (max-width: 760px) { .olympus .field { --card-w: 65px; } }
 /* Clique direito: a carta real grande no centro; clique, clique direito ou Esc fecha. */
 .bigcard { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; background: rgba(4, 6, 14, .72); backdrop-filter: blur(3px); cursor: zoom-out; animation: bigcard-in .18s ease-out; }
