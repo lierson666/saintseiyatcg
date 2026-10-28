@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0b0c17">
+  <meta name="theme-color" content="#05070c">
   <meta name="description" content="Awaken your Cosmo. An original Saint Seiya fan card game with local battles and an AI rival.">
   <title>Saint Seiya TCG — The Sanctuary</title>
   <link rel="icon" href="../LOGO/favicon.png">
@@ -16,18 +16,11 @@
   <meta property="og:url" content="https://saintseiyatcg.com/playtest/">
   <meta property="og:image" content="https://saintseiyatcg.com/LOGO/og-image.jpg">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="stylesheet" href="./game.css?v=20261028-1">
   <link rel="stylesheet" href="../shared/live-card.css?v=20261024-4">
-  <link rel="stylesheet" href="./v2.css?v=20261024-4">
-  <link rel="stylesheet" href="./arena.css?v=20261024-4">
+  <link rel="stylesheet" href="./lobby.css?v=20261028-2">
 </head>
 <body>
-  <main id="game-root"><section class="loading-screen"><img src="../LOGO/logo-web.webp" alt="Saint Seiya TCG"><p>Entering the sanctuary…</p></section></main>
-  <div id="audio-root"></div>
-  <div id="modal-root"></div>
-  <div id="preview-root" aria-hidden="true"></div>
-  <div id="effects-root" aria-hidden="true"></div>
-  <div id="notice-root" role="status" aria-live="polite"></div>
-  <script type="module" src="./app-v2.js?v=20261028-arena"></script>
+  <main id="lobby" class="lobby"><p class="lb-loading">Entering the sanctuary…</p></main>
+  <script type="module" src="./lobby.js?v=20261028-3"></script>
 </body>
 </html>

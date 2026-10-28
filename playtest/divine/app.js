@@ -15,6 +15,7 @@ import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, cloc
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {createDirector} from './director.js?v=3';
 import {createAI} from './ai.js?v=2';
+import {findDeck} from '../deck-store.js';
 import {renderLiveCard} from '../../shared/live-card.js?v=20261028-5';
 
 const $ = (s, el = document) => el.querySelector(s), $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -1060,7 +1061,7 @@ addEventListener('resize', () => drawIntents());
 
 function newMatch(seed = Date.now() % 100000, first) {
   // Poseidon V6 não tem cartas canônicas: o God Poseidon pilota o deck Athena V6 do jogador B, como FIXTURE rotulada.
-  match = createMatch({cards, canonIndex: canonIndex(canon), decks, gods: {A: 'god-athena', B: settings.godB}, seed, first});
+  match = createMatch({cards, canonIndex: canonIndex(canon), decks, gods: {A: decks.A.god || 'god-athena', B: settings.godB}, seed, first});
   ctx = {cards, objects: match.objects, attached: match.attached}; // ctx.decide vem do protocolo de decisão (act)
   logLines = []; mode = null; pending = null; marked = new Set(); ending = false; seenEvents = 0;
   clock = createClock(match.state.order);
@@ -1261,7 +1262,7 @@ async function init() {
     return r.json();
   })));
   canon = canonData; cards = loadCanon(canon);
-  const [rush, fortress] = deckData.decks, deckOf = id => deckData.decks.find(d => d.id === id);
+  const [rush, fortress] = deckData.decks, deckOf = id => findDeck(id, deckData.decks); // presets D171 ou decks do criador (../deck-store.js)
   const query = new URLSearchParams(location.search);
   decks = {A: deckOf(query.get('deckA')) || rush, B: deckOf(query.get('deckB')) || fortress}; // ?deckA=&deckB= vindos da seleção do menu
   director = createDirector({ui, getFx: () => scene?.fx, settings});

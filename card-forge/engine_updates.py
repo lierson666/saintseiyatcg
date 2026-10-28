@@ -17,10 +17,10 @@ import time
 RULES = 'docs/guia-do-jogo.md'
 CHANGELOG = 'docs/CHANGELOG-regras.md'
 EDITABLE = {
-    'playtest/engine-v2.js', 'playtest/app-v2.js', 'playtest/view-v2.js', 'playtest/battle-guide.js',
+    'playtest/engine-v2.js',
     'shared/card-model.js', 'shared/rules-policy.js', 'shared/import-playtest.js', 'shared/card-revisions.js',
     'shared/card-text.js', 'shared/live-card.js', 'shared/starter-decks.js',
-    'tools/test-rules-v2.mjs', 'tools/test-rules-v21.mjs', 'tools/test-battle-guide.mjs', 'tools/test-presentation.mjs',
+    'tools/test-rules-v2.mjs', 'tools/test-rules-v21.mjs', 'tools/test-presentation.mjs',
     'tools/test-card-presentation.mjs', 'tools/test-star-hill-editors.mjs',
 }
 EXTRA_TEST = 'tools/test-motor-gerado.mjs'
