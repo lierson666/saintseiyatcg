@@ -24,6 +24,7 @@ export function createMatch({cards, canonIndex, decks, gods = {A: 'god-athena', 
   const soul = {A: cards.get(gods.A).soul, B: cards.get(gods.B).soul};
   const state = createCore({first, second: first === 'A' ? 'B' : 'A', soul, decks: piles});
   state.gods = gods;
+  state.units = {}; // uid -> {prepared, damage} dos Devotees no campo
   state.domains = {A: decks.A.domain_id, B: decks.B.domain_id};
   return {state, objects, attached: {}};
 }

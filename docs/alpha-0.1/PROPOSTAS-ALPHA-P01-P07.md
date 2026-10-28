@@ -1,6 +1,6 @@
 # Alpha 0.1 — propostas ALPHA-P01 a ALPHA-P07
 
-**Status de todas: NÃO APROVADA.** Cada uma precisa da confirmação individual do autor. A numeração é provisória e não usa a faixa D. A D269 fica de fora.
+**Status: cada proposta precisa da confirmação individual do autor.** Aprovadas até agora: P04 (opção A). As demais: NÃO APROVADAS. A numeração é provisória e não usa a faixa D. A D269 fica de fora.
 
 Se o autor achar o texto original (D1–D190) de algum item, esse texto substitui a proposta.
 
@@ -80,6 +80,8 @@ Nos decks aprovados (Pegasus Rush × Dragon Fortress), as keywords em uso são:
 - **Risco:** baixo. O núcleo já implementa a A, com a posição marcada como pendente.
 
 ## ALPHA-P04 — Procedimento de Strike, dano, retaliação e Cleanup
+
+**Status: APROVADA, opção A, pelo autor em 28/10/2026** (dano simultâneo, retaliação do God, dano persistente). Implementada em `playtest/engine-v3/strike.js`. Guardian (P05) e a janela de reação (P06) continuam pendentes.
 
 - **Comprovado:**
   - D22: um Strike por turno.
