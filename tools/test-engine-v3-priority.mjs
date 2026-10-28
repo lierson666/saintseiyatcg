@@ -80,7 +80,8 @@ test('Strike declarado abre janela; Moment do defensor resolve antes do dano', (
   const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
   const canon = read('../data/canon/d268.json'), cards = loadCanon(canon);
   const [rush, fortress] = read('../data/alpha-0.1/decks-proposta-d171.json').decks;
-  const m = createMatch({cards, canonIndex: canonIndex(canon), decks: {A: rush, B: fortress}, seed: 3});
+  const m = createMatch({cards, canonIndex: canonIndex(canon), decks: {A: rush, B: fortress}, first: 'A', seed: 3});
+  for (const p of Object.values(m.state.players)) p.deck.push(...p.hand.splice(0)); m.state.setup = null; // cenário isolado: sem mão inicial (P01)
   const ctx = {cards, objects: m.objects, attached: m.attached}, s = m.state, log = [];
   const p = s.players.A, seiya = p.deck.find(u => u.includes(':001:'));
   p.deck.splice(p.deck.indexOf(seiya), 1); p.battlefield.push(seiya);

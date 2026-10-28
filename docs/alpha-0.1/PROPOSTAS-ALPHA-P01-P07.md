@@ -1,6 +1,6 @@
 # Alpha 0.1 — propostas ALPHA-P01 a ALPHA-P07
 
-**Status: cada proposta precisa da confirmação individual do autor.** Aprovadas até agora: P02, P04, P05 e P06 (todas opção A). As demais: NÃO APROVADAS. A numeração é provisória e não usa a faixa D. A D269 fica de fora.
+**Status: cada proposta precisa da confirmação individual do autor.** Aprovadas até agora: P01, P02, P04, P05 e P06 (todas opção A). As demais: NÃO APROVADAS. A numeração é provisória e não usa a faixa D. A D269 fica de fora.
 
 Se o autor achar o texto original (D1–D190) de algum item, esse texto substitui a proposta.
 
@@ -26,6 +26,8 @@ Nos decks aprovados (Pegasus Rush × Dragon Fortress), as keywords em uso são:
 ---
 
 ## ALPHA-P01 — Mão inicial, mulligan e quem começa
+
+**Status: APROVADA, opção A, pelo autor em 28/10/2026.** Implementada em `playtest/engine-v3/match.js` (`createMatch` sorteia e compra 7; `mulligan`). O 1º turno só começa depois dos dois mulligans.
 
 - **Comprovado:** nada da 3.0. A D170 tira a compra do 1º turno, o que pressupõe uma mão inicial.
 - **Referência histórica:** Vanilla 1.0 e 2.x usam mão de 7, com troca de cartas.

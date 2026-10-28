@@ -15,7 +15,8 @@ const [rush, fortress] = read('../data/alpha-0.1/decks-proposta-d171.json').deck
 
 // Coloca no campo direto do deck: a entrada pela mão depende da ALPHA-P02 (estado de entrada).
 function setup() {
-  const m = createMatch({cards, canonIndex: canonIndex(canon), decks: {A: rush, B: fortress}, seed: 3});
+  const m = createMatch({cards, canonIndex: canonIndex(canon), decks: {A: rush, B: fortress}, first: 'A', seed: 3});
+  for (const p of Object.values(m.state.players)) p.deck.push(...p.hand.splice(0)); m.state.setup = null; // cenário isolado: sem mão inicial (P01)
   const ctx = {cards, objects: m.objects, attached: m.attached};
   const field = (key, id, prepared = true) => {
     const p = m.state.players[key], uid = p.deck.find(u => u.includes(`:${id}:`) && !p.battlefield.includes(u));

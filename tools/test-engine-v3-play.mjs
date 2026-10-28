@@ -15,7 +15,8 @@ const cards = loadCanon(canon);
 const [rush, fortress] = read('../data/alpha-0.1/decks-proposta-d171.json').decks;
 
 function setup(cardsMap = cards) {
-  const m = createMatch({cards: cardsMap, canonIndex: canonIndex(canon), decks: {A: rush, B: fortress}, seed: 5});
+  const m = createMatch({cards: cardsMap, canonIndex: canonIndex(canon), decks: {A: rush, B: fortress}, first: 'A', seed: 5});
+  for (const p of Object.values(m.state.players)) p.deck.push(...p.hand.splice(0)); m.state.setup = null; // cenário isolado: sem mão inicial (P01)
   const ctx = {cards: cardsMap, objects: m.objects, attached: m.attached}, s = m.state;
   const take = (key, id) => { const p = s.players[key], uid = p.deck.find(u => u.includes(`:${id}:`)); p.deck.splice(p.deck.indexOf(uid), 1); return uid; };
   const toHand = (key, id) => { const uid = take(key, id); s.players[key].hand.push(uid); return uid; };

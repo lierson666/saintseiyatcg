@@ -33,6 +33,7 @@ const other = (state, key) => state.order.find(k => k !== key);
 export function startTurn(state, startOfTurn = []) {
   alive(state);
   assertIdle(state);
+  if (state.setup) throw new RuleError('P01', `mulligan pendente: ${state.setup.join(', ')}`);
   const key = state.active, p = state.players[key];
   state.turn++;
   p.ownTurns++;
@@ -42,7 +43,6 @@ export function startTurn(state, startOfTurn = []) {
   if (startOfTurn.length) pushTriggers(state, startOfTurn, drawStep);
   else drawStep();
 }
-export function openingHand() { throw new NotSpecified('mão inicial e mulligan da 3.0'); }
 
 export function draw(state, key, n) {
   alive(state);
