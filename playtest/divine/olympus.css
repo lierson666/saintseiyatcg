@@ -275,3 +275,26 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .inspector .dcard--xl { flex: none; width: 260px; height: 364px; }
 .inspector .dcard--xl .dcard__art[style] { background-size: 100% 100%; background-position: center; }
 .inspector .dcard--xl:has(.dcard__art[style]) .dcard__plate, .inspector .dcard--xl:has(.dcard__art[style]) .dcard__cost { display: none; }
+
+/* Setas de intenção: translúcidas, fixas enquanto o Strike ou a cadeia esperam resolver. */
+.intent-arrows { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 30; pointer-events: none; overflow: visible; }
+.intent path { fill: none; stroke-width: 5; stroke-linecap: round; stroke-dasharray: 12 8; opacity: .55; animation: aim-flow .9s linear infinite; }
+.intent circle { fill: none; stroke-width: 2; opacity: .5; animation: intent-pulse 1.4s ease-in-out infinite; }
+.intent text { font: 700 12px/1 system-ui, sans-serif; letter-spacing: .08em; text-anchor: middle; paint-order: stroke; stroke: rgba(4, 6, 20, .85); stroke-width: 4px; }
+.intent--strike path, .intent--strike circle { stroke: #ff5a40; } .intent--strike text, .ih--strike { fill: #ff8a70; }
+.intent--spell path, .intent--spell circle { stroke: #c79bff; } .intent--spell text, .ih--spell { fill: #dcc2ff; }
+.intent--source path, .intent--source circle { stroke: #7fc8ff; } .intent--source text, .ih--source { fill: #b8e2ff; }
+.ih { opacity: .7; }
+@keyframes intent-pulse { 50% { opacity: .15; r: 28; } }
+.reduce-motion .intent path, .reduce-motion .intent circle { animation: none; }
+
+/* God: Attack no HUD e painel de status (clique direito). */
+.godhud__atk { display: flex; align-items: center; gap: 3px; padding: 2px 9px; border-radius: 14px; font: 600 15px/1 Georgia, serif; color: #ffd9a0; background: rgba(60, 20, 10, .65); border: 1px solid rgba(255, 170, 110, .45); }
+.godhud__atk b { font-size: 20px; color: #fff3e0; }
+.godcard { flex: none; display: grid; gap: 10px; justify-items: center; width: 200px; }
+.godcard .godhud__portrait { width: 140px; }
+.godstats { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; width: 100%; }
+.godstat { display: grid; gap: 1px; padding: 6px 8px; border-radius: 8px; background: rgba(255, 255, 255, .05); border: 1px solid rgba(227, 194, 122, .25); text-align: center; }
+.godstat small { font: 600 10px/1.2 system-ui; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.godstat b { font: 600 22px/1.1 Georgia, serif; color: var(--gold-hi); } .godstat b span { font-size: 13px; color: var(--muted); }
+.godstat em { font: 11px/1.2 system-ui; font-style: normal; color: #9fb4d8; }

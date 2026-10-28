@@ -371,6 +371,7 @@ function godHud(key, side) {
       <strong class="godhud__name">${esc(god.name[0] + god.name.slice(1).toLowerCase())}</strong>
       <div class="godhud__row">
         <span class="godhud__soul" data-soul="${key}"><i class="heart" aria-hidden="true"></i><b>${p.soul}</b></span>
+        <span class="godhud__atk" title="Attack ${god.atk}: damage the God deals back to a Devotee that strikes it">⚔<b>${god.atk}</b></span>
         <span class="godhud__awaken" title="Awaken ${d.awakenAt}: active while Soul ≤ ${d.awakenAt}">${d.awakenAt}</span>
         ${ult !== 'none' ? `<span class="godhud__ult ${ult}" title="Ultimate ${ult === 'used' ? 'used' : 'available once per match'}">U</span>` : ''}
         ${d.judgment ? `<span class="godhud__judgment" title="Divine Judgment: loses at the end of Round ${d.judgment.deadline}">⚖ R${d.judgment.deadline}</span>` : ''}
@@ -432,7 +433,7 @@ function command() {
   else if (s.window) label = s.chain.length ? 'Pass · Resolve' : 'Pass';
   // Cadeia de cima para baixo: o topo resolve primeiro (LIFO, D186); gatilhos simultâneos entram em APNAP (D187).
   // A ordem entre gatilhos simultâneos do mesmo jogador ainda não é escolha dele (GODS-3.0-SUPPLEMENT, pendência 5).
-  const chain = s.chain.length ? `<ol class="chain" aria-label="Chain, top resolves first">${s.chain.map((c, i) => `<li><b>${i + 1}</b> ${esc(c.ability || (c.uid && ctx.objects[c.uid] ? info(c.uid).name : 'Triggered ability'))} <small>Player ${c.controller}</small></li>`).reverse().join('')}</ol>
+  const chain = s.chain.length ? `<ol class="chain" aria-label="Chain, top resolves first">${s.chain.map((c, i) => `<li data-chain="${i}"><b>${i + 1}</b> ${esc(c.ability || (c.uid && ctx.objects[c.uid] ? info(c.uid).name : 'Triggered ability'))} <small>Player ${c.controller}</small></li>`).reverse().join('')}</ol>
     <small class="chain__hint">${s.chain.length > 1 ? 'Top resolves first' : 'Resolves when both pass'}</small>` : '';
   return `<aside class="command" aria-label="Turn actions">
     ${s.window ? `<div class="priority"><small>Priority</small><strong>Player ${s.window.priority}</strong>${chain}</div>` : ''}
@@ -520,6 +521,7 @@ function render() {
   if (mode) $$('.dcard').forEach(el => { if (!el.classList.contains('pickable') && el.closest('.field')) el.classList.add('dimmed'); });
   if (scene) { const st = $('[data-stats]'); if (st) st.textContent = `WebGL on · ${JSON.stringify(scene.stats())}`; }
   updateClock();
+  drawIntents();
 }
 
 // ---------- Adaptador do DOM para o orquestrador ----------
@@ -711,7 +713,7 @@ overlayRoot.addEventListener('change', e => {
 document.addEventListener('pointerover', e => {
   const el = e.target.closest?.('.dcard[data-uid]:not(.dcard--back)');
   clearTimeout(inspectTimer);
-  if (!el) return hideInspect();
+  if (!el) return $('#inspector .godcard') ? undefined : hideInspect(); // painel do God fica até clicar fora
   inspectTimer = setTimeout(() => showInspect(el.dataset.uid), 300);
   previewCost(el.dataset.uid);
 });
@@ -721,6 +723,23 @@ function showInspect(uid) {
   box.innerHTML = `${cardFace(uid, {size: 'dcard--xl', field: S().players[owner(uid)].battlefield.includes(uid)})}<div class="inspector__text"><strong>${esc(c.name)}</strong><small>${esc(c.type)}${c.cost ? ` · ${c.cost.amount} ${c.cost.unit === 'base' ? 'Base' : 'Latent'}` : ''}</small>${lines.map(l => `<p>${esc(l)}</p>`).join('')}</div>`;
   box.classList.add('show');
 }
+// Clique direito no retrato do God: status base e atuais (Soul, Attack, Awaken, Ultimate) e o texto completo.
+function showGodInspect(key) {
+  const s = S(), p = s.players[key], d = s.divine[key], god = cards.get(s.gods[key]), max = soulMax(s, key), box = $('#inspector');
+  const lines = god.text.split('\n').slice(3).filter(l => l && !/^SOUL \d/.test(l)); // stats já estão nos quadros
+  const stat = (label, value, note = '') => `<div class="godstat"><small>${label}</small><b>${value}</b>${note ? `<em>${note}</em>` : ''}</div>`;
+  box.innerHTML = `<div class="godcard"><div class="godhud__portrait" style="background-image:url('${GOD_ART[s.gods[key]] || ''}')"></div>
+      <div class="godstats">${stat('Soul', `${p.soul}<span>/${max}</span>`)}${stat('Attack', god.atk, 'retaliation')}${stat('Awaken', d.awakenAt, d.awaken ? 'active' : `at Soul ≤ ${d.awakenAt}`)}${stat('Ultimate', d.ultimateUsed ? 'Used' : 'Ready', 'once per match')}</div></div>
+    <div class="inspector__text"><strong>${esc(god.name)}</strong><small>${esc(god.type)} · Player ${key}</small>${lines.map(l => `<p>${esc(l)}</p>`).join('')}</div>`;
+  box.classList.add('show');
+}
+document.addEventListener('contextmenu', e => {
+  const el = e.target.closest?.('[data-god]');
+  if (!el) return;
+  e.preventDefault();
+  showGodInspect(el.dataset.god);
+});
+document.addEventListener('pointerdown', e => { if (!e.target.closest?.('#inspector') && $('#inspector .godcard')) hideInspect(); });
 function hideInspect() { $('#inspector').classList.remove('show'); $$('.orb.preview').forEach(o => o.classList.remove('preview')); }
 // Prévia de pagamento: as esferas que esta carta gastaria piscam antes do clique.
 function previewCost(uid) {
@@ -868,6 +887,44 @@ document.addEventListener('keydown', e => {
   if (e.key === 'l' || e.key === 'L') { logOpen = !logOpen; render(); }
 });
 document.addEventListener('click', e => { if (!e.target.closest('.quick') && !e.target.closest('.dcard')) closeQuick(); });
+
+// ---------- Setas de intenção (quem mira quem) ----------
+// Setas translúcidas e fixas enquanto algo espera resolver: Strike declarado (atacante → alvo) e cada item da cadeia
+// (número na lista de prioridade → alvo, ou → carta de origem do gatilho). Só leitura do estado; não decide nada.
+const elOf = ref => (!ref ? null : ref.startsWith?.('god:') ? $(`[data-god="${ref.slice(4)}"] .godhud__portrait`) : $(`.field .dcard[data-uid="${ref}"], .lane .dcard[data-uid="${ref}"]`));
+const center = el => { const r = el.getBoundingClientRect(); return [r.left + r.width / 2, r.top + r.height / 2]; };
+function pendingStrike(s) {
+  if (!s.window) return null;
+  for (let i = s.events.length - 1; i >= 0; i--) {
+    const e = s.events[i];
+    if (['strike_resolve', 'strike_fizzled', 'turn_start'].includes(e.type)) return null;
+    if (e.type === 'strike_declared') return e;
+  }
+  return null;
+}
+function drawIntents() {
+  $('.intent-arrows')?.remove();
+  if (!match || S().victory) return;
+  const s = S(), arrows = [];
+  const strike = pendingStrike(s);
+  if (strike) arrows.push({from: elOf(strike.attacker), to: elOf(strike.target.kind === 'god' ? `god:${strike.target.player}` : strike.target.uid), kind: 'strike', label: 'STRIKE'});
+  s.chain.forEach((c, i) => {
+    const from = $(`.chain [data-chain="${i}"] b`), target = c.target && ctx.objects[c.target] ? c.target : null;
+    if (target) arrows.push({from, to: elOf(target), kind: 'spell', label: String(i + 1)});
+    else if (c.uid && elOf(c.uid)) arrows.push({from, to: elOf(c.uid), kind: 'source', label: String(i + 1)});
+  });
+  const live = arrows.filter(a => a.from && a.to);
+  if (!live.length) return;
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('class', 'intent-arrows');
+  svg.innerHTML = '<defs>' + ['strike', 'spell', 'source'].map(k => `<marker id="ih-${k}" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path class="ih ih--${k}" d="M0,0 L10,5 L0,10 z"/></marker>`).join('') + '</defs>' +
+    live.map(a => {
+      const [x0, y0] = center(a.from), [x1, y1] = center(a.to), mx = (x0 + x1) / 2, my = (y0 + y1) / 2 - Math.min(120, Math.hypot(x1 - x0, y1 - y0) * .25);
+      return `<g class="intent intent--${a.kind}"><path d="M${x0},${y0} Q${mx},${my} ${x1},${y1}" marker-end="url(#ih-${a.kind})"/><circle cx="${x1}" cy="${y1}" r="22"/><text x="${mx}" y="${my + 4}">${esc(a.label)}</text></g>`;
+    }).join('');
+  document.body.append(svg);
+}
+addEventListener('resize', () => drawIntents());
 
 // ---------- Partida ----------
 

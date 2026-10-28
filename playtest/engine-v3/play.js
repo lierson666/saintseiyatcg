@@ -141,5 +141,6 @@ export function playSpell(state, ctx, key, uid, choice = {}) {
   leaveHand(state, key, uid);
   p.stack.push(uid);
   emit(state, 'card_played', {player: key, uid, kind: 'Spell', category: category.category});
-  respond(state, key, {speed: 'instant', uid, run: finish}); // Moment jogado abre ou continua a janela
+  // `target` só informa a interface (seta do alvo); a resolução usa `choice`.
+  respond(state, key, {speed: 'instant', uid, run: finish, target: typeof choice === 'object' ? choice.target ?? null : null}); // Moment jogado abre ou continua a janela
 }
