@@ -3,7 +3,10 @@
 // `ctx`: {cards (loadCanon), objects (uid -> {owner, cardId}), attached}. Estado de unidade em state.units[uid] = {prepared, damage}.
 import {RuleError, NotSpecified, recordStrike, loseSoul, destroyDevotee, assertIdle, openWindow, pushTriggers} from './core.js';
 
-const PENDING_KEYWORDS = ['Guardian', 'Cheater', 'Nimble', 'Pierce', 'Long Range']; // P05
+const PENDING_KEYWORDS = ['Long Range']; // fora da P05: sem definição 3.0
+
+// Keywords impressas + concedidas por efeito (`state.units[uid].keywords`).
+export const keywordsOf = (state, ctx, uid) => [...card(ctx, uid).keywords, ...(state.units[uid]?.keywords || [])];
 
 const card = (ctx, uid) => ctx.cards.get(ctx.objects[uid].cardId);
 const onField = (state, key, uid) => state.players[key].battlefield.includes(uid);
@@ -21,10 +24,16 @@ export function declareStrike(state, ctx, attacker, target, triggers = []) {
   const legal = target.kind === 'god' ? target.player === enemy
     : target.kind === 'devotee' && onField(state, enemy, target.uid) && card(ctx, target.uid).kind === 'Devotee';
   if (!legal) throw new RuleError('P04', 'alvo precisa ser o God inimigo ou um Devotee inimigo');
-  // Legalidade de alvo com keywords depende da P05; não presumir.
-  const involved = [attacker, ...state.players[enemy].battlefield].filter(uid => card(ctx, uid).kind === 'Devotee');
-  const keyword = involved.flatMap(uid => card(ctx, uid).keywords).find(k => PENDING_KEYWORDS.includes(k));
-  if (keyword) throw new NotSpecified(`ALPHA-P05: efeito de ${keyword} na declaração e no dano do Strike`);
+  const defenders = state.players[enemy].battlefield.filter(uid => card(ctx, uid).kind === 'Devotee');
+  const keyword = [attacker, ...defenders].flatMap(uid => keywordsOf(state, ctx, uid)).find(k => PENDING_KEYWORDS.includes(k));
+  if (keyword) throw new NotSpecified(`efeito de ${keyword} no Strike (fora da ALPHA-P05)`);
+  // P05 A: Guardian Prepared obriga a mirar um Guardian; Nimble ignora sempre; Cheater ignora contra God.
+  const own = keywordsOf(state, ctx, attacker), isGuardian = uid => keywordsOf(state, ctx, uid).includes('Guardian');
+  const guarded = defenders.some(uid => isGuardian(uid) && state.units[uid]?.prepared);
+  const ignores = own.includes('Nimble') || (own.includes('Cheater') && target.kind === 'god');
+  if (guarded && !ignores && !(target.kind === 'devotee' && isGuardian(target.uid))) {
+    throw new RuleError('P05', 'há Guardian Prepared: o Strike precisa mirar um Devotee com Guardian');
+  }
   recordStrike(state, attacker); // D22
   state.units[attacker].prepared = false;
   const strike = {attacker, target, player: key};
@@ -41,9 +50,12 @@ export function resolveStrike(state, ctx, strike) {
   }
   const atk = card(ctx, attacker).atk;
   if (target.kind === 'devotee') {
-    const back = card(ctx, target.uid).atk;
+    const back = card(ctx, target.uid).atk, before = state.units[target.uid].damage;
     state.units[target.uid].damage += atk;
     state.units[attacker].damage += back;
+    // P05 A: Pierce leva o dano acima do HP restante do alvo ao Soul do God dele.
+    const excess = atk - Math.max(0, card(ctx, target.uid).hp - before);
+    if (keywordsOf(state, ctx, attacker).includes('Pierce') && excess > 0 && loseSoul(state, {[enemy]: excess})) return state.victory;
   } else {
     state.units[attacker].damage += ctx.cards.get(state.gods[enemy]).atk;
     if (loseSoul(state, {[enemy]: atk})) return state.victory; // D52: encerra na hora

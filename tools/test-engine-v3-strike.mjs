@@ -83,10 +83,49 @@ test('ilegais: Unprepared, segundo Strike no turno (D22), turno alheio, alvo ali
   assert.throws(() => declareStrike(s.state, s.ctx, seiya, {kind: 'god', player: 'B'}), /D22/);
 });
 
-test('Guardian em campo bloqueia de forma explícita até a ALPHA-P05', () => {
+test('P05 Guardian: com Guardian Prepared, Strike no God ou em Devotee sem Guardian é recusado e nada é gasto', () => {
+  const s = setup();
+  const seiya = s.field('A', '001'), acolyte = s.field('B', '043'), guard = s.field('B', '040'); // 040: Guardian
+  for (const target of [{kind: 'god', player: 'B'}, {kind: 'devotee', uid: acolyte}]) {
+    assert.throws(() => declareStrike(s.state, s.ctx, seiya, target), e => e instanceof RuleError && e.decision === 'P05');
+  }
+  assert.equal(s.state.units[seiya].prepared, true, 'declaração recusada não gasta nada');
+  strike(s, seiya, {kind: 'devotee', uid: guard});
+  assert.equal(s.state.units[guard].damage, 2);
+});
+
+test('P05 Guardian Unprepared não protege', () => {
   const s = setup();
   const seiya = s.field('A', '001');
-  s.field('B', '040'); // Sanctuary Guard: Guardian
-  assert.throws(() => declareStrike(s.state, s.ctx, seiya, {kind: 'god', player: 'B'}), e => e instanceof NotSpecified && /P05.*Guardian/.test(e.message));
-  assert.equal(s.state.units[seiya].prepared, true, 'declaração recusada não gasta nada');
+  s.field('B', '040', false);
+  strike(s, seiya, {kind: 'god', player: 'B'});
+  assert.equal(s.state.players.B.soul, 28);
+});
+
+test('P05 Nimble (021) ignora Guardian; Cheater ignora só contra God', () => {
+  const s = setup();
+  const marin = s.field('A', '021'), seiya = s.field('A', '001'), acolyte = s.field('B', '043');
+  s.field('B', '040');
+  strike(s, marin, {kind: 'devotee', uid: acolyte});
+  assert.ok(s.state.players.B.tartarus.includes(acolyte));
+  s.state.units[seiya].keywords = ['Cheater']; // concedido por efeito (ex.: 019 equipada); a carta não muda
+  const enemyDevotee = s.field('B', '042');
+  assert.throws(() => declareStrike(s.state, s.ctx, seiya, {kind: 'devotee', uid: enemyDevotee}), /P05/);
+  strike(s, seiya, {kind: 'god', player: 'B'});
+  assert.equal(s.state.players.B.soul, 28);
+});
+
+test('P05 Pierce: dano acima do HP restante do alvo vai para o Soul do God dele', () => {
+  const s = setup();
+  const seiya = s.field('A', '001'), repairer = s.field('B', '042'); // ATK 2 contra HP 2 com 1 de dano: excesso 1
+  s.state.units[repairer].damage = 1;
+  s.state.units[seiya].keywords = ['Pierce'];
+  strike(s, seiya, {kind: 'devotee', uid: repairer});
+  assert.equal(s.state.players.B.soul, 29);
+  assert.ok(s.state.players.B.tartarus.includes(repairer));
+  const t = setup();
+  const jabu = t.field('A', '028'), shunrei = t.field('B', '037'); // sem Pierce: excesso não passa
+  t.state.units[shunrei].damage = 2;
+  strike(t, jabu, {kind: 'devotee', uid: shunrei});
+  assert.equal(t.state.players.B.soul, 30);
 });

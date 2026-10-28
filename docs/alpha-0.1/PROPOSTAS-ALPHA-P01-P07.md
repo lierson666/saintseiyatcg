@@ -1,6 +1,6 @@
 # Alpha 0.1 — propostas ALPHA-P01 a ALPHA-P07
 
-**Status: cada proposta precisa da confirmação individual do autor.** Aprovadas até agora: P02, P04 e P06 (todas opção A). As demais: NÃO APROVADAS. A numeração é provisória e não usa a faixa D. A D269 fica de fora.
+**Status: cada proposta precisa da confirmação individual do autor.** Aprovadas até agora: P02, P04, P05 e P06 (todas opção A). As demais: NÃO APROVADAS. A numeração é provisória e não usa a faixa D. A D269 fica de fora.
 
 Se o autor achar o texto original (D1–D190) de algum item, esse texto substitui a proposta.
 
@@ -83,7 +83,7 @@ Nos decks aprovados (Pegasus Rush × Dragon Fortress), as keywords em uso são:
 
 ## ALPHA-P04 — Procedimento de Strike, dano, retaliação e Cleanup
 
-**Status: APROVADA, opção A, pelo autor em 28/10/2026** (dano simultâneo, retaliação do God, dano persistente). Implementada em `playtest/engine-v3/strike.js`. Guardian (P05) continua pendente. A janela de reação entre a declaração e o dano vem da P06 A.
+**Status: APROVADA, opção A, pelo autor em 28/10/2026** (dano simultâneo, retaliação do God, dano persistente). Implementada em `playtest/engine-v3/strike.js`. Guardian e as keywords vêm da P05 A. A janela de reação entre a declaração e o dano vem da P06 A.
 
 - **Comprovado:**
   - D22: um Strike por turno.
@@ -117,6 +117,8 @@ Nos decks aprovados (Pegasus Rush × Dragon Fortress), as keywords em uso são:
 - **Risco:** médio. Com a retaliação do God, atacar o God custa vida ao atacante. Medir.
 
 ## ALPHA-P05 — Guardian, Cheater, Nimble e Pierce (as keywords dos decks)
+
+**Status: APROVADA, opção A, pelo autor em 28/10/2026.** Implementada em `playtest/engine-v3/strike.js`. Keywords concedidas por efeito ficam em `state.units[uid].keywords`; os efeitos que concedem (019 Cheater, 077 Pierce) ainda não estão na engine. Long Range segue sem definição.
 
 - **Comprovado:** as cartas só nomeiam as keywords; não há definição 3.0. A Memória Mestre diz, como **resumo**, que Cheater "ignora Guardian ao atacar um God".
 - **A:**
