@@ -50,7 +50,7 @@ uv run --with psd-tools --with pillow --with scipy python card-forge/tools/extra
 - Molduras, ornamentos e ícones podem continuar usando as peças visuais existentes. As duas representações compartilham ID, revisão, dados e ilustração; não mantenha duas cópias independentes do texto ou das regras.
 - Mudanças válidas de atributos e estados devem aparecer durante a partida sem reexportar a imagem. A engine calcula o resultado; a apresentação apenas o exibe.
 - A autorização local de migração de `playtest/` está registrada acima. A diretriz de representação não dispensa diff aprovado para `data/cards.json` nem aprovação para novas regras.
-- Hierarquia visual é obrigatória nas duas representações: identidade/custo, tipo, keywords, blocos de habilidade com títulos e custos, Owners/Resonance/estágios e indicadores. EQUIP nunca deve sumir em uma carta equipável. A sintaxe visual compartilhada fica em `shared/card-text.js`; nenhuma formatação pode inventar efeitos ou mudar o texto salvo silenciosamente.
+- Hierarquia visual é obrigatória nas duas representações: identidade/custo, tipo, keywords, blocos de habilidade com títulos e custos, Owners/Resonance/estágios e indicadores. A orientação visual de 25/10/2026 remove os badges EQUIP e DAMAGE/Armor HP do rodapé padrão; o custo de Equip continua nas regras e no Inspector, e o HP próprio no Inspector. Os valores laterais do meio de Equipment são os bônus de ATK/HP do portador. O círculo de Cosmo no custo indica Cosmoble. Consulte `../docs/layout-studio/sintaxe-visual-20261025.md`. A sintaxe visual compartilhada fica em `shared/card-text.js`; nenhuma formatação pode inventar efeitos ou mudar o texto salvo silenciosamente.
 
 ## Convenções do texto de regras
 

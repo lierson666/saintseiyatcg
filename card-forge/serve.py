@@ -32,6 +32,9 @@ LOCAL_HOSTS = {"localhost", "127.0.0.1"}
 _hill_spec = importlib.util.spec_from_file_location('star_hill', Path(__file__).with_name('star_hill.py'))
 star_hill = importlib.util.module_from_spec(_hill_spec)
 _hill_spec.loader.exec_module(star_hill)
+_studio_spec = importlib.util.spec_from_file_location("layout_studio", Path(__file__).with_name("layout_studio.py"))
+layout_studio = importlib.util.module_from_spec(_studio_spec)
+_studio_spec.loader.exec_module(layout_studio)
 
 
 def fmt(value, indent, expand=False):
@@ -124,6 +127,8 @@ class Handler(SimpleHTTPRequestHandler):
         if not self.local_host():
             return
         path = self.path.split('?', 1)[0]
+        if path.startswith('/api/layout-studio'):
+            return layout_studio.handle(self, path)
         if path.startswith('/api/star-hill/'):
             try:
                 return star_hill.get(self, path)
@@ -144,6 +149,8 @@ class Handler(SimpleHTTPRequestHandler):
             if n <= 0 or n > MAX_BODY:
                 return self.reply(413, {"erro": "corpo vazio ou grande demais"})
             raw = self.rfile.read(n)
+            if self.path.startswith('/api/layout-studio'):
+                return layout_studio.handle(self, self.path.split('?', 1)[0], raw, atomic_write)
             if self.path.startswith('/api/star-hill/'):
                 return star_hill.post(self, self.path.split('?', 1)[0], raw, atomic_write)
             parts = self.path.strip("/").split("/")
