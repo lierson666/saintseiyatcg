@@ -200,6 +200,14 @@ test('Guia §63 (autor, 28/10/2026): segunda versão sai da mão, paga, entra e 
   assert.equal(s.players.A.battlefield.filter(u => u.includes(':040:')).length, 2);
 });
 
+test('G3-040: personagem nomeado de classe baixa (Support) repete no campo; lendário só para guerreiros', () => {
+  const {s, ctx, field} = setup();
+  const a = field('A', '036'), b = field('A', '036'); // Seika: Devotee — Support
+  ctx.decide = () => { throw new Error('classe baixa não pergunta'); };
+  checkDefeats(s, ctx);
+  assert.deepEqual(s.players.A.battlefield.filter(u => u === a || u === b).length, 2);
+});
+
 test('Guia §63: duplicata vinda de efeito — o controlador escolhe qual manter; a outra vai ao Tartarus sem ser destruição', () => {
   const {s, ctx, field} = setup();
   const first = field('A', '021'), second = field('A', '021'); // como se um efeito trouxesse outra Marin

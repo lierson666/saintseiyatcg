@@ -197,8 +197,11 @@ const removeDamage = (state, uid, n) => { state.units[uid].damage = Math.max(0, 
 // Verificação de estado: todo Devotee com dano >= HP é derrotado (D197), depois de cada Strike, Spell ou habilidade.
 // Guia §63: personagem nomeado (identidade estável da G3-029); `null` = genérico, sem exclusividade.
 // Carta fora da tabela lança IdentityGap (lacuna, não palpite).
+// G3-040: só as classes de guerreiros são lendárias (um por personagem); Warrior, Support e sem classe repetem.
+const LEGENDARY = /\b(Saint|Marines?|Marinas?|Satellites?|Spect(?:er|re)s?|Berserk(?:er)?s?)\b/i;
 export function namedCharacter(ctx, uid) {
   const id = ctx.objects[uid].cardId.toLowerCase();
+  if (!LEGENDARY.test(ctx.cards.get(ctx.objects[uid].cardId)?.type || '')) return null;
   if (!(ctx.identities && Object.hasOwn(ctx.identities, id)) && CHARACTER_IDENTITY[id] === null) return null;
   return characterOf(id, ctx.identities);
 }
