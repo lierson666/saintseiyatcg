@@ -143,8 +143,32 @@ h1, h2, h3, .lb-play, .lb-tab, .lb-hero p { font-family: "Cinzel", "Trajan Pro",
 .lb-ghost:hover { color: var(--text); border-color: var(--muted); }
 
 /* Carta grande (botão direito) */
-.lb-big { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; background: #000c; backdrop-filter: blur(4px); cursor: zoom-out; }
-.lb-card--big { width: min(440px, 80vw, calc(86vh * 1488 / 2091)); }
+.lb-big { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; gap: 32px; padding: 24px; background: #000d; backdrop-filter: blur(6px); cursor: zoom-out; animation: lb-fade .18s ease-out; }
+@keyframes lb-fade { from { opacity: 0; } }
+.lb-card--big { flex: none; width: min(440px, 46vw, calc(86vh * 1488 / 2091)); box-shadow: 0 30px 80px #000, 0 0 60px #e6c36a22; }
+.lb-info { position: relative; width: min(440px, 44vw); max-height: 86vh; overflow: auto; padding: 26px 26px 22px; cursor: default; display: grid; gap: 14px; align-content: start;
+  border: 1px solid #e6c36a55; border-radius: 14px; background: linear-gradient(180deg, #111830f5, #080c18f8); box-shadow: 0 24px 60px #000c; animation: lb-slide .22s ease-out; }
+.lb-info__close { position: absolute; top: 14px; right: 14px; }
+.lb-info__type { margin: 0; padding-right: 40px; color: var(--gold); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; }
+.lb-info h2 { margin: -6px 0 0; font-size: 28px; line-height: 1.1; color: #fff6dc; }
+.lb-info__sub { margin: -8px 0 0; color: var(--muted); font-style: italic; }
+.lb-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.lb-chip { display: inline-flex; align-items: baseline; gap: 6px; padding: 5px 10px; border: 1px solid var(--line); border-radius: 8px; background: #0a0f1c; font-weight: 600; }
+.lb-chip small { color: var(--muted); font-weight: 400; font-size: 11px; text-transform: uppercase; letter-spacing: .08em; }
+.lb-chip.is-cost { border-color: #e6c36a88; color: var(--gold-2); }
+.lb-chip.is-atk { border-color: #6cc4ff88; color: #7fd8ff; }
+.lb-chip.is-hp { border-color: #ffb34788; color: #ffb347; }
+.lb-kws { display: flex; flex-wrap: wrap; gap: 6px; }
+.lb-kws span { padding: 3px 10px; border-radius: 999px; background: #2a2310; border: 1px solid var(--gold); color: var(--gold-2); font-size: 13px; }
+.lb-info__rules { display: grid; gap: 10px; font-size: 15px; line-height: 1.5; color: #e9e3d3; }
+.lb-info__rules p { margin: 0; }
+.lb-info__rules b { color: var(--gold-2); }
+.lb-info__flavour { margin: 0; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-style: italic; }
+.lb-info__deck { display: flex; align-items: center; gap: 8px; padding-top: 12px; border-top: 1px solid var(--line); }
+.lb-info__deck span { flex: 1; color: var(--muted); }
+.lb-info__deck b { font-size: 20px; color: var(--text); }
+.lb-info__deck .lb-ghost { width: 42px; font-size: 18px; }
+.lb-info__deck button:disabled { opacity: .4; cursor: not-allowed; }
 
 @media (max-width: 760px) {
   body { overflow: auto; }
@@ -158,4 +182,6 @@ h1, h2, h3, .lb-play, .lb-tab, .lb-hero p { font-family: "Cinzel", "Trajan Pro",
   .lb-builder { grid-template-columns: 1fr; height: auto; }
   .lb-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
   .lb-body--home, .lb-body--builder { overflow: visible; }
+  .lb-big { flex-direction: column; overflow: auto; justify-content: flex-start; }
+  .lb-card--big, .lb-info { width: min(380px, 100%); max-height: none; }
 }

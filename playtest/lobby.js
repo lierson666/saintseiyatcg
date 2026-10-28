@@ -162,8 +162,38 @@ function builder() {
   </section>`;
 }
 
+// Carta grande (botão direito): a carta e, ao lado, o texto canônico do D268 em tamanho de leitura.
+// Linhas de cabeçalho viram fichas (custo, tipo, ATK/HP...); o resto são habilidades, com o nome em destaque.
+const HEADER = /^(\d{3} — |Rarity:|Type:|Casting Cost:|ATK:|HP:|Cosmoble:|Auto-Equip|Equip \{|SOUL \d|God — )/;
+function cardInfo(id) {
+  const c = cards.get(id), f = id.startsWith('god-') ? godForge(id) : forge.get(id);
+  const lines = c.text.split('\n').map(l => l.trim()).filter(Boolean);
+  const subtitle = lines[1] && !HEADER.test(lines[1]) ? lines[1] : '';
+  const rules = lines.slice(subtitle ? 2 : 1).filter(l => !HEADER.test(l)).map(l => {
+    const m = l.match(/^([A-Z][^—:.]{1,38}) — (.*)$/);
+    return `<p>${m ? `<b>${esc(m[1])}</b> — ${esc(m[2])}` : esc(l)}</p>`;
+  }).join('');
+  const chip = (label, value, cls = '') => (value == null || value === '' ? '' : `<span class="lb-chip ${cls}"><small>${label}</small>${esc(value)}</span>`);
+  const equip = c.text.match(/Equip \{(\d+)\} — (.+)/), auto = c.autoEquip.join(' / ');
+  const n = ui.screen === 'builder' && !['God', 'Domain'].includes(c.kind) ? count(ui.builder, id) : null;
+  return `<section class="lb-info" data-act="stay" aria-label="${esc(c.name)} details">
+    <button class="lb-x lb-info__close" data-act="close-big" aria-label="Close">×</button>
+    <p class="lb-info__type">${esc(c.type)}</p>
+    <h2>${esc(c.name)}</h2>${subtitle ? `<p class="lb-info__sub">${esc(subtitle)}</p>` : ''}
+    <div class="lb-chips">${chip('Cost', c.cost ? `${c.cost.amount} ${c.cost.unit === 'base' ? 'Base' : 'Latent'}` : null, 'is-cost')}
+      ${chip('ATK', c.atk, 'is-atk')}${chip('HP', c.hp, 'is-hp')}${chip('Soul', c.soul)}${chip('Awaken', c.awaken)}
+      ${chip('Rarity', c.rarity)}${chip('Cosmoble', c.cosmoble == null ? null : c.cosmoble ? 'Yes' : 'No')}
+      ${chip('Auto-Equip', auto)}${chip('Equip', equip ? `${equip[1]} · ${equip[2]}` : null)}</div>
+    ${c.keywords.length ? `<div class="lb-kws">${c.keywords.map(k => `<span>${esc(k)}</span>`).join('')}</div>` : ''}
+    <div class="lb-info__rules">${rules}</div>
+    ${f?.flavour_en ? `<p class="lb-info__flavour">${esc(f.flavour_en)}</p>` : ''}
+    ${n == null ? '' : `<div class="lb-info__deck"><span>In deck <b>${n}</b> / ${COPY_LIMIT}</span>
+      <button class="lb-ghost" data-act="remove" data-id="${id}" ${n ? '' : 'disabled'} aria-label="Remove one">−</button>
+      <button class="lb-play lb-play--small" data-act="add" data-id="${id}" ${n >= COPY_LIMIT || deckSize(ui.builder.deck) >= DECK_SIZE ? 'disabled' : ''}>Add</button></div>`}
+  </section>`;
+}
 function bigCard() {
-  return ui.big ? `<div class="lb-big" data-act="close-big" role="dialog" aria-label="Card">${face(ui.big, 'lb-card--big')}</div>` : '';
+  return ui.big ? `<div class="lb-big" data-act="close-big" role="dialog" aria-label="Card">${face(ui.big, 'lb-card--big')}${cardInfo(ui.big)}</div>` : '';
 }
 
 // Redesenha tudo; guarda a rolagem das colunas para o clique não voltar a lista ao topo.
