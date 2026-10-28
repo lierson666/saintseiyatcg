@@ -388,26 +388,55 @@ function cosmoGauge(key, side) {
 
 // Retrato do God (cantos esquerdos da referência): nome, Soul com coração, escudo de Awaken, barra de Soul,
 // selos de Ultimate e Divine Judgment. O seu abre o menu dos poderes divinos.
-// Medalhão do God (estilo avatar do Arena): retrato com anel de Soul que esvazia conforme o God sofre dano; embaixo,
-// a placa com ATTACK (espada), Soul (gema da facção) e Awaken (sol), e o selo de Ultimate no medalhão.
+// HUD do God no layout do autor (arte de referência de 28/10/2026), desenhado em SVG para escalar sem perder nitidez:
+// medalhão com anel dourado, tridente no topo e asas douradas; faixa com o nome entre louros; placa com Soul (coração),
+// ATTACK (espadas), Awaken (escudo) e selo U da Ultimate, asas prateadas nas pontas e medalhão Ω com ponta embaixo.
+const GOLD = id => `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6cf"/><stop offset=".35" stop-color="#f0cc6e"/><stop offset=".7" stop-color="#a8741f"/><stop offset="1" stop-color="#f6d98c"/></linearGradient>`;
+const WING = (id, fill) => `<svg class="gh-wing" viewBox="0 0 120 100" aria-hidden="true"><defs>${fill}</defs><g fill="url(#${id})" stroke="#5a3a0c" stroke-width="1.2">
+  <path d="M116 58 C86 48 46 34 4 4 C26 40 62 58 116 70Z"/><path d="M116 68 C84 64 44 56 10 34 C34 62 70 76 116 80Z"/>
+  <path d="M116 78 C86 80 52 80 22 64 C48 86 80 92 116 90Z"/><path d="M116 88 C92 92 66 96 42 88 C64 102 92 102 116 98Z"/></g></svg>`;
+const CREST = id => `<svg class="gh-crest" viewBox="0 0 100 130" aria-hidden="true"><defs>${GOLD(id)}</defs><g fill="url(#${id})" stroke="#5a3a0c" stroke-width="1.2">
+  <path d="M50 0 L58 70 L50 128 L42 70Z"/><path d="M8 34 Q14 92 50 98 Q86 92 92 34 Q80 80 50 84 Q20 80 8 34Z"/><path d="M26 74 L50 68 L74 74 L50 80Z"/></g></svg>`;
+const LAUREL = (id, flip) => `<svg class="gh-laurel" viewBox="0 0 40 40" aria-hidden="true" ${flip ? 'style="transform:scaleX(-1)"' : ''}><defs>${GOLD(id)}</defs><g fill="url(#${id})">
+  <path d="M30 36 Q10 30 8 6" fill="none" stroke="url(#${id})" stroke-width="2"/>${[[9,10,-30],[11,17,-40],[14,24,-50],[19,30,-60]].map(([x,y,r]) => `<ellipse cx="${x}" cy="${y}" rx="5" ry="2.2" transform="rotate(${r} ${x} ${y})"/><ellipse cx="${x + 5}" cy="${y - 3}" rx="5" ry="2.2" transform="rotate(${r + 70} ${x + 5} ${y - 3})"/>`).join('')}</g></svg>`;
+const HEART = id => `<svg viewBox="0 0 24 22" aria-hidden="true"><defs><radialGradient id="${id}" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffd0d6"/><stop offset=".35" stop-color="#ff2a48"/><stop offset="1" stop-color="#6a0418"/></radialGradient></defs>
+  <path d="M12 21 C-4 11 1 -1 12 6 C23 -1 28 11 12 21Z" fill="url(#${id})" stroke="#3a0008" stroke-width=".8"/><path d="M6 6 Q9 3 11 7" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="1.2"/></svg>`;
+const SWORDS = id => `<svg viewBox="0 0 24 24" aria-hidden="true"><defs>${GOLD(id)}</defs><g stroke="url(#${id})" stroke-width="2.2" stroke-linecap="round">
+  <path d="M4 4 L19 19"/><path d="M20 4 L5 19"/><path d="M15 21 L21 15" stroke-width="2.6"/><path d="M3 15 L9 21" stroke-width="2.6"/></g></svg>`;
+const SHIELD = id => `<svg viewBox="0 0 24 26" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d8f0ff"/><stop offset=".4" stop-color="#2f8dff"/><stop offset="1" stop-color="#062a7a"/></linearGradient></defs>
+  <path d="M12 1 L23 5 L21 16 L12 25 L3 16 L1 5Z" fill="url(#${id})" stroke="#bfe2ff" stroke-width="1"/><path d="M12 1 L12 25 M1 5 L12 12 L23 5" stroke="#e8f6ff" stroke-opacity=".45" stroke-width=".8" fill="none"/></svg>`;
+const PLATE = (gid, sid) => `<svg class="gh-plate__bg" viewBox="0 0 600 150" preserveAspectRatio="none" aria-hidden="true"><defs>${GOLD(gid)}
+  <linearGradient id="${sid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2358"/><stop offset="1" stop-color="#0a0a22"/></linearGradient></defs>
+  <path d="M44 12 H556 Q588 12 598 56 Q588 100 556 100 H44 Q12 100 2 56 Q12 12 44 12Z" fill="url(#${sid})" stroke="url(#${gid})" stroke-width="5"/>
+  <path d="M50 22 H550 Q576 22 584 56 Q576 90 550 90 H50 Q24 90 16 56 Q24 22 50 22Z" fill="none" stroke="url(#${gid})" stroke-opacity=".55" stroke-width="1.5"/>
+  <path d="M300 0 L311 12 L300 24 L289 12Z" fill="url(#${gid})"/><path d="M300 148 L291 116 L309 116Z" fill="url(#${gid})"/>
+  <circle cx="300" cy="104" r="17" fill="url(#${gid})" stroke="#5a3a0c" stroke-width="1.5"/>
+  <text x="300" y="112" text-anchor="middle" font-family="Georgia, serif" font-weight="700" font-size="22" fill="#3a2406">Ω</text></svg>`;
+const SILVER = id => `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#c9c4b6"/><stop offset="1" stop-color="#77715f"/></linearGradient>`;
 function godHud(key, side) {
   const s = S(), p = s.players[key], d = s.divine[key], god = cards.get(s.gods[key]);
-  const pick = mode?.options?.includes(`god:${key}`), max = soulMax(s, key), pct = Math.round(p.soul / max * 100);
+  const pick = mode?.options?.includes(`god:${key}`), max = soulMax(s, key);
   const ult = d.ultimateUsed ? 'used' : ['god-athena', 'god-poseidon'].includes(d.god) ? 'ready' : 'none';
   const f = FORGE.get(`${god.name.toLowerCase()}-001`), art = f?.ilustracao ? FORGE_ART + f.ilustracao : GOD_ART[s.gods[key]] || '';
-  const faction = god.name.toLowerCase(), low = p.soul <= Math.max(d.awakenAt, Math.ceil(max / 4));
+  const low = p.soul <= Math.max(d.awakenAt, Math.ceil(max / 4)), k = `gh${key}`;
   return `<section class="godhud godhud--${side} ${pick ? 'pickable' : ''} ${s.active === key ? 'is-active' : ''} ${d.awaken ? 'is-awaken' : ''} ${low ? 'is-low' : ''}" data-god="${key}"
       ${pick ? `data-pick="god:${key}"` : ''} role="button" tabindex="0" aria-label="${esc(god.name)}, Soul ${p.soul} of ${max}${d.awaken ? ', Awaken' : ''}">
-    <div class="godhud__medal" style="--soul:${pct}">
-      <div class="godhud__portrait" style="background-image:url('${art}')"></div>
+    <div class="gh-medal">
+      ${WING(`${k}w`, GOLD(`${k}w`))}${WING(`${k}w2`, GOLD(`${k}w2`)).replace('class="gh-wing"', 'class="gh-wing gh-wing--r"')}
+      ${CREST(`${k}c`)}
+      <div class="gh-ring"><div class="godhud__portrait" style="background-image:url('${art}')"></div></div>
       ${d.judgment ? `<span class="godhud__judgment" title="Divine Judgment: loses at the end of Round ${d.judgment.deadline}">⚖ R${d.judgment.deadline}</span>` : ''}
     </div>
-    <div class="godhud__name"><span>${esc(god.name)}</span></div>
-    <div class="godhud__plate">
-      <span class="godhud__soul" data-soul="${key}" title="Soul ${p.soul} of ${max}"><i class="heart" aria-hidden="true"></i><b>${p.soul}</b></span>
-      <span class="godhud__atk" title="Attack ${god.atk}: damage the God deals back to a Devotee that strikes it"><i aria-hidden="true">⚔</i><b>${god.atk}</b></span>
-      <span class="godhud__awaken" title="Awaken ${d.awakenAt}: active while Soul ≤ ${d.awakenAt}"><i class="shield" aria-hidden="true"></i><b>${d.awakenAt}</b></span>
-      ${ult !== 'none' ? `<span class="godhud__ult ${ult}" title="Ultimate ${ult === 'used' ? 'used' : 'ready · once per match'}">U</span>` : ''}
+    <div class="gh-name">${LAUREL(`${k}l`)}<span>${esc(god.name)}</span>${LAUREL(`${k}l2`, true)}</div>
+    <div class="gh-plate">
+      ${WING(`${k}s`, SILVER(`${k}s`)).replace('class="gh-wing"', 'class="gh-wing gh-wing--plate"')}${WING(`${k}s2`, SILVER(`${k}s2`)).replace('class="gh-wing"', 'class="gh-wing gh-wing--plate gh-wing--r"')}
+      ${PLATE(`${k}p`, `${k}q`)}
+      <div class="gh-cells">
+        <span class="gh-cell gh-cell--soul godhud__soul" data-soul="${key}" title="Soul ${p.soul} of ${max}">${HEART(`${k}h`)}<b>${p.soul}</b></span>
+        <span class="gh-cell gh-cell--atk" title="Attack ${god.atk}: damage the God deals back to a Devotee that strikes it">${SWORDS(`${k}x`)}<b>${god.atk}</b></span>
+        <span class="gh-cell gh-cell--awk" title="Awaken ${d.awakenAt}: active while Soul ≤ ${d.awakenAt}">${SHIELD(`${k}d`)}<b>${d.awakenAt}</b></span>
+        ${ult !== 'none' ? `<span class="gh-ult godhud__ult ${ult}" title="Ultimate ${ult === 'used' ? 'used' : 'ready · once per match'}"><b>U</b></span>` : ''}
+      </div>
     </div></section>`;
 }
 // Santuário do jogador (canto, como o deck no Arena): miniatura do Domain, Cosmo (Bases e Latent) e zonas.
