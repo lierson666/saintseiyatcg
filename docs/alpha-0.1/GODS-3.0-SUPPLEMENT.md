@@ -31,13 +31,16 @@ Legenda de estado: **Impl** (implementado e testado), **Parcial**, **Pendente** 
 | G3-019 | Custos pagos são públicos; informação privada não vaza ao adversário | Spec §7 | — | Impl: `eventsFor` esconde a carta comprada | teste "G3-019/020" |
 | G3-020 | Reconexão recupera o estado oficial e nunca repete efeitos | Spec §8 | — | Parcial: cursor por `seq` e `resumeFor`; estado completo serializável pendente (a cadeia guarda funções) | `sync.js` |
 | G3-021 | Animação nunca decide; engine não espera animação; falha de animação não repete efeito | Spec §8 | — | Impl | `playtest/divine/director.js` |
-| G3-022 | **Identidade de personagem** (Athena Exclamation) = nome impresso da carta | Procedimento técnico | D229, D230 | **Lacuna leve**: confirmar se cartas diferentes do mesmo personagem contam como mesma identidade | `gods.js identity` |
+| G3-022 | Identidade de personagem = nome impresso da carta | Procedimento técnico | D229, D230 | **Substituída pela G3-029** | — |
 | G3-023 | O "Cosmo" do custo de Ultimate é pago com **Base preparada** | Autor, 28/10/2026 | D229 | Impl | `announceExclamation` |
 | G3-024 | Relógio Alpha: 60 s básicos por turno, reserva inicial 90, teto 180, +50% do básico não usado | Spec §9 | — | Impl | `clock.js`; teste "Relógio Alpha" |
 | G3-025 | Animações não consomem tempo de decisão | Spec §9 | — | Impl: `clockPause/Resume` | idem |
-| G3-026 | Decisão usa o relógio do responsável; fora do próprio turno só existe a reserva dele | Spec §9 (leitura literal) | G3-024 | Impl — **confirmar** | `clockHandTo` |
-| G3-027 | Timeouts: opcional → `TIMEOUT_DECLINED`; janela → `TIMEOUT_PASS_PRIORITY`; fase de ações → `TIMEOUT_END_TURN`; obrigatória → `TIMEOUT_AUTO_CHOICE` | Spec §9 | — | Parcial: códigos e decisão; critério da escolha obrigatória é lacuna | `timeoutAction` |
+| G3-026 | Decisão usa o relógio do responsável; fora do próprio turno só existe a reserva dele | Spec §9 (leitura literal) | G3-024 | Impl; confirmada e detalhada pela G3-031 | `clockHandTo` |
+| G3-027 | Timeouts: opcional → `TIMEOUT_DECLINED`; janela → `TIMEOUT_PASS_PRIORITY`; fase de ações → `TIMEOUT_END_TURN`; obrigatória → `TIMEOUT_AUTO_CHOICE` | Spec §9 | — | Impl; critério da escolha obrigatória pela G3-030 | `timeoutAction` |
 | G3-028 | 12 tochas: 1 acesa por 60 s restantes (arredonda para cima), teto 12 | Autor, 28/10/2026 | G3-024 | Impl | `torchesLit` |
+| G3-029 | **Identidade de personagem** = personagem canônico, separado do ID da carta. Seiya V1/V2 são a mesma identidade; arte, subtítulo, Cloth ou reimpressão não criam identidade nova; personagens distintos nunca se fundem. Mapeamento explícito e verificável (não por remoção de palavras do título); identidade não confirmada = lacuna sinalizada | Homologação complementar, 28/10/2026 | D229, D230 | Impl | `shared/character-identity.js`; `gods.js identity`; testes "G3-029" |
+| G3-030 | **Timeout em escolha obrigatória**: lê as opções legais no momento, ordena pelo id estável do objeto (ordem natural) e escolhe o menor; em escolha múltipla repete sobre as restantes revalidando a legalidade a cada passo; registra `TIMEOUT_AUTO_CHOICE` com opções elegíveis, critério e resultado; sem avaliação estratégica | Homologação complementar, 28/10/2026 | G3-027 | Impl | `clock.js timeoutAutoChoice`; testes "G3-030" |
+| G3-031 | **Relógio fora do turno**: os 60 s básicos pertencem só ao turno próprio; responder no turno adversário consome só a reserva; não reduz o básico do turno seguinte; reserva máxima 180; reserva zerada aplica os timeouts homologados; sem decisão atribuída o relógio pausa; cinemáticas não são cobradas | Homologação complementar, 28/10/2026 | G3-024–G3-027 | Impl | `clock.js clockIdle`, `clockHandTo`; testes "G3-031" |
 
 ## Procedimentos canônicos implementados (God Athena)
 
@@ -52,10 +55,10 @@ Legenda de estado: **Impl** (implementado e testado), **Parcial**, **Pendente** 
 
 | # | Item | Tipo | Efeito no Alpha |
 | --- | --- | --- | --- |
-| 1 | Poseidon (Water Prison, Pressure of the Deep, Great Flood): falta **Seal** na engine 3.0 e falta catálogo de Poseidon V6 | Pendente | Poseidon não jogável; integração preparada (ver abaixo) |
+| 1 | Poseidon: God e Seal implementados; **catálogo Poseidon V6 não existe como canônico** (4 fichas PARCIAL). Ver `POSEIDON-V6-RECUPERACAO.md` | Pendente | God Poseidon jogável só com deck fixture rotulado e parâmetros P-SEAL-1 / P-FLOOD-1 |
 | 2 | Hades, Artemis, Ares | Fora do Alpha | Sem deck |
-| 3 | Identidade de personagem (G3-022) | Lacuna leve | Usa o nome impresso |
-| 4 | Critério determinístico de `TIMEOUT_AUTO_CHOICE` | Lacuna | Engine lança em vez de escolher |
+| 3 | Identidade de personagem | Resolvido (G3-029) | Tabela explícita; Devotees genéricos sem personagem = lacuna |
+| 4 | Critério determinístico de `TIMEOUT_AUTO_CHOICE` | Resolvido (G3-030) | — |
 | 5 | Ordenação de gatilhos próprios pelo jogador (Spec §5.7) | Pendente | Ordem atual: a de criação |
 | 6 | Diálogo de escolha assíncrono ("you may") | Técnico | `ctx.decide` é síncrono; a UI usa diálogo do navegador |
 | 7 | Estado completo serializável para reconexão remota | Técnico | Cadeia guarda funções |
@@ -63,9 +66,13 @@ Legenda de estado: **Impl** (implementado e testado), **Parcial**, **Pendente** 
 
 Nenhum G3 contradiz D1–D268 nos pontos verificados (D52, D150, D186, D187, D191, D198–D200, D204–D206, D218, D225, D228–D230).
 
-## Preparação para Poseidon V6
+## Procedimentos canônicos implementados (God Poseidon)
 
-- `state.divine[k]` já é genérico (Soul, limite Awaken, Ultimate usado).
-- Gancho `hooks.checkpoint` serve para Pressure of the Deep (D211: gatilho na transição de 0 para ≥1 Seal).
-- Gancho `onDeclare` no Strike é o ponto da Water Prison (D198: 2 Latent; D212: Seal depois da declaração não cancela o Strike; D263–D268).
-- Falta: contador Seal (D211/D212), catálogo Poseidon V6 e os procedimentos D207/D231/D232 (Great Flood).
+| Habilidade | Tipo | Decisões | Implementação |
+| --- | --- | --- | --- |
+| Seal (mecânica) | Marcadores | D211, D212 | `core.js addSeal`, `prepareUnit`: cada Prepare remove 1 marcador em vez de preparar; N marcadores atrasam N Prepares; não é stun nem cancela Strike |
+| Water Prison | Divine Power, Triggered | D198, D212, D263, D268 | Strike legal de Devotee inimigo; 2 Latent opcional; recusar não gasta uso; pagar gasta mesmo sem Seal |
+| Pressure of the Deep | Awaken 4 | D211, D233, D234, D264–D267 | Um gatilho por Devotee em transição 0 → ≥1 Seal, inimigo no instante; Mill 2 do controlador gravado; compra 1 |
+| Great Flood | Ultimate, 8 Cosmo (Base, G3-023) | D207, D231, D232, D253, G3-005/006 | Retorno simultâneo de Devotees e Equipment; uma Base por Devotee escolhida por quem a controla; descarta metade (para cima); Mill 3 por descarte |
+
+Lacunas reais (perguntas fechadas em `POSEIDON-V6-RECUPERACAO.md`): P-SEAL-1 (quantos marcadores "Seal that Devotee" coloca), P-SEAL-2 (Prepare redundante em Devotee Prepared e Sealed), P-FLOOD-1 (quem escolhe o descarte do Great Flood). A engine lança `NotSpecified` nesses pontos; os testes usam parâmetros de fixture rotulados. Water Prison em atacante já Sealed é a D269, não aprovada: também `NotSpecified`.

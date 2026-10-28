@@ -2,8 +2,9 @@
 // Regras: textos D268 dos Gods, D200, D204, D205, D206, D218, D225, D228–D230 e o suplemento
 // docs/alpha-0.1/GODS-3.0-SUPPLEMENT.md (G3-xxx). Nada aqui vem da engine 2.2.
 // Habilidades da Athena que mexem em Devotees (Divine Protection, Cosmo of Hope) ficam em effects.js e leem `state.divine`.
-import {RuleError, NotSpecified, emit, hooks, assertIdle, pushTriggers, loseSoul, loseGame, destroyDevotee, spendBase} from './core.js';
+import {RuleError, NotSpecified, emit, hooks, assertIdle, pushTriggers, loseSoul, loseGame, destroyDevotee, spendBase, addSeal, mill, draw, useOncePerRound} from './core.js';
 import {card, controllerOf, isSaint, atkOf} from './effects.js';
+import {characterOf, IdentityGap} from '../../shared/character-identity.js';
 
 const other = (state, key) => state.order.find(k => k !== key);
 
@@ -69,8 +70,9 @@ export function payMixed(state, key, {base = 0, latent = 0, soul = 0}) {
 }
 
 // ---------- Athena Exclamation (Ultimate) ----------
-// Identidade de personagem: nome impresso da carta (cópias do mesmo nome são a mesma identidade). G3-022.
-const identity = (ctx, uid) => card(ctx, uid).name;
+// Identidade de personagem (G3-029): personagem canônico pela tabela explícita, não o nome nem o ID da carta.
+// `ctx.identities`: tabela extra (reimpressão aprovada ou fixture rotulada). Sem identidade confirmada: IdentityGap.
+const identity = (ctx, uid) => characterOf(ctx.objects[uid].cardId, ctx.identities);
 const saintClass = (ctx, uid) => (/Gold Saint/.test(card(ctx, uid).type) ? 'Gold' : /Silver Saint/.test(card(ctx, uid).type) ? 'Silver' : /Bronze Saint/.test(card(ctx, uid).type) ? 'Bronze' : null);
 const EXTRA = {Bronze: 3, Silver: 2, Gold: 0}; // D229
 
@@ -88,7 +90,9 @@ export function ultimateBlock(state, ctx, key, saints) {
   if (d.god !== 'god-athena') return 'only-athena';
   if (d.ultimateUsed) return 'used';
   if (state.active !== key || state.window || state.chain.length) return 'sorcery';
-  if (saints && !validSaints(state, ctx, key, saints)) return 'saints';
+  if (saints) {
+    try { if (!validSaints(state, ctx, key, saints)) return 'saints'; } catch (e) { if (e instanceof IdentityGap) return 'identity'; throw e; }
+  }
   if (saints && state.players[key].bases.filter(b => b.prepared).length < exclamationCost(ctx, saints)) return 'cost';
   return null;
 }
@@ -152,4 +156,118 @@ export function removeJudgment(state, ctx, key, devotees) {
   pushTriggers(state, [{controller: key, uid: `judgment-removal:${j.id}`, ability: 'DIVINE JUDGMENT', run: st => {
     if (st.divine[key].judgment?.id === j.id) { st.divine[key].judgment = null; emit(st, 'judgment_removed', {player: key, id: j.id}); }
   }}]);
+}
+
+// ---------- Poseidon ----------
+// Textos D268 (correntes D198): Water Prison, Pressure of the Deep (Awaken 4), Great Flood (Ultimate, 8 Cosmo).
+// `ctx.rules.sealCounters`: quantos marcadores "Seal that Devotee" coloca. Sem decisão homologada (pergunta P-SEAL-1):
+// sem o parâmetro, a engine lança NotSpecified em vez de escolher um número.
+const sealCounters = ctx => {
+  const n = ctx.rules?.sealCounters;
+  if (!Number.isInteger(n) || n < 1) throw new NotSpecified('"Seal that Devotee" coloca quantos marcadores Seal (P-SEAL-1)');
+  return n;
+};
+const poseidons = state => state.order.filter(k => state.divine?.[k]?.god === 'god-poseidon');
+const ask = (ctx, player, question) => Boolean(ctx.decide?.(player, question));
+
+// Water Prison (D198, D212, D263, D268): Strike legal declarado por Devotee inimigo (inimigo na declaração, D263) gera a
+// oportunidade enquanto o uso do Round estiver livre. Recusar não paga, não sela e não gasta o uso; pagar 2 Latent
+// gasta o uso mesmo se o Seal não acontecer. O Seal não cancela o Strike (D212).
+hooks.strikeDeclared.push((state, ctx, attacker, controller) => poseidons(state)
+  .filter(key => key !== controller && !state.roundUses.has(`god:${key}:water-prison`))
+  .map(key => {
+    sealCounters(ctx); // lacuna P-SEAL-1 antes de mexer no estado
+    // Water Prison sobre atacante já Sealed é a proposta D269, não aprovada: nada aqui depende dela.
+    if (state.units[attacker]?.seal) throw new NotSpecified('Water Prison em Devotee já Sealed (D269 pendente)');
+    return {controller: key, uid: `water-prison:${attacker}`, ability: 'WATER PRISON', run: st => {
+      const once = `god:${key}:water-prison`;
+      if (st.roundUses.has(once) || st.players[key].latent < 2) return;
+      if (!ask(ctx, key, {ability: 'WATER PRISON', uid: attacker, cost: {latent: 2}})) {
+        emit(st, 'divine_power_declined', {player: key, ability: 'WATER PRISON', uid: attacker});
+        return;
+      }
+      st.players[key].latent -= 2;
+      emit(st, 'cosmo_spent', {player: key, unit: 'latent', amount: 2});
+      useOncePerRound(st, once);
+      emit(st, 'divine_power', {player: key, ability: 'WATER PRISON', uid: attacker});
+      if (!st.units[attacker]) { emit(st, 'seal_failed', {uid: attacker, source: 'WATER PRISON'}); return; }
+      addSeal(st, ctx, [attacker], sealCounters(ctx), 'WATER PRISON');
+    }};
+  }));
+
+// Pressure of the Deep (D211, D233, D234, D264–D267): um gatilho por Devotee que passou de 0 para ≥1 Seal e era inimigo
+// de Poseidon nesse instante, com Awaken ativo. Grava quem controlava o Devotee (quem faz o Mill 2, D265); o gatilho
+// continua se o Devotee sair do campo (D266). Mill = min(2, deck) sem Fatigue (D233); a compra independe do Mill (D234).
+hooks.sealed.push((state, ctx, transitions) => poseidons(state)
+  .filter(key => state.divine[key].awaken)
+  .flatMap(key => transitions.filter(t => t.controller && t.controller !== key).map(({uid, controller}) => (
+    {controller: key, uid: `pressure:${uid}`, ability: 'PRESSURE OF THE DEEP', millPlayer: controller, run: st => {
+      emit(st, 'divine_power', {player: key, ability: 'PRESSURE OF THE DEEP', uid, millPlayer: controller});
+      mill(st, controller, 2);
+      draw(st, key, 1);
+    }}))));
+
+// Great Flood (Ultimate): G3-005/006 (Sorcery, uma por partida, uso gasto no anúncio legal); custo 8 em Base preparada (G3-023).
+export const GREAT_FLOOD_COST = 8;
+export function greatFloodBlock(state, key) {
+  const d = state.divine[key];
+  if (state.victory) return 'D52';
+  if (d.god !== 'god-poseidon') return 'only-poseidon';
+  if (d.ultimateUsed) return 'used';
+  if (state.active !== key || state.window || state.chain.length) return 'sorcery';
+  if (state.players[key].bases.filter(b => b.prepared).length < GREAT_FLOOD_COST) return 'cost';
+  return null;
+}
+export function announceGreatFlood(state, ctx, key) {
+  const why = greatFloodBlock(state, key);
+  if (why) throw new RuleError('G3-005', `Great Flood indisponível: ${why}`);
+  if (!ctx.rules?.floodDiscardChooser) throw new NotSpecified('quem escolhe as cartas descartadas pelo Great Flood (P-FLOOD-1)');
+  spendBase(state, key, GREAT_FLOOD_COST);
+  state.divine[key].ultimateUsed = true;
+  emit(state, 'ultimate_announced', {player: key, ability: 'GREAT FLOOD', cost: GREAT_FLOOD_COST});
+  pushTriggers(state, [{controller: key, uid: `ultimate:${key}`, ability: 'GREAT FLOOD', run: st => resolveGreatFlood(st, ctx, key)}]);
+}
+
+// Escolha de quem decide (D231, descarte): `ctx.decide` devolve a escolha; fora das opções legais é erro, não palpite.
+function choose(ctx, player, question, options, count) {
+  const picked = count === 1 ? [ctx.decide?.(player, {...question, options})] : ctx.decide?.(player, {...question, options, count});
+  if (!Array.isArray(picked) || picked.length !== count || new Set(picked).size !== count || !picked.every(o => options.includes(o))) {
+    throw new RuleError(question.decision, `${player} precisa escolher ${count} entre ${options.length}`);
+  }
+  return picked;
+}
+
+function resolveGreatFlood(state, ctx, key) {
+  for (const enemy of state.order.filter(k => k !== key)) {
+    const p = state.players[enemy];
+    // D207: Devotees e Equipment inimigos (inclusive Armor presa) voltam juntos, cada um para a mão do Owner.
+    const moving = p.battlefield.filter(uid => ['Devotee', 'Equipment'].includes(card(ctx, uid).kind));
+    const returnedDevotees = moving.filter(uid => card(ctx, uid).kind === 'Devotee');
+    for (const uid of moving) {
+      p.battlefield = p.battlefield.filter(x => x !== uid);
+      state.players[ctx.objects[uid].owner].hand.push(uid);
+      delete state.units[uid];
+      delete ctx.attached[uid];
+      state.effects = state.effects.filter(e => e.target !== uid);
+    }
+    for (const e of Object.keys(ctx.attached)) if (moving.includes(ctx.attached[e])) delete ctx.attached[e];
+    emit(state, 'returned_to_hand', {ability: 'GREAT FLOOD', uids: [...moving]});
+    // D207/D231/D253: para cada Devotee devolvido, uma Base controlada pelo Owner dele, escolhida por quem a controla.
+    for (const uid of returnedDevotees) {
+      const owner = ctx.objects[uid].owner, bases = state.players[owner].bases.map(b => b.uid);
+      if (!bases.length) continue;
+      const [base] = choose(ctx, owner, {ability: 'GREAT FLOOD', decision: 'D231', choose: 'base', for: uid}, bases, 1);
+      state.players[owner].bases = state.players[owner].bases.filter(b => b.uid !== base);
+      state.players[ctx.objects[base].owner].hand.push(base);
+      emit(state, 'base_returned', {player: owner, uid: base});
+    }
+    // D232: metade da mão atual, para cima; Mill 3 por carta descartada de fato.
+    const need = Math.ceil(p.hand.length / 2), chooser = ctx.rules.floodDiscardChooser === 'owner' ? enemy : key;
+    const discarded = need ? choose(ctx, chooser, {ability: 'GREAT FLOOD', decision: 'D232', choose: 'discard', player: enemy}, [...p.hand], need) : [];
+    p.hand = p.hand.filter(uid => !discarded.includes(uid));
+    p.tartarus.push(...discarded);
+    emit(state, 'discarded', {player: enemy, uids: discarded});
+    mill(state, enemy, 3 * discarded.length);
+  }
+  emit(state, 'ultimate_resolved', {player: key, ability: 'GREAT FLOOD'});
 }

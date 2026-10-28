@@ -30,8 +30,9 @@ export function emit(state, type, data = {}) {
 }
 
 // Ganchos dos Gods (gods.js), sem import circular. `checkpoint`: entre resoluções completas da cadeia e nas
-// passagens de turno (G3-003); `roundEnd`: gatilhos extras do checkpoint de fim de Round (D204), ex.: Divine Judgment.
-export const hooks = {checkpoint: [], roundEnd: []};
+// passagens de turno (G3-003); `roundEnd`: gatilhos extras do checkpoint de fim de Round (D204), ex.: Divine Judgment;
+// `strikeDeclared(state, ctx, attacker, controller)` e `sealed(state, ctx, transitions)` devolvem gatilhos (ex.: Poseidon).
+export const hooks = {checkpoint: [], roundEnd: [], strikeDeclared: [], sealed: []};
 export function runCheckpoint(state) { if (!state.victory) for (const fn of hooks.checkpoint) fn(state); }
 
 // Visibilidade (G3-019): o adversário não vê qual carta foi comprada nem qual voltou no mulligan.
@@ -60,12 +61,44 @@ export function startTurn(state, startOfTurn = []) {
     const unit = state.units[uid];
     if (!unit) continue;
     if (unit.skipPrepare) unit.skipPrepare = false; // "cannot be Prepared during your next Prepare Phase" (077)
-    else unit.prepared = true;
+    else prepareUnit(state, uid);
   }
   emit(state, 'turn_start', {player: key});
   const drawStep = () => { if (p.ownTurns > 1) draw(state, key, DRAWS_PER_TURN); runCheckpoint(state); };
   if (startOfTurn.length) pushTriggers(state, startOfTurn, drawStep);
   else drawStep();
+}
+
+// ---------- Seal (D211, D212) ----------
+// Seal são marcadores num Devotee. "Sealed" = 1 ou mais marcadores; "becomes Sealed" = passagem de 0 para ≥1 (D211).
+// Única consequência canônica: cada evento que prepararia o Devotee remove 1 marcador em vez de prepará-lo;
+// N marcadores atrasam N desses eventos (D211, D212). Seal não é stun, não cancela Strike declarado (D212) e não
+// proíbe ações: um Devotee Sealed e Prepared pode agir. Marcadores ficam no objeto; se ele sai do campo, somem.
+// Devolve os uids que passaram de 0 para ≥1 e põe os gatilhos de `hooks.sealed` na cadeia (D267: um por Devotee).
+export function addSeal(state, ctx, uids, n, source) {
+  if (!Number.isInteger(n) || n < 1) throw new NotSpecified('número de marcadores Seal do efeito');
+  const transitions = [];
+  for (const uid of uids) {
+    const unit = state.units[uid];
+    if (!unit) continue;
+    const before = unit.seal || 0;
+    unit.seal = before + n;
+    emit(state, 'seal_added', {uid, added: n, counters: unit.seal, source});
+    if (before === 0) transitions.push({uid, controller: state.order.find(k => state.players[k].battlefield.includes(uid))});
+  }
+  if (transitions.length) pushTriggers(state, hooks.sealed.flatMap(fn => fn(state, ctx, transitions)));
+  return transitions.map(t => t.uid);
+}
+
+// Todo evento que prepara um Devotee passa por aqui. Com Seal, remove 1 marcador em vez de preparar (D211).
+// Devotee já Prepared e com Seal: a regra não diz se o Prepare redundante gasta marcador (pergunta P-SEAL-2).
+export function prepareUnit(state, uid) {
+  const unit = state.units[uid];
+  if (!unit?.seal) { unit.prepared = true; return true; }
+  if (unit.prepared) throw new NotSpecified('Prepare de Devotee já Prepared com Seal (P-SEAL-2)');
+  unit.seal--;
+  emit(state, 'seal_removed', {uid, counters: unit.seal});
+  return false;
 }
 
 export function draw(state, key, n) {
@@ -83,6 +116,7 @@ export function draw(state, key, n) {
 export function mill(state, key, requested) {
   const p = state.players[key], moved = p.deck.splice(0, Math.min(Math.max(0, requested), p.deck.length));
   p.tartarus.push(...moved);
+  emit(state, 'mill', {player: key, requested, moved: moved.length});
   return moved.length;
 }
 

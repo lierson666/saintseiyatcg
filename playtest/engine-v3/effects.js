@@ -7,7 +7,7 @@
 // Decisões do autor em 28/10/2026 para esta parte: {C} se paga com Base preparada; Resonance de Equipment só vale
 // equipado no Devotee nomeado; dano que não é de Strike também passa pela Armor (prevenções "Strike damage" não valem);
 // dano redirecionado pela Resonance da 004 é dano de Strike em Shiryu.
-import {RuleError, useOncePerRound, addEffect, destroyDevotee, draw, spendBase, pushTriggers, emit, gainLatent} from './core.js';
+import {RuleError, useOncePerRound, addEffect, destroyDevotee, draw, spendBase, pushTriggers, emit, gainLatent, prepareUnit} from './core.js';
 
 export const card = (ctx, uid) => ctx.cards.get(ctx.objects[uid].cardId);
 const id = (ctx, uid) => ctx.objects[uid].cardId.slice(-3);
@@ -189,7 +189,7 @@ export function damageDevotee(state, ctx, uid, amount, strike = true) {
 
 // "Prepare it. It cannot declare another Strike this round.": o limite já vem da D22 (um Strike por Devotee por turno,
 // e o Round seguinte é outro turno); preparar só deixa o Devotee em guarda.
-const prepareNoStrike = (state, uid) => { state.units[uid].prepared = true; };
+const prepareNoStrike = (state, uid) => { prepareUnit(state, uid); };
 const removeDamage = (state, uid, n) => { state.units[uid].damage = Math.max(0, state.units[uid].damage - n); };
 
 // Verificação de estado: todo Devotee com dano >= HP é derrotado (D197), depois de cada Strike, Spell ou habilidade.
@@ -379,7 +379,8 @@ export function onEnter(state, ctx, key, uid, {target} = {}) {
   if (n === '043') {
     pushTriggers(state, [{controller: key, run: st => {
       const deck = st.players[key].deck, look = deck.splice(0, 2);
-      const top = look.length === 2 ? (ctx.decide?.(key, {ability: 'Sacred Knowledge', cards: look}) ?? look[0]) : look[0];
+      const pick = look.length === 2 ? ctx.decide?.(key, {ability: 'Sacred Knowledge', cards: look}) : look[0];
+      const top = look.includes(pick) ? pick : look[0]; // resposta fora das 2 cartas = sem escolha (não cria objeto)
       if (top) deck.unshift(top);
       deck.push(...look.filter(u => u !== top));
     }}]);
@@ -392,7 +393,7 @@ export function onCastEquipment(state, ctx, key, uid, {target} = {}) {
   pushTriggers(state, [{controller: key, run: st => {
     if (!alive(st, key, target)) return;
     modify(st, target, {atk: 3, hp: 3});
-    st.units[target].prepared = true;
+    prepareUnit(st, target);
   }}]);
 }
 

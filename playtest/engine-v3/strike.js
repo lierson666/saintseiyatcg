@@ -1,7 +1,7 @@
 // Strike da engine 3.0: ALPHA-P04 opção A, aprovada pelo autor em 28/10/2026.
 // Declaração → janela de reação (P06 A) → dano simultâneo → verificação de destruição.
 // `ctx`: {cards (loadCanon), objects (uid -> {owner, cardId}), attached}. Estado de unidade em state.units[uid] = {prepared, damage}.
-import {RuleError, NotSpecified, recordStrike, loseSoul, destroyDevotee, assertIdle, openWindow, pushTriggers, emit} from './core.js';
+import {RuleError, NotSpecified, recordStrike, loseSoul, destroyDevotee, assertIdle, openWindow, pushTriggers, emit, hooks} from './core.js';
 import {atkOf, keywordsOf, damageDevotee, preventGod, onDeclare, afterStrike, checkDefeats} from './effects.js';
 
 export {atkOf, hpOf, keywordsOf, gearOf} from './effects.js';
@@ -48,13 +48,15 @@ export function strikeTargets(state, ctx, attacker) {
 // Abre a janela (P06): gatilhos de declaração (D202) entram na cadeia; o dano roda quando a janela fecha.
 export function declareStrike(state, ctx, attacker, target, triggers = []) {
   const {key} = checkStrike(state, ctx, attacker, target);
+  // Gatilhos "when an enemy Devotee declares a Strike" (Water Prison): montados antes de mudar o estado.
+  const declared = hooks.strikeDeclared.flatMap(fn => fn(state, ctx, attacker, key));
   recordStrike(state, attacker); // D22
   state.units[attacker].prepared = false;
   emit(state, 'strike_declared', {player: key, attacker, target});
   onDeclare(state, ctx, attacker, target);
   const strike = {attacker, target, player: key};
   openWindow(state, () => resolveStrike(state, ctx, strike));
-  pushTriggers(state, triggers);
+  pushTriggers(state, [...triggers, ...declared]);
   return strike;
 }
 
