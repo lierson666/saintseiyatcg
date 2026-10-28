@@ -1,0 +1,228 @@
+{
+ "status": "PROPOSTA — não aprovada. Critério: retirar a 4ª cópia; repor com +1 de carta da própria lista do mesmo tipo (Devotee/Equipment/Spell), menor custo primeiro; sem Sacred/Mythic, sem 019 e sem 026 (Kiki pendente no catálogo V6); se não houver, qualquer tipo da própria lista; por último carta Common Cosmoble do catálogo D268 do mesmo tipo.",
+ "origem": "data/alpha-0.1/decks-experimentais.json",
+ "decks": [
+  {
+   "alpha_nome": "Pegasus Rush",
+   "id": "rulebook2-athena-d171",
+   "nome": "PEGASUS SEIYA — Never Surrender",
+   "domain_id": "athena-v6-062",
+   "flavour": "milagres, Training e reviravoltas",
+   "main_deck": [
+    {
+     "card_id": "athena-v6-001",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-002",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-021",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-028",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-027",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-036",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-040",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-034",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-060",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-053",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-054",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-076",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-081",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-082",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-052",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-056",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-061",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-019",
+     "quantity": 1
+    },
+    {
+     "card_id": "athena-v6-087",
+     "quantity": 1
+    },
+    {
+     "card_id": "athena-v6-043",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-044",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-088",
+     "quantity": 1
+    }
+   ],
+   "ajustes_d171": [
+    "-1 athena-v6-001 PEGASUS SEIYA",
+    "-1 athena-v6-002 PEGASUS CLOTH V2",
+    "-1 athena-v6-021 EAGLE MARIN",
+    "-1 athena-v6-028 UNICORN JABU",
+    "-1 athena-v6-060 THE TRAINING OF PEGASUS",
+    "-1 athena-v6-053 THE FIRST BURN OF COSMO",
+    "-1 athena-v6-054 A SAINT NEVER SURRENDERS",
+    "+1 athena-v6-034 TATSUMI, SAORI’S GUARDIAN (Devotee, custo 2, Common)",
+    "+1 athena-v6-044 CRACKED BRONZE CLOTH (Equipment, custo 2, Common)",
+    "+1 athena-v6-036 SEIKA, THE LOST SISTER (Devotee, custo 2, Common)",
+    "+1 athena-v6-040 SANCTUARY GUARD (Devotee, custo 2, Common)",
+    "+1 athena-v6-061 THE CALL OF ATHENA (Spell, custo 3, Common)",
+    "+1 athena-v6-082 THE GOLDEN ARROW (Spell, custo 5, Rare)",
+    "+1 athena-v6-043 STAR HILL ACOLYTE (Devotee, custo 2, Common)"
+   ]
+  },
+  {
+   "alpha_nome": "Dragon Fortress",
+   "id": "rulebook2-shiryu-d171",
+   "nome": "DRAGON SHIRYU — The Unbreakable Shield",
+   "domain_id": "athena-v6-064",
+   "flavour": "Guardian, redirecionamento e restauração de Armor",
+   "main_deck": [
+    {
+     "card_id": "athena-v6-003",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-004",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-037",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-040",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-042",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-041",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-011",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-045",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-048",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-049",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-058",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-059",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-077",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-054",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-056",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-044",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-085",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-061",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-043",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-027",
+     "quantity": 3
+    }
+   ],
+   "ajustes_d171": [
+    "-1 athena-v6-003 DRAGON SHIRYU",
+    "-1 athena-v6-004 DRAGON CLOTH V2",
+    "-1 athena-v6-037 SHUNREI, THE PRAYER OF ROZAN",
+    "-1 athena-v6-040 SANCTUARY GUARD",
+    "-1 athena-v6-042 JAMIR CLOTH REPAIRER",
+    "-1 athena-v6-041 SANCTUARY HEALER",
+    "-1 athena-v6-011 ARIES MU",
+    "-1 athena-v6-045 DRAGON SHIELD",
+    "-1 athena-v6-058 BLOOD OF THE DRAGON",
+    "+1 athena-v6-043 STAR HILL ACOLYTE (Devotee, custo 2, Common)",
+    "+1 athena-v6-044 CRACKED BRONZE CLOTH (Equipment, custo 2, Common)",
+    "+1 athena-v6-043 STAR HILL ACOLYTE (Devotee, custo 2, Common)",
+    "+1 athena-v6-048 LIBRA SWORD (Equipment, custo 3, Common)",
+    "+1 athena-v6-061 THE CALL OF ATHENA (Spell, custo 3, Common)",
+    "+1 athena-v6-085 SHIRYU’S LAST DRAGON (Spell, custo 6, Rare)",
+    "+1 athena-v6-027 CASSIOS, THE FALLEN RIVAL (Devotee, custo 2, Common) — NOVA na lista",
+    "+1 athena-v6-027 CASSIOS, THE FALLEN RIVAL (Devotee, custo 2, Common) — NOVA na lista",
+    "+1 athena-v6-027 CASSIOS, THE FALLEN RIVAL (Devotee, custo 2, Common) — NOVA na lista"
+   ]
+  }
+ ]
+}

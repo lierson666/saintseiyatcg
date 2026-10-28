@@ -32,3 +32,12 @@ test('as duas listas experimentais excedem o limite de 3 (D171) só nas cartas c
   // Com o limite antigo de 4, as listas passam: o conflito é só a D171.
   for (const d of decks) assert.deepEqual(validateDeck(d, index, {copyLimit: 4}), [], d.alpha_nome);
 });
+
+test('proposta D171 (não aprovada) fecha 60 com no máximo 3 cópias, sem 019 a mais e sem Kiki 026', () => {
+  const proposal = read('../data/alpha-0.1/decks-proposta-d171.json').decks;
+  for (const d of proposal) {
+    assert.deepEqual(validateDeck(d, index), [], d.alpha_nome);
+    assert.ok(!d.main_deck.some(e => e.card_id === 'athena-v6-026'));
+    assert.ok((d.main_deck.find(e => e.card_id === 'athena-v6-019')?.quantity ?? 0) <= 1);
+  }
+});

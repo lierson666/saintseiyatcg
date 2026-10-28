@@ -130,3 +130,29 @@ Lacunas que lançam `NotSpecified` em vez de inventar:
 Dentro do núcleo, a Base nova entra **não preparada**. Essa é uma leitura literal da D4: só o início do turno prepara Bases. Precisa de confirmação.
 
 O núcleo **ainda não está ligado** ao `/playtest`. `engine-v2.js` e o catálogo não foram tocados.
+
+## Memória Mestre D268 (28/10/2026) cruzada com esta matriz
+
+A Memória Mestre é um resumo de continuidade, nível **S**. Ela não muda nenhuma linha da matriz e não desbloqueia o turno. O que acrescenta:
+
+- **Kamui 019: Cosmoble No.** Confere com o `original_text`, que diz "Cosmoble: No".
+- **Cheater**, descrito como "ignorando Guardian ao atacar um God": é só resumo. A keyword não tem definição canônica no pacote e continua bloqueada junto com Guardian (linha 15).
+- **Vitória por esgotamento do deck:** não implementar. A D174 determina Fatigue, cujo procedimento ainda falta (linha 27).
+
+## Proposta de decks com 3 cópias
+
+A proposta está em `data/alpha-0.1/decks-proposta-d171.json` e **não foi aprovada**. Nenhuma carta foi alterada.
+
+Critério usado:
+1. Retirar a 4ª cópia.
+2. Repor com +1 de uma carta da própria lista, do mesmo tipo, menor custo primeiro.
+3. Sem Sacred ou Mythic, sem cópia extra da 019 e sem a 026 (Kiki, pendente no catálogo V6).
+4. Se a lista não tiver carta elegível, usar qualquer tipo da própria lista.
+5. Por último, uma carta Common Cosmoble do catálogo, do mesmo tipo.
+
+| Deck | Sai (−1 cada) | Entra (+1 cada) |
+| --- | --- | --- |
+| Pegasus Rush | 001, 002, 021, 028, 053, 054, 060 | 034, 036, 040, 043, 044, 061, 082 |
+| Dragon Fortress | 003, 004, 011, 037, 040, 041, 042, 045, 058 | 043 ×2, 044, 048, 061, 085, **027 ×3 (Cassios, nova na lista)** |
+
+Cassios é uma carta Warrior agressiva dentro de um deck defensivo. O critério mecânico chegou a ela porque a lista Dragon não tinha mais Devotees elegíveis. A escolha final é do autor.
