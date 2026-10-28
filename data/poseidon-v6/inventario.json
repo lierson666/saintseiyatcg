@@ -1,0 +1,163 @@
+{
+ "titulo": "Poseidon V6 — inventário recuperado (não normativo)",
+ "data": "2026-10-28",
+ "regra": "Nada aqui foi criado: só texto encontrado em fonte. Estados: CANÔNICO (texto + aprovação registrada), PARCIAL (texto sem aprovação), PLANEJADO (só intenção de design), AUSENTE (sem fonte).",
+ "fontes_consultadas": [
+  "data/canon/d268.json — 95 registros (90 Athena V6 + 5 Gods); God Poseidon canônico; nenhuma carta Poseidon",
+  "Drive: 07 — MEMÓRIA MESTRE ATÉ D268 (1siYvI52oeuL9kChNvhy9neDl27yyvvV-CawGhNQfq34) — 'Poseidon: somente quatro dos sete Marina Generals no Vanilla'; 'o catálogo D268 ... não 90 cartas de Poseidon'",
+  "Drive: [SSTCG] CARDS (146XaqNAh4sbiW5zIFAuFitJ5oqwyy2TREFe92IA2ZBc) — fichas 091–094",
+  "Drive/repo: SSTCG_HANDOFF_CLAUDE/SSTCG_CONTEXTO_COMPLETO_PARA_CLAUDE.md — dicas de keyword por Marina",
+  "Drive: SSTCG_300_cartas_playtest.xlsx/.csv (1pY_ngvZfK-Aqm9jJFL-YScpOS4PxtcNk) — 50 conceitos Poseidon 'PROVISIONAL' (catálogo 2.x, não V6)",
+  "data/cards.json — 51 cartas Poseidon 2.x (sst-02-*, status needs-review, raridade Playtest), legado pré-V6",
+  "git: nenhum commit com cartas Poseidon V6"
+ ],
+ "god": {
+  "id": "GOD-POSEIDON",
+  "estado": "CANÔNICO",
+  "soul": 27,
+  "attack": 2,
+  "awaken": 4,
+  "fonte": "data/canon/d268.json + D198 (Water Prison: 2 Latent Cosmo)"
+ },
+ "cartas": [
+  {
+   "numero": "091",
+   "nome": "SEA DRAGON KANON",
+   "subtitulo": "The Hidden Master of the Deep",
+   "raridade": "Mythic",
+   "tipo": "Devotee — Marina General",
+   "custo": 6,
+   "atk": 4,
+   "hp": 5,
+   "cosmoble": true,
+   "keywords": [
+    "Pierce"
+   ],
+   "texto": [
+    "Pierce",
+    "Golden Triangle — 2, : Return target enemy Devotee to its owner's hand. If that Devotee had a Seal counter, its controller mills two cards.",
+    "Emperor's Shadow — Once each round, when Sea Dragon Kanon deals Strike damage to an enemy Devotee, you may put 1 Seal counter on another target enemy Devotee."
+   ],
+   "personagem": "kanon",
+   "estado": "PARCIAL",
+   "fonte": {
+    "doc": "[SSTCG] CARDS",
+    "id": "146XaqNAh4sbiW5zIFAuFitJ5oqwyy2TREFe92IA2ZBc",
+    "secao": "POSEIDON'S CARD",
+    "modificado": "2026-10-25T21:15:36Z"
+   },
+   "por_que_parcial": "Ficha completa no documento de cartas, mas sem registro de aprovação (nem no D268, que tem só Athena V6 + 5 Gods, nem decisão D/G3). O mesmo documento marca 'NEXT CARD TO REVIEW: 004' antes da seção Poseidon.",
+   "nota": "Símbolo de custo após o número perdido na exportação do Google Docs ('2, :'); provavelmente {C}/{T}, não confirmado."
+  },
+  {
+   "numero": "092",
+   "nome": "SEA DRAGON SCALE",
+   "subtitulo": "The Armor of the Ocean's Master",
+   "raridade": "Rare",
+   "tipo": "Equipment — Armor — Scale",
+   "custo": 4,
+   "hp": 5,
+   "cosmoble": true,
+   "auto_equip": "Sea Dragon Kanon",
+   "equip": "5 — Other Devotees",
+   "keywords": [],
+   "texto": [
+    "Equipped Devotee gets +2 ATK.",
+    "Golden Triangle — 3, : Return target enemy Devotee to its owner's hand.",
+    "Resonance — Sea Dragon Kanon: When Sea Dragon Kanon activates Golden Triangle from this Scale, its controller may choose another target enemy Devotee and put 1 Seal counter on it."
+   ],
+   "estado": "PARCIAL",
+   "fonte": {
+    "doc": "[SSTCG] CARDS",
+    "id": "146XaqNAh4sbiW5zIFAuFitJ5oqwyy2TREFe92IA2ZBc",
+    "secao": "POSEIDON'S CARD",
+    "modificado": "2026-10-25T21:15:36Z"
+   },
+   "por_que_parcial": "Ficha completa no documento de cartas, mas sem registro de aprovação (nem no D268, que tem só Athena V6 + 5 Gods, nem decisão D/G3). O mesmo documento marca 'NEXT CARD TO REVIEW: 004' antes da seção Poseidon.",
+   "nota": "Símbolo de custo após o número perdido na exportação do Google Docs ('2, :'); provavelmente {C}/{T}, não confirmado."
+  },
+  {
+   "numero": "093",
+   "nome": "SIREN SORRENTO",
+   "subtitulo": "The Melody of the Seven Seas",
+   "raridade": "Mythic",
+   "tipo": "Devotee — Marina General",
+   "custo": 5,
+   "atk": 2,
+   "hp": 5,
+   "cosmoble": true,
+   "keywords": [
+    "Nimble"
+   ],
+   "texto": [
+    "Nimble",
+    "Dead End Symphony — Once each round, when Siren Sorrento declares a Strike, the defending enemy Devotee gets -2 ATK during that Strike.",
+    "Dead End Climax — Whenever Siren Sorrento deals Strike damage to an enemy God, that God's controller discards a card."
+   ],
+   "personagem": "sorrento",
+   "estado": "PARCIAL",
+   "fonte": {
+    "doc": "[SSTCG] CARDS",
+    "id": "146XaqNAh4sbiW5zIFAuFitJ5oqwyy2TREFe92IA2ZBc",
+    "secao": "POSEIDON'S CARD",
+    "modificado": "2026-10-25T21:15:36Z"
+   },
+   "por_que_parcial": "Ficha completa no documento de cartas, mas sem registro de aprovação (nem no D268, que tem só Athena V6 + 5 Gods, nem decisão D/G3). O mesmo documento marca 'NEXT CARD TO REVIEW: 004' antes da seção Poseidon."
+  },
+  {
+   "numero": "094",
+   "nome": "SIREN SCALE",
+   "subtitulo": "The Song of Eternal Sorrow",
+   "raridade": "Rare",
+   "tipo": "Equipment — Armor — Scale",
+   "custo": 4,
+   "hp": 4,
+   "cosmoble": true,
+   "auto_equip": "Siren Sorrento",
+   "equip": "5 — Other Devotees",
+   "keywords": [],
+   "texto": [
+    "Equipped Devotee gets +1 ATK.",
+    "Siren's Melody — Once each round, when equipped Devotee declares a Strike, the defending enemy Devotee gets -1 ATK during that Strike.",
+    "Resonance — Siren Sorrento: Whenever Siren Sorrento deals Strike damage to an enemy God, that God's controller discards an additional card."
+   ],
+   "estado": "PARCIAL",
+   "fonte": {
+    "doc": "[SSTCG] CARDS",
+    "id": "146XaqNAh4sbiW5zIFAuFitJ5oqwyy2TREFe92IA2ZBc",
+    "secao": "POSEIDON'S CARD",
+    "modificado": "2026-10-25T21:15:36Z"
+   },
+   "por_que_parcial": "Ficha completa no documento de cartas, mas sem registro de aprovação (nem no D268, que tem só Athena V6 + 5 Gods, nem decisão D/G3). O mesmo documento marca 'NEXT CARD TO REVIEW: 004' antes da seção Poseidon."
+  }
+ ],
+ "planejado": [
+  {
+   "personagem": "baian",
+   "nome_provavel": "Seahorse Baian",
+   "dica": "Long Range",
+   "estado": "PLANEJADO",
+   "fonte": "SSTCG_CONTEXTO_COMPLETO_PARA_CLAUDE.md §8"
+  },
+  {
+   "personagem": "krishna",
+   "nome_provavel": "Chrysaor Krishna",
+   "dica": "proteção contra ser alvo de Moments/Techniques adversárias; sem keyword",
+   "estado": "PLANEJADO",
+   "fonte": "idem"
+  },
+  {
+   "personagem": "io",
+   "nome_provavel": "Scylla Io",
+   "dica": "Impulse",
+   "estado": "PLANEJADO",
+   "fonte": "idem"
+  }
+ ],
+ "ausente": "Demais cartas do set Poseidon V6 (até 90), números além de 094, quais 4 dos 7 Marinas entram no Vanilla (Kanon e Sorrento têm ficha; os outros 2 não estão definidos), Scales de Baian/Krishna/Io, Spells e Domains Poseidon V6.",
+ "regras_de_wording_do_autor": [
+  "Scales funcionam em portadores não originais (Equip N — Other Devotees); Resonance confere o portador nomeado",
+  "ETB antes de modificadores de status",
+  "Cosmoble definido carta a carta"
+ ]
+}

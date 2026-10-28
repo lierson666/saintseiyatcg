@@ -1,7 +1,7 @@
 // Divine Arena · orquestrador de apresentação. Lê os eventos que a engine já registrou (state.events) e os
 // dramatiza em sequência. Nunca decide resultado: os números exibidos vêm dos próprios eventos.
 // `ui` é o adaptador do DOM (posições e textos); `fx` é a camada WebGL (pode faltar: tudo vira só DOM).
-import {wait} from './scene.js?v=20261028-3';
+import {wait} from './scene.js?v=20261028-4';
 
 // Hierarquia visual dos golpes (COMBAT_CINEMATICS.md): comum < Saint < assinatura < divino.
 // As assinaturas são só visuais e disparam pelo número da carta atacante; não criam regra.
@@ -146,6 +146,77 @@ export function createDirector({ui, getFx, settings}) {
       await pause(380);
     },
     async round_end() {},
+    // ---------- Gods ----------
+    async awaken_changed(e) {
+      const at = ui.center(ui.godRect(e.player));
+      if (e.awaken) {
+        fx()?.charge(at.x, at.y, {color: '#9fd0ff', count: 90, radius: 140});
+        await ui.banner('Awaken', e.player, t(900));
+        fx()?.shockwave(at.x, at.y, {color: '#bfe2ff', size: 220});
+      } else ui.float(at, 'Awaken ends', 'shield');
+    },
+    async divine_power(e) {
+      const at = ui.center(ui.godRect(e.player));
+      fx()?.burst(at.x, at.y, {color: '#bfe2ff', count: 40, speed: 220});
+      ui.float(at, e.ability, 'gain');
+      await pause(420);
+    },
+    async seal_added(e) {
+      const at = ui.center(ui.rect(e.uid));
+      if (!at) return;
+      fx()?.shockwave(at.x, at.y, {color: '#7fd4ff', size: 130});
+      ui.float(at, `Seal ×${e.added}`, 'shield');
+      await pause(450);
+    },
+    async seal_removed(e) {
+      const at = ui.center(ui.rect(e.uid));
+      if (at) ui.float(at, 'Seal −1 · stays Unprepared', 'shield');
+      await pause(300);
+    },
+    async defeat_prevented(e) {
+      const at = ui.center(ui.rect(e.uid));
+      if (!at) return;
+      fx()?.shockwave(at.x, at.y, {color: '#ffe7a8', size: 150});
+      ui.float(at, 'Divine Protection', 'shield');
+      await pause(500);
+    },
+    // Cinemática divina (nível mais alto da hierarquia): nome do Ultimate, Cosmo convergindo, raios dos Saints ao God.
+    async ultimate_announced(e) {
+      ui.cinematic?.(true);
+      for (const uid of e.saints || []) ui.pulse(uid, 'attacking', true);
+      const god = ui.center(ui.godRect(e.player));
+      fx()?.charge(god.x, god.y, {color: '#ffe4a0', count: 140, radius: 220});
+      await ui.callout(e.ability, e.player, t(1300));
+      ui.cinematic?.(false); // a janela de resposta (G3-005) volta com o HUD inteiro
+    },
+    async ultimate_resolved(e) {
+      ui.cinematic?.(true);
+      if (e.ability === 'GREAT FLOOD') { // onda sobre o campo inimigo; o retorno às mãos aparece no render seguinte
+        const enemy = ui.enemyOf(e.player), god = ui.center(ui.godRect(e.player)), to = ui.center(ui.godRect(enemy));
+        fx()?.beam(god, to, {color: '#7fd4ff', width: 44, duration: .7});
+        impact(to, {color: '#7fd4ff', strength: 2});
+        await ui.banner('Great Flood', e.player, t(1100));
+        ui.cinematic?.(false);
+        return;
+      }
+      const enemy = ui.enemyOf(e.player), to = ui.center(ui.godRect(enemy));
+      const shots = e.snapshot.map((s, i) => {
+        const from = ui.center(ui.rect(s.uid));
+        if (!from) return Promise.resolve();
+        fx()?.charge(from.x, from.y, {color: '#ffd36e', count: 70});
+        return pause(180 * i + 260).then(() => fx()?.beam(from, to, {color: '#fff2c4', width: 30, duration: .5}));
+      });
+      await Promise.all(shots);
+      impact(to, {color: '#ffd36e', strength: 2});
+      for (const s of e.snapshot) ui.pulse(s.uid, 'shatter');
+      ui.float(to, `-${e.loss} Soul`, 'damage big');
+      await pause(700);
+      ui.cinematic?.(false);
+    },
+    async ultimate_failed(e) { ui.cinematic?.(false); ui.float(ui.center(ui.godRect(e.player)), 'Ultimate failed', 'shield'); await pause(600); },
+    async judgment_placed(e) { await ui.banner('Divine Judgment', e.player, t(1100)); },
+    async judgment_removed(e) { ui.float(ui.center(ui.godRect(e.player)), 'Judgment removed', 'gain'); await pause(400); },
+    async soul_gained(e) { if (e.amount) { ui.setSoul(e.player, e.soul); ui.float(ui.center(ui.godRect(e.player)), `+${e.amount} Soul`, 'gain'); } },
     async victory(e) { await ui.banner(e.draw ? 'Draw' : ui.isViewer(e.winner) ? 'Victory' : `Player ${e.winner} wins`, e.winner, t(1200)); },
     async window_open() {}, async window_close() {}, async pass(e) { ui.log(e); }, async chain_add() {}, async resolve() {}, async end_phase(e) { ui.log(e); },
   };

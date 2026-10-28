@@ -7,7 +7,7 @@
 // Decisões do autor em 28/10/2026 para esta parte: {C} se paga com Base preparada; Resonance de Equipment só vale
 // equipado no Devotee nomeado; dano que não é de Strike também passa pela Armor (prevenções "Strike damage" não valem);
 // dano redirecionado pela Resonance da 004 é dano de Strike em Shiryu.
-import {RuleError, useOncePerRound, addEffect, destroyDevotee, draw, spendBase, pushTriggers, emit} from './core.js';
+import {RuleError, useOncePerRound, addEffect, destroyDevotee, draw, spendBase, pushTriggers, emit, gainLatent, prepareUnit} from './core.js';
 
 export const card = (ctx, uid) => ctx.cards.get(ctx.objects[uid].cardId);
 const id = (ctx, uid) => ctx.objects[uid].cardId.slice(-3);
@@ -18,6 +18,9 @@ export const isSaint = (ctx, uid) => card(ctx, uid).kind === 'Devotee' && /Saint
 export const isBronze = (ctx, uid) => isSaint(ctx, uid) && /Bronze Saint/.test(card(ctx, uid).type);
 const other = (state, key) => state.order.find(k => k !== key);
 const ask = (ctx, player, question) => Boolean(ctx.decide?.(player, question));
+// Athena Devotee de um jogador cujo God Athena está Awaken (estado do último checkpoint, G3-004).
+const isAthenaDevotee = (ctx, uid) => ctx.objects[uid].cardId.startsWith('athena-') && card(ctx, uid).kind === 'Devotee';
+const athenaAwaken = (state, ctx, key, uid) => state.divine?.[key]?.god === 'god-athena' && state.divine[key].awaken && isAthenaDevotee(ctx, uid);
 const behind = (state, key) => state.players[key].soul < state.players[other(state, key)].soul;
 // {N}{C}: N Bases preparadas. Devolve false se não dá para pagar (nada é gasto).
 const payC = (state, key, n) => {
@@ -41,6 +44,7 @@ function mods(state, ctx, uid) {
     if (n === '036' && controls(state, ctx, key, '001')) list.push({atk: 0, hp: 2}); // Sibling Bond
     if (n === '037' && controls(state, ctx, key, '003')) list.push({atk: 0, hp: 1}); // Dragon's Promise
     if (n === '001' && behind(state, key)) list.push({atk: 1, hp: 0}); // Miracle
+    if (athenaAwaken(state, ctx, key, uid)) list.push({atk: 1, hp: 1}); // God Athena, Divine Protection (Awaken 5)
     if (n === '001' && wears(ctx, uid, '019') && behind(state, key)) list.push({atk: 2, hp: 2}); // 019 Resonance
     // Master's Guidance: cada Eagle Marin dá +1/+1 aos Bronze Saints do controlador com Training counter.
     if (state.units[uid]?.training && isBronze(ctx, uid)) {
@@ -185,14 +189,24 @@ export function damageDevotee(state, ctx, uid, amount, strike = true) {
 
 // "Prepare it. It cannot declare another Strike this round.": o limite já vem da D22 (um Strike por Devotee por turno,
 // e o Round seguinte é outro turno); preparar só deixa o Devotee em guarda.
-const prepareNoStrike = (state, uid) => { state.units[uid].prepared = true; };
+const prepareNoStrike = (state, uid) => { prepareUnit(state, uid); };
 const removeDamage = (state, uid, n) => { state.units[uid].damage = Math.max(0, state.units[uid].damage - n); };
 
 // Verificação de estado: todo Devotee com dano >= HP é derrotado (D197), depois de cada Strike, Spell ou habilidade.
 export function checkDefeats(state, ctx) {
   for (const key of state.order) {
     for (const uid of devotees(state, ctx, key)) {
-      if (state.units[uid] && state.units[uid].damage >= hpOf(state, ctx, uid)) destroyDevotee(state, uid, ctx.objects, ctx.attached);
+      if (!state.units[uid] || state.units[uid].damage < hpOf(state, ctx, uid)) continue;
+      // God Athena, Divine Protection (D200): Defeat prevenível de Athena Devotee; pode pagar 3 Latent, fica com 1 HP.
+      const p = state.players[key];
+      if (athenaAwaken(state, ctx, key, uid) && p.latent >= 3 && ask(ctx, key, {ability: 'Divine Protection', god: true, uid, cost: '3 Latent'})) {
+        p.latent -= 3;
+        emit(state, 'cosmo_spent', {player: key, unit: 'latent', amount: 3});
+        state.units[uid].damage = hpOf(state, ctx, uid) - 1;
+        emit(state, 'defeat_prevented', {uid, player: key, ability: 'DIVINE PROTECTION'});
+        continue;
+      }
+      destroyDevotee(state, uid, ctx.objects, ctx.attached);
     }
   }
 }
@@ -365,7 +379,8 @@ export function onEnter(state, ctx, key, uid, {target} = {}) {
   if (n === '043') {
     pushTriggers(state, [{controller: key, run: st => {
       const deck = st.players[key].deck, look = deck.splice(0, 2);
-      const top = look.length === 2 ? (ctx.decide?.(key, {ability: 'Sacred Knowledge', cards: look}) ?? look[0]) : look[0];
+      const pick = look.length === 2 ? ctx.decide?.(key, {ability: 'Sacred Knowledge', cards: look}) : look[0];
+      const top = look.includes(pick) ? pick : look[0]; // resposta fora das 2 cartas = sem escolha (não cria objeto)
       if (top) deck.unshift(top);
       deck.push(...look.filter(u => u !== top));
     }}]);
@@ -378,7 +393,7 @@ export function onCastEquipment(state, ctx, key, uid, {target} = {}) {
   pushTriggers(state, [{controller: key, run: st => {
     if (!alive(st, key, target)) return;
     modify(st, target, {atk: 3, hp: 3});
-    st.units[target].prepared = true;
+    prepareUnit(st, target);
   }}]);
 }
 
@@ -441,6 +456,14 @@ export function afterStrike(state, ctx, strike) {
         }
       });
     }
+  }
+  // God Athena, Cosmo of Hope (D225): Athena Devotee que atacou ou defendeu e continua no campo do mesmo controlador;
+  // uma vez por Round; ganha 1 Latent (teto 3). O uso só conta na resolução.
+  for (const key of state.order) {
+    const once = `god:${key}:cosmo-of-hope`;
+    if (state.divine?.[key]?.god !== 'god-athena' || state.roundUses.has(once)) continue;
+    if (![attacker, t].some(uid => survived(uid) && controllerOf(state, uid) === key && isAthenaDevotee(ctx, uid))) continue;
+    add(key, st => { if (useOncePerRound(st, once)) { emit(st, 'divine_power', {player: key, ability: 'COSMO OF HOPE'}); gainLatent(st, key, 1); } });
   }
   // Rising Dragon (003): sobreviveu como defensor, +1 ATK até o fim do Round.
   if (survived(t) && id(ctx, t) === '003' && useOncePerRound(state, `rising-dragon:${t}`)) {

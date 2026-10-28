@@ -4,6 +4,41 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — G3-032 a G3-034 (Seal e Great Flood)
+
+- **Antes:** P-SEAL-1, P-SEAL-2 e P-FLOOD-1 abertas; a engine lançava `NotSpecified` e os testes usavam parâmetros de fixture.
+- **Depois (autor, opção A nas três):**
+  - G3-032: "Seal that Devotee" adiciona exatamente 1 marcador; aplicações sucessivas acumulam;
+  - G3-033: Prepare redundante em Devotee já Prepared não remove marcadores Seal;
+  - G3-034: no Great Flood, quem tem a mão afetada escolhe o descarte; timeout pela G3-030.
+- **Motivo:** respostas homologadas do autor em 28/10/2026.
+- **Pendências:** D269 continua não aprovada (`NotSpecified`); catálogo Poseidon V6 continua PARCIAL.
+
+## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — G3-029 a G3-031, Seal e God Poseidon
+
+- **Antes:** identidade de personagem pelo nome impresso (G3-022); timeout de escolha obrigatória sem critério; relógio fora do turno só por leitura literal (G3-026); sem Seal nem Poseidon na engine 3.0.
+- **Depois:**
+  - G3-029: identidade de personagem por tabela explícita, separada do ID da carta;
+  - G3-030: timeout escolhe o menor id estável, revalidando cada passo, e registra `TIMEOUT_AUTO_CHOICE`;
+  - G3-031: básico só no turno próprio; resposta fora do turno gasta só a reserva; pausa sem decisão atribuída;
+  - Seal implementado como na D211/D212 (marcadores que atrasam o Prepare);
+  - Water Prison, Pressure of the Deep e Great Flood implementados como nas D198, D207, D211, D212, D231–D234, D253, D263–D268.
+- **Motivo:** homologação complementar do autor (28/10/2026) e recuperação do Poseidon V6.
+- **Pendências:**
+  - perguntas P-SEAL-1, P-SEAL-2 e P-FLOOD-1 (a engine lança `NotSpecified`);
+  - D269 não aprovada;
+  - catálogo Poseidon V6 sem cartas canônicas (4 fichas PARCIAL);
+  - HUD Olympus sem Poseidon.
+  - Ver `docs/alpha-0.1/POSEIDON-V6-RECUPERACAO.md`.
+- O `docs/guia-do-jogo.md` (2.x) não muda. A §48 (Sealed como status) conflita com a D211/D212; a engine 3.0 segue o D268.
+
+## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — Gods 3.0 (registro suplementar G3)
+
+- **Antes:** a engine 3.0 não tinha Awaken, Ultimate, Soul máximo nem relógio competitivo; God Athena só retaliava.
+- **Depois:** decisões complementares aprovadas pelo autor ficam em `docs/alpha-0.1/GODS-3.0-SUPPLEMENT.md` (G3-001 a G3-028), fora de D1–D268 e sem ocupar a D269. Implementados: Awaken dinâmico, Ultimate (Athena Exclamation pago com Base preparada), Divine Judgment, Cosmo of Hope, Divine Protection, Soul máximo em camadas, Damage × Lose Soul, custo misto atômico, relógio Alpha (60 + reserva 90/180, 1 tocha por 60 s).
+- **Motivo:** especificação Olympus Arena V1 + respostas do autor de 28/10/2026.
+- **Pendências:** identidade de personagem (G3-022), critério de `TIMEOUT_AUTO_CHOICE`, Seal e Poseidon V6. O `docs/guia-do-jogo.md` (2.x) não muda.
+
 ## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — Categoria de 053, 060, 082 e 085
 
 - **Antes:** a D194 classificava 18 Spells; 053, 060, 082 e 085 ficavam sem categoria e não podiam ser jogadas.

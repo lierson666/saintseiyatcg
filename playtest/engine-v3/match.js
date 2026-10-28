@@ -3,6 +3,7 @@
 // quem começa é sorteado, cada um compra 7 e faz um mulligan parcial, começando pelo jogador inicial.
 import {createCore, draw, RuleError, emit} from './core.js';
 import {validateDeck} from '../../shared/deck-v3.js';
+import {initGods} from './gods.js';
 
 // Embaralhamento reproduzível (mulberry32 + Fisher–Yates): mesma seed, mesma partida.
 export function seeded(seed) {
@@ -29,6 +30,7 @@ export function createMatch({cards, canonIndex, decks, gods = {A: 'god-athena', 
   const soul = {A: cards.get(gods.A).soul, B: cards.get(gods.B).soul};
   const state = createCore({first, second: first === 'A' ? 'B' : 'A', soul, decks: piles});
   state.gods = gods;
+  initGods(state, {cards}); // Soul máximo, Awaken e Ultimate de cada God (gods.js)
   state.domains = {A: decks.A.domain_id, B: decks.B.domain_id};
   for (const key of state.order) draw(state, key, OPENING_HAND);
   state.setup = [...state.order]; // ordem do mulligan; vazio = pronto para o 1º turno
