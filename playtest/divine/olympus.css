@@ -482,3 +482,17 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
   .cosmo--opp { left: 22px; top: calc(var(--u) * 2); transform: scale(.8); transform-origin: left top; }
   .cosmo--me { left: 22px; top: auto; bottom: calc(var(--u) * 9); transform: scale(.8); transform-origin: left bottom; }
 }
+
+/* Mão estilo Arena (autor, 28/10/2026): cartas grandes em leque, metade à mostra; no hover a carta sobe inteira e
+   cresce para leitura, e as vizinhas abrem espaço. O avatar do God fica logo acima da mão, sem encostar nela. */
+@media (min-width: 761px) {
+  .olympus .hand--me { --hand-w: calc(var(--u) * 14); --hand-h: calc(var(--hand-w) * 1.4); bottom: calc(var(--hand-h) * -.52); z-index: 7; }
+  .olympus .hand--me .hand__slot { --shift: 0px; margin: 0 calc(var(--hand-w) * -.1); transition: transform .22s cubic-bezier(.2, .8, .2, 1);
+    transform: translateX(var(--shift)) rotate(calc((var(--i) - (var(--n) - 1) / 2) * 3deg)) translateY(calc(abs(var(--i) - (var(--n) - 1) / 2) * var(--u) * .5)); }
+  .olympus .hand--me .hand__slot:hover { transform-origin: 50% 100%; transform: translateY(calc(var(--hand-h) * -.5)) scale(1.65); z-index: 10; }
+  .olympus .hand--me .hand__slot:hover ~ .hand__slot { --shift: calc(var(--hand-w) * .45); }
+  .olympus .hand--me .hand__slot:has(~ .hand__slot:hover) { --shift: calc(var(--hand-w) * -.45); }
+  .olympus .hand--me .hand__slot:hover .dcard { box-shadow: 0 18px 40px rgba(0, 0, 0, .8), 0 0 0 2px var(--gold-hi), 0 0 30px rgba(255, 210, 120, .6); }
+  .godhud--me { bottom: calc(var(--u) * 14 * 1.4 * .48 + var(--u) * 1.2); }
+  .godhud__portrait { width: calc(var(--u) * 9.5); }
+}
