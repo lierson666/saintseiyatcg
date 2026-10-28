@@ -61,26 +61,26 @@ test('Destroy leva Devotee e Armor para o Tartarus do Owner; Equipment não-Armo
   assert.throws(() => destroyDevotee(s2, shiryu, o2, a2), NotSpecified);
 });
 
-test('simulação reproduzível: 27 turnos próprios de compra e Base até a Fatigue bloquear, sem perder objetos', () => {
+test('simulação reproduzível de compra e Base até a Fatigue (P07) encerrar a partida, sem perder objetos', () => {
   const m = match(42), {state, objects} = m;
   keepAll(m);
   const log = [];
-  let blocked = null;
-  for (let turn = 0; turn < 80 && !blocked; turn++) {
-    try { startTurn(state); } catch (e) { if (e instanceof NotSpecified) { blocked = e.topic; break; } throw e; }
+  for (let turn = 0; turn < 80 && !state.victory; turn++) {
+    startTurn(state);
+    if (state.victory) break;
     const p = state.players[state.active];
     const base = p.hand.find(uid => cards.get(objects[uid].cardId).cosmoble);
     if (base) placeBase(state, state.active, base, cards.get(objects[base].cardId));
-    log.push(`R${state.round} ${state.active} mão ${p.hand.length} deck ${p.deck.length} bases ${p.bases.length} latent ${p.latent}`);
+    log.push(`R${state.round} ${state.active} mão ${p.hand.length} deck ${p.deck.length} bases ${p.bases.length} latent ${p.latent} soul ${p.soul}`);
     endTurn(state); passAll(state);
     checkInvariants(state, objects);
   }
-  // P01: mão de 7, deck 53; 1º turno sem compra (D170), depois 2 por turno (D3): 26 compras deixam 1 carta,
-  // e o 28º turno de A pede 2 com 1 no deck (Fatigue, D174, sem texto).
-  assert.match(blocked, /D174/);
-  assert.deepEqual([state.players.A.deck.length, state.players.B.deck.length], [1, 1]);
-  assert.equal(log.length, 54);
+  // P01: deck 53; D170 + D3: 26 compras completas deixam 1 carta. A partir do 28º turno próprio, cada compra falha
+  // tira 1, 2, 3… (P07). A, inicial, chega à 8ª falha (1+…+8 = 36 ≥ 30) no 32º turno, um antes de B.
+  assert.deepEqual(state.victory, {winner: 'B'});
+  assert.equal(log.length, 62);
   assert.match(log[0], /^R1 A mão 6 deck 53 bases 1/);
+  assert.match(log.at(-1), /^R31 B .* soul 2$/);
   assert.ok(state.players.A.latent <= 3 && state.players.B.latent <= 3);
 });
 

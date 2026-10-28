@@ -1,6 +1,6 @@
 # Alpha 0.1 — propostas ALPHA-P01 a ALPHA-P07
 
-**Status: cada proposta precisa da confirmação individual do autor.** Aprovadas até agora: P01 a P06 (todas opção A). Falta a P07. As demais: NÃO APROVADAS. A numeração é provisória e não usa a faixa D. A D269 fica de fora.
+**Status: cada proposta precisa da confirmação individual do autor.** Aprovadas: P01 a P07, todas opção A, em 28/10/2026. As demais: NÃO APROVADAS. A numeração é provisória e não usa a faixa D. A D269 fica de fora.
 
 Se o autor achar o texto original (D1–D190) de algum item, esse texto substitui a proposta.
 
@@ -174,6 +174,8 @@ Nos decks aprovados (Pegasus Rush × Dragon Fortress), as keywords em uso são:
 - **Risco:** médio. Se o autor tiver o texto das D60–D63, ele prevalece.
 
 ## ALPHA-P07 — Fatigue
+
+**Status: APROVADA, opção A, pelo autor em 28/10/2026.** Implementada em `draw` (`playtest/engine-v3/core.js`), com contador `fatigue` por jogador.
 
 - **Comprovado:**
   - D174: deck vazio causa Fatigue, sem derrota automática.

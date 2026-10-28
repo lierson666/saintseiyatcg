@@ -17,7 +17,7 @@ export class NotSpecified extends Error {
 }
 
 export function createCore({first = 'A', second = 'B', soul, decks}) {
-  const player = key => ({soul: soul[key], latent: 0, deck: [...decks[key]], hand: [], battlefield: [], tartarus: [], void: [], bases: [], ownTurns: 0, baseTurn: 0});
+  const player = key => ({soul: soul[key], latent: 0, deck: [...decks[key]], hand: [], battlefield: [], tartarus: [], void: [], bases: [], ownTurns: 0, baseTurn: 0, fatigue: 0});
   return {round: 1, turn: 0, turnInRound: 0, order: [first, second], active: first, victory: null,
     players: {[first]: player(first), [second]: player(second)}, roundUses: new Set(), strikes: new Map(), effects: [], chain: [], window: null, units: {}};
 }
@@ -47,9 +47,12 @@ export function startTurn(state, startOfTurn = []) {
 export function draw(state, key, n) {
   alive(state);
   const p = state.players[key];
-  // D174: deck vazio causa Fatigue, sem derrota automática; valor e progressão não têm texto.
-  if (p.deck.length < n) throw new NotSpecified('D174: valor e progressão da Fatigue');
-  p.hand.push(...p.deck.splice(0, n));
+  // D174 + ALPHA-P07 opção A (aprovada em 28/10/2026): cada compra com deck vazio tira Soul igual ao total
+  // de compras falhas do jogador na partida (1, 2, 3…); o contador nunca zera. Soul 0 encerra na hora (D52).
+  for (let i = 0; i < n && !state.victory; i++) {
+    if (p.deck.length) p.hand.push(p.deck.shift());
+    else loseSoul(state, {[key]: ++p.fatigue});
+  }
 }
 
 // D233: move min(N, K) do topo para o Tartarus do dono; sem obrigação pendente e sem Fatigue.

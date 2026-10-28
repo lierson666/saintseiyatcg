@@ -47,11 +47,11 @@ test('D5 + teto 3: Base não usada vira Latent ao fim do turno; gasta não conve
   assert.equal(s.players.A.latent, 3);
 });
 
-test('D233: Mill move min(N, K), sem obrigação pendente; Draw com deck curto não é inventado', () => {
+test('D233: Mill move min(N, K), sem obrigação pendente e sem Fatigue', () => {
   const s = core(3);
   assert.equal(mill(s, 'B', 5), 3);
   assert.deepEqual([s.players.B.deck.length, s.players.B.tartarus.length], [0, 3]);
-  assert.throws(() => draw(s, 'B', 1), e => e instanceof NotSpecified && /Fatigue/.test(e.message));
+  assert.deepEqual([s.players.B.soul, s.players.B.fatigue], [30, 0]);
 });
 
 test('D52 + D174: Soul 0 encerra na hora; os dois em 0 empatam; nada age depois', () => {
@@ -118,4 +118,15 @@ test('P03: 4 Bases não usadas com Latent 1 viram Latent 3 num só evento, antes
   respond(s, 'B', {speed: 'instant', run: st => seen.push(st.players.A.latent)});
   passAll(s);
   assert.deepEqual(seen, [3, 3], 'resposta e gatilho de End Phase já veem o Latent convertido');
+});
+
+test('P07: Fatigue cumulativa por compra falha; o contador não zera; Soul 0 encerra na hora', () => {
+  const s = core(1);
+  draw(s, 'A', 2);
+  assert.deepEqual([s.players.A.hand.length, s.players.A.soul], [1, 29], '1ª compra ok, 2ª falha: perde 1');
+  draw(s, 'A', 2);
+  assert.equal(s.players.A.soul, 29 - 2 - 3);
+  s.players.A.soul = 4;
+  draw(s, 'A', 2);
+  assert.deepEqual([s.players.A.soul, s.players.A.fatigue, s.victory], [0, 4, {winner: 'B'}], 'para na compra que zerou');
 });
