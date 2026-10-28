@@ -13,6 +13,9 @@ export const QUALITY = {
 
 // Temas por alinhamento: cores do céu, chão, colunas, luz e poeira. Só Athena e Poseidon têm cena nesta fatia.
 export const THEMES = {
+  // Olympus Arena V1 (referência aprovada em docs/olympus-arena/): noite cósmica azul/violeta, piso zodiacal dourado.
+  olympus: {label: 'Olympus Arena', skyTop: '#02040f', skyBottom: '#1b2563', floorA: '#22306b', floorB: '#070b24', line: '#c9a45c',
+    column: '#8d96bd', light: '#a9c0ff', dust: '#8fc4ff', fog: '#04071a', caustics: 0, zodiac: 1},
   athena: {label: "Athena's Sanctuary", skyTop: '#0b1030', skyBottom: '#d9a54a', floorA: '#f3ede1', floorB: '#b9ab92', line: '#e8c46a',
     column: '#efe6d4', light: '#ffdca0', dust: '#ffd77a', fog: '#1a1530', caustics: 0},
   poseidon: {label: "Poseidon's Undersea Temple", skyTop: '#02101f', skyBottom: '#0c5a7a', floorA: '#3d8fa6', floorB: '#0d3346', line: '#7fe3f0',
@@ -68,6 +71,28 @@ const FX_VERT = `attribute vec4 aColor; attribute float aSize; varying vec4 vCol
 void main(){ vColor = aColor; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.); gl_PointSize = aSize; }`;
 const FX_FRAG = `varying vec4 vColor; void main(){ float d = length(gl_PointCoord - .5); float core = smoothstep(.5, .0, d); gl_FragColor = vec4(vColor.rgb * (1. + core), vColor.a * core); }`;
 
+// Mostrador zodiacal do piso, em linhas douradas finas sobre transparente.
+function zodiacCanvas() {
+  const S = 1024, c = document.createElement('canvas'), g = c.getContext('2d'), m = S / 2;
+  c.width = c.height = S;
+  g.translate(m, m); g.strokeStyle = 'rgba(214,176,98,.85)'; g.fillStyle = 'rgba(224,188,112,.9)';
+  const ring = (r, w = 2) => { g.lineWidth = w; g.beginPath(); g.arc(0, 0, r, 0, Math.PI * 2); g.stroke(); };
+  [500, 486, 392, 300, 214, 120].forEach((r, i) => ring(r, i < 2 ? 3 : 2));
+  for (let i = 0; i < 12; i++) { // divisões das 12 casas
+    const a = i / 12 * Math.PI * 2; g.lineWidth = 2;
+    g.beginPath(); g.moveTo(Math.cos(a) * 300, Math.sin(a) * 300); g.lineTo(Math.cos(a) * 486, Math.sin(a) * 486); g.stroke();
+  }
+  const signs = '♈♉♊♋♌♍♎♏♐♑♒♓';
+  g.font = '70px serif'; g.textAlign = 'center'; g.textBaseline = 'middle';
+  [...signs].forEach((ch, i) => { const a = (i + .5) / 12 * Math.PI * 2; g.save(); g.translate(Math.cos(a) * 440, Math.sin(a) * 440); g.rotate(a + Math.PI / 2); g.fillText(ch + '\uFE0E', 0, 0); g.restore(); });
+  for (let i = 0; i < 72; i++) { const a = i / 72 * Math.PI * 2, r1 = i % 6 ? 380 : 360; g.lineWidth = 1.5; g.beginPath(); g.moveTo(Math.cos(a) * r1, Math.sin(a) * r1); g.lineTo(Math.cos(a) * 392, Math.sin(a) * 392); g.stroke(); }
+  // Estrela de 16 pontas no centro.
+  g.beginPath();
+  for (let i = 0; i <= 32; i++) { const a = i / 32 * Math.PI * 2, r = i % 2 ? 40 : (i % 4 ? 150 : 210); g.lineTo(Math.cos(a) * r, Math.sin(a) * r); }
+  g.lineWidth = 2; g.stroke(); g.globalAlpha = .18; g.fill(); g.globalAlpha = 1;
+  return c;
+}
+
 export async function createScene(host, {quality = 'high', theme = 'athena', reduceFlashes = false} = {}) {
   const probe = document.createElement('canvas');
   if (!(probe.getContext('webgl2') || probe.getContext('webgl'))) return null;
@@ -100,6 +125,12 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
     uniforms: {uTime: uniforms.uTime, uA: {value: col('#fff')}, uB: {value: col('#888')}, uLine: {value: col('#fc0')}, uCaustics: {value: 0}}}));
   floor.rotation.x = -Math.PI / 2;
   world.add(floor);
+
+  // Piso zodiacal (Olympus): textura desenhada uma vez em canvas — anéis, 12 casas, signos e rosa dos ventos.
+  const zodiac = new THREE.Mesh(new THREE.CircleGeometry(11, 96), new THREE.MeshBasicMaterial({
+    map: new THREE.CanvasTexture(zodiacCanvas()), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, opacity: .9}));
+  zodiac.rotation.x = -Math.PI / 2; zodiac.position.y = .02;
+  world.add(zodiac);
 
   world.add(new THREE.HemisphereLight('#ffffff', '#202030', .55));
   const sun = new THREE.DirectionalLight('#ffffff', 1.6);
@@ -154,6 +185,7 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
     f.uA.value.set(t.floorA); f.uB.value.set(t.floorB); f.uLine.value.set(t.line); f.uCaustics.value = t.caustics;
     colMat.color.set(t.column); sun.color.set(t.light); rayMat.uniforms.uColor.value.set(t.light); dustMat.uniforms.uColor.value.set(t.dust);
     world.fog = new THREE.Fog(t.fog, 26, 70);
+    zodiac.visible = !!t.zodiac;
   }
 
   // ---------- VFX em espaço de tela ----------

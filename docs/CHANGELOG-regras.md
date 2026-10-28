@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — Gods 3.0 (registro suplementar G3)
+
+- **Antes:** a engine 3.0 não tinha Awaken, Ultimate, Soul máximo nem relógio competitivo; God Athena só retaliava.
+- **Depois:** decisões complementares aprovadas pelo autor ficam em `docs/alpha-0.1/GODS-3.0-SUPPLEMENT.md` (G3-001 a G3-028), fora de D1–D268 e sem ocupar a D269. Implementados: Awaken dinâmico, Ultimate (Athena Exclamation pago com Base preparada), Divine Judgment, Cosmo of Hope, Divine Protection, Soul máximo em camadas, Damage × Lose Soul, custo misto atômico, relógio Alpha (60 + reserva 90/180, 1 tocha por 60 s).
+- **Motivo:** especificação Olympus Arena V1 + respostas do autor de 28/10/2026.
+- **Pendências:** identidade de personagem (G3-022), critério de `TIMEOUT_AUTO_CHOICE`, Seal e Poseidon V6. O `docs/guia-do-jogo.md` (2.x) não muda.
+
 ## 2026-10-28 — Handbook 3.0 / Alpha 0.1 — Categoria de 053, 060, 082 e 085
 
 - **Antes:** a D194 classificava 18 Spells; 053, 060, 082 e 085 ficavam sem categoria e não podiam ser jogadas.

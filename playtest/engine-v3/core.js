@@ -29,6 +29,17 @@ export function emit(state, type, data = {}) {
   state.events.push({seq: state.events.length + 1, type, round: state.round, turn: state.turn, ...data});
 }
 
+// Ganchos dos Gods (gods.js), sem import circular. `checkpoint`: entre resoluções completas da cadeia e nas
+// passagens de turno (G3-003); `roundEnd`: gatilhos extras do checkpoint de fim de Round (D204), ex.: Divine Judgment.
+export const hooks = {checkpoint: [], roundEnd: []};
+export function runCheckpoint(state) { if (!state.victory) for (const fn of hooks.checkpoint) fn(state); }
+
+// Visibilidade (G3-019): o adversário não vê qual carta foi comprada nem qual voltou no mulligan.
+const PRIVATE = {draw: 'uid'};
+export function eventsFor(state, viewer, from = 0) {
+  return state.events.slice(from).map(e => (PRIVATE[e.type] && e.player !== viewer ? {...e, [PRIVATE[e.type]]: null} : e));
+}
+
 const alive = state => { if (state.victory) throw new RuleError('D52', 'a partida já terminou'); };
 const other = (state, key) => state.order.find(k => k !== key);
 
@@ -52,7 +63,7 @@ export function startTurn(state, startOfTurn = []) {
     else unit.prepared = true;
   }
   emit(state, 'turn_start', {player: key});
-  const drawStep = () => { if (p.ownTurns > 1) draw(state, key, DRAWS_PER_TURN); };
+  const drawStep = () => { if (p.ownTurns > 1) draw(state, key, DRAWS_PER_TURN); runCheckpoint(state); };
   if (startOfTurn.length) pushTriggers(state, startOfTurn, drawStep);
   else drawStep();
 }
@@ -108,13 +119,27 @@ export function gainLatent(state, key, n) {
 }
 
 // D52 + D174: Soul 0 encerra na hora; os dois Gods em 0 ao mesmo tempo empatam.
-export function loseSoul(state, losses) {
+// `cause` (G3-013): 'damage' (dano, depois de prevenção), 'loss' (Lose Soul direto) ou 'payment' (custo pago).
+// Soul atual nunca fica negativo; `amount` registra o valor integral (G3-012).
+export function loseSoul(state, losses, cause = 'loss') {
   alive(state);
-  for (const [key, n] of Object.entries(losses)) { state.players[key].soul -= n; emit(state, 'soul_lost', {player: key, amount: n, soul: state.players[key].soul}); }
+  for (const [key, n] of Object.entries(losses)) {
+    const p = state.players[key];
+    p.soul = Math.max(0, p.soul - n);
+    emit(state, 'soul_lost', {player: key, amount: n, soul: p.soul, cause});
+  }
   const dead = state.order.filter(k => state.players[k].soul <= 0);
   if (dead.length === 2) state.victory = {draw: true};
   else if (dead.length === 1) state.victory = {winner: other(state, dead[0])};
   if (state.victory) emit(state, 'victory', state.victory);
+  return state.victory;
+}
+
+// Derrota por efeito (ex.: Divine Judgment vencido): o jogador `key` perde a partida na hora (D52).
+export function loseGame(state, key, reason) {
+  alive(state);
+  state.victory = {winner: other(state, key), reason};
+  emit(state, 'victory', state.victory);
   return state.victory;
 }
 
@@ -221,11 +246,14 @@ export function pass(state, key) {
     emit(state, 'resolve', {player: top.controller, uid: top.uid});
     top.run(state);
     if (state.victory) { state.window = null; state.chain = []; return state.victory; } // D52
+    runCheckpoint(state);
     if (state.chain.length) { reopen(state); return undefined; }
   }
   state.window = null;
   emit(state, 'window_close', {});
-  return w.onClose(state);
+  const result = w.onClose(state);
+  runCheckpoint(state);
+  return result;
 }
 
 // Os dois passam até não haver janela; devolve o resultado do último passo (vitória ou retorno do onClose).
@@ -255,7 +283,7 @@ export function endTurn(state, {endOfTurn = [], endOfRound = []} = {}) {
 // D204: gatilhos de fim de Round depois dos de fim de turno e antes do Cleanup.
 // Gatilhos atrasados de carta ("at the end of the round", em `state.delayed`) entram aqui também.
 function roundCheckpoint(state, triggers) {
-  if (state.turnInRound === 1) triggers = [...triggers, ...state.delayed.splice(0)];
+  if (state.turnInRound === 1) triggers = [...triggers, ...state.delayed.splice(0), ...hooks.roundEnd.flatMap(fn => fn(state))];
   if (state.turnInRound === 1 && triggers.length) pushTriggers(state, triggers, () => cleanup(state));
   else cleanup(state);
 }

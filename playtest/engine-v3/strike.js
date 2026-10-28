@@ -75,12 +75,12 @@ export function resolveStrike(state, ctx, strike) {
     damageDevotee(state, ctx, attacker, back);
     // P05 A: Pierce leva o dano acima do HP restante do alvo ao Soul do God dele (prevenível como dano de Strike ao God).
     const toGod = pierce && excess > 0 ? preventGod(state, ctx, enemy, excess) : 0;
-    if (toGod > 0 && loseSoul(state, {[enemy]: toGod})) return state.victory;
+    if (toGod > 0 && loseSoul(state, {[enemy]: toGod}, 'damage')) return state.victory;
   } else {
     damageDevotee(state, ctx, attacker, ctx.cards.get(state.gods[enemy]).atk);
     const toGod = preventGod(state, ctx, enemy, atk);
     emit(state, 'god_damage', {player: enemy, incoming: atk, dealt: toGod});
-    if (toGod > 0 && loseSoul(state, {[enemy]: toGod})) return state.victory; // D52: encerra na hora
+    if (toGod > 0 && loseSoul(state, {[enemy]: toGod}, 'damage')) return state.victory; // D52: encerra na hora
   }
   checkDefeats(state, ctx);
   afterStrike(state, ctx, strike);

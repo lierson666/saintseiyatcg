@@ -186,7 +186,8 @@ test('opcionais pagos: Prayer of Rozan (1 Latent), Crystal Wall (2 Latent, tamb√
   const jabu = field('A', '028'); // ATK 2 + Unicorn Gallop 1 contra Shiryu: Dragon Shield 1, Prayer 1, Final Sacrifice o resto
   strike(jabu, {kind: 'devotee', uid: shiryu});
   assert.deepEqual(asked, ['Crystal Wall', 'Prayer of Rozan', 'Final Sacrifice']);
-  assert.deepEqual([s.units[shiryu].damage, s.players.B.latent, s.players.B.tartarus.includes(cassios)], [0, 0, true]);
+  // Latent 1: Prayer gastou o √∫ltimo, e Shiryu (Athena Devotee) defendeu e sobreviveu: Cosmo of Hope do God Athena (D225).
+  assert.deepEqual([s.units[shiryu].damage, s.players.B.latent, s.players.B.tartarus.includes(cassios)], [0, 1, true]);
   checkInvariants(s, ctx.objects);
 });
 
