@@ -556,3 +556,14 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .sanctum .zdeck { grid-template-columns: calc(var(--s) * 3.8) auto; }
 .sanctum .zdeck__back { justify-self: center; width: calc(var(--s) * 2.6); }
 .sanctum .zpile small { order: 0; font-size: calc(var(--s) * .8); letter-spacing: .1em; }
+/* Relógio no meio da tela, na borda direita (autor, 28/10/2026). */
+@media (min-width: 761px) {
+  .command__clock { position: fixed; right: 18px; top: 50%; transform: translateY(-50%); z-index: 6; }
+}
+/* Os dois santuários à esquerda (autor, 28/10/2026): oponente no alto, você embaixo. Rótulo das zonas sob o número
+   para caber na largura do painel. */
+.sanctum--opp { right: auto; left: 14px; top: 14px; }
+.sanctum .zpile { grid-template-columns: calc(var(--s) * 3.8) 1fr; grid-template-rows: auto auto; row-gap: 2px; }
+.sanctum .zpile .zicon { grid-row: 1 / span 2; }
+.sanctum .zpile b { align-self: end; }
+.sanctum .zpile small { align-self: start; grid-column: 2; font-size: calc(var(--s) * .72); }
