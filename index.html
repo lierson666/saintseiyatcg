@@ -29,7 +29,7 @@
     .stamp { font: 600 11px/1 "Cinzel", Georgia, serif; letter-spacing: .42em; text-transform: uppercase; color: var(--muted); }
     nav { position: sticky; top: 0; z-index: 3; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px clamp(16px, 4vw, 56px);
       background: #0b0c1699; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
-    .logo { height: 40px; width: auto; display: block; }
+    .logo { display: block; width: clamp(220px, 26vw, 360px); height: auto; margin: 0 0 28px -6px; filter: drop-shadow(0 0 30px #e6c36a40); }
     .soon { display: inline-flex; align-items: center; gap: 10px; }
     .soon i { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 10px var(--gold), 0 0 22px var(--ember); animation: beat 2.4s ease-in-out infinite; }
     @keyframes beat { 50% { opacity: .35; } }
@@ -74,7 +74,6 @@
       main { grid-template-columns: 1fr; padding-top: 40px; }
       .veil { background: linear-gradient(180deg, #05060c66, #05060ccc 60%); }
       .pass > .stamp, .pass h2, form { padding-left: 20px; padding-right: 20px; }
-      nav .stamp.hide-sm { display: none; }
     }
     @media (prefers-reduced-motion: reduce) { .soon i { animation: none; } button, input { transition: none; } }
   </style>
@@ -90,12 +89,12 @@
   <div class="veil" aria-hidden="true"></div>
   <div class="page">
     <nav>
-      <img class="logo" src="/LOGO/logo-web.webp" alt="Saint Seiya TCG" width="760" height="380">
-      <span class="stamp hide-sm">Trading Card Game</span>
+      <span class="stamp">Saint Seiya · TCG</span>
       <span class="stamp soon"><i aria-hidden="true"></i>Coming soon</span>
     </nav>
     <main>
       <section class="hero">
+        <img class="logo" src="/LOGO/logo-web.webp" alt="Saint Seiya TCG" width="760" height="380">
         <p class="stamp">The Holy War approaches</p>
         <h1><span class="lyric">Burn your</span><span class="cosmo">Cosmo</span></h1>
         <p class="lead">The gods are gathering their armies. Leave your name and be the first to know <em>when the gates of the Sanctuary open.</em></p>
