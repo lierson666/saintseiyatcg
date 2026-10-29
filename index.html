@@ -1,7 +1,7 @@
 <!doctype html>
-<!-- Home de saintseiyatcg.com (autor, 29/10/2026): Coming Soon com cadastro de novidades.
-     Os cadastros vão para a planilha Google do autor via Apps Script (tools/coming-soon-apps-script.gs).
-     Cole a URL do app da web em SIGNUP_URL abaixo. -->
+<!-- Home de saintseiyatcg.com (autor, 29/10/2026): Coming Soon com cadastro de novidades, direção brutal com estrelas
+     e cosmo envolvendo o usuário (canvas). Os cadastros vão para a planilha Google do autor via Apps Script
+     (tools/coming-soon-apps-script.gs; passo a passo em docs/coming-soon.md). Cole a URL do app da web em SIGNUP_URL. -->
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -11,77 +11,186 @@
   <meta property="og:title" content="Saint Seiya TCG — Coming Soon">
   <meta property="og:description" content="Burn your Cosmo. Be the first to know.">
   <meta property="og:image" content="/LOGO/og-image.jpg">
+  <meta name="theme-color" content="#030409">
   <link rel="icon" href="/LOGO/favicon.png">
   <link rel="apple-touch-icon" href="/LOGO/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Jost:wght@400;500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Jost:wght@400;500;700&display=swap">
   <style>
-    :root { --bg: #05070c; --text: #ece6d6; --muted: #9aa3bb; --gold: #e6c36a; --gold-2: #f6dd94; --ember: #ff8a2b; --line: #e6c36a55; color-scheme: dark; }
+    :root { --bg: #030409; --ink: #f4ecd8; --muted: #a39d8c; --gold: #e6c36a; --gold-2: #ffe7a3; --ember: #ff8a2b; --blood: #ff4d2e; color-scheme: dark; }
     * { box-sizing: border-box; }
-    html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); font: 16px/1.5 "Jost", system-ui, sans-serif; }
-    body { min-height: 100dvh; display: grid; place-items: center; padding: 32px 16px; overflow-x: hidden;
-      background: radial-gradient(ellipse at 50% 35%, #ff8a2b26, transparent 55%), linear-gradient(180deg, #05070ccc, #05070cf2), url("/playtest/assets/sanctuary.webp") center / cover fixed, var(--bg); }
-    .stars { position: fixed; inset: 0; pointer-events: none; background-image: radial-gradient(1px 1px at 20% 30%, #fff8, transparent), radial-gradient(1px 1px at 70% 20%, #fff6, transparent),
-      radial-gradient(1.5px 1.5px at 40% 80%, #f6dd94aa, transparent), radial-gradient(1px 1px at 85% 65%, #fff7, transparent), radial-gradient(1px 1px at 10% 75%, #fff5, transparent); }
-    main { position: relative; width: min(560px, 100%); text-align: center; }
-    .logo { width: min(380px, 80vw); height: auto; filter: drop-shadow(0 0 30px #ff8a2b55); }
-    .soon { margin: 18px 0 4px; font: 600 14px "Cinzel", Georgia, serif; letter-spacing: .4em; color: var(--muted); }
-    h1 { margin: 0; font: 800 clamp(34px, 8vw, 60px)/1.05 "Cinzel", Georgia, serif; letter-spacing: .04em;
-      background: linear-gradient(180deg, var(--gold-2), var(--gold) 45%, var(--ember)); -webkit-background-clip: text; background-clip: text; color: transparent;
-      text-shadow: 0 0 40px #ff8a2b40; animation: burn 3.5s ease-in-out infinite; }
-    @keyframes burn { 50% { filter: drop-shadow(0 0 14px #ff8a2b88); } }
-    .lead { margin: 14px auto 28px; max-width: 42ch; color: var(--muted); }
-    form { display: grid; gap: 12px; padding: 22px; border: 1px solid var(--line); border-radius: 14px; background: #0b0f1bcc; backdrop-filter: blur(8px); text-align: left; }
-    label { display: grid; gap: 6px; font-size: 13px; color: var(--muted); letter-spacing: .04em; }
-    input[type=text], input[type=email] { width: 100%; min-height: 46px; padding: 10px 14px; border: 1px solid #2a3554; border-radius: 8px; background: #070a14; color: var(--text); font: inherit; }
-    input:focus-visible, button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
-    .consent { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; letter-spacing: 0; }
-    .consent input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--gold); }
-    button { min-height: 48px; border: 0; border-radius: 8px; cursor: pointer; font: 800 15px "Cinzel", Georgia, serif; letter-spacing: .12em; color: #1a1000;
-      background: linear-gradient(180deg, var(--gold-2), var(--gold)); box-shadow: 0 6px 24px #e6c36a44; }
-    button:disabled { opacity: .6; cursor: default; }
+    html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--ink); font: 16px/1.5 "Jost", system-ui, sans-serif; }
+    body { min-height: 100dvh; overflow-x: hidden; }
+    #sky { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+    .grain { position: fixed; inset: 0; pointer-events: none; opacity: .07; mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+    .page { position: relative; z-index: 1; min-height: 100dvh; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(320px, .75fr); grid-template-rows: auto 1fr auto; gap: 0 clamp(24px, 4vw, 64px); padding: clamp(16px, 3vw, 40px); }
+    header { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: center; gap: 16px; border-bottom: 2px solid var(--ink); padding-bottom: 14px; }
+    .logo { height: clamp(44px, 6vw, 72px); width: auto; filter: drop-shadow(0 0 18px #ff8a2b66); }
+    .tag { font: 700 12px "Jost", sans-serif; letter-spacing: .32em; text-transform: uppercase; border: 2px solid var(--gold); color: var(--gold); padding: 8px 12px; }
+    .title { align-self: center; padding: clamp(24px, 6vh, 72px) 0; }
+    .kicker { margin: 0 0 10px; font: 700 13px "Jost", sans-serif; letter-spacing: .5em; text-transform: uppercase; color: var(--ember); }
+    h1 { margin: 0; font: 900 clamp(64px, 13.5vw, 230px)/.82 "Cinzel", Georgia, serif; letter-spacing: -.02em; text-transform: uppercase; }
+    h1 span { display: block; }
+    h1 .burn { color: transparent; -webkit-text-stroke: 2px var(--ink); }
+    h1 .cosmo { background: linear-gradient(180deg, var(--gold-2) 0%, var(--gold) 35%, var(--ember) 70%, var(--blood) 100%); -webkit-background-clip: text; background-clip: text; color: transparent;
+      filter: drop-shadow(0 0 28px #ff8a2b88); animation: flare 2.8s ease-in-out infinite; }
+    @keyframes flare { 50% { filter: drop-shadow(0 0 54px #ff8a2bcc) brightness(1.15); } }
+    .lead { max-width: 46ch; margin: 22px 0 0; font-size: clamp(16px, 1.4vw, 19px); color: var(--muted); }
+    .lead b { color: var(--ink); font-weight: 700; }
+    .lead, .kicker { position: relative; text-shadow: 0 1px 10px #000, 0 0 3px #000; }
+    .panel { position: relative; z-index: 2; align-self: center; border: 2px solid var(--ink); background: #030409e6; box-shadow: 12px 12px 0 var(--ember); }
+    .panel h2 { margin: 0; padding: 14px 18px; font: 900 22px/1.1 "Cinzel", Georgia, serif; letter-spacing: .04em; text-transform: uppercase; background: var(--ink); color: var(--bg); }
+    form { display: grid; gap: 16px; padding: 20px 18px 22px; }
+    label { display: grid; gap: 6px; font: 700 12px "Jost", sans-serif; letter-spacing: .24em; text-transform: uppercase; }
+    input[type=text], input[type=email] { width: 100%; min-height: 52px; padding: 12px 14px; border: 2px solid #f4ecd88c; border-radius: 0; background: #000; color: var(--ink); font: 500 17px "Jost", sans-serif; letter-spacing: .02em; }
+    input[type=text]:focus, input[type=email]:focus { border-color: var(--gold); box-shadow: 0 0 0 4px #e6c36a33, 0 0 28px #ff8a2b55; outline: none; }
+    .consent { display: flex; gap: 12px; align-items: flex-start; font: 400 14px/1.45 "Jost", sans-serif; letter-spacing: 0; text-transform: none; color: var(--muted); }
+    .consent input { flex: none; width: 22px; height: 22px; margin: 0; accent-color: var(--ember); }
+    button { min-height: 58px; border: 2px solid var(--ink); border-radius: 0; cursor: pointer; font: 900 18px "Cinzel", Georgia, serif; letter-spacing: .16em; text-transform: uppercase;
+      color: var(--bg); background: linear-gradient(180deg, var(--gold-2), var(--gold) 55%, var(--ember)); transition: transform .12s ease-out, box-shadow .12s ease-out; box-shadow: 6px 6px 0 var(--ink); }
+    button:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0 var(--ink); }
+    button:active { transform: translate(4px, 4px); box-shadow: 2px 2px 0 var(--ink); }
+    button:disabled { opacity: .6; cursor: default; transform: none; }
+    :focus-visible { outline: 3px solid var(--gold-2); outline-offset: 3px; }
     .hp { position: absolute; left: -9999px; }
-    .status { min-height: 1.5em; margin: 0; font-size: 14px; text-align: center; }
-    .status.ok { color: var(--gold-2); } .status.err { color: #ff8f80; }
-    footer { margin-top: 26px; font-size: 12px; color: #6f7894; }
-    @media (prefers-reduced-motion: reduce) { h1 { animation: none; } body { background-attachment: scroll; } }
+    .status { min-height: 1.5em; margin: 0; font: 500 15px "Jost", sans-serif; }
+    .status.ok { color: var(--gold-2); } .status.err { color: #ff9a87; }
+    footer { grid-column: 1 / -1; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-top: 2px solid var(--ink); padding-top: 12px;
+      font: 700 11px "Jost", sans-serif; letter-spacing: .28em; text-transform: uppercase; color: var(--muted); }
+    @media (max-width: 860px) {
+      .page { grid-template-columns: 1fr; grid-template-rows: auto auto auto auto; }
+      .title { padding: 28px 0 24px; }
+      .panel { margin-bottom: 28px; box-shadow: 8px 8px 0 var(--ember); }
+      .tag { display: none; }
+    }
+    @media (prefers-reduced-motion: reduce) { h1 .cosmo { animation: none; } button { transition: none; } }
   </style>
 </head>
 <body>
-  <div class="stars" aria-hidden="true"></div>
-  <main>
-    <img class="logo" src="/LOGO/logo-web.webp" alt="Saint Seiya TCG" width="760" height="380">
-    <p class="soon">COMING SOON</p>
-    <h1>Burn Your Cosmo</h1>
-    <p class="lead">The Holy War is about to begin. Leave your name and email to be the first to know when the gates of the Sanctuary open.</p>
-    <form id="signup" novalidate>
-      <label>Name<input type="text" name="name" autocomplete="name" required maxlength="80"></label>
-      <label>Email<input type="email" name="email" autocomplete="email" required maxlength="120"></label>
-      <label class="hp" aria-hidden="true">Leave empty<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
-      <label class="consent"><input type="checkbox" name="consent" required> I agree to receive Saint Seiya TCG news by email. I can unsubscribe at any time.</label>
-      <button type="submit">Notify me</button>
-      <p class="status" role="status" aria-live="polite"></p>
-    </form>
-    <footer>Saint Seiya TCG · In development</footer>
-  </main>
+  <canvas id="sky" aria-hidden="true"></canvas>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="page">
+    <header>
+      <img class="logo" src="/LOGO/logo-web.webp" alt="Saint Seiya TCG" width="760" height="380">
+      <span class="tag">Coming soon</span>
+    </header>
+    <section class="title">
+      <p class="kicker">The Holy War approaches</p>
+      <h1><span class="burn">Burn</span><span>Your</span><span class="cosmo">Cosmo</span></h1>
+      <p class="lead">The gods are gathering their armies. <b>Leave your name and email</b> and be the first to know when the gates of the Sanctuary open.</p>
+    </section>
+    <section class="panel" aria-labelledby="join">
+      <h2 id="join">Join the Holy War</h2>
+      <form id="signup" novalidate>
+        <label>Name<input type="text" name="name" autocomplete="name" required maxlength="80"></label>
+        <label>Email<input type="email" name="email" autocomplete="email" required maxlength="120"></label>
+        <label class="hp" aria-hidden="true">Leave empty<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+        <label class="consent"><input type="checkbox" name="consent" required> I agree to receive Saint Seiya TCG news by email. I can unsubscribe at any time.</label>
+        <button type="submit">Ignite</button>
+        <p class="status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+    <footer><span>Saint Seiya TCG</span><span>In development</span></footer>
+  </div>
   <script>
     // URL do app da web do Apps Script (tools/coming-soon-apps-script.gs). Vazio: o formulário avisa que ainda não abriu.
     const SIGNUP_URL = '';
+
+    // ---------- Céu e cosmo (canvas) ----------
+    // Três camadas de estrelas com paralaxe; perto do ponteiro elas se ligam em constelação.
+    // O cosmo é um campo de partículas douradas/brasa que nasce em volta do ponteiro (ou do formulário, parado),
+    // cresce ao digitar e explode ao cadastrar. Sem animação com prefers-reduced-motion.
+    const sky = document.getElementById('sky'), g = sky.getContext('2d');
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let W = 0, H = 0, dpr = 1, stars = [], sparks = [], heat = 0, t = 0;
+    const me = {x: innerWidth * .7, y: innerHeight * .5, tx: innerWidth * .7, ty: innerHeight * .5, active: false};
+    function resize() {
+      dpr = Math.min(devicePixelRatio || 1, 2); W = innerWidth; H = innerHeight;
+      sky.width = W * dpr; sky.height = H * dpr; g.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const n = Math.round(W * H / 2600);
+      stars = Array.from({length: n}, () => ({x: Math.random() * W, y: Math.random() * H, z: Math.random() ** 2, tw: Math.random() * 6.28}));
+    }
+    function anchor() { // sem ponteiro: o cosmo queima em volta da palavra COSMO
+      const r = document.querySelector('h1 .cosmo').getBoundingClientRect();
+      return {x: r.left + r.width / 2, y: r.top + r.height / 2};
+    }
+    function spawn(x, y, burst = 0) {
+      const a = Math.random() * 6.28, d = burst ? Math.random() * 3 + 2 : Math.random() * (90 + heat * 110);
+      sparks.push({x: x + Math.cos(a) * d, y: y + Math.sin(a) * d, vx: burst ? Math.cos(a) * d * 2.2 : Math.cos(a) * .3, vy: burst ? Math.sin(a) * d * 2.2 : -Math.random() * 1.6 - .4,
+        life: 1, decay: .007 + Math.random() * .016, r: Math.random() * 3 + .8, hue: 22 + Math.random() * 28});
+    }
+    function frame() {
+      t += 1;
+      const target = me.active ? me : anchor();
+      me.x += ((me.active ? me.tx : target.x) - me.x) * .08; me.y += ((me.active ? me.ty : target.y) - me.y) * .08;
+      heat *= .985;
+      g.fillStyle = '#030409'; g.fillRect(0, 0, W, H);
+      // nebulosa do cosmo em volta do usuário
+      const glow = g.createRadialGradient(me.x, me.y, 0, me.x, me.y, 260 + heat * 220);
+      glow.addColorStop(0, `rgba(255,150,60,${.20 + heat * .25})`); glow.addColorStop(.45, `rgba(230,195,106,${.07 + heat * .1})`); glow.addColorStop(1, 'rgba(3,4,9,0)');
+      g.fillStyle = glow; g.fillRect(0, 0, W, H);
+      // estrelas com paralaxe e constelação perto do ponteiro
+      const px = (me.x / W - .5), py = (me.y / H - .5), near = [];
+      for (const s of stars) {
+        const x = s.x - px * 30 * s.z, y = s.y - py * 30 * s.z, a = .35 + .65 * Math.abs(Math.sin(t * .02 + s.tw)) * (.4 + s.z * .6);
+        g.fillStyle = `rgba(255,248,230,${a})`; g.fillRect(x, y, .6 + s.z * 1.6, .6 + s.z * 1.6);
+        const dx = x - me.x, dy = y - me.y;
+        if (s.z > .25 && dx * dx + dy * dy < 170 * 170 && near.length < 14) near.push([x, y]);
+      }
+      g.strokeStyle = `rgba(230,195,106,${.22 + heat * .3})`; g.lineWidth = 1; g.beginPath();
+      for (let i = 1; i < near.length; i++) { g.moveTo(near[i - 1][0], near[i - 1][1]); g.lineTo(near[i][0], near[i][1]); }
+      g.stroke();
+      // partículas do cosmo (soma de luz)
+      for (let i = 0; i < 10 + heat * 18; i++) spawn(me.x, me.y);
+      g.globalCompositeOperation = 'lighter';
+      for (let i = sparks.length - 1; i >= 0; i--) {
+        const p = sparks[i];
+        p.x += p.vx + Math.sin((p.y + t) * .03) * .4; p.y += p.vy; p.vx *= .97; p.vy = p.vy * .97 - .02; p.life -= p.decay;
+        if (p.life <= 0) { sparks.splice(i, 1); continue; }
+        g.fillStyle = `hsla(${p.hue},100%,${55 + p.life * 20}%,${p.life * .9})`;
+        g.beginPath(); g.arc(p.x, p.y, p.r * (1 + p.life), 0, 6.28); g.fill();
+      }
+      g.globalCompositeOperation = 'source-over';
+      if (sparks.length > 900) sparks.splice(0, sparks.length - 900);
+      if (!still && !document.hidden) requestAnimationFrame(frame);
+    }
+    function paintStill() { // movimento reduzido: só o céu, sem partículas
+      g.fillStyle = '#030409'; g.fillRect(0, 0, W, H);
+      for (const s of stars) { g.fillStyle = `rgba(255,248,230,${.3 + s.z * .6})`; g.fillRect(s.x, s.y, .6 + s.z * 1.6, .6 + s.z * 1.6); }
+    }
+    const move = (x, y) => { me.tx = x; me.ty = y; me.active = true; };
+    addEventListener('pointermove', e => move(e.clientX, e.clientY), {passive: true});
+    addEventListener('pointerdown', e => { move(e.clientX, e.clientY); heat = Math.min(1, heat + .3); }, {passive: true});
+    document.documentElement.addEventListener('pointerleave', () => { me.active = false; });
+    addEventListener('resize', () => { resize(); if (still) paintStill(); });
+    document.addEventListener('visibilitychange', () => { if (!document.hidden && !still) requestAnimationFrame(frame); });
+    resize();
+    if (still) paintStill(); else requestAnimationFrame(frame);
+
+    // ---------- Cadastro ----------
     const form = document.getElementById('signup'), status = form.querySelector('.status'), button = form.querySelector('button');
     const say = (text, kind) => { status.textContent = text; status.className = `status ${kind || ''}`; };
+    form.addEventListener('input', () => { heat = Math.min(1, heat + .08); }); // digitar acende o cosmo
+    function explode() {
+      if (still) return;
+      const r = button.getBoundingClientRect();
+      for (let i = 0; i < 260; i++) spawn(r.left + r.width / 2, r.top + r.height / 2, 1);
+      heat = 1;
+    }
     form.addEventListener('submit', async e => {
       e.preventDefault();
       const data = new FormData(form), name = data.get('name').trim(), email = data.get('email').trim();
       if (data.get('website')) return; // robô preencheu o campo escondido
-      if (!name) return say('Please tell us your name.', 'err');
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return say('Please enter a valid email.', 'err');
+      if (!name) return say('Tell us your name, Saint.', 'err');
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return say('That email is not valid.', 'err');
       if (!data.get('consent')) return say('Please agree to receive our news.', 'err');
-      if (!SIGNUP_URL) return say('Sign-ups open very soon. Please come back later.', 'err');
-      button.disabled = true; say('Sending…');
+      if (!SIGNUP_URL) return say('Sign-ups open very soon. Come back shortly.', 'err');
+      button.disabled = true; say('Igniting…');
       try {
         // Apps Script não devolve CORS: o envio é "no-cors" e a resposta não é lida.
         await fetch(SIGNUP_URL, {method: 'POST', mode: 'no-cors', body: new URLSearchParams({name, email, source: 'saintseiyatcg.com'})});
-        form.reset(); say('Your Cosmo has been heard. See you in the Sanctuary!', 'ok');
+        form.reset(); explode(); say('Your Cosmo has been heard. See you in the Sanctuary.', 'ok');
       } catch { say('Something went wrong. Please try again.', 'err'); }
       finally { button.disabled = false; }
     });
