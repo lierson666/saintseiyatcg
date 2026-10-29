@@ -953,7 +953,7 @@ function loadout(uid) {
       ${gear.map(g => line(esc(info(g).name), sign(bonus(g).atk || 0), sign(bonus(g).hp || 0), 'is-gear')).join('')}
       ${otherAtk || otherHp ? line('Other effects', sign(otherAtk), sign(otherHp), 'is-other') : ''}
       ${line('Total', atk, dmg ? `${hp - dmg}<small>/${hp}</small>` : hp, 'is-total')}</ul>
-    ${gear.length ? `<h4>Equipped</h4><div class="loadout__gear">${gear.map(g => cardFace(g, {field: true})).join('')}</div>` : '<p class="loadout__none">Nothing equipped.</p>'}
+    ${gear.length ? `<h4>Equipped</h4><div class="loadout__gear">${gear.map(g => `<button class="loadout__card" data-open-card="${g}" data-tip="${esc(`${info(g).name}|Click to view this card.`)}">${cardFace(g, {field: true})}</button>`).join('')}</div>` : '<p class="loadout__none">Nothing equipped.</p>'}
   </aside>`;
 }
 function showBigCard(uid) {
@@ -963,8 +963,15 @@ function showBigCard(uid) {
   box.id = 'bigcard';
   box.className = 'bigcard';
   const field = S().players[owner(uid)].battlefield.includes(uid);
-  box.innerHTML = cardFace(uid, {size: 'dcard--big', field}) + (field && info(uid).kind === 'Devotee' ? loadout(uid) : '');
-  box.addEventListener('pointerdown', closeBigCard);
+  const bearer = ctx.attached[uid];
+  box.innerHTML = cardFace(uid, {size: 'dcard--big', field}) + (field && info(uid).kind === 'Devotee' ? loadout(uid)
+    : bearer ? `<aside class="loadout"><h3>${esc(info(uid).name)}</h3><h4>Equipped on</h4><div class="loadout__gear"><button class="loadout__card" data-open-card="${bearer}" data-tip="${esc(`${info(bearer).name}|Click to view the bearer.`)}">${cardFace(bearer, {field: true})}</button></div></aside>` : '');
+  // Cartas do painel abrem grandes (equipamento a partir do portador e vice-versa); clicar no painel não fecha; fora dele, fecha.
+  box.addEventListener('pointerdown', e => {
+    const open = e.target.closest('[data-open-card]');
+    if (open) return showBigCard(open.dataset.openCard);
+    if (!e.target.closest('.loadout')) closeBigCard();
+  });
   box.addEventListener('contextmenu', e => { e.preventDefault(); closeBigCard(); });
   document.body.append(box);
 }
