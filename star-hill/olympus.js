@@ -45,8 +45,12 @@ function deckErrors(d, index) {
 const count = d => d.main_deck.reduce((n, e) => n + e.quantity, 0);
 const name = id => cards.get(id)?.name || id || '—';
 
-function publishBox() {
+// `compact`: uma linha só, na página Cartas, para o editor ganhar altura.
+function publishBox(compact = false) {
   const when = status?.publicado_em ? new Date(status.publicado_em * 1000).toLocaleString('pt-BR') : 'nunca';
+  const tag = status?.pendente ? '<span class="tag">Há mudanças não publicadas</span>' : '<span class="tag">Jogo em dia com o Forge</span>';
+  if (compact) return `<section class="panel publish-bar" title="O jogo usa uma cópia leve das cartas do Card Forge. Publique depois de editar cartas, textos ou artes."><h2>Cartas no jogo</h2>${tag}<small>Última publicação: ${esc(when)}</small>
+    <div class="actions"><button class="primary" data-action="publish">Publicar cartas no jogo</button><a href="../playtest/" target="_blank" rel="noopener">Abrir jogo ↗</a></div></section>`;
   return `<section class="panel"><h2>Cartas no jogo</h2>
     <p class="hint">O jogo usa uma cópia leve das cartas do Card Forge. Depois de editar cartas, textos ou artes, publique para a próxima partida usar a versão nova.</p>
     <p>${status?.pendente ? '<span class="tag">Há mudanças não publicadas</span>' : '<span class="tag">Jogo em dia com o Forge</span>'} <small>Última publicação: ${esc(when)}</small></p>
@@ -75,7 +79,7 @@ function cardList() {
 }
 function cardsPage() {
   const chip = (f, label) => `<button class="chip" data-action="card-faction" data-faction="${f}" ${f ? `data-tone="${f}"` : ''} aria-pressed="${f === cardFaction}">${label}</button>`;
-  return `${publishBox()}<div class="cards-workbench" style="margin-top:20px"><aside class="card-browser" aria-label="Catálogo de cartas"><div class="card-browser-head">
+  return `${publishBox(true)}<div class="cards-workbench" style="margin-top:16px"><aside class="card-browser" aria-label="Catálogo de cartas"><div class="card-browser-head">
     <input class="search" id="card-search" placeholder="Buscar nome, ID ou facção" aria-label="Buscar carta">
     <div class="chips" role="group" aria-label="Filtrar por facção">${chip('', 'Todas')}${FACTIONS.map(f => chip(f, f)).join('')}</div>
     <small class="card-count" id="card-count"></small></div><div id="card-list" style="overflow:auto">${cardList()}</div></aside>
