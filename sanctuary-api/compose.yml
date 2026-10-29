@@ -1,0 +1,17 @@
+# sanctuary-api no mamaco-dev: projeto próprio ("-p sanctuary"), na rede do Caddy do casamamaco.
+# Subir (root): docker compose -f /home/dev/sanctuary-api/compose.yml -p sanctuary up -d --build
+services:
+  sanctuary-api:
+    build: .
+    restart: unless-stopped
+    environment:
+      SANCTUARY_ORIGIN: https://saintseiyatcg.com
+      SANCTUARY_INVITES: ${SANCTUARY_INVITES:-}
+    volumes:
+      - sanctuary-data:/data
+    networks: [casamamaco_default]
+volumes:
+  sanctuary-data:
+networks:
+  casamamaco_default:
+    external: true

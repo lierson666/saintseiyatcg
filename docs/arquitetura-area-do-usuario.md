@@ -1,6 +1,6 @@
 # Área do usuário — proposta de arquitetura
 
-Status: **proposta, aguardando aprovação do autor** (29/10/2026). Nada implementado.
+Status: **aprovada e no ar** (29/10/2026). Contas, sessão, convites e o portão do /playtest estão em `sanctuary-api/`; a sincronização dos decks no lobby ainda falta.
 Fonte: pedido do autor ("login e senha, salvar os decks de cada usuário"), revisado com `renaissance-architecture` e `ui-ux-pro-max`.
 
 ## O que existe hoje
