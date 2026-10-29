@@ -1313,10 +1313,28 @@ function decisionText(req) {
   return {who, title: req.ability, kicker: 'Optional ability', body: req.text || `${parts.join(' ')} Use it?`.trim(), yes: 'Use', no: 'Decline'};
 }
 
+// Texto impresso da habilidade que fez a pergunta ("NOME — efeito" numa carta em jogo), para o jogador ver o que vai
+// acontecer antes de escolher. Spell (Technique/Event/Miracle) resolve inteira: mostra também as linhas seguintes.
+function abilityEffect(name) {
+  if (!name) return null;
+  const re = new RegExp(`^${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s+—\\s+`, 'i');
+  const ids = new Set([...Object.values(ctx.objects).map(o => o.cardId), ...Object.values(S().gods)]);
+  for (const id of ids) {
+    const card = cards.get(id), lines = (card?.text || '').split('\n');
+    const at = lines.findIndex(l => re.test(l));
+    if (at < 0) continue;
+    const spell = /Technique|Event|Miracle/.test(card.type || '');
+    // Linhas de continuação (sem "NOME — ") pertencem à mesma habilidade.
+    let end = at + 1;
+    while (end < lines.length && (spell || !/^[^—]{2,40} — /.test(lines[end]))) end++;
+    return {source: card.name, lines: [lines[at].replace(re, ''), ...lines.slice(at + 1, end)].filter(Boolean)};
+  }
+  return null;
+}
 // Opção de decisão: uid de carta ou God ('god:A', alvo de dano das cartas V6).
 const optName = uid => (String(uid).startsWith('god:') ? `${cards.get(S().gods[uid.slice(4)]).name} (Player ${uid.slice(4)})` : pending?.pending.choose === 'mode' ? String(uid) : info(uid).name);
 function decisionModal() {
-  const req = pending.pending, t = decisionText(req);
+  const req = pending.pending, t = decisionText(req), fx = abilityEffect(req.ability);
   if (pending.peek) return `<button class="decision-pill" data-dec="peek" data-focus="peek">Back to decision · ${esc(t.title)} <kbd>Esc</kbd></button>`;
   const timeout = settings.timeouts ? `<small class="decision__timeout">On timeout: ${req.kind === 'optional' ? 'declined' : 'automatic choice, lowest stable ID'}</small>` : '';
   let body;
@@ -1331,6 +1349,7 @@ function decisionModal() {
   return `<div class="decision-veil"></div><section class="decision decision--${req.kind}" role="dialog" aria-modal="true" aria-labelledby="decision-title" aria-describedby="decision-body">
     <header class="decision__head"><span class="decision__who">${esc(t.who)} decides</span><span class="decision__clock" data-decision-clock></span></header>
     <small class="decision__kicker">${esc(t.kicker)}</small><h2 id="decision-title">${esc(t.title)}</h2>
+    ${fx ? `<div class="decision__effect"><small>${esc(fx.source)}</small>${fx.lines.map(l => `<p>${esc(l)}</p>`).join('')}</div>` : ''}
     <p id="decision-body">${esc(t.body)}</p>${t.note ? `<p class="decision__note">${esc(t.note)}</p>` : ''}${body}
     <footer class="decision__foot">${timeout}<button class="ghost" data-dec="peek" data-focus="peek">View board <kbd>Esc</kbd></button></footer></section>`;
 }
