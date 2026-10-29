@@ -187,11 +187,29 @@ export function createDirector({ui, getFx, settings}) {
         fx()?.shockwave(at.x, at.y, {color: '#bfe2ff', size: 220});
       } else ui.float(at, 'Awaken ends', 'shield');
     },
+    // Poder do God (autor, 28/10/2026: precisa ser sentido): Cosmo sobe no God, nome em destaque, onda e estrondo.
     async divine_power(e) {
-      const at = ui.center(ui.godRect(e.player));
-      fx()?.burst(at.x, at.y, {color: '#bfe2ff', count: 40, speed: 220});
+      const at = ui.center(ui.godRect(e.player)), f = fx();
+      if (!skipping) chargeSound(.5);
+      f?.charge(at.x, at.y, {color: '#bfe2ff', count: 110, radius: 170});
+      await ui.callout(e.ability, e.player, t(900));
+      if (!skipping) strikeSound(.35);
+      f?.shockwave(at.x, at.y, {color: '#bfe2ff', size: 260});
+      f?.burst(at.x, at.y, {color: '#e6f4ff', count: 90, speed: 420});
+      shake(4);
       ui.float(at, e.ability, 'gain');
-      await pause(420);
+      await pause(380);
+    },
+    // Domain: a energia sai do Domain no painel e chega ao God do dono.
+    async domain_power(e) {
+      const from = ui.center(ui.domainRect(e.player)), to = ui.center(ui.godRect(e.player)), f = fx();
+      if (!skipping) chargeSound(.4);
+      if (from) f?.charge(from.x, from.y, {color: '#ffe4a0', count: 80, radius: 110});
+      await ui.callout(e.ability, e.player, t(800));
+      if (from && to && f && !skipping) await f.beam(from, to, {color: '#ffe4a0', width: 26, duration: .35});
+      if (to) { f?.shockwave(to.x, to.y, {color: '#ffe4a0', size: 200}); ui.float(to, e.ability, 'gain'); }
+      shake(3);
+      await pause(320);
     },
     async seal_added(e) {
       const at = ui.center(ui.rect(e.uid));
@@ -247,6 +265,7 @@ export function createDirector({ui, getFx, settings}) {
     },
     async ultimate_failed(e) { ui.cinematic?.(false); ui.float(ui.center(ui.godRect(e.player)), 'Ultimate failed', 'shield'); await pause(600); },
     async judgment_placed(e) { await ui.banner('Divine Judgment', e.player, t(1100)); },
+    async judgment_removal(e) { return handlers.judgment_removed(e); }, // nome que a engine emite (gods.js)
     async judgment_removed(e) { ui.float(ui.center(ui.godRect(e.player)), 'Judgment removed', 'gain'); await pause(400); },
     async soul_gained(e) { if (e.amount) { ui.setSoul(e.player, e.soul); ui.float(ui.center(ui.godRect(e.player)), `+${e.amount} Soul`, 'gain'); } },
     async victory(e) { await ui.banner(e.draw ? 'Draw' : ui.isViewer(e.winner) ? 'Victory' : `Player ${e.winner} wins`, e.winner, t(1200)); },

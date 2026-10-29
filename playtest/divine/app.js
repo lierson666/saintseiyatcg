@@ -13,7 +13,7 @@ import {createScene, THEMES} from './scene.js?v=20261028-5';
 import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudgment, greatFloodBlock, announceGreatFlood, GREAT_FLOOD_COST} from '../engine-v3/gods.js';
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
-import {createDirector} from './director.js?v=6';
+import {createDirector} from './director.js?v=7';
 import {createAI} from './ai.js?v=2';
 import {findDeck} from '../deck-store.js';
 import {unlock, playMusic} from '../audio.js?v=20261028-strike';
@@ -652,6 +652,7 @@ const ui = {
   isViewer: key => key === viewer(),
   rect: uid => rectOf($(`[data-uid="${uid}"]`)),
   godRect: key => rectOf($(`[data-god="${key}"]`)),
+  domainRect: key => rectOf($(`[data-domain="${key}"]`)),
   deckRect: key => rectOf($(`[data-deck="${key}"]`)),
   handRect: key => rectOf($(`[data-hand="${key}"]`)),
   fieldRect: key => rectOf($(`[data-field="${key}"]`)),
@@ -1268,6 +1269,8 @@ function decisionText(req) {
   if (req.ability === 'WATER PRISON') return {who, title: 'Water Prison', kicker: 'Divine Power · once each Round',
     body: `${n(req.uid)} declared a Strike. Pay 2 Latent Cosmo to Seal it? It gets 1 Seal counter; the Strike still happens. Declining keeps this Round's use.`,
     note: `You have ${p.latent} Latent Cosmo.`, yes: 'Pay 2 Latent · Seal', no: 'Decline'};
+  if (req.ability === 'TOURNAMENT SPIRIT') return {who, title: 'Tournament Spirit', kicker: 'Domain · once each Round',
+    body: 'Your Bronze Saint defeated an enemy Devotee with a Strike. Draw a card?', yes: 'Draw a card', no: 'Decline'};
   if (req.kind === 'choice') {
     const title = req.ability === 'GREAT FLOOD' ? 'Great Flood' : req.ability;
     if (req.choose === 'base') return {who, title, kicker: 'Mandatory choice', body: `${n(req.for)} returned to its owner's hand. Choose 1 Cosmo Base you control to return to your hand.`};

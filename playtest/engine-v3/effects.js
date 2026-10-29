@@ -46,6 +46,12 @@ function mods(state, ctx, uid) {
     if (n === '037' && controls(state, ctx, key, '003')) list.push({atk: 0, hp: 1}); // Dragon's Promise
     if (n === '001' && behind(state, key)) list.push({atk: 1, hp: 0}); // Miracle
     if (athenaAwaken(state, ctx, key, uid)) list.push({atk: 1, hp: 1}); // God Athena, Divine Protection (Awaken 5)
+    // Domain 064 The Five Old Peaks, Ancient Discipline: Saints amigos com Guardian, +0/+1. Keywords lidas sem mods()
+    // (keywordsOf chama mods: recursão). shortcut: Guardian dado por Equipment não conta; ampliar se surgir carta assim.
+    if (state.domains?.[key] === 'athena-v6-064' && isSaint(ctx, uid)
+      && [...card(ctx, uid).keywords, ...(state.units[uid]?.keywords || []), ...state.effects.filter(e => e.target === uid && e.kind === 'mod').flatMap(e => e.keywords || [])].includes('Guardian')) {
+      list.push({atk: 0, hp: 1, source: 'domain'});
+    }
     if (n === '001' && wears(ctx, uid, '019') && behind(state, key)) list.push({atk: 2, hp: 2}); // 019 Resonance
     // G3-039: cada Training counter é +1/+1 por si (acumula). Master's Guidance soma +1/+1 por Eagle Marin.
     if (state.units[uid]?.training) list.push({atk: state.units[uid].training, hp: state.units[uid].training});
@@ -507,6 +513,17 @@ export function afterStrike(state, ctx, strike) {
         useOncePerRound(st, `resonance:${sword}`); damageDevotee(st, ctx, t, 1, false); checkDefeats(st, ctx);
       }
     }, {uid: sword, ability: 'Resonance', target: t});
+  }
+  // Domain 062 Galaxian Wars Arena, Tournament Spirit: Bronze Saint amigo atacante derrotou o Devotee inimigo alvo;
+  // uma vez por Round, pode comprar 1. Retaliação (defensor Bronze derrota o atacante) fica de fora até o autor decidir.
+  const arena = strike.player, spirit = `domain:${arena}:tournament-spirit`;
+  if (t && !survived(t) && state.domains?.[arena] === 'athena-v6-062' && isBronze(ctx, attacker) && !state.roundUses.has(spirit)) {
+    add(arena, st => {
+      if (st.roundUses.has(spirit) || !ask(ctx, arena, {ability: 'TOURNAMENT SPIRIT', draw: 1})) return;
+      useOncePerRound(st, spirit);
+      emit(st, 'domain_power', {player: arena, ability: 'TOURNAMENT SPIRIT'});
+      draw(st, arena, 1);
+    }, {uid: `domain:${arena}`, ability: 'TOURNAMENT SPIRIT'});
   }
   pushTriggers(state, triggers);
 }

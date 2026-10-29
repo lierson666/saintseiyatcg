@@ -56,7 +56,8 @@ test('077 Shiryu\'s Sacrificed Sight: +2/+2 e Pierce em Shiryu; no fim do Round 
   const {s, ctx, field, cast, end} = setup({A: fortress, B: rush});
   const shiryu = field('A', '003');
   cast('A', '077', {target: shiryu});
-  assert.deepEqual([atkOf(s, ctx, shiryu), hpOf(s, ctx, shiryu), keywordsOf(s, ctx, shiryu).includes('Pierce')], [4, 7, true]);
+  // HP 8 = 5 impresso + 2 da Spell + 1 do Domain 064 (Guardian) do deck de Shiryu.
+  assert.deepEqual([atkOf(s, ctx, shiryu), hpOf(s, ctx, shiryu), keywordsOf(s, ctx, shiryu).includes('Pierce')], [4, 8, true]);
   end(); startTurn(s); end();
   assert.deepEqual([s.units[shiryu].prepared, atkOf(s, ctx, shiryu)], [false, 2]);
   startTurn(s);
@@ -197,4 +198,26 @@ test('Unicorn Gallop (028): +1 ATK só durante o Strike contra Devotee; Rising D
   strike(jabu, {kind: 'devotee', uid: shiryu});
   assert.deepEqual([s.units[shiryu].damage, atkOf(s, ctx, jabu)], [2, 2], '3 de dano menos Dragon Shield 1');
   assert.equal(atkOf(s, ctx, shiryu), 3, 'Rising Dragon');
+});
+
+test('Domain 064 The Five Old Peaks: Saint amigo com Guardian ganha +0/+1; sem o Domain, não', () => {
+  const {s, ctx, field} = setup({A: fortress, B: rush});
+  const shiryu = field('A', '003');
+  assert.equal(s.domains.A, 'athena-v6-064');
+  assert.deepEqual([atkOf(s, ctx, shiryu), hpOf(s, ctx, shiryu)], [2, 6]);
+  s.domains.A = 'athena-v6-062';
+  assert.equal(hpOf(s, ctx, shiryu), 5);
+});
+
+test('Domain 062 Galaxian Wars Arena: Bronze Saint atacante derrota Devotee inimigo e compra 1, uma vez por Round', () => {
+  const {s, ctx, field, strike} = setup({A: rush, B: fortress}, () => true);
+  assert.equal(s.domains.A, 'athena-v6-062');
+  const seiya = field('A', '001'), [one, two] = [field('B', '003'), field('B', '003')];
+  for (const uid of [one, two]) s.units[uid].damage = hpOf(s, ctx, uid) - 1;
+  const hand = s.players.A.hand.length;
+  strike(seiya, {kind: 'devotee', uid: one}); passAll(s);
+  assert.equal(s.units[one], undefined, 'alvo derrotado');
+  assert.equal(s.players.A.hand.length - hand, 1, 'Tournament Spirit comprou 1');
+  strike(field('A', '028'), {kind: 'devotee', uid: two}); passAll(s); // outro Bronze (Jabu): nomes únicos no campo
+  assert.equal(s.players.A.hand.length - hand, 1, 'segunda derrota no mesmo Round não compra');
 });
