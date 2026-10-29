@@ -7,7 +7,8 @@ import {spellCategory} from './engine-v3/core.js';
 import {renderLiveCard} from '../shared/live-card.js?v=20261029-forge';
 import {unlock, playMusic, setVolume, volume} from './audio.js';
 import {loadMyDecks, saveMyDecks, findDeck} from './deck-store.js';
-import {mountKV} from '../shared/kv-sky.js?v=20261029-1';
+import {mountKV} from '../shared/kv-sky.js?v=20261029-2';
+import {countryOptions, countryName} from '../shared/countries.js?v=20261029-1';
 
 const root = document.getElementById('lobby');
 const ART = '../card-forge/art-web/';
@@ -75,9 +76,9 @@ function topBar() {
   const tab = (s, label) => `<button class="lb-tab ${ui.screen === s ? 'is-active' : ''}" data-act="go" data-screen="${s}">${label}</button>`;
   return `<header class="lb-top">
     <img class="lb-top__logo" src="../LOGO/logo-web.webp" alt="Saint Seiya TCG">
-    <nav class="lb-tabs">${tab('home', 'Home')}${tab('decks', 'Decks')}${tab('options', 'Options')}</nav>
+    <nav class="lb-tabs">${tab('home', 'Home')}${tab('decks', 'Decks')}${tab('profile', 'Profile')}${tab('options', 'Options')}</nav>
     <span class="lb-top__tag">Alpha 0.1 · Engine 3.0</span>
-    ${ui.user ? `<span class="lb-user"><i class="kv-dot" aria-hidden="true"></i>${esc(ui.user.name)}<button class="kv-ghost" data-act="signout">Sign out</button></span>` : ''}
+    ${ui.user ? `<span class="lb-user"><i class="kv-dot" aria-hidden="true"></i>${esc(ui.user.username || ui.user.name)}<button class="kv-ghost" data-act="signout">Sign out</button></span>` : ''}
   </header>`;
 }
 
@@ -139,6 +140,68 @@ function options() {
   const row = (k, label) => `<label class="lb-field lb-volume">${label}<input type="range" min="0" max="100" value="${Math.round(volume[k] * 100)}" data-act="volume" data-kind="${k}"><output>${Math.round(volume[k] * 100)}%</output></label>`;
   return `<section class="lb-page lb-options"><header class="lb-page__head"><h1>Options</h1><p>Match settings (speed, quality, timers) live in the arena's Settings button.</p></header>
     ${row('music', 'Music')}${row('sfx', 'Sound effects')}</section>`;
+}
+
+// ---------- Perfil (docs/contas-amigos-chat.md, etapa 1) ----------
+// Avatar: arte de um God (por ora); o código de amigo é o que os amigos usam para adicionar.
+const AVATARS = ['god-athena', 'god-poseidon', 'god-hades', 'god-ares', 'god-artemis'];
+const api = (path, method = 'GET', body) => fetch(path, {method, credentials: 'same-origin', headers: body ? {'Content-Type': 'application/json'} : {}, body: body && JSON.stringify(body)})
+  .then(async r => { const data = await r.json().catch(() => ({})); if (!r.ok) throw Error(data.error || 'Something went wrong. Please try again.'); return data; });
+function profileScreen() {
+  const u = ui.user, msg = k => ui.profileMsg?.[k] ? `<p class="kv-status ${ui.profileMsg[k].kind}" role="status">${esc(ui.profileMsg[k].text)}</p>` : '<p class="kv-status" role="status"></p>';
+  if (!u) return `<section class="lb-page"><header class="lb-page__head"><h1>Profile</h1><p>Sign in to see your profile.</p></header><a class="kv-button lb-linkbtn" href="/login/?next=/playtest/">Sign in</a></section>`;
+  if (!u.complete) return `<section class="lb-page lb-profile"><header class="lb-page__head"><h1>Complete your profile</h1><p>Choose the username your friends will see.</p></header>
+    <form class="kv-card lb-form" data-form="complete">
+      <label class="kv-field"><span class="kv-stamp">Username</span><input class="kv-input" name="username" required minlength="3" maxlength="20" pattern="[A-Za-z0-9_]{3,20}" spellcheck="false"></label>
+      <label class="kv-field"><span class="kv-stamp">Country</span><select class="kv-input" name="country">${countryOptions(u.country || 'BR')}</select></label>
+      <label class="lb-consent"><input type="checkbox" name="accept_terms" required> I agree to the <a href="/privacy/" target="_blank" rel="noopener">privacy terms</a>.</label>
+      <button class="kv-button">Save</button>${msg('complete')}</form></section>`;
+  const avatar = u.avatar_card || 'god-athena';
+  return `<section class="lb-page lb-profile">
+    <header class="lb-profile__head kv-card">
+      <span class="lb-avatar" style="background-image:url('${artOf(avatar) || ''}')"></span>
+      <div><p class="kv-stamp kv-stamp--gold">${esc(countryName(u.country))}</p><h1>${esc(u.username)}</h1>
+        <p class="lb-code"><span class="kv-stamp">Friend code</span><b>${esc(u.friend_code)}</b><button class="kv-ghost" data-act="copy-code">${ui.copied ? 'Copied' : 'Copy'}</button></p></div>
+    </header>
+    <div class="lb-profile__grid">
+      <form class="kv-card lb-form" data-form="me">
+        <h2>Account</h2>
+        <div class="lb-avatars" role="radiogroup" aria-label="Avatar">${AVATARS.map(id => `<button type="button" role="radio" aria-checked="${id === avatar}" class="lb-avatar lb-avatar--pick ${id === avatar ? 'is-on' : ''}" data-act="avatar" data-id="${id}" style="background-image:url('${artOf(id) || ''}')" aria-label="${esc(cards.get(id)?.name || id)}"></button>`).join('')}</div>
+        <label class="kv-field"><span class="kv-stamp">Full name</span><input class="kv-input" name="name" value="${esc(u.name)}" required maxlength="80" autocomplete="name"></label>
+        <label class="kv-field"><span class="kv-stamp">Email</span><input class="kv-input" value="${esc(u.email)}" disabled></label>
+        <label class="kv-field"><span class="kv-stamp">Country</span><select class="kv-input" name="country">${countryOptions(u.country)}</select></label>
+        <label class="kv-field"><span class="kv-stamp">Phone · optional</span><input class="kv-input" name="phone" type="tel" value="${esc(u.phone || '')}" maxlength="20" autocomplete="tel"></label>
+        <button class="kv-button">Save</button>${msg('me')}
+      </form>
+      <div class="lb-profile__side">
+        <form class="kv-card lb-form" data-form="password">
+          <h2>Password</h2>
+          <label class="kv-field"><span class="kv-stamp">Current password</span><input class="kv-input" name="current" type="password" required autocomplete="current-password"></label>
+          <label class="kv-field"><span class="kv-stamp">New password</span><input class="kv-input" name="new" type="password" required minlength="10" autocomplete="new-password"></label>
+          <button class="kv-ghost">Change password</button>${msg('password')}
+        </form>
+        <form class="kv-card lb-form lb-danger" data-form="delete">
+          <h2>Delete account</h2><p>This removes your account, sessions and decks. It cannot be undone.</p>
+          <label class="kv-field"><span class="kv-stamp">Password</span><input class="kv-input" name="password" type="password" required autocomplete="current-password"></label>
+          <button class="kv-ghost">Delete my account</button>${msg('delete')}
+        </form>
+      </div>
+    </div></section>`;
+}
+async function submitProfile(form) {
+  const kind = form.dataset.form, f = Object.fromEntries(new FormData(form));
+  const say = (text, k) => { ui.profileMsg = {[kind]: {text, kind: k}}; render(); };
+  try {
+    if (kind === 'complete') ui.user = await api('/api/me', 'PATCH', {username: f.username, country: f.country, accept_terms: 'accept_terms' in f});
+    if (kind === 'me') { ui.user = await api('/api/me', 'PATCH', {name: f.name, country: f.country, phone: f.phone}); return say('Saved.', 'ok'); }
+    if (kind === 'password') { await api('/api/me/password', 'POST', {current: f.current, new: f.new}); return say('Password changed. Other devices were signed out.', 'ok'); }
+    if (kind === 'delete') {
+      if (!confirm('Delete your account forever?')) return;
+      await api('/api/me', 'DELETE', {password: f.password}); location.replace('/');
+      return;
+    }
+    say('', '');
+  } catch (e) { say(e.message, 'err'); }
 }
 
 // ---------- Criador de decks ----------
@@ -264,7 +327,7 @@ function bigCard() {
 const SCROLLERS = ['.lb-body', '.lb-grid', '.lb-list', '.lb-panel'];
 function render() {
   const keep = SCROLLERS.map(sel => root.querySelector(sel)?.scrollTop || 0), screen = root.dataset.screen;
-  const body = {home, decks: decksScreen, options, builder}[ui.screen]();
+  const body = {home, decks: decksScreen, profile: profileScreen, options, builder}[ui.screen]();
   root.innerHTML = `${topBar()}<div class="lb-body lb-body--${ui.screen}">${body}</div>${bigCard()}${picker()}${notice()}`;
   if (screen === ui.screen) SCROLLERS.forEach((sel, i) => { const el = root.querySelector(sel); if (el) el.scrollTop = keep[i]; });
   root.dataset.screen = ui.screen;
@@ -308,6 +371,8 @@ const actions = {
   go: t => { ui.screen = t.dataset.screen; ui.play = false; },
   play: () => { ui.screen = 'home'; ui.play = true; },
   'close-play': () => { ui.play = false; },
+  avatar: async t => { try { ui.user = await api('/api/me', 'PATCH', {avatar_card: t.dataset.id}); } catch (e) { ui.profileMsg = {me: {text: e.message, kind: 'err'}}; } render(); },
+  'copy-code': async () => { await navigator.clipboard?.writeText(ui.user.friend_code).catch(() => {}); ui.copied = true; setTimeout(() => { ui.copied = false; render(); }, 1500); },
   slide: t => { ui.slide = (ui.slide || 0) + Number(t.dataset.step); },
   signout: async () => {
     await fetch('/api/auth/logout', {method: 'POST', credentials: 'same-origin'}).catch(() => {});
@@ -351,6 +416,11 @@ root.addEventListener('click', e => {
   render();
 });
 // Botão direito mostra a carta grande, como no jogo.
+root.addEventListener('submit', e => {
+  const form = e.target.closest('[data-form]');
+  if (!form) return;
+  e.preventDefault(); submitProfile(form);
+});
 root.addEventListener('contextmenu', e => {
   const t = e.target.closest('[data-card]');
   if (!t) return;
@@ -393,7 +463,7 @@ async function init() {
   if (!findDeck(ui.deckB, presets)) ui.deckB = presets[1]?.id || presets[0]?.id;
   render();
   // Conta do sanctuary-api (login no /login/). Sem API (dev local), o lobby segue sem o nome no topo.
-  fetch('/api/me', {credentials: 'same-origin'}).then(r => r.ok ? r.json() : null).then(u => { if (u) { ui.user = u; render(); } }).catch(() => {});
+  fetch('/api/me', {credentials: 'same-origin'}).then(r => r.ok ? r.json() : null).then(u => { if (u) { ui.user = u; if (!u.complete) ui.screen = 'profile'; render(); } }).catch(() => {});
 }
 mountKV();
 init().catch(e => { root.innerHTML = `<p class="lb-loading">${esc(e.message)}</p>`; console.error(e); });

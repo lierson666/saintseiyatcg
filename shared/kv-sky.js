@@ -96,7 +96,7 @@ export function mountKV({anchor: anchorSelector = null} = {}) {
     const horizon = g.createRadialGradient(W * .5, H * 1.15, 0, W * .5, H * 1.15, H * .75);
     horizon.addColorStop(0, 'rgba(255,150,80,.32)'); horizon.addColorStop(.4, 'rgba(120,90,200,.16)'); horizon.addColorStop(1, 'rgba(0,0,0,0)');
     g.fillStyle = horizon; g.fillRect(0, 0, W, H);
-    g.globalAlpha = .9; g.drawImage(milky, ox * .4, oy * .4, W, H); g.globalAlpha = 1;
+    if (milky.width && milky.height) { g.globalAlpha = .9; g.drawImage(milky, ox * .4, oy * .4, W, H); g.globalAlpha = 1; } // janela com tamanho 0 (aba escondida)
     for (const s of stars) {
       const x = s.x - ox * s.z, y = s.y - oy * s.z, size = .5 + s.z * 2.2;
       g.globalAlpha = (.35 + .65 * Math.abs(Math.sin(t * .015 + s.tw))) * (.45 + s.z * .55);

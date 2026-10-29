@@ -35,6 +35,12 @@
     .show:hover { color: var(--kv-ink); }
     .row .kv-input { padding-right: 76px; }
     .hint { margin: -6px 0 0; font-size: 13px; color: var(--kv-dim); }
+    .hint.ok { color: var(--kv-gold-2); } .hint.err { color: var(--kv-error); }
+    select.kv-input { appearance: none; background: #05060c99 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23a8a397' stroke-width='1.5'/%3E%3C/svg%3E") right 20px center no-repeat; }
+    select.kv-input option { background: #10111c; }
+    .consent { display: flex; gap: 12px; align-items: flex-start; font: 300 13px/1.5 var(--kv-sans); color: var(--kv-muted); }
+    .consent input { flex: none; width: 18px; height: 18px; margin: 1px 0 0; accent-color: var(--kv-gold); }
+    .consent a { color: var(--kv-gold-2); }
     .kv-footer .kv-stamp { color: var(--kv-dim); }
     @media (max-width: 900px) { main { grid-template-columns: 1fr; } .hero .lead { display: none; } }
   </style>
@@ -63,10 +69,15 @@
           <p class="kv-status" role="status" aria-live="polite"></p>
         </form>
         <form id="signup" aria-labelledby="heading" novalidate hidden>
-          <label class="kv-field"><span class="kv-stamp">Name</span><input class="kv-input" type="text" name="name" autocomplete="name" required maxlength="60"></label>
+          <label class="kv-field"><span class="kv-stamp">Full name</span><input class="kv-input" type="text" name="name" autocomplete="name" required maxlength="80"></label>
+          <label class="kv-field"><span class="kv-stamp">Username</span><input class="kv-input" type="text" name="username" autocomplete="username" required minlength="3" maxlength="20" pattern="[A-Za-z0-9_]{3,20}" aria-describedby="user-hint" spellcheck="false"></label>
+          <p class="hint" id="user-hint">3 to 20 letters, numbers or _. This is how friends find you.</p>
           <label class="kv-field"><span class="kv-stamp">Email</span><input class="kv-input" type="email" name="email" autocomplete="email" required maxlength="190"></label>
+          <label class="kv-field"><span class="kv-stamp">Country</span><select class="kv-input" name="country" autocomplete="country" required></select></label>
+          <label class="kv-field"><span class="kv-stamp">Phone · optional</span><input class="kv-input" type="tel" name="phone" autocomplete="tel" maxlength="20" placeholder="+55 11 91234-5678"></label>
           <label class="kv-field"><span class="kv-stamp">Password</span><span class="row"><input class="kv-input" type="password" name="password" autocomplete="new-password" required minlength="10"><button class="show" type="button">Show</button></span></label>
           <p class="hint">At least 10 characters. Only emails on the beta list can create an account.</p>
+          <label class="consent"><input type="checkbox" name="accept_terms" required> <span>I agree to the <a href="/privacy/" target="_blank" rel="noopener">privacy terms</a>.</span></label>
           <button class="kv-button" type="submit">Create account</button>
           <p class="kv-status" role="status" aria-live="polite"></p>
         </form>
@@ -75,7 +86,8 @@
     <footer class="kv-footer"><span class="kv-stamp">Saint Seiya TCG · Closed beta</span></footer>
   </div>
   <script type="module">
-    import {mountKV} from '/shared/kv-sky.js?v=20261029-1';
+    import {mountKV} from '/shared/kv-sky.js?v=20261029-2';
+    import {countryOptions} from '/shared/countries.js?v=20261029-1';
     const kv = mountKV({anchor: 'h1 .kv-cosmo'});
     // Só destinos do próprio site (evita redirecionar para fora).
     const raw = new URLSearchParams(location.search).get('next') || '/playtest/';
@@ -106,7 +118,7 @@
         const r = await fetch(path, {method: 'POST', headers: {'Content-Type': 'application/json'}, credentials: 'same-origin', body: JSON.stringify(body)});
         const data = await r.json().catch(() => ({}));
         if (!r.ok) return say(data.error || 'Something went wrong. Please try again.', 'err');
-        kv.burst(button); say(`Welcome, ${data.name}.`, 'ok');
+        kv.burst(button); say(`Welcome, ${data.username || data.name}.`, 'ok');
         setTimeout(() => location.replace(next), 600);
       } catch { say('No connection to the Sanctuary. Please try again.', 'err'); }
       finally { button.disabled = false; }
@@ -121,10 +133,23 @@
       }
       submit(e.target, '/api/auth/login', {email: d.get('email'), password: d.get('password')});
     });
+    $('#signup [name=country]').innerHTML = countryOptions('BR');
+    // Nome de usuário: confere no banco se está livre enquanto a pessoa digita.
+    let userTimer;
+    $('#signup [name=username]').addEventListener('input', e => {
+      clearTimeout(userTimer);
+      const hint = $('#user-hint'), u = e.target.value.trim();
+      if (!/^[A-Za-z0-9_]{3,20}$/.test(u)) { hint.textContent = '3 to 20 letters, numbers or _. This is how friends find you.'; hint.className = 'hint'; return; }
+      userTimer = setTimeout(async () => {
+        const r = await fetch('/api/username-available?u=' + encodeURIComponent(u)).then(r => r.json()).catch(() => null);
+        if (!r || e.target.value.trim() !== u) return;
+        hint.textContent = r.available ? `${u} is available.` : r.reason; hint.className = `hint ${r.available ? 'ok' : 'err'}`;
+      }, 350);
+    });
     $('#signup').addEventListener('submit', e => {
       e.preventDefault();
-      const d = new FormData(e.target);
-      submit(e.target, '/api/auth/register', {name: d.get('name'), email: d.get('email'), password: d.get('password')});
+      const d = new FormData(e.target), f = Object.fromEntries(d);
+      submit(e.target, '/api/auth/register', {name: f.name, username: f.username, email: f.email, country: f.country, phone: f.phone, password: f.password, accept_terms: d.has('accept_terms')});
     });
     // Já logado? Vai direto ao destino.
     fetch('/api/me', {credentials: 'same-origin'}).then(r => r.ok && location.replace(next)).catch(() => {});

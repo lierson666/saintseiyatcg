@@ -281,3 +281,29 @@ body { font: 300 15px/1.45 var(--kv-sans); }
   .lb-news { grid-template-columns: repeat(3, 1fr); }
   .lb-top__tag { display: none; }
 }
+
+/* Perfil (KV) */
+.lb-profile { max-width: 1080px; }
+.lb-profile__head { display: flex; align-items: center; gap: 28px; padding: 28px; margin-bottom: 20px; }
+.lb-profile__head h1 { margin: 10px 0 12px; font: italic 400 clamp(36px, 4vw, 56px)/1 var(--kv-serif); }
+.lb-avatar { flex: none; width: 112px; height: 112px; border-radius: 50%; border: 1px solid #e6c36a88; background: center 18% / cover, var(--kv-glass); box-shadow: 0 0 30px #e6c36a33; }
+.lb-avatars { display: flex; gap: 10px; }
+.lb-avatar--pick { width: 52px; height: 52px; padding: 0; opacity: .55; box-shadow: none; transition: opacity .2s; }
+.lb-avatar--pick:hover, .lb-avatar--pick.is-on { opacity: 1; border-color: var(--kv-gold); box-shadow: 0 0 14px #e6c36a66; }
+.lb-code { display: flex; align-items: center; gap: 14px; margin: 0; }
+.lb-code b { font: 600 18px var(--kv-title); letter-spacing: .06em; color: var(--kv-gold-2); }
+.lb-code .kv-ghost { min-height: 34px; padding: 0 16px; font-size: 10px; }
+.lb-profile__grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+.lb-profile__side { display: grid; gap: 20px; }
+.lb-form { display: grid; gap: 14px; padding: 26px 28px; }
+.lb-form h2 { margin: 0 0 4px; font: italic 400 28px/1.1 var(--kv-serif); }
+.lb-form p { margin: 0; color: var(--kv-muted); }
+.lb-form select.kv-input option { background: #10111c; }
+.lb-form .kv-input:disabled { opacity: .6; }
+.lb-danger { border-color: #ff9a8733; }
+.lb-consent { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: var(--kv-muted); }
+.lb-consent input { accent-color: var(--kv-gold); }
+.lb-consent a { color: var(--kv-gold-2); }
+.lb-linkbtn { display: inline-flex; align-items: center; text-decoration: none; }
+.lb-body--profile { overflow: auto; }
+@media (max-width: 900px) { .lb-profile__grid { grid-template-columns: 1fr; } .lb-profile__head { flex-direction: column; align-items: flex-start; } }

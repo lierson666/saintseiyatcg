@@ -7,7 +7,7 @@ Cadastro só para emails convidados (tabela invites; SANCTUARY_INVITES semeia na
 import hashlib, hmac, json, os, re, secrets, sqlite3, threading, time
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
-from urllib.parse import quote, urlparse
+from urllib.parse import parse_qs, quote, urlparse
 
 DB_PATH = os.environ.get('SANCTUARY_DB', '/data/sanctuary.db')
 ORIGIN = os.environ.get('SANCTUARY_ORIGIN', 'https://saintseiyatcg.com')
@@ -19,6 +19,10 @@ LOGIN_LIMIT, LOGIN_WINDOW = 5, 15 * 60
 EMAIL_RE = re.compile(r'^[^\s@]{1,64}@[^\s@]{1,190}\.[^\s@]{2,}$')
 DECK_ID_RE = re.compile(r'^[A-Za-z0-9_-]{1,80}$')
 BAD_LOGIN = 'Email or password is incorrect.'
+# Cadastro completo (docs/contas-amigos-chat.md, aprovado em 29/10/2026): sem CPF; telefone opcional.
+USERNAME_RE = re.compile(r'^[A-Za-z0-9_]{3,20}$')
+PHONE_RE = re.compile(r'^\+?[0-9 ()-]{7,20}$')
+COUNTRY_RE = re.compile(r'^[A-Z]{2}$')
 
 SCHEMA = """
 create table if not exists users (id integer primary key, email text unique not null, display_name text not null,
@@ -40,6 +44,13 @@ def open_db(path=DB_PATH):
     db = sqlite3.connect(path, check_same_thread=False, isolation_level=None)
     db.row_factory = sqlite3.Row
     db.executescript('pragma journal_mode=wal; pragma foreign_keys=on;' + SCHEMA)
+    # Migração do cadastro completo: colunas novas em contas antigas (ficam vazias até o perfil ser completado).
+    have = {r['name'] for r in db.execute('pragma table_info(users)')}
+    for col in ('username', 'username_display', 'country', 'phone', 'friend_code', 'avatar_card', 'accepted_terms_at'):
+        if col not in have:
+            db.execute(f'alter table users add column {col}')
+    db.execute('create unique index if not exists users_username on users(username)')
+    db.execute('create unique index if not exists users_friend_code on users(friend_code)')
     for email in filter(None, (e.strip().lower() for e in os.environ.get('SANCTUARY_INVITES', '').split(','))):
         db.execute('insert or ignore into invites values (?, ?)', (email, int(time.time())))
     return db
@@ -54,6 +65,48 @@ def hash_password(password, salt=None):
 def check_password(password, stored):
     _, salt, key = stored.split('$')
     return hmac.compare_digest(hash_password(password, bytes.fromhex(salt)).split('$')[2], key)
+
+
+def new_friend_code(display):  # Nome#1234, único
+    while True:
+        code = f'{display}#{secrets.randbelow(9000) + 1000}'
+        if not db.execute('select 1 from users where friend_code = ?', (code,)).fetchone():
+            return code
+
+
+def profile(u):  # dados que o próprio jogador vê
+    return {'email': u['email'], 'name': u['display_name'], 'username': u['username_display'], 'friend_code': u['friend_code'],
+            'country': u['country'], 'phone': u['phone'], 'avatar_card': u['avatar_card'], 'complete': bool(u['username'])}
+
+
+def clean_profile(body, partial=False):
+    """Valida os campos do perfil. partial=True: só os enviados (edição)."""
+    out = {}
+    if not partial or 'name' in body:
+        name = ' '.join(str(body.get('name', '')).split())
+        if not 2 <= len(name) <= 80:
+            raise ApiError(400, 'Enter your full name.')
+        out['display_name'] = name
+    if not partial or 'country' in body:
+        country = str(body.get('country', '')).strip().upper()
+        if not COUNTRY_RE.match(country):
+            raise ApiError(400, 'Choose your country.')
+        out['country'] = country
+    if not partial or 'phone' in body:
+        phone = str(body.get('phone') or '').strip()
+        if phone and not PHONE_RE.match(phone):
+            raise ApiError(400, 'Enter the phone with country code, like +55 11 91234-5678.')
+        out['phone'] = phone or None
+    if 'avatar_card' in body:
+        out['avatar_card'] = str(body.get('avatar_card') or '')[:80] or None
+    return out
+
+
+def check_username(username):
+    if not USERNAME_RE.match(username):
+        raise ApiError(400, 'Username: 3 to 20 letters, numbers or _.')
+    if db.execute('select 1 from users where username = ?', (username.lower(),)).fetchone():
+        raise ApiError(409, 'This username is taken.')
 
 
 def token_hash(token):
@@ -109,7 +162,7 @@ class Handler(BaseHTTPRequestHandler):
             return None
         now = int(time.time())
         with lock:
-            row = db.execute('select u.id, u.email, u.display_name from sessions s join users u on u.id = s.user_id '
+            row = db.execute('select u.* from sessions s join users u on u.id = s.user_id '
                              'where s.token_hash = ? and s.expires_at > ?', (token_hash(token.value), now)).fetchone()
             if row:
                 db.execute('update sessions set last_seen = ? where token_hash = ?', (now, token_hash(token.value)))
@@ -146,9 +199,17 @@ class Handler(BaseHTTPRequestHandler):
                 return self.login()
             if method == 'POST' and path == '/api/auth/logout':
                 return self.logout()
-            if method == 'GET' and path == '/api/me':
-                u = self.require_user()
-                return self.send_json(200, {'email': u['email'], 'name': u['display_name']})
+            if method == 'GET' and path == '/api/username-available':
+                return self.username_available()
+            if path == '/api/me':
+                if method == 'GET':
+                    return self.send_json(200, profile(self.require_user()))
+                if method == 'PATCH':
+                    return self.update_me()
+                if method == 'DELETE':
+                    return self.delete_me()
+            if method == 'POST' and path == '/api/me/password':
+                return self.change_password()
             if path == '/api/decks' and method == 'GET':
                 return self.list_decks()
             m = re.fullmatch(r'/api/decks/([^/]+)(/restore)?', path)
@@ -167,6 +228,7 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self): self.dispatch('POST')
     def do_PUT(self): self.dispatch('PUT')
     def do_DELETE(self): self.dispatch('DELETE')
+    def do_PATCH(self): self.dispatch('PATCH')
 
     def auth_check(self):
         # forward_auth do Caddy: 2xx libera; senão o Caddy devolve esta resposta ao navegador (vai para o login).
@@ -183,22 +245,77 @@ class Handler(BaseHTTPRequestHandler):
     def register(self):
         body = self.read_json()
         email = str(body.get('email', '')).strip().lower()
-        name = str(body.get('name', '')).strip()[:60]
+        username = str(body.get('username', '')).strip()
         password = str(body.get('password', ''))
         if not EMAIL_RE.match(email):
             raise ApiError(400, 'Enter a valid email.')
-        if not name:
-            raise ApiError(400, 'Enter your name.')
+        fields = clean_profile(body)
         if len(password) < 10:
             raise ApiError(400, 'Use at least 10 characters for the password.')
+        if body.get('accept_terms') is not True:
+            raise ApiError(400, 'Please accept the privacy terms.')
+        now = int(time.time())
         with lock:
             if not db.execute('select 1 from invites where email = ?', (email,)).fetchone():
                 raise ApiError(403, 'This email is not on the beta list yet.')
             if db.execute('select 1 from users where email = ?', (email,)).fetchone():
                 raise ApiError(409, 'This email already has an account. Sign in instead.')
-            cur = db.execute('insert into users (email, display_name, password_hash, created_at) values (?, ?, ?, ?)',
-                             (email, name, hash_password(password), int(time.time())))
-        self.send_json(201, {'email': email, 'name': name}, self.start_session(cur.lastrowid))
+            check_username(username)
+            cur = db.execute('insert into users (email, display_name, password_hash, created_at, username, username_display, country, phone, '
+                             'friend_code, accepted_terms_at) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                             (email, fields['display_name'], hash_password(password), now, username.lower(), username,
+                              fields['country'], fields['phone'], new_friend_code(username), now))
+            user = db.execute('select * from users where id = ?', (cur.lastrowid,)).fetchone()
+        self.send_json(201, profile(user), self.start_session(user['id']))
+
+    def username_available(self):
+        u = (parse_qs(urlparse(self.path).query).get('u') or [''])[0].strip()
+        try:
+            with lock:
+                check_username(u)
+        except ApiError as e:
+            return self.send_json(200, {'available': False, 'reason': e.message})
+        self.send_json(200, {'available': True})
+
+    def update_me(self):
+        user = self.require_user()
+        body = self.read_json()
+        fields = clean_profile(body, partial=True)
+        with lock:
+            if 'username' in body and not user['username']:  # conta antiga completando o perfil: escolhe o nome uma vez
+                username = str(body['username']).strip()
+                check_username(username)
+                fields.update(username=username.lower(), username_display=username, friend_code=new_friend_code(username))
+            if body.get('accept_terms') is True and not user['accepted_terms_at']:
+                fields['accepted_terms_at'] = int(time.time())
+            if fields:
+                db.execute(f'update users set {", ".join(k + " = ?" for k in fields)} where id = ?', (*fields.values(), user['id']))
+            fresh = db.execute('select * from users where id = ?', (user['id'],)).fetchone()
+        self.send_json(200, profile(fresh))
+
+    def change_password(self):
+        user = self.require_user()
+        body = self.read_json()
+        if not check_password(str(body.get('current', '')), user['password_hash']):
+            raise ApiError(403, 'Current password is incorrect.')
+        new = str(body.get('new', ''))
+        if len(new) < 10:
+            raise ApiError(400, 'Use at least 10 characters for the password.')
+        with lock:
+            db.execute('update users set password_hash = ? where id = ?', (hash_password(new), user['id']))
+            db.execute('delete from sessions where user_id = ?', (user['id'],))  # derruba os outros aparelhos
+        self.send_json(200, {'ok': True}, self.start_session(user['id']))
+
+    def delete_me(self):  # LGPD: o jogador apaga a própria conta, com a senha
+        user = self.require_user()
+        body = self.read_json()
+        if not check_password(str(body.get('password', '')), user['password_hash']):
+            raise ApiError(403, 'Password is incorrect.')
+        with lock:
+            for table in ('sessions', 'decks'):
+                db.execute(f'delete from {table} where user_id = ?', (user['id'],))
+            db.execute('delete from users where id = ?', (user['id'],))
+        self.send_json(200, {'ok': True}, self.session_cookie('', 0))
 
     def login(self):
         body = self.read_json()
@@ -210,12 +327,12 @@ class Handler(BaseHTTPRequestHandler):
             tries = db.execute('select count(*) from login_attempts where email = ? or ip = ?', (email, ip)).fetchone()[0]
             if tries >= LOGIN_LIMIT:
                 raise ApiError(429, 'Too many attempts. Wait 15 minutes and try again.')
-            user = db.execute('select id, password_hash, display_name from users where email = ?', (email,)).fetchone()
+            user = db.execute('select * from users where email = ?', (email,)).fetchone()
         if not user or not check_password(password, user['password_hash']):
             with lock:
                 db.execute('insert into login_attempts values (?, ?, ?)', (email, ip, now))
             raise ApiError(401, BAD_LOGIN)
-        self.send_json(200, {'email': email, 'name': user['display_name']}, self.start_session(user['id']))
+        self.send_json(200, profile(user), self.start_session(user['id']))
 
     def logout(self):
         token = SimpleCookie(self.headers.get('Cookie', '')).get(COOKIE)

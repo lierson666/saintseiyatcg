@@ -48,17 +48,28 @@ class Api(unittest.TestCase):
         return r.status, (json.loads(raw) if raw and r.headers.get('Content-Type') == 'application/json' else None), set_cookie.split(';')[0], r.headers
 
     def test_fluxo_completo(self):
-        st, _, _, _ = self.call('POST', '/api/auth/register', {'email': 'other@example.com', 'name': 'X', 'password': 'x' * 12})
+        st, _, _, _ = self.call('POST', '/api/auth/register', {'email': 'other@example.com', 'name': 'Other One', 'username': 'Other', 'country': 'BR', 'password': 'x' * 12, 'accept_terms': True})
         self.assertEqual(st, 403)  # sem convite
-        st, _, _, _ = self.call('POST', '/api/auth/register', {'email': 'saint@example.com', 'name': 'Seiya', 'password': 'short'})
+        st, _, _, _ = self.call('POST', '/api/auth/register', {'email': 'saint@example.com', 'name': 'Seiya Kido', 'username': 'Seiya', 'country': 'BR', 'password': 'short', 'accept_terms': True})
         self.assertEqual(st, 400)
-        st, _, _, _ = self.call('POST', '/api/auth/register', {'email': 'saint@example.com', 'name': 'Seiya', 'password': 'pegasus-ryu-sei'}, origin='https://evil.test')
+        st, _, _, _ = self.call('POST', '/api/auth/register', {'email': 'saint@example.com'}, origin='https://evil.test')
         self.assertEqual(st, 403)  # origem errada
-        st, body, cookie, _ = self.call('POST', '/api/auth/register', {'email': 'SAINT@example.com', 'name': 'Seiya', 'password': 'pegasus-ryu-sei'})
-        self.assertEqual((st, body['name']), (201, 'Seiya'))
+        full = {'email': 'SAINT@example.com', 'name': 'Seiya Kido', 'username': 'Pegasus_Seiya', 'country': 'BR', 'password': 'pegasus-ryu-sei', 'accept_terms': True}
+        self.assertEqual(self.call('POST', '/api/auth/register', {**full, 'accept_terms': False})[0], 400)
+        self.assertEqual(self.call('POST', '/api/auth/register', {**full, 'username': 'ab'})[0], 400)
+        self.assertEqual(self.call('POST', '/api/auth/register', {**full, 'phone': 'call me'})[0], 400)
+        st, body, cookie, _ = self.call('POST', '/api/auth/register', full)
+        self.assertEqual((st, body['name'], body['username'], body['complete']), (201, 'Seiya Kido', 'Pegasus_Seiya', True))
+        self.assertRegex(body['friend_code'], r'^Pegasus_Seiya#\d{4}$')
         self.assertTrue(cookie.startswith('sst_session='))
-        st, _, _, _ = self.call('POST', '/api/auth/register', {'email': 'saint@example.com', 'name': 'Seiya', 'password': 'pegasus-ryu-sei'})
-        self.assertEqual(st, 409)
+        self.assertEqual(self.call('POST', '/api/auth/register', full)[0], 409)
+        self.assertFalse(self.call('GET', '/api/username-available?u=pegasus_SEIYA')[1]['available'])
+        self.assertTrue(self.call('GET', '/api/username-available?u=Shiryu')[1]['available'])
+        st, body, _, _ = self.call('PATCH', '/api/me', {'phone': '+55 11 91234-5678', 'country': 'pt', 'username': 'Hacker'}, cookie=cookie)
+        self.assertEqual((st, body['phone'], body['country'], body['username']), (200, '+55 11 91234-5678', 'PT', 'Pegasus_Seiya'))
+        self.assertEqual(self.call('POST', '/api/me/password', {'current': 'wrong', 'new': 'x' * 12}, cookie=cookie)[0], 403)
+        st, _, cookie, _ = self.call('POST', '/api/me/password', {'current': 'pegasus-ryu-sei', 'new': 'pegasus-ryu-sei'}, cookie=cookie)
+        self.assertEqual(st, 200)
 
         self.assertEqual(self.call('GET', '/api/auth/check', cookie=cookie)[0], 204)
         st, _, _, h = self.call('GET', '/api/auth/check', headers={'X-Forwarded-Uri': '/playtest/?x=1'})
@@ -79,6 +90,9 @@ class Api(unittest.TestCase):
         st, _, cookie2, _ = self.call('POST', '/api/auth/login', {'email': 'saint@example.com', 'password': 'pegasus-ryu-sei'})
         self.assertEqual(st, 200)
         self.assertEqual(self.call('GET', '/api/auth/check', cookie=cookie2)[0], 204)
+        self.assertEqual(self.call('DELETE', '/api/me', {'password': 'nope'}, cookie=cookie2)[0], 403)
+        self.assertEqual(self.call('DELETE', '/api/me', {'password': 'pegasus-ryu-sei'}, cookie=cookie2)[0], 200)
+        self.assertEqual(self.call('POST', '/api/auth/login', {'email': 'saint@example.com', 'password': 'pegasus-ryu-sei'})[0], 401)
 
     def test_limite_de_tentativas(self):
         for _ in range(server.LOGIN_LIMIT):
