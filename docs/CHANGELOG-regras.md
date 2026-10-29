@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-29 — §46A, tabela de keywords — Trample removida; a keyword é Pierce
+
+- **Antes:** §46A definia Trample como igual a Pierce (sem somar); 15 cartas V6 (Artemis 369–440, Neutral 499) imprimiam Trample.
+- **Depois:** Trample não existe. As 15 cartas passam a dizer Pierce (`data/cards.json` e export do Forge); §46A fica como removida.
+- **Motivo:** correção do autor em 29/10/2026 ("a keyword é PIERCE e não Trample").
+- **Pendências:** engine ajustada (Strike, lista de keywords, efeitos de Artemis e Neutral). `data/cards.json` alterado no checkout do Olympus, sem commit (o arquivo tem mudanças de outras sessões).
+
 ## 2026-10-29 — §54 — Alvo de Spell escolhido ao jogar
 
 - **Antes:** a engine V6 escolhia alvos de Spell na resolução; o guia não definia.

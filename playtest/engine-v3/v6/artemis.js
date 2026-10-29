@@ -2,7 +2,6 @@
 // Gancho próprio deste arquivo: `watchCounter(s, c, key, self, target, n, by)` — disparado por `grow` (abaixo) quando
 // um efeito de `by` põe N marcadores +1/+1 em `target`. shortcut: k.addCounter direto (outras facções) não dispara;
 // mover o disparo para o kit quando ele ganhar o evento.
-// Trample: o guia não define a keyword; aqui ela só é concedida (sem efeito no Strike).
 import * as k from './kit.js';
 import {spendBase} from '../core.js';
 import {shield} from '../effects.js';
@@ -116,9 +115,9 @@ export default {
     killInCombat: growSelf(2),
     mods: (s, c, key, self) => { const n = k.gearOf(c, self).length; return n ? [{atk: n, hp: n}] : []; },
   },
-  // Primordial Power: "gains Trample" não vem do parse do bônus. Primordial Awakening: só ao ser jogada já presa.
+  // Primordial Power: "gains Pierce" não vem do parse do bônus. Primordial Awakening: só ao ser jogada já presa.
   'artemis-v6-370': {
-    aura: gearAura(() => true, {keywords: ['Trample']}),
+    aura: gearAura(() => true, {keywords: ['Pierce']}),
     cast: (s, c, key, self) => bearer(s, c, key, self) && (st => { const b = bearer(st, c, key, self); if (b) grow(st, c, key, b, 2); }),
   },
   // CHANDRA
@@ -136,7 +135,7 @@ export default {
     aura: lord(isArtemis, 1, 1),
     startTurn: run((st, c, key) => growEach(st, c, key, k.chooseUpTo(c, key, 'ETERNAL MOONLIGHT', k.devotees(st, c, key), 2))),
     declare: (s, c, key, self) => ready(s, key) >= 2 && (st => {
-      if (k.may(c, key, 'CELESTIAL RADIANCE', {uid: self, cost: '{2}{C}'}) && payC(st, key, 2)) k.buff(st, self, 0, 0, 'this_round', ['Trample']);
+      if (k.may(c, key, 'CELESTIAL RADIANCE', {uid: self, cost: '{2}{C}'}) && payC(st, key, 2)) k.buff(st, self, 0, 0, 'this_round', ['Pierce']);
     }),
   },
   'artemis-v6-374': {spell: {run: (st, c, key) => {
@@ -177,7 +176,7 @@ export default {
     gearKillInCombat: (s, c, key, self, b) => (k.hasType(c, b, 'Satellite') || k.hasType(c, b, 'Lunar Guardian')) && (st => grow(st, c, key, b, 1)),
   },
   'artemis-v6-380': {
-    aura: gearAura(() => true, {keywords: ['Trample']}),
+    aura: gearAura(() => true, {keywords: ['Pierce']}),
     gearDeclare: buffBearer(2, 0),
     gearKillInCombat: (s, c, key, self) => k.onceTurn(s, `${self}:aim`) && (st => { if (k.may(c, key, 'UNERRING AIM', {uid: self})) k.draw(st, key, 1); }),
   },
@@ -214,7 +213,7 @@ export default {
       run: (st, c, key, self) => { k.addCounter(st, self, -1); shield(st, self, 2, {strikeOnly: false, duration: 'this_round'}); }},
     mods: (s, c, key, self) => (counters(s, self) ? [{keywords: ['Guardian']}] : []),
   },
-  'artemis-v6-392': {mods: (s, c, key, self) => (counters(s, self) ? [{keywords: ['Trample']}] : [])},
+  'artemis-v6-392': {mods: (s, c, key, self) => (counters(s, self) ? [{keywords: ['Pierce']}] : [])},
   'artemis-v6-393': {mods: (s, c, key, self) => (k.devotees(s, c, key).some(u => u !== self && k.hasType(c, u, 'Satellite')) ? [{atk: 1, hp: 0}] : [])},
   'artemis-v6-394': {enter: buffSelf(1, 0)},
   'artemis-v6-395': {watchCounter: (s, c, key, self, target) => target === self && (st => k.gainSoul(st, key, 1))},
@@ -227,7 +226,7 @@ export default {
   'artemis-v6-400': {
     watchCounter: (s, c, key, self, target) => target !== self && k.controllerOf(s, target) === key && k.onceTurn(s, `${self}:growth`)
       && (st => grow(st, c, key, self, 1)),
-    aura: (s, c, key, self, unit) => (unit !== self && k.controllerOf(s, unit) === key && counters(s, self) >= 3 ? {keywords: ['Trample']} : null),
+    aura: (s, c, key, self, unit) => (unit !== self && k.controllerOf(s, unit) === key && counters(s, self) >= 3 ? {keywords: ['Pierce']} : null),
   },
   'artemis-v6-401': {watchCounter: (s, c, key, self, target) => target === self && (st => k.buff(st, self, 1, 0, 'this_round'))},
   'artemis-v6-402': {enter: run((st, c, key) => lookTop(st, c, key, 'LUNAR GUIDANCE', 3, u => k.isDevotee(c, u)))},
@@ -263,7 +262,7 @@ export default {
   'artemis-v6-410': {gearKillInCombat: (s, c, key, self) => k.onceTurn(s, `${self}:supply`) && (st => {
     if (k.may(c, key, "HUNTER'S SUPPLY", {uid: self})) { k.draw(st, key, 1); k.discard(st, c, key, 1, "HUNTER'S SUPPLY"); }
   })},
-  'artemis-v6-411': {gearDeclare: buffBearer(0, 0, ['Trample'])},
+  'artemis-v6-411': {gearDeclare: buffBearer(0, 0, ['Pierce'])},
   // Remover marcador do portador é custo de habilidade ativada: AÇÃO (guia §56).
   'artemis-v6-412': {activate: {name: 'LUNAR SHELTER', cost: 0, tap: false,
     check: (s, c, key, self) => { const b = bearer(s, c, key, self); if (!b || !counters(s, b)) throw new k.RuleError('custo', 'portador sem marcador +1/+1'); },
@@ -288,7 +287,7 @@ export default {
     const src = pickFriend(st, c, key, 'PRIMAL STRIKE');
     blast(st, c, src, src && pickEnemy(st, c, key, 'PRIMAL STRIKE'));
   }}},
-  'artemis-v6-419': {spell: {run: (st, c, key) => { const t = pickFriend(st, c, key, 'WILD STRENGTH'); if (t) k.buff(st, t, 3, 3, 'this_round', ['Trample']); }}},
+  'artemis-v6-419': {spell: {run: (st, c, key) => { const t = pickFriend(st, c, key, 'WILD STRENGTH'); if (t) k.buff(st, t, 3, 3, 'this_round', ['Pierce']); }}},
   'artemis-v6-420': {spell: {run: (st, c, key) => {
     const deck = st.players[key].deck, look = deck.slice(0, 3);
     const pick = k.choose(c, key, 'LUNAR PROSPERITY', look, {text: 'Choose a card to put into your Cosmo Bank.'});
@@ -318,7 +317,7 @@ export default {
   }}},
   'artemis-v6-426': {spell: {run: (st, c, key) => {
     growEach(st, c, key, k.devotees(st, c, key), 2);
-    k.devotees(st, c, key).filter(u => k.atkOf(st, c, u) >= 5).forEach(u => k.buff(st, u, 0, 0, 'this_round', ['Trample']));
+    k.devotees(st, c, key).filter(u => k.atkOf(st, c, u) >= 5).forEach(u => k.buff(st, u, 0, 0, 'this_round', ['Pierce']));
   }}},
   // Domain Lunar Sanctuary. Interpretação: "as it enters" = gatilho logo depois de entrar.
   'artemis-v6-427': {

@@ -555,9 +555,9 @@ Se o defensor for destruído, não retaliará.
 
 Ao iniciar Strike contra um Devotee, o dano excedente ao HP restante do alvo é causado ao Soul do God que o controla. Não se aplica à retaliação.
 
-### 46A. Trample
+### 46A. (Removida)
 
-Mesmo efeito de Pierce: ao iniciar Strike contra um Devotee, o dano excedente ao HP restante do alvo é causado ao Soul do God que o controla. Não se aplica à retaliação. Trample e Pierce no mesmo Devotee não se somam (autor, 29/10/2026).
+Trample não existe: a keyword é Pierce (§46). Cartas que diziam Trample foram corrigidas para Pierce (autor, 29/10/2026).
 
 ### 47. Impulse
 
@@ -697,7 +697,6 @@ O dano é marcado separadamente do HP máximo. Power negativo causa zero dano. H
 | Cheater | Durante um Strike contra este Devotee, o Devotee adversário não se beneficia de Long Range. Não ignora Guardian. |
 | Long Range | Ao iniciar Strike, causa seu dano primeiro. Verificar destruição/derrota antes da retaliação; alvo destruído não retalia. Defender com Long Range não concede dano primeiro. |
 | Pierce | Ao iniciar Strike contra um Devotee, o dano excedente ao HP restante daquele alvo é causado ao Soul do God que o controla. Não funciona por retaliação. Calcular depois de prevenção/modificação do dano e sem contar dano antigo como dano novo. |
-| Trample | Igual a Pierce (§46A). Não se soma a Pierce. |
 | Impulse | Pode declarar Strike na rodada em que entra em campo. |
 | Sealed | Não pode declarar Strike nem ativar suas próprias habilidades, inclusive habilidades concedidas por equipamento. Mantém passivas, Rivalidades e retaliação; pode receber Evolve, que pertence à Cloth. Dura até o fim da rodada, salvo duração expressa diferente. |
 | Unfaith | Ao declarar Strike contra um God, pode escolher remover até 2 Latent Cosmo daquele jogador em lugar de causar dano ao Soul. A escolha é anunciada antes das respostas. O God retalia normalmente; sem Latent, o modo não causa dano ao Soul. |

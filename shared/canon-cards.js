@@ -37,7 +37,7 @@ export function parseCard(record) {
     // "Equip: None — Global" (020 e itens globais): fica no campo sem portador (guia §33).
     global: /Equip: None — Global/.test(text),
     equipped: bonus ? {atk: Number(bonus[1]), hp: Number(bonus[2] ?? 0), keywords: bonus[3] ? [bonus[3]] : []} : null,
-    keywords: ['Guardian', 'Cheater', 'Nimble', 'Pierce', 'Impulse', 'Long Range', 'Trample']
+    keywords: ['Guardian', 'Cheater', 'Nimble', 'Pierce', 'Impulse', 'Long Range']
       .filter(k => new RegExp(`^\\s*${k}\\s*$`, 'm').test(text)),
     text,
   };

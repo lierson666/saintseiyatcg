@@ -720,16 +720,16 @@ test('498 Dark Tournament: cada jogador sacrifica um Devotee; com Black Saint, c
   assert.equal(s.players.A.hand.length, 1);
 });
 
-test('499 Humanity\'s Defiance: +2/+2 e Trample no turno; sacrifica um Devotee no end step', () => {
+test('499 Humanity\'s Defiance: +2/+2 e Pierce na rodada; sacrifica um Devotee no end step', () => {
   const {s, ctx, give} = setup();
   const a = give('A', N(468)), b = give('A', N(468)), spell = give('A', N(499), 'hand');
   cast(s, ctx, spell);
   assert.equal(atkOf(s, ctx, a), k.card(ctx, a).atk + 2);
   assert.equal(hpOf(s, ctx, a), k.card(ctx, a).hp + 2);
-  assert.ok(k.keywordsOf(s, ctx, a).includes('Trample'));
+  assert.ok(k.keywordsOf(s, ctx, a).includes('Pierce'));
   endTurn(s); passAll(s);
   assert.equal(s.players.A.battlefield.length, 1);
-  assert.equal(atkOf(s, ctx, s.players.A.battlefield[0]), k.card(ctx, b).atk); // bônus expirou
+  assert.equal(atkOf(s, ctx, s.players.A.battlefield[0]), k.card(ctx, b).atk + 2); // "until end of turn" = fim da rodada (§64)
 });
 
 test('500 The Eighth Sense: devolve até 2 Devotees exhausted, imortais; perde 5 Soul', () => {

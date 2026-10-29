@@ -539,7 +539,7 @@ export default {
   }}},
   // Humanity's Defiance (Moment)
   'neutral-v6-499': {spell: {run: (s, c, key, self) => {
-    for (const u of mine(s, c, key)) k.buff(s, u, 2, 2, 'this_turn', ['Trample']); // Beyond Divine Power + Unbreakable Resolve
+    for (const u of mine(s, c, key)) k.buff(s, u, 2, 2, 'this_round', ['Pierce']); // Beyond Divine Power + Unbreakable Resolve
     (s.v6EndSac ||= []).push({key, uid: self}); // Ultimate Sacrifice: no próximo end step
   }}},
   // The Eighth Sense (Moment)

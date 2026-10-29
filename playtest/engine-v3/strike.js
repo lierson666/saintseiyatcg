@@ -81,7 +81,7 @@ export function resolveStrike(state, ctx, strike) {
     state.effects = state.effects.filter(e => e.duration !== 'this_strike'); // escudos/bônus do Strike anulado não sobram
     return null;
   }
-  const atk = atkOf(state, ctx, attacker), pierce = keywordsOf(state, ctx, attacker).some(k => k === 'Pierce' || k === 'Trample'); // §46A: Trample = Pierce, não somam // lidos antes do dano
+  const atk = atkOf(state, ctx, attacker), pierce = keywordsOf(state, ctx, attacker).includes('Pierce'); // lido antes do dano
   strike.atks = {[attacker]: atk};
   // Equipment presos antes do dano: gatilhos V6 "equipped Devotee …" valem mesmo se o portador morrer no Strike.
   strike.gearBefore = Object.fromEntries([attacker, target.uid].filter(Boolean).map(u => [u, gearOf(ctx, u)]));

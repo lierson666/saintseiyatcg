@@ -70,11 +70,11 @@ test('declare + killInCombat: Great Lunar Hound ganha marcador ao declarar e com
   assert.equal(p.hand.length, cards0 + 1);
 });
 
-test('Equipment: Silver Moon Arrow dá Trample, +2/+0 no Strike contra Devotee e compra ao derrotar', () => {
+test('Equipment: Silver Moon Arrow dá Pierce, +2/+0 no Strike contra Devotee e compra ao derrotar', () => {
   const {s, ctx, p, field, hand} = setup();
   const archer = field('A', 'artemis-v6-393'), arrow = hand('A', 'artemis-v6-380'), prey = field('B', 'artemis-v6-386');
   playEquipment(s, ctx, 'A', arrow, archer);
-  assert.ok(keywordsOf(s, ctx, archer).includes('Trample'));
+  assert.ok(keywordsOf(s, ctx, archer).includes('Pierce'));
   const atk = atkOf(s, ctx, archer), cards0 = p.hand.length;
   declareStrike(s, ctx, archer, {kind: 'devotee', uid: prey});
   passAll(s); // resolve o gatilho; a janela continua até o dano
