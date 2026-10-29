@@ -12,7 +12,8 @@ import {atkOf, hpOf, keywordsOf, gearOf, isSaint, isBronze, ABILITIES} from '../
 import {v6Spell, entryOf} from '../engine-v3/v6/hooks.js';
 import {STEPS, ABILITY_STEPS} from '../choices-v3.js?v=2';
 import {createScene, THEMES} from './scene.js?v=20261028-5';
-import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudgment, greatFloodBlock, announceGreatFlood, GREAT_FLOOD_COST} from '../engine-v3/gods.js';
+import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudgment, greatFloodBlock, announceGreatFlood, GREAT_FLOOD_COST,
+  greatEclipseBlock, GREAT_ECLIPSE_COST, obliterationBlock, OBLITERATION_COST, bloodlustBlock, BLOODLUST_COST, moonHarvestBlock} from '../engine-v3/gods.js';
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
@@ -268,10 +269,20 @@ function confirmMulligan() {
 // Ações divinas do jogador agora: Ultimate (pronto ou o motivo do bloqueio) e remover Divine Judgment.
 function godActions(key) {
   const s = S(), d = s.divine[key], mine = key === viewer() && !s.victory && !s.setup;
-  const block = d.god === 'god-poseidon' ? greatFloodBlock(s, key) : ultimateBlock(s, ctx, key);
-  const run = d.god === 'god-poseidon' ? () => act({type: 'greatFlood', key}) : () => startExclamation(key);
-  const why = {used: 'Ultimate already used this match.', sorcery: 'Ultimate: your turn, with no response pending.', cost: `Great Flood needs ${GREAT_FLOOD_COST} prepared Bases.`, 'only-athena': 'No Ultimate available.'}[block] || (block ? 'Not available now.' : '');
+  // Ultimate por God: bloqueio (motivo) e ação. Moon Awakening (Artemis) ainda não existe na engine.
+  const ULT = {
+    'god-poseidon': [() => greatFloodBlock(s, key), () => act({type: 'greatFlood', key}), `Great Flood needs ${GREAT_FLOOD_COST} prepared Bases.`],
+    'god-hades': [() => greatEclipseBlock(s, key), () => act({type: 'greatEclipse', key}), `Great Eclipse needs ${GREAT_ECLIPSE_COST} prepared Bases.`],
+    'god-ares': [() => obliterationBlock(s, key), () => act({type: 'obliteration', key}), `Obliteration needs ${OBLITERATION_COST} prepared Bases.`],
+    'god-artemis': [() => 'pendente', () => {}, ''],
+  }[d.god] || [() => ultimateBlock(s, ctx, key), () => startExclamation(key), ''];
+  const block = ULT[0](), run = ULT[1];
+  const why = {used: 'Ultimate already used this match.', sorcery: 'Ultimate: your turn, with no response pending.', cost: ULT[2] || 'Not enough prepared Bases.', 'only-athena': 'No Ultimate available.', pendente: 'This Ultimate is not available in the playtest yet.'}[block] || (block ? 'Not available now.' : '');
+  // Bloodlust (Ares): Divine Power ativado, escolhe o Devotee na barra de escolha.
+  const blood = d.god === 'god-ares' && mine ? bloodlustBlock(s, ctx, key) : 'only-ares';
   return {
+    bloodlust: d.god !== 'god-ares' ? null : {ok: mine && !blood, why: {sorcery: 'Bloodlust: your turn, with no response pending.', used: 'Bloodlust already used this round.', cost: `Bloodlust costs ${BLOODLUST_COST} Latent Cosmo.`, target: 'You control no Devotee.'}[blood] || 'Not available now.',
+      run: () => begin('bloodlust', key, null, [{key: 'uid', pick: 'devotee', label: 'Bloodlust: choose a Devotee you control (Prepare it, +1 ATK this round)'}], choice => ({type: 'bloodlust', key, choice}))},
     ultimate: {ok: mine && !block, why: mine ? why : "Only the God's controller uses it.", run},
     judgment: mine && d.judgment && idleFor(key) ? () => begin('judgment', key, null,
       [{key: 'devotees', pick: 'devotee', multi: 3, label: 'Sacrifice exactly three Devotees you control'}], choice => ({type: 'judgment', key, choice})) : null,
@@ -799,6 +810,9 @@ function handMenu(uid, el) {
   const reason = playableReason(key, uid);
   if (!reason) items.push([`Play ${info(uid).name}`, () => playFromHand(key, uid)]);
   if (canBase(key, uid)) items.push(['Place as Cosmo Base', () => placeAsBase(key, uid)]);
+  // Moon Harvest (Artemis): carta não Cosmoble vira Base, uma vez por rodada, perdendo 2 Soul.
+  if (!info(uid).cosmoble && S().divine?.[key]?.god === 'god-artemis' && !moonHarvestBlock(S(), ctx, key, uid) && idleFor(key) && S().players[key].baseTurn !== S().turn)
+    items.push(['Moon Harvest: place as Cosmo Base (lose 2 Soul)', () => act({type: 'moonHarvest', key, uid})]);
   if (!items.length) return warn(reason || 'Not playable now.');
   quickMenu(el, items, {always: true}); // carta da mão nunca sai sem o jogador escolher o que fazer
 }
@@ -882,11 +896,12 @@ function showGodPanel(key) {
   const s = S(), p = s.players[key], d = s.divine[key], god = cards.get(s.gods[key]), max = soulMax(s, key), acts = godActions(key);
   const forge = FORGE.get(`${god.name.toLowerCase()}-001`);
   const art = forge?.ilustracao ? renderLiveCard(forge, {art: FORGE_ART + forge.ilustracao}) : `<div class="godpanel__portrait" style="background-image:url('${GOD_ART[s.gods[key]] || ''}')"></div>`;
-  const state = pw => pw.kind === 'ultimate' ? (d.ultimateUsed ? ['used', 'Used'] : acts.ultimate.ok ? ['ready', 'Ready · click to use'] : ['locked', acts.ultimate.why])
+  const state = pw => pw.name === 'BLOODLUST' && acts.bloodlust ? (acts.bloodlust.ok ? ['ready', 'Ready · click to use'] : ['locked', acts.bloodlust.why])
+    : pw.kind === 'ultimate' ? (d.ultimateUsed ? ['used', 'Used'] : acts.ultimate.ok ? ['ready', 'Ready · click to use'] : ['locked', acts.ultimate.why])
     : pw.kind === 'awaken' ? (d.awaken ? ['active', 'Active'] : ['locked', `Awakens at Soul ≤ ${d.awakenAt}`]) : ['active', 'Always on'];
   const icon = {divine: '✦', awaken: '☀', ultimate: '⚡'};
   const powers = godPowers(god).map((pw, i) => {
-    const [st, label] = state(pw), click = pw.kind === 'ultimate' && st === 'ready';
+    const [st, label] = state(pw), click = (pw.kind === 'ultimate' || pw.name === 'BLOODLUST') && st === 'ready';
     return `<button class="power power--${pw.kind} is-${st}" data-power="${i}" ${click ? '' : 'aria-disabled="true"'} title="${esc(label)}">
       <span class="power__icon" aria-hidden="true">${icon[pw.kind]}</span>
       <span class="power__head"><strong>${esc(pw.name)}</strong><small>${esc(pw.tag)}</small></span>
@@ -919,6 +934,7 @@ function showGodPanel(key) {
     if (!b) return;
     if (b.dataset.power === 'judgment') { closeBigCard(); return acts.judgment(); }
     const pw = godPowers(god)[b.dataset.power];
+    if (pw.name === 'BLOODLUST' && acts.bloodlust) { if (!acts.bloodlust.ok) return warn(acts.bloodlust.why); closeBigCard(); return acts.bloodlust.run(); }
     if (pw.kind !== 'ultimate') return warn(`${pw.name}: ${state(pw)[1]}. It works automatically.`);
     if (!acts.ultimate.ok) return warn(acts.ultimate.why);
     closeBigCard();

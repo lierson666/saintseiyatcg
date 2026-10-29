@@ -2,9 +2,11 @@
 // Regras: textos D268 dos Gods, D200, D204, D205, D206, D218, D225, D228–D230 e o suplemento
 // docs/alpha-0.1/GODS-3.0-SUPPLEMENT.md (G3-xxx). Nada aqui vem da engine 2.2.
 // Habilidades da Athena que mexem em Devotees (Divine Protection, Cosmo of Hope) ficam em effects.js e leem `state.divine`.
-import {RuleError, NotSpecified, emit, hooks, assertIdle, pushTriggers, loseSoul, loseGame, destroyDevotee, spendBase, addSeal, mill, draw, useOncePerRound} from './core.js';
+import {RuleError, NotSpecified, emit, hooks, assertIdle, pushTriggers, loseSoul, loseGame, destroyDevotee, spendBase, gainLatent, placeBase, addSeal, mill, draw, useOncePerRound} from './core.js';
 import {card, controllerOf, isSaint, atkOf} from './effects.js';
 import {characterOf, IdentityGap} from '../../shared/character-identity.js';
+import * as k from './v6/kit.js'; // ciclo gods↔kit é seguro: kit só usa gainSoul dentro de funções
+import {contextOf} from './v6/registry.js';
 
 const other = (state, key) => state.order.find(k => k !== key);
 
@@ -265,3 +267,191 @@ function resolveGreatFlood(state, ctx, key) {
   }
   emit(state, 'ultimate_resolved', {player: key, ability: 'GREAT FLOOD'});
 }
+
+// ========== Hades, Ares, Artemis ==========
+// Textos D268 (God cards do canon; card-forge/art-web/cards.json diverge em pontos: ver docs/v6-efeitos-pendencias.md).
+// A engine não tem ganchos globais de "Devotee destruído", "retorno do Tartarus", "kill em Strike" nem "ganho de Latent".
+// Em vez de editar core/effects, o `scanGods` lê o log de eventos no checkpoint (depois de cada resolução completa)
+// e cria os gatilhos na cadeia. // pendente: ganchos nativos no instante exato do evento (hoje o gatilho nasce no checkpoint).
+const byGod = (state, god) => state.order.filter(key => state.divine?.[key]?.god === god);
+const isDevoteeUid = (ctx, uid) => ctx.cards.get(ctx.objects[uid]?.cardId)?.kind === 'Devotee';
+const baseCost = (state, key, n) => state.players[key].bases.filter(b => b.prepared).length >= n;
+
+// Ultimate comum: Sorcery do dono, uma por partida, custo em Base preparada (G3-005/006/023), uso gasto no anúncio legal.
+function ultimateBlockOf(state, key, god, cost) {
+  const d = state.divine[key];
+  if (state.victory) return 'D52';
+  if (d.god !== god) return `only-${god.slice(4)}`;
+  if (d.ultimateUsed) return 'used';
+  if (state.active !== key || state.window || state.chain.length) return 'sorcery';
+  if (!baseCost(state, key, cost)) return 'cost';
+  return null;
+}
+function announceUltimate(state, ctx, key, god, ability, cost, resolve) {
+  const why = ultimateBlockOf(state, key, god, cost);
+  if (why) throw new RuleError('G3-005', `${ability} indisponível: ${why}`);
+  spendBase(state, key, cost);
+  state.divine[key].ultimateUsed = true;
+  emit(state, 'ultimate_announced', {player: key, ability, cost});
+  pushTriggers(state, [{controller: key, uid: `ultimate:${key}`, ability, run: st => resolve(st, ctx, key)}]);
+}
+
+// ---------- Hades ----------
+export const GREAT_ECLIPSE_COST = 7;
+export const greatEclipseBlock = (state, key) => ultimateBlockOf(state, key, 'god-hades', GREAT_ECLIPSE_COST);
+export const announceGreatEclipse = (state, ctx, key) => announceUltimate(state, ctx, key, 'god-hades', 'GREAT ECLIPSE', GREAT_ECLIPSE_COST, resolveGreatEclipse);
+
+function resolveGreatEclipse(state, ctx, key) {
+  const enemy = other(state, key);
+  const options = state.players[key].tartarus.filter(uid => ctx.objects[uid]?.owner === key && isDevoteeUid(ctx, uid));
+  const picked = k.chooseUpTo(ctx, key, 'GREAT ECLIPSE', options, 3, {text: 'Choose up to three Devotees from your Tartarus.'});
+  // Entram Unprepared e perdem Impulse (`entered` nulo: o Strike só vale com Impulse no turno de entrada).
+  const returned = picked.filter(uid => k.putOntoField(state, ctx, key, uid, 'tartarus', {prepared: false}));
+  for (const uid of returned) if (state.units[uid]) state.units[uid].entered = null;
+  let lost = 0;
+  if (returned.length) {
+    const before = state.players[enemy].soul;
+    if (loseSoul(state, {[enemy]: 2 * returned.length}, 'loss')) return;
+    lost = before - state.players[enemy].soul; // Soul realmente perdido (nunca abaixo de 0)
+    gainSoul(state, key, Math.ceil(lost / 2));
+  }
+  emit(state, 'ultimate_resolved', {player: key, ability: 'GREAT ECLIPSE', returned, lost});
+}
+
+// ---------- Ares ----------
+export const BLOODLUST_COST = 3, OBLITERATION_COST = 6;
+export const obliterationBlock = (state, key) => ultimateBlockOf(state, key, 'god-ares', OBLITERATION_COST);
+export const announceObliteration = (state, ctx, key) => announceUltimate(state, ctx, key, 'god-ares', 'OBLITERATION', OBLITERATION_COST, resolveObliteration);
+
+function resolveObliteration(state, ctx, key) {
+  const mine = k.devotees(state, ctx, key);
+  for (const uid of mine) {
+    k.prepare(state, uid);
+    k.buff(state, uid, 3, 0, 'this_round', ['Pierce', 'Long Range', 'Impulse']);
+  }
+  state.divine[key].obliteration = state.round; // vale no Round do anúncio; ver gatilho "completes a Strike" em scanGods
+  emit(state, 'ultimate_resolved', {player: key, ability: 'OBLITERATION', devotees: [...mine]});
+}
+
+// Bloodlust: Divine Power ativado (Sorcery), "Cost: 3 Cosmo" lido como 3 Latent (como os outros Divine Powers). Uma vez por Round.
+export function bloodlustBlock(state, ctx, key, uid) {
+  if (state.victory) return 'D52';
+  if (state.divine[key].god !== 'god-ares') return 'only-ares';
+  if (state.active !== key || state.window || state.chain.length) return 'sorcery';
+  if (state.roundUses.has(`god:${key}:bloodlust`)) return 'used';
+  if (state.players[key].latent < BLOODLUST_COST) return 'cost';
+  if (uid !== undefined && !(k.onField(state, key, uid) && isDevoteeUid(ctx, uid))) return 'target';
+  if (uid === undefined && !k.devotees(state, ctx, key).length) return 'target';
+  return null;
+}
+export function activateBloodlust(state, ctx, key, uid) {
+  const why = bloodlustBlock(state, ctx, key, uid);
+  if (why) throw new RuleError('G3-005', `Bloodlust indisponível: ${why}`);
+  state.players[key].latent -= BLOODLUST_COST;
+  emit(state, 'cosmo_spent', {player: key, unit: 'latent', amount: BLOODLUST_COST});
+  useOncePerRound(state, `god:${key}:bloodlust`);
+  emit(state, 'divine_power', {player: key, ability: 'BLOODLUST', uid});
+  pushTriggers(state, [{controller: key, uid: `bloodlust:${uid}`, ability: 'BLOODLUST', run: st => {
+    if (!k.onField(st, key, uid)) return;
+    k.prepare(st, uid);
+    k.buff(st, uid, 1, 0, 'this_round');
+  }}]);
+}
+
+// ---------- Artemis ----------
+// Moon Harvest: no lugar do `placeBase` normal para carta não Cosmoble. Uma vez por Round; perde 2 Soul se usar.
+export function moonHarvestBlock(state, ctx, key, uid) {
+  if (state.victory) return 'D52';
+  if (state.divine[key].god !== 'god-artemis') return 'only-artemis';
+  if (state.roundUses.has(`god:${key}:moon-harvest`)) return 'used';
+  if (!state.players[key].hand.includes(uid)) return 'hand';
+  if (card(ctx, uid).cosmoble) return 'cosmoble'; // já é Cosmoble: use placeBase normal, sem custo
+  return null;
+}
+export function placeBaseMoonHarvest(state, ctx, key, uid) {
+  const why = moonHarvestBlock(state, ctx, key, uid);
+  if (why) throw new RuleError('G3-005', `Moon Harvest indisponível: ${why}`);
+  placeBase(state, key, uid, {...card(ctx, uid), cosmoble: true}); // valida turno, cadeia vazia e 1 Base por turno antes de gastar o uso
+  useOncePerRound(state, `god:${key}:moon-harvest`);
+  emit(state, 'divine_power', {player: key, ability: 'MOON HARVEST', uid});
+  loseSoul(state, {[key]: 2}, 'loss');
+}
+// Moon Awakening (Ultimate, custo 9): pendente. Exige Base que também é Devotee (zona dupla), 3/3 até o fim do Round.
+// pendente: sem modelo de objeto-Base-e-Devotee na engine; ver docs/v6-efeitos-pendencias.md.
+export const moonAwakeningBlock = () => 'pendente';
+
+// ---------- Leitura do log: gatilhos dos três Gods ----------
+function scanGods(state) {
+  const ctx = contextOf(state);
+  if (!ctx || state.victory) return;
+  const events = state.events.slice(state.godScan ?? 0);
+  state.godScan = state.events.length;
+  if (!events.length) return;
+  const triggers = [];
+  const gone = events.filter(e => (e.type === 'destroyed' || e.type === 'sacrificed') && ctx.objects[e.uid] && isDevoteeUid(ctx, e.uid));
+
+  // Offering of Life: um gatilho por lote de Devotees derrotados (o uso é do Round; recusar não gasta).
+  for (const key of byGod(state, 'god-hades')) {
+    if (gone.length) {
+      const once = `god:${key}:offering`, first = gone[0].uid;
+      triggers.push({controller: key, uid: `offering:${first}`, ability: 'OFFERING OF LIFE', run: st => {
+        if (st.victory || st.roundUses.has(once) || st.players[key].soul < 1) return;
+        if (!ask(ctx, key, {ability: 'OFFERING OF LIFE', uid: first, cost: {soul: 2}})) { emit(st, 'divine_power_declined', {player: key, ability: 'OFFERING OF LIFE', uid: first}); return; }
+        useOncePerRound(st, once);
+        emit(st, 'divine_power', {player: key, ability: 'OFFERING OF LIFE', uid: first});
+        if (loseSoul(st, {[key]: 2}, 'loss')) return;
+        draw(st, key, 1);
+        gainLatent(st, key, 1);
+      }});
+    }
+    // King of Tartarus (Awaken): um gatilho por Devotee que voltou do próprio Tartarus.
+    if (state.divine[key].awaken) for (const e of events.filter(e => e.type === 'card_played' && e.from === 'tartarus' && e.player === key && e.kind === 'Devotee')) {
+      triggers.push({controller: key, uid: `king:${e.uid}`, ability: 'KING OF TARTARUS', run: st => {
+        if (st.victory) return;
+        emit(st, 'divine_power', {player: key, ability: 'KING OF TARTARUS', uid: e.uid});
+        if (loseSoul(st, {[other(st, key)]: 1}, 'loss')) return;
+        gainSoul(st, key, 1);
+      }});
+    }
+  }
+
+  // Ares: Butchery (kill em Strike) e Obliteration (destruir quem completa Strike).
+  const ares = byGod(state, 'god-ares');
+  if (ares.length) {
+    let strike = null;
+    for (const e of events) {
+      if (['window_close', 'resolve', 'chain_add', 'end_phase'].includes(e.type)) strike = null;
+      else if (e.type === 'strike_resolve') {
+        strike = e;
+        const key = e.player;
+        if (ares.includes(key) && state.divine[key].obliteration === e.round) {
+          triggers.push({controller: key, uid: `obliteration:${e.attacker}`, ability: 'OBLITERATION', run: st => {
+            if (st.victory || !k.onField(st, key, e.attacker)) return;
+            k.defeat(st, ctx, e.attacker); // D205: derrota que não pode ser prevenida (k.defeat ignora prevenção)
+          }});
+        }
+      } else if (strike && e.type === 'destroyed' && strike.target?.kind === 'devotee' && (e.uid === strike.target.uid || e.uid === strike.attacker) && isDevoteeUid(ctx, e.uid)) {
+        const killerSide = e.uid === strike.target.uid ? strike.player : other(state, strike.player);
+        if (ares.includes(killerSide) && state.divine[killerSide].awaken) {
+          triggers.push({controller: killerSide, uid: `butchery:${e.uid}`, ability: 'BUTCHERY', run: st => {
+            if (st.victory) return;
+            emit(st, 'divine_power', {player: killerSide, ability: 'BUTCHERY', uid: e.uid});
+            loseSoul(st, {[other(st, killerSide)]: 1}, 'loss');
+          }});
+        }
+      }
+    }
+  }
+
+  // Artemis, Moonlight Blessing (Awaken): +1 Latent no primeiro ganho do Round (imediato, é substituição; teto 3 em gainLatent).
+  for (const key of byGod(state, 'god-artemis')) {
+    if (!state.divine[key].awaken || state.roundUses.has(`god:${key}:moonlight`)) continue;
+    if (events.some(e => e.type === 'latent_gained' && e.player === key)) {
+      useOncePerRound(state, `god:${key}:moonlight`);
+      emit(state, 'divine_power', {player: key, ability: 'MOONLIGHT BLESSING'});
+      gainLatent(state, key, 1);
+    }
+  }
+  pushTriggers(state, triggers);
+}
+hooks.checkpoint.push(scanGods);

@@ -3,7 +3,7 @@
 import {startTurn, endTurn, pass, placeBase, RuleError} from './core.js';
 import {declareStrike} from './strike.js';
 import {playDevotee, playEquipment, playSpell, activate, reequip} from './play.js';
-import {announceExclamation, removeJudgment, announceGreatFlood} from './gods.js';
+import {announceExclamation, removeJudgment, announceGreatFlood, announceGreatEclipse, announceObliteration, activateBloodlust, placeBaseMoonHarvest} from './gods.js';
 import {mulligan} from './match.js';
 import {applyTimeout} from './clock.js';
 
@@ -41,6 +41,10 @@ export function applyAction(match, ctx, action) {
       if ((choice.saints || []).length !== 3) throw Object.assign(new Error('saints'), {decision: 'G3-005'});
       return announceExclamation(s, ctx, key, choice.saints);
     case 'greatFlood': return announceGreatFlood(s, ctx, key);
+    case 'greatEclipse': return announceGreatEclipse(s, ctx, key);
+    case 'obliteration': return announceObliteration(s, ctx, key);
+    case 'bloodlust': return activateBloodlust(s, ctx, key, choice.uid);
+    case 'moonHarvest': return placeBaseMoonHarvest(s, ctx, key, uid);
     case 'judgment': return removeJudgment(s, ctx, key, choice.devotees);
     case 'timeout': if (applyTimeout(s, key) === 'TIMEOUT_END_TURN') match.ending = true; return;
     default: throw new RuleError('alvo', `ação desconhecida: ${type}`);
