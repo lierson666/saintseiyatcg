@@ -424,7 +424,7 @@ Reequipar exige uma AÇÃO e o custo Equip da carta: Armor usa o padrão Resonan
 
 Resonance representa afinidade exata com personagens indicados. Uma Armor pode ter vários portadores designados, com habilidades distintas; o nome/identidade precisa corresponder exatamente. Equipar a Armor não transforma outro Devotee naquele personagem.
 
-Padrão inicial para Armor: Equip {1} para Resonant Wearer; Equip {5} para outros Devotees. Campos específicos da carta podem balancear esses valores. O custo de jogar é separado e Base-only; Equip e transferência aceitam Base e/ou Latent. Armas e acessórios mantêm o Equip impresso.
+Padrão inicial para Armor: Equip {1} para Resonant Wearer; Equip {5} para outros Devotees. Campos específicos da carta podem balancear esses valores. O custo de jogar é separado e Base-only; Equip e transferência aceitam Base e/ou Latent. Armas e acessórios mantêm o Equip impresso. Equipment ou Item sem Auto-Equip e sem Equip impresso equipa qualquer Devotee amigo pagando o próprio Casting Cost (autor, 29/10/2026).
 
 Owners continuam identificando requisitos de evolução quando impressos e também contam como portadores designados para Equip reduzido. Habilidades universais funcionam com qualquer portador elegível; apenas as habilidades específicas de Resonance exigem seu personagem. Use “Equipped Devotee”, “This Armor” e “Resonance — Pegasus Seiya”, sem presumir que o portador é o personagem original.
 

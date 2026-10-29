@@ -103,3 +103,14 @@ test('Equipment não-Armor fica solto quando o portador sai e é reequipado paga
   assert.equal(ctx.attached[weapon], acolyte);
   assert.throws(() => reequip(s, ctx, 'A', weapon, acolyte), e => e instanceof RuleError && /solto/.test(e.message));
 });
+
+test('Equipment sem Auto-Equip nem Equip impresso equipa qualquer Devotee pelo Casting Cost (guia §33, 29/10/2026)', () => {
+  const {s, ctx, field, equip} = setup({A: fortress, B: rush});
+  const cassios = field('A', '027'), weapon = equip('A', '049', cassios), acolyte = field('A', '043');
+  ctx.cards = new Map(cards);
+  const card = {...cards.get('athena-v6-049'), autoEquip: [], equip: null};
+  ctx.cards.set('athena-v6-049', card);
+  delete ctx.attached[weapon];
+  s.players.A.bases = s.players.A.deck.splice(0, 6).map(uid => ({uid, prepared: true}));
+  assert.deepEqual(reequip(s, ctx, 'A', weapon, acolyte), {cost: card.cost});
+});

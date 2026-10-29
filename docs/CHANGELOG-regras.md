@@ -4,6 +4,14 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-29 — §33 — Equip sem custo impresso usa o Casting Cost
+
+- **Seção:** `docs/guia-do-jogo.md`, §33 (Resonance e Equip).
+- **Antes:** Equipment ou Item sem Auto-Equip e sem Equip {N} não tinha custo de Equip definido (engine: NotSpecified).
+- **Depois:** equipa qualquer Devotee amigo pagando o próprio Casting Cost.
+- **Motivo:** decisão do autor em 29/10/2026 ("Igual ao Casting Cost"), para os Equipment de Ares e os Items de Hades e neutros.
+- **Pendências:** nenhuma carta alterada; engine 3.0 ajustada (`playtest/engine-v3/play.js`, `equipCost`).
+
 ## 2026-10-28 — §63 — Tournament Spirit (062) vale atacando e defendendo
 
 - **Seção:** `docs/guia-do-jogo.md`, §63 (Gods e Domains).

@@ -107,7 +107,7 @@ function equipCost(state, ctx, key, card, bearer) {
   }
   if (card.autoEquip.some(name => name.toUpperCase() === target.name.toUpperCase())) return card.cost;
   if (card.equip) return {amount: card.equip.amount, unit: card.cost.unit}; // "Other" e "Any" cobrem quem não é nomeado
-  if (!card.autoEquip.length) throw new NotSpecified(`${card.id}: Equipment sem Auto-Equip nem Equip {N}`);
+  if (!card.autoEquip.length) return card.cost; // sem Auto-Equip nem Equip impresso: Casting Cost (guia §33, autor, 29/10/2026)
   throw new RuleError('Equip', `${card.name} só equipa ${card.autoEquip.join(' ou ')}`);
 }
 
