@@ -1,0 +1,119 @@
+<!doctype html>
+<!-- Painel do sistema (autor, 29/10/2026): pedidos de acesso, convites, jogadores e denúncias do chat.
+     Fica no site (mesma origem do cookie de sessão); o Star Hill abre esta página. Só contas em SANCTUARY_ADMINS veem dados. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Saint Seiya TCG — System</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#05060c">
+  <link rel="icon" href="/LOGO/favicon.png">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Cormorant+Garamond:ital,wght@1,400&family=Jost:wght@300;400;500&display=swap">
+  <link rel="stylesheet" href="/shared/kv.css?v=20261029-1">
+  <style>
+    html, body { margin: 0; background: var(--kv-bg); color: var(--kv-ink); font: 300 16px/1.5 var(--kv-sans); }
+    .page { min-height: 100dvh; display: grid; grid-template-rows: auto 1fr; }
+    .kv-nav a { color: var(--kv-muted); text-decoration: none; }
+    main { width: min(1100px, 100%); margin: 0 auto; padding: 32px 16px 64px; box-sizing: border-box; }
+    h1 { margin: 8px 0 24px; font: italic 400 clamp(36px, 5vw, 56px)/1 var(--kv-serif); }
+    .tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+    .tabs button[aria-selected="true"] { border-color: var(--kv-gold); color: var(--kv-gold); }
+    .count { margin-left: 8px; padding: 0 8px; border-radius: 999px; background: #e6c36a22; color: var(--kv-gold); font-size: 12px; }
+    .bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 16px; }
+    .bar .kv-input { flex: 1 1 260px; min-height: 44px; }
+    table { width: 100%; border-collapse: collapse; }
+    th { text-align: left; font: 600 10px var(--kv-title); letter-spacing: .3em; text-transform: uppercase; color: var(--kv-dim); padding: 8px; }
+    td { padding: 12px 8px; border-top: 1px solid var(--kv-line); vertical-align: top; }
+    td small { display: block; color: var(--kv-muted); }
+    .actions { display: flex; gap: 6px; justify-content: flex-end; flex-wrap: wrap; }
+    .actions .kv-ghost { min-height: 36px; padding: 0 14px; font-size: 13px; }
+    .tag { font-size: 12px; color: var(--kv-muted); } .tag.on { color: #7be0a0; } .tag.match { color: var(--kv-gold); } .tag.bad { color: var(--kv-error, #ff7a6b); }
+    .empty { color: var(--kv-muted); padding: 24px 0; }
+    .log { margin: 8px 0 0; padding: 12px 16px; border-left: 2px solid var(--kv-line); color: var(--kv-muted); font-size: 14px; }
+    .log b { color: var(--kv-ink); font-weight: 500; }
+    @media (max-width: 640px) { thead { display: none; } td { display: block; border-top: 0; padding: 4px 0; } tr { display: block; border-top: 1px solid var(--kv-line); padding: 12px 0; } .actions { justify-content: flex-start; } }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <nav class="kv-nav"><a class="kv-stamp" href="/playtest/">Saint Seiya · TCG</a><span class="kv-stamp kv-stamp--gold">System</span></nav>
+    <main>
+      <p class="kv-stamp kv-stamp--gold">Star Hill</p>
+      <h1>Control of the Sanctuary</h1>
+      <div class="tabs" role="tablist"></div>
+      <p class="kv-status" id="status" role="status"></p>
+      <section id="view"></section>
+    </main>
+  </div>
+  <script type="module">
+    const $ = s => document.querySelector(s);
+    const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+    const when = t => (t ? new Date(t * 1000).toLocaleString() : '—');
+    const TABS = [['requests', 'Requests'], ['invites', 'Invites'], ['players', 'Players'], ['reports', 'Reports']];
+    let data = null, tab = location.hash.slice(1) || 'requests';
+    const say = (text, bad) => { $('#status').textContent = text; $('#status').style.color = bad ? 'var(--kv-error, #ff7a6b)' : ''; };
+
+    async function api(method, path, body) {
+      const r = await fetch(path, {method, credentials: 'same-origin', headers: body ? {'Content-Type': 'application/json'} : {}, body: body ? JSON.stringify(body) : undefined});
+      if (r.status === 401) { location.assign(`/login/?v=3&next=${encodeURIComponent('/admin/')}`); throw new Error('Sign in to continue.'); }
+      const out = await r.json().catch(() => ({}));
+      if (!r.ok) throw new Error(out.error || 'Something went wrong.');
+      return out;
+    }
+    async function load() {
+      try { data = await api('GET', '/api/admin/overview'); say(''); render(); }
+      catch (e) { say(e.message, true); $('#view').innerHTML = ''; }
+    }
+    async function run(method, path, body, done) {
+      try { await api(method, path, body); say(done); await load(); } catch (e) { say(e.message, true); }
+    }
+
+    const views = {
+      requests: () => !data.requests.length ? '<p class="empty">No pending requests.</p>' : `<table><thead><tr><th>Player</th><th>Asked</th><th></th></tr></thead><tbody>${data.requests.map(r => `
+        <tr><td>${esc(r.name)}<small>${esc(r.email)}${r.news ? ' · news opt-in' : ''}${r.has_account ? ' · already has an account' : ''}</small></td><td>${when(r.at)}</td>
+        <td class="actions"><button class="kv-ghost" data-do="approve" data-id="${r.id}">Approve</button><button class="kv-ghost" data-do="decline" data-id="${r.id}">Decline</button></td></tr>`).join('')}</tbody></table>`,
+      invites: () => `<form class="bar" id="invite"><input class="kv-input" type="email" name="email" placeholder="email@example.com" required aria-label="Email to invite"><button class="kv-ghost">Invite</button></form>
+        <table><thead><tr><th>Email</th><th>Invited</th><th>Account</th><th></th></tr></thead><tbody>${data.invites.map(i => `
+        <tr><td>${esc(i.email)}</td><td>${when(i.at)}</td><td>${i.username ? esc(i.username) : '<span class="tag">not yet</span>'}</td>
+        <td class="actions">${i.username ? '' : `<button class="kv-ghost" data-do="uninvite" data-email="${esc(i.email)}">Remove</button>`}</td></tr>`).join('')}</tbody></table>`,
+      players: () => `<table><thead><tr><th>Player</th><th>Country</th><th>Status</th><th>Joined</th><th></th></tr></thead><tbody>${data.users.map(u => `
+        <tr><td>${esc(u.username || '(profile incomplete)')}<small>${esc(u.name)} · ${esc(u.email)}</small></td><td>${esc(u.country || '—')}</td>
+        <td>${u.suspended ? '<span class="tag bad">suspended</span>' : `<span class="tag ${u.status === 'online' ? 'on' : u.status}">${u.status === 'match' ? 'in a duel' : u.status}</span>`}<small>last seen ${when(u.last_seen)}</small></td>
+        <td>${when(u.created_at)}</td>
+        <td class="actions">${u.admin || !u.username ? '' : u.suspended ? `<button class="kv-ghost" data-do="restore" data-user="${esc(u.username)}">Restore</button>` : `<button class="kv-ghost" data-do="suspend" data-user="${esc(u.username)}">Suspend</button>`}</td></tr>`).join('')}</tbody></table>`,
+      reports: () => !data.reports.length ? '<p class="empty">No open reports.</p>' : data.reports.map(r => `
+        <article class="kv-card" style="padding:20px;margin-bottom:16px"><div class="bar"><span><b>${esc(r.reporter)}</b> reported <b>${esc(r.reported)}</b> · ${when(r.at)}</span>
+        <span class="actions" style="margin-left:auto"><button class="kv-ghost" data-do="suspend" data-user="${esc(r.reported)}">Suspend ${esc(r.reported)}</button><button class="kv-ghost" data-do="resolve" data-id="${r.id}">Mark resolved</button></span></div>
+        <div class="log">${r.messages.map(m => `<div><b>${esc(m.from)}</b>: ${esc(m.body)} <small>${when(m.at)}</small></div>`).join('') || 'No messages.'}</div></article>`).join(''),
+    };
+    const counts = () => ({requests: data.requests.length, invites: 0, players: 0, reports: data.reports.length});
+    function render() {
+      const c = counts();
+      $('.tabs').innerHTML = TABS.map(([k, label]) => `<button class="kv-ghost" role="tab" aria-selected="${k === tab}" data-tab="${k}">${label}${c[k] ? `<span class="count">${c[k]}</span>` : ''}</button>`).join('');
+      $('#view').innerHTML = views[tab]();
+    }
+
+    document.addEventListener('click', e => {
+      const t = e.target.closest('[data-tab]');
+      if (t) { tab = t.dataset.tab; history.replaceState(null, '', `#${tab}`); return render(); }
+      const b = e.target.closest('[data-do]');
+      if (!b) return;
+      const {do: act, id, user, email} = b.dataset;
+      if (act === 'approve') return run('POST', `/api/admin/requests/${id}/approve`, null, 'Approved: they can create an account now.');
+      if (act === 'decline') return run('POST', `/api/admin/requests/${id}/decline`, null, 'Request declined.');
+      if (act === 'uninvite') return confirm(`Remove the invite for ${email}?`) && run('DELETE', `/api/admin/invites/${encodeURIComponent(email)}`, null, 'Invite removed.');
+      if (act === 'suspend') return confirm(`Suspend ${user}? They are signed out everywhere and cannot sign in.`) && run('POST', `/api/admin/users/${user}/suspend`, null, `${user} is suspended.`);
+      if (act === 'restore') return run('POST', `/api/admin/users/${user}/restore`, null, `${user} can sign in again.`);
+      if (act === 'resolve') return run('POST', `/api/admin/reports/${id}/resolve`, null, 'Report resolved.');
+    });
+    document.addEventListener('submit', e => {
+      if (e.target.id !== 'invite') return;
+      e.preventDefault();
+      run('POST', '/api/admin/invites', {email: e.target.email.value.trim()}, 'Invited.');
+    });
+    load();
+    setInterval(() => { if (!document.hidden && !document.activeElement?.matches('input')) load(); }, 30000);
+  </script>
+</body>
+</html>

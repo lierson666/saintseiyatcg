@@ -29,6 +29,10 @@ NO_PLAYER = 'No player with this friend code.'
 MSG_MAX, MSG_PER_MIN, MSG_KEEP_DAYS, MSG_PAGE = 500, 20, 90, 50
 # Versão da página de login no link de redirecionamento: muda a URL e o navegador não reaproveita a página velha do cache.
 LOGIN_VERSION = '3'
+# Painel do sistema (Star Hill → /admin/, autor 29/10/2026): admins por email; pedidos de acesso vêm da home.
+ADMINS = {e.strip().lower() for e in os.environ.get('SANCTUARY_ADMINS', '').split(',') if e.strip()}
+REQUESTS_PER_HOUR = 5
+SUSPENDED = 'This account is suspended.'
 OLD_FORM = 'Please reload this page to see the new sign-up form.'
 
 SCHEMA = """
@@ -49,6 +53,8 @@ create table if not exists messages (id integer primary key, from_id integer not
 create index if not exists messages_pair on messages(from_id, to_id, id);
 create table if not exists reports (id integer primary key, reporter_id integer not null, reported_id integer not null,
   created_at integer not null, excerpt text not null);
+create table if not exists access_requests (id integer primary key, email text unique not null, name text not null,
+  news integer not null, ip text not null, created_at integer not null, status text not null default 'pending', decided_at integer);
 create table if not exists blocks (user_id integer not null, blocked_id integer not null, created_at integer not null,
   primary key (user_id, blocked_id));
 """
@@ -64,9 +70,11 @@ def open_db(path=DB_PATH):
     db.executescript('pragma journal_mode=wal; pragma foreign_keys=on;' + SCHEMA)
     # Migração do cadastro completo: colunas novas em contas antigas (ficam vazias até o perfil ser completado).
     have = {r['name'] for r in db.execute('pragma table_info(users)')}
-    for col in ('username', 'username_display', 'country', 'phone', 'friend_code', 'avatar_card', 'accepted_terms_at', 'last_seen', 'status'):
+    for col in ('username', 'username_display', 'country', 'phone', 'friend_code', 'avatar_card', 'accepted_terms_at', 'last_seen', 'status', 'suspended_at'):
         if col not in have:
             db.execute(f'alter table users add column {col}')
+    if 'resolved_at' not in {r['name'] for r in db.execute('pragma table_info(reports)')}:
+        db.execute('alter table reports add column resolved_at')
     db.execute('create unique index if not exists users_username on users(username)')
     db.execute('create unique index if not exists users_friend_code on users(friend_code)')
     for email in filter(None, (e.strip().lower() for e in os.environ.get('SANCTUARY_INVITES', '').split(','))):
@@ -94,7 +102,8 @@ def new_friend_code(display):  # Nome#1234, único
 
 def profile(u):  # dados que o próprio jogador vê
     return {'email': u['email'], 'name': u['display_name'], 'username': u['username_display'], 'friend_code': u['friend_code'],
-            'country': u['country'], 'phone': u['phone'], 'avatar_card': u['avatar_card'], 'complete': bool(u['username'])}
+            'country': u['country'], 'phone': u['phone'], 'avatar_card': u['avatar_card'], 'complete': bool(u['username']),
+            'admin': u['email'] in ADMINS}
 
 
 def clean_profile(body, partial=False):
@@ -181,7 +190,7 @@ class Handler(BaseHTTPRequestHandler):
         now = int(time.time())
         with lock:
             row = db.execute('select u.* from sessions s join users u on u.id = s.user_id '
-                             'where s.token_hash = ? and s.expires_at > ?', (token_hash(token.value), now)).fetchone()
+                             'where s.token_hash = ? and s.expires_at > ? and u.suspended_at is null', (token_hash(token.value), now)).fetchone()
             if row:
                 db.execute('update sessions set last_seen = ? where token_hash = ?', (now, token_hash(token.value)))
         return row
@@ -190,6 +199,12 @@ class Handler(BaseHTTPRequestHandler):
         user = self.current_user()
         if not user:
             raise ApiError(401, 'Sign in to continue.')
+        return user
+
+    def require_admin(self):
+        user = self.require_user()
+        if user['email'] not in ADMINS:
+            raise ApiError(403, 'Admins only.')
         return user
 
     def check_origin(self):  # CSRF: gravações só a partir do próprio site
@@ -248,6 +263,10 @@ class Handler(BaseHTTPRequestHandler):
                     return self.chat_read(m[1])
                 if method == 'POST':
                     return self.chat_report(m[1]) if m[2] else self.chat_send(m[1])
+            if method == 'POST' and path == '/api/access-requests':
+                return self.access_request()
+            if path.startswith('/api/admin/'):
+                return self.admin(method, path)
             if path == '/api/decks' and method == 'GET':
                 return self.list_decks()
             m = re.fullmatch(r'/api/decks/([^/]+)(/restore)?', path)
@@ -522,6 +541,8 @@ class Handler(BaseHTTPRequestHandler):
             with lock:
                 db.execute('insert into login_attempts values (?, ?, ?)', (email, ip, now))
             raise ApiError(401, BAD_LOGIN)
+        if user['suspended_at']:
+            raise ApiError(403, SUSPENDED)
         self.send_json(200, profile(user), self.start_session(user['id']))
 
     def logout(self):
@@ -570,6 +591,91 @@ class Handler(BaseHTTPRequestHandler):
         if not cur.rowcount:
             raise ApiError(404, 'Deck not found in the trash.')
         self.send_json(200, {'ok': True})
+
+    # ---------- pedidos de acesso (home) ----------
+    def access_request(self):  # resposta igual para email novo ou repetido: não revela quem já pediu
+        body = self.read_json()
+        email = str(body.get('email', '')).strip().lower()
+        name = ' '.join(str(body.get('name', '')).split())[:80]
+        if not EMAIL_RE.match(email):
+            raise ApiError(400, 'Enter a valid email.')
+        if len(name) < 2:
+            raise ApiError(400, 'Enter your name.')
+        ip, now = self.client_ip(), int(time.time())
+        with lock:
+            if db.execute('select count(*) from access_requests where ip = ? and created_at > ?', (ip, now - 3600)).fetchone()[0] >= REQUESTS_PER_HOUR:
+                raise ApiError(429, 'Too many requests. Try again later.')
+            db.execute('insert or ignore into access_requests (email, name, news, ip, created_at) values (?, ?, ?, ?, ?)',
+                       (email, name, 1 if body.get('news') is True else 0, ip, now))
+        self.send_json(201, {'ok': True})
+
+    # ---------- painel do sistema (/admin/, aberto pelo Star Hill) ----------
+    def admin(self, method, path):
+        self.require_admin()
+        now = int(time.time())
+        if method == 'GET' and path == '/api/admin/overview':
+            return self.admin_overview(now)
+        m = re.fullmatch(r'/api/admin/requests/(\d+)/(approve|decline)', path)
+        if m and method == 'POST':
+            with lock:
+                r = db.execute("select * from access_requests where id = ? and status = 'pending'", (int(m[1]),)).fetchone()
+                if not r:
+                    raise ApiError(404, 'Request not found.')
+                if m[2] == 'approve':
+                    db.execute('insert or ignore into invites values (?, ?)', (r['email'], now))
+                db.execute('update access_requests set status = ?, decided_at = ? where id = ?', (m[2] + 'd', now, r['id']))
+            return self.send_json(200, {'ok': True})
+        if path == '/api/admin/invites' and method == 'POST':
+            email = str(self.read_json().get('email', '')).strip().lower()
+            if not EMAIL_RE.match(email):
+                raise ApiError(400, 'Enter a valid email.')
+            with lock:
+                db.execute('insert or ignore into invites values (?, ?)', (email, now))
+            return self.send_json(201, {'ok': True})
+        m = re.fullmatch(r'/api/admin/invites/([^/]+)', path)
+        if m and method == 'DELETE':  # tira o convite; conta já criada continua
+            with lock:
+                db.execute('delete from invites where email = ?', (m[1].lower(),))
+            return self.send_json(200, {'ok': True})
+        m = re.fullmatch(r'/api/admin/users/([A-Za-z0-9_]{3,20})/(suspend|restore)', path)
+        if m and method == 'POST':
+            with lock:
+                user = self.by_username(m[1])
+                if user['email'] in ADMINS:
+                    raise ApiError(400, 'Admins cannot be suspended here.')
+                db.execute('update users set suspended_at = ? where id = ?', (now if m[2] == 'suspend' else None, user['id']))
+                if m[2] == 'suspend':
+                    db.execute('delete from sessions where user_id = ?', (user['id'],))  # sai de todos os aparelhos
+            return self.send_json(200, {'ok': True})
+        m = re.fullmatch(r'/api/admin/reports/(\d+)/resolve', path)
+        if m and method == 'POST':
+            with lock:
+                db.execute('update reports set resolved_at = ? where id = ?', (now, int(m[1])))
+            return self.send_json(200, {'ok': True})
+        raise ApiError(404, 'Not found.')
+
+    def admin_overview(self, now):
+        with lock:
+            requests = db.execute("select r.*, exists(select 1 from users u where u.email = r.email) as has_account from access_requests r "
+                                  "where status = 'pending' order by created_at").fetchall()
+            invites = db.execute('select i.email, i.created_at, u.username_display from invites i left join users u on u.email = i.email '
+                                 'order by i.created_at desc').fetchall()
+            users = db.execute('select * from users order by created_at desc').fetchall()
+            reports = db.execute('select r.*, a.username_display as reporter, b.username_display as reported, b.id as reported_id '
+                                 'from reports r join users a on a.id = r.reporter_id join users b on b.id = r.reported_id '
+                                 'where r.resolved_at is null order by r.created_at').fetchall()
+        names = {u['id']: u['username_display'] for u in users}
+        online = lambda u: (u['status'] or 'online') if (u['last_seen'] or 0) > now - ONLINE_WINDOW else 'offline'
+        self.send_json(200, {
+            'requests': [{'id': r['id'], 'email': r['email'], 'name': r['name'], 'news': bool(r['news']), 'at': r['created_at'],
+                          'has_account': bool(r['has_account'])} for r in requests],
+            'invites': [{'email': i['email'], 'at': i['created_at'], 'username': i['username_display']} for i in invites],
+            'users': [{'username': u['username_display'], 'name': u['display_name'], 'email': u['email'], 'country': u['country'],
+                       'created_at': u['created_at'], 'last_seen': u['last_seen'], 'status': online(u), 'suspended': bool(u['suspended_at']),
+                       'admin': u['email'] in ADMINS} for u in users],
+            'reports': [{'id': r['id'], 'reporter': r['reporter'], 'reported': r['reported'], 'at': r['created_at'],
+                         'messages': [{'from': names.get(m['from_id'], '?'), 'body': m['body'], 'at': m['created_at']}
+                                      for m in reversed(json.loads(r['excerpt']))]} for r in reports]})
 
 
 def make_server(port=8080, host='0.0.0.0'):

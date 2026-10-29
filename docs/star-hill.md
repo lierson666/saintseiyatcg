@@ -32,6 +32,17 @@ O menu **Visualizar** oferece os módulos por `⌘1` a `⌘8`. **Editar** encami
 - **Cosméticos:** escala inicial de HUD/cartas, token de vantagem, verso e preferência de efeitos.
 - **Livro de regras:** revisão do texto oficial com motivo, histórico e changelog. Salvar texto não reprograma automaticamente o motor; mudanças mecânicas precisam de implementação e validação próprias.
 
+## Sistema · jogadores (29/10/2026)
+
+O link **Sistema · jogadores ↗** abre `https://saintseiyatcg.com/admin/` no navegador, com a sua conta do jogo. Só emails listados em `SANCTUARY_ADMINS` (arquivo `.env` do sanctuary-api no servidor) veem os dados.
+
+- **Requests:** pedidos de acesso feitos na home. *Approve* cria o convite; a pessoa já pode criar a conta em `/login/`.
+- **Invites:** convites ativos e quem já criou conta. Convide um email direto ou remova um convite sem conta.
+- **Players:** contas, país, status (online, em duelo, offline) e último acesso. *Suspend* desconecta o jogador de todos os aparelhos e bloqueia o login; *Restore* desfaz.
+- **Reports:** denúncias do chat com as últimas 20 mensagens da conversa. Suspenda o autor ou marque como resolvida.
+
+O painel fica no site, e não no Star Hill local, porque usa o mesmo cookie de sessão do jogo (mesma origem).
+
 ## Editor de decks
 
 A composição segue a referência do [editor do MTG Arena](https://magic.wizards.com/en/news/mtg-arena/upcoming-improvements-to-reprints): coleção de cartas à esquerda, filtros no topo, marcadores de cópias e deck na lateral. O STAR HILL usa a identidade visual e as regras do Saint Seiya. A opção **Horizontal** organiza o deck abaixo da coleção, por custo em Cosmo.

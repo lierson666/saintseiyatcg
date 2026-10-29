@@ -1,7 +1,7 @@
 <!doctype html>
 <!-- Home de saintseiyatcg.com (autor, 29/10/2026): Coming Soon com cadastro de novidades no KV oficial (shared/kv.css,
-     shared/kv-sky.js, docs/kv-oficial.md). Os cadastros vão para a planilha Google do autor via Apps Script
-     (tools/coming-soon-apps-script.gs; passo a passo em docs/coming-soon.md). Cole a URL do app da web em SIGNUP_URL. -->
+     shared/kv-sky.js, docs/kv-oficial.md). Os cadastros viram pedidos de acesso ao beta no
+     sanctuary-api (/api/access-requests) e aparecem no painel do sistema (/admin/, aberto pelo Star Hill). -->
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -81,7 +81,6 @@
   <script type="module">
     import {mountKV} from '/shared/kv-sky.js?v=20261029-2';
     // URL do app da web do Apps Script (tools/coming-soon-apps-script.gs). Vazio: o formulário avisa que ainda não abriu.
-    const SIGNUP_URL = '';
     // Endereço limpo na barra: /index.html aparece como /.
     if (location.pathname === '/index.html') history.replaceState(null, '', '/' + location.search + location.hash);
     const kv = mountKV({anchor: 'h1 .kv-cosmo'});
@@ -97,11 +96,11 @@
       if (!name) return say('Tell us your name, Saint.', 'err');
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return say('That email is not valid.', 'err');
       if (!data.get('consent')) return say('Please agree to receive our news.', 'err');
-      if (!SIGNUP_URL) return say('Sign-ups open very soon. Come back shortly.', 'err');
       button.disabled = true; say('Igniting…');
       try {
-        // Apps Script não devolve CORS: o envio é "no-cors" e a resposta não é lida.
-        await fetch(SIGNUP_URL, {method: 'POST', mode: 'no-cors', body: new URLSearchParams({name, email, source: 'saintseiyatcg.com'})});
+        // Pedido de acesso ao beta: cai no painel do sistema (/admin/, Star Hill), onde o autor aprova o convite.
+        const r = await fetch('/api/access-requests', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({name, email, news: true})});
+        if (!r.ok) return say((await r.json().catch(() => ({}))).error || 'Something went wrong. Please try again.', 'err');
         form.reset(); kv.burst(button); say('Your Cosmo has been heard. See you in the Sanctuary.', 'ok');
       } catch { say('Something went wrong. Please try again.', 'err'); }
       finally { button.disabled = false; }

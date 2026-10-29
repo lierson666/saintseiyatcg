@@ -2,8 +2,9 @@
 import json, os, sys, tempfile, threading, unittest, urllib.request
 from urllib.error import HTTPError
 
-os.environ['SANCTUARY_INVITES'] = 'Saint@Example.com,a@example.com,b@example.com,c@example.com,d@example.com,e@example.com'
+os.environ['SANCTUARY_INVITES'] = 'Saint@Example.com,a@example.com,b@example.com,c@example.com,d@example.com,e@example.com,adm@example.com,f@example.com'
 os.environ['SANCTUARY_INSECURE_COOKIE'] = '1'
+os.environ['SANCTUARY_ADMINS'] = 'adm@example.com'
 sys.path.insert(0, os.path.dirname(__file__))
 import server  # noqa: E402
 
@@ -160,6 +161,28 @@ class Api(unittest.TestCase):
         self.assertEqual(self.call('POST', '/api/chat/Shun/report', cookie=e)[0], 201)
         self.call('POST', '/api/blocks', {'username': 'Shun'}, cookie=e)
         self.assertEqual(self.call('POST', '/api/chat/June', {'body': 'hello?'}, cookie=d)[0], 403)
+
+    def test_painel_admin(self):
+        reg = lambda email, user: self.call('POST', '/api/auth/register', {'email': email, 'name': user + ' Name', 'username': user, 'country': 'BR', 'password': 'x' * 12, 'accept_terms': True})[2]
+        admin, player = reg('adm@example.com', 'Athena_Adm'), reg('f@example.com', 'Ikki_Player')
+        self.assertTrue(self.call('GET', '/api/me', cookie=admin)[1]['admin'])
+        self.assertEqual(self.call('GET', '/api/admin/overview', cookie=player)[0], 403)
+        # pedido de acesso pela home vira convite e libera o cadastro
+        self.assertEqual(self.call('POST', '/api/access-requests', {'name': 'Hyoga', 'email': 'Hyoga@example.com', 'news': True})[0], 201)
+        self.assertEqual(self.call('POST', '/api/access-requests', {'name': 'Hyoga', 'email': 'hyoga@example.com'})[0], 201)
+        st, view, _, _ = self.call('GET', '/api/admin/overview', cookie=admin)
+        req = [r for r in view['requests'] if r['email'] == 'hyoga@example.com']
+        self.assertEqual(len(req), 1)
+        self.assertEqual(self.call('POST', f"/api/admin/requests/{req[0]['id']}/approve", cookie=admin)[0], 200)
+        self.assertTrue(reg('hyoga@example.com', 'Cygnus_Hyoga'))
+        # suspensão derruba a sessão e bloqueia o login
+        self.assertEqual(self.call('POST', '/api/admin/users/Ikki_Player/suspend', cookie=admin)[0], 200)
+        self.assertEqual(self.call('GET', '/api/me', cookie=player)[0], 401)
+        st, body, _, _ = self.call('POST', '/api/auth/login', {'email': 'f@example.com', 'password': 'x' * 12})
+        self.assertEqual((st, body['error']), (403, server.SUSPENDED))
+        self.assertEqual(self.call('POST', '/api/admin/users/Ikki_Player/restore', cookie=admin)[0], 200)
+        self.assertEqual(self.call('POST', '/api/auth/login', {'email': 'f@example.com', 'password': 'x' * 12})[0], 200)
+        self.assertEqual(self.call('POST', '/api/admin/users/Athena_Adm/suspend', cookie=admin)[0], 400)
 
 
 if __name__ == '__main__':
