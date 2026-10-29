@@ -8,7 +8,7 @@ import {canonIndex, validateDeck, DECK_SIZE} from '../shared/deck-v3.js';
 const $ = s => document.querySelector(s);
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const FACTIONS = ['Athena', 'Poseidon', 'Hades', 'Ares', 'Artemis', 'Neutral'];
-const DECK_FILES = ['../data/alpha-0.1/decks-proposta-d171.json', '../data/alpha-0.1/decks-preview.json'];
+const DECK_FILES = ['../data/alpha-0.1/decks-proposta-d171.json', '../data/alpha-0.1/decks-preview.json', '../data/alpha-0.1/decks-competitivos.json'];
 const PAGES = {
   visao: ['Visão geral', 'Olympus Arena, sob seu controle.'],
   cartas: ['Cartas · Card Forge', 'Cada carta, uma constelação.'],
@@ -28,7 +28,7 @@ function notice(text) { $('#notice').className = text ? 'notice' : ''; $('#notic
 
 // Mesmas fontes do lobby: D268 + cartas novas do export do Forge.
 async function load() {
-  const [canon, exported, ...files] = await Promise.all([json('../data/canon/d268.json'), json('../card-forge/art-web/cards.json'), ...DECK_FILES.map(json)]);
+  const [canon, exported, ...files] = await Promise.all([json('../data/canon/d268.json'), json('../card-forge/art-web/cards.json'), ...DECK_FILES.map(u => json(u).catch(() => ({decks: []})))]);
   forge = (await json('../data/cards.json')).cartas;
   cards = loadCanon(canon);
   const index = canonIndex(canon);

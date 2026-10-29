@@ -1475,9 +1475,10 @@ async function init() {
     return r.json();
   })));
   const previewDecks = await fetch('../../data/alpha-0.1/decks-preview.json').then(r => (r.ok ? r.json() : {decks: []})).catch(() => ({decks: []}));
+  const compDecks = await fetch('../../data/alpha-0.1/decks-competitivos.json').then(r => (r.ok ? r.json() : {decks: []})).catch(() => ({decks: []}));
   canon = canonData; cards = loadCanon(canon); index = canonIndex(canon);
   addPreviewCards(cards, index, [...FORGE.values()]); // etapa 1: Poseidon, Hades, Ares, Artemis e neutras (shared/preview-cards.js)
-  const presets = [...deckData.decks, ...previewDecks.decks];
+  const presets = [...deckData.decks, ...previewDecks.decks, ...compDecks.decks];
   const [rush, fortress] = deckData.decks, deckOf = id => findDeck(id, presets); // presets D171 e de prévia, ou decks do criador (../deck-store.js)
   const query = new URLSearchParams(location.search);
   decks = {A: deckOf(query.get('deckA')) || rush, B: deckOf(query.get('deckB')) || fortress}; // ?deckA=&deckB= vindos da seleção do menu
