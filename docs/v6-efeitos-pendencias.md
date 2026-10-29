@@ -117,7 +117,7 @@ Implementado em `playtest/engine-v3/v6/athena-gear.js`. Perguntas e aproximaçõ
 
 Implementado em `playtest/engine-v3/gods.js` (testes: `tools/test-engine-v3-gods-v6.mjs`). Sem ganchos nativos de "Devotee destruído", "voltou do Tartarus", "kill em Strike" e "ganho de Latent", os gatilhos nascem no checkpoint (`scanGods` lê o log de eventos); o efeito só entra na cadeia depois da resolução em curso, não no instante do evento. A interface (`playtest/divine/app.js`) ainda não chama `announceGreatEclipse`, `announceObliteration`, `activateBloodlust` nem `placeBaseMoonHarvest`.
 
-- **Valores impressos**: a engine lê o D268 (`god-ares` Awaken 5, `god-hades` Awaken 7, `god-artemis` Awaken 3; Soul pela G3-042). `cards.json` diz Ares `awaken: 7` no campo, mas "BUTCHERY — Awaken 5" no texto. Qual vale?
+- **Valores impressos**: a engine lê o D268 (`god-ares` Awaken 7 desde 29/10/2026, `god-hades` Awaken 7, `god-artemis` Awaken 3; Soul pela G3-042). `cards.json` diz Ares `awaken: 7` no campo, mas "BUTCHERY — Awaken 5" no texto. Qual vale?
 - **D268 vs cards.json**: Hades "defeated" (D268) vs "destroyed" (cards.json); Ares "defeat" vs "destroy"; "ATTACK" vs "Power". Implementado como Devotee destruído ou sacrificado (a engine trata sacrifício como derrota). Sacrifício deve contar?
 - **Hades Offering of Life**: "lose 2 Soul" é efeito (não custo), então pode ser letal. Uma vez por Round vale só se aceitar (recusar não gasta). Vários Devotees destruídos juntos geram um só gatilho. Confirmar.
 - **Hades King of Tartarus**: só "returns" via `putOntoField` (evento `card_played` com `from: 'tartarus'`). Awaken é lido no checkpoint, não no instante do retorno.

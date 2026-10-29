@@ -9,7 +9,7 @@ Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências
 - **Antes:** Technique (Sorcery) resolvia na hora, sem janela (P06); só Moment abria janela. Bloodlust ("Cost: 3 Cosmo") era lido como 3 Latent.
 - **Depois:** toda Spell entra na pilha e abre janela; resolve depois de os dois passarem. Bloodlust paga 3 com Base preparada ou Latent (a engine usa Base primeiro e completa com Latent).
 - **Motivo:** decisões do autor em 29/10/2026; contra-mágicas Moment de Poseidon (133, 136, 154, 156, 159, 167, 171) precisam responder a Spells.
-- **Pendências:** engine ajustada (`play.js`, `gods.js`). Contra-mágicas de Poseidon ainda por implementar. God Ares: autor escolheu Awaken 7, mas o registro canônico D268 (GOD-ARES) diz AWAKEN 5 — aguarda confirmação para alterar o canônico.
+- **Pendências:** engine ajustada (`play.js`, `gods.js`). Contra-mágicas de Poseidon ainda por implementar. God Ares: Awaken 5 → 7 no texto aprovado do registro canônico GOD-ARES (`data/canon/d268.json`; `original_text` intacto), autorizado pelo autor em 29/10/2026.
 
 ## 2026-10-29 — §54 — Event e Miracle jogam como Technique
 

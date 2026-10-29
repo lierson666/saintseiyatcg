@@ -12,7 +12,8 @@ const sha = value => createHash('sha256').update(value).digest('hex');
 const records = [...canon.cards, ...canon.gods];
 
 // Projeção lida do Drive em 28/10/2026 (doc 04). Mudou o arquivo? Revise o diff com o autor antes de atualizar.
-const SNAPSHOT_SHA256 = '4cd05f9821422de5d1dc25544b5b4e52be7ce985ae5771bf0ba70884defd4433';
+// 29/10/2026: GOD-ARES AWAKEN 5 → 7 no texto aprovado (autor; docs/CHANGELOG-regras.md).
+const SNAPSHOT_SHA256 = 'feee523f6f84ce43c713a3b10b53a3df90642f8a17158e12daa1b9f1077f56e0';
 const KAMUI_ORIGINAL_SHA256 = '153ad7e355b3fd87d9dc79ead14f62dfd7d2c03e8c703c56ec9bcee256ca5099';
 
 test('snapshot não foi editado desde a importação', () => {

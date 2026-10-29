@@ -107,10 +107,15 @@ test('Ares Bloodlust paga com Base preparada primeiro e completa com Latent', ()
   assert.deepEqual([A.bases.filter(b => b.prepared).length, A.latent, s.units[unit].prepared], [0, 0, true]);
 });
 
-test('Ares Butchery (Awaken 5): Devotee seu derrota Devotee inimigo em Strike → o God inimigo perde 1 Soul (só com Awaken)', () => {
+test('Ares Awaken 7 (canônico, autor 29/10/2026)', () => {
+  const {s} = setup('god-ares');
+  assert.equal(s.divine.A.awakenAt, 7);
+});
+
+test('Ares Butchery (Awaken 7): Devotee seu derrota Devotee inimigo em Strike → o God inimigo perde 1 Soul (só com Awaken)', () => {
   for (const awake of [true, false]) {
     const {s, ctx, field, foe: mk, soul, B} = setup('god-ares');
-    soul('A', awake ? 5 : 12);
+    soul('A', awake ? 7 : 12);
     const atk = field('A', '001'), foe = mk();
     damageDevotee(s, ctx, foe, hpOf(s, ctx, foe) - 1, false);
     declareStrike(s, ctx, atk, {kind: 'devotee', uid: foe}); passAll(s);
