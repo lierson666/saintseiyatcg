@@ -819,3 +819,6 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .drag-zone--band small { align-self: flex-start; margin: auto 0 5cqh 3cqw; padding: 3px 12px; border-radius: 999px; background: rgba(5, 14, 45, .6); }
 .loadout__card { padding: 0; border: 0; background: none; cursor: zoom-in; border-radius: 10px; transition: transform .15s, box-shadow .15s; }
 .loadout__card:hover { transform: translateY(-4px) scale(1.04); box-shadow: 0 0 0 2px #e8c46a, 0 8px 20px rgba(0, 0, 0, .6); }
+
+/* Golpes por cima das cartas (autor, 28/10/2026): canvas de efeitos acima do tabuleiro, abaixo da carta ampliada. */
+.stage > .fx-canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 40; }

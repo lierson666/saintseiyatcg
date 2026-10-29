@@ -106,6 +106,14 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
   renderer.domElement.className = 'arena-canvas';
   renderer.domElement.setAttribute('aria-hidden', 'true');
   host.prepend(renderer.domElement);
+  // Golpes por cima das cartas (autor, 28/10/2026): os efeitos vão num segundo canvas transparente acima do DOM.
+  const fxRenderer = new THREE.WebGLRenderer({antialias: q.antialias, alpha: true, premultipliedAlpha: true});
+  fxRenderer.setClearColor(0x000000, 0);
+  fxRenderer.setPixelRatio(renderer.getPixelRatio());
+  fxRenderer.domElement.className = 'fx-canvas';
+  fxRenderer.domElement.setAttribute('aria-hidden', 'true');
+  // irmão do tabuleiro (não filho do #arena, que fica atrás do DOM); z-index em olympus.css
+  host.parentElement.insertBefore(fxRenderer.domElement, host.parentElement.querySelector('#overlay-root'));
 
   // ---------- Arena em perspectiva ----------
   const world = new THREE.Scene();
@@ -301,7 +309,7 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
 
   function resize() {
     const w = host.clientWidth || innerWidth, h = host.clientHeight || innerHeight;
-    renderer.setSize(w, h, false);
+    renderer.setSize(w, h, false); fxRenderer.setSize(w, h, false);
     camera.aspect = w / h; camera.updateProjectionMatrix();
     fxCam.left = 0; fxCam.right = w; fxCam.top = 0; fxCam.bottom = h; fxCam.updateProjectionMatrix();
     dustMat.uniforms.uPixel.value = renderer.getPixelRatio() * h * .05;
@@ -323,8 +331,7 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
     stepParticles(dt); stepShapes(dt);
     renderer.clear();
     renderer.render(world, camera);
-    renderer.clearDepth();
-    renderer.render(fxScene, fxCam);
+    fxRenderer.render(fxScene, fxCam);
   }
 
   // Perda de contexto: para o desenho e avisa; a interface DOM continua jogável.
@@ -335,7 +342,7 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
 
   function setQuality(name) {
     q = QUALITY[name] || QUALITY.high;
-    renderer.setPixelRatio(Math.min(q.pixelRatio, window.devicePixelRatio || 1));
+    renderer.setPixelRatio(Math.min(q.pixelRatio, window.devicePixelRatio || 1)); fxRenderer.setPixelRatio(renderer.getPixelRatio());
     buildColumns(q.columns); buildDust(q.ambient);
     rays.forEach(r => { r.visible = q.rays; });
     resize();
@@ -349,7 +356,7 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
     get fps() { return fps; },
     set reduceFlashes(v) { reduceFlashes = v; },
     stats: () => ({fps: Math.round(fps), calls: renderer.info.render.calls, particles: P.n, geometries: renderer.info.memory.geometries, textures: renderer.info.memory.textures}),
-    dispose() { running = false; ro.disconnect(); renderer.dispose(); renderer.domElement.remove(); },
+    dispose() { running = false; ro.disconnect(); renderer.dispose(); renderer.domElement.remove(); fxRenderer.dispose(); fxRenderer.domElement.remove(); },
   };
 }
 

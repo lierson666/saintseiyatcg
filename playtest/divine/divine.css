@@ -17,7 +17,7 @@ kbd { font: 11px/1 ui-monospace, monospace; opacity: .7; border: 1px solid curre
 .arena canvas { display: block; width: 100%; height: 100%; }
 .stage.no-webgl .arena { background: radial-gradient(ellipse at 50% 110%, #d9a54a 0, #3a2a4a 45%, #0b1030 80%); }
 .stage.no-webgl[data-theme="poseidon"] .arena { background: radial-gradient(ellipse at 50% 110%, #0c5a7a 0, #06304a 45%, #02101f 80%); }
-.stage.shaking { animation: shake .32s linear; }
+.stage.shaking { animation: shake var(--shake-t, .32s) linear; }
 @keyframes shake { 20% { transform: translate(calc(var(--shake) * -1), calc(var(--shake) * .5)); } 40% { transform: translate(var(--shake), calc(var(--shake) * -.4)); }
   60% { transform: translate(calc(var(--shake) * -.6), calc(var(--shake) * .3)); } 80% { transform: translate(calc(var(--shake) * .3), 0); } }
 

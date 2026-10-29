@@ -188,6 +188,27 @@ const SFX = {
   }
 };
 
+// Golpe que cresce com o ATK (autor, 28/10/2026): power 0..1 deixa o estrondo mais grave, alto e longo.
+export function strikeSound(power = 0) {
+  if (!ctx || ctx.state !== "running") return;
+  const p = Math.max(0, Math.min(1, power)), t = ctx.currentTime;
+  noise(sfxBus, { at: t, duration: 0.3 + p * 0.9, gain: 0.35 + p * 0.35, type: "lowpass", from: 2600 + p * 2000, to: 140 - p * 80 });
+  tone(sfxBus, { freq: 100 - p * 45, glide: 34 - p * 12, at: t, release: 0.35 + p * 1.1, gain: 0.45 + p * 0.4 });
+  tone(sfxBus, { freq: 1320, type: "square", at: t, release: 0.25, gain: 0.05, filter: 3000 });
+  if (p > 0.45) { // estalo de trovão e tremor longo nos golpes fortes
+    noise(sfxBus, { at: t + 0.02, duration: 0.18, gain: 0.3 * p, from: 6000, to: 1500, q: 0.6 });
+    noise(sfxBus, { at: t + 0.12, duration: 1.2 + p, gain: 0.18 * p, type: "lowpass", from: 260, to: 50 });
+  }
+  if (p > 0.75) [62, 69, 74].forEach((n, i) => tone(sfxBus, { freq: midi(n), type: "sawtooth", at: t + 0.05, attack: 0.04, release: 1.6, gain: 0.04 / (i + 1), filter: 1800 }));
+}
+// Carga do Cosmo antes do golpe: sobe mais e por mais tempo quanto maior o ATK.
+export function chargeSound(power = 0) {
+  if (!ctx || ctx.state !== "running") return;
+  const p = Math.max(0, Math.min(1, power));
+  noise(sfxBus, { duration: 0.2 + p * 0.5, gain: 0.08 + p * 0.14, from: 300, to: 2400 + p * 3000, q: 0.9 });
+  tone(sfxBus, { freq: 180, glide: 520 + p * 900, type: "triangle", attack: 0.05, release: 0.2 + p * 0.5, gain: 0.05 + p * 0.07 });
+}
+
 // Caminhos vêm da biblioteca validada pelo backend local.
 export function playFxFile(path,gain=1){
   unlock();if(!path)return;

@@ -9,14 +9,14 @@ import {declareStrike, strikeTargets} from '../engine-v3/strike.js';
 import {playDevotee, playEquipment, playSpell, activate, reequip, duplicateCharacter} from '../engine-v3/play.js';
 import {atkOf, hpOf, keywordsOf, gearOf, isSaint, isBronze, ABILITIES} from '../engine-v3/effects.js';
 import {STEPS, ABILITY_STEPS} from '../choices-v3.js?v=2';
-import {createScene, THEMES} from './scene.js?v=20261028-4';
+import {createScene, THEMES} from './scene.js?v=20261028-5';
 import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudgment, greatFloodBlock, announceGreatFlood, GREAT_FLOOD_COST} from '../engine-v3/gods.js';
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
-import {createDirector} from './director.js?v=5';
+import {createDirector} from './director.js?v=6';
 import {createAI} from './ai.js?v=2';
 import {findDeck} from '../deck-store.js';
-import {unlock, playMusic} from '../audio.js';
+import {unlock, playMusic} from '../audio.js?v=20261028-strike';
 import {renderLiveCard} from '../../shared/live-card.js?v=20261028-5';
 
 const $ = (s, el = document) => el.querySelector(s), $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -677,7 +677,7 @@ const ui = {
   },
   setSoul(key, soul) { const el = $(`[data-soul="${key}"] b`); if (el) { el.textContent = soul; el.parentElement.classList.remove('hit'); void el.offsetWidth; el.parentElement.classList.add('hit'); } },
   spendOrbs(key, unit, amount) { $$(`[data-bank="${key}"] [data-bank-unit="${unit}"] .orb.ready`).slice(-amount).forEach(o => { o.classList.remove('ready'); o.classList.add('spending'); }); },
-  shake(amp) { if (!amp || settings.reduceMotion) return; stage.style.setProperty('--shake', `${Math.min(10, amp)}px`); stage.classList.remove('shaking'); void stage.offsetWidth; stage.classList.add('shaking'); },
+  shake(amp) { if (!amp || settings.reduceMotion) return; stage.style.setProperty('--shake', `${Math.min(22, amp)}px`); stage.style.setProperty('--shake-t', `${Math.min(.9, .25 + amp * .03)}s`); stage.classList.remove('shaking'); void stage.offsetWidth; stage.classList.add('shaking'); },
   async banner(text, key, ms) {
     if (!ms) return;
     const el = document.createElement('div');

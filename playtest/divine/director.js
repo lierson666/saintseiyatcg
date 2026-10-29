@@ -1,7 +1,8 @@
 // Divine Arena · orquestrador de apresentação. Lê os eventos que a engine já registrou (state.events) e os
 // dramatiza em sequência. Nunca decide resultado: os números exibidos vêm dos próprios eventos.
 // `ui` é o adaptador do DOM (posições e textos); `fx` é a camada WebGL (pode faltar: tudo vira só DOM).
-import {wait} from './scene.js?v=20261028-4';
+import {wait} from './scene.js?v=20261028-5';
+import {strikeSound, chargeSound} from '../audio.js?v=20261028-strike';
 
 // Hierarquia visual dos golpes (COMBAT_CINEMATICS.md): comum < Saint < assinatura < divino.
 // As assinaturas são só visuais e disparam pelo número da carta atacante; não criam regra.
@@ -25,28 +26,35 @@ export function createDirector({ui, getFx, settings}) {
     return hit ? {style: hit[1], color: hit[2]} : {style: 'physical', color: '#ffe0a0'};
   }
 
-  // Golpe do atacante até o alvo; resolve no momento do impacto.
-  async function strikeVfx(from, to, style) {
+  // Força do golpe pelo ATK (autor, 28/10/2026): 0 num ATK 2, 1 num ATK 10. Só apresentação; o dano vem da engine.
+  const powerOf = atk => Math.max(0, Math.min(1, ((atk || 0) - 2) / 8));
+
+  // Golpe do atacante até o alvo; resolve no momento do impacto. `p` (0..1) engrossa tudo.
+  async function strikeVfx(from, to, style, p = 0) {
     const f = fx();
-    if (!f || skipping) return;
-    f.charge(from.x, from.y, {color: style.color, count: style.style === 'physical' ? 30 : 60});
-    await pause(style.style === 'physical' ? 140 : 260);
+    if (skipping) return;
+    chargeSound(p);
+    if (!f) return;
+    f.charge(from.x, from.y, {color: style.color, count: Math.round((style.style === 'physical' ? 30 : 60) * (1 + p * 2))});
+    if (p > .6) f.shake(p * 3); // o chão treme enquanto o Cosmo sobe
+    await pause((style.style === 'physical' ? 140 : 260) + p * 420);
     if (style.style === 'meteor') {
       // Pegasus Ryuseiken: rajada de meteoros com leve dispersão, todos convergindo no alvo.
       const shots = [];
-      for (let i = 0; i < 9; i++) {
-        const jitter = {x: from.x + (Math.random() - .5) * 60, y: from.y + (Math.random() - .5) * 60};
-        shots.push(wait(i * 28).then(() => f.projectile(jitter, to, {color: style.color, duration: .22, size: 12, trail: 2})));
+      const n = 9 + Math.round(p * 16), spread = 60 + p * 90;
+      for (let i = 0; i < n; i++) {
+        const jitter = {x: from.x + (Math.random() - .5) * spread, y: from.y + (Math.random() - .5) * spread};
+        shots.push(wait(i * 28).then(() => f.projectile(jitter, to, {color: style.color, duration: .22, size: 12 * (1 + p * .6), trail: 2 + p * 2})));
       }
       await Promise.all(shots);
     } else if (style.style === 'dragon') {
       // Rozan Shoryuha: espiral ascendente de Cosmo verde que mergulha no alvo.
-      await Promise.all([f.projectile(from, to, {color: style.color, duration: .42, size: 22, trail: 5, arc: 140}),
+      await Promise.all([f.projectile(from, to, {color: style.color, duration: .42, size: 22 * (1 + p), trail: 5 + p * 4, arc: 140}),
         wait(60).then(() => f.projectile(from, to, {color: '#d6ffe9', duration: .42, size: 10, trail: 2, arc: -90}))]);
     } else if (style.style === 'energy') {
-      await f.beam(from, to, {color: style.color, width: 22, duration: .3});
+      await f.beam(from, to, {color: style.color, width: 22 * (1 + p * 1.8), duration: .3 + p * .25});
     } else {
-      await f.projectile(from, to, {color: style.color, duration: .18, size: 14, trail: 2});
+      await f.projectile(from, to, {color: style.color, duration: .18, size: 14 * (1 + p * 1.2), trail: 2 + p * 3});
     }
   }
 
@@ -55,7 +63,8 @@ export function createDirector({ui, getFx, settings}) {
     if (f && !skipping) {
       f.burst(at.x, at.y, {color, count: Math.round(50 * strength), speed: 380 * strength});
       f.shockwave(at.x, at.y, {color, size: 160 * strength});
-      if (strength > 1.2) f.flash(.25);
+      if (strength > 1.2) f.flash(Math.min(.6, .12 + strength * .1));
+      if (strength > 1.8) wait(90).then(() => f.shockwave(at.x, at.y, {color: '#ffffff', size: 260 * strength})); // segunda onda
     }
     shake(strength * 6);
   }
@@ -131,12 +140,13 @@ export function createDirector({ui, getFx, settings}) {
     },
     async strike_resolve(e) {
       const from = ui.center(ui.rect(e.attacker)), targetRect = e.target.kind === 'god' ? ui.godRect(e.target.player) : ui.rect(e.target.uid);
-      const to = ui.center(targetRect), style = styleOf(e.attacker);
-      if (style.name) await ui.callout(style.name, e.player, t(650));
+      const to = ui.center(targetRect), style = styleOf(e.attacker), p = powerOf(e.atk);
+      if (style.name) await ui.callout(style.name, e.player, t(650 + p * 350));
       ui.pulse(e.attacker, 'lunge');
-      await strikeVfx(from, to, style);
-      await pause(40); // hit stop
-      impact(to, {color: style.color, strength: style.name ? 1.4 : 1});
+      await strikeVfx(from, to, style, p);
+      await pause(40 + p * 160); // hit stop: mais longo quanto mais forte
+      if (!skipping) strikeSound(p);
+      impact(to, {color: style.color, strength: (style.name ? 1.4 : 1) * (1 + p * 1.3)});
       // Retaliação: do alvo de volta ao atacante (o God usa o raio divino).
       await pause(140);
       const back = e.target.kind === 'god' ? {style: 'energy', color: '#ffd36e'} : styleOf(e.target.uid);
