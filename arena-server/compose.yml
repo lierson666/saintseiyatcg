@@ -15,8 +15,11 @@ services:
       ARENA_ACCOUNTS: http://sanctuary-api:8080
       ARENA_SECRET: ${ARENA_SECRET:?ARENA_SECRET}
     volumes:
-      - /home/dev/saintseiyatcg:/app:ro
       - /home/dev/arena-server:/app/arena-server:ro
+      - /home/dev/saintseiyatcg/playtest:/app/playtest:ro
+      - /home/dev/saintseiyatcg/shared:/app/shared:ro
+      - /home/dev/saintseiyatcg/data:/app/data:ro
+      - /home/dev/saintseiyatcg/card-forge/art-web:/app/card-forge/art-web:ro
     networks: [casamamaco_default]
 networks:
   casamamaco_default:
