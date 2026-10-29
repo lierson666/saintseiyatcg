@@ -1,6 +1,6 @@
 # Duelo online — plano da etapa 4
 
-Status: **plano aprovado em direção, aguardando execução** (29/10/2026).
+Status: **no ar em 29/10/2026** (arena-server em container `-p arena`; rota `/arena/*` no Caddy; desafio pelo chat). Rede: SSE + POST (não WebSocket).
 Decisões do autor (29/10/2026):
 - o desafio sai do próprio chat;
 - o duelo já nasce completo: o servidor arbitra e esconde a informação oculta, sem versão intermediária.
