@@ -76,6 +76,14 @@ export function createAI(h) {
   // Pergunta da engine para a IA: "you may" = sim; escolha obrigatória = as cartas mais baratas (descarte, Base a devolver).
   function answer(req) {
     if (req.kind === 'optional') return true;
+    // Alvo de carta V6: God inimigo primeiro; senão o Devotee inimigo mais caro; senão o próprio mais caro.
+    if (req.choose === 'target') {
+      const god = req.options.find(o => String(o).startsWith('god:') && o !== `god:${req.player}`);
+      if (god) return god;
+      const real = req.options.filter(o => !String(o).startsWith('god:'));
+      const foes = real.filter(o => !String(o).startsWith(`${req.player}:`));
+      return [...(foes.length ? foes : real.length ? real : req.options)].sort((a, b) => cost(b) - cost(a))[0];
+    }
     const sorted = [...req.options].sort((a, b) => cost(a) - cost(b));
     if (req.choose === 'keep') return [...req.options].sort((a, b) => h.hp(b) - h.hp(a))[0]; // §63: mantém a versão mais inteira
     if (req.choose === 'top') return [...req.options].sort((a, b) => cost(b) - cost(a))[0];

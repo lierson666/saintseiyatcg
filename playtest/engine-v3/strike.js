@@ -2,7 +2,8 @@
 // Declaração → janela de reação (P06 A) → dano simultâneo → verificação de destruição.
 // `ctx`: {cards (loadCanon), objects (uid -> {owner, cardId}), attached}. Estado de unidade em state.units[uid] = {prepared, damage}.
 import {RuleError, NotSpecified, recordStrike, loseSoul, destroyDevotee, assertIdle, openWindow, pushTriggers, emit, hooks} from './core.js';
-import {atkOf, keywordsOf, damageDevotee, preventGod, onDeclare, afterStrike, checkDefeats} from './effects.js';
+import {atkOf, keywordsOf, damageDevotee, preventGod, onDeclare, afterStrike, checkDefeats, gearOf} from './effects.js';
+import {v6Declare} from './v6/hooks.js';
 
 export {atkOf, hpOf, keywordsOf, gearOf} from './effects.js';
 
@@ -52,7 +53,8 @@ export function strikeTargets(state, ctx, attacker) {
 export function declareStrike(state, ctx, attacker, target, triggers = []) {
   const {key, bypass} = checkStrike(state, ctx, attacker, target);
   // Gatilhos "when an enemy Devotee declares a Strike" (Water Prison): montados antes de mudar o estado.
-  const declared = hooks.strikeDeclared.flatMap(fn => fn(state, ctx, attacker, key));
+  const declared = [...hooks.strikeDeclared.flatMap(fn => fn(state, ctx, attacker, key)),
+    ...v6Declare(state, ctx, key, attacker, target)]; // cartas V6: "Whenever … declares a Strike"
   recordStrike(state, attacker); // D22
   state.units[attacker].prepared = false;
   emit(state, 'strike_declared', {player: key, attacker, target, ...(bypass && {bypass})});
@@ -73,13 +75,17 @@ export function resolveStrike(state, ctx, strike) {
   }
   const atk = atkOf(state, ctx, attacker), pierce = keywordsOf(state, ctx, attacker).includes('Pierce'); // lidos antes do dano
   strike.atks = {[attacker]: atk};
+  // Equipment presos antes do dano: gatilhos V6 "equipped Devotee …" valem mesmo se o portador morrer no Strike.
+  strike.gearBefore = Object.fromEntries([attacker, target.uid].filter(Boolean).map(u => [u, gearOf(ctx, u)]));
   emit(state, 'strike_resolve', {player, attacker, target, atk});
   if (target.kind === 'devotee') {
     const back = atkOf(state, ctx, target.uid), before = state.units[target.uid].damage;
     strike.atks[target.uid] = back;
     const excess = damageDevotee(state, ctx, target.uid, atk);
     strike.dealt = (state.units[target.uid]?.damage ?? Infinity) - before; // dano que chegou ao Devotee (Libra Sword)
+    const backBefore = state.units[attacker].damage;
     damageDevotee(state, ctx, attacker, back);
+    strike.dealtBack = (state.units[attacker]?.damage ?? Infinity) - backBefore;
     // P05 A: Pierce leva o dano acima do HP restante do alvo ao Soul do God dele (prevenível como dano de Strike ao God).
     const toGod = pierce && excess > 0 ? preventGod(state, ctx, enemy, excess) : 0;
     if (toGod > 0 && loseSoul(state, {[enemy]: toGod}, 'damage')) return state.victory;
@@ -87,6 +93,7 @@ export function resolveStrike(state, ctx, strike) {
     damageDevotee(state, ctx, attacker, ctx.cards.get(state.gods[enemy]).atk);
     const toGod = preventGod(state, ctx, enemy, atk);
     emit(state, 'god_damage', {player: enemy, incoming: atk, dealt: toGod});
+    strike.godDealt = toGod;
     if (toGod > 0 && loseSoul(state, {[enemy]: toGod}, 'damage')) return state.victory; // D52: encerra na hora
   }
   checkDefeats(state, ctx);

@@ -4,6 +4,7 @@
 import {createCore, draw, RuleError, emit} from './core.js';
 import {validateDeck} from '../../shared/deck-v3.js';
 import {initGods} from './gods.js';
+import {bindContext} from './v6/registry.js';
 
 // Embaralhamento reproduzível (mulberry32 + Fisher–Yates): mesma seed, mesma partida.
 export function seeded(seed) {
@@ -36,7 +37,9 @@ export function createMatch({cards, canonIndex, decks, gods = {A: 'god-athena', 
   state.domains = {A: decks.A.domain_id, B: decks.B.domain_id};
   for (const key of state.order) draw(state, key, OPENING_HAND);
   state.setup = [...state.order]; // ordem do mulligan; vazio = pronto para o 1º turno
-  return {state, objects, attached: {}, random};
+  const attached = {};
+  bindContext(state, {cards, objects, attached}); // sem runDecisions (testes), os gatilhos de turno V6 usam este ctx
+  return {state, objects, attached, random};
 }
 
 // Mulligan único e gratuito: devolve `uids` da mão ao deck, embaralha e compra o mesmo número. [] = manter.

@@ -9,6 +9,7 @@ import {startTurn, endTurn, pass, placeBase, spellCategory, runCheckpoint} from 
 import {declareStrike, strikeTargets} from '../engine-v3/strike.js';
 import {playDevotee, playEquipment, playSpell, activate, reequip, duplicateCharacter} from '../engine-v3/play.js';
 import {atkOf, hpOf, keywordsOf, gearOf, isSaint, isBronze, ABILITIES} from '../engine-v3/effects.js';
+import {v6Spell, entryOf} from '../engine-v3/v6/hooks.js';
 import {STEPS, ABILITY_STEPS} from '../choices-v3.js?v=2';
 import {createScene, THEMES} from './scene.js?v=20261028-5';
 import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudgment, greatFloodBlock, announceGreatFlood, GREAT_FLOOD_COST} from '../engine-v3/gods.js';
@@ -79,10 +80,11 @@ function playableReason(key, uid) {
   if (s.victory || s.setup) return 'The match is not running.';
   if (pending) return 'Answer the pending decision first.';
   if (c.kind === 'Spell') {
-    const cat = spellCategory(Number(num(uid)));
+    const cat = spellCat(uid);
     if (!cat) return 'This Technique or Moment is not playable yet.';
     if (cat.speed === 'instant' ? !(s.window ? s.window.priority === key : s.active === key && !s.chain.length) : !idleFor(key)) return cat.speed === 'instant' ? 'You need priority to cast a Moment.' : 'Techniques are cast on your turn, with no response pending.';
-    return affordable(key, c.cost) ? missingTarget(key, uid) : `Needs ${c.cost.amount} ${c.cost.unit === 'base' ? 'prepared Base' : 'Latent'} Cosmo.`;
+    const cost = cat.v6 && s.window ? {amount: c.cost.amount, unit: 'latent'} : c.cost; // Technique V6 como resposta: só Latent
+    return affordable(key, cost) ? missingTarget(key, uid) : `Needs ${cost.amount} ${cost.unit === 'base' ? 'prepared Base' : 'Latent'} Cosmo.`;
   }
   if (!idleFor(key)) return s.active !== key ? "It's not your turn." : 'Wait for the response window to close.';
   if (c.kind === 'Equipment' && (c.global || c.armor) && affordable(key, c.cost)) return null; // Armor sem portador (§XII)
@@ -111,7 +113,13 @@ function placeAsBase(key, uid) {
   warn('Cosmo Base placed. It is ready to pay costs now.');
 }
 // Há resposta possível? (Auto-pass só passa quando não há nenhum Moment jogável na mão.)
-const hasResponse = key => S().players[key].hand.some(u => info(u).kind === 'Spell' && spellCategory(Number(num(u)))?.speed === 'instant' && !playableReason(key, u));
+// Categoria da Spell: V6 pelo subtipo impresso (Technique = ação ou resposta; Moment = ação, guia §XII); D268 pela D194.
+const spellCat = uid => {
+  const v6 = ctx.objects[uid] && v6Spell(ctx, uid);
+  if (v6) return {category: v6.category, speed: v6.category === 'Technique' ? 'instant' : 'sorcery', v6: true};
+  return spellCategory(Number(num(uid)));
+};
+const hasResponse = key => S().players[key].hand.some(u => info(u).kind === 'Spell' && spellCat(u)?.speed === 'instant' && !playableReason(key, u));
 
 // ---------- Execução de ações ----------
 
@@ -340,7 +348,7 @@ function chainLabel(c) {
 function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
   if (hidden) return `<div class="dcard dcard--back ${size}" data-uid="${uid}" aria-label="Face-down card"><span></span></div>`;
   const s = S(), c = info(uid), n = num(uid), unit = s.units[uid];
-  const cat = c.kind === 'Spell' ? spellCategory(Number(n)) : null;
+  const cat = c.kind === 'Spell' && ctx.objects[uid] ? spellCat(uid) : null;
   const subtype = cat ? cat.category : (c.type.split(' — ')[1] || c.kind);
   const forge = FORGE.get(ctx.objects[uid].cardId);
   const atk = field ? atkOf(s, ctx, uid) : c.atk, hp = field ? hpOf(s, ctx, uid) : c.hp;
@@ -809,7 +817,12 @@ function fieldMenu(uid, el) {
     if (strikeTargets(s, ctx, uid).length) items.push(['Strike', () => startStrike(uid)]);
     const ab = ABILITIES[num(uid)];
     if (ab && s.units[uid]?.prepared) items.push([`${ab.name} ({T}, ${ab.cost} Base)`, () => begin('activate', key, uid, ABILITY_STEPS[num(uid)] || [], choice => ({type: 'activate', key, uid, choice}))]);
-  } else if (c.kind === 'Equipment' && !c.global && !ctx.attached[uid]) items.push(['Re-equip', () => begin('reequip', key, uid, [{key: 'bearer', pick: 'devotee', label: 'Re-equip to which Devotee?'}], choice => ({type: 'reequip', key, uid, choice}))]);
+  }
+  const v6a = entryOf(ctx, uid)?.activate; // habilidade ativada V6 (Devotee ou Equipment)
+  if (v6a && (v6a.tap === false || s.units[uid]?.prepared) && !(v6a.once && s.roundUses.has(`ability:${uid}`))) {
+    items.push([`${v6a.name}${v6a.tap === false ? '' : ' ({T}'}${v6a.cost ? `${v6a.tap === false ? ' (' : ', '}${v6a.cost} Base)` : v6a.tap === false ? '' : ')'}`, () => act({type: 'activate', key, uid, choice: {}})]);
+  }
+  if (c.kind === 'Equipment' && !c.global && !ctx.attached[uid]) items.push(['Re-equip', () => begin('reequip', key, uid, [{key: 'bearer', pick: 'devotee', label: 'Re-equip to which Devotee?'}], choice => ({type: 'reequip', key, uid, choice}))]);
   if (!items.length) return warn(s.units[uid]?.prepared === false ? 'Unprepared: it readies at the start of your turn.' : 'No action available for this card.');
   quickMenu(el, items);
 }
@@ -1276,13 +1289,15 @@ function decisionText(req) {
     if (req.choose === 'discard') return {who, title, kicker: 'Mandatory choice', body: `Discard half of your hand, rounded up: choose ${req.count} card${req.count > 1 ? 's' : ''}. Each discarded card mills 3.`};
     if (req.choose === 'keep') return {who, title: 'ONE PER CHARACTER', kicker: 'Mandatory choice', body: `You control two versions of ${info(req.options[0]).name.split(",")[0]}. Choose the one to keep; the other goes to the Tartarus (it is not destroyed).`};
     if (req.choose === 'top') return {who, title, kicker: 'Mandatory choice', body: 'Choose the card to keep on top of your deck. The other goes to the bottom.'};
-    return {who, title, kicker: 'Mandatory choice', body: `Choose ${req.count}.`};
+    return {who, title, kicker: 'Mandatory choice', body: req.text || `Choose ${req.count}.`};
   }
   const parts = [req.source && n(req.source) ? `Source: ${n(req.source)}.` : '', req.uid && n(req.uid) ? `Affects: ${n(req.uid)}.` : '',
     req.amount ? `${req.amount} damage incoming.` : '', req.cost ? `Cost: ${typeof req.cost === 'string' ? req.cost : `${req.cost.latent} Latent`}.` : ''].filter(Boolean);
-  return {who, title: req.ability, kicker: 'Optional ability', body: `${parts.join(' ')} Use it?`.trim(), yes: 'Use', no: 'Decline'};
+  return {who, title: req.ability, kicker: 'Optional ability', body: req.text || `${parts.join(' ')} Use it?`.trim(), yes: 'Use', no: 'Decline'};
 }
 
+// Opção de decisão: uid de carta ou God ('god:A', alvo de dano das cartas V6).
+const optName = uid => (String(uid).startsWith('god:') ? `${cards.get(S().gods[uid.slice(4)]).name} (Player ${uid.slice(4)})` : info(uid).name);
 function decisionModal() {
   const req = pending.pending, t = decisionText(req);
   if (pending.peek) return `<button class="decision-pill" data-dec="peek" data-focus="peek">Back to decision · ${esc(t.title)} <kbd>Esc</kbd></button>`;
@@ -1292,7 +1307,7 @@ function decisionModal() {
     body = `<div class="decision__actions"><button class="primary-action" data-dec="yes" data-focus="yes">${esc(t.yes)}</button><button class="ghost" data-dec="no" data-focus="no">${esc(t.no)}</button></div>`;
   } else {
     const picked = pending.picked;
-    const opts = req.options.map((uid, i) => `<button class="decision__opt ${picked.includes(uid) ? 'picked' : ''}" data-dec="opt" data-opt="${esc(uid)}" data-focus="opt:${esc(uid)}" aria-pressed="${picked.includes(uid)}" aria-label="${esc(info(uid).name)}${i < 9 ? `, key ${i + 1}` : ''}">${cardFace(uid).replace('tabindex="0"', 'tabindex="-1"')}${i < 9 ? `<kbd>${i + 1}</kbd>` : ''}</button>`).join('');
+    const opts = req.options.map((uid, i) => `<button class="decision__opt ${picked.includes(uid) ? 'picked' : ''}" data-dec="opt" data-opt="${esc(uid)}" data-focus="opt:${esc(uid)}" aria-pressed="${picked.includes(uid)}" aria-label="${esc(optName(uid))}${i < 9 ? `, key ${i + 1}` : ''}">${String(uid).startsWith('god:') ? `<span class="dcard decision__god">${esc(optName(uid))}</span>` : cardFace(uid).replace('tabindex="0"', 'tabindex="-1"')}${i < 9 ? `<kbd>${i + 1}</kbd>` : ''}</button>`).join('');
     body = `<div class="decision__opts" role="group" aria-label="Options">${opts}</div>
       <div class="decision__actions"><button class="primary-action" data-dec="confirm" data-focus="confirm" ${picked.length === req.count ? '' : 'disabled'}>Confirm · ${picked.length}/${req.count}</button></div>`;
   }

@@ -7,6 +7,7 @@
 // (opções revalidadas no replay).
 import {emit, RuleError} from './core.js';
 import {timeoutAutoChoice} from './clock.js';
+import {bindContext} from './v6/registry.js';
 
 export class PendingDecision extends Error {
   constructor(request) { super(`decisão pendente: ${request.ability}`); this.request = request; }
@@ -30,9 +31,9 @@ export function restore(state, ctx, snap) { assignInPlace(state, snap.state); as
 
 // Pergunta da engine → pedido para a interface. `kind`: 'optional' (sim/não) ou 'choice' (obrigatória, entre `options`).
 export function describe(player, q) {
-  if (q.options) return {player, kind: 'choice', ability: q.ability, choose: q.choose, decision: q.decision, for: q.for, options: [...q.options], count: q.count || 1, multiple: !!q.count};
+  if (q.options) return {player, kind: 'choice', ability: q.ability, choose: q.choose, decision: q.decision, for: q.for, options: [...q.options], count: q.count || 1, multiple: !!q.count, text: q.text ?? null};
   if (q.cards) return {player, kind: 'choice', ability: q.ability, choose: 'top', options: [...q.cards], count: 1, multiple: false};
-  return {player, kind: 'optional', ability: q.ability, uid: q.uid ?? null, source: q.source ?? null, amount: q.amount ?? null, cost: q.cost ?? null, god: q.god ?? null};
+  return {player, kind: 'optional', ability: q.ability, uid: q.uid ?? null, source: q.source ?? null, amount: q.amount ?? null, cost: q.cost ?? null, god: q.god ?? null, text: q.text ?? null};
 }
 
 // Resposta: {value} ou {timeout: true}. Fora das opções legais é erro (a interface não escolhe pelo jogador).
@@ -55,6 +56,7 @@ function answer(state, req, a) {
 // e roda de novo com a resposta nova. Sem pergunta pendente → {done: true}.
 export function runDecisions(state, ctx, fn, answers = [], snap = snapshot(state, ctx)) {
   const previous = ctx.decide;
+  bindContext(state, ctx); // gatilhos de turno V6 perguntam pelo mesmo ctx (v6/hooks.js)
   let asked = 0;
   ctx.decide = (player, q) => {
     const req = describe(player, q);

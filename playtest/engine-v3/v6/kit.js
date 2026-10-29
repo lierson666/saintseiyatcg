@@ -1,0 +1,200 @@
+// Kit das cartas V6: ações comuns de texto de carta sobre a engine 3.0. Toda escolha é uma pergunta da engine
+// (`ctx.decide`), respondida no modal de decisão da arena, pela IA ou pelo jogador remoto. Sem `decide`, recusa.
+import {RuleError, destroyDevotee, draw, emit, gainLatent, loseSoul, mill, prepareUnit, useOncePerRound, addEffect} from '../core.js';
+import {card, controllerOf, modify, damageDevotee, checkDefeats, atkOf, hpOf, keywordsOf} from '../effects.js';
+import {gainSoul} from '../gods.js';
+import {collect} from './registry.js';
+
+export {card, controllerOf, modify, damageDevotee, checkDefeats, atkOf, hpOf, keywordsOf, gainSoul, loseSoul, draw, mill, gainLatent, emit, RuleError, addEffect};
+export const other = (s, key) => s.order.find(k => k !== key);
+export const id = (c, uid) => c.objects[uid]?.cardId;
+export const isDevotee = (c, uid) => card(c, uid)?.kind === 'Devotee';
+// Subtipo na linha de tipo ("Devotee — Specter"): Specter, Skeleton, Berserker, Marina, Hunter…
+export const hasType = (c, uid, type) => new RegExp(`\\b${type}`, 'i').test(card(c, uid)?.type || '');
+export const devotees = (s, c, key) => s.players[key].battlefield.filter(u => isDevotee(c, u));
+export const enemies = (s, c, key) => devotees(s, c, other(s, key));
+export const allDevotees = (s, c) => s.order.flatMap(k => devotees(s, c, k));
+export const onField = (s, key, uid) => !!uid && controllerOf(s, uid) === key;
+export const costOf = (c, uid) => card(c, uid)?.cost?.amount ?? 0;
+export const bearerOf = (c, gear) => c.attached[gear] || null;
+export const gearOf = (c, uid) => Object.keys(c.attached).filter(e => c.attached[e] === uid);
+// "Once each round" de uma fonte: marca na hora em que o gatilho é gerado (o segundo evento do Round não gera).
+export const once = (s, tag) => (s.roundUses.has(tag) ? false : (useOncePerRound(s, tag), true));
+export const onceTurn = (s, tag) => once(s, `${tag}:turn${s.turn}`);
+
+// ---------- perguntas ----------
+// "You may …": sim/não. `cost` aparece no modal (ex.: '1 Soul').
+export const may = (c, key, ability, extra = {}) => Boolean(c.decide?.(key, {ability, ...extra}));
+// Escolha de alvo entre `options` (uids). Sem opção: null. `optional`: inclui recusar (null). `text`: frase do modal.
+export function choose(c, key, ability, options, {optional = false, text} = {}) {
+  const list = [...new Set(options.filter(Boolean))];
+  if (!list.length) return null;
+  if (optional && !may(c, key, ability, {text: text || 'Use this ability?'})) return null;
+  return c.decide?.(key, {ability, options: list, choose: 'target', text}) ?? null;
+}
+// Até `count` alvos diferentes (escolhe um por vez; para quando acabar ou o jogador recusar).
+export function chooseUpTo(c, key, ability, options, count, {text} = {}) {
+  const picked = [];
+  for (let i = 0; i < count; i++) {
+    const rest = options.filter(o => !picked.includes(o));
+    const pick = choose(c, key, ability, rest, {optional: i > 0 || count > 1, text});
+    if (!pick) break;
+    picked.push(pick);
+  }
+  return picked;
+}
+// Alvo entre Devotees e Gods: devolve uid ou 'god:A'/'god:B'.
+export const godTarget = player => `god:${player}`;
+export const isGod = t => typeof t === 'string' && t.startsWith('god:');
+
+// ---------- efeitos ----------
+// Dano que não é de Strike (passa pela Armor; prevenções "Strike damage" não valem). Checa derrotas depois.
+export function damage(s, c, target, amount) {
+  if (!target || amount <= 0) return;
+  if (isGod(target)) return loseSoul(s, {[target.slice(4)]: amount}, 'damage');
+  if (!controllerOf(s, target)) return;
+  damageDevotee(s, c, target, amount, false);
+  checkDefeats(s, c);
+}
+export const loseSoulOf = (s, key, n) => loseSoul(s, {[key]: n}, 'loss');
+// "Pay N Soul": custo. Não paga se não tiver Soul suficiente (devolve false).
+export function paySoul(s, key, n) {
+  if (s.players[key].soul < n) return false;
+  loseSoul(s, {[key]: n}, 'payment');
+  return true;
+}
+export function payLatent(s, key, n) {
+  const p = s.players[key];
+  if (p.latent < n) return false;
+  p.latent -= n;
+  emit(s, 'cosmo_spent', {player: key, unit: 'latent', amount: n});
+  return true;
+}
+export function defeat(s, c, uid, event = 'destroyed') {
+  if (!controllerOf(s, uid)) return;
+  const owner = c.objects[uid].owner;
+  destroyDevotee(s, uid, c.objects, c.attached, event);
+  emit(s, 'v6_defeat', {uid, owner});
+  defeatedHooks(s, c, owner, uid);
+}
+// "Sacrifice": o controlador derrota o próprio Devotee (conta como derrotado para os gatilhos).
+export const sacrifice = (s, c, uid) => defeat(s, c, uid, 'sacrificed');
+// Gatilhos de derrota fora de checkDefeats (derrota direta por efeito).
+let defeatedHooks = () => {};
+export const setDefeatedHooks = fn => { defeatedHooks = fn; };
+
+export function exhaust(s, uid) { if (s.units[uid]) { s.units[uid].prepared = false; emit(s, 'exhausted', {uid}); } }
+export const prepare = (s, uid) => { if (s.units[uid]) prepareUnit(s, uid); };
+export function removeDamage(s, uid, n = Infinity) { if (s.units[uid]) s.units[uid].damage = Math.max(0, s.units[uid].damage - n); }
+// Marcadores +1/+1 (e -1/-1): ficam no objeto enquanto ele estiver em campo; somados em mods() (effects.js).
+export function addCounter(s, uid, n = 1) {
+  if (!s.units[uid]) return;
+  s.units[uid].counters = (s.units[uid].counters || 0) + n;
+  emit(s, 'counter', {uid, amount: n});
+}
+// Marcadores com nome (Rebirth, etc.): só contagem, sem bônus.
+export function addMarker(s, uid, name, n = 1) {
+  if (!s.units[uid]) return;
+  const m = (s.units[uid].markers ||= {});
+  m[name] = Math.max(0, (m[name] || 0) + n);
+}
+export const markers = (s, uid, name) => s.units[uid]?.markers?.[name] || 0;
+export const buff = (s, uid, atk, hp, duration = 'this_round', keywords = []) => { if (s.units[uid]) modify(s, uid, {atk, hp, keywords}, duration); };
+
+// Zonas. `from` 'tartarus' | 'hand' | 'deck' | 'battlefield'.
+function take(s, c, uid, from) {
+  const p = s.players[c.objects[uid].owner];
+  if (from === 'battlefield') {
+    for (const pl of Object.values(s.players)) pl.battlefield = pl.battlefield.filter(x => x !== uid);
+    delete s.units[uid];
+    s.effects = s.effects.filter(e => e.target !== uid);
+    for (const g of gearOf(c, uid)) delete c.attached[g];
+    delete c.attached[uid];
+    return true;
+  }
+  if (!p[from].includes(uid)) return false;
+  p[from].splice(p[from].indexOf(uid), 1);
+  return true;
+}
+export function toHand(s, c, uid, from = 'tartarus') {
+  if (from === 'battlefield' && !controllerOf(s, uid)) return false;
+  if (!take(s, c, uid, from)) return false;
+  s.players[c.objects[uid].owner].hand.push(uid);
+  emit(s, 'returned_to_hand', {player: c.objects[uid].owner, uid});
+  return true;
+}
+export function toTartarus(s, c, uid, from = 'hand') {
+  if (from === 'battlefield' && !controllerOf(s, uid)) return false;
+  if (!take(s, c, uid, from)) return false;
+  s.players[c.objects[uid].owner].tartarus.push(uid);
+  return true;
+}
+export function exile(s, c, uid, from = 'battlefield') {
+  if (from === 'battlefield' && !controllerOf(s, uid)) return false;
+  if (!take(s, c, uid, from)) return false;
+  s.players[c.objects[uid].owner].void.push(uid);
+  emit(s, 'exiled', {uid});
+  return true;
+}
+// Põe um Devotee no campo sem pagar (retorno do Tartarus, busca no deck). Guia §62: volta Prepared, sem dano,
+// salvo texto ("exhausted"/"Unprepared" → prepared false). Limite de 1 retorno do Tartarus por carta física/rodada.
+export function putOntoField(s, c, key, uid, from, {prepared = true} = {}) {
+  if (from === 'tartarus') {
+    const tag = `return:${uid}`;
+    if (s.roundUses.has(tag)) return false;
+    useOncePerRound(s, tag);
+  }
+  if (!take(s, c, uid, from)) return false;
+  s.players[key].battlefield.push(uid);
+  s.units[uid] = {prepared, damage: 0, entered: s.turn};
+  emit(s, 'card_played', {player: key, uid, kind: 'Devotee', from});
+  enteredHooks(s, c, key, uid);
+  return true;
+}
+let enteredHooks = () => {};
+export const setEnteredHooks = fn => { enteredHooks = fn; };
+
+// Descarte escolhido pelo próprio jogador; dispara observadores de descarte.
+export function discard(s, c, key, n = 1, ability = 'Discard') {
+  const out = [];
+  for (let i = 0; i < n && s.players[key].hand.length; i++) {
+    const uid = s.players[key].hand.length === 1 ? s.players[key].hand[0] : c.decide?.(key, {ability, options: [...s.players[key].hand], choose: 'discard-one', text: 'Choose a card to discard.'});
+    if (!uid || !toTartarus(s, c, uid, 'hand')) break;
+    emit(s, 'discarded', {player: key, uid});
+    out.push(uid);
+  }
+  if (out.length) watchers(s, c, 'watchDiscard', [key, out[0]], 'Discard');
+  return out;
+}
+export function discardRandom(s, c, key, n = 1, random = Math.random) {
+  const out = [];
+  for (let i = 0; i < n && s.players[key].hand.length; i++) {
+    const uid = s.players[key].hand[Math.floor(random() * s.players[key].hand.length)];
+    toTartarus(s, c, uid, 'hand');
+    emit(s, 'discarded', {player: key, uid});
+    out.push(uid);
+  }
+  if (out.length) watchers(s, c, 'watchDiscard', [key, out[0]], 'Discard');
+  return out;
+}
+// Busca no deck: escolhe uma carta que satisfaz `filter`, revela, põe na mão e embaralha (sem embaralhador: mantém).
+export function search(s, c, key, ability, filter) {
+  const options = s.players[key].deck.filter(u => filter(card(c, u), u));
+  const pick = options.length ? c.decide?.(key, {ability, options, choose: 'search', text: 'Choose a card to put into your hand.'}) : null;
+  if (pick && take(s, c, pick, 'deck')) { s.players[key].hand.push(pick); emit(s, 'revealed', {player: key, uid: pick}); }
+  return pick || null;
+}
+// Carta do topo do deck para a reserva de Cosmo (Base) — "put … into your Cosmo Bank face down as an unprepared Cosmo Base".
+export function topToBase(s, key, prepared = false) {
+  const uid = s.players[key].deck.shift();
+  if (!uid) return null;
+  s.players[key].bases.push({uid, prepared});
+  emit(s, 'base_added', {player: key, prepared});
+  return uid;
+}
+
+// Observadores (Domains e cartas em campo) — gatilhos na cadeia.
+import {pushTriggers} from '../core.js';
+export function watchers(s, c, hook, args, label) {
+  pushTriggers(s, collect(s, c, s.order, hook, args, label));
+}

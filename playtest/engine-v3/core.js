@@ -32,7 +32,8 @@ export function emit(state, type, data = {}) {
 // Ganchos dos Gods (gods.js), sem import circular. `checkpoint`: entre resoluções completas da cadeia e nas
 // passagens de turno (G3-003); `roundEnd`: gatilhos extras do checkpoint de fim de Round (D204), ex.: Divine Judgment;
 // `strikeDeclared(state, ctx, attacker, controller)` e `sealed(state, ctx, transitions)` devolvem gatilhos (ex.: Poseidon).
-export const hooks = {checkpoint: [], roundEnd: [], strikeDeclared: [], sealed: []};
+// `turnStart`/`turnEnd(state)`: gatilhos de início/fim do turno do ativo (cartas V6, v6/hooks.js).
+export const hooks = {checkpoint: [], roundEnd: [], strikeDeclared: [], sealed: [], turnStart: [], turnEnd: []};
 export function runCheckpoint(state) { if (!state.victory) for (const fn of hooks.checkpoint) fn(state); }
 
 // Visibilidade (G3-019): o adversário não vê qual carta foi comprada nem qual voltou no mulligan.
@@ -64,6 +65,7 @@ export function startTurn(state, startOfTurn = []) {
     else prepareUnit(state, uid);
   }
   emit(state, 'turn_start', {player: key});
+  startOfTurn = [...startOfTurn, ...hooks.turnStart.flatMap(fn => fn(state))];
   const drawStep = () => { if (p.ownTurns > 1) draw(state, key, DRAWS_PER_TURN); runCheckpoint(state); };
   if (startOfTurn.length) pushTriggers(state, startOfTurn, drawStep);
   else drawStep();
@@ -316,7 +318,7 @@ export function endTurn(state, {endOfTurn = [], endOfRound = []} = {}) {
   emit(state, 'end_phase', {player: key});
   gainLatent(state, key, state.players[key].bases.filter(b => b.prepared).length);
   openWindow(state, () => roundCheckpoint(state, endOfRound));
-  pushTriggers(state, endOfTurn);
+  pushTriggers(state, [...endOfTurn, ...hooks.turnEnd.flatMap(fn => fn(state))]);
 }
 
 // D204: gatilhos de fim de Round depois dos de fim de turno e antes do Cleanup.

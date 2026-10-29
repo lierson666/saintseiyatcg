@@ -4,6 +4,7 @@
 // `ctx`: {cards (loadCanon), objects (uid -> {owner, cardId}), attached (uid do Equipment -> uid do portador)}.
 import {RuleError, NotSpecified, assertIdle, spendBase, spellCategory, respond, emit} from './core.js';
 import {SPELLS, ABILITIES, onEnter, onCastEquipment, checkDefeats, namedCharacter, enforceUniqueness} from './effects.js';
+import {v6Spell, entryOf} from './v6/hooks.js';
 
 // Custo impresso: Base (D4) ou Latent. Valida tudo antes de mexer no estado.
 export function payCost(state, key, cost) {
@@ -75,14 +76,16 @@ export function activate(state, ctx, key, uid, choice = {}) {
   if (state.victory) throw new RuleError('D52', 'a partida já terminou');
   if (key !== state.active) throw new RuleError('D1', 'só o jogador ativo age, no próprio turno');
   assertIdle(state); // D173: Sorcery
-  const ability = ABILITIES[ctx.objects[uid]?.cardId.slice(-3)];
+  const v6 = entryOf(ctx, uid)?.activate;
+  const ability = v6 ? {...v6, check: (s, c, k, ch) => v6.check?.(s, c, k, uid, ch), run: (s, c, k, ch) => v6.run(s, c, k, uid, ch)}
+    : ABILITIES[ctx.objects[uid]?.cardId.slice(-3)];
   if (!ability || !state.players[key].battlefield.includes(uid)) throw new RuleError('{T}', 'sem habilidade ativada implementada');
-  if (state.units[uid]?.prepared !== true) throw new RuleError('D192', 'o Devotee precisa estar Prepared para {T}');
+  if (ability.tap !== false && state.units[uid]?.prepared !== true) throw new RuleError('D192', 'o Devotee precisa estar Prepared para {T}');
   if (ability.once && state.roundUses.has(`ability:${uid}`)) throw new RuleError('D191', `${ability.name} já foi usada neste Round`);
   ability.check(state, ctx, key, choice);
-  spendBase(state, key, ability.cost); // {N}{C}: Base preparada (autor, 28/10/2026)
+  spendBase(state, key, ability.cost || 0); // {N}{C}: Base preparada (autor, 28/10/2026)
   if (ability.once) state.roundUses.add(`ability:${uid}`);
-  state.units[uid].prepared = false;
+  if (ability.tap !== false) state.units[uid].prepared = false;
   emit(state, 'ability', {player: key, uid, name: ability.name, target: choice.target});
   ability.run(state, ctx, key, choice);
   checkDefeats(state, ctx);
@@ -122,6 +125,7 @@ function equipCost(state, ctx, key, card, bearer) {
 // `choice`: escolhas da carta ({target, targets, mode, prepare}); o efeito vem de SPELLS (effects.js).
 // Uma função no lugar de `choice` substitui o efeito (testes de procedimento).
 export function playSpell(state, ctx, key, uid, choice = {}) {
+  if (typeof choice !== 'function' && v6Spell(ctx, uid)) return playSpellV6(state, ctx, key, uid, choice);
   const number = Number(ctx.objects[uid]?.cardId.slice(-3)), category = spellCategory(number);
   if (!category) throw new NotSpecified(`categoria de Spell da carta ${number} (D194 cobre 18 cartas)`);
   const spell = SPELLS[ctx.objects[uid].cardId.slice(-3)];
@@ -149,4 +153,39 @@ export function playSpell(state, ctx, key, uid, choice = {}) {
   emit(state, 'card_played', {player: key, uid, kind: 'Spell', category: category.category});
   // `target` só informa a interface (seta do alvo); a resolução usa `choice`.
   respond(state, key, {speed: 'instant', uid, run: finish, target: typeof choice === 'object' ? choice.target ?? null : null}); // Moment jogado abre ou continua a janela
+}
+
+// Spell V6 (guia §XII, cap. 54): Moment exige AÇÃO (própria vez, cadeia vazia) e paga o custo impresso em Base;
+// Technique joga como AÇÃO (Base) ou como resposta numa janela em que tem prioridade, pagando só Latent.
+// Alvos e escolhas são perguntas na resolução (v6/kit.js). `choice` é repassado a spell.check/run.
+function playSpellV6(state, ctx, key, uid, choice) {
+  const {entry, category} = v6Spell(ctx, uid);
+  const p = state.players[key];
+  const finish = st => {
+    emit(st, 'spell_resolved', {player: key, uid});
+    entry.spell.run(st, ctx, key, uid, choice);
+    st.players[key].stack.splice(st.players[key].stack.indexOf(uid), 1);
+    st.players[ctx.objects[uid].owner].tartarus.push(uid);
+    checkDefeats(st, ctx);
+  };
+  const response = category === 'Technique' && state.window;
+  if (!response) {
+    const card = sorceryFromHand(state, ctx, key, uid, 'Spell');
+    entry.spell.check?.(state, ctx, key, choice);
+    payCost(state, key, card.cost);
+    leaveHand(state, key, uid);
+    p.stack.push(uid);
+    emit(state, 'card_played', {player: key, uid, kind: 'Spell', category});
+    finish(state);
+    return;
+  }
+  if (state.victory) throw new RuleError('D52', 'a partida já terminou');
+  const card = fromHand(state, ctx, key, uid, 'Spell');
+  if (state.window.priority !== key) throw new RuleError('P06', `${key} não tem prioridade`);
+  entry.spell.check?.(state, ctx, key, choice);
+  payCost(state, key, {amount: card.cost.amount, unit: 'latent'}); // resposta: só Latent (guia §XII)
+  leaveHand(state, key, uid);
+  p.stack.push(uid);
+  emit(state, 'card_played', {player: key, uid, kind: 'Spell', category});
+  respond(state, key, {speed: 'instant', uid, run: finish, target: null});
 }

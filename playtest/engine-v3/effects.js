@@ -8,6 +8,7 @@
 // equipado no Devotee nomeado; dano que não é de Strike também passa pela Armor (prevenções "Strike damage" não valem);
 // dano redirecionado pela Resonance da 004 é dano de Strike em Shiryu.
 import {CHARACTER_IDENTITY, characterOf} from '../../shared/character-identity.js';
+import {v6Mods, v6Entered, v6Cast, v6Defeated, v6AfterStrike} from './v6/hooks.js';
 import {RuleError, useOncePerRound, addEffect, destroyDevotee, draw, spendBase, pushTriggers, emit, gainLatent, prepareUnit, loseSoul} from './core.js';
 
 export const card = (ctx, uid) => ctx.cards.get(ctx.objects[uid].cardId);
@@ -55,6 +56,7 @@ function mods(state, ctx, uid) {
     if (n === '001' && wears(ctx, uid, '019') && behind(state, key)) list.push({atk: 2, hp: 2}); // 019 Resonance
     // G3-039: cada Training counter é +1/+1 por si (acumula). Master's Guidance soma +1/+1 por Eagle Marin.
     if (state.units[uid]?.training) list.push({atk: state.units[uid].training, hp: state.units[uid].training});
+    list.push(...v6Mods(state, ctx, key, uid)); // cartas V6: "While …", marcadores +1/+1 e auras (v6/hooks.js)
     if (state.units[uid]?.training && isBronze(ctx, uid)) {
       for (const m of devotees(state, ctx, key).filter(u => id(ctx, u) === '021')) list.push({atk: 1, hp: 1, source: m});
     }
@@ -245,31 +247,10 @@ export function checkDefeats(state, ctx) {
       const berserker = /Berserker/.test(card(ctx, uid).type), gear = Object.keys(ctx.attached).filter(e => ctx.attached[e] === uid);
       destroyDevotee(state, uid, ctx.objects, ctx.attached);
       if (berserker) harvestOfTheFallen(state, key);
-      soulReturns(state, ctx, key, uid, gear);
+      v6Defeated(state, ctx, key, uid, gear);
     }
   }
   enforceUniqueness(state, ctx);
-}
-// Hades V6, "When … is defeated, you may pay N Soul. If you do, return … to [its owner's] hand" (texto do autor, 28/10/2026).
-// Devotee: volta do Tartarus. Equipment: volta de onde estiver (Tartarus, se Armor; campo sem portador, se não).
-const RETURN_ON_DEFEAT = {
-  'hades-v6-212': {soul: 2, ability: 'ETERNAL DEFENDER'},
-  'hades-v6-218': {soul: 1, ability: 'RISE AGAIN'},
-};
-const GEAR_RETURN_ON_DEFEAT = {'hades-v6-225': {soul: 1, ability: 'BONE RECLAMATION'}};
-function soulReturns(state, ctx, key, uid, gear) {
-  const found = [[uid, RETURN_ON_DEFEAT[ctx.objects[uid].cardId]], ...gear.map(e => [e, GEAR_RETURN_ON_DEFEAT[ctx.objects[e].cardId]])].filter(([, r]) => r);
-  pushTriggers(state, found.map(([target, r]) => ({controller: ctx.objects[target].owner, uid: target, ability: r.ability, run: st => {
-    const owner = ctx.objects[target].owner, p = st.players[owner];
-    const zone = ['tartarus', 'battlefield'].find(z => p[z].includes(target) && (z === 'tartarus' || target !== uid) && !ctx.attached[target]);
-    if (st.victory || !zone || !ask(ctx, owner, {ability: r.ability, uid: target, cost: `${r.soul} Soul`})) return;
-    loseSoul(st, {[owner]: r.soul}, 'payment');
-    if (st.victory) return;
-    p[zone] = p[zone].filter(x => x !== target);
-    delete st.units[target];
-    p.hand.push(target);
-    emit(st, 'returned_to_hand', {player: owner, uid: target, ability: r.ability});
-  }})));
 }
 // Domain 335 The Fields of Carnage, Harvest of the Fallen: Berserker amigo derrotado causa 1 de dano ao God inimigo,
 // uma vez por turno (autor, 29/10/2026). Unending Slaughter ainda não está implementado.
@@ -443,6 +424,7 @@ export const SPELLS = {
 
 // Gatilhos de entrada (P06: gatilho na cadeia abre janela). `choice.target` é escolhido ao jogar.
 export function onEnter(state, ctx, key, uid, {target} = {}) {
+  v6Entered(state, ctx, key, uid);
   const n = id(ctx, uid);
   // Eagle Marin: 1 Training counter noutro Bronze Saint seu (sem alvo legal, não faz nada).
   if (n === '021' && target && target !== uid && alive(state, key, target) && isBronze(ctx, target)) {
@@ -462,6 +444,7 @@ export function onEnter(state, ctx, key, uid, {target} = {}) {
 
 // Pegasus God Cloth (019), ao ser jogada: se seu God tem menos Soul, um Devotee seu ganha +3/+3 até o fim do Round e prepara.
 export function onCastEquipment(state, ctx, key, uid, {target} = {}) {
+  v6Cast(state, ctx, key, uid);
   if (id(ctx, uid) !== '019' || !behind(state, key) || !target || !alive(state, key, target)) return;
   pushTriggers(state, [{controller: key, uid, ability: 'When you cast', target, run: st => {
     if (!alive(st, key, target)) return;
@@ -565,5 +548,6 @@ export function afterStrike(state, ctx, strike) {
       draw(st, arena, 1);
     }, {uid: `domain:${arena}`, ability: 'TOURNAMENT SPIRIT'});
   }
+  triggers.push(...v6AfterStrike(state, ctx, strike, strike.gearBefore || {}));
   pushTriggers(state, triggers);
 }
