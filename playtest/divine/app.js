@@ -601,7 +601,8 @@ function choiceBar() {
 function overlays() {
   const s = S();
   let html = '';
-  if (s.setup && !(online && s.setup[0] !== online.key)) { // online: a mão inicial do adversário não aparece
+  // Só a mão de quem está olhando: contra a IA ou online, a mão inicial do adversário nunca aparece (hot-seat mostra a de quem decide).
+  if (s.setup && s.setup[0] === (online ? online.key : viewer())) {
     const key = s.setup[0];
     html += `<div class="overlay mulligan"><h2>Player ${key} · Opening hand</h2><p>Send any number of cards to the bottom of your deck, shuffle and draw that many. Once.</p>
       <div class="mulligan__cards">${s.players[key].hand.map(u => `<button class="mull ${marked.has(u) ? 'marked' : ''}" data-mull="${u}">${cardFace(u, {size: 'dcard--lg'})}</button>`).join('')}</div>
