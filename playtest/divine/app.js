@@ -14,6 +14,7 @@ import {createScene, THEMES} from './scene.js?v=20261028-5';
 import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudgment, greatFloodBlock, announceGreatFlood, GREAT_FLOOD_COST} from '../engine-v3/gods.js';
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
+import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
 import {createDirector} from './director.js?v=7';
 import {createAI} from './ai.js?v=3';
 import {findDeck} from '../deck-store.js';
@@ -41,7 +42,7 @@ const saveSettings = () => { try { localStorage.setItem(SETTINGS_KEY, JSON.strin
 let canon, cards, index, decks, match, ctx, scene = null, director, clock;
 let mode = null;           // escolha em andamento: {kind, key, uid, steps, i, choice, picked, options, run}
 let pending = null;        // decisão pedida pela engine no meio da resolução (decision.js): {pending, snap, answers, run, shown, picked, peek}
-let marked = new Set(), logLines = [], logOpen = false, settingsOpen = false, ending = false, inspectTimer, seenEvents = 0, drag = null;
+let marked = new Set(), logLines = [], logOpen = false, settingsOpen = false, inspectTimer, seenEvents = 0, drag = null;
 
 const S = () => match.state;
 const info = uid => cards.get(ctx.objects[uid].cardId);
@@ -103,7 +104,7 @@ const canBase = (key, uid) => !baseReason(key, uid);
 function placeAsBase(key, uid) {
   const reason = baseReason(key, uid);
   if (reason) return warn(reason);
-  act(() => placeBase(S(), key, uid, info(uid)));
+  act({type: 'base', key, uid});
   warn('Cosmo Base placed. It is ready to pay costs now.');
 }
 // Há resposta possível? (Auto-pass só passa quando não há nenhum Moment jogável na mão.)
@@ -113,27 +114,21 @@ const hasResponse = key => S().players[key].hand.some(u => info(u).kind === 'Spe
 
 // A ação e os avanços automáticos rodam dentro do protocolo de decisão: pergunta da engine sem resposta suspende tudo
 // no ponto da pergunta (modal), e a resposta continua do mesmo snapshot (decision.js), sem repetir custo nem gatilho.
-async function act(fn) {
+// `action`: ação serializável (engine-v3/actions.js), a mesma que o duelo online manda ao servidor; a IA local ainda passa função.
+async function act(action) {
   if (director.busy || pending) return;
-  const s = S(), from = s.events.length, wasEnding = ending;
+  const s = S(), from = s.events.length, wasEnding = match.ending;
   const run = () => {
-    ending = wasEnding;
-    fn();
+    match.ending = wasEnding;
+    if (typeof action === 'function') action(); else applyAction(match, ctx, action);
     try { autoAdvance(); } catch (e) { if (e instanceof PendingDecision) throw e; warn(why(e)); }
   };
   let r;
-  try { r = runDecisions(s, ctx, run); } catch (e) { ending = wasEnding; warn(why(e)); console.debug(e); render(); return; }
+  try { r = runDecisions(s, ctx, run); } catch (e) { match.ending = wasEnding; warn(why(e)); console.debug(e); render(); return; }
   return present(r, run, from);
 }
 // Avança o que não precisa de escolha: início do turno seguinte e passes automáticos.
-function autoAdvance() {
-  const s = S();
-  for (let guard = 0; guard < 60; guard++) {
-    if (ending && !s.window && !s.victory) { ending = false; startTurn(s); continue; }
-    if (settings.autoPass && s.window && !s.victory && !hasResponse(s.window.priority)) { pass(s, s.window.priority); continue; }
-    break;
-  }
-}
+const autoAdvance = () => advanceMatch(match, key => settings.autoPass && !hasResponse(key));
 // Mostra só os eventos ainda não animados (o replay repete o prefixo já visto, idêntico) e, se houver pergunta, abre o modal.
 async function present(r, run, from) {
   const s = S(), shown = pending && pending.shown <= s.events.length ? pending.shown : from;
@@ -185,7 +180,7 @@ function advance() {
   const {run, choice} = mode;
   mode = null;
   $$('.choice, .pickable').forEach(el => (el.classList.contains('choice') ? el.remove() : el.classList.remove('pickable')));
-  act(() => run(choice));
+  act(run(choice));
 }
 
 function candidates(step, key) {
@@ -207,23 +202,20 @@ function playFromHand(key, uid) {
   if (reason) return warn(reason);
   if (c.kind === 'Devotee') {
     if (duplicateCharacter(S(), ctx, key, uid)) warn(`You already control ${c.name.split(',')[0]}: after it enters, choose which version stays.`);
-    return begin('play', key, uid, STEPS[n] || [], ch => playDevotee(S(), ctx, key, uid, ch));
+    return begin('play', key, uid, STEPS[n] || [], choice => ({type: 'play', key, uid, choice}));
   }
   if (c.kind === 'Equipment') {
     const steps = c.global ? [] : [{key: 'bearer', pick: 'devotee', label: `Choose who wears ${c.name}`}];
     if (n === '019') steps.push({key: 'target', pick: 'devotee', optional: true, label: 'Pegasus God Cloth: which Devotee gets +3/+3 (if your God is behind)?'});
-    return begin('play', key, uid, steps, ch => playEquipment(S(), ctx, key, uid, ch.bearer, ch));
+    return begin('play', key, uid, steps, choice => ({type: 'play', key, uid, choice}));
   }
-  return begin('play', key, uid, STEPS[n] || [], ch => playSpell(S(), ctx, key, uid, ch));
+  return begin('play', key, uid, STEPS[n] || [], choice => ({type: 'play', key, uid, choice}));
 }
 
 function startStrike(uid) {
   const targets = strikeTargets(S(), ctx, uid);
   if (!targets.length) return warn('No legal target for this Devotee right now.');
-  begin('strike', S().active, uid, [{key: 'target', pick: 'strike', label: `Choose a target for ${info(uid).name}`}], ch => {
-    const target = ch.target.startsWith('god:') ? {kind: 'god', player: ch.target.slice(4)} : {kind: 'devotee', uid: ch.target};
-    declareStrike(S(), ctx, uid, target);
-  });
+  begin('strike', S().active, uid, [{key: 'target', pick: 'strike', label: `Choose a target for ${info(uid).name}`}], choice => ({type: 'strike', key: S().active, uid, choice}));
 }
 
 function primary() {
@@ -238,8 +230,8 @@ function primary() {
   if (s.victory) return;
   if (aiControls()) return; // vez da IA: o botão não age por ela
   if (s.setup) return confirmMulligan();
-  if (s.window) return act(() => pass(s, s.window.priority));
-  act(() => { ending = true; endTurn(s); });
+  if (s.window) return act({type: 'pass', key: s.window.priority});
+  act({type: 'endTurn', key: s.active});
 }
 
 function choose(value) {
@@ -255,7 +247,7 @@ function choose(value) {
 function confirmMulligan() {
   const s = S(), key = s.setup[0], back = [...marked];
   marked = new Set();
-  act(() => { mulligan(match, key, back); if (!s.setup) startTurn(s); });
+  act({type: 'mulligan', key, choice: {uids: back}});
 }
 
 // ---------- Poderes divinos ----------
@@ -264,20 +256,17 @@ function confirmMulligan() {
 function godActions(key) {
   const s = S(), d = s.divine[key], mine = key === viewer() && !s.victory && !s.setup;
   const block = d.god === 'god-poseidon' ? greatFloodBlock(s, key) : ultimateBlock(s, ctx, key);
-  const run = d.god === 'god-poseidon' ? () => act(() => announceGreatFlood(S(), ctx, key)) : () => startExclamation(key);
+  const run = d.god === 'god-poseidon' ? () => act({type: 'greatFlood', key}) : () => startExclamation(key);
   const why = {used: 'Ultimate already used this match.', sorcery: 'Ultimate: your turn, with no response pending.', cost: `Great Flood needs ${GREAT_FLOOD_COST} prepared Bases.`, 'only-athena': 'No Ultimate available.'}[block] || (block ? 'Not available now.' : '');
   return {
     ultimate: {ok: mine && !block, why: mine ? why : "Only the God's controller uses it.", run},
     judgment: mine && d.judgment && idleFor(key) ? () => begin('judgment', key, null,
-      [{key: 'devotees', pick: 'devotee', multi: 3, label: 'Sacrifice exactly three Devotees you control'}], ch => removeJudgment(S(), ctx, key, ch.devotees)) : null,
+      [{key: 'devotees', pick: 'devotee', multi: 3, label: 'Sacrifice exactly three Devotees you control'}], choice => ({type: 'judgment', key, choice})) : null,
   };
 }
 
 function startExclamation(key) {
-  begin('ultimate', key, null, [{key: 'saints', pick: 'ready-saint', multi: 3, label: 'Choose three Prepared Saints with different identities (cost 5 +3 Bronze +2 Silver)'}], ch => {
-    if ((ch.saints || []).length !== 3) throw Object.assign(new Error('saints'), {decision: 'G3-005'});
-    announceExclamation(S(), ctx, key, ch.saints);
-  });
+  begin('ultimate', key, null, [{key: 'saints', pick: 'ready-saint', multi: 3, label: 'Choose three Prepared Saints with different identities (cost 5 +3 Bronze +2 Silver)'}], choice => ({type: 'exclamation', key, choice}));
   if (mode) mode.title = 'ATHENA EXCLAMATION'; // sem escolha legal, begin não abre modo (já avisou)
   render();
 }
@@ -318,7 +307,7 @@ function tickClock() {
   if (!settings.timeouts || !key || director.busy || s.victory || s.setup) return;
   if (pending) { if (pending.pending.player === key) reply({timeout: true}); return; }
   if (mode) { mode = null; closeQuick(); }
-  act(() => { if (applyTimeout(S(), key) === 'TIMEOUT_END_TURN') ending = true; });
+  act({type: 'timeout', key});
 }
 
 // ---------- Render ----------
@@ -813,8 +802,8 @@ function fieldMenu(uid, el) {
   if (c.kind === 'Devotee') {
     if (strikeTargets(s, ctx, uid).length) items.push(['Strike', () => startStrike(uid)]);
     const ab = ABILITIES[num(uid)];
-    if (ab && s.units[uid]?.prepared) items.push([`${ab.name} ({T}, ${ab.cost} Base)`, () => begin('activate', key, uid, ABILITY_STEPS[num(uid)] || [], ch => activate(S(), ctx, key, uid, ch))]);
-  } else if (c.kind === 'Equipment' && !c.global && !ctx.attached[uid]) items.push(['Re-equip', () => begin('reequip', key, uid, [{key: 'bearer', pick: 'devotee', label: 'Re-equip to which Devotee?'}], ch => reequip(S(), ctx, key, uid, ch.bearer))]);
+    if (ab && s.units[uid]?.prepared) items.push([`${ab.name} ({T}, ${ab.cost} Base)`, () => begin('activate', key, uid, ABILITY_STEPS[num(uid)] || [], choice => ({type: 'activate', key, uid, choice}))]);
+  } else if (c.kind === 'Equipment' && !c.global && !ctx.attached[uid]) items.push(['Re-equip', () => begin('reequip', key, uid, [{key: 'bearer', pick: 'devotee', label: 'Re-equip to which Devotee?'}], choice => ({type: 'reequip', key, uid, choice}))]);
   if (!items.length) return warn(s.units[uid]?.prepared === false ? 'Unprepared: it readies at the start of your turn.' : 'No action available for this card.');
   quickMenu(el, items);
 }
@@ -1192,7 +1181,7 @@ function newMatch(seed = Date.now() % 100000, first) {
   // Poseidon V6 não tem cartas canônicas: o God Poseidon pilota o deck Athena V6 do jogador B, como FIXTURE rotulada.
   match = createMatch({cards, canonIndex: index, decks, gods: {A: decks.A.god || 'god-athena', B: settings.godB}, seed, first});
   ctx = {cards, objects: match.objects, attached: match.attached}; // ctx.decide vem do protocolo de decisão (act)
-  logLines = []; mode = null; pending = null; marked = new Set(); ending = false; seenEvents = 0;
+  logLines = []; mode = null; pending = null; marked = new Set(); seenEvents = 0;
   clock = createClock(match.state.order);
   say(`Seed ${seed}. Player ${match.state.order[0]} goes first.`);
   $('.fixture-tag')?.remove();
@@ -1375,11 +1364,11 @@ async function aiTick() {
   aiBusy = true;
   try {
     if (pending) { if (pending.pending.player === key) await reply({value: ai.answer(pending.pending)}); return; }
-    if (s.setup) { if (s.setup[0] === key) await act(() => { mulligan(match, key, []); if (!s.setup) startTurn(s); }); return; }
-    if (s.window) { if (s.window.priority === key) await act(() => pass(s, key)); return; }
+    if (s.setup) { if (s.setup[0] === key) await act({type: 'mulligan', key, choice: {uids: []}}); return; }
+    if (s.window) { if (s.window.priority === key) await act({type: 'pass', key}); return; }
     if (!idleFor(key)) return;
     const a = ai.next(key);
-    if (!a) { await act(() => { ending = true; endTurn(s); }); return; }
+    if (!a) { await act({type: 'endTurn', key: s.active}); return; }
     const before = s.events.length;
     await act(a.run);
     if (S().events.length === before && !pending) ai.refuse(a); // a engine recusou: não tenta de novo neste turno
