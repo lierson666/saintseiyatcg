@@ -4,6 +4,15 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-29 — §33 — Todo Equipment equipável tem Equip impresso; itens globais ficam sem portador
+
+- **Seção:** `docs/guia-do-jogo.md`, §33 (Resonance e Equip). Substitui a entrada anterior do mesmo dia.
+- **Antes:** Equipment ou Item sem Auto-Equip e sem Equip impresso equipava qualquer Devotee pelo Casting Cost.
+- **Depois:** toda Cloth e todo Equipment que se prende a um Devotee tem Equip impresso. Itens globais (“Equip: None — Global”) pagam o Casting Cost e ficam no campo sem portador.
+- **Motivo:** decisão do autor em 29/10/2026 ("todas cloths e equips devem ter custo de Equip; se não tiver, crie um que faça sentido"; itens globais continuam globais).
+- **Cartas:** `data/cards.json` com diff aprovado: Equip {N} para 24 cartas de Ares — Warplates = Casting Cost + 1 (272, 274, 276, 278, 280, 282, 284, 286, 288, 336–340), Cracked Warplate 314 = 1, armas e War Gear = Casting Cost (315–321), Divine Relics 289 = 4 e 290 = 3. Globais sem mudança: Athena 020 (D268), Poseidon 170 e 178, Hades 200 e 227, neutras 470, 478, 491, 493 e 494.
+- **Pendências:** engine 3.0 (`play.js`, `canon-cards.js`, `preview-cards.js`), arena e IA ajustadas. As habilidades escritas dos itens globais ainda não estão implementadas.
+
 ## 2026-10-29 — §33 — Equip sem custo impresso usa o Casting Cost
 
 - **Seção:** `docs/guia-do-jogo.md`, §33 (Resonance e Equip).

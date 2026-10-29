@@ -11,7 +11,9 @@ export function previewRecord(f) {
   const text = [`${String(f.numero_carta).padStart(3, '0')} — ${f.nome_exibicao_en}`, f.subtitulo_en, `Rarity: ${f.raridade}`, `Type: ${type}`,
     f.custo != null && `Casting Cost: ${f.custo} {${f.unidade_custo === 'latent_cosmo' ? 'L' : 'B'}}`,
     f.power != null && `ATK: ${f.power} | HP: ${f.vida}`, f.cosmoble != null && f.tipo !== 'Domain' && `Cosmoble: ${f.cosmoble ? 'Yes' : 'No'}`,
-    f.tipo === 'Equipment' && `Auto-Equip — ${f.auto_equip_en?.length ? f.auto_equip_en.join(' and/or ') : 'None'}`,
+    // Sem Auto-Equip e sem Equip impresso: item global (autor, 29/10/2026), como o "Equip: None — Global Anthem" da 020.
+    f.tipo === 'Equipment' && (f.auto_equip_en?.length || f.equipar_custo_outros != null
+      ? `Auto-Equip — ${f.auto_equip_en?.length ? f.auto_equip_en.join(' and/or ') : 'None'}` : 'Equip: None — Global'),
     f.equipar_custo_outros != null && `Equip {${f.equipar_custo_outros}} — ${f.auto_equip_en?.length ? 'Other Devotees' : 'Any friendly Devotee'}`,
     ...(f.habilidades_en || [])].filter(Boolean).join('\n');
   return {id: f.id, name: f.nome_exibicao_en, type, approved_current_text_as_of_d268: text};

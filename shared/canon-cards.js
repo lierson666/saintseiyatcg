@@ -34,6 +34,8 @@ export function parseCard(record) {
     awaken: number(text, /AWAKEN (\d+)/),
     autoEquip: auto && auto[1].trim() !== 'None' ? auto[1].split(' and/or ').map(n => n.trim()) : [],
     equip: equip ? {amount: Number(equip[1]), who: /^Other/.test(equip[2]) ? 'other' : 'any'} : null,
+    // "Equip: None — Global" (020 e itens globais): fica no campo sem portador (guia §33).
+    global: /Equip: None — Global/.test(text),
     equipped: bonus ? {atk: Number(bonus[1]), hp: Number(bonus[2] ?? 0), keywords: bonus[3] ? [bonus[3]] : []} : null,
     keywords: ['Guardian', 'Cheater', 'Nimble', 'Pierce', 'Impulse', 'Long Range']
       .filter(k => new RegExp(`^\\s*${k}\\s*$`, 'm').test(text)),

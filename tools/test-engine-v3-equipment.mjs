@@ -7,7 +7,7 @@ import {canonIndex} from '../shared/deck-v3.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
 import {startTurn, endTurn, passAll, checkInvariants, RuleError} from '../playtest/engine-v3/core.js';
 import {declareStrike, atkOf, hpOf, keywordsOf} from '../playtest/engine-v3/strike.js';
-import {reequip} from '../playtest/engine-v3/play.js';
+import {reequip, playEquipment} from '../playtest/engine-v3/play.js';
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json');
@@ -104,13 +104,17 @@ test('Equipment não-Armor fica solto quando o portador sai e é reequipado paga
   assert.throws(() => reequip(s, ctx, 'A', weapon, acolyte), e => e instanceof RuleError && /solto/.test(e.message));
 });
 
-test('Equipment sem Auto-Equip nem Equip impresso equipa qualquer Devotee pelo Casting Cost (guia §33, 29/10/2026)', () => {
-  const {s, ctx, field, equip} = setup({A: fortress, B: rush});
-  const cassios = field('A', '027'), weapon = equip('A', '049', cassios), acolyte = field('A', '043');
+test('item global (Equip: None — Global) paga o Casting Cost e fica no campo sem portador (guia §33, 29/10/2026)', () => {
+  const {s, ctx} = setup({A: fortress, B: rush});
+  const shield = cards.get('athena-v6-020');
+  assert.equal(shield.global, true);
+  assert.equal(cards.get('athena-v6-049').global, false);
+  const p = s.players.A, uid = p.deck.find(u => u.includes(':020:')) ?? p.deck[0];
   ctx.cards = new Map(cards);
-  const card = {...cards.get('athena-v6-049'), autoEquip: [], equip: null};
-  ctx.cards.set('athena-v6-049', card);
-  delete ctx.attached[weapon];
-  s.players.A.bases = s.players.A.deck.splice(0, 6).map(uid => ({uid, prepared: true}));
-  assert.deepEqual(reequip(s, ctx, 'A', weapon, acolyte), {cost: card.cost});
+  ctx.cards.set(ctx.objects[uid].cardId, {...shield, id: ctx.objects[uid].cardId, cost: {amount: 1, unit: 'base'}});
+  p.deck.splice(p.deck.indexOf(uid), 1); p.hand.push(uid);
+  p.bases = p.deck.splice(0, 2).map(u => ({uid: u, prepared: true}));
+  assert.deepEqual(playEquipment(s, ctx, 'A', uid, null), {cost: {amount: 1, unit: 'base'}});
+  assert.ok(p.battlefield.includes(uid) && !ctx.attached[uid]);
+  assert.throws(() => reequip(s, ctx, 'A', uid, uid), RuleError);
 });

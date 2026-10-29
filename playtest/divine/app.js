@@ -15,7 +15,7 @@ import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudg
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {createDirector} from './director.js?v=7';
-import {createAI} from './ai.js?v=2';
+import {createAI} from './ai.js?v=3';
 import {findDeck} from '../deck-store.js';
 import {unlock, playMusic} from '../audio.js?v=20261028-strike';
 import {renderLiveCard} from '../../shared/live-card.js?v=20261028-5';
@@ -82,6 +82,7 @@ function playableReason(key, uid) {
     return affordable(key, c.cost) ? missingTarget(key, uid) : `Needs ${c.cost.amount} ${c.cost.unit === 'base' ? 'prepared Base' : 'Latent'} Cosmo.`;
   }
   if (!idleFor(key)) return s.active !== key ? "It's not your turn." : 'Wait for the response window to close.';
+  if (c.kind === 'Equipment' && c.global) return affordable(key, c.cost) ? null : `Needs ${c.cost.amount} prepared Base Cosmo.`;
   if (c.kind === 'Equipment') {
     const devs = s.players[key].battlefield.filter(u => info(u).kind === 'Devotee');
     if (!devs.length) return 'You need a Devotee to equip.';
@@ -209,7 +210,7 @@ function playFromHand(key, uid) {
     return begin('play', key, uid, STEPS[n] || [], ch => playDevotee(S(), ctx, key, uid, ch));
   }
   if (c.kind === 'Equipment') {
-    const steps = [{key: 'bearer', pick: 'devotee', label: `Choose who wears ${c.name}`}];
+    const steps = c.global ? [] : [{key: 'bearer', pick: 'devotee', label: `Choose who wears ${c.name}`}];
     if (n === '019') steps.push({key: 'target', pick: 'devotee', optional: true, label: 'Pegasus God Cloth: which Devotee gets +3/+3 (if your God is behind)?'});
     return begin('play', key, uid, steps, ch => playEquipment(S(), ctx, key, uid, ch.bearer, ch));
   }
@@ -813,7 +814,7 @@ function fieldMenu(uid, el) {
     if (strikeTargets(s, ctx, uid).length) items.push(['Strike', () => startStrike(uid)]);
     const ab = ABILITIES[num(uid)];
     if (ab && s.units[uid]?.prepared) items.push([`${ab.name} ({T}, ${ab.cost} Base)`, () => begin('activate', key, uid, ABILITY_STEPS[num(uid)] || [], ch => activate(S(), ctx, key, uid, ch))]);
-  } else if (c.kind === 'Equipment' && !ctx.attached[uid]) items.push(['Re-equip', () => begin('reequip', key, uid, [{key: 'bearer', pick: 'devotee', label: 'Re-equip to which Devotee?'}], ch => reequip(S(), ctx, key, uid, ch.bearer))]);
+  } else if (c.kind === 'Equipment' && !c.global && !ctx.attached[uid]) items.push(['Re-equip', () => begin('reequip', key, uid, [{key: 'bearer', pick: 'devotee', label: 'Re-equip to which Devotee?'}], ch => reequip(S(), ctx, key, uid, ch.bearer))]);
   if (!items.length) return warn(s.units[uid]?.prepared === false ? 'Unprepared: it readies at the start of your turn.' : 'No action available for this card.');
   quickMenu(el, items);
 }

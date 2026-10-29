@@ -53,13 +53,15 @@ export function playDevotee(state, ctx, key, uid, choice = {}) {
 // em outro Devotee permitido por "Equip {N}", paga N em vez do Casting Cost. Sem portador legal, não joga.
 // Ação comum: não abre janela (P06).
 // `choice.target`: alvo do gatilho "When you cast" (019).
+// Item global ("Equip: None — Global"): paga o Casting Cost e fica no campo sem portador; `bearer` é ignorado.
 export function playEquipment(state, ctx, key, uid, bearer, choice = {}) {
   const card = sorceryFromHand(state, ctx, key, uid, 'Equipment');
-  const cost = equipCost(state, ctx, key, card, bearer);
+  if (card.global) bearer = null;
+  const cost = card.global ? card.cost : equipCost(state, ctx, key, card, bearer);
   payCost(state, key, cost);
   leaveHand(state, key, uid);
   state.players[key].battlefield.push(uid);
-  ctx.attached[uid] = bearer;
+  if (bearer) ctx.attached[uid] = bearer;
   emit(state, 'card_played', {player: key, uid, kind: 'Equipment', bearer});
   onCastEquipment(state, ctx, key, uid, choice);
   return {cost};
@@ -107,7 +109,8 @@ function equipCost(state, ctx, key, card, bearer) {
   }
   if (card.autoEquip.some(name => name.toUpperCase() === target.name.toUpperCase())) return card.cost;
   if (card.equip) return {amount: card.equip.amount, unit: card.cost.unit}; // "Other" e "Any" cobrem quem não é nomeado
-  if (!card.autoEquip.length) return card.cost; // sem Auto-Equip nem Equip impresso: Casting Cost (guia §33, autor, 29/10/2026)
+  if (card.global) throw new RuleError('Equip', `${card.name} é global e não se prende a um Devotee`);
+  if (!card.autoEquip.length) throw new NotSpecified(`${card.id}: Equipment sem Auto-Equip nem Equip {N}`);
   throw new RuleError('Equip', `${card.name} só equipa ${card.autoEquip.join(' ou ')}`);
 }
 

@@ -54,8 +54,8 @@ export function createAI(h) {
       const c = h.info(uid);
       if (c.kind === 'Equipment') {
         const mine = devotees(key), named = mine.find(d => c.autoEquip.some(n => n.toUpperCase() === h.info(d).name.toUpperCase()));
-        const bearer = named || mine[0];
-        if (bearer) return {id: id(`play:${uid}`), run: () => h.playEquipment(key, uid, bearer, {})};
+        const bearer = c.global ? null : named || mine[0];
+        if (bearer || c.global) return {id: id(`play:${uid}`), run: () => h.playEquipment(key, uid, bearer, {})};
         continue;
       }
       const ch = choicesFor(key, h.STEPS[h.num(uid)] || []);
