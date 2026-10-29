@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-29 — §54 — Alvo de Spell escolhido ao jogar
+
+- **Antes:** a engine V6 escolhia alvos de Spell na resolução; o guia não definia.
+- **Depois:** alvos são escolhidos ao jogar a Spell, antes da janela de resposta; se o alvo sumir, a parte que dependia dele não acontece.
+- **Motivo:** decisão do autor em 29/10/2026; Poseidon 115, 117, 121 e 124 reagem a "a Spell that targets…".
+- **Pendências:** migrar as Spells V6 que escolhem alvo para a conjuração (engine).
+
 ## 2026-10-29 — §54 — Toda Spell abre janela de resposta; Bloodlust paga com Base ou Latent
 
 - **Antes:** Technique (Sorcery) resolvia na hora, sem janela (P06); só Moment abria janela. Bloodlust ("Cost: 3 Cosmo") era lido como 3 Latent.
