@@ -6,8 +6,9 @@ import hades from './hades.js';
 import poseidon from './poseidon.js';
 import ares from './ares.js';
 import artemis from './artemis.js';
+import athena from './athena.js';
 
-register(hades); register(poseidon); register(ares); register(artemis);
+register(hades); register(poseidon); register(ares); register(artemis); register(athena);
 export {V6, entryOf, bindContext, contextOf} from './registry.js';
 
 const nameOf = (ctx, uid) => ctx.cards.get(ctx.objects[uid]?.cardId)?.name || uid;
