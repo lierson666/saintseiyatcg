@@ -27,7 +27,7 @@ box.innerHTML = `
   <div class="gh-row">
     <div class="gh-face" title="Arraste para posicionar; roda do mouse para zoom"></div>
     <div class="gh-ctl">
-      <label>Zoom <input type="range" name="zoom" min="60" max="500" step="1"><output data-for="zoom"></output></label>
+      <label>Zoom <input type="range" name="zoom" min="60" max="1500" step="1"><output data-for="zoom"></output></label>
       <label>Horizontal <input type="range" name="x" min="0" max="100" step="0.5"><output data-for="x"></output></label>
       <label>Vertical <input type="range" name="y" min="0" max="100" step="0.5"><output data-for="y"></output></label>
     </div>
@@ -78,7 +78,7 @@ setInterval(() => {
 }, 400);
 
 box.addEventListener('input', e => { if (e.target.name in DEFAULT) { hud[e.target.name] = +e.target.value; paint(); } });
-face.addEventListener('wheel', e => { e.preventDefault(); hud.zoom = clamp(hud.zoom * (e.deltaY < 0 ? 1.06 : 1 / 1.06), 60, 500); paint(); }, {passive: false});
+face.addEventListener('wheel', e => { e.preventDefault(); hud.zoom = clamp(hud.zoom * (e.deltaY < 0 ? 1.06 : 1 / 1.06), 60, 1500); paint(); }, {passive: false});
 face.addEventListener('pointerdown', e => {
   face.setPointerCapture(e.pointerId);
   const start = {x: e.clientX, y: e.clientY, hx: hud.x, hy: hud.y}, w = face.clientWidth;
@@ -106,14 +106,17 @@ box.addEventListener('click', async e => {
     const post = async (url, body, type) => {
       const r = await fetch(url, {method: 'POST', headers: {'Content-Type': type}, body});
       const j = await r.json().catch(() => ({}));
+      if (r.status === 501 || r.status === 405) throw new Error(`este servidor não grava. Abra o Forge em http://localhost:8765/card-forge/ (python3 card-forge/serve.py).`);
       if (!r.ok) throw new Error(j.erro || `HTTP ${r.status}`);
       return j;
     };
-    if (upload) {
-      const blob = await (await fetch(upload)).blob();
-      hud.image = (await post(`/api/art/${current}-hud`, blob, blob.type)).path;
-      upload = null;
-    }
+    // Grava sempre a imagem que está na prévia como art/<id>-hud: o jogo mostra exatamente o que se vê aqui,
+    // mesmo quando a "arte da carta" do Forge não é a mesma arte exportada para o jogo.
+    const src = upload || (hud.image ? hud.image : cardArt);
+    if (!src) throw new Error('nenhuma imagem para salvar');
+    const blob = await (await fetch(src)).blob();
+    hud.image = (await post(`/api/art/${current}-hud`, blob, blob.type)).path;
+    upload = null;
     const data = {image: hud.image?.replace(/^\.\.\//, '') || null, zoom: Math.round(hud.zoom), x: +hud.x.toFixed(1), y: +hud.y.toFixed(1)};
     await post(`/api/project/${current}-hud`, JSON.stringify(data), 'application/json');
     hud = {...data, image: data.image ? '../' + data.image : null};

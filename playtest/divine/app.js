@@ -354,8 +354,8 @@ function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
     field && c.kind === 'Devotee' && !unit?.prepared ? 'unprepared' : '', kws.includes('Guardian') && field ? 'guarding' : ''].join(' ');
   const statBuffed = (v, base) => (v > base ? 'up' : v < base ? 'down' : '');
   // Dano não tem marcador: o HP impresso já mostra a vida restante, em vermelho.
-  const marks = `${unit?.training ? `<i class="dcard__counter" title="Training counter">✦${unit.training}</i>` : ''}
-    ${unit?.seal ? `<i class="dcard__seal" title="${unit.seal} Seal counter${unit.seal > 1 ? 's' : ''}: each Prepare removes one instead">◈${unit.seal}</i>` : ''}`;
+  const marks = unit?.training || unit?.seal ? `<span class="dcard__tokens">${unit?.training ? token('training', unit.training, `Training|${unit.training} counter${unit.training > 1 ? 's' : ''}: +1 ATK / +1 HP each.`) : ''}${unit?.seal
+    ? token('seal', unit.seal, `Seal|${unit.seal} counter${unit.seal > 1 ? 's' : ''}: each Prepare removes one instead of preparing.`) : ''}</span>` : '';
   if (forge) {
     // ATK e HP ao vivo no próprio número impresso: verde com bônus, vermelho com dano ou redução.
     const live = renderLiveCard(forge, {stats: {power: atk ?? null, hp: hp == null ? null : hp - dmg, damage: dmg, keywords: kws}, art: forge.ilustracao && FORGE_ART + forge.ilustracao})
@@ -401,6 +401,8 @@ const FRAMES = {
   ares: {ratio: 1.1607, hole: [26.5, 20, 46, 51.8], plate: [28.4, 73.6, 42.2, 12.1]},
 };
 const box = ([x, y, w, h]) => `left:${x}%;top:${y}%;width:${w}%;height:${h}%`;
+// Marcador como moeda (autor, 28/10/2026): dourada para Training, prata e azul para Seal, dourada com balança para Divine Judgment.
+const token = (kind, n, tip) => `<i class="token token--${kind}" data-tip="${esc(tip)}"><b>${n}</b></i>`;
 function godHud(key, side) {
   const s = S(), p = s.players[key], d = s.divine[key], god = cards.get(s.gods[key]);
   const pick = mode?.options?.includes(`god:${key}`), max = soulMax(s, key);
@@ -416,7 +418,7 @@ function godHud(key, side) {
       <div class="gh-hole godhud__portrait" style="${box(fr.hole)};${face}"></div>
       <img class="gh-frame__img" src="./assets/god-frames/${frame}.png" alt="">
       <span class="gh-name" style="${box(fr.plate)}">${esc(god.name)}</span>
-      ${d.judgment ? `<span class="godhud__judgment" title="Divine Judgment: loses at the end of Round ${d.judgment.deadline}">⚖ R${d.judgment.deadline}</span>` : ''}
+      ${d.judgment ? `<span class="godhud__judgment">${token('judgment', `R${d.judgment.deadline}`, `Divine Judgment|This God loses at the end of Round ${d.judgment.deadline} unless the counter is removed.`)}</span>` : ''}
     </div>
     <div class="gh-plate">
       ${PLATE(`${k}p`, `${k}q`)}
@@ -449,8 +451,8 @@ function sanctum(key, side) {
     </div>
     ${row(`zdeck ${n ? '' : 'is-empty'}`, '<i class="zdeck__back"></i>', 'Deck', n, `Deck|${plural(n, 'card')} left. Each player draws 2 cards per turn.`, `data-deck="${key}"`)}
     ${row('rail__row--hand', '<i class="rail__hand"></i>', 'Hand', p.hand.length, `Hand|${plural(p.hand.length, 'card')}.`)}
-    ${row('zpile zpile--tartarus', '<img class="zicon" src="./assets/tartarus.png" alt="">', 'Tartarus', p.tartarus.length, `Tartarus|${plural(p.tartarus.length, 'card')}. Destroyed Devotees go here and gain Afterlife.`)}
-    ${row('zpile zpile--void', '<img class="zicon" src="./assets/void.png" alt="">', 'Void', p.void.length, `Void|${plural(p.void.length, 'card')}. Exiled cards go here. No Afterlife.`)}
+    ${row('zpile zpile--tartarus', '<img class="zicon" src="./assets/tartarus.png" alt="">', 'Tartarus', p.tartarus.length, `Tartarus|${plural(p.tartarus.length, 'card')}. Destroyed Devotees go here and gain Afterlife. Click to view.`, `data-pile="${key}:tartarus"`)}
+    ${row('zpile zpile--void', '<img class="zicon" src="./assets/void.png" alt="">', 'Void', p.void.length, `Void|${plural(p.void.length, 'card')}. Exiled cards go here. No Afterlife. Click to view.`, `data-pile="${key}:void"`)}
     ${p.fatigue ? row('zpile--fatigue', '⚠', 'Fatigue', p.fatigue, 'Fatigue|Drawing from an empty deck.') : ''}
   </section>`;
 }
@@ -484,14 +486,10 @@ function cosmoLane(key, side) {
   }).join('');
   return `<section class="lane lane--${side}" data-lane="${key}" style="--n:${bases.length}" aria-label="Player ${key} Cosmo Bases">${slots || '<p class="lane__empty">Cosmo Bases</p>'}</section>`;
 }
-// Faixa do God (autor, 28/10/2026): Bases à esquerda, God no meio, Equipments/Cloths ainda não equipados à direita.
-function gearLane(key) {
-  const loose = S().players[key].battlefield.filter(u => !ctx.attached[u] && info(u).kind === 'Equipment');
-  return `<section class="gearlane" data-gear-lane="${key}" aria-label="Player ${key} unequipped Equipment">${loose.map(u => `<div class="gearlane__slot">${cardFace(u, {field: true})}</div>`).join('')}</section>`;
-}
+// Faixa do God (autor, 28/10/2026): Bases à esquerda do God; equipamento solto continua no campo.
 function fieldRow(key) {
   const s = S(), p = s.players[key];
-  const units = p.battlefield.filter(u => !ctx.attached[u] && info(u).kind !== 'Equipment').map(u => {
+  const units = p.battlefield.filter(u => !ctx.attached[u]).map(u => {
     const gear = gearOf(ctx, u).map(g => `<div class="gear" data-uid="${g}" title="${esc(info(g).name)}">${esc(info(g).name)}${s.units[g]?.damage ? ` · ${s.units[g].damage} dmg` : ''}</div>`).join('');
     return `<div class="slot">${cardFace(u, {field: true})}${gear ? `<div class="gears">${gear}</div>` : ''}</div>`;
   }).join('');
@@ -626,8 +624,8 @@ function render() {
     <div class="olympus ${mode ? 'is-choosing' : ''} ${pending ? 'is-deciding' : ''}" ${pending && !pending.peek ? 'inert' : ''}>
       ${handRow(them, settings.hideOpponent || settings.ai === them)}
       <main class="arena-field">${fieldRow(them)}<div class="midline"></div>${fieldRow(me)}</main>
-      <div class="band band--opp">${cosmoLane(them, 'opp')}<i class="band__god"></i>${gearLane(them)}</div>
-      <div class="band band--me">${cosmoLane(me, 'me')}<i class="band__god"></i>${gearLane(me)}</div>
+      <div class="band band--opp">${cosmoLane(them, 'opp')}</div>
+      <div class="band band--me">${cosmoLane(me, 'me')}</div>
       <aside class="rail">${sanctum(them, 'opp')}${sanctum(me, 'me')}</aside>
       ${godHud(them, 'opp')}${godHud(me, 'me')}
       ${handRow(me, false)}
@@ -758,6 +756,8 @@ boardRoot.addEventListener('click', e => {
   if (btn?.dataset.done !== undefined) return choose(null);
   if (btn?.dataset.toggleLog !== undefined) { logOpen = !logOpen; return render(); }
   if (btn?.dataset.toggleSettings !== undefined) { settingsOpen = !settingsOpen; return render(); }
+  const pile = t.closest('[data-pile]');
+  if (pile) return showPile(...pile.dataset.pile.split(':'));
   const slot = t.closest('.lane__base[data-slot]');
   if (slot) return togglePool(slot);
   const pickEl = t.closest('[data-pick], .pickable');
@@ -969,6 +969,24 @@ function showBigCard(uid) {
   document.body.append(box);
 }
 function closeBigCard() { $('#bigcard')?.remove(); }
+// Tartarus e Void são públicos (autor, 28/10/2026): clicar na linha do trilho abre a pilha; clicar numa carta a mostra grande.
+function showPile(key, zone) {
+  closeBigCard();
+  const uids = [...S().players[key][zone]].reverse(), name = zone === 'tartarus' ? 'Tartarus' : 'Void';
+  const box = document.createElement('div');
+  box.id = 'bigcard';
+  box.className = 'bigcard pile';
+  box.innerHTML = `<section class="pile__box" role="dialog" aria-label="${name} of Player ${key}">
+    <header><h3>${name}</h3><small>Player ${key} · ${uids.length} card${uids.length === 1 ? '' : 's'} · newest first</small></header>
+    ${uids.length ? `<div class="pile__grid">${uids.map(u => `<button class="pile__card" data-pile-card="${u}">${cardFace(u)}</button>`).join('')}</div>` : `<p class="pile__empty">No cards in the ${name}.</p>`}</section>`;
+  box.addEventListener('click', e => {
+    const card = e.target.closest('[data-pile-card]');
+    if (card) return showBigCard(card.dataset.pileCard);
+    if (!e.target.closest('.pile__box')) closeBigCard();
+  });
+  box.addEventListener('contextmenu', e => { e.preventDefault(); closeBigCard(); });
+  document.body.append(box);
+}
 function hideInspect() { $('#inspector').classList.remove('show'); $$('.orb.preview').forEach(o => o.classList.remove('preview')); }
 // Prévia de pagamento: as esferas que esta carta gastaria piscam antes do clique.
 function previewCost(uid) {
@@ -978,7 +996,7 @@ function previewCost(uid) {
   $$(`[data-bank="${key}"] [data-bank-unit="${c.cost.unit}"] .orb.ready`).slice(-c.cost.amount).forEach(o => o.classList.add('preview'));
 }
 
-// Durante o arraste: CAST cobre a minha metade do campo inteira (autor, 28/10/2026); COSMO BASE acende na área das Bases, à esquerda do God.
+// Durante o arraste: CAST cobre a minha metade do campo inteira (autor, 28/10/2026); COSMO BASE acende na linha inteira do God.
 // A zona só acende se a ação for possível agora; a engine ainda decide ao soltar.
 function showDragZones(uid) {
   const key = owner(uid), field = $('.arena-field');
@@ -986,7 +1004,7 @@ function showDragZones(uid) {
   const cast = !playableReason(key, uid), cosmo = canBase(key, uid);
   field.insertAdjacentHTML('beforeend', `<div class="drag-zones" aria-hidden="true">
     <div class="drag-zone drag-zone--cast ${cast ? '' : 'is-off'}"><strong>CAST</strong><small>${cast ? 'Release to cast as Devotee, Armor or effect' : esc(playableReason(key, uid))}</small></div></div>`);
-  $('.band--me .lane')?.insertAdjacentHTML('beforeend', `<div class="drag-zone drag-zone--cosmo drag-zone--band ${cosmo ? '' : 'is-off'}" aria-hidden="true"><strong>COSMO BASE</strong><small>${cosmo ? 'Release to set as Cosmo Base' : esc(baseReason(key, uid))}</small></div>`);
+  $('.band--me')?.insertAdjacentHTML('beforeend', `<div class="drag-zone drag-zone--cosmo drag-zone--band ${cosmo ? '' : 'is-off'}" aria-hidden="true"><strong>COSMO BASE</strong><small>${cosmo ? 'Release to set as Cosmo Base' : esc(baseReason(key, uid))}</small></div>`);
   $('.olympus')?.classList.add('is-dragging');
 }
 function hideDragZones() {
@@ -995,8 +1013,8 @@ function hideDragZones() {
 }
 // Zona sob o cursor: 'cast', 'cosmo' ou null (fora do campo ou ação impossível).
 function dragZoneAt(uid, x, y) {
-  const r = $('.arena-field')?.getBoundingClientRect(), key = owner(uid), b = $('.band--me .lane')?.getBoundingClientRect();
-  if (b && x >= b.left && x <= b.right && y >= b.top && y <= b.bottom) return canBase(key, uid) ? 'cosmo' : null; // área das Bases, à esquerda do God
+  const r = $('.arena-field')?.getBoundingClientRect(), key = owner(uid), b = $('.band--me')?.getBoundingClientRect();
+  if (b && x >= b.left && x <= b.right && y >= b.top && y <= b.bottom) return canBase(key, uid) ? 'cosmo' : null; // linha inteira do God
   if (!r || x < r.left || x > r.right || y < r.top || y > r.bottom) return null;
   if (y < r.top + r.height / 2) return null; // CAST só na minha metade do campo
   return playableReason(key, uid) ? null : 'cast';

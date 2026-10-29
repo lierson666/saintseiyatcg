@@ -711,8 +711,8 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .rail__pool { position: absolute; top: -.75em; right: .6em; padding: 1px 6px; border-radius: 999px; font: 700 .9em/1.3 system-ui, sans-serif; font-style: normal; letter-spacing: .08em;
   color: #06122e; background: linear-gradient(180deg, #c8ecff, #6fb6ff); box-shadow: 0 0 10px rgba(120, 190, 255, .8); }
 
-/* Faixa do God (autor, 28/10/2026): Bases à esquerda do God, amontoando conforme crescem; Equipments e Cloths
-   ainda não equipados à direita. O campo fica só com os Devotees, que são a estrela e ganham o tamanho. */
+/* Faixa do God (autor, 28/10/2026): Bases à esquerda do God, amontoando conforme crescem. O campo fica com os
+   Devotees (e equipamento solto), que são a estrela e ganham o tamanho. */
 @media (min-width: 761px) {
   .band { --m: calc(var(--u, 8px) * 7.5); position: absolute; z-index: 5; pointer-events: none;
     left: calc(min(calc(var(--u, 8px) * 1.1), calc((100vh - 40px) / 78)) * 19 + 28px); right: calc(clamp(190px, 15vw, 250px) + 30px);
@@ -723,11 +723,7 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
     min-height: var(--land-h); display: flex; align-items: center; justify-content: flex-start; pointer-events: auto; }
   .band .lane__base { flex: 0 1 calc(var(--land-w) + var(--u) * .6); min-width: calc(var(--land-w) * .16); height: var(--land-h); justify-content: start; }
   .band .lane__empty { margin: 0; opacity: .45; font-size: calc(var(--u) * 1.2); }
-  .band__god { grid-column: 2; }
-  .gearlane { --card-w: calc(var(--m) * 1.22); grid-column: 3; display: flex; align-items: center; justify-content: flex-start; min-width: 0; pointer-events: auto; }
-  .gearlane__slot { flex: 0 1 calc(var(--card-w) + var(--u) * .6); min-width: calc(var(--card-w) * .2); }
-  .gearlane .dcard { width: var(--card-w); height: calc(var(--card-w) * 1.4); flex: none; }
-  .drag-zone--band { position: absolute; inset: calc(var(--u) * -1); z-index: 20; min-width: calc(var(--land-w) * 3.2); }
+  .drag-zone--band { position: absolute; inset: calc(var(--u) * -.6) 0; z-index: 20; } /* a linha inteira do God */
   .drag-zone--band strong { font-size: calc(var(--u) * 2.2); }
   .arena-field { grid-template-rows: auto auto auto; }
   .olympus .field { --card-w: min(calc(var(--u) * 16), calc((100vh - var(--u) * 51.5) * .34)); --card-h: calc(var(--card-w) * 1.4); }
@@ -755,3 +751,59 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 
 /* CAST brilha na minha metade inteira do campo, nunca no lado do oponente (autor, 28/10/2026); COSMO BASE fica na faixa do God. */
 .drag-zones { inset: 50% 0 0; grid-template-rows: 1fr; }
+
+/* Marcadores como moedas (autor, 28/10/2026): borda serrilhada, face cunhada, número em relevo e brilho girando. */
+.dcard__tokens { position: absolute; z-index: 4; top: 18%; left: -8%; display: flex; flex-direction: column; gap: 4px; pointer-events: auto; }
+.token { --c1: #fff6cf; --c2: #f0cc6e; --c3: #a8741f; --c4: #5a3a0c; --ink: #3a2406; --glyph: "✦";
+  position: relative; display: grid; place-items: center; width: clamp(20px, calc(var(--card-w, 90px) * .3), 40px); aspect-ratio: 1; border-radius: 50%; font-style: normal;
+  background: radial-gradient(circle at 35% 30%, var(--c1), var(--c2) 38%, var(--c3) 72%, var(--c4));
+  box-shadow: 0 0 0 1.5px var(--c4), inset 0 0 0 2px rgba(255, 250, 220, .55), inset 0 -3px 5px rgba(0, 0, 0, .35), 0 3px 6px rgba(0, 0, 0, .55), 0 0 10px rgba(255, 210, 120, .45);
+  cursor: help; animation: token-in .35s cubic-bezier(.2, .9, .3, 1.4); }
+.token::before { content: ""; position: absolute; inset: 9%; border-radius: 50%; border: 1px dashed rgba(90, 58, 12, .55); }
+.token::after { content: var(--glyph); position: absolute; top: 4%; font: 700 .32em/1 Georgia, serif; color: var(--ink); opacity: .7; }
+.token b { position: relative; top: 8%; font: 700 clamp(10px, calc(var(--card-w, 90px) * .14), 18px)/1 Georgia, "Times New Roman", serif; color: var(--ink);
+  text-shadow: 0 1px 0 rgba(255, 250, 220, .7), 0 -1px 0 rgba(0, 0, 0, .25); }
+.token--seal { --c1: #f2fbff; --c2: #b8d8ee; --c3: #4f86b8; --c4: #12345a; --ink: #0c2440; --glyph: "◈"; box-shadow: 0 0 0 1.5px var(--c4), inset 0 0 0 2px rgba(230, 248, 255, .6), inset 0 -3px 5px rgba(0, 0, 0, .35), 0 3px 6px rgba(0, 0, 0, .55), 0 0 10px rgba(120, 200, 255, .55); }
+.token--judgment { --glyph: "⚖"; width: 38px; }
+.token--judgment b { font-size: 13px; }
+.godhud .godhud__judgment { background: none; padding: 0; border: 0; box-shadow: none; }
+@keyframes token-in { from { transform: scale(.2) rotateY(180deg); opacity: 0; } }
+.reduce-motion .token { animation: none; }
+
+/* Pilha de Tartarus/Void aberta pelo trilho (autor, 28/10/2026). */
+.bigcard.pile { cursor: default; }
+.pile__box { width: min(1100px, 92vw); max-height: 86vh; overflow: auto; padding: 18px 22px 22px; border-radius: 16px; color: #e8e6f2;
+  background: rgba(10, 12, 32, .95); border: 1px solid rgba(232, 196, 106, .55); box-shadow: 0 18px 50px rgba(0, 0, 0, .7); }
+.pile__box header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 14px; }
+.pile__box h3 { margin: 0; font: 600 24px/1 Georgia, serif; color: #f6e2a8; letter-spacing: .06em; }
+.pile__box small { font: 12px/1 system-ui, sans-serif; opacity: .65; letter-spacing: .06em; }
+.pile__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+.pile__card { padding: 0; border: 0; background: none; cursor: zoom-in; transition: transform .15s; }
+.pile__card:hover { transform: translateY(-4px) scale(1.03); }
+.pile__card .dcard { --card-w: 150px; width: 100%; height: auto; aspect-ratio: 5 / 7; }
+.pile__empty { margin: 20px 0; opacity: .6; text-align: center; }
+.rail [data-pile] { cursor: pointer; }
+
+/* Palavras das zonas de arrasto gigantes (autor, 28/10/2026): ocupam a altura da zona, com um brilho que corre pelas letras.
+   COSMO BASE fica à esquerda do God para o medalhão não cortar a palavra. */
+.drag-zone { container-type: size; }
+.drag-zone strong { font: 700 min(58cqh, 13cqw)/.9 "Cinzel", "Trajan Pro", Palatino, Georgia, serif; letter-spacing: .06em; color: transparent; text-shadow: none;
+  background: linear-gradient(100deg, var(--z1) 0%, var(--z1) 38%, #fff 48%, var(--z2) 54%, var(--z1) 64%, var(--z1) 100%) 0 0 / 250% 100%;
+  -webkit-background-clip: text; background-clip: text; filter: drop-shadow(0 0 18px var(--zg)) drop-shadow(0 4px 10px rgba(0, 0, 0, .6));
+  animation: zone-shine 2.6s linear infinite; }
+.drag-zone small { font-size: max(13px, 6cqh); }
+.drag-zone--cast { --z1: #f4c45e; --z2: #fff1c2; --zg: rgba(255, 200, 90, .65); }
+.drag-zone--cosmo { --z1: #6fb6ff; --z2: #e4f4ff; --zg: rgba(100, 170, 255, .75); }
+.drag-zone--band { align-items: flex-start; padding-left: 3cqw; }
+.drag-zone--band strong { font-size: min(52cqh, 7.2cqw); }
+.drag-zone--band small { max-width: 40cqw; text-align: left; }
+@keyframes zone-shine { from { background-position: 125% 0; } to { background-position: -125% 0; } }
+.reduce-motion .drag-zone strong { animation: none; }
+
+/* COSMO BASE corre na horizontal pela linha inteira do God, na altura toda da faixa e a 40% (autor, 28/10/2026). */
+.drag-zone--band { align-items: center; padding: 0; overflow: hidden; }
+.drag-zone--band strong { position: absolute; top: 50%; left: 0; font-size: 100cqh; line-height: .8; white-space: nowrap; opacity: .4;
+  animation: zone-shine 2.6s linear infinite, zone-marquee 7s linear infinite; }
+.drag-zone--band small { position: relative; z-index: 1; max-width: none; text-align: center; align-self: flex-end; margin: 0 0 4cqh; }
+@keyframes zone-marquee { from { transform: translate(100cqw, -50%); } to { transform: translate(-100%, -50%); } }
+.reduce-motion .drag-zone--band strong { animation: none; transform: translate(4cqw, -50%); }
