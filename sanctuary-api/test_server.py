@@ -2,7 +2,7 @@
 import json, os, sys, tempfile, threading, unittest, urllib.request
 from urllib.error import HTTPError
 
-os.environ['SANCTUARY_INVITES'] = 'Saint@Example.com'
+os.environ['SANCTUARY_INVITES'] = 'Saint@Example.com,a@example.com,b@example.com,c@example.com'
 os.environ['SANCTUARY_INSECURE_COOKIE'] = '1'
 sys.path.insert(0, os.path.dirname(__file__))
 import server  # noqa: E402
@@ -64,7 +64,7 @@ class Api(unittest.TestCase):
         self.assertTrue(cookie.startswith('sst_session='))
         self.assertEqual(self.call('POST', '/api/auth/register', full)[0], 409)
         self.assertFalse(self.call('GET', '/api/username-available?u=pegasus_SEIYA')[1]['available'])
-        self.assertTrue(self.call('GET', '/api/username-available?u=Shiryu')[1]['available'])
+        self.assertTrue(self.call('GET', '/api/username-available?u=Shun_Free')[1]['available'])
         st, body, _, _ = self.call('PATCH', '/api/me', {'phone': '+55 11 91234-5678', 'country': 'pt', 'username': 'Hacker'}, cookie=cookie)
         self.assertEqual((st, body['phone'], body['country'], body['username']), (200, '+55 11 91234-5678', 'PT', 'Pegasus_Seiya'))
         self.assertEqual(self.call('POST', '/api/me/password', {'current': 'wrong', 'new': 'x' * 12}, cookie=cookie)[0], 403)
@@ -99,6 +99,41 @@ class Api(unittest.TestCase):
             st, body, _, _ = self.call('POST', '/api/auth/login', {'email': 'nobody@example.com', 'password': 'wrong-password'}, headers={'X-Forwarded-For': '10.9.9.9'})
             self.assertEqual((st, body['error']), (401, server.BAD_LOGIN))
         self.assertEqual(self.call('POST', '/api/auth/login', {'email': 'nobody@example.com', 'password': 'x'}, headers={'X-Forwarded-For': '10.9.9.9'})[0], 429)
+
+
+    def new_player(self, letter, username):
+        st, body, cookie, _ = self.call('POST', '/api/auth/register', {'email': f'{letter}@example.com', 'name': f'Player {letter}', 'username': username,
+                                                                       'country': 'BR', 'password': 'cosmo-burn-123', 'accept_terms': True})
+        self.assertEqual(st, 201)
+        return body['friend_code'], cookie
+
+    def test_amigos(self):
+        code_a, a = self.new_player('a', 'Shiryu')
+        code_b, b = self.new_player('b', 'Hyoga')
+        code_c, c = self.new_player('c', 'Ikki')
+        self.assertEqual(self.call('POST', '/api/friends/requests', {'code': 'Nobody#0000'}, cookie=a)[0], 404)
+        self.assertEqual(self.call('POST', '/api/friends/requests', {'code': code_a}, cookie=a)[0], 400)
+        self.assertEqual(self.call('POST', '/api/friends/requests', {'code': code_b.lower()}, cookie=a)[0], 201)
+        incoming = self.call('GET', '/api/friends', cookie=b)[1]['incoming']
+        self.assertEqual([r['username'] for r in incoming], ['Shiryu'])
+        self.assertEqual(self.call('POST', f"/api/friends/requests/{incoming[0]['id']}/accept", cookie=a)[0], 404)  # só o destinatário aceita
+        self.assertEqual(self.call('POST', f"/api/friends/requests/{incoming[0]['id']}/accept", cookie=b)[0], 200)
+        self.assertEqual(self.call('POST', '/api/friends/requests', {'code': code_b}, cookie=a)[0], 409)
+        friends = self.call('GET', '/api/friends', cookie=a)[1]['friends']
+        self.assertEqual([(f['username'], f['status']) for f in friends], [('Hyoga', 'offline')])
+        self.call('POST', '/api/presence', {'status': 'match'}, cookie=b)
+        self.assertEqual(self.call('GET', '/api/friends', cookie=a)[1]['friends'][0]['status'], 'match')
+        # pedidos cruzados viram amizade direto
+        self.call('POST', '/api/friends/requests', {'code': code_a}, cookie=c)
+        self.assertEqual(self.call('POST', '/api/friends/requests', {'code': code_c}, cookie=a)[1], {'friend': 'Ikki'})
+        # bloqueio: desfaz amizade e o bloqueado não consegue pedir de novo
+        self.assertEqual(self.call('POST', '/api/blocks', {'username': 'ikki'}, cookie=a)[0], 200)
+        self.assertEqual([f['username'] for f in self.call('GET', '/api/friends', cookie=a)[1]['friends']], ['Hyoga'])
+        st, body, _, _ = self.call('POST', '/api/friends/requests', {'code': code_a}, cookie=c)
+        self.assertEqual((st, body['error']), (404, server.NO_PLAYER))
+        self.assertEqual(self.call('DELETE', '/api/blocks/Ikki', cookie=a)[0], 200)
+        self.assertEqual(self.call('DELETE', '/api/friends/Hyoga', cookie=a)[0], 200)
+        self.assertEqual(self.call('GET', '/api/friends', cookie=b)[1]['friends'], [])
 
 
 if __name__ == '__main__':

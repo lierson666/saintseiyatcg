@@ -9,6 +9,8 @@ import {unlock, playMusic, setVolume, volume} from './audio.js';
 import {loadMyDecks, saveMyDecks, findDeck} from './deck-store.js';
 import {mountKV} from '../shared/kv-sky.js?v=20261029-2';
 import {countryOptions, countryName} from '../shared/countries.js?v=20261029-1';
+import {startPresence} from '../shared/presence.js?v=20261029-1';
+import {mountSocial} from './social.js?v=20261029-2';
 
 const root = document.getElementById('lobby');
 const ART = '../card-forge/art-web/';
@@ -78,8 +80,21 @@ function topBar() {
     <img class="lb-top__logo" src="../LOGO/logo-web.webp" alt="Saint Seiya TCG">
     <nav class="lb-tabs">${tab('home', 'Home')}${tab('decks', 'Decks')}${tab('profile', 'Profile')}${tab('options', 'Options')}</nav>
     <span class="lb-top__tag">Alpha 0.1 · Engine 3.0</span>
+    ${ui.user?.complete ? `<button class="lb-socialbtn" data-act="friends" aria-label="Friends">Friends ${socialBadge()}</button>` : ''}
     ${ui.user ? `<span class="lb-user"><i class="kv-dot" aria-hidden="true"></i>${esc(ui.user.username || ui.user.name)}<button class="kv-ghost" data-act="signout">Sign out</button></span>` : ''}
   </header>`;
+}
+
+// Contador do botão Friends: amigos online e pedidos pendentes (atualizado pelo painel sem redesenhar o lobby).
+let social = null;
+const socialBadge = () => `<span class="lb-socialbtn__count">${ui.online || 0}</span>${ui.requests ? `<span class="lb-socialbtn__req" aria-label="${ui.requests} friend requests">${ui.requests}</span>` : ''}`;
+function startSocial() {
+  if (social || !ui.user?.complete) return;
+  startPresence('online');
+  social = mountSocial({api, avatarOf: id => artOf(id || 'god-athena'), onCount: (online, requests) => {
+    ui.online = online; ui.requests = requests;
+    const b = root.querySelector('.lb-socialbtn'); if (b) b.innerHTML = `Friends ${socialBadge()}`;
+  }});
 }
 
 // Carrossel da home (KV oficial): um God por slide, com a arte do Forge ao fundo.
@@ -192,7 +207,7 @@ async function submitProfile(form) {
   const kind = form.dataset.form, f = Object.fromEntries(new FormData(form));
   const say = (text, k) => { ui.profileMsg = {[kind]: {text, kind: k}}; render(); };
   try {
-    if (kind === 'complete') ui.user = await api('/api/me', 'PATCH', {username: f.username, country: f.country, accept_terms: 'accept_terms' in f});
+    if (kind === 'complete') { ui.user = await api('/api/me', 'PATCH', {username: f.username, country: f.country, accept_terms: 'accept_terms' in f}); startSocial(); }
     if (kind === 'me') { ui.user = await api('/api/me', 'PATCH', {name: f.name, country: f.country, phone: f.phone}); return say('Saved.', 'ok'); }
     if (kind === 'password') { await api('/api/me/password', 'POST', {current: f.current, new: f.new}); return say('Password changed. Other devices were signed out.', 'ok'); }
     if (kind === 'delete') {
@@ -372,6 +387,7 @@ const actions = {
   play: () => { ui.screen = 'home'; ui.play = true; },
   'close-play': () => { ui.play = false; },
   avatar: async t => { try { ui.user = await api('/api/me', 'PATCH', {avatar_card: t.dataset.id}); } catch (e) { ui.profileMsg = {me: {text: e.message, kind: 'err'}}; } render(); },
+  friends: () => social?.toggle(),
   'copy-code': async () => { await navigator.clipboard?.writeText(ui.user.friend_code).catch(() => {}); ui.copied = true; setTimeout(() => { ui.copied = false; render(); }, 1500); },
   slide: t => { ui.slide = (ui.slide || 0) + Number(t.dataset.step); },
   signout: async () => {
@@ -463,7 +479,7 @@ async function init() {
   if (!findDeck(ui.deckB, presets)) ui.deckB = presets[1]?.id || presets[0]?.id;
   render();
   // Conta do sanctuary-api (login no /login/). Sem API (dev local), o lobby segue sem o nome no topo.
-  fetch('/api/me', {credentials: 'same-origin'}).then(r => r.ok ? r.json() : null).then(u => { if (u) { ui.user = u; if (!u.complete) ui.screen = 'profile'; render(); } }).catch(() => {});
+  fetch('/api/me', {credentials: 'same-origin'}).then(r => r.ok ? r.json() : null).then(u => { if (u) { ui.user = u; if (!u.complete) ui.screen = 'profile'; render(); startSocial(); } }).catch(() => {});
 }
 mountKV();
 init().catch(e => { root.innerHTML = `<p class="lb-loading">${esc(e.message)}</p>`; console.error(e); });

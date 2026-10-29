@@ -23,6 +23,8 @@ BAD_LOGIN = 'Email or password is incorrect.'
 USERNAME_RE = re.compile(r'^[A-Za-z0-9_]{3,20}$')
 PHONE_RE = re.compile(r'^\+?[0-9 ()-]{7,20}$')
 COUNTRY_RE = re.compile(r'^[A-Z]{2}$')
+ONLINE_WINDOW = 45  # segundos sem batimento para virar offline (o navegador bate a cada 20 s)
+NO_PLAYER = 'No player with this friend code.'
 
 SCHEMA = """
 create table if not exists users (id integer primary key, email text unique not null, display_name text not null,
@@ -33,6 +35,12 @@ create table if not exists invites (email text primary key, created_at integer n
 create table if not exists decks (user_id integer not null references users(id), deck_id text not null, data text not null,
   revision integer not null, updated_at integer not null, deleted_at integer, primary key (user_id, deck_id));
 create table if not exists login_attempts (email text not null, ip text not null, at integer not null);
+create table if not exists friend_requests (id integer primary key, from_id integer not null, to_id integer not null,
+  created_at integer not null, unique (from_id, to_id));
+create table if not exists friendships (user_a integer not null, user_b integer not null, created_at integer not null,
+  primary key (user_a, user_b), check (user_a < user_b));
+create table if not exists blocks (user_id integer not null, blocked_id integer not null, created_at integer not null,
+  primary key (user_id, blocked_id));
 """
 
 lock = threading.Lock()
@@ -46,7 +54,7 @@ def open_db(path=DB_PATH):
     db.executescript('pragma journal_mode=wal; pragma foreign_keys=on;' + SCHEMA)
     # Migração do cadastro completo: colunas novas em contas antigas (ficam vazias até o perfil ser completado).
     have = {r['name'] for r in db.execute('pragma table_info(users)')}
-    for col in ('username', 'username_display', 'country', 'phone', 'friend_code', 'avatar_card', 'accepted_terms_at'):
+    for col in ('username', 'username_display', 'country', 'phone', 'friend_code', 'avatar_card', 'accepted_terms_at', 'last_seen', 'status'):
         if col not in have:
             db.execute(f'alter table users add column {col}')
     db.execute('create unique index if not exists users_username on users(username)')
@@ -210,6 +218,20 @@ class Handler(BaseHTTPRequestHandler):
                     return self.delete_me()
             if method == 'POST' and path == '/api/me/password':
                 return self.change_password()
+            if method == 'POST' and path == '/api/presence':
+                return self.presence()
+            if method == 'GET' and path == '/api/friends':
+                return self.friends()
+            if method == 'POST' and path == '/api/friends/requests':
+                return self.friend_request()
+            m = re.fullmatch(r'/api/friends/requests/(\d+)(?:/(accept|decline))?', path)
+            if m and (method == 'POST') == bool(m[2]) and method in ('POST', 'DELETE'):
+                return self.answer_request(int(m[1]), m[2] or 'cancel')
+            m = re.fullmatch(r'/api/(friends|blocks)/([A-Za-z0-9_]{3,20})', path)
+            if m and method == 'DELETE':
+                return self.remove_friend(m[2]) if m[1] == 'friends' else self.unblock(m[2])
+            if method == 'POST' and path == '/api/blocks':
+                return self.block()
             if path == '/api/decks' and method == 'GET':
                 return self.list_decks()
             m = re.fullmatch(r'/api/decks/([^/]+)(/restore)?', path)
@@ -314,8 +336,108 @@ class Handler(BaseHTTPRequestHandler):
         with lock:
             for table in ('sessions', 'decks'):
                 db.execute(f'delete from {table} where user_id = ?', (user['id'],))
+            uid = user['id']
+            db.execute('delete from friend_requests where from_id = ? or to_id = ?', (uid, uid))
+            db.execute('delete from friendships where user_a = ? or user_b = ?', (uid, uid))
+            db.execute('delete from blocks where user_id = ? or blocked_id = ?', (uid, uid))
             db.execute('delete from users where id = ?', (user['id'],))
         self.send_json(200, {'ok': True}, self.session_cookie('', 0))
+
+    # ---------- amigos (etapa 2) ----------
+    def presence(self):  # batimento: online no lobby ou em partida
+        user = self.require_user()
+        status = 'match' if self.read_json().get('status') == 'match' else 'online'
+        with lock:
+            db.execute('update users set last_seen = ?, status = ? where id = ?', (int(time.time()), status, user['id']))
+        self.send_json(200, {'ok': True})
+
+    def friends(self):
+        me = self.require_user()['id']
+        now = int(time.time())
+        card = lambda u: {'username': u['username_display'], 'friend_code': u['friend_code'], 'avatar_card': u['avatar_card']}
+        with lock:
+            friends = db.execute('select u.* from friendships f join users u on u.id = case when f.user_a = ? then f.user_b else f.user_a end '
+                                 'where ? in (f.user_a, f.user_b)', (me, me)).fetchall()
+            incoming = db.execute('select r.id as request_id, u.* from friend_requests r join users u on u.id = r.from_id where r.to_id = ?', (me,)).fetchall()
+            outgoing = db.execute('select r.id as request_id, u.* from friend_requests r join users u on u.id = r.to_id where r.from_id = ?', (me,)).fetchall()
+            blocked = db.execute('select u.* from blocks b join users u on u.id = b.blocked_id where b.user_id = ?', (me,)).fetchall()
+        status = lambda u: (u['status'] or 'online') if (u['last_seen'] or 0) > now - ONLINE_WINDOW else 'offline'
+        order = {'online': 0, 'match': 1, 'offline': 2}
+        self.send_json(200, {
+            'friends': sorted(({**card(u), 'status': status(u)} for u in friends), key=lambda f: (order[f['status']], f['username'].lower())),
+            'incoming': [{**card(u), 'id': u['request_id']} for u in incoming],
+            'outgoing': [{**card(u), 'id': u['request_id']} for u in outgoing],
+            'blocked': [card(u) for u in blocked]})
+
+    def by_username(self, username):
+        user = db.execute('select * from users where username = ?', (username.lower(),)).fetchone()
+        if not user:
+            raise ApiError(404, 'Player not found.')
+        return user
+
+    def blocked_between(self, a, b):
+        return db.execute('select 1 from blocks where (user_id = ? and blocked_id = ?) or (user_id = ? and blocked_id = ?)', (a, b, b, a)).fetchone()
+
+    def befriend(self, a, b):
+        db.execute('insert or ignore into friendships values (?, ?, ?)', (min(a, b), max(a, b), int(time.time())))
+        db.execute('delete from friend_requests where (from_id = ? and to_id = ?) or (from_id = ? and to_id = ?)', (a, b, b, a))
+
+    def friend_request(self):
+        me = self.require_user()
+        code = str(self.read_json().get('code', '')).strip()
+        with lock:
+            other = db.execute('select * from users where lower(friend_code) = lower(?)', (code,)).fetchone()
+            # bloqueio nos dois sentidos responde igual a código inexistente (não revela quem bloqueou)
+            if not other or self.blocked_between(me['id'], other['id']):
+                raise ApiError(404, NO_PLAYER)
+            if other['id'] == me['id']:
+                raise ApiError(400, 'That is your own friend code.')
+            a, b = sorted((me['id'], other['id']))
+            if db.execute('select 1 from friendships where user_a = ? and user_b = ?', (a, b)).fetchone():
+                raise ApiError(409, f"{other['username_display']} is already your friend.")
+            if db.execute('select 1 from friend_requests where from_id = ? and to_id = ?', (other['id'], me['id'])).fetchone():
+                self.befriend(me['id'], other['id'])  # o outro já tinha pedido: vira amizade
+                return self.send_json(200, {'friend': other['username_display']})
+            db.execute('insert or ignore into friend_requests (from_id, to_id, created_at) values (?, ?, ?)', (me['id'], other['id'], int(time.time())))
+        self.send_json(201, {'sent': other['username_display']})
+
+    def answer_request(self, request_id, answer):
+        me = self.require_user()['id']
+        with lock:
+            r = db.execute('select * from friend_requests where id = ?', (request_id,)).fetchone()
+            mine = r and (r['to_id'] == me if answer in ('accept', 'decline') else r['from_id'] == me)
+            if not mine:
+                raise ApiError(404, 'Request not found.')
+            if answer == 'accept':
+                self.befriend(r['from_id'], r['to_id'])
+            else:
+                db.execute('delete from friend_requests where id = ?', (request_id,))
+        self.send_json(200, {'ok': True})
+
+    def remove_friend(self, username):
+        me = self.require_user()['id']
+        with lock:
+            other = self.by_username(username)['id']
+            db.execute('delete from friendships where user_a = ? and user_b = ?', (min(me, other), max(me, other)))
+        self.send_json(200, {'ok': True})
+
+    def block(self):
+        me = self.require_user()['id']
+        username = str(self.read_json().get('username', ''))
+        with lock:
+            other = self.by_username(username)['id']
+            if other == me:
+                raise ApiError(400, 'You cannot block yourself.')
+            db.execute('insert or ignore into blocks values (?, ?, ?)', (me, other, int(time.time())))
+            db.execute('delete from friendships where user_a = ? and user_b = ?', (min(me, other), max(me, other)))
+            db.execute('delete from friend_requests where (from_id = ? and to_id = ?) or (from_id = ? and to_id = ?)', (me, other, other, me))
+        self.send_json(200, {'ok': True})
+
+    def unblock(self, username):
+        me = self.require_user()['id']
+        with lock:
+            db.execute('delete from blocks where user_id = ? and blocked_id = ?', (me, self.by_username(username)['id']))
+        self.send_json(200, {'ok': True})
 
     def login(self):
         body = self.read_json()

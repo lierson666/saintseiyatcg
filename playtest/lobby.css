@@ -307,3 +307,44 @@ body { font: 300 15px/1.45 var(--kv-sans); }
 .lb-linkbtn { display: inline-flex; align-items: center; text-decoration: none; }
 .lb-body--profile { overflow: auto; }
 @media (max-width: 900px) { .lb-profile__grid { grid-template-columns: 1fr; } .lb-profile__head { flex-direction: column; align-items: flex-start; } }
+
+/* Amigos (KV): botão no topo e painel lateral */
+.lb-socialbtn { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 14px; border: 1px solid var(--kv-line); border-radius: var(--kv-pill); background: #f5f1e60d;
+  color: var(--kv-ink); font: 600 10px var(--kv-title); letter-spacing: .28em; text-transform: uppercase; }
+.lb-socialbtn:hover { border-color: #e6c36a88; }
+.lb-top__tag + .lb-socialbtn { margin-left: 0; }
+.lb-socialbtn__count { min-width: 20px; padding: 2px 6px; border-radius: 999px; background: #e6c36a22; color: var(--kv-gold-2); font: 500 12px var(--kv-sans); letter-spacing: 0; }
+.lb-socialbtn__req { min-width: 20px; padding: 2px 6px; border-radius: 999px; background: var(--kv-ember); color: #120d04; font: 600 12px var(--kv-sans); letter-spacing: 0; }
+.lb-social { position: fixed; top: 68px; right: 0; bottom: 0; z-index: 900; width: min(380px, 100%); display: flex; flex-direction: column; gap: 14px; padding: 20px 22px;
+  background: #0b0c16ee; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border-left: 1px solid var(--kv-line); animation: lb-slide .25s ease-out; font: 300 15px var(--kv-sans); color: var(--kv-ink); }
+.lb-social[hidden] { display: none; }
+.lb-social header { display: flex; align-items: center; justify-content: space-between; }
+.lb-social h2 { margin: 0; font: italic 400 32px/1 var(--kv-serif); }
+.lb-social__add { display: grid; grid-template-columns: 1fr auto; gap: 8px 10px; align-items: end; }
+.lb-social__add .kv-field { grid-column: 1; }
+.lb-social__add .kv-ghost { min-height: 50px; }
+.lb-social__add .kv-status { grid-column: 1 / -1; font-size: 13px; }
+.lb-social__list { flex: 1; min-height: 0; overflow: auto; display: grid; gap: 6px; align-content: start; }
+.lb-social__list h3 { margin: 12px 0 4px; font-size: 10px; }
+.lb-social__empty { color: var(--kv-muted); font-size: 14px; }
+.lb-friend { display: flex; align-items: center; gap: 12px; padding: 8px 10px; border: 1px solid transparent; border-radius: 14px; }
+.lb-friend:hover { border-color: var(--kv-line); background: #f5f1e608; }
+.lb-friend__avatar { position: relative; flex: none; width: 40px; height: 40px; border-radius: 50%; background: center 18% / cover, var(--kv-glass); border: 1px solid var(--kv-line); }
+.lb-friend.is-online .lb-friend__avatar::after, .lb-friend.is-match .lb-friend__avatar::after { content: ""; position: absolute; right: -1px; bottom: -1px; width: 11px; height: 11px; border-radius: 50%; border: 2px solid #0b0c16; }
+.lb-friend.is-online .lb-friend__avatar::after { background: var(--kv-gold); box-shadow: 0 0 8px var(--kv-gold); }
+.lb-friend.is-match .lb-friend__avatar::after { background: var(--kv-ember); box-shadow: 0 0 8px var(--kv-ember); }
+.lb-friend.is-offline { opacity: .55; }
+.lb-friend__name { flex: 1; min-width: 0; display: grid; }
+.lb-friend__name b { font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lb-friend__name small { color: var(--kv-muted); font-size: 12px; }
+.lb-friend__acts { display: flex; gap: 6px; }
+.lb-friend .kv-ghost { min-height: 32px; padding: 0 12px; font-size: 9px; letter-spacing: .2em; }
+.kv-ghost.is-gold { border-color: #e6c36a88; color: var(--kv-gold-2); }
+.lb-friend__more { width: 34px; height: 34px; border: 0; border-radius: 50%; background: none; color: var(--kv-muted); font-size: 18px; }
+.lb-friend__more:hover { background: #f5f1e614; color: var(--kv-ink); }
+.lb-friend__menu { position: absolute; left: 22px; right: 22px; bottom: 20px; display: grid; gap: 4px; padding: 14px; border: 1px solid var(--kv-line); border-radius: var(--kv-radius); background: #10111cf5; }
+.lb-friend__menu p { margin: 0 0 6px; }
+.lb-friend__menu button { min-height: 44px; border: 0; border-radius: 12px; background: none; color: var(--kv-ink); text-align: left; padding: 0 12px; font: 400 15px var(--kv-sans); }
+.lb-friend__menu button:hover { background: #f5f1e614; }
+.lb-social__blocked summary { cursor: pointer; margin-top: 12px; font-size: 10px; }
+@media (max-width: 1200px) { .lb-top__tag { display: none; } }
