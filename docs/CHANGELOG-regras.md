@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-29 — §3, §5, §46A, §54, §61, §63 — Moment é a Spell instantânea; Trample; {T} de Equipment; Engage
+
+- **Antes:** Technique jogava como AÇÃO ou resposta (Latent); Moment exigia AÇÃO. Trample, {T} em Equipment e Engage não tinham regra.
+- **Depois:** Moment joga como AÇÃO ou resposta (como resposta, só Latent); Technique exige AÇÃO. Trample = Pierce (não somam). {T} em Equipment = uma vez por rodada. "Engaged with X" = estar num Strike com X; "Engage that Devotee" força o Strike.
+- **Motivo:** decisões do autor em 29/10/2026 ao revisar as dúvidas dos efeitos V6 (`docs/v6-efeitos-pendencias.md`). Moment instantâneo bate com as cartas D268 da Athena e com as contra-mágicas de Poseidon.
+- **Pendências:** engine 3.0 ajustada (Spells V6, Trample no Strike). Contra-mágicas de Poseidon ainda precisam do gancho de "Spell inimiga na pilha". Textos das cartas com Engage (Artemis 363, 365, 384) podem ser reescritos no Card Forge.
+
 ## 2026-10-29 — Handbook 3.0 / Alpha 0.1 — ALPHA-P02: Devotee com Impulse entra Prepared
 
 - **Antes:** todo Devotee entrava Unprepared; o Impulse só liberava o Strike no turno de entrada.

@@ -6,7 +6,7 @@ Cada facção tem o seu arquivo (`hades.js`, `poseidon.js`, `ares.js`, `artemis.
 ## Decisões de implementação comuns (provisórias, valem até o autor confirmar)
 
 - **Alvos e escolhas** são perguntados na resolução do efeito, no modal de decisão (não ao jogar a carta).
-- **Spells V6:** a categoria vem do subtipo impresso. Moment exige AÇÃO e paga Base. Technique joga como AÇÃO (Base) ou como resposta numa janela de prioridade, pagando só Latent (guia §XII, cap. 54 e 61). As Spells do D268 continuam pela D194, que diz o contrário (Moment instantâneo). **Conflito a resolver.**
+- **Spells V6:** ✅ resolvido (autor, 29/10/2026): Moment joga como AÇÃO (Base) ou resposta (só Latent); Technique exige AÇÃO. Guia §54 invertido; bate com a D194 das cartas da Athena.
 - **"Until end of turn"** = fim do turno atual da engine (`this_turn`). O guia §64 pede revisão contextual de "turn"; confirmar carta a carta.
 - **+1/+1 e -1/-1 counters** = marcadores no objeto, somados aos atributos enquanto ele estiver em campo (como o Training counter, §48A).
 - **Exhaust** = tornar Unprepared.
@@ -16,11 +16,11 @@ Cada facção tem o seu arquivo (`hades.js`, `poseidon.js`, `ares.js`, `artemis.
 
 ## Dúvidas gerais (afetam várias cartas)
 
-- **Trample** (Artemis 369, 370, 373, 380, 383, 385, 392, 400, 411, 419, 426, 433, 439, 440): o guia não define. Hoje é só rótulo.
-- **Engage** (Artemis 363, 365, 384): mecânica removida. Reescrever os textos ou mapear para Rivalidade (§58)?
-- **Contra-mágicas em Moment** (Poseidon 133, 136, 154, 156, 159, 167, 171): Moment exige AÇÃO com pilha vazia, então nunca há Spell inimiga para mirar. Podem ser resposta?
+- **Trample** ✅ resolvido: igual a Pierce, não somam (guia §46A). Engine ajustada.
+- **Engage** ✅ resolvido: "engaged with X" = estar num Strike com X; "Engage that Devotee" força o Strike (guia §63). Falta implementar 363 e 384 com essa leitura.
+- **Contra-mágicas em Moment** ✅ Moment agora é resposta. Falta o gancho de engine "Spell inimiga na pilha" para Poseidon 133, 136, 154, 156, 159, 167, 171.
 - **"Would take Strike damage"** (Poseidon 096, 099, 100, 104, 110, 122, 131, 145): virou escudo de 1 criado na declaração do Strike.
-- **{T} em Equipment** (Hades 200, 227; Poseidon 092, 098, 126–128; Artemis 414): Equipment não tem Prepared. Tratado como "uma vez por rodada".
+- **{T} em Equipment** ✅ resolvido: uma vez por rodada (guia §61). Já implementado assim.
 - **"Once per turn" × "once each round"**: implementado por turno onde o texto diz turn. O guia §64 pede revisão de "turn".
 - **"Cosmo spend only to cast a Devotee"** (Artemis 397, 407, 414) e **{C} temporário** (386): sem rastreio de origem do Latent.
 - **Tokens** (Artemis 444 Forest Guardian 3/3): não existem nas regras.

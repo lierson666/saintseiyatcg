@@ -83,7 +83,7 @@ function playableReason(key, uid) {
     const cat = spellCat(uid);
     if (!cat) return 'This Technique or Moment is not playable yet.';
     if (cat.speed === 'instant' ? !(s.window ? s.window.priority === key : s.active === key && !s.chain.length) : !idleFor(key)) return cat.speed === 'instant' ? 'You need priority to cast a Moment.' : 'Techniques are cast on your turn, with no response pending.';
-    const cost = cat.v6 && s.window ? {amount: c.cost.amount, unit: 'latent'} : c.cost; // Technique V6 como resposta: só Latent
+    const cost = cat.v6 && s.window ? {amount: c.cost.amount, unit: 'latent'} : c.cost; // Moment V6 como resposta: só Latent
     return affordable(key, cost) ? missingTarget(key, uid) : `Needs ${cost.amount} ${cost.unit === 'base' ? 'prepared Base' : 'Latent'} Cosmo.`;
   }
   if (!idleFor(key)) return s.active !== key ? "It's not your turn." : 'Wait for the response window to close.';
@@ -113,10 +113,10 @@ function placeAsBase(key, uid) {
   warn('Cosmo Base placed. It is ready to pay costs now.');
 }
 // Há resposta possível? (Auto-pass só passa quando não há nenhum Moment jogável na mão.)
-// Categoria da Spell: V6 pelo subtipo impresso (Technique = ação ou resposta; Moment = ação, guia §XII); D268 pela D194.
+// Categoria da Spell: V6 pelo subtipo impresso (Moment = ação ou resposta; Technique = ação, guia §54); D268 pela D194.
 const spellCat = uid => {
   const v6 = ctx.objects[uid] && v6Spell(ctx, uid);
-  if (v6) return {category: v6.category, speed: v6.category === 'Technique' ? 'instant' : 'sorcery', v6: true};
+  if (v6) return {category: v6.category, speed: v6.category === 'Moment' ? 'instant' : 'sorcery', v6: true};
   return spellCategory(Number(num(uid)));
 };
 const hasResponse = key => S().players[key].hand.some(u => info(u).kind === 'Spell' && spellCat(u)?.speed === 'instant' && !playableReason(key, u));

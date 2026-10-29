@@ -92,7 +92,7 @@ Moment
 
 Carta que representa um acontecimento ou intervenção.
 
-Technique pode ser jogada como AÇÃO ou resposta em uma janela de prioridade. Moment exige AÇÃO. Custos, prioridade e resolução estão definidos no capítulo XII.
+Moment pode ser jogado como AÇÃO ou resposta em uma janela de prioridade. Technique exige AÇÃO. Custos, prioridade e resolução estão definidos no capítulo XII (autor, 29/10/2026).
 
 ---
 
@@ -119,9 +119,9 @@ Uma Base Prepared paga 1 Base Cosmo e fica indisponível até a renovação. Sou
 | Jogar Devotee | Sim | Não |
 | Jogar qualquer Armor | Sim | Não |
 | Ativar Ultimate | Sim | Não |
-| Technique como AÇÃO | Sim | Sim |
-| Technique como resposta | Não | Sim |
-| Moment e Equipment que não seja Armor | Sim | Sim |
+| Moment como AÇÃO | Sim | Sim |
+| Moment como resposta | Não | Sim |
+| Technique e Equipment que não seja Armor | Sim | Sim |
 | Equip, transferência, evolução e habilidades comuns | Sim | Sim |
 
 Custos expressamente restritos na carta continuam restritos. A proibição de usar Latent para jogar Devotee/Armor ou Ultimate não pode ser contornada por um custo genérico de Cosmo.
@@ -555,6 +555,10 @@ Se o defensor for destruído, não retaliará.
 
 Ao iniciar Strike contra um Devotee, o dano excedente ao HP restante do alvo é causado ao Soul do God que o controla. Não se aplica à retaliação.
 
+### 46A. Trample
+
+Mesmo efeito de Pierce: ao iniciar Strike contra um Devotee, o dano excedente ao HP restante do alvo é causado ao Soul do God que o controla. Não se aplica à retaliação. Trample e Pierce no mesmo Devotee não se somam (autor, 29/10/2026).
+
 ### 47. Impulse
 
 Pode declarar Strike na rodada em que entra em campo.
@@ -650,8 +654,8 @@ O autor aprovou a aplicação das recomendações de fechamento ao sistema do jo
 
 ### 56. Timing, respostas e resolução
 
-- Uma AÇÃO comum só é declarada na própria oportunidade e com a pilha vazia. Jogar Devotee, equipamento ou Moment; Strike, Evolve e habilidades marcadas como AÇÃO seguem essa regra.
-- **Technique** pode ser jogada como AÇÃO na própria oportunidade ou como resposta em uma janela de prioridade. Como resposta, não gasta a próxima AÇÃO, mas paga integralmente seus custos exclusivamente em Latent Cosmo. **Moment** exige AÇÃO, salvo texto explícito.
+- Uma AÇÃO comum só é declarada na própria oportunidade e com a pilha vazia. Jogar Devotee, equipamento ou Technique; Strike, Evolve e habilidades marcadas como AÇÃO seguem essa regra.
+- **Moment** pode ser jogado como AÇÃO na própria oportunidade ou como resposta em uma janela de prioridade. Como resposta, não gasta a próxima AÇÃO, mas paga integralmente seus custos exclusivamente em Latent Cosmo. **Technique** exige AÇÃO, salvo texto explícito (autor, 29/10/2026).
 - Habilidades ativadas exigem AÇÃO por padrão; apenas as expressamente permitidas como resposta podem ser ativadas na prioridade. Passivas e gatilhos não gastam AÇÃO. Uma carta que disser como e quando a habilidade funciona fornece a exceção.
 - Ao declarar uma AÇÃO, anunciar escolhas e alvos e pagar custos. Strike deixa o atacante Unprepared nesse momento. O adversário recebe a primeira prioridade para responder.
 - Cada resposta entra no topo da pilha e entrega prioridade ao adversário. Dois passes de prioridade resolvem apenas o item do topo. Havendo itens restantes, a prioridade volta ao jogador da oportunidade atual; o processo continua até esvaziar a pilha e resolver os gatilhos produzidos.
@@ -693,6 +697,7 @@ O dano é marcado separadamente do HP máximo. Power negativo causa zero dano. H
 | Cheater | Durante um Strike contra este Devotee, o Devotee adversário não se beneficia de Long Range. Não ignora Guardian. |
 | Long Range | Ao iniciar Strike, causa seu dano primeiro. Verificar destruição/derrota antes da retaliação; alvo destruído não retalia. Defender com Long Range não concede dano primeiro. |
 | Pierce | Ao iniciar Strike contra um Devotee, o dano excedente ao HP restante daquele alvo é causado ao Soul do God que o controla. Não funciona por retaliação. Calcular depois de prevenção/modificação do dano e sem contar dano antigo como dano novo. |
+| Trample | Igual a Pierce (§46A). Não se soma a Pierce. |
 | Impulse | Pode declarar Strike na rodada em que entra em campo. |
 | Sealed | Não pode declarar Strike nem ativar suas próprias habilidades, inclusive habilidades concedidas por equipamento. Mantém passivas, Rivalidades e retaliação; pode receber Evolve, que pertence à Cloth. Dura até o fim da rodada, salvo duração expressa diferente. |
 | Unfaith | Ao declarar Strike contra um God, pode escolher remover até 2 Latent Cosmo daquele jogador em lugar de causar dano ao Soul. A escolha é anunciada antes das respostas. O God retalia normalmente; sem Latent, o modo não causa dano ao Soul. |
@@ -706,7 +711,7 @@ Se um Strike normal causar Soul zero aos dois Gods simultaneamente por efeitos a
 ### 60. Cosmo, Latent e custos
 
 - Uma Base disponível paga 1 Cosmo e fica indisponível até a renovação. Gastar Bases para pagar é parte do pagamento; não cria uma AÇÃO adicional nem exige guardar um estoque de Cosmo gerado sem uso.
-- Aplicar a matriz da seção 5: Devotee, Armor e Ultimate usam somente Base; Technique como resposta usa somente Latent; os demais custos aceitam ambos, respeitando restrições expressas. Cosmo temporário só paga custos genéricos, salvo texto específico, e não é armazenado automaticamente.
+- Aplicar a matriz da seção 5: Devotee, Armor e Ultimate usam somente Base; Moment como resposta usa somente Latent; os demais custos aceitam ambos, respeitando restrições expressas. Cosmo temporário só paga custos genéricos, salvo texto específico, e não é armazenado automaticamente.
 - Manter Latent como recurso de superação: **uma vez por AÇÃO adversária**, se um ou mais Devotees seus receberem dano efetivo de fontes adversárias, ganhar 1 Latent. As respostas e consequências daquela AÇÃO contam na mesma ocorrência. Dano zero ou totalmente prevenido não gera; o Devotee pode ter sido destruído pelo dano.
 - Limite de **3 Latent por jogador**, persistente entre rodadas. Após os efeitos de fim, converter opcionalmente Bases disponíveis até esse limite; a capacidade de Bases renova normalmente na próxima rodada.
 - Dano de retaliação sofrido durante sua própria AÇÃO não gera esse ganho geral. Cartas podem criar suas próprias fontes de Latent.
@@ -720,6 +725,7 @@ Se um Strike normal causar Soul zero aos dois Gods simultaneamente por efeitos a
 - Jogar qualquer Armor custa uma AÇÃO e seu custo de entrada exclusivamente em Base. Pode entrar sem portador ou entrar equipada pagando também seu custo de Equip, na mesma AÇÃO, com alvo elegível anunciado. Se apenas o portador ficar inválido, ela entra sem portador e não devolve o custo de Equip.
 - Equipar uma armadura em campo, reequipar ou transferir custa uma AÇÃO mais Equip. Usar **Equip 1 para portador designado / 5 para os outros** em Armor, salvo custos específicos; armas/acessórios usam o custo impresso ou 1. Equip pode ser pago com Base e/ou Latent. Trocar de armadura deixa a anterior em campo sem portador, em Vanilla; não a destrói.
 - Desequipar voluntariamente custa uma AÇÃO e zero Cosmo. Não exige Prepared. Transferência e troca são concluídas antes de recalcular os atributos e verificar destruição, evitando mortes por um estado intermediário de interface.
+- Equipment com {T} no custo (ex.: Pandora's Box, Kraken Scale, Lunar Amulet) usa a habilidade **uma vez por rodada**; Equipment não tem estado Prepared/Unprepared (autor, 29/10/2026).
 - Destruir equipamento envia ao Tartarus; exilar envia ao Void; desequipar mantém no campo. Apenas Devotees ganham Afterlife no Tartarus. Equipamentos anexados não são enviados junto com o portador quando ele morre, retorna à mão ou é exilado, salvo texto explícito.
 - **Living Armor:** todas as Armor possuem HP próprio e dano independente do Devotee. O dano persiste entre rodadas, transferência, desequipamento e reset para Vanilla. Ao atingir HP máximo, a Armor permanece no Battlefield em estado Broken. Todos os bônus e habilidades concedidos por ela ficam suspensos até ser reparada (esclarecimento aprovado em 24/10/2026).
 - Evolução pertence a Cloth + Owner atual. Desanexar, transferir ou sair do campo reseta para Vanilla. A armadura continua tendo seus benefícios Vanilla quando equipada em um não Owner elegível.
@@ -752,6 +758,7 @@ Se um Strike normal causar Soul zero aos dois Gods simultaneamente por efeitos a
 - Relics só são únicas se isso estiver expresso. Retirar o desconto geral de 2 Cosmo por repetir nome; evolução de Cloth passa a ser a progressão geral, e uma carta específica pode autorizar substituir sua versão anterior.
 - Gods não iniciam Strike nem equipam armaduras. Possuem Soul e Attack; retaliação permanece disponível independentemente de Prepared. Custos de habilidades do God devem estar impressos, inclusive eventual esgotamento.
 - Domains permanecem em jogo, fora do deck, sem custo de entrada e protegidos de ataque, destruição, exílio, retorno à mão e mudança de controle adversária nesta base. Seus efeitos e limites de uso vêm do texto da carta. Galaxian Wars Arena (062), Tournament Spirit: conta quando o Bronze Saint amigo derrota o Devotee inimigo num Strike, tanto atacando quanto defendendo (dano de retaliação) (autor, 28/10/2026).
+- **Engage** (texto antigo de algumas cartas de Artemis): "engaged with X" significa estar num Strike com X, atacando ou defendendo; "Engage that Devotee" força esse Devotee num Strike contra o seu (autor, 29/10/2026). A mecânica de Engage separada não existe.
 - Manter Tartarus e Void distintos. Void representa exílio e não concede Afterlife. Efeitos só alcançam as zonas e tipos que identificam; “target Devotee” não alcança automaticamente uma carta no Tartarus.
 
 ### 64. Duração dos efeitos e Card Craft

@@ -155,8 +155,8 @@ export function playSpell(state, ctx, key, uid, choice = {}) {
   respond(state, key, {speed: 'instant', uid, run: finish, target: typeof choice === 'object' ? choice.target ?? null : null}); // Moment jogado abre ou continua a janela
 }
 
-// Spell V6 (guia §XII, cap. 54): Moment exige AÇÃO (própria vez, cadeia vazia) e paga o custo impresso em Base;
-// Technique joga como AÇÃO (Base) ou como resposta numa janela em que tem prioridade, pagando só Latent.
+// Spell V6 (guia §54, autor 29/10/2026): Technique exige AÇÃO (própria vez, cadeia vazia) e paga o custo impresso em Base;
+// Moment joga como AÇÃO (Base) ou como resposta numa janela em que tem prioridade, pagando só Latent.
 // Alvos e escolhas são perguntas na resolução (v6/kit.js). `choice` é repassado a spell.check/run.
 function playSpellV6(state, ctx, key, uid, choice) {
   const {entry, category} = v6Spell(ctx, uid);
@@ -168,7 +168,7 @@ function playSpellV6(state, ctx, key, uid, choice) {
     st.players[ctx.objects[uid].owner].tartarus.push(uid);
     checkDefeats(st, ctx);
   };
-  const response = category === 'Technique' && state.window;
+  const response = category === 'Moment' && state.window;
   if (!response) {
     const card = sorceryFromHand(state, ctx, key, uid, 'Spell');
     entry.spell.check?.(state, ctx, key, choice);
