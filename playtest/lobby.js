@@ -14,9 +14,12 @@ const KINDS = ['All', 'Devotee', 'Equipment', 'Spell', 'Domain'];
 const COSTS = ['All', '1', '2', '3', '4', '5', '6', '7+'];
 const FACTIONS = ['athena', 'poseidon', 'hades', 'ares', 'artemis'];
 const symbol = f => `../CARD-TEMPLATE/symbols/${f}.png`;
+// Filtro da coleção: os 5 Gods e as neutras (sem símbolo; botão cinza claro como o frame).
+const PICKS = [...FACTIONS, 'neutral'];
+const cap = f => f[0].toUpperCase() + f.slice(1);
 
 let cards, index, forge, presets = [], gods = [];
-const ui = {screen: 'home', play: false, mode: 'ai', deckA: null, deckB: null, first: 'random', big: null, builder: null};
+const ui = {screen: 'home', play: false, mode: 'ai', deckA: null, deckB: null, first: 'random', big: null, notice: null, builder: null};
 try { Object.assign(ui, JSON.parse(localStorage.getItem('sstcg.lobby.v1')) || {}, {screen: 'home', play: false, big: null, builder: null}); } catch { /* sem preferências salvas */ }
 const remember = () => { try { localStorage.setItem('sstcg.lobby.v1', JSON.stringify({mode: ui.mode, deckA: ui.deckA, deckB: ui.deckB, first: ui.first})); } catch { /* idem */ } };
 
@@ -122,12 +125,12 @@ function openBuilder(deck) {
   if (deck?.preset) { base.id = null; base.nome = `${deck.alpha_nome || deck.nome} (copy)`; delete base.preset; }
   base.god ||= 'god-athena';
   // show: facções visíveis na coleção (símbolos dos Gods, várias ao mesmo tempo); começa nas cores do deck.
-  ui.builder = {deck: base, q: '', cost: 'All', kind: 'All', dirty: false, show: [...deckFactions(base)].filter(f => f !== 'neutral')};
+  ui.builder = {deck: base, q: '', cost: 'All', kind: 'All', dirty: false, show: [...deckFactions(base)]};
   ui.screen = 'builder';
 }
 const count = (b, id) => b.deck.main_deck.find(e => e.card_id === id)?.quantity || 0;
 function pool(b) {
-  const factions = new Set([...(b.show.length ? b.show : FACTIONS), 'neutral']);
+  const factions = new Set(b.show.length ? b.show : PICKS);
   const q = b.q.trim().toLowerCase();
   // A coleção mostra os Gods marcados; a identidade do deck (God + Domain + neutras) é validada em deckErrors.
   return [...cards.values()].filter(c => c.kind !== 'God' && factions.has(faction(c))
@@ -151,8 +154,9 @@ function builder() {
       <div class="lb-filters"><input type="search" placeholder="Search name or text" value="${esc(b.q)}" data-act="search" aria-label="Search cards">
         <div class="lb-pills" aria-label="Cost">${COSTS.map(v => pill('cost', v)).join('')}</div>
         <div class="lb-pills" aria-label="Type">${KINDS.map(v => pill('kind', v)).join('')}</div>
-        <div class="lb-gods" role="group" aria-label="Show cards of">${FACTIONS.map(f => `<button class="lb-godpick ${b.show.includes(f) ? 'is-active' : ''}"
-          data-act="show-god" data-faction="${f}" aria-pressed="${b.show.includes(f)}" title="${cards.get(`god-${f}`)?.name || f}"><img src="${symbol(f)}" alt="${f}"></button>`).join('')}</div></div>
+        <div class="lb-gods" role="group" aria-label="Show cards of">${PICKS.map(f => `<button class="lb-godpick ${b.show.includes(f) ? 'is-active' : ''}"
+          data-act="show-god" data-faction="${f}" aria-pressed="${b.show.includes(f)}" title="${cards.get(`god-${f}`)?.name || 'Neutral'}">${f === 'neutral'
+          ? '<span class="lb-godpick__neutral" aria-hidden="true"></span><span class="lb-sr">Neutral</span>' : `<img src="${symbol(f)}" alt="${f}">`}</button>`).join('')}</div></div>
       <div class="lb-grid">${cards_.map(c => {
         const n = count(b, c.id), isDomain = c.kind === 'Domain', on = isDomain ? d.domain_id === c.id : n > 0;
         return `<button class="lb-slot ${on ? 'is-in' : ''} ${!isDomain && n >= COPY_LIMIT ? 'is-max' : ''}" data-act="${isDomain ? 'set-domain' : 'add'}" data-id="${c.id}" aria-label="${esc(c.name)}">
@@ -210,6 +214,12 @@ function cardInfo(id) {
       <button class="lb-play lb-play--small" data-act="add" data-id="${id}" ${n >= COPY_LIMIT || deckSize(ui.builder.deck) >= DECK_SIZE ? 'disabled' : ''}>Add</button></div>`}
   </section>`;
 }
+// Aviso modal (carta fora da identidade de cor do deck).
+function notice() {
+  return ui.notice ? `<div class="lb-notice" role="alertdialog" aria-modal="true" aria-labelledby="lb-notice-t"><div class="lb-notice__box">
+    <h3 id="lb-notice-t">${esc(ui.notice.title)}</h3><p>${esc(ui.notice.text)}</p>
+    <button class="lb-play lb-play--small" data-act="close-notice" autofocus>OK</button></div></div>` : '';
+}
 function bigCard() {
   return ui.big ? `<div class="lb-big" data-act="close-big" role="dialog" aria-label="Card">${face(ui.big, 'lb-card--big')}${cardInfo(ui.big)}</div>` : '';
 }
@@ -219,7 +229,7 @@ const SCROLLERS = ['.lb-body', '.lb-grid', '.lb-list', '.lb-panel'];
 function render() {
   const keep = SCROLLERS.map(sel => root.querySelector(sel)?.scrollTop || 0), screen = root.dataset.screen;
   const body = {home, decks: decksScreen, options, builder}[ui.screen]();
-  root.innerHTML = `${topBar()}<div class="lb-body lb-body--${ui.screen}">${body}</div>${bigCard()}`;
+  root.innerHTML = `${topBar()}<div class="lb-body lb-body--${ui.screen}">${body}</div>${bigCard()}${notice()}`;
   if (screen === ui.screen) SCROLLERS.forEach((sel, i) => { const el = root.querySelector(sel); if (el) el.scrollTop = keep[i]; });
   root.dataset.screen = ui.screen;
 }
@@ -227,6 +237,15 @@ function render() {
 // ---------- Ações ----------
 function setCount(id, delta) {
   const list = ui.builder.deck.main_deck, entry = list.find(e => e.card_id === id), n = (entry?.quantity || 0) + delta;
+  // Identidade de cor (guia §63): só cartas do God, do Domain ou neutras entram.
+  const card = cards.get(id), ok = deckFactions(ui.builder.deck);
+  if (delta > 0 && card && !ok.has(faction(card))) {
+    const names = [...ok].map(f => f === 'neutral' ? 'neutral' : cap(f)), f = cap(faction(card));
+    const list = names.length > 1 ? `${names.slice(0, -1).join(', ')} and ${names.at(-1)}` : names[0];
+    ui.big = null;
+    ui.notice = {title: 'Outside this deck\'s colors', text: `${card.name} is ${/^[AEIOU]/.test(f) ? 'an' : 'a'} ${f} card. This deck can only use ${list} cards. Change the God or the Domain to add it.`};
+    return;
+  }
   if (n > COPY_LIMIT || (delta > 0 && deckSize(ui.builder.deck) >= DECK_SIZE)) return;
   if (!entry) list.push({card_id: id, quantity: n});
   else if (n <= 0) list.splice(list.indexOf(entry), 1);
@@ -271,6 +290,7 @@ const actions = {
     ui.screen = 'decks';
   },
   'close-big': () => { ui.big = null; },
+  'close-notice': () => { ui.notice = null; },
 };
 
 root.addEventListener('click', e => {
@@ -308,7 +328,7 @@ root.addEventListener('input', e => {
     input.focus(); input.setSelectionRange(at, at);
   }
 });
-addEventListener('keydown', e => { if (e.key === 'Escape' && (ui.big || ui.play)) { ui.big = null; ui.play = false; render(); } });
+addEventListener('keydown', e => { if (e.key === 'Escape' && (ui.big || ui.play || ui.notice)) { ui.big = null; ui.play = false; ui.notice = null; render(); } });
 // Áudio só começa após o primeiro gesto do jogador (política dos navegadores).
 addEventListener('pointerdown', () => { unlock(); playMusic('menu'); }, {once: true});
 

@@ -192,3 +192,9 @@ h1, h2, h3, .lb-play, .lb-tab, .lb-hero p { font-family: "Cinzel", "Trajan Pro",
   .lb-big { flex-direction: column; overflow: auto; justify-content: flex-start; }
   .lb-card--big, .lb-info { width: min(380px, 100%); max-height: none; }
 }
+.lb-godpick__neutral { width: 22px; height: 22px; border-radius: 50%; background: #d6d8dd; box-shadow: inset 0 0 0 3px #9ea2ab; }
+.lb-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.lb-notice { position: fixed; inset: 0; z-index: 1100; display: grid; place-items: center; padding: 16px; background: #000b; backdrop-filter: blur(4px); animation: lb-fade .18s ease-out; }
+.lb-notice__box { max-width: 420px; padding: 22px 24px; border: 1px solid var(--gold); border-radius: 14px; background: #141621; box-shadow: 0 12px 40px #000c; text-align: center; }
+.lb-notice__box h3 { margin: 0 0 8px; color: var(--gold); }
+.lb-notice__box p { margin: 0 0 16px; line-height: 1.45; }
