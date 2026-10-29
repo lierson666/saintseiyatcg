@@ -58,6 +58,8 @@
     .status.ok { color: var(--gold-2); } .status.err { color: #ff9a87; }
     footer { grid-column: 1 / -1; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; border-top: 2px solid var(--ink); padding-top: 12px;
       font: 700 11px "Jost", sans-serif; letter-spacing: .28em; text-transform: uppercase; color: var(--muted); }
+    .love { color: var(--gold); letter-spacing: .18em; }
+    .love span { color: var(--blood); }
     @media (max-width: 860px) {
       .page { grid-template-columns: 1fr; grid-template-rows: auto auto auto auto; }
       .title { padding: 28px 0 24px; }
@@ -91,7 +93,7 @@
         <p class="status" role="status" aria-live="polite"></p>
       </form>
     </section>
-    <footer><span>Saint Seiya TCG</span><span>In development</span></footer>
+    <footer><span>Saint Seiya TCG · In development</span><span class="love">Feito com muito amor por fãs brasileiros <span aria-label="amor">♥</span></span></footer>
   </div>
   <script>
     // URL do app da web do Apps Script (tools/coming-soon-apps-script.gs). Vazio: o formulário avisa que ainda não abriu.
