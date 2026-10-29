@@ -10,7 +10,7 @@ import {loadMyDecks, saveMyDecks, findDeck} from './deck-store.js';
 import {mountKV} from '../shared/kv-sky.js?v=20261029-2';
 import {countryOptions, countryName} from '../shared/countries.js?v=20261029-1';
 import {startPresence} from '../shared/presence.js?v=20261029-1';
-import {mountSocial} from './social.js?v=20261029-3';
+import {mountSocial} from './social.js?v=20261029-4';
 
 const root = document.getElementById('lobby');
 const ART = '../card-forge/art-web/';
@@ -91,7 +91,8 @@ const socialBadge = () => `<span class="lb-socialbtn__count">${ui.online || 0}</
 function startSocial() {
   if (social || !ui.user?.complete) return;
   startPresence('online');
-  social = mountSocial({api, avatarOf: id => artOf(id || 'god-athena'), onCount: (online, requests) => {
+  social = mountSocial({api, avatarOf: id => artOf(id || 'god-athena'),
+    decks: () => allDecks().filter(deckValid).map(d => ({id: d.id, name: d.alpha_nome || d.nome, deck: d})), onCount: (online, requests) => {
     ui.online = online; ui.requests = requests;
     const b = root.querySelector('.lb-socialbtn'); if (b) b.innerHTML = `Friends ${socialBadge()}`;
   }});

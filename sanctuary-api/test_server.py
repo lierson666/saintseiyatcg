@@ -2,7 +2,7 @@
 import json, os, sys, tempfile, threading, unittest, urllib.request
 from urllib.error import HTTPError
 
-os.environ['SANCTUARY_INVITES'] = 'Saint@Example.com,a@example.com,b@example.com,c@example.com,d@example.com,e@example.com,adm@example.com,f@example.com'
+os.environ['SANCTUARY_INVITES'] = 'Saint@Example.com,a@example.com,b@example.com,c@example.com,d@example.com,e@example.com,adm@example.com,f@example.com,g@example.com,h@example.com'
 os.environ['SANCTUARY_INSECURE_COOKIE'] = '1'
 os.environ['SANCTUARY_ADMINS'] = 'adm@example.com'
 sys.path.insert(0, os.path.dirname(__file__))
@@ -183,6 +183,48 @@ class Api(unittest.TestCase):
         self.assertEqual(self.call('POST', '/api/admin/users/Ikki_Player/restore', cookie=admin)[0], 200)
         self.assertEqual(self.call('POST', '/api/auth/login', {'email': 'f@example.com', 'password': 'x' * 12})[0], 200)
         self.assertEqual(self.call('POST', '/api/admin/users/Athena_Adm/suspend', cookie=admin)[0], 400)
+
+    def test_desafio(self):
+        import http.server
+        created, results = [], {}
+        class Arena(http.server.BaseHTTPRequestHandler):  # arena-server falso
+            def log_message(self, *a): pass
+            def do_POST(self):
+                body = json.loads(self.rfile.read(int(self.headers['Content-Length'])))
+                created.append((self.headers.get('X-Arena-Secret'), body['players']))
+                self.send_response(201); self.send_header('Content-Type', 'application/json'); self.end_headers(); self.wfile.write(b'{"id": "match12345"}')
+            def do_GET(self):
+                self.send_response(200); self.send_header('Content-Type', 'application/json'); self.end_headers()
+                self.wfile.write(json.dumps({'victory': results.get('v')}).encode())
+        fake = http.server.HTTPServer(('127.0.0.1', 0), Arena)
+        threading.Thread(target=fake.serve_forever, daemon=True).start()
+        server.ARENA_URL, server.ARENA_SECRET = f'http://127.0.0.1:{fake.server_address[1]}', 's3cret'
+        reg = lambda email, user: self.call('POST', '/api/auth/register', {'email': email, 'name': user + ' Name', 'username': user, 'country': 'BR', 'password': 'x' * 12, 'accept_terms': True})[2]
+        a, b = reg('g@example.com', 'Aiolos_G'), reg('h@example.com', 'Aiolia_H')
+        code = self.call('GET', '/api/me', cookie=b)[1]['friend_code']
+        self.call('POST', '/api/friends/requests', {'code': code}, cookie=a)
+        rid = self.call('GET', '/api/friends', cookie=b)[1]['incoming'][0]['id']
+        self.call('POST', f'/api/friends/requests/{rid}/accept', cookie=b)
+        deck = {'main_deck': [{'card_id': 'x', 'quantity': 1}]}
+        self.assertEqual(self.call('POST', '/api/challenges', {'to': 'Aiolia_H', 'deck': deck}, cookie=a)[0], 409)  # offline
+        self.call('POST', '/api/presence', {}, cookie=b)
+        st, ch, _, _ = self.call('POST', '/api/challenges', {'to': 'Aiolia_H', 'deck': deck}, cookie=a)
+        self.assertEqual(st, 201)
+        pend = self.call('GET', '/api/challenges/pending', cookie=b)[1]['challenges']
+        self.assertEqual((pend[0]['id'], pend[0]['from']), (ch['id'], 'Aiolos_G'))
+        msgs = self.call('GET', '/api/chat/Aiolos_G', cookie=b)[1]['messages']
+        self.assertEqual(msgs[-1]['challenge']['status'], 'pending')
+        self.assertEqual(self.call('POST', f"/api/challenges/{ch['id']}/accept", {'deck': deck}, cookie=a)[0], 404)  # quem desafiou não aceita
+        st, acc, _, _ = self.call('POST', f"/api/challenges/{ch['id']}/accept", {'deck': deck}, cookie=b)
+        self.assertEqual((st, acc['match']), (200, 'match12345'))
+        self.assertEqual(created[0], ('s3cret', {'A': 'Aiolos_G', 'B': 'Aiolia_H'}))
+        mine = self.call('GET', '/api/challenges/pending', cookie=a)[1]['challenges']
+        self.assertEqual((mine[0]['status'], mine[0]['match']), ('accepted', 'match12345'))
+        results['v'] = {'winner': 'B', 'reason': 'soul'}
+        msgs = self.call('GET', '/api/chat/Aiolia_H', cookie=a)[1]['messages']
+        self.assertEqual((msgs[-1]['kind'], msgs[-1]['body']), ('result', '🏆 Aiolia_H won the duel.'))
+        self.assertEqual(self.call('POST', f"/api/challenges/{ch['id']}/decline", cookie=b)[0], 409)
+        fake.shutdown()
 
 
 if __name__ == '__main__':

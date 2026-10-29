@@ -4,7 +4,7 @@ Só biblioteca padrão: http.server + sqlite3 + hashlib.scrypt. Roda atrás do C
 GET /api/auth/check (forward_auth) para liberar o /playtest só a quem está logado.
 Cadastro só para emails convidados (tabela invites; SANCTUARY_INVITES semeia na partida).
 """
-import hashlib, hmac, json, os, re, secrets, sqlite3, threading, time
+import hashlib, hmac, json, os, re, secrets, sqlite3, threading, time, urllib.request, urllib.error
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, quote, urlparse
@@ -32,6 +32,10 @@ LOGIN_VERSION = '3'
 # Painel do sistema (Star Hill → /admin/, autor 29/10/2026): admins por email; pedidos de acesso vêm da home.
 ADMINS = {e.strip().lower() for e in os.environ.get('SANCTUARY_ADMINS', '').split(',') if e.strip()}
 REQUESTS_PER_HOUR = 5
+# Duelo online (docs/duelo-online.md, etapa 4): desafio pelo chat, expira em 60 s; a partida roda no arena-server.
+ARENA_URL = os.environ.get('ARENA_URL', 'http://arena-server:8090')
+ARENA_SECRET = os.environ.get('ARENA_SECRET', '')
+CHALLENGE_SECONDS = 60
 SUSPENDED = 'This account is suspended.'
 OLD_FORM = 'Please reload this page to see the new sign-up form.'
 
@@ -55,6 +59,8 @@ create table if not exists reports (id integer primary key, reporter_id integer 
   created_at integer not null, excerpt text not null);
 create table if not exists access_requests (id integer primary key, email text unique not null, name text not null,
   news integer not null, ip text not null, created_at integer not null, status text not null default 'pending', decided_at integer);
+create table if not exists challenges (id integer primary key, from_id integer not null, to_id integer not null, deck text not null,
+  created_at integer not null, status text not null default 'pending', match_id text, winner_id integer, settled_at integer);
 create table if not exists blocks (user_id integer not null, blocked_id integer not null, created_at integer not null,
   primary key (user_id, blocked_id));
 """
@@ -73,6 +79,10 @@ def open_db(path=DB_PATH):
     for col in ('username', 'username_display', 'country', 'phone', 'friend_code', 'avatar_card', 'accepted_terms_at', 'last_seen', 'status', 'suspended_at'):
         if col not in have:
             db.execute(f'alter table users add column {col}')
+    have = {r['name'] for r in db.execute('pragma table_info(messages)')}
+    for col in ('kind', 'ref'):  # mensagem especial do chat: 'challenge' (ref = id do desafio) e 'result'
+        if col not in have:
+            db.execute(f'alter table messages add column {col}')
     if 'resolved_at' not in {r['name'] for r in db.execute('pragma table_info(reports)')}:
         db.execute('alter table reports add column resolved_at')
     db.execute('create unique index if not exists users_username on users(username)')
@@ -263,6 +273,13 @@ class Handler(BaseHTTPRequestHandler):
                     return self.chat_read(m[1])
                 if method == 'POST':
                     return self.chat_report(m[1]) if m[2] else self.chat_send(m[1])
+            if method == 'POST' and path == '/api/challenges':
+                return self.challenge()
+            if method == 'GET' and path == '/api/challenges/pending':
+                return self.challenges_pending()
+            m = re.fullmatch(r'/api/challenges/(\d+)/(accept|decline|cancel)', path)
+            if m and method == 'POST':
+                return self.challenge_answer(int(m[1]), m[2])
             if method == 'POST' and path == '/api/access-requests':
                 return self.access_request()
             if path.startswith('/api/admin/'):
@@ -492,13 +509,24 @@ class Handler(BaseHTTPRequestHandler):
         after = int(after) if after.isdigit() else 0
         with lock:
             other = self.friend_by_username(me, username)
+            self.settle_pair(me, other['id'])
             rows = db.execute('select * from (select * from messages where ((from_id = ? and to_id = ?) or (from_id = ? and to_id = ?)) and id > ? '
                               'order by id desc limit ?) order by id', (me, other['id'], other['id'], me, after, MSG_PAGE)).fetchall()
             db.execute('update messages set seen_at = ? where from_id = ? and to_id = ? and seen_at is null', (int(time.time()), other['id'], me))
             # "Seen" da minha última mensagem: o outro já leu?
             last_seen = db.execute('select max(id) from messages where from_id = ? and to_id = ? and seen_at is not null', (me, other['id'])).fetchone()[0]
-        self.send_json(200, {'messages': [{'id': r['id'], 'mine': r['from_id'] == me, 'body': r['body'], 'at': r['created_at']} for r in rows],
-                             'seen_up_to': last_seen or 0})
+            refs = [r['ref'] for r in rows if r['ref']]
+            challenges = {c['id']: c for c in db.execute(f"select * from challenges where id in ({','.join('?' * len(refs))})", refs).fetchall()} if refs else {}
+            recent = self.open_challenges(me, other['id'])
+        out = []
+        for r in rows:
+            m = {'id': r['id'], 'mine': r['from_id'] == me, 'body': r['body'], 'at': r['created_at'], 'kind': r['kind'] or 'text'}
+            c = challenges.get(r['ref'])
+            if c:
+                m['challenge'] = self.challenge_view(c, me)
+            out.append(m)
+        self.send_json(200, {'messages': out, 'seen_up_to': last_seen or 0,
+                             'challenges': recent})
 
     def chat_send(self, username):
         me = self.require_user()['id']
@@ -591,6 +619,108 @@ class Handler(BaseHTTPRequestHandler):
         if not cur.rowcount:
             raise ApiError(404, 'Deck not found in the trash.')
         self.send_json(200, {'ok': True})
+
+    # ---------- desafios (duelo online, etapa 4) ----------
+    @staticmethod
+    def challenge_status(c, now=None):
+        now = now or int(time.time())
+        return 'expired' if c['status'] == 'pending' and c['created_at'] < now - CHALLENGE_SECONDS else c['status']
+
+    def challenge_view(self, c, me):
+        return {'id': c['id'], 'status': self.challenge_status(c), 'mine': c['from_id'] == me, 'match': c['match_id'],
+                'expires_at': c['created_at'] + CHALLENGE_SECONDS}
+
+    def open_challenges(self, me, other):  # estado atual dos desafios recentes da conversa (a mensagem já mostrada muda de estado)
+        rows = db.execute('select * from challenges where ((from_id = ? and to_id = ?) or (from_id = ? and to_id = ?)) and created_at > ?',
+                          (me, other, other, me, int(time.time()) - 3600)).fetchall()
+        return [self.challenge_view(c, me) for c in rows]
+
+    def challenge(self):
+        me = self.require_user()
+        body = self.read_json()
+        deck = body.get('deck')
+        if not isinstance(deck, dict) or not isinstance(deck.get('main_deck'), list):
+            raise ApiError(400, 'Choose a deck.')
+        now = int(time.time())
+        with lock:
+            other = self.friend_by_username(me['id'], str(body.get('to', '')))
+            if (other['last_seen'] or 0) <= now - ONLINE_WINDOW:
+                raise ApiError(409, f"{other['username_display']} is offline.")
+            if db.execute("select 1 from challenges where from_id = ? and to_id = ? and status = 'pending' and created_at > ?",
+                          (me['id'], other['id'], now - CHALLENGE_SECONDS)).fetchone():
+                raise ApiError(409, 'You already challenged this friend. Wait for the answer.')
+            cur = db.execute('insert into challenges (from_id, to_id, deck, created_at) values (?, ?, ?, ?)', (me['id'], other['id'], json.dumps(deck), now))
+            db.execute("insert into messages (from_id, to_id, body, created_at, kind, ref) values (?, ?, ?, ?, 'challenge', ?)",
+                       (me['id'], other['id'], f"⚔ {me['username_display']} challenged you to a duel", now, cur.lastrowid))
+        self.send_json(201, {'id': cur.lastrowid, 'expires_at': now + CHALLENGE_SECONDS})
+
+    def challenges_pending(self):  # aviso no lobby: desafios recebidos ainda abertos e os meus que viraram partida
+        me = self.require_user()['id']
+        now = int(time.time())
+        with lock:
+            rows = db.execute('select c.*, u.username_display as from_name from challenges c join users u on u.id = c.from_id '
+                              "where (c.to_id = ? and c.status = 'pending' and c.created_at > ?) "
+                              "or (c.from_id = ? and c.status = 'accepted' and c.created_at > ?)", (me, now - CHALLENGE_SECONDS, me, now - 300)).fetchall()
+        self.send_json(200, {'challenges': [{**self.challenge_view(c, me), 'from': c['from_name']} for c in rows]})
+
+    def challenge_answer(self, cid, answer):
+        me = self.require_user()
+        body = self.read_json()
+        now = int(time.time())
+        with lock:
+            c = db.execute('select * from challenges where id = ?', (cid,)).fetchone()
+            if not c or me['id'] not in (c['from_id'], c['to_id']) or (answer == 'cancel') != (c['from_id'] == me['id']):
+                raise ApiError(404, 'Challenge not found.')
+            if self.challenge_status(c, now) != 'pending':
+                raise ApiError(409, 'This challenge is no longer open.')
+            if answer != 'accept':
+                db.execute('update challenges set status = ? where id = ?', (answer + 'd' if answer == 'decline' else 'cancelled', cid))
+                return self.send_json(200, {'ok': True})
+            deck = body.get('deck')
+            if not isinstance(deck, dict) or not isinstance(deck.get('main_deck'), list):
+                raise ApiError(400, 'Choose a deck.')
+            names = dict(db.execute('select id, username_display from users where id in (?, ?)', (c['from_id'], c['to_id'])).fetchall())
+        # fora do lock: chamada de rede ao arena-server (quem desafiou é A; quem aceitou é B)
+        match_id = self.arena_create({'A': names[c['from_id']], 'B': names[c['to_id']]}, {'A': json.loads(c['deck']), 'B': deck})
+        with lock:
+            cur = db.execute("update challenges set status = 'accepted', match_id = ? where id = ? and status = 'pending'", (match_id, cid))
+            if not cur.rowcount:
+                raise ApiError(409, 'This challenge is no longer open.')
+        self.send_json(200, {'match': match_id})
+
+    def arena_create(self, players, decks):
+        req = urllib.request.Request(f'{ARENA_URL}/arena/matches', json.dumps({'players': players, 'decks': decks}).encode(),
+                                     {'Content-Type': 'application/json', 'X-Arena-Secret': ARENA_SECRET})
+        try:
+            with urllib.request.urlopen(req, timeout=10) as r:
+                return json.load(r)['id']
+        except urllib.error.HTTPError as e:
+            msg = json.loads(e.read() or b'{}').get('error') if e.code == 400 else None
+            raise ApiError(400 if msg else 502, msg or 'The duel server is not available. Try again in a moment.')
+        except (urllib.error.URLError, OSError):
+            raise ApiError(502, 'The duel server is not available. Try again in a moment.')
+
+    def settle_pair(self, a, b):  # resultado das partidas da conversa: vira mensagem no chat quando o duelo termina
+        rows = db.execute("select * from challenges where status = 'accepted' and settled_at is null and "
+                          '((from_id = ? and to_id = ?) or (from_id = ? and to_id = ?))', (a, b, b, a)).fetchall()
+        for c in rows:
+            try:
+                req = urllib.request.Request(f"{ARENA_URL}/arena/matches/{c['match_id']}/result", headers={'X-Arena-Secret': ARENA_SECRET})
+                with urllib.request.urlopen(req, timeout=3) as r:
+                    victory = json.load(r).get('victory')
+            except urllib.error.HTTPError as e:
+                victory = {'winner': None, 'reason': 'gone'} if e.code == 404 else None
+            except (urllib.error.URLError, OSError):
+                continue
+            if not victory:
+                continue
+            winner = {'A': c['from_id'], 'B': c['to_id']}.get(victory.get('winner'))
+            name = db.execute('select username_display from users where id = ?', (winner,)).fetchone() if winner else None
+            text = f"🏆 {name[0]} won the duel." if name else ('The duel ended.' if victory.get('reason') == 'gone' else 'The duel ended in a draw.')
+            now = int(time.time())
+            db.execute('update challenges set winner_id = ?, settled_at = ? where id = ?', (winner, now, c['id']))
+            db.execute("insert into messages (from_id, to_id, body, created_at, kind, ref, seen_at) values (?, ?, ?, ?, 'result', ?, ?)",
+                       (c['from_id'], c['to_id'], text, now, c['id'], None))
 
     # ---------- pedidos de acesso (home) ----------
     def access_request(self):  # resposta igual para email novo ou repetido: não revela quem já pediu

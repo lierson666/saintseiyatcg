@@ -367,3 +367,19 @@ body { font: 300 15px/1.45 var(--kv-sans); }
 .lb-chat__seen { margin: -4px 4px 0; text-align: right; font-size: 11px; color: var(--kv-gold); }
 .lb-chat__form { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
 .lb-chat__form .kv-ghost { min-height: 50px; }
+
+/* Duelo pelo chat (etapa 4): formulário de desafio, mensagem de desafio, resultado e aviso no topo. */
+.lb-chat__duel { min-height: 36px; padding: 0 14px; font-size: 13px; white-space: nowrap; }
+.lb-chat__duel:disabled { opacity: .45; cursor: not-allowed; }
+.lb-duel { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--kv-line); }
+.lb-duel[hidden] { display: none; }
+.lb-duel__deck { flex: 1 1 160px; min-height: 40px; padding: 6px 14px; }
+.lb-msg--duel { max-width: 92%; padding: 12px 14px; border: 1px solid #e6c36a66; border-radius: 16px; background: #e6c36a12; display: grid; gap: 8px; }
+.lb-msg--duel p { padding: 0; border: 0; background: none; }
+.lb-duel__acts { display: flex; gap: 8px; }
+.lb-duel__state { color: var(--kv-muted); font-size: 13px; }
+.lb-duel__state a { color: var(--kv-gold); }
+.lb-msg.is-system { align-self: center; max-width: 100%; }
+.lb-msg.is-system p { border-color: #e6c36a55; color: var(--kv-gold); text-align: center; }
+.lb-notice.kv-card { position: fixed; top: 16px; bottom: auto; right: auto; height: auto; align-content: start; left: 50%; transform: translateX(-50%); z-index: 60; width: min(420px, calc(100vw - 32px)); padding: 16px 18px; display: grid; gap: 10px; box-sizing: border-box; }
+.lb-notice p { margin: 0; }
