@@ -98,6 +98,8 @@
   <script>
     // URL do app da web do Apps Script (tools/coming-soon-apps-script.gs). Vazio: o formulário avisa que ainda não abriu.
     const SIGNUP_URL = '';
+    // Endereço limpo na barra: /index.html aparece como / (a raiz volta para cá; ver playtest/index.html).
+    if (location.pathname === '/index.html') history.replaceState(null, '', '/' + location.search + location.hash);
 
     // ---------- Céu e cosmo (canvas) ----------
     // Três camadas de estrelas com paralaxe; perto do ponteiro elas se ligam em constelação.

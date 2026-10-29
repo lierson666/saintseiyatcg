@@ -2,6 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <script>
+    // shortcut: o Caddy ainda faz "redir / /playtest/ 302" (precisa de root para tirar; docs/coming-soon.md).
+    // Quem chega aqui por esse redirecionamento (saintseiyatcg.com/) volta para a home; /playtest/ digitado direto abre o jogo.
+    // Apague este bloco quando a linha sair do Caddyfile.
+    if (location.hostname.endsWith('saintseiyatcg.com') && performance.getEntriesByType('navigation')[0]?.redirectCount > 0) location.replace('/index.html');
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#05070c">
   <meta name="description" content="Awaken your Cosmo. An original Saint Seiya fan card game with local battles and an AI rival.">
