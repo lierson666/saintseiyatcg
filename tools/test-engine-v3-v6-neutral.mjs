@@ -237,10 +237,12 @@ test('459 Unstable Power (aproximação): Prepared no início do turno depois de
   assert.equal(V6[N(459)].startTurn(s, ctx, 'A', whale), false);
 });
 
-test('460 Black Unicorn: ataca no turno em que entra (Impulse), compra ao ferir o God; descarta ao atacar', () => {
+test('460 Black Unicorn: Impulse na entrada não mira God (§47); depois compra ao ferir o God e descarta ao atacar', () => {
   const {s, ctx, give} = setup();
   const uni = give('A', N(460), 'hand');
   playDevotee(s, ctx, 'A', uni, {}); passAll(s);
+  assert.throws(() => strike(s, ctx, uni, god), /§47/);
+  Object.assign(s.units[uni], {entered: s.turn - 1, prepared: true}); // rodada seguinte
   tough(s, uni);
   give('A', FOE, 'hand');
   const deck = s.players.A.deck.length;
@@ -389,7 +391,7 @@ test('472 Aquatic Ambush: paga 2 e exaure Devotee inimigo; Phantom Retreat: volt
   play(s, ctx, dol);
   assert.equal(s.units[foe].prepared, false);
   assert.equal(ready(s, 'A'), r - 2 - k.card(ctx, dol).cost.amount);
-  s.units[dol].prepared = true; tough(s, dol);
+  s.units[dol].prepared = true; s.units[dol].entered = s.turn - 1; tough(s, dol); // rodada seguinte (§47)
   strike(s, ctx, dol, god);
   assert.ok(s.players.A.hand.includes(dol));
 });

@@ -9,7 +9,7 @@ import {addPreviewCards} from '../shared/preview-cards.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
 import {startTurn, passAll} from '../playtest/engine-v3/core.js';
 import {playDevotee, playEquipment, reequip} from '../playtest/engine-v3/play.js';
-import {strikeTargets} from '../playtest/engine-v3/strike.js';
+import {strikeTargets, checkStrike} from '../playtest/engine-v3/strike.js';
 import {checkDefeats} from '../playtest/engine-v3/effects.js';
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
@@ -32,7 +32,7 @@ test('Devotee com Impulse entra Prepared e ataca no turno; sem Impulse, não', (
   const {s, ctx, play} = setup();
   const raider = play('299'), plain = play('279'); // Red Fire Legion Raider (Impulse); Disaster Legion sem Impulse
   assert.equal(s.units[raider].prepared, true);
-  assert.ok(strikeTargets(s, ctx, raider).length);
+  assert.throws(() => checkStrike(s, ctx, raider, {kind: 'god', player: 'B'}), /§47/); // §47: na entrada, não mira God
   assert.equal(s.units[plain].prepared, false);
   assert.equal(strikeTargets(s, ctx, plain).length, 0);
 });

@@ -6,7 +6,7 @@ import {loadCanon} from '../shared/canon-cards.js';
 import {canonIndex} from '../shared/deck-v3.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
 import {startTurn, endTurn, passAll, placeBase, spendBase, respond, checkInvariants, RuleError, NotSpecified} from '../playtest/engine-v3/core.js';
-import {declareStrike} from '../playtest/engine-v3/strike.js';
+import {declareStrike, strikeTargets} from '../playtest/engine-v3/strike.js';
 import {playDevotee, playEquipment, playSpell} from '../playtest/engine-v3/play.js';
 import {checkDefeats} from '../playtest/engine-v3/effects.js';
 import {runDecisions, resume} from '../playtest/engine-v3/decision.js';
@@ -47,18 +47,43 @@ test('Devotee jogado entra Unprepared, paga Base e não ataca no turno em que en
   assert.equal(s.players.B.soul, 20 - cards.get('athena-v6-001').atk);
 });
 
-test('Impulse deixa declarar Strike no turno em que entra', () => {
+// §47 (autor, 29/10/2026): Impulse ataca na rodada de entrada, mas esse Strike não pode ter um God como alvo.
+function impulseSetup(extra = {}) {
   const withImpulse = new Map(cards);
-  withImpulse.set('athena-v6-001', {...cards.get('athena-v6-001'), keywords: ['Impulse']}); // carta de teste, catálogo intacto
-  const {s, ctx, toHand, bases} = setup(withImpulse);
-  const seiya = toHand('A', '001');
-  bases('A', cards.get('athena-v6-001').cost.amount);
-  startTurn(s);
-  playDevotee(s, ctx, 'A', seiya);
+  withImpulse.set('athena-v6-001', {...cards.get('athena-v6-001'), keywords: ['Impulse'], ...extra}); // carta de teste, catálogo intacto
+  const t = setup(withImpulse);
+  const seiya = t.toHand('A', '001');
+  t.bases('A', cards.get('athena-v6-001').cost.amount);
+  startTurn(t.s);
+  const foe = t.field('B', '042');
+  playDevotee(t.s, t.ctx, 'A', seiya);
+  return {...t, seiya, foe};
+}
+
+test('Impulse: na rodada de entrada pode mirar Devotee, não o God', () => {
+  const {s, ctx, seiya, foe} = impulseSetup();
+  assert.throws(() => declareStrike(s, ctx, seiya, {kind: 'god', player: 'B'}), /§47/);
+  assert.deepEqual(strikeTargets(s, ctx, seiya), [{kind: 'devotee', uid: foe}]);
+  declareStrike(s, ctx, seiya, {kind: 'devotee', uid: foe});
+  passAll(s);
+  assert.equal(s.players.B.soul, 20);
+  assert.deepEqual(cards.get('athena-v6-001').keywords, []);
+});
+
+test('Impulse + Pierce na rodada de entrada: o excedente chega ao Soul', () => {
+  const {s, ctx, seiya, foe} = impulseSetup({keywords: ['Impulse', 'Pierce'], atk: 4});
+  declareStrike(s, ctx, seiya, {kind: 'devotee', uid: foe});
+  passAll(s);
+  assert.equal(s.players.B.soul, 18, '4 de ATK contra 2 de HP: 2 passam ao Soul');
+});
+
+test('Impulse: a partir da rodada seguinte o Devotee pode mirar o God', () => {
+  const {s, ctx, seiya, end} = impulseSetup();
+  s.players.B.battlefield.splice(0); // sem Devotee inimigo
+  end(); startTurn(s); end(); startTurn(s);
   declareStrike(s, ctx, seiya, {kind: 'god', player: 'B'});
   passAll(s);
-  assert.equal(s.players.B.soul, 18);
-  assert.deepEqual(cards.get('athena-v6-001').keywords, []);
+  assert.equal(s.players.B.soul, 20 - cards.get('athena-v6-001').atk);
 });
 
 test('jogada ilegal não mexe no estado: sem Base suficiente, fora do turno, com janela aberta, carta que não é Devotee', () => {

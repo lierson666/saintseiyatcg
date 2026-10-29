@@ -4,6 +4,15 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-29 — §§19, 47, 57, 59 — Impulse
+
+- **Antes:** pode declarar Strike na rodada em que entra, contra qualquer alvo aberto.
+- **Depois:** o Strike na rodada de entrada não pode ter um God como alvo; Pierce continua valendo (o dano excedente pode chegar ao Soul).
+- **Motivo:** sem Engage, Impulse virou dano direto no God sem resposta; Ares ficou forte demais. Modelo Ambush + Overwhelm do Star Wars Unlimited, aprovado pelo autor.
+- **Cartas:** Berserker of Flame, Warrior of Vengeance, Scylla Io (sem mudança de texto).
+- **Engine/IA:** filtro de alvo em `playtest/engine-v3/strike.js` (`checkStrike`): Devotee que entrou nesta rodada não pode mirar God. A IA e a interface usam `strikeTargets`, que passa pelo mesmo filtro. Vale também para Impulse ganho por efeito.
+- **Pendências:** os nomes de carta acima são do conjunto SST-04 (300 cartas); no catálogo V6 em jogo, Impulse está em ares-v6-295, 299, 308, 310, 313, 323, 343 e hades-v6-265 (o filtro vale para todas). War Cry (SST-04-023) depende da decisão sobre o rebalanceamento de Ares.
+
 ## 2026-10-29 — Tabela de parâmetros (G3-042) — Soul, Attack e Awaken dos Gods vêm do Card Forge
 
 - **Antes:** Soul pela tabela G3-042 (Athena 20, Poseidon 18, Hades 22, Artemis 15, Ares 20); Attack e Awaken do D268.

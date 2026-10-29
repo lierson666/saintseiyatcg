@@ -244,7 +244,7 @@ Seções do Engage, ENG, Disengage e Multiguard removidas; a numeração foi man
 
 ### 19. Entrada em campo
 
-Devotees entram **Prepared**, em guarda, mas **não podem declarar Strike na rodada em que entraram**. **Impulse** remove essa restrição.
+Devotees entram **Prepared**, em guarda, mas **não podem declarar Strike na rodada em que entraram**. **Impulse** remove essa restrição (o Strike na rodada de entrada não pode ter um God como alvo).
 
 ---
 
@@ -257,7 +257,7 @@ Strike é a ação utilizada para causar dano.
 Para realizar Strike, o Devotee deve:
 
 1. Estar Prepared.
-2. Não ter entrado em campo nesta rodada (salvo Impulse).
+2. Não ter entrado em campo nesta rodada (salvo Impulse; o Strike na rodada de entrada não pode ter um God como alvo).
 3. Não estar Sealed.
 4. Escolher um alvo aberto (capítulo IV) e utilizar uma AÇÃO.
 
@@ -561,7 +561,7 @@ Trample não existe: a keyword é Pierce (§46). Cartas que diziam Trample foram
 
 ### 47. Impulse
 
-Pode declarar Strike na rodada em que entra em campo.
+Pode declarar Strike na rodada em que entra em campo. Esse Strike não pode ter um God como alvo. Pierce continua funcionando normalmente.
 
 ### 48. Sealed
 
@@ -670,7 +670,7 @@ O autor aprovou a aplicação das recomendações de fechamento ao sistema do jo
 
 ### 57. Entrada em campo e Prepared
 
-- Devotees entram **Prepared** (em guarda), mas não podem declarar Strike na rodada em que entraram. **Impulse** remove essa restrição; não concede AÇÃO extra.
+- Devotees entram **Prepared** (em guarda), mas não podem declarar Strike na rodada em que entraram. **Impulse** remove essa restrição (o Strike na rodada de entrada não pode ter um God como alvo); não concede AÇÃO extra.
 - A preparação normal acontece no início da rodada seguinte. Efeitos explícitos podem preparar antes disso ou impedir a preparação.
 - Evolve e retaliação não usam Prepared.
 - Um efeito que prepara pode permitir outro Strike na mesma rodada. O limite natural é Prepared mais AÇÕES disponíveis.
@@ -697,7 +697,7 @@ O dano é marcado separadamente do HP máximo. Power negativo causa zero dano. H
 | Cheater | Durante um Strike contra este Devotee, o Devotee adversário não se beneficia de Long Range. Não ignora Guardian. |
 | Long Range | Ao iniciar Strike, causa seu dano primeiro. Verificar destruição/derrota antes da retaliação; alvo destruído não retalia. Defender com Long Range não concede dano primeiro. |
 | Pierce | Ao iniciar Strike contra um Devotee, o dano excedente ao HP restante daquele alvo é causado ao Soul do God que o controla. Não funciona por retaliação. Calcular depois de prevenção/modificação do dano e sem contar dano antigo como dano novo. |
-| Impulse | Pode declarar Strike na rodada em que entra em campo. |
+| Impulse | Pode declarar Strike na rodada em que entra em campo. Esse Strike não pode ter um God como alvo. Pierce continua funcionando normalmente. |
 | Sealed | Não pode declarar Strike nem ativar suas próprias habilidades, inclusive habilidades concedidas por equipamento. Mantém passivas, Rivalidades e retaliação; pode receber Evolve, que pertence à Cloth. Dura até o fim da rodada, salvo duração expressa diferente. |
 | Unfaith | Ao declarar Strike contra um God, pode escolher remover até 2 Latent Cosmo daquele jogador em lugar de causar dano ao Soul. A escolha é anunciada antes das respostas. O God retalia normalmente; sem Latent, o modo não causa dano ao Soul. |
 

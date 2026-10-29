@@ -23,6 +23,8 @@ export function checkStrike(state, ctx, attacker, target) {
   const unit = state.units[attacker], impulse = unit?.entered === state.turn && keywordsOf(state, ctx, attacker).includes('Impulse'); // inclui Impulse dado por efeito (V6)
   if (unit?.prepared !== true && !impulse) throw new RuleError('P04', 'o atacante precisa estar Prepared');
   if (cannotStrike(state, attacker)) throw new RuleError('V6', 'este Devotee não pode declarar Strike neste Round'); // gancho cannotStrike
+  // §47 (autor, 29/10/2026): o Strike na rodada de entrada (Impulse) não pode ter um God como alvo; Pierce segue normal.
+  if (target.kind === 'god' && unit?.entered === state.turn) throw new RuleError('§47', 'Devotee que entrou nesta rodada não pode ter um God como alvo');
   const legal = target.kind === 'god' ? target.player === enemy
     : target.kind === 'devotee' && onField(state, enemy, target.uid) && card(ctx, target.uid).kind === 'Devotee';
   if (!legal) throw new RuleError('P04', 'alvo precisa ser o God inimigo ou um Devotee inimigo');
