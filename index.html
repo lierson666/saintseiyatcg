@@ -1,0 +1,90 @@
+<!doctype html>
+<!-- Home de saintseiyatcg.com (autor, 29/10/2026): Coming Soon com cadastro de novidades.
+     Os cadastros vão para a planilha Google do autor via Apps Script (tools/coming-soon-apps-script.gs).
+     Cole a URL do app da web em SIGNUP_URL abaixo. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Saint Seiya TCG — Coming Soon</title>
+  <meta name="description" content="Saint Seiya TCG is coming soon. Burn your Cosmo and be the first to know.">
+  <meta property="og:title" content="Saint Seiya TCG — Coming Soon">
+  <meta property="og:description" content="Burn your Cosmo. Be the first to know.">
+  <meta property="og:image" content="/LOGO/og-image.jpg">
+  <link rel="icon" href="/LOGO/favicon.png">
+  <link rel="apple-touch-icon" href="/LOGO/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Jost:wght@400;500&display=swap">
+  <style>
+    :root { --bg: #05070c; --text: #ece6d6; --muted: #9aa3bb; --gold: #e6c36a; --gold-2: #f6dd94; --ember: #ff8a2b; --line: #e6c36a55; color-scheme: dark; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); font: 16px/1.5 "Jost", system-ui, sans-serif; }
+    body { min-height: 100dvh; display: grid; place-items: center; padding: 32px 16px; overflow-x: hidden;
+      background: radial-gradient(ellipse at 50% 35%, #ff8a2b26, transparent 55%), linear-gradient(180deg, #05070ccc, #05070cf2), url("/playtest/assets/sanctuary.webp") center / cover fixed, var(--bg); }
+    .stars { position: fixed; inset: 0; pointer-events: none; background-image: radial-gradient(1px 1px at 20% 30%, #fff8, transparent), radial-gradient(1px 1px at 70% 20%, #fff6, transparent),
+      radial-gradient(1.5px 1.5px at 40% 80%, #f6dd94aa, transparent), radial-gradient(1px 1px at 85% 65%, #fff7, transparent), radial-gradient(1px 1px at 10% 75%, #fff5, transparent); }
+    main { position: relative; width: min(560px, 100%); text-align: center; }
+    .logo { width: min(380px, 80vw); height: auto; filter: drop-shadow(0 0 30px #ff8a2b55); }
+    .soon { margin: 18px 0 4px; font: 600 14px "Cinzel", Georgia, serif; letter-spacing: .4em; color: var(--muted); }
+    h1 { margin: 0; font: 800 clamp(34px, 8vw, 60px)/1.05 "Cinzel", Georgia, serif; letter-spacing: .04em;
+      background: linear-gradient(180deg, var(--gold-2), var(--gold) 45%, var(--ember)); -webkit-background-clip: text; background-clip: text; color: transparent;
+      text-shadow: 0 0 40px #ff8a2b40; animation: burn 3.5s ease-in-out infinite; }
+    @keyframes burn { 50% { filter: drop-shadow(0 0 14px #ff8a2b88); } }
+    .lead { margin: 14px auto 28px; max-width: 42ch; color: var(--muted); }
+    form { display: grid; gap: 12px; padding: 22px; border: 1px solid var(--line); border-radius: 14px; background: #0b0f1bcc; backdrop-filter: blur(8px); text-align: left; }
+    label { display: grid; gap: 6px; font-size: 13px; color: var(--muted); letter-spacing: .04em; }
+    input[type=text], input[type=email] { width: 100%; min-height: 46px; padding: 10px 14px; border: 1px solid #2a3554; border-radius: 8px; background: #070a14; color: var(--text); font: inherit; }
+    input:focus-visible, button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+    .consent { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; letter-spacing: 0; }
+    .consent input { width: 18px; height: 18px; margin-top: 2px; accent-color: var(--gold); }
+    button { min-height: 48px; border: 0; border-radius: 8px; cursor: pointer; font: 800 15px "Cinzel", Georgia, serif; letter-spacing: .12em; color: #1a1000;
+      background: linear-gradient(180deg, var(--gold-2), var(--gold)); box-shadow: 0 6px 24px #e6c36a44; }
+    button:disabled { opacity: .6; cursor: default; }
+    .hp { position: absolute; left: -9999px; }
+    .status { min-height: 1.5em; margin: 0; font-size: 14px; text-align: center; }
+    .status.ok { color: var(--gold-2); } .status.err { color: #ff8f80; }
+    footer { margin-top: 26px; font-size: 12px; color: #6f7894; }
+    @media (prefers-reduced-motion: reduce) { h1 { animation: none; } body { background-attachment: scroll; } }
+  </style>
+</head>
+<body>
+  <div class="stars" aria-hidden="true"></div>
+  <main>
+    <img class="logo" src="/LOGO/logo-web.webp" alt="Saint Seiya TCG" width="760" height="380">
+    <p class="soon">COMING SOON</p>
+    <h1>Burn Your Cosmo</h1>
+    <p class="lead">The Holy War is about to begin. Leave your name and email to be the first to know when the gates of the Sanctuary open.</p>
+    <form id="signup" novalidate>
+      <label>Name<input type="text" name="name" autocomplete="name" required maxlength="80"></label>
+      <label>Email<input type="email" name="email" autocomplete="email" required maxlength="120"></label>
+      <label class="hp" aria-hidden="true">Leave empty<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+      <label class="consent"><input type="checkbox" name="consent" required> I agree to receive Saint Seiya TCG news by email. I can unsubscribe at any time.</label>
+      <button type="submit">Notify me</button>
+      <p class="status" role="status" aria-live="polite"></p>
+    </form>
+    <footer>Saint Seiya TCG · In development</footer>
+  </main>
+  <script>
+    // URL do app da web do Apps Script (tools/coming-soon-apps-script.gs). Vazio: o formulário avisa que ainda não abriu.
+    const SIGNUP_URL = '';
+    const form = document.getElementById('signup'), status = form.querySelector('.status'), button = form.querySelector('button');
+    const say = (text, kind) => { status.textContent = text; status.className = `status ${kind || ''}`; };
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      const data = new FormData(form), name = data.get('name').trim(), email = data.get('email').trim();
+      if (data.get('website')) return; // robô preencheu o campo escondido
+      if (!name) return say('Please tell us your name.', 'err');
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return say('Please enter a valid email.', 'err');
+      if (!data.get('consent')) return say('Please agree to receive our news.', 'err');
+      if (!SIGNUP_URL) return say('Sign-ups open very soon. Please come back later.', 'err');
+      button.disabled = true; say('Sending…');
+      try {
+        // Apps Script não devolve CORS: o envio é "no-cors" e a resposta não é lida.
+        await fetch(SIGNUP_URL, {method: 'POST', mode: 'no-cors', body: new URLSearchParams({name, email, source: 'saintseiyatcg.com'})});
+        form.reset(); say('Your Cosmo has been heard. See you in the Sanctuary!', 'ok');
+      } catch { say('Something went wrong. Please try again.', 'err'); }
+      finally { button.disabled = false; }
+    });
+  </script>
+</body>
+</html>
