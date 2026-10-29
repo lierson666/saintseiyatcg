@@ -29,6 +29,8 @@ const faction = card => (forge.get(card.id)?.faccao || card.id.replace(/^god-/, 
 const godForge = godId => forge.get(`${godId.replace(/^god-/, '')}-001`);
 const artOf = id => { const f = id.startsWith('god-') ? godForge(id) : forge.get(id); return f?.ilustracao ? ART + f.ilustracao : null; };
 // Spell não existe para o jogador: é Technique ou Moment (tipo impresso; Athena Event/Miracle pela D194, core.js).
+// Linha de tipo para o jogador: sem "Spell —", como na face da carta (live-card.js).
+const typeText = c => c.type.replace(/^Spell\s*—\s*/, '');
 const kindOf = c => c.kind === 'Divine Artifact' ? 'Equipment' : c.kind !== 'Spell' ? c.kind
   : c.type.match(/Moment|Technique/)?.[0] || spellCategory(Number(c.id.slice(-3)))?.category || 'Technique';
 const sortCards = (a, b) => (a.kind === 'Domain') - (b.kind === 'Domain') || (a.cost?.amount ?? 0) - (b.cost?.amount ?? 0) || a.name.localeCompare(b.name);
@@ -36,7 +38,7 @@ const sortCards = (a, b) => (a.kind === 'Domain') - (b.kind === 'Domain') || (a.
 function face(id, cls = '') {
   const c = cards.get(id), f = id.startsWith('god-') ? godForge(id) : forge.get(id);
   if (f) return `<div class="lb-card ${cls}" data-card="${id}">${renderLiveCard(f, {art: artOf(id)})}</div>`;
-  return `<div class="lb-card lb-card--plain ${cls}" data-card="${id}"><b>${c.cost?.amount ?? ''}</b><strong>${esc(c.name)}</strong><small>${esc(c.type)}</small>
+  return `<div class="lb-card lb-card--plain ${cls}" data-card="${id}"><b>${c.cost?.amount ?? ''}</b><strong>${esc(c.name)}</strong><small>${esc(typeText(c))}</small>
     ${c.atk != null ? `<em>${c.atk} / ${c.hp}</em>` : ''}</div>`;
 }
 
@@ -203,7 +205,7 @@ function cardInfo(id) {
   const n = ui.screen === 'builder' && !['God', 'Domain'].includes(c.kind) ? count(ui.builder, id) : null;
   return `<section class="lb-info" data-act="stay" aria-label="${esc(c.name)} details">
     <button class="lb-x lb-info__close" data-act="close-big" aria-label="Close">×</button>
-    <p class="lb-info__type">${esc(c.type)}</p>
+    <p class="lb-info__type">${esc(typeText(c))}</p>
     <h2>${esc(c.name)}</h2>${subtitle ? `<p class="lb-info__sub">${esc(subtitle)}</p>` : ''}
     <div class="lb-chips">${chip('Cost', c.cost ? `${c.cost.amount} ${c.cost.unit === 'base' ? 'Base' : 'Latent'}` : null, 'is-cost')}
       ${chip('ATK', c.atk, 'is-atk')}${chip('HP', c.hp, 'is-hp')}${chip('Soul', c.soul)}${chip('Awaken', c.awaken)}
