@@ -18,7 +18,7 @@ import {createDirector} from './director.js?v=7';
 import {createAI} from './ai.js?v=3';
 import {findDeck} from '../deck-store.js';
 import {unlock, playMusic} from '../audio.js?v=20261028-strike';
-import {renderLiveCard} from '../../shared/live-card.js?v=20261028-5';
+import {renderLiveCard} from '../../shared/live-card.js?v=20261029-forge';
 
 const $ = (s, el = document) => el.querySelector(s), $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));

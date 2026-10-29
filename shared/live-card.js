@@ -1,11 +1,13 @@
 import {renderRules,inlineMarkup,presentationRules,ruleBlocksWithoutKeywords,blocksMarkup} from './card-text.js?v=20261028-1';
 import {isArmor,isEquipment} from './card-model.js?v=20261024-4';
-import {renderPublishedCard} from './layout-studio/runtime.js';
+import {renderPublishedCard,visualProject} from './layout-studio/runtime.js';
 import {printedEquipmentBonuses,signedBonus} from './card-visual-values.js';
 // A ilustração é apenas fundo. Letras, números e estados são dados independentes no DOM.
 const escape=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const portraits={'athena-001':'athena-001','athena-002':'athena-002','athena-003':'athena-003','athena-004':'athena-004','athena-005':'athena-005','athena-006':'athena-006','sst-01-001':'athena-002','sst-01-002':'athena-003','sst-01-003':'athena-004','sst-01-004':'athena-005','sst-01-005':'athena-006'};
 export function illustration(card){
+  const saved=visualProject(card?.id)?.art?.src;
+  if(saved)return new URL('../'+saved,import.meta.url).href;
   if(card?.ilustracao)return card.ilustracao;
   const id=portraits[card?.id];return id?new URL(`../playtest/assets/portraits/${id}.webp`,import.meta.url).href:null;
 }
@@ -34,6 +36,8 @@ function rulesSize(texts,base,w,h){
   return 22;
 }
 function renderPsdCard(card,{src,stage,hp,power,keywords,damage,rules,equipment,equip,ownerLine,instance,compact}){
+  const savedArt=visualProject(card.id)?.art;
+  const artworkStyle=savedArt?.w&&savedArt?.h?`position:absolute;max-width:none;width:${savedArt.w/14.88}%;height:${savedArt.h/20.91}%;left:${savedArt.x/14.88}%;top:${savedArt.y/20.91}%;object-fit:fill`:'';
   const {T,P}=PSD,f=String(card.faccao||'').toLowerCase(),pack=T.factions[f]||NEUTRAL,L=T.layouts[psdLayoutKey(card)];
   // Enquadramento salvo no projeto do Card Forge (x, y, largura em px da carta 1488×2091), igual ao Forge.
   const fr=card.ilustracao_enquadramento,frame=fr?.w?` style="position:absolute;max-width:none;left:${fr.x/14.88}%;top:${fr.y/20.91}%;width:${fr.w/14.88}%;height:auto;object-fit:fill"`:'';
@@ -67,7 +71,7 @@ function renderPsdCard(card,{src,stage,hp,power,keywords,damage,rules,equipment,
       out+=gem(el.piece,at(el.piece,el),v,el.label,el.field==='equip'?'live-card__equip':`lc-gem--${el.field}`,undefined,stat);
     }
     else if(el.kind==='text'){
-      const v=el.field==='name'?card.nome_exibicao_en:el.field==='typeLine'?L.typeLine.replace('{tipo}',card.tipo==='Spell'?'':card.tipo).replace('{faccao}',card.faccao||'').replace('{subtipos}',(card.subtipos||[]).join(' — ')).replace(/^(\s*[—-]\s*)+/,'').replace(/(\s*[—-]\s*)+$/,'').replace(/\s*[—-]\s*(?=[—-])/g,''):el.field==='flavour'?(card.flavour_en||card.flavour):el.field==='subtitle'?card.subtitulo_en:null;
+      const v=el.field==='name'?card.nome_exibicao_en:el.field==='typeLine'?L.typeLine.replace('{tipo}',card.tipo==='Spell'?'':card.tipo).replace('{faccao}',card.faccao||'').replace('{subtipos}',(card.subtipos||[]).join(' — ')).replace(/^(\s*[—-]\s*)+/,'').replace(/(\s*[—-]\s*)+$/,'').replace(/\s*[—-]\s*(?=[—-])/g,''):el.field==='flavour'?(card.flavour_en||card.flavour):el.field==='subtitle'?(card.tagline_en||card.subtitulo_en):null;
       if(has(v))out+=text(v,el,el.field==='name'?'live-card__heading':el.field==='typeLine'?'live-card__type':'');
     }
     else if(el.kind==='rules'){
@@ -78,13 +82,13 @@ function renderPsdCard(card,{src,stage,hp,power,keywords,damage,rules,equipment,
     else if(el.kind==='rarity'){const p=P[`athena/rarity_${String(card.raridade||'').toLowerCase()}`];if(p){const hh=el.h||p.h,ww=p.w*hh/p.h;out+=piece(`athena/rarity_${card.raridade.toLowerCase()}`,[el.x-ww/2,el.y-hh/2,ww,hh],'lc-rarity');}}
   }
   return `<div class="live-card live-card--psd live-card--${escape(f||'neutral')} ${compact?'live-card--compact':''} ${instance&&!instance.prepared&&card.tipo==='Devotee'?'live-card--unprepared':''}" data-live-card="${escape(card.id)}" style="--psd-ink:${pack.color};--psd-glow:${pack.glow}">
-    <div class="live-card__illustration" aria-hidden="true">${src?`<img src="${escape(src)}" alt="" draggable="false" loading="lazy"${frame}>`:'<span class="live-card__placeholder">✧<small>Illustration pending</small></span>'}</div>
+    <div class="live-card__illustration" aria-hidden="true">${src?`<img src="${escape(src)}" alt="" draggable="false" loading="lazy"${artworkStyle?` style="${artworkStyle}"`:frame}>`:'<span class="live-card__placeholder">✧<small>Illustration pending</small></span>'}</div>
     <div class="lc-psd">${out}</div>${damage?`<span class="live-card__damage">${damage} damage · ${escape(hp)} HP left</span>`:''}${instance&&card.tipo==='Devotee'?`<span class="live-card__state">${instance.prepared?'Prepared':'Unprepared'}${instance.awakened?' · Awakened':''}</span>`:''}
   </div>`;
 }
 function armorStatus(card,hp,damage){
   if(!isArmor(card))return '';
-  const max=Number.isFinite(card.vida)&&card.vida>0?card.vida:null,broken=max!==null&&damage>=max;
+  const raw=card.damage_cloth??card.vida;const max=Number.isFinite(Number(raw))&&Number(raw)>0?Number(raw):null,broken=max!==null&&damage>=max;
   return `<span class="live-card__armor-status ${broken?'is-broken':''}" data-armor-state="${broken?'broken':max===null?'pending':'active'}">${max===null?'ARMOR HP · review pending':`${broken?'BROKEN · ':''}ARMOR HP ${Math.max(0,max-damage)} / ${max}`}</span>`;
 }
 export function renderLiveCard(card,{stats=null,instance=null,art=null,compact=false,equipment:attachedEquipment=[],mode=null}={}){

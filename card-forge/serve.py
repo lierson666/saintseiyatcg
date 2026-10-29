@@ -17,6 +17,7 @@ import os
 import re
 import sys
 import tempfile
+import subprocess
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from zipfile import BadZipFile
@@ -80,7 +81,7 @@ def upsert_card(text, card):
         _, end = json.JSONDecoder().raw_decode(text, m.end() - 1)
         close = text.rindex("]", 0, end)
         body = text[:close].rstrip()
-        new = body + ",\n    " + fmt(card, 4) + "\n  " + text[close:]
+        new = body + (",\n    " if data["cartas"] else "\n    ") + fmt(card, 4) + "\n  " + text[close:]
         new = re.sub(r'"total_cartas":\s*\d+', f'"total_cartas": {len(data["cartas"]) + 1}', new, count=1)
     check = json.loads(new)  # nunca grava JSON quebrado
     assert any(c["id"] == card["id"] for c in check["cartas"])
@@ -164,6 +165,17 @@ class Handler(SimpleHTTPRequestHandler):
                 except (BadZipFile, ParseError, ValueError, KeyError, IndexError) as error:
                     return self.reply(400, {"erro": f"Planilha inválida: {error}"})
                 return self.reply(200, result)
+            if parts == ["api", "publish-visuals"]:
+                # Publicação restrita aos assets do Card Forge. Host e Origin local
+                # já foram conferidos. Nunca sincroniza regras, cards.json ou engine.
+                try:
+                    published = subprocess.run(
+                        [sys.executable, str(FORGE / 'publish_visuals.py'), '--sync'],
+                        cwd=ROOT, capture_output=True, text=True, timeout=120, check=True)
+                    return self.reply(200, {"ok": True, "message": "Artes publicadas no jogo", "details": published.stdout[-900:]})
+                except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as error:
+                    detail=(getattr(error, 'stderr', '') or str(error))[-500:]
+                    return self.reply(502, {"erro": "Projeto salvo localmente, mas o envio ao jogo falhou: " + detail})
             if parts == ["api", "card"]:
                 card = json.loads(raw)
                 if not isinstance(card, dict) or not ID_RE.match(str(card.get("id", ""))):
@@ -209,20 +221,24 @@ def selftest():
     data = json.loads(text)
     for c in data["cartas"]:
         assert upsert_card(text, c) == text, f"formatador mudou {c['id']}"
-    original = data["cartas"][0]
+    original = data["cartas"][0] if data["cartas"] else {"id": "zz-origem", "nome_exibicao_en": "Teste"}
+    sample = text if data["cartas"] else upsert_card(text, original)
     edited = dict(original, nome_exibicao_en=original["nome_exibicao_en"] + " · teste")
-    changed = upsert_card(text, edited)
-    start, end = card_span(text, original["id"])
+    changed = upsert_card(sample, edited)
+    start, end = card_span(sample, original["id"])
     new_start, new_end = card_span(changed, original["id"])
     assert json.loads(changed[new_start:new_end]) == edited, "edição não aplicada"
-    assert changed[:new_start] == text[:start] and changed[new_end:] == text[end:], "edição fora da carta"
+    assert changed[:new_start] == sample[:start] and changed[new_end:] == sample[end:], "edição fora da carta"
     assert upsert_card(changed, edited) == changed, "edição repetida gerou diff"
-    novo = dict(data["cartas"][0], id="zz-teste")
+    novo = dict(original, id="zz-teste")
     t2 = upsert_card(text, novo)
     d2 = json.loads(t2)
     assert len(d2["cartas"]) == len(data["cartas"]) + 1 and d2["cartas"][-1]["id"] == "zz-teste"
     assert d2["total_cartas"] == len(d2["cartas"])
-    print(f"selftest ok: {len(data['cartas'])} cartas preservadas sem diff; edição e append ok")
+    empty = dict(data, cartas=[], total_cartas=0)
+    first = json.loads(upsert_card(fmt(empty, 0) + "\n", novo))
+    assert first == dict(empty, cartas=[novo], total_cartas=1), "primeira carta em catálogo vazio"
+    print(f"selftest ok: {len(data['cartas'])} cartas preservadas sem diff; edição, append e catálogo vazio ok")
     import http.client, threading
     server = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
     threading.Thread(target=server.serve_forever, daemon=True).start()
@@ -236,7 +252,7 @@ def selftest():
     local = f"127.0.0.1:{port}"
     assert status("GET", {"Host": local}) == 200
     assert status("GET", {"Host": f"evil.example:{port}"}) == 403, "DNS rebinding"
-    card = json.dumps(dict(data["cartas"][0], id="zz-teste"))
+    card = json.dumps(novo)
     assert status("POST", {"Host": local, "Content-Type": "text/plain"}, card) == 403, "POST sem Origin"
     assert status("POST", {"Host": local, "Origin": "https://evil.example"}, card) == 403, "POST de outro site"
     server.shutdown()

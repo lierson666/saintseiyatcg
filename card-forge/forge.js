@@ -487,6 +487,7 @@ form.addEventListener('input', (e) => {
 function fromCard(c, proj = {}) {
   const s = blankState();
   for (const k of Object.keys(s)) if (k in c && c[k] !== null) s[k] = c[k];
+  s.subtitle=c.tagline_en||c.subtitulo_en||''; // V6 canonical subtitle
   s.revisao_regras=c.revisao_regras||'1.0';
   s.referencias_mitologicas_texto=(c.referencias_mitologicas||[]).join('\n');
   s.donos=(c.donos||[]).join(', ');s.estagios=structuredClone(c.estagios||[]);s.resonanceText=(c.ressonancias||[]).map(r=>`${r.personagem_id} | ${r.habilidade_en}`).join('\n');
@@ -497,7 +498,7 @@ function fromCard(c, proj = {}) {
   s.rules = gen.map((g) => g.markup).join('\n\n');
   const bonus = (c.habilidades_en || []).join(' ').match(/gets ([+-]\d+)\/([+-]\d+)/);
   if (bonus && c.tipo === 'Relic') { s.bonusPower = bonus[1]; s.bonusResistance = bonus[2]; }
-  return Object.assign(s, proj, { art: proj.art || null });
+  return Object.assign(s, proj, { subtitle: (typeof proj.subtitle==='string' && proj.subtitle.trim())?proj.subtitle:s.subtitle, art: proj.art || null });
 }
 
 let selectionRevision=0;
@@ -506,7 +507,18 @@ async function selectCard(id) {
   const c = db.cartas.find((x) => x.id === id);
   if (!c) return;
   let proj = {};
-  try { const r = await fetch(`projects/${id}.json`); if (r.ok) proj = await r.json(); else await r.arrayBuffer(); } catch { /* sem projeto */ }
+  // Read the persisted project directly from disk on every selection. The runtime
+  // metadata endpoint may be unavailable on an old server or on static hosting.
+  // Bust browser cache so edits are never replaced by an earlier response.
+  try {
+    const response=await fetch(`projects/${encodeURIComponent(id)}.json?read=${Date.now()}`,{cache:'no-store'});
+    if(!response.ok)await response.arrayBuffer();
+    if(response.ok){
+      proj=await response.json();
+      if(proj.art?.src?.startsWith('card-forge/'))proj.art.src='../'+proj.art.src;
+    }else proj=structuredClone(visualProject(id));
+  }catch{proj=structuredClone(visualProject(id));}
+  if(proj.art?.src?.startsWith('card-forge/'))proj.art.src='../'+proj.art.src;
   if(revision!==selectionRevision)return;
   const previousGenerated=gen,next=fromCard(c,proj),generated=gen;gen=previousGenerated;
   if(!next.art&&illustration(c)){const im=await loadImg(illustration(c));if(im){next.art={src:illustration(c)};coverArt(im,next.art);}}
@@ -652,32 +664,59 @@ async function post(url, body, type = 'application/json') {
   return j;
 }
 
-$('#saveProject').addEventListener('click', async () => {
-  try {
-    if (!S.id) throw new Error('carta sem id');
-    const art = S.art ? { ...S.art } : null;
-    if (art?.uploaded) {
-      const blob = await (await fetch(art.src)).blob();
-      const png = await new Promise(async (ok) => {
-        const im = await loadImg(art.src);
-        const c = Object.assign(document.createElement('canvas'), { width: im.naturalWidth, height: im.naturalHeight });
-        c.getContext('2d').drawImage(im, 0, 0);
-        c.toBlob(ok, blob.type === 'image/jpeg' ? 'image/jpeg' : 'image/png', 0.95);
-      });
-      const res = await post(`/api/art/${S.id}`, png, png.type);
-      art.src = res.path.replace(/^card-forge\//, '');
-      delete art.uploaded;
-      S.art = { ...art };
+async function saveVisualProject(){
+  if(!S.id)throw new Error('Carta sem ID.');
+  const art=S.art?{...S.art}:null;
+  if(art?.uploaded){
+    const image=await loadImg(art.src);
+    if(!image)throw new Error('Não foi possível carregar a arte antes de salvar.');
+    const blob=await new Promise(resolve=>{
+      const cv=Object.assign(document.createElement('canvas'),{width:image.naturalWidth,height:image.naturalHeight});
+      cv.getContext('2d').drawImage(image,0,0);
+      cv.toBlob(resolve,'image/png',.95);
+    });
+    if(!blob)throw new Error('Falha ao converter a imagem.');
+    const result=await post(`/api/art/${S.id}`,blob,'image/png');
+    art.src=result.path.replace(/^card-forge\//,'');
+    delete art.uploaded;
+  }
+  const proj={title:S.title,subtitle:S.subtitle,flavour:S.flavour,bonusPower:S.bonusPower,bonusResistance:S.bonusResistance,art};
+  await post(`/api/project/${S.id}`,JSON.stringify(proj));
+  // Persisted data must be confirmed via GET before claiming successful save.
+  const readback=await fetch(`projects/${encodeURIComponent(S.id)}.json?verify=${Date.now()}`,{cache:'no-store'});
+  if(!readback.ok)throw new Error(`Projeto gravado, mas a leitura falhou (HTTP ${readback.status}).`);
+  const persisted=await readback.json();
+  if(JSON.stringify(persisted)!==JSON.stringify(proj))throw new Error('O servidor não devolveu o mesmo projeto salvo. Confira a pasta local.');
+  S.art=art?{...art}:null;
+  return proj;
+}
+
+let pendingSaveBoth=false;
+$('#saveProject').addEventListener('click',async()=>{
+  try{
+    if(!S.id)throw new Error('Carta sem ID.');
+    const current=buildCard(),changes=diffCards(orig,current);
+    if(changes.length){
+      pendingBatch=null;pendingSaveBoth=true;pending=current;
+      $('#diffTarget').textContent=`${S.id}: salvar dados da carta + visual (confirmação necessária)`;
+      const body=$('#diffBody');
+      body.replaceChildren(...changes.flatMap(({k,x,y})=>{
+        const before=Object.assign(document.createElement('div'),{className:'del',textContent:`- ${k}: ${x}`});
+        const after=Object.assign(document.createElement('div'),{className:'add',textContent:`+ ${k}: ${y}`});
+        return orig?[before,after]:[after];
+      }));
+      $('#diffDialog').showModal();return;
     }
-    const proj = { title: S.title, subtitle: S.subtitle, flavour: S.flavour, bonusPower: S.bonusPower, bonusResistance: S.bonusResistance, art };
-    await post(`/api/project/${S.id}`, JSON.stringify(proj));
-    say(`projeto salvo em card-forge/projects/${S.id}.json`);
-  } catch (e) { say(e.message, true); }
+    await saveVisualProject();
+    say(`✓ ${S.id}: salvo no Mac. Publicando no Playtest…`);
+    await post('/api/publish-visuals','{}');
+    say(`✓ ${S.id}: arte publicada no Playtest, com zoom e posição.`);
+  }catch(e){say(`Falha ao salvar: ${e.message}`,true);}
 });
 
 function buildCard() {
   const source=S.importBase||orig;
-  const base = source ? structuredClone(source) : Object.fromEntries(Object.keys(db.cartas[0]).map((k) => [k, null]));
+  const base = source ? structuredClone(source) : Object.fromEntries(Object.keys(db.cartas[0] || {}).map((k) => [k, null]));
   const n = (v) => (has(v) ? Number(v) : null);
   const paras = splitParas(S.rules);
   const habilidades = paras.map((md, i) => (gen[i] && gen[i].markup === md ? gen[i].text : fromMarkup(md)));
@@ -715,6 +754,7 @@ function diffCards(a, b) {
 
 let pending = null;
 $('#saveCards').addEventListener('click', () => {
+  pendingSaveBoth=false;
   if (!S.id) return say('carta sem id', true);
   pendingBatch = null;
   pending = buildCard();
@@ -729,17 +769,26 @@ $('#saveCards').addEventListener('click', () => {
   }));
   $('#diffDialog').showModal();
 });
-$('#diffCancel').addEventListener('click', () => { pendingBatch = null; $('#diffDialog').close(); });
+$('#diffCancel').addEventListener('click', () => { pendingBatch = null; pendingSaveBoth=false; $('#diffDialog').close(); });
 $('#diffConfirm').addEventListener('click', async () => {
   $('#diffDialog').close();
   try {
     if (pendingBatch) return await saveBatch();
     await post('/api/card', JSON.stringify(pending));
-    db = await (await fetch('../data/cards.json')).json();
-    orig = db.cartas.find((c) => c.id === pending.id);
-    gen = (orig.habilidades_en || []).map((text) => ({ text, markup: toMarkup(text) }));
+    if(pendingSaveBoth){
+      await saveVisualProject();
+      say(`✓ ${pending.id}: salvo no Mac. Publicando arte no Playtest…`);
+      await post('/api/publish-visuals','{}');
+    }
+    const updated=await fetch(`../data/cards.json?verify=${Date.now()}`,{cache:'no-store'});
+    if(!updated.ok)throw Error('Não foi possível conferir o catálogo após salvar.');
+    db=await updated.json();
+    orig=db.cartas.find(c=>c.id===pending.id);
+    if(!orig||JSON.stringify(orig)!==JSON.stringify(pending))throw Error('O catálogo não corresponde à versão enviada.');
+    gen=(orig.habilidades_en||[]).map(text=>({text,markup:toMarkup(text)}));
     fillCardSelect(orig.id);
-    say(`cards.json gravado (${pending.id})`);
+    say(pendingSaveBoth?`✓ ${pending.id}: carta + visual gravados e conferidos.`:`✓ ${pending.id}: cards.json gravado e conferido.`);
+    pendingSaveBoth=false;
   } catch (e) { say(e.message, true); }
 });
 
@@ -792,7 +841,7 @@ const MULTI = new Set(['rules', 'habilidade_awaken_en', 'ultimate_en']);
 const pick = (v, opts) => opts.find((o) => fold(o) === fold(v));
 const TIPOS = ['Devotee', 'Equipment', 'Support', 'Relic', 'Spell', 'Technique', 'Moment', 'Domain', 'God'];
 const FACCOES = ['Athena', 'Ares', 'Artemis', 'Hades', 'Poseidon', 'Neutral'];
-const RARIDADES = ['Common', 'Uncommon', 'Rare', 'Mythic', 'Sacred', 'Divine', 'Playtest'];
+const RARIDADES = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythic', 'Sacred', 'Divine', 'Playtest'];
 
 export function parseBatch(text) {
   const out = [];
@@ -969,9 +1018,10 @@ window.addEventListener('card-layouts:published',()=>render());
 
 try {
   db = await (await fetch('../data/cards.json')).json();
-  const start = new URLSearchParams(location.search).get('card') || 'athena-002';
+  const requested = new URLSearchParams(location.search).get('card') || 'athena-002';
+  const start = db.cartas.find(c => c.id === requested)?.id || db.cartas[0]?.id;
   fillCardSelect(start);
-  await selectCard(start);
+  if (start) await selectCard(start); else newCard();
 } catch (e) {
   say(`falha ao carregar cards.json: ${e.message}`, true);
 }

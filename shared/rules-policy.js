@@ -3,9 +3,10 @@ export const LATENT_CAP=3;
 export const ARMOR_SUBTYPES=['Armor','Cloth','Scale','Surplice','Warplate','Moonplate'];
 export const CHARACTER_ORIGINS=['CANON — KURUMADA','SAINT SEIYA — OUTRAS OBRAS','MITOLOGIA ADAPTADA','ORIGINAL TCG'];
 export const armorCard=c=>c?.tipo!=='Devotee'&&(c?.slot_equipamento==='armadura'||(c?.subtipos||[]).some(s=>ARMOR_SUBTYPES.includes(s)));
+export const techniqueCard=c=>c?.tipo==='Technique'||c?.tipo==='Spell'&&c.subtipos?.includes('Technique');
 export function paymentUnit(type,c={},response=false,printed='cosmo'){
   if(type==='ultimate'||type==='play'&&(c.tipo==='Devotee'||armorCard(c)))return 'base_cosmo';
-  if(type==='play'&&c.tipo==='Technique'&&response)return 'latent_cosmo';
+  if(type==='play'&&techniqueCard(c)&&response)return 'latent_cosmo';
   return printed||'cosmo';
 }
 export const unitLabel=unit=>unit==='base_cosmo'?'Base Cosmo only':unit==='latent_cosmo'?'Latent Cosmo only':'Base / Latent Cosmo';
