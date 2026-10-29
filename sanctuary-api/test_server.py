@@ -205,7 +205,7 @@ class Api(unittest.TestCase):
         self.call('POST', '/api/friends/requests', {'code': code}, cookie=a)
         rid = self.call('GET', '/api/friends', cookie=b)[1]['incoming'][0]['id']
         self.call('POST', f'/api/friends/requests/{rid}/accept', cookie=b)
-        deck = {'main_deck': [{'card_id': 'x', 'quantity': 1}]}
+        deck = {'god': 'god-ares', 'main_deck': [{'card_id': 'x', 'quantity': 1}]}
         self.assertEqual(self.call('POST', '/api/challenges', {'to': 'Aiolia_H', 'deck': deck}, cookie=a)[0], 409)  # offline
         self.call('POST', '/api/presence', {}, cookie=b)
         st, ch, _, _ = self.call('POST', '/api/challenges', {'to': 'Aiolia_H', 'deck': deck}, cookie=a)
@@ -224,7 +224,38 @@ class Api(unittest.TestCase):
         msgs = self.call('GET', '/api/chat/Aiolia_H', cookie=a)[1]['messages']
         self.assertEqual((msgs[-1]['kind'], msgs[-1]['body']), ('result', '🏆 Aiolia_H won the duel.'))
         self.assertEqual(self.call('POST', f"/api/challenges/{ch['id']}/decline", cookie=b)[0], 409)
+        self.call('GET', '/api/chat/Aiolia_H', cookie=a)  # reler o chat não duplica o duelo
+        # perfil: contagem única, adversário, God e data
+        st, p, _, _ = self.call('GET', '/api/profile/aiolia_h', cookie=a)
+        self.assertEqual((st, p['username'], p['stats']), (200, 'Aiolia_H', {'played': 1, 'wins': 1, 'losses': 0, 'winrate': 100}))
+        self.assertEqual((p['recent'][0]['opponent'], p['recent'][0]['result'], p['recent'][0]['god']), ('Aiolos_G', 'win', 'god-ares'))
+        self.assertEqual(self.call('GET', '/api/profile/Aiolos_G', cookie=b)[1]['stats']['losses'], 1)
+        self.assertEqual(self.call('GET', '/api/profile/Aiolia_H')[0], 401)  # só logado
+        self.assertEqual(self.call('GET', '/api/profile/Nobody_X', cookie=a)[0], 404)
+        # bloqueado: o perfil some
+        self.call('POST', '/api/blocks', {'username': 'Aiolia_H'}, cookie=a)
+        self.assertEqual(self.call('GET', '/api/profile/Aiolia_H', cookie=a)[0], 404)
+        # apagar a conta de A: tira os dados dele e anonimiza A no histórico de B
+        server.db.execute("insert into login_attempts values ('g@example.com', '1.1.1.1', ?)", (2 * 10**9,))
+        server.db.execute("insert into access_requests (email, name, news, ip, created_at) values ('g@example.com', 'G', 0, '1.1.1.1', 1)")
+        self.assertEqual(self.call('DELETE', '/api/me', {'password': 'x' * 12}, cookie=a)[0], 200)
+        q = lambda t, w: server.db.execute(f'select count(*) from {t} where {w}').fetchone()[0]
+        self.assertEqual((q('challenges', '1=1'), q('login_attempts', "email = 'g@example.com'"), q('access_requests', "email = 'g@example.com'")), (0, 0, 0))
+        p = self.call('GET', '/api/profile/Aiolia_H', cookie=b)[1]
+        self.assertEqual((p['stats']['played'], p['recent'][0]['opponent']), (1, 'Deleted player'))
         fake.shutdown()
+
+    def test_decks_limites(self):
+        server.db.execute("insert or ignore into invites values ('decks@example.com', 1)")
+        c = self.call('POST', '/api/auth/register', {'email': 'decks@example.com', 'name': 'F Name', 'username': 'Shura_F', 'country': 'BR', 'password': 'x' * 12, 'accept_terms': True})[2]
+        self.assertEqual(self.call('PUT', '/api/decks/d1', {'data': {'main_deck': 'x'}, 'revision': 0}, cookie=c)[0], 400)
+        self.assertEqual(self.call('PUT', '/api/decks/d1', {'data': {'main_deck': []}, 'revision': 0}, cookie=c)[0], 200)
+        server.MAX_DECKS = 1
+        try:
+            self.assertEqual(self.call('PUT', '/api/decks/d2', {'data': {'main_deck': []}, 'revision': 0}, cookie=c)[0], 400)
+            self.assertEqual(self.call('PUT', '/api/decks/d1', {'data': {'main_deck': []}, 'revision': 1}, cookie=c)[0], 200)  # editar não conta
+        finally:
+            server.MAX_DECKS = 100
 
 
 if __name__ == '__main__':

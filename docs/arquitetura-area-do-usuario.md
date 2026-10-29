@@ -1,6 +1,6 @@
 # Área do usuário — proposta de arquitetura
 
-Status: **aprovada e no ar** (29/10/2026). Contas, sessão, convites e o portão do /playtest estão em `sanctuary-api/`; a sincronização dos decks no lobby ainda falta.
+Status: **aprovada e no ar** (29/10/2026). Contas, sessão, convites e o portão do /playtest estão em `sanctuary-api/`; a sincronização dos decks e o perfil com estatísticas estão no lobby.
 Fonte: pedido do autor ("login e senha, salvar os decks de cada usuário"), revisado com `renaissance-architecture` e `ui-ux-pro-max`.
 
 ## O que existe hoje
@@ -93,10 +93,27 @@ sanctuary-api  (container novo no stack casamamaco)
 
 ### Sincronização dos decks
 
-- **Ao entrar:** o jogo lê `/api/decks`. Decks que só existem no aparelho aparecem com a ação "Save to account". A importação nunca é automática; o jogador escolhe.
-- **Ao salvar logado:** o jogo grava no `localStorage` primeiro (resposta imediata) e depois chama `PUT`.
-  - Sem rede, o deck fica marcado "Waiting to sync" e tenta de novo.
-  - Com 409 (o deck mudou em outro aparelho), o jogador escolhe entre "Keep this version" e "Use the other one".
+Implementada em `playtest/deck-store.js` (decisão do autor em 29/10/2026: a importação é automática, uma vez por conta).
+
+- **Cache local:** o `localStorage` continua sendo a leitura síncrona de todas as telas (construtor, lobby, desafio no chat). Sem conta ou sem rede, tudo funciona como antes.
+- **Metadados** (`sstcg.decks.meta.v1`, por usuário): `rev` (revisão do servidor por deck), `dirty` (por enviar), `gone` (apagados por avisar), `migrated`.
+- **Ao entrar** (`syncDecks`, chamado quando `/api/me` responde):
+  - decks só do servidor entram no cache;
+  - decks só do navegador, que nenhuma conta conhecia, são enviados (importação única, sem duplicar: a chave é o `id`);
+  - deck já sincronizado que sumiu do servidor foi apagado em outro aparelho e sai do cache (fica 30 dias na lixeira da conta);
+  - decks vistos por outra conta neste navegador não migram para a conta nova.
+- **Ao salvar/apagar:** grava no cache e enfileira `PUT`/`DELETE`. Falha de rede deixa o deck em `dirty` e tenta de novo no próximo salvamento ou login.
+- **Conflito (409):** vale o que o jogador acabou de salvar (última gravação vence), mas a versão do servidor vira uma cópia local "(other device)" que também é enviada. Nenhum deck some em silêncio.
+- **Aviso:** texto discreto no canto do lobby ("Saved to your account" / "Saved on this device only — sign in to sync" / "...will sync when you are online").
+- **Limites no servidor:** `main_deck` (se enviado) precisa ser lista com até 200 entradas; até 100 decks ativos por conta (editar um existente não conta).
+
+### Duelos e perfil do jogador
+
+- **Tabela `duels`** (criada na subida do servidor, `create table if not exists`; o banco de produção ganha a tabela e a coluna `challenges.deck_b` sozinhos no próximo start): `challenge_id` (chave, garante um registro por partida), `a_id`/`b_id` (quem desafiou / quem aceitou), `winner` (`A`, `B` ou nulo = empate), `a_god`/`b_god`, `rounds` (só se o arena-server informar), `finished_at`.
+- **Quando grava:** em `settle_pair`, no mesmo ponto em que o chat recebe "won the duel" (o resultado é descoberto de forma preguiçosa, ao abrir a conversa). Partida que sumiu do arena-server (`reason: gone`) não conta.
+- **`GET /api/profile/<username>`** (só logado): `{username, country, joined, avatar_card, stats: {played, wins, losses, winrate}, recent: [10 últimos: opponent, result, god, date]}`. Suspenso e bloqueado (nos dois sentidos) retornam 404. Não expõe email, nome completo nem telefone.
+- **Interface:** modal no lobby, aberto por "View profile" / "Profile" no painel Friends e pelo nome no topo (perfil próprio).
+- **Apagar a conta** (`DELETE /api/me`) remove também desafios, denúncias feitas, pedidos de acesso e tentativas de login do usuário. Nos duelos, o histórico do adversário é mantido e o apagado aparece como "Deleted player".
 
 ## Interface (ui-ux-pro-max)
 

@@ -15,6 +15,7 @@ SECURE_COOKIE = os.environ.get('SANCTUARY_INSECURE_COOKIE') != '1'  # só testes
 COOKIE = 'sst_session'
 SESSION_DAYS = 30
 MAX_BODY = 64 * 1024
+MAX_DECKS = 100
 LOGIN_LIMIT, LOGIN_WINDOW = 5, 15 * 60
 EMAIL_RE = re.compile(r'^[^\s@]{1,64}@[^\s@]{1,190}\.[^\s@]{2,}$')
 DECK_ID_RE = re.compile(r'^[A-Za-z0-9_-]{1,80}$')
@@ -61,6 +62,10 @@ create table if not exists access_requests (id integer primary key, email text u
   news integer not null, ip text not null, created_at integer not null, status text not null default 'pending', decided_at integer);
 create table if not exists challenges (id integer primary key, from_id integer not null, to_id integer not null, deck text not null,
   created_at integer not null, status text not null default 'pending', match_id text, winner_id integer, settled_at integer);
+create table if not exists duels (challenge_id integer primary key, a_id integer, b_id integer, winner text, a_god text, b_god text,
+  rounds integer, finished_at integer not null);
+create index if not exists duels_a on duels(a_id, finished_at);
+create index if not exists duels_b on duels(b_id, finished_at);
 create table if not exists blocks (user_id integer not null, blocked_id integer not null, created_at integer not null,
   primary key (user_id, blocked_id));
 """
@@ -85,6 +90,8 @@ def open_db(path=DB_PATH):
             db.execute(f'alter table messages add column {col}')
     if 'resolved_at' not in {r['name'] for r in db.execute('pragma table_info(reports)')}:
         db.execute('alter table reports add column resolved_at')
+    if 'deck_b' not in {r['name'] for r in db.execute('pragma table_info(challenges)')}:
+        db.execute('alter table challenges add column deck_b')  # deck de quem aceitou (só o God aparece no perfil)
     db.execute('create unique index if not exists users_username on users(username)')
     db.execute('create unique index if not exists users_friend_code on users(friend_code)')
     for email in filter(None, (e.strip().lower() for e in os.environ.get('SANCTUARY_INVITES', '').split(','))):
@@ -273,6 +280,9 @@ class Handler(BaseHTTPRequestHandler):
                     return self.chat_read(m[1])
                 if method == 'POST':
                     return self.chat_report(m[1]) if m[2] else self.chat_send(m[1])
+            m = re.fullmatch(r'/api/profile/([A-Za-z0-9_]{3,20})', path)
+            if m and method == 'GET':
+                return self.player_profile(m[1])
             if method == 'POST' and path == '/api/challenges':
                 return self.challenge()
             if method == 'GET' and path == '/api/challenges/pending':
@@ -395,6 +405,13 @@ class Handler(BaseHTTPRequestHandler):
             db.execute('delete from friendships where user_a = ? or user_b = ?', (uid, uid))
             db.execute('delete from blocks where user_id = ? or blocked_id = ?', (uid, uid))
             db.execute('delete from messages where from_id = ? or to_id = ?', (uid, uid))
+            db.execute('delete from challenges where from_id = ? or to_id = ?', (uid, uid))
+            db.execute('delete from reports where reporter_id = ?', (uid,))
+            db.execute('delete from access_requests where email = ?', (user['email'],))
+            db.execute('delete from login_attempts where email = ?', (user['email'],))
+            # duelos: o histórico do adversário fica, o apagado vira "Deleted player" (id nulo)
+            db.execute('update duels set a_id = null where a_id = ?', (uid,))
+            db.execute('update duels set b_id = null where b_id = ?', (uid,))
             db.execute('delete from users where id = ?', (user['id'],))
         self.send_json(200, {'ok': True}, self.session_cookie('', 0))
 
@@ -592,8 +609,14 @@ class Handler(BaseHTTPRequestHandler):
         data, revision = body.get('data'), body.get('revision', 0)
         if not isinstance(data, dict) or not isinstance(revision, int):
             raise ApiError(400, 'Send {data, revision}.')
+        main = data.get('main_deck', [])
+        if not isinstance(main, list) or len(main) > 200:
+            raise ApiError(400, 'This deck is not valid.')
         now = int(time.time())
         with lock:
+            if not db.execute('select 1 from decks where user_id = ? and deck_id = ?', (user['id'], deck_id)).fetchone() and \
+                    db.execute('select count(*) from decks where user_id = ? and deleted_at is null', (user['id'],)).fetchone()[0] >= MAX_DECKS:
+                raise ApiError(400, f'You can keep up to {MAX_DECKS} decks.')
             row = db.execute('select data, revision from decks where user_id = ? and deck_id = ?', (user['id'], deck_id)).fetchone()
             current = row['revision'] if row else 0
             if revision != current:  # mudou em outro aparelho: o jogador escolhe a versão
@@ -683,10 +706,36 @@ class Handler(BaseHTTPRequestHandler):
         # fora do lock: chamada de rede ao arena-server (quem desafiou é A; quem aceitou é B)
         match_id = self.arena_create({'A': names[c['from_id']], 'B': names[c['to_id']]}, {'A': json.loads(c['deck']), 'B': deck})
         with lock:
-            cur = db.execute("update challenges set status = 'accepted', match_id = ? where id = ? and status = 'pending'", (match_id, cid))
+            cur = db.execute("update challenges set status = 'accepted', match_id = ?, deck_b = ? where id = ? and status = 'pending'",
+                             (match_id, json.dumps({'god': deck.get('god')}), cid))
             if not cur.rowcount:
                 raise ApiError(409, 'This challenge is no longer open.')
         self.send_json(200, {'match': match_id})
+
+    def player_profile(self, username):  # perfil público entre jogadores logados; bloqueados e suspensos aparecem como inexistentes
+        me = self.require_user()
+        with lock:
+            u = db.execute('select * from users where username = ?', (username.lower(),)).fetchone()
+            if not u or u['suspended_at'] or (u['id'] != me['id'] and self.blocked_between(me['id'], u['id'])):
+                raise ApiError(404, 'Player not found.')
+            uid = u['id']
+            rows = db.execute('select d.*, a.username_display as a_name, b.username_display as b_name from duels d '
+                              'left join users a on a.id = d.a_id left join users b on b.id = d.b_id '
+                              'where d.a_id = ? or d.b_id = ? order by d.finished_at desc, d.challenge_id desc', (uid, uid)).fetchall()
+        wins = losses = 0
+        recent = []
+        for d in rows:
+            side = 'A' if d['a_id'] == uid else 'B'
+            result = 'draw' if not d['winner'] else 'win' if d['winner'] == side else 'loss'
+            wins += result == 'win'
+            losses += result == 'loss'
+            if len(recent) < 10:
+                recent.append({'opponent': (d['b_name'] if side == 'A' else d['a_name']) or 'Deleted player', 'result': result,
+                               'god': d['a_god'] if side == 'A' else d['b_god'], 'date': d['finished_at']})
+        played = len(rows)
+        self.send_json(200, {'username': u['username_display'], 'country': u['country'], 'joined': u['created_at'],
+                             'avatar_card': u['avatar_card'], 'stats': {'played': played, 'wins': wins, 'losses': losses,
+                             'winrate': round(100 * wins / played) if played else 0}, 'recent': recent})
 
     def arena_create(self, players, decks):
         req = urllib.request.Request(f'{ARENA_URL}/arena/matches', json.dumps({'players': players, 'decks': decks}).encode(),
@@ -719,6 +768,12 @@ class Handler(BaseHTTPRequestHandler):
             text = f"🏆 {name[0]} won the duel." if name else ('The duel ended.' if victory.get('reason') == 'gone' else 'The duel ended in a draw.')
             now = int(time.time())
             db.execute('update challenges set winner_id = ?, settled_at = ? where id = ?', (winner, now, c['id']))
+            rounds = victory.get('rounds')
+            if victory.get('reason') != 'gone':  # partida que sumiu do arena-server não conta como duelo jogado
+                god = lambda d: str((json.loads(d) if isinstance(d, str) else d).get('god') or '')[:40] or None
+                db.execute('insert or ignore into duels values (?, ?, ?, ?, ?, ?, ?, ?)',
+                           (c['id'], c['from_id'], c['to_id'], victory.get('winner') if winner else None, god(c['deck']), god(c['deck_b'] or '{}'),
+                            rounds if isinstance(rounds, int) else None, now))
             db.execute("insert into messages (from_id, to_id, body, created_at, kind, ref, seen_at) values (?, ?, ?, ?, 'result', ?, ?)",
                        (c['from_id'], c['to_id'], text, now, c['id'], None))
 

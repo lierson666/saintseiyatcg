@@ -7,7 +7,7 @@
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const LABEL = {online: 'Online', match: 'In a match', offline: 'Offline'};
 
-export function mountSocial({api, avatarOf, onCount, decks = () => [], play = id => location.assign(`/playtest/divine/?match=${encodeURIComponent(id)}`)}) {
+export function mountSocial({api, avatarOf, onCount, decks = () => [], onProfile = () => {}, play = id => location.assign(`/playtest/divine/?match=${encodeURIComponent(id)}`)}) {
   const el = document.createElement('aside');
   el.className = 'lb-social'; el.hidden = true; el.setAttribute('aria-label', 'Friends');
   document.body.append(el);
@@ -45,6 +45,7 @@ export function mountSocial({api, avatarOf, onCount, decks = () => [], play = id
         ${data.blocked.length ? `<details class="lb-social__blocked"><summary class="kv-stamp">Blocked · ${data.blocked.length}</summary>${data.blocked.map(b => person(b, `<button class="kv-ghost" data-social="unblock" data-user="${esc(b.username)}">Unblock</button>`)).join('')}</details>` : ''}
       </div>
       ${menu ? `<div class="lb-friend__menu" role="menu"><p class="kv-stamp">${esc(menu)}</p>
+        <button role="menuitem" data-social="profile" data-user="${esc(menu)}">View profile</button>
         <button role="menuitem" data-social="remove" data-user="${esc(menu)}">Remove friend</button>
         <button role="menuitem" data-social="block" data-user="${esc(menu)}">Block</button>
         <button role="menuitem" data-social="menu-close">Cancel</button></div>` : ''}`;
@@ -59,7 +60,7 @@ export function mountSocial({api, avatarOf, onCount, decks = () => [], play = id
     const f = data.friends.find(x => x.username === username);
     chat = {user: username, last: 0, seenUpTo: 0, poll: null};
     el.innerHTML = `<header class="lb-chat__head"><button class="lb-x" data-social="back" aria-label="Back to friends">‹</button>
-        ${person(f || {username})}<button class="kv-ghost is-gold lb-chat__duel" data-social="duel-open" ${f?.status === 'online' ? '' : 'disabled title="Your friend must be online"'}>⚔ Challenge</button><button class="lb-chat__report" data-social="report" data-user="${esc(username)}">Report</button></header>
+        ${person(f || {username})}<button class="kv-ghost lb-chat__duel" data-social="profile" data-user="${esc(username)}">Profile</button><button class="kv-ghost is-gold lb-chat__duel" data-social="duel-open" ${f?.status === 'online' ? '' : 'disabled title="Your friend must be online"'}>⚔ Challenge</button><button class="lb-chat__report" data-social="report" data-user="${esc(username)}">Report</button></header>
       <form class="lb-duel" data-social-form="duel" hidden><span class="kv-stamp">Your deck</span>${deckSelect('deck')}<button class="kv-ghost is-gold">Send challenge</button><button type="button" class="kv-ghost" data-social="duel-close">Cancel</button></form>
       <ol class="lb-chat__log" aria-live="polite" aria-label="Messages with ${esc(username)}"></ol>
       <p class="lb-chat__seen" hidden>Seen</p>
@@ -146,6 +147,7 @@ export function mountSocial({api, avatarOf, onCount, decks = () => [], play = id
     if (act === 'close') return toggle(false);
     if (act === 'chat') { menu = null; return openChat(user); }
     if (act === 'back') return closeChat();
+    if (act === 'profile') { menu = null; if (!chat) paint(); return onProfile(user); }
     if (act === 'report') {
       if (!confirm(`Report this conversation with ${user}? The last messages will be sent to the Saint Seiya TCG team.`)) return;
       try { await api(`/api/chat/${encodeURIComponent(user)}/report`, 'POST'); el.querySelector('.kv-status').textContent = 'Thanks. The team will review it.'; } catch (err) { el.querySelector('.kv-status').textContent = err.message; }

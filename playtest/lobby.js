@@ -6,11 +6,11 @@ import {canonIndex, validateDeck, DECK_SIZE, COPY_LIMIT} from '../shared/deck-v3
 import {spellCategory} from './engine-v3/core.js';
 import {renderLiveCard} from '../shared/live-card.js?v=20261029-forge';
 import {unlock, playMusic, setVolume, volume} from './audio.js';
-import {loadMyDecks, saveMyDecks, findDeck} from './deck-store.js';
+import {loadMyDecks, saveMyDecks, findDeck, syncDecks, onDeckStatus} from './deck-store.js?v=20261029-2';
 import {mountKV} from '../shared/kv-sky.js?v=20261029-2';
 import {countryOptions, countryName} from '../shared/countries.js?v=20261029-1';
 import {startPresence} from '../shared/presence.js?v=20261029-1';
-import {mountSocial} from './social.js?v=20261029-4';
+import {mountSocial} from './social.js?v=20261029-5';
 
 const root = document.getElementById('lobby');
 const ART = '../card-forge/art-web/';
@@ -81,7 +81,7 @@ function topBar() {
     <nav class="lb-tabs">${tab('home', 'Home')}${tab('decks', 'Decks')}${tab('profile', 'Profile')}${tab('options', 'Options')}</nav>
     <span class="lb-top__tag">Alpha 0.1 · Engine 3.0</span>
     ${ui.user?.complete ? `<button class="lb-socialbtn" data-act="friends" aria-label="Friends">Friends ${socialBadge()}</button>` : ''}
-    ${ui.user ? `<span class="lb-user"><i class="kv-dot" aria-hidden="true"></i>${esc(ui.user.username || ui.user.name)}<button class="kv-ghost" data-act="signout">Sign out</button></span>` : ''}
+    ${ui.user ? `<span class="lb-user"><i class="kv-dot" aria-hidden="true"></i>${ui.user.complete ? `<button class="kv-ghost" data-act="my-profile" aria-label="My player profile">${esc(ui.user.username)}</button>` : esc(ui.user.name)}<button class="kv-ghost" data-act="signout">Sign out</button></span>` : ''}
   </header>`;
 }
 
@@ -91,7 +91,7 @@ const socialBadge = () => `<span class="lb-socialbtn__count">${ui.online || 0}</
 function startSocial() {
   if (social || !ui.user?.complete) return;
   startPresence('online');
-  social = mountSocial({api, avatarOf: id => artOf(id || 'god-athena'),
+  social = mountSocial({api, onProfile: openProfile, avatarOf: id => artOf(id || 'god-athena'),
     decks: () => allDecks().filter(deckValid).map(d => ({id: d.id, name: d.alpha_nome || d.nome, deck: d})), onCount: (online, requests) => {
     ui.online = online; ui.requests = requests;
     const b = root.querySelector('.lb-socialbtn'); if (b) b.innerHTML = `Friends ${socialBadge()}`;
@@ -156,6 +156,33 @@ function options() {
   const row = (k, label) => `<label class="lb-field lb-volume">${label}<input type="range" min="0" max="100" value="${Math.round(volume[k] * 100)}" data-act="volume" data-kind="${k}"><output>${Math.round(volume[k] * 100)}%</output></label>`;
   return `<section class="lb-page lb-options"><header class="lb-page__head"><h1>Options</h1><p>Match settings (speed, quality, timers) live in the arena's Settings button.</p></header>
     ${row('music', 'Music')}${row('sfx', 'Sound effects')}</section>`;
+}
+
+// ---------- Perfil do jogador (modal): estatísticas e últimos duelos online ----------
+const when = t => new Date(t * 1000).toLocaleDateString('en', {day: 'numeric', month: 'short', year: 'numeric'});
+const RESULT = {win: 'Won', loss: 'Lost', draw: 'Draw'};
+async function openProfile(username) {
+  const opener = document.activeElement;
+  const dlg = document.createElement('dialog');
+  dlg.className = 'lb-pmodal kv-card'; dlg.setAttribute('aria-label', `${username} · player profile`);
+  dlg.innerHTML = '<p class="kv-status" role="status">Loading…</p>';
+  document.body.append(dlg); dlg.showModal();
+  dlg.addEventListener('close', () => { dlg.remove(); opener?.focus?.(); });
+  dlg.addEventListener('click', e => { if (e.target === dlg || e.target.closest('[data-pclose]')) dlg.close(); });
+  try {
+    const p = await api(`/api/profile/${encodeURIComponent(username)}`), s = p.stats;
+    const god = id => esc(cards.get(id)?.name || (id || '').replace(/^god-/, '') || '—');
+    dlg.innerHTML = `<header class="lb-pmodal__head"><span class="lb-avatar" style="background-image:url('${artOf(p.avatar_card || 'god-athena') || ''}')"></span>
+        <div><p class="kv-stamp kv-stamp--gold">${esc(countryName(p.country))} · Joined ${when(p.joined)}</p><h2>${esc(p.username)}</h2></div>
+        <button class="kv-ghost" data-pclose autofocus>Close</button></header>
+      <dl class="lb-pstats"><div><dt class="kv-stamp">Played</dt><dd>${s.played}</dd></div><div><dt class="kv-stamp">Wins</dt><dd>${s.wins}</dd></div>
+        <div><dt class="kv-stamp">Losses</dt><dd>${s.losses}</dd></div><div><dt class="kv-stamp">Win rate</dt><dd>${s.winrate}%</dd></div></dl>
+      <h3 class="kv-stamp">Recent duels</h3>
+      ${p.recent.length ? `<ol class="lb-precent">${p.recent.map(r => `<li class="is-${r.result}"><b>${RESULT[r.result]}</b> vs ${esc(r.opponent)}<small>${god(r.god)} · ${when(r.date)}</small></li>`).join('')}</ol>` : '<p class="kv-status">No online duels yet.</p>'}`;
+    dlg.querySelector('[data-pclose]').focus();
+  } catch (e) {
+    dlg.innerHTML = `<p class="kv-status err" role="status">${esc(e.message)}</p><button class="kv-ghost" data-pclose>Close</button>`;
+  }
 }
 
 // ---------- Perfil (docs/contas-amigos-chat.md, etapa 1) ----------
@@ -389,6 +416,7 @@ const actions = {
   'close-play': () => { ui.play = false; },
   avatar: async t => { try { ui.user = await api('/api/me', 'PATCH', {avatar_card: t.dataset.id}); } catch (e) { ui.profileMsg = {me: {text: e.message, kind: 'err'}}; } render(); },
   friends: () => social?.toggle(),
+  'my-profile': () => openProfile(ui.user.username),
   'copy-code': async () => { await navigator.clipboard?.writeText(ui.user.friend_code).catch(() => {}); ui.copied = true; setTimeout(() => { ui.copied = false; render(); }, 1500); },
   slide: t => { ui.slide = (ui.slide || 0) + Number(t.dataset.step); },
   signout: async () => {
@@ -480,7 +508,14 @@ async function init() {
   if (!findDeck(ui.deckB, presets)) ui.deckB = presets[1]?.id || presets[0]?.id;
   render();
   // Conta do sanctuary-api (login no /login/). Sem API (dev local), o lobby segue sem o nome no topo.
-  fetch('/api/me', {credentials: 'same-origin'}).then(r => r.ok ? r.json() : null).then(u => { if (u) { ui.user = u; if (!u.complete) ui.screen = 'profile'; render(); startSocial(); } }).catch(() => {});
+  fetch('/api/me', {credentials: 'same-origin'}).then(r => r.ok ? r.json() : null).then(u => { if (u) { ui.user = u; if (!u.complete) ui.screen = 'profile'; render(); startSocial(); if (u.username) syncDecks(u.username, () => { if (ui.screen !== 'builder') render(); }); } }).catch(() => {});
 }
+// Aviso discreto do salvamento dos decks (conta ou só este aparelho); não bloqueia nada.
+let deckNote = null, deckNoteTimer = 0;
+onDeckStatus(({text, kind}) => {
+  if (!deckNote) { deckNote = document.createElement('p'); deckNote.className = 'kv-status lb-deckstatus'; deckNote.setAttribute('role', 'status'); document.body.append(deckNote); }
+  deckNote.className = `kv-status lb-deckstatus ${kind === 'warn' ? '' : kind}`; deckNote.textContent = text; deckNote.hidden = false;
+  clearTimeout(deckNoteTimer); deckNoteTimer = setTimeout(() => { deckNote.hidden = true; }, 5000);
+});
 mountKV();
 init().catch(e => { root.innerHTML = `<p class="lb-loading">${esc(e.message)}</p>`; console.error(e); });
