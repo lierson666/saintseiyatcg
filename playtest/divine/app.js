@@ -77,7 +77,7 @@ function playableReason(key, uid) {
   if (pending) return 'Answer the pending decision first.';
   if (c.kind === 'Spell') {
     const cat = spellCategory(Number(num(uid)));
-    if (!cat) return 'This Spell has no approved speed yet.';
+    if (!cat) return 'This Technique or Moment is not playable yet.';
     if (cat.speed === 'instant' ? !(s.window ? s.window.priority === key : s.active === key && !s.chain.length) : !idleFor(key)) return cat.speed === 'instant' ? 'You need priority to cast a Moment.' : 'Techniques are cast on your turn, with no response pending.';
     return affordable(key, c.cost) ? missingTarget(key, uid) : `Needs ${c.cost.amount} ${c.cost.unit === 'base' ? 'prepared Base' : 'Latent'} Cosmo.`;
   }

@@ -3,6 +3,7 @@
 import {loadCanon} from '../shared/canon-cards.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {canonIndex, validateDeck, DECK_SIZE, COPY_LIMIT} from '../shared/deck-v3.js';
+import {spellCategory} from './engine-v3/core.js';
 import {renderLiveCard} from '../shared/live-card.js?v=20261028-5';
 import {unlock, playMusic, setVolume, volume} from './audio.js';
 import {loadMyDecks, saveMyDecks, findDeck} from './deck-store.js';
@@ -10,7 +11,7 @@ import {loadMyDecks, saveMyDecks, findDeck} from './deck-store.js';
 const root = document.getElementById('lobby');
 const ART = '../card-forge/art-web/';
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
-const KINDS = ['All', 'Devotee', 'Equipment', 'Spell', 'Domain'];
+const KINDS = ['All', 'Devotee', 'Equipment', 'Technique', 'Moment', 'Domain'];
 const COSTS = ['All', '1', '2', '3', '4', '5', '6', '7+'];
 const FACTIONS = ['athena', 'poseidon', 'hades', 'ares', 'artemis'];
 const symbol = f => `../CARD-TEMPLATE/symbols/${f}.png`;
@@ -27,7 +28,9 @@ const remember = () => { try { localStorage.setItem('sstcg.lobby.v1', JSON.strin
 const faction = card => (forge.get(card.id)?.faccao || card.id.replace(/^god-/, '').split('-')[0]).toLowerCase();
 const godForge = godId => forge.get(`${godId.replace(/^god-/, '')}-001`);
 const artOf = id => { const f = id.startsWith('god-') ? godForge(id) : forge.get(id); return f?.ilustracao ? ART + f.ilustracao : null; };
-const kindOf = c => (c.kind === 'Divine Artifact' ? 'Equipment' : c.kind);
+// Spell não existe para o jogador: é Technique ou Moment (tipo impresso; Athena Event/Miracle pela D194, core.js).
+const kindOf = c => c.kind === 'Divine Artifact' ? 'Equipment' : c.kind !== 'Spell' ? c.kind
+  : c.type.match(/Moment|Technique/)?.[0] || spellCategory(Number(c.id.slice(-3)))?.category || 'Technique';
 const sortCards = (a, b) => (a.kind === 'Domain') - (b.kind === 'Domain') || (a.cost?.amount ?? 0) - (b.cost?.amount ?? 0) || a.name.localeCompare(b.name);
 
 function face(id, cls = '') {
