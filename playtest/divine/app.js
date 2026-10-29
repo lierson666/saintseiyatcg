@@ -1309,7 +1309,7 @@ function decisionText(req) {
     return {who, title, kicker: 'Mandatory choice', body: req.text || `Choose ${req.count}.`};
   }
   const parts = [req.source && n(req.source) ? `Source: ${n(req.source)}.` : '', req.uid && n(req.uid) ? `Affects: ${n(req.uid)}.` : '',
-    req.amount ? `${req.amount} damage incoming.` : '', req.cost ? `Cost: ${typeof req.cost === 'string' ? req.cost : `${req.cost.latent} Latent`}.` : ''].filter(Boolean);
+    req.amount ? `${req.amount} damage incoming.` : '', req.cost ? `Cost: ${typeof req.cost === 'string' ? req.cost : req.cost.soul ? `${req.cost.soul} Soul` : `${req.cost.latent} Latent`}.` : ''].filter(Boolean);
   return {who, title: req.ability, kicker: 'Optional ability', body: req.text || `${parts.join(' ')} Use it?`.trim(), yes: 'Use', no: 'Decline'};
 }
 
