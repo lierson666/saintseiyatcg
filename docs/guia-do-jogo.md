@@ -777,7 +777,7 @@ Se um Strike normal causar Soul zero aos dois Gods simultaneamente por efeitos a
 
 | Parâmetro | Parâmetro inicial |
 | --- | --- |
-| Soul / Attack de God de referência | 20 / 3; Soul entre 15 e 22 por God (Alpha: Athena 20, Poseidon 18, Hades 22, Artemis 15, Ares 20); variar por facção apenas com compensação no restante da carta |
+| Soul / Attack de God de referência | 20 / 3; Soul entre 15 e 22 por God. Os valores de cada God (Soul, Attack, Awaken) são os da carta do God no Card Forge (`data/cards.json`, ids `<facção>-001`) desde 29/10/2026; em 29/10/2026: Athena 22/2/Awaken 5, Poseidon 22/1/4, Hades 18/2/7, Artemis 20/1/3, Ares 18/3/7 |
 | Compras | 2 por rodada a partir da segunda |
 | Bases | 1 por jogador/rodada, sem AÇÃO |
 | Latent | Limite de 3; ganho geral uma vez por AÇÃO adversária com dano elegível; persiste e aceita conversão opcional de Bases no encerramento |

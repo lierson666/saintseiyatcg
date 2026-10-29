@@ -29,5 +29,12 @@ export function addPreviewCards(cards, index, forgeCards) {
     cards.set(r.id, card);
     index?.set(r.id, r);
   }
+  // Gods: Soul, Attack e Awaken vêm da carta do God no Forge (<facção>-001), por cima do D268 e da G3-042 (autor, 29/10/2026).
+  for (const f of forgeCards.filter(c => /^(athena|poseidon|hades|ares|artemis)-001$/.test(c.id))) {
+    const god = cards.get(`god-${f.id.slice(0, -4)}`);
+    if (!god) continue;
+    const n = v => (Number.isFinite(Number(v)) && v !== null && v !== '' ? Number(v) : undefined);
+    cards.set(`god-${f.id.slice(0, -4)}`, {...god, soul: n(f.soul) ?? god.soul, atk: n(f.attack) ?? god.atk, awaken: n(f.awaken) ?? god.awaken});
+  }
   return cards;
 }

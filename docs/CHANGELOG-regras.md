@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-29 — Tabela de parâmetros (G3-042) — Soul, Attack e Awaken dos Gods vêm do Card Forge
+
+- **Antes:** Soul pela tabela G3-042 (Athena 20, Poseidon 18, Hades 22, Artemis 15, Ares 20); Attack e Awaken do D268.
+- **Depois:** o jogo lê Soul, Attack e Awaken da carta do God no Forge (`<facção>-001`). Hoje: Athena 22/2/5, Poseidon 22/1/4, Hades 18/2/7, Artemis 20/1/3, Ares 18/3/7.
+- **Motivo:** decisão do autor em 29/10/2026: editar o God no Card Forge deve mudar o jogo.
+- **Pendências:** engine ajustada (`shared/preview-cards.js`). O D268 continua como está; textos de poder dos Gods seguem o D268/engine.
+
 ## 2026-10-29 — §46A, tabela de keywords — Trample removida; a keyword é Pierce
 
 - **Antes:** §46A definia Trample como igual a Pierce (sem somar); 15 cartas V6 (Artemis 369–440, Neutral 499) imprimiam Trample.
