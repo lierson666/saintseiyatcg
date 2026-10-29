@@ -346,7 +346,7 @@ function chainLabel(c) {
   return {title, text, target: c.target && ctx.objects[c.target] ? info(c.target).name : ''};
 }
 function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
-  if (hidden) return `<div class="dcard dcard--back ${size}" data-uid="${uid}" aria-label="Face-down card"><span></span></div>`;
+  if (hidden || !ctx.objects[uid]) return `<div class="dcard dcard--back ${size}" data-uid="${uid}" aria-label="Face-down card"><span></span></div>`;
   const s = S(), c = info(uid), n = num(uid), unit = s.units[uid];
   const cat = c.kind === 'Spell' && ctx.objects[uid] ? spellCat(uid) : null;
   const subtype = cat ? cat.category : (c.type.split(' — ')[1] || c.kind);
@@ -590,7 +590,7 @@ function choiceBar() {
 function overlays() {
   const s = S();
   let html = '';
-  if (s.setup) {
+  if (s.setup && !(online && s.setup[0] !== online.key)) { // online: a mão inicial do adversário não aparece
     const key = s.setup[0];
     html += `<div class="overlay mulligan"><h2>Player ${key} · Opening hand</h2><p>Send any number of cards to the bottom of your deck, shuffle and draw that many. Once.</p>
       <div class="mulligan__cards">${s.players[key].hand.map(u => `<button class="mull ${marked.has(u) ? 'marked' : ''}" data-mull="${u}">${cardFace(u, {size: 'dcard--lg'})}</button>`).join('')}</div>
@@ -1360,6 +1360,7 @@ function focusDecision() {
 }
 // O log também acompanha eventos que o orquestrador não descreve.
 function watchEvents() {
+  if (!match) return requestAnimationFrame(watchEvents); // online: espera a primeira visão do servidor
   const s = S();
   const fresh = s.events.slice(watchEvents.seen || 0);
   for (const e of fresh) logEvent(e);
