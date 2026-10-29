@@ -7,6 +7,7 @@ services:
     environment:
       SANCTUARY_ORIGIN: https://saintseiyatcg.com
       SANCTUARY_INVITES: ${SANCTUARY_INVITES:-}
+      SANCTUARY_ADMINS: ${SANCTUARY_ADMINS:-}
     volumes:
       - sanctuary-data:/data
     networks: [casamamaco_default]
