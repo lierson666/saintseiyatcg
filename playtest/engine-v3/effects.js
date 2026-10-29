@@ -514,10 +514,12 @@ export function afterStrike(state, ctx, strike) {
       }
     }, {uid: sword, ability: 'Resonance', target: t});
   }
-  // Domain 062 Galaxian Wars Arena, Tournament Spirit: Bronze Saint amigo atacante derrotou o Devotee inimigo alvo;
-  // uma vez por Round, pode comprar 1. Retaliação (defensor Bronze derrota o atacante) fica de fora até o autor decidir.
-  const arena = strike.player, spirit = `domain:${arena}:tournament-spirit`;
-  if (t && !survived(t) && state.domains?.[arena] === 'athena-v6-062' && isBronze(ctx, attacker) && !state.roundUses.has(spirit)) {
+  // Domain 062 Galaxian Wars Arena, Tournament Spirit: Bronze Saint amigo derrotou o Devotee inimigo no Strike, atacando
+  // ou defendendo na retaliação (autor, 28/10/2026; guia §63); uma vez por Round, pode comprar 1.
+  const sides = t ? [[strike.player, attacker, t], [other(state, strike.player), t, attacker]] : [];
+  for (const [arena, saint, foe] of sides) {
+    const spirit = `domain:${arena}:tournament-spirit`;
+    if (survived(foe) || state.domains?.[arena] !== 'athena-v6-062' || !isBronze(ctx, saint) || state.roundUses.has(spirit)) continue;
     add(arena, st => {
       if (st.roundUses.has(spirit) || !ask(ctx, arena, {ability: 'TOURNAMENT SPIRIT', draw: 1})) return;
       useOncePerRound(st, spirit);

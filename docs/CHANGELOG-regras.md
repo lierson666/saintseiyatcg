@@ -4,6 +4,14 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-28 — §63 — Tournament Spirit (062) vale atacando e defendendo
+
+- **Seção:** `docs/guia-do-jogo.md`, §63 (Gods e Domains).
+- **Antes:** o texto "when a friendly Bronze Saint defeats an enemy Devotee with a Strike" não dizia se a retaliação contava.
+- **Depois:** conta quando o Bronze Saint amigo derrota o Devotee inimigo num Strike, atacando ou defendendo (retaliação).
+- **Motivo:** decisão do autor em 28/10/2026 ("pode ser defendendo também").
+- **Pendências:** nenhuma carta alterada; engine 3.0 já implementa assim (`playtest/engine-v3/effects.js`, teste em `tools/test-engine-v3-effects.mjs`).
+
 ## 2026-10-28 — §55 e Handbook 3.0 G3-041 — volta a compra de 2 cartas por turno
 
 - **Seção:** `docs/guia-do-jogo.md` §55 e `docs/alpha-0.1/GODS-3.0-SUPPLEMENT.md` G3-041 (revoga G3-037).

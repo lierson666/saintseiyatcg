@@ -221,3 +221,13 @@ test('Domain 062 Galaxian Wars Arena: Bronze Saint atacante derrota Devotee inim
   strike(field('A', '028'), {kind: 'devotee', uid: two}); passAll(s); // outro Bronze (Jabu): nomes únicos no campo
   assert.equal(s.players.A.hand.length - hand, 1, 'segunda derrota no mesmo Round não compra');
 });
+
+test('Domain 062 Tournament Spirit: Bronze Saint defensor que derrota o atacante na retaliação também compra (guia §63)', () => {
+  const {s, ctx, field, strike} = setup({A: fortress, B: rush}, () => true);
+  const shiryu = field('A', '003'), seiya = field('B', '001');
+  s.units[shiryu].damage = hpOf(s, ctx, shiryu) - 1; // Seiya defende e derrota Shiryu na retaliação
+  const hand = s.players.B.hand.length;
+  strike(shiryu, {kind: 'devotee', uid: seiya}); passAll(s);
+  assert.equal(s.units[shiryu], undefined, 'atacante derrotado');
+  assert.equal(s.players.B.hand.length - hand, 1, 'retaliação ativa Tournament Spirit');
+});
