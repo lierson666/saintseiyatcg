@@ -20,7 +20,7 @@ const PICKS = [...FACTIONS, 'neutral'];
 const cap = f => f[0].toUpperCase() + f.slice(1);
 
 let cards, index, forge, presets = [], gods = [];
-const ui = {screen: 'home', play: false, mode: 'ai', deckA: null, deckB: null, first: 'random', big: null, notice: null, builder: null};
+const ui = {screen: 'home', play: false, mode: 'ai', deckA: null, deckB: null, first: 'random', big: null, notice: null, picker: null, builder: null};
 try { Object.assign(ui, JSON.parse(localStorage.getItem('sstcg.lobby.v1')) || {}, {screen: 'home', play: false, big: null, builder: null}); } catch { /* sem preferências salvas */ }
 const remember = () => { try { localStorage.setItem('sstcg.lobby.v1', JSON.stringify({mode: ui.mode, deckA: ui.deckA, deckB: ui.deckB, first: ui.first})); } catch { /* idem */ } };
 
@@ -55,6 +55,7 @@ function deckErrors(d) {
 }
 const deckValid = d => !deckErrors(d).length;
 function deckCover(d) {
+  if (d.thumb && artOf(d.thumb)) return artOf(d.thumb); // capa escolhida no deckbuilder
   const first = d.main_deck.map(e => e.card_id).find(id => artOf(id));
   return artOf(first || deckGod(d));
 }
@@ -170,13 +171,10 @@ function builder() {
     </div>
     <aside class="lb-list">
       <input class="lb-list__name" value="${esc(d.nome)}" data-act="rename" aria-label="Deck name">
-      <label class="lb-field">God<select data-act="god">${gods.map(g => `<option value="${g.id}" ${d.god === g.id ? 'selected' : ''}>${esc(g.name)}</option>`).join('')}</select></label>
-      <label class="lb-field">Domain<select data-act="domain"><option value="">Choose a Domain</option>${FACTIONS.map(f => {
-        const list = [...cards.values()].filter(c => c.kind === 'Domain' && faction(c) === f).sort(sortCards);
-        return list.length ? `<optgroup label="${esc(cards.get(`god-${f}`)?.name || f)}">${list.map(c => `<option value="${c.id}" ${d.domain_id === c.id ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</optgroup>` : '';
-      }).join('')}</select></label>
-      <div class="lb-list__god" style="background-image:url('${artOf(d.god) || ''}')"><span>${[...deckFactions(d)].filter(f => f !== 'neutral').map(f => `<img src="${symbol(f)}" alt="">`).join('')}${esc(cards.get(d.god)?.name || '')}</span>
+      <div class="lb-cover" style="background-image:url('${deckCover(d) || ''}')"><span>${[...deckFactions(d)].filter(f => f !== 'neutral').map(f => `<img src="${symbol(f)}" alt="">`).join('')}${esc(cards.get(d.god)?.name || '')}</span>
         <small>${domain ? esc(domain.name) : 'No Domain yet'}</small></div>
+      <div class="lb-picks">${[['god', 'God', d.god], ['domain', 'Domain', d.domain_id], ['thumb', 'Cover', d.thumb || d.god]].map(([k, label, id]) =>
+        `<button class="lb-pick" data-act="open-picker" data-pick="${k}" aria-label="Choose ${label}">${id && cards.get(id) ? face(id, 'lb-card--mini') : '<span class="lb-pick__empty">+</span>'}<small>${label}</small></button>`).join('')}</div>
       <div class="lb-list__count ${size === DECK_SIZE ? 'is-full' : ''}"><strong>${size}</strong> / ${DECK_SIZE}</div>
       <div class="lb-curve" aria-label="Cost curve">${curve.map((n, i) => `<span style="--h:${n / peak}"><i>${n || ''}</i><b>${i === 6 ? '7+' : i + 1}</b></span>`).join('')}</div>
       <ol class="lb-strips">${list.map(e => `<li><button class="lb-strip" data-act="remove" data-id="${e.card_id}" data-card="${e.card_id}" style="--art:url('${artOf(e.card_id) || ''}')">
@@ -219,6 +217,23 @@ function cardInfo(id) {
       <button class="lb-play lb-play--small" data-act="add" data-id="${id}" ${n >= COPY_LIMIT || deckSize(ui.builder.deck) >= DECK_SIZE ? 'disabled' : ''}>Add</button></div>`}
   </section>`;
 }
+// Seletor visual (como o comandante do MTG Arena): God, Domain ou a carta de capa do deck.
+function pickerOptions(kind, d) {
+  if (kind === 'god') return gods.map(g => g.id);
+  const domains = [...cards.values()].filter(c => c.kind === 'Domain').sort((a, b) => (faction(b) === faction(cards.get(d.god))) - (faction(a) === faction(cards.get(d.god))) || PICKS.indexOf(faction(a)) - PICKS.indexOf(faction(b)) || a.name.localeCompare(b.name));
+  if (kind === 'domain') return domains.map(c => c.id);
+  return [...new Set([d.god, d.domain_id, ...d.main_deck.map(e => e.card_id)].filter(id => id && cards.get(id)))];
+}
+function picker() {
+  const kind = ui.picker, d = ui.builder?.deck;
+  if (!kind || !d) return '';
+  const current = {god: d.god, domain: d.domain_id, thumb: d.thumb || d.god}[kind];
+  const title = {god: 'Choose your God', domain: 'Choose your Domain', thumb: 'Choose the deck cover'}[kind];
+  return `<div class="lb-picker" role="dialog" aria-modal="true" aria-label="${title}"><div class="lb-picker__box"><header><h2>${title}</h2>
+    <button class="lb-play lb-play--small" data-act="close-picker">Close</button></header>
+    <div class="lb-picker__grid">${pickerOptions(kind, d).map(id => `<button class="lb-slot ${id === current ? 'is-in' : ''}" data-act="picked" data-id="${id}" aria-label="${esc(cards.get(id).name)}">${face(id)}</button>`).join('')}</div></div></div>`;
+}
+
 // Aviso modal (carta fora da identidade de cor do deck).
 function notice() {
   return ui.notice ? `<div class="lb-notice" role="alertdialog" aria-modal="true" aria-labelledby="lb-notice-t"><div class="lb-notice__box">
@@ -234,7 +249,7 @@ const SCROLLERS = ['.lb-body', '.lb-grid', '.lb-list', '.lb-panel'];
 function render() {
   const keep = SCROLLERS.map(sel => root.querySelector(sel)?.scrollTop || 0), screen = root.dataset.screen;
   const body = {home, decks: decksScreen, options, builder}[ui.screen]();
-  root.innerHTML = `${topBar()}<div class="lb-body lb-body--${ui.screen}">${body}</div>${bigCard()}${notice()}`;
+  root.innerHTML = `${topBar()}<div class="lb-body lb-body--${ui.screen}">${body}</div>${bigCard()}${picker()}${notice()}`;
   if (screen === ui.screen) SCROLLERS.forEach((sel, i) => { const el = root.querySelector(sel); if (el) el.scrollTop = keep[i]; });
   root.dataset.screen = ui.screen;
 }
@@ -296,6 +311,15 @@ const actions = {
   },
   'close-big': () => { ui.big = null; },
   'close-notice': () => { ui.notice = null; },
+  'open-picker': t => { ui.picker = t.dataset.pick; },
+  'close-picker': () => { ui.picker = null; },
+  picked: t => {
+    const b = ui.builder, id = t.dataset.id;
+    if (ui.picker === 'god') { b.deck.god = id; b.show = [...new Set([...b.show, faction(cards.get(id))])]; }
+    if (ui.picker === 'domain') { b.deck.domain_id = id; b.show = [...new Set([...b.show, faction(cards.get(id))])]; }
+    if (ui.picker === 'thumb') b.deck.thumb = id;
+    b.dirty = true; ui.picker = null;
+  },
 };
 
 root.addEventListener('click', e => {
@@ -316,8 +340,6 @@ root.addEventListener('contextmenu', e => {
 root.addEventListener('change', e => {
   const t = e.target, act = t.dataset.act;
   if (act === 'first') { ui.first = t.value; remember(); }
-  else if (act === 'god') { ui.builder.deck.god = t.value; ui.builder.dirty = true; ui.builder.show = [...new Set([...ui.builder.show, faction(cards.get(t.value))])]; }
-  else if (act === 'domain') { ui.builder.deck.domain_id = t.value || null; ui.builder.dirty = true; }
   else if (act === 'rename') { ui.builder.deck.nome = t.value.trim() || 'New deck'; ui.builder.dirty = true; }
   else return;
   render();
@@ -333,7 +355,7 @@ root.addEventListener('input', e => {
     input.focus(); input.setSelectionRange(at, at);
   }
 });
-addEventListener('keydown', e => { if (e.key === 'Escape' && (ui.big || ui.play || ui.notice)) { ui.big = null; ui.play = false; ui.notice = null; render(); } });
+addEventListener('keydown', e => { if (e.key === 'Escape' && (ui.big || ui.play || ui.notice || ui.picker)) { ui.big = null; ui.play = false; ui.notice = null; ui.picker = null; render(); } });
 // Áudio só começa após o primeiro gesto do jogador (política dos navegadores).
 addEventListener('pointerdown', () => { unlock(); playMusic('menu'); }, {once: true});
 
