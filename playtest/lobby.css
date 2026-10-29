@@ -212,3 +212,72 @@ h1, h2, h3, .lb-play, .lb-tab, .lb-hero p { font-family: "Cinzel", "Trajan Pro",
 .lb-picker__box h2 { margin: 0; font-family: "Cinzel", Georgia, serif; color: var(--gold); font-size: 20px; }
 .lb-picker__grid { overflow: auto; padding: 18px 20px 24px; display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 16px 12px; }
 /* Assinatura fixa do projeto, em inglês (autor, 29/10/2026): aparece sempre no lobby. */
+
+/* ---------- KV oficial (autor, 29/10/2026; shared/kv.css, docs/kv-oficial.md) ----------
+   Céu de estrelas ao fundo, vidro com linhas finas, um único sinal dourado, Cinzel em carimbo, Cormorant itálico nos destaques. */
+:root { --bg: var(--kv-bg); --panel: #10111cb3; --panel-2: #161827cc; --line: var(--kv-line); --text: var(--kv-ink); --muted: var(--kv-muted); --gold: var(--kv-gold); --gold-2: var(--kv-gold-2); }
+html, body { background: var(--kv-bg); }
+body { font: 300 15px/1.45 var(--kv-sans); }
+.lobby { background: none; z-index: 1; }
+.lobby::before { background: radial-gradient(120% 90% at 30% 40%, transparent, #05060c99 75%); }
+.lb-top { height: 68px; background: #0b0c1699; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--kv-line); box-shadow: none; }
+.lb-top__logo { height: 40px; filter: drop-shadow(0 0 16px #e6c36a33); }
+.lb-tab { font: 600 11px var(--kv-title); letter-spacing: .36em; }
+.lb-tab.is-active::after { height: 1px; left: 20px; right: 20px; background: var(--kv-gold); }
+.lb-top__tag { font: 600 10px var(--kv-title); letter-spacing: .32em; color: var(--kv-dim); }
+.lb-user { display: flex; align-items: center; gap: 12px; font: 400 14px var(--kv-sans); color: var(--kv-ink); }
+.lb-user .kv-ghost { min-height: 36px; padding: 0 16px; font-size: 10px; }
+
+/* Home no estilo Arena: carrossel grande, coluna de destaques à direita, Play no canto. */
+.lb-home { grid-template-columns: minmax(0, 1fr) minmax(240px, 320px); grid-template-rows: 1fr auto; gap: 20px; padding: 28px clamp(16px, 3vw, 40px) 32px; }
+.lb-hero { grid-row: 1 / 3; min-height: 340px; border-radius: var(--kv-radius); box-shadow: none;
+  background: linear-gradient(90deg, #05060cf2 0%, #05060cb8 36%, #05060c10 72%), var(--hero) right 20% / cover no-repeat, var(--kv-glass); }
+.lb-hero__copy { left: clamp(28px, 4vw, 56px); bottom: clamp(48px, 7vh, 72px); max-width: 560px; }
+.lb-hero__copy .kv-stamp { margin: 0 0 18px; }
+.lb-hero__copy h1 { margin: 0 0 18px; text-shadow: none; }
+.lb-hero__copy h1 span { display: block; }
+.lb-hero__copy .kv-lyric { font-size: clamp(36px, 4.6vw, 72px); }
+.lb-hero__copy .kv-cosmo { font-size: clamp(38px, 5vw, 80px); }
+.lb-hero__copy > span { font-size: 17px; color: var(--kv-muted); }
+.lb-hero__arrow { position: absolute; top: 50%; translate: 0 -50%; width: 48px; height: 48px; border: 1px solid var(--kv-line); border-radius: 50%; background: #05060c80; color: var(--kv-ink); font: 300 28px/1 var(--kv-sans); transition: border-color .2s; }
+.lb-hero__arrow:hover { border-color: var(--kv-gold); color: var(--kv-gold-2); }
+.lb-hero__arrow.is-prev { left: 16px; } .lb-hero__arrow.is-next { right: 16px; }
+.lb-hero__dots { position: absolute; left: 50%; bottom: 20px; translate: -50% 0; display: flex; gap: 8px; }
+.lb-hero__dots i { width: 6px; height: 6px; border-radius: 50%; background: #f5f1e640; }
+.lb-hero__dots i.is-on { background: var(--kv-gold); box-shadow: 0 0 10px var(--kv-gold); }
+.lb-news { grid-column: 2; grid-row: 1; margin: 0; grid-template-columns: 1fr; grid-auto-rows: 1fr; align-content: stretch; }
+.lb-news__tile { height: auto; min-height: 110px; padding: 18px; border: 1px solid var(--kv-line); border-radius: var(--kv-radius);
+  background: linear-gradient(0deg, #05060cf0 15%, #05060c30 75%), var(--tile) center 25% / cover, var(--kv-glass); }
+.lb-news__tile:hover { transform: translateY(-2px); border-color: #e6c36a99; }
+.lb-news__tile small { font: 600 10px var(--kv-title); letter-spacing: .36em; color: var(--kv-gold); }
+.lb-news__tile strong { margin-top: 6px; font: italic 400 22px/1.1 var(--kv-serif); }
+.lb-dock { position: static; grid-column: 2; grid-row: 2; align-items: stretch; }
+.lb-dock__deck { border-radius: var(--kv-pill); border-color: var(--kv-line); background: var(--kv-glass); backdrop-filter: blur(12px); font: 400 14px var(--kv-sans); }
+.lb-dock__deck span { border-radius: 999px; width: 44px; height: 44px; }
+.lb-play { min-width: 0; padding: 0 40px; min-height: 64px; border: 0; border-radius: var(--kv-pill); font: 700 18px var(--kv-title); letter-spacing: .4em; color: #120d04;
+  background: linear-gradient(180deg, var(--kv-gold-2), var(--kv-gold)); box-shadow: 0 0 0 1px #ffe7a366, 0 12px 44px -10px #ff8a2bcc; }
+.lb-play:hover:not(:disabled) { box-shadow: 0 0 0 1px #ffe7a3aa, 0 16px 60px -8px #ff8a2b; filter: none; }
+.lb-play--small { min-height: 46px; padding: 0 26px; font-size: 13px; }
+
+/* Painéis, decks e páginas no vidro */
+.lb-panel { background: #0b0c16e6; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border-left: 1px solid var(--kv-line); box-shadow: none; }
+.lb-panel h2, .lb-page__head h1 { font: italic 400 34px/1.1 var(--kv-serif); color: var(--kv-ink); letter-spacing: 0; }
+.lb-panel h3, .lb-field { font: 600 10px var(--kv-title); letter-spacing: .32em; text-transform: uppercase; color: var(--kv-muted); }
+.lb-mode, .lb-pill, .lb-ghost, .lb-x { border-radius: var(--kv-pill); }
+.lb-mode.is-active { background: #e6c36a1a; }
+.lb-deck { border-radius: 16px; background: var(--kv-glass); }
+.lb-deck__name strong { font: 600 13px var(--kv-title); letter-spacing: .08em; }
+.lb-field select, .lb-filters input, .lb-list__name { border: 1px solid var(--kv-line); border-radius: var(--kv-pill); background: #05060c99; padding: 10px 16px; color: var(--kv-ink); font: 400 14px var(--kv-sans); letter-spacing: 0; text-transform: none; }
+.lb-filters { background: #0b0c1699; backdrop-filter: blur(12px); border-bottom-color: var(--kv-line); }
+.lb-list { background: #0b0c16d9; backdrop-filter: blur(16px); border-left-color: var(--kv-line); }
+.lb-list__actions { background: transparent; }
+.lb-notice__box, .lb-info { border: 1px solid var(--kv-line); border-radius: var(--kv-radius); background: #10111ce6; backdrop-filter: blur(18px); }
+.lb-notice__box h3 { font: italic 400 26px var(--kv-serif); color: var(--kv-gold-2); }
+
+@media (max-width: 900px) {
+  .lb-home { grid-template-columns: 1fr; grid-template-rows: auto auto auto; overflow: auto; }
+  .lb-hero { grid-row: auto; min-height: 380px; }
+  .lb-news, .lb-dock { grid-column: 1; grid-row: auto; }
+  .lb-news { grid-template-columns: repeat(3, 1fr); }
+  .lb-top__tag { display: none; }
+}

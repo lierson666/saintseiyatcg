@@ -1,0 +1,133 @@
+<!doctype html>
+<!-- Login do playtest (autor, 29/10/2026): entrar e criar conta no KV oficial. Fala com o sanctuary-api (/api/auth/*).
+     O Caddy manda para cá quem abre /playtest sem sessão (?next= guarda o destino). Criar conta só para emails convidados. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Saint Seiya TCG — Sign in</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#05060c">
+  <link rel="icon" href="/LOGO/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Cormorant+Garamond:ital,wght@1,400&family=Jost:wght@300;400;500&display=swap">
+  <link rel="stylesheet" href="/shared/kv.css?v=20261029-1">
+  <style>
+    html, body { margin: 0; min-height: 100%; background: var(--kv-bg); color: var(--kv-ink); font: 300 16px/1.5 var(--kv-sans); }
+    * { box-sizing: border-box; }
+    .page { position: relative; z-index: 1; min-height: 100dvh; display: grid; grid-template-rows: auto 1fr auto; }
+    .kv-nav a { color: var(--kv-muted); text-decoration: none; }
+    .kv-nav a:hover { color: var(--kv-ink); }
+    main { width: min(1200px, 100%); margin: 0 auto; padding: clamp(32px, 8vh, 96px) clamp(16px, 4vw, 56px); display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(320px, 440px); gap: clamp(32px, 6vw, 96px); align-items: center; }
+    .logo { display: block; width: clamp(200px, 24vw, 320px); height: auto; margin: 0 0 24px -6px; filter: drop-shadow(0 0 30px #e6c36a40); }
+    h1 { margin: 24px 0 0; font-weight: 400; }
+    h1 .kv-lyric, h1 .kv-cosmo { display: block; }
+    .lead { max-width: 40ch; margin: 24px 0 0; font-size: 18px; color: var(--kv-muted); }
+    .tabs { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--kv-line); }
+    .tabs button { min-height: 56px; border: 0; background: none; color: var(--kv-muted); font: 600 11px var(--kv-title); letter-spacing: .32em; text-transform: uppercase; position: relative; }
+    .tabs button[aria-selected=true] { color: var(--kv-gold-2); }
+    .tabs button[aria-selected=true]::after { content: ""; position: absolute; left: 24px; right: 24px; bottom: -1px; height: 1px; background: var(--kv-gold); box-shadow: 0 0 10px var(--kv-gold); }
+    .kv-card h2 { margin: 0; padding: 28px 28px 0; font: italic 400 34px/1.1 var(--kv-serif); }
+    form { display: grid; gap: 14px; padding: 20px 28px 30px; }
+    form[hidden] { display: none; }
+    .row { position: relative; }
+    .show { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); min-height: 36px; padding: 0 14px; border: 0; border-radius: 999px; background: none; color: var(--kv-muted); font: 500 12px var(--kv-sans); letter-spacing: .08em; }
+    .show:hover { color: var(--kv-ink); }
+    .row .kv-input { padding-right: 76px; }
+    .hint { margin: -6px 0 0; font-size: 13px; color: var(--kv-dim); }
+    .kv-footer .kv-stamp { color: var(--kv-dim); }
+    @media (max-width: 900px) { main { grid-template-columns: 1fr; } .hero .lead { display: none; } }
+  </style>
+</head>
+<body>
+  <div class="kv-veil" aria-hidden="true"></div>
+  <div class="page">
+    <nav class="kv-nav"><a class="kv-stamp" href="/">Saint Seiya · TCG</a><span class="kv-stamp">Closed beta</span></nav>
+    <main>
+      <section class="hero">
+        <img class="logo" src="/LOGO/logo-web.webp" alt="Saint Seiya TCG" width="760" height="380">
+        <p class="kv-stamp kv-stamp--gold">The gates of the Sanctuary</p>
+        <h1><span class="kv-lyric">Awaken your</span><span class="kv-cosmo">Cosmo</span></h1>
+        <p class="lead">The playtest is open to invited Saints. Sign in to build your decks and battle.</p>
+      </section>
+      <section class="kv-card">
+        <div class="tabs" role="tablist">
+          <button type="button" role="tab" id="tab-in" aria-controls="signin" aria-selected="true">Sign in</button>
+          <button type="button" role="tab" id="tab-up" aria-controls="signup" aria-selected="false">Create account</button>
+        </div>
+        <h2 id="heading">Welcome back, Saint</h2>
+        <form id="signin" aria-labelledby="heading" novalidate>
+          <label class="kv-field"><span class="kv-stamp">Email</span><input class="kv-input" type="email" name="email" autocomplete="email" required maxlength="190"></label>
+          <label class="kv-field"><span class="kv-stamp">Password</span><span class="row"><input class="kv-input" type="password" name="password" autocomplete="current-password" required><button class="show" type="button">Show</button></span></label>
+          <button class="kv-button" type="submit">Enter</button>
+          <p class="kv-status" role="status" aria-live="polite"></p>
+        </form>
+        <form id="signup" aria-labelledby="heading" novalidate hidden>
+          <label class="kv-field"><span class="kv-stamp">Name</span><input class="kv-input" type="text" name="name" autocomplete="name" required maxlength="60"></label>
+          <label class="kv-field"><span class="kv-stamp">Email</span><input class="kv-input" type="email" name="email" autocomplete="email" required maxlength="190"></label>
+          <label class="kv-field"><span class="kv-stamp">Password</span><span class="row"><input class="kv-input" type="password" name="password" autocomplete="new-password" required minlength="10"><button class="show" type="button">Show</button></span></label>
+          <p class="hint">At least 10 characters. Only emails on the beta list can create an account.</p>
+          <button class="kv-button" type="submit">Create account</button>
+          <p class="kv-status" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
+    <footer class="kv-footer"><span class="kv-stamp">Saint Seiya TCG · Closed beta</span></footer>
+  </div>
+  <script type="module">
+    import {mountKV} from '/shared/kv-sky.js?v=20261029-1';
+    const kv = mountKV({anchor: 'h1 .kv-cosmo'});
+    // Só destinos do próprio site (evita redirecionar para fora).
+    const raw = new URLSearchParams(location.search).get('next') || '/playtest/';
+    const next = raw.startsWith('/') && !raw.startsWith('//') ? raw : '/playtest/';
+    const $ = s => document.querySelector(s);
+    const HEAD = {signin: 'Welcome back, Saint', signup: 'Join the Sanctuary'};
+
+    function show(id) {
+      for (const f of ['signin', 'signup']) $('#' + f).hidden = f !== id;
+      $('#tab-in').setAttribute('aria-selected', id === 'signin');
+      $('#tab-up').setAttribute('aria-selected', id === 'signup');
+      $('#heading').textContent = HEAD[id];
+      $(`#${id} input`).focus();
+    }
+    $('#tab-in').onclick = () => show('signin');
+    $('#tab-up').onclick = () => show('signup');
+    for (const b of document.querySelectorAll('.show')) b.onclick = () => {
+      const input = b.previousElementSibling, visible = input.type === 'text';
+      input.type = visible ? 'password' : 'text'; b.textContent = visible ? 'Show' : 'Hide';
+    };
+    document.addEventListener('input', () => kv.warm());
+
+    async function submit(form, path, body) {
+      const status = form.querySelector('.kv-status'), button = form.querySelector('.kv-button');
+      const say = (t, k) => { status.textContent = t; status.className = `kv-status ${k || ''}`; };
+      button.disabled = true; say('Opening the gates…');
+      try {
+        const r = await fetch(path, {method: 'POST', headers: {'Content-Type': 'application/json'}, credentials: 'same-origin', body: JSON.stringify(body)});
+        const data = await r.json().catch(() => ({}));
+        if (!r.ok) return say(data.error || 'Something went wrong. Please try again.', 'err');
+        kv.burst(button); say(`Welcome, ${data.name}.`, 'ok');
+        setTimeout(() => location.replace(next), 600);
+      } catch { say('No connection to the Sanctuary. Please try again.', 'err'); }
+      finally { button.disabled = false; }
+    }
+    $('#signin').addEventListener('submit', e => {
+      e.preventDefault();
+      const d = new FormData(e.target);
+      if (!d.get('email') || !d.get('password')) {
+        const s = e.target.querySelector('.kv-status');
+        s.textContent = 'Enter your email and password.'; s.className = 'kv-status err';
+        return;
+      }
+      submit(e.target, '/api/auth/login', {email: d.get('email'), password: d.get('password')});
+    });
+    $('#signup').addEventListener('submit', e => {
+      e.preventDefault();
+      const d = new FormData(e.target);
+      submit(e.target, '/api/auth/register', {name: d.get('name'), email: d.get('email'), password: d.get('password')});
+    });
+    // Já logado? Vai direto ao destino.
+    fetch('/api/me', {credentials: 'same-origin'}).then(r => r.ok && location.replace(next)).catch(() => {});
+  </script>
+</body>
+</html>

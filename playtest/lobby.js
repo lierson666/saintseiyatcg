@@ -7,6 +7,7 @@ import {spellCategory} from './engine-v3/core.js';
 import {renderLiveCard} from '../shared/live-card.js?v=20261029-forge';
 import {unlock, playMusic, setVolume, volume} from './audio.js';
 import {loadMyDecks, saveMyDecks, findDeck} from './deck-store.js';
+import {mountKV} from '../shared/kv-sky.js?v=20261029-1';
 
 const root = document.getElementById('lobby');
 const ART = '../card-forge/art-web/';
@@ -76,15 +77,30 @@ function topBar() {
     <img class="lb-top__logo" src="../LOGO/logo-web.webp" alt="Saint Seiya TCG">
     <nav class="lb-tabs">${tab('home', 'Home')}${tab('decks', 'Decks')}${tab('options', 'Options')}</nav>
     <span class="lb-top__tag">Alpha 0.1 · Engine 3.0</span>
+    ${ui.user ? `<span class="lb-user"><i class="kv-dot" aria-hidden="true"></i>${esc(ui.user.name)}<button class="kv-ghost" data-act="signout">Sign out</button></span>` : ''}
   </header>`;
 }
 
+// Carrossel da home (KV oficial): um God por slide, com a arte do Forge ao fundo.
+const SLIDES = [
+  {god: 'god-athena', stamp: 'Olympus Arena', lyric: 'Let your', word: 'Cosmo burn', text: 'Build a deck around your God and take it to the arena.'},
+  {god: 'god-poseidon', stamp: 'The seas rise', lyric: 'Lord of the', word: 'Seven Seas', text: 'Poseidon calls his Marina Generals to war.'},
+  {god: 'god-hades', stamp: 'The underworld wakes', lyric: 'The armies of', word: 'Hades', text: 'Specters march from the Underworld.'},
+  {god: 'god-ares', stamp: 'Blood and fury', lyric: 'The war god', word: 'Ares', text: 'Berserkers feed on every fallen Saint.'},
+  {god: 'god-artemis', stamp: 'Moonlight hunt', lyric: 'The silver bow of', word: 'Artemis', text: 'Her Angels strike from the night sky.'},
+];
+
 function home() {
   const deck = findDeck(ui.deckA, presets);
+  const n = SLIDES.length, i = ((ui.slide || 0) % n + n) % n, slide = SLIDES[i];
   return `<section class="lb-home">
-    <div class="lb-hero" style="--hero:url('${artOf('god-athena') || ''}')">
-      <div class="lb-hero__copy"><p>Olympus Arena</p><h1>Let your Cosmo burn.</h1>
-        <span>Build a deck around your God and take it to the arena.</span></div>
+    <div class="lb-hero kv-card" style="--hero:url('${artOf(slide.god) || ''}')">
+      <div class="lb-hero__copy"><p class="kv-stamp kv-stamp--gold">${slide.stamp}</p>
+        <h1><span class="kv-lyric">${slide.lyric}</span><span class="kv-cosmo">${slide.word}</span></h1>
+        <span>${slide.text}</span></div>
+      <button class="lb-hero__arrow is-prev" data-act="slide" data-step="-1" aria-label="Previous">‹</button>
+      <button class="lb-hero__arrow is-next" data-act="slide" data-step="1" aria-label="Next">›</button>
+      <div class="lb-hero__dots">${SLIDES.map((_, j) => `<i class="${j === i ? 'is-on' : ''}"></i>`).join('')}</div>
     </div>
     <div class="lb-news">
       <button class="lb-news__tile" data-act="go" data-screen="decks" style="--tile:url('${artOf('athena-v6-001') || ''}')"><small>Decks</small><strong>Build your deck</strong></button>
@@ -292,6 +308,11 @@ const actions = {
   go: t => { ui.screen = t.dataset.screen; ui.play = false; },
   play: () => { ui.screen = 'home'; ui.play = true; },
   'close-play': () => { ui.play = false; },
+  slide: t => { ui.slide = (ui.slide || 0) + Number(t.dataset.step); },
+  signout: async () => {
+    await fetch('/api/auth/logout', {method: 'POST', credentials: 'same-origin'}).catch(() => {});
+    location.replace('/login/');
+  },
   mode: t => { ui.mode = t.dataset.mode; remember(); },
   'pick-a': t => { ui.deckA = t.dataset.deck; remember(); },
   'pick-b': t => { ui.deckB = t.dataset.deck; remember(); },
@@ -371,5 +392,8 @@ async function init() {
   if (!findDeck(ui.deckA, presets)) ui.deckA = presets[0]?.id;
   if (!findDeck(ui.deckB, presets)) ui.deckB = presets[1]?.id || presets[0]?.id;
   render();
+  // Conta do sanctuary-api (login no /login/). Sem API (dev local), o lobby segue sem o nome no topo.
+  fetch('/api/me', {credentials: 'same-origin'}).then(r => r.ok ? r.json() : null).then(u => { if (u) { ui.user = u; render(); } }).catch(() => {});
 }
+mountKV();
 init().catch(e => { root.innerHTML = `<p class="lb-loading">${esc(e.message)}</p>`; console.error(e); });

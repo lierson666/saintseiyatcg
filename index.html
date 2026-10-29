@@ -1,6 +1,6 @@
 <!doctype html>
-<!-- Home de saintseiyatcg.com (autor, 29/10/2026): Coming Soon com cadastro de novidades, direção elegante com céu de estrelas
-     e ponteiro com cosmo (canvas). Os cadastros vão para a planilha Google do autor via Apps Script
+<!-- Home de saintseiyatcg.com (autor, 29/10/2026): Coming Soon com cadastro de novidades no KV oficial (shared/kv.css,
+     shared/kv-sky.js, docs/kv-oficial.md). Os cadastros vão para a planilha Google do autor via Apps Script
      (tools/coming-soon-apps-script.gs; passo a passo em docs/coming-soon.md). Cole a URL do app da web em SIGNUP_URL. -->
 <html lang="en">
 <head>
@@ -16,261 +16,80 @@
   <link rel="apple-touch-icon" href="/LOGO/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Cormorant+Garamond:ital,wght@1,400&family=Jost:wght@300;400;500&display=swap">
+  <link rel="stylesheet" href="/shared/kv.css?v=20261029-1">
   <style>
-    /* Direção elegante (autor, 29/10/2026): céu à noite, um único sinal dourado, serifa itálica editorial + Cinzel em carimbo
-       espaçado, linhas finas no lugar de sombras e um cartão de vidro para o cadastro. */
-    :root { --bg: #05060c; --ink: #f5f1e6; --muted: #a8a397; --dim: #6f6b62; --line: #f5f1e626; --gold: #e6c36a; --gold-2: #ffe7a3; --ember: #ff8a2b; color-scheme: dark; }
+    html, body { margin: 0; min-height: 100%; background: var(--kv-bg); color: var(--kv-ink); font: 300 16px/1.5 var(--kv-sans); }
     * { box-sizing: border-box; }
-    html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--ink); font: 300 16px/1.5 "Jost", system-ui, sans-serif; }
     body { min-height: 100dvh; overflow-x: hidden; }
-    #sky { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
-    .veil { position: fixed; inset: 0; pointer-events: none; background: linear-gradient(90deg, #05060cd9 0%, #05060c80 42%, #05060c00 70%); }
     .page { position: relative; z-index: 1; min-height: 100dvh; display: grid; grid-template-rows: auto 1fr auto; }
-    .stamp { font: 600 11px/1 "Cinzel", Georgia, serif; letter-spacing: .42em; text-transform: uppercase; color: var(--muted); }
-    nav { position: sticky; top: 0; z-index: 3; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px clamp(16px, 4vw, 56px);
-      background: #0b0c1699; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
-    .logo { display: block; width: clamp(220px, 26vw, 360px); height: auto; margin: 0 0 28px -6px; filter: drop-shadow(0 0 30px #e6c36a40); }
+    .kv-nav { position: sticky; top: 0; z-index: 3; }
     .soon { display: inline-flex; align-items: center; gap: 10px; }
-    .soon i { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 10px var(--gold), 0 0 22px var(--ember); animation: beat 2.4s ease-in-out infinite; }
+    .soon .kv-dot { animation: beat 2.4s ease-in-out infinite; }
     @keyframes beat { 50% { opacity: .35; } }
     main { width: min(1200px, 100%); margin: 0 auto; padding: clamp(40px, 9vh, 120px) clamp(16px, 4vw, 56px); display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(320px, .8fr); gap: clamp(32px, 6vw, 96px); align-items: center; }
-    .hero .stamp { color: var(--gold); }
+    .logo { display: block; width: clamp(220px, 26vw, 360px); height: auto; margin: 0 0 28px -6px; filter: drop-shadow(0 0 30px #e6c36a40); }
     h1 { margin: 28px 0 0; font-weight: 400; line-height: .9; }
-    h1 .lyric { display: block; font: italic 400 clamp(56px, 8.4vw, 128px)/.9 "Cormorant Garamond", Georgia, serif; letter-spacing: -.03em; color: var(--ink); }
-    h1 .cosmo { display: block; margin-top: .08em; font: 700 clamp(58px, 9.4vw, 148px)/.95 "Cinzel", Georgia, serif; letter-spacing: .06em;
-      background: linear-gradient(180deg, var(--gold-2), var(--gold) 55%, #b98a3a); -webkit-background-clip: text; background-clip: text; color: transparent;
-      filter: drop-shadow(0 0 24px #e6c36a55); }
-    .lead { max-width: 42ch; margin: 32px 0 0; font-size: clamp(17px, 1.4vw, 20px); color: var(--muted); }
-    .lead em { font: italic 400 1.15em "Cormorant Garamond", Georgia, serif; color: var(--ink); }
-    .pass { position: relative; border: 1px solid var(--line); border-radius: 20px; background: #10111c8c; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); overflow: hidden; }
-    .pass::before { content: ""; position: absolute; inset: -40% -30% auto auto; width: 70%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(#e6c36a2e, transparent 65%); pointer-events: none; }
-    .pass > .stamp { margin: 0; padding: 32px 28px 0; color: var(--gold); }
-    .pass h2 { margin: 0; padding: 14px 28px 0; font: italic 400 34px/1.1 "Cormorant Garamond", Georgia, serif; }
+    h1 .kv-lyric { display: block; font-size: clamp(56px, 8.4vw, 128px); }
+    h1 .kv-cosmo { display: block; margin-top: .08em; font-size: clamp(58px, 9.4vw, 148px); }
+    .lead { max-width: 42ch; margin: 32px 0 0; font-size: clamp(17px, 1.4vw, 20px); color: var(--kv-muted); }
+    .lead em { font: italic 400 1.15em var(--kv-serif); color: var(--kv-ink); }
+    .kv-card > .kv-stamp { margin: 0; padding: 32px 28px 0; }
+    .kv-card h2 { margin: 0; padding: 14px 28px 0; font: italic 400 34px/1.1 var(--kv-serif); }
     form { display: grid; gap: 14px; padding: 24px 28px 30px; }
-    label { display: grid; gap: 8px; }
-    input[type=text], input[type=email] { width: 100%; min-height: 50px; padding: 12px 20px; border: 1px solid var(--line); border-radius: 999px; background: #05060c99; color: var(--ink); font: 400 16px "Jost", sans-serif; transition: border-color .2s, box-shadow .2s; }
-    input[type=text]:focus, input[type=email]:focus { border-color: var(--gold); box-shadow: 0 0 0 4px #e6c36a1f; outline: none; }
-    .consent { display: flex; gap: 12px; align-items: flex-start; font: 300 13px/1.5 "Jost", sans-serif; color: var(--muted); }
-    .consent input { flex: none; width: 18px; height: 18px; margin: 1px 0 0; accent-color: var(--gold); }
-    button { min-height: 54px; margin-top: 4px; border: 0; border-radius: 999px; font: 600 14px "Cinzel", Georgia, serif; letter-spacing: .32em; text-transform: uppercase; color: #120d04;
-      background: linear-gradient(180deg, var(--gold-2), var(--gold)); box-shadow: 0 0 0 1px #ffe7a366, 0 10px 40px -12px #ff8a2b99; transition: transform .2s, box-shadow .2s; }
-    button:hover { transform: translateY(-1px); box-shadow: 0 0 0 1px #ffe7a3aa, 0 14px 50px -10px #ff8a2bcc; }
-    button:disabled { opacity: .6; transform: none; }
-    :focus-visible { outline: 2px solid var(--gold-2); outline-offset: 3px; }
+    .consent { display: flex; gap: 12px; align-items: flex-start; font: 300 13px/1.5 var(--kv-sans); color: var(--kv-muted); }
+    .consent input { flex: none; width: 18px; height: 18px; margin: 1px 0 0; accent-color: var(--kv-gold); }
+    .kv-button { margin-top: 4px; }
     .hp { position: absolute; left: -9999px; }
-    .status { min-height: 1.5em; margin: 0; font: 400 14px "Jost", sans-serif; }
-    .status.ok { color: var(--gold-2); } .status.err { color: #ff9a87; }
-    footer { display: flex; justify-content: space-between; align-items: center; gap: 12px 24px; flex-wrap: wrap; padding: 18px clamp(16px, 4vw, 56px); border-top: 1px solid var(--line); font-size: 14px; color: var(--muted); }
-    footer .stamp { color: var(--dim); }
-    .love span { color: var(--gold); }
-    #trail { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9998; }
-    #pointer { position: fixed; left: 0; top: 0; z-index: 9999; pointer-events: none; opacity: 0; transform: translate3d(-100px, -100px, 0);
-      filter: drop-shadow(0 0 4px #ff8a2bcc) drop-shadow(0 0 12px #e6c36a88); transition: opacity .2s; will-change: transform; }
-    @media (pointer: fine) {
-      html.cosmo-pointer, html.cosmo-pointer * { cursor: none; }
-      html.cosmo-pointer input[type=text], html.cosmo-pointer input[type=email] { cursor: text; }
-    }
+    .kv-footer .kv-stamp { color: var(--kv-dim); }
+    .love span { color: var(--kv-gold); }
     @media (max-width: 900px) {
       main { grid-template-columns: 1fr; padding-top: 40px; }
-      .veil { background: linear-gradient(180deg, #05060c66, #05060ccc 60%); }
-      .pass > .stamp, .pass h2, form { padding-left: 20px; padding-right: 20px; }
+      .kv-card > .kv-stamp, .kv-card h2, form { padding-left: 20px; padding-right: 20px; }
     }
-    @media (prefers-reduced-motion: reduce) { .soon i { animation: none; } button, input { transition: none; } }
+    @media (prefers-reduced-motion: reduce) { .soon .kv-dot { animation: none; } }
   </style>
 </head>
 <body>
-  <canvas id="sky" aria-hidden="true"></canvas>
-  <canvas id="trail" aria-hidden="true"></canvas>
-  <svg id="pointer" aria-hidden="true" width="34" height="38" viewBox="0 0 34 38">
-    <defs><linearGradient id="pg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3c4"/><stop offset=".45" stop-color="#e6c36a"/><stop offset="1" stop-color="#ff8a2b"/></linearGradient></defs>
-    <path d="M5 4 L5 31 L12.5 23.5 L28 25.5 Z" fill="#02040ca6" stroke="url(#pg)" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round"/>
-    <path d="M7.4 9 L7.4 14" stroke="#fffbe8" stroke-width="1.4" stroke-linecap="round" opacity=".85"/>
-  </svg>
-  <div class="veil" aria-hidden="true"></div>
+  <div class="kv-veil" aria-hidden="true"></div>
   <div class="page">
-    <nav>
-      <span class="stamp">Saint Seiya · TCG</span>
-      <span class="stamp soon"><i aria-hidden="true"></i>Coming soon</span>
+    <nav class="kv-nav">
+      <span class="kv-stamp">Saint Seiya · TCG</span>
+      <span class="kv-stamp soon"><i class="kv-dot" aria-hidden="true"></i>Coming soon</span>
     </nav>
     <main>
       <section class="hero">
         <img class="logo" src="/LOGO/logo-web.webp" alt="Saint Seiya TCG" width="760" height="380">
-        <p class="stamp">The Holy War approaches</p>
-        <h1><span class="lyric">Burn your</span><span class="cosmo">Cosmo</span></h1>
+        <p class="kv-stamp kv-stamp--gold">The Holy War approaches</p>
+        <h1><span class="kv-lyric">Burn your</span><span class="kv-cosmo">Cosmo</span></h1>
         <p class="lead">The gods are gathering their armies. Leave your name and be the first to know <em>when the gates of the Sanctuary open.</em></p>
       </section>
-      <section class="pass" aria-labelledby="join">
-        <p class="stamp">Be the first to know</p>
+      <section class="kv-card" aria-labelledby="join">
+        <p class="kv-stamp kv-stamp--gold">Be the first to know</p>
         <h2 id="join">Join the Holy War</h2>
         <form id="signup" novalidate>
-          <label><span class="stamp">Name</span><input type="text" name="name" autocomplete="name" required maxlength="80"></label>
-          <label><span class="stamp">Email</span><input type="email" name="email" autocomplete="email" required maxlength="120"></label>
+          <label class="kv-field"><span class="kv-stamp">Name</span><input class="kv-input" type="text" name="name" autocomplete="name" required maxlength="80"></label>
+          <label class="kv-field"><span class="kv-stamp">Email</span><input class="kv-input" type="email" name="email" autocomplete="email" required maxlength="120"></label>
           <label class="hp" aria-hidden="true">Leave empty<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
           <label class="consent"><input type="checkbox" name="consent" required> I agree to receive Saint Seiya TCG news by email. I can unsubscribe at any time.</label>
-          <button type="submit">Ignite</button>
-          <p class="status" role="status" aria-live="polite"></p>
+          <button class="kv-button" type="submit">Ignite</button>
+          <p class="kv-status" role="status" aria-live="polite"></p>
         </form>
       </section>
     </main>
-    <footer><span class="stamp">Saint Seiya TCG · In development</span><span class="love">Made with lots of love by Brazilian fans <span aria-label="love">♥</span></span></footer>
+    <footer class="kv-footer"><span class="kv-stamp">Saint Seiya TCG · In development</span><span class="love">Made with lots of love by Brazilian fans <span aria-label="love">♥</span></span></footer>
   </div>
-  <script>
+  <script type="module">
+    import {mountKV} from '/shared/kv-sky.js?v=20261029-1';
     // URL do app da web do Apps Script (tools/coming-soon-apps-script.gs). Vazio: o formulário avisa que ainda não abriu.
     const SIGNUP_URL = '';
-    // Endereço limpo na barra: /index.html aparece como / (a raiz volta para cá; ver playtest/index.html).
+    // Endereço limpo na barra: /index.html aparece como /.
     if (location.pathname === '/index.html') history.replaceState(null, '', '/' + location.search + location.hash);
-
-    // ---------- Céu e cosmo (canvas) ----------
-    // Céu próprio, inspirado no estilo dos apps de astronomia (autor, 29/10/2026; nada copiado de app nenhum):
-    // degradê noturno até um horizonte que brilha, Via Láctea, estrelas com cor e as constelações dos Cavaleiros de Bronze
-    // em traço fino com nome. O cosmo (partículas douradas/brasa) segue o ponteiro, acende a constelação mais próxima,
-    // cresce ao digitar e explode ao cadastrar. Com prefers-reduced-motion, só o céu parado.
-    const sky = document.getElementById('sky'), g = sky.getContext('2d');
-    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    // Constelações simplificadas: pontos num quadro 0..1 e ligações por índice; `at` = centro em fração da tela, `s` = tamanho.
-    const FIGURES = [
-      {name: 'Pegasus', at: [.78, .26], s: .30, p: [[.30,.55],[.30,.25],[.65,.25],[.65,.55],[.15,.62],[.05,.72],[0,.86],[.14,.16],[.02,.08]], l: [[0,1],[1,2],[2,3],[3,0],[0,4],[4,5],[5,6],[1,7],[7,8]]},
-      {name: 'Andromeda', at: [.94, .56], s: .24, p: [[0,.15],[.3,.32],[.55,.45],[.85,.68],[.42,.62],[.2,.8]], l: [[0,1],[1,2],[2,3],[1,4],[4,5]]},
-      {name: 'Cygnus', at: [.16, .2], s: .26, p: [[.5,0],[.5,.42],[.5,1],[.16,.46],[0,.58],[.84,.36],[1,.3]], l: [[0,1],[1,2],[1,3],[3,4],[1,5],[5,6]]},
-      {name: 'Draco', at: [.5, .12], s: .30, p: [[.86,.1],[.96,.22],[.88,.32],[.78,.22],[.68,.4],[.55,.55],[.44,.42],[.3,.58],[.2,.78],[.05,.88]], l: [[0,1],[1,2],[2,3],[3,0],[2,4],[4,5],[5,6],[6,7],[7,8],[8,9]]},
-      {name: 'Phoenix', at: [.12, .78], s: .24, p: [[.5,0],[.32,.36],[.68,.36],[.15,.74],[.85,.74],[.5,.56]], l: [[0,1],[0,2],[1,3],[2,4],[1,5],[2,5]]},
-    ];
-    const TINTS = ['#cfe0ff', '#ffffff', '#fff3d6', '#ffd29a', '#ffb27a', '#a9c8ff'];
-    let W = 0, H = 0, dpr = 1, stars = [], sparks = [], figures = [], milky = null, heat = 0, t = 0;
-    const me = {x: innerWidth * .7, y: innerHeight * .5, tx: innerWidth * .7, ty: innerHeight * .5, active: false};
-    function resize() {
-      dpr = Math.min(devicePixelRatio || 1, 2); W = innerWidth; H = innerHeight;
-      sky.width = W * dpr; sky.height = H * dpr; g.setTransform(dpr, 0, 0, dpr, 0, 0);
-      trail.width = W * dpr; trail.height = H * dpr; tg.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const n = Math.round(W * H / 2200);
-      stars = Array.from({length: n}, () => ({x: Math.random() * W, y: Math.random() * H, z: Math.random() ** 3, tw: Math.random() * 6.28, c: TINTS[Math.random() * TINTS.length | 0]}));
-      const unit = Math.min(W, H * 1.4);
-      figures = FIGURES.map(f => ({...f, pts: f.p.map(([x, y]) => [f.at[0] * W + (x - .5) * f.s * unit, f.at[1] * H + (y - .5) * f.s * unit]), glow: 0}));
-      milky = paintMilkyWay();
-    }
-    // Via Láctea: faixa diagonal pintada uma vez num canvas fora da tela (nuvem + poeira de estrelas).
-    function paintMilkyWay() {
-      const c = document.createElement('canvas'); c.width = W * dpr; c.height = H * dpr;
-      const m = c.getContext('2d'); m.setTransform(dpr, 0, 0, dpr, 0, 0);
-      m.translate(W / 2, H / 2); m.rotate(-.42); const len = Math.hypot(W, H);
-      for (let i = 0; i < 70; i++) {
-        const x = (Math.random() - .5) * len, y = (Math.random() - .5) * H * .22, r = 40 + Math.random() * 140;
-        const cloud = m.createRadialGradient(x, y, 0, x, y, r);
-        cloud.addColorStop(0, `rgba(${150 + Math.random() * 60 | 0},${150 + Math.random() * 40 | 0},255,${.035 + Math.random() * .04})`); cloud.addColorStop(1, 'rgba(0,0,0,0)');
-        m.fillStyle = cloud; m.fillRect(x - r, y - r, r * 2, r * 2);
-      }
-      for (let i = 0; i < W * H / 260; i++) {
-        const y = (Math.random() + Math.random() + Math.random() - 1.5) * H * .16;
-        m.fillStyle = `rgba(230,236,255,${Math.random() * .5})`; m.fillRect((Math.random() - .5) * len, y, .7, .7);
-      }
-      return c;
-    }
-    function anchor() { // sem ponteiro: o cosmo queima em volta da palavra COSMO
-      const r = document.querySelector('h1 .cosmo').getBoundingClientRect();
-      return {x: r.left + r.width / 2, y: r.top + r.height / 2};
-    }
-    // Ponteiro com cosmo (autor, 29/10/2026): seta dourada em SVG acima de tudo e um rastro fino de brasas saindo da ponta.
-    // Só com mouse; no toque fica o cursor do sistema. Digitar aquece o brilho; cadastrar solta um anel de brasas.
-    const trail = document.getElementById('trail'), tg = trail.getContext('2d'), pointer = document.getElementById('pointer');
-    const fine = matchMedia('(pointer: fine)').matches;
-    let tip = null, lastTip = null;
-    if (fine && !still) document.documentElement.classList.add('cosmo-pointer');
-    function spawn(x, y, burst = 0) {
-      const a = Math.random() * 6.28, v = burst ? 1.5 + Math.random() * 3.5 : Math.random() * .5;
-      sparks.push({x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - (burst ? 0 : .35), life: 1, decay: burst ? .018 + Math.random() * .02 : .03 + Math.random() * .03,
-        r: burst ? .8 + Math.random() * 1.6 : .5 + Math.random() * 1.1, hue: 28 + Math.random() * 22});
-    }
-    function paintTrail() {
-      tg.clearRect(0, 0, W, H);
-      if (tip && lastTip) { // brasas só quando o ponteiro anda
-        const steps = Math.min(6, Math.hypot(tip.x - lastTip.x, tip.y - lastTip.y) / 6 | 0);
-        for (let i = 0; i < steps + (heat > .2 ? 1 : 0); i++) spawn(lastTip.x + (tip.x - lastTip.x) * i / Math.max(steps, 1), lastTip.y + (tip.y - lastTip.y) * i / Math.max(steps, 1));
-      }
-      lastTip = tip && {...tip};
-      tg.globalCompositeOperation = 'lighter';
-      for (let i = sparks.length - 1; i >= 0; i--) {
-        const p = sparks[i];
-        p.x += p.vx; p.y += p.vy; p.vx *= .95; p.vy = p.vy * .95 - .015; p.life -= p.decay;
-        if (p.life <= 0) { sparks.splice(i, 1); continue; }
-        tg.fillStyle = `hsla(${p.hue},100%,${60 + p.life * 25}%,${p.life})`;
-        tg.beginPath(); tg.arc(p.x, p.y, p.r * p.life + .3, 0, 6.28); tg.fill();
-      }
-      tg.globalCompositeOperation = 'source-over';
-      if (sparks.length > 400) sparks.splice(0, sparks.length - 400);
-      pointer.style.filter = `drop-shadow(0 0 ${4 + heat * 6}px #ff8a2bcc) drop-shadow(0 0 ${12 + heat * 14 + Math.sin(t * .06) * 3}px #e6c36a88)`;
-    }
-    function paintSky(ox, oy) {
-      const bg = g.createLinearGradient(0, 0, 0, H);
-      bg.addColorStop(0, '#02040c'); bg.addColorStop(.45, '#071433'); bg.addColorStop(.82, '#0d2350'); bg.addColorStop(1, '#1d2f5e');
-      g.fillStyle = bg; g.fillRect(0, 0, W, H);
-      const horizon = g.createRadialGradient(W * .5, H * 1.15, 0, W * .5, H * 1.15, H * .75);
-      horizon.addColorStop(0, 'rgba(255,150,80,.32)'); horizon.addColorStop(.4, 'rgba(120,90,200,.16)'); horizon.addColorStop(1, 'rgba(0,0,0,0)');
-      g.fillStyle = horizon; g.fillRect(0, 0, W, H);
-      g.globalAlpha = .9; g.drawImage(milky, ox * .4, oy * .4, W, H); g.globalAlpha = 1;
-      for (const s of stars) {
-        const x = s.x - ox * s.z, y = s.y - oy * s.z, size = .5 + s.z * 2.2;
-        g.globalAlpha = (.35 + .65 * Math.abs(Math.sin(t * .015 + s.tw))) * (.45 + s.z * .55);
-        g.fillStyle = s.c; g.beginPath(); g.arc(x, y, size * .6, 0, 6.28); g.fill();
-        if (s.z > .55) { g.globalAlpha *= .25; g.beginPath(); g.arc(x, y, size * 2.2, 0, 6.28); g.fill(); }
-      }
-      g.globalAlpha = 1;
-    }
-    function paintFigures(ox, oy) {
-      g.font = '500 11px Jost, sans-serif'; g.textAlign = 'center';
-      if ('letterSpacing' in g) g.letterSpacing = '4px';
-      for (const f of figures) {
-        const cx = f.at[0] * W - ox, cy = f.at[1] * H - oy, near = Math.hypot(me.x - cx, me.y - cy) < Math.min(W, H) * .22;
-        f.glow += ((near ? 1 : 0) - f.glow) * .06;
-        const pts = f.pts.map(([x, y]) => [x - ox, y - oy]);
-        g.lineWidth = 1 + f.glow; g.strokeStyle = `rgba(${150 + f.glow * 100 | 0},${185 + f.glow * 10 | 0},${255 - f.glow * 150 | 0},${.28 + f.glow * .5})`;
-        g.beginPath(); for (const [a, b] of f.l) { g.moveTo(...pts[a]); g.lineTo(...pts[b]); } g.stroke();
-        for (const [x, y] of pts) {
-          g.fillStyle = f.glow > .3 ? '#ffe7a3' : '#e8f0ff'; g.beginPath(); g.arc(x, y, 1.6 + f.glow * 1.4, 0, 6.28); g.fill();
-          g.fillStyle = `rgba(200,220,255,${.12 + f.glow * .2})`; g.beginPath(); g.arc(x, y, 5 + f.glow * 4, 0, 6.28); g.fill();
-        }
-        const low = pts.reduce((m, p) => Math.max(m, p[1]), -Infinity);
-        g.fillStyle = `rgba(${190 + f.glow * 60 | 0},${205 + f.glow * 20 | 0},255,${.45 + f.glow * .5})`;
-        g.fillText(f.name.toUpperCase(), cx, low + 22);
-      }
-      if ('letterSpacing' in g) g.letterSpacing = '0px';
-    }
-    function frame() {
-      t += 1;
-      const target = me.active ? me : anchor();
-      me.x += ((me.active ? me.tx : target.x) - me.x) * .08; me.y += ((me.active ? me.ty : target.y) - me.y) * .08;
-      heat *= .985;
-      const ox = (me.x / W - .5) * 26, oy = (me.y / H - .5) * 18;
-      paintSky(ox, oy);
-      paintFigures(ox * .6, oy * .6);
-      paintTrail();
-      if (!still && !document.hidden) requestAnimationFrame(frame);
-    }
-    function paintStill() { paintSky(0, 0); paintFigures(0, 0); } // movimento reduzido: céu e constelações parados
-    const move = (x, y) => { me.tx = x; me.ty = y; me.active = true; };
-    addEventListener('pointermove', e => {
-      move(e.clientX, e.clientY);
-      if (!fine || still || e.pointerType !== 'mouse') return;
-      tip = {x: e.clientX + 5, y: e.clientY + 4}; // ponta da seta
-      pointer.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
-      pointer.style.opacity = e.target.closest('input[type=text], input[type=email]') ? '0' : '1';
-    }, {passive: true});
-    addEventListener('pointerdown', e => { move(e.clientX, e.clientY); heat = Math.min(1, heat + .3); }, {passive: true});
-    document.documentElement.addEventListener('pointerleave', () => { me.active = false; tip = lastTip = null; pointer.style.opacity = '0'; });
-    addEventListener('resize', () => { resize(); if (still) paintStill(); });
-    document.addEventListener('visibilitychange', () => { if (!document.hidden && !still) requestAnimationFrame(frame); });
-    resize();
-    if (still) paintStill(); else requestAnimationFrame(frame);
+    const kv = mountKV({anchor: 'h1 .kv-cosmo'});
 
     // ---------- Cadastro ----------
-    const form = document.getElementById('signup'), status = form.querySelector('.status'), button = form.querySelector('button');
-    const say = (text, kind) => { status.textContent = text; status.className = `status ${kind || ''}`; };
-    form.addEventListener('input', () => { heat = Math.min(1, heat + .08); }); // digitar acende o cosmo
-    function explode() {
-      if (still) return;
-      const r = button.getBoundingClientRect();
-      for (let i = 0; i < 120; i++) spawn(r.left + r.width / 2, r.top + r.height / 2, 1);
-      heat = 1;
-    }
+    const form = document.getElementById('signup'), status = form.querySelector('.kv-status'), button = form.querySelector('button');
+    const say = (text, kind) => { status.textContent = text; status.className = `kv-status ${kind || ''}`; };
+    form.addEventListener('input', () => kv.warm());
     form.addEventListener('submit', async e => {
       e.preventDefault();
       const data = new FormData(form), name = data.get('name').trim(), email = data.get('email').trim();
@@ -283,7 +102,7 @@
       try {
         // Apps Script não devolve CORS: o envio é "no-cors" e a resposta não é lida.
         await fetch(SIGNUP_URL, {method: 'POST', mode: 'no-cors', body: new URLSearchParams({name, email, source: 'saintseiyatcg.com'})});
-        form.reset(); explode(); say('Your Cosmo has been heard. See you in the Sanctuary.', 'ok');
+        form.reset(); kv.burst(button); say('Your Cosmo has been heard. See you in the Sanctuary.', 'ok');
       } catch { say('Something went wrong. Please try again.', 'err'); }
       finally { button.disabled = false; }
     });
