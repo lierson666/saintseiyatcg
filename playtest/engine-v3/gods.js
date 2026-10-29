@@ -391,10 +391,11 @@ function scanGods(state) {
   const triggers = [];
   const gone = events.filter(e => (e.type === 'destroyed' || e.type === 'sacrificed') && ctx.objects[e.uid] && isDevoteeUid(ctx, e.uid));
 
-  // Offering of Life: um gatilho por lote de Devotees derrotados (o uso é do Round; recusar não gasta).
+  // Offering of Life: um gatilho por lote de Devotees SEUS derrotados (autor, 29/10/2026); o uso é do Round; recusar não gasta.
   for (const key of byGod(state, 'god-hades')) {
-    if (gone.length) {
-      const once = `god:${key}:offering`, first = gone[0].uid;
+    const mine = gone.filter(e => ctx.objects[e.uid].owner === key); // shortcut: dono, não controlador; trocar quando houver troca de controle
+    if (mine.length) {
+      const once = `god:${key}:offering`, first = mine[0].uid;
       triggers.push({controller: key, uid: `offering:${first}`, ability: 'OFFERING OF LIFE', run: st => {
         if (st.victory || st.roundUses.has(once) || st.players[key].soul < 1) return;
         if (!ask(ctx, key, {ability: 'OFFERING OF LIFE', uid: first, cost: {soul: 2}})) { emit(st, 'divine_power_declined', {player: key, ability: 'OFFERING OF LIFE', uid: first}); return; }

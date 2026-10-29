@@ -37,9 +37,15 @@ function setup(god, decide = (p, q) => (q.options ? q.options[0] : true)) {
 const kill = (s, ctx, uid) => { damageDevotee(s, ctx, uid, 99, false); checkDefeats(s, ctx); runCheckpoint(s); passAll(s); };
 const count = (s, type, ability) => s.events.filter(e => e.type === type && (!ability || e.ability === ability)).length;
 
-test('Hades Offering of Life: Devotee destruído (qualquer lado) → perde 2 Soul, compra 1 e ganha 1 Latent; uma vez por Round', () => {
+// Devotee do próprio A no campo (deck rush).
+const ownDevotee = (s, ctx) => { const p = s.players.A, uid = p.deck.find(u => ctx.cards.get(ctx.objects[u].cardId).kind === 'Devotee'); p.deck.splice(p.deck.indexOf(uid), 1); p.battlefield.push(uid); s.units[uid] = {prepared: true, damage: 0}; return uid; };
+
+test('Hades Offering of Life: só Devotee SEU derrotado → perde 2 Soul, compra 1 e ganha 1 Latent; uma vez por Round', () => {
   const {s, ctx, foe: mk, A} = setup('god-hades');
-  const foe = mk(), foe2 = mk(), hand = A.hand.length, soul = A.soul;
+  const hand0 = A.hand.length, soul = A.soul;
+  kill(s, ctx, mk());
+  assert.deepEqual([A.soul, A.hand.length, count(s, 'divine_power', 'OFFERING OF LIFE')], [soul, hand0, 0], 'Devotee inimigo não dispara');
+  const foe = ownDevotee(s, ctx), foe2 = ownDevotee(s, ctx), hand = A.hand.length;
   kill(s, ctx, foe);
   assert.deepEqual([A.soul, A.hand.length, A.latent], [soul - 2, hand + 1, 1]);
   kill(s, ctx, foe2);
@@ -49,11 +55,11 @@ test('Hades Offering of Life: Devotee destruído (qualquer lado) → perde 2 Sou
 
 test('Hades Offering of Life: recusar não gasta Soul nem o uso do Round', () => {
   let answer = false;
-  const {s, ctx, foe, A} = setup('god-hades', () => answer);
-  kill(s, ctx, foe());
+  const {s, ctx, A} = setup('god-hades', () => answer);
+  kill(s, ctx, ownDevotee(s, ctx));
   assert.deepEqual([A.soul, A.latent, count(s, 'divine_power_declined')], [22, 0, 1]);
   answer = true;
-  kill(s, ctx, foe());
+  kill(s, ctx, ownDevotee(s, ctx));
   assert.deepEqual([A.soul, A.latent], [20, 1]);
 });
 

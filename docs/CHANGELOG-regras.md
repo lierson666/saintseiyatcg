@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-29 — God Hades (D268) — Offering of Life só com Devotee seu
+
+- **Antes:** "Once each round, when a Devotee is defeated, you may lose 2 Soul…": qualquer Devotee, dos dois lados.
+- **Depois:** "Once each round, when a Devotee you control is defeated, you may lose 2 Soul. If you do, draw a card and gain 1 Latent Cosmo."
+- **Motivo:** decisão do autor em 29/10/2026 ("sempre que um Devotee SEU morrer, e não qualquer um").
+- **Pendências:** engine (`playtest/engine-v3/gods.js`) e texto aprovado do D268 ajustados; snapshot do `tools/test-d268-integrity.mjs` atualizado. O texto da carta `hades-001` em `data/cards.json` (Forge, que ainda diz "is destroyed") aguarda aprovação do diff. "Seu" é lido pelo dono da carta até existir troca de controle.
+
 ## 2026-10-29 — §§19, 47, 57, 59 — Impulse
 
 - **Antes:** pode declarar Strike na rodada em que entra, contra qualquer alvo aberto.

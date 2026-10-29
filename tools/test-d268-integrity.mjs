@@ -13,7 +13,7 @@ const records = [...canon.cards, ...canon.gods];
 
 // Projeção lida do Drive em 28/10/2026 (doc 04). Mudou o arquivo? Revise o diff com o autor antes de atualizar.
 // 29/10/2026: GOD-ARES AWAKEN 5 → 7 no texto aprovado (autor; docs/CHANGELOG-regras.md).
-const SNAPSHOT_SHA256 = 'feee523f6f84ce43c713a3b10b53a3df90642f8a17158e12daa1b9f1077f56e0';
+const SNAPSHOT_SHA256 = 'b6c15bbcd1b30f0330d11bdd05fb1a167230e33f4238b81b38a317881e41b17f';
 const KAMUI_ORIGINAL_SHA256 = '153ad7e355b3fd87d9dc79ead14f62dfd7d2c03e8c703c56ec9bcee256ca5099';
 
 test('snapshot não foi editado desde a importação', () => {
