@@ -14,14 +14,16 @@ const shuffle = (list, random) => { for (let i = list.length - 1; i > 0; i--) { 
 
 export const OPENING_HAND = 7;
 
-// `first` omitido: sorteado pela seed.
-export function createMatch({cards, canonIndex, decks, gods = {A: 'god-athena', B: 'god-athena'}, first, seed = 1}) {
+// `first` omitido: sorteado pela seed. `uidFor(key, cardId, n)`: ids das cartas; o duelo online passa ids opacos
+// (sem o número da carta) para o uid não revelar uma carta escondida.
+const readableUid = (key, cardId, n) => `${key}:${cardId.slice(-3)}:${n}`;
+export function createMatch({cards, canonIndex, decks, gods = {A: 'god-athena', B: 'god-athena'}, first, seed = 1, uidFor = readableUid}) {
   const random = seeded(seed), objects = {}, piles = {};
   for (const key of ['A', 'B']) {
     const errors = validateDeck(decks[key], canonIndex);
     if (errors.length) throw new Error(`Deck ${key} inválido: ${JSON.stringify(errors.slice(0, 3))}`);
     piles[key] = shuffle(decks[key].main_deck.flatMap(({card_id, quantity}) => Array.from({length: quantity}, (_, i) => {
-      const uid = `${key}:${card_id.slice(-3)}:${i + 1}`;
+      const uid = uidFor(key, card_id, i + 1);
       objects[uid] = {owner: key, cardId: card_id, armor: cards.get(card_id).armor};
       return uid;
     })), random);
