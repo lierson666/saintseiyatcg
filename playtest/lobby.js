@@ -308,15 +308,15 @@ addEventListener('pointerdown', () => { unlock(); playMusic('menu'); }, {once: t
 
 async function init() {
   const get = u => fetch(u).then(r => { if (!r.ok) throw Error(`Missing ${u}`); return r.json(); });
-  const [canon, deckData, art] = await Promise.all([get('../data/canon/d268.json'), get('../data/alpha-0.1/decks-proposta-d171.json'),
-    get(`${ART}cards.json`).catch(() => ({cartas: []}))]);
+  const [canon, deckData, art, previewDecks] = await Promise.all([get('../data/canon/d268.json'), get('../data/alpha-0.1/decks-proposta-d171.json'),
+    get(`${ART}cards.json`).catch(() => ({cartas: []})), get('../data/alpha-0.1/decks-preview-poseidon-hades.json').catch(() => ({decks: []}))]);
   cards = loadCanon(canon); index = canonIndex(canon);
   forge = new Map(art.cartas.map(c => [c.id, c]));
   for (const f of art.cartas.filter(c => /^(poseidon|hades)-v6-/.test(c.id))) {
     const r = previewRecord(f);
     cards.set(r.id, {...parseCard(r), preview: true}); index.set(r.id, r);
   }
-  presets = deckData.decks;
+  presets = [...deckData.decks, ...previewDecks.decks];
   gods = canon.gods.map(g => cards.get(g.id.toLowerCase()));
   if (!findDeck(ui.deckA, presets)) ui.deckA = presets[0]?.id;
   if (!findDeck(ui.deckB, presets)) ui.deckB = presets[1]?.id || presets[0]?.id;
