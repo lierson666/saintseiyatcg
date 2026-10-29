@@ -331,7 +331,7 @@ async function init() {
     get(`${ART}cards.json`).catch(() => ({cartas: []})), get('../data/alpha-0.1/decks-preview.json').catch(() => ({decks: []}))]);
   cards = loadCanon(canon); index = canonIndex(canon);
   forge = new Map(art.cartas.map(c => [c.id, c]));
-  for (const f of art.cartas.filter(c => /^(poseidon|hades|ares|artemis)-v6-/.test(c.id))) {
+  for (const f of art.cartas.filter(c => /^(poseidon|hades|ares|artemis|neutral)-v6-/.test(c.id))) {
     const r = previewRecord(f);
     cards.set(r.id, {...parseCard(r), preview: true}); index.set(r.id, r);
   }

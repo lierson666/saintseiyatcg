@@ -122,7 +122,8 @@ function typeLine(s, fmt) {
 
 // ---------- desenho ----------
 const font = (style, size) => T.styles[style].font.replace('{s}', size.toFixed(1));
-const fac = () => S.faccao==='Neutral'?{...T.factions.athena,color:'#ddd9c9'}:T.factions[String(S.faccao).toLowerCase()] || T.factions.athena;
+// Neutral tem pacote próprio em templates.json (cinza claro, sem símbolo e sem borda).
+const fac = () => T.factions[String(S.faccao).toLowerCase()] || T.factions.athena;
 const facKey = () => (T.factions[String(S.faccao).toLowerCase()] ? String(S.faccao).toLowerCase() : 'athena');
 
 // Peça da facção: '<facção>/x' se existir no pacote do Deus; senão a de Athena tingida na cor da facção.

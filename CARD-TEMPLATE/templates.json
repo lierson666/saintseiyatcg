@@ -11,13 +11,14 @@
     "flavour":  { "font": "italic 400 {s}px 'ITC Avant Garde Gothic Pro', 'ITC Avant Garde Gothic', 'Century Gothic', Avenir, sans-serif", "glow": false }
   },
   "color": "#FFF0BF",
-  "_factions_pt": "Pacote por facção, tirado do PSD do Deus. Peça 'athena/x' vira '<facção>/x' quando existe (desenhada no lugar da de Athena); senão a de Athena é tingida com 'color'. 'omit' = peças que a facção não usa.",
+  "_factions_pt": "Pacote por facção, tirado do PSD do Deus. Peça 'athena/x' vira '<facção>/x' quando existe (desenhada no lugar da de Athena); senão a de Athena é tingida com 'color'. 'omit' = peças que a facção não usa. Neutral (autor, 29/10/2026): cinza claro, sem símbolo de facção e sem a borda do frame.",
   "factions": {
     "athena":   { "color": "#FFF0BF", "glow": "rgba(255,252,0,0.55)", "frame": ["athena/vignette", "athena/frame"] },
     "hades":    { "color": "#C07CFF", "glow": "rgba(168,0,255,0.55)", "frame": ["hades/frame_1", "hades/frame_2"] },
     "ares":     { "color": "#FF6D6D", "glow": "rgba(255,0,0,0.55)", "frame": ["ares/frame_1", "ares/frame_2"] },
     "artemis":  { "color": "#BFFFCD", "glow": "rgba(0,255,30,0.55)", "frame": ["artemis/frame_1", "artemis/frame_2"], "omit": ["box_name", "box_subtitle"] },
-    "poseidon": { "color": "#8FEEFF", "glow": "rgba(0,246,255,0.55)", "frame": ["poseidon/frame_1", "poseidon/frame_2", "poseidon/frame_3"] }
+    "poseidon": { "color": "#8FEEFF", "glow": "rgba(0,246,255,0.55)", "frame": ["poseidon/frame_1", "poseidon/frame_2", "poseidon/frame_3"] },
+    "neutral": {"color": "#D6D8DD", "glow": "rgba(255,255,255,0.30)", "frame": ["athena/vignette"]}
   },
   "typeToLayout": {
     "Devotee": "devotee",
