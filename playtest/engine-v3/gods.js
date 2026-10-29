@@ -333,13 +333,15 @@ function resolveObliteration(state, ctx, key) {
   emit(state, 'ultimate_resolved', {player: key, ability: 'OBLITERATION', devotees: [...mine]});
 }
 
-// Bloodlust: Divine Power ativado (Sorcery), "Cost: 3 Cosmo" lido como 3 Latent (como os outros Divine Powers). Uma vez por Round.
+// Bloodlust: Divine Power ativado (Sorcery). "Cost: 3 Cosmo" = Base preparada ou Latent (autor, 29/10/2026);
+// paga primeiro com Base preparada e completa com Latent. Uma vez por Round.
+const bloodlustSplit = (state, key) => { const base = Math.min(BLOODLUST_COST, state.players[key].bases.filter(b => b.prepared).length); return {base, latent: BLOODLUST_COST - base}; };
 export function bloodlustBlock(state, ctx, key, uid) {
   if (state.victory) return 'D52';
   if (state.divine[key].god !== 'god-ares') return 'only-ares';
   if (state.active !== key || state.window || state.chain.length) return 'sorcery';
   if (state.roundUses.has(`god:${key}:bloodlust`)) return 'used';
-  if (state.players[key].latent < BLOODLUST_COST) return 'cost';
+  if (state.players[key].latent < bloodlustSplit(state, key).latent) return 'cost';
   if (uid !== undefined && !(k.onField(state, key, uid) && isDevoteeUid(ctx, uid))) return 'target';
   if (uid === undefined && !k.devotees(state, ctx, key).length) return 'target';
   return null;
@@ -347,8 +349,7 @@ export function bloodlustBlock(state, ctx, key, uid) {
 export function activateBloodlust(state, ctx, key, uid) {
   const why = bloodlustBlock(state, ctx, key, uid);
   if (why) throw new RuleError('G3-005', `Bloodlust indisponível: ${why}`);
-  state.players[key].latent -= BLOODLUST_COST;
-  emit(state, 'cosmo_spent', {player: key, unit: 'latent', amount: BLOODLUST_COST});
+  payMixed(state, key, bloodlustSplit(state, key));
   useOncePerRound(state, `god:${key}:bloodlust`);
   emit(state, 'divine_power', {player: key, ability: 'BLOODLUST', uid});
   pushTriggers(state, [{controller: key, uid: `bloodlust:${uid}`, ability: 'BLOODLUST', run: st => {

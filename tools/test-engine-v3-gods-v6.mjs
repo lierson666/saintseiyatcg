@@ -89,7 +89,7 @@ test('Hades Great Eclipse: sem Devotee no Tartarus gasta o custo e não muda Sou
   assert.deepEqual([B.soul, s.players.A.soul], [20, 10]);
 });
 
-test('Ares Bloodlust (Divine Power, 3 Latent): prepara o Devotee e dá +1 ATK até o fim do Round; uma vez por Round', () => {
+test('Ares Bloodlust (Divine Power, 3 Cosmo): prepara o Devotee e dá +1 ATK até o fim do Round; uma vez por Round', () => {
   const {s, ctx, field, A} = setup('god-ares');
   const unit = field('A', '001', false), base = atkOf(s, ctx, unit);
   A.latent = 3;
@@ -97,6 +97,14 @@ test('Ares Bloodlust (Divine Power, 3 Latent): prepara o Devotee e dá +1 ATK at
   assert.deepEqual([s.units[unit].prepared, atkOf(s, ctx, unit), A.latent], [true, base + 1, 0]);
   A.latent = 3;
   assert.throws(() => activateBloodlust(s, ctx, 'A', unit), RuleError);
+});
+
+test('Ares Bloodlust paga com Base preparada primeiro e completa com Latent', () => {
+  const {s, ctx, field, A} = setup('god-ares');
+  const unit = field('A', '001', false);
+  A.bases = [{uid: 'b1', prepared: true}, {uid: 'b2', prepared: true}]; A.latent = 1;
+  activateBloodlust(s, ctx, 'A', unit); passAll(s);
+  assert.deepEqual([A.bases.filter(b => b.prepared).length, A.latent, s.units[unit].prepared], [0, 0, true]);
 });
 
 test('Ares Butchery (Awaken 5): Devotee seu derrota Devotee inimigo em Strike → o God inimigo perde 1 Soul (só com Awaken)', () => {

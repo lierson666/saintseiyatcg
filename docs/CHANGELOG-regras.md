@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-29 — §54 — Toda Spell abre janela de resposta; Bloodlust paga com Base ou Latent
+
+- **Antes:** Technique (Sorcery) resolvia na hora, sem janela (P06); só Moment abria janela. Bloodlust ("Cost: 3 Cosmo") era lido como 3 Latent.
+- **Depois:** toda Spell entra na pilha e abre janela; resolve depois de os dois passarem. Bloodlust paga 3 com Base preparada ou Latent (a engine usa Base primeiro e completa com Latent).
+- **Motivo:** decisões do autor em 29/10/2026; contra-mágicas Moment de Poseidon (133, 136, 154, 156, 159, 167, 171) precisam responder a Spells.
+- **Pendências:** engine ajustada (`play.js`, `gods.js`). Contra-mágicas de Poseidon ainda por implementar. God Ares: autor escolheu Awaken 7, mas o registro canônico D268 (GOD-ARES) diz AWAKEN 5 — aguarda confirmação para alterar o canônico.
+
 ## 2026-10-29 — §54 — Event e Miracle jogam como Technique
 
 - **Antes:** subtipos Event (3 cartas) e Miracle (15 cartas) sem regra; a engine recusava essas Spells.

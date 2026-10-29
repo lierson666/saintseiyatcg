@@ -199,10 +199,12 @@ test('leaves: sacrifício conta como saída', () => {
   assert.deepEqual(has('leaves').map(e => e[2]), ['tartarus']);
 });
 
-test('watchSpell: sem observador a Technique resolve na hora; com contra-mágica sai da cadeia sem efeito', () => {
+test('watchSpell: sem observador a Technique resolve após os passes; com contra-mágica sai da cadeia sem efeito', () => {
   const { s, ctx, give } = setup();
   const sp = give('A', 't-spell', 'hand');
   playSpell(s, ctx, 'A', sp);
+  assert.ok(s.window);
+  passAll(s);
   assert.equal(has('spellRan').length, 1);
   assert.equal(s.window, null);
   const {s: s2, ctx: c2, give: g2} = setup();

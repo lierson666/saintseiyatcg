@@ -126,7 +126,7 @@ test('Equipment: "Any friendly Devotee" (044) paga Equip {N}; portador inimigo o
   assert.equal(ready(s, 'A'), 0);
 });
 
-test('Technique (052): Sorcery, paga Base, resolve sem janela e vai para o Tartarus do Owner', () => {
+test('Technique (052): paga Base, abre janela, resolve depois dos passes e vai para o Tartarus do Owner', () => {
   const {s, ctx, objects, toHand, bases} = setup();
   const wars = toHand('A', '052'), log = [];
   bases('A', 3);
@@ -134,7 +134,9 @@ test('Technique (052): Sorcery, paga Base, resolve sem janela e vai para o Tarta
   assert.throws(() => playSpell(s, ctx, 'A', wars, {targets: ['x', 'y', 'z']}), /até dois/, 'escolha inválida recusa antes de pagar');
   assert.equal(ready(s, 'A'), 3, 'nada pago');
   playSpell(s, ctx, 'A', wars, () => log.push('efeito'));
-  assert.deepEqual([log, s.window, ready(s, 'A')], [['efeito'], null, 0]);
+  assert.deepEqual([log, s.window?.priority, ready(s, 'A')], [[], 'B', 0]);
+  passAll(s);
+  assert.deepEqual([log, s.window], [['efeito'], null]);
   assert.ok(s.players.A.tartarus.includes(wars));
   checkInvariants(s, objects);
 });
@@ -178,7 +180,9 @@ test('Moment do ativo abre janela; 053 é Technique (autor, 28/10/2026)', () => 
   passAll(s);
   assert.ok(s.players.A.tartarus.includes(never));
   playSpell(s, ctx, 'A', other, () => {});
-  assert.deepEqual([s.window, s.players.A.tartarus.includes(other)], [null, true], 'Sorcery: resolve sem janela');
+  assert.equal(s.window.priority, 'B', 'Technique também abre janela (autor, 29/10/2026)');
+  passAll(s);
+  assert.deepEqual([s.window, s.players.A.tartarus.includes(other)], [null, true]);
 });
 
 test('Guia §63 (autor, 28/10/2026): segunda versão sai da mão, paga, entra e o controlador escolhe quem fica; genérico repete', () => {

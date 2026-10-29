@@ -146,7 +146,10 @@ export function playSpell(state, ctx, key, uid, choice = {}) {
     leaveHand(state, key, uid);
     p.stack.push(uid);
     emit(state, 'card_played', {player: key, uid, kind: 'Spell', category: category.category});
-    finish(state); // Sorcery não abre janela (P06): resolve na hora
+    // Toda Spell abre janela de resposta antes de resolver (autor, 29/10/2026; substitui P06 para Spells).
+    openWindow(state);
+    state.chain.push({controller: key, uid, speed: 'instant', run: finish, target: typeof choice === 'object' ? choice.target ?? null : null, spell: true});
+    emit(state, 'chain_add', {player: key, uid});
     return;
   }
   if (state.victory) throw new RuleError('D52', 'a partida já terminou');
@@ -182,10 +185,8 @@ function playSpellV6(state, ctx, key, uid, choice) {
     leaveHand(state, key, uid);
     p.stack.push(uid);
     emit(state, 'card_played', {player: key, uid, kind: 'Spell', category});
-    // Gancho watchSpell: com observador (contra-mágica) a Spell espera na cadeia e o adversário responde (guia §56).
-    // Sem observador resolve na hora, como antes.
+    // Toda Spell espera na cadeia e abre janela de resposta (autor, 29/10/2026); watchSpell (contra-mágica) entra junto.
     const watchers = collect(state, ctx, state.order, 'watchSpell', [key, uid], 'a Spell is cast');
-    if (!watchers.length) { finish(state); return; }
     openWindow(state);
     state.chain.push({controller: key, uid, speed: 'instant', run: finish, target: null, spell: true});
     emit(state, 'chain_add', {player: key, uid});

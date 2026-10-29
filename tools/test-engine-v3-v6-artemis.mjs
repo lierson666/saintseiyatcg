@@ -184,7 +184,7 @@ test('tokens (guia §63): The Forest Invades Sanctuary cria 2 Forest Guardian 3/
   const {checkInvariants} = await import('../playtest/engine-v3/core.js');
   const {s, ctx, p, hand, id} = setup();
   const spell = hand('A', id(444)), bases0 = p.bases.length;
-  playSpell(s, ctx, 'A', spell, {});
+  playSpell(s, ctx, 'A', spell, {}); passAll(s);
   const tokens = p.battlefield.filter(u => ctx.objects[u]?.token);
   assert.equal(tokens.length, 2);
   assert.equal(p.bases.length - bases0 + 4 >= 2, true); // 2 Bases novas (o custo gastou Bases preparadas, não removeu)

@@ -281,7 +281,7 @@ function godActions(key) {
   // Bloodlust (Ares): Divine Power ativado, escolhe o Devotee na barra de escolha.
   const blood = d.god === 'god-ares' && mine ? bloodlustBlock(s, ctx, key) : 'only-ares';
   return {
-    bloodlust: d.god !== 'god-ares' ? null : {ok: mine && !blood, why: {sorcery: 'Bloodlust: your turn, with no response pending.', used: 'Bloodlust already used this round.', cost: `Bloodlust costs ${BLOODLUST_COST} Latent Cosmo.`, target: 'You control no Devotee.'}[blood] || 'Not available now.',
+    bloodlust: d.god !== 'god-ares' ? null : {ok: mine && !blood, why: {sorcery: 'Bloodlust: your turn, with no response pending.', used: 'Bloodlust already used this round.', cost: `Bloodlust costs ${BLOODLUST_COST} Cosmo (prepared Base or Latent).`, target: 'You control no Devotee.'}[blood] || 'Not available now.',
       run: () => begin('bloodlust', key, null, [{key: 'uid', pick: 'devotee', label: 'Bloodlust: choose a Devotee you control (Prepare it, +1 ATK this round)'}], choice => ({type: 'bloodlust', key, choice}))},
     ultimate: {ok: mine && !block, why: mine ? why : "Only the God's controller uses it.", run},
     judgment: mine && d.judgment && idleFor(key) ? () => begin('judgment', key, null,
