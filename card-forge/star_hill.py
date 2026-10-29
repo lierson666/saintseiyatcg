@@ -7,6 +7,7 @@ import importlib.util
 import json
 import re
 import secrets
+import subprocess
 import threading
 import time
 import zipfile
@@ -342,6 +343,27 @@ def audio_signature(raw, suffix):
     return valid
 
 
+# Olympus Arena (autor, 29/10/2026): o jogo lê as cartas do export card-forge/art-web/, não de data/cards.json.
+# "Publicar" roda tools/forge-art-web.sh; o status compara as datas do Forge com as do export.
+EXPORT = 'card-forge/art-web/cards.json'
+
+
+def game_status(root=ROOT):
+    export = root / EXPORT
+    sources = [root / 'data/cards.json', *(root / 'card-forge/projects').glob('*.json'), *(root / 'card-forge/art').glob('*.*')]
+    newest = max((f.stat().st_mtime for f in sources if f.exists()), default=0)
+    done = export.stat().st_mtime if export.exists() else 0
+    return {'publicado_em': done, 'pendente': newest > done}
+
+
+def publish(root=ROOT):
+    with LOCK:
+        run = subprocess.run(['/bin/sh', str(root / 'tools/forge-art-web.sh'), str(root)], capture_output=True, text=True, timeout=900)
+    if run.returncode:
+        raise ValueError('Falha ao publicar as cartas: ' + (run.stderr.strip().splitlines() or ['erro desconhecido'])[-1])
+    return {'mensagem': (run.stdout.strip().splitlines() or ['Cartas publicadas.'])[-1], **game_status(root)}
+
+
 def get(handler, path):
     if path == '/api/star-hill/motor':
         handler.reply(200, engine_updates.manager(ROOT).info())
@@ -351,6 +373,8 @@ def get(handler, path):
         handler.reply(200, read_document('config'))
     elif path == '/api/star-hill/regras':
         handler.reply(200, read_document('regras'))
+    elif path == '/api/star-hill/jogo':
+        handler.reply(200, game_status())
     elif path == '/api/star-hill/assets':
         handler.reply(200, {'arquivos': catalog(), 'fontes': json.loads((ROOT / SOURCES).read_text())})
     else:
@@ -383,6 +407,8 @@ def post(handler, path, raw, atomic_write):
                 result = motor.cancel(body.get('trabalho'))
             else:
                 return handler.reply(404, {'erro': 'Operação do motor desconhecida.'})
+        elif path == '/api/star-hill/publicar':
+            result = publish()
         elif path == '/api/star-hill/preview':
             result = preview(body)
         elif path == '/api/star-hill/apply':
