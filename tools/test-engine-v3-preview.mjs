@@ -8,7 +8,7 @@ import {canonIndex} from '../shared/deck-v3.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
 import {startTurn, passAll} from '../playtest/engine-v3/core.js';
-import {playDevotee} from '../playtest/engine-v3/play.js';
+import {playDevotee, playEquipment, reequip} from '../playtest/engine-v3/play.js';
 import {strikeTargets} from '../playtest/engine-v3/strike.js';
 import {checkDefeats} from '../playtest/engine-v3/effects.js';
 
@@ -45,4 +45,41 @@ test('Fields of Carnage: Berserker amigo derrotado tira 1 do God inimigo, uma ve
   assert.equal(s.players.B.soul, soul - 1);
   s.units[b].damage = 99; checkDefeats(s, ctx); if (s.chain.length) passAll(s);
   assert.equal(s.players.B.soul, soul - 1);
+});
+
+// Hades V6 (texto do autor, 28/10/2026): Armor entra sem portador (guia §XII); "When … is defeated, you may pay 1 Soul".
+function hades() {
+  const deck = id => ({...decks.find(d => d.id === id)});
+  const m = createMatch({cards, canonIndex: index, decks: {A: deck('preview-hades-108'), B: deck('preview-artemis-hunt')}, first: 'A', seed: 1});
+  const s = m.state, ctx = {cards, objects: m.objects, attached: m.attached}, p = s.players.A;
+  for (const pl of Object.values(s.players)) pl.deck.push(...pl.hand.splice(0)); s.setup = null;
+  startTurn(s);
+  p.bases = p.deck.splice(0, 8).map(uid => ({uid, prepared: true}));
+  const take = id => { const uid = p.deck.find(u => m.objects[u].cardId === id); p.deck.splice(p.deck.indexOf(uid), 1); p.hand.push(uid); return uid; };
+  return {s, ctx, p, take};
+}
+
+test('Skeleton Armor entra sem portador pagando só 2; depois equipa pagando Equip', () => {
+  const {s, ctx, p, take} = hades();
+  const armor = take('hades-v6-225');
+  const ready = () => p.bases.filter(b => b.prepared).length, before = ready();
+  playEquipment(s, ctx, 'A', armor, null);
+  assert.equal(before - ready(), 2);
+  assert.ok(p.battlefield.includes(armor));
+  assert.equal(ctx.attached[armor], undefined);
+  const dev = take('hades-v6-218'); playDevotee(s, ctx, 'A', dev, {});
+  reequip(s, ctx, 'A', armor, dev);
+  assert.equal(ctx.attached[armor], dev);
+});
+
+test('Rise Again e Bone Reclamation: pagar 1 Soul devolve à mão; recusar deixa no Tartarus', () => {
+  const {s, ctx, p, take} = hades();
+  const dev = take('hades-v6-218'), armor = take('hades-v6-225');
+  playDevotee(s, ctx, 'A', dev, {}); playEquipment(s, ctx, 'A', armor, dev);
+  const soul = p.soul;
+  ctx.decide = (player, q) => q.ability === 'RISE AGAIN';
+  s.units[dev].damage = 99; checkDefeats(s, ctx); passAll(s);
+  assert.ok(p.hand.includes(dev));
+  assert.ok(p.tartarus.includes(armor));
+  assert.equal(p.soul, soul - 1);
 });

@@ -242,12 +242,34 @@ export function checkDefeats(state, ctx) {
         emit(state, 'defeat_prevented', {uid, player: key, ability: 'DIVINE PROTECTION'});
         continue;
       }
-      const berserker = /Berserker/.test(card(ctx, uid).type);
+      const berserker = /Berserker/.test(card(ctx, uid).type), gear = Object.keys(ctx.attached).filter(e => ctx.attached[e] === uid);
       destroyDevotee(state, uid, ctx.objects, ctx.attached);
       if (berserker) harvestOfTheFallen(state, key);
+      soulReturns(state, ctx, key, uid, gear);
     }
   }
   enforceUniqueness(state, ctx);
+}
+// Hades V6, "When … is defeated, you may pay N Soul. If you do, return … to [its owner's] hand" (texto do autor, 28/10/2026).
+// Devotee: volta do Tartarus. Equipment: volta de onde estiver (Tartarus, se Armor; campo sem portador, se não).
+const RETURN_ON_DEFEAT = {
+  'hades-v6-212': {soul: 2, ability: 'ETERNAL DEFENDER'},
+  'hades-v6-218': {soul: 1, ability: 'RISE AGAIN'},
+};
+const GEAR_RETURN_ON_DEFEAT = {'hades-v6-225': {soul: 1, ability: 'BONE RECLAMATION'}};
+function soulReturns(state, ctx, key, uid, gear) {
+  const found = [[uid, RETURN_ON_DEFEAT[ctx.objects[uid].cardId]], ...gear.map(e => [e, GEAR_RETURN_ON_DEFEAT[ctx.objects[e].cardId]])].filter(([, r]) => r);
+  pushTriggers(state, found.map(([target, r]) => ({controller: ctx.objects[target].owner, uid: target, ability: r.ability, run: st => {
+    const owner = ctx.objects[target].owner, p = st.players[owner];
+    const zone = ['tartarus', 'battlefield'].find(z => p[z].includes(target) && (z === 'tartarus' || target !== uid) && !ctx.attached[target]);
+    if (st.victory || !zone || !ask(ctx, owner, {ability: r.ability, uid: target, cost: `${r.soul} Soul`})) return;
+    loseSoul(st, {[owner]: r.soul}, 'payment');
+    if (st.victory) return;
+    p[zone] = p[zone].filter(x => x !== target);
+    delete st.units[target];
+    p.hand.push(target);
+    emit(st, 'returned_to_hand', {player: owner, uid: target, ability: r.ability});
+  }})));
 }
 // Domain 335 The Fields of Carnage, Harvest of the Fallen: Berserker amigo derrotado causa 1 de dano ao God inimigo,
 // uma vez por turno (autor, 29/10/2026). Unending Slaughter ainda não está implementado.

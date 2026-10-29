@@ -45,10 +45,12 @@ let pending = null;        // decisão pedida pela engine no meio da resolução
 let marked = new Set(), logLines = [], logOpen = false, settingsOpen = false, inspectTimer, seenEvents = 0, drag = null;
 
 const S = () => match.state;
-const info = uid => cards.get(ctx.objects[uid].cardId);
-const num = uid => ctx.objects[uid].cardId.slice(-3);
+// Carta escondida (duelo online: mão e Bases do adversário, decks): o servidor não manda qual é.
+const HIDDEN_CARD = {name: 'a face-down card', kind: 'Hidden', type: 'Hidden', keywords: []};
+const info = uid => (ctx.objects[uid] ? cards.get(ctx.objects[uid].cardId) : HIDDEN_CARD);
+const num = uid => ctx.objects[uid]?.cardId.slice(-3) || '000';
 const other = key => S().order.find(k => k !== key);
-const owner = uid => ctx.objects[uid].owner;
+const owner = uid => ctx.objects[uid]?.owner || String(uid).split(':')[0];
 // Quem está à frente da tela: o jogador que precisa agir agora (hot-seat local).
 // A IA está decidindo agora (setup, janela ou turno dela).
 const aiControls = () => { const s = S(); return settings.ai !== 'none' && (pending ? pending.pending.player : s.setup ? s.setup[0] : s.window ? s.window.priority : s.active) === settings.ai; };
@@ -83,6 +85,7 @@ function playableReason(key, uid) {
     return affordable(key, c.cost) ? missingTarget(key, uid) : `Needs ${c.cost.amount} ${c.cost.unit === 'base' ? 'prepared Base' : 'Latent'} Cosmo.`;
   }
   if (!idleFor(key)) return s.active !== key ? "It's not your turn." : 'Wait for the response window to close.';
+  if (c.kind === 'Equipment' && (c.global || c.armor) && affordable(key, c.cost)) return null; // Armor sem portador (§XII)
   if (c.kind === 'Equipment' && c.global) return affordable(key, c.cost) ? null : `Needs ${c.cost.amount} prepared Base Cosmo.`;
   if (c.kind === 'Equipment') {
     const devs = s.players[key].battlefield.filter(u => info(u).kind === 'Devotee');
@@ -116,6 +119,7 @@ const hasResponse = key => S().players[key].hand.some(u => info(u).kind === 'Spe
 // no ponto da pergunta (modal), e a resposta continua do mesmo snapshot (decision.js), sem repetir custo nem gatilho.
 // `action`: ação serializável (engine-v3/actions.js), a mesma que o duelo online manda ao servidor; a IA local ainda passa função.
 async function act(action) {
+  if (online) return typeof action === 'function' ? undefined : sendOnline('action', {action});
   if (director.busy || pending) return;
   const s = S(), from = s.events.length, wasEnding = match.ending;
   const run = () => {
@@ -147,6 +151,7 @@ async function present(r, run, from) {
 }
 // Resposta à decisão pendente: {value} ou {timeout: true}. Resposta recusada pela engine volta ao ponto da pergunta.
 function reply(answer) {
+  if (online) return pending && !director.busy ? sendOnline('answer', {answer}) : undefined;
   if (!pending || director.busy) return;
   const p = pending, s = S();
   let r;
@@ -205,7 +210,7 @@ function playFromHand(key, uid) {
     return begin('play', key, uid, STEPS[n] || [], choice => ({type: 'play', key, uid, choice}));
   }
   if (c.kind === 'Equipment') {
-    const steps = c.global ? [] : [{key: 'bearer', pick: 'devotee', label: `Choose who wears ${c.name}`}];
+    const steps = c.global ? [] : [{key: 'bearer', pick: 'devotee', optional: !!c.armor, label: c.armor ? `Choose who wears ${c.name}, or Skip to put it on the field without a bearer` : `Choose who wears ${c.name}`}];
     if (n === '019') steps.push({key: 'target', pick: 'devotee', optional: true, label: 'Pegasus God Cloth: which Devotee gets +3/+3 (if your God is behind)?'});
     return begin('play', key, uid, steps, choice => ({type: 'play', key, uid, choice}));
   }
@@ -708,7 +713,8 @@ const ui = {
     const n = uid => (uid ? info(uid).name : '');
     const t = {card_played: `${e.player} plays ${n(e.uid)}${e.bearer ? ` on ${n(e.bearer)}` : ''}.`, spell_resolved: `${n(e.uid)} resolves.`, ability: `${e.player} uses ${e.name}.`,
       strike_declared: `${e.player}: ${n(e.attacker)} strikes ${e.target?.kind === 'god' ? `God ${e.target.player}` : n(e.target?.uid)}${e.bypass ? ` past Guardian (${e.bypass}${e.bypass === 'Cheater' ? ' ignores Guardian against the God' : ' ignores Guardian'})` : ''}.`, strike_fizzled: `${n(e.attacker)}'s Strike fizzles: attacker or target left the battlefield.`, destroyed: `${n(e.uid)} is destroyed.`, unique_removed: `${n(e.uid)} goes to the Tartarus: only one version of a character (not destroyed).`,
-      pass: `${e.player} passes.`, end_phase: `${e.player} ends the turn.`, equipped: `${n(e.uid)} equipped to ${n(e.bearer)}.`}[e.type];
+      pass: `${e.player} passes.`, end_phase: `${e.player} ends the turn.`, equipped: `${n(e.uid)} equipped to ${n(e.bearer)}.`,
+      returned_to_hand: `${n(e.uid)} returns to ${e.player}'s hand (${e.ability}).`}[e.type];
     if (t) say(t);
   },
 };
@@ -814,7 +820,7 @@ overlayRoot.addEventListener('click', e => {
   if (btn.closest('.decision, .decision-pill')) return decisionClick(btn);
   if (btn.dataset.mull) { marked.has(btn.dataset.mull) ? marked.delete(btn.dataset.mull) : marked.add(btn.dataset.mull); return render(); }
   if (btn.dataset.primary !== undefined) return primary();
-  if (btn.dataset.new !== undefined) return newMatch();
+  if (btn.dataset.new !== undefined) return online ? concedeOnline() : newMatch();
   if (btn.dataset.toggleSettings !== undefined) { settingsOpen = false; return render(); }
 });
 overlayRoot.addEventListener('change', e => {
@@ -1262,6 +1268,8 @@ function decisionText(req) {
     note: `You have ${p.latent} Latent Cosmo.`, yes: 'Pay 2 Latent · Seal', no: 'Decline'};
   if (req.ability === 'TOURNAMENT SPIRIT') return {who, title: 'Tournament Spirit', kicker: 'Domain · once each Round',
     body: 'Your Bronze Saint defeated an enemy Devotee with a Strike. Draw a card?', yes: 'Draw a card', no: 'Decline'};
+  if (['RISE AGAIN', 'ETERNAL DEFENDER', 'BONE RECLAMATION'].includes(req.ability)) return {who, title: req.ability, kicker: 'Optional ability',
+    body: `${n(req.uid)} can return to your hand. Pay ${req.cost}?`, note: `Your God has ${p.soul} Soul.`, yes: `Pay ${req.cost} · Return`, no: 'Decline'};
   if (req.kind === 'choice') {
     const title = req.ability === 'GREAT FLOOD' ? 'Great Flood' : req.ability;
     if (req.choose === 'base') return {who, title, kicker: 'Mandatory choice', body: `${n(req.for)} returned to its owner's hand. Choose 1 Cosmo Base you control to return to your hand.`};
@@ -1346,6 +1354,58 @@ function watchEvents() {
 }
 
 
+// ---------- Duelo online (?match=ID; docs/duelo-online.md) ----------
+// O arena-server tem a partida; a tela recebe a visão do jogador (sem mão nem deck do adversário) por Server-Sent
+// Events e manda ações serializáveis. O adversário ocupa o lugar da "IA" na tela (settings.ai), sem a IA jogar.
+const MATCH_ID = new URLSearchParams(location.search).get('match');
+let online = null; // {id, key, queue}
+const revive = v => {
+  if (v === null || typeof v !== 'object') return v;
+  if (Array.isArray(v)) return v.map(revive);
+  if ('$set' in v) return new Set(v.$set.map(revive));
+  if ('$map' in v) return new Map(v.$map.map(([k, x]) => [revive(k), revive(x)]));
+  return Object.fromEntries(Object.entries(v).map(([k, x]) => [k, revive(x)]));
+};
+async function sendOnline(verb, data = {}) {
+  if (director.busy) return;
+  const r = await fetch(`/arena/matches/${online.id}/${verb}`, {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)}).catch(() => null);
+  if (!r) return warn('Connection lost. Reconnecting…');
+  if (!r.ok) { const e = await r.json().catch(() => ({})); warn(e.decision ? why(e) : e.error || "That can't be done right now."); render(); }
+}
+function concedeOnline() {
+  if (S().victory) return location.assign('../');
+  if (confirm('Concede this duel?')) sendOnline('concede');
+}
+// Visão nova do servidor: troca o estado e anima só os eventos que ainda não passaram na tela.
+async function applyView(view) {
+  const first = !match, from = first ? 0 : S().events.length;
+  online.key = view.you;
+  settings.ai = view.state.order.find(k => k !== view.you); settings.hideOpponent = true; settings.timeouts = false;
+  match = {state: revive(view.state), objects: view.objects, attached: revive(view.attached), ending: view.ending};
+  ctx = {cards, objects: match.objects, attached: match.attached};
+  const s = S(), req = s.pending;
+  pending = req ? {pending: req, picked: [], peek: false, shown: s.events.length} : null;
+  if (pending && req.player !== view.you) pending = {pending: req, picked: [], peek: true, shown: s.events.length};
+  mode = null;
+  if (first) { clock = createClock(s.order); seenEvents = s.events.length; watchEvents.seen = 0; return render(); }
+  const events = s.events.slice(from);
+  seenEvents = s.events.length;
+  syncClock(events);
+  render.lock = true;
+  await director.play(events);
+  render.lock = false;
+  render();
+  focusDecision();
+  // Auto-pass do lado do jogador: sem resposta possível, passa a prioridade sozinho.
+  if (s.window && !s.victory && !pending && s.window.priority === view.you && settings.autoPass && !hasResponse(view.you)) sendOnline('action', {action: {type: 'pass'}});
+}
+function connectOnline() {
+  online = {id: MATCH_ID, key: null, queue: Promise.resolve()};
+  const es = new EventSource(`/arena/matches/${encodeURIComponent(MATCH_ID)}/stream`);
+  es.addEventListener('view', e => { const view = JSON.parse(e.data); online.queue = online.queue.then(() => applyView(view)).catch(err => console.error(err)); });
+  es.onerror = () => { if (!match) { es.close(); boardRoot.innerHTML = '<p class="fatal">This duel is not available. <a href="../">Back to the lobby</a></p>'; } else warn('Connection lost. Reconnecting…'); };
+}
+
 // ---------- Oponente IA (settings.ai: 'B' ou 'none') ----------
 // A IA só escolhe; cada ação passa pela engine 3.0 como a do humano (mesmo act/reply, mesmas regras e animações).
 const ai = createAI({
@@ -1359,7 +1419,7 @@ const ai = createAI({
 let aiBusy = false;
 async function aiTick() {
   const key = settings.ai;
-  if (key === 'none' || aiBusy || !match || director.busy || mode || S().victory) return;
+  if (online || key === 'none' || aiBusy || !match || director.busy || mode || S().victory) return;
   const s = S();
   aiBusy = true;
   try {
@@ -1393,9 +1453,12 @@ async function init() {
   if (params.get('godB')) settings.godB = `god-${params.get('godB')}`; // ?godB=poseidon
   if (params.get('ai')) settings.ai = params.get('ai'); // ?ai=B (padrão) ou ?ai=none (hot-seat)
   if (params.get('timeouts')) settings.timeouts = params.get('timeouts') === '1'; // ?timeouts=1 (QA)
-  newMatch(Number(params.get('seed')) || undefined, params.get('demo') ? 'A' : ['A', 'B'].includes(params.get('first')) ? params.get('first') : undefined);
-  applyDemo(params.get('demo'));
-  render();
+  if (MATCH_ID) connectOnline(); // duelo online: a partida vem do servidor (a primeira visão chama render)
+  else {
+    newMatch(Number(params.get('seed')) || undefined, params.get('demo') ? 'A' : ['A', 'B'].includes(params.get('first')) ? params.get('first') : undefined);
+    applyDemo(params.get('demo'));
+    render();
+  }
   requestAnimationFrame(watchEvents);
   setInterval(tickClock, 250);
   setInterval(aiTick, 700);

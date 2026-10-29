@@ -58,7 +58,9 @@ export function playDevotee(state, ctx, key, uid, choice = {}) {
 export function playEquipment(state, ctx, key, uid, bearer, choice = {}) {
   const card = sorceryFromHand(state, ctx, key, uid, 'Equipment');
   if (card.global) bearer = null;
-  const cost = card.global ? card.cost : equipCost(state, ctx, key, card, bearer);
+  // Guia §XII: Armor pode entrar sem portador, pagando só o custo de entrada (Base); equipa depois com AÇÃO + Equip.
+  if (!bearer && !card.global && !card.armor) throw new RuleError('Equip', `${card.name} precisa de um portador`);
+  const cost = card.global || !bearer ? card.cost : equipCost(state, ctx, key, card, bearer);
   payCost(state, key, cost);
   leaveHand(state, key, uid);
   state.players[key].battlefield.push(uid);
