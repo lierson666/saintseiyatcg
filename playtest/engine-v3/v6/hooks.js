@@ -106,6 +106,7 @@ hooks.turnEnd.push(turnHook('endTurn'));
 export function v6Spell(ctx, uid) {
   const entry = entryOf(ctx, uid), card = ctx.cards.get(ctx.objects[uid]?.cardId);
   if (!entry?.spell) return null;
-  const category = /Technique/.test(card.type) ? 'Technique' : /Moment/.test(card.type) ? 'Moment' : null;
+  // Event e Miracle jogam como Technique (guia §54, autor 29/10/2026).
+  const category = /Technique|Event|Miracle/.test(card.type) ? 'Technique' : /Moment/.test(card.type) ? 'Moment' : null;
   return category && {entry, category};
 }

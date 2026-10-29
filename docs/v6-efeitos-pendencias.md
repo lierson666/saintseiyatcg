@@ -68,7 +68,7 @@ remoção de Seal; Soul como custo de ativada; ativada de Domain; mill/retorno �
 
 ## Athena — Spells e Domains
 
-- Subtipos **Event** e **Miracle** (athena-v6-055, 079, 080, 083, 086, 089, 090): o guia só define Technique e Moment. Qual a velocidade (Sorcery/Instant) e o custo como resposta? Hoje `v6Spell` (hooks.js) não os reconhece e `playSpell` recusa; o `spell.run` está pronto.
+- ✅ Resolvido (autor, 29/10/2026: jogam como Technique, guia §54). Subtipos **Event** e **Miracle** (athena-v6-055, 079, 080, 083, 086, 089, 090): o guia só define Technique e Moment. Qual a velocidade (Sorcery/Instant) e o custo como resposta? Hoje `v6Spell` (hooks.js) não os reconhece e `playSpell` recusa; o `spell.run` está pronto.
 - 080 The Return of the Phoenix / 090 The Will of Athena: "cannot declare a Strike this round" não tem gancho na engine (só a D22). Falta um efeito que proíba declarar Strike.
 - 080: "Exhausted" implementado como volta Unprepared; Rebirth é só marcador nomeado (sem efeito). Qual o efeito de Rebirth?
 - 083 The Twelve Flames: "Saints with Flame counters get +1 ATK until the end of the round" implementado como +1 ATK nos Saints que recebem o contador na resolução (não segue Saints que ganhem Flame de outra fonte). Final Hour: por contador removido, "may remove 1 damage" pergunta uma vez por contador.

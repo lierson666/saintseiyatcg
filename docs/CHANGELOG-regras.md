@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-29 — §54 — Event e Miracle jogam como Technique
+
+- **Antes:** subtipos Event (3 cartas) e Miracle (15 cartas) sem regra; a engine recusava essas Spells.
+- **Depois:** Event e Miracle só como AÇÃO, pagos com Base ou Latent, iguais à Technique.
+- **Motivo:** decisão do autor em 29/10/2026 ao implementar os efeitos V6 de Athena.
+- **Pendências:** engine ajustada (`v6Spell` em `playtest/engine-v3/v6/hooks.js`). Cartas Event/Miracle sem entrada V6 continuam sem efeito.
+
 ## 2026-10-29 — §63, §64 — “Turn” vira rodada; Cosmo gerado vira Latent; Token
 
 - **Antes:** textos V6 com “once per turn”/“until end of turn” sem leitura definida; Cosmo restrito/temporário e tokens sem regra.

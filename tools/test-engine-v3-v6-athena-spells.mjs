@@ -40,11 +40,11 @@ function setup() {
   };
   return {s, ctx, give};
 }
-import {V6} from '../playtest/engine-v3/v6/hooks.js';
+import {V6, v6Spell} from '../playtest/engine-v3/v6/hooks.js';
 
 const A = n => `athena-v6-${n}`;
 const FOE = 'artemis-v6-399';
-// Event/Miracle ainda não passam por playSpell (hooks.js v6Spell): roda a resolução direto.
+// Resolução chamada direto (o caminho por playSpell é coberto no último teste).
 const cast = (s, ctx, n, key = 'A') => { V6[A(n)].spell.run(s, ctx, key, `${key}:spell:${n}`, {}); };
 const endRound = s => { for (const t of s.delayed.splice(0)) t.run(s); };
 const hp = (s, uid) => s.units[uid].damage;
@@ -190,4 +190,9 @@ test('063 Jamir Tower: Cloth Restoration tira 1 de dano de Armor amiga', () => {
   s.units[armor].damage = 2;
   V6[A('063')].activate.run(s, ctx, 'A');
   assert.equal(s.units[armor].damage, 1);
+});
+
+test('Event e Miracle jogam como Technique (guia §54)', () => {
+  const {ctx, give} = setup();
+  for (const id of ['athena-v6-055', 'athena-v6-079', 'athena-v6-090']) assert.equal(v6Spell(ctx, give('A', id, 'hand')).category, 'Technique');
 });
