@@ -22,7 +22,7 @@ const faction = card => (forge.get(card.id)?.faccao || card.id.replace(/^god-/, 
 const godForge = godId => forge.get(`${godId.replace(/^god-/, '')}-001`);
 const artOf = id => { const f = id.startsWith('god-') ? godForge(id) : forge.get(id); return f?.ilustracao ? ART + f.ilustracao : null; };
 const kindOf = c => (c.kind === 'Divine Artifact' ? 'Equipment' : c.kind);
-// Prévia (autor, 28/10/2026): Poseidon e Hades entram na coleção a partir do Forge, no formato de texto do D268,
+// Prévia (autor, 28-29/10/2026): Poseidon, Hades e Ares entram na coleção a partir do Forge, no formato de texto do D268,
 // mas a engine 3.0 só conhece o D268; deck com carta de prévia monta e salva, porém não entra em partida.
 function previewRecord(f) {
   const type = [f.tipo, (f.subtipos || []).join(' ')].filter(Boolean).join(' — ');
@@ -84,7 +84,7 @@ function home() {
     <div class="lb-news">
       <button class="lb-news__tile" data-act="go" data-screen="decks" style="--tile:url('${artOf('athena-v6-001') || ''}')"><small>Decks</small><strong>Build your deck</strong></button>
       <button class="lb-news__tile" data-act="play" style="--tile:url('${artOf('athena-v6-003') || ''}')"><small>Battle</small><strong>Challenge the AI</strong></button>
-      <button class="lb-news__tile" data-act="go" data-screen="decks" style="--tile:url('${artOf('god-poseidon') || ''}')"><small>Preview</small><strong>Poseidon and Hades cards</strong></button>
+      <button class="lb-news__tile" data-act="go" data-screen="decks" style="--tile:url('${artOf('god-poseidon') || ''}')"><small>Preview</small><strong>Poseidon, Hades and Ares cards</strong></button>
     </div>
     <div class="lb-dock" ${ui.play ? 'hidden' : ''}>
       ${deck ? `<button class="lb-dock__deck" data-act="play"><span style="background-image:url('${deckCover(deck) || ''}')"></span><strong>${esc(deck.alpha_nome || deck.nome)}</strong></button>` : ''}
@@ -104,7 +104,7 @@ function playPanel() {
     <h3>${ui.mode === 'ai' ? 'Rival deck · AI' : 'Player B deck'}</h3><div class="lb-panel__decks">${decks.map(d => deckBox(d, 'pick-b')).join('')}</div>
     <label class="lb-field">Opening initiative<select data-act="first">${[['random', 'Random'], ['A', ui.mode === 'ai' ? 'You' : 'Player A'], ['B', ui.mode === 'ai' ? 'AI' : 'Player B']]
       .map(([v, l]) => `<option value="${v}" ${ui.first === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
-    <button class="lb-play lb-play--wide" data-act="start" ${ready ? '' : 'disabled'}>${ready ? 'Play' : 'Pick two complete Athena decks · Poseidon and Hades are preview only'}</button>
+    <button class="lb-play lb-play--wide" data-act="start" ${ready ? '' : 'disabled'}>${ready ? 'Play' : 'Pick two complete Athena decks · Poseidon, Hades and Ares are preview only'}</button>
   </aside>`;
 }
 
@@ -169,7 +169,7 @@ function builder() {
       <ol class="lb-strips">${list.map(e => `<li><button class="lb-strip" data-act="remove" data-id="${e.card_id}" data-card="${e.card_id}" style="--art:url('${artOf(e.card_id) || ''}')">
         <b class="lb-gem ${e.card.cost?.unit || ''}">${e.card.cost?.amount ?? '–'}</b><span>${esc(e.card.name)}</span><em>×${e.quantity}</em></button></li>`).join('')
         || '<li class="lb-empty">Click cards in the collection to add them.</li>'}</ol>
-      ${errors.length ? `<ul class="lb-errors">${errors.slice(0, 4).map(e => `<li>${errorText(e)}</li>`).join('')}</ul>` : (deckPlayable(d) ? '<p class="lb-ok">Deck ready to play.</p>' : '<p class="lb-ok">Deck complete. Poseidon and Hades cards are preview only: matches come later.</p>')}
+      ${errors.length ? `<ul class="lb-errors">${errors.slice(0, 4).map(e => `<li>${errorText(e)}</li>`).join('')}</ul>` : (deckPlayable(d) ? '<p class="lb-ok">Deck ready to play.</p>' : '<p class="lb-ok">Deck complete. Poseidon, Hades and Ares cards are preview only: matches come later.</p>')}
       <div class="lb-list__actions">${d.id ? '<button class="lb-ghost" data-act="delete-deck">Delete</button>' : ''}
         <button class="lb-ghost" data-act="go" data-screen="decks">Cancel</button><button class="lb-play lb-play--small" data-act="save-deck">Done</button></div>
     </aside>
@@ -312,7 +312,7 @@ async function init() {
     get(`${ART}cards.json`).catch(() => ({cartas: []})), get('../data/alpha-0.1/decks-preview-poseidon-hades.json').catch(() => ({decks: []}))]);
   cards = loadCanon(canon); index = canonIndex(canon);
   forge = new Map(art.cartas.map(c => [c.id, c]));
-  for (const f of art.cartas.filter(c => /^(poseidon|hades)-v6-/.test(c.id))) {
+  for (const f of art.cartas.filter(c => /^(poseidon|hades|ares)-v6-/.test(c.id))) {
     const r = previewRecord(f);
     cards.set(r.id, {...parseCard(r), preview: true}); index.set(r.id, r);
   }
