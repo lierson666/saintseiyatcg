@@ -17,8 +17,17 @@ export default {
     declare: (s, c, key, self, target) => target.kind === 'devotee' && sealed(s, target.uid) &&
       (st => shield(st, self, Infinity, {duration: 'this_strike'})),
   },
-  // Aquarius Camus. Freezing Coffin ({2}{C}, {T}) ainda não está implementado.
+  // Aquarius Camus
   'athena-v6-017': {
+    // Freezing Coffin — {2}{C}, {T}: 2 Seal no Devotee inimigo alvo.
+    activate: {
+      name: 'FREEZING COFFIN', cost: 2,
+      check: (s, c, key) => { if (!k.enemies(s, c, key).length) throw new k.RuleError('alvo', 'sem Devotee inimigo'); },
+      run: (s, c, key) => {
+        const t = k.choose(c, key, 'FREEZING COFFIN', k.enemies(s, c, key), {text: 'Choose target enemy Devotee.'});
+        if (t) addSeal(s, c, [t], 2, 'FREEZING COFFIN');
+      },
+    },
     // Absolute Zero: dano de Strike a Devotee inimigo que já tem Seal causa 2 a mais.
     combatDamage: (s, c, key, self, victim) => sealed(s, victim) && (st => k.damage(st, c, victim, 2)),
   },

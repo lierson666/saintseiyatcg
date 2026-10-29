@@ -7,8 +7,11 @@ import poseidon from './poseidon.js';
 import ares from './ares.js';
 import artemis from './artemis.js';
 import athena from './athena.js';
+import athenaDevotees from './athena-devotees.js';
+import athenaGear from './athena-gear.js';
+import athenaSpells from './athena-spells.js';
 
-register(hades); register(poseidon); register(ares); register(artemis); register(athena);
+register(hades); register(poseidon); register(ares); register(artemis); register(athena); register(athenaDevotees); register(athenaGear); register(athenaSpells);
 export {V6, entryOf, bindContext, contextOf} from './registry.js';
 
 const nameOf = (ctx, uid) => ctx.cards.get(ctx.objects[uid]?.cardId)?.name || uid;
