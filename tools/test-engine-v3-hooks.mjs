@@ -48,8 +48,8 @@ register({
     gearWouldBeDefeated: (s, c, key, self, bearer) => { if (!log.includes('gear-no')) { k.removeDamage(s, bearer); log.push(['gearSaved', bearer]); return true; } return false; },
     attach: (s, c, key, self, bearer) => st => { log.push(['attach', self, bearer]); },
   },
-  't-spell': {spell: {run: () => { log.push(['spellRan']); }}},
-  't-spell2': {spell: {run: () => { log.push(['spell2Ran']); }}},
+  't-spell': {spell: {targets: () => [], /* run com efeito fora do estado: sem ensaio */ run: () => { log.push(['spellRan']); }}},
+  't-spell2': {spell: {targets: () => [], run: () => { log.push(['spell2Ran']); }}},
   't-domain': {activate: {name: 'Test Domain Power', cost: 1, once: true, tap: false, run: (s, c, key) => { log.push(['domainActivated', key]); }}},
 });
 

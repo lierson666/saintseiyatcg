@@ -76,8 +76,23 @@ const enemy = (st, c, key, ability, text = 'Choose target enemy Devotee.', filte
 const enemies = (st, c, key, ability, n, text = 'Choose target enemy Devotees.') => k.chooseUpTo(c, key, ability, k.enemies(st, c, key), n, {text});
 const debuff = (st, uid, n, duration = 'this_round') => { if (uid && st.units[uid]) k.buff(st, uid, -n, 0, duration); };
 // "Choose one": pergunta entre os modos implementados (um só: sem pergunta).
-const mode = (c, key, ability, list) => (list.length === 1 ? list[0] : c.decide?.(key, {ability, options: list, choose: 'mode', text: 'Choose one.'}) ?? null);
+const mode = (c, key, ability, list) => (list.length === 1 ? list[0] : list.length ? c.decide?.(key, {ability, options: list, choose: 'mode', text: 'Choose one.'}) ?? null : null);
 const needEnemy = (s, c, key, filter = () => true) => { if (!k.enemies(s, c, key).some(filter)) throw new k.RuleError('alvo', 'sem Devotee inimigo válido'); };
+
+// ---------- contra-mágica (alvos de Spell escolhidos ao conjurar: guia §54) ----------
+// "Enemy Moment or Technique" na cadeia (Event e Miracle contam como Technique, §54). `only(item)` filtra os itens
+// (ex.: "that targets your God or a friendly Devotee", lido nos alvos que a Spell guardou ao ser conjurada).
+const counterable = (s, c, key, only = () => true) => s.chain.filter(i => i.spell && i.controller !== key && castMT(c, i.uid) && only(i)).map(i => i.uid);
+const aimsAtMe = (s, c, key) => item => k.targetsMine(s, c, key, k.itemTargets(item));
+const needCounter = only => (s, c, key) => { if (!counterable(s, c, key, only?.(s, c, key)).length) throw new k.RuleError('alvo', 'sem Moment ou Technique inimigo na cadeia'); };
+const counterTarget = (c, s, key, ability, only) => k.choose(c, key, ability, counterable(s, c, key, only), {text: 'Choose target enemy Moment or Technique.'});
+// Contra-mágica; `unless` > 0: "unless its controller pays {N}{C}" (o controlador responde na hora). Devolve true se anulou.
+function counter(st, c, uid, ability, unless = 0) {
+  const item = st.chain.find(i => i.spell && i.uid === uid);
+  if (!item) return false; // alvo já resolveu ou saiu da cadeia: a parte que dependia dele não acontece
+  if (unless && ready(st, item.controller) >= unless && k.may(c, item.controller, ability, {cost: `${unless} Cosmo`, text: `Pay {${unless}}{C} to keep your Spell from being countered?`})) { spendBase(st, item.controller, unless); return false; }
+  return k.counterSpell(st, c, uid);
+}
 
 // ---------- gancho "becomes Sealed" ----------
 // core.addSeal chama hooks.sealed com as transições 0 → ≥1 (D211); cartas V6 observam por `watchSealed(s, c, key, self, transitions)`.
@@ -325,7 +340,15 @@ export default {
   },
   'poseidon-v6-115': {
     enter: (s, c, key) => st => lookTop(st, c, key, 3, 'CURRENT READING'),
-    // pendente: Tidal Escape ("becomes the target of an enemy Moment or Technique") — sem gancho de alvo de Spell.
+    // Tidal Escape (watchSpell + alvos guardados ao conjurar): uma vez por Round, devolve-se à mão; o uso só gasta se aceitar.
+    watchSpell: (s, c, key, self, caster, spellUid, targets) => {
+      if (caster === key || !castMT(c, spellUid) || !targets.includes(self) || s.roundUses.has(`escape:${self}`)) return;
+      return st => {
+        if (!st.units[self] || st.roundUses.has(`escape:${self}`) || !k.may(c, key, 'TIDAL ESCAPE', {uid: self, text: 'Return Ocean Current Scout to its owner\'s hand?'})) return;
+        k.once(st, `escape:${self}`);
+        bounce(st, c, key, self);
+      };
+    },
   },
   'poseidon-v6-116': {
     // Pearl Divination (gancho watchSpell): paga {1}{C}, compra 1 e descarta 1.
@@ -339,7 +362,16 @@ export default {
       };
     },
   },
-  // 117 Ancient Sea Guardian — pendente: Tidal Rejection (a Spell só escolhe alvo na resolução: sem alvo conhecido ao conjurar, não dá para saber se mira seu God/Devotee).
+  // 117 Ancient Sea Guardian — Tidal Rejection (watchSpell): Moment/Technique inimigo que mira o seu God ou um Devotee seu (alvos
+  // guardados ao conjurar); pague {2}{C} e Exhaust nele (Prepared) para anular. Uso do Round marcado no evento (como o 119).
+  'poseidon-v6-117': {
+    watchSpell: (s, c, key, self, caster, spellUid, targets) => caster !== key && castMT(c, spellUid) && k.targetsMine(s, c, key, targets) &&
+      s.units[self]?.prepared && ready(s, key) >= 2 && !s.roundUses.has(`rejection:${self}`) && k.once(s, `rejection:${self}`) && (st => {
+        if (!st.units[self]?.prepared || !k.spellOnChain(st, spellUid) || !pay(st, c, key, 2, 'TIDAL REJECTION', self)) return;
+        k.exhaust(st, self);
+        k.counterSpell(st, c, spellUid);
+      }),
+  },
   'poseidon-v6-118': {
     enter: (s, c, key, self) => st => { if (k.devotees(st, c, key).some(u => u !== self && isMarina(c, u))) k.draw(st, key, 1); },
     // Banner of the Emperor (estática): aplicada como +1 ATK 'this_strike' na declaração do Strike inimigo contra o Marina.
@@ -369,7 +401,19 @@ export default {
     enter: (s, c, key) => st => { for (const p of opponents(st, key)) mill(st, c, p, 2); },
   },
   'poseidon-v6-121': {
-    // pendente: Countercurrent (alvo de Spell inimiga + contra-mágica) sem gancho.
+    // Countercurrent (watchSpell): Moment/Technique inimigo que mira um Marina seu (alvos guardados ao conjurar); paga {1}{C}, devolve
+    // esse Marina à mão e, se a Spell ficou sem alvo legal, anula. Uso do Round marcado no evento.
+    watchSpell: (s, c, key, self, caster, spellUid, targets) => {
+      if (caster === key || !castMT(c, spellUid) || ready(s, key) < 1 || s.roundUses.has(`countercurrent:${self}`)) return;
+      const marinas = targets.filter(t => isMarina(c, t) && k.controllerOf(s, t) === key);
+      if (!marinas.length || !k.once(s, `countercurrent:${self}`)) return;
+      return st => {
+        const t = marinas.length === 1 ? marinas[0] : k.choose(c, key, 'COUNTERCURRENT', marinas.filter(u => k.controllerOf(st, u) === key), {text: 'Choose the Marina Devotee to return.'});
+        if (!t || !k.spellOnChain(st, spellUid) || !pay(st, c, key, 1, 'COUNTERCURRENT', self)) return;
+        bounce(st, c, key, t);
+        if (!targets.some(u => k.stillTarget(st, u))) k.counterSpell(st, c, spellUid); // sem alvo legal restante
+      };
+    },
     watchBounce: (s, c, key, self, uid, ctrl) => {
       if (ctrl !== key || !isMarina(c, uid) || !k.once(s, `retreat:${self}`)) return;
       return st => { if (pay(st, c, key, 1, 'TACTICAL RETREAT', self)) loot(st, c, key, 'TACTICAL RETREAT'); };
@@ -389,7 +433,18 @@ export default {
       };
     },
   },
-  // 124 Coral Reef — pendente: Living Reef (mesmo motivo do 117: alvo da Spell desconhecido ao conjurar); o +0/+1 já vem do Equipment.
+  // 124 Coral Barrier — Living Reef (watchSpell): o portador é alvo de Moment/Technique inimigo; paga {2}{C} e a Spell é anulada a
+  // menos que o controlador pague {2}{C}. O +0/+1 já vem do Equipment. Uso do Round marcado no evento.
+  'poseidon-v6-124': {
+    watchSpell: (s, c, key, self, caster, spellUid, targets) => {
+      const bearer = k.bearerOf(c, self);
+      return caster !== key && bearer && castMT(c, spellUid) && targets.includes(bearer) && ready(s, key) >= 2 &&
+        !s.roundUses.has(`reef:${self}`) && k.once(s, `reef:${self}`) && (st => {
+          if (!k.spellOnChain(st, spellUid) || !pay(st, c, key, 2, 'LIVING REEF', self)) return;
+          counter(st, c, spellUid, 'LIVING REEF', 2);
+        });
+    },
+  },
   'poseidon-v6-125': {
     gearDeclare: (s, c, key, self, bearer, target) => {
       if (target.kind !== 'devotee' || !sealed(s, target.uid) || !k.once(s, `piercing:${self}`)) return;
@@ -440,7 +495,10 @@ export default {
   'poseidon-v6-132': {
     spell: {run: (s, c, key) => { const r = bounce(s, c, key, enemy(s, c, key, 'RETURN')); if (r?.hadSeal) loot(s, c, key, 'OCEAN\'S WISDOM'); }},
   },
-  // 133 — pendente: contra-mágica; Moment exige AÇÃO com a pilha vazia (guia §56), então nunca há Spell inimiga como alvo.
+  // 133 Call of the Ocean: Moment em resposta (guia §54) contra Moment/Technique inimigo na cadeia; o alvo é escolhido ao conjurar.
+  'poseidon-v6-133': {
+    spell: {check: needCounter(), run: (s, c, key) => { const t = counterTarget(c, s, key, 'CALL OF THE OCEAN'); if (t) counter(s, c, t, 'CALL OF THE OCEAN', 2); }},
+  },
   'poseidon-v6-134': {
     spell: {run: (s, c, key) => {
       const r = bounce(s, c, key, enemy(s, c, key, 'RETURN', 'Return target enemy Devotee with ATK 3 or less.', u => k.atkOf(s, c, u) <= 3));
@@ -450,13 +508,20 @@ export default {
   'poseidon-v6-135': {
     spell: {run: (s, c, key) => lookTop(s, c, key, generals(s, c, key) ? 4 : 3, 'OCEANIC FORESIGHT')},
   },
-  // 136 — pendente: contra-mágica (ver 133).
+  // 136 The Sea Never Forgives: só contra Spell que mira o seu God ou um Devotee seu (alvos guardados ao conjurar).
+  'poseidon-v6-136': {
+    spell: {check: needCounter(aimsAtMe), run: (s, c, key) => { const t = counterTarget(c, s, key, 'THE SEA NEVER FORGIVES', aimsAtMe(s, c, key)); if (t) k.counterSpell(s, c, t); }},
+  },
   'poseidon-v6-137': {
     spell: {run: (s, c, key) => { const t = enemy(s, c, key, 'ABYSSAL WEIGHT'); if (t) seal(s, c, [t], sealed(s, t) ? 2 : 1, 'ABYSSAL WEIGHT'); }},
   },
   'poseidon-v6-138': {
-    spell: {run: (s, c, key) => bounce(s, c, key, k.choose(c, key, 'RETURN', k.devotees(s, c, key), {text: 'Return target friendly Devotee to its owner\'s hand.'}))},
-    // pendente: Safe Passage (draw) — exige o Devotee como alvo de Spell inimiga na pilha; Moment não responde (§56).
+    // Safe Passage: lido na resolução; a Spell inimiga que o mirava continua na cadeia abaixo (ver docs/v6-efeitos-pendencias.md).
+    spell: {run: (s, c, key) => {
+      const t = k.choose(c, key, 'RETURN', k.devotees(s, c, key), {text: 'Return target friendly Devotee to its owner\'s hand.'});
+      const targeted = !!t && counterable(s, c, key).some(u => k.spellTargets(s, u).includes(t));
+      if (bounce(s, c, key, t) && targeted) k.draw(s, key, 1);
+    }},
   },
   'poseidon-v6-139': {
     spell: {run: (s, c, key) => {
@@ -573,10 +638,13 @@ export default {
       if (controls(s, c, key, HYOGA)) loot(s, c, key, 'FROZEN BROTHERHOOD');
     }},
   },
-  // Royal Interdiction — pendente: contra-mágica (ver 133); só o modo de retorno é oferecido.
   'poseidon-v6-154': {
+    // Choose one (ao conjurar): Reversal precisa de Devotee inimigo; Interdiction, de Moment/Technique inimigo na cadeia.
     spell: {run: (s, c, key) => {
-      bounce(s, c, key, enemy(s, c, key, 'DIMENSIONAL REVERSAL'));
+      const modes = [k.enemies(s, c, key).length && 'Dimensional Reversal', counterable(s, c, key).length && 'Royal Interdiction'].filter(Boolean);
+      const pick = mode(c, key, 'THE SEA DRAGON\'S COMMAND', modes);
+      if (pick === 'Dimensional Reversal') bounce(s, c, key, enemy(s, c, key, 'DIMENSIONAL REVERSAL'));
+      if (pick === 'Royal Interdiction') { const t = counterTarget(c, s, key, 'ROYAL INTERDICTION'); if (t) counter(s, c, t, 'ROYAL INTERDICTION', 3); }
       if (controls(s, c, key, KANON)) loot(s, c, key, 'KANON\'S STRATEGY');
     }},
   },
@@ -587,7 +655,15 @@ export default {
       if (controls(s, c, key, SORRENTO)) loot(s, c, key, 'SORROWFUL ECHO');
     }},
   },
-  // 156 — pendente: contra-mágica (ver 133); Receding Wave depende dela.
+  // 156 Wall of Ocean Currents: como a 136; Receding Wave só se a Spell foi anulada (o alvo é escolhido ao conjurar, "you may").
+  'poseidon-v6-156': {
+    spell: {check: needCounter(aimsAtMe), run: (s, c, key) => {
+      const t = counterTarget(c, s, key, 'WALL OF OCEAN CURRENTS', aimsAtMe(s, c, key));
+      if (!t || !k.counterSpell(s, c, t)) return;
+      const back = k.choose(c, key, 'RECEDING WAVE', k.devotees(s, c, key), {optional: true, text: 'Return target friendly Devotee to its owner\'s hand?'});
+      if (back) bounce(s, c, key, back);
+    }},
+  },
   'poseidon-v6-157': {
     spell: {run: (s, c, key) => {
       const picked = enemies(s, c, key, 'ARCTIC SILENCE', 2);
@@ -605,12 +681,16 @@ export default {
       if (t) k.toHand(s, c, t, 'tartarus');
     }},
   },
-  // Denial — pendente: contra-mágica (ver 133); só Reversal é oferecido.
+  // 159: Denial (anula, sem pagamento) ou Reversal; o modo e o alvo são escolhidos ao conjurar.
   'poseidon-v6-159': {
     spell: {run: (s, c, key) => {
       const gear = s.players[k.other(s, key)].battlefield.filter(u => k.card(c, u)?.kind === 'Equipment');
-      const t = k.choose(c, key, 'REVERSAL', gear, {text: 'Return target enemy Equipment to its owner\'s hand.'});
-      if (t) k.toHand(s, c, t, 'battlefield');
+      const pick = mode(c, key, 'THE SEVEN SEAS ANSWER', [counterable(s, c, key).length && 'Denial', gear.length && 'Reversal'].filter(Boolean));
+      if (pick === 'Denial') { const t = counterTarget(c, s, key, 'DENIAL'); if (t) k.counterSpell(s, c, t); }
+      if (pick === 'Reversal') {
+        const t = k.choose(c, key, 'REVERSAL', gear, {text: 'Return target enemy Equipment to its owner\'s hand.'});
+        if (t) k.toHand(s, c, t, 'battlefield');
+      }
     }},
   },
   'poseidon-v6-160': {
@@ -665,15 +745,23 @@ export default {
     spell: {run: (s, c, key) => {
       const foe = k.other(s, key), options = s.players[foe].battlefield.filter(u => ['Devotee', 'Equipment'].includes(k.card(c, u)?.kind));
       const t = k.choose(c, key, 'RETURN', options, {text: 'Return target enemy Devotee or Equipment to its owner\'s hand.'});
-      if (!t) return;
-      if (k.isDevotee(c, t)) bounce(s, c, key, t); else k.toHand(s, c, t, 'battlefield');
-      const hand = s.players[foe].hand, top = hand.length ? c.decide?.(foe, {ability: 'DIMENSIONAL DISTORTION', options: [...hand], choose: 'top', text: 'Put a card from your hand on top of your deck.'}) : null;
-      const put = hand.includes(top) ? top : hand[0];
-      if (put) { hand.splice(hand.indexOf(put), 1); s.players[foe].deck.unshift(put); }
+      if (t) { // alvo ilegal: o retorno e o Dimensional Distortion não acontecem; o draw de Kanon não depende dele
+        if (k.isDevotee(c, t)) bounce(s, c, key, t); else k.toHand(s, c, t, 'battlefield');
+        const hand = s.players[foe].hand, top = hand.length ? c.decide?.(foe, {ability: 'DIMENSIONAL DISTORTION', options: [...hand], choose: 'top', text: 'Put a card from your hand on top of your deck.'}) : null;
+        const put = hand.includes(top) ? top : hand[0];
+        if (put) { hand.splice(hand.indexOf(put), 1); s.players[foe].deck.unshift(put); }
+      }
       if (controls(s, c, key, KANON)) k.draw(s, key, 1);
     }},
   },
-  // 167 — pendente: contra-mágica (ver 133); Final Melody e a Resonance dependem dela.
+  // 167 Song of the Last Siren: Final Melody (o controlador descarta) só se a Spell foi anulada; Resonance — Sorrento: você pode comprar e descartar.
+  'poseidon-v6-167': {
+    spell: {check: needCounter(), run: (s, c, key) => {
+      const t = counterTarget(c, s, key, 'SONG OF THE LAST SIREN'), foe = t && s.chain.find(i => i.uid === t)?.controller;
+      if (t && k.counterSpell(s, c, t)) k.discard(s, c, foe, 1, 'FINAL MELODY');
+      if (controls(s, c, key, SORRENTO)) mayLoot(s, c, key, 'RESONANCE');
+    }},
+  },
   'poseidon-v6-168': {
     spell: {run: (s, c, key) => {
       const done = seal(s, c, enemies(s, c, key, 'FROZEN DOMINION', 3), 1, 'FROZEN DOMINION');
@@ -694,11 +782,13 @@ export default {
   },
   'poseidon-v6-171': {
     spell: {run: (s, c, key) => {
-      // Silence — pendente: contra-mágica (ver 133).
-      const modes = ['Submission', 'Oppression', 'Dominion'], first = mode(c, key, 'CHOOSE TWO', modes);
+      // Choose two (ao conjurar): Submission e Silence só se há alvo (Devotee inimigo / Moment ou Technique inimigo na cadeia).
+      const modes = [k.enemies(s, c, key).length && 'Submission', counterable(s, c, key).length && 'Silence', 'Oppression', 'Dominion'].filter(Boolean);
+      const first = mode(c, key, 'CHOOSE TWO', modes);
       const second = first && mode(c, key, 'CHOOSE TWO', modes.filter(m => m !== first));
       for (const m of modes.filter(m => m === first || m === second)) {
         if (m === 'Submission') bounce(s, c, key, enemy(s, c, key, 'SUBMISSION'));
+        if (m === 'Silence') { const t = counterTarget(c, s, key, 'SILENCE'); if (t) k.counterSpell(s, c, t); }
         if (m === 'Oppression') mill(s, c, k.other(s, key), 4);
         if (m === 'Dominion') { k.draw(s, key, 2); k.discard(s, c, key, 1, 'DOMINION'); }
       }

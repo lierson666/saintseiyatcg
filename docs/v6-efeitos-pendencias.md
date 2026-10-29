@@ -18,7 +18,7 @@ Cada facção tem o seu arquivo (`hades.js`, `poseidon.js`, `ares.js`, `artemis.
 
 - **Trample** ✅ resolvido: igual a Pierce, não somam (guia §46A). Engine ajustada.
 - **Engage** ✅ resolvido: "engaged with X" = estar num Strike com X; "Engage that Devotee" força o Strike (guia §63). Falta implementar 363 e 384 com essa leitura.
-- **Contra-mágicas em Moment** ✅ Moment agora é resposta. Parcial (gancho `watchSpell`, 29/10/2026): Poseidon 119 Sacred Interdiction implementada; 133, 136, 154, 156, 159, 167, 171 (Moments que contrariam) continuam abertas — ver "Ganchos novos" no fim.
+- **Contra-mágicas em Moment** ✅ (watchSpell + alvos na conjuração, 29/10/2026): Poseidon 119, 133, 136, 154, 156, 159, 167, 171 (Silence) e as reações 115, 117, 121, 124 implementadas — ver "Alvos na conjuração e contra-mágicas" no fim.
 - **"Would take Strike damage"** (Poseidon 096, 099, 100, 104, 110, 122, 131, 145): virou escudo de 1 criado na declaração do Strike.
 - **{T} em Equipment** ✅ resolvido: uma vez por rodada (guia §61). Já implementado assim.
 - **"Once per turn" × "once each round"**: implementado por turno onde o texto diz turn. O guia §64 pede revisão de "turn".
@@ -137,11 +137,11 @@ Ganchos adicionados em `playtest/engine-v3/` para completar cartas V6 (contrato 
 activate de Domain (`domain:${key}`). Extras não pedidos, necessários para fechar cartas: `tookDamage` (+gear/watch) e `prevent`/`gearPrevent`
 (prevenção obrigatória). Perguntas ao autor (a engine segue a leitura literal até a resposta):
 
-- **Conjurar abre janela de resposta?** Hoje uma Technique/Moment jogada como AÇÃO resolve na hora (P06 A: ação comum não abre janela), a menos que
+- ✅ Resolvido (autor, 29/10/2026, guia §54): **toda Spell abre janela de resposta** e resolve depois que os dois passam. Poseidon 133, 136, 154, 156, 159, 167, 171 (Silence) agora têm Spell inimiga na cadeia para contrariar. (Pergunta original abaixo, mantida como histórico.) **Conjurar abre janela de resposta?** Hoje uma Technique/Moment jogada como AÇÃO resolve na hora (P06 A: ação comum não abre janela), a menos que
   exista um observador `watchSpell` com efeito (contra-mágica, "when you cast…"): aí a Spell espera na cadeia e o adversário recebe prioridade (guia §56:
   "o adversário recebe a primeira prioridade"). Por isso os Moments que contrariam (Poseidon 133, 136, 154, 156, 159, 167, 171 Silence) ainda não têm
   Spell inimiga para responder. Toda conjuração deve abrir janela? (mudaria o ritmo do jogo e a IA/arena)
-- **Alvo de Spell conhecido ao conjurar?** Poseidon 117 Tidal Rejection, 121 Countercurrent, 124 Living Reef e 115 Tidal Escape dependem de "targets your
+- ✅ Resolvido (autor, 29/10/2026, guia §54): **alvos de Spell são escolhidos ao jogá-la**, antes da janela; se o alvo não estiver mais disponível na resolução, a parte que dependia dele não acontece. Poseidon 115, 117, 121 e 124 implementadas (v6/targets.js). (Pergunta original abaixo.) **Alvo de Spell conhecido ao conjurar?** Poseidon 117 Tidal Rejection, 121 Countercurrent, 124 Living Reef e 115 Tidal Escape dependem de "targets your
   God/friendly Devotee". As escolhas das Spells V6 são perguntadas só na resolução (kit), então o alvo não existe quando o gatilho de conjuração nasce.
   Escolher os alvos ao conjurar (guia §56: "anunciar escolhas e alvos") para todas as Spells V6?
 - **"Moment or Technique" inclui Event e Miracle?** O guia §54 diz que jogam como Technique; os gatilhos de conjuração (Poseidon 116, 142, 148, 170, 178;
@@ -164,3 +164,49 @@ activate de Domain (`domain:${key}`). Extras não pedidos, necessários para fec
   remoção de Seal (Hades 158, 180, 425), Soul como custo de habilidade ativada (Hades 172, 228), alvo de habilidade inimiga (Ares 277, Hades 258),
   perda de habilidades ativadas (Poseidon 160, 169), imunidade a retorno à mão (Poseidon 176), origem do Cosmo gasto (Artemis 397), Engage (Artemis 363, 384),
   Athena 014/016/018 Resonance de segundo Devotee ("Pending design and approval").
+
+
+## Alvos na conjuração e contra-mágicas (29/10/2026)
+
+Implementado (guia §54): alvos e modos das Spells V6 são perguntados ao conjurar (`v6/targets.js`; contrato em `v6/registry.js`), guardados em `item.targets` da
+cadeia e no evento `card_played` (`targets`); `watchSpell` recebe os alvos como 6º argumento. Poseidon 115, 117, 121, 124 (reações a alvo) e 133, 136, 154, 156,
+159, 167, 171 (contra-mágicas), mais o Safe Passage da 138, estão completos. Perguntas ao autor (a engine segue a leitura literal até a resposta):
+
+- **Modo ("Choose one/two") escolhido ao conjurar?** Os alvos dependem do modo, então o modo sai junto com os alvos (Poseidon 140, 154, 159, 171; Hades 241; Athena 061, 081). Confere?
+- **"Choose one" cujo modo depende de ter alvo:** só são oferecidos os modos com alvo legal (154: Reversal precisa de Devotee inimigo, Interdiction de Moment/Technique inimigo na cadeia; 159 e 171 idem). Spell sem nenhum alvo legal (133, 136, 156, 167) não pode ser conjurada. Confere?
+- **Alvo que depende de escolha da resolução:** "You may defeat up to three friendly Saints. For each, choose: deal 3 damage to target…" (Athena 089), "up to three Saints… return target defeated Saint" (090) e Receding Wave (156) só podem escolher o alvo depois de uma escolha anterior. A 156 pergunta o alvo ao conjurar (assumindo que a Spell será anulada); Athena 089/090 e riders do tipo "if you do, target…" perguntam na resolução. Aceitável?
+- **"Target opponent / target enemy God":** "target enemy God" (Hades 238, 267; Ares 357) conta como Spell que mira o God do adversário (alvo guardado sem pergunta, visível a Poseidon 136/117). "Target opponent" (Hades 237, 239, 257; Ares 348) não conta como mirar o God. Confere?
+- **Spell que mira a própria Spell na cadeia:** o alvo das contra-mágicas é guardado como o uid da Spell inimiga; se ela já saiu da cadeia na resolução, a parte "anular" não acontece (e Final Melody/Receding Wave também não).
+- **"Moment or Technique" inclui Event e Miracle** (§54: jogam como Technique): contra-mágicas e reações os contam. Mesma pergunta já feita acima.
+- **138 Safe Passage ("was the target … when you cast this Moment"):** lido na resolução (a Spell inimiga continua na cadeia abaixo do Moment, a menos que uma resposta a tenha anulado). Se a anulação entre conjurar e resolver deve mudar o resultado, é preciso guardar o fato ao conjurar.
+- **121 Countercurrent:** "that Marina Devotee" com vários Marinas mirados: o dono escolhe um na resolução do gatilho. "No remaining legal targets" = nenhum dos alvos guardados segue legal (Devotee em campo; God sempre legal); Spell com um só alvo é anulada ao devolver o Marina.
+- **115/117/121/124 "once each round":** 117, 121 e 124 marcam o uso no evento (como 119); 115 só gasta o uso se aceitar devolver. Alinhar?
+- **Ensaio dos alvos:** o motor ensaia `run` numa cópia do estado para achar as perguntas de alvo. Efeito de `run` fora do estado do jogo (log, contador externo) roda também no ensaio; por isso `targets` explícito existe no contrato.
+- **Partes independentes do alvo:** Minos (Hades 258), Eternal Slumber (192), Kiki's Telekinesis (Athena 057) e Golden Triangle (Poseidon 166) agora compram/rendem mesmo com o alvo ilegal. Outras Spells ainda saem cedo (`if (!t) return`) quando o alvo some; revisar uma a uma se o autor quiser a leitura estrita "só a parte do alvo".
+
+## Neutral
+Cartas `neutral-v6-451`…`500` em `playtest/engine-v3/v6/neutral.js`. Leituras provisórias (o autor confirma): "once per turn / first … each turn" = uma vez por Round (§64); "until end of turn" = `this_turn`; "blocks" = ser o alvo declarado de um Strike inimigo (como Poseidon/Athena); tokens (Sanctuary Soldier, Steel Recruit) são 1/1 incolores sem cor/Cosmo e o tipo do Soldier é "Soldier" (Phaeton os reforça); Equipment `{T}` = uma vez por Round (§61). Perguntas:
+
+- **Cost reduction (Dr. Asamori 464, Graad Lab 470):** "Equipment cards you cast cost 1 less, minimum 1" e "first Equipment each turn costs 1 less". Não há gancho de custo em `play.js` (`payCost`/`equipCost`). Vale também para o custo de Equip {N} (hoje é o que se paga ao jogar equipado) ou só o Casting Cost? Pode ser um gancho `costMod` no `playEquipment`?
+- **Pular a compra (Black Swan 453, Frozen Sacrifice):** "skip your next draw step". `startTurn` (core.js) não tem como cancelar a compra; só gravei `state.skipDraw[key] = true`. Precisa de um campo lido no `drawStep`. A compra do 1º turno próprio (que já não existe) conta como "next draw step"?
+- **"Cannot block" (Black Phoenix Shadow 458):** o Strike não tem bloqueio (o atacante escolhe o alvo; Guardian força). "Cannot block" vira "não pode ser alvo de Strike inimigo"? Ou "não conta como Guardian"? Hoje não faz nada. E "Black Whale/Daichi/Jellyfish blocks" = ser o alvo declarado (assim implementei).
+- **"Becomes disengaged" (Black Whale 459, Unstable Power):** sem gancho de Prepare. Aproximação: no início do turno, se está Prepared e tinha ficado Exhausted ao entrar ou ao declarar Strike, perde 1 Soul. Outros Prepares/Exhausts por efeito não contam. Prepare por efeito (Athena etc.) também dispara? "Heavy Armor — enters exhausted" é o padrão de todo Devotee (sem Impulse), então não tem código.
+- **Alvo de Technique inimiga (Sho 461, Sky Steel Cloth 465, Geist 471, Agora 486):** redirecionar, contrariar (pagando) e "pagar 2 a mais ou contrariar" dependem de o alvo da Spell existir ao conjurar (a pergunta já aberta sobre alvos no cast). Ficaram sem código (Mechanical Precision do Sho, Steel Synchronization das Cloths que não dependem disso estão feitos). Em 465, "Steel Synchronization" reduz o custo de Aerial Interception de 3 para 2 se o portador é Steel Saint?
+- **Cosmo Disruption 476:** é Technique, ou seja Sorcery (só com a cadeia vazia), então nunca há Spell na cadeia para contrariar. O texto "Counter target Moment or Technique" pede que seja Moment? Implementei o efeito (contraria a Spell escolhida na cadeia, depois perde 2 Soul), testado direto.
+- **Last Moment Defense 497:** "this turn" (Technique é jogada no seu turno) deixa a prevenção só no seu próprio turno, quando o adversário não ataca. É "this round"? Implementei `this_turn` literal. "It does not ready during your next ready step": usei `skipPrepare` do controlador do Devotee (se o alvo é inimigo, é o ready step dele, não o de quem conjurou). Confirmar.
+- **Eighth Sense 500:** "cannot be defeated until the end of your next turn": efeito `save` re-armado; ao salvar o dano fica em HP − 1 (convenção de Moonlight Protection). Duração aproximada por `next_round`. Também vale para derrota por efeito direto (defeat/sacrifice)? Hoje só dano.
+- **Humanity's Defiance 499:** "Devotees you control" = os que estão em campo na resolução (os que entram depois não ganham). "Beginning of your next end step" = no end step do seu turno (o desta Spell, se jogada no seu turno).
+- **Rule Through Fear (Jango 456):** o jogador escolhe entre sacrificar outro Black Saint ou perder 3 Soul (pergunta de modo na engine); "if you control another Black Saint" é checado no fim do turno e de novo na resolução.
+- **Death Queen Mask 492, Forbidden Power:** "its controller loses 2 Soul" lido como o controlador do portador (custo de quem usa, no estilo de Black Dragon). Se for o controlador do Devotee derrotado, é só trocar o alvo. Qual?
+- **Corrupted Protection 492 / "prevent that defeat":** só substitui derrota por dano (`checkDefeats`); remove todo o dano do portador e o Mask vai para o Tartarus (some o +2/+1).
+- **Ohko 482, Uncontrolled Rage ("must attack each turn if able"):** a engine não obriga Strike. Hoje sem código. Aceitar? Ou perde Soul/é sacrificado se não atacar?
+- **Leda 483, Twin Chains:** "attacks alongside another Devotee" lido como "outro Devotee seu já declarou Strike neste turno" (os Strikes são um de cada vez; o que ataca primeiro não ganha). Confirmar.
+- **Arachne 487, Venomous Trap:** só vê derrotas por dano (`watchWouldBeDefeated` grava se o Devotee estava Exhausted); derrota por efeito direto (defeat/sacrifice) não conta por falta de gancho antes da remoção.
+- **Graad Lab 470, Steel Production:** só enxerga Equipment jogado já preso a um portador (gancho `attach`); Equipment global/Armor sem portador não conta. Falta um gancho `watchCast` de Equipment (e de qualquer carta).
+- **Cosmo Converter 493, Overloaded Circuits:** Equipment não tem "ready step" próprio. Aproximado: depois de gerar Latent, não pode ser usado no seu turno seguinte. Reflete o texto? A "Soul como custo" exige Soul ≥ 1 (pode zerar e perder o jogo).
+- **Universal Cosmo Crystal 478 e Cloth Repair Tools 491:** têm duas habilidades ativadas cada, mas a entrada `activate` aceita uma. Implementei uma só com `choice.mode` ('amplify'|'overload'; 'repair'|'salvage'); a UI precisa mandar o modo. "Sacrifice: …" paga o sacrifício antes de escolher o alvo (Repair Tools pode devolver a si mesma).
+- **Cosmo Extraction 496:** a Base entra Prepared ou Unprepared? Usei Unprepared (padrão de `topToBase`).
+- **Agora 486, Lotus Meditation / Shiva 485:** "first Technique each turn" e "cast a Technique" contam Event/Miracle (jogam como Technique, §54), como as outras facções.
+- **Dark Tournament 498:** cada jogador escolhe o próprio Devotee; quem conjurou escolhe primeiro. "If you control a Black Saint" é avaliado depois dos sacrifícios.
+- **Phantom Sea Ambush 475, Ghost Tactics:** "If you control a Ghost Saint" avaliado depois dos retornos à mão.
+- **Marcador -1/-1 (Black Andromeda 454, Sea Serpent 473):** usa o marcador existente (`addCounter(-1)`); o registro que lembra "tinha marcador" quando morre fica em `state.v6Minus`. Marcador -1/-1 vindo de outras cartas (Artemis) também deveria contar? Hoje só os de 454/473 e qualquer `counters < 0` em campo.

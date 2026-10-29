@@ -1,6 +1,8 @@
 // Efeitos V6 de Hades, por id de carta (contrato em ./registry.js; kit em ./kit.js).
 // Interpretações e cláusulas sem gancho: comentários "Interpretação:" e "pendente:" nas entradas.
 import * as k from './kit.js';
+// "Target enemy God": único alvo possível, guardado ao conjurar sem pergunta (v6/targets.js; reações como Poseidon 136 o enxergam).
+const godOfFoe = (s, c, key) => [k.godTarget(k.other(s, key))];
 import {addSeal} from '../core.js';
 
 // ---------- ajudantes locais ----------
@@ -181,8 +183,7 @@ export default {
   },
   'hades-v6-192': {spell: {run: (s, c, key) => { // Eternal Slumber
     const t = k.choose(c, key, 'ETERNAL SLUMBER', k.allDevotees(s, c));
-    if (!t) return;
-    seal(s, c, [t], 3, 'ETERNAL SLUMBER');
+    if (t) seal(s, c, [t], 3, 'ETERNAL SLUMBER'); // alvo ilegal: só o Seal não acontece
     k.draw(s, key, 1);
   }}},
   'hades-v6-193': { // Thanatos
@@ -377,7 +378,7 @@ export default {
     oppSacrifices(s, c, key, "THE FERRYMAN'S PRICE", 1);
     payDraw(s, c, key, "THE FERRYMAN'S PRICE", 2, 1);
   }}},
-  'hades-v6-238': {spell: {run: (s, c, key) => drain(s, key, 3)}}, // Souls of the Damned
+  'hades-v6-238': {spell: {targets: godOfFoe, run: (s, c, key) => drain(s, key, 3)}}, // Souls of the Damned
   'hades-v6-239': {spell: {run: (s, c, key) => { strip(s, c, key, 'THE WHISPERS OF PANDORA', cd => cd.kind !== 'Devotee'); lose(s, key, 1); }}},
   'hades-v6-240': {spell: {run: (s, c, key) => { if (toFieldFrom(s, c, key, 'THE RETURN FROM DEATH', devCost(4))) lose(s, key, 2); }}},
   // The Will of Hades. Interpretação: "Your God loses 1 Soul" vale para os dois modos (linha separada).
@@ -445,9 +446,10 @@ export default {
   'hades-v6-257': {spell: {run: (s, c, key) => { strip(s, c, key, 'THE TRIAL OF THE DEAD', () => true); lose(s, key, 2); }}},
   'hades-v6-258': {spell: {run: (s, c, key) => { // The Judgment of Minos
     const t = enemy(s, c, key, 'THE JUDGMENT OF MINOS');
-    if (!t) return;
-    seal(s, c, [t], 2, 'THE JUDGMENT OF MINOS');
-    if (k.devotees(s, c, key).some(u => k.hasType(c, u, 'Judge Specter'))) weaken(s, c, t, 2, 2);
+    if (t) { // alvo que saiu do campo: só as partes dele não acontecem; o "Draw 1" não depende dele
+      seal(s, c, [t], 2, 'THE JUDGMENT OF MINOS');
+      if (k.devotees(s, c, key).some(u => k.hasType(c, u, 'Judge Specter'))) weaken(s, c, t, 2, 2);
+    }
     k.draw(s, key, 1);
   }}},
   'hades-v6-259': {spell: {run: (s, c, key) => { // The Specters Invade Sanctuary
@@ -489,7 +491,7 @@ export default {
     lose(s, k.other(s, key), theirs);
     gain(s, key, mine);
   }}},
-  'hades-v6-267': {spell: {run: (s, c, key) => { // The Sword That Pierces Athena
+  'hades-v6-267': {spell: {targets: godOfFoe, run: (s, c, key) => { // The Sword That Pierces Athena
     lose(s, k.other(s, key), 5 + (controls(s, c, key, 'hades-v6-199') ? 3 : 0));
     if (!s.victory) payDraw(s, c, key, 'THE SWORD THAT PIERCES ATHENA', 3, 2);
   }}},

@@ -30,7 +30,7 @@ export const may = (c, key, ability, extra = {}) => Boolean(c.decide?.(key, {abi
 export function choose(c, key, ability, options, {optional = false, text} = {}) {
   const list = [...new Set(options.filter(Boolean))];
   if (!list.length) return null;
-  if (optional && !may(c, key, ability, {text: text || 'Use this ability?'})) return null;
+  if (optional && !may(c, key, ability, {text: text || 'Use this ability?', part: 'target'})) return null; // `part`: v6/targets.js guarda esta resposta como parte do alvo
   return c.decide?.(key, {ability, options: list, choose: 'target', text}) ?? null;
 }
 // Até `count` alvos diferentes (escolhe um por vez; para quando acabar ou o jogador recusar).
@@ -246,3 +246,13 @@ export function counterSpell(s, c, spellUid) {
 }
 // Spell conjurada na cadeia agora (para `watchSpell` saber se ainda dá para contrariar).
 export const spellOnChain = (s, spellUid) => s.chain.some(i => i.spell && i.uid === spellUid);
+
+// ---------- alvos de Spell na cadeia (guia §54: alvos escolhidos ao conjurar) ----------
+// Alvos que a Spell `item` guardou ao ser conjurada (uids, 'god:X' ou uid de Spell na cadeia).
+export const itemTargets = item => item?.targets || (item?.target ? [item.target] : []);
+export const spellTargets = (s, spellUid) => itemTargets(s.chain.find(i => i.spell && i.uid === spellUid));
+// Alvo ainda legal agora: God sempre; Spell se segue na cadeia; Devotee/Equipment se segue em campo.
+export const stillTarget = (s, t) => (isGod(t) ? true : spellOnChain(s, t) || !!controllerOf(s, t));
+// A Spell mira o God de `key` ou um Devotee dele? (`only`: filtro extra sobre o Devotee, ex.: Marina)
+export const targetsMine = (s, c, key, values, only = () => true) =>
+  values.some(t => t === godTarget(key) || (isDevotee(c, t) && controllerOf(s, t) === key && only(t)));

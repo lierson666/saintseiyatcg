@@ -263,3 +263,199 @@ test('watchSurvive (Domain 145): Seahorse Baian defensor sobrevive: compra e des
   assert.ok(s.roundUses.has('baian-surv:domain:A'));
   assert.equal(hook(s, ctx, 'A', 'domain:A', baian, 'defender', foe), false); // uma vez por Round
 });
+
+// ---------- Contra-mágicas e reações a alvo de Spell (guia §54: toda Spell abre janela; alvos escolhidos ao conjurar) ----------
+// Aqui Poseidon é B (responde); A (Hades, ativo) conjura Judgment of Minos (hades-v6-258, Technique: 2 Seal no Devotee inimigo alvo).
+function duel(answers = {}) {
+  const deck = id => ({...decks.find(d => d.id === id)});
+  const m = createMatch({cards, canonIndex: index, decks: {A: deck('preview-hades-108'), B: deck('preview-poseidon-tide')}, gods: {A: 'god-hades', B: 'god-poseidon'}, first: 'A', seed: 1});
+  const s = m.state, asked = [];
+  const decide = (player, q) => {
+    asked.push({player, ...q});
+    const a = answers[q.ability];
+    if (a !== undefined) return typeof a === 'function' ? a(q, player) : a;
+    return q.options ? q.options[0] : true;
+  };
+  const ctx = {cards, objects: m.objects, attached: m.attached, decide}, A = s.players.A, B = s.players.B;
+  for (const pl of Object.values(s.players)) pl.deck.push(...pl.hand.splice(0)); s.setup = null;
+  startTurn(s);
+  A.bases = A.deck.splice(-12).map(uid => ({uid, prepared: true}));
+  B.bases = B.deck.splice(-12).map(uid => ({uid, prepared: true}));
+  B.latent = 10;
+  let n = 0;
+  const put = (key, cardId, zone = 'hand') => {
+    const uid = `${key}:y${n++}:${cardId}`;
+    m.objects[uid] = {owner: key, cardId, armor: cards.get(cardId).armor};
+    s.players[key][zone].push(uid);
+    if (zone === 'battlefield') s.units[uid] = {prepared: true, damage: 0, entered: 0};
+    return uid;
+  };
+  // A conjura Minos mirando `target`; devolve o uid da Spell.
+  const minos = target => { const sp = put('A', 'hades-v6-258'); answers['THE JUDGMENT OF MINOS'] = () => target; playSpell(s, ctx, 'A', sp); return sp; };
+  const respond = id => { const uid = put('B', P(id)); playSpell(s, ctx, 'B', uid); return uid; };
+  const sealed = uid => s.units[uid]?.seal || 0;
+  return {s, ctx, A, B, put, minos, respond, sealed, asked, answers};
+}
+
+test('133 Call of the Ocean: alvo escolhido ao conjurar; anula a menos que o controlador pague {2}{C}', () => {
+  for (const pays of [false, true]) {
+    const {s, A, B, put, minos, respond, sealed, answers} = duel();
+    answers['CALL OF THE OCEAN'] = q => (q.options ? q.options[0] : pays); // alvo = 1ª opção; "pagar?" = pays
+    const x = put('B', P('118'), 'battlefield'), sp = minos(x);
+    const counter = respond('133');
+    assert.deepEqual(s.chain.find(i => i.uid === counter).targets, [sp]); // a resposta mira a Spell na cadeia
+    const bases = ready(A);
+    done(s);
+    if (pays) { assert.equal(sealed(x), 2); assert.equal(ready(A), bases - 2); assert.ok(!s.events.some(e => e.type === 'spell_countered')); }
+    else { assert.equal(sealed(x), 0); assert.ok(A.tartarus.includes(sp)); assert.ok(s.events.some(e => e.type === 'spell_countered' && e.uid === sp)); }
+    assert.ok(B.tartarus.includes(counter));
+  }
+});
+
+test('133/136/156/167: sem Moment ou Technique inimigo na cadeia não há alvo e a conjuração é recusada', () => {
+  const {s, ctx, B, put} = duel();
+  s.active = 'B';
+  for (const id of ['133', '136', '156', '167']) assert.throws(() => playSpell(s, ctx, 'B', put('B', P(id))), RuleError, id);
+  assert.equal(B.stack.length, 0);
+});
+
+test('136 The Sea Never Forgives: só contra Spell que mira o seu Devotee ou God; sem pagamento', () => {
+  const {s, ctx, A, put, minos, respond, sealed} = duel();
+  const x = put('B', P('118'), 'battlefield'), sp = minos(x);
+  respond('136'); done(s);
+  assert.equal(sealed(x), 0); assert.ok(A.tartarus.includes(sp));
+  // Spell que não mira nada seu (Serve the Lord of Darkness mira Devotee de A): 136 não tem alvo.
+  const d = duel();
+  const own = d.put('A', 'hades-v6-206', 'battlefield'), serve = d.put('A', 'hades-v6-236');
+  d.answers['SERVE THE LORD OF DARKNESS'] = () => own;
+  playSpell(d.s, d.ctx, 'A', serve);
+  assert.throws(() => playSpell(d.s, d.ctx, 'B', d.put('B', P('136'))), RuleError);
+  // Spell que mira o God (Souls of the Damned): alvo guardado sem pergunta.
+  const g = duel(), souls = g.put('A', 'hades-v6-238'), soulB = g.s.players.B.soul;
+  playSpell(g.s, g.ctx, 'A', souls);
+  assert.deepEqual(g.s.chain[0].targets, ['god:B']);
+  g.respond('136'); done(g.s);
+  assert.equal(g.s.players.B.soul, soulB); // God de B não perdeu Soul
+  assert.ok(g.A.tartarus.includes(souls));
+});
+
+test('154 The Sea Dragon\'s Command: Royal Interdiction anula a menos que pague {3}{C}; sem Spell na cadeia só oferece Reversal', () => {
+  const {s, A, put, minos, respond, sealed, answers, asked} = duel();
+  answers['THE SEA DRAGON\'S COMMAND'] = 'Royal Interdiction'; answers['ROYAL INTERDICTION'] = q => (q.options ? q.options[0] : false);
+  put('A', 'hades-v6-206', 'battlefield'); // Devotee inimigo de B: Reversal também é possível
+  const x = put('B', P('118'), 'battlefield'), sp = minos(x);
+  respond('154');
+  assert.deepEqual(asked.filter(q => q.choose === 'mode').map(q => q.options), [['Dimensional Reversal', 'Royal Interdiction']]); // perguntado ao conjurar
+  done(s);
+  assert.equal(sealed(x), 0); assert.ok(A.tartarus.includes(sp));
+  // Fora de janela (cadeia vazia) o único modo possível é Reversal: sem pergunta de modo.
+  const d = duel(), foe = d.put('A', 'hades-v6-206', 'battlefield');
+  d.s.active = 'B'; d.s.window = null;
+  playSpell(d.s, d.ctx, 'B', d.put('B', P('154')));
+  assert.equal(d.asked.filter(q => q.choose === 'mode').length, 0);
+  assert.equal(d.s.chain[0].targets[0], foe);
+});
+
+test('156 Wall of Ocean Currents: anula Spell que mira Devotee seu; Receding Wave devolve outro Devotee (alvo escolhido ao conjurar)', () => {
+  const {s, A, B, put, minos, respond, sealed, answers, asked} = duel();
+  const x = put('B', P('118'), 'battlefield'), y = put('B', P('115'), 'battlefield'), sp = minos(x);
+  answers['RECEDING WAVE'] = q => (q.options ? y : true);
+  const w = respond('156');
+  assert.deepEqual(s.chain.find(i => i.uid === w).targets, [sp, y]);
+  assert.equal(asked.filter(q => q.ability === 'RECEDING WAVE' && q.options).length, 1); // uma vez, ao conjurar
+  done(s);
+  assert.equal(sealed(x), 0); assert.ok(A.tartarus.includes(sp));
+  assert.ok(B.hand.includes(y) && !s.units[y]);
+});
+
+test('159 The Seven Seas Answer: Denial anula; Reversal devolve Equipment inimigo', () => {
+  const a = duel();
+  a.answers['THE SEVEN SEAS ANSWER'] = 'Denial';
+  const x = a.put('B', P('118'), 'battlefield'), sp = a.minos(x);
+  a.respond('159'); done(a.s);
+  assert.equal(a.sealed(x), 0); assert.ok(a.A.tartarus.includes(sp));
+  const b = duel(), gear = b.put('A', 'hades-v6-224', 'battlefield');
+  b.s.active = 'B'; b.s.window = null;
+  b.answers['THE SEVEN SEAS ANSWER'] = 'Reversal';
+  b.respond('159'); done(b.s);
+  assert.ok(b.A.hand.includes(gear) && !b.A.battlefield.includes(gear));
+});
+
+test('167 Song of the Last Siren: anula; Final Melody faz o controlador descartar', () => {
+  const {s, A, put, minos, respond, sealed} = duel();
+  put('A', 'hades-v6-206'); // carta na mão para o descarte
+  const x = put('B', P('118'), 'battlefield'), sp = minos(x), hand = A.hand.length;
+  respond('167'); done(s);
+  assert.equal(sealed(x), 0); assert.ok(A.tartarus.includes(sp));
+  assert.equal(A.hand.length, hand - 1); // Final Melody: descartou 1
+  assert.ok(s.events.some(e => e.type === 'discarded' && e.player === 'A'));
+});
+
+test('171 The Emperor\'s Decree: Silence é modo escolhido ao conjurar (junto com Dominion)', () => {
+  const {s, A, B, put, minos, respond, sealed, answers} = duel();
+  const picks = ['Silence', 'Dominion'];
+  answers['CHOOSE TWO'] = q => { const m = picks.shift(); assert.ok(q.options.includes(m)); return m; };
+  const x = put('B', P('118'), 'battlefield'), sp = minos(x), hand = B.hand.length;
+  respond('171'); done(s);
+  assert.equal(sealed(x), 0); assert.ok(A.tartarus.includes(sp));
+  assert.equal(B.hand.length, hand + 1); // +2 compradas, -1 descartada
+});
+
+test('138 The Ocean\'s Embrace: Safe Passage compra se o Devotee era alvo de Spell inimiga ao conjurar', () => {
+  for (const hit of [true, false]) {
+    const {s, B, put, minos, respond, answers} = duel();
+    const x = put('B', P('118'), 'battlefield'), y = put('B', P('115'), 'battlefield');
+    minos(x); // 115 reagiria a ser alvo; aqui o alvo é x e o 115 não é mirado
+    answers.RETURN = () => (hit ? x : y);
+    const hand = B.hand.length;
+    respond('138'); done(s);
+    // x devolvido: +1 carta (retorno) +1 (Safe Passage); y devolvido: só +1 (retorno)
+    assert.equal(B.hand.length - hand, hit ? 2 : 1);
+  }
+});
+
+test('115 Tidal Escape: ao ser alvo de Spell inimiga volta à mão; a Spell perde o alvo e a parte dele não acontece', () => {
+  const {s, A, B, put, minos, sealed} = duel();
+  const scout = put('B', P('115'), 'battlefield'), other = put('B', P('118'), 'battlefield'), hand = A.hand.length;
+  const sp = minos(scout);
+  assert.deepEqual(s.chain.find(i => i.uid === sp).targets, [scout]);
+  done(s);
+  assert.ok(B.hand.includes(scout) && !s.units[scout]);
+  assert.equal(sealed(other), 0); assert.ok(A.tartarus.includes(sp));
+  assert.equal(A.hand.length, hand + 1); // "Draw 1 card" não dependia do alvo
+});
+
+test('117 Tidal Rejection: paga {2}{C}, Exhaust no Guardian e anula Spell que mira o God ou Devotee seu; uma vez por Round', () => {
+  const {s, A, B, put, minos, sealed} = duel();
+  const guard = put('B', P('117'), 'battlefield'), x = put('B', P('118'), 'battlefield'), sp = minos(x), bases = ready(B);
+  done(s);
+  assert.equal(sealed(x), 0); assert.ok(A.tartarus.includes(sp));
+  assert.equal(s.units[guard].prepared, false); assert.equal(ready(B), bases - 2);
+  const again = minos(x); done(s); // mesmo Round: não reage de novo
+  assert.equal(sealed(x), 2); assert.ok(A.tartarus.includes(again));
+});
+
+test('121 Countercurrent: devolve o Marina mirado e, sem alvo legal restante, anula a Spell', () => {
+  const {s, A, B, put, minos, sealed} = duel();
+  const master = put('B', P('121'), 'battlefield'), hand = A.hand.length, bases = ready(B);
+  const sp = minos(master);
+  done(s);
+  assert.ok(B.hand.includes(master) && !s.units[master]);
+  assert.ok(A.tartarus.includes(sp)); assert.ok(s.events.some(e => e.type === 'spell_countered' && e.uid === sp));
+  assert.equal(A.hand.length, hand); // anulada: sem "Draw 1"
+  assert.equal(ready(B), bases - 1);
+});
+
+test('124 Coral Barrier: portador mirado; paga {2}{C} e anula a menos que o controlador pague {2}{C}', () => {
+  for (const pays of [false, true]) {
+    const {s, ctx, A, B, put, minos, sealed, answers} = duel();
+    answers['LIVING REEF'] = (q, player) => (player === 'A' ? pays : true); // A responde "pagar para manter a Spell?"; B paga o Reef
+    const bearer = put('B', P('118'), 'battlefield'), gear = put('B', P('124'), 'battlefield');
+    ctx.attached[gear] = bearer;
+    const sp = minos(bearer), bases = ready(B);
+    done(s);
+    assert.equal(ready(B), bases - 2);
+    assert.equal(sealed(bearer), pays ? 2 : 0);
+    assert.equal(A.tartarus.includes(sp), true);
+  }
+});

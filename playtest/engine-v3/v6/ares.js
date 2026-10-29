@@ -8,6 +8,8 @@
 // - "Pierce" impresso em Equipment (317) vale para o portador.
 // - "Once per turn, … you may" marca o uso quando o gatilho nasce, mesmo se o jogador recusar.
 import * as k from './kit.js';
+// "Target enemy God": único alvo possível, guardado ao conjurar sem pergunta (v6/targets.js; reações como Poseidon 136 o enxergam).
+const godOfFoe = (s, c, key) => [k.godTarget(k.other(s, key))];
 import {hooks} from '../core.js';
 import {contextOf, trigger} from './registry.js';
 
@@ -524,7 +526,7 @@ export default {
     const [dead] = t ? sweep(s, c, [t], 3) : [];
     if (dead) hit(s, c, k.godTarget(dead.owner), 2);
   }}},
-  'ares-v6-357': {spell: {run: (s, c, key) => {
+  'ares-v6-357': {spell: {targets: godOfFoe, run: (s, c, key) => {
     const foe = k.other(s, key);
     k.loseSoulOf(s, foe, 3);
     if (!s.victory && s.players[foe].soul <= 10) loot(s, c, key, 'OPPORTUNITY FOR WAR');

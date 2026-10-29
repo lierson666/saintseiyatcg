@@ -354,7 +354,7 @@ function chainLabel(c) {
     if (text.length < 25) text = lines.slice(i + 1).find(l => l && !/^Cost:/.test(l)) || text;
   } else if (ability) text = lines.find(l => l.toLowerCase().includes(low)) || '';
   const title = [card?.name, named && ability.toUpperCase() !== card?.name?.toUpperCase() ? ability : ''].filter(Boolean).join(' · ') || 'Triggered ability';
-  return {title, text, target: c.target && ctx.objects[c.target] ? info(c.target).name : ''};
+  return {title, text, target: (c.targets?.length ? c.targets : [c.target]).filter(Boolean).map(u => (String(u).startsWith('god:') ? `God ${u.slice(4)}` : ctx.objects[u] ? info(u).name : '')).filter(Boolean).join(', ')}; // alvos escolhidos ao conjurar (item.targets)
 }
 function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
   if (hidden || !ctx.objects[uid]) return `<div class="dcard dcard--back ${size}" data-uid="${uid}" aria-label="Face-down card"><span></span></div>`;
@@ -1191,9 +1191,9 @@ function drawIntents() {
   const strike = pendingStrike(s);
   if (strike) arrows.push({from: elOf(strike.attacker), to: elOf(strike.target.kind === 'god' ? `god:${strike.target.player}` : strike.target.uid), kind: 'strike', label: 'STRIKE'});
   s.chain.forEach((c, i) => {
-    const from = $(`.chain [data-chain="${i}"] b`), target = c.target && ctx.objects[c.target] ? c.target : null;
-    if (target) arrows.push({from, to: elOf(target), kind: 'spell', label: String(i + 1)});
-    else if (c.uid && elOf(c.uid)) arrows.push({from, to: elOf(c.uid), kind: 'source', label: String(i + 1)});
+    const from = $(`.chain [data-chain="${i}"] b`), aimed = (c.targets?.length ? c.targets : [c.target]).filter(u => u && (ctx.objects[u] || String(u).startsWith('god:')));
+    for (const target of aimed) arrows.push({from, to: elOf(target), kind: 'spell', label: String(i + 1)});
+    if (!aimed.length && c.uid && elOf(c.uid)) arrows.push({from, to: elOf(c.uid), kind: 'source', label: String(i + 1)});
   });
   const live = arrows.filter(a => a.from && a.to);
   if (!live.length) return;

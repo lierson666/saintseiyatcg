@@ -46,16 +46,24 @@
 //                                                Gancho extra (não pedido): era a única forma exata de "whenever X is dealt damage, prevent 1".
 //   attach(s, c, key, self, bearer)              Equipment ficou preso a `bearer` (jogado já equipado ou equipado depois).
 //   watchAttach(s, c, key, self, gear, bearer)   observador: um Equipment ficou preso a `bearer` (ex.: "whenever an Equipment becomes attached to X").
-//   watchSpell(s, c, key, self, caster, spellUid)   uma Spell foi posta na cadeia (observador). Com algum observador a Spell espera na
-//                                                cadeia (janela aberta) e kit.counterSpell(s, c, spellUid) a contraria.
+//   watchSpell(s, c, key, self, caster, spellUid, targets)   uma Spell foi posta na cadeia (observador); `targets`: os alvos que ela
+//                                                escolheu ao ser conjurada (uids, 'god:X'). A Spell espera na cadeia (janela aberta) e
+//                                                kit.counterSpell(s, c, spellUid) a contraria. kit.targetsMine/stillTarget leem os alvos.
 //   Marcas de efeito: effects.forbidStrike(s, uid) ("cannot declare a Strike this round"), effects.forbidPrepare(s, uid)
 //   ("cannot be Prepared this round"). Domain: activate em `domain:${key}` via play.activate.
 //   mods(s, c, key, self) -> [{atk, hp, keywords}]          bônus estático do próprio Devotee ("While …", "has Guardian")
 //   aura(s, c, key, self, unit) -> {atk, hp, keywords}|null bônus estático que a carta dá a outro Devotee `unit`
-//   spell: {check?(s, c, key, choice), run(s, c, key, self, choice)}   Technique/Moment (categoria pelo subtipo)
+//   spell: {check?(s, c, key, choice), targets?(s, c, key, self), run(s, c, key, self, choice, targets)}   Technique/Moment (categoria pelo subtipo)
+//       ALVOS NA CONJURAÇÃO (guia §54, autor 29/10/2026): os alvos (e os modos, que decidem os alvos) são escolhidos ao jogar a Spell,
+//       antes de pagar e de abrir a janela, para as respostas os verem (item da cadeia `targets`, evento `spell_targets`, 6º argumento
+//       de `watchSpell`). Sem `targets`, o motor ensaia `run` numa cópia do estado (v6/targets.js): as perguntas de alvo/modo do
+//       conjurador (kit.choose, kit.chooseUpTo, modo) vão ao jogador na conjuração e são repetidas na resolução; o resto ("you may",
+//       descarte, busca) fica para a resolução. Na resolução, alvo que já não é opção legal vira null: a parte dele não acontece.
+//       Por isso `run` deve ser puro sobre (s, c): efeito fora do estado roda também no ensaio. `targets` explícito (devolve a lista
+//       de alvos, perguntando pelo kit; o motor não ensaia) serve para alvo sem pergunta ("target enemy God") ou efeito externo.
 //   activate: {name, cost, once, tap, check?(s, c, key, self, choice), run(s, c, key, self, choice)}  habilidade ativada
 // `watch*` em Domain: `self` = `domain:${key}` (o Domain não é objeto de deck; fica em state.domains[key]).
-// Escolhas ("target", "you may", "choose") são perguntas da engine na resolução, pelo kit (./kit.js).
+// Escolhas de alvo e de modo: perguntas da engine na CONJURAÇÃO (ver `spell` acima); "you may" e demais: na resolução, pelo kit (./kit.js).
 
 const CARDS = {};
 export const V6 = CARDS;

@@ -30,8 +30,7 @@ export default {
   'athena-v6-057': {spell: {run: (s, c, key) => {
     const gear = s.players[key].battlefield.filter(u => k.card(c, u)?.kind === 'Equipment');
     const t = k.choose(c, key, "KIKI'S TELEKINESIS", gear, {text: 'Choose target friendly Equipment.'});
-    if (!t) return;
-    k.toHand(s, c, t, 'battlefield');
+    if (t) k.toHand(s, c, t, 'battlefield'); // alvo ilegal: só o retorno não acontece
     if (controls(s, c, key, 'athena-v6-026')) k.draw(s, key, 1);
   }}},
   // Freezing Coffin

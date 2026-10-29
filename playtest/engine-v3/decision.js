@@ -14,7 +14,7 @@ export class PendingDecision extends Error {
 }
 
 // Cópia profunda que preserva funções (gatilhos e onClose da cadeia), Set e Map.
-function clone(v) {
+export function clone(v) {
   if (v === null || typeof v !== 'object') return v;
   if (v instanceof Set) return new Set([...v].map(clone));
   if (v instanceof Map) return new Map([...v].map(([k, x]) => [clone(k), clone(x)]));

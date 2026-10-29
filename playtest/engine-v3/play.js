@@ -6,6 +6,7 @@ import {RuleError, NotSpecified, assertIdle, spendBase, spellCategory, respond, 
 import {SPELLS, ABILITIES, onEnter, onCastEquipment, checkDefeats, namedCharacter, enforceUniqueness} from './effects.js';
 import {v6Spell, entryOf, V6, v6Attach} from './v6/hooks.js';
 import {collect} from './v6/registry.js';
+import {aim, withTargets} from './v6/targets.js';
 
 // Custo impresso: Base (D4) ou Latent. Valida tudo antes de mexer no estado.
 export function payCost(state, key, cost) {
@@ -166,29 +167,35 @@ export function playSpell(state, ctx, key, uid, choice = {}) {
 
 // Spell V6 (guia §54, autor 29/10/2026): Technique exige AÇÃO (própria vez, cadeia vazia) e paga o custo impresso em Base;
 // Moment joga como AÇÃO (Base) ou como resposta numa janela em que tem prioridade, pagando só Latent.
-// Alvos e escolhas são perguntas na resolução (v6/kit.js). `choice` é repassado a spell.check/run.
+// Alvos (e modos) são escolhidos AO CONJURAR, antes de pagar e de abrir a janela (v6/targets.js); ficam em `item.targets`
+// e no evento `spell_targets`. Na resolução, alvo que já não é legal faz a parte dele não acontecer. Demais escolhas
+// ("you may", descarte, busca) continuam sendo perguntas da resolução. `choice` é repassado a spell.check/run.
 function playSpellV6(state, ctx, key, uid, choice) {
   const {entry, category} = v6Spell(ctx, uid);
-  const p = state.players[key];
+  const response = category === 'Moment' && state.window;
+  let aimed = {records: [], values: []};
+  // `finish` usa `st` (o snapshot da decisão troca os objetos do estado) e as respostas de alvo guardadas ao conjurar.
   const finish = st => {
     emit(st, 'spell_resolved', {player: key, uid});
-    entry.spell.run(st, ctx, key, uid, choice);
+    withTargets(ctx, key, aimed.records, () => entry.spell.run(st, ctx, key, uid, choice, aimed.values));
     st.players[key].stack.splice(st.players[key].stack.indexOf(uid), 1);
     st.players[ctx.objects[uid].owner].tartarus.push(uid);
     checkDefeats(st, ctx);
   };
-  const response = category === 'Moment' && state.window;
+  const announce = () => emit(state, 'card_played', {player: key, uid, kind: 'Spell', category, targets: aimed.values});
+  const item = () => ({speed: 'instant', uid, run: finish, target: aimed.values[0] ?? null, targets: aimed.values, spell: true});
   if (!response) {
     const card = sorceryFromHand(state, ctx, key, uid, 'Spell');
     entry.spell.check?.(state, ctx, key, choice);
+    aimed = aim(state, ctx, key, uid, entry, choice); // pergunta os alvos antes de pagar (pode restaurar o estado: nada capturado antes)
     payCost(state, key, card.cost);
     leaveHand(state, key, uid);
-    p.stack.push(uid);
-    emit(state, 'card_played', {player: key, uid, kind: 'Spell', category});
+    state.players[key].stack.push(uid);
+    announce();
     // Toda Spell espera na cadeia e abre janela de resposta (autor, 29/10/2026); watchSpell (contra-mágica) entra junto.
-    const watchers = collect(state, ctx, state.order, 'watchSpell', [key, uid], 'a Spell is cast');
+    const watchers = collect(state, ctx, state.order, 'watchSpell', [key, uid, aimed.values], 'a Spell is cast');
     openWindow(state);
-    state.chain.push({controller: key, uid, speed: 'instant', run: finish, target: null, spell: true});
+    state.chain.push({controller: key, ...item()});
     emit(state, 'chain_add', {player: key, uid});
     pushTriggers(state, watchers);
     return;
@@ -197,10 +204,11 @@ function playSpellV6(state, ctx, key, uid, choice) {
   const card = fromHand(state, ctx, key, uid, 'Spell');
   if (state.window.priority !== key) throw new RuleError('P06', `${key} não tem prioridade`);
   entry.spell.check?.(state, ctx, key, choice);
+  aimed = aim(state, ctx, key, uid, entry, choice);
   payCost(state, key, {amount: card.cost.amount, unit: 'latent'}); // resposta: só Latent (guia §XII)
   leaveHand(state, key, uid);
-  p.stack.push(uid);
-  emit(state, 'card_played', {player: key, uid, kind: 'Spell', category});
-  respond(state, key, {speed: 'instant', uid, run: finish, target: null, spell: true});
-  pushTriggers(state, collect(state, ctx, state.order, 'watchSpell', [key, uid], 'a Spell is cast')); // gancho watchSpell (resposta)
+  state.players[key].stack.push(uid);
+  announce();
+  respond(state, key, item());
+  pushTriggers(state, collect(state, ctx, state.order, 'watchSpell', [key, uid, aimed.values], 'a Spell is cast')); // gancho watchSpell (resposta)
 }
