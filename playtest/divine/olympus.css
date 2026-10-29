@@ -807,3 +807,13 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .drag-zone--band small { position: relative; z-index: 1; max-width: none; text-align: center; align-self: flex-end; margin: 0 0 4cqh; }
 @keyframes zone-marquee { from { transform: translate(100cqw, -50%); } to { transform: translate(-100%, -50%); } }
 .reduce-motion .drag-zone--band strong { animation: none; transform: translate(4cqw, -50%); }
+
+/* COSMO BASE em laço contínuo e bem lento (autor, 28/10/2026): duas cópias seguidas andam meia largura e recomeçam
+   sem salto; as pontas da faixa esmaecem e o brilho passa devagar. */
+.drag-zone--band strong { display: flex; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; opacity: .4;
+  animation: zone-shine 7s ease-in-out infinite, zone-marquee 48s linear infinite; }
+.drag-zone--band strong span { flex: none; }
+@keyframes zone-marquee { from { transform: translate(0, -50%); } to { transform: translate(-50%, -50%); } }
+.drag-zone--band::before { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(90deg, rgba(8, 22, 70, .85), transparent 14%, transparent 86%, rgba(8, 22, 70, .85)); }
+.drag-zone--band small { align-self: flex-start; margin: auto 0 5cqh 3cqw; padding: 3px 12px; border-radius: 999px; background: rgba(5, 14, 45, .6); }

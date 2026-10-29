@@ -1004,7 +1004,7 @@ function showDragZones(uid) {
   const cast = !playableReason(key, uid), cosmo = canBase(key, uid);
   field.insertAdjacentHTML('beforeend', `<div class="drag-zones" aria-hidden="true">
     <div class="drag-zone drag-zone--cast ${cast ? '' : 'is-off'}"><strong>CAST</strong><small>${cast ? 'Release to cast as Devotee, Armor or effect' : esc(playableReason(key, uid))}</small></div></div>`);
-  $('.band--me')?.insertAdjacentHTML('beforeend', `<div class="drag-zone drag-zone--cosmo drag-zone--band ${cosmo ? '' : 'is-off'}" aria-hidden="true"><strong>COSMO BASE</strong><small>${cosmo ? 'Release to set as Cosmo Base' : esc(baseReason(key, uid))}</small></div>`);
+  $('.band--me')?.insertAdjacentHTML('beforeend', `<div class="drag-zone drag-zone--cosmo drag-zone--band ${cosmo ? '' : 'is-off'}" aria-hidden="true"><strong><span>Cosmo Base ✦ Cosmo Base ✦&nbsp;</span><span>Cosmo Base ✦ Cosmo Base ✦&nbsp;</span></strong><small>${cosmo ? 'Release to set as Cosmo Base' : esc(baseReason(key, uid))}</small></div>`);
   $('.olympus')?.classList.add('is-dragging');
 }
 function hideDragZones() {
