@@ -72,10 +72,10 @@ export function payLatent(s, key, n) {
 }
 export function defeat(s, c, uid, event = 'destroyed') {
   if (!controllerOf(s, uid)) return;
-  const owner = c.objects[uid].owner;
+  const owner = c.objects[uid].owner, gear = gearOf(c, uid); // antes da derrota: gatilhos "equipped Devotee is defeated"
   destroyDevotee(s, uid, c.objects, c.attached, event);
   emit(s, 'v6_defeat', {uid, owner});
-  defeatedHooks(s, c, owner, uid);
+  defeatedHooks(s, c, owner, uid, gear);
 }
 // "Sacrifice": o controlador derrota o próprio Devotee (conta como derrotado para os gatilhos).
 export const sacrifice = (s, c, uid) => defeat(s, c, uid, 'sacrificed');

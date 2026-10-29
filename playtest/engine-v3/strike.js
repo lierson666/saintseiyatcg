@@ -20,7 +20,7 @@ export function checkStrike(state, ctx, attacker, target) {
   assertIdle(state);
   if (!onField(state, key, attacker) || card(ctx, attacker).kind !== 'Devotee') throw new RuleError('P04', 'o atacante precisa ser um Devotee seu no campo');
   // P02: entra Unprepared; Impulse deixa declarar Strike no turno em que entrou.
-  const unit = state.units[attacker], impulse = unit?.entered === state.turn && card(ctx, attacker).keywords.includes('Impulse');
+  const unit = state.units[attacker], impulse = unit?.entered === state.turn && keywordsOf(state, ctx, attacker).includes('Impulse'); // inclui Impulse dado por efeito (V6)
   if (unit?.prepared !== true && !impulse) throw new RuleError('P04', 'o atacante precisa estar Prepared');
   const legal = target.kind === 'god' ? target.player === enemy
     : target.kind === 'devotee' && onField(state, enemy, target.uid) && card(ctx, target.uid).kind === 'Devotee';
@@ -71,6 +71,7 @@ export function resolveStrike(state, ctx, strike) {
   if (!onField(state, player, attacker) || (target.kind === 'devotee' && !onField(state, enemy, target.uid))) {
     // G3-036 (autor, 28/10/2026): Strike anulado — sem dano nem retaliação; o Strike continua contado como usado.
     emit(state, 'strike_fizzled', {player, attacker, target});
+    state.effects = state.effects.filter(e => e.duration !== 'this_strike'); // escudos/bônus do Strike anulado não sobram
     return null;
   }
   const atk = atkOf(state, ctx, attacker), pierce = keywordsOf(state, ctx, attacker).includes('Pierce'); // lidos antes do dano

@@ -1,5 +1,423 @@
-// Efeitos V6 de artemis, por id de carta (contrato em ./registry.js; kit em ./kit.js).
+// Efeitos V6 de Artemis, por id de carta (contrato em ./registry.js; kit em ./kit.js).
+// Gancho próprio deste arquivo: `watchCounter(s, c, key, self, target, n, by)` — disparado por `grow` (abaixo) quando
+// um efeito de `by` põe N marcadores +1/+1 em `target`. shortcut: k.addCounter direto (outras facções) não dispara;
+// mover o disparo para o kit quando ele ganhar o evento.
+// Trample: o guia não define a keyword; aqui ela só é concedida (sem efeito no Strike).
 import * as k from './kit.js';
+import {spendBase} from '../core.js';
+import {shield} from '../effects.js';
+
+const counters = (s, uid) => s.units[uid]?.counters || 0;
+const isArtemis = (c, uid) => k.isDevotee(c, uid) && k.id(c, uid).startsWith('artemis-');
+const named = (c, uid, name) => k.card(c, uid)?.name === name;
+const bank = (s, key) => s.players[key].bases.length; // Cosmo Bank = Bases (como em k.topToBase)
+const ready = (s, key) => s.players[key].bases.filter(b => b.prepared).length;
+// {N}{C}: N Bases preparadas (como payC em effects.js). Não paga parcial.
+const payC = (s, key, n) => ready(s, key) >= n && (spendBase(s, key, n), true);
+// Devotee foi jogado da mão ("cast"), não posto no campo por efeito (putOntoField marca `from`).
+const wasCast = (s, uid) => { const e = s.events.findLast(x => x.type === 'card_played' && x.uid === uid); return !!e && !e.from; };
+
+// Marcadores +1/+1 postos por um efeito de `by`; avisa os observadores `watchCounter`.
+function grow(s, c, by, uid, n = 1) {
+  if (!s.units[uid] || n <= 0) return;
+  k.addCounter(s, uid, n);
+  k.watchers(s, c, 'watchCounter', [uid, n, by], '+1/+1 counter');
+}
+const growEach = (s, c, by, uids, n = 1) => uids.forEach(u => grow(s, c, by, u, n));
+const pickFriend = (s, c, key, ability, {optional = false, not} = {}) =>
+  k.choose(c, key, ability, k.devotees(s, c, key).filter(u => u !== not), {optional, text: 'Choose a friendly Devotee.'});
+const pickEnemy = (s, c, key, ability) => k.choose(c, key, ability, k.enemies(s, c, key), {text: 'Choose an enemy Devotee.'});
+// "Deals damage equal to its ATTACK" (não é Strike).
+const blast = (s, c, src, target, extra = 0) => { if (src && s.units[src] && target) k.damage(s, c, target, k.atkOf(s, c, src) + extra); };
+// "Fights": cada um causa ATK ao outro, ao mesmo tempo, sem ser Strike (interpretação decidida).
+function fight(s, c, a, b) {
+  if (!s.units[a] || !s.units[b]) return;
+  const atkA = k.atkOf(s, c, a), atkB = k.atkOf(s, c, b);
+  if (atkA > 0) k.damageDevotee(s, c, b, atkA, false);
+  if (atkB > 0) k.damageDevotee(s, c, a, atkB, false);
+  k.checkDefeats(s, c);
+}
+// Carta específica do deck para a Cosmo Bank, como Base Unprepared.
+function toBase(s, key, uid) {
+  const deck = s.players[key].deck;
+  if (!deck.includes(uid)) return;
+  deck.splice(deck.indexOf(uid), 1);
+  s.players[key].bases.push({uid, prepared: false});
+  k.emit(s, 'base_added', {player: key, prepared: false});
+}
+// "Look at the top N … you may reveal X and put it into your hand; the rest on the bottom".
+// shortcut: o resto vai para o fundo na ordem atual ("any order" sem pergunta).
+function lookTop(s, c, key, ability, n, filter) {
+  const deck = s.players[key].deck, look = deck.splice(0, n);
+  const pick = k.choose(c, key, ability, look.filter(filter), {optional: true, text: 'Reveal a card and put it into your hand?'});
+  if (pick) { s.players[key].hand.push(pick); k.emit(s, 'revealed', {player: key, uid: pick}); }
+  deck.push(...look.filter(u => u !== pick));
+}
+const maybeTopToBase = (s, c, key, ability) => {
+  const top = s.players[key].deck[0];
+  if (top && k.may(c, key, ability, {uid: top, text: 'Put the top card of your deck into your Cosmo Bank?'})) k.topToBase(s, key);
+};
+
+// Fábricas de gatilho (resolução sem condição no evento).
+const run = fn => (s, c, key, self, ...a) => st => fn(st, c, key, self, ...a);
+const bearer = (s, c, key, self) => { const b = c.attached[self]; return b && k.onField(s, key, b) ? b : null; };
+const vsDevotee = target => target?.kind === 'devotee';
+const buffSelf = (atk, hp, kw = []) => run((st, c, key, self) => k.buff(st, self, atk, hp, 'this_turn', kw));
+const buffBearer = (atk, hp, kw = []) => (s, c, key, self, b, target) => vsDevotee(target) && (st => k.buff(st, b, atk, hp, 'this_turn', kw));
+const growSelf = (n = 1) => run((st, c, key, self) => grow(st, c, key, self, n));
+const drawOne = run((st, c, key) => k.draw(st, key, 1));
+const growBearer = run((st, c, key, self, b) => grow(st, c, key, b, 1));
+// "Other friendly <tipo> get +A/+H" (aura).
+const lord = (test, atk, hp) => (s, c, key, self, unit) =>
+  unit !== self && k.controllerOf(s, unit) === key && k.isDevotee(c, unit) && test(c, unit) ? {atk, hp} : null;
+const gearAura = (test, bonus) => (s, c, key, self, unit) => (c.attached[self] === unit && test(s, c, key, unit) ? bonus : null);
+const perBank = (s, c, key) => { const n = Math.floor(bank(s, key) / 3); return n ? [{atk: n, hp: n}] : []; };
+const search = (st, c, key, ability, filter) => k.search(st, c, key, ability, (card, uid) => card.kind === 'Devotee' && filter(card, uid));
 
 export default {
+  // CALISTO
+  'artemis-v6-361': {
+    aura: lord(isArtemis, 1, 1),
+    watchCounter: (s, c, key, self, target, n, by) => by === key && k.controllerOf(s, target) === key && k.once(s, `${self}:lunar-command`)
+      && (st => k.draw(st, key, 1)),
+  },
+  // 362 Moonlight Protection: pendente: falta gancho "would be defeated" para todo dano (save só cobre Strike, sem escolha).
+  // LA SCOUMOUNE. Hunter's Instinct: sem efeito (Engage/disengaged removido do jogo); Guardian já vale.
+  'artemis-v6-363': {declare: (s, c, key, self, target) => vsDevotee(target) && (st => grow(st, c, key, self, 1))},
+  'artemis-v6-364': {gearKillInCombat: growBearer},
+  // DAPHNE. Interpretação: "becomes engaged" = Strike entre Daphne e um Devotee inimigo, atacando ou sendo alvo.
+  'artemis-v6-365': {
+    declare: (s, c, key, self, target) => vsDevotee(target) && (st => grow(st, c, key, self, 1)),
+    watchDeclare: (s, c, key, self, attacker, target) => target?.uid === self && k.controllerOf(s, attacker) !== key && (st => grow(st, c, key, self, 1)),
+  },
+  'artemis-v6-366': {startTurn: (s, c, key, self) => { const b = bearer(s, c, key, self); return b && !counters(s, b) && (st => grow(st, c, key, b, 1)); }},
+  // HERMIA
+  'artemis-v6-367': {
+    watchCounter: (s, c, key, self, target) => target !== self && k.controllerOf(s, target) === key && ready(s, key) >= 1 && (st => {
+      if (st.units[self] && k.may(c, key, 'LUNAR HARMONY', {uid: self, cost: '{1}{C}'}) && payC(st, key, 1)) grow(st, c, key, self, 1);
+    }),
+    mods: (s, c, key) => (k.devotees(s, c, key).some(u => named(c, u, 'DAPHNE')) ? [{atk: 2, hp: 2}] : []),
+  },
+  'artemis-v6-368': {gearDeclare: (s, c, key, self, b) => counters(s, b) > 0 && (st => k.buff(st, b, 1, 1, 'this_turn'))},
+  // SATYR
+  'artemis-v6-369': {
+    killInCombat: growSelf(2),
+    mods: (s, c, key, self) => { const n = k.gearOf(c, self).length; return n ? [{atk: n, hp: n}] : []; },
+  },
+  // Primordial Power: "gains Trample" não vem do parse do bônus. Primordial Awakening: só ao ser jogada já presa.
+  'artemis-v6-370': {
+    aura: gearAura(() => true, {keywords: ['Trample']}),
+    cast: (s, c, key, self) => bearer(s, c, key, self) && (st => { const b = bearer(st, c, key, self); if (b) grow(st, c, key, b, 2); }),
+  },
+  // CHANDRA
+  'artemis-v6-371': {
+    enter: run((st, c, key) => { const t = pickFriend(st, c, key, 'DIVINE AWAKENING'); if (t) grow(st, c, key, t, 1); }),
+    watchCounter: (s, c, key, self, target, n, by) => by === key && target !== self && k.controllerOf(s, target) === key
+      && k.onceTurn(s, `${self}:communion`) && (st => { if (k.may(c, key, 'MOONLIT COMMUNION', {uid: self})) k.gainLatent(st, key, 1); }),
+  },
+  'artemis-v6-372': {spell: {run: (st, c, key) => {
+    search(st, c, key, 'DIVINE EMERGENCE', (card, uid) => isArtemis(c, uid) && card.cost.amount <= 4);
+    growEach(st, c, key, k.chooseUpTo(c, key, 'LUNAR BLESSING', k.devotees(st, c, key), 2));
+  }}},
+  // SELENE
+  'artemis-v6-373': {
+    aura: lord(isArtemis, 1, 1),
+    startTurn: run((st, c, key) => growEach(st, c, key, k.chooseUpTo(c, key, 'ETERNAL MOONLIGHT', k.devotees(st, c, key), 2))),
+    declare: (s, c, key, self) => ready(s, key) >= 2 && (st => {
+      if (k.may(c, key, 'CELESTIAL RADIANCE', {uid: self, cost: '{2}{C}'}) && payC(st, key, 2)) k.buff(st, self, 0, 0, 'this_turn', ['Trample']);
+    }),
+  },
+  'artemis-v6-374': {spell: {run: (st, c, key) => {
+    const t = pickFriend(st, c, key, 'SILVER RADIANCE');
+    if (t) { grow(st, c, key, t, 2); k.prepare(st, t); }
+  }}},
+  // THE FIRST MOON GUARDIAN
+  'artemis-v6-375': {
+    watchDeclare: (s, c, key, self, attacker, target) => k.controllerOf(s, attacker) !== key && vsDevotee(target) && k.controllerOf(s, target.uid) === key
+      && k.onceTurn(s, `${self}:vigil`) && (st => grow(st, c, key, self, 1)),
+    aura: (s, c, key, self, unit) => (unit !== self && k.controllerOf(s, unit) === key && counters(s, unit) > 0 ? {atk: 0, hp: 1} : null),
+  },
+  'artemis-v6-376': {spell: {run: (st, c, key) => {
+    growEach(st, c, key, k.chooseUpTo(c, key, 'SACRED COVENANT', k.devotees(st, c, key).filter(u => isArtemis(c, u)), 3));
+    if (k.devotees(st, c, key).filter(u => isArtemis(c, u)).length >= 3) k.draw(st, key, 1);
+  }}},
+  // CHLORIS
+  'artemis-v6-377': {
+    watchEnter: (s, c, key, self, entered) => k.controllerOf(s, entered) === key && k.isDevotee(c, entered) && k.onceTurn(s, `${self}:blooming`)
+      && (st => grow(st, c, key, entered, 1)),
+    activate: {name: "SPRING'S RENEWAL", cost: 0,
+      check: (s, c, key) => { if (!k.devotees(s, c, key).some(u => counters(s, u))) throw new k.RuleError('alvo', 'nenhum Devotee seu com marcador +1/+1'); },
+      run: (st, c, key) => {
+        const t = k.choose(c, key, "SPRING'S RENEWAL", k.devotees(st, c, key).filter(u => counters(st, u)), {text: 'Remove a +1/+1 counter from which Devotee?'});
+        if (t) { k.addCounter(st, t, -1); k.draw(st, key, 1); }
+      }},
+  },
+  'artemis-v6-378': {
+    startTurn: (s, c, key, self) => bearer(s, c, key, self) && (st => { const b = bearer(st, c, key, self); if (b) grow(st, c, key, b, 1); }),
+    bearerDefeated: (s, c, key, self, dead) => st => {
+      const options = st.players[key].tartarus.filter(u => u !== dead && k.isDevotee(c, u) && k.costOf(c, u) <= 2);
+      const t = k.choose(c, key, "NATURE'S REBIRTH", options, {optional: true, text: 'Return a Devotee with Casting Cost 2 or less to your hand?'});
+      if (t) k.toHand(st, c, t, 'tartarus');
+    },
+  },
+  'artemis-v6-379': {
+    gearDeclare: run((st, c, key) => k.damage(st, c, pickEnemy(st, c, key, 'CELESTIAL ARROW'), 2)),
+    gearKillInCombat: (s, c, key, self, b) => (k.hasType(c, b, 'Satellite') || k.hasType(c, b, 'Lunar Guardian')) && (st => grow(st, c, key, b, 1)),
+  },
+  'artemis-v6-380': {
+    aura: gearAura(() => true, {keywords: ['Trample']}),
+    gearDeclare: buffBearer(2, 0),
+    gearKillInCombat: (s, c, key, self) => k.onceTurn(s, `${self}:aim`) && (st => { if (k.may(c, key, 'UNERRING AIM', {uid: self})) k.draw(st, key, 1); }),
+  },
+  'artemis-v6-381': {enter: run((st, c, key) => { const t = pickFriend(st, c, key, 'FOREST BLESSING', {optional: true}); if (t) grow(st, c, key, t, 1); })},
+  'artemis-v6-382': {mods: (s, c, key, self) => (k.devotees(s, c, key).some(u => u !== self && k.hasType(c, u, 'Sacred Beast')) ? [{atk: 1, hp: 0}] : [])},
+  'artemis-v6-383': {killInCombat: growSelf(1)},
+  // 384 Crushing Coils: pendente: "Engage" foi removido do jogo, sem mecânica equivalente.
+  'artemis-v6-384': {mods: (s, c, key, self) => {
+    const n = Math.min(3, k.devotees(s, c, key).filter(u => u !== self && k.hasType(c, u, 'Sacred Beast')).length);
+    return n ? [{atk: n, hp: n}] : [];
+  }},
+  'artemis-v6-385': {declare: growSelf(1), killInCombat: drawOne},
+  // 386 Lunar Offering: pendente: a engine não tem Cosmo temporário ("Generate 1 {C}", só no seu turno).
+  'artemis-v6-387': {watchCounter: (s, c, key, self, target, n, by) => by === key && target !== self && k.controllerOf(s, target) === key
+    && (st => k.buff(st, self, 1, 1, 'this_turn'))},
+  'artemis-v6-388': {enter: (s, c, key) => ready(s, key) >= 1 && (st => {
+    if (!k.enemies(st, c, key).length || !k.may(c, key, 'PRECISE HUNT', {cost: '{1}{C}'}) || !payC(st, key, 1)) return;
+    k.damage(st, c, pickEnemy(st, c, key, 'PRECISE HUNT'), 1);
+  })},
+  'artemis-v6-389': {declare: (s, c, key, self) => counters(s, self) > 0 && (st => k.buff(st, self, 1, 0, 'this_turn'))},
+  // MOON TEMPLE ACOLYTE
+  'artemis-v6-390': {
+    enter: run((st, c, key, self) => { const t = pickFriend(st, c, key, 'CELESTIAL CULTIVATION', {not: self}); if (t) grow(st, c, key, t, 1); }),
+    declare: run((st, c, key, self) => {
+      const from = k.choose(c, key, 'LUNAR GUIDANCE', k.devotees(st, c, key).filter(u => u !== self && counters(st, u)), {optional: true, text: 'Move a +1/+1 counter to Moon Temple Acolyte?'});
+      if (from && st.units[self]) { k.addCounter(st, from, -1); grow(st, c, key, self, 1); }
+    }),
+  },
+  // ANCIENT FOREST GUARDIAN. Remover marcador é custo de habilidade ativada: AÇÃO (guia §56).
+  'artemis-v6-391': {
+    activate: {name: 'ANCIENT RESILIENCE', cost: 0, tap: false,
+      check: (s, c, key, self) => { if (!counters(s, self)) throw new k.RuleError('custo', 'sem marcador +1/+1'); },
+      run: (st, c, key, self) => { k.addCounter(st, self, -1); shield(st, self, 2, {strikeOnly: false, duration: 'this_turn'}); }},
+    mods: (s, c, key, self) => (counters(s, self) ? [{keywords: ['Guardian']}] : []),
+  },
+  'artemis-v6-392': {mods: (s, c, key, self) => (counters(s, self) ? [{keywords: ['Trample']}] : [])},
+  'artemis-v6-393': {mods: (s, c, key, self) => (k.devotees(s, c, key).some(u => u !== self && k.hasType(c, u, 'Satellite')) ? [{atk: 1, hp: 0}] : [])},
+  'artemis-v6-394': {enter: buffSelf(1, 0)},
+  'artemis-v6-395': {watchCounter: (s, c, key, self, target) => target === self && (st => k.gainSoul(st, key, 1))},
+  'artemis-v6-396': {defeated: run((st, c, key) => k.gainLatent(st, key, 1))},
+  // 397 Living Roots: pendente: a engine não rastreia a origem do Cosmo gasto.
+  'artemis-v6-397': {activate: {name: 'VERDANT CHANNELING', cost: 0, run: (st, c, key) => k.gainLatent(st, key, 1)}},
+  'artemis-v6-398': {enter: run((st, c, key) => { const t = pickFriend(st, c, key, 'MOONLIT BLESSING'); if (t) grow(st, c, key, t, 1); })},
+  'artemis-v6-399': {mods: (s, c, key, self) => (k.devotees(s, c, key).some(u => u !== self && k.hasType(c, u, 'Forest Guardian')) ? [{atk: 1, hp: 1}] : [])},
+  // PRIMAL FOREST GUARDIAN
+  'artemis-v6-400': {
+    watchCounter: (s, c, key, self, target) => target !== self && k.controllerOf(s, target) === key && k.onceTurn(s, `${self}:growth`)
+      && (st => grow(st, c, key, self, 1)),
+    aura: (s, c, key, self, unit) => (unit !== self && k.controllerOf(s, unit) === key && counters(s, self) >= 3 ? {keywords: ['Trample']} : null),
+  },
+  'artemis-v6-401': {watchCounter: (s, c, key, self, target) => target === self && (st => k.buff(st, self, 1, 0, 'this_turn'))},
+  'artemis-v6-402': {enter: run((st, c, key) => lookTop(st, c, key, 'LUNAR GUIDANCE', 3, u => k.isDevotee(c, u)))},
+  'artemis-v6-403': {enter: run((st, c, key) => {
+    const deck = st.players[key].deck, top = deck[0];
+    if (top && k.may(c, key, 'FOREST FORAGING', {uid: top, text: 'Put the top card of your deck on the bottom?'})) deck.push(deck.shift());
+  })},
+  'artemis-v6-404': {
+    aura: lord((c, u) => k.hasType(c, u, 'Sacred Beast'), 1, 0),
+    watchKill: (s, c, key, self, killer) => killer !== self && k.hasType(c, killer, 'Sacred Beast') && (st => grow(st, c, key, self, 1)),
+  },
+  // ANCIENT GROVE TREANT
+  'artemis-v6-405': {
+    enter: run((st, c, key, self) => growEach(st, c, key, k.chooseUpTo(c, key, 'ANCIENT GROWTH', k.devotees(st, c, key).filter(u => u !== self), 2))),
+    mods: (s, c, key, self) => {
+      const n = Math.min(3, k.devotees(s, c, key).filter(u => u !== self && counters(s, u)).length);
+      return n ? [{atk: n, hp: n}] : [];
+    },
+  },
+  // 406 Divine Training: pendente: falta gancho "Equipment becomes attached" (jogar preso e reequipar).
+  'artemis-v6-406': {declare: (s, c, key, self, target) => vsDevotee(target) && (st => k.buff(st, self, 1, 1, 'this_turn'))},
+  // shortcut: "Spend this Cosmo only to cast a Devotee" não é aplicado (Latent sem origem na engine).
+  'artemis-v6-407': {
+    activate: {name: 'PRIMAL CHANNELING', cost: 0, run: (st, c, key) => k.gainLatent(st, key, 1)},
+    watchEnter: (s, c, key, self, entered) => k.controllerOf(s, entered) === key && k.isDevotee(c, entered) && wasCast(s, entered) && k.costOf(c, entered) >= 5
+      && k.onceTurn(s, `${self}:wisdom`) && (st => { if (k.may(c, key, "NATURE'S WISDOM", {uid: self})) k.draw(st, key, 1); }),
+  },
+  'artemis-v6-408': {enter: run((st, c, key) => k.gainSoul(st, key, 2))},
+  'artemis-v6-409': {gearDeclare: buffBearer(1, 0)},
+  'artemis-v6-410': {gearKillInCombat: (s, c, key, self) => k.onceTurn(s, `${self}:supply`) && (st => {
+    if (k.may(c, key, "HUNTER'S SUPPLY", {uid: self})) { k.draw(st, key, 1); k.discard(st, c, key, 1, "HUNTER'S SUPPLY"); }
+  })},
+  'artemis-v6-411': {gearDeclare: buffBearer(0, 0, ['Trample'])},
+  // Remover marcador do portador é custo de habilidade ativada: AÇÃO (guia §56).
+  'artemis-v6-412': {activate: {name: 'LUNAR SHELTER', cost: 0, tap: false,
+    check: (s, c, key, self) => { const b = bearer(s, c, key, self); if (!b || !counters(s, b)) throw new k.RuleError('custo', 'portador sem marcador +1/+1'); },
+    run: (st, c, key, self) => { const b = bearer(st, c, key, self); k.addCounter(st, b, -1); shield(st, b, 2, {strikeOnly: false, duration: 'this_turn'}); }}},
+  'artemis-v6-413': {gearKillInCombat: growBearer},
+  // {T} de Equipment: a engine não prepara Equipment; `once` (1 por Round) equivale a virar e renovar no seu turno.
+  // shortcut: "only to cast a Devotee" não é aplicado. Lunar Resonance: o parse do preview aplica +1/+1 sempre; a aura
+  // desconta quando a condição não vale.
+  'artemis-v6-414': {
+    activate: {name: 'VERDANT CHANNELING', cost: 0, tap: false, once: true, run: (st, c, key) => k.gainLatent(st, key, 1)},
+    aura: gearAura((s, c, key, unit) => !k.devotees(s, c, key).some(u => u !== unit && counters(s, u)), {atk: -1, hp: -1}),
+  },
+  'artemis-v6-415': {aura: gearAura((s, c, key, unit) => counters(s, unit) > 0, {keywords: ['Guardian']})},
+  'artemis-v6-416': {watchEnter: (s, c, key, self, entered) => {
+    const b = bearer(s, c, key, self);
+    return b && entered !== b && k.controllerOf(s, entered) === key && k.isDevotee(c, entered) && k.onceTurn(s, `${self}:growth`) && (st => {
+      if (bearer(st, c, key, self) === b && k.may(c, key, 'ANCIENT GROWTH', {uid: b})) grow(st, c, key, b, 1);
+    });
+  }},
+  'artemis-v6-417': {spell: {run: (st, c, key) => k.topToBase(st, key)}},
+  'artemis-v6-418': {spell: {run: (st, c, key) => {
+    const src = pickFriend(st, c, key, 'PRIMAL STRIKE');
+    blast(st, c, src, src && pickEnemy(st, c, key, 'PRIMAL STRIKE'));
+  }}},
+  'artemis-v6-419': {spell: {run: (st, c, key) => { const t = pickFriend(st, c, key, 'WILD STRENGTH'); if (t) k.buff(st, t, 3, 3, 'this_turn', ['Trample']); }}},
+  'artemis-v6-420': {spell: {run: (st, c, key) => {
+    const deck = st.players[key].deck, look = deck.slice(0, 3);
+    const pick = k.choose(c, key, 'LUNAR PROSPERITY', look, {text: 'Choose a card to put into your Cosmo Bank.'});
+    if (pick) toBase(st, key, pick);
+    const rest = look.filter(u => u !== pick);
+    rest.forEach(u => deck.splice(deck.indexOf(u), 1));
+    deck.push(...rest);
+  }}},
+  'artemis-v6-421': {spell: {run: (st, c, key) => {
+    const t = pickFriend(st, c, key, 'PRIMAL BLESSING');
+    if (!t) return;
+    grow(st, c, key, t, 1);
+    if (st.units[t] && k.atkOf(st, c, t) >= 4) maybeTopToBase(st, c, key, 'NATURAL EXPANSION');
+  }}},
+  'artemis-v6-422': {spell: {run: (st, c, key) => {
+    const a = pickFriend(st, c, key, "PREDATOR'S CHALLENGE"), b = a && pickEnemy(st, c, key, "PREDATOR'S CHALLENGE");
+    if (b) fight(st, c, a, b);
+  }}},
+  'artemis-v6-423': {spell: {run: (st, c, key) => { k.topToBase(st, key); k.topToBase(st, key); }}},
+  'artemis-v6-424': {spell: {run: (st, c, key) => {
+    const src = pickFriend(st, c, key, 'MOONLIT EXECUTION');
+    blast(st, c, src, src && pickEnemy(st, c, key, 'MOONLIT EXECUTION'), src && k.hasType(c, src, 'Satellite') ? 1 : 0);
+  }}},
+  'artemis-v6-425': {spell: {run: (st, c, key) => {
+    const t = k.choose(c, key, 'NATURAL RENEWAL', st.players[key].tartarus.filter(u => k.isDevotee(c, u)), {text: 'Return a Devotee from your Tartarus.'});
+    if (t && k.toHand(st, c, t, 'tartarus') && k.costOf(c, t) >= 4) k.gainSoul(st, key, 2);
+  }}},
+  'artemis-v6-426': {spell: {run: (st, c, key) => {
+    growEach(st, c, key, k.devotees(st, c, key), 2);
+    k.devotees(st, c, key).filter(u => k.atkOf(st, c, u) >= 5).forEach(u => k.buff(st, u, 0, 0, 'this_turn', ['Trample']));
+  }}},
+  // Domain Lunar Sanctuary. Interpretação: "as it enters" = gatilho logo depois de entrar.
+  'artemis-v6-427': {
+    watchEnter: (s, c, key, self, entered) => k.controllerOf(s, entered) === key && isArtemis(c, entered) && wasCast(s, entered) && ready(s, key) >= 1
+      && k.onceTurn(s, `${self}:communion`) && (st => {
+      if (st.units[entered] && k.may(c, key, 'LUNAR COMMUNION', {uid: entered, cost: '{1}{C}'}) && payC(st, key, 1)) grow(st, c, key, entered, 1);
+    }),
+    aura: (s, c, key, self, unit) => (k.controllerOf(s, unit) === key && k.hasType(c, unit, 'Satellite') ? {atk: 0, hp: 1} : null),
+  },
+  'artemis-v6-428': {watchEnter: (s, c, key, self, entered) => k.controllerOf(s, entered) === key && k.isDevotee(c, entered) && k.costOf(c, entered) >= 4
+    && k.onceTurn(s, `${self}:expansion`) && (st => maybeTopToBase(st, c, key, 'VERDANT EXPANSION'))},
+  'artemis-v6-429': {
+    watchCounter: (s, c, key, self, target, n, by) => by === key && k.controllerOf(s, target) === key && k.onceTurn(s, `${self}:blessing`)
+      && (st => k.gainSoul(st, key, 1)),
+    aura: (s, c, key, self, unit) => (k.controllerOf(s, unit) === key && counters(s, unit) > 0 ? {atk: 0, hp: 1} : null),
+  },
+  'artemis-v6-430': {
+    watchDeclare: (s, c, key, self, attacker, target) => k.controllerOf(s, attacker) === key && vsDevotee(target) && k.atkOf(s, c, attacker) >= 4
+      && (st => k.buff(st, attacker, 1, 1, 'this_turn')),
+    watchKill: (s, c, key, self) => k.onceTurn(s, `${self}:reward`) && (st => { if (k.may(c, key, "PREDATOR'S REWARD")) k.draw(st, key, 1); }),
+  },
+  'artemis-v6-431': {
+    aura: lord((c, u) => k.hasType(c, u, 'Satellite'), 1, 1),
+    enter: run((st, c, key) => {
+      const src = k.choose(c, key, 'MOONLIT AMBUSH', k.devotees(st, c, key).filter(u => k.hasType(c, u, 'Satellite')), {text: 'Choose a friendly Satellite.'});
+      blast(st, c, src, src && pickEnemy(st, c, key, 'MOONLIT AMBUSH'));
+    }),
+  },
+  'artemis-v6-432': {gearKillInCombat: run((st, c, key, self, b) =>
+    growEach(st, c, key, k.chooseUpTo(c, key, 'MOONLIGHT SUPREMACY', k.devotees(st, c, key).filter(u => u !== b), 2)))},
+  'artemis-v6-433': {
+    enter: run((st, c, key, self) => blast(st, c, self, pickEnemy(st, c, key, 'PRIMAL ARRIVAL'))),
+    mods: perBank,
+  },
+  // Ancient Protection ("gains Guardian") não vem do parse do bônus.
+  'artemis-v6-434': {
+    aura: gearAura(() => true, {keywords: ['Guardian']}),
+    startTurn: (s, c, key, self) => bearer(s, c, key, self) && bank(s, key) >= 6 && (st => { const b = bearer(st, c, key, self); if (b) grow(st, c, key, b, 1); }),
+  },
+  'artemis-v6-435': {
+    enter: run((st, c, key) => k.damage(st, c, pickEnemy(st, c, key, 'PRECISE EXECUTION'), 3)),
+    watchDeclare: (s, c, key, self, attacker, target) => k.controllerOf(s, attacker) === key && k.hasType(c, attacker, 'Satellite') && vsDevotee(target)
+      && (st => k.buff(st, attacker, 1, 0, 'this_turn')),
+    killInCombat: drawOne,
+  },
+  'artemis-v6-436': {
+    gearDeclare: buffBearer(2, 0),
+    gearKillInCombat: (s, c, key, self) => k.onceTurn(s, `${self}:accuracy`) && (st => k.draw(st, key, 1)),
+  },
+  'artemis-v6-437': {
+    enter: run((st, c, key) => k.topToBase(st, key)),
+    mods: (s, c, key) => (bank(s, key) >= 6 ? [{atk: 2, hp: 2}] : []),
+  },
+  // 438 Lunar Resistance: pendente: falta gancho de prevenção obrigatória para todo dano (preventDevotee é fixo por número).
+  'artemis-v6-438': {watchCounter: (s, c, key, self, target, n, by) => target === self && by === key && k.onceTurn(s, `${self}:blessing`)
+    && (st => k.gainSoul(st, key, 2))},
+  'artemis-v6-439': {
+    declare: (s, c, key, self, target) => vsDevotee(target) && (st => k.buff(st, self, 2, 0, 'this_turn')),
+    killInCombat: run((st, c, key) => k.topToBase(st, key)),
+  },
+  'artemis-v6-440': {
+    mods: perBank,
+    enter: run((st, c, key, self) => blast(st, c, self, pickEnemy(st, c, key, 'LUNAR DEVASTATION'))),
+    killInCombat: run((st, c, key, self) => growEach(st, c, key, k.devotees(st, c, key).filter(u => u !== self))),
+  },
+  'artemis-v6-441': {spell: {run: (st, c, key) => {
+    lookTop(st, c, key, 'DIVINE RETURN', 4, u => isArtemis(c, u));
+    const t = pickFriend(st, c, key, 'LUNAR BLESSING');
+    if (t) grow(st, c, key, t, 1);
+  }}},
+  'artemis-v6-442': {spell: {run: (st, c, key) => {
+    search(st, c, key, 'SACRED GATHERING', card => /Lunar Guardian/.test(card.type));
+    const mine = k.devotees(st, c, key).filter(u => isArtemis(c, u));
+    if (mine.length >= 3) growEach(st, c, key, mine);
+  }}},
+  'artemis-v6-443': {spell: {run: (st, c, key) => {
+    const a = pickFriend(st, c, key, "HUNTER'S CHALLENGE"), b = a && pickEnemy(st, c, key, "HUNTER'S CHALLENGE");
+    if (!b) return;
+    fight(st, c, a, b);
+    if (!k.controllerOf(st, b)) k.draw(st, key, 1);
+  }}},
+  // 444 Nature's Army: pendente: a engine não tem tokens.
+  'artemis-v6-444': {spell: {run: (st, c, key) => { k.topToBase(st, key); k.topToBase(st, key); }}},
+  'artemis-v6-445': {spell: {run: (st, c, key) => {
+    const t = pickFriend(st, c, key, 'DIVINE DEFIANCE');
+    if (!t) return;
+    k.buff(st, t, 3, 3, 'this_turn');
+    shield(st, t, Infinity, {strikeOnly: false, duration: 'this_turn'});
+  }}},
+  'artemis-v6-446': {spell: {run: (st, c, key) => {
+    search(st, c, key, 'DIVINE TRANSFORMATION', (card, uid) => isArtemis(c, uid) && card.cost.amount <= 5);
+    const t = pickFriend(st, c, key, "MOON GODDESS' GIFT");
+    if (t) grow(st, c, key, t, 2);
+  }}},
+  'artemis-v6-447': {spell: {run: (st, c, key) => {
+    const t = pickFriend(st, c, key, 'SACRED SACRIFICE', {optional: true});
+    if (!t) return;
+    const guardian = k.hasType(c, t, 'Lunar Guardian');
+    k.defeat(st, c, t);
+    k.draw(st, key, 2);
+    k.topToBase(st, key);
+    if (guardian) growEach(st, c, key, k.devotees(st, c, key));
+  }}},
+  // Alvos e ATK lidos antes do dano (simultâneo); derrotas checadas no fim.
+  'artemis-v6-448': {spell: {run: (st, c, key) => {
+    const src = pickFriend(st, c, key, 'NATURAL SELECTION');
+    const atk = src ? k.atkOf(st, c, src) : 0;
+    if (atk <= 0) return;
+    for (const u of k.enemies(st, c, key).filter(e => k.atkOf(st, c, e) < atk)) k.damageDevotee(st, c, u, atk, false);
+    k.checkDefeats(st, c);
+  }}},
+  'artemis-v6-449': {spell: {run: (st, c, key) => k.devotees(st, c, key).forEach(u => k.buff(st, u, 3, 3, 'this_turn', ['Pierce']))}},
+  'artemis-v6-450': {spell: {run: (st, c, key) => {
+    for (let i = 0; i < 3; i++) k.topToBase(st, key);
+    growEach(st, c, key, k.devotees(st, c, key), 2);
+    k.draw(st, key, Math.min(3, k.devotees(st, c, key).filter(u => k.atkOf(st, c, u) >= 6).length));
+  }}},
 };

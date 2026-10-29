@@ -77,6 +77,7 @@ export function createAI(h) {
   function answer(req) {
     if (req.kind === 'optional') return true;
     // Alvo de carta V6: God inimigo primeiro; senão o Devotee inimigo mais caro; senão o próprio mais caro.
+    if (req.choose === 'mode') return req.options[0]; // modo escrito: o primeiro
     if (req.choose === 'target') {
       const god = req.options.find(o => String(o).startsWith('god:') && o !== `god:${req.player}`);
       if (god) return god;

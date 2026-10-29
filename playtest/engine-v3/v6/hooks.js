@@ -35,7 +35,7 @@ export function v6Defeated(state, ctx, key, uid, gear = []) {
     ...collect(state, ctx, state.order, 'watchDefeat', [uid, owner], 'a Devotee is defeated'),
   ]);
 }
-setDefeatedHooks((state, ctx, owner, uid) => v6Defeated(state, ctx, owner, uid));
+setDefeatedHooks((state, ctx, owner, uid, gear) => v6Defeated(state, ctx, owner, uid, gear));
 
 // Strike declarado: gatilhos entram na mesma janela do Strike (declareStrike recebe a lista).
 export function v6Declare(state, ctx, key, attacker, target) {

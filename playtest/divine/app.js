@@ -1297,7 +1297,7 @@ function decisionText(req) {
 }
 
 // Opção de decisão: uid de carta ou God ('god:A', alvo de dano das cartas V6).
-const optName = uid => (String(uid).startsWith('god:') ? `${cards.get(S().gods[uid.slice(4)]).name} (Player ${uid.slice(4)})` : info(uid).name);
+const optName = uid => (String(uid).startsWith('god:') ? `${cards.get(S().gods[uid.slice(4)]).name} (Player ${uid.slice(4)})` : pending?.pending.choose === 'mode' ? String(uid) : info(uid).name);
 function decisionModal() {
   const req = pending.pending, t = decisionText(req);
   if (pending.peek) return `<button class="decision-pill" data-dec="peek" data-focus="peek">Back to decision · ${esc(t.title)} <kbd>Esc</kbd></button>`;
@@ -1307,7 +1307,7 @@ function decisionModal() {
     body = `<div class="decision__actions"><button class="primary-action" data-dec="yes" data-focus="yes">${esc(t.yes)}</button><button class="ghost" data-dec="no" data-focus="no">${esc(t.no)}</button></div>`;
   } else {
     const picked = pending.picked;
-    const opts = req.options.map((uid, i) => `<button class="decision__opt ${picked.includes(uid) ? 'picked' : ''}" data-dec="opt" data-opt="${esc(uid)}" data-focus="opt:${esc(uid)}" aria-pressed="${picked.includes(uid)}" aria-label="${esc(optName(uid))}${i < 9 ? `, key ${i + 1}` : ''}">${String(uid).startsWith('god:') ? `<span class="dcard decision__god">${esc(optName(uid))}</span>` : cardFace(uid).replace('tabindex="0"', 'tabindex="-1"')}${i < 9 ? `<kbd>${i + 1}</kbd>` : ''}</button>`).join('');
+    const opts = req.options.map((uid, i) => `<button class="decision__opt ${picked.includes(uid) ? 'picked' : ''}" data-dec="opt" data-opt="${esc(uid)}" data-focus="opt:${esc(uid)}" aria-pressed="${picked.includes(uid)}" aria-label="${esc(optName(uid))}${i < 9 ? `, key ${i + 1}` : ''}">${String(uid).startsWith('god:') || req.choose === 'mode' ? `<span class="dcard decision__god">${esc(optName(uid))}</span>` : cardFace(uid).replace('tabindex="0"', 'tabindex="-1"')}${i < 9 ? `<kbd>${i + 1}</kbd>` : ''}</button>`).join('');
     body = `<div class="decision__opts" role="group" aria-label="Options">${opts}</div>
       <div class="decision__actions"><button class="primary-action" data-dec="confirm" data-focus="confirm" ${picked.length === req.count ? '' : 'disabled'}>Confirm · ${picked.length}/${req.count}</button></div>`;
   }
