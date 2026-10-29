@@ -348,3 +348,22 @@ body { font: 300 15px/1.45 var(--kv-sans); }
 .lb-friend__menu button:hover { background: #f5f1e614; }
 .lb-social__blocked summary { cursor: pointer; margin-top: 12px; font-size: 10px; }
 @media (max-width: 1200px) { .lb-top__tag { display: none; } }
+
+/* Chat entre amigos (KV) */
+.lb-friend { position: relative; }
+.lb-friend__open { position: absolute; inset: 0 44px 0 0; border: 0; background: none; border-radius: 14px; }
+.lb-friend__more, .lb-friend__acts, .lb-friend .kv-ghost { position: relative; z-index: 1; }
+.lb-friend__unread { min-width: 20px; padding: 2px 7px; border-radius: 999px; background: var(--kv-ember); color: #120d04; font: 600 12px var(--kv-sans); text-align: center; }
+.lb-chat__head { gap: 6px; }
+.lb-chat__head .lb-friend { flex: 1; padding: 0 6px; }
+.lb-chat__report { border: 0; background: none; color: var(--kv-dim); font: 400 12px var(--kv-sans); text-decoration: underline; }
+.lb-chat__report:hover { color: var(--kv-error); }
+.lb-chat__log { flex: 1; min-height: 0; overflow: auto; margin: 0; padding: 8px 2px; list-style: none; display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--kv-line); }
+.lb-msg { max-width: 82%; display: grid; gap: 2px; align-self: flex-start; }
+.lb-msg p { margin: 0; padding: 9px 14px; border: 1px solid var(--kv-line); border-radius: 18px 18px 18px 6px; background: #f5f1e60d; overflow-wrap: anywhere; line-height: 1.4; }
+.lb-msg time { padding: 0 8px; font-size: 11px; color: var(--kv-dim); }
+.lb-msg.is-mine { align-self: flex-end; text-align: right; }
+.lb-msg.is-mine p { border-color: #e6c36a55; border-radius: 18px 18px 6px 18px; background: #e6c36a1a; text-align: left; }
+.lb-chat__seen { margin: -4px 4px 0; text-align: right; font-size: 11px; color: var(--kv-gold); }
+.lb-chat__form { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+.lb-chat__form .kv-ghost { min-height: 50px; }

@@ -25,6 +25,11 @@ PHONE_RE = re.compile(r'^\+?[0-9 ()-]{7,20}$')
 COUNTRY_RE = re.compile(r'^[A-Z]{2}$')
 ONLINE_WINDOW = 45  # segundos sem batimento para virar offline (o navegador bate a cada 20 s)
 NO_PLAYER = 'No player with this friend code.'
+# Chat (etapa 3): só entre amigos; 500 caracteres; 20 mensagens por minuto; histórico de 90 dias.
+MSG_MAX, MSG_PER_MIN, MSG_KEEP_DAYS, MSG_PAGE = 500, 20, 90, 50
+# Versão da página de login no link de redirecionamento: muda a URL e o navegador não reaproveita a página velha do cache.
+LOGIN_VERSION = '3'
+OLD_FORM = 'Please reload this page to see the new sign-up form.'
 
 SCHEMA = """
 create table if not exists users (id integer primary key, email text unique not null, display_name text not null,
@@ -39,6 +44,11 @@ create table if not exists friend_requests (id integer primary key, from_id inte
   created_at integer not null, unique (from_id, to_id));
 create table if not exists friendships (user_a integer not null, user_b integer not null, created_at integer not null,
   primary key (user_a, user_b), check (user_a < user_b));
+create table if not exists messages (id integer primary key, from_id integer not null, to_id integer not null,
+  body text not null, created_at integer not null, seen_at integer);
+create index if not exists messages_pair on messages(from_id, to_id, id);
+create table if not exists reports (id integer primary key, reporter_id integer not null, reported_id integer not null,
+  created_at integer not null, excerpt text not null);
 create table if not exists blocks (user_id integer not null, blocked_id integer not null, created_at integer not null,
   primary key (user_id, blocked_id));
 """
@@ -232,6 +242,12 @@ class Handler(BaseHTTPRequestHandler):
                 return self.remove_friend(m[2]) if m[1] == 'friends' else self.unblock(m[2])
             if method == 'POST' and path == '/api/blocks':
                 return self.block()
+            m = re.fullmatch(r'/api/chat/([A-Za-z0-9_]{3,20})(/report)?', path)
+            if m:
+                if method == 'GET' and not m[2]:
+                    return self.chat_read(m[1])
+                if method == 'POST':
+                    return self.chat_report(m[1]) if m[2] else self.chat_send(m[1])
             if path == '/api/decks' and method == 'GET':
                 return self.list_decks()
             m = re.fullmatch(r'/api/decks/([^/]+)(/restore)?', path)
@@ -260,7 +276,7 @@ class Handler(BaseHTTPRequestHandler):
             return
         target = self.headers.get('X-Forwarded-Uri') or '/playtest/'
         self.send_response(302)
-        self.send_header('Location', '/login/?next=' + quote(target, safe='/'))
+        self.send_header('Location', f'/login/?v={LOGIN_VERSION}&next=' + quote(target, safe='/'))
         self.send_header('Cache-Control', 'no-store')
         self.end_headers()
 
@@ -269,6 +285,8 @@ class Handler(BaseHTTPRequestHandler):
         email = str(body.get('email', '')).strip().lower()
         username = str(body.get('username', '')).strip()
         password = str(body.get('password', ''))
+        if 'username' not in body:  # formulário antigo em cache (sem usuário e país)
+            raise ApiError(400, OLD_FORM)
         if not EMAIL_RE.match(email):
             raise ApiError(400, 'Enter a valid email.')
         fields = clean_profile(body)
@@ -340,6 +358,7 @@ class Handler(BaseHTTPRequestHandler):
             db.execute('delete from friend_requests where from_id = ? or to_id = ?', (uid, uid))
             db.execute('delete from friendships where user_a = ? or user_b = ?', (uid, uid))
             db.execute('delete from blocks where user_id = ? or blocked_id = ?', (uid, uid))
+            db.execute('delete from messages where from_id = ? or to_id = ?', (uid, uid))
             db.execute('delete from users where id = ?', (user['id'],))
         self.send_json(200, {'ok': True}, self.session_cookie('', 0))
 
@@ -361,10 +380,11 @@ class Handler(BaseHTTPRequestHandler):
             incoming = db.execute('select r.id as request_id, u.* from friend_requests r join users u on u.id = r.from_id where r.to_id = ?', (me,)).fetchall()
             outgoing = db.execute('select r.id as request_id, u.* from friend_requests r join users u on u.id = r.to_id where r.from_id = ?', (me,)).fetchall()
             blocked = db.execute('select u.* from blocks b join users u on u.id = b.blocked_id where b.user_id = ?', (me,)).fetchall()
+            unread = dict(db.execute('select from_id, count(*) from messages where to_id = ? and seen_at is null group by from_id', (me,)).fetchall())
         status = lambda u: (u['status'] or 'online') if (u['last_seen'] or 0) > now - ONLINE_WINDOW else 'offline'
         order = {'online': 0, 'match': 1, 'offline': 2}
         self.send_json(200, {
-            'friends': sorted(({**card(u), 'status': status(u)} for u in friends), key=lambda f: (order[f['status']], f['username'].lower())),
+            'friends': sorted(({**card(u), 'status': status(u), 'unread': unread.get(u['id'], 0)} for u in friends), key=lambda f: (order[f['status']], f['username'].lower())),
             'incoming': [{**card(u), 'id': u['request_id']} for u in incoming],
             'outgoing': [{**card(u), 'id': u['request_id']} for u in outgoing],
             'blocked': [card(u) for u in blocked]})
@@ -438,6 +458,54 @@ class Handler(BaseHTTPRequestHandler):
         with lock:
             db.execute('delete from blocks where user_id = ? and blocked_id = ?', (me, self.by_username(username)['id']))
         self.send_json(200, {'ok': True})
+
+    # ---------- chat (etapa 3) ----------
+    def friend_by_username(self, me, username):  # o outro precisa ser amigo (e não bloqueado)
+        other = self.by_username(username)
+        a, b = sorted((me, other['id']))
+        if not db.execute('select 1 from friendships where user_a = ? and user_b = ?', (a, b)).fetchone():
+            raise ApiError(403, 'You can only chat with friends.')
+        return other
+
+    def chat_read(self, username):
+        me = self.require_user()['id']
+        after = (parse_qs(urlparse(self.path).query).get('after') or ['0'])[0]
+        after = int(after) if after.isdigit() else 0
+        with lock:
+            other = self.friend_by_username(me, username)
+            rows = db.execute('select * from (select * from messages where ((from_id = ? and to_id = ?) or (from_id = ? and to_id = ?)) and id > ? '
+                              'order by id desc limit ?) order by id', (me, other['id'], other['id'], me, after, MSG_PAGE)).fetchall()
+            db.execute('update messages set seen_at = ? where from_id = ? and to_id = ? and seen_at is null', (int(time.time()), other['id'], me))
+            # "Seen" da minha última mensagem: o outro já leu?
+            last_seen = db.execute('select max(id) from messages where from_id = ? and to_id = ? and seen_at is not null', (me, other['id'])).fetchone()[0]
+        self.send_json(200, {'messages': [{'id': r['id'], 'mine': r['from_id'] == me, 'body': r['body'], 'at': r['created_at']} for r in rows],
+                             'seen_up_to': last_seen or 0})
+
+    def chat_send(self, username):
+        me = self.require_user()['id']
+        body = ' '.join(str(self.read_json().get('body', '')).split(' ')).strip()
+        if not body:
+            raise ApiError(400, 'Write a message.')
+        if len(body) > MSG_MAX:
+            raise ApiError(400, f'Messages can have up to {MSG_MAX} characters.')
+        now = int(time.time())
+        with lock:
+            other = self.friend_by_username(me, username)
+            if db.execute('select count(*) from messages where from_id = ? and created_at > ?', (me, now - 60)).fetchone()[0] >= MSG_PER_MIN:
+                raise ApiError(429, 'You are sending messages too fast. Wait a moment.')
+            cur = db.execute('insert into messages (from_id, to_id, body, created_at) values (?, ?, ?, ?)', (me, other['id'], body, now))
+            db.execute('delete from messages where created_at < ?', (now - MSG_KEEP_DAYS * 86400,))
+        self.send_json(201, {'id': cur.lastrowid, 'mine': True, 'body': body, 'at': now})
+
+    def chat_report(self, username):  # guarda as últimas 20 mensagens da conversa para o autor revisar
+        me = self.require_user()['id']
+        with lock:
+            other = self.by_username(username)
+            rows = db.execute('select from_id, body, created_at from messages where (from_id = ? and to_id = ?) or (from_id = ? and to_id = ?) '
+                              'order by id desc limit 20', (me, other['id'], other['id'], me)).fetchall()
+            db.execute('insert into reports (reporter_id, reported_id, created_at, excerpt) values (?, ?, ?, ?)',
+                       (me, other['id'], int(time.time()), json.dumps([dict(r) for r in rows])))
+        self.send_json(201, {'ok': True})
 
     def login(self):
         body = self.read_json()

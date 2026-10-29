@@ -2,7 +2,7 @@
 import json, os, sys, tempfile, threading, unittest, urllib.request
 from urllib.error import HTTPError
 
-os.environ['SANCTUARY_INVITES'] = 'Saint@Example.com,a@example.com,b@example.com,c@example.com'
+os.environ['SANCTUARY_INVITES'] = 'Saint@Example.com,a@example.com,b@example.com,c@example.com,d@example.com,e@example.com'
 os.environ['SANCTUARY_INSECURE_COOKIE'] = '1'
 sys.path.insert(0, os.path.dirname(__file__))
 import server  # noqa: E402
@@ -54,6 +54,8 @@ class Api(unittest.TestCase):
         self.assertEqual(st, 400)
         st, _, _, _ = self.call('POST', '/api/auth/register', {'email': 'saint@example.com'}, origin='https://evil.test')
         self.assertEqual(st, 403)  # origem errada
+        st, body, _, _ = self.call('POST', '/api/auth/register', {'email': 'saint@example.com', 'name': 'Seiya', 'password': 'pegasus-ryu-sei'})
+        self.assertEqual((st, body['error']), (400, server.OLD_FORM))
         full = {'email': 'SAINT@example.com', 'name': 'Seiya Kido', 'username': 'Pegasus_Seiya', 'country': 'BR', 'password': 'pegasus-ryu-sei', 'accept_terms': True}
         self.assertEqual(self.call('POST', '/api/auth/register', {**full, 'accept_terms': False})[0], 400)
         self.assertEqual(self.call('POST', '/api/auth/register', {**full, 'username': 'ab'})[0], 400)
@@ -73,7 +75,7 @@ class Api(unittest.TestCase):
 
         self.assertEqual(self.call('GET', '/api/auth/check', cookie=cookie)[0], 204)
         st, _, _, h = self.call('GET', '/api/auth/check', headers={'X-Forwarded-Uri': '/playtest/?x=1'})
-        self.assertEqual((st, h['Location']), (302, '/login/?next=/playtest/%3Fx%3D1'))
+        self.assertEqual((st, h['Location']), (302, '/login/?v=3&next=/playtest/%3Fx%3D1'))
 
         self.assertEqual(self.call('GET', '/api/me', cookie=cookie)[1]['email'], 'saint@example.com')
         st, body, _, _ = self.call('PUT', '/api/decks/deck-1', {'data': {'nome': 'A'}, 'revision': 0}, cookie=cookie)
@@ -134,6 +136,30 @@ class Api(unittest.TestCase):
         self.assertEqual(self.call('DELETE', '/api/blocks/Ikki', cookie=a)[0], 200)
         self.assertEqual(self.call('DELETE', '/api/friends/Hyoga', cookie=a)[0], 200)
         self.assertEqual(self.call('GET', '/api/friends', cookie=b)[1]['friends'], [])
+
+
+    def test_chat(self):
+        code_d, d = self.new_player('d', 'Shun')
+        code_e, e = self.new_player('e', 'June')
+        self.assertEqual(self.call('POST', '/api/chat/June', {'body': 'hi'}, cookie=d)[0], 403)  # ainda não são amigos
+        self.call('POST', '/api/friends/requests', {'code': code_e}, cookie=d)
+        self.call('POST', '/api/friends/requests', {'code': code_d}, cookie=e)  # cruzado: amigos
+        self.assertEqual(self.call('POST', '/api/chat/June', {'body': '   '}, cookie=d)[0], 400)
+        self.assertEqual(self.call('POST', '/api/chat/June', {'body': 'x' * 501}, cookie=d)[0], 400)
+        st, sent, _, _ = self.call('POST', '/api/chat/June', {'body': 'Nebula chain!'}, cookie=d)
+        self.assertEqual((st, sent['body']), (201, 'Nebula chain!'))
+        self.assertEqual(self.call('GET', '/api/friends', cookie=e)[1]['friends'][0]['unread'], 1)
+        got = self.call('GET', '/api/chat/shun', cookie=e)[1]
+        self.assertEqual([(m['body'], m['mine']) for m in got['messages']], [('Nebula chain!', False)])
+        self.assertEqual(self.call('GET', '/api/friends', cookie=e)[1]['friends'][0]['unread'], 0)
+        self.assertEqual(self.call('GET', '/api/chat/June', cookie=d)[1]['seen_up_to'], sent['id'])
+        self.assertEqual(self.call('GET', f"/api/chat/June?after={sent['id']}", cookie=d)[1]['messages'], [])
+        for i in range(server.MSG_PER_MIN - 1):
+            self.call('POST', '/api/chat/June', {'body': f'm{i}'}, cookie=d)
+        self.assertEqual(self.call('POST', '/api/chat/June', {'body': 'too many'}, cookie=d)[0], 429)
+        self.assertEqual(self.call('POST', '/api/chat/Shun/report', cookie=e)[0], 201)
+        self.call('POST', '/api/blocks', {'username': 'Shun'}, cookie=e)
+        self.assertEqual(self.call('POST', '/api/chat/June', {'body': 'hello?'}, cookie=d)[0], 403)
 
 
 if __name__ == '__main__':

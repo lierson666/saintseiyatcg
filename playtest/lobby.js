@@ -10,7 +10,7 @@ import {loadMyDecks, saveMyDecks, findDeck} from './deck-store.js';
 import {mountKV} from '../shared/kv-sky.js?v=20261029-2';
 import {countryOptions, countryName} from '../shared/countries.js?v=20261029-1';
 import {startPresence} from '../shared/presence.js?v=20261029-1';
-import {mountSocial} from './social.js?v=20261029-2';
+import {mountSocial} from './social.js?v=20261029-3';
 
 const root = document.getElementById('lobby');
 const ART = '../card-forge/art-web/';
@@ -164,7 +164,7 @@ const api = (path, method = 'GET', body) => fetch(path, {method, credentials: 's
   .then(async r => { const data = await r.json().catch(() => ({})); if (!r.ok) throw Error(data.error || 'Something went wrong. Please try again.'); return data; });
 function profileScreen() {
   const u = ui.user, msg = k => ui.profileMsg?.[k] ? `<p class="kv-status ${ui.profileMsg[k].kind}" role="status">${esc(ui.profileMsg[k].text)}</p>` : '<p class="kv-status" role="status"></p>';
-  if (!u) return `<section class="lb-page"><header class="lb-page__head"><h1>Profile</h1><p>Sign in to see your profile.</p></header><a class="kv-button lb-linkbtn" href="/login/?next=/playtest/">Sign in</a></section>`;
+  if (!u) return `<section class="lb-page"><header class="lb-page__head"><h1>Profile</h1><p>Sign in to see your profile.</p></header><a class="kv-button lb-linkbtn" href="/login/?v=3&next=/playtest/">Sign in</a></section>`;
   if (!u.complete) return `<section class="lb-page lb-profile"><header class="lb-page__head"><h1>Complete your profile</h1><p>Choose the username your friends will see.</p></header>
     <form class="kv-card lb-form" data-form="complete">
       <label class="kv-field"><span class="kv-stamp">Username</span><input class="kv-input" name="username" required minlength="3" maxlength="20" pattern="[A-Za-z0-9_]{3,20}" spellcheck="false"></label>
@@ -392,7 +392,7 @@ const actions = {
   slide: t => { ui.slide = (ui.slide || 0) + Number(t.dataset.step); },
   signout: async () => {
     await fetch('/api/auth/logout', {method: 'POST', credentials: 'same-origin'}).catch(() => {});
-    location.replace('/login/');
+    location.replace('/login/?v=3');
   },
   mode: t => { ui.mode = t.dataset.mode; remember(); },
   'pick-a': t => { ui.deckA = t.dataset.deck; remember(); },
