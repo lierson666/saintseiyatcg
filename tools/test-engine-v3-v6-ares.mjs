@@ -82,7 +82,7 @@ test('Warplate: Razor Winds no Strike; Resonance e Enyo dão Pierce só ao porta
   assert.ok(keywordsOf(s, ctx, gal).includes('Pierce'));
 });
 
-test('activate: Suicide Orders derrota outro Berserker e dá +3/Pierce a Lior; uma vez por turno', () => {
+test('activate: Suicide Orders derrota outro Berserker e dá +3/Pierce a Lior; uma vez por rodada', () => {
   const {s, ctx, give} = setup();
   const lior = give('A', '275'), dead = give('A', '293'); give('A', '291');
   const soul = s.players.B.soul, atk = atkOf(s, ctx, lior);

@@ -21,7 +21,7 @@ const friends = (s, c, key, pred = () => true) => k.devotees(s, c, key).filter(u
 const hit = (st, c, t, n) => { if (!st.victory && t && n > 0) k.damage(st, c, t, n); };
 const draw = (st, key, n) => { if (!st.victory) k.draw(st, key, n); };
 const loot = (st, c, key, ability) => { draw(st, key, 1); if (!st.victory) k.discard(st, c, key, 1, ability); };
-const buff = (st, uid, atk, keywords = []) => { if (alive(st, uid)) k.buff(st, uid, atk, 0, 'this_turn', keywords); };
+const buff = (st, uid, atk, keywords = []) => { if (alive(st, uid)) k.buff(st, uid, atk, 0, 'this_round', keywords); };
 
 // Histórico do turno (state.events): dano recebido, Strikes declarados, Devotees derrotados.
 const thisTurn = (s, ...types) => s.events.filter(e => e.turn === s.turn && types.includes(e.type));
@@ -143,7 +143,7 @@ export default {
     activate: {
       name: 'SUICIDE ORDERS', cost: 0, tap: false,
       check: (s, c, key, self) => {
-        if (s.roundUses.has(`${self}:suicide:turn${s.turn}`)) throw new k.RuleError('once', 'Suicide Orders já foi usada neste turno');
+        if (s.roundUses.has(`${self}:suicide`)) throw new k.RuleError('once', 'Suicide Orders já foi usada nesta rodada');
         if (!friends(s, c, key, u => u !== self).length) throw new k.RuleError('alvo', 'sem outro Berserker amigo');
       },
       run: (s, c, key, self) => {

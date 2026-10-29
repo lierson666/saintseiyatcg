@@ -179,3 +179,25 @@ test('Domain Lunar Sanctuary: Devotee Artemis jogado da mão pode receber marcad
   playDevotee(s, ctx, 'A', hand('A', 'artemis-v6-393'), {}); if (s.window) passAll(s);
   assert.equal(p.battlefield.filter(u => s.units[u]?.counters).length, 1); // uma vez por turno
 });
+
+test('tokens (guia §63): The Forest Invades Sanctuary cria 2 Forest Guardian 3/3 Unprepared; token derrotado some', async () => {
+  const {checkInvariants} = await import('../playtest/engine-v3/core.js');
+  const {s, ctx, p, hand, id} = setup();
+  const spell = hand('A', id(444)), bases0 = p.bases.length;
+  playSpell(s, ctx, 'A', spell, {});
+  const tokens = p.battlefield.filter(u => ctx.objects[u]?.token);
+  assert.equal(tokens.length, 2);
+  assert.equal(p.bases.length - bases0 + 4 >= 2, true); // 2 Bases novas (o custo gastou Bases preparadas, não removeu)
+  assert.deepEqual([atkOf(s, ctx, tokens[0]), hpOf(s, ctx, tokens[0]), s.units[tokens[0]].prepared], [3, 3, false]);
+  s.units[tokens[0]].damage = 3; checkDefeats(s, ctx);
+  assert.ok(!p.battlefield.includes(tokens[0]) && !p.tartarus.includes(tokens[0]));
+  checkInvariants(s, ctx.objects);
+});
+
+test('Moonlit Initiate (386): {T} gera 1 Latent comum', () => {
+  const {s, ctx, p, field, id} = setup();
+  const init = field('A', id(386)), latent0 = p.latent;
+  activate(s, ctx, 'A', init, {});
+  assert.equal(p.latent, latent0 + 1);
+  assert.equal(s.units[init].prepared, false);
+});

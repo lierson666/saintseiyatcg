@@ -212,7 +212,7 @@ export function destroyDevotee(state, uid, objects, attached, event = 'destroyed
   for (const loose of gear.filter(e => !objects[e].armor)) delete attached[loose];
   for (const moved of [uid, ...gear.filter(e => objects[e].armor)]) {
     for (const p of Object.values(state.players)) p.battlefield = p.battlefield.filter(x => x !== moved);
-    state.players[objects[moved].owner].tartarus.push(moved);
+    if (!objects[moved].token) state.players[objects[moved].owner].tartarus.push(moved); // token some (guia §63)
     delete attached[moved];
     delete state.units[moved];
     state.effects = state.effects.filter(e => e.target !== moved); // objeto novo se voltar
@@ -228,8 +228,9 @@ export function checkInvariants(state, objects) {
     for (const base of p.bases) seen.set(base.uid, (seen.get(base.uid) || 0) + 1);
     if (p.latent < 0 || p.latent > LATENT_CAP) throw new Error(`Latent fora do teto: ${key}=${p.latent}`);
   }
-  const missing = Object.keys(objects).filter(uid => seen.get(uid) !== 1);
-  if (missing.length || seen.size !== Object.keys(objects).length) throw new Error(`objetos fora de zona única: ${missing.slice(0, 5)}`);
+  // Token fora do campo deixa de existir: o objeto pode sobrar sem zona (replay de decisão) e não conta.
+  const missing = Object.keys(objects).filter(uid => seen.get(uid) !== 1 && !(objects[uid].token && !seen.has(uid)));
+  if (missing.length || seen.size !== Object.keys(objects).filter(uid => !objects[uid].token || seen.has(uid)).length) throw new Error(`objetos fora de zona única: ${missing.slice(0, 5)}`);
 }
 
 export function spellCategory(number) {

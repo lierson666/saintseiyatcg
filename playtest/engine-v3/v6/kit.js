@@ -20,7 +20,8 @@ export const bearerOf = (c, gear) => c.attached[gear] || null;
 export const gearOf = (c, uid) => Object.keys(c.attached).filter(e => c.attached[e] === uid);
 // "Once each round" de uma fonte: marca na hora em que o gatilho é gerado (o segundo evento do Round não gera).
 export const once = (s, tag) => (s.roundUses.has(tag) ? false : (useOncePerRound(s, tag), true));
-export const onceTurn = (s, tag) => once(s, `${tag}:turn${s.turn}`);
+// Guia §64 (autor, 29/10/2026): "once per turn" vale uma vez por rodada.
+export const onceTurn = (s, tag) => once(s, tag);
 
 // ---------- perguntas ----------
 // "You may …": sim/não. `cost` aparece no modal (ex.: '1 Soul').
@@ -116,9 +117,12 @@ function take(s, c, uid, from) {
   p[from].splice(p[from].indexOf(uid), 1);
   return true;
 }
+// Token (guia §63): ao sair do campo deixa de existir.
+const vanish = (c, uid) => (c.objects[uid]?.token ? (delete c.objects[uid], true) : false);
 export function toHand(s, c, uid, from = 'tartarus') {
   if (from === 'battlefield' && !controllerOf(s, uid)) return false;
   if (!take(s, c, uid, from)) return false;
+  if (vanish(c, uid)) return true;
   s.players[c.objects[uid].owner].hand.push(uid);
   emit(s, 'returned_to_hand', {player: c.objects[uid].owner, uid});
   return true;
@@ -126,12 +130,14 @@ export function toHand(s, c, uid, from = 'tartarus') {
 export function toTartarus(s, c, uid, from = 'hand') {
   if (from === 'battlefield' && !controllerOf(s, uid)) return false;
   if (!take(s, c, uid, from)) return false;
+  if (vanish(c, uid)) return true;
   s.players[c.objects[uid].owner].tartarus.push(uid);
   return true;
 }
 export function exile(s, c, uid, from = 'battlefield') {
   if (from === 'battlefield' && !controllerOf(s, uid)) return false;
   if (!take(s, c, uid, from)) return false;
+  if (vanish(c, uid)) return true;
   s.players[c.objects[uid].owner].void.push(uid);
   emit(s, 'exiled', {uid});
   return true;
@@ -150,6 +156,20 @@ export function putOntoField(s, c, key, uid, from, {prepared = true} = {}) {
   emit(s, 'card_played', {player: key, uid, kind: 'Devotee', from});
   enteredHooks(s, c, key, uid);
   return true;
+}
+// Token: Devotee sem carta (guia §63). Entra Unprepared; o uid vem de um contador do estado (o replay das decisões
+// recria o mesmo uid). `spec`: {id, name, atk, hp, type}.
+export function summonToken(s, c, key, spec) {
+  if (!c.cards.has(spec.id)) c.cards.set(spec.id, {id: spec.id, name: spec.name, kind: 'Devotee', type: `Devotee — ${spec.type || 'Token'}`,
+    cost: {amount: 0, unit: 'base'}, atk: spec.atk, hp: spec.hp, keywords: [], token: true});
+  s.tokenSeq = (s.tokenSeq || 0) + 1;
+  const uid = `${key}:token:${s.tokenSeq}`;
+  c.objects[uid] = {owner: key, cardId: spec.id, armor: false, token: true};
+  s.players[key].battlefield.push(uid);
+  s.units[uid] = {prepared: false, damage: 0, entered: s.turn};
+  emit(s, 'card_played', {player: key, uid, kind: 'Devotee', token: true});
+  enteredHooks(s, c, key, uid);
+  return uid;
 }
 let enteredHooks = () => {};
 export const setEnteredHooks = fn => { enteredHooks = fn; };

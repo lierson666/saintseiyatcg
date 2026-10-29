@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-29 — §63, §64 — “Turn” vira rodada; Cosmo gerado vira Latent; Token
+
+- **Antes:** textos V6 com “once per turn”/“until end of turn” sem leitura definida; Cosmo restrito/temporário e tokens sem regra.
+- **Depois:** “once per turn” = uma vez por rodada; “until end of turn” = até o fim da rodada. Cosmo gerado por efeito = Latent comum, sem restrição de uso. Token = Devotee sem carta, entra Unprepared, some ao sair do campo.
+- **Motivo:** decisões do autor em 29/10/2026 sobre as dúvidas dos efeitos V6. Proteções “would take Strike damage” de Poseidon ficam como escudo criado na declaração do Strike (confirmado).
+- **Pendências:** engine V6 ajustada (kit `onceTurn` por rodada, durações, Artemis 386 e 444, tokens no `destroyDevotee`).
+
 ## 2026-10-29 — §3, §5, §46A, §54, §61, §63 — Moment é a Spell instantânea; Trample; {T} de Equipment; Engage
 
 - **Antes:** Technique jogava como AÇÃO ou resposta (Latent); Moment exigia AÇÃO. Trample, {T} em Equipment e Engage não tinham regra.

@@ -759,11 +759,14 @@ Se um Strike normal causar Soul zero aos dois Gods simultaneamente por efeitos a
 - Gods não iniciam Strike nem equipam armaduras. Possuem Soul e Attack; retaliação permanece disponível independentemente de Prepared. Custos de habilidades do God devem estar impressos, inclusive eventual esgotamento.
 - Domains permanecem em jogo, fora do deck, sem custo de entrada e protegidos de ataque, destruição, exílio, retorno à mão e mudança de controle adversária nesta base. Seus efeitos e limites de uso vêm do texto da carta. Galaxian Wars Arena (062), Tournament Spirit: conta quando o Bronze Saint amigo derrota o Devotee inimigo num Strike, tanto atacando quanto defendendo (dano de retaliação) (autor, 28/10/2026).
 - **Engage** (texto antigo de algumas cartas de Artemis): "engaged with X" significa estar num Strike com X, atacando ou defendendo; "Engage that Devotee" força esse Devotee num Strike contra o seu (autor, 29/10/2026). A mecânica de Engage separada não existe.
+- **Token** (ex.: Forest Guardian 3/3 de The Forest Invades Sanctuary): Devotee criado por efeito, sem carta. Entra Unprepared, não é lendário, não ganha Afterlife e deixa de existir quando sai do campo (não vai ao Tartarus, à mão nem ao Void). Não conta como carta para efeitos de deck, mão ou Tartarus (autor, 29/10/2026).
+- **Cosmo gerado por efeito** (“Generate {C}”, “Cosmo Latente”) entra como Latent Cosmo comum, respeitando o limite de 3. Restrições impressas de uso (“only during your turn”, “only to cast a Devotee”) não se aplicam nesta versão (autor, 29/10/2026).
 - Manter Tartarus e Void distintos. Void representa exílio e não concede Afterlife. Efeitos só alcançam as zonas e tipos que identificam; “target Devotee” não alcança automaticamente uma carta no Tartarus.
 
 ### 64. Duração dos efeitos e Card Craft
 
 - Novos textos usam **round** para rodada e **action** para AÇÃO. Evitar “turn” no novo conjunto, pois deixou de representar o fluxo do jogo.
+- Em textos existentes, **“once per turn” vale “once each round”** e **“until end of turn” vale “until end of round”** (autor, 29/10/2026).
 - “Until end of round” termina no encerramento atual; “until the beginning of the next round” termina no início da seguinte, antes da preparação. Uma duração diferente deve identificar precisamente o evento.
 - Cada texto antigo precisa de revisão contextual: “during your opponent's turn” pode virar “during an opponent's action”, mas isso não é substituição automática segura para todas as habilidades.
 - Habilidades de entrada aparecem primeiro na carta. A posição gráfica não antecipa a resolução de um gatilho em relação à pilha.
