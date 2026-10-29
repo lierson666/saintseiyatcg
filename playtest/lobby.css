@@ -86,7 +86,14 @@ h1, h2, h3, .lb-play, .lb-tab, .lb-hero p { font-family: "Cinzel", "Trajan Pro",
 .lb-page__head p { margin: 6px 0 22px; color: var(--muted); }
 .lb-deckgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
 .lb-field { display: grid; gap: 6px; color: var(--muted); font-size: 13px; }
-.lb-field select, .lb-filters input, .lb-list__name { padding: 9px 10px; border: 1px solid var(--line); border-radius: 8px; background: #0a0f1c; }
+.lb-field select, .lb-filters input, .lb-list > * { flex: none; }
+.lb-gods { display: flex; gap: 6px; }
+.lb-godpick { width: 38px; height: 38px; padding: 6px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: var(--panel); opacity: .45; filter: grayscale(.7); transition: opacity .15s, filter .15s, border-color .15s; }
+.lb-godpick img { max-width: 100%; max-height: 100%; }
+.lb-godpick:hover { opacity: .8; }
+.lb-godpick.is-active { opacity: 1; filter: none; border-color: var(--gold); box-shadow: 0 0 10px #e6c36a55; }
+.lb-list__god span img { height: 18px; margin-right: 6px; vertical-align: -3px; }
+.lb-list__name { padding: 9px 10px; border: 1px solid var(--line); border-radius: 8px; background: #0a0f1c; }
 .lb-options { max-width: 560px; }
 .lb-volume { grid-template-columns: 140px 1fr 50px; align-items: center; margin-bottom: 14px; font-size: 15px; color: var(--text); }
 .lb-volume input { accent-color: var(--gold); }
@@ -125,7 +132,7 @@ h1, h2, h3, .lb-play, .lb-tab, .lb-hero p { font-family: "Cinzel", "Trajan Pro",
 .lb-list__count.is-full strong { color: var(--green); }
 .lb-curve { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; height: 70px; align-items: end; }
 .lb-curve span { position: relative; height: 100%; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; font-size: 11px; color: var(--muted); }
-.lb-curve span::before { content: ""; width: 100%; height: calc(var(--h) * 70%); min-height: 2px; border-radius: 3px 3px 0 0; background: linear-gradient(0deg, #8a6a20, var(--gold)); }
+.lb-curve span::before { content: ""; width: 100%; height: calc(var(--h) * 58%); min-height: 2px; border-radius: 3px 3px 0 0; background: linear-gradient(0deg, #8a6a20, var(--gold)); }
 .lb-curve i { position: absolute; top: 0; font-style: normal; }
 .lb-strips { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; }
 .lb-strip { width: 100%; height: 34px; display: flex; align-items: center; gap: 8px; padding: 0 10px 0 4px; border: 1px solid #2b3552; border-radius: 6px; text-align: left;

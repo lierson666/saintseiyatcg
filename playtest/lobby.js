@@ -11,6 +11,8 @@ const ART = '../card-forge/art-web/';
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const KINDS = ['All', 'Devotee', 'Equipment', 'Spell', 'Domain'];
 const COSTS = ['All', '1', '2', '3', '4', '5', '6', '7+'];
+const FACTIONS = ['athena', 'poseidon', 'hades', 'ares', 'artemis'];
+const symbol = f => `../CARD-TEMPLATE/symbols/${f}.png`;
 
 let cards, index, forge, presets = [], gods = [];
 const ui = {screen: 'home', play: false, mode: 'ai', deckA: null, deckB: null, first: 'random', big: null, builder: null};
@@ -132,15 +134,16 @@ function openBuilder(deck) {
   const base = deck ? structuredClone(deck) : {id: null, nome: 'New deck', god: 'god-athena', domain_id: null, main_deck: []};
   if (deck?.preset) { base.id = null; base.nome = `${deck.alpha_nome || deck.nome} (copy)`; delete base.preset; }
   base.god ||= 'god-athena';
-  ui.builder = {deck: base, q: '', cost: 'All', kind: 'All', dirty: false};
+  // show: facções visíveis na coleção (símbolos dos Gods, várias ao mesmo tempo); começa nas cores do deck.
+  ui.builder = {deck: base, q: '', cost: 'All', kind: 'All', dirty: false, show: [...deckFactions(base)].filter(f => f !== 'neutral')};
   ui.screen = 'builder';
 }
 const count = (b, id) => b.deck.main_deck.find(e => e.card_id === id)?.quantity || 0;
 function pool(b) {
-  const factions = deckFactions(b.deck);
+  const factions = new Set([...(b.show.length ? b.show : FACTIONS), 'neutral']);
   const q = b.q.trim().toLowerCase();
-  // Domain de qualquer facção pode ser a base; ele traz a própria cor para o deck.
-  return [...cards.values()].filter(c => c.kind !== 'God' && (c.kind === 'Domain' || factions.has(faction(c)))
+  // A coleção mostra os Gods marcados; a identidade do deck (God + Domain + neutras) é validada em deckErrors.
+  return [...cards.values()].filter(c => c.kind !== 'God' && factions.has(faction(c))
     && (b.kind === 'All' || kindOf(c) === b.kind)
     && (b.cost === 'All' || (b.cost === '7+' ? (c.cost?.amount ?? 0) >= 7 : c.cost?.amount === Number(b.cost)))
     && (!q || `${c.name} ${c.text}`.toLowerCase().includes(q))).sort(sortCards);
@@ -160,7 +163,9 @@ function builder() {
     <div class="lb-pool">
       <div class="lb-filters"><input type="search" placeholder="Search name or text" value="${esc(b.q)}" data-act="search" aria-label="Search cards">
         <div class="lb-pills" aria-label="Cost">${COSTS.map(v => pill('cost', v)).join('')}</div>
-        <div class="lb-pills" aria-label="Type">${KINDS.map(v => pill('kind', v)).join('')}</div></div>
+        <div class="lb-pills" aria-label="Type">${KINDS.map(v => pill('kind', v)).join('')}</div>
+        <div class="lb-gods" role="group" aria-label="Show cards of">${FACTIONS.map(f => `<button class="lb-godpick ${b.show.includes(f) ? 'is-active' : ''}"
+          data-act="show-god" data-faction="${f}" aria-pressed="${b.show.includes(f)}" title="${cards.get(`god-${f}`)?.name || f}"><img src="${symbol(f)}" alt="${f}"></button>`).join('')}</div></div>
       <div class="lb-grid">${cards_.map(c => {
         const n = count(b, c.id), isDomain = c.kind === 'Domain', on = isDomain ? d.domain_id === c.id : n > 0;
         return `<button class="lb-slot ${on ? 'is-in' : ''} ${!isDomain && n >= COPY_LIMIT ? 'is-max' : ''}" data-act="${isDomain ? 'set-domain' : 'add'}" data-id="${c.id}" aria-label="${esc(c.name)}">
@@ -170,7 +175,11 @@ function builder() {
     <aside class="lb-list">
       <input class="lb-list__name" value="${esc(d.nome)}" data-act="rename" aria-label="Deck name">
       <label class="lb-field">God<select data-act="god">${gods.map(g => `<option value="${g.id}" ${d.god === g.id ? 'selected' : ''}>${esc(g.name)}</option>`).join('')}</select></label>
-      <div class="lb-list__god" style="background-image:url('${artOf(d.god) || ''}')"><span>${esc(cards.get(d.god)?.name || '')}</span>
+      <label class="lb-field">Domain<select data-act="domain"><option value="">Choose a Domain</option>${FACTIONS.map(f => {
+        const list = [...cards.values()].filter(c => c.kind === 'Domain' && faction(c) === f).sort(sortCards);
+        return list.length ? `<optgroup label="${esc(cards.get(`god-${f}`)?.name || f)}">${list.map(c => `<option value="${c.id}" ${d.domain_id === c.id ? 'selected' : ''}>${esc(c.name)}</option>`).join('')}</optgroup>` : '';
+      }).join('')}</select></label>
+      <div class="lb-list__god" style="background-image:url('${artOf(d.god) || ''}')"><span>${[...deckFactions(d)].filter(f => f !== 'neutral').map(f => `<img src="${symbol(f)}" alt="">`).join('')}${esc(cards.get(d.god)?.name || '')}</span>
         <small>${domain ? esc(domain.name) : 'No Domain yet'}</small></div>
       <div class="lb-list__count ${size === DECK_SIZE ? 'is-full' : ''}"><strong>${size}</strong> / ${DECK_SIZE}</div>
       <div class="lb-curve" aria-label="Cost curve">${curve.map((n, i) => `<span style="--h:${n / peak}"><i>${n || ''}</i><b>${i === 6 ? '7+' : i + 1}</b></span>`).join('')}</div>
@@ -267,6 +276,7 @@ const actions = {
   add: t => setCount(t.dataset.id, 1),
   remove: t => setCount(t.dataset.id, -1),
   'set-domain': t => { ui.builder.deck.domain_id = t.dataset.id; ui.builder.dirty = true; },
+  'show-god': t => { const s = ui.builder.show, f = t.dataset.faction; ui.builder.show = s.includes(f) ? s.filter(x => x !== f) : [...s, f]; },
   'save-deck': () => { saveDeck(); ui.screen = 'decks'; },
   'delete-deck': () => {
     if (!confirm(`Delete "${ui.builder.deck.nome}"?`)) return;
@@ -294,7 +304,8 @@ root.addEventListener('contextmenu', e => {
 root.addEventListener('change', e => {
   const t = e.target, act = t.dataset.act;
   if (act === 'first') { ui.first = t.value; remember(); }
-  else if (act === 'god') { ui.builder.deck.god = t.value; ui.builder.dirty = true; }
+  else if (act === 'god') { ui.builder.deck.god = t.value; ui.builder.dirty = true; ui.builder.show = [...new Set([...ui.builder.show, faction(cards.get(t.value))])]; }
+  else if (act === 'domain') { ui.builder.deck.domain_id = t.value || null; ui.builder.dirty = true; }
   else if (act === 'rename') { ui.builder.deck.nome = t.value.trim() || 'New deck'; ui.builder.dirty = true; }
   else return;
   render();
