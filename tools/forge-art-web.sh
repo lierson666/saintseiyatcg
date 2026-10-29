@@ -12,7 +12,9 @@ for f in "$ROOT"/card-forge/art/*.png "$ROOT"/card-forge/art/*.jpg; do
   [ -e "$f" ] || continue
   out="$DEST/$(basename "${f%.*}").jpg"
   [ "$out" -nt "$f" ] && continue
-  sips -Z 640 -s format jpeg -s formatOptions 82 "$f" --out "$out" >/dev/null
+  # rosto do God no HUD vai com zoom alto: sai maior para não borrar
+  case "$f" in *-hud.*) size=2048 ;; *) size=640 ;; esac
+  sips -Z "$size" -s format jpeg -s formatOptions 85 "$f" --out "$out" >/dev/null
 done
 python3 - "$ROOT" "$DEST" <<'EOF'
 import json, sys, pathlib

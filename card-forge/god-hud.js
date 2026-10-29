@@ -23,7 +23,7 @@ box.innerHTML = `
     #godHud .gh-say { min-height: 1.2em; margin-top: 6px; font-size: 12px; }
   </style>
   <h3>God face in the game HUD</h3>
-  <p>Arraste para mover, use a roda do mouse para o zoom. O círculo é o mesmo do HUD.</p>
+  <p>Arraste para mover, use a roda do mouse para o zoom. O círculo é o mesmo do HUD. Salva sozinho a cada ajuste.</p>
   <div class="gh-row">
     <div class="gh-face" title="Arraste para posicionar; roda do mouse para zoom"></div>
     <div class="gh-ctl">
@@ -56,6 +56,7 @@ function paint() {
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 
 async function load(S) {
+  clearTimeout(timer); imageDirty = false; // troca de carta: não grava o ajuste pendente na carta nova
   current = S.id; upload = null; hud = {...DEFAULT};
   cardArt = S.art?.src ? (S.art.src.startsWith('card-forge/') ? '../' + S.art.src : S.art.src) : '';
   try {
@@ -77,50 +78,56 @@ setInterval(() => {
   if (!box.hidden && S.id && S.id !== current) load(S);
 }, 400);
 
-box.addEventListener('input', e => { if (e.target.name in DEFAULT) { hud[e.target.name] = +e.target.value; paint(); } });
-face.addEventListener('wheel', e => { e.preventDefault(); hud.zoom = clamp(hud.zoom * (e.deltaY < 0 ? 1.06 : 1 / 1.06), 60, 1500); paint(); }, {passive: false});
+// Salva sozinho (autor, 28/10/2026): cada ajuste grava meio segundo depois; a imagem só sobe quando muda.
+let timer = 0, imageDirty = false;
+function queue() { if (!current) return; clearTimeout(timer); say('Salvando…'); timer = setTimeout(save, 600); }
+async function post(url, body, type) {
+  const r = await fetch(url, {method: 'POST', headers: {'Content-Type': type}, body});
+  const j = await r.json().catch(() => ({}));
+  if (r.status === 501 || r.status === 405) throw new Error('este servidor não grava. Abra o Forge em http://localhost:8765/card-forge/ (python3 card-forge/serve.py).');
+  if (!r.ok) throw new Error(j.erro || `HTTP ${r.status}`);
+  return j;
+}
+async function save() {
+  const id = current;
+  try {
+    // Grava a imagem que está na prévia como art/<id>-hud: o jogo mostra exatamente o que se vê aqui,
+    // mesmo quando a "arte da carta" do Forge não é a mesma arte exportada para o jogo.
+    if (imageDirty || upload || !hud.image) {
+      const src = upload || hud.image || cardArt;
+      if (!src) throw new Error('nenhuma imagem para salvar');
+      const blob = await (await fetch(src)).blob();
+      hud.image = '../' + (await post(`/api/art/${id}-hud`, blob, blob.type)).path;
+      upload = null; imageDirty = false;
+    }
+    const data = {image: hud.image.replace(/^\.\.\//, ''), zoom: Math.round(hud.zoom), x: +hud.x.toFixed(1), y: +hud.y.toFixed(1)};
+    await post(`/api/project/${id}-hud`, JSON.stringify(data), 'application/json');
+    if (id === current) say('Salvo ✓ Rode tools/forge-art-web.sh para levar ao jogo.');
+  } catch (err) { say(`Erro ao salvar: ${err.message}`); }
+}
+
+box.addEventListener('input', e => { if (e.target.name in DEFAULT) { hud[e.target.name] = +e.target.value; paint(); queue(); } });
+face.addEventListener('wheel', e => { e.preventDefault(); hud.zoom = clamp(hud.zoom * (e.deltaY < 0 ? 1.06 : 1 / 1.06), 60, 1500); paint(); queue(); }, {passive: false});
 face.addEventListener('pointerdown', e => {
   face.setPointerCapture(e.pointerId);
   const start = {x: e.clientX, y: e.clientY, hx: hud.x, hy: hud.y}, w = face.clientWidth;
   // Arrastar para a direita mostra mais da esquerda da imagem: a posição em % anda ao contrário do mouse.
   const move = ev => { hud.x = clamp(start.hx - (ev.clientX - start.x) / w * 100, 0, 100); hud.y = clamp(start.hy - (ev.clientY - start.y) / w * 100, 0, 100); paint(); };
   face.addEventListener('pointermove', move);
-  face.addEventListener('pointerup', () => face.removeEventListener('pointermove', move), {once: true});
+  face.addEventListener('pointerup', () => { face.removeEventListener('pointermove', move); queue(); }, {once: true});
 });
 file.addEventListener('change', () => {
   const f = file.files[0];
   if (!f) return;
   const reader = new FileReader();
-  reader.onload = () => { upload = reader.result; hud = {...hud, zoom: 140, x: 50, y: 30}; say(`Imagem nova: ${f.name}. Ajuste e salve.`); paint(); };
+  reader.onload = () => { upload = reader.result; hud = {...hud, zoom: 140, x: 50, y: 30}; paint(); queue(); };
   reader.readAsDataURL(f);
   file.value = '';
 });
-box.addEventListener('click', async e => {
+box.addEventListener('click', e => {
   const act = e.target.closest('[data-act]')?.dataset.act;
   if (act === 'pick') file.click();
-  if (act === 'card') { upload = null; hud.image = null; say('Usando a arte da carta. Salve para confirmar.'); paint(); }
-  if (act === 'reset') { hud = {...hud, zoom: DEFAULT.zoom, x: DEFAULT.x, y: DEFAULT.y}; paint(); }
-  if (act !== 'save' || !current) return;
-  try {
-    say('Salvando…');
-    const post = async (url, body, type) => {
-      const r = await fetch(url, {method: 'POST', headers: {'Content-Type': type}, body});
-      const j = await r.json().catch(() => ({}));
-      if (r.status === 501 || r.status === 405) throw new Error(`este servidor não grava. Abra o Forge em http://localhost:8765/card-forge/ (python3 card-forge/serve.py).`);
-      if (!r.ok) throw new Error(j.erro || `HTTP ${r.status}`);
-      return j;
-    };
-    // Grava sempre a imagem que está na prévia como art/<id>-hud: o jogo mostra exatamente o que se vê aqui,
-    // mesmo quando a "arte da carta" do Forge não é a mesma arte exportada para o jogo.
-    const src = upload || (hud.image ? hud.image : cardArt);
-    if (!src) throw new Error('nenhuma imagem para salvar');
-    const blob = await (await fetch(src)).blob();
-    hud.image = (await post(`/api/art/${current}-hud`, blob, blob.type)).path;
-    upload = null;
-    const data = {image: hud.image?.replace(/^\.\.\//, '') || null, zoom: Math.round(hud.zoom), x: +hud.x.toFixed(1), y: +hud.y.toFixed(1)};
-    await post(`/api/project/${current}-hud`, JSON.stringify(data), 'application/json');
-    hud = {...data, image: data.image ? '../' + data.image : null};
-    say('Rosto salvo. Rode tools/forge-art-web.sh para levar ao jogo.');
-    paint();
-  } catch (err) { say(`Erro: ${err.message}`); }
+  if (act === 'card') { upload = null; hud.image = null; imageDirty = true; paint(); queue(); }
+  if (act === 'reset') { hud = {...hud, zoom: DEFAULT.zoom, x: DEFAULT.x, y: DEFAULT.y}; paint(); queue(); }
+  if (act === 'save') { clearTimeout(timer); say('Salvando…'); save(); }
 });
