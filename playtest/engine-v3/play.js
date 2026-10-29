@@ -43,7 +43,8 @@ export function playDevotee(state, ctx, key, uid, choice = {}) {
   payCost(state, key, card.cost);
   leaveHand(state, key, uid);
   state.players[key].battlefield.push(uid);
-  state.units[uid] = {prepared: false, damage: 0, entered: state.turn}; // P02: entra Unprepared
+  // P02: entra Unprepared; com Impulse entra Prepared, pronto para o Strike (autor, 29/10/2026).
+  state.units[uid] = {prepared: card.keywords.includes('Impulse'), damage: 0, entered: state.turn};
   emit(state, 'card_played', {player: key, uid, kind: 'Devotee'});
   onEnter(state, ctx, key, uid, choice);
   enforceUniqueness(state, ctx); // §63 (autor, 28/10/2026): pode jogar a segunda versão; o controlador escolhe quem fica

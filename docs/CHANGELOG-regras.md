@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-29 — Handbook 3.0 / Alpha 0.1 — ALPHA-P02: Devotee com Impulse entra Prepared
+
+- **Antes:** todo Devotee entrava Unprepared; o Impulse só liberava o Strike no turno de entrada.
+- **Depois:** Devotee com Impulse entra Prepared, pronto para declarar Strike no turno em que entrou. Sem Impulse, segue entrando Unprepared.
+- **Motivo:** decisão do autor em 29/10/2026 ("impulse não trigou; o devotee entra preparado e pronto pra atacar"). Na arena, arrastar para atacar exigia Prepared e travava o Impulse.
+- **Pendências:** vale para a engine 3.0 (`playtest/engine-v3/play.js`). O `docs/guia-do-jogo.md` (2.x) já diz que todo Devotee entra Prepared e não muda.
+
 ## 2026-10-29 — §33 — Todo Equipment equipável tem Equip impresso; itens globais ficam sem portador
 
 - **Seção:** `docs/guia-do-jogo.md`, §33 (Resonance e Equip). Substitui a entrada anterior do mesmo dia.

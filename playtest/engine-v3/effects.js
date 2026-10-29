@@ -8,7 +8,7 @@
 // equipado no Devotee nomeado; dano que não é de Strike também passa pela Armor (prevenções "Strike damage" não valem);
 // dano redirecionado pela Resonance da 004 é dano de Strike em Shiryu.
 import {CHARACTER_IDENTITY, characterOf} from '../../shared/character-identity.js';
-import {RuleError, useOncePerRound, addEffect, destroyDevotee, draw, spendBase, pushTriggers, emit, gainLatent, prepareUnit} from './core.js';
+import {RuleError, useOncePerRound, addEffect, destroyDevotee, draw, spendBase, pushTriggers, emit, gainLatent, prepareUnit, loseSoul} from './core.js';
 
 export const card = (ctx, uid) => ctx.cards.get(ctx.objects[uid].cardId);
 const id = (ctx, uid) => ctx.objects[uid].cardId.slice(-3);
@@ -242,10 +242,24 @@ export function checkDefeats(state, ctx) {
         emit(state, 'defeat_prevented', {uid, player: key, ability: 'DIVINE PROTECTION'});
         continue;
       }
+      const berserker = /Berserker/.test(card(ctx, uid).type);
       destroyDevotee(state, uid, ctx.objects, ctx.attached);
+      if (berserker) harvestOfTheFallen(state, key);
     }
   }
   enforceUniqueness(state, ctx);
+}
+// Domain 335 The Fields of Carnage, Harvest of the Fallen: Berserker amigo derrotado causa 1 de dano ao God inimigo,
+// uma vez por turno (autor, 29/10/2026). Unending Slaughter ainda não está implementado.
+function harvestOfTheFallen(state, key) {
+  const once = `domain:${key}:harvest:${state.turn}`;
+  if (state.domains?.[key] !== 'ares-v6-335' || state.victory || state.roundUses.has(once)) return;
+  useOncePerRound(state, once);
+  pushTriggers(state, [{controller: key, uid: `domain:${key}`, ability: 'HARVEST OF THE FALLEN', run: st => {
+    if (st.victory) return;
+    emit(st, 'domain_power', {player: key, ability: 'HARVEST OF THE FALLEN'});
+    loseSoul(st, {[other(st, key)]: 1}, 'damage');
+  }}]);
 }
 const enemyDevotee = (state, ctx, key, uid) => {
   if (!uid || controllerOf(state, uid) !== other(state, key) || card(ctx, uid).kind !== 'Devotee') {

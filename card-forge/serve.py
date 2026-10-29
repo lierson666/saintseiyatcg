@@ -166,12 +166,12 @@ class Handler(SimpleHTTPRequestHandler):
                     return self.reply(400, {"erro": f"Planilha inválida: {error}"})
                 return self.reply(200, result)
             if parts == ["api", "publish-visuals"]:
-                # Publicação restrita aos assets do Card Forge. Host e Origin local
-                # já foram conferidos. Nunca sincroniza regras, cards.json ou engine.
+                # Olympus Arena (autor, 29/10/2026): "enviar ao jogo" é o export local card-forge/art-web
+                # (tools/forge-art-web.sh). Não envia nada para servidor remoto: há artes provisórias de terceiros.
                 try:
                     published = subprocess.run(
-                        [sys.executable, str(FORGE / 'publish_visuals.py'), '--sync'],
-                        cwd=ROOT, capture_output=True, text=True, timeout=120, check=True)
+                        ['/bin/sh', str(ROOT / 'tools/forge-art-web.sh'), str(ROOT)],
+                        cwd=ROOT, capture_output=True, text=True, timeout=900, check=True)
                     return self.reply(200, {"ok": True, "message": "Artes publicadas no jogo", "details": published.stdout[-900:]})
                 except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as error:
                     detail=(getattr(error, 'stderr', '') or str(error))[-500:]
