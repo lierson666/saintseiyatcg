@@ -1,0 +1,23 @@
+# arena-server no mamaco-dev: projeto próprio ("-p arena"), na rede do Caddy do casamamaco.
+# O código fica em /home/dev/arena-server (fora do site público); a engine e os dados vêm do site, só leitura.
+# Subir (root): docker compose -f /home/dev/arena-server/compose.yml -p arena up -d
+services:
+  arena-server:
+    image: node:24-alpine
+    restart: unless-stopped
+    user: node
+    read_only: true
+    working_dir: /app/arena-server
+    command: ["node", "server.mjs"]
+    environment:
+      PORT: "8090"
+      ARENA_ORIGIN: https://saintseiyatcg.com
+      ARENA_ACCOUNTS: http://sanctuary-api:8080
+      ARENA_SECRET: ${ARENA_SECRET:?ARENA_SECRET}
+    volumes:
+      - /home/dev/saintseiyatcg:/app:ro
+      - /home/dev/arena-server:/app/arena-server:ro
+    networks: [casamamaco_default]
+networks:
+  casamamaco_default:
+    external: true

@@ -8,6 +8,8 @@ services:
       SANCTUARY_ORIGIN: https://saintseiyatcg.com
       SANCTUARY_INVITES: ${SANCTUARY_INVITES:-}
       SANCTUARY_ADMINS: ${SANCTUARY_ADMINS:-}
+      ARENA_URL: http://arena-server:8090
+      ARENA_SECRET: ${ARENA_SECRET:-}
     volumes:
       - sanctuary-data:/data
     networks: [casamamaco_default]
