@@ -26,7 +26,10 @@ for c in cards:
     if proj.get('subtitle'): c['subtitulo_en'] = proj['subtitle']
     if proj.get('flavour'): c['flavour_en'] = proj['flavour']
     if (proj.get('art') or {}).get('w'): c['ilustracao_enquadramento'] = {k: proj['art'][k] for k in ('x', 'y', 'w')}
-    if (dest / f"{c['id']}.jpg").exists(): c['ilustracao'] = f"{c['id']}.jpg"
+    # arte ligada no projeto (inclui a provisória <id>-ref, Poseidon/Hades 28/10/2026); senão <id>.jpg
+    src = pathlib.Path((proj.get('art') or {}).get('src') or '').stem
+    if src and (dest / f"{src}.jpg").exists(): c['ilustracao'] = f"{src}.jpg"
+    elif (dest / f"{c['id']}.jpg").exists(): c['ilustracao'] = f"{c['id']}.jpg"
     # rosto do God no HUD, escolhido no Card Forge (card-forge/god-hud.js): imagem própria ou a arte da carta
     h = root / f"card-forge/projects/{c['id']}-hud.json"
     if h.exists():
