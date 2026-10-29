@@ -3,6 +3,7 @@
 // render() mostra o estado final. Entrada travada durante a animação (Espaço pula).
 import {loadCanon} from '../../shared/canon-cards.js';
 import {canonIndex} from '../../shared/deck-v3.js';
+import {addPreviewCards} from '../../shared/preview-cards.js';
 import {createMatch, mulligan} from '../engine-v3/match.js';
 import {startTurn, endTurn, pass, placeBase, spellCategory, runCheckpoint} from '../engine-v3/core.js';
 import {declareStrike, strikeTargets} from '../engine-v3/strike.js';
@@ -37,7 +38,7 @@ const settings = {quality: 'high', theme: 'olympus', godB: 'god-athena', timeout
 try { Object.assign(settings, JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}')); } catch { /* sem armazenamento */ }
 const saveSettings = () => { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch { /* sem armazenamento */ } };
 
-let canon, cards, decks, match, ctx, scene = null, director, clock;
+let canon, cards, index, decks, match, ctx, scene = null, director, clock;
 let mode = null;           // escolha em andamento: {kind, key, uid, steps, i, choice, picked, options, run}
 let pending = null;        // decisão pedida pela engine no meio da resolução (decision.js): {pending, snap, answers, run, shown, picked, peek}
 let marked = new Set(), logLines = [], logOpen = false, settingsOpen = false, ending = false, inspectTimer, seenEvents = 0, drag = null;
@@ -1188,7 +1189,7 @@ addEventListener('pointerdown', () => { unlock(); playMusic('battle'); }, {once:
 
 function newMatch(seed = Date.now() % 100000, first) {
   // Poseidon V6 não tem cartas canônicas: o God Poseidon pilota o deck Athena V6 do jogador B, como FIXTURE rotulada.
-  match = createMatch({cards, canonIndex: canonIndex(canon), decks, gods: {A: decks.A.god || 'god-athena', B: settings.godB}, seed, first});
+  match = createMatch({cards, canonIndex: index, decks, gods: {A: decks.A.god || 'god-athena', B: settings.godB}, seed, first});
   ctx = {cards, objects: match.objects, attached: match.attached}; // ctx.decide vem do protocolo de decisão (act)
   logLines = []; mode = null; pending = null; marked = new Set(); ending = false; seenEvents = 0;
   clock = createClock(match.state.order);
@@ -1390,8 +1391,11 @@ async function init() {
     if (!r.ok) throw Error(`Missing ${u}`);
     return r.json();
   })));
-  canon = canonData; cards = loadCanon(canon);
-  const [rush, fortress] = deckData.decks, deckOf = id => findDeck(id, deckData.decks); // presets D171 ou decks do criador (../deck-store.js)
+  const previewDecks = await fetch('../../data/alpha-0.1/decks-preview.json').then(r => (r.ok ? r.json() : {decks: []})).catch(() => ({decks: []}));
+  canon = canonData; cards = loadCanon(canon); index = canonIndex(canon);
+  addPreviewCards(cards, index, [...FORGE.values()]); // etapa 1: Poseidon, Hades, Ares, Artemis e neutras (shared/preview-cards.js)
+  const presets = [...deckData.decks, ...previewDecks.decks];
+  const [rush, fortress] = deckData.decks, deckOf = id => findDeck(id, presets); // presets D171 e de prévia, ou decks do criador (../deck-store.js)
   const query = new URLSearchParams(location.search);
   decks = {A: deckOf(query.get('deckA')) || rush, B: deckOf(query.get('deckB')) || fortress}; // ?deckA=&deckB= vindos da seleção do menu
   director = createDirector({ui, getFx: () => scene?.fx, settings});

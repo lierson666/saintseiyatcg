@@ -1,6 +1,7 @@
 // Lobby do Saint Seiya TCG no estilo do MTG Arena: barra superior (Home, Decks, Options), botão Play com gaveta de modo e deck,
 // tela de decks e criador de decks. A partida é o Olympus Arena (./divine/), que recebe os decks pela URL.
-import {loadCanon, parseCard} from '../shared/canon-cards.js';
+import {loadCanon} from '../shared/canon-cards.js';
+import {addPreviewCards} from '../shared/preview-cards.js';
 import {canonIndex, validateDeck, DECK_SIZE, COPY_LIMIT} from '../shared/deck-v3.js';
 import {renderLiveCard} from '../shared/live-card.js?v=20261028-5';
 import {unlock, playMusic, setVolume, volume} from './audio.js';
@@ -24,19 +25,6 @@ const faction = card => (forge.get(card.id)?.faccao || card.id.replace(/^god-/, 
 const godForge = godId => forge.get(`${godId.replace(/^god-/, '')}-001`);
 const artOf = id => { const f = id.startsWith('god-') ? godForge(id) : forge.get(id); return f?.ilustracao ? ART + f.ilustracao : null; };
 const kindOf = c => (c.kind === 'Divine Artifact' ? 'Equipment' : c.kind);
-// Prévia (autor, 28-29/10/2026): Poseidon, Hades, Ares e Artemis entram na coleção a partir do Forge, no formato de texto do D268,
-// mas a engine 3.0 só conhece o D268; deck com carta de prévia monta e salva, porém não entra em partida.
-function previewRecord(f) {
-  const type = [f.tipo, (f.subtipos || []).join(' ')].filter(Boolean).join(' — ');
-  const text = [`${String(f.numero_carta).padStart(3, '0')} — ${f.nome_exibicao_en}`, f.subtitulo_en, `Rarity: ${f.raridade}`, `Type: ${type}`,
-    f.custo != null && `Casting Cost: ${f.custo} {${f.unidade_custo === 'latent_cosmo' ? 'L' : 'B'}}`,
-    f.power != null && `ATK: ${f.power} | HP: ${f.vida}`, f.cosmoble != null && f.tipo !== 'Domain' && `Cosmoble: ${f.cosmoble ? 'Yes' : 'No'}`,
-    f.tipo === 'Equipment' && `Auto-Equip — ${f.auto_equip_en?.length ? f.auto_equip_en.join(' and/or ') : 'None'}`,
-    f.equipar_custo_outros != null && `Equip {${f.equipar_custo_outros}} — ${f.auto_equip_en?.length ? 'Other Devotees' : 'Any friendly Devotee'}`,
-    ...(f.habilidades_en || [])].filter(Boolean).join('\n');
-  return {id: f.id, name: f.nome_exibicao_en, type, approved_current_text_as_of_d268: text};
-}
-const isPreview = id => cards.get(id)?.preview;
 const sortCards = (a, b) => (a.kind === 'Domain') - (b.kind === 'Domain') || (a.cost?.amount ?? 0) - (b.cost?.amount ?? 0) || a.name.localeCompare(b.name);
 
 function face(id, cls = '') {
@@ -58,7 +46,6 @@ function deckErrors(d) {
     .map(e => ({code: 'identity', card_id: e.card_id}))];
 }
 const deckValid = d => !deckErrors(d).length;
-const deckPlayable = d => deckValid(d) && !isPreview(d.domain_id) && !d.main_deck.some(e => isPreview(e.card_id));
 function deckCover(d) {
   const first = d.main_deck.map(e => e.card_id).find(id => artOf(id));
   return artOf(first || deckGod(d));
@@ -69,7 +56,7 @@ function deckBox(d, act) {
     data-act="${act}" data-deck="${esc(d.id)}">
     <span class="lb-deck__art" style="${art ? `background-image:url('${art}')` : ''}"></span>
     <span class="lb-deck__name"><strong>${esc(d.alpha_nome || d.nome)}</strong>
-      <small>${esc(cards.get(deckGod(d))?.name || '')} · ${ok ? `${deckSize(d)} cards` : `Incomplete · ${deckSize(d)}/${DECK_SIZE}`}${d.preset ? ' · Starter' : ''}${ok && !deckPlayable(d) ? ' · Preview' : ''}</small></span>
+      <small>${esc(cards.get(deckGod(d))?.name || '')} · ${ok ? `${deckSize(d)} cards` : `Incomplete · ${deckSize(d)}/${DECK_SIZE}`}${d.preset ? ' · Starter' : ''}</small></span>
   </button>`;
 }
 
@@ -93,7 +80,7 @@ function home() {
     <div class="lb-news">
       <button class="lb-news__tile" data-act="go" data-screen="decks" style="--tile:url('${artOf('athena-v6-001') || ''}')"><small>Decks</small><strong>Build your deck</strong></button>
       <button class="lb-news__tile" data-act="play" style="--tile:url('${artOf('athena-v6-003') || ''}')"><small>Battle</small><strong>Challenge the AI</strong></button>
-      <button class="lb-news__tile" data-act="go" data-screen="decks" style="--tile:url('${artOf('god-poseidon') || ''}')"><small>Preview</small><strong>New Gods preview</strong></button>
+      <button class="lb-news__tile" data-act="go" data-screen="decks" style="--tile:url('${artOf('god-poseidon') || ''}')"><small>New</small><strong>Poseidon, Hades, Ares and Artemis</strong></button>
     </div>
     <div class="lb-dock" ${ui.play ? 'hidden' : ''}>
       ${deck ? `<button class="lb-dock__deck" data-act="play"><span style="background-image:url('${deckCover(deck) || ''}')"></span><strong>${esc(deck.alpha_nome || deck.nome)}</strong></button>` : ''}
@@ -105,7 +92,7 @@ function home() {
 
 function playPanel() {
   const decks = allDecks(), mode = (m, label) => `<button class="lb-mode ${ui.mode === m ? 'is-active' : ''}" data-act="mode" data-mode="${m}">${label}</button>`;
-  const ready = [ui.deckA, ui.deckB].every(id => { const d = findDeck(id, presets); return d && deckPlayable(d); });
+  const ready = [ui.deckA, ui.deckB].every(id => { const d = findDeck(id, presets); return d && deckValid(d); });
   return `<aside class="lb-panel" aria-label="Play">
     <header><h2>Play</h2><button class="lb-x" data-act="close-play" aria-label="Close">×</button></header>
     <div class="lb-modes">${mode('ai', 'Battle vs AI')}${mode('local', 'Local battle')}</div>
@@ -113,7 +100,7 @@ function playPanel() {
     <h3>${ui.mode === 'ai' ? 'Rival deck · AI' : 'Player B deck'}</h3><div class="lb-panel__decks">${decks.map(d => deckBox(d, 'pick-b')).join('')}</div>
     <label class="lb-field">Opening initiative<select data-act="first">${[['random', 'Random'], ['A', ui.mode === 'ai' ? 'You' : 'Player A'], ['B', ui.mode === 'ai' ? 'AI' : 'Player B']]
       .map(([v, l]) => `<option value="${v}" ${ui.first === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
-    <button class="lb-play lb-play--wide" data-act="start" ${ready ? '' : 'disabled'}>${ready ? 'Play' : 'Pick two complete Athena decks · Poseidon, Hades, Ares and Artemis are preview only'}</button>
+    <button class="lb-play lb-play--wide" data-act="start" ${ready ? '' : 'disabled'}>${ready ? 'Play' : 'Pick two complete decks'}</button>
   </aside>`;
 }
 
@@ -186,7 +173,7 @@ function builder() {
       <ol class="lb-strips">${list.map(e => `<li><button class="lb-strip" data-act="remove" data-id="${e.card_id}" data-card="${e.card_id}" style="--art:url('${artOf(e.card_id) || ''}')">
         <b class="lb-gem ${e.card.cost?.unit || ''}">${e.card.cost?.amount ?? '–'}</b><span>${esc(e.card.name)}</span><em>×${e.quantity}</em></button></li>`).join('')
         || '<li class="lb-empty">Click cards in the collection to add them.</li>'}</ol>
-      ${errors.length ? `<ul class="lb-errors">${errors.slice(0, 4).map(e => `<li>${errorText(e)}</li>`).join('')}</ul>` : (deckPlayable(d) ? '<p class="lb-ok">Deck ready to play.</p>' : '<p class="lb-ok">Deck complete. Poseidon, Hades, Ares and Artemis cards are preview only: matches come later.</p>')}
+      ${errors.length ? `<ul class="lb-errors">${errors.slice(0, 4).map(e => `<li>${errorText(e)}</li>`).join('')}</ul>` : '<p class="lb-ok">Deck ready to play.</p>'}
       <div class="lb-list__actions">${d.id ? '<button class="lb-ghost" data-act="delete-deck">Delete</button>' : ''}
         <button class="lb-ghost" data-act="go" data-screen="decks">Cancel</button><button class="lb-play lb-play--small" data-act="save-deck">Done</button></div>
     </aside>
@@ -331,10 +318,7 @@ async function init() {
     get(`${ART}cards.json`).catch(() => ({cartas: []})), get('../data/alpha-0.1/decks-preview.json').catch(() => ({decks: []}))]);
   cards = loadCanon(canon); index = canonIndex(canon);
   forge = new Map(art.cartas.map(c => [c.id, c]));
-  for (const f of art.cartas.filter(c => /^(poseidon|hades|ares|artemis|neutral)-v6-/.test(c.id))) {
-    const r = previewRecord(f);
-    cards.set(r.id, {...parseCard(r), preview: true}); index.set(r.id, r);
-  }
+  addPreviewCards(cards, index, art.cartas);
   presets = [...deckData.decks, ...previewDecks.decks];
   gods = canon.gods.map(g => cards.get(g.id.toLowerCase()));
   if (!findDeck(ui.deckA, presets)) ui.deckA = presets[0]?.id;

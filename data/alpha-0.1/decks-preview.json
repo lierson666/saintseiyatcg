@@ -1,5 +1,5 @@
 {
-  "nota": "Decks iniciais de prévia dos Gods além de Athena, aprovados pelo autor (Poseidon e Hades em 28/10/2026; Ares e Artemis em 29/10/2026). Não jogáveis até a engine conhecer as cartas.",
+  "nota": "Decks iniciais de prévia dos Gods além de Athena, aprovados pelo autor (Poseidon e Hades em 28/10/2026; Ares e Artemis em 29/10/2026). Jogáveis desde a etapa 1 (29/10/2026): custo, ATK/HP, keywords e bônus fixo; habilidades ainda não implementadas.",
   "decks": [
     {
       "id": "preview-poseidon-tide",
