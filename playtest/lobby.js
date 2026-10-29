@@ -48,7 +48,14 @@ function face(id, cls = '') {
 const allDecks = () => [...presets.map(d => ({...d, preset: true})), ...loadMyDecks()];
 const deckGod = d => d.god || 'god-athena';
 const deckSize = d => d.main_deck.reduce((n, e) => n + e.quantity, 0);
-const deckValid = d => !validateDeck(d, index).length;
+// Identidade de cores (guia §63): facção do God, facção do Domain e neutras.
+const deckFactions = d => new Set([faction(cards.get(deckGod(d))), d.domain_id && cards.get(d.domain_id) && faction(cards.get(d.domain_id)), 'neutral'].filter(Boolean));
+function deckErrors(d) {
+  const ok = deckFactions(d);
+  return [...validateDeck(d, index), ...d.main_deck.filter(e => cards.get(e.card_id) && !ok.has(faction(cards.get(e.card_id))))
+    .map(e => ({code: 'identity', card_id: e.card_id}))];
+}
+const deckValid = d => !deckErrors(d).length;
 const deckPlayable = d => deckValid(d) && !isPreview(d.domain_id) && !d.main_deck.some(e => isPreview(e.card_id));
 function deckCover(d) {
   const first = d.main_deck.map(e => e.card_id).find(id => artOf(id));
@@ -130,9 +137,10 @@ function openBuilder(deck) {
 }
 const count = (b, id) => b.deck.main_deck.find(e => e.card_id === id)?.quantity || 0;
 function pool(b) {
-  const factions = new Set([faction(cards.get(b.deck.god)), b.deck.domain_id && faction(cards.get(b.deck.domain_id)), 'neutral'].filter(Boolean));
+  const factions = deckFactions(b.deck);
   const q = b.q.trim().toLowerCase();
-  return [...cards.values()].filter(c => c.kind !== 'God' && factions.has(faction(c))
+  // Domain de qualquer facção pode ser a base; ele traz a própria cor para o deck.
+  return [...cards.values()].filter(c => c.kind !== 'God' && (c.kind === 'Domain' || factions.has(faction(c)))
     && (b.kind === 'All' || kindOf(c) === b.kind)
     && (b.cost === 'All' || (b.cost === '7+' ? (c.cost?.amount ?? 0) >= 7 : c.cost?.amount === Number(b.cost)))
     && (!q || `${c.name} ${c.text}`.toLowerCase().includes(q))).sort(sortCards);
@@ -140,11 +148,11 @@ function pool(b) {
 function errorText(e) {
   const name = id => esc(cards.get(id)?.name || id);
   return {domain: 'Choose a Domain from the collection.', size: `${e.total} / ${DECK_SIZE} cards.`, copies: `${name(e.card_id)}: ${e.count} copies (max ${COPY_LIMIT}).`,
-    unknown: `${name(e.card_id)} is not in the card pool.`, outside: `${name(e.card_id)} can't go in the main deck.`, quantity: `${name(e.card_id)}: invalid quantity.`}[e.code] || e.code;
+    unknown: `${name(e.card_id)} is not in the card pool.`, outside: `${name(e.card_id)} can't go in the main deck.`, identity: `${name(e.card_id)} is outside this deck's colors (God, Domain and neutral).`, quantity: `${name(e.card_id)}: invalid quantity.`}[e.code] || e.code;
 }
 function builder() {
   const b = ui.builder, d = b.deck, list = d.main_deck.map(e => ({...e, card: cards.get(e.card_id)})).filter(e => e.card).sort((x, y) => sortCards(x.card, y.card));
-  const errors = validateDeck(d, index), size = deckSize(d), curve = [1, 2, 3, 4, 5, 6, 7].map(n => list.filter(e => (n === 7 ? (e.card.cost?.amount ?? 0) >= 7 : e.card.cost?.amount === n)).reduce((s, e) => s + e.quantity, 0));
+  const errors = deckErrors(d), size = deckSize(d), curve = [1, 2, 3, 4, 5, 6, 7].map(n => list.filter(e => (n === 7 ? (e.card.cost?.amount ?? 0) >= 7 : e.card.cost?.amount === n)).reduce((s, e) => s + e.quantity, 0));
   const peak = Math.max(1, ...curve), cards_ = pool(b);
   const pill = (key, v) => `<button class="lb-pill ${b[key] === v ? 'is-active' : ''}" data-act="filter" data-key="${key}" data-value="${v}">${v}</button>`;
   const domain = d.domain_id && cards.get(d.domain_id);
@@ -286,7 +294,7 @@ root.addEventListener('contextmenu', e => {
 root.addEventListener('change', e => {
   const t = e.target, act = t.dataset.act;
   if (act === 'first') { ui.first = t.value; remember(); }
-  else if (act === 'god') { Object.assign(ui.builder.deck, {god: t.value, domain_id: null}); ui.builder.dirty = true; }
+  else if (act === 'god') { ui.builder.deck.god = t.value; ui.builder.dirty = true; }
   else if (act === 'rename') { ui.builder.deck.nome = t.value.trim() || 'New deck'; ui.builder.dirty = true; }
   else return;
   render();
