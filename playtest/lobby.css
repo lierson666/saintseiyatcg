@@ -211,6 +211,6 @@ h1, h2, h3, .lb-play, .lb-tab, .lb-hero p { font-family: "Cinzel", "Trajan Pro",
 .lb-picker__box header { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--line); }
 .lb-picker__box h2 { margin: 0; font-family: "Cinzel", Georgia, serif; color: var(--gold); font-size: 20px; }
 .lb-picker__grid { overflow: auto; padding: 18px 20px 24px; display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 16px 12px; }
-/* Assinatura fixa do projeto (autor, 29/10/2026): aparece sempre no lobby. */
+/* Assinatura fixa do projeto, em inglês (autor, 29/10/2026): aparece sempre no lobby. */
 .lb-love { position: fixed; left: 0; right: 0; bottom: 4px; z-index: 5; text-align: center; pointer-events: none; font-size: 11px; letter-spacing: .12em; color: #e6c36acc; text-shadow: 0 1px 4px #000; }
 .lb-love span { color: #ff6b5a; }

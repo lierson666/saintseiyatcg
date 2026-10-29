@@ -249,7 +249,7 @@ const SCROLLERS = ['.lb-body', '.lb-grid', '.lb-list', '.lb-panel'];
 function render() {
   const keep = SCROLLERS.map(sel => root.querySelector(sel)?.scrollTop || 0), screen = root.dataset.screen;
   const body = {home, decks: decksScreen, options, builder}[ui.screen]();
-  root.innerHTML = `${topBar()}<div class="lb-body lb-body--${ui.screen}">${body}</div><footer class="lb-love">Feito com muito amor por fãs brasileiros <span aria-label="amor">♥</span></footer>${bigCard()}${picker()}${notice()}`;
+  root.innerHTML = `${topBar()}<div class="lb-body lb-body--${ui.screen}">${body}</div><footer class="lb-love">Made with lots of love by Brazilian fans <span aria-label="love">♥</span></footer>${bigCard()}${picker()}${notice()}`;
   if (screen === ui.screen) SCROLLERS.forEach((sel, i) => { const el = root.querySelector(sel); if (el) el.scrollTop = keep[i]; });
   root.dataset.screen = ui.screen;
 }
