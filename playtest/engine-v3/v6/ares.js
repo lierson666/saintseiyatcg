@@ -239,7 +239,12 @@ export default {
   },
   // Enyo, Spear of Destruction
   'ares-v6-289': merge(gearDeclareDamage(3, 'FLAME OF ANNIHILATION'), gearKillGod(3), gearKeywords(['Pierce'], berserker)),
-  // 290 Shield of the War God: pendente (sem gancho "survives combat" nem "takes damage").
+  // 290 Shield of the War God. Warborn Defiance (gancho gearSurvive): o portador sobreviveu ao combate; 2 de dano ao Devotee inimigo
+  // envolvido. Unyielding Fury (gancho gearTookDamage): ao tomar dano, +2 ATK até o fim do turno (aproximado por 'this_round', como o buff).
+  'ares-v6-290': {
+    gearSurvive: (s, c, key, self, bearer, role, foe) => !!foe && (st => { if (alive(st, foe)) hit(st, c, foe, 2); }),
+    gearTookDamage: (s, c, key, self, bearer) => st => buff(st, bearer, 2),
+  },
   'ares-v6-291': declareGod(1),
   'ares-v6-292': {watchDeclare: (s, c, key, self, attacker) => friendlyBerserkerDeclared(s, c, key, self, attacker) && (st => buff(st, self, 1))},
   'ares-v6-293': deathGod(1),
@@ -262,7 +267,8 @@ export default {
     watchDeclare: (s, c, key, self, attacker) => friendlyBerserkerDeclared(s, c, key, self, attacker) && (st => buff(st, self, 1)),
     killInCombat: (s, c, key) => st => hit(st, c, foeGod(st, key), 2),
   },
-  // 303 Bloodstained Gladiator: pendente (sem gancho "is dealt damage").
+  // 303 Bloodstained Gladiator: Bloodied Pride (gancho tookDamage), Strike ou efeito.
+  'ares-v6-303': {tookDamage: (s, c, key) => st => hit(st, c, ownGod(key), 1)},
   'ares-v6-304': {
     declare: (s, c, key, self, target) =>
       target.kind === 'devotee' && k.keywordsOf(s, c, target.uid).includes('Guardian') && (st => buff(st, self, 2)),
@@ -289,8 +295,12 @@ export default {
     },
   },
   'ares-v6-308': {endTurn: (s, c, key, self) => s.strikes.get(self) !== s.turn && (st => hit(st, c, ownGod(key), 1))},
-  // Ares' Royal Guard. pendente: War God's Protection (sem gancho "another friendly Berserker is dealt damage").
+  // Ares' Royal Guard. War God's Protection (gancho watchTookDamage): outro Berserker amigo tomou dano; pode causar 1 a um Devotee inimigo.
   'ares-v6-309': {
+    watchTookDamage: (s, c, key, self, unit) => unit !== self && k.controllerOf(s, unit) === key && berserker(c, unit) && (st => {
+      if (!k.enemies(st, c, key).length || !k.may(c, key, "WAR GOD'S PROTECTION", {uid: self, text: 'Deal 1 damage to target enemy Devotee?'})) return;
+      hit(st, c, enemyDevotee(st, c, key, "WAR GOD'S PROTECTION"), 1);
+    }),
     mods: (s, c, key, self) => {
       const n = Math.min(3, declaredBy(s, c, key).filter(u => u !== self).length);
       return n ? [{atk: n}] : [];
@@ -410,8 +420,15 @@ export default {
   'ares-v6-336': merge(gearKeywords(['Pierce'], (c, b) => berserker(c, b) && k.hasType(c, b, 'Red Fire Legion')), {
     gearDeclare: (s, c, key) => st => hit(st, c, foeGod(st, key), 1),
   }),
-  // pendente: Flame Resonance (sem gancho "whenever you cast a Moment or Technique").
-  'ares-v6-337': gearDeclareOther(1, 'CALCULATED STRIKE'),
+  // Flame Resonance (gancho watchSpell): portador Flame Legion Berserker e você conjura Moment ou Technique (Event/Miracle jogam
+  // como Technique, §54): +1 ATK até o fim do turno. Só devolve gatilho quando vale (senão a Spell resolve sem janela).
+  'ares-v6-337': merge(gearDeclareOther(1, 'CALCULATED STRIKE'), {
+    watchSpell: (s, c, key, self, caster, spellUid) => {
+      const bearer = k.bearerOf(c, self);
+      return caster === key && !!bearer && berserker(c, bearer) && k.hasType(c, bearer, 'Flame Legion') &&
+        /Moment|Technique|Event|Miracle/.test(k.card(c, spellUid)?.type || '') && (st => buff(st, bearer, 1));
+    },
+  }),
   'ares-v6-338': {
     bearerDefeated: (s, c, key, self, bearer) => st => {
       hit(st, c, enemyDevotee(st, c, key, 'LAST LAUGH'), 2);
@@ -431,8 +448,10 @@ export default {
       return named(c, bearer, 'BERSERKER CHAMPION') && friendlyBerserkerDeclared(s, c, key, bearer, attacker) && (st => buff(st, bearer, 1));
     },
   }),
-  // Crimson Fire Guardian. pendente: Crimson Retaliation (sem gancho "is dealt combat damage by an enemy Devotee").
-  'ares-v6-341': {killInCombat: (s, c, key) => st => hit(st, c, foeGod(st, key), 2)},
+  // Crimson Fire Guardian. Crimson Retaliation (gancho tookDamage): dano de combate de Devotee inimigo, 2 de volta nele.
+  'ares-v6-341': {
+    tookDamage: (s, c, key, self, info) => info.combat && !!info.foe && (st => { if (alive(st, info.foe)) hit(st, c, info.foe, 2); }),
+    killInCombat: (s, c, key) => st => hit(st, c, foeGod(st, key), 2)},
   'ares-v6-342': {
     enter: (s, c, key) => st => lookTop(st, c, key, 3, 'STRATEGIC DEPLOYMENT'),
     watchDeclare: (s, c, key, self, attacker) => friendlyBerserkerDeclared(s, c, key, self, attacker)

@@ -96,7 +96,10 @@ export function addSeal(state, ctx, uids, n, source) {
 // G3-033: Prepare redundante em Devotee já Prepared não remove marcadores.
 export function prepareUnit(state, uid) {
   const unit = state.units[uid];
-  if (unit.prepared || !unit.seal) { unit.prepared = true; return true; }
+  if (unit.prepared) return true;
+  // Gancho cannotPrepare (v6/registry.js): "cannot be Prepared this round" — efeito 'noPrepare' no alvo; nem o Seal é gasto.
+  if (state.effects.some(e => e.kind === 'noPrepare' && e.target === uid)) { emit(state, 'prepare_blocked', {uid}); return false; }
+  if (!unit.seal) { unit.prepared = true; return true; }
   unit.seal--;
   emit(state, 'seal_removed', {uid, counters: unit.seal});
   return false;

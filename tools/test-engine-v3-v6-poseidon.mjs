@@ -9,6 +9,7 @@ import {addPreviewCards} from '../shared/preview-cards.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
 import {startTurn, passAll, addSeal, RuleError} from '../playtest/engine-v3/core.js';
 import {playDevotee, playSpell, activate} from '../playtest/engine-v3/play.js';
+import {V6} from '../playtest/engine-v3/v6/hooks.js';
 import {declareStrike} from '../playtest/engine-v3/strike.js';
 import {atkOf, hpOf} from '../playtest/engine-v3/effects.js';
 
@@ -59,6 +60,7 @@ test('enter + bounce: Sea Dragon Kanon devolve o Devotee inimigo à mão do Owne
 
 test('spell + watchSealed: Abyssal Weight põe 1 Seal, ou 2 se já tinha; Whispers Below observa 1×/Round', () => {
   const {s, ctx, A, put, asked} = poseidon();
+  s.domains.A = null; // o Domain 142 (Oceanic Dominion) compraria e descartaria ao conjurar: fora deste teste
   put('A', P('102'), 'battlefield');
   const foe = put('B', 'hades-v6-211', 'battlefield'), spell = put('A', P('137')), top = A.deck[0];
   playSpell(s, ctx, 'A', spell, {}); passAll(s);
@@ -137,4 +139,127 @@ test('dano dividido: Wrath of the Seven Seas reparte 5 entre os alvos escolhidos
   playSpell(s, ctx, 'A', put('A', P('174')), {}); passAll(s);
   assert.equal(s.units[a].damage + s.units[b].damage, 5);
   assert.ok(s.units[a].damage > 0 && s.units[b].damage > 0);
+});
+
+// ---- Completados com os ganchos novos (29/10/2026) ----
+const done = s => { while (s.window) passAll(s); };
+const bases = p => p.bases.filter(b => b.prepared).length;
+
+test('watchSpell: Pearl Sanctuary Keeper compra e descarta ao conjurar Technique (uma vez por Round, paga {1}{C})', () => {
+  const {s, ctx, A, put} = poseidon();
+  s.domains.A = null;
+  const keeper = put('A', P('116'), 'battlefield');
+  const hand0 = A.hand.length, b0 = bases(A);
+  const spell = put('A', P('137'));
+  playSpell(s, ctx, 'A', spell, {}); done(s);
+  assert.ok(s.roundUses.has(`pearldiv:${keeper}`));
+  // compra 1 e descarta 1 (+ descarta a carta paga pelo Pearl of Protection? não: paga {1}{C}); Spell paga o custo impresso
+  assert.equal(A.hand.length, hand0 + 1 /* Spell posta na mão */ - 1 /* conjurada */ + 1 - 1);
+  assert.ok(bases(A) <= b0 - 1);
+  const b1 = bases(A);
+  playSpell(s, ctx, 'A', put('A', P('137')), {}); done(s);
+  assert.equal(bases(A), b1 - cards.get(P('137')).cost.amount, 'segunda conjuração no Round: Pearl Divination não paga de novo');
+});
+
+test('watchSpell (Domain): Oceanic Dominion vale ao conjurar; Ancient Secrets (148) e Forgotten Knowledge ativado por domain:A', () => {
+  const {s, ctx, A, put, asked} = poseidon();
+  s.domains.A = P('142');
+  playSpell(s, ctx, 'A', put('A', P('137')), {}); done(s);
+  assert.ok(asked.some(q => q.ability === 'OCEANIC DOMINION'));
+  const {s: s2, ctx: c2, A: A2, put: put2, asked: asked2} = poseidon();
+  s2.domains.A = P('148');
+  const tartarus0 = A2.tartarus.length, bases0 = bases(A2);
+  activate(s2, c2, 'A', 'domain:A'); done(s2);
+  assert.equal(A2.tartarus.length, tartarus0 + 1); // comprou 1 e descartou 1
+  assert.equal(bases(A2), bases0 - 2);
+  playSpell(s2, c2, 'A', put2('A', P('137')), {}); done(s2);
+  assert.ok(asked2.some(q => q.ability === 'ANCIENT SECRETS'));
+  assert.ok(A2);
+});
+
+test('watchSpell: Poseidon\'s Trident (178) compra ao conjurar Technique e Royal Scepter (170) saqueia', () => {
+  const {s, ctx, A, put} = poseidon();
+  s.domains.A = null;
+  put('A', P('178'), 'battlefield'); put('A', P('170'), 'battlefield');
+  const spell = put('A', P('137'));
+  const hand0 = A.hand.length;
+  playSpell(s, ctx, 'A', spell, {}); done(s);
+  // +1 (Trident) +1 -1 (Scepter) -1 (Spell conjurada)
+  assert.equal(A.hand.length, hand0 + 1 + 1 - 1 - 1 + 0);
+});
+
+test('Sacred Interdiction (119): contra-mágica do Moment/Technique inimigo, a menos que o controlador pague {2}{C}', () => {
+  const {s, ctx, B, A, put} = poseidon({'SACRED INTERDICTION': (q) => (q.options ? q.options[0] : true)});
+  const warden = put('A', P('119'), 'battlefield');
+  // B conjura uma Technique do Hades; A tem prioridade para o gatilho.
+  s.active = 'B';
+  B.bases = B.deck.splice(0, 6).map(uid => ({uid, prepared: true}));
+  const spell = put('B', 'hades-v6-233');
+  const b0 = bases(B);
+  playSpell(s, ctx, 'B', spell, {}); done(s);
+  // B responde "sim" à pergunta de pagar {2}{C}? answers devolve true para qualquer jogador: B paga e a Spell resolve
+  assert.equal(s.units[warden].prepared, false);
+  assert.ok(bases(B) <= b0 - 2 - cards.get('hades-v6-233').cost.amount + 0);
+  assert.ok(A);
+});
+
+test('Sacred Interdiction (119): sem pagar, a Spell é anulada e vai ao Tartarus sem efeito', () => {
+  const {s, ctx, B, put} = poseidon({'SACRED INTERDICTION': q => !q.uid /* só o gatilho do Warden tem uid; o controlador da Spell recusa pagar */ ? false : true});
+  put('A', P('119'), 'battlefield');
+  s.active = 'B';
+  B.bases = B.deck.splice(0, 6).map(uid => ({uid, prepared: true}));
+  const spell = put('B', 'hades-v6-233'), soul = B.soul;
+  playSpell(s, ctx, 'B', spell, {}); done(s);
+  assert.ok(B.tartarus.includes(spell));
+  assert.equal(B.soul, soul, 'The Call of the Underworld perde Soul se resolver: não resolveu');
+  assert.ok(s.events.some(e => e.type === 'spell_countered'));
+});
+
+test('survive: Atlantean Sentinel (105) põe Seal no atacante; Baian (145) e War Helm (130) como defensores', () => {
+  const {s, ctx, A, put} = poseidon();
+  s.domains.A = null;
+  const sentinel = put('A', P('105'), 'battlefield'), foe = put('B', 'hades-v6-211', 'battlefield');
+  s.effects.push({kind: 'mod', target: sentinel, atk: 0, hp: 10, keywords: [], duration: 'this_round'});
+  s.active = 'B';
+  declareStrike(s, ctx, foe, {kind: 'devotee', uid: sentinel}); passAll(s);
+  assert.equal(s.units[foe].seal, 1);
+  assert.ok(A);
+});
+
+test('Frozen Brotherhood (097): Isaac ataca Hyoga e sobrevivem: 1 Seal sai de cada um', () => {
+  const {s, ctx, put} = poseidon();
+  s.domains.A = null;
+  const isaac = put('A', P('097'), 'battlefield'), hyoga = put('B', 'athena-v6-005', 'battlefield');
+  s.effects.push({kind: 'mod', target: isaac, atk: 0, hp: 20, keywords: [], duration: 'this_round'});
+  s.effects.push({kind: 'mod', target: hyoga, atk: 0, hp: 20, keywords: [], duration: 'this_round'});
+  s.units[isaac].seal = 2; s.units[hyoga].seal = 1;
+  declareStrike(s, ctx, isaac, {kind: 'devotee', uid: hyoga}); passAll(s);
+  assert.equal(s.units[isaac].seal, 2, '2 +1 (Diamond Dust do Hyoga) -1 (Frozen Brotherhood)');
+  assert.equal(s.units[hyoga].seal, 1, '1 +1 (Aurora Borealis) -1 (Frozen Brotherhood)');
+});
+
+test('gearSurvive: Atlantean War Helm (130) olha o topo do deck como defensor (uma vez por Round)', () => {
+  const {s, ctx, put, asked} = poseidon();
+  s.domains.A = null;
+  const me = put('A', 'poseidon-v6-101', 'battlefield'), helm = put('A', P('130'), 'battlefield'), foe = put('B', 'hades-v6-211', 'battlefield');
+  ctx.attached[helm] = me;
+  s.effects.push({kind: 'mod', target: me, atk: 0, hp: 10, keywords: [], duration: 'this_round'});
+  s.active = 'B';
+  declareStrike(s, ctx, foe, {kind: 'devotee', uid: me}); passAll(s);
+  assert.ok(asked.some(q => q.ability === 'BATTLE AWARENESS'));
+  assert.ok(s.roundUses.has(`awareness:${helm}`));
+});
+
+test('watchSurvive (Domain 145): Seahorse Baian defensor sobrevive: compra e descarta (uma vez por Round)', () => {
+  // Baian tem Long Range (Strike recusado pela engine, ALPHA-P05): o gancho é chamado direto.
+  const {s, ctx, A, put} = poseidon();
+  s.domains.A = P('145');
+  const baian = put('A', P('095'), 'battlefield'), foe = put('B', 'hades-v6-211', 'battlefield');
+  const tartarus0 = A.tartarus.length;
+  const hook = V6[P('145')].watchSurvive;
+  assert.equal(hook(s, ctx, 'A', 'domain:A', baian, 'attacker', foe), false); // só como defensor
+  hook(s, ctx, 'A', 'domain:A', baian, 'defender', foe)(s);
+  assert.equal(A.tartarus.length, tartarus0 + 1);
+  assert.ok(s.roundUses.has('baian-surv:domain:A'));
+  assert.equal(hook(s, ctx, 'A', 'domain:A', baian, 'defender', foe), false); // uma vez por Round
 });

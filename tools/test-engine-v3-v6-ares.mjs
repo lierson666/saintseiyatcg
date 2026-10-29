@@ -11,6 +11,8 @@ import {startTurn, endTurn, passAll} from '../playtest/engine-v3/core.js';
 import {playDevotee, playSpell, activate} from '../playtest/engine-v3/play.js';
 import {declareStrike} from '../playtest/engine-v3/strike.js';
 import {checkDefeats, atkOf, keywordsOf} from '../playtest/engine-v3/effects.js';
+import * as k from '../playtest/engine-v3/v6/kit.js';
+import {V6} from '../playtest/engine-v3/v6/hooks.js';
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json'), cards = loadCanon(canon), index = canonIndex(canon);
@@ -147,4 +149,63 @@ test('Basil: inimigo que levou dano dele no turno e morre tira 1 do God', () => 
   const soul = s.players.B.soul;
   s.units[foe].damage = 99; checkDefeats(s, ctx); passAll(s);
   assert.equal(s.players.B.soul, soul - 1);
+});
+
+// ---- Completados com os ganchos novos (29/10/2026) ----
+test('303 Bloodied Pride: tomar dano (Strike ou efeito) causa 1 ao próprio God', () => {
+  const {s, ctx, give} = setup();
+  const glad = give('A', '303'), foe = give('B', '304'), soul = s.players.A.soul;
+  strike(s, ctx, glad, {kind: 'devotee', uid: foe}); // 303 tem HP 1: o Strike o derrota, mas o gatilho ainda vale
+  assert.equal(s.players.A.soul, soul - 1);
+  const {s: s2, ctx: c2, give: g2} = setup();
+  const glad2 = g2('A', '303'), soul2 = s2.players.A.soul;
+  k.damage(s2, c2, glad2, 1); passAll(s2);
+  assert.equal(s2.players.A.soul, soul2 - 1);
+  assert.ok(V6['ares-v6-303']);
+});
+
+test('341 Crimson Retaliation: dano de combate de Devotee inimigo volta em 2 para ele', () => {
+  const {s, ctx, give} = setup();
+  const guard = give('A', '341'), foe = give('B', '304'); // 304: 3/2, o Guardian leva 3
+  s.active = 'B'; strike(s, ctx, foe, {kind: 'devotee', uid: guard});
+  assert.ok(s.players.B.tartarus.includes(foe)); // morre na retaliação (5) de qualquer jeito
+  const {s: s2, ctx: c2, give: g2} = setup();
+  const guard2 = g2('A', '341'), foe2 = g2('B', '309'); // 4/5: sobrevive ao 5 de retaliação? HP 5 -> morre; usa 2 de HP extra
+  s2.effects.push({kind: 'mod', target: foe2, atk: 0, hp: 10, keywords: [], duration: 'this_round'});
+  s2.active = 'B'; strike(s2, c2, foe2, {kind: 'devotee', uid: guard2});
+  const back = s2.events.find(e => e.type === 'damage' && e.uid === foe2 && e.strike).dealt;
+  assert.equal(s2.units[foe2].damage, back + 2); // retaliação + 2 de Crimson Retaliation
+});
+
+test('309 War God\'s Protection: outro Berserker amigo tomou dano; pode causar 1 a um Devotee inimigo', () => {
+  const {s, ctx, give} = setup();
+  const royal = give('A', '309'), ally = give('A', '292'), foe = give('B', '309');
+  s.effects.push({kind: 'mod', target: foe, atk: 0, hp: 10, keywords: [], duration: 'this_round'});
+  k.damage(s, ctx, ally, 1); passAll(s);
+  assert.equal(s.units[foe].damage, 1);
+  assert.ok(royal);
+});
+
+test('290 Shield of the War God: sobrevive e causa 2 ao Devotee inimigo; ao tomar dano ganha +2 ATK', () => {
+  const {s, ctx, give} = setup();
+  const me = give('A', '309'), shield = give('A', '290', 'battlefield', me), foe = give('B', '309');
+  s.effects.push({kind: 'mod', target: foe, atk: 0, hp: 10, keywords: [], duration: 'this_round'});
+  const atk = atkOf(s, ctx, me);
+  strike(s, ctx, me, {kind: 'devotee', uid: foe});
+  assert.equal(s.units[foe].damage, atkOf(s, ctx, me) - 2 + 2); // dano do Strike (ATK já com +2) + 2 da Warborn Defiance
+  assert.equal(atkOf(s, ctx, me), atk + 2); // Unyielding Fury (retaliação do foe feriu o portador)
+  assert.ok(shield);
+});
+
+test('337 Flame Resonance: Flame Legion Berserker equipado ganha +1 ATK quando você conjura Technique', () => {
+  const {s, ctx, give} = setup();
+  const bers = give('A', '292'), plate = give('A', '337', 'battlefield', bers);
+  const spell = give('A', '323', 'hand'), ally = give('A', '292');
+  const atk = atkOf(s, ctx, bers);
+  playSpell(s, ctx, 'A', spell, {target: ally});
+  assert.ok(s.window); // gatilho do observador: a Technique espera na cadeia
+  passAll(s);
+  assert.equal(atkOf(s, ctx, bers), atk + 2 + 1); // +2 da Charge Into Battle (alvo: o primeiro Berserker) e +1 da Flame Resonance
+  assert.ok(s.players.A.tartarus.includes(spell));
+  assert.ok(plate);
 });

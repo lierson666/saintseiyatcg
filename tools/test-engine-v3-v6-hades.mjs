@@ -10,7 +10,8 @@ import {createMatch} from '../playtest/engine-v3/match.js';
 import {startTurn, passAll} from '../playtest/engine-v3/core.js';
 import {playDevotee, playSpell, activate} from '../playtest/engine-v3/play.js';
 import {declareStrike} from '../playtest/engine-v3/strike.js';
-import {checkDefeats, atkOf, hpOf, keywordsOf} from '../playtest/engine-v3/effects.js';
+import {checkDefeats, atkOf, hpOf, keywordsOf, damageDevotee} from '../playtest/engine-v3/effects.js';
+import {toHand, toTartarus} from '../playtest/engine-v3/v6/kit.js';
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json'), cards = loadCanon(canon), index = canonIndex(canon);
@@ -181,4 +182,45 @@ test('Will of Hades: modo escolhido; perde 1 Soul', () => {
   cast('hades-v6-241'); done(s);
   assert.equal(hpOf(s, ctx, foe), 2);
   assert.equal(p.soul, 9);
+});
+
+// ---- Completados com os ganchos novos (29/10/2026) ----
+test('Gemini Saga: devolvida à mão (sai do campo por outra via), também devolve o exilado', () => {
+  const {s, ctx, b, add, play} = hades();
+  const foe = add('hades-v6-206', 'B', 'battlefield');
+  const saga = play('hades-v6-255'); done(s);
+  assert.ok(b.void.includes(foe));
+  toHand(s, ctx, saga, 'battlefield'); done(s);
+  assert.ok(b.battlefield.includes(foe));
+});
+
+test('200 Pandora\'s Box — The Last Hope: ao sair do campo, God ganha 3 Soul e compra 1', () => {
+  const {s, ctx, p, add} = hades();
+  const box = add('hades-v6-200', 'A', 'battlefield');
+  const hand = p.hand.length, soul = p.soul;
+  toHand(s, ctx, box, 'battlefield'); done(s);
+  assert.equal(p.soul, soul + 3);
+  assert.equal(p.hand.length, hand + 1 + 1); // a própria Box volta à mão e compra 1
+});
+
+test('224 Cracked Surplice — Broken Offering: Armor quebrada por dano (portador vivo) paga 1 Soul e devolve um Devotee de custo 1', () => {
+  const {s, ctx, p, add, answers} = hades();
+  const dev = add('hades-v6-218', 'A', 'battlefield'), surplice = add('hades-v6-224', 'A', 'battlefield');
+  ctx.attached[surplice] = dev;
+  s.units[surplice] = {damage: 0};
+  s.effects.push({kind: 'mod', target: dev, atk: 0, hp: 20, keywords: [], duration: 'this_round'});
+  const cheap = add('hades-v6-220', 'A', 'tartarus'), soul = p.soul;
+  assert.ok(cards.get('hades-v6-220').cost.amount <= 1, 'carta de teste com custo 1');
+  answers({'BROKEN OFFERING': (pl, q) => (q.options ? q.options[0] : true)});
+  damageDevotee(s, ctx, dev, 10, false); done(s);
+  assert.ok(p.tartarus.includes(surplice) && p.battlefield.includes(dev));
+  assert.ok(p.hand.includes(cheap));
+  assert.equal(p.soul, soul - 1);
+});
+
+test('231 Torch of the Underworld — Guiding Light: ao ir para o Tartarus, 2 cartas do deck vão junto', () => {
+  const {s, ctx, p, add} = hades();
+  const torch = add('hades-v6-231', 'A', 'battlefield'), deck = p.deck.length;
+  toTartarus(s, ctx, torch, 'battlefield'); done(s);
+  assert.equal(p.deck.length, deck - 2);
 });

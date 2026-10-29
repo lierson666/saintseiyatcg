@@ -11,7 +11,9 @@ import {startTurn, endTurn, passAll, runCheckpoint} from '../playtest/engine-v3/
 import {playDevotee, playSpell, activate} from '../playtest/engine-v3/play.js';
 import {declareStrike} from '../playtest/engine-v3/strike.js';
 import {V6} from '../playtest/engine-v3/v6/hooks.js';
-import {checkDefeats, atkOf, hpOf} from '../playtest/engine-v3/effects.js';
+import {checkDefeats, atkOf, hpOf, modify} from '../playtest/engine-v3/effects.js';
+import * as k from '../playtest/engine-v3/v6/kit.js';
+const modifyAtk = (s, uid, atk) => modify(s, uid, {atk});
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json'), cards = loadCanon(canon), index = canonIndex(canon);
@@ -180,7 +182,7 @@ test('029 Hanging Bear: o Devotee atingido não declara Strike no turno seguinte
   const geki = give('A', 'athena-v6-029'), foe = give('B', 'athena-v6-007');
   strike(s, ctx, geki, {kind: 'devotee', uid: foe});
   assert.ok(s.roundUses.has(`${geki}:hanging`));
-  assert.equal(s.strikes.get(foe), s.turn + 1);
+  assert.ok(s.effects.some(e => e.kind === 'noStrike' && e.target === foe)); // gancho cannotStrike: até o fim do Round
 });
 
 test('030 Poisonous Claws e 033 Chameleon Whip: atingido perde 1 ATK até o fim da rodada', () => {
@@ -274,4 +276,92 @@ test('075 Cerberus Chains e Three-Headed Assault', () => {
   t.s.units[f2].seal = 1;
   strike(t.s, t.ctx, d2, {kind: 'devotee', uid: f2});
   assert.equal(t.s.units[f2].damage, atkOf(t.s, t.ctx, d2) + 1);
+});
+
+// ---- Completados com os ganchos novos (29/10/2026) ----
+test('009 Phoenix Rebirth: em vez de ser derrotado, tira o dano, cansa, ganha Rebirth e não ataca neste Round; só uma vez', () => {
+  const {s, ctx, give} = setup();
+  const ikki = give('A', 'athena-v6-009');
+  s.units[ikki].damage = hpOf(s, ctx, ikki);
+  checkDefeats(s, ctx);
+  assert.ok(s.players.A.battlefield.includes(ikki));
+  assert.equal(s.units[ikki].damage, 0);
+  assert.equal(s.units[ikki].prepared, false);
+  assert.equal(s.units[ikki].markers.Rebirth, 1);
+  assert.ok(s.effects.some(e => e.kind === 'noStrike' && e.target === ikki));
+  s.units[ikki].damage = hpOf(s, ctx, ikki);
+  checkDefeats(s, ctx);
+  assert.ok(s.players.A.tartarus.includes(ikki)); // com Rebirth já é derrotado
+});
+
+test('013 Another Dimension: Saga devolve o alvo ao sair por qualquer via (aqui, de volta à mão)', () => {
+  const {s, ctx, give} = setup();
+  const saga = give('A', 'athena-v6-013', 'hand'), foe = give('B', FOE);
+  playDevotee(s, ctx, 'A', saga, {}); passAll(s);
+  assert.ok(s.players.B.void.includes(foe));
+  k.toHand(s, ctx, saga, 'battlefield'); passAll(s);
+  assert.ok(s.players.B.battlefield.includes(foe));
+});
+
+test('023 Untouchable: Marble Wall previne todo o dano e Misty pode se Preparar, sem Strike no Round; Cloth 068 perde 1 dano', () => {
+  const {s, ctx, give} = setup();
+  const misty = give('A', 'athena-v6-023'), foe = give('B', 'athena-v6-005');
+  const cloth = give('A', 'athena-v6-068', 'battlefield', misty);
+  s.units[cloth] = {damage: 1};
+  s.units[misty].prepared = false;
+  foeStrike(s, ctx, foe, {kind: 'devotee', uid: misty});
+  assert.equal(s.units[misty].damage, 0);
+  assert.equal(s.units[misty].prepared, true);
+  assert.equal(s.units[cloth].damage, 0);
+  assert.ok(s.effects.some(e => e.kind === 'noStrike' && e.target === misty));
+});
+
+test('023 Untouchable: se o escudo não previne tudo, não dispara', () => {
+  const {s, ctx, give} = setup();
+  const misty = give('A', 'athena-v6-023'), foe = give('B', FOE); // ATK 3: o escudo cobre 3, então usa um atacante maior
+  s.units[misty].prepared = false;
+  modifyAtk(s, foe, 1); // ATK 4: o escudo previne 3, passa 1
+  foeStrike(s, ctx, foe, {kind: 'devotee', uid: misty});
+  assert.equal(s.units[misty].prepared, false);
+});
+
+test('024 Medusa Shield: paga {2}{C}; o atacante não é Prepared nem ataca neste Round; Stone Gaze dá +1/+1 ao sobreviver', () => {
+  const {s, ctx, give} = setup();
+  const algol = give('A', 'athena-v6-024'), foe = give('B', FOE), bases = ready(s, 'A'), atk = atkOf(s, ctx, algol);
+  foeStrike(s, ctx, foe, {kind: 'devotee', uid: algol});
+  assert.equal(ready(s, 'A'), bases - 2);
+  assert.ok(s.effects.some(e => e.kind === 'noPrepare' && e.target === foe));
+  assert.ok(s.effects.some(e => e.kind === 'noStrike' && e.target === foe));
+  assert.equal(atkOf(s, ctx, algol), atk + 1); // Stone Gaze
+  assert.equal(hpOf(s, ctx, algol), 4 + 1);
+});
+
+test('039 Guilty: outro Saint sobrevive a um Strike; Guilty pode causar 1 de dano a ele para dar +1 ATK', () => {
+  const {s, ctx, give} = setup();
+  const guilty = give('A', 'athena-v6-039'), ally = give('A', 'athena-v6-005'), foe = give('B', FOE);
+  const atk = atkOf(s, ctx, ally);
+  modifyAtk(s, foe, -1);
+  foeStrike(s, ctx, foe, {kind: 'devotee', uid: ally});
+  const hit = s.units[ally].damage;
+  assert.ok(hit >= 1 && s.players.A.battlefield.includes(ally));
+  assert.equal(atkOf(s, ctx, ally), atk + 1);
+  assert.ok(s.roundUses.has(`${guilty}:training`));
+});
+
+test('073 Million Ghost Attack: defensor que sobrevive ganha +1 ATK', () => {
+  const {s, ctx, give} = setup();
+  const hound = give('A', 'athena-v6-073'), foe = give('B', FOE), atk = atkOf(s, ctx, hound);
+  modifyAtk(s, foe, -2);
+  foeStrike(s, ctx, foe, {kind: 'devotee', uid: hound});
+  assert.equal(atkOf(s, ctx, hound), atk + 1);
+});
+
+test('074 Crow\'s Escape: defensor que sobrevive pode se Preparar, sem Strike neste Round', () => {
+  const {s, ctx, give} = setup();
+  const jamian = give('A', 'athena-v6-074'), foe = give('B', FOE);
+  s.units[jamian].prepared = false;
+  modifyAtk(s, foe, -2);
+  foeStrike(s, ctx, foe, {kind: 'devotee', uid: jamian});
+  assert.equal(s.units[jamian].prepared, true);
+  assert.ok(s.effects.some(e => e.kind === 'noStrike' && e.target === jamian));
 });

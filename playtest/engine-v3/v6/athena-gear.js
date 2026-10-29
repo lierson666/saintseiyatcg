@@ -4,14 +4,14 @@
 // não são repetidos aqui. {T} em Equipment = uma vez por Round (guia §61), por isso `once: true, tap: false`.
 import * as k from './kit.js';
 import {spendBase, addSeal} from '../core.js';
-import {shield} from '../effects.js';
+import {shield, isBronze} from '../effects.js';
 
 const name = (c, uid) => k.card(c, uid)?.name || '';
 const isSaint = (c, uid) => k.isDevotee(c, uid) && /Saint/.test(k.card(c, uid).type);
 const sealed = (s, uid) => (s.units[uid]?.seal || 0) > 0;
 const ready = (s, key) => s.players[key].bases.filter(b => b.prepared).length;
 const named = re => (c, uid) => !!uid && re.test(name(c, uid));
-const HYOGA = named(/Hyoga/i), SHUN = named(/\bShun\b/i), IKKI = named(/Ikki/i), MU = named(/\bMu\b/i), SAGA = named(/Saga/i),
+const MARIN = named(/Eagle Marin/i), HYOGA = named(/Hyoga/i), SHUN = named(/\bShun\b/i), IKKI = named(/Ikki/i), MU = named(/\bMu\b/i), SAGA = named(/Saga/i),
   AIOLIA = named(/Aiolia/i), CAMUS = named(/Camus/i), SHAINA = named(/Shaina/i), ORPHEE = named(/Orphee/i);
 
 // "You may pay {N}{C}": Bases preparadas (só pergunta se dá para pagar).
@@ -86,18 +86,25 @@ export default {
   },
 
   // Andromeda Cloth V2 (+1 ATK: genérico)
-  // pendente: Resonance — Andromeda Shun (Counterattack: "whenever Shun prevents damage to your God or another friendly Saint
-  //   with Nebula Chain, deal damage equal to half the prevented, rounded down") — efeito do Shun/Nebula Chain, precisa de
-  //   gancho "prevented damage".
-  'athena-v6-008': {},
+  // Resonance — Andromeda Shun, Counterattack (gancho watchDamagePrevented): o Nebula Chain do Shun (`nebulaOpen`) preveniu
+  // dano ao seu God ou a outro Saint amigo; causa metade do prevenido (arredondado para baixo) ao atacante.
+  'athena-v6-008': {
+    watchDamagePrevented: (s, c, key, self, unit, info) => {
+      const shun = k.bearerOf(c, self);
+      const mine = unit === `god:${key}` || (unit !== shun && k.controllerOf(s, unit) === key && isSaint(c, unit)); // só o prevenido do lado do Shun
+      if (!SHUN(c, shun) || !s.units[shun]?.nebulaOpen || !info.foe || !mine) return;
+      const half = Math.floor(info.prevented / 2);
+      return half > 0 && (st => { if (st.units[info.foe]) k.damage(st, c, info.foe, half); });
+    },
+  },
 
   // Phoenix Cloth V2 (+2 ATK: genérico)
   'athena-v6-010': {
     // Burning Spirit: +1 ATK enquanto o portador tem dano marcado.
     aura: (s, c, key, self, unit) => (k.bearerOf(c, self) === unit && (s.units[unit]?.damage || 0) > 0 ? {atk: 1, hp: 0} : null),
     // Resonance — Phoenix Ikki: uma vez por jogo, ao ficar equipada em Ikki, pode remover todos os Rebirth dele.
-    // pendente: só vale ao ser jogada já equipada em Ikki (cast); equipar depois (reequip) não tem gancho.
-    cast: (s, c, key, self) => {
+    // Gancho attach: vale ao jogar já equipada em Ikki e ao equipar depois (reequip).
+    attach: (s, c, key, self) => {
       const b = k.bearerOf(c, self);
       if (!IKKI(c, b) || !game(s, key, 'phoenix-cloth-v2') || !k.markers(s, b, 'Rebirth')) return;
       return st => {
@@ -196,8 +203,13 @@ export default {
   },
 
   // Phoenix Feather
-  // pendente: Resonance — Phoenix Ikki ("when Ikki survives a Strike, you may remove 1 damage") — sem gancho "survives a Strike".
   'athena-v6-047': {
+    // Resonance — Phoenix Ikki (gancho gearSurvive): uma vez por Round, ao sobreviver a um Strike, pode remover 1 dano dele.
+    gearSurvive: (s, c, key, self, bearer) => IKKI(c, bearer) && !s.roundUses.has(`feather:${self}`) && (st => {
+      if (!st.units[bearer] || st.roundUses.has(`feather:${self}`) || !k.may(c, key, 'RESONANCE — PHOENIX IKKI', {uid: bearer, text: 'Remove 1 damage from Phoenix Ikki?'})) return;
+      k.once(st, `feather:${self}`);
+      k.removeDamage(st, bearer, 1);
+    }),
     // Burning Will: +1 ATK enquanto o portador tem dano marcado.
     aura: (s, c, key, self, unit) => (k.bearerOf(c, self) === unit && (s.units[unit]?.damage || 0) > 0 ? {atk: 1, hp: 0} : null),
   },
@@ -220,8 +232,16 @@ export default {
   },
 
   // Eagle Silver Cloth (+1 ATK: genérico)
-  // pendente: Resonance — Eagle Marin (sobrevive a um Strike: Training em outro Bronze Saint) — sem gancho "survives a Strike".
   'athena-v6-066': {
+    // Resonance — Eagle Marin (gancho gearSurvive): uma vez por Round, ao sobreviver a um Strike, 1 Training em outro Bronze Saint amigo.
+    gearSurvive: (s, c, key, self, bearer) => MARIN(c, bearer) && !s.roundUses.has(`aerial:${self}`) && (st => {
+      const others = st.players[key].battlefield.filter(u => u !== bearer && isBronze(c, u));
+      if (!st.units[bearer] || st.roundUses.has(`aerial:${self}`) || !others.length) return;
+      const t = k.choose(c, key, 'RESONANCE — EAGLE MARIN', others, {optional: true, text: 'Put 1 Training counter on another friendly Bronze Saint?'});
+      if (!t) return;
+      k.once(st, `aerial:${self}`);
+      st.units[t].training = (st.units[t].training || 0) + 1;
+    }),
     // Aerial Grace: o portador ganha Nimble.
     aura: (s, c, key, self, unit) => (k.bearerOf(c, self) === unit ? {atk: 0, hp: 0, keywords: ['Nimble']} : null),
   },
@@ -243,7 +263,7 @@ export default {
   },
 
   // Lizard Silver Cloth (+0/+1: genérico)
-  // pendente: Resonance — Lizard Misty (Marble Wall previne todo o dano: remove 1 dano da Cloth) — efeito do Misty, sem gancho de prevenção.
+  // Resonance — Lizard Misty: implementada no damagePrevented de Misty (athena-devotees.js, athena-v6-023).
   'athena-v6-068': {
     // Air Barrier: uma vez por Round, o portador receberia dano de Strike: pode pagar {1}{C} e prevenir 1.
     watchDeclare: ward({tag: 'air', ability: 'AIR BARRIER', cost: 1, amount: 1, unit: (s, c, key, self) => k.bearerOf(c, self),
@@ -251,9 +271,13 @@ export default {
   },
 
   // Perseus Silver Cloth (+0/+1: genérico)
-  // pendente: Medusa's Curse ("survives a Strike as a defender": Seal no atacante) — sem gancho "survives a Strike".
-  // pendente: Resonance — Perseus Algol (Medusa Shield dá -1 ATK ao atacante) — efeito do Algol.
-  'athena-v6-069': {},
+  // Resonance — Perseus Algol (Medusa Shield dá -1 ATK ao atacante): implementada no watchDeclare do Algol (athena-v6-024).
+  'athena-v6-069': {
+    // Medusa's Curse (gancho gearSurvive): uma vez por Round, o portador sobreviveu como defensor: 1 Seal no atacante.
+    gearSurvive: (s, c, key, self, bearer, role, foe) => role === 'defender' && foe && !s.roundUses.has(`curse:${self}`) && k.once(s, `curse:${self}`) && (st => {
+      if (st.units[foe]) addSeal(st, c, [foe], 1, "MEDUSA'S CURSE");
+    }),
+  },
 
   // Lyra Silver Cloth (+0/+1: genérico)
   'athena-v6-070': {

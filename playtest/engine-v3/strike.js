@@ -2,7 +2,7 @@
 // Declaração → janela de reação (P06 A) → dano simultâneo → verificação de destruição.
 // `ctx`: {cards (loadCanon), objects (uid -> {owner, cardId}), attached}. Estado de unidade em state.units[uid] = {prepared, damage}.
 import {RuleError, NotSpecified, recordStrike, loseSoul, destroyDevotee, assertIdle, openWindow, pushTriggers, emit, hooks} from './core.js';
-import {atkOf, keywordsOf, damageDevotee, preventGod, onDeclare, afterStrike, checkDefeats, gearOf} from './effects.js';
+import {atkOf, keywordsOf, damageDevotee, preventGod, onDeclare, afterStrike, checkDefeats, gearOf, cannotStrike} from './effects.js';
 import {v6Declare} from './v6/hooks.js';
 
 export {atkOf, hpOf, keywordsOf, gearOf} from './effects.js';
@@ -22,6 +22,7 @@ export function checkStrike(state, ctx, attacker, target) {
   // P02: entra Unprepared; Impulse deixa declarar Strike no turno em que entrou.
   const unit = state.units[attacker], impulse = unit?.entered === state.turn && keywordsOf(state, ctx, attacker).includes('Impulse'); // inclui Impulse dado por efeito (V6)
   if (unit?.prepared !== true && !impulse) throw new RuleError('P04', 'o atacante precisa estar Prepared');
+  if (cannotStrike(state, attacker)) throw new RuleError('V6', 'este Devotee não pode declarar Strike neste Round'); // gancho cannotStrike
   const legal = target.kind === 'god' ? target.player === enemy
     : target.kind === 'devotee' && onField(state, enemy, target.uid) && card(ctx, target.uid).kind === 'Devotee';
   if (!legal) throw new RuleError('P04', 'alvo precisa ser o God inimigo ou um Devotee inimigo');
@@ -65,6 +66,12 @@ export function declareStrike(state, ctx, attacker, target, triggers = []) {
   return strike;
 }
 
+// Último evento 'damage' do Devotee (emitido por damageDevotee): {incoming, prevented, absorbed, dealt}.
+const lastHit = (state, uid, from) => {
+  const e = state.events.slice(from).find(x => x.type === 'damage' && x.uid === uid);
+  return e && {incoming: e.incoming, prevented: e.prevented, absorbed: e.absorbed, dealt: e.dealt};
+};
+
 // Dano simultâneo; God perde Soul 1:1 e retalia com ATTACK; dano persiste (sem limpeza no Cleanup).
 export function resolveStrike(state, ctx, strike) {
   const {attacker, target, player} = strike, enemy = state.order.find(k => k !== player);
@@ -79,22 +86,27 @@ export function resolveStrike(state, ctx, strike) {
   // Equipment presos antes do dano: gatilhos V6 "equipped Devotee …" valem mesmo se o portador morrer no Strike.
   strike.gearBefore = Object.fromEntries([attacker, target.uid].filter(Boolean).map(u => [u, gearOf(ctx, u)]));
   emit(state, 'strike_resolve', {player, attacker, target, atk});
+  const mark = state.events.length;
   if (target.kind === 'devotee') {
     const back = atkOf(state, ctx, target.uid), before = state.units[target.uid].damage;
     strike.atks[target.uid] = back;
     const excess = damageDevotee(state, ctx, target.uid, atk);
+    strike.hits = {[target.uid]: lastHit(state, target.uid, mark)}; // gancho damagePrevented: o que a prevenção/Armor tirou de cada lado
     strike.dealt = (state.units[target.uid]?.damage ?? Infinity) - before; // dano que chegou ao Devotee (Libra Sword)
     const backBefore = state.units[attacker].damage;
     damageDevotee(state, ctx, attacker, back);
+    strike.hits[attacker] = lastHit(state, attacker, mark);
     strike.dealtBack = (state.units[attacker]?.damage ?? Infinity) - backBefore;
     // P05 A: Pierce leva o dano acima do HP restante do alvo ao Soul do God dele (prevenível como dano de Strike ao God).
     const toGod = pierce && excess > 0 ? preventGod(state, ctx, enemy, excess) : 0;
     if (toGod > 0 && loseSoul(state, {[enemy]: toGod}, 'damage')) return state.victory;
   } else {
     damageDevotee(state, ctx, attacker, ctx.cards.get(state.gods[enemy]).atk);
+    strike.hits = {[attacker]: lastHit(state, attacker, mark)};
     const toGod = preventGod(state, ctx, enemy, atk);
     emit(state, 'god_damage', {player: enemy, incoming: atk, dealt: toGod});
     strike.godDealt = toGod;
+    strike.godHit = {incoming: atk, prevented: atk - toGod, absorbed: 0, dealt: toGod}; // gancho damagePrevented (observadores)
     if (toGod > 0 && loseSoul(state, {[enemy]: toGod}, 'damage')) return state.victory; // D52: encerra na hora
   }
   checkDefeats(state, ctx);

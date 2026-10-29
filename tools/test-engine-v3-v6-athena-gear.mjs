@@ -8,7 +8,8 @@ import {canonIndex} from '../shared/deck-v3.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
 import {startTurn, passAll} from '../playtest/engine-v3/core.js';
-import {activate, playEquipment} from '../playtest/engine-v3/play.js';
+import {activate, playEquipment, reequip} from '../playtest/engine-v3/play.js';
+import * as k from '../playtest/engine-v3/v6/kit.js';
 import {declareStrike} from '../playtest/engine-v3/strike.js';
 import {atkOf, hpOf, keywordsOf} from '../playtest/engine-v3/effects.js';
 
@@ -394,4 +395,77 @@ test('070 Healing Melody: remove 1 de dano de Saint amigo; Orphee pode curar out
   activate(t.s, t.ctx, 'A', c2, {target: orphee});
   assert.equal(t.s.units[orphee].damage, 1);
   assert.equal(t.s.units[friend].damage, 1);
+});
+
+// ---- Completados com os ganchos novos (29/10/2026) ----
+const foeStrike = (s, ctx, attacker, target) => { s.active = 'B'; return strike(s, ctx, attacker, target); };
+
+test('008 Counterattack: Nebula Chain do Shun previne e o atacante leva metade do dano prevenido (para baixo)', () => {
+  const {s, ctx, give} = setup();
+  const shun = give('A', SHUN), cloth = give('A', G(8), 'battlefield', shun), ally = give('A', SAINT), foe = give('B', FOE);
+  const atk = atkOf(s, ctx, foe);
+  foeStrike(s, ctx, foe, {kind: 'devotee', uid: ally});
+  assert.equal(dmg(s, ally), 0);
+  assert.equal(dmg(s, foe), Math.floor(atk / 2));
+  assert.ok(cloth);
+});
+
+test('008 Counterattack: vale também para Strike contra o God; sem Nebula Chain não dispara', () => {
+  const {s, ctx, give} = setup();
+  const shun = give('A', SHUN); give('A', G(8), 'battlefield', shun);
+  const foe = give('B', FOE), atk = atkOf(s, ctx, foe);
+  foeStrike(s, ctx, foe, {kind: 'god', player: 'A'});
+  assert.equal(dmg(s, foe), Math.floor(atk / 2));
+  const {s: s2, ctx: c2, give: g2} = setup();
+  const shun2 = g2('A', SHUN); g2('A', G(8), 'battlefield', shun2);
+  s2.units[shun2].prepared = false; // sem Prepared, o Nebula Chain não acontece
+  const ally2 = g2('A', SAINT), foe2 = g2('B', FOE);
+  foeStrike(s2, c2, foe2, {kind: 'devotee', uid: ally2});
+  assert.ok(dmg(s2, ally2) > 0);
+});
+
+test('010 Phoenix Cloth V2: equipar depois (reequip) em Ikki também dispara a Resonance', () => {
+  const {s, ctx, give} = setup();
+  const ikki = give('A', IKKI), cloth = give('A', G(10));
+  k.addMarker(s, ikki, 'Rebirth', 1);
+  reequip(s, ctx, 'A', cloth, ikki); passAll(s);
+  assert.equal(k.markers(s, ikki, 'Rebirth'), 0);
+  assert.equal(s.v6Game['A:phoenix-cloth-v2'], true);
+});
+
+test('047 Phoenix Feather: Ikki sobrevive a um Strike e pode remover 1 dano (uma vez por Round)', () => {
+  const {s, ctx, give} = setup();
+  const ikki = give('A', IKKI), feather = give('A', G(47), 'battlefield', ikki), foe = give('B', FOE);
+  tough(s, ikki);
+  strike(s, ctx, ikki, {kind: 'devotee', uid: foe});
+  const taken = (atkOf(s, ctx, foe));
+  assert.equal(dmg(s, ikki), taken - 1);
+  assert.ok(s.roundUses.has(`feather:${feather}`));
+});
+
+test('066 Eagle Silver Cloth: Marin sobrevive e põe 1 Training em outro Bronze Saint amigo', () => {
+  const {s, ctx, give} = setup();
+  const marin = give('A', G(21)), cloth = give('A', G(66), 'battlefield', marin), ally = give('A', SAINT), foe = give('B', FOE);
+  tough(s, marin);
+  strike(s, ctx, marin, {kind: 'devotee', uid: foe});
+  assert.equal(s.units[ally].training, 1);
+  assert.ok(s.roundUses.has(`aerial:${cloth}`));
+});
+
+test('069 Medusa\'s Curse: o portador sobrevive como defensor e o atacante recebe 1 Seal', () => {
+  const {s, ctx, give} = setup();
+  const me = give('A', SAINT), cloth = give('A', G(69), 'battlefield', me), foe = give('B', FOE);
+  tough(s, me);
+  foeStrike(s, ctx, foe, {kind: 'devotee', uid: me});
+  assert.equal(s.units[foe].seal, 1);
+  assert.ok(s.roundUses.has(`curse:${cloth}`));
+});
+
+test('069 Medusa\'s Curse: como atacante não dispara', () => {
+  const {s, ctx, give} = setup();
+  const me = give('A', SAINT); give('A', G(69), 'battlefield', me);
+  const foe = give('B', FOE);
+  tough(s, me); tough(s, foe);
+  strike(s, ctx, me, {kind: 'devotee', uid: foe});
+  assert.equal(s.units[foe].seal || 0, 0);
 });

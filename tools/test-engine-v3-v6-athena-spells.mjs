@@ -196,3 +196,39 @@ test('Event e Miracle jogam como Technique (guia §54)', () => {
   const {ctx, give} = setup();
   for (const id of ['athena-v6-055', 'athena-v6-079', 'athena-v6-090']) assert.equal(v6Spell(ctx, give('A', id, 'hand')).category, 'Technique');
 });
+
+// ---- Completados com os ganchos novos (29/10/2026) ----
+test('063 Jamir Tower: ativada de ponta a ponta por play.activate("domain:A"), paga {2}{C}, uma vez por Round', () => {
+  const {s, ctx, give} = setup();
+  s.domains.A = A('063');
+  const shun = give('A', A('007')), armor = give('A', A('002'), 'battlefield', shun);
+  s.units[armor] ||= {prepared: true, damage: 0, entered: 0};
+  s.units[armor].damage = 2;
+  const before = s.players.A.bases.filter(b => b.prepared).length;
+  activate(s, ctx, 'A', 'domain:A');
+  assert.equal(s.units[armor].damage, 1);
+  assert.equal(s.players.A.bases.filter(b => b.prepared).length, before - 2);
+  assert.throws(() => activate(s, ctx, 'A', 'domain:A'), /já foi usada/);
+});
+
+test('080 e 090: o Saint devolvido não declara Strike neste Round (cannotStrike)', () => {
+  for (const [n, id] of [['080', A('001')], ['090', A('001')]]) {
+    const {s, ctx, give} = setup();
+    const dead = give('A', id, 'tartarus');
+    s.players.A.soul = 4;
+    cast(s, ctx, n);
+    assert.ok(s.players.A.battlefield.includes(dead), n);
+    assert.ok(s.effects.some(e => e.kind === 'noStrike' && e.target === dead), n);
+  }
+});
+
+test('065 Stairway: Saint amigo sobrevive a um Strike; paga {1}{C} e ganha +1 ATK, uma vez por Round', () => {
+  const {s, ctx, give} = setup();
+  s.domains.A = A('065');
+  const saint = give('A', A('029')), foe = give('B', FOE);
+  const atk = atkOf(s, ctx, saint), bases = s.players.A.bases.filter(b => b.prepared).length;
+  s.active = 'B'; declareStrike(s, ctx, foe, {kind: 'devotee', uid: saint}); passAll(s);
+  assert.equal(atkOf(s, ctx, saint), atk + 1);
+  assert.equal(s.players.A.bases.filter(b => b.prepared).length, bases - 1);
+  assert.ok(s.roundUses.has('twelve-temples:A'));
+});

@@ -223,7 +223,8 @@ export default {
     activate: {name: 'OPEN THE BOX', cost: 3, once: true, tap: false,
       check: (s, c, key) => { if (s.players[key].soul < 3) throw new k.RuleError('custo', 'Soul insuficiente (3)'); },
       run: (s, c, key) => { k.paySoul(s, key, 3); k.search(s, c, key, 'OPEN THE BOX', cd => cd.kind === 'Devotee'); }},
-    // pendente: The Last Hope ("When Pandora's Box leaves the battlefield") — sem gancho de saída de Equipment.
+    // The Last Hope (gancho leaves): saiu do campo por qualquer via; seu God ganha 3 Soul e você compra 1.
+    leaves: (s, c, key) => st => { gain(st, key, 3); k.draw(st, key, 1); },
   },
   'hades-v6-201': { // Harpy Valentine + Harpy Surplice (246)
     ...drainOnEnter(2, (st, c, key, self) => { if (resonance(st, c, self, 'hades-v6-246')) gain(st, key, 1); }),
@@ -316,12 +317,11 @@ export default {
     enter: (s, c, key) => st => gain(st, key, 2),
     activate: {name: "SERVANT'S SACRIFICE", cost: 0, once: true, tap: false, run: (s, c, key, self) => { k.sacrifice(s, c, self); k.draw(s, key, 1); }},
   },
-  'hades-v6-224': { // Cracked Surplice. "destroyed" coberto quando vai ao Tartarus com o portador derrotado.
-    // pendente: Armor quebrada por dano (effects.damageDevotee) não tem gancho.
-    bearerDefeated: (s, c, key, self) => st => {
+  'hades-v6-224': { // Cracked Surplice. "destroyed" = vai ao Tartarus (portador derrotado ou Armor quebrada por dano; gancho leaves).
+    leaves: (s, c, key, self, where) => where === 'tartarus' && (st => {
       if (st.players[c.objects[self].owner].tartarus.includes(self) && inTartarus(st, c, key, devCost(1)).length
         && pay(st, c, key, 'BROKEN OFFERING', 1, self)) toHandFrom(st, c, key, 'BROKEN OFFERING', devCost(1));
-    },
+    }),
   },
   // Bone Reclamation: volta à mão de onde estiver (campo sem portador ou Tartarus).
   'hades-v6-225': {
@@ -354,7 +354,8 @@ export default {
   },
   'hades-v6-231': { // Torch of the Underworld
     watchEnter: onReturn(false, (st, c, key) => gain(st, key, 1), 'flame'),
-    // pendente: Guiding Light ("When Torch … is destroyed") — Relic solta não é destruída por nenhum caminho com gancho.
+    // Guiding Light (gancho leaves): "destroyed" = foi do campo para o Tartarus.
+    leaves: (s, c, key, self, where) => where === 'tartarus' && (st => k.mill(st, key, 2)),
   },
   'hades-v6-232': {spell: {run: (s, c, key) => noStrike(s, toFieldFrom(s, c, key, 'THE AWAKENING OF THE SPECTERS', specter(3)))}},
   'hades-v6-233': {spell: {run: (s, c, key) => { k.search(s, c, key, 'THE CALL OF THE UNDERWORLD', specter(3)); lose(s, key, 2); }}},
@@ -429,7 +430,7 @@ export default {
       const t = enemy(st, c, key, 'ANOTHER DIMENSION');
       if (t && k.onField(st, key, self) && k.exile(st, c, t)) exiledBy(st)[self] = t;
     },
-    defeated: (s, c, key, self) => s.hadesExile?.[self] && (st => {
+    leaves: (s, c, key, self) => s.hadesExile?.[self] && (st => { // gancho leaves: "until Gemini Saga leaves the battlefield" por qualquer via
       const t = exiledBy(st)[self], owner = c.objects[t].owner;
       delete exiledBy(st)[self];
       if (st.players[owner].void.includes(t)) k.putOntoField(st, c, owner, t, 'void');

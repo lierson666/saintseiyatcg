@@ -1,10 +1,10 @@
 // Efeitos V6 de Athena (spells e domains) que a tabela por número (effects.js) não cobre. Ver ./athena.js.
 // Texto: card-forge/art-web/cards.json (habilidades_en). Dúvidas: docs/v6-efeitos-pendencias.md ("Athena — Spells e Domains").
-// pendente (engine): v6Spell (hooks.js) só reconhece os subtipos Technique e Moment; Event e Miracle (055, 079, 080, 083,
-// 086, 089, 090) ainda não são jogáveis por playSpell. O `spell.run` abaixo está pronto para quando o subtipo for definido.
+// Event e Miracle jogam como Technique (v6Spell em hooks.js, guia §54): 055, 079, 080, 083, 086, 089 e 090 são jogáveis.
 import * as k from './kit.js';
 import {addSeal} from '../core.js';
-import {shield} from '../effects.js';
+import {shield, forbidStrike} from '../effects.js';
+import {spendBase} from '../core.js';
 
 const isSaint = (c, u) => k.hasType(c, u, 'Saint');
 const saints = (s, c, key, type = 'Saint') => k.devotees(s, c, key).filter(u => k.hasType(c, u, type));
@@ -49,11 +49,12 @@ export default {
     shield(s, t, 4);
     if (named(c, t, 'ANDROMEDA SHUN') && k.may(c, key, "SHUN'S EMBRACE", {text: 'Also prevent the next 2 Strike damage to your God?'})) shield(s, k.godTarget(key), 2);
   }}},
-  // The Return of the Phoenix. pendente: "cannot declare a Strike this round" (sem gancho que proíba declarar Strike).
+  // The Return of the Phoenix: o Saint devolvido não declara Strike neste Round (gancho cannotStrike).
   'athena-v6-080': {spell: {run: (s, c, key) => {
     const dead = s.players[key].tartarus.filter(u => k.hasType(c, u, 'Bronze Saint') && c.objects[u].owner === key);
     const t = k.choose(c, key, 'THE RETURN OF THE PHOENIX', dead, {text: 'Choose target defeated friendly Bronze Saint.'});
     if (!t || !k.putOntoField(s, c, key, t, 'tartarus', {prepared: false})) return; // Exhausted
+    forbidStrike(s, t);
     if (named(c, t, 'PHOENIX IKKI')) { k.removeDamage(s, t); k.addMarker(s, t, 'Rebirth', 1); }
   }}},
   // The Twelve Flames
@@ -97,22 +98,21 @@ export default {
     }
     if (gold) for (const u of saints(s, c, key)) k.buff(s, u, 2, 2); // The Light of the Twelve
   }}},
-  // The Will of Athena. pendente: "cannot declare a Strike this round" (sem gancho que proíba declarar Strike).
+  // The Will of Athena: o Saint devolvido (Miracle of Hope) não declara Strike neste Round (gancho cannotStrike).
   'athena-v6-090': {spell: {run: (s, c, key) => {
     for (const t of k.chooseUpTo(c, key, 'DIVINE WILL', saints(s, c, key), 3, {text: 'Choose up to three friendly Saints.'})) k.buff(s, t, 3, 3);
     shield(s, k.godTarget(key), Infinity); // Athena's Protection
     if (s.players[key].soul > 5) return;
     const dead = s.players[key].tartarus.filter(u => isSaint(c, u) && k.isDevotee(c, u) && c.objects[u].owner === key);
     const t = k.choose(c, key, 'THE MIRACLE OF HOPE', dead, {text: 'Choose target defeated friendly Saint.'});
-    if (t) k.putOntoField(s, c, key, t, 'tartarus', {prepared: true});
+    if (t && k.putOntoField(s, c, key, t, 'tartarus', {prepared: true})) forbidStrike(s, t);
   }}},
 
   // ---------- Domains ----------
-  // Jamir Tower. pendente: o engine não ativa habilidade de Domain (play.activate exige carta no campo; Domain não tem {T}).
-  // A resolução fica pronta aqui; falta o ponto de ativação.
+  // Jamir Tower: ativada pelo play.activate com uid `domain:${key}`. O {T} do Domain vale uma vez por Round (como o Equipment, §61).
   'athena-v6-063': {
     activate: {
-      name: 'CLOTH RESTORATION', cost: 2,
+      name: 'CLOTH RESTORATION', cost: 2, once: true, tap: false,
       check: (s, c, key) => { if (!s.players[key].battlefield.some(u => k.card(c, u)?.armor)) throw new k.RuleError('alvo', 'sem Armor amiga'); },
       run: (s, c, key) => {
         const armor = k.choose(c, key, 'CLOTH RESTORATION', s.players[key].battlefield.filter(u => k.card(c, u)?.armor), {text: 'Choose target friendly Armor.'});
@@ -120,6 +120,16 @@ export default {
       },
     },
   },
-  // The Stairway to the Twelve Temples. pendente: Twelve Temples ("a friendly Saint survives a Strike") sem gancho de sobrevivência.
-  // 065: sem entrada.
+  // The Stairway to the Twelve Temples — Twelve Temples (gancho watchSurvive): uma vez por Round, um Saint amigo sobreviveu a um
+  // Strike; pode pagar {1}{C} para ele ganhar +1 ATK até o fim do Round.
+  'athena-v6-065': {
+    watchSurvive: (s, c, key, self, unit) => k.controllerOf(s, unit) === key && isSaint(c, unit) && !s.roundUses.has('twelve-temples:' + key) && (st => {
+      const tag = 'twelve-temples:' + key;
+      if (!st.units[unit] || st.roundUses.has(tag) || st.players[key].bases.filter(b => b.prepared).length < 1
+        || !k.may(c, key, 'TWELVE TEMPLES', {uid: unit, cost: '1 Cosmo', text: 'Pay {1}{C}: that Saint gets +1 ATK?'})) return;
+      spendBase(st, key, 1);
+      k.once(st, tag);
+      k.buff(st, unit, 1, 0);
+    }),
+  },
 };

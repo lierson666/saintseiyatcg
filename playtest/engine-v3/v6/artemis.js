@@ -81,7 +81,19 @@ export default {
     watchCounter: (s, c, key, self, target, n, by) => by === key && k.controllerOf(s, target) === key && k.once(s, `${self}:lunar-command`)
       && (st => k.draw(st, key, 1)),
   },
-  // 362 Moonlight Protection: pendente: falta gancho "would be defeated" para todo dano (save só cobre Strike, sem escolha).
+  // 362 Callisto's Lunar Vestment — Moonlight Protection (gancho gearWouldBeDefeated): uma vez por Round, o portador seria derrotado;
+  // pode tirar um marcador +1/+1 dele para evitar a derrota (fica com 1 de HP) e prevenir todo dano a ele neste Round.
+  'artemis-v6-362': {
+    gearWouldBeDefeated: (s, c, key, self, bearer) => {
+      if (s.roundUses.has(`${self}:moonlight`) || !counters(s, bearer)
+        || !k.may(c, key, 'MOONLIGHT PROTECTION', {uid: bearer, text: 'Remove a +1/+1 counter to prevent that defeat?'})) return false;
+      k.once(s, `${self}:moonlight`);
+      k.addCounter(s, bearer, -1);
+      s.units[bearer].damage = Math.max(0, Math.min(s.units[bearer].damage, k.hpOf(s, c, bearer) - 1));
+      shield(s, bearer, Infinity, {strikeOnly: false});
+      return true;
+    },
+  },
   // LA SCOUMOUNE. Hunter's Instinct: sem efeito (Engage/disengaged removido do jogo); Guardian já vale.
   'artemis-v6-363': {declare: (s, c, key, self, target) => vsDevotee(target) && (st => grow(st, c, key, self, 1))},
   'artemis-v6-364': {gearKillInCombat: growBearer},
@@ -235,8 +247,11 @@ export default {
       return n ? [{atk: n, hp: n}] : [];
     },
   },
-  // 406 Divine Training: pendente: falta gancho "Equipment becomes attached" (jogar preso e reequipar).
-  'artemis-v6-406': {declare: (s, c, key, self, target) => vsDevotee(target) && (st => k.buff(st, self, 1, 1, 'this_round'))},
+  // 406 Divine Training (gancho watchAttach): Equipment preso à Huntress (jogado já equipado ou equipado depois) põe +1/+1 nela.
+  'artemis-v6-406': {
+    declare: (s, c, key, self, target) => vsDevotee(target) && (st => k.buff(st, self, 1, 1, 'this_round')),
+    watchAttach: (s, c, key, self, gear, bearer) => bearer === self && k.controllerOf(s, self) === key && (st => grow(st, c, key, self, 1)),
+  },
   // shortcut: "Spend this Cosmo only to cast a Devotee" não é aplicado (Latent sem origem na engine).
   'artemis-v6-407': {
     activate: {name: 'PRIMAL CHANNELING', cost: 0, run: (st, c, key) => k.gainLatent(st, key, 1)},
@@ -357,8 +372,8 @@ export default {
     enter: run((st, c, key) => k.topToBase(st, key)),
     mods: (s, c, key) => (bank(s, key) >= 6 ? [{atk: 2, hp: 2}] : []),
   },
-  // 438 Lunar Resistance: pendente: falta gancho de prevenção obrigatória para todo dano (preventDevotee é fixo por número).
-  'artemis-v6-438': {watchCounter: (s, c, key, self, target, n, by) => target === self && by === key && k.onceTurn(s, `${self}:blessing`)
+  // 438 Lunar Resistance (gancho prevent): previne 1 de todo dano que receber (Strike ou efeito).
+  'artemis-v6-438': {prevent: (s, c, key, self, amount) => Math.min(1, amount), watchCounter: (s, c, key, self, target, n, by) => target === self && by === key && k.onceTurn(s, `${self}:blessing`)
     && (st => k.gainSoul(st, key, 2))},
   'artemis-v6-439': {
     declare: (s, c, key, self, target) => vsDevotee(target) && (st => k.buff(st, self, 2, 0, 'this_round')),
@@ -385,7 +400,6 @@ export default {
     fight(st, c, a, b);
     if (!k.controllerOf(st, b)) k.draw(st, key, 1);
   }}},
-  // 444 Nature's Army: pendente: a engine não tem tokens.
   // Nature's Army: dois tokens Forest Guardian 3/3 (guia §63, autor 29/10/2026).
   'artemis-v6-444': {spell: {run: (st, c, key) => {
     k.topToBase(st, key); k.topToBase(st, key);

@@ -8,7 +8,7 @@ import {canonIndex} from '../shared/deck-v3.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
 import {startTurn, endTurn, passAll} from '../playtest/engine-v3/core.js';
-import {playDevotee, playEquipment, playSpell, activate} from '../playtest/engine-v3/play.js';
+import {playDevotee, playEquipment, playSpell, activate, reequip} from '../playtest/engine-v3/play.js';
 import {declareStrike} from '../playtest/engine-v3/strike.js';
 import {atkOf, hpOf, keywordsOf, damageDevotee, checkDefeats} from '../playtest/engine-v3/effects.js';
 import {bindContext} from '../playtest/engine-v3/v6/registry.js';
@@ -200,4 +200,58 @@ test('Moonlit Initiate (386): {T} gera 1 Latent comum', () => {
   activate(s, ctx, 'A', init, {});
   assert.equal(p.latent, latent0 + 1);
   assert.equal(s.units[init].prepared, false);
+});
+
+// ---- Completados com os ganchos novos (29/10/2026) ----
+test('362 Moonlight Protection: remove um marcador +1/+1, evita a derrota e previne o resto do dano no Round; só uma vez', () => {
+  const {s, ctx, field, id} = setup();
+  const wolf = field('A', id(404)), vest = field('A', id(362));
+  ctx.attached[vest] = wolf;
+  s.units[wolf].counters = 2;
+  s.units[wolf].damage = hpOf(s, ctx, wolf);
+  checkDefeats(s, ctx);
+  assert.ok(s.players.A.battlefield.includes(wolf));
+  assert.equal(s.units[wolf].counters, 1);
+  assert.equal(s.units[wolf].damage, hpOf(s, ctx, wolf) - 1);
+  assert.ok(s.roundUses.has(`${vest}:moonlight`));
+  // Todo dano neste Round é prevenido (Strike ou efeito).
+  const before = s.units[wolf].damage;
+  damageDevotee(s, ctx, wolf, 5, false);
+  assert.equal(s.units[wolf].damage, before);
+  // Segunda derrota no mesmo Round: sem uso, o Devotee é destruído.
+  s.effects = s.effects.filter(e => e.kind !== 'prevent');
+  s.units[wolf].damage = hpOf(s, ctx, wolf);
+  checkDefeats(s, ctx);
+  assert.ok(s.players.A.tartarus.includes(wolf));
+});
+
+test('362 Moonlight Protection: sem marcador +1/+1 não pergunta e o Devotee é derrotado', () => {
+  const {s, ctx, field, id} = setup();
+  const wolf = field('A', id(404)), vest = field('A', id(362));
+  ctx.attached[vest] = wolf;
+  s.units[wolf].damage = hpOf(s, ctx, wolf);
+  checkDefeats(s, ctx);
+  assert.ok(s.players.A.tartarus.includes(wolf));
+});
+
+test('406 Divine Training: Equipment preso à Huntress (jogado ou equipado depois) põe +1/+1 nela', () => {
+  const {s, ctx, field, hand, id} = setup();
+  const huntress = field('A', id(406)), other = field('A', id(404)), gear = field('A', id(362));
+  reequip(s, ctx, 'A', gear, huntress); passAll(s);
+  assert.equal(s.units[huntress].counters, 1);
+  const gear2 = field('A', id(362));
+  reequip(s, ctx, 'A', gear2, other); passAll(s);
+  assert.equal(s.units[huntress].counters, 1); // em outro Devotee não conta
+  assert.ok(hand);
+});
+
+test('438 Lunar Resistance: previne 1 de todo dano (Strike e efeito) e a Armor não é tocada', () => {
+  const {s, ctx, field, id} = setup();
+  const guard = field('A', id(438));
+  damageDevotee(s, ctx, guard, 3, false);
+  assert.equal(s.units[guard].damage, 2);
+  damageDevotee(s, ctx, guard, 1, true);
+  assert.equal(s.units[guard].damage, 2); // 1 prevenido por inteiro
+  const e = s.events.filter(x => x.type === 'damage').at(-1);
+  assert.equal(e.prevented, 1);
 });

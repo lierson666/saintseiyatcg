@@ -54,7 +54,10 @@ export function damage(s, c, target, amount) {
   if (!target || amount <= 0) return;
   if (isGod(target)) return loseSoul(s, {[target.slice(4)]: amount}, 'damage');
   if (!controllerOf(s, target)) return;
+  const mark = s.events.length, key = controllerOf(s, target);
   damageDevotee(s, c, target, amount, false);
+  const hit = s.events.slice(mark).find(e => e.type === 'damage' && e.uid === target);
+  if (hit?.dealt > 0) damagedHooks(s, c, key, target, {dealt: hit.dealt, foe: null, combat: false}); // gancho tookDamage
   checkDefeats(s, c);
 }
 export const loseSoulOf = (s, key, n) => loseSoul(s, {[key]: n}, 'loss');
@@ -82,6 +85,11 @@ export function defeat(s, c, uid, event = 'destroyed') {
 export const sacrifice = (s, c, uid) => defeat(s, c, uid, 'sacrificed');
 // Gatilhos de derrota fora de checkDefeats (derrota direta por efeito).
 let defeatedHooks = () => {};
+// Gancho leaves: saída do campo sem derrota (mão, exílio, Tartarus por efeito). Ligado em hooks.js.
+let leavesHooks = () => {};
+let damagedHooks = () => {};
+export const setDamagedHooks = fn => { damagedHooks = fn; };
+export const setLeavesHooks = fn => { leavesHooks = fn; };
 export const setDefeatedHooks = fn => { defeatedHooks = fn; };
 
 export function exhaust(s, uid) { if (s.units[uid]) { s.units[uid].prepared = false; emit(s, 'exhausted', {uid}); } }
@@ -121,7 +129,9 @@ function take(s, c, uid, from) {
 const vanish = (c, uid) => (c.objects[uid]?.token ? (delete c.objects[uid], true) : false);
 export function toHand(s, c, uid, from = 'tartarus') {
   if (from === 'battlefield' && !controllerOf(s, uid)) return false;
+  const was = from === 'battlefield' ? controllerOf(s, uid) : null; // gancho leaves (Devotee ou Equipment)
   if (!take(s, c, uid, from)) return false;
+  if (was) leavesHooks(s, c, was, uid, 'hand');
   if (vanish(c, uid)) return true;
   s.players[c.objects[uid].owner].hand.push(uid);
   emit(s, 'returned_to_hand', {player: c.objects[uid].owner, uid});
@@ -129,14 +139,18 @@ export function toHand(s, c, uid, from = 'tartarus') {
 }
 export function toTartarus(s, c, uid, from = 'hand') {
   if (from === 'battlefield' && !controllerOf(s, uid)) return false;
+  const was = from === 'battlefield' ? controllerOf(s, uid) : null; // gancho leaves (Devotee ou Equipment)
   if (!take(s, c, uid, from)) return false;
+  if (was) leavesHooks(s, c, was, uid, 'tartarus');
   if (vanish(c, uid)) return true;
   s.players[c.objects[uid].owner].tartarus.push(uid);
   return true;
 }
 export function exile(s, c, uid, from = 'battlefield') {
   if (from === 'battlefield' && !controllerOf(s, uid)) return false;
+  const was = from === 'battlefield' ? controllerOf(s, uid) : null; // gancho leaves (Devotee ou Equipment)
   if (!take(s, c, uid, from)) return false;
+  if (was) leavesHooks(s, c, was, uid, 'void');
   if (vanish(c, uid)) return true;
   s.players[c.objects[uid].owner].void.push(uid);
   emit(s, 'exiled', {uid});
@@ -218,3 +232,17 @@ import {pushTriggers} from '../core.js';
 export function watchers(s, c, hook, args, label) {
   pushTriggers(s, collect(s, c, s.order, hook, args, label));
 }
+
+// Contra-mágica (gancho watchSpell): tira a Spell `spellUid` da cadeia antes de resolver; vai para o Tartarus do Owner
+// sem efeito. Devolve false se ela já não está na cadeia.
+export function counterSpell(s, c, spellUid) {
+  const at = s.chain.findIndex(i => i.spell && i.uid === spellUid);
+  if (at < 0) return false;
+  const [item] = s.chain.splice(at, 1);
+  for (const p of Object.values(s.players)) if (p.stack.includes(spellUid)) p.stack.splice(p.stack.indexOf(spellUid), 1);
+  s.players[c.objects[spellUid].owner].tartarus.push(spellUid);
+  emit(s, 'spell_countered', {player: item.controller, uid: spellUid});
+  return true;
+}
+// Spell conjurada na cadeia agora (para `watchSpell` saber se ainda dá para contrariar).
+export const spellOnChain = (s, spellUid) => s.chain.some(i => i.spell && i.uid === spellUid);

@@ -8,7 +8,7 @@
 // equipado no Devotee nomeado; dano que não é de Strike também passa pela Armor (prevenções "Strike damage" não valem);
 // dano redirecionado pela Resonance da 004 é dano de Strike em Shiryu.
 import {CHARACTER_IDENTITY, characterOf} from '../../shared/character-identity.js';
-import {v6Mods, v6Entered, v6Cast, v6Defeated, v6AfterStrike, contextOf} from './v6/hooks.js';
+import {v6Mods, v6Entered, v6Cast, v6Defeated, v6AfterStrike, v6WouldBeDefeated, v6Leaves, v6Prevent, contextOf} from './v6/hooks.js';
 import {hooks, RuleError, useOncePerRound, addEffect, destroyDevotee, draw, spendBase, pushTriggers, emit, gainLatent, prepareUnit, loseSoul} from './core.js';
 
 export const card = (ctx, uid) => ctx.cards.get(ctx.objects[uid].cardId);
@@ -75,7 +75,11 @@ export const modify = (state, target, {atk = 0, hp = 0, keywords = []}, duration
 export const shield = (state, target, amount, {strikeOnly = true, duration = 'this_round'} = {}) =>
   addEffect(state, {kind: 'prevent', target, amount, strikeOnly, duration});
 // "When target … would be defeated by Strike damage this round, prevent that damage instead."
-export const save = (state, target, onSave) => addEffect(state, {kind: 'save', target, onSave, duration: 'this_round'});
+export const save = (state, target, onSave, {anyDamage = false} = {}) => addEffect(state, {kind: 'save', target, onSave, anyDamage, duration: 'this_round'});
+// Gancho cannotStrike / cannotPrepare (v6/registry.js): marcas com duração, lidas por checkStrike (strike.js) e prepareUnit (core.js).
+export const forbidStrike = (state, target, duration = 'this_round') => addEffect(state, {kind: 'noStrike', target, duration});
+export const forbidPrepare = (state, target, duration = 'this_round') => addEffect(state, {kind: 'noPrepare', target, duration});
+export const cannotStrike = (state, uid) => state.effects.some(e => e.kind === 'noStrike' && e.target === uid);
 
 function useShields(state, target, amount, strike) {
   for (const e of state.effects.filter(x => x.kind === 'prevent' && x.target === target && (strike || !x.strikeOnly))) {
@@ -90,7 +94,7 @@ function useShields(state, target, amount, strike) {
 // Prevenção de dano num Devotee. Fora de Strike só valem escudos de "damage" sem "Strike". Devolve o dano que sobra.
 function preventDevotee(state, ctx, uid, amount, strike) {
   if (amount <= 0) return 0;
-  if (!strike) return useShields(state, uid, amount, false);
+  if (!strike) return useShields(state, uid, Math.max(0, amount - v6Prevent(state, ctx, controllerOf(state, uid), uid, amount, false)), false);
   const key = controllerOf(state, uid), gear = gearOf(ctx, uid), shiryu = id(ctx, uid) === '003';
   // 1. Obrigatórias. Dragon Shield (003 e 004) não acumula: uma vez por Round por Devotee.
   if ((shiryu || gear.some(e => id(ctx, e) === '004')) && useOncePerRound(state, `dragon-shield:${uid}`)) amount -= 1;
@@ -105,7 +109,7 @@ function preventDevotee(state, ctx, uid, amount, strike) {
       if (n === '045' && shiryu && before > amount && armor) shield(state, armor, 1, {strikeOnly: false, duration: 'next_round'});
     }
   }
-  amount = Math.max(0, amount);
+  amount = Math.max(0, amount - v6Prevent(state, ctx, key, uid, amount, strike)); // cartas V6: prevenção obrigatória (gancho prevent)
   // 2. Escudos de Spell.
   amount = useShields(state, uid, amount, true);
   // 3. Opcionais, só para Saint.
@@ -113,7 +117,7 @@ function preventDevotee(state, ctx, uid, amount, strike) {
   // 4. "Would be defeated": conta a Armor que ainda absorve. Primeiro salvamento de Spell, depois Divine Protection (019).
   const armorRoom = gear.filter(e => card(ctx, e).armor).reduce((n, e) => n + card(ctx, e).hp - (state.units[e]?.damage || 0), 0);
   if (amount <= 0 || state.units[uid].damage + amount < hpOf(state, ctx, uid) + armorRoom) return amount;
-  const saver = state.effects.find(e => e.kind === 'save' && e.target === uid);
+  const saver = state.effects.find(e => e.kind === 'save' && e.target === uid && !e.anyDamage);
   if (saver) {
     state.effects = state.effects.filter(e => e !== saver);
     saver.onSave?.(state, ctx);
@@ -152,6 +156,7 @@ function optionalPrevention(state, ctx, key, uid, amount) {
     // Final Sacrifice: another friendly Saint; defeat Cassios, prevent up to 3 (sem limite por Round).
     if (n === '027' && source !== uid && ask(ctx, key, {ability: 'Final Sacrifice', source, uid, amount})) {
       destroyDevotee(state, source, ctx.objects, ctx.attached); amount -= Math.min(3, amount);
+      pushTriggers(state, v6Leaves(state, ctx, key, source, 'tartarus'));
     }
   }
   return amount;
@@ -189,6 +194,7 @@ export function damageDevotee(state, ctx, uid, amount, strike = true) {
       delete state.units[armor];
       state.effects = state.effects.filter(e => e.target !== armor);
       emit(state, 'destroyed', {uid: armor, owner: ctx.objects[armor].owner});
+      pushTriggers(state, v6Leaves(state, ctx, controllerOf(state, uid) ?? ctx.objects[armor].owner, armor, 'tartarus')); // Armor quebrada por dano
     }
   }
   const room = Math.max(0, hpOf(state, ctx, uid) - state.units[uid].damage);
@@ -226,9 +232,20 @@ export function enforceUniqueness(state, ctx) {
       if (!copies) break;
       const keep = ctx.decide?.(key, {ability: 'ONE PER CHARACTER', decision: '§63', choose: 'keep', options: [...copies]});
       if (!copies.includes(keep)) throw new RuleError('§63', `${key} precisa escolher qual versão manter`);
-      for (const uid of copies.filter(u => u !== keep)) destroyDevotee(state, uid, ctx.objects, ctx.attached, 'unique_removed');
+      for (const uid of copies.filter(u => u !== keep)) { destroyDevotee(state, uid, ctx.objects, ctx.attached, 'unique_removed'); pushTriggers(state, v6Leaves(state, ctx, key, uid, 'tartarus')); }
     }
   }
+}
+
+// "Would be defeated" (qualquer dano): 1) salvamento de Spell marcado `anyDamage` (consumido); 2) ganchos V6
+// (`wouldBeDefeated`/`gearWouldBeDefeated`/`watchWouldBeDefeated`, devolvem true se tomaram o lugar da derrota).
+// A derrota só é cancelada se o Devotee ficar com dano < HP ou sair do campo (o gancho corrige o dano).
+function replaceDefeat(state, ctx, key, uid) {
+  const saver = state.effects.find(e => e.kind === 'save' && e.target === uid && e.anyDamage);
+  if (saver) { state.effects = state.effects.filter(e => e !== saver); saver.onSave?.(state, ctx); }
+  else if (!v6WouldBeDefeated(state, ctx, key, uid)) return false;
+  emit(state, 'defeat_prevented', {uid, player: key, ability: 'WOULD BE DEFEATED'});
+  return !state.units[uid] || state.units[uid].damage < hpOf(state, ctx, uid);
 }
 
 export function checkDefeats(state, ctx) {
@@ -244,6 +261,8 @@ export function checkDefeats(state, ctx) {
         emit(state, 'defeat_prevented', {uid, player: key, ability: 'DIVINE PROTECTION'});
         continue;
       }
+      // Gancho wouldBeDefeated: substituição antes da derrota (efeito 'save' com anyDamage e ganchos V6); pode cancelá-la.
+      if (replaceDefeat(state, ctx, key, uid)) continue;
       const berserker = /Berserker/.test(card(ctx, uid).type), gear = Object.keys(ctx.attached).filter(e => ctx.attached[e] === uid);
       destroyDevotee(state, uid, ctx.objects, ctx.attached);
       if (berserker) harvestOfTheFallen(state, key);

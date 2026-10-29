@@ -28,6 +28,16 @@ function pay(st, c, key, n, ability, uid) {
   if (n) spendBase(st, key, n);
   return true;
 }
+// "Cast a Moment or Technique" (gancho watchSpell): Event e Miracle jogam como Technique (guia §54).
+const castMT = (c, spellUid) => /Moment|Technique|Event|Miracle/.test(k.card(c, spellUid)?.type || '');
+// Observador "once each round, when you cast a Moment or Technique, you may pay {n}{C}. If you do, <run>". O uso do Round é
+// marcado no evento (convenção deste arquivo); só devolve gatilho (e portanto abre a janela da Spell) quando vale.
+const onCast = (tag, ability, cost, run) => (s, c, key, self, caster, spellUid) => caster === key && castMT(c, spellUid) &&
+  !s.roundUses.has(`${tag}:${self}`) && ready(s, key) >= cost && k.once(s, `${tag}:${self}`) && (st => {
+    if (pay(st, c, key, cost, ability, self)) run(st, c, key, self);
+  });
+// Remove 1 Seal (Frozen Brotherhood): o contador sai sem passar por Prepare.
+const unseal = (st, uid) => { const u = st.units[uid]; if (u?.seal) { u.seal--; k.emit(st, 'seal_removed', {uid, counters: u.seal}); } };
 const loot = (st, c, key, ability) => { k.draw(st, key, 1); k.discard(st, c, key, 1, ability); };
 const mayLoot = (st, c, key, ability) => { if (k.may(c, key, ability, {text: 'Draw a card, then discard a card?'})) loot(st, c, key, ability); };
 // "Look at the top card of your deck. You may put that card on the bottom of your deck."
@@ -194,8 +204,15 @@ export default {
       return st => {
         strikeBuff(st, self, (frozen ? 2 : 0) + (brother ? 2 : 0) + (pillar ? 1 : 0)); // 146: Resonance — Kraken Isaac
         if (brother) strikeBuff(st, t, 2);
-        // pendente: Frozen Brotherhood "if either Devotee survives, remove 1 Seal counter from each surviving Devotee" — sem gancho pós-Strike de sobrevivente.
       };
+    },
+    // Frozen Brotherhood (cláusula final, ganchos survive/defeated): Strike contra Hyoga em que algum dos dois sobrevive tira
+    // 1 Seal de cada sobrevivente. Isaac sobrevive: ele e Hyoga (se ainda em campo); Isaac cai e Hyoga sobrevive: só Hyoga.
+    survive: (s, c, key, self, role, foe) => role === 'attacker' && !!foe && HYOGA.test(name(c, foe)) && (st => { unseal(st, self); unseal(st, foe); }),
+    defeated: (s, c, key, self) => {
+      const last = s.events.findLast(e => e.type === 'strike_resolve' && e.attacker === self);
+      const foe = last?.target?.uid;
+      return !!foe && last.turn === s.turn && HYOGA.test(name(c, foe)) && k.controllerOf(s, foe) && (st => unseal(st, foe));
     },
   },
   'poseidon-v6-098': {
@@ -254,7 +271,12 @@ export default {
     mods: (s, c, key, self) => (k.devotees(s, c, key).some(u => u !== self && isMarina(c, u)) ? [{atk: 0, hp: 1}] : []),
     watchDeclare: selfWard({ability: 'OCEANIC DEFENSE'}),
   },
-  // 105 Atlantean Sentinel — pendente: Ancient Vigil ("survives a Strike as a defender") sem gancho; Guardian já é da engine.
+  // 105 Atlantean Sentinel — Ancient Vigil (gancho survive): sobreviveu como defensor; pode pagar {1}{C} e pôr 1 Seal no atacante.
+  'poseidon-v6-105': {
+    survive: (s, c, key, self, role, foe) => role === 'defender' && !!foe && ready(s, key) >= 1 && (st => {
+      if (st.units[foe] && pay(st, c, key, 1, 'ANCIENT VIGIL', self)) seal(st, c, [foe], 1, 'ANCIENT VIGIL');
+    }),
+  },
   'poseidon-v6-106': {
     mods: (s, c, key) => (s.domains?.[key] ? [{atk: 0, hp: 1}] : []),
   },
@@ -306,7 +328,8 @@ export default {
     // pendente: Tidal Escape ("becomes the target of an enemy Moment or Technique") — sem gancho de alvo de Spell.
   },
   'poseidon-v6-116': {
-    // pendente: Pearl Divination ("when you cast a Moment or Technique") — sem gancho de conjuração.
+    // Pearl Divination (gancho watchSpell): paga {1}{C}, compra 1 e descarta 1.
+    watchSpell: onCast('pearldiv', 'PEARL DIVINATION', 1, (st, c, key) => loot(st, c, key, 'PEARL DIVINATION')),
     watchDiscard: (s, c, key, self, player) => {
       if (player !== key || !k.once(s, `pearl:${self}`)) return;
       return st => {
@@ -316,7 +339,7 @@ export default {
       };
     },
   },
-  // 117 Ancient Sea Guardian — pendente: Tidal Rejection (contra-mágica) sem gancho de conjuração inimiga.
+  // 117 Ancient Sea Guardian — pendente: Tidal Rejection (a Spell só escolhe alvo na resolução: sem alvo conhecido ao conjurar, não dá para saber se mira seu God/Devotee).
   'poseidon-v6-118': {
     enter: (s, c, key, self) => st => { if (k.devotees(st, c, key).some(u => u !== self && isMarina(c, u))) k.draw(st, key, 1); },
     // Banner of the Emperor (estática): aplicada como +1 ATK 'this_strike' na declaração do Strike inimigo contra o Marina.
@@ -326,7 +349,17 @@ export default {
       return st => strikeBuff(st, t, 1);
     },
   },
-  // 119 Trident Temple Warden — pendente: Sacred Interdiction (contra-mágica) sem gancho de conjuração inimiga.
+  // 119 Trident Temple Warden — Sacred Interdiction (gancho watchSpell + kit.counterSpell): Moment/Technique inimigo; pague {2}{C} e
+  // Exhaust nele (precisa estar Prepared); a Spell é anulada a menos que o controlador pague {2}{C}. Uso do Round marcado no evento.
+  'poseidon-v6-119': {
+    watchSpell: (s, c, key, self, caster, spellUid) => caster !== key && castMT(c, spellUid) && s.units[self]?.prepared && ready(s, key) >= 2 &&
+      !s.roundUses.has(`interdiction:${self}`) && k.once(s, `interdiction:${self}`) && (st => {
+        if (!st.units[self]?.prepared || !k.spellOnChain(st, spellUid) || !pay(st, c, key, 2, 'SACRED INTERDICTION', self)) return;
+        k.exhaust(st, self);
+        if (ready(st, caster) >= 2 && k.may(c, caster, 'SACRED INTERDICTION', {cost: '2 Cosmo', text: 'Pay {2}{C} to keep your Spell from being countered?'})) { spendBase(st, caster, 2); return; }
+        k.counterSpell(st, c, spellUid);
+      }),
+  },
   'poseidon-v6-120': {
     watchMill: (s, c, key, self, player) => {
       const tag = `prophecy:${self}`;
@@ -356,7 +389,7 @@ export default {
       };
     },
   },
-  // 124 Coral Reef — pendente: Living Reef (contra-mágica) sem gancho; o +0/+1 já vem do Equipment.
+  // 124 Coral Reef — pendente: Living Reef (mesmo motivo do 117: alvo da Spell desconhecido ao conjurar); o +0/+1 já vem do Equipment.
   'poseidon-v6-125': {
     gearDeclare: (s, c, key, self, bearer, target) => {
       if (target.kind !== 'devotee' || !sealed(s, target.uid) || !k.once(s, `piercing:${self}`)) return;
@@ -397,7 +430,10 @@ export default {
       return st => debuff(st, victim, 1);
     },
   },
-  // 130 Battle Awareness — pendente: "survives a Strike as a defender" sem gancho; o +0/+1 já vem do Equipment.
+  // 130 Battle Awareness (gancho gearSurvive): portador sobreviveu como defensor; uma vez por Round, olha o topo do deck e pode pô-lo no fundo.
+  'poseidon-v6-130': {
+    gearSurvive: (s, c, key, self, bearer, role) => role === 'defender' && !s.roundUses.has(`awareness:${self}`) && k.once(s, `awareness:${self}`) && (st => scry(st, c, key, 'BATTLE AWARENESS')),
+  },
   'poseidon-v6-131': {
     watchDeclare: bearerWard({ability: 'SACRED DEFENSE', amount: (st, c, key, self, uid) => (isMarina(c, uid) ? 2 : 1)}),
   },
@@ -442,8 +478,9 @@ export default {
       for (const t of enemies(s, c, key, 'GATHERING STORM', 2)) { const r = bounce(s, c, key, t); if (r?.hadSeal) mill(s, c, r.ctrl, 1); }
     }},
   },
-  // Domain — pendente: Oceanic Dominion ("when you cast a Moment or Technique") sem gancho de conjuração.
+  // Domain — Oceanic Dominion (gancho watchSpell): paga {1}{C}, compra 1 e descarta 1.
   'poseidon-v6-142': {
+    watchSpell: onCast('oceanic', 'OCEANIC DOMINION', 1, (st, c, key) => loot(st, c, key, 'OCEANIC DOMINION')),
     watchDeclare: (s, c, key, self, attacker, target) => {
       if (!poseidon(s, key) || target.kind !== 'god' || target.player !== key || !k.once(s, `territory:${self}`)) return;
       return st => strikeBuff(st, attacker, -1);
@@ -468,7 +505,9 @@ export default {
   'poseidon-v6-145': {
     watchDeclare: ward({cost: 1, ability: 'WALL OF THE PACIFIC',
       unit: (s, c, key, self, attacker, target) => inStrike(attacker, target).find(u => k.controllerOf(s, u) === key)}),
-    // pendente: Resonance — Seahorse Baian ("survives a Strike as a defender") sem gancho.
+    // Resonance — Seahorse Baian (gancho watchSurvive): uma vez por Round, Baian sobreviveu como defensor: compra 1 e descarta 1.
+    watchSurvive: (s, c, key, self, unit, role) => role === 'defender' && k.controllerOf(s, unit) === key && BAIAN.test(name(c, unit)) &&
+      !s.roundUses.has(`baian-surv:${self}`) && k.once(s, `baian-surv:${self}`) && (st => loot(st, c, key, 'RESONANCE — SEAHORSE BAIAN')),
   },
   // Resonance — Kraken Isaac fica na declaração de Isaac (097).
   'poseidon-v6-146': {
@@ -485,7 +524,12 @@ export default {
       return st => { if (!st.roundUses.has(tag) && st.units[attacker] && pay(st, c, key, 2, 'LOST IN THE REEF', attacker)) { k.once(st, tag); bounce(st, c, key, attacker); } };
     },
   },
-  // 148 Domain Ruins — pendente: Forgotten Knowledge (activate só aceita objeto no campo, Domain não é) e Ancient Secrets (sem gancho de conjuração).
+  // 148 The Sunken Temple (Domain Ruins): Forgotten Knowledge ({2}{C}, {T}: Domain activate, uma vez por Round) e Ancient Secrets (watchSpell).
+  'poseidon-v6-148': {
+    activate: {name: 'Forgotten Knowledge', cost: 2, once: true, tap: false, run: (s, c, key) => loot(s, c, key, 'FORGOTTEN KNOWLEDGE')},
+    watchSpell: (s, c, key, self, caster, spellUid) => caster === key && castMT(c, spellUid) && !s.roundUses.has(`secrets:${self}`) &&
+      k.once(s, `secrets:${self}`) && (st => scry(st, c, key, 'ANCIENT SECRETS')),
+  },
   'poseidon-v6-149': {
     watchSealed: onSealed('crushing', (st, c, key, self, uid) => (st.units[uid] && pay(st, c, key, 1, 'CRUSHING DEPTHS', uid) ? (debuff(st, uid, 1), true) : false)),
     watchMill: (s, c, key, self, player) => {
@@ -644,7 +688,10 @@ export default {
       if (controls(s, c, key, ISAAC) || controls(s, c, key, HYOGA)) k.draw(s, key, 1);
     }},
   },
-  // 170 — pendente: Royal Knowledge (sem gancho de conjuração) e Emperor's Authority (sem redução de custo).
+  // 170 Atlantean Royal Scepter — Royal Knowledge (gancho watchSpell). pendente: Emperor's Authority (sem redução de custo).
+  'poseidon-v6-170': {
+    watchSpell: onCast('royal', 'ROYAL KNOWLEDGE', 1, (st, c, key) => loot(st, c, key, 'ROYAL KNOWLEDGE')),
+  },
   'poseidon-v6-171': {
     spell: {run: (s, c, key) => {
       // Silence — pendente: contra-mágica (ver 133).
@@ -718,7 +765,8 @@ export default {
     }},
   },
   'poseidon-v6-178': {
-    // pendente: Divine Sovereignty (sem gancho de conjuração) e Emperor's Dominion (sem redução de custo).
+    // Divine Sovereignty (gancho watchSpell): paga {1}{C} e compra 1. pendente: Emperor's Dominion (sem redução de custo).
+    watchSpell: onCast('sovereignty', 'DIVINE SOVEREIGNTY', 1, (st, c, key) => k.draw(st, key, 1)),
     activate: {name: 'Oceanic Judgment', cost: 3, once: true, tap: false, check: (s, c, key) => needEnemy(s, c, key),
       run: (s, c, key) => seal(s, c, [enemy(s, c, key, 'OCEANIC JUDGMENT')], 1, 'OCEANIC JUDGMENT')},
   },

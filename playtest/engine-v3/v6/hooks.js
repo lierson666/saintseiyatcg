@@ -1,7 +1,7 @@
 // Pontos da engine 3.0 que chamam os efeitos V6 (registry.js). A engine importa só este arquivo.
 import {hooks, pushTriggers} from '../core.js';
-import {V6, entryOf, collect, trigger, contextOf, register} from './registry.js';
-import {setDefeatedHooks, setEnteredHooks} from './kit.js';
+import {V6, entryOf, collect, trigger, contextOf, register, sources} from './registry.js';
+import {setDefeatedHooks, setEnteredHooks, setLeavesHooks, setDamagedHooks} from './kit.js';
 import hades from './hades.js';
 import poseidon from './poseidon.js';
 import ares from './ares.js';
@@ -37,9 +37,65 @@ export function v6Defeated(state, ctx, key, uid, gear = []) {
     ...own(state, ctx, owner, uid, 'defeated', [], 'is defeated'),
     ...gear.flatMap(g => own(state, ctx, ctx.objects[g].owner, g, 'bearerDefeated', [uid], 'equipped Devotee defeated')),
     ...collect(state, ctx, state.order, 'watchDefeat', [uid, owner], 'a Devotee is defeated'),
+    ...v6Leaves(state, ctx, key, uid, 'tartarus'),
+    ...gear.filter(g => ctx.objects[g].armor).flatMap(g => v6Leaves(state, ctx, ctx.objects[g].owner, g, 'tartarus')), // Armor vai junto
   ]);
 }
 setDefeatedHooks((state, ctx, owner, uid, gear) => v6Defeated(state, ctx, owner, uid, gear));
+
+// Gancho leaves: Devotee saiu do campo por qualquer via (destruído, devolvido à mão, exilado, removido por §63).
+// `where`: 'tartarus' | 'hand' | 'void'. `key`: controlador de quando saiu. Devolve gatilhos (quem chama põe na cadeia).
+export function v6Leaves(state, ctx, key, uid, where) {
+  return [
+    ...own(state, ctx, key, uid, 'leaves', [where], 'leaves the battlefield'),
+    ...collect(state, ctx, state.order, 'watchLeaves', [uid, where, key], 'a Devotee leaves the battlefield'),
+  ];
+}
+setLeavesHooks((state, ctx, key, uid, where) => pushTriggers(state, v6Leaves(state, ctx, key, uid, where)));
+
+// Gancho wouldBeDefeated: substituição ANTES de destroyDevotee (effects.checkDefeats). Cada gancho pode perguntar (kit)
+// e devolve true se tomou o lugar da derrota; ele mesmo corrige o dano (ex.: remove dano) ou tira o Devotee do campo.
+// Para no primeiro que substituir. Ordem: o próprio Devotee, seus Equipment, observadores.
+export function v6WouldBeDefeated(state, ctx, key, uid) {
+  if (entryOf(ctx, uid)?.wouldBeDefeated?.(state, ctx, key, uid)) return true;
+  for (const g of Object.keys(ctx.attached).filter(e => ctx.attached[e] === uid)) {
+    if (entryOf(ctx, g)?.gearWouldBeDefeated?.(state, ctx, ctx.objects[g].owner, g, uid)) return true;
+  }
+  for (const k of state.order) for (const {self, entry} of sources(state, ctx, k)) {
+    if (self !== uid && entry.watchWouldBeDefeated?.(state, ctx, k, self, uid, key)) return true;
+  }
+  return false;
+}
+
+// Gancho attach: Equipment ficou preso a um portador (jogado já equipado ou equipado depois: reequip).
+export function v6Attach(state, ctx, key, uid, bearer) {
+  pushTriggers(state, [...own(state, ctx, key, uid, 'attach', [bearer], 'becomes attached'),
+    ...collect(state, ctx, state.order, 'watchAttach', [uid, bearer], 'Equipment becomes attached')]);
+}
+
+// Gancho prevent: prevenção OBRIGATÓRIA de dano a um Devotee (antes dos escudos). `prevent(s, c, key, self, amount, strike)` do
+// próprio Devotee e `gearPrevent(s, c, key, self, bearer, amount, strike)` do Equipment devolvem quanto previnem (<= amount).
+export function v6Prevent(state, ctx, key, uid, amount, strike) {
+  let left = amount;
+  const take = n => { left -= Math.max(0, Math.min(left, n || 0)); };
+  take(entryOf(ctx, uid)?.prevent?.(state, ctx, key, uid, left, strike));
+  for (const g of Object.keys(ctx.attached).filter(e => ctx.attached[e] === uid)) {
+    if (left > 0) take(entryOf(ctx, g)?.gearPrevent?.(state, ctx, ctx.objects[g].owner, g, uid, left, strike));
+  }
+  return amount - left;
+}
+
+// Gancho tookDamage: Devotee foi atingido por dano (Strike ou efeito) que de fato chegou a ele. Devolve gatilhos.
+// info: {dealt, foe (Devotee que causou, ou null), combat (dano de Strike)}. Também gearTookDamage / watchTookDamage.
+export function tookDamage(state, ctx, key, uid, info, gearList) {
+  const gear = gearList || Object.keys(ctx.attached).filter(g => ctx.attached[g] === uid);
+  return [
+    ...own(state, ctx, key, uid, 'tookDamage', [info], 'is dealt damage'),
+    ...gear.flatMap(g => own(state, ctx, ctx.objects[g].owner, g, 'gearTookDamage', [uid, info], 'equipped Devotee is dealt damage')),
+    ...collect(state, ctx, state.order, 'watchTookDamage', [uid, info], 'a Devotee is dealt damage'),
+  ];
+}
+setDamagedHooks((state, ctx, key, uid, info) => pushTriggers(state, tookDamage(state, ctx, key, uid, info)));
 
 // Strike declarado: gatilhos entram na mesma janela do Strike (declareStrike recebe a lista).
 export function v6Declare(state, ctx, key, attacker, target) {
@@ -65,6 +121,38 @@ export function v6AfterStrike(state, ctx, strike, gearBefore) {
       out.push(...collect(state, ctx, [key], 'watchKill', [uid, victim], 'defeats a Devotee'));
     }
   };
+  // Ganchos damagePrevented (Strike prevenido total/parcialmente) e survive (continuou em campo depois do Strike).
+  const onBattlefield = u => state.order.some(k => state.players[k].battlefield.includes(u));
+  const gearNow = u => Object.keys(ctx.attached).filter(g => ctx.attached[g] === u);
+  const prevented = (uid, key, foe, role) => {
+    const h = strike.hits?.[uid];
+    if (!h || h.prevented <= 0) return;
+    const info = {...h, full: h.prevented >= h.incoming, role, foe};
+    out.push(...own(state, ctx, key, uid, 'damagePrevented', [info], 'damage is prevented'));
+    for (const g of gear(uid)) out.push(...own(state, ctx, ctx.objects[g].owner, g, 'gearDamagePrevented', [uid, info], 'equipped Devotee damage is prevented'));
+    out.push(...collect(state, ctx, state.order, 'watchDamagePrevented', [uid, info], 'Strike damage is prevented'));
+  };
+  const survived = (uid, key, foe, role) => {
+    if (!onBattlefield(uid)) return;
+    out.push(...own(state, ctx, key, uid, 'survive', [role, foe], 'survives a Strike'));
+    for (const g of gearNow(uid)) out.push(...own(state, ctx, ctx.objects[g].owner, g, 'gearSurvive', [uid, role, foe], 'equipped Devotee survives a Strike'));
+    out.push(...collect(state, ctx, state.order, 'watchSurvive', [uid, role, foe], 'a Devotee survives a Strike'));
+  };
+  // Dano ao God prevenido: só observadores (watchDamagePrevented com unit = 'god:X').
+  if (target.kind === 'god' && strike.godHit?.prevented > 0) {
+    out.push(...collect(state, ctx, state.order, 'watchDamagePrevented', [`god:${enemy}`, {...strike.godHit, full: strike.godHit.dealt === 0, role: 'defender', foe: attacker, god: true}], 'Strike damage is prevented'));
+  }
+  // Gancho tookDamage: dano de Strike efetivamente causado (info.dealt > 0) a cada lado; info.combat = true.
+  const hurt = (uid, key, foe) => {
+    const h = strike.hits?.[uid];
+    if (h?.dealt > 0) out.push(...tookDamage(state, ctx, key, uid, {dealt: h.dealt, foe, combat: true}, gear(uid)));
+  };
+  hurt(attacker, player, target.uid || null);
+  if (target.kind === 'devotee') hurt(target.uid, enemy, attacker);
+  prevented(attacker, player, target.uid || null, 'attacker');
+  if (target.kind === 'devotee') prevented(target.uid, enemy, attacker, 'defender');
+  survived(attacker, player, target.uid || null, 'attacker');
+  if (target.kind === 'devotee') survived(target.uid, enemy, attacker, 'defender');
   if (target.kind === 'devotee') {
     const t = target.uid, gone = u => !state.order.some(k => state.players[k].battlefield.includes(u));
     side(attacker, player, t, strike.dealt || 0, gone(t));

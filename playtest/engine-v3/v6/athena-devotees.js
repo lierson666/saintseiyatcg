@@ -2,7 +2,7 @@
 // Texto: card-forge/art-web/cards.json (habilidades_en). Dúvidas: docs/v6-efeitos-pendencias.md ("Athena — Devotees").
 import * as k from './kit.js';
 import {spendBase, addSeal} from '../core.js';
-import {shield, isSaint, isBronze} from '../effects.js';
+import {shield, isSaint, isBronze, forbidStrike, forbidPrepare} from '../effects.js';
 
 const name = (c, uid) => k.card(c, uid)?.name || '';
 const sealed = (s, uid) => (s.units[uid]?.seal || 0) > 0;
@@ -22,12 +22,8 @@ const inStrike = (attacker, target, uid) => attacker === uid || (target.kind ===
 const againstAlly = (s, c, key, self, attacker, target) => k.controllerOf(s, attacker) !== key && (
   (target.kind === 'god' && target.player === key) ||
   (target.kind === 'devotee' && target.uid !== self && k.controllerOf(s, target.uid) === key && isSaint(c, target.uid)));
-// "Cannot declare another Strike this round": a D22 já cobre o resto do turno de quem atacou; se o dono do alvo ainda tem
-// turno neste Round (o ativo joga primeiro), o próximo turno (turn + 1) também fica barrado.
-function lockStrike(s, uid) {
-  const owner = k.controllerOf(s, uid);
-  if (owner && owner !== s.active && s.turnInRound === 0) s.strikes.set(uid, s.turn + 1);
-}
+// "Cannot declare another Strike this round" (gancho cannotStrike): marca exata, vale até o fim do Round nos dois turnos.
+const lockStrike = (s, uid) => { if (s.units[uid]) forbidStrike(s, uid); };
 // "Once each round, when X deals Strike damage to an enemy Devotee, <efeito>": uso gasto ao resolver (se o alvo ainda existir).
 const onHit = (tag, run) => (s, c, key, self, victim) => !s.roundUses.has(`${self}:${tag}`) && (st => {
   if (st.units[victim] && k.controllerOf(st, victim) !== key && k.once(st, `${self}:${tag}`)) run(st, c, key, self, victim);
@@ -51,20 +47,33 @@ export default {
   // Andromeda Shun
   'athena-v6-007': {
     // Nebula Chain: Exhaust (precisa estar Prepared) e o Strike não causa dano nenhum (nem retaliação).
-    watchDeclare: (s, c, key, self, attacker, target) => againstAlly(s, c, key, self, attacker, target) && s.units[self]?.prepared &&
-      !s.roundUses.has(`${self}:nebula`) && (st => {
+    // `nebulaOpen`: o Nebula Chain é deste Strike (lido pela Resonance da Andromeda Cloth V2, 008); a próxima declaração apaga.
+    watchDeclare: (s, c, key, self, attacker, target) => {
+      if (s.units[self]) s.units[self].nebulaOpen = false;
+      return againstAlly(s, c, key, self, attacker, target) && s.units[self]?.prepared && !s.roundUses.has(`${self}:nebula`) && (st => {
         if (!st.units[self]?.prepared || st.roundUses.has(`${self}:nebula`) || !k.may(c, key, 'NEBULA CHAIN', {uid: self})) return;
         k.once(st, `${self}:nebula`);
+        st.units[self].nebulaOpen = true;
         k.exhaust(st, self);
         shield(st, target.kind === 'god' ? k.godTarget(key) : target.uid, Infinity, {duration: 'this_strike'});
         shield(st, attacker, Infinity, {duration: 'this_strike'});
-      }),
+      });
+    },
     // Brotherhood
     aura: (s, c, key, self, unit) => unit !== self && k.controllerOf(s, unit) === key && isSaint(c, unit) ? {hp: 1} : null,
   },
   // Phoenix Ikki
   'athena-v6-009': {
-    // pendente: Phoenix Rebirth ("would be defeated" para qualquer dano; sem gancho). O marcador 'Rebirth' (addMarker) já é lido por Esmeralda.
+    // Phoenix Rebirth (gancho wouldBeDefeated): sem Rebirth, em vez de ser derrotado tira todo o dano, fica Exhausted,
+    // ganha 1 Rebirth e não declara Strike neste Round. O marcador 'Rebirth' (addMarker) é lido por Esmeralda.
+    wouldBeDefeated: (s, c, key, self) => {
+      if (k.markers(s, self, 'Rebirth') > 0) return false;
+      k.removeDamage(s, self);
+      k.exhaust(s, self);
+      k.addMarker(s, self, 'Rebirth', 1);
+      lockStrike(s, self);
+      return true;
+    },
     mods: (s, c, key, self) => saints(s, c, key).every(u => u === self) ? [{atk: 2}] : [], // Lone Wolf
   },
   // Gemini Saga
@@ -74,8 +83,8 @@ export default {
       const t = k.choose(c, key, 'ANOTHER DIMENSION', k.enemies(st, c, key), {text: 'Send target enemy Devotee to the Void.'});
       if (t && k.exile(st, c, t)) (st.dimension ||= {})[self] = [...(st.dimension[self] || []), t];
     },
-    // pendente: "until Gemini Saga leaves the battlefield" só cobre derrota (sem gancho de saída genérica: devolver à mão, exílio…).
-    defeated: (s, c, key, self) => s.dimension?.[self]?.length && (st => {
+    // "Until Gemini Saga leaves the battlefield" (gancho leaves): derrota, mão, exílio… devolvem o alvo.
+    leaves: (s, c, key, self) => s.dimension?.[self]?.length && (st => {
       for (const t of st.dimension[self]) {
         const owner = c.objects[t]?.owner;
         if (owner && st.players[owner].void.includes(t)) k.putOntoField(st, c, owner, t, 'void');
@@ -109,20 +118,53 @@ export default {
   },
   // Lizard Misty
   'athena-v6-023': {
-    // Marble Wall: o escudo nasce na declaração do Strike (padrão de poseidon.js). pendente: Untouchable (precisa saber que o escudo preveniu tudo).
+    // Marble Wall: o escudo nasce na declaração do Strike (atalho do padrão de poseidon.js; a prevenção em si já é exata).
+    // `marbleOpen` marca que o escudo é deste Strike; a próxima declaração qualquer o apaga.
     watchDeclare: (s, c, key, self, attacker, target) => {
       const tag = `${self}:marble`;
+      if (s.units[self]) s.units[self].marbleOpen = false;
       if (!inStrike(attacker, target, self) || s.roundUses.has(tag) || ready(s, key) < 1) return;
       return st => {
         if (!st.units[self] || st.roundUses.has(tag) || !pay(st, c, key, 1, 'MARBLE WALL', self)) return;
         k.once(st, tag);
         shield(st, self, 3, {duration: 'this_strike'});
+        st.units[self].marbleOpen = true;
+      };
+    },
+    // Untouchable (gancho damagePrevented): o Marble Wall deste Strike preveniu todo o dano que Misty receberia; pode se
+    // Preparar (sem Strike neste Round). Resonance (Lizard Silver Cloth 068): remove 1 dano da Cloth a cada vez (mandatório).
+    damagePrevented: (s, c, key, self, info) => {
+      if (!s.units[self]?.marbleOpen) return;
+      s.units[self].marbleOpen = false;
+      if (!info.full) return;
+      return st => {
+        const cloth = k.gearOf(c, self).find(g => c.objects[g].cardId === 'athena-v6-068');
+        if (cloth) k.removeDamage(st, cloth, 1);
+        if (!st.units[self] || st.roundUses.has(`${self}:untouchable`) || !k.may(c, key, 'UNTOUCHABLE', {uid: self, text: 'Prepare Lizard Misty?'})) return;
+        k.once(st, `${self}:untouchable`);
+        k.prepare(st, self);
+        lockStrike(st, self);
       };
     },
   },
   // Perseus Algol
-  // pendente: Medusa Shield ("cannot be Prepared this round" não tem marca na engine) e Stone Gaze (sobreviver a Strike como defensor).
-  'athena-v6-024': {},
+  'athena-v6-024': {
+    // Medusa Shield: Devotee inimigo declara Strike contra Algol; pague {2}{C} e ele não é Prepared nem declara Strike
+    // neste Round (ganchos cannotPrepare/cannotStrike). Resonance (Perseus Silver Cloth 069): -1 ATK dele durante o Strike.
+    watchDeclare: (s, c, key, self, attacker, target) => {
+      const tag = `${self}:medusa`;
+      if (target.kind !== 'devotee' || target.uid !== self || k.controllerOf(s, attacker) === key || s.roundUses.has(tag) || ready(s, key) < 2) return;
+      return st => {
+        if (!st.units[attacker] || st.roundUses.has(tag) || !pay(st, c, key, 2, 'MEDUSA SHIELD', self)) return;
+        k.once(st, tag);
+        forbidPrepare(st, attacker);
+        forbidStrike(st, attacker);
+        if (k.gearOf(c, self).some(g => c.objects[g].cardId === 'athena-v6-069')) k.buff(st, attacker, -1, 0, 'this_strike');
+      };
+    },
+    // Stone Gaze (gancho survive): sobreviveu como defensor, +1/+1 até o fim do Round.
+    survive: (s, c, key, self, role) => role === 'defender' && (st => { if (st.units[self]) k.buff(st, self, 1, 1); }),
+  },
   // Lyra Orphee
   'athena-v6-025': {
     activate: {name: 'STRING NOCTURNE', cost: 2, run: (s, c, key) => {
@@ -180,8 +222,16 @@ export default {
       if (t) k.addMarker(st, t, 'Rebirth', -1);
     },
   },
-  // pendente: Guilty (Training Through Pain: sobreviver a Strike).
-  'athena-v6-039': {},
+  // Guilty — Training Through Pain (gancho watchSurvive): outro Saint amigo sobreviveu a um Strike; uma vez por Round,
+  // pode causar 1 de dano a ele; se causar, +1 ATK até o fim do Round.
+  'athena-v6-039': {
+    watchSurvive: (s, c, key, self, unit) => unit !== self && k.controllerOf(s, unit) === key && isSaint(c, unit) && !s.roundUses.has(`${self}:training`) && (st => {
+      if (!st.units[unit] || st.roundUses.has(`${self}:training`) || !k.may(c, key, 'TRAINING THROUGH PAIN', {uid: unit, text: 'Deal 1 damage to that Saint? It gets +1 ATK.'})) return;
+      k.once(st, `${self}:training`);
+      k.damage(st, c, unit, 1);
+      if (st.units[unit]) k.buff(st, unit, 1, 0);
+    }),
+  },
   // Centaur Babel: Flame Whip
   'athena-v6-071': {combatDamage: onHit('flame', (st, c, key, self, victim) => k.damage(st, c, victim, 1))},
   // Whale Moses
@@ -191,15 +241,25 @@ export default {
     watchDeclare: (s, c, key, self, attacker, target) => inStrike(attacker, target, self) && !s.roundUses.has(`${self}:endurance`) &&
       k.once(s, `${self}:endurance`) && (st => { if (st.units[self]) shield(st, self, 1, {duration: 'this_strike'}); }),
   },
-  // Hound Asterion: Mind Reading. pendente: Million Ghost Attack (sobreviver como defensor).
-  'athena-v6-073': {watchDeclare: payShade('mind', 'MIND READING', 1, 2)},
+  // Hound Asterion: Mind Reading; Million Ghost Attack (gancho survive): sobreviveu como defensor, +1 ATK até o fim do Round.
+  'athena-v6-073': {
+    watchDeclare: payShade('mind', 'MIND READING', 1, 2),
+    survive: (s, c, key, self, role) => role === 'defender' && (st => { if (st.units[self]) k.buff(st, self, 1, 0); }),
+  },
   // Crow Jamian
   'athena-v6-074': {
-    // Black Wing Formation: Jamian ataca um Devotee inimigo; o defensor perde 1 ATK no Strike. pendente: Crow's Escape (sobreviver como defensor).
+    // Black Wing Formation: Jamian ataca um Devotee inimigo; o defensor perde 1 ATK no Strike.
     declare: (s, c, key, self, target) => target.kind === 'devotee' && !s.roundUses.has(`${self}:wing`) && ready(s, key) >= 1 && (st => {
       if (!st.units[target.uid] || st.roundUses.has(`${self}:wing`) || !pay(st, c, key, 1, 'BLACK WING FORMATION', self)) return;
       k.once(st, `${self}:wing`);
       k.buff(st, target.uid, -1, 0, 'this_strike');
+    }),
+    // Crow's Escape (gancho survive): uma vez por Round, sobreviveu como defensor: pode se Preparar; não declara Strike neste Round.
+    survive: (s, c, key, self, role) => role === 'defender' && !s.roundUses.has(`${self}:escape`) && (st => {
+      if (!st.units[self] || st.roundUses.has(`${self}:escape`) || !k.may(c, key, "CROW'S ESCAPE", {uid: self, text: 'Prepare Crow Jamian?'})) return;
+      k.once(st, `${self}:escape`);
+      k.prepare(st, self);
+      lockStrike(st, self);
     }),
   },
   // Cerberus Dante

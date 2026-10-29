@@ -24,6 +24,32 @@
 //   startTurn(s, c, key, self) / endTurn(s, c, key, self)   no turno do controlador ("at the beginning/end of your turn")
 //   watchEnter(s, c, key, self, entered)        observador: "Whenever another friendly … enters"
 //   watchDiscard(s, c, key, self, player, uid)  observador: "Whenever an opponent discards a card"
+//   Ganchos novos (29/10/2026):
+//   survive(s, c, key, self, role, foe)          X continuou em campo depois de um Strike (`role`: 'attacker'|'defender';
+//                                                `foe`: o outro Devotee, ou null se o alvo era o God). Também gearSurvive(s, c, key,
+//                                                self, bearer, role, foe) e watchSurvive(s, c, key, self, unit, role, foe).
+//   damagePrevented(s, c, key, self, info)       parte do dano de Strike a X foi prevenida. info = {prevented, incoming, absorbed,
+//                                                dealt, full (tudo prevenido), role, foe}. gearDamagePrevented(…, self, bearer, info),
+//                                                watchDamagePrevented(…, self, unit, info); contra o God, unit = 'god:X' e info.god = true.
+//   wouldBeDefeated(s, c, key, self)             SUBSTITUIÇÃO síncrona antes de X ser destruído (checkDefeats). Devolve true se tomou
+//                                                o lugar da derrota e já corrigiu o dano (ou tirou X do campo); pode perguntar (kit.may).
+//                                                gearWouldBeDefeated(…, self, bearer); watchWouldBeDefeated(…, self, victim, owner).
+//                                                Alternativa de Spell: effects.save(state, uid, onSave, {anyDamage: true}).
+//   tookDamage(s, c, key, self, info)            X foi atingido por dano que chegou a ele (Strike ou efeito). info = {dealt, foe (Devotee
+//                                                que causou ou null), combat (true se foi dano de Strike)}. gearTookDamage(…, self, bearer,
+//                                                info), watchTookDamage(…, self, unit, info). Gancho extra (não pedido), destrava o Ares.
+//   leaves(s, c, key, self, where)               X (Devotee ou Equipment) saiu do campo por qualquer via; `where`: 'tartarus'|'hand'|'void'.
+//                                                Armor conta ao ir com o portador derrotado ou quebrada por dano. Gatilho.
+//   watchLeaves(s, c, key, self, left, where, ctrl)  observador: outro Devotee saiu do campo.
+//   prevent(s, c, key, self, amount, strike)     PREVENÇÃO obrigatória ("prevent N of that damage") do dano que X receberia; devolve quanto
+//                                                previne (<= amount). Roda antes dos escudos de Spell. gearPrevent(…, self, bearer, amount, strike).
+//                                                Gancho extra (não pedido): era a única forma exata de "whenever X is dealt damage, prevent 1".
+//   attach(s, c, key, self, bearer)              Equipment ficou preso a `bearer` (jogado já equipado ou equipado depois).
+//   watchAttach(s, c, key, self, gear, bearer)   observador: um Equipment ficou preso a `bearer` (ex.: "whenever an Equipment becomes attached to X").
+//   watchSpell(s, c, key, self, caster, spellUid)   uma Spell foi posta na cadeia (observador). Com algum observador a Spell espera na
+//                                                cadeia (janela aberta) e kit.counterSpell(s, c, spellUid) a contraria.
+//   Marcas de efeito: effects.forbidStrike(s, uid) ("cannot declare a Strike this round"), effects.forbidPrepare(s, uid)
+//   ("cannot be Prepared this round"). Domain: activate em `domain:${key}` via play.activate.
 //   mods(s, c, key, self) -> [{atk, hp, keywords}]          bônus estático do próprio Devotee ("While …", "has Guardian")
 //   aura(s, c, key, self, unit) -> {atk, hp, keywords}|null bônus estático que a carta dá a outro Devotee `unit`
 //   spell: {check?(s, c, key, choice), run(s, c, key, self, choice)}   Technique/Moment (categoria pelo subtipo)

@@ -2,9 +2,10 @@
 // Devotee: Sorcery (D173), entra Unprepared (ALPHA-P02 A). Equipment: custo alternativo, Spell: Tartarus do Owner
 // (as duas aprovadas pelo autor em 28/10/2026). Moment/Technique: D194. Janela: ALPHA-P06 A.
 // `ctx`: {cards (loadCanon), objects (uid -> {owner, cardId}), attached (uid do Equipment -> uid do portador)}.
-import {RuleError, NotSpecified, assertIdle, spendBase, spellCategory, respond, emit} from './core.js';
+import {RuleError, NotSpecified, assertIdle, spendBase, spellCategory, respond, emit, openWindow, pushTriggers} from './core.js';
 import {SPELLS, ABILITIES, onEnter, onCastEquipment, checkDefeats, namedCharacter, enforceUniqueness} from './effects.js';
-import {v6Spell, entryOf} from './v6/hooks.js';
+import {v6Spell, entryOf, V6, v6Attach} from './v6/hooks.js';
+import {collect} from './v6/registry.js';
 
 // Custo impresso: Base (D4) ou Latent. Valida tudo antes de mexer no estado.
 export function payCost(state, key, cost) {
@@ -68,6 +69,7 @@ export function playEquipment(state, ctx, key, uid, bearer, choice = {}) {
   if (bearer) ctx.attached[uid] = bearer;
   emit(state, 'card_played', {player: key, uid, kind: 'Equipment', bearer});
   onCastEquipment(state, ctx, key, uid, choice);
+  if (bearer) v6Attach(state, ctx, key, uid, bearer); // gancho attach
   return {cost};
 }
 
@@ -76,10 +78,13 @@ export function activate(state, ctx, key, uid, choice = {}) {
   if (state.victory) throw new RuleError('D52', 'a partida já terminou');
   if (key !== state.active) throw new RuleError('D1', 'só o jogador ativo age, no próprio turno');
   assertIdle(state); // D173: Sorcery
-  const v6 = entryOf(ctx, uid)?.activate;
-  const ability = v6 ? {...v6, check: (s, c, k, ch) => v6.check?.(s, c, k, uid, ch), run: (s, c, k, ch) => v6.run(s, c, k, uid, ch)}
+  // Domain (`domain:${key}`): habilidade ativada do Domain do próprio jogador; não é objeto de deck nem tem {T}.
+  const domain = String(uid).startsWith('domain:');
+  if (domain && (uid !== `domain:${key}` || !V6[state.domains?.[key]]?.activate)) throw new RuleError('{T}', 'sem habilidade ativada de Domain');
+  const v6 = domain ? V6[state.domains[key]].activate : entryOf(ctx, uid)?.activate;
+  const ability = v6 ? {...v6, ...(domain && {tap: false}), check: (s, c, k, ch) => v6.check?.(s, c, k, uid, ch), run: (s, c, k, ch) => v6.run(s, c, k, uid, ch)}
     : ABILITIES[ctx.objects[uid]?.cardId.slice(-3)];
-  if (!ability || !state.players[key].battlefield.includes(uid)) throw new RuleError('{T}', 'sem habilidade ativada implementada');
+  if (!ability || (!domain && !state.players[key].battlefield.includes(uid))) throw new RuleError('{T}', 'sem habilidade ativada implementada');
   if (ability.tap !== false && state.units[uid]?.prepared !== true) throw new RuleError('D192', 'o Devotee precisa estar Prepared para {T}');
   if (ability.once && state.roundUses.has(`ability:${uid}`)) throw new RuleError('D191', `${ability.name} já foi usada neste Round`);
   ability.check(state, ctx, key, choice);
@@ -105,6 +110,7 @@ export function reequip(state, ctx, key, uid, bearer) {
   payCost(state, key, cost);
   ctx.attached[uid] = bearer;
   emit(state, 'equipped', {player: key, uid, bearer});
+  v6Attach(state, ctx, key, uid, bearer); // gancho attach: Equipment/Armor equipado depois da conjuração
   return {cost};
 }
 
@@ -176,7 +182,14 @@ function playSpellV6(state, ctx, key, uid, choice) {
     leaveHand(state, key, uid);
     p.stack.push(uid);
     emit(state, 'card_played', {player: key, uid, kind: 'Spell', category});
-    finish(state);
+    // Gancho watchSpell: com observador (contra-mágica) a Spell espera na cadeia e o adversário responde (guia §56).
+    // Sem observador resolve na hora, como antes.
+    const watchers = collect(state, ctx, state.order, 'watchSpell', [key, uid], 'a Spell is cast');
+    if (!watchers.length) { finish(state); return; }
+    openWindow(state);
+    state.chain.push({controller: key, uid, speed: 'instant', run: finish, target: null, spell: true});
+    emit(state, 'chain_add', {player: key, uid});
+    pushTriggers(state, watchers);
     return;
   }
   if (state.victory) throw new RuleError('D52', 'a partida já terminou');
@@ -187,5 +200,6 @@ function playSpellV6(state, ctx, key, uid, choice) {
   leaveHand(state, key, uid);
   p.stack.push(uid);
   emit(state, 'card_played', {player: key, uid, kind: 'Spell', category});
-  respond(state, key, {speed: 'instant', uid, run: finish, target: null});
+  respond(state, key, {speed: 'instant', uid, run: finish, target: null, spell: true});
+  pushTriggers(state, collect(state, ctx, state.order, 'watchSpell', [key, uid], 'a Spell is cast')); // gancho watchSpell (resposta)
 }
