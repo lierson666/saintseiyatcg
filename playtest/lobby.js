@@ -317,7 +317,7 @@ addEventListener('pointerdown', () => { unlock(); playMusic('menu'); }, {once: t
 async function init() {
   const get = u => fetch(u).then(r => { if (!r.ok) throw Error(`Missing ${u}`); return r.json(); });
   const [canon, deckData, art, previewDecks] = await Promise.all([get('../data/canon/d268.json'), get('../data/alpha-0.1/decks-proposta-d171.json'),
-    get(`${ART}cards.json`).catch(() => ({cartas: []})), get('../data/alpha-0.1/decks-preview-poseidon-hades.json').catch(() => ({decks: []}))]);
+    get(`${ART}cards.json`).catch(() => ({cartas: []})), get('../data/alpha-0.1/decks-preview.json').catch(() => ({decks: []}))]);
   cards = loadCanon(canon); index = canonIndex(canon);
   forge = new Map(art.cartas.map(c => [c.id, c]));
   for (const f of art.cartas.filter(c => /^(poseidon|hades|ares|artemis)-v6-/.test(c.id))) {

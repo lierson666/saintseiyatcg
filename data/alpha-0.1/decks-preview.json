@@ -1,0 +1,481 @@
+{
+  "nota": "Decks iniciais de prévia dos Gods além de Athena, aprovados pelo autor (Poseidon e Hades em 28/10/2026; Ares e Artemis em 29/10/2026). Não jogáveis até a engine conhecer as cartas.",
+  "decks": [
+    {
+      "id": "preview-poseidon-tide",
+      "nome": "Tide of the Seven Seas",
+      "god": "god-poseidon",
+      "domain_id": "poseidon-v6-142",
+      "main_deck": [
+        {
+          "card_id": "poseidon-v6-106",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-107",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-105",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-108",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-111",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-104",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-099",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-103",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-091",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-093",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-100",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-092",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-094",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-125",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-131",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-133",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-140",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-132",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-137",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-152",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-156",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-153",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-162",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-166",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-141",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-172",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-180",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": "preview-hades-108",
+      "nome": "Army of the 108 Stars",
+      "god": "god-hades",
+      "domain_id": "hades-v6-242",
+      "main_deck": [
+        {
+          "card_id": "hades-v6-218",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-206",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-217",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-211",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-215",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-219",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-212",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-208",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-189",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-181",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-183",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-185",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-195",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-190",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-225",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-226",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-182",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-199",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-236",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-235",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-234",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-238",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-241",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-240",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-258",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-263",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-270",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": "preview-ares-legions",
+      "nome": "Legions of War",
+      "god": "god-ares",
+      "domain_id": "ares-v6-332",
+      "main_deck": [
+        {
+          "card_id": "ares-v6-293",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-291",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-292",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-295",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-298",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-297",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-299",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-304",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-302",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-279",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-281",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-271",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-273",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-316",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-336",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-315",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-272",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-289",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-322",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-323",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-325",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-327",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-331",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-350",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-354",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-346",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-351",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-358",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": "preview-artemis-hunt",
+      "nome": "The Silver Hunt",
+      "god": "god-artemis",
+      "domain_id": "artemis-v6-429",
+      "main_deck": [
+        {
+          "card_id": "artemis-v6-381",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-398",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-393",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-388",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-395",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-390",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-399",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-383",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-404",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-365",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-367",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-371",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-361",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-375",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-409",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-413",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-415",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-362",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-379",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-421",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-419",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-422",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-424",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-417",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-376",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-441",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-374",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-426",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-449",
+          "quantity": 1
+        }
+      ]
+    }
+  ]
+}
