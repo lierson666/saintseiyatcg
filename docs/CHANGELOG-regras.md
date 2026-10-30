@@ -4,6 +4,20 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-30 — Cartas de Ares — rebalanceamento
+
+- **Antes:** pings automáticos no God sem custo; Devotees de custo ≤ 2 com 3 de ATK; Bloodlust preparava o Devotee para um segundo Strike em qualquer alvo.
+- **Depois:**
+  - Gatilhos automáticos de dano no God (271, 275, 278, 281, 282, 291, 293, 313, 314, 317, 333, 335, 336, 338, 343) viram "you may pay N Soul. If you do, deal N damage…" (1 Soul por ponto; nas de alvo misto paga-se sempre).
+  - −1 ATK em 291, 295, 297, 301, 304 e 313.
+  - Bloodlust (God Ares, D268): "It can't declare a Strike against a God this round."
+- **Motivo:** Ares agressivo demais (round-robin de bots: Berserker Blitz 73%, Glorious Demise 64%). Decisões do autor no grilling de 29/10/2026; diff aprovado em 30/10/2026: `docs/rebalanceamento-ares-2026-10-30/cards.diff.md`.
+- **Pendências:**
+  - Pings automáticos no God que ficaram fora do diff aprovado: 289 Enyo (gearKillGod 3), 302 Unquenchable Fury (2), 316 Blood Hunger (1), 332 Eternal Bloodshed (2), 340 Champion's Ferocity (1), 341 Burning Pride (2). Aguardam decisão do autor.
+  - Spells 347, 348, 357 e a ativação 307 ficam sem taxa (decisão do autor).
+  - Engine: `playtest/engine-v3/v6/ares.js` (taxa), `effects.js` (Harvest of the Fallen, `forbidGodStrike`), `gods.js` (Bloodlust), `strike.js` (filtro). IA não paga Soul com 6 ou menos.
+  - Resonances de Ares agora comparam o id da carta: o Forge renomeou personagens (ex.: "Ethon Alcmenes").
+
 ## 2026-10-29 — God Hades (D268) — Offering of Life só com Devotee seu
 
 - **Antes:** "Once each round, when a Devotee is defeated, you may lose 2 Soul…": qualquer Devotee, dos dois lados.

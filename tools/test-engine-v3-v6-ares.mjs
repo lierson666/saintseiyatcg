@@ -209,3 +209,29 @@ test('337 Flame Resonance: Flame Legion Berserker equipado ganha +1 ATK quando v
   assert.ok(s.players.A.tartarus.includes(spell));
   assert.ok(plate);
 });
+
+// Rebalanceamento (autor, 30/10/2026): dano automático no God custa Soul, e é opcional.
+test('Burning Assault (291): pagar 1 Soul tira 1 do God inimigo; recusar não paga nem causa dano', () => {
+  for (const pay of [true, false]) {
+    const {s, ctx, give} = setup();
+    ctx.decide = (player, q) => (q.options ? q.options[0] : pay && q.ability === 'BURNING ASSAULT');
+    s.domains.A = null; // sem Eternal Bloodshed (332) somando dano
+    const red = give('A', '291'), foe = give('B', '293');
+    const a = s.players.A.soul, b = s.players.B.soul;
+    strike(s, ctx, red, {kind: 'devotee', uid: foe});
+    assert.deepEqual([s.players.A.soul, s.players.B.soul], pay ? [a - 1, b - 1] : [a, b]);
+  }
+});
+
+test('Promethean Fire (271) paga 2 Soul por 2 de dano; Final Explosion (313) paga mesmo mirando Devotee', () => {
+  const {s, ctx, give} = setup();
+  ctx.decide = (player, q) => (q.options ? (q.options.find(o => !String(o).startsWith('god:')) ?? q.options[0]) : player === 'A');
+  s.domains.A = null;
+  const alc = give('A', '271'), foe = give('B', '293'), boom = give('A', '313');
+  const a = s.players.A.soul, b = s.players.B.soul;
+  strike(s, ctx, alc, {kind: 'devotee', uid: foe});
+  assert.deepEqual([s.players.A.soul, s.players.B.soul], [a - 2, b - 2]);
+  s.units[boom].damage = 99; checkDefeats(s, ctx); passAll(s);
+  assert.equal(s.players.A.soul, a - 3, 'Final Explosion cobra 1 Soul também contra Devotee');
+});
+

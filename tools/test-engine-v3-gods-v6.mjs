@@ -8,7 +8,7 @@ import {canonIndex} from '../shared/deck-v3.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
 import {startTurn, passAll, runCheckpoint, gainLatent, RuleError, NotSpecified} from '../playtest/engine-v3/core.js';
 import {bindContext} from '../playtest/engine-v3/v6/registry.js';
-import {declareStrike} from '../playtest/engine-v3/strike.js';
+import {declareStrike, checkStrike} from '../playtest/engine-v3/strike.js';
 import {atkOf, keywordsOf, damageDevotee, checkDefeats, hpOf} from '../playtest/engine-v3/effects.js';
 import {refreshAwaken, announceGreatEclipse, greatEclipseBlock, activateBloodlust, announceObliteration, placeBaseMoonHarvest, moonAwakeningBlock} from '../playtest/engine-v3/gods.js';
 import {putOntoField} from '../playtest/engine-v3/v6/kit.js';
@@ -103,6 +103,8 @@ test('Ares Bloodlust (Divine Power, 3 Cosmo): prepara o Devotee e dá +1 ATK at�
   assert.deepEqual([s.units[unit].prepared, atkOf(s, ctx, unit), A.latent], [true, base + 1, 0]);
   A.latent = 3;
   assert.throws(() => activateBloodlust(s, ctx, 'A', unit), RuleError);
+  // Rebalanceamento (autor, 30/10/2026): o Devotee preparado não mira God nesta rodada.
+  assert.throws(() => checkStrike(s, ctx, unit, {kind: 'god', player: 'B'}), /God/);
 });
 
 test('Ares Bloodlust paga com Base preparada primeiro e completa com Latent', () => {

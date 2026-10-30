@@ -17,7 +17,10 @@ const foeGod = (s, key) => k.godTarget(k.other(s, key));
 const ownGod = key => k.godTarget(key);
 const alive = (s, uid) => !!uid && !!k.controllerOf(s, uid);
 const berserker = (c, uid) => k.hasType(c, uid, 'Berserker');
-const named = (c, uid, name) => !!uid && k.card(c, uid)?.name === name;
+// Resonance por personagem: compara o id da carta (o nome de exibição muda no Forge, ex.: "Ethon Alcmenes", 30/10/2026).
+const CHARACTER = {'ALCMENES OF ETHON': 271, 'OFIR OF OUROBOROS': 273, 'LIOR OF LAMASSU': 275, 'LOTIS OF LAMIA': 277, 'ISEU OF PYTHON': 279,
+  'CATREU OF AKEPHALOS': 281, 'ALCEU OF LAMASSU': 283, 'ARIONTE OF ANFISTA': 285, 'BASIL OF MANTICORE': 287, 'BERSERKER CHAMPION': 302};
+const named = (c, uid, name) => !!uid && c.objects[uid]?.cardId === `ares-v6-${CHARACTER[name]}`;
 const friends = (s, c, key, pred = () => true) => k.devotees(s, c, key).filter(u => berserker(c, u) && pred(u));
 // loseSoul/draw lançam D52 depois da vitória: tudo que vem depois de um dano ao God passa por aqui.
 const hit = (st, c, t, n) => { if (!st.victory && t && n > 0) k.damage(st, c, t, n); };
@@ -91,10 +94,13 @@ const enterDamage = (n, ability, filter) => ({
     if (t) { markHit(st, self, t); hit(st, c, t, n); }
   }),
 });
-const declareGod = n => ({declare: (s, c, key) => st => hit(st, c, foeGod(st, key), n)});
-const deathGod = n => ({defeated: (s, c, key) => st => hit(st, c, foeGod(st, key), n)});
+// Rebalanceamento (autor, 30/10/2026): dano automático no God custa Soul — "you may pay N Soul. If you do, deal N…".
+const taxed = (st, c, key, ability, n, uid) => !st.victory && st.players[key].soul >= n
+  && k.may(c, key, ability, {uid, cost: `${n} Soul`}) && k.paySoul(st, key, n);
+const declareGod = (n, ability) => ({declare: (s, c, key, self) => st => { if (taxed(st, c, key, ability, n, self)) hit(st, c, foeGod(st, key), n); }});
+const deathGod = (n, ability) => ({defeated: (s, c, key, self) => st => { if (taxed(st, c, key, ability, n, self)) hit(st, c, foeGod(st, key), n); }});
 const deathDevotee = (n, ability) => ({defeated: (s, c, key) => st => hit(st, c, enemyDevotee(st, c, key, ability), n)});
-const deathAny = (n, ability) => ({defeated: (s, c, key) => st => hit(st, c, enemyOrGod(st, c, key, ability), n)});
+const deathAny = (n, ability) => ({defeated: (s, c, key, self) => st => { if (taxed(st, c, key, ability, n, self)) hit(st, c, enemyOrGod(st, c, key, ability), n); }});
 const otherFriendlyBerserkerDied = (c, key, other, dead, owner) => owner === key && dead !== other && berserker(c, dead);
 const friendlyBerserkerDeclared = (s, c, key, other, attacker) => attacker !== other && k.controllerOf(s, attacker) === key && berserker(c, attacker);
 const gearDeclareDamage = (n, ability) => ({gearDeclare: (s, c, key) => st => hit(st, c, enemyDevotee(st, c, key, ability), n)});
@@ -103,7 +109,8 @@ const gearDeclareOther = (n, ability) => ({
   gearDeclare: (s, c, key, self, bearer) => st => buff(st, friendlyBerserker(st, c, key, ability, u => u !== bearer), n),
 });
 const gearKillGod = n => ({gearKillInCombat: (s, c, key) => st => hit(st, c, foeGod(st, key), n)});
-const gearDeathGod = n => ({bearerDefeated: (s, c, key) => st => hit(st, c, foeGod(st, key), n)});
+const gearDeathGod = (n, ability) => ({bearerDefeated: (s, c, key, self) => st => { if (taxed(st, c, key, ability, n, self)) hit(st, c, foeGod(st, key), n); }});
+const gearKillGodTaxed = (n, ability) => ({gearKillInCombat: (s, c, key, self) => st => { if (taxed(st, c, key, ability, n, self)) hit(st, c, foeGod(st, key), n); }});
 // "That God's controller / target opponent discards a card[, then draws a card]."
 const opponentDiscards = (st, c, key, ability, thenDraw = 0) => {
   const foe = k.other(st, key);
@@ -118,7 +125,7 @@ const merge = (...parts) => Object.assign({}, ...parts);
 
 export default {
   // Alcmenes of Ethon
-  'ares-v6-271': merge(enterDamage(3, 'CRIMSON ARRIVAL'), declareGod(2), {
+  'ares-v6-271': merge(enterDamage(3, 'CRIMSON ARRIVAL'), declareGod(2, 'PROMETHEAN FIRE'), {
     killInCombat: (s, c, key, self) => k.onceTurn(s, `${self}:inferno`) && (st => { if (alive(st, self)) k.prepare(st, self); }),
   }),
   // Ethon Warplate
@@ -141,7 +148,7 @@ export default {
   // Lior of Lamassu
   'ares-v6-275': {
     watchDefeat: (s, c, key, self, dead, owner) =>
-      otherFriendlyBerserkerDied(c, key, self, dead, owner) && (st => hit(st, c, enemyOrGod(st, c, key, 'CRUEL ENTERTAINMENT'), 1)),
+      otherFriendlyBerserkerDied(c, key, self, dead, owner) && (st => { if (taxed(st, c, key, 'CRUEL ENTERTAINMENT', 1, self)) hit(st, c, enemyOrGod(st, c, key, 'CRUEL ENTERTAINMENT'), 1); }),
     activate: {
       name: 'SUICIDE ORDERS', cost: 0, tap: false,
       check: (s, c, key, self) => {
@@ -174,7 +181,7 @@ export default {
   'ares-v6-278': {
     gearGodDamage: (s, c, key) => st => opponentDiscards(st, c, key, 'HAUNTING PRESENCE'),
     watchDiscard: (s, c, key, self, player) =>
-      player !== key && named(c, k.bearerOf(c, self), 'LOTIS OF LAMIA') && k.onceTurn(s, `${self}:lamia`) && (st => hit(st, c, k.godTarget(player), 1)),
+      player !== key && named(c, k.bearerOf(c, self), 'LOTIS OF LAMIA') && k.onceTurn(s, `${self}:lamia`) && (st => { if (taxed(st, c, key, 'LAMIA RESONANCE', 1, self)) hit(st, c, k.godTarget(player), 1); }),
   },
   // Iseu of Python
   'ares-v6-279': merge(enterDamage(1, "SERPENT'S AMBUSH"), {
@@ -190,13 +197,13 @@ export default {
     },
   },
   // Catreu of Akephalos
-  'ares-v6-281': merge(enterDamage(1, 'MERCILESS ARRIVAL'), deathGod(1), {
+  'ares-v6-281': merge(enterDamage(1, 'MERCILESS ARRIVAL'), deathGod(1, 'DEATH WITHOUT FEAR'), {
     watchDefeat: (s, c, key, self, dead, owner) => otherFriendlyBerserkerDied(c, key, self, dead, owner) && (st => buff(st, self, 1)),
   }),
   // Akephalos Warplate
-  'ares-v6-282': merge(gearKillGod(1), {
+  'ares-v6-282': merge(gearKillGodTaxed(1, 'RELENTLESS EXECUTION'), {
     bearerDefeated: (s, c, key, self, bearer) =>
-      named(c, bearer, 'CATREU OF AKEPHALOS') && (st => hit(st, c, enemyOrGod(st, c, key, 'AKEPHALOS RESONANCE'), 2)),
+      named(c, bearer, 'CATREU OF AKEPHALOS') && (st => { if (taxed(st, c, key, 'AKEPHALOS RESONANCE', 2, self)) hit(st, c, enemyOrGod(st, c, key, 'AKEPHALOS RESONANCE'), 2); }),
   }),
   // Alceu of Lamassu
   'ares-v6-283': {
@@ -247,9 +254,9 @@ export default {
     gearSurvive: (s, c, key, self, bearer, role, foe) => !!foe && (st => { if (alive(st, foe)) hit(st, c, foe, 2); }),
     gearTookDamage: (s, c, key, self, bearer) => st => buff(st, bearer, 2),
   },
-  'ares-v6-291': declareGod(1),
+  'ares-v6-291': declareGod(1, 'BURNING ASSAULT'),
   'ares-v6-292': {watchDeclare: (s, c, key, self, attacker) => friendlyBerserkerDeclared(s, c, key, self, attacker) && (st => buff(st, self, 1))},
-  'ares-v6-293': deathGod(1),
+  'ares-v6-293': deathGod(1, 'GLORIOUS DEMISE'),
   'ares-v6-294': {godDamage: (s, c, key) => st => opponentDiscards(st, c, key, 'PSYCHOLOGICAL WARFARE')},
   'ares-v6-295': {
     declare: (s, c, key, self) => st => buff(st, self, 1),
@@ -334,10 +341,10 @@ export default {
   'ares-v6-313': merge(deathAny(1, 'FINAL EXPLOSION'), {
     endTurn: (s, c, key, self) => st => { if (alive(st, self)) k.defeat(st, c, self); },
   }),
-  'ares-v6-314': gearDeathGod(1),
+  'ares-v6-314': gearDeathGod(1, 'LAST PROTECTION'),
   'ares-v6-315': gearDeclareSelf(1),
   'ares-v6-316': gearKillGod(1),
-  'ares-v6-317': merge(gearKeywords(['Pierce']), gearDeathGod(1)),
+  'ares-v6-317': merge(gearKeywords(['Pierce']), gearDeathGod(1, "DEATH'S TRIBUTE")),
   'ares-v6-318': {
     gearCombatDamage: (s, c, key, self, bearer, victim) => st => hit(st, c, enemyDevotee(st, c, key, 'SAVAGE CLEAVE', u => u !== victim), 1),
   },
@@ -405,7 +412,7 @@ export default {
   },
   'ares-v6-333': {
     watchDeclare: (s, c, key, self, attacker) =>
-      friendlyBerserkerDeclared(s, c, key, null, attacker) && k.onceTurn(s, `${self}:scorched`) && (st => hit(st, c, foeGod(st, key), 1)),
+      friendlyBerserkerDeclared(s, c, key, null, attacker) && k.onceTurn(s, `${self}:scorched`) && (st => { if (taxed(st, c, key, 'SCORCHED GROUND', 1, self)) hit(st, c, foeGod(st, key), 1); }),
     endTurn: (s, c, key) => defeatedThisTurn(s, c).some(e => e.owner !== key) && (st => hit(st, c, ownGod(key), 1)),
   },
   'ares-v6-334': {
@@ -420,7 +427,7 @@ export default {
 
   // ---------- Legion Warplates ----------
   'ares-v6-336': merge(gearKeywords(['Pierce'], (c, b) => berserker(c, b) && k.hasType(c, b, 'Red Fire Legion')), {
-    gearDeclare: (s, c, key) => st => hit(st, c, foeGod(st, key), 1),
+    gearDeclare: (s, c, key, self) => st => { if (taxed(st, c, key, 'BURNING STRIKE', 1, self)) hit(st, c, foeGod(st, key), 1); },
   }),
   // Flame Resonance (gancho watchSpell): portador Flame Legion Berserker e você conjura Moment ou Technique (Event/Miracle jogam
   // como Technique, §54): +1 ATK até o fim do turno. Só devolve gatilho quando vale (senão a Spell resolve sem janela).
@@ -434,7 +441,7 @@ export default {
   'ares-v6-338': {
     bearerDefeated: (s, c, key, self, bearer) => st => {
       hit(st, c, enemyDevotee(st, c, key, 'LAST LAUGH'), 2);
-      if (k.hasType(c, bearer, 'Disaster Legion')) hit(st, c, foeGod(st, key), 1);
+      if (k.hasType(c, bearer, 'Disaster Legion') && taxed(st, c, key, 'DISASTER RESONANCE', 1, self)) hit(st, c, foeGod(st, key), 1);
     },
   },
   'ares-v6-339': {

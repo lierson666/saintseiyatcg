@@ -2,7 +2,7 @@
 // Declaração → janela de reação (P06 A) → dano simultâneo → verificação de destruição.
 // `ctx`: {cards (loadCanon), objects (uid -> {owner, cardId}), attached}. Estado de unidade em state.units[uid] = {prepared, damage}.
 import {RuleError, NotSpecified, recordStrike, loseSoul, destroyDevotee, assertIdle, openWindow, pushTriggers, emit, hooks} from './core.js';
-import {atkOf, keywordsOf, damageDevotee, preventGod, onDeclare, afterStrike, checkDefeats, gearOf, cannotStrike} from './effects.js';
+import {atkOf, keywordsOf, damageDevotee, preventGod, onDeclare, afterStrike, checkDefeats, gearOf, cannotStrike, cannotStrikeGod} from './effects.js';
 import {v6Declare} from './v6/hooks.js';
 
 export {atkOf, hpOf, keywordsOf, gearOf} from './effects.js';
@@ -25,6 +25,7 @@ export function checkStrike(state, ctx, attacker, target) {
   if (cannotStrike(state, attacker)) throw new RuleError('V6', 'este Devotee não pode declarar Strike neste Round'); // gancho cannotStrike
   // §47 (autor, 29/10/2026): o Strike na rodada de entrada (Impulse) não pode ter um God como alvo; Pierce segue normal.
   if (target.kind === 'god' && unit?.entered === state.turn) throw new RuleError('§47', 'Devotee que entrou nesta rodada não pode ter um God como alvo');
+  if (target.kind === 'god' && cannotStrikeGod(state, attacker)) throw new RuleError('V6', 'este Devotee não pode mirar um God nesta rodada');
   const legal = target.kind === 'god' ? target.player === enemy
     : target.kind === 'devotee' && onField(state, enemy, target.uid) && card(ctx, target.uid).kind === 'Devotee';
   if (!legal) throw new RuleError('P04', 'alvo precisa ser o God inimigo ou um Devotee inimigo');

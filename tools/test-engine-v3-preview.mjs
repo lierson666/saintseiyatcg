@@ -37,12 +37,14 @@ test('Devotee com Impulse entra Prepared e ataca no turno; sem Impulse, não', (
   assert.equal(strikeTargets(s, ctx, plain).length, 0);
 });
 
-test('Fields of Carnage: Berserker amigo derrotado tira 1 do God inimigo, uma vez por turno', () => {
+test('Fields of Carnage: Berserker amigo derrotado; pagando 1 Soul tira 1 do God inimigo, uma vez por turno', () => {
   const {s, ctx, play} = setup();
+  ctx.decide = (player, q) => q.ability === 'HARVEST OF THE FALLEN'; // rebalanceamento 30/10/2026: custa 1 Soul
   s.domains.A = 'ares-v6-335';
-  const a = play('299'), b = play('279'), soul = s.players.B.soul;
+  const a = play('299'), b = play('279'), soul = s.players.B.soul, own = s.players.A.soul;
   s.units[a].damage = 99; checkDefeats(s, ctx); passAll(s);
   assert.equal(s.players.B.soul, soul - 1);
+  assert.equal(s.players.A.soul, own - 1);
   s.units[b].damage = 99; checkDefeats(s, ctx); if (s.chain.length) passAll(s);
   assert.equal(s.players.B.soul, soul - 1);
 });

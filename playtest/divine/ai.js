@@ -75,7 +75,8 @@ export function createAI(h) {
 
   // Pergunta da engine para a IA: "you may" = sim; escolha obrigatória = as cartas mais baratas (descarte, Base a devolver).
   function answer(req) {
-    if (req.kind === 'optional') return true;
+    // Custo em Soul (taxa de Ares, Rise Again…): só paga com folga, para não se matar por 1 de dano.
+    if (req.kind === 'optional') return !(req.cost?.soul || /Soul/.test(String(req.cost ?? ''))) || h.S().players[req.player].soul > 6;
     // Alvo de carta V6: God inimigo primeiro; senão o Devotee inimigo mais caro; senão o próprio mais caro.
     if (req.choose === 'mode') return req.options[0]; // modo escrito: o primeiro
     if (req.choose === 'target') {

@@ -3,7 +3,7 @@
 // docs/alpha-0.1/GODS-3.0-SUPPLEMENT.md (G3-xxx). Nada aqui vem da engine 2.2.
 // Habilidades da Athena que mexem em Devotees (Divine Protection, Cosmo of Hope) ficam em effects.js e leem `state.divine`.
 import {RuleError, NotSpecified, emit, hooks, assertIdle, pushTriggers, loseSoul, loseGame, destroyDevotee, spendBase, gainLatent, placeBase, addSeal, mill, draw, useOncePerRound} from './core.js';
-import {card, controllerOf, isSaint, atkOf} from './effects.js';
+import {card, controllerOf, isSaint, atkOf, forbidGodStrike} from './effects.js';
 import {characterOf, IdentityGap} from '../../shared/character-identity.js';
 import * as k from './v6/kit.js'; // ciclo gods↔kit é seguro: kit só usa gainSoul dentro de funções
 import {contextOf} from './v6/registry.js';
@@ -356,6 +356,7 @@ export function activateBloodlust(state, ctx, key, uid) {
     if (!k.onField(st, key, uid)) return;
     k.prepare(st, uid);
     k.buff(st, uid, 1, 0, 'this_round');
+    forbidGodStrike(st, uid); // autor, 29/10/2026: não pode mirar God nesta rodada
   }}]);
 }
 

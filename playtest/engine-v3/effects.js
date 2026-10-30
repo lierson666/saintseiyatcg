@@ -80,6 +80,9 @@ export const save = (state, target, onSave, {anyDamage = false} = {}) => addEffe
 export const forbidStrike = (state, target, duration = 'this_round') => addEffect(state, {kind: 'noStrike', target, duration});
 export const forbidPrepare = (state, target, duration = 'this_round') => addEffect(state, {kind: 'noPrepare', target, duration});
 export const cannotStrike = (state, uid) => state.effects.some(e => e.kind === 'noStrike' && e.target === uid);
+// Bloodlust (autor, 29/10/2026): o Devotee pode atacar, mas não um God, até o fim da rodada.
+export const forbidGodStrike = (state, target, duration = 'this_round') => addEffect(state, {kind: 'noGodStrike', target, duration});
+export const cannotStrikeGod = (state, uid) => state.effects.some(e => e.kind === 'noGodStrike' && e.target === uid);
 
 function useShields(state, target, amount, strike) {
   for (const e of state.effects.filter(x => x.kind === 'prevent' && x.target === target && (strike || !x.strikeOnly))) {
@@ -265,7 +268,7 @@ export function checkDefeats(state, ctx) {
       if (replaceDefeat(state, ctx, key, uid)) continue;
       const berserker = /Berserker/.test(card(ctx, uid).type), gear = Object.keys(ctx.attached).filter(e => ctx.attached[e] === uid);
       destroyDevotee(state, uid, ctx.objects, ctx.attached);
-      if (berserker) harvestOfTheFallen(state, key);
+      if (berserker) harvestOfTheFallen(state, ctx, key);
       v6Defeated(state, ctx, key, uid, gear);
     }
   }
@@ -273,13 +276,16 @@ export function checkDefeats(state, ctx) {
 }
 // Checagem de estado: dano ≥ HP derrota mesmo sem Strike (ex.: aura +1/+1 que sumiu com a fonte).
 hooks.checkpoint.push(state => { const ctx = contextOf(state); if (ctx) checkDefeats(state, ctx); });
-// Domain 335 The Fields of Carnage, Harvest of the Fallen: Berserker amigo derrotado causa 1 de dano ao God inimigo,
-// uma vez por rodada (guia §64). Unending Slaughter ainda não está implementado.
-function harvestOfTheFallen(state, key) {
+// Domain 335 The Fields of Carnage, Harvest of the Fallen: Berserker amigo derrotado; você pode pagar 1 Soul para causar 1
+// de dano ao God inimigo (rebalanceamento, autor 30/10/2026), uma vez por rodada (guia §64). Unending Slaughter: v6/ares.js.
+function harvestOfTheFallen(state, ctx, key) {
   const once = `domain:${key}:harvest`;
   if (state.domains?.[key] !== 'ares-v6-335' || state.victory || state.roundUses.has(once)) return;
   useOncePerRound(state, once);
   pushTriggers(state, [{controller: key, uid: `domain:${key}`, ability: 'HARVEST OF THE FALLEN', run: st => {
+    if (st.victory) return;
+    if (st.players[key].soul < 1 || !ask(ctx, key, {ability: 'HARVEST OF THE FALLEN', uid: `domain:${key}`, cost: '1 Soul'})) return;
+    loseSoul(st, {[key]: 1}, 'payment');
     if (st.victory) return;
     emit(st, 'domain_power', {player: key, ability: 'HARVEST OF THE FALLEN'});
     loseSoul(st, {[other(st, key)]: 1}, 'damage');

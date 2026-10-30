@@ -18,7 +18,7 @@ import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, cloc
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
 import {createDirector} from './director.js?v=7';
-import {createAI} from './ai.js?v=3';
+import {createAI} from './ai.js?v=4';
 import {findDeck} from '../deck-store.js';
 import {unlock, playMusic} from '../audio.js?v=20261028-strike';
 import {renderLiveCard} from '../../shared/live-card.js?v=20261029-forge';
