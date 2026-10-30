@@ -446,6 +446,12 @@ test('121 Countercurrent: devolve o Marina mirado e, sem alvo legal restante, an
   assert.equal(ready(B), bases - 1);
 });
 
+test('121 Countercurrent: Spell inimiga mirando um God não quebra o gatilho (alvo god:X sem objeto)', () => {
+  const {s, ctx, put} = duel();
+  const master = put('B', P('121'), 'battlefield'), sp = put('A', 'hades-v6-258');
+  assert.doesNotThrow(() => V6[P('121')].watchSpell(s, ctx, 'B', master, 'A', sp, ['god:B']));
+});
+
 test('124 Coral Barrier: portador mirado; paga {2}{C} e anula a menos que o controlador pague {2}{C}', () => {
   for (const pays of [false, true]) {
     const {s, ctx, A, B, put, minos, sealed, answers} = duel();

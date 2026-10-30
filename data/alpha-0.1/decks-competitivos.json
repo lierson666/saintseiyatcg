@@ -950,7 +950,7 @@
       "nome": "Berserker Blitz",
       "god": "god-ares",
       "domain_id": "ares-v6-334",
-      "arquetipo": "Curva baixa de Berserkers com Impulse, Warplates/armas e Charge Into Battle. The Arena of Blood dá ATK a quem derrota. Vence antes do turno 8 batendo direto no God.",
+      "arquetipo": "Curva baixa de Berserkers com Impulse, Warplates/armas, No Mercy e remoção barata (First Blood, Rain of Spears). The Arena of Blood dá ATK a quem derrota. Sem cartas que ferem o próprio God; as taxas de Soul de Ares só valem com folga de Soul. Vence cedo batendo direto no God.",
       "tema": "Berserker aggro / rush",
       "main_deck": [
         {
@@ -959,14 +959,14 @@
         },
         {
           "card_id": "ares-v6-296",
-          "quantity": 2
+          "quantity": 3
         },
         {
           "card_id": "ares-v6-306",
           "quantity": 2
         },
         {
-          "card_id": "ares-v6-303",
+          "card_id": "ares-v6-343",
           "quantity": 2
         },
         {
@@ -974,8 +974,8 @@
           "quantity": 2
         },
         {
-          "card_id": "ares-v6-310",
-          "quantity": 2
+          "card_id": "ares-v6-327",
+          "quantity": 3
         },
         {
           "card_id": "ares-v6-291",
@@ -1054,10 +1054,6 @@
           "quantity": 2
         },
         {
-          "card_id": "ares-v6-327",
-          "quantity": 2
-        },
-        {
           "card_id": "ares-v6-350",
           "quantity": 1
         },
@@ -1084,7 +1080,7 @@
       "nome": "Glorious Demise",
       "god": "god-ares",
       "domain_id": "ares-v6-335",
-      "arquetipo": "Berserkers descartáveis (Disaster Legion) que causam dano ao God ao morrer; Blood for Blood, Suicide Orders e as varreduras (Burn It All, Azure, Bloody Rain) alimentam Fields of Carnage. Vence pelo dano acumulado ao God.",
+      "arquetipo": "Berserkers descartáveis (Disaster Legion) que causam dano ao God ao morrer, pagando a taxa de Soul; Blood for Blood e Suicide Orders alimentam Fields of Carnage. Corpos de meio de curva (Royal Guard, Berserker Champion, Crimson Fire Guardian, Lior) e remoção (First Blood, Rain of Spears, Azure, The Crimson Fire, The Fall of Ikki) seguram a mesa sem ferir o próprio God. Vence pelo dano acumulado ao God.",
       "tema": "Glorious Demise / burn ao God",
       "main_deck": [
         {
@@ -1100,36 +1096,40 @@
           "quantity": 3
         },
         {
-          "card_id": "ares-v6-303",
+          "card_id": "ares-v6-343",
           "quantity": 3
-        },
-        {
-          "card_id": "ares-v6-275",
-          "quantity": 2
         },
         {
           "card_id": "ares-v6-279",
           "quantity": 2
         },
         {
-          "card_id": "ares-v6-283",
+          "card_id": "ares-v6-281",
           "quantity": 2
         },
         {
-          "card_id": "ares-v6-312",
-          "quantity": 2
+          "card_id": "ares-v6-283",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-275",
+          "quantity": 3
         },
         {
           "card_id": "ares-v6-309",
-          "quantity": 2
+          "quantity": 3
         },
         {
-          "card_id": "ares-v6-310",
-          "quantity": 2
+          "card_id": "ares-v6-302",
+          "quantity": 3
         },
         {
-          "card_id": "ares-v6-311",
-          "quantity": 2
+          "card_id": "ares-v6-345",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-341",
+          "quantity": 3
         },
         {
           "card_id": "ares-v6-338",
@@ -1140,15 +1140,27 @@
           "quantity": 2
         },
         {
-          "card_id": "ares-v6-326",
+          "card_id": "ares-v6-314",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-316",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-322",
           "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-326",
+          "quantity": 2
         },
         {
           "card_id": "ares-v6-347",
           "quantity": 3
         },
         {
-          "card_id": "ares-v6-328",
+          "card_id": "ares-v6-327",
           "quantity": 2
         },
         {
@@ -1156,48 +1168,20 @@
           "quantity": 2
         },
         {
-          "card_id": "ares-v6-352",
-          "quantity": 1
-        },
-        {
-          "card_id": "ares-v6-357",
-          "quantity": 2
-        },
-        {
           "card_id": "ares-v6-350",
           "quantity": 2
-        },
-        {
-          "card_id": "ares-v6-359",
-          "quantity": 1
-        },
-        {
-          "card_id": "ares-v6-360",
-          "quantity": 1
-        },
-        {
-          "card_id": "ares-v6-322",
-          "quantity": 3
-        },
-        {
-          "card_id": "ares-v6-330",
-          "quantity": 2
-        },
-        {
-          "card_id": "ares-v6-296",
-          "quantity": 2
-        },
-        {
-          "card_id": "ares-v6-291",
-          "quantity": 3
         },
         {
           "card_id": "ares-v6-354",
           "quantity": 2
         },
         {
-          "card_id": "ares-v6-314",
-          "quantity": 1
+          "card_id": "ares-v6-330",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-328",
+          "quantity": 2
         }
       ]
     },
@@ -1450,7 +1434,7 @@
       "nome": "Steel Armory",
       "god": "god-ares",
       "domain_id": "ares-v6-334",
-      "arquetipo": "Steel Saints neutros (Recruit, Sho, Daichi) e suas Steel Cloths crescem equipados, com o arsenal genérico de Ares (Helmet, Blade, Axe, Chains of Fury, Javelin). Muitos equipamentos baratos em corpos pequenos; Arena of Blood recompensa quem derrota. Vence com um corpo equipado que bate todo turno.",
+      "arquetipo": "Steel Saints neutros (Recruit, Sho, Daichi) e suas Steel Cloths crescem equipados, ao lado de Berserkers de meio de curva (Alceu, Berserker Champion, Crimson Fire Guardian, Royal Guard) e do arsenal genérico de Ares (Helmet, Blade, Axe, Javelin, Champion Warplate). Remoção barata (First Blood, Rain of Spears, The Crimson Fire, The Fall of Ikki) abre caminho; Arena of Blood recompensa quem derrota. Vence com um corpo equipado que bate todo turno.",
       "tema": "Steel Saints / artifacts",
       "main_deck": [
         {
@@ -1466,10 +1450,6 @@
           "quantity": 2
         },
         {
-          "card_id": "neutral-v6-465",
-          "quantity": 2
-        },
-        {
           "card_id": "neutral-v6-466",
           "quantity": 2
         },
@@ -1478,63 +1458,47 @@
           "quantity": 2
         },
         {
-          "card_id": "ares-v6-293",
-          "quantity": 2
-        },
-        {
-          "card_id": "ares-v6-296",
-          "quantity": 2
-        },
-        {
-          "card_id": "ares-v6-306",
-          "quantity": 2
-        },
-        {
-          "card_id": "ares-v6-303",
-          "quantity": 2
-        },
-        {
-          "card_id": "ares-v6-312",
+          "card_id": "neutral-v6-465",
           "quantity": 1
-        },
-        {
-          "card_id": "ares-v6-310",
-          "quantity": 2
         },
         {
           "card_id": "ares-v6-291",
           "quantity": 3
         },
         {
-          "card_id": "ares-v6-292",
+          "card_id": "ares-v6-304",
           "quantity": 2
-        },
-        {
-          "card_id": "ares-v6-295",
-          "quantity": 3
         },
         {
           "card_id": "ares-v6-297",
           "quantity": 2
         },
         {
+          "card_id": "ares-v6-292",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-293",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-283",
+          "quantity": 3
+        },
+        {
           "card_id": "ares-v6-279",
           "quantity": 2
         },
         {
-          "card_id": "ares-v6-281",
-          "quantity": 1
-        },
-        {
-          "card_id": "ares-v6-283",
+          "card_id": "ares-v6-302",
           "quantity": 2
         },
         {
-          "card_id": "ares-v6-304",
+          "card_id": "ares-v6-341",
           "quantity": 2
         },
         {
-          "card_id": "ares-v6-314",
+          "card_id": "ares-v6-309",
           "quantity": 2
         },
         {
@@ -1546,11 +1510,11 @@
           "quantity": 3
         },
         {
-          "card_id": "ares-v6-317",
+          "card_id": "ares-v6-318",
           "quantity": 2
         },
         {
-          "card_id": "ares-v6-318",
+          "card_id": "ares-v6-340",
           "quantity": 2
         },
         {
@@ -1558,12 +1522,32 @@
           "quantity": 2
         },
         {
-          "card_id": "ares-v6-321",
+          "card_id": "ares-v6-314",
           "quantity": 2
         },
         {
           "card_id": "ares-v6-322",
           "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-327",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-350",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-354",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-325",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-323",
+          "quantity": 1
         }
       ]
     },
@@ -1706,7 +1690,7 @@
       "nome": "Carnage of the Underworld",
       "god": "god-hades",
       "domain_id": "ares-v6-335",
-      "arquetipo": "God de Hades (Offering of Life: morte vira carta) com Domain de Ares (Fields of Carnage: morte de Berserker queima o God). Berserkers baratos e Impulse pressionam; Dullahan, Harpy e Souls of the Damned devolvem o Soul que Ares gasta.",
+      "arquetipo": "God de Hades (Offering of Life: morte vira carta) com Domain de Ares (Fields of Carnage: morte de Berserker queima o God). Berserkers de Disaster Legion e de meio de curva (Alceu, Iseu, Catreu, Berserker Champion, Crimson Fire Guardian) pressionam; Dullahan, Harpy e Souls of the Damned devolvem o Soul que as taxas de Ares gastam.",
       "tema": "Dois facções: God Hades + Domain Ares",
       "main_deck": [
         {
@@ -1722,16 +1706,20 @@
           "quantity": 2
         },
         {
-          "card_id": "ares-v6-310",
+          "card_id": "ares-v6-341",
           "quantity": 2
         },
         {
-          "card_id": "ares-v6-291",
+          "card_id": "ares-v6-283",
           "quantity": 3
         },
         {
-          "card_id": "ares-v6-295",
-          "quantity": 3
+          "card_id": "ares-v6-279",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-281",
+          "quantity": 1
         },
         {
           "card_id": "ares-v6-304",
@@ -1739,7 +1727,7 @@
         },
         {
           "card_id": "ares-v6-322",
-          "quantity": 2
+          "quantity": 3
         },
         {
           "card_id": "ares-v6-315",
@@ -1762,11 +1750,7 @@
           "quantity": 2
         },
         {
-          "card_id": "hades-v6-234",
-          "quantity": 2
-        },
-        {
-          "card_id": "hades-v6-218",
+          "card_id": "ares-v6-302",
           "quantity": 2
         },
         {
@@ -1827,7 +1811,7 @@
         },
         {
           "card_id": "hades-v6-241",
-          "quantity": 1
+          "quantity": 2
         }
       ]
     }

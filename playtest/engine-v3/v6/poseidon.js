@@ -9,7 +9,7 @@ import {collect} from './registry.js';
 const name = (c, uid) => k.card(c, uid)?.name || '';
 const KANON = /Kanon/i, SORRENTO = /Sorrento/i, BAIAN = /Baian/i, ISAAC = /Isaac/i, HYOGA = /Hyoga/i, THETIS = /Thetis/i;
 const controls = (s, c, key, re) => k.devotees(s, c, key).some(u => re.test(name(c, u)));
-const isMarina = (c, uid) => k.isDevotee(c, uid) && k.hasType(c, uid, 'Marina');
+const isMarina = (c, uid) => !k.isGod(uid) && k.isDevotee(c, uid) && k.hasType(c, uid, 'Marina'); // alvo 'god:X' não tem objeto
 const isGeneral = (c, uid) => k.isDevotee(c, uid) && k.hasType(c, uid, 'Marina General');
 const isScale = (c, uid) => /Scale/.test(k.card(c, uid)?.type || '');
 const generals = (s, c, key) => k.devotees(s, c, key).filter(u => isGeneral(c, u)).length;
