@@ -30,16 +30,24 @@
   .rail .sanctum__domain { width: auto; height: 36px; border-radius: 8px; }
 
   /* Comando: sem relógio grande nem trilha de fases; turno numa linha e o botão de ação embaixo à direita. */
-  .command { width: var(--cmd-w); right: calc(8px + var(--sr)); bottom: calc(8px + var(--sb)); gap: 6px; }
+  .command { width: var(--cmd-w); right: calc(8px + var(--sr)); top: auto; bottom: calc(8px + var(--sb)); transform: none; display: flex; flex-direction: column; gap: 6px; }
   .command > * { width: 100%; min-width: 0; max-width: 100%; box-sizing: border-box; }
-  .command__clock, .phasebar__steps, .phasebar__turn small { display: none; }
-  .phasebar__turn { display: block; text-align: center; }
-  .phasebar { padding: 4px 10px; border-radius: 12px; }
-  .phasebar__turn strong { font-size: 13px; }
+  /* Turno numa faixa fina: "Your turn" e a fase atual (auditoria mobile, fase 2). */
+  .command__clock, .phasebar__turn small { display: none; }
+  .phasebar { display: flex; align-items: baseline; justify-content: center; gap: 6px; min-height: 0; padding: 6px 10px; border-radius: 12px; }
+  .phasebar__turn { display: block; }
+  .phasebar__turn strong { font: 600 12px/1 Georgia, serif; white-space: nowrap; }
+  .phasebar__steps { display: flex; margin: 0; padding: 0; list-style: none; }
+  .phasebar__steps li { display: none; font: 600 12px/1 system-ui, sans-serif; color: #e8c46a; white-space: nowrap; }
+  .phasebar__steps li.on { display: block; }
   .action-btn { min-height: 44px; padding: 8px 12px; font-size: 14px; gap: 8px; }
-  .command__tools { gap: 3px; flex-wrap: nowrap; justify-content: space-between; }
-  .command__tools button, .command__tools a { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 36px; padding: 4px 2px; font-size: 10px; text-align: center; }
-  .demo-tag { transform: scale(.75); transform-origin: top right; }
+  /* Log, Settings e Menu atrás de um botão só (⋯); abrem empilhados acima dele. */
+  .command .command__more { display: flex; align-items: center; justify-content: center; min-height: 40px; border-radius: 12px; border: 1px solid #ffffff26; background: #04081c99; color: #c9c3dc; font: 700 20px/1 system-ui, sans-serif; letter-spacing: .1em; }
+  .command__more[aria-expanded="true"] { border-color: #e8c46a; color: #e8c46a; }
+  .command__tools { order: 9; display: none; flex-direction: column; gap: 4px; }
+  .command__tools.is-open { display: flex; }
+  .command .command__more { order: 10; }
+  .command__tools button, .command__tools a { display: flex; align-items: center; justify-content: center; min-height: 40px; padding: 4px 8px; font-size: 13px; text-align: center; }
 
   /* Mão do oponente: só o número (no contador); a sua espia embaixo e sobe ao tocar. */
   .olympus .hand--opp { display: none; }
@@ -79,8 +87,12 @@
   .cast-slot { left: calc(12px + var(--sl) + var(--rail-w)); }
   .banner { right: calc(var(--cmd-w) + var(--sr)); }
   .olympus .hand--me { margin-bottom: var(--sb); }
-  .demo-tag { right: calc(8px + var(--sr)); }
+  /* Selo de demonstração: pequeno, embaixo à esquerda, fora do caminho. */
+  .demo-tag { top: auto; bottom: calc(4px + var(--sb)); left: calc(var(--rail-w) + 14px + var(--sl)); right: auto; transform: none; padding: 2px 8px; font-size: 9px; opacity: .7; pointer-events: none; }
 }
+
+/* Botão ⋯ do menu de ferramentas: só no celular deitado. */
+.command__more { display: none; }
 
 /* Em pé no celular: o duelo pede para girar. */
 .rotate-hint { display: none; }

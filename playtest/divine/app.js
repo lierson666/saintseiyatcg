@@ -45,7 +45,7 @@ const saveSettings = () => { try { localStorage.setItem(SETTINGS_KEY, JSON.strin
 let canon, cards, index, decks, match, ctx, scene = null, director, clock;
 let mode = null;           // escolha em andamento: {kind, key, uid, steps, i, choice, picked, options, run}
 let pending = null;        // decisão pedida pela engine no meio da resolução (decision.js): {pending, snap, answers, run, shown, picked, peek}
-let marked = new Set(), logLines = [], logOpen = false, settingsOpen = false, inspectTimer, seenEvents = 0, drag = null;
+let marked = new Set(), logLines = [], logOpen = false, settingsOpen = false, toolsOpen = false, inspectTimer, seenEvents = 0, drag = null;
 let casting = null;        // carta jogada da mão que ainda espera alvo (fica travada no slot de conjuração)
 
 const S = () => match.state;
@@ -599,7 +599,8 @@ function command() {
     <div class="command__clock">${clockMarkup()}</div>
     ${phaseBar()}
     <button class="action-btn" data-primary ${s.victory || aiControls() ? 'disabled' : ''}><span>${esc(label)}</span><i aria-hidden="true">›</i></button>
-    <div class="command__tools"><button data-toggle-log aria-pressed="${logOpen}">Log</button><button data-toggle-settings>Settings</button><a href="../">Menu</a></div>
+    <button class="command__more" data-toggle-tools aria-expanded="${toolsOpen}" aria-label="Game menu">⋯</button>
+    <div class="command__tools${toolsOpen ? ' is-open' : ''}"><button data-toggle-log aria-pressed="${logOpen}">Log</button><button data-toggle-settings>Settings</button><a href="../">Menu</a></div>
   </aside>`;
 }
 
@@ -819,8 +820,9 @@ boardRoot.addEventListener('click', e => {
   if (btn?.dataset.mode) { mode.choice[mode.steps[mode.i].key] = btn.dataset.mode; mode.i++; return advance(); }
   if (btn?.dataset.confirm) { mode.choice[mode.steps[mode.i].key] = btn.dataset.confirm === 'yes'; mode.i++; return advance(); }
   if (btn?.dataset.done !== undefined) return choose(null);
-  if (btn?.dataset.toggleLog !== undefined) { logOpen = !logOpen; return render(); }
-  if (btn?.dataset.toggleSettings !== undefined) { settingsOpen = !settingsOpen; return render(); }
+  if (btn?.dataset.toggleTools !== undefined) { toolsOpen = !toolsOpen; return render(); }
+  if (btn?.dataset.toggleLog !== undefined) { logOpen = !logOpen; toolsOpen = false; return render(); }
+  if (btn?.dataset.toggleSettings !== undefined) { settingsOpen = !settingsOpen; toolsOpen = false; return render(); }
   const pile = t.closest('[data-pile]');
   if (pile) return showPile(...pile.dataset.pile.split(':'));
   const bank = t.closest('[data-bank]');
