@@ -40,14 +40,38 @@
   0%, 100% { filter: drop-shadow(0 0 3px var(--fac)) drop-shadow(0 -2px 10px var(--fac-2)); }
   50% { filter: drop-shadow(0 0 6px var(--fac)) drop-shadow(0 -6px 20px var(--fac-2)); }
 }
-/* chama atrás da carta: sobe e tremula; fica abaixo da carta (a carta cria a própria camada pelo filter) */
-.olympus .hand__slot.playable .dcard::before, .olympus .dcard.can-strike::before { content: ""; position: absolute; z-index: -1; inset: -16% -12% -2%; pointer-events: none;
-  border-radius: 46% 46% 38% 38%; background: radial-gradient(ellipse 60% 70% at 50% 72%, var(--fac) 0%, var(--fac-2) 38%, transparent 72%);
-  filter: blur(10px); opacity: .85; transform-origin: 50% 90%; animation: cosmo-flame 1.1s ease-in-out infinite alternate; }
-@keyframes cosmo-flame { from { transform: scale(.94, .9); opacity: .65; } to { transform: scale(1.04, 1.1) translateY(-3%); opacity: .95; } }
+/* Cosmo queimando atrás da carta: línguas de fogo que sobem sem parar (camadas de gradiente rolando para cima,
+   recortadas por uma máscara em forma de chama) e fagulhas subindo. Tudo fica atrás da carta (a carta cria
+   a própria camada pelo filter). Só CSS: anima transform/background-position, leve para celular. */
+.olympus .hand__slot.playable .dcard::before, .olympus .dcard.can-strike::before,
+.olympus .hand__slot.playable .dcard::after, .olympus .dcard.can-strike::after { content: ""; position: absolute; z-index: -1; pointer-events: none; }
+.olympus .hand__slot.playable .dcard::before, .olympus .dcard.can-strike::before {
+  inset: -62% -18% -4%;
+  background:
+    radial-gradient(14% 22% at 22% 70%, var(--fac) 0%, transparent 100%),
+    radial-gradient(12% 26% at 50% 62%, #fff8 0%, var(--fac) 30%, transparent 100%),
+    radial-gradient(15% 24% at 78% 72%, var(--fac) 0%, transparent 100%),
+    radial-gradient(40% 30% at 50% 88%, var(--fac-2) 0%, transparent 100%);
+  background-size: 100% 60%, 100% 52%, 100% 64%, 100% 100%;
+  background-repeat: repeat-y, repeat-y, repeat-y, no-repeat;
+  -webkit-mask: radial-gradient(62% 80% at 50% 78%, #000 45%, transparent 100%);
+  mask: radial-gradient(62% 80% at 50% 78%, #000 45%, transparent 100%);
+  filter: blur(4px) saturate(1.5) brightness(1.25); mix-blend-mode: screen;
+  animation: cosmo-rise 1.4s linear infinite, cosmo-sway 2.2s ease-in-out infinite alternate; }
+@keyframes cosmo-rise { to { background-position: 0 -60%, 0 -52%, 0 -64%, 0 0; } }
+@keyframes cosmo-sway { from { transform: skewX(-3deg) scaleY(.96); } to { transform: skewX(3deg) scaleY(1.06); } }
+/* fagulhas: pontinhos que sobem e somem no alto */
+.olympus .hand__slot.playable .dcard::after, .olympus .dcard.can-strike::after {
+  inset: -46% -8% 10%;
+  background: radial-gradient(circle, #fff 0 1px, var(--fac) 1.5px, transparent 3px) 0 0 / 23px 41px,
+              radial-gradient(circle, var(--fac) 0 1px, transparent 2.5px) 11px 17px / 31px 53px;
+  -webkit-mask: linear-gradient(0deg, transparent, #000 30%, #000 55%, transparent);
+  mask: linear-gradient(0deg, transparent, #000 30%, #000 55%, transparent);
+  opacity: .9; animation: cosmo-sparks 2.4s linear infinite; }
+@keyframes cosmo-sparks { to { background-position: 0 -82px, 11px -89px; } }
 .olympus.is-deciding .hand__slot.playable .dcard { animation: none; filter: none; }
-.olympus.is-deciding .hand__slot.playable .dcard::before { display: none; }
+.olympus.is-deciding .hand__slot.playable .dcard::before, .olympus.is-deciding .hand__slot.playable .dcard::after { display: none; }
 @media (prefers-reduced-motion: reduce) {
   .olympus .hand__slot.playable .dcard, .olympus .dcard.can-strike { animation: none; filter: drop-shadow(0 0 5px var(--fac)) drop-shadow(0 -4px 14px var(--fac-2)); }
-  .olympus .hand__slot.playable .dcard::before, .olympus .dcard.can-strike::before { animation: none; }
+  .olympus .hand__slot.playable .dcard::before, .olympus .dcard.can-strike::before, .olympus .hand__slot.playable .dcard::after, .olympus .dcard.can-strike::after { animation: none; }
 }
