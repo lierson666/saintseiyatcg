@@ -17,7 +17,7 @@ import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudg
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
-import {createDirector} from './director.js?v=7';
+import {createDirector} from './director.js?v=8';
 import {createAI} from './ai.js?v=4';
 import {findDeck} from '../deck-store.js';
 import {unlock, playMusic} from '../audio.js?v=20261028-strike';
@@ -45,6 +45,7 @@ let canon, cards, index, decks, match, ctx, scene = null, director, clock;
 let mode = null;           // escolha em andamento: {kind, key, uid, steps, i, choice, picked, options, run}
 let pending = null;        // decisão pedida pela engine no meio da resolução (decision.js): {pending, snap, answers, run, shown, picked, peek}
 let marked = new Set(), logLines = [], logOpen = false, settingsOpen = false, inspectTimer, seenEvents = 0, drag = null;
+let casting = null;        // carta jogada da mão que ainda espera alvo (fica travada no slot de conjuração)
 
 const S = () => match.state;
 // Carta escondida (duelo online: mão e Bases do adversário, decks): o servidor não manda qual é.
@@ -145,7 +146,8 @@ const autoAdvance = () => advanceMatch(match, key => settings.autoPass && !hasRe
 // Mostra só os eventos ainda não animados (o replay repete o prefixo já visto, idêntico) e, se houver pergunta, abre o modal.
 async function present(r, run, from) {
   const s = S(), shown = pending && pending.shown <= s.events.length ? pending.shown : from;
-  pending = r.pending ? {...r, run, shown: s.events.length, picked: [], peek: false} : null;
+  pending = r.pending ? {...r, run, shown: s.events.length, picked: [], peek: sideReq(r.pending)} : null;
+  if (!pending) casting = null;
   const events = s.events.slice(shown);
   seenEvents = s.events.length;
   syncClock(events);
@@ -183,7 +185,7 @@ function advance() {
     if (step.when && !step.when(mode.choice)) { mode.i++; continue; }
     // Escolha obrigatória sem nenhum candidato: avisa e cancela em vez de travar a barra de escolha.
     if (step.pick && !step.optional && !mode.picked.length && !candidates(step, mode.key).length) {
-      mode = null;
+      mode = null; casting = null;
       warn('No legal choice for that right now.');
       return render();
     }
@@ -211,15 +213,33 @@ function candidates(step, key) {
   }
 }
 
+// Alvo no tabuleiro (autor, 30/10/2026): a carta conjurada fica travada no slot de conjuração, fora do campo, e o
+// jogador puxa a seta dela até o alvo, como no Strike (clique no alvo também vale). Cobre a escolha da interface ao
+// jogar da mão (`mode`, ex.: portador da Cloth) e a pergunta de alvo da engine (Spell V6 mira ao conjurar) quando
+// todas as opções estão no tabuleiro; as demais perguntas seguem no modal.
+const onBoard = ref => String(ref).startsWith('god:') || S().order.some(k => S().players[k].battlefield.includes(ref));
+const targetReq = req => !!req && req.kind === 'choice' && req.count === 1 && req.choose !== 'mode' && req.player !== settings.ai
+  && req.options.length > 0 && req.options.every(onBoard);
+// Painel lateral estilo Arena (autor, 30/10/2026): gatilho opcional e alvo no tabuleiro aparecem com a carta de origem
+// em zoom ao lado do campo, o texto do efeito e uma seta até quem é afetado, sem cobrir o campo. Esc abre o modal clássico.
+const sideReq = req => !!req && req.player !== settings.ai && (req.kind === 'optional' || targetReq(req));
+function boardPick() {
+  if (mode?.kind === 'play') return {uid: mode.uid, refs: mode.options || [], pick: choose};
+  if (!pending?.peek || !targetReq(pending.pending)) return null;
+  const req = pending.pending, src = [casting, req.uid, req.source].find(u => u && ctx.objects[u]);
+  return {uid: src || null, refs: req.options, pick: v => reply({value: req.multiple ? [v] : v})};
+}
+
 function playFromHand(key, uid) {
   const c = info(uid), n = num(uid), reason = playableReason(key, uid);
   if (reason) return warn(reason);
+  casting = uid;
   if (c.kind === 'Devotee') {
     if (duplicateCharacter(S(), ctx, key, uid)) warn(`You already control ${c.name.split(',')[0]}: after it enters, choose which version stays.`);
     return begin('play', key, uid, STEPS[n] || [], choice => ({type: 'play', key, uid, choice}));
   }
   if (c.kind === 'Equipment') {
-    const steps = c.global ? [] : [{key: 'bearer', pick: 'devotee', optional: !!c.armor, label: c.armor ? `Choose who wears ${c.name}, or Skip to put it on the field without a bearer` : `Choose who wears ${c.name}`}];
+    const steps = c.global ? [] : [{key: 'bearer', pick: 'devotee', optional: !!c.armor, label: c.armor ? `Drag ${c.name} to who wears it, or Skip to put it on the field without a bearer` : `Drag ${c.name} to who wears it`}];
     if (n === '019') steps.push({key: 'target', pick: 'devotee', optional: true, label: 'Pegasus God Cloth: which Devotee gets +3/+3 (if your God is behind)?'});
     return begin('play', key, uid, steps, choice => ({type: 'play', key, uid, choice}));
   }
@@ -420,7 +440,7 @@ const box = ([x, y, w, h]) => `left:${x}%;top:${y}%;width:${w}%;height:${h}%`;
 const token = (kind, n, tip) => `<i class="token token--${kind}" data-tip="${esc(tip)}"><b>${n}</b></i>`;
 function godHud(key, side) {
   const s = S(), p = s.players[key], d = s.divine[key], god = cards.get(s.gods[key]);
-  const pick = mode?.options?.includes(`god:${key}`), max = soulMax(s, key);
+  const pick = (mode?.options || boardPick()?.refs)?.includes(`god:${key}`), max = soulMax(s, key);
   const ult = d.ultimateUsed ? 'used' : ['god-athena', 'god-poseidon'].includes(d.god) ? 'ready' : 'none';
   const f = FORGE.get(`${god.name.toLowerCase()}-001`), art = f?.ilustracao ? FORGE_ART + f.ilustracao : GOD_ART[s.gods[key]] || '';
   const low = p.soul <= Math.max(d.awakenAt, Math.ceil(max / 4)), k = `gh${key}`;
@@ -586,6 +606,14 @@ function clockMarkup() {
     <div class="zclock__time"><b data-clock-time>--:--</b><small data-clock-label>Turn</small></div></div>`;
 }
 
+// Slot de conjuração: a carta jogada fica aqui, fora do campo, até o alvo ser escolhido; dela sai a seta.
+function castSlot() {
+  const bp = mode && boardPick();
+  if (!bp?.uid) return '';
+  return `<div class="cast-slot" aria-label="Casting ${esc(info(bp.uid).name)}">${cardFace(bp.uid, {size: 'dcard--lg'})}
+    ${bp.refs.length ? '<small>Drag to a target</small>' : ''}</div>`;
+}
+
 function choiceBar() {
   if (!mode) return '';
   const step = mode.steps[mode.i];
@@ -647,15 +675,20 @@ function render() {
       ${handRow(me, false)}
       ${command()}
       ${s.window && !s.victory ? `<div class="priority-glow priority-glow--${s.window.priority === me ? 'me' : 'opp'}" aria-hidden="true"></div>` : ''}
+      ${castSlot()}
     </div>${choiceBar()}`;
   if (drag?.ghost) showDragZones(drag.uid); // re-render no meio do arraste não apaga as zonas
   const focused = document.activeElement?.closest?.('.decision [data-focus]')?.dataset.focus;
   overlayRoot.innerHTML = overlays();
   if (focused) $(`.decision [data-focus="${CSS.escape(focused)}"]`)?.focus();
   for (const uid of mode?.options || []) $$(`[data-uid="${uid}"]`).forEach(el => el.classList.add('pickable'));
+  const bp = boardPick();
+  if (bp?.uid) $$(`.hand .dcard[data-uid="${bp.uid}"]`).forEach(el => el.classList.add('is-casting'));
+  if (bp && !mode) for (const ref of bp.refs) if (!ref.startsWith('god:')) $$(`.field .dcard[data-uid="${ref}"]`).forEach(el => el.classList.add('pickable'));
   if (mode) $$('.dcard').forEach(el => { if (!el.classList.contains('pickable') && el.closest('.field')) el.classList.add('dimmed'); });
   if (scene) { const st = $('[data-stats]'); if (st) st.textContent = `WebGL on · ${JSON.stringify(scene.stats())}`; }
   updateClock();
+  animateTrigger();
   drawIntents();
 }
 
@@ -685,7 +718,7 @@ const ui = {
     document.body.append(el);
     setTimeout(() => el.remove(), 1300);
   },
-  pulse(uid, cls, on) { $$(`[data-uid="${uid}"]`).forEach(el => { if (on === false) el.classList.remove(cls); else { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); } }); },
+  pulse(uid, cls, on) { $$(String(uid).startsWith('domain:') ? `[data-domain="${String(uid).slice(7)}"]` : `[data-uid="${uid}"]`).forEach(el => { if (on === false) el.classList.remove(cls); else { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); } }); },
   aim(attacker, target) {
     $$('.aimed').forEach(el => el.classList.remove('aimed'));
     if (!attacker) return;
@@ -764,11 +797,13 @@ function logEvent(e) {
 boardRoot.addEventListener('click', e => {
   if (Date.now() < noClickUntil) return; // fim de uma seta de ataque, não um clique
   if (director.busy) return director.skip();
+  const bp = pending && boardPick();
+  if (bp) { const el = e.target.closest('.pickable'); return el && bp.pick(el.dataset.pick || el.dataset.uid); }
   if (pending) return focusDecision();
   const s = S(), t = e.target;
   const btn = t.closest('button');
   if (btn?.dataset.primary !== undefined) return primary();
-  if (btn?.dataset.cancel !== undefined) { mode = null; return render(); }
+  if (btn?.dataset.cancel !== undefined) { mode = null; casting = null; return render(); }
   if (btn?.dataset.mode) { mode.choice[mode.steps[mode.i].key] = btn.dataset.mode; mode.i++; return advance(); }
   if (btn?.dataset.confirm) { mode.choice[mode.steps[mode.i].key] = btn.dataset.confirm === 'yes'; mode.i++; return advance(); }
   if (btn?.dataset.done !== undefined) return choose(null);
@@ -845,7 +880,7 @@ function fieldMenu(uid, el) {
 overlayRoot.addEventListener('click', e => {
   const btn = e.target.closest('button');
   if (!btn) return;
-  if (btn.closest('.decision, .decision-pill')) return decisionClick(btn);
+  if (btn.closest('.decision, .decision-pill, .trigger-panel')) return decisionClick(btn);
   if (btn.dataset.mull) { marked.has(btn.dataset.mull) ? marked.delete(btn.dataset.mull) : marked.add(btn.dataset.mull); return render(); }
   if (btn.dataset.primary !== undefined) return primary();
   if (btn.dataset.new !== undefined) return online ? concedeOnline() : newMatch();
@@ -1054,9 +1089,12 @@ function dragZoneAt(uid, x, y) {
   if (y < r.top + r.height / 2) return null; // CAST só na minha metade do campo
   return playableReason(key, uid) ? null : 'cast';
 }
-// Arrastar da mão: soltar no campo joga; soltar num Devotee seu escolhe o portador/alvo; soltar na área de Cosmo vira Base.
+// Arrastar da mão: soltar no campo joga (o alvo, se houver, sai da seta do slot de conjuração); soltar na área de Cosmo vira Base.
 document.addEventListener('pointerdown', e => {
-  if (director.busy || mode) return;
+  if (director.busy) return;
+  const slot = e.target.closest('.cast-slot .dcard, .trigger-panel.is-targeting .trigger-panel__card .dcard');
+  if (slot) return startCastAim(slot, e);
+  if (mode) return;
   const unit = e.target.closest('.field--me .dcard[data-uid]');
   if (unit) return startAim(unit, e);
   const el = e.target.closest('.hand--me .dcard[data-uid]');
@@ -1066,22 +1104,28 @@ document.addEventListener('pointerdown', e => {
 
 // Ataque por seta (estilo Hearthstone): segurar um Devotee seu Prepared, puxar a seta e soltar no alvo declara o
 // Strike. Os alvos legais vêm de strikeTargets (a engine valida de novo no declareStrike). Clique sem puxar abre o menu.
+// A mesma seta sai do slot de conjuração para escolher o alvo da carta jogada. Alvos como ref: uid ou 'god:X'.
 let aim = null, noClickUntil = 0;
+const refOf = tg => (tg.kind === 'god' ? `god:${tg.player}` : tg.uid);
 function startAim(el, e) {
   const uid = el.dataset.uid, key = owner(uid);
   if (!idleFor(key) || info(uid).kind !== 'Devotee' || !S().units[uid]?.prepared) return;
   const targets = strikeTargets(S(), ctx, uid);
   if (!targets.length) return;
-  aim = {uid, el, x: e.clientX, y: e.clientY, on: false, targets, svg: null, hover: null};
+  aim = {uid, el, x: e.clientX, y: e.clientY, on: false, refs: targets.map(refOf), svg: null,
+    done: ref => act(() => declareStrike(S(), ctx, uid, targets.find(tg => refOf(tg) === ref)))};
 }
-const aimEls = () => aim.targets.flatMap(tg => (tg.kind === 'god' ? $$(`[data-god="${tg.player}"]`) : $$(`.field .dcard[data-uid="${tg.uid}"]`)));
+function startCastAim(el, e) {
+  const bp = boardPick();
+  if (!bp?.refs.length) return;
+  e.preventDefault();
+  aim = {uid: bp.uid, el, x: e.clientX, y: e.clientY, on: false, refs: bp.refs, svg: null, cast: true, done: bp.pick};
+}
+const refEls = ref => (ref.startsWith('god:') ? $$(`[data-god="${ref.slice(4)}"]`) : $$(`.field .dcard[data-uid="${ref}"]`));
+const aimEls = () => aim.refs.flatMap(refEls);
 function aimTargetAt(x, y) {
   const els = document.elementsFromPoint(x, y);
-  for (const tg of aim.targets) {
-    if (tg.kind === 'god' && els.some(d => d.closest?.(`[data-god="${tg.player}"]`))) return tg;
-    if (tg.kind === 'devotee' && els.some(d => d.closest?.(`.field .dcard[data-uid="${tg.uid}"]`))) return tg;
-  }
-  return null;
+  return aim.refs.find(ref => els.some(d => d.closest?.(ref.startsWith('god:') ? `[data-god="${ref.slice(4)}"]` : `.field .dcard[data-uid="${ref}"]`))) || null;
 }
 function moveAim(e) {
   if (!aim.on) {
@@ -1099,20 +1143,21 @@ function moveAim(e) {
   $$('path:not([d^="M0"])', aim.svg).forEach(path => path.setAttribute('d', d));
   const reticle = $('.aim-arrow__reticle', aim.svg);
   reticle.setAttribute('cx', x1); reticle.setAttribute('cy', y1);
-  const tg = aimTargetAt(x1, y1);
-  aim.svg.classList.toggle('is-locked', !!tg);
+  const ref = aimTargetAt(x1, y1);
+  aim.svg.classList.toggle('is-locked', !!ref);
   $$('.aim-hover').forEach(el => el.classList.remove('aim-hover'));
-  if (tg) (tg.kind === 'god' ? $$(`[data-god="${tg.player}"]`) : $$(`.field .dcard[data-uid="${tg.uid}"]`)).forEach(el => el.classList.add('aim-hover'));
+  if (ref) refEls(ref).forEach(el => el.classList.add('aim-hover'));
 }
 function endAim(e) {
-  const a = aim, tg = a.on && e ? aimTargetAt(e.clientX, e.clientY) : null;
+  const a = aim, ref = a.on && e ? aimTargetAt(e.clientX, e.clientY) : null;
   aim = null;
   if (!a.on) return; // clique simples: o menu do campo segue normal
   noClickUntil = Date.now() + 400;
   a.svg?.remove(); a.el.classList.remove('aiming');
   $$('.aim-hover').forEach(el => el.classList.remove('aim-hover'));
   $$('.pickable').forEach(el => el.classList.remove('pickable'));
-  if (tg) act(() => declareStrike(S(), ctx, a.uid, tg));
+  if (ref) a.done(ref);
+  else if (a.cast) render(); // seta solta fora: a carta segue no slot, alvos acesos de novo
 }
 document.addEventListener('pointermove', e => { if (aim) moveAim(e); });
 document.addEventListener('pointerup', e => { if (aim) endAim(e); });
@@ -1156,9 +1201,7 @@ document.addEventListener('pointerup', e => {
   if (!onField && !onUnit) return;
   const reason = playableReason(key, uid);
   if (reason) return warn(reason);
-  playFromHand(key, uid);
-  // Se a primeira escolha é um Devotee seu e a carta caiu sobre um, já escolhe.
-  if (mode && onUnit && mode.options?.includes(onUnit.dataset.uid)) choose(onUnit.dataset.uid);
+  playFromHand(key, uid); // nada é escolhido pelo ponto onde a carta caiu: o alvo sai da seta do slot (autor, 30/10/2026)
 });
 
 document.addEventListener('keydown', e => {
@@ -1166,7 +1209,7 @@ document.addEventListener('keydown', e => {
   if (e.code === 'Escape' && $('#bigcard')) return closeBigCard();
   if (pending && !director.busy) return decisionKey(e);
   if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); return primary(); }
-  if (e.code === 'Escape') { closeQuick(); cancelDrag(); if (aim) endAim(null); if (mode) { mode = null; render(); } else if (settingsOpen || logOpen) { settingsOpen = logOpen = false; render(); } }
+  if (e.code === 'Escape') { closeQuick(); cancelDrag(); if (aim) endAim(null); if (mode) { mode = null; casting = null; render(); } else if (settingsOpen || logOpen) { settingsOpen = logOpen = false; render(); } }
   if (e.key === 'l' || e.key === 'L') { logOpen = !logOpen; render(); }
 });
 document.addEventListener('click', e => { if (!e.target.closest('.quick') && !e.target.closest('.dcard')) closeQuick(); });
@@ -1196,6 +1239,7 @@ function drawIntents() {
     for (const target of aimed) arrows.push({from, to: elOf(target), kind: 'spell', label: String(i + 1)});
     if (!aimed.length && c.uid && elOf(c.uid)) arrows.push({from, to: elOf(c.uid), kind: 'source', label: String(i + 1)});
   });
+  if (pending?.peek && pending.pending.uid && !targetReq(pending.pending)) arrows.push({from: $('.trigger-panel__card .dcard'), to: elOf(pending.pending.uid), kind: 'spell', label: '?'});
   const live = arrows.filter(a => a.from && a.to);
   if (!live.length) return;
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -1318,7 +1362,7 @@ function decisionText(req) {
 function abilityEffect(name) {
   if (!name) return null;
   const re = new RegExp(`^${name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s+—\\s+`, 'i');
-  const ids = new Set([...Object.values(ctx.objects).map(o => o.cardId), ...Object.values(S().gods)]);
+  const ids = new Set([...Object.values(ctx.objects).map(o => o.cardId), ...Object.values(S().gods), ...Object.values(S().domains || {}).filter(Boolean)]);
   for (const id of ids) {
     const card = cards.get(id), lines = (card?.text || '').split('\n');
     const at = lines.findIndex(l => re.test(l));
@@ -1327,7 +1371,7 @@ function abilityEffect(name) {
     // Linhas de continuação (sem "NOME — ") pertencem à mesma habilidade.
     let end = at + 1;
     while (end < lines.length && (spell || !/^[^—]{2,40} — /.test(lines[end]))) end++;
-    return {source: card.name, lines: [lines[at].replace(re, ''), ...lines.slice(at + 1, end)].filter(Boolean)};
+    return {id, source: card.name, lines: [lines[at].replace(re, ''), ...lines.slice(at + 1, end)].filter(Boolean)};
   }
   return null;
 }
@@ -1335,6 +1379,7 @@ function abilityEffect(name) {
 const optName = uid => (String(uid).startsWith('god:') ? `${cards.get(S().gods[uid.slice(4)]).name} (Player ${uid.slice(4)})` : pending?.pending.choose === 'mode' ? String(uid) : info(uid).name);
 function decisionModal() {
   const req = pending.pending, t = decisionText(req), fx = abilityEffect(req.ability);
+  if (pending.peek && sideReq(req)) return sidePanel(req, t, fx);
   if (pending.peek) return `<button class="decision-pill" data-dec="peek" data-focus="peek">Back to decision · ${esc(t.title)} <kbd>Esc</kbd></button>`;
   const timeout = settings.timeouts ? `<small class="decision__timeout">On timeout: ${req.kind === 'optional' ? 'declined' : 'automatic choice, lowest stable ID'}</small>` : '';
   let body;
@@ -1354,6 +1399,56 @@ function decisionModal() {
     <footer class="decision__foot">${timeout}<button class="ghost" data-dec="peek" data-focus="peek">View board <kbd>Esc</kbd></button></footer></section>`;
 }
 
+// Carta de origem do painel: a que está sendo conjurada, a fonte informada pela engine ou a carta em jogo dona do texto;
+// sem objeto (ex.: Domain), a carta do catálogo pelo id achado no texto.
+function sourceUid(req, fx) {
+  const s = S(), live = u => s.order.some(k => s.players[k].battlefield.includes(u) || s.players[k].stack.includes(u) || s.players[k].hand.includes(u));
+  return [casting, req.source].find(u => u && ctx.objects[u])
+    || (fx && Object.keys(ctx.objects).find(u => ctx.objects[u].cardId === fx.id && live(u) && u !== req.uid)) || null;
+}
+// Elemento da fonte no tabuleiro (carta em campo, Domain ou God), para piscar e de onde a carta voa até o painel.
+function boardSourceEl(req, fx) {
+  const s = S(), src = sourceUid(req, fx);
+  if (src) return $(`.field .dcard[data-uid="${src}"]`);
+  const dom = fx && s.order.find(k => s.domains?.[k] === fx.id);
+  if (dom) return $(`[data-domain="${dom}"]`);
+  const god = fx && s.order.find(k => s.gods[k] === fx.id);
+  return god ? $(`[data-god="${god}"] .godhud__portrait`) : null;
+}
+// Gatilho estilo Arena: a fonte no campo pisca e a carta voa dela até o zoom do painel (só na primeira vez da pergunta).
+function animateTrigger() {
+  const card = $('.trigger-panel__card .dcard');
+  if (!pending?.peek || !card) return;
+  const req = pending.pending, fx = abilityEffect(req.ability), from = boardSourceEl(req, fx);
+  from?.classList.add('is-triggering');
+  const key = `${req.ability}|${req.uid}|${pending.answers?.length}`;
+  if (pending.flown === key || settings.reduceMotion) return;
+  pending.flown = key;
+  if (!from) return void card.animate([{opacity: 0, transform: 'scale(.7)'}, {opacity: 1, transform: 'none'}], {duration: 320, easing: 'cubic-bezier(.2,.8,.2,1)'});
+  const a = from.getBoundingClientRect(), b = card.getBoundingClientRect();
+  const dx = a.left + a.width / 2 - (b.left + b.width / 2), dy = a.top + a.height / 2 - (b.top + b.height / 2), k = a.width / b.width;
+  card.animate([
+    {transform: `translate(${dx}px, ${dy}px) scale(${k})`, filter: 'brightness(2.2)', offset: 0},
+    {transform: `translate(${dx}px, ${dy}px) scale(${k * 1.15})`, filter: 'brightness(2.6)', offset: .25},
+    {transform: 'none', filter: 'brightness(1)', offset: 1},
+  ], {duration: 620, easing: 'cubic-bezier(.2,.8,.2,1)'});
+}
+function sidePanel(req, t, fx) {
+  const src = sourceUid(req, fx), f = !src && fx && FORGE.get(fx.id);
+  const face = src ? cardFace(src, {size: 'dcard--lg'}) : f ? `<div class="dcard dcard--lg art-full">${renderLiveCard(f, {art: f.ilustracao && FORGE_ART + f.ilustracao})}</div>` : '';
+  const target = targetReq(req);
+  const actions = req.kind === 'optional'
+    ? `<button class="primary-action" data-dec="yes" data-focus="yes">${esc(t.yes)}</button><button class="ghost" data-dec="no" data-focus="no">${esc(t.no)}</button>`
+    : `<button class="ghost" data-dec="peek" data-focus="peek">List <kbd>Esc</kbd></button>${casting && !online ? '<button class="ghost" data-dec="cancel">Cancel</button>' : ''}`;
+  return `<aside class="trigger-panel ${target ? 'is-targeting' : ''}" role="dialog" aria-labelledby="trigger-title">
+    ${face ? `<div class="trigger-panel__card">${face}${target && face ? '<small>Drag to a target</small>' : ''}</div>` : ''}
+    <div class="trigger-panel__box"><span class="decision__who">${esc(t.who)} decides</span><span class="decision__clock" data-decision-clock></span>
+      <small class="decision__kicker">${esc(t.kicker)}</small><h3 id="trigger-title">${esc(t.title)}</h3>
+      ${fx ? `<div class="decision__effect">${fx.lines.map(l => `<p>${esc(l)}</p>`).join('')}</div>` : ''}
+      <p>${esc(t.body)}</p>${t.note ? `<p class="decision__note">${esc(t.note)}</p>` : ''}
+      <div class="trigger-panel__actions">${actions}</div></div></aside>`;
+}
+
 function togglePick(uid) {
   const req = pending.pending, picked = pending.picked;
   if (!req.options.includes(uid)) return;
@@ -1366,6 +1461,8 @@ function decisionClick(btn) {
   if (!pending || director.busy) return;
   const req = pending.pending, a = btn.dataset.dec;
   if (a === 'peek') { pending.peek = !pending.peek; render(); return focusDecision(); }
+  // Desistir da conjuração enquanto escolhe o alvo: nada foi pago ainda (os alvos são perguntados antes do custo).
+  if (a === 'cancel' && casting && !online) { restore(S(), ctx, pending.snap); pending = casting = null; seenEvents = S().events.length; return render(); }
   if (a === 'yes' || a === 'no') return reply({value: a === 'yes'});
   if (a === 'opt') return togglePick(btn.dataset.opt);
   if (a === 'confirm' && pending.picked.length === req.count) return reply({value: req.multiple ? [...pending.picked] : pending.picked[0]});
@@ -1388,11 +1485,11 @@ function decisionKey(e) {
     return;
   }
   // Espaço/Enter fora de um botão do modal não passam o turno: devolvem o foco à decisão.
-  if ((e.code === 'Space' || e.code === 'Enter') && !document.activeElement?.closest?.('.decision, .decision-pill')) { e.preventDefault(); focusDecision(); }
+  if ((e.code === 'Space' || e.code === 'Enter') && !document.activeElement?.closest?.('.decision, .decision-pill, .trigger-panel')) { e.preventDefault(); focusDecision(); }
 }
 function focusDecision() {
-  if (!pending || document.activeElement?.closest?.('.decision, .decision-pill')) return;
-  $('.decision [data-focus="yes"], .decision .decision__opt, .decision-pill')?.focus();
+  if (!pending || document.activeElement?.closest?.('.decision, .decision-pill, .trigger-panel')) return;
+  $('.decision [data-focus="yes"], .decision .decision__opt, .decision-pill, .trigger-panel [data-focus]')?.focus();
 }
 // O log também acompanha eventos que o orquestrador não descreve.
 function watchEvents() {

@@ -269,7 +269,8 @@ export function createDirector({ui, getFx, settings}) {
     async judgment_removed(e) { ui.float(ui.center(ui.godRect(e.player)), 'Judgment removed', 'gain'); await pause(400); },
     async soul_gained(e) { if (e.amount) { ui.setSoul(e.player, e.soul); ui.float(ui.center(ui.godRect(e.player)), `+${e.amount} Soul`, 'gain'); } },
     async victory(e) { await ui.banner(e.draw ? 'Draw' : ui.isViewer(e.winner) ? 'Victory' : `Player ${e.winner} wins`, e.winner, t(1200)); },
-    async window_open() {}, async window_close() {}, async pass(e) { ui.log(e); }, async chain_add() {}, async resolve() {}, async end_phase(e) { ui.log(e); },
+    async window_open() {}, async window_close() {}, async pass(e) { ui.log(e); }, // Gatilho entrando na cadeia e resolvendo: a carta de origem pisca e cresce (estilo Arena), nada genérico.
+    async chain_add(e) { ui.pulse(e.uid, 'trigger-pop'); await pause(240); }, async resolve(e) { ui.pulse(e.uid, 'trigger-pop'); await pause(300); }, async end_phase(e) { ui.log(e); },
   };
 
   return {
