@@ -159,6 +159,7 @@ export function gainLatent(state, key, n) {
   p.latent += gained;
   if (gained) emit(state, 'latent_gained', {player: key, amount: gained});
   return gained;
+  return gained;
 }
 
 // D52 + D174: Soul 0 encerra na hora; os dois Gods em 0 ao mesmo tempo empatam.
@@ -320,7 +321,10 @@ export function endTurn(state, {endOfTurn = [], endOfRound = []} = {}) {
   assertIdle(state);
   const key = state.active;
   emit(state, 'end_phase', {player: key});
-  gainLatent(state, key, state.players[key].bases.filter(b => b.prepared).length);
+  // Guia §5/§60: a Base convertida em Latent fica indisponível (Unprepared, girada) até a renovação seguinte.
+  // Só as que de fato viraram Latent: o excesso acima do teto não gira Base nenhuma.
+  const ready = state.players[key].bases.filter(b => b.prepared), gained = gainLatent(state, key, ready.length);
+  ready.slice(0, gained).forEach(b => { b.prepared = false; });
   openWindow(state, () => roundCheckpoint(state, endOfRound));
   pushTriggers(state, [...endOfTurn, ...hooks.turnEnd.flatMap(fn => fn(state))]);
 }

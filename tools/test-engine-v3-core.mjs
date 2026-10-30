@@ -118,6 +118,7 @@ test('P03: 4 Bases não usadas com Latent 1 viram Latent 3 num só evento, antes
   startTurn(s);
   endTurn(s, {endOfTurn: [{controller: 'A', run: st => seen.push(st.players.A.latent)}]});
   assert.equal(s.players.A.latent, 3, 'o excesso de 2 se perde');
+  assert.deepEqual(s.players.A.bases.map(b => b.prepared), [false, false, true, true], '§5: só as 2 Bases convertidas giram');
   respond(s, 'B', {speed: 'instant', run: st => seen.push(st.players.A.latent)});
   passAll(s);
   assert.deepEqual(seen, [3, 3], 'resposta e gatilho de End Phase já veem o Latent convertido');
