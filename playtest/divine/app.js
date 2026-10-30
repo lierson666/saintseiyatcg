@@ -395,15 +395,17 @@ function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
   // Dano não tem marcador: o HP impresso já mostra a vida restante, em vermelho.
   const marks = unit?.training || unit?.seal ? `<span class="dcard__tokens">${unit?.training ? token('training', unit.training, `Training|${unit.training} counter${unit.training > 1 ? 's' : ''}: +1 ATK / +1 HP each.`) : ''}${unit?.seal
     ? token('seal', unit.seal, `Seal|${unit.seal} counter${unit.seal > 1 ? 's' : ''}: each Prepare removes one instead of preparing.`) : ''}</span>` : '';
-  if (forge && field && c.kind === 'Devotee' && BOARD_TOKENS) {
+  if (forge && field && !size && c.kind === 'Devotee' && BOARD_TOKENS) { // só na mesa: inspetor (size xl) mostra a carta inteira
     // Carta na mesa no estilo MTG Arena (teste local, autor 30/10/2026): só arte, nome, ATK e HP.
     // A arte segue o enquadramento do Forge, recortada da altura do rosto; o texto inteiro fica no inspetor.
     const fr = forge.ilustracao_enquadramento, fac = CARD_FACTIONS.has(String(forge.faccao).toLowerCase()) ? String(forge.faccao).toLowerCase() : 'athena';
-    const art = forge.ilustracao ? `--art:url('${FORGE_ART + forge.ilustracao}');${fr?.w ? `--fx:${fr.x / 1488};--fy:${(fr.y - 160) / 1488};--fw:${fr.w / 1488};` : ''}` : '';
+    // Sem arte (ex.: artes provisórias -ref não vão ao site): o símbolo da facção no centro, sem recorte.
+    const art = forge.ilustracao ? `--art:url('${FORGE_ART + forge.ilustracao}');${fr?.w ? `--fx:${fr.x / 1488};--fy:${(fr.y - 160) / 1488};--fw:${fr.w / 1488};` : ''}`
+      : CARD_FACTIONS.has(String(forge.faccao).toLowerCase()) ? `--art:url('../../CARD-TEMPLATE/symbols/${fac}.png');` : '';
     // HP: Athena tem gem_resistance; as outras facções usam gem_soul (CARD-TEMPLATE/pieces.json).
     const gem = (kind, v, trend) => `<b class="btok__stat btok__stat--${kind}" data-trend="${trend}" style="--gem:url('../../CARD-TEMPLATE/${fac}/gem_${kind === 'atk' ? 'power' : fac === 'athena' ? 'resistance' : 'soul'}.png')">${v}</b>`;
     return `<div class="${cls} dcard--board" data-uid="${uid}" tabindex="0" aria-label="${esc(c.name)}, ATK ${atk}, HP ${hp - dmg} of ${hp}">
-      <div class="btok ${fr?.w ? 'is-framed' : ''}" style="${art}"><span class="btok__name">${esc(c.name)}</span>
+      <div class="btok ${!forge.ilustracao ? 'is-noart' : fr?.w ? 'is-framed' : ''}" style="${art}"><span class="btok__name">${esc(c.name)}</span>
         ${gem('atk', atk, statBuffed(atk, c.atk))}${gem('hp', hp - dmg, dmg ? 'down' : statBuffed(hp, c.hp))}</div>${marks}</div>`;
   }
   if (forge) {
