@@ -17,7 +17,7 @@ for f in "$ROOT"/card-forge/art/*.png "$ROOT"/card-forge/art/*.jpg; do
   sips -Z "$size" -s format jpeg -s formatOptions 85 "$f" --out "$out" >/dev/null
 done
 python3 - "$ROOT" "$DEST" <<'EOF'
-import json, sys, pathlib
+import json, sys, pathlib, subprocess
 root, dest = pathlib.Path(sys.argv[1]), pathlib.Path(sys.argv[2])
 cards = json.loads((root / 'data/cards.json').read_text())['cartas']
 for c in cards:
@@ -30,6 +30,12 @@ for c in cards:
     src = pathlib.Path((proj.get('art') or {}).get('src') or '').stem
     if src and (dest / f"{src}.jpg").exists(): c['ilustracao'] = f"{src}.jpg"
     elif (dest / f"{c['id']}.jpg").exists(): c['ilustracao'] = f"{c['id']}.jpg"
+    # altura proporcional à arte: o layout publicado (shared/layout-studio) precisa de x, y, w e h
+    fr = c.get('ilustracao_enquadramento')
+    if fr and c.get('ilustracao'):
+        dims = subprocess.run(['sips', '-g', 'pixelWidth', '-g', 'pixelHeight', str(dest / c['ilustracao'])], capture_output=True, text=True).stdout.split()
+        w, h = (int(dims[i + 1]) for i in (dims.index('pixelWidth:'), dims.index('pixelHeight:')))
+        fr['h'] = round(fr['w'] * h / w, 2)
     # rosto do God no HUD, escolhido no Card Forge (card-forge/god-hud.js): imagem própria ou a arte da carta
     h = root / f"card-forge/projects/{c['id']}-hud.json"
     if h.exists():

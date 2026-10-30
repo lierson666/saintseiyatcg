@@ -82,7 +82,7 @@ function renderPsdCard(card,{src,stage,hp,power,keywords,damage,rules,equipment,
     else if(el.kind==='rarity'){const p=P[`athena/rarity_${String(card.raridade||'').toLowerCase()}`];if(p){const hh=el.h||p.h,ww=p.w*hh/p.h;out+=piece(`athena/rarity_${card.raridade.toLowerCase()}`,[el.x-ww/2,el.y-hh/2,ww,hh],'lc-rarity');}}
   }
   return `<div class="live-card live-card--psd live-card--${escape(f||'neutral')} ${compact?'live-card--compact':''} ${instance&&!instance.prepared&&card.tipo==='Devotee'?'live-card--unprepared':''}" data-live-card="${escape(card.id)}" style="--psd-ink:${pack.color};--psd-glow:${pack.glow}">
-    <div class="live-card__illustration" aria-hidden="true">${src?`<img src="${escape(src)}" alt="" draggable="false" loading="lazy"${artworkStyle?` style="${artworkStyle}"`:frame}>`:'<span class="live-card__placeholder">✧<small>Illustration pending</small></span>'}</div>
+    <div class="live-card__illustration" aria-hidden="true">${src?`<img src="${escape(src)}" alt="" draggable="false" loading="lazy"${frame||(artworkStyle?` style="${artworkStyle}"`:'')}>`:'<span class="live-card__placeholder">✧<small>Illustration pending</small></span>'}</div>
     <div class="lc-psd">${out}</div>${damage?`<span class="live-card__damage">${damage} damage · ${escape(hp)} HP left</span>`:''}${instance&&card.tipo==='Devotee'?`<span class="live-card__state">${instance.prepared?'Prepared':'Unprepared'}${instance.awakened?' · Awakened':''}</span>`:''}
   </div>`;
 }
@@ -93,7 +93,9 @@ function armorStatus(card,hp,damage){
 }
 export function renderLiveCard(card,{stats=null,instance=null,art=null,compact=false,equipment:attachedEquipment=[],mode=null}={}){
   if(!card)return '<div class="live-card live-card--missing">Unknown card</div>';
-  const studio=renderPublishedCard(card,{stats,instance,art:art||illustration(card),equipment:attachedEquipment,mode:mode||(instance?'playtest':'print'),assetRects:PSD?.P});
+  // Enquadramento do export do Card Forge (com altura) vale mais que o manifesto do layout, que pode estar velho.
+  const fr=card.ilustracao_enquadramento,src0=art||illustration(card),studioArt=fr?.w&&fr?.h&&typeof src0==='string'?{src:src0,x:fr.x,y:fr.y,w:fr.w,h:fr.h}:src0;
+  const studio=renderPublishedCard(card,{stats,instance,art:studioArt,equipment:attachedEquipment,mode:mode||(instance?'playtest':'print'),assetRects:PSD?.P});
   if(studio)return studio;
   const src=art||illustration(card),stage=card.estagios?.[instance?.stage||0],hp=stats?.hp??card.vida??card.resistance;
   const power=stats?.power??card.power,keywords=stats?.keywords??card.keywords_en??[],damage=stats?.damage??instance?.damage??0;

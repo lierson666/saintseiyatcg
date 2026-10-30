@@ -4,7 +4,7 @@ import {loadCanon} from '../shared/canon-cards.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {canonIndex, validateDeck, DECK_SIZE, COPY_LIMIT} from '../shared/deck-v3.js';
 import {spellCategory} from './engine-v3/core.js';
-import {renderLiveCard} from '../shared/live-card.js?v=20261029-forge';
+import {renderLiveCard} from '../shared/live-card.js?v=20261030-art';
 import {unlock, playMusic, setVolume, volume} from './audio.js';
 import {loadMyDecks, saveMyDecks, findDeck, syncDecks, onDeckStatus, deckCovers, setDeckCover} from './deck-store.js?v=20261030-1';
 import {mountKV} from '../shared/kv-sky.js?v=20261029-2';
