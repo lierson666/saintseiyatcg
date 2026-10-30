@@ -92,6 +92,15 @@ const sealOnEnter = (n, ability) => (s, c, key) => st => seal(st, c, [enemy(st, 
 const offering = (ability, ready, effect) => (s, c, key, self) => st => {
   if (ready(st, c, key) && sacrificeOne(st, c, key, ability, self, true)) effect(st, c, key, self);
 };
+// Rebalanceamento de Hades (autor, 30/10/2026): ETB de remoção/dreno vira "you may pay N Soul. If you do, …".
+// `ready`: só pergunta quando o efeito tem alvo (sem inimigo, nada a pagar). Padrão: há Devotee inimigo.
+const hasEnemy = (st, c, key) => k.enemies(st, c, key).length > 0;
+const taxed = (n, ability, enter, ready = hasEnemy) => (s, c, key, self) => {
+  const run = enter(s, c, key, self);
+  return run && (st => { if (ready(st, c, key) && pay(st, c, key, ability, n, self)) run(st); });
+};
+const always = () => true;
+
 // Defeat enemy Devotee com HP restante ≤ n.
 const execute = (ability, n) => [
   (st, c, key) => k.enemies(st, c, key).some(u => room(st, c, u) <= n),
@@ -149,14 +158,15 @@ const oppSacrifices = (st, c, key, ability, n, each) => {
 export default {
   // Wyvern Rhadamanthys. Interpretação: "target Devotee" inclui os seus (e ele mesmo), leitura literal.
   'hades-v6-181': {
-    enter: (s, c, key) => st => { const t = k.choose(c, key, 'GREATEST CAUTION', k.allDevotees(st, c)); if (t) k.defeat(st, c, t); },
+    enter: taxed(2, 'GREATEST CAUTION', (s, c, key) => st => { const t = k.choose(c, key, 'GREATEST CAUTION', k.allDevotees(st, c)); if (t) k.defeat(st, c, t); },
+      (st, c) => k.allDevotees(st, c).length > 0),
     watchDefeat: onDefeat('enemy', (st, c, key, self, dead, owner) => drain(st, key, 1, owner), 'judge'),
   },
   'hades-v6-182': { // Wyvern Surplice: "destroys … in combat" = derrota no Strike, atacando ou retaliando
     gearKillInCombat: (s, c, key, self, bearer, victim) => /RHADAMANTHYS/i.test(name(c, bearer)) && (st => drain(st, key, 2, c.objects[victim].owner)),
   },
   'hades-v6-183': { // Griffon Minos
-    enter: sealOnEnter(2, 'COSMIC MARIONATION'),
+    enter: taxed(1, 'COSMIC MARIONATION', sealOnEnter(2, 'COSMIC MARIONATION')),
     // pendente: Puppet Master ("Whenever a Seal counter is removed") — sem gancho de remoção de Seal (core.prepareUnit).
   },
   'hades-v6-184': { // Griffon Surplice
@@ -168,9 +178,9 @@ export default {
     killInCombat: (s, c, key, self) => st => aiacosReturn(st, c, key, self),
   },
   // 186 Garuda Surplice: dentro de Galactica Illusion (185), único retorno ao campo feito por Aiacos.
-  'hades-v6-187': drainOnEnter(2, (st, c, key, self) => { // Sphinx Pharaoh + Sphinx Surplice (188)
+  'hades-v6-187': {enter: taxed(1, 'BALANCE OF CURSE', drainOnEnter(2, (st, c, key, self) => { // Sphinx Pharaoh + Sphinx Surplice (188)
     if (resonance(st, c, self, 'hades-v6-188') && pay(st, c, key, 'SPHINX SURPLICE', 2)) k.draw(st, key, 1);
-  }),
+  }).enter, always)},
   // pendente 187: Dead End Symphony ("whenever you pay Soul to activate an ability") — sem gancho de pagamento de Soul.
   'hades-v6-189': { // Acheron Charon
     enter: (s, c, key) => st => { if (pay(st, c, key, "THE FERRYMAN'S PRICE", 2)) k.search(st, c, key, "THE FERRYMAN'S PRICE", devCost(3)); },
@@ -178,7 +188,7 @@ export default {
   },
   // 190 Acheron Surplice: dentro de Passage to the Underworld (189).
   'hades-v6-191': { // Hypnos
-    enter: (s, c, key) => st => seal(st, c, k.enemies(st, c, key), 2, 'ETERNAL DROWSINESS'),
+    enter: taxed(2, 'ETERNAL DROWSINESS', (s, c, key) => st => seal(st, c, k.enemies(st, c, key), 2, 'ETERNAL DROWSINESS')),
     // pendente: Eternal Slumber ("loses its last Seal counter") — sem gancho de remoção de Seal.
   },
   'hades-v6-192': {spell: {run: (s, c, key) => { // Eternal Slumber
@@ -187,7 +197,7 @@ export default {
     k.draw(s, key, 1);
   }}},
   'hades-v6-193': { // Thanatos
-    enter: (s, c, key) => st => { const t = enemy(st, c, key, 'TERRIBLE PROVIDENCE'); if (t) k.defeat(st, c, t); },
+    enter: taxed(2, 'TERRIBLE PROVIDENCE', (s, c, key) => st => { const t = enemy(st, c, key, 'TERRIBLE PROVIDENCE'); if (t) k.defeat(st, c, t); }),
     watchDefeat: onDefeat('enemy', (st, c, key, self, dead, owner) => drain(st, key, 2, owner), 'execution'),
   },
   'hades-v6-194': {spell: {run: (s, c, key) => { // Divine Touch of Death
@@ -228,7 +238,7 @@ export default {
     leaves: (s, c, key) => st => { gain(st, key, 3); k.draw(st, key, 1); },
   },
   'hades-v6-201': { // Harpy Valentine + Harpy Surplice (246)
-    ...drainOnEnter(2, (st, c, key, self) => { if (resonance(st, c, self, 'hades-v6-246')) gain(st, key, 1); }),
+    enter: taxed(1, 'GREED THE LIFE', drainOnEnter(2, (st, c, key, self) => { if (resonance(st, c, self, 'hades-v6-246')) gain(st, key, 1); }).enter, always),
     watchDefeat: (s, c, key, self, dead, owner) => owner === key && k.hasType(c, dead, 'Judge Specter') && (st => {
       if (!k.onField(st, key, self) || !st.players[key].tartarus.includes(dead) || !k.may(c, key, 'LOYAL SERVANT', {uid: dead, text: 'Sacrifice Harpy Valentine?'})) return;
       k.sacrifice(st, c, self);
@@ -247,7 +257,7 @@ export default {
     enter: (s, c, key) => st => payDraw(st, c, key, 'METAMORPHOSIS', 2, 2),
     godDamage: (s, c, key, self) => st => myuReturn(st, c, key, self),
   },
-  'hades-v6-204': {enter: niobe(3, 3, 'DEEP FRAGRANCE'), defeated: niobe(2, 2, 'POISONOUS DEATH')}, // Deep Niobe (+249)
+  'hades-v6-204': {enter: taxed(1, 'DEEP FRAGRANCE', niobe(3, 3, 'DEEP FRAGRANCE')), defeated: niobe(2, 2, 'POISONOUS DEATH')}, // Deep Niobe (+249)
   'hades-v6-205': { // Basilisk Sylphid
     combatDamage: (s, c, key, self, victim) => st => weaken(st, c, victim, 2, 2),
     watchDefeat: (s, c, key, self, dead, owner) => owner !== key && s.active === key && (st => k.buff(st, self, 2, 0)),
@@ -265,7 +275,7 @@ export default {
     watchDefeat: (s, c, key, self, dead, owner) => owner === key && sacrificed(s, dead) && (st => gain(st, key, 1)),
   },
   'hades-v6-209': { // Worm Raimi
-    enter: sealOnEnter(1, "WORM'S BIND"),
+    enter: taxed(1, "WORM'S BIND", sealOnEnter(1, "WORM'S BIND")),
     declare: (s, c, key, self, target) => target.kind === 'devotee' && s.units[target.uid]?.seal > 0 && (st => k.buff(st, self, 2, 0)),
   },
   'hades-v6-210': { // Golem Rock
@@ -279,7 +289,7 @@ export default {
   // Guardian: o parser do texto V6 não lê "X has Guardian" como keyword impressa.
   'hades-v6-212': {...riseFromTartarus(2, 'ETERNAL DEFENDER'), mods: () => [{keywords: ['Guardian']}]},
   'hades-v6-213': { // Lycaon Phlegyas
-    enter: curse(2, 2, 'HOWLING INFERNO'),
+    enter: taxed(1, 'HOWLING INFERNO', curse(2, 2, 'HOWLING INFERNO')),
     killInCombat: (s, c, key) => st => gain(st, key, 2),
   },
   'hades-v6-214': { // Minotaur Gordon. Interpretação: Executioner ("defeats") lido como derrota no Strike (killInCombat).
@@ -291,7 +301,7 @@ export default {
     watchDefeat: onDefeat('enemy', (st, c, key) => gain(st, key, 1)),
   },
   'hades-v6-216': { // Gorgon Ox
-    enter: sealOnEnter(1, 'PETRIFYING GAZE'),
+    enter: taxed(1, 'PETRIFYING GAZE', sealOnEnter(1, 'PETRIFYING GAZE')),
     declare: (s, c, key, self, target) => target.kind === 'devotee' && s.units[target.uid]?.seal > 0 && (st => k.buff(st, target.uid, -2, 0)),
   },
   'hades-v6-217': { // Dullahan Cube
@@ -411,26 +421,26 @@ export default {
     gearKillInCombat: (s, c, key, self, bearer) => /SYLPHID/i.test(name(c, bearer)) && (st => toHandFrom(st, c, key, 'BASILISK SURPLICE', specter(2), {optional: true})),
   },
   'hades-v6-251': { // Cancer Deathmask
-    enter: curse(3, 3, 'SEKI SHIKI MEIKAI HA'),
+    enter: taxed(1, 'SEKI SHIKI MEIKAI HA', curse(3, 3, 'SEKI SHIKI MEIKAI HA')),
     watchDefeat: onDefeat('enemy', (st, c, key) => { if (pay(st, c, key, 'GATEWAY TO YOMOTSU', 1)) k.mill(st, key, 2); }, 'yomotsu'),
   },
   'hades-v6-252': { // Pisces Aphrodite
-    enter: curse(2, 2, 'BLOODY ROSE'),
+    enter: taxed(1, 'BLOODY ROSE', curse(2, 2, 'BLOODY ROSE')),
     watchDefeat: onDefeat('enemy', (st, c, key, self, dead, owner) => drain(st, key, 1, owner), 'rose'),
   },
   'hades-v6-253': { // Capricorn Shura
-    enter: (s, c, key) => st => execute('EXCALIBUR', 3)[1](st, c, key),
+    enter: taxed(2, 'EXCALIBUR', (s, c, key) => st => execute('EXCALIBUR', 3)[1](st, c, key), execute('EXCALIBUR', 3)[0]),
     killInCombat: (s, c, key, self) => st => { if (sacrificeOne(st, c, key, 'BLADE OF SACRIFICE', self, true)) k.draw(st, key, 2); },
   },
   'hades-v6-254': { // Aquarius Camus
-    enter: sealOnEnter(2, 'DIAMOND DUST'),
+    enter: taxed(1, 'DIAMOND DUST', sealOnEnter(2, 'DIAMOND DUST')),
     // pendente: Aurora Execution ("loses its last Seal counter") — sem gancho de remoção de Seal.
   },
   'hades-v6-255': { // Gemini Saga
-    enter: (s, c, key, self) => st => {
+    enter: taxed(2, 'ANOTHER DIMENSION', (s, c, key, self) => st => {
       const t = enemy(st, c, key, 'ANOTHER DIMENSION');
       if (t && k.onField(st, key, self) && k.exile(st, c, t)) exiledBy(st)[self] = t;
-    },
+    }),
     leaves: (s, c, key, self) => s.hadesExile?.[self] && (st => { // gancho leaves: "until Gemini Saga leaves the battlefield" por qualquer via
       const t = exiledBy(st)[self], owner = c.objects[t].owner;
       delete exiledBy(st)[self];

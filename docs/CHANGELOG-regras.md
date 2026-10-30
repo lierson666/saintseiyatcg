@@ -4,6 +4,15 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-30 — Cartas de Hades — rebalanceamento
+
+- **Antes:** Devotees de Hades acima da curva (ATK+HP médio 6.4 no custo 3, 8.2 no 4, 9.3 no 5) e ETB de remoção, Seal, −X/−X e dreno de Soul sem custo.
+- **Depois:**
+  - −1 (de preferência HP) nos Devotees de custo 3 a 6 com ATK+HP ≥ 2×custo+1: 181, 208, 210, 211, 212, 214, 216, 219.
+  - ETB viram "you may pay N Soul. If you do, …": 2 Soul em remoção/exílio/Seal em massa (181, 191, 193, 253, 255); 1 Soul em −X/−X, Seal e dreno (183, 187, 201, 204, 209, 213, 216, 251, 252, 254).
+- **Motivo:** decisão do autor em 30/10/2026 (grilling: "ambos, leve", curva no meio-termo entre Athena e Ares, taxa de Soul como no Ares).
+- **Pendências:** `data/cards.json` gravado (diff aprovado, `docs/rebalanceamento-hades-2026-10-30/cards.diff.md`); engine V6 e testes ajustados; round-robin de bots e retuno dos decks de Hades a seguir.
+
 ## 2026-10-30 — §55 — volta a compra de 1 carta por turno
 
 - **Seção:** `docs/guia-do-jogo.md` §55 (compras) e tabela de valores iniciais (linha Compras).

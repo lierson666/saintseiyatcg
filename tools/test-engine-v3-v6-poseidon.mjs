@@ -73,7 +73,7 @@ test('spell + watchSealed: Abyssal Weight põe 1 Seal, ou 2 se já tinha; Whispe
 
 test('watchDeclare (prevenção): Royal Trident Guard previne 1 do dano de Strike, uma vez por Round', () => {
   const {s, ctx, put} = poseidon();
-  const guard = put('A', P('104'), 'battlefield'), foe = put('B', 'hades-v6-211', 'battlefield'); // Troll Iwan: ATK 4
+  const guard = put('A', P('104'), 'battlefield'), foe = put('B', 'hades-v6-210', 'battlefield'); // Golem Rock: ATK 4 (Troll Iwan caiu para 3 em 30/10/2026)
   declareStrike(s, ctx, guard, {kind: 'devotee', uid: foe}); passAll(s);
   assert.equal(s.units[guard].damage, 3);
 });

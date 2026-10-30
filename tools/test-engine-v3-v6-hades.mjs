@@ -44,21 +44,32 @@ function hades() {
   return {s, ctx, p, b, add, play, cast, kill, answers};
 }
 const done = s => { while (s.window) passAll(s); };
+// Aceita pagar a taxa de Soul do ETB (rebalanceamento de 30/10/2026) e escolhe a primeira opção de alvo.
+const yes = (pl, q) => (q.options ? q.options[0] : true);
 
-test('enter + drain (Harpy Valentine): enemy God perde 2, o seu ganha 2', () => {
-  const {s, p, b, play} = hades();
+test('enter + drain (Harpy Valentine): paga 1 Soul; enemy God perde 2, o seu ganha 2', () => {
+  const {s, p, b, play, answers} = hades();
+  answers({'GREED THE LIFE': yes});
   play('hades-v6-201'); done(s);
   assert.equal(b.soul, 8);
-  assert.equal(p.soul, 12);
+  assert.equal(p.soul, 11, '10 − 1 (taxa) + 2');
+});
+
+test('Taxa de Soul recusada: o ETB não acontece (Deep Niobe)', () => {
+  const {s, p, b, add, play} = hades();
+  const foe = add('hades-v6-218', 'B', 'battlefield');
+  play('hades-v6-204'); done(s);
+  assert.ok(b.battlefield.includes(foe));
+  assert.equal(p.soul, 10);
 });
 
 test('Rhadamanthys: enter derrota o alvo; Judge\'s Authority drena 1 uma vez por Round', () => {
   const {s, p, b, add, play, kill, answers} = hades();
   const x = add('hades-v6-218', 'B', 'battlefield'), y = add('hades-v6-206', 'B', 'battlefield');
-  answers({'GREATEST CAUTION': (pl, q) => x});
+  answers({'GREATEST CAUTION': (pl, q) => (q.options ? x : true)});
   play('hades-v6-181'); done(s);
   assert.ok(b.tartarus.includes(x));
-  assert.equal(b.soul, 9); assert.equal(p.soul, 11);
+  assert.equal(b.soul, 9); assert.equal(p.soul, 9, '10 − 2 (taxa) + 1 (Judge)');
   kill(y); done(s);
   assert.equal(b.soul, 9, 'once each round');
 });
@@ -117,8 +128,9 @@ test('Awakening of the Specters: volta Unprepared e não declara Strike no turno
 });
 
 test('Seal (Minos): 2 marcadores no alvo inimigo', () => {
-  const {s, add, play} = hades();
+  const {s, add, play, answers} = hades();
   const foe = add('hades-v6-206', 'B', 'battlefield');
+  answers({'COSMIC MARIONATION': yes});
   play('hades-v6-183'); done(s);
   assert.equal(s.units[foe].seal, 2);
 });
@@ -141,8 +153,9 @@ test('ativada (Wandering Soul): sacrifica e ganha 1 Soul, uma vez por Round', ()
 });
 
 test('Debuff até o fim do Round derrota quem fica com HP ≤ dano (Deep Niobe)', () => {
-  const {s, b, add, play} = hades();
+  const {s, b, add, play, answers} = hades();
   const foe = add('hades-v6-218', 'B', 'battlefield');
+  answers({'DEEP FRAGRANCE': yes});
   play('hades-v6-204'); done(s);
   assert.ok(b.tartarus.includes(foe));
 });
@@ -166,8 +179,9 @@ test('gearGodDamage (Hades\' Sword): o God atingido perde 3 a mais', () => {
 });
 
 test('Gemini Saga: exila até Saga sair; derrota de Saga devolve o exilado ao dono', () => {
-  const {s, p, b, add, play, kill} = hades();
+  const {s, p, b, add, play, kill, answers} = hades();
   const foe = add('hades-v6-206', 'B', 'battlefield');
+  answers({'ANOTHER DIMENSION': yes});
   const saga = play('hades-v6-255'); done(s);
   assert.ok(b.void.includes(foe));
   kill(saga); done(s);
@@ -180,14 +194,15 @@ test('Will of Hades: modo escolhido; perde 1 Soul', () => {
   answers({'THE WILL OF HADES': (pl, q) => (q.choose === 'mode' ? 'weaken' : foe)});
   add('hades-v6-218', 'A', 'tartarus');
   cast('hades-v6-241'); done(s);
-  assert.equal(hpOf(s, ctx, foe), 2);
+  assert.equal(hpOf(s, ctx, foe), 1, 'Royal Guard HP 4 (30/10/2026) − 3');
   assert.equal(p.soul, 9);
 });
 
 // ---- Completados com os ganchos novos (29/10/2026) ----
 test('Gemini Saga: devolvida à mão (sai do campo por outra via), também devolve o exilado', () => {
-  const {s, ctx, b, add, play} = hades();
+  const {s, ctx, b, add, play, answers} = hades();
   const foe = add('hades-v6-206', 'B', 'battlefield');
+  answers({'ANOTHER DIMENSION': yes});
   const saga = play('hades-v6-255'); done(s);
   assert.ok(b.void.includes(foe));
   toHand(s, ctx, saga, 'battlefield'); done(s);

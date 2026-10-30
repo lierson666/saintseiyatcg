@@ -1,0 +1,16 @@
+games 420 crashes 0 stalls 8 stalledPairs comp-athena-cloth-voltron>comp-athena-seal-control;comp-athena-cloth-voltron>comp-poseidon-counter-control;comp-athena-bronze-brotherhood>comp-athena-seal-control;comp-athena-bronze-brotherhood>comp-poseidon-marina-tempo;comp-athena-seal-control>comp-poseidon-counter-control;comp-poseidon-counter-control>comp-poseidon-marina-tempo
+comp-hades-specter-midrange         91% W51 L5 D0 avgTurns 16.3
+comp-underworld-carnage             79% W44 L12 D0 avgTurns 16.4
+comp-hades-aristocrats              68% W38 L18 D0 avgTurns 16.8
+comp-hades-black-saints             55% W31 L25 D0 avgTurns 15.9
+comp-poseidon-marina-tempo          52% W29 L24 D3 avgTurns 31.0
+comp-athena-seal-control            48% W27 L25 D4 avgTurns 27.8
+comp-hades-reanimator               48% W27 L29 D0 avgTurns 14.4
+comp-poseidon-counter-control       43% W24 L28 D4 avgTurns 33.9
+comp-athena-cloth-voltron           41% W23 L30 D3 avgTurns 29.9
+comp-athena-bronze-brotherhood      41% W23 L31 D2 avgTurns 25.4
+comp-ares-berserker-rush            41% W23 L33 D0 avgTurns 20.9
+comp-ares-glorious-demise           41% W23 L33 D0 avgTurns 17.9
+comp-artemis-huntress-precision     36% W20 L36 D0 avgTurns 19.7
+comp-artemis-counter-ramp           29% W16 L40 D0 avgTurns 20.5
+comp-neutral-steel-armory           23% W13 L43 D0 avgTurns 20.7
