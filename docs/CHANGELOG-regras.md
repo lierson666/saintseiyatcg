@@ -13,7 +13,7 @@ Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências
   - Bloodlust (God Ares, D268): "It can't declare a Strike against a God this round."
 - **Motivo:** Ares agressivo demais (round-robin de bots: Berserker Blitz 73%, Glorious Demise 64%). Decisões do autor no grilling de 29/10/2026; diff aprovado em 30/10/2026: `docs/rebalanceamento-ares-2026-10-30/cards.diff.md`.
 - **Pendências:**
-  - Pings automáticos no God que ficaram fora do diff aprovado: 289 Enyo (gearKillGod 3), 302 Unquenchable Fury (2), 316 Blood Hunger (1), 332 Eternal Bloodshed (2), 340 Champion's Ferocity (1), 341 Burning Pride (2). Aguardam decisão do autor.
+  - Segunda leva (autor, 30/10/2026, "pode fazer"): mesma taxa em 289 Divine Destruction (3), 302 Unquenchable Fury (2), 316 Blood Hunger (1), 332 Eternal Bloodshed (2), 340 Champion's Ferocity (1), 341 Burning Pride (2) e, pela mesma regra de gatilho automático, 272 Scorching Impact (1) e 286 Anfista Resonance (1).
   - Spells 347, 348, 357 e a ativação 307 ficam sem taxa (decisão do autor).
   - Engine: `playtest/engine-v3/v6/ares.js` (taxa), `effects.js` (Harvest of the Fallen, `forbidGodStrike`), `gods.js` (Bloodlust), `strike.js` (filtro). IA não paga Soul com 6 ou menos.
   - Resonances de Ares agora comparam o id da carta: o Forge renomeou personagens (ex.: "Ethon Alcmenes").

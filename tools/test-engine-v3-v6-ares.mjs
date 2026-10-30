@@ -154,6 +154,7 @@ test('Basil: inimigo que levou dano dele no turno e morre tira 1 do God', () => 
 // ---- Completados com os ganchos novos (29/10/2026) ----
 test('303 Bloodied Pride: tomar dano (Strike ou efeito) causa 1 ao próprio God', () => {
   const {s, ctx, give} = setup();
+  s.domains.A = null; // Eternal Bloodshed (332) agora cobra Soul
   const glad = give('A', '303'), foe = give('B', '304'), soul = s.players.A.soul;
   strike(s, ctx, glad, {kind: 'devotee', uid: foe}); // 303 tem HP 1: o Strike o derrota, mas o gatilho ainda vale
   assert.equal(s.players.A.soul, soul - 1);

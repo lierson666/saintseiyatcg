@@ -47,4 +47,8 @@ Decisões do autor (grilling de 29/10/2026):
 | ares-v6-338 Disaster Legion Warplate | Disaster Resonance | If equipped Devotee is a Disaster Legion Berserker, when that Devotee is defeated, **you may pay 1 Soul. If you do,** deal 1 damage to target enemy God. |
 | ares-v6-343 Disaster Wing Assassin | Last Breath of the Storm | When Disaster Wing Assassin is defeated, **you may pay 1 Soul. If you do,** deal 1 damage to target enemy Devotee or God. |
 
+## Segunda leva (aprovada em 30/10/2026)
+
+Mesmo texto ("you may pay N Soul. If you do, deal N damage…"): 272 Scorching Impact (1), 286 Anfista Resonance (1), 289 Divine Destruction (3), 302 Unquenchable Fury (2), 316 Blood Hunger (1), 332 Eternal Bloodshed (2), 340 Champion's Ferocity (1), 341 Burning Pride (2).
+
 Ficam como estão: 307 Warflame (ativação já paga), Spells 347 Suicide Orders, 348 Nightmare Manifestation, 357 The Lost Staff of Nike.

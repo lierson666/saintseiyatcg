@@ -108,7 +108,6 @@ const gearDeclareSelf = n => ({gearDeclare: (s, c, key, self, bearer) => st => b
 const gearDeclareOther = (n, ability) => ({
   gearDeclare: (s, c, key, self, bearer) => st => buff(st, friendlyBerserker(st, c, key, ability, u => u !== bearer), n),
 });
-const gearKillGod = n => ({gearKillInCombat: (s, c, key) => st => hit(st, c, foeGod(st, key), n)});
 const gearDeathGod = (n, ability) => ({bearerDefeated: (s, c, key, self) => st => { if (taxed(st, c, key, ability, n, self)) hit(st, c, foeGod(st, key), n); }});
 const gearKillGodTaxed = (n, ability) => ({gearKillInCombat: (s, c, key, self) => st => { if (taxed(st, c, key, ability, n, self)) hit(st, c, foeGod(st, key), n); }});
 // "That God's controller / target opponent discards a card[, then draws a card]."
@@ -130,7 +129,7 @@ export default {
   }),
   // Ethon Warplate
   'ares-v6-272': merge(gearKeywords(['Pierce'], (c, b) => named(c, b, 'ALCMENES OF ETHON')), {
-    gearCombatDamage: (s, c, key) => st => hit(st, c, foeGod(st, key), 1),
+    gearCombatDamage: (s, c, key, self) => st => { if (taxed(st, c, key, 'SCORCHING IMPACT', 1, self)) hit(st, c, foeGod(st, key), 1); },
   }),
   // Ofir of Ouroboros
   'ares-v6-273': {
@@ -231,7 +230,7 @@ export default {
   'ares-v6-286': {
     gearDeclare: (s, c, key, self, bearer, target) => target.kind === 'devotee'
       && (st => { if (st.units[target.uid]?.damage > 0 && alive(st, bearer)) k.buff(st, bearer, 2, 0, 'this_strike'); }),
-    gearKillInCombat: (s, c, key, self, bearer) => named(c, bearer, 'ARIONTE OF ANFISTA') && (st => hit(st, c, foeGod(st, key), 1)),
+    gearKillInCombat: (s, c, key, self, bearer) => named(c, bearer, 'ARIONTE OF ANFISTA') && (st => { if (taxed(st, c, key, 'ANFISTA RESONANCE', 1, self)) hit(st, c, foeGod(st, key), 1); }),
   },
   // Basil of Manticore
   'ares-v6-287': merge(enterDamage(1, 'VENOMOUS ARRIVAL'), {
@@ -247,7 +246,7 @@ export default {
     },
   },
   // Enyo, Spear of Destruction
-  'ares-v6-289': merge(gearDeclareDamage(3, 'FLAME OF ANNIHILATION'), gearKillGod(3), gearKeywords(['Pierce'], berserker)),
+  'ares-v6-289': merge(gearDeclareDamage(3, 'FLAME OF ANNIHILATION'), gearKillGodTaxed(3, 'DIVINE DESTRUCTION'), gearKeywords(['Pierce'], berserker)),
   // 290 Shield of the War God. Warborn Defiance (gancho gearSurvive): o portador sobreviveu ao combate; 2 de dano ao Devotee inimigo
   // envolvido. Unyielding Fury (gancho gearTookDamage): ao tomar dano, +2 ATK até o fim do turno (aproximado por 'this_round', como o buff).
   'ares-v6-290': {
@@ -274,7 +273,7 @@ export default {
   // Berserker Champion
   'ares-v6-302': {
     watchDeclare: (s, c, key, self, attacker) => friendlyBerserkerDeclared(s, c, key, self, attacker) && (st => buff(st, self, 1)),
-    killInCombat: (s, c, key) => st => hit(st, c, foeGod(st, key), 2),
+    killInCombat: (s, c, key, self) => st => { if (taxed(st, c, key, 'UNQUENCHABLE FURY', 2, self)) hit(st, c, foeGod(st, key), 2); },
   },
   // 303 Bloodstained Gladiator: Bloodied Pride (gancho tookDamage), Strike ou efeito.
   'ares-v6-303': {tookDamage: (s, c, key) => st => hit(st, c, ownGod(key), 1)},
@@ -343,7 +342,7 @@ export default {
   }),
   'ares-v6-314': gearDeathGod(1, 'LAST PROTECTION'),
   'ares-v6-315': gearDeclareSelf(1),
-  'ares-v6-316': gearKillGod(1),
+  'ares-v6-316': gearKillGodTaxed(1, 'BLOOD HUNGER'),
   'ares-v6-317': merge(gearKeywords(['Pierce']), gearDeathGod(1, "DEATH'S TRIBUTE")),
   'ares-v6-318': {
     gearCombatDamage: (s, c, key, self, bearer, victim) => st => hit(st, c, enemyDevotee(st, c, key, 'SAVAGE CLEAVE', u => u !== victim), 1),
@@ -408,7 +407,7 @@ export default {
   // Ares' War Temple
   'ares-v6-332': {
     aura: (s, c, key, self, unit) => (k.controllerOf(s, unit) === key && berserker(c, unit) ? {atk: 1} : null),
-    watchKill: (s, c, key, self, killer) => berserker(c, killer) && k.onceTurn(s, `${self}:bloodshed`) && (st => hit(st, c, foeGod(st, key), 2)),
+    watchKill: (s, c, key, self, killer) => berserker(c, killer) && k.onceTurn(s, `${self}:bloodshed`) && (st => { if (taxed(st, c, key, 'ETERNAL BLOODSHED', 2, self)) hit(st, c, foeGod(st, key), 2); }),
   },
   'ares-v6-333': {
     watchDeclare: (s, c, key, self, attacker) =>
@@ -451,7 +450,7 @@ export default {
       return player !== key && !!bearer && k.hasType(c, bearer, 'Fear Legion') && k.onceTurn(s, `${self}:fear`) && (st => buff(st, bearer, 1));
     },
   },
-  'ares-v6-340': merge(gearKillGod(1), {
+  'ares-v6-340': merge(gearKillGodTaxed(1, "CHAMPION'S FEROCITY"), {
     watchDeclare: (s, c, key, self, attacker) => {
       const bearer = k.bearerOf(c, self);
       return named(c, bearer, 'BERSERKER CHAMPION') && friendlyBerserkerDeclared(s, c, key, bearer, attacker) && (st => buff(st, bearer, 1));
@@ -460,7 +459,7 @@ export default {
   // Crimson Fire Guardian. Crimson Retaliation (gancho tookDamage): dano de combate de Devotee inimigo, 2 de volta nele.
   'ares-v6-341': {
     tookDamage: (s, c, key, self, info) => info.combat && !!info.foe && (st => { if (alive(st, info.foe)) hit(st, c, info.foe, 2); }),
-    killInCombat: (s, c, key) => st => hit(st, c, foeGod(st, key), 2)},
+    killInCombat: (s, c, key, self) => st => { if (taxed(st, c, key, 'BURNING PRIDE', 2, self)) hit(st, c, foeGod(st, key), 2); }},
   'ares-v6-342': {
     enter: (s, c, key) => st => lookTop(st, c, key, 3, 'STRATEGIC DEPLOYMENT'),
     watchDeclare: (s, c, key, self, attacker) => friendlyBerserkerDeclared(s, c, key, self, attacker)
