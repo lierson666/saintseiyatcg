@@ -1,0 +1,23 @@
+/* Carta na mesa no estilo MTG Arena (teste local, autor 30/10/2026): arte recortada, nome em cima,
+   ATK e HP nas gemas da facção embaixo. A carta inteira continua na mão, no inspetor e nas listas. */
+.olympus .field .dcard.dcard--board, .field .dcard.dcard--board { height: calc(var(--card-w) * .86); background: none; border: 0; box-shadow: none; container-type: inline-size; }
+.btok { position: absolute; inset: 0; overflow: hidden; border-radius: 7cqw; background: #0b0c16 var(--art) center 22% / cover no-repeat;
+  border: 1px solid #e6c36a66; box-shadow: 0 6px 16px #000a, inset 0 0 0 1px #0008; }
+.btok.is-framed { background-size: calc(var(--fw) * 100cqw) auto; background-position: calc(var(--fx) * 100cqw) calc(var(--fy) * 100cqw); }
+.btok::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, #000c 0, #0000 26%, #0000 62%, #000b 100%); }
+.btok__name { position: absolute; z-index: 1; left: 6cqw; right: 6cqw; top: 4cqw; overflow: hidden; text-align: center; white-space: nowrap; text-overflow: ellipsis;
+  font: italic 800 8.4cqw/1.1 "Cinzel", Georgia, serif; letter-spacing: .02em; color: #fff3cf; text-shadow: 0 1px 0 #6b4a12, 0 2px 6px #000; }
+.btok__stat { position: absolute; z-index: 1; bottom: 2cqw; display: grid; place-items: center; width: 30cqw; aspect-ratio: 1; background: var(--gem) center / contain no-repeat;
+  font: 800 13cqw/1 "Cinzel", Georgia, serif; color: #fff8e2; text-shadow: 0 0 4px #000, 0 2px 3px #000; }
+.btok__stat--atk { left: 2cqw; }
+.btok__stat--hp { right: 2cqw; }
+.btok__stat[data-trend="up"] { color: #8dffa0; }
+.btok__stat[data-trend="down"] { color: #ff7a6e; }
+/* estados que antes vinham da moldura da carta */
+.dcard--board.guarding .btok { border-color: #8fd6ff; box-shadow: 0 0 0 2px #8fd6ff88, 0 6px 16px #000a; }
+.dcard--board.unprepared .btok { filter: saturate(.55) brightness(.75); }
+/* Celular deitado: mais baixas que a carta inteira, então cabem maiores (a mesa cheia ainda encolhe, mobile.css). */
+@media (orientation: landscape) and (max-height: 500px) {
+  .olympus .field { --card-w: calc(var(--u) * 23); }
+}
