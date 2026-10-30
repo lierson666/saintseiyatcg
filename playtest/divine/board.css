@@ -96,3 +96,18 @@
   .olympus .hand__slot.playable .dcard::before, .olympus .dcard.can-strike::before, .olympus .hand__slot.playable .dcard::after, .olympus .dcard.can-strike::after,
   .olympus .dcard[data-fac]:is(.can-strike, .hand__slot.playable *)::after { animation: none; }
 }
+
+/* Habilidade ativada na carta grande (autor, 30/10/2026): o bloco da habilidade acende ao passar o mouse
+   e mostra o botão Use flutuando no canto, sem empurrar o texto. No toque o botão fica sempre visível. */
+.bigcard .rule-block--usable { position: relative; border-radius: 4px; pointer-events: auto; transition: background .15s, box-shadow .15s; }
+.bigcard .rule-block--usable:hover, .bigcard .rule-block--usable:focus-within { background: #e6c36a1f; box-shadow: 0 0 0 1px #e6c36a8c; }
+.bigcard .rule-use { position: absolute; z-index: 3; right: 0; top: 0; transform: translateY(-70%); display: inline-flex; align-items: baseline; gap: 6px;
+  min-height: 30px; padding: 5px 12px; border: 1px solid #ffd36e; border-radius: 999px; background: linear-gradient(#3a2a0c, #1a1206);
+  color: #ffe6a6; font: 700 13px/1 system-ui, sans-serif; letter-spacing: .04em; white-space: nowrap; cursor: pointer;
+  box-shadow: 0 4px 12px #000a, 0 0 12px #ffd36e55; opacity: 0; pointer-events: none; transition: opacity .15s, transform .15s; }
+.bigcard .rule-use small { font-weight: 500; font-size: 11px; color: #e8d6a8; }
+.bigcard .rule-block--usable:hover .rule-use, .bigcard .rule-block--usable:focus-within .rule-use, .bigcard .rule-use:focus-visible { opacity: 1; pointer-events: auto; transform: translateY(-85%); }
+.bigcard .rule-use:hover { background: linear-gradient(#5a3f10, #2a1c08); }
+.bigcard .rule-use[aria-disabled="true"] { border-color: #ffffff40; background: #12131c; color: #b8b1c9; box-shadow: 0 4px 12px #000a; cursor: not-allowed; }
+@media (hover: none) { .bigcard .rule-use { opacity: 1; pointer-events: auto; transform: translateY(-85%); min-height: 36px; } }
+@media (prefers-reduced-motion: reduce) { .bigcard .rule-use { transition: none; } }

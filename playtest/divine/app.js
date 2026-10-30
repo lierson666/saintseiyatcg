@@ -895,18 +895,26 @@ function markBank(key, uid, x, y) {
   bank.classList.toggle('drop-target', canBase(key, uid));
   bank.classList.toggle('drop-hover', canBase(key, uid) && bankAt(key, x, y));
 }
+// Habilidades ativadas da carta, com se dá para usar agora e por quê não. Usado pelo menu da carta e pela carta grande.
+function cardAbilities(uid) {
+  const s = S(), key = owner(uid), c = info(uid), out = [], idle = idleFor(key);
+  const ab = c.kind === 'Devotee' && ABILITIES[num(uid)];
+  if (ab) out.push({name: ab.name, label: `${ab.name} ({T}, ${ab.cost} Base)`, cost: `{T} · ${ab.cost} Base`,
+    why: !idle ? "Wait for your turn's main phase." : !s.units[uid]?.prepared ? 'Unprepared: it readies at the start of your turn.' : '',
+    run: () => begin('activate', key, uid, ABILITY_STEPS[num(uid)] || [], choice => ({type: 'activate', key, uid, choice}))});
+  const v6a = entryOf(ctx, uid)?.activate; // habilidade ativada V6 (Devotee ou Equipment)
+  if (v6a) out.push({name: v6a.name, label: `${v6a.name}${v6a.tap === false ? '' : ' ({T}'}${v6a.cost ? `${v6a.tap === false ? ' (' : ', '}${v6a.cost} Base)` : v6a.tap === false ? '' : ')'}`,
+    cost: [v6a.tap === false ? '' : '{T}', v6a.cost ? `${v6a.cost} Base` : ''].filter(Boolean).join(' · '),
+    why: !idle ? "Wait for your turn's main phase." : v6a.tap !== false && !s.units[uid]?.prepared ? 'Unprepared: it readies at the start of your turn.'
+      : v6a.once && s.roundUses.has(`ability:${uid}`) ? 'Already used this round.' : '',
+    run: () => act({type: 'activate', key, uid, choice: {}})});
+  return out;
+}
 function fieldMenu(uid, el) {
   const s = S(), key = owner(uid), c = info(uid), items = [];
   if (!idleFor(key)) return warn("Wait for your turn's main phase.");
-  if (c.kind === 'Devotee') {
-    if (strikeTargets(s, ctx, uid).length) items.push(['Strike', () => startStrike(uid)]);
-    const ab = ABILITIES[num(uid)];
-    if (ab && s.units[uid]?.prepared) items.push([`${ab.name} ({T}, ${ab.cost} Base)`, () => begin('activate', key, uid, ABILITY_STEPS[num(uid)] || [], choice => ({type: 'activate', key, uid, choice}))]);
-  }
-  const v6a = entryOf(ctx, uid)?.activate; // habilidade ativada V6 (Devotee ou Equipment)
-  if (v6a && (v6a.tap === false || s.units[uid]?.prepared) && !(v6a.once && s.roundUses.has(`ability:${uid}`))) {
-    items.push([`${v6a.name}${v6a.tap === false ? '' : ' ({T}'}${v6a.cost ? `${v6a.tap === false ? ' (' : ', '}${v6a.cost} Base)` : v6a.tap === false ? '' : ')'}`, () => act({type: 'activate', key, uid, choice: {}})]);
-  }
+  if (c.kind === 'Devotee' && strikeTargets(s, ctx, uid).length) items.push(['Strike', () => startStrike(uid)]);
+  for (const a of cardAbilities(uid)) if (!a.why) items.push([a.label, a.run]);
   if (c.kind === 'Equipment' && !c.global && !ctx.attached[uid]) items.push(['Re-equip', () => begin('reequip', key, uid, [{key: 'bearer', pick: 'devotee', label: 'Re-equip to which Devotee?'}], choice => ({type: 'reequip', key, uid, choice}))]);
   if (!items.length) return warn(s.units[uid]?.prepared === false ? 'Unprepared: it readies at the start of your turn.' : 'No action available for this card.');
   quickMenu(el, items);
@@ -1086,8 +1094,19 @@ function showBigCard(uid) {
   const bearer = ctx.attached[uid];
   box.innerHTML = cardFace(uid, {size: 'dcard--big', field}) + (field && info(uid).kind === 'Devotee' ? loadout(uid)
     : bearer ? `<aside class="loadout"><h3>${esc(info(uid).name)}</h3><h4>Equipped on</h4><div class="loadout__gear"><button class="loadout__card" data-open-card="${bearer}" data-tip="${esc(`${info(bearer).name}|Click to view the bearer.`)}">${cardFace(bearer, {field: true})}</button></div></aside>` : '');
+  // Habilidade ativada no próprio texto da carta (autor, 30/10/2026): passar o mouse destaca e mostra "Use"
+  // (no toque fica sempre visível); se não dá para usar agora, o botão vem apagado com o motivo.
+  const abilities = field && owner(uid) === viewer() ? cardAbilities(uid) : [];
+  abilities.forEach((a, i) => {
+    const block = [...box.querySelectorAll('.rule-block')].find(b => b.textContent.trim().toLowerCase().startsWith(a.name.toLowerCase()));
+    if (!block) return;
+    block.classList.add('rule-block--usable');
+    block.insertAdjacentHTML('beforeend', `<button class="rule-use" data-use="${i}" ${a.why ? 'aria-disabled="true"' : ''} data-tip="${esc(`${a.name}|${a.why || `Use now: ${a.cost || 'free'}.`}`)}">${a.why ? 'Not now' : 'Use'}<small>${esc(a.cost)}</small></button>`);
+  });
   // Cartas do painel abrem grandes (equipamento a partir do portador e vice-versa); clicar no painel não fecha; fora dele, fecha.
   box.addEventListener('pointerdown', e => {
+    const use = e.target.closest('[data-use]');
+    if (use) { e.preventDefault(); const a = abilities[+use.dataset.use]; if (a.why) return warn(a.why); closeBigCard(); return a.run(); }
     const open = e.target.closest('[data-open-card]');
     if (open) return showBigCard(open.dataset.openCard);
     if (!e.target.closest('.loadout')) closeBigCard();
