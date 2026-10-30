@@ -73,17 +73,18 @@ function overview() {
 let cardFaction = '', cardCurrent = '';
 function cardList() {
   const q = ($('#card-search')?.value || '').toLowerCase();
-  const list = forge.filter(c => (!cardFaction || c.faccao === cardFaction) && `${c.nome_exibicao_en} ${c.id} ${c.faccao}`.toLowerCase().includes(q));
+  // "gods" é a seção só de Gods (autor, 30/10/2026); os outros valores são facções.
+  const list = forge.filter(c => (!cardFaction || (cardFaction === 'gods' ? /^god$/i.test(c.tipo) : c.faccao === cardFaction)) && `${c.nome_exibicao_en} ${c.id} ${c.faccao}`.toLowerCase().includes(q));
   const counter = $('#card-count');
   if (counter) counter.textContent = `${list.length} de ${forge.length} cartas`;
   return list.length ? list.map(c => `<button class="card-row" data-action="edit-card" data-card="${esc(c.id)}" data-tone="${esc(c.faccao)}" aria-current="${c.id === cardCurrent}">
     <i aria-hidden="true"></i><span><b>${esc(c.nome_exibicao_en)}</b><small>${esc(c.id)}</small></span><em>${esc(c.tipo)}</em></button>`).join('') : '<p class="hint card-empty">Nenhuma carta encontrada.</p>';
 }
 function cardsPage() {
-  const chip = (f, label) => `<button class="chip" data-action="card-faction" data-faction="${f}" ${f ? `data-tone="${f}"` : ''} aria-pressed="${f === cardFaction}">${label}</button>`;
+  const chip = (f, label) => `<button class="chip" data-action="card-faction" data-faction="${f}" ${FACTIONS.includes(f) ? `data-tone="${f}"` : ''} aria-pressed="${f === cardFaction}">${label}</button>`;
   return `${publishBox(true)}<div class="cards-workbench" style="margin-top:16px"><aside class="card-browser" aria-label="Catálogo de cartas"><div class="card-browser-head">
     <input class="search" id="card-search" placeholder="Buscar nome, ID ou facção" aria-label="Buscar carta">
-    <div class="chips" role="group" aria-label="Filtrar por facção">${chip('', 'Todas')}${FACTIONS.map(f => chip(f, f)).join('')}</div>
+    <div class="chips" role="group" aria-label="Filtrar por facção">${chip('', 'Todas')}${chip('gods', 'Gods')}${FACTIONS.map(f => chip(f, f)).join('')}</div>
     <small class="card-count" id="card-count"></small></div><div id="card-list" style="overflow:auto">${cardList()}</div></aside>
     <iframe class="forge-frame" id="forge" title="Card Forge — editor de cartas" src="../card-forge/${cardCurrent ? `?card=${encodeURIComponent(cardCurrent)}` : ''}"></iframe></div>`;
 }
