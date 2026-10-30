@@ -89,6 +89,7 @@ export function createDirector({ui, getFx, settings}) {
       const at = ui.center(ui.bankRect(e.player, 'base'));
       await ui.flyCard(e.uid, ui.rect(e.uid) || ui.handRect(e.player), ui.bankRect(e.player, 'base'), t(260), false);
       fx()?.burst(at.x, at.y, {color: '#ffd36e', count: 30, speed: 200});
+      ui.bankPulse?.(e.player);
     },
     // Cosmo como pool (autor, 28/10/2026): a energia sai das Bases prontas (ou do Latent), junta-se no orbe de Cosmo
     // do jogador e só depois corre até a carta conjurada em card_played.

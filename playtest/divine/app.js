@@ -17,7 +17,7 @@ import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudg
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
-import {createDirector} from './director.js?v=10';
+import {createDirector} from './director.js?v=11';
 import {createAI} from './ai.js?v=4';
 import {findDeck} from '../deck-store.js';
 import {unlock, playMusic} from '../audio.js?v=20261030-telas';
@@ -716,9 +716,11 @@ const ui = {
   handRect: key => rectOf($(`[data-hand="${key}"]`)),
   fieldRect: key => rectOf($(`[data-field="${key}"]`)),
   bankRect: (key, unit) => rectOf($(`[data-bank="${key}"] [data-bank-unit="${unit}"]`)),
-  baseRects: uids => uids.map(u => rectOf($(`[data-slot="${u}"]`))),
+  // Sem a faixa de Bases (celular, mobile.css), o Cosmo sai do contador.
+  baseRects: uids => { const r = uids.map(u => rectOf($(`[data-slot="${u}"]`))).filter(b => b?.width); return r.length ? r : [ui.bankRect(uids.length && owner(uids[0]), 'base')]; },
   clearPool: () => { for (const k of ['A', 'B']) delete S().players[k].pool; },
-  readyBaseRects: (key, n) => $$(`[data-lane="${key}"] .lane__base:not(.tapped)`).slice(0, n).map(rectOf), // o motor usa as primeiras Bases prontas
+  readyBaseRects: (key, n) => { const r = $$(`[data-lane="${key}"] .lane__base:not(.tapped)`).slice(0, n).map(rectOf).filter(b => b?.width); return r.length ? r : [ui.bankRect(key, 'base')]; }, // o motor usa as primeiras Bases prontas
+  bankPulse(key) { const el = $(`[data-bank="${key}"]`); if (!el) return; el.classList.remove('is-pulse'); void el.offsetWidth; el.classList.add('is-pulse'); },
   center: r => (r ? {x: r.left + r.width / 2, y: r.top + r.height / 2} : null),
   float(at, text, cls) {
     if (!at) return;
@@ -821,6 +823,8 @@ boardRoot.addEventListener('click', e => {
   if (btn?.dataset.toggleSettings !== undefined) { settingsOpen = !settingsOpen; return render(); }
   const pile = t.closest('[data-pile]');
   if (pile) return showPile(...pile.dataset.pile.split(':'));
+  const bank = t.closest('[data-bank]');
+  if (bank && !mode) return showBases(bank.dataset.bank);
   const slot = t.closest('.lane__base[data-slot]');
   if (slot) return togglePool(slot);
   const pickEl = t.closest('[data-pick], .pickable');
@@ -1071,6 +1075,25 @@ function showBigCard(uid) {
 }
 function closeBigCard() { $('#bigcard')?.remove(); }
 // Tartarus e Void são públicos (autor, 28/10/2026): clicar na linha do trilho abre a pilha; clicar numa carta a mostra grande.
+// Bases do jogador (autor, 30/10/2026): tocar no contador de Cosmo mostra as cartas que viraram Base, viradas para cima
+// só para o dono, marcando as usadas; do oponente, só a contagem (Bases são secretas).
+function showBases(key) {
+  closeBigCard();
+  const p = S().players[key], mine = key === viewer(), ready = p.bases.filter(b => b.prepared).length;
+  const box = document.createElement('div');
+  box.id = 'bigcard';
+  box.className = 'bigcard pile';
+  box.innerHTML = `<section class="pile__box" role="dialog" aria-label="Cosmo Bases of Player ${key}">
+    <header><h3>Cosmo Bases</h3><small>Player ${key} · ${ready} prepared of ${p.bases.length} · Latent ${p.latent}/3</small></header>
+    ${!mine ? '<p class="pile__empty">Your opponent\'s Bases are face down.</p>' : p.bases.length ? `<div class="pile__grid">${p.bases.map(b => `<button class="pile__card ${b.prepared ? '' : 'is-used'}" data-pile-card="${b.uid}" aria-label="${b.prepared ? 'Prepared' : 'Used'} Base">${cardFace(b.uid)}<small>${b.prepared ? 'Prepared' : 'Used'}</small></button>`).join('')}</div>` : '<p class="pile__empty">No Cosmo Bases yet.</p>'}</section>`;
+  box.addEventListener('click', e => {
+    const card = e.target.closest('[data-pile-card]');
+    if (card) return showBigCard(card.dataset.pileCard);
+    if (!e.target.closest('.pile__box')) closeBigCard();
+  });
+  box.addEventListener('contextmenu', e => { e.preventDefault(); closeBigCard(); });
+  document.body.append(box);
+}
 function showPile(key, zone) {
   closeBigCard();
   const uids = [...S().players[key][zone]].reverse(), name = zone === 'tartarus' ? 'Tartarus' : 'Void';
