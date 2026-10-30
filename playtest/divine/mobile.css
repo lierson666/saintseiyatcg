@@ -1,0 +1,59 @@
+/* Duelo no celular deitado (autor, 30/10/2026): simplificação no estilo do MTG Arena mobile.
+   Cartas maiores, HUD mínimo: contadores sem rótulo, relógio e fases recolhidos, mão do oponente só como número,
+   ferramentas num menu. Vale só em tela baixa na horizontal; no desktop nada muda. Em pé, pede para girar. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .olympus { --u: min(1.3vh, .62vw); }
+  .olympus .field { --card-w: calc(var(--u) * 15); --card-h: calc(var(--card-w) * 1.4); }
+  .arena-field { left: calc(var(--rail-w) + 10px); right: calc(var(--cmd-w) + 10px); top: 4%; bottom: calc(var(--u) * 10); }
+  .olympus { --rail-w: 52px; --cmd-w: 128px; }
+
+  /* Contadores: só ícone e número (toque mostra a dica com o nome). */
+  .rail { width: var(--rail-w); left: 6px; top: 6px; bottom: 6px; }
+  .rail .rail__label, .rail .rail__who small, .rail .sanctum__domain strong, .rail .sanctum__domain small { display: none; }
+  .rail .rail__row { grid-template-columns: 1fr auto; padding: 0 4px; }
+  .rail .rail__row .rail__ico { width: 16px; height: 16px; }
+  .rail .rail__row b { grid-column: 2; font-size: 15px; }
+  .rail .rail__row--cosmo b { font-size: 18px; }
+  .rail .sanctum__domain { height: 22px; }
+
+  /* Comando: sem relógio grande nem trilha de fases; turno numa linha e o botão de ação embaixo à direita. */
+  .command { width: var(--cmd-w); right: 8px; bottom: 8px; gap: 6px; }
+  .command > * { width: 100%; min-width: 0; max-width: 100%; box-sizing: border-box; }
+  .command__clock, .phasebar__steps, .phasebar__turn small { display: none; }
+  .phasebar__turn { display: block; text-align: center; }
+  .phasebar { padding: 4px 10px; border-radius: 12px; }
+  .phasebar__turn strong { font-size: 13px; }
+  .action-btn { min-height: 44px; padding: 8px 12px; font-size: 14px; gap: 8px; }
+  .command__tools { gap: 3px; flex-wrap: nowrap; justify-content: space-between; }
+  .command__tools button, .command__tools a { flex: 1; min-height: 32px; padding: 4px 2px; font-size: 10px; text-align: center; }
+  .demo-tag { transform: scale(.75); transform-origin: top right; }
+
+  /* Mão do oponente: só o número (no contador); a sua espia embaixo e sobe ao tocar. */
+  .olympus .hand--opp { display: none; }
+  .olympus .hand--me { --hand-w: calc(var(--u) * 15); bottom: calc(var(--hand-w) * -.8); }
+  .olympus .hand--me:hover, .olympus .hand--me:focus-within { bottom: calc(var(--hand-w) * -.25); }
+  .olympus .hand--me .hand__slot:hover { transform: translateY(calc(var(--hand-w) * -.2)) scale(1.1); }
+
+  /* God: retrato menor, perto da mesa. */
+  .godhud__portrait { width: calc(var(--u) * 8); }
+  .godhud--me { bottom: calc(var(--u) * 4); left: auto; right: calc(var(--cmd-w) + 16px); transform: none; }
+  .godhud--opp { top: 4px; left: auto; right: calc(var(--cmd-w) + 16px); transform: none; }
+
+  /* Pedido de alvo: faixa fina no topo, sem cobrir a mesa. */
+  .olympus.is-choosing ~ .choice, .olympus ~ .choice, .choice { top: 4px; left: 50%; transform: translateX(-50%); padding: 4px 12px; max-width: 60vw; font-size: 12px; }
+  .choice strong { font-size: 13px; }
+  .command__tools { align-items: stretch; }
+  /* Painéis laterais (gatilho, cadeia) ocupam menos. */
+  .trigger-panel { max-width: 46vw; }
+}
+
+/* Em pé no celular: o duelo pede para girar. */
+.rotate-hint { display: none; }
+@media (orientation: portrait) and (max-width: 600px) {
+  .rotate-hint { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; align-content: center; gap: 14px; padding: 24px;
+    background: #05060c; color: #f4efe2; text-align: center; font: 600 18px/1.4 "Cinzel", Georgia, serif; }
+  .rotate-hint svg { width: 72px; height: 72px; color: #e8c46a; animation: rotate-hint 1.8s ease-in-out infinite; }
+  .rotate-hint small { font: 400 14px/1.4 system-ui, sans-serif; color: #b8b1c9; }
+}
+@keyframes rotate-hint { 0%, 30% { transform: rotate(0); } 60%, 100% { transform: rotate(-90deg); } }
+@media (prefers-reduced-motion: reduce) { .rotate-hint svg { animation: none; } }

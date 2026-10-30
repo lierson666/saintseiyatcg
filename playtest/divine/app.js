@@ -910,6 +910,7 @@ overlayRoot.addEventListener('change', e => {
 
 // Inspeção: passar o mouse 300 ms sobre uma carta aberta mostra a versão grande com o texto completo.
 document.addEventListener('pointerover', e => {
+  if (e.pointerType === 'touch') return; // no toque, a inspeção é segurar o dedo (abaixo)
   const base = e.target.closest?.('.dcard[data-base]');
   if (base && owner(base.dataset.base) === viewer()) { clearTimeout(inspectTimer); inspectTimer = setTimeout(() => showInspect(base.dataset.base), 300); return; } // só o dono vê a própria Base
   const el = e.target.closest?.('.dcard[data-uid]:not(.dcard--back)');
@@ -918,6 +919,26 @@ document.addEventListener('pointerover', e => {
   inspectTimer = setTimeout(() => showInspect(el.dataset.uid), 300);
   previewCost(el.dataset.uid);
 });
+// Toque (celular, estilo Arena): segurar 450 ms numa carta mostra a versão grande; soltar fecha sem acionar o clique.
+let press = null, swallowClickUntil = 0;
+addEventListener('click', ev => { if (Date.now() < swallowClickUntil) { ev.stopPropagation(); ev.preventDefault(); } }, {capture: true});
+addEventListener('contextmenu', ev => { if (press) ev.preventDefault(); }); // sem menu do sistema ao segurar a carta
+document.addEventListener('pointerdown', e => {
+  if (e.pointerType !== 'touch') return;
+  const el = e.target.closest?.('.dcard[data-uid]:not(.dcard--back), .dcard[data-base]'), uid = el?.dataset.uid || el?.dataset.base;
+  if (!uid || (el.dataset.base && owner(uid) !== viewer())) return;
+  press = {x: e.clientX, y: e.clientY, shown: false};
+  press.timer = setTimeout(() => { press.shown = true; showInspect(uid); }, 450);
+});
+document.addEventListener('pointermove', e => { if (press && !press.shown && Math.hypot(e.clientX - press.x, e.clientY - press.y) > 10) { clearTimeout(press.timer); press = null; } });
+const endPress = () => {
+  if (!press) return;
+  clearTimeout(press.timer);
+  if (press.shown) { hideInspect(); swallowClickUntil = Date.now() + 400; }
+  press = null;
+};
+document.addEventListener('pointerup', endPress);
+document.addEventListener('pointercancel', endPress);
 function showInspect(uid) {
   const c = info(uid), box = $('#inspector');
   const lines = c.text.split('\n').slice(2).filter(l => !/^\s*(Rarity|Type|Casting Cost|ATK|HP|Cosmoble)/.test(l));
@@ -1637,6 +1658,11 @@ async function init() {
   stage.classList.toggle('no-webgl', !scene);
   window.__divine = {get state() { return S(); }, get ctx() { return ctx; }, get scene() { return scene; }, get clock() { return clock; }, settings}; // inspeção no QA
 }
+// Celular (autor, 30/10/2026): no primeiro toque, tela cheia e trava na horizontal onde o navegador deixa (Android);
+// no iPhone o aviso de girar (mobile.css) cobre o modo em pé.
+if (matchMedia('(pointer: coarse)').matches) addEventListener('pointerdown', () => {
+  document.documentElement.requestFullscreen?.({navigationUI: 'hide'}).then(() => screen.orientation?.lock?.('landscape')).catch(() => {});
+}, {once: true});
 // Dica flutuante (autor, 28/10/2026): tudo com data-tip="Título|texto" explica o que é ao passar o mouse ou focar.
 const tip = document.body.appendChild(Object.assign(document.createElement('div'), {className: 'tip', role: 'tooltip'}));
 function showTip(e) {
