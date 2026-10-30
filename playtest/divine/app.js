@@ -400,7 +400,8 @@ function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
     // A arte segue o enquadramento do Forge, recortada da altura do rosto; o texto inteiro fica no inspetor.
     const fr = forge.ilustracao_enquadramento, fac = CARD_FACTIONS.has(String(forge.faccao).toLowerCase()) ? String(forge.faccao).toLowerCase() : 'athena';
     const art = forge.ilustracao ? `--art:url('${FORGE_ART + forge.ilustracao}');${fr?.w ? `--fx:${fr.x / 1488};--fy:${(fr.y - 160) / 1488};--fw:${fr.w / 1488};` : ''}` : '';
-    const gem = (kind, v, trend) => `<b class="btok__stat btok__stat--${kind}" data-trend="${trend}" style="--gem:url('../../CARD-TEMPLATE/${fac}/gem_${kind === 'atk' ? 'power' : 'resistance'}.png')">${v}</b>`;
+    // HP: Athena tem gem_resistance; as outras facções usam gem_soul (CARD-TEMPLATE/pieces.json).
+    const gem = (kind, v, trend) => `<b class="btok__stat btok__stat--${kind}" data-trend="${trend}" style="--gem:url('../../CARD-TEMPLATE/${fac}/gem_${kind === 'atk' ? 'power' : fac === 'athena' ? 'resistance' : 'soul'}.png')">${v}</b>`;
     return `<div class="${cls} dcard--board" data-uid="${uid}" tabindex="0" aria-label="${esc(c.name)}, ATK ${atk}, HP ${hp - dmg} of ${hp}">
       <div class="btok ${fr?.w ? 'is-framed' : ''}" style="${art}"><span class="btok__name">${esc(c.name)}</span>
         ${gem('atk', atk, statBuffed(atk, c.atk))}${gem('hp', hp - dmg, dmg ? 'down' : statBuffed(hp, c.hp))}</div>${marks}</div>`;
