@@ -69,7 +69,7 @@ test('Rhadamanthys: enter derrota o alvo; Judge\'s Authority drena 1 uma vez por
   answers({'GREATEST CAUTION': (pl, q) => (q.options ? x : true)});
   play('hades-v6-181'); done(s);
   assert.ok(b.tartarus.includes(x));
-  assert.equal(b.soul, 9); assert.equal(p.soul, 9, '10 − 2 (taxa) + 1 (Judge)');
+  assert.equal(b.soul, 9); assert.equal(p.soul, 8, '10 − 3 (taxa) + 1 (Judge)');
   kill(y); done(s);
   assert.equal(b.soul, 9, 'once each round');
 });

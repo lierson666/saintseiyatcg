@@ -50,3 +50,20 @@ Antes → depois da média de ATK+HP por custo: 3: 6.4 → 6.0 · 4: 8.2 → 7.8
 - Já têm custo: 189 Acheron Charon, 195 Pandora, 203 Papillon Myu, 215 Alraune Queen, 221 River Styx Ferryman (Soul); 210 Golem Rock, 211 Troll Iwan, 222 Underworld Executioner (sacrifício).
 - Sem remoção: 185 Garuda Aiacos, 197 Aries Shion (volta do Tartarus ao campo), 202 Balron Lune (descarte), 206, 220, 223 Elysium Servant (+2 Soul).
 - 217 Dullahan Cube (custo 2, dreno 1/1): sem taxa, por ser barato.
+
+## Segunda leva (aprovada em 30/10/2026)
+
+- Remoção total sobe para 3 Soul: 181 Greatest Caution, 193 Terrible Providence, 253 Excalibur, 255 Another Dimension.
+- −3/−3 sobe para 2 Soul: 204 Deep Fragrance, 251 Seki Shiki Meikai Ha.
+
+## Medição (round-robin de bots, 1 compra por turno)
+
+| Arquivo | Cenário | Hades specter | carnage | aristocrats | black saints | reanimator |
+| --- | --- | --- | --- | --- | --- | --- |
+| rr-hades-base.txt | Hades antigo (4 jogos/par) | 93% | 77% | 73% | 63% | 61% |
+| rr-hades-nerf.txt | 1ª leva (4/par) | 91% | 79% | 68% | 55% | 48% |
+| rr-hades-leva2.txt | 2ª leva (8/par) | 90% | 77% | 72% | 52% | 50% |
+| rr-e1.txt | 1ª leva sem Offering of Life (4/par) | 86% | 59% | 89% | 68% | 66% |
+| rr-e2.txt | 1ª leva com Soul 27 (4/par) | 88% | 82% | 70% | 70% | 68% |
+
+Conclusão: a taxa nos ETB e o −1 de stats quase não mexem; o Offering of Life e a Soul inicial também não explicam. O motor do Hades está em outro lugar (Spells, Equipment/Surplice, Domain ou a composição dos decks) — falta diagnosticar.

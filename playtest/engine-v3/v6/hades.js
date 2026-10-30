@@ -158,7 +158,7 @@ const oppSacrifices = (st, c, key, ability, n, each) => {
 export default {
   // Wyvern Rhadamanthys. Interpretação: "target Devotee" inclui os seus (e ele mesmo), leitura literal.
   'hades-v6-181': {
-    enter: taxed(2, 'GREATEST CAUTION', (s, c, key) => st => { const t = k.choose(c, key, 'GREATEST CAUTION', k.allDevotees(st, c)); if (t) k.defeat(st, c, t); },
+    enter: taxed(3, 'GREATEST CAUTION', (s, c, key) => st => { const t = k.choose(c, key, 'GREATEST CAUTION', k.allDevotees(st, c)); if (t) k.defeat(st, c, t); },
       (st, c) => k.allDevotees(st, c).length > 0),
     watchDefeat: onDefeat('enemy', (st, c, key, self, dead, owner) => drain(st, key, 1, owner), 'judge'),
   },
@@ -197,7 +197,7 @@ export default {
     k.draw(s, key, 1);
   }}},
   'hades-v6-193': { // Thanatos
-    enter: taxed(2, 'TERRIBLE PROVIDENCE', (s, c, key) => st => { const t = enemy(st, c, key, 'TERRIBLE PROVIDENCE'); if (t) k.defeat(st, c, t); }),
+    enter: taxed(3, 'TERRIBLE PROVIDENCE', (s, c, key) => st => { const t = enemy(st, c, key, 'TERRIBLE PROVIDENCE'); if (t) k.defeat(st, c, t); }),
     watchDefeat: onDefeat('enemy', (st, c, key, self, dead, owner) => drain(st, key, 2, owner), 'execution'),
   },
   'hades-v6-194': {spell: {run: (s, c, key) => { // Divine Touch of Death
@@ -257,7 +257,7 @@ export default {
     enter: (s, c, key) => st => payDraw(st, c, key, 'METAMORPHOSIS', 2, 2),
     godDamage: (s, c, key, self) => st => myuReturn(st, c, key, self),
   },
-  'hades-v6-204': {enter: taxed(1, 'DEEP FRAGRANCE', niobe(3, 3, 'DEEP FRAGRANCE')), defeated: niobe(2, 2, 'POISONOUS DEATH')}, // Deep Niobe (+249)
+  'hades-v6-204': {enter: taxed(2, 'DEEP FRAGRANCE', niobe(3, 3, 'DEEP FRAGRANCE')), defeated: niobe(2, 2, 'POISONOUS DEATH')}, // Deep Niobe (+249)
   'hades-v6-205': { // Basilisk Sylphid
     combatDamage: (s, c, key, self, victim) => st => weaken(st, c, victim, 2, 2),
     watchDefeat: (s, c, key, self, dead, owner) => owner !== key && s.active === key && (st => k.buff(st, self, 2, 0)),
@@ -421,7 +421,7 @@ export default {
     gearKillInCombat: (s, c, key, self, bearer) => /SYLPHID/i.test(name(c, bearer)) && (st => toHandFrom(st, c, key, 'BASILISK SURPLICE', specter(2), {optional: true})),
   },
   'hades-v6-251': { // Cancer Deathmask
-    enter: taxed(1, 'SEKI SHIKI MEIKAI HA', curse(3, 3, 'SEKI SHIKI MEIKAI HA')),
+    enter: taxed(2, 'SEKI SHIKI MEIKAI HA', curse(3, 3, 'SEKI SHIKI MEIKAI HA')),
     watchDefeat: onDefeat('enemy', (st, c, key) => { if (pay(st, c, key, 'GATEWAY TO YOMOTSU', 1)) k.mill(st, key, 2); }, 'yomotsu'),
   },
   'hades-v6-252': { // Pisces Aphrodite
@@ -429,7 +429,7 @@ export default {
     watchDefeat: onDefeat('enemy', (st, c, key, self, dead, owner) => drain(st, key, 1, owner), 'rose'),
   },
   'hades-v6-253': { // Capricorn Shura
-    enter: taxed(2, 'EXCALIBUR', (s, c, key) => st => execute('EXCALIBUR', 3)[1](st, c, key), execute('EXCALIBUR', 3)[0]),
+    enter: taxed(3, 'EXCALIBUR', (s, c, key) => st => execute('EXCALIBUR', 3)[1](st, c, key), execute('EXCALIBUR', 3)[0]),
     killInCombat: (s, c, key, self) => st => { if (sacrificeOne(st, c, key, 'BLADE OF SACRIFICE', self, true)) k.draw(st, key, 2); },
   },
   'hades-v6-254': { // Aquarius Camus
@@ -437,7 +437,7 @@ export default {
     // pendente: Aurora Execution ("loses its last Seal counter") — sem gancho de remoção de Seal.
   },
   'hades-v6-255': { // Gemini Saga
-    enter: taxed(2, 'ANOTHER DIMENSION', (s, c, key, self) => st => {
+    enter: taxed(3, 'ANOTHER DIMENSION', (s, c, key, self) => st => {
       const t = enemy(st, c, key, 'ANOTHER DIMENSION');
       if (t && k.onField(st, key, self) && k.exile(st, c, t)) exiledBy(st)[self] = t;
     }),
