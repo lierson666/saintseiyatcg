@@ -25,4 +25,4 @@
   .olympus .field { --card-w: calc(var(--u) * 23); }
 }
 /* Carta sem arte no site (artes -ref ficam só no Forge local): símbolo da facção pequeno no centro. */
-.btok.is-noart { background: var(--art) center 46% / 38% auto no-repeat, radial-gradient(circle at 50% 46%, #2a2350, #0b0c16 70%); }
+.btok.is-noart { background: var(--art) center 46% / var(--noart-w, 38%) auto no-repeat, radial-gradient(circle at 50% 46%, #2a2350, #0b0c16 70%); }
