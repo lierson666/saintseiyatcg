@@ -35,40 +35,32 @@
 .dcard[data-fac="ares"] { --fac: #ff6a4a; --fac-2: #d41a1a; }
 .dcard[data-fac="artemis"] { --fac: #e6f4ff; --fac-2: #8fc8ff; }
 .dcard[data-fac="neutral"] { --fac: #f2ead6; --fac-2: #b9a98a; }
-.olympus .hand__slot.playable .dcard, .olympus .dcard.can-strike { overflow: visible; box-shadow: none; animation: cosmo-burn 1.6s ease-in-out infinite; }
-@keyframes cosmo-burn {
-  0%, 100% { filter: drop-shadow(0 0 3px var(--fac)) drop-shadow(0 -2px 10px var(--fac-2)); }
-  50% { filter: drop-shadow(0 0 6px var(--fac)) drop-shadow(0 -6px 20px var(--fac-2)); }
+/* Elegante (autor, 30/10/2026: a chama grande tomava a tela): um fio de Cosmo corre pela borda da carta,
+   brilho suave em volta e poucas fagulhas subindo só do topo. Fica justo à carta. */
+@property --cosmo-a { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+.olympus .hand__slot.playable .dcard, .olympus .dcard.can-strike { overflow: visible; box-shadow: none; animation: cosmo-glow 2.4s ease-in-out infinite; }
+@keyframes cosmo-glow {
+  0%, 100% { filter: drop-shadow(0 0 2px var(--fac)) drop-shadow(0 0 6px color-mix(in srgb, var(--fac-2) 55%, transparent)); }
+  50% { filter: drop-shadow(0 0 3px var(--fac)) drop-shadow(0 0 10px color-mix(in srgb, var(--fac-2) 70%, transparent)); }
 }
-/* Cosmo queimando atrás da carta: línguas de fogo que sobem sem parar (camadas de gradiente rolando para cima,
-   recortadas por uma máscara em forma de chama) e fagulhas subindo. Tudo fica atrás da carta (a carta cria
-   a própria camada pelo filter). Só CSS: anima transform/background-position, leve para celular. */
 .olympus .hand__slot.playable .dcard::before, .olympus .dcard.can-strike::before,
-.olympus .hand__slot.playable .dcard::after, .olympus .dcard.can-strike::after { content: ""; position: absolute; z-index: -1; pointer-events: none; }
+.olympus .hand__slot.playable .dcard::after, .olympus .dcard.can-strike::after { content: ""; position: absolute; pointer-events: none; }
+/* o fio: anel de 2px com um rastro de luz girando (conic-gradient), recortado para ficar só na borda */
 .olympus .hand__slot.playable .dcard::before, .olympus .dcard.can-strike::before {
-  inset: -62% -18% -4%;
-  background:
-    radial-gradient(14% 22% at 22% 70%, var(--fac) 0%, transparent 100%),
-    radial-gradient(12% 26% at 50% 62%, #fff8 0%, var(--fac) 30%, transparent 100%),
-    radial-gradient(15% 24% at 78% 72%, var(--fac) 0%, transparent 100%),
-    radial-gradient(40% 30% at 50% 88%, var(--fac-2) 0%, transparent 100%);
-  background-size: 100% 60%, 100% 52%, 100% 64%, 100% 100%;
-  background-repeat: repeat-y, repeat-y, repeat-y, no-repeat;
-  -webkit-mask: radial-gradient(62% 80% at 50% 78%, #000 45%, transparent 100%);
-  mask: radial-gradient(62% 80% at 50% 78%, #000 45%, transparent 100%);
-  filter: blur(4px) saturate(1.5) brightness(1.25); mix-blend-mode: screen;
-  animation: cosmo-rise 1.4s linear infinite, cosmo-sway 2.2s ease-in-out infinite alternate; }
-@keyframes cosmo-rise { to { background-position: 0 -60%, 0 -52%, 0 -64%, 0 0; } }
-@keyframes cosmo-sway { from { transform: skewX(-3deg) scaleY(.96); } to { transform: skewX(3deg) scaleY(1.06); } }
-/* fagulhas: pontinhos que sobem e somem no alto */
+  z-index: 2; inset: -2px; padding: 2px; border-radius: 9px;
+  background: conic-gradient(from var(--cosmo-a), transparent 0 55%, color-mix(in srgb, var(--fac-2) 60%, transparent) 70%, var(--fac) 84%, #fff 88%, transparent 92%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  animation: cosmo-run 2.8s linear infinite; }
+@keyframes cosmo-run { to { --cosmo-a: 360deg; } }
+/* fagulhas: faixa fina acima do topo, poucas e lentas */
 .olympus .hand__slot.playable .dcard::after, .olympus .dcard.can-strike::after {
-  inset: -46% -8% 10%;
-  background: radial-gradient(circle, #fff 0 1px, var(--fac) 1.5px, transparent 3px) 0 0 / 23px 41px,
-              radial-gradient(circle, var(--fac) 0 1px, transparent 2.5px) 11px 17px / 31px 53px;
-  -webkit-mask: linear-gradient(0deg, transparent, #000 30%, #000 55%, transparent);
-  mask: linear-gradient(0deg, transparent, #000 30%, #000 55%, transparent);
-  opacity: .9; animation: cosmo-sparks 2.4s linear infinite; }
-@keyframes cosmo-sparks { to { background-position: 0 -82px, 11px -89px; } }
+  z-index: -1; left: 12%; right: 12%; top: -22%; height: 26%;
+  background: radial-gradient(circle, #fff 0 .8px, var(--fac) 1.2px, transparent 2.2px) 0 0 / 19px 37px,
+              radial-gradient(circle, var(--fac) 0 .8px, transparent 2px) 9px 14px / 27px 45px;
+  -webkit-mask: linear-gradient(0deg, transparent, #000 35%, transparent); mask: linear-gradient(0deg, transparent, #000 35%, transparent);
+  opacity: .7; animation: cosmo-sparks 3.2s linear infinite; }
+@keyframes cosmo-sparks { to { background-position: 0 -74px, 9px -76px; } }
 .olympus.is-deciding .hand__slot.playable .dcard { animation: none; filter: none; }
 .olympus.is-deciding .hand__slot.playable .dcard::before, .olympus.is-deciding .hand__slot.playable .dcard::after { display: none; }
 @media (prefers-reduced-motion: reduce) {
