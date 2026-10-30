@@ -400,3 +400,10 @@ body { font: 300 15px/1.45 var(--kv-sans); }
 .lb-precent li { display: grid; gap: 4px; padding: 10px 14px; border: 1px solid var(--kv-line); border-radius: 14px; font: 400 15px var(--kv-sans); }
 .lb-precent small { color: var(--kv-muted); }
 .lb-precent .is-win b { color: var(--kv-gold-2); } .lb-precent .is-loss b { color: var(--kv-error); }
+
+/* Capa do deck escolhida na tela Decks (autor, 30/10/2026), também nos Starter. */
+.lb-deckwrap { position: relative; display: flex; flex-direction: column; }
+.lb-deckwrap > .lb-deck { flex: 1; }
+.lb-deck__cover { position: absolute; top: 8px; right: 8px; z-index: 2; min-height: 32px; padding: 6px 12px; border: 1px solid var(--gold, #e6c36a); border-radius: 999px; background: #0b0d1ce6; color: var(--gold, #e6c36a); font: 500 12px/1 Jost, system-ui, sans-serif; letter-spacing: .06em; cursor: pointer; opacity: .85; transition: opacity .15s, background .15s; }
+.lb-deck__cover:hover, .lb-deck__cover:focus-visible { opacity: 1; background: #1a1630; }
+@media (hover: hover) { .lb-deckwrap .lb-deck__cover { opacity: 0; } .lb-deckwrap:hover .lb-deck__cover, .lb-deck__cover:focus-visible { opacity: 1; } }

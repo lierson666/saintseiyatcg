@@ -6,7 +6,7 @@ import {canonIndex, validateDeck, DECK_SIZE, COPY_LIMIT} from '../shared/deck-v3
 import {spellCategory} from './engine-v3/core.js';
 import {renderLiveCard} from '../shared/live-card.js?v=20261029-forge';
 import {unlock, playMusic, setVolume, volume} from './audio.js';
-import {loadMyDecks, saveMyDecks, findDeck, syncDecks, onDeckStatus} from './deck-store.js?v=20261029-2';
+import {loadMyDecks, saveMyDecks, findDeck, syncDecks, onDeckStatus, deckCovers, setDeckCover} from './deck-store.js?v=20261030-1';
 import {mountKV} from '../shared/kv-sky.js?v=20261029-2';
 import {countryOptions, countryName} from '../shared/countries.js?v=20261029-1';
 import {startPresence} from '../shared/presence.js?v=20261029-1';
@@ -58,12 +58,18 @@ function deckErrors(d) {
     .map(e => ({code: 'identity', card_id: e.card_id}))];
 }
 const deckValid = d => !deckErrors(d).length;
+const thumbOf = d => d.thumb || deckCovers()[d.id] || null; // deck do jogador: no deck; Starter: neste aparelho
 function deckCover(d) {
-  if (d.thumb && artOf(d.thumb)) return artOf(d.thumb); // capa escolhida no deckbuilder
+  if (thumbOf(d) && artOf(thumbOf(d))) return artOf(thumbOf(d)); // capa escolhida pelo jogador
   const first = d.main_deck.map(e => e.card_id).find(id => artOf(id));
   return artOf(first || deckGod(d));
 }
 function deckBox(d, act) {
+  const box = deckButton(d, act);
+  // Tela Decks: botão de capa em qualquer deck, inclusive Starter (autor, 30/10/2026).
+  return act === 'edit-deck' ? `<div class="lb-deckwrap">${box}<button class="lb-deck__cover" data-act="cover" data-deck="${esc(d.id)}" aria-label="Choose the cover of ${esc(d.alpha_nome || d.nome)}">Cover</button></div>` : box;
+}
+function deckButton(d, act) {
   const ok = deckValid(d), art = deckCover(d);
   return `<button class="lb-deck ${ok ? '' : 'is-incomplete'} ${ui.deckA === d.id && act === 'pick-a' ? 'is-picked' : ''} ${ui.deckB === d.id && act === 'pick-b' ? 'is-picked' : ''}"
     data-act="${act}" data-deck="${esc(d.id)}">
@@ -344,12 +350,12 @@ function pickerOptions(kind, d) {
   if (kind === 'god') return gods.map(g => g.id);
   const domains = [...cards.values()].filter(c => c.kind === 'Domain').sort((a, b) => (faction(b) === faction(cards.get(d.god))) - (faction(a) === faction(cards.get(d.god))) || PICKS.indexOf(faction(a)) - PICKS.indexOf(faction(b)) || a.name.localeCompare(b.name));
   if (kind === 'domain') return domains.map(c => c.id);
-  return [...new Set([d.god, d.domain_id, ...d.main_deck.map(e => e.card_id)].filter(id => id && cards.get(id)))];
+  return [...new Set([d.god, d.domain_id, ...d.main_deck.map(e => e.card_id)].filter(id => id && cards.get(id) && artOf(id)))]; // capa: só carta com arte
 }
 function picker() {
-  const kind = ui.picker, d = ui.builder?.deck;
+  const kind = ui.picker, d = ui.coverFor ? findDeck(ui.coverFor, presets) : ui.builder?.deck;
   if (!kind || !d) return '';
-  const current = {god: d.god, domain: d.domain_id, thumb: d.thumb || d.god}[kind];
+  const current = {god: d.god, domain: d.domain_id, thumb: thumbOf(d) || d.god}[kind];
   const title = {god: 'Choose your God', domain: 'Choose your Domain', thumb: 'Choose the deck cover'}[kind];
   return `<div class="lb-picker" role="dialog" aria-modal="true" aria-label="${title}"><div class="lb-picker__box"><header><h2>${title}</h2>
     <button class="lb-play lb-play--small" data-act="close-picker">Close</button></header>
@@ -443,9 +449,16 @@ const actions = {
   'close-big': () => { ui.big = null; },
   'close-notice': () => { ui.notice = null; },
   'open-picker': t => { ui.picker = t.dataset.pick; },
-  'close-picker': () => { ui.picker = null; },
+  'close-picker': () => { ui.picker = null; ui.coverFor = null; },
+  cover: t => { ui.coverFor = t.dataset.deck; ui.picker = 'thumb'; },
   picked: t => {
     const b = ui.builder, id = t.dataset.id;
+    if (ui.coverFor) { // capa escolhida direto na tela Decks
+      const own = loadMyDecks(), mine = own.find(x => x.id === ui.coverFor);
+      if (mine) saveMyDecks(own.map(x => (x === mine ? {...x, thumb: id} : x))); else setDeckCover(ui.coverFor, id);
+      ui.coverFor = null; ui.picker = null;
+      return;
+    }
     if (ui.picker === 'god') { b.deck.god = id; b.show = [...new Set([...b.show, faction(cards.get(id))])]; }
     if (ui.picker === 'domain') { b.deck.domain_id = id; b.show = [...new Set([...b.show, faction(cards.get(id))])]; }
     if (ui.picker === 'thumb') b.deck.thumb = id;

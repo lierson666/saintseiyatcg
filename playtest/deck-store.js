@@ -20,6 +20,12 @@ const OFFLINE = 'Saved on this device only — will sync when you are online';
 
 export function loadMyDecks() { return read(KEY, []); }
 
+// Capa escolhida para um deck Starter (autor, 30/10/2026): o Starter é só leitura, então a capa fica neste aparelho.
+// Decks do jogador guardam a capa no próprio deck (`thumb`) e sincronizam com a conta.
+const COVERS = 'sstcg.deckcovers.v1';
+export const deckCovers = () => read(COVERS, {});
+export function setDeckCover(id, cardId) { write(COVERS, {...deckCovers(), [id]: cardId}); }
+
 export function saveMyDecks(list) {
   const before = new Map(loadMyDecks().map(d => [d.id, JSON.stringify(d)]));
   write(KEY, list);
