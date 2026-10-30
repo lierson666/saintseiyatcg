@@ -74,12 +74,12 @@ test('Rhadamanthys: enter derrota o alvo; Judge\'s Authority drena 1 uma vez por
   assert.equal(b.soul, 9, 'once each round');
 });
 
-test('watchDefeat de Domain: Hades Castle drena 1 quando um Specter amigo é derrotado', () => {
+test('watchDefeat de Domain: Hades Castle tira 1 Soul do inimigo quando um Specter amigo é derrotado (sem ganho, 30/10/2026)', () => {
   const {s, p, b, add, kill} = hades();
   assert.equal(s.domains.A, 'hades-v6-242');
   const spec = add('hades-v6-219', 'A', 'battlefield'); // Royal Guard também drena 2 ao morrer
   kill(spec); done(s);
-  assert.equal(b.soul, 7); assert.equal(p.soul, 13);
+  assert.equal(b.soul, 7); assert.equal(p.soul, 12, 'só o dreno da Royal Guard dá Soul a Hades');
 });
 
 test('Guardian impresso em texto (Royal Guard) vira keyword', () => {
@@ -190,11 +190,11 @@ test('Gemini Saga: exila até Saga sair; derrota de Saga devolve o exilado ao do
 
 test('Will of Hades: modo escolhido; perde 1 Soul', () => {
   const {s, ctx, p, b, add, cast, answers} = hades();
-  const foe = add('hades-v6-219', 'B', 'battlefield');
+  const foe = add('hades-v6-183', 'B', 'battlefield'); // Griffon Minos: HP 6
   answers({'THE WILL OF HADES': (pl, q) => (q.choose === 'mode' ? 'weaken' : foe)});
   add('hades-v6-218', 'A', 'tartarus');
   cast('hades-v6-241'); done(s);
-  assert.equal(hpOf(s, ctx, foe), 1, 'Royal Guard HP 4 (30/10/2026) − 3');
+  assert.equal(hpOf(s, ctx, foe), 3, 'Griffon Minos HP 6 − 3');
   assert.equal(p.soul, 9);
 });
 

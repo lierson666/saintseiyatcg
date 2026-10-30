@@ -836,28 +836,12 @@
       "tema": "Specter midrange / Surplices",
       "main_deck": [
         {
-          "card_id": "hades-v6-181",
-          "quantity": 2
-        },
-        {
           "card_id": "hades-v6-182",
-          "quantity": 2
-        },
-        {
-          "card_id": "hades-v6-185",
           "quantity": 2
         },
         {
           "card_id": "hades-v6-201",
           "quantity": 3
-        },
-        {
-          "card_id": "hades-v6-202",
-          "quantity": 2
-        },
-        {
-          "card_id": "hades-v6-203",
-          "quantity": 2
         },
         {
           "card_id": "hades-v6-204",
@@ -896,28 +880,12 @@
           "quantity": 2
         },
         {
-          "card_id": "hades-v6-241",
-          "quantity": 3
-        },
-        {
-          "card_id": "hades-v6-258",
-          "quantity": 2
-        },
-        {
           "card_id": "hades-v6-236",
           "quantity": 2
         },
         {
           "card_id": "hades-v6-238",
           "quantity": 2
-        },
-        {
-          "card_id": "hades-v6-199",
-          "quantity": 1
-        },
-        {
-          "card_id": "hades-v6-267",
-          "quantity": 1
         },
         {
           "card_id": "hades-v6-217",
@@ -932,15 +900,35 @@
           "quantity": 2
         },
         {
-          "card_id": "hades-v6-262",
-          "quantity": 2
-        },
-        {
           "card_id": "hades-v6-224",
           "quantity": 3
         },
         {
           "card_id": "hades-v6-212",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-206",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-207",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-218",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-220",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-221",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-210",
           "quantity": 2
         }
       ]
@@ -1695,15 +1683,15 @@
       "main_deck": [
         {
           "card_id": "ares-v6-293",
-          "quantity": 2
+          "quantity": 3
         },
         {
           "card_id": "ares-v6-301",
-          "quantity": 2
+          "quantity": 3
         },
         {
           "card_id": "ares-v6-313",
-          "quantity": 2
+          "quantity": 3
         },
         {
           "card_id": "ares-v6-341",
@@ -1719,11 +1707,11 @@
         },
         {
           "card_id": "ares-v6-281",
-          "quantity": 1
+          "quantity": 2
         },
         {
           "card_id": "ares-v6-304",
-          "quantity": 2
+          "quantity": 3
         },
         {
           "card_id": "ares-v6-322",
@@ -1742,10 +1730,6 @@
           "quantity": 3
         },
         {
-          "card_id": "hades-v6-201",
-          "quantity": 2
-        },
-        {
           "card_id": "hades-v6-238",
           "quantity": 2
         },
@@ -1755,7 +1739,7 @@
         },
         {
           "card_id": "hades-v6-220",
-          "quantity": 2
+          "quantity": 3
         },
         {
           "card_id": "hades-v6-223",
@@ -1767,10 +1751,6 @@
         },
         {
           "card_id": "hades-v6-208",
-          "quantity": 2
-        },
-        {
-          "card_id": "hades-v6-222",
           "quantity": 2
         },
         {
@@ -1786,31 +1766,23 @@
           "quantity": 2
         },
         {
-          "card_id": "ares-v6-350",
-          "quantity": 2
-        },
-        {
-          "card_id": "ares-v6-328",
-          "quantity": 1
-        },
-        {
-          "card_id": "hades-v6-214",
-          "quantity": 2
-        },
-        {
           "card_id": "hades-v6-204",
           "quantity": 2
         },
         {
-          "card_id": "hades-v6-205",
+          "card_id": "hades-v6-218",
           "quantity": 2
         },
         {
-          "card_id": "hades-v6-212",
+          "card_id": "hades-v6-206",
           "quantity": 2
         },
         {
-          "card_id": "hades-v6-241",
+          "card_id": "hades-v6-207",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-221",
           "quantity": 2
         }
       ]

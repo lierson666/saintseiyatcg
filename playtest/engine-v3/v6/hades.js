@@ -401,7 +401,8 @@ export default {
     if (done) lose(s, key, 1);
   }}},
   'hades-v6-242': { // Hades Castle (Domain)
-    watchDefeat: (s, c, key, self, dead, owner) => owner === key && k.hasType(c, dead, 'Specter') && k.once(s, `${self}:dark`) && (st => drain(st, key, 1)),
+    // Dark Authority (rebalanceamento 30/10/2026): só o God inimigo perde 1 Soul; Hades não ganha.
+    watchDefeat: (s, c, key, self, dead, owner) => owner === key && k.hasType(c, dead, 'Specter') && k.once(s, `${self}:dark`) && (st => lose(st, k.other(st, key), 1)),
     // pendente: Eternal Allegiance (custo -1 do primeiro Specter devolvido à mão) — sem gancho de redução de custo.
   },
   'hades-v6-243': { // The River Acheron (Domain). Ferry of the Dead: em recall() acima.

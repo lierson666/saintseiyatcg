@@ -80,7 +80,7 @@ test('watchDeclare (prevenção): Royal Trident Guard previne 1 do dano de Strik
 
 test('declare: Marina Spearman ganha +1 ATK contra inimigo Sealed, só durante o Strike', () => {
   const {s, ctx, put} = poseidon();
-  const spear = put('A', P('107'), 'battlefield'), foe = put('B', 'hades-v6-212', 'battlefield'); // Beetle: 4/5
+  const spear = put('A', P('107'), 'battlefield'), foe = put('B', 'hades-v6-183', 'battlefield'); // Griffon Minos: 3/6 (Beetle caiu para 4/3 em 30/10/2026)
   addSeal(s, ctx, [foe], 1, 'teste'); passAll(s);
   declareStrike(s, ctx, spear, {kind: 'devotee', uid: foe}); passAll(s);
   assert.equal(s.units[foe].damage, 3);
@@ -135,7 +135,7 @@ test('modo: Marina\'s Oath em Loyalty dá +0/+2 até o fim do Round', () => {
 test('dano dividido: Wrath of the Seven Seas reparte 5 entre os alvos escolhidos', () => {
   let i = 0;
   const {s, ctx, put} = poseidon({'OCEANIC FURY': q => (q.choose === 'target' && q.text?.startsWith('Assign') ? q.options[i++ % 2] : q.options ? q.options[0] : true)});
-  const a = put('B', 'hades-v6-219', 'battlefield'), b = put('B', 'hades-v6-212', 'battlefield');
+  const a = put('B', 'hades-v6-183', 'battlefield'), b = put('B', 'hades-v6-191', 'battlefield'); // HP 6 e 7: ninguém morre com 5
   playSpell(s, ctx, 'A', put('A', P('174')), {}); passAll(s);
   assert.equal(s.units[a].damage + s.units[b].damage, 5);
   assert.ok(s.units[a].damage > 0 && s.units[b].damage > 0);
@@ -218,7 +218,7 @@ test('Sacred Interdiction (119): sem pagar, a Spell é anulada e vai ao Tartarus
 test('survive: Atlantean Sentinel (105) põe Seal no atacante; Baian (145) e War Helm (130) como defensores', () => {
   const {s, ctx, A, put} = poseidon();
   s.domains.A = null;
-  const sentinel = put('A', P('105'), 'battlefield'), foe = put('B', 'hades-v6-211', 'battlefield');
+  const sentinel = put('A', P('105'), 'battlefield'), foe = put('B', 'hades-v6-183', 'battlefield'); // HP 6: sobrevive à retaliação
   s.effects.push({kind: 'mod', target: sentinel, atk: 0, hp: 10, keywords: [], duration: 'this_round'});
   s.active = 'B';
   declareStrike(s, ctx, foe, {kind: 'devotee', uid: sentinel}); passAll(s);

@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-30 — Cartas de Hades — rebalanceamento, 3ª leva
+
+- **Antes:** Devotees de Hades de custo ≥ 3 com o HP da 2ª leva; Hades Castle (Dark Authority): "target enemy God loses 1 Soul and your God gains 1 Soul".
+- **Depois:** −1 HP em todos os Devotees de Hades de custo ≥ 3 (31 cartas, inclusive as já cortadas); Dark Authority: "target enemy God loses 1 Soul" (Hades não ganha).
+- **Motivo:** decisão do autor em 30/10/2026, após diagnóstico por bots: o motor do Hades era o corpo (HP alto) e o Hades Castle; ETB, Spells e Offering of Life pesavam pouco. Detalhe em `docs/rebalanceamento-hades-2026-10-30/cards.diff.md`.
+- **Pendências:** decks Carnage e Specter retunados (Carnage 57%). Hades Specter Midrange segue em ~67% nos bots; o autor aceitou por ora e ele volta numa próxima leva de cartas.
+
 ## 2026-10-30 — Cartas de Hades — rebalanceamento
 
 - **Antes:** Devotees de Hades acima da curva (ATK+HP médio 6.4 no custo 3, 8.2 no 4, 9.3 no 5) e ETB de remoção, Seal, −X/−X e dreno de Soul sem custo.
