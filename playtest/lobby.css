@@ -452,3 +452,7 @@ body { font: 300 15px/1.45 var(--kv-sans); }
 @media (prefers-reduced-motion: reduce) { .lb-slot, .lb-slot__art, .lb-row { transition: none; } }
 .lb-panel--play { animation: none; }
 .lb-panel--play.is-opening { animation: lb-slide .25s ease-out; }
+.lb-install { display: grid; gap: 8px; max-width: 520px; margin-top: 24px; padding: 16px 18px; border: 1px solid var(--kv-line); border-radius: 16px; background: #10111c99; }
+.lb-install h2 { margin: 0; font: 600 15px var(--kv-title); letter-spacing: .12em; text-transform: uppercase; color: var(--kv-gold-2); }
+.lb-install p { margin: 0; color: var(--kv-muted); font-size: 14px; }
+.lb-install b { color: var(--kv-ink); font-weight: 500; }

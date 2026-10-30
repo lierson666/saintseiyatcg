@@ -191,7 +191,20 @@ function decksScreen() {
 function options() {
   const row = (k, label) => `<label class="lb-field lb-volume">${label}<input type="range" min="0" max="100" value="${Math.round(volume[k] * 100)}" data-act="volume" data-kind="${k}"><output>${Math.round(volume[k] * 100)}%</output></label>`;
   return `<section class="lb-page lb-options"><header class="lb-page__head"><h1>Options</h1><p>Match settings (speed, quality, timers) live in the arena's Settings button.</p></header>
-    ${row('music', 'Music')}${row('sfx', 'Sound effects')}</section>`;
+    ${row('music', 'Music')}${row('sfx', 'Sound effects')}${installBox()}</section>`;
+}
+
+// Web app (autor, 30/10/2026): Android instala pelo pedido do navegador; iPhone só pelo Compartilhar › Adicionar à Tela de Início.
+let installPrompt = null;
+addEventListener('beforeinstallprompt', e => { e.preventDefault(); installPrompt = e; if (ui.screen === 'options') render(); });
+const standalone = () => matchMedia('(display-mode: fullscreen), (display-mode: standalone)').matches || navigator.standalone;
+const isIOS = () => /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+function installBox() {
+  const body = standalone() ? '<p>Installed. You are playing in the app.</p>'
+    : installPrompt ? '<button class="lb-play lb-play--small" data-act="install">Install app</button>'
+    : isIOS() ? '<p>In Safari, tap <b>Share</b> and then <b>Add to Home Screen</b>.</p>'
+    : '<p>Open this page in Chrome on your phone and use <b>Install app</b> from the browser menu.</p>';
+  return `<section class="lb-install"><h2>Play as an app</h2><p>Full screen, in landscape, from your home screen.</p>${body}</section>`;
 }
 
 // ---------- Perfil do jogador (modal): estatísticas e últimos duelos online ----------
@@ -448,6 +461,7 @@ function startMatch() {
 
 const actions = {
   go: t => { ui.screen = t.dataset.screen; ui.play = false; },
+  install: async () => { if (!installPrompt) return; installPrompt.prompt(); await installPrompt.userChoice.catch(() => null); installPrompt = null; render(); },
   play: () => { ui.screen = 'home'; ui.playOpening = !ui.play; ui.play = true; ui.slot = 'a'; },
   'close-play': () => { ui.play = false; },
   avatar: async t => { try { ui.user = await api('/api/me', 'PATCH', {avatar_card: t.dataset.id}); } catch (e) { ui.profileMsg = {me: {text: e.message, kind: 'err'}}; } render(); },
