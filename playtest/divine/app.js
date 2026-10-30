@@ -569,6 +569,14 @@ function phaseBar() {
   </div>`;
 }
 
+// Arte de cada item da cadeia (autor, 30/10/2026): carta de origem; Domain pelo catálogo; God pelo projeto do Forge.
+function chainArt(c) {
+  const s = S(), uid = String(c.uid || '');
+  const id = ctx.objects[uid]?.cardId || (uid.startsWith('domain:') ? s.domains?.[uid.slice(7)] : null);
+  const f = (id && FORGE.get(id)) || FORGE.get(`${cards.get(s.gods[c.controller])?.name.toLowerCase()}-001`);
+  return f?.ilustracao ? FORGE_ART + f.ilustracao : '';
+}
+
 // Comando (canto inferior direito): relógio das Doze Casas acima do botão de ações.
 function command() {
   const s = S(), v = viewer();
@@ -581,7 +589,8 @@ function command() {
   // A ordem entre gatilhos simultâneos do mesmo jogador ainda não é escolha dele (GODS-3.0-SUPPLEMENT, pendência 5).
   const chain = s.chain.length ? `<ol class="chain" aria-label="Chain, top resolves first">${s.chain.map((c, i) => {
     const t = chainLabel(c);
-    return `<li data-chain="${i}"><b>${i + 1}</b><div class="chain__body"><strong>${esc(t.title)}</strong>${t.text ? `<em>${esc(t.text)}</em>` : ''}<small>${t.target ? `Target: ${esc(t.target)} · ` : ''}Player ${c.controller}</small></div></li>`;
+    const art = chainArt(c);
+    return `<li data-chain="${i}"><b>${i + 1}</b>${art ? `<i class="chain__art" style="background-image:url('${art}')" aria-hidden="true"></i>` : ''}<div class="chain__body"><strong>${esc(t.title)}</strong>${t.text ? `<em>${esc(t.text)}</em>` : ''}<small>${t.target ? `Target: ${esc(t.target)} · ` : ''}Player ${c.controller}</small></div></li>`;
   }).reverse().join('')}</ol>
     <small class="chain__hint">${s.chain.length > 1 ? 'Top resolves first' : 'Resolves when both pass'}</small>` : '';
   return `<aside class="command" aria-label="Turn actions">
@@ -1434,8 +1443,14 @@ function animateTrigger() {
   ], {duration: 620, easing: 'cubic-bezier(.2,.8,.2,1)'});
 }
 function sidePanel(req, t, fx) {
-  const src = sourceUid(req, fx), f = !src && fx && FORGE.get(fx.id);
-  const face = src ? cardFace(src, {size: 'dcard--lg'}) : f ? `<div class="dcard dcard--lg art-full">${renderLiveCard(f, {art: f.ilustracao && FORGE_ART + f.ilustracao})}</div>` : '';
+  // Sempre há arte ao lado (autor, 30/10/2026): carta em jogo; senão a do catálogo (Domain); God pelo projeto do Forge
+  // (`hades-001`, como o godHud); por último a carta afetada ou o God de quem decide.
+  const forgeGod = id => cards.get(id) && FORGE.get(`${cards.get(id).name.toLowerCase()}-001`);
+  const godOf = fx && Object.values(S().gods).includes(fx.id) ? fx.id : null;
+  const src = sourceUid(req, fx), f = !src && fx && (FORGE.get(fx.id) || (godOf && forgeGod(godOf)));
+  const alt = !src && !f && (req.uid && ctx.objects[req.uid] ? req.uid : null), g = !src && !f && !alt && forgeGod(S().gods[req.player]);
+  const live = c => `<div class="dcard dcard--lg art-full">${renderLiveCard(c, {art: c.ilustracao && FORGE_ART + c.ilustracao})}</div>`;
+  const face = src ? cardFace(src, {size: 'dcard--lg'}) : f ? live(f) : alt ? cardFace(alt, {size: 'dcard--lg'}) : g ? live(g) : '';
   const target = targetReq(req);
   const actions = req.kind === 'optional'
     ? `<button class="primary-action" data-dec="yes" data-focus="yes">${esc(t.yes)}</button><button class="ghost" data-dec="no" data-focus="no">${esc(t.no)}</button>`

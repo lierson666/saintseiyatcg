@@ -863,3 +863,8 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
   100% { filter: brightness(1); }
 }
 .reduce-motion .trigger-pop { animation: none; }
+/* Cadeia com a arte de cada gatilho, na ordem de resolução (topo resolve primeiro). */
+.priority .chain li { display: flex; align-items: center; gap: 6px; padding: 3px 0; }
+.chain__art { flex: none; width: 34px; height: 46px; border-radius: 4px; background: #120a20 center 18% / cover no-repeat; box-shadow: 0 0 0 1px var(--gold), 0 2px 6px rgba(0, 0, 0, .6); }
+.priority .chain li:first-child .chain__art { width: 42px; height: 58px; box-shadow: 0 0 0 2px var(--gold-hi), 0 0 14px rgba(255, 210, 120, .7); animation: trigger-flash .9s ease-in-out infinite; }
+.reduce-motion .priority .chain li:first-child .chain__art { animation: none; }
