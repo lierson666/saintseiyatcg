@@ -327,7 +327,10 @@ function builder() {
   const peak = Math.max(1, ...curve), cards_ = pool(b);
   const pill = (key, v) => `<button class="lb-pill ${b[key] === v ? 'is-active' : ''}" data-act="filter" data-key="${key}" data-value="${v}">${v}</button>`;
   const domain = d.domain_id && cards.get(d.domain_id);
-  return `<section class="lb-builder">
+  // No celular a coleção e a lista do deck viram duas abas (Cards | Deck); no desktop ficam lado a lado.
+  return `<section class="lb-builder is-${b.view || 'pool'}">
+    <div class="lb-bview" role="group" aria-label="Builder view">${[['pool', 'Cards'], ['list', `Deck ${size}/${DECK_SIZE}`]].map(([v, label]) =>
+      `<button class="lb-pill ${(b.view || 'pool') === v ? 'is-active' : ''}" data-act="builder-view" data-view="${v}" aria-pressed="${(b.view || 'pool') === v}">${label}</button>`).join('')}</div>
     <div class="lb-pool">
       <div class="lb-filters"><input type="search" placeholder="Search name or text" value="${esc(b.q)}" data-act="search" aria-label="Search cards">
         <div class="lb-pills" aria-label="Cost">${COSTS.map(v => pill('cost', v)).join('')}</div>
@@ -490,6 +493,7 @@ const actions = {
   add: t => setCount(t.dataset.id, 1),
   remove: t => setCount(t.dataset.id, -1),
   'set-domain': t => { ui.builder.deck.domain_id = t.dataset.id; ui.builder.dirty = true; },
+  'builder-view': t => { ui.builder.view = t.dataset.view; },
   'card-size': t => { ui.cardSize = t.dataset.size; remember(); },
   'show-god': t => { const s = ui.builder.show, f = t.dataset.faction; ui.builder.show = s.includes(f) ? s.filter(x => x !== f) : [...s, f]; },
   'save-deck': () => { saveDeck(); ui.screen = 'decks'; },

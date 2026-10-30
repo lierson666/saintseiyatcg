@@ -100,6 +100,7 @@ h1, h2, h3, .lb-play, .lb-tab, .lb-hero p { font-family: "Cinzel", "Trajan Pro",
 
 /* Criador de decks */
 .lb-builder { height: 100%; display: grid; grid-template-columns: 1fr 340px; min-height: 0; }
+.lb-bview { display: none; }
 .lb-pool { min-height: 0; display: grid; grid-template-rows: auto 1fr; }
 .lb-filters { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; padding: 14px 20px; border-bottom: 1px solid var(--line); background: #070b16cc; }
 .lb-filters input { width: 240px; }
@@ -456,3 +457,92 @@ body { font: 300 15px/1.45 var(--kv-sans); }
 .lb-install h2 { margin: 0; font: 600 15px var(--kv-title); letter-spacing: .12em; text-transform: uppercase; color: var(--kv-gold-2); }
 .lb-install p { margin: 0; color: var(--kv-muted); font-size: 14px; }
 .lb-install b { color: var(--kv-ink); font-weight: 500; }
+
+/* ---------- Celular (autor, 30/10/2026: responsividade do jogo inteiro) ----------
+   Em pé: abas numa barra fixa embaixo (como app), topo só com logo e conta, telas rolam.
+   Deitado (altura baixa): topo fino, tudo rola; o builder vira coluna única. */
+@media (max-width: 600px) {
+  /* sem backdrop-filter no topo: ele prenderia a barra de abas (fixed) dentro do cabeçalho */
+  .lb-top { gap: 8px; height: 56px; padding: 0 max(12px, env(safe-area-inset-right)) 0 max(12px, env(safe-area-inset-left)); background: #0b0c16f2; backdrop-filter: none; -webkit-backdrop-filter: none; }
+  .lb-top__logo { height: 32px; }
+  .lb-tabs { position: fixed; z-index: 60; left: 0; right: 0; bottom: 0; height: auto; gap: 0; padding: 0 0 env(safe-area-inset-bottom);
+    justify-content: space-around; background: #0b0c16f2; border-top: 1px solid var(--kv-line); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+  .lb-tab { flex: 1; min-height: 56px; padding: 0; font-size: 11px; letter-spacing: .2em; }
+  .lb-tab.is-active::after { top: 0; bottom: auto; left: 28%; right: 28%; height: 2px; border-radius: 0 0 2px 2px; }
+  .lb-user { gap: 6px; margin-left: auto; font-size: 12px; }
+  .lb-user .kv-ghost { padding: 0 10px; }
+  .lb-socialbtn { padding: 0 10px; font-size: 10px; }
+  .lb-body, .lb-body--home, .lb-body--builder { overflow: auto; padding-bottom: calc(64px + env(safe-area-inset-bottom)); }
+  /* Home: destaque mais baixo, novidades numa fileira que desliza para o lado. */
+  .lb-hero { min-height: 300px; }
+  .lb-hero__arrow { top: 16px; translate: none; width: 44px; height: 44px; }
+  .lb-hero__arrow.is-prev { left: auto; right: 68px; }
+  .lb-news { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 10px; margin-inline: -16px; padding: 0 16px 4px; scrollbar-width: none; }
+  .lb-news::-webkit-scrollbar { display: none; }
+  .lb-news__tile { flex: 0 0 72%; min-height: 120px; scroll-snap-align: start; }
+  /* Decks: duas colunas; botão Cover com área de toque maior. */
+  .lb-deckgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .lb-deck__cover { min-height: 40px; }
+  /* Options: rótulo em cima, controle na largura toda. */
+  .lb-volume { grid-template-columns: 1fr auto; gap: 4px 10px; }
+  .lb-volume input { grid-column: 1 / -1; grid-row: 2; height: 36px; }
+  /* Painel Play: cobre a barra de abas (é um passo de decisão), toques de 40-44px, rodapé opaco. */
+  .lb-panel { z-index: 70; }
+  .lb-panel--play { padding-inline: 14px; }
+  .lb-panel__foot { margin-inline: -14px; padding: 12px 14px calc(14px + env(safe-area-inset-bottom)); background: #0b0c16fa; border-top-color: var(--kv-line); }
+  .lb-x { width: 44px; height: 44px; }
+  .lb-chip { min-height: 40px; min-width: 44px; }
+  /* Botões Done/Cancel do builder ficam acima da barra de abas. */
+  .lb-list__actions { bottom: calc(56px + env(safe-area-inset-bottom)); padding: 8px 0; background: #0b0c16f2; }
+}
+
+/* Deck builder no celular (em pé ou deitado) e tablet estreito: abas Cards | Deck, uma tela por vez, filtros quebram linha. */
+@media (max-width: 760px), (orientation: landscape) and (max-height: 500px) {
+  .lb-body--builder { overflow: auto; }
+  .lb-builder { display: flex; flex-direction: column; height: auto; }
+  .lb-bview { position: sticky; top: 0; z-index: 5; display: flex; gap: 6px; padding: 10px 16px; background: #0b0c16f2; border-bottom: 1px solid var(--kv-line); }
+  .lb-bview .lb-pill { flex: 1; min-height: 44px; font-size: 14px; }
+  .lb-builder.is-pool .lb-list, .lb-builder.is-list .lb-pool { display: none; }
+  .lb-pool, .lb-list { width: 100%; min-width: 0; box-sizing: border-box; }
+  .lb-list { border-left: 0; overflow: visible; }
+  .lb-grid { overflow: visible; padding: 14px 16px 24px; gap: 14px 10px; }
+  .lb-filters { padding: 12px 16px; gap: 8px; }
+  .lb-filters input[type=search] { width: 100%; min-height: 44px; box-sizing: border-box; }
+  .lb-pills { flex-wrap: wrap; }
+  .lb-pill { min-height: 40px; min-width: 40px; }
+  .lb-gods { flex-wrap: wrap; }
+  .lb-godpick { width: 44px; height: 44px; }
+  .lb-strip { min-height: 44px; }
+}
+
+/* Celular deitado (o app instalado abre assim): topo fino; na Home o banner fica à esquerda e
+   novidades + Play à direita, tudo visível sem rolar. Margens laterais respeitam o notch. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .lb-top { height: 48px; gap: 12px; padding-inline: max(16px, env(safe-area-inset-left)) max(16px, env(safe-area-inset-right)); }
+  .lb-top__logo { height: 30px; }
+  .lb-tab { min-height: 48px; padding: 0 12px; letter-spacing: .24em; }
+  .lb-body { padding-inline: env(safe-area-inset-left) env(safe-area-inset-right); }
+  .lb-home { grid-template-columns: minmax(0, 1fr) 250px; grid-template-rows: minmax(0, 1fr) auto; gap: 10px; padding: 10px 16px 12px; overflow: hidden; }
+  .lb-hero { grid-column: 1; grid-row: 1 / 3; min-height: 0; }
+  .lb-news { grid-column: 2; grid-row: 1; display: flex; flex-direction: column; gap: 8px; min-height: 0; overflow: auto; margin: 0; }
+  .lb-news__tile { flex: 1 0 64px; min-height: 64px; padding: 10px 14px; }
+  .lb-news__tile { justify-content: center; gap: 2px; }
+  .lb-news__tile strong { margin-top: 0; font-size: 15px; line-height: 1.1; }
+  .lb-hero__arrow { top: 12px; translate: none; width: 44px; height: 44px; }
+  .lb-hero__arrow.is-prev { left: auto; right: 64px; }
+  .lb-hero__arrow.is-next { right: 12px; }
+  .lb-dock { grid-column: 2; grid-row: 2; gap: 8px; }
+  .lb-dock .lb-play { min-height: 48px; }
+  .lb-deck__cover { min-height: 40px; }
+  .lb-volume input { height: 36px; }
+}
+
+/* Tela de toque (qualquer tamanho): alvos de pelo menos 40-44px. */
+@media (pointer: coarse) {
+  .lb-chip, .lb-pill { min-height: 40px; min-width: 40px; }
+  .lb-x { width: 44px; height: 44px; }
+  .lb-strip { min-height: 44px; }
+  .lb-deck__cover { min-height: 40px; }
+  .lb-godpick { width: 44px; height: 44px; }
+  .lb-volume input { height: 36px; }
+}

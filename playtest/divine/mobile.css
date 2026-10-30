@@ -74,6 +74,10 @@
   .olympus .dcard :is(.lc-rules, .lc-text--subtitle, .lc-text--typeline) { visibility: hidden; }
   .olympus .dcard .lc-gem { transform: scale(1.25); }
 
+  /* Mulligan: cartas o maior possível na altura que sobra (antes ficavam com 64px de largura). */
+  .overlay.mulligan { gap: 8px; padding: 10px calc(12px + var(--sr)) calc(10px + var(--sb)) calc(12px + var(--sl)); }
+  .overlay.mulligan .mull { max-width: calc((100dvh - 190px) * 150 / 210); }
+
   /* Pedido de alvo: faixa fina no topo, sem cobrir a mesa. */
   .olympus.is-choosing ~ .choice, .olympus ~ .choice, .choice { top: 4px; left: 50%; transform: translateX(-50%); padding: 4px 12px; max-width: 60vw; font-size: 12px; }
   .choice strong { font-size: 13px; }
@@ -95,6 +99,10 @@
 /* Toque longo no iPhone: sem a prévia de imagem nem a seleção do sistema; o jogo mostra o inspetor da carta. */
 body, body img { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; -webkit-user-drag: none; }
 body :is(input, textarea, [contenteditable]) { -webkit-user-select: text; user-select: text; }
+
+/* Fechar Log e Settings com um toque (no celular não há Esc). */
+.drawer__x { position: absolute; top: 6px; right: 6px; width: 44px; height: 44px; border: 0; border-radius: 50%; background: none; color: #c9c3dc; font: 400 24px/1 system-ui, sans-serif; cursor: pointer; }
+.drawer__x:hover, .drawer__x:focus-visible { color: #f4efe2; background: #ffffff14; }
 
 /* Botão ⋯ do menu de ferramentas: só no celular deitado. */
 .command__more { display: none; }
