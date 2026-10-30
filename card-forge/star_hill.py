@@ -364,6 +364,15 @@ def publish(root=ROOT):
     return {'mensagem': (run.stdout.strip().splitlines() or ['Cartas publicadas.'])[-1], **game_status(root)}
 
 
+# Jogo online (autor, 30/10/2026): tools/publish-site.sh gera o export e envia ao servidor sem as artes -ref.
+def publish_site(root=ROOT):
+    with LOCK:
+        run = subprocess.run(['/bin/sh', str(root / 'tools/publish-site.sh'), str(root)], capture_output=True, text=True, timeout=1800)
+    if run.returncode:
+        raise ValueError('Falha ao publicar no site: ' + (run.stderr.strip().splitlines() or ['erro desconhecido'])[-1])
+    return {'mensagem': (run.stdout.strip().splitlines() or ['Cartas publicadas no site.'])[-1], **game_status(root)}
+
+
 def get(handler, path):
     if path == '/api/star-hill/motor':
         handler.reply(200, engine_updates.manager(ROOT).info())
@@ -409,6 +418,8 @@ def post(handler, path, raw, atomic_write):
                 return handler.reply(404, {'erro': 'Operação do motor desconhecida.'})
         elif path == '/api/star-hill/publicar':
             result = publish()
+        elif path == '/api/star-hill/publicar-site':
+            result = publish_site()
         elif path == '/api/star-hill/preview':
             result = preview(body)
         elif path == '/api/star-hill/apply':

@@ -20,12 +20,14 @@ export function toJSON(v) {
   return out;
 }
 
-export function createArena({cards, canonIndex, now = () => Date.now() / 1000}) {
+// `catalog` (opcional): função que devolve {cards, canonIndex} atuais; cada partida nova usa o catálogo do momento.
+export function createArena({cards, canonIndex, catalog = () => ({cards, canonIndex}), now = () => Date.now() / 1000}) {
   const matches = new Map();
 
   // decks: {A, B} já validados pelo dono; players: {A: username, B: username}.
   function create({players, decks, seed = randomInt(1, 2 ** 31)}) {
     const id = randomBytes(9).toString('base64url');
+    const {cards, canonIndex} = catalog();
     const gods = {A: decks.A.god || 'god-athena', B: decks.B.god || 'god-athena'};
     const match = createMatch({cards, canonIndex, decks, gods, seed, uidFor: opaque});
     const rec = {id, players, match, ctx: {cards, objects: match.objects, attached: match.attached}, pending: null,

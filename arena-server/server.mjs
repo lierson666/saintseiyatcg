@@ -7,7 +7,7 @@
 //   POST /arena/matches/:id/action      {action}   ·   POST /arena/matches/:id/answer {answer}   ·   POST /arena/matches/:id/concede
 //   GET  /arena/matches/:id/result      interno: vencedor (o sanctuary-api escreve no chat)
 import http from 'node:http';
-import {readFileSync} from 'node:fs';
+import {readFileSync, statSync} from 'node:fs';
 import {loadCanon} from '../shared/canon-cards.js';
 import {canonIndex} from '../shared/deck-v3.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
@@ -22,9 +22,20 @@ if (!SECRET) throw new Error('ARENA_SECRET is required');
 
 const read = path => JSON.parse(readFileSync(new URL(path, ROOT)));
 const canon = read('data/canon/d268.json');
-const cards = loadCanon(canon), index = canonIndex(canon);
-try { addPreviewCards(cards, index, read('card-forge/art-web/cards.json').cartas); } catch { /* sem export do Forge: só o D268 */ }
-const arena = createArena({cards, canonIndex: index});
+const FORGE = new URL('card-forge/art-web/cards.json', ROOT);
+// O Star Hill publica o export do Forge sem reiniciar a arena: recarrega quando a data do arquivo muda.
+let loaded = {stamp: null};
+function catalog() {
+  let stamp = 0;
+  try { stamp = statSync(FORGE).mtimeMs; } catch { /* sem export */ }
+  if (stamp !== loaded.stamp) {
+    const cards = loadCanon(canon), index = canonIndex(canon);
+    try { addPreviewCards(cards, index, JSON.parse(readFileSync(FORGE)).cartas); } catch { /* sem export do Forge: só o D268 */ }
+    loaded = {stamp, cards, canonIndex: index};
+  }
+  return loaded;
+}
+const arena = createArena({catalog});
 const streams = new Map(); // matchId -> Set({res, key})
 
 const send = (res, status, body) => { res.writeHead(status, {'Content-Type': 'application/json', 'Cache-Control': 'no-store'}); res.end(JSON.stringify(body)); };

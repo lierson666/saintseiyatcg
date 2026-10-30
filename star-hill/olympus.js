@@ -50,11 +50,11 @@ function publishBox(compact = false) {
   const when = status?.publicado_em ? new Date(status.publicado_em * 1000).toLocaleString('pt-BR') : 'nunca';
   const tag = status?.pendente ? '<span class="tag">Há mudanças não publicadas</span>' : '<span class="tag">Jogo em dia com o Forge</span>';
   if (compact) return `<section class="panel publish-bar" title="O jogo usa uma cópia leve das cartas do Card Forge. Publique depois de editar cartas, textos ou artes."><h2>Cartas no jogo</h2>${tag}<small>Última publicação: ${esc(when)}</small>
-    <div class="actions"><button class="primary" data-action="publish">Publicar cartas no jogo</button><a href="../playtest/" target="_blank" rel="noopener">Abrir jogo ↗</a></div></section>`;
+    <div class="actions"><button class="primary" data-action="publish">Publicar cartas no jogo</button><button data-action="publish-site" title="Envia cartas e artes ao saintseiyatcg.com (sem as artes -ref). A próxima partida online já usa a versão nova.">Publicar no site</button><a href="../playtest/" target="_blank" rel="noopener">Abrir jogo ↗</a></div></section>`;
   return `<section class="panel"><h2>Cartas no jogo</h2>
     <p class="hint">O jogo usa uma cópia leve das cartas do Card Forge. Depois de editar cartas, textos ou artes, publique para a próxima partida usar a versão nova.</p>
     <p>${status?.pendente ? '<span class="tag">Há mudanças não publicadas</span>' : '<span class="tag">Jogo em dia com o Forge</span>'} <small>Última publicação: ${esc(when)}</small></p>
-    <div class="actions"><button class="primary" data-action="publish">Publicar cartas no jogo</button><a href="../playtest/" target="_blank" rel="noopener">Abrir jogo ↗</a></div></section>`;
+    <div class="actions"><button class="primary" data-action="publish">Publicar cartas no jogo</button><button data-action="publish-site" title="Envia cartas e artes ao saintseiyatcg.com (sem as artes -ref). A próxima partida online já usa a versão nova.">Publicar no site</button><a href="../playtest/" target="_blank" rel="noopener">Abrir jogo ↗</a></div></section>`;
 }
 function overview() {
   const per = FACTIONS.map(f => [f, forge.filter(c => c.faccao === f).length]);
@@ -132,6 +132,11 @@ document.addEventListener('click', async e => {
     b.disabled = true; b.textContent = 'Publicando…';
     try { const r = await api('publicar', {}); notice(`Publicado: ${r.mensagem}`); await load(); await render(); }
     catch (err) { notice(err.message); b.disabled = false; b.textContent = 'Publicar cartas no jogo'; }
+  }
+  if (b.dataset.action === 'publish-site') {
+    b.disabled = true; b.textContent = 'Enviando ao site…';
+    try { const r = await api('publicar-site', {}); notice(r.mensagem); await load(); await render(); }
+    catch (err) { notice(err.message); b.disabled = false; b.textContent = 'Publicar no site'; }
   }
 });
 document.addEventListener('input', e => { if (e.target.id === 'card-search') $('#card-list').innerHTML = cardList(); });
