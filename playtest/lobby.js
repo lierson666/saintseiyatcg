@@ -5,12 +5,13 @@ import {addPreviewCards} from '../shared/preview-cards.js';
 import {canonIndex, validateDeck, DECK_SIZE, COPY_LIMIT} from '../shared/deck-v3.js';
 import {spellCategory} from './engine-v3/core.js';
 import {renderLiveCard} from '../shared/live-card.js?v=20261030-art';
-import {unlock, playMusic, setVolume, volume} from './audio.js';
+import {unlock, playMusic, setVolume, volume} from './audio.js?v=20261030-telas';
 import {loadMyDecks, saveMyDecks, findDeck, syncDecks, onDeckStatus, deckCovers, setDeckCover} from './deck-store.js?v=20261030-1';
 import {mountKV} from '../shared/kv-sky.js?v=20261029-2';
 import {countryOptions, countryName} from '../shared/countries.js?v=20261029-1';
 import {startPresence} from '../shared/presence.js?v=20261029-1';
 import {mountSocial} from './social.js?v=20261029-5';
+import {telas, imageUrl, sound, applyColors, applyTexts} from './telas.js?v=20261030-1';
 
 const root = document.getElementById('lobby');
 const ART = '../card-forge/art-web/';
@@ -104,35 +105,30 @@ function startSocial() {
   }});
 }
 
-// Carrossel da home (KV oficial): um God por slide, com a arte do Forge ao fundo.
-const SLIDES = [
-  {god: 'god-athena', stamp: 'Olympus Arena', lyric: 'Let your', word: 'Cosmo burn', text: 'Build a deck around your God and take it to the arena.'},
-  {god: 'god-poseidon', stamp: 'The seas rise', lyric: 'Lord of the', word: 'Seven Seas', text: 'Poseidon calls his Marina Generals to war.'},
-  {god: 'god-hades', stamp: 'The underworld wakes', lyric: 'The armies of', word: 'Hades', text: 'Specters march from the Underworld.'},
-  {god: 'god-ares', stamp: 'Blood and fury', lyric: 'The war god', word: 'Ares', text: 'Berserkers feed on every fallen Saint.'},
-  {god: 'god-artemis', stamp: 'Moonlight hunt', lyric: 'The silver bow of', word: 'Artemis', text: 'Her Angels strike from the night sky.'},
-];
+// Carrossel e blocos da home: editados no Star Hill (data/olympus-telas.json, playtest/telas.js).
+const HOME = telas.home || {slides: [{imagem: 'card:god-athena', carimbo: 'Olympus Arena', linha1: 'Let your', linha2: 'Cosmo burn', texto: 'Build a deck around your God and take it to the arena.'}],
+  blocos: [], botao_play: 'Play'};
+const SLIDES = HOME.slides;
+const img = v => imageUrl(v, artOf);
 
 function home() {
   const deck = findDeck(ui.deckA, presets);
   const n = SLIDES.length, i = ((ui.slide || 0) % n + n) % n, slide = SLIDES[i];
   return `<section class="lb-home">
-    <div class="lb-hero kv-card" style="--hero:url('${artOf(slide.god) || ''}')">
-      <div class="lb-hero__copy"><p class="kv-stamp kv-stamp--gold">${slide.stamp}</p>
-        <h1><span class="kv-lyric">${slide.lyric}</span><span class="kv-cosmo">${slide.word}</span></h1>
-        <span>${slide.text}</span></div>
+    <div class="lb-hero kv-card" style="--hero:url('${img(slide.imagem)}')">
+      <div class="lb-hero__copy"><p class="kv-stamp kv-stamp--gold">${esc(slide.carimbo)}</p>
+        <h1><span class="kv-lyric">${esc(slide.linha1)}</span><span class="kv-cosmo">${esc(slide.linha2)}</span></h1>
+        <span>${esc(slide.texto)}</span></div>
       <button class="lb-hero__arrow is-prev" data-act="slide" data-step="-1" aria-label="Previous">‹</button>
       <button class="lb-hero__arrow is-next" data-act="slide" data-step="1" aria-label="Next">›</button>
       <div class="lb-hero__dots">${SLIDES.map((_, j) => `<i class="${j === i ? 'is-on' : ''}"></i>`).join('')}</div>
     </div>
     <div class="lb-news">
-      <button class="lb-news__tile" data-act="go" data-screen="decks" style="--tile:url('${artOf('athena-v6-001') || ''}')"><small>Decks</small><strong>Build your deck</strong></button>
-      <button class="lb-news__tile" data-act="play" style="--tile:url('${artOf('athena-v6-003') || ''}')"><small>Battle</small><strong>Challenge the AI</strong></button>
-      <button class="lb-news__tile" data-act="go" data-screen="decks" style="--tile:url('${artOf('god-poseidon') || ''}')"><small>New</small><strong>Poseidon, Hades, Ares and Artemis</strong></button>
+      ${HOME.blocos.map(b => `<button class="lb-news__tile" ${b.destino === 'play' ? 'data-act="play"' : `data-act="go" data-screen="${esc(b.destino)}"`} style="--tile:url('${img(b.imagem)}')"><small>${esc(b.rotulo)}</small><strong>${esc(b.titulo)}</strong></button>`).join('')}
     </div>
     <div class="lb-dock" ${ui.play ? 'hidden' : ''}>
       ${deck ? `<button class="lb-dock__deck" data-act="play"><span style="background-image:url('${deckCover(deck) || ''}')"></span><strong>${esc(deck.alpha_nome || deck.nome)}</strong></button>` : ''}
-      <button class="lb-play" data-act="play">Play</button>
+      <button class="lb-play" data-act="play">${esc(HOME.botao_play || 'Play')}</button>
     </div>
     ${ui.play ? playPanel() : ''}
   </section>`;
@@ -470,6 +466,7 @@ root.addEventListener('click', e => {
   const t = e.target.closest('[data-act]');
   if (!t || !actions[t.dataset.act] || t.disabled) return;
   if (t.dataset.act === 'go' && ui.screen === 'builder' && ui.builder.dirty && !confirm('Leave without saving this deck?')) return;
+  sound(t.dataset.act === 'play' ? 'play' : 'clique');
   actions[t.dataset.act](t);
   render();
 });
@@ -531,4 +528,7 @@ onDeckStatus(({text, kind}) => {
   clearTimeout(deckNoteTimer); deckNoteTimer = setTimeout(() => { deckNote.hidden = true; }, 5000);
 });
 mountKV();
+applyColors('lobby');
+applyTexts(document.body);
+if (telas.fundos?.lobby) root.style.setProperty('--lobby-fundo', `url('${img(telas.fundos.lobby)}')`);
 init().catch(e => { root.innerHTML = `<p class="lb-loading">${esc(e.message)}</p>`; console.error(e); });

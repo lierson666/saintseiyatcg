@@ -2,7 +2,8 @@
 // dramatiza em sequência. Nunca decide resultado: os números exibidos vêm dos próprios eventos.
 // `ui` é o adaptador do DOM (posições e textos); `fx` é a camada WebGL (pode faltar: tudo vira só DOM).
 import {wait} from './scene.js?v=20261028-5';
-import {strikeSound, chargeSound} from '../audio.js?v=20261028-strike';
+import {strikeSound, chargeSound} from '../audio.js?v=20261030-telas';
+import {anim, ANIM_OF, sound} from '../telas.js?v=20261030-1';
 
 // Hierarquia visual dos golpes (COMBAT_CINEMATICS.md): comum < Saint < assinatura < divino.
 // As assinaturas são só visuais e disparam pelo número da carta atacante; não criam regra.
@@ -14,10 +15,12 @@ const STYLE_BY_TYPE = [[/Gold Saint/, 'energy', '#ffd36e'], [/Silver Saint/, 'en
 
 export function createDirector({ui, getFx, settings}) {
   let skipping = false, busy = false;
-  const fx = () => (settings.reduceMotion ? null : getFx());
-  const t = ms => (skipping ? 0 : ms * ({fast: .55, normal: 1, cinematic: 1.35}[settings.speed] || 1));
+  // Grupo do evento em curso (Star Hill: ligada e velocidade por grupo); desligada = sem efeito e sem espera.
+  let cur = {ligada: true, velocidade: 1};
+  const fx = () => (settings.reduceMotion || !cur.ligada ? null : getFx());
+  const t = ms => (skipping || !cur.ligada ? 0 : ms * ({fast: .55, normal: 1, cinematic: 1.35}[settings.speed] || 1) / cur.velocidade);
   const pause = ms => (t(ms) ? wait(t(ms)) : Promise.resolve());
-  const shake = amp => { const f = fx(); if (f && !skipping) { f.shake(amp * settings.shake); f.punch(amp * settings.shake * .05); } ui.shake(amp * settings.shake); };
+  const shake = amp => { if (!cur.ligada) return; const f = fx(); if (f && !skipping) { f.shake(amp * settings.shake); f.punch(amp * settings.shake * .05); } ui.shake(amp * settings.shake); };
 
   function styleOf(uid) {
     const sig = SIGNATURES[ui.number(uid)];
@@ -268,7 +271,7 @@ export function createDirector({ui, getFx, settings}) {
     async judgment_removal(e) { return handlers.judgment_removed(e); }, // nome que a engine emite (gods.js)
     async judgment_removed(e) { ui.float(ui.center(ui.godRect(e.player)), 'Judgment removed', 'gain'); await pause(400); },
     async soul_gained(e) { if (e.amount) { ui.setSoul(e.player, e.soul); ui.float(ui.center(ui.godRect(e.player)), `+${e.amount} Soul`, 'gain'); } },
-    async victory(e) { await ui.banner(e.draw ? 'Draw' : ui.isViewer(e.winner) ? 'Victory' : `Player ${e.winner} wins`, e.winner, t(1200)); },
+    async victory(e) { sound(e.draw ? 'derrota' : ui.isViewer(e.winner) ? 'vitoria' : 'derrota'); await ui.banner(e.draw ? 'Draw' : ui.isViewer(e.winner) ? 'Victory' : `Player ${e.winner} wins`, e.winner, t(1200)); },
     async window_open() {}, async window_close() {}, async pass(e) { ui.log(e); }, // Gatilho entrando na cadeia e resolvendo: a carta de origem pisca e cresce (estilo Arena), nada genérico.
     async chain_add(e) { ui.pulse(e.uid, 'trigger-pop'); await pause(240); }, async resolve(e) { ui.pulse(e.uid, 'trigger-pop'); await pause(300); }, async end_phase(e) { ui.log(e); },
   };
@@ -280,8 +283,13 @@ export function createDirector({ui, getFx, settings}) {
     async play(events) {
       busy = true; skipping = false;
       try {
-        for (const e of events) await (handlers[e.type] || (async () => {}))(e);
-      } finally { busy = false; skipping = false; }
+        for (const e of events) {
+          const group = ANIM_OF[e.type];
+          cur = group ? anim(group) : {ligada: true, velocidade: 1};
+          if (group && !skipping) sound(group);
+          await (handlers[e.type] || (async () => {}))(e);
+        }
+      } finally { busy = false; skipping = false; cur = {ligada: true, velocidade: 1}; }
     },
   };
 }

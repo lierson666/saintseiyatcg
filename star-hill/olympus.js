@@ -4,6 +4,7 @@
 import {loadCanon} from '../shared/canon-cards.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {canonIndex, validateDeck, DECK_SIZE} from '../shared/deck-v3.js';
+import {loadTelas, mountTelas} from './telas-editor.js?v=20261030-3';
 
 const $ = s => document.querySelector(s);
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -13,6 +14,7 @@ const PAGES = {
   visao: ['Visão geral', 'Olympus Arena, sob seu controle.'],
   cartas: ['Cartas · Card Forge', 'Cada carta, uma constelação.'],
   decks: ['Decks iniciais', 'Os decks prontos do jogo.'],
+  telas: ['Telas e som', 'Telas, sons, músicas e animações do jogo.'],
   regras: ['Livro de regras', 'A fonte da verdade.'],
 };
 let forge = [], cards, decks = [], status = null, rules = null;
@@ -105,6 +107,7 @@ async function render() {
   $('#breadcrumb').textContent = PAGES[id][0];
   $('#page-title').textContent = PAGES[id][1];
   for (const a of document.querySelectorAll('.sidebar nav a')) a.toggleAttribute('aria-current', a.hash === '#' + id);
+  if (id === 'telas') { await loadTelas(api); return mountTelas($('#content'), {api, notice}); }
   $('#content').innerHTML = id === 'cartas' ? cardsPage() : id === 'decks' ? decksPage() : id === 'regras' ? await rulesPage() : overview();
   if (id === 'cartas') $('#card-list').innerHTML = cardList(); // contador só existe depois do HTML
 }

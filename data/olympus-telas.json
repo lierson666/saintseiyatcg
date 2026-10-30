@@ -1,0 +1,137 @@
+{
+  "versao": 1,
+  "home": {
+    "slides": [
+      {
+        "imagem": "card:god-athena",
+        "carimbo": "Olympus Arena",
+        "linha1": "Let your",
+        "linha2": "Cosmo burn",
+        "texto": "Build a deck around your God and take it to the arena."
+      },
+      {
+        "imagem": "card:god-poseidon",
+        "carimbo": "The seas rise",
+        "linha1": "Lord of the",
+        "linha2": "Seven Seas",
+        "texto": "Poseidon calls his Marina Generals to war."
+      },
+      {
+        "imagem": "card:god-hades",
+        "carimbo": "The underworld wakes",
+        "linha1": "The armies of",
+        "linha2": "Hades",
+        "texto": "Specters march from the Underworld."
+      },
+      {
+        "imagem": "card:god-ares",
+        "carimbo": "Blood and fury",
+        "linha1": "The war god",
+        "linha2": "Ares",
+        "texto": "Berserkers feed on every fallen Saint."
+      },
+      {
+        "imagem": "card:god-artemis",
+        "carimbo": "Moonlight hunt",
+        "linha1": "The silver bow of",
+        "linha2": "Artemis",
+        "texto": "Her Angels strike from the night sky."
+      }
+    ],
+    "blocos": [
+      {
+        "imagem": "card:athena-v6-001",
+        "rotulo": "Decks",
+        "titulo": "Build your deck",
+        "destino": "decks"
+      },
+      {
+        "imagem": "card:athena-v6-003",
+        "rotulo": "Battle",
+        "titulo": "Challenge the AI",
+        "destino": "play"
+      },
+      {
+        "imagem": "card:god-poseidon",
+        "rotulo": "New",
+        "titulo": "Poseidon, Hades, Ares and Artemis",
+        "destino": "decks"
+      }
+    ],
+    "botao_play": "Play"
+  },
+  "fundos": {
+    "lobby": "playtest/assets/sanctuary.webp",
+    "duelo": null,
+    "duelo_opacidade": 0.35
+  },
+  "cores": {
+    "lobby": {},
+    "duelo": {}
+  },
+  "textos": {},
+  "animacoes": {
+    "compra": {
+      "ligada": true,
+      "velocidade": 1
+    },
+    "conjurar": {
+      "ligada": true,
+      "velocidade": 1
+    },
+    "cosmo": {
+      "ligada": true,
+      "velocidade": 1
+    },
+    "gatilho": {
+      "ligada": true,
+      "velocidade": 1
+    },
+    "ataque": {
+      "ligada": true,
+      "velocidade": 1
+    },
+    "dano": {
+      "ligada": true,
+      "velocidade": 1
+    },
+    "morte": {
+      "ligada": true,
+      "velocidade": 1
+    },
+    "turno": {
+      "ligada": true,
+      "velocidade": 1
+    },
+    "ultimate": {
+      "ligada": true,
+      "velocidade": 1
+    }
+  },
+  "audio": {
+    "menu": "MUSIC/PEGASUS TYU SEI KEN.mp3",
+    "inicio_batalha": "MUSIC/battle",
+    "playlist": [
+      "MUSIC/GLIDESACRIFICE.mp3",
+      "MUSIC/PEGASUS TYU SEI KEN.mp3",
+      "MUSIC/SEIYAxRADAMANTYS.mp3",
+      "MUSIC/TENKAIHEN.mp3",
+      "MUSIC/UNDERTHEWOODOFTHEWORLDTREE.mp3"
+    ],
+    "efeitos": {
+      "clique": null,
+      "play": null,
+      "voltar": null,
+      "turno": null,
+      "compra": null,
+      "conjurar": null,
+      "cosmo": null,
+      "gatilho": null,
+      "ataque": null,
+      "dano": null,
+      "morte": null,
+      "vitoria": null,
+      "derrota": null
+    }
+  }
+}

@@ -17,10 +17,11 @@ import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudg
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
-import {createDirector} from './director.js?v=8';
+import {createDirector} from './director.js?v=9';
 import {createAI} from './ai.js?v=4';
 import {findDeck} from '../deck-store.js';
-import {unlock, playMusic} from '../audio.js?v=20261028-strike';
+import {unlock, playMusic} from '../audio.js?v=20261030-telas';
+import {telas, anim, sound, imageUrl, applyColors, applyTexts} from '../telas.js?v=20261030-1';
 import {renderLiveCard} from '../../shared/live-card.js?v=20261030-art';
 
 const $ = (s, el = document) => el.querySelector(s), $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -1431,16 +1432,18 @@ function animateTrigger() {
   const req = pending.pending, fx = abilityEffect(req.ability), from = boardSourceEl(req, fx);
   from?.classList.add('is-triggering');
   const key = `${req.ability}|${req.uid}|${pending.answers?.length}`;
-  if (pending.flown === key || settings.reduceMotion) return;
+  const a0 = anim('gatilho');
+  if (pending.flown === key || settings.reduceMotion || !a0.ligada) return;
   pending.flown = key;
-  if (!from) return void card.animate([{opacity: 0, transform: 'scale(.7)'}, {opacity: 1, transform: 'none'}], {duration: 320, easing: 'cubic-bezier(.2,.8,.2,1)'});
+  sound('gatilho');
+  if (!from) return void card.animate([{opacity: 0, transform: 'scale(.7)'}, {opacity: 1, transform: 'none'}], {duration: 320 / a0.velocidade, easing: 'cubic-bezier(.2,.8,.2,1)'});
   const a = from.getBoundingClientRect(), b = card.getBoundingClientRect();
   const dx = a.left + a.width / 2 - (b.left + b.width / 2), dy = a.top + a.height / 2 - (b.top + b.height / 2), k = a.width / b.width;
   card.animate([
     {transform: `translate(${dx}px, ${dy}px) scale(${k})`, filter: 'brightness(2.2)', offset: 0},
     {transform: `translate(${dx}px, ${dy}px) scale(${k * 1.15})`, filter: 'brightness(2.6)', offset: .25},
     {transform: 'none', filter: 'brightness(1)', offset: 1},
-  ], {duration: 620, easing: 'cubic-bezier(.2,.8,.2,1)'});
+  ], {duration: 620 / a0.velocidade, easing: 'cubic-bezier(.2,.8,.2,1)'});
 }
 function sidePanel(req, t, fx) {
   // Sempre há arte ao lado (autor, 30/10/2026): carta em jogo; senão a do catálogo (Domain); God pelo projeto do Forge
@@ -1614,6 +1617,9 @@ async function init() {
   const query = new URLSearchParams(location.search);
   decks = {A: deckOf(query.get('deckA')) || rush, B: deckOf(query.get('deckB')) || fortress}; // ?deckA=&deckB= vindos da seleção do menu
   director = createDirector({ui, getFx: () => scene?.fx, settings});
+  // Star Hill (data/olympus-telas.json): cores, textos e imagem de fundo do duelo, por cima do cenário 3D.
+  applyColors('duelo'); applyTexts(stage);
+  if (telas.fundos?.duelo) $('#arena').insertAdjacentHTML('afterend', `<div class="tela-fundo" aria-hidden="true" style="background-image:url('${imageUrl(telas.fundos.duelo, id => { const f = FORGE.get(id); return f?.ilustracao ? FORGE_ART + f.ilustracao : ''; })}');opacity:${Number(telas.fundos.duelo_opacidade ?? .35)}"></div>`);
   const params = new URLSearchParams(location.search);
   if (params.get('godB')) settings.godB = `god-${params.get('godB')}`; // ?godB=poseidon
   if (params.get('ai')) settings.ai = params.get('ai'); // ?ai=B (padrão) ou ?ai=none (hot-seat)

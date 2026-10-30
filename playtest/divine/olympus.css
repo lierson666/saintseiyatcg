@@ -868,3 +868,6 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .chain__art { flex: none; width: 34px; height: 46px; border-radius: 4px; background: #120a20 center 18% / cover no-repeat; box-shadow: 0 0 0 1px var(--gold), 0 2px 6px rgba(0, 0, 0, .6); }
 .priority .chain li:first-child .chain__art { width: 42px; height: 58px; box-shadow: 0 0 0 2px var(--gold-hi), 0 0 14px rgba(255, 210, 120, .7); animation: trigger-flash .9s ease-in-out infinite; }
 .reduce-motion .priority .chain li:first-child .chain__art { animation: none; }
+
+/* Fundo do duelo escolhido no Star Hill (playtest/telas.js): sobre o cenário 3D, abaixo do tabuleiro. */
+.tela-fundo { position: absolute; inset: 0; background: center / cover no-repeat; pointer-events: none; }

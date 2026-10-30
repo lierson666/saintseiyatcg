@@ -11,7 +11,7 @@ button, input, select { font: inherit; color: inherit; }
 button { cursor: pointer; }
 h1, h2, h3, .lb-play, .lb-tab, .lb-hero p { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif; }
 .lobby { position: fixed; inset: 0; display: grid; grid-template-rows: auto 1fr;
-  background: radial-gradient(120% 80% at 70% 0%, #1a2340 0%, transparent 60%), url('./assets/sanctuary.webp') center / cover, var(--bg); }
+  background: radial-gradient(120% 80% at 70% 0%, #1a2340 0%, transparent 60%), var(--lobby-fundo, url('./assets/sanctuary.webp')) center / cover, var(--bg); }
 .lobby::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, #05070cdd, #05070cf2 40%, #05070c); pointer-events: none; }
 .lobby > * { position: relative; }
 .lb-loading { margin: auto; color: var(--muted); }

@@ -4,6 +4,7 @@
 # 2. Monta uma cópia sem as artes provisórias <id>-ref (material de terceiros: nunca vão ao servidor).
 # 3. Envia por rsync ao mamaco-dev e confere: nenhuma -ref no remoto e cards.json idêntico.
 # A arena online recarrega cards.json sozinha na próxima partida (arena-server/server.mjs).
+# Também leva as telas e sons do Star Hill (data/olympus-telas.json e os arquivos que ele usa).
 # Mudanças de motor (código em playtest/ ou arena-server/) não vão por aqui.
 set -e
 ROOT="${1:-$(cd "$(dirname "$0")/.." && pwd)}"
@@ -31,6 +32,22 @@ assert '-ref.' not in json.dumps(data)
 json.dump(data, open(path, 'w'), ensure_ascii=False)
 EOF
 rsync -az --checksum "$STAGE/" "$HOST:$REMOTE/"
+# Telas e som do Star Hill: o JSON e só as imagens/áudios que ele usa (nada de -ref).
+python3 - "$ROOT" > "$STAGE/.telas-files" <<'EOF2'
+import json, sys, pathlib
+root = pathlib.Path(sys.argv[1])
+t = json.loads((root / 'data/olympus-telas.json').read_text())
+paths = {'data/olympus-telas.json'}
+def walk(v):
+    if isinstance(v, dict): [walk(x) for x in v.values()]
+    elif isinstance(v, list): [walk(x) for x in v]
+    elif isinstance(v, str) and not v.startswith('card:') and '/' in v and (root / v).is_file(): paths.add(v)
+walk(t)
+assert not any('-ref.' in p for p in paths)
+print('\n'.join(sorted(paths)))
+EOF2
+rsync -az --checksum --files-from="$STAGE/.telas-files" "$ROOT/" "$HOST:/home/dev/saintseiyatcg/"
+ssh "$HOST" "cd /home/dev/saintseiyatcg && tr '\\n' '\\0' | xargs -0 chmod a+rX" < "$STAGE/.telas-files"
 LOCAL_SHA="$(shasum -a 256 "$STAGE/cards.json" | cut -d' ' -f1)"
 OUT="$(ssh "$HOST" "chmod -R a+rX $REMOTE && find $REMOTE -name '*-ref.*' | wc -l && sha256sum $REMOTE/cards.json | cut -d' ' -f1")"
 REFS="$(echo "$OUT" | sed -n 1p | tr -d ' ')"

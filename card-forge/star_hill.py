@@ -58,7 +58,7 @@ def catalog(root=ROOT):
     visual_root = root / 'star-hill/assets'
     if visual_root.is_dir():
         for path in sorted(visual_root.rglob('*')):
-            if path.is_file() and not path.is_symlink() and path.suffix.lower() in {'.png', '.webp', '.gif', '.webm', '.mp4'} and path.resolve().is_relative_to(visual_root.resolve()):
+            if path.is_file() and not path.is_symlink() and path.suffix.lower() in {'.png', '.jpg', '.jpeg', '.webp', '.gif', '.webm', '.mp4'} and path.resolve().is_relative_to(visual_root.resolve()):
                 relative = path.relative_to(root).as_posix()
                 result.append({'arquivo': relative, 'url': encoded(relative), 'nome': path.stem,
                                'grupo': 'visual', 'origem': 'autor', 'bytes': path.stat().st_size})
@@ -294,14 +294,15 @@ def upload(raw, filename, source, atomic_write, root=ROOT):
         raise ValueError('Origem inválida.')
     filename = unquote(filename)
     suffix = Path(filename).suffix.lower()
-    if suffix in {'.png', '.webp', '.gif', '.webm', '.mp4'}:
+    if suffix in {'.png', '.webp', '.gif', '.webm', '.mp4', '.jpg', '.jpeg'}:
         valid = ((suffix == '.png' and raw[:8] == b'\x89PNG\r\n\x1a\n') or
+                 (suffix in {'.jpg', '.jpeg'} and raw[:3] == b'\xff\xd8\xff') or
                  (suffix == '.webp' and raw[:4] == b'RIFF' and raw[8:12] == b'WEBP') or
                  (suffix == '.gif' and raw[:6] in {b'GIF87a', b'GIF89a'}) or
                  (suffix == '.webm' and raw[:4] == b'\x1aE\xdf\xa3') or
                  (suffix == '.mp4' and raw[4:8] == b'ftyp'))
         if not valid or len(raw) > 20 * 1024 * 1024:
-            raise ValueError('Use PNG, WebP, GIF, WebM ou MP4 válido, até 20 MB.')
+            raise ValueError('Use PNG, JPG, WebP, GIF, WebM ou MP4 válido, até 20 MB.')
         safe = re.sub(r'[^a-zA-Z0-9._-]', '-', Path(filename).stem)[:70] or 'visual'
         target = root / 'star-hill/assets' / (safe + '-' + hashlib.sha256(raw).hexdigest()[:12] + suffix)
         if not target.resolve().is_relative_to((root / 'star-hill/assets').resolve()) or target.is_symlink():
@@ -373,6 +374,107 @@ def publish_site(root=ROOT):
     return {'mensagem': (run.stdout.strip().splitlines() or ['Cartas publicadas no site.'])[-1], **game_status(root)}
 
 
+# Telas do Olympus Arena (autor, 30/10/2026): home, fundos, cores, textos, animações e áudio que o jogo lê em playtest/telas.js.
+TELAS = 'data/olympus-telas.json'
+ANIM_GROUPS = {'compra', 'conjurar', 'cosmo', 'gatilho', 'ataque', 'dano', 'morte', 'turno', 'ultimate'}
+SOUND_EVENTS = {'clique', 'play', 'voltar', 'turno', 'compra', 'conjurar', 'cosmo', 'gatilho', 'ataque', 'dano', 'morte', 'vitoria', 'derrota'}
+IMAGE_DIRS = ('card-forge/art-web/', 'star-hill/assets/', 'playtest/assets/', 'LOGO/')
+
+
+def validate_telas(value, root=ROOT):
+    def fail(msg):
+        raise ValueError(msg)
+    def text(v, limit=200, empty=True):
+        if not isinstance(v, str) or len(v) > limit or (not empty and not v.strip()):
+            fail('Texto inválido ou longo demais.')
+    def image(v, optional=False):
+        if v is None and optional:
+            return
+        if not isinstance(v, str) or '-ref.' in v:
+            fail('Imagem inválida (artes -ref não podem ir para o jogo).')
+        if v.startswith('card:'):
+            if not re.fullmatch(r'card:[a-z0-9-]{3,40}', v):
+                fail('Carta inválida: ' + v)
+            return
+        if not v.startswith(IMAGE_DIRS) or '..' in v or not (root / v).is_file():
+            fail('Imagem não encontrada: ' + v)
+    if not isinstance(value, dict) or value.get('versao') != 1 or set(value) != {'versao', 'home', 'fundos', 'cores', 'textos', 'animacoes', 'audio'}:
+        fail('Estrutura das telas inválida.')
+    home = value['home']
+    if not isinstance(home, dict) or set(home) != {'slides', 'blocos', 'botao_play'}:
+        fail('Home inválida.')
+    if not isinstance(home['slides'], list) or not 1 <= len(home['slides']) <= 12:
+        fail('O carrossel precisa de 1 a 12 slides.')
+    for slide in home['slides']:
+        if not isinstance(slide, dict) or set(slide) != {'imagem', 'carimbo', 'linha1', 'linha2', 'texto'}:
+            fail('Slide inválido.')
+        image(slide['imagem'])
+        for k in ('carimbo', 'linha1', 'linha2', 'texto'):
+            text(slide[k])
+    if not isinstance(home['blocos'], list) or len(home['blocos']) > 6:
+        fail('A home aceita até 6 blocos.')
+    for bloco in home['blocos']:
+        if not isinstance(bloco, dict) or set(bloco) != {'imagem', 'rotulo', 'titulo', 'destino'} or bloco['destino'] not in {'decks', 'profile', 'options', 'play'}:
+            fail('Bloco inválido.')
+        image(bloco['imagem'])
+        text(bloco['rotulo']); text(bloco['titulo'])
+    text(home['botao_play'], 30, False)
+    fundos = value['fundos']
+    if not isinstance(fundos, dict) or set(fundos) != {'lobby', 'duelo', 'duelo_opacidade'}:
+        fail('Fundos inválidos.')
+    image(fundos['lobby'], True); image(fundos['duelo'], True)
+    if type(fundos['duelo_opacidade']) not in (int, float) or not 0 <= fundos['duelo_opacidade'] <= 1:
+        fail('Opacidade do fundo do duelo deve ficar entre 0 e 100%.')
+    cores = value['cores']
+    if not isinstance(cores, dict) or set(cores) != {'lobby', 'duelo'}:
+        fail('Cores inválidas.')
+    for tela in cores.values():
+        if not isinstance(tela, dict) or len(tela) > 60:
+            fail('Cores inválidas.')
+        for k, v in tela.items():
+            if not re.fullmatch(r'--[a-z0-9-]{1,40}', k) or not isinstance(v, str) or not re.fullmatch(r'#[0-9a-fA-F]{3,8}|rgba?\([0-9., %]{5,40}\)', v):
+                fail('Cor inválida: ' + str(k))
+    textos = value['textos']
+    if not isinstance(textos, dict) or len(textos) > 500:
+        fail('Textos inválidos.')
+    for k, v in textos.items():
+        text(k, 300, False); text(v, 300)
+    anims = value['animacoes']
+    if not isinstance(anims, dict) or set(anims) != ANIM_GROUPS:
+        fail('Animações inválidas.')
+    for a in anims.values():
+        if not isinstance(a, dict) or set(a) != {'ligada', 'velocidade'} or type(a['ligada']) is not bool or type(a['velocidade']) not in (int, float) or not 0.25 <= a['velocidade'] <= 3:
+            fail('Animação inválida: velocidade entre 0,25× e 3×.')
+    audio = value['audio']
+    if not isinstance(audio, dict) or set(audio) != {'menu', 'inicio_batalha', 'playlist', 'efeitos'}:
+        fail('Áudio inválido.')
+    paths = {item['arquivo'] for item in catalog(root) if item['grupo'] != 'visual'}
+    def media(p, optional=False):
+        if (p is None and optional) or p in paths:
+            return
+        fail('Áudio não encontrado na biblioteca: ' + str(p))
+    media(audio['menu']); media(audio['inicio_batalha'])
+    if not isinstance(audio['playlist'], list) or not 1 <= len(audio['playlist']) <= 100:
+        fail('A playlist da batalha precisa de 1 a 100 faixas.')
+    for p in audio['playlist']:
+        media(p)
+    if not isinstance(audio['efeitos'], dict) or set(audio['efeitos']) != SOUND_EVENTS:
+        fail('Sons por evento inválidos.')
+    for p in audio['efeitos'].values():
+        media(p, True)
+    return copy.deepcopy(value)
+
+
+def save_telas(body, atomic_write, root=ROOT):
+    current = (root / TELAS).read_text(encoding='utf-8')
+    if body.get('revisao') != revision(current):
+        raise ValueError('As telas mudaram em outra janela. Recarregue antes de salvar.')
+    value = validate_telas(body.get('conteudo'), root)
+    text = json.dumps(value, ensure_ascii=False, indent=2) + '\n'
+    atomic_write(root / TELAS, text.encode('utf-8'))
+    return {'ok': True, 'revisao': revision(text)}
+
+
 def get(handler, path):
     if path == '/api/star-hill/motor':
         handler.reply(200, engine_updates.manager(ROOT).info())
@@ -382,6 +484,9 @@ def get(handler, path):
         handler.reply(200, read_document('config'))
     elif path == '/api/star-hill/regras':
         handler.reply(200, read_document('regras'))
+    elif path == '/api/star-hill/telas':
+        text = (ROOT / TELAS).read_text(encoding='utf-8')
+        handler.reply(200, {'arquivo': TELAS, 'revisao': revision(text), 'conteudo': json.loads(text)})
     elif path == '/api/star-hill/jogo':
         handler.reply(200, game_status())
     elif path == '/api/star-hill/assets':
@@ -420,6 +525,8 @@ def post(handler, path, raw, atomic_write):
             result = publish()
         elif path == '/api/star-hill/publicar-site':
             result = publish_site()
+        elif path == '/api/star-hill/telas':
+            result = save_telas(body, atomic_write)
         elif path == '/api/star-hill/preview':
             result = preview(body)
         elif path == '/api/star-hill/apply':
