@@ -134,17 +134,51 @@ function home() {
   </section>`;
 }
 
+// Seleção de decks do Play (autor, 30/10/2026): confronto no topo (seu deck × rival), lista compacta do lado ativo
+// com filtro por God e origem, iniciativa em botões e Play fixo no rodapé.
+const deckKind = d => !d.preset ? 'mine' : d.arquetipo ? 'competitive' : 'starter';
+const KIND_LABEL = {mine: 'My decks', starter: 'Starters', competitive: 'Competitive'};
+function slotCard(side) {
+  const d = findDeck(side === 'a' ? ui.deckA : ui.deckB, presets), active = (ui.slot || 'a') === side;
+  const who = side === 'a' ? (ui.mode === 'ai' ? 'You' : 'Player A') : (ui.mode === 'ai' ? 'AI rival' : 'Player B');
+  return `<button class="lb-slot ${active ? 'is-active' : ''}" data-act="slot" data-slot="${side}" aria-pressed="${active}">
+    <span class="lb-slot__art" style="${d && deckCover(d) ? `background-image:url('${deckCover(d)}')` : ''}"></span>
+    <span class="lb-slot__who">${who}</span>
+    <strong>${d ? esc(d.alpha_nome || d.nome) : 'Choose a deck'}</strong>
+    <small>${d ? `${esc(cards.get(deckGod(d))?.name || '')}${deckValid(d) ? '' : ' · Incomplete'}` : ''}</small></button>`;
+}
+function deckRow(d, act, picked) {
+  const ok = deckValid(d), art = deckCover(d), god = deckGod(d).replace(/^god-/, '');
+  return `<button class="lb-row ${picked ? 'is-picked' : ''} ${ok ? '' : 'is-incomplete'}" data-act="${act}" data-deck="${esc(d.id)}" aria-pressed="${picked}" ${ok ? '' : 'aria-disabled="true"'}>
+    <span class="lb-row__art" style="${art ? `background-image:url('${art}')` : ''}"></span>
+    <span class="lb-row__name"><strong>${esc(d.alpha_nome || d.nome)}</strong><small>${esc(d.tema || d.arquetipo || (ok ? `${deckSize(d)} cards` : `Incomplete · ${deckSize(d)}/${DECK_SIZE}`))}</small></span>
+    <img class="lb-row__god" src="${symbol(god)}" alt="${esc(cap(god))}"></button>`;
+}
 function playPanel() {
-  const decks = allDecks(), mode = (m, label) => `<button class="lb-mode ${ui.mode === m ? 'is-active' : ''}" data-act="mode" data-mode="${m}">${label}</button>`;
+  const side = ui.slot || 'a', act = side === 'a' ? 'pick-a' : 'pick-b', current = side === 'a' ? ui.deckA : ui.deckB;
+  const god = ui.deckGodFilter || 'all', kind = ui.deckKindFilter || 'all';
+  const decks = allDecks().filter(d => (god === 'all' || deckGod(d) === `god-${god}`) && (kind === 'all' || deckKind(d) === kind));
+  const groups = ['mine', 'starter', 'competitive'].map(k => [k, decks.filter(d => deckKind(d) === k)]).filter(([, l]) => l.length);
+  const mode = (m, label) => `<button class="lb-mode ${ui.mode === m ? 'is-active' : ''}" data-act="mode" data-mode="${m}">${label}</button>`;
+  const chip = (key, v, label, html = esc(label)) => `<button class="lb-chip ${(ui[key] || 'all') === v ? 'is-on' : ''}" data-act="deck-filter" data-key="${key}" data-value="${v}" aria-pressed="${(ui[key] || 'all') === v}" title="${esc(label)}">${html}</button>`;
+  const first = [['random', 'Random'], ['A', ui.mode === 'ai' ? 'You' : 'Player A'], ['B', ui.mode === 'ai' ? 'AI' : 'Player B']];
   const ready = [ui.deckA, ui.deckB].every(id => { const d = findDeck(id, presets); return d && deckValid(d); });
-  return `<aside class="lb-panel" aria-label="Play">
+  const opening = ui.playOpening; ui.playOpening = false; // anima só ao abrir, não a cada clique
+  return `<aside class="lb-panel lb-panel--play ${opening ? 'is-opening' : ''}" aria-label="Play">
     <header><h2>Play</h2><button class="lb-x" data-act="close-play" aria-label="Close">×</button></header>
     <div class="lb-modes">${mode('ai', 'Battle vs AI')}${mode('local', 'Local battle')}</div>
-    <h3>${ui.mode === 'ai' ? 'Your deck' : 'Player A deck'}</h3><div class="lb-panel__decks">${decks.map(d => deckBox(d, 'pick-a')).join('')}</div>
-    <h3>${ui.mode === 'ai' ? 'Rival deck · AI' : 'Player B deck'}</h3><div class="lb-panel__decks">${decks.map(d => deckBox(d, 'pick-b')).join('')}</div>
-    <label class="lb-field">Opening initiative<select data-act="first">${[['random', 'Random'], ['A', ui.mode === 'ai' ? 'You' : 'Player A'], ['B', ui.mode === 'ai' ? 'AI' : 'Player B']]
-      .map(([v, l]) => `<option value="${v}" ${ui.first === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
-    <button class="lb-play lb-play--wide" data-act="start" ${ready ? '' : 'disabled'}>${ready ? 'Play' : 'Pick two complete decks'}</button>
+    <div class="lb-matchup">${slotCard('a')}<span class="lb-vs" aria-hidden="true">VS</span>${slotCard('b')}</div>
+    <div class="lb-choose">
+      <p class="lb-choose__title"><span>Choosing <b>${side === 'a' ? (ui.mode === 'ai' ? 'your deck' : 'Player A deck') : (ui.mode === 'ai' ? 'the AI deck' : 'Player B deck')}</b></span>
+        ${side === 'b' && ui.mode === 'ai' ? '<button class="lb-ghost lb-ghost--sm" data-act="random-b">Random rival</button>' : ''}</p>
+      <div class="lb-chips">${chip('deckGodFilter', 'all', 'All Gods', 'All')}${FACTIONS.map(f => chip('deckGodFilter', f, cap(f), `<img src="${symbol(f)}" alt="">`)).join('')}</div>
+      <div class="lb-chips">${chip('deckKindFilter', 'all', 'All')}${Object.entries(KIND_LABEL).map(([k, l]) => chip('deckKindFilter', k, l)).join('')}</div>
+      <div class="lb-rows">${groups.length ? groups.map(([k, l]) => `<h3>${KIND_LABEL[k]} <span>${l.length}</span></h3>${l.map(d => deckRow(d, act, d.id === current)).join('')}`).join('') : '<p class="lb-empty">No deck matches these filters.</p>'}</div>
+    </div>
+    <footer class="lb-panel__foot">
+      <div class="lb-first" role="group" aria-label="Who starts">${first.map(([v, l]) => `<button class="lb-chip ${ui.first === v ? 'is-on' : ''}" data-act="first-pick" data-value="${v}" aria-pressed="${ui.first === v}">${l}</button>`).join('')}<span>starts</span></div>
+      <button class="lb-play lb-play--wide" data-act="start" ${ready ? '' : 'disabled'}>${ready ? 'Play' : 'Pick two complete decks'}</button>
+    </footer>
   </aside>`;
 }
 
@@ -414,7 +448,7 @@ function startMatch() {
 
 const actions = {
   go: t => { ui.screen = t.dataset.screen; ui.play = false; },
-  play: () => { ui.screen = 'home'; ui.play = true; },
+  play: () => { ui.screen = 'home'; ui.playOpening = !ui.play; ui.play = true; ui.slot = 'a'; },
   'close-play': () => { ui.play = false; },
   avatar: async t => { try { ui.user = await api('/api/me', 'PATCH', {avatar_card: t.dataset.id}); } catch (e) { ui.profileMsg = {me: {text: e.message, kind: 'err'}}; } render(); },
   friends: () => social?.toggle(),
@@ -426,8 +460,13 @@ const actions = {
     location.replace('/login/?v=3');
   },
   mode: t => { ui.mode = t.dataset.mode; remember(); },
-  'pick-a': t => { ui.deckA = t.dataset.deck; remember(); },
-  'pick-b': t => { ui.deckB = t.dataset.deck; remember(); },
+  // Deck incompleto não entra; escolhido o seu, o painel passa para o rival.
+  'pick-a': t => { const d = findDeck(t.dataset.deck, presets); if (!d || !deckValid(d)) return; ui.deckA = t.dataset.deck; ui.slot = 'b'; remember(); },
+  'pick-b': t => { const d = findDeck(t.dataset.deck, presets); if (!d || !deckValid(d)) return; ui.deckB = t.dataset.deck; remember(); },
+  slot: t => { ui.slot = t.dataset.slot; },
+  'deck-filter': t => { ui[t.dataset.key] = t.dataset.value; },
+  'first-pick': t => { ui.first = t.dataset.value; remember(); },
+  'random-b': () => { const ok = allDecks().filter(d => deckValid(d) && d.id !== ui.deckA); if (ok.length) ui.deckB = ok[Math.floor(Math.random() * ok.length)].id; remember(); },
   start: startMatch,
   'new-deck': () => openBuilder(null),
   'edit-deck': t => openBuilder(allDecks().find(d => d.id === t.dataset.deck)),
