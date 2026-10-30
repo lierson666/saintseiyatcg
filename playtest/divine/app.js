@@ -1122,7 +1122,7 @@ function startAim(el, e) {
   const targets = strikeTargets(S(), ctx, uid);
   if (!targets.length) return;
   aim = {uid, el, x: e.clientX, y: e.clientY, on: false, refs: targets.map(refOf), svg: null,
-    done: ref => act(() => declareStrike(S(), ctx, uid, targets.find(tg => refOf(tg) === ref)))};
+    done: ref => act({type: 'strike', key, uid, choice: {target: ref}})}; // ação serializável: vale também no duelo online
 }
 function startCastAim(el, e) {
   const bp = boardPick();
