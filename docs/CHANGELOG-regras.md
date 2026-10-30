@@ -4,6 +4,14 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-30 — §55 — volta a compra de 1 carta por turno
+
+- **Seção:** `docs/guia-do-jogo.md` §55 (compras) e tabela de valores iniciais (linha Compras).
+- **Antes:** 2 cartas por turno a partir da segunda rodada (G3-041, 28/10/2026).
+- **Depois:** 1 carta por turno a partir da segunda rodada. Primeira rodada continua sem compra.
+- **Motivo:** decisão do autor em 30/10/2026 ("tá muito roubado com muita carta").
+- **Pendências:** engine 3.0 (`DRAWS_PER_TURN`) e testes ajustados; `docs/alpha-0.1/GODS-3.0-SUPPLEMENT.md` G3-041 não atualizado; nenhuma carta alterada.
+
 ## 2026-10-30 — Cartas de Ares — rebalanceamento
 
 - **Antes:** pings automáticos no God sem custo; Devotees de custo ≤ 2 com 3 de ATK; Bloodlust preparava o Devotee para um segundo Strike em qualquer alvo.

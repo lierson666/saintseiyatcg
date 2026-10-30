@@ -642,7 +642,7 @@ O autor aprovou a aplicação das recomendações de fechamento ao sistema do jo
 ### 55. Rodada, iniciativa, compras e passe
 
 - Sortear a iniciativa inicial. O vencedor escolhe quem começa e o perdedor do sorteio recebe 1 Latent, independentemente dessa escolha. A iniciativa alterna entre os jogadores a cada rodada, independentemente de quem realizou a última AÇÃO.
-- Ambos começam com 7 cartas. Não há compra normal na primeira rodada. A partir da segunda, cada jogador compra **2 cartas** no início do próprio turno.
+- Ambos começam com 7 cartas. Não há compra normal na primeira rodada. A partir da segunda, cada jogador compra **1 carta** no início do próprio turno.
 - Ordem do início: renovar as Bases dos dois jogadores; preparar seus Devotees; renovar limites por rodada; realizar as compras; resolver os gatilhos de início. O jogador com iniciativa recebe a primeira oportunidade de AÇÃO após essa preparação.
 - Cada jogador pode colocar uma Base Cosmoble durante sua própria oportunidade, antes da AÇÃO e com a pilha vazia, uma vez por rodada. Isso não consome a AÇÃO e não abre uma janela de resposta por si só. Gatilhos causados pela colocação são resolvidos antes da AÇÃO.
 - Pass encerra as AÇÕES comuns daquele jogador na rodada. O adversário pode realizar AÇÕES sucessivas até passar. Ambos terem passado encerra a fase. O jogador que passou ainda pode responder; passes de prioridade são separados e nunca declaram Pass da rodada.
@@ -650,7 +650,7 @@ O autor aprovou a aplicação das recomendações de fechamento ao sistema do jo
 - Não há limite máximo de cartas na mão nesta base de regras.
 - Tentar comprar sem cartas suficientes causa derrota: comprar o que houver e registrar a falha na quantidade restante. Se os dois falharem na mesma compra simultânea, o resultado é empate.
 
-**Por quê:** comprar 2 cartas por turno gerava vantagem de cartas grande demais no playtest (autor, 28/10/2026). Com 1 compra, colocar Base passa a custar uma escolha real entre recurso e jogada.
+**Por quê:** comprar 2 cartas por turno gerava vantagem de cartas grande demais no playtest (autor, 28/10/2026; confirmado de novo em 30/10/2026). Com 1 compra, colocar Base passa a custar uma escolha real entre recurso e jogada.
 
 ### 56. Timing, respostas e resolução
 
@@ -778,7 +778,7 @@ Se um Strike normal causar Soul zero aos dois Gods simultaneamente por efeitos a
 | Parâmetro | Parâmetro inicial |
 | --- | --- |
 | Soul / Attack de God de referência | 20 / 3; Soul entre 15 e 22 por God. Os valores de cada God (Soul, Attack, Awaken) são os da carta do God no Card Forge (`data/cards.json`, ids `<facção>-001`) desde 29/10/2026; em 29/10/2026: Athena 22/2/Awaken 5, Poseidon 22/1/4, Hades 18/2/7, Artemis 20/1/3, Ares 18/3/7 |
-| Compras | 2 por rodada a partir da segunda |
+| Compras | 1 por rodada a partir da segunda |
 | Bases | 1 por jogador/rodada, sem AÇÃO |
 | Latent | Limite de 3; ganho geral uma vez por AÇÃO adversária com dano elegível; persiste e aceita conversão opcional de Bases no encerramento |
 | Evolve | Uma vez por Cloth/rodada |

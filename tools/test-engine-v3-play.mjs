@@ -121,7 +121,7 @@ test('início do turno: prepara, depois gatilhos (APNAP/LIFO, com janela), depoi
   assert.equal(s.players.A.hand.length, 0, 'compra espera os gatilhos');
   passAll(s);
   assert.deepEqual(log, ['base true mão 0', 'base true mão 0']);
-  assert.equal(s.players.A.hand.length, 2, 'G3-041');
+  assert.equal(s.players.A.hand.length, 1, '§55: 1 carta por turno');
 });
 
 const ready = (s, key) => s.players[key].bases.filter(b => b.prepared).length;
