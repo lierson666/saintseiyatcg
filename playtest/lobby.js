@@ -27,7 +27,7 @@ const cap = f => f[0].toUpperCase() + f.slice(1);
 let cards, index, forge, presets = [], gods = [];
 const ui = {screen: 'home', play: false, mode: 'ai', deckA: null, deckB: null, first: 'random', big: null, notice: null, picker: null, builder: null};
 try { Object.assign(ui, JSON.parse(localStorage.getItem('sstcg.lobby.v1')) || {}, {screen: 'home', play: false, big: null, builder: null}); } catch { /* sem preferências salvas */ }
-const remember = () => { try { localStorage.setItem('sstcg.lobby.v1', JSON.stringify({mode: ui.mode, deckA: ui.deckA, deckB: ui.deckB, first: ui.first})); } catch { /* idem */ } };
+const remember = () => { try { localStorage.setItem('sstcg.lobby.v1', JSON.stringify({mode: ui.mode, deckA: ui.deckA, deckB: ui.deckB, first: ui.first, cardSize: ui.cardSize})); } catch { /* idem */ } };
 
 // ---------- Cartas ----------
 const faction = card => (forge.get(card.id)?.faccao || card.id.replace(/^god-/, '').split('-')[0]).toLowerCase();
@@ -141,9 +141,9 @@ const KIND_LABEL = {mine: 'My decks', starter: 'Starters', competitive: 'Competi
 function slotCard(side) {
   const d = findDeck(side === 'a' ? ui.deckA : ui.deckB, presets), active = (ui.slot || 'a') === side;
   const who = side === 'a' ? (ui.mode === 'ai' ? 'You' : 'Player A') : (ui.mode === 'ai' ? 'AI rival' : 'Player B');
-  return `<button class="lb-slot ${active ? 'is-active' : ''}" data-act="slot" data-slot="${side}" aria-pressed="${active}">
-    <span class="lb-slot__art" style="${d && deckCover(d) ? `background-image:url('${deckCover(d)}')` : ''}"></span>
-    <span class="lb-slot__who">${who}</span>
+  return `<button class="lb-match ${active ? 'is-active' : ''}" data-act="slot" data-slot="${side}" aria-pressed="${active}">
+    <span class="lb-match__art" style="${d && deckCover(d) ? `background-image:url('${deckCover(d)}')` : ''}"></span>
+    <span class="lb-match__who">${who}</span>
     <strong>${d ? esc(d.alpha_nome || d.nome) : 'Choose a deck'}</strong>
     <small>${d ? `${esc(cards.get(deckGod(d))?.name || '')}${deckValid(d) ? '' : ' · Incomplete'}` : ''}</small></button>`;
 }
@@ -320,6 +320,7 @@ function errorText(e) {
   return {domain: 'Choose a Domain from the collection.', size: `${e.total} / ${DECK_SIZE} cards.`, copies: `${name(e.card_id)}: ${e.count} copies (max ${COPY_LIMIT}).`,
     unknown: `${name(e.card_id)} is not in the card pool.`, outside: `${name(e.card_id)} can't go in the main deck.`, identity: `${name(e.card_id)} is outside this deck's colors (God, Domain and neutral).`, quantity: `${name(e.card_id)}: invalid quantity.`}[e.code] || e.code;
 }
+const CARD_SIZES = {S: 130, M: 180, L: 250, XL: 330};
 function builder() {
   const b = ui.builder, d = b.deck, list = d.main_deck.map(e => ({...e, card: cards.get(e.card_id)})).filter(e => e.card).sort((x, y) => sortCards(x.card, y.card));
   const errors = deckErrors(d), size = deckSize(d), curve = [1, 2, 3, 4, 5, 6, 7].map(n => list.filter(e => (n === 7 ? (e.card.cost?.amount ?? 0) >= 7 : e.card.cost?.amount === n)).reduce((s, e) => s + e.quantity, 0));
@@ -333,8 +334,9 @@ function builder() {
         <div class="lb-pills" aria-label="Type">${KINDS.map(v => pill('kind', v)).join('')}</div>
         <div class="lb-gods" role="group" aria-label="Show cards of">${PICKS.map(f => `<button class="lb-godpick ${b.show.includes(f) ? 'is-active' : ''}"
           data-act="show-god" data-faction="${f}" aria-pressed="${b.show.includes(f)}" title="${cards.get(`god-${f}`)?.name || 'Neutral'}">${f === 'neutral'
-          ? '<span class="lb-godpick__neutral" aria-hidden="true"></span><span class="lb-sr">Neutral</span>' : `<img src="${symbol(f)}" alt="${f}">`}</button>`).join('')}</div></div>
-      <div class="lb-grid">${cards_.map(c => {
+          ? '<span class="lb-godpick__neutral" aria-hidden="true"></span><span class="lb-sr">Neutral</span>' : `<img src="${symbol(f)}" alt="${f}">`}</button>`).join('')}</div>
+        <div class="lb-pills lb-sizes" role="group" aria-label="Card size">${Object.keys(CARD_SIZES).map(k => `<button class="lb-pill ${(ui.cardSize || 'M') === k ? 'is-active' : ''}" data-act="card-size" data-size="${k}" aria-pressed="${(ui.cardSize || 'M') === k}">${k}</button>`).join('')}</div></div>
+      <div class="lb-grid" style="--slot:${CARD_SIZES[ui.cardSize] || CARD_SIZES.M}px">${cards_.map(c => {
         const n = count(b, c.id), isDomain = c.kind === 'Domain', on = isDomain ? d.domain_id === c.id : n > 0;
         return `<button class="lb-slot ${on ? 'is-in' : ''} ${!isDomain && n >= COPY_LIMIT ? 'is-max' : ''}" data-act="${isDomain ? 'set-domain' : 'add'}" data-id="${c.id}" aria-label="${esc(c.name)}">
           ${face(c.id)}<i class="lb-slot__count">${isDomain ? (on ? 'Domain' : 'Set Domain') : `${n} / ${COPY_LIMIT}`}</i></button>`;
@@ -488,6 +490,7 @@ const actions = {
   add: t => setCount(t.dataset.id, 1),
   remove: t => setCount(t.dataset.id, -1),
   'set-domain': t => { ui.builder.deck.domain_id = t.dataset.id; ui.builder.dirty = true; },
+  'card-size': t => { ui.cardSize = t.dataset.size; remember(); },
   'show-god': t => { const s = ui.builder.show, f = t.dataset.faction; ui.builder.show = s.includes(f) ? s.filter(x => x !== f) : [...s, f]; },
   'save-deck': () => { saveDeck(); ui.screen = 'decks'; },
   'delete-deck': () => {
