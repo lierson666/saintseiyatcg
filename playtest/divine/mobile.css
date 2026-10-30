@@ -92,6 +92,10 @@
   .demo-tag { top: auto; bottom: calc(4px + var(--sb)); left: calc(var(--rail-w) + 14px + var(--sl)); right: auto; transform: none; padding: 2px 8px; font-size: 9px; opacity: .7; pointer-events: none; }
 }
 
+/* Toque longo no iPhone: sem a prévia de imagem nem a seleção do sistema; o jogo mostra o inspetor da carta. */
+body, body img { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; -webkit-user-drag: none; }
+body :is(input, textarea, [contenteditable]) { -webkit-user-select: text; user-select: text; }
+
 /* Botão ⋯ do menu de ferramentas: só no celular deitado. */
 .command__more { display: none; }
 
