@@ -7,71 +7,72 @@
   /* Bases fora da mesa: ficam só no contador de Cosmo (tocar abre a lista); o espaço vai para os campos. */
   .olympus .lane { display: none; }
   .arena-field { grid-template-rows: 1fr auto 1fr; }
-  .arena-field { left: calc(var(--rail-w) + 10px + var(--sl)); right: calc(var(--cmd-w) + 140px + var(--sr)); top: 4%; bottom: calc(var(--u) * 10 + var(--sb)); }
+  .arena-field { left: calc(var(--rail-w) + 10px + var(--sl)); right: calc(var(--cmd-w) + 116px + var(--sr)); top: 4%; bottom: calc(var(--u) * 10 + var(--sb)); }
   /* Área segura do iPhone (notch e barra de gestos): nada tocável embaixo dela. Precisa de viewport-fit=cover (index.html). */
   :root { --sl: env(safe-area-inset-left, 0px); --sr: env(safe-area-inset-right, 0px); --sb: env(safe-area-inset-bottom, 0px); }
-  .olympus { --rail-w: 96px; --cmd-w: 128px; }
+  .olympus { --rail-w: 78px; --cmd-w: 116px; }
 
   /* Contadores (auditoria mobile, 30/10/2026): Cosmo em cima na largura toda; Domain, Latent, Deck, Hand,
-     Tartarus e Void em ladrilhos 2x3 de 36px, só ícone e número, sem quebrar nem vazar. Toque mostra a dica com o nome. */
+     Tartarus e Void em ladrilhos 2x3 de 30px (compactados após teste no iPhone), só ícone e número, sem quebrar nem vazar. Toque mostra a dica com o nome. */
   .rail { width: var(--rail-w); left: calc(6px + var(--sl)); top: 6px; bottom: calc(6px + var(--sb)); justify-content: space-between; }
-  .rail .sanctum { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; padding: 4px; }
+  .rail .sanctum { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; padding: 3px; }
   .rail .sanctum .cosmo { display: contents; }
   .rail .rail__label, .rail .rail__who, .rail .sanctum__domain strong, .rail .sanctum__domain small { display: none; }
-  .rail .rail__row { display: flex; align-items: center; justify-content: center; gap: 4px; height: 36px; min-width: 0; padding: 0 2px; border-radius: 8px; background: #ffffff0d; }
-  .rail .rail__row .rail__ico { display: flex; width: auto; height: 16px; }
-  .rail .rail__row .rail__ico img, .rail .rail__row .rail__ico i { width: 16px; height: 16px; }
-  .rail .rail__row b { font: 700 14px/1 Georgia, serif; white-space: nowrap; }
+  .rail .rail__row { display: flex; align-items: center; justify-content: center; gap: 3px; height: 30px; min-width: 0; padding: 0 2px; border-radius: 6px; background: none; }
+  .rail .rail__row .rail__ico { display: flex; width: auto; height: 14px; }
+  .rail .rail__row .rail__ico img, .rail .rail__row .rail__ico i { width: 14px; height: 14px; }
+  .rail .rail__row b { font: 700 13px/1 Georgia, serif; white-space: nowrap; }
   .rail .rail__row b small { font-size: .7em; opacity: .75; }
   .rail .rail__row--latent .rail__ico .orb:not(:first-child) { display: none; }
-  .rail .rail__row--cosmo { grid-column: 1 / -1; order: -1; height: 44px; cursor: pointer; }
-  .rail .rail__row--cosmo b { font-size: 22px; }
-  .rail .rail__row--cosmo .rail__ico, .rail .rail__row--cosmo .rail__ico img { width: 22px; height: 22px; }
-  .rail .sanctum__domain { width: auto; height: 36px; border-radius: 8px; }
+  .rail .rail__row--latent { gap: 1px; padding: 0; }
+  .rail .rail__row--cosmo { grid-column: 1 / -1; order: -1; height: 36px; cursor: pointer; background: #ffffff0d; }
+  .rail .rail__row--cosmo b { font-size: 18px; }
+  .rail .rail__row--cosmo .rail__ico, .rail .rail__row--cosmo .rail__ico img { width: 18px; height: 18px; }
+  .rail .sanctum__domain { width: auto; height: 30px; border-radius: 6px; }
 
   /* Comando: sem relógio grande nem trilha de fases; turno numa linha e o botão de ação embaixo à direita. */
   .command { width: var(--cmd-w); right: calc(8px + var(--sr)); top: auto; bottom: calc(8px + var(--sb)); transform: none; display: flex; flex-direction: column; gap: 6px; }
   .command > * { width: 100%; min-width: 0; max-width: 100%; box-sizing: border-box; }
   /* Turno numa faixa fina: "Your turn" e a fase atual (auditoria mobile, fase 2). */
   .command__clock, .phasebar__turn small { display: none; }
-  .phasebar { display: flex; align-items: baseline; justify-content: center; gap: 6px; min-height: 0; padding: 6px 10px; border-radius: 12px; }
+  .phasebar { display: flex; align-items: baseline; justify-content: center; gap: 6px; min-height: 0; padding: 5px 8px; border-radius: 10px; }
   .phasebar__turn { display: block; }
-  .phasebar__turn strong { font: 600 12px/1 Georgia, serif; white-space: nowrap; }
+  .phasebar__turn strong { font: 600 11px/1 Georgia, serif; white-space: nowrap; }
   .phasebar__steps { display: flex; margin: 0; padding: 0; list-style: none; }
-  .phasebar__steps li { display: none; font: 600 12px/1 system-ui, sans-serif; color: #e8c46a; white-space: nowrap; }
+  .phasebar__steps li { display: none; font: 600 10px/1 system-ui, sans-serif; color: #e8c46a; white-space: nowrap; }
   .phasebar__steps li.on { display: block; }
-  .action-btn { min-height: 44px; padding: 8px 12px; font-size: 14px; gap: 8px; }
+  .action-btn { min-height: 40px; padding: 6px 10px; font-size: 13px; gap: 6px; }
   /* Log, Settings e Menu atrás de um botão só (⋯); abrem empilhados acima dele. */
-  .command .command__more { display: flex; align-items: center; justify-content: center; min-height: 40px; border-radius: 12px; border: 1px solid #ffffff26; background: #04081c99; color: #c9c3dc; font: 700 20px/1 system-ui, sans-serif; letter-spacing: .1em; }
+  .command .command__more { display: flex; align-items: center; justify-content: center; align-self: flex-end; width: 44px; min-height: 30px; border-radius: 10px; border: 1px solid #ffffff1a; background: #04081c80; color: #c9c3dc; font: 700 16px/1 system-ui, sans-serif; letter-spacing: .1em; }
   .command__more[aria-expanded="true"] { border-color: #e8c46a; color: #e8c46a; }
   .command__tools { order: 9; display: none; flex-direction: column; gap: 4px; }
   .command__tools.is-open { display: flex; }
-  .command .command__more { order: 10; }
-  .command__tools button, .command__tools a { display: flex; align-items: center; justify-content: center; min-height: 40px; padding: 4px 8px; font-size: 13px; text-align: center; }
+  .command .command__more { order: 10; width: 44px; }
+  .command__tools button, .command__tools a { display: flex; align-items: center; justify-content: center; min-height: 36px; padding: 4px 8px; font-size: 12px; text-align: center; }
 
   /* Mão do oponente: só o número (no contador); a sua espia embaixo e sobe ao tocar. */
   .olympus .hand--opp { display: none; }
-  .olympus .hand--me { --hand-w: calc(var(--u) * 15); bottom: calc(var(--hand-w) * -.8); left: calc(var(--rail-w) + 16px + var(--sl)); right: calc(var(--cmd-w) + 140px + var(--sr)); width: auto; transform: none; }
+  .olympus .hand--me { --hand-w: calc(var(--u) * 13); bottom: calc(var(--hand-w) * -.85); left: calc(var(--rail-w) + 16px + var(--sl)); right: calc(var(--cmd-w) + 116px + var(--sr)); width: auto; transform: none; }
   .olympus .hand--me:hover, .olympus .hand--me:focus-within { bottom: calc(var(--hand-w) * -.25); }
   .olympus .hand--me .hand__slot:hover { transform: translateY(calc(var(--hand-w) * -.2)) scale(1.1); }
 
-  /* God: perto da mesa, à direita. Placa maior para Alma, ataque e Ultimate lerem a 12px. */
-  .olympus .godhud { --m: 46px; }
-  .godhud__portrait { width: calc(var(--u) * 8); }
-  .gh-cell b { font-size: 13px; }
-  .gh-ult b { font-size: 11px; }
-  .godhud--me { bottom: calc(var(--u) * 4 + var(--sb)); left: auto; right: calc(var(--cmd-w) + 16px + var(--sr)); transform: none; }
-  .godhud--opp { top: 4px; left: auto; right: calc(var(--cmd-w) + 16px + var(--sr)); transform: none; }
+  /* God: perto da mesa, à direita. Placa compacta, números a 12px. */
+  .olympus .godhud { --m: 38px; }
+  .godhud__portrait { width: calc(var(--u) * 6.5); }
+  .gh-cell b { font-size: 12px; }
+  .gh-ult b { font-size: 10px; }
+  .godhud--me { bottom: calc(var(--u) * 4 + var(--sb)); left: auto; right: calc(var(--cmd-w) + 12px + var(--sr)); transform: none; }
+  .godhud--opp { top: 4px; left: auto; right: calc(var(--cmd-w) + 12px + var(--sr)); transform: none; }
 
   /* Cartas na mesa e na mão: sem texto de regras (ilegível a esse tamanho); custo, ATK e RES maiores.
      O texto inteiro fica no toque longo (inspetor). */
-  .olympus .field { --card-w: calc(var(--u) * 21); }
+  .olympus .field { --card-w: calc(var(--u) * 19); }
   /* Mesa cheia: as cartas encolhem para caber entre os contadores e o God. */
   .olympus .field:has(> :nth-child(5)) { --card-w: calc(var(--u) * 16); }
   .olympus .field:has(> :nth-child(6)) { --card-w: calc(var(--u) * 13); }
   .olympus .field:has(> :nth-child(7)) { --card-w: calc(var(--u) * 11); }
   .olympus .dcard :is(.lc-rules, .lc-text--subtitle, .lc-text--typeline) { visibility: hidden; }
-  .olympus .dcard .lc-gem { transform: scale(1.35); }
+  .olympus .dcard .lc-gem { transform: scale(1.25); }
 
   /* Pedido de alvo: faixa fina no topo, sem cobrir a mesa. */
   .olympus.is-choosing ~ .choice, .olympus ~ .choice, .choice { top: 4px; left: 50%; transform: translateX(-50%); padding: 4px 12px; max-width: 60vw; font-size: 12px; }
