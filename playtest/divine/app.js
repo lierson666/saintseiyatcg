@@ -390,7 +390,10 @@ function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
   const kws = [...new Set(field && c.kind === 'Devotee' ? keywordsOf(s, ctx, uid) : c.keywords)];
   const dmg = unit?.damage || 0;
   const cls = ['dcard', size, forge ? 'art-full' : '', `kind-${c.kind.toLowerCase()}`, `rarity-${(c.rarity || 'common').toLowerCase()}`, c.armor ? 'is-armor' : '', cat ? `cat-${cat.category.toLowerCase()}` : '',
-    field && c.kind === 'Devotee' && !unit?.prepared ? 'unprepared' : '', kws.includes('Guardian') && field ? 'guarding' : ''].join(' ');
+    field && c.kind === 'Devotee' && !unit?.prepared ? 'unprepared' : '', kws.includes('Guardian') && field ? 'guarding' : '',
+    // Aura de Cosmo (autor, 30/10/2026): Devotee seu que pode atacar agora queima Cosmo atrás, na cor da facção.
+    field && !size && c.kind === 'Devotee' && owner(uid) === viewer() && idleFor(owner(uid)) && strikeTargets(s, ctx, uid).length ? 'can-strike' : ''].join(' ');
+  const facAttr = ` data-fac="${CARD_FACTIONS.has(String(forge?.faccao).toLowerCase()) ? String(forge.faccao).toLowerCase() : 'neutral'}"`;
   const statBuffed = (v, base) => (v > base ? 'up' : v < base ? 'down' : '');
   // Dano não tem marcador: o HP impresso já mostra a vida restante, em vermelho.
   const marks = unit?.training || unit?.seal ? `<span class="dcard__tokens">${unit?.training ? token('training', unit.training, `Training|${unit.training} counter${unit.training > 1 ? 's' : ''}: +1 ATK / +1 HP each.`) : ''}${unit?.seal
@@ -404,7 +407,7 @@ function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
       : CARD_FACTIONS.has(String(forge.faccao).toLowerCase()) ? `--art:url('../../CARD-TEMPLATE/symbols/${fac}.png');` : `--art:url('../../LOGO/logo-web.webp');--noart-w:70%;`;
     // HP: Athena tem gem_resistance; as outras facções usam gem_soul (CARD-TEMPLATE/pieces.json).
     const gem = (kind, v, trend) => `<b class="btok__stat btok__stat--${kind}" data-trend="${trend}" style="--gem:url('../../CARD-TEMPLATE/${fac}/gem_${kind === 'atk' ? 'power' : fac === 'athena' ? 'resistance' : 'soul'}.png')">${v}</b>`;
-    return `<div class="${cls} dcard--board" data-uid="${uid}" tabindex="0" aria-label="${esc(c.name)}, ATK ${atk}, HP ${hp - dmg} of ${hp}">
+    return `<div class="${cls} dcard--board"${facAttr} data-uid="${uid}" tabindex="0" aria-label="${esc(c.name)}, ATK ${atk}, HP ${hp - dmg} of ${hp}">
       <div class="btok ${!forge.ilustracao ? 'is-noart' : fr?.w ? 'is-framed' : ''}" style="${art}"><span class="btok__name">${esc(c.name)}</span>
         ${gem('atk', atk, statBuffed(atk, c.atk))}${gem('hp', hp - dmg, dmg ? 'down' : statBuffed(hp, c.hp))}</div>${marks}</div>`;
   }
@@ -413,7 +416,7 @@ function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
     const live = renderLiveCard(forge, {stats: {power: atk ?? null, hp: hp == null ? null : hp - dmg, damage: dmg, keywords: kws}, art: forge.ilustracao && FORGE_ART + forge.ilustracao})
       .replace('data-stat="power"', `data-stat="power" data-trend="${statBuffed(atk, c.atk)}"`)
       .replace('data-stat="hp"', `data-stat="hp" data-trend="${dmg ? 'down' : statBuffed(hp, c.hp)}"`);
-    return `<div class="${cls}" data-uid="${uid}" tabindex="0" aria-label="${esc(c.name)}${c.kind === 'Devotee' ? `, ATK ${atk}, HP ${hp - dmg} of ${hp}` : ''}">${live}${marks}</div>`;
+    return `<div class="${cls}"${facAttr} data-uid="${uid}" tabindex="0" aria-label="${esc(c.name)}${c.kind === 'Devotee' ? `, ATK ${atk}, HP ${hp - dmg} of ${hp}` : ''}">${live}${marks}</div>`;
   }
   return `<div class="${cls}" data-uid="${uid}" tabindex="0" aria-label="${esc(c.name)}">
     <div class="dcard__art"><span class="dcard__glyph">${esc(c.name.split(/[ ,’']/)[0].slice(0, 2))}</span></div>
