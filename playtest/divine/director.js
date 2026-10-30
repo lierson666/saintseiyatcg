@@ -283,10 +283,12 @@ export function createDirector({ui, getFx, settings}) {
     async play(events) {
       busy = true; skipping = false;
       try {
+        let last = null;
         for (const e of events) {
           const group = ANIM_OF[e.type];
           cur = group ? anim(group) : {ligada: true, velocidade: 1};
-          if (group && !skipping) sound(group);
+          if (group && group !== last && !skipping) sound(group); // um som por sequência do mesmo grupo
+          last = group;
           await (handlers[e.type] || (async () => {}))(e);
         }
       } finally { busy = false; skipping = false; cur = {ligada: true, velocidade: 1}; }

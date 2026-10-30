@@ -3,7 +3,7 @@
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const ANIMS = {compra: 'Compra de carta', conjurar: 'Conjurar carta e Base', cosmo: 'Cosmo pago e Latent', gatilho: 'Gatilhos e habilidades',
   ataque: 'Ataque (Strike)', dano: 'Dano e Soul', morte: 'Carta derrotada', turno: 'Início de turno e rodada', ultimate: 'Ultimate'};
-const SOUNDS = {clique: 'Clique nos menus', play: 'Botão Play', voltar: 'Voltar', turno: 'Início de turno', compra: 'Compra de carta', conjurar: 'Conjurar carta',
+const SOUNDS = {ultimate: 'Ultimate', clique: 'Clique nos menus', play: 'Botão Play', voltar: 'Voltar', turno: 'Início de turno', compra: 'Compra de carta', conjurar: 'Conjurar carta',
   cosmo: 'Cosmo pago', gatilho: 'Gatilho', ataque: 'Ataque', dano: 'Dano', morte: 'Carta derrotada', vitoria: 'Vitória', derrota: 'Derrota'};
 // Cores com o valor padrão do CSS (shared/kv.css e playtest/divine/divine.css).
 const COLORS = {
@@ -89,13 +89,37 @@ function page() {
       <button data-tl="text-add">+ Texto</button></section>
     <section class="panel tl"><h2>Animações do duelo</h2>
       ${Object.entries(ANIMS).map(([k, l]) => { const a = doc.animacoes[k]; return `<div class="tl-anim"><label><input type="checkbox" data-path="animacoes.${k}.ligada" data-kind="bool" ${a.ligada ? 'checked' : ''}> ${l}</label>
+        ${soundChooser(`audio.efeitos.${k}`)}
         <label class="tl-speed">Velocidade <b>${a.velocidade}×</b><input type="range" min="0.25" max="3" step="0.25" data-path="animacoes.${k}.velocidade" data-kind="number" value="${a.velocidade}" ${a.ligada ? '' : 'disabled'}></label></div>`; }).join('')}</section>
     <section class="panel tl"><h2>Músicas</h2>
       <h3>Menus</h3>${audioPicker('audio.menu')}<h3>Abertura da batalha</h3>${audioPicker('audio.inicio_batalha')}
       <h3>Playlist da batalha</h3><p class="hint">Tocam em ordem aleatória depois da abertura.</p><div class="tl-playlist">
       ${audios.filter(a => a.grupo === 'musica').map(a => `<label><input type="checkbox" data-playlist="${esc(a.arquivo)}" ${doc.audio.playlist.includes(a.arquivo) ? 'checked' : ''}> ${esc(a.nome)}</label>`).join('')}</div></section>
-    <section class="panel tl"><h2>Sons por evento</h2>
-      ${Object.entries(SOUNDS).map(([k, l]) => `<div class="tl-sound"><span>${l}</span>${audioPicker(`audio.efeitos.${k}`, true)}</div>`).join('')}</section>`;
+    <section class="panel tl"><h2>Sons dos menus e do fim da partida</h2>
+      ${Object.entries(SOUNDS).filter(([k]) => !ANIMS[k]).map(([k, l]) => `<div class="tl-sound"><span>${l}</span>${soundChooser(`audio.efeitos.${k}`)}</div>`).join('')}</section>
+    <dialog id="tl-sounds" class="tl-dialog"></dialog>`;
+}
+
+// Biblioteca de FX (MUSIC/fx/<fonte>, a mesma do Star Hill antigo): botão com o som atual e lista com busca e Ouvir.
+const fxName = path => audios.find(a => a.arquivo === path)?.nome || path?.split('/').pop() || '';
+const soundChooser = path => { const v = get(doc, path); return `<div class="tl-chooser"><button type="button" class="tl-chooser__pick" data-tl="pick-sound" data-path="${path}">${v ? `♪ ${esc(fxName(v))}` : 'Sem som'}</button>
+  ${v ? `<button type="button" data-tl="ouvir" data-src="${esc(v)}" aria-label="Ouvir">▶</button><button type="button" data-tl="clear-sound" data-path="${path}" aria-label="Tirar som">✕</button>` : ''}</div>`; };
+let picking = null;
+function soundList() {
+  const q = (document.querySelector('#tl-sound-q')?.value || '').toLowerCase(), src = document.querySelector('#tl-sound-src')?.value || '';
+  const list = audios.filter(a => (!src || (src === 'musica' ? a.grupo === 'musica' : a.origem === src)) && (!q || `${a.nome} ${a.origem}`.toLowerCase().includes(q)));
+  return list.length ? list.map(a => `<li><button type="button" data-tl="ouvir" data-src="${esc(a.arquivo)}" aria-label="Ouvir ${esc(a.nome)}">▶</button><span>${esc(a.nome)}<small>${esc(a.grupo === 'musica' ? 'música' : a.origem)} · ${(a.bytes / 1024).toFixed(0)} KB</small></span>
+    <button type="button" class="primary" data-tl="use-sound" data-src="${esc(a.arquivo)}">Usar</button></li>`).join('') : '<li class="hint">Nenhum som com esse filtro.</li>';
+}
+function openSounds(path) {
+  picking = path;
+  const dlg = root.querySelector('#tl-sounds'), sources = [...new Set(audios.filter(a => a.grupo === 'fx').map(a => a.origem))];
+  dlg.innerHTML = `<form method="dialog" class="tl-dialog__head"><strong>Escolher som</strong><button aria-label="Fechar">✕</button></form>
+    <div class="tl-dialog__filters"><input id="tl-sound-q" type="search" placeholder="Buscar (hit, cosmo, punch…)" autocomplete="off">
+    <select id="tl-sound-src"><option value="">Todas as fontes</option>${sources.map(o => `<option value="${esc(o)}">${esc(o)}</option>`).join('')}<option value="musica">Músicas</option></select>
+    <label class="tl-upload">Enviar áudio<input type="file" accept="audio/mpeg,audio/ogg,audio/wav,.mp3,.ogg,.wav,.zip" data-upload="${path}" hidden></label></div>
+    <ul id="tl-sound-list" class="tl-sound-list">${soundList()}</ul>`;
+  dlg.showModal(); dlg.querySelector('#tl-sound-q').focus();
 }
 
 function status() {
@@ -119,7 +143,7 @@ async function upload(file, path) {
   const data = await r.json().catch(() => ({}));
   if (!r.ok) throw Error(data.erro || 'Falha no envio.');
   library(await hooks.api('assets'));
-  return data.arquivo;
+  return data.arquivo || data.arquivos?.[0];
 }
 
 // Eventos só agem quando o editor está montado na página.
@@ -151,6 +175,8 @@ document.addEventListener('change', async e => {
   } catch (err) { hooks.notice(err.message); }
 });
 let player = null;
+document.addEventListener('input', e => { if (e.target.id === 'tl-sound-q' || e.target.id === 'tl-sound-src') root.querySelector('#tl-sound-list').innerHTML = soundList(); });
+document.addEventListener('change', e => { if (e.target.id === 'tl-sound-src') root.querySelector('#tl-sound-list').innerHTML = soundList(); });
 document.addEventListener('click', async e => {
   const b = e.target.closest('[data-tl]');
   if (!b || !root?.contains(b)) return;
@@ -163,6 +189,9 @@ document.addEventListener('click', async e => {
   if (act === 'text-add') { pairs.push(['', '']); dirty = true; }
   if (act === 'text-del') { pairs.splice(i, 1); dirty = true; }
   if (act === 'ouvir') { player?.pause(); player = new Audio(url(b.dataset.src)); player.play().catch(() => {}); return; }
+  if (act === 'pick-sound') return openSounds(b.dataset.path);
+  if (act === 'use-sound') { player?.pause(); set(picking, b.dataset.src); root.querySelector('#tl-sounds').close(); }
+  if (act === 'clear-sound') set(b.dataset.path, null);
   if (act === 'save') {
     // Linhas de texto sem original são descartadas ao salvar.
     doc.textos = Object.fromEntries(pairs.filter(([a]) => a.trim()));

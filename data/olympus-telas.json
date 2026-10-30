@@ -3,7 +3,7 @@
   "home": {
     "slides": [
       {
-        "imagem": "card:god-athena",
+        "imagem": "star-hill/assets/TWELVEHOUSES-3e78b8f3b563.jpg",
         "carimbo": "Olympus Arena",
         "linha1": "Let your",
         "linha2": "Cosmo burn",
@@ -131,7 +131,8 @@
       "dano": null,
       "morte": null,
       "vitoria": null,
-      "derrota": null
+      "derrota": null,
+      "ultimate": null
     }
   }
 }

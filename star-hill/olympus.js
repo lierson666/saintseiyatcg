@@ -4,7 +4,7 @@
 import {loadCanon} from '../shared/canon-cards.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {canonIndex, validateDeck, DECK_SIZE} from '../shared/deck-v3.js';
-import {loadTelas, mountTelas} from './telas-editor.js?v=20261030-3';
+import {loadTelas, mountTelas} from './telas-editor.js?v=20261030-4';
 
 const $ = s => document.querySelector(s);
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
