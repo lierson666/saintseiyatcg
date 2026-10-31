@@ -936,3 +936,33 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .chain li[data-src]:hover, .chain li[data-src]:focus-visible, .order__item:hover { background: rgba(255, 210, 120, .1); }
 #inspector .rule-block.is-hot { padding: 4px 6px; border-radius: 6px; background: rgba(255, 210, 120, .16); box-shadow: inset 3px 0 0 var(--gold-hi); }
 .gear[data-uid] { cursor: help; }
+
+/* Área de conjuração (cast slot e carta do painel de trigger) na cor e no tema do God (autor, 31/10/2026). */
+.trigger-panel__card[data-godfx] { position: relative; } [data-godfx] { isolation: isolate; }
+[data-godfx] .dcard { box-shadow: 0 0 0 2px rgb(var(--glow)), 0 0 34px rgba(var(--glow), .6); animation: cast-glow-god 1.6s ease-in-out infinite; }
+[data-godfx] small { color: rgb(var(--glow)); }
+@keyframes cast-glow-god { 50% { box-shadow: 0 0 0 2px rgb(var(--glow)), 0 0 52px rgba(var(--glow), .85); } }
+.cast-aura { position: absolute; z-index: -1; left: 50%; top: 42%; width: 250%; aspect-ratio: 1; transform: translate(-50%, -50%); pointer-events: none; border-radius: 50%; }
+.cast-aura::before, .cast-aura::after { content: ""; position: absolute; inset: 0; border-radius: 50%; }
+/* Athena: raios dourados girando. */
+[data-godfx="athena"] .cast-aura::before { background: repeating-conic-gradient(from 0deg, rgba(var(--glow), .55) 0 6deg, transparent 6deg 22deg); -webkit-mask: radial-gradient(circle, #000 18%, transparent 68%); mask: radial-gradient(circle, #000 18%, transparent 68%); animation: fx-spin 14s linear infinite; }
+[data-godfx="athena"] .cast-aura::after { background: radial-gradient(circle, rgba(255, 245, 210, .5), rgba(var(--glow), .2) 35%, transparent 62%); animation: fx-breathe 2.4s ease-in-out infinite; }
+/* Poseidon: ondas de água se abrindo. */
+[data-godfx="poseidon"] .cast-aura::before, [data-godfx="poseidon"] .cast-aura::after { inset: 8%; border: 4px solid rgba(var(--glow), .85); box-shadow: 0 0 18px rgba(var(--glow), .6), inset 0 0 18px rgba(var(--glow), .4); animation: fx-ripple 2.4s ease-out infinite; }
+[data-godfx="poseidon"] .cast-aura::after { animation-delay: 1.2s; }
+/* Hades: névoa roxa subindo. */
+[data-godfx="hades"] .cast-aura::before { background: radial-gradient(22% 30% at 22% 62%, rgba(var(--glow), .8), transparent 70%), radial-gradient(22% 30% at 78% 55%, rgba(120, 40, 200, .85), transparent 70%), radial-gradient(30% 18% at 50% 85%, rgba(var(--glow), .7), transparent 70%); filter: blur(8px); animation: fx-smoke 3.2s ease-in-out infinite; }
+[data-godfx="hades"] .cast-aura::after { background: radial-gradient(circle, transparent 22%, rgba(var(--glow), .35) 34%, transparent 52%); animation: fx-breathe 3s ease-in-out infinite; }
+/* Ares: brasas vermelhas tremulando. */
+[data-godfx="ares"] .cast-aura::before { background: radial-gradient(circle, rgba(255, 180, 90, .7) 15%, rgba(var(--glow), .55) 32%, rgba(var(--glow), .15) 48%, transparent 58%); animation: fx-flicker .9s steps(3) infinite; }
+[data-godfx="ares"] .cast-aura::after { background: radial-gradient(4px 4px at 20% 60%, #ffc070, transparent), radial-gradient(3px 3px at 80% 45%, #ff8a50, transparent), radial-gradient(4px 4px at 26% 30%, #ffd090, transparent), radial-gradient(3px 3px at 76% 72%, #ff6a40, transparent), radial-gradient(3px 3px at 50% 18%, #ffb060, transparent); animation: fx-embers 1.8s linear infinite; }
+/* Artemis: lua crescente prateada. */
+[data-godfx="artemis"] .cast-aura::before { inset: 14%; box-shadow: inset 14px -6px 0 0 rgba(var(--glow), .75), 0 0 30px rgba(var(--glow), .35); animation: fx-spin 18s linear infinite; }
+[data-godfx="artemis"] .cast-aura::after { background: radial-gradient(circle, rgba(230, 255, 245, .35), rgba(var(--glow), .15) 35%, transparent 60%); animation: fx-breathe 3.4s ease-in-out infinite; }
+@keyframes fx-spin { to { transform: rotate(360deg); } }
+@keyframes fx-breathe { 50% { opacity: .55; transform: scale(.94); } }
+@keyframes fx-ripple { from { transform: scale(.45); opacity: 1; } to { transform: scale(1); opacity: 0; } }
+@keyframes fx-smoke { 0% { transform: translateY(8%) scale(.95); opacity: .7; } 50% { transform: translateY(-6%) scale(1.05); opacity: 1; } 100% { transform: translateY(8%) scale(.95); opacity: .7; } }
+@keyframes fx-flicker { 50% { opacity: .7; transform: scale(1.04); } }
+@keyframes fx-embers { from { transform: translateY(10%); opacity: 1; } to { transform: translateY(-25%); opacity: 0; } }
+.reduce-motion .cast-aura::before, .reduce-motion .cast-aura::after, .reduce-motion [data-godfx] .dcard { animation: none; }

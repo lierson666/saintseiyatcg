@@ -629,6 +629,8 @@ function phaseBar() {
 
 // Arte de cada item da cadeia (autor, 30/10/2026): carta de origem; Domain pelo catálogo; God pelo projeto do Forge.
 // Cor do brilho do lado de quem joga o turno, pelo God (autor, 31/10/2026): r, g, b.
+// Área de conjuração na cor e no tema do God de quem conjura (autor, 31/10/2026).
+const godFx = key => { const g = S().divine?.[key]?.god || 'god-athena'; return `data-godfx="${g.slice(4)}" style="--glow:${GOD_GLOW[g] || GOD_GLOW['god-athena']}"`; };
 const GOD_GLOW = {'god-athena': '255, 205, 100', 'god-poseidon': '90, 180, 255', 'god-hades': '170, 100, 255', 'god-ares': '255, 90, 70', 'god-artemis': '170, 240, 210'};
 function chainArt(c) {
   const s = S(), uid = String(c.uid || '');
@@ -738,7 +740,7 @@ function clockMarkup() {
 function castSlot() {
   const bp = mode && boardPick();
   if (!bp?.uid) return '';
-  return `<div class="cast-slot" aria-label="Casting ${esc(info(bp.uid).name)}">${cardFace(bp.uid, {size: 'dcard--lg'})}
+  return `<div class="cast-slot" ${godFx(owner(bp.uid))} aria-label="Casting ${esc(info(bp.uid).name)}"><i class="cast-aura" aria-hidden="true"></i>${cardFace(bp.uid, {size: 'dcard--lg'})}
     ${bp.refs.length ? '<small>Drag to a target</small>' : ''}</div>`;
 }
 
@@ -1689,7 +1691,7 @@ function sidePanel(req, t, fx) {
   // Fila: o item que está resolvendo e os que vêm depois (topo da cadeia primeiro).
   const next = [...S().chain].reverse(), queue = next.length ? `<div class="trigger-queue"><small>Trigger 1 of ${next.length + 1}</small><ol>${next.slice(0, 4).map(c => `<li ${srcAttrs(c)}>${esc(chainLabel(c).title)}</li>`).join('')}${next.length > 4 ? `<li>+${next.length - 4} more</li>` : ''}</ol></div>` : '';
   return `<aside class="trigger-panel ${target ? 'is-targeting' : ''}" role="dialog" aria-labelledby="trigger-title">
-    ${face ? `<div class="trigger-panel__card">${face}${target && face ? '<small>Drag to a target</small>' : ''}</div>` : ''}
+    ${face ? `<div class="trigger-panel__card" ${godFx(req.player)}><i class="cast-aura" aria-hidden="true"></i>${face}${target && face ? '<small>Drag to a target</small>' : ''}</div>` : ''}
     <div class="trigger-panel__box"><span class="decision__who">${esc(t.who)} decides</span><span class="decision__clock" data-decision-clock></span>
       <small class="decision__kicker">${esc(t.kicker)}</small><h3 id="trigger-title">${esc(t.title)}</h3>
       ${fx ? `<div class="decision__effect card-text">${fx.lines.map(l => `<p>${inlineMarkup(l)}</p>`).join('')}</div>` : ''}
