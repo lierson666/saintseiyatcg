@@ -7,7 +7,7 @@ import {spellCategory} from './engine-v3/core.js';
 import {renderLiveCard, renderCardText} from '../shared/live-card.js?v=20261031-kw6';
 import {unlock, playMusic, setVolume, volume} from './audio.js?v=20261030-telas';
 import {loadMyDecks, saveMyDecks, findDeck, syncDecks, onDeckStatus, deckCovers, setDeckCover} from './deck-store.js?v=20261031-2';
-import {mountKV} from '../shared/kv-sky.js?v=20261031-top';
+import {mountKV} from '../shared/kv-sky.js?v=20261031-fast';
 import {countryOptions, countryName} from '../shared/countries.js?v=20261029-1';
 import {startPresence} from '../shared/presence.js?v=20261029-1';
 import {mountSocial} from './social.js?v=20261031-ds3';
@@ -216,6 +216,7 @@ function options() {
   return `<section class="lb-page lb-options"><header class="lb-page__head"><h1>Options</h1><p>Saved on this device. The same options open from the gear during a match.</p></header>
     <h2 class="lb-options__h">Display</h2>
     <label class="lb-set"><span>Full screen</span><input type="checkbox" data-act="fullscreen" ${document.fullscreenElement ? 'checked' : ''}></label>
+    ${window.ssStage?.desktop ? sel('resolution', 'Resolution', window.ssStage.LIST) : ''}
     ${sel('quality', 'Graphics', {low: 'Low', medium: 'Medium', high: 'High', ultra: 'Ultra'})}${sel('theme', 'Arena', THEME_LABELS)}
     <h2 class="lb-options__h">Sound</h2>${row('music', 'Music')}${row('sfx', 'Sound effects')}
     <h2 class="lb-options__h">Gameplay</h2>
@@ -629,6 +630,7 @@ root.addEventListener('input', e => {
   const t = e.target;
   if (t.dataset.act === 'volume') { setVolume(t.dataset.kind, t.value / 100); t.nextElementSibling.value = `${t.value}%`; }
   if (t.dataset.act === 'match-set') setMatch(t.dataset.key, t.type === 'checkbox' ? t.checked : t.type === 'range' ? Number(t.value) : t.value);
+  if (t.dataset.act === 'match-set' && t.dataset.key === 'resolution') window.ssStage?.set(t.value); // palco 16:9 (shared/stage-fit.js)
   if (t.dataset.act === 'fullscreen') toggleFullscreen();
   if (t.dataset.act === 'deck-search') {
     ui.deckQ = t.value; const q = t.value.toLowerCase();
