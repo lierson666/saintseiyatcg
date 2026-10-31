@@ -17,7 +17,7 @@ let PSD=null;
 try{
   const url=p=>new URL(`../CARD-TEMPLATE/${p}`,import.meta.url);
   const [T,pieces]=await Promise.all(['templates.json','pieces.json'].map(f=>fetch(url(f)).then(r=>{if(!r.ok)throw r.status;return r.json();})));
-  PSD={T,P:pieces.pieces,src:k=>url(`${k}.png`).href};
+  PSD={T,P:pieces.pieces,src:k=>url(`${k}.webp`).href}; // .webp gerado por tools/light-assets.py
 }catch{/* sem spec: layout simples */}
 const NEUTRAL={color:'#ECE7DA',glow:'rgba(255,255,255,0.35)',frame:['athena/vignette','athena/frame']};
 // Mesmo mapeamento do layoutKey() do card-forge/forge.js.

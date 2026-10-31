@@ -1,7 +1,8 @@
 // Divine Arena · camada WebGL (Three.js). Só apresentação: arena, luz, partículas e VFX.
 // Duas cenas no mesmo renderer: a arena em perspectiva (fundo) e os VFX em espaço de tela (pixels do DOM),
 // para que golpes saiam exatamente das cartas HTML. createScene() devolve null sem WebGL ou sem a CDN.
-const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
+// Three.js r160 enxuto, só as classes usadas aqui (auditoria de performance, fase 1). Classe nova: ver tools/three-slim.entry.js.
+const THREE_URL = new URL('./vendor/three-0.160.0-slim.js', import.meta.url).href;
 
 // Perfis de qualidade (PERFORMANCE_BUDGET.md). Partículas = poeira de Cosmo ambiente; vfx = teto do pool de VFX.
 export const QUALITY = {

@@ -26,6 +26,7 @@ import {unlock, playMusic} from '../audio.js?v=20261030-telas';
 import {telas, anim, sound, imageUrl, applyColors, applyTexts} from '../telas.js?v=20261030-1';
 import {renderLiveCard, renderCardText} from '../../shared/live-card.js?v=20261031-ed5';
 import {armorBonusText, printedEquipmentBonuses} from '../../shared/card-visual-values.js?v=20261031-kw6';
+import {lightArt} from '../../shared/light-art.js';
 
 const $ = (s, el = document) => el.querySelector(s), $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -377,6 +378,7 @@ function tickClock() {
 
 // Cartas do Card Forge como dados (tools/forge-art-web.sh): shared/live-card.js desenha moldura, textos e números no DOM; a arte é só fundo.
 const FORGE_ART = '../../card-forge/art-web/';
+const forgeArt = file => lightArt(FORGE_ART + file);
 // Mesa no estilo Arena (só arte, nome, ATK e HP); ?board=classic volta à carta inteira para comparar.
 const BOARD_TOKENS = new URLSearchParams(location.search).get('board') !== 'classic';
 const CARD_FACTIONS = new Set(['athena', 'poseidon', 'hades', 'ares', 'artemis']);
@@ -407,7 +409,7 @@ function chainLabel(c) {
 // Arte do token de mesa: enquadramento do Forge; sem arte, o símbolo da facção ou o logo.
 function tokenArt(forge) {
   const fr = forge.ilustracao_enquadramento, fac = String(forge.faccao).toLowerCase();
-  return forge.ilustracao ? `--art:url('${FORGE_ART + forge.ilustracao}');${fr?.w ? `--fx:${fr.x / 1488};--fy:${(fr.y - 160) / 1488};--fw:${fr.w / 1488};` : ''}`
+  return forge.ilustracao ? `--art:url('${forgeArt(forge.ilustracao)}');${fr?.w ? `--fx:${fr.x / 1488};--fy:${(fr.y - 160) / 1488};--fw:${fr.w / 1488};` : ''}`
     : CARD_FACTIONS.has(fac) ? `--art:url('../../CARD-TEMPLATE/symbols/${fac}.png');` : `--art:url('../../LOGO/logo-web.webp');--noart-w:70%;`;
 }
 // Bônus impresso de qualquer Equipment (Armor: bonus_poder/bonus_vida; armas: linha "Equipped Devotee gets").
@@ -446,7 +448,7 @@ function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
     // A arte segue o enquadramento do Forge, recortada da altura do rosto; o texto inteiro fica no inspetor.
     const fr = forge.ilustracao_enquadramento, fac = CARD_FACTIONS.has(String(forge.faccao).toLowerCase()) ? String(forge.faccao).toLowerCase() : 'athena';
     // Sem arte (ex.: artes provisórias -ref não vão ao site): o símbolo da facção no centro, sem recorte.
-    const art = forge.ilustracao ? `--art:url('${FORGE_ART + forge.ilustracao}');${fr?.w ? `--fx:${fr.x / 1488};--fy:${(fr.y - 160) / 1488};--fw:${fr.w / 1488};` : ''}`
+    const art = forge.ilustracao ? `--art:url('${forgeArt(forge.ilustracao)}');${fr?.w ? `--fx:${fr.x / 1488};--fy:${(fr.y - 160) / 1488};--fw:${fr.w / 1488};` : ''}`
       : CARD_FACTIONS.has(String(forge.faccao).toLowerCase()) ? `--art:url('../../CARD-TEMPLATE/symbols/${fac}.png');` : `--art:url('../../LOGO/logo-web.webp');--noart-w:70%;`;
     // HP: Athena tem gem_resistance; as outras facções usam gem_soul (CARD-TEMPLATE/pieces.json).
     const gem = (kind, v, trend) => `<b class="btok__stat btok__stat--${kind}" data-trend="${trend}" style="--gem:url('../../CARD-TEMPLATE/${fac}/gem_${kind === 'atk' ? 'power' : fac === 'athena' ? 'resistance' : 'soul'}.png')">${v}</b>`;
@@ -456,7 +458,7 @@ function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
   }
   if (forge) {
     // ATK e HP ao vivo no próprio número impresso: verde com bônus, vermelho com dano ou redução.
-    const live = renderLiveCard(forge, {stats: {power: atk ?? null, hp: hp == null ? null : hp - dmg, damage: dmg, keywords: kws}, art: forge.ilustracao && FORGE_ART + forge.ilustracao})
+    const live = renderLiveCard(forge, {stats: {power: atk ?? null, hp: hp == null ? null : hp - dmg, damage: dmg, keywords: kws}, art: forge.ilustracao && forgeArt(forge.ilustracao)})
       .replace('data-stat="power"', `data-stat="power" data-trend="${statBuffed(atk, c.atk)}"`)
       .replace('data-stat="hp"', `data-stat="hp" data-trend="${dmg ? 'down' : statBuffed(hp, c.hp)}"`);
     return `<div class="${cls}"${facAttr} data-uid="${uid}" tabindex="0" aria-label="${esc(c.name)}${c.kind === 'Devotee' ? `, ATK ${atk}, HP ${hp - dmg} of ${hp}` : ''}">${live}${marks}</div>`;
@@ -500,16 +502,16 @@ const token = (kind, n, tip) => `<i class="token token--${kind}" data-tip="${esc
 function godHud(key, side) {
   const s = S(), p = s.players[key], d = s.divine[key], god = cards.get(s.gods[key]);
   const pick = (mode?.options || boardPick()?.refs)?.includes(`god:${key}`), max = soulMax(s, key);
-  const f = FORGE.get(`${god.name.toLowerCase()}-001`), art = f?.ilustracao ? FORGE_ART + f.ilustracao : GOD_ART[s.gods[key]] || '';
+  const f = FORGE.get(`${god.name.toLowerCase()}-001`), art = f?.ilustracao ? forgeArt(f.ilustracao) : GOD_ART[s.gods[key]] || '';
   const low = p.soul <= Math.max(d.awakenAt, Math.ceil(max / 4)), k = `gh${key}`;
   // Rosto escolhido no Card Forge (card-forge/god-hud.js): mesma conta da prévia de lá; sem escolha, a arte da carta.
-  const h = f?.hud_rosto, face = h ? `background-image:url('${FORGE_ART + h.imagem}');background-size:${h.zoom}% auto;background-position:${h.x}% ${h.y}%` : `background-image:url('${art}')`;
+  const h = f?.hud_rosto, face = h ? `background-image:url('${forgeArt(h.imagem)}');background-size:${h.zoom}% auto;background-position:${h.x}% ${h.y}%` : `background-image:url('${art}')`;
   const frame = FRAMES[god.name.toLowerCase()] ? god.name.toLowerCase() : 'athena', fr = FRAMES[frame];
   return `<section class="godhud godhud--${side} ${pick ? 'pickable' : ''} ${s.active === key ? 'is-active' : ''} ${d.awaken ? 'is-awaken' : ''} ${low ? 'is-low' : ''}" data-god="${key}" style="--glow:${GOD_GLOW[d.god] || GOD_GLOW['god-athena']}"
       ${pick ? `data-pick="god:${key}"` : ''} role="button" tabindex="0" aria-label="${esc(god.name)}, Soul ${p.soul} of ${max}${d.awaken ? ', Awaken' : ''}">
     <div class="gh-frame" style="aspect-ratio:${fr.ratio}" data-tip="${esc(`God|${god.name}, Player ${key}. Devotees can Strike it.`)}">
       <div class="gh-hole godhud__portrait" style="${box(fr.hole)};${face}"></div>
-      <img class="gh-frame__img gh-frame__img--${frame}" src="./assets/god-frames/${frame}.png" alt="">
+      <img class="gh-frame__img gh-frame__img--${frame}" src="./assets/god-frames/${frame}.webp" alt="">
       <span class="gh-name" style="${box(fr.plate)}">${esc(god.name)}</span>
       ${d.judgment ? `<span class="godhud__judgment">${token('judgment', `R${d.judgment.deadline}`, `Divine Judgment|This God loses at the end of Round ${d.judgment.deadline} unless the counter is removed.`)}</span>` : ''}
     </div>
@@ -533,7 +535,7 @@ function sanctum(key, side) {
   const plural = (k, w) => `${k} ${w}${k === 1 ? '' : 's'}`;
   return `<section class="sanctum sanctum--${side}" aria-label="${side === 'me' ? 'Your' : 'Opponent'} resources">
     <header class="rail__who">${side === 'me' ? 'You' : 'Opponent'} <small>Player ${key}</small></header>
-    <button class="sanctum__domain" data-domain="${key}" style="--art:url('${f?.ilustracao ? FORGE_ART + f.ilustracao : ''}')" data-tip="${esc(`Domain|${dom?.name || '—'}. Click to view the card.`)}">
+    <button class="sanctum__domain" data-domain="${key}" style="--art:url('${f?.ilustracao ? forgeArt(f.ilustracao) : ''}')" data-tip="${esc(`Domain|${dom?.name || '—'}. Click to view the card.`)}">
       <small>Domain</small><strong>${esc(dom?.name || '—')}</strong></button>
     <div class="cosmo" data-bank="${key}" style="--burn:${burn}">
       ${row('rail__row--cosmo', `<img class="cosmo__sigil" src="../../CARD-TEMPLATE/athena/gem_cost.png" alt="">`, `Cosmo Base${pooled ? `<em class="rail__pool">Pool ${pooled}</em>` : ''}`, `${ready}<small>/${p.bases.length}</small><span class="cosmo__pips">${pips}</span>`,
@@ -555,7 +557,7 @@ function showDomainCard(key) {
   box.id = 'bigcard'; box.className = 'bigcard';
   // Domain com habilidade ativada (ex.: The Altar of Slaughter): botão para usar, no seu turno e com a mesa parada.
   const ab = V6[S().domains[key]]?.activate, usable = ab && key === viewer() && idleFor(key);
-  box.innerHTML = `<div class="dcard dcard--big art-full">${renderLiveCard(f, {art: f.ilustracao && FORGE_ART + f.ilustracao})}</div>
+  box.innerHTML = `<div class="dcard dcard--big art-full">${renderLiveCard(f, {art: f.ilustracao && forgeArt(f.ilustracao)})}</div>
     ${usable ? `<button class="primary-action bigcard__use" data-domain-use>Use ${esc(ab.name)}</button>` : ''}`;
   box.querySelector('[data-domain-use]')?.addEventListener('pointerdown', e => { e.stopPropagation(); closeBigCard(); act({type: 'activate', key, uid: `domain:${key}`, choice: {}}); });
   box.addEventListener('pointerdown', closeBigCard);
@@ -645,7 +647,7 @@ function chainArt(c) {
   const s = S(), uid = String(c.uid || '');
   const id = ctx.objects[uid]?.cardId || (uid.startsWith('domain:') ? s.domains?.[uid.slice(7)] : null);
   const f = (id && FORGE.get(id)) || FORGE.get(`${cards.get(s.gods[c.controller])?.name.toLowerCase()}-001`);
-  return f?.ilustracao ? FORGE_ART + f.ilustracao : '';
+  return f?.ilustracao ? forgeArt(f.ilustracao) : '';
 }
 
 // Comando (canto inferior direito): relógio das Doze Casas acima do botão de ações.
@@ -849,7 +851,7 @@ function zoomFace(it) {
   if (ctx.objects[it.uid]) return cardFace(it.uid, {size: 'dcard--lg'}).replace('tabindex="0"', 'tabindex="-1"');
   const uid = String(it.uid || ''), id = uid.startsWith('domain:') ? S().domains?.[uid.slice(7)] : null;
   const f = (id && FORGE.get(id)) || FORGE.get(`${cards.get(S().gods[it.controller])?.name.toLowerCase()}-001`);
-  return f ? `<div class="dcard dcard--lg art-full">${renderLiveCard(f, {art: f.ilustracao && FORGE_ART + f.ilustracao})}</div>` : '';
+  return f ? `<div class="dcard dcard--lg art-full">${renderLiveCard(f, {art: f.ilustracao && forgeArt(f.ilustracao)})}</div>` : '';
 }
 function drawZoom() {
   let el = document.getElementById('chain-zoom');
@@ -1266,7 +1268,7 @@ function showGodPanel(key) {
   hideInspect();
   const s = S(), p = s.players[key], d = s.divine[key], god = cards.get(s.gods[key]), max = soulMax(s, key), acts = godActions(key);
   const forge = FORGE.get(`${god.name.toLowerCase()}-001`);
-  const art = forge?.ilustracao ? renderLiveCard(forge, {art: FORGE_ART + forge.ilustracao}) : `<div class="godpanel__portrait" style="background-image:url('${GOD_ART[s.gods[key]] || ''}')"></div>`;
+  const art = forge?.ilustracao ? renderLiveCard(forge, {art: forgeArt(forge.ilustracao)}) : `<div class="godpanel__portrait" style="background-image:url('${GOD_ART[s.gods[key]] || ''}')"></div>`;
   const state = pw => pw.name === 'BLOODLUST' && acts.bloodlust ? (acts.bloodlust.ok ? ['ready', 'Ready · click to use'] : ['locked', acts.bloodlust.why])
     : pw.kind === 'ultimate' ? (d.ultimateUsed ? ['used', 'Used'] : acts.ultimate.ok ? ['ready', 'Ready · click to use'] : ['locked', acts.ultimate.why])
     : pw.kind === 'awaken' ? (d.awaken ? ['active', 'Active'] : ['locked', `Awakens at Soul ≤ ${d.awakenAt}`]) : ['active', 'Always on'];
@@ -1834,7 +1836,7 @@ function sidePanel(req, t, fx) {
   const godOf = fx && Object.values(S().gods).includes(fx.id) ? fx.id : null;
   const src = sourceUid(req, fx), f = !src && fx && (FORGE.get(fx.id) || (godOf && forgeGod(godOf)));
   const alt = !src && !f && (req.uid && ctx.objects[req.uid] ? req.uid : null), g = !src && !f && !alt && forgeGod(S().gods[req.player]);
-  const live = c => `<div class="dcard dcard--lg art-full">${renderLiveCard(c, {art: c.ilustracao && FORGE_ART + c.ilustracao})}</div>`;
+  const live = c => `<div class="dcard dcard--lg art-full">${renderLiveCard(c, {art: c.ilustracao && forgeArt(c.ilustracao)})}</div>`;
   const face = src ? cardFace(src, {size: 'dcard--lg'}) : f ? live(f) : alt ? cardFace(alt, {size: 'dcard--lg'}) : g ? live(g) : '';
   const target = targetReq(req), waiting = online && req.player !== online.key;
   const cancel = casting && !online ? '<button class="ghost" data-dec="cancel">Cancel</button>' : '';
@@ -2061,7 +2063,7 @@ async function init() {
   director = createDirector({ui, getFx: () => scene?.fx, settings});
   // Star Hill (data/olympus-telas.json): cores, textos e imagem de fundo do duelo, por cima do cenário 3D.
   applyColors('duelo'); applyTexts(stage);
-  if (telas.fundos?.duelo) $('#arena').insertAdjacentHTML('afterend', `<div class="tela-fundo" aria-hidden="true" style="background-image:url('${imageUrl(telas.fundos.duelo, id => { const f = FORGE.get(id); return f?.ilustracao ? FORGE_ART + f.ilustracao : ''; })}');opacity:${Number(telas.fundos.duelo_opacidade ?? .35)}"></div>`);
+  if (telas.fundos?.duelo) $('#arena').insertAdjacentHTML('afterend', `<div class="tela-fundo" aria-hidden="true" style="background-image:url('${imageUrl(telas.fundos.duelo, id => { const f = FORGE.get(id); return f?.ilustracao ? forgeArt(f.ilustracao) : ''; })}');opacity:${Number(telas.fundos.duelo_opacidade ?? .35)}"></div>`);
   const params = new URLSearchParams(location.search);
   if (params.get('godB')) settings.godB = `god-${params.get('godB')}`; // ?godB=poseidon
   if (params.get('ai')) settings.ai = params.get('ai'); // ?ai=B (padrão) ou ?ai=none (hot-seat)

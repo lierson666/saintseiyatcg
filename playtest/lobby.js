@@ -13,6 +13,7 @@ import {startPresence} from '../shared/presence.js?v=20261029-1';
 import {mountSocial} from './social.js?v=20261031-home1';
 import {telas, imageUrl, sound, applyColors, applyTexts} from './telas.js?v=20261030-1';
 import {loadEconomy, ownedLimit, missingCards, coinBadge, storeScreen, collectionScreen, openBooster, buyBooster} from './economy.js?v=20261031-live3';
+import {lightArt} from '../shared/light-art.js';
 import {featureGrid} from './home-features.js?v=20261031-home1';
 import {loadRank, rankBadge, rankName, rankSummary, openRankPanel, playerName} from './rank.js?v=20261031-6';
 
@@ -35,7 +36,7 @@ const remember = () => { try { localStorage.setItem('sstcg.lobby.v1', JSON.strin
 // ---------- Cartas ----------
 const faction = card => (forge.get(card.id)?.faccao || card.id.replace(/^god-/, '').split('-')[0]).toLowerCase();
 const godForge = godId => forge.get(`${godId.replace(/^god-/, '')}-001`);
-const artOf = id => { const f = id.startsWith('god-') ? godForge(id) : forge.get(id); return f?.ilustracao ? ART + f.ilustracao : null; };
+const artOf = (id, size) => { const f = id.startsWith('god-') ? godForge(id) : forge.get(id); return f?.ilustracao ? lightArt(ART + f.ilustracao, size) : null; };
 // Spell não existe para o jogador: é Technique ou Moment (tipo impresso; Athena Event/Miracle pela D194, core.js).
 // Linha de tipo para o jogador: sem "Spell —", como na face da carta (live-card.js).
 const typeText = c => c.type.replace(/^Spell\s*—\s*/, '');
@@ -103,7 +104,7 @@ const socialBadge = () => `<span class="lb-socialbtn__count">${ui.online || 0}</
 function startSocial() {
   if (social || !ui.user?.complete) return;
   startPresence('online');
-  social = mountSocial({api, onProfile: openProfile, avatarOf: id => artOf(id || 'god-athena'),
+  social = mountSocial({api, onProfile: openProfile, avatarOf: id => artOf(id || 'god-athena', 'thumb'),
     decks: () => allDecks().filter(deckValid).map(d => ({id: d.id, name: d.alpha_nome || d.nome, deck: d})), onCount: (online, requests) => {
     ui.online = online; ui.requests = requests;
     const b = root.querySelector('.lb-socialbtn'); if (b) b.innerHTML = `Friends ${socialBadge()}`;
@@ -227,7 +228,7 @@ async function openProfile(username) {
   try {
     const p = await api(`/api/profile/${encodeURIComponent(username)}`), s = p.stats;
     const god = id => esc(cards.get(id)?.name || (id || '').replace(/^god-/, '') || '—');
-    dlg.innerHTML = `<header class="lb-pmodal__head"><span class="lb-avatar" style="background-image:url('${artOf(p.avatar_card || 'god-athena') || ''}')"></span>
+    dlg.innerHTML = `<header class="lb-pmodal__head"><span class="lb-avatar" style="background-image:url('${artOf(p.avatar_card || 'god-athena', 'thumb') || ''}')"></span>
         <div><p class="kv-stamp kv-stamp--gold">${esc(countryName(p.country))} · Joined ${when(p.joined)}</p><h2>${playerName(p.username)}</h2></div>
         <button class="kv-ghost" data-pclose autofocus>Close</button></header>
       <dl class="lb-pstats"><div><dt class="kv-stamp">Played</dt><dd>${s.played}</dd></div><div><dt class="kv-stamp">Wins</dt><dd>${s.wins}</dd></div>
@@ -260,14 +261,14 @@ function profileScreen() {
   const avatar = u.avatar_card || 'god-athena';
   return `<section class="lb-page lb-profile">
     <header class="lb-profile__head kv-card">
-      <span class="lb-avatar" style="background-image:url('${artOf(avatar) || ''}')"></span>
+      <span class="lb-avatar" style="background-image:url('${artOf(avatar, 'thumb') || ''}')"></span>
       <div><p class="kv-stamp kv-stamp--gold">${esc(countryName(u.country))}</p><h1>${playerName(u.username)}</h1>
         <p class="lb-code"><span class="kv-stamp">Friend code</span><b>${esc(u.friend_code)}</b><button class="kv-ghost" data-act="copy-code">${ui.copied ? 'Copied' : 'Copy'}</button></p></div>
     </header>
     <div class="lb-profile__grid">
       <form class="kv-card lb-form" data-form="me">
         <h2>Account</h2>
-        <div class="lb-avatars" role="radiogroup" aria-label="Avatar">${AVATARS.map(id => `<button type="button" role="radio" aria-checked="${id === avatar}" class="lb-avatar lb-avatar--pick ${id === avatar ? 'is-on' : ''}" data-act="avatar" data-id="${id}" style="background-image:url('${artOf(id) || ''}')" aria-label="${esc(cards.get(id)?.name || id)}"></button>`).join('')}</div>
+        <div class="lb-avatars" role="radiogroup" aria-label="Avatar">${AVATARS.map(id => `<button type="button" role="radio" aria-checked="${id === avatar}" class="lb-avatar lb-avatar--pick ${id === avatar ? 'is-on' : ''}" data-act="avatar" data-id="${id}" style="background-image:url('${artOf(id, 'thumb') || ''}')" aria-label="${esc(cards.get(id)?.name || id)}"></button>`).join('')}</div>
         <label class="kv-field"><span class="kv-stamp">Full name</span><input class="kv-input" name="name" value="${esc(u.name)}" required maxlength="80" autocomplete="name"></label>
         <label class="kv-field"><span class="kv-stamp">Email</span><input class="kv-input" value="${esc(u.email)}" disabled></label>
         <label class="kv-field"><span class="kv-stamp">Country</span><select class="kv-input" name="country">${countryOptions(u.country)}</select></label>
@@ -362,7 +363,7 @@ function builder() {
         `<button class="lb-pick" data-act="open-picker" data-pick="${k}" aria-label="Choose ${label}">${id && cards.get(id) ? face(id, 'lb-card--mini') : '<span class="lb-pick__empty">+</span>'}<small>${label}</small></button>`).join('')}</div>
       <div class="lb-list__count ${size === DECK_SIZE ? 'is-full' : ''}"><strong>${size}</strong> / ${DECK_SIZE}</div>
       <div class="lb-curve" aria-label="Cost curve">${curve.map((n, i) => `<span style="--h:${n / peak}"><i>${n || ''}</i><b>${i === 6 ? '7+' : i + 1}</b></span>`).join('')}</div>
-      <ol class="lb-strips">${list.map(e => `<li><button class="lb-strip" data-act="remove" data-id="${e.card_id}" data-card="${e.card_id}" style="--art:url('${artOf(e.card_id) || ''}')">
+      <ol class="lb-strips">${list.map(e => `<li><button class="lb-strip" data-act="remove" data-id="${e.card_id}" data-card="${e.card_id}" style="--art:url('${artOf(e.card_id, 'thumb') || ''}')">
         <b class="lb-gem ${e.card.cost?.unit || ''}">${e.card.cost?.amount ?? '–'}</b><span>${esc(e.card.name)}</span><em>×${e.quantity}</em></button></li>`).join('')
         || '<li class="lb-empty">Click cards in the collection to add them.</li>'}</ol>
       ${errors.length ? `<ul class="lb-errors">${errors.slice(0, 4).map(e => `<li>${errorText(e)}</li>`).join('')}</ul>` : '<p class="lb-ok">Deck ready to play.</p>'}

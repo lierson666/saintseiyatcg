@@ -55,5 +55,24 @@ Pedido do autor: "auditoria de three.js e react no jogo todo, pra deixar o jogo 
 ### Fase 3 — acabamento AAA (grill próprio depois das fases 1–2)
 Tokens de movimento únicos, hover e zoom de carta consistentes, transições de tela, tipografia e estados vazios no padrão MTG Arena.
 
+## Fase 1 — feito em 31/10/2026
+
+| Página | Antes | Depois |
+| --- | --- | --- |
+| Lobby (Home) | 3,5 MB | 2,8 MB (imagens 2,0 → 1,2 MB) |
+| Duelo | 8,8 MB | 4,3 MB (imagens 5,4 → 1,6 MB; Three.js 1,24 MB → 466 KB, 121 KB com gzip) |
+
+- `tools/light-assets.py` gera as versões WebP. Rodar antes de cada deploy; é incremental.
+  - `art-web/webp/` tem o lado maior até 1024 px. Os HUD de 2048 px viraram ~180 KB.
+  - `art-web/thumb/` tem até 320 px.
+  - `art-web/light.json` lista o que existe.
+  - `.webp` ao lado de cada PNG do `CARD-TEMPLATE` e de `god-frames`.
+  - Total: 86,5 MB → 34,8 MB.
+- `shared/light-art.js`: `lightArt(url, size)` só troca a URL quando a versão leve existe. Arte nova ainda não convertida continua no JPG.
+- O lobby usa `thumb` em avatares e listas do deck e `webp` no resto. O duelo usa `webp` em todas as artes do Forge.
+- `shared/live-card.js` monta as peças da carta em `.webp`. Card Forge e Layout Studio continuam nos PNG originais.
+- Three.js servido do próprio site (`playtest/divine/vendor/three-0.160.0-slim.js`), sem a CDN. Ao usar uma classe nova, recriar pela entrada `tools/three-slim.entry.js`.
+- JSON: sem mudança. São ~194 KB com gzip e o jogo precisa de tudo. O ganho real vem do cache (item 4), que ainda espera o sim do autor para mexer no Caddy.
+
 ## Já corrigido nesta rodada
 - A coluna implícita da `.lobby` crescia até a largura do carrossel (~1.470 px) e empurrava o PLAY para fora da tela em janelas menores. Corrigido em `playtest/home.css` com `.lobby { grid-template-columns: minmax(0, 1fr); }`.
