@@ -4,6 +4,7 @@
 // Vive fora do render() do lobby (#social) para a atualização a cada 15 s não apagar o que o jogador digita.
 // Duelo (etapa 4, docs/duelo-online.md): Challenge no chat com escolha de deck; o desafio vira mensagem com Accept/Decline,
 // expira em 60 s e, aceito, leva os dois para a mesma partida. Fora do chat, um aviso no topo mostra o desafio recebido.
+import {playerName} from './rank.js?v=20261031-4';
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const LABEL = {online: 'Online', match: 'In a match', offline: 'Offline'};
 
@@ -18,7 +19,7 @@ export function mountSocial({api, avatarOf, onCount, decks = () => [], onProfile
 
   const person = (p, extra = '') => `<div class="lb-friend ${p.status ? 'is-' + p.status : ''}">
     <span class="lb-friend__avatar" style="background-image:url('${avatarOf(p.avatar_card) || ''}')"></span>
-    <span class="lb-friend__name"><b>${esc(p.username)}</b><small>${p.status ? LABEL[p.status] : esc(p.friend_code)}</small></span>${extra}</div>`;
+    <span class="lb-friend__name"><b>${playerName(p.username)}</b><small>${p.status ? LABEL[p.status] : esc(p.friend_code)}</small></span>${extra}</div>`;
   // Amigo: a linha abre o chat; mostra quantas mensagens não lidas.
   const friendRow = f => person(f, `${f.unread ? `<span class="lb-friend__unread" aria-label="${f.unread} unread">${f.unread}</span>` : ''}
     <button class="lb-friend__open" data-social="chat" data-user="${esc(f.username)}" aria-label="Chat with ${esc(f.username)}"></button>

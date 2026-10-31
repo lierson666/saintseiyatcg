@@ -52,3 +52,7 @@
 .rk-plate span { display: grid; line-height: 1.15; min-width: 0; }
 .rk-plate b { font: 600 13px Cinzel, serif; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .rk-plate small { font-size: 11px; opacity: .75; white-space: nowrap; }
+
+/* Lendas (autor, 31/10/2026): nome dourado, como os devs no MTG Arena. */
+.is-legend { background: linear-gradient(180deg, #fff3c4, #f1c75b 45%, #c8922e); -webkit-background-clip: text; background-clip: text; color: transparent;
+  -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 6px #e6c36a80); font-weight: 600; }

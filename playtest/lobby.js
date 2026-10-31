@@ -10,9 +10,9 @@ import {loadMyDecks, saveMyDecks, findDeck, syncDecks, onDeckStatus, deckCovers,
 import {mountKV} from '../shared/kv-sky.js?v=20261029-2';
 import {countryOptions, countryName} from '../shared/countries.js?v=20261029-1';
 import {startPresence} from '../shared/presence.js?v=20261029-1';
-import {mountSocial} from './social.js?v=20261031-poll1';
+import {mountSocial} from './social.js?v=20261031-legend1';
 import {telas, imageUrl, sound, applyColors, applyTexts} from './telas.js?v=20261030-1';
-import {loadRank, rankBadge, rankName, openRankPanel} from './rank.js?v=20261031-3';
+import {loadRank, rankBadge, rankName, openRankPanel, playerName} from './rank.js?v=20261031-4';
 
 const root = document.getElementById('lobby');
 const ART = '../card-forge/art-web/';
@@ -90,7 +90,7 @@ function topBar() {
     <span class="lb-top__tag">Alpha 0.1 · Engine 3.0</span>
     ${ui.user?.complete ? `<button class="lb-socialbtn" data-act="friends" aria-label="Friends">Friends ${socialBadge()}</button>` : ''}
     ${ui.rank ? rankBadge(ui.rank) : ''}
-    ${ui.user ? `<span class="lb-user"><i class="kv-dot" aria-hidden="true"></i>${ui.user.complete ? `<button class="kv-ghost" data-act="my-profile" aria-label="My player profile">${esc(ui.user.username)}</button>` : esc(ui.user.name)}<button class="kv-ghost" data-act="signout">Sign out</button></span>` : ''}
+    ${ui.user ? `<span class="lb-user"><i class="kv-dot" aria-hidden="true"></i>${ui.user.complete ? `<button class="kv-ghost" data-act="my-profile" aria-label="My player profile">${playerName(ui.user.username)}</button>` : esc(ui.user.name)}<button class="kv-ghost" data-act="signout">Sign out</button></span>` : ''}
   </header>`;
 }
 
@@ -224,7 +224,7 @@ async function openProfile(username) {
     const p = await api(`/api/profile/${encodeURIComponent(username)}`), s = p.stats;
     const god = id => esc(cards.get(id)?.name || (id || '').replace(/^god-/, '') || '—');
     dlg.innerHTML = `<header class="lb-pmodal__head"><span class="lb-avatar" style="background-image:url('${artOf(p.avatar_card || 'god-athena') || ''}')"></span>
-        <div><p class="kv-stamp kv-stamp--gold">${esc(countryName(p.country))} · Joined ${when(p.joined)}</p><h2>${esc(p.username)}</h2></div>
+        <div><p class="kv-stamp kv-stamp--gold">${esc(countryName(p.country))} · Joined ${when(p.joined)}</p><h2>${playerName(p.username)}</h2></div>
         <button class="kv-ghost" data-pclose autofocus>Close</button></header>
       <dl class="lb-pstats"><div><dt class="kv-stamp">Played</dt><dd>${s.played}</dd></div><div><dt class="kv-stamp">Wins</dt><dd>${s.wins}</dd></div>
         <div><dt class="kv-stamp">Losses</dt><dd>${s.losses}</dd></div><div><dt class="kv-stamp">Win rate</dt><dd>${s.winrate}%</dd></div></dl>
@@ -255,7 +255,7 @@ function profileScreen() {
   return `<section class="lb-page lb-profile">
     <header class="lb-profile__head kv-card">
       <span class="lb-avatar" style="background-image:url('${artOf(avatar) || ''}')"></span>
-      <div><p class="kv-stamp kv-stamp--gold">${esc(countryName(u.country))}</p><h1>${esc(u.username)}</h1>
+      <div><p class="kv-stamp kv-stamp--gold">${esc(countryName(u.country))}</p><h1>${playerName(u.username)}</h1>
         <p class="lb-code"><span class="kv-stamp">Friend code</span><b>${esc(u.friend_code)}</b><button class="kv-ghost" data-act="copy-code">${ui.copied ? 'Copied' : 'Copy'}</button></p></div>
     </header>
     <div class="lb-profile__grid">

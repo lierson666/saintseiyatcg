@@ -6,6 +6,12 @@ const TIERS = ['Steel', 'Iron', 'Bronze', 'Silver', 'Gold', 'Kamui'];
 const CACHE = 'sstcg.rank.v1'; // último rank visto: base do "antes → depois" no fim da partida
 const PIPS = 6;
 
+// Lendas (autor, 31/10/2026): nome em dourado, como os devs no MTG Arena. Usernames são únicos (índice users_username).
+const LEGENDS = new Set(['lierson']);
+export const playerName = name => {
+  const legend = LEGENDS.has(String(name ?? '').split('#')[0].trim().toLowerCase());
+  return legend ? `<span class="is-legend" title="Legend">${esc(name)}</span>` : esc(name);
+};
 export const rankName = r => r.tier === 'Kamui' ? 'Kamui' : `${r.tier} ${ROMAN[r.division]}`;
 // Símbolos do autor (LOGO/SSTCG_Ranked_Transparent_PNG.zip): emblema do tier; a divisão vai no texto.
 // Os escudos de divisão do zip vieram cortados com pedaços dos vizinhos; voltam quando chegarem recortados certo.
@@ -46,7 +52,7 @@ export function openRankPanel(r, opener) {
       <p class="kv-status">${r.xp_in_level} / ${r.xp_level_size} XP · vs AI today ${r.ai_xp_today} / ${r.ai_xp_cap} XP</p></section>
     <p class="kv-status">Rank moves only in online duels. Matches vs the AI give XP.</p>
     <h3 class="rk-board__head"><img src="${art('kamui-top20')}" alt="Kamui · Top 20"></h3>
-    ${r.kamui?.length ? `<ol class="rk-board">${r.kamui.map(k => `<li><b>${esc(k.username)}</b><span>${k.points} pts</span></li>`).join('')}</ol>` : '<p class="kv-status">No one has reached Kamui yet.</p>'}`;
+    ${r.kamui?.length ? `<ol class="rk-board">${r.kamui.map(k => `<li><b>${playerName(k.username)}</b><span>${k.points} pts</span></li>`).join('')}</ol>` : '<p class="kv-status">No one has reached Kamui yet.</p>'}`;
   document.body.append(dlg);
   dlg.showModal();
   dlg.addEventListener('close', () => { dlg.remove(); opener?.focus?.(); });
@@ -102,7 +108,7 @@ export async function mountNameplates({online, players, you}) {
   const foeName = online ? players?.[Object.keys(players).find(k => k !== you)] : null;
   const foe = foeName ? await call(`/api/profile/${encodeURIComponent(foeName)}`).catch(() => null) : null;
   const plate = (side, name, r) => `<aside class="rk-plate rk-plate--${side}" aria-label="${side === 'me' ? 'You' : 'Opponent'}: ${esc(name)}${r ? `, ${esc(rankName(r))}` : ''}">
-    ${r ? emblem(r) : ''}<span><b>${esc(name)}</b>${r ? `<small>${esc(rankName(r))} · Lv ${r.level}</small>` : ''}</span></aside>`;
+    ${r ? emblem(r) : ''}<span><b>${playerName(name)}</b>${r ? `<small>${esc(rankName(r))} · Lv ${r.level}</small>` : ''}</span></aside>`;
   document.body.insertAdjacentHTML('beforeend', plate('foe', foe?.username || foeName || 'AI Opponent', foe?.rank)
     + (me ? plate('me', me.username, mine) : ''));
 }
