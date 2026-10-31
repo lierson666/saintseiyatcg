@@ -22,7 +22,7 @@ test('parser lê os 95 registros sem alterar texto e com os números impressos (
   assert.equal(cards.get('athena-v6-019').cosmoble, false); // Kamui: Cosmoble No
   assert.deepEqual(['athena', 'poseidon', 'hades', 'artemis', 'ares'].map(g => cards.get(`god-${g}`).soul), [20, 18, 22, 15, 20]); // G3-042 por cima do SOUL impresso
   for (const n of ['062', '063', '064', '065']) assert.equal(cards.get(`athena-v6-${n}`).cost, null, 'D196');
-  assert.deepEqual(cards.get('athena-v6-054').cost, {amount: 3, unit: 'latent'});
+  assert.deepEqual([cards.get('athena-v6-054').type, cards.get('athena-v6-054').cost], ['Spell — Technique', {amount: 3, unit: 'base'}]); // ex-Miracle (autor, 31/10/2026)
   assert.deepEqual(cards.get('athena-v6-014').autoEquip, ['Gemini Saga', 'Dragon Shiryu']);
   assert.deepEqual([cards.get('athena-v6-044').autoEquip, cards.get('athena-v6-044').equip], [[], {amount: 2, who: 'any'}]);
   assert.deepEqual(cards.get('athena-v6-019').equip, {amount: 6, who: 'other'});

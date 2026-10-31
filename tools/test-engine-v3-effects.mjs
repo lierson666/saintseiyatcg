@@ -66,14 +66,17 @@ test('077 Shiryu\'s Sacrificed Sight: +2/+2 e Pierce em Shiryu; no fim do Round 
   assert.equal(s.units[shiryu].prepared, true);
 });
 
-test('061 The Call of Athena (God) em resposta ao Strike previne 3 de dano ao God', () => {
-  const {s, ctx, field, cast} = setup();
+// Ex-Miracle, agora Technique (guia, autor 31/10/2026): não responde ao Strike; no próprio turno, paga Base e protege o God.
+test('061 The Call of Athena (God) é Technique: recusada em resposta ao Strike; como AÇÃO põe escudo de 3 no God', () => {
+  const {s, ctx, field, cast, end} = setup();
   const seiya = field('A', '001');
   declareStrike(s, ctx, seiya, {kind: 'god', player: 'B'});
-  cast('B', '061', {mode: 'god'});
-  passAll(s);
-  assert.equal(s.players.B.soul, 20);
-  assert.equal(s.effects.find(e => e.target === 'god:B').amount, 1, 'sobra 1 do escudo');
+  assert.throws(() => cast('B', '061', {mode: 'god'}), /D1/);
+  passAll(s); end();
+  const p = s.players.B, call = p.hand.at(-1);
+  p.bases = p.deck.splice(0, 3).map(b => ({uid: b, prepared: true}));
+  playSpell(s, ctx, 'B', call, {mode: 'god'}); passAll(s);
+  assert.equal(s.effects.find(e => e.target === 'god:B').amount, 3);
 });
 
 test('081 The Testament of Aiolos: "both" só com Pegasus Seiya', () => {

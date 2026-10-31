@@ -201,22 +201,15 @@ test('Technique fora do próprio turno ou com janela aberta é recusada', () => 
   assert.throws(() => playSpell(s, ctx, 'A', own, () => {}), e => e.decision === 'P06');
 });
 
-test('Moment (056) do defensor responde ao Strike, paga Latent, resolve antes do dano e vai para o Tartarus', () => {
-  const {s, ctx, objects, toHand, field} = setup();
-  const seiya = field('A', '001'), protect = toHand('B', '056'), log = [];
+// 056 era Miracle e virou Technique (guia, autor 31/10/2026): o defensor não responde com ela ao Strike.
+test('Technique (056) do defensor não responde ao Strike e não paga nada', () => {
+  const {s, ctx, toHand, field} = setup();
+  const seiya = field('A', '001'), protect = toHand('B', '056');
   s.players.B.latent = 2;
   startTurn(s);
-  assert.throws(() => playSpell(s, ctx, 'B', protect, () => {}), /não pode jogar Instant/);
-  assert.equal(s.players.B.latent, 2, 'nada pago');
   declareStrike(s, ctx, seiya, {kind: 'god', player: 'B'});
-  playSpell(s, ctx, 'B', protect, st => log.push(`soul ${st.players.B.soul}`));
-  assert.deepEqual([s.players.B.latent, s.players.B.stack], [0, [protect]]);
-  checkInvariants(s, objects);
-  passAll(s);
-  assert.deepEqual(log, ['soul 20']);
-  assert.equal(s.players.B.soul, 18);
-  assert.ok(s.players.B.tartarus.includes(protect));
-  checkInvariants(s, objects);
+  assert.throws(() => playSpell(s, ctx, 'B', protect, () => {}), /D1/);
+  assert.deepEqual([s.players.B.latent, s.players.B.stack], [2, []]);
 });
 
 test('Moment do ativo abre janela; 053 é Technique (autor, 28/10/2026)', () => {
