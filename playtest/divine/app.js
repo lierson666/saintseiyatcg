@@ -413,7 +413,7 @@ function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
   const s = S(), c = info(uid), n = num(uid), unit = s.units[uid];
   const cat = c.kind === 'Spell' && ctx.objects[uid] ? spellCat(uid) : null;
   const subtype = cat ? cat.category : (c.type.split(' — ')[1] || c.kind);
-  const forge = FORGE.get(ctx.objects[uid].cardId);
+  const forge = FORGE.get(ctx.objects[uid].cardId), forge0 = forge;
   const atk = field ? atkOf(s, ctx, uid) : c.atk, hp = field ? hpOf(s, ctx, uid) : c.hp;
   const kws = [...new Set(field && c.kind === 'Devotee' ? keywordsOf(s, ctx, uid) : c.keywords)];
   const dmg = unit?.damage || 0;
@@ -433,7 +433,11 @@ function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
       <div class="btok ${!forge.ilustracao ? 'is-noart' : ''}" style="${tokenArt(forge)}"><span class="btok__name">${esc(c.name)}</span>
         ${bonus ? `<span class="btok__band">${esc(bonus)}</span>` : ''}${equip != null && !c.global ? `<b class="btok__equip" title="Equip ${equip}"><small>EQUIP</small>${equip}</b>` : ''}</div></div>`;
   }
-  if (forge && field && !size && c.kind === 'Devotee' && BOARD_TOKENS) { // só na mesa: inspetor (size xl) mostra a carta inteira
+  // Token (Moon Spirit, Forest Guardian…): sem projeto no Forge; entra no mesmo formato de mesa, com o símbolo da facção do God
+  // de quem controla (autor, 31/10/2026).
+  const tok = !forge && field && !size && c.kind === 'Devotee' && BOARD_TOKENS ? {faccao: cards.get(S().gods[owner(uid)])?.name || 'neutral', ilustracao: null} : null;
+  if ((forge || tok) && field && !size && c.kind === 'Devotee' && BOARD_TOKENS) { // só na mesa: inspetor (size xl) mostra a carta inteira
+    const forge = forge0 || tok, facAttr = ` data-fac="${CARD_FACTIONS.has(String(forge.faccao).toLowerCase()) ? String(forge.faccao).toLowerCase() : 'neutral'}"${tok ? ' data-token' : ''}`;
     // Carta na mesa no estilo MTG Arena (teste local, autor 30/10/2026): só arte, nome, ATK e HP.
     // A arte segue o enquadramento do Forge, recortada da altura do rosto; o texto inteiro fica no inspetor.
     const fr = forge.ilustracao_enquadramento, fac = CARD_FACTIONS.has(String(forge.faccao).toLowerCase()) ? String(forge.faccao).toLowerCase() : 'athena';
