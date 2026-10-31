@@ -80,11 +80,13 @@ export function createAI(h) {
     // Alvo de carta V6: God inimigo primeiro; senão o Devotee inimigo mais caro; senão o próprio mais caro.
     if (req.choose === 'mode') return req.options[0]; // modo escrito: o primeiro
     if (req.choose === 'target') {
-      const god = req.options.find(o => String(o).startsWith('god:') && o !== `god:${req.player}`);
-      if (god) return god;
+      const god = req.options.filter(o => String(o).startsWith('god:') && o !== `god:${req.player}`);
       const real = req.options.filter(o => !String(o).startsWith('god:'));
-      const foes = real.filter(o => !String(o).startsWith(`${req.player}:`));
-      return [...(foes.length ? foes : real.length ? real : req.options)].sort((a, b) => cost(b) - cost(a))[0];
+      const foes = real.filter(o => !String(o).startsWith(`${req.player}:`)).sort((a, b) => cost(b) - cost(a));
+      const rest = req.options.filter(o => !god.includes(o) && !foes.includes(o)).sort((a, b) => cost(b) - cost(a));
+      // "Up to N" (multiple): lista; inimigos primeiro e só completa com os próprios até o mínimo.
+      if (req.multiple) { const enemy = [...god, ...foes].slice(0, req.count); return [...enemy, ...rest.slice(0, Math.max(0, (req.min ?? req.count) - enemy.length))]; }
+      return god[0] ?? foes[0] ?? rest[0];
     }
     const sorted = [...req.options].sort((a, b) => cost(a) - cost(b));
     if (req.choose === 'keep') return [...req.options].sort((a, b) => h.hp(b) - h.hp(a))[0]; // §63: mantém a versão mais inteira

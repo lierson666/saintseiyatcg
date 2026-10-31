@@ -20,7 +20,7 @@ import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, cloc
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
 import {createDirector} from './director.js?v=18';
-import {createAI} from './ai.js?v=5';
+import {createAI} from './ai.js?v=6';
 import {findDeck} from '../deck-store.js';
 import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-face3';
 import {unlock, playMusic} from '../audio.js?v=20261030-telas';
@@ -2071,14 +2071,18 @@ const ai = createAI({
   playSpell: (key, uid, ch) => playSpell(S(), ctx, key, uid, ch), declareStrike: (uid, target) => declareStrike(S(), ctx, uid, target),
   announceExclamation: (key, trio) => announceExclamation(S(), ctx, key, trio), announceGreatFlood: key => announceGreatFlood(S(), ctx, key),
 });
-let aiBusy = false;
+let aiBusy = false, aiRefused = null; // pergunta cuja resposta da IA a engine recusou: na próxima vez responde por timeout
 async function aiTick() {
   const key = settings.ai;
   if (online || key === 'none' || aiBusy || !match || director.busy || mode || S().victory) return;
   const s = S();
   aiBusy = true;
   try {
-    if (pending) { if (pending.pending.player === key) await reply({value: ai.answer(pending.pending)}); return; }
+    if (pending) {
+      const p = pending.pending;
+      if (p.player === key) { await reply(aiRefused === p ? {timeout: true} : {value: ai.answer(p)}); if (pending?.pending === p) aiRefused = p; }
+      return;
+    }
     if (s.setup) { if (s.setup[0] === key) await act({type: 'mulligan', key, choice: {uids: []}}); return; }
     if (s.window) { if (s.window.priority === key) await act({type: 'pass', key}); return; }
     if (!idleFor(key)) return;
