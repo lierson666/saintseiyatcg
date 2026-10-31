@@ -95,6 +95,11 @@ h1, h2, h3, .lb-play, .lb-tab, .lb-hero p { font-family: "Cinzel", "Trajan Pro",
 .lb-list__god span img, .lb-cover span img { height: 18px; margin-right: 6px; vertical-align: -3px; }
 .lb-list__name { padding: 9px 10px; border: 1px solid var(--line); border-radius: 8px; background: #0a0f1c; }
 .lb-options { max-width: 560px; }
+.lb-options__h { margin: 22px 0 10px; font: 600 12px/1 var(--kv-title, serif); letter-spacing: .3em; text-transform: uppercase; color: var(--gold); }
+.lb-set { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 44px; padding: 4px 0; border-bottom: 1px solid rgba(255, 255, 255, .06); font-size: 15px; color: var(--text); }
+.lb-set select { width: auto; min-width: 180px; }
+.lb-set input[type=checkbox] { width: 20px; height: 20px; accent-color: var(--gold); }
+.lb-set input[type=range] { width: 180px; accent-color: var(--gold); }
 .lb-volume { grid-template-columns: 140px 1fr 50px; align-items: center; margin-bottom: 14px; font-size: 15px; color: var(--text); }
 .lb-volume input { accent-color: var(--gold); }
 

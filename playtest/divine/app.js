@@ -784,10 +784,13 @@ function overlays() {
   if (pending && !s.victory && pending.pending.player !== settings.ai) html += decisionModal();
   else html += orderPanel();
   if (logOpen) html += `<div class="drawer log" aria-label="Match log"><h3>Match log</h3><button class="drawer__x" data-toggle-log aria-label="Close log">×</button>${logLines.slice(-150).reverse().map(l => `<p><small>R${l.round}</small> ${esc(l.text)}</p>`).join('')}</div>`;
+  // Engrenagem de opções sempre visível no canto superior direito, como no MTG Arena (autor, 31/10/2026).
+  html += `<button class="gear-btn" data-toggle-settings aria-label="Options" aria-expanded="${settingsOpen}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.4 13a7.6 7.6 0 0 0 0-2l2-1.6-2-3.4-2.4 1a7.4 7.4 0 0 0-1.7-1L15 3.5h-4l-.4 2.5a7.4 7.4 0 0 0-1.7 1l-2.4-1-2 3.4 2 1.6a7.6 7.6 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7.4 7.4 0 0 0 1.7 1l.4 2.5h4l.4-2.5a7.4 7.4 0 0 0 1.7-1l2.4 1 2-3.4-2-1.6Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></button>`;
   if (settingsOpen) {
     const sel = (key, opts) => `<select data-setting="${key}">${Object.entries(opts).map(([v, l]) => `<option value="${v}" ${settings[key] === v ? 'selected' : ''}>${l}</option>`).join('')}</select>`;
     const chk = (key, l) => `<label class="set"><span>${l}</span><input type="checkbox" data-setting="${key}" ${settings[key] ? 'checked' : ''}></label>`;
     html += `<div class="drawer settings" role="dialog" aria-label="Settings"><h3>Settings</h3><button class="drawer__x" data-toggle-settings aria-label="Close settings">×</button>
+      <label class="set"><span>Full screen</span><input type="checkbox" data-fullscreen ${document.fullscreenElement ? 'checked' : ''}></label>
       <label class="set"><span>Graphics</span>${sel('quality', {low: 'Low', medium: 'Medium', high: 'High', ultra: 'Ultra'})}</label>
       <label class="set"><span>Arena</span>${sel('theme', Object.fromEntries(Object.entries(THEMES).map(([k, t]) => [k, t.label])))}</label>
       <label class="set"><span>God of Player B (new match)</span>${sel('godB', {'god-athena': 'Athena', 'god-poseidon': 'Poseidon · fixture deck'})}</label>
@@ -1226,10 +1229,12 @@ overlayRoot.addEventListener('click', e => {
   if (btn.dataset.mull) { marked.has(btn.dataset.mull) ? marked.delete(btn.dataset.mull) : marked.add(btn.dataset.mull); return render(); }
   if (btn.dataset.primary !== undefined) return primary();
   if (btn.dataset.new !== undefined) return online ? concedeOnline() : newMatch();
-  if (btn.dataset.toggleSettings !== undefined) { settingsOpen = false; return render(); }
+  if (btn.dataset.toggleSettings !== undefined) { settingsOpen = !settingsOpen; toolsOpen = false; return render(); }
   if (btn.dataset.toggleLog !== undefined) { logOpen = false; return render(); }
 });
+document.addEventListener('fullscreenchange', () => { if (settingsOpen) render(); });
 overlayRoot.addEventListener('change', e => {
+  if (e.target.dataset.fullscreen !== undefined) return void (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.())?.catch?.(() => {});
   const key = e.target.dataset.setting;
   if (!key) return;
   settings[key] = e.target.type === 'checkbox' ? e.target.checked : e.target.type === 'range' ? Number(e.target.value) : e.target.value;

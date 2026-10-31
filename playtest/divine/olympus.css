@@ -1155,3 +1155,12 @@ body.is-peeking .decision-veil--center, body.is-peeking .trigger-panel.is-center
 body.is-peeking:has(.trigger-panel.is-center) .peek-return { display: block; position: fixed; z-index: 46; left: 50%; bottom: 18px; transform: translateX(-50%);
   min-height: 44px; padding: 0 22px; border: 1px solid var(--gold); border-radius: 999px; background: rgba(10, 12, 34, .94); color: var(--gold-hi); font: 600 14px/1 system-ui; }
 .reduce-motion .trigger-panel.is-center { animation: none; }
+
+/* Engrenagem de opções (autor, 31/10/2026): canto superior direito, como no MTG Arena; a placa do oponente fica ao lado. */
+.gear-btn { position: fixed; z-index: 46; top: 16px; right: 16px; width: 44px; height: 44px; display: grid; place-items: center; padding: 0; border: 1px solid rgba(201, 164, 92, .55);
+  border-radius: 50%; background: rgba(8, 10, 28, .82); color: var(--gold-hi, #ffe7a8); box-shadow: 0 4px 14px rgba(0, 0, 0, .5); cursor: pointer; transition: transform .25s cubic-bezier(.2, .8, .2, 1), border-color .2s; }
+.gear-btn svg { width: 24px; height: 24px; }
+.gear-btn:hover, .gear-btn[aria-expanded="true"] { transform: rotate(45deg); border-color: var(--gold-hi, #ffe7a8); }
+.gear-btn:focus-visible { outline: 2px solid var(--gold-hi, #ffe7a8); outline-offset: 2px; }
+.rk-plate--foe { right: 72px; }
+.reduce-motion .gear-btn { transition: none; }

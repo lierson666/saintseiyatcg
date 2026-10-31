@@ -202,11 +202,33 @@ function decksScreen() {
     ${allDecks().map(d => deckBox(d, 'edit-deck')).join('')}</div></section>`;
 }
 
+// Opções (autor, 31/10/2026): as mesmas do duelo (mesma chave do localStorage de playtest/divine/app.js) + tela cheia.
+const MATCH_KEY = 'ssTcgOlympusArena';
+const MATCH_DEFAULTS = {quality: 'high', theme: 'olympus', speed: 'normal', skipDraws: false, reduceMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
+  reduceFlashes: false, shake: 1, autoPass: true, phaseTips: true, timeouts: false};
+const matchSettings = () => { try { return {...MATCH_DEFAULTS, ...JSON.parse(localStorage.getItem(MATCH_KEY) || '{}')}; } catch { return {...MATCH_DEFAULTS}; } };
+const setMatch = (key, value) => { try { localStorage.setItem(MATCH_KEY, JSON.stringify({...matchSettings(), [key]: value})); } catch { /* sem armazenamento */ } };
+const THEME_LABELS = {olympus: 'Olympus Arena', athena: "Athena's Sanctuary", poseidon: "Poseidon's Undersea Temple"}; // = THEMES de divine/scene.js
+export const toggleFullscreen = () => (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.())?.catch?.(() => {});
 function options() {
+  const m = matchSettings();
   const row = (k, label) => `<label class="lb-field lb-volume">${label}<input type="range" min="0" max="100" value="${Math.round(volume[k] * 100)}" data-act="volume" data-kind="${k}"><output>${Math.round(volume[k] * 100)}%</output></label>`;
-  return `<section class="lb-page lb-options"><header class="lb-page__head"><h1>Options</h1><p>Match settings (speed, quality, timers) live in the arena's Settings button.</p></header>
-    ${row('music', 'Music')}${row('sfx', 'Sound effects')}${installBox()}</section>`;
+  const sel = (k, label, opts) => `<label class="lb-set"><span>${label}</span><select class="kv-input" data-act="match-set" data-key="${k}">${Object.entries(opts).map(([v, l]) => `<option value="${v}" ${m[k] === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label>`;
+  const chk = (k, label) => `<label class="lb-set"><span>${label}</span><input type="checkbox" data-act="match-set" data-key="${k}" ${m[k] ? 'checked' : ''}></label>`;
+  return `<section class="lb-page lb-options"><header class="lb-page__head"><h1>Options</h1><p>Saved on this device. The same options open from the gear during a match.</p></header>
+    <h2 class="lb-options__h">Display</h2>
+    <label class="lb-set"><span>Full screen</span><input type="checkbox" data-act="fullscreen" ${document.fullscreenElement ? 'checked' : ''}></label>
+    ${sel('quality', 'Graphics', {low: 'Low', medium: 'Medium', high: 'High', ultra: 'Ultra'})}${sel('theme', 'Arena', THEME_LABELS)}
+    <h2 class="lb-options__h">Sound</h2>${row('music', 'Music')}${row('sfx', 'Sound effects')}
+    <h2 class="lb-options__h">Gameplay</h2>
+    ${sel('speed', 'Animation speed', {fast: 'Fast', normal: 'Normal', cinematic: 'Cinematic'})}
+    ${chk('phaseTips', 'Phase tips (control panel)')}${chk('autoPass', 'Auto-pass when you have no response')}${chk('skipDraws', 'Skip draw animations')}${chk('timeouts', 'Apply clock timeouts')}
+    <h2 class="lb-options__h">Accessibility</h2>
+    ${chk('reduceMotion', 'Reduce motion')}${chk('reduceFlashes', 'Reduce flashes')}
+    <label class="lb-set"><span>Screen shake</span><input type="range" min="0" max="1.5" step=".25" value="${m.shake}" data-act="match-set" data-key="shake"></label>
+    ${installBox()}</section>`;
 }
+document.addEventListener('fullscreenchange', () => { if (ui.screen === 'options') render(); });
 
 // Web app (autor, 30/10/2026): Android instala pelo pedido do navegador; iPhone só pelo Compartilhar › Adicionar à Tela de Início.
 let installPrompt = null;
@@ -591,6 +613,8 @@ root.addEventListener('change', e => {
 root.addEventListener('input', e => {
   const t = e.target;
   if (t.dataset.act === 'volume') { setVolume(t.dataset.kind, t.value / 100); t.nextElementSibling.value = `${t.value}%`; }
+  if (t.dataset.act === 'match-set') setMatch(t.dataset.key, t.type === 'checkbox' ? t.checked : t.type === 'range' ? Number(t.value) : t.value);
+  if (t.dataset.act === 'fullscreen') toggleFullscreen();
   if (t.dataset.act === 'deck-search') {
     ui.deckQ = t.value; const q = t.value.toLowerCase();
     root.querySelectorAll('.ds-deck').forEach(el => { el.hidden = !el.dataset.name.includes(q); });
