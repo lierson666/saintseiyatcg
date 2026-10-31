@@ -271,3 +271,37 @@ test('407 Primal Channeling: o próximo Devotee do turno custa 1 a menos; o segu
   before = ready(); playDevotee(s, ctx, 'A', b, {});
   assert.equal(before - ready(), cost);
 });
+
+// ---- Artemis → Verde (meta Premodern, 31/10/2026): docs/rebalance-artemis-premodern.md ----
+test('435 Silver Arrow Commander: Precise Execution é fight (cada um causa o próprio ATK), não 3 de dano fixo', () => {
+  const {s, ctx, field, hand, id} = setup();
+  const foe = field('B', id(382)), cmd = hand('A', id(435)); // Moonlit Wolf 2/1 do lado B
+  const foeAtk = atkOf(s, ctx, foe);
+  playDevotee(s, ctx, 'A', cmd, {}); passAll(s);
+  assert.ok(!s.units[foe], 'o 5/4 derrota o alvo');
+  assert.equal(s.units[cmd].damage, foeAtk, 'e leva o ATK do alvo');
+});
+
+test('388 Silver Arrow Huntress: Precise Hunt põe Training counter num Devotee seu, sem dano', () => {
+  const {s, ctx, field, hand, io, id} = setup();
+  const friend = field('A', id(382)), foe = field('B', 'ares-v6-271');
+  io.answer = q => (q.options.includes(friend) ? friend : q.options[0]);
+  playDevotee(s, ctx, 'A', hand('A', id(388)), {}); passAll(s);
+  assert.equal(s.units[friend].counters, 1);
+  assert.equal(s.units[foe].damage, 0);
+});
+
+test('379 Divine Bow: Celestial Arrow dá +2 ATK contra Devotee, sem dano em outro alvo', () => {
+  const {s, ctx, field, hand, id} = setup();
+  const archer = field('A', id(393)), foe = field('B', 'ares-v6-271'), other = field('B', 'ares-v6-271');
+  playEquipment(s, ctx, 'A', hand('A', id(379)), archer);
+  const atk = atkOf(s, ctx, archer);
+  declareStrike(s, ctx, archer, {kind: 'devotee', uid: foe}); passAll(s);
+  assert.equal(s.units[other].damage, 0);
+  assert.ok(!s.units[foe] || s.units[foe].damage >= atk + 2);
+});
+
+test('custos novos: 397 c1, 449 c5, 450 c6', () => {
+  const {ctx, id} = setup();
+  assert.deepEqual([397, 449, 450].map(n => ctx.cards.get(id(n)).cost.amount), [1, 5, 6]);
+});

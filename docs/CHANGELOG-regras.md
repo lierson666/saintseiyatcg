@@ -4,6 +4,15 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-31 — Cartas de Artemis — Verde (Elves: ramp + tribal, meta Premodern)
+
+- **Antes:** dano fixo em 388 (1), 435 (3 no ETB) e 379 (2 a cada Strike); 397 Sacred Grove Dryad c2; 449 c7 e 450 c8; textos com "+1/+1 counter", "Once per round" e "once per turn".
+- **Depois:** 388 dá Training counter num Devotee seu; 435 tem fight opcional no ETB; 379 dá +2 ATK quando o portador declara Strike contra Devotee. 397 c1, 449 c5 (Overrun), 450 c6. Fight e bite ficam como a remoção do Verde. Em todas as cartas de Artemis, "+1/+1 counter" virou "Training counter" (§48A) e "once per round/turn" virou "once each round" (§64); só texto, sem mudar efeito (60 cartas no total).
+- **Motivo:** meta Premodern aprovado pelo autor em 31/10/2026 (`docs/meta-premodern.md`); diff aprovado em 31/10/2026 (`docs/rebalance-artemis-premodern.md`).
+- **Engine:** `playtest/engine-v3/v6/artemis.js` (379, 388, 435; perguntas dizem "Training counter"). Testes novos em `tools/test-engine-v3-v6-artemis.mjs`. Suíte engine-v3 inteira passa (494 testes).
+- **Decks:** "Artemis Hunt" (`comp-artemis-hunt`) em `data/alpha-0.1/decks-competitivos.json`. Os decks Artemis antigos não foram retunados.
+- **Pendências:** round-robin de bots (meta 45–55%); playtest do autor; lista Enchantress na etapa das duplas.
+
 ## 2026-10-31 — Cartas de Hades — Preto (Midrange + Reanimator, meta Premodern)
 
 - **Antes:** Seal em 11 cartas (papel do Azul); reanimação com teto de custo (240 ≤4); remoção dura a c5 (194, 262); discard a c2–c3 (239, 257); 265 era o Threaten (papel de Ares); topo de c7 a c9 (199, 269, 270).

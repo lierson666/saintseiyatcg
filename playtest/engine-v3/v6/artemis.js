@@ -20,7 +20,7 @@ const wasCast = (s, uid) => { const e = s.events.findLast(x => x.type === 'card_
 function grow(s, c, by, uid, n = 1) {
   if (!s.units[uid] || n <= 0) return;
   k.addCounter(s, uid, n);
-  k.watchers(s, c, 'watchCounter', [uid, n, by], '+1/+1 counter');
+  k.watchers(s, c, 'watchCounter', [uid, n, by], 'Training counter');
 }
 const growEach = (s, c, by, uids, n = 1) => uids.forEach(u => grow(s, c, by, u, n));
 const pickFriend = (s, c, key, ability, {optional = false, not} = {}) =>
@@ -104,7 +104,7 @@ export default {
   'artemis-v6-362': {
     gearWouldBeDefeated: (s, c, key, self, bearer) => {
       if (s.roundUses.has(`${self}:moonlight`) || !counters(s, bearer)
-        || !k.may(c, key, 'MOONLIGHT PROTECTION', {uid: bearer, text: 'Remove a +1/+1 counter to prevent that defeat?'})) return false;
+        || !k.may(c, key, 'MOONLIGHT PROTECTION', {uid: bearer, text: 'Remove a Training counter to prevent that defeat?'})) return false;
       k.once(s, `${self}:moonlight`);
       k.addCounter(s, bearer, -1);
       s.units[bearer].damage = Math.max(0, Math.min(s.units[bearer].damage, k.hpOf(s, c, bearer) - 1));
@@ -181,7 +181,7 @@ export default {
     activate: {name: "SPRING'S RENEWAL", cost: 0,
       check: (s, c, key) => { if (!k.devotees(s, c, key).some(u => counters(s, u))) throw new k.RuleError('alvo', 'nenhum Devotee seu com marcador +1/+1'); },
       run: (st, c, key) => {
-        const t = k.choose(c, key, "SPRING'S RENEWAL", k.devotees(st, c, key).filter(u => counters(st, u)), {text: 'Remove a +1/+1 counter from which Devotee?'});
+        const t = k.choose(c, key, "SPRING'S RENEWAL", k.devotees(st, c, key).filter(u => counters(st, u)), {text: 'Remove a Training counter from which Devotee?'});
         if (t) { k.addCounter(st, t, -1); k.draw(st, key, 1); }
       }},
   },
@@ -194,7 +194,7 @@ export default {
     },
   },
   'artemis-v6-379': {
-    gearDeclare: run((st, c, key) => k.damage(st, c, pickEnemy(st, c, key, 'CELESTIAL ARROW'), 2)),
+    gearDeclare: buffBearer(2, 0), // Celestial Arrow (31/10/2026): +2 ATK contra Devotee; o dano fixo saiu (papel de Ares)
     gearKillInCombat: (s, c, key, self, b) => (k.hasType(c, b, 'Satellite') || k.hasType(c, b, 'Lunar Guardian')) && (st => grow(st, c, key, b, 1)),
   },
   'artemis-v6-380': {
@@ -227,15 +227,17 @@ export default {
   'artemis-v6-387': {watchCounter: (s, c, key, self, target, n, by) => by === key && target !== self && k.controllerOf(s, target) === key
     && (st => k.buff(st, self, 1, 1, 'this_round'))},
   'artemis-v6-388': {enter: (s, c, key) => ready(s, key) >= 1 && (st => {
-    if (!k.enemies(st, c, key).length || !k.may(c, key, 'PRECISE HUNT', {cost: '{1}{C}'}) || !payC(st, key, 1)) return;
-    k.damage(st, c, pickEnemy(st, c, key, 'PRECISE HUNT'), 1);
+    // 31/10/2026: o dano de 1 virou Training counter num Devotee seu.
+    if (!k.may(c, key, 'PRECISE HUNT', {cost: '{1}{C}'}) || !payC(st, key, 1)) return;
+    const t = pickFriend(st, c, key, 'PRECISE HUNT');
+    if (t) grow(st, c, key, t, 1);
   })},
   'artemis-v6-389': {declare: (s, c, key, self) => counters(s, self) > 0 && (st => k.buff(st, self, 1, 0, 'this_round'))},
   // MOON TEMPLE ACOLYTE
   'artemis-v6-390': {
     enter: run((st, c, key, self) => { const t = pickFriend(st, c, key, 'CELESTIAL CULTIVATION', {not: self}); if (t) grow(st, c, key, t, 1); }),
     declare: run((st, c, key, self) => {
-      const from = k.choose(c, key, 'LUNAR GUIDANCE', k.devotees(st, c, key).filter(u => u !== self && counters(st, u)), {optional: true, text: 'Move a +1/+1 counter to Moon Temple Acolyte?'});
+      const from = k.choose(c, key, 'LUNAR GUIDANCE', k.devotees(st, c, key).filter(u => u !== self && counters(st, u)), {optional: true, text: 'Move a Training counter to Moon Temple Acolyte?'});
       if (from && st.units[self]) { k.addCounter(st, from, -1); grow(st, c, key, self, 1); }
     }),
   },
@@ -409,7 +411,11 @@ export default {
     startTurn: (s, c, key, self) => bearer(s, c, key, self) && bank(s, key) >= 6 && (st => { const b = bearer(st, c, key, self); if (b) grow(st, c, key, b, 1); }),
   },
   'artemis-v6-435': {
-    enter: run((st, c, key) => k.damage(st, c, pickEnemy(st, c, key, 'PRECISE EXECUTION'), 3)),
+    // Precise Execution (31/10/2026): fight opcional no lugar dos 3 de dano.
+    enter: run((st, c, key, self) => {
+      if (!k.enemies(st, c, key).length || !k.may(c, key, 'PRECISE EXECUTION', {uid: self, text: 'Fight target enemy Devotee?'})) return;
+      fight(st, c, self, pickEnemy(st, c, key, 'PRECISE EXECUTION'));
+    }),
     watchDeclare: (s, c, key, self, attacker, target) => k.controllerOf(s, attacker) === key && k.hasType(c, attacker, 'Satellite') && vsDevotee(target)
       && (st => k.buff(st, attacker, 1, 0, 'this_round')),
     killInCombat: drawOne,

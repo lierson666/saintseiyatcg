@@ -13006,11 +13006,11 @@
       "keywords_en": [],
       "habilidades_en": [
         "Divine Authority — Other friendly Artemis Devotees get +1/+1.",
-        "Lunar Command — Once per round, whenever you put one or more +1/+1 counters on a friendly Devotee, draw 1 card."
+        "Lunar Command — Once each round, whenever you put one or more Training counters on a friendly Devotee, draw 1 card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-362",
@@ -13038,11 +13038,11 @@
       "equipar_custo": 2,
       "keywords_en": [],
       "habilidades_en": [
-        "Moonlight Protection — Once per round, when equipped Devotee would be defeated, you may remove a +1/+1 counter from it. If you do, prevent that defeat and all damage that would be dealt to it this round."
+        "Moonlight Protection — Once each round, when equipped Devotee would be defeated, you may remove a Training counter from it. If you do, prevent that defeat and all damage that would be dealt to it this round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026.",
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md.",
       "categoria_equipamento": "Armor",
       "slot_equipamento": "armadura",
       "auto_equip_en": [],
@@ -13078,12 +13078,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Relentless Pursuit — Whenever La Scoumoune declares a Strike against an enemy Devotee, put a +1/+1 counter on La Scoumoune.",
+        "Relentless Pursuit — Whenever La Scoumoune declares a Strike against an enemy Devotee, put a Training counter on La Scoumoune.",
         "Hunter's Instinct — La Scoumoune may declare a Strike against an Unprepared enemy Devotee ignoring Guardian."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-364",
@@ -13111,11 +13111,11 @@
       "equipar_custo": 1,
       "keywords_en": [],
       "habilidades_en": [
-        "Shadow Hunt — Whenever equipped Devotee defeats an enemy Devotee during combat, put a +1/+1 counter on equipped Devotee."
+        "Shadow Hunt — Whenever equipped Devotee defeats an enemy Devotee during combat, put a Training counter on equipped Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026.",
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md.",
       "categoria_equipamento": "Armor",
       "slot_equipamento": "armadura",
       "auto_equip_en": [],
@@ -13154,11 +13154,11 @@
       ],
       "habilidades_en": [
         "Guardian",
-        "Forest's Embrace — Whenever Daphne becomes engaged with an enemy Devotee, put a +1/+1 counter on Daphne."
+        "Forest's Embrace — Whenever Daphne becomes engaged with an enemy Devotee, put a Training counter on Daphne."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-366",
@@ -13186,11 +13186,11 @@
       "equipar_custo": 2,
       "keywords_en": [],
       "habilidades_en": [
-        "Ancient Resilience — At the beginning of your turn, if equipped Devotee has no +1/+1 counters, put a +1/+1 counter on it."
+        "Ancient Resilience — At the beginning of your turn, if equipped Devotee has no Training counters, put a Training counter on it."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026.",
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md.",
       "categoria_equipamento": "Armor",
       "slot_equipamento": "armadura",
       "auto_equip_en": [],
@@ -13226,12 +13226,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Lunar Harmony — Whenever another friendly Devotee receives one or more +1/+1 counters, you may pay {1}{C}. If you do, put a +1/+1 counter on Hermia.",
+        "Lunar Harmony — Whenever another friendly Devotee receives one or more Training counters, you may pay {1}{C}. If you do, put a Training counter on Hermia.",
         "Sister's Bond — While you control Daphne, Hermia gets +2/+2."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-368",
@@ -13259,11 +13259,11 @@
       "equipar_custo": 1,
       "keywords_en": [],
       "habilidades_en": [
-        "Lunar Precision — Whenever equipped Devotee declares a Strike, if it has a +1/+1 counter, it gets +1/+1 until end of round."
+        "Lunar Precision — Whenever equipped Devotee declares a Strike, if it has a Training counter, it gets +1/+1 until end of round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026.",
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md.",
       "categoria_equipamento": "Armor",
       "slot_equipamento": "armadura",
       "auto_equip_en": [],
@@ -13300,12 +13300,12 @@
       "keywords_en": ["Pierce"],
       "habilidades_en": [
         "Pierce",
-        "Primal Dominance — Whenever Satyr defeats an enemy Devotee during combat, put two +1/+1 counters on Satyr.",
+        "Primal Dominance — Whenever Satyr defeats an enemy Devotee during combat, put two Training counters on Satyr.",
         "Ancient Strength — Satyr gets +1/+1 for each Equipment attached to it."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-370",
@@ -13334,11 +13334,11 @@
       "keywords_en": [],
       "habilidades_en": [
         "Equipped Devotee has Pierce.",
-        "Primordial Awakening — When Satyr Sacred Armor becomes attached to a Devotee, put two +1/+1 counters on that Devotee."
+        "Primordial Awakening — When Satyr Sacred Armor becomes attached to a Devotee, put two Training counters on that Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026.",
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md.",
       "categoria_equipamento": "Armor",
       "slot_equipamento": "armadura",
       "auto_equip_en": [],
@@ -13374,12 +13374,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Divine Awakening — When Chandra enters the battlefield, put a +1/+1 counter on target friendly Devotee.",
-        "Moonlit Communion — Whenever you put one or more +1/+1 counters on another friendly Devotee, you may generate {1}{L}. This ability triggers only once per turn."
+        "Divine Awakening — When Chandra enters the battlefield, put a Training counter on target friendly Devotee.",
+        "Moonlit Communion — Whenever you put one or more Training counters on another friendly Devotee, you may generate {1}{L}. This ability triggers only once each round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-372",
@@ -13409,11 +13409,11 @@
       "keywords_en": [],
       "habilidades_en": [
         "Divine Emergence — Search your deck for an Artemis Devotee with Casting Cost 4 or less, reveal it, and put it into your hand. Then shuffle your deck.",
-        "Lunar Blessing — Put a +1/+1 counter on up to two friendly Devotees."
+        "Lunar Blessing — Put a Training counter on up to two friendly Devotees."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-373",
@@ -13443,12 +13443,12 @@
       "keywords_en": [],
       "habilidades_en": [
         "Lunar Majesty — Other friendly Artemis Devotees get +1/+1.",
-        "Eternal Moonlight — At the beginning of your turn, put a +1/+1 counter on up to two target friendly Devotees.",
+        "Eternal Moonlight — At the beginning of your turn, put a Training counter on up to two target friendly Devotees.",
         "Celestial Radiance — Whenever Selene declares a Strike, you may pay {2}{C}. If you do, Selene gains Pierce until end of round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-374",
@@ -13477,12 +13477,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Silver Radiance — Put two +1/+1 counters on target friendly Devotee.",
+        "Silver Radiance — Put two Training counters on target friendly Devotee.",
         "Moonlight Renewal — Prepare that Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-375",
@@ -13512,12 +13512,12 @@
       "keywords_en": ["Guardian"],
       "habilidades_en": [
         "Guardian",
-        "Sacred Vigil — Whenever an enemy Devotee declares a Strike against a friendly Devotee, put a +1/+1 counter on the First Moon Guardian. This ability triggers only once per turn.",
-        "Lunar Fortress — Other friendly Devotees with +1/+1 counters get +0/+1."
+        "Sacred Vigil — Whenever an enemy Devotee declares a Strike against a friendly Devotee, put a Training counter on the First Moon Guardian. This ability triggers only once each round.",
+        "Lunar Fortress — Other friendly Devotees with Training counters get +0/+1."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-376",
@@ -13546,12 +13546,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Sacred Covenant — Put a +1/+1 counter on each of up to three target friendly Artemis Devotees.",
+        "Sacred Covenant — Put a Training counter on each of up to three target friendly Artemis Devotees.",
         "United Hunt — If you control three or more Artemis Devotees, draw 1 card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-377",
@@ -13580,12 +13580,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Blooming Presence — Whenever another friendly Devotee enters the battlefield, put a +1/+1 counter on that Devotee. This ability triggers only once per turn.",
-        "Spring's Renewal — {T}: Remove a +1/+1 counter from target friendly Devotee. If you do, draw 1 card."
+        "Blooming Presence — Whenever another friendly Devotee enters the battlefield, put a Training counter on that Devotee. This ability triggers only once each round.",
+        "Spring's Renewal — {T}: Remove a Training counter from target friendly Devotee. If you do, draw 1 card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-378",
@@ -13613,12 +13613,12 @@
       "equipar_custo": 2,
       "keywords_en": [],
       "habilidades_en": [
-        "Everlasting Bloom — At the beginning of your turn, put a +1/+1 counter on equipped Devotee.",
+        "Everlasting Bloom — At the beginning of your turn, put a Training counter on equipped Devotee.",
         "Nature's Rebirth — When equipped Devotee is defeated, you may return another target Devotee with Casting Cost 2 or less from your Tartarus to your hand."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026.",
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md.",
       "categoria_equipamento": "Armor",
       "slot_equipamento": "armadura",
       "auto_equip_en": [],
@@ -13655,12 +13655,12 @@
       "keywords_en": [],
       "habilidades_en": [
         "Divine Precision — Equipped Devotee gets +3/+2.",
-        "Celestial Arrow — Whenever equipped Devotee declares a Strike, it deals 2 damage to target enemy Devotee.",
-        "Moon Goddess' Blessing — If equipped Devotee is a Satellite or Lunar Guardian, put a +1/+1 counter on it whenever it defeats an enemy Devotee during combat."
+        "Celestial Arrow — Whenever equipped Devotee declares a Strike against an enemy Devotee, it gets +2 ATK until the end of the round.",
+        "Moon Goddess' Blessing — If equipped Devotee is a Satellite or Lunar Guardian, put a Training counter on it whenever it defeats an enemy Devotee during combat."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026.",
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md.",
       "categoria_equipamento": "Weapon",
       "slot_equipamento": "acessorio",
       "auto_equip_en": [],
@@ -13698,11 +13698,11 @@
       "habilidades_en": [
         "Silver Piercing — Equipped Devotee gets +2/+1 and gains Pierce.",
         "Divine Hunt — Whenever equipped Devotee declares a Strike against an enemy Devotee, it gets +2/+0 until end of round.",
-        "Unerring Aim — Whenever equipped Devotee defeats an enemy Devotee during combat, you may draw 1 card. This ability triggers only once per turn."
+        "Unerring Aim — Whenever equipped Devotee defeats an enemy Devotee during combat, you may draw 1 card. This ability triggers only once each round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026.",
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md.",
       "categoria_equipamento": "Weapon",
       "slot_equipamento": "acessorio",
       "auto_equip_en": [],
@@ -13738,11 +13738,11 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Forest Blessing — When Sacred Stag enters the battlefield, you may put a +1/+1 counter on target friendly Devotee."
+        "Forest Blessing — When Sacred Stag enters the battlefield, you may put a Training counter on target friendly Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-382",
@@ -13805,11 +13805,11 @@
       "keywords_en": ["Pierce"],
       "habilidades_en": [
         "Pierce",
-        "Primal Growth — Whenever Silver Moon Bear defeats an enemy Devotee during combat, put a +1/+1 counter on Silver Moon Bear."
+        "Primal Growth — Whenever Silver Moon Bear defeats an enemy Devotee during combat, put a Training counter on Silver Moon Bear."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-384",
@@ -13873,12 +13873,12 @@
       "keywords_en": ["Pierce"],
       "habilidades_en": [
         "Pierce",
-        "Relentless Hunt — Whenever the Great Lunar Hound declares a Strike, put a +1/+1 counter on it.",
+        "Relentless Hunt — Whenever the Great Lunar Hound declares a Strike, put a Training counter on it.",
         "Predator's Reward — Whenever the Great Lunar Hound defeats an enemy Devotee during combat, draw 1 card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-386",
@@ -13940,11 +13940,11 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Rooted Strength — Whenever you put one or more +1/+1 counters on another friendly Devotee, Sacred Grove Keeper gets +1/+1 until end of round."
+        "Rooted Strength — Whenever you put one or more Training counters on another friendly Devotee, Sacred Grove Keeper gets +1/+1 until end of round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-388",
@@ -13973,11 +13973,11 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Precise Hunt — When Silver Arrow Huntress enters the battlefield, you may pay {1}{C}. If you do, deal 1 damage to target enemy Devotee."
+        "Precise Hunt — When Silver Arrow Huntress enters the battlefield, you may pay {1}{C}. If you do, put a Training counter on target friendly Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-389",
@@ -14006,11 +14006,11 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Ferocious Instinct — Whenever Wildwood Stalker declares a Strike, if it has a +1/+1 counter, it gets +1/+0 until end of round."
+        "Ferocious Instinct — Whenever Wildwood Stalker declares a Strike, if it has a Training counter, it gets +1/+0 until end of round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-390",
@@ -14039,12 +14039,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Celestial Cultivation — When Moon Temple Acolyte enters the battlefield, put a +1/+1 counter on another target friendly Devotee.",
-        "Lunar Guidance — Whenever Moon Temple Acolyte declares a Strike, you may move one +1/+1 counter from another friendly Devotee to Moon Temple Acolyte."
+        "Celestial Cultivation — When Moon Temple Acolyte enters the battlefield, put a Training counter on another target friendly Devotee.",
+        "Lunar Guidance — Whenever Moon Temple Acolyte declares a Strike, you may move one Training counter from another friendly Devotee to Moon Temple Acolyte."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-391",
@@ -14073,12 +14073,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Ancient Resilience — Remove a +1/+1 counter from Ancient Forest Guardian: Prevent the next 2 damage that would be dealt to Ancient Forest Guardian this turn.",
-        "Rooted Defense — While Ancient Forest Guardian has a +1/+1 counter, it gains Guardian."
+        "Ancient Resilience — Remove a Training counter from Ancient Forest Guardian: Prevent the next 2 damage that would be dealt to Ancient Forest Guardian this turn.",
+        "Rooted Defense — While Ancient Forest Guardian has a Training counter, it gains Guardian."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-392",
@@ -14107,11 +14107,11 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Primal Fury — Lunar Beast gains Pierce while it has a +1/+1 counter."
+        "Primal Fury — Lunar Beast gains Pierce while it has a Training counter."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-393",
@@ -14207,11 +14207,11 @@
       "keywords_en": ["Guardian"],
       "habilidades_en": [
         "Guardian",
-        "Sacred Watch — Whenever Moon Temple Sentinel receives one or more +1/+1 counters, gain {1}{S}."
+        "Sacred Watch — Whenever Moon Temple Sentinel receives one or more Training counters, gain {1}{S}."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-396",
@@ -14261,7 +14261,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 2,
+      "custo": 1,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -14274,11 +14274,11 @@
       "keywords_en": [],
       "habilidades_en": [
         "Verdant Channeling — {T}: Generate {1}{L}.",
-        "Living Roots — If Sacred Grove Dryad generated Cosmo this turn, the first Devotee you cast this turn enters the battlefield with a +1/+1 counter."
+        "Living Roots — If Sacred Grove Dryad generated Cosmo this turn, the first Devotee you cast this turn enters the battlefield with a Training counter."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-398",
@@ -14307,11 +14307,11 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Moonlit Blessing — When Lunar Nymph enters the battlefield, put a +1/+1 counter on target friendly Devotee."
+        "Moonlit Blessing — When Lunar Nymph enters the battlefield, put a Training counter on target friendly Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-399",
@@ -14375,12 +14375,12 @@
       "keywords_en": ["Pierce"],
       "habilidades_en": [
         "Pierce",
-        "Primal Growth — Whenever another friendly Devotee receives one or more +1/+1 counters, put a +1/+1 counter on Primal Forest Guardian. This ability triggers only once per turn.",
-        "Nature's Dominance — While Primal Forest Guardian has three or more +1/+1 counters, other friendly Devotees gain Pierce."
+        "Primal Growth — Whenever another friendly Devotee receives one or more Training counters, put a Training counter on Primal Forest Guardian. This ability triggers only once each round.",
+        "Nature's Dominance — While Primal Forest Guardian has three or more Training counters, other friendly Devotees gain Pierce."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-401",
@@ -14409,11 +14409,11 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Hunter's Training — Whenever Huntress Apprentice receives one or more +1/+1 counters, it gets +1/+0 until end of round."
+        "Hunter's Training — Whenever Huntress Apprentice receives one or more Training counters, it gets +1/+0 until end of round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-402",
@@ -14509,11 +14509,11 @@
       "keywords_en": [],
       "habilidades_en": [
         "Pack Leadership — Other friendly Sacred Beasts get +1/+0.",
-        "Predator's Growth — Whenever another friendly Sacred Beast defeats an enemy Devotee during combat, put a +1/+1 counter on Silver Fang Wolf."
+        "Predator's Growth — Whenever another friendly Sacred Beast defeats an enemy Devotee during combat, put a Training counter on Silver Fang Wolf."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-405",
@@ -14543,12 +14543,12 @@
       "keywords_en": ["Guardian"],
       "habilidades_en": [
         "Guardian",
-        "Ancient Growth — When Ancient Grove Treant enters the battlefield, put a +1/+1 counter on each of up to two other target friendly Devotees.",
-        "Rooted Majesty — Ancient Grove Treant gets +1/+1 for each other friendly Devotee with a +1/+1 counter, up to +3/+3."
+        "Ancient Growth — When Ancient Grove Treant enters the battlefield, put a Training counter on each of up to two other target friendly Devotees.",
+        "Rooted Majesty — Ancient Grove Treant gets +1/+1 for each other friendly Devotee with a Training counter, up to +3/+3."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-406",
@@ -14578,11 +14578,11 @@
       "keywords_en": [],
       "habilidades_en": [
         "Sacred Precision — Whenever Artemis' Royal Huntress declares a Strike against an enemy Devotee, it gets +1/+1 until end of round.",
-        "Divine Training — Whenever an Equipment becomes attached to Artemis' Royal Huntress, put a +1/+1 counter on it."
+        "Divine Training — Whenever an Equipment becomes attached to Artemis' Royal Huntress, put a Training counter on it."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-407",
@@ -14612,11 +14612,11 @@
       "keywords_en": [],
       "habilidades_en": [
         "Primal Channeling — {T}: The next Devotee you cast this turn costs 1 less.",
-        "Nature's Wisdom — Whenever you cast a Devotee with Casting Cost 5 or greater, you may draw 1 card. This ability triggers only once per turn."
+        "Nature's Wisdom — Whenever you cast a Devotee with Casting Cost 5 or greater, you may draw 1 card. This ability triggers only once each round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-408",
@@ -14720,11 +14720,11 @@
       "keywords_en": [],
       "habilidades_en": [
         "Endless Arrows — Equipped Devotee gets +1/+0.",
-        "Hunter's Supply — Whenever equipped Devotee defeats an enemy Devotee during combat, you may draw 1 card, then discard 1 card. This ability triggers only once per turn."
+        "Hunter's Supply — Whenever equipped Devotee defeats an enemy Devotee during combat, you may draw 1 card, then discard 1 card. This ability triggers only once each round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026.",
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md.",
       "categoria_equipamento": "Artifact",
       "slot_equipamento": "acessorio",
       "auto_equip_en": [],
@@ -14802,11 +14802,11 @@
       "keywords_en": [],
       "habilidades_en": [
         "Moonlit Protection — Equipped Devotee gets +0/+2.",
-        "Lunar Shelter — Remove a +1/+1 counter from equipped Devotee: Prevent the next 2 damage that would be dealt to it this turn."
+        "Lunar Shelter — Remove a Training counter from equipped Devotee: Prevent the next 2 damage that would be dealt to it this turn."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026.",
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md.",
       "categoria_equipamento": "Artifact",
       "slot_equipamento": "acessorio",
       "auto_equip_en": [],
@@ -14843,11 +14843,11 @@
       "keywords_en": [],
       "habilidades_en": [
         "Hunter's Edge — Equipped Devotee gets +1/+0.",
-        "Predator's Strike — Whenever equipped Devotee defeats an enemy Devotee during combat, put a +1/+1 counter on equipped Devotee."
+        "Predator's Strike — Whenever equipped Devotee defeats an enemy Devotee during combat, put a Training counter on equipped Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026.",
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md.",
       "categoria_equipamento": "Weapon",
       "slot_equipamento": "acessorio",
       "auto_equip_en": [],
@@ -14884,11 +14884,11 @@
       "keywords_en": [],
       "habilidades_en": [
         "Verdant Channeling — {T}: Generate {1}{L}. Spend this Cosmo only to cast a Devotee.",
-        "Lunar Resonance — Equipped Devotee gets +1/+1 while you control another Devotee with a +1/+1 counter."
+        "Lunar Resonance — Equipped Devotee gets +1/+1 while you control another Devotee with a Training counter."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026.",
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md.",
       "categoria_equipamento": "Artifact",
       "slot_equipamento": "acessorio",
       "auto_equip_en": [],
@@ -14925,11 +14925,11 @@
       "keywords_en": [],
       "habilidades_en": [
         "Rooted Defense — Equipped Devotee gets +0/+3.",
-        "Forest's Protection — Equipped Devotee gains Guardian while it has a +1/+1 counter."
+        "Forest's Protection — Equipped Devotee gains Guardian while it has a Training counter."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026.",
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md.",
       "categoria_equipamento": "Artifact",
       "slot_equipamento": "acessorio",
       "auto_equip_en": [],
@@ -14964,11 +14964,11 @@
       "equipar_custo": 2,
       "keywords_en": [],
       "habilidades_en": [
-        "Ancient Growth — Whenever another friendly Devotee enters the battlefield, you may put a +1/+1 counter on equipped Devotee. This ability triggers only once per turn."
+        "Ancient Growth — Whenever another friendly Devotee enters the battlefield, you may put a Training counter on equipped Devotee. This ability triggers only once each round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026.",
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md.",
       "categoria_equipamento": "Armor",
       "slot_equipamento": "armadura",
       "auto_equip_en": [],
@@ -15137,12 +15137,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Primal Blessing — Put a +1/+1 counter on target friendly Devotee.",
+        "Primal Blessing — Put a Training counter on target friendly Devotee.",
         "Natural Expansion — If that Devotee has ATK 4 or greater, look at the top card of your deck. You may put it into your Cosmo Bank face down as unprepared Cosmo Base."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-422",
@@ -15305,12 +15305,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Divine Growth — Put two +1/+1 counters on each friendly Devotee.",
+        "Divine Growth — Put two Training counters on each friendly Devotee.",
         "Primal Supremacy — Friendly Devotees with ATK 5 or greater gain Pierce until end of round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-427",
@@ -15340,11 +15340,11 @@
       "keywords_en": [],
       "habilidades_en": [
         "Moonlit Sanctuary — Friendly Satellites get +0/+1.",
-        "Lunar Communion — Once per game — {3}{C}: Put a +1/+1 counter on each friendly Artemis Devotee."
+        "Lunar Communion — Once per game — {3}{C}: Put a Training counter on each friendly Artemis Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-428",
@@ -15407,12 +15407,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Rooted Endurance — Friendly Devotees with +1/+1 counters get +0/+1.",
-        "Ancient Blessing — Once per game — {2}{C}: Put two +1/+1 counters on target friendly Devotee."
+        "Rooted Endurance — Friendly Devotees with Training counters get +0/+1.",
+        "Ancient Blessing — Once per game — {2}{C}: Put two Training counters on target friendly Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-430",
@@ -15508,11 +15508,11 @@
       "equipar_custo": 2,
       "keywords_en": [],
       "habilidades_en": [
-        "Moonlight Supremacy — Whenever equipped Devotee defeats an enemy Devotee during combat, put a +1/+1 counter on each of up to two other target friendly Devotees."
+        "Moonlight Supremacy — Whenever equipped Devotee defeats an enemy Devotee during combat, put a Training counter on each of up to two other target friendly Devotees."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026.",
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md.",
       "categoria_equipamento": "Armor",
       "slot_equipamento": "armadura",
       "auto_equip_en": [],
@@ -15583,11 +15583,11 @@
       "keywords_en": [],
       "habilidades_en": [
         "Ancient Protection — Equipped Devotee gains Guardian.",
-        "Rooted Growth — At the beginning of your turn, if you have six or more cards in your Cosmo Bank, put a +1/+1 counter on equipped Devotee."
+        "Rooted Growth — At the beginning of your turn, if you have six or more cards in your Cosmo Bank, put a Training counter on equipped Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026.",
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md.",
       "categoria_equipamento": "Armor",
       "slot_equipamento": "armadura",
       "auto_equip_en": [],
@@ -15623,13 +15623,13 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Precise Execution — When Silver Arrow Commander enters the battlefield, it deals 3 damage to target enemy Devotee.",
+        "Precise Execution — When Silver Arrow Commander enters the battlefield, you may have it fight target enemy Devotee. Each deals damage equal to its ATK to the other.",
         "Hunter's Mastery — Whenever a friendly Satellite declares a Strike against an enemy Devotee, that Satellite gets +1/+0 until end of round.",
         "Lunar Precision — Whenever Silver Arrow Commander defeats an enemy Devotee during combat, draw 1 card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-436",
@@ -15658,11 +15658,11 @@
       "keywords_en": [],
       "habilidades_en": [
         "Hunter's Precision — Whenever equipped Devotee declares a Strike against an enemy Devotee, it gets +2/+0 until end of round.",
-        "Divine Accuracy — Whenever equipped Devotee defeats an enemy Devotee during combat, draw 1 card. This ability triggers only once per turn."
+        "Divine Accuracy — Whenever equipped Devotee defeats an enemy Devotee during combat, draw 1 card. This ability triggers only once each round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026.",
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md.",
       "categoria_equipamento": "Armor",
       "slot_equipamento": "armadura",
       "auto_equip_en": [],
@@ -15734,11 +15734,11 @@
       "habilidades_en": [
         "Guardian",
         "Lunar Resistance — Whenever the Third Moon Guardian is dealt damage, prevent 1 of that damage.",
-        "Ancient Blessing — Whenever you put one or more +1/+1 counters on the Third Moon Guardian, gain {2}{S}. This ability triggers only once per turn."
+        "Ancient Blessing — Whenever you put one or more Training counters on the Third Moon Guardian, gain {2}{S}. This ability triggers only once each round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-439",
@@ -15805,11 +15805,11 @@
         "Pierce",
         "Primordial Strength — The Fifth Moon Guardian gets +1/+1 for every three cards in your Cosmo Bank.",
         "Lunar Devastation — When the Fifth Moon Guardian enters the battlefield, it deals damage equal to its ATK to target enemy Devotee.",
-        "Nature's Sovereignty — Whenever the Fifth Moon Guardian defeats an enemy Devotee during combat, put a +1/+1 counter on each other friendly Devotee."
+        "Nature's Sovereignty — Whenever the Fifth Moon Guardian defeats an enemy Devotee during combat, put a Training counter on each other friendly Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-441",
@@ -15839,11 +15839,11 @@
       "keywords_en": [],
       "habilidades_en": [
         "Divine Return — Look at the top four cards of your deck. You may reveal an Artemis Devotee among them and put it into your hand. Put the remaining cards on the bottom of your deck in any order.",
-        "Lunar Blessing — Put a +1/+1 counter on target friendly Devotee."
+        "Lunar Blessing — Put a Training counter on target friendly Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-442",
@@ -15873,11 +15873,11 @@
       "keywords_en": [],
       "habilidades_en": [
         "Sacred Gathering — Search your deck for a Lunar Guardian Devotee, reveal it, and put it into your hand. Then shuffle your deck.",
-        "United Strength — If you control three or more Artemis Devotees, put a +1/+1 counter on each of them."
+        "United Strength — If you control three or more Artemis Devotees, put a Training counter on each of them."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-443",
@@ -16009,11 +16009,11 @@
       "keywords_en": [],
       "habilidades_en": [
         "Divine Transformation — Search your deck for an Artemis Devotee with Casting Cost 5 or less, reveal it, and put it into your hand. Then shuffle your deck.",
-        "Moon Goddess' Gift — Put two +1/+1 counters on target friendly Devotee."
+        "Moon Goddess' Gift — Put two Training counters on target friendly Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-447",
@@ -16043,11 +16043,11 @@
       "keywords_en": [],
       "habilidades_en": [
         "Sacred Sacrifice — You may defeat a friendly Devotee. If you do, draw 2 cards and put the top card of your deck into your Cosmo Bank face down as unprepared Cosmo Base.",
-        "Eternal Memory — If the defeated Devotee was a Lunar Guardian, put a +1/+1 counter on each remaining friendly Devotee."
+        "Eternal Memory — If the defeated Devotee was a Lunar Guardian, put a Training counter on each remaining friendly Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-448",
@@ -16097,7 +16097,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 7,
+      "custo": 5,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -16113,7 +16113,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "artemis-v6-450",
@@ -16130,7 +16130,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 8,
+      "custo": 6,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -16143,12 +16143,12 @@
       "keywords_en": [],
       "habilidades_en": [
         "Primordial Ascension — Put the top three cards of your deck into your Cosmo Bank face down as unprepared Cosmo Base.",
-        "Nature's Dominion — Put two +1/+1 counters on each friendly Devotee.",
+        "Nature's Dominion — Put two Training counters on each friendly Devotee.",
         "Eternal Wilderness — For each friendly Devotee with ATK 6 or greater, draw 1 card, up to a maximum of three cards."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
     },
     {
       "id": "neutral-v6-451",

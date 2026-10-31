@@ -2356,6 +2356,128 @@
           "quantity": 1
         }
       ]
+    },
+    {
+      "id": "comp-artemis-hunt",
+      "nome": "Artemis Hunt",
+      "god": "god-artemis",
+      "domain_id": "artemis-v6-428",
+      "arquetipo": "Referência do meta Premodern (Elves): Devotees de mana de custo 1 (Moonlit Initiate, Sacred Grove Dryad), ramp de Base extra, lorde Satellite (Moonlight Huntress Captain), fight/bite como remoção e Overrun (The Wrath of Artemis c5). docs/meta-premodern.md e docs/rebalance-artemis-premodern.md (31/10/2026).",
+      "tema": "Ramp + tribal (Elves)",
+      "main_deck": [
+        {
+          "card_id": "artemis-v6-386",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-397",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-396",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-407",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-381",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-393",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-388",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-398",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-402",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-404",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-406",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-392",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-431",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-383",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-437",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-435",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-385",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-361",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-433",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-417",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-420",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-423",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-422",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-424",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-446",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-449",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-372",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-450",
+          "quantity": 1
+        }
+      ]
     }
   ]
 }
