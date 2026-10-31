@@ -1056,3 +1056,5 @@ body.has-chain-zoom .trigger-panel:not(.is-targeting) .trigger-panel__card { dis
 body:has(.cast-slot, .trigger-panel.is-targeting, .pick-modal, .mulligan, .victory) #chain-zoom { display: none; }
 .reduce-motion #chain-zoom { animation: none; transition: none; }
 body.has-chain-zoom .command__clock { visibility: hidden; }
+/* Ares: o PNG do autor corta a crista do elmo reto no topo; esfuma a ponta para não parecer cortada (31/10/2026). */
+.gh-frame__img--ares { -webkit-mask-image: linear-gradient(to bottom, transparent 7%, #000 13%); mask-image: linear-gradient(to bottom, transparent 7%, #000 13%); }

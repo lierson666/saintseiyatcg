@@ -506,7 +506,7 @@ function godHud(key, side) {
       ${pick ? `data-pick="god:${key}"` : ''} role="button" tabindex="0" aria-label="${esc(god.name)}, Soul ${p.soul} of ${max}${d.awaken ? ', Awaken' : ''}">
     <div class="gh-frame" style="aspect-ratio:${fr.ratio}" data-tip="${esc(`God|${god.name}, Player ${key}. Devotees can attack it.`)}">
       <div class="gh-hole godhud__portrait" style="${box(fr.hole)};${face}"></div>
-      <img class="gh-frame__img" src="./assets/god-frames/${frame}.png" alt="">
+      <img class="gh-frame__img gh-frame__img--${frame}" src="./assets/god-frames/${frame}.png" alt="">
       <span class="gh-name" style="${box(fr.plate)}">${esc(god.name)}</span>
       ${d.judgment ? `<span class="godhud__judgment">${token('judgment', `R${d.judgment.deadline}`, `Divine Judgment|This God loses at the end of Round ${d.judgment.deadline} unless the counter is removed.`)}</span>` : ''}
     </div>
