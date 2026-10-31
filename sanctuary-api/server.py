@@ -59,9 +59,9 @@ def bundle_price(qty):
     return PRICES[BOOSTER] * qty * (100 - BUNDLES[qty]) // 100
 
 
-# Cosméticos (autor, 31/10/2026): avatar (rosto), sleeve (verso das cartas) e deck box por personagem.
+# Cosméticos (autor, 31/10/2026): avatar (rosto) e sleeve (verso das cartas) por personagem. Deck box saiu (a capa do deck já faz isso).
 # Só personagens com arte final; arte -ref (provisória) nunca vai à loja. Deuses custam o dobro; avatar de Deus é grátis.
-# Item no inventário: 'avatar:<id>', 'sleeve:<id>', 'box:<id>'. O id é o da carta (Deus: 'god-<nome>').
+# Item no inventário: 'avatar:<id>', 'sleeve:<id>'. O id é o da carta (Deus: 'god-<nome>').
 COSMETIC_GROUPS = (
     ('Gods', [('god-athena', 'Athena'), ('god-poseidon', 'Poseidon'), ('god-hades', 'Hades'), ('god-ares', 'Ares'), ('god-artemis', 'Artemis')]),
     ('Bronze Saints', [('athena-v6-001', 'Pegasus Seiya'), ('athena-v6-003', 'Dragon Shiryu'), ('athena-v6-005', 'Cygnus Hyoga'),
@@ -70,8 +70,8 @@ COSMETIC_GROUPS = (
                      ('athena-v6-017', 'Aquarius Camus'), ('hades-v6-197', 'Aries Shion'), ('hades-v6-253', 'Capricorn Shura')]),
     ('Judges of the Underworld', [('hades-v6-181', 'Wyvern Rhadamanthys'), ('hades-v6-183', 'Griffon Minos'), ('hades-v6-185', 'Garuda Aiacos')]),
 )
-COSMETIC_KINDS = {'avatar': 500, 'sleeve': 1500, 'box': 1500}
-SET_OFF = 20  # trio avatar + sleeve + box do mesmo personagem
+COSMETIC_KINDS = {'avatar': 500, 'sleeve': 1500}
+SET_OFF = 20  # avatar + sleeve do mesmo personagem
 COSMETICS = {cid: name for _, chars in COSMETIC_GROUPS for cid, name in chars}
 
 
@@ -878,8 +878,6 @@ class Handler(BaseHTTPRequestHandler):
             raise ApiError(400, 'This deck is not valid.')
         now = int(time.time())
         with lock:
-            if data.get('box') and not owns_cosmetic(user['id'], 'box', str(data['box'])):
-                raise ApiError(400, 'Get this deck box in the Store first.')
             if not db.execute('select 1 from decks where user_id = ? and deck_id = ?', (user['id'], deck_id)).fetchone() and \
                     db.execute('select count(*) from decks where user_id = ? and deleted_at is null', (user['id'],)).fetchone()[0] >= MAX_DECKS:
                 raise ApiError(400, f'You can keep up to {MAX_DECKS} decks.')
@@ -1131,8 +1129,10 @@ class Handler(BaseHTTPRequestHandler):
             kinds = [k for k in COSMETIC_KINDS if not owns_cosmetic(uid, k, cid)] if kind == 'set' else [kind]
             if not kinds or kind != 'set' and owns_cosmetic(uid, kind, cid):
                 raise ApiError(400, 'You already have this.')
-            # trio: desconto só com os 3 por comprar; com parte já comprada, paga só o que falta
+            # set: desconto só com tudo por comprar; com parte já comprada, paga só o que falta
             paid = [k for k in COSMETIC_KINDS if cosmetic_price(k, cid)]
+            if kind == 'set' and len(paid) < 2:  # Deus: avatar grátis, não há set
+                raise ApiError(400, 'Unknown item.')
             price = set_price(cid) if kind == 'set' and kinds == paid else sum(cosmetic_price(k, cid) for k in kinds)
             if coins_of(uid) < price:
                 raise ApiError(400, 'Not enough Cosmo Coins.')

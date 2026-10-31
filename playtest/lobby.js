@@ -6,16 +6,17 @@ import {canonIndex, validateDeck, DECK_SIZE, COPY_LIMIT} from '../shared/deck-v3
 import {spellCategory} from './engine-v3/core.js';
 import {renderLiveCard, renderCardText} from '../shared/live-card.js?v=20261031-kw6';
 import {unlock, playMusic, setVolume, volume} from './audio.js?v=20261030-telas';
-import {loadMyDecks, saveMyDecks, findDeck, syncDecks, onDeckStatus, deckCovers, setDeckCover, deckBoxes, setDeckBox} from './deck-store.js?v=20261031-box';
+import {loadMyDecks, saveMyDecks, findDeck, syncDecks, onDeckStatus, deckCovers, setDeckCover} from './deck-store.js?v=20261031-2';
 import {mountKV} from '../shared/kv-sky.js?v=20261031-top';
 import {countryOptions, countryName} from '../shared/countries.js?v=20261029-1';
 import {startPresence} from '../shared/presence.js?v=20261029-1';
 import {mountSocial} from './social.js?v=20261031-ds3';
 import {telas, imageUrl, sound, applyColors, applyTexts} from './telas.js?v=20261030-1';
-import {loadEconomy, ownedLimit, missingCards, coinBadge, storeScreen, collectionScreen, openBooster, buyBooster, buyCosmetic, cosPreview} from './economy.js?v=20261031-cos2';
+import {loadEconomy, ownedLimit, missingCards, coinBadge, storeScreen, collectionScreen, openBooster, buyBooster, buyCosmetic} from './economy.js?v=20261031-face2';
 import {lightArt} from '../shared/light-art.js';
-import {featureGrid} from './home-features.js?v=20261031-cos1';
-import {loadRank, rankBadge, rankName, rankSummary, openRankPanel, playerName} from './rank.js?v=20261031-cos1';
+import {faceStyle} from './avatar-face.js?v=20261031-2';
+import {progressTrack} from './home-features.js?v=20261031-face2';
+import {loadRank, rankBadge, rankName, rankSummary, openRankPanel, playerName} from './rank.js?v=20261031-face2';
 
 const root = document.getElementById('lobby');
 const ART = '../card-forge/art-web/';
@@ -69,18 +70,16 @@ function deckCover(d) {
   const first = d.main_deck.map(e => e.card_id).find(id => artOf(id));
   return artOf(first || deckGod(d));
 }
-const boxOf = d => d.box || deckBoxes()[d.id] || null;
-const boxBadge = d => boxOf(d) ? cosPreview('box', artOf(boxOf(d), 'thumb')).replace('class="ec-cos-box"', 'class="ec-cos-box lb-deck__boxed"') : '';
 function deckBox(d, act) {
   const box = deckButton(d, act);
   // Tela Decks: botão de capa em qualquer deck, inclusive Starter (autor, 30/10/2026).
-  return act === 'edit-deck' ? `<div class="lb-deckwrap">${box}<button class="lb-deck__cover" data-act="cover" data-deck="${esc(d.id)}" aria-label="Choose the cover of ${esc(d.alpha_nome || d.nome)}">Cover</button>${ui.econ?.cosmetics ? `<button class="lb-deck__cover lb-deck__box" data-act="pick-box" data-deck="${esc(d.id)}" aria-label="Choose the deck box of ${esc(d.alpha_nome || d.nome)}">Box</button>` : ''}</div>` : box;
+  return act === 'edit-deck' ? `<div class="lb-deckwrap">${box}<button class="lb-deck__cover" data-act="cover" data-deck="${esc(d.id)}" aria-label="Choose the cover of ${esc(d.alpha_nome || d.nome)}">Cover</button></div>` : box;
 }
 function deckButton(d, act) {
   const ok = deckValid(d), art = deckCover(d);
   return `<button class="lb-deck ${ok ? '' : 'is-incomplete'} ${ui.deckA === d.id && act === 'pick-a' ? 'is-picked' : ''} ${ui.deckB === d.id && act === 'pick-b' ? 'is-picked' : ''}"
     data-act="${act}" data-deck="${esc(d.id)}">
-    <span class="lb-deck__art" style="${art ? `background-image:url('${art}')` : ''}">${boxBadge(d)}</span>
+    <span class="lb-deck__art" style="${art ? `background-image:url('${art}')` : ''}"></span>
     <span class="lb-deck__name"><strong>${esc(d.alpha_nome || d.nome)}</strong>
       <small>${esc(cards.get(deckGod(d))?.name || '')} · ${ok ? `${deckSize(d)} cards` : `Incomplete · ${deckSize(d)}/${DECK_SIZE}`}${d.preset ? ' · Starter' : ''}</small></span>
   </button>`;
@@ -138,7 +137,7 @@ function home() {
       ${deck ? `<button class="lb-dock__deck" data-act="play"><span style="background-image:url('${deckCover(deck) || ''}')"></span><strong>${esc(deck.alpha_nome || deck.nome)}</strong></button>` : ''}
       <button class="lb-play" data-act="play">${esc(HOME.botao_play || 'Play')}</button>
     </div>
-    ${featureGrid({user: ui.user, econ: ui.econ, rank: ui.rank, online: ui.online, total: [...cards.values()].filter(c => c.kind !== 'God').length, art: id => artOf(id)})}
+    ${progressTrack({user: ui.user, econ: ui.econ, rank: ui.rank})}
     ${ui.play ? playPanel() : ''}
   </section>`;
 }
@@ -192,7 +191,7 @@ function deckTile(d, act, picked) {
   const ok = deckValid(d), art = deckCover(d), god = deckGod(d).replace(/^god-/, ''), name = d.alpha_nome || d.nome;
   return `<button class="ds-deck ${picked ? 'is-picked' : ''} ${ok ? '' : 'is-incomplete'}" data-act="${act}" data-deck="${esc(d.id)}" data-name="${esc(name.toLowerCase())}"
     aria-pressed="${picked}" ${ok ? '' : 'aria-disabled="true"'}>
-    <span class="ds-deck__art" style="${art ? `background-image:url('${art}')` : ''}">${boxBadge(d)}</span>
+    <span class="ds-deck__art" style="${art ? `background-image:url('${art}')` : ''}"></span>
     <img class="ds-deck__god" src="${symbol(god)}" alt="${esc(cap(god))}">
     <span class="ds-deck__name"><strong>${esc(name)}</strong><small>${esc(ok ? (d.tema || d.arquetipo || `${deckSize(d)} cards`) : `Incomplete · ${deckSize(d)}/${DECK_SIZE}`)}</small></span>
   </button>`;
@@ -259,7 +258,7 @@ async function openProfile(username) {
   try {
     const p = await api(`/api/profile/${encodeURIComponent(username)}`), s = p.stats;
     const god = id => esc(cards.get(id)?.name || (id || '').replace(/^god-/, '') || '—');
-    dlg.innerHTML = `<header class="lb-pmodal__head"><span class="lb-avatar" style="background-image:url('${artOf(p.avatar_card || 'god-athena', 'thumb') || ''}')"></span>
+    dlg.innerHTML = `<header class="lb-pmodal__head"><span class="lb-avatar" style="background-image:url('${artOf(p.avatar_card || 'god-athena') || ''}');${faceStyle(p.avatar_card || 'god-athena')}"></span>
         <div><p class="kv-stamp kv-stamp--gold">${esc(countryName(p.country))} · Joined ${when(p.joined)}</p><h2>${playerName(p.username)}</h2></div>
         <button class="kv-ghost" data-pclose autofocus>Close</button></header>
       <dl class="lb-pstats"><div><dt class="kv-stamp">Played</dt><dd>${s.played}</dd></div><div><dt class="kv-stamp">Wins</dt><dd>${s.wins}</dd></div>
@@ -293,14 +292,14 @@ function profileScreen() {
   const avatars = ui.econ?.cosmetics ? ui.econ.cosmetics.flatMap(g => g.items).filter(c => c.avatar.owned).map(c => c.id) : AVATARS; // as da loja que o jogador tem
   return `<section class="lb-page lb-profile">
     <header class="lb-profile__head kv-card">
-      <span class="lb-avatar" style="background-image:url('${artOf(avatar, 'thumb') || ''}')"></span>
+      <span class="lb-avatar" style="background-image:url('${artOf(avatar) || ''}');${faceStyle(avatar)}"></span>
       <div><p class="kv-stamp kv-stamp--gold">${esc(countryName(u.country))}</p><h1>${playerName(u.username)}</h1>
         <p class="lb-code"><span class="kv-stamp">Friend code</span><b>${esc(u.friend_code)}</b><button class="kv-ghost" data-act="copy-code">${ui.copied ? 'Copied' : 'Copy'}</button></p></div>
     </header>
     <div class="lb-profile__grid">
       <form class="kv-card lb-form" data-form="me">
         <h2>Account</h2>
-        <div class="lb-avatars" role="radiogroup" aria-label="Avatar">${avatars.map(id => `<button type="button" role="radio" aria-checked="${id === avatar}" class="lb-avatar lb-avatar--pick ${id === avatar ? 'is-on' : ''}" data-act="avatar" data-id="${id}" style="background-image:url('${artOf(id, 'thumb') || ''}')" aria-label="${esc(cards.get(id)?.name || id)}"></button>`).join('')}</div>
+        <div class="lb-avatars" role="radiogroup" aria-label="Avatar">${avatars.map(id => `<button type="button" role="radio" aria-checked="${id === avatar}" class="lb-avatar lb-avatar--pick ${id === avatar ? 'is-on' : ''}" data-act="avatar" data-id="${id}" style="background-image:url('${artOf(id) || ''}');${faceStyle(id)}" aria-label="${esc(cards.get(id)?.name || id)}"></button>`).join('')}</div>
         <label class="kv-field"><span class="kv-stamp">Full name</span><input class="kv-input" name="name" value="${esc(u.name)}" required maxlength="80" autocomplete="name"></label>
         <label class="kv-field"><span class="kv-stamp">Email</span><input class="kv-input" value="${esc(u.email)}" disabled></label>
         <label class="kv-field"><span class="kv-stamp">Country</span><select class="kv-input" name="country">${countryOptions(u.country)}</select></label>
@@ -446,14 +445,6 @@ function pickerOptions(kind, d) {
 function picker() {
   const kind = ui.picker, d = ui.coverFor ? findDeck(ui.coverFor, presets) : ui.builder?.deck;
   if (!kind || !d) return '';
-  if (kind === 'box') { // deck box: só as que o jogador tem, ou nenhuma
-    const owned = (ui.econ?.cosmetics || []).flatMap(g => g.items).filter(c => c.box.owned), cur = boxOf(d);
-    return `<div class="lb-picker" role="dialog" aria-modal="true" aria-label="Choose the deck box"><div class="lb-picker__box"><header><h2>Choose the deck box</h2>
-    <button class="lb-play lb-play--small" data-act="close-picker">Close</button></header>
-    ${owned.length ? '' : '<p class="lb-picker__empty">Buy deck boxes in the Store.</p>'}
-    <div class="lb-picker__grid lb-picker__grid--box"><button class="lb-boxpick ${cur ? '' : 'is-in'}" data-act="picked-box" data-id=""><span class="ec-cos-box"></span><small>None</small></button>
-    ${owned.map(c => `<button class="lb-boxpick ${c.id === cur ? 'is-in' : ''}" data-act="picked-box" data-id="${c.id}">${cosPreview('box', artOf(c.id, 'thumb'))}<small>${esc(c.name)}</small></button>`).join('')}</div></div></div>`;
-  }
   const current = {god: d.god, domain: d.domain_id, thumb: thumbOf(d) || d.god}[kind];
   const title = {god: 'Choose your God', domain: 'Choose your Domain', thumb: 'Choose the deck cover'}[kind];
   return `<div class="lb-picker" role="dialog" aria-modal="true" aria-label="${title}"><div class="lb-picker__box"><header><h2>${title}</h2>
@@ -578,12 +569,6 @@ const actions = {
   'open-picker': t => { ui.picker = t.dataset.pick; },
   'close-picker': () => { ui.picker = null; ui.coverFor = null; },
   cover: t => { ui.coverFor = t.dataset.deck; ui.picker = 'thumb'; },
-  'pick-box': t => { ui.coverFor = t.dataset.deck; ui.picker = 'box'; },
-  'picked-box': t => {
-    const id = t.dataset.id || null, own = loadMyDecks(), mine = own.find(x => x.id === ui.coverFor);
-    if (mine) saveMyDecks(own.map(x => (x === mine ? {...x, box: id || undefined} : x))); else setDeckBox(ui.coverFor, id);
-    ui.coverFor = null; ui.picker = null;
-  },
   'store-tab': t => { ui.storeTab = t.dataset.value; ui.cosPick = null; },
   'store-group': t => { ui.storeGroup = t.dataset.value; },
   'cos-pick': t => { ui.cosPick = {kind: t.dataset.kind, id: t.dataset.id}; },

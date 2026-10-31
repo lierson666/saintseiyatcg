@@ -1,5 +1,6 @@
 // Economia do Olympus Arena (docs/economia.md, autor 31/10/2026): saldo de Cosmo Coins, Store, Collection e abertura de booster.
 // O servidor decide tudo (saldo, coleção, conteúdo do pacote); aqui só se desenha. Visual da loja inspirado em MTG Arena e RipRush.
+import {faceStyle} from './avatar-face.js?v=20261031-2';
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const fmt = n => Number(n || 0).toLocaleString('en');
 const COPY_LIMIT = 3;
@@ -49,43 +50,43 @@ document.addEventListener('pointerout', e => {
 
 // Cosméticos (autor, 31/10/2026): avatar, sleeve e deck box por personagem; o servidor manda catálogo, preço e posse.
 // art(id, size) devolve a arte do personagem (Deus: 'god-<nome>'); o rosto do avatar é recorte automático da arte.
-export const COS_KINDS = [['avatar', 'Avatar'], ['sleeve', 'Sleeve'], ['box', 'Deck box']];
-export const cosPreview = (kind, url) => `<span class="ec-cos-${kind}" style="background-image:url('${url || ''}')" aria-hidden="true"></span>`;
+export const COS_KINDS = [['avatar', 'Avatar'], ['sleeve', 'Sleeve']]; // Deck box saiu (autor, 31/10/2026): a capa do deck já faz isso
+// Avatar: recorte no rosto (avatar-face.js); sleeve e caixa usam a arte inteira.
+export const cosPreview = (kind, url, id) => `<span class="ec-cos-${kind}" style="background-image:url('${url || ''}');${kind === 'avatar' ? faceStyle(id) : ''}" aria-hidden="true"></span>`;
 // Loja estilo MTG Arena (autor, 31/10/2026): abas por categoria, um item grande por tile com o preço no botão,
 // filtro por grupo e confirmação de compra com a prévia grande. Textos: /design:ux-copy.
-const TABS = [['boosters', 'Boosters'], ['avatar', 'Avatars'], ['sleeve', 'Sleeves'], ['box', 'Deck Boxes'], ['set', 'Sets']];
+const TABS = [['boosters', 'Boosters'], ['avatar', 'Avatars'], ['sleeve', 'Sleeves'], ['set', 'Sets']];
 const KIND = {avatar: {one: 'Avatar', what: 'Your portrait in the lobby and at the table.'},
   sleeve: {one: 'Sleeve', what: 'The back of your cards. Your opponent sees it too.'},
-  box: {one: 'Deck Box', what: 'Holds one of your decks. Choose it in Decks.'},
-  set: {one: 'Set', what: 'Avatar, Sleeve and Deck Box together.'}};
+  set: {one: 'Set', what: 'Avatar and Sleeve together.'}};
 const paidKinds = c => COS_KINDS.filter(([k]) => c[k].price).map(([k]) => k);
 const setFull = c => paidKinds(c).reduce((n, k) => n + c[k].price, 0);
 const setOpen = c => paidKinds(c).every(k => !c[k].owned);
 const coinPrice = (now, was) => `<i class="ec-coin" aria-hidden="true"></i>${was ? `<s>${fmt(was)}</s>` : ''}${fmt(now)}`;
 const allItems = e => (e.cosmetics || []).flatMap(g => g.items.map(c => ({...c, group: g.group})));
 function setArt(c, art) {
-  return `<span class="ec-set__art" aria-hidden="true">${COS_KINDS.map(([k]) => cosPreview(k, art(c.id, k === 'avatar' ? 'thumb' : 'webp'))).join('')}</span>`;
+  return `<span class="ec-set__art" aria-hidden="true">${COS_KINDS.map(([k]) => cosPreview(k, art(c.id, 'webp'), c.id)).join('')}</span>`;
 }
 function itemTile(e, c, kind, art, using) {
   const set = kind === 'set', it = set ? null : c[kind], owned = set ? !setOpen(c) : it.owned;
   const price = set ? c.set : it.price, inUse = !set && using[kind] === c.id;
   const action = !owned ? `<button class="ec-cta ec-tile__price" data-act="cos-pick" data-kind="${kind}" data-id="${c.id}" aria-label="Buy ${esc(c.name)} ${KIND[kind].one} for ${fmt(price)} Cosmo Coins">${price ? coinPrice(price, set ? setFull(c) : 0) : 'Free'}</button>`
-    : set || kind === 'box' ? '<span class="ec-tile__state">Owned</span>'
+    : set ? '<span class="ec-tile__state">Owned</span>'
     : inUse ? '<span class="ec-tile__state is-on">Equipped</span>'
     : `<button class="ec-tile__equip" data-act="use-cos" data-kind="${kind}" data-id="${c.id}">Equip</button>`;
   return `<article class="ec-tile ec-tile--${kind} ${owned ? 'is-owned' : ''}">
     ${set ? `<b class="ec-bundle__off">-${e.set_off}%</b>` : ''}
-    <button class="ec-tile__look" data-act="cos-pick" data-kind="${kind}" data-id="${c.id}" aria-label="See ${esc(c.name)} ${KIND[kind].one}">${set ? setArt(c, art) : cosPreview(kind, art(c.id, kind === 'avatar' ? 'thumb' : 'webp'))}</button>
+    <button class="ec-tile__look" data-act="cos-pick" data-kind="${kind}" data-id="${c.id}" aria-label="See ${esc(c.name)} ${KIND[kind].one}">${set ? setArt(c, art) : cosPreview(kind, art(c.id, 'webp'), c.id)}</button>
     <h4>${esc(c.name)}</h4><small>${esc(c.group)}</small>${action}</article>`;
 }
 // Confirmação (o que compra, quanto custa, quanto falta); dono do item: só a prévia e o atalho de equipar.
 function confirmBox(e, c, kind, art, using) {
   const set = kind === 'set', owned = set ? !setOpen(c) : c[kind].owned, price = set ? c.set : c[kind].price, short = price - e.coins;
   const title = `${esc(c.name)} ${KIND[kind].one}`;
-  const cta = owned ? (kind === 'avatar' || kind === 'sleeve') && using[kind] !== c.id ? `<button class="ec-cta" data-act="use-cos" data-kind="${kind}" data-id="${c.id}">Equip</button>` : ''
+  const cta = owned ? !set && using[kind] !== c.id ? `<button class="ec-cta" data-act="use-cos" data-kind="${kind}" data-id="${c.id}">Equip</button>` : ''
     : `<button class="ec-cta" data-act="buy-cos" data-kind="${kind}" data-id="${c.id}" ${short > 0 ? 'disabled' : ''}>Buy for ${coinPrice(price)}</button>`;
   return `<div class="ec-confirm" role="dialog" aria-modal="true" aria-labelledby="ec-confirm-t"><div class="ec-confirm__box">
-    <div class="ec-confirm__art ec-tile--${kind}">${set ? setArt(c, art) : cosPreview(kind, art(c.id, 'webp'))}</div>
+    <div class="ec-confirm__art ec-tile--${kind}">${set ? setArt(c, art) : cosPreview(kind, art(c.id, 'webp'), c.id)}</div>
     <div class="ec-confirm__info"><p class="ec-eyebrow">${esc(c.group)} · ${KIND[kind].one}</p><h2 id="ec-confirm-t">${title}</h2><p>${KIND[kind].what}</p>
       ${set && !owned ? `<p class="ec-confirm__deal"><b class="ec-bundle__off">-${e.set_off}%</b> ${fmt(setFull(c) - c.set)} Cosmo Coins less than buying each one.</p>` : ''}
       ${owned ? '<p class="ec-confirm__owned">You own this.</p>' : short > 0 ? `<p class="ec-hint">You need ${fmt(short)} more Cosmo Coins.</p>` : ''}
@@ -94,7 +95,7 @@ function confirmBox(e, c, kind, art, using) {
 function cosmeticsTab(e, art, me, view) {
   const using = {avatar: me?.avatar_card || 'god-athena', sleeve: me?.sleeve || null}, kind = view.tab;
   const groups = (e.cosmetics || []).map(g => g.group), group = groups.includes(view.group) ? view.group : 'all';
-  const items = allItems(e).filter(c => group === 'all' || c.group === group).filter(c => kind !== 'set' || paidKinds(c).length);
+  const items = allItems(e).filter(c => group === 'all' || c.group === group).filter(c => kind !== 'set' || paidKinds(c).length > 1); // Deus: avatar grátis, sem set
   const chip = (v, label) => `<button class="lb-pill ${group === v ? 'is-active' : ''}" data-act="store-group" data-value="${esc(v)}">${esc(label)}</button>`;
   const pick = view.pick && allItems(e).find(c => c.id === view.pick.id);
   return `<p class="ec-tabnote">${KIND[kind].what}${kind === 'set' ? ` Save ${e.set_off}%.` : ''}</p>

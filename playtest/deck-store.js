@@ -25,10 +25,6 @@ export function loadMyDecks() { return read(KEY, []); }
 const COVERS = 'sstcg.deckcovers.v1';
 export const deckCovers = () => read(COVERS, {});
 export function setDeckCover(id, cardId) { write(COVERS, {...deckCovers(), [id]: cardId}); }
-// Deck box (cosmético da loja, 31/10/2026): igual à capa — Starter guarda neste aparelho; deck do jogador guarda `box` no deck.
-const BOXES = 'sstcg.deckboxes.v1';
-export const deckBoxes = () => read(BOXES, {});
-export function setDeckBox(id, boxId) { write(BOXES, {...deckBoxes(), [id]: boxId || undefined}); }
 
 export function saveMyDecks(list) {
   const before = new Map(loadMyDecks().map(d => [d.id, JSON.stringify(d)]));

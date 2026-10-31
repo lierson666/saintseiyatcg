@@ -18,7 +18,7 @@
 @keyframes ec-foil { from { background-position: 120% 0; } to { background-position: -120% 0; } }
 
 /* Store: vitrine preto + dourado (ui-ux-pro-max: luxo = vidro escuro, um acento dourado, tipografia com respiro). */
-.ec-store { max-width: 1040px; }
+.ec-store { max-width: 1240px; margin-inline: auto; }
 .ec-store__head { display: flex; flex-wrap: wrap; gap: 16px 32px; align-items: flex-end; justify-content: space-between; margin-bottom: 28px; }
 .ec-store__head h1 { margin: 0; } .ec-store__head p { margin: 6px 0 0; color: var(--kv-muted, #b9b3a3); font-size: 16px; }
 .ec-wallet { display: flex; border: 1px solid #e9c45c33; border-radius: 14px; background: #0b0d14b3; backdrop-filter: blur(8px); }
@@ -171,7 +171,7 @@ body.ec-opening #lobby { visibility: hidden; }
 @media (prefers-reduced-motion: reduce) { .ec-pack.is-live, .ec-ring { transition: none; } .ec-strip, .ec-pack.is-torn { animation-duration: .01s; } }
 
 /* Pacotes com desconto (autor, 31/10/2026, estilo MTG Arena): quatro cartões lado a lado; o desconto vira selo. */
-.ec-bundles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 14px 0 6px; padding: 0; list-style: none; }
+.ec-bundles { display: grid; width: 100%; grid-template-columns: repeat(auto-fit, minmax(128px, 1fr)); gap: 12px; margin: 14px 0 6px; padding: 0; list-style: none; }
 .ec-bundle { position: relative; display: grid; justify-items: center; gap: 2px; padding: 14px 8px 10px; border: 1px solid rgba(255, 255, 255, .14); border-radius: 14px;
   background: linear-gradient(180deg, rgba(30, 26, 60, .9), rgba(10, 10, 24, .95)); text-align: center; }
 .ec-bundle.has-off { border-color: rgba(233, 196, 92, .55); }
@@ -179,8 +179,8 @@ body.ec-opening #lobby { visibility: hidden; }
 .ec-bundle small { font: 600 11px var(--kv-sans, system-ui); letter-spacing: .14em; text-transform: uppercase; color: #bfb7a3; }
 .ec-bundle__off { position: absolute; top: -10px; right: -6px; padding: 3px 8px; border-radius: 999px; background: linear-gradient(180deg, #ff8a5c, #d9452b);
   color: #fff; font: 800 12px var(--kv-sans, system-ui); box-shadow: 0 4px 10px #0008; }
-.ec-bundle__buy { width: 100%; margin-top: 8px; justify-content: center; gap: 6px; font-size: 14px; }
-.ec-bundle__buy s { opacity: .6; font-weight: 500; font-size: 12px; }
+.ec-bundle__buy { width: 100%; min-height: 48px; margin-top: 10px; padding: 6px 8px; flex-wrap: wrap; justify-content: center; gap: 0 6px; border-radius: 12px; font-size: 15px; line-height: 1.1; }
+.ec-bundle__buy s { flex-basis: 100%; text-align: center; opacity: .6; font-weight: 500; font-size: 12px; }
 
 /* Resumo de vários boosters: uma tela, raras primeiro e brilhando; clique direito amplia. */
 .ec-sum__head { text-align: center; color: #f6ecd0; }
@@ -192,27 +192,15 @@ body.ec-opening #lobby { visibility: hidden; }
 .ec-sum__card.is-divine { filter: drop-shadow(0 0 14px rgba(200, 150, 255, .9)); }
 .ec-tag--count { position: absolute; left: 6px; top: 6px; padding: 2px 8px; border-radius: 999px; background: rgba(5, 6, 14, .85); color: #fff; font: 800 13px system-ui; }
 @keyframes ec-sum-in { from { opacity: 0; transform: translateY(10px) scale(.96); } }
-@media (max-width: 760px) { .ec-bundles { grid-template-columns: repeat(2, minmax(0, 1fr)); } .ec-sum { grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); } }
+@media (max-width: 760px) { .ec-sum { grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); } }
 @media (prefers-reduced-motion: reduce) { .ec-sum__card { animation: none; } }
 
-/* Cosméticos (autor, 31/10/2026): avatar (rosto), sleeve (verso) e deck box por personagem; trio com desconto. */
-.ec-cos-avatar, .ec-cos-sleeve, .ec-cos-box { display: block; flex: none; background: #141826 center 18% / cover no-repeat; }
+/* Cosméticos (autor, 31/10/2026): avatar (rosto, recorte em avatar-face.js) e sleeve (verso) por personagem; set com desconto. */
+.ec-cos-avatar, .ec-cos-sleeve { display: block; flex: none; background: #141826 center 18% / cover no-repeat; }
 .ec-cos-avatar { width: 64px; height: 64px; margin: 4px 0; border-radius: 50%; border: 2px solid #e9c45c; box-shadow: 0 0 0 3px #0b0d14, 0 6px 16px #0008; }
 .ec-cos-sleeve { width: 52px; height: 73px; border-radius: 5px; border: 2px solid #b8913f; background-position: center 22%;
   box-shadow: inset 0 0 0 3px #0b0d14cc, inset 0 0 0 4px #e9c45c55, 0 6px 14px #0009; }
-.ec-cos-box { position: relative; width: 56px; height: 72px; border-radius: 4px 6px 6px 4px; border: 1px solid #c9a24e; background-position: center 20%;
-  transform: perspective(240px) rotateY(-16deg); box-shadow: 6px 0 0 -1px #6a4a14, 7px 2px 10px #000a; }
-.ec-cos-box::before { content: ''; position: absolute; inset: 0 0 auto; height: 18%; border-bottom: 1px solid #e9c45c; background: linear-gradient(180deg, #1b1f4aee, #07081cdd); }
-.ec-cos-box:not([style]) { background: linear-gradient(160deg, #1b1f4a, #07081c); }
-/* Deck box no deck: selo no canto da capa; escolha na tela Decks. */
 .lb-deck__art { position: relative; }
-.lb-deck__boxed { position: absolute; right: 10px; bottom: 8px; width: 30px; height: 39px; }
-.lb-picker__grid--box { grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); }
-.lb-boxpick { display: grid; justify-items: center; gap: 8px; padding: 14px 6px; border-radius: 12px; border: 1px solid #ffffff1a; background: #0b0d14; color: #e6dfcd; cursor: pointer; }
-.lb-boxpick.is-in { border-color: #e9c45c; box-shadow: 0 0 0 2px #e9c45c55; }
-.lb-boxpick small { font-size: 12px; text-align: center; }
-.lb-picker__empty { margin: 0 0 12px; color: var(--kv-muted, #b9b3a3); }
-@media (prefers-reduced-motion: reduce) { .ec-cos-box { transform: none; } }
 
 /* Loja estilo MTG Arena (autor, 31/10/2026): abas, tiles grandes com o preço no botão, confirmação de compra. */
 .ec-tabs { display: flex; gap: 6px; margin: 8px 0 24px; border-bottom: 1px solid #ffffff1a; overflow-x: auto; scrollbar-width: none; }
@@ -244,9 +232,8 @@ body.ec-opening #lobby { visibility: hidden; }
 /* Prévias em tamanho de vitrine */
 .ec-tile--avatar .ec-cos-avatar { width: 170px; height: 170px; border-width: 3px; }
 .ec-tile--sleeve .ec-cos-sleeve { width: 150px; height: 210px; border-radius: 9px; }
-.ec-tile--box .ec-cos-box { width: 150px; height: 190px; }
 .ec-set__art { display: flex; align-items: center; gap: 12px; }
-.ec-tile--set .ec-cos-avatar { width: 80px; height: 80px; } .ec-tile--set .ec-cos-sleeve { width: 92px; height: 129px; } .ec-tile--set .ec-cos-box { width: 84px; height: 108px; }
+.ec-tile--set .ec-cos-avatar { width: 120px; height: 120px; } .ec-tile--set .ec-cos-sleeve { width: 120px; height: 168px; }
 /* Confirmação de compra */
 .ec-confirm { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 16px; background: #02030acc; backdrop-filter: blur(6px); animation: ec-fade .18s ease-out; }
 .ec-confirm__box { display: grid; grid-template-columns: auto minmax(0, 340px); align-items: center; gap: 36px; max-width: 760px; padding: 36px;
@@ -254,7 +241,6 @@ body.ec-opening #lobby { visibility: hidden; }
 .ec-confirm__art { display: grid; place-items: center; min-width: 220px; }
 .ec-confirm__art.ec-tile--avatar .ec-cos-avatar { width: 220px; height: 220px; }
 .ec-confirm__art.ec-tile--sleeve .ec-cos-sleeve { width: 200px; height: 280px; }
-.ec-confirm__art.ec-tile--box .ec-cos-box { width: 200px; height: 254px; }
 .ec-confirm__info h2 { margin: 6px 0 10px; font: 700 26px/1.15 var(--kv-title, Cinzel, serif); color: #f6ecd0; text-wrap: balance; }
 .ec-confirm__info > p { margin: 0 0 12px; line-height: 1.5; color: var(--kv-muted, #b9b3a3); }
 .ec-confirm__deal { display: flex; align-items: center; gap: 8px; }
@@ -264,3 +250,4 @@ body.ec-opening #lobby { visibility: hidden; }
 @keyframes ec-fade { from { opacity: 0; } }
 @media (max-width: 640px) { .ec-confirm__box { grid-template-columns: 1fr; justify-items: center; padding: 24px; gap: 18px; text-align: center; } .ec-tile__look { height: 190px; } }
 @media (prefers-reduced-motion: reduce) { .ec-tile, .ec-confirm { transition: none; animation: none; } }
+

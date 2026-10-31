@@ -323,9 +323,9 @@ class Api(unittest.TestCase):
         self.call('POST', '/api/admin/users/Seiya_Econ/economy', {'boosters': -14}, cookie=adm)
         o = self.call('POST', '/api/boosters/open', {'count': 10}, cookie=c)[1]  # "Open all (2)"
         self.assertEqual((len(o['packs']), o['boosters']), (2, 0))
-        # cosméticos: avatar/sleeve/box por personagem, trio com -20%; usar só o que tem
+        # cosméticos: avatar e sleeve por personagem, set com -20%; usar só o que tem
         cos = {i['id']: i for g in o['cosmetics'] for i in g['items']}
-        self.assertEqual((cos['god-hades']['avatar']['price'], cos['god-hades']['sleeve']['price'], cos['athena-v6-001']['set']), (0, 3000, 2800))
+        self.assertEqual((cos['god-hades']['avatar']['price'], cos['god-hades']['sleeve']['price'], cos['athena-v6-001']['set']), (0, 3000, 1600))
         self.assertTrue(cos['god-hades']['avatar']['owned'])
         self.assertTrue(all('-ref' not in i for i in cos))
         server.db.execute("update users set full_access = 0 where username = 'seiya_econ'")
@@ -336,15 +336,11 @@ class Api(unittest.TestCase):
         e = self.call('POST', '/api/store/buy', {'item': 'avatar', 'id': 'athena-v6-001'}, cookie=c)[1]
         self.assertEqual(before - e['coins'], 500)
         self.assertEqual(self.call('POST', '/api/store/buy', {'item': 'avatar', 'id': 'athena-v6-001'}, cookie=c)[0], 400)  # já tem
-        e = self.call('POST', '/api/store/buy', {'item': 'set', 'id': 'athena-v6-001'}, cookie=c)[1]  # trio: paga só o que falta
-        self.assertEqual(before - e['coins'], 3500)
+        e = self.call('POST', '/api/store/buy', {'item': 'set', 'id': 'athena-v6-001'}, cookie=c)[1]  # set: paga só o que falta
+        self.assertEqual(before - e['coins'], 2000)
         st, me, _, _ = self.call('PATCH', '/api/me', {'sleeve': 'athena-v6-001', 'avatar_card': 'athena-v6-001'}, cookie=c)
         self.assertEqual((st, me['sleeve'], me['avatar_card']), (200, 'athena-v6-001', 'athena-v6-001'))
-        self.assertEqual(self.call('PUT', '/api/decks/d1', {'data': {'main_deck': [], 'box': 'hades-v6-181'}, 'revision': 0}, cookie=c)[0], 400)
-        self.assertEqual(self.call('PUT', '/api/decks/d1', {'data': {'main_deck': [], 'box': 'athena-v6-001'}, 'revision': 0}, cookie=c)[0], 200)
-        before = self.call('GET', '/api/economy', cookie=c)[1]['coins']
-        e = self.call('POST', '/api/store/buy', {'item': 'set', 'id': 'god-ares'}, cookie=c)[1]  # Deus: avatar grátis, trio = sleeve + box com -20%
-        self.assertEqual((before - e['coins'], cos['god-ares']['set']), (4800, 4800))
+        self.assertEqual(self.call('POST', '/api/store/buy', {'item': 'set', 'id': 'god-ares'}, cookie=c)[0], 400)  # Deus: avatar grátis, sem set
         self.assertEqual(self.call('GET', '/api/profile/Saga_Adm', cookie=c)[0], 200)
         # duelo online: deck com carta que não tem é recusado; acesso total libera
         rare = next(cid for cid in server.CATALOG['booster']['Divine'] if cid not in server.CATALOG['starter'])

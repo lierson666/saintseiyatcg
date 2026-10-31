@@ -1,28 +1,30 @@
-/* Home vitrine (home-features.js): o carrossel e o PLAY ficam no topo; abaixo, um bloco por feature. A home passa a rolar. */
-.lb-body--home { overflow: auto; }
-/* A coluna implícita da .lobby crescia até a largura do carrossel e empurrava o PLAY para fora da tela abaixo de ~1480px. */
-.lobby { grid-template-columns: minmax(0, 1fr); }
-.lb-home { height: auto; grid-template-rows: minmax(380px, 62vh) auto auto; }
-.lb-features { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr)); gap: 14px; }
-.lb-feat { position: relative; isolation: isolate; display: grid; align-content: end; justify-items: start; gap: 4px; min-height: 168px; padding: 18px;
-  border: 1px solid var(--kv-line, #ffffff22); border-radius: 18px; overflow: hidden; text-align: left; color: #f6ecd0; text-decoration: none; cursor: pointer;
-  background: #0b0d14; font: inherit; transition: transform .2s cubic-bezier(.2, .8, .2, 1), border-color .2s, box-shadow .2s; }
-.lb-feat::before { content: ""; position: absolute; inset: 0; z-index: -2; background: var(--feat) center 20% / cover; transition: transform .6s cubic-bezier(.2, .8, .2, 1); }
-.lb-feat::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, #05060c22 0%, #05060ca6 45%, #05060cf2 100%); }
-.lb-feat:hover, .lb-feat:focus-visible { transform: translateY(-3px); border-color: #e9c45c88; box-shadow: 0 16px 40px #000a, 0 0 0 1px #e9c45c33; }
-.lb-feat:hover::before { transform: scale(1.06); }
-.lb-feat:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
-.lb-feat small { font: 600 11px var(--kv-sans, system-ui); letter-spacing: .18em; text-transform: uppercase; color: var(--kv-gold, #e9c45c); }
-.lb-feat strong { font: 700 20px/1.15 var(--kv-title, Cinzel, serif); }
-.lb-feat span { font-size: 13px; line-height: 1.45; color: #d6d0c0; max-width: 32ch; }
-.lb-feat__live { position: absolute; top: 14px; right: 14px; padding: 4px 10px; border-radius: 999px; background: #0b0d14d9; border: 1px solid #ffffff26;
-  font: 600 12px var(--kv-sans, system-ui); color: var(--kv-gold-2, #f1d68a); white-space: nowrap; }
-.lb-feat.is-hot .lb-feat__live { background: linear-gradient(180deg, #f6dc8a, #d9a93c); color: #1a1205; border-color: transparent; box-shadow: 0 0 18px #e9c45c88; }
-.lb-feat__emblem { position: absolute; top: 10px; left: 10px; } .lb-feat__emblem .rk-emblem { height: 54px; }
-.lb-feat:has(.lb-feat__emblem) small { margin-top: 40px; }
-@media (max-width: 600px) {
-  .lb-home { grid-template-rows: auto; }
-  .lb-features { grid-template-columns: 1fr 1fr; gap: 10px; }
-  .lb-feat { min-height: 140px; padding: 14px; } .lb-feat strong { font-size: 16px; } .lb-feat span { display: none; }
+/* Home estilo MTG Arena (autor, 31/10/2026): carrossel e destaques ocupam a tela; embaixo, a trilha de progresso
+   (nível, XP contra a IA, rank, boosters) sobre uma linha, e PLAY no canto direito. Sem grade de atalhos: o menu já leva a tudo. */
+.lb-home { min-height: calc(100dvh - 88px); grid-template-rows: minmax(300px, 1fr) auto; }
+.lb-hero { grid-row: 1; min-height: 300px; }
+.lb-track { grid-column: 1; grid-row: 2; position: relative; display: flex; justify-content: center; align-items: flex-start; gap: clamp(16px, 4vw, 56px); padding: 6px 0 4px; }
+.lb-track::after { content: ''; position: absolute; left: 8%; right: 8%; bottom: 30px; height: 1px; z-index: -1;
+  background: linear-gradient(90deg, transparent, #e9c45c66 15%, #e9c45c66 85%, transparent); }
+.lb-mark { display: grid; justify-items: center; gap: 6px; min-width: 96px; padding: 0; border: 0; background: none; color: inherit; text-decoration: none; cursor: pointer; }
+.lb-mark:focus-visible { outline: 2px solid #fff; outline-offset: 6px; border-radius: 12px; }
+.lb-mark__count { font: 600 13px var(--kv-sans, system-ui); color: #e6dfcd; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.lb-mark__ring { position: relative; display: grid; place-items: center; width: 84px; height: 84px; border-radius: 50%;
+  background: radial-gradient(circle, #10142a 58%, transparent 59%), conic-gradient(var(--kv-gold, #e9c45c) var(--p, 0%), #ffffff1a 0);
+  box-shadow: 0 8px 24px #0009; transition: transform .2s cubic-bezier(.2, .8, .2, 1); }
+.lb-mark__ring--plain { background: radial-gradient(circle, #141a30, #0a0c18); border: 1px solid #e9c45c55; }
+.lb-mark:hover .lb-mark__ring { transform: translateY(-3px) scale(1.04); }
+.lb-mark__ring b { font: 700 28px/1 var(--kv-title, Cinzel, serif); color: var(--kv-gold-2, #f1d68a); }
+.lb-mark__ring .lb-mark__xp { font-size: 22px; letter-spacing: .04em; }
+.lb-mark__ring .rk-emblem { height: 64px; }
+.lb-mark__pack { height: 70px; transform: rotate(-6deg); filter: drop-shadow(0 4px 8px #000a); }
+.lb-mark.is-hot .lb-mark__ring { box-shadow: 0 0 0 2px #e9c45c, 0 0 28px #e9c45c88; }
+.lb-mark.is-hot .lb-mark__count { color: var(--kv-gold-2, #f1d68a); }
+.lb-mark__label { max-width: 16ch; font: 600 10px/1.3 var(--kv-sans, system-ui); letter-spacing: .16em; text-transform: uppercase; color: var(--kv-muted, #b9b3a3); text-align: center; }
+.lb-track--guest .lb-mark__label { max-width: none; }
+@media (max-width: 900px) {
+  .lb-home { min-height: 0; }
+  .lb-track { grid-column: 1 / -1; grid-row: auto; flex-wrap: wrap; gap: 18px 24px; }
+  .lb-track::after { display: none; }
+  .lb-mark__ring { width: 68px; height: 68px; } .lb-mark__ring .rk-emblem { height: 52px; } .lb-mark__pack { height: 56px; }
 }
-@media (prefers-reduced-motion: reduce) { .lb-feat, .lb-feat::before { transition: none; } }
+@media (prefers-reduced-motion: reduce) { .lb-mark__ring { transition: none; } }
