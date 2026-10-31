@@ -21,7 +21,7 @@ import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
 import {createDirector} from './director.js?v=16';
 import {createAI} from './ai.js?v=5';
 import {findDeck} from '../deck-store.js';
-import {rankAfterMatch} from '../rank.js?v=20261031-2';
+import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-3';
 import {unlock, playMusic} from '../audio.js?v=20261030-telas';
 import {telas, anim, sound, imageUrl, applyColors, applyTexts} from '../telas.js?v=20261030-1';
 import {renderLiveCard, renderCardText} from '../../shared/live-card.js?v=20261031-ed5';
@@ -1951,7 +1951,7 @@ async function applyView(view) {
   const s = S(), req = s.pending;
   pending = req ? {pending: req, picked: [], peek: true, shown: s.events.length} : null;
   mode = null;
-  if (first) { clock = createClock(s.order); seenEvents = s.events.length; watchEvents.seen = 0; return render(); }
+  if (first) { mountNameplates({online: true, players: view.players, you: view.you}); clock = createClock(s.order); seenEvents = s.events.length; watchEvents.seen = 0; return render(); }
   const events = s.events.slice(from);
   seenEvents = s.events.length;
   syncClock(events);
@@ -2027,6 +2027,7 @@ async function init() {
     newMatch(Number(params.get('seed')) || undefined, params.get('demo') ? 'A' : ['A', 'B'].includes(params.get('first')) ? params.get('first') : undefined);
     applyDemo(params.get('demo'));
     render();
+    if (settings.ai !== 'none') mountNameplates({online: false}); // hot-seat não tem dono de conta em cada lado
   }
   requestAnimationFrame(watchEvents);
   setInterval(tickClock, 250);

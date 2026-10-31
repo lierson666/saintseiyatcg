@@ -93,3 +93,16 @@ function showResult(before, after, online) {
     if (!online && !gained) xp.querySelector('b').textContent = 'Daily AI XP limit reached';
   }, 900);
 }
+
+// Placas da mesa (pedido do autor, 31/10/2026): canto direito, adversário em cima, eu embaixo; nome + selo do rank.
+// players: {A: username, B: username} no online; contra a IA só o meu lado tem conta.
+export async function mountNameplates({online, players, you}) {
+  if (document.querySelector('.rk-plate')) return;
+  const [me, mine] = await Promise.all([call('/api/me').catch(() => null), call('/api/rank').catch(() => cached())]);
+  const foeName = online ? players?.[Object.keys(players).find(k => k !== you)] : null;
+  const foe = foeName ? await call(`/api/profile/${encodeURIComponent(foeName)}`).catch(() => null) : null;
+  const plate = (side, name, r) => `<aside class="rk-plate rk-plate--${side}" aria-label="${side === 'me' ? 'You' : 'Opponent'}: ${esc(name)}${r ? `, ${esc(rankName(r))}` : ''}">
+    ${r ? emblem(r) : ''}<span><b>${esc(name)}</b>${r ? `<small>${esc(rankName(r))} · Lv ${r.level}</small>` : ''}</span></aside>`;
+  document.body.insertAdjacentHTML('beforeend', plate('foe', foe?.username || foeName || 'AI Opponent', foe?.rank)
+    + (me ? plate('me', me.username, mine) : ''));
+}

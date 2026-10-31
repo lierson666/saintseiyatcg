@@ -43,3 +43,12 @@
 .rk-result__x { position: absolute; top: 6px; right: 8px; border: 0; background: none; color: inherit; font-size: 20px; cursor: pointer; opacity: .7; }
 @keyframes rk-in { from { opacity: 0; translate: 0 12px; } }
 @media (prefers-reduced-motion: reduce) { .rk-result, .rk-result__promo { animation: none; } .rk-xp i, .rk-pips i { transition: none; } }
+
+/* Placas da mesa (Olympus Arena): canto direito, adversário em cima, eu embaixo. */
+.rk-plate { position: fixed; right: 16px; z-index: 40; display: flex; align-items: center; gap: 8px; padding: 6px 12px 6px 6px;
+  border: 1px solid #e9c45c44; border-radius: 999px; background: #0b0d14cc; color: #f1ead8; font: 13px Jost, system-ui, sans-serif;
+  pointer-events: none; max-width: min(260px, 40vw); }
+.rk-plate--foe { top: 16px; } .rk-plate--me { bottom: 16px; }
+.rk-plate span { display: grid; line-height: 1.15; min-width: 0; }
+.rk-plate b { font: 600 13px Cinzel, serif; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rk-plate small { font-size: 11px; opacity: .75; white-space: nowrap; }
