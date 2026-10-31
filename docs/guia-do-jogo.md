@@ -41,7 +41,7 @@ O God e o Domain começam a partida em suas respectivas posições de jogo, fora
 
 O jogador começa com uma mão de 7 cartas.
 
-O limite é de 3 cópias por identidade de carta. O deck aceita as facções do God e do Domain e cartas neutras. Há um mulligan parcial gratuito, uma vez por jogador; o procedimento completo está no capítulo XII (§55).
+O limite é de 3 cópias por identidade de carta. O deck aceita a facção do God, cartas neutras e, se o Domain for de outra facção, até 15 cartas dessa facção (Domain fora da cor: ver §63). Há um mulligan parcial gratuito, uma vez por jogador; o procedimento completo está no capítulo XII (§55).
 
 ### 3. Tipos de cartas
 
@@ -691,6 +691,15 @@ Se um Strike causar Soul zero aos dois Gods simultaneamente por efeitos aplicáv
 
 - Deck principal com 60 cartas, até **3 cópias da mesma identidade de carta**; artes alternativas e revisões da mesma carta não aumentam o limite. God e Domain ficam fora dessas 60.
 - Permitir cartas da facção do God, da facção do Domain e neutras. Se God e Domain forem da mesma facção, o deck é monofacção mais neutras. Não criar cinco tipos de mana nesta base.
+- **Domain fora da cor** (autor, 31/10/2026). Se a facção do Domain for diferente da facção do God:
+  1. Só a **primeira habilidade impressa** do Domain funciona; as demais são ignoradas.
+  2. Habilidades **estáticas** do Domain não funcionam.
+  3. Habilidade disparada ou ativada do Domain tem custo adicional de **{1}{S}** (o God do controlador perde 1 Soul), pago quando ela iria para a pilha. O pagamento é opcional: sem pagar, a habilidade não é usada. Disparo obrigatório passa a ser opcional.
+  4. O deck principal pode ter **até 15 cartas** da facção do Domain. Cartas neutras não contam nesse limite; God e Domain ficam fora dos 60.
+  - Domain da mesma facção do God funciona inteiro, sem custo extra; o bônus de ressonância é não sofrer essas restrições.
+- **Forma dos Domains e Once per game** (autor, 31/10/2026). Um Domain tem duas linhas: a primeira é um efeito simples e contínuo (estática de +1 ATK ou +1 HP num subtipo, ou gatilho/ativada de 1 ponto no máximo uma vez por rodada), sem compra de carta; a segunda é forte e marcada **Once per game**. Compra de carta em Domain só aparece na habilidade Once per game.
+  - **Once per game:** habilidade ativada que o controlador usa no próprio turno, pagando o custo impresso; vai à pilha. Ao declará-la, o Domain fica marcado como usado (vira de lado) até o fim da partida; se for contrariada, continua usada.
+  - Domain fora da cor perde a segunda linha pela regra acima; o poder forte fica para quem é da cor.
 - Um mulligan parcial gratuito: separar qualquer quantidade da mão inicial, comprar a mesma quantidade e só então embaralhar as separadas no deck. Apenas uma troca; sem penalidade de Latent ao adversário. Ver §55.
 - Cada jogador pode controlar um Devotee de cada **personagem nomeado**, mesmo que existam versões diferentes da carta. Essa regra de lendário vale só para as classes de guerreiros: **Saints, Marines, Satellites, Specters e Berserkers**. Devotees de classe baixa (Warrior, Support e sem classe) não são lendários e podem ter mais de uma cópia no campo. Unidades genéricas também não têm essa exclusividade. Usar identidade estável de personagem para essa regra e para Resonance; título e ilustração não bastam.
 - Uma segunda versão de personagem que já controla pode ser jogada da mão normalmente. Sempre que houver duplicidade (por jogada da mão ou por efeito), o controlador escolhe um para manter e envia os outros ao Tartarus, sem considerar isso destruição. Habilidades de entrada continuam seguindo o fato de a carta ter entrado; essa interação deve ser considerada no custo do efeito que a trouxe.

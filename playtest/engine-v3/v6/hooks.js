@@ -1,6 +1,6 @@
 // Pontos da engine 3.0 que chamam os efeitos V6 (registry.js). A engine importa só este arquivo.
 import {hooks, pushTriggers, emit} from '../core.js';
-import {V6, entryOf, collect, trigger, contextOf, register, sources} from './registry.js';
+import {V6, entryOf, collect, trigger, contextOf, register, sources, domainEntry} from './registry.js';
 import {setDefeatedHooks, setEnteredHooks, setLeavesHooks, setDamagedHooks} from './kit.js';
 import hades from './hades.js';
 import poseidon from './poseidon.js';
@@ -191,7 +191,7 @@ export function v6Mods(state, ctx, key, uid) {
       const aura = src !== uid && V6[ctx.objects[src]?.cardId]?.aura?.(state, ctx, k, src, uid);
       if (aura) list.push(aura);
     }
-    const domain = V6[state.domains?.[k]]?.aura?.(state, ctx, k, `domain:${k}`, uid);
+    const domain = domainEntry(state, k)?.aura?.(state, ctx, k, `domain:${k}`, uid); // fora da cor: sem estáticas (§63)
     if (domain) list.push(domain);
   }
   return list;

@@ -9,6 +9,7 @@
 // dano redirecionado pela Resonance da 004 é dano de Strike em Shiryu.
 import {CHARACTER_IDENTITY, characterOf} from '../../shared/character-identity.js';
 import {v6Mods, v6Entered, v6Cast, v6Defeated, v6AfterStrike, v6WouldBeDefeated, v6Leaves, v6Prevent, contextOf} from './v6/hooks.js';
+import {offColor, payOffColor} from './v6/registry.js';
 import {hooks, RuleError, useOncePerRound, addEffect, destroyDevotee, draw, spendBase, pushTriggers, emit, gainLatent, prepareUnit, loseSoul} from './core.js';
 
 export const card = (ctx, uid) => ctx.cards.get(ctx.objects[uid].cardId);
@@ -51,7 +52,7 @@ function mods(state, ctx, uid) {
     if (athenaAwaken(state, ctx, key, uid)) list.push({atk: 1, hp: 1}); // God Athena, Divine Protection (Awaken 5)
     // Domain 064 The Five Old Peaks, Ancient Discipline: Saints amigos com Guardian, +0/+1. Keywords lidas sem mods()
     // (keywordsOf chama mods: recursão). shortcut: Guardian dado por Equipment não conta; ampliar se surgir carta assim.
-    if (state.domains?.[key] === 'athena-v6-064' && isSaint(ctx, uid)
+    if (state.domains?.[key] === 'athena-v6-064' && !offColor(state, key) && isSaint(ctx, uid) // estática: some fora da cor (§63)
       && [...card(ctx, uid).keywords, ...(state.units[uid]?.keywords || []), ...state.effects.filter(e => e.target === uid && e.kind === 'mod').flatMap(e => e.keywords || [])].includes('Guardian')) {
       list.push({atk: 0, hp: 1, source: 'domain'});
     }
@@ -273,7 +274,7 @@ function harvestOfTheFallen(state, ctx, key) {
   if (state.domains?.[key] !== 'ares-v6-335' || state.victory || state.roundUses.has(once)) return;
   useOncePerRound(state, once);
   pushTriggers(state, [{controller: key, uid: `domain:${key}`, ability: 'HARVEST OF THE FALLEN', run: st => {
-    if (st.victory) return;
+    if (st.victory || (offColor(st, key) && !payOffColor(st, ctx, key, 'HARVEST OF THE FALLEN'))) return;
     if (st.players[key].soul < 1 || !ask(ctx, key, {ability: 'HARVEST OF THE FALLEN', uid: `domain:${key}`, cost: '1 Soul'})) return;
     loseSoul(st, {[key]: 1}, 'payment');
     if (st.victory) return;
@@ -553,16 +554,18 @@ export function afterStrike(state, ctx, strike) {
     }, {uid: sword, ability: 'Resonance', target: t});
   }
   // Domain 062 Galaxian Wars Arena, Tournament Spirit: Bronze Saint amigo derrotou o Devotee inimigo no Strike, atacando
-  // ou defendendo na retaliação (autor, 28/10/2026; guia §63); uma vez por Round, pode comprar 1.
+  // ou defendendo na retaliação (autor, 28/10/2026; guia §63); uma vez por Round, o Saint ganha +1 ATK até o fim do Round
+  // (rebalanceamento dos Domains, 31/10/2026: sem compra).
   const sides = t ? [[strike.player, attacker, t], [other(state, strike.player), t, attacker]] : [];
   for (const [arena, saint, foe] of sides) {
     const spirit = `domain:${arena}:tournament-spirit`;
     if (survived(foe) || state.domains?.[arena] !== 'athena-v6-062' || !isBronze(ctx, saint) || state.roundUses.has(spirit)) continue;
     add(arena, st => {
-      if (st.roundUses.has(spirit) || !ask(ctx, arena, {ability: 'TOURNAMENT SPIRIT', draw: 1})) return;
+      if (st.roundUses.has(spirit) || !st.units[saint]) return;
       useOncePerRound(st, spirit);
+      if (offColor(st, arena) && !payOffColor(st, ctx, arena, 'TOURNAMENT SPIRIT')) return;
       emit(st, 'domain_power', {player: arena, ability: 'TOURNAMENT SPIRIT'});
-      draw(st, arena, 1);
+      modify(st, saint, {atk: 1});
     }, {uid: `domain:${arena}`, ability: 'TOURNAMENT SPIRIT'});
   }
   triggers.push(...v6AfterStrike(state, ctx, strike, strike.gearBefore || {}));

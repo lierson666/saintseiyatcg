@@ -2,7 +2,7 @@
 // tela de decks e criador de decks. A partida é o Olympus Arena (./divine/), que recebe os decks pela URL.
 import {loadCanon} from '../shared/canon-cards.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
-import {canonIndex, validateDeck, DECK_SIZE, COPY_LIMIT} from '../shared/deck-v3.js';
+import {canonIndex, validateDeck, colorErrors, splashCount, DECK_SIZE, COPY_LIMIT, SPLASH_LIMIT} from '../shared/deck-v3.js';
 import {spellCategory} from './engine-v3/core.js';
 import {renderLiveCard, renderCardText} from '../shared/live-card.js?v=20261031-kw6';
 import {unlock, playMusic, setVolume, volume} from './audio.js?v=20261030-telas';
@@ -58,11 +58,8 @@ const deckGod = d => d.god || 'god-athena';
 const deckSize = d => d.main_deck.reduce((n, e) => n + e.quantity, 0);
 // Identidade de cores (guia §63): facção do God, facção do Domain e neutras.
 const deckFactions = d => new Set([faction(cards.get(deckGod(d))), d.domain_id && cards.get(d.domain_id) && faction(cards.get(d.domain_id)), 'neutral'].filter(Boolean));
-function deckErrors(d) {
-  const ok = deckFactions(d);
-  return [...validateDeck(d, index), ...d.main_deck.filter(e => cards.get(e.card_id) && !ok.has(faction(cards.get(e.card_id))))
-    .map(e => ({code: 'identity', card_id: e.card_id}))];
-}
+const factionOf = id => cards.get(id) && faction(cards.get(id));
+const deckErrors = d => [...validateDeck(d, index), ...colorErrors({...d, god: deckGod(d)}, factionOf)];
 const deckValid = d => !deckErrors(d).length;
 const thumbOf = d => d.thumb || deckCovers()[d.id] || null; // deck do jogador: no deck; Starter: neste aparelho
 function deckCover(d) {
@@ -359,7 +356,7 @@ function pool(b) {
 function errorText(e) {
   const name = id => esc(cards.get(id)?.name || id);
   return {domain: 'Choose a Domain from the collection.', size: `${e.total} / ${DECK_SIZE} cards.`, copies: `${name(e.card_id)}: ${e.count} copies (max ${COPY_LIMIT}).`,
-    unknown: `${name(e.card_id)} is not in the card pool.`, outside: `${name(e.card_id)} can't go in the main deck.`, identity: `${name(e.card_id)} is outside this deck's colors (God, Domain and neutral).`, quantity: `${name(e.card_id)}: invalid quantity.`}[e.code] || e.code;
+    unknown: `${name(e.card_id)} is not in the card pool.`, outside: `${name(e.card_id)} can't go in the main deck.`, identity: `${name(e.card_id)} is outside this deck's colors (God, Domain and neutral).`, quantity: `${name(e.card_id)}: invalid quantity.`, splash: `${e.count} cards from the Domain's faction (max ${SPLASH_LIMIT}).`}[e.code] || e.code;
 }
 const CARD_SIZES = {S: 130, M: 180, L: 250, XL: 330};
 function builder() {
@@ -484,6 +481,13 @@ function setCount(id, delta) {
     const list = names.length > 1 ? `${names.slice(0, -1).join(', ')} and ${names.at(-1)}` : names[0];
     ui.big = null;
     ui.notice = {title: 'Outside this deck\'s colors', text: `${card.name} is ${/^[AEIOU]/.test(f) ? 'an' : 'a'} ${f} card. This deck can only use ${list} cards. Change the God or the Domain to add it.`};
+    return;
+  }
+  // Guia §63: até SPLASH_LIMIT cartas da facção de um Domain de outra cor; neutras não contam.
+  const deck = {...ui.builder.deck, god: deckGod(ui.builder.deck)};
+  if (delta > 0 && card && ![factionOf(deck.god), 'neutral'].includes(faction(card)) && splashCount(deck, factionOf) >= SPLASH_LIMIT) {
+    ui.big = null;
+    ui.notice = {title: 'Splash limit reached', text: `This deck already has ${SPLASH_LIMIT} cards from its Domain's faction. Cards from your God's faction and neutral cards have no limit.`};
     return;
   }
   if (delta > 0 && n > ownedLimit(ui.econ, id, card?.kind)) {  // coleção (docs/economia.md): só entram as cópias que o jogador tem

@@ -4,7 +4,7 @@ import * as k from './kit.js';
 // "Target enemy God": único alvo possível, guardado ao conjurar sem pergunta (v6/targets.js; reações como Poseidon 136 o enxergam).
 const godOfFoe = (s, c, key) => [k.godTarget(k.other(s, key))];
 import {addSeal, hooks, pushTriggers} from '../core.js';
-import {collect, contextOf} from './registry.js';
+import {collect, contextOf, offColor, payOffColor} from './registry.js';
 
 // ---------- ajudantes locais ----------
 const name = (c, uid) => k.card(c, uid)?.name || '';
@@ -71,7 +71,8 @@ const inTartarus = (s, c, key, test) => s.players[key].tartarus.filter(u => test
 // shortcut: só vê retornos feitos por cartas deste arquivo; virar observador quando o kit tiver gancho de retorno à mão.
 function recall(s, c, key, uid) {
   if (!k.toHand(s, c, uid, 'tartarus')) return false;
-  if (s.domains?.[key] === 'hades-v6-243' && k.isDevotee(c, uid) && k.once(s, `domain:${key}:ferry`)) gain(s, key, 1);
+  if (s.domains?.[key] === 'hades-v6-243' && k.isDevotee(c, uid) && k.once(s, `domain:${key}:ferry`)
+    && (!offColor(s, key) || payOffColor(s, c, key, 'FERRY OF THE DEAD'))) gain(s, key, 1); // fora da cor: {1}{S} (§63)
   return true;
 }
 function toHandFrom(s, c, key, ability, test, {optional = false, exclude} = {}) {
@@ -436,23 +437,26 @@ export default {
     if (mode === 'recall') done = !!toHandFrom(s, c, key, 'THE WILL OF HADES', specter(2));
     if (done) lose(s, key, 1);
   }}},
-  'hades-v6-242': { // Hades Castle (Domain)
+  // ---------- Domains (rebalanceamento, autor 31/10/2026): linha 1 simples; linha 2 `opg` (Once per game, guia §63) ----------
+  'hades-v6-242': { // Hades Castle
     // Dark Authority (rebalanceamento 30/10/2026): só o God inimigo perde 1 Soul; Hades não ganha.
     watchDefeat: (s, c, key, self, dead, owner) => owner === key && k.hasType(c, dead, 'Specter') && k.once(s, `${self}:dark`) && (st => lose(st, k.other(st, key), 1)),
-    // Eternal Allegiance (gancho costLess): o primeiro Specter que voltou do Tartarus à mão neste Round custa 1 a menos neste Round.
-    costLess: (s, c, key, self, uid) => s.events.find(e => e.type === 'returned_to_hand' && e.from === 'tartarus' && e.player === key && e.round === s.round && k.hasType(c, e.uid, 'Specter'))?.uid === uid && {n: 1},
+    opg: {name: 'ETERNAL ALLEGIANCE', cost: 3, run: (s, c, key) => {
+      const pool = inTartarus(s, c, key, cd => /Specter/.test(cd.type));
+      for (const u of k.chooseUpTo(c, key, 'ETERNAL ALLEGIANCE', pool, 2, {text: 'Choose up to two Specter cards in your Tartarus.'})) recall(s, c, key, u);
+    }},
   },
-  'hades-v6-243': { // The River Acheron (Domain). Ferry of the Dead: em recall() acima.
-    watchDefeat: onDefeat('friend', (st, c, key) => payDraw(st, c, key, 'PRICE OF PASSAGE', 1, 1), 'passage'),
+  'hades-v6-243': { // The River Acheron. Ferry of the Dead: em recall() acima.
+    opg: {name: 'PRICE OF PASSAGE', cost: 2, run: (s, c, key) => k.draw(s, key, Math.min(3, k.defeatedThisRound(s, c).filter(e => e.owner === key).length))},
   },
-  'hades-v6-244': { // The First Prison (Domain)
+  'hades-v6-244': { // The First Prison
     watchDiscard: (s, c, key, self, player) => player !== key && k.once(s, `${self}:judgment`) && (st => lose(st, player, 1)),
-    watchDefeat: onDefeat('enemy', (st, c, key) => payDraw(st, c, key, 'ETERNAL PUNISHMENT', 1, 1), 'punishment'),
+    opg: {name: 'ETERNAL PUNISHMENT', cost: 3, run: (s, c, key) => k.discard(s, c, k.other(s, key), 2, 'ETERNAL PUNISHMENT')},
   },
-  'hades-v6-245': { // The Gates of the Underworld (Domain)
-    watchDefeat: onDefeat('friend', (st, c, key) => toHandFrom(st, c, key, 'GATES OF DEATH', specter(2), {optional: true}), 'gates'),
-    // Interpretação: "enters with +1/+1" vira gatilho de entrada (+1/+1 até o fim do Round), não substituição.
-    watchEnter: onReturn(false, (st, c, key, self, entered) => k.buff(st, entered, 1, 1), 'rise'),
+  'hades-v6-245': { // The Gates of the Underworld
+    // Interpretação: "enters with +1 ATK" vira gatilho de entrada (+1 ATK até o fim do Round), não substituição.
+    watchEnter: onReturn(false, (st, c, key, self, entered) => k.buff(st, entered, 1, 0), 'rise'),
+    opg: {name: 'GATES OF DEATH', cost: 3, run: (s, c, key) => toFieldFrom(s, c, key, 'GATES OF DEATH', specter(3))},
   },
   // 246–249: Resonances dentro das habilidades de Valentine (201), Lune (202), Myu (203) e Niobe (204).
   'hades-v6-250': { // Basilisk Surplice

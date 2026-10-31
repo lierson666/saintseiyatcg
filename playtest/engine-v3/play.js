@@ -2,10 +2,10 @@
 // Devotee: Sorcery (D173), entra Unprepared (ALPHA-P02 A). Equipment: custo alternativo, Spell: Tartarus do Owner
 // (as duas aprovadas pelo autor em 28/10/2026). Moment/Technique: D194. Janela: ALPHA-P06 A.
 // `ctx`: {cards (loadCanon), objects (uid -> {owner, cardId}), attached (uid do Equipment -> uid do portador)}.
-import {RuleError, NotSpecified, assertIdle, spendBase, spellCategory, respond, emit, openWindow, pushTriggers, useOncePerRound} from './core.js';
+import {RuleError, NotSpecified, assertIdle, spendBase, spellCategory, respond, emit, openWindow, pushTriggers, useOncePerRound, loseSoul} from './core.js';
 import {SPELLS, ABILITIES, onEnter, onCastEquipment, checkDefeats, namedCharacter, enforceUniqueness, silenced} from './effects.js';
 import {v6Spell, entryOf, V6, v6Attach} from './v6/hooks.js';
-import {collect, sources} from './v6/registry.js';
+import {collect, sources, domainEntry} from './v6/registry.js';
 import {aim, withTargets} from './v6/targets.js';
 
 // Guia §5: Moment como AÇÃO, Technique, Equipment que não é Armor, Equip e habilidades comuns pagam em Base e/ou Latent.
@@ -137,10 +137,12 @@ export function activate(state, ctx, key, uid, choice = {}) {
   if (state.victory) throw new RuleError('D52', 'a partida já terminou');
   if (key !== state.active) throw new RuleError('D1', 'só o jogador ativo age, no próprio turno');
   assertIdle(state); // D173: Sorcery
-  // Domain (`domain:${key}`): habilidade ativada do Domain do próprio jogador; não é objeto de deck nem tem {T}.
-  const domain = String(uid).startsWith('domain:');
-  if (domain && (uid !== `domain:${key}` || !V6[state.domains?.[key]]?.activate)) throw new RuleError('{T}', 'sem habilidade ativada de Domain');
-  const v6 = domain ? V6[state.domains[key]].activate : entryOf(ctx, uid)?.activate;
+  // Domain (`domain:${key}`): habilidade ativada da linha 1 do Domain do próprio jogador; não é objeto de deck nem tem {T}.
+  // `domain:${key}:opg`: linha 2, Once per game (guia §63): uma vez na partida; o Domain fica usado ao declarar.
+  const domain = String(uid).startsWith('domain:'), opg = uid === `domain:${key}:opg`, dom = domain && domainEntry(state, key);
+  if (domain && !(opg ? dom?.opg : uid === `domain:${key}` && dom?.activate)) throw new RuleError('{T}', 'sem habilidade ativada de Domain');
+  if (opg && state.domainUsed?.[key]) throw new RuleError('§63', 'a habilidade Once per game já foi usada');
+  const v6 = domain ? (opg ? dom.opg : dom.activate) : entryOf(ctx, uid)?.activate;
   const ability = v6 ? {...v6, ...(domain && {tap: false}), check: (s, c, k, ch) => v6.check?.(s, c, k, uid, ch), run: (s, c, k, ch) => v6.run(s, c, k, uid, ch)}
     : ABILITIES[ctx.objects[uid]?.cardId.slice(-3)];
   if (!ability || (!domain && !state.players[key].battlefield.includes(uid))) throw new RuleError('{T}', 'sem habilidade ativada implementada');
@@ -149,14 +151,18 @@ export function activate(state, ctx, key, uid, choice = {}) {
   const once = typeof ability.once === 'function' ? ability.once(state, ctx, key, uid) : ability.once; // ex.: 016 com Ikki não tem limite
   if (once && state.roundUses.has(`ability:${uid}`)) throw new RuleError('D191', `${ability.name} já foi usada neste Round`);
   ability.check(state, ctx, key, choice);
+  if (v6?.offColor && state.players[key].soul < 1) throw new RuleError('§63', 'Domain fora da cor: falta {1}{S}');
   payCost(state, key, mixed({amount: ability.cost || 0, unit: 'base'})); // {N}{C}: Base e/ou Latent (guia §5)
+  if (v6?.offColor) loseSoul(state, {[key]: 1}, 'payment'); // Domain fora da cor: custo adicional {1}{S} (§63)
+  if (opg) (state.domainUsed ||= {})[key] = true;
   if (once) state.roundUses.add(`ability:${uid}`);
   if (ability.tap !== false) state.units[uid].prepared = false;
-  emit(state, 'ability', {player: key, uid, name: ability.name, target: choice.target});
+  const src = opg ? `domain:${key}` : uid; // a interface acha o Domain por `domain:${key}`
+  emit(state, 'ability', {player: key, uid: src, name: ability.name, target: choice.target});
   // Guia §56 (30/10/2026): a habilidade ativada vai à pilha com janela de resposta; custo e {T} já foram pagos.
   openWindow(state);
-  state.chain.push({controller: key, uid, speed: 'instant', ability: ability.name, target: choice.target ?? null, run: st => { ability.run(st, ctx, key, choice); checkDefeats(st, ctx); }});
-  emit(state, 'chain_add', {player: key, uid});
+  state.chain.push({controller: key, uid: src, speed: 'instant', ability: ability.name, target: choice.target ?? null, run: st => { ability.run(st, ctx, key, choice); checkDefeats(st, ctx); }});
+  emit(state, 'chain_add', {player: key, uid: src});
 }
 
 // Equipment solto no campo (não-Armor cujo portador saiu) volta a um Devotee seu pagando Equip {N}

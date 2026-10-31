@@ -41,3 +41,18 @@ test('decks D171 aprovados fecham 60 com no máximo 3 cópias, sem 019 a mais e 
     assert.ok((d.main_deck.find(e => e.card_id === 'athena-v6-019')?.quantity ?? 0) <= 1);
   }
 });
+
+test('Domain fora da cor libera até 15 cartas da facção dele; neutras não contam (guia §63)', async () => {
+  const {colorErrors, splashCount} = await import('../shared/deck-v3.js');
+  const factionOf = id => id && id.replace(/^god-/, '').split('-')[0];
+  const d = (poseidon, neutral = 0) => ({god: 'god-athena', domain_id: 'poseidon-v6-148', main_deck: [
+    {card_id: 'athena-v6-001', quantity: 60 - poseidon - neutral},
+    {card_id: 'poseidon-v6-101', quantity: poseidon},
+    ...(neutral ? [{card_id: 'neutral-v6-001', quantity: neutral}] : []),
+  ]});
+  assert.equal(splashCount(d(15, 20), factionOf), 15);
+  assert.deepEqual(colorErrors(d(15, 20), factionOf), []);
+  assert.deepEqual(colorErrors(d(16), factionOf), [{code: 'splash', count: 16}]);
+  // Mesma cor: Domain de Athena com God Athena não libera Poseidon.
+  assert.deepEqual(codes(colorErrors({...d(3), domain_id: 'athena-v6-062'}, factionOf)), ['identity']);
+});

@@ -74,19 +74,24 @@ const perBank = (s, c, key) => { const n = Math.floor(bank(s, key) / 3); return 
 const search = (st, c, key, ability, filter) => k.search(st, c, key, ability, (card, uid) => card.kind === 'Devotee' && filter(card, uid));
 
 export default {
-  // The Hunter's Moon (autor, 31/10/2026): no início do seu turno troca uma Base por uma carta; a nova Base (topo do deck)
-  // entra Unprepared. shortcut: o motor prepara as Bases antes dos gatilhos de início de turno; a Base trocada sai já preparada.
+  // The Hunter's Moon (rebalanceamento dos Domains, 31/10/2026): Moonlit Watch olha o topo no início do seu turno; a troca de Base
+  // por carta fica na Once per game. shortcut: o custo (Base ao Tartarus) é pago na resolução.
   'artemis-v6-504': {
-    startTurn: (s, c, key) => s.players[key].bases.length > 0 && (st => { // Moonlit Harvest
+    startTurn: (s, c, key) => s.players[key].deck.length > 0 && (st => { // Moonlit Watch
       const p = st.players[key];
-      if (!p.bases.length || !k.may(c, key, 'MOONLIT HARVEST', {text: 'Put a Cosmo Base into your Tartarus to draw 1 card and replace it with the top card of your deck?'})) return;
-      const b = k.choose(c, key, 'MOONLIT HARVEST', p.bases.map(x => x.uid), {text: 'Choose a Cosmo Base to put into your Tartarus.'});
-      if (!b) return;
-      p.bases = p.bases.filter(x => x.uid !== b);
-      p.tartarus.push(b);
-      k.draw(st, key, 1);
-      if (!st.victory && p.deck.length) p.bases.push({uid: p.deck.shift(), prepared: false});
+      if (p.deck.length && k.may(c, key, 'MOONLIT WATCH', {uid: p.deck[0], text: 'Put the top card of your deck on the bottom of your deck?'})) p.deck.push(p.deck.shift());
     }),
+    opg: {name: 'MOONLIT HARVEST', cost: 1,
+      check: (s, c, key) => { if (!s.players[key].bases.length) throw new k.RuleError('MOONLIT HARVEST', 'sem Cosmo Base para pôr no Tartarus'); },
+      run: (st, c, key) => {
+        const p = st.players[key];
+        const b = k.choose(c, key, 'MOONLIT HARVEST', p.bases.map(x => x.uid), {text: 'Choose a Cosmo Base to put into your Tartarus.'});
+        if (!b) return;
+        p.bases = p.bases.filter(x => x.uid !== b);
+        p.tartarus.push(b);
+        k.draw(st, key, 2);
+        if (!st.victory) k.topToBase(st, key, false);
+      }},
   },
   // CALISTO
   'artemis-v6-361': {
@@ -363,25 +368,27 @@ export default {
     growEach(st, c, key, k.devotees(st, c, key), 2);
     k.devotees(st, c, key).filter(u => k.atkOf(st, c, u) >= 5).forEach(u => k.buff(st, u, 0, 0, 'this_round', ['Pierce']));
   }}},
-  // Domain Lunar Sanctuary. Interpretação: "as it enters" = gatilho logo depois de entrar.
+  // ---------- Domains (rebalanceamento, autor 31/10/2026): linha 1 simples; linha 2 `opg` (Once per game, guia §63) ----------
   'artemis-v6-427': {
-    watchEnter: (s, c, key, self, entered) => k.controllerOf(s, entered) === key && isArtemis(c, entered) && wasCast(s, entered) && ready(s, key) >= 1
-      && k.onceTurn(s, `${self}:communion`) && (st => {
-      if (st.units[entered] && k.may(c, key, 'LUNAR COMMUNION', {uid: entered, cost: '{1}{C}'}) && payC(st, key, 1)) grow(st, c, key, entered, 1);
-    }),
     aura: (s, c, key, self, unit) => (k.controllerOf(s, unit) === key && k.hasType(c, unit, 'Satellite') ? {atk: 0, hp: 1} : null),
+    opg: {name: 'LUNAR COMMUNION', cost: 3, run: (s, c, key) => k.devotees(s, c, key).filter(u => isArtemis(c, u)).forEach(u => grow(s, c, key, u, 1))},
   },
-  'artemis-v6-428': {watchEnter: (s, c, key, self, entered) => k.controllerOf(s, entered) === key && k.isDevotee(c, entered) && k.costOf(c, entered) >= 4
-    && k.onceTurn(s, `${self}:expansion`) && (st => maybeTopToBase(st, c, key, 'VERDANT EXPANSION'))},
+  'artemis-v6-428': {
+    watchEnter: (s, c, key, self, entered) => k.controllerOf(s, entered) === key && k.isDevotee(c, entered) && k.costOf(c, entered) >= 4
+      && k.once(s, `${self}:forest`) && (st => k.gainSoul(st, key, 1)), // Forest Blessing
+    opg: {name: 'VERDANT EXPANSION', cost: 2, run: (s, c, key) => k.topToBase(s, key, false)},
+  },
   'artemis-v6-429': {
-    watchCounter: (s, c, key, self, target, n, by) => by === key && k.controllerOf(s, target) === key && k.onceTurn(s, `${self}:blessing`)
-      && (st => k.gainSoul(st, key, 1)),
     aura: (s, c, key, self, unit) => (k.controllerOf(s, unit) === key && counters(s, unit) > 0 ? {atk: 0, hp: 1} : null),
+    opg: {name: 'ANCIENT BLESSING', cost: 2, run: (s, c, key) => {
+      const t = k.choose(c, key, 'ANCIENT BLESSING', k.devotees(s, c, key), {text: 'Choose target friendly Devotee.'});
+      if (t) grow(s, c, key, t, 2);
+    }},
   },
   'artemis-v6-430': {
     watchDeclare: (s, c, key, self, attacker, target) => k.controllerOf(s, attacker) === key && vsDevotee(target) && k.atkOf(s, c, attacker) >= 4
-      && (st => k.buff(st, attacker, 1, 1, 'this_round')),
-    watchKill: (s, c, key, self) => k.onceTurn(s, `${self}:reward`) && (st => { if (k.may(c, key, "PREDATOR'S REWARD")) k.draw(st, key, 1); }),
+      && k.once(s, `${self}:hunter`) && (st => k.buff(st, attacker, 1, 0, 'this_strike')),
+    opg: {name: "PREDATOR'S REWARD", cost: 2, run: (s, c, key) => k.draw(s, key, Math.min(3, k.defeatedThisRound(s, c).filter(e => e.owner !== key).length))},
   },
   'artemis-v6-431': {
     aura: lord((c, u) => k.hasType(c, u, 'Satellite'), 1, 1),

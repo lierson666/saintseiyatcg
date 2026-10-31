@@ -4,6 +4,7 @@
 
 export const DECK_SIZE = 60;
 export const COPY_LIMIT = 3;
+export const SPLASH_LIMIT = 15;
 
 const kind = card => card.type.split(' — ')[0];
 
@@ -30,5 +31,23 @@ export function validateDeck(deck, index, {copyLimit = COPY_LIMIT, size = DECK_S
   }
   for (const [card_id, count] of copies) if (count > copyLimit) errors.push({code: 'copies', card_id, count});
   if (total !== size) errors.push({code: 'size', total});
+  return errors;
+}
+
+// Cores (guia §63): facção do God, neutras e até SPLASH_LIMIT cartas da facção de um Domain de outra cor.
+// `factionOf(id)` devolve a facção em minúsculas ('neutral' para neutras) ou undefined para carta desconhecida.
+export function splashCount(deck, factionOf) {
+  const god = factionOf(deck.god || 'god-athena');
+  return deck.main_deck.reduce((n, {card_id, quantity}) => {
+    const f = factionOf(card_id);
+    return f && f !== god && f !== 'neutral' ? n + quantity : n;
+  }, 0);
+}
+
+export function colorErrors(deck, factionOf, limit = SPLASH_LIMIT) {
+  const ok = new Set([factionOf(deck.god || 'god-athena'), factionOf(deck.domain_id), 'neutral']);
+  const errors = deck.main_deck.filter(e => factionOf(e.card_id) && !ok.has(factionOf(e.card_id))).map(e => ({code: 'identity', card_id: e.card_id}));
+  const count = splashCount(deck, factionOf);
+  if (count > limit) errors.push({code: 'splash', count});
   return errors;
 }

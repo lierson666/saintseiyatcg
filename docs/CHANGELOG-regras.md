@@ -4,6 +4,23 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-31 — §63 — Forma dos Domains e Once per game
+
+- **Antes:** Domains com uma a três habilidades, várias com compra de carta recorrente.
+- **Depois:** duas linhas: efeito simples (teto de 1 ponto, até 1x por rodada, sem compra) + habilidade **Once per game** (ativada no próprio turno, vai à pilha, Domain vira de lado ao declarar). Compra de carta só na Once per game.
+- **Motivo:** autor, 31/10/2026: "Domains devem ser coisas simples; os poderosos taxados ou com uso uma vez na partida".
+- **Cartas:** os 28 Domains reescritos em `data/cards.json` (`habilidades_en`), diff aprovado pelo autor em 31/10/2026 (`docs/rebalance-domains-2026-10-31.diff.md`).
+- **Engine (31/10/2026):** `playtest/engine-v3` aplica os 28 textos novos, a Once per game (`domain:${key}:opg` em `play.activate`; `state.domainUsed`) e o Domain fora da cor (`v6/registry.js` `domainEntry`/`offColor`/`payOffColor`: estáticas e Once per game desligadas, {1}{S} opcional nos gatilhos e +{1}{S} na ativada). Resonances de Domain em Kanon (091), Sorrento (093), Isaac (097) e Baian removidas. Interface (`playtest/divine/app.js`): botão da Once per game e Domain virado de lado depois do uso. `card-forge/art-web/cards.json` recebeu os mesmos 28 textos.
+- **Atalhos do motor:** o "once each round" do gatilho fora da cor é gasto mesmo se o jogador recusar o {1}{S}; os custos de sacrifício (503) e de Base ao Tartarus (504) da Once per game são pagos na resolução.
+- **Pendências:** IA não usa habilidades de Domain; `star-hill/deck-builder.js` sem o limite de 15; interface não verificada no navegador.
+
+## 2026-10-31 — §2 e §63 — Domain fora da cor do God
+
+- **Antes:** o deck aceitava, sem limite, cartas da facção do God, da facção do Domain e neutras; o Domain funcionava inteiro qualquer que fosse a facção do God. Na prática, qualquer deck podia escolher o Domain com melhor compra de cartas.
+- **Depois:** Domain de facção diferente da do God usa só a primeira habilidade impressa; estáticas não funcionam; disparadas e ativadas pedem custo adicional opcional de {1}{S} (sem pagar, não é usada). O deck pode ter até 15 cartas da facção do Domain; neutras não contam. Domain da mesma facção funciona inteiro.
+- **Motivo:** autor, 31/10/2026 (grilling): evitar que todos usem os Domains de draw engine e dar ressonância a Deus + Domain da mesma cor.
+- **Pendências:** deckbuilder (`shared/deck-v3.js`, `playtest/lobby.js`) e motor do playtest. Rebalanceamento dos 28 Domains pedido pelo autor na mesma data (Domains simples; os poderosos taxados ou de uso único na partida) — exige diff aprovado em `data/cards.json`.
+
 ## 2026-10-31 — §12, §40, §42, §44 e §62 — Cheater e Afterlife novos
 
 - **Antes:** Cheater ignorava Guardian ao mirar o God e anulava o Long Range de quem o atacava. Afterlife era keyword universal: todo Devotee no Tartarus tinha Afterlife.

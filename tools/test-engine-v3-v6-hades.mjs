@@ -24,6 +24,7 @@ const decks = read('../data/alpha-0.1/decks-preview.json').decks;
 function hades() {
   const deck = id => ({...decks.find(d => d.id === id)});
   const m = createMatch({cards, canonIndex: index, decks: {A: deck('preview-hades-108'), B: deck('preview-artemis-hunt')}, first: 'A', seed: 1});
+  m.state.gods.A = 'god-hades'; // Domain da mesma facção do God (guia §63)
   const s = m.state, ctx = guardDecide({cards, objects: m.objects, attached: m.attached}), p = s.players.A, b = s.players.B;
   for (const pl of Object.values(s.players)) pl.deck.push(...pl.hand.splice(0)); s.setup = null;
   startTurn(s);

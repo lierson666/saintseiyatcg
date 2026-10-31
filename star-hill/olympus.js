@@ -3,7 +3,7 @@
 // Os módulos do jogo antigo (game-settings.json: áudio, HUD, telas, interações, cosméticos) ficam em star-hill.js, fora do menu.
 import {loadCanon} from '../shared/canon-cards.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
-import {canonIndex, validateDeck, DECK_SIZE} from '../shared/deck-v3.js';
+import {canonIndex, validateDeck, colorErrors, DECK_SIZE, SPLASH_LIMIT} from '../shared/deck-v3.js';
 import {loadTelas, mountTelas} from './telas-editor.js?v=20261030-4';
 
 const $ = s => document.querySelector(s);
@@ -40,9 +40,7 @@ async function load() {
 }
 const facOf = c => (c?.id || '').replace(/^god-/, '').split('-')[0];
 function deckErrors(d, index) {
-  const ok = new Set([facOf(cards.get(d.god || 'god-athena')), facOf(cards.get(d.domain_id)), 'neutral']);
-  const off = d.main_deck.filter(e => cards.get(e.card_id) && !ok.has(facOf(cards.get(e.card_id))));
-  return [...validateDeck(d, index).map(e => e.code), ...off.map(() => 'identity')];
+  return [...validateDeck(d, index), ...colorErrors(d, id => cards.get(id) && facOf(cards.get(id)))].map(e => e.code);
 }
 const count = d => d.main_deck.reduce((n, e) => n + e.quantity, 0);
 const name = id => cards.get(id)?.name || id || '—';
@@ -90,7 +88,7 @@ function cardsPage() {
     <small class="card-count" id="card-count"></small></div><div id="card-list" style="overflow:auto">${cardList()}</div></aside>
     <iframe class="forge-frame" id="forge" title="Card Forge — editor de cartas" src="../card-forge/${cardCurrent ? `?card=${encodeURIComponent(cardCurrent)}` : ''}"></iframe></div>`;
 }
-const ERR = {identity: 'carta fora das cores do God e do Domain', copies: 'mais de 3 cópias', size: `deck sem ${DECK_SIZE} cartas`, domain: 'sem Domain', unknown: 'carta inexistente', outside: 'carta que não vai no deck', quantity: 'quantidade inválida'};
+const ERR = {identity: 'carta fora das cores do God e do Domain', splash: `mais de ${SPLASH_LIMIT} cartas da facção do Domain`, copies: 'mais de 3 cópias', size: `deck sem ${DECK_SIZE} cartas`, domain: 'sem Domain', unknown: 'carta inexistente', outside: 'carta que não vai no deck', quantity: 'quantidade inválida'};
 function decksPage() {
   return `<section class="panel"><h2>Decks prontos do Olympus Arena</h2>
     <p class="hint">Regra de montagem (guia §63): 1 God e 1 Domain; só cartas das cores do God, do Domain ou neutras; ${DECK_SIZE} cartas; até 3 cópias. Para montar ou alterar decks, use o deckbuilder do jogo.</p>

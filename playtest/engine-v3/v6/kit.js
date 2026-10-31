@@ -58,6 +58,8 @@ export function damage(s, c, target, amount) {
   checkDefeats(s, c);
 }
 export const loseSoulOf = (s, key, n) => loseSoul(s, {[key]: n}, 'loss');
+// Devotees derrotados (destruídos ou sacrificados) neste Round: eventos com `owner` (Domains Once per game, 31/10/2026).
+export const defeatedThisRound = (s, c) => s.events.filter(e => e.round === s.round && (e.type === 'destroyed' || e.type === 'sacrificed') && isDevotee(c, e.uid));
 // "Pay N Soul": custo. Não paga se não tiver Soul suficiente (devolve false).
 export function paySoul(s, key, n) {
   if (s.players[key].soul < n) return false;

@@ -214,25 +214,27 @@ test('Domain 064 The Five Old Peaks: Saint amigo com Guardian ganha +0/+1; sem o
   assert.equal(hpOf(s, ctx, shiryu), 5);
 });
 
-test('Domain 062 Galaxian Wars Arena: Bronze Saint atacante derrota Devotee inimigo e compra 1, uma vez por Round', () => {
+test('Domain 062 Galaxian Wars Arena: Bronze Saint atacante derrota Devotee inimigo e ganha +1 ATK no Round, uma vez por Round', () => {
   const {s, ctx, field, strike} = setup({A: rush, B: fortress}, () => true);
   assert.equal(s.domains.A, 'athena-v6-062');
   const seiya = field('A', '001'), [one, two] = [field('B', '003'), field('B', '003')];
   for (const uid of [one, two]) s.units[uid].damage = hpOf(s, ctx, uid) - 1;
-  const hand = s.players.A.hand.length;
+  const atk0 = atkOf(s, ctx, seiya), hand = s.players.A.hand.length;
   strike(seiya, {kind: 'devotee', uid: one}); passAll(s);
   assert.equal(s.units[one], undefined, 'alvo derrotado');
-  assert.equal(s.players.A.hand.length - hand, 1, 'Tournament Spirit comprou 1');
-  strike(field('A', '028'), {kind: 'devotee', uid: two}); passAll(s); // outro Bronze (Jabu): nomes únicos no campo
-  assert.equal(s.players.A.hand.length - hand, 1, 'segunda derrota no mesmo Round não compra');
+  assert.equal(atkOf(s, ctx, seiya), atk0 + 1, 'Tournament Spirit: +1 ATK');
+  assert.equal(s.players.A.hand.length, hand, 'sem compra');
+  const jabu = field('A', '028'), jabu0 = atkOf(s, ctx, jabu);
+  strike(jabu, {kind: 'devotee', uid: two}); passAll(s); // outro Bronze (Jabu): nomes únicos no campo
+  assert.equal(atkOf(s, ctx, jabu), jabu0, 'segunda derrota no mesmo Round não dispara');
 });
 
-test('Domain 062 Tournament Spirit: Bronze Saint defensor que derrota o atacante na retaliação também compra (guia §63)', () => {
+test('Domain 062 Tournament Spirit: Bronze Saint defensor que derrota o atacante na retaliação também ganha +1 ATK (guia §63)', () => {
   const {s, ctx, field, strike} = setup({A: fortress, B: rush}, () => true);
   const shiryu = field('A', '003'), seiya = field('B', '001');
   s.units[shiryu].damage = hpOf(s, ctx, shiryu) - 1; // Seiya defende e derrota Shiryu na retaliação
-  const hand = s.players.B.hand.length;
+  const atk0 = atkOf(s, ctx, seiya);
   strike(shiryu, {kind: 'devotee', uid: seiya}); passAll(s);
   assert.equal(s.units[shiryu], undefined, 'atacante derrotado');
-  assert.equal(s.players.B.hand.length - hand, 1, 'retaliação ativa Tournament Spirit');
+  assert.equal(atkOf(s, ctx, seiya), atk0 + 1, 'retaliação ativa Tournament Spirit');
 });

@@ -138,10 +138,11 @@ function thetisResonance(st, c, key, thetis) {
 const strikeBuff = (st, uid, n) => { if (n && st.units[uid]) k.buff(st, uid, n, 0, 'this_strike'); };
 
 export default {
-  // The Tidal Archive (autor, 31/10/2026): Domain de compra; a maré leva 2 cartas do seu deck.
+  // The Tidal Archive (rebalanceamento dos Domains, 31/10/2026): Drowned Knowledge olha o topo; a compra fica na Once per game.
   'poseidon-v6-502': {
     watchSealed: (s, c, key, self, transitions) => enemySealed(key, transitions).length > 0 && k.once(s, `${self}:drowned`)
-      && (st => { k.draw(st, key, 1); if (!st.victory) mill(st, c, key, 2); }), // Drowned Knowledge
+      && (st => scry(st, c, key, 'DROWNED KNOWLEDGE')),
+    opg: {name: 'TIDAL RECALL', cost: 2, run: (s, c, key) => { k.draw(s, key, 2); if (!s.victory) mill(s, c, key, 2); }},
   },
   // Sea Dragon Kanon
   'poseidon-v6-091': {
@@ -152,12 +153,9 @@ export default {
     activate: {name: 'Golden Triangle', cost: 2, check: (s, c, key) => needEnemy(s, c, key),
       run: (s, c, key) => { const r = bounce(s, c, key, enemy(s, c, key, 'GOLDEN TRIANGLE')); if (r?.hadSeal) mill(s, c, r.ctrl, 2); }},
     combatDamage: (s, c, key, self, victim) => {
-      const shadow = `shadow:${self}`, dimension = `resonance:domain:${key}`;
-      const pillar = s.domains?.[key] === 'poseidon-v6-143' && !s.roundUses.has(dimension);
-      if (s.roundUses.has(shadow) && !pillar) return;
-      if (pillar) k.once(s, dimension); // Ocean Pillar (143), Resonance — Sea Dragon Kanon: obrigatória
+      const shadow = `shadow:${self}`;
+      if (s.roundUses.has(shadow)) return;
       return st => {
-        if (pillar) mill(st, c, k.other(st, key), 2);
         if (st.roundUses.has(shadow)) return;
         const t = k.choose(c, key, 'EMPEROR\'S SHADOW', k.enemies(st, c, key).filter(u => u !== victim), {optional: true, text: 'Put 1 Seal counter on another target enemy Devotee?'});
         if (t) { k.once(st, shadow); seal(st, c, [t], 1, 'EMPEROR\'S SHADOW'); }
@@ -182,7 +180,6 @@ export default {
     },
     godDamage: (s, c, key, self, player) => st => {
       k.discard(st, c, player, 1, 'DEAD END CLIMAX');
-      if (st.domains?.[key] === 'poseidon-v6-144') mayLoot(st, c, key, 'RESONANCE — SIREN SORRENTO'); // Ocean Pillar (144)
     },
   },
   'poseidon-v6-094': {
@@ -219,10 +216,10 @@ export default {
     declare: (s, c, key, self, target) => {
       const t = target.uid;
       if (!t) return;
-      const frozen = sealed(s, t), brother = HYOGA.test(name(c, t)), pillar = frozen && s.domains?.[key] === 'poseidon-v6-146';
+      const frozen = sealed(s, t), brother = HYOGA.test(name(c, t));
       if (!frozen && !brother) return;
       return st => {
-        strikeBuff(st, self, (frozen ? 2 : 0) + (brother ? 2 : 0) + (pillar ? 1 : 0)); // 146: Resonance — Kraken Isaac
+        strikeBuff(st, self, (frozen ? 2 : 0) + (brother ? 2 : 0));
         if (brother) strikeBuff(st, t, 2);
       };
     },
@@ -550,64 +547,57 @@ export default {
       for (const t of enemies(s, c, key, 'GATHERING STORM', 2)) { const r = bounce(s, c, key, t); if (r?.hadSeal) mill(s, c, r.ctrl, 1); }
     }},
   },
-  // Domain — Oceanic Dominion (gancho watchSpell): paga {1}{C}, compra 1 e descarta 1.
+  // ---------- Domains (rebalanceamento, autor 31/10/2026): linha 1 simples; linha 2 `opg` (Once per game, guia §63) ----------
   'poseidon-v6-142': {
-    watchSpell: onCast('oceanic', 'OCEANIC DOMINION', 1, (st, c, key) => loot(st, c, key, 'OCEANIC DOMINION')),
-    watchDeclare: (s, c, key, self, attacker, target) => {
-      if (!poseidon(s, key) || target.kind !== 'god' || target.player !== key || !k.once(s, `territory:${self}`)) return;
-      return st => strikeBuff(st, attacker, -1);
-    },
+    watchSpell: (s, c, key, self, caster, spellUid) => caster === key && castMT(c, spellUid) && k.once(s, `oceanic:${self}`)
+      && (st => k.gainSoul(st, key, 1)), // Oceanic Dominion
+    opg: {name: 'DIVINE TERRITORY', cost: 2, run: (s, c, key) => { k.draw(s, key, 2); if (!s.victory) k.discard(s, c, key, 1, 'DIVINE TERRITORY'); }},
   },
-  // Resonance — Sea Dragon Kanon fica na entrada de Kanon (091).
   'poseidon-v6-143': {
-    watchBounce: (s, c, key, self, uid, ctrl, by) => {
-      const tag = `currents:${self}`;
-      if (by !== key || ctrl === key || s.roundUses.has(tag)) return;
-      return st => { if (!st.roundUses.has(tag) && pay(st, c, key, 1, 'DIMENSIONAL CURRENTS', self)) { k.once(st, tag); loot(st, c, key, 'DIMENSIONAL CURRENTS'); } };
-    },
+    // Dimensional Currents: o controlador do Devotee devolvido moe 1.
+    watchBounce: (s, c, key, self, uid, ctrl, by) => by === key && ctrl !== key && k.once(s, `currents:${self}`) && (st => mill(st, c, ctrl, 1)),
+    opg: {name: 'GOLDEN TRIANGLE', cost: 3, check: (s, c, key) => needEnemy(s, c, key),
+      run: (s, c, key) => { bounce(s, c, key, enemy(s, c, key, 'GOLDEN TRIANGLE')); k.draw(s, key, 1); }},
   },
-  // Resonance — Siren Sorrento fica na entrada de Sorrento (093).
   'poseidon-v6-144': {
     watchDeclare: (s, c, key, self, attacker) => {
       const tag = `silent:${self}`;
       if (k.controllerOf(s, attacker) === key || s.roundUses.has(tag)) return;
       return st => { if (!st.roundUses.has(tag) && st.units[attacker] && pay(st, c, key, 1, 'SILENT SYMPHONY', attacker)) { k.once(st, tag); strikeBuff(st, attacker, -1); } };
     },
+    opg: {name: 'DEAD END SYMPHONY', cost: 2, check: (s, c, key) => needEnemy(s, c, key),
+      run: (s, c, key) => { const t = enemy(s, c, key, 'DEAD END SYMPHONY'); if (t) seal(s, c, [t], 1, 'DEAD END SYMPHONY'); }},
   },
   'poseidon-v6-145': {
     watchDeclare: ward({cost: 1, ability: 'WALL OF THE PACIFIC',
       unit: (s, c, key, self, attacker, target) => inStrike(attacker, target).find(u => k.controllerOf(s, u) === key)}),
-    // Resonance — Seahorse Baian (gancho watchSurvive): uma vez por Round, Baian sobreviveu como defensor: compra 1 e descarta 1.
-    watchSurvive: (s, c, key, self, unit, role) => role === 'defender' && k.controllerOf(s, unit) === key && BAIAN.test(name(c, unit)) &&
-      !s.roundUses.has(`baian-surv:${self}`) && k.once(s, `baian-surv:${self}`) && (st => loot(st, c, key, 'RESONANCE — SEAHORSE BAIAN')),
+    opg: {name: 'RISING BILLOWS', cost: 3, run: (s, c, key) => k.devotees(s, c, key).forEach(u => shield(s, u, Infinity))},
   },
-  // Resonance — Kraken Isaac fica na declaração de Isaac (097).
   'poseidon-v6-146': {
     watchSealed: (s, c, key, self, transitions) => {
       const hit = enemySealed(key, transitions)[0];
       if (!hit || !k.once(s, `frozen-waters:${self}`)) return;
       return st => mill(st, c, hit.controller, 1);
     },
+    opg: {name: 'AURORA BOREALIS', cost: 2, run: (s, c, key) => k.draw(s, key, Math.min(3, k.enemies(s, c, key).filter(u => sealed(s, u)).length))},
   },
   'poseidon-v6-147': {
-    watchDeclare: (s, c, key, self, attacker, target) => {
-      const tag = `reef:${self}`;
-      if (target.kind !== 'god' || target.player !== key || s.roundUses.has(tag)) return;
-      return st => { if (!st.roundUses.has(tag) && st.units[attacker] && pay(st, c, key, 2, 'LOST IN THE REEF', attacker)) { k.once(st, tag); bounce(st, c, key, attacker); } };
-    },
+    // Lost in the Reef: o primeiro Devotee inimigo que declara Strike contra o seu God em cada Round, -1 ATK nesse Strike.
+    watchDeclare: (s, c, key, self, attacker, target) => target.kind === 'god' && target.player === key && k.once(s, `reef:${self}`)
+      && (st => strikeBuff(st, attacker, -1)),
+    opg: {name: 'THE ENDLESS REEF', cost: 3, run: (s, c, key) => {
+      const pool = k.enemies(s, c, key).filter(u => k.costOf(c, u) <= 3);
+      for (const t of k.chooseUpTo(c, key, 'THE ENDLESS REEF', pool, 2, {text: 'Choose up to two enemy Devotees with Casting Cost 3 or less.'})) bounce(s, c, key, t);
+    }},
   },
-  // 148 The Sunken Temple (Domain Ruins): Forgotten Knowledge ({2}{C}, {T}: Domain activate, uma vez por Round) e Ancient Secrets (watchSpell).
   'poseidon-v6-148': {
-    activate: {name: 'Forgotten Knowledge', cost: 2, once: true, tap: false, run: (s, c, key) => loot(s, c, key, 'FORGOTTEN KNOWLEDGE')},
-    watchSpell: (s, c, key, self, caster, spellUid) => caster === key && castMT(c, spellUid) && !s.roundUses.has(`secrets:${self}`) &&
-      k.once(s, `secrets:${self}`) && (st => scry(st, c, key, 'ANCIENT SECRETS')),
+    watchSpell: (s, c, key, self, caster, spellUid) => caster === key && castMT(c, spellUid) && k.once(s, `secrets:${self}`)
+      && (st => scry(st, c, key, 'ANCIENT SECRETS')),
+    opg: {name: 'FORGOTTEN KNOWLEDGE', cost: 2, run: (s, c, key) => { k.draw(s, key, 3); if (!s.victory) k.discard(s, c, key, 2, 'FORGOTTEN KNOWLEDGE'); }},
   },
   'poseidon-v6-149': {
     watchSealed: onSealed('crushing', (st, c, key, self, uid) => (st.units[uid] && pay(st, c, key, 1, 'CRUSHING DEPTHS', uid) ? (debuff(st, uid, 1), true) : false)),
-    watchMill: (s, c, key, self, player) => {
-      if (player === key || !k.once(s, `echoes:${self}`)) return;
-      return st => scry(st, c, key, 'ECHOES OF THE ABYSS');
-    },
+    opg: {name: 'ECHOES OF THE ABYSS', cost: 3, run: (s, c, key) => mill(s, c, k.other(s, key), 4)},
   },
   'poseidon-v6-150': {
     spell: {run: (s, c, key) => {

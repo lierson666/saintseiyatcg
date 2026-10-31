@@ -123,7 +123,7 @@ const gearKeywords = (keywords, cond = () => true) => ({
 const merge = (...parts) => Object.assign({}, ...parts);
 
 export default {
-  // The Altar of Slaughter (autor, 31/10/2026): Domain ativado; sacrifica um Devotee seu, perde 1 Soul e compra 1.
+  // The Altar of Slaughter (rebalanceamento dos Domains, 31/10/2026): Blood Offering vira dano; a compra fica na Once per game.
   'ares-v6-503': {
     activate: {name: 'BLOOD OFFERING', cost: 0, once: true, tap: false,
       check: (s, c, key) => { if (!k.devotees(s, c, key).length) throw new k.RuleError('BLOOD OFFERING', 'sem Devotee para sacrificar'); },
@@ -131,8 +131,16 @@ export default {
         const t = k.choose(c, key, 'BLOOD OFFERING', k.devotees(s, c, key), {text: 'Choose a friendly Devotee to sacrifice.'});
         if (!t) return;
         k.sacrifice(s, c, t);
-        k.loseSoulOf(s, key, 1);
-        if (!s.victory) k.draw(s, key, 1);
+        hit(s, c, k.choose(c, key, 'BLOOD OFFERING', k.enemies(s, c, key), {text: 'Choose target enemy Devotee.'}), 1);
+      }},
+    // shortcut: o sacrifício do custo acontece na resolução (o motor não tem custo de sacrifício ao declarar).
+    opg: {name: 'GREAT SACRIFICE', cost: 1,
+      check: (s, c, key) => { if (!k.devotees(s, c, key).length) throw new k.RuleError('GREAT SACRIFICE', 'sem Devotee para sacrificar'); },
+      run: (s, c, key) => {
+        const t = k.choose(c, key, 'GREAT SACRIFICE', k.devotees(s, c, key), {text: 'Choose a friendly Devotee to sacrifice.'});
+        if (!t) return;
+        k.sacrifice(s, c, t);
+        if (!s.victory) k.draw(s, key, 3);
       }},
   },
   // Alcmenes of Ethon
@@ -422,25 +430,27 @@ export default {
     later(s, key, self, 'BLOOD OFFERING', {kind: 'bloodOffering'});
   }}},
 
-  // ---------- Domains (self = `domain:${key}`) ----------
+  // ---------- Domains (self = `domain:${key}`). Rebalanceamento, autor 31/10/2026: linha 1 simples; linha 2 `opg` (Once per game, §63) ----------
   // Ares' War Temple
   'ares-v6-332': {
     aura: (s, c, key, self, unit) => (k.controllerOf(s, unit) === key && berserker(c, unit) ? {atk: 1} : null),
-    watchKill: (s, c, key, self, killer) => berserker(c, killer) && k.onceTurn(s, `${self}:bloodshed`) && (st => { if (taxed(st, c, key, 'ETERNAL BLOODSHED', 2, self)) hit(st, c, foeGod(st, key), 2); }),
+    opg: {name: 'ETERNAL BLOODSHED', cost: 3, run: (s, c, key) => hit(s, c, foeGod(s, key), Math.min(3, k.devotees(s, c, key).filter(u => berserker(c, u)).length))},
   },
   'ares-v6-333': {
     watchDeclare: (s, c, key, self, attacker) =>
       friendlyBerserkerDeclared(s, c, key, null, attacker) && k.onceTurn(s, `${self}:scorched`) && (st => { if (taxed(st, c, key, 'SCORCHED GROUND', 1, self)) hit(st, c, foeGod(st, key), 1); }),
-    endTurn: (s, c, key) => defeatedThisTurn(s, c).some(e => e.owner !== key) && (st => hit(st, c, ownGod(key), 1)),
+    opg: {name: 'SCORCHED EARTH', cost: 3, run: (s, c, key) => k.enemies(s, c, key).forEach(u => hit(s, c, u, 1))},
   },
   'ares-v6-334': {
-    watchKill: (s, c, key, self, killer) => berserker(c, killer) && (st => buff(st, killer, 2)),
-    watchDefeat: (s, c, key, self, dead, owner) =>
-      otherFriendlyBerserkerDied(c, key, null, dead, owner) && k.onceTurn(s, `${self}:spectacle`) && (st => loot(st, c, key, 'BLOOD SPECTACLE')),
+    watchKill: (s, c, key, self, killer) => berserker(c, killer) && k.once(s, `${self}:glory`) && (st => buff(st, killer, 1)),
+    opg: {name: 'BLOOD SPECTACLE', cost: 2, run: (s, c, key) => {
+      k.draw(s, key, 2);
+      if (!s.victory) k.devotees(s, c, key).filter(u => berserker(c, u)).forEach(u => buff(s, u, 1));
+    }},
   },
-  // The Fields of Carnage: Harvest of the Fallen fica em effects.js; aqui só Unending Slaughter.
+  // The Fields of Carnage: Harvest of the Fallen fica em effects.js.
   'ares-v6-335': {
-    endTurn: (s, c, key) => defeatedThisTurn(s, c).length >= 3 && (st => loot(st, c, key, 'UNENDING SLAUGHTER')),
+    opg: {name: 'UNENDING SLAUGHTER', cost: 2, run: (s, c, key) => k.draw(s, key, Math.min(3, k.defeatedThisRound(s, c).length))},
   },
 
   // ---------- Legion Warplates ----------

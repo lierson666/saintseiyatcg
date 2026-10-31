@@ -162,17 +162,22 @@ test('watchSpell: Pearl Sanctuary Keeper compra e descarta ao conjurar Technique
   assert.equal(bases(A), b1 - cards.get(P('137')).cost.amount, 'segunda conjuração no Round: Pearl Divination não paga de novo');
 });
 
-test('watchSpell (Domain): Oceanic Dominion vale ao conjurar; Ancient Secrets (148) e Forgotten Knowledge ativado por domain:A', () => {
-  const {s, ctx, A, put, asked} = poseidon();
+test('watchSpell (Domain): Oceanic Dominion dá 1 Soul ao conjurar; Ancient Secrets (148) e Forgotten Knowledge Once per game (domain:A:opg)', () => {
+  const {s, ctx, A, put} = poseidon();
   s.domains.A = P('142');
+  A.soul -= 3;
+  const soul0 = A.soul;
   playSpell(s, ctx, 'A', put('A', P('137')), {}); done(s);
-  assert.ok(asked.some(q => q.ability === 'OCEANIC DOMINION'));
+  assert.equal(A.soul, soul0 + 1);
   const {s: s2, ctx: c2, A: A2, put: put2, asked: asked2} = poseidon();
   s2.domains.A = P('148');
-  const tartarus0 = A2.tartarus.length, bases0 = bases(A2);
-  activate(s2, c2, 'A', 'domain:A'); done(s2);
-  assert.equal(A2.tartarus.length, tartarus0 + 1); // comprou 1 e descartou 1
+  assert.throws(() => activate(s2, c2, 'A', 'domain:A'), /Domain/); // 148 não tem mais ativada na linha 1
+  const tartarus0 = A2.tartarus.length, bases0 = bases(A2), hand0 = A2.hand.length;
+  activate(s2, c2, 'A', 'domain:A:opg'); done(s2);
+  assert.equal(A2.tartarus.length, tartarus0 + 2); // comprou 3 e descartou 2
+  assert.equal(A2.hand.length, hand0 + 1);
   assert.equal(bases(A2), bases0 - 2);
+  assert.throws(() => activate(s2, c2, 'A', 'domain:A:opg'), /Once per game/);
   playSpell(s2, c2, 'A', put2('A', P('137')), {}); done(s2);
   assert.ok(asked2.some(q => q.ability === 'ANCIENT SECRETS'));
   assert.ok(A2);
@@ -251,18 +256,13 @@ test('gearSurvive: Atlantean War Helm (130) olha o topo do deck como defensor (u
   assert.ok(s.roundUses.has(`awareness:${helm}`));
 });
 
-test('watchSurvive (Domain 145): Seahorse Baian defensor sobrevive: compra e descarta (uma vez por Round)', () => {
-  // Baian tem Long Range (Strike recusado pela engine, ALPHA-P05): o gancho é chamado direto.
+test('Domain 145 sem Resonance de Baian (rebalanceamento 31/10/2026); Rising Billows previne todo dano de Strike no Round', () => {
   const {s, ctx, A, put} = poseidon();
   s.domains.A = P('145');
-  const baian = put('A', P('095'), 'battlefield'), foe = put('B', 'hades-v6-211', 'battlefield');
-  const tartarus0 = A.tartarus.length;
-  const hook = V6[P('145')].watchSurvive;
-  assert.equal(hook(s, ctx, 'A', 'domain:A', baian, 'attacker', foe), false); // só como defensor
-  hook(s, ctx, 'A', 'domain:A', baian, 'defender', foe)(s);
-  assert.equal(A.tartarus.length, tartarus0 + 1);
-  assert.ok(s.roundUses.has('baian-surv:domain:A'));
-  assert.equal(hook(s, ctx, 'A', 'domain:A', baian, 'defender', foe), false); // uma vez por Round
+  assert.equal(V6[P('145')].watchSurvive, undefined);
+  const me = put('A', 'poseidon-v6-101', 'battlefield');
+  activate(s, ctx, 'A', 'domain:A:opg'); done(s);
+  assert.ok(s.effects.some(e => e.kind === 'prevent' && e.target === me && e.amount === Infinity));
 });
 
 // ---------- Contra-mágicas e reações a alvo de Spell (guia §54: toda Spell abre janela; alvos escolhidos ao conjurar) ----------

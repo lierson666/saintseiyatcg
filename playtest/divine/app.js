@@ -11,6 +11,7 @@ import {declareStrike, strikeTargets} from '../engine-v3/strike.js';
 import {playDevotee, playEquipment, playSpell, activate, reequip, duplicateCharacter, resonant, castCost, mixed} from '../engine-v3/play.js';
 import {atkOf, hpOf, keywordsOf, gearOf, isSaint, isBronze, ABILITIES} from '../engine-v3/effects.js';
 import {v6Spell, entryOf, V6} from '../engine-v3/v6/hooks.js';
+import {domainEntry} from '../engine-v3/v6/registry.js';
 import {STEPS, ABILITY_STEPS} from '../choices-v3.js?v=2';
 import {createScene, THEMES} from './scene.js?v=20261031-pool1';
 import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudgment, greatFloodBlock, announceGreatFlood, GREAT_FLOOD_COST,
@@ -542,7 +543,7 @@ function sanctum(key, side) {
   const plural = (k, w) => `${k} ${w}${k === 1 ? '' : 's'}`;
   return `<section class="sanctum sanctum--${side}" aria-label="${side === 'me' ? 'Your' : 'Opponent'} resources">
     <header class="rail__who">${side === 'me' ? 'You' : 'Opponent'} <small>Player ${key}</small></header>
-    <button class="sanctum__domain" data-domain="${key}" style="--art:url('${f?.ilustracao ? forgeArt(f.ilustracao) : ''}')" data-tip="${esc(`Domain|${dom?.name || '—'}. Click to view the card.`)}">
+    <button class="sanctum__domain${S().domainUsed?.[key] ? ' is-used' : ''}" data-domain="${key}" style="--art:url('${f?.ilustracao ? forgeArt(f.ilustracao) : ''}')" data-tip="${esc(`Domain|${dom?.name || '—'}. Click to view the card.`)}">
       <small>Domain</small><strong>${esc(dom?.name || '—')}</strong></button>
     <div class="cosmo" data-bank="${key}" style="--burn:${burn}">
       ${row('rail__row--cosmo', `<img class="cosmo__sigil" src="../../CARD-TEMPLATE/athena/gem_cost.png" alt="">`, `Cosmo Base${pooled ? `<em class="rail__pool">Pool ${pooled}</em>` : ''}`, `${ready}<small>/${p.bases.length}</small><span class="cosmo__pips">${pips}</span>`,
@@ -562,11 +563,13 @@ function showDomainCard(key) {
   closeBigCard(); hideInspect();
   const box = document.createElement('div');
   box.id = 'bigcard'; box.className = 'bigcard';
-  // Domain com habilidade ativada (ex.: The Altar of Slaughter): botão para usar, no seu turno e com a mesa parada.
-  const ab = V6[S().domains[key]]?.activate, usable = ab && key === viewer() && idleFor(key);
+  // Domain: botão da habilidade ativada (linha 1) e da Once per game (linha 2, guia §63), no seu turno e com a mesa parada.
+  // Fora da cor, domainEntry tira a Once per game.
+  const dom = domainEntry(S(), key), idle = key === viewer() && idleFor(key);
+  const uses = [dom?.activate && [`domain:${key}`, dom.activate.name], dom?.opg && !S().domainUsed?.[key] && [`domain:${key}:opg`, `${dom.opg.name} (once per game)`]].filter(Boolean);
   box.innerHTML = `<div class="dcard dcard--big art-full">${renderLiveCard(f, {art: f.ilustracao && forgeArt(f.ilustracao)})}</div>
-    ${usable ? `<button class="primary-action bigcard__use" data-domain-use>Use ${esc(ab.name)}</button>` : ''}`;
-  box.querySelector('[data-domain-use]')?.addEventListener('pointerdown', e => { e.stopPropagation(); closeBigCard(); act({type: 'activate', key, uid: `domain:${key}`, choice: {}}); });
+    ${idle ? uses.map(([uid, name]) => `<button class="primary-action bigcard__use" data-domain-use="${uid}">Use ${esc(name)}</button>`).join('') : ''}`;
+  box.querySelectorAll('[data-domain-use]').forEach(b => b.addEventListener('pointerdown', e => { e.stopPropagation(); closeBigCard(); act({type: 'activate', key, uid: b.dataset.domainUse, choice: {}}); }));
   box.addEventListener('pointerdown', closeBigCard);
   box.addEventListener('contextmenu', e => { e.preventDefault(); closeBigCard(); });
   document.body.append(box);

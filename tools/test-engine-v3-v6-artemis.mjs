@@ -26,6 +26,7 @@ const decks = read('../data/alpha-0.1/decks-preview.json').decks;
 function setup() {
   const deck = id => ({...decks.find(d => d.id === id)});
   const m = createMatch({cards, canonIndex: index, decks: {A: deck('preview-artemis-hunt'), B: deck('preview-ares-legions')}, first: 'A', seed: 1});
+  m.state.gods.A = 'god-artemis'; // Domain da mesma facção do God (guia §63)
   const s = m.state, ctx = {cards, objects: m.objects, attached: m.attached}, p = s.players.A;
   bindContext(s, ctx);
   for (const pl of Object.values(s.players)) pl.deck.push(...pl.hand.splice(0)); s.setup = null;
@@ -41,7 +42,7 @@ function setup() {
   return {s, ctx, p, field, hand, io, id: cardId => `artemis-v6-${cardId}`};
 }
 
-test('enter + watchCounter: Lunar Nymph põe marcador; Calisto compra 1 (uma por Round); Primordial Grove dá 1 Soul e +0/+1', () => {
+test('enter + watchCounter: Lunar Nymph põe marcador; Calisto compra 1 (uma por Round); Ancient Grove dá +0/+1 (sem Soul desde 31/10/2026)', () => {
   const {s, ctx, p, field, hand, io, id} = setup();
   s.domains.A = id(429);
   p.soul -= 5;
@@ -53,12 +54,12 @@ test('enter + watchCounter: Lunar Nymph põe marcador; Calisto compra 1 (uma por
   assert.equal(atkOf(s, ctx, wolf), atk0 + 1);
   assert.equal(hpOf(s, ctx, wolf), hp0 + 2); // marcador + Rooted Endurance
   assert.equal(p.hand.length, cards0 - 1 + 1); // jogou a Nymph, Calisto comprou 1
-  assert.equal(p.soul, soul0 + 1);
+  assert.equal(p.soul, soul0);
   // Segunda vez no mesmo Round/turno: nem Calisto nem o Domain disparam.
   playDevotee(s, ctx, 'A', hand('A', id(398)), {}); passAll(s);
   assert.equal(s.units[wolf].counters, 2);
   assert.equal(p.hand.length, cards0); // pôs outra Nymph na mão e jogou; sem compra
-  assert.equal(p.soul, soul0 + 1);
+  assert.equal(p.soul, soul0);
   assert.equal(atkOf(s, ctx, calisto), cards.get(id(361)).atk); // Divine Authority é só para os outros
 });
 
@@ -172,15 +173,15 @@ test('Hermia paga {1}{C} quando outro Devotee recebe marcador; Lunar Amulet só 
   assert.equal(atkOf(s, ctx, hermia), atk + 1 + 1); // marcador + Lunar Resonance
 });
 
-test('Domain Lunar Sanctuary: Devotee Artemis jogado da mão pode receber marcador pagando {1}{C}; Satellites +0/+1', () => {
-  const {s, ctx, p, hand} = setup();
+test('Domain 427 Temple of the Moon: Satellites +0/+1; Lunar Communion (Once per game) põe +1/+1 em cada Devotee de Artemis', () => {
+  const {s, ctx, p, field} = setup();
   s.domains.A = 'artemis-v6-427';
-  const archer = hand('A', 'artemis-v6-393');
-  playDevotee(s, ctx, 'A', archer, {}); passAll(s);
+  const archer = field('A', 'artemis-v6-393'), other = field('A', 'artemis-v6-404');
+  assert.equal(hpOf(s, ctx, archer), cards.get('artemis-v6-393').hp + 1);
+  activate(s, ctx, 'A', 'domain:A:opg', {});
   assert.equal(s.units[archer].counters, 1);
-  assert.equal(hpOf(s, ctx, archer), cards.get('artemis-v6-393').hp + 1 + 1);
-  playDevotee(s, ctx, 'A', hand('A', 'artemis-v6-393'), {}); if (s.window) passAll(s);
-  assert.equal(p.battlefield.filter(u => s.units[u]?.counters).length, 1); // uma vez por turno
+  assert.equal(s.units[other].counters, 1);
+  assert.throws(() => activate(s, ctx, 'A', 'domain:A:opg', {}), /Once per game/);
 });
 
 test('tokens (guia §63): The Forest Invades Sanctuary cria 2 Forest Guardian 3/3 Unprepared; token derrotado some', async () => {

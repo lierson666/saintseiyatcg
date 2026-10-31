@@ -3,7 +3,7 @@
 // Event e Miracle jogam como Technique (v6Spell em hooks.js, guia §54): 055, 079, 080, 083, 086, 089 e 090 são jogáveis.
 import * as k from './kit.js';
 import {addSeal} from '../core.js';
-import {shield, forbidStrike} from '../effects.js';
+import {shield, forbidStrike, isBronze, keywordsOf} from '../effects.js';
 import {spendBase} from '../core.js';
 
 const isSaint = (c, u) => k.hasType(c, u, 'Saint');
@@ -20,10 +20,14 @@ const atRoundEnd = (s, key, self, ability, run) => s.delayed.push({controller: k
 // Devotees seus que vestem uma Armor (alvo do Cloth Restoration, 30/10/2026).
 const armored = (s, c, key) => s.players[key].battlefield.filter(u => k.card(c, u)?.kind === 'Devotee' && Object.keys(c.attached).some(e => c.attached[e] === u && k.card(c, e)?.armor));
 export default {
-  // Athena's Statue (autor, 31/10/2026): Domain de compra; o preço é o Soul de Athena.
+  // Athena's Statue (rebalanceamento dos Domains, 31/10/2026): Saint's Resolve dá 1 Soul; a compra fica na Once per game.
   'athena-v6-501': {
     watchSurvive: (s, c, key, self, unit) => k.controllerOf(s, unit) === key && isSaint(c, unit) && k.once(s, `${self}:resolve`)
-      && (st => { k.draw(st, key, 1); if (!st.victory) k.loseSoulOf(st, key, 1); }), // Saint's Resolve
+      && (st => k.gainSoul(st, key, 1)), // Saint's Resolve
+    opg: {name: "ATHENA'S PROTECTION", cost: 2, run: (s, c, key) => {
+      k.draw(s, key, 2);
+      shield(s, k.godTarget(key), Infinity); // "Prevent all Strike damage to your God until the end of the round"
+    }},
   },
   // ---------- Spells ----------
   // The Masked Saint's Oath
@@ -115,6 +119,13 @@ export default {
   }}},
 
   // ---------- Domains ----------
+  // Linha 2 de cada Domain: `opg` (Once per game, guia §63), ativada pelo play.activate com uid `domain:${key}:opg`.
+  // 062 Galaxian Wars Arena: Tournament Spirit fica em effects.js (afterStrike).
+  'athena-v6-062': {opg: {name: 'THE GALAXIAN WARS', cost: 2,
+    run: (s, c, key) => k.draw(s, key, Math.min(3, k.devotees(s, c, key).filter(u => isBronze(c, u)).length))}},
+  // 064 The Five Old Peaks: Ancient Discipline (estática) fica em effects.js (mods).
+  'athena-v6-064': {opg: {name: "ROZAN'S WATERFALL", cost: 2,
+    run: (s, c, key) => saints(s, c, key).filter(u => keywordsOf(s, c, u).includes('Guardian')).forEach(u => k.removeDamage(s, u))}},
   // Jamir Tower: ativada pelo play.activate com uid `domain:${key}`. O {T} do Domain vale uma vez por Round (como o Equipment, §61).
   'athena-v6-063': {
     activate: {
@@ -126,6 +137,10 @@ export default {
         if (t) k.removeDamage(s, t, 1);
       },
     },
+    opg: {name: "MU'S FORGE", cost: 2, run: (s, c, key) => {
+      const t = k.choose(c, key, "MU'S FORGE", s.players[key].tartarus.filter(u => k.card(c, u)?.armor), {text: 'Choose target Armor card in your Tartarus.'});
+      if (t) k.toHand(s, c, t, 'tartarus');
+    }},
   },
   // The Stairway to the Twelve Temples — Twelve Temples (gancho watchSurvive): uma vez por Round, um Saint amigo sobreviveu a um
   // Strike; pode pagar {1}{C} para ele ganhar +1 ATK até o fim do Round.
@@ -138,5 +153,9 @@ export default {
       k.once(st, tag);
       k.buff(st, unit, 1, 0);
     }),
+    opg: {name: 'THE FIRE CLOCK', cost: 3, run: (s, c, key) => {
+      k.draw(s, key, 2);
+      if (!s.victory) saints(s, c, key).forEach(u => k.buff(s, u, 1, 0));
+    }},
   },
 };

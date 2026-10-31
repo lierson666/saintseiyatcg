@@ -1678,7 +1678,7 @@
       "nome": "Carnage of the Underworld",
       "god": "god-hades",
       "domain_id": "ares-v6-335",
-      "arquetipo": "God de Hades (Offering of Life: morte vira carta) com Domain de Ares (Fields of Carnage: morte de Berserker queima o God). Berserkers de Disaster Legion e de meio de curva (Alceu, Iseu, Catreu, Berserker Champion, Crimson Fire Guardian) pressionam; Dullahan, Harpy e Souls of the Damned devolvem o Soul que as taxas de Ares gastam.",
+      "arquetipo": "God de Hades (Offering of Life: morte vira carta) com Domain de Ares (Fields of Carnage: morte de Berserker queima o God). Splash de 15 cartas de Ares (guia §63): Berserkers baratos de Disaster Legion, Raging Hoplite e First Blood pressionam; Specters de meio de curva (Worm Raimi, Alraune, Gorgon Ox, Lycaon, Minotaur) seguram a mesa; Dullahan, Harpy e Souls of the Damned devolvem o Soul que as taxas de Ares gastam.",
       "tema": "Dois facções: God Hades + Domain Ares",
       "main_deck": [
         {
@@ -1694,22 +1694,6 @@
           "quantity": 3
         },
         {
-          "card_id": "ares-v6-341",
-          "quantity": 2
-        },
-        {
-          "card_id": "ares-v6-283",
-          "quantity": 3
-        },
-        {
-          "card_id": "ares-v6-279",
-          "quantity": 2
-        },
-        {
-          "card_id": "ares-v6-281",
-          "quantity": 2
-        },
-        {
           "card_id": "ares-v6-304",
           "quantity": 3
         },
@@ -1718,23 +1702,11 @@
           "quantity": 3
         },
         {
-          "card_id": "ares-v6-315",
-          "quantity": 2
-        },
-        {
-          "card_id": "ares-v6-316",
-          "quantity": 2
-        },
-        {
           "card_id": "hades-v6-217",
           "quantity": 3
         },
         {
           "card_id": "hades-v6-238",
-          "quantity": 2
-        },
-        {
-          "card_id": "ares-v6-302",
           "quantity": 2
         },
         {
@@ -1762,10 +1734,6 @@
           "quantity": 2
         },
         {
-          "card_id": "ares-v6-327",
-          "quantity": 2
-        },
-        {
           "card_id": "hades-v6-204",
           "quantity": 2
         },
@@ -1783,6 +1751,38 @@
         },
         {
           "card_id": "hades-v6-221",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-209",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-215",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-216",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-213",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-214",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-224",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-225",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-233",
           "quantity": 2
         }
       ]
