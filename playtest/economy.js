@@ -51,21 +51,59 @@ document.addEventListener('pointerout', e => {
 // art(id, size) devolve a arte do personagem (Deus: 'god-<nome>'); o rosto do avatar é recorte automático da arte.
 export const COS_KINDS = [['avatar', 'Avatar'], ['sleeve', 'Sleeve'], ['box', 'Deck box']];
 export const cosPreview = (kind, url) => `<span class="ec-cos-${kind}" style="background-image:url('${url || ''}')" aria-hidden="true"></span>`;
-function cosmetics(e, art, me) {
-  const using = {avatar: me?.avatar_card || 'god-athena', sleeve: me?.sleeve || null};
-  const tile = (c, kind, label) => { const it = c[kind], on = using[kind] === c.id;
-    const btn = !it.owned ? `<button class="ec-cta ec-cos__buy" data-act="buy-cos" data-kind="${kind}" data-id="${c.id}" ${e.coins >= it.price ? '' : 'disabled'} aria-label="Buy ${label} ${esc(c.name)} for ${fmt(it.price)} Cosmo Coins"><i class="ec-coin" aria-hidden="true"></i>${fmt(it.price)}</button>`
-      : kind === 'box' ? '<span class="ec-cos__own">Owned · pick it in Decks</span>'
-      : on ? '<span class="ec-cos__own is-on">In use</span>' : `<button class="ec-cos__use" data-act="use-cos" data-kind="${kind}" data-id="${c.id}">Use</button>`;
-    return `<li class="ec-cos__tile ${it.owned ? 'is-owned' : ''}">${cosPreview(kind, art(c.id, kind === 'avatar' ? 'thumb' : 'webp'))}<small>${label}${it.price ? '' : ' · Free'}</small>${btn}</li>`; };
-  const card = c => { const paid = COS_KINDS.filter(([k]) => c[k].price), full = paid.reduce((n, [k]) => n + c[k].price, 0);
-    const set = paid.every(([k]) => !c[k].owned) ? `<button class="ec-cta ec-cos__set" data-act="buy-cos" data-kind="set" data-id="${c.id}" ${e.coins >= c.set ? '' : 'disabled'} aria-label="Buy the full set of ${esc(c.name)} for ${fmt(c.set)} Cosmo Coins, ${e.set_off}% off">
-        Full set <b class="ec-bundle__off">-${e.set_off}%</b><i class="ec-coin" aria-hidden="true"></i><s>${fmt(full)}</s>${fmt(c.set)}</button>` : '';
-    return `<article class="ec-cos"><h4>${esc(c.name)}</h4><ul>${COS_KINDS.map(([k, l]) => tile(c, k, l)).join('')}</ul>${set}</article>`; };
-  return (e.cosmetics || []).map(g => `<h3 class="ec-cos__group">${esc(g.group)}</h3><div class="ec-cos__grid">${g.items.map(card).join('')}</div>`).join('');
+// Loja estilo MTG Arena (autor, 31/10/2026): abas por categoria, um item grande por tile com o preço no botão,
+// filtro por grupo e confirmação de compra com a prévia grande. Textos: /design:ux-copy.
+const TABS = [['boosters', 'Boosters'], ['avatar', 'Avatars'], ['sleeve', 'Sleeves'], ['box', 'Deck Boxes'], ['set', 'Sets']];
+const KIND = {avatar: {one: 'Avatar', what: 'Your portrait in the lobby and at the table.'},
+  sleeve: {one: 'Sleeve', what: 'The back of your cards. Your opponent sees it too.'},
+  box: {one: 'Deck Box', what: 'Holds one of your decks. Choose it in Decks.'},
+  set: {one: 'Set', what: 'Avatar, Sleeve and Deck Box together.'}};
+const paidKinds = c => COS_KINDS.filter(([k]) => c[k].price).map(([k]) => k);
+const setFull = c => paidKinds(c).reduce((n, k) => n + c[k].price, 0);
+const setOpen = c => paidKinds(c).every(k => !c[k].owned);
+const coinPrice = (now, was) => `<i class="ec-coin" aria-hidden="true"></i>${was ? `<s>${fmt(was)}</s>` : ''}${fmt(now)}`;
+const allItems = e => (e.cosmetics || []).flatMap(g => g.items.map(c => ({...c, group: g.group})));
+function setArt(c, art) {
+  return `<span class="ec-set__art" aria-hidden="true">${COS_KINDS.map(([k]) => cosPreview(k, art(c.id, k === 'avatar' ? 'thumb' : 'webp'))).join('')}</span>`;
+}
+function itemTile(e, c, kind, art, using) {
+  const set = kind === 'set', it = set ? null : c[kind], owned = set ? !setOpen(c) : it.owned;
+  const price = set ? c.set : it.price, inUse = !set && using[kind] === c.id;
+  const action = !owned ? `<button class="ec-cta ec-tile__price" data-act="cos-pick" data-kind="${kind}" data-id="${c.id}" aria-label="Buy ${esc(c.name)} ${KIND[kind].one} for ${fmt(price)} Cosmo Coins">${price ? coinPrice(price, set ? setFull(c) : 0) : 'Free'}</button>`
+    : set || kind === 'box' ? '<span class="ec-tile__state">Owned</span>'
+    : inUse ? '<span class="ec-tile__state is-on">Equipped</span>'
+    : `<button class="ec-tile__equip" data-act="use-cos" data-kind="${kind}" data-id="${c.id}">Equip</button>`;
+  return `<article class="ec-tile ec-tile--${kind} ${owned ? 'is-owned' : ''}">
+    ${set ? `<b class="ec-bundle__off">-${e.set_off}%</b>` : ''}
+    <button class="ec-tile__look" data-act="cos-pick" data-kind="${kind}" data-id="${c.id}" aria-label="See ${esc(c.name)} ${KIND[kind].one}">${set ? setArt(c, art) : cosPreview(kind, art(c.id, kind === 'avatar' ? 'thumb' : 'webp'))}</button>
+    <h4>${esc(c.name)}</h4><small>${esc(c.group)}</small>${action}</article>`;
+}
+// Confirmação (o que compra, quanto custa, quanto falta); dono do item: só a prévia e o atalho de equipar.
+function confirmBox(e, c, kind, art, using) {
+  const set = kind === 'set', owned = set ? !setOpen(c) : c[kind].owned, price = set ? c.set : c[kind].price, short = price - e.coins;
+  const title = `${esc(c.name)} ${KIND[kind].one}`;
+  const cta = owned ? (kind === 'avatar' || kind === 'sleeve') && using[kind] !== c.id ? `<button class="ec-cta" data-act="use-cos" data-kind="${kind}" data-id="${c.id}">Equip</button>` : ''
+    : `<button class="ec-cta" data-act="buy-cos" data-kind="${kind}" data-id="${c.id}" ${short > 0 ? 'disabled' : ''}>Buy for ${coinPrice(price)}</button>`;
+  return `<div class="ec-confirm" role="dialog" aria-modal="true" aria-labelledby="ec-confirm-t"><div class="ec-confirm__box">
+    <div class="ec-confirm__art ec-tile--${kind}">${set ? setArt(c, art) : cosPreview(kind, art(c.id, 'webp'))}</div>
+    <div class="ec-confirm__info"><p class="ec-eyebrow">${esc(c.group)} · ${KIND[kind].one}</p><h2 id="ec-confirm-t">${title}</h2><p>${KIND[kind].what}</p>
+      ${set && !owned ? `<p class="ec-confirm__deal"><b class="ec-bundle__off">-${e.set_off}%</b> ${fmt(setFull(c) - c.set)} Cosmo Coins less than buying each one.</p>` : ''}
+      ${owned ? '<p class="ec-confirm__owned">You own this.</p>' : short > 0 ? `<p class="ec-hint">You need ${fmt(short)} more Cosmo Coins.</p>` : ''}
+      <div class="ec-actions">${cta}<button class="ec-cta ec-cta--open" data-act="cos-close">${owned ? 'Close' : 'Not now'}</button></div></div></div></div>`;
+}
+function cosmeticsTab(e, art, me, view) {
+  const using = {avatar: me?.avatar_card || 'god-athena', sleeve: me?.sleeve || null}, kind = view.tab;
+  const groups = (e.cosmetics || []).map(g => g.group), group = groups.includes(view.group) ? view.group : 'all';
+  const items = allItems(e).filter(c => group === 'all' || c.group === group).filter(c => kind !== 'set' || paidKinds(c).length);
+  const chip = (v, label) => `<button class="lb-pill ${group === v ? 'is-active' : ''}" data-act="store-group" data-value="${esc(v)}">${esc(label)}</button>`;
+  const pick = view.pick && allItems(e).find(c => c.id === view.pick.id);
+  return `<p class="ec-tabnote">${KIND[kind].what}${kind === 'set' ? ` Save ${e.set_off}%.` : ''}</p>
+    <div class="lb-pills ec-groups">${chip('all', 'All')}${groups.map(g => chip(g, g)).join('')}</div>
+    <div class="ec-tiles ec-tiles--${kind}">${items.map(c => itemTile(e, c, kind, art, using)).join('')}</div>
+    ${pick ? confirmBox(e, pick, view.pick.kind, art, using) : ''}`;
 }
 
-export function storeScreen(e, art = () => null, me = null) {
+export function storeScreen(e, art = () => null, me = null, view = {}) {
   if (!e) return `<section class="lb-page"><header class="lb-page__head"><h1>Store</h1><p>Sign in to buy and open boosters.</p></header></section>`;
   // Layout (autor pediu /ui-ux-pro-max, 31/10/2026): vitrine preto + dourado; booster em destaque, cosméticos "em breve" embaixo.
   const price = e.prices.booster, can = e.coins >= price;
@@ -79,11 +117,8 @@ export function storeScreen(e, art = () => null, me = null) {
   // Abrir 1 ou 10 de uma vez; com menos de 10, "Open all (N)".
   const opens = e.boosters > 1 ? `<button class="ec-cta ec-cta--open" data-act="open-booster" data-count="${Math.min(10, e.boosters)}">${e.boosters >= 10 ? 'Open 10' : `Open all (${e.boosters})`}</button>` : '';
   const odds = [['10', 'Common'], ['3', 'Uncommon'], ['1', 'Legendary or Divine']];
-  return `<section class="lb-page ec-store">
-    <header class="ec-store__head"><div><h1>Store</h1><p>Spend Cosmo Coins earned in duels.</p></div>
-      <div class="ec-wallet" aria-label="Your wallet"><span><i class="ec-coin" aria-hidden="true"></i><b>${fmt(e.coins)}</b><small>Cosmo Coins</small></span>
-        <span><b>${e.boosters}</b><small>${e.boosters === 1 ? 'Booster' : 'Boosters'}</small></span></div></header>
-    <article class="ec-feature">
+  const tab = TABS.some(([t]) => t === view.tab) && (view.tab === 'boosters' || e.cosmetics) ? view.tab : 'boosters';
+  const boosters = `<article class="ec-feature">
       <div class="ec-feature__pack">${pack()}</div>
       <div class="ec-feature__info">
         <p class="ec-eyebrow">Booster · All Gods</p>
@@ -92,11 +127,16 @@ export function storeScreen(e, art = () => null, me = null) {
         <p class="ec-note">A Divine card replaces the Legendary in about 1 of 8 boosters. Copies beyond 3 turn into Cosmo Coins.</p>
         ${e.boosters ? `<div class="ec-actions"><button class="ec-cta" data-act="open-booster" data-count="1">Open 1</button>${opens}</div>` : ''}
         <ul class="ec-bundles" aria-label="Buy boosters">${bundles.map(bundle).join('')}</ul>
-        ${can ? '' : `<p class="ec-hint">${fmt(price - e.coins)} more Cosmo Coins to buy one.</p>`}
+        ${can ? '' : `<p class="ec-hint">You need ${fmt(price - e.coins)} more Cosmo Coins for one booster.</p>`}
       </div>
-    </article>
-    <h2 class="ec-section">Cosmetics <span>Avatar · Sleeve · Deck box</span></h2>
-    ${cosmetics(e, art, me)}
+    </article>`;
+  return `<section class="lb-page ec-store">
+    <header class="ec-store__head"><div><h1>Store</h1><p>Spend Cosmo Coins earned in duels.</p></div>
+      <div class="ec-wallet" aria-label="Your wallet"><span><i class="ec-coin" aria-hidden="true"></i><b>${fmt(e.coins)}</b><small>Cosmo Coins</small></span>
+        <span><b>${e.boosters}</b><small>${e.boosters === 1 ? 'Booster' : 'Boosters'}</small></span></div></header>
+    <nav class="ec-tabs" role="tablist" aria-label="Store">${TABS.filter(([t]) => t === 'boosters' || e.cosmetics).map(([t, label]) =>
+      `<button role="tab" aria-selected="${t === tab}" class="ec-tab ${t === tab ? 'is-active' : ''}" data-act="store-tab" data-value="${t}">${label}</button>`).join('')}</nav>
+    ${tab === 'boosters' ? boosters : cosmeticsTab(e, art, me, {...view, tab})}
   </section>`;
 }
 

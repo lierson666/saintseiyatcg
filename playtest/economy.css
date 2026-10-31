@@ -196,14 +196,6 @@ body.ec-opening #lobby { visibility: hidden; }
 @media (prefers-reduced-motion: reduce) { .ec-sum__card { animation: none; } }
 
 /* Cosméticos (autor, 31/10/2026): avatar (rosto), sleeve (verso) e deck box por personagem; trio com desconto. */
-.ec-cos__group { margin: 28px 0 12px; font: 600 12px var(--kv-sans, system-ui); letter-spacing: .2em; text-transform: uppercase; color: var(--kv-gold, #e9c45c); }
-.ec-cos__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 14px; }
-.ec-cos { display: grid; gap: 12px; padding: 16px; border-radius: 16px; border: 1px solid #ffffff1a; background: #0b0d14cc; }
-.ec-cos h4 { margin: 0; font: 700 15px var(--kv-title, Cinzel, serif); color: #f6ecd0; text-wrap: balance; }
-.ec-cos ul { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0; padding: 0; list-style: none; }
-.ec-cos__tile { display: grid; justify-items: center; align-content: start; gap: 6px; padding: 10px 4px; border-radius: 12px; background: #ffffff08; }
-.ec-cos__tile.is-owned { background: #e9c45c10; }
-.ec-cos__tile small { font: 600 10px var(--kv-sans, system-ui); letter-spacing: .12em; text-transform: uppercase; color: var(--kv-muted, #b9b3a3); }
 .ec-cos-avatar, .ec-cos-sleeve, .ec-cos-box { display: block; flex: none; background: #141826 center 18% / cover no-repeat; }
 .ec-cos-avatar { width: 64px; height: 64px; margin: 4px 0; border-radius: 50%; border: 2px solid #e9c45c; box-shadow: 0 0 0 3px #0b0d14, 0 6px 16px #0008; }
 .ec-cos-sleeve { width: 52px; height: 73px; border-radius: 5px; border: 2px solid #b8913f; background-position: center 22%;
@@ -212,15 +204,6 @@ body.ec-opening #lobby { visibility: hidden; }
   transform: perspective(240px) rotateY(-16deg); box-shadow: 6px 0 0 -1px #6a4a14, 7px 2px 10px #000a; }
 .ec-cos-box::before { content: ''; position: absolute; inset: 0 0 auto; height: 18%; border-bottom: 1px solid #e9c45c; background: linear-gradient(180deg, #1b1f4aee, #07081cdd); }
 .ec-cos-box:not([style]) { background: linear-gradient(160deg, #1b1f4a, #07081c); }
-.ec-cos__buy { min-height: 32px; padding: 0 12px; gap: 6px; border-radius: 10px; font-size: 13px; }
-.ec-cos__buy .ec-coin, .ec-cos__set .ec-coin { width: 14px; height: 14px; }
-.ec-cos__use { min-height: 32px; padding: 0 14px; border-radius: 10px; border: 1px solid #e9c45c88; background: transparent; color: var(--kv-gold-2, #f1d68a); font: 600 13px var(--kv-sans, system-ui); cursor: pointer; }
-.ec-cos__use:hover, .ec-cos__use:focus-visible { background: #e9c45c1f; }
-.ec-cos__own { min-height: 32px; display: grid; place-items: center; text-align: center; font: 600 11px/1.3 var(--kv-sans, system-ui); color: var(--kv-muted, #b9b3a3); }
-.ec-cos__own.is-on { color: #8fe3a8; }
-.ec-cos__set { width: 100%; min-height: 40px; padding: 0 14px; gap: 8px; font-size: 14px; }
-.ec-cos__set .ec-bundle__off { position: static; }
-.ec-cos__set s { opacity: .6; font-weight: 500; }
 /* Deck box no deck: selo no canto da capa; escolha na tela Decks. */
 .lb-deck__art { position: relative; }
 .lb-deck__boxed { position: absolute; right: 10px; bottom: 8px; width: 30px; height: 39px; }
@@ -230,3 +213,54 @@ body.ec-opening #lobby { visibility: hidden; }
 .lb-boxpick small { font-size: 12px; text-align: center; }
 .lb-picker__empty { margin: 0 0 12px; color: var(--kv-muted, #b9b3a3); }
 @media (prefers-reduced-motion: reduce) { .ec-cos-box { transform: none; } }
+
+/* Loja estilo MTG Arena (autor, 31/10/2026): abas, tiles grandes com o preço no botão, confirmação de compra. */
+.ec-tabs { display: flex; gap: 6px; margin: 8px 0 24px; border-bottom: 1px solid #ffffff1a; overflow-x: auto; scrollbar-width: none; }
+.ec-tab { position: relative; min-height: 48px; padding: 0 18px; border: 0; background: none; cursor: pointer; white-space: nowrap;
+  font: 600 13px var(--kv-sans, system-ui); letter-spacing: .16em; text-transform: uppercase; color: var(--kv-muted, #b9b3a3); }
+.ec-tab:hover, .ec-tab:focus-visible { color: #f6ecd0; }
+.ec-tab.is-active { color: var(--kv-gold-2, #f1d68a); }
+.ec-tab.is-active::after { content: ''; position: absolute; inset: auto 12px -1px; height: 2px; border-radius: 2px; background: var(--kv-gold, #e9c45c); }
+.ec-tabnote { margin: 0 0 14px; color: var(--kv-muted, #b9b3a3); }
+.ec-groups { margin-bottom: 22px; }
+.ec-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); gap: 18px; }
+.ec-tiles--set { grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); }
+.ec-tile { position: relative; display: grid; justify-items: center; align-content: start; gap: 4px; padding: 22px 16px 18px; border-radius: 18px;
+  border: 1px solid #ffffff14; background: linear-gradient(180deg, #151a2bcc, #0b0d14e6); transition: border-color .2s, transform .2s cubic-bezier(.2, .8, .2, 1); }
+.ec-tile:hover { border-color: #e9c45c66; transform: translateY(-3px); }
+.ec-tile > .ec-bundle__off { top: 12px; right: 12px; }
+.ec-tile__look { display: grid; place-items: center; height: 230px; margin-bottom: 10px; padding: 0; border: 0; background: none; cursor: pointer; }
+.ec-tile__look:focus-visible { outline: 2px solid #fff; outline-offset: 6px; border-radius: 12px; }
+.ec-tile h4 { margin: 0; font: 700 15px var(--kv-title, Cinzel, serif); color: #f6ecd0; text-align: center; text-wrap: balance; }
+.ec-tile > small { margin-bottom: 10px; font: 600 10px var(--kv-sans, system-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--kv-muted, #b9b3a3); }
+.ec-tile__price { min-height: 40px; padding: 0 18px; gap: 6px; border-radius: 12px; font-size: 15px; }
+.ec-tile__price .ec-coin, .ec-confirm .ec-coin { width: 16px; height: 16px; }
+.ec-tile__price s, .ec-confirm s { opacity: .55; font-weight: 500; }
+.ec-tile__equip { min-height: 40px; padding: 0 22px; border-radius: 12px; border: 1px solid #e9c45c88; background: transparent; cursor: pointer;
+  color: var(--kv-gold-2, #f1d68a); font: 600 14px var(--kv-sans, system-ui); }
+.ec-tile__equip:hover, .ec-tile__equip:focus-visible { background: #e9c45c1f; }
+.ec-tile__state { min-height: 40px; display: grid; place-items: center; font: 600 13px var(--kv-sans, system-ui); color: var(--kv-muted, #b9b3a3); }
+.ec-tile__state.is-on { color: #8fe3a8; }
+/* Prévias em tamanho de vitrine */
+.ec-tile--avatar .ec-cos-avatar { width: 170px; height: 170px; border-width: 3px; }
+.ec-tile--sleeve .ec-cos-sleeve { width: 150px; height: 210px; border-radius: 9px; }
+.ec-tile--box .ec-cos-box { width: 150px; height: 190px; }
+.ec-set__art { display: flex; align-items: center; gap: 12px; }
+.ec-tile--set .ec-cos-avatar { width: 80px; height: 80px; } .ec-tile--set .ec-cos-sleeve { width: 92px; height: 129px; } .ec-tile--set .ec-cos-box { width: 84px; height: 108px; }
+/* Confirmação de compra */
+.ec-confirm { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 16px; background: #02030acc; backdrop-filter: blur(6px); animation: ec-fade .18s ease-out; }
+.ec-confirm__box { display: grid; grid-template-columns: auto minmax(0, 340px); align-items: center; gap: 36px; max-width: 760px; padding: 36px;
+  border-radius: 22px; border: 1px solid #e9c45c55; background: linear-gradient(180deg, #141a2e, #0a0c14); box-shadow: 0 30px 80px #000c; }
+.ec-confirm__art { display: grid; place-items: center; min-width: 220px; }
+.ec-confirm__art.ec-tile--avatar .ec-cos-avatar { width: 220px; height: 220px; }
+.ec-confirm__art.ec-tile--sleeve .ec-cos-sleeve { width: 200px; height: 280px; }
+.ec-confirm__art.ec-tile--box .ec-cos-box { width: 200px; height: 254px; }
+.ec-confirm__info h2 { margin: 6px 0 10px; font: 700 26px/1.15 var(--kv-title, Cinzel, serif); color: #f6ecd0; text-wrap: balance; }
+.ec-confirm__info > p { margin: 0 0 12px; line-height: 1.5; color: var(--kv-muted, #b9b3a3); }
+.ec-confirm__deal { display: flex; align-items: center; gap: 8px; }
+.ec-confirm__deal .ec-bundle__off { position: static; }
+.ec-confirm__owned { color: #8fe3a8 !important; }
+.ec-confirm .ec-actions { margin-top: 18px; }
+@keyframes ec-fade { from { opacity: 0; } }
+@media (max-width: 640px) { .ec-confirm__box { grid-template-columns: 1fr; justify-items: center; padding: 24px; gap: 18px; text-align: center; } .ec-tile__look { height: 190px; } }
+@media (prefers-reduced-motion: reduce) { .ec-tile, .ec-confirm { transition: none; animation: none; } }

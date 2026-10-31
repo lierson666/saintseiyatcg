@@ -12,7 +12,7 @@ import {countryOptions, countryName} from '../shared/countries.js?v=20261029-1';
 import {startPresence} from '../shared/presence.js?v=20261029-1';
 import {mountSocial} from './social.js?v=20261031-ds3';
 import {telas, imageUrl, sound, applyColors, applyTexts} from './telas.js?v=20261030-1';
-import {loadEconomy, ownedLimit, missingCards, coinBadge, storeScreen, collectionScreen, openBooster, buyBooster, buyCosmetic, cosPreview} from './economy.js?v=20261031-cos1';
+import {loadEconomy, ownedLimit, missingCards, coinBadge, storeScreen, collectionScreen, openBooster, buyBooster, buyCosmetic, cosPreview} from './economy.js?v=20261031-cos2';
 import {lightArt} from '../shared/light-art.js';
 import {featureGrid} from './home-features.js?v=20261031-cos1';
 import {loadRank, rankBadge, rankName, rankSummary, openRankPanel, playerName} from './rank.js?v=20261031-cos1';
@@ -477,7 +477,7 @@ function render() {
   const keep = SCROLLERS.map(sel => root.querySelector(sel)?.scrollTop || 0), screen = root.dataset.screen;
   const body = {home, decks: decksScreen, profile: profileScreen, options, builder,
     collection: () => collectionScreen(ui.econ, [...cards.values()].filter(c => c.kind !== 'God').sort(sortCards), face, ui.colFilter),
-    store: () => storeScreen(ui.econ, (id, size) => artOf(id, size), ui.user)}[ui.screen]();
+    store: () => storeScreen(ui.econ, (id, size) => artOf(id, size), ui.user, {tab: ui.storeTab, group: ui.storeGroup, pick: ui.cosPick})}[ui.screen]();
   root.innerHTML = `${topBar()}<div class="lb-body lb-body--${ui.screen}">${body}</div>${bigCard()}${picker()}${notice()}`;
   if (screen === ui.screen) SCROLLERS.forEach((sel, i) => { const el = root.querySelector(sel); if (el) el.scrollTop = keep[i]; });
   root.dataset.screen = ui.screen;
@@ -584,6 +584,10 @@ const actions = {
     if (mine) saveMyDecks(own.map(x => (x === mine ? {...x, box: id || undefined} : x))); else setDeckBox(ui.coverFor, id);
     ui.coverFor = null; ui.picker = null;
   },
+  'store-tab': t => { ui.storeTab = t.dataset.value; ui.cosPick = null; },
+  'store-group': t => { ui.storeGroup = t.dataset.value; },
+  'cos-pick': t => { ui.cosPick = {kind: t.dataset.kind, id: t.dataset.id}; },
+  'cos-close': () => { ui.cosPick = null; },
   'buy-cos': async t => { try { ui.econ = await buyCosmetic(t.dataset.kind, t.dataset.id); } catch (e) { ui.notice = {title: 'Store', text: e.message}; } render(); },
   'use-cos': async t => {
     try { ui.user = await api('/api/me', 'PATCH', {[t.dataset.kind === 'avatar' ? 'avatar_card' : 'sleeve']: t.dataset.id}); } catch (e) { ui.notice = {title: 'Store', text: e.message}; }
@@ -650,7 +654,7 @@ root.addEventListener('input', e => {
     input.focus(); input.setSelectionRange(at, at);
   }
 });
-addEventListener('keydown', e => { if (e.key === 'Escape' && (ui.big || ui.play || ui.notice || ui.picker)) { ui.big = null; ui.play = false; ui.notice = null; ui.picker = null; render(); } });
+addEventListener('keydown', e => { if (e.key === 'Escape' && (ui.big || ui.play || ui.notice || ui.picker || ui.cosPick)) { ui.big = null; ui.play = false; ui.notice = null; ui.picker = null; ui.cosPick = null; render(); } });
 // Áudio só começa após o primeiro gesto do jogador (política dos navegadores).
 addEventListener('pointerdown', () => { unlock(); playMusic('menu'); }, {once: true});
 
