@@ -94,7 +94,7 @@ function renderPsdCard(card,{src,stage,hp,power,keywords,damage,rules,equipment,
     else if(el.kind==='rarity'){
       const key=`athena/rarity_${String(card.raridade||'').toLowerCase()}`,gemImg=P[key]?`<img class="lc-footer__rarity" src="${escape(PSD.src(key))}" alt="${escape(card.raridade)}">`:'';
       const parts=[gemImg,EDITION.code,EDITION.language,card.artista,`© ${EDITION.year} SSTCG`].filter(Boolean);
-      out+=`<div class="lc-footer" style="top:${el.y/20.91}%;font-size:${cqw(38)}" title="${escape(EDITION.name)}">${parts.map(x=>`<span>${x.startsWith('<img')?x:escape(x)}</span>`).join('<i>•</i>')}</div>`;
+      out+=`<div class="lc-footer" style="top:${el.y/20.91}%;font-size:${cqw(30)}" title="${escape(EDITION.name)}">${parts.map(x=>`<span>${x.startsWith('<img')?x:escape(x)}</span>`).join('<i>•</i>')}</div>`;
     }
   }
   return `<div class="live-card live-card--psd live-card--${escape(f||'neutral')} ${compact?'live-card--compact':''} ${instance&&!instance.prepared&&card.tipo==='Devotee'?'live-card--unprepared':''}" data-live-card="${escape(card.id)}" style="--psd-ink:${pack.color};--psd-glow:${pack.glow}">

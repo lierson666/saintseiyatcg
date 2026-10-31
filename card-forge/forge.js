@@ -1,6 +1,6 @@
 import {createHistory} from '../shared/editor-history.js';
 import {compilePlaytest} from '../shared/import-playtest.js';
-import {renderLiveCard,illustration} from '../shared/live-card.js?v=20261031-sym2';
+import {renderLiveCard,illustration} from '../shared/live-card.js?v=20261031-ft3';
 import {textBlocks, blocksMarkup, presentationRules, ruleBlocksWithoutKeywords, KEYWORD_WORDS, STAT_RE, statTrend} from '../shared/card-text.js?v=20261031-sym2';
 import {isArmor,isEquipment,validateCard} from '../shared/card-model.js';
 // Card Forge — editor de cartas em vanilla JS. Renderiza no canvas nativo 1488x2091 usando
@@ -480,15 +480,17 @@ async function render() {
       case 'rules': await drawRules(el, S); break;
       case 'rarity': {
         // Rodapé de edição (autor, 31/10/2026; igual a shared/live-card.js): raridade • DOC • EN • artista • © ano SSTCG.
-        const key = `athena/rarity_${S.raridade.toLowerCase()}`, p = P[key], size = 38, gh = size * 1.6, gw = p ? p.w * gh / p.h : 0;
+        const key = `athena/rarity_${S.raridade.toLowerCase()}`, p = P[key], size = 30, gh = size * 1.35, gw = p ? p.w * gh / p.h : 0;
         const parts = [EDITION.code, EDITION.language, (S.artista || '').trim().toUpperCase(), `© ${EDITION.year} SSTCG`].filter(Boolean), sep = '  •  ';
         ctx.save();
-        ctx.font = `900 ${size}px Avenir, 'Avenir Next', sans-serif`;
+        // Delicado (autor, 31/10/2026): fino, espaçado e translúcido para não brigar com o flavour.
+        ctx.font = `400 ${size}px Avenir, 'Avenir Next', sans-serif`;
+        ctx.letterSpacing = `${size * 0.14}px`;
         ctx.textAlign = 'left';
         const text = parts.join(sep), tw = ctx.measureText(text).width, gap = p ? ctx.measureText(sep).width : 0;
         let x = el.x - (gw + gap + tw) / 2;
         if (p) { await drawPiece(key, { rect: [x, el.y - gh / 2, gw, gh] }); x += gw; ctx.fillStyle = '#f4efe6b3'; ctx.textBaseline = 'middle'; ctx.fillText(sep, x, el.y); x += gap; }
-        ctx.textBaseline = 'middle'; ctx.shadowColor = '#000'; ctx.shadowBlur = 8; ctx.fillStyle = '#f4efe6'; ctx.fillText(text, x, el.y);
+        ctx.textBaseline = 'middle'; ctx.shadowColor = '#000'; ctx.shadowBlur = 8; ctx.fillStyle = '#f4efe6b8'; ctx.fillText(text, x, el.y);
         ctx.restore();
         break;
       }
