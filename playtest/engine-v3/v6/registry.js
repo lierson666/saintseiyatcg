@@ -24,6 +24,7 @@
 //   startTurn(s, c, key, self) / endTurn(s, c, key, self)   no turno do controlador ("at the beginning/end of your turn")
 //   watchEnter(s, c, key, self, entered)        observador: "Whenever another friendly … enters"
 //   watchDiscard(s, c, key, self, player, uid)  observador: "Whenever an opponent discards a card"
+//   watchLatentLoss(s, c, key, self, player, n) observador: "Whenever an opponent loses Latent Cosmo" (disparado por Ares, ares.js)
 //   Ganchos novos (29/10/2026):
 //   survive(s, c, key, self, role, foe)          X continuou em campo depois de um Strike (`role`: 'attacker'|'defender';
 //                                                `foe`: o outro Devotee, ou null se o alvo era o God). Também gearSurvive(s, c, key,

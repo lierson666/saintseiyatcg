@@ -4,6 +4,16 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-31 — Cartas de Ares — Sligh (meta Premodern), 2ª passada
+
+- **Antes:** Fear Legion fazia o oponente descartar; wraths de 6 a 8 (352, 358, 359); pings de entrada em 281, 287 e 343; Promethean Fire (271); Mind Reading (273); Flame of Annihilation (289).
+- **Depois:** 24 cartas (271, 273, 277, 278, 281, 283, 285, 287, 289, 294, 296, 300, 321, 322, 327, 328, 339, 343, 344, 348, 351, 352, 358, 359). O discard vira perda de Latent ("loses {1}{L}"), os wraths viram alcance (352: 4 no God; 359: 1 por Devotee no seu Tartarus, até 5), First Blood vira o Bolt (3 em Devotee ou 1 no God), saem os pings de entrada em excesso, Alcmenes passa a c5 5/4 Impulse e Arionte ganha Impulse.
+- **Motivo:** meta Premodern aprovado pelo autor em 31/10/2026 (`docs/meta-premodern.md`); diff aprovado em 31/10/2026 (`docs/rebalance-ares-premodern.md`).
+- **Desvio do diff:** 277 e 294 usam "loses {1}{L}" em vez da keyword Unfaith, porque o `engine-v3` não implementa Unfaith.
+- **Engine:** `playtest/engine-v3/v6/ares.js` (helper `drainLatent`, observador novo `watchLatentLoss`, `distribute`) e `tools/test-engine-v3-v6-ares.mjs` (23 testes). Suíte engine-v3 inteira passa (484 testes).
+- **Decks:** "Ares Sligh" (`comp-ares-sligh`) em `data/alpha-0.1/decks-competitivos.json`. Berserker Blitz e Glorious Demise não foram retunados.
+- **Pendências:** round-robin de bots (meta 45–55%); playtest do autor.
+
 ## 2026-10-31 — §63 — Forma dos Domains e Once per game
 
 - **Antes:** Domains com uma a três habilidades, várias com compra de carta recorrente.

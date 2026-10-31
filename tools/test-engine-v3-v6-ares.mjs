@@ -96,13 +96,13 @@ test('activate: Suicide Orders derrota outro Berserker e dá +3/Pierce a Lior; u
   assert.throws(() => activate(s, ctx, 'A', lior));
 });
 
-test('Moment em área: Azure Plague derrota um e tira 1 do God por derrotado', () => {
+test('Moment em área: Azure Plague (1 em cada inimigo) derrota um e tira 1 do God por derrotado', () => {
   const {s, ctx, give} = setup();
-  const small = give('B', '304'), big = give('B', '302'), spell = give('A', '351', 'hand');
+  const small = give('B', '293'), big = give('B', '302'), spell = give('A', '351', 'hand');
   const soul = s.players.B.soul;
   playSpell(s, ctx, 'A', spell); if (s.window) passAll(s);
   assert.ok(s.players.B.tartarus.includes(small));
-  assert.equal(s.units[big].damage, 2);
+  assert.equal(s.units[big].damage, 1);
   assert.equal(s.players.B.soul, soul - 1);
 });
 
@@ -135,17 +135,21 @@ test('mods: Royal Guard ganha +1 por outro Berserker que declarou Strike no turn
   assert.equal(atkOf(s, ctx, guard), base + 2);
 });
 
-test('godDamage: Psychological Warfare faz o dono do God descartar', () => {
+test('godDamage: Psychological Warfare tira 1 Latent do dono do God (Sligh, 31/10/2026)', () => {
   const {s, ctx, give} = setup();
   const card = give('B', '291', 'hand'), fear = give('A', '294');
+  s.players.B.latent = 2;
   strike(s, ctx, fear, god);
-  assert.ok(s.players.B.tartarus.includes(card));
+  assert.equal(s.players.B.latent, 1);
+  assert.ok(s.players.B.hand.includes(card));
 });
 
 test('Basil: inimigo que levou dano dele no turno e morre tira 1 do God', () => {
   const {s, ctx, give} = setup();
-  const foe = give('B', '304'), basil = give('A', '287', 'hand'); // Venomous Arrival: 1 de dano
-  playDevotee(s, ctx, 'A', basil, {}); passAll(s);
+  s.domains.A = null;
+  const foe = give('B', '309'), basil = give('A', '287');
+  for (const u of [foe, basil]) s.effects.push({kind: 'mod', target: u, atk: 0, hp: 10, keywords: [], duration: 'this_round'});
+  strike(s, ctx, basil, {kind: 'devotee', uid: foe});
   const soul = s.players.B.soul;
   s.units[foe].damage = 99; checkDefeats(s, ctx); passAll(s);
   assert.equal(s.players.B.soul, soul - 1);
@@ -224,15 +228,69 @@ test('Burning Assault (291): pagar 1 Soul tira 1 do God inimigo; recusar não pa
   }
 });
 
-test('Promethean Fire (271) paga 2 Soul por 2 de dano; Final Explosion (313) paga mesmo mirando Devotee', () => {
+test('Alcmenes (271) não tem mais Promethean Fire; Final Explosion (313) paga mesmo mirando Devotee', () => {
   const {s, ctx, give} = setup();
   ctx.decide = (player, q) => (q.options ? (q.options.find(o => !String(o).startsWith('god:')) ?? q.options[0]) : player === 'A');
   s.domains.A = null;
   const alc = give('A', '271'), foe = give('B', '293'), boom = give('A', '313');
   const a = s.players.A.soul, b = s.players.B.soul;
   strike(s, ctx, alc, {kind: 'devotee', uid: foe});
-  assert.deepEqual([s.players.A.soul, s.players.B.soul], [a - 2, b - 2]);
+  assert.deepEqual([s.players.A.soul, s.players.B.soul], [a, b]);
   s.units[boom].damage = 99; checkDefeats(s, ctx); passAll(s);
-  assert.equal(s.players.A.soul, a - 3, 'Final Explosion cobra 1 Soul também contra Devotee');
+  assert.equal(s.players.A.soul, a - 1, 'Final Explosion cobra 1 Soul também contra Devotee');
+});
+
+// Ares → Sligh (meta Premodern, 31/10/2026).
+const cast = (s, ctx, spell, opts) => { playSpell(s, ctx, 'A', spell, opts); if (s.window) passAll(s); };
+test('First Blood (322): 3 num Devotee inimigo ou 1 no God', () => {
+  const {s, ctx, give} = setup();
+  const soul = s.players.B.soul;
+  cast(s, ctx, give('A', '322', 'hand')); // decide: God primeiro
+  assert.equal(s.players.B.soul, soul - 1);
+  ctx.decide = (player, q) => (q.options ? q.options.find(o => !String(o).startsWith('god:')) ?? q.options[0] : player === 'A');
+  const foe = give('B', '309');
+  cast(s, ctx, give('A', '322', 'hand'));
+  assert.equal(s.units[foe].damage, 3);
+});
+test('Rain of Spears (327) distribui 3 entre até dois; Burn It All (328) causa 2 em todos', () => {
+  const {s, ctx, give} = setup();
+  const x = give('B', '309'), y = give('B', '309'), z = give('B', '309');
+  ctx.decide = (player, q) => (q.options ? (q.count ? q.options.slice(0, q.count) : q.options[0]) : player === 'A');
+  cast(s, ctx, give('A', '327', 'hand'));
+  assert.deepEqual([x, y, z].map(u => s.units[u].damage).sort(), [0, 1, 2]);
+  const mine = give('A', '309');
+  cast(s, ctx, give('A', '328', 'hand'));
+  assert.equal(s.units[mine].damage, 2);
+  assert.equal(s.units[z].damage + s.units[y].damage + s.units[x].damage, 3 + 6);
+});
+test('Bloody Rain (352): 4 no God inimigo, 1 no seu; Apocalypse (359): 1 por Devotee no seu Tartarus, até 5', () => {
+  const {s, ctx, give} = setup();
+  s.domains.A = null;
+  const a = s.players.A.soul, b = s.players.B.soul;
+  cast(s, ctx, give('A', '352', 'hand'));
+  assert.deepEqual([s.players.A.soul, s.players.B.soul], [a - 1, b - 4]);
+  for (let i = 0; i < 7; i++) give('A', '293', 'tartarus');
+  give('A', '322', 'tartarus');
+  cast(s, ctx, give('A', '359', 'hand'));
+  assert.equal(s.players.B.soul, b - 4 - 5);
+});
+test('Living Nightmare (348) tira até 2 Latent e 1 no God por Latent; Feast on Fear (344) ganha +1 ATK', () => {
+  const {s, ctx, give} = setup();
+  const weaver = give('A', '344'), atk = atkOf(s, ctx, weaver);
+  s.players.B.latent = 1;
+  const soul = s.players.B.soul;
+  cast(s, ctx, give('A', '348', 'hand'));
+  assert.equal(s.players.B.latent, 0);
+  assert.equal(s.players.B.soul, soul - 1);
+  assert.equal(atkOf(s, ctx, weaver), atk + 1);
+});
+test("War Cry (296): o Berserker que acabou de entrar ganha Impulse e fica Prepared", () => {
+  const {s, ctx, give} = setup();
+  const fresh = give('A', '291');
+  s.units[fresh] = {prepared: false, damage: 0, entered: s.turn};
+  ctx.decide = (player, q) => (q.options ? (q.options.includes(fresh) ? fresh : q.options[0]) : player === 'A');
+  playDevotee(s, ctx, 'A', give('A', '296', 'hand'), {}); passAll(s);
+  assert.ok(s.units[fresh].prepared);
+  assert.ok(keywordsOf(s, ctx, fresh).includes('Impulse'));
 });
 

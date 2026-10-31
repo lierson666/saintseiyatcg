@@ -1786,6 +1786,116 @@
           "quantity": 2
         }
       ]
+    },
+    {
+      "id": "comp-ares-sligh",
+      "nome": "Ares Sligh",
+      "god": "god-ares",
+      "domain_id": "ares-v6-333",
+      "arquetipo": "Referência do meta Premodern (Mono-Red Sligh): curva 1-2-3 de Berserkers com Impulse, burn em Devotee e no God (First Blood, Rain of Spears, The Bloody Rain, The Apocalypse of Ares) e filtragem. Vence cedo; o burn fecha o God. docs/meta-premodern.md e docs/rebalance-ares-premodern.md (31/10/2026).",
+      "tema": "Sligh (aggro + burn)",
+      "main_deck": [
+        {
+          "card_id": "ares-v6-293",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-313",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-308",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-310",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-307",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-291",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-295",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-343",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-299",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-285",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-271",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-320",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-317",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-322",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-327",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-326",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-354",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-350",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-357",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-352",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-359",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-347",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-323",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-330",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-325",
+          "quantity": 1
+        }
+      ]
     }
   ]
 }

@@ -110,12 +110,27 @@ const gearDeclareOther = (n, ability) => ({
 });
 const gearDeathGod = (n, ability) => ({bearerDefeated: (s, c, key, self) => st => { if (taxed(st, c, key, ability, n, self)) hit(st, c, foeGod(st, key), n); }});
 const gearKillGodTaxed = (n, ability) => ({gearKillInCombat: (s, c, key, self) => st => { if (taxed(st, c, key, ability, n, self)) hit(st, c, foeGod(st, key), n); }});
-// "That God's controller / target opponent discards a card[, then draws a card]."
-const opponentDiscards = (st, c, key, ability, thenDraw = 0) => {
-  const foe = k.other(st, key);
-  k.discard(st, c, foe, 1, ability);
-  if (thenDraw) draw(st, foe, thenDraw);
+// "Target opponent loses {N}{L}" (Ares → Sligh, 31/10/2026: o discard da Fear Legion vira negação de Latent).
+// Avisa os observadores watchLatentLoss(s, c, key, self, player, lost); devolve quanto saiu.
+const drainLatent = (st, c, key, n, ability) => {
+  const foe = k.other(st, key), p = st.players[foe], lost = Math.min(n, p.latent);
+  if (!lost) return 0;
+  p.latent -= lost;
+  k.emit(st, 'latent_lost', {player: foe, amount: lost, ability});
+  k.watchers(st, c, 'watchLatentLoss', [foe, lost], 'Latent');
+  return lost;
 };
+// "Distribute N damage among one or two target enemy Devotees" (§64: cada alvo recebe pelo menos 1).
+function distribute(st, c, key, ability, total, max) {
+  const targets = k.chooseUpTo(c, key, ability, k.enemies(st, c, key), Math.min(total, max), {text: `Choose up to ${max} target enemy Devotees.`});
+  if (!targets.length) return;
+  const dealt = Object.fromEntries(targets.map(t => [t, 1]));
+  for (let i = targets.length; i < total; i++) {
+    const t = targets.length === 1 ? targets[0] : k.choose(c, key, ability, targets, {text: 'Assign 1 damage to a target.'}) ?? targets[0];
+    dealt[t]++;
+  }
+  for (const t of targets) hit(st, c, t, dealt[t]);
+}
 // Aura de Equipment: o portador ganha keywords se `cond(c, portador)`.
 const gearKeywords = (keywords, cond = () => true) => ({
   aura: (s, c, key, self, unit) => (unit === k.bearerOf(c, self) && cond(c, unit) ? {keywords} : null),
@@ -144,7 +159,7 @@ export default {
       }},
   },
   // Alcmenes of Ethon
-  'ares-v6-271': merge(enterDamage(3, 'CRIMSON ARRIVAL'), declareGod(2, 'PROMETHEAN FIRE'), {
+  'ares-v6-271': merge(enterDamage(3, 'CRIMSON ARRIVAL'), {
     killInCombat: (s, c, key, self) => k.onceTurn(s, `${self}:inferno`) && (st => { if (alive(st, self)) k.prepare(st, self); }),
   }),
   // Ethon Warplate
@@ -154,10 +169,7 @@ export default {
   // Ofir of Ouroboros
   'ares-v6-273': {
     enter: (s, c, key) => st => lookTop(st, c, key, 3, 'BATTLEFIELD INSIGHT'),
-    watchDeclare: (s, c, key, self, attacker) => {
-      if (friendlyBerserkerDeclared(s, c, key, self, attacker)) return st => buff(st, attacker, 1);
-      if (k.controllerOf(s, attacker) !== key && k.onceTurn(s, `${self}:mind`)) return st => buff(st, friendlyBerserker(st, c, key, 'MIND READING'), 2);
-    },
+    watchDeclare: (s, c, key, self, attacker) => friendlyBerserkerDeclared(s, c, key, self, attacker) && (st => buff(st, attacker, 1)),
   },
   // Ouroboros Warplate
   'ares-v6-274': merge(gearDeclareOther(2, 'FLAME COORDINATION'), {
@@ -200,13 +212,13 @@ export default {
         if (!k.spellOnChain(st, spellUid) || !k.may(c, key, 'ILLUSORY ESCAPE', {uid: self, cost: 'discard a card'})) return;
         if (k.discard(st, c, key, 1, 'ILLUSORY ESCAPE').length) { k.once(st, `${self}:escape`); k.counterSpell(st, c, spellUid); }
       }),
-    enter: (s, c, key) => st => opponentDiscards(st, c, key, 'NIGHTMARE MANIFESTATION'),
-    godDamage: (s, c, key) => st => opponentDiscards(st, c, key, 'TORMENT'),
+    enter: (s, c, key) => st => drainLatent(st, c, key, 1, 'NIGHTMARE MANIFESTATION'),
+    godDamage: (s, c, key) => st => drainLatent(st, c, key, 1, 'TORMENT'),
   },
   // Lamia Warplate
   'ares-v6-278': {
-    gearGodDamage: (s, c, key) => st => opponentDiscards(st, c, key, 'HAUNTING PRESENCE'),
-    watchDiscard: (s, c, key, self, player) =>
+    gearGodDamage: (s, c, key) => st => drainLatent(st, c, key, 1, 'HAUNTING PRESENCE'),
+    watchLatentLoss: (s, c, key, self, player) =>
       player !== key && named(c, k.bearerOf(c, self), 'LOTIS OF LAMIA') && k.onceTurn(s, `${self}:lamia`) && (st => { if (taxed(st, c, key, 'LAMIA RESONANCE', 1, self)) hit(st, c, k.godTarget(player), 1); }),
   },
   // Iseu of Python
@@ -223,7 +235,7 @@ export default {
     },
   },
   // Catreu of Akephalos
-  'ares-v6-281': merge(enterDamage(1, 'MERCILESS ARRIVAL'), deathGod(1, 'DEATH WITHOUT FEAR'), {
+  'ares-v6-281': merge(deathGod(1, 'DEATH WITHOUT FEAR'), {
     watchDefeat: (s, c, key, self, dead, owner) => otherFriendlyBerserkerDied(c, key, self, dead, owner) && (st => buff(st, self, 1)),
   }),
   // Akephalos Warplate
@@ -260,10 +272,10 @@ export default {
     gearKillInCombat: (s, c, key, self, bearer) => named(c, bearer, 'ARIONTE OF ANFISTA') && (st => { if (taxed(st, c, key, 'ANFISTA RESONANCE', 1, self)) hit(st, c, foeGod(st, key), 1); }),
   },
   // Basil of Manticore
-  'ares-v6-287': merge(enterDamage(1, 'VENOMOUS ARRIVAL'), {
+  'ares-v6-287': {
     combatDamage: (s, c, key, self, victim) => st => buff(st, victim, -1),
     watchDefeat: (s, c, key, self, dead, owner) => owner !== key && hitBy(s, self, dead) && (st => hit(st, c, k.godTarget(owner), 1)),
-  }),
+  },
   // Manticore Warplate
   'ares-v6-288': {
     gearCombatDamage: (s, c, key, self, bearer, victim) => st => buff(st, victim, -1),
@@ -273,7 +285,7 @@ export default {
     },
   },
   // Enyo, Spear of Destruction
-  'ares-v6-289': merge(gearDeclareDamage(3, 'FLAME OF ANNIHILATION'), gearKillGodTaxed(3, 'DIVINE DESTRUCTION'), gearKeywords(['Pierce'], berserker)),
+  'ares-v6-289': merge(gearKillGodTaxed(3, 'DIVINE DESTRUCTION'), gearKeywords(['Pierce'], berserker)),
   // 290 Shield of the War God. Warborn Defiance (gancho gearSurvive): o portador sobreviveu ao combate; 2 de dano ao Devotee inimigo
   // envolvido. Unyielding Fury (gancho gearTookDamage): ao tomar dano, +2 ATK até o fim do turno (aproximado por 'this_round', como o buff).
   'ares-v6-290': {
@@ -283,18 +295,24 @@ export default {
   'ares-v6-291': declareGod(1, 'BURNING ASSAULT'),
   'ares-v6-292': {watchDeclare: (s, c, key, self, attacker) => friendlyBerserkerDeclared(s, c, key, self, attacker) && (st => buff(st, self, 1))},
   'ares-v6-293': deathGod(1, 'GLORIOUS DEMISE'),
-  'ares-v6-294': {godDamage: (s, c, key) => st => opponentDiscards(st, c, key, 'PSYCHOLOGICAL WARFARE')},
+  'ares-v6-294': {godDamage: (s, c, key) => st => drainLatent(st, c, key, 1, 'PSYCHOLOGICAL WARFARE')},
   'ares-v6-295': {
     declare: (s, c, key, self) => st => buff(st, self, 1),
     endTurn: (s, c, key, self) => s.strikes.get(self) === s.turn && (st => { if (alive(st, self)) k.defeat(st, c, self); }),
   },
-  'ares-v6-296': {enter: (s, c, key) => st => buff(st, friendlyBerserker(st, c, key, 'WAR CRY'), 1)},
+  // Impulse até o fim do round: ver interpretação no topo (como 323).
+  'ares-v6-296': {enter: (s, c, key) => st => {
+    const t = friendlyBerserker(st, c, key, 'WAR CRY');
+    if (!alive(st, t)) return;
+    buff(st, t, 1, ['Impulse']);
+    if (st.units[t].entered === st.turn) k.prepare(st, t);
+  }},
   'ares-v6-297': enterDamage(1, 'BURNING EXECUTION', damagedThisTurn),
   'ares-v6-298': {enter: (s, c, key, self) => st => buff(st, friendlyBerserker(st, c, key, 'TACTICAL OPENING', u => u !== self), 1)},
   'ares-v6-299': {godDamage: (s, c, key) => st => hit(st, c, enemyDevotee(st, c, key, 'SCORCHED EARTH'), 1)},
   'ares-v6-300': {
     enter: (s, c, key) => st => buff(st, enemyDevotee(st, c, key, 'CRIPPLING TERROR'), -1),
-    godDamage: (s, c, key) => st => opponentDiscards(st, c, key, 'LINGERING NIGHTMARE', 1),
+    godDamage: (s, c, key) => st => drainLatent(st, c, key, 1, 'LINGERING NIGHTMARE'),
   },
   'ares-v6-301': deathDevotee(1, 'CATASTROPHIC END'),
   // Berserker Champion
@@ -385,8 +403,8 @@ export default {
 
   // ---------- Spells ----------
   'ares-v6-322': {spell: {run: (s, c, key) => {
-    const t = enemyDevotee(s, c, key, 'FIRST STRIKE');
-    if (t) hit(s, c, t, damagedThisTurn(s, t) ? 2 : 3);
+    const t = enemyOrGod(s, c, key, 'FIRST STRIKE');
+    if (t) hit(s, c, t, k.isGod(t) ? 1 : 3);
   }}},
   // Impulse até o fim do turno: ver interpretação no topo.
   'ares-v6-323': {spell: {run: (s, c, key) => {
@@ -409,9 +427,8 @@ export default {
     k.defeat(s, c, mine);
     hit(s, c, enemyDevotee(s, c, key, 'BLOOD EXCHANGE'), atk);
   }}},
-  'ares-v6-327': {spell: {run: (s, c, key) =>
-    sweep(s, c, k.chooseUpTo(c, key, 'SPEAR BARRAGE', k.enemies(s, c, key), 3, {text: 'Choose up to three target enemy Devotees.'}), 2)}},
-  'ares-v6-328': {spell: {run: (s, c, key) => { sweep(s, c, k.enemies(s, c, key), 2); hit(s, c, ownGod(key), 1); }}},
+  'ares-v6-327': {spell: {run: (s, c, key) => distribute(s, c, key, 'SPEAR BARRAGE', 3, 2)}},
+  'ares-v6-328': {spell: {run: (s, c, key) => { sweep(s, c, k.allDevotees(s, c), 2); }}},
   'ares-v6-329': {spell: {run: (s, c, key, self) => {
     const t = friendlyBerserker(s, c, key, 'RECKLESS MOMENTUM');
     if (t) { k.prepare(s, t); buff(s, t, 1); }
@@ -473,8 +490,8 @@ export default {
     },
   },
   'ares-v6-339': {
-    gearGodDamage: (s, c, key) => st => opponentDiscards(st, c, key, 'NIGHTMARE STRIKE', 1),
-    watchDiscard: (s, c, key, self, player) => {
+    gearGodDamage: (s, c, key) => st => drainLatent(st, c, key, 1, 'NIGHTMARE STRIKE'),
+    watchLatentLoss: (s, c, key, self, player) => {
       const bearer = k.bearerOf(c, self);
       return player !== key && !!bearer && k.hasType(c, bearer, 'Fear Legion') && k.onceTurn(s, `${self}:fear`) && (st => buff(st, bearer, 1));
     },
@@ -497,12 +514,10 @@ export default {
         if (k.discard(st, c, key, 1, 'CALCULATED ASSAULT').length) buff(st, attacker, 2, ['Pierce']);
       }),
   },
-  'ares-v6-343': merge(deathAny(1, 'LAST BREATH OF THE STORM'), {
-    declare: (s, c, key) => st => hit(st, c, enemyDevotee(st, c, key, 'RAZORWIND ASSAULT'), 1),
-  }),
+  'ares-v6-343': deathAny(1, 'LAST BREATH OF THE STORM'),
   'ares-v6-344': {
-    enter: (s, c, key) => st => opponentDiscards(st, c, key, 'WHISPERS OF TERROR', 1),
-    watchDiscard: (s, c, key, self, player) => player !== key && k.onceTurn(s, `${self}:feast`) && (st => buff(st, self, 1)),
+    enter: (s, c, key) => st => drainLatent(st, c, key, 1, 'WHISPERS OF TERROR'),
+    watchLatentLoss: (s, c, key, self, player) => player !== key && k.onceTurn(s, `${self}:feast`) && (st => buff(st, self, 1)),
     godDamage: (s, c, key) => st => hit(st, c, enemyDevotee(st, c, key, 'ILLUSORY TORMENT'), 1),
   },
   'ares-v6-345': {
@@ -520,8 +535,7 @@ export default {
     if (n) hit(s, c, enemyOrGod(s, c, key, 'DISPOSABLE SOLDIERS'), 2 * n);
   }}},
   'ares-v6-348': {spell: {run: (s, c, key) => {
-    const foe = k.other(s, key), n = k.discard(s, c, foe, 2, 'LIVING NIGHTMARE').length;
-    hit(s, c, k.godTarget(foe), n);
+    hit(s, c, foeGod(s, key), drainLatent(s, c, key, 2, 'LIVING NIGHTMARE'));
   }}},
   'ares-v6-349': {spell: {run: (s, c, key) => {
     lookTop(s, c, key, 4, 'DIVINE INSIGHT');
@@ -534,10 +548,10 @@ export default {
     hit(s, c, t, 4);
     hit(s, c, k.godTarget(owner), 2);
   }}},
-  'ares-v6-351': {spell: {run: (s, c, key) => hit(s, c, foeGod(s, key), sweep(s, c, k.enemies(s, c, key), 2).length)}},
-  'ares-v6-352': {spell: {run: (s, c, key) => {
-    const dead = sweep(s, c, k.allDevotees(s, c), 3);
-    for (const p of s.order) hit(s, c, k.godTarget(p), dead.filter(d => d.owner === p).length);
+  'ares-v6-351': {spell: {run: (s, c, key) => hit(s, c, foeGod(s, key), sweep(s, c, k.enemies(s, c, key), 1).length)}},
+  'ares-v6-352': {spell: {targets: godOfFoe, run: (s, c, key) => {
+    hit(s, c, foeGod(s, key), 4);
+    hit(s, c, ownGod(key), 1);
   }}},
   'ares-v6-353': {spell: {run: (s, c, key) => {
     const mine = friends(s, c, key);
@@ -567,14 +581,11 @@ export default {
     if (!s.victory && s.players[foe].soul <= 10) loot(s, c, key, 'OPPORTUNITY FOR WAR');
   }}},
   'ares-v6-358': {spell: {run: (s, c, key) => {
-    sweep(s, c, k.enemies(s, c, key), 4);
-    for (const u of friends(s, c, key)) buff(s, u, 3, ['Pierce']);
+    for (const u of friends(s, c, key)) buff(s, u, 2, ['Pierce']);
+    sweep(s, c, k.enemies(s, c, key).filter(u => k.keywordsOf(s, c, u).includes('Guardian')), 2);
   }}},
-  'ares-v6-359': {spell: {run: (s, c, key) => {
-    const dead = sweep(s, c, k.allDevotees(s, c), 5);
-    const mine = dead.filter(d => d.owner === key && berserker(c, d.uid)).length, theirs = dead.filter(d => d.owner !== key).length;
-    hit(s, c, foeGod(s, key), mine + theirs);
-  }}},
+  'ares-v6-359': {spell: {targets: godOfFoe, run: (s, c, key) =>
+    hit(s, c, foeGod(s, key), Math.min(5, s.players[key].tartarus.filter(u => k.isDevotee(c, u)).length))}},
   'ares-v6-360': {spell: {run: (s, c, key) => {
     const all = k.allDevotees(s, c);
     for (const u of all) k.defeat(s, c, u);

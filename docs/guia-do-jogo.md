@@ -4,7 +4,7 @@ OFFICIAL RULEBOOK — VERSION 2.1
 
 Core Rules · Combat · Cosmo · Armor · Resonance · Tartarus
 
-Status: regras aprovadas em 23–24/10/2026, consolidadas na versão 2.1. **Atualização de 31/10/2026:** o fluxo do jogo é por **turnos dentro de cada Round** (regras Alpha ALPHA-P01 a P07, aprovadas em 28/10/2026, e decisões G3 seguintes), como implementado no `playtest/engine-v3`; o sistema de AÇÕES alternadas foi retirado. Valores de cartas continuam sujeitos a balanceamento. O registro integral da aprovação 2.1 está em [decisoes-aprovadas.md](rulebook-2.1/decisoes-aprovadas.md); esse registro é histórico, e este guia integrado é a referência vigente.
+Status: regras aprovadas em 23–24/10/2026, consolidadas na versão 2.1. **Atualização de 31/10/2026:** o fluxo do jogo é por **turnos dentro de cada Round** (regras Alpha ALPHA-P01 a P07, aprovadas em 28/10/2026, e decisões G3 seguintes), como implementado no `playtest/engine-v3`; o sistema de AÇÕES alternadas foi retirado. Valores de cartas continuam sujeitos a balanceamento. Este guia é a única referência de regra vigente.
 
 Princípio fundamental: Saint Seiya TCG é um jogo de cartas estratégico em que cada jogador controla um God e seus Devotees. Os jogadores desenvolvem Cosmo, estabelecem confrontos individuais, despertam o poder de seus Cavaleiros e procuram derrotar o God adversário.
 

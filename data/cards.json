@@ -9810,25 +9810,25 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 6,
+      "custo": 5,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
       "awaken": null,
-      "power": 7,
-      "vida": 5,
+      "power": 5,
+      "vida": 4,
       "resistance": 5,
       "damage_cloth": null,
       "equipar_custo": null,
-      "keywords_en": [],
+      "keywords_en": ["Impulse"],
       "habilidades_en": [
+        "Impulse",
         "Crimson Arrival — When Alcmenes enters the battlefield, deal 3 damage to target enemy Devotee.",
-        "Promethean Fire — Whenever Alcmenes declares a Strike, you may pay {2}{S}. If you do, deal 2 damage to the defending God.",
         "Unrelenting Inferno — Whenever Alcmenes defeats an enemy Devotee during combat, Prepare Alcmenes. This ability triggers only once per turn."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
     },
     {
       "id": "ares-v6-272",
@@ -9885,25 +9885,24 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 5,
+      "custo": 4,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
       "awaken": null,
-      "power": 4,
-      "vida": 5,
+      "power": 3,
+      "vida": 4,
       "resistance": 5,
       "damage_cloth": null,
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
         "Battlefield Insight — When Ofir enters the battlefield, look at the top three cards of your deck. Put one into your hand and the rest on the bottom of your deck in any order.",
-        "Divine War Flames — Whenever another friendly Berserker declares a Strike, that Berserker gains +1 ATK until end of round.",
-        "Mind Reading — Once per turn, when an enemy Devotee declares a Strike, target friendly Berserker gains +2 ATK until end of round."
+        "Divine War Flames — Whenever another friendly Berserker declares a Strike, that Berserker gains +1 ATK until end of round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
     },
     {
       "id": "ares-v6-274",
@@ -10046,13 +10045,13 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Nightmare Manifestation — When Lotis enters the battlefield, target opponent discards a card.",
-        "Torment — Whenever Lotis deals damage to a God, that God's controller discards a card.",
+        "Nightmare Manifestation — When Lotis enters the battlefield, target opponent loses {1}{L}.",
+        "Torment — Whenever Lotis deals damage to a God, that God's controller loses {1}{L}.",
         "Illusory Escape — Once per turn, when Lotis becomes the target of an enemy ability, you may discard a card. If you do, cancel that ability's effect on Lotis."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
     },
     {
       "id": "ares-v6-278",
@@ -10080,12 +10079,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Haunting Presence — Whenever equipped Devotee deals combat damage to a God, that God's controller discards a card.",
-        "Resonance — Lotis of Lamia: Whenever an opponent discards a card, you may pay {1}{S}. If you do, deal 1 damage to that opponent's God. This ability triggers only once per turn."
+        "Haunting Presence — Whenever equipped Devotee deals combat damage to a God, that God's controller loses {1}{L}.",
+        "Resonance — Lotis of Lamia: Whenever an opponent loses Latent Cosmo, you may pay {1}{S}. If you do, deal 1 damage to that opponent's God. This ability triggers only once per turn."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Sem custo de Equip no original: tratado como Equipment global.",
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Sem custo de Equip no original: tratado como Equipment global. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md.",
       "categoria_equipamento": "Armor",
       "slot_equipamento": null,
       "auto_equip_en": ["Lotis of Lamia"],
@@ -10195,13 +10194,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Merciless Arrival — When Catreu enters the battlefield, deal 1 damage to target enemy Devotee.",
         "Headless Fury — Whenever another friendly Berserker is defeated, Catreu gains +1 ATK until end of round.",
         "Death Without Fear — When Catreu is defeated, you may pay {1}{S}. If you do, deal 1 damage to target enemy God."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
     },
     {
       "id": "ares-v6-282",
@@ -10263,8 +10261,8 @@
       "soul": null,
       "attack": null,
       "awaken": null,
-      "power": 4,
-      "vida": 3,
+      "power": 3,
+      "vida": 2,
       "resistance": 3,
       "damage_cloth": null,
       "equipar_custo": null,
@@ -10275,7 +10273,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
     },
     {
       "id": "ares-v6-284",
@@ -10342,14 +10340,15 @@
       "resistance": 2,
       "damage_cloth": null,
       "equipar_custo": null,
-      "keywords_en": [],
+      "keywords_en": ["Impulse"],
       "habilidades_en": [
+        "Impulse",
         "Predator's Arrival — When Arionte enters the battlefield, deal 1 damage to target enemy Devotee that has already taken damage this turn.",
         "Relentless Pursuit — Whenever Arionte defeats an enemy Devotee during combat, Prepare Arionte. This ability triggers only once per turn."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
     },
     {
       "id": "ares-v6-286",
@@ -10418,13 +10417,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Venomous Arrival — When Basil enters the battlefield, deal 1 damage to target enemy Devotee.",
         "Manticore's Sting — Whenever Basil deals combat damage to an enemy Devotee, that Devotee gets -1 ATK until end of round.",
         "Predatory Cruelty — Whenever an enemy Devotee is defeated after taking damage from Basil this turn, deal 1 damage to that Devotee's God."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
     },
     {
       "id": "ares-v6-288",
@@ -10481,7 +10479,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 6,
+      "custo": 5,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -10493,14 +10491,13 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Equipped Devotee gets +4 ATK.",
-        "Flame of Annihilation — Whenever equipped Devotee declares a Strike, deal 3 damage to target enemy Devotee.",
+        "Equipped Devotee gets +3 ATK.",
         "Divine Destruction — Whenever equipped Devotee defeats an enemy Devotee during combat, you may pay {3}{S}. If you do, deal 3 damage to the opposing God.",
         "Ares' Sacred Weapon — If equipped Devotee is a Berserker, it gains Pierce."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Sem custo de Equip no original: tratado como Equipment global.",
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Sem custo de Equip no original: tratado como Equipment global. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md.",
       "categoria_equipamento": "Artifact",
       "slot_equipamento": null,
       "auto_equip_en": [],
@@ -10677,11 +10674,11 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Psychological Warfare — Whenever this Devotee deals combat damage to a God, that God's controller discards a card."
+        "Psychological Warfare — Whenever this Devotee deals combat damage to a God, that God's controller loses {1}{L}."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
     },
     {
       "id": "ares-v6-295",
@@ -10744,11 +10741,11 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "War Cry — When Ares' War Herald enters the battlefield, target friendly Berserker gains +1 ATK until end of round."
+        "War Cry — When Ares' War Herald enters the battlefield, target friendly Berserker gains +1 ATK and Impulse until end of round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
     },
     {
       "id": "ares-v6-297",
@@ -10878,11 +10875,11 @@
       "keywords_en": [],
       "habilidades_en": [
         "Crippling Terror — When Fear Legion Tormentor enters the battlefield, target enemy Devotee gets -1 ATK until end of round.",
-        "Lingering Nightmare — Whenever Fear Legion Tormentor deals combat damage to a God, that God's controller discards a card, then draws a card."
+        "Lingering Nightmare — Whenever Fear Legion Tormentor deals combat damage to a God, that God's controller loses {1}{L}."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
     },
     {
       "id": "ares-v6-301",
@@ -11632,13 +11629,13 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Equipped Devotee gets +2 ATK.",
+        "Equipped Devotee gets +1 ATK.",
         "Unchained Violence — Whenever equipped Devotee declares a Strike, it gains +2 ATK until end of round.",
         "Bloodbound Chains — At the end of your turn, if equipped Devotee declared a Strike this turn, deal 1 damage to your God."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Sem custo de Equip no original: tratado como Equipment global.",
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Sem custo de Equip no original: tratado como Equipment global. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md.",
       "categoria_equipamento": "Artifact",
       "slot_equipamento": null,
       "auto_equip_en": [],
@@ -11674,11 +11671,11 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "First Strike — Deal 2 damage to target enemy Devotee. If that Devotee has not taken damage this turn, deal 3 damage instead."
+        "First Strike — Deal 3 damage to target enemy Devotee or 1 damage to target enemy God."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
     },
     {
       "id": "ares-v6-323",
@@ -11827,7 +11824,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 3,
+      "custo": 2,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -11839,11 +11836,11 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Spear Barrage — Deal 2 damage to up to three target enemy Devotees."
+        "Spear Barrage — Distribute 3 damage among one or two target enemy Devotees."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
     },
     {
       "id": "ares-v6-328",
@@ -11860,7 +11857,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 3,
+      "custo": 2,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -11872,11 +11869,11 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Scorched Battlefield — Deal 2 damage to each enemy Devotee and 1 damage to your God."
+        "Scorched Battlefield — Deal 2 damage to each Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
     },
     {
       "id": "ares-v6-329",
@@ -12260,12 +12257,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Nightmare Strike — Whenever equipped Devotee deals combat damage to a God, that God's controller discards a card, then draws a card.",
-        "Fear Resonance — If equipped Devotee is a Fear Legion Berserker, whenever an opponent discards a card, equipped Devotee gains +1 ATK until end of round. This ability triggers only once per turn."
+        "Nightmare Strike — Whenever equipped Devotee deals combat damage to a God, that God's controller loses {1}{L}.",
+        "Fear Resonance — If equipped Devotee is a Fear Legion Berserker, whenever an opponent loses Latent Cosmo, equipped Devotee gains +1 ATK until end of round. This ability triggers only once per turn."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Sem custo de Equip no original: tratado como Equipment global.",
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Sem custo de Equip no original: tratado como Equipment global. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md.",
       "categoria_equipamento": "Armor",
       "slot_equipamento": null,
       "auto_equip_en": [],
@@ -12410,12 +12407,11 @@
       "keywords_en": ["Impulse"],
       "habilidades_en": [
         "Impulse",
-        "Razorwind Assault — Whenever Disaster Wing Assassin declares a Strike, deal 1 damage to target enemy Devotee.",
         "Last Breath of the Storm — When Disaster Wing Assassin is defeated, you may pay {1}{S}. If you do, deal 1 damage to target enemy Devotee or God."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
     },
     {
       "id": "ares-v6-344",
@@ -12444,13 +12440,13 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Whispers of Terror — When Nightmare Weaver enters the battlefield, target opponent discards a card, then draws a card.",
-        "Feast on Fear — Whenever an opponent discards a card, Nightmare Weaver gains +1 ATK until end of round. This ability triggers only once per turn.",
+        "Whispers of Terror — When Nightmare Weaver enters the battlefield, target opponent loses {1}{L}.",
+        "Feast on Fear — Whenever an opponent loses Latent Cosmo, Nightmare Weaver gains +1 ATK until end of round. This ability triggers only once per turn.",
         "Illusory Torment — Whenever Nightmare Weaver deals combat damage to a God, deal 1 damage to target enemy Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
     },
     {
       "id": "ares-v6-345",
@@ -12580,11 +12576,11 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Living Nightmare — Target opponent discards two cards. For each card discarded this way, deal 1 damage to that opponent's God."
+        "Living Nightmare — Target opponent loses up to {2}{L}. Deal 1 damage to that opponent's God for each Latent Cosmo lost this way."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
     },
     {
       "id": "ares-v6-349",
@@ -12668,7 +12664,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 5,
+      "custo": 3,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -12680,12 +12676,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Azure Plague — Deal 2 damage to each enemy Devotee.",
+        "Azure Plague — Deal 1 damage to each enemy Devotee.",
         "Spreading Death — For each enemy Devotee defeated by this Moment, deal 1 damage to the opposing God."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
     },
     {
       "id": "ares-v6-352",
@@ -12702,7 +12698,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 6,
+      "custo": 4,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -12714,12 +12710,11 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Rain of Destruction — Deal 3 damage to each Devotee.",
-        "Bloodsoaked Earth — For each Devotee defeated by this Moment, deal 1 damage to its controller's God."
+        "Rain of Destruction — Deal 4 damage to target enemy God. Deal 1 damage to your God."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
     },
     {
       "id": "ares-v6-353",
@@ -12906,7 +12901,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 7,
+      "custo": 5,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -12918,12 +12913,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Divine Awakening — Deal 4 damage to each enemy Devotee.",
-        "Bloodlust Unleashed — Friendly Berserkers gain +3 ATK and Pierce until end of round."
+        "Divine Awakening — Friendly Berserkers gain +2 ATK and Pierce until end of round.",
+        "Bloodlust Unleashed — Deal 2 damage to each enemy Devotee with Guardian."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
     },
     {
       "id": "ares-v6-359",
@@ -12940,7 +12935,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 8,
+      "custo": 5,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -12952,13 +12947,11 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Apocalyptic Destruction — Deal 5 damage to each Devotee.",
-        "Final Offering — For each friendly Berserker defeated by this Moment, deal 1 damage to the opposing God.",
-        "End of All Hope — For each enemy Devotee defeated by this Moment, deal an additional 1 damage to the opposing God."
+        "Apocalyptic Destruction — Deal damage to target enemy God equal to the number of Devotee cards in your Tartarus, up to 5."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
     },
     {
       "id": "ares-v6-360",
