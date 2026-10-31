@@ -310,6 +310,42 @@ class Api(unittest.TestCase):
         self.assertEqual((b['coins'], b['boosters']), (r['coins'] - 1000, 1))
         users = {u['username']: u for u in self.call('GET', '/api/admin/overview', cookie=adm)[1]['users']}
         self.assertEqual((users['Seiya_Econ']['boosters'], users['Seiya_Econ']['full_access']), (1, True))
+        # pacotes com desconto (1/3/10/25: 0/5/10/20%) e abrir até 10 de uma vez
+        self.assertEqual([(x['qty'], x['price']) for x in b['prices']['bundles']], [(1, 1000), (3, 2850), (10, 9000), (25, 20000)])
+        self.assertEqual(self.call('POST', '/api/store/buy', {'item': 'booster', 'qty': 7}, cookie=c)[0], 400)
+        self.call('POST', '/api/admin/users/Seiya_Econ/economy', {'coins': 20000, 'reason': 'test'}, cookie=adm)
+        before = self.call('GET', '/api/economy', cookie=c)[1]['coins']
+        b = self.call('POST', '/api/store/buy', {'item': 'booster', 'qty': 25}, cookie=c)[1]
+        self.assertEqual((before - b['coins'], b['boosters']), (20000, 26))
+        self.assertEqual(self.call('POST', '/api/boosters/open', {'count': 11}, cookie=c)[0], 400)
+        o = self.call('POST', '/api/boosters/open', {'count': 10}, cookie=c)[1]
+        self.assertEqual((len(o['packs']), len(o['cards']), o['boosters']), (10, 140, 16))
+        self.call('POST', '/api/admin/users/Seiya_Econ/economy', {'boosters': -14}, cookie=adm)
+        o = self.call('POST', '/api/boosters/open', {'count': 10}, cookie=c)[1]  # "Open all (2)"
+        self.assertEqual((len(o['packs']), o['boosters']), (2, 0))
+        # cosméticos: avatar/sleeve/box por personagem, trio com -20%; usar só o que tem
+        cos = {i['id']: i for g in o['cosmetics'] for i in g['items']}
+        self.assertEqual((cos['god-hades']['avatar']['price'], cos['god-hades']['sleeve']['price'], cos['athena-v6-001']['set']), (0, 3000, 2800))
+        self.assertTrue(cos['god-hades']['avatar']['owned'])
+        self.assertTrue(all('-ref' not in i for i in cos))
+        server.db.execute("update users set full_access = 0 where username = 'seiya_econ'")
+        self.assertEqual(self.call('PATCH', '/api/me', {'sleeve': 'athena-v6-001'}, cookie=c)[0], 400)  # ainda não comprou
+        self.assertEqual(self.call('POST', '/api/store/buy', {'item': 'sleeve', 'id': 'nope'}, cookie=c)[0], 400)
+        self.call('POST', '/api/admin/users/Seiya_Econ/economy', {'coins': 10000, 'reason': 'test'}, cookie=adm)
+        before = self.call('GET', '/api/economy', cookie=c)[1]['coins']
+        e = self.call('POST', '/api/store/buy', {'item': 'avatar', 'id': 'athena-v6-001'}, cookie=c)[1]
+        self.assertEqual(before - e['coins'], 500)
+        self.assertEqual(self.call('POST', '/api/store/buy', {'item': 'avatar', 'id': 'athena-v6-001'}, cookie=c)[0], 400)  # já tem
+        e = self.call('POST', '/api/store/buy', {'item': 'set', 'id': 'athena-v6-001'}, cookie=c)[1]  # trio: paga só o que falta
+        self.assertEqual(before - e['coins'], 3500)
+        st, me, _, _ = self.call('PATCH', '/api/me', {'sleeve': 'athena-v6-001', 'avatar_card': 'athena-v6-001'}, cookie=c)
+        self.assertEqual((st, me['sleeve'], me['avatar_card']), (200, 'athena-v6-001', 'athena-v6-001'))
+        self.assertEqual(self.call('PUT', '/api/decks/d1', {'data': {'main_deck': [], 'box': 'hades-v6-181'}, 'revision': 0}, cookie=c)[0], 400)
+        self.assertEqual(self.call('PUT', '/api/decks/d1', {'data': {'main_deck': [], 'box': 'athena-v6-001'}, 'revision': 0}, cookie=c)[0], 200)
+        before = self.call('GET', '/api/economy', cookie=c)[1]['coins']
+        e = self.call('POST', '/api/store/buy', {'item': 'set', 'id': 'god-ares'}, cookie=c)[1]  # Deus: avatar grátis, trio = sleeve + box com -20%
+        self.assertEqual((before - e['coins'], cos['god-ares']['set']), (4800, 4800))
+        self.assertEqual(self.call('GET', '/api/profile/Saga_Adm', cookie=c)[0], 200)
         # duelo online: deck com carta que não tem é recusado; acesso total libera
         rare = next(cid for cid in server.CATALOG['booster']['Divine'] if cid not in server.CATALOG['starter'])
         with server.lock:

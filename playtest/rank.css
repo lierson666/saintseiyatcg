@@ -57,6 +57,8 @@
 /* Placa ancorada ao lado do God (rank.js mountNameplates: hoje só a do oponente). */
 .rk-plate.is-anchored { right: auto; bottom: auto; transform: translateY(-50%); padding: 6px 18px 6px 8px; }
 .rk-plate.is-anchored .rk-emblem { height: 52px; }
+.rk-plate__avatar { flex: none; width: 72px; height: 72px; border-radius: 50%; border: 2px solid #e9c45c; background: #141826 center 18% / cover no-repeat; box-shadow: 0 0 0 3px #0b0d14; }
+.rk-plate.is-anchored .rk-plate__avatar { width: 46px; height: 46px; }
 .rk-plate.is-anchored b { font-size: 22px; } .rk-plate.is-anchored small { font-size: 16px; }
 
 /* Perfil de jogador (lobby): resumo do rank. */

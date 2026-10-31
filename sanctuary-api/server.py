@@ -50,6 +50,47 @@ ARENA_SECRET = os.environ.get('ARENA_SECRET', '')
 CATALOG = json.loads(Path(__file__).with_name('catalog.json').read_text())
 BOOSTER = 'booster-olympus'
 PRICES = {BOOSTER: 1000}
+# Pacotes da loja (autor, 31/10/2026, estilo MTG Arena): quantidade -> desconto em %. Edição pelo Star Hill fica para depois.
+BUNDLES = {1: 0, 3: 5, 10: 10, 25: 20}
+MAX_OPEN = 10  # abrir de uma vez: 1 ou até 10
+
+
+def bundle_price(qty):
+    return PRICES[BOOSTER] * qty * (100 - BUNDLES[qty]) // 100
+
+
+# Cosméticos (autor, 31/10/2026): avatar (rosto), sleeve (verso das cartas) e deck box por personagem.
+# Só personagens com arte final; arte -ref (provisória) nunca vai à loja. Deuses custam o dobro; avatar de Deus é grátis.
+# Item no inventário: 'avatar:<id>', 'sleeve:<id>', 'box:<id>'. O id é o da carta (Deus: 'god-<nome>').
+COSMETIC_GROUPS = (
+    ('Gods', [('god-athena', 'Athena'), ('god-poseidon', 'Poseidon'), ('god-hades', 'Hades'), ('god-ares', 'Ares'), ('god-artemis', 'Artemis')]),
+    ('Bronze Saints', [('athena-v6-001', 'Pegasus Seiya'), ('athena-v6-003', 'Dragon Shiryu'), ('athena-v6-005', 'Cygnus Hyoga'),
+                       ('athena-v6-007', 'Andromeda Shun'), ('athena-v6-009', 'Phoenix Ikki')]),
+    ('Gold Saints', [('athena-v6-011', 'Aries Mu'), ('athena-v6-013', 'Gemini Saga'), ('athena-v6-015', 'Leo Aiolia'),
+                     ('athena-v6-017', 'Aquarius Camus'), ('hades-v6-197', 'Aries Shion'), ('hades-v6-253', 'Capricorn Shura')]),
+    ('Judges of the Underworld', [('hades-v6-181', 'Wyvern Rhadamanthys'), ('hades-v6-183', 'Griffon Minos'), ('hades-v6-185', 'Garuda Aiacos')]),
+)
+COSMETIC_KINDS = {'avatar': 500, 'sleeve': 1500, 'box': 1500}
+SET_OFF = 20  # trio avatar + sleeve + box do mesmo personagem
+COSMETICS = {cid: name for _, chars in COSMETIC_GROUPS for cid, name in chars}
+
+
+def cosmetic_price(kind, cid):
+    if kind == 'avatar' and cid.startswith('god-'):
+        return 0
+    return COSMETIC_KINDS[kind] * (2 if cid.startswith('god-') else 1)
+
+
+def set_price(cid):
+    return sum(cosmetic_price(k, cid) for k in COSMETIC_KINDS) * (100 - SET_OFF) // 100
+
+
+def owns_cosmetic(uid, kind, cid):
+    if cid not in COSMETICS or kind not in COSMETIC_KINDS:
+        return False
+    if cosmetic_price(kind, cid) == 0:
+        return True
+    return bool(db.execute('select full_access from users where id = ?', (uid,)).fetchone()[0]) or item_count(uid, f'{kind}:{cid}') > 0
 WELCOME_BOOSTERS = 3
 COPY_LIMIT = 3
 DUPLICATE_COINS = {'Common': 25, 'Uncommon': 50, 'Legendary': 200, 'Divine': 500}
@@ -127,7 +168,7 @@ def open_db(path=DB_PATH):
     db.executescript('pragma journal_mode=wal; pragma foreign_keys=on;' + SCHEMA)
     # Migração do cadastro completo: colunas novas em contas antigas (ficam vazias até o perfil ser completado).
     have = {r['name'] for r in db.execute('pragma table_info(users)')}
-    for col in ('username', 'username_display', 'country', 'phone', 'friend_code', 'avatar_card', 'accepted_terms_at', 'last_seen', 'status', 'suspended_at', 'full_access'):
+    for col in ('username', 'username_display', 'country', 'phone', 'friend_code', 'avatar_card', 'sleeve', 'accepted_terms_at', 'last_seen', 'status', 'suspended_at', 'full_access'):
         if col not in have:
             db.execute(f'alter table users add column {col}')
     have = {r['name'] for r in db.execute('pragma table_info(messages)')}
@@ -165,7 +206,7 @@ def new_friend_code(display):  # Nome#1234, único
 
 def profile(u):  # dados que o próprio jogador vê
     return {'email': u['email'], 'name': u['display_name'], 'username': u['username_display'], 'friend_code': u['friend_code'],
-            'country': u['country'], 'phone': u['phone'], 'avatar_card': u['avatar_card'], 'complete': bool(u['username']),
+            'country': u['country'], 'phone': u['phone'], 'avatar_card': u['avatar_card'], 'sleeve': u['sleeve'], 'complete': bool(u['username']),
             'admin': u['email'] in ADMINS}
 
 
@@ -286,7 +327,11 @@ def economy_of(uid):
     u = db.execute('select full_access from users where id = ?', (uid,)).fetchone()
     return {'coins': coins_of(uid), 'boosters': item_count(uid, BOOSTER), 'full_access': bool(u['full_access']),
             'collection': {r['card_id']: r['qty'] for r in db.execute('select card_id, qty from collection where user_id = ?', (uid,))},
-            'prices': {'booster': PRICES[BOOSTER]}}
+            'prices': {'booster': PRICES[BOOSTER], 'bundles': [{'qty': q, 'off': off, 'price': bundle_price(q)} for q, off in BUNDLES.items()]},
+            'cosmetics': [{'group': g, 'items': [{'id': cid, 'name': name, 'set': set_price(cid),
+                                                   **{k: {'price': cosmetic_price(k, cid), 'owned': owns_cosmetic(uid, k, cid)} for k in COSMETIC_KINDS}}
+                                                  for cid, name in chars]} for g, chars in COSMETIC_GROUPS],
+            'set_off': SET_OFF}
 
 
 def level_of(xp):
@@ -346,6 +391,8 @@ def clean_profile(body, partial=False):
         out['phone'] = phone or None
     if 'avatar_card' in body:
         out['avatar_card'] = str(body.get('avatar_card') or '')[:80] or None
+    if 'sleeve' in body:
+        out['sleeve'] = str(body.get('sleeve') or '')[:80] or None
     return out
 
 
@@ -587,6 +634,9 @@ class Handler(BaseHTTPRequestHandler):
                 fields.update(username=username.lower(), username_display=username, friend_code=new_friend_code(username))
             if body.get('accept_terms') is True and not user['accepted_terms_at']:
                 fields['accepted_terms_at'] = int(time.time())
+            for kind, col in (('avatar', 'avatar_card'), ('sleeve', 'sleeve')):  # cosmético só se for do jogador
+                if fields.get(col) and not owns_cosmetic(user['id'], kind, fields[col]):
+                    raise ApiError(400, 'Get this in the Store first.')
             if fields:
                 db.execute(f'update users set {", ".join(k + " = ?" for k in fields)} where id = ?', (*fields.values(), user['id']))
             fresh = db.execute('select * from users where id = ?', (user['id'],)).fetchone()
@@ -828,6 +878,8 @@ class Handler(BaseHTTPRequestHandler):
             raise ApiError(400, 'This deck is not valid.')
         now = int(time.time())
         with lock:
+            if data.get('box') and not owns_cosmetic(user['id'], 'box', str(data['box'])):
+                raise ApiError(400, 'Get this deck box in the Store first.')
             if not db.execute('select 1 from decks where user_id = ? and deck_id = ?', (user['id'], deck_id)).fetchone() and \
                     db.execute('select count(*) from decks where user_id = ? and deleted_at is null', (user['id'],)).fetchone()[0] >= MAX_DECKS:
                 raise ApiError(400, f'You can keep up to {MAX_DECKS} decks.')
@@ -958,7 +1010,7 @@ class Handler(BaseHTTPRequestHandler):
         have = {'played': played, 'wins': wins, 'tier': tier, 'level': r['level'], 'ai_wins': ai_wins}
         achievements = [{'id': i, 'name': n, 'description': d, 'done': have[m] >= goal} for i, n, d, m, goal in ACHIEVEMENTS]
         self.send_json(200, {'rank': {k: r[k] for k in ('tier', 'division', 'pips', 'points', 'level', 'title')}, 'achievements': achievements, 'username': u['username_display'], 'country': u['country'], 'joined': u['created_at'],
-                             'avatar_card': u['avatar_card'], 'stats': {'played': played, 'wins': wins, 'losses': losses,
+                             'avatar_card': u['avatar_card'], 'sleeve': u['sleeve'], 'stats': {'played': played, 'wins': wins, 'losses': losses,
                              'winrate': round(100 * wins / played) if played else 0}, 'recent': recent})
 
     def arena_create(self, players, decks):
@@ -1051,27 +1103,62 @@ class Handler(BaseHTTPRequestHandler):
 
     def store_buy(self):
         uid = self.require_user()['id']
-        if self.read_json().get('item') != 'booster':
+        body = self.read_json()
+        if body.get('item') in COSMETIC_KINDS or body.get('item') == 'set':
+            return self.buy_cosmetic(uid, body.get('item'), str(body.get('id', '')))
+        if body.get('item') != 'booster':
             raise ApiError(400, 'Unknown item.')
+        try:
+            qty = int(body.get('qty', 1))
+        except (TypeError, ValueError):
+            qty = 0
+        if qty not in BUNDLES:
+            raise ApiError(400, 'Unknown bundle.')
+        price = bundle_price(qty)
         with lock:
             welcome(uid)
-            if coins_of(uid) < PRICES[BOOSTER]:
+            if coins_of(uid) < price:
                 raise ApiError(400, 'Not enough Cosmo Coins.')
-            add_coins(uid, -PRICES[BOOSTER], f'buy:{BOOSTER}')
-            add_item(uid, BOOSTER, 1)
+            add_coins(uid, -price, f'buy:{BOOSTER}x{qty}')
+            add_item(uid, BOOSTER, qty)
+            state = economy_of(uid)
+        self.send_json(200, state)
+
+    def buy_cosmetic(self, uid, kind, cid):
+        if cid not in COSMETICS:
+            raise ApiError(400, 'Unknown item.')
+        with lock:
+            kinds = [k for k in COSMETIC_KINDS if not owns_cosmetic(uid, k, cid)] if kind == 'set' else [kind]
+            if not kinds or kind != 'set' and owns_cosmetic(uid, kind, cid):
+                raise ApiError(400, 'You already have this.')
+            # trio: desconto só com os 3 por comprar; com parte já comprada, paga só o que falta
+            paid = [k for k in COSMETIC_KINDS if cosmetic_price(k, cid)]
+            price = set_price(cid) if kind == 'set' and kinds == paid else sum(cosmetic_price(k, cid) for k in kinds)
+            if coins_of(uid) < price:
+                raise ApiError(400, 'Not enough Cosmo Coins.')
+            add_coins(uid, -price, f'buy:{kind}:{cid}')
+            for k in kinds:
+                add_item(uid, f'{k}:{cid}', 1)
             state = economy_of(uid)
         self.send_json(200, state)
 
     def booster_open(self):
         uid = self.require_user()['id']
+        try:
+            want = int(self.read_json().get('count', 1))
+        except (TypeError, ValueError):
+            want = 0
+        if not 1 <= want <= MAX_OPEN:
+            raise ApiError(400, f'Open 1 to {MAX_OPEN} boosters at a time.')
         with lock:
             welcome(uid)
-            if item_count(uid, BOOSTER) < 1:
+            n = min(want, item_count(uid, BOOSTER))  # "Open all (N)": abre o que houver, até o pedido
+            if n < 1:
                 raise ApiError(400, 'You have no boosters to open.')
-            add_item(uid, BOOSTER, -1)
-            cards = open_pack(uid)
+            add_item(uid, BOOSTER, -n)
+            packs = [open_pack(uid) for _ in range(n)]
             state = economy_of(uid)
-        self.send_json(200, {'cards': cards, **state})
+        self.send_json(200, {'cards': [c for p in packs for c in p], 'packs': packs, **state})
 
     # ---------- painel do sistema (/admin/, aberto pelo Star Hill) ----------
     def admin(self, method, path):

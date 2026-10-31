@@ -21,7 +21,7 @@ import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
 import {createDirector} from './director.js?v=18';
 import {createAI} from './ai.js?v=5';
 import {findDeck} from '../deck-store.js';
-import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-9';
+import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-cos1';
 import {unlock, playMusic} from '../audio.js?v=20261030-telas';
 import {telas, anim, sound, imageUrl, applyColors, applyTexts} from '../telas.js?v=20261030-1';
 import {renderLiveCard, renderCardText} from '../../shared/live-card.js?v=20261031-ed5';
@@ -415,6 +415,10 @@ function tokenArt(forge) {
 }
 // Bônus impresso de qualquer Equipment (Armor: bonus_poder/bonus_vida; armas: linha "Equipped Devotee gets").
 const printedBonusFields = f => { const b = printedEquipmentBonuses(f); return {bonus_poder: b.power || 0, bonus_vida: b.hp || 0}; };
+// Sleeve (cosmético da loja, 31/10/2026): verso das cartas de cada jogador, visto pelos dois (como no Arena).
+const sleeves = {};
+const sleeveVar = key => { const id = sleeves[key], f = id && FORGE.get(id.replace(/^god-(.+)$/, '$1-001')); return f?.ilustracao ? `--sleeve:url('${forgeArt(f.ilustracao)}');` : ''; };
+const useSleeves = (r, me) => { if (!r) return; sleeves[me] = r.me?.sleeve; sleeves[me === 'A' ? 'B' : 'A'] = r.foe?.sleeve; render(); };
 function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
   if (hidden || !ctx.objects[uid]) return `<div class="dcard dcard--back ${size}" data-uid="${uid}" aria-label="Face-down card"><span></span></div>`;
   const s = S(), c = info(uid), n = num(uid), unit = s.units[uid];
@@ -543,7 +547,7 @@ function sanctum(key, side) {
         `Cosmo Base|${ready} of ${p.bases.length} prepared${pooled ? `, ${pooled} burning in your pool` : ''}. Prepared Bases pay card and ability costs. Click a Base on the field to burn it into your pool. Once per round you may place a Cosmoble card as a Base.`, 'data-bank-unit="base"')}
       ${row('rail__row--latent', flames, 'Latent', `${p.latent}<small>/3</small>`, `Latent Cosmo|${p.latent} of 3 stored. At round end, unused Bases can be stored here.`, 'data-bank-unit="latent"')}
     </div>
-    ${row(`zdeck ${n ? '' : 'is-empty'}`, '<i class="zdeck__back"></i>', 'Deck', n, `Deck|${plural(n, 'card')} left. Each player draws 2 cards per turn.`, `data-deck="${key}"`)}
+    ${row(`zdeck ${n ? '' : 'is-empty'}`, '<i class="zdeck__back"></i>', 'Deck', n, `Deck|${plural(n, 'card')} left. Each player draws 2 cards per turn.`, `data-deck="${key}" style="${sleeveVar(key)}"`)}
     ${row('rail__row--hand', '<i class="rail__hand"></i>', 'Hand', p.hand.length, `Hand|${plural(p.hand.length, 'card')}.`)}
     ${row('zpile zpile--tartarus', '<img class="zicon" src="./assets/tartarus.png" alt="">', 'Tartarus', p.tartarus.length, `Tartarus|${plural(p.tartarus.length, 'card')}. Destroyed Devotees go here. Afterlife abilities work from here. Click to view.`, `data-pile="${key}:tartarus"`)}
     ${row('zpile zpile--void', '<img class="zicon" src="./assets/void.png" alt="">', 'Void', p.void.length, `Void|${plural(p.void.length, 'card')}. Exiled cards go here. Click to view.`, `data-pile="${key}:void"`)}
@@ -582,7 +586,7 @@ function cosmoLane(key, side) {
       : mine ? 'Cosmo Base|Prepared. Click to burn its Cosmo into your pool.' : 'Cosmo Base|Prepared.';
     return `<div class="lane__base ${b.prepared ? '' : 'tapped'} ${pooled ? 'pooled' : ''} ${anim}" data-slot="${b.uid}" data-tip="${tip}">${face}</div>`;
   }).join('');
-  return `<section class="lane lane--${side}" data-lane="${key}" style="--n:${bases.length}" aria-label="Player ${key} Cosmo Bases">${slots || '<p class="lane__empty">Cosmo Bases</p>'}</section>`;
+  return `<section class="lane lane--${side}" data-lane="${key}" style="--n:${bases.length};${sleeveVar(key)}" aria-label="Player ${key} Cosmo Bases">${slots || '<p class="lane__empty">Cosmo Bases</p>'}</section>`;
 }
 // Faixa do God (autor, 28/10/2026): Bases à esquerda do God; equipamento solto continua no campo.
 function fieldRow(key) {
@@ -600,7 +604,7 @@ function fieldRow(key) {
 
 function handRow(key, hidden) {
   const hand = S().players[key].hand, n = hand.length;
-  return `<div class="hand hand--${hidden ? 'opp' : 'me'}" data-hand="${key}" style="--n:${n}">${hand.map((u, i) => {
+  return `<div class="hand hand--${hidden ? 'opp' : 'me'}" data-hand="${key}" style="--n:${n};${sleeveVar(key)}">${hand.map((u, i) => {
     const playable = !hidden && !playableReason(key, u), base = !hidden && canBase(key, u);
     return `<div class="hand__slot ${playable ? 'playable' : ''} ${base ? 'baseable' : ''}" style="--i:${i}">${cardFace(u, {hidden, size: hidden ? 'dcard--sm' : ''})}</div>`;
   }).join('')}</div>`;
@@ -2032,7 +2036,7 @@ async function applyView(view) {
   const s = S(), req = s.pending;
   pending = req ? {pending: req, picked: [], peek: true, shown: s.events.length} : null;
   mode = null;
-  if (first) { mountNameplates({online: true, players: view.players, you: view.you}); clock = createClock(s.order); seenEvents = s.events.length; watchEvents.seen = 0; return render(); }
+  if (first) { mountNameplates({online: true, players: view.players, you: view.you}).then(r => useSleeves(r, view.you)); clock = createClock(s.order); seenEvents = s.events.length; watchEvents.seen = 0; return render(); }
   const events = s.events.slice(from);
   seenEvents = s.events.length;
   syncClock(events);
@@ -2108,7 +2112,7 @@ async function init() {
     newMatch(Number(params.get('seed')) || undefined, params.get('demo') ? 'A' : ['A', 'B'].includes(params.get('first')) ? params.get('first') : undefined);
     applyDemo(params.get('demo'));
     render();
-    if (settings.ai !== 'none') mountNameplates({online: false}); // hot-seat não tem dono de conta em cada lado
+    if (settings.ai !== 'none') mountNameplates({online: false}).then(r => useSleeves(r, settings.ai === 'A' ? 'B' : 'A')); // hot-seat não tem dono de conta em cada lado
   }
   requestAnimationFrame(watchEvents);
   setInterval(tickClock, 250);

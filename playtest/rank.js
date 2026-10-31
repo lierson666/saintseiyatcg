@@ -1,10 +1,13 @@
 // Ranking e XP do Olympus Arena (docs/ranking-xp.md, aprovado em 31/10/2026). O sanctuary-api calcula rank e XP;
 // aqui só se desenha: selo na barra do lobby, painel de rank e o resumo animado no fim da partida.
+import {lightArt} from '../shared/light-art.js';
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const ROMAN = ['', 'I', 'II', 'III', 'IV'];
 const TIERS = ['Steel', 'Iron', 'Bronze', 'Silver', 'Gold', 'Kamui'];
 const CACHE = 'sstcg.rank.v1'; // último rank visto: base do "antes → depois" no fim da partida
 const PIPS = 6;
+// Avatar (cosmético da loja): id da carta do personagem; Deus é 'god-<nome>' e usa a arte '<nome>-001'.
+const avatarUrl = id => id ? lightArt(new URL(`../card-forge/art-web/${id.replace(/^god-(.+)$/, '$1-001')}.jpg`, import.meta.url).href, 'thumb') : null;
 
 // Lendas (autor, 31/10/2026): nome em dourado, como os devs no MTG Arena. Usernames são únicos (índice users_username).
 const LEGENDS = new Set(['lierson']);
@@ -112,10 +115,10 @@ export async function mountNameplates({online, players, you}) {
   const [me, mine] = await Promise.all([call('/api/me').catch(() => null), call('/api/rank').catch(() => cached())]);
   const foeName = online ? players?.[Object.keys(players).find(k => k !== you)] : null;
   const foe = foeName ? await call(`/api/profile/${encodeURIComponent(foeName)}`).catch(() => null) : null;
-  const plate = (side, name, r) => `<aside class="rk-plate rk-plate--${side}" aria-label="${side === 'me' ? 'You' : 'Opponent'}: ${esc(name)}${r ? `, ${esc(rankName(r))}` : ''}">
-    ${r ? emblem(r) : ''}<span><b>${playerName(name)}</b>${r ? `<small>${esc(rankName(r))} · Lv ${r.level}</small>` : ''}</span></aside>`;
-  document.body.insertAdjacentHTML('beforeend', plate('foe', foe?.username || foeName || 'AI Opponent', foe?.rank)
-    + (me ? plate('me', me.username, mine) : ''));
+  const plate = (side, name, r, avatar) => `<aside class="rk-plate rk-plate--${side}" aria-label="${side === 'me' ? 'You' : 'Opponent'}: ${esc(name)}${r ? `, ${esc(rankName(r))}` : ''}">
+    ${avatar ? `<i class="rk-plate__avatar" style="background-image:url('${avatarUrl(avatar)}')" aria-hidden="true"></i>` : ''}${r ? emblem(r) : ''}<span><b>${playerName(name)}</b>${r ? `<small>${esc(rankName(r))} · Lv ${r.level}</small>` : ''}</span></aside>`;
+  document.body.insertAdjacentHTML('beforeend', plate('foe', foe?.username || foeName || 'AI Opponent', foe?.rank, foe?.avatar_card || (foeName && 'god-athena'))
+    + (me ? plate('me', me.username, mine, me.avatar_card || 'god-athena') : ''));
   // Placa do oponente ao lado do God dele, como no Arena; a sua fica no bloco do canto direito, acima do botão de ação.
   // O HUD do God é redesenhado a cada render, então a posição é conferida de tempos em tempos.
   const place = () => [['foe', 'opp']].forEach(([side, hudSide]) => {
@@ -127,4 +130,5 @@ export async function mountNameplates({online, players, you}) {
     plate.style.top = `${Math.round(hud.top + hud.height / 2)}px`;
   });
   place(); setInterval(place, 500); addEventListener('resize', place);
+  return {me, foe}; // sleeves dos dois lados (duelo)
 }

@@ -47,12 +47,38 @@ document.addEventListener('pointerout', e => {
   if (p && !p.contains(e.relatedTarget)) { p.classList.remove('is-tilting'); ['--rx', '--ry'].forEach(k => p.style.removeProperty(k)); }
 });
 
-export function storeScreen(e) {
+// Cosméticos (autor, 31/10/2026): avatar, sleeve e deck box por personagem; o servidor manda catálogo, preço e posse.
+// art(id, size) devolve a arte do personagem (Deus: 'god-<nome>'); o rosto do avatar é recorte automático da arte.
+export const COS_KINDS = [['avatar', 'Avatar'], ['sleeve', 'Sleeve'], ['box', 'Deck box']];
+export const cosPreview = (kind, url) => `<span class="ec-cos-${kind}" style="background-image:url('${url || ''}')" aria-hidden="true"></span>`;
+function cosmetics(e, art, me) {
+  const using = {avatar: me?.avatar_card || 'god-athena', sleeve: me?.sleeve || null};
+  const tile = (c, kind, label) => { const it = c[kind], on = using[kind] === c.id;
+    const btn = !it.owned ? `<button class="ec-cta ec-cos__buy" data-act="buy-cos" data-kind="${kind}" data-id="${c.id}" ${e.coins >= it.price ? '' : 'disabled'} aria-label="Buy ${label} ${esc(c.name)} for ${fmt(it.price)} Cosmo Coins"><i class="ec-coin" aria-hidden="true"></i>${fmt(it.price)}</button>`
+      : kind === 'box' ? '<span class="ec-cos__own">Owned · pick it in Decks</span>'
+      : on ? '<span class="ec-cos__own is-on">In use</span>' : `<button class="ec-cos__use" data-act="use-cos" data-kind="${kind}" data-id="${c.id}">Use</button>`;
+    return `<li class="ec-cos__tile ${it.owned ? 'is-owned' : ''}">${cosPreview(kind, art(c.id, kind === 'avatar' ? 'thumb' : 'webp'))}<small>${label}${it.price ? '' : ' · Free'}</small>${btn}</li>`; };
+  const card = c => { const paid = COS_KINDS.filter(([k]) => c[k].price), full = paid.reduce((n, [k]) => n + c[k].price, 0);
+    const set = paid.every(([k]) => !c[k].owned) ? `<button class="ec-cta ec-cos__set" data-act="buy-cos" data-kind="set" data-id="${c.id}" ${e.coins >= c.set ? '' : 'disabled'} aria-label="Buy the full set of ${esc(c.name)} for ${fmt(c.set)} Cosmo Coins, ${e.set_off}% off">
+        Full set <b class="ec-bundle__off">-${e.set_off}%</b><i class="ec-coin" aria-hidden="true"></i><s>${fmt(full)}</s>${fmt(c.set)}</button>` : '';
+    return `<article class="ec-cos"><h4>${esc(c.name)}</h4><ul>${COS_KINDS.map(([k, l]) => tile(c, k, l)).join('')}</ul>${set}</article>`; };
+  return (e.cosmetics || []).map(g => `<h3 class="ec-cos__group">${esc(g.group)}</h3><div class="ec-cos__grid">${g.items.map(card).join('')}</div>`).join('');
+}
+
+export function storeScreen(e, art = () => null, me = null) {
   if (!e) return `<section class="lb-page"><header class="lb-page__head"><h1>Store</h1><p>Sign in to buy and open boosters.</p></header></section>`;
   // Layout (autor pediu /ui-ux-pro-max, 31/10/2026): vitrine preto + dourado; booster em destaque, cosméticos "em breve" embaixo.
   const price = e.prices.booster, can = e.coins >= price;
+  // Pacotes com desconto escalonado (autor, 31/10/2026, estilo MTG Arena): 1, 3, 10 e 25, preço riscado e selo do desconto.
+  const bundles = e.prices.bundles || [{qty: 1, off: 0, price}];
+  const bundle = b => { const ok = e.coins >= b.price, full = price * b.qty;
+    return `<li class="ec-bundle ${b.off ? 'has-off' : ''}">${b.off ? `<b class="ec-bundle__off">-${b.off}%</b>` : ''}
+      <strong>${b.qty}</strong><small>${b.qty === 1 ? 'Booster' : 'Boosters'}</small>
+      <button class="ec-cta ec-bundle__buy" data-act="buy-booster" data-qty="${b.qty}" ${ok ? '' : 'disabled'} aria-label="Buy ${b.qty} for ${fmt(b.price)} Cosmo Coins${b.off ? `, ${b.off}% off` : ''}">
+        <i class="ec-coin" aria-hidden="true"></i>${b.off ? `<s>${fmt(full)}</s>` : ''}${fmt(b.price)}</button></li>`; };
+  // Abrir 1 ou 10 de uma vez; com menos de 10, "Open all (N)".
+  const opens = e.boosters > 1 ? `<button class="ec-cta ec-cta--open" data-act="open-booster" data-count="${Math.min(10, e.boosters)}">${e.boosters >= 10 ? 'Open 10' : `Open all (${e.boosters})`}</button>` : '';
   const odds = [['10', 'Common'], ['3', 'Uncommon'], ['1', 'Legendary or Divine']];
-  const soon = [['Sleeves', 'Card backs for your decks'], ['Avatars', 'Your portrait in the lobby'], ['God art', 'New art for your God on the table']];
   return `<section class="lb-page ec-store">
     <header class="ec-store__head"><div><h1>Store</h1><p>Spend Cosmo Coins earned in duels.</p></div>
       <div class="ec-wallet" aria-label="Your wallet"><span><i class="ec-coin" aria-hidden="true"></i><b>${fmt(e.coins)}</b><small>Cosmo Coins</small></span>
@@ -64,15 +90,13 @@ export function storeScreen(e) {
         <h2>Olympus</h2>
         <ul class="ec-odds" aria-label="Each booster has 14 cards">${odds.map(([n, r]) => `<li><b>${n}</b>${r}</li>`).join('')}</ul>
         <p class="ec-note">A Divine card replaces the Legendary in about 1 of 8 boosters. Copies beyond 3 turn into Cosmo Coins.</p>
-        <div class="ec-actions">
-          ${e.boosters ? `<button class="ec-cta" data-act="open-booster">Open booster (${e.boosters})</button>` : ''}
-          <button class="ec-cta ${e.boosters ? 'ec-cta--open' : ''}" data-act="buy-booster" ${can ? '' : 'disabled'} aria-describedby="ec-price-hint"><i class="ec-coin" aria-hidden="true"></i>Buy · ${fmt(price)}</button>
-        </div>
-        <p class="ec-hint" id="ec-price-hint">${can ? `You'll have ${fmt(e.coins - price)} left.` : `${fmt(price - e.coins)} more Cosmo Coins to buy one.`}</p>
+        ${e.boosters ? `<div class="ec-actions"><button class="ec-cta" data-act="open-booster" data-count="1">Open 1</button>${opens}</div>` : ''}
+        <ul class="ec-bundles" aria-label="Buy boosters">${bundles.map(bundle).join('')}</ul>
+        ${can ? '' : `<p class="ec-hint">${fmt(price - e.coins)} more Cosmo Coins to buy one.</p>`}
       </div>
     </article>
-    <h2 class="ec-section">Cosmetics <span>Coming soon</span></h2>
-    <div class="ec-soon">${soon.map(([t, d]) => `<article class="ec-soon__item"><h3>${t}</h3><p>${d}</p></article>`).join('')}</div>
+    <h2 class="ec-section">Cosmetics <span>Avatar · Sleeve · Deck box</span></h2>
+    ${cosmetics(e, art, me)}
   </section>`;
 }
 
@@ -93,7 +117,7 @@ export function collectionScreen(e, list, face, filter = 'all') {
 
 // Abertura (estilo MTG Arena): o pacote rasga, as 14 cartas caem viradas; clique vira uma, "Reveal all" vira todas.
 // Legendary e Divine brilham antes de virar; repetidas acima de 3 mostram as coins que viraram.
-export async function openBooster(face, done, count = 1) {
+export async function openBooster(face, done, count = 1, open = 1) {
   const dlg = document.createElement('dialog');
   dlg.className = 'ec-open';
   dlg.setAttribute('aria-label', 'Opening booster');
@@ -146,10 +170,11 @@ export async function openBooster(face, done, count = 1) {
   const p = front(), slot = p.parentElement;
   cut.classList.add('is-done');
   slot.insertAdjacentHTML('beforeend', `<div class="ec-strip">${p.outerHTML}</div>`);
-  p.classList.add('is-torn');
+  // Vários de uma vez: todos os pacotes do leque rasgam juntos.
+  (open > 1 ? ring.querySelectorAll('.ec-pack') : [p]).forEach(x => x.classList.add('is-torn'));
   ring.classList.add('is-opening');
   let r;
-  try { r = await call('/api/boosters/open', 'POST'); } catch (err) {
+  try { r = await call('/api/boosters/open', 'POST', {count: open}); } catch (err) {
     dlg.innerHTML = `<p class="kv-status err" role="status">${esc(err.message)}</p><button class="kv-ghost" data-close>Close</button>`;
     dlg.querySelector('[data-close]').onclick = () => dlg.close();
     dlg.addEventListener('close', () => dlg.remove());
@@ -157,7 +182,8 @@ export async function openBooster(face, done, count = 1) {
   }
   await new Promise(ok => setTimeout(ok, matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 900));
   const coins = r.cards.reduce((n, c) => n + c.coins, 0);
-  dlg.innerHTML = `<div class="ec-open__cards">${r.cards.map((c, i) => `<button class="ec-flip is-${c.rarity.toLowerCase()} ${c.new ? 'is-new' : ''}" style="--i:${i}" data-i="${i}" data-id="${esc(c.id)}" aria-label="Reveal card ${i + 1}">
+  if (r.packs?.length > 1) summary(dlg, r, face, coins);
+  else dlg.innerHTML = `<div class="ec-open__cards">${r.cards.map((c, i) => `<button class="ec-flip is-${c.rarity.toLowerCase()} ${c.new ? 'is-new' : ''}" style="--i:${i}" data-i="${i}" data-id="${esc(c.id)}" aria-label="Reveal card ${i + 1}">
       <span class="ec-flip__back"><img src="${LOGO}" alt=""></span><span class="ec-flip__front">${face(c.id)}
       ${c.new ? '<b class="ec-tag ec-tag--new">New</b>' : ''}${c.coins ? `<b class="ec-tag ec-tag--coins">+${c.coins}</b>` : ''}</span></button>`).join('')}</div>
     <footer class="ec-open__foot"><button class="kv-ghost" data-reveal>Reveal all</button>
@@ -169,7 +195,7 @@ export async function openBooster(face, done, count = 1) {
   const unzoom = () => { zoom.hidden = true; zoom.innerHTML = ''; };
   dlg.addEventListener('contextmenu', ev => {
     ev.preventDefault();
-    const b = ev.target.closest('.ec-flip.is-open');
+    const b = ev.target.closest('.ec-flip.is-open, .ec-sum__card');
     if (!zoom.hidden || !b) return unzoom();
     zoom.innerHTML = face(b.dataset.id, 'lb-card--big');
     zoom.hidden = false;
@@ -209,4 +235,20 @@ export async function openBooster(face, done, count = 1) {
   dlg.addEventListener('close', () => { dlg.remove(); done(r); });
 }
 
-export const buyBooster = () => call('/api/store/buy', 'POST', {item: 'booster'});
+// Resumo de vários boosters (autor, 31/10/2026): uma tela só, cartas agrupadas; Divine e Legendary primeiro, brilhando.
+const RANK = {Divine: 0, Legendary: 1, Uncommon: 2, Common: 3};
+function summary(dlg, r, face, coins) {
+  const by = new Map();
+  for (const c of r.cards) { const g = by.get(c.id) || {...c, n: 0, coins: 0}; g.n++; g.coins += c.coins; g.new ||= c.new; by.set(c.id, g); }
+  const list = [...by.values()].sort((a, b) => RANK[a.rarity] - RANK[b.rarity] || b.new - a.new);
+  const fresh = list.filter(c => c.new).length;
+  dlg.innerHTML = `<header class="ec-sum__head"><h2>${r.packs.length} boosters opened</h2>
+      <p>${r.cards.length} cards · ${fresh} new${coins ? ` · +${fmt(coins)} Cosmo Coins from extra copies` : ''}</p></header>
+    <div class="ec-sum">${list.map((c, i) => `<div class="ec-sum__card is-${c.rarity.toLowerCase()}" style="--i:${i}" data-id="${esc(c.id)}">${face(c.id)}
+      ${c.n > 1 ? `<b class="ec-tag ec-tag--count">×${c.n}</b>` : ''}${c.new ? '<b class="ec-tag ec-tag--new">New</b>' : ''}</div>`).join('')}</div>
+    <footer class="ec-open__foot"><p class="kv-status">Right-click a card to see it big.</p><button class="kv-button is-gold" data-close>Done</button></footer>
+    <div class="ec-zoom" hidden></div>`;
+}
+
+export const buyBooster = (qty = 1) => call('/api/store/buy', 'POST', {item: 'booster', qty});
+export const buyCosmetic = (item, id) => call('/api/store/buy', 'POST', {item, id});
