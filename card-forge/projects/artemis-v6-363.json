@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Relentless Huntress",
+  "flavour": "\"No prey escapes the shadow of the moon.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/artemis-v6-363.png",
+    "w": 1742.5,
+    "x": -165.79575564628965,
+    "y": -27.435452901495466,
+    "zoom": 1,
+    "baseW": 1742.5
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "Keeper of the Lunar Sanctuary",
+  "flavour": "\"Her oath was sworn before the first mortal temple touched the earth.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/artemis-v6-375.png",
+    "w": 1488,
+    "x": 0,
+    "y": -70.5,
+    "zoom": 1,
+    "baseW": 1488
+  }
+}

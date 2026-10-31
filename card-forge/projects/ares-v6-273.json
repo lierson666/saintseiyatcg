@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Divine Strategist",
+  "flavour": "\"I have already seen every move you are about to make.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/ares-v6-273.png",
+    "w": 1568.25,
+    "x": -40.125,
+    "y": 0,
+    "zoom": 1,
+    "baseW": 1568.25
+  }
+}

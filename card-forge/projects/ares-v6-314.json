@@ -1,0 +1,14 @@
+{
+  "title": "",
+  "subtitle": "Armor of the Fallen",
+  "flavour": "\"A broken Warplate is still capable of claiming one final life.\"",
+  "art": {
+    "src": "art/ares-v6-314-ref.jpg",
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -286.83,
+    "zoom": 1,
+    "baseW": 1488.0,
+    "provisoria": true
+  }
+}

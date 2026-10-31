@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "Threads of Eternal Submission",
+  "flavour": "",
+  "bonusPower": "+1",
+  "bonusResistance": "+3",
+  "art": {
+    "src": "art/hades-v6-184.png",
+    "w": 1488,
+    "x": 0,
+    "y": -70.5,
+    "zoom": 1,
+    "baseW": 1488
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "Bound to Eternal Suffering",
+  "flavour": "",
+  "bonusPower": "+1",
+  "bonusResistance": "+1",
+  "art": {
+    "src": "art/hades-v6-226.png",
+    "w": 1488,
+    "x": 0,
+    "y": -255.9577259475218,
+    "zoom": 1,
+    "baseW": 1488
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "title": "",
+  "subtitle": "The Pearl of the Seven Seas",
+  "flavour": "",
+  "bonusPower": "+0",
+  "bonusResistance": "+1",
+  "art": {
+    "src": "art/poseidon-v6-100-ref.jpg",
+    "w": 2091,
+    "x": -296.52408422267087,
+    "y": -182.0826662561576,
+    "zoom": 1,
+    "baseW": 2091,
+    "provisoria": true
+  }
+}

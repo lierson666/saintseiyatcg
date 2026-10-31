@@ -5,11 +5,11 @@
   "bonusPower": "",
   "bonusResistance": "",
   "art": {
-    "src": "../ARTS/ARES.png",
-    "x": -202,
-    "y": -197,
-    "w": 1800,
-    "zoom": 1,
-    "baseW": 1800
+    "src": "art/ares-001.png",
+    "w": 2060.8896,
+    "x": -286.4448,
+    "y": -334.5599999999997,
+    "zoom": 1.32,
+    "baseW": 1561.28
   }
 }

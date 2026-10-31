@@ -1,0 +1,14 @@
+{
+  "title": "",
+  "subtitle": "Keeper of Celestial Rites",
+  "flavour": "\"Under Artemis' gaze, even the weakest spirit may blossom.\"",
+  "art": {
+    "src": "art/artemis-v6-390-ref.jpg",
+    "w": 2091.0,
+    "x": -301.5,
+    "y": 0.0,
+    "zoom": 1,
+    "baseW": 2091.0,
+    "provisoria": true
+  }
+}

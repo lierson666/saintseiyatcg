@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "Armor of the Moon's Shadow",
+  "flavour": "\"Forged for those who hunt beyond the reach of sunlight.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/artemis-v6-364.png",
+    "w": 2380.8,
+    "x": -534.7689223254381,
+    "y": -299.3897963826332,
+    "zoom": 1.6,
+    "baseW": 1488
+  }
+}

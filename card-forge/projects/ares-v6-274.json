@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Eternal Flame of Wisdom",
+  "flavour": "\"The flame of war reveals every weakness before the battle begins.\"",
+  "bonusPower": "+1",
+  "bonusResistance": "+2",
+  "art": {
+    "src": "art/ares-v6-274.png",
+    "w": 1488,
+    "x": 0,
+    "y": -70.5,
+    "zoom": 1,
+    "baseW": 1488
+  }
+}

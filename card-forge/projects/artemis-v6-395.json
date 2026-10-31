@@ -1,0 +1,14 @@
+{
+  "title": "",
+  "subtitle": "Protector of the Sacred Gates",
+  "flavour": "\"The gates of the Moon Temple have never fallen to mortal hands.\"",
+  "art": {
+    "src": "art/artemis-v6-395-ref.jpg",
+    "w": 2091.0,
+    "x": -301.5,
+    "y": 0.0,
+    "zoom": 1,
+    "baseW": 2091.0,
+    "provisoria": true
+  }
+}

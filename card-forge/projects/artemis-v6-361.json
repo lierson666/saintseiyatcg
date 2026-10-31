@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The High Priestess of Artemis",
+  "flavour": "\"To defy the Moon Goddess is to challenge the heavens themselves.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/artemis-v6-361.png",
+    "w": 1711.2,
+    "x": -1.5799538505913233,
+    "y": -198.0124153325122,
+    "zoom": 1.1500000000000001,
+    "baseW": 1488
+  }
+}

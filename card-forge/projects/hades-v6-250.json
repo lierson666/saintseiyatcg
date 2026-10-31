@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Venom of the Celestial Swift Star",
+  "flavour": "",
+  "bonusPower": "+2",
+  "bonusResistance": "+1",
+  "art": {
+    "src": "art/hades-v6-250.png",
+    "w": 1568.25,
+    "x": -40.125,
+    "y": 0,
+    "zoom": 1,
+    "baseW": 1568.25
+  }
+}

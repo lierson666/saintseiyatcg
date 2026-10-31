@@ -5,11 +5,11 @@
   "bonusPower": "",
   "bonusResistance": "",
   "art": {
-    "src": "../ARTS/ARTHEMIS.png",
-    "x": -155,
-    "y": -235,
-    "w": 1787,
-    "zoom": 1,
-    "baseW": 1787
+    "src": "art/artemis-001.png",
+    "w": 1951.6,
+    "x": -231.79999999999995,
+    "y": -261.37499999999955,
+    "zoom": 1.25,
+    "baseW": 1561.28
   }
 }

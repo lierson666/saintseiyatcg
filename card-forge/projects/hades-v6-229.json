@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "Chains That Bind the Living and the Dead",
+  "flavour": "",
+  "bonusPower": "+1",
+  "bonusResistance": "+1",
+  "art": {
+    "src": "art/hades-v6-229.png",
+    "w": 1488,
+    "x": -16.52719641378519,
+    "y": -226.70053194966658,
+    "zoom": 1,
+    "baseW": 1488
+  }
+}

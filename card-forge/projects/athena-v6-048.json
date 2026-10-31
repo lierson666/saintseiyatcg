@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Blade of Justice",
+  "flavour": "",
+  "bonusPower": "+2",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/athena-v6-048.png",
+    "w": 1606.5397402597405,
+    "x": -59.26987012987024,
+    "y": -20.90999999999849,
+    "zoom": 1.02,
+    "baseW": 1575.0389610389611
+  }
+}

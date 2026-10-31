@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Headless Executioner",
+  "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/hades-v6-217.png",
+    "w": 1960.3124999999998,
+    "x": -234.12752601861627,
+    "y": -236.36125954974057,
+    "zoom": 1.2499999999999998,
+    "baseW": 1568.25
+  }
+}

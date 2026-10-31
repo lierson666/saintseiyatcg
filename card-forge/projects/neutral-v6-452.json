@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Dragon of Darkness",
+  "flavour": "\"His strength rivals the Dragon, but his heart has forgotten the meaning of honor.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/neutral-v6-452.png",
+    "w": 1488,
+    "x": 11.184535876423979,
+    "y": -83.59961530125713,
+    "zoom": 1,
+    "baseW": 1488
+  }
+}

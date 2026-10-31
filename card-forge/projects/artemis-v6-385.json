@@ -1,0 +1,14 @@
+{
+  "title": "",
+  "subtitle": "The Eternal Hunter",
+  "flavour": "\"Even the stars fall silent when the greatest hunter begins its pursuit.\"",
+  "art": {
+    "src": "art/artemis-v6-385-ref.jpg",
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -442.5,
+    "zoom": 1,
+    "baseW": 1488.0,
+    "provisoria": true
+  }
+}

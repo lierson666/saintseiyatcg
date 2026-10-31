@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Instrument of Divine Authority",
+  "flavour": "",
+  "bonusPower": "+1",
+  "bonusResistance": "+2",
+  "art": {
+    "src": "art/hades-v6-196.png",
+    "w": 2995.3575,
+    "x": -366.3411718370785,
+    "y": -444.96969440832424,
+    "zoom": 1.9100000000000001,
+    "baseW": 1568.25
+  }
+}

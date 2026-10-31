@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Price of Passage",
+  "flavour": "",
+  "bonusPower": "+1",
+  "bonusResistance": "+2",
+  "art": {
+    "src": "art/hades-v6-190.png",
+    "w": 1413.6,
+    "x": 21.225126345544396,
+    "y": -62.157066807542606,
+    "zoom": 0.95,
+    "baseW": 1488
+  }
+}

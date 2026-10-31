@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Laughing Calamity",
+  "flavour": "\"Go on, my soldiers! Die gloriously! I could use a good laugh.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/ares-v6-275.png",
+    "w": 1787.805,
+    "x": -144.53859627958775,
+    "y": -16.404765117035026,
+    "zoom": 1.1400000000000001,
+    "baseW": 1568.25
+  }
+}

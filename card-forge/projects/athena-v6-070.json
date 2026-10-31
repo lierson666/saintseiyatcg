@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Song of the Underworld",
+  "flavour": "",
+  "bonusPower": "+0",
+  "bonusResistance": "+1",
+  "art": {
+    "src": "art/athena-v6-070.png",
+    "w": 1630.98,
+    "x": -80.68065071524472,
+    "y": -188.84131319083247,
+    "zoom": 1.04,
+    "baseW": 1568.25
+  }
+}

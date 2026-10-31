@@ -1,0 +1,6658 @@
+{
+  "schemaVersion": 1,
+  "projects": {
+    "ares-001-hud": {},
+    "ares-001": {
+      "title": "",
+      "subtitle": "Driven by Hate",
+      "flavour": "“Kneel before the god of war”",
+      "art": {
+        "x": -202,
+        "y": -197,
+        "w": 1800,
+        "zoom": 1,
+        "baseW": 1800,
+        "src": "playtest/assets/card-art/ares-001.webp?v=7659b053697e",
+        "h": 2410.714285714286
+      }
+    },
+    "ares-v6-271": {
+      "title": "",
+      "subtitle": "The Crimson Commander",
+      "flavour": "\"The divine fire does not distinguish flesh from steel. Everything burns.\"",
+      "art": {
+        "w": 1607.0400000000004,
+        "x": -42.90553792904575,
+        "y": -19.83574026522342,
+        "zoom": 1.08,
+        "baseW": 1488.0000000000002,
+        "src": "playtest/assets/card-art/ares-v6-271.webp?v=e8c31a504342",
+        "h": 2272.1036818851258
+      }
+    },
+    "ares-v6-272": {
+      "title": "",
+      "subtitle": "The Devourer of Prometheus",
+      "flavour": "\"From the torment of Prometheus, the flames of war were born.\"",
+      "art": {
+        "w": 1488,
+        "x": 0,
+        "y": -70.5,
+        "zoom": 1,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/ares-v6-272.webp?v=1e79187a0a40",
+        "h": 2232.0
+      }
+    },
+    "ares-v6-273": {
+      "title": "",
+      "subtitle": "The Divine Strategist",
+      "flavour": "\"I have already seen every move you are about to make.\"",
+      "art": {
+        "w": 1488.0000000000002,
+        "x": -1.1368683772161603e-13,
+        "y": -6.399852724595121,
+        "zoom": 1,
+        "baseW": 1488.0000000000002,
+        "src": "playtest/assets/card-art/ares-v6-273.webp?v=d999fc6791c9",
+        "h": 2103.7997054491902
+      }
+    },
+    "ares-v6-274": {
+      "title": "",
+      "subtitle": "The Eternal Flame of Wisdom",
+      "flavour": "\"The flame of war reveals every weakness before the battle begins.\"",
+      "art": {
+        "w": 1488,
+        "x": 0,
+        "y": -70.5,
+        "zoom": 1,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/ares-v6-274.webp?v=999a52ef3d73",
+        "h": 2232.0
+      }
+    },
+    "ares-v6-275": {
+      "title": "",
+      "subtitle": "The Laughing Calamity",
+      "flavour": "\"Go on, my soldiers! Die gloriously! I could use a good laugh.\"",
+      "art": {
+        "w": 1488.0000000000002,
+        "x": -1.1368683772161603e-13,
+        "y": -6.399852724595121,
+        "zoom": 1,
+        "baseW": 1488.0000000000002,
+        "src": "playtest/assets/card-art/ares-v6-275.webp?v=7f3cb2204313",
+        "h": 2103.7997054491902
+      }
+    },
+    "ares-v6-276": {
+      "title": "",
+      "subtitle": "Wings of the Catastrophe",
+      "flavour": "\"Every beat of these wings carries the promise of another beautiful disaster.\"",
+      "art": {
+        "w": 1805.18,
+        "x": -158.59,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1805.18,
+        "src": "playtest/assets/card-art/ares-v6-276.webp?v=50e23148247a",
+        "h": 2091.0001666666667
+      }
+    },
+    "ares-v6-277": {
+      "title": "",
+      "subtitle": "The Mistress of Nightmares",
+      "flavour": "\"Your greatest fear is not death. It is what I will show you before it.\"",
+      "art": {
+        "w": 1755.84,
+        "x": -46.80794346697428,
+        "y": -40.148056972411155,
+        "zoom": 1.1799999999999997,
+        "baseW": 1488.0000000000002,
+        "src": "playtest/assets/card-art/ares-v6-277.webp?v=74a0ac31cf45",
+        "h": 2482.483652430044
+      }
+    },
+    "ares-v6-278": {
+      "title": "",
+      "subtitle": "The Armor of Endless Nightmares",
+      "flavour": "\"Those who survive her illusions pray never to dream again.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -377.45,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-278.webp?v=328f194167ab",
+        "h": 2845.901639344262
+      }
+    },
+    "ares-v6-279": {
+      "title": "",
+      "subtitle": "The Serpent of Disaster",
+      "flavour": "\"In the shadow of disaster, even the smallest wound becomes fatal.\"",
+      "art": {
+        "w": 3246.78,
+        "x": -879.39,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 3246.78,
+        "src": "playtest/assets/card-art/ares-v6-279.webp?v=b651833bca27",
+        "h": 2090.9969021739134
+      }
+    },
+    "ares-v6-280": {
+      "title": "",
+      "subtitle": "The Constrictor's Embrace",
+      "flavour": "\"The serpent does not rush its prey. It simply ensures there is no escape.\"",
+      "art": {
+        "w": 1567.19,
+        "x": -39.59,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1567.19,
+        "src": "playtest/assets/card-art/ares-v6-280.webp?v=399b0431fea6",
+        "h": 2091.006222826087
+      }
+    },
+    "ares-v6-281": {
+      "title": "",
+      "subtitle": "The Headless Executioner",
+      "flavour": "\"A warrior without a head has no reason to fear the blade.\"",
+      "art": {
+        "w": 2445.0182704019485,
+        "x": 56.86453079268006,
+        "y": 91.30957512315263,
+        "zoom": 1,
+        "baseW": 2445.0182704019485,
+        "src": "playtest/assets/card-art/ares-v6-281.webp?v=ccd1a33a74da",
+        "h": 2090.9999999999995
+      }
+    },
+    "ares-v6-282": {
+      "title": "",
+      "subtitle": "Armor of the Headless Horror",
+      "flavour": "\"The executioner never needs to see the face of his victim.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -3.82,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-282.webp?v=70e8ca578650",
+        "h": 2098.6415094339623
+      }
+    },
+    "ares-v6-283": {
+      "title": "",
+      "subtitle": "The Winged Ravager",
+      "flavour": "\"The storm does not choose its victims. Neither do I.\"",
+      "art": {
+        "w": 2567.269183922046,
+        "x": -30.09142784218841,
+        "y": 12.801178609913677,
+        "zoom": 1.05,
+        "baseW": 2445.0182704019485,
+        "src": "playtest/assets/card-art/ares-v6-283.webp?v=357b5c7709f5",
+        "h": 2195.55
+      }
+    },
+    "ares-v6-284": {
+      "title": "",
+      "subtitle": "Wings of the Ruined Sky",
+      "flavour": "\"The skies themselves tremble before the wings of disaster.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -260.54,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-284.webp?v=301c5affaa96",
+        "h": 2612.086956521739
+      }
+    },
+    "ares-v6-285": {
+      "title": "",
+      "subtitle": "The Relentless Hunter",
+      "flavour": "\"Once the hunt begins, there is nowhere left to run.\"",
+      "art": {
+        "w": 2787.320828258221,
+        "x": -57.26945941321799,
+        "y": -70.97602717056657,
+        "zoom": 1.14,
+        "baseW": 2445.0182704019485,
+        "src": "playtest/assets/card-art/ares-v6-285.webp?v=2be7552b7c4f",
+        "h": 2383.7399999999993
+      }
+    },
+    "ares-v6-286": {
+      "title": "",
+      "subtitle": "The Hunter's Cruel Embrace",
+      "flavour": "\"A single wound is all the hunter needs.\"",
+      "art": {
+        "w": 4182.0,
+        "x": -1347.0,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 4182.0,
+        "src": "playtest/assets/card-art/ares-v6-286.webp?v=bf67886e2641",
+        "h": 2091.0
+      }
+    },
+    "ares-v6-287": {
+      "title": "",
+      "subtitle": "The Venomous Executioner",
+      "flavour": "\"The pain of my venom is merely the beginning.\"",
+      "art": {
+        "w": 2713.970280146163,
+        "x": -14.050718578407839,
+        "y": 91.14864583876886,
+        "zoom": 1.11,
+        "baseW": 2445.0182704019485,
+        "src": "playtest/assets/card-art/ares-v6-287.webp?v=e279148af875",
+        "h": 2321.01
+      }
+    },
+    "ares-v6-288": {
+      "title": "",
+      "subtitle": "The Scorpion-Tailed Horror",
+      "flavour": "\"Its sting carries a death no armor can prevent.\"",
+      "art": {
+        "w": 2443.38,
+        "x": -477.69,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2443.38,
+        "src": "playtest/assets/card-art/ares-v6-288.webp?v=bba796e14778",
+        "h": 2091.001387755102
+      }
+    },
+    "ares-v6-289": {
+      "title": "",
+      "subtitle": "The Divine Flame of Obliteration",
+      "flavour": "\"Enyo is not merely the spear of war. She is the destruction that follows it.\"",
+      "art": {
+        "w": 1542.11,
+        "x": -27.06,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1542.11,
+        "src": "playtest/assets/card-art/ares-v6-289.webp?v=5366d335ba62",
+        "h": 2090.9966101694913
+      }
+    },
+    "ares-v6-290": {
+      "title": "",
+      "subtitle": "The Last Defense Before Victory",
+      "flavour": "\"Even the shield of Ares was forged to bring destruction.\"",
+      "art": {
+        "w": 1568.25,
+        "x": -40.125,
+        "y": 0,
+        "zoom": 1,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/ares-v6-290.webp?v=0ec6d5efa5c4",
+        "h": 2091.0
+      }
+    },
+    "ares-v6-291": {
+      "title": "",
+      "subtitle": "Born in Promethean Flames",
+      "flavour": "\"The crimson fire of Ares leaves nothing but ashes.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -276.72,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-291.webp?v=620c77ddb9df",
+        "h": 2644.4347826086955
+      }
+    },
+    "ares-v6-292": {
+      "title": "",
+      "subtitle": "The Flame That Guides the Blade",
+      "flavour": "\"We do not strike first. We strike where the enemy is weakest.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -279.53,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-292.webp?v=b1bf2038db5a",
+        "h": 2650.057142857143
+      }
+    },
+    "ares-v6-293": {
+      "title": "",
+      "subtitle": "A Life Meant to Be Spent",
+      "flavour": "\"Lord Lior promised us glory. He never promised survival.\"",
+      "art": {
+        "w": 1672.8,
+        "x": -92.4,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1672.8,
+        "src": "playtest/assets/card-art/ares-v6-293.webp?v=8cee6c0f03fe",
+        "h": 2091.0
+      }
+    },
+    "ares-v6-294": {
+      "title": "",
+      "subtitle": "The Whisper Before the Scream",
+      "flavour": "\"Fear is the wound that never heals.\"",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/ares-v6-294.webp?v=b20423ed920c",
+        "h": 2091.0
+      }
+    },
+    "ares-v6-295": {
+      "title": "",
+      "subtitle": "The Hunger for Battle",
+      "flavour": "\"For a Berserker, a short life is a small price for one glorious battle.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -581.85,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-295.webp?v=1061d51ce890",
+        "h": 3254.704761904762
+      }
+    },
+    "ares-v6-296": {
+      "title": "",
+      "subtitle": "The Voice of Endless Conflict",
+      "flavour": "\"When the herald calls, the world knows that peace has ended.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -277.17,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-296.webp?v=bc843b16fa8d",
+        "h": 2645.3333333333335
+      }
+    },
+    "ares-v6-297": {
+      "title": "",
+      "subtitle": "The Flame That Judges All",
+      "flavour": "\"Mercy is a weakness the crimson flame cannot afford.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -275.71,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-297.webp?v=1c86d95337a0",
+        "h": 2642.413043478261
+      }
+    },
+    "ares-v6-298": {
+      "title": "",
+      "subtitle": "The First Move of Victory",
+      "flavour": "\"A single precise strike is worth a thousand reckless charges.\"",
+      "art": {
+        "w": 2612.86,
+        "x": -562.43,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2612.86,
+        "src": "playtest/assets/card-art/ares-v6-298.webp?v=4e35ebb5bdbc",
+        "h": 2090.998016304348
+      }
+    },
+    "ares-v6-299": {
+      "title": "",
+      "subtitle": "The Scorching Vanguard",
+      "flavour": "\"The battlefield burns long after their footsteps fade.\"",
+      "art": {
+        "w": 1488.0,
+        "x": -0.0,
+        "y": -6.4,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-299.webp?v=0b4a00fa9b8b",
+        "h": 2103.79970544919
+      }
+    },
+    "ares-v6-300": {
+      "title": "",
+      "subtitle": "The Artist of Suffering",
+      "flavour": "\"The finest torment is the one that begins when the battle ends.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -75.06,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-300.webp?v=13c461cafe95",
+        "h": 2241.1102040816327
+      }
+    },
+    "ares-v6-301": {
+      "title": "",
+      "subtitle": "The Joy of Destruction",
+      "flavour": "\"Lord Lior laughed as the fortress fell. We laughed even louder.\"",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/ares-v6-301.webp?v=1bfcf99fa122",
+        "h": 2091.0
+      }
+    },
+    "ares-v6-302": {
+      "title": "",
+      "subtitle": "Born for the Slaughter",
+      "flavour": "\"Victory is measured by the enemies left standing. I intend to leave none.\"",
+      "art": {
+        "w": 1568.78,
+        "x": -40.39,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1568.78,
+        "src": "playtest/assets/card-art/ares-v6-302.webp?v=55f9a078e452",
+        "h": 2090.9961684782606
+      }
+    },
+    "ares-v6-303": {
+      "title": "",
+      "subtitle": "The Arena's Last Survivor",
+      "flavour": "\"I stopped counting victories when the arena ran out of bodies.\"",
+      "art": {
+        "w": 2195.4,
+        "x": -353.7,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2195.4,
+        "src": "playtest/assets/card-art/ares-v6-303.webp?v=ed2cb782e988",
+        "h": 2090.999184782609
+      }
+    },
+    "ares-v6-304": {
+      "title": "",
+      "subtitle": "Shieldbreaker of the War God",
+      "flavour": "\"There is no shield forged that can withstand the wrath of Ares.\"",
+      "art": {
+        "w": 1516.71,
+        "x": -14.36,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1516.71,
+        "src": "playtest/assets/card-art/ares-v6-304.webp?v=f9db20b73640",
+        "h": 2090.9982524271845
+      }
+    },
+    "ares-v6-305": {
+      "title": "",
+      "subtitle": "No Retreat, No Mercy",
+      "flavour": "\"Every thrust brings me closer to victory, even if it brings me closer to death.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -47.11,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-305.webp?v=06cb16474496",
+        "h": 2185.217038539554
+      }
+    },
+    "ares-v6-306": {
+      "title": "",
+      "subtitle": "The Rhythm of Carnage",
+      "flavour": "\"Each beat is another heartbeat stolen from the enemy.\"",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/ares-v6-306.webp?v=13e49e210948",
+        "h": 2091.0
+      }
+    },
+    "ares-v6-307": {
+      "title": "",
+      "subtitle": "Student of the Eternal Warfire",
+      "flavour": "\"Master Ofir taught us that every flame has a purpose, and every enemy has a weakness.\"",
+      "art": {
+        "w": 4023.26,
+        "x": -1267.63,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 4023.26,
+        "src": "playtest/assets/card-art/ares-v6-307.webp?v=1166755b5d6e",
+        "h": 2091.0004353741497
+      }
+    },
+    "ares-v6-308": {
+      "title": "",
+      "subtitle": "The Blade Beyond Reason",
+      "flavour": "\"His sword moves faster than thought, and his rage faster still.\"",
+      "art": {
+        "w": 2099.75,
+        "x": -305.87,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2099.75,
+        "src": "playtest/assets/card-art/ares-v6-308.webp?v=991dcef80ad5",
+        "h": 2091.001041666667
+      }
+    },
+    "ares-v6-309": {
+      "title": "",
+      "subtitle": "The Unbroken Spear",
+      "flavour": "\"They guard the god of war not because he needs protection, but because he demands absolute loyalty.\"",
+      "art": {
+        "w": 1672.8,
+        "x": -92.4,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1672.8,
+        "src": "playtest/assets/card-art/ares-v6-309.webp?v=f1593ac6d4b7",
+        "h": 2091.0
+      }
+    },
+    "ares-v6-310": {
+      "title": "",
+      "subtitle": "Bound to the Battlefield",
+      "flavour": "\"My life was given to Ares long before I drew my first breath.\"",
+      "art": {
+        "w": 2143.42,
+        "x": -327.71,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2143.42,
+        "src": "playtest/assets/card-art/ares-v6-310.webp?v=eeb8aa568f5c",
+        "h": 2090.999402173913
+      }
+    },
+    "ares-v6-311": {
+      "title": "",
+      "subtitle": "Bound by Blood, Forged for War",
+      "flavour": "\"My blood belongs to Ares. My enemies shall pay the rest.\"",
+      "art": {
+        "w": 1560.29,
+        "x": -36.14,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1560.29,
+        "src": "playtest/assets/card-art/ares-v6-311.webp?v=d16b3245c8e0",
+        "h": 2091.000884353741
+      }
+    },
+    "ares-v6-312": {
+      "title": "",
+      "subtitle": "The Spoils of Slaughter",
+      "flavour": "\"The dead have no use for what they leave behind.\"",
+      "art": {
+        "w": 1647.73,
+        "x": -79.86,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1647.73,
+        "src": "playtest/assets/card-art/ares-v6-312.webp?v=85147e9b5af0",
+        "h": 2091.0051902173914
+      }
+    },
+    "ares-v6-313": {
+      "title": "",
+      "subtitle": "A Glorious Death Awaits",
+      "flavour": "\"Lord Lior ordered us to die. I intend to make him laugh.\"",
+      "art": {
+        "w": 1488.0,
+        "x": -0.0,
+        "y": -5.35,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-313.webp?v=4a05198a8ad0",
+        "h": 2101.6949152542375
+      }
+    },
+    "ares-v6-314": {
+      "title": "",
+      "subtitle": "Armor of the Fallen",
+      "flavour": "\"A broken Warplate is still capable of claiming one final life.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -286.83,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-314.webp?v=5d7cbd368efa",
+        "h": 2664.6521739130435
+      }
+    },
+    "ares-v6-315": {
+      "title": "",
+      "subtitle": "The Face of War",
+      "flavour": "\"Behind the iron mask, only the desire for blood remains.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -663.21,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-315.webp?v=784e3c786216",
+        "h": 3417.4162679425835
+      }
+    },
+    "ares-v6-316": {
+      "title": "",
+      "subtitle": "A Weapon That Never Rests",
+      "flavour": "\"The blade remembers every life it has taken.\"",
+      "art": {
+        "w": 3717.33,
+        "x": -1114.67,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 3717.33,
+        "src": "playtest/assets/card-art/ares-v6-316.webp?v=58a97530095e",
+        "h": 2090.9981249999996
+      }
+    },
+    "ares-v6-317": {
+      "title": "",
+      "subtitle": "The Last Weapon Standing",
+      "flavour": "\"Even in death, the warrior's spear seeks one final victim.\"",
+      "art": {
+        "w": 1515.84,
+        "x": -13.92,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1515.84,
+        "src": "playtest/assets/card-art/ares-v6-317.webp?v=a8832efedf53",
+        "h": 2090.99914893617
+      }
+    },
+    "ares-v6-318": {
+      "title": "",
+      "subtitle": "The Brutal Edge of War",
+      "flavour": "\"One swing. Two bodies. No survivors.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -34.79,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-318.webp?v=37d18c9ae088",
+        "h": 2160.576
+      }
+    },
+    "ares-v6-319": {
+      "title": "",
+      "subtitle": "The March of Endless Slaughter",
+      "flavour": "\"The drums never stop. Neither does the war.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -281.77,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-319.webp?v=4ab5515128d7",
+        "h": 2654.5434782608695
+      }
+    },
+    "ares-v6-320": {
+      "title": "",
+      "subtitle": "The Spear of Crimson Fire",
+      "flavour": "\"Before the warrior arrives, the flames have already claimed their prey.\"",
+      "art": {
+        "w": 1672.8,
+        "x": -92.4,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1672.8,
+        "src": "playtest/assets/card-art/ares-v6-320.webp?v=6a534e699c7f",
+        "h": 2091.0
+      }
+    },
+    "ares-v6-321": {
+      "title": "",
+      "subtitle": "Bound by Rage",
+      "flavour": "\"The chains do not restrain their rage. They feed it.\"",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/ares-v6-321.webp?v=dd9e2a8724d2",
+        "h": 2091.0
+      }
+    },
+    "ares-v6-322": {
+      "title": "",
+      "subtitle": "The First Wound of War",
+      "flavour": "\"Every war begins with a single wound.\"",
+      "art": {
+        "w": 2658.97,
+        "x": -585.49,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2658.97,
+        "src": "playtest/assets/card-art/ares-v6-322.webp?v=af642dcee08c",
+        "h": 2090.9995374149657
+      }
+    },
+    "ares-v6-323": {
+      "title": "",
+      "subtitle": "No Time for Fear",
+      "flavour": "\"The warriors of Ares do not wait for battle. They bring it.\"",
+      "art": {
+        "w": 2658.97,
+        "x": -585.49,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2658.97,
+        "src": "playtest/assets/card-art/ares-v6-323.webp?v=c9f23a0e0da5",
+        "h": 2090.9995374149657
+      }
+    },
+    "ares-v6-324": {
+      "title": "",
+      "subtitle": "Rage Without Limits",
+      "flavour": "\"A Berserker's greatest strength is also his final breath.\"",
+      "art": {
+        "w": 1542.11,
+        "x": -27.06,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1542.11,
+        "src": "playtest/assets/card-art/ares-v6-324.webp?v=5007d8fb1c62",
+        "h": 2090.9966101694913
+      }
+    },
+    "ares-v6-325": {
+      "title": "",
+      "subtitle": "The Weak Shall Fall",
+      "flavour": "\"Mercy is a luxury reserved for those who survive.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -275.71,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-325.webp?v=5826bb176421",
+        "h": 2642.413043478261
+      }
+    },
+    "ares-v6-326": {
+      "title": "",
+      "subtitle": "The Price of Vengeance",
+      "flavour": "\"The blood of one warrior shall purchase the death of another.\"",
+      "art": {
+        "w": 1742.89,
+        "x": -127.45,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1742.89,
+        "src": "playtest/assets/card-art/ares-v6-326.webp?v=07203a4dcf2b",
+        "h": 2090.9943885869566
+      }
+    },
+    "ares-v6-327": {
+      "title": "",
+      "subtitle": "Death from Above",
+      "flavour": "\"The sky darkened, not with clouds, but with the weapons of war.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -275.71,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-327.webp?v=1a76f2583a1e",
+        "h": 2642.413043478261
+      }
+    },
+    "ares-v6-328": {
+      "title": "",
+      "subtitle": "Leave Nothing Standing",
+      "flavour": "\"The flames of Ares recognize no boundary between victory and destruction.\"",
+      "art": {
+        "w": 1672.8,
+        "x": -92.4,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1672.8,
+        "src": "playtest/assets/card-art/ares-v6-328.webp?v=f09fa68d8c8f",
+        "h": 2091.0
+      }
+    },
+    "ares-v6-329": {
+      "title": "",
+      "subtitle": "Victory at Any Cost",
+      "flavour": "\"Retreat is impossible. Survival is optional.\"",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/ares-v6-329.webp?v=e268dd0eb81f",
+        "h": 2091.0
+      }
+    },
+    "ares-v6-330": {
+      "title": "",
+      "subtitle": "The Fire Within",
+      "flavour": "\"Every sacrifice feeds the fire that will consume our enemies.\"",
+      "art": {
+        "w": 1616.57,
+        "x": -64.29,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1616.57,
+        "src": "playtest/assets/card-art/ares-v6-330.webp?v=107ede4e66e7",
+        "h": 2090.998152173913
+      }
+    },
+    "ares-v6-331": {
+      "title": "",
+      "subtitle": "War Is the Only Truth",
+      "flavour": "\"Peace is a lie told by those too weak to wage war.\"",
+      "art": {
+        "w": 1491.65,
+        "x": -1.83,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1491.65,
+        "src": "playtest/assets/card-art/ares-v6-331.webp?v=dcd109ce8f22",
+        "h": 2090.9936281859073
+      }
+    },
+    "ares-v6-332": {
+      "title": "",
+      "subtitle": "The Throne of Endless Conflict",
+      "flavour": "\"Within these walls, every prayer is answered with the sound of clashing steel.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -118.19,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-332.webp?v=7575549dc645",
+        "h": 2327.3846153846152
+      }
+    },
+    "ares-v6-333": {
+      "title": "",
+      "subtitle": "Where the Earth Itself Burns",
+      "flavour": "\"The flames do not follow the army. The army follows the flames.\"",
+      "art": {
+        "w": 1488.0,
+        "x": -0.0,
+        "y": -99.43,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-333.webp?v=e6094e4a9dc6",
+        "h": 2289.866666666667
+      }
+    },
+    "ares-v6-334": {
+      "title": "",
+      "subtitle": "Only the Strong Shall Remain",
+      "flavour": "\"The crowd does not cheer for victory. It cheers for blood.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -12.22,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-334.webp?v=fc1e5298f702",
+        "h": 2115.44
+      }
+    },
+    "ares-v6-335": {
+      "title": "",
+      "subtitle": "A Thousand Graves, One Battlefield",
+      "flavour": "\"There are no victors here. Only those who have not yet fallen.\"",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/ares-v6-335.webp?v=1af0f604fb96",
+        "h": 2091.0
+      }
+    },
+    "ares-v6-336": {
+      "title": "",
+      "subtitle": "Armor of the Crimson Inferno",
+      "flavour": "\"The flames of Ethon burn within every plate of crimson steel.\"",
+      "art": {
+        "w": 2170.74,
+        "x": -341.37,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2170.74,
+        "src": "playtest/assets/card-art/ares-v6-336.webp?v=404ef345f845",
+        "h": 2090.998530612245
+      }
+    },
+    "ares-v6-337": {
+      "title": "",
+      "subtitle": "Armor of Divine Strategy",
+      "flavour": "\"A warrior guided by Ofir's wisdom never wastes a single flame.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -442.5,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-337.webp?v=e8a96880987c",
+        "h": 2976.0
+      }
+    },
+    "ares-v6-338": {
+      "title": "",
+      "subtitle": "Armor of the Laughing Death",
+      "flavour": "\"Even their deaths are offered as entertainment to Lord Lior.\"",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/ares-v6-338.webp?v=91e4dfbad971",
+        "h": 2091.0
+      }
+    },
+    "ares-v6-339": {
+      "title": "",
+      "subtitle": "Armor of Silent Terror",
+      "flavour": "\"The armor reflects the nightmares of those who dare to face it.\"",
+      "art": {
+        "w": 1693.04,
+        "x": -102.52,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1693.04,
+        "src": "playtest/assets/card-art/ares-v6-339.webp?v=143bc71b03fc",
+        "h": 2090.9964130434782
+      }
+    },
+    "ares-v6-340": {
+      "title": "",
+      "subtitle": "The Armor of a Thousand Battles",
+      "flavour": "\"Every scar is a victory. Every victory demands another battle.\"",
+      "art": {
+        "w": 2079.7,
+        "x": -295.85,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2079.7,
+        "src": "playtest/assets/card-art/ares-v6-340.webp?v=463970133aa4",
+        "h": 2091.002717391304
+      }
+    },
+    "ares-v6-341": {
+      "title": "",
+      "subtitle": "The Unyielding Flame",
+      "flavour": "\"The warriors of Ethon do not retreat. They turn the ground beneath their enemies into ashes.\"",
+      "art": {
+        "w": 3041.45,
+        "x": -776.73,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 3041.45,
+        "src": "playtest/assets/card-art/ares-v6-341.webp?v=d13121f68348",
+        "h": 2090.996875
+      }
+    },
+    "ares-v6-342": {
+      "title": "",
+      "subtitle": "The Mind Behind the Blade",
+      "flavour": "\"Under Ofir's command, even the smallest soldier can decide the fate of a war.\"",
+      "art": {
+        "w": 1502.03,
+        "x": -7.02,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1502.03,
+        "src": "playtest/assets/card-art/ares-v6-342.webp?v=a213a84241d8",
+        "h": 2090.9930394431553
+      }
+    },
+    "ares-v6-343": {
+      "title": "",
+      "subtitle": "The Blade Carried by the Storm",
+      "flavour": "\"Lior's laughter is the last sound heard before the storm tears its victims apart.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -11.87,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-343.webp?v=b3a78c96a3b3",
+        "h": 2114.7391304347825
+      }
+    },
+    "ares-v6-344": {
+      "title": "",
+      "subtitle": "The Shadow Within Your Mind",
+      "flavour": "\"Lady Lotis taught us that the most terrible battlefield lies within the enemy's own mind.\"",
+      "art": {
+        "w": 1574.68,
+        "x": -43.34,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1574.68,
+        "src": "playtest/assets/card-art/ares-v6-344.webp?v=ec4910aa678f",
+        "h": 2091.0036462585035
+      }
+    },
+    "ares-v6-345": {
+      "title": "",
+      "subtitle": "The Last Warrior Standing",
+      "flavour": "\"When the final battle ends, only the servants of war shall remain.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -70.5,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-345.webp?v=443fcbd5484d",
+        "h": 2232.0
+      }
+    },
+    "ares-v6-346": {
+      "title": "",
+      "subtitle": "The War God's Army Advances",
+      "flavour": "\"The earth trembled beneath their footsteps, and the heavens knew that Ares had returned.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -2.17,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-346.webp?v=02d47f571104",
+        "h": 2095.3469387755104
+      }
+    },
+    "ares-v6-347": {
+      "title": "",
+      "subtitle": "The Commander's Cruel Amusement",
+      "flavour": "\"Lior watched his soldiers march toward certain death and smiled. The battle was finally becoming entertaining.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -85.38,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-347.webp?v=def357736d79",
+        "h": 2261.76
+      }
+    },
+    "ares-v6-348": {
+      "title": "",
+      "subtitle": "The Fear That Takes Form",
+      "flavour": "\"Lotis opened the gates of their minds and let their deepest nightmares become reality.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -276.72,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-348.webp?v=6599e523c474",
+        "h": 2644.4347826086955
+      }
+    },
+    "ares-v6-349": {
+      "title": "",
+      "subtitle": "The Wisdom Granted by Ares",
+      "flavour": "\"The divine flames do not merely burn. They reveal the path to victory.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -442.5,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-349.webp?v=6cf1cb04fa0b",
+        "h": 2976.0
+      }
+    },
+    "ares-v6-350": {
+      "title": "",
+      "subtitle": "The Flame That Consumes Everything",
+      "flavour": "\"Alcmenes raised his Cosmo, and the divine fire of Prometheus swallowed everything in its path.\"",
+      "art": {
+        "w": 1847.22,
+        "x": -179.61,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1847.22,
+        "src": "playtest/assets/card-art/ares-v6-350.webp?v=428ccebea44e",
+        "h": 2091.002775510204
+      }
+    },
+    "ares-v6-351": {
+      "title": "",
+      "subtitle": "The Plague of the War God",
+      "flavour": "\"Before the armies arrived, death had already claimed the land.\"",
+      "art": {
+        "w": 1685.28,
+        "x": -98.64,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1685.28,
+        "src": "playtest/assets/card-art/ares-v6-351.webp?v=6eb98416ee16",
+        "h": 2090.9955555555553
+      }
+    },
+    "ares-v6-352": {
+      "title": "",
+      "subtitle": "When the Heavens Wept Blood",
+      "flavour": "\"The sky turned crimson, and the world learned the true meaning of war.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -21.98,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-352.webp?v=403c387ba759",
+        "h": 2134.9565217391305
+      }
+    },
+    "ares-v6-353": {
+      "title": "",
+      "subtitle": "The Armies of the Apocalypse",
+      "flavour": "\"Four armies. Four commanders. One god who desires nothing but endless war.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -385.51,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-353.webp?v=762ef7db1db4",
+        "h": 2862.016713091922
+      }
+    },
+    "ares-v6-354": {
+      "title": "",
+      "subtitle": "The Crimson Flame Claims a Legend",
+      "flavour": "\"Even the legendary Phoenix fell before the divine flames of Ethon.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -513.78,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-354.webp?v=acb321f4e2ed",
+        "h": 3118.562874251497
+      }
+    },
+    "ares-v6-355": {
+      "title": "",
+      "subtitle": "There Shall Be No Peace",
+      "flavour": "\"Ares does not demand victory. He demands destruction.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -70.5,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-355.webp?v=a5f8a8f5bfc9",
+        "h": 2232.0
+      }
+    },
+    "ares-v6-356": {
+      "title": "",
+      "subtitle": "The Last Barrier of the Sanctuary",
+      "flavour": "\"Even Athena's sacred barrier could not silence the drums of war.\"",
+      "art": {
+        "w": 1626.33,
+        "x": -69.17,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1626.33,
+        "src": "playtest/assets/card-art/ares-v6-356.webp?v=fda016e8a89e",
+        "h": 2090.9957142857143
+      }
+    },
+    "ares-v6-357": {
+      "title": "",
+      "subtitle": "The Missing Power of Victory",
+      "flavour": "\"Without Nike, the goddess of victory stood before a war she could not easily win.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -59.45,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-357.webp?v=230926934de8",
+        "h": 2209.90099009901
+      }
+    },
+    "ares-v6-358": {
+      "title": "",
+      "subtitle": "The Return of the Bloodthirsty God",
+      "flavour": "\"The heavens trembled as the god of war opened his eyes, and the age of peace came to an end.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -8.25,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-358.webp?v=f6dd8ef5fc64",
+        "h": 2107.4938775510204
+      }
+    },
+    "ares-v6-359": {
+      "title": "",
+      "subtitle": "The World Shall Burn",
+      "flavour": "\"Ares did not come to conquer the world. He came to watch it burn.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -8.25,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-359.webp?v=f6dd8ef5fc64",
+        "h": 2107.4938775510204
+      }
+    },
+    "ares-v6-360": {
+      "title": "",
+      "subtitle": "War Never Truly Ends",
+      "flavour": "\"As long as hatred burns in the hearts of gods and men, the war of Ares shall never end.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -8.25,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/ares-v6-360.webp?v=f6dd8ef5fc64",
+        "h": 2107.4938775510204
+      }
+    },
+    "artemis-001-hud": {},
+    "artemis-001": {
+      "title": "",
+      "subtitle": "Moonlight Lullaby",
+      "flavour": "“Look at the sky… that is the realm you will never reach.”",
+      "art": {
+        "x": -155,
+        "y": -235,
+        "w": 1787,
+        "zoom": 1,
+        "baseW": 1787,
+        "src": "playtest/assets/card-art/artemis-001.webp?v=1b8ba947f2eb",
+        "h": 2393.3035714285716
+      }
+    },
+    "artemis-v6-361": {
+      "title": "",
+      "subtitle": "The High Priestess of Artemis",
+      "flavour": "\"To defy the Moon Goddess is to challenge the heavens themselves.\"",
+      "art": {
+        "w": 1711.2,
+        "x": -1.5799538505913233,
+        "y": -198.0124153325122,
+        "zoom": 1.1500000000000001,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/artemis-v6-361.webp?v=1b12bba3924e",
+        "h": 2566.8
+      }
+    },
+    "artemis-v6-362": {
+      "title": "",
+      "subtitle": "Raiment of the High Priestess",
+      "flavour": "\"The moon shelters those who serve its will.\"",
+      "art": {
+        "w": 2876.59,
+        "x": -694.3,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2876.59,
+        "src": "playtest/assets/card-art/artemis-v6-362.webp?v=6ba66342332c",
+        "h": 2090.999524456522
+      }
+    },
+    "artemis-v6-363": {
+      "title": "",
+      "subtitle": "The Relentless Huntress",
+      "flavour": "\"No prey escapes the shadow of the moon.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -49.27,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-363.webp?v=c350617ff146",
+        "h": 2189.5434782608695
+      }
+    },
+    "artemis-v6-364": {
+      "title": "",
+      "subtitle": "Armor of the Moon's Shadow",
+      "flavour": "\"Forged for those who hunt beyond the reach of sunlight.\"",
+      "art": {
+        "w": 1519.01,
+        "x": -15.51,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1519.01,
+        "src": "playtest/assets/card-art/artemis-v6-364.webp?v=7b3299ed80a4",
+        "h": 2090.9995559502663
+      }
+    },
+    "artemis-v6-365": {
+      "title": "",
+      "subtitle": "Guardian of the Sacred Moon",
+      "flavour": "\"My life belongs to the goddess. My strength belongs to the forest.\"",
+      "art": {
+        "w": 1520.73,
+        "x": -16.36,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1520.73,
+        "src": "playtest/assets/card-art/artemis-v6-365.webp?v=778710598e23",
+        "h": 2091.00375
+      }
+    },
+    "artemis-v6-366": {
+      "title": "",
+      "subtitle": "Protection of the Ancient Grove",
+      "flavour": "\"Even when shattered, the roots of the ancient world rise again.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -134.78,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-366.webp?v=896b7f2166a8",
+        "h": 2360.555102040816
+      }
+    },
+    "artemis-v6-367": {
+      "title": "",
+      "subtitle": "The Silver Moon's Protector",
+      "flavour": "\"Where my sister stands, I shall never retreat.\"",
+      "art": {
+        "w": 3655.52,
+        "x": -1083.76,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 3655.52,
+        "src": "playtest/assets/card-art/artemis-v6-367.webp?v=7b195258d1f0",
+        "h": 2090.9971739130433
+      }
+    },
+    "artemis-v6-368": {
+      "title": "",
+      "subtitle": "Silver Protection of the Hunt",
+      "flavour": "\"Beneath the silver moon, every movement becomes a perfect hunt.\"",
+      "art": {
+        "w": 1520.16,
+        "x": -16.08,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1520.16,
+        "src": "playtest/assets/card-art/artemis-v6-368.webp?v=3be34445bc96",
+        "h": 2090.9955918367345
+      }
+    },
+    "artemis-v6-369": {
+      "title": "",
+      "subtitle": "The Ancient Guardian",
+      "flavour": "\"Before the first sanctuary was built, the wilderness already had its champions.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -84.12,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-369.webp?v=6fe918d1f24d",
+        "h": 2259.2450704225353
+      }
+    },
+    "artemis-v6-370": {
+      "title": "",
+      "subtitle": "Relic of the Primordial Wild",
+      "flavour": "\"The power of the ancient world cannot be contained by mortal hands.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -276.72,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-370.webp?v=32bf6c8fad6b",
+        "h": 2644.4347826086955
+      }
+    },
+    "artemis-v6-371": {
+      "title": "",
+      "subtitle": "The Mortal Vessel of the Moon Goddess",
+      "flavour": "\"Within a child's fragile heart, an ancient goddess opened her eyes.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -111.49,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-371.webp?v=1c0ebdf6ef40",
+        "h": 2313.9748953974895
+      }
+    },
+    "artemis-v6-372": {
+      "title": "",
+      "subtitle": "The Return of the Moon Goddess",
+      "flavour": "\"The moon had never abandoned the world. It had only been waiting.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -276.72,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-372.webp?v=1d9e292b74ff",
+        "h": 2644.4347826086955
+      }
+    },
+    "artemis-v6-373": {
+      "title": "",
+      "subtitle": "The Primordial Light of the Night",
+      "flavour": "\"Before Artemis drew her first bow, Selene had already illuminated the heavens.\"",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/artemis-v6-373.webp?v=f173a4c71d75",
+        "h": 2091.0
+      }
+    },
+    "artemis-v6-374": {
+      "title": "",
+      "subtitle": "The Blessing of the Ancient Moon",
+      "flavour": "\"The oldest light in the heavens awakens strength that time itself cannot diminish.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -134.78,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-374.webp?v=cf5f4acab083",
+        "h": 2360.555102040816
+      }
+    },
+    "artemis-v6-375": {
+      "title": "",
+      "subtitle": "Keeper of the Lunar Sanctuary",
+      "flavour": "\"Her oath was sworn before the first mortal temple touched the earth.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -6.82,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-375.webp?v=06fd8f8fcf15",
+        "h": 2104.6304347826085
+      }
+    },
+    "artemis-v6-376": {
+      "title": "",
+      "subtitle": "Seven Warriors, One Divine Will",
+      "flavour": "\"Seven vows beneath a single moon. Seven arrows guided by one divine will.\"",
+      "art": {
+        "w": 3717.33,
+        "x": -1114.67,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 3717.33,
+        "src": "playtest/assets/card-art/artemis-v6-376.webp?v=ad51543826b0",
+        "h": 2090.998125
+      }
+    },
+    "artemis-v6-377": {
+      "title": "",
+      "subtitle": "The Eternal Spring",
+      "flavour": "\"Even beneath the coldest moon, her flowers remember the warmth of life.\"",
+      "art": {
+        "w": 1988.34,
+        "x": -250.17,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1988.34,
+        "src": "playtest/assets/card-art/artemis-v6-377.webp?v=864b1799658e",
+        "h": 2090.998858695652
+      }
+    },
+    "artemis-v6-378": {
+      "title": "",
+      "subtitle": "The Armor of Eternal Spring",
+      "flavour": "\"Its petals never wither, for the goddess of spring refuses to surrender to death.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -73.03,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-378.webp?v=3ac8c32fba4e",
+        "h": 2237.061224489796
+      }
+    },
+    "artemis-v6-379": {
+      "title": "",
+      "subtitle": "The Weapon of the Celestial Hunt",
+      "flavour": "\"No mortal distance can shield a soul from the judgment of Artemis.\"",
+      "art": {
+        "w": 1570.19,
+        "x": -41.1,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1570.19,
+        "src": "playtest/assets/card-art/artemis-v6-379.webp?v=b6977b20560d",
+        "h": 2090.995594059406
+      }
+    },
+    "artemis-v6-380": {
+      "title": "",
+      "subtitle": "The Arrow That Never Misses",
+      "flavour": "\"Once released, the silver arrow follows its prey beyond the reach of fate.\"",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/artemis-v6-380.webp?v=d96b5f3f9687",
+        "h": 2091.0
+      }
+    },
+    "artemis-v6-381": {
+      "title": "",
+      "subtitle": "The Moon's Chosen Beast",
+      "flavour": "\"Where its hooves touch the earth, the ancient forest awakens.\"",
+      "art": {
+        "w": 1674.66,
+        "x": -93.33,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1674.66,
+        "src": "playtest/assets/card-art/artemis-v6-381.webp?v=0f3c84c09a51",
+        "h": 2090.9990833333336
+      }
+    },
+    "artemis-v6-382": {
+      "title": "",
+      "subtitle": "Predator Beneath the Silver Moon",
+      "flavour": "\"One howl summons the pack. One shadow announces the hunt.\"",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/artemis-v6-382.webp?v=35d09cfa9820",
+        "h": 2091.0
+      }
+    },
+    "artemis-v6-383": {
+      "title": "",
+      "subtitle": "The Strength of the Wilderness",
+      "flavour": "\"Its strength is measured not by the prey it takes, but by the forests it protects.\"",
+      "art": {
+        "w": 1674.66,
+        "x": -93.33,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1674.66,
+        "src": "playtest/assets/card-art/artemis-v6-383.webp?v=29f83600a7f5",
+        "h": 2090.9990833333336
+      }
+    },
+    "artemis-v6-384": {
+      "title": "",
+      "subtitle": "The Coils of the Forgotten World",
+      "flavour": "\"Beneath the oldest roots, something ancient waits for the world to remember fear.\"",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/artemis-v6-384.webp?v=ae164df02ab0",
+        "h": 2091.0
+      }
+    },
+    "artemis-v6-385": {
+      "title": "",
+      "subtitle": "The Eternal Hunter",
+      "flavour": "\"Even the stars fall silent when the greatest hunter begins its pursuit.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -442.5,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-385.webp?v=1fc5f47efc76",
+        "h": 2976.0
+      }
+    },
+    "artemis-v6-386": {
+      "title": "",
+      "subtitle": "The First Oath",
+      "flavour": "\"Every hunter begins by listening to the forest.\"",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/artemis-v6-386.webp?v=7412c7205e6d",
+        "h": 2091.0
+      }
+    },
+    "artemis-v6-387": {
+      "title": "",
+      "subtitle": "Guardian of the Ancient Woods",
+      "flavour": "\"The oldest trees shelter the strongest warriors.\"",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/artemis-v6-387.webp?v=b542c2d73e89",
+        "h": 2091.0
+      }
+    },
+    "artemis-v6-388": {
+      "title": "",
+      "subtitle": "Eyes Beneath the Moon",
+      "flavour": "\"Her arrow reaches its prey before the sound of the bow.\"",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/artemis-v6-388.webp?v=6843b3772d42",
+        "h": 2091.0
+      }
+    },
+    "artemis-v6-389": {
+      "title": "",
+      "subtitle": "Predator of the Sacred Forest",
+      "flavour": "\"The forest rewards those who embrace the hunt.\"",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/artemis-v6-389.webp?v=9cb8879f0546",
+        "h": 2091.0
+      }
+    },
+    "artemis-v6-390": {
+      "title": "",
+      "subtitle": "Keeper of Celestial Rites",
+      "flavour": "\"Under Artemis' gaze, even the weakest spirit may blossom.\"",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/artemis-v6-390.webp?v=55304dad1bf7",
+        "h": 2091.0
+      }
+    },
+    "artemis-v6-391": {
+      "title": "",
+      "subtitle": "The Unyielding Roots",
+      "flavour": "\"The oldest trees do not fear the storm. They remember when the storm was born.\"",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/artemis-v6-391.webp?v=b9c89a7c2da3",
+        "h": 2091.0
+      }
+    },
+    "artemis-v6-392": {
+      "title": "",
+      "subtitle": "Born Under the Silver Moon",
+      "flavour": "\"Its roar echoes through forests untouched by mankind.\"",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/artemis-v6-392.webp?v=915499dfca0b",
+        "h": 2091.0
+      }
+    },
+    "artemis-v6-393": {
+      "title": "",
+      "subtitle": "The Silent Watcher",
+      "flavour": "\"The first arrow is a warning. The second is a promise.\"",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/artemis-v6-393.webp?v=99ad10a08158",
+        "h": 2091.0
+      }
+    },
+    "artemis-v6-394": {
+      "title": "",
+      "subtitle": "Warrior of the Dark Moon",
+      "flavour": "\"They emerge from the darkness where even moonlight fears to reach.\"",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/artemis-v6-394.webp?v=c82db7008ad8",
+        "h": 2091.0
+      }
+    },
+    "artemis-v6-395": {
+      "title": "",
+      "subtitle": "Protector of the Sacred Gates",
+      "flavour": "\"The gates of the Moon Temple have never fallen to mortal hands.\"",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/artemis-v6-395.webp?v=2e83251bcc8c",
+        "h": 2091.0
+      }
+    },
+    "artemis-v6-396": {
+      "title": "",
+      "subtitle": "Whisper of the Ancient Woods",
+      "flavour": "\"A fallen leaf is never the end of life, but the beginning of another.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -37.43,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-396.webp?v=fa7c52556709",
+        "h": 2165.866666666667
+      }
+    },
+    "artemis-v6-397": {
+      "title": "",
+      "subtitle": "Daughter of the Eternal Forest",
+      "flavour": "\"Her roots reach the deepest memories of the world.\"",
+      "art": {
+        "w": 1520.73,
+        "x": -16.36,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1520.73,
+        "src": "playtest/assets/card-art/artemis-v6-397.webp?v=9f2508f91f04",
+        "h": 2091.00375
+      }
+    },
+    "artemis-v6-398": {
+      "title": "",
+      "subtitle": "The Moon's Gentle Whisper",
+      "flavour": "\"Even the smallest light can awaken the strength of a thousand stars.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -164.51,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-398.webp?v=d31e0c397e69",
+        "h": 2420.021739130435
+      }
+    },
+    "artemis-v6-399": {
+      "title": "",
+      "subtitle": "Defender of the Sacred Wilderness",
+      "flavour": "\"No tree stands alone. No guardian fights without the forest.\"",
+      "art": {
+        "w": 1773.81,
+        "x": -142.91,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1773.81,
+        "src": "playtest/assets/card-art/artemis-v6-399.webp?v=9b3953c63f81",
+        "h": 2090.997482806052
+      }
+    },
+    "artemis-v6-400": {
+      "title": "",
+      "subtitle": "The Ancient Power Awakens",
+      "flavour": "\"When the ancient forest rises, mountains tremble beneath its roots.\"",
+      "art": {
+        "w": 1813.88,
+        "x": -162.94,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1813.88,
+        "src": "playtest/assets/card-art/artemis-v6-400.webp?v=c101ece1204e",
+        "h": 2091.000555555556
+      }
+    },
+    "artemis-v6-401": {
+      "title": "",
+      "subtitle": "The First Arrow",
+      "flavour": "\"Before the huntress learns to strike, she must learn to listen.\"",
+      "art": {
+        "w": 2181.91,
+        "x": -346.96,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2181.91,
+        "src": "playtest/assets/card-art/artemis-v6-401.webp?v=c3e80a0c4e99",
+        "h": 2090.997083333333
+      }
+    },
+    "artemis-v6-402": {
+      "title": "",
+      "subtitle": "The Messenger of the Moon",
+      "flavour": "\"Its silver antlers illuminate paths that no mortal hunter could ever find.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -80.61,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-402.webp?v=7c9e7a33d1fe",
+        "h": 2252.217391304348
+      }
+    },
+    "artemis-v6-403": {
+      "title": "",
+      "subtitle": "The Clever Spirit of the Forest",
+      "flavour": "\"The smallest creatures often know the secrets of the oldest forests.\"",
+      "art": {
+        "w": 3717.33,
+        "x": -1114.67,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 3717.33,
+        "src": "playtest/assets/card-art/artemis-v6-403.webp?v=c649a5316d2a",
+        "h": 2090.998125
+      }
+    },
+    "artemis-v6-404": {
+      "title": "",
+      "subtitle": "Alpha of the Lunar Pack",
+      "flavour": "\"The pack follows neither the strongest nor the fastest, but the one chosen by the moon.\"",
+      "art": {
+        "w": 1672.8,
+        "x": -92.4,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1672.8,
+        "src": "playtest/assets/card-art/artemis-v6-404.webp?v=f1373afa2537",
+        "h": 2091.0
+      }
+    },
+    "artemis-v6-405": {
+      "title": "",
+      "subtitle": "The Forest That Walks",
+      "flavour": "\"When the ancient trees abandon their roots, even the mountains know that war has begun.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -73.03,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-405.webp?v=1d6965c556f6",
+        "h": 2237.061224489796
+      }
+    },
+    "artemis-v6-406": {
+      "title": "",
+      "subtitle": "The Goddess' Chosen Arrow",
+      "flavour": "\"Her arrow carries not merely steel, but the unquestionable will of the goddess.\"",
+      "art": {
+        "w": 3981.57,
+        "x": -1246.78,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 3981.57,
+        "src": "playtest/assets/card-art/artemis-v6-406.webp?v=5a213c7e209b",
+        "h": 2091.001387755102
+      }
+    },
+    "artemis-v6-407": {
+      "title": "",
+      "subtitle": "Voice of the Ancient World",
+      "flavour": "\"She does not command the forest. She merely speaks, and the forest answers.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -277.17,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-407.webp?v=554f831e3301",
+        "h": 2645.3333333333335
+      }
+    },
+    "artemis-v6-408": {
+      "title": "",
+      "subtitle": "Keeper of the Eternal Waters",
+      "flavour": "\"The sacred waters remember every life the forest has ever sheltered.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -275.71,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-408.webp?v=ef980b488539",
+        "h": 2642.413043478261
+      }
+    },
+    "artemis-v6-409": {
+      "title": "",
+      "subtitle": "Weapon of the Moon Huntresses",
+      "flavour": "\"Every arrow is a prayer offered to the goddess of the hunt.\"",
+      "art": {
+        "w": 3654.27,
+        "x": -1083.14,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 3654.27,
+        "src": "playtest/assets/card-art/artemis-v6-409.webp?v=bf845fa4f99a",
+        "h": 2090.999182561308
+      }
+    },
+    "artemis-v6-410": {
+      "title": "",
+      "subtitle": "Arrows for the Endless Hunt",
+      "flavour": "\"A true huntress never counts her arrows. She counts the prey that escaped.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -215.05,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-410.webp?v=97a01204f342",
+        "h": 2521.108695652174
+      }
+    },
+    "artemis-v6-411": {
+      "title": "",
+      "subtitle": "The Weapon of the Ancient Hunt",
+      "flavour": "\"Carved from the oldest trees, its point carries the fury of the wilderness.\"",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/artemis-v6-411.webp?v=3ce4dcfbbbfd",
+        "h": 2091.0
+      }
+    },
+    "artemis-v6-412": {
+      "title": "",
+      "subtitle": "Shelter Beneath the Silver Moon",
+      "flavour": "\"Even the fiercest storm grows silent beneath the moon's embrace.\"",
+      "art": {
+        "w": 2878.62,
+        "x": -695.31,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2878.62,
+        "src": "playtest/assets/card-art/artemis-v6-412.webp?v=e4f286d3fdef",
+        "h": 2090.9975833333333
+      }
+    },
+    "artemis-v6-413": {
+      "title": "",
+      "subtitle": "The Hunter's Final Answer",
+      "flavour": "\"A true hunter carries only what the wilderness cannot provide.\"",
+      "art": {
+        "w": 2527.77,
+        "x": -519.89,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2527.77,
+        "src": "playtest/assets/card-art/artemis-v6-413.webp?v=e0f710f542be",
+        "h": 2090.998857142857
+      }
+    },
+    "artemis-v6-414": {
+      "title": "",
+      "subtitle": "The Heart of the Lunar Forest",
+      "flavour": "\"Within the moonstone, the rhythm of the ancient world continues to beat.\"",
+      "art": {
+        "w": 1488.0,
+        "x": -0.0,
+        "y": -128.3,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-414.webp?v=34016aa49653",
+        "h": 2347.593220338983
+      }
+    },
+    "artemis-v6-415": {
+      "title": "",
+      "subtitle": "The Unbroken Defense",
+      "flavour": "\"The forest has endured a thousand wars. Its guardians have learned to endure them all.\"",
+      "art": {
+        "w": 3136.5,
+        "x": -824.25,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 3136.5,
+        "src": "playtest/assets/card-art/artemis-v6-415.webp?v=4bd8e6d9a4d3",
+        "h": 2091.0
+      }
+    },
+    "artemis-v6-416": {
+      "title": "",
+      "subtitle": "The Living Armor of the Wild",
+      "flavour": "\"It does not merely protect its wearer. It grows alongside their Cosmo.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -638.41,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-416.webp?v=8301bb312294",
+        "h": 3367.810650887574
+      }
+    },
+    "artemis-v6-417": {
+      "title": "",
+      "subtitle": "The World Reclaims Its Power",
+      "flavour": "\"The earth awakens, and with it, a power older than the gods.\"",
+      "art": {
+        "w": 2944.22,
+        "x": -728.11,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2944.22,
+        "src": "playtest/assets/card-art/artemis-v6-417.webp?v=2b14312b3adf",
+        "h": 2090.9970612244897
+      }
+    },
+    "artemis-v6-418": {
+      "title": "",
+      "subtitle": "The Wrath of the Ancient Wild",
+      "flavour": "\"When the forest strikes, even the strongest armor cannot silence its fury.\"",
+      "art": {
+        "w": 1938.26,
+        "x": -225.13,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1938.26,
+        "src": "playtest/assets/card-art/artemis-v6-418.webp?v=db8d6eabf79a",
+        "h": 2091.0033152173914
+      }
+    },
+    "artemis-v6-419": {
+      "title": "",
+      "subtitle": "The Strength of the Living World",
+      "flavour": "\"The wilderness does not teach mercy. It teaches survival.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -276.72,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-419.webp?v=ce2da4812c4f",
+        "h": 2644.4347826086955
+      }
+    },
+    "artemis-v6-420": {
+      "title": "",
+      "subtitle": "The Goddess Provides",
+      "flavour": "\"Beneath her silver light, the chosen discover strength where others see only darkness.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -256.82,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-420.webp?v=a1ead20a8c0f",
+        "h": 2604.6358974358973
+      }
+    },
+    "artemis-v6-421": {
+      "title": "",
+      "subtitle": "The Strength Beneath the Earth",
+      "flavour": "\"The smallest seed may one day become a forest that eclipses the heavens.\"",
+      "art": {
+        "w": 1568.78,
+        "x": -40.39,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1568.78,
+        "src": "playtest/assets/card-art/artemis-v6-421.webp?v=b72dbd80b79c",
+        "h": 2090.9961684782606
+      }
+    },
+    "artemis-v6-422": {
+      "title": "",
+      "subtitle": "The Strong Devour the Weak",
+      "flavour": "\"In the wilderness, strength is the only law that cannot be broken.\"",
+      "art": {
+        "w": 2927.4,
+        "x": -719.7,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2927.4,
+        "src": "playtest/assets/card-art/artemis-v6-422.webp?v=fa406bfa0f30",
+        "h": 2091.0
+      }
+    },
+    "artemis-v6-423": {
+      "title": "",
+      "subtitle": "The Earth Remembers",
+      "flavour": "\"Beneath every kingdom lies an older world, waiting to rise.\"",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/artemis-v6-423.webp?v=c6014a0879a1",
+        "h": 2091.0
+      }
+    },
+    "artemis-v6-424": {
+      "title": "",
+      "subtitle": "Judgment from the Moon",
+      "flavour": "\"The arrow does not choose its victim. The goddess already has.\"",
+      "art": {
+        "w": 1563.36,
+        "x": -37.68,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1563.36,
+        "src": "playtest/assets/card-art/artemis-v6-424.webp?v=cff7f14abb4e",
+        "h": 2090.9939999999997
+      }
+    },
+    "artemis-v6-425": {
+      "title": "",
+      "subtitle": "Life Finds a Way",
+      "flavour": "\"What the world takes, the forest eventually returns.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -55.34,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-425.webp?v=45608857d9ca",
+        "h": 2201.6739130434785
+      }
+    },
+    "artemis-v6-426": {
+      "title": "",
+      "subtitle": "The Divine Order of Nature",
+      "flavour": "\"Mankind was never meant to conquer nature. It was meant to live beneath its will.\"",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/artemis-v6-426.webp?v=31acf0ee3418",
+        "h": 2091.0
+      }
+    },
+    "artemis-v6-427": {
+      "title": "",
+      "subtitle": "The Sanctuary of the Lunar Goddess",
+      "flavour": "\"Far beyond the reach of mortal eyes, the goddess watches over her chosen warriors.\"",
+      "art": {
+        "w": 3717.33,
+        "x": -1114.67,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 3717.33,
+        "src": "playtest/assets/card-art/artemis-v6-427.webp?v=f8cbf23a8c04",
+        "h": 2090.998125
+      }
+    },
+    "artemis-v6-428": {
+      "title": "",
+      "subtitle": "The Heart of the Living World",
+      "flavour": "\"Every root carries the memory of a world that existed before humanity.\"",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/artemis-v6-428.webp?v=49b4c64358c5",
+        "h": 2091.0
+      }
+    },
+    "artemis-v6-429": {
+      "title": "",
+      "subtitle": "Where the First Trees Still Stand",
+      "flavour": "\"The oldest trees have witnessed the rise and fall of gods. They remain.\"",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/artemis-v6-429.webp?v=b8ade01ca8e3",
+        "h": 2091.0
+      }
+    },
+    "artemis-v6-430": {
+      "title": "",
+      "subtitle": "The Eternal Chase",
+      "flavour": "\"Within these sacred grounds, every living creature becomes either hunter or prey.\"",
+      "art": {
+        "w": 3748.5,
+        "x": -1130.25,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 3748.5,
+        "src": "playtest/assets/card-art/artemis-v6-430.webp?v=76faac2ffbbb",
+        "h": 2091.0
+      }
+    },
+    "artemis-v6-431": {
+      "title": "",
+      "subtitle": "Commander of the Silver Hunt",
+      "flavour": "\"Under her command, a thousand arrows fly as one.\"",
+      "art": {
+        "w": 3981.57,
+        "x": -1246.78,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 3981.57,
+        "src": "playtest/assets/card-art/artemis-v6-431.webp?v=b8ff761cb9ac",
+        "h": 2091.001387755102
+      }
+    },
+    "artemis-v6-432": {
+      "title": "",
+      "subtitle": "Vestment of the Silver Commander",
+      "flavour": "\"The moon rewards victory with strength, and strength with eternal glory.\"",
+      "art": {
+        "w": 1672.8,
+        "x": -92.4,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1672.8,
+        "src": "playtest/assets/card-art/artemis-v6-432.webp?v=7f838f03ee56",
+        "h": 2091.0
+      }
+    },
+    "artemis-v6-433": {
+      "title": "",
+      "subtitle": "The Wilderness Incarnate",
+      "flavour": "\"The forest does not send armies. It sends its strongest children.\"",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/artemis-v6-433.webp?v=a30047ac903c",
+        "h": 2091.0
+      }
+    },
+    "artemis-v6-434": {
+      "title": "",
+      "subtitle": "The Living Bark of the Ancient World",
+      "flavour": "\"Its roots drink from the earth itself, and its strength knows no season.\"",
+      "art": {
+        "w": 3717.33,
+        "x": -1114.67,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 3717.33,
+        "src": "playtest/assets/card-art/artemis-v6-434.webp?v=446900bce66c",
+        "h": 2090.9981249999996
+      }
+    },
+    "artemis-v6-435": {
+      "title": "",
+      "subtitle": "The Huntress Who Never Misses",
+      "flavour": "\"The greatest huntress does not seek her prey. She knows where it will fall.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -49.27,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-435.webp?v=c350617ff146",
+        "h": 2189.5434782608695
+      }
+    },
+    "artemis-v6-436": {
+      "title": "",
+      "subtitle": "The Armor of Unerring Precision",
+      "flavour": "\"No shadow can conceal what the moon has chosen to reveal.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -49.27,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-436.webp?v=c350617ff146",
+        "h": 2189.5434782608695
+      }
+    },
+    "artemis-v6-437": {
+      "title": "",
+      "subtitle": "Keeper of the Verdant Path",
+      "flavour": "\"Every path through the sacred forest leads deeper into the goddess' dominion.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -49.27,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-437.webp?v=c350617ff146",
+        "h": 2189.5434782608695
+      }
+    },
+    "artemis-v6-438": {
+      "title": "",
+      "subtitle": "The Unbroken Lunar Shield",
+      "flavour": "\"Her shield has endured storms that shattered entire kingdoms.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -49.27,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-438.webp?v=c350617ff146",
+        "h": 2189.5434782608695
+      }
+    },
+    "artemis-v6-439": {
+      "title": "",
+      "subtitle": "The Hunter of Divine Prey",
+      "flavour": "\"Every fallen enemy becomes another step toward the goddess' ultimate victory.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -49.27,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-439.webp?v=c350617ff146",
+        "h": 2189.5434782608695
+      }
+    },
+    "artemis-v6-440": {
+      "title": "",
+      "subtitle": "The Ancient Moon's Final Sentinel",
+      "flavour": "\"The last guardian does not defend the sacred moon. She is the judgment that follows its rising.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -49.27,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-440.webp?v=c350617ff146",
+        "h": 2189.5434782608695
+      }
+    },
+    "artemis-v6-441": {
+      "title": "",
+      "subtitle": "The Moon Rises Once More",
+      "flavour": "\"After centuries of silence, the moon finally answered the prayers of her chosen.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -49.27,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-441.webp?v=c350617ff146",
+        "h": 2189.5434782608695
+      }
+    },
+    "artemis-v6-442": {
+      "title": "",
+      "subtitle": "The Sacred Oath Renewed",
+      "flavour": "\"Seven warriors answered the call. Seven destinies became one.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -49.27,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-442.webp?v=c350617ff146",
+        "h": 2189.5434782608695
+      }
+    },
+    "artemis-v6-443": {
+      "title": "",
+      "subtitle": "The Hunt Begins",
+      "flavour": "\"The first blood spilled beneath the moon marked the beginning of a war without mercy.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -49.27,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-443.webp?v=c350617ff146",
+        "h": 2189.5434782608695
+      }
+    },
+    "artemis-v6-444": {
+      "title": "",
+      "subtitle": "The Earth Reclaims the Sacred Ground",
+      "flavour": "\"The stone pillars of Sanctuary cracked as ancient roots rose to reclaim the land.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -49.27,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-444.webp?v=c350617ff146",
+        "h": 2189.5434782608695
+      }
+    },
+    "artemis-v6-445": {
+      "title": "",
+      "subtitle": "Two Goddesses, One World",
+      "flavour": "\"Athena saw humanity's potential. Artemis saw the destruction it had already caused.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -49.27,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-445.webp?v=c350617ff146",
+        "h": 2189.5434782608695
+      }
+    },
+    "artemis-v6-446": {
+      "title": "",
+      "subtitle": "The Mortal Vessel Transformed",
+      "flavour": "\"A child's eyes opened, but the soul looking through them belonged to a goddess.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -49.27,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-446.webp?v=c350617ff146",
+        "h": 2189.5434782608695
+      }
+    },
+    "artemis-v6-447": {
+      "title": "",
+      "subtitle": "The Price of Divine Loyalty",
+      "flavour": "\"They fell beneath the same moon, their vows unbroken even in death.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -49.27,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-447.webp?v=c350617ff146",
+        "h": 2189.5434782608695
+      }
+    },
+    "artemis-v6-448": {
+      "title": "",
+      "subtitle": "The Goddess Demands Balance",
+      "flavour": "\"The goddess did not see cruelty in her judgment. She saw the restoration of balance.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -49.27,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-448.webp?v=c350617ff146",
+        "h": 2189.5434782608695
+      }
+    },
+    "artemis-v6-449": {
+      "title": "",
+      "subtitle": "Nature's Final Judgment",
+      "flavour": "\"When the goddess commands the wilderness to rise, even the heavens tremble.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -49.27,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-449.webp?v=c350617ff146",
+        "h": 2189.5434782608695
+      }
+    },
+    "artemis-v6-450": {
+      "title": "",
+      "subtitle": "The End of Mankind's Dominion",
+      "flavour": "\"The world did not end. It simply remembered who ruled it before mankind.\"",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -49.27,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/artemis-v6-450.webp?v=c350617ff146",
+        "h": 2189.5434782608695
+      }
+    },
+    "athena-001-hud": {},
+    "athena-001": {
+      "title": "",
+      "subtitle": "SAORI KIDDO",
+      "flavour": "",
+      "art": {
+        "w": 3481.6544,
+        "x": -996.8272,
+        "y": -1285.9650000000015,
+        "zoom": 2.23,
+        "baseW": 1561.28,
+        "src": "playtest/assets/card-art/athena-001.webp?v=5708267b7259",
+        "h": 4662.929999999999
+      }
+    },
+    "athena-002": {
+      "title": "Pegasus Seiya",
+      "subtitle": "Athena’s Last Stand",
+      "flavour": "“Burn cosmo, burn!”",
+      "art": {
+        "x": -320.1,
+        "y": -416.6,
+        "w": 2250.26,
+        "zoom": 1,
+        "baseW": 2250.26,
+        "src": "playtest/assets/card-art/athena-002.webp?v=761e2de0e140",
+        "h": 3013.741071428572
+      }
+    },
+    "athena-003": {
+      "title": "",
+      "subtitle": "",
+      "flavour": "“You have forgotten that you possess a surrogate body. Cosmo is the fire of the heart.”",
+      "art": {
+        "w": 1039.9650291821565,
+        "x": 213.7054694063424,
+        "y": 375.4334593476756,
+        "zoom": 0.6989012292890837,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/athena-003.webp?v=370906cecb90",
+        "h": 1550.2584285945188
+      }
+    },
+    "athena-v6-001": {
+      "title": "",
+      "subtitle": "Athens Last Stand",
+      "flavour": "\"Burn cosmos, BURN!\"",
+      "art": {
+        "w": 2530.11,
+        "x": -487.7669321588671,
+        "y": -84.93752803966197,
+        "zoom": 1.21,
+        "baseW": 2091,
+        "src": "playtest/assets/card-art/athena-v6-001.webp?v=19867cdf022c",
+        "h": 2530.11
+      }
+    },
+    "athena-v6-002": {
+      "title": "",
+      "subtitle": "The Wings of Hope",
+      "flavour": "",
+      "art": {
+        "w": 1568.25,
+        "x": -40.125,
+        "y": 0,
+        "zoom": 1,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-002.webp?v=6a312aa21e4e",
+        "h": 2091.0
+      }
+    },
+    "athena-v6-003": {
+      "title": "",
+      "subtitle": "The Unbreakable Will",
+      "flavour": "",
+      "art": {
+        "w": 2255.7518938326016,
+        "x": -422.20649423583154,
+        "y": -216.6045864838036,
+        "zoom": 1.5159622942423399,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/athena-v6-003.webp?v=78b7b325ab94",
+        "h": 3383.6278407489026
+      }
+    },
+    "athena-v6-004": {
+      "title": "",
+      "subtitle": "The Strongest Shield",
+      "flavour": "",
+      "art": {
+        "w": 1568.25,
+        "x": -40.125,
+        "y": 0,
+        "zoom": 1,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-004.webp?v=38e052b00cd0",
+        "h": 2091.0
+      }
+    },
+    "athena-v6-005": {
+      "title": "",
+      "subtitle": "The Frozen Resolve",
+      "flavour": "",
+      "art": {
+        "w": 1488,
+        "x": 0,
+        "y": -70.5,
+        "zoom": 1,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/athena-v6-005.webp?v=6941096a4b69",
+        "h": 2232.0
+      }
+    },
+    "athena-v6-006": {
+      "title": "",
+      "subtitle": "The Eternal Ice",
+      "flavour": "",
+      "art": {
+        "w": 1740.9599999999998,
+        "x": -202.1648860686472,
+        "y": -9.158904710591173,
+        "zoom": 1.17,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/athena-v6-006.webp?v=e1fe8fc6978b",
+        "h": 2611.4399999999996
+      }
+    },
+    "athena-v6-007": {
+      "title": "",
+      "subtitle": "The Gentle Protector",
+      "flavour": "",
+      "art": {
+        "w": 1673.3965763195436,
+        "x": -92.69828815977178,
+        "y": 0,
+        "zoom": 1,
+        "baseW": 1673.3965763195436,
+        "src": "playtest/assets/card-art/athena-v6-007.webp?v=66a55eca159b",
+        "h": 2091.0
+      }
+    },
+    "athena-v6-008": {
+      "title": "",
+      "subtitle": "The Chains of Protection",
+      "flavour": "",
+      "art": {
+        "w": 1568.25,
+        "x": -40.125,
+        "y": 0,
+        "zoom": 1,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-008.webp?v=87e7d39db55a",
+        "h": 2091.0
+      }
+    },
+    "athena-v6-009": {
+      "title": "",
+      "subtitle": "The Immortal Flame",
+      "flavour": "",
+      "art": {
+        "w": 1725.075,
+        "x": -70.38239050052812,
+        "y": -237.55830776576659,
+        "zoom": 1.1,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-009.webp?v=2e1af34038be",
+        "h": 2300.1
+      }
+    },
+    "athena-v6-010": {
+      "title": "",
+      "subtitle": "From the Ashes",
+      "flavour": "",
+      "art": {
+        "w": 1568.25,
+        "x": -40.125,
+        "y": 0,
+        "zoom": 1,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-010.webp?v=68a966f7daab",
+        "h": 2091.0
+      }
+    },
+    "athena-v6-011": {
+      "title": "",
+      "subtitle": "The Guardian of Jamir",
+      "flavour": "",
+      "art": {
+        "w": 1488,
+        "x": -3.260828598349576,
+        "y": 46.1670594928479,
+        "zoom": 1,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/athena-v6-011.webp?v=a474f393d9c3",
+        "h": 2232.0
+      }
+    },
+    "athena-v6-012": {
+      "title": "",
+      "subtitle": "Stardust Revolution",
+      "flavour": "",
+      "art": {
+        "w": 1834.8525,
+        "x": -173.42624999999998,
+        "y": -177.73499999999967,
+        "zoom": 1.17,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-012.webp?v=86badb97fd8d",
+        "h": 2446.47
+      }
+    },
+    "athena-v6-013": {
+      "title": "",
+      "subtitle": "The Two Faces of Fate",
+      "flavour": "",
+      "art": {
+        "w": 1568.25,
+        "x": -40.125,
+        "y": 0,
+        "zoom": 1,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-013.webp?v=4ea87d0f4254",
+        "h": 2091.0
+      }
+    },
+    "athena-v6-014": {
+      "title": "",
+      "subtitle": "Galaxian Explosion",
+      "flavour": "",
+      "art": {
+        "w": 1850.5349999999999,
+        "x": -198.5499013158327,
+        "y": -223.27208889702433,
+        "zoom": 1.18,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-014.webp?v=2f85d14b1ce9",
+        "h": 2467.3799999999997
+      }
+    },
+    "athena-v6-015": {
+      "title": "",
+      "subtitle": "The Golden Lightning",
+      "flavour": "",
+      "art": {
+        "w": 1488,
+        "x": 0,
+        "y": -275.7065217391305,
+        "zoom": 1,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/athena-v6-015.webp?v=e92e21c67eed",
+        "h": 2642.413043478261
+      }
+    },
+    "athena-v6-016": {
+      "title": "",
+      "subtitle": "Lightning Plasma",
+      "flavour": "",
+      "art": {
+        "w": 1960.3125,
+        "x": -252.34355548496706,
+        "y": -415.4617654827699,
+        "zoom": 1.25,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-016.webp?v=370d222fd55a",
+        "h": 2613.75
+      }
+    },
+    "athena-v6-017": {
+      "title": "",
+      "subtitle": "The Master of Absolute Zero",
+      "flavour": "",
+      "art": {
+        "w": 1935.9872,
+        "x": -252.42462646832098,
+        "y": 92.73161837613725,
+        "zoom": 1.24,
+        "baseW": 1561.28,
+        "src": "playtest/assets/card-art/athena-v6-017.webp?v=409fec607380",
+        "h": 2592.84
+      }
+    },
+    "athena-v6-018": {
+      "title": "",
+      "subtitle": "Aurora Execution",
+      "flavour": "",
+      "art": {
+        "w": 1568.25,
+        "x": -40.125,
+        "y": 0,
+        "zoom": 1,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-018.webp?v=c538ae5c81fd",
+        "h": 2091.0
+      }
+    },
+    "athena-v6-019": {
+      "title": "",
+      "subtitle": "The Wings of Divinity",
+      "flavour": "",
+      "art": {
+        "w": 1592.16,
+        "x": -28.3108962681672,
+        "y": -72.49383187378157,
+        "zoom": 1.07,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/athena-v6-019.webp?v=2766293ff952",
+        "h": 2826.084
+      }
+    },
+    "athena-v6-020": {
+      "title": "",
+      "subtitle": "The Last Miracle",
+      "flavour": "",
+      "art": {
+        "w": 1772.1225,
+        "x": -137.29215540501957,
+        "y": -240.8558728868661,
+        "zoom": 1.13,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-020.webp?v=9f120e45d39d",
+        "h": 2362.83
+      }
+    },
+    "athena-v6-021": {
+      "title": "",
+      "subtitle": "The Masked Mentor",
+      "flavour": "",
+      "art": {
+        "w": 1967.2128,
+        "x": -260.899917616166,
+        "y": -381.3610897087682,
+        "zoom": 1.26,
+        "baseW": 1561.28,
+        "src": "playtest/assets/card-art/athena-v6-021.webp?v=c9cde76e39ee",
+        "h": 2634.66
+      }
+    },
+    "athena-v6-022": {
+      "title": "",
+      "subtitle": "The Serpent’s Wrath",
+      "flavour": "",
+      "art": {
+        "w": 1561.28,
+        "x": -36.639999999999986,
+        "y": 0,
+        "zoom": 1,
+        "baseW": 1561.28,
+        "src": "playtest/assets/card-art/athena-v6-022.webp?v=b7cc52deb20b",
+        "h": 2091.0
+      }
+    },
+    "athena-v6-023": {
+      "title": "",
+      "subtitle": "The Untouchable Beauty",
+      "flavour": "",
+      "art": {
+        "w": 2399.4225,
+        "x": -579.1649635549797,
+        "y": -281.73764562437407,
+        "zoom": 1.53,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-023.webp?v=7a829a492b88",
+        "h": 3199.23
+      }
+    },
+    "athena-v6-024": {
+      "title": "",
+      "subtitle": "The Petrifying Gaze",
+      "flavour": "",
+      "art": {
+        "w": 1815.36,
+        "x": -266.0326299860093,
+        "y": -106.84605614864586,
+        "zoom": 1.22,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/athena-v6-024.webp?v=e91f26f834c4",
+        "h": 2883.218823529412
+      }
+    },
+    "athena-v6-025": {
+      "title": "",
+      "subtitle": "The Melody of the Underworld",
+      "flavour": "",
+      "art": {
+        "w": 2211.2325,
+        "x": -401.9421843859752,
+        "y": -96.50003662426877,
+        "zoom": 1.4100000000000001,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-025.webp?v=dbe61930cd60",
+        "h": 2948.31
+      }
+    },
+    "athena-v6-026": {
+      "title": "",
+      "subtitle": "",
+      "flavour": "",
+      "art": {
+        "w": 1568.25,
+        "x": -40.125,
+        "y": 0,
+        "zoom": 1,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-026.webp?v=cd9993f6aa79",
+        "h": 2091.0
+      }
+    },
+    "athena-v6-027": {
+      "title": "",
+      "subtitle": "The Ultimate Sacrifice",
+      "flavour": "",
+      "art": {
+        "w": 1991.6775,
+        "x": -245.60387577449103,
+        "y": 44.678045554291316,
+        "zoom": 1.27,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-027.webp?v=88fde5d8a543",
+        "h": 2655.57
+      }
+    },
+    "athena-v6-028": {
+      "title": "",
+      "subtitle": "The Galloping Warrior",
+      "flavour": "",
+      "art": {
+        "w": 1568.25,
+        "x": -40.125,
+        "y": 0,
+        "zoom": 1,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-028.webp?v=c97b62e9aac1",
+        "h": 2091.0
+      }
+    },
+    "athena-v6-029": {
+      "title": "",
+      "subtitle": "The Crushing Grip",
+      "flavour": "",
+      "art": {
+        "w": 2085.7725,
+        "x": -340.35294331582105,
+        "y": -440.375238540312,
+        "zoom": 1.33,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-029.webp?v=1fa0ec771f19",
+        "h": 2781.03
+      }
+    },
+    "athena-v6-030": {
+      "title": "",
+      "subtitle": "The Venomous Fang",
+      "flavour": "",
+      "art": {
+        "w": 2132.82,
+        "x": -260.19933843474297,
+        "y": -541.7256040718464,
+        "zoom": 1.36,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-030.webp?v=e8cd7731138f",
+        "h": 2843.76
+      }
+    },
+    "athena-v6-031": {
+      "title": "",
+      "subtitle": "The Pack Hunter",
+      "flavour": "",
+      "art": {
+        "w": 1940.5158620689654,
+        "x": -283.58361832037656,
+        "y": -104.44567586064181,
+        "zoom": 1.29,
+        "baseW": 1504.2758620689654,
+        "src": "playtest/assets/card-art/athena-v6-031.webp?v=c54e1391dedd",
+        "h": 2697.39
+      }
+    },
+    "athena-v6-032": {
+      "title": "",
+      "subtitle": "The Lion’s Courage",
+      "flavour": "",
+      "art": {
+        "w": 1776.2464952638702,
+        "x": -38.26846648811534,
+        "y": -35.44154929291227,
+        "zoom": 1.18,
+        "baseW": 1505.2936400541273,
+        "src": "playtest/assets/card-art/athena-v6-032.webp?v=d4db31705899",
+        "h": 2467.38
+      }
+    },
+    "athena-v6-033": {
+      "title": "",
+      "subtitle": "The Loyal Protector",
+      "flavour": "",
+      "art": {
+        "w": 1911.722922868742,
+        "x": -196.64072077823073,
+        "y": -194.89092083875175,
+        "zoom": 1.2700000000000002,
+        "baseW": 1505.2936400541273,
+        "src": "playtest/assets/card-art/athena-v6-033.webp?v=9fc953b347cd",
+        "h": 2655.5700000000006
+      }
+    },
+    "athena-v6-034": {
+      "title": "",
+      "subtitle": "The Unwavering Attendant",
+      "flavour": "",
+      "art": {
+        "w": 1910.90625,
+        "x": -196.7740855116637,
+        "y": 66.38466149219767,
+        "zoom": 1,
+        "baseW": 1910.90625,
+        "src": "playtest/assets/card-art/athena-v6-034.webp?v=460b3a3994f3",
+        "h": 2091.0
+      }
+    },
+    "athena-v6-035": {
+      "title": "",
+      "subtitle": "The Gentle Heart",
+      "flavour": "",
+      "art": {
+        "w": 1787.805,
+        "x": -197.39163571081866,
+        "y": -241.99577718628098,
+        "zoom": 1.1400000000000001,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-035.webp?v=e276fc126ac6",
+        "h": 2383.7400000000002
+      }
+    },
+    "athena-v6-036": {
+      "title": "",
+      "subtitle": "The Bond Beyond Memory",
+      "flavour": "",
+      "art": {
+        "w": 1568.25,
+        "x": -40.125,
+        "y": 0,
+        "zoom": 1,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-036.webp?v=91b58504c19a",
+        "h": 2091.0
+      }
+    },
+    "athena-v6-037": {
+      "title": "",
+      "subtitle": "The Voice That Reaches the Dragon",
+      "flavour": "",
+      "art": {
+        "w": 1824.0022681883027,
+        "x": -303.1827667355585,
+        "y": -1.2502621606793127,
+        "zoom": 1.09,
+        "baseW": 1673.3965763195436,
+        "src": "playtest/assets/card-art/athena-v6-037.webp?v=38025ebf290e",
+        "h": 2279.19
+      }
+    },
+    "athena-v6-038": {
+      "title": "",
+      "subtitle": "The Light of Death Queen Island",
+      "flavour": "",
+      "art": {
+        "w": 1568.25,
+        "x": -49.4826221340262,
+        "y": -68.41337674739918,
+        "zoom": 1,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-038.webp?v=1ccc52440e44",
+        "h": 2091.0
+      }
+    },
+    "athena-v6-039": {
+      "title": "",
+      "subtitle": "The Mask of Hatred",
+      "flavour": "",
+      "art": {
+        "w": 1850.5349999999999,
+        "x": -231.84751884475907,
+        "y": -13.922297423601776,
+        "zoom": 1.18,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-039.webp?v=99fc89b72f20",
+        "h": 2467.3799999999997
+      }
+    },
+    "athena-v6-040": {
+      "title": "",
+      "subtitle": "Defender of the Twelve Temples",
+      "flavour": "",
+      "art": {
+        "w": 1561.28,
+        "x": -36.639999999999986,
+        "y": 0,
+        "zoom": 1,
+        "baseW": 1561.28,
+        "src": "playtest/assets/card-art/athena-v6-040.webp?v=3d9b05026765",
+        "h": 2091.0
+      }
+    },
+    "athena-v6-041": {
+      "title": "",
+      "subtitle": "Keeper of the Sacred Flame",
+      "flavour": "",
+      "art": {
+        "w": 1858.5459740259741,
+        "x": -175.4548572254855,
+        "y": -4.497028240079658,
+        "zoom": 1.18,
+        "baseW": 1575.0389610389611,
+        "src": "playtest/assets/card-art/athena-v6-041.webp?v=3ea9afd63a15",
+        "h": 2467.38
+      }
+    },
+    "athena-v6-042": {
+      "title": "",
+      "subtitle": "The Hands That Restore Hope",
+      "flavour": "",
+      "art": {
+        "w": 1575.0389610389611,
+        "x": -43.51948051948057,
+        "y": 0,
+        "zoom": 1,
+        "baseW": 1575.0389610389611,
+        "src": "playtest/assets/card-art/athena-v6-042.webp?v=2624612dae74",
+        "h": 2091.0
+      }
+    },
+    "athena-v6-043": {
+      "title": "",
+      "subtitle": "Keeper of Forbidden Knowledge",
+      "flavour": "",
+      "art": {
+        "w": 1937.2979220779223,
+        "x": -406.6291709242023,
+        "y": -6.515264829555008,
+        "zoom": 1.23,
+        "baseW": 1575.0389610389611,
+        "src": "playtest/assets/card-art/athena-v6-043.webp?v=7f7c82fb2ac6",
+        "h": 2571.93
+      }
+    },
+    "athena-v6-044": {
+      "title": "",
+      "subtitle": "Armor of a Fallen Saint",
+      "flavour": "",
+      "art": {
+        "w": 1834.8525,
+        "x": -220.81979138708846,
+        "y": -18.62424333550041,
+        "zoom": 1.17,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-044.webp?v=79e85d3a5973",
+        "h": 2446.47
+      }
+    },
+    "athena-v6-045": {
+      "title": "",
+      "subtitle": "The Unbreakable Defense",
+      "flavour": "",
+      "art": {
+        "w": 1568.25,
+        "x": -40.125,
+        "y": 0,
+        "zoom": 1,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-045.webp?v=a944cb122f65",
+        "h": 2091.0
+      }
+    },
+    "athena-v6-046": {
+      "title": "",
+      "subtitle": "The Chain That Protects",
+      "flavour": "",
+      "art": {
+        "w": 1568.25,
+        "x": -40.125,
+        "y": 0,
+        "zoom": 1,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-046.webp?v=254c9778d0b4",
+        "h": 2091.0
+      }
+    },
+    "athena-v6-047": {
+      "title": "",
+      "subtitle": "The Flame That Never Dies",
+      "flavour": "",
+      "art": {
+        "w": 1568.25,
+        "x": -40.125,
+        "y": 0,
+        "zoom": 1,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-047.webp?v=1639e60078f5",
+        "h": 2091.0
+      }
+    },
+    "athena-v6-048": {
+      "title": "",
+      "subtitle": "The Blade of Justice",
+      "flavour": "",
+      "art": {
+        "w": 1606.5397402597405,
+        "x": -59.26987012987024,
+        "y": -20.90999999999849,
+        "zoom": 1.02,
+        "baseW": 1575.0389610389611,
+        "src": "playtest/assets/card-art/athena-v6-048.webp?v=ac00c12f9e37",
+        "h": 2132.82
+      }
+    },
+    "athena-v6-049": {
+      "title": "",
+      "subtitle": "The Balance of Protection",
+      "flavour": "",
+      "art": {
+        "w": 1575.0389610389611,
+        "x": -43.51948051948057,
+        "y": 0,
+        "zoom": 1,
+        "baseW": 1575.0389610389611,
+        "src": "playtest/assets/card-art/athena-v6-049.webp?v=470d79be089b",
+        "h": 2091.0
+      }
+    },
+    "athena-v6-050": {
+      "title": "",
+      "subtitle": "The Art of Restoration",
+      "flavour": "",
+      "art": {
+        "w": 2125.7775467775464,
+        "x": -551.4910062072069,
+        "y": -63.941705949284824,
+        "zoom": 1,
+        "baseW": 2125.7775467775464,
+        "src": "playtest/assets/card-art/athena-v6-050.webp?v=080cd359a437",
+        "h": 2090.9999999999995
+      }
+    },
+    "athena-v6-051": {
+      "title": "",
+      "subtitle": "The Flame of Athena",
+      "flavour": "",
+      "art": {
+        "w": 2430.7875000000004,
+        "x": -539.5525028195759,
+        "y": -284.493856672627,
+        "zoom": 1.5500000000000003,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-051.webp?v=0aa850d4ef6d",
+        "h": 3241.0500000000006
+      }
+    },
+    "athena-v6-052": {
+      "title": "",
+      "subtitle": "The Tournament Begins",
+      "flavour": "",
+      "art": {
+        "w": 2963.9925,
+        "x": -756.7008726765267,
+        "y": -1727.9287969359564,
+        "zoom": 1.89,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-052.webp?v=3dee137ea340",
+        "h": 3951.99
+      }
+    },
+    "athena-v6-053": {
+      "title": "",
+      "subtitle": "Awaken Your Inner Power",
+      "flavour": "",
+      "art": {
+        "w": 3167.8650000000002,
+        "x": -854.5159451646063,
+        "y": -1819.8493540718468,
+        "zoom": 2.02,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-053.webp?v=1f8cf9f55c04",
+        "h": 4223.820000000001
+      }
+    },
+    "athena-v6-054": {
+      "title": "",
+      "subtitle": "Rise Beyond Defeat",
+      "flavour": "",
+      "art": {
+        "w": 1615.2975000000001,
+        "x": -84.25463755960368,
+        "y": -169.9230654665147,
+        "zoom": 1.03,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-054.webp?v=f5d3fff9d444",
+        "h": 2153.73
+      }
+    },
+    "athena-v6-055": {
+      "title": "",
+      "subtitle": "Behind the Mask",
+      "flavour": "",
+      "art": {
+        "w": 1568.25,
+        "x": -40.125,
+        "y": 0,
+        "zoom": 1,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-055.webp?v=1b3357d4117c",
+        "h": 2091.0
+      }
+    },
+    "athena-v6-056": {
+      "title": "",
+      "subtitle": "For the Goddess Athena",
+      "flavour": "",
+      "art": {
+        "w": 1502.88,
+        "x": -41.39722810724379,
+        "y": -236.5439130762711,
+        "zoom": 1.01,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/athena-v6-056.webp?v=632c2ef7f038",
+        "h": 2670.3670138150906
+      }
+    },
+    "athena-v6-057": {
+      "title": "",
+      "subtitle": "The Apprentice’s Hidden Power",
+      "flavour": "",
+      "art": {
+        "w": 1568.25,
+        "x": -40.125,
+        "y": 0,
+        "zoom": 1,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-057.webp?v=8c341e3b12d3",
+        "h": 2091.0
+      }
+    },
+    "athena-v6-058": {
+      "title": "",
+      "subtitle": "The Price of Protection",
+      "flavour": "",
+      "art": {
+        "w": 1975.9950000000001,
+        "x": -250.2748605916113,
+        "y": -395.41168583387525,
+        "zoom": 1.26,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-058.webp?v=27f596d4d9b0",
+        "h": 2634.6600000000003
+      }
+    },
+    "athena-v6-059": {
+      "title": "",
+      "subtitle": "The Strength to Return",
+      "flavour": "",
+      "art": {
+        "w": 1803.4875000000002,
+        "x": -299.41652184886084,
+        "y": -199.67665871305405,
+        "zoom": 1.1500000000000001,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-059.webp?v=052336464f4c",
+        "h": 2404.6500000000005
+      }
+    },
+    "athena-v6-060": {
+      "title": "",
+      "subtitle": "The Path to Becoming a Saint",
+      "flavour": "",
+      "art": {
+        "w": 1866.2175,
+        "x": -184.81762702367018,
+        "y": -322.3010366547462,
+        "zoom": 1.19,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-060.webp?v=0bb79d926897",
+        "h": 2488.29
+      }
+    },
+    "athena-v6-061": {
+      "title": "",
+      "subtitle": "Answer the Goddess",
+      "flavour": "",
+      "art": {
+        "w": 1488,
+        "x": -10.865888130657027,
+        "y": -483.73816179302185,
+        "zoom": 1,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/athena-v6-061.webp?v=4eb62c6a8acc",
+        "h": 3295.5704697986575
+      }
+    },
+    "athena-v6-062": {
+      "title": "",
+      "subtitle": "Where Legends Are Born",
+      "flavour": "",
+      "art": {
+        "w": 1568.25,
+        "x": -40.125,
+        "y": 0,
+        "zoom": 1,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-062.webp?v=11e8a0dfa521",
+        "h": 2091.0
+      }
+    },
+    "athena-v6-063": {
+      "title": "",
+      "subtitle": "The Sanctuary of Restoration",
+      "flavour": "",
+      "art": {
+        "w": 1568.25,
+        "x": -40.125,
+        "y": 0,
+        "zoom": 1,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-063.webp?v=e1172110bec3",
+        "h": 2091.0
+      }
+    },
+    "athena-v6-064": {
+      "title": "",
+      "subtitle": "The Wisdom of Rozan",
+      "flavour": "",
+      "art": {
+        "w": 1568.25,
+        "x": -40.125,
+        "y": 0,
+        "zoom": 1,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-064.webp?v=d19e7023ae5d",
+        "h": 2091.0
+      }
+    },
+    "athena-v6-065": {
+      "title": "",
+      "subtitle": "The Road to Athena",
+      "flavour": "",
+      "art": {
+        "w": 1488,
+        "x": -7.966193644176656,
+        "y": -223.29981457073018,
+        "zoom": 1,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/athena-v6-065.webp?v=eb8961c49a86",
+        "h": 2642.413043478261
+      }
+    },
+    "athena-v6-066": {
+      "title": "",
+      "subtitle": "The Wings of the Mentor",
+      "flavour": "",
+      "art": {
+        "w": 2493.5175,
+        "x": -478.2547383505125,
+        "y": -891.0083411898567,
+        "zoom": 1.5899999999999999,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-066.webp?v=b633c7965510",
+        "h": 3324.69
+      }
+    },
+    "athena-v6-067": {
+      "title": "",
+      "subtitle": "The Serpent’s Venom",
+      "flavour": "",
+      "art": {
+        "w": 1488,
+        "x": 2.8572081203780613,
+        "y": -533.3214945122123,
+        "zoom": 1,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/athena-v6-067.webp?v=3420a40c026c",
+        "h": 2642.413043478261
+      }
+    },
+    "athena-v6-068": {
+      "title": "",
+      "subtitle": "The Invisible Barrier",
+      "flavour": "",
+      "art": {
+        "w": 1666.5600000000002,
+        "x": -49.68015761071308,
+        "y": -853.2109573062149,
+        "zoom": 1.12,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/athena-v6-068.webp?v=f5ddb736e9c7",
+        "h": 2959.5026086956527
+      }
+    },
+    "athena-v6-069": {
+      "title": "",
+      "subtitle": "The Shield of Medusa",
+      "flavour": "",
+      "art": {
+        "w": 1488,
+        "x": -8.47603003740403,
+        "y": -540.2361208532398,
+        "zoom": 1,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/athena-v6-069.webp?v=a8e93e17e30e",
+        "h": 2642.413043478261
+      }
+    },
+    "athena-v6-070": {
+      "title": "",
+      "subtitle": "The Song of the Underworld",
+      "flavour": "",
+      "art": {
+        "w": 1630.98,
+        "x": -80.68065071524472,
+        "y": -188.84131319083247,
+        "zoom": 1.04,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-070.webp?v=14feb06fe696",
+        "h": 2174.64
+      }
+    },
+    "athena-v6-071": {
+      "title": "",
+      "subtitle": "The Burning Centaur",
+      "flavour": "",
+      "art": {
+        "w": 1488,
+        "x": -47.71218913285554,
+        "y": -415.68787434803824,
+        "zoom": 1,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/athena-v6-071.webp?v=52ac50fbb994",
+        "h": 2642.413043478261
+      }
+    },
+    "athena-v6-072": {
+      "title": "",
+      "subtitle": "The Crushing Tide",
+      "flavour": "",
+      "art": {
+        "w": 1696.32,
+        "x": -87.36535191160101,
+        "y": -1036.909803991809,
+        "zoom": 1.14,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/athena-v6-072.webp?v=65227bdc6c77",
+        "h": 3012.350869565217
+      }
+    },
+    "athena-v6-073": {
+      "title": "",
+      "subtitle": "The Mind Reader",
+      "flavour": "",
+      "art": {
+        "w": 1488,
+        "x": -15.688090683265273,
+        "y": -510.4639278672189,
+        "zoom": 1,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/athena-v6-073.webp?v=fd850ab04b49",
+        "h": 2642.413043478261
+      }
+    },
+    "athena-v6-074": {
+      "title": "",
+      "subtitle": "The Black Wings",
+      "flavour": "",
+      "art": {
+        "w": 1881.8999999999999,
+        "x": -187.29709762156295,
+        "y": 11.464896578348316,
+        "zoom": 1.2,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-074.webp?v=c1cf94c4e694",
+        "h": 2509.2
+      }
+    },
+    "athena-v6-075": {
+      "title": "",
+      "subtitle": "The Chains of Cerberus",
+      "flavour": "",
+      "art": {
+        "w": 1488,
+        "x": 7.116466322131146,
+        "y": -555.7754424153334,
+        "zoom": 1,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/athena-v6-075.webp?v=0c10d5a888cb",
+        "h": 2642.413043478261
+      }
+    },
+    "athena-v6-076": {
+      "title": "",
+      "subtitle": "The Love That Defied Death",
+      "flavour": "",
+      "art": {
+        "w": 1568.25,
+        "x": -40.125,
+        "y": 0,
+        "zoom": 1,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-076.webp?v=d68845c71cb8",
+        "h": 2091.0
+      }
+    },
+    "athena-v6-077": {
+      "title": "",
+      "subtitle": "To See Beyond the Darkness",
+      "flavour": "",
+      "art": {
+        "w": 1568.25,
+        "x": -40.125,
+        "y": 0,
+        "zoom": 1,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-077.webp?v=bb3177c97d44",
+        "h": 2091.0
+      }
+    },
+    "athena-v6-078": {
+      "title": "",
+      "subtitle": "An Eternal Prison of Ice",
+      "flavour": "",
+      "art": {
+        "w": 1568.25,
+        "x": -40.125,
+        "y": 0,
+        "zoom": 1,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-078.webp?v=d5d1aede04cd",
+        "h": 2091.0
+      }
+    },
+    "athena-v6-079": {
+      "title": "",
+      "subtitle": "The Strength of Compassion",
+      "flavour": "",
+      "art": {
+        "w": 1492.015625,
+        "x": -5.587288844116642,
+        "y": 43.69703958062428,
+        "zoom": 1,
+        "baseW": 1492.015625,
+        "src": "playtest/assets/card-art/athena-v6-079.webp?v=cba922f0bfba",
+        "h": 2091.0
+      }
+    },
+    "athena-v6-080": {
+      "title": "",
+      "subtitle": "From Ashes, I Rise Again",
+      "flavour": "",
+      "art": {
+        "w": 1488,
+        "x": -2.7403706135968378,
+        "y": 1.9447263085187387,
+        "zoom": 1,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/athena-v6-080.webp?v=62c9fd7363a3",
+        "h": 2300.2
+      }
+    },
+    "athena-v6-081": {
+      "title": "",
+      "subtitle": "The Will of Sagittarius",
+      "flavour": "",
+      "art": {
+        "w": 1991.6775,
+        "x": -260.5272118679154,
+        "y": -315.0630904583867,
+        "zoom": 1.27,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/athena-v6-081.webp?v=c6c27fd91d54",
+        "h": 2655.57
+      }
+    },
+    "athena-v6-082": {
+      "title": "",
+      "subtitle": "The Arrow of Destiny",
+      "flavour": "",
+      "art": {
+        "w": 1607.0400000000002,
+        "x": -134.91250072108505,
+        "y": -170.87344221059107,
+        "zoom": 1.08,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/athena-v6-082.webp?v=c9a2043588c5",
+        "h": 3034.6272000000004
+      }
+    },
+    "athena-v6-083": {
+      "title": "",
+      "subtitle": "The Countdown to Destiny",
+      "flavour": "",
+      "art": {
+        "w": 1712.1241921397375,
+        "x": -22.487665552780413,
+        "y": 187.24510728218434,
+        "zoom": 0.8199999999999998,
+        "baseW": 2087.956331877729,
+        "src": "playtest/assets/card-art/athena-v6-083.webp?v=a67ba869a42b",
+        "h": 1714.6199999999994
+      }
+    },
+    "athena-v6-084": {
+      "title": "",
+      "subtitle": "The Cold Beyond Death",
+      "flavour": "",
+      "art": {
+        "w": 1502.88,
+        "x": -7.440000000000055,
+        "y": -289.9395652173903,
+        "zoom": 1.01,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/athena-v6-084.webp?v=83932d35dba1",
+        "h": 2670.879130434783
+      }
+    },
+    "athena-v6-085": {
+      "title": "",
+      "subtitle": "The Ultimate Sacrifice",
+      "flavour": "",
+      "art": {
+        "w": 1621.92,
+        "x": -66.87895725665999,
+        "y": -262.41555246261373,
+        "zoom": 1.09,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/athena-v6-085.webp?v=57cff9d4fd2f",
+        "h": 2280.8250000000003
+      }
+    },
+    "athena-v6-086": {
+      "title": "",
+      "subtitle": "The Man Who Challenged a God",
+      "flavour": "",
+      "art": {
+        "w": 1488,
+        "x": -7.084601547554485,
+        "y": 57.63887455299073,
+        "zoom": 1,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/athena-v6-086.webp?v=b0b6207b4a14",
+        "h": 2101.8
+      }
+    },
+    "athena-v6-087": {
+      "title": "",
+      "subtitle": "The Light That Saves a Goddess",
+      "flavour": "",
+      "art": {
+        "w": 2090.4311751904243,
+        "x": -298.3928996472922,
+        "y": 60.88270074772481,
+        "zoom": 1.25,
+        "baseW": 1672.3449401523394,
+        "src": "playtest/assets/card-art/athena-v6-087.webp?v=f71e1d3ee6f4",
+        "h": 2613.75
+      }
+    },
+    "athena-v6-088": {
+      "title": "",
+      "subtitle": "Awakening Beyond Death",
+      "flavour": "",
+      "art": {
+        "w": 1488,
+        "x": 0,
+        "y": -276.7173913043471,
+        "zoom": 1,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/athena-v6-088.webp?v=83f10cea8811",
+        "h": 2644.4347826086955
+      }
+    },
+    "athena-v6-089": {
+      "title": "",
+      "subtitle": "The Light Beyond the Darkness",
+      "flavour": "",
+      "art": {
+        "w": 1489.9433198380566,
+        "x": -0.9716599190282977,
+        "y": 0,
+        "zoom": 1,
+        "baseW": 1489.9433198380566,
+        "src": "playtest/assets/card-art/athena-v6-089.webp?v=c91f66eece77",
+        "h": 2091.0
+      }
+    },
+    "athena-v6-090": {
+      "title": "",
+      "subtitle": "Hope Shall Never Die",
+      "flavour": "",
+      "art": {
+        "w": 1532.64,
+        "x": -22.32000000000005,
+        "y": -183.7684668192196,
+        "zoom": 1.03,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/athena-v6-090.webp?v=28c6d8eac441",
+        "h": 2458.536933638444
+      }
+    },
+    "hades-001-hud": {},
+    "hades-001": {
+      "title": "",
+      "subtitle": "Deathbringer",
+      "flavour": "“I am the end of all things.”",
+      "art": {
+        "x": -118,
+        "y": -106,
+        "w": 1724,
+        "zoom": 1,
+        "baseW": 1724,
+        "src": "playtest/assets/card-art/hades-001.webp?v=ed53193ca846",
+        "h": 2308.9285714285716
+      }
+    },
+    "hades-v6-181": {
+      "title": "",
+      "subtitle": "The Ruthless Judge",
+      "flavour": "",
+      "art": {
+        "w": 1685.18,
+        "x": -98.59,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1685.18,
+        "src": "playtest/assets/card-art/hades-v6-181.webp?v=ee853567a06d",
+        "h": 2090.9988571428576
+      }
+    },
+    "hades-v6-182": {
+      "title": "",
+      "subtitle": "Armor of the Ruthless Judge",
+      "flavour": "",
+      "art": {
+        "w": 1519.01,
+        "x": -15.51,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1519.01,
+        "src": "playtest/assets/card-art/hades-v6-182.webp?v=688a7c845a30",
+        "h": 2090.9995559502663
+      }
+    },
+    "hades-v6-183": {
+      "title": "",
+      "subtitle": "The Master of Cosmic Marionation",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": -0.0,
+        "y": -6.43,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-183.webp?v=2217dc666dfe",
+        "h": 2103.866666666667
+      }
+    },
+    "hades-v6-184": {
+      "title": "",
+      "subtitle": "Threads of Eternal Submission",
+      "flavour": "",
+      "art": {
+        "w": 1863.23,
+        "x": -187.62,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1863.23,
+        "src": "playtest/assets/card-art/hades-v6-184.webp?v=b5ef64c29e72",
+        "h": 2090.999599198397
+      }
+    },
+    "hades-v6-185": {
+      "title": "",
+      "subtitle": "The Infernal Wing",
+      "flavour": "",
+      "art": {
+        "w": 1776.09,
+        "x": -144.05,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1776.09,
+        "src": "playtest/assets/card-art/hades-v6-185.webp?v=4b7763d737bd",
+        "h": 2090.999574468085
+      }
+    },
+    "hades-v6-186": {
+      "title": "",
+      "subtitle": "Wings of the Infernal Star",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -276.72,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-186.webp?v=58b0d7801746",
+        "h": 2644.4347826086955
+      }
+    },
+    "hades-v6-187": {
+      "title": "",
+      "subtitle": "The Judge of Souls",
+      "flavour": "",
+      "art": {
+        "w": 1568.25,
+        "x": -40.12,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/hades-v6-187.webp?v=6b8c797a767c",
+        "h": 2091.0
+      }
+    },
+    "hades-v6-188": {
+      "title": "",
+      "subtitle": "The Scales of the Damned",
+      "flavour": "",
+      "art": {
+        "w": 1568.25,
+        "x": -40.12,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/hades-v6-188.webp?v=383a942f20fa",
+        "h": 2091.0
+      }
+    },
+    "hades-v6-189": {
+      "title": "",
+      "subtitle": "The Ferryman of the Dead",
+      "flavour": "",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/hades-v6-189.webp?v=05bb99fc674d",
+        "h": 2091.0
+      }
+    },
+    "hades-v6-190": {
+      "title": "",
+      "subtitle": "The Price of Passage",
+      "flavour": "",
+      "art": {
+        "w": 1672.8,
+        "x": -92.4,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1672.8,
+        "src": "playtest/assets/card-art/hades-v6-190.webp?v=0879bf0ee27f",
+        "h": 2091.0
+      }
+    },
+    "hades-v6-191": {
+      "title": "",
+      "subtitle": "The Eternal Slumber",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -70.5,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-191.webp?v=6504b4aca970",
+        "h": 2232.0
+      }
+    },
+    "hades-v6-192": {
+      "title": "",
+      "subtitle": "The Sleep From Which None Awaken",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -223.14,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-192.webp?v=0c77ebac79e4",
+        "h": 2537.282608695652
+      }
+    },
+    "hades-v6-193": {
+      "title": "",
+      "subtitle": "The Merciless God of Death",
+      "flavour": "",
+      "art": {
+        "w": 2062.97,
+        "x": -287.49,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2062.97,
+        "src": "playtest/assets/card-art/hades-v6-193.webp?v=8e0a08dd2eb2",
+        "h": 2090.999483695652
+      }
+    },
+    "hades-v6-194": {
+      "title": "",
+      "subtitle": "No Mortal Escapes Death",
+      "flavour": "",
+      "art": {
+        "w": 1488,
+        "x": -25.2148831843092,
+        "y": 1.8452971059112997,
+        "zoom": 1,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/hades-v6-194.webp?v=c7d996be7842",
+        "h": 2511.3924050632913
+      }
+    },
+    "hades-v6-195": {
+      "title": "",
+      "subtitle": "The Voice of Hades",
+      "flavour": "",
+      "art": {
+        "w": 1541.51,
+        "x": -26.75,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1541.51,
+        "src": "playtest/assets/card-art/hades-v6-195.webp?v=e3fc6a03062f",
+        "h": 2091.000639455782
+      }
+    },
+    "hades-v6-196": {
+      "title": "",
+      "subtitle": "The Instrument of Divine Authority",
+      "flavour": "",
+      "art": {
+        "w": 1568.25,
+        "x": -40.12,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/hades-v6-196.webp?v=fec398a053ef",
+        "h": 2091.0
+      }
+    },
+    "hades-v6-197": {
+      "title": "",
+      "subtitle": "The Grandmaster Returned From Death",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -50.28,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-197.webp?v=8154dbc4a252",
+        "h": 2191.5652173913045
+      }
+    },
+    "hades-v6-198": {
+      "title": "",
+      "subtitle": "The Armor of the Resurrected Grandmaster",
+      "flavour": "",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/hades-v6-198.webp?v=092ccafb3993",
+        "h": 2091.0
+      }
+    },
+    "hades-v6-199": {
+      "title": "",
+      "subtitle": "The Blade That Pierces the Gods",
+      "flavour": "",
+      "art": {
+        "w": 2466.17,
+        "x": -489.08,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2466.17,
+        "src": "playtest/assets/card-art/hades-v6-199.webp?v=91ee90eca958",
+        "h": 2091.0031991051455
+      }
+    },
+    "hades-v6-200": {
+      "title": "",
+      "subtitle": "The Vessel of Forbidden Evils",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -184.76,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-200.webp?v=4901be428f41",
+        "h": 2460.521739130435
+      }
+    },
+    "hades-v6-201": {
+      "title": "",
+      "subtitle": "The Loyal Servant of Wyvern",
+      "flavour": "",
+      "art": {
+        "w": 1672.8,
+        "x": -92.4,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1672.8,
+        "src": "playtest/assets/card-art/hades-v6-201.webp?v=fa9bad44cb73",
+        "h": 2091.0
+      }
+    },
+    "hades-v6-202": {
+      "title": "",
+      "subtitle": "The Infernal Judge of Sins",
+      "flavour": "",
+      "art": {
+        "w": 1672.8,
+        "x": -92.4,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1672.8,
+        "src": "playtest/assets/card-art/hades-v6-202.webp?v=4c8929b51385",
+        "h": 2091.0
+      }
+    },
+    "hades-v6-203": {
+      "title": "",
+      "subtitle": "The Specter of Metamorphosis",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -42.88,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-203.webp?v=f3061eba6ad0",
+        "h": 2176.768558951965
+      }
+    },
+    "hades-v6-204": {
+      "title": "",
+      "subtitle": "The Deadly Fragrance",
+      "flavour": "",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/hades-v6-204.webp?v=2362c886732b",
+        "h": 2091.0
+      }
+    },
+    "hades-v6-205": {
+      "title": "",
+      "subtitle": "The Venomous Star",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -31.08,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-205.webp?v=9f7019278102",
+        "h": 2153.1521739130435
+      }
+    },
+    "hades-v6-206": {
+      "title": "",
+      "subtitle": "The Servant of the First Prison",
+      "flavour": "",
+      "art": {
+        "w": 3818.8,
+        "x": -1165.4,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 3818.8,
+        "src": "playtest/assets/card-art/hades-v6-206.webp?v=953160d66864",
+        "h": 2091.000543478261
+      }
+    },
+    "hades-v6-207": {
+      "title": "",
+      "subtitle": "The Cowardly Servant",
+      "flavour": "",
+      "art": {
+        "w": 2788.0,
+        "x": -650.0,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2788.0,
+        "src": "playtest/assets/card-art/hades-v6-207.webp?v=6ae68aa5462f",
+        "h": 2091.0
+      }
+    },
+    "hades-v6-208": {
+      "title": "",
+      "subtitle": "The Giant of the Underworld",
+      "flavour": "",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/hades-v6-208.webp?v=d3aef49c34c4",
+        "h": 2091.0
+      }
+    },
+    "hades-v6-209": {
+      "title": "",
+      "subtitle": "The Specter Beneath the Earth",
+      "flavour": "",
+      "art": {
+        "w": 3721.27,
+        "x": -1116.64,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 3721.27,
+        "src": "playtest/assets/card-art/hades-v6-209.webp?v=d3b520be10ee",
+        "h": 2090.999333333333
+      }
+    },
+    "hades-v6-210": {
+      "title": "",
+      "subtitle": "The Crushing Star",
+      "flavour": "",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/hades-v6-210.webp?v=cdcc78030131",
+        "h": 2091.0
+      }
+    },
+    "hades-v6-211": {
+      "title": "",
+      "subtitle": "The Brutal Star",
+      "flavour": "",
+      "art": {
+        "w": 1605.03,
+        "x": -58.52,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1605.03,
+        "src": "playtest/assets/card-art/hades-v6-211.webp?v=4bdacf058410",
+        "h": 2090.9974166666666
+      }
+    },
+    "hades-v6-212": {
+      "title": "",
+      "subtitle": "The Crushing Star",
+      "flavour": "",
+      "art": {
+        "w": 3946.09,
+        "x": -1229.05,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 3946.09,
+        "src": "playtest/assets/card-art/hades-v6-212.webp?v=6ab6b349d44d",
+        "h": 2090.9987771739134
+      }
+    },
+    "hades-v6-213": {
+      "title": "",
+      "subtitle": "The Savage Star",
+      "flavour": "",
+      "art": {
+        "w": 2019.56,
+        "x": -265.78,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2019.56,
+        "src": "playtest/assets/card-art/hades-v6-213.webp?v=800c643c9a85",
+        "h": 2091.000217687075
+      }
+    },
+    "hades-v6-214": {
+      "title": "",
+      "subtitle": "The Executioner's Axe",
+      "flavour": "",
+      "art": {
+        "w": 2788.0,
+        "x": -650.0,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2788.0,
+        "src": "playtest/assets/card-art/hades-v6-214.webp?v=bc2136165ae6",
+        "h": 2091.0
+      }
+    },
+    "hades-v6-215": {
+      "title": "",
+      "subtitle": "The Bloodthirsty Flower",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -442.5,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-215.webp?v=57618ed07687",
+        "h": 2976.0
+      }
+    },
+    "hades-v6-216": {
+      "title": "",
+      "subtitle": "The Petrifying Star",
+      "flavour": "",
+      "art": {
+        "w": 3717.33,
+        "x": -1114.67,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 3717.33,
+        "src": "playtest/assets/card-art/hades-v6-216.webp?v=f968938d2f48",
+        "h": 2090.9981249999996
+      }
+    },
+    "hades-v6-217": {
+      "title": "",
+      "subtitle": "The Headless Executioner",
+      "flavour": "",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/hades-v6-217.webp?v=2f50e0badcf1",
+        "h": 2091.0
+      }
+    },
+    "hades-v6-218": {
+      "title": "",
+      "subtitle": "The Endless Servant",
+      "flavour": "",
+      "art": {
+        "w": 3537.88,
+        "x": -1024.94,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 3537.88,
+        "src": "playtest/assets/card-art/hades-v6-218.webp?v=5f1732905c1d",
+        "h": 2091.002445652174
+      }
+    },
+    "hades-v6-219": {
+      "title": "",
+      "subtitle": "The Guardian of Giudecca",
+      "flavour": "",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/hades-v6-219.webp?v=6571a4132187",
+        "h": 2091.0
+      }
+    },
+    "hades-v6-220": {
+      "title": "",
+      "subtitle": "The Forgotten Dead",
+      "flavour": "",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/hades-v6-220.webp?v=f12e408d1a1f",
+        "h": 2091.0
+      }
+    },
+    "hades-v6-221": {
+      "title": "",
+      "subtitle": "The Keeper of the Crossing",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -256.5,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-221.webp?v=1965ea2bc728",
+        "h": 2604.0
+      }
+    },
+    "hades-v6-222": {
+      "title": "",
+      "subtitle": "The Blade of Final Judgment",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -63.92,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-222.webp?v=b735e41ababb",
+        "h": 2218.83185840708
+      }
+    },
+    "hades-v6-223": {
+      "title": "",
+      "subtitle": "The Silent Keeper of Paradise",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -98.34,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-223.webp?v=280550f5f2c3",
+        "h": 2287.673469387755
+      }
+    },
+    "hades-v6-224": {
+      "title": "",
+      "subtitle": "Even Broken Armor Serves the Dead",
+      "flavour": "",
+      "art": {
+        "w": 2803.23,
+        "x": -657.62,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2803.23,
+        "src": "playtest/assets/card-art/hades-v6-224.webp?v=b5944af92516",
+        "h": 2090.9962907608697
+      }
+    },
+    "hades-v6-225": {
+      "title": "",
+      "subtitle": "Protection Beyond the Grave",
+      "flavour": "",
+      "art": {
+        "w": 2401.38,
+        "x": -456.69,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2401.38,
+        "src": "playtest/assets/card-art/hades-v6-225.webp?v=6243bd402454",
+        "h": 2090.9975510204085
+      }
+    },
+    "hades-v6-226": {
+      "title": "",
+      "subtitle": "Bound to Eternal Suffering",
+      "flavour": "",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/hades-v6-226.webp?v=0297525ae961",
+        "h": 2091.0
+      }
+    },
+    "hades-v6-227": {
+      "title": "",
+      "subtitle": "The Price of the Final Journey",
+      "flavour": "",
+      "art": {
+        "w": 2724.97,
+        "x": -618.49,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2724.97,
+        "src": "playtest/assets/card-art/hades-v6-227.webp?v=62aba3af5e0a",
+        "h": 2090.997387755102
+      }
+    },
+    "hades-v6-228": {
+      "title": "",
+      "subtitle": "The Melody of the Underworld",
+      "flavour": "",
+      "art": {
+        "w": 1640.7,
+        "x": -76.35,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1640.7,
+        "src": "playtest/assets/card-art/hades-v6-228.webp?v=e141bf88c26c",
+        "h": 2091.0008152173914
+      }
+    },
+    "hades-v6-229": {
+      "title": "",
+      "subtitle": "Chains That Bind the Living and the Dead",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -144.9,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-229.webp?v=00f2792dee7b",
+        "h": 2380.8
+      }
+    },
+    "hades-v6-230": {
+      "title": "",
+      "subtitle": "The Garment of the Departed",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -626.41,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-230.webp?v=e48c64bad3a3",
+        "h": 3343.820224719101
+      }
+    },
+    "hades-v6-231": {
+      "title": "",
+      "subtitle": "The Flame That Guides the Dead",
+      "flavour": "",
+      "art": {
+        "w": 1797.53,
+        "x": -154.76,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1797.53,
+        "src": "playtest/assets/card-art/hades-v6-231.webp?v=a1175b3d7fff",
+        "h": 2091.0042857142857
+      }
+    },
+    "hades-v6-232": {
+      "title": "",
+      "subtitle": "The Dead Shall Rise Again",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -70.5,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-232.webp?v=8b3d26566ee7",
+        "h": 2232.0
+      }
+    },
+    "hades-v6-233": {
+      "title": "",
+      "subtitle": "Answer the Voice of Death",
+      "flavour": "",
+      "art": {
+        "w": 2699.96,
+        "x": -605.98,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2699.96,
+        "src": "playtest/assets/card-art/hades-v6-233.webp?v=5db716d21223",
+        "h": 2091.0016304347823
+      }
+    },
+    "hades-v6-234": {
+      "title": "",
+      "subtitle": "From Death Comes Power",
+      "flavour": "",
+      "art": {
+        "w": 1672.34,
+        "x": -92.17,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1672.34,
+        "src": "playtest/assets/card-art/hades-v6-234.webp?v=f9ab18282a63",
+        "h": 2090.9938231292517
+      }
+    },
+    "hades-v6-235": {
+      "title": "",
+      "subtitle": "Bound Beyond Life and Death",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -275.71,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-235.webp?v=982e6ad745fa",
+        "h": 2642.413043478261
+      }
+    },
+    "hades-v6-236": {
+      "title": "",
+      "subtitle": "Obedience Beyond the Grave",
+      "flavour": "",
+      "art": {
+        "w": 1672.8,
+        "x": -92.4,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1672.8,
+        "src": "playtest/assets/card-art/hades-v6-236.webp?v=9409972a234a",
+        "h": 2091.0
+      }
+    },
+    "hades-v6-237": {
+      "title": "",
+      "subtitle": "Every Soul Must Pay",
+      "flavour": "",
+      "art": {
+        "w": 1672.34,
+        "x": -92.17,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1672.34,
+        "src": "playtest/assets/card-art/hades-v6-237.webp?v=a3c673a59a07",
+        "h": 2090.9938231292517
+      }
+    },
+    "hades-v6-238": {
+      "title": "",
+      "subtitle": "The Eternal Suffering of the Dead",
+      "flavour": "",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/hades-v6-238.webp?v=5f1d9b64e21c",
+        "h": 2091.0
+      }
+    },
+    "hades-v6-239": {
+      "title": "",
+      "subtitle": "The Voice That Commands the Dead",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -25.46,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-239.webp?v=002fdba43f46",
+        "h": 2141.910204081633
+      }
+    },
+    "hades-v6-240": {
+      "title": "",
+      "subtitle": "Death Cannot Hold the Faithful",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -276.72,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-240.webp?v=4ed435795e89",
+        "h": 2644.4347826086955
+      }
+    },
+    "hades-v6-241": {
+      "title": "",
+      "subtitle": "Death Is the Will of the Underworld",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -70.5,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-241.webp?v=7f6d3742c844",
+        "h": 2232.0
+      }
+    },
+    "hades-v6-242": {
+      "title": "",
+      "subtitle": "The Fortress of the Underworld",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -561.91,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-242.webp?v=6a0263fc4a32",
+        "h": 3214.814814814815
+      }
+    },
+    "hades-v6-243": {
+      "title": "",
+      "subtitle": "The Crossing Between Life and Death",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -274.7,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-243.webp?v=2c41ca8d3e6e",
+        "h": 2640.391304347826
+      }
+    },
+    "hades-v6-244": {
+      "title": "",
+      "subtitle": "The Court of Eternal Judgment",
+      "flavour": "",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/hades-v6-244.webp?v=8b3528325817",
+        "h": 2091.0
+      }
+    },
+    "hades-v6-245": {
+      "title": "",
+      "subtitle": "Abandon All Hope, Ye Who Enter",
+      "flavour": "",
+      "art": {
+        "w": 1640.0,
+        "x": -76.0,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1640.0,
+        "src": "playtest/assets/card-art/hades-v6-245.webp?v=92387cb3b753",
+        "h": 2091.0
+      }
+    },
+    "hades-v6-246": {
+      "title": "",
+      "subtitle": "The Wings of the Celestial Weeping Star",
+      "flavour": "",
+      "art": {
+        "w": 1568.25,
+        "x": -40.12,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1568.25,
+        "src": "playtest/assets/card-art/hades-v6-246.webp?v=cd36b8373bad",
+        "h": 2091.0
+      }
+    },
+    "hades-v6-247": {
+      "title": "",
+      "subtitle": "The Armor of Infernal Judgment",
+      "flavour": "",
+      "art": {
+        "w": 1953.02,
+        "x": -232.51,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1953.02,
+        "src": "playtest/assets/card-art/hades-v6-247.webp?v=a1d0c6297d90",
+        "h": 2091.0051086956523
+      }
+    },
+    "hades-v6-248": {
+      "title": "",
+      "subtitle": "The Wings of Metamorphosis",
+      "flavour": "",
+      "art": {
+        "w": 1509.44,
+        "x": -10.72,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1509.44,
+        "src": "playtest/assets/card-art/hades-v6-248.webp?v=6e827c72d5f7",
+        "h": 2090.9991341991345
+      }
+    },
+    "hades-v6-249": {
+      "title": "",
+      "subtitle": "The Armor of the Deadly Fragrance",
+      "flavour": "",
+      "art": {
+        "w": 1672.8,
+        "x": -92.4,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1672.8,
+        "src": "playtest/assets/card-art/hades-v6-249.webp?v=3a1532898d6f",
+        "h": 2091.0
+      }
+    },
+    "hades-v6-250": {
+      "title": "",
+      "subtitle": "The Venom of the Celestial Swift Star",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -70.5,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-250.webp?v=cb3150712e45",
+        "h": 2232.0
+      }
+    },
+    "hades-v6-251": {
+      "title": "",
+      "subtitle": "The Return of the Death Seeker",
+      "flavour": "",
+      "art": {
+        "w": 2087.13,
+        "x": -299.57,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2087.13,
+        "src": "playtest/assets/card-art/hades-v6-251.webp?v=18ff89fc8015",
+        "h": 2090.9950555555556
+      }
+    },
+    "hades-v6-252": {
+      "title": "",
+      "subtitle": "The Beauty of Eternal Death",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -9.85,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-252.webp?v=37068d6450ee",
+        "h": 2110.695652173913
+      }
+    },
+    "hades-v6-253": {
+      "title": "",
+      "subtitle": "The Blade Returned From Death",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -9.26,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-253.webp?v=98f3bbe49a3c",
+        "h": 2109.5183673469387
+      }
+    },
+    "hades-v6-254": {
+      "title": "",
+      "subtitle": "The Frozen Soul of the Underworld",
+      "flavour": "",
+      "art": {
+        "w": 1672.8,
+        "x": -92.4,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1672.8,
+        "src": "playtest/assets/card-art/hades-v6-254.webp?v=19809ef9a5a9",
+        "h": 2091.0
+      }
+    },
+    "hades-v6-255": {
+      "title": "",
+      "subtitle": "The Fallen Emperor Returns",
+      "flavour": "",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/hades-v6-255.webp?v=a7c891739073",
+        "h": 2091.0
+      }
+    },
+    "hades-v6-256": {
+      "title": "",
+      "subtitle": "The Dead Return as Enemies",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -30.52,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-256.webp?v=cb85425c596a",
+        "h": 2152.0326530612247
+      }
+    },
+    "hades-v6-257": {
+      "title": "",
+      "subtitle": "Every Sin Demands Judgment",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -277.17,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-257.webp?v=9cb4d836d535",
+        "h": 2645.3333333333335
+      }
+    },
+    "hades-v6-258": {
+      "title": "",
+      "subtitle": "No Soul Escapes the Marionette",
+      "flavour": "",
+      "art": {
+        "w": 1672.8,
+        "x": -92.4,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1672.8,
+        "src": "playtest/assets/card-art/hades-v6-258.webp?v=efd4de9eb233",
+        "h": 2091.0
+      }
+    },
+    "hades-v6-259": {
+      "title": "",
+      "subtitle": "The Underworld Marches Upon Athena",
+      "flavour": "",
+      "art": {
+        "w": 1525.25,
+        "x": -18.62,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1525.25,
+        "src": "playtest/assets/card-art/hades-v6-259.webp?v=f316a15d3b5e",
+        "h": 2091.001698369565
+      }
+    },
+    "hades-v6-260": {
+      "title": "",
+      "subtitle": "Death Is Merely Another Beginning",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -276.72,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-260.webp?v=e3d79cce5125",
+        "h": 2644.4347826086955
+      }
+    },
+    "hades-v6-261": {
+      "title": "",
+      "subtitle": "Her Final Act of Defiance",
+      "flavour": "",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/hades-v6-261.webp?v=16060ae082f6",
+        "h": 2091.0
+      }
+    },
+    "hades-v6-262": {
+      "title": "",
+      "subtitle": "Even Gold Cannot Resist Death",
+      "flavour": "",
+      "art": {
+        "w": 2037.47,
+        "x": -274.74,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2037.47,
+        "src": "playtest/assets/card-art/hades-v6-262.webp?v=0262e01aa986",
+        "h": 2090.999589490969
+      }
+    },
+    "hades-v6-263": {
+      "title": "",
+      "subtitle": "The Supreme Authorities of the Underworld",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -70.5,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-263.webp?v=7528ca2ddd4a",
+        "h": 2232.0
+      }
+    },
+    "hades-v6-264": {
+      "title": "",
+      "subtitle": "The Living Shall Join the Dead",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -275.71,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-264.webp?v=ae96d4bb6b8b",
+        "h": 2642.413043478261
+      }
+    },
+    "hades-v6-265": {
+      "title": "",
+      "subtitle": "The Purest Soul Becomes the Vessel",
+      "flavour": "",
+      "art": {
+        "w": 2182.94,
+        "x": -347.47,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2182.94,
+        "src": "playtest/assets/card-art/hades-v6-265.webp?v=ff8e90098061",
+        "h": 2090.995516304348
+      }
+    },
+    "hades-v6-266": {
+      "title": "",
+      "subtitle": "The Dead March Against the Living",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -73.03,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-266.webp?v=eaecf1c8ab29",
+        "h": 2237.061224489796
+      }
+    },
+    "hades-v6-267": {
+      "title": "",
+      "subtitle": "The Wound That Defied Divinity",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -2.77,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-267.webp?v=6568bd841ea0",
+        "h": 2096.5434782608695
+      }
+    },
+    "hades-v6-268": {
+      "title": "",
+      "subtitle": "An Eternity Without Awakening",
+      "flavour": "",
+      "art": {
+        "w": 1565.59,
+        "x": -38.8,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1565.59,
+        "src": "playtest/assets/card-art/hades-v6-268.webp?v=fc098f7b4d00",
+        "h": 2090.998600543478
+      }
+    },
+    "hades-v6-269": {
+      "title": "",
+      "subtitle": "Even Death Itself Can Fall",
+      "flavour": "",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/hades-v6-269.webp?v=ebadbee35bd2",
+        "h": 2091.0
+      }
+    },
+    "hades-v6-270": {
+      "title": "",
+      "subtitle": "The Eternal Darkness of Hades",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -21.98,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/hades-v6-270.webp?v=323f979d5bc4",
+        "h": 2134.9565217391305
+      }
+    },
+    "neutral-v6-451": {
+      "title": "",
+      "subtitle": "The Fist of Black Death",
+      "flavour": "\"His fists carry the same stars as Pegasus, but every star has turned black.\""
+    },
+    "neutral-v6-452": {
+      "title": "",
+      "subtitle": "The Dragon of Darkness",
+      "flavour": "\"His strength rivals the Dragon, but his heart has forgotten the meaning of honor.\""
+    },
+    "neutral-v6-453": {
+      "title": "",
+      "subtitle": "The Frozen Shadow",
+      "flavour": "\"His ice does not shine like a diamond. It swallows every trace of light.\""
+    },
+    "neutral-v6-454": {
+      "title": "",
+      "subtitle": "The Chains of Corruption",
+      "flavour": "\"Unlike the chains of Andromeda, these serpents do not protect. They hunger.\""
+    },
+    "neutral-v6-455": {
+      "title": "",
+      "subtitle": "The False Immortal",
+      "flavour": "\"He imitates the Phoenix's resurrection, but every return consumes another piece of his soul.\""
+    },
+    "neutral-v6-456": {
+      "title": "",
+      "subtitle": "The Tyrant of Death Queen Island",
+      "flavour": "\"On Death Queen Island, power was the only law, and Jango declared himself its king.\""
+    },
+    "neutral-v6-457": {
+      "title": "",
+      "subtitle": "The Eyes Within Darkness",
+      "flavour": "\"Though his eyes could see nothing, his senses revealed the movements hidden in darkness.\""
+    },
+    "neutral-v6-458": {
+      "title": "",
+      "subtitle": "The Imitation of Immortality",
+      "flavour": "\"They wore the shape of the Phoenix, but possessed none of its eternal flame.\""
+    },
+    "neutral-v6-459": {
+      "title": "",
+      "subtitle": "The Crushing Shadow of the Sea",
+      "flavour": "\"The weight of darkness is greater than the weight of any armor.\""
+    },
+    "neutral-v6-460": {
+      "title": "",
+      "subtitle": "The Dark Gallop",
+      "flavour": "\"He charges without fear, for darkness has already taken everything he could lose.\""
+    },
+    "neutral-v6-461": {
+      "title": "",
+      "subtitle": "The Wings of Steel",
+      "flavour": "\"His wings were not born from the stars, but from humanity's determination to reach them.\""
+    },
+    "neutral-v6-462": {
+      "title": "",
+      "subtitle": "The Unbreakable Earth",
+      "flavour": "\"The ground itself trembles beneath the weight of his steel armor.\""
+    },
+    "neutral-v6-463": {
+      "title": "",
+      "subtitle": "The Mechanical Ocean",
+      "flavour": "\"His armor transforms the ocean's vibrations into weapons of extraordinary precision.\""
+    },
+    "neutral-v6-464": {
+      "title": "",
+      "subtitle": "The Genius Behind the Steel Saints",
+      "flavour": "\"Where others sought divine power, he discovered that human ingenuity could challenge the gods.\""
+    },
+    "neutral-v6-465": {
+      "title": "",
+      "subtitle": "The Mechanical Wings of the Toucan",
+      "flavour": "\"Forged without divine blessings, its wings proved that humanity could challenge the heavens.\""
+    },
+    "neutral-v6-466": {
+      "title": "",
+      "subtitle": "The Mechanical Armor of the Fox",
+      "flavour": "\"Its strength comes not from ancient legends, but from the earth beneath mankind's feet.\""
+    },
+    "neutral-v6-467": {
+      "title": "",
+      "subtitle": "The Mechanical Armor of the Swordfish",
+      "flavour": "\"Its mechanical resonance turns the silence of the ocean into a devastating force.\""
+    },
+    "neutral-v6-468": {
+      "title": "",
+      "subtitle": "A Warrior Without a Constellation",
+      "flavour": "\"Not all heroes are chosen by the stars. Some build their own destiny.\""
+    },
+    "neutral-v6-469": {
+      "title": "",
+      "subtitle": "The First Step Toward Artificial Cosmo",
+      "flavour": "\"Every masterpiece begins as an experiment, and every experiment carries the risk of failure.\""
+    },
+    "neutral-v6-470": {
+      "title": "",
+      "subtitle": "Where Humanity Challenges the Gods",
+      "flavour": "\"Within these walls, science became humanity's answer to divine power.\""
+    },
+    "neutral-v6-471": {
+      "title": "",
+      "subtitle": "The Mistress of Illusions",
+      "flavour": "\"Her greatest weapon was never her strength, but the illusions that made enemies doubt their own senses.\""
+    },
+    "neutral-v6-472": {
+      "title": "",
+      "subtitle": "The Phantom of the Waves",
+      "flavour": "\"He strikes from beneath the waves and vanishes before his enemies understand what happened.\""
+    },
+    "neutral-v6-473": {
+      "title": "",
+      "subtitle": "The Venom Beneath the Surface",
+      "flavour": "\"The sea hides countless dangers, but few are as merciless as the serpent beneath its surface.\""
+    },
+    "neutral-v6-474": {
+      "title": "",
+      "subtitle": "The Living Paralysis",
+      "flavour": "\"His touch carries no visible wound, only the terrifying silence of a body that refuses to move.\""
+    },
+    "neutral-v6-475": {
+      "title": "",
+      "subtitle": "The Ocean Hides Its Deadliest Warriors",
+      "flavour": "\"The sea reveals its secrets only after the enemy has already disappeared beneath the waves.\""
+    },
+    "neutral-v6-476": {
+      "title": "",
+      "subtitle": "The Universe Falls Silent",
+      "flavour": "\"Even the greatest technique becomes meaningless when the flow of Cosmo is severed.\""
+    },
+    "neutral-v6-477": {
+      "title": "",
+      "subtitle": "A Second Chance Bought With Blood",
+      "flavour": "\"To pull a warrior back from death is to surrender a fragment of your own existence.\""
+    },
+    "neutral-v6-478": {
+      "title": "",
+      "subtitle": "A Fragment of the Infinite Universe",
+      "flavour": "\"Within a fragment of crystal, the endless energy of the universe waits to be awakened.\""
+    },
+    "neutral-v6-479": {
+      "title": "",
+      "subtitle": "The Secrets Beyond the Seventh Sense",
+      "flavour": "\"Some truths cannot be discovered without sacrificing a part of the soul.\""
+    },
+    "neutral-v6-480": {
+      "title": "",
+      "subtitle": "No Warrior Stands Above Fate",
+      "flavour": "\"When judgment comes from beyond the stars, even the strongest armor offers no protection.\""
+    },
+    "neutral-v6-481": {
+      "title": "",
+      "subtitle": "The Master of Eternal Ice",
+      "flavour": "\"Before the Swan learned to fly, he was taught to master the silence of eternal ice.\""
+    },
+    "neutral-v6-482": {
+      "title": "",
+      "subtitle": "The Tiger of Rozan",
+      "flavour": "\"He possessed the strength of a tiger, but never learned the patience of a dragon.\""
+    },
+    "neutral-v6-483": {
+      "title": "",
+      "subtitle": "The Rival of Andromeda",
+      "flavour": "\"His chains were forged for battle, but envy became the heaviest chain of all.\""
+    },
+    "neutral-v6-484": {
+      "title": "",
+      "subtitle": "The Second Chain of Andromeda",
+      "flavour": "\"Two chains, one ambition, and a rivalry neither warrior could overcome.\""
+    },
+    "neutral-v6-485": {
+      "title": "",
+      "subtitle": "The Dance of a Thousand Feathers",
+      "flavour": "\"His movements were beautiful as a peacock's feathers and deadly as a storm of blades.\""
+    },
+    "neutral-v6-486": {
+      "title": "",
+      "subtitle": "The Disciple of Enlightenment",
+      "flavour": "\"The lotus rises from the mud, untouched by the darkness from which it grows.\""
+    },
+    "neutral-v6-487": {
+      "title": "",
+      "subtitle": "The Hunter of the Mountains",
+      "flavour": "\"His web was invisible until his prey discovered that escape was already impossible.\""
+    },
+    "neutral-v6-488": {
+      "title": "",
+      "subtitle": "The Architect of Betrayal",
+      "flavour": "\"He wielded neither legendary Cloth nor divine power, yet his ambitions threatened the Sanctuary itself.\""
+    },
+    "neutral-v6-489": {
+      "title": "",
+      "subtitle": "The Hand of the False Pope",
+      "flavour": "\"He followed the Pope's commands without questioning the darkness behind the throne.\""
+    },
+    "neutral-v6-490": {
+      "title": "",
+      "subtitle": "Strength Without Allegiance",
+      "flavour": "\"Some warriors fight for gods. Others fight for whoever pays the highest price.\""
+    },
+    "neutral-v6-491": {
+      "title": "",
+      "subtitle": "The Instruments of Restoration",
+      "flavour": "\"Even the strongest armor cannot survive forever without the hands that restore it.\""
+    },
+    "neutral-v6-492": {
+      "title": "",
+      "subtitle": "The Seal of the Black Saints",
+      "flavour": "\"The mask concealed their faces, but never the darkness consuming their souls.\""
+    },
+    "neutral-v6-493": {
+      "title": "",
+      "subtitle": "Artificial Energy Regulation",
+      "flavour": "\"Humanity learned to manipulate Cosmo, but every artificial miracle demanded a sacrifice.\""
+    },
+    "neutral-v6-494": {
+      "title": "",
+      "subtitle": "Resources for the Long War",
+      "flavour": "\"Warriors may survive on courage, but armies survive on preparation.\""
+    },
+    "neutral-v6-495": {
+      "title": "",
+      "subtitle": "Beyond the Reach of the Stars",
+      "flavour": "\"To remove an enemy from existence is to disturb the balance of the universe itself.\""
+    },
+    "neutral-v6-496": {
+      "title": "",
+      "subtitle": "Power Taken by Force",
+      "flavour": "\"The universe grants power freely to those who understand it. Those who steal it must pay.\""
+    },
+    "neutral-v6-497": {
+      "title": "",
+      "subtitle": "Survival Against Impossible Odds",
+      "flavour": "\"Survival is sometimes the greatest victory a warrior can achieve.\""
+    },
+    "neutral-v6-498": {
+      "title": "",
+      "subtitle": "Where Darkness Forged Its Warriors",
+      "flavour": "\"On Death Queen Island, victory was not earned through honor, but through the destruction of everyone who stood in the way.\""
+    },
+    "neutral-v6-499": {
+      "title": "",
+      "subtitle": "The Will to Challenge the Gods",
+      "flavour": "\"When gods demanded submission, humanity answered with the courage to stand against them.\""
+    },
+    "neutral-v6-500": {
+      "title": "",
+      "subtitle": "Awakening Beyond Death",
+      "flavour": "\"Beyond the Seventh Sense lies a power that allows the living to cross the boundary between life and death.\""
+    },
+    "poseidon-001-hud": {},
+    "poseidon-001": {
+      "title": "",
+      "subtitle": "High Tide",
+      "flavour": "“The oceans are eternal. Humanity is not.”",
+      "art": {
+        "x": -172,
+        "y": -357,
+        "w": 1832,
+        "zoom": 1,
+        "baseW": 1832,
+        "src": "playtest/assets/card-art/poseidon-001.webp?v=b927f05c2f54",
+        "h": 2453.5714285714284
+      }
+    },
+    "poseidon-v6-091": {
+      "title": "",
+      "subtitle": "The Hidden Master of the Deep",
+      "flavour": "",
+      "art": {
+        "w": 1672.8,
+        "x": -92.4,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1672.8,
+        "src": "playtest/assets/card-art/poseidon-v6-091.webp?v=ebbee808df35",
+        "h": 2091.0
+      }
+    },
+    "poseidon-v6-092": {
+      "title": "",
+      "subtitle": "The Armor of the Ocean's Master",
+      "flavour": "",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/poseidon-v6-092.webp?v=d9e2e17b562c",
+        "h": 2091.0
+      }
+    },
+    "poseidon-v6-093": {
+      "title": "",
+      "subtitle": "The Melody of the Seven Seas",
+      "flavour": "",
+      "art": {
+        "w": 2232,
+        "x": -342.4865157196419,
+        "y": -41.69918180418563,
+        "zoom": 1.5,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/poseidon-v6-093.webp?v=c61fc5faca1e",
+        "h": 3666.8571428571427
+      }
+    },
+    "poseidon-v6-094": {
+      "title": "",
+      "subtitle": "The Song of Eternal Sorrow",
+      "flavour": "",
+      "art": {
+        "w": 2539.56,
+        "x": -12.858309777905902,
+        "y": 10.836976600985167,
+        "zoom": 1,
+        "baseW": 2539.56,
+        "src": "playtest/assets/card-art/poseidon-v6-094.webp?v=3fc805a96937",
+        "h": 2090.9964130434782
+      }
+    },
+    "poseidon-v6-095": {
+      "title": "",
+      "subtitle": "The Impenetrable Wall of the Pacific",
+      "flavour": "",
+      "art": {
+        "w": 1672.8,
+        "x": -92.4,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1672.8,
+        "src": "playtest/assets/card-art/poseidon-v6-095.webp?v=d328645666fd",
+        "h": 2091.0
+      }
+    },
+    "poseidon-v6-096": {
+      "title": "",
+      "subtitle": "The Unbreakable Wall of the Pacific",
+      "flavour": "",
+      "art": {
+        "w": 2793.06,
+        "x": -28.367755985001452,
+        "y": -75.71130310960598,
+        "zoom": 1,
+        "baseW": 2793.06,
+        "src": "playtest/assets/card-art/poseidon-v6-096.webp?v=e393eeb5a392",
+        "h": 2091.000081521739
+      }
+    },
+    "poseidon-v6-097": {
+      "title": "",
+      "subtitle": "The Frozen Vengeance of the Arctic",
+      "flavour": "",
+      "art": {
+        "w": 2410.56,
+        "x": -315.94129756068526,
+        "y": -20.47210272408438,
+        "zoom": 1.6199999999999999,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/poseidon-v6-097.webp?v=83c51c0d051c",
+        "h": 3829.764155844156
+      }
+    },
+    "poseidon-v6-098": {
+      "title": "",
+      "subtitle": "The Eternal Ice of the Arctic Ocean",
+      "flavour": "",
+      "art": {
+        "w": 2510.56,
+        "x": -24.257213729449006,
+        "y": -279.9373460591132,
+        "zoom": 1,
+        "baseW": 2510.56,
+        "src": "playtest/assets/card-art/poseidon-v6-098.webp?v=e9914bf23574",
+        "h": 2090.996304347826
+      }
+    },
+    "poseidon-v6-099": {
+      "title": "",
+      "subtitle": "The Loyal Voice of the Sea Emperor",
+      "flavour": "",
+      "art": {
+        "w": 2232,
+        "x": -445.83400634554357,
+        "y": -46.71968519088614,
+        "zoom": 1.5,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/poseidon-v6-099.webp?v=850db04a9dcf",
+        "h": 3980.4
+      }
+    },
+    "poseidon-v6-100": {
+      "title": "",
+      "subtitle": "The Pearl of the Seven Seas",
+      "flavour": "",
+      "art": {
+        "w": 2091,
+        "x": -296.52408422267087,
+        "y": -182.0826662561576,
+        "zoom": 1,
+        "baseW": 2091,
+        "src": "playtest/assets/card-art/poseidon-v6-100.webp?v=7ef4fdcf8851",
+        "h": 2091.0
+      }
+    },
+    "poseidon-v6-101": {
+      "title": "",
+      "subtitle": "The Mortal Vessel of a God",
+      "flavour": "",
+      "art": {
+        "w": 2440.3199999999997,
+        "x": -360.3458955869627,
+        "y": -432.77335785098717,
+        "zoom": 1.64,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/poseidon-v6-101.webp?v=1a27d555123e",
+        "h": 4388.763
+      }
+    },
+    "poseidon-v6-102": {
+      "title": "",
+      "subtitle": "Keeper of the Forgotten Depths",
+      "flavour": "",
+      "art": {
+        "w": 1668.1,
+        "x": -90.05,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1668.1,
+        "src": "playtest/assets/card-art/poseidon-v6-102.webp?v=ba8e2f3c60b4",
+        "h": 2090.9985915492957
+      }
+    },
+    "poseidon-v6-103": {
+      "title": "",
+      "subtitle": "The Emperor's Voice Reaches Every Ocean",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -29.05,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/poseidon-v6-103.webp?v=dd1a869fc210",
+        "h": 2149.108695652174
+      }
+    },
+    "poseidon-v6-104": {
+      "title": "",
+      "subtitle": "No Enemy Shall Reach the Emperor",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -264.87,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/poseidon-v6-104.webp?v=64b7f1165a9d",
+        "h": 2620.743639921722
+      }
+    },
+    "poseidon-v6-105": {
+      "title": "",
+      "subtitle": "The Last Watcher of Atlantis",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -223.14,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/poseidon-v6-105.webp?v=446a642355cb",
+        "h": 2537.282608695652
+      }
+    },
+    "poseidon-v6-106": {
+      "title": "",
+      "subtitle": "Defender of the Sacred Pillars",
+      "flavour": "",
+      "art": {
+        "w": 3986.98,
+        "x": -1266.5100461494087,
+        "y": -46.28515625,
+        "zoom": 1,
+        "baseW": 3986.98,
+        "src": "playtest/assets/card-art/poseidon-v6-106.webp?v=d25facd9b1c9",
+        "h": 2090.9976630434785
+      }
+    },
+    "poseidon-v6-107": {
+      "title": "",
+      "subtitle": "The Spear That Pierces the Waves",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -194.85,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/poseidon-v6-107.webp?v=d472d5c87bbc",
+        "h": 2480.690807799443
+      }
+    },
+    "poseidon-v6-108": {
+      "title": "",
+      "subtitle": "First to Rise, Last to Fall",
+      "flavour": "",
+      "art": {
+        "w": 1879.09,
+        "x": -195.55,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1879.09,
+        "src": "playtest/assets/card-art/poseidon-v6-108.webp?v=17930dfc1153",
+        "h": 2090.9982472826086
+      }
+    },
+    "poseidon-v6-109": {
+      "title": "",
+      "subtitle": "Nothing Escapes the Deep",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -16.92,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/poseidon-v6-109.webp?v=c143c2f6a50e",
+        "h": 2124.8478260869565
+      }
+    },
+    "poseidon-v6-110": {
+      "title": "",
+      "subtitle": "The Living Wall of the Ocean",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -24.44,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/poseidon-v6-110.webp?v=476391b381a0",
+        "h": 2139.885714285714
+      }
+    },
+    "poseidon-v6-111": {
+      "title": "",
+      "subtitle": "The Tide Strikes Without Warning",
+      "flavour": "",
+      "art": {
+        "w": 1926.13,
+        "x": -219.06,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1926.13,
+        "src": "playtest/assets/card-art/poseidon-v6-111.webp?v=d600ba969e7a",
+        "h": 2091.0025407608696
+      }
+    },
+    "poseidon-v6-112": {
+      "title": "",
+      "subtitle": "Nothing Escapes the Ocean's Gaze",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -563.15,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/poseidon-v6-112.webp?v=1ecfc70d85ea",
+        "h": 3217.2972972972975
+      }
+    },
+    "poseidon-v6-113": {
+      "title": "",
+      "subtitle": "Keeper of the Ocean's Lost Knowledge",
+      "flavour": "",
+      "art": {
+        "w": 2776.98,
+        "x": -644.49,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2776.98,
+        "src": "playtest/assets/card-art/poseidon-v6-113.webp?v=4b248a0071d9",
+        "h": 2090.9998214285715
+      }
+    },
+    "poseidon-v6-114": {
+      "title": "",
+      "subtitle": "Her Prayers Echo Through the Depths",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -274.7,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/poseidon-v6-114.webp?v=72ccde60cf1a",
+        "h": 2640.391304347826
+      }
+    },
+    "poseidon-v6-115": {
+      "title": "",
+      "subtitle": "Every Current Carries a Secret",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -9.82,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/poseidon-v6-115.webp?v=93f0e01db42e",
+        "h": 2110.6382978723404
+      }
+    },
+    "poseidon-v6-116": {
+      "title": "",
+      "subtitle": "The Deepest Truth Lies Within the Pearl",
+      "flavour": "",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/poseidon-v6-116.webp?v=f2139accb03e",
+        "h": 2091.0
+      }
+    },
+    "poseidon-v6-117": {
+      "title": "",
+      "subtitle": "The Ocean Rejects All Intruders",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -70.5,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/poseidon-v6-117.webp?v=d4b3a0353de7",
+        "h": 2232.0
+      }
+    },
+    "poseidon-v6-118": {
+      "title": "",
+      "subtitle": "Under One Banner, the Seven Seas March",
+      "flavour": "",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/poseidon-v6-118.webp?v=90cf1edca1e3",
+        "h": 2091.0
+      }
+    },
+    "poseidon-v6-119": {
+      "title": "",
+      "subtitle": "No Magic Shall Disturb the Sacred Temple",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -69.49,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/poseidon-v6-119.webp?v=fa5ea8bb569c",
+        "h": 2229.978260869565
+      }
+    },
+    "poseidon-v6-120": {
+      "title": "",
+      "subtitle": "He Has Seen the End of Every Shore",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -274.7,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/poseidon-v6-120.webp?v=937368d5c268",
+        "h": 2640.391304347826
+      }
+    },
+    "poseidon-v6-121": {
+      "title": "",
+      "subtitle": "The Emperor's Wisdom Is a Weapon",
+      "flavour": "",
+      "art": {
+        "w": 1508.8,
+        "x": -10.4,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1508.8,
+        "src": "playtest/assets/card-art/poseidon-v6-121.webp?v=06bf1d48e3a6",
+        "h": 2091.0
+      }
+    },
+    "poseidon-v6-122": {
+      "title": "",
+      "subtitle": "Even Broken Armor Remembers the Sea",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -679.0,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/poseidon-v6-122.webp?v=116d8000ea3a",
+        "h": 3449.0066225165565
+      }
+    },
+    "poseidon-v6-123": {
+      "title": "",
+      "subtitle": "The Spear of the Forgotten Kingdom",
+      "flavour": "",
+      "art": {
+        "w": 1570.49,
+        "x": -41.25,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1570.49,
+        "src": "playtest/assets/card-art/poseidon-v6-123.webp?v=8aaea42efdf4",
+        "h": 2090.995257142857
+      }
+    },
+    "poseidon-v6-124": {
+      "title": "",
+      "subtitle": "The Reef Protects Its Own",
+      "flavour": "",
+      "art": {
+        "w": 2789.26,
+        "x": -650.63,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2789.26,
+        "src": "playtest/assets/card-art/poseidon-v6-124.webp?v=eed100cf34c8",
+        "h": 2090.9962721088436
+      }
+    },
+    "poseidon-v6-125": {
+      "title": "",
+      "subtitle": "A Thousand Currents, One Strike",
+      "flavour": "",
+      "art": {
+        "w": 2936.98,
+        "x": -724.49,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2936.98,
+        "src": "playtest/assets/card-art/poseidon-v6-125.webp?v=b0154499778a",
+        "h": 2091.002065217391
+      }
+    },
+    "poseidon-v6-126": {
+      "title": "",
+      "subtitle": "No Prison Is Deeper Than the Sea",
+      "flavour": "",
+      "art": {
+        "w": 2944.22,
+        "x": -728.11,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2944.22,
+        "src": "playtest/assets/card-art/poseidon-v6-126.webp?v=cc131bcf2b54",
+        "h": 2090.9970612244897
+      }
+    },
+    "poseidon-v6-127": {
+      "title": "",
+      "subtitle": "The Ocean Holds Forgotten Knowledge",
+      "flavour": "",
+      "art": {
+        "w": 1674.66,
+        "x": -93.33,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1674.66,
+        "src": "playtest/assets/card-art/poseidon-v6-127.webp?v=503df07ef172",
+        "h": 2090.9990833333336
+      }
+    },
+    "poseidon-v6-128": {
+      "title": "",
+      "subtitle": "The Art of Restoring the Emperor's Armor",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -73.03,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/poseidon-v6-128.webp?v=eb3c952a9291",
+        "h": 2237.061224489796
+      }
+    },
+    "poseidon-v6-129": {
+      "title": "",
+      "subtitle": "The Venom Beneath the Waves",
+      "flavour": "",
+      "art": {
+        "w": 2639.75,
+        "x": -575.88,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2639.75,
+        "src": "playtest/assets/card-art/poseidon-v6-129.webp?v=ec5240f77274",
+        "h": 2090.9976222826085
+      }
+    },
+    "poseidon-v6-130": {
+      "title": "",
+      "subtitle": "The Crown of the Ocean's Soldiers",
+      "flavour": "",
+      "art": {
+        "w": 2959.57,
+        "x": -735.78,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2959.57,
+        "src": "playtest/assets/card-art/poseidon-v6-130.webp?v=8225f132b337",
+        "h": 2091.000543478261
+      }
+    },
+    "poseidon-v6-131": {
+      "title": "",
+      "subtitle": "The Shield That Guards the Sacred Seas",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -276.72,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/poseidon-v6-131.webp?v=c504632d045c",
+        "h": 2644.4347826086955
+      }
+    },
+    "poseidon-v6-132": {
+      "title": "",
+      "subtitle": "Every Wave Is a Warning",
+      "flavour": "",
+      "art": {
+        "w": 4894.54,
+        "x": -1703.27,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 4894.54,
+        "src": "playtest/assets/card-art/poseidon-v6-132.webp?v=3df6acecde7d",
+        "h": 2091.000761904762
+      }
+    },
+    "poseidon-v6-133": {
+      "title": "",
+      "subtitle": "The Depths Have Their Own Answers",
+      "flavour": "",
+      "art": {
+        "w": 1863.17,
+        "x": -187.58,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1863.17,
+        "src": "playtest/assets/card-art/poseidon-v6-133.webp?v=f6c813cec387",
+        "h": 2091.0032880434783
+      }
+    },
+    "poseidon-v6-134": {
+      "title": "",
+      "subtitle": "The Sea Strikes Without Mercy",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -188.77,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/poseidon-v6-134.webp?v=f0775c7476aa",
+        "h": 2468.5434782608695
+      }
+    },
+    "poseidon-v6-135": {
+      "title": "",
+      "subtitle": "The Truth Lies Beneath the Waves",
+      "flavour": "",
+      "art": {
+        "w": 5642.62,
+        "x": -2077.31,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 5642.62,
+        "src": "playtest/assets/card-art/poseidon-v6-135.webp?v=2321e0a7c3d0",
+        "h": 2090.998147138964
+      }
+    },
+    "poseidon-v6-136": {
+      "title": "",
+      "subtitle": "Every Debt Returns with the Tide",
+      "flavour": "",
+      "art": {
+        "w": 2788.0,
+        "x": -650.0,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2788.0,
+        "src": "playtest/assets/card-art/poseidon-v6-136.webp?v=94099bd837bd",
+        "h": 2091.0
+      }
+    },
+    "poseidon-v6-137": {
+      "title": "",
+      "subtitle": "The Deepest Waters Allow No Movement",
+      "flavour": "",
+      "art": {
+        "w": 3717.33,
+        "x": -1114.67,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 3717.33,
+        "src": "playtest/assets/card-art/poseidon-v6-137.webp?v=f4f4603cb714",
+        "h": 2090.9981249999996
+      }
+    },
+    "poseidon-v6-138": {
+      "title": "",
+      "subtitle": "What the Sea Claims, the Sea Keeps",
+      "flavour": "",
+      "art": {
+        "w": 4304.1,
+        "x": -1408.05,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 4304.1,
+        "src": "playtest/assets/card-art/poseidon-v6-138.webp?v=7b3410d9da2b",
+        "h": 2090.998936170213
+      }
+    },
+    "poseidon-v6-139": {
+      "title": "",
+      "subtitle": "The Ocean Knows What You Will Draw",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -781.87,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/poseidon-v6-139.webp?v=c551b7101ac6",
+        "h": 3654.7368421052633
+      }
+    },
+    "poseidon-v6-140": {
+      "title": "",
+      "subtitle": "Our Lives Belong to the Emperor",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -191.36,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/poseidon-v6-140.webp?v=88b5e65e595d",
+        "h": 2473.721518987342
+      }
+    },
+    "poseidon-v6-141": {
+      "title": "",
+      "subtitle": "Before the Flood, There Is Silence",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -182.71,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/poseidon-v6-141.webp?v=7abf302e8903",
+        "h": 2456.413043478261
+      }
+    },
+    "poseidon-v6-142": {
+      "title": "",
+      "subtitle": "The Throne Beneath the Waves",
+      "flavour": "",
+      "art": {
+        "w": 1519.24,
+        "x": -15.62,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1519.24,
+        "src": "playtest/assets/card-art/poseidon-v6-142.webp?v=7ff2beb43618",
+        "h": 2090.996989247312
+      }
+    },
+    "poseidon-v6-143": {
+      "title": "",
+      "subtitle": "The Dominion of the Sea Dragon",
+      "flavour": "",
+      "art": {
+        "w": 1520.73,
+        "x": -16.36,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1520.73,
+        "src": "playtest/assets/card-art/poseidon-v6-143.webp?v=0eb67ad3d9da",
+        "h": 2091.00375
+      }
+    },
+    "poseidon-v6-144": {
+      "title": "",
+      "subtitle": "The Dominion of the Siren",
+      "flavour": "",
+      "art": {
+        "w": 2788.0,
+        "x": -650.0,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2788.0,
+        "src": "playtest/assets/card-art/poseidon-v6-144.webp?v=8a35c7936c4b",
+        "h": 2091.0
+      }
+    },
+    "poseidon-v6-145": {
+      "title": "",
+      "subtitle": "The Dominion of the Seahorse",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -270.81,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/poseidon-v6-145.webp?v=d9ea423ebf2b",
+        "h": 2632.6153846153848
+      }
+    },
+    "poseidon-v6-146": {
+      "title": "",
+      "subtitle": "The Dominion of the Kraken",
+      "flavour": "",
+      "art": {
+        "w": 2686.51,
+        "x": -599.25,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2686.51,
+        "src": "playtest/assets/card-art/poseidon-v6-146.webp?v=3a0fcf1d39cc",
+        "h": 2091.0002833333338
+      }
+    },
+    "poseidon-v6-147": {
+      "title": "",
+      "subtitle": "A Thousand Paths, None Leading Home",
+      "flavour": "",
+      "art": {
+        "w": 2788.0,
+        "x": -650.0,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2788.0,
+        "src": "playtest/assets/card-art/poseidon-v6-147.webp?v=ad6825a80a42",
+        "h": 2091.0
+      }
+    },
+    "poseidon-v6-148": {
+      "title": "",
+      "subtitle": "Knowledge Buried Beneath the Ocean",
+      "flavour": "",
+      "art": {
+        "w": 2788.0,
+        "x": -650.0,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2788.0,
+        "src": "playtest/assets/card-art/poseidon-v6-148.webp?v=78d78d5c8f86",
+        "h": 2091.0
+      }
+    },
+    "poseidon-v6-149": {
+      "title": "",
+      "subtitle": "Where Light and Hope Disappear",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -247.4,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/poseidon-v6-149.webp?v=e690e5caa640",
+        "h": 2585.804347826087
+      }
+    },
+    "poseidon-v6-150": {
+      "title": "",
+      "subtitle": "The Breath That Repels the Heavens",
+      "flavour": "",
+      "art": {
+        "w": 3717.33,
+        "x": -1114.67,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 3717.33,
+        "src": "playtest/assets/card-art/poseidon-v6-150.webp?v=840367cb625f",
+        "h": 2090.998125
+      }
+    },
+    "poseidon-v6-151": {
+      "title": "",
+      "subtitle": "The Melody That Silences the Soul",
+      "flavour": "",
+      "art": {
+        "w": 1951.6,
+        "x": -231.8,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1951.6,
+        "src": "playtest/assets/card-art/poseidon-v6-151.webp?v=ca7856735947",
+        "h": 2091.0
+      }
+    },
+    "poseidon-v6-152": {
+      "title": "",
+      "subtitle": "The Ocean Turns Against Its Enemies",
+      "flavour": "",
+      "art": {
+        "w": 4182.0,
+        "x": -1347.0,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 4182.0,
+        "src": "playtest/assets/card-art/poseidon-v6-152.webp?v=eb8e7310ac49",
+        "h": 2091.0
+      }
+    },
+    "poseidon-v6-153": {
+      "title": "",
+      "subtitle": "The Cold That Reaches Beyond the Soul",
+      "flavour": "",
+      "art": {
+        "w": 2937.05,
+        "x": -724.53,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2937.05,
+        "src": "playtest/assets/card-art/poseidon-v6-153.webp?v=ec637572a231",
+        "h": 2090.9994523548744
+      }
+    },
+    "poseidon-v6-154": {
+      "title": "",
+      "subtitle": "Every Current Obeys the Master",
+      "flavour": "",
+      "art": {
+        "w": 1488,
+        "x": -66.89991346985869,
+        "y": -106.11809113300501,
+        "zoom": 1,
+        "baseW": 1488,
+        "src": "playtest/assets/card-art/poseidon-v6-154.webp?v=1cc04a1fa8d6",
+        "h": 2644.4347826086955
+      }
+    },
+    "poseidon-v6-155": {
+      "title": "",
+      "subtitle": "A Song No Warrior Can Resist",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -20.68,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/poseidon-v6-155.webp?v=600c697b0e85",
+        "h": 2132.3571428571427
+      }
+    },
+    "poseidon-v6-156": {
+      "title": "",
+      "subtitle": "The Sea Refuses Your Command",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -710.99,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/poseidon-v6-156.webp?v=c097c8041568",
+        "h": 3512.984822934233
+      }
+    },
+    "poseidon-v6-157": {
+      "title": "",
+      "subtitle": "Where Even Time Stands Still",
+      "flavour": "",
+      "art": {
+        "w": 2788.0,
+        "x": -650.0,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2788.0,
+        "src": "playtest/assets/card-art/poseidon-v6-157.webp?v=d2568f7548c7",
+        "h": 2091.0
+      }
+    },
+    "poseidon-v6-158": {
+      "title": "",
+      "subtitle": "The Lost Kingdom Rises Once More",
+      "flavour": "",
+      "art": {
+        "w": 1854.19,
+        "x": -183.09,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1854.19,
+        "src": "playtest/assets/card-art/poseidon-v6-158.webp?v=d6cded955bca",
+        "h": 2091.002309782609
+      }
+    },
+    "poseidon-v6-159": {
+      "title": "",
+      "subtitle": "The Ocean Has the Final Word",
+      "flavour": "",
+      "art": {
+        "w": 3717.33,
+        "x": -1114.67,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 3717.33,
+        "src": "playtest/assets/card-art/poseidon-v6-159.webp?v=f414964d4eaa",
+        "h": 2090.9981249999996
+      }
+    },
+    "poseidon-v6-160": {
+      "title": "",
+      "subtitle": "Not Even a Whisper Survives",
+      "flavour": "",
+      "art": {
+        "w": 1654.34,
+        "x": -83.17,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1654.34,
+        "src": "playtest/assets/card-art/poseidon-v6-160.webp?v=4db4953d7d39",
+        "h": 2090.995727891156
+      }
+    },
+    "poseidon-v6-161": {
+      "title": "",
+      "subtitle": "The Ocean Always Returns",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -108.98,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/poseidon-v6-161.webp?v=66438133f76b",
+        "h": 2308.9655172413795
+      }
+    },
+    "poseidon-v6-162": {
+      "title": "",
+      "subtitle": "The Mind Is the First Battlefield",
+      "flavour": "",
+      "art": {
+        "w": 1497.16,
+        "x": -4.58,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1497.16,
+        "src": "playtest/assets/card-art/poseidon-v6-162.webp?v=39d02f67a068",
+        "h": 2091.0055865921786
+      }
+    },
+    "poseidon-v6-163": {
+      "title": "",
+      "subtitle": "The Final Note of Despair",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -43.69,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/poseidon-v6-163.webp?v=2904c107dd15",
+        "h": 2178.3783783783783
+      }
+    },
+    "poseidon-v6-164": {
+      "title": "",
+      "subtitle": "The Ocean Rejects All Resistance",
+      "flavour": "",
+      "art": {
+        "w": 2788.0,
+        "x": -650.0,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2788.0,
+        "src": "playtest/assets/card-art/poseidon-v6-164.webp?v=5540d9cc979f",
+        "h": 2091.0
+      }
+    },
+    "poseidon-v6-165": {
+      "title": "",
+      "subtitle": "The Fang of the Frozen Ocean",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -20.68,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/poseidon-v6-165.webp?v=13d15778ba28",
+        "h": 2132.3571428571427
+      }
+    },
+    "poseidon-v6-166": {
+      "title": "",
+      "subtitle": "Beyond the Boundaries of Reality",
+      "flavour": "",
+      "art": {
+        "w": 1672.8,
+        "x": -92.4,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 1672.8,
+        "src": "playtest/assets/card-art/poseidon-v6-166.webp?v=f8c5dcff36a6",
+        "h": 2091.0
+      }
+    },
+    "poseidon-v6-167": {
+      "title": "",
+      "subtitle": "A Melody That Steals All Hope",
+      "flavour": "",
+      "art": {
+        "w": 2788.0,
+        "x": -650.0,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2788.0,
+        "src": "playtest/assets/card-art/poseidon-v6-167.webp?v=df352bda0f1b",
+        "h": 2091.0
+      }
+    },
+    "poseidon-v6-168": {
+      "title": "",
+      "subtitle": "The Arctic Answers with Fury",
+      "flavour": "",
+      "art": {
+        "w": 2788.0,
+        "x": -650.0,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2788.0,
+        "src": "playtest/assets/card-art/poseidon-v6-168.webp?v=df59a0a9854c",
+        "h": 2091.0
+      }
+    },
+    "poseidon-v6-169": {
+      "title": "",
+      "subtitle": "A Prison Beyond Time",
+      "flavour": "",
+      "art": {
+        "w": 2788.0,
+        "x": -650.0,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2788.0,
+        "src": "playtest/assets/card-art/poseidon-v6-169.webp?v=badcf87ce9a5",
+        "h": 2091.0
+      }
+    },
+    "poseidon-v6-170": {
+      "title": "",
+      "subtitle": "Authority Forged Beneath the Waves",
+      "flavour": "",
+      "art": {
+        "w": 2782.88,
+        "x": -647.44,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2782.88,
+        "src": "playtest/assets/card-art/poseidon-v6-170.webp?v=e01f1f51944a",
+        "h": 2091.0037569060773
+      }
+    },
+    "poseidon-v6-171": {
+      "title": "",
+      "subtitle": "All Seas Shall Obey",
+      "flavour": "",
+      "art": {
+        "w": 3717.33,
+        "x": -1114.67,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 3717.33,
+        "src": "playtest/assets/card-art/poseidon-v6-171.webp?v=7ab6a4f6fc74",
+        "h": 2090.9981249999996
+      }
+    },
+    "poseidon-v6-172": {
+      "title": "",
+      "subtitle": "The Sea Shall Rise Again",
+      "flavour": "",
+      "art": {
+        "w": 2091.0,
+        "x": -301.5,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2091.0,
+        "src": "playtest/assets/card-art/poseidon-v6-172.webp?v=7ad4ba07a200",
+        "h": 2091.0
+      }
+    },
+    "poseidon-v6-173": {
+      "title": "",
+      "subtitle": "Even Empires Must Drown",
+      "flavour": "",
+      "art": {
+        "w": 2788.0,
+        "x": -650.0,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2788.0,
+        "src": "playtest/assets/card-art/poseidon-v6-173.webp?v=8b10f5221ad5",
+        "h": 2091.0
+      }
+    },
+    "poseidon-v6-174": {
+      "title": "",
+      "subtitle": "No Shore Is Beyond His Reach",
+      "flavour": "",
+      "art": {
+        "w": 2788.0,
+        "x": -650.0,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2788.0,
+        "src": "playtest/assets/card-art/poseidon-v6-174.webp?v=1c93e39c39e2",
+        "h": 2091.0
+      }
+    },
+    "poseidon-v6-175": {
+      "title": "",
+      "subtitle": "There Is No Escape from the Tide",
+      "flavour": "",
+      "art": {
+        "w": 2788.0,
+        "x": -650.0,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2788.0,
+        "src": "playtest/assets/card-art/poseidon-v6-175.webp?v=d71a5b8ca24f",
+        "h": 2091.0
+      }
+    },
+    "poseidon-v6-176": {
+      "title": "",
+      "subtitle": "The Seas Bow to One Master",
+      "flavour": "",
+      "art": {
+        "w": 3748.5,
+        "x": -1130.25,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 3748.5,
+        "src": "playtest/assets/card-art/poseidon-v6-176.webp?v=66c71f53cb76",
+        "h": 2091.0
+      }
+    },
+    "poseidon-v6-177": {
+      "title": "",
+      "subtitle": "The Age of the Seas Begins",
+      "flavour": "",
+      "art": {
+        "w": 2965.74,
+        "x": -738.87,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 2965.74,
+        "src": "playtest/assets/card-art/poseidon-v6-177.webp?v=958088b6b14e",
+        "h": 2091.0009361069833
+      }
+    },
+    "poseidon-v6-178": {
+      "title": "",
+      "subtitle": "The Authority of the Seven Seas",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -70.5,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/poseidon-v6-178.webp?v=44dd442e7cef",
+        "h": 2232.0
+      }
+    },
+    "poseidon-v6-179": {
+      "title": "",
+      "subtitle": "The Pillar That Holds the World",
+      "flavour": "",
+      "art": {
+        "w": 3717.33,
+        "x": -1114.67,
+        "y": 0.0,
+        "zoom": 1,
+        "baseW": 3717.33,
+        "src": "playtest/assets/card-art/poseidon-v6-179.webp?v=2f0d9d7030c2",
+        "h": 2090.998125
+      }
+    },
+    "poseidon-v6-180": {
+      "title": "",
+      "subtitle": "Let the World Return to the Sea",
+      "flavour": "",
+      "art": {
+        "w": 1488.0,
+        "x": 0.0,
+        "y": -60.45,
+        "zoom": 1,
+        "baseW": 1488.0,
+        "src": "playtest/assets/card-art/poseidon-v6-180.webp?v=733b69626ef2",
+        "h": 2211.891891891892
+      }
+    }
+  }
+}

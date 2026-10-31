@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "Guardian of the Sacred Moon",
+  "flavour": "\"My life belongs to the goddess. My strength belongs to the forest.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/artemis-v6-365.png",
+    "w": 1693.71,
+    "x": -107.65001127830249,
+    "y": 7.671305266579793,
+    "zoom": 1.08,
+    "baseW": 1568.25
+  }
+}

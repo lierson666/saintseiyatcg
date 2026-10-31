@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Burning Centaur",
+  "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/athena-v6-071.png",
+    "w": 1488,
+    "x": -47.71218913285554,
+    "y": -415.68787434803824,
+    "zoom": 1,
+    "baseW": 1488
+  }
+}

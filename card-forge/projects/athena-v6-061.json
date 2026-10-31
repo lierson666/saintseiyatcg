@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "Answer the Goddess",
+  "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/athena-v6-061.png",
+    "w": 1488,
+    "x": -10.865888130657027,
+    "y": -483.73816179302185,
+    "zoom": 1,
+    "baseW": 1488
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "title": "",
+  "subtitle": "The Loyal Voice of the Sea Emperor",
+  "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/poseidon-v6-099-ref.jpg",
+    "w": 2232,
+    "x": -445.83400634554357,
+    "y": -46.71968519088614,
+    "zoom": 1.5,
+    "baseW": 1488,
+    "provisoria": true
+  }
+}

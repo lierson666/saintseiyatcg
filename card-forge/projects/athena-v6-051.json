@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Flame of Athena",
+  "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/athena-v6-051.png",
+    "w": 2430.7875000000004,
+    "x": -539.5525028195759,
+    "y": -284.493856672627,
+    "zoom": 1.5500000000000003,
+    "baseW": 1568.25
+  }
+}

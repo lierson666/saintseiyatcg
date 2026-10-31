@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Winged Ravager",
+  "flavour": "\"The storm does not choose its victims. Neither do I.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/ares-v6-283.png",
+    "w": 2567.269183922046,
+    "x": -30.09142784218841,
+    "y": 12.801178609913677,
+    "zoom": 1.05,
+    "baseW": 2445.0182704019485
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "Lightning Plasma",
+  "flavour": "",
+  "bonusPower": "+2",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/athena-v6-016.png",
+    "w": 1960.3125,
+    "x": -252.34355548496706,
+    "y": -415.4617654827699,
+    "zoom": 1.25,
+    "baseW": 1568.25
+  }
+}

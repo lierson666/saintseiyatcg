@@ -1,0 +1,14 @@
+{
+  "title": "",
+  "subtitle": "The Unbroken Defense",
+  "flavour": "\"The forest has endured a thousand wars. Its guardians have learned to endure them all.\"",
+  "art": {
+    "src": "art/artemis-v6-415-ref.jpg",
+    "w": 3136.5,
+    "x": -824.25,
+    "y": 0.0,
+    "zoom": 1,
+    "baseW": 3136.5,
+    "provisoria": true
+  }
+}

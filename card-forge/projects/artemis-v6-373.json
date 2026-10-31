@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Primordial Light of the Night",
+  "flavour": "\"Before Artemis drew her first bow, Selene had already illuminated the heavens.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/artemis-v6-373.png",
+    "w": 2395.6800000000003,
+    "x": -465.1352240407425,
+    "y": -6.386084104014003,
+    "zoom": 1.61,
+    "baseW": 1488
+  }
+}

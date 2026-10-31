@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Immortal Flame",
+  "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/athena-v6-009.png",
+    "w": 1725.075,
+    "x": -70.38239050052812,
+    "y": -237.55830776576659,
+    "zoom": 1.1,
+    "baseW": 1568.25
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Serpent’s Venom",
+  "flavour": "",
+  "bonusPower": "+1",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/athena-v6-067.png",
+    "w": 1488,
+    "x": 2.8572081203780613,
+    "y": -533.3214945122123,
+    "zoom": 1,
+    "baseW": 1488
+  }
+}

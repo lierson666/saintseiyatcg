@@ -1,0 +1,16 @@
+{
+  "title": "",
+  "subtitle": "Defender of the Sacred Pillars",
+  "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/poseidon-v6-106-ref.jpg",
+    "w": 3986.98,
+    "x": -1266.5100461494087,
+    "y": -46.28515625,
+    "zoom": 1,
+    "baseW": 3986.98,
+    "provisoria": true
+  }
+}

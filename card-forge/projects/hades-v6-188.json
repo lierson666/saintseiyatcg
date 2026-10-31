@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Scales of the Damned",
+  "flavour": "",
+  "bonusPower": "+1",
+  "bonusResistance": "+2",
+  "art": {
+    "src": "art/hades-v6-188.png",
+    "w": 1488,
+    "x": -3.3458013305541954,
+    "y": -139.67812804778941,
+    "zoom": 1,
+    "baseW": 1488
+  }
+}

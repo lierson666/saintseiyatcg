@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "Defender of the Twelve Temples",
+  "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/athena-v6-040.png",
+    "w": 1561.28,
+    "x": -36.639999999999986,
+    "y": 0,
+    "zoom": 1,
+    "baseW": 1561.28
+  }
+}

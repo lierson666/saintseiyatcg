@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Shield of Medusa",
+  "flavour": "",
+  "bonusPower": "+0",
+  "bonusResistance": "+1",
+  "art": {
+    "src": "art/athena-v6-069.png",
+    "w": 1488,
+    "x": -8.47603003740403,
+    "y": -540.2361208532398,
+    "zoom": 1,
+    "baseW": 1488
+  }
+}

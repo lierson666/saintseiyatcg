@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Frozen Shadow",
+  "flavour": "\"His ice does not shine like a diamond. It swallows every trace of light.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/neutral-v6-453.png",
+    "w": 1488,
+    "x": -2.8890728949546656,
+    "y": -71.82032096608157,
+    "zoom": 1,
+    "baseW": 1488
+  }
+}

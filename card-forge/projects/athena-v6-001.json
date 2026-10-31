@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "Athens Last Stand",
+  "flavour": "\"Burn cosmos, BURN!\"",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/athena-v6-001.png",
+    "w": 2530.11,
+    "x": -487.7669321588671,
+    "y": -84.93752803966197,
+    "zoom": 1.21,
+    "baseW": 2091
+  }
+}

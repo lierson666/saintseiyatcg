@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Pack Hunter",
+  "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/athena-v6-031.png",
+    "w": 1940.5158620689654,
+    "x": -283.58361832037656,
+    "y": -104.44567586064181,
+    "zoom": 1.29,
+    "baseW": 1504.2758620689654
+  }
+}

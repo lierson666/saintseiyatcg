@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Cowardly Servant",
+  "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/hades-v6-207.png",
+    "w": 2008.8000000000002,
+    "x": -260.4000000000001,
+    "y": -392.7816229116929,
+    "zoom": 1.35,
+    "baseW": 1488
+  }
+}

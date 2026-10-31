@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Devourer of Prometheus",
+  "flavour": "\"From the torment of Prometheus, the flames of war were born.\"",
+  "bonusPower": "+3",
+  "bonusResistance": "+1",
+  "art": {
+    "src": "art/ares-v6-272.png",
+    "w": 1488,
+    "x": 0,
+    "y": -70.5,
+    "zoom": 1,
+    "baseW": 1488
+  }
+}

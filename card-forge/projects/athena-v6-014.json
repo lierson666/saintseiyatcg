@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "Galaxian Explosion",
+  "flavour": "",
+  "bonusPower": "+2",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/athena-v6-014.png",
+    "w": 1850.5349999999999,
+    "x": -198.5499013158327,
+    "y": -223.27208889702433,
+    "zoom": 1.18,
+    "baseW": 1568.25
+  }
+}

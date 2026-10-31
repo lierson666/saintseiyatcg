@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Mind Reader",
+  "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/athena-v6-073.png",
+    "w": 1488,
+    "x": -15.688090683265273,
+    "y": -510.4639278672189,
+    "zoom": 1,
+    "baseW": 1488
+  }
+}

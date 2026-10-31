@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Frozen Resolve",
+  "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/athena-v6-005.png",
+    "w": 1488,
+    "x": 0,
+    "y": -70.5,
+    "zoom": 1,
+    "baseW": 1488
+  }
+}

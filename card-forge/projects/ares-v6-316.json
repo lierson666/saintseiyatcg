@@ -1,0 +1,14 @@
+{
+  "title": "",
+  "subtitle": "A Weapon That Never Rests",
+  "flavour": "\"The blade remembers every life it has taken.\"",
+  "art": {
+    "src": "art/ares-v6-316-ref.jpg",
+    "w": 3717.33,
+    "x": -1114.67,
+    "y": 0.0,
+    "zoom": 1,
+    "baseW": 3717.33,
+    "provisoria": true
+  }
+}

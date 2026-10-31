@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Invisible Barrier",
+  "flavour": "",
+  "bonusPower": "+0",
+  "bonusResistance": "+1",
+  "art": {
+    "src": "art/athena-v6-068.png",
+    "w": 1666.5600000000002,
+    "x": -49.68015761071308,
+    "y": -853.2109573062149,
+    "zoom": 1.12,
+    "baseW": 1488
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Venomous Fang",
+  "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/athena-v6-030.png",
+    "w": 2132.82,
+    "x": -260.19933843474297,
+    "y": -541.7256040718464,
+    "zoom": 1.36,
+    "baseW": 1568.25
+  }
+}

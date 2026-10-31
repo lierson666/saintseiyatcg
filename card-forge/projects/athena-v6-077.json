@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "To See Beyond the Darkness",
+  "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/athena-v6-077.png",
+    "w": 1568.25,
+    "x": -40.125,
+    "y": 0,
+    "zoom": 1,
+    "baseW": 1568.25
+  }
+}

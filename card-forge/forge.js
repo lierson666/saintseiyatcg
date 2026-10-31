@@ -1,7 +1,7 @@
 import {createHistory} from '../shared/editor-history.js';
 import {compilePlaytest} from '../shared/import-playtest.js';
-import {textBlocks,blocksMarkup,presentationRules,ruleBlocksWithoutKeywords} from '../shared/card-text.js';
-import {renderLiveCard,illustration} from '../shared/live-card.js';
+import {renderLiveCard,illustration} from '../shared/live-card.js?v=20261031-ed1';
+import {textBlocks, blocksMarkup, presentationRules, ruleBlocksWithoutKeywords, KEYWORD_WORDS, STAT_RE, statTrend} from '../shared/card-text.js?v=20261031-sym1';
 import {isArmor,isEquipment,validateCard} from '../shared/card-model.js';
 // Card Forge — editor de cartas em vanilla JS. Renderiza no canvas nativo 1488x2091 usando
 // as peças de CARD-TEMPLATE/ (extraídas dos PSDs) e o spec CARD-TEMPLATE/templates.json.
@@ -9,7 +9,7 @@ import {isArmor,isEquipment,validateCard} from '../shared/card-model.js';
 import {publishedScene,visualProject} from '../shared/layout-studio/runtime.js';
 import {sceneCanvas} from '../shared/layout-studio/renderer.js';
 import {simulateCard} from './studio-preview.js';
-import {printedEquipmentBonuses,signedBonus} from '../shared/card-visual-values.js';
+import {printedEquipmentBonuses,signedBonus,armorBonusText} from '../shared/card-visual-values.js?v=20261031-kw6';
 
 const T = await (await fetch('../CARD-TEMPLATE/templates.json')).json();
 const P = (await (await fetch('../CARD-TEMPLATE/pieces.json')).json()).pieces;
@@ -68,7 +68,7 @@ function blankState() {
   return {
     id: '', nome_exibicao_en: '', title: '', subtitle: '', tipo: 'Devotee', subtipos: '', faccao: 'Athena',
     revisao_regras: '2.1', cosmoble: false, personagem_unico: false, personagem_id: '', origem_personagem: '', referencias_mitologicas_texto: '', slot_equipamento: '', donos: '', estagios: [], resonanceText: '',
-    raridade: 'Common', custo: '', unidade_custo: 'cosmo', power: '', vida: '', resistance: '', bonusPower: '', bonusResistance: '',
+    raridade: 'Common', custo: '', unidade_custo: 'cosmo', power: '', vida: '', resistance: '', bonusPower: '', bonusResistance: '', auto_equip: '', artista: '',
     equipar_custo: '', equipar_custo_ressonante: '', equipar_custo_outros: '', damage_cloth: '', soul: '', attack: '', awaken: '', keywords: '', rules: '',
     habilidade_awaken_en: '', ultimate_en: '', flavour: '', art: null,
   };
@@ -78,7 +78,11 @@ function blankState() {
 const COST = { 'Latent Cosmo': '{L}', 'Base Cosmo': '{B}', Cosmo: '{C}' }; // {B} e {C} usam o mesmo ícone
 const titleCase = (s) => s.toLowerCase().replace(/(^|[\s-])(\p{L})/gu, (m, a, b) => a + b.toUpperCase());
 
+// Símbolos no dado (autor, 31/10/2026): cards.json guarda {N}{C}/{N}{L}/{N}{B}/{N}{S}/{T}; o markup do editor usa "N {C}".
+const TOKEN_WORD = { L: 'Latent Cosmo', B: 'Base Cosmo', C: 'Cosmo' };
 export function toMarkup(text) {
+  text = text.replace(/\{(\d+|X)\}\{([BCL])\}/g, (_, n, k) => `${n} ${TOKEN_WORD[k]}`).replace(/\{(\d+|X)\}\{S\}/g, '$1 {S}');
+  if (/^Resonance — [^.:]+$/.test(text)) return `**${text}**`; // 1ª linha da Armor, inteira (30/10/2026)
   let m = text.match(/^(.+?) — Cost: (\d+) (Latent Cosmo|Base Cosmo|Cosmo)\. (.*)$/);
   let out = m ? `**${m[2]} ${COST[m[3]]} ${m[1].toUpperCase()}:**\n${m[4]}` : text;
   if (!m && (m = text.match(/^([^.—]{2,30}) — ([^.—]{1,25})\. (.*)$/))) out = `**${m[1]} — ${m[2]}:**\n${m[3]}`;
@@ -90,13 +94,12 @@ export function toMarkup(text) {
 
 export function fromMarkup(md) {
   let s = md.trim();
-  const UNIT = { L: 'Latent Cosmo', B: 'Base Cosmo', C: 'Cosmo', S: 'Soul', T: 'Tap' };
   let m = s.match(/^\*\*(\d+) \{([BCL])\} (.+?):\*\*\s*\n?([\s\S]*)$/);
-  if (m) s = `${titleCase(m[3])} — Cost: ${m[1]} ${UNIT[m[2]]}. ${m[4]}`;
+  if (m) s = `${titleCase(m[3])} — Cost: {${m[1]}}{${m[2]}}. ${m[4]}`;
   else if ((m = s.match(/^\*\*([^*—]{2,30}) — ([^*—]{1,25}):\*\*\s*\n?([\s\S]*)$/))) s = `${m[1]} — ${m[2]}. ${m[3]}`;
   else if ((m = s.match(/^\*\*([^*]{2,40}):\*\*\s*\n?([\s\S]*)$/))) s = `${m[1]} — ${m[2]}`;
   return s
-    .replace(/\s*\{([BCLST])\}/g, (_, k) => ` ${UNIT[k]}`)
+    .replace(/(\d+|X) \{([BCLS])\}/g, '{$1}{$2}')
     .replace(/\*\*/g, '').replace(/\s*\n\s*/g, ' ').replace(/\s{2,}/g, ' ').trim();
 }
 
@@ -114,7 +117,7 @@ function layoutKey(s) {
 const list = (v) => (Array.isArray(v) ? v : String(v || '').split(',')).map((x) => x.trim()).filter(Boolean);
 const has = (v) => v !== null && v !== undefined && String(v).trim() !== '';
 
-// Spell não aparece na linha de tipo: Technique, Moment e Miracle já são os Spells (autor, 28/10/2026).
+// Spell não aparece na linha de tipo: Technique e Moment já são os Spells (autor, 28/10/2026; Miracle e Event saíram em 31/10/2026).
 function typeLine(s, fmt) {
   return fmt.replace('{tipo}', s.tipo === 'Spell' ? '' : s.tipo).replace('{faccao}', s.faccao).replace('{subtipos}', list(s.subtipos).join(' — '))
     .replace(/^\s*[—-]\s*/, '').replace(/\s*[—-]\s*$/, '').replace(/\s*[—-]\s*(?=\s*[—-])/g, '');
@@ -243,19 +246,22 @@ async function drawFrame() {
 const ICONS = { '{C}': 'athena/icon_cosmo', '{B}': 'athena/icon_cosmo', '{L}': 'athena/icon_latent', '{S}': 'icons/soul', '{T}': 'icons/tap' };
 // Keywords (docs/guia-do-jogo.md §24 + ações dos Deuses) saem em NEGRITO MAIÚSCULO no texto de regras, como nos PSDs.
 export const KEYWORDS = ['Guardian', 'Nimble', 'Cheater', 'Long Range', 'Pierce', 'Impulse', 'Sealed', 'Unfaith', 'Prepare', 'Prepared', 'Afterlife', 'Multiguard', 'Seal'];
-const KW_RE = new RegExp(`\\b(${[...KEYWORDS].sort((a, b) => b.length - a.length).join('|')})\\b`, 'gi');
-const boldKeywords = (para) => para.split(/(\*\*[^*]*\*\*)/).map((seg, i) => (i % 2 ? seg : seg.replace(KW_RE, (m) => `**${m.toUpperCase()}**`))).join('');
+const KW_RE = new RegExp(`\\b(${[...KEYWORD_WORDS].sort((a, b) => b.length - a.length).join('|')})\\b`, 'gi'); // mesma lista do duelo (shared/card-text.js)
+const boldKeywords = (para) => para.split(/(\*\*[^*]*\*\*)/).map((seg, i) => (i % 2 ? seg : seg.replace(KW_RE, (m) => `**${m.toUpperCase()}**`).replace(STAT_RE, (m) => `⟪${statTrend(m)}|${m.toUpperCase()}⟫`))).join('');
 
 function tokenize(para) {
   const toks = [];
-  let bold = false;
-  for (const part of boldKeywords(para).split(/(\*\*|\{[BCLST]\}|\n|[ \t]+)/)) {
+  let bold = false, stat = null;
+  // ⟪up|…⟫ / ⟪down|…⟫: bônus de atributo, negrito e colorido (verde/vermelho).
+  for (const part of boldKeywords(para).split(/(\*\*|⟪(?:up|down|mixed)\||⟫|\{[BCLST]\}|\n|[ \t]+)/)) {
     if (!part) continue;
     if (part === '**') bold = !bold;
+    else if (part.startsWith('⟪')) { stat = part.slice(1, -1); bold = true; }
+    else if (part === '⟫') { stat = null; bold = false; }
     else if (part === '\n') toks.push({ t: 'br' });
     else if (/^[ \t]+$/.test(part)) toks.push({ t: 'sp' });
     else if (ICONS[part]) toks.push({ t: 'icon', key: ICONS[part], bold });
-    else toks.push({ t: 'w', text: part, bold });
+    else toks.push({ t: 'w', text: part, bold, stat });
   }
   return toks;
 }
@@ -293,7 +299,7 @@ async function drawRules(el, s) {
   const [rx, ry, rw, rh] = el.rect;
   const paras = [];
   if (has(s.keywords)) paras.push(`**${list(s.keywords).join(', ').toUpperCase()}.**`);
-  const text=s.estagios.length?presentationRules(buildCard()).map(toMarkup):splitParas(s.rules);
+  const text=s.estagios.length||layoutKey(s)==='relic_cloth'?presentationRules(buildCard()).map(toMarkup):splitParas(s.rules); // Armor: 1ª linha Equip · Resonance
   paras.push(...splitParas(blocksMarkup(ruleBlocksWithoutKeywords(text,list(s.keywords)))));
   if (layoutKey(s) === 'god' && has(s.habilidade_awaken_en)) {
     paras.push(`**AWAKEN${has(s.awaken) ? ` ${s.awaken}` : ''}**`, ...s.habilidade_awaken_en.split(/(?<=\.) (?=[A-Z][^.—]{1,30} — )/).map(toMarkup));
@@ -311,7 +317,7 @@ async function drawRules(el, s) {
   ctx.fillStyle = fac().color;
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
-  let y = ry;
+  let y = ry + Math.max(0, (rh - L.h) / 2); // bloco centralizado na vertical da área de texto (autor, 31/10/2026)
   for (const ln of L.lines) {
     if (ln.gap) { y += ln.gap; continue; }
     const x0 = rx + (rw - ln.w) / 2, cy = y + L.lh / 2;
@@ -325,6 +331,8 @@ async function drawRules(el, s) {
           }
         } else {
           ctx.font = it.bold ? L.fBold : L.fNorm;
+          // Texto em branco; só títulos e keywords (negrito) na cor do tema (autor, 31/10/2026; igual a shared/live-card.css).
+          if (!stroke) ctx.fillStyle = STAT_INK[it.stat] || (it.bold ? fac().color : RULES_INK);
           (stroke ? ctx.strokeText : ctx.fillText).call(ctx, it.text, x0 + it.x, cy);
         }
       }
@@ -333,6 +341,9 @@ async function drawRules(el, s) {
     y += L.lh;
   }
 }
+
+const RULES_INK = '#f4efe6', STAT_INK = {up: '#8dffa6', down: '#ff5a4a'};
+const EDITION = {name: 'Dawn of Cosmo', code: 'DOC', language: 'EN', year: 2026}; // mesmo rodapé de shared/live-card.js
 
 async function drawArt(s) {
   ctx.fillStyle = '#05060c';
@@ -388,6 +399,26 @@ async function render() {
         if (g) drawText(String(S.custo), 'number', g.cx, g.cy, el.size, 200, true);
         break;
       }
+      case 'band': {
+        // Faixa de bônus da Armor (autor, 30/10/2026): "+1 ATK / +5 HP" com as cores dos atributos do Devotee.
+        const parts = armorBonusText({ ...buildCard(), bonus_poder: Number(S.bonusPower) || 0, bonus_vida: Number(S.bonusResistance) || 0 })?.split(' / ');
+        if (!parts) break;
+        ctx.save();
+        ctx.font = T.styles.number.font.replace('{s}', el.size);
+        const sep = '  /  ', widths = parts.map((p) => ctx.measureText(p).width), sw = ctx.measureText(sep).width;
+        const total = widths.reduce((a, b) => a + b, 0) + sw * (parts.length - 1), padX = el.size * 0.9, h = el.size * 1.5;
+        ctx.beginPath(); ctx.roundRect(el.x - total / 2 - padX, el.y - h / 2, total + padX * 2, h, h / 2);
+        ctx.fillStyle = '#100e16e6'; ctx.fill(); ctx.lineWidth = 3; ctx.strokeStyle = '#bfa66e'; ctx.stroke();
+        ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+        let x = el.x - total / 2;
+        parts.forEach((p, i) => {
+          if (i) { ctx.fillStyle = '#bfa66e'; ctx.fillText(sep, x, el.y); x += sw; }
+          ctx.lineWidth = el.size * 0.12; ctx.strokeStyle = '#141008'; ctx.strokeText(p, x, el.y);
+          ctx.fillStyle = /ATK$/.test(p) ? '#7fd8ff' : '#ffb347'; ctx.fillText(p, x, el.y); x += widths[i];
+        });
+        ctx.restore();
+        break;
+      }
       case 'gem': {
         const field={equip:'equipar_custo',damage:'damage_cloth'}[el.field]||el.field;
         if(field==='damage_cloth'&&['2.0','2.1'].includes(S.revisao_regras))break;
@@ -410,10 +441,17 @@ async function render() {
       }
       case 'rules': await drawRules(el, S); break;
       case 'rarity': {
-        const key = `athena/rarity_${S.raridade.toLowerCase()}`;
-        const p = P[key];
-        const h = el.h || p?.h, w = p ? p.w * h / p.h : 0;
-        if (p) await drawPiece(key, { rect: [el.x - w / 2, el.y - h / 2, w, h] });
+        // Rodapé de edição (autor, 31/10/2026; igual a shared/live-card.js): raridade • DOC • EN • artista • © ano SSTCG.
+        const key = `athena/rarity_${S.raridade.toLowerCase()}`, p = P[key], size = 38, gh = size * 1.6, gw = p ? p.w * gh / p.h : 0;
+        const parts = [EDITION.code, EDITION.language, (S.artista || '').trim().toUpperCase(), `© ${EDITION.year} SSTCG`].filter(Boolean), sep = '  •  ';
+        ctx.save();
+        ctx.font = `900 ${size}px Avenir, 'Avenir Next', sans-serif`;
+        ctx.textAlign = 'left';
+        const text = parts.join(sep), tw = ctx.measureText(text).width, gap = p ? ctx.measureText(sep).width : 0;
+        let x = el.x - (gw + gap + tw) / 2;
+        if (p) { await drawPiece(key, { rect: [x, el.y - gh / 2, gw, gh] }); x += gw; ctx.fillStyle = '#f4efe6b3'; ctx.textBaseline = 'middle'; ctx.fillText(sep, x, el.y); x += gap; }
+        ctx.textBaseline = 'middle'; ctx.shadowColor = '#000'; ctx.shadowBlur = 8; ctx.fillStyle = '#f4efe6'; ctx.fillText(text, x, el.y);
+        ctx.restore();
         break;
       }
     }
@@ -492,13 +530,16 @@ function fromCard(c, proj = {}) {
   s.referencias_mitologicas_texto=(c.referencias_mitologicas||[]).join('\n');
   s.donos=(c.donos||[]).join(', ');s.estagios=structuredClone(c.estagios||[]);s.resonanceText=(c.ressonancias||[]).map(r=>`${r.personagem_id} | ${r.habilidade_en}`).join('\n');
   const stage=c.estagios?.[0],printed=printedEquipmentBonuses(c);if(isEquipment(c)){s.bonusPower=signedBonus(printed.power)??'';s.bonusResistance=signedBonus(printed.hp)??'';}
+  s.auto_equip=(c.auto_equip_en||[]).join(' / ');if(c.equipar_custo_outros!=null&&c.equipar_custo==null)s.equipar_custo=c.equipar_custo_outros; // Armor: Equip único
   s.subtipos = (c.subtipos || []).join(', ');
   s.keywords = (c.keywords_en || []).join(', ');
   gen = (c.habilidades_en || []).map((text) => ({ text, markup: toMarkup(text) }));
   s.rules = gen.map((g) => g.markup).join('\n\n');
   const bonus = (c.habilidades_en || []).join(' ').match(/gets ([+-]\d+)\/([+-]\d+)/);
   if (bonus && c.tipo === 'Relic') { s.bonusPower = bonus[1]; s.bonusResistance = bonus[2]; }
-  return Object.assign(s, proj, { subtitle: (typeof proj.subtitle==='string' && proj.subtitle.trim())?proj.subtitle:s.subtitle, art: proj.art || null });
+  // Armor (30/10/2026): bônus vem de bonus_poder/bonus_vida do cards.json, não do projeto visual antigo.
+  const armorBonus = c.bonus_poder != null || c.bonus_vida != null ? { bonusPower: signedBonus(c.bonus_poder || 0), bonusResistance: signedBonus(c.bonus_vida || 0) } : {};
+  return Object.assign(s, proj, { subtitle: (typeof proj.subtitle==='string' && proj.subtitle.trim())?proj.subtitle:s.subtitle, art: proj.art || null }, armorBonus);
 }
 
 let selectionRevision=0;
@@ -739,7 +780,14 @@ function buildCard() {
   // texto com marcação ({L}, **) volta para o formato do cards.json; texto intacto fica como está
   const plain = (v) => (/[{*]/.test(v || '') ? fromMarkup(v) : (v || '').trim());
   if (S.tipo === 'God') Object.assign(base, { habilidade_awaken_en: plain(S.habilidade_awaken_en), ultimate_en: plain(S.ultimate_en) });
+  if (has(S.artista) || (source && 'artista' in source)) base.artista = (S.artista || '').trim() || null; // rodapé de edição
   if (has(base.custo)) base.unidade_custo = S.unidade_custo; else base.unidade_custo = null;
+  // Armor (sintaxe de 30/10/2026): bônus em campos, Equip único, Resonance pelos nomes; HP próprio e Equip ressonante não existem.
+  if (layoutKey(S) === 'relic_cloth') {
+    Object.assign(base, { bonus_poder: Number(S.bonusPower) || 0, bonus_vida: Number(S.bonusResistance) || 0,
+      equipar_custo_outros: n(S.equipar_custo), auto_equip_en: (S.auto_equip || '').split('/').map((x) => x.trim()).filter(Boolean) });
+    for (const k of ['damage_cloth', 'equipar_auto', 'equipar_custo_ressonante']) delete base[k];
+  }
   return base;
 }
 
@@ -841,7 +889,7 @@ const MULTI = new Set(['rules', 'habilidade_awaken_en', 'ultimate_en']);
 const pick = (v, opts) => opts.find((o) => fold(o) === fold(v));
 const TIPOS = ['Devotee', 'Equipment', 'Support', 'Relic', 'Spell', 'Technique', 'Moment', 'Domain', 'God'];
 const FACCOES = ['Athena', 'Ares', 'Artemis', 'Hades', 'Poseidon', 'Neutral'];
-const RARIDADES = ['Common', 'Uncommon', 'Rare', 'Epic', 'Legendary', 'Mythic', 'Sacred', 'Divine', 'Playtest'];
+const RARIDADES = ['Common', 'Uncommon', 'Legendary', 'Divine', 'Playtest']; // 4 raridades (autor, 31/10/2026)
 
 export function parseBatch(text) {
   const out = [];

@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "An Eternal Prison of Ice",
+  "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/athena-v6-078.png",
+    "w": 1568.25,
+    "x": -40.125,
+    "y": 0,
+    "zoom": 1,
+    "baseW": 1568.25
+  }
+}

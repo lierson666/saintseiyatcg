@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "Aurora Execution",
+  "flavour": "",
+  "bonusPower": "+1",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/athena-v6-018.png",
+    "w": 1568.25,
+    "x": -40.125,
+    "y": 0,
+    "zoom": 1,
+    "baseW": 1568.25
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "title": "",
+  "subtitle": "The Earth Remembers",
+  "flavour": "\"Beneath every kingdom lies an older world, waiting to rise.\"",
+  "art": {
+    "src": "art/artemis-v6-423-ref.jpg",
+    "w": 2091.0,
+    "x": -301.5,
+    "y": 0.0,
+    "zoom": 1,
+    "baseW": 2091.0,
+    "provisoria": true
+  }
+}

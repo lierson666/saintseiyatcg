@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "Stardust Revolution",
+  "flavour": "",
+  "bonusPower": "+1",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/athena-v6-012.png",
+    "w": 1834.8525,
+    "x": -173.42624999999998,
+    "y": -177.73499999999967,
+    "zoom": 1.17,
+    "baseW": 1568.25
+  }
+}

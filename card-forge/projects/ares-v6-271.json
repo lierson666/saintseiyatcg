@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Crimson Commander",
+  "flavour": "\"The divine fire does not distinguish flesh from steel. Everything burns.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/ares-v6-271.png",
+    "w": 2195.5499999999997,
+    "x": -410.4199476058589,
+    "y": 30.730256420676483,
+    "zoom": 1.4,
+    "baseW": 1568.25
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Lion’s Courage",
+  "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/athena-v6-032.png",
+    "w": 1776.2464952638702,
+    "x": -38.26846648811534,
+    "y": -35.44154929291227,
+    "zoom": 1.18,
+    "baseW": 1505.2936400541273
+  }
+}

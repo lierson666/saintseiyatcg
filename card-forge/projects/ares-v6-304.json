@@ -1,0 +1,14 @@
+{
+  "title": "",
+  "subtitle": "Shieldbreaker of the War God",
+  "flavour": "\"There is no shield forged that can withstand the wrath of Ares.\"",
+  "art": {
+    "src": "art/ares-v6-304-ref.jpg",
+    "w": 1516.71,
+    "x": -14.36,
+    "y": 0.0,
+    "zoom": 1,
+    "baseW": 1516.71,
+    "provisoria": true
+  }
+}

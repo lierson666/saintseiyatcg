@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "Silver Protection of the Hunt",
+  "flavour": "\"Beneath the silver moon, every movement becomes a perfect hunt.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/artemis-v6-368.png",
+    "w": 1488,
+    "x": 0,
+    "y": -70.5,
+    "zoom": 1,
+    "baseW": 1488
+  }
+}

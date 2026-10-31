@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Petrifying Gaze",
+  "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/athena-v6-024.png",
+    "w": 1815.36,
+    "x": -266.0326299860093,
+    "y": -106.84605614864586,
+    "zoom": 1.22,
+    "baseW": 1488
+  }
+}

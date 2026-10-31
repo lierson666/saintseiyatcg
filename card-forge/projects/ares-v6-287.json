@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Venomous Executioner",
+  "flavour": "\"The pain of my venom is merely the beginning.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/ares-v6-287.png",
+    "w": 2713.970280146163,
+    "x": -14.050718578407839,
+    "y": 91.14864583876886,
+    "zoom": 1.11,
+    "baseW": 2445.0182704019485
+  }
+}

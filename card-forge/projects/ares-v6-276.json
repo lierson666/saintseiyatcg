@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "Wings of the Catastrophe",
+  "flavour": "\"Every beat of these wings carries the promise of another beautiful disaster.\"",
+  "bonusPower": "+2",
+  "bonusResistance": "+1",
+  "art": {
+    "src": "art/ares-v6-276.png",
+    "w": 2070.09,
+    "x": -328.39051580390037,
+    "y": -417.00443880038983,
+    "zoom": 1.32,
+    "baseW": 1568.25
+  }
+}

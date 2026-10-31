@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Price of the Final Journey",
+  "flavour": "A coin for charon, he must have recompense",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/hades-v6-227.png",
+    "w": 1568.25,
+    "x": -40.125,
+    "y": 0,
+    "zoom": 1,
+    "baseW": 1568.25
+  }
+}

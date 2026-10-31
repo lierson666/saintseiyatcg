@@ -1,0 +1,14 @@
+{
+  "title": "",
+  "subtitle": "The Last Warrior Standing",
+  "flavour": "\"When the final battle ends, only the servants of war shall remain.\"",
+  "art": {
+    "src": "art/ares-v6-345-ref.jpg",
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -70.5,
+    "zoom": 1,
+    "baseW": 1488.0,
+    "provisoria": true
+  }
+}

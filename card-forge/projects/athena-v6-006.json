@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Eternal Ice",
+  "flavour": "",
+  "bonusPower": "+1",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/athena-v6-006.png",
+    "w": 1740.9599999999998,
+    "x": -202.1648860686472,
+    "y": -9.158904710591173,
+    "zoom": 1.17,
+    "baseW": 1488
+  }
+}

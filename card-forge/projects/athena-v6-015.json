@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Golden Lightning",
+  "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/athena-v6-015.png",
+    "w": 1488,
+    "x": 0,
+    "y": -275.7065217391305,
+    "zoom": 1,
+    "baseW": 1488
+  }
+}

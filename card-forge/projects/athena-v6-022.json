@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Serpent’s Wrath",
+  "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/athena-v6-022.png",
+    "w": 1561.28,
+    "x": -36.639999999999986,
+    "y": 0,
+    "zoom": 1,
+    "baseW": 1561.28
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "Protection of the Ancient Grove",
+  "flavour": "\"Even when shattered, the roots of the ancient world rise again.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/artemis-v6-366.png",
+    "w": 1830.24,
+    "x": -132.4203374925051,
+    "y": -11.209192234233115,
+    "zoom": 1.23,
+    "baseW": 1488
+  }
+}

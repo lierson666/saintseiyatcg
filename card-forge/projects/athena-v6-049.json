@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Balance of Protection",
+  "flavour": "",
+  "bonusPower": "+0",
+  "bonusResistance": "+2",
+  "art": {
+    "src": "art/athena-v6-049.png",
+    "w": 1575.0389610389611,
+    "x": -43.51948051948057,
+    "y": 0,
+    "zoom": 1,
+    "baseW": 1575.0389610389611
+  }
+}

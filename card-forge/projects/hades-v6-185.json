@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Infernal Wing",
+  "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/hades-v6-185.png",
+    "w": 2164.185,
+    "x": -339.86630578476996,
+    "y": -268.0364086882314,
+    "zoom": 1.38,
+    "baseW": 1568.25
+  }
+}

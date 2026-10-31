@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "Protection Beyond the Grave",
+  "flavour": "",
+  "bonusPower": "+1",
+  "bonusResistance": "+2",
+  "art": {
+    "src": "art/hades-v6-225.png",
+    "w": 1458.4725,
+    "x": 14.763749999999959,
+    "y": 73.18500000000063,
+    "zoom": 0.93,
+    "baseW": 1568.25
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Wings of the Mentor",
+  "flavour": "",
+  "bonusPower": "+1",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/athena-v6-066.png",
+    "w": 2493.5175,
+    "x": -478.2547383505125,
+    "y": -891.0083411898567,
+    "zoom": 1.5899999999999999,
+    "baseW": 1568.25
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "Armor of a Fallen Saint",
+  "flavour": "",
+  "bonusPower": "+1",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/athena-v6-044.png",
+    "w": 1834.8525,
+    "x": -220.81979138708846,
+    "y": -18.62424333550041,
+    "zoom": 1.17,
+    "baseW": 1568.25
+  }
+}

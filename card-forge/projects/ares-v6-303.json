@@ -1,0 +1,14 @@
+{
+  "title": "",
+  "subtitle": "The Arena's Last Survivor",
+  "flavour": "\"I stopped counting victories when the arena ran out of bodies.\"",
+  "art": {
+    "src": "art/ares-v6-303-ref.jpg",
+    "w": 2195.4,
+    "x": -353.7,
+    "y": 0.0,
+    "zoom": 1,
+    "baseW": 2195.4,
+    "provisoria": true
+  }
+}

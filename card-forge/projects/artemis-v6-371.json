@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": " VESSEL OF ARTEMIS",
+  "flavour": "\"Within a child's fragile heart, an ancient goddess opened her eyes.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/artemis-v6-371.png",
+    "w": 2098.08,
+    "x": -317.16985752219966,
+    "y": -100.92515564044061,
+    "zoom": 1.41,
+    "baseW": 1488
+  }
+}

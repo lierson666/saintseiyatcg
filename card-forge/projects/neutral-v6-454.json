@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Chains of Corruption",
+  "flavour": "\"Unlike the chains of Andromeda, these serpents do not protect. They hunger.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/neutral-v6-454.png",
+    "w": 1488,
+    "x": 0,
+    "y": -277.16666666666674,
+    "zoom": 1,
+    "baseW": 1488
+  }
+}

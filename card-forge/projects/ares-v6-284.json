@@ -1,0 +1,14 @@
+{
+  "title": "",
+  "subtitle": "Wings of the Ruined Sky",
+  "flavour": "\"The skies themselves tremble before the wings of disaster.\"",
+  "art": {
+    "src": "art/ares-v6-284-ref.jpg",
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -260.54,
+    "zoom": 1,
+    "baseW": 1488.0,
+    "provisoria": true
+  }
+}

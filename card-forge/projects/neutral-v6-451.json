@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Fist of Black Death",
+  "flavour": "\"His fists carry the same stars as Pegasus, but every star has turned black.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/neutral-v6-451.png",
+    "w": 1488,
+    "x": 1.954372840704707,
+    "y": -115.99533010944958,
+    "zoom": 1,
+    "baseW": 1488
+  }
+}

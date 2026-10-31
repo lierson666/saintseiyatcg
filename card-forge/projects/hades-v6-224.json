@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "Even Broken Armor Serves the Dead",
+  "flavour": "",
+  "bonusPower": "+1",
+  "bonusResistance": "+1",
+  "art": {
+    "src": "art/hades-v6-224.png",
+    "w": 1773.204845814978,
+    "x": -142.60242290748897,
+    "y": 0,
+    "zoom": 1,
+    "baseW": 1773.204845814978
+  }
+}

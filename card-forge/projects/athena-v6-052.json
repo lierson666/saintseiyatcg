@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Tournament Begins",
+  "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/athena-v6-052.png",
+    "w": 2963.9925,
+    "x": -756.7008726765267,
+    "y": -1727.9287969359564,
+    "zoom": 1.89,
+    "baseW": 1568.25
+  }
+}

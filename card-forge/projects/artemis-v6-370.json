@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "Relic of the Primordial Wild",
+  "flavour": "\"The power of the ancient world cannot be contained by mortal hands.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/artemis-v6-370.png",
+    "w": 1488,
+    "x": 41.38172058361647,
+    "y": -14.959936809167743,
+    "zoom": 1,
+    "baseW": 1488
+  }
+}

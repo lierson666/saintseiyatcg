@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Wings of Divinity",
+  "flavour": "",
+  "bonusPower": "+3",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/athena-v6-019.png",
+    "w": 1592.16,
+    "x": -28.3108962681672,
+    "y": -72.49383187378157,
+    "zoom": 1.07,
+    "baseW": 1488
+  }
+}

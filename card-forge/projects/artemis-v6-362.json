@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "Raiment of the High Priestess",
+  "flavour": "\"The moon shelters those who serve its will.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/artemis-v6-362.png",
+    "w": 1568.25,
+    "x": -40.125,
+    "y": 0,
+    "zoom": 1,
+    "baseW": 1568.25
+  }
+}

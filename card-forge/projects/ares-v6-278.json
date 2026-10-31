@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Armor of Endless Nightmares",
+  "flavour": "\"Those who survive her illusions pray never to dream again.\"",
+  "bonusPower": "+1",
+  "bonusResistance": "+2",
+  "art": {
+    "src": "art/ares-v6-278.png",
+    "w": 1568.25,
+    "x": -40.125,
+    "y": 0,
+    "zoom": 1,
+    "baseW": 1568.25
+  }
+}

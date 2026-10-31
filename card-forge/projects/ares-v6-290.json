@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Last Defense Before Victory",
+  "flavour": "\"Even the shield of Ares was forged to bring destruction.\"",
+  "bonusPower": "+1",
+  "bonusResistance": "+3",
+  "art": {
+    "src": "art/ares-v6-290.png",
+    "w": 1568.25,
+    "x": -40.125,
+    "y": 0,
+    "zoom": 1,
+    "baseW": 1568.25
+  }
+}

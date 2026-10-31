@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "Armor of the Ruthless Judge",
+  "flavour": "",
+  "bonusPower": "+2",
+  "bonusResistance": "+2",
+  "art": {
+    "src": "art/hades-v6-182.png",
+    "w": 1874.88,
+    "x": -193.44000000000005,
+    "y": -360.65999999999985,
+    "zoom": 1.26,
+    "baseW": 1488
+  }
+}

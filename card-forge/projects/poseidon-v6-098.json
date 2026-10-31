@@ -1,0 +1,16 @@
+{
+  "title": "",
+  "subtitle": "The Eternal Ice of the Arctic Ocean",
+  "flavour": "",
+  "bonusPower": "+1",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/poseidon-v6-098-ref.jpg",
+    "w": 2510.56,
+    "x": -24.257213729449006,
+    "y": -279.9373460591132,
+    "zoom": 1,
+    "baseW": 2510.56,
+    "provisoria": true
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Road to Athena",
+  "flavour": "",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/athena-v6-065.png",
+    "w": 1488,
+    "x": -7.966193644176656,
+    "y": -223.29981457073018,
+    "zoom": 1,
+    "baseW": 1488
+  }
+}

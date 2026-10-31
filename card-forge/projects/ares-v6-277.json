@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Mistress of Nightmares",
+  "flavour": "\"Your greatest fear is not death. It is what I will show you before it.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/ares-v6-277.png",
+    "w": 1568.25,
+    "x": -40.125,
+    "y": 0,
+    "zoom": 1,
+    "baseW": 1568.25
+  }
+}

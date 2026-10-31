@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Headless Executioner",
+  "flavour": "\"A warrior without a head has no reason to fear the blade.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/ares-v6-281.png",
+    "w": 2445.0182704019485,
+    "x": 56.86453079268006,
+    "y": 91.30957512315263,
+    "zoom": 1,
+    "baseW": 2445.0182704019485
+  }
+}

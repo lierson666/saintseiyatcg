@@ -1,0 +1,15 @@
+{
+  "title": "",
+  "subtitle": "The Tyrant of Death Queen Island",
+  "flavour": "\"On Death Queen Island, power was the only law, and Jango declared himself its king.\"",
+  "bonusPower": "",
+  "bonusResistance": "",
+  "art": {
+    "src": "art/neutral-v6-456.png",
+    "w": 1488,
+    "x": 0,
+    "y": -20.67857142857156,
+    "zoom": 1,
+    "baseW": 1488
+  }
+}
