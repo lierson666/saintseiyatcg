@@ -98,6 +98,7 @@ test('013 Another Dimension: Saga manda o alvo ao Void e o devolve quando é der
   s.units[saga].damage = hpOf(s, ctx, saga);
   runCheckpoint(s); passAll(s);
   assert.ok(s.players.B.battlefield.includes(foe));
+  assert.equal(s.units[foe].prepared, false, 'volta Unprepared (autor, 31/10/2026)');
 });
 
 test('013 Duality: +1 ATK com mais Soul, +1 HP com menos', () => {

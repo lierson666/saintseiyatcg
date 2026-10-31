@@ -87,7 +87,7 @@ export default {
     leaves: (s, c, key, self) => s.dimension?.[self]?.length && (st => {
       for (const t of st.dimension[self]) {
         const owner = c.objects[t]?.owner;
-        if (owner && st.players[owner].void.includes(t)) k.putOntoField(st, c, owner, t, 'void');
+        if (owner && st.players[owner].void.includes(t)) k.putOntoField(st, c, owner, t, 'void', {prepared: false}); // volta Unprepared; ETB normal (autor, 31/10/2026)
       }
       delete st.dimension[self];
     }),
