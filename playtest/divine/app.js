@@ -695,7 +695,7 @@ function phaseHints() {
 function controlPanel() {
   const s = S();
   if (s.victory) return '';
-  const busy = pending || (s.window && s.order.some(mustOrder)); // o painel de trigger ocupa este lugar
+  const busy = pending || mode || (s.window && s.order.some(mustOrder)); // painel de trigger ou carta em conjuração ocupam este lugar
   const h = phaseHints();
   hintRefs = h.refs;
   const items = Object.entries(h.refs).filter(([, r]) => r.length).map(([id, r]) => `<li><button class="ctrl__hint" data-hint="${id}" aria-label="${esc(HINTS[id][0])}: highlight ${r.length}"><strong>${esc(HINTS[id][0])}</strong><span>${inlineMarkup(HINTS[id][1])}</span></button></li>`).join('');
@@ -740,12 +740,12 @@ function clockMarkup() {
 function castSlot() {
   const bp = mode && boardPick();
   if (!bp?.uid) return '';
-  return `<div class="cast-slot" ${godFx(owner(bp.uid))} aria-label="Casting ${esc(info(bp.uid).name)}"><i class="cast-aura" aria-hidden="true"></i>${cardFace(bp.uid, {size: 'dcard--lg'})}
-    ${bp.refs.length ? '<small>Drag to a target</small>' : ''}</div>`;
+  return `<div class="cast-slot" ${godFx(owner(bp.uid))} role="dialog" aria-label="Casting ${esc(info(bp.uid).name)}"><i class="cast-aura" aria-hidden="true"></i>${cardFace(bp.uid, {size: 'dcard--lg'})}
+    <div class="cast-prompt">${choicePrompt(false)}${bp.refs.length ? '<small class="cast-prompt__how">Click a glowing target or drag the card to it</small>' : ''}</div></div>`;
 }
 
-function choiceBar() {
-  if (!mode) return '';
+// Instrução da escolha. Com carta sendo conjurada, vai presa a ela (castSlot), fora do campo; senão, barra no topo da mesa.
+function choicePrompt(withName = true) {
   const step = mode.steps[mode.i];
   const name = mode.title || (mode.uid ? info(mode.uid).name : '');
   let controls = '';
@@ -753,7 +753,12 @@ function choiceBar() {
   else if (step.confirm) controls = '<button data-confirm="yes">Yes</button><button data-confirm="no">No</button>';
   else if (step.multi) controls = `<button data-done>Done (${mode.picked.length}/${step.multi})</button>`;
   else if (step.optional) controls = '<button data-done>Skip</button>';
-  return `<div class="choice" role="dialog" aria-label="Choose"><strong>${esc(name)}</strong><span>${esc(step.label || step.confirm || 'Choose one')}</span>${controls}<button class="ghost" data-cancel>Cancel <kbd>Esc</kbd></button></div>`;
+  const steps = mode.steps.length > 1 ? `<small class="choice__step">Step ${mode.i + 1} of ${mode.steps.length}</small>` : '';
+  return `${withName ? `<strong>${esc(name)}</strong>` : ''}${steps}<span class="choice__label"><i class="choice__reticle" aria-hidden="true"></i>${esc(step.label || step.confirm || 'Choose one')}</span>${controls}<button class="ghost" data-cancel>Cancel <kbd>Esc</kbd></button>`;
+}
+function choiceBar() {
+  if (!mode || boardPick()?.uid) return '';
+  return `<div class="choice" role="dialog" aria-label="Choose">${choicePrompt()}</div>`;
 }
 
 function overlays() {
@@ -1079,7 +1084,7 @@ document.addEventListener('pointerover', e => {
   if (item) { clearTimeout(inspectTimer); const src = item.dataset.src; if (ctx.objects[src]) inspectTimer = setTimeout(() => showInspect(src, item.dataset.ability, item.closest('.trigger-panel, .ctrl')), 200); else hideInspect(); return; }
   const el = e.target.closest?.('.dcard[data-uid]:not(.dcard--back), .gear[data-uid]'); // faixa do equipamento também abre a carta
   clearTimeout(inspectTimer);
-  if (!el) return hideInspect();
+  if (!el || (mode && el.classList.contains('pickable'))) return hideInspect(); // mirando: o preview não cobre a instrução
   inspectTimer = setTimeout(() => showInspect(el.dataset.uid), 300);
   previewCost(el.dataset.uid);
 });
