@@ -508,6 +508,13 @@
       "w": 233,
       "h": 1,
       "src": "FRAMES/POSEIDON/POSEIDON.psd :: LINHAN AWAKEN 1"
+    },
+    "athena/rarity_legendary": {
+      "x": 715,
+      "y": 1989,
+      "w": 59,
+      "h": 58,
+      "src": "FRAMES/ATHENA/RELICS/LIBRA-SWORD.psd :: MITIC"
     }
   },
   "linked_missing": [

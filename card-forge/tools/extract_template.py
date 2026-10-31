@@ -34,6 +34,7 @@ PIECES = [
     ("FRAMES/ATHENA/RELICS/LIBRA-SWORD.psd", "COMMON", (715, 1988), "athena", "rarity_common"),
     ("FRAMES/ATHENA/RELICS/LIBRA-SWORD.psd", "INCOMMON", (715, 1989), "athena", "rarity_uncommon"),
     ("FRAMES/ATHENA/RELICS/LIBRA-SWORD.psd", "MITIC", (715, 1989), "athena", "rarity_mythic"),
+    ("FRAMES/ATHENA/RELICS/LIBRA-SWORD.psd", "MITIC", (715, 1989), "athena", "rarity_legendary"),  # Legendary usa a estrela dourada (autor, 31/10/2026)
     ("FRAMES/ATHENA/RELICS/LIBRA-SWORD.psd", "DIVINE", (713, 1986), "athena", "rarity_divine"),
     ("FRAMES/ATHENA/ATHENA.psd", "Arte 6", (1227, 782), "athena", "gem_soul"),
     # ícones de texto que só existem nos PSDs dos Deuses (o editor tinge na cor da facção)
