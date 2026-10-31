@@ -926,3 +926,13 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .hint-glow { outline: 3px solid var(--gold-hi) !important; outline-offset: 2px; box-shadow: 0 0 22px rgba(255, 210, 120, .85) !important; animation: hint-pulse .8s ease-in-out 3; }
 @keyframes hint-pulse { 50% { outline-color: rgba(255, 240, 200, .4); } }
 .reduce-motion .hint-glow { animation: none; }
+
+/* Pilha (autor, 31/10/2026): selo com a ordem de resolução na carta de origem; seta sólida só no hover do item; habilidade em destaque no inspetor. */
+.chain-badge { position: absolute; z-index: 5; top: -8px; right: -8px; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%;
+  font: 700 12px/1 system-ui; color: #1a1204; background: var(--gold-hi); box-shadow: 0 0 0 2px #1a1204, 0 0 10px rgba(255, 210, 120, .8); pointer-events: none; }
+.intent--hover path { stroke: #ffe08a; stroke-dasharray: none; opacity: .9; animation: none; } .intent--hover circle { stroke: #ffe08a; } .ih--hover { fill: #ffe08a; }
+.chain__sub { font: 600 11px/1.25 system-ui, sans-serif; color: var(--gold-hi); }
+[data-src] { cursor: help; }
+.chain li[data-src]:hover, .chain li[data-src]:focus-visible, .order__item:hover { background: rgba(255, 210, 120, .1); }
+#inspector .rule-block.is-hot { padding: 4px 6px; border-radius: 6px; background: rgba(255, 210, 120, .16); box-shadow: inset 3px 0 0 var(--gold-hi); }
+.gear[data-uid] { cursor: help; }

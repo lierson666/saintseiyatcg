@@ -378,10 +378,15 @@ const CARD_FACTIONS = new Set(['athena', 'poseidon', 'hades', 'ares', 'artemis']
 const FORGE = new Map((await fetch(`${FORGE_ART}cards.json`).then(r => (r.ok ? r.json() : {cartas: []})).catch(() => ({cartas: []}))).cartas.map(c => [c.id, c]));
 // Item da cadeia em texto de jogador: carta de origem, nome da habilidade, a linha impressa dela e o alvo.
 // `c.source` (número da carta) quando o texto vem de outra carta (gatilho atrasado de Spell); sem carta no jogo, o God do controlador.
+// Dados de um item da pilha para o hover: carta de origem, habilidade e alvos.
+const srcAttrs = c => `data-src="${esc(c.uid || '')}" data-ability="${esc(chainLabel(c).sub || c.ability || '')}" data-targets="${esc((c.targets?.length ? c.targets : [c.target]).filter(Boolean).join(' '))}"`;
+let hoverItem = null; // item da pilha sob o mouse: desenha a seta da origem até os alvos
 function chainLabel(c) {
   const card = c.source ? [...cards.values()].find(x => x.id.endsWith(`-${c.source}`))
     : c.uid && ctx.objects[c.uid] ? info(c.uid) : cards.get(S().gods[c.controller]);
-  const ability = c.ability || '', named = /^[A-Z]/.test(ability) && !/^When /.test(ability);
+  // Gatilhos V6 chegam como "NOME · enters the battlefield": tira o nome da carta para não repetir no título.
+  const raw = c.ability || '', prefix = `${card?.name || ''} · `.toUpperCase();
+  const ability = raw.toUpperCase().startsWith(prefix) ? raw.slice(prefix.length) : raw, named = /^[A-Z]/.test(ability) && !/^When /.test(ability);
   // Linha que começa com a habilidade ("NOME — efeito"); se depois do nome só há a etiqueta (Divine Power, Ultimate), o efeito
   // está na linha seguinte (pula "Cost:"). Sem linha própria (gatilho sem nome), a primeira linha que cita a frase.
   const lines = card?.text.split('\n').map(l => l.trim()) || [], low = ability.toLowerCase();
@@ -390,8 +395,9 @@ function chainLabel(c) {
     text = named ? lines[i].slice(ability.length).replace(/^\s*[—:-]\s*/, '') : lines[i];
     if (text.length < 25) text = lines.slice(i + 1).find(l => l && !/^Cost:/.test(l)) || text;
   } else if (ability) text = lines.find(l => l.toLowerCase().includes(low)) || '';
-  const title = [card?.name, named && ability.toUpperCase() !== card?.name?.toUpperCase() ? ability : ''].filter(Boolean).join(' · ') || 'Triggered ability';
-  return {title, text, target: (c.targets?.length ? c.targets : [c.target]).filter(Boolean).map(u => (String(u).startsWith('god:') ? `God ${u.slice(4)}` : ctx.objects[u] ? info(u).name : '')).filter(Boolean).join(', ')}; // alvos escolhidos ao conjurar (item.targets)
+  const sub = ability && ability.toUpperCase() !== card?.name?.toUpperCase() ? ability[0].toUpperCase() + ability.slice(1) : '';
+  const title = [card?.name, sub].filter(Boolean).join(' · ') || 'Triggered ability';
+  return {title, name: card?.name || 'Triggered ability', sub, text, target: (c.targets?.length ? c.targets : [c.target]).filter(Boolean).map(u => (String(u).startsWith('god:') ? `God ${u.slice(4)}` : ctx.objects[u] ? info(u).name : '')).filter(Boolean).join(', ')}; // alvos escolhidos ao conjurar (item.targets)
 }
 // Arte do token de mesa: enquadramento do Forge; sem arte, o símbolo da facção ou o logo.
 function tokenArt(forge) {
@@ -576,7 +582,7 @@ function fieldRow(key) {
     // Equipamento preso: mini-token com arte, nome e bônus, ligado ao portador (clique abre o inspetor da carta).
     const gear = gearOf(ctx, u).map(g => {
       const f = FORGE.get(ctx.objects[g].cardId), bonus = f && armorBonusText({...f, ...printedBonusFields(f)});
-      return `<div class="gear ${info(g).armor ? 'gear--armor' : ''}" data-uid="${g}" tabindex="0" title="${esc(info(g).name)}${bonus ? ` · ${esc(bonus)}` : ''}"${f ? ` style="${tokenArt(f)}"` : ''}><span>${esc(info(g).name)}</span>${bonus ? `<b>${esc(bonus)}</b>` : ''}</div>`;
+      return `<div class="gear ${info(g).armor ? 'gear--armor' : ''}" data-uid="${g}" tabindex="0" aria-label="${esc(info(g).name)}${bonus ? ` · ${esc(bonus)}` : ''}"${f ? ` style="${tokenArt(f)}"` : ''}><span>${esc(info(g).name)}</span>${bonus ? `<b>${esc(bonus)}</b>` : ''}</div>`;
     }).join('');
     return `<div class="slot">${cardFace(u, {field: true})}${gear ? `<div class="gears">${gear}</div>` : ''}</div>`;
   }).join('');
@@ -693,7 +699,7 @@ function controlPanel() {
   const chain = s.chain.length ? `<ol class="chain" aria-label="Chain, top resolves first">${s.chain.map((c, i) => {
     const t = chainLabel(c);
     const art = chainArt(c);
-    return `<li data-chain="${i}"><b>${i + 1}</b>${art ? `<i class="chain__art" style="background-image:url('${art}')" aria-hidden="true"></i>` : ''}<div class="chain__body"><strong>${esc(t.title)}</strong>${t.text ? `<em>${esc(t.text)}</em>` : ''}<small>${t.target ? `Target: ${esc(t.target)} · ` : ''}Player ${c.controller}</small></div></li>`;
+    return `<li data-chain="${i}" ${srcAttrs(c)} tabindex="0"><b>${s.chain.length - i}</b>${art ? `<i class="chain__art" style="background-image:url('${art}')" aria-hidden="true"></i>` : ''}<div class="chain__body"><strong>${esc(t.name)}</strong>${t.sub ? `<span class="chain__sub">${esc(t.sub)}</span>` : ''}${t.text ? `<em>${esc(t.text)}</em>` : ''}<small>${t.target ? `Target: ${esc(t.target)} · ` : ''}Player ${c.controller}</small></div></li>`;
   }).reverse().join('')}</ol>
     <small class="chain__hint">${s.chain.length > 1 ? 'Top resolves first' : 'Resolves when both pass'}</small>` : '';
   const tips = settings.phaseTips;
@@ -1064,7 +1070,10 @@ document.addEventListener('pointerover', e => {
   if (e.pointerType === 'touch') return; // no toque, a inspeção é segurar o dedo (abaixo)
   const base = e.target.closest?.('.dcard[data-base]');
   if (base && owner(base.dataset.base) === viewer()) { clearTimeout(inspectTimer); inspectTimer = setTimeout(() => showInspect(base.dataset.base), 300); return; } // só o dono vê a própria Base
-  const el = e.target.closest?.('.dcard[data-uid]:not(.dcard--back)');
+  const item = e.target.closest?.('[data-src]');
+  if (item !== hoverItem?.el) setHoverItem(item);
+  if (item) { clearTimeout(inspectTimer); const src = item.dataset.src; if (ctx.objects[src]) inspectTimer = setTimeout(() => showInspect(src, item.dataset.ability, item.closest('.trigger-panel, .ctrl')), 200); else hideInspect(); return; }
+  const el = e.target.closest?.('.dcard[data-uid]:not(.dcard--back), .gear[data-uid]'); // faixa do equipamento também abre a carta
   clearTimeout(inspectTimer);
   if (!el) return hideInspect();
   inspectTimer = setTimeout(() => showInspect(el.dataset.uid), 300);
@@ -1076,25 +1085,30 @@ addEventListener('click', ev => { if (Date.now() < swallowClickUntil) { ev.stopP
 addEventListener('contextmenu', ev => { if (press) ev.preventDefault(); }); // sem menu do sistema ao segurar a carta
 document.addEventListener('pointerdown', e => {
   if (e.pointerType !== 'touch') return;
-  const el = e.target.closest?.('.dcard[data-uid]:not(.dcard--back), .dcard[data-base]'), uid = el?.dataset.uid || el?.dataset.base;
+  const el = e.target.closest?.('.dcard[data-uid]:not(.dcard--back), .dcard[data-base], .gear[data-uid], [data-src]'), uid = el?.dataset.uid || el?.dataset.base || el?.dataset.src;
+  if (el?.dataset.src !== undefined && !ctx.objects[uid]) return;
   if (!uid || (el.dataset.base && owner(uid) !== viewer())) return;
   press = {x: e.clientX, y: e.clientY, shown: false};
-  press.timer = setTimeout(() => { press.shown = true; showInspect(uid); }, 450);
+  press.timer = setTimeout(() => { press.shown = true; showInspect(uid, el.dataset.ability || ''); if (el.dataset.src !== undefined) setHoverItem(el); }, 450);
 });
 document.addEventListener('pointermove', e => { if (press && !press.shown && Math.hypot(e.clientX - press.x, e.clientY - press.y) > 10) { clearTimeout(press.timer); press = null; } });
 const endPress = () => {
   if (!press) return;
   clearTimeout(press.timer);
-  if (press.shown) { hideInspect(); swallowClickUntil = Date.now() + 400; }
+  if (press.shown) { hideInspect(); setHoverItem(null); swallowClickUntil = Date.now() + 400; }
   press = null;
 };
 document.addEventListener('pointerup', endPress);
 document.addEventListener('pointercancel', endPress);
-function showInspect(uid) {
+function showInspect(uid, ability = '', beside = null) {
   const c = info(uid), box = $('#inspector');
+  // Aberto a partir de um painel (pilha, ordem): fica ao lado dele, sem cobrir a lista.
+  const r = beside?.getBoundingClientRect();
+  box.style.left = r && r.right + 12 + 300 < innerWidth ? `${Math.round(r.right + 12)}px` : '';
   const lines = c.text.split('\n').slice(2).filter(l => !/^\s*(Rarity|Type|Casting Cost|ATK|HP|Cosmoble)/.test(l));
   const forgeOf = FORGE.get(ctx.objects[uid].cardId); // texto com as regras da carta impressa (autor, 31/10/2026)
   box.innerHTML = `${cardFace(uid, {size: 'dcard--xl', field: S().players[owner(uid)].battlefield.includes(uid)})}<div class="inspector__text"><strong>${esc(c.name)}</strong><small>${esc(c.type.replace(/^Spell\s*—\s*/, ''))}${c.cost ? ` · ${c.cost.amount} ${c.cost.unit === 'base' ? 'Base' : 'Latent'}` : ''}</small>${forgeOf ? renderCardText(forgeOf) : lines.map(l => `<p>${esc(l)}</p>`).join('')}</div>`;
+  if (ability) { const want = ability.toUpperCase(); $$('.rule-block', box).find(b => b.querySelector('.rule-heading')?.textContent.toUpperCase().includes(want))?.classList.add('is-hot'); }
   box.classList.add('show');
 }
 // Clique direito no retrato do God: status base e atuais (Soul, Attack, Awaken, Ultimate) e o texto completo.
@@ -1447,17 +1461,16 @@ function drawIntents() {
   const s = S(), arrows = [];
   const strike = pendingStrike(s);
   if (strike) arrows.push({from: elOf(strike.attacker), to: elOf(strike.target.kind === 'god' ? `god:${strike.target.player}` : strike.target.uid), kind: 'strike', label: 'STRIKE'});
-  s.chain.forEach((c, i) => {
-    const from = $(`.chain [data-chain="${i}"] b`), aimed = (c.targets?.length ? c.targets : [c.target]).filter(u => u && (ctx.objects[u] || String(u).startsWith('god:')));
-    for (const target of aimed) arrows.push({from, to: elOf(target), kind: 'spell', label: String(i + 1)});
-    if (!aimed.length && c.uid && elOf(c.uid)) arrows.push({from, to: elOf(c.uid), kind: 'source', label: String(i + 1)});
-  });
+  // Pilha (autor, 31/10/2026): sem setas paradas; a origem leva o selo com a ordem de resolução e a seta só aparece no hover do item.
+  $$('.chain-badge').forEach(b => b.remove());
+  s.chain.forEach((c, i) => { const el = elOf(c.uid); if (el && !el.querySelector('.chain-badge')) el.insertAdjacentHTML('beforeend', `<span class="chain-badge" aria-label="Chain ${s.chain.length - i}">${s.chain.length - i}</span>`); });
+  if (hoverItem) for (const target of hoverItem.targets) arrows.push({from: elOf(hoverItem.src), to: elOf(target), kind: 'hover', label: ''});
   if (pending?.peek && pending.pending.uid && !targetReq(pending.pending)) arrows.push({from: $('.trigger-panel__card .dcard'), to: elOf(pending.pending.uid), kind: 'spell', label: '?'});
   const live = arrows.filter(a => a.from && a.to);
   if (!live.length) return;
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
   svg.setAttribute('class', 'intent-arrows');
-  svg.innerHTML = '<defs>' + ['strike', 'spell', 'source'].map(k => `<marker id="ih-${k}" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path class="ih ih--${k}" d="M0,0 L10,5 L0,10 z"/></marker>`).join('') + '</defs>' +
+  svg.innerHTML = '<defs>' + ['strike', 'spell', 'source', 'hover'].map(k => `<marker id="ih-${k}" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path class="ih ih--${k}" d="M0,0 L10,5 L0,10 z"/></marker>`).join('') + '</defs>' +
     live.map(a => {
       const [x0, y0] = center(a.from), [x1, y1] = center(a.to), mx = (x0 + x1) / 2, my = (y0 + y1) / 2 - Math.min(120, Math.hypot(x1 - x0, y1 - y0) * .25);
       return `<g class="intent intent--${a.kind}"><path d="M${x0},${y0} Q${mx},${my} ${x1},${y1}" marker-end="url(#ih-${a.kind})"/><circle cx="${x1}" cy="${y1}" r="22"/><text x="${mx}" y="${my + 4}">${esc(a.label)}</text></g>`;
@@ -1465,6 +1478,12 @@ function drawIntents() {
   document.body.append(svg);
 }
 addEventListener('resize', () => drawIntents());
+function setHoverItem(el) {
+  $$('.is-triggering').forEach(x => x.classList.remove('is-triggering'));
+  hoverItem = el ? {el, src: el.dataset.src, targets: (el.dataset.targets || '').split(' ').filter(u => u && (ctx.objects[u] || u.startsWith('god:')))} : null;
+  if (hoverItem) (elOf(hoverItem.src) || (hoverItem.src.startsWith('domain:') ? $(`[data-domain="${hoverItem.src.slice(7)}"]`) : null))?.classList.add('is-triggering');
+  drawIntents();
+}
 // Música de batalha (playlist de ../audio.js); só toca depois do primeiro gesto do jogador (política dos navegadores).
 addEventListener('pointerdown', () => { unlock(); playMusic('battle'); }, {once: true});
 
@@ -1666,7 +1685,7 @@ function sidePanel(req, t, fx) {
     : req.kind === 'optional' ? `<button class="primary-action" data-dec="yes" data-focus="yes">${esc(t.yes)}</button><button class="ghost" data-dec="no" data-focus="no">${esc(t.no)}</button>`
     : opts ? `<button class="primary-action" data-dec="confirm" data-focus="confirm" ${picked.length === req.count ? '' : 'disabled'}>Confirm · ${picked.length}/${req.count}</button>${cancel}` : cancel;
   // Fila: o item que está resolvendo e os que vêm depois (topo da cadeia primeiro).
-  const next = [...S().chain].reverse(), queue = next.length ? `<div class="trigger-queue"><small>Trigger 1 of ${next.length + 1}</small><ol>${next.slice(0, 4).map(c => `<li>${esc(chainLabel(c).title)}</li>`).join('')}${next.length > 4 ? `<li>+${next.length - 4} more</li>` : ''}</ol></div>` : '';
+  const next = [...S().chain].reverse(), queue = next.length ? `<div class="trigger-queue"><small>Trigger 1 of ${next.length + 1}</small><ol>${next.slice(0, 4).map(c => `<li ${srcAttrs(c)}>${esc(chainLabel(c).title)}</li>`).join('')}${next.length > 4 ? `<li>+${next.length - 4} more</li>` : ''}</ol></div>` : '';
   return `<aside class="trigger-panel ${target ? 'is-targeting' : ''}" role="dialog" aria-labelledby="trigger-title">
     ${face ? `<div class="trigger-panel__card">${face}${target && face ? '<small>Drag to a target</small>' : ''}</div>` : ''}
     <div class="trigger-panel__box"><span class="decision__who">${esc(t.who)} decides</span><span class="decision__clock" data-decision-clock></span>
@@ -1683,8 +1702,8 @@ function orderPanel() {
   if (!key) { orderDraft = null; return ''; }
   const items = ownBatch(s, key);
   if (orderDraft?.batch !== batchKey(key)) orderDraft = {batch: batchKey(key), key, order: items.map((_, i) => i)};
-  const row = (i, at) => { const t = chainLabel(items[i]), art = chainArt(items[i]); return `<li class="order__item" draggable="true" data-order="${at}">
-      <b>${at + 1}</b>${art ? `<i class="chain__art" style="background-image:url('${art}')" aria-hidden="true"></i>` : ''}<div class="chain__body"><strong>${esc(t.title)}</strong>${t.text ? `<em>${inlineMarkup(t.text)}</em>` : ''}</div>
+  const row = (i, at) => { const t = chainLabel(items[i]), art = chainArt(items[i]); return `<li class="order__item" draggable="true" data-order="${at}" ${srcAttrs(items[i])}>
+      <b>${at + 1}</b>${art ? `<i class="chain__art" style="background-image:url('${art}')" aria-hidden="true"></i>` : ''}<div class="chain__body"><strong>${esc(t.name)}</strong>${t.sub ? `<span class="chain__sub">${esc(t.sub)}</span>` : ''}${t.text ? `<em>${inlineMarkup(t.text)}</em>` : ''}</div>
       <span class="order__move"><button class="ghost" data-order-up="${at}" aria-label="Move up" ${at ? '' : 'disabled'}>↑</button><button class="ghost" data-order-down="${at}" aria-label="Move down" ${at < items.length - 1 ? '' : 'disabled'}>↓</button></span></li>`; };
   return `<aside class="trigger-panel trigger-panel--order" role="dialog" aria-labelledby="order-title">
     <div class="trigger-panel__box"><span class="decision__who">Player ${key} decides</span>
