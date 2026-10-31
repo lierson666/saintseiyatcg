@@ -258,3 +258,15 @@ test('438 Lunar Resistance: previne 1 de todo dano (Strike e efeito) e a Armor n
   const e = s.events.filter(x => x.type === 'damage').at(-1);
   assert.equal(e.prevented, 1);
 });
+
+test('407 Primal Channeling: o próximo Devotee do turno custa 1 a menos; o seguinte paga cheio; Latent não muda (autor, 31/10/2026)', () => {
+  const {s, ctx, p, field, hand, id} = setup();
+  const shaman = field('A', id(407)), a = hand('A', id(404)), b = hand('A', id(404));
+  const cost = cards.get(id(404)).cost.amount, ready = () => p.bases.filter(x => x.prepared).length, latent0 = p.latent;
+  activate(s, ctx, 'A', shaman);
+  assert.equal(p.latent, latent0);
+  let before = ready(); playDevotee(s, ctx, 'A', a, {});
+  assert.equal(before - ready(), cost - 1);
+  before = ready(); playDevotee(s, ctx, 'A', b, {});
+  assert.equal(before - ready(), cost);
+});

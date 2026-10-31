@@ -270,9 +270,19 @@ export default {
     declare: (s, c, key, self, target) => vsDevotee(target) && (st => k.buff(st, self, 1, 1, 'this_round')),
     watchAttach: (s, c, key, self, gear, bearer) => bearer === self && k.controllerOf(s, self) === key && (st => grow(st, c, key, self, 1)),
   },
-  // shortcut: "Spend this Cosmo only to cast a Devotee" não é aplicado (Latent sem origem na engine).
+  // Primal Channeling (autor, 31/10/2026: Latent não paga Devotee): "{T}: The next Devotee you cast this turn costs 1 less."
+  // Ativações no mesmo turno somam até o próximo Devotee; a `tag` é gasta quando o custo é pago (play.js, costLess).
+  // shortcut: o desconto vem da Shaman em campo (gancho costLess); se ela sair antes do cast, o desconto some.
   'artemis-v6-407': {
-    activate: {name: 'PRIMAL CHANNELING', cost: 0, run: (st, c, key) => k.gainLatent(st, key, 1)},
+    activate: {name: 'PRIMAL CHANNELING', cost: 0, run: (st, c, key) => {
+      const p = st.primal?.[key];
+      if (p && p.turn === st.turn && !st.roundUses.has(p.tag)) p.n += 1;
+      else (st.primal ||= {})[key] = {turn: st.turn, n: 1, tag: `primal:${key}:${st.turn}:${st.primalSeq = (st.primalSeq || 0) + 1}`};
+    }},
+    costLess: (s, c, key, self, uid) => {
+      const p = s.primal?.[key], first = k.devotees(s, c, key).find(u => c.objects[u]?.cardId === 'artemis-v6-407');
+      return self === first && k.isDevotee(c, uid) && p?.turn === s.turn && !s.roundUses.has(p.tag) && {n: p.n, tag: p.tag};
+    },
     watchEnter: (s, c, key, self, entered) => k.controllerOf(s, entered) === key && k.isDevotee(c, entered) && wasCast(s, entered) && k.costOf(c, entered) >= 5
       && k.onceTurn(s, `${self}:wisdom`) && (st => { if (k.may(c, key, "NATURE'S WISDOM", {uid: self})) k.draw(st, key, 1); }),
   },
