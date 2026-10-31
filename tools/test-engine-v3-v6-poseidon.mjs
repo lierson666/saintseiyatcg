@@ -8,7 +8,7 @@ import {canonIndex} from '../shared/deck-v3.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
 import {startTurn, passAll, addSeal, RuleError} from '../playtest/engine-v3/core.js';
-import {playDevotee, playSpell, activate} from '../playtest/engine-v3/play.js';
+import {playDevotee, playEquipment, playSpell, activate} from '../playtest/engine-v3/play.js';
 import {V6} from '../playtest/engine-v3/v6/hooks.js';
 import {declareStrike} from '../playtest/engine-v3/strike.js';
 import {atkOf, hpOf} from '../playtest/engine-v3/effects.js';
@@ -88,13 +88,14 @@ test('declare: Marina Spearman ganha +1 ATK contra inimigo Sealed, só durante o
   assert.equal(atkOf(s, ctx, spear), 2, 'o bônus some depois do Strike');
 });
 
-test('godDamage: Siren Sorrento faz o God inimigo descartar', () => {
+test('godDamage: Siren Sorrento faz o God inimigo moer 2 (31/10/2026: era discard)', () => {
   const {s, ctx, B, put} = poseidon();
   const siren = put('A', P('093'), 'battlefield');
   B.hand.push(...B.deck.splice(0, 2));
+  const deck = B.deck.length;
   declareStrike(s, ctx, siren, {kind: 'god', player: 'B'}); passAll(s);
-  assert.equal(B.hand.length, 1);
-  assert.equal(B.tartarus.length, 1);
+  assert.equal(B.hand.length, 2);
+  assert.equal(B.deck.length, deck - 2);
 });
 
 test('activate em Equipment: Kraken Scale sela um inimigo, uma vez por Round, pagando {2}', () => {
@@ -130,16 +131,14 @@ test('modo: Marina\'s Oath em Loyalty dá +0/+2 até o fim do Round', () => {
   const {s, ctx, put} = poseidon({'LOYALTY OR DISCIPLINE': 'Loyalty'});
   const spear = put('A', P('107'), 'battlefield');
   playSpell(s, ctx, 'A', put('A', P('140')), {}); passAll(s);
-  assert.equal(hpOf(s, ctx, spear), 4);
+  assert.equal(hpOf(s, ctx, spear), 3); // Spearman 2/1 (31/10/2026) + Loyalty +0/+2
 });
 
-test('dano dividido: Wrath of the Seven Seas reparte 5 entre os alvos escolhidos', () => {
-  let i = 0;
-  const {s, ctx, put} = poseidon({'OCEANIC FURY': q => (q.choose === 'target' && q.text?.startsWith('Assign') ? q.options[i++ % 2] : q.options ? q.options[0] : true)});
-  const a = put('B', 'hades-v6-183', 'battlefield'), b = put('B', 'hades-v6-191', 'battlefield'); // HP 6 e 7: ninguém morre com 5
+test('174 The Wrath of the Seven Seas (Sleep, 31/10/2026): 1 Seal em cada Devotee inimigo, sem dano', () => {
+  const {s, ctx, put} = poseidon();
+  const a = put('B', 'hades-v6-183', 'battlefield'), b = put('B', 'hades-v6-191', 'battlefield');
   playSpell(s, ctx, 'A', put('A', P('174')), {}); passAll(s);
-  assert.equal(s.units[a].damage + s.units[b].damage, 5);
-  assert.ok(s.units[a].damage > 0 && s.units[b].damage > 0);
+  assert.deepEqual([s.units[a].seal, s.units[b].seal, s.units[a].damage, s.units[b].damage], [1, 1, 0, 0]);
 });
 
 // ---- Completados com os ganchos novos (29/10/2026) ----
@@ -357,24 +356,23 @@ test('154 The Sea Dragon\'s Command: Royal Interdiction anula a menos que pague 
   assert.equal(d.s.chain[0].targets[0], foe);
 });
 
-test('156 Wall of Ocean Currents: anula Spell que mira Devotee seu; Receding Wave devolve outro Devotee (alvo escolhido ao conjurar)', () => {
-  const {s, A, B, put, minos, respond, sealed, answers, asked} = duel();
-  const x = put('B', P('118'), 'battlefield'), y = put('B', P('115'), 'battlefield'), sp = minos(x);
-  answers['RECEDING WAVE'] = q => (q.options ? y : true);
-  const w = respond('156');
-  assert.deepEqual(s.chain.find(i => i.uid === w).targets, [sp, y]);
-  assert.equal(asked.filter(q => q.ability === 'RECEDING WAVE' && q.options).length, 1); // uma vez, ao conjurar
-  done(s);
-  assert.equal(sealed(x), 0); assert.ok(A.tartarus.includes(sp));
-  assert.ok(B.hand.includes(y) && !s.units[y]);
+test('156 Wall of Ocean Currents (31/10/2026): anula Equipment inimigo na pilha', () => {
+  const {s, ctx, A, put, respond} = duel();
+  const gear = put('A', 'hades-v6-224');
+  playEquipment(s, ctx, 'A', gear, null); // Armor sem Devotee Resonant entra sem portador
+  respond('156'); done(s);
+  assert.ok(A.tartarus.includes(gear) && !A.battlefield.includes(gear));
+  s.active = 'B'; s.window = null;
+  assert.throws(() => respond('156'), /Equipment/, 'sem Equipment na pilha não conjura');
 });
 
-test('159 The Seven Seas Answer: Denial anula; Reversal devolve Equipment inimigo', () => {
+test('159 The Seven Seas Answer (31/10/2026): Denial anula Devotee inimigo na pilha; Reversal devolve Equipment inimigo', () => {
   const a = duel();
   a.answers['THE SEVEN SEAS ANSWER'] = 'Denial';
-  const x = a.put('B', P('118'), 'battlefield'), sp = a.minos(x);
+  const foe = a.put('A', 'hades-v6-206');
+  playDevotee(a.s, a.ctx, 'A', foe, {});
   a.respond('159'); done(a.s);
-  assert.equal(a.sealed(x), 0); assert.ok(a.A.tartarus.includes(sp));
+  assert.ok(a.A.tartarus.includes(foe) && !a.s.units[foe]);
   const b = duel(), gear = b.put('A', 'hades-v6-224', 'battlefield');
   b.s.active = 'B'; b.s.window = null;
   b.answers['THE SEVEN SEAS ANSWER'] = 'Reversal';
@@ -382,14 +380,20 @@ test('159 The Seven Seas Answer: Denial anula; Reversal devolve Equipment inimig
   assert.ok(b.A.hand.includes(gear) && !b.A.battlefield.includes(gear));
 });
 
-test('167 Song of the Last Siren: anula; Final Melody faz o controlador descartar', () => {
-  const {s, A, put, minos, respond, sealed} = duel();
-  put('A', 'hades-v6-206'); // carta na mão para o descarte
-  const x = put('B', P('118'), 'battlefield'), sp = minos(x), hand = A.hand.length;
+test('167 Song of the Last Siren (Force of Will, 31/10/2026): anula qualquer carta na pilha; custa {3}{S} e 1 descarte', () => {
+  const {s, B, put, minos, respond, sealed} = duel();
+  put('B', P('133')); // carta na mão para o descarte
+  const x = put('B', P('118'), 'battlefield'), sp = minos(x), soul = B.soul, hand = B.hand.length;
   respond('167'); done(s);
-  assert.equal(sealed(x), 0); assert.ok(A.tartarus.includes(sp));
-  assert.equal(A.hand.length, hand - 1); // Final Melody: descartou 1
-  assert.ok(s.events.some(e => e.type === 'discarded' && e.player === 'A'));
+  assert.equal(sealed(x), 0); assert.ok(s.players.A.tartarus.includes(sp));
+  assert.ok(s.events.some(e => e.type === 'soul_lost' && e.player === 'B' && e.amount === 3 && e.cause === 'cost'));
+  assert.equal(B.soul, soul - 3 + 1, 'o Domain 142 devolve {1}{S} ao conjurar Moment');
+  assert.equal(B.hand.length, hand - 1, 'descartou 1 (a 167 foi conjurada a partir da mão nova)');
+  const d = duel(), foe = d.put('A', 'hades-v6-206');
+  d.put('B', P('133'));
+  playDevotee(d.s, d.ctx, 'A', foe, {});
+  d.respond('167'); done(d.s);
+  assert.ok(d.A.tartarus.includes(foe) && !d.s.units[foe], 'também anula Devotee');
 });
 
 test('171 The Emperor\'s Decree: Silence é modo escolhido ao conjurar (junto com Dominion)', () => {
@@ -465,4 +469,27 @@ test('124 Coral Barrier: portador mirado; paga {2}{C} e anula a menos que o cont
     assert.equal(sealed(bearer), pays ? 2 : 0);
     assert.equal(A.tartarus.includes(sp), true);
   }
+});
+
+// ---- Poseidon → Azul (meta Premodern, 31/10/2026): docs/rebalance-poseidon-premodern.md ----
+test('103 e 118 são lordes: outras Marinas +1/+1 e +1 ATK; o próprio lorde não se conta', () => {
+  const {s, ctx, put} = poseidon();
+  const spear = put('A', P('107'), 'battlefield'), herald = put('A', P('103'), 'battlefield'), banner = put('A', P('118'), 'battlefield');
+  assert.deepEqual([atkOf(s, ctx, spear), hpOf(s, ctx, spear)], [4, 2], 'Spearman 2/1 + 1/1 + 1/0');
+  assert.deepEqual([atkOf(s, ctx, herald), hpOf(s, ctx, herald)], [3, 3], 'Herald só ganha o +1 ATK do Banner');
+  assert.deepEqual([atkOf(s, ctx, banner), hpOf(s, ctx, banner)], [2, 4], 'Banner só ganha o +1/+1 do Herald');
+});
+
+test('109 Abyssal Watcher: "target player" pode moer o próprio deck (Reanimator)', () => {
+  const {s, ctx, A, put} = poseidon({'EYES OF THE ABYSS': q => (q.choose === 'mode' ? 'self' : q.options ? q.options[0] : true)});
+  const watcher = put('A', P('109')), deck = A.deck.length, grave = A.tartarus.length;
+  playDevotee(s, ctx, 'A', watcher, {}); passAll(s);
+  assert.deepEqual([A.deck.length, A.tartarus.length], [deck - 2, grave + 2]);
+});
+
+test('165 Viking Tiger Claw: Seal e -2 ATK, sem dano', () => {
+  const {s, ctx, put} = poseidon();
+  const foe = put('B', 'hades-v6-183', 'battlefield'), atk = atkOf(s, ctx, foe);
+  playSpell(s, ctx, 'A', put('A', P('165')), {}); passAll(s);
+  assert.deepEqual([s.units[foe].seal, s.units[foe].damage, atkOf(s, ctx, foe)], [1, 0, atk - 2]);
 });

@@ -77,6 +77,8 @@ const enemies = (st, c, key, ability, n, text = 'Choose target enemy Devotees.')
 const debuff = (st, uid, n, duration = 'this_round') => { if (uid && st.units[uid]) k.buff(st, uid, -n, 0, duration); };
 // "Choose one": pergunta entre os modos implementados (um só: sem pergunta).
 const mode = (c, key, ability, list) => (list.length === 1 ? list[0] : list.length ? c.decide?.(key, {ability, options: list, choose: 'mode', text: 'Choose one.'}) ?? null : null);
+// "Target player" (self-mill do Reanimator, 31/10/2026): pergunta 'self' ou 'opponent'; sem resposta, o oponente.
+const targetPlayer = (st, c, key, ability) => (mode(c, key, ability, ['opponent', 'self']) === 'self' ? key : k.other(st, key));
 const needEnemy = (s, c, key, filter = () => true) => { if (!k.enemies(s, c, key).some(filter)) throw new k.RuleError('alvo', 'sem Devotee inimigo válido'); };
 
 // ---------- contra-mágica (alvos de Spell escolhidos ao conjurar: guia §54) ----------
@@ -92,6 +94,24 @@ function counter(st, c, uid, ability, unless = 0) {
   if (!item) return false; // alvo já resolveu ou saiu da cadeia: a parte que dependia dele não acontece
   if (unless && ready(st, item.controller) >= unless && k.may(c, item.controller, ability, {cost: `${unless} Cosmo`, text: `Pay {${unless}}{C} to keep your Spell from being countered?`})) { spendBase(st, item.controller, unless); return false; }
   return k.counterSpell(st, c, uid);
+}
+
+// Counter por alcance (autor, 31/10/2026): tudo vai à pilha (§56), então o counter cancela a jogada inimiga do tipo que
+// a carta nomeia. Habilidade cancelada sai da cadeia sem efeito; a fonte fica no campo.
+const DEVOTEE_ON_STACK = c => i => !!i.card && k.card(c, i.uid)?.kind === 'Devotee';
+const EQUIPMENT_ON_STACK = c => i => !!i.card && k.card(c, i.uid)?.kind === 'Equipment';
+const ANY_ON_STACK = () => i => !!(i.spell || i.card || i.ability);
+const onStack = (s, c, key, only) => s.chain.filter(i => i.controller !== key && only(i));
+const needOnStack = (only, what) => (s, c, key) => { if (!onStack(s, c, key, only(c)).length) throw new k.RuleError('alvo', `sem ${what} inimigo na pilha`); };
+function cancelOnStack(st, c, key, ability, only, text) {
+  const items = onStack(st, c, key, only(c));
+  const uid = k.choose(c, key, ability, [...new Set(items.map(i => i.uid))], {text});
+  const item = uid && items.find(i => i.uid === uid);
+  if (!item) return false;
+  if (!item.ability) return k.counterSpell(st, c, uid);
+  st.chain.splice(st.chain.indexOf(item), 1);
+  k.emit(st, 'ability_countered', {player: item.controller, uid, ability: item.ability});
+  return true;
 }
 
 // ---------- gancho "becomes Sealed" ----------
@@ -178,16 +198,15 @@ export default {
       if (target.kind !== 'devotee' || !k.once(s, `symphony:${self}`)) return;
       return st => strikeBuff(st, target.uid, -2);
     },
-    godDamage: (s, c, key, self, player) => st => {
-      k.discard(st, c, player, 1, 'DEAD END CLIMAX');
-    },
+    // Poseidon → Azul (31/10/2026): o discard virou mill.
+    godDamage: (s, c, key, self, player) => st => { mill(st, c, player, 2); },
   },
   'poseidon-v6-094': {
     gearDeclare: (s, c, key, self, bearer, target) => {
       if (target.kind !== 'devotee' || !k.once(s, `melody:${self}`)) return;
       return st => strikeBuff(st, target.uid, -1);
     },
-    gearGodDamage: (s, c, key, self, bearer, player) => (SORRENTO.test(name(c, bearer)) ? st => k.discard(st, c, player, 1, 'RESONANCE — SIREN SORRENTO') : undefined),
+    gearGodDamage: (s, c, key, self, bearer, player) => (SORRENTO.test(name(c, bearer)) ? st => { mill(st, c, player, 2); } : undefined),
   },
   // Seahorse Baian (Long Range ainda é NotSpecified no Strike da engine 3.0).
   'poseidon-v6-095': {
@@ -272,8 +291,8 @@ export default {
       if (t) seal(st, c, [t], 1, 'DIVINE AWAKENING');
     },
     mods: (s, c, key) => (awakened(s, key) ? [{atk: 2, hp: 1}] : []),
-    // "Remove 1 damage from your God" = ganhar 1 Soul (dano em God é perda de Soul), limitado ao Soul máximo.
-    watchSealed: onSealed('emperors-will', (st, c, key, self) => (pay(st, c, key, 1, 'THE EMPEROR\'S WILL', self) ? (k.gainSoul(st, key, 1), true) : false)),
+    // Poseidon → Azul (31/10/2026): o ganho de Soul virou loot.
+    watchSealed: onSealed('emperors-will', (st, c, key, self) => (pay(st, c, key, 1, 'THE EMPEROR\'S WILL', self) ? (loot(st, c, key, 'THE EMPEROR\'S WILL'), true) : false)),
   },
   'poseidon-v6-102': {
     activate: {name: 'Abyssal Ritual', cost: 1, check: (s, c, key) => needEnemy(s, c, key, u => sealed(s, u)),
@@ -281,8 +300,8 @@ export default {
     watchSealed: onSealed('whispers', (st, c, key) => scry(st, c, key, 'WHISPERS BELOW')),
   },
   'poseidon-v6-103': {
-    enter: (s, c, key) => st => lookTop(st, c, key, 3, 'ROYAL SUMMONS', {optional: true, filter: u => isMarina(c, u)}),
-    aura: (s, c, key, self, unit) => (k.controllerOf(s, unit) === key && isMarina(c, unit) ? {atk: 0, hp: 1} : null),
+    // Lord of Atlantis (31/10/2026): outras Marinas +1/+1; Royal Summons saiu.
+    aura: (s, c, key, self, unit) => (unit !== self && k.controllerOf(s, unit) === key && isMarina(c, unit) ? {atk: 1, hp: 1} : null),
   },
   'poseidon-v6-104': {
     mods: (s, c, key, self) => (k.devotees(s, c, key).some(u => u !== self && isMarina(c, u)) ? [{atk: 0, hp: 1}] : []),
@@ -315,7 +334,7 @@ export default {
     },
   },
   'poseidon-v6-109': {
-    enter: (s, c, key) => st => mill(st, c, k.other(st, key), 2),
+    enter: (s, c, key) => st => mill(st, c, targetPlayer(st, c, key, 'EYES OF THE ABYSS'), 2),
   },
   'poseidon-v6-110': {
     watchDeclare: selfWard({ability: 'CORAL ARMOR'}),
@@ -376,12 +395,8 @@ export default {
   },
   'poseidon-v6-118': {
     enter: (s, c, key, self) => st => { if (k.devotees(st, c, key).some(u => u !== self && isMarina(c, u))) k.draw(st, key, 1); },
-    // Banner of the Emperor (estática): aplicada como +1 ATK 'this_strike' na declaração do Strike inimigo contra o Marina.
-    watchDeclare: (s, c, key, self, attacker, target) => {
-      const t = target.uid;
-      if (!t || t === self || k.controllerOf(s, t) !== key || !isMarina(c, t)) return;
-      return st => strikeBuff(st, t, 1);
-    },
+    // Banner of the Emperor (31/10/2026): outras Marinas +1 ATK, sempre.
+    aura: (s, c, key, self, unit) => (unit !== self && k.controllerOf(s, unit) === key && isMarina(c, unit) ? {atk: 1, hp: 0} : null),
   },
   // 119 Trident Temple Warden — Sacred Interdiction (gancho watchSpell + kit.counterSpell): Moment/Technique inimigo; pague {2}{C} e
   // Exhaust nele (precisa estar Prepared); a Spell é anulada a menos que o controlador pague {2}{C}. Uso do Round marcado no evento.
@@ -400,7 +415,7 @@ export default {
       if (player === key || s.roundUses.has(tag)) return;
       return st => { if (!st.roundUses.has(tag) && pay(st, c, key, 1, 'PROPHECY OF THE ABYSS', self)) { k.once(st, tag); k.draw(st, key, 1); } };
     },
-    enter: (s, c, key) => st => { for (const p of opponents(st, key)) mill(st, c, p, 2); },
+    enter: (s, c, key) => st => mill(st, c, targetPlayer(st, c, key, 'DARK REVELATION'), 2),
   },
   'poseidon-v6-121': {
     // Countercurrent (watchSpell): Moment/Technique inimigo que mira um Marina seu (alvos guardados ao conjurar); paga {1}{C}, devolve
@@ -648,17 +663,14 @@ export default {
   'poseidon-v6-155': {
     spell: {run: (s, c, key) => {
       const t = enemy(s, c, key, 'ENCHANTED MELODY');
-      if (t) { debuff(s, t, 2); if (sealed(s, t)) k.discard(s, c, k.controllerOf(s, t), 1, 'ENCHANTED MELODY'); }
+      if (t) { debuff(s, t, 2); if (sealed(s, t)) mill(s, c, k.controllerOf(s, t), 2); }
       if (controls(s, c, key, SORRENTO)) loot(s, c, key, 'SORROWFUL ECHO');
     }},
   },
-  // 156 Wall of Ocean Currents: como a 136; Receding Wave só se a Spell foi anulada (o alvo é escolhido ao conjurar, "you may").
+  // 156 Wall of Ocean Currents (31/10/2026): counter de Equipment na pilha.
   'poseidon-v6-156': {
-    spell: {check: needCounter(aimsAtMe), run: (s, c, key) => {
-      const t = counterTarget(c, s, key, 'WALL OF OCEAN CURRENTS', aimsAtMe(s, c, key));
-      if (!t || !k.counterSpell(s, c, t)) return;
-      const back = k.choose(c, key, 'RECEDING WAVE', k.devotees(s, c, key), {optional: true, text: 'Return target friendly Devotee to its owner\'s hand?'});
-      if (back) bounce(s, c, key, back);
+    spell: {check: needOnStack(EQUIPMENT_ON_STACK, 'Equipment'), run: (s, c, key) => {
+      cancelOnStack(s, c, key, 'WALL OF OCEAN CURRENTS', EQUIPMENT_ON_STACK, 'Choose target enemy Equipment on the stack.');
     }},
   },
   'poseidon-v6-157': {
@@ -669,21 +681,20 @@ export default {
       debuff(s, picked.length === 1 ? picked[0] : k.choose(c, key, 'ARCTIC SILENCE', picked, {text: 'Choose one of those Devotees to get -2 ATK.'}), 2);
     }},
   },
-  // "Discard pile" = Tartarus.
   'poseidon-v6-158': {
     spell: {run: (s, c, key) => {
       k.draw(s, key, 2);
       if (!s.domains?.[key]) return;
-      const t = k.choose(c, key, 'ANCIENT DOMINION', s.players[key].tartarus.filter(u => k.card(c, u)?.kind === 'Equipment'), {optional: true, text: 'Return target Equipment from your discard pile to your hand?'});
+      const t = k.choose(c, key, 'ANCIENT DOMINION', s.players[key].tartarus.filter(u => k.card(c, u)?.kind === 'Equipment'), {optional: true, text: 'Return target Equipment from your Tartarus to your hand?'});
       if (t) k.toHand(s, c, t, 'tartarus');
     }},
   },
-  // 159: Denial (anula, sem pagamento) ou Reversal; o modo e o alvo são escolhidos ao conjurar.
+  // 159 (31/10/2026): Denial anula Devotee inimigo na pilha; ou Reversal. O modo e o alvo são escolhidos ao conjurar.
   'poseidon-v6-159': {
     spell: {run: (s, c, key) => {
       const gear = s.players[k.other(s, key)].battlefield.filter(u => k.card(c, u)?.kind === 'Equipment');
-      const pick = mode(c, key, 'THE SEVEN SEAS ANSWER', [counterable(s, c, key).length && 'Denial', gear.length && 'Reversal'].filter(Boolean));
-      if (pick === 'Denial') { const t = counterTarget(c, s, key, 'DENIAL'); if (t) k.counterSpell(s, c, t); }
+      const pick = mode(c, key, 'THE SEVEN SEAS ANSWER', [onStack(s, c, key, DEVOTEE_ON_STACK(c)).length && 'Denial', gear.length && 'Reversal'].filter(Boolean));
+      if (pick === 'Denial') cancelOnStack(s, c, key, 'DENIAL', DEVOTEE_ON_STACK, 'Choose target enemy Devotee on the stack.');
       if (pick === 'Reversal') {
         const t = k.choose(c, key, 'REVERSAL', gear, {text: 'Return target enemy Equipment to its owner\'s hand.'});
         if (t) k.toHand(s, c, t, 'battlefield', key);
@@ -710,17 +721,14 @@ export default {
     spell: {run: (s, c, key) => {
       const r = bounce(s, c, key, enemy(s, c, key, 'RETURN'));
       if (!r) return;
-      const hand = s.players[r.ctrl].hand;
-      k.emit(s, 'hand_revealed', {player: r.ctrl, uids: [...hand]});
-      const t = k.choose(c, key, 'ILLUSIONARY CONTROL', hand.filter(u => /Moment|Technique/.test(k.card(c, u)?.type || '')), {text: 'Choose a Moment or Technique to discard.'});
-      if (t && k.toTartarus(s, c, t, 'hand')) { k.emit(s, 'discarded', {player: r.ctrl, uid: t}); k.watchers(s, c, 'watchDiscard', [r.ctrl, t], 'Discard'); }
+      k.draw(s, key, 1); // Illusionary Control (31/10/2026): o discard virou compra
       if (controls(s, c, key, KANON)) mill(s, c, r.ctrl, 2);
     }},
   },
   'poseidon-v6-163': {
     spell: {run: (s, c, key) => {
       for (const t of enemies(s, c, key, 'SIREN\'S REQUIEM', 2)) debuff(s, t, 3);
-      for (const p of opponents(s, key)) k.discard(s, c, p, 1, 'SIREN\'S REQUIEM');
+      for (const p of opponents(s, key)) mill(s, c, p, 2); // Siren's Requiem (31/10/2026): discard → mill
       if (controls(s, c, key, SORRENTO)) loot(s, c, key, 'RESONANCE — SIREN SORRENTO');
     }},
   },
@@ -732,10 +740,11 @@ export default {
   },
   'poseidon-v6-165': {
     spell: {run: (s, c, key) => {
-      const t = enemy(s, c, key, 'FROZEN CLAWS');
+      // Azul não destrói direto (31/10/2026): Seal e -2 ATK; com Kraken Isaac, 1 Seal a mais.
+      const t = enemy(s, c, key, 'VIKING TIGER CLAW');
       if (!t) return;
-      k.damage(s, c, t, 4 + (controls(s, c, key, ISAAC) ? 2 : 0));
-      if (s.units[t]) seal(s, c, [t], 1, 'FROZEN CLAWS');
+      seal(s, c, [t], controls(s, c, key, ISAAC) ? 2 : 1, 'VIKING TIGER CLAW');
+      debuff(s, t, 2);
     }},
   },
   'poseidon-v6-166': {
@@ -751,13 +760,17 @@ export default {
       if (controls(s, c, key, KANON)) k.draw(s, key, 1);
     }},
   },
-  // 167 Song of the Last Siren: Final Melody (o controlador descarta) só se a Spell foi anulada; Resonance — Sorrento: você pode comprar e descartar.
+  // 167 Song of the Last Siren (Force of Will, 31/10/2026): anula qualquer carta ou habilidade inimiga na pilha.
+  // Custo adicional ao conjurar: o God perde {3}{S} e você descarta 1 carta.
   'poseidon-v6-167': {
-    spell: {check: needCounter(), run: (s, c, key) => {
-      const t = counterTarget(c, s, key, 'SONG OF THE LAST SIREN'), foe = t && s.chain.find(i => i.uid === t)?.controller;
-      if (t && k.counterSpell(s, c, t)) k.discard(s, c, foe, 1, 'FINAL MELODY');
-      if (controls(s, c, key, SORRENTO)) mayLoot(s, c, key, 'RESONANCE');
-    }},
+    spell: {
+      check: (s, c, key) => {
+        needOnStack(ANY_ON_STACK, 'carta ou habilidade')(s, c, key);
+        if (s.players[key].hand.length < 2) throw new k.RuleError('custo', 'SONG OF THE LAST SIREN: precisa descartar 1 carta');
+      },
+      cost: (s, c, key) => { k.loseSoul(s, {[key]: 3}, 'cost'); k.discard(s, c, key, 1, 'SONG OF THE LAST SIREN'); },
+      run: (s, c, key) => { cancelOnStack(s, c, key, 'SONG OF THE LAST SIREN', ANY_ON_STACK, 'Choose target enemy card or ability on the stack.'); },
+    },
   },
   'poseidon-v6-168': {
     spell: {run: (s, c, key) => {
@@ -803,34 +816,21 @@ export default {
   'poseidon-v6-173': {
     spell: {run: (s, c, key) => {
       for (const t of enemies(s, c, key, 'SUNKEN EMPIRE', 2)) { const r = bounce(s, c, key, t); if (r) mill(s, c, r.ctrl, 2); }
-      if (s.domains?.[key]) for (const p of opponents(s, key)) k.discard(s, c, p, 1, 'LOST BENEATH THE WAVES');
+      if (s.domains?.[key]) k.draw(s, key, 1); // Lost Beneath the Waves (31/10/2026): discard → compra
     }},
   },
   'poseidon-v6-174': {
     spell: {run: (s, c, key) => {
-      const picked = enemies(s, c, key, 'OCEANIC FURY', 3);
-      if (!picked.length) return;
-      // Divisão ponto a ponto: cada ponto de dano é uma pergunta entre os alvos escolhidos.
-      const split = Object.fromEntries(picked.map(u => [u, 0])), total = 5 + (generals(s, c, key) >= 2 ? 2 : 0);
-      for (let i = 0; i < total; i++) {
-        const t = picked.length === 1 ? picked[0] : c.decide?.(key, {ability: 'OCEANIC FURY', options: picked, choose: 'target', text: `Assign 1 damage (${i + 1}/${total}).`});
-        split[picked.includes(t) ? t : picked[0]]++;
-      }
-      for (const [u, n] of Object.entries(split)) {
-        k.damage(s, c, u, n);
-        // "Cannot be Prepared until the end of the round": só pula o Prepare do inimigo se o turno dele ainda vem neste Round.
-        if (n > 0 && s.units[u] && s.active === key && s.turnInRound === 0) s.units[u].skipPrepare = true;
-      }
+      // Sleep (31/10/2026): 1 Seal em cada Devotee inimigo; com dois Marina Generals, compra 1.
+      seal(s, c, k.enemies(s, c, key), 1, 'OCEANIC FURY');
+      if (generals(s, c, key) >= 2) k.draw(s, key, 1);
     }},
   },
   'poseidon-v6-175': {
     spell: {run: (s, c, key) => {
-      let discarded = false;
-      for (const p of opponents(s, key)) {
-        mill(s, c, p, 4);
-        if (k.devotees(s, c, p).filter(u => sealed(s, u)).length >= 2 && k.discard(s, c, p, 1, 'RISING PRESSURE').length) discarded = true;
-      }
-      if (discarded) k.draw(s, key, 1);
+      // 31/10/2026: Rising Pressure moe 2 a mais (era discard); The Deep Remembers compra 1.
+      for (const p of opponents(s, key)) mill(s, c, p, 4 + (k.devotees(s, c, p).filter(u => sealed(s, u)).length >= 2 ? 2 : 0));
+      k.draw(s, key, 1);
     }},
   },
   'poseidon-v6-176': {
@@ -844,10 +844,10 @@ export default {
   },
   'poseidon-v6-177': {
     spell: {run: (s, c, key) => {
-      const general = k.choose(c, key, 'CALL OF THE EMPEROR', s.players[key].tartarus.filter(u => isGeneral(c, u)), {text: 'Return target Marina General from your discard pile to the Battlefield.'});
+      const general = k.choose(c, key, 'CALL OF THE EMPEROR', s.players[key].tartarus.filter(u => isGeneral(c, u)), {text: 'Return target Marina General from your Tartarus to the Battlefield.'});
       // Entra Exhausted; o próximo turno do controlador já é outro Round, então "cannot declare a Strike this round" vale por si.
       if (general) k.putOntoField(s, c, key, general, 'tartarus', {prepared: false});
-      const scale = k.choose(c, key, 'OCEANIC RESTORATION', s.players[key].tartarus.filter(u => isScale(c, u)), {optional: true, text: 'Return target Scale from your discard pile to your hand?'});
+      const scale = k.choose(c, key, 'OCEANIC RESTORATION', s.players[key].tartarus.filter(u => isScale(c, u)), {optional: true, text: 'Return target Scale from your Tartarus to your hand?'});
       if (scale) k.toHand(s, c, scale, 'tartarus');
       // The Seven Seas Endure: sem efeito — o retorno do Tartarus já entra sem dano (guia §62).
     }},
@@ -870,7 +870,7 @@ export default {
     spell: {run: (s, c, key) => {
       const back = k.enemies(s, c, key).map(t => bounce(s, c, key, t)).filter(Boolean);
       for (const p of opponents(s, key)) { const n = back.filter(r => r.ctrl === p).length; if (n) mill(s, c, p, Math.min(12, 3 * n)); }
-      if (awakened(s, key)) for (const p of opponents(s, key)) k.discard(s, c, p, 2, 'THE EMPEROR\'S WRATH');
+      if (awakened(s, key)) k.draw(s, key, 2); // The Emperor's Wrath (31/10/2026): discard → compra
     }},
   },
 };

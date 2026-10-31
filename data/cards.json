@@ -3481,11 +3481,11 @@
       "habilidades_en": [
         "Nimble",
         "Dead End Symphony — Once each round, when Siren Sorrento declares a Strike, the defending enemy Devotee gets -2 ATK during that Strike.",
-        "Dead End Climax — Whenever Siren Sorrento deals Strike damage to an enemy God, that God's controller discards a card."
+        "Dead End Climax — Whenever Siren Sorrento deals Strike damage to an enemy God, that God's controller mills two cards."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
     },
     {
       "id": "poseidon-v6-094",
@@ -3514,11 +3514,11 @@
       "keywords_en": [],
       "habilidades_en": [
         "Siren's Melody — Once each round, when equipped Devotee declares a Strike, the defending enemy Devotee gets -1 ATK during that Strike.",
-        "Resonance — Siren Sorrento: Whenever Siren Sorrento deals Strike damage to an enemy God, that God's controller discards an additional card."
+        "Resonance — Siren Sorrento: Whenever Siren Sorrento deals Strike damage to an enemy God, that God's controller mills two additional cards."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026.",
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md.",
       "categoria_equipamento": "Armor",
       "slot_equipamento": "armadura",
       "auto_equip_en": ["Siren Sorrento"],
@@ -3782,11 +3782,11 @@
       "habilidades_en": [
         "Divine Awakening — When Julian Solo enters the Battlefield, you may put 1 Seal counter on target enemy Devotee.",
         "Vessel of Poseidon — While your God is Poseidon and is Awakened, Julian Solo gets +2 ATK / +1 HP.",
-        "The Emperor's Will — Once each round, whenever an enemy Devotee becomes Sealed, you may pay {1}{C}. If you do, remove 1 damage from your God."
+        "The Emperor's Will — Once each round, whenever an enemy Devotee becomes Sealed, you may pay {1}{C}. If you do, draw a card, then discard a card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
     },
     {
       "id": "poseidon-v6-102",
@@ -3849,12 +3849,11 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Royal Summons — When Herald of the Seven Seas enters the Battlefield, look at the top 3 cards of your deck. You may reveal a Marina Devotee from among them and put it into your hand. Put the remaining cards on the bottom of your deck in any order.",
-        "Emperor's Authority — Other friendly Marina Devotees get +0 ATK / +1 HP."
+        "Emperor's Authority — Other friendly Marina Devotees get +1 ATK / +1 HP."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
     },
     {
       "id": "poseidon-v6-104",
@@ -3974,13 +3973,13 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 2,
+      "custo": 1,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
       "awaken": null,
       "power": 2,
-      "vida": 2,
+      "vida": 1,
       "resistance": 2,
       "damage_cloth": null,
       "equipar_custo": null,
@@ -3990,7 +3989,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
     },
     {
       "id": "poseidon-v6-108",
@@ -4052,11 +4051,11 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Eyes of the Abyss — When Abyssal Watcher enters the Battlefield, target opponent mills two cards."
+        "Eyes of the Abyss — When Abyssal Watcher enters the Battlefield, target player mills two cards."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
     },
     {
       "id": "poseidon-v6-110",
@@ -4357,11 +4356,11 @@
       "keywords_en": [],
       "habilidades_en": [
         "Rally the Marines — When Marina Standard Bearer enters the Battlefield, draw a card if you control another friendly Marina Devotee.",
-        "Banner of the Emperor — Other friendly Marina Devotees get +1 ATK while defending against an enemy Strike."
+        "Banner of the Emperor — Other friendly Marina Devotees get +1 ATK."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
     },
     {
       "id": "poseidon-v6-119",
@@ -4424,11 +4423,11 @@
       "keywords_en": [],
       "habilidades_en": [
         "Prophecy of the Abyss — Once each round, whenever an opponent mills one or more cards, you may pay {1}{C}. If you do, draw a card.",
-        "Dark Revelation — When The Drowned Prophet enters the Battlefield, each opponent mills two cards."
+        "Dark Revelation — When The Drowned Prophet enters the Battlefield, target player mills two cards."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
     },
     {
       "id": "poseidon-v6-121",
@@ -4990,7 +4989,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 3,
+      "custo": 2,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -5007,7 +5006,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
     },
     {
       "id": "poseidon-v6-136",
@@ -5024,7 +5023,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 3,
+      "custo": 2,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -5040,7 +5039,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
     },
     {
       "id": "poseidon-v6-137",
@@ -5641,7 +5640,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 4,
+      "custo": 3,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -5660,7 +5659,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Carta modal: bounce ou counter tributável. A presença de Kanon melhora a seleção de cartas sem produzir compra líquida adicional."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Carta modal: bounce ou counter tributável. A presença de Kanon melhora a seleção de cartas sem produzir compra líquida adicional. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
     },
     {
       "id": "poseidon-v6-155",
@@ -5690,12 +5689,12 @@
       "keywords_en": [],
       "habilidades_en": [
         "Target enemy Devotee gets -2 ATK until the end of the round.",
-        "Enchanted Melody — If that Devotee has a Seal counter, its controller discards a card.",
+        "Enchanted Melody — If that Devotee has a Seal counter, its controller mills two cards.",
         "Sorrowful Echo — If you control Siren Sorrento, draw a card, then discard a card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Descarte condicional que combina com Sorrento, mas exige estabelecer Seal antes de obter a vantagem."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Descarte condicional que combina com Sorrento, mas exige estabelecer Seal antes de obter a vantagem. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
     },
     {
       "id": "poseidon-v6-156",
@@ -5712,7 +5711,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 3,
+      "custo": 2,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -5724,12 +5723,11 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Counter target enemy Moment or Technique that targets a friendly Devotee or your God.",
-        "Receding Wave — If that Moment or Technique is countered this way, you may return target friendly Devotee to its owner's hand."
+        "Counter target enemy Equipment on the stack."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Counter defensivo com bounce próprio opcional. Permite proteger uma unidade e reutilizar seu ETB, mas custa tempo de desenvolvimento."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Counter defensivo com bounce próprio opcional. Permite proteger uma unidade e reutilizar seu ETB, mas custa tempo de desenvolvimento. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
     },
     {
       "id": "poseidon-v6-157",
@@ -5780,7 +5778,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 5,
+      "custo": 4,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -5793,11 +5791,11 @@
       "keywords_en": [],
       "habilidades_en": [
         "Draw two cards.",
-        "Ancient Dominion — If you control a Domain, you may return target friendly Equipment from your discard pile to your hand."
+        "Ancient Dominion — If you control a Domain, you may return target friendly Equipment from your Tartarus to your hand."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Card advantage direta, com recuperação de Equipment condicionada ao controle de um Domain."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Card advantage direta, com recuperação de Equipment condicionada ao controle de um Domain. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
     },
     {
       "id": "poseidon-v6-159",
@@ -5814,7 +5812,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 4,
+      "custo": 3,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -5827,12 +5825,12 @@
       "keywords_en": [],
       "habilidades_en": [
         "Choose one:",
-        "Denial — Counter target enemy Moment or Technique.",
+        "Denial — Counter target enemy Devotee on the stack.",
         "Reversal — Return target enemy Equipment to its owner's hand."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Hard counter ou resposta a Equipment. É a carta de interação mais flexível deste bloco, compensada pelo custo 4."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Hard counter ou resposta a Equipment. É a carta de interação mais flexível deste bloco, compensada pelo custo 4. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
     },
     {
       "id": "poseidon-v6-160",
@@ -5932,12 +5930,12 @@
       "keywords_en": [],
       "habilidades_en": [
         "Return target enemy Devotee to its owner's hand.",
-        "Illusionary Control — That Devotee's controller reveals their hand. Choose a Moment or Technique card from it. That player discards the chosen card.",
+        "Illusionary Control — Draw a card.",
         "Resonance — Sea Dragon Kanon: If you control Sea Dragon Kanon, that player mills two cards."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Bounce e descarte seletivo. Oferece informação sobre a mão adversária, mas só permite descartar Moment ou Technique."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Bounce e descarte seletivo. Oferece informação sobre a mão adversária, mas só permite descartar Moment ou Technique. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
     },
     {
       "id": "poseidon-v6-163",
@@ -5967,12 +5965,12 @@
       "keywords_en": [],
       "habilidades_en": [
         "Choose up to two target enemy Devotees. Each gets -3 ATK until the end of the round.",
-        "Siren's Requiem — Each opponent discards a card.",
+        "Siren's Requiem — Each opponent mills two cards.",
         "Resonance — Siren Sorrento: If you control Siren Sorrento, draw a card, then discard a card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Controle de combate e descarte. A presença de Sorrento melhora a qualidade da mão, sem gerar compra líquida adicional."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Controle de combate e descarte. A presença de Sorrento melhora a qualidade da mão, sem gerar compra líquida adicional. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
     },
     {
       "id": "poseidon-v6-164",
@@ -6024,7 +6022,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 5,
+      "custo": 3,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -6036,13 +6034,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Deal 4 damage to target enemy Devotee.",
-        "Frozen Claws — If that Devotee survives, put 1 Seal counter on it.",
-        "Resonance — Kraken Isaac: If you control Kraken Isaac, deal 2 additional damage to that Devotee."
+        "Put 1 Seal counter on target enemy Devotee. It gets -2 ATK until the end of the round.",
+        "Resonance — Kraken Isaac: If you control Kraken Isaac, put 1 additional Seal counter on it."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Remoção e Seal. O bônus de Isaac aumenta o dano total para 6, e o Seal só acontece se o alvo sobreviver ao dano."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Remoção e Seal. O bônus de Isaac aumenta o dano total para 6, e o Seal só acontece se o alvo sobreviver ao dano. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
     },
     {
       "id": "poseidon-v6-166",
@@ -6094,7 +6091,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 4,
+      "custo": 3,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -6106,13 +6103,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Counter target enemy Moment or Technique.",
-        "Final Melody — If that Moment or Technique is countered this way, its controller discards a card.",
-        "Resonance — Siren Sorrento: If you control Siren Sorrento, you may draw a card, then discard a card."
+        "As an additional cost to cast this Moment, your God loses {3}{S} and you discard a card.",
+        "Counter target enemy card or ability on the stack."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Hard counter com descarte. Forte, porém exige 4 Cosmo Base e uma resposta válida na cadeia de resolução."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Hard counter com descarte. Forte, porém exige 4 Cosmo Base e uma resposta válida na cadeia de resolução. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
     },
     {
       "id": "poseidon-v6-168",
@@ -6325,11 +6321,11 @@
       "habilidades_en": [
         "Sunken Empire — Return up to two target enemy Devotees to their owners' hands.",
         "Buried Civilization — For each Devotee returned this way, its controller mills two cards.",
-        "Lost Beneath the Waves — If you control a Domain, each opponent discards a card."
+        "Lost Beneath the Waves — If you control a Domain, draw a card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Bounce múltiplo com pressão em recursos. Seu potencial máximo depende de controlar um Domain."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Bounce múltiplo com pressão em recursos. Seu potencial máximo depende de controlar um Domain. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
     },
     {
       "id": "poseidon-v6-174",
@@ -6346,7 +6342,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 7,
+      "custo": 6,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -6358,13 +6354,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Oceanic Fury — Deal 5 damage divided as you choose among up to three target enemy Devotees.",
-        "Crushing Depths — Enemy Devotees dealt damage by this Technique cannot be Prepared until the end of the round.",
-        "Divine Retribution — If you control at least two Marina Generals, distribute 2 additional damage among those targets."
+        "Oceanic Fury — Put 1 Seal counter on each enemy Devotee.",
+        "Divine Retribution — If you control at least two Marina Generals, draw a card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Remoção em área. O bônus máximo exige dois Generais, uma condição relevante para o Vanilla."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Remoção em área. O bônus máximo exige dois Generais, uma condição relevante para o Vanilla. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
     },
     {
       "id": "poseidon-v6-175",
@@ -6394,12 +6389,12 @@
       "keywords_en": [],
       "habilidades_en": [
         "Relentless Waters — Each opponent mills four cards.",
-        "Rising Pressure — Each opponent who controls at least two Devotees with Seal counters discards a card.",
-        "The Deep Remembers — Draw a card if at least one opponent discarded a card this way."
+        "Rising Pressure — Each opponent who controls at least two Devotees with Seal counters mills two additional cards.",
+        "The Deep Remembers — Draw a card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Mill e descarte condicional. Recompensa Seal sem aplicar novos marcadores."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Mill e descarte condicional. Recompensa Seal sem aplicar novos marcadores. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
     },
     {
       "id": "poseidon-v6-176",
@@ -6451,7 +6446,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 7,
+      "custo": 6,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -6463,13 +6458,13 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Call of the Emperor — Return target Marina General card from your discard pile to the Battlefield under your control Unprepared. It cannot declare a Strike this round.",
-        "Oceanic Restoration — You may return target Scale card from your discard pile to your hand.",
+        "Call of the Emperor — Return target Marina General card from your Tartarus to the Battlefield under your control Unprepared. It cannot declare a Strike this round.",
+        "Oceanic Restoration — You may return target Scale card from your Tartarus to your hand.",
         "The Seven Seas Endure — If your God is Poseidon, remove up to 2 damage from that Marina General."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Recuperação de uma ameaça Mythic e uma Scale. Forte no jogo longo, com restrição de ataque na rodada em que retorna."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Recuperação de uma ameaça Mythic e uma Scale. Forte no jogo longo, com restrição de ataque na rodada em que retorna. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
     },
     {
       "id": "poseidon-v6-178",
@@ -6486,7 +6481,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 9,
+      "custo": 6,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -6504,7 +6499,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Artefato divino para o late game. Combina draw e Seal, mas exige investimento inicial de 9 Cosmo Base.",
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Artefato divino para o late game. Combina draw e Seal, mas exige investimento inicial de 9 Cosmo Base. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md.",
       "categoria_equipamento": "Artifact",
       "slot_equipamento": null,
       "auto_equip_en": [],
@@ -6528,7 +6523,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 8,
+      "custo": 6,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -6546,7 +6541,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Inspirada no Main Breadwinner, o grande pilar central do reino submarino. Atua como defesa absoluta temporária e grande virada de tempo."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Inspirada no Main Breadwinner, o grande pilar central do reino submarino. Atua como defesa absoluta temporária e grande virada de tempo. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
     },
     {
       "id": "poseidon-v6-180",
@@ -6563,7 +6558,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 10,
+      "custo": 7,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -6577,11 +6572,11 @@
       "habilidades_en": [
         "The Rising Oceans — Return all enemy Devotees to their owners' hands.",
         "Drowning Civilization — Each opponent mills three cards for each Devotee returned to their hand this way, up to twelve cards per opponent.",
-        "The Emperor's Wrath — If your God is Poseidon and is Awakened, each opponent discards two cards."
+        "The Emperor's Wrath — If your God is Poseidon and is Awakened, draw two cards."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. O maior reset de Battlefield da coleção. Diferente do Ultimate de Poseidon, não devolve Equipment separadamente nem Cosmo Base, preservando uma distinção mecânica importante."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. O maior reset de Battlefield da coleção. Diferente do Ultimate de Poseidon, não devolve Equipment separadamente nem Cosmo Base, preservando uma distinção mecânica importante. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
     },
     {
       "id": "hades-v6-181",

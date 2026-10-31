@@ -2014,6 +2014,230 @@
           "quantity": 1
         }
       ]
+    },
+    {
+      "id": "comp-poseidon-control",
+      "nome": "Poseidon Control",
+      "god": "god-poseidon",
+      "domain_id": "poseidon-v6-142",
+      "arquetipo": "Referência do meta Premodern (Mono-U Control): escada de counters em Moment de até c3 (Song of the Last Siren como Force of Will), compra e filtro, bounce e Seal; poucos finalizadores (Kanon, Sorrento, Isaac). docs/meta-premodern.md e docs/rebalance-poseidon-premodern.md (31/10/2026).",
+      "tema": "Control (counter + compra)",
+      "main_deck": [
+        {
+          "card_id": "poseidon-v6-167",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-159",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-133",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-154",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-136",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-135",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-139",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-113",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-116",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-132",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-152",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-137",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-174",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-105",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-110",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-117",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-119",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-091",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-093",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-097",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-101",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-099",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-171",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-170",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-178",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-179",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-180",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": "comp-poseidon-marina",
+      "nome": "Poseidon Marina",
+      "god": "god-poseidon",
+      "domain_id": "poseidon-v6-143",
+      "arquetipo": "Referência do meta Premodern (Merfolk): Marinas baratas com dois lordes (Herald +1/+1, Standard Bearer +1 ATK), bounce no turno do ataque e counters leves. docs/meta-premodern.md e docs/rebalance-poseidon-premodern.md (31/10/2026).",
+      "tema": "Tempo (tribal Marina)",
+      "main_deck": [
+        {
+          "card_id": "poseidon-v6-107",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-106",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-115",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-103",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-118",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-108",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-111",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-112",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-099",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-104",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-121",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-095",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-093",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-125",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-123",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-122",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-132",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-152",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-133",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-159",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-167",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-135",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-140",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-136",
+          "quantity": 2
+        }
+      ]
     }
   ]
 }

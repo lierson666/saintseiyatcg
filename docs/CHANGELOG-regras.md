@@ -4,6 +4,16 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-31 — Cartas de Poseidon — Azul (Control + Marina, meta Premodern)
+
+- **Antes:** counters de c4 (154, 159, 167) não podiam responder, porque a resposta paga só com Latent (teto 3); todo counter anulava só Moment/Technique; discard do oponente em 093, 094, 155, 162, 163, 167, 173, 175 e 180; dano direto em 165 e 174; 101 Julian ganhava Soul; Herald (103) dava +0/+1; Spells de c7 a c10.
+- **Depois:** 26 cartas. Escada de counters até c3, cada um com alcance: 133 e 136 (Moment/Technique, c2), 156 (Equipment na pilha, c2), 159 (Devotee na pilha, c3), 154 (c3) e 167 (qualquer carta ou habilidade na pilha, c3, com custo adicional: o God perde {3}{S} e você descarta 1 carta). O discard virou mill ou compra. 165 vira Seal com −2 ATK (c3) e 174 vira Seal em todo Devotee inimigo (c6). 101 dá loot. 103 (+1/+1) e 118 (+1 ATK) são lordes Marina; 107 custa 1 (2/1). 109 e 120 dizem "target player" (self-mill). 135 c2, 158 c4, 177/178/179 c6, 180 c7; "discard pile" virou Tartarus.
+- **Motivo:** meta Premodern aprovado pelo autor em 31/10/2026 (`docs/meta-premodern.md`); diff aprovado em 31/10/2026 (`docs/rebalance-poseidon-premodern.md`).
+- **Engine:** `playtest/engine-v3/v6/poseidon.js` (counter por alcance: `onStack`, `cancelOnStack`; habilidade anulada sai da cadeia e a fonte fica no campo; `targetPlayer`; custo adicional do 167 pelo gancho `spell.cost`). Testes em `tools/test-engine-v3-v6-poseidon.mjs`. Suíte engine-v3 inteira passa (487 testes).
+- **Decks:** "Poseidon Control" (`comp-poseidon-control`) e "Poseidon Marina" (`comp-poseidon-marina`) em `data/alpha-0.1/decks-competitivos.json`. Os decks Poseidon antigos não foram retunados.
+- **Atalhos do motor:** "target player" sem resposta escolhe o oponente; os counters de Devotee (117, 119, 121, 124) seguem só contra Moment/Technique.
+- **Pendências:** round-robin de bots (meta 45–55%); playtest do autor; IA não sabe usar o 167 contra habilidades.
+
 ## 2026-10-31 — Cartas de Athena — Branco (Saints + Enchantress, meta Premodern)
 
 - **Antes:** truques defensivos (054, 056, 058, 061, 076, 079, 081) eram Technique; Seal em Shaina, Dante e Perseus Silver Cloth; The Golden Arrow (082) c5; Healer (041) e 035 só curavam; magias caras de c7 a c10 (020 The Last Miracle, 087 The Last Hope, 088 The Path, 089, 090).
