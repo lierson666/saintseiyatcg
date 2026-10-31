@@ -9,6 +9,8 @@ Endpoints (só 127.0.0.1):
   POST /api/export/<nome>     PNG     grava card-forge/out/<nome>.png (fora do git)
   POST /api/project/<id>      {...}   grava card-forge/projects/<id>.json (subtítulo, flavour, enquadramento da arte)
   POST /api/art/<id>          PNG/JPG grava card-forge/art/<id>.<ext> (fica fora do git)
+  GET  /api/boosters          lista os ids de pacote com arte em playtest/assets/boosters/
+  POST /api/booster/<id>      WEBP/PNG grava a arte de fundo do pacote em playtest/assets/boosters/<id>.webp
 """
 import json
 import io
@@ -27,6 +29,7 @@ from xml.etree.ElementTree import ParseError
 ROOT = Path(__file__).resolve().parents[1]
 CARDS = ROOT / "data" / "cards.json"
 FORGE = ROOT / "card-forge"
+BOOSTERS = ROOT / "playtest" / "assets" / "boosters"
 ID_RE = re.compile(r"^[a-z0-9][a-z0-9-]{0,63}$")
 MAX_BODY = 40 * 1024 * 1024
 LOCAL_HOSTS = {"localhost", "127.0.0.1"}
@@ -130,6 +133,8 @@ class Handler(SimpleHTTPRequestHandler):
         path = self.path.split('?', 1)[0]
         if path.startswith('/api/layout-studio'):
             return layout_studio.handle(self, path)
+        if path == '/api/boosters':
+            return self.reply(200, sorted(f.stem for f in BOOSTERS.glob('*.webp')))
         if path.startswith('/api/star-hill/'):
             try:
                 return star_hill.get(self, path)
@@ -209,6 +214,21 @@ class Handler(SimpleHTTPRequestHandler):
                     return self.reply(415, {"erro": "só PNG ou JPG"})
                 atomic_write(FORGE / "art" / f"{parts[2]}.{kind}", raw)
                 return self.reply(200, {"ok": True, "path": f"card-forge/art/{parts[2]}.{kind}"})
+            if len(parts) == 3 and parts[:2] == ["api", "booster"] and ID_RE.match(parts[2]):
+                # O logo e o nome do pacote são desenhados por cima no lobby (.ec-pack); aqui só a arte de fundo.
+                if raw.startswith(b"\x89PNG"):
+                    # Safari/WKWebView não gera WEBP no canvas: converte com Pillow se houver.
+                    try:
+                        from PIL import Image
+                    except ImportError:
+                        return self.reply(415, {"erro": "Este navegador não gera WEBP e o Pillow não está instalado. Use o Chrome."})
+                    out = io.BytesIO()
+                    Image.open(io.BytesIO(raw)).convert("RGB").save(out, "WEBP", quality=86)
+                    raw = out.getvalue()
+                if not (raw[:4] == b"RIFF" and raw[8:12] == b"WEBP"):
+                    return self.reply(415, {"erro": "só WEBP ou PNG"})
+                atomic_write(BOOSTERS / f"{parts[2]}.webp", raw)
+                return self.reply(200, {"ok": True, "path": f"playtest/assets/boosters/{parts[2]}.webp"})
             return self.reply(404, {"erro": "rota desconhecida"})
         except (ValueError, KeyError, AssertionError, TypeError) as e:
             return self.reply(400, {"erro": str(e)})

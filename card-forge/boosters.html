@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Boosters · Card Forge</title>
+  <link rel="icon" href="../LOGO/favicon.png?v=20261030">
+  <link rel="stylesheet" href="forge.css">
+  <link rel="stylesheet" href="../playtest/economy.css">
+  <style>
+    .bz { display: flex; flex-wrap: wrap; gap: 32px; padding: 24px; align-items: flex-start; }
+    .bz__form { display: flex; flex-direction: column; gap: 12px; width: 320px; max-height: none; }
+    .bz__row { display: flex; gap: 8px; align-items: end; }
+    /* Prévia no tamanho da abertura do booster; a arte fica num canvas atrás do logo e do nome. */
+    .bz .ec-pack { width: 300px; cursor: grab; touch-action: none; }
+    .bz .ec-pack:active { cursor: grabbing; }
+    .bz .ec-pack canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .bz .ec-pack__name { font-size: 28px; }
+    .bz__save { background: var(--gold); color: #1b1505; font-weight: 700; border: 0; padding: 10px; cursor: pointer; }
+    .bz__save:disabled { opacity: .5; cursor: default; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Card Forge <small>Boosters</small></h1>
+    <a href="index.html" style="color:var(--gold);font-weight:600">← Cartas</a>
+    <span id="status" role="status"></span>
+  </header>
+  <main class="bz">
+    <div class="ec-pack" id="pack" aria-label="Prévia do pacote: arraste para posicionar a arte">
+      <canvas id="art" width="800" height="1440"></canvas>
+      <img class="ec-pack__logo" src="../LOGO/logo-web.webp" alt="">
+      <span class="ec-pack__name" id="packName">Olympus</span>
+      <span class="ec-pack__foil"></span>
+    </div>
+    <form class="bz__form" id="form">
+      <div class="bz__row">
+        <label>Pacote <select id="packId"></select></label>
+        <label>Novo id <input id="newId" placeholder="dawn-of-cosmo" pattern="[a-z0-9][a-z0-9-]{0,63}"></label>
+      </div>
+      <label>Nome na prévia <input id="label" value="Olympus"></label>
+      <label>Arte de fundo <input id="file" type="file" accept="image/*"></label>
+      <label>Zoom <input id="zoom" type="range" min="1" max="4" step="0.01" value="1"></label>
+      <p class="hint">Arraste a prévia para posicionar. O logo e o nome são desenhados pelo jogo por cima da arte; o arquivo salvo tem só o fundo (800×1440, proporção 5:9).</p>
+      <button class="bz__save" id="save" type="submit" disabled>Salvar em playtest/assets/boosters/</button>
+    </form>
+  </main>
+  <script type="module">
+    const $ = id => document.getElementById(id);
+    const canvas = $('art'), ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    let img = null, zoom = 1, cx = .5, cy = .5; // centro da arte visível, em fração da imagem
+    const status = (msg, error) => { $('status').textContent = msg; $('status').className = error ? 'error' : ''; };
+    const packId = () => $('newId').value.trim() || $('packId').value;
+
+    // Cobre o pacote inteiro (como object-fit: cover) e aplica zoom e posição.
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      if (!img) return;
+      const s = Math.max(W / img.width, H / img.height) * zoom;
+      const vw = W / s, vh = H / s;
+      cx = Math.min(Math.max(cx, vw / 2 / img.width), 1 - vw / 2 / img.width);
+      cy = Math.min(Math.max(cy, vh / 2 / img.height), 1 - vh / 2 / img.height);
+      ctx.drawImage(img, cx * img.width - vw / 2, cy * img.height - vh / 2, vw, vh, 0, 0, W, H);
+    }
+    const load = src => new Promise((ok, fail) => { const i = new Image(); i.onload = () => ok(i); i.onerror = fail; i.src = src; });
+
+    async function showPack(id) {
+      $('label').value = $('packName').textContent = id.replace(/-/g, ' ');
+      zoom = 1; cx = cy = .5; $('zoom').value = 1; $('save').disabled = true;
+      try { img = await load(`../playtest/assets/boosters/${id}.webp?t=${Date.now()}`); } catch { img = null; }
+      draw();
+    }
+
+    const ids = await fetch('/api/boosters').then(r => r.json()).catch(() => []);
+    if (!ids.includes('olympus')) ids.unshift('olympus');
+    $('packId').innerHTML = ids.map(id => `<option>${id}</option>`).join('');
+    showPack('olympus');
+
+    $('packId').onchange = () => { $('newId').value = ''; showPack($('packId').value); };
+    $('newId').oninput = () => { $('packName').textContent = $('label').value = $('newId').value.replace(/-/g, ' '); };
+    $('label').oninput = () => { $('packName').textContent = $('label').value; };
+    $('zoom').oninput = () => { zoom = +$('zoom').value; draw(); };
+    $('file').onchange = async () => {
+      const f = $('file').files[0];
+      if (!f) return;
+      const url = URL.createObjectURL(f);
+      try { img = await load(url); } catch { return status('Não foi possível ler a imagem.', true); } finally { URL.revokeObjectURL(url); }
+      zoom = 1; cx = cy = .5; $('zoom').value = 1; $('save').disabled = false;
+      draw(); status(`${f.name}: ${img.width}×${img.height}`);
+    };
+
+    // Arrastar move a arte na direção do ponteiro.
+    let drag = null;
+    $('pack').onpointerdown = e => { if (img) { drag = {x: e.clientX, y: e.clientY}; $('pack').setPointerCapture(e.pointerId); } };
+    $('pack').onpointermove = e => {
+      if (!drag) return;
+      const box = $('pack').getBoundingClientRect(), s = Math.max(W / img.width, H / img.height) * zoom;
+      cx -= (e.clientX - drag.x) * (W / box.width) / s / img.width;
+      cy -= (e.clientY - drag.y) * (H / box.height) / s / img.height;
+      drag = {x: e.clientX, y: e.clientY}; draw();
+      $('save').disabled = false;
+    };
+    $('pack').onpointerup = $('pack').onpointercancel = () => { drag = null; };
+
+    $('form').onsubmit = async e => {
+      e.preventDefault();
+      const id = packId();
+      if (!/^[a-z0-9][a-z0-9-]{0,63}$/.test(id)) return status('Id inválido: use minúsculas, números e hífen.', true);
+      if (!img) return status('Escolha uma imagem.', true);
+      const blob = await new Promise(ok => canvas.toBlob(ok, 'image/webp', .86));
+      const r = await fetch(`/api/booster/${id}`, {method: 'POST', body: blob}).catch(() => null);
+      const res = r && await r.json().catch(() => ({}));
+      if (!r?.ok) return status(res?.erro || 'Falha ao salvar.', true);
+      status(`Salvo em ${res.path}`);
+      $('save').disabled = true;
+      if (!ids.includes(id)) { ids.push(id); $('packId').add(new Option(id)); }
+      $('packId').value = id; $('newId').value = '';
+    };
+  </script>
+</body>
+</html>
