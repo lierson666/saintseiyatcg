@@ -501,7 +501,7 @@ function godHud(key, side) {
   // Rosto escolhido no Card Forge (card-forge/god-hud.js): mesma conta da prévia de lá; sem escolha, a arte da carta.
   const h = f?.hud_rosto, face = h ? `background-image:url('${FORGE_ART + h.imagem}');background-size:${h.zoom}% auto;background-position:${h.x}% ${h.y}%` : `background-image:url('${art}')`;
   const frame = FRAMES[god.name.toLowerCase()] ? god.name.toLowerCase() : 'athena', fr = FRAMES[frame];
-  return `<section class="godhud godhud--${side} ${pick ? 'pickable' : ''} ${s.active === key ? 'is-active' : ''} ${d.awaken ? 'is-awaken' : ''} ${low ? 'is-low' : ''}" data-god="${key}"
+  return `<section class="godhud godhud--${side} ${pick ? 'pickable' : ''} ${s.active === key ? 'is-active' : ''} ${d.awaken ? 'is-awaken' : ''} ${low ? 'is-low' : ''}" data-god="${key}" style="--glow:${GOD_GLOW[d.god] || GOD_GLOW['god-athena']}"
       ${pick ? `data-pick="god:${key}"` : ''} role="button" tabindex="0" aria-label="${esc(god.name)}, Soul ${p.soul} of ${max}${d.awaken ? ', Awaken' : ''}">
     <div class="gh-frame" style="aspect-ratio:${fr.ratio}" data-tip="${esc(`God|${god.name}, Player ${key}. Devotees can attack it.`)}">
       <div class="gh-hole godhud__portrait" style="${box(fr.hole)};${face}"></div>
