@@ -102,8 +102,13 @@
 .live-card--psd .lc-footer{position:absolute;left:4%;right:4%;transform:translateY(-50%);display:flex;align-items:center;justify-content:center;gap:.55em;font-family:Avenir,'Avenir Next',sans-serif;font-weight:400;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;color:#f4efe6b8;text-shadow:0 0 .25cqw #000,0 0 .6cqw #000}
 .live-card--psd .lc-footer i{font-style:normal;opacity:.7}
 .live-card--psd .lc-footer__rarity{display:block;height:1.35em;width:auto}
-/* Texto que não cabe (autor, 31/10/2026): a caixa cresce para cima sobre a arte; a placa escura cobre só o que passou da
-   altura do layout (--lc-rules-h), com borda suave. Em Large/Extra large (html.lc-a11y) a placa cobre a caixa toda. */
-.live-card.live-card--psd .lc-rules{background:linear-gradient(180deg,transparent,rgba(4,6,14,.82) 2.2cqw) top/100% calc(100% - var(--lc-rules-h,100%)) no-repeat}
+/* Texto que não cabe (autor, 31/10/2026): rolagem dentro do frame, como no MTG Arena; a arte fica intacta.
+   Em Large/Extra large (html.lc-a11y) entra a placa escura atrás do texto. */
+.live-card.live-card--psd .lc-rules{box-sizing:border-box;max-height:var(--lc-rules-h);overflow-y:auto;overscroll-behavior:contain;animation:lc-more linear both;animation-timeline:scroll(self)}
+/* Barra sempre visível (no Mac a padrão some) e esmaecido embaixo enquanto há texto abaixo; sem rolagem, nada aparece. */
+.live-card--psd .lc-rules::-webkit-scrollbar{width:.7cqw}
+.live-card--psd .lc-rules::-webkit-scrollbar-thumb{background:var(--psd-ink,#e6c36a);border-radius:1cqw}
+.live-card--psd .lc-rules::-webkit-scrollbar-track{background:rgba(0,0,0,.35);border-radius:1cqw}
+@keyframes lc-more{0%,96%{-webkit-mask-image:linear-gradient(#000 80%,transparent);mask-image:linear-gradient(#000 80%,transparent)}100%{-webkit-mask-image:none;mask-image:none}}
 html.lc-a11y .live-card.live-card--psd .lc-rules{font-weight:500;background:linear-gradient(180deg,transparent,rgba(4,6,14,.86) 2.2cqw) 0 0/100% 100% no-repeat;padding:1.4cqw 1.2cqw .6cqw;margin:0 -1.2cqw;text-shadow:0 0 .2cqw #000,0 0 .35cqw #000,0 .1cqw .5cqw #000}
 html.lc-a11y .live-card--psd .lc-rules strong,html.lc-a11y .live-card--psd .lc-rules .rule-heading{font-weight:900}

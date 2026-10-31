@@ -33,7 +33,7 @@ const pct=(x,y,w,h)=>`left:${x/14.88}%;top:${y/20.91}%;width:${w/14.88}%;height:
 const cqw=px=>`${(px/14.88).toFixed(3)}cqw`;
 // Encolhe o texto de regras até caber na caixa (estimativa: Avenir ≈ 0,5em por caractere).
 // Acessibilidade (autor, 31/10/2026): o texto encolhe no máximo até 85% do tamanho do layout; se ainda não couber,
-// a caixa de regras cresce para cima sobre a arte (renderPsdCard) em vez de cortar o texto.
+// a caixa de regras ganha rolagem (live-card.css) em vez de cortar o texto.
 function rulesSize(texts,base,w,h){
   const floor=Math.round(base*.85);
   for(let s=base;s>floor;s--){const per=w/(s*.5);let lines=0;for(const t of texts)lines+=Math.max(1,Math.ceil(t.length/per));if(lines*s*1.18+(texts.length-1)*s*.5<=h)return s;}
@@ -94,7 +94,7 @@ function renderPsdCard(card,{src,stage,hp,power,keywords,damage,rules,equipment,
       const cut=card.tipo==='God'&&P[`${f}/gem_awaken`]?rules.findIndex(t=>/^\*\*AWAKEN\b/.test(t)):-1,head=cut<0?'':awakenHead(f,card.awaken);
       const body=cut<0?renderRules(rules):`${renderRules(rules.slice(0,cut))}${head}${renderRules(rules.slice(cut+1))}`;
       const fs=rulesSize([kw,...rules,ownerLine].filter(Boolean),el.size,w,cut<0?h:h-280);
-      // Caixa ancorada embaixo, altura mínima do layout e crescendo para cima; --lc-text = tamanho do texto (Options › Accessibility).
+      // Caixa do layout (--lc-rules-h = altura máxima, com rolagem); --lc-text = tamanho do texto (Options › Accessibility).
       const box=`left:${x/14.88}%;bottom:${(2091-y-h)/20.91}%;width:${w/14.88}%;min-height:${h/20.91}%;--lc-rules-h:${cqw(h)}`;
       out+=`<div class="lc-rules live-card__rules" style="${box};font-size:calc(${cqw(fs)} * var(--lc-text, 1))">${kw?`<p class="live-card__keywords">${keywords.map(k=>inlineMarkup(k)).join(', ')}</p>`:''}${body}${ownerLine?`<p class="live-card__owners">${ownerLine}</p>`:''}</div>`;
     }
