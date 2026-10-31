@@ -18,7 +18,7 @@ import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudg
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
-import {createDirector} from './director.js?v=12';
+import {createDirector} from './director.js?v=13';
 import {createAI} from './ai.js?v=5';
 import {findDeck} from '../deck-store.js';
 import {unlock, playMusic} from '../audio.js?v=20261030-telas';
@@ -835,6 +835,8 @@ function render() {
 const rectOf = el => (el ? el.getBoundingClientRect() : null);
 const ui = {
   number: num, type: uid => info(uid).type, enemyOf: key => other(key),
+  // Cor do God de quem controla o Devotee (golpes básicos no tema do deus, autor 31/10/2026).
+  godColor: uid => { const k = S().order.find(k => S().players[k].battlefield.includes(uid)); return k && `rgb(${GOD_GLOW[S().divine?.[k]?.god] || GOD_GLOW['god-athena']})`; },
   cinematic(on) { stage.classList.toggle('cinematic', on); },
   isViewer: key => key === viewer(),
   rect: uid => rectOf($(`[data-uid="${uid}"]`)),

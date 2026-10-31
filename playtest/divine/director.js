@@ -26,7 +26,8 @@ export function createDirector({ui, getFx, settings}) {
     const sig = SIGNATURES[ui.number(uid)];
     if (sig) return sig;
     const type = ui.type(uid), hit = STYLE_BY_TYPE.find(([re]) => re.test(type));
-    return hit ? {style: hit[1], color: hit[2]} : {style: 'physical', color: '#ffe0a0'};
+    // Golpe básico na cor do God de quem ataca; a tabela por tipo só define o estilo (e a cor se não houver God).
+    return {style: hit ? hit[1] : 'physical', color: ui.godColor?.(uid) || (hit ? hit[2] : '#ffe0a0')};
   }
 
   // Força do golpe pelo ATK (autor, 28/10/2026): 0 num ATK 2, 1 num ATK 10. Só apresentação; o dano vem da engine.

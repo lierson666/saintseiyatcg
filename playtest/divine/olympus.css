@@ -945,8 +945,14 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .cast-aura { position: absolute; z-index: -1; left: 50%; top: 42%; width: 250%; aspect-ratio: 1; transform: translate(-50%, -50%); pointer-events: none; border-radius: 50%; }
 .cast-aura::before, .cast-aura::after { content: ""; position: absolute; inset: 0; border-radius: 50%; }
 /* Athena: raios dourados girando. */
-[data-godfx="athena"] .cast-aura::before { background: repeating-conic-gradient(from 0deg, rgba(var(--glow), .55) 0 6deg, transparent 6deg 22deg); -webkit-mask: radial-gradient(circle, #000 18%, transparent 68%); mask: radial-gradient(circle, #000 18%, transparent 68%); animation: fx-spin 14s linear infinite; }
-[data-godfx="athena"] .cast-aura::after { background: radial-gradient(circle, rgba(255, 245, 210, .5), rgba(var(--glow), .2) 35%, transparent 62%); animation: fx-breathe 2.4s ease-in-out infinite; }
+/* Athena (autor 31/10/2026): sem raios; poeira de luz sagrada subindo devagar e um halo fino, sereno. */
+[data-godfx="athena"] .cast-aura::before { inset: 6%;
+  background-image: radial-gradient(4px 4px at 12% 20%, #fffaf0, transparent), radial-gradient(3px 3px at 30% 65%, rgba(var(--glow), 1), transparent), radial-gradient(5px 5px at 48% 35%, #fff6dc, transparent), radial-gradient(3px 3px at 66% 80%, #fffaf0, transparent), radial-gradient(4px 4px at 82% 50%, rgba(var(--glow), 1), transparent), radial-gradient(2px 2px at 22% 90%, #fff, transparent), radial-gradient(3px 3px at 58% 8%, #fff6dc, transparent), radial-gradient(2px 2px at 90% 15%, #fff, transparent),
+    radial-gradient(3px 3px at 8% 45%, #fffaf0, transparent), radial-gradient(2px 2px at 40% 92%, rgba(var(--glow), 1), transparent), radial-gradient(4px 4px at 74% 28%, #fffaf0, transparent), radial-gradient(2px 2px at 52% 56%, #fff, transparent);
+  background-size: 96px 128px; -webkit-mask: radial-gradient(circle, #000 26%, transparent 70%); mask: radial-gradient(circle, #000 26%, transparent 70%); filter: drop-shadow(0 0 4px rgba(255, 240, 200, 1)) drop-shadow(0 0 10px rgba(var(--glow), .8)); animation: fx-motes 7s linear infinite, fx-twinkle 2.6s ease-in-out infinite; }
+[data-godfx="athena"] .cast-aura::after { inset: 16%; background: radial-gradient(circle, rgba(255, 250, 235, .32), rgba(var(--glow), .14) 30%, transparent 46%, rgba(var(--glow), .0) 54%, rgba(255, 240, 200, .5) 56.5%, rgba(var(--glow), .0) 59%, transparent 70%); animation: fx-breathe 4.2s ease-in-out infinite; }
+@keyframes fx-motes { to { background-position: 0 -128px; } }
+@keyframes fx-twinkle { 50% { opacity: .65; } }
 /* Poseidon: ondas de água se abrindo. */
 [data-godfx="poseidon"] .cast-aura::before, [data-godfx="poseidon"] .cast-aura::after { inset: 8%; border: 4px solid rgba(var(--glow), .85); box-shadow: 0 0 18px rgba(var(--glow), .6), inset 0 0 18px rgba(var(--glow), .4); animation: fx-ripple 2.4s ease-out infinite; }
 [data-godfx="poseidon"] .cast-aura::after { animation-delay: 1.2s; }
