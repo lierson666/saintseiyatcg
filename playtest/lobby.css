@@ -112,11 +112,15 @@ h1, h2, h3, .lb-play, .lb-tab, .lb-hero p { font-family: "Cinzel", "Trajan Pro",
 .lb-pills { display: flex; gap: 4px; }
 .lb-pill { padding: 6px 11px; border: 1px solid var(--line); border-radius: 999px; background: var(--panel); color: var(--muted); font-size: 13px; }
 .lb-pill.is-active { border-color: var(--gold); color: #1a1000; background: var(--gold); }
-.lb-grid { min-height: 0; overflow: auto; padding: 18px 20px 40px; display: grid; grid-template-columns: repeat(auto-fill, minmax(var(--slot, 180px), 1fr)); gap: 18px 14px; align-content: start; }
-.lb-slot { position: relative; padding: 0; border: 0; background: none; transition: transform .15s; }
+.lb-grid { min-height: 0; overflow: auto; padding: 18px 20px 40px; display: grid; grid-template-columns: repeat(auto-fill, minmax(var(--slot, 180px), 1fr)); gap: 8px 14px; align-content: start; }
+/* Desempenho (autor, 31/10/2026: ponteiro engasgando com muitas cartas): cada slot pinta isolado e fora da tela não pinta.
+   content-visibility corta o que vaza do slot, então o selo de cópias fica dentro (padding-bottom) em vez de bottom negativo. */
+.lb-slot { position: relative; padding: 0 0 10px; border: 0; background: none; transition: transform .15s; content-visibility: auto; contain-intrinsic-size: auto 280px; }
 .lb-slot:hover { transform: translateY(-4px) scale(1.02); z-index: 1; }
+/* Miniaturas da grade sem o brilho drop-shadow das gemas/símbolo: invisível nesse tamanho e dobrava o custo de pintar o hover. */
+.lb-grid .live-card--psd .lc-symbol, .lb-grid .live-card--psd .lc-gem > .lc-piece, .lb-grid .live-card--psd .lc-awaken__word, .lb-grid .live-card--psd .lc-awaken__gem img { filter: none; }
 .lb-slot.is-max .lb-card { filter: brightness(.55); }
-.lb-slot__count { position: absolute; left: 50%; bottom: -9px; transform: translateX(-50%); padding: 2px 10px; border-radius: 999px; font-style: normal; font-size: 12px; white-space: nowrap;
+.lb-slot__count { position: absolute; left: 50%; bottom: 1px; transform: translateX(-50%); padding: 2px 10px; border-radius: 999px; font-style: normal; font-size: 12px; white-space: nowrap;
   background: #0a0f1c; border: 1px solid var(--line); color: var(--muted); }
 .lb-slot.is-in .lb-slot__count { color: #1a1000; background: var(--gold); border-color: var(--gold-2); }
 .lb-card { width: 100%; border-radius: 4.5% / 3.2%; overflow: hidden; box-shadow: 0 8px 20px #000a; container-type: inline-size; }
@@ -155,10 +159,10 @@ h1, h2, h3, .lb-play, .lb-tab, .lb-hero p { font-family: "Cinzel", "Trajan Pro",
 .lb-ghost { padding: 10px 14px; border: 1px solid var(--line); border-radius: 8px; background: none; color: var(--muted); }
 .lb-ghost:hover { color: var(--text); border-color: var(--muted); }
 
-/* Carta grande (botão direito) */
-.lb-big { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; gap: 32px; padding: 24px; background: #000d; backdrop-filter: blur(6px); cursor: zoom-out; animation: lb-fade .18s ease-out; }
+/* Carta grande (botão direito): altura máxima da tela, no canto esquerdo (autor, 31/10/2026); detalhes ao lado. */
+.lb-big { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: flex-start; gap: 32px; padding: 12px; background: #000d; backdrop-filter: blur(6px); cursor: zoom-out; animation: lb-fade .18s ease-out; }
 @keyframes lb-fade { from { opacity: 0; } }
-.lb-card--big { flex: none; width: min(440px, 46vw, calc(86vh * 1488 / 2091)); box-shadow: 0 30px 80px #000, 0 0 60px #e6c36a22; }
+.lb-card--big { flex: none; width: min(62vw, calc((100dvh - 24px) * 1488 / 2091)); box-shadow: 0 30px 80px #000, 0 0 60px #e6c36a22; }
 .lb-info { position: relative; width: min(440px, 44vw); max-height: 86vh; overflow: auto; padding: 26px 26px 22px; cursor: default; display: grid; gap: 14px; align-content: start;
   border: 1px solid #e6c36a55; border-radius: 14px; background: linear-gradient(180deg, #111830f5, #080c18f8); box-shadow: 0 24px 60px #000c; animation: lb-slide .22s ease-out; }
 .lb-info__close { position: absolute; top: 14px; right: 14px; }
