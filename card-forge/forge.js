@@ -1,7 +1,7 @@
 import {createHistory} from '../shared/editor-history.js';
 import {compilePlaytest} from '../shared/import-playtest.js';
-import {renderLiveCard,illustration} from '../shared/live-card.js?v=20261031-ed1';
-import {textBlocks, blocksMarkup, presentationRules, ruleBlocksWithoutKeywords, KEYWORD_WORDS, STAT_RE, statTrend} from '../shared/card-text.js?v=20261031-sym1';
+import {renderLiveCard,illustration} from '../shared/live-card.js?v=20261031-sym2';
+import {textBlocks, blocksMarkup, presentationRules, ruleBlocksWithoutKeywords, KEYWORD_WORDS, STAT_RE, statTrend} from '../shared/card-text.js?v=20261031-sym2';
 import {isArmor,isEquipment,validateCard} from '../shared/card-model.js';
 // Card Forge — editor de cartas em vanilla JS. Renderiza no canvas nativo 1488x2091 usando
 // as peças de CARD-TEMPLATE/ (extraídas dos PSDs) e o spec CARD-TEMPLATE/templates.json.
@@ -274,9 +274,13 @@ function layoutRules(paras, size, maxW) {
   const out = [];
   let h = 0;
   paras.forEach((para, pi) => {
+    // God (autor, 31/10/2026): ⟦AWAKEN N⟧ é o cabeçalho do PSD; ⟦ETIQUETA⟧ é a etiqueta pequena acima do título.
+    const aw = para.match(/^⟦AWAKEN ?([^⟧]*)⟧$/), tag = !aw && para.match(/^⟦([^⟧]+)⟧\n/);
+    if (aw) { out.push({ awaken: aw[1], h: size * 3.2 }); h += size * 3.2; }
+    if (tag) { out.push({ tag: tag[1], h: size * 0.8 }); h += size * 0.8; para = para.slice(tag[0].length); }
     let line = [], lw = 0, pendingSp = false;
     const flush = () => { out.push({ items: line, w: lw }); h += lh; line = []; lw = 0; pendingSp = false; };
-    for (const tk of tokenize(para)) {
+    for (const tk of aw ? [] : tokenize(para)) {
       if (tk.t === 'br') { flush(); continue; }
       if (tk.t === 'sp') { pendingSp = line.length > 0; continue; }
       let w;
@@ -295,19 +299,40 @@ function layoutRules(paras, size, maxW) {
   return { lines: out, h, lh, fNorm, fBold, iconW };
 }
 
+// God (autor, 31/10/2026): mesmos blocos do duelo (shared/card-text.js): etiqueta pequena, "{custo} NOME:" e o efeito embaixo.
+// O bloco do Awaken leva o cabeçalho do PSD no lugar da etiqueta.
+function godParas(c, awaken) {
+  const sym = (t) => t.replace(/\{(\d+|X)\}(?=\{[BCLS]\})/g, '$1 ');
+  const raw = [...(c.habilidades_en || []), c.habilidade_awaken_en, c.ultimate_en].filter(has);
+  return textBlocks(raw).flatMap((b) => {
+    const [tag, title] = b.heading?.includes(' § ') ? b.heading.split(' § ') : ['', b.heading];
+    const body = sym([title ? `**${title.toUpperCase()}${b.body ? ':' : ''}**` : '', b.body].filter(Boolean).join('\n'));
+    if (/^Awaken\b/i.test(tag)) return [`⟦AWAKEN ${has(awaken) ? awaken : tag.replace(/\D+/g, '')}⟧`, body];
+    return [tag ? `⟦${tag.toUpperCase()}⟧\n${body}` : body];
+  });
+}
+
+async function drawAwaken(x, y, w, h, n) {
+  const f = facKey(), [gem, word, line] = await Promise.all(['gem_awaken', 'awaken_word', 'awaken_line'].map((k) => (P[`${f}/${k}`] ? pieceImage(`${f}/${k}`, false) : null)));
+  const cy = y + h / 2;
+  if (!gem || !word) { ctx.font = T.styles.rules.bold.replace('{s}', h * 0.45); ctx.textAlign = 'center'; ctx.fillStyle = fac().color; ctx.fillText(`AWAKEN ${n}`, x + w / 2, cy); ctx.textAlign = 'left'; return; }
+  const gw = h * gem.width / gem.height, wh = h * 0.62, ww = wh * word.width / word.height, pad = h * 0.12, overlap = h * 0.25;
+  const mid = gw + ww - overlap, side = Math.max(0, (w - mid) / 2 - pad), gx = x + (w - mid) / 2;
+  if (line) for (const lx of [x, gx + mid + pad]) ctx.drawImage(line, lx, cy - h * 0.012, side, h * 0.024);
+  paint(false, 0.6, () => { ctx.drawImage(gem, gx, y, gw, h); ctx.drawImage(word, gx + gw - overlap, cy - wh / 2, ww, wh); });
+  ctx.font = `italic 700 ${h * 0.52}px Futura, 'Century Gothic', sans-serif`;
+  ctx.textAlign = 'center'; ctx.fillStyle = fac().color;
+  paint(true, 0.9, () => ctx.fillText(String(n), gx + gw / 2, cy + h * 0.02), () => { ctx.lineWidth = h * 0.06; ctx.strokeText(String(n), gx + gw / 2, cy + h * 0.02); });
+  ctx.textAlign = 'left';
+}
+
 async function drawRules(el, s) {
   const [rx, ry, rw, rh] = el.rect;
   const paras = [];
   if (has(s.keywords)) paras.push(`**${list(s.keywords).join(', ').toUpperCase()}.**`);
   const text=s.estagios.length||layoutKey(s)==='relic_cloth'?presentationRules(buildCard()).map(toMarkup):splitParas(s.rules); // Armor: 1ª linha Equip · Resonance
-  paras.push(...splitParas(blocksMarkup(ruleBlocksWithoutKeywords(text,list(s.keywords)))));
-  if (layoutKey(s) === 'god' && has(s.habilidade_awaken_en)) {
-    paras.push(`**AWAKEN${has(s.awaken) ? ` ${s.awaken}` : ''}**`, ...s.habilidade_awaken_en.split(/(?<=\.) (?=[A-Z][^.—]{1,30} — )/).map(toMarkup));
-  }
-  if (layoutKey(s) === 'god' && has(s.ultimate_en)) {
-    const u = toMarkup(s.ultimate_en);
-    paras.push(u.startsWith('**') ? `**ULTIMATE: ${u.slice(2)}` : `**ULTIMATE:**\n${u}`);
-  }
+  if (layoutKey(s) === 'god') paras.push(...godParas(buildCard(), s.awaken));
+  else paras.push(...splitParas(blocksMarkup(ruleBlocksWithoutKeywords(text,list(s.keywords)))));
   if (!paras.length) return;
   let size = el.size, L;
   // encolhe até caber na caixa
@@ -320,6 +345,13 @@ async function drawRules(el, s) {
   let y = ry + Math.max(0, (rh - L.h) / 2); // bloco centralizado na vertical da área de texto (autor, 31/10/2026)
   for (const ln of L.lines) {
     if (ln.gap) { y += ln.gap; continue; }
+    if (ln.awaken !== undefined) { await drawAwaken(rx, y, rw, ln.h, ln.awaken); ctx.textBaseline = 'middle'; y += ln.h; continue; }
+    if (ln.tag) {
+      ctx.font = T.styles.rules.bold.replace('{s}', Math.round(size * 0.66));
+      ctx.letterSpacing = `${size * 0.08}px`; ctx.textAlign = 'center'; ctx.fillStyle = fac().color;
+      paint(false, 0.5, () => ctx.fillText(ln.tag, rx + rw / 2, y + ln.h / 2), () => { ctx.lineWidth = size * 0.12; ctx.strokeText(ln.tag, rx + rw / 2, y + ln.h / 2); });
+      ctx.letterSpacing = '0px'; ctx.textAlign = 'left'; y += ln.h; continue;
+    }
     const x0 = rx + (rw - ln.w) / 2, cy = y + L.lh / 2;
     const run = (stroke) => {
       for (const it of ln.items) {
@@ -778,7 +810,7 @@ function buildCard() {
     if(mechanicalTextChanged||!source)base.motor_revisao_pendente=true;
   }
   // texto com marcação ({L}, **) volta para o formato do cards.json; texto intacto fica como está
-  const plain = (v) => (/[{*]/.test(v || '') ? fromMarkup(v) : (v || '').trim());
+  const plain = (v) => (/\*\*|(?:\d|X) \{[BCLS]\}/.test(v || '') ? fromMarkup(v) : (v || '').trim()); // texto cru ({5}{C}, quebras de linha) fica como está
   if (S.tipo === 'God') Object.assign(base, { habilidade_awaken_en: plain(S.habilidade_awaken_en), ultimate_en: plain(S.ultimate_en) });
   if (has(S.artista) || (source && 'artista' in source)) base.artista = (S.artista || '').trim() || null; // rodapé de edição
   if (has(base.custo)) base.unidade_custo = S.unidade_custo; else base.unidade_custo = null;

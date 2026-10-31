@@ -6,7 +6,7 @@ import {canonIndex} from '../../shared/deck-v3.js';
 import {addPreviewCards} from '../../shared/preview-cards.js';
 import {createMatch, mulligan} from '../engine-v3/match.js';
 import {startTurn, endTurn, pass, placeBase, spellCategory, runCheckpoint, ownBatch} from '../engine-v3/core.js';
-import {inlineMarkup} from '../../shared/card-text.js?v=20261031-sym1';
+import {inlineMarkup} from '../../shared/card-text.js?v=20261031-sym2';
 import {declareStrike, strikeTargets} from '../engine-v3/strike.js';
 import {playDevotee, playEquipment, playSpell, activate, reequip, duplicateCharacter, resonant, castCost, mixed} from '../engine-v3/play.js';
 import {atkOf, hpOf, keywordsOf, gearOf, isSaint, isBronze, ABILITIES} from '../engine-v3/effects.js';
@@ -24,7 +24,7 @@ import {findDeck} from '../deck-store.js';
 import {rankAfterMatch} from '../rank.js?v=20261031-1';
 import {unlock, playMusic} from '../audio.js?v=20261030-telas';
 import {telas, anim, sound, imageUrl, applyColors, applyTexts} from '../telas.js?v=20261030-1';
-import {renderLiveCard, renderCardText} from '../../shared/live-card.js?v=20261031-ed1';
+import {renderLiveCard, renderCardText} from '../../shared/live-card.js?v=20261031-sym2';
 import {armorBonusText, printedEquipmentBonuses} from '../../shared/card-visual-values.js?v=20261031-kw6';
 
 const $ = (s, el = document) => el.querySelector(s), $$ = (s, el = document) => [...el.querySelectorAll(s)];

@@ -104,6 +104,6 @@ export function presentationRules(card){
 // Título com etiqueta ("ULTIMATE § {7}{C} NOME") ou começando por símbolo: etiqueta pequena acima e sem dois-pontos.
 // Corpo em várias linhas: um parágrafo por linha.
 export function renderRules(texts){return textBlocks(texts).map(b=>{
-  const [tag,title]=b.heading?.includes(' § ')?b.heading.split(' § '):['',b.heading],colon=b.body&&!tag&&!/^\{/.test(title||'')?':':'';
+  const [tag,title]=b.heading?.includes(' § ')?b.heading.split(' § '):['',b.heading],colon=b.body?':':'';
   return `<div class="rule-block rule-block--${b.kind}">${tag?`<small class="rule-tag">${escapeText(tag.toUpperCase())}</small>`:''}${title?`<strong class="rule-heading">${inlineMarkup(title.toUpperCase())}${colon}</strong>`:''}${b.body?String(b.body).split('\n').filter(l=>l.trim()).map(l=>`<p>${inlineMarkup(l)}</p>`).join(''):''}</div>`;
 }).join('');}
