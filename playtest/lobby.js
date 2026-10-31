@@ -10,10 +10,11 @@ import {loadMyDecks, saveMyDecks, findDeck, syncDecks, onDeckStatus, deckCovers,
 import {mountKV} from '../shared/kv-sky.js?v=20261031-top';
 import {countryOptions, countryName} from '../shared/countries.js?v=20261029-1';
 import {startPresence} from '../shared/presence.js?v=20261029-1';
-import {mountSocial} from './social.js?v=20261031-econ1';
+import {mountSocial} from './social.js?v=20261031-home1';
 import {telas, imageUrl, sound, applyColors, applyTexts} from './telas.js?v=20261030-1';
-import {loadEconomy, ownedLimit, missingCards, coinBadge, storeScreen, collectionScreen, openBooster, buyBooster} from './economy.js?v=20261031-drama1';
-import {loadRank, rankBadge, rankName, rankSummary, openRankPanel, playerName} from './rank.js?v=20261031-5';
+import {loadEconomy, ownedLimit, missingCards, coinBadge, storeScreen, collectionScreen, openBooster, buyBooster} from './economy.js?v=20261031-live3';
+import {featureGrid} from './home-features.js?v=20261031-home1';
+import {loadRank, rankBadge, rankName, rankSummary, openRankPanel, playerName} from './rank.js?v=20261031-6';
 
 const root = document.getElementById('lobby');
 const ART = '../card-forge/art-web/';
@@ -134,6 +135,7 @@ function home() {
       ${deck ? `<button class="lb-dock__deck" data-act="play"><span style="background-image:url('${deckCover(deck) || ''}')"></span><strong>${esc(deck.alpha_nome || deck.nome)}</strong></button>` : ''}
       <button class="lb-play" data-act="play">${esc(HOME.botao_play || 'Play')}</button>
     </div>
+    ${featureGrid({user: ui.user, econ: ui.econ, rank: ui.rank, online: ui.online, total: [...cards.values()].filter(c => c.kind !== 'God').length, art: id => artOf(id)})}
     ${ui.play ? playPanel() : ''}
   </section>`;
 }
@@ -510,7 +512,7 @@ const actions = {
   start: startMatch,
   'collection-filter': t => { ui.colFilter = t.dataset.value; render(); },
   'buy-booster': async () => { try { ui.econ = await buyBooster(); } catch (e) { ui.notice = {title: 'Store', text: e.message}; } render(); },
-  'open-booster': () => openBooster(face, r => { ui.econ = r; render(); }),
+  'open-booster': () => openBooster(face, r => { ui.econ = r; render(); }, ui.econ?.boosters),
   'new-deck': () => openBuilder(null),
   'edit-deck': t => openBuilder(allDecks().find(d => d.id === t.dataset.deck)),
   filter: t => { ui.builder[t.dataset.key] = t.dataset.value; },

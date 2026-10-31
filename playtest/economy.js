@@ -4,7 +4,7 @@ const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '
 const fmt = n => Number(n || 0).toLocaleString('en');
 const COPY_LIMIT = 3;
 // Booster (padrão MTG): arte de fundo + logo da edição embaixo, ambos editados no Card Forge (card-forge/boosters.html).
-const PACK_ART = new URL('./assets/boosters/olympus.webp', import.meta.url).href;
+export const PACK_ART = new URL('./assets/boosters/olympus.webp', import.meta.url).href;
 const PACK_LOGO = new URL('./assets/boosters/logo/olympus.webp', import.meta.url).href;
 const LOGO = new URL('../LOGO/logo-web.webp', import.meta.url).href;
 
@@ -26,8 +26,26 @@ export const missingCards = (e, deck, kindOf) => !e || e.full_access ? [] : deck
 export const coinBadge = e => `<button class="ec-coins" data-act="go" data-screen="store" aria-label="${fmt(e.coins)} Cosmo Coins. Open the Store">
   <i aria-hidden="true"></i><b>${fmt(e.coins)}</b></button>`;
 
-const pack = () => `<div class="ec-pack" aria-hidden="true"><img class="ec-pack__art" src="${PACK_ART}" alt="" onerror="this.remove()">
-  <img class="ec-pack__logo" src="${PACK_LOGO}" alt="" onerror="this.remove()"><span class="ec-pack__foil"></span></div>`;
+const pack = (cls = '') => `<div class="ec-pack is-live ${cls}" aria-hidden="true"><img class="ec-pack__art" src="${PACK_ART}" alt="" onerror="this.remove()">
+  <img class="ec-pack__logo" src="${PACK_LOGO}" alt="" onerror="this.remove()"><span class="ec-pack__foil"></span><span class="ec-pack__glare"></span></div>`;
+
+// Pacote vivo (ideias do gacha-card-game, autor 31/10/2026; código próprio, o repositório não tem licença):
+// inclina seguindo o ponteiro e o brilho do plástico acompanha; ao sair, volta macio (transição no CSS).
+const STILL = matchMedia('(prefers-reduced-motion: reduce)');
+document.addEventListener('pointermove', e => {
+  const p = e.target.closest?.('.ec-pack.is-live');
+  if (!p || STILL.matches || p.closest('.ec-ring.is-dragging')) return;
+  const r = p.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
+  p.classList.add('is-tilting');
+  p.style.setProperty('--rx', `${((.5 - y) * 18).toFixed(1)}deg`);
+  p.style.setProperty('--ry', `${((x - .5) * 22).toFixed(1)}deg`);
+  p.style.setProperty('--gx', `${(x * 100).toFixed(0)}%`);
+  p.style.setProperty('--gy', `${(y * 100).toFixed(0)}%`);
+});
+document.addEventListener('pointerout', e => {
+  const p = e.target.closest?.('.ec-pack.is-live');
+  if (p && !p.contains(e.relatedTarget)) { p.classList.remove('is-tilting'); ['--rx', '--ry'].forEach(k => p.style.removeProperty(k)); }
+});
 
 export function storeScreen(e) {
   if (!e) return `<section class="lb-page"><header class="lb-page__head"><h1>Store</h1><p>Sign in to buy and open boosters.</p></header></section>`;
@@ -75,15 +93,61 @@ export function collectionScreen(e, list, face, filter = 'all') {
 
 // Abertura (estilo MTG Arena): o pacote rasga, as 14 cartas caem viradas; clique vira uma, "Reveal all" vira todas.
 // Legendary e Divine brilham antes de virar; repetidas acima de 3 mostram as coins que viraram.
-export async function openBooster(face, done) {
+export async function openBooster(face, done, count = 1) {
   const dlg = document.createElement('dialog');
   dlg.className = 'ec-open';
   dlg.setAttribute('aria-label', 'Opening booster');
-  dlg.innerHTML = `<div class="ec-open__pack is-tearing">${pack()}</div>`;
+  // Carrossel (até 5 dos boosters do jogador, em leque 3D): arrastar gira e para no mais próximo; o da frente é o que abre.
+  // Rasgar (estilo TCG Pocket): arrastar pela faixa de cima do pacote da frente corta; Enter ou o botão abrem direto.
+  const owned = Math.max(1, Math.min(5, count)), step = 24;
+  dlg.innerHTML = `<div class="ec-stage"><div class="ec-ring" style="--n:${owned}">${Array.from({length: owned}, (_, i) =>
+      `<div class="ec-ring__slot" style="--i:${i}">${pack()}</div>`).join('')}</div>
+      <div class="ec-cut" aria-hidden="true"><i></i></div></div>
+    <p class="ec-open__hint">Swipe across the top of the pack to tear it open</p>
+    <footer class="ec-open__foot"><button class="kv-ghost" data-close>Not now</button><button class="kv-button is-gold" data-tear>Open</button></footer>`;
   document.body.append(dlg);
   document.body.classList.add('ec-opening');  // fundo da abertura = céu do site (kv-sky); o lobby some por baixo
   dlg.showModal();
   dlg.addEventListener('close', () => document.body.classList.remove('ec-opening'));
+  const ring = dlg.querySelector('.ec-ring'), cut = dlg.querySelector('.ec-cut');
+  let angle = 0, drag = null;
+  const front = () => ring.children[Math.round(-angle / step)].querySelector('.ec-pack');
+  const spin = a => { angle = Math.max(-(owned - 1) * step, Math.min(0, a)); ring.style.setProperty('--a', `${angle}deg`); };
+  const torn = new Promise(ok => {
+    dlg.addEventListener('pointerdown', e => {
+      const p = front(), r = p.getBoundingClientRect();
+      if (!e.target.closest('.ec-stage')) return;
+      const onTop = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.top + r.height * .28;
+      drag = {x: e.clientX, a: angle, tear: onTop, r};
+      if (onTop) { cut.style.cssText = `left:${r.left}px;top:${r.top + r.height * .12}px;width:${r.width}px`; cut.classList.add('is-on'); }
+      else ring.classList.add('is-dragging');
+      dlg.setPointerCapture?.(e.pointerId);
+    });
+    dlg.addEventListener('pointermove', e => {
+      if (!drag) return;
+      if (drag.tear) cut.style.setProperty('--p', Math.max(0, Math.min(1, (e.clientX - drag.r.left) / drag.r.width)));
+      else if (owned > 1) spin(drag.a + (e.clientX - drag.x) * .4);
+    });
+    dlg.addEventListener('pointerup', () => {
+      if (!drag) return;
+      const p = Number(cut.style.getPropertyValue('--p') || 0), was = drag;
+      drag = null; ring.classList.remove('is-dragging');
+      if (was.tear && p > .7) return ok();
+      cut.classList.remove('is-on'); cut.style.removeProperty('--p');
+      if (!was.tear) spin(Math.round(angle / step) * step);  // para no pacote mais próximo
+    });
+    dlg.addEventListener('click', e => { if (e.target.closest('[data-tear]')) ok(); });
+  });
+  dlg.addEventListener('click', e => { if (e.target.closest('[data-close]') && !dlg.querySelector('.ec-flip')) dlg.close(); });
+  dlg.addEventListener('close', () => dlg.remove(), {once: true});
+  dlg.querySelector('[data-tear]').focus();
+  await torn;
+  // Rasgo: a tira de cima voa, o resto do pacote cai e as cartas aparecem.
+  const p = front(), slot = p.parentElement;
+  cut.classList.add('is-done');
+  slot.insertAdjacentHTML('beforeend', `<div class="ec-strip">${p.outerHTML}</div>`);
+  p.classList.add('is-torn');
+  ring.classList.add('is-opening');
   let r;
   try { r = await call('/api/boosters/open', 'POST'); } catch (err) {
     dlg.innerHTML = `<p class="kv-status err" role="status">${esc(err.message)}</p><button class="kv-ghost" data-close>Close</button>`;

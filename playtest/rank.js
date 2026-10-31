@@ -36,6 +36,7 @@ export async function loadRank() {
 }
 
 // Perfil de jogador (lobby): emblema, rank, pips e nível.
+export const rankEmblem = r => emblem(r, true);
 export const rankSummary = r => `<div class="rk-summary">${emblem(r, true)}<div><b>${esc(rankName(r))}</b>${pips(r)}
   <small>Level ${r.level}${r.title ? ` · ${esc(r.title)}` : ''}</small></div></div>`;
 

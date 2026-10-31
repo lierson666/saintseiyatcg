@@ -32,9 +32,8 @@
   border: 1px solid #e9c45c33; background: radial-gradient(ellipse at 18% 50%, #e9c45c26, transparent 55%), linear-gradient(135deg, #12101fe6, #07080ee6);
   box-shadow: 0 30px 80px #0009, inset 0 1px 0 #ffffff14; backdrop-filter: blur(10px); }
 .ec-feature__pack { perspective: 900px; }
-.ec-feature__pack .ec-pack { width: 210px; transform: rotateY(-12deg) rotateZ(-2deg); transition: transform .5s cubic-bezier(.2, .8, .2, 1);
+.ec-feature__pack .ec-pack { width: 210px; --rest-y: -12deg; --rest-z: -2deg;
   box-shadow: 0 30px 60px #000c, 0 0 60px #e9c45c33, inset 0 0 0 1px #ffffff2a; }
-.ec-feature:hover .ec-feature__pack .ec-pack { transform: rotateY(0) rotateZ(0) translateY(-6px); }
 .ec-feature__info { display: grid; gap: 14px; justify-items: start; min-width: 0; }
 .ec-eyebrow { margin: 0; font: 600 12px var(--kv-sans, system-ui); letter-spacing: .2em; text-transform: uppercase; color: var(--kv-gold, #e9c45c); }
 .ec-feature__info h2 { margin: 0; font: 700 clamp(32px, 4vw, 44px)/1 var(--kv-title, Cinzel, serif); color: #f6ecd0; }
@@ -140,3 +139,37 @@ body.ec-opening #lobby { visibility: hidden; }
 .ec-flip.is-divine .ec-spark { background: #f1e6ff; box-shadow: 0 0 10px #c9a6ff; }
 @keyframes ec-spark { 0% { opacity: 1; transform: translate(-50%, -50%) scale(1); } 100% { opacity: 0; transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(.3); } }
 @media (prefers-reduced-motion: reduce) { .ec-flip.is-new.is-open::before, .ec-flip.is-charging .ec-flip__back { animation: none; } }
+
+/* Pacote vivo: inclina seguindo o ponteiro, brilho do plástico acompanha, volta macio ao sair. */
+.ec-pack.is-live { transform: perspective(800px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, var(--rest-y, 0deg))) rotateZ(var(--rest-z, 0deg));
+  transition: transform .6s cubic-bezier(.2, .8, .2, 1); will-change: transform; }
+.ec-pack.is-live.is-tilting { transition-duration: .08s; }
+.ec-pack__glare { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: 0; transition: opacity .3s; mix-blend-mode: overlay;
+  background: radial-gradient(circle at var(--gx, 50%) var(--gy, 30%), #ffffffd0, #ffffff30 25%, transparent 55%); }
+.ec-pack.is-tilting .ec-pack__glare { opacity: 1; }
+/* Lateral crimpada e plástico: o pacote parece embalagem de verdade. */
+.ec-pack { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+.ec-pack::before, .ec-pack::after { background: repeating-linear-gradient(90deg, #f1e2ad 0 3px, #b8964a 3px 6px), linear-gradient(#fff6, #0000); background-blend-mode: overlay; }
+
+/* Abertura: palco com carrossel 3D e faixa de corte. */
+.ec-stage { position: relative; display: grid; place-items: center; min-height: 58vh; perspective: 1400px; touch-action: none; user-select: none; }
+.ec-ring { position: relative; width: 220px; aspect-ratio: 5 / 9; transform-style: preserve-3d; transform: translateZ(-640px) rotateY(var(--a, 0deg));
+  transition: transform .6s cubic-bezier(.2, .8, .2, 1); }
+.ec-ring.is-dragging { transition: none; cursor: grabbing; }
+.ec-ring__slot { position: absolute; inset: 0; transform: rotateY(calc(var(--i) * 24deg)) translateZ(640px); }
+.ec-ring__slot .ec-pack { width: 100%; }
+.ec-ring[style*="--n:1"] { transform: none; } .ec-ring[style*="--n:1"] .ec-ring__slot { transform: none; }
+.ec-open__hint { margin: 8px 0 0; text-align: center; font-size: 14px; color: var(--kv-muted, #b9b3a3); }
+.ec-cut { position: fixed; z-index: 3; height: 3px; pointer-events: none; opacity: 0; }
+.ec-cut.is-on { opacity: 1; }
+.ec-cut i { display: block; height: 100%; width: calc(var(--p, 0) * 100%); border-radius: 2px;
+  background: linear-gradient(90deg, #fff, #ffe9a8); box-shadow: 0 0 12px #fff, 0 0 24px #e9c45c; }
+.ec-cut.is-done { opacity: 0; transition: opacity .3s .2s; }
+/* Rasgo: tira de cima voa, corpo cai e some. */
+.ec-strip { position: absolute; inset: 0; pointer-events: none; animation: ec-strip .8s cubic-bezier(.3, .6, .4, 1) forwards; }
+.ec-strip .ec-pack { width: 100%; clip-path: polygon(0 0, 100% 0, 100% 14%, 0 12%); }
+.ec-pack.is-torn { clip-path: polygon(0 12%, 100% 14%, 100% 100%, 0 100%); animation: ec-body 1s .25s ease-in forwards; }
+@keyframes ec-strip { to { transform: translate(140px, -220px) rotate(38deg); opacity: 0; } }
+@keyframes ec-body { 40% { filter: brightness(1.8); } to { transform: translateY(60px) scale(.9); opacity: 0; filter: brightness(3); } }
+.ec-ring.is-opening .ec-ring__slot:not(:has(.is-torn)) { opacity: 0; transition: opacity .3s; }
+@media (prefers-reduced-motion: reduce) { .ec-pack.is-live, .ec-ring { transition: none; } .ec-strip, .ec-pack.is-torn { animation-duration: .01s; } }

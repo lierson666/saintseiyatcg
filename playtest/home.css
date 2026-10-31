@@ -1,0 +1,28 @@
+/* Home vitrine (home-features.js): o carrossel e o PLAY ficam no topo; abaixo, um bloco por feature. A home passa a rolar. */
+.lb-body--home { overflow: auto; }
+/* A coluna implícita da .lobby crescia até a largura do carrossel e empurrava o PLAY para fora da tela abaixo de ~1480px. */
+.lobby { grid-template-columns: minmax(0, 1fr); }
+.lb-home { height: auto; grid-template-rows: minmax(380px, 62vh) auto auto; }
+.lb-features { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr)); gap: 14px; }
+.lb-feat { position: relative; isolation: isolate; display: grid; align-content: end; justify-items: start; gap: 4px; min-height: 168px; padding: 18px;
+  border: 1px solid var(--kv-line, #ffffff22); border-radius: 18px; overflow: hidden; text-align: left; color: #f6ecd0; text-decoration: none; cursor: pointer;
+  background: #0b0d14; font: inherit; transition: transform .2s cubic-bezier(.2, .8, .2, 1), border-color .2s, box-shadow .2s; }
+.lb-feat::before { content: ""; position: absolute; inset: 0; z-index: -2; background: var(--feat) center 20% / cover; transition: transform .6s cubic-bezier(.2, .8, .2, 1); }
+.lb-feat::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, #05060c22 0%, #05060ca6 45%, #05060cf2 100%); }
+.lb-feat:hover, .lb-feat:focus-visible { transform: translateY(-3px); border-color: #e9c45c88; box-shadow: 0 16px 40px #000a, 0 0 0 1px #e9c45c33; }
+.lb-feat:hover::before { transform: scale(1.06); }
+.lb-feat:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.lb-feat small { font: 600 11px var(--kv-sans, system-ui); letter-spacing: .18em; text-transform: uppercase; color: var(--kv-gold, #e9c45c); }
+.lb-feat strong { font: 700 20px/1.15 var(--kv-title, Cinzel, serif); }
+.lb-feat span { font-size: 13px; line-height: 1.45; color: #d6d0c0; max-width: 32ch; }
+.lb-feat__live { position: absolute; top: 14px; right: 14px; padding: 4px 10px; border-radius: 999px; background: #0b0d14d9; border: 1px solid #ffffff26;
+  font: 600 12px var(--kv-sans, system-ui); color: var(--kv-gold-2, #f1d68a); white-space: nowrap; }
+.lb-feat.is-hot .lb-feat__live { background: linear-gradient(180deg, #f6dc8a, #d9a93c); color: #1a1205; border-color: transparent; box-shadow: 0 0 18px #e9c45c88; }
+.lb-feat__emblem { position: absolute; top: 10px; left: 10px; } .lb-feat__emblem .rk-emblem { height: 54px; }
+.lb-feat:has(.lb-feat__emblem) small { margin-top: 40px; }
+@media (max-width: 600px) {
+  .lb-home { grid-template-rows: auto; }
+  .lb-features { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .lb-feat { min-height: 140px; padding: 14px; } .lb-feat strong { font-size: 16px; } .lb-feat span { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .lb-feat, .lb-feat::before { transition: none; } }
