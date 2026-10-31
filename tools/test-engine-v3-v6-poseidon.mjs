@@ -265,7 +265,7 @@ test('Domain 145 sem Resonance de Baian (rebalanceamento 31/10/2026); Rising Bil
 });
 
 // ---------- Contra-mágicas e reações a alvo de Spell (guia §54: toda Spell abre janela; alvos escolhidos ao conjurar) ----------
-// Aqui Poseidon é B (responde); A (Hades, ativo) conjura Judgment of Minos (hades-v6-258, Technique: 2 Seal no Devotee inimigo alvo).
+// Aqui Poseidon é B (responde); A (Hades, ativo) conjura Eternal Slumber (hades-v6-192, Technique: 3 Seal no Devotee inimigo alvo).
 function duel(answers = {}) {
   const deck = id => ({...decks.find(d => d.id === id)});
   const m = createMatch({cards, canonIndex: index, decks: {A: deck('preview-hades-108'), B: deck('preview-poseidon-tide')}, gods: {A: 'god-hades', B: 'god-poseidon'}, first: 'A', seed: 1});
@@ -291,7 +291,7 @@ function duel(answers = {}) {
     return uid;
   };
   // A conjura Minos mirando `target`; devolve o uid da Spell.
-  const minos = target => { const sp = put('A', 'hades-v6-258'); answers['THE JUDGMENT OF MINOS'] = () => target; playSpell(s, ctx, 'A', sp); return sp; };
+  const minos = target => { const sp = put('A', 'hades-v6-192'); answers['ETERNAL SLUMBER'] = () => target; playSpell(s, ctx, 'A', sp); return sp; };
   const respond = id => { const uid = put('B', P(id)); playSpell(s, ctx, 'B', uid); return uid; };
   const sealed = uid => s.units[uid]?.seal || 0;
   return {s, ctx, A, B, put, minos, respond, sealed, asked, answers};
@@ -306,7 +306,7 @@ test('133 Call of the Ocean: alvo escolhido ao conjurar; anula a menos que o con
     assert.deepEqual(s.chain.find(i => i.uid === counter).targets, [sp]); // a resposta mira a Spell na cadeia
     const bases = ready(A);
     done(s);
-    if (pays) { assert.equal(sealed(x), 2); assert.equal(ready(A), bases - 2); assert.ok(!s.events.some(e => e.type === 'spell_countered')); }
+    if (pays) { assert.equal(sealed(x), 3); assert.equal(ready(A), bases - 2); assert.ok(!s.events.some(e => e.type === 'spell_countered')); }
     else { assert.equal(sealed(x), 0); assert.ok(A.tartarus.includes(sp)); assert.ok(s.events.some(e => e.type === 'spell_countered' && e.uid === sp)); }
     assert.ok(B.tartarus.includes(counter));
   }
@@ -437,7 +437,7 @@ test('117 Tidal Rejection: paga {2}{C}, Exhaust no Guardian e anula Spell que mi
   assert.equal(sealed(x), 0); assert.ok(A.tartarus.includes(sp));
   assert.equal(s.units[guard].prepared, false); assert.equal(ready(B), bases - 2);
   const again = minos(x); done(s); // mesmo Round: não reage de novo
-  assert.equal(sealed(x), 2); assert.ok(A.tartarus.includes(again));
+  assert.equal(sealed(x), 3); assert.ok(A.tartarus.includes(again));
 });
 
 test('121 Countercurrent: devolve o Marina mirado e, sem alvo legal restante, anula a Spell', () => {
@@ -453,7 +453,7 @@ test('121 Countercurrent: devolve o Marina mirado e, sem alvo legal restante, an
 
 test('121 Countercurrent: Spell inimiga mirando um God não quebra o gatilho (alvo god:X sem objeto)', () => {
   const {s, ctx, put} = duel();
-  const master = put('B', P('121'), 'battlefield'), sp = put('A', 'hades-v6-258');
+  const master = put('B', P('121'), 'battlefield'), sp = put('A', 'hades-v6-192');
   assert.doesNotThrow(() => V6[P('121')].watchSpell(s, ctx, 'B', master, 'A', sp, ['god:B']));
 });
 
@@ -466,7 +466,7 @@ test('124 Coral Barrier: portador mirado; paga {2}{C} e anula a menos que o cont
     const sp = minos(bearer), bases = ready(B);
     done(s);
     assert.equal(ready(B), bases - 2);
-    assert.equal(sealed(bearer), pays ? 2 : 0);
+    assert.equal(sealed(bearer), pays ? 3 : 0);
     assert.equal(A.tartarus.includes(sp), true);
   }
 });

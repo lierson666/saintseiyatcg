@@ -758,17 +758,17 @@ test('Alvo de Technique inimiga: Geist (471) sacrifica outro e contraria; Agora 
   const geist = t.give('B', N(471)), other = t.give('B', N(468));
   const yesB = t.ctx.decide;
   t.ctx.decide = (player, q) => (q.ability === 'DECEPTIVE PRESENCE' && !q.options ? true : yesB(player, q));
-  const spell = t.give('A', 'hades-v6-258', 'hand');
+  const spell = t.give('A', 'hades-v6-192', 'hand');
   playSpell(t.s, t.ctx, 'A', spell, {}); passAll(t.s);
   assert.ok(t.s.events.some(e => e.type === 'spell_countered' && e.uid === spell));
   assert.ok(t.s.players.B.tartarus.includes(other), 'sacrificou o outro');
   assert.ok(!t.s.units[geist]?.seal, 'Geist sem Seal');
   const a = setup();
   const agora = a.give('B', N(486));
-  const spell2 = a.give('A', 'hades-v6-258', 'hand'), before = a.s.players.A.bases.filter(b => b.prepared).length;
+  const spell2 = a.give('A', 'hades-v6-192', 'hand'), before = a.s.players.A.bases.filter(b => b.prepared).length;
   playSpell(a.s, a.ctx, 'A', spell2, {}); passAll(a.s);
-  assert.equal(a.s.players.A.bases.filter(b => b.prepared).length, before - a.ctx.cards.get('hades-v6-258').cost.amount - 2, 'pagou {2} a mais');
-  assert.equal(a.s.units[agora].seal, 2);
+  assert.equal(a.s.players.A.bases.filter(b => b.prepared).length, before - a.ctx.cards.get('hades-v6-192').cost.amount - 2, 'pagou {2} a mais');
+  assert.equal(a.s.units[agora].seal, 3);
 });
 
 test('461 Sky Defender: paga 2 e a Technique inimiga que mirava outro Devotee vai para Sho', () => {
@@ -777,9 +777,9 @@ test('461 Sky Defender: paga 2 e a Technique inimiga que mirava outro Devotee va
   const base = ctx.decide;
   ctx.decide = (player, q) => (q.ability === 'SKY DEFENDER' && !q.options ? true : base(player, q));
   s.players.B.bases = s.players.B.deck.splice(0, 3).map(uid => ({uid, prepared: true}));
-  const spell = give('A', 'hades-v6-258', 'hand');
+  const spell = give('A', 'hades-v6-192', 'hand');
   playSpell(s, ctx, 'A', spell, {}); passAll(s);
-  assert.equal(s.units[sho].seal, 2, 'Sho recebeu o efeito');
+  assert.equal(s.units[sho].seal, 3, 'Sho recebeu o efeito');
   assert.ok(!s.units[other].seal, 'o alvo original não');
 });
 

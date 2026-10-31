@@ -6678,12 +6678,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Cosmic Marionation — When Griffon Minos enters the battlefield, you may pay {1}{S}. If you do, put 2 Seal counters on target enemy Devotee.",
-        "Puppet Master — Whenever a Seal counter is removed from an enemy Devotee, its controller loses {1}{S}."
+        "Cosmic Marionation — When Griffon Minos enters the battlefield, you may pay {1}{S}. If you do, target enemy Devotee gets -2 ATK / -2 HP until the end of the round.",
+        "Puppet Master — Whenever an enemy Devotee is defeated during your turn, its controller loses {1}{S}."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md."
     },
     {
       "id": "hades-v6-184",
@@ -6711,11 +6711,11 @@
       "equipar_custo": 5,
       "keywords_en": [],
       "habilidades_en": [
-        "Resonance — Minos: Once each round, when Griffon Minos declares a Strike, you may put 1 Seal counter on target enemy Devotee."
+        "Resonance — Minos: Once each round, when Griffon Minos declares a Strike, target enemy Devotee gets -1 ATK / -1 HP until the end of the round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026.",
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md.",
       "categoria_equipamento": "Armor",
       "slot_equipamento": "armadura",
       "auto_equip_en": ["Griffon Minos"],
@@ -7060,7 +7060,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 5,
+      "custo": 3,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -7078,7 +7078,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md."
     },
     {
       "id": "hades-v6-195",
@@ -7243,7 +7243,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 7,
+      "custo": 5,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -7261,7 +7261,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026.",
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md.",
       "categoria_equipamento": "Artifact",
       "slot_equipamento": "acessorio",
       "auto_equip_en": [],
@@ -7611,12 +7611,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Worm's Bind — When Worm Raimi enters the battlefield, you may pay {1}{S}. If you do, put 1 Seal counter on target enemy Devotee.",
-        "Underground Ambush — Whenever Worm Raimi Strikes a Sealed Devotee, Worm Raimi gets +2 ATK until the end of the round."
+        "Worm's Bind — When Worm Raimi enters the battlefield, you may pay {1}{S}. If you do, target enemy Devotee gets -1 ATK / -1 HP until the end of the round.",
+        "Underground Ambush — Whenever Worm Raimi Strikes a damaged Devotee, Worm Raimi gets +2 ATK until the end of the round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md."
     },
     {
       "id": "hades-v6-210",
@@ -7848,12 +7848,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Petrifying Gaze — When Gorgon Ox enters the battlefield, you may pay {1}{S}. If you do, put 1 Seal counter on target enemy Devotee.",
-        "Stone Curse — Whenever Gorgon Ox Strikes a Sealed Devotee, that Devotee gets -2 ATK until the end of the round."
+        "Petrifying Gaze — When Gorgon Ox enters the battlefield, you may pay {1}{S}. If you do, target enemy Devotee can't declare a Strike during its controller's next turn.",
+        "Stone Curse — Once each round, whenever Gorgon Ox Strikes, the defending Devotee gets -2 ATK during that Strike."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md."
     },
     {
       "id": "hades-v6-217",
@@ -8320,12 +8320,12 @@
       "keywords_en": [],
       "habilidades_en": [
         "Equipped Devotee gets +1 ATK / +1 HP.",
-        "Eternal Binding — When Underworld Shackles enters the battlefield, put 1 Seal counter on target enemy Devotee.",
-        "Cursed Chains — Whenever equipped Devotee defeats an enemy Devotee in combat, you may put 1 Seal counter on another target enemy Devotee."
+        "Eternal Binding — When Underworld Shackles enters the battlefield, target enemy Devotee gets -1 ATK / -1 HP until the end of the round.",
+        "Cursed Chains — Whenever equipped Devotee defeats an enemy Devotee in combat, another target enemy Devotee gets -1 ATK / -1 HP until the end of the round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026.",
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md.",
       "categoria_equipamento": "Artifact",
       "slot_equipamento": "acessorio",
       "auto_equip_en": [],
@@ -8670,7 +8670,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 2,
+      "custo": 1,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -8688,7 +8688,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md."
     },
     {
       "id": "hades-v6-240",
@@ -8700,12 +8700,12 @@
       "nome_interno_pt": "",
       "faccao": "Hades",
       "tipo": "Spell",
-      "subtipos": ["Moment"],
+      "subtipos": ["Technique"],
       "raridade": "Common",
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 4,
+      "custo": 3,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -8717,12 +8717,13 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Return target Devotee with Casting Cost 4 or less from your Tartarus to the battlefield Unprepared.",
-        "Your God loses {2}{S}."
+        "Return target Devotee from your Tartarus to the battlefield Unprepared.",
+        "It cannot declare a Strike this round.",
+        "Your God loses {3}{S}."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md."
     },
     {
       "id": "hades-v6-241",
@@ -9220,12 +9221,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Diamond Dust — When Aquarius Camus enters the battlefield, you may pay {1}{S}. If you do, put 2 Seal counters on target enemy Devotee.",
-        "Aurora Execution — Once each round, whenever an enemy Devotee loses its last Seal counter, its controller loses {2}{S} and your God gains {2}{S}."
+        "Diamond Dust — When Aquarius Camus enters the battlefield, you may pay {1}{S}. If you do, target enemy Devotee can't declare a Strike during its controller's next turn.",
+        "Aurora Execution — Once each round, whenever an enemy Devotee is defeated, its controller loses {1}{S} and your God gains {1}{S}."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md."
     },
     {
       "id": "hades-v6-255",
@@ -9311,7 +9312,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 3,
+      "custo": 2,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -9329,7 +9330,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md."
     },
     {
       "id": "hades-v6-258",
@@ -9358,13 +9359,13 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Put 2 Seal counters on target enemy Devotee.",
-        "If you control a Judge Specter, that Devotee gets -2 ATK / -2 HP until the end of the round.",
+        "Target enemy Devotee gets -2 ATK / -2 HP until the end of the round.",
+        "If you control a Judge Specter, it gets -4 ATK / -4 HP instead.",
         "Draw 1 card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md."
     },
     {
       "id": "hades-v6-259",
@@ -9486,7 +9487,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 5,
+      "custo": 4,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -9504,7 +9505,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md."
     },
     {
       "id": "hades-v6-263",
@@ -9585,12 +9586,12 @@
       "nome_interno_pt": "",
       "faccao": "Hades",
       "tipo": "Spell",
-      "subtipos": ["Moment"],
+      "subtipos": ["Technique"],
       "raridade": "Legendary",
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 6,
+      "custo": 5,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -9602,14 +9603,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Gain control of target enemy Devotee until the end of the round.",
-        "Prepare that Devotee. It gains Impulse until the end of the round.",
-        "At the end of the round, sacrifice that Devotee.",
+        "Return target Devotee from an opponent's Tartarus to the battlefield under your control Unprepared.",
         "Your God loses {3}{S}."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md."
     },
     {
       "id": "hades-v6-266",
@@ -9731,7 +9730,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 8,
+      "custo": 6,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -9749,7 +9748,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md."
     },
     {
       "id": "hades-v6-270",
@@ -9766,7 +9765,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 9,
+      "custo": 7,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -9780,12 +9779,11 @@
       "habilidades_en": [
         "Return up to 3 target Devotees from your Tartarus to the battlefield Unprepared.",
         "Those Devotees cannot Strike this round.",
-        "For each Devotee returned this way, target enemy God loses {3}{S} and your God gains {3}{S}.",
-        "Then each opponent sacrifices 2 Devotees."
+        "For each Devotee returned this way, target enemy God loses {3}{S} and your God gains {3}{S}."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md."
     },
     {
       "id": "ares-v6-271",

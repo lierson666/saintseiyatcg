@@ -18,7 +18,7 @@ const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json'), cards = loadCanon(canon), index = canonIndex(canon);
 addPreviewCards(cards, index, read('../card-forge/art-web/cards.json').cartas);
 const decks = read('../data/alpha-0.1/decks-preview.json').decks;
-const MINOS = 'hades-v6-258'; // Technique: 2 Seal no Devotee inimigo alvo; "Draw 1 card" (não depende do alvo)
+const MINOS = 'hades-v6-192'; // Eternal Slumber (Technique de Hypnos): 3 Seal no Devotee alvo; "Draw 1 card" (não depende do alvo)
 
 function duel(decide) {
   const deck = id => ({...decks.find(d => d.id === id)});
@@ -53,7 +53,7 @@ test('alvo é perguntado ao conjurar, aparece na cadeia e no log, e não é perg
   assert.equal(s.units[item.targets[0]].seal ?? 0, 0); // nada resolveu ainda
   done(s);
   assert.equal(asked.filter(q => q.choose === 'target').length, 1); // resolução usa a resposta guardada
-  assert.equal(s.units[item.targets[0]].seal, 2);
+  assert.equal(s.units[item.targets[0]].seal, 3);
   assert.ok(A.tartarus.includes(sp));
   assert.ok(foe);
 });

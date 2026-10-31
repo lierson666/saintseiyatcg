@@ -4,6 +4,16 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-31 — Cartas de Hades — Preto (Midrange + Reanimator, meta Premodern)
+
+- **Antes:** Seal em 11 cartas (papel do Azul); reanimação com teto de custo (240 ≤4); remoção dura a c5 (194, 262); discard a c2–c3 (239, 257); 265 era o Threaten (papel de Ares); topo de c7 a c9 (199, 269, 270).
+- **Depois:** 16 cartas. O Seal fica só em Hypnos (191, 192, 268). Nas outras: 183, 184, 209, 229 e 258 dão −X/−X; 216 e 254 impedem o Strike do alvo no próximo turno dele; Puppet Master (183) e Aurora Execution (254) disparam quando um Devotee inimigo é derrotado; Underground Ambush (209) mira Devotee com dano. 240 vira o Animate Dead (Technique c3, qualquer custo, sem Strike neste Round, {3}{S}). 265 reanima do Tartarus do oponente (Technique c5). 194 c3, 262 c4, 239 c1, 257 c2, 269 c6, 270 c7 (sem o sacrifício final), 199 c5.
+- **Motivo:** meta Premodern aprovado pelo autor em 31/10/2026 (`docs/meta-premodern.md`); diff aprovado em 31/10/2026 (`docs/rebalance-hades-premodern.md`).
+- **Engine:** `playtest/engine-v3/v6/hades.js` (`weakenOnEnter`, `lockOnEnter`/`lockNextTurn` via `forbidStrike`; o gancho de fim de Round do Threaten saiu). Testes em `tools/test-engine-v3-v6-hades.mjs`; os testes de pilha que usavam o 258 como sonda de Seal passaram a usar o 192 (Hypnos). Suíte engine-v3 inteira passa (490 testes).
+- **Decks:** "Hades Midrange" (`comp-hades-midrange`) em `data/alpha-0.1/decks-competitivos.json`. Os decks Hades antigos não foram retunados.
+- **Atalhos do motor:** Stone Curse (216) dá −2 ATK até o fim do Round, como antes.
+- **Pendências:** round-robin de bots (meta 45–55%); playtest do autor; lista Reanimator na etapa das duplas.
+
 ## 2026-10-31 — Cartas de Poseidon — Azul (Control + Marina, meta Premodern)
 
 - **Antes:** counters de c4 (154, 159, 167) não podiam responder, porque a resposta paga só com Latent (teto 3); todo counter anulava só Moment/Technique; discard do oponente em 093, 094, 155, 162, 163, 167, 173, 175 e 180; dano direto em 165 e 174; 101 Julian ganhava Soul; Herald (103) dava +0/+1; Spells de c7 a c10.

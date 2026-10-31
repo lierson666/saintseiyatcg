@@ -2238,6 +2238,124 @@
           "quantity": 2
         }
       ]
+    },
+    {
+      "id": "comp-hades-midrange",
+      "nome": "Hades Midrange",
+      "god": "god-hades",
+      "domain_id": "hades-v6-242",
+      "arquetipo": "Referência do meta Premodern (Mono-Black): discard cedo (Whispers of Pandora c1, Trial of the Dead c2), remoção dura (Divine Touch of Death c3, Ferryman's Price, Will of Hades), Specters eficientes com dreno e recursão do Tartarus. docs/meta-premodern.md e docs/rebalance-hades-premodern.md (31/10/2026).",
+      "tema": "Midrange (discard + remoção)",
+      "main_deck": [
+        {
+          "card_id": "hades-v6-218",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-220",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-217",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-206",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-221",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-215",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-209",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-216",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-219",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-201",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-202",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-213",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-252",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-251",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-181",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-193",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-194",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-237",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-241",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-262",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-239",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-257",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-238",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-240",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-234",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-226",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-269",
+          "quantity": 1
+        }
+      ]
     }
   ]
 }

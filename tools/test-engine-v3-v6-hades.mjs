@@ -130,12 +130,12 @@ test('Awakening of the Specters: volta Unprepared e não declara Strike no turno
   assert.equal(s.strikes.get(dead), s.turn);
 });
 
-test('Seal (Minos): 2 marcadores no alvo inimigo', () => {
-  const {s, add, play, answers} = hades();
-  const foe = add('hades-v6-206', 'B', 'battlefield');
+test('Minos (31/10/2026): Cosmic Marionation dá -2/-2 no alvo inimigo, sem Seal', () => {
+  const {s, ctx, add, play, answers} = hades();
+  const foe = add('hades-v6-191', 'B', 'battlefield'), atk = atkOf(s, ctx, foe), life = hpOf(s, ctx, foe);
   answers({'COSMIC MARIONATION': yes});
   play('hades-v6-183'); done(s);
-  assert.equal(s.units[foe].seal, 2);
+  assert.deepEqual([atkOf(s, ctx, foe), hpOf(s, ctx, foe), s.units[foe].seal ?? 0], [atk - 2, life - 2, 0]);
 });
 
 test('descarte (Balron Lune): escolhe Moment/Technique da mão; Fire Whip drena 1', () => {
@@ -244,15 +244,14 @@ test('231 Torch of the Underworld — Guiding Light: ao ir para o Tartarus, 2 ca
   assert.equal(p.deck.length, deck - 2);
 });
 
-test('Seal removido: Puppet Master (183) tira 1 Soul a cada Seal; Aurora Execution (254) no último Seal, uma vez por Round', () => {
-  const {s, p, b, add} = hades();
+test('Puppet Master (183) e Aurora Execution (254) (31/10/2026): Devotee inimigo derrotado no seu turno', () => {
+  const {s, p, b, add, kill} = hades();
   add('hades-v6-183', 'A', 'battlefield'); add('hades-v6-254', 'A', 'battlefield');
-  const foe = add('hades-v6-218', 'B', 'battlefield');
-  Object.assign(s.units[foe], {prepared: false, seal: 2});
-  prepareUnit(s, foe); runCheckpoint(s); done(s);
-  assert.deepEqual([b.soul, p.soul], [9, 10], 'Seal 2 → 1: só Puppet Master');
-  prepareUnit(s, foe); runCheckpoint(s); done(s);
-  assert.deepEqual([b.soul, p.soul], [6, 12], 'último Seal: Puppet Master 1 + Aurora 2; Hades ganha 2');
+  const foe = add('hades-v6-218', 'B', 'battlefield'), other = add('hades-v6-218', 'B', 'battlefield');
+  kill(foe); done(s);
+  assert.deepEqual([b.soul, p.soul], [8, 11], 'Puppet Master 1 + Aurora 1 (drena)');
+  kill(other); done(s);
+  assert.deepEqual([b.soul, p.soul], [7, 11], 'Aurora só uma vez por Round');
 });
 
 test('Eternal Slumber (191): paga 2 Soul e derrota o Devotee que perdeu o último Seal', () => {
@@ -278,14 +277,33 @@ test('Soul pago por habilidade: Dead End Symphony (187) compra pagando +1', () =
   assert.equal(p.soul, 10 - 1 + 2 - 1, 'taxa 1, drain +2, Symphony 1');
 });
 
-test('265 The Possession of Shun: toma o Devotee inimigo até o fim do Round, Prepared com Impulse; Hades perde 3', () => {
+test('265 The Possession of Shun (31/10/2026): reanima do Tartarus do oponente, sob o seu controle, Unprepared; Hades perde 3', () => {
   const {s, ctx, p, b, add, cast} = hades();
-  const foe = add('hades-v6-218', 'B', 'battlefield');
-  s.units[foe].prepared = false;
+  const foe = add('hades-v6-218', 'B', 'tartarus');
   const soul = p.soul;
   cast('hades-v6-265', {}); done(s);
-  assert.ok(p.battlefield.includes(foe) && !b.battlefield.includes(foe));
-  assert.equal(s.units[foe].prepared, true);
+  assert.ok(p.battlefield.includes(foe) && !b.tartarus.includes(foe));
+  assert.equal(s.units[foe].prepared, false);
   assert.equal(p.soul, soul - 3);
   assert.equal(ctx.objects[foe].owner, 'B', 'o dono não muda');
+});
+
+test('240 The Return from Death (Animate Dead, 31/10/2026): qualquer custo, Unprepared, sem Strike neste Round; Hades perde 3', () => {
+  const {s, p, add, cast} = hades();
+  const big = add('hades-v6-193', 'A', 'tartarus'); // Thanatos, c7
+  const soul = p.soul;
+  cast('hades-v6-240', {}); done(s);
+  assert.ok(p.battlefield.includes(big));
+  assert.equal(s.units[big].prepared, false);
+  assert.equal(s.strikes.get(big), s.turn, 'não declara Strike neste Round');
+  assert.equal(p.soul, soul - 3);
+});
+
+test('Gorgon Ox (216, 31/10/2026): Petrifying Gaze impede o Strike do alvo no próximo turno dele, sem Seal', () => {
+  const {s, add, play, answers} = hades();
+  const foe = add('hades-v6-191', 'B', 'battlefield');
+  answers({'PETRIFYING GAZE': yes});
+  play('hades-v6-216'); done(s);
+  assert.equal(s.units[foe].seal ?? 0, 0);
+  assert.ok(s.effects.some(e => e.kind === 'noStrike' && e.target === foe));
 });

@@ -5,6 +5,7 @@ import * as k from './kit.js';
 const godOfFoe = (s, c, key) => [k.godTarget(k.other(s, key))];
 import {addSeal, hooks, pushTriggers} from '../core.js';
 import {collect, contextOf, offColor, payOffColor} from './registry.js';
+import {forbidStrike} from '../effects.js';
 
 // ---------- ajudantes locais ----------
 const name = (c, uid) => k.card(c, uid)?.name || '';
@@ -38,13 +39,6 @@ hooks.checkpoint.push(state => {
     if (e.type === 'soul_paid') out.push(...collect(state, ctx, state.order, 'watchSoulPaid', [e], 'Soul is paid'));
   }
   if (out.length) pushTriggers(state, out);
-});
-// 265: "At the end of the round, sacrifice that Devotee" (quem o controla agora).
-hooks.roundEnd.push(state => {
-  const ctx = contextOf(state), due = (state.v6Possessed || []).filter(e => e.round === state.round);
-  if (!ctx || !due.length) return [];
-  state.v6Possessed = state.v6Possessed.filter(e => e.round !== state.round);
-  return due.map(e => ({controller: e.key, uid: `possession:${e.uid}`, ability: 'THE POSSESSION OF SHUN', run: st => { if (k.controllerOf(st, e.uid) === e.key) k.sacrifice(st, ctx, e.uid); }}));
 });
 const sealOwner = (s, c, e) => k.controllerOf(s, e.uid) ?? c.objects[e.uid].owner; // Seal tirado na saída: o dono
 const enemySeal = (s, c, key, e) => k.isDevotee(c, e.uid) && sealOwner(s, c, e) !== key;
@@ -116,6 +110,11 @@ const drainOnEnter = (n, after) => ({enter: (s, c, key, self) => st => { drain(s
 const curse = (atk, hp, ability) => (s, c, key) => st => { const t = enemy(st, c, key, ability); if (t) weaken(st, c, t, atk, hp); };
 // "When X enters …, put N Seal counters on target enemy Devotee."
 const sealOnEnter = (n, ability) => (s, c, key) => st => seal(st, c, [enemy(st, c, key, ability)], n, ability);
+// Hades → Preto (31/10/2026): o Seal ficou só em Hypnos; o resto vira −X/−X ou "can't declare a Strike".
+const weakenOnEnter = (n, ability) => (s, c, key) => st => { const t = enemy(st, c, key, ability); if (t) weaken(st, c, t, n, n); };
+// "Can't declare a Strike during its controller's next turn": neste Round se o turno dele ainda vem; senão, no próximo.
+const lockNextTurn = (st, key, uid) => { if (uid && st.units[uid]) forbidStrike(st, uid, st.active === key && st.order[0] === key ? 'this_round' : 'next_round'); };
+const lockOnEnter = ability => (s, c, key) => st => lockNextTurn(st, key, enemy(st, c, key, ability));
 // "When X enters …, you may sacrifice another friendly Devotee. If you do, <effect>." `ready`: há alvo para o efeito.
 const offering = (ability, ready, effect) => (s, c, key, self) => st => {
   if (ready(st, c, key) && sacrificeOne(st, c, key, ability, self, true)) effect(st, c, key, self);
@@ -194,12 +193,12 @@ export default {
     gearKillInCombat: (s, c, key, self, bearer, victim) => /RHADAMANTHYS/i.test(name(c, bearer)) && (st => drain(st, key, 2, c.objects[victim].owner)),
   },
   'hades-v6-183': { // Griffon Minos
-    enter: taxed(1, 'COSMIC MARIONATION', sealOnEnter(2, 'COSMIC MARIONATION')),
-    watchSealRemoved: (s, c, key, self, e) => enemySeal(s, c, key, e) && (st => lose(st, sealOwner(st, c, e), 1)), // Puppet Master
+    enter: taxed(1, 'COSMIC MARIONATION', weakenOnEnter(2, 'COSMIC MARIONATION')),
+    watchDefeat: (s, c, key, self, dead, owner) => owner !== key && s.active === key && (st => lose(st, owner, 1)), // Puppet Master
   },
   'hades-v6-184': { // Griffon Surplice
     gearDeclare: (s, c, key, self, bearer) => /MINOS/i.test(name(c, bearer)) && k.once(s, `${self}:resonance`)
-      && (st => seal(st, c, [enemy(st, c, key, 'GRIFFON SURPLICE', () => true, {optional: true})], 1, 'GRIFFON SURPLICE')),
+      && (st => { const t = enemy(st, c, key, 'GRIFFON SURPLICE'); if (t) weaken(st, c, t, 1, 1); }),
   },
   'hades-v6-185': { // Garuda Aiacos
     enter: (s, c, key) => st => toHandFrom(st, c, key, 'GARUDA FLAP', devCost(3), {optional: true}),
@@ -311,8 +310,8 @@ export default {
     watchDefeat: (s, c, key, self, dead, owner) => owner === key && sacrificed(s, dead) && (st => gain(st, key, 1)),
   },
   'hades-v6-209': { // Worm Raimi
-    enter: taxed(1, "WORM'S BIND", sealOnEnter(1, "WORM'S BIND")),
-    declare: (s, c, key, self, target) => target.kind === 'devotee' && s.units[target.uid]?.seal > 0 && (st => k.buff(st, self, 2, 0)),
+    enter: taxed(1, "WORM'S BIND", weakenOnEnter(1, "WORM'S BIND")),
+    declare: (s, c, key, self, target) => target.kind === 'devotee' && s.units[target.uid]?.damage > 0 && (st => k.buff(st, self, 2, 0)),
   },
   'hades-v6-210': { // Golem Rock
     enter: offering('ROLLING BOMBER STONE', ...execute('ROLLING BOMBER STONE', 3)),
@@ -337,8 +336,9 @@ export default {
     watchDefeat: onDefeat('enemy', (st, c, key) => gain(st, key, 1)),
   },
   'hades-v6-216': { // Gorgon Ox
-    enter: taxed(1, 'PETRIFYING GAZE', sealOnEnter(1, 'PETRIFYING GAZE')),
-    declare: (s, c, key, self, target) => target.kind === 'devotee' && s.units[target.uid]?.seal > 0 && (st => k.buff(st, target.uid, -2, 0)),
+    enter: taxed(1, 'PETRIFYING GAZE', lockOnEnter('PETRIFYING GAZE')),
+    // Stone Curse: −2 ATK "during that Strike" aplicado até o fim do Round (como o 216 fazia antes).
+    declare: (s, c, key, self, target) => target.kind === 'devotee' && k.once(s, `${self}:stone`) && (st => k.buff(st, target.uid, -2, 0)),
   },
   'hades-v6-217': { // Dullahan Cube
     ...drainOnEnter(1),
@@ -391,8 +391,8 @@ export default {
     watchSoulPaid: (s, c, key, self, e) => e.player === key && e.uid && e.uid === k.bearerOf(c, self) && k.once(s, `${self}:melody`) && (st => lose(st, k.other(st, key), 1)),
   },
   'hades-v6-229': { // Underworld Shackles
-    cast: (s, c, key) => st => seal(st, c, [enemy(st, c, key, 'ETERNAL BINDING')], 1, 'ETERNAL BINDING'),
-    gearKillInCombat: (s, c, key, self, bearer, victim) => st => seal(st, c, [enemy(st, c, key, 'CURSED CHAINS', u => u !== victim, {optional: true})], 1, 'CURSED CHAINS'),
+    cast: (s, c, key) => st => { const t = enemy(st, c, key, 'ETERNAL BINDING'); if (t) weaken(st, c, t, 1, 1); },
+    gearKillInCombat: (s, c, key, self, bearer, victim) => st => { const t = enemy(st, c, key, 'CURSED CHAINS', u => u !== victim); if (t) weaken(st, c, t, 1, 1); },
   },
   'hades-v6-230': { // Funeral Shroud
     bearerDefeated: (s, c, key, self, bearer) => st => {
@@ -427,7 +427,8 @@ export default {
   }}},
   'hades-v6-238': {spell: {targets: godOfFoe, run: (s, c, key) => drain(s, key, 3)}}, // Souls of the Damned
   'hades-v6-239': {spell: {run: (s, c, key) => { strip(s, c, key, 'THE WHISPERS OF PANDORA', cd => cd.kind !== 'Devotee'); lose(s, key, 1); }}},
-  'hades-v6-240': {spell: {run: (s, c, key) => { if (toFieldFrom(s, c, key, 'THE RETURN FROM DEATH', devCost(4))) lose(s, key, 2); }}},
+  // Animate Dead (31/10/2026): qualquer Devotee do seu Tartarus, sem teto de custo; não declara Strike neste Round.
+  'hades-v6-240': {spell: {run: (s, c, key) => { const u = toFieldFrom(s, c, key, 'THE RETURN FROM DEATH', always); if (u) { noStrike(s, u); lose(s, key, 3); } }}},
   // The Will of Hades. Interpretação: "Your God loses 1 Soul" vale para os dois modos (linha separada).
   'hades-v6-241': {spell: {run: (s, c, key) => {
     const modes = [k.enemies(s, c, key).length && 'weaken', inTartarus(s, c, key, specter(2)).length && 'recall'].filter(Boolean);
@@ -475,9 +476,8 @@ export default {
     killInCombat: (s, c, key, self) => st => { if (sacrificeOne(st, c, key, 'BLADE OF SACRIFICE', self, true)) k.draw(st, key, 2); },
   },
   'hades-v6-254': { // Aquarius Camus
-    enter: taxed(1, 'DIAMOND DUST', sealOnEnter(2, 'DIAMOND DUST')),
-    watchSealRemoved: (s, c, key, self, e) => e.counters === 0 && enemySeal(s, c, key, e) && k.once(s, `${self}:aurora`) // Aurora Execution
-      && (st => { lose(st, sealOwner(st, c, e), 2); gain(st, key, 2); }),
+    enter: taxed(1, 'DIAMOND DUST', lockOnEnter('DIAMOND DUST')),
+    watchDefeat: (s, c, key, self, dead, owner) => owner !== key && k.once(s, `${self}:aurora`) && (st => drain(st, key, 1, owner)), // Aurora Execution
   },
   'hades-v6-255': { // Gemini Saga
     enter: taxed(3, 'ANOTHER DIMENSION', (s, c, key, self) => st => {
@@ -500,8 +500,8 @@ export default {
   'hades-v6-258': {spell: {run: (s, c, key) => { // The Judgment of Minos
     const t = enemy(s, c, key, 'THE JUDGMENT OF MINOS');
     if (t) { // alvo que saiu do campo: só as partes dele não acontecem; o "Draw 1" não depende dele
-      seal(s, c, [t], 2, 'THE JUDGMENT OF MINOS');
-      if (k.devotees(s, c, key).some(u => k.hasType(c, u, 'Judge Specter'))) weaken(s, c, t, 2, 2);
+      const n = k.devotees(s, c, key).some(u => k.hasType(c, u, 'Judge Specter')) ? 4 : 2; // 31/10/2026: sem Seal
+      weaken(s, c, t, n, n);
     }
     k.draw(s, key, 1);
   }}},
@@ -539,17 +539,11 @@ export default {
   'hades-v6-264': {spell: {run: (s, c, key) => oppSacrifices(s, c, key, 'THE CURSE OF THE UNDERWORLD', 2, v => drain(s, key, 1, c.objects[v].owner))}},
   // The Possession of Shun (autor, 30/10/2026): troca de controle até o fim do Round = o Devotee muda de `battlefield`
   // (o controlador é quem tem o uid no campo; o dono continua em objects). No fim do Round, quem controla o sacrifica.
+  // 31/10/2026: deixou de ser Threaten; reanima do Tartarus do oponente, sob o seu controle, Unprepared.
   'hades-v6-265': {spell: {run: (s, c, key) => {
-    const t = enemy(s, c, key, 'THE POSSESSION OF SHUN');
-    if (t) {
-      const from = s.players[k.controllerOf(s, t)];
-      from.battlefield.splice(from.battlefield.indexOf(t), 1);
-      s.players[key].battlefield.push(t);
-      s.units[t].prepared = true;
-      k.buff(s, t, 0, 0, 'this_round', ['Impulse']);
-      (s.v6Possessed ||= []).push({key, uid: t, round: s.round});
-      k.emit(s, 'control_changed', {uid: t, player: key});
-    }
+    const foe = k.other(s, key), dead = s.players[foe].tartarus.filter(u => k.isDevotee(c, u) && !s.roundUses.has(`return:${u}`));
+    const t = k.choose(c, key, 'THE POSSESSION OF SHUN', dead, {text: "Choose a Devotee in an opponent's Tartarus to return under your control."});
+    if (t) raise(s, c, key, t);
     lose(s, key, 3);
   }}},
   'hades-v6-266': {spell: {run: (s, c, key) => { // The Fall of the Sanctuary
@@ -576,7 +570,6 @@ export default {
   }}},
   'hades-v6-270': {spell: {run: (s, c, key) => { // The Greatest Eclipse
     const picks = k.chooseUpTo(c, key, 'THE GREATEST ECLIPSE', returnable(s, c, key, () => true), 3, {text: 'Choose Devotees to return to the battlefield.'});
-    for (const u of picks) if (raise(s, c, key, u)) { noStrike(s, u); drain(s, key, 3); }
-    oppSacrifices(s, c, key, 'THE GREATEST ECLIPSE', 2);
+    for (const u of picks) if (raise(s, c, key, u)) { noStrike(s, u); drain(s, key, 3); } // 31/10/2026: sem o sacrifício final
   }}},
 };
