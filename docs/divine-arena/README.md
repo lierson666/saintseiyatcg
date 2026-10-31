@@ -8,7 +8,6 @@ Princípio: **a engine decide, a apresentação dramatiza, o jogador permanece n
 | --- | --- |
 | [GAME_DESIGN_VISION.md](GAME_DESIGN_VISION.md) | Visão, pilares, escopo do slice |
 | [ARENA_REFERENCE_ANALYSIS.md](ARENA_REFERENCE_ANALYSIS.md) | Princípios de UX de TCG digital (observação pública) |
-| [CANONICAL_RULES_MATRIX.md](CANONICAL_RULES_MATRIX.md) | Regra → engine → evento → apresentação; itens BLOCKED_BY_RULES |
 | [AAA_VISUAL_DIRECTION.md](AAA_VISUAL_DIRECTION.md) | Arenas, paleta, hierarquia visual, contrato de arte |
 | [THREEJS_ARCHITECTURE.md](THREEJS_ARCHITECTURE.md) | Camadas, cenas, fluxo de eventos |
 | [ANIMATION_SYSTEM.md](ANIMATION_SYSTEM.md) | Orquestrador, fila, tempos, skip |

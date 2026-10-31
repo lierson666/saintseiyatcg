@@ -6,9 +6,7 @@ Tudo que for criado neste projeto (cartas, decks, engine do playtest, IA, UI, Ca
 
 | O quê | Fonte oficial |
 | --- | --- |
-| Regras do jogo | `docs/guia-do-jogo.md` (Rulebook 2.1 + Guarda e Rivalidade, 24/10/2026) |
-| Migração para o Rulebook 2.0 | `docs/migracao-rulebook-2.0.md` (impactos e pendências; não cria regras) |
-| Histórico do fechamento do 2.0 | `docs/proposta-fechamento-rulebook-2.0.md` (aprovado em 23/10/2026 e incorporado ao guia) |
+| Regras do jogo | `docs/guia-do-jogo.md` (regra vigente: turnos dentro do Round, 31/10/2026). Única fonte de regra; versões e propostas antigas foram apagadas em 31/10/2026 |
 | Mudanças de regra | `docs/CHANGELOG-regras.md` |
 | Cartas (dados, custos, textos) | `data/cards.json` |
 | Beta Athena (decks, domains, proxies) | `docs/beta-athena.md` + `data/beta-athena.json` |
@@ -16,7 +14,7 @@ Tudo que for criado neste projeto (cartas, decks, engine do playtest, IA, UI, Ca
 
 Ordem de precedência quando houver conflito: `guia-do-jogo.md` > `cards.json` > `beta-athena` > código (`playtest/`, `card-forge/`). O código implementa a regra; não define regra.
 
-O Rulebook 2.0 foi fornecido em 23/10/2026; as alterações 2.1 aprovadas em 24/10/2026 estão integradas ao guia vigente. Na mesma data, o autor aprovou aplicar as propostas de fechamento e modificar o jogo. As definições foram incorporadas ao capítulo XII do guia; regras da Vanilla 1.0 não preenchem lacunas automaticamente. A migração de código está autorizada, inclusive em `playtest/`, sem publicação remota. `data/cards.json` continua exigindo aprovação de um diff antes da gravação.
+Regras de versões anteriores (Vanilla 1.0, Rulebook 2.0/2.1, AÇÕES alternadas) não valem e não preenchem lacunas. A migração de código está autorizada, inclusive em `playtest/`, sem publicação remota. `data/cards.json` continua exigindo aprovação de um diff antes da gravação.
 
 ## Como mudar uma regra
 

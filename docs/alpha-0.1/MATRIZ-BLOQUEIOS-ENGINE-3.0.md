@@ -165,7 +165,7 @@ Cassios é uma carta Warrior agressiva dentro de um deck defensivo. O critério 
   - Ares: "as though they had Impulse";
   - 005 e Artemis: o God retalia ("retaliatory Strike damage", "retaliation damage from Gods");
   - 041: "Remove up to 2 damage", o que indica que o dano persiste.
-- **Propostas:** `docs/alpha-0.1/PROPOSTAS-ALPHA-P01-P07.md`. Todas **NÃO APROVADAS**.
+- **Propostas:** ALPHA-P01 a P07, aprovadas e incorporadas ao `docs/guia-do-jogo.md` em 31/10/2026.
 
 ### Entregas técnicas desta rodada
 

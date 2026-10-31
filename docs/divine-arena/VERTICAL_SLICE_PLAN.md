@@ -8,7 +8,7 @@
 - Sistema visual de Cosmo com prévia de custo.
 - Inspeção, log, settings persistidos, atalhos, arrastar e soltar.
 
-## Bloqueado por regra (ver CANONICAL_RULES_MATRIX)
+## Bloqueado por regra
 Poseidon jogável, Awaken/Divine Power/Ultimate, Long Range, cinemática divina.
 
 ## Próximos passos sugeridos

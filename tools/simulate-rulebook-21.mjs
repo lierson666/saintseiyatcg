@@ -27,5 +27,5 @@ for(let index=0;index<strategies.length;index++)for(const first of ['A','B'])for
 }
 assert.ok(totals.responses>0,'Nenhuma resposta Latent exercitada');assert.ok(totals.strikes>0);assert.ok(totals.equips>0);assert.ok(totals.banked>0);
 const report={versao:'2.1',partidas:results.length,totais:totals,resultados:results,limite:'Perfis heurísticos e catálogo provisório: regressão de fluxo, não prova de balanceamento competitivo.'};
-fs.writeFileSync(new URL('../docs/rulebook-2.1/simulacoes.json',import.meta.url),JSON.stringify(report,null,2)+'\n');
+fs.mkdirSync(new URL('../card-forge/out/',import.meta.url),{recursive:true});fs.writeFileSync(new URL('../card-forge/out/simulacoes-rulebook-21.json',import.meta.url),JSON.stringify(report,null,2)+'\n');
 console.log(JSON.stringify({partidas:results.length,totais:totals,rodadas:[Math.min(...results.map(r=>r.rodadas)),Math.max(...results.map(r=>r.rodadas))]}));

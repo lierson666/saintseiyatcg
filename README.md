@@ -15,12 +15,11 @@ O projeto agora ja possui uma base visual forte e um documento de regras oficial
 
 Athena agora ja esta catalogada de forma muito mais completa no banco de dados, incluindo God, Domains, Bronze Saints, Silver Saints, Gold Saints, Cloths, Weapons, Relics, Techniques e Moments. A gauntlet `Athena Beta v0.1` tambem ja esta documentada.
 
-Em 23/10/2026, o **Rulebook 2.0** foi consolidado e integrado à arena local e ao Card Forge. O catálogo tem 357 cartas (57 históricas + 300 novas aprovadas), seis decks iniciais e cartas interativas. A HUD distingue o token de vantagem/iniciativa da oportunidade de AÇÃO e da prioridade. Veja [a implementação](docs/implementacao-rulebook-2.0.md) e [a validação](docs/validacao-rulebook-2.0.md).
+A regra vigente está em `docs/guia-do-jogo.md` (turnos dentro do Round, 31/10/2026); é a única fonte de regra.
 
 ## Documentacao principal
 
-- `/docs/guia-do-jogo.md`: manual oficial `Rulebook 2.0`, base para playtest
-- `/docs/migracao-rulebook-2.0.md`: mudanças, pendências e preparação das novas cartas
+- `/docs/guia-do-jogo.md`: manual oficial vigente, base para playtest
 - `/docs/CHANGELOG-regras.md`: historico de mudancas de regra
 - `/CLAUDE.md`: repositorio de regras (fontes oficiais e como mudar uma regra)
 - `/data/cards.json`: banco inicial das cartas ja exportadas

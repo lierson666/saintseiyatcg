@@ -6,7 +6,7 @@ cd "$(dirname "$0")/.."
 out=card-forge/out/contexto-chat-regras-completo.md
 mkdir -p card-forge/out
 {
-  cat docs/contexto-chat-regras.md
+  printf '%s\n' '# Contexto de regras' '' 'Fonte oficial: docs/guia-do-jogo.md.'
   for f in docs/guia-do-jogo.md docs/CHANGELOG-regras.md docs/beta-athena.md; do
     printf '\n\n---\n\n# Anexo: %s\n\n' "$f"
     cat "$f"
