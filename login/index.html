@@ -17,7 +17,7 @@
   <meta name="apple-mobile-web-app-title" content="Saint Seiya">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Cormorant+Garamond:ital,wght@1,400&family=Jost:wght@300;400;500&display=swap">
-  <link rel="stylesheet" href="/shared/kv.css?v=20261031-ptr2">
+  <link rel="stylesheet" href="/shared/kv.css?v=20261031-native">
   <style>
     html, body { margin: 0; min-height: 100%; background: var(--kv-bg); color: var(--kv-ink); font: 300 16px/1.5 var(--kv-sans); }
     * { box-sizing: border-box; }
@@ -101,7 +101,7 @@
     <footer class="kv-footer"><span class="kv-stamp">Saint Seiya TCG · Closed beta</span></footer>
   </div>
   <script type="module">
-    import {mountKV} from '/shared/kv-sky.js?v=20261031-fast';
+    import {mountKV} from '/shared/kv-sky.js?v=20261031-native';
     import {countryOptions} from '/shared/countries.js?v=20261029-1';
     const kv = mountKV({anchor: 'h1 .kv-cosmo'});
     // Só destinos do próprio site (evita redirecionar para fora).

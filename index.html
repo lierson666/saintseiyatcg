@@ -17,7 +17,7 @@
   <link rel="apple-touch-icon" href="/LOGO/apple-touch-icon.png?v=20261030">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Cormorant+Garamond:ital,wght@1,400&family=Jost:wght@300;400;500&display=swap">
-  <link rel="stylesheet" href="/shared/kv.css?v=20261031-ptr2">
+  <link rel="stylesheet" href="/shared/kv.css?v=20261031-native">
   <style>
     html, body { margin: 0; min-height: 100%; background: var(--kv-bg); color: var(--kv-ink); font: 300 16px/1.5 var(--kv-sans); }
     * { box-sizing: border-box; }
@@ -80,7 +80,7 @@
     <footer class="kv-footer"><span class="kv-stamp">Saint Seiya TCG · In development</span><span class="love">Made with lots of love by Brazilian fans <span aria-label="love">♥</span></span></footer>
   </div>
   <script type="module">
-    import {mountKV} from '/shared/kv-sky.js?v=20261031-fast';
+    import {mountKV} from '/shared/kv-sky.js?v=20261031-native';
     // URL do app da web do Apps Script (tools/coming-soon-apps-script.gs). Vazio: o formulário avisa que ainda não abriu.
     // Endereço limpo na barra: /index.html aparece como /.
     if (location.pathname === '/index.html') history.replaceState(null, '', '/' + location.search + location.hash);

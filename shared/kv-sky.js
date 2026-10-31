@@ -66,15 +66,7 @@ export function mountKV({anchor: anchorSelector = null} = {}) {
   const fine = matchMedia('(pointer: fine)').matches;
   let tip = null, lastTip = null, glowStep = -1, trailDirty = false;
   if (fine && !still) document.documentElement.classList.add('cosmo-pointer');
-  // Acima de tudo (autor, 31/10/2026): o ponteiro vive na camada do topo (popover) e volta ao topo sempre que
-  // um <dialog> modal ou outro popover abre por cima dele. Sem suporte a popover, kv.css volta ao cursor do sistema nos modais.
-  if (fine && !still && pointer.showPopover) {
-    const raise = () => { try { if (pointer.matches(':popover-open')) pointer.hidePopover(); pointer.showPopover(); } catch {} };
-    raise(); document.documentElement.classList.add('kv-pointer-top');
-    new MutationObserver(ms => { if (ms.some(m => m.target !== pointer && (m.target.open || m.target.matches?.(':popover-open')))) raise(); })
-      .observe(document.body, {subtree: true, attributes: true, attributeFilter: ['open']});
-    document.addEventListener('toggle', e => { if (e.target !== pointer && e.newState === 'open') raise(); }, true);
-  }
+  // Ponteiro nativo (kv.css, autor 31/10/2026): sem camada do topo, sem rastro; o céu ainda segue o mouse.
   function spawn(x, y, burst = 0) {
     const a = Math.random() * 6.28, v = burst ? 1.5 + Math.random() * 3.5 : Math.random() * .5;
     sparks.push({x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - (burst ? 0 : .35), life: 1, decay: burst ? .018 + Math.random() * .02 : .03 + Math.random() * .03,
@@ -149,17 +141,12 @@ export function mountKV({anchor: anchorSelector = null} = {}) {
     heat *= .985;
     const ox = (me.x / W - .5) * 26, oy = (me.y / H - .5) * 18;
     if (t % 2 === 0) { paintSky(ox, oy); paintFigures(ox * .6, oy * .6); } // céu a 30 fps; brasas e ponteiro a 60
-    paintTrail();
     if (!still && !document.hidden) requestAnimationFrame(frame);
   }
   function paintStill() { paintSky(0, 0); paintFigures(0, 0); } // movimento reduzido: céu e constelações parados
   const move = (x, y) => { me.tx = x; me.ty = y; me.active = true; };
   addEventListener('pointermove', e => {
     move(e.clientX, e.clientY);
-    if (!fine || still || e.pointerType !== 'mouse') return;
-    tip = {x: e.clientX + 5, y: e.clientY + 4}; // ponta da seta
-    pointer.style.transform = `translate3d(${e.clientX}px, ${e.clientY}px, 0)`;
-    pointer.style.opacity = e.target.closest(TEXT_FIELDS) ? '0' : '1';
   }, {passive: true});
   addEventListener('pointerdown', e => { move(e.clientX, e.clientY); heat = Math.min(1, heat + .3); }, {passive: true});
   document.documentElement.addEventListener('pointerleave', () => { me.active = false; tip = lastTip = null; pointer.style.opacity = '0'; });
@@ -173,9 +160,7 @@ export function mountKV({anchor: anchorSelector = null} = {}) {
     warm(step = .08) { heat = Math.min(1, heat + step); }, // digitar acende o cosmo
     burst(el) { // anel de brasas a partir de um elemento (ex.: botão de envio)
       if (still) return;
-      const r = el.getBoundingClientRect();
-      for (let i = 0; i < 120; i++) spawn(r.left + r.width / 2, r.top + r.height / 2, 1);
-      heat = 1;
+      heat = 1; // sem rastro (ponteiro nativo): as brasas não são mais desenhadas
     },
   };
 }
