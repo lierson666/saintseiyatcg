@@ -18,8 +18,8 @@ const canon = read('../data/canon/d268.json');
 const cards = loadCanon(canon);
 const [rush, fortress] = read('../data/alpha-0.1/decks-proposta-d171.json').decks;
 
-// A joga o God `god`; B é Athena. `decide` padrão: sim / primeira opção.
-function setup(god, decide = (p, q) => (q.options ? q.options[0] : true)) {
+// A joga o God `god`; B é Athena. `decide` padrão: sim / primeira opção (ou as primeiras `count`).
+function setup(god, decide = (p, q) => (q.options ? (q.count ? q.options.slice(0, q.count) : q.options[0]) : true)) {
   const m = createMatch({cards, canonIndex: canonIndex(canon), decks: {A: rush, B: fortress}, gods: {A: god, B: 'god-athena'}, first: 'A', seed: 3});
   for (const p of Object.values(m.state.players)) p.deck.push(...p.hand.splice(0)); m.state.setup = null;
   const s = m.state, ctx = {cards, objects: m.objects, attached: m.attached, decide};

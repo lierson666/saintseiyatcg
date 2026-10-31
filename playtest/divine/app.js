@@ -1616,7 +1616,7 @@ function decisionText(req) {
     if (req.choose === 'discard') return {who, title, kicker: 'Mandatory choice', body: `Discard half of your hand, rounded up: choose ${req.count} card${req.count > 1 ? 's' : ''}. Each discarded card mills 3.`};
     if (req.choose === 'keep') return {who, title: 'ONE PER CHARACTER', kicker: 'Mandatory choice', body: `You control two versions of ${info(req.options[0]).name.split(",")[0]}. Choose the one to keep; the other goes to the Tartarus (it is not destroyed).`};
     if (req.choose === 'top') return {who, title, kicker: 'Mandatory choice', body: 'Choose the card to keep on top of your deck. The other goes to the bottom.'};
-    return {who, title, kicker: 'Mandatory choice', body: req.text || `Choose ${req.count}.`};
+    return {who, title, kicker: req.min === 0 ? `Choose up to ${req.count}` : 'Mandatory choice', body: req.text || `Choose ${req.count}.`};
   }
   const parts = [req.source && n(req.source) ? `Source: ${n(req.source)}.` : '', req.uid && n(req.uid) ? `Affects: ${n(req.uid)}.` : '',
     req.amount ? `${req.amount} damage incoming.` : '', req.cost ? `Cost: ${typeof req.cost === 'string' ? req.cost : req.cost.soul ? `${req.cost.soul} Soul` : `${req.cost.latent} Latent`}.` : ''].filter(Boolean);
@@ -1655,7 +1655,7 @@ function decisionModal() {
     const picked = pending.picked;
     const opts = req.options.map((uid, i) => `<button class="decision__opt ${picked.includes(uid) ? 'picked' : ''}" data-dec="opt" data-opt="${esc(uid)}" data-focus="opt:${esc(uid)}" aria-pressed="${picked.includes(uid)}" aria-label="${esc(optName(uid))}${i < 9 ? `, key ${i + 1}` : ''}">${String(uid).startsWith('god:') || req.choose === 'mode' ? `<span class="dcard decision__god">${esc(optName(uid))}</span>` : cardFace(uid).replace('tabindex="0"', 'tabindex="-1"')}${i < 9 ? `<kbd>${i + 1}</kbd>` : ''}</button>`).join('');
     body = `<div class="decision__opts" role="group" aria-label="Options">${opts}</div>
-      <div class="decision__actions"><button class="primary-action" data-dec="confirm" data-focus="confirm" ${picked.length === req.count ? '' : 'disabled'}>Confirm · ${picked.length}/${req.count}</button></div>`;
+      <div class="decision__actions"><button class="primary-action" data-dec="confirm" data-focus="confirm" ${pickedOk(req, picked) ? '' : 'disabled'}>Confirm · ${picked.length}/${req.count}</button></div>`;
   }
   return `<div class="decision-veil"></div><section class="decision decision--${req.kind}" role="dialog" aria-modal="true" aria-labelledby="decision-title" aria-describedby="decision-body">
     <header class="decision__head"><span class="decision__who">${esc(t.who)} decides</span><span class="decision__clock" data-decision-clock></span></header>
@@ -1720,7 +1720,7 @@ function sidePanel(req, t, fx) {
   const opts = req.kind === 'choice' && !target ? `<div class="decision__opts trigger-panel__opts" role="group" aria-label="Options">${req.options.map((uid, i) => `<button class="decision__opt ${picked.includes(uid) ? 'picked' : ''}" data-dec="opt" data-opt="${esc(uid)}" data-focus="opt:${esc(uid)}" aria-pressed="${picked.includes(uid)}" aria-label="${esc(optName(uid))}${i < 9 ? `, key ${i + 1}` : ''}">${String(uid).startsWith('god:') || req.choose === 'mode' || !ctx.objects[uid] ? `<span class="dcard decision__god">${esc(optName(uid))}</span>` : cardFace(uid, {size}).replace('tabindex="0"', 'tabindex="-1"')}${i < 9 ? `<kbd>${i + 1}</kbd>` : ''}</button>`).join('')}</div>` : '';
   const actions = waiting ? `<p class="decision__note">Waiting for Player ${req.player}…</p>`
     : req.kind === 'optional' ? `<button class="primary-action" data-dec="yes" data-focus="yes">${esc(t.yes)}</button><button class="ghost" data-dec="no" data-focus="no">${esc(t.no)}</button>`
-    : opts ? `<button class="primary-action" data-dec="confirm" data-focus="confirm" ${picked.length === req.count ? '' : 'disabled'}>Confirm · ${picked.length}/${req.count}</button>${cancel}` : cancel;
+    : opts ? `<button class="primary-action" data-dec="confirm" data-focus="confirm" ${pickedOk(req, picked) ? '' : 'disabled'}>Confirm · ${picked.length}/${req.count}</button>${cancel}` : cancel;
   // Fila: o item que está resolvendo e os que vêm depois (topo da cadeia primeiro).
   const next = [...S().chain].reverse(), queue = next.length ? `<div class="trigger-queue"><small>Trigger 1 of ${next.length + 1}</small><ol>${next.slice(0, 4).map(c => `<li ${srcAttrs(c)}>${esc(chainLabel(c).title)}</li>`).join('')}${next.length > 4 ? `<li>+${next.length - 4} more</li>` : ''}</ol></div>` : '';
   if (offBoard && !waiting) return `<div class="pick-veil" aria-hidden="true"></div><section class="pick-modal" role="dialog" aria-modal="true" aria-labelledby="trigger-title" ${godFx(req.player)}>
@@ -1781,6 +1781,8 @@ function confirmOrder() {
   render();
 }
 
+// Confirm libera com a quantidade exata ou, em "up to N" (min), de min até N.
+const pickedOk = (req, picked) => picked.length <= req.count && picked.length >= (req.min ?? req.count);
 function togglePick(uid) {
   const req = pending.pending, picked = pending.picked;
   if (!req.options.includes(uid)) return;
@@ -1797,7 +1799,7 @@ function decisionClick(btn) {
   if (a === 'cancel' && casting && !online) { restore(S(), ctx, pending.snap); pending = casting = null; seenEvents = S().events.length; return render(); }
   if (a === 'yes' || a === 'no') return reply({value: a === 'yes'});
   if (a === 'opt') return togglePick(btn.dataset.opt);
-  if (a === 'confirm' && pending.picked.length === req.count) return reply({value: req.multiple ? [...pending.picked] : pending.picked[0]});
+  if (a === 'confirm' && pickedOk(req, pending.picked)) return reply({value: req.multiple ? [...pending.picked] : pending.picked[0]});
 }
 // Teclado: 1–9 marcam opções; setas andam entre opções; Tab fica preso no modal.
 function decisionKey(e) {

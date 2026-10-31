@@ -44,6 +44,12 @@ export function chooseUpTo(c, key, ability, options, count, {text} = {}) {
   }
   return picked;
 }
+// "Up to N" numa pergunta só (autor, 31/10/2026: Great Eclipse em uma tela): escolhe de 0 a N de uma vez.
+export function pickUpTo(c, key, ability, options, count, {text} = {}) {
+  const list = [...new Set(options.filter(Boolean))];
+  if (!list.length) return [];
+  return c.decide?.(key, {ability, options: list, choose: 'target', count: Math.min(count, list.length), min: 0, text}) ?? [];
+}
 // Alvo entre Devotees e Gods: devolve uid ou 'god:A'/'god:B'.
 export const godTarget = player => `god:${player}`;
 export const isGod = t => typeof t === 'string' && t.startsWith('god:');

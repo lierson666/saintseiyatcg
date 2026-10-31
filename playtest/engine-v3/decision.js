@@ -31,7 +31,7 @@ export function restore(state, ctx, snap) { assignInPlace(state, snap.state); as
 
 // Pergunta da engine → pedido para a interface. `kind`: 'optional' (sim/não) ou 'choice' (obrigatória, entre `options`).
 export function describe(player, q) {
-  if (q.options) return {player, kind: 'choice', ability: q.ability, choose: q.choose, decision: q.decision, for: q.for, options: [...q.options], count: q.count || 1, multiple: !!q.count, text: q.text ?? null};
+  if (q.options) return {player, kind: 'choice', ability: q.ability, choose: q.choose, decision: q.decision, for: q.for, options: [...q.options], count: q.count || 1, min: q.min ?? (q.count || 1), multiple: !!q.count, text: q.text ?? null};
   if (q.cards) return {player, kind: 'choice', ability: q.ability, choose: 'top', options: [...q.cards], count: 1, multiple: false};
   return {player, kind: 'optional', ability: q.ability, uid: q.uid ?? null, source: q.source ?? null, amount: q.amount ?? null, cost: q.cost ?? null, god: q.god ?? null, text: q.text ?? null};
 }
@@ -39,13 +39,15 @@ export function describe(player, q) {
 // Resposta: {value} ou {timeout: true}. Fora das opções legais é erro (a interface não escolhe pelo jogador).
 function answer(state, req, a) {
   if (a.timeout) {
+    // "Up to N" (min 0) é opcional: no timeout, recusa tudo, como a pergunta opcional.
+    if (req.kind === 'choice' && req.min === 0) { emit(state, 'TIMEOUT_DECLINED', {player: req.player, ability: req.ability}); return []; }
     if (req.kind === 'optional') { emit(state, 'TIMEOUT_DECLINED', {player: req.player, ability: req.ability}); return false; }
     const picked = timeoutAutoChoice(state, {player: req.player, options: req.options, count: req.count});
     return req.multiple ? picked : picked[0];
   }
   if (req.kind === 'optional') return Boolean(a.value);
   const list = req.multiple ? a.value : [a.value];
-  if (!Array.isArray(list) || list.length !== req.count || new Set(list).size !== list.length || !list.every(o => req.options.includes(o))) {
+  if (!Array.isArray(list) || list.length > req.count || list.length < (req.min ?? req.count) || new Set(list).size !== list.length || !list.every(o => req.options.includes(o))) {
     throw new RuleError('alvo', `${req.player}: resposta fora das opções legais de ${req.ability}`);
   }
   return a.value;

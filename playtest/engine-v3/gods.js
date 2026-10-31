@@ -303,7 +303,7 @@ export const announceGreatEclipse = (state, ctx, key) => announceUltimate(state,
 function resolveGreatEclipse(state, ctx, key) {
   const enemy = other(state, key);
   const options = state.players[key].tartarus.filter(uid => ctx.objects[uid]?.owner === key && isDevoteeUid(ctx, uid));
-  const picked = k.chooseUpTo(ctx, key, 'GREAT ECLIPSE', options, 3, {text: 'Choose up to three Devotees from your Tartarus.'});
+  const picked = k.pickUpTo(ctx, key, 'GREAT ECLIPSE', options, 3, {text: 'Choose up to three Devotees from your Tartarus.'});
   // Entram Unprepared e perdem Impulse (`entered` nulo: o Strike só vale com Impulse no turno de entrada).
   const returned = picked.filter(uid => k.putOntoField(state, ctx, key, uid, 'tartarus', {prepared: false}));
   for (const uid of returned) if (state.units[uid]) state.units[uid].entered = null;
