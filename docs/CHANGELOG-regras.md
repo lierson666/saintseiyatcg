@@ -4,6 +4,14 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-31 — Decks — Duplas do meta Premodern
+
+- **Antes:** o meta tinha as 6 listas das facções solo.
+- **Depois:** 4 listas duplas em `data/alpha-0.1/decks-competitivos.json`: Athena Enchantress (`comp-enchantress`, Domain 504), Hades Reanimator (`comp-reanimator`, Domain 144), Ares Rakdos (`comp-rakdos`, Domain 244) e Poseidon Azorius (`comp-azorius`, Domain 501). Cada uma tem 45 cartas da facção do God e 15 da facção do Domain fora da cor (§2, §63). Nenhuma carta mudou.
+- **Motivo:** meta Premodern aprovado pelo autor em 31/10/2026 (`docs/meta-premodern.md`); listas aprovadas em 31/10/2026 (`docs/duplas-premodern.md`). Com elas, o meta tem as 10 listas de referência.
+- **Validação:** as 10 listas passam em `colorErrors` (`shared/deck-v3.js`) e têm 60 cartas.
+- **Pendências:** round-robin de bots (meta 45–55%); planos de IA por arquétipo; o Domain fora da cor rende pouco (só a primeira linha, gatilhos com {1}{S}), e o 501 do Azorius quase não dispara sem Saints.
+
 ## 2026-10-31 — Cartas de Artemis — Verde (Elves: ramp + tribal, meta Premodern)
 
 - **Antes:** dano fixo em 388 (1), 435 (3 no ETB) e 379 (2 a cada Strike); 397 Sacred Grove Dryad c2; 449 c7 e 450 c8; textos com "+1/+1 counter", "Once per round" e "once per turn".

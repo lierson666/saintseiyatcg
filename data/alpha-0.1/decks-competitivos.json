@@ -2478,6 +2478,438 @@
           "quantity": 1
         }
       ]
+    },
+    {
+      "id": "comp-enchantress",
+      "nome": "Athena Enchantress",
+      "god": "god-athena",
+      "domain_id": "artemis-v6-504",
+      "arquetipo": "Referência do meta Premodern (Selesnya Enchantress): dupla com o God como motor e até 15 cartas da facção do Domain fora da cor. docs/meta-premodern.md e docs/duplas-premodern.md (31/10/2026).",
+      "tema": "Enchantress (Equipment + compra)",
+      "main_deck": [
+        {
+          "card_id": "athena-v6-043",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-042",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-020",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-045",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-046",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-047",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-048",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-049",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-050",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-051",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-028",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-031",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-032",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-040",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-041",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-082",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-056",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-061",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-053",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-414",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-409",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-413",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-412",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-415",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-417",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-386",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "id": "comp-reanimator",
+      "nome": "Hades Reanimator",
+      "god": "god-hades",
+      "domain_id": "poseidon-v6-144",
+      "arquetipo": "Referência do meta Premodern (Reanimator): dupla com o God como motor e até 15 cartas da facção do Domain fora da cor. docs/meta-premodern.md e docs/duplas-premodern.md (31/10/2026).",
+      "tema": "Reanimator (self-mill + Animate Dead)",
+      "main_deck": [
+        {
+          "card_id": "hades-v6-191",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-193",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-181",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-255",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-240",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-260",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-232",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-265",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-206",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-220",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-221",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-189",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-251",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-218",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-194",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-237",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-239",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-257",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-234",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-109",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-120",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-113",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-139",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-135",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-133",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "id": "comp-rakdos",
+      "nome": "Ares Rakdos",
+      "god": "god-ares",
+      "domain_id": "hades-v6-244",
+      "arquetipo": "Referência do meta Premodern (Rakdos Suicide): dupla com o God como motor e até 15 cartas da facção do Domain fora da cor. docs/meta-premodern.md e docs/duplas-premodern.md (31/10/2026).",
+      "tema": "Aggro + sacrifício",
+      "main_deck": [
+        {
+          "card_id": "ares-v6-293",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-313",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-308",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-310",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-307",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-291",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-295",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-343",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-299",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-320",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-317",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-322",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-327",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-326",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-357",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-323",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-330",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-239",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-257",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-194",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-237",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-234",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-222",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "id": "comp-azorius",
+      "nome": "Poseidon Azorius",
+      "god": "god-poseidon",
+      "domain_id": "athena-v6-501",
+      "arquetipo": "Referência do meta Premodern (UW Control): dupla com o God como motor e até 15 cartas da facção do Domain fora da cor. docs/meta-premodern.md e docs/duplas-premodern.md (31/10/2026).",
+      "tema": "Control (counter + remoção)",
+      "main_deck": [
+        {
+          "card_id": "poseidon-v6-167",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-159",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-133",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-154",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-136",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-135",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-139",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-113",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-116",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-132",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-152",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-137",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-174",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-091",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-093",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-097",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-101",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-105",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-082",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-056",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-061",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-040",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-041",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-035",
+          "quantity": 2
+        }
+      ]
     }
   ]
 }
