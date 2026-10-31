@@ -1,7 +1,7 @@
 // Divine Arena · orquestrador de apresentação. Lê os eventos que a engine já registrou (state.events) e os
 // dramatiza em sequência. Nunca decide resultado: os números exibidos vêm dos próprios eventos.
 // `ui` é o adaptador do DOM (posições e textos); `fx` é a camada WebGL (pode faltar: tudo vira só DOM).
-import {wait} from './scene.js?v=20261028-5';
+import {wait} from './scene.js?v=20261031-pool1';
 import {strikeSound, chargeSound} from '../audio.js?v=20261030-telas';
 import {anim, ANIM_OF, sound} from '../telas.js?v=20261030-1';
 

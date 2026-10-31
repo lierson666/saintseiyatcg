@@ -1,12 +1,18 @@
 import {resolveLayout,validateTemplate} from './model.js';
 import {makeScene,renderScene} from './renderer.js';
 
-let library=null,inflight=null,lastRead=0,projects={},assetRects={};
+let library=null,inflight=null,lastRead=0,projects={},assetRects={},projectsInflight=null,projectsRead=0;
 const publishedKey=value=>JSON.stringify((value?.published||[]).map(t=>[t.id,t.revision]));
 const matching=(t,c,surface)=>t.scope.surface===surface&&(!t.scope.subtype||c.subtipos?.includes(t.scope.subtype))&&(t.scope.level==='global'||t.scope.value===({type:c.tipo,faction:c.faccao,rarity:c.raridade,card:c.id})[t.scope.level]);
 export function layoutLibrary(){return library;}
 export function visualProject(id){return projects[id]||{};}
-export async function refreshCardProjects(){
+// Foco e visibilitychange disparam juntos ao voltar à janela: mesma trava de 15 s e de pedido em voo de refreshLayouts.
+export function refreshCardProjects({force=false}={}){
+  if(projectsInflight)return projectsInflight;if(!force&&Date.now()-projectsRead<15000)return Promise.resolve(projects);
+  projectsRead=Date.now();
+  return projectsInflight=loadCardProjects().finally(()=>{projectsInflight=null;});
+}
+async function loadCardProjects(){
   try{
     const response=await fetch(new URL('../../data/card-projects.json',import.meta.url),{cache:'no-store',signal:AbortSignal.timeout(5000)});
     if(!response.ok)throw Error('No published projects');
@@ -47,8 +53,8 @@ function artworkContext(card,context){const project=context.project||visualProje
 export function renderPublishedCard(card,context={}){const scene=publishedScene(card,artworkContext(card,context));return scene?renderScene(scene):null;}
 export function renderPublishedInspector(card,context={}){const scene=publishedScene(card,{...artworkContext(card,context),mode:'inspector'},'inspector');return scene?renderScene(scene):null;}
 if(typeof window!=='undefined'){
-  if(typeof BroadcastChannel!=='undefined'){const channel=new BroadcastChannel('saint-seiya-layout-studio');channel.onmessage=()=>{refreshLayouts({force:true});refreshCardProjects();};}
+  if(typeof BroadcastChannel!=='undefined'){const channel=new BroadcastChannel('saint-seiya-layout-studio');channel.onmessage=()=>{refreshLayouts({force:true});refreshCardProjects({force:true});};}
   window.addEventListener('focus',()=>{refreshLayouts();refreshCardProjects();});
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){refreshLayouts();refreshCardProjects();}});
-  await Promise.all([refreshLayouts({force:true}),refreshCardProjects(),fetch(new URL('../../CARD-TEMPLATE/pieces.json',import.meta.url),{signal:AbortSignal.timeout(4000)}).then(r=>r.ok?r.json():{}).then(data=>{assetRects=data.pieces||{};}).catch(()=>{})]);
+  await Promise.all([refreshLayouts({force:true}),refreshCardProjects({force:true}),fetch(new URL('../../CARD-TEMPLATE/pieces.json',import.meta.url),{signal:AbortSignal.timeout(4000)}).then(r=>r.ok?r.json():{}).then(data=>{assetRects=data.pieces||{};}).catch(()=>{})]);
 }

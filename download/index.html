@@ -1,0 +1,162 @@
+<!doctype html>
+<!-- Página de download do app de desktop (desktop/, decisões do autor em 31/10/2026): instaladores sem assinatura,
+     hospedados em /download/files/. O app só abre o site oficial; tutorial cobre os avisos do macOS e do Windows. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Saint Seiya TCG — Download</title>
+  <meta name="description" content="Download the Saint Seiya TCG desktop app for Windows and macOS, with step-by-step install instructions.">
+  <meta name="theme-color" content="#05060c">
+  <link rel="icon" href="/LOGO/favicon.png?v=20261030">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Cormorant+Garamond:ital,wght@1,400&family=Jost:wght@300;400;500&display=swap">
+  <link rel="stylesheet" href="/shared/kv.css?v=20261029-1">
+  <style>
+    html, body { margin: 0; background: var(--kv-bg); color: var(--kv-ink); font: 300 17px/1.6 var(--kv-sans); }
+    .page { position: relative; z-index: 1; min-height: 100dvh; display: grid; grid-template-rows: auto 1fr auto; }
+    .kv-nav a { color: var(--kv-muted); text-decoration: none; }
+    a { color: var(--kv-gold-2); }
+    main { width: min(1080px, 100%); margin: 0 auto; padding: clamp(32px, 8vh, 88px) clamp(16px, 4vw, 40px) 64px; box-sizing: border-box; }
+    .hero { max-width: 720px; }
+    .hero h1 { margin: 18px 0 20px; display: grid; gap: 6px; }
+    .lead { max-width: 60ch; color: var(--kv-muted); margin: 0 0 32px; }
+    .get { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 0 0 12px; }
+    .get .kv-card { padding: 24px; display: grid; gap: 14px; align-content: start; }
+    .get .kv-card.is-yours { border-color: #e6c36a88; }
+    .get h2 { margin: 0; font: 600 13px var(--kv-title); letter-spacing: .32em; text-transform: uppercase; color: var(--kv-ink); }
+    .get p { margin: 0; font-size: 14px; color: var(--kv-muted); }
+    .get .kv-button, .get .kv-ghost { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+    .get .kv-ghost { color: var(--kv-ink); }
+    .yours { font: 600 10px var(--kv-title); letter-spacing: .3em; text-transform: uppercase; color: var(--kv-gold); }
+    .fine { font-size: 14px; color: var(--kv-dim); margin: 0 0 56px; }
+    .guide { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+    .guide .kv-card { padding: 28px; }
+    .guide .wide { grid-column: 1 / -1; }
+    h3 { margin: 0 0 14px; font: 600 12px var(--kv-title); letter-spacing: .32em; text-transform: uppercase; color: var(--kv-gold); }
+    ol, ul { margin: 0; padding-left: 1.3em; color: var(--kv-muted); }
+    li { margin: 0 0 10px; } li:last-child { margin-bottom: 0; }
+    strong { color: var(--kv-ink); font-weight: 500; }
+    kbd { font: 500 13px var(--kv-sans); padding: 1px 7px; border: 1px solid var(--kv-line); border-radius: 6px; background: #f5f1e60d; color: var(--kv-ink); }
+    .section-title { margin: 0 0 20px; font: italic 400 clamp(32px, 4.4vw, 52px)/1 var(--kv-serif); }
+    .guide p { margin: 0 0 12px; color: var(--kv-muted); } .guide p:last-child { margin-bottom: 0; }
+    dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 8px 20px; color: var(--kv-muted); }
+    dt { color: var(--kv-ink); font-weight: 400; }
+    dd { margin: 0; }
+    @media (max-width: 520px) { dl { grid-template-columns: 1fr; } dd { margin-bottom: 8px; } }
+  </style>
+</head>
+<body>
+  <div class="kv-veil" aria-hidden="true"></div>
+  <div class="page">
+    <nav class="kv-nav"><a class="kv-stamp" href="/">Saint Seiya · TCG</a><span style="display:flex;gap:clamp(14px,3vw,32px)"><a class="kv-stamp" href="/how-to-play/">How to play</a><a class="kv-stamp" href="/playtest/">Play in browser</a></span></nav>
+    <main>
+      <section class="hero" aria-labelledby="title">
+        <p class="kv-stamp kv-stamp--gold"><span class="kv-dot" aria-hidden="true"></span>&nbsp; Desktop app · Closed beta</p>
+        <h1 id="title"><span class="kv-lyric">Bring the Sanctuary</span><span class="kv-cosmo">Home</span></h1>
+        <p class="lead">The Saint Seiya TCG app opens Olympus Arena in its own window, full screen, without browser tabs. Your account, decks, rank and friends are the same as on the website.</p>
+      </section>
+
+      <div class="get">
+        <section class="kv-card" data-os="win" aria-labelledby="win-title">
+          <span class="yours" hidden>Your system</span>
+          <h2 id="win-title">Windows</h2>
+          <p>Windows 10 or 11, 64-bit · about 90 MB</p>
+          <a class="kv-button" href="/download/files/SaintSeiyaTCG-1.0.0-win-x64.exe" download>Download .exe</a>
+        </section>
+        <section class="kv-card" data-os="mac" aria-labelledby="mac-title">
+          <span class="yours" hidden>Your system</span>
+          <h2 id="mac-title">macOS</h2>
+          <p>macOS 12 or later · Apple silicon and Intel · about 190 MB</p>
+          <a class="kv-button" href="/download/files/SaintSeiyaTCG-1.0.0-mac-universal.dmg" download>Download .dmg</a>
+        </section>
+      </div>
+      <p class="fine">Version 1.0.0. You need a beta account to play; access is by invitation. The app needs an internet connection.</p>
+
+      <h2 class="section-title">How to install</h2>
+      <div class="guide">
+        <section class="kv-card" id="windows" aria-labelledby="g-win">
+          <h3 id="g-win">Windows</h3>
+          <ol>
+            <li>Open the downloaded file <strong>SaintSeiyaTCG-1.0.0-win-x64.exe</strong>.</li>
+            <li>If Windows shows <strong>“Windows protected your PC”</strong>, select <strong>More info</strong>, then <strong>Run anyway</strong>. This appears because the beta app is not yet signed with a paid certificate.</li>
+            <li>Choose the install folder (or keep the default) and select <strong>Install</strong>.</li>
+            <li>Open <strong>Saint Seiya TCG</strong> from the desktop shortcut or the Start menu.</li>
+          </ol>
+        </section>
+        <section class="kv-card" id="mac" aria-labelledby="g-mac">
+          <h3 id="g-mac">macOS</h3>
+          <ol>
+            <li>Open the downloaded file <strong>SaintSeiyaTCG-1.0.0-mac-universal.dmg</strong>.</li>
+            <li>Drag <strong>Saint Seiya TCG</strong> into the <strong>Applications</strong> folder.</li>
+            <li>Open the app from Applications. macOS warns that it cannot verify the developer, because the beta app is not notarized yet. Select <strong>Done</strong>.</li>
+            <li>Open <strong>System Settings → Privacy &amp; Security</strong>, scroll down and select <strong>Open Anyway</strong> next to Saint Seiya TCG. Confirm with your password.</li>
+            <li>From now on, the app opens normally.</li>
+          </ol>
+        </section>
+        <section class="kv-card" aria-labelledby="g-first">
+          <h3 id="g-first">First launch</h3>
+          <ol>
+            <li>Sign in with the email and password of your beta account.</li>
+            <li>No account yet? Ask for access on the <a href="/">home page</a>. We send an invitation when a spot opens.</li>
+            <li>The app remembers your sign-in, so you go straight to the lobby next time.</li>
+          </ol>
+        </section>
+        <section class="kv-card" aria-labelledby="g-use">
+          <h3 id="g-use">Controls</h3>
+          <dl>
+            <dt>Full screen</dt><dd><kbd>F11</kbd> on Windows, <kbd>Ctrl</kbd> <kbd>⌘</kbd> <kbd>F</kbd> on macOS</dd>
+            <dt>Back to lobby</dt><dd><kbd>Ctrl</kbd> <kbd>L</kbd> (<kbd>⌘</kbd> <kbd>L</kbd> on macOS)</dd>
+            <dt>Reload</dt><dd><kbd>Ctrl</kbd> <kbd>R</kbd> (<kbd>⌘</kbd> <kbd>R</kbd> on macOS)</dd>
+            <dt>Zoom</dt><dd><kbd>Ctrl</kbd> <kbd>+</kbd> / <kbd>−</kbd> / <kbd>0</kbd></dd>
+          </dl>
+        </section>
+        <section class="kv-card" aria-labelledby="g-updates">
+          <h3 id="g-updates">Updates</h3>
+          <p>The game updates by itself: every new card, rule or fix reaches the app as soon as it reaches the website. You only download the app again when this page announces a new app version.</p>
+        </section>
+        <section class="kv-card" aria-labelledby="g-req">
+          <h3 id="g-req">Requirements</h3>
+          <ul>
+            <li>Windows 10/11 64-bit, or macOS 12 Monterey or later.</li>
+            <li>A graphics card with WebGL (any computer from the last 8 years).</li>
+            <li>4 GB of RAM and a stable internet connection.</li>
+          </ul>
+        </section>
+        <section class="kv-card" aria-labelledby="g-help">
+          <h3 id="g-help">Trouble?</h3>
+          <ul>
+            <li><strong>“The Sanctuary is out of reach”:</strong> check your internet connection and select Try again.</li>
+            <li><strong>Blank or frozen screen:</strong> press Reload (<kbd>Ctrl</kbd> <kbd>R</kbd>).</li>
+            <li><strong>Slow duels:</strong> in the duel, open Settings and lower Graphics.</li>
+            <li><strong>Text too big or small:</strong> reset the zoom with <kbd>Ctrl</kbd> <kbd>0</kbd>.</li>
+          </ul>
+        </section>
+        <section class="kv-card" aria-labelledby="g-remove">
+          <h3 id="g-remove">Uninstall</h3>
+          <p><strong>Windows:</strong> Settings → Apps → Installed apps → Saint Seiya TCG → Uninstall.</p>
+          <p><strong>macOS:</strong> drag Saint Seiya TCG from Applications to the Trash.</p>
+          <p>Your decks and rank stay safe in your account.</p>
+        </section>
+        <section class="kv-card wide" aria-labelledby="g-browser">
+          <h3 id="g-browser">Prefer not to install?</h3>
+          <p>Play at <a href="/playtest/">saintseiyatcg.com/playtest</a> in Chrome, Edge or Safari. In Chrome or Edge you can also choose <strong>Install Saint Seiya TCG</strong> in the address bar to get a window of its own, with no download.</p>
+        </section>
+      </div>
+    </main>
+    <footer class="kv-footer"><span class="kv-stamp">Saint Seiya TCG · Closed beta</span><span><a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a></span></footer>
+  </div>
+  <script type="module">
+    import {mountKV} from '/shared/kv-sky.js?v=20261029-2';
+    mountKV({anchor: 'h1 .kv-cosmo'});
+    // Destaca o sistema de quem visita; o outro botão vira secundário.
+    const ua = navigator.userAgentData?.platform || navigator.platform || navigator.userAgent;
+    const os = /win/i.test(ua) ? 'win' : /mac/i.test(ua) ? 'mac' : null;
+    if (os) for (const card of document.querySelectorAll('[data-os]')) {
+      const mine = card.dataset.os === os;
+      card.classList.toggle('is-yours', mine); card.querySelector('.yours').hidden = !mine;
+      if (!mine) card.querySelector('.kv-button').className = 'kv-ghost';
+      if (mine) card.parentElement.prepend(card);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+{
+  "name": "saint-seiya-tcg",
+  "productName": "Saint Seiya TCG",
+  "version": "1.0.0",
+  "description": "Saint Seiya TCG desktop app (Olympus Arena).",
+  "author": "Saint Seiya TCG",
+  "homepage": "https://saintseiyatcg.com",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dist:mac": "electron-builder --mac",
+    "dist:win": "electron-builder --win",
+    "dist": "electron-builder --mac --win"
+  },
+  "devDependencies": {
+    "electron": "39.8.10",
+    "electron-builder": "26.0.20"
+  },
+  "build": {
+    "appId": "com.saintseiyatcg.desktop",
+    "productName": "Saint Seiya TCG",
+    "artifactName": "SaintSeiyaTCG-${version}-${os}-${arch}.${ext}",
+    "directories": {"output": "dist", "buildResources": "build"},
+    "files": ["main.js", "offline.html", "build/icon.png"],
+    "mac": {
+      "target": [{"target": "dmg", "arch": ["universal"]}],
+      "category": "public.app-category.card-games",
+      "icon": "build/icon.png",
+      "identity": null
+    },
+    "dmg": {"title": "Saint Seiya TCG"},
+    "win": {
+      "target": [{"target": "nsis", "arch": ["x64"]}],
+      "icon": "build/icon.png",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "Saint Seiya TCG"
+    }
+  }
+}

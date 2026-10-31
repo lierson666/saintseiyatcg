@@ -1,0 +1,314 @@
+<!doctype html>
+<!-- Como jogar (autor, 31/10/2026): página no estilo do "How to Play" do Magic, no KV oficial (shared/kv.css).
+     Fonte das regras: docs/guia-do-jogo.md (Rulebook 2.1). Esta página resume; não cria regra.
+     As cartas são renderizadas ao vivo pelo shared/live-card.js a partir de card-forge/art-web/cards.json. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Saint Seiya TCG — How to Play</title>
+  <meta name="description" content="Learn to play Saint Seiya TCG: your God and Devotees, Cosmo, rounds, Strike, guard and Rivals, Armor and keywords.">
+  <meta name="theme-color" content="#05060c">
+  <link rel="icon" href="/LOGO/favicon.png?v=20261030">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Cormorant+Garamond:ital,wght@1,400&family=Jost:wght@300;400;500&display=swap">
+  <link rel="stylesheet" href="/shared/kv.css?v=20261029-1">
+  <link rel="stylesheet" href="/shared/live-card.css?v=20261031-tap1">
+  <style>
+    html, body { margin: 0; background: var(--kv-bg); color: var(--kv-ink); font: 300 17px/1.65 var(--kv-sans); }
+    html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+    .page { position: relative; z-index: 1; min-height: 100dvh; display: grid; grid-template-rows: auto 1fr auto; }
+    .kv-nav { position: sticky; top: 0; z-index: 5; }
+    .kv-nav a { color: var(--kv-muted); text-decoration: none; }
+    .kv-nav .links { display: flex; gap: clamp(14px, 3vw, 32px); }
+    a { color: var(--kv-gold-2); }
+    main { width: min(1120px, 100%); margin: 0 auto; padding: clamp(32px, 8vh, 96px) clamp(16px, 4vw, 40px) 72px; box-sizing: border-box; }
+    .hero { max-width: 760px; margin-bottom: clamp(48px, 8vh, 88px); }
+    .hero h1 { margin: 18px 0 20px; display: grid; gap: 6px; }
+    .lead { max-width: 62ch; color: var(--kv-muted); margin: 0 0 28px; }
+    .cta { display: flex; flex-wrap: wrap; gap: 12px; }
+    .cta a { display: inline-flex; align-items: center; text-decoration: none; }
+    .cta .kv-ghost { color: var(--kv-ink); }
+
+    section.block { margin: 0 0 clamp(56px, 10vh, 112px); }
+    .eyebrow { margin: 0 0 10px; }
+    h2 { margin: 0 0 18px; font: italic 400 clamp(34px, 4.6vw, 56px)/1.02 var(--kv-serif); }
+    h3 { margin: 0 0 12px; font: 600 12px var(--kv-title); letter-spacing: .32em; text-transform: uppercase; color: var(--kv-gold); }
+    p { margin: 0 0 14px; color: var(--kv-muted); } p:last-child { margin-bottom: 0; }
+    strong { color: var(--kv-ink); font-weight: 500; }
+    ol, ul { margin: 0; padding-left: 1.3em; color: var(--kv-muted); } li { margin: 0 0 10px; } li:last-child { margin-bottom: 0; }
+    .intro { max-width: 68ch; margin-bottom: 28px; }
+
+    /* Índice em mosaico, como os blocos do tutorial do Magic */
+    .tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+    .tile { position: relative; display: grid; align-content: end; gap: 6px; min-height: 150px; padding: 18px; text-decoration: none; color: var(--kv-ink);
+      transition: border-color .2s, transform .2s; background-size: cover; background-position: center 25%; }
+    .tile::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, #05060c1a, #05060ce6 75%); z-index: 0; }
+    .tile > * { position: relative; z-index: 1; }
+    .tile:hover { border-color: #e6c36a88; transform: translateY(-2px); }
+    .tile b { font: 600 13px var(--kv-title); letter-spacing: .22em; text-transform: uppercase; }
+    .tile span { font-size: 14px; color: var(--kv-muted); line-height: 1.4; }
+    .tile .n { font: italic 400 28px/1 var(--kv-serif); color: var(--kv-gold); }
+
+    /* Leitura da carta: carta ao vivo + legenda numerada */
+    .anatomy { display: grid; grid-template-columns: minmax(220px, 300px) 1fr; gap: clamp(24px, 5vw, 64px); align-items: start; }
+    .legend { counter-reset: part; list-style: none; padding: 0; display: grid; gap: 14px; }
+    .legend li { counter-increment: part; display: grid; grid-template-columns: 34px 1fr; gap: 12px; margin: 0; }
+    .legend li::before { content: counter(part); display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%;
+      border: 1px solid #e6c36a88; color: var(--kv-gold-2); font: 600 13px var(--kv-title); }
+    .card-slot { width: 100%; aspect-ratio: 63 / 88; container-type: inline-size; overflow: clip; border-radius: 4.5cqi; }
+    .card-slot > * { width: 100%; height: 100%; }
+
+    /* Tipos de carta */
+    .types { display: grid; grid-template-columns: repeat(3, minmax(0, 260px)); gap: 28px clamp(20px, 4vw, 48px); }
+    @media (max-width: 640px) { .types { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 14px; } }
+    figure.type { margin: 0; display: grid; gap: 12px; align-content: start; }
+    .type figcaption b { display: block; font: 600 12px var(--kv-title); letter-spacing: .28em; text-transform: uppercase; color: var(--kv-ink); margin-bottom: 4px; }
+    .type figcaption { font-size: 15px; color: var(--kv-muted); line-height: 1.5; }
+
+    .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+    .grid2 .kv-card { padding: 26px; }
+    .steps { counter-reset: step; list-style: none; padding: 0; display: grid; gap: 16px; }
+    .steps > li { counter-increment: step; position: relative; padding: 22px 24px 22px 76px; margin: 0; }
+    .steps > li::before { content: counter(step, upper-roman); position: absolute; left: 22px; top: 18px; font: italic 400 34px/1 var(--kv-serif); color: var(--kv-gold); }
+    .note { border-left: 2px solid var(--kv-gold); padding: 4px 0 4px 16px; margin: 18px 0 0; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 15px; }
+    th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--kv-line); vertical-align: top; }
+    th { font: 600 11px var(--kv-title); letter-spacing: .24em; text-transform: uppercase; color: var(--kv-gold); }
+    td:first-child { color: var(--kv-ink); font-weight: 500; }
+    #keywords td:first-child { white-space: nowrap; }
+    td { color: var(--kv-muted); }
+    .yes { color: var(--kv-gold-2); } .no { color: var(--kv-dim); }
+    .table-wrap { overflow-x: auto; }
+    .kv-card.pad { padding: clamp(20px, 3vw, 32px); }
+
+    .end { text-align: center; display: grid; justify-items: center; gap: 18px; }
+    @media (max-width: 720px) {
+      .anatomy { grid-template-columns: 1fr; } .anatomy .card-slot { max-width: 280px; margin: 0 auto; }
+      .kv-nav .links .opt { display: none; }
+      .steps > li { padding: 20px 18px 20px 62px; } .steps > li::before { left: 16px; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .tile { transition: none; } }
+  </style>
+</head>
+<body>
+  <div class="kv-veil" aria-hidden="true"></div>
+  <div class="page">
+    <nav class="kv-nav">
+      <a class="kv-stamp" href="/">Saint Seiya · TCG</a>
+      <span class="links"><a class="kv-stamp opt" href="/download/">Download</a><a class="kv-stamp kv-stamp--gold" href="/playtest/">Play</a></span>
+    </nav>
+    <main>
+      <header class="hero">
+        <p class="kv-stamp kv-stamp--gold"><span class="kv-dot" aria-hidden="true"></span>&nbsp; How to play · Rulebook 2.1</p>
+        <h1><span class="kv-lyric">Learn to burn your</span><span class="kv-cosmo">Cosmo</span></h1>
+        <p class="lead">Saint Seiya TCG is a strategy card game for two players. Each of you commands a God and an army of Devotees: Saints, Marinas, Specters and more. Build your Cosmo, choose your duels, awaken your warriors and bring down the enemy God.</p>
+        <div class="cta"><a class="kv-button" href="#basics">Start learning</a><a class="kv-ghost" href="/playtest/">Play a duel</a></div>
+      </header>
+
+      <section class="block" aria-labelledby="t-index">
+        <p class="kv-stamp eyebrow">The essentials</p>
+        <h2 id="t-index">Everything you need, step by step</h2>
+        <nav class="tiles" aria-label="Topics">
+          <a class="tile kv-card" href="#basics" data-art="athena-001"><i class="n">1</i><b>The goal</b><span>Bring the enemy God's Soul to zero.</span></a>
+          <a class="tile kv-card" href="#read" data-art="athena-v6-001"><i class="n">2</i><b>Read a card</b><span>Cost, Power, HP and abilities.</span></a>
+          <a class="tile kv-card" href="#types" data-art="athena-v6-002"><i class="n">3</i><b>Card types</b><span>God, Domain, Devotee, Armor and spells.</span></a>
+          <a class="tile kv-card" href="#setup" data-art="athena-v6-065"><i class="n">4</i><b>Setting up</b><span>Your deck, your hand and who starts.</span></a>
+          <a class="tile kv-card" href="#cosmo" data-art="athena-v6-053"><i class="n">5</i><b>Cosmo</b><span>Base and Latent Cosmo pay for everything.</span></a>
+          <a class="tile kv-card" href="#round" data-art="athena-v6-052"><i class="n">6</i><b>The round</b><span>Players take turns, one ACTION at a time.</span></a>
+          <a class="tile kv-card" href="#strike" data-art="athena-v6-009"><i class="n">7</i><b>Strike</b><span>Combat is simultaneous, and damage stays.</span></a>
+          <a class="tile kv-card" href="#guard" data-art="athena-v6-003"><i class="n">8</i><b>Guard and Rivals</b><span>Who you can hit, and who must be hit.</span></a>
+          <a class="tile kv-card" href="#armor" data-art="athena-v6-012"><i class="n">9</i><b>Armor</b><span>Cloths, Scales, Surplices and Resonance.</span></a>
+          <a class="tile kv-card" href="#keywords" data-art="athena-v6-011"><i class="n">10</i><b>Keywords</b><span>Guardian, Long Range, Pierce and more.</span></a>
+        </nav>
+      </section>
+
+      <section class="block" id="basics" aria-labelledby="t-basics">
+        <p class="kv-stamp eyebrow">1 · The goal</p>
+        <h2 id="t-basics">Defeat the enemy God</h2>
+        <div class="intro">
+          <p>Each player controls one <strong>God</strong>. Gods have <strong>Soul</strong> instead of HP. When a God's Soul reaches <strong>zero</strong>, its player loses the match. If both Gods fall at the same moment, the match is a draw.</p>
+          <p>Your Devotees do the fighting. They strike enemy Devotees and the enemy God, protect your own God, and grow stronger with Armor, Awaken and Ultimates.</p>
+        </div>
+        <div class="grid2">
+          <div class="kv-card"><h3>Every duel matters</h3><p>Damage stays on your Devotees between rounds. A wounded Saint is still a Saint, until the next blow.</p></div>
+          <div class="kv-card"><h3>Sacrifice holds the line</h3><p>Even a mighty warrior can be stopped by Devotees who stand guard and give everything.</p></div>
+          <div class="kv-card"><h3>Cosmo beats the odds</h3><p>Cosmo and Armor let weaker warriors overcome stronger foes.</p></div>
+          <div class="kv-card"><h3>A God is a summit</h3><p>Bringing down a God is an extraordinary feat. Plan for it.</p></div>
+        </div>
+      </section>
+
+      <section class="block" id="read" aria-labelledby="t-read">
+        <p class="kv-stamp eyebrow">2 · Read a card</p>
+        <h2 id="t-read">How to read a Devotee</h2>
+        <div class="anatomy">
+          <div class="card-slot" data-card="athena-v6-001" role="img" aria-label="Pegasus Seiya card"></div>
+          <ol class="legend">
+            <li><p><strong>Cost.</strong> How much Cosmo you pay to play the card. Devotees and Armor are paid only with Base Cosmo.</p></li>
+            <li><p><strong>Name and subtitle.</strong> The character. Effects that name a character only count that exact identity: wearing Pegasus Cloth does not make someone Pegasus Seiya.</p></li>
+            <li><p><strong>Type and subtype.</strong> Devotee, Equipment, Technique, Moment or Domain, plus subtypes such as Bronze Saint or Gold Saint.</p></li>
+            <li><p><strong>Abilities and keywords.</strong> What the card does. Keywords such as Guardian or Long Range are short rules explained below. When a card's text and a general rule disagree, the card wins.</p></li>
+            <li><p><strong>Power.</strong> The damage this Devotee deals in a Strike, both when attacking and when striking back.</p></li>
+            <li><p><strong>HP.</strong> How much damage it can hold. When its damage reaches its HP, it is destroyed and goes to the Tartarus.</p></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="block" id="types" aria-labelledby="t-types">
+        <p class="kv-stamp eyebrow">3 · Card types</p>
+        <h2 id="t-types">Your forces</h2>
+        <div class="types">
+          <figure class="type"><div class="card-slot" data-card="athena-001" role="img" aria-label="Athena God card"></div>
+            <figcaption><b>God</b>The divinity you command. Starts in play with its Soul, Attack and divine powers. If it falls, you lose.</figcaption></figure>
+          <figure class="type"><div class="card-slot" data-card="athena-v6-065" role="img" aria-label="A Domain card"></div>
+            <figcaption><b>Domain</b>Your God's realm. Starts in play with its own abilities.</figcaption></figure>
+          <figure class="type"><div class="card-slot" data-card="athena-v6-001" role="img" aria-label="A Devotee card"></div>
+            <figcaption><b>Devotee</b>Saints, Marinas, Specters and other warriors. They have Power and HP, and they Strike.</figcaption></figure>
+          <figure class="type"><div class="card-slot" data-card="athena-v6-002" role="img" aria-label="An Armor card"></div>
+            <figcaption><b>Equipment</b>Armor (Cloth, Scale, Surplice, Warplate, Moonplate), weapons and accessories that empower a Devotee.</figcaption></figure>
+          <figure class="type"><div class="card-slot" data-card="athena-v6-053" role="img" aria-label="A Technique card"></div>
+            <figcaption><b>Technique</b>A special technique. Playing one always takes your ACTION.</figcaption></figure>
+          <figure class="type"><div class="card-slot" data-card="athena-v6-052" role="img" aria-label="A Moment card"></div>
+            <figcaption><b>Moment</b>A sudden event. Play it as your ACTION, or as a response during your opponent's play.</figcaption></figure>
+        </div>
+      </section>
+
+      <section class="block" id="setup" aria-labelledby="t-setup">
+        <p class="kv-stamp eyebrow">4 · Setting up</p>
+        <h2 id="t-setup">Before the first round</h2>
+        <div class="grid2">
+          <div class="kv-card"><h3>Your deck</h3><ul>
+            <li><strong>1 God</strong> and <strong>1 Domain</strong>, which start in play.</li>
+            <li>A main deck of exactly <strong>60 cards</strong>.</li>
+            <li>Up to <strong>3 copies</strong> of each card.</li>
+            <li>Cards from your God's and Domain's factions, plus neutral cards.</li>
+          </ul></div>
+          <div class="kv-card"><h3>Starting the match</h3><ul>
+            <li>Shuffle and draw <strong>7 cards</strong>.</li>
+            <li>You may take one free partial <strong>mulligan</strong>: send back the cards you don't want and draw replacements.</li>
+            <li>Flip for initiative. The winner chooses who starts; the player who lost the flip gets <strong>1 Latent Cosmo</strong>.</li>
+            <li>No one draws in the first round.</li>
+          </ul></div>
+        </div>
+      </section>
+
+      <section class="block" id="cosmo" aria-labelledby="t-cosmo">
+        <p class="kv-stamp eyebrow">5 · Cosmo</p>
+        <h2 id="t-cosmo">The energy of the universe within you</h2>
+        <div class="intro">
+          <p>Cosmo pays for every card and ability. Cards marked <strong>Cosmoble</strong> can be placed face down as a <strong>Cosmo Base</strong>: once per round, on your own opportunity and before your ACTION. Placing a Base is free; it does not use your ACTION.</p>
+          <p>Each <strong>Base</strong> pays 1 Cosmo and is spent until the next round renews it. <strong>Latent Cosmo</strong> is a bank of up to 3 that stays between rounds. At the end of a round, you may convert unused Bases into Latent. You also gain 1 Latent, once per enemy ACTION, when your Devotees take damage from it.</p>
+        </div>
+        <div class="kv-card pad table-wrap">
+          <table>
+            <thead><tr><th scope="col">To pay for</th><th scope="col">Base</th><th scope="col">Latent</th></tr></thead>
+            <tbody>
+              <tr><td>Devotee, Armor, Ultimate</td><td class="yes">Yes</td><td class="no">No</td></tr>
+              <tr><td>Moment as your ACTION</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+              <tr><td>Moment as a response</td><td class="no">No</td><td class="yes">Yes</td></tr>
+              <tr><td>Technique, weapons, accessories</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+              <tr><td>Equip and other abilities</td><td class="yes">Yes</td><td class="yes">Yes</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="block" id="round" aria-labelledby="t-round">
+        <p class="kv-stamp eyebrow">6 · The round</p>
+        <h2 id="t-round">One ACTION at a time</h2>
+        <p class="intro">There are no full turns. In each round, players alternate opportunities, and each opportunity is one ACTION. Initiative, who acts first, switches every round.</p>
+        <ol class="steps">
+          <li class="kv-card"><h3>Start of round</h3><p>Renew both players' Bases, prepare your Devotees, and draw <strong>1 card</strong> each (from the second round on). Then start-of-round effects happen.</p></li>
+          <li class="kv-card"><h3>Actions</h3><p>On your opportunity, take one ACTION: play a Devotee or Equipment, play a Technique or Moment, Strike, use an ability that needs an ACTION, or <strong>Pass</strong>.</p>
+            <p>Pass ends your ACTIONS for the round, but you can still respond. Your opponent keeps acting until they pass too.</p></li>
+          <li class="kv-card"><h3>End of round</h3><p>When both players have passed, end-of-round effects happen, effects “until end of round” expire, and you may turn unused Bases into Latent Cosmo. Then a new round begins.</p></li>
+        </ol>
+        <p class="note"><strong>Everything can be answered.</strong> Each card you play and each ability you use waits on the stack. Your opponent may respond with a Moment, paid with Latent Cosmo. The last thing played resolves first.</p>
+      </section>
+
+      <section class="block" id="strike" aria-labelledby="t-strike">
+        <p class="kv-stamp eyebrow">7 · Strike</p>
+        <h2 id="t-strike">Combat</h2>
+        <div class="grid2">
+          <div class="kv-card"><h3>Declaring a Strike</h3><p>A Devotee can Strike if it is <strong>Prepared</strong>, did not enter play this round, and has an open target (see Guard and Rivals). Striking uses your ACTION and leaves the attacker <strong>Unprepared</strong>.</p></div>
+          <div class="kv-card"><h3>Devotee against Devotee</h3><p>Both deal damage equal to their <strong>Power</strong>, at the same time. The defender strikes back even if Unprepared, and it costs it nothing. Even a Devotee destroyed in the clash still deals its damage.</p></div>
+          <div class="kv-card"><h3>Devotee against God</h3><p>The Devotee deals its Power to the God's <strong>Soul</strong>. The God strikes back at the same time with its <strong>Attack</strong>.</p></div>
+          <div class="kv-card"><h3>Damage stays</h3><p>Damage is not healed at the end of the round. A Devotee is destroyed when its damage equals or exceeds its HP, and goes to the <strong>Tartarus</strong>, where cards marked Afterlife can still reach it.</p></div>
+        </div>
+      </section>
+
+      <section class="block" id="guard" aria-labelledby="t-guard">
+        <p class="kv-stamp eyebrow">8 · Guard and Rivals</p>
+        <h2 id="t-guard">Whoever attacks, opens up</h2>
+        <div class="grid2">
+          <div class="kv-card"><h3>Prepared and Unprepared</h3><p>A <strong>Prepared</strong> Devotee is on guard: it can Strike, and it cannot be targeted. An <strong>Unprepared</strong> Devotee is open. Devotees enter play Prepared and get Prepared again at the start of each round.</p></div>
+          <div class="kv-card"><h3>Open targets</h3><ul>
+            <li>The enemy <strong>God</strong> is always open.</li>
+            <li>An enemy Devotee is open if it is <strong>Unprepared</strong>, has <strong>Guardian</strong>, or is your attacker's <strong>Rival</strong>.</li>
+          </ul></div>
+          <div class="kv-card"><h3>Guardian</h3><p>If an enemy Guardian is an open target, your Strike must choose a Guardian. Rivals and Devotees with Nimble are the exceptions.</p></div>
+          <div class="kv-card"><h3>Rivals</h3><p>When a Strike between two Devotees ends with <strong>both alive</strong>, they become Rivals. Rivals can always strike each other, even on guard and past a Guardian. The bond lasts until one leaves play.</p></div>
+        </div>
+      </section>
+
+      <section class="block" id="armor" aria-labelledby="t-armor">
+        <p class="kv-stamp eyebrow">9 · Armor</p>
+        <h2 id="t-armor">Cloths, Scales and Surplices</h2>
+        <div class="intro">
+          <p>Each faction has its Armor: Athena's <strong>Cloth</strong>, Poseidon's <strong>Scale</strong>, Hades's <strong>Surplice</strong>, Ares's <strong>Warplate</strong> and Artemis's <strong>Moonplate</strong>. Each Devotee has one Armor slot; weapons and accessories use their own slots.</p>
+        </div>
+        <div class="grid2">
+          <div class="kv-card"><h3>Playing Armor</h3><p>Playing an Armor takes an ACTION and its cost, in Base Cosmo only. Its HP adds to the wearer's maximum HP; damage always stays on the Devotee.</p></div>
+          <div class="kv-card"><h3>Resonance</h3><p>“Resonance — Pegasus Seiya” links an Armor to its character. That character wears it for free when it is played or enters play, and unlocks the abilities marked with Resonance.</p></div>
+          <div class="kv-card"><h3>Equip</h3><p>Any Devotee can wear any Armor already in play: pay an ACTION and the printed <strong>Equip</strong> cost. If the wearer falls, the Armor stays in play, waiting for a new wearer.</p></div>
+          <div class="kv-card"><h3>Awaken and Ultimate</h3><p><strong>Awaken</strong> belongs to the character, not the Armor. <strong>Ultimates</strong> are extraordinary abilities with their own conditions, paid only with Base Cosmo.</p></div>
+        </div>
+      </section>
+
+      <section class="block" id="keywords" aria-labelledby="t-keywords">
+        <p class="kv-stamp eyebrow">10 · Keywords</p>
+        <h2 id="t-keywords">Combat keywords</h2>
+        <div class="kv-card pad table-wrap">
+          <table>
+            <thead><tr><th scope="col">Keyword</th><th scope="col">What it does</th></tr></thead>
+            <tbody>
+              <tr><td>Guardian</td><td>Enemy Strikes must choose a Guardian that is an open target, except against Rivals or with Nimble.</td></tr>
+              <tr><td>Nimble</td><td>Ignores Guardian when choosing a Strike target. It can still be attacked normally.</td></tr>
+              <tr><td>Long Range</td><td>When it starts a Strike, it deals its damage first. A target destroyed by it does not strike back. No bonus when defending.</td></tr>
+              <tr><td>Cheater</td><td>Attackers lose Long Range when they Strike this Devotee. Cheater does not ignore Guardian.</td></tr>
+              <tr><td>Pierce</td><td>When it starts a Strike against a Devotee, damage beyond the target's remaining HP hits the enemy God's Soul.</td></tr>
+              <tr><td>Impulse</td><td>Can Strike in the round it enters play, against any legal target, including the God.</td></tr>
+              <tr><td>Seal</td><td>A counter on a Devotee. When it would become Prepared, it removes one Seal counter and stays Unprepared instead.</td></tr>
+              <tr><td>Unfaith</td><td>When it Strikes a God, it may remove up to 2 of that player's Latent Cosmo instead of dealing Soul damage. The God still strikes back.</td></tr>
+              <tr><td>Training</td><td>Each Training counter gives the Devotee +1 Power and +1 HP while it stays in play.</td></tr>
+              <tr><td>Afterlife</td><td>Every Devotee in the Tartarus has Afterlife, so cards can find it. It does not bring it back by itself.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="block end" aria-labelledby="t-end">
+        <p class="kv-stamp kv-stamp--gold">Your first duel</p>
+        <h2 id="t-end">The best way to learn is to fight</h2>
+        <p class="intro">Challenge the AI in Olympus Arena. The duel shows your open targets, your Cosmo and every response window as you play.</p>
+        <div class="cta"><a class="kv-button" href="/playtest/">Play now</a><a class="kv-ghost" href="/download/">Get the desktop app</a></div>
+      </section>
+    </main>
+    <footer class="kv-footer"><span class="kv-stamp">Saint Seiya TCG · Rulebook 2.1</span><span><a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a></span></footer>
+  </div>
+  <script type="module">
+    import {mountKV} from '/shared/kv-sky.js?v=20261029-2';
+    mountKV({anchor: 'h1 .kv-cosmo'});
+    // Cartas reais, desenhadas pelo mesmo renderizador do jogo. Sem dados, o espaço some e o texto continua legível.
+    const ART = '/card-forge/art-web/';
+    const slots = document.querySelectorAll('[data-card]'), tiles = document.querySelectorAll('[data-art]');
+    try {
+      const [{renderLiveCard}, data] = await Promise.all([import('/shared/live-card.js?v=20261031-kw6'), fetch(ART + 'cards.json').then(r => r.json())]);
+      const byId = new Map(data.cartas.map(c => [c.id, c]));
+      const art = c => c?.ilustracao && !/-ref\./.test(c.ilustracao) ? ART + c.ilustracao : null; // nunca arte provisória (-ref)
+      for (const slot of slots) { const c = byId.get(slot.dataset.card); if (c) slot.innerHTML = renderLiveCard(c, {art: art(c)}); else slot.remove(); }
+      for (const tile of tiles) { const src = art(byId.get(tile.dataset.art)); if (src) tile.style.backgroundImage = `url("${src}")`; }
+    } catch { slots.forEach(s => s.remove()); }
+  </script>
+</body>
+</html>

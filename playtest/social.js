@@ -58,6 +58,7 @@ export function mountSocial({api, avatarOf, onCount, decks = () => [], onProfile
   const time = at => new Date(at * 1000).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
   function openChat(username) {
     const f = data.friends.find(x => x.username === username);
+    if (chat) clearInterval(chat.poll); // trocar de conversa não pode empilhar polls
     chat = {user: username, last: 0, seenUpTo: 0, poll: null};
     el.innerHTML = `<header class="lb-chat__head"><button class="lb-x" data-social="back" aria-label="Back to friends">‹</button>
         ${person(f || {username})}<button class="kv-ghost lb-chat__duel" data-social="profile" data-user="${esc(username)}">Profile</button><button class="kv-ghost is-gold lb-chat__duel" data-social="duel-open" ${f?.status === 'online' ? '' : 'disabled title="Your friend must be online"'}>⚔ Challenge</button><button class="lb-chat__report" data-social="report" data-user="${esc(username)}">Report</button></header>

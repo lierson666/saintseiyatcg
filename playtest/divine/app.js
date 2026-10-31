@@ -12,7 +12,7 @@ import {playDevotee, playEquipment, playSpell, activate, reequip, duplicateChara
 import {atkOf, hpOf, keywordsOf, gearOf, isSaint, isBronze, ABILITIES} from '../engine-v3/effects.js';
 import {v6Spell, entryOf, V6} from '../engine-v3/v6/hooks.js';
 import {STEPS, ABILITY_STEPS} from '../choices-v3.js?v=2';
-import {createScene, THEMES} from './scene.js?v=20261028-5';
+import {createScene, THEMES} from './scene.js?v=20261031-pool1';
 import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudgment, greatFloodBlock, announceGreatFlood, GREAT_FLOOD_COST,
   greatEclipseBlock, GREAT_ECLIPSE_COST, obliterationBlock, OBLITERATION_COST, bloodlustBlock, BLOODLUST_COST, moonHarvestBlock, moonAwakeningBlock, MOON_AWAKENING_COST} from '../engine-v3/gods.js';
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout} from '../engine-v3/clock.js';

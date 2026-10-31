@@ -223,8 +223,11 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
     P.base[i] = size * renderer.getPixelRatio(); P.size[i] = P.base[i]; P.life[i] = life; P.max[i] = life; P.drag[i] = drag; P.grav[i] = grav;
   }
   function stepParticles(dt) {
+    if (!P.n) return; // nada vivo: não reenvia os buffers à GPU a cada frame
+    let alive = 0;
     for (let i = 0; i < P.n; i++) {
       if (P.life[i] <= 0) { P.size[i] = 0; continue; }
+      alive++;
       P.life[i] -= dt;
       const k = Math.max(0, P.life[i] / P.max[i]), d = Math.exp(-P.drag[i] * dt);
       P.vel[i * 2] *= d; P.vel[i * 2 + 1] = P.vel[i * 2 + 1] * d + P.grav[i] * dt;
@@ -234,23 +237,31 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
     }
     fxGeo.attributes.position.needsUpdate = true; fxGeo.attributes.aColor.needsUpdate = true; fxGeo.attributes.aSize.needsUpdate = true;
     fxGeo.setDrawRange(0, P.n);
+    if (!alive) { P.n = 0; cursor = 0; }
   }
 
   // Formas efêmeras (anéis de choque, feixes, flash): malhas reaproveitadas por tipo.
   const live = [];
   const ringGeo = new THREE.RingGeometry(.82, 1, 64), quadGeo = new THREE.PlaneGeometry(1, 1);
-  const additive = color => { const m = new THREE.MeshBasicMaterial({color, transparent: true, depthTest: false, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide}); return m; }; // y para baixo inverte a face
+  // Pool de malhas: descartar o último material liberava o shader e cada golpe recompilava (~150 ms de travada).
+  const pool = [];
+  const additive = color => new THREE.MeshBasicMaterial({color, transparent: true, depthTest: false, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide}); // y para baixo inverte a face
   function shape(geo, color, update, duration) {
-    const mesh = new THREE.Mesh(geo, additive(color));
+    const mesh = pool.pop() || new THREE.Mesh(geo, additive(color));
+    mesh.geometry = geo; mesh.material.color.set(color); mesh.material.opacity = 1; mesh.rotation.set(0, 0, 0);
     fxScene.add(mesh);
     live.push({mesh, update, t: 0, duration});
+  }
+  { // aquece o shader na carga, para o primeiro golpe não travar
+    const warm = new THREE.Mesh(quadGeo, additive('#fff')); warm.material.opacity = 0;
+    fxScene.add(warm); fxRenderer.compile(fxScene, fxCam); fxScene.remove(warm); pool.push(warm);
   }
   function stepShapes(dt) {
     for (let i = live.length - 1; i >= 0; i--) {
       const s = live[i]; s.t += dt;
       const k = Math.min(1, s.t / s.duration);
       s.update(s.mesh, k);
-      if (k >= 1) { fxScene.remove(s.mesh); s.mesh.material.dispose(); live.splice(i, 1); }
+      if (k >= 1) { fxScene.remove(s.mesh); pool.push(s.mesh); live.splice(i, 1); }
     }
   }
 

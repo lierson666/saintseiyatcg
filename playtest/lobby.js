@@ -10,7 +10,7 @@ import {loadMyDecks, saveMyDecks, findDeck, syncDecks, onDeckStatus, deckCovers,
 import {mountKV} from '../shared/kv-sky.js?v=20261029-2';
 import {countryOptions, countryName} from '../shared/countries.js?v=20261029-1';
 import {startPresence} from '../shared/presence.js?v=20261029-1';
-import {mountSocial} from './social.js?v=20261029-5';
+import {mountSocial} from './social.js?v=20261031-poll1';
 import {telas, imageUrl, sound, applyColors, applyTexts} from './telas.js?v=20261030-1';
 import {loadRank, rankBadge, rankName, openRankPanel} from './rank.js?v=20261031-1';
 
