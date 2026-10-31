@@ -75,10 +75,10 @@
         <td class="actions"><button class="kv-ghost" data-do="approve" data-id="${r.id}">Approve</button><button class="kv-ghost" data-do="decline" data-id="${r.id}">Decline</button></td></tr>`).join('')}</tbody></table>`,
       invites: () => `<form class="bar" id="invite"><input class="kv-input" type="email" name="email" placeholder="email@example.com" required aria-label="Email to invite"><button class="kv-ghost">Invite</button></form>
         <table><thead><tr><th>Email</th><th>Invited</th><th>Account</th><th></th></tr></thead><tbody>${data.invites.map(i => `
-        <tr><td>${esc(i.email)}</td><td>${when(i.at)}</td><td>${i.username ? esc(i.username) : '<span class="tag">not yet</span>'}</td>
+        <tr><td>${esc(i.email)}</td><td>${when(i.at)}</td><td>${i.username ? esc(i.username) + (i.friend_code ? `<small>${esc(i.friend_code)}</small>` : '') : '<span class="tag">not yet</span>'}</td>
         <td class="actions">${i.username ? '' : `<button class="kv-ghost" data-do="uninvite" data-email="${esc(i.email)}">Remove</button>`}</td></tr>`).join('')}</tbody></table>`,
       players: () => `<table><thead><tr><th>Player</th><th>Country</th><th>Status</th><th>Joined</th><th></th></tr></thead><tbody>${data.users.map(u => `
-        <tr><td>${esc(u.username || '(profile incomplete)')}<small>${esc(u.name)} · ${esc(u.email)}</small></td><td>${esc(u.country || '—')}</td>
+        <tr><td>${esc(u.username || '(profile incomplete)')}<small>${u.friend_code ? esc(u.friend_code) + ' · ' : ''}${esc(u.name)} · ${esc(u.email)}</small></td><td>${esc(u.country || '—')}</td>
         <td>${u.suspended ? '<span class="tag bad">suspended</span>' : `<span class="tag ${u.status === 'online' ? 'on' : u.status}">${u.status === 'match' ? 'in a duel' : u.status}</span>`}<small>last seen ${when(u.last_seen)}</small></td>
         <td>${when(u.created_at)}</td>
         <td class="actions">${u.admin || !u.username ? '' : u.suspended ? `<button class="kv-ghost" data-do="restore" data-user="${esc(u.username)}">Restore</button>` : `<button class="kv-ghost" data-do="suspend" data-user="${esc(u.username)}">Suspend</button>`}</td></tr>`).join('')}</tbody></table>`,

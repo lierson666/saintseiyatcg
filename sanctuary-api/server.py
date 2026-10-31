@@ -962,7 +962,7 @@ class Handler(BaseHTTPRequestHandler):
         with lock:
             requests = db.execute("select r.*, exists(select 1 from users u where u.email = r.email) as has_account from access_requests r "
                                   "where status = 'pending' order by created_at").fetchall()
-            invites = db.execute('select i.email, i.created_at, u.username_display from invites i left join users u on u.email = i.email '
+            invites = db.execute('select i.email, i.created_at, u.username_display, u.friend_code from invites i left join users u on u.email = i.email '
                                  'order by i.created_at desc').fetchall()
             users = db.execute('select * from users order by created_at desc').fetchall()
             reports = db.execute('select r.*, a.username_display as reporter, b.username_display as reported, b.id as reported_id '
@@ -973,8 +973,8 @@ class Handler(BaseHTTPRequestHandler):
         self.send_json(200, {
             'requests': [{'id': r['id'], 'email': r['email'], 'name': r['name'], 'news': bool(r['news']), 'at': r['created_at'],
                           'has_account': bool(r['has_account'])} for r in requests],
-            'invites': [{'email': i['email'], 'at': i['created_at'], 'username': i['username_display']} for i in invites],
-            'users': [{'username': u['username_display'], 'name': u['display_name'], 'email': u['email'], 'country': u['country'],
+            'invites': [{'email': i['email'], 'at': i['created_at'], 'username': i['username_display'], 'friend_code': i['friend_code']} for i in invites],
+            'users': [{'username': u['username_display'], 'friend_code': u['friend_code'], 'name': u['display_name'], 'email': u['email'], 'country': u['country'],
                        'created_at': u['created_at'], 'last_seen': u['last_seen'], 'status': online(u), 'suspended': bool(u['suspended_at']),
                        'admin': u['email'] in ADMINS} for u in users],
             'reports': [{'id': r['id'], 'reporter': r['reporter'], 'reported': r['reported'], 'at': r['created_at'],
