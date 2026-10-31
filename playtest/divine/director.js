@@ -255,6 +255,13 @@ export function createDirector({ui, getFx, settings}) {
         return;
       }
       const enemy = ui.enemyOf(e.player), to = ui.center(ui.godRect(enemy));
+      if (!e.snapshot) { // Ultimates sem os raios dos Saints (Great Eclipse, Moon Awakening, Obliteration…): onda e o Soul perdido
+        impact(to, {color: '#d6b4ff', strength: 1.6});
+        if (e.lost) ui.float(to, `-${e.lost} Soul`, 'damage big');
+        await pause(600);
+        ui.cinematic?.(false);
+        return;
+      }
       const shots = e.snapshot.map((s, i) => {
         const from = ui.center(ui.rect(s.uid));
         if (!from) return Promise.resolve();
@@ -303,6 +310,7 @@ export function createDirector({ui, getFx, settings}) {
           cur = group ? anim(group) : {ligada: true, velocidade: 1};
           if (group && group !== last && !skipping) sound(group); // um som por sequência do mesmo grupo
           last = group;
+          ui.onEvent?.(e); // zoom da pilha acompanha a animação, não o render
           await (handlers[e.type] || (async () => {}))(e);
         }
       } finally { busy = false; skipping = false; cur = {ligada: true, velocidade: 1}; }

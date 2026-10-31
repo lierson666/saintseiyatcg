@@ -18,7 +18,7 @@ import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudg
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
-import {createDirector} from './director.js?v=13';
+import {createDirector} from './director.js?v=15';
 import {createAI} from './ai.js?v=5';
 import {findDeck} from '../deck-store.js';
 import {unlock, playMusic} from '../audio.js?v=20261030-telas';
@@ -161,7 +161,7 @@ async function present(r, run, from) {
   syncClock(events);
   render.lock = true;
   clockPause(clock, now()); // G3-025: animação não gasta tempo de decisão
-  await director.play(events);
+  try { await director.play(events); } catch (err) { console.error(err); } // animação quebrada não pode travar a partida
   clockResume(clock, now());
   render.lock = false;
   if (pending) clockHandTo(clock, pending.pending.player, now()); // G3-026: a decisão usa o relógio de quem decide
@@ -173,6 +173,7 @@ function reply(answer) {
   if (online) return pending && !director.busy ? sendOnline('answer', {answer}) : undefined;
   if (!pending || director.busy) return;
   const p = pending, s = S();
+  $$('.pick-modal, .pick-veil').forEach(el => el.remove()); // respondeu: o popup sai já, sem esperar a animação da resolução
   let r;
   try { r = resume(s, ctx, p.run, p, answer); } catch (e) {
     warn(why(e)); console.debug(e);
@@ -798,6 +799,7 @@ function overlays() {
 function render() {
   if (!aim) $('.aim-follow')?.remove(); // a seta de mira volta no próximo movimento do mouse, se ainda houver alvo
   if (render.lock) return;
+  syncZoom();
   document.body.classList.toggle("reduce-motion", !!settings.reduceMotion);
   const s = S(), me = viewer(), them = other(me);
   if (mode) { const step = mode.steps[mode.i]; mode.options = step?.pick ? candidates(step, mode.key).filter(u => !mode.picked.includes(u)) : []; }
@@ -830,10 +832,65 @@ function render() {
   drawIntents();
 }
 
+// Zoom da pilha (autor, 31/10/2026): toda carta ou habilidade que entra na pilha, dos dois lados, aparece em zoom no canto
+// superior direito na hora (pelos eventos da animação: o render espera a fila) e fica até resolver + 1s. Topo grande,
+// as de baixo em leque atrás, na ordem em que resolvem. O render sincroniza com a pilha real.
+let zoomItems = [], zoomResolving = null, zoomTimer = 0;
+function zoomFace(it) {
+  if (ctx.objects[it.uid]) return cardFace(it.uid, {size: 'dcard--lg'}).replace('tabindex="0"', 'tabindex="-1"');
+  const uid = String(it.uid || ''), id = uid.startsWith('domain:') ? S().domains?.[uid.slice(7)] : null;
+  const f = (id && FORGE.get(id)) || FORGE.get(`${cards.get(S().gods[it.controller])?.name.toLowerCase()}-001`);
+  return f ? `<div class="dcard dcard--lg art-full">${renderLiveCard(f, {art: f.ilustracao && FORGE_ART + f.ilustracao})}</div>` : '';
+}
+function drawZoom() {
+  let el = document.getElementById('chain-zoom');
+  if (!el) { el = document.createElement('div'); el.id = 'chain-zoom'; el.setAttribute('aria-live', 'polite'); document.body.appendChild(el); }
+  const top = zoomItems.at(-1), key = zoomItems.map(it => it.uid).join('|') + `#${zoomResolving}`;
+  if (el.dataset.key === key) return;
+  el.dataset.key = key;
+  clearTimeout(zoomTimer);
+  if (!top) {
+    if (!el.classList.contains('is-on')) return;
+    el.classList.add('is-leaving');
+    zoomTimer = setTimeout(() => { el.className = ''; el.innerHTML = ''; document.body.classList.remove('has-chain-zoom'); }, 1300);
+    return;
+  }
+  const g = S().divine?.[top.controller]?.god;
+  el.dataset.godfx = (g || 'god-athena').slice(4);
+  el.style.setProperty('--glow', GOD_GLOW[g] || GOD_GLOW['god-athena']);
+  el.className = 'chain-zoom is-on';
+  document.body.classList.add('has-chain-zoom');
+  const t = chainLabel(top), below = zoomItems.slice(-3, -1);
+  el.innerHTML = `<div class="chain-zoom__stack"><i class="cast-aura" aria-hidden="true"></i>${below.map((it, i) => `<div class="chain-zoom__under" style="--i:${below.length - i}" aria-hidden="true">${zoomFace(it)}</div>`).join('')}<div class="chain-zoom__top">${zoomFace(top)}</div></div>
+    <small class="chain-zoom__label">${zoomResolving === top.uid ? 'Resolving' : `Player ${esc(top.controller)}`} · ${esc(t.sub || t.name)}${zoomItems.length > 1 ? ` <b>+${zoomItems.length - 1}</b>` : ''}</small>`;
+}
+function zoomEvent(e) {
+  const push = it => { if (it.uid && !zoomItems.some(x => x.uid === it.uid)) zoomItems.push(it); };
+  if (e.type === 'trigger') push({uid: e.uid, controller: e.player, ability: e.ability});
+  else if (e.type === 'ability') push({uid: e.uid, controller: e.player, ability: e.name, target: e.target});
+  else if (e.type === 'chain_add' || (e.type === 'card_played' && !e.from && !e.token)) push({uid: e.uid, controller: e.player});
+  else if (e.type === 'resolve') {
+    if (zoomResolving) zoomItems = zoomItems.filter(x => x.uid !== zoomResolving);
+    push({uid: e.uid, controller: e.player, ability: e.ability});
+    zoomResolving = e.uid;
+  } else if (e.type === 'fizzled') zoomItems = zoomItems.filter(x => x.uid !== e.uid);
+  else return;
+  drawZoom();
+}
+function syncZoom() {
+  const s = S();
+  const resolving = pending && zoomItems.find(x => x.uid === zoomResolving); // decisão no meio da resolução: a carta fica
+  zoomItems = s.victory ? [] : s.chain.map(c => ({uid: c.uid, controller: c.controller, ability: c.ability, source: c.source, target: c.target, targets: c.targets}));
+  if (resolving && !zoomItems.some(x => x.uid === resolving.uid)) zoomItems.push(resolving);
+  zoomResolving = resolving ? resolving.uid : null;
+  drawZoom();
+}
+
 // ---------- Adaptador do DOM para o orquestrador ----------
 
 const rectOf = el => (el ? el.getBoundingClientRect() : null);
 const ui = {
+  onEvent: zoomEvent,
   number: num, type: uid => info(uid).type, enemyOf: key => other(key),
   // Cor do God de quem controla o Devotee (golpes básicos no tema do deus, autor 31/10/2026).
   godColor: uid => { const k = S().order.find(k => S().players[k].battlefield.includes(uid)); return k && `rgb(${GOD_GLOW[S().divine?.[k]?.god] || GOD_GLOW['god-athena']})`; },
@@ -1872,7 +1929,7 @@ async function applyView(view) {
   seenEvents = s.events.length;
   syncClock(events);
   render.lock = true;
-  await director.play(events);
+  try { await director.play(events); } catch (err) { console.error(err); }
   render.lock = false;
   render();
   focusDecision();

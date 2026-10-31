@@ -1038,3 +1038,21 @@ body:has(.trigger-panel, .cast-slot) .command__clock { visibility: hidden; }
 @keyframes awakenAura { 50% { box-shadow: 0 0 0 2px rgba(0, 0, 0, .7), 0 0 36px 10px rgba(var(--glow), 1), 0 0 100px 30px rgba(var(--glow), .6), inset 0 0 24px rgba(var(--glow), .7); } }
 @keyframes awakenWave { from { transform: scale(1); opacity: .9; } to { transform: scale(1.55); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .godhud.is-awaken .gh-hole, .godhud.is-awaken .gh-hole::before, .godhud.is-awaken .gh-hole::after { animation: none; } .godhud.is-awaken .gh-hole::after { display: none; } }
+
+/* Zoom da pilha (autor, 31/10/2026): canto superior direito, aparece ao entrar na pilha e sai 1s depois de resolver;
+   o painel de decisão desce para baixo dele. */
+:root { --zoom-card: clamp(150px, 12vw, 200px); --zoom-h: calc(var(--zoom-card) * 1.4 + 40px); }
+#chain-zoom { display: none; position: fixed; z-index: 43; right: clamp(12px, 1.5vw, 24px); top: 12px; width: clamp(240px, 20vw, 300px); justify-items: center; gap: 6px; pointer-events: none; }
+#chain-zoom.is-on { display: grid; animation: cast-in-right .32s cubic-bezier(.2, .8, .2, 1); }
+#chain-zoom.is-leaving { opacity: 0; transition: opacity .3s ease .9s; }
+.chain-zoom__stack { position: relative; display: grid; justify-items: center; }
+.chain-zoom .dcard { --card-w: var(--zoom-card); }
+.chain-zoom__top { position: relative; z-index: 2; filter: drop-shadow(0 0 18px rgba(var(--glow), .55)); }
+.chain-zoom__under { position: absolute; z-index: 1; top: 0; transform: translate(calc(var(--i) * -22px), calc(var(--i) * 8px)) rotate(calc(var(--i) * -6deg)) scale(.92); filter: brightness(.55) saturate(.8); }
+.chain-zoom__label { position: relative; z-index: 3; padding: 3px 12px; border: 1px solid rgb(var(--glow)); border-radius: 999px; background: rgba(10, 12, 34, .92); color: #f3ead6; font: 600 12px/1.3 system-ui, sans-serif; letter-spacing: .02em; text-align: center; box-shadow: 0 0 14px rgba(var(--glow), .35); }
+.chain-zoom__label b { color: rgb(var(--glow)); }
+body.has-chain-zoom .trigger-panel:not(.is-targeting) { top: calc(12px + var(--zoom-h)); max-height: calc(100dvh - 24px - var(--zoom-h)); }
+body.has-chain-zoom .trigger-panel:not(.is-targeting) .trigger-panel__card { display: none; }
+body:has(.cast-slot, .trigger-panel.is-targeting, .pick-modal, .mulligan, .victory) #chain-zoom { display: none; }
+.reduce-motion #chain-zoom { animation: none; transition: none; }
+body.has-chain-zoom .command__clock { visibility: hidden; }

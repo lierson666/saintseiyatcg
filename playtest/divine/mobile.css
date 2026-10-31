@@ -87,6 +87,10 @@
   .pile__box h3 { font-size: 18px; }
   .pile__grid { grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 8px; }
   /* Painéis laterais (gatilho, cadeia) ocupam menos. */
+  /* Zoom da pilha no celular deitado: mesmo canto, menor. */
+  :root { --zoom-card: clamp(84px, 11vw, 120px); --zoom-h: calc(var(--zoom-card) * 1.4 + 30px); }
+  #chain-zoom { width: min(38vw, 260px); right: calc(8px + var(--sr)); top: 6px; }
+  body.has-chain-zoom .trigger-panel:not(.is-targeting) { top: calc(6px + var(--zoom-h)); max-height: calc(100dvh - 12px - var(--zoom-h)); }
   /* Celular deitado (autor, 31/10/2026): painel até 38% da largura, carta menor, texto rolando, botões de 44 px; o campo segue clicável. */
   .trigger-panel, .cast-slot { width: min(38vw, 260px); left: auto; right: calc(8px + var(--sr)); top: 6px; gap: 6px; }
   .trigger-panel__card .dcard, .cast-slot .dcard { --card-w: clamp(84px, 11vw, 120px); }
