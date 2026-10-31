@@ -31,23 +31,30 @@ const pack = () => `<div class="ec-pack" aria-hidden="true"><img class="ec-pack_
 
 export function storeScreen(e) {
   if (!e) return `<section class="lb-page"><header class="lb-page__head"><h1>Store</h1><p>Sign in to buy and open boosters.</p></header></section>`;
+  // Layout (autor pediu /ui-ux-pro-max, 31/10/2026): vitrine preto + dourado; booster em destaque, cosméticos "em breve" embaixo.
   const price = e.prices.booster, can = e.coins >= price;
+  const odds = [['10', 'Common'], ['3', 'Uncommon'], ['1', 'Legendary or Divine']];
+  const soon = [['Sleeves', 'Card backs for your decks'], ['Avatars', 'Your portrait in the lobby'], ['God art', 'New art for your God on the table']];
   return `<section class="lb-page ec-store">
-    <header class="lb-page__head"><h1>Store</h1><p>Spend Cosmo Coins on boosters. Each booster has 14 cards: 10 Common, 3 Uncommon and 1 Legendary or Divine.</p></header>
-    <div class="ec-store__grid">
-      <article class="ec-tile ec-tile--olympus">
-        ${pack()}
-        <div class="ec-tile__body"><h2>Olympus Booster</h2><p class="kv-status">All Gods · 14 cards · Divine in about 1 of 8</p>
-          <button class="kv-button ec-buy" data-act="buy-booster" ${can ? '' : 'disabled'}><i class="ec-coin" aria-hidden="true"></i>${fmt(price)}</button>
-          ${can ? '' : `<p class="kv-status">You need ${fmt(price - e.coins)} more Cosmo Coins.</p>`}</div>
-      </article>
-      <article class="ec-tile ec-tile--owned">
-        <div class="ec-stack" aria-hidden="true">${pack()}${e.boosters > 1 ? pack() : ''}</div>
-        <div class="ec-tile__body"><h2>My boosters</h2><p class="ec-count">${e.boosters}</p>
-          <button class="kv-button is-gold" data-act="open-booster" ${e.boosters ? '' : 'disabled'}>Open booster</button></div>
-      </article>
-    </div>
-    <p class="kv-status">Sleeves, avatars and God art arrive in the Store soon.</p>
+    <header class="ec-store__head"><div><h1>Store</h1><p>Spend Cosmo Coins earned in duels.</p></div>
+      <div class="ec-wallet" aria-label="Your wallet"><span><i class="ec-coin" aria-hidden="true"></i><b>${fmt(e.coins)}</b><small>Cosmo Coins</small></span>
+        <span><b>${e.boosters}</b><small>${e.boosters === 1 ? 'Booster' : 'Boosters'}</small></span></div></header>
+    <article class="ec-feature">
+      <div class="ec-feature__pack">${pack()}</div>
+      <div class="ec-feature__info">
+        <p class="ec-eyebrow">Booster · All Gods</p>
+        <h2>Olympus</h2>
+        <ul class="ec-odds" aria-label="Each booster has 14 cards">${odds.map(([n, r]) => `<li><b>${n}</b>${r}</li>`).join('')}</ul>
+        <p class="ec-note">A Divine card replaces the Legendary in about 1 of 8 boosters. Copies beyond 3 turn into Cosmo Coins.</p>
+        <div class="ec-actions">
+          ${e.boosters ? `<button class="ec-cta" data-act="open-booster">Open booster (${e.boosters})</button>` : ''}
+          <button class="ec-cta ${e.boosters ? 'ec-cta--open' : ''}" data-act="buy-booster" ${can ? '' : 'disabled'} aria-describedby="ec-price-hint"><i class="ec-coin" aria-hidden="true"></i>Buy · ${fmt(price)}</button>
+        </div>
+        <p class="ec-hint" id="ec-price-hint">${can ? `You'll have ${fmt(e.coins - price)} left.` : `${fmt(price - e.coins)} more Cosmo Coins to buy one.`}</p>
+      </div>
+    </article>
+    <h2 class="ec-section">Cosmetics <span>Coming soon</span></h2>
+    <div class="ec-soon">${soon.map(([t, d]) => `<article class="ec-soon__item"><h3>${t}</h3><p>${d}</p></article>`).join('')}</div>
   </section>`;
 }
 
@@ -74,7 +81,9 @@ export async function openBooster(face, done) {
   dlg.setAttribute('aria-label', 'Opening booster');
   dlg.innerHTML = `<div class="ec-open__pack is-tearing">${pack()}</div>`;
   document.body.append(dlg);
+  document.body.classList.add('ec-opening');  // fundo da abertura = céu do site (kv-sky); o lobby some por baixo
   dlg.showModal();
+  dlg.addEventListener('close', () => document.body.classList.remove('ec-opening'));
   let r;
   try { r = await call('/api/boosters/open', 'POST'); } catch (err) {
     dlg.innerHTML = `<p class="kv-status err" role="status">${esc(err.message)}</p><button class="kv-ghost" data-close>Close</button>`;
@@ -84,21 +93,53 @@ export async function openBooster(face, done) {
   }
   await new Promise(ok => setTimeout(ok, matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 900));
   const coins = r.cards.reduce((n, c) => n + c.coins, 0);
-  dlg.innerHTML = `<div class="ec-open__cards">${r.cards.map((c, i) => `<button class="ec-flip is-${c.rarity.toLowerCase()}" style="--i:${i}" data-i="${i}" aria-label="Reveal card ${i + 1}">
+  dlg.innerHTML = `<div class="ec-open__cards">${r.cards.map((c, i) => `<button class="ec-flip is-${c.rarity.toLowerCase()} ${c.new ? 'is-new' : ''}" style="--i:${i}" data-i="${i}" data-id="${esc(c.id)}" aria-label="Reveal card ${i + 1}">
       <span class="ec-flip__back"><img src="${LOGO}" alt=""></span><span class="ec-flip__front">${face(c.id)}
       ${c.new ? '<b class="ec-tag ec-tag--new">New</b>' : ''}${c.coins ? `<b class="ec-tag ec-tag--coins">+${c.coins}</b>` : ''}</span></button>`).join('')}</div>
     <footer class="ec-open__foot"><button class="kv-ghost" data-reveal>Reveal all</button>
       ${coins ? `<p class="kv-status ec-open__coins" hidden>Extra copies: +${fmt(coins)} Cosmo Coins</p>` : ''}
-      <button class="kv-button is-gold" data-close>Done</button></footer>`;
-  const flip = b => {
+      <button class="kv-button is-gold" data-close>Done</button></footer>
+    <div class="ec-zoom" hidden></div>`;
+  // Zoom (autor, 31/10/2026): botão direito numa carta já virada mostra a carta grande; clique, botão direito ou Esc fecham.
+  const zoom = dlg.querySelector('.ec-zoom');
+  const unzoom = () => { zoom.hidden = true; zoom.innerHTML = ''; };
+  dlg.addEventListener('contextmenu', ev => {
+    ev.preventDefault();
+    const b = ev.target.closest('.ec-flip.is-open');
+    if (!zoom.hidden || !b) return unzoom();
+    zoom.innerHTML = face(b.dataset.id, 'lb-card--big');
+    zoom.hidden = false;
+  });
+  dlg.addEventListener('cancel', ev => { if (!zoom.hidden) { ev.preventDefault(); unzoom(); } });
+  // Drama por raridade (autor, 31/10/2026): Uncommon dá um clarão; Legendary e Divine tremem antes de virar,
+  // clarão na cor da raridade, tela treme e faíscas saem da carta. Com prefers-reduced-motion só o clarão.
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const DRAMA = {uncommon: {wait: 0, sparks: 0}, legendary: {wait: 650, sparks: 18, shake: 'ec-shake'}, divine: {wait: 1100, sparks: 32, shake: 'ec-shake--big'}};
+  const sleep = ms => new Promise(ok => setTimeout(ok, still ? 0 : ms));
+  const flip = async b => {
+    if (b.classList.contains('is-open') || b.classList.contains('is-charging')) return;
+    const rarity = ['divine', 'legendary', 'uncommon'].find(k => b.classList.contains(`is-${k}`)), d = DRAMA[rarity];
+    if (d?.wait) { b.classList.add('is-charging'); await sleep(d.wait); b.classList.remove('is-charging'); }
     b.classList.add('is-open');
+    if (d) {
+      dlg.insertAdjacentHTML('beforeend', `<div class="ec-flash ec-flash--${rarity}" aria-hidden="true"></div>`);
+      setTimeout(() => dlg.querySelector('.ec-flash')?.remove(), 900);
+      if (!still && d.shake) { dlg.classList.remove('ec-shake', 'ec-shake--big'); void dlg.offsetWidth; dlg.classList.add(d.shake); }
+      if (!still) for (let i = 0; i < d.sparks; i++) {
+        const a = Math.random() * Math.PI * 2, r = 60 + Math.random() * 120;
+        b.insertAdjacentHTML('beforeend', `<i class="ec-spark" style="--x:${Math.cos(a) * r}px;--y:${Math.sin(a) * r}px;--d:${(Math.random() * 300) | 0}ms"></i>`);
+      }
+      setTimeout(() => b.querySelectorAll('.ec-spark').forEach(x => x.remove()), 1400);
+    }
     const tally = dlg.querySelector('.ec-open__coins');
     if (tally && !dlg.querySelector('.ec-flip:not(.is-open)')) tally.hidden = false;  // total das repetidas só depois de virar tudo
+    return d?.wait ? 700 : 60;
   };
   dlg.addEventListener('click', ev => {
+    if (!zoom.hidden) return unzoom();
     const b = ev.target.closest('.ec-flip');
     if (b) flip(b);
-    if (ev.target.closest('[data-reveal]')) dlg.querySelectorAll('.ec-flip').forEach((x, i) => setTimeout(() => flip(x), i * 60));
+    if (ev.target.closest('[data-reveal]')) (async () => { for (const x of dlg.querySelectorAll('.ec-flip:not(.is-open)')) await sleep(await flip(x) || 0); })();
     if (ev.target.closest('[data-close]')) dlg.close();
   });
   dlg.addEventListener('close', () => { dlg.remove(); done(r); });

@@ -12,7 +12,7 @@ import {countryOptions, countryName} from '../shared/countries.js?v=20261029-1';
 import {startPresence} from '../shared/presence.js?v=20261029-1';
 import {mountSocial} from './social.js?v=20261031-econ1';
 import {telas, imageUrl, sound, applyColors, applyTexts} from './telas.js?v=20261030-1';
-import {loadEconomy, ownedLimit, missingCards, coinBadge, storeScreen, collectionScreen, openBooster, buyBooster} from './economy.js?v=20261031-3';
+import {loadEconomy, ownedLimit, missingCards, coinBadge, storeScreen, collectionScreen, openBooster, buyBooster} from './economy.js?v=20261031-drama1';
 import {loadRank, rankBadge, rankName, rankSummary, openRankPanel, playerName} from './rank.js?v=20261031-5';
 
 const root = document.getElementById('lobby');
