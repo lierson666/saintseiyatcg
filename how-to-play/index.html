@@ -1,7 +1,8 @@
 <!doctype html>
 <!-- Como jogar (autor, 31/10/2026): página no estilo do "How to Play" do Magic, no KV oficial (shared/kv.css).
      Fonte: regras Alpha aprovadas e implementadas no engine-v3 (P01–P07, G3-035/038, 28–31/10/2026). O guia-do-jogo.md ainda descreve o sistema de AÇÕES e está desatualizado.
-     As cartas são renderizadas ao vivo pelo shared/live-card.js a partir de card-forge/art-web/cards.json. -->
+     Cartas e artes são públicas (autor, 31/10/2026): imagens em how-to-play/cards/ (render do live-card, 800×1124)
+     e how-to-play/art/ (ilustrações do Card Forge). Não dependem de /card-forge nem /data, que ficam atrás do login. -->
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -12,7 +13,6 @@
   <link rel="icon" href="/LOGO/favicon.png?v=20261030">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Cormorant+Garamond:ital,wght@1,400&family=Jost:wght@300;400;500&display=swap">
   <link rel="stylesheet" href="/shared/kv.css?v=20261029-1">
-  <link rel="stylesheet" href="/shared/live-card.css?v=20261031-tap1">
   <style>
     html, body { margin: 0; background: var(--kv-bg); color: var(--kv-ink); font: 300 17px/1.65 var(--kv-sans); }
     html { scroll-behavior: smooth; scroll-padding-top: 80px; }
@@ -56,7 +56,7 @@
     .legend li::before { content: counter(part); display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%;
       border: 1px solid #e6c36a88; color: var(--kv-gold-2); font: 600 13px var(--kv-title); }
     .card-slot { width: 100%; aspect-ratio: 63 / 88; container-type: inline-size; overflow: clip; }
-    .card-slot > * { width: 100%; height: 100%; }
+    .card-slot > img { display: block; width: 100%; height: 100%; object-fit: cover; }
     main .card-slot { cursor: zoom-in; transition: transform .2s; }
     main .card-slot:hover { transform: translateY(-3px); }
     .zoom { border: 0; padding: 0; background: transparent; overflow: visible; max-width: none; max-height: none; }
@@ -334,30 +334,19 @@
   <script type="module">
     import {mountKV} from '/shared/kv-sky.js?v=20261029-2';
     mountKV({anchor: 'h1 .kv-cosmo'});
-    // Cartas reais, desenhadas pelo mesmo renderizador do jogo. Sem dados, o espaço some e o texto continua legível.
-    const ART = '/card-forge/art-web/';
-    const slots = document.querySelectorAll('[data-card]'), tiles = document.querySelectorAll('[data-art]');
-    try {
-      const [{renderLiveCard}, data] = await Promise.all([import('/shared/live-card.js?v=20261031-kw6'), fetch(ART + 'cards.json').then(r => r.json())]);
-      const byId = new Map(data.cartas.map(c => [c.id, c]));
-      const art = c => c?.ilustracao && !/-ref\./.test(c.ilustracao) ? ART + c.ilustracao : null; // nunca arte provisória (-ref)
-      for (const slot of slots) {
-        const c = byId.get(slot.dataset.card);
-        if (!c) { slot.remove(); continue; }
-        slot.innerHTML = renderLiveCard(c, {art: art(c)});
-        // O live-card marca a arte como lazy; dentro do slot recortado o Chrome não chegava a buscar algumas (Ares, Artemis).
-        slot.querySelectorAll('img[loading="lazy"]').forEach(img => { img.loading = 'eager'; });
-        Object.assign(slot, {tabIndex: 0}); slot.setAttribute('role', 'button');
-        slot.setAttribute('aria-label', `Zoom: ${c.nome_exibicao_en || slot.dataset.card}`);
-      }
-      // Zoom: clicar (ou Enter/Espaço) abre a carta grande; clicar fora, Esc ou no botão fecha.
-      const zoom = document.getElementById('zoom'), zoomCard = zoom.querySelector('.zoom__card');
-      const open = slot => { zoomCard.innerHTML = slot.innerHTML; zoom.showModal(); };
-      document.addEventListener('click', e => { const slot = e.target.closest('.card-slot'); if (slot) open(slot); });
-      document.addEventListener('keydown', e => { const slot = e.target.closest?.('.card-slot'); if (slot && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); open(slot); } });
-      zoom.addEventListener('click', e => { if (e.target === zoom || e.target.closest('.zoom__close')) zoom.close(); });
-      for (const tile of tiles) { const src = art(byId.get(tile.dataset.art)); if (src) tile.style.backgroundImage = `url("${src}")`; }
-    } catch { slots.forEach(s => s.remove()); }
+    // Cartas como imagens estáticas (how-to-play/cards/), públicas para quem não tem login.
+    for (const slot of document.querySelectorAll('main [data-card]')) {
+      const name = slot.getAttribute('aria-label') || slot.dataset.card;
+      slot.innerHTML = `<img src="/how-to-play/cards/${slot.dataset.card}.jpg" alt="${name}" loading="lazy" decoding="async" width="800" height="1124">`;
+      slot.removeAttribute('role'); slot.tabIndex = 0; slot.setAttribute('role', 'button'); slot.setAttribute('aria-label', `Zoom: ${name}`);
+    }
+    for (const tile of document.querySelectorAll('[data-art]')) tile.style.backgroundImage = `url("/how-to-play/art/${tile.dataset.art}.jpg")`;
+    // Zoom: clicar (ou Enter/Espaço) abre a carta grande; clicar fora, Esc ou no botão fecha.
+    const zoom = document.getElementById('zoom'), zoomCard = zoom.querySelector('.zoom__card');
+    const open = slot => { zoomCard.innerHTML = slot.innerHTML; zoom.showModal(); };
+    document.addEventListener('click', e => { const slot = e.target.closest('main .card-slot'); if (slot) open(slot); });
+    document.addEventListener('keydown', e => { const slot = e.target.closest?.('main .card-slot'); if (slot && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); open(slot); } });
+    zoom.addEventListener('click', e => { if (e.target === zoom || e.target.closest('.zoom__close')) zoom.close(); });
   </script>
 </body>
 </html>
