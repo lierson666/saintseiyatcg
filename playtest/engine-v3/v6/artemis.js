@@ -74,6 +74,20 @@ const perBank = (s, c, key) => { const n = Math.floor(bank(s, key) / 3); return 
 const search = (st, c, key, ability, filter) => k.search(st, c, key, ability, (card, uid) => card.kind === 'Devotee' && filter(card, uid));
 
 export default {
+  // The Hunter's Moon (autor, 31/10/2026): no início do seu turno troca uma Base por uma carta; a nova Base (topo do deck)
+  // entra Unprepared. shortcut: o motor prepara as Bases antes dos gatilhos de início de turno; a Base trocada sai já preparada.
+  'artemis-v6-504': {
+    startTurn: (s, c, key) => s.players[key].bases.length > 0 && (st => { // Moonlit Harvest
+      const p = st.players[key];
+      if (!p.bases.length || !k.may(c, key, 'MOONLIT HARVEST', {text: 'Put a Cosmo Base into your Tartarus to draw 1 card and replace it with the top card of your deck?'})) return;
+      const b = k.choose(c, key, 'MOONLIT HARVEST', p.bases.map(x => x.uid), {text: 'Choose a Cosmo Base to put into your Tartarus.'});
+      if (!b) return;
+      p.bases = p.bases.filter(x => x.uid !== b);
+      p.tartarus.push(b);
+      k.draw(st, key, 1);
+      if (!st.victory && p.deck.length) p.bases.push({uid: p.deck.shift(), prepared: false});
+    }),
+  },
   // CALISTO
   'artemis-v6-361': {
     aura: lord(isArtemis, 1, 1),

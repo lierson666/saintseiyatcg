@@ -10,7 +10,7 @@ import {inlineMarkup} from '../../shared/card-text.js?v=20261031-kw6';
 import {declareStrike, strikeTargets} from '../engine-v3/strike.js';
 import {playDevotee, playEquipment, playSpell, activate, reequip, duplicateCharacter, resonant, castCost, mixed} from '../engine-v3/play.js';
 import {atkOf, hpOf, keywordsOf, gearOf, isSaint, isBronze, ABILITIES} from '../engine-v3/effects.js';
-import {v6Spell, entryOf} from '../engine-v3/v6/hooks.js';
+import {v6Spell, entryOf, V6} from '../engine-v3/v6/hooks.js';
 import {STEPS, ABILITY_STEPS} from '../choices-v3.js?v=2';
 import {createScene, THEMES} from './scene.js?v=20261028-5';
 import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudgment, greatFloodBlock, announceGreatFlood, GREAT_FLOOD_COST,
@@ -556,7 +556,11 @@ function showDomainCard(key) {
   closeBigCard(); hideInspect();
   const box = document.createElement('div');
   box.id = 'bigcard'; box.className = 'bigcard';
-  box.innerHTML = `<div class="dcard dcard--big art-full">${renderLiveCard(f, {art: f.ilustracao && FORGE_ART + f.ilustracao})}</div>`;
+  // Domain com habilidade ativada (ex.: The Altar of Slaughter): botão para usar, no seu turno e com a mesa parada.
+  const ab = V6[S().domains[key]]?.activate, usable = ab && key === viewer() && idleFor(key);
+  box.innerHTML = `<div class="dcard dcard--big art-full">${renderLiveCard(f, {art: f.ilustracao && FORGE_ART + f.ilustracao})}</div>
+    ${usable ? `<button class="primary-action bigcard__use" data-domain-use>Use ${esc(ab.name)}</button>` : ''}`;
+  box.querySelector('[data-domain-use]')?.addEventListener('pointerdown', e => { e.stopPropagation(); closeBigCard(); act({type: 'activate', key, uid: `domain:${key}`, choice: {}}); });
   box.addEventListener('pointerdown', closeBigCard);
   box.addEventListener('contextmenu', e => { e.preventDefault(); closeBigCard(); });
   document.body.append(box);

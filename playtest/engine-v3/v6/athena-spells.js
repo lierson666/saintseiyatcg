@@ -20,6 +20,11 @@ const atRoundEnd = (s, key, self, ability, run) => s.delayed.push({controller: k
 // Devotees seus que vestem uma Armor (alvo do Cloth Restoration, 30/10/2026).
 const armored = (s, c, key) => s.players[key].battlefield.filter(u => k.card(c, u)?.kind === 'Devotee' && Object.keys(c.attached).some(e => c.attached[e] === u && k.card(c, e)?.armor));
 export default {
+  // Athena's Statue (autor, 31/10/2026): Domain de compra; o preço é o Soul de Athena.
+  'athena-v6-501': {
+    watchSurvive: (s, c, key, self, unit) => k.controllerOf(s, unit) === key && isSaint(c, unit) && k.once(s, `${self}:resolve`)
+      && (st => { k.draw(st, key, 1); if (!st.victory) k.loseSoulOf(st, key, 1); }), // Saint's Resolve
+  },
   // ---------- Spells ----------
   // The Masked Saint's Oath
   'athena-v6-055': {spell: {run: (s, c, key) => {

@@ -138,6 +138,11 @@ function thetisResonance(st, c, key, thetis) {
 const strikeBuff = (st, uid, n) => { if (n && st.units[uid]) k.buff(st, uid, n, 0, 'this_strike'); };
 
 export default {
+  // The Tidal Archive (autor, 31/10/2026): Domain de compra; a maré leva 2 cartas do seu deck.
+  'poseidon-v6-502': {
+    watchSealed: (s, c, key, self, transitions) => enemySealed(key, transitions).length > 0 && k.once(s, `${self}:drowned`)
+      && (st => { k.draw(st, key, 1); if (!st.victory) mill(st, c, key, 2); }), // Drowned Knowledge
+  },
   // Sea Dragon Kanon
   'poseidon-v6-091': {
     enter: (s, c, key) => st => {

@@ -123,6 +123,18 @@ const gearKeywords = (keywords, cond = () => true) => ({
 const merge = (...parts) => Object.assign({}, ...parts);
 
 export default {
+  // The Altar of Slaughter (autor, 31/10/2026): Domain ativado; sacrifica um Devotee seu, perde 1 Soul e compra 1.
+  'ares-v6-503': {
+    activate: {name: 'BLOOD OFFERING', cost: 0, once: true, tap: false,
+      check: (s, c, key) => { if (!k.devotees(s, c, key).length) throw new k.RuleError('BLOOD OFFERING', 'sem Devotee para sacrificar'); },
+      run: (s, c, key) => {
+        const t = k.choose(c, key, 'BLOOD OFFERING', k.devotees(s, c, key), {text: 'Choose a friendly Devotee to sacrifice.'});
+        if (!t) return;
+        k.sacrifice(s, c, t);
+        k.loseSoulOf(s, key, 1);
+        if (!s.victory) k.draw(s, key, 1);
+      }},
+  },
   // Alcmenes of Ethon
   'ares-v6-271': merge(enterDamage(3, 'CRIMSON ARRIVAL'), declareGod(2, 'PROMETHEAN FIRE'), {
     killInCombat: (s, c, key, self) => k.onceTurn(s, `${self}:inferno`) && (st => { if (alive(st, self)) k.prepare(st, self); }),

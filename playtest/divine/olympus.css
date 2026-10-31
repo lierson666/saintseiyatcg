@@ -1058,3 +1058,4 @@ body:has(.cast-slot, .trigger-panel.is-targeting, .pick-modal, .mulligan, .victo
 body.has-chain-zoom .command__clock { visibility: hidden; }
 /* Ares: o PNG do autor corta a crista do elmo reto no topo; esfuma a ponta para não parecer cortada (31/10/2026). */
 .gh-frame__img--ares { -webkit-mask-image: linear-gradient(to bottom, transparent 7%, #000 13%); mask-image: linear-gradient(to bottom, transparent 7%, #000 13%); }
+.bigcard { align-content: center; gap: 14px; } .bigcard__use { cursor: pointer; min-height: 44px; padding: 10px 22px; }
