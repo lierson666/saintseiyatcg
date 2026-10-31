@@ -1,0 +1,65 @@
+/* Economia (economy.js): saldo de Cosmo Coins, Store, Collection e abertura de booster. */
+.ec-coin, .ec-coins i { display: inline-block; width: 16px; height: 16px; flex: none; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff6c8, #e9c45c 45%, #9a6b1c); box-shadow: 0 0 8px #e9c45c88; }
+.ec-coins { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid var(--kv-line, #ffffff22); border-radius: 999px;
+  background: #0006; color: var(--kv-gold-2, #f1d68a); font: 600 13px var(--kv-sans, system-ui); cursor: pointer; white-space: nowrap; }
+.ec-coins:hover, .ec-coins:focus-visible { border-color: var(--kv-gold, #e9c45c); }
+
+/* Pacote: arte de fundo + logo por cima (padrão MTG); brilho de foil passando. */
+.ec-pack { position: relative; width: 180px; aspect-ratio: 5 / 9; border-radius: 10px; overflow: hidden; flex: none;
+  background: linear-gradient(160deg, #3a2a6b, #0b0d14); box-shadow: 0 18px 40px #000a, inset 0 0 0 1px #ffffff2a; }
+.ec-pack::before, .ec-pack::after { content: ""; position: absolute; left: 0; right: 0; height: 14px; z-index: 2;
+  background: repeating-linear-gradient(90deg, #d8c48a 0 6px, #a88a42 6px 12px); opacity: .9; }
+.ec-pack::before { top: 0; } .ec-pack::after { bottom: 0; }
+.ec-pack__art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.ec-pack__logo { position: absolute; z-index: 1; top: 9%; left: 10%; width: 80%; filter: drop-shadow(0 4px 10px #000c); }
+.ec-pack__name { position: absolute; z-index: 1; left: 0; right: 0; bottom: 12%; text-align: center; font: 700 18px Cinzel, serif;
+  color: #f6e6b0; letter-spacing: .12em; text-transform: uppercase; text-shadow: 0 2px 8px #000; }
+.ec-pack__foil { position: absolute; inset: 0; z-index: 1; background: linear-gradient(115deg, transparent 35%, #ffffff40 50%, transparent 65%);
+  background-size: 250% 100%; animation: ec-foil 3.5s ease-in-out infinite; mix-blend-mode: screen; }
+@keyframes ec-foil { from { background-position: 120% 0; } to { background-position: -120% 0; } }
+
+/* Store: tiles escuros com a cor do pacote, preço embaixo (referência RipRush / MTG Arena). */
+.ec-store__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 20px; }
+.ec-tile { display: flex; gap: 20px; align-items: center; padding: 20px; border-radius: 18px; border: 1px solid var(--kv-line, #ffffff22);
+  background: radial-gradient(circle at 20% 30%, #5b3fb055, transparent 60%), #0b0d14cc; }
+.ec-tile--owned { background: radial-gradient(circle at 20% 30%, #e9c45c33, transparent 60%), #0b0d14cc; }
+.ec-tile__body { display: grid; gap: 10px; justify-items: start; min-width: 0; }
+.ec-tile__body h2 { margin: 0; font: 700 22px var(--kv-title, Cinzel, serif); }
+.ec-buy { display: inline-flex; align-items: center; gap: 8px; }
+.ec-count { margin: 0; font: 700 40px var(--kv-title, Cinzel, serif); color: var(--kv-gold-2, #f1d68a); }
+.ec-stack { position: relative; width: 150px; flex: none; }
+.ec-stack .ec-pack { width: 130px; }
+.ec-stack .ec-pack + .ec-pack { position: absolute; top: 10px; left: 18px; z-index: -1; transform: rotate(6deg); opacity: .7; }
+
+/* Collection */
+.ec-card { position: relative; }
+.ec-card.is-missing .lb-card { filter: grayscale(1) brightness(.45); }
+
+/* Abertura do booster */
+.ec-open { width: min(1100px, calc(100% - 24px)); max-width: none; max-height: calc(100% - 24px); overflow: auto; padding: 24px; border: 0;
+  background: transparent; color: #f1ead8; }
+.ec-open::backdrop { background: radial-gradient(circle at 50% 40%, #2a1d5a, #05060c 75%); }
+.ec-open__pack { display: grid; place-items: center; min-height: 60vh; }
+.ec-open__pack .ec-pack { width: 220px; }
+.ec-open__pack.is-tearing .ec-pack { animation: ec-tear .9s ease-in forwards; }
+@keyframes ec-tear { 0% { transform: scale(1); } 40% { transform: scale(1.06) rotate(-2deg); } 70% { transform: scale(1.1) rotate(2deg); filter: brightness(1.6); }
+  100% { transform: scale(1.3); opacity: 0; filter: brightness(3); } }
+.ec-open__cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; }
+.ec-flip { position: relative; aspect-ratio: 5 / 7; padding: 0; border: 0; background: none; cursor: pointer; perspective: 900px;
+  animation: ec-deal .45s calc(var(--i) * 45ms) ease-out backwards; }
+@keyframes ec-deal { from { opacity: 0; transform: translateY(-40px) scale(.8); } }
+.ec-flip__back, .ec-flip__front { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 8px; transition: transform .6s cubic-bezier(.2, .8, .2, 1); }
+.ec-flip__back { background: radial-gradient(circle at 50% 40%, #4a3a8a, #12101f 70%); box-shadow: inset 0 0 0 2px #e9c45c55, 0 6px 16px #000a; }
+.ec-flip__back { display: grid; place-items: center; } .ec-flip__back img { width: 70%; opacity: .85; }
+.ec-flip__front { transform: rotateY(180deg); }
+.ec-flip__front .lb-card { width: 100%; height: 100%; }
+.ec-flip.is-open .ec-flip__back { transform: rotateY(-180deg); } .ec-flip.is-open .ec-flip__front { transform: rotateY(0); }
+.ec-flip.is-legendary:not(.is-open) .ec-flip__back { box-shadow: inset 0 0 0 2px #e9c45c, 0 0 22px #e9c45caa; animation: ec-glow 1.4s ease-in-out infinite alternate; }
+.ec-flip.is-divine:not(.is-open) .ec-flip__back { box-shadow: inset 0 0 0 2px #c9a6ff, 0 0 30px #c9a6ffcc; animation: ec-glow 1s ease-in-out infinite alternate; }
+@keyframes ec-glow { to { filter: brightness(1.35); } }
+.ec-tag { position: absolute; z-index: 2; top: 6px; right: 6px; padding: 2px 8px; border-radius: 999px; font: 700 11px var(--kv-sans, system-ui); }
+.ec-tag--new { background: #e9c45c; color: #1a1205; } .ec-tag--coins { top: auto; bottom: 6px; background: #0b0d14e6; color: #f1d68a; }
+.ec-open__foot { position: sticky; bottom: 0; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: center; padding: 16px 0 0; }
+@media (prefers-reduced-motion: reduce) { .ec-pack__foil, .ec-flip, .ec-flip__back, .ec-open__pack.is-tearing .ec-pack { animation: none; } .ec-flip__back, .ec-flip__front { transition: none; } }
+.lb-slot.is-unowned .lb-card { filter: grayscale(1) brightness(.45); }

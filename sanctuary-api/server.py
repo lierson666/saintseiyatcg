@@ -7,6 +7,7 @@ Cadastro só para emails convidados (tabela invites; SANCTUARY_INVITES semeia na
 import calendar, hashlib, hmac, json, os, re, secrets, sqlite3, threading, time, urllib.request, urllib.error
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
 from urllib.parse import parse_qs, quote, urlparse
 
 DB_PATH = os.environ.get('SANCTUARY_DB', '/data/sanctuary.db')
@@ -44,6 +45,35 @@ TITLES = ((50, 'Seventh Sense'), (30, 'Cosmo Awakened'), (20, 'Cloth Bearer'), (
 # Contas fixadas em Kamui (pedido do autor, 31/10/2026): começam em Kamui e não caem dele, nem na virada da temporada.
 KAMUI_FIXED = {'limattenhauer@gmail.com'}
 ARENA_SECRET = os.environ.get('ARENA_SECRET', '')
+# Economia (docs/economia.md, autor 31/10/2026): Cosmo Coins, coleção e boosters, tudo decidido aqui no servidor.
+# catalog.json vem de tools/economy-catalog.py (cartas do booster por raridade e coleção inicial); Gods e Domains são de todos.
+CATALOG = json.loads(Path(__file__).with_name('catalog.json').read_text())
+BOOSTER = 'booster-olympus'
+PRICES = {BOOSTER: 1000}
+WELCOME_BOOSTERS = 3
+COPY_LIMIT = 3
+DUPLICATE_COINS = {'Common': 25, 'Uncommon': 50, 'Legendary': 200, 'Divine': 500}
+PACK = (('Common', 10), ('Uncommon', 3))  # + 1 Legendary, que vira Divine em 1 de 8 pacotes
+DIVINE_ODDS = 8
+RARITY = {cid: r for r, ids in CATALOG['booster'].items() for cid in ids}
+roll = secrets.SystemRandom()
+# Conquistas (autor, 31/10/2026): derivadas do que o servidor já guarda, sem tabela própria.
+# (id, nome, descrição, medida, alvo); medidas: played/wins online, tier (melhor desta temporada ou da anterior), level, ai_wins.
+ACHIEVEMENTS = (
+    ('first-victory', 'First Victory', 'Win an online duel.', 'wins', 1),
+    ('duels-10', 'Initiate', 'Play 10 online duels.', 'played', 10),
+    ('duels-50', 'Veteran', 'Play 50 online duels.', 'played', 50),
+    ('duels-100', 'Legend of the Arena', 'Play 100 online duels.', 'played', 100),
+    ('wins-10', 'Rising Saint', 'Win 10 online duels.', 'wins', 10),
+    ('wins-50', 'Champion of Athena', 'Win 50 online duels.', 'wins', 50),
+    ('rank-bronze', 'Bronze Saint', 'Reach Bronze.', 'tier', 2),
+    ('rank-silver', 'Silver Saint', 'Reach Silver.', 'tier', 3),
+    ('rank-gold', 'Gold Saint', 'Reach Gold.', 'tier', 4),
+    ('rank-kamui', 'Kamui', 'Reach Kamui.', 'tier', 5),
+    *((f'level-{lv}', title, f'Reach level {lv}.', 'level', lv) for lv, title in reversed(TITLES)),
+    ('ai-1', 'Sparring Partner', 'Beat the AI.', 'ai_wins', 1),
+    ('ai-10', 'Training Grounds', 'Beat the AI 10 times.', 'ai_wins', 10),
+)
 CHALLENGE_SECONDS = 60
 SUSPENDED = 'This account is suspended.'
 OLD_FORM = 'Please reload this page to see the new sign-up form.'
@@ -77,6 +107,11 @@ create index if not exists duels_b on duels(b_id, finished_at);
 create table if not exists ai_xp (id integer primary key, user_id integer not null, result text not null, xp integer not null,
   created_at integer not null);
 create index if not exists ai_xp_user on ai_xp(user_id, created_at);
+create table if not exists coin_ledger (id integer primary key, user_id integer not null, delta integer not null, reason text not null,
+  created_at integer not null);
+create index if not exists coin_ledger_user on coin_ledger(user_id);
+create table if not exists collection (user_id integer not null, card_id text not null, qty integer not null, primary key (user_id, card_id));
+create table if not exists inventory (user_id integer not null, item text not null, qty integer not null, primary key (user_id, item));
 create table if not exists blocks (user_id integer not null, blocked_id integer not null, created_at integer not null,
   primary key (user_id, blocked_id));
 """
@@ -92,7 +127,7 @@ def open_db(path=DB_PATH):
     db.executescript('pragma journal_mode=wal; pragma foreign_keys=on;' + SCHEMA)
     # Migração do cadastro completo: colunas novas em contas antigas (ficam vazias até o perfil ser completado).
     have = {r['name'] for r in db.execute('pragma table_info(users)')}
-    for col in ('username', 'username_display', 'country', 'phone', 'friend_code', 'avatar_card', 'accepted_terms_at', 'last_seen', 'status', 'suspended_at'):
+    for col in ('username', 'username_display', 'country', 'phone', 'friend_code', 'avatar_card', 'accepted_terms_at', 'last_seen', 'status', 'suspended_at', 'full_access'):
         if col not in have:
             db.execute(f'alter table users add column {col}')
     have = {r['name'] for r in db.execute('pragma table_info(messages)')}
@@ -183,6 +218,75 @@ def climb(results, now=None, floor=0):
         best = dict(r) if best is None or key(r) > key(best) else best
     show = lambda r: r and {'tier': TIERS[r['tier']], 'division': r['division']}
     return {**r, 'tier': TIERS[r['tier']], 'season': season_name(season), 'season_ends': calendar.timegm(((season + 1) // 12, (season + 1) % 12 + 1, 1, 0, 0, 0)), 'best': show(best), 'last_season': show(last) if last else None}
+
+
+def coins_of(uid):
+    return db.execute('select coalesce(sum(delta), 0) from coin_ledger where user_id = ?', (uid,)).fetchone()[0]
+
+
+def add_coins(uid, delta, reason):
+    db.execute('insert into coin_ledger (user_id, delta, reason, created_at) values (?, ?, ?, ?)', (uid, delta, reason, int(time.time())))
+
+
+def add_item(uid, item, qty):
+    db.execute('insert into inventory values (?, ?, ?) on conflict(user_id, item) do update set qty = qty + excluded.qty', (uid, item, qty))
+
+
+def item_count(uid, item):
+    row = db.execute('select qty from inventory where user_id = ? and item = ?', (uid, item)).fetchone()
+    return row[0] if row else 0
+
+
+def welcome(uid):
+    """Primeira visita à economia: coleção dos 5 decks iniciais + boosters de boas-vindas (uma vez; marca no livro-razão)."""
+    if db.execute("select 1 from coin_ledger where user_id = ? and reason = 'welcome'", (uid,)).fetchone():
+        return
+    db.executemany('insert or ignore into collection values (?, ?, ?)', [(uid, cid, n) for cid, n in CATALOG['starter'].items()])
+    add_item(uid, BOOSTER, WELCOME_BOOSTERS)
+    add_coins(uid, 0, 'welcome')
+
+
+def gain_card(uid, cid):
+    """Põe a carta na coleção; acima de 3 cópias vira Cosmo Coins. Devolve (era nova, coins da cópia extra)."""
+    row = db.execute('select qty from collection where user_id = ? and card_id = ?', (uid, cid)).fetchone()
+    have = row[0] if row else 0
+    if have >= COPY_LIMIT:
+        coins = DUPLICATE_COINS[RARITY[cid]]
+        add_coins(uid, coins, f'duplicate:{cid}')
+        return False, coins
+    db.execute('insert into collection values (?, ?, 1) on conflict(user_id, card_id) do update set qty = qty + 1', (uid, cid))
+    return have == 0, 0
+
+
+def open_pack(uid):
+    top = 'Divine' if roll.randrange(DIVINE_ODDS) == 0 else 'Legendary'
+    pulls = [cid for rarity, n in PACK for cid in roll.sample(CATALOG['booster'][rarity], n)] + [roll.choice(CATALOG['booster'][top])]
+    out = []
+    for cid in pulls:
+        new, coins = gain_card(uid, cid)
+        out.append({'id': cid, 'rarity': RARITY[cid], 'new': new, 'coins': coins})
+    return out
+
+
+def missing_cards(uid, deck):
+    """Cartas do deck além das que o jogador tem (duelo online; acesso total ignora). Gods e Domains não contam."""
+    if db.execute('select full_access from users where id = ?', (uid,)).fetchone()[0]:
+        return []
+    welcome(uid)
+    have = dict(db.execute('select card_id, qty from collection where user_id = ?', (uid,)).fetchall())
+    need = {}
+    for e in deck.get('main_deck', []):
+        cid = str(e.get('card_id', ''))
+        if cid in RARITY:
+            need[cid] = need.get(cid, 0) + int(e.get('quantity') or 0)
+    return [cid for cid, n in need.items() if n > have.get(cid, 0)]
+
+
+def economy_of(uid):
+    u = db.execute('select full_access from users where id = ?', (uid,)).fetchone()
+    return {'coins': coins_of(uid), 'boosters': item_count(uid, BOOSTER), 'full_access': bool(u['full_access']),
+            'collection': {r['card_id']: r['qty'] for r in db.execute('select card_id, qty from collection where user_id = ?', (uid,))},
+            'prices': {'booster': PRICES[BOOSTER]}}
 
 
 def level_of(xp):
@@ -389,6 +493,12 @@ class Handler(BaseHTTPRequestHandler):
             m = re.fullmatch(r'/api/challenges/(\d+)/(accept|decline|cancel)', path)
             if m and method == 'POST':
                 return self.challenge_answer(int(m[1]), m[2])
+            if method == 'GET' and path == '/api/economy':
+                return self.economy()
+            if method == 'POST' and path == '/api/store/buy':
+                return self.store_buy()
+            if method == 'POST' and path == '/api/boosters/open':
+                return self.booster_open()
             if method == 'GET' and path == '/api/rank':
                 return self.rank()
             if method == 'POST' and path == '/api/xp/ai':
@@ -501,7 +611,7 @@ class Handler(BaseHTTPRequestHandler):
         if not check_password(str(body.get('password', '')), user['password_hash']):
             raise ApiError(403, 'Password is incorrect.')
         with lock:
-            for table in ('sessions', 'decks'):
+            for table in ('sessions', 'decks', 'coin_ledger', 'collection', 'inventory'):
                 db.execute(f'delete from {table} where user_id = ?', (user['id'],))
             uid = user['id']
             db.execute('delete from friend_requests where from_id = ? or to_id = ?', (uid, uid))
@@ -770,6 +880,8 @@ class Handler(BaseHTTPRequestHandler):
             raise ApiError(400, 'Choose a deck.')
         now = int(time.time())
         with lock:
+            if missing_cards(me['id'], deck):
+                raise ApiError(400, 'This deck uses cards you do not own yet.')
             other = self.friend_by_username(me['id'], str(body.get('to', '')))
             if (other['last_seen'] or 0) <= now - ONLINE_WINDOW:
                 raise ApiError(409, f"{other['username_display']} is offline.")
@@ -806,6 +918,8 @@ class Handler(BaseHTTPRequestHandler):
             deck = body.get('deck')
             if not isinstance(deck, dict) or not isinstance(deck.get('main_deck'), list):
                 raise ApiError(400, 'Choose a deck.')
+            if missing_cards(me['id'], deck):
+                raise ApiError(400, 'This deck uses cards you do not own yet.')
             names = dict(db.execute('select id, username_display from users where id in (?, ?)', (c['from_id'], c['to_id'])).fetchall())
         # fora do lock: chamada de rede ao arena-server (quem desafiou é A; quem aceitou é B)
         match_id = self.arena_create({'A': names[c['from_id']], 'B': names[c['to_id']]}, {'A': json.loads(c['deck']), 'B': deck})
@@ -838,7 +952,12 @@ class Handler(BaseHTTPRequestHandler):
                                'god': d['a_god'] if side == 'A' else d['b_god'], 'date': d['finished_at']})
         played = len(rows)
         r = rank_of(uid)
-        self.send_json(200, {'rank': {k: r[k] for k in ('tier', 'division', 'points', 'level', 'title')}, 'username': u['username_display'], 'country': u['country'], 'joined': u['created_at'],
+        # shortcut: vitórias contra a IA só contam quando deram XP (teto diário); trocar se o autor quiser contar todas.
+        ai_wins = db.execute("select count(*) from ai_xp where user_id = ? and result = 'win'", (uid,)).fetchone()[0]
+        tier = max(TIERS.index(t['tier']) for t in (r, r['best'], r['last_season']) if t)
+        have = {'played': played, 'wins': wins, 'tier': tier, 'level': r['level'], 'ai_wins': ai_wins}
+        achievements = [{'id': i, 'name': n, 'description': d, 'done': have[m] >= goal} for i, n, d, m, goal in ACHIEVEMENTS]
+        self.send_json(200, {'rank': {k: r[k] for k in ('tier', 'division', 'pips', 'points', 'level', 'title')}, 'achievements': achievements, 'username': u['username_display'], 'country': u['country'], 'joined': u['created_at'],
                              'avatar_card': u['avatar_card'], 'stats': {'played': played, 'wins': wins, 'losses': losses,
                              'winrate': round(100 * wins / played) if played else 0}, 'recent': recent})
 
@@ -922,6 +1041,38 @@ class Handler(BaseHTTPRequestHandler):
                        (email, name, 1 if body.get('news') is True else 0, ip, now))
         self.send_json(201, {'ok': True})
 
+    # ---------- economia (docs/economia.md) ----------
+    def economy(self):
+        uid = self.require_user()['id']
+        with lock:
+            welcome(uid)
+            state = economy_of(uid)
+        self.send_json(200, state)
+
+    def store_buy(self):
+        uid = self.require_user()['id']
+        if self.read_json().get('item') != 'booster':
+            raise ApiError(400, 'Unknown item.')
+        with lock:
+            welcome(uid)
+            if coins_of(uid) < PRICES[BOOSTER]:
+                raise ApiError(400, 'Not enough Cosmo Coins.')
+            add_coins(uid, -PRICES[BOOSTER], f'buy:{BOOSTER}')
+            add_item(uid, BOOSTER, 1)
+            state = economy_of(uid)
+        self.send_json(200, state)
+
+    def booster_open(self):
+        uid = self.require_user()['id']
+        with lock:
+            welcome(uid)
+            if item_count(uid, BOOSTER) < 1:
+                raise ApiError(400, 'You have no boosters to open.')
+            add_item(uid, BOOSTER, -1)
+            cards = open_pack(uid)
+            state = economy_of(uid)
+        self.send_json(200, {'cards': cards, **state})
+
     # ---------- painel do sistema (/admin/, aberto pelo Star Hill) ----------
     def admin(self, method, path):
         self.require_admin()
@@ -960,6 +1111,24 @@ class Handler(BaseHTTPRequestHandler):
                 if m[2] == 'suspend':
                     db.execute('delete from sessions where user_id = ?', (user['id'],))  # sai de todos os aparelhos
             return self.send_json(200, {'ok': True})
+        m = re.fullmatch(r'/api/admin/users/([A-Za-z0-9_]{3,20})/economy', path)
+        if m and method == 'POST':  # Star Hill: acesso total, dar/tirar coins (com motivo) e boosters
+            body = self.read_json()
+            coins, boosters = int(body.get('coins') or 0), int(body.get('boosters') or 0)
+            reason = str(body.get('reason') or '').strip()[:120]
+            if coins and not reason:
+                raise ApiError(400, 'Say why the coins change.')
+            with lock:
+                user = self.by_username(m[1])
+                welcome(user['id'])
+                if 'full_access' in body:
+                    db.execute('update users set full_access = ? where id = ?', (1 if body['full_access'] else None, user['id']))
+                if coins:
+                    add_coins(user['id'], coins, f'admin:{reason}')
+                if boosters:
+                    add_item(user['id'], BOOSTER, max(boosters, -item_count(user['id'], BOOSTER)))
+                state = economy_of(user['id'])
+            return self.send_json(200, {k: state[k] for k in ('coins', 'boosters', 'full_access')})
         m = re.fullmatch(r'/api/admin/reports/(\d+)/resolve', path)
         if m and method == 'POST':
             with lock:
@@ -985,7 +1154,8 @@ class Handler(BaseHTTPRequestHandler):
             'invites': [{'email': i['email'], 'at': i['created_at'], 'username': i['username_display'], 'friend_code': i['friend_code']} for i in invites],
             'users': [{'username': u['username_display'], 'friend_code': u['friend_code'], 'name': u['display_name'], 'email': u['email'], 'country': u['country'],
                        'created_at': u['created_at'], 'last_seen': u['last_seen'], 'status': online(u), 'suspended': bool(u['suspended_at']),
-                       'admin': u['email'] in ADMINS} for u in users],
+                       'admin': u['email'] in ADMINS, 'full_access': bool(u['full_access']), 'coins': coins_of(u['id']),
+                       'boosters': item_count(u['id'], BOOSTER)} for u in users],
             'reports': [{'id': r['id'], 'reporter': r['reporter'], 'reported': r['reported'], 'at': r['created_at'],
                          'messages': [{'from': names.get(m['from_id'], '?'), 'body': m['body'], 'at': m['created_at']}
                                       for m in reversed(json.loads(r['excerpt']))]} for r in reports]})

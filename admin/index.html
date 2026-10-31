@@ -77,10 +77,13 @@
         <table><thead><tr><th>Email</th><th>Invited</th><th>Account</th><th></th></tr></thead><tbody>${data.invites.map(i => `
         <tr><td>${esc(i.email)}</td><td>${when(i.at)}</td><td>${i.username ? esc(i.username) + (i.friend_code ? `<small>${esc(i.friend_code)}</small>` : '') : '<span class="tag">not yet</span>'}</td>
         <td class="actions">${i.username ? '' : `<button class="kv-ghost" data-do="uninvite" data-email="${esc(i.email)}">Remove</button>`}</td></tr>`).join('')}</tbody></table>`,
-      players: () => `<table><thead><tr><th>Player</th><th>Country</th><th>Status</th><th>Joined</th><th></th></tr></thead><tbody>${data.users.map(u => `
+      players: () => `<table><thead><tr><th>Player</th><th>Country</th><th>Status</th><th>Joined</th><th>Economy</th><th></th></tr></thead><tbody>${data.users.map(u => `
         <tr><td>${esc(u.username || '(profile incomplete)')}<small>${u.friend_code ? esc(u.friend_code) + ' · ' : ''}${esc(u.name)} · ${esc(u.email)}</small></td><td>${esc(u.country || '—')}</td>
         <td>${u.suspended ? '<span class="tag bad">suspended</span>' : `<span class="tag ${u.status === 'online' ? 'on' : u.status}">${u.status === 'match' ? 'in a duel' : u.status}</span>`}<small>last seen ${when(u.last_seen)}</small></td>
         <td>${when(u.created_at)}</td>
+        <td>${u.coins.toLocaleString('en')} coins · ${u.boosters} boosters${u.full_access ? ' <span class="tag on">full access</span>' : ''}
+          ${u.username ? `<span class="actions"><button class="kv-ghost" data-do="coins" data-user="${esc(u.username)}">Coins</button><button class="kv-ghost" data-do="boosters" data-user="${esc(u.username)}">Boosters</button>
+          <button class="kv-ghost" data-do="full" data-user="${esc(u.username)}" data-on="${u.full_access ? '' : '1'}">${u.full_access ? 'Remove full access' : 'Full access'}</button></span>` : ''}</td>
         <td class="actions">${u.admin || !u.username ? '' : u.suspended ? `<button class="kv-ghost" data-do="restore" data-user="${esc(u.username)}">Restore</button>` : `<button class="kv-ghost" data-do="suspend" data-user="${esc(u.username)}">Suspend</button>`}</td></tr>`).join('')}</tbody></table>`,
       reports: () => !data.reports.length ? '<p class="empty">No open reports.</p>' : data.reports.map(r => `
         <article class="kv-card" style="padding:20px;margin-bottom:16px"><div class="bar"><span><b>${esc(r.reporter)}</b> reported <b>${esc(r.reported)}</b> · ${when(r.at)}</span>
@@ -105,6 +108,12 @@
       if (act === 'uninvite') return confirm(`Remove the invite for ${email}?`) && run('DELETE', `/api/admin/invites/${encodeURIComponent(email)}`, null, 'Invite removed.');
       if (act === 'suspend') return confirm(`Suspend ${user}? They are signed out everywhere and cannot sign in.`) && run('POST', `/api/admin/users/${user}/suspend`, null, `${user} is suspended.`);
       if (act === 'restore') return run('POST', `/api/admin/users/${user}/restore`, null, `${user} can sign in again.`);
+      // Economia (docs/economia.md): dar/tirar Cosmo Coins com motivo, boosters e acesso total à coleção.
+      if (act === 'coins') { const n = parseInt(prompt(`Cosmo Coins for ${user} (use - to remove):`, '1000'), 10); const why = n && prompt('Reason (kept in the ledger):', 'Beta tester');
+        return n && why && run('POST', `/api/admin/users/${user}/economy`, {coins: n, reason: why}, `${user}: ${n > 0 ? '+' : ''}${n} coins.`); }
+      if (act === 'boosters') { const n = parseInt(prompt(`Boosters for ${user} (use - to remove):`, '3'), 10);
+        return n && run('POST', `/api/admin/users/${user}/economy`, {boosters: n}, `${user}: ${n > 0 ? '+' : ''}${n} boosters.`); }
+      if (act === 'full') return run('POST', `/api/admin/users/${user}/economy`, {full_access: !!b.dataset.on}, b.dataset.on ? `${user} now owns every card.` : `${user} uses their own collection again.`);
       if (act === 'resolve') return run('POST', `/api/admin/reports/${id}/resolve`, null, 'Report resolved.');
     });
     document.addEventListener('submit', e => {

@@ -10,9 +10,10 @@ import {loadMyDecks, saveMyDecks, findDeck, syncDecks, onDeckStatus, deckCovers,
 import {mountKV} from '../shared/kv-sky.js?v=20261031-top';
 import {countryOptions, countryName} from '../shared/countries.js?v=20261029-1';
 import {startPresence} from '../shared/presence.js?v=20261029-1';
-import {mountSocial} from './social.js?v=20261031-legend1';
+import {mountSocial} from './social.js?v=20261031-econ1';
 import {telas, imageUrl, sound, applyColors, applyTexts} from './telas.js?v=20261030-1';
-import {loadRank, rankBadge, rankName, openRankPanel, playerName} from './rank.js?v=20261031-4';
+import {loadEconomy, ownedLimit, missingCards, coinBadge, storeScreen, collectionScreen, openBooster, buyBooster} from './economy.js?v=20261031-3';
+import {loadRank, rankBadge, rankName, rankSummary, openRankPanel, playerName} from './rank.js?v=20261031-5';
 
 const root = document.getElementById('lobby');
 const ART = '../card-forge/art-web/';
@@ -86,9 +87,10 @@ function topBar() {
   const tab = (s, label) => `<button class="lb-tab ${ui.screen === s ? 'is-active' : ''}" data-act="go" data-screen="${s}">${label}</button>`;
   return `<header class="lb-top">
     <img class="lb-top__logo" src="../LOGO/logo-web.webp" alt="Saint Seiya TCG">
-    <nav class="lb-tabs">${tab('home', 'Home')}${tab('decks', 'Decks')}${tab('profile', 'Profile')}${tab('options', 'Options')}</nav>
+    <nav class="lb-tabs">${tab('home', 'Home')}${tab('decks', 'Decks')}${tab('collection', 'Collection')}${tab('store', 'Store')}${tab('profile', 'Profile')}${tab('options', 'Options')}</nav>
     <span class="lb-top__tag">Alpha 0.1 · Engine 3.0</span>
     ${ui.user?.complete ? `<button class="lb-socialbtn" data-act="friends" aria-label="Friends">Friends ${socialBadge()}</button>` : ''}
+    ${ui.econ ? coinBadge(ui.econ) : ''}
     ${ui.rank ? rankBadge(ui.rank) : ''}
     ${ui.user ? `<span class="lb-user"><i class="kv-dot" aria-hidden="true"></i>${ui.user.complete ? `<button class="kv-ghost" data-act="my-profile" aria-label="My player profile">${playerName(ui.user.username)}</button>` : esc(ui.user.name)}<button class="kv-ghost" data-act="signout">Sign out</button></span>` : ''}
   </header>`;
@@ -228,7 +230,9 @@ async function openProfile(username) {
         <button class="kv-ghost" data-pclose autofocus>Close</button></header>
       <dl class="lb-pstats"><div><dt class="kv-stamp">Played</dt><dd>${s.played}</dd></div><div><dt class="kv-stamp">Wins</dt><dd>${s.wins}</dd></div>
         <div><dt class="kv-stamp">Losses</dt><dd>${s.losses}</dd></div><div><dt class="kv-stamp">Win rate</dt><dd>${s.winrate}%</dd></div></dl>
-      ${p.rank ? `<p class="kv-stamp">${esc(rankName(p.rank))} · Level ${p.rank.level}${p.rank.title ? ` · ${esc(p.rank.title)}` : ''}</p>` : ''}
+      ${p.rank ? rankSummary(p.rank) : ''}
+      ${p.achievements ? `<h3 class="kv-stamp">Achievements · ${p.achievements.filter(a => a.done).length}/${p.achievements.length}</h3>
+        <ul class="lb-achievements">${p.achievements.map(a => `<li class="${a.done ? 'is-done' : ''}"><b>${esc(a.name)}</b><small>${esc(a.description)}</small></li>`).join('')}</ul>` : ''}
       <h3 class="kv-stamp">Recent duels</h3>
       ${p.recent.length ? `<ol class="lb-precent">${p.recent.map(r => `<li class="is-${r.result}"><b>${RESULT[r.result]}</b> vs ${esc(r.opponent)}<small>${god(r.god)} · ${when(r.date)}</small></li>`).join('')}</ol>` : '<p class="kv-status">No online duels yet.</p>'}`;
     dlg.querySelector('[data-pclose]').focus();
@@ -343,9 +347,9 @@ function builder() {
           ? '<span class="lb-godpick__neutral" aria-hidden="true"></span><span class="lb-sr">Neutral</span>' : `<img src="${symbol(f)}" alt="${f}">`}</button>`).join('')}</div>
         <div class="lb-pills lb-sizes" role="group" aria-label="Card size">${Object.keys(CARD_SIZES).map(k => `<button class="lb-pill ${(ui.cardSize || 'M') === k ? 'is-active' : ''}" data-act="card-size" data-size="${k}" aria-pressed="${(ui.cardSize || 'M') === k}">${k}</button>`).join('')}</div></div>
       <div class="lb-grid" style="--slot:${CARD_SIZES[ui.cardSize] || CARD_SIZES.M}px">${cards_.map(c => {
-        const n = count(b, c.id), isDomain = c.kind === 'Domain', on = isDomain ? d.domain_id === c.id : n > 0;
-        return `<button class="lb-slot ${on ? 'is-in' : ''} ${!isDomain && n >= COPY_LIMIT ? 'is-max' : ''}" data-act="${isDomain ? 'set-domain' : 'add'}" data-id="${c.id}" aria-label="${esc(c.name)}">
-          ${face(c.id)}<i class="lb-slot__count">${isDomain ? (on ? 'Domain' : 'Set Domain') : `${n} / ${COPY_LIMIT}`}</i></button>`;
+        const n = count(b, c.id), isDomain = c.kind === 'Domain', on = isDomain ? d.domain_id === c.id : n > 0, max = ownedLimit(ui.econ, c.id, c.kind);
+        return `<button class="lb-slot ${on ? 'is-in' : ''} ${!isDomain && n >= max ? 'is-max' : ''} ${!isDomain && !max ? 'is-unowned' : ''}" data-act="${isDomain ? 'set-domain' : 'add'}" data-id="${c.id}" aria-label="${esc(c.name)}">
+          ${face(c.id)}<i class="lb-slot__count">${isDomain ? (on ? 'Domain' : 'Set Domain') : `${n} / ${max}`}</i></button>`;
       }).join('') || '<p class="lb-empty">No cards for this God yet.</p>'}</div>
     </div>
     <aside class="lb-list">
@@ -428,7 +432,9 @@ function bigCard() {
 const SCROLLERS = ['.lb-body', '.lb-grid', '.lb-list', '.lb-panel'];
 function render() {
   const keep = SCROLLERS.map(sel => root.querySelector(sel)?.scrollTop || 0), screen = root.dataset.screen;
-  const body = {home, decks: decksScreen, profile: profileScreen, options, builder}[ui.screen]();
+  const body = {home, decks: decksScreen, profile: profileScreen, options, builder,
+    collection: () => collectionScreen(ui.econ, [...cards.values()].filter(c => c.kind !== 'God').sort(sortCards), face, ui.colFilter),
+    store: () => storeScreen(ui.econ)}[ui.screen]();
   root.innerHTML = `${topBar()}<div class="lb-body lb-body--${ui.screen}">${body}</div>${bigCard()}${picker()}${notice()}`;
   if (screen === ui.screen) SCROLLERS.forEach((sel, i) => { const el = root.querySelector(sel); if (el) el.scrollTop = keep[i]; });
   root.dataset.screen = ui.screen;
@@ -444,6 +450,10 @@ function setCount(id, delta) {
     const list = names.length > 1 ? `${names.slice(0, -1).join(', ')} and ${names.at(-1)}` : names[0];
     ui.big = null;
     ui.notice = {title: 'Outside this deck\'s colors', text: `${card.name} is ${/^[AEIOU]/.test(f) ? 'an' : 'a'} ${f} card. This deck can only use ${list} cards. Change the God or the Domain to add it.`};
+    return;
+  }
+  if (delta > 0 && n > ownedLimit(ui.econ, id, card?.kind)) {  // coleção (docs/economia.md): só entram as cópias que o jogador tem
+    if (n <= COPY_LIMIT) { ui.big = null; ui.notice = {title: 'Not in your collection', text: `You own ${ownedLimit(ui.econ, id, card?.kind)} of ${card?.name || 'this card'}. Open boosters in the Store to get more.`}; }
     return;
   }
   if (n > COPY_LIMIT || (delta > 0 && deckSize(ui.builder.deck) >= DECK_SIZE)) return;
@@ -463,6 +473,12 @@ function saveDeck() {
 }
 function startMatch() {
   const a = findDeck(ui.deckA, presets), b = findDeck(ui.deckB, presets);
+  // Contra a IA o deck precisa estar na coleção; hot-seat (mesma tela) usa todas as cartas, para teste.
+  const missing = ui.mode === 'ai' ? missingCards(ui.econ, a, id => cards.get(id)?.kind) : [];
+  if (missing.length) {
+    ui.notice = {title: 'Missing cards', text: `This deck uses cards you don't own yet: ${missing.slice(0, 4).map(m => `${cards.get(m.card_id)?.name || m.card_id} (${m.have}/${m.need})`).join(', ')}${missing.length > 4 ? ` and ${missing.length - 4} more` : ''}. Open boosters in the Store or edit the deck.`};
+    return render();
+  }
   const q = new URLSearchParams({deckA: a.id, deckB: b.id, ai: ui.mode === 'ai' ? 'B' : 'none', godB: deckGod(b).replace(/^god-/, '')});
   if (ui.first !== 'random') q.set('first', ui.first);
   location.href = `./divine/?${q}`;
@@ -492,6 +508,9 @@ const actions = {
   'first-pick': t => { ui.first = t.dataset.value; remember(); },
   'random-b': () => { const ok = allDecks().filter(d => deckValid(d) && d.id !== ui.deckA); if (ok.length) ui.deckB = ok[Math.floor(Math.random() * ok.length)].id; remember(); },
   start: startMatch,
+  'collection-filter': t => { ui.colFilter = t.dataset.value; render(); },
+  'buy-booster': async () => { try { ui.econ = await buyBooster(); } catch (e) { ui.notice = {title: 'Store', text: e.message}; } render(); },
+  'open-booster': () => openBooster(face, r => { ui.econ = r; render(); }),
   'new-deck': () => openBuilder(null),
   'edit-deck': t => openBuilder(allDecks().find(d => d.id === t.dataset.deck)),
   filter: t => { ui.builder[t.dataset.key] = t.dataset.value; },
@@ -583,7 +602,7 @@ async function init() {
   if (!findDeck(ui.deckB, presets)) ui.deckB = presets[1]?.id || presets[0]?.id;
   render();
   // Conta do sanctuary-api (login no /login/). Sem API (dev local), o lobby segue sem o nome no topo.
-  fetch('/api/me', {credentials: 'same-origin'}).then(r => r.ok ? r.json() : null).then(u => { if (u) { ui.user = u; if (!u.complete) ui.screen = 'profile'; render(); startSocial(); loadRank().then(r => { ui.rank = r; if (r && ui.screen !== 'builder') render(); }); if (u.username) syncDecks(u.username, () => { if (ui.screen !== 'builder') render(); }); } }).catch(() => {});
+  fetch('/api/me', {credentials: 'same-origin'}).then(r => r.ok ? r.json() : null).then(u => { if (u) { ui.user = u; if (!u.complete) ui.screen = 'profile'; render(); startSocial(); loadRank().then(r => { ui.rank = r; if (r && ui.screen !== 'builder') render(); }); loadEconomy().then(e => { ui.econ = e; if (e && ui.screen !== 'builder') render(); }); if (u.username) syncDecks(u.username, () => { if (ui.screen !== 'builder') render(); }); } }).catch(() => {});
 }
 // Aviso discreto do salvamento dos decks (conta ou só este aparelho); não bloqueia nada.
 let deckNote = null, deckNoteTimer = 0;

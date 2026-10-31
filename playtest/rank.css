@@ -27,7 +27,7 @@
 .rk-panel__level { margin-bottom: 12px; }
 .rk-board__head { margin: 16px 0 0; } .rk-board__head img { display: block; height: 40px; width: auto; }
 .rk-board { margin: 8px 0 0; padding-left: 22px; }
-.rk-board li { padding: 3px 0; } .rk-board li span { float: right; opacity: .8; }
+.rk-board li { padding: 3px 0; } .rk-board li > span { float: right; opacity: .8; }  /* > : o nome dourado (span.is-legend) não flutua */
 
 .rk-result { position: fixed; z-index: 1000; left: 50%; bottom: 24px; transform: translateX(-50%); width: min(360px, calc(100% - 32px));
   display: grid; gap: 12px; padding: 16px 40px 16px 16px; border: 1px solid #e9c45c55; border-radius: 12px; background: #0b0d14ee;
@@ -45,13 +45,20 @@
 @media (prefers-reduced-motion: reduce) { .rk-result, .rk-result__promo { animation: none; } .rk-xp i, .rk-pips i { transition: none; } }
 
 /* Placas da mesa (Olympus Arena): canto direito, adversário em cima, eu embaixo. */
-.rk-plate { position: fixed; right: 16px; z-index: 40; display: flex; align-items: center; gap: 8px; padding: 6px 12px 6px 6px;
+.rk-plate { position: fixed; right: 16px; z-index: 40; display: flex; align-items: center; gap: 14px; padding: 8px 24px 8px 10px;
   border: 1px solid #e9c45c44; border-radius: 999px; background: #0b0d14cc; color: #f1ead8; font: 13px Jost, system-ui, sans-serif;
-  pointer-events: none; max-width: min(260px, 40vw); }
+  pointer-events: none; max-width: min(560px, 60vw); }
 .rk-plate--foe { top: 16px; } .rk-plate--me { bottom: 16px; }
-.rk-plate span { display: grid; line-height: 1.15; min-width: 0; }
-.rk-plate b { font: 600 13px Cinzel, serif; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.rk-plate small { font-size: 11px; opacity: .75; white-space: nowrap; }
+/* Nome e rank 2,5x (autor, 31/10/2026); o emblema acompanha. */
+.rk-plate .rk-emblem { height: 80px; }
+.rk-plate > span { display: grid; line-height: 1.15; min-width: 0; }
+.rk-plate b { font: 600 32px Cinzel, serif; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rk-plate small { font-size: 27px; opacity: .75; white-space: nowrap; }
+
+/* Perfil de jogador (lobby): resumo do rank. */
+.rk-summary { display: flex; align-items: center; gap: 14px; margin: 0 0 18px; }
+.rk-summary > div { display: grid; gap: 2px; }
+.rk-summary b { font: 700 18px Cinzel, serif; } .rk-summary small { opacity: .75; }
 
 /* Lendas (autor, 31/10/2026): nome dourado, como os devs no MTG Arena. */
 .is-legend { background: linear-gradient(180deg, #fff3c4, #f1c75b 45%, #c8922e); -webkit-background-clip: text; background-clip: text; color: transparent;

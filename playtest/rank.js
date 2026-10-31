@@ -35,6 +35,10 @@ export async function loadRank() {
   try { const r = await call('/api/rank'); remember(r); return r; } catch { return null; }
 }
 
+// Perfil de jogador (lobby): emblema, rank, pips e nível.
+export const rankSummary = r => `<div class="rk-summary">${emblem(r, true)}<div><b>${esc(rankName(r))}</b>${pips(r)}
+  <small>Level ${r.level}${r.title ? ` · ${esc(r.title)}` : ''}</small></div></div>`;
+
 export const rankBadge = r => `<button class="rk-badge" data-act="rank" aria-label="Rank ${esc(rankName(r))}, level ${r.level}">
   ${emblem(r)}<span><b>${esc(rankName(r))}</b><small>Lv ${r.level}</small></span></button>`;
 

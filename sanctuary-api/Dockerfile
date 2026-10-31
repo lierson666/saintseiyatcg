@@ -1,7 +1,7 @@
 # sanctuary-api: só biblioteca padrão, nada para instalar.
 FROM python:3.12-alpine
 WORKDIR /app
-COPY server.py .
+COPY server.py catalog.json ./
 RUN adduser -D -u 10001 sanctuary && mkdir /data && chown sanctuary /data
 USER sanctuary
 VOLUME /data

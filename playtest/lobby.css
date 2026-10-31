@@ -546,3 +546,11 @@ body { font: 300 15px/1.45 var(--kv-sans); }
   .lb-godpick { width: 44px; height: 44px; }
   .lb-volume input { height: 36px; }
 }
+
+/* Clique no avatar abre o perfil (acima do botão de chat da linha); conquistas no perfil. */
+.lb-friend__who { position: relative; z-index: 1; flex: none; padding: 0; border: 0; border-radius: 50%; background: none; cursor: pointer; }
+.lb-friend__who:focus-visible { outline: 2px solid var(--kv-gold); outline-offset: 2px; }
+.lb-achievements { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 8px; margin: 8px 0 20px; padding: 0; list-style: none; }
+.lb-achievements li { display: grid; gap: 2px; padding: 10px; border: 1px solid var(--kv-line); border-radius: 12px; opacity: .45; filter: grayscale(1); }
+.lb-achievements li.is-done { opacity: 1; filter: none; border-color: #e9c45c66; background: #e9c45c0f; }
+.lb-achievements b { font: 600 13px var(--kv-title); color: var(--kv-gold-2); } .lb-achievements small { font-size: 11px; color: var(--kv-muted); }

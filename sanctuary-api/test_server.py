@@ -279,7 +279,48 @@ class Api(unittest.TestCase):
         self.assertEqual((sum(gains), gains[-1]), (500, 0))  # teto diário contra a IA
         r = self.call('GET', '/api/rank', cookie=c)[1]
         self.assertEqual((r['xp'], r['tier'], r['pips'], r['ai_xp_today']), (500, 'Steel', 0, 500))  # IA não mexe no rank
-        self.assertEqual(self.call('GET', '/api/profile/Mu_Rank', cookie=c)[1]['rank']['tier'], 'Steel')
+        p = self.call('GET', '/api/profile/Mu_Rank', cookie=c)[1]
+        self.assertEqual(p['rank']['tier'], 'Steel')
+        done = {a['id'] for a in p['achievements'] if a['done']}
+        self.assertEqual(done, {'ai-1', 'ai-10'})  # 10 vitórias com XP contra a IA (a 11ª bateu no teto e não conta)
+
+    def test_economia(self):
+        reg = lambda email, user: self.call('POST', '/api/auth/register', {'email': email, 'name': user + ' Name', 'username': user, 'country': 'BR', 'password': 'x' * 12, 'accept_terms': True})[2]
+        server.ADMINS.add('econ-adm@example.com')
+        for e in ('econ@example.com', 'econ-adm@example.com'):
+            server.db.execute('insert or ignore into invites values (?, 1)', (e,))
+        c, adm = reg('econ@example.com', 'Seiya_Econ'), reg('econ-adm@example.com', 'Saga_Adm')
+        self.assertEqual(self.call('GET', '/api/economy')[0], 401)
+        e = self.call('GET', '/api/economy', cookie=c)[1]
+        self.assertEqual((e['coins'], e['boosters'], e['full_access'], sum(e['collection'].values())), (0, 3, False, 300))  # boas-vindas
+        self.assertEqual(self.call('GET', '/api/economy', cookie=c)[1]['boosters'], 3)  # boas-vindas uma vez só
+        self.assertEqual(self.call('POST', '/api/store/buy', {'item': 'booster'}, cookie=c)[0], 400)  # sem coins
+        st, o, _, _ = self.call('POST', '/api/boosters/open', cookie=c)
+        rar = [x['rarity'] for x in o['cards']]
+        self.assertEqual((st, len(rar), rar.count('Common'), rar.count('Uncommon'), o['boosters']), (200, 14, 10, 3, 2))
+        self.assertIn(rar[-1], ('Legendary', 'Divine'))
+        self.assertTrue(all(n <= 3 for n in o['collection'].values()))
+        self.assertEqual(o['coins'], sum(x['coins'] for x in o['cards']))  # repetidas acima de 3 viram coins
+        # Star Hill: dar coins exige motivo; acesso total; boosters
+        self.assertEqual(self.call('POST', '/api/admin/users/Seiya_Econ/economy', {'coins': 1000}, cookie=c)[0], 403)
+        self.assertEqual(self.call('POST', '/api/admin/users/Seiya_Econ/economy', {'coins': 1000}, cookie=adm)[0], 400)
+        st, r, _, _ = self.call('POST', '/api/admin/users/Seiya_Econ/economy', {'coins': 1000, 'reason': 'test', 'full_access': True, 'boosters': -9}, cookie=adm)
+        self.assertEqual((st, r['coins'] - o['coins'], r['full_access'], r['boosters']), (200, 1000, True, 0))
+        b = self.call('POST', '/api/store/buy', {'item': 'booster'}, cookie=c)[1]
+        self.assertEqual((b['coins'], b['boosters']), (r['coins'] - 1000, 1))
+        users = {u['username']: u for u in self.call('GET', '/api/admin/overview', cookie=adm)[1]['users']}
+        self.assertEqual((users['Seiya_Econ']['boosters'], users['Seiya_Econ']['full_access']), (1, True))
+        # duelo online: deck com carta que não tem é recusado; acesso total libera
+        rare = next(cid for cid in server.CATALOG['booster']['Divine'] if cid not in server.CATALOG['starter'])
+        with server.lock:
+            other = server.db.execute("select id from users where username = 'saga_adm'").fetchone()[0]
+            self.assertEqual(server.missing_cards(other, {'main_deck': [{'card_id': rare, 'quantity': 3}]}), [rare])
+            self.assertEqual(server.missing_cards(other, {'main_deck': [{'card_id': 'athena-v6-001', 'quantity': 3}]}), [])
+        # mil pacotes: Divine perto de 1 em 8, nunca God nem Domain
+        uid = server.db.execute("select id from users where username = 'seiya_econ'").fetchone()[0]
+        with server.lock:
+            tops = [server.open_pack(uid)[-1]['rarity'] for _ in range(800)]
+        self.assertTrue(60 < tops.count('Divine') < 150, tops.count('Divine'))
 
     def test_decks_limites(self):
         server.db.execute("insert or ignore into invites values ('decks@example.com', 1)")
