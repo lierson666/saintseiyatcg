@@ -10,10 +10,22 @@ const words=KEYWORD_WORDS;
 export const statTrend=m=>/-\d/.test(m)?(/\+\d/.test(m)?'mixed':'down'):'up';
 export const STAT_RE=/(?<![\w])[+-]\d+(?:\s*(?:ATK|ATTACK|HP|Power))?(?:\s*\/\s*[+-]\d+(?:\s*(?:ATK|ATTACK|HP|Power))?)?/gi;
 const emphasis=new RegExp(`\\b(${words.join('|')})\\b`,'gi');
+// Símbolos do texto (autor, 31/10/2026): {N}{C} Cosmo (ícone de Base), {N}{L} Latent, {N}{B} Base, {N}{S} Soul, {T} Tap.
+// Ícones dos PSDs (CARD-TEMPLATE), pintados com a cor do texto; Soul verde ao ganhar e vermelho ao perder ou pagar.
+const SYMBOLS={B:['athena/icon_cosmo','Base Cosmo'],C:['athena/icon_cosmo','Cosmo'],L:['athena/icon_latent','Latent Cosmo'],S:['icons/soul','Soul'],T:['icons/tap','Tap']};
+const symbolUrl=k=>new URL(`../CARD-TEMPLATE/${k}.png`,import.meta.url).href;
+const SYMBOL_RE=/(?:\{(?:\d+|X)\})?\{[BCLST]\}/;
+function symbolMarkup(token,before=''){
+  const [,n,k]=token.match(/^(?:\{(\d+|X)\})?\{([BCLST])\}$/),[icon,name]=SYMBOLS[k];
+  const trend=k!=='S'?'':/\b(gains?|gained|restores?)\s+(?:up to\s+|an additional\s+)?$/i.test(before)?' rule-sym--up':/\b(lose|loses|lost|pay|pays|paid)\s+(?:up to\s+|an additional\s+)?$/i.test(before)?' rule-sym--down':'';
+  return `<span class="rule-sym rule-sym--${k}${trend}" title="${n?`${n} `:''}${name}" aria-label="${n?`${n} `:''}${name}">${n?`<b>${n}</b>`:''}<i style="--m:url('${symbolUrl(icon)}')"></i></span>`;
+}
 export function inlineMarkup(text){
-  return String(text).split(/(\*\*[^*]+\*\*|\{[BCLST]\})/g).map(s=>{
-    if(s.startsWith('**'))return `<strong>${escapeText(s.slice(2,-2))}</strong>`;
-    if(/^\{[BCLST]\}$/.test(s)){const names={B:'Base Cosmo',C:'Cosmo',L:'Latent Cosmo',S:'Soul',T:'Tap'};return `<span class="rule-symbol" title="${names[s[1]]}" aria-label="${names[s[1]]}">${s[1]==='T'?'↷':s[1]==='S'?'◇':'✺'}</span>`;}
+  let before='';
+  return String(text).split(new RegExp(`(\\*\\*[^*]+\\*\\*|${SYMBOL_RE.source})`,'g')).filter(s=>s!==undefined).map(s=>{
+    if(s.startsWith('**'))return `<strong>${inlineMarkup(s.slice(2,-2))}</strong>`;
+    if(new RegExp(`^${SYMBOL_RE.source}$`).test(s)){const out=symbolMarkup(s,before);before='';return out;}
+    before=s;
     return escapeText(s).replace(emphasis,m=>`<strong>${m.toUpperCase()}</strong>`).replace(STAT_RE,m=>`<strong class="rule-stat rule-stat--${statTrend(m)}">${m.toUpperCase()}</strong>`);
   }).join('');
 }
@@ -24,7 +36,11 @@ export function textBlocks(texts){
     const chunks=String(text).split(/\n\s*\n|(?<=\.)\s+(?=(?:Owner:|Resonance\s*[—-]|7th Sense\s*[—-]|God Cloth\s*[—-]|Activation:))/i);
     for(let chunk of chunks){
       chunk=chunk.trim();if(!chunk)continue;
-      let m=chunk.match(/^\*\*([^*]+)\*\*\s*\n?([\s\S]*)$/);
+      // Poder de God (autor, 31/10/2026): "NOME — Ultimate\nCost: {7}{C}\n…" vira etiqueta ULTIMATE + título "{7}{C} NOME".
+      // Etiqueta e título viajam juntos no título, separados por " § " (sobrevive ao blocksMarkup).
+      let m=chunk.match(/^([^—\n*]{2,45}?)\s+—\s+(Divine Power|Ultimate|Awaken \d+)\b[ \t]*\n?(?:Cost:\s*((?:\{[^}]+\})+)\.?[ \t]*\n?)?([\s\S]*)$/);
+      if(m){result.push({heading:`${m[2]} § ${m[3]?`${m[3]} `:''}${m[1]}`,body:m[4],kind:'ability'});continue;}
+      m=chunk.match(/^\*\*([^*]+)\*\*\s*\n?([\s\S]*)$/);
       if(m){result.push({heading:m[1].replace(/:$/,''),body:m[2],kind:'ability'});continue;}
       // 1ª linha da Armor (30/10/2026): "Resonance — Aries Mu" fica inteira, em destaque, sem virar título + corpo.
       if(/^Resonance — [^.:]+$/.test(chunk)){result.push({heading:chunk,body:'',kind:'equip'});continue;}
@@ -34,6 +50,11 @@ export function textBlocks(texts){
       if(m){result.push({heading:`${m[1]} — ${m[2]}`,body:m[3],kind:'evolution'});continue;}
       m=chunk.match(/^(Owner|Activation|Equip):\s*([\s\S]*)$/i);
       if(m){result.push({heading:m[1],body:m[2],kind:m[1].toLowerCase()});continue;}
+      // Custo antes do nome (autor, 31/10/2026): "Nome — Cost: {5}{C}. …" e "Nome — {2}{C}, {T}: …" viram "{5}{C} NOME".
+      m=chunk.match(/^([^.—\n]{2,45})\s*—\s*Cost:\s*((?:\{[^}]+\})+)\.\s*([\s\S]*)$/);
+      if(m){result.push({heading:`${m[2]} ${m[1].trim()}`,body:m[3],kind:'ability'});continue;}
+      m=chunk.match(/^([A-Z][^.:—\n]{1,44}?)\s+—\s+((?:\{[^}]+\}[,\s]*)+)([^:\n]{0,40}?):\s*([\s\S]*)$/);
+      if(m){const extra=m[3].replace(/^[,\s]+/,'').trim();result.push({heading:`${m[2].replace(/[,\s]+/g,'')} ${m[1]}`,body:extra?`${extra}: ${m[4]}`:m[4],kind:'ability'});continue;}
       m=chunk.match(/^([^.—\n]{2,45})\s*—\s*(Cost:[^.]+)\.\s*([\s\S]*)$/);
       if(m){result.push({heading:`${m[1]} — ${m[2]}`,body:m[3],kind:'ability'});continue;}
       // Nome de golpe/habilidade com travessão (autor, 31/10/2026): "Garuda Flap — When …" vira título + corpo.
@@ -80,4 +101,9 @@ export function presentationRules(card){
     ...stages.slice(1).map(s=>`${s.nome} — ACTION, pay ${s.custo??'?'} Cosmo: This equipment grants ${bonus(s)} instead. ${card.donos?.length?'Only its Owner may evolve it.':'Eligible wearers may evolve it.'}${s.exige_awaken?' Requires an Awakened Owner.':''}${s.habilidades_en?.length?' '+s.habilidades_en.join(' '):''}`),
     ...(card.ressonancias||[]).map(r=>`Resonance — ${name(r.personagem_id)}: ${r.habilidade_en}`)];
 }
-export function renderRules(texts){return textBlocks(texts).map(b=>`<div class="rule-block rule-block--${b.kind}">${b.heading?`<strong class="rule-heading">${inlineMarkup(b.heading.toUpperCase())}${b.body?':':''}</strong>`:''}${b.body?`<p>${inlineMarkup(b.body)}</p>`:''}</div>`).join('');}
+// Título com etiqueta ("ULTIMATE § {7}{C} NOME") ou começando por símbolo: etiqueta pequena acima e sem dois-pontos.
+// Corpo em várias linhas: um parágrafo por linha.
+export function renderRules(texts){return textBlocks(texts).map(b=>{
+  const [tag,title]=b.heading?.includes(' § ')?b.heading.split(' § '):['',b.heading],colon=b.body&&!tag&&!/^\{/.test(title||'')?':':'';
+  return `<div class="rule-block rule-block--${b.kind}">${tag?`<small class="rule-tag">${escapeText(tag.toUpperCase())}</small>`:''}${title?`<strong class="rule-heading">${inlineMarkup(title.toUpperCase())}${colon}</strong>`:''}${b.body?String(b.body).split('\n').filter(l=>l.trim()).map(l=>`<p>${inlineMarkup(l)}</p>`).join(''):''}</div>`;
+}).join('');}

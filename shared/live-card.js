@@ -1,4 +1,4 @@
-import {renderRules,inlineMarkup,presentationRules,ruleBlocksWithoutKeywords,blocksMarkup} from './card-text.js?v=20261031-kw6';
+import {renderRules,inlineMarkup,presentationRules,ruleBlocksWithoutKeywords,blocksMarkup} from './card-text.js?v=20261031-sym1';
 import {isArmor,isEquipment} from './card-model.js?v=20261024-4';
 import {renderPublishedCard,visualProject} from './layout-studio/runtime.js';
 import {printedEquipmentBonuses,signedBonus,armorBonusText} from './card-visual-values.js?v=20261031-kw6';
@@ -85,7 +85,7 @@ function renderPsdCard(card,{src,stage,hp,power,keywords,damage,rules,equipment,
       // God: o marcador **AWAKEN N** vira o cabeçalho do PSD do Deus (linha, gema com o número, "Awaken", linha; autor, 31/10/2026).
       const cut=card.tipo==='God'&&P[`${f}/gem_awaken`]?rules.findIndex(t=>/^\*\*AWAKEN\b/.test(t)):-1,head=cut<0?'':awakenHead(f,card.awaken);
       const body=cut<0?renderRules(rules):`${renderRules(rules.slice(0,cut))}${head}${renderRules(rules.slice(cut+1))}`;
-      const fs=rulesSize([kw,...rules,ownerLine].filter(Boolean),el.size,w,cut<0?h:h-240);
+      const fs=rulesSize([kw,...rules,ownerLine].filter(Boolean),el.size,w,cut<0?h:h-280);
       out+=`<div class="lc-rules live-card__rules" style="${pct(x,y,w,h)};font-size:${cqw(fs)}">${kw?`<p class="live-card__keywords">${keywords.map(k=>inlineMarkup(k)).join(', ')}</p>`:''}${body}${ownerLine?`<p class="live-card__owners">${ownerLine}</p>`:''}</div>`;
     }
     else if(el.kind==='rarity'){const p=P[`athena/rarity_${String(card.raridade||'').toLowerCase()}`];if(p){const hh=el.h||p.h,ww=p.w*hh/p.h;out+=piece(`athena/rarity_${card.raridade.toLowerCase()}`,[el.x-ww/2,el.y-hh/2,ww,hh],'lc-rarity');}}
@@ -124,8 +124,9 @@ export function renderLiveCard(card,{stats=null,instance=null,art=null,compact=f
   // God: Awaken e Ultimate vêm de campos próprios, com os mesmos títulos do Card Forge (drawRules).
   // **AWAKEN N** vira o cabeçalho do PSD do Deus no renderPsdCard (autor, 31/10/2026).
   if(card.tipo==='God'){
-    if(card.habilidade_awaken_en)rules.push(`**AWAKEN${card.awaken?` ${card.awaken}`:''}**`,...card.habilidade_awaken_en.split('\n'));
-    if(card.ultimate_en)rules.push('**ULTIMATE:**',...card.ultimate_en.split('\n'));
+    // Blocos inteiros: textBlocks lê "NOME — Awaken N" / "NOME — Ultimate" + "Cost: {N}{C}" (etiqueta + custo antes do nome).
+    if(card.habilidade_awaken_en)rules.push(`**AWAKEN${card.awaken?` ${card.awaken}`:''}**`,card.habilidade_awaken_en);
+    if(card.ultimate_en)rules.push(card.ultimate_en);
   }
   const ownerAlready=rules.some(t=>/Owner:/i.test(t)),resonanceAlready=rules.some(t=>/Resonance\s*[—-]/i.test(t));
   if(PSD){

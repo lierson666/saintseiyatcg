@@ -88,3 +88,12 @@
 .live-card--psd .lc-awaken__gem b{position:relative;font:italic 700 5.4cqw/1 Futura,'Futura PT','Century Gothic',sans-serif;color:var(--psd-ink);text-shadow:0 0 .2cqw #000,0 0 .45cqw #000,0 0 3cqw var(--psd-glow)}
 .live-card--psd .lc-awaken__word{flex:none;height:6.45cqw;width:auto;margin-left:-2.6cqw}
 .live-card--psd .lc-awaken__word,.live-card--psd .lc-awaken__gem img{filter:drop-shadow(0 0 .25cqw #000) drop-shadow(0 0 .9cqw rgba(0,0,0,.85))}
+
+/* Símbolos no texto (autor, 31/10/2026): número em negrito + ícone do PSD pintado com a cor do texto; Soul verde/vermelho. */
+.rule-sym{display:inline-flex;align-items:center;gap:.06em;vertical-align:-.12em;font-weight:900;color:var(--psd-ink,currentColor);white-space:nowrap}
+.rule-sym i{display:inline-block;width:1.05em;height:1.05em;background:currentColor;-webkit-mask:var(--m) center/contain no-repeat;mask:var(--m) center/contain no-repeat}
+.rule-sym--T i{width:.85em}
+.rule-sym.rule-sym--up{color:#8dffa6}
+.rule-sym.rule-sym--down{color:#ff5a4a}
+.rule-tag{display:block;font-size:.72em;font-weight:900;letter-spacing:.12em;opacity:.8;color:var(--psd-ink,inherit);line-height:1.2}
+.live-card--psd .lc-awaken+.rule-block .rule-tag{display:none} /* o cabeçalho do Awaken já diz "Awaken N" */
