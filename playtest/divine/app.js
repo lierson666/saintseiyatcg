@@ -849,7 +849,7 @@ function render() {
   if (mode) { const step = mode.steps[mode.i]; mode.options = step?.pick ? candidates(step, mode.key).filter(u => !mode.picked.includes(u)) : []; }
   // Morph em vez de innerHTML: só o que mudou é trocado; imagens, animações CSS e camadas da GPU sobrevivem ao render (medição de 31/10/2026).
   Idiomorph.morph(boardRoot, `
-    <div class="olympus ${mode ? 'is-choosing' : ''} ${pending ? 'is-deciding' : ''} ${losers(s).map(k => `fallen-${k === me ? 'me' : 'opp'}`).join(' ')}" ${pending && !pending.peek ? 'inert' : ''}>
+    <div class="olympus ${mode ? 'is-choosing' : ''} ${pending ? 'is-deciding' : ''} ${losers(s).map(k => `fallen-${k === me ? 'me' : 'opp'}`).join(' ')}" ${pending && !pending.peek ? 'data-locked' : ''}>
       ${handRow(them, settings.hideOpponent || settings.ai === them)}
       <main class="arena-field">${fieldRow(them)}<div class="midline"></div>${fieldRow(me)}</main>
       <div class="band band--opp">${cosmoLane(them, 'opp')}</div>
@@ -959,7 +959,7 @@ function flyResolved(node) {
     {transform: 'scale(.9)', filter: 'brightness(3) blur(8px)', opacity: 0}], {duration: 420, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards'})
     .finished.then(() => {
       ghost.remove();
-      const dest = !ability && S().players[k]?.battlefield?.includes(uid) && elOf(uid);
+      const dest = (!ability && S().players[k]?.battlefield?.includes(uid) && elOf(uid)) || null;
       land();
       const d = dest?.getBoundingClientRect();
       if (!d?.width) return;
@@ -1117,10 +1117,6 @@ function logEvent(e) {
 
 // ---------- Entrada ----------
 
-// Arrastar para ordenar os gatilhos (o ↑↓ cobre teclado e toque).
-overlayRoot.addEventListener('dragstart', e => { const li = e.target.closest?.('.order__item'); if (li) { e.dataTransfer.setData('text/plain', li.dataset.order); e.dataTransfer.effectAllowed = 'move'; } });
-overlayRoot.addEventListener('dragover', e => { if (e.target.closest?.('.order__item')) e.preventDefault(); });
-overlayRoot.addEventListener('drop', e => { const li = e.target.closest?.('.order__item'); if (!li || !orderDraft) return; e.preventDefault(); moveOrder(+e.dataTransfer.getData('text/plain'), +li.dataset.order); });
 boardRoot.addEventListener('click', e => {
   if (Date.now() < noClickUntil) return; // fim de uma seta de ataque, não um clique
   if (director.busy) return director.skip();
@@ -1224,8 +1220,7 @@ overlayRoot.addEventListener('click', e => {
   const btn = e.target.closest('button');
   if (!btn) return;
   if (btn.dataset.orderOk !== undefined) return confirmOrder();
-  if (btn.dataset.orderUp) return moveOrder(+btn.dataset.orderUp, +btn.dataset.orderUp - 1);
-  if (btn.dataset.orderDown) return moveOrder(+btn.dataset.orderDown, +btn.dataset.orderDown + 1);
+  if (btn.dataset.orderPick) return pickOrder(+btn.dataset.orderPick);
   if (btn.dataset.peek !== undefined) return void document.body.classList.toggle('is-peeking');
   if (btn.closest('.decision, .decision-pill, .trigger-panel, .pick-modal')) { document.body.classList.remove('is-peeking'); return decisionClick(btn); }
   if (btn.dataset.mull) { marked.has(btn.dataset.mull) ? marked.delete(btn.dataset.mull) : marked.add(btn.dataset.mull); return render(); }
@@ -1246,6 +1241,11 @@ overlayRoot.addEventListener('change', e => {
   render();
 });
 
+// Mesa travada durante uma decisão (antes era inert): clique e arraste não passam, mas passar o mouse (preview à
+// esquerda) e o clique direito (zoom) seguem funcionando, como no Arena.
+for (const type of ['click', 'pointerdown']) boardRoot.addEventListener(type, e => {
+  if (e.button === 0 && e.target.closest?.('.olympus[data-locked]')) { e.stopPropagation(); e.preventDefault(); }
+}, {capture: true});
 // Inspeção: passar o mouse 300 ms sobre uma carta aberta mostra a versão grande com o texto completo.
 document.addEventListener('pointerover', e => {
   if (e.pointerType === 'touch') return; // no toque, a inspeção é segurar o dedo (abaixo)
@@ -1911,21 +1911,25 @@ function orderPanel() {
   if (!key) { orderDraft = null; return ''; }
   const items = ownBatch(s, key);
   if (orderDraft?.batch !== batchKey(key)) orderDraft = {batch: batchKey(key), key, order: items.map((_, i) => i)};
-  // Ordem na própria pilha (grill do autor, 31/10/2026): cascata no ponto da pilha, topo = resolve primeiro; arrastar uma
-  // carta sobre outra troca a ordem; ↑↓ seguem para teclado.
-  const n = orderDraft.order.length;
-  const item = (i, at) => `<div class="cz-item order__item ${at ? '' : 'is-top'}" draggable="true" data-order="${at}" style="--d:${at}" ${srcAttrs(items[i])} aria-label="${at + 1}: ${esc(chainLabel(items[i]).name)}">
-      <b class="order__num">${at + 1}</b>${stackFace(items[i])}
-      <span class="order__move"><button class="ghost" data-order-up="${at}" aria-label="Resolve earlier" ${at ? '' : 'disabled'}>↑</button><button class="ghost" data-order-down="${at}" aria-label="Resolve later" ${at < n - 1 ? '' : 'disabled'}>↓</button></span></div>`;
+  // Ordem por clique (grill do autor, 31/10/2026): blocos compactos no ponto da pilha, já numerados na ordem padrão;
+  // clicar na sequência em que devem resolver renumera. Sem arrastar (WCAG 2.2, movimento de arraste).
+  const nums = orderDraft.picks || orderDraft.order;
+  const tile = (it, i) => { const t = chainLabel(it), at = nums.indexOf(i), num = at < 0 ? '' : at + 1;
+    return `<li><button class="order-tile ${num ? 'is-set' : ''}" data-order-pick="${i}" aria-pressed="${!!num}" ${srcAttrs(it)}
+      aria-label="${esc(t.sub || t.name)}${num ? `, resolves ${num}` : ', not ordered yet'}" title="${esc(t.text || '')}">
+      <i class="order-tile__art" style="background-image:url('${chainArt(it)}')" aria-hidden="true"></i><span class="order-tile__num" aria-hidden="true">${num}</span>
+      <span class="order-tile__body"><b>${esc(t.sub || t.name)}</b><small>${esc(t.name)}</small>${t.text ? `<em>${inlineMarkup(t.text)}</em>` : ''}</span></button></li>`; };
   return `<aside class="trigger-panel trigger-panel--order" role="dialog" aria-labelledby="order-title">
-    <div class="cz-stack order-stack" style="--n:${n - 1}">${orderDraft.order.map(item).join('')}</div>
-    <div class="trigger-panel__box"><h3 id="order-title">Order your triggers</h3><p>Drag a card onto another. 1 resolves first.</p>
-      <div class="trigger-panel__actions"><button class="primary-action" data-order-ok data-focus="order">Confirm order</button></div></div></aside>`;
+    <ol class="order-tiles">${items.map(tile).join('')}</ol>
+    <div class="trigger-panel__box"><h3 id="order-title">Order your triggers</h3><p>${orderDraft.picks ? `Pick #${orderDraft.picks.length + 1}` : 'Click them in the order they resolve.'}</p>
+      <div class="trigger-panel__actions"><button class="primary-action" data-order-ok data-focus="order" ${orderDraft.picks ? 'disabled' : ''}>Confirm order</button></div></div></aside>`;
 }
-function moveOrder(from, to) {
-  const o = orderDraft.order;
-  if (to < 0 || to >= o.length || from === to) return;
-  o.splice(to, 0, o.splice(from, 1)[0]);
+// Clicar em ordem: o primeiro clique recomeça a numeração; clicar num numerado o desmarca; o último entra sozinho.
+function pickOrder(i) {
+  const d = orderDraft, n = d.order.length;
+  let picks = d.picks ? (d.picks.includes(i) ? d.picks.filter(x => x !== i) : [...d.picks, i]) : [i];
+  if (picks.length === n - 1) picks.push(d.order.find(x => !picks.includes(x)));
+  if (picks.length === n) { d.order = picks; d.picks = null; } else d.picks = picks;
   render();
 }
 function confirmOrder() {

@@ -139,7 +139,6 @@ body.has-chain-zoom .command__clock { visibility: visible; }
 /* Decisão central (gatilho opcional, escolha): a carta já aparece grande no bloco; a pilha some para não cobrir as opções.
    "View board" devolve a mesa inteira, pilha incluída. */
 body:not(.is-peeking):has(.trigger-panel.is-center, .trigger-panel--order) #chain-zoom { display: none; }
-.trigger-panel--order .order__item { min-height: 64px; padding: 8px 10px; }
 
 /* Um só ponto de pilha, como no Arena (vídeos de referência, 31/10/2026): toda carta jogada, dos dois lados, e todo
    gatilho com alvo aparecem no mesmo lugar (direita do campo, meia altura), em pé, do mesmo tamanho e com a mesma borda.
@@ -175,12 +174,6 @@ body:not(.is-peeking):has(.trigger-panel.is-center, .trigger-panel--order) #chai
    (o principal grande embaixo, os outros pequenos em cima; obrigatória = Cancel cinza). Escolha com lista de opções
    (.trigger-panel__opts) continua na caixa. */
 .choice__actions { display: contents; }
-.order__num { position: absolute; z-index: 3; top: -12px; left: 50%; transform: translateX(-50%); display: grid; place-items: center; width: 28px; height: 28px;
-  border-radius: 50%; background: linear-gradient(180deg, #f6dc8a, #d9a93c); color: #1a1205; font: 800 14px system-ui; box-shadow: 0 4px 10px #0008; }
-.order__move { position: absolute; z-index: 3; right: 6px; bottom: 6px; display: flex; gap: 4px; opacity: 0; transition: opacity .15s; }
-.order__item:hover .order__move, .order__item:focus-within .order__move { opacity: 1; }
-.order__move button { min-height: 28px; padding: 0 8px; }
-.trigger-panel--order .order__item { cursor: grab; }
 @media (min-width: 761px) and (min-height: 501px) {
   /* Centraliza sem transform: os filhos fixos (chip e botões) precisam medir pela janela. */
   .trigger-panel.is-targeting, .trigger-panel.is-center, body.has-chain-zoom .trigger-panel.is-center, .trigger-panel--order, body.has-chain-zoom .trigger-panel--order {
@@ -189,7 +182,6 @@ body:not(.is-peeking):has(.trigger-panel.is-center, .trigger-panel--order) #chai
     position: fixed; z-index: 46; left: auto; bottom: auto; top: calc(50% + var(--cz-w) * .7 + 14px); right: var(--stack-right, 298px); width: var(--cz-w); max-height: none;
     display: block; margin: 0; padding: 9px 12px; overflow: visible; transform: none; text-align: center; pointer-events: none;
     border: 1px solid rgba(255, 205, 100, .45); border-radius: 12px; background: rgba(8, 9, 24, .9); box-shadow: 0 10px 24px rgba(0, 0, 0, .55); }
-  .trigger-panel--order .trigger-panel__box { top: calc(50% + var(--cz-w) * .7 + 14px + var(--n, 1) * 8px); }
   .cast-slot .cast-prompt .choice__label { display: block; font: 600 14px/1.35 system-ui, sans-serif; color: #f6efdc; text-shadow: none; }
   .cast-slot .cast-prompt :is(.choice__reticle, .cast-prompt__how) { display: none; }
   .trigger-panel:not(:has(.trigger-panel__opts)) .trigger-panel__box > :is(.decision__who, .decision__kicker, .decision__effect, .decision__note, .trigger-queue) { display: none; }
@@ -209,3 +201,28 @@ body:not(.is-peeking):has(.trigger-panel.is-center, .trigger-panel--order) #chai
   /* Enquanto a pergunta usa o canto, o botão de ação, o ⏩ e a placa saem de cena. */
   body:has(.cast-slot .choice__actions, .trigger-panel:not(.has-opts) .trigger-panel__actions) :is(.command .action-btn, .command .command__full, .rk-plate--me) { visibility: hidden; }
 }
+
+/* Ordem dos gatilhos por clique (grill do autor, 31/10/2026): blocos compactos no ponto da pilha. */
+.trigger-panel--order { flex-direction: column; align-items: stretch; gap: 10px; width: var(--cz-w, 260px); max-width: none; }
+.order-tiles { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.order-tile { position: relative; display: grid; grid-template-columns: 64px minmax(0, 1fr); align-items: stretch; width: 100%; min-height: 84px; padding: 0; overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .18); border-radius: 12px; background: rgba(12, 14, 34, .94); color: #f3ecdc; text-align: left; font: inherit; cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, .5); transition: transform .15s cubic-bezier(.2, .8, .2, 1), border-color .15s, box-shadow .15s; }
+.order-tile:hover { transform: translateX(-4px); border-color: rgba(255, 205, 100, .7); }
+.order-tile:active { transform: translateX(-4px) scale(.98); }
+.order-tile:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.order-tile.is-set { border-color: rgba(255, 205, 100, .85); box-shadow: 0 0 0 1px rgba(255, 205, 100, .35), 0 8px 20px rgba(0, 0, 0, .5); }
+.order-tile__art { background: #141826 center 20% / cover; }
+.order-tile__num { position: absolute; left: 32px; top: 50%; transform: translate(-50%, -50%); display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%;
+  border: 2px dashed rgba(255, 255, 255, .55); background: rgba(5, 6, 14, .7); font: 800 16px system-ui; color: #1a1205; }
+.order-tile.is-set .order-tile__num { border: 0; background: linear-gradient(180deg, #f6dc8a, #d9a93c); box-shadow: 0 2px 8px #000a; }
+.order-tile__body { display: grid; align-content: center; gap: 1px; min-width: 0; padding: 8px 10px; }
+.order-tile__body b { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font: 700 14px/1.2 Cinzel, serif; color: #f6dc8a; }
+.order-tile__body small { font: 600 10px system-ui; letter-spacing: .12em; text-transform: uppercase; color: #bfb7a3; }
+.order-tile__body em { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font: 12px/1.3 system-ui, sans-serif; color: #ddd6c4; font-style: normal; }
+@media (min-width: 761px) and (min-height: 501px) {
+  .trigger-panel.trigger-panel--order .trigger-panel__box { position: static; width: auto; }
+}
+@media (prefers-reduced-motion: reduce) { .order-tile { transition: none; } }
+/* A mesa escurecida da decisão não engole o mouse: preview e zoom das cartas por baixo continuam (app.js data-locked). */
+.decision-veil--center { pointer-events: none; }
