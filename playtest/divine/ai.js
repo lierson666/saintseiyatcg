@@ -53,7 +53,7 @@ export function createAI(h) {
       if (!fresh(`play:${uid}`)) continue;
       const c = h.info(uid);
       if (c.kind === 'Equipment') {
-        const mine = devotees(key), named = mine.find(d => c.autoEquip.some(n => n.toUpperCase() === h.info(d).name.toUpperCase()));
+        const mine = devotees(key), named = mine.find(d => h.resonant(key, c, d));
         const bearer = c.global ? null : c.armor ? named || null : named || mine[0]; // Armor: só no Resonant (guia §28)
         if (bearer || c.global || c.armor) return {id: id(`play:${uid}`), run: () => h.playEquipment(key, uid, bearer, {})};
         continue;

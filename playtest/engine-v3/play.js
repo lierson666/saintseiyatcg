@@ -7,6 +7,7 @@ import {SPELLS, ABILITIES, onEnter, onCastEquipment, checkDefeats, namedCharacte
 import {v6Spell, entryOf, V6, v6Attach} from './v6/hooks.js';
 import {collect, sources, domainEntry} from './v6/registry.js';
 import {aim, withTargets} from './v6/targets.js';
+import {resonates} from '../../shared/canon-cards.js';
 
 // Guia §5: Moment como AÇÃO, Technique, Equipment que não é Armor, Equip e habilidades comuns pagam em Base e/ou Latent.
 // Devotee, Armor e Ultimate: só Base; Moment como resposta: só Latent.
@@ -190,7 +191,7 @@ export function reequip(state, ctx, key, uid, bearer) {
 export function resonant(state, ctx, key, card, bearer) {
   const target = ctx.cards.get(ctx.objects[bearer]?.cardId);
   return state.players[key].battlefield.includes(bearer) && target?.kind === 'Devotee'
-    && card.autoEquip.some(name => name.toUpperCase() === target.name.toUpperCase());
+    && resonates(card, target.name);
 }
 function armorEquipCost(state, ctx, key, card, bearer) {
   const target = ctx.cards.get(ctx.objects[bearer]?.cardId);
@@ -208,7 +209,7 @@ function equipCost(state, ctx, key, card, bearer) {
   if (!state.players[key].battlefield.includes(bearer) || target?.kind !== 'Devotee') {
     throw new RuleError('Equip', 'o portador precisa ser um Devotee seu no campo');
   }
-  if (card.autoEquip.some(name => name.toUpperCase() === target.name.toUpperCase())) return card.cost;
+  if (resonates(card, target.name)) return card.cost;
   if (card.equip) return {amount: card.equip.amount, unit: card.cost.unit}; // "Other" e "Any" cobrem quem não é nomeado
   if (card.global) throw new RuleError('Equip', `${card.name} é global e não se prende a um Devotee`);
   if (!card.autoEquip.length) throw new NotSpecified(`${card.id}: Equipment sem Auto-Equip nem Equip {N}`);

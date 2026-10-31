@@ -20,7 +20,7 @@ import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, cloc
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
 import {createDirector} from './director.js?v=18';
-import {createAI} from './ai.js?v=6';
+import {createAI} from './ai.js?v=7';
 import {findDeck} from '../deck-store.js';
 import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-face3';
 import {unlock, playMusic} from '../audio.js?v=20261030-telas';
@@ -103,7 +103,7 @@ function playableReason(key, uid) {
   if (c.kind === 'Equipment') {
     const devs = s.players[key].battlefield.filter(u => info(u).kind === 'Devotee');
     if (!devs.length) return 'You need a Devotee to equip.';
-    const cheapest = Math.min(...devs.map(d => c.autoEquip.some(n => n.toUpperCase() === info(d).name.toUpperCase()) ? c.cost.amount : c.equip ? castCost(s, ctx, key, uid, {amount: c.equip.amount, unit: 'base'}).amount : Infinity));
+    const cheapest = Math.min(...devs.map(d => resonant(s, ctx, key, c, d) ? c.cost.amount : c.equip ? castCost(s, ctx, key, uid, {amount: c.equip.amount, unit: 'base'}).amount : Infinity));
     return readyBases(key) + s.players[key].latent >= cheapest ? null : `Needs ${cheapest === Infinity ? '—' : cheapest} Cosmo (Base and/or Latent).`;
   }
   return affordable(key, c.cost) ? null : `Needs ${c.cost.amount} prepared Base Cosmo.`;
@@ -2064,7 +2064,7 @@ function connectOnline() {
 // ---------- Oponente IA (settings.ai: 'B' ou 'none') ----------
 // A IA só escolhe; cada ação passa pela engine 3.0 como a do humano (mesmo act/reply, mesmas regras e animações).
 const ai = createAI({
-  S, info, num, known: uid => !!ctx.objects[uid], duplicate: (key, uid) => !!duplicateCharacter(S(), ctx, key, uid), candidates, playableReason, canBase, STEPS,
+  S, info, num, known: uid => !!ctx.objects[uid], resonant: (key, armor, uid) => resonant(S(), ctx, key, armor, uid), duplicate: (key, uid) => !!duplicateCharacter(S(), ctx, key, uid), candidates, playableReason, canBase, STEPS,
   hp: uid => hpOf(S(), ctx, uid) - (S().units[uid]?.damage || 0), atk: uid => atkOf(S(), ctx, uid), isSaint: uid => isSaint(ctx, uid),
   strikeTargets: uid => strikeTargets(S(), ctx, uid), ultimateBlock: (key, trio) => ultimateBlock(S(), ctx, key, trio), greatFloodBlock: key => greatFloodBlock(S(), key),
   placeBase, playDevotee: (key, uid, ch) => playDevotee(S(), ctx, key, uid, ch), playEquipment: (key, uid, bearer, ch) => playEquipment(S(), ctx, key, uid, bearer, ch),

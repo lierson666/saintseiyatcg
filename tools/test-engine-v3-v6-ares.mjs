@@ -8,7 +8,7 @@ import {canonIndex} from '../shared/deck-v3.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
 import {startTurn, endTurn, passAll} from '../playtest/engine-v3/core.js';
-import {playDevotee, playSpell, activate} from '../playtest/engine-v3/play.js';
+import {playDevotee, playSpell, playEquipment, activate} from '../playtest/engine-v3/play.js';
 import {declareStrike} from '../playtest/engine-v3/strike.js';
 import {checkDefeats, atkOf, keywordsOf} from '../playtest/engine-v3/effects.js';
 import * as k from '../playtest/engine-v3/v6/kit.js';
@@ -294,3 +294,16 @@ test("War Cry (296): o Berserker que acabou de entrar ganha Impulse e fica Prepa
   assert.ok(keywordsOf(s, ctx, fresh).includes('Impulse'));
 });
 
+
+test('Warplate é Armor (guia §26/§28): só entra vestida no Resonant; sem ele, entra sem portador', () => {
+  const {s, ctx, give} = setup();
+  assert.ok(cards.get('ares-v6-272').armor);
+  const alc = give('A', '271'), gal = give('A', '310');
+  const loose = give('A', '272', 'hand'), worn = give('A', '272', 'hand');
+  assert.throws(() => playEquipment(s, ctx, 'A', loose, gal), /Resonant/);
+  playEquipment(s, ctx, 'A', loose, null); passAll(s);
+  assert.ok(s.players.A.battlefield.includes(loose));
+  assert.equal(ctx.attached[loose], undefined);
+  playEquipment(s, ctx, 'A', worn, alc); passAll(s);
+  assert.equal(ctx.attached[worn], alc);
+});

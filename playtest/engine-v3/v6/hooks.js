@@ -1,5 +1,6 @@
 // Pontos da engine 3.0 que chamam os efeitos V6 (registry.js). A engine importa só este arquivo.
 import {hooks, pushTriggers, emit} from '../core.js';
+import {resonates} from '../../../shared/canon-cards.js';
 import {V6, entryOf, collect, trigger, contextOf, register, sources, domainEntry} from './registry.js';
 import {setDefeatedHooks, setEnteredHooks, setLeavesHooks, setDamagedHooks} from './kit.js';
 import hades from './hades.js';
@@ -32,7 +33,7 @@ function resonanceOnEnter(state, ctx, key, uid) {
   if (dev?.kind !== 'Devotee') return [];
   const mine = a => state.players[key].battlefield.includes(a) && ctx.attached[a] !== uid;
   const armors = state.players[key].battlefield.filter(a => ctx.objects[a]?.armor
-    && ctx.cards.get(ctx.objects[a].cardId).autoEquip.some(n => n.toUpperCase() === dev.name.toUpperCase()));
+    && resonates(ctx.cards.get(ctx.objects[a].cardId), dev.name));
   return armors.map(armor => trigger(key, armor, `${nameOf(ctx, armor)} · Resonance`, st => {
     if (!mine(armor) || !st.players[key].battlefield.includes(uid) || !ctx.decide?.(key, {ability: 'Resonance', uid: armor, source: uid, text: `Equip ${nameOf(ctx, armor)} on ${nameOf(ctx, uid)} for free?`})) return;
     for (const e of Object.keys(ctx.attached)) if (e !== armor && ctx.attached[e] === uid && ctx.objects[e].armor) delete ctx.attached[e];

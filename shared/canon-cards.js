@@ -28,7 +28,8 @@ export function parseCard(record) {
     name: record.name,
     type,
     kind,
-    armor: type.includes('Armor'),
+    // Guia §26: Warplate (Ares) e Moonplate (Artemis) são Armor mesmo sem "Armor" no subtipo do Forge.
+    armor: /Armor|Warplate|Moonplate/.test(type),
     rarity: text.match(/Rarity: (\w+)/)?.[1] ?? null,
     // D196: Domains sem custo e sem Cosmoble no texto exibido.
     cost: cost ? {amount: Number(cost[1]), unit: exMiracle ? 'base' : UNITS[cost[2]]} : null,
@@ -52,3 +53,8 @@ export const loadCanon = canon => new Map([...canon.cards, ...canon.gods].map(r 
   const card = parseCard(r);
   return [card.id, card];
 }));
+
+// Guia §27 (identidade estável do personagem): Resonance pela identidade do personagem, não pela ordem do título: "Alcmenes of Ethon" = "Ethon Alcmenes"
+// (Devotees de Ares renomeados no Forge em 30/10/2026; o texto da Resonance manteve o nome antigo).
+const characterWords = name => String(name).toUpperCase().split(/\s+/).filter(w => w && w !== 'OF').sort().join(' ');
+export const resonates = (armor, devoteeName) => armor.autoEquip.some(n => characterWords(n) === characterWords(devoteeName));
