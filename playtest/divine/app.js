@@ -18,10 +18,10 @@ import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudg
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
-import {createDirector} from './director.js?v=16';
+import {createDirector} from './director.js?v=17';
 import {createAI} from './ai.js?v=5';
 import {findDeck} from '../deck-store.js';
-import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-8';
+import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-9';
 import {unlock, playMusic} from '../audio.js?v=20261030-telas';
 import {telas, anim, sound, imageUrl, applyColors, applyTexts} from '../telas.js?v=20261030-1';
 import {renderLiveCard, renderCardText} from '../../shared/live-card.js?v=20261031-ed5';
@@ -629,7 +629,7 @@ function phaseBar() {
   if (s.victory || s.setup) return `<div class="phasebar"><div class="phasebar__turn">${esc(phaseText())}</div></div>`;
   const now = PHASES.indexOf(currentPhase(s)), mine = s.active === v;
   return `<div class="phasebar ${mine ? 'is-mine' : 'is-theirs'}" aria-label="${esc(phaseText())}">
-    <div class="phasebar__turn"><small>Round ${s.round}</small><strong>${mine ? 'Your turn' : `Opponent's turn`}</strong><small>Player ${s.active}</small></div>
+    <div class="phasebar__turn"><strong>${mine ? 'Your turn' : `Opponent's turn`}</strong><small>Round ${s.round} · Player ${s.active}</small></div>
     <ol class="phasebar__steps">${PHASES.map((p, i) => `<li class="${i < now ? 'done' : i === now ? 'on' : ''}">${p}</li>`).join('')}</ol>
     ${s.window ? `<div class="phasebar__window">${s.chain.length ? `Chain of ${s.chain.length} · ` : ''}Response · Player ${s.window.priority} to act</div>` : ''}
   </div>`;
@@ -840,7 +840,7 @@ function render() {
 // Zoom da pilha (autor, 31/10/2026): toda carta ou habilidade que entra na pilha, dos dois lados, aparece em zoom no canto
 // superior direito na hora (pelos eventos da animação: o render espera a fila) e fica até resolver + 1s. Topo grande,
 // as de baixo em leque atrás, na ordem em que resolvem. O render sincroniza com a pilha real.
-let zoomItems = [], zoomResolving = null, zoomTimer = 0;
+let zoomItems = [], zoomResolving = null, zoomTimer = 0, lastTop = null;
 function zoomFace(it) {
   if (ctx.objects[it.uid]) return cardFace(it.uid, {size: 'dcard--lg'}).replace('tabindex="0"', 'tabindex="-1"');
   const uid = String(it.uid || ''), id = uid.startsWith('domain:') ? S().domains?.[uid.slice(7)] : null;
@@ -877,7 +877,16 @@ function drawZoom() {
     return `<div class="cz-item ${depth ? '' : 'is-top'} is-${it.controller === me ? 'me' : 'opp'} ${it.ability ? 'is-ability' : ''}" style="--d:${depth};--glow:${GOD_GLOW[g] || GOD_GLOW['god-athena']}" data-controller="${esc(it.controller)}" ${srcAttrs(it)}>${depth ? '' : '<i class="cast-aura" aria-hidden="true"></i>'}${stackFace(it)}</div>`;
   }).join('')}</div>
     <small class="chain-zoom__label">${zoomResolving === top.uid ? 'Resolving' : 'Resolves next'} · ${esc(who(top))} · ${esc(t.sub || t.name)}${zoomItems.length > 5 ? ` <b>+${zoomItems.length - 5}</b>` : ''}</small>`;
-  el.querySelector('.cz-item.is-top').dataset.godfx = (S().divine?.[top.controller]?.god || 'god-athena').slice(4);
+  const topEl = el.querySelector('.cz-item.is-top');
+  topEl.dataset.godfx = (S().divine?.[top.controller]?.god || 'god-athena').slice(4);
+  // Entrada estilo Arena: o item novo sai da carta de origem (campo ou mão) e voa até o topo da pilha. A carta revelada do
+  // oponente já chega voando pela revelação.
+  const from = top.uid !== lastTop && !revealQueue.some(x => x.uid === top.uid) && !$('.cast-reveal') && (elOf(top.uid) || $(`.hand .dcard[data-uid="${top.uid}"]`));
+  lastTop = top.uid;
+  const a = from?.getBoundingClientRect(), b = topEl.lastElementChild?.getBoundingClientRect();
+  if (a?.width && b?.width && !settings.reduceMotion) topEl.lastElementChild.animate([
+    {transform: `translate(${a.left + a.width / 2 - b.left - b.width / 2}px, ${a.top + a.height / 2 - b.top - b.height / 2}px) scale(${a.width / b.width})`, opacity: .3, filter: 'brightness(2.2)'},
+    {transform: 'none', opacity: 1, filter: 'brightness(1)'}], {duration: 420, easing: 'cubic-bezier(.2,.8,.2,1)'});
   drawIntents();
 }
 // Resolução estilo Arena: o item brilha e voa para onde a carta foi (campo, Tartarus, Void); gatilho se desfaz em luz.
@@ -891,7 +900,7 @@ function flyResolved(node) {
   requestAnimationFrame(() => requestAnimationFrame(() => { // espera a mesa desenhar a carta no destino
     const s = S(), uid = node.dataset.src, k = node.dataset.controller;
     const pile = ['tartarus', 'void'].find(z => s.players[k]?.[z]?.includes(uid));
-    const dest = !node.classList.contains('is-ability') && (elOf(uid) || (pile && $(`[data-pile="${k}:${pile}"]`)));
+    const dest = (!node.classList.contains('is-ability') && (elOf(uid) || (pile && $(`[data-pile="${k}:${pile}"]`)))) || null;
     const d = dest?.getBoundingClientRect(), opts = {duration: 700, easing: 'cubic-bezier(.5,0,.2,1)', fill: 'forwards'};
     const frames = d?.width
       ? [{transform: 'none', filter: 'brightness(1)'}, {transform: 'scale(1.06)', filter: 'brightness(2.2)', offset: .3},
@@ -906,8 +915,8 @@ const revealQueue = [];
 let revealing = false;
 function revealCast(it) {
   const me = online ? online.key : viewer();
-  // Como no Arena: só a jogada do oponente é revelada; a sua vai direto para a pilha.
-  if (!it.uid || it.controller === me || S().victory || revealQueue.some(x => x.uid === it.uid)) return;
+  // Como no Arena: só a carta jogada pelo oponente é revelada; a sua e os gatilhos voam direto para a pilha (drawZoom).
+  if (!it.uid || it.ability || it.controller === me || S().victory || revealQueue.some(x => x.uid === it.uid)) return;
   revealQueue.push(it);
   if (!revealing) nextReveal();
 }
@@ -1014,15 +1023,6 @@ const ui = {
     setTimeout(() => el.remove(), 1300);
   },
   refRect: ref => { const r = String(ref || ''); return r.startsWith('god:') || r.startsWith('ultimate:') ? ui.godRect(r.split(':')[1]) : r.startsWith('domain:') ? ui.domainRect(r.slice(7)) : ui.rect(r); },
-  // Gatilho do oponente: faixa no topo por ~1,5 s com a carta pequena e o nome da habilidade; não trava a partida.
-  triggerNote(e) {
-    const c = {uid: e.uid, controller: e.player, ability: e.ability}, t = chainLabel(c), art = chainArt(c);
-    const el = document.createElement('div');
-    el.className = 'trigger-note'; el.setAttribute('role', 'status');
-    el.innerHTML = `${art ? `<i style="background-image:url('${art}')" aria-hidden="true"></i>` : ''}<span><small>Player ${esc(e.player)} · trigger</small><b>${esc(t.title)}</b></span>`;
-    stage.append(el);
-    setTimeout(() => el.remove(), 1500);
-  },
   pulse(uid, cls, on) { $$(String(uid).startsWith('domain:') ? `[data-domain="${String(uid).slice(7)}"]` : `[data-uid="${uid}"]`).forEach(el => { if (on === false) el.classList.remove(cls); else { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); } }); },
   aim(attacker, target) {
     $$('.aimed').forEach(el => el.classList.remove('aimed'));
@@ -1918,7 +1918,7 @@ function orderPanel() {
   const row = (i, at) => { const t = chainLabel(items[i]), art = chainArt(items[i]); return `<li class="order__item" draggable="true" data-order="${at}" ${srcAttrs(items[i])}>
       <b>${at + 1}</b>${art ? `<i class="chain__art" style="background-image:url('${art}')" aria-hidden="true"></i>` : ''}<div class="chain__body"><strong>${esc(t.name)}</strong>${t.sub ? `<span class="chain__sub">${esc(t.sub)}</span>` : ''}${t.text ? `<em>${inlineMarkup(t.text)}</em>` : ''}</div>
       <span class="order__move"><button class="ghost" data-order-up="${at}" aria-label="Move up" ${at ? '' : 'disabled'}>↑</button><button class="ghost" data-order-down="${at}" aria-label="Move down" ${at < items.length - 1 ? '' : 'disabled'}>↓</button></span></li>`; };
-  return `<aside class="trigger-panel trigger-panel--order" role="dialog" aria-labelledby="order-title">
+  return `<div class="decision-veil decision-veil--center" aria-hidden="true"></div><aside class="trigger-panel trigger-panel--order" role="dialog" aria-labelledby="order-title">
     <div class="trigger-panel__box"><span class="decision__who">Player ${key} decides</span>
       <small class="decision__kicker">${items.length} triggers at the same time</small><h3 id="order-title">Order your triggers</h3>
       <p>Drag to choose the order. Trigger 1 resolves first.</p>

@@ -4,7 +4,7 @@
 // Vive fora do render() do lobby (#social) para a atualização a cada 15 s não apagar o que o jogador digita.
 // Duelo (etapa 4, docs/duelo-online.md): Challenge no chat com escolha de deck; o desafio vira mensagem com Accept/Decline,
 // expira em 60 s e, aceito, leva os dois para a mesma partida. Fora do chat, um aviso no topo mostra o desafio recebido.
-import {playerName} from './rank.js?v=20261031-8';
+import {playerName} from './rank.js?v=20261031-9';
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const LABEL = {online: 'Online', match: 'In a match', offline: 'Offline'};
 

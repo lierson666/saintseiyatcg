@@ -54,7 +54,7 @@
 .rk-plate > span { display: grid; line-height: 1.15; min-width: 0; }
 .rk-plate b { font: 600 32px Cinzel, serif; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .rk-plate small { font-size: 27px; opacity: .75; white-space: nowrap; }
-/* Cada placa ao lado do próprio God (rank.js mountNameplates); a direita fica para a pilha e o botão de ação. */
+/* Placa ancorada ao lado do God (rank.js mountNameplates: hoje só a do oponente). */
 .rk-plate.is-anchored { right: auto; bottom: auto; transform: translateY(-50%); padding: 6px 18px 6px 8px; }
 .rk-plate.is-anchored .rk-emblem { height: 52px; }
 .rk-plate.is-anchored b { font-size: 22px; } .rk-plate.is-anchored small { font-size: 16px; }

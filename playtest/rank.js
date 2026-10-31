@@ -116,9 +116,9 @@ export async function mountNameplates({online, players, you}) {
     ${r ? emblem(r) : ''}<span><b>${playerName(name)}</b>${r ? `<small>${esc(rankName(r))} · Lv ${r.level}</small>` : ''}</span></aside>`;
   document.body.insertAdjacentHTML('beforeend', plate('foe', foe?.username || foeName || 'AI Opponent', foe?.rank)
     + (me ? plate('me', me.username, mine) : ''));
-  // Cada placa ao lado do próprio God, como no Arena: a pilha fica à direita e o botão de ação no canto inferior direito.
+  // Placa do oponente ao lado do God dele, como no Arena; a sua fica no bloco do canto direito, acima do botão de ação.
   // O HUD do God é redesenhado a cada render, então a posição é conferida de tempos em tempos.
-  const place = () => [['foe', 'opp'], ['me', 'me']].forEach(([side, hudSide]) => {
+  const place = () => [['foe', 'opp']].forEach(([side, hudSide]) => {
     const plate = document.querySelector(`.rk-plate--${side}`), hud = document.querySelector(`.godhud--${hudSide}`)?.getBoundingClientRect();
     if (!plate) return;
     if (!hud?.width) return plate.classList.remove('is-anchored');

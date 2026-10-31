@@ -301,7 +301,7 @@ export function createDirector({ui, getFx, settings}) {
       sound(e.draw ? 'derrota' : ui.isViewer(e.winner) ? 'vitoria' : 'derrota'); await ui.banner(e.draw ? 'Draw' : ui.isViewer(e.winner) ? 'Victory' : `Player ${e.winner} wins`, e.winner, t(1200)); },
     async window_open() {}, async window_close() {}, async pass(e) { ui.log(e); }, // Gatilho entrando na cadeia e resolvendo: a carta de origem pisca e cresce (estilo Arena), nada genérico.
     async chain_add(e) { ui.pulse(e.uid, 'trigger-pop'); await pause(240); },
-    async trigger(e) { ui.pulse(e.uid, 'trigger-pop'); ui.log(e); if (!ui.isViewer(e.player)) ui.triggerNote(e); await pause(240); },
+    async trigger(e) { ui.pulse(e.uid, 'trigger-pop'); ui.log(e); await pause(240); }, // a origem pisca e o item voa para a pilha (app.js drawZoom)
     // Ao resolver: linha de energia da fonte até cada alvo e o número no alvo (~1 s); com Reduce motion fica só o número.
     async resolved(e) {
       const from = ui.center(ui.refRect(e.uid));

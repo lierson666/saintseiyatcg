@@ -72,7 +72,7 @@ body.has-chain-zoom .trigger-panel--opp { display: none; }
 @media (min-width: 761px) and (min-height: 501px) {
   /* Centraliza a coluna sem transform: com transform, o botão fixo ficaria preso a ela e não ao canto da tela. */
   .command { top: 0; bottom: 0; margin: auto 0; height: fit-content; transform: none; }
-  .command .action-btn { position: fixed; z-index: 30; right: 22px; bottom: 22px; width: auto; min-width: 172px; min-height: 52px; padding: 0 26px; gap: 0;
+  .command .action-btn { position: fixed; z-index: 30; right: 22px; bottom: 22px; width: 262px; min-height: 52px; padding: 0 18px; gap: 0;
     border-radius: 999px; border: 2px solid #ffd2a8; background: linear-gradient(180deg, #ffa25c, #e0532b); color: #fff;
     font: 700 19px/1 Cinzel, serif; letter-spacing: .05em; text-shadow: 0 1px 3px rgba(0, 0, 0, .55);
     box-shadow: 0 8px 22px rgba(0, 0, 0, .6), 0 0 26px rgba(255, 120, 60, .45); animation: none; }
@@ -83,7 +83,7 @@ body.has-chain-zoom .trigger-panel--opp { display: none; }
   .command .action-btn[data-state="wait"], .command .action-btn:disabled { border-color: rgba(255, 255, 255, .18); background: linear-gradient(180deg, #2c3043, #1a1c28);
     color: #b9b4a8; text-shadow: none; box-shadow: 0 8px 22px rgba(0, 0, 0, .6); filter: none; opacity: 1; }
   /* Full control vira o botãozinho redondo ao lado, como o do Arena. */
-  .command .command__full { position: fixed; z-index: 30; right: 26px; bottom: 84px; width: 36px; height: 36px; padding: 0; overflow: hidden;
+  .command .command__full { position: fixed; z-index: 30; right: 22px; bottom: 100px; width: 36px; height: 36px; padding: 0; overflow: hidden;
     border-radius: 50%; font-size: 0; border: 1px solid rgba(255, 255, 255, .25); background: #141726 center / 18px no-repeat
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f1d68a'%3E%3Cpath d='M3 5l8 7-8 7zM12 5l8 7-8 7z'/%3E%3C/svg%3E"); }
   .command .command__full[aria-pressed="true"] { border-color: #6cbcff; box-shadow: 0 0 14px rgba(90, 170, 255, .7); }
@@ -100,3 +100,63 @@ body.has-chain-zoom .trigger-panel--opp { display: none; }
   .cast-slot .cast-prompt .cast-prompt__how { flex-basis: 100%; order: 3; font-size: 13px; color: #e6e0d0; text-shadow: 0 1px 4px #000; }
   .cast-slot .cast-prompt button { min-width: 120px; box-shadow: 0 6px 16px rgba(0, 0, 0, .6); }
 }
+
+/* ---------- HUD do canto direito (autor, 31/10/2026): relógio, cartão do turno e ferramentas em cima;
+   embaixo, sua placa com o ⏩ ao lado e o botão de ação, tudo alinhado na mesma largura. ---------- */
+@media (min-width: 761px) and (min-height: 501px) {
+  .command { right: 22px; width: 262px; gap: 12px; }
+  .phasebar { gap: 10px; padding: 12px 14px; border-radius: 16px; background: linear-gradient(180deg, rgba(22, 20, 36, .92), rgba(10, 10, 22, .92));
+    border-color: rgba(232, 196, 106, .35); box-shadow: 0 10px 28px rgba(0, 0, 0, .5); }
+  .phasebar__turn { display: grid; justify-items: center; gap: 4px; text-align: center; }
+  .phasebar__turn strong { font: 700 22px/1.1 Cinzel, Georgia, serif; letter-spacing: .03em; white-space: nowrap; }
+  .phasebar__turn small { font: 600 11px/1 system-ui, sans-serif; letter-spacing: .16em; color: #a89a78; white-space: nowrap; }
+  .phasebar__steps { gap: 4px; }
+  .phasebar__steps li { padding: 6px 0; border-radius: 999px; font-size: 9.5px; letter-spacing: .08em; }
+  .phasebar__window { padding-top: 6px; }
+  .command__tools { justify-content: center; gap: 8px; }
+  .command__tools button, .command__tools a { min-height: 30px; padding: 0 14px; border-radius: 999px; display: inline-flex; align-items: center;
+    font: 600 12px/1 system-ui, sans-serif; color: #d8d2c4; background: rgba(10, 12, 26, .75); border-color: rgba(255, 255, 255, .14); text-decoration: none; }
+  .command__tools button:hover, .command__tools a:hover { color: #fff; border-color: rgba(232, 196, 106, .55); }
+
+  /* Sua placa + ⏩ na mesma linha, logo acima do botão de ação; tudo com a largura da coluna (262px). */
+  .rk-plate--me { left: auto; top: auto; right: 68px; bottom: 88px; width: 216px; max-width: none; transform: none; gap: 10px; padding: 6px 14px 6px 6px;
+    border-radius: 16px; border-color: rgba(232, 196, 106, .35); background: linear-gradient(180deg, rgba(22, 20, 36, .92), rgba(10, 10, 22, .92)); box-shadow: 0 10px 28px rgba(0, 0, 0, .5); }
+  .rk-plate--me .rk-emblem { height: 46px; }
+  .rk-plate--me b { font-size: 19px; color: #f6e6bf; }
+  .rk-plate--me small { font-size: 12px; letter-spacing: .06em; opacity: .7; }
+}
+
+/* ---------- Design review (31/10/2026) ---------- */
+@media (min-width: 761px) and (min-height: 501px) {
+  /* Dicas da fase: viram um chip de uma linha; abrem no clique. A mesa volta a ser o foco, como no Arena. */
+  .rail .ctrl:not(.is-open):not(.has-chain) { flex: 0 0 auto; padding: 8px 12px; }
+  .ctrl:not(.is-open) .ctrl__hints, .ctrl:not(.is-open) .ctrl__note { display: none; }
+  .ctrl__head { cursor: pointer; position: relative; padding-right: 18px; }
+  .ctrl__head::after { content: ""; position: absolute; right: 2px; top: 50%; width: 7px; height: 7px; border: solid rgba(232, 196, 106, .8);
+    border-width: 0 2px 2px 0; transform: translateY(-70%) rotate(45deg); transition: transform .2s; }
+  .ctrl.is-open .ctrl__head::after { transform: translateY(-30%) rotate(-135deg); }
+  .ctrl__head:focus-visible { outline: 2px solid #fff; outline-offset: 2px; border-radius: 6px; }
+
+  /* Pergunta na mesa: faixa escura suave atrás do texto, para ler por cima das cartas do campo. */
+  .cast-slot .cast-prompt::before { content: ""; position: absolute; z-index: -1; inset: -26px -60px; border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(4, 5, 14, .82), rgba(4, 5, 14, .55) 60%, transparent); pointer-events: none; }
+}
+@media (min-width: 761px) and (min-height: 501px) {
+  /* Carta em conjuração fica onde fica a pilha (borda direita do campo, meia altura), como no Arena; sem transform,
+     porque a pergunta flutuante (position: fixed) mora dentro dela. */
+  .cast-slot { left: auto; right: 298px; top: 0; bottom: 0; margin: auto 0; height: fit-content; transform: none; animation: none; }
+  .cast-slot .dcard { --card-w: clamp(170px, calc(46vh / 1.4), 300px); }
+  .cast-slot > small { display: none; }
+}
+@media (min-width: 761px) and (min-height: 501px) {
+  /* Pergunta à esquerda da carta, nunca por cima dela. */
+  .cast-slot .cast-prompt { left: 24px; right: calc(298px + clamp(170px, calc(46vh / 1.4), 300px) + 32px); width: auto; max-width: 520px; margin-left: auto; transform: translateY(-50%); }
+}
+/* Decisão central (gatilho opcional, escolha): a carta já aparece grande no bloco; a pilha some para não cobrir as opções.
+   "View board" devolve a mesa inteira, pilha incluída. */
+body:not(.is-peeking):has(.trigger-panel.is-center, .trigger-panel--order) #chain-zoom { display: none; }
+/* Ordem de gatilhos simultâneos: mesmo bloco central, sobre a mesa escurecida (antes caía na borda direita, sob a pilha). */
+.trigger-panel--order, body.has-chain-zoom .trigger-panel--order { left: 50%; right: auto; top: 50%; transform: translate(-50%, -50%); z-index: 45; width: min(520px, calc(100vw - 32px)); max-width: none; animation: decision-in .3s cubic-bezier(.2, .8, .2, 1); }
+.trigger-panel--order .trigger-panel__box { width: 100%; max-height: 86dvh; overflow: auto; }
+.trigger-panel--order .order__item { min-height: 64px; padding: 8px 10px; }
+.trigger-panel--order .trigger-panel__actions { justify-content: center; }

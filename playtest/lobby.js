@@ -10,12 +10,12 @@ import {loadMyDecks, saveMyDecks, findDeck, syncDecks, onDeckStatus, deckCovers,
 import {mountKV} from '../shared/kv-sky.js?v=20261031-top';
 import {countryOptions, countryName} from '../shared/countries.js?v=20261029-1';
 import {startPresence} from '../shared/presence.js?v=20261029-1';
-import {mountSocial} from './social.js?v=20261031-ds2';
+import {mountSocial} from './social.js?v=20261031-ds3';
 import {telas, imageUrl, sound, applyColors, applyTexts} from './telas.js?v=20261030-1';
 import {loadEconomy, ownedLimit, missingCards, coinBadge, storeScreen, collectionScreen, openBooster, buyBooster} from './economy.js?v=20261031-live3';
 import {lightArt} from '../shared/light-art.js';
-import {featureGrid} from './home-features.js?v=20261031-ds2';
-import {loadRank, rankBadge, rankName, rankSummary, openRankPanel, playerName} from './rank.js?v=20261031-8';
+import {featureGrid} from './home-features.js?v=20261031-ds3';
+import {loadRank, rankBadge, rankName, rankSummary, openRankPanel, playerName} from './rank.js?v=20261031-9';
 
 const root = document.getElementById('lobby');
 const ART = '../card-forge/art-web/';
