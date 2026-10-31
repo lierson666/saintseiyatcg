@@ -14,13 +14,11 @@
   <link rel="icon" href="/LOGO/favicon.png?v=20261030">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Cormorant+Garamond:ital,wght@1,400&family=Jost:wght@300;400;500&display=swap">
   <link rel="stylesheet" href="/shared/kv.css?v=20261029-1">
+  <link rel="stylesheet" href="/shared/site-nav.css?v=20261031-1">
   <style>
     html, body { margin: 0; background: var(--kv-bg); color: var(--kv-ink); font: 300 17px/1.65 var(--kv-sans); }
     html { scroll-behavior: smooth; scroll-padding-top: 80px; }
     .page { position: relative; z-index: 1; min-height: 100dvh; display: grid; grid-template-rows: auto 1fr auto; }
-    .kv-nav { position: sticky; top: 0; z-index: 5; }
-    .kv-nav a { color: var(--kv-muted); text-decoration: none; }
-    .kv-nav .links { display: flex; gap: clamp(14px, 3vw, 32px); }
     a { color: var(--kv-gold-2); }
     main { width: min(1120px, 100%); margin: 0 auto; padding: clamp(32px, 8vh, 96px) clamp(16px, 4vw, 40px) 72px; box-sizing: border-box; }
     .hero { max-width: 760px; margin-bottom: clamp(48px, 8vh, 88px); }
@@ -104,7 +102,6 @@
     .end { text-align: center; display: grid; justify-items: center; gap: 18px; }
     @media (max-width: 720px) {
       .anatomy { grid-template-columns: 1fr; } .anatomy .card-slot { max-width: 280px; margin: 0 auto; }
-      .kv-nav .links .opt { display: none; }
       .steps > li { padding: 20px 18px 20px 62px; } .steps > li::before { left: 16px; }
     }
     @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .tile { transition: none; } }
@@ -113,10 +110,7 @@
 <body>
   <div class="kv-veil" aria-hidden="true"></div>
   <div class="page">
-    <nav class="kv-nav">
-      <a class="kv-stamp" href="/">Saint Seiya · TCG</a>
-      <span class="links"><a class="kv-stamp opt" href="/download/">Download</a><a class="kv-stamp kv-stamp--gold" href="/playtest/">Play</a></span>
-    </nav>
+    <header class="site-top"><a class="site-top__logo" href="/"><img src="/LOGO/logo-web.webp" alt="Saint Seiya TCG"></a><nav class="site-tabs" aria-label="Site"><a class="site-tab" href="/about/">The game</a><a class="site-tab" href="/how-to-play/" aria-current="page">How to play</a><a class="site-tab" href="/download/">Install</a><a class="site-tab" href="/gallery/">Card gallery</a></nav><a class="kv-button site-top__play" href="/playtest/">Play</a></header>
     <main>
       <header class="hero">
         <p class="kv-stamp kv-stamp--gold"><span class="kv-dot" aria-hidden="true"></span>&nbsp; How to play · Alpha rules</p>
@@ -344,6 +338,7 @@
   <script type="module">
     import {mountKV} from '/shared/kv-sky.js?v=20261029-2';
     mountKV({anchor: 'h1 .kv-cosmo'});
+    document.querySelector('.site-tab[aria-current]')?.scrollIntoView({inline: 'center', block: 'nearest'}); // celular: aba atual visível
     // Cartas como imagens estáticas (how-to-play/cards/), públicas para quem não tem login.
     for (const slot of document.querySelectorAll('main [data-card]')) {
       const name = slot.getAttribute('aria-label') || slot.dataset.card;

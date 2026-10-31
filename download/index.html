@@ -12,10 +12,10 @@
   <link rel="icon" href="/LOGO/favicon.png?v=20261030">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Cormorant+Garamond:ital,wght@1,400&family=Jost:wght@300;400;500&display=swap">
   <link rel="stylesheet" href="/shared/kv.css?v=20261029-1">
+  <link rel="stylesheet" href="/shared/site-nav.css?v=20261031-1">
   <style>
     html, body { margin: 0; background: var(--kv-bg); color: var(--kv-ink); font: 300 17px/1.6 var(--kv-sans); }
     .page { position: relative; z-index: 1; min-height: 100dvh; display: grid; grid-template-rows: auto 1fr auto; }
-    .kv-nav a { color: var(--kv-muted); text-decoration: none; }
     a { color: var(--kv-gold-2); }
     main { width: min(1080px, 100%); margin: 0 auto; padding: clamp(32px, 8vh, 88px) clamp(16px, 4vw, 40px) 64px; box-sizing: border-box; }
     .hero { max-width: 720px; }
@@ -49,7 +49,7 @@
 <body>
   <div class="kv-veil" aria-hidden="true"></div>
   <div class="page">
-    <nav class="kv-nav"><a class="kv-stamp" href="/">Saint Seiya · TCG</a><span style="display:flex;gap:clamp(14px,3vw,32px)"><a class="kv-stamp" href="/how-to-play/">How to play</a><a class="kv-stamp" href="/playtest/">Play in browser</a></span></nav>
+    <header class="site-top"><a class="site-top__logo" href="/"><img src="/LOGO/logo-web.webp" alt="Saint Seiya TCG"></a><nav class="site-tabs" aria-label="Site"><a class="site-tab" href="/about/">The game</a><a class="site-tab" href="/how-to-play/">How to play</a><a class="site-tab" href="/download/" aria-current="page">Install</a><a class="site-tab" href="/gallery/">Card gallery</a></nav><a class="kv-button site-top__play" href="/playtest/">Play</a></header>
     <main>
       <section class="hero" aria-labelledby="title">
         <p class="kv-stamp kv-stamp--gold"><span class="kv-dot" aria-hidden="true"></span>&nbsp; Desktop app · Closed beta</p>
@@ -149,6 +149,7 @@
   <script type="module">
     import {mountKV} from '/shared/kv-sky.js?v=20261029-2';
     mountKV({anchor: 'h1 .kv-cosmo'});
+    document.querySelector('.site-tab[aria-current]')?.scrollIntoView({inline: 'center', block: 'nearest'}); // celular: aba atual visível
     // Destaca o sistema de quem visita; o outro botão vira secundário.
     const ua = navigator.userAgentData?.platform || navigator.platform || navigator.userAgent;
     const os = /win/i.test(ua) ? 'win' : /mac/i.test(ua) ? 'mac' : null;

@@ -1,0 +1,109 @@
+<!doctype html>
+<!-- O que é o jogo (autor, 31/10/2026): apresentação para quem chega. Textos seguem docs/guia-do-jogo.md
+     (princípio fundamental, as quatro sensações e a identidade das facções); a home segue com o pedido de acesso. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex, nofollow"> <!-- site fora das buscas por enquanto (autor, 31/10/2026) -->
+  <title>Saint Seiya TCG — The Game</title>
+  <meta name="description" content="Saint Seiya TCG is a strategic card game: lead a God and their Devotees, burn your Cosmo and bring down the enemy God.">
+  <meta name="theme-color" content="#05060c">
+  <link rel="icon" href="/LOGO/favicon.png?v=20261030">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Cormorant+Garamond:ital,wght@1,400&family=Jost:wght@300;400;500&display=swap">
+  <link rel="stylesheet" href="/shared/kv.css?v=20261029-1">
+  <link rel="stylesheet" href="/shared/site-nav.css?v=20261031-1">
+  <style>
+    html, body { margin: 0; background: var(--kv-bg); color: var(--kv-ink); font: 300 17px/1.6 var(--kv-sans); }
+    .page { position: relative; z-index: 1; min-height: 100dvh; display: grid; grid-template-rows: auto 1fr auto; }
+    a { color: var(--kv-gold-2); }
+    main { width: min(1120px, 100%); margin: 0 auto; padding: clamp(32px, 8vh, 96px) clamp(16px, 4vw, 40px) 72px; box-sizing: border-box; }
+    section { margin-bottom: clamp(56px, 9vh, 104px); }
+    .hero { max-width: 760px; }
+    .hero h1 { margin: 18px 0 20px; display: grid; gap: 6px; }
+    .lead { max-width: 60ch; color: var(--kv-muted); margin: 0 0 28px; }
+    .cta { display: flex; flex-wrap: wrap; gap: 12px; }
+    .cta a { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
+    .cta .kv-ghost { color: var(--kv-ink); }
+    .section-title { margin: 0 0 12px; font: italic 400 clamp(32px, 4.4vw, 52px)/1.05 var(--kv-serif); }
+    .intro { max-width: 62ch; color: var(--kv-muted); margin: 0 0 28px; }
+    .feel { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px; margin: 0; padding: 0; list-style: none; counter-reset: f; }
+    .feel li { counter-increment: f; padding: 24px; }
+    .feel li::before { content: counter(f, upper-roman); display: block; margin-bottom: 10px; font: 600 12px var(--kv-title); letter-spacing: .32em; color: var(--kv-gold); }
+    .feel strong { display: block; margin-bottom: 6px; color: var(--kv-ink); font-weight: 500; }
+    .feel p { margin: 0; font-size: 15px; color: var(--kv-muted); }
+    .gods { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: clamp(10px, 1.6vw, 18px); margin: 0; padding: 0; list-style: none; }
+    .gods img { display: block; width: 100%; height: auto; border-radius: 4.5%/3.2%; }
+    .gods h3 { margin: 14px 0 4px; font: 600 12px var(--kv-title); letter-spacing: .32em; text-transform: uppercase; color: var(--kv-gold); }
+    .gods p { margin: 0; font-size: 14px; color: var(--kv-muted); }
+    .flow { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+    .flow .kv-card { padding: 24px; }
+    .flow h3 { margin: 0 0 10px; font: 600 12px var(--kv-title); letter-spacing: .32em; text-transform: uppercase; color: var(--kv-gold); }
+    .flow p { margin: 0; font-size: 15px; color: var(--kv-muted); }
+    .closing { padding: clamp(28px, 4vw, 48px); display: grid; gap: 16px; justify-items: start; }
+    .closing p { margin: 0; max-width: 60ch; color: var(--kv-muted); }
+    @media (max-width: 900px) { .gods { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (max-width: 520px) { .gods { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  </style>
+</head>
+<body>
+  <div class="kv-veil" aria-hidden="true"></div>
+  <div class="page">
+    <header class="site-top"><a class="site-top__logo" href="/"><img src="/LOGO/logo-web.webp" alt="Saint Seiya TCG"></a><nav class="site-tabs" aria-label="Site"><a class="site-tab" href="/about/" aria-current="page">The game</a><a class="site-tab" href="/how-to-play/">How to play</a><a class="site-tab" href="/download/">Install</a><a class="site-tab" href="/gallery/">Card gallery</a></nav><a class="kv-button site-top__play" href="/playtest/">Play</a></header>
+    <main>
+      <section class="hero" aria-labelledby="title">
+        <p class="kv-stamp kv-stamp--gold"><span class="kv-dot" aria-hidden="true"></span>&nbsp; The game · Closed beta</p>
+        <h1 id="title"><span class="kv-lyric">A war among</span><span class="kv-cosmo">Gods</span></h1>
+        <p class="lead">Saint Seiya TCG is a strategic card game. You lead a God and the Devotees who fight in their name. Build up your Cosmo, choose every duel with care, awaken the power of your Saints and bring the enemy God down.</p>
+        <div class="cta"><a class="kv-button" href="/how-to-play/">Learn to play</a><a class="kv-ghost" href="/gallery/">See the cards</a></div>
+      </section>
+
+      <section aria-labelledby="feel-title">
+        <h2 class="section-title" id="feel-title">What every match feels like</h2>
+        <p class="intro">The game is built around four ideas. If a rule or a card does not serve them, it does not belong.</p>
+        <ul class="feel">
+          <li class="kv-card"><strong>Every duel matters.</strong><p>Fights are one against one. Who strikes, who blocks and who falls changes the whole match.</p></li>
+          <li class="kv-card"><strong>Sacrifice can stop giants.</strong><p>A legendary Saint is not unbeatable. The right Guardian, at the right time, holds the line.</p></li>
+          <li class="kv-card"><strong>Cosmo beats raw strength.</strong><p>Burning your Cosmo and dressing your Devotees in armor lets the underdog win.</p></li>
+          <li class="kv-card"><strong>Defeating a God is legendary.</strong><p>Gods hit back. Bringing one down is the hardest thing in the game, and the only way to win.</p></li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="gods-title">
+        <h2 class="section-title" id="gods-title">Five Gods, five ways to fight</h2>
+        <p class="intro">Each deck follows one God. Their faction decides how you play: protect, control, endure, attack or hunt.</p>
+        <ul class="gods">
+          <li><img src="/how-to-play/cards/athena-001.jpg" alt="Athena God card" loading="lazy" width="800" height="1124"><h3>Athena</h3><p>The unbreakable will. Saints fight together and grow stronger side by side.</p></li>
+          <li><img src="/how-to-play/cards/poseidon-001.jpg" alt="Poseidon God card" loading="lazy" width="800" height="1124"><h3>Poseidon</h3><p>Control and steady pressure, like a rising tide.</p></li>
+          <li><img src="/how-to-play/cards/hades-001.jpg" alt="Hades God card" loading="lazy" width="800" height="1124"><h3>Hades</h3><p>Persistence, sacrifice and the dead who return.</p></li>
+          <li><img src="/how-to-play/cards/ares-001.jpg" alt="Ares God card" loading="lazy" width="800" height="1124"><h3>Ares</h3><p>Aggression, combat and conquest.</p></li>
+          <li><img src="/how-to-play/cards/artemis-001.jpg" alt="Artemis God card" loading="lazy" width="800" height="1124"><h3>Artemis</h3><p>The hunt: precision and well-chosen eliminations.</p></li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="flow-title">
+        <h2 class="section-title" id="flow-title">A match at a glance</h2>
+        <p class="intro">Two players, one God each. The full rules are on <a href="/how-to-play/">How to play</a>.</p>
+        <div class="flow">
+          <div class="kv-card"><h3>Your deck</h3><p>One God, one Domain and a 60-card deck of Devotees, Equipment and Spells.</p></div>
+          <div class="kv-card"><h3>Cosmo</h3><p>Play one Base each turn to build the Cosmo you spend on cards and powers.</p></div>
+          <div class="kv-card"><h3>Rounds</h3><p>Each Round, both players take a turn. Summon, equip and strike, then end your turn.</p></div>
+          <div class="kv-card"><h3>Victory</h3><p>Reduce the enemy God's Soul to zero. Lose your own God, and you lose the match.</p></div>
+        </div>
+      </section>
+
+      <section class="kv-card closing" aria-labelledby="beta-title">
+        <h2 class="section-title" id="beta-title">Join the closed beta</h2>
+        <p>Saint Seiya TCG is in closed beta. Play in your browser or install the desktop app; your decks and rank follow your account. No account yet? Ask for access on the home page.</p>
+        <div class="cta"><a class="kv-button" href="/">Request access</a><a class="kv-ghost" href="/download/">Install the app</a></div>
+      </section>
+    </main>
+    <footer class="kv-footer"><span class="kv-stamp">Saint Seiya TCG · Closed beta</span><span><a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a></span></footer>
+  </div>
+  <script type="module">
+    import {mountKV} from '/shared/kv-sky.js?v=20261029-2';
+    mountKV({anchor: 'h1 .kv-cosmo'});
+    document.querySelector('.site-tab[aria-current]')?.scrollIntoView({inline: 'center', block: 'nearest'}); // celular: aba atual visível
+  </script>
+</body>
+</html>

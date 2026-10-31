@@ -1,0 +1,127 @@
+<!doctype html>
+<!-- Galeria de cartas (autor, 31/10/2026): só cartas com arte final (sem -ref). Imagens são renders estáticos do live-card
+     (gallery/img 800×1124, gallery/thumb 560px), gerados fora do repo e publicados por rsync; cards.json traz só id, nome, facção, tipo e custo. -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex, nofollow"> <!-- site fora das buscas por enquanto (autor, 31/10/2026) -->
+  <title>Saint Seiya TCG — Card Gallery</title>
+  <meta name="description" content="Browse every Saint Seiya TCG card with final art: Gods, Devotees, Equipment, Spells and Domains.">
+  <meta name="theme-color" content="#05060c">
+  <link rel="icon" href="/LOGO/favicon.png?v=20261030">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Cormorant+Garamond:ital,wght@1,400&family=Jost:wght@300;400;500&display=swap">
+  <link rel="stylesheet" href="/shared/kv.css?v=20261029-1">
+  <link rel="stylesheet" href="/shared/site-nav.css?v=20261031-1">
+  <style>
+    html, body { margin: 0; background: var(--kv-bg); color: var(--kv-ink); font: 300 17px/1.6 var(--kv-sans); }
+    .page { position: relative; z-index: 1; min-height: 100dvh; display: grid; grid-template-rows: auto 1fr auto; }
+    a { color: var(--kv-gold-2); }
+    main { width: min(1280px, 100%); margin: 0 auto; padding: clamp(32px, 6vh, 72px) clamp(16px, 4vw, 40px) 72px; box-sizing: border-box; }
+    .hero { max-width: 720px; margin-bottom: 32px; }
+    .hero h1 { margin: 18px 0 16px; display: grid; gap: 6px; }
+    .lead { max-width: 60ch; color: var(--kv-muted); margin: 0; }
+    .filters { position: sticky; top: 68px; z-index: 5; display: grid; gap: 10px; padding: 14px 0; margin-bottom: 20px;
+      background: linear-gradient(var(--kv-bg) 75%, transparent); }
+    .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .chip { min-height: 34px; padding: 0 14px; border: 1px solid var(--kv-line); border-radius: var(--kv-pill); background: #f5f1e60d; color: var(--kv-muted);
+      font: 600 10px var(--kv-title); letter-spacing: .26em; text-transform: uppercase; cursor: pointer; }
+    .chip:hover { color: var(--kv-ink); }
+    .chip[aria-pressed="true"] { color: #1a1408; background: linear-gradient(#f3dc99, #c99a45); border-color: transparent; }
+    .search { flex: 1 1 220px; max-width: 320px; min-height: 38px; padding: 0 16px; border: 1px solid var(--kv-line); border-radius: var(--kv-pill);
+      background: #f5f1e60d; color: var(--kv-ink); font: 400 15px var(--kv-sans); }
+    .search:focus { outline: 1px solid var(--kv-gold); }
+    .count { margin-left: auto; font: 600 10px var(--kv-title); letter-spacing: .3em; text-transform: uppercase; color: var(--kv-dim); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(200px, 42vw), 1fr)); gap: clamp(12px, 2vw, 20px); margin: 0; padding: 0; list-style: none; }
+    .grid button { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; border-radius: 4.5%/3.2%; transition: transform .2s; }
+    .grid button:hover, .grid button:focus-visible { transform: translateY(-3px); }
+    .grid button:focus-visible { outline: 2px solid var(--kv-gold); outline-offset: 3px; }
+    .grid img { display: block; width: 100%; height: auto; aspect-ratio: 800 / 1124; border-radius: 4.5%/3.2%; background: #0b0c16; }
+    .empty { color: var(--kv-muted); }
+    .zoom { border: 0; padding: 0; background: transparent; overflow: visible; max-width: none; max-height: none; }
+    .zoom::backdrop { background: #05060ce6; backdrop-filter: blur(6px); }
+    .zoom img { display: block; width: min(92vw, calc(88vh * 800 / 1124)); height: auto; cursor: zoom-out; }
+    .zoom__close { position: fixed; top: 16px; right: 16px; color: var(--kv-ink); }
+    @media (max-width: 640px) { .filters { position: static; } .count { margin-left: 0; } }
+    @media (prefers-reduced-motion: reduce) { .grid button { transition: none; } }
+  </style>
+</head>
+<body>
+  <div class="kv-veil" aria-hidden="true"></div>
+  <div class="page">
+    <header class="site-top"><a class="site-top__logo" href="/"><img src="/LOGO/logo-web.webp" alt="Saint Seiya TCG"></a><nav class="site-tabs" aria-label="Site"><a class="site-tab" href="/about/">The game</a><a class="site-tab" href="/how-to-play/">How to play</a><a class="site-tab" href="/download/">Install</a><a class="site-tab" href="/gallery/" aria-current="page">Card gallery</a></nav><a class="kv-button site-top__play" href="/playtest/">Play</a></header>
+    <main>
+      <section class="hero" aria-labelledby="title">
+        <p class="kv-stamp kv-stamp--gold"><span class="kv-dot" aria-hidden="true"></span>&nbsp; Card gallery · Closed beta</p>
+        <h1 id="title"><span class="kv-lyric">Every Saint,</span><span class="kv-cosmo">Every God</span></h1>
+        <p class="lead">The cards of the beta that already have their final art. Filter by faction or type, search by name, and select a card to see it up close.</p>
+      </section>
+      <div class="filters">
+        <div class="row" role="group" aria-label="Faction" data-filter="faction"></div>
+        <div class="row" role="group" aria-label="Type" data-filter="type"></div>
+        <div class="row"><input class="search" type="search" placeholder="Search by name" aria-label="Search by name"><span class="count" aria-live="polite"></span></div>
+      </div>
+      <ul class="grid"></ul>
+      <p class="empty" hidden>No card matches these filters.</p>
+    </main>
+    <footer class="kv-footer"><span class="kv-stamp">Saint Seiya TCG · Closed beta</span><span><a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a></span></footer>
+  </div>
+  <dialog class="zoom" aria-label="Card zoom">
+    <button class="zoom__close kv-ghost" type="button">Close</button>
+    <img alt="">
+  </dialog>
+  <script type="module">
+    import {mountKV} from '/shared/kv-sky.js?v=20261029-2';
+    mountKV({anchor: 'h1 .kv-cosmo'});
+    document.querySelector('.site-tab[aria-current]')?.scrollIntoView({inline: 'center', block: 'nearest'}); // celular: aba atual visível
+    const V = '20261031-1';
+    const cards = await fetch('/gallery/cards.json?v=' + V).then(r => r.json());
+    const FILTERS = {
+      faction: ['All', 'Athena', 'Poseidon', 'Hades', 'Ares', 'Artemis', 'Neutral'],
+      type: ['All', 'God', 'Devotee', 'Equipment', 'Spell', 'Domain'],
+    };
+    const state = {faction: 'All', type: 'All', q: ''};
+    const label = {Spell: 'Spells', Devotee: 'Devotees', God: 'Gods', Domain: 'Domains'};
+    for (const [key, values] of Object.entries(FILTERS)) {
+      const row = document.querySelector(`[data-filter="${key}"]`);
+      row.innerHTML = values.filter(v => v === 'All' || cards.some(c => c[key] === v))
+        .map(v => `<button class="chip" type="button" data-v="${v}" aria-pressed="${v === 'All'}">${key === 'type' ? label[v] || v : v}</button>`).join('');
+      row.addEventListener('click', e => {
+        const b = e.target.closest('.chip'); if (!b) return;
+        state[key] = b.dataset.v;
+        for (const c of row.children) c.setAttribute('aria-pressed', c === b);
+        render();
+      });
+    }
+    const grid = document.querySelector('.grid'), count = document.querySelector('.count'), empty = document.querySelector('.empty');
+    const esc = s => s.replace(/[&<>"]/g, ch => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[ch]));
+    // Itens criados uma vez; o filtro só esconde, para não recarregar imagens.
+    grid.innerHTML = cards.map(c => {
+      const name = esc(c.name + (c.title ? ' — ' + c.title : ''));
+      return `<li data-id="${c.id}"><button type="button" aria-label="${name}, ${c.faction} ${c.type}"><img src="/gallery/thumb/${c.id}.jpg?v=${V}" alt="" loading="lazy" decoding="async" width="560" height="787"></button></li>`;
+    }).join('');
+    const items = [...grid.children];
+    function render() {
+      const q = state.q.trim().toLowerCase();
+      let n = 0;
+      cards.forEach((c, i) => {
+        const show = (state.faction === 'All' || c.faction === state.faction) && (state.type === 'All' || c.type === state.type)
+          && (!q || (c.name + ' ' + c.title).toLowerCase().includes(q));
+        items[i].hidden = !show; n += show;
+      });
+      count.textContent = n === 1 ? '1 card' : n + ' cards';
+      empty.hidden = n > 0;
+    }
+    document.querySelector('.search').addEventListener('input', e => { state.q = e.target.value; render(); });
+    render();
+    const zoom = document.querySelector('.zoom'), zoomImg = zoom.querySelector('img');
+    grid.addEventListener('click', e => {
+      const li = e.target.closest('li'); if (!li) return;
+      const c = cards.find(x => x.id === li.dataset.id);
+      zoomImg.src = `/gallery/img/${c.id}.jpg?v=${V}`; zoomImg.alt = c.name + (c.title ? ' — ' + c.title : '');
+      zoom.showModal();
+    });
+    zoom.addEventListener('click', e => { if (e.target === zoom || e.target === zoomImg || e.target.closest('.zoom__close')) zoom.close(); });
+  </script>
+</body>
+</html>

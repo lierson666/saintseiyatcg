@@ -41,3 +41,7 @@ MOBILE GAMES/
 star-hill/assets/
 __pycache__/
 card-forge/art-web/
+
+# Galeria pública: renders gerados (scratchpad gallery/main.js), publicados por rsync
+gallery/img/
+gallery/thumb/
