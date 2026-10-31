@@ -69,12 +69,12 @@ function overview() {
     <div class="table-wrap"><table><thead><tr><th>Facção</th><th>Cartas</th></tr></thead><tbody>${per.map(([f, n]) => `<tr><td>${f}</td><td>${n}</td></tr>`).join('')}</tbody></table></div>
     <div class="actions"><a href="#cartas">Editar cartas</a><a href="#decks">Ver decks</a><a href="#regras">Consultar regras</a></div></section></div>`;
 }
-// Lista de cartas com filtro de facção ao lado do Forge (mesmo visual do Star Hill anterior).
-let cardFaction = '', cardCurrent = '';
+// Lista de cartas com filtros de tipo e de facção, combináveis (autor, 31/10/2026), ao lado do Forge.
+const CARD_TYPES = ['God', 'Devotee', 'Spell', 'Equipment', 'Domain'];
+let cardFaction = '', cardType = '', cardCurrent = '';
 function cardList() {
   const q = ($('#card-search')?.value || '').toLowerCase();
-  // "gods" é a seção só de Gods (autor, 30/10/2026); os outros valores são facções.
-  const list = forge.filter(c => (!cardFaction || (cardFaction === 'gods' ? /^god$/i.test(c.tipo) : c.faccao === cardFaction)) && `${c.nome_exibicao_en} ${c.id} ${c.faccao}`.toLowerCase().includes(q));
+  const list = forge.filter(c => (!cardType || c.tipo === cardType) && (!cardFaction || c.faccao === cardFaction) && `${c.nome_exibicao_en} ${c.id} ${c.faccao}`.toLowerCase().includes(q));
   const counter = $('#card-count');
   if (counter) counter.textContent = `${list.length} de ${forge.length} cartas`;
   return list.length ? list.map(c => `<button class="card-row" data-action="edit-card" data-card="${esc(c.id)}" data-tone="${esc(c.faccao)}" aria-current="${c.id === cardCurrent}">
@@ -82,9 +82,11 @@ function cardList() {
 }
 function cardsPage() {
   const chip = (f, label) => `<button class="chip" data-action="card-faction" data-faction="${f}" ${FACTIONS.includes(f) ? `data-tone="${f}"` : ''} aria-pressed="${f === cardFaction}">${label}</button>`;
+  const typeChip = (t, label) => `<button class="chip" data-action="card-type" data-type="${t}" aria-pressed="${t === cardType}">${label}</button>`;
   return `${publishBox(true)}<div class="cards-workbench" style="margin-top:16px"><aside class="card-browser" aria-label="Catálogo de cartas"><div class="card-browser-head">
     <input class="search" id="card-search" placeholder="Buscar nome, ID ou facção" aria-label="Buscar carta">
-    <div class="chips" role="group" aria-label="Filtrar por facção">${chip('', 'Todas')}${chip('gods', 'Gods')}${FACTIONS.map(f => chip(f, f)).join('')}</div>
+    <div class="chips" role="group" aria-label="Filtrar por tipo">${typeChip('', 'Todos os tipos')}${CARD_TYPES.map(t => typeChip(t, t)).join('')}</div>
+    <div class="chips" role="group" aria-label="Filtrar por facção">${chip('', 'Todas as facções')}${FACTIONS.map(f => chip(f, f)).join('')}</div>
     <small class="card-count" id="card-count"></small></div><div id="card-list" style="overflow:auto">${cardList()}</div></aside>
     <iframe class="forge-frame" id="forge" title="Card Forge — editor de cartas" src="../card-forge/${cardCurrent ? `?card=${encodeURIComponent(cardCurrent)}` : ''}"></iframe></div>`;
 }
@@ -120,9 +122,9 @@ document.addEventListener('click', async e => {
   const b = e.target.closest('button');
   if (!b) return;
   if (b.id === 'reload') return refresh();
-  if (b.dataset.action === 'card-faction') {
-    cardFaction = b.dataset.faction;
-    document.querySelectorAll('.chip').forEach(c => c.setAttribute('aria-pressed', String(c === b)));
+  if (b.dataset.action === 'card-faction' || b.dataset.action === 'card-type') {
+    if (b.dataset.action === 'card-type') cardType = b.dataset.type; else cardFaction = b.dataset.faction;
+    document.querySelectorAll(`.chip[data-action="${b.dataset.action}"]`).forEach(c => c.setAttribute('aria-pressed', String(c === b)));
     $('#card-list').innerHTML = cardList();
   }
   if (b.dataset.action === 'edit-card') {
