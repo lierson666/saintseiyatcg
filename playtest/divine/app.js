@@ -256,8 +256,8 @@ function playFromHand(key, uid) {
     // Armor (guia §28, 30/10/2026): só entra vestida num Resonant seu, sem Equip; senão entra sem portador.
     const armorPick = c.armor && candidates({pick: 'resonant', armor: uid}, key).length;
     const steps = c.global || (c.armor && !armorPick) ? [] : c.armor
-      ? [{key: 'bearer', pick: 'resonant', armor: uid, optional: true, label: `Resonance: drag ${c.name} to who wears it, or Skip to put it on the field without a bearer`}]
-      : [{key: 'bearer', pick: 'devotee', label: `Drag ${c.name} to who wears it`}];
+      ? [{key: 'bearer', pick: 'resonant', armor: uid, optional: true, label: `Choose who wears ${c.name}`}]
+      : [{key: 'bearer', pick: 'devotee', label: `Choose who wears ${c.name}`}];
     if (n === '019') steps.push({key: 'target', pick: 'devotee', optional: true, label: 'Pegasus God Cloth: which Devotee gets +3/+3 (if your God is behind)?'});
     return begin('play', key, uid, steps, choice => ({type: 'play', key, uid, choice}));
   }
@@ -759,7 +759,7 @@ function choicePrompt(withName = true) {
   else if (step.multi) controls = `<button data-done>Done (${mode.picked.length}/${step.multi})</button>`;
   else if (step.optional) controls = '<button data-done>Skip</button>';
   const steps = mode.steps.length > 1 ? `<small class="choice__step">Step ${mode.i + 1} of ${mode.steps.length}</small>` : '';
-  return `${withName ? `<strong>${esc(name)}</strong>` : ''}${steps}<span class="choice__label"><i class="choice__reticle" aria-hidden="true"></i>${esc(step.label || step.confirm || 'Choose one')}</span>${controls}<button class="ghost" data-cancel>Cancel <kbd>Esc</kbd></button>`;
+  return `${withName ? `<strong>${esc(name)}</strong>` : ''}${steps}<span class="choice__label"><i class="choice__reticle" aria-hidden="true"></i>${esc(step.label || step.confirm || 'Choose one')}</span><div class="choice__actions">${controls}<button class="ghost" data-cancel>Cancel <kbd>Esc</kbd></button></div>`;
 }
 function choiceBar() {
   if (!mode || boardPick()?.uid) return '';
@@ -1893,7 +1893,7 @@ function sidePanel(req, t, fx) {
     <p class="pick-modal__ask">${inlineMarkup(t.body)}</p>${opts}<div class="trigger-panel__actions">${actions}</div></section>`;
   // Decisão estilo Arena (autor, 31/10/2026): bloco central (carta grande + opções) sobre a mesa escurecida; "View board" espia a mesa.
   const peek = target ? '' : '<button class="ghost decision__peek" data-peek>View board</button>';
-  return `${target ? '' : '<div class="decision-veil decision-veil--center" aria-hidden="true"></div><button class="peek-return" data-peek>Back to decision</button>'}<aside class="trigger-panel ${target ? 'is-targeting' : 'is-center'}" role="dialog" aria-labelledby="trigger-title">
+  return `${target ? '' : '<div class="decision-veil decision-veil--center" aria-hidden="true"></div><button class="peek-return" data-peek>Back to decision</button>'}<aside class="trigger-panel ${target ? 'is-targeting' : 'is-center'} ${opts ? 'has-opts' : ''}" role="dialog" aria-labelledby="trigger-title">
     ${face ? `<div class="trigger-panel__card" ${godFx(req.player)}><i class="cast-aura" aria-hidden="true"></i>${face}${target && face ? '<small>Drag to a target</small>' : ''}</div>` : ''}
     <div class="trigger-panel__box"><span class="decision__who">${esc(t.who)} decides</span><span class="decision__clock" data-decision-clock></span>
       <small class="decision__kicker">${esc(t.kicker)}</small><h3 id="trigger-title">${esc(t.title)}</h3>
@@ -1909,14 +1909,15 @@ function orderPanel() {
   if (!key) { orderDraft = null; return ''; }
   const items = ownBatch(s, key);
   if (orderDraft?.batch !== batchKey(key)) orderDraft = {batch: batchKey(key), key, order: items.map((_, i) => i)};
-  const row = (i, at) => { const t = chainLabel(items[i]), art = chainArt(items[i]); return `<li class="order__item" draggable="true" data-order="${at}" ${srcAttrs(items[i])}>
-      <b>${at + 1}</b>${art ? `<i class="chain__art" style="background-image:url('${art}')" aria-hidden="true"></i>` : ''}<div class="chain__body"><strong>${esc(t.name)}</strong>${t.sub ? `<span class="chain__sub">${esc(t.sub)}</span>` : ''}${t.text ? `<em>${inlineMarkup(t.text)}</em>` : ''}</div>
-      <span class="order__move"><button class="ghost" data-order-up="${at}" aria-label="Move up" ${at ? '' : 'disabled'}>↑</button><button class="ghost" data-order-down="${at}" aria-label="Move down" ${at < items.length - 1 ? '' : 'disabled'}>↓</button></span></li>`; };
-  return `<div class="decision-veil decision-veil--center" aria-hidden="true"></div><aside class="trigger-panel trigger-panel--order" role="dialog" aria-labelledby="order-title">
-    <div class="trigger-panel__box"><span class="decision__who">Player ${key} decides</span>
-      <small class="decision__kicker">${items.length} triggers at the same time</small><h3 id="order-title">Order your triggers</h3>
-      <p>Drag to choose the order. Trigger 1 resolves first.</p>
-      <ol class="order" aria-label="Resolution order">${orderDraft.order.map(row).join('')}</ol>
+  // Ordem na própria pilha (grill do autor, 31/10/2026): cascata no ponto da pilha, topo = resolve primeiro; arrastar uma
+  // carta sobre outra troca a ordem; ↑↓ seguem para teclado.
+  const n = orderDraft.order.length;
+  const item = (i, at) => `<div class="cz-item order__item ${at ? '' : 'is-top'}" draggable="true" data-order="${at}" style="--d:${at}" ${srcAttrs(items[i])} aria-label="${at + 1}: ${esc(chainLabel(items[i]).name)}">
+      <b class="order__num">${at + 1}</b>${stackFace(items[i])}
+      <span class="order__move"><button class="ghost" data-order-up="${at}" aria-label="Resolve earlier" ${at ? '' : 'disabled'}>↑</button><button class="ghost" data-order-down="${at}" aria-label="Resolve later" ${at < n - 1 ? '' : 'disabled'}>↓</button></span></div>`;
+  return `<aside class="trigger-panel trigger-panel--order" role="dialog" aria-labelledby="order-title">
+    <div class="cz-stack order-stack" style="--n:${n - 1}">${orderDraft.order.map(item).join('')}</div>
+    <div class="trigger-panel__box"><h3 id="order-title">Order your triggers</h3><p>Drag a card onto another. 1 resolves first.</p>
       <div class="trigger-panel__actions"><button class="primary-action" data-order-ok data-focus="order">Confirm order</button></div></div></aside>`;
 }
 function moveOrder(from, to) {

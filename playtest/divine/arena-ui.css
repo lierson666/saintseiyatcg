@@ -169,3 +169,43 @@ body:not(.is-peeking):has(.trigger-panel.is-center, .trigger-panel--order) #chai
 /* Cast estilo Arena: fantasma parado onde a carta caiu (app.js holdCast) e carta da mesa escondida até o pouso. */
 .dcard.dragging.cast-hold { transition: none; }
 .field .is-landing { visibility: hidden; }
+
+/* ---------- Pergunta e botões estilo Arena (grill do autor, 31/10/2026) ----------
+   Cast e gatilho: texto curto num chip logo abaixo da carta da pilha; os botões ficam no lugar do botão de ação
+   (o principal grande embaixo, os outros pequenos em cima; obrigatória = Cancel cinza). Escolha com lista de opções
+   (.trigger-panel__opts) continua na caixa. */
+.choice__actions { display: contents; }
+.order__num { position: absolute; z-index: 3; top: -12px; left: 50%; transform: translateX(-50%); display: grid; place-items: center; width: 28px; height: 28px;
+  border-radius: 50%; background: linear-gradient(180deg, #f6dc8a, #d9a93c); color: #1a1205; font: 800 14px system-ui; box-shadow: 0 4px 10px #0008; }
+.order__move { position: absolute; z-index: 3; right: 6px; bottom: 6px; display: flex; gap: 4px; opacity: 0; transition: opacity .15s; }
+.order__item:hover .order__move, .order__item:focus-within .order__move { opacity: 1; }
+.order__move button { min-height: 28px; padding: 0 8px; }
+.trigger-panel--order .order__item { cursor: grab; }
+@media (min-width: 761px) and (min-height: 501px) {
+  /* Centraliza sem transform: os filhos fixos (chip e botões) precisam medir pela janela. */
+  .trigger-panel.is-targeting, .trigger-panel.is-center, body.has-chain-zoom .trigger-panel.is-center, .trigger-panel--order, body.has-chain-zoom .trigger-panel--order {
+    top: 0; bottom: 0; margin: auto 0; height: fit-content; transform: none; }
+  .cast-slot .cast-prompt, .trigger-panel:not(:has(.trigger-panel__opts)) .trigger-panel__box {
+    position: fixed; z-index: 46; left: auto; bottom: auto; top: calc(50% + var(--cz-w) * .7 + 14px); right: var(--stack-right, 298px); width: var(--cz-w); max-height: none;
+    display: block; margin: 0; padding: 9px 12px; overflow: visible; transform: none; text-align: center; pointer-events: none;
+    border: 1px solid rgba(255, 205, 100, .45); border-radius: 12px; background: rgba(8, 9, 24, .9); box-shadow: 0 10px 24px rgba(0, 0, 0, .55); }
+  .trigger-panel--order .trigger-panel__box { top: calc(50% + var(--cz-w) * .7 + 14px + var(--n, 1) * 8px); }
+  .cast-slot .cast-prompt .choice__label { display: block; font: 600 14px/1.35 system-ui, sans-serif; color: #f6efdc; text-shadow: none; }
+  .cast-slot .cast-prompt :is(.choice__reticle, .cast-prompt__how) { display: none; }
+  .trigger-panel:not(:has(.trigger-panel__opts)) .trigger-panel__box > :is(.decision__who, .decision__kicker, .decision__effect, .decision__note, .trigger-queue) { display: none; }
+  .trigger-panel:not(:has(.trigger-panel__opts)) .trigger-panel__box h3 { margin: 0 0 2px; font: 700 15px/1.25 Cinzel, serif; color: var(--gold-hi, #f6dc8a); }
+  .trigger-panel:not(:has(.trigger-panel__opts)) .trigger-panel__box > p { margin: 0; font: 13px/1.35 system-ui, sans-serif; color: #e6e0d0; }
+  .trigger-panel:not(:has(.trigger-panel__opts)) .decision__clock { display: block; margin-top: 4px; font: 600 11px system-ui; color: #bfb7a3; }
+  /* Botões no lugar do botão de ação. */
+  .cast-slot .choice__actions, .trigger-panel:not(:has(.trigger-panel__opts)) .trigger-panel__actions {
+    position: fixed; z-index: 47; right: 22px; bottom: 22px; width: 262px; display: flex; flex-direction: column-reverse; gap: 8px; pointer-events: auto; animation: tp-box .22s ease-out .12s backwards; }
+  :is(.cast-slot .choice__actions, .trigger-panel .trigger-panel__actions) > button { order: 1; width: 100%; min-height: 38px; margin: 0; border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, .25); background: rgba(10, 12, 30, .92); color: #e8e2d2; font: 600 14px system-ui, sans-serif; box-shadow: 0 6px 16px rgba(0, 0, 0, .5); }
+  :is(.cast-slot .choice__actions, .trigger-panel .trigger-panel__actions) > button:first-child { order: 0; min-height: 52px; border: 1px solid #ffd5a0;
+    background: linear-gradient(180deg, #ffb35c, #e0651f); color: #fff; font: 700 20px Cinzel, serif; letter-spacing: .02em; text-shadow: 0 1px 2px #0006; }
+  :is(.cast-slot .choice__actions, .trigger-panel .trigger-panel__actions) > button.ghost:first-child { border-color: #8a8fa0; background: linear-gradient(180deg, #5b6070, #3a3e4c); }
+  :is(.cast-slot .choice__actions, .trigger-panel .trigger-panel__actions) kbd { display: none; }
+  .trigger-panel .trigger-panel__actions > .decision__note { display: grid; place-items: center; min-height: 52px; margin: 0; border-radius: 999px; background: rgba(40, 44, 60, .92); color: #cfc8b6; font: 600 15px system-ui; }
+  /* Enquanto a pergunta usa o canto, o botão de ação, o ⏩ e a placa saem de cena. */
+  body:has(.cast-slot .choice__actions, .trigger-panel:not(.has-opts) .trigger-panel__actions) :is(.command .action-btn, .command .command__full, .rk-plate--me) { visibility: hidden; }
+}
