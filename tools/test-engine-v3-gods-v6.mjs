@@ -12,6 +12,7 @@ import {declareStrike, checkStrike} from '../playtest/engine-v3/strike.js';
 import {atkOf, keywordsOf, damageDevotee, checkDefeats, hpOf} from '../playtest/engine-v3/effects.js';
 import {refreshAwaken, announceGreatEclipse, greatEclipseBlock, activateBloodlust, announceObliteration, placeBaseMoonHarvest, moonAwakeningBlock, announceMoonAwakening} from '../playtest/engine-v3/gods.js';
 import {putOntoField} from '../playtest/engine-v3/v6/kit.js';
+import {guardDecide} from './engine-test-upto.mjs';
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json');
@@ -22,7 +23,7 @@ const [rush, fortress] = read('../data/alpha-0.1/decks-proposta-d171.json').deck
 function setup(god, decide = (p, q) => (q.options ? (q.count ? q.options.slice(0, q.count) : q.options[0]) : true)) {
   const m = createMatch({cards, canonIndex: canonIndex(canon), decks: {A: rush, B: fortress}, gods: {A: god, B: 'god-athena'}, first: 'A', seed: 3});
   for (const p of Object.values(m.state.players)) p.deck.push(...p.hand.splice(0)); m.state.setup = null;
-  const s = m.state, ctx = {cards, objects: m.objects, attached: m.attached, decide};
+  const s = m.state, ctx = guardDecide({cards, objects: m.objects, attached: m.attached, decide});
   bindContext(s, ctx);
   const take = (key, id) => { const p = s.players[key], uid = p.deck.find(u => u.includes(`:${id}:`)); p.deck.splice(p.deck.indexOf(uid), 1); return uid; };
   const field = (key, id, prepared = true) => { const uid = take(key, id); s.players[key].battlefield.push(uid); s.units[uid] = {prepared, damage: 0}; return uid; };

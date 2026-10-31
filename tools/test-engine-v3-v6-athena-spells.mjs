@@ -22,7 +22,7 @@ const decks = read('../data/alpha-0.1/decks-preview.json').decks;
 function setup() {
   const deck = id => ({...decks.find(d => d.id === id)});
   const m = createMatch({cards, canonIndex: index, decks: {A: deck('preview-ares-legions'), B: deck('preview-artemis-hunt')}, first: 'A', seed: 1});
-  const s = m.state, ctx = {cards, objects: m.objects, attached: m.attached}, p = s.players.A;
+  const s = m.state, ctx = guardDecide({cards, objects: m.objects, attached: m.attached}), p = s.players.A;
   for (const pl of Object.values(s.players)) pl.deck.push(...pl.hand.splice(0)); s.setup = null;
   s.domains.B = null;
   startTurn(s);
@@ -41,6 +41,7 @@ function setup() {
   return {s, ctx, give};
 }
 import {V6, v6Spell} from '../playtest/engine-v3/v6/hooks.js';
+import {guardDecide} from './engine-test-upto.mjs';
 // Guia §56 (30/10/2026): jogada e {T} vão à pilha; aqui os dois passam e a pilha resolve na hora.
 const resolved = fn => (s, ...a) => { const r = fn(s, ...a); passAll(s); return r; };
 const activate = resolved(activateRaw);

@@ -38,7 +38,7 @@ export function aim(s, c, key, self, entry, choice = {}) {
     return value;
   };
   try { entry.spell.run(s2, c2, key, self, choice, []); } catch (e) { if (asked) throw asked; /* resposta neutra no ensaio: o erro real, se houver, vem na resolução */ }
-  return {records, values: [...new Set(records.filter(r => r.kind !== 'may' && r.kind !== 'mode' && r.value).map(r => r.value))]};
+  return {records, values: [...new Set(records.filter(r => r.kind !== 'may' && r.kind !== 'mode' && r.value).flatMap(r => r.value))]}; // "up to N" responde lista
 }
 
 // Roda `fn` (a resolução) com as respostas de alvo guardadas. Sem `records` (alvos explícitos) só roda.
@@ -52,6 +52,7 @@ export function withTargets(c, key, records, fn) {
       if (at >= 0) {
         const [r] = left.splice(at, 1);
         if (q.part === 'target' || r.value == null) return r.value;
+        if (Array.isArray(r.value)) return r.value.filter(v => q.options.includes(v)); // "up to N": só os que seguem legais
         return q.options.includes(r.value) ? r.value : null; // alvo que saiu do campo: a parte dele não acontece
       }
     }

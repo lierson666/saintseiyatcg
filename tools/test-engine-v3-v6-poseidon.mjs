@@ -12,6 +12,7 @@ import {playDevotee, playSpell, activate} from '../playtest/engine-v3/play.js';
 import {V6} from '../playtest/engine-v3/v6/hooks.js';
 import {declareStrike} from '../playtest/engine-v3/strike.js';
 import {atkOf, hpOf} from '../playtest/engine-v3/effects.js';
+import {guardDecide} from './engine-test-upto.mjs';
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json'), cards = loadCanon(canon), index = canonIndex(canon);
@@ -31,7 +32,7 @@ function poseidon(answers = {}) {
     if (a !== undefined) return typeof a === 'function' ? a(q) : a;
     return q.options ? q.options[0] : true;
   };
-  const ctx = {cards, objects: m.objects, attached: m.attached, decide}, A = s.players.A, B = s.players.B;
+  const ctx = guardDecide({cards, objects: m.objects, attached: m.attached, decide}), A = s.players.A, B = s.players.B;
   for (const pl of Object.values(s.players)) pl.deck.push(...pl.hand.splice(0)); s.setup = null;
   startTurn(s);
   A.bases = A.deck.splice(-12).map(uid => ({uid, prepared: true}));
@@ -276,7 +277,7 @@ function duel(answers = {}) {
     if (a !== undefined) return typeof a === 'function' ? a(q, player) : a;
     return q.options ? q.options[0] : true;
   };
-  const ctx = {cards, objects: m.objects, attached: m.attached, decide}, A = s.players.A, B = s.players.B;
+  const ctx = guardDecide({cards, objects: m.objects, attached: m.attached, decide}), A = s.players.A, B = s.players.B;
   for (const pl of Object.values(s.players)) pl.deck.push(...pl.hand.splice(0)); s.setup = null;
   startTurn(s);
   A.bases = A.deck.splice(-12).map(uid => ({uid, prepared: true}));

@@ -33,17 +33,8 @@ export function choose(c, key, ability, options, {optional = false, text} = {}) 
   if (optional && !may(c, key, ability, {text: text || 'Use this ability?', part: 'target'})) return null; // `part`: v6/targets.js guarda esta resposta como parte do alvo
   return c.decide?.(key, {ability, options: list, choose: 'target', text}) ?? null;
 }
-// Até `count` alvos diferentes (escolhe um por vez; para quando acabar ou o jogador recusar).
-export function chooseUpTo(c, key, ability, options, count, {text} = {}) {
-  const picked = [];
-  for (let i = 0; i < count; i++) {
-    const rest = options.filter(o => !picked.includes(o));
-    const pick = choose(c, key, ability, rest, {optional: i > 0 || count > 1, text});
-    if (!pick) break;
-    picked.push(pick);
-  }
-  return picked;
-}
+// Até `count` alvos diferentes: sempre numa pergunta só, todos de uma vez (autor, 31/10/2026).
+export const chooseUpTo = (c, key, ability, options, count, opts) => pickUpTo(c, key, ability, options, count, opts);
 // "Up to N" numa pergunta só (autor, 31/10/2026: Great Eclipse em uma tela): escolhe de 0 a N de uma vez.
 export function pickUpTo(c, key, ability, options, count, {text} = {}) {
   const list = [...new Set(options.filter(Boolean))];

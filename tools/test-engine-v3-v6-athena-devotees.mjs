@@ -13,6 +13,7 @@ import {declareStrike} from '../playtest/engine-v3/strike.js';
 import {V6} from '../playtest/engine-v3/v6/hooks.js';
 import {checkDefeats, atkOf, hpOf, modify} from '../playtest/engine-v3/effects.js';
 import * as k from '../playtest/engine-v3/v6/kit.js';
+import {guardDecide} from './engine-test-upto.mjs';
 const modifyAtk = (s, uid, atk) => modify(s, uid, {atk});
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
@@ -25,7 +26,7 @@ const decks = read('../data/alpha-0.1/decks-preview.json').decks;
 function setup() {
   const deck = id => ({...decks.find(d => d.id === id)});
   const m = createMatch({cards, canonIndex: index, decks: {A: deck('preview-ares-legions'), B: deck('preview-artemis-hunt')}, first: 'A', seed: 1});
-  const s = m.state, ctx = {cards, objects: m.objects, attached: m.attached}, p = s.players.A;
+  const s = m.state, ctx = guardDecide({cards, objects: m.objects, attached: m.attached}), p = s.players.A;
   for (const pl of Object.values(s.players)) pl.deck.push(...pl.hand.splice(0)); s.setup = null;
   s.domains.B = null;
   startTurn(s);

@@ -12,6 +12,7 @@ import {activate as activateRaw, playEquipment as playEquipmentRaw, reequip} fro
 import * as k from '../playtest/engine-v3/v6/kit.js';
 import {declareStrike} from '../playtest/engine-v3/strike.js';
 import {atkOf, hpOf, keywordsOf} from '../playtest/engine-v3/effects.js';
+import {guardDecide} from './engine-test-upto.mjs';
 // Guia §56 (30/10/2026): jogada e {T} vão à pilha; aqui os dois passam e a pilha resolve na hora.
 const resolved = fn => (s, ...a) => { const r = fn(s, ...a); passAll(s); return r; };
 const activate = resolved(activateRaw), playEquipment = resolved(playEquipmentRaw);
@@ -30,7 +31,7 @@ const [HYOGA, SHUN, IKKI, MU, SAGA, AIOLIA, CAMUS, SHAINA, ORPHEE] = [5, 7, 9, 1
 function setup() {
   const deck = id => ({...decks.find(d => d.id === id)});
   const m = createMatch({cards, canonIndex: index, decks: {A: deck('preview-ares-legions'), B: deck('preview-artemis-hunt')}, first: 'A', seed: 1});
-  const s = m.state, ctx = {cards, objects: m.objects, attached: m.attached}, p = s.players.A;
+  const s = m.state, ctx = guardDecide({cards, objects: m.objects, attached: m.attached}), p = s.players.A;
   for (const pl of Object.values(s.players)) pl.deck.push(...pl.hand.splice(0)); s.setup = null;
   s.domains.B = null;
   startTurn(s);
