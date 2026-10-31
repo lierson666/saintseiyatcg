@@ -589,10 +589,12 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .gh-plate { position: relative; z-index: 3; width: calc(var(--m) * 2.7); aspect-ratio: 600 / 150; margin-top: calc(var(--m) * -.1); }
 .gh-plate__bg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .gh-cells { position: absolute; left: 6%; right: 6%; top: 13%; height: 54%; display: flex; align-items: center; justify-content: space-between; gap: 3%; }
-.gh-cell { flex: 1; height: 82%; display: flex; align-items: center; justify-content: center; gap: 10%; border-radius: calc(var(--m) * .08); }
+.gh-cell { flex: 1; height: 82%; min-width: 0; display: flex; align-items: center; justify-content: center; gap: 8%; padding: 0 6%; border-radius: calc(var(--m) * .08); container-type: size; overflow: hidden; }
 .gh-cell svg { height: 66%; width: auto; }
-.gh-cell b { font: 700 calc(var(--m) * .26)/1 Georgia, "Times New Roman", serif; color: #fff; text-shadow: 0 2px 3px #000; }
-.gh-cell--soul { background: linear-gradient(180deg, rgba(60, 40, 110, .55), rgba(20, 14, 50, .55)); border: 1px solid rgba(160, 120, 255, .25); }
+.gh-cell b { font: 700 52cqh/1 Georgia, "Times New Roman", serif; font-variant-numeric: lining-nums tabular-nums; color: #fff; text-shadow: 0 2px 3px #000; white-space: nowrap; }
+/* Soul (autor, 31/10/2026): símbolo de Soul das cartas, em dourado; o número cabe na célula (tamanho pela altura do box). */
+.gh-soulicon { flex: none; height: 70cqh; aspect-ratio: 1; background: linear-gradient(160deg, #fff3c4, #e6c36a 45%, #a8771f); -webkit-mask: url(../../CARD-TEMPLATE/icons/soul.png) center / contain no-repeat; mask: url(../../CARD-TEMPLATE/icons/soul.png) center / contain no-repeat; filter: drop-shadow(0 0 3px rgba(230, 195, 106, .7)); }
+.gh-cell--soul { background: linear-gradient(180deg, rgba(48, 36, 18, .7), rgba(14, 10, 30, .75)); border: 1px solid rgba(230, 195, 106, .45); }
 .gh-cell--atk { background: linear-gradient(180deg, #5a2a16, #2a0e06); border: 2px solid #b8893a; }
 .gh-cell--awk { background: linear-gradient(180deg, rgba(20, 50, 120, .5), rgba(6, 16, 50, .55)); border: 1px solid rgba(110, 180, 255, .3); }
 .gh-ult { flex: none; position: relative; display: grid; place-items: center; height: 92%; aspect-ratio: 1; border-radius: 50%;
@@ -605,7 +607,7 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .godhud.is-active .gh-hole { box-shadow: 0 0 0 2px #2a1c06, 0 0 40px rgba(255, 200, 90, .85), inset 0 0 0 2px rgba(255, 244, 200, .5); }
 .godhud.is-awaken .gh-hole { box-shadow: 0 0 0 2px #0a1430, 0 0 44px rgba(110, 190, 255, .85), inset 0 0 0 2px rgba(200, 235, 255, .6); }
 .godhud.is-awaken .gh-cell--awk { box-shadow: 0 0 16px rgba(110, 190, 255, .7); border-color: #8fd6ff; }
-.godhud.is-low .gh-cell--soul svg { animation: heart-beat 1s ease-in-out infinite; }
+.godhud.is-low .gh-soulicon { animation: heart-beat 1s ease-in-out infinite; }
 @keyframes heart-beat { 15% { transform: scale(1.22); } 30% { transform: scale(1); } 45% { transform: scale(1.14); } }
 .godhud.pickable .gh-hole, .godhud.aimed .gh-hole { box-shadow: 0 0 0 3px #ff6a5a, 0 0 40px rgba(255, 90, 70, .9); }
 .godhud .godhud__judgment { position: absolute; top: 0; left: 0; z-index: 5; }
@@ -632,9 +634,9 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
   .godhud--opp { --m: calc(var(--u, 8px) * 5.6); }
   .godhud--opp .gh-name { display: grid; }
   .gh-cell--soul { flex: 1.8; }
-  .gh-cell--soul b { font-size: calc(var(--m) * .36); color: #fff1f3; text-shadow: 0 2px 3px #000, 0 0 12px rgba(255, 60, 90, .55); }
+  .gh-cell--soul b { font-size: 68cqh; color: #fff6dc; text-shadow: 0 2px 3px #000, 0 0 12px rgba(230, 195, 106, .55); }
   .gh-cell--atk, .gh-cell--awk { flex: .85; }
-  .gh-cell--atk b, .gh-cell--awk b { font-size: calc(var(--m) * .2); }
+  .gh-cell--atk b, .gh-cell--awk b { font-size: 58cqh; }
   .gh-cell--atk svg, .gh-cell--awk svg { height: 52%; }
 
   .rail { --s: min(calc(var(--u, 8px) * 1.1), calc((100vh - 40px) / 78)); position: absolute; z-index: 6; left: 12px; top: 10px; bottom: 10px;

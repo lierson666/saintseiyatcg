@@ -478,8 +478,6 @@ function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
 // medalhão com anel dourado, tridente no topo e asas douradas; faixa com o nome entre louros; placa com Soul (coração),
 // ATTACK (espadas), Awaken (escudo) e selo U da Ultimate, asas prateadas nas pontas e medalhão Ω com ponta embaixo.
 const GOLD = id => `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6cf"/><stop offset=".35" stop-color="#f0cc6e"/><stop offset=".7" stop-color="#a8741f"/><stop offset="1" stop-color="#f6d98c"/></linearGradient>`;
-const HEART = id => `<svg viewBox="0 0 24 22" aria-hidden="true"><defs><radialGradient id="${id}" cx=".35" cy=".3" r=".8"><stop offset="0" stop-color="#ffd0d6"/><stop offset=".35" stop-color="#ff2a48"/><stop offset="1" stop-color="#6a0418"/></radialGradient></defs>
-  <path d="M12 21 C-4 11 1 -1 12 6 C23 -1 28 11 12 21Z" fill="url(#${id})" stroke="#3a0008" stroke-width=".8"/><path d="M6 6 Q9 3 11 7" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="1.2"/></svg>`;
 const SWORDS = id => `<svg viewBox="0 0 24 24" aria-hidden="true"><defs>${GOLD(id)}</defs><g stroke="url(#${id})" stroke-width="2.2" stroke-linecap="round">
   <path d="M4 4 L19 19"/><path d="M20 4 L5 19"/><path d="M15 21 L21 15" stroke-width="2.6"/><path d="M3 15 L9 21" stroke-width="2.6"/></g></svg>`;
 const SHIELD = id => `<svg viewBox="0 0 24 26" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d8f0ff"/><stop offset=".4" stop-color="#2f8dff"/><stop offset="1" stop-color="#062a7a"/></linearGradient></defs>
@@ -521,7 +519,7 @@ function godHud(key, side) {
     <div class="gh-plate">
       ${PLATE(`${k}p`, `${k}q`)}
       <div class="gh-cells">
-        <span class="gh-cell gh-cell--soul godhud__soul" data-soul="${key}" data-tip="Soul|${p.soul} of ${max}. When a God's Soul reaches 0, its player loses.">${HEART(`${k}h`)}<b>${p.soul}</b></span>
+        <span class="gh-cell gh-cell--soul godhud__soul" data-soul="${key}" data-tip="Soul|${p.soul} of ${max}. When a God's Soul reaches 0, its player loses."><i class="gh-soulicon" aria-hidden="true"></i><b>${p.soul}</b></span>
         <span class="gh-cell gh-cell--atk" data-tip="Attack|${god.atk}. Damage the God deals back to a Devotee that strikes it.">${SWORDS(`${k}x`)}<b>${god.atk}</b></span>
         <span class="gh-cell gh-cell--awk" data-tip="Awaken|Active while Soul ≤ ${d.awakenAt}${d.awaken ? ' — active now' : ''}.">${SHIELD(`${k}d`)}<b>${d.awakenAt}</b></span>
         ${ult !== 'none' ? `<span class="gh-ult godhud__ult ${ult}" data-tip="Ultimate|Once per match. ${ult === 'used' ? 'Already used.' : 'Ready.'}"><b>U</b></span>` : ''}
