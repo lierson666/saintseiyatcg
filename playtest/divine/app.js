@@ -40,7 +40,7 @@ const why = e => WHY[e.decision] || (e.topic ? `Not in Alpha 0.1: ${e.topic}` : 
 
 const SETTINGS_KEY = 'ssTcgOlympusArena';
 const settings = {quality: 'high', theme: 'olympus', godB: 'god-athena', timeouts: false, speed: 'normal', skipDraws: false, reduceMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
-  reduceFlashes: false, shake: 1, hideOpponent: true, autoPass: true, ai: 'B'};
+  reduceFlashes: false, shake: 1, hideOpponent: true, autoPass: true, phaseTips: true, ai: 'B'};
 try { Object.assign(settings, JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}')); } catch { /* sem armazenamento */ }
 const saveSettings = () => { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch { /* sem armazenamento */ } };
 
@@ -637,16 +637,7 @@ function command() {
   else if (aiControls()) label = 'Opponent thinking…';
   else if (s.setup) label = marked.size ? `Return ${marked.size}` : 'Keep Hand';
   else if (s.window) label = s.chain.length ? 'Pass · Resolve' : 'Pass';
-  // Cadeia de cima para baixo: o topo resolve primeiro (LIFO, D186); gatilhos simultâneos entram em APNAP (D187).
-  // A ordem entre gatilhos simultâneos do mesmo jogador ainda não é escolha dele (GODS-3.0-SUPPLEMENT, pendência 5).
-  const chain = s.chain.length ? `<ol class="chain" aria-label="Chain, top resolves first">${s.chain.map((c, i) => {
-    const t = chainLabel(c);
-    const art = chainArt(c);
-    return `<li data-chain="${i}"><b>${i + 1}</b>${art ? `<i class="chain__art" style="background-image:url('${art}')" aria-hidden="true"></i>` : ''}<div class="chain__body"><strong>${esc(t.title)}</strong>${t.text ? `<em>${esc(t.text)}</em>` : ''}<small>${t.target ? `Target: ${esc(t.target)} · ` : ''}Player ${c.controller}</small></div></li>`;
-  }).reverse().join('')}</ol>
-    <small class="chain__hint">${s.chain.length > 1 ? 'Top resolves first' : 'Resolves when both pass'}</small>` : '';
   return `<aside class="command" aria-label="Turn actions">
-    ${s.window ? `<div class="priority"><small>Priority</small><strong>Player ${s.window.priority}</strong>${chain}</div>` : ''}
     <div class="command__clock">${clockMarkup()}</div>
     ${phaseBar()}
     <button class="action-btn" data-primary ${s.victory || aiControls() ? 'disabled' : ''}><span>${esc(label)}</span><i aria-hidden="true">›</i></button>
@@ -654,6 +645,72 @@ function command() {
     <button class="command__more" data-toggle-tools aria-expanded="${toolsOpen}" aria-label="Game menu">⋯</button>
     <div class="command__tools${toolsOpen ? ' is-open' : ''}"><button data-toggle-log aria-pressed="${logOpen}">Log</button><button data-toggle-settings>Settings</button><a href="../">Menu</a></div>
   </aside>`;
+}
+
+// Painel de controle entre os trilhos (autor, 31/10/2026): a dica da fase lista só o que dá para fazer agora (clicar acende
+// as cartas), a pilha fica aqui (topo primeiro, LIFO D186; APNAP §56) e, com decisão, o painel de trigger ocupa o mesmo lugar.
+let ctrlOpen = false, hintRefs = {};
+const HINTS = {
+  base: ['PLACE A COSMO BASE', 'Once per turn: turn a card from your hand into a Cosmo Base.'],
+  devotee: ['PLAY A DEVOTEE', 'Pay its cost with your ready Cosmo Bases.'],
+  equip: ['EQUIP', 'Attach an Equipment or Cloth to one of your Devotees.'],
+  technique: ['CAST A TECHNIQUE', 'Only on your turn, with the chain empty.'],
+  moment: ['CAST A MOMENT', 'Now, or later as a response.'],
+  strike: ['STRIKE', 'A Prepared Devotee attacks an enemy Devotee or God.'],
+  ability: ['USE AN ABILITY', '{T} and Cosmo abilities on your cards.'],
+  ultimate: ['ULTIMATE', "Your God's once-per-match power is ready."],
+  end: ['END TURN', "When you're done."],
+};
+function phaseHints() {
+  const s = S(), v = viewer(), p = s.players[v], phase = currentPhase(s);
+  const hand = (test) => p.hand.filter(u => !playableReason(v, u) && test(info(u), u)).map(u => `.hand [data-uid="${u}"]`);
+  const moments = hand((c, u) => c.kind === 'Spell' && spellCat(u)?.category === 'Moment');
+  if (s.setup) return {title: 'OPENING HAND', note: 'Send any cards to the bottom and draw that many. Once.', refs: {}};
+  if (s.window && s.window.priority === v) return {title: 'RESPOND', note: 'Play a Moment, paid with Latent Cosmo, or Pass. When both players pass, the top of the chain resolves.', refs: {moment: moments}};
+  if (s.active !== v) return {title: `OPPONENT'S ${phase.toUpperCase()} PHASE`, note: moments.length ? 'You can respond with a Moment when you get priority.' : '', refs: {}};
+  if (phase !== 'Main') return {title: `${phase.toUpperCase()} PHASE`, note: {Prepare: 'Your Cosmo Bases and Devotees become Prepared.', Draw: 'You draw 1 card.', End: 'End-of-turn effects resolve.'}[phase], refs: {}};
+  const field = p.battlefield.filter(u => ctx.objects[u]);
+  return {title: 'MAIN PHASE', note: '', refs: {
+    base: p.hand.filter(u => canBase(v, u)).map(u => `.hand [data-uid="${u}"]`),
+    devotee: hand(c => c.kind === 'Devotee'),
+    equip: hand(c => c.kind === 'Equipment'),
+    technique: hand((c, u) => c.kind === 'Spell' && spellCat(u)?.category !== 'Moment'),
+    moment: moments,
+    strike: idleFor(v) ? field.filter(u => info(u).kind === 'Devotee' && strikeTargets(s, ctx, u).length).map(u => `.field [data-uid="${u}"]`) : [],
+    ability: field.filter(u => cardAbilities(u).some(a => !a.why)).map(u => `.field [data-uid="${u}"]`),
+    ultimate: godActions(v).ultimate.ok ? [`[data-god="${v}"] .godhud__portrait`] : [],
+    end: idleFor(v) ? ['[data-primary]'] : [],
+  }};
+}
+function controlPanel() {
+  const s = S();
+  if (s.victory) return '';
+  const busy = pending || (s.window && s.order.some(mustOrder)); // o painel de trigger ocupa este lugar
+  const h = phaseHints();
+  hintRefs = h.refs;
+  const items = Object.entries(h.refs).filter(([, r]) => r.length).map(([id, r]) => `<li><button class="ctrl__hint" data-hint="${id}" aria-label="${esc(HINTS[id][0])}: highlight ${r.length}"><strong>${esc(HINTS[id][0])}</strong><span>${inlineMarkup(HINTS[id][1])}</span></button></li>`).join('');
+  // Cadeia de cima para baixo: o topo resolve primeiro (LIFO, D186); gatilhos simultâneos em APNAP, cada um ordena os seus (§56).
+  const chain = s.chain.length ? `<ol class="chain" aria-label="Chain, top resolves first">${s.chain.map((c, i) => {
+    const t = chainLabel(c);
+    const art = chainArt(c);
+    return `<li data-chain="${i}"><b>${i + 1}</b>${art ? `<i class="chain__art" style="background-image:url('${art}')" aria-hidden="true"></i>` : ''}<div class="chain__body"><strong>${esc(t.title)}</strong>${t.text ? `<em>${esc(t.text)}</em>` : ''}<small>${t.target ? `Target: ${esc(t.target)} · ` : ''}Player ${c.controller}</small></div></li>`;
+  }).reverse().join('')}</ol>
+    <small class="chain__hint">${s.chain.length > 1 ? 'Top resolves first' : 'Resolves when both pass'}</small>` : '';
+  const tips = settings.phaseTips;
+  if (!tips && !s.window) return '';
+  // Com pilha, ela ocupa o box e a dica encolhe numa linha.
+  return `<section class="ctrl ${busy ? 'is-busy' : ''} ${ctrlOpen ? 'is-open' : ''} ${s.window ? 'has-chain' : ''}" aria-label="Control panel">
+    ${tips ? `<button class="ctrl__head" data-ctrl-toggle aria-expanded="${ctrlOpen}"><small>${s.active === viewer() ? 'Your turn' : `Player ${s.active}'s turn`}</small><strong>${esc(h.title)}</strong></button>
+      ${h.note ? `<p class="ctrl__note">${inlineMarkup(h.note)}</p>` : ''}${items && !s.window ? `<ul class="ctrl__hints">${items}</ul>` : ''}` : ''}
+    ${s.window ? `<div class="priority ctrl__chain"><small>Priority</small><strong>Player ${s.window.priority}</strong>${chain}</div>` : ''}
+  </section>`;
+}
+// Clique numa dica: acende por 2,5 s as cartas e botões que fazem aquela ação.
+function flashHint(id) {
+  if (ctrlOpen) { ctrlOpen = false; render(); } // celular: fecha o box para a mesa aparecer
+  const els = (hintRefs[id] || []).flatMap(sel => $$(sel));
+  els.forEach(el => { el.classList.remove('hint-glow'); void el.offsetWidth; el.classList.add('hint-glow'); });
+  setTimeout(() => els.forEach(el => el.classList.remove('hint-glow')), 2500);
 }
 
 // Relógio das Doze Casas: 12 tochas de 15 s (3 minutos); acesas = tempo restante de quem decide (mapeamento G3-028).
@@ -715,7 +772,7 @@ function overlays() {
       <label class="set"><span>God of Player B (new match)</span>${sel('godB', {'god-athena': 'Athena', 'god-poseidon': 'Poseidon · fixture deck'})}</label>
       <label class="set"><span>Opponent (new match)</span>${sel('ai', {B: 'AI plays Player B', none: 'Hot-seat (two humans)'})}</label>
       <label class="set"><span>Animation speed</span>${sel('speed', {fast: 'Fast', normal: 'Normal', cinematic: 'Cinematic'})}</label>
-      ${chk('autoPass', 'Auto-pass when you have no response (off = Full control)')}${chk('skipDraws', 'Skip draw animations')}${chk('reduceMotion', 'Reduce motion')}${chk('reduceFlashes', 'Reduce flashes')}${chk('hideOpponent', 'Hide the other hand (hot-seat)')}${chk('timeouts', 'Apply clock timeouts')}
+      ${chk('phaseTips', 'Phase tips (control panel)')}${chk('autoPass', 'Auto-pass when you have no response (off = Full control)')}${chk('skipDraws', 'Skip draw animations')}${chk('reduceMotion', 'Reduce motion')}${chk('reduceFlashes', 'Reduce flashes')}${chk('hideOpponent', 'Hide the other hand (hot-seat)')}${chk('timeouts', 'Apply clock timeouts')}
       <label class="set"><span>Screen shake</span><input type="range" min="0" max="1.5" step=".25" value="${settings.shake}" data-setting="shake"></label>
       <p class="stats" data-stats>${scene ? 'WebGL on' : 'WebGL off · 2D fallback'}</p>
       <button data-toggle-settings>Close</button></div>`;
@@ -734,7 +791,7 @@ function render() {
       <main class="arena-field">${fieldRow(them)}<div class="midline"></div>${fieldRow(me)}</main>
       <div class="band band--opp">${cosmoLane(them, 'opp')}</div>
       <div class="band band--me">${cosmoLane(me, 'me')}</div>
-      <aside class="rail">${sanctum(them, 'opp')}${sanctum(me, 'me')}</aside>
+      <aside class="rail">${sanctum(them, 'opp')}${controlPanel()}${sanctum(me, 'me')}</aside>
       ${godHud(them, 'opp')}${godHud(me, 'me')}
       ${handRow(me, false)}
       ${command()}
@@ -892,6 +949,8 @@ boardRoot.addEventListener('click', e => {
   if (btn?.dataset.confirm) { mode.choice[mode.steps[mode.i].key] = btn.dataset.confirm === 'yes'; mode.i++; return advance(); }
   if (btn?.dataset.done !== undefined) return choose(null);
   if (btn?.dataset.toggleTools !== undefined) { toolsOpen = !toolsOpen; return render(); }
+  if (btn?.dataset.hint) return flashHint(btn.dataset.hint);
+  if (btn?.dataset.ctrlToggle !== undefined) { ctrlOpen = !ctrlOpen; return render(); }
   if (btn?.dataset.fullControl !== undefined) { settings.autoPass = !settings.autoPass; saveSettings(); return render(); }
   if (btn?.dataset.toggleLog !== undefined) { logOpen = !logOpen; toolsOpen = false; return render(); }
   if (btn?.dataset.toggleSettings !== undefined) { settingsOpen = !settingsOpen; toolsOpen = false; return render(); }
