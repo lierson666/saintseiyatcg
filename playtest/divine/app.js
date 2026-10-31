@@ -695,7 +695,7 @@ function phaseHints() {
 function controlPanel() {
   const s = S();
   if (s.victory) return '';
-  const busy = pending || mode || (s.window && s.order.some(mustOrder)); // painel de trigger ou carta em conjuração ocupam este lugar
+  const busy = false; // painel de trigger e carta em conjuração ficam na coluna da direita (autor, 31/10/2026)
   const h = phaseHints();
   hintRefs = h.refs;
   const items = Object.entries(h.refs).filter(([, r]) => r.length).map(([id, r]) => `<li><button class="ctrl__hint" data-hint="${id}" aria-label="${esc(HINTS[id][0])}: highlight ${r.length}"><strong>${esc(HINTS[id][0])}</strong><span>${inlineMarkup(HINTS[id][1])}</span></button></li>`).join('');
@@ -776,7 +776,7 @@ function overlays() {
       <div class="row"><button class="primary-action" data-new>New match</button><a class="ghost" href="../">Main menu</a></div></div>`;
   }
   if (pending && !s.victory && pending.pending.player !== settings.ai) html += decisionModal();
-  else html += orderPanel();
+  else html += orderPanel() || opponentCast();
   if (logOpen) html += `<div class="drawer log" aria-label="Match log"><h3>Match log</h3><button class="drawer__x" data-toggle-log aria-label="Close log">×</button>${logLines.slice(-150).reverse().map(l => `<p><small>R${l.round}</small> ${esc(l.text)}</p>`).join('')}</div>`;
   if (settingsOpen) {
     const sel = (key, opts) => `<select data-setting="${key}">${Object.entries(opts).map(([v, l]) => `<option value="${v}" ${settings[key] === v ? 'selected' : ''}>${l}</option>`).join('')}</select>`;
@@ -796,6 +796,7 @@ function overlays() {
 }
 
 function render() {
+  if (!aim) $('.aim-follow')?.remove(); // a seta de mira volta no próximo movimento do mouse, se ainda houver alvo
   if (render.lock) return;
   document.body.classList.toggle("reduce-motion", !!settings.reduceMotion);
   const s = S(), me = viewer(), them = other(me);
@@ -1084,7 +1085,7 @@ document.addEventListener('pointerover', e => {
   if (item) { clearTimeout(inspectTimer); const src = item.dataset.src; if (ctx.objects[src]) inspectTimer = setTimeout(() => showInspect(src, item.dataset.ability, item.closest('.trigger-panel, .ctrl')), 200); else hideInspect(); return; }
   const el = e.target.closest?.('.dcard[data-uid]:not(.dcard--back), .gear[data-uid]'); // faixa do equipamento também abre a carta
   clearTimeout(inspectTimer);
-  if (!el || (mode && el.classList.contains('pickable'))) return hideInspect(); // mirando: o preview não cobre a instrução
+  if (!el || mode) return hideInspect(); // mirando: sem preview por cima da mesa e da instrução
   inspectTimer = setTimeout(() => showInspect(el.dataset.uid), 300);
   previewCost(el.dataset.uid);
 });
@@ -1370,7 +1371,8 @@ function moveAim(e) {
     aim.el.classList.add('aiming');
     aimEls().forEach(el => el.classList.add('pickable'));
     aim.svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    aim.svg.setAttribute('class', 'aim-arrow');
+    aim.svg.setAttribute('class', `aim-arrow ${aim.cast ? 'aim-follow' : ''}`);
+    if (aim.cast) aim.svg.style.cssText = aim.el.closest('[data-godfx]')?.style.cssText || '';
     aim.svg.innerHTML = '<defs><marker id="aim-head" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs><path class="aim-arrow__glow"/><path class="aim-arrow__line" marker-end="url(#aim-head)"/><circle class="aim-arrow__reticle" r="16"/>';
     document.body.append(aim.svg);
   }
@@ -1395,7 +1397,26 @@ function endAim(e) {
   if (ref) a.done(ref);
   else if (a.cast) render(); // seta solta fora: a carta segue no slot, alvos acesos de novo
 }
-document.addEventListener('pointermove', e => { if (aim) moveAim(e); });
+document.addEventListener('pointermove', e => { if (aim) moveAim(e); else followAim(e); });
+// Mirando sem arrastar (autor, 31/10/2026): a seta sai da carta em conjuração e segue o cursor, na cor do God; trava no alvo válido.
+function followAim(e) {
+  const card = $('.cast-slot .dcard, .trigger-panel.is-targeting .trigger-panel__card .dcard'), bp = card && boardPick();
+  let svg = $('.aim-follow');
+  if (!bp?.refs.length || e.pointerType === 'touch') return svg?.remove();
+  if (!svg) {
+    svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('class', 'aim-arrow aim-follow');
+    svg.innerHTML = '<defs><marker id="aim-follow-head" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs><path class="aim-arrow__glow"/><path class="aim-arrow__line" marker-end="url(#aim-follow-head)"/><circle class="aim-arrow__reticle" r="16"/>';
+    document.body.append(svg);
+  }
+  svg.style.cssText = card.closest('[data-godfx]')?.style.cssText || '';
+  const r = card.getBoundingClientRect(), x0 = r.left + r.width / 2, y0 = r.top + r.height / 2, x1 = e.clientX, y1 = e.clientY;
+  const d = `M${x0},${y0} Q${(x0 + x1) / 2},${Math.min(y0, y1) - 80} ${x1},${y1}`;
+  $$('path:not([d^="M0"])', svg).forEach(path => path.setAttribute('d', d));
+  const ret = $('.aim-arrow__reticle', svg); ret.setAttribute('cx', x1); ret.setAttribute('cy', y1);
+  const els = document.elementsFromPoint(x1, y1);
+  svg.classList.toggle('is-locked', bp.refs.some(ref => els.some(d => d.closest?.(ref.startsWith('god:') ? `[data-god="${ref.slice(4)}"]` : `.field .dcard[data-uid="${ref}"]`))));
+}
 document.addEventListener('pointerup', e => { if (aim) endAim(e); });
 document.addEventListener('pointercancel', () => { if (aim) endAim(null); });
 window.addEventListener('blur', () => { if (aim) endAim(null); });
@@ -1474,6 +1495,8 @@ function drawIntents() {
   $$('.chain-badge').forEach(b => b.remove());
   s.chain.forEach((c, i) => { const el = elOf(c.uid); if (el && !el.querySelector('.chain-badge')) el.insertAdjacentHTML('beforeend', `<span class="chain-badge" aria-label="Chain ${s.chain.length - i}">${s.chain.length - i}</span>`); });
   if (hoverItem) for (const target of hoverItem.targets) arrows.push({from: elOf(hoverItem.src), to: elOf(target), kind: 'hover', label: ''});
+  const opp = $('.trigger-panel--opp .dcard'), top = s.chain.at(-1);
+  if (opp && top) for (const target of (top.targets?.length ? top.targets : [top.target]).filter(u => u && (ctx.objects[u] || String(u).startsWith('god:')))) arrows.push({from: opp, to: elOf(target), kind: 'hover', label: ''});
   if (pending?.peek && pending.pending.uid && !targetReq(pending.pending)) arrows.push({from: $('.trigger-panel__card .dcard'), to: elOf(pending.pending.uid), kind: 'spell', label: '?'});
   const live = arrows.filter(a => a.from && a.to);
   if (!live.length) return;
@@ -1702,6 +1725,18 @@ function sidePanel(req, t, fx) {
       ${fx ? `<div class="decision__effect card-text">${fx.lines.map(l => `<p>${inlineMarkup(l)}</p>`).join('')}</div>` : ''}
       <p>${inlineMarkup(t.body)}</p>${t.note ? `<p class="decision__note">${esc(t.note)}</p>` : ''}
       ${opts}<div class="trigger-panel__actions">${actions}</div>${queue}</div></aside>`;
+}
+
+// Conjuração do oponente na pilha (autor, 31/10/2026): a carta aparece na coluna da direita, só leitura, com a seta até o alvo.
+function opponentCast() {
+  const s = S(), top = s.chain.at(-1);
+  if (!s.window || mode || !top || top.controller === viewer() || !ctx.objects[top.uid] || s.victory) return '';
+  const t = chainLabel(top);
+  return `<aside class="trigger-panel trigger-panel--opp" aria-label="Opponent casts ${esc(t.name)}">
+    <div class="trigger-panel__card" ${godFx(top.controller)}><i class="cast-aura" aria-hidden="true"></i>${cardFace(top.uid, {size: 'dcard--lg'})}</div>
+    <div class="trigger-panel__box"><span class="decision__who">Player ${esc(top.controller)} casts</span><h3>${esc(t.name)}</h3>${t.sub ? `<small class="decision__kicker">${esc(t.sub)}</small>` : ''}
+      ${t.text ? `<div class="decision__effect card-text"><p>${inlineMarkup(t.text)}</p></div>` : ''}${t.target ? `<p>Target: <strong>${esc(t.target)}</strong></p>` : ''}
+      <p class="decision__note">${s.window.priority === viewer() ? 'Respond with a Moment or Pass.' : `Waiting for Player ${s.window.priority}.`}</p></div></aside>`;
 }
 
 // Gatilhos simultâneos do jogador (2+): ele arrasta (ou usa ↑↓) para escolher a ordem antes de passar (§56, APNAP).

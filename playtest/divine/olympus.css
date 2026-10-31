@@ -984,3 +984,19 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .drag-zone--cast[data-godfx] { --z1: rgb(var(--glow)); --z2: #fff; --zg: rgba(var(--glow), .65); color: rgb(var(--glow)); border-color: rgb(var(--glow));
   background: radial-gradient(ellipse at center, rgba(var(--glow), .33), rgba(10, 8, 30, .67) 70%); box-shadow: inset 0 0 40px rgba(var(--glow), .33), 0 0 18px rgba(var(--glow), .4); }
 .is-over-cast .drag-zone--cast[data-godfx] { box-shadow: inset 0 0 75px rgba(var(--glow), .47), 0 0 40px rgba(var(--glow), .85); }
+
+/* Coluna da direita (autor, 31/10/2026): carta em zoom no canto superior direito e o texto logo abaixo; o box fica por cima do cosmo da carta. */
+.trigger-panel, .cast-slot { left: auto; right: clamp(12px, 1.5vw, 24px); top: 12px; transform: none; flex-direction: column; align-items: stretch; gap: 10px;
+  width: clamp(240px, 20vw, 300px); max-width: none; max-height: calc(100dvh - 24px); animation: cast-in-right .32s cubic-bezier(.2, .8, .2, 1); }
+.trigger-panel .trigger-panel__card { justify-items: center; }
+.trigger-panel__card .dcard, .cast-slot .dcard { --card-w: clamp(150px, 12vw, 200px); }
+.trigger-panel__box, .cast-prompt { position: relative; z-index: 2; width: auto; }
+.trigger-panel__box { max-height: none; overflow: auto; min-height: 0; }
+@keyframes cast-in-right { from { opacity: 0; transform: translateX(30px) scale(.96); } }
+.reduce-motion .trigger-panel, .reduce-motion .cast-slot { animation: none; }
+body:has(.trigger-panel, .cast-slot) .command__clock { visibility: hidden; }
+/* Seta da carta em conjuração: sólida, na cor do God. */
+.aim-follow .aim-arrow__line { stroke: rgb(var(--glow, 255, 207, 122)); stroke-dasharray: none; animation: none; }
+.aim-follow marker path { fill: rgb(var(--glow, 255, 207, 122)); }
+.aim-follow .aim-arrow__glow { stroke: rgba(var(--glow, 255, 207, 122), .35); }
+.aim-follow .aim-arrow__reticle { stroke: rgb(var(--glow, 255, 207, 122)); }

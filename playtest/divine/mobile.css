@@ -88,8 +88,8 @@
   .pile__grid { grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 8px; }
   /* Painéis laterais (gatilho, cadeia) ocupam menos. */
   /* Celular deitado (autor, 31/10/2026): painel até 38% da largura, carta menor, texto rolando, botões de 44 px; o campo segue clicável. */
-  .trigger-panel { max-width: 38vw; left: calc(8px + var(--sl)); gap: 8px; }
-  .trigger-panel__card .dcard { --card-w: clamp(84px, 11vw, 120px); }
+  .trigger-panel, .cast-slot { width: min(38vw, 260px); left: auto; right: calc(8px + var(--sr)); top: 6px; gap: 6px; }
+  .trigger-panel__card .dcard, .cast-slot .dcard { --card-w: clamp(84px, 11vw, 120px); }
   .trigger-panel__box { max-height: calc(100dvh - 24px); padding: 10px 12px; font-size: 12px; }
   .trigger-panel__box h3 { font-size: 15px; }
   .trigger-panel__actions button, .order__move button { min-height: 44px; }
@@ -104,7 +104,6 @@
   .ctrl:not(.is-open) .ctrl__note { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .ctrl__hint { min-height: 44px; }
   .inspector { left: calc(10px + var(--sl)); max-height: calc(100dvh - 16px); }
-  .cast-slot { left: calc(12px + var(--sl) + var(--rail-w)); }
   .banner { right: calc(var(--cmd-w) + var(--sr)); }
   .olympus .hand--me { margin-bottom: var(--sb); }
   /* Selo de demonstração: pequeno, embaixo à esquerda, fora do caminho. */
