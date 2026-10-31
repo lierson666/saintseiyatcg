@@ -7,7 +7,7 @@ import {canonIndex} from '../shared/deck-v3.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
 import {startTurn, endTurn, passAll, placeBase, spendBase, respond, checkInvariants, RuleError, NotSpecified} from '../playtest/engine-v3/core.js';
 import {declareStrike, strikeTargets} from '../playtest/engine-v3/strike.js';
-import {playDevotee, playEquipment, playSpell} from '../playtest/engine-v3/play.js';
+import {playDevotee, playEquipment, playSpell, reequip, payCost, mixed} from '../playtest/engine-v3/play.js';
 import {checkDefeats} from '../playtest/engine-v3/effects.js';
 import {runDecisions, resume} from '../playtest/engine-v3/decision.js';
 
@@ -35,6 +35,8 @@ test('Devotee jogado entra Unprepared, paga Base e não ataca no turno em que en
   bases('A', cost.amount);
   startTurn(s);
   playDevotee(s, ctx, 'A', seiya);
+  assert.ok(!s.players.A.battlefield.includes(seiya) && s.players.A.stack.includes(seiya), 'guia §56: espera na pilha');
+  passAll(s);
   assert.ok(s.players.A.battlefield.includes(seiya));
   assert.deepEqual(s.units[seiya], {prepared: false, damage: 0, entered: 1});
   assert.equal(s.players.A.bases.filter(b => b.prepared).length, 0, 'custo pago com Base');
@@ -47,7 +49,7 @@ test('Devotee jogado entra Unprepared, paga Base e não ataca no turno em que en
   assert.equal(s.players.B.soul, 20 - cards.get('athena-v6-001').atk);
 });
 
-// §47 (autor, 29/10/2026): Impulse ataca na rodada de entrada, mas esse Strike não pode ter um God como alvo.
+// §47 (autor, 30/10/2026): Impulse ataca na rodada de entrada, inclusive o God.
 function impulseSetup(extra = {}) {
   const withImpulse = new Map(cards);
   withImpulse.set('athena-v6-001', {...cards.get('athena-v6-001'), keywords: ['Impulse'], ...extra}); // carta de teste, catálogo intacto
@@ -56,14 +58,13 @@ function impulseSetup(extra = {}) {
   t.bases('A', cards.get('athena-v6-001').cost.amount);
   startTurn(t.s);
   const foe = t.field('B', '042');
-  playDevotee(t.s, t.ctx, 'A', seiya);
+  playDevotee(t.s, t.ctx, 'A', seiya); passAll(t.s); // guia §56: resolve a pilha
   return {...t, seiya, foe};
 }
 
-test('Impulse: na rodada de entrada pode mirar Devotee, não o God', () => {
+test('Impulse: na rodada de entrada pode mirar Devotee ou o God', () => {
   const {s, ctx, seiya, foe} = impulseSetup();
-  assert.throws(() => declareStrike(s, ctx, seiya, {kind: 'god', player: 'B'}), /§47/);
-  assert.deepEqual(strikeTargets(s, ctx, seiya), [{kind: 'devotee', uid: foe}]);
+  assert.deepEqual(strikeTargets(s, ctx, seiya).map(t => t.kind).sort(), ['devotee', 'god']);
   declareStrike(s, ctx, seiya, {kind: 'devotee', uid: foe});
   passAll(s);
   assert.equal(s.players.B.soul, 20);
@@ -126,29 +127,53 @@ test('início do turno: prepara, depois gatilhos (APNAP/LIFO, com janela), depoi
 
 const ready = (s, key) => s.players[key].bases.filter(b => b.prepared).length;
 
-test('Equipment: Auto-Equip paga o Casting Cost; outro Devotee paga Equip {N} no lugar; sem janela', () => {
+test('Armor: só entra vestida num Resonant e paga o custo impresso; num não-Resonant a jogada é recusada; sem janela', () => {
   const {s, ctx, objects, toHand, bases, field} = setup();
   const seiya = field('A', '001'), jabu = field('A', '028');
-  const cloth = toHand('A', '002'), cloth2 = toHand('A', '002'); // Pegasus Cloth: 3 {B}, Auto-Equip Pegasus Seiya, Equip {5}
+  const cloth = toHand('A', '002'), cloth2 = toHand('A', '002'); // Pegasus Cloth: 3 {B}, Resonance Pegasus Seiya, Equip {5}
   bases('A', 7);
   startTurn(s);
   assert.deepEqual(playEquipment(s, ctx, 'A', cloth, seiya), {cost: {amount: 3, unit: 'base'}});
+  assert.ok(s.window, 'guia §56: vai à pilha com janela'); passAll(s);
   assert.deepEqual([ctx.attached[cloth], ready(s, 'A'), s.window], [seiya, 4, null]);
-  assert.throws(() => playEquipment(s, ctx, 'A', cloth2, jabu), /insuficientes \(4\/5\)/);
+  assert.throws(() => playEquipment(s, ctx, 'A', cloth2, jabu), RuleError, 'não-Resonant não recebe Armor ao jogar (nem pagando Equip)');
   assert.ok(s.players.A.hand.includes(cloth2), 'recusa não move a carta');
+  assert.equal(ready(s, 'A'), 4, 'nada pago na recusa');
+  playEquipment(s, ctx, 'A', cloth2, null); passAll(s); // entra solta pagando só o custo impresso
+  assert.deepEqual([ctx.attached[cloth2], ready(s, 'A')], [undefined, 1]);
   checkInvariants(s, objects);
 });
 
-test('Equipment: "Any friendly Devotee" (044) paga Equip {N}; portador inimigo ou fora do campo é recusado', () => {
+test('Armor "Any friendly Devotee" (044): entra solta pelo custo impresso; reequip paga Equip {N} e recusa portador inimigo ou fora do campo', () => {
   const {s, ctx, toHand, bases, field} = setup();
   const seiya = field('A', '001'), enemy = field('B', '043'), cracked = toHand('A', '044'), inHand = toHand('A', '028');
-  bases('A', 2);
+  bases('A', 4);
   startTurn(s);
-  assert.throws(() => playEquipment(s, ctx, 'A', cracked, enemy), /Devotee seu no campo/);
-  assert.throws(() => playEquipment(s, ctx, 'A', cracked, inHand), /Devotee seu no campo/);
-  playEquipment(s, ctx, 'A', cracked, seiya);
-  assert.equal(ctx.attached[cracked], seiya);
-  assert.equal(ready(s, 'A'), 0);
+  assert.throws(() => playEquipment(s, ctx, 'A', cracked, enemy), /Resonant/);
+  assert.throws(() => playEquipment(s, ctx, 'A', cracked, inHand), /Resonant/);
+  assert.throws(() => playEquipment(s, ctx, 'A', cracked, seiya), /Resonant/, '044 não tem Resonance: não entra vestida');
+  playEquipment(s, ctx, 'A', cracked, null); passAll(s);
+  assert.deepEqual([ctx.attached[cracked], ready(s, 'A')], [undefined, 2], 'custo impresso 2');
+  assert.throws(() => reequip(s, ctx, 'A', cracked, enemy), /Devotee seu no campo/);
+  assert.throws(() => reequip(s, ctx, 'A', cracked, inHand), /Devotee seu no campo/);
+  assert.deepEqual(reequip(s, ctx, 'A', cracked, seiya), {cost: {amount: 2, unit: 'base'}});
+  assert.deepEqual([ctx.attached[cracked], ready(s, 'A')], [seiya, 0]);
+});
+
+test('Resonance ao entrar: o Devotee Resonant puxa, de graça, a Armor vestida por outro Devotee seu quando decide sim; sem decidir, nada muda', () => {
+  for (const yes of [true, false]) {
+    const {s, ctx, objects, toHand, bases, field} = setup();
+    const jabu = field('A', '028'), seiya = toHand('A', '001');
+    const cloth = field('A', '002'); ctx.attached[cloth] = jabu; // Pegasus Cloth (Resonance Pegasus Seiya) vestida por Jabu
+    bases('A', 3);
+    ctx.decide = (key, q) => yes && q.ability === 'Resonance';
+    startTurn(s);
+    playDevotee(s, ctx, 'A', seiya);
+    passAll(s);
+    assert.equal(ctx.attached[cloth], yes ? seiya : jabu, yes ? 'Armor sai de Jabu e veste Seiya sem pagar Equip' : 'recusou: continua em Jabu');
+    assert.ok(s.players.A.battlefield.includes(cloth));
+    checkInvariants(s, objects);
+  }
 });
 
 test('Technique (052): paga Base, abre janela, resolve depois dos passes e vai para o Tartarus do Owner', () => {
@@ -219,13 +244,13 @@ test('Guia §63 (autor, 28/10/2026): segunda versão sai da mão, paga, entra e 
   const asked = [];
   ctx.decide = (player, q) => { asked.push(q); return marin; }; // fica a nova
   const ready = s.players.A.bases.filter(b => b.prepared).length;
-  playDevotee(s, ctx, 'A', marin);
+  playDevotee(s, ctx, 'A', marin); passAll(s); // guia §56: resolve a pilha
   assert.equal(s.players.A.bases.filter(b => b.prepared).length, ready - cards.get('athena-v6-021').cost.amount, 'pagou o custo');
   assert.deepEqual(asked.map(q => [q.decision, q.choose, q.options]), [['§63', 'keep', [old, marin]]]);
   assert.ok(s.players.A.battlefield.includes(marin) && !s.players.A.battlefield.includes(old));
   assert.ok(s.players.A.tartarus.includes(old));
   ctx.decide = () => { throw new Error('genérico não pergunta'); };
-  playDevotee(s, ctx, 'A', guard); playDevotee(s, ctx, 'A', guard2); // Sanctuary Guard: genérico
+  playDevotee(s, ctx, 'A', guard); passAll(s); playDevotee(s, ctx, 'A', guard2); passAll(s); // Sanctuary Guard: genérico
   assert.equal(s.players.A.battlefield.filter(u => u.includes(':040:')).length, 2);
 });
 
@@ -273,4 +298,42 @@ test('Guia §63 no protocolo de decisão: pergunta pendente ao controlador; time
   const done = resume(s, ctx, fn, r, {timeout: true});
   assert.ok(done.done);
   assert.deepEqual(s.players.A.battlefield, [[a, b].sort((x, y) => x.localeCompare(y, 'en', {numeric: true}))[0]]);
+});
+
+// §25/§45 Long Range: quem inicia causa o dano primeiro; alvo derrotado não retalia; Cheater no alvo anula (§44).
+function longRange(foeKeywords = []) {
+  const m = new Map(cards);
+  m.set('athena-v6-001', {...cards.get('athena-v6-001'), keywords: ['Long Range']}); // cartas de teste, catálogo intacto
+  m.set('athena-v6-042', {...cards.get('athena-v6-042'), keywords: foeKeywords});
+  const t = setup(m);
+  return {...t, seiya: t.field('A', '001'), foe: t.field('B', '042')};
+}
+
+test('Long Range: derrota o alvo antes da retaliação', () => {
+  const {s, ctx, seiya, foe} = longRange();
+  declareStrike(s, ctx, seiya, {kind: 'devotee', uid: foe}); passAll(s);
+  assert.ok(s.players.B.tartarus.includes(foe));
+  assert.equal(s.units[seiya].damage, 0, 'sem retaliação');
+});
+
+test('Long Range: alvo que sobrevive retalia; Cheater no alvo volta ao dano simultâneo', () => {
+  const a = longRange();
+  a.s.units[a.foe].damage = -20; // sobrevive ao primeiro dano
+  declareStrike(a.s, a.ctx, a.seiya, {kind: 'devotee', uid: a.foe}); passAll(a.s);
+  assert.ok(a.s.units[a.seiya].damage > 0, 'retaliou');
+  const b = longRange(['Cheater']);
+  declareStrike(b.s, b.ctx, b.seiya, {kind: 'devotee', uid: b.foe}); passAll(b.s);
+  assert.ok(b.s.units[b.seiya].damage > 0, 'Cheater: retaliação simultânea mesmo derrotado');
+});
+
+// Guia §5: Moment como AÇÃO, Technique e Equipment pagam em Base e/ou Latent; Devotee só Base.
+test('custo misto: 1 Base + 2 Latent pagam uma Spell de custo 3 no próprio turno; Devotee não usa Latent', () => {
+  const {s} = setup();
+  const p = s.players.A;
+  p.bases = p.deck.splice(0, 1).map(uid => ({uid, prepared: true}));
+  p.latent = 2;
+  payCost(s, 'A', mixed({amount: 3, unit: 'base'}));
+  assert.deepEqual([p.bases.filter(b => b.prepared).length, p.latent], [0, 0]);
+  p.bases[0].prepared = true; p.latent = 2;
+  assert.throws(() => payCost(s, 'A', {amount: 3, unit: 'base'}), RuleError);
 });

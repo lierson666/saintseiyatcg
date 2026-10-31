@@ -2,16 +2,28 @@
 // Devotee: Sorcery (D173), entra Unprepared (ALPHA-P02 A). Equipment: custo alternativo, Spell: Tartarus do Owner
 // (as duas aprovadas pelo autor em 28/10/2026). Moment/Technique: D194. Janela: ALPHA-P06 A.
 // `ctx`: {cards (loadCanon), objects (uid -> {owner, cardId}), attached (uid do Equipment -> uid do portador)}.
-import {RuleError, NotSpecified, assertIdle, spendBase, spellCategory, respond, emit, openWindow, pushTriggers} from './core.js';
-import {SPELLS, ABILITIES, onEnter, onCastEquipment, checkDefeats, namedCharacter, enforceUniqueness} from './effects.js';
+import {RuleError, NotSpecified, assertIdle, spendBase, spellCategory, respond, emit, openWindow, pushTriggers, useOncePerRound} from './core.js';
+import {SPELLS, ABILITIES, onEnter, onCastEquipment, checkDefeats, namedCharacter, enforceUniqueness, silenced} from './effects.js';
 import {v6Spell, entryOf, V6, v6Attach} from './v6/hooks.js';
-import {collect} from './v6/registry.js';
+import {collect, sources} from './v6/registry.js';
 import {aim, withTargets} from './v6/targets.js';
 
-// Custo impresso: Base (D4) ou Latent. Valida tudo antes de mexer no estado.
+// Guia §5: Moment como AÇÃO, Technique, Equipment que não é Armor, Equip e habilidades comuns pagam em Base e/ou Latent.
+// Devotee, Armor e Ultimate: só Base; Moment como resposta: só Latent.
+export const mixed = cost => cost && {...cost, unit: 'mixed'};
+
+// Custo impresso: Base (D4), Latent ou misto. Valida tudo antes de mexer no estado.
+// shortcut: no misto gasta Base primeiro e completa com Latent (o jogador não escolhe a divisão); Latent persiste, Base renova.
 export function payCost(state, key, cost) {
   if (!cost) return;
   const p = state.players[key];
+  if (cost.unit === 'mixed') {
+    const bases = p.bases.filter(b => b.prepared).length, fromBase = Math.min(bases, cost.amount), rest = cost.amount - fromBase;
+    if (rest > p.latent) throw new RuleError('custo', `Cosmo insuficiente (${bases} Base + ${p.latent} Latent / ${cost.amount})`);
+    spendBase(state, key, fromBase);
+    if (rest) { p.latent -= rest; emit(state, 'cosmo_spent', {player: key, unit: 'latent', amount: rest}); }
+    return;
+  }
   if (cost.unit === 'latent') {
     if (p.latent < cost.amount) throw new RuleError('custo', `Latent insuficiente (${p.latent}/${cost.amount})`);
     p.latent -= cost.amount;
@@ -41,36 +53,82 @@ export function duplicateCharacter(state, ctx, key, uid) {
   return who && state.players[key].battlefield.some(u => u !== uid && ctx.cards.get(ctx.objects[u].cardId).kind === 'Devotee' && namedCharacter(ctx, u) === who) ? who : null;
 }
 
+// Redução de custo V6 (gancho costLess): cada fonte do jogador devolve {n, min, tag}; `min` é o piso do texto
+// ("to a minimum of 1"), `tag` marca "the first … each round" e só é gasta quando o custo é pago.
+function discount(state, ctx, key, uid, cost) {
+  let n = 0, min = 0;
+  const tags = [];
+  for (const {self, entry} of cost ? sources(state, ctx, key) : []) {
+    const r = entry.costLess?.(state, ctx, key, self, uid);
+    if (!r) continue;
+    n += r.n; min = Math.max(min, r.min ?? 0);
+    if (r.tag) tags.push(r.tag);
+  }
+  return {cost: n ? {...cost, amount: Math.max(Math.min(min, cost.amount), cost.amount - n)} : cost, tags};
+}
+// Custo de conjurar `uid` agora, com reduções (a interface usa para saber se dá para pagar).
+export const castCost = (state, ctx, key, uid, cost) => discount(state, ctx, key, uid, cost).cost;
+function payCast(state, ctx, key, uid, cost) {
+  const d = discount(state, ctx, key, uid, cost);
+  payCost(state, key, d.cost);
+  d.tags.forEach(tag => useOncePerRound(state, tag));
+  return d.cost;
+}
+
+// Guia §56 (autor, 30/10/2026): tudo vai à pilha, como no Magic. A carta paga, sai da mão, vai ao `stack` do jogador e
+// espera na cadeia com janela de resposta (só Moment responde); `resolve(st)` roda quando os dois passam. Contrariada
+// (kit.counterSpell acha o item por `card: true`), vai ao Tartarus do dono. `st`: o snapshot da decisão troca os objetos.
+function castToStack(state, key, uid, announce, resolve) {
+  state.players[key].stack.push(uid);
+  emit(state, 'card_played', {player: key, uid, ...announce});
+  openWindow(state);
+  state.chain.push({controller: key, uid, speed: 'instant', card: true, run: st => {
+    const at = st.players[key].stack.indexOf(uid);
+    if (at >= 0) st.players[key].stack.splice(at, 1);
+    resolve(st);
+  }});
+  emit(state, 'chain_add', {player: key, uid});
+}
+
 export function playDevotee(state, ctx, key, uid, choice = {}) {
   const card = sorceryFromHand(state, ctx, key, uid, 'Devotee');
-  payCost(state, key, card.cost);
+  payCast(state, ctx, key, uid, card.cost);
   leaveHand(state, key, uid);
-  state.players[key].battlefield.push(uid);
-  // P02: entra Unprepared; com Impulse entra Prepared, pronto para o Strike (autor, 29/10/2026).
-  state.units[uid] = {prepared: card.keywords.includes('Impulse'), damage: 0, entered: state.turn};
-  emit(state, 'card_played', {player: key, uid, kind: 'Devotee'});
-  onEnter(state, ctx, key, uid, choice);
-  enforceUniqueness(state, ctx); // §63 (autor, 28/10/2026): pode jogar a segunda versão; o controlador escolhe quem fica
+  castToStack(state, key, uid, {kind: 'Devotee'}, st => {
+    st.players[key].battlefield.push(uid);
+    // P02: entra Unprepared; com Impulse entra Prepared, pronto para o Strike (autor, 29/10/2026).
+    st.units[uid] = {prepared: card.keywords.includes('Impulse'), damage: 0, entered: st.turn};
+    emit(st, 'entered', {player: key, uid, kind: 'Devotee'});
+    onEnter(st, ctx, key, uid, choice);
+    enforceUniqueness(st, ctx); // §63 (autor, 28/10/2026): pode jogar a segunda versão; o controlador escolhe quem fica
+  });
 }
 
 // Equipment (custo alternativo, autor 28/10/2026): no Devotee nomeado em Auto-Equip, paga o Casting Cost;
 // em outro Devotee permitido por "Equip {N}", paga N em vez do Casting Cost. Sem portador legal, não joga.
-// Ação comum: não abre janela (P06).
+// Vai à pilha (guia §56, 30/10/2026); ao resolver, entra em campo. Arma cujo portador saiu antes de resolver vai ao Tartarus;
+// Armor entra sem portador.
 // `choice.target`: alvo do gatilho "When you cast" (019).
 // Item global ("Equip: None — Global"): paga o Casting Cost e fica no campo sem portador; `bearer` é ignorado.
 export function playEquipment(state, ctx, key, uid, bearer, choice = {}) {
   const card = sorceryFromHand(state, ctx, key, uid, 'Equipment');
   if (card.global) bearer = null;
-  // Guia §XII: Armor pode entrar sem portador, pagando só o custo de entrada (Base); equipa depois com AÇÃO + Equip.
   if (!bearer && !card.global && !card.armor) throw new RuleError('Equip', `${card.name} precisa de um portador`);
-  const cost = card.global || !bearer ? card.cost : equipCost(state, ctx, key, card, bearer);
-  payCost(state, key, cost);
+  // Guia §28 (30/10/2026): Armor paga só o custo impresso; entra vestida apenas num Resonant seu (sem Equip), senão sem portador.
+  if (card.armor && bearer && !resonant(state, ctx, key, card, bearer)) throw new RuleError('Resonance', `${card.name} só entra vestida num Devotee Resonant; senão entra sem portador`);
+  const printed = card.global || !bearer || card.armor ? card.cost : equipCost(state, ctx, key, card, bearer);
+  const cost = payCast(state, ctx, key, uid, card.armor ? printed : mixed(printed)); // Armor: só Base (guia §5)
   leaveHand(state, key, uid);
-  state.players[key].battlefield.push(uid);
-  if (bearer) ctx.attached[uid] = bearer;
-  emit(state, 'card_played', {player: key, uid, kind: 'Equipment', bearer});
-  onCastEquipment(state, ctx, key, uid, choice);
-  if (bearer) v6Attach(state, ctx, key, uid, bearer); // gancho attach
+  castToStack(state, key, uid, {kind: 'Equipment', bearer}, st => {
+    const holder = bearer && st.players[key].battlefield.includes(bearer) ? bearer : null;
+    if (bearer && !holder && !card.armor) { st.players[ctx.objects[uid].owner].tartarus.push(uid); emit(st, 'fizzled', {player: key, uid}); return; }
+    st.players[key].battlefield.push(uid);
+    if (holder) { if (card.armor) dropArmor(ctx, holder, uid); ctx.attached[uid] = holder; }
+    emit(st, 'entered', {player: key, uid, kind: 'Equipment', bearer: holder});
+    onCastEquipment(st, ctx, key, uid, choice);
+    if (holder) v6Attach(st, ctx, key, uid, holder); // gancho attach
+  });
+  pushTriggers(state, collect(state, ctx, [key], 'watchEquipCast', [uid], 'an Equipment is cast')); // "when you cast": acima do item na pilha
   return {cost};
 }
 
@@ -86,33 +144,57 @@ export function activate(state, ctx, key, uid, choice = {}) {
   const ability = v6 ? {...v6, ...(domain && {tap: false}), check: (s, c, k, ch) => v6.check?.(s, c, k, uid, ch), run: (s, c, k, ch) => v6.run(s, c, k, uid, ch)}
     : ABILITIES[ctx.objects[uid]?.cardId.slice(-3)];
   if (!ability || (!domain && !state.players[key].battlefield.includes(uid))) throw new RuleError('{T}', 'sem habilidade ativada implementada');
+  if (!domain && silenced(state, uid)) throw new RuleError('V6', 'este Devotee perdeu as habilidades ativadas neste Round');
   if (ability.tap !== false && state.units[uid]?.prepared !== true) throw new RuleError('D192', 'o Devotee precisa estar Prepared para {T}');
-  if (ability.once && state.roundUses.has(`ability:${uid}`)) throw new RuleError('D191', `${ability.name} já foi usada neste Round`);
+  const once = typeof ability.once === 'function' ? ability.once(state, ctx, key, uid) : ability.once; // ex.: 016 com Ikki não tem limite
+  if (once && state.roundUses.has(`ability:${uid}`)) throw new RuleError('D191', `${ability.name} já foi usada neste Round`);
   ability.check(state, ctx, key, choice);
-  spendBase(state, key, ability.cost || 0); // {N}{C}: Base preparada (autor, 28/10/2026)
-  if (ability.once) state.roundUses.add(`ability:${uid}`);
+  payCost(state, key, mixed({amount: ability.cost || 0, unit: 'base'})); // {N}{C}: Base e/ou Latent (guia §5)
+  if (once) state.roundUses.add(`ability:${uid}`);
   if (ability.tap !== false) state.units[uid].prepared = false;
   emit(state, 'ability', {player: key, uid, name: ability.name, target: choice.target});
-  ability.run(state, ctx, key, choice);
-  checkDefeats(state, ctx);
+  // Guia §56 (30/10/2026): a habilidade ativada vai à pilha com janela de resposta; custo e {T} já foram pagos.
+  openWindow(state);
+  state.chain.push({controller: key, uid, speed: 'instant', ability: ability.name, target: choice.target ?? null, run: st => { ability.run(st, ctx, key, choice); checkDefeats(st, ctx); }});
+  emit(state, 'chain_add', {player: key, uid});
 }
 
 // Equipment solto no campo (não-Armor cujo portador saiu) volta a um Devotee seu pagando Equip {N}
 // (autor, 28/10/2026); no Devotee nomeado em Auto-Equip vale o Casting Cost, como ao jogar. Sorcery.
+// Armor (guia §28, 30/10/2026): sem portador ou tirada de outro Devotee seu; AÇÃO + Equip impresso para qualquer um, inclusive o Resonant.
 export function reequip(state, ctx, key, uid, bearer) {
   if (state.victory) throw new RuleError('D52', 'a partida já terminou');
   if (key !== state.active) throw new RuleError('D1', 'só o jogador ativo age, no próprio turno');
   assertIdle(state);
   const card = ctx.cards.get(ctx.objects[uid]?.cardId);
-  if (!state.players[key].battlefield.includes(uid) || card?.kind !== 'Equipment' || ctx.attached[uid]) {
+  if (!state.players[key].battlefield.includes(uid) || card?.kind !== 'Equipment' || (ctx.attached[uid] && !card.armor)) {
     throw new RuleError('Equip', 'só Equipment seu, solto no campo, pode ser reequipado');
   }
-  const cost = equipCost(state, ctx, key, card, bearer);
-  payCost(state, key, cost);
+  if (card.armor && ctx.attached[uid] === bearer) throw new RuleError('Equip', `${card.name} já está nesse Devotee`);
+  const cost = card.armor ? armorEquipCost(state, ctx, key, card, bearer) : equipCost(state, ctx, key, card, bearer);
+  payCost(state, key, mixed(cost)); // Equip e transferência: Base e/ou Latent (guia §5, §28)
+  if (card.armor) dropArmor(ctx, bearer, uid);
   ctx.attached[uid] = bearer;
   emit(state, 'equipped', {player: key, uid, bearer});
   v6Attach(state, ctx, key, uid, bearer); // gancho attach: Equipment/Armor equipado depois da conjuração
   return {cost};
+}
+
+// Devotee seu no campo cujo nome está na Resonance da Armor (auto_equip_en; Owner/Auto-Equip antigos valem como Resonance).
+export function resonant(state, ctx, key, card, bearer) {
+  const target = ctx.cards.get(ctx.objects[bearer]?.cardId);
+  return state.players[key].battlefield.includes(bearer) && target?.kind === 'Devotee'
+    && card.autoEquip.some(name => name.toUpperCase() === target.name.toUpperCase());
+}
+function armorEquipCost(state, ctx, key, card, bearer) {
+  const target = ctx.cards.get(ctx.objects[bearer]?.cardId);
+  if (!state.players[key].battlefield.includes(bearer) || target?.kind !== 'Devotee') throw new RuleError('Equip', 'o portador precisa ser um Devotee seu no campo');
+  if (!card.equip) throw new NotSpecified(`${card.id}: Armor sem Equip {N} impresso`);
+  return {amount: card.equip.amount, unit: 'base'}; // reequip paga como misto (Base e/ou Latent)
+}
+// Um slot de Armor (§26): a Armor que o novo portador vestia fica no campo sem portador.
+export function dropArmor(ctx, bearer, keep) {
+  for (const e of Object.keys(ctx.attached)) if (e !== keep && ctx.attached[e] === bearer && ctx.objects[e].armor) delete ctx.attached[e];
 }
 
 function equipCost(state, ctx, key, card, bearer) {
@@ -143,7 +225,7 @@ export function playSpell(state, ctx, key, uid, choice = {}) {
   const finish = st => { emit(st, 'spell_resolved', {player: key, uid}); effect(st); st.players[key].stack.splice(st.players[key].stack.indexOf(uid), 1); st.players[ctx.objects[uid].owner].tartarus.push(uid); checkDefeats(st, ctx); }; // `st`, não o estado capturado: o snapshot da decisão troca os objetos
   if (category.speed === 'sorcery') {
     const card = sorceryFromHand(state, ctx, key, uid, 'Spell');
-    payCost(state, key, card.cost);
+    payCost(state, key, mixed(card.cost));
     leaveHand(state, key, uid);
     p.stack.push(uid);
     emit(state, 'card_played', {player: key, uid, kind: 'Spell', category: category.category});
@@ -157,7 +239,7 @@ export function playSpell(state, ctx, key, uid, choice = {}) {
   const card = fromHand(state, ctx, key, uid, 'Spell');
   // Instant: fora de janela só o ativo; dentro, quem tem prioridade (P06). Checa antes de pagar.
   if (state.window ? state.window.priority !== key : key !== state.active) throw new RuleError('P06', `${key} não pode jogar Instant agora`);
-  payCost(state, key, card.cost);
+  payCost(state, key, state.window ? {amount: card.cost.amount, unit: 'latent'} : mixed(card.cost)); // resposta: só Latent (guia §5)
   leaveHand(state, key, uid);
   p.stack.push(uid);
   emit(state, 'card_played', {player: key, uid, kind: 'Spell', category: category.category});
@@ -165,8 +247,8 @@ export function playSpell(state, ctx, key, uid, choice = {}) {
   respond(state, key, {speed: 'instant', uid, run: finish, target: typeof choice === 'object' ? choice.target ?? null : null}); // Moment jogado abre ou continua a janela
 }
 
-// Spell V6 (guia §54, autor 29/10/2026): Technique exige AÇÃO (própria vez, cadeia vazia) e paga o custo impresso em Base;
-// Moment joga como AÇÃO (Base) ou como resposta numa janela em que tem prioridade, pagando só Latent.
+// Spell V6 (guia §54, autor 29/10/2026): Technique exige AÇÃO (própria vez, cadeia vazia) e paga o custo impresso em Base e/ou Latent;
+// Moment joga como AÇÃO (Base e/ou Latent) ou como resposta numa janela em que tem prioridade, pagando só Latent (guia §5).
 // Alvos (e modos) são escolhidos AO CONJURAR, antes de pagar e de abrir a janela (v6/targets.js); ficam em `item.targets`
 // e no evento `spell_targets`. Na resolução, alvo que já não é legal faz a parte dele não acontecer. Demais escolhas
 // ("you may", descarte, busca) continuam sendo perguntas da resolução. `choice` é repassado a spell.check/run.
@@ -177,7 +259,10 @@ function playSpellV6(state, ctx, key, uid, choice) {
   // `finish` usa `st` (o snapshot da decisão troca os objetos do estado) e as respostas de alvo guardadas ao conjurar.
   const finish = st => {
     emit(st, 'spell_resolved', {player: key, uid});
-    withTargets(ctx, key, aimed.records, () => entry.spell.run(st, ctx, key, uid, choice, aimed.values));
+    // Redirecionamento (Sky Defender 461): troca o alvo `from` por `to` nas respostas guardadas; alvo ilegal vira null.
+    const swap = st.v6Redirect?.[uid], to = v => (swap && v === swap.from ? swap.to : v);
+    const records = aimed.records && aimed.records.map(r => ({...r, value: to(r.value)}));
+    withTargets(ctx, key, records, () => entry.spell.run(st, ctx, key, uid, choice, aimed.values.map(to)));
     st.players[key].stack.splice(st.players[key].stack.indexOf(uid), 1);
     st.players[ctx.objects[uid].owner].tartarus.push(uid);
     checkDefeats(st, ctx);
@@ -188,8 +273,9 @@ function playSpellV6(state, ctx, key, uid, choice) {
     const card = sorceryFromHand(state, ctx, key, uid, 'Spell');
     entry.spell.check?.(state, ctx, key, choice);
     aimed = aim(state, ctx, key, uid, entry, choice); // pergunta os alvos antes de pagar (pode restaurar o estado: nada capturado antes)
-    payCost(state, key, card.cost);
+    payCast(state, ctx, key, uid, mixed(card.cost)); // Technique e Moment como AÇÃO: Base e/ou Latent (guia §5)
     leaveHand(state, key, uid);
+    entry.spell.cost?.(state, ctx, key, uid); // custo adicional (ex.: descarte do 476), pago ao conjurar
     state.players[key].stack.push(uid);
     announce();
     // Toda Spell espera na cadeia e abre janela de resposta (autor, 29/10/2026); watchSpell (contra-mágica) entra junto.
@@ -205,8 +291,9 @@ function playSpellV6(state, ctx, key, uid, choice) {
   if (state.window.priority !== key) throw new RuleError('P06', `${key} não tem prioridade`);
   entry.spell.check?.(state, ctx, key, choice);
   aimed = aim(state, ctx, key, uid, entry, choice);
-  payCost(state, key, {amount: card.cost.amount, unit: 'latent'}); // resposta: só Latent (guia §XII)
+  payCast(state, ctx, key, uid, {amount: card.cost.amount, unit: 'latent'}); // resposta: só Latent (guia §XII)
   leaveHand(state, key, uid);
+  entry.spell.cost?.(state, ctx, key, uid);
   state.players[key].stack.push(uid);
   announce();
   respond(state, key, item());

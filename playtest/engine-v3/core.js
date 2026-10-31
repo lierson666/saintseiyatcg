@@ -66,7 +66,8 @@ export function startTurn(state, startOfTurn = []) {
   }
   emit(state, 'turn_start', {player: key});
   startOfTurn = [...startOfTurn, ...hooks.turnStart.flatMap(fn => fn(state))];
-  const drawStep = () => { if (p.ownTurns > 1) draw(state, key, DRAWS_PER_TURN); runCheckpoint(state); };
+  // "Skip your next draw step" (neutral 453 Frozen Sacrifice): consome a marca na próxima compra do turno.
+  const drawStep = () => { if (p.ownTurns > 1) { if (state.skipDraw?.[key]) delete state.skipDraw[key]; else draw(state, key, DRAWS_PER_TURN); } runCheckpoint(state); };
   if (startOfTurn.length) pushTriggers(state, startOfTurn, drawStep);
   else drawStep();
 }
@@ -205,16 +206,19 @@ export function useOncePerRound(state, id) {
 // 'next_round' termina no fim do Round seguinte ao da criação.
 export function addEffect(state, effect) { state.effects.push({...effect, round: state.round}); }
 
-// Destroy (D197) de um Devotee: vai para o Tartarus do Owner, e a Armor presa a ele também (D40/D90).
+// Destroy (D197) de um Devotee: vai para o Tartarus do Owner.
 // `event`: 'unique_removed' para a saída do guia §63, que move igual mas não é destruição.
-// Equipment que não é Armor fica no campo, solto, e pode ser reequipado (autor, 28/10/2026).
+// Equipment e Armor ficam no campo, soltos, e podem ser reequipados (autor, 28/10/2026; Armor: guia §32, 30/10/2026).
 // `objects`: uid -> {owner, armor}; `attached`: uid do Equipment -> uid do Devotee.
+// Moon Awakening (gods.js): ao sair do campo, o objeto volta a ser a carta real.
+export function restoreMoon(objects, uid) { const o = objects[uid]; if (o?.moon) { o.cardId = o.moon.cardId; delete o.moon; } }
 export function destroyDevotee(state, uid, objects, attached, event = 'destroyed') {
   const zone = Object.values(state.players).find(p => p.battlefield.includes(uid));
   if (!zone) throw new RuleError('D197', `${uid} não está no campo`);
   const gear = Object.keys(attached).filter(e => attached[e] === uid);
-  for (const loose of gear.filter(e => !objects[e].armor)) delete attached[loose];
-  for (const moved of [uid, ...gear.filter(e => objects[e].armor)]) {
+  for (const loose of gear) delete attached[loose];
+  for (const moved of [uid]) {
+    restoreMoon(objects, moved); // Moon Spirit derrotada: a carta real vai ao Tartarus (D209)
     for (const p of Object.values(state.players)) p.battlefield = p.battlefield.filter(x => x !== moved);
     if (!objects[moved].token) state.players[objects[moved].owner].tartarus.push(moved); // token some (guia §63)
     delete attached[moved];

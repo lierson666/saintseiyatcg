@@ -108,7 +108,7 @@ function candidates(g, key, step) {
     case 'saint': return devs.filter(u => isSaint(g.ctx, u));
     case 'bronze': return devs.filter(u => isBronze(g.ctx, u));
     case 'devotee': return devs;
-    case 'armor': return s.players[key].battlefield.filter(u => card(g, u).armor && g.ctx.attached[u]);
+    case 'armor': return s.players[key].battlefield.filter(u => Object.keys(g.ctx.attached).some(e => g.ctx.attached[e] === u && card(g, e).armor));
     case 'enemy': return s.players[other(s, key)].battlefield.filter(u => card(g, u).kind === 'Devotee');
     default: return [];
   }

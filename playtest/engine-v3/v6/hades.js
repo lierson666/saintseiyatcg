@@ -3,7 +3,8 @@
 import * as k from './kit.js';
 // "Target enemy God": único alvo possível, guardado ao conjurar sem pergunta (v6/targets.js; reações como Poseidon 136 o enxergam).
 const godOfFoe = (s, c, key) => [k.godTarget(k.other(s, key))];
-import {addSeal} from '../core.js';
+import {addSeal, hooks, pushTriggers} from '../core.js';
+import {collect, contextOf} from './registry.js';
 
 // ---------- ajudantes locais ----------
 const name = (c, uid) => k.card(c, uid)?.name || '';
@@ -20,7 +21,33 @@ const goldSaint = cd => cd.kind === 'Devotee' && /Gold Saint/.test(cd.type);
 const lose = (s, who, n) => { if (!s.victory && n > 0) k.loseSoulOf(s, who, n); };
 const gain = (s, key, n) => { if (!s.victory && n > 0) k.gainSoul(s, key, n); };
 const drain = (s, key, n, loser = k.other(s, key)) => { lose(s, loser, n); gain(s, key, n); };
-const pay = (s, c, key, ability, n, uid) => s.players[key].soul >= n && k.may(c, key, ability, {uid, cost: `${n} Soul`}) && k.paySoul(s, key, n);
+// Soul pago por habilidade: evento `soul_paid` (uid = fonte, quando conhecida) para 187 Dead End Symphony e 228 Pandora's Harp.
+const pay = (s, c, key, ability, n, uid) => s.players[key].soul >= n && k.may(c, key, ability, {uid, cost: `${n} Soul`}) && k.paySoul(s, key, n)
+  && (k.emit(s, 'soul_paid', {player: key, amount: n, uid: uid ?? null, ability}), true);
+
+// Observadores por evento, lidos no checkpoint (como scanGods): watchSealRemoved(e) e watchSoulPaid(e).
+// shortcut: o gatilho nasce no checkpoint seguinte, não no instante da remoção/pagamento.
+hooks.checkpoint.push(state => {
+  const ctx = contextOf(state);
+  if (!ctx || state.victory) return;
+  const events = state.events.slice(state.hadesScan ?? 0);
+  state.hadesScan = state.events.length;
+  const out = [];
+  for (const e of events) {
+    if (e.type === 'seal_removed' && ctx.objects[e.uid]) out.push(...collect(state, ctx, state.order, 'watchSealRemoved', [e], 'a Seal counter is removed'));
+    if (e.type === 'soul_paid') out.push(...collect(state, ctx, state.order, 'watchSoulPaid', [e], 'Soul is paid'));
+  }
+  if (out.length) pushTriggers(state, out);
+});
+// 265: "At the end of the round, sacrifice that Devotee" (quem o controla agora).
+hooks.roundEnd.push(state => {
+  const ctx = contextOf(state), due = (state.v6Possessed || []).filter(e => e.round === state.round);
+  if (!ctx || !due.length) return [];
+  state.v6Possessed = state.v6Possessed.filter(e => e.round !== state.round);
+  return due.map(e => ({controller: e.key, uid: `possession:${e.uid}`, ability: 'THE POSSESSION OF SHUN', run: st => { if (k.controllerOf(st, e.uid) === e.key) k.sacrifice(st, ctx, e.uid); }}));
+});
+const sealOwner = (s, c, e) => k.controllerOf(s, e.uid) ?? c.objects[e.uid].owner; // Seal tirado na saída: o dono
+const enemySeal = (s, c, key, e) => k.isDevotee(c, e.uid) && sealOwner(s, c, e) !== key;
 
 const seal = (s, c, uids, n, source) => { const list = uids.filter(u => s.units[u]); if (list.length) addSeal(s, c, list, n, source); };
 // -X/-Y até o fim do Round; HP máximo ≤ dano derrota na hora (verificação de estado).
@@ -167,7 +194,7 @@ export default {
   },
   'hades-v6-183': { // Griffon Minos
     enter: taxed(1, 'COSMIC MARIONATION', sealOnEnter(2, 'COSMIC MARIONATION')),
-    // pendente: Puppet Master ("Whenever a Seal counter is removed") — sem gancho de remoção de Seal (core.prepareUnit).
+    watchSealRemoved: (s, c, key, self, e) => enemySeal(s, c, key, e) && (st => lose(st, sealOwner(st, c, e), 1)), // Puppet Master
   },
   'hades-v6-184': { // Griffon Surplice
     gearDeclare: (s, c, key, self, bearer) => /MINOS/i.test(name(c, bearer)) && k.once(s, `${self}:resonance`)
@@ -180,8 +207,11 @@ export default {
   // 186 Garuda Surplice: dentro de Galactica Illusion (185), único retorno ao campo feito por Aiacos.
   'hades-v6-187': {enter: taxed(1, 'BALANCE OF CURSE', drainOnEnter(2, (st, c, key, self) => { // Sphinx Pharaoh + Sphinx Surplice (188)
     if (resonance(st, c, self, 'hades-v6-188') && pay(st, c, key, 'SPHINX SURPLICE', 2)) k.draw(st, key, 1);
-  }).enter, always)},
-  // pendente 187: Dead End Symphony ("whenever you pay Soul to activate an ability") — sem gancho de pagamento de Soul.
+  }).enter, always),
+    // Dead End Symphony. Interpretação: todo Soul pago por habilidade (os "you may pay N Soul" de Hades); o próprio pagamento extra não reabre.
+    watchSoulPaid: (s, c, key, self, e) => e.player === key && e.ability !== 'DEAD END SYMPHONY' && !s.roundUses.has(`${self}:symphony`)
+      && (st => { if (k.onField(st, key, self) && pay(st, c, key, 'DEAD END SYMPHONY', 1, self)) { k.once(st, `${self}:symphony`); k.draw(st, key, 1); } }),
+  },
   'hades-v6-189': { // Acheron Charon
     enter: (s, c, key) => st => { if (pay(st, c, key, "THE FERRYMAN'S PRICE", 2)) k.search(st, c, key, "THE FERRYMAN'S PRICE", devCost(3)); },
     watchDefeat: onDefeat('other', (st, c, key, self) => { if (pay(st, c, key, 'PASSAGE TO THE UNDERWORLD', 1)) charonMill(st, c, key, self, 1); }, 'passage'),
@@ -189,7 +219,10 @@ export default {
   // 190 Acheron Surplice: dentro de Passage to the Underworld (189).
   'hades-v6-191': { // Hypnos
     enter: taxed(2, 'ETERNAL DROWSINESS', (s, c, key) => st => seal(st, c, k.enemies(st, c, key), 2, 'ETERNAL DROWSINESS')),
-    // pendente: Eternal Slumber ("loses its last Seal counter") — sem gancho de remoção de Seal.
+    // Eternal Slumber: uso do Round só gasto se pagar.
+    watchSealRemoved: (s, c, key, self, e) => e.counters === 0 && enemySeal(s, c, key, e) && !s.roundUses.has(`${self}:slumber`) && (st => {
+      if (k.onField(st, key, self) && k.controllerOf(st, e.uid) && pay(st, c, key, 'ETERNAL SLUMBER', 2, self)) { k.once(st, `${self}:slumber`); k.defeat(st, c, e.uid); }
+    }),
   },
   'hades-v6-192': {spell: {run: (s, c, key) => { // Eternal Slumber
     const t = k.choose(c, key, 'ETERNAL SLUMBER', k.allDevotees(s, c));
@@ -267,7 +300,9 @@ export default {
     defeated: (s, c, key) => st => payDraw(st, c, key, 'EXPENDABLE SERVANT', 1, 1),
   },
   'hades-v6-207': { // Frog Zeros
-    // pendente: Coward's Escape ("when chosen as the target of an enemy ability") — sem gancho de alvo.
+    // Coward's Escape (gancho watchSpell; shortcut: só Spell inimiga, habilidade ativada não avisa alvo). Uso gasto só se pagar.
+    watchSpell: (s, c, key, self, caster, spellUid, targets = []) => caster !== key && targets.includes(self) && !s.roundUses.has(`${self}:escape`)
+      && (st => { if (k.onField(st, key, self) && pay(st, c, key, "COWARD'S ESCAPE", 2, self)) { k.once(st, `${self}:escape`); k.toHand(st, c, self, 'battlefield', key); } }),
     watchDefeat: onDefeat('other', (st, c, key) => lose(st, k.other(st, key), 1)),
   },
   'hades-v6-208': { // Cyclops Giganto. "attacks" = declara Strike.
@@ -328,11 +363,10 @@ export default {
     enter: (s, c, key) => st => gain(st, key, 2),
     activate: {name: "SERVANT'S SACRIFICE", cost: 0, once: true, tap: false, run: (s, c, key, self) => { k.sacrifice(s, c, self); k.draw(s, key, 1); }},
   },
-  'hades-v6-224': { // Cracked Surplice. "destroyed" = vai ao Tartarus (portador derrotado ou Armor quebrada por dano; gancho leaves).
-    leaves: (s, c, key, self, where) => where === 'tartarus' && (st => {
-      if (st.players[c.objects[self].owner].tartarus.includes(self) && inTartarus(st, c, key, devCost(1)).length
-        && pay(st, c, key, 'BROKEN OFFERING', 1, self)) toHandFrom(st, c, key, 'BROKEN OFFERING', devCost(1));
-    }),
+  'hades-v6-224': { // Cracked Surplice — Broken Offering (autor, 30/10/2026): "When equipped Devotee is defeated".
+    bearerDefeated: (s, c, key, self) => st => {
+      if (inTartarus(st, c, key, devCost(1)).length && pay(st, c, key, 'BROKEN OFFERING', 1, self)) toHandFrom(st, c, key, 'BROKEN OFFERING', devCost(1));
+    },
   },
   // Bone Reclamation: volta à mão de onde estiver (campo sem portador ou Tartarus).
   'hades-v6-225': {
@@ -352,7 +386,9 @@ export default {
       if (!s.victory) k.draw(s, key, 1);
     }},
   },
-  // pendente 228 Pandora's Harp: "whenever you pay Soul to activate an ability of equipped Devotee" — sem gancho de pagamento.
+  'hades-v6-228': { // Pandora's Harp — Sorrowful Melody: Soul pago por habilidade do portador (evento soul_paid com uid do portador).
+    watchSoulPaid: (s, c, key, self, e) => e.player === key && e.uid && e.uid === k.bearerOf(c, self) && k.once(s, `${self}:melody`) && (st => lose(st, k.other(st, key), 1)),
+  },
   'hades-v6-229': { // Underworld Shackles
     cast: (s, c, key) => st => seal(st, c, [enemy(st, c, key, 'ETERNAL BINDING')], 1, 'ETERNAL BINDING'),
     gearKillInCombat: (s, c, key, self, bearer, victim) => st => seal(st, c, [enemy(st, c, key, 'CURSED CHAINS', u => u !== victim, {optional: true})], 1, 'CURSED CHAINS'),
@@ -403,7 +439,8 @@ export default {
   'hades-v6-242': { // Hades Castle (Domain)
     // Dark Authority (rebalanceamento 30/10/2026): só o God inimigo perde 1 Soul; Hades não ganha.
     watchDefeat: (s, c, key, self, dead, owner) => owner === key && k.hasType(c, dead, 'Specter') && k.once(s, `${self}:dark`) && (st => lose(st, k.other(st, key), 1)),
-    // pendente: Eternal Allegiance (custo -1 do primeiro Specter devolvido à mão) — sem gancho de redução de custo.
+    // Eternal Allegiance (gancho costLess): o primeiro Specter que voltou do Tartarus à mão neste Round custa 1 a menos neste Round.
+    costLess: (s, c, key, self, uid) => s.events.find(e => e.type === 'returned_to_hand' && e.from === 'tartarus' && e.player === key && e.round === s.round && k.hasType(c, e.uid, 'Specter'))?.uid === uid && {n: 1},
   },
   'hades-v6-243': { // The River Acheron (Domain). Ferry of the Dead: em recall() acima.
     watchDefeat: onDefeat('friend', (st, c, key) => payDraw(st, c, key, 'PRICE OF PASSAGE', 1, 1), 'passage'),
@@ -435,7 +472,8 @@ export default {
   },
   'hades-v6-254': { // Aquarius Camus
     enter: taxed(1, 'DIAMOND DUST', sealOnEnter(2, 'DIAMOND DUST')),
-    // pendente: Aurora Execution ("loses its last Seal counter") — sem gancho de remoção de Seal.
+    watchSealRemoved: (s, c, key, self, e) => e.counters === 0 && enemySeal(s, c, key, e) && k.once(s, `${self}:aurora`) // Aurora Execution
+      && (st => { lose(st, sealOwner(st, c, e), 2); gain(st, key, 2); }),
   },
   'hades-v6-255': { // Gemini Saga
     enter: taxed(3, 'ANOTHER DIMENSION', (s, c, key, self) => st => {
@@ -445,7 +483,7 @@ export default {
     leaves: (s, c, key, self) => s.hadesExile?.[self] && (st => { // gancho leaves: "until Gemini Saga leaves the battlefield" por qualquer via
       const t = exiledBy(st)[self], owner = c.objects[t].owner;
       delete exiledBy(st)[self];
-      if (st.players[owner].void.includes(t)) k.putOntoField(st, c, owner, t, 'void');
+      if (st.players[owner].void.includes(t)) k.putOntoField(st, c, owner, t, 'void', {prepared: false}); // volta Unprepared e sem dano (autor, 30/10/2026)
     }),
     watchDefeat: onDefeat('other', (st, c, key) => lose(st, k.other(st, key), 2), 'galaxian'),
   },
@@ -495,7 +533,21 @@ export default {
     if (!s.victory && k.devotees(s, c, key).some(u => k.hasType(c, u, 'Judge Specter'))) k.draw(s, key, 1);
   }}},
   'hades-v6-264': {spell: {run: (s, c, key) => oppSacrifices(s, c, key, 'THE CURSE OF THE UNDERWORLD', 2, v => drain(s, key, 1, c.objects[v].owner))}},
-  // pendente 265 The Possession of Shun: mudança de controle sem suporte (checkStrike usa o owner como controlador).
+  // The Possession of Shun (autor, 30/10/2026): troca de controle até o fim do Round = o Devotee muda de `battlefield`
+  // (o controlador é quem tem o uid no campo; o dono continua em objects). No fim do Round, quem controla o sacrifica.
+  'hades-v6-265': {spell: {run: (s, c, key) => {
+    const t = enemy(s, c, key, 'THE POSSESSION OF SHUN');
+    if (t) {
+      const from = s.players[k.controllerOf(s, t)];
+      from.battlefield.splice(from.battlefield.indexOf(t), 1);
+      s.players[key].battlefield.push(t);
+      s.units[t].prepared = true;
+      k.buff(s, t, 0, 0, 'this_round', ['Impulse']);
+      (s.v6Possessed ||= []).push({key, uid: t, round: s.round});
+      k.emit(s, 'control_changed', {uid: t, player: key});
+    }
+    lose(s, key, 3);
+  }}},
   'hades-v6-266': {spell: {run: (s, c, key) => { // The Fall of the Sanctuary
     const all = k.allDevotees(s, c), mine = all.filter(u => friendly(s, key, u)).length, theirs = all.length - mine;
     for (const u of all) k.defeat(s, c, u);

@@ -1,7 +1,7 @@
-import {renderRules,inlineMarkup,presentationRules,ruleBlocksWithoutKeywords,blocksMarkup} from './card-text.js?v=20261028-1';
+import {renderRules,inlineMarkup,presentationRules,ruleBlocksWithoutKeywords,blocksMarkup} from './card-text.js?v=20261030-armor5';
 import {isArmor,isEquipment} from './card-model.js?v=20261024-4';
 import {renderPublishedCard,visualProject} from './layout-studio/runtime.js';
-import {printedEquipmentBonuses,signedBonus} from './card-visual-values.js';
+import {printedEquipmentBonuses,signedBonus,armorBonusText} from './card-visual-values.js';
 // A ilustração é apenas fundo. Letras, números e estados são dados independentes no DOM.
 const escape=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const portraits={'athena-001':'athena-001','athena-002':'athena-002','athena-003':'athena-003','athena-004':'athena-004','athena-005':'athena-005','athena-006':'athena-006','sst-01-001':'athena-002','sst-01-002':'athena-003','sst-01-003':'athena-004','sst-01-004':'athena-005','sst-01-005':'athena-006'};
@@ -52,7 +52,7 @@ function renderPsdCard(card,{src,stage,hp,power,keywords,damage,rules,equipment,
   const at=(key,el)=>{const p=P[key];return p?[p.x+(el.dx||0),p.y+(el.dy||0),p.w,p.h]:null;};
   const gem=(key,rect,value,label,cls='',size=label?80:99,stat='')=>`<span class="lc-gem ${cls}" style="${pct(...rect)}">${piece(key,[0,0,1488,2091])}${label?`<small style="font-size:${cqw(24)}">${label}</small>`:''}<b style="font-size:${cqw(size)}"${stat}>${escape(value)}</b></span>`;
   const text=(v,el,cls='')=>{const t=el.upper?String(v).toUpperCase():String(v),fs=Math.min(el.size,(el.maxW||1400)/(t.length*.62));return `<span class="lc-text lc-text--${el.style} ${cls}" style="left:${el.x/14.88}%;top:${el.y/20.91}%;font-size:${cqw(fs)}">${escape(t)}</span>`;};
-  const values={power,resistance:hp,attack:card.attack,soul:instance?.soul??card.soul,equip,damage:card.damage_cloth,
+  const values={power,resistance:hp,attack:card.attack,soul:instance?.soul??card.soul,equip,damage:null,armorBonus:armorBonusText(card),
     bonusPower:signedBonus(printedEquipmentBonuses(card,instance?.stage||0).power),bonusResistance:signedBonus(printedEquipmentBonuses(card,instance?.stage||0).hp)};
   const has=v=>v!==null&&v!==undefined&&v!=='';
   const elements=[...L.elements];
@@ -69,6 +69,11 @@ function renderPsdCard(card,{src,stage,hp,power,keywords,damage,rules,equipment,
       const v=el.field==='equip'?(equip??'?'):values[el.field];
       const stat=el.field==='power'?' data-stat="power"':el.field==='resistance'?` data-stat="hp"${damage?' class="is-wounded"':''}`:'';
       out+=gem(el.piece,at(el.piece,el),v,el.label,el.field==='equip'?'live-card__equip':`lc-gem--${el.field}`,undefined,stat);
+    }
+    else if(el.kind==='band'&&has(values[el.field])){
+      // Faixa de bônus da Armor (autor, 30/10/2026): "+1 ATK / +5 HP", cores dos atributos do Devotee.
+      const parts=String(values[el.field]).split(' / ').map(p=>`<b class="${/ATK$/.test(p)?'is-atk':'is-hp'}">${escape(p)}</b>`).join('<i>/</i>');
+      out+=`<span class="lc-band" style="left:${el.x/14.88}%;top:${el.y/20.91}%;font-size:${cqw(el.size)}">${parts}</span>`;
     }
     else if(el.kind==='text'){
       const v=el.field==='name'?card.nome_exibicao_en:el.field==='typeLine'?L.typeLine.replace('{tipo}',card.tipo==='Spell'?'':card.tipo).replace('{faccao}',card.faccao||'').replace('{subtipos}',(card.subtipos||[]).join(' — ')).replace(/^(\s*[—-]\s*)+/,'').replace(/(\s*[—-]\s*)+$/,'').replace(/\s*[—-]\s*(?=[—-])/g,''):el.field==='flavour'?(card.flavour_en||card.flavour):el.field==='subtitle'?(card.tagline_en||card.subtitulo_en):null;
@@ -88,8 +93,7 @@ function renderPsdCard(card,{src,stage,hp,power,keywords,damage,rules,equipment,
 }
 function armorStatus(card,hp,damage){
   if(!isArmor(card))return '';
-  const raw=card.damage_cloth??card.vida;const max=Number.isFinite(Number(raw))&&Number(raw)>0?Number(raw):null,broken=max!==null&&damage>=max;
-  return `<span class="live-card__armor-status ${broken?'is-broken':''}" data-armor-state="${broken?'broken':max===null?'pending':'active'}">${max===null?'ARMOR HP · review pending':`${broken?'BROKEN · ':''}ARMOR HP ${Math.max(0,max-damage)} / ${max}`}</span>`;
+  return ''; // guia §26A (30/10/2026): Armor sem HP próprio, sem Broken
 }
 export function renderLiveCard(card,{stats=null,instance=null,art=null,compact=false,equipment:attachedEquipment=[],mode=null}={}){
   if(!card)return '<div class="live-card live-card--missing">Unknown card</div>';
@@ -100,7 +104,7 @@ export function renderLiveCard(card,{stats=null,instance=null,art=null,compact=f
   const src=art||illustration(card),stage=card.estagios?.[instance?.stage||0],hp=stats?.hp??card.vida??card.resistance;
   const power=stats?.power??card.power,keywords=stats?.keywords??card.keywords_en??[],damage=stats?.damage??instance?.damage??0;
   const ownerName=id=>id.split('-').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
-  const rules=ruleBlocksWithoutKeywords(presentationRules(card).map(t=>{for(const k of keywords){const prefix=k+'.';if(t.toLowerCase().startsWith(prefix.toLowerCase()))t=t.slice(prefix.length).trim();}return t;}).filter(Boolean),keywords).map(block=>blocksMarkup([block])),equipment=isEquipment(card),equip=card.equipar_custo;
+  const rules=ruleBlocksWithoutKeywords(presentationRules(card).map(t=>{for(const k of keywords){const prefix=k+'.';if(t.toLowerCase().startsWith(prefix.toLowerCase()))t=t.slice(prefix.length).trim();}return t;}).filter(Boolean),keywords).map(block=>blocksMarkup([block])),equipment=isEquipment(card),equip=card.equipar_custo_outros??card.equipar_custo; // Armor: Equip universal no selo
   // God: Awaken e Ultimate vêm de campos próprios, com os mesmos títulos do Card Forge (drawRules).
   if(card.tipo==='God'){
     if(card.habilidade_awaken_en)rules.push(`**AWAKEN${card.awaken?` ${card.awaken}`:''}**`,...card.habilidade_awaken_en.split('\n'));
@@ -108,7 +112,7 @@ export function renderLiveCard(card,{stats=null,instance=null,art=null,compact=f
   }
   const ownerAlready=rules.some(t=>/Owner:/i.test(t)),resonanceAlready=rules.some(t=>/Resonance\s*[—-]/i.test(t));
   if(PSD){
-    const ownerLine=[card.donos?.length&&!ownerAlready?`Owner: ${card.donos.map(ownerName).map(escape).join(' / ')}`:'',card.ressonancias?.length&&!resonanceAlready?`Resonance: ${card.ressonancias.map(r=>escape(ownerName(r.personagem_id))).join(' / ')}`:''].filter(Boolean).join('<br>');
+    const ownerLine=['',card.ressonancias?.length&&!resonanceAlready?`Resonance: ${card.ressonancias.map(r=>escape(ownerName(r.personagem_id))).join(' / ')}`:''].filter(Boolean).join('<br>');
     return renderPsdCard(card,{src,stage,hp,power,keywords,damage,rules,equipment,equip,ownerLine,instance,compact});
   }
   return `<div class="live-card live-card--${escape(card.faccao?.toLowerCase()||'neutral')} ${compact?'live-card--compact':''} ${instance&&!instance.prepared&&card.tipo==='Devotee'?'live-card--unprepared':''}" data-live-card="${escape(card.id)}">
@@ -117,7 +121,6 @@ export function renderLiveCard(card,{stats=null,instance=null,art=null,compact=f
     <div class="live-card__body"><p class="live-card__type">${escape([card.tipo,...(card.subtipos||[])].join(' · '))}${card.cosmoble?' · Cosmoble':''}</p>
     ${keywords.length?`<p class="live-card__keywords">${keywords.map(k=>inlineMarkup(k)).join(' · ')}</p>`:''}
     <div class="live-card__rules">${renderRules(rules)}</div>
-    ${card.donos?.length&&!ownerAlready?`<p class="live-card__owners">Owner: ${card.donos.map(ownerName).map(escape).join(' / ')}</p>`:''}
     ${card.ressonancias?.length&&!resonanceAlready?`<p class="live-card__owners">Resonance: ${card.ressonancias.map(r=>escape(ownerName(r.personagem_id))).join(' / ')}</p>`:''}
     </div><footer class="live-card__footer"><small>${escape(stage?.nome||card.faccao||'')}</small>
     ${card.tipo==='Devotee'?`<div class="live-card__stats" title="Power / remaining HP"><b data-stat="power">${escape(power)}</b><span>/</span><b data-stat="hp" class="${damage?'is-wounded':''}">${escape(hp)}</b></div>`:card.tipo==='God'?`<div class="live-card__stats"><b>${escape(card.attack)}</b><span>ATK</span><b>${escape(instance?.soul??card.soul)}</b><span>Soul</span></div>`:stage?`<div class="live-card__stats"><b>+${stage.bonus_poder}</b><span>/</span><b>+${stage.bonus_vida}</b></div>`:''}

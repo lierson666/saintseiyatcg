@@ -17,6 +17,8 @@ const alive = (s, key, u) => k.onField(s, key, u);
 // "At the end of the round": gatilho atrasado, resolvido no checkpoint de fim de Round (core.js `delayed`).
 const atRoundEnd = (s, key, self, ability, run) => s.delayed.push({controller: key, uid: self, ability, run});
 
+// Devotees seus que vestem uma Armor (alvo do Cloth Restoration, 30/10/2026).
+const armored = (s, c, key) => s.players[key].battlefield.filter(u => k.card(c, u)?.kind === 'Devotee' && Object.keys(c.attached).some(e => c.attached[e] === u && k.card(c, e)?.armor));
 export default {
   // ---------- Spells ----------
   // The Masked Saint's Oath
@@ -112,10 +114,11 @@ export default {
   'athena-v6-063': {
     activate: {
       name: 'CLOTH RESTORATION', cost: 2, once: true, tap: false,
-      check: (s, c, key) => { if (!s.players[key].battlefield.some(u => k.card(c, u)?.armor)) throw new k.RuleError('alvo', 'sem Armor amiga'); },
+      // Texto de 30/10/2026: "target friendly Devotee equipped with an Armor" (Armor não tem dano próprio).
+      check: (s, c, key) => { if (!armored(s, c, key).length) throw new k.RuleError('alvo', 'sem Devotee seu com Armor'); },
       run: (s, c, key) => {
-        const armor = k.choose(c, key, 'CLOTH RESTORATION', s.players[key].battlefield.filter(u => k.card(c, u)?.armor), {text: 'Choose target friendly Armor.'});
-        if (armor) k.removeDamage(s, armor, 1);
+        const t = k.choose(c, key, 'CLOTH RESTORATION', armored(s, c, key), {text: 'Choose target friendly Devotee equipped with an Armor.'});
+        if (t) k.removeDamage(s, t, 1);
       },
     },
   },

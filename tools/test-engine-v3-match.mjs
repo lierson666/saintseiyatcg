@@ -48,13 +48,14 @@ test('deck inválido é recusado ao montar a partida', () => {
   assert.throws(() => createMatch({cards, canonIndex: index, decks: {A: bad, B: fortress}}), /Deck A inválido/);
 });
 
-test('Destroy leva Devotee e Armor para o Tartarus do Owner; Equipment não-Armor fica solto no campo', () => {
+test('Destroy leva só o Devotee ao Tartarus do Owner; Armor e Equipment ficam soltos no campo (guia §32)', () => {
   const {state, objects, attached} = match();
   const take = id => { const p = state.players.A, uid = p.deck.find(u => u.includes(`:${id}:`)); p.deck.splice(p.deck.indexOf(uid), 1); p.battlefield.push(uid); return uid; };
   const seiya = take('001'), cloth = take('002');
   attached[cloth] = seiya;
   destroyDevotee(state, seiya, objects, attached);
-  assert.deepEqual(state.players.A.tartarus, [seiya, cloth]);
+  assert.deepEqual(state.players.A.tartarus, [seiya]);
+  assert.ok(state.players.A.battlefield.includes(cloth), 'Armor continua no campo, sem portador');
   assert.deepEqual(attached, {});
   checkInvariants(state, objects);
   const {state: s2, objects: o2, attached: a2} = createMatch({cards, canonIndex: index, decks: {A: fortress, B: rush}});

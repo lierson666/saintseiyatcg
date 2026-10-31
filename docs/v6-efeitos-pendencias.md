@@ -12,7 +12,7 @@ Cada facção tem o seu arquivo (`hades.js`, `poseidon.js`, `ares.js`, `artemis.
 - **Exhaust** = tornar Unprepared.
 - **Sacrifice** = o controlador derrota o próprio Devotee; conta como "defeated" para gatilhos.
 - **Retorno do Tartarus ao campo:** Prepared e sem dano, salvo texto (§62); limite de 1 retorno por carta física por rodada.
-- **Armor e portador derrotado:** a engine ainda manda a Armor ao Tartarus junto com o portador; o guia §61 diz que equipamentos ficam em campo sem portador. **Divergência antiga, fora deste trabalho.**
+- **Armor e portador derrotado:** ✅ (guia §32, 30/10/2026) a Armor fica em campo sem portador. Texto antigo: o guia §61 diz que equipamentos ficam em campo sem portador. **Divergência antiga, fora deste trabalho.**
 
 ## Dúvidas gerais (afetam várias cartas)
 
@@ -62,9 +62,10 @@ Cada facção tem o seu arquivo (`hades.js`, `poseidon.js`, `ares.js`, `artemis.
 
 ## Ganchos que faltam na engine (cláusulas marcadas `// pendente:` no código)
 
-Ainda abertos após os ganchos de 29/10/2026 (ver "Ganchos novos" no fim): alvo de habilidade/Spell inimiga e contra-mágica de Moment
-(exige janela a cada conjuração); redução de custo; mudança de controle; remoção de Seal; Soul como custo de ativada;
-perda de habilidades ativadas; imunidade a retorno à mão; origem do Cosmo gasto; Engage; embaralhar após busca.
+Fechados em 30/10/2026 (CHANGELOG-regras): Long Range, redução de custo (`costLess`), perda de habilidades ativadas, imunidade a retorno
+à mão, remoção de Seal, Soul pago por habilidade, alvo de Spell inimiga (via `watchSpell`), pular a compra, Equipment conjurado.
+Ainda abertos: mudança de controle; origem do Cosmo gasto; Engage; embaralhar após busca; alvo de habilidade ativada inimiga
+(ativadas não anunciam alvo); redirecionar Spell (Sho 461).
 
 ## Athena — Spells e Domains
 

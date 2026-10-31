@@ -8,10 +8,13 @@ import {canonIndex} from '../shared/deck-v3.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
 import {startTurn, endTurn, passAll} from '../playtest/engine-v3/core.js';
-import {playDevotee, playEquipment, playSpell, activate, reequip} from '../playtest/engine-v3/play.js';
+import {playDevotee as playDevoteeRaw, playEquipment as playEquipmentRaw, playSpell, activate as activateRaw, reequip} from '../playtest/engine-v3/play.js';
 import {declareStrike} from '../playtest/engine-v3/strike.js';
 import {atkOf, hpOf, keywordsOf, damageDevotee, checkDefeats} from '../playtest/engine-v3/effects.js';
 import {bindContext} from '../playtest/engine-v3/v6/registry.js';
+// Guia §56 (30/10/2026): jogada e {T} vão à pilha; aqui os dois passam e a pilha resolve na hora.
+const resolved = fn => (s, ...a) => { const r = fn(s, ...a); passAll(s); return r; };
+const playDevotee = resolved(playDevoteeRaw), playEquipment = resolved(playEquipmentRaw), activate = resolved(activateRaw);
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json'), cards = loadCanon(canon), index = canonIndex(canon);
@@ -113,7 +116,7 @@ test('remoção: Primal Strike causa ATK; Hunter\'s Challenge luta e compra se o
 test('startTurn: Ancient Sacred Armor põe marcador se não houver; Selene põe em até dois', () => {
   const {s, ctx, field, hand} = setup();
   const bear = field('A', 'artemis-v6-383'), armor = hand('A', 'artemis-v6-366');
-  playEquipment(s, ctx, 'A', armor, bear);
+  playEquipment(s, ctx, 'A', armor, null); reequip(s, ctx, 'A', armor, bear); // Armor entra solta (guia §28) e veste pagando Equip
   endTurn(s); passAll(s); startTurn(s); if (s.window) passAll(s); // turno de B
   endTurn(s); passAll(s); startTurn(s); if (s.window) passAll(s); // volta para A
   assert.equal(s.active, 'A');

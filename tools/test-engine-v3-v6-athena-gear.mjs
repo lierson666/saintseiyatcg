@@ -8,10 +8,13 @@ import {canonIndex} from '../shared/deck-v3.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
 import {startTurn, passAll} from '../playtest/engine-v3/core.js';
-import {activate, playEquipment, reequip} from '../playtest/engine-v3/play.js';
+import {activate as activateRaw, playEquipment as playEquipmentRaw, reequip} from '../playtest/engine-v3/play.js';
 import * as k from '../playtest/engine-v3/v6/kit.js';
 import {declareStrike} from '../playtest/engine-v3/strike.js';
 import {atkOf, hpOf, keywordsOf} from '../playtest/engine-v3/effects.js';
+// Guia §56 (30/10/2026): jogada e {T} vão à pilha; aqui os dois passam e a pilha resolve na hora.
+const resolved = fn => (s, ...a) => { const r = fn(s, ...a); passAll(s); return r; };
+const activate = resolved(activateRaw), playEquipment = resolved(playEquipmentRaw);
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json'), cards = loadCanon(canon), index = canonIndex(canon);
@@ -112,7 +115,7 @@ test('010 Resonance Ikki: ao ser jogada em Ikki, remove os Rebirth uma vez por j
   assert.equal(s.units[ikki].markers.Rebirth, 1, 'segunda cópia não pode usar de novo');
 });
 
-test('010 Resonance Ikki: recusar não gasta o uso; fora de Ikki não pergunta', () => {
+test('010 Resonance Ikki: recusar não gasta o uso; fora de Ikki a Armor não entra vestida', () => {
   const {s, ctx, give} = setup();
   const ikki = give('A', IKKI), other = give('A', SAINT);
   s.units[ikki].markers = {Rebirth: 2};
@@ -124,8 +127,7 @@ test('010 Resonance Ikki: recusar não gasta o uso; fora de Ikki não pergunta',
   assert.ok(!s.v6Game?.['A:phoenix-cloth-v2']);
   const c2 = give('A', G(10), 'hand');
   s.units[other].markers = {Rebirth: 1};
-  playEquipment(s, ctx, 'A', c2, other);
-  passAll(s);
+  assert.throws(() => playEquipment(s, ctx, 'A', c2, other), /Resonant/, 'só entra vestida num Resonant (guia §28)');
   assert.equal(s.units[other].markers.Rebirth, 1);
 });
 
@@ -311,17 +313,19 @@ test('047 Burning Will: +1 ATK com dano marcado no portador', () => {
   assert.equal(atkOf(s, ctx, bear), 4);
 });
 
-test('050 Repair Tools: remove 1 dano de Armor amiga; Mu remove até 2', () => {
+test('050 Repair Tools: remove 1 dano de Devotee amigo com Armor; Mu remove até 2', () => {
   const {s, ctx, give} = setup();
-  const bear = give('A', SAINT), tools = give('A', G(50), 'battlefield', bear), armor = give('A', G(6), 'battlefield', bear);
-  s.units[armor].damage = 3;
-  activate(s, ctx, 'A', tools, {target: armor});
-  assert.equal(s.units[armor].damage, 2);
+  const bear = give('A', SAINT), tools = give('A', G(50), 'battlefield', bear);
+  give('A', G(6), 'battlefield', bear);
+  s.units[bear].damage = 3;
+  activate(s, ctx, 'A', tools, {target: bear});
+  assert.equal(s.units[bear].damage, 2);
   assert.equal(ready(s), 9);
-  const t = setup(), mu = t.give('A', MU), tl = t.give('A', G(50), 'battlefield', mu), ar = t.give('A', G(6), 'battlefield', mu);
-  t.s.units[ar].damage = 3;
-  activate(t.s, t.ctx, 'A', tl, {target: ar});
-  assert.equal(t.s.units[ar].damage, 1);
+  const t = setup(), mu = t.give('A', MU), tl = t.give('A', G(50), 'battlefield', mu);
+  t.give('A', G(6), 'battlefield', mu);
+  t.s.units[mu].damage = 3;
+  activate(t.s, t.ctx, 'A', tl, {target: mu});
+  assert.equal(t.s.units[mu].damage, 1);
 });
 
 test('051 Sacred Flame: +1 ATK só enquanto seu God tem menos Soul que o oposto', () => {
@@ -379,7 +383,8 @@ test('068 Air Barrier: portador atacado, paga 1 e previne 1; uma vez por Round',
   const bear = give('A', SAINT), foe = give('B', FOE), cloth = give('A', G(68), 'battlefield', bear);
   s.active = 'B';
   declareStrike(s, ctx, foe, {kind: 'devotee', uid: bear}); passAll(s);
-  assert.equal(dmg(s, cloth), 2); // 3 - 1; a Armor absorve o dano que passou
+  assert.equal(dmg(s, bear), 2); // 3 - 1; o dano que passou vai ao portador (a Armor não tem dano próprio)
+  assert.equal(s.units[cloth]?.damage ?? 0, 0, 'a Armor não acumula dano');
   assert.equal(ready(s), 9);
 });
 

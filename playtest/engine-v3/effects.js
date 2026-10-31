@@ -39,6 +39,8 @@ const wears = (ctx, uid, number) => gearOf(ctx, uid).find(e => id(ctx, e) === nu
 // Bônus que valem agora: fixo do Equipment, habilidades "While …" das cartas dos decks e efeitos com duração.
 function mods(state, ctx, uid) {
   const list = gearOf(ctx, uid).map(e => card(ctx, e).equipped).filter(Boolean);
+  // Guia §26A (30/10/2026): o HP impresso da Armor (card.hp, texto D268 sem bonus_vida do Forge) soma ao HP máximo do portador.
+  for (const e of gearOf(ctx, uid)) if (card(ctx, e).armor && card(ctx, e).hp) list.push({atk: 0, hp: card(ctx, e).hp});
   const key = controllerOf(state, uid);
   if (key) {
     const n = id(ctx, uid);
@@ -79,6 +81,9 @@ export const save = (state, target, onSave, {anyDamage = false} = {}) => addEffe
 // Gancho cannotStrike / cannotPrepare (v6/registry.js): marcas com duração, lidas por checkStrike (strike.js) e prepareUnit (core.js).
 export const forbidStrike = (state, target, duration = 'this_round') => addEffect(state, {kind: 'noStrike', target, duration});
 export const forbidPrepare = (state, target, duration = 'this_round') => addEffect(state, {kind: 'noPrepare', target, duration});
+// "Loses all activated abilities until the end of the round" (Poseidon 160, 169): lido por play.activate.
+export const silence = (state, target, duration = 'this_round') => addEffect(state, {kind: 'noAbilities', target, duration});
+export const silenced = (state, uid) => state.effects.some(e => e.kind === 'noAbilities' && e.target === uid);
 export const cannotStrike = (state, uid) => state.effects.some(e => e.kind === 'noStrike' && e.target === uid);
 // Bloodlust (autor, 29/10/2026): o Devotee pode atacar, mas não um God, até o fim da rodada.
 export const forbidGodStrike = (state, target, duration = 'this_round') => addEffect(state, {kind: 'noGodStrike', target, duration});
@@ -118,8 +123,7 @@ function preventDevotee(state, ctx, uid, amount, strike) {
   // 3. Opcionais, só para Saint.
   if (amount > 0 && isSaint(ctx, uid)) amount = optionalPrevention(state, ctx, key, uid, amount);
   // 4. "Would be defeated": conta a Armor que ainda absorve. Primeiro salvamento de Spell, depois Divine Protection (019).
-  const armorRoom = gear.filter(e => card(ctx, e).armor).reduce((n, e) => n + card(ctx, e).hp - (state.units[e]?.damage || 0), 0);
-  if (amount <= 0 || state.units[uid].damage + amount < hpOf(state, ctx, uid) + armorRoom) return amount;
+  if (amount <= 0 || state.units[uid].damage + amount < hpOf(state, ctx, uid)) return amount;
   const saver = state.effects.find(e => e.kind === 'save' && e.target === uid && !e.anyDamage);
   if (saver) {
     state.effects = state.effects.filter(e => e !== saver);
@@ -177,29 +181,15 @@ export function preventGod(state, ctx, key, amount, strike = true) {
   return amount;
 }
 
-// Dano num Devotee (`strike`: se é dano de Strike): prevenção, depois Armor na ordem de equipar, depois o Devotee.
+// Dano num Devotee (`strike`: se é dano de Strike): prevenção, escudos das Armor, depois o Devotee.
 // Devolve o dano que passou do HP restante do Devotee (base do Pierce).
 export function damageDevotee(state, ctx, uid, amount, strike = true) {
   if (!state.units[uid]) return 0; // já saiu (ex.: Final Sacrifice)
   const incoming = amount;
   amount = preventDevotee(state, ctx, uid, amount, strike);
   const afterPrevention = amount;
-  for (const armor of gearOf(ctx, uid).filter(e => card(ctx, e).armor)) {
-    const unit = state.units[armor] ??= {damage: 0};
-    const hit = useShields(state, armor, amount, strike), absorbed = Math.min(hit, card(ctx, armor).hp - unit.damage);
-    unit.damage += absorbed;
-    amount = hit - absorbed;
-    if (unit.damage >= card(ctx, armor).hp) {
-      const owner = state.players[ctx.objects[armor].owner];
-      owner.battlefield = owner.battlefield.filter(x => x !== armor);
-      owner.tartarus.push(armor);
-      delete ctx.attached[armor];
-      delete state.units[armor];
-      state.effects = state.effects.filter(e => e.target !== armor);
-      emit(state, 'destroyed', {uid: armor, owner: ctx.objects[armor].owner});
-      pushTriggers(state, v6Leaves(state, ctx, controllerOf(state, uid) ?? ctx.objects[armor].owner, armor, 'tartarus')); // Armor quebrada por dano
-    }
-  }
+  // Guia §26A (30/10/2026): a Armor não tem dano próprio; escudos postos nela protegem o portador.
+  for (const armor of gearOf(ctx, uid).filter(e => card(ctx, e).armor)) amount = useShields(state, armor, amount, strike);
   const room = Math.max(0, hpOf(state, ctx, uid) - state.units[uid].damage);
   state.units[uid].damage += amount;
   emit(state, 'damage', {uid, strike, incoming, prevented: incoming - afterPrevention, absorbed: afterPrevention - amount, dealt: amount});
@@ -486,13 +476,13 @@ export const ABILITIES = {
   '041': {name: 'Sacred Recovery', cost: 1,
     check: (s, c, k, {target}) => { if (!alive(s, k, target) || card(c, target).kind !== 'Devotee') throw new RuleError('alvo', 'Devotee seu'); },
     run: (s, c, k, {target}) => { if (alive(s, k, target)) removeDamage(s, target, 2); }},
-  '042': {name: 'Armor Ward', cost: 1,
-    check: (s, c, k, {target}) => { if (!alive(s, k, target) || !card(c, target).armor) throw new RuleError('alvo', 'Armor sua'); },
-    run: (s, c, k, {target}) => { if (alive(s, k, target)) shield(s, target, 1, {strikeOnly: false, duration: 'next_round'}); }},
-  '011': {name: 'Cloth Restoration', cost: 2, once: true,
-    check: (s, c, k, {target}) => { if (!alive(s, k, target) || !card(c, target).armor) throw new RuleError('alvo', 'Armor sua'); },
-    run: (s, c, k, {target}) => { if (alive(s, k, target)) shield(s, target, 2, {strikeOnly: false, duration: 'next_round'}); }},
+  // 042 e 011 (texto de 30/10/2026): remove 1 dano de Devotee amigo que veste uma Armor (Armor não tem dano próprio).
+  '042': {name: 'Armor Repair', cost: 1, check: (s, c, k, {target}) => armoredTarget(s, c, k, target), run: (s, c, k, {target}) => { if (alive(s, k, target)) removeDamage(s, target, 1); }},
+  '011': {name: 'Cloth Restoration', cost: 1, check: (s, c, k, {target}) => armoredTarget(s, c, k, target), run: (s, c, k, {target}) => { if (alive(s, k, target)) removeDamage(s, target, 1); }},
 };
+function armoredTarget(s, c, k, target) {
+  if (!alive(s, k, target) || card(c, target).kind !== 'Devotee' || !Object.keys(c.attached).some(g => c.attached[g] === target && card(c, g)?.armor)) throw new RuleError('alvo', 'Devotee seu com Armor');
+}
 
 // Strike declarado: Unicorn Gallop (028) e Divine Cosmo (019: pague {3}{C}, +2 ATK durante o Strike).
 export function onDeclare(state, ctx, attacker, target) {

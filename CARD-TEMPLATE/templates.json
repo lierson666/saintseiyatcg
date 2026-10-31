@@ -66,11 +66,12 @@
         { "kind": "text", "field": "name", "style": "title", "x": 745, "y": 188, "size": 75, "maxW": 780, "upper": true },
         { "kind": "text", "field": "subtitle", "style": "subtitle", "x": 745, "y": 282, "size": 42, "maxW": 960, "upper": true },
         { "kind": "piece", "piece": "athena/box_type" },
-        { "kind": "gem", "piece": "athena/gem_power", "field": "bonusPower", "size": 99, "dx": 6, "dy": -6 },
+        { "kind": "gem", "piece": "athena/gem_power", "field": "bonusPower", "size": 99, "dx": 6, "dy": -6, "_nota_pt": "Bônus de ATK da Armor ao portador (layout original das Cloths, autor 30/10/2026)" },
         { "kind": "gem", "piece": "athena/gem_resistance", "field": "bonusResistance", "size": 99, "dx": 8, "dy": -6 },
         { "kind": "text", "field": "typeLine", "style": "typeline", "x": 744, "y": 1255, "size": 42, "maxW": 1000, "upper": true },
         { "kind": "rules", "rect": [221, 1310, 1046, 515], "size": 42 },
         { "kind": "piece", "piece": "athena/divider", "dy": 3 },
+        { "kind": "gem", "piece": "athena/gem_equip", "field": "equip", "label": "EQUIP", "size": 80, "_nota_pt": "Equip universal da Armor (autor, 30/10/2026)" },
         { "kind": "text", "field": "flavour", "style": "flavour", "x": 753, "y": 1895, "size": 42, "maxW": 1100 },
         { "kind": "rarity", "x": 744, "y": 2013, "h": 72 }
       ]

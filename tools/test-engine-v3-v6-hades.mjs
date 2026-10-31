@@ -7,11 +7,12 @@ import {loadCanon} from '../shared/canon-cards.js';
 import {canonIndex} from '../shared/deck-v3.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
-import {startTurn, passAll} from '../playtest/engine-v3/core.js';
+import {startTurn, passAll, prepareUnit, runCheckpoint} from '../playtest/engine-v3/core.js';
 import {playDevotee, playSpell, activate} from '../playtest/engine-v3/play.js';
 import {declareStrike} from '../playtest/engine-v3/strike.js';
 import {checkDefeats, atkOf, hpOf, keywordsOf, damageDevotee} from '../playtest/engine-v3/effects.js';
 import {toHand, toTartarus} from '../playtest/engine-v3/v6/kit.js';
+import {bindContext} from '../playtest/engine-v3/v6/hooks.js';
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json'), cards = loadCanon(canon), index = canonIndex(canon);
@@ -186,6 +187,8 @@ test('Gemini Saga: exila até Saga sair; derrota de Saga devolve o exilado ao do
   assert.ok(b.void.includes(foe));
   kill(saga); done(s);
   assert.ok(b.battlefield.includes(foe));
+  assert.equal(s.units[foe].prepared, false, 'volta Unprepared (autor, 30/10/2026)');
+  assert.equal(s.units[foe].damage, 0);
 });
 
 test('Will of Hades: modo escolhido; perde 1 Soul', () => {
@@ -218,17 +221,16 @@ test('200 Pandora\'s Box — The Last Hope: ao sair do campo, God ganha 3 Soul e
   assert.equal(p.hand.length, hand + 1 + 1); // a própria Box volta à mão e compra 1
 });
 
-test('224 Cracked Surplice — Broken Offering: Armor quebrada por dano (portador vivo) paga 1 Soul e devolve um Devotee de custo 1', () => {
-  const {s, ctx, p, add, answers} = hades();
+// pendente: revisão de carta (Armor sem dano próprio, 30/10/2026) — Broken Offering depende de Armor quebrada por dano.
+test('224 Cracked Surplice — Broken Offering: portador derrotado, paga 1 Soul e devolve um Devotee de custo 1', () => {
+  const {s, ctx, p, add, kill, answers} = hades();
   const dev = add('hades-v6-218', 'A', 'battlefield'), surplice = add('hades-v6-224', 'A', 'battlefield');
   ctx.attached[surplice] = dev;
-  s.units[surplice] = {damage: 0};
-  s.effects.push({kind: 'mod', target: dev, atk: 0, hp: 20, keywords: [], duration: 'this_round'});
   const cheap = add('hades-v6-220', 'A', 'tartarus'), soul = p.soul;
   assert.ok(cards.get('hades-v6-220').cost.amount <= 1, 'carta de teste com custo 1');
   answers({'BROKEN OFFERING': (pl, q) => (q.options ? q.options[0] : true)});
-  damageDevotee(s, ctx, dev, 10, false); done(s);
-  assert.ok(p.tartarus.includes(surplice) && p.battlefield.includes(dev));
+  kill(dev); done(s);
+  assert.ok(p.tartarus.includes(dev) && p.battlefield.includes(surplice), 'a Armor fica em campo sem portador (§32)');
   assert.ok(p.hand.includes(cheap));
   assert.equal(p.soul, soul - 1);
 });
@@ -238,4 +240,50 @@ test('231 Torch of the Underworld — Guiding Light: ao ir para o Tartarus, 2 ca
   const torch = add('hades-v6-231', 'A', 'battlefield'), deck = p.deck.length;
   toTartarus(s, ctx, torch, 'battlefield'); done(s);
   assert.equal(p.deck.length, deck - 2);
+});
+
+test('Seal removido: Puppet Master (183) tira 1 Soul a cada Seal; Aurora Execution (254) no último Seal, uma vez por Round', () => {
+  const {s, p, b, add} = hades();
+  add('hades-v6-183', 'A', 'battlefield'); add('hades-v6-254', 'A', 'battlefield');
+  const foe = add('hades-v6-218', 'B', 'battlefield');
+  Object.assign(s.units[foe], {prepared: false, seal: 2});
+  prepareUnit(s, foe); runCheckpoint(s); done(s);
+  assert.deepEqual([b.soul, p.soul], [9, 10], 'Seal 2 → 1: só Puppet Master');
+  prepareUnit(s, foe); runCheckpoint(s); done(s);
+  assert.deepEqual([b.soul, p.soul], [6, 12], 'último Seal: Puppet Master 1 + Aurora 2; Hades ganha 2');
+});
+
+test('Eternal Slumber (191): paga 2 Soul e derrota o Devotee que perdeu o último Seal', () => {
+  const {s, ctx, p, b, add, answers} = hades();
+  bindContext(s, ctx); // observadores do checkpoint perguntam pelo ctx da partida
+  answers({'ETERNAL SLUMBER': true});
+  add('hades-v6-191', 'A', 'battlefield');
+  const foe = add('hades-v6-218', 'B', 'battlefield');
+  Object.assign(s.units[foe], {prepared: false, seal: 1});
+  prepareUnit(s, foe); runCheckpoint(s); done(s);
+  assert.ok(b.tartarus.includes(foe));
+  assert.equal(p.soul, 8);
+});
+
+test('Soul pago por habilidade: Dead End Symphony (187) compra pagando +1', () => {
+  const {s, ctx, p, b, add, play, answers} = hades();
+  bindContext(s, ctx);
+  answers({'GREED THE LIFE': yes, 'DEAD END SYMPHONY': true});
+  add('hades-v6-187', 'A', 'battlefield');
+  const hand = p.hand.length;
+  play('hades-v6-201'); done(s); runCheckpoint(s); done(s);
+  assert.equal(p.hand.length, hand + 1, 'comprou 1');
+  assert.equal(p.soul, 10 - 1 + 2 - 1, 'taxa 1, drain +2, Symphony 1');
+});
+
+test('265 The Possession of Shun: toma o Devotee inimigo até o fim do Round, Prepared com Impulse; Hades perde 3', () => {
+  const {s, ctx, p, b, add, cast} = hades();
+  const foe = add('hades-v6-218', 'B', 'battlefield');
+  s.units[foe].prepared = false;
+  const soul = p.soul;
+  cast('hades-v6-265', {}); done(s);
+  assert.ok(p.battlefield.includes(foe) && !b.battlefield.includes(foe));
+  assert.equal(s.units[foe].prepared, true);
+  assert.equal(p.soul, soul - 3);
+  assert.equal(ctx.objects[foe].owner, 'B', 'o dono não muda');
 });

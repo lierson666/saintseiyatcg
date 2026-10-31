@@ -111,3 +111,18 @@
 .bigcard .rule-use[aria-disabled="true"] { border-color: #ffffff40; background: #12131c; color: #b8b1c9; box-shadow: 0 4px 12px #000a; cursor: not-allowed; }
 @media (hover: none) { .bigcard .rule-use { opacity: 1; pointer-events: auto; transform: translateY(-85%); min-height: 36px; } }
 @media (prefers-reduced-motion: reduce) { .bigcard .rule-use { transition: none; } }
+
+/* Equipamento na mesa (autor, 30/10/2026). Solto: token compacto com bônus e selo EQUIP. Preso: mini-token sob o portador. */
+.dcard--gear .btok__band { position: absolute; z-index: 1; left: 50%; bottom: 6cqw; transform: translateX(-50%); padding: 1.5cqw 5cqw; border: 1px solid #bfa66e; border-radius: 99px;
+  background: #100e16e6; color: #f4efe2; font: italic 700 9cqw/1 Futura, 'Futura PT', 'Century Gothic', sans-serif; white-space: nowrap; }
+.dcard--gear .btok__equip { position: absolute; z-index: 2; left: 3cqw; top: 16cqw; filter: drop-shadow(0 0 2cqw #000); display: grid; place-items: center; width: 26cqw; aspect-ratio: 1;
+  background: url('../../CARD-TEMPLATE/athena/gem_equip.png') center / contain no-repeat; color: #fff0bf; font: italic 700 10cqw/1 Futura, 'Futura PT', sans-serif; }
+.dcard--gear .btok__equip small { font: 900 4cqw/1 Avenir, 'Avenir Next', sans-serif; margin-bottom: -2cqw; }
+.dcard--gear .btok { filter: saturate(.8); }
+.slot .gears { display: flex; flex-direction: column; gap: 3px; margin-top: 4px; width: var(--card-w, 100%); }
+.slot .gear { position: relative; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 1px; min-height: 26px; padding: 3px 8px 3px 30px;
+  border: 1px solid #bfa66e88; border-radius: 99px; overflow: hidden; background: #0b0c16e6; color: #f4efe2; font: italic 700 11px/1.1 Futura, 'Futura PT', sans-serif; cursor: pointer; }
+.slot .gear::before { content: ""; position: absolute; left: 2px; top: 2px; bottom: 2px; aspect-ratio: 1; border-radius: 50%; background: #0b0c16 var(--art) center 22% / cover no-repeat; }
+.slot .gear span { max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.slot .gear b { color: #ffb347; font-size: 9px; }
+.slot .gear--armor { border-color: #e8c46a; }

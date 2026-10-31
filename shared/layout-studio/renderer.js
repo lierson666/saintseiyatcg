@@ -41,7 +41,7 @@ export function makeScene(layout,context,{transparent=false,omitFrame=false,sele
     if(transparent&&layer.id==='background')continue;
     if(!evaluateLayer(layer,ctx)||omitFrame&&['Frame','DecorativeLayer','GlowEffect'].includes(layer.component))continue;
     const value=layer.binding?bindingValue(layer.binding,ctx):layer.text||'',shape=['Frame','ArtworkFrame','FactionIcon','DecorativeLayer','GlowEffect','Divider','CardPreview'].includes(layer.component);
-    if(layer.component==='ArmorHPBadge'&&!(Number(bindingValue('card.armorHP',ctx))>0)){warnings.push({layer:layer.id,kind:'missing',message:'Armor sem HP próprio válido no catálogo.'});continue;}
+    if(layer.component==='ArmorHPBadge'&&!(Number(bindingValue('card.armorHP',ctx))>0))continue; // Armor sem HP próprio (30/10/2026)
     if(!shape&&!valueText(value).trim())continue;
     const badge=['CastingCost','StatBadge','ArmorHPBadge','SoulBadge','AwakenBadge'].includes(layer.component),label=layer.label;
     const bodyLayer=badge&&label?{...layer,height:layer.height*.74,y:layer.y+layer.height*.26}:layer;
@@ -50,7 +50,6 @@ export function makeScene(layout,context,{transparent=false,omitFrame=false,sele
     if(flow&&layer.component==='RulesBox'&&flow.size<32)warnings.push({layer:layer.id,kind:'legibility',message:`${layer.name}: fonte de ${flow.size}px pequena para impressão; amplie a área ou escolha uma variante de leitura.`});
     commands.push({layer,value,flow,label,badge,bodyLayer,nestedCard:layer.component==='CardPreview'?nestedCard:null});
   }
-  if(context.card&&bindingValue('card.isArmor',ctx)&&!(Number(bindingValue('card.armorHP',ctx))>0)&&!warnings.some(w=>w.kind==='missing'))warnings.push({layer:'armor-hp',kind:'missing',message:'Armor sem HP próprio válido no catálogo; indicador omitido da arte final.'});
   return{canvas:layout.canvas,theme:layout.theme,commands,warnings,transparent,selection,key,cosmoble:Boolean(context.card?.cosmoble),art:context.art,assetRects:context.assetRects||{},cardId:context.card?.id};
 }
 const safeKey=value=>String(value).replace(/[^a-zA-Z0-9-]/g,'-');

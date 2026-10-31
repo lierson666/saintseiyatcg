@@ -173,8 +173,7 @@ const ask = (ctx, player, question) => Boolean(ctx.decide?.(player, question));
 hooks.strikeDeclared.push((state, ctx, attacker, controller) => poseidons(state)
   .filter(key => key !== controller && !state.roundUses.has(`god:${key}:water-prison`))
   .map(key => {
-    // Water Prison sobre atacante já Sealed é a proposta D269, não aprovada: nada aqui depende dela.
-    if (state.units[attacker]?.seal) throw new NotSpecified('Water Prison em Devotee já Sealed (D269 pendente)');
+    // Water Prison sobre atacante já Sealed: soma +1 Seal (autor, 30/10/2026).
     return {controller: key, uid: `water-prison:${attacker}`, ability: 'WATER PRISON', run: st => {
       const once = `god:${key}:water-prison`;
       if (st.roundUses.has(once) || st.players[key].latent < 2) return;
@@ -378,9 +377,48 @@ export function placeBaseMoonHarvest(state, ctx, key, uid) {
   emit(state, 'divine_power', {player: key, ability: 'MOON HARVEST', uid});
   loseSoul(state, {[key]: 2}, 'loss');
 }
-// Moon Awakening (Ultimate, custo 9): pendente. Exige Base que também é Devotee (zona dupla), 3/3 até o fim do Round.
-// pendente: sem modelo de objeto-Base-e-Devotee na engine; ver docs/v6-efeitos-pendencias.md.
-export const moonAwakeningBlock = () => 'pendente';
+// Moon Awakening (Ultimate, custo 9; D209, D214–D216, D223; autor 30/10/2026: implementar como o D268).
+// Na resolução escolhe até 5 Bases suas; viram Moon Spirit 3/3 com Impulse, Long Range e Pierce até o fim do Round
+// (saem de `bases`, não geram Cosmo, entram Prepared — autor, 30/10/2026, desvio do D268; objects[uid].moon guarda a carta real).
+// Strike: God não causa dano de retaliação a Moon Spirit; dano dela ao God inimigo tira +2 Soul (strike.js).
+// Derrotada vai ao Tartarus do dono como a carta real (D209); no fim do Round, a que segue em campo volta a ser Base Unprepared.
+export const MOON_AWAKENING_COST = 9, MOON_SPIRIT = 'artemis-token-moon-spirit';
+export const moonAwakeningBlock = (state, key) => ultimateBlockOf(state, key, 'god-artemis', MOON_AWAKENING_COST);
+export const announceMoonAwakening = (state, ctx, key) => announceUltimate(state, ctx, key, 'god-artemis', 'MOON AWAKENING', MOON_AWAKENING_COST, resolveMoonAwakening);
+function resolveMoonAwakening(state, ctx, key) {
+  const p = state.players[key];
+  if (!ctx.cards.has(MOON_SPIRIT)) ctx.cards.set(MOON_SPIRIT, {id: MOON_SPIRIT, name: 'Moon Spirit', kind: 'Devotee', type: 'Devotee — Moon Spirit',
+    cost: {amount: 0, unit: 'base'}, atk: 3, hp: 3, keywords: ['Impulse', 'Long Range', 'Pierce']});
+  const picked = k.chooseUpTo(ctx, key, 'MOON AWAKENING', p.bases.map(b => b.uid), 5, {text: 'Choose up to five Cosmo Bases to awaken as Moon Spirits.'});
+  for (const uid of picked) {
+    const base = p.bases.find(b => b.uid === uid);
+    if (!base) continue;
+    p.bases.splice(p.bases.indexOf(base), 1);
+    ctx.objects[uid].moon = {cardId: ctx.objects[uid].cardId, round: state.round};
+    ctx.objects[uid].cardId = MOON_SPIRIT;
+    p.battlefield.push(uid);
+    state.units[uid] = {prepared: true, damage: 0, entered: state.turn};
+    emit(state, 'moon_awakened', {player: key, uid});
+  }
+}
+hooks.roundEnd.push(state => {
+  const ctx = contextOf(state);
+  if (!ctx) return [];
+  for (const key of state.order) for (const uid of [...state.players[key].battlefield]) {
+    const moon = ctx.objects[uid]?.moon;
+    if (!moon) continue;
+    const p = state.players[key];
+    p.battlefield.splice(p.battlefield.indexOf(uid), 1);
+    for (const g of Object.keys(ctx.attached)) if (ctx.attached[g] === uid) delete ctx.attached[g];
+    delete state.units[uid];
+    state.effects = state.effects.filter(e => e.target !== uid);
+    ctx.objects[uid].cardId = moon.cardId;
+    delete ctx.objects[uid].moon;
+    state.players[ctx.objects[uid].owner].bases.push({uid, prepared: false});
+    emit(state, 'moon_reverted', {player: key, uid});
+  }
+  return [];
+});
 
 // ---------- Leitura do log: gatilhos dos três Gods ----------
 function scanGods(state) {
@@ -392,11 +430,11 @@ function scanGods(state) {
   const triggers = [];
   const gone = events.filter(e => (e.type === 'destroyed' || e.type === 'sacrificed') && ctx.objects[e.uid] && isDevoteeUid(ctx, e.uid));
 
-  // Offering of Life: um gatilho por lote de Devotees SEUS derrotados (autor, 29/10/2026); o uso é do Round; recusar não gasta.
+  // Offering of Life: um gatilho por Devotee SEU derrotado (autor, 30/10/2026); o uso é do Round; recusar não gasta.
   for (const key of byGod(state, 'god-hades')) {
     const mine = gone.filter(e => ctx.objects[e.uid].owner === key); // shortcut: dono, não controlador; trocar quando houver troca de controle
-    if (mine.length) {
-      const once = `god:${key}:offering`, first = mine[0].uid;
+    const once = `god:${key}:offering`;
+    for (const {uid: first} of mine) {
       triggers.push({controller: key, uid: `offering:${first}`, ability: 'OFFERING OF LIFE', run: st => {
         if (st.victory || st.roundUses.has(once) || st.players[key].soul < 1) return;
         if (!ask(ctx, key, {ability: 'OFFERING OF LIFE', uid: first, cost: {soul: 2}})) { emit(st, 'divine_power_declined', {player: key, ability: 'OFFERING OF LIFE', uid: first}); return; }

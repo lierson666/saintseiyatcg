@@ -5,6 +5,8 @@ export function printedEquipmentBonuses(card,stageIndex=0){
   if(!isEquipment(card))return{power:null,hp:null};
   const stage=card.estagios?.[stageIndex];
   if(stage)return{power:stage.bonus_poder??null,hp:stage.bonus_vida??null};
+  // Armor (sintaxe de 30/10/2026): bônus nos campos bonus_poder/bonus_vida, mostrados na faixa da base; 0 não aparece.
+  if(card.bonus_poder!=null||card.bonus_vida!=null)return{power:card.bonus_poder||null,hp:card.bonus_vida||null};
   for(const line of card.habilidades_en||[]){
     let match=String(line).match(/^Equipped Devotee gets ([+-]\d+) (?:ATK|Power)(?: \/ ([+-]\d+) HP)?(?: and [A-Za-z][A-Za-z ,'-]*)?\.$/i);
     if(match)return{power:Number(match[1]),hp:match[2]===undefined?null:Number(match[2])};
@@ -13,12 +15,23 @@ export function printedEquipmentBonuses(card,stageIndex=0){
   }
   return{power:null,hp:null};
 }
+// Faixa de bônus da Armor: "+1 ATK / +5 HP" (zeros omitidos).
+export function armorBonusText(card){
+  const {power,hp}=printedEquipmentBonuses(card);
+  return [power?`${signedBonus(power)} ATK`:'',hp?`${signedBonus(hp)} HP`:''].filter(Boolean).join(' / ')||null;
+}
 export const signedBonus=value=>value==null?null:Number.isFinite(Number(value))?`${Number(value)>=0?'+':''}${Number(value)}`:null;
 export function equipmentCostText(card){
   if(!isEquipment(card))return null;
   const auto=Array.isArray(card.auto_equip_en)?card.auto_equip_en.join(' / '):card.auto_equip_en||'';
   const owner=(card.donos||[]).map(id=>id.split('-').map(s=>s.charAt(0).toUpperCase()+s.slice(1)).join(' ')).join(' / ');
   const result=[];
+  // Armor (guia §27/§28, 30/10/2026): Resonance equipa sozinho ao conjurar; Equip N vale para qualquer portador em campo.
+  if(/armor/i.test([card.categoria_equipamento,...(card.subtipos||[])].join(' '))){
+    // 1ª linha do texto (autor, 30/10/2026): "Resonance — Aries Mu". O Equip fica no selo EQUIP do canto inferior esquerdo.
+    const named=(Array.isArray(card.auto_equip_en)?card.auto_equip_en:[card.auto_equip_en]).filter(Boolean);
+    return named.length?`Resonance — ${named.join(' / ')}`:null;
+  }
   if(card.equipar_auto&&auto)result.push(`Auto-Equip — ${auto}.`);
   if(card.equipar_custo_ressonante!=null&&!card.equipar_auto)result.push(`Equip ${card.equipar_custo_ressonante} — ${owner||'Resonant Wearer'}.`);
   const other=card.equipar_custo_outros??card.equipar_custo;

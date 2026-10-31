@@ -3,7 +3,7 @@
 // Só stats/keywords (tratados pela engine ou por preview-cards): bônus fixo de Equipment (465, 466, 467, 469, 492), Guardian (462).
 // Interpretações provisórias (o autor confirma):
 // - "blocks" = o Devotee é o alvo declarado de um Strike inimigo (defensor), como em poseidon.js.
-// - "until end of turn" = duração 'this_turn' (expira no Cleanup).
+// - "until end of turn" = duração 'this_round' (autor, 30/10/2026: vale até o fim do Round, nos dois turnos).
 // - "once per turn" / "first … each turn" = uma vez por rodada (guia §64), via k.onceTurn.
 // - Devotee entra Unprepared por padrão, então "enters exhausted" (459) não precisa de código.
 // - Spells que escolhem alvo: a escolha fica numa função `target…` bem nomeada, fácil de mover para o cast.
@@ -85,7 +85,7 @@ hooks.sealed.push((state, ctx, transitions) => {
   const out = [];
   for (const key of state.order) for (const self of state.players[key].battlefield) {
     if (ctx.objects[self]?.cardId !== 'neutral-v6-481') continue;
-    for (const t of transitions) if (t.controller && t.controller !== key) out.push(trigger(key, self, 'CRYSTAL SAINT · FROZEN DISCIPLINE', st => { if (live(st, self)) k.buff(st, self, 1, 1, 'this_turn'); }));
+    for (const t of transitions) if (t.controller && t.controller !== key) out.push(trigger(key, self, 'CRYSTAL SAINT · FROZEN DISCIPLINE', st => { if (live(st, self)) k.buff(st, self, 1, 1, 'this_round'); }));
   }
   return out;
 });
@@ -124,8 +124,7 @@ export default {
     enter: (s, c, key) => st => {
       const t = targetEnemy(st, c, key, 'BLACK BLIZZARD', 'Seal target enemy Devotee.'); // Black Blizzard
       if (t) addSeal(st, c, [t], 1, 'BLACK BLIZZARD');
-      // pendente: Frozen Sacrifice. A engine não tem gancho para pular a compra do turno (core.js startTurn); só marca o pedido.
-      (st.skipDraw ||= {})[key] = true;
+      (st.skipDraw ||= {})[key] = true; // Frozen Sacrifice: lido no drawStep (core.startTurn)
     },
   },
   // Black Andromeda
@@ -173,15 +172,15 @@ export default {
   'neutral-v6-457': {
     watchDeclare: (s, c, key, self, attacker) => {
       if (k.controllerOf(s, attacker) !== key) { // Blind Perception
-        return ready(s, key) >= 2 && (st => { if (live(st, attacker) && pay(st, c, key, 2, 'BLIND PERCEPTION', self)) k.buff(st, attacker, -2, 0, 'this_turn'); });
+        return ready(s, key) >= 2 && (st => { if (live(st, attacker) && pay(st, c, key, 2, 'BLIND PERCEPTION', self)) k.buff(st, attacker, -2, 0, 'this_round'); });
       }
-      return attacker !== self && black(c, attacker) && (st => { if (live(st, attacker)) k.buff(st, attacker, 1, 0, 'this_turn'); }); // Brother's Guidance
+      return attacker !== self && black(c, attacker) && (st => { if (live(st, attacker)) k.buff(st, attacker, 1, 0, 'this_round'); }); // Brother's Guidance
     },
     watchDefeat: (s, c, key, self, dead, owner) => dead !== self && owner === key && black(c, dead) && (st => lose(st, key, 1)), // Shared Fate
   },
   // Black Phoenix Shadow
-  // pendente: False Wings ("cannot block"). Não há regra de bloqueio: o atacante escolhe o alvo. Ver docs/v6-efeitos-pendencias.md.
   'neutral-v6-458': {
+    noRetaliate: true, // False Wings: "cannot retaliate"
     defeated: (s, c, key) => st => { // Disposable Shadow
       if (!k.may(c, key, 'DISPOSABLE SHADOW', {text: 'Draw 1 card? (then discard 1 card and lose 1 Soul)'})) return;
       draw(st, key, 1);
@@ -197,7 +196,7 @@ export default {
       return ready(s, key) >= 2 && foes(s, c, key).length > 0 && (st => { // Crushing Impact
         if (!pay(st, c, key, 2, 'CRUSHING IMPACT', self)) return;
         const t = targetEnemy(st, c, key, 'CRUSHING IMPACT');
-        if (t) { k.buff(st, t, -2, -2, 'this_turn'); k.checkDefeats(st, c); }
+        if (t) { k.buff(st, t, -2, -2, 'this_round'); k.checkDefeats(st, c); }
       });
     },
     // Heavy Armor: todo Devotee entra Unprepared; nada a fazer. Marca para Unstable Power.
@@ -227,8 +226,14 @@ export default {
 
   // ---------- Steel Saints e Scientist ----------
   // Sho, Sky Steel Saint
-  // pendente: Sky Defender (redirecionar Technique inimiga que mira um Devotee seu): Spell ainda não tem alvo ao conjurar.
   'neutral-v6-461': {
+    // Sky Defender: Technique inimiga que mira outro Devotee seu; paga 2 e o alvo vira Sho (play.js lê s.v6Redirect na resolução).
+    watchSpell: (s, c, key, self, caster, spellUid, targets = []) => {
+      const from = caster !== key && isTechnique(c, spellUid) && targets.find(t => t !== self && mine(s, c, key).includes(t));
+      return from && ready(s, key) >= 2 && (st => {
+        if (k.spellOnChain(st, spellUid) && k.onField(st, key, self) && pay(st, c, key, 2, 'SKY DEFENDER', self)) (st.v6Redirect ||= {})[spellUid] = {from, to: self};
+      });
+    },
     watchAttach: (s, c, key, self, gear, bearer) => bearer === self && k.controllerOf(s, gear) === key && k.onceTurn(s, `mechanical:${self}`) && // Mechanical Precision
       (st => loot(st, c, key, 'MECHANICAL PRECISION')),
   },
@@ -245,18 +250,23 @@ export default {
       const small = () => foes(st, c, key).filter(u => k.costOf(c, u) <= 2);
       if (!small().length || !pay(st, c, key, 1, 'RESONANCE ENGINE', self)) return;
       const t = k.choose(c, key, 'RESONANCE ENGINE', small(), {text: 'Return target enemy Devotee with Casting Cost 2 or less.'});
-      if (t) k.toHand(st, c, t, 'battlefield');
+      if (t) k.toHand(st, c, t, 'battlefield', key);
     }),
   },
   // Dr. Asamori
-  // pendente: Mechanical Engineering (Equipment custa 1 a menos, mínimo 1): sem gancho de redução de custo.
   'neutral-v6-464': {
+    costLess: (s, c, key, self, uid) => k.card(c, uid)?.kind === 'Equipment' && {n: 1, min: 1}, // Mechanical Engineering
     activate: {name: 'Steel Innovation', cost: 2, once: true, tap: true,
       run: (s, c, key) => { k.search(s, c, key, 'STEEL INNOVATION', card => card.kind === 'Equipment'); }},
   },
   // Sky Steel Cloth
-  // pendente: Aerial Interception (contrariar Technique inimiga que mira o portador) e sua redução com Steel Saint: sem alvo ao conjurar.
-  'neutral-v6-465': {},
+  'neutral-v6-465': { // Aerial Interception; Steel Synchronization: custa 2 com Steel Saint
+    watchSpell: (s, c, key, self, caster, spellUid, targets = []) => {
+      const bearer = k.bearerOf(c, self), cost = bearer && steel(c, bearer) ? 2 : 3;
+      return caster !== key && isTechnique(c, spellUid) && bearer && targets.includes(bearer) && ready(s, key) >= cost
+        && (st => { if (k.spellOnChain(st, spellUid) && pay(st, c, key, cost, 'AERIAL INTERCEPTION', self)) k.counterSpell(st, c, spellUid); });
+    },
+  },
   // Land Steel Cloth
   'neutral-v6-466': {
     gearPrevent: (s, c, key, self, bearer, amount) => (amount > 0 && k.onceTurn(s, `seismic:${self}`) ? Math.min(1, amount) : 0), // Seismic Resistance
@@ -264,7 +274,7 @@ export default {
   },
   // Marine Steel Cloth
   'neutral-v6-467': {
-    gearCombatDamage: (s, c, key, self, bearer, victim) => st => { if (live(st, victim)) k.buff(st, victim, -2, 0, 'this_turn'); }, // Sonic Disruption
+    gearCombatDamage: (s, c, key, self, bearer, victim) => st => { if (live(st, victim)) k.buff(st, victim, -2, 0, 'this_round'); }, // Sonic Disruption
     gearKillInCombat: (s, c, key, self, bearer) => steel(c, bearer) && k.onceTurn(s, `marine-sync:${self}`) && (st => loot(st, c, key, 'STEEL SYNCHRONIZATION')),
   },
   // Steel Saint Recruit
@@ -272,16 +282,15 @@ export default {
   // Steel Armor Prototype
   'neutral-v6-469': {
     gearDeclare: (s, c, key, self, bearer) => ready(s, key) >= 1 && (st => { // Unstable Mechanism
-      if (live(st, bearer) && pay(st, c, key, 1, 'UNSTABLE MECHANISM', self)) k.buff(st, bearer, 1, 0, 'this_turn');
+      if (live(st, bearer) && pay(st, c, key, 1, 'UNSTABLE MECHANISM', self)) k.buff(st, bearer, 1, 0, 'this_round');
     }),
   },
   // Graad Foundation Laboratory
-  // pendente: Technological Advancement (primeiro Equipment custa 1 a menos): sem gancho de redução de custo.
-  // pendente: Steel Production só vê Equipment que fica preso a um portador (gancho attach); Equipment global/Armor sem portador não conta.
   'neutral-v6-470': {
     activate: {name: 'Research Facility', cost: 2, once: true, tap: false, run: (s, c, key) => loot(s, c, key, 'RESEARCH FACILITY')},
-    watchAttach: (s, c, key, self, gear) => {
-      if (k.controllerOf(s, gear) !== key) return;
+    // Technological Advancement: "first … each turn" = uma vez por Round (§64).
+    costLess: (s, c, key, self, uid) => k.card(c, uid)?.kind === 'Equipment' && !s.roundUses.has(`tech:${self}`) && {n: 1, min: 1, tag: `tech:${self}`},
+    watchEquipCast: (s, c, key, self, gear) => { // Steel Production: o segundo Equipment conjurado no turno
       const casts = s.events.filter(e => e.type === 'card_played' && e.kind === 'Equipment' && e.player === key && e.turn === s.turn);
       return casts.length >= 2 && casts[1].uid === gear && (st => { steelToken(st, c, key); });
     },
@@ -289,13 +298,18 @@ export default {
 
   // ---------- Ghost Saints ----------
   // Geist, Phantom Queen
-  // pendente: Deceptive Presence (contrariar Technique inimiga que mira Geist): sem alvo ao conjurar.
   'neutral-v6-471': {
     enter: (s, c, key) => st => { // Phantom Illusion
       const t = targetEnemy(st, c, key, 'PHANTOM ILLUSION', "Return target enemy Devotee to its owner's hand.");
-      if (t) k.toHand(st, c, t, 'battlefield');
+      if (t) k.toHand(st, c, t, 'battlefield', key);
     },
     aura: (s, c, key, self, unit) => (unit !== self && k.controllerOf(s, unit) === key && ghost(c, unit) ? {atk: 1, hp: 1} : null), // Ghost Command
+    watchSpell: (s, c, key, self, caster, spellUid, targets = []) => caster !== key && isTechnique(c, spellUid) && targets.includes(self) // Deceptive Presence
+      && mine(s, c, key).some(u => u !== self) && (st => {
+        if (!k.spellOnChain(st, spellUid) || !k.may(c, key, 'DECEPTIVE PRESENCE', {uid: self, cost: 'sacrifice another Devotee'})) return;
+        const v = k.choose(c, key, 'DECEPTIVE PRESENCE', mine(st, c, key).filter(u => u !== self), {text: 'Sacrifice another Devotee.'});
+        if (v) { k.sacrifice(st, c, v); k.counterSpell(st, c, spellUid); }
+      }),
   },
   // Dolphin Ghost Saint
   'neutral-v6-472': {
@@ -317,25 +331,31 @@ export default {
   'neutral-v6-474': {
     combatDamage: (s, c, key, self, victim) => st => { if (live(st, victim)) addSeal(st, c, [victim], 1, 'PARALYZING TOUCH'); },
     watchDeclare: (s, c, key, self, attacker, target) => target.kind === 'devotee' && target.uid === self && k.controllerOf(s, attacker) !== key && // Toxic Defense
-      (st => { if (live(st, attacker)) { k.buff(st, attacker, -1, -1, 'this_turn'); k.checkDefeats(st, c); } }),
+      (st => { if (live(st, attacker)) { k.buff(st, attacker, -1, -1, 'this_round'); k.checkDefeats(st, c); } }),
   },
   // Phantom Sea Ambush (Moment)
   'neutral-v6-475': {spell: {run: (s, c, key) => {
     const own = targetOwn(s, c, key, 'SPECTRAL ASSAULT', "Return target Devotee you control to its owner's hand.");
     if (own) k.toHand(s, c, own, 'battlefield');
     const foe = targetEnemy(s, c, key, 'SPECTRAL ASSAULT', "Return target enemy Devotee to its owner's hand.");
-    if (foe) k.toHand(s, c, foe, 'battlefield');
+    if (foe) k.toHand(s, c, foe, 'battlefield', key);
     if (mine(s, c, key).some(u => ghost(c, u))) loot(s, c, key, 'GHOST TACTICS'); // avaliado depois dos retornos
   }}},
 
   // ---------- Spells, Equipment e Devotees gerais ----------
-  // Cosmo Disruption
-  // pendente: Technique é Sorcery (precisa da cadeia vazia), então hoje nunca há Spell para contrariar. Ver pendências.
-  'neutral-v6-476': {spell: {run: (s, c, key, self) => {
-    const t = targetSpellOnChain(s, c, key, 'COSMO INTERRUPTION', self);
-    if (t) k.counterSpell(s, c, t);
-    lose(s, key, 2); // Energy Backlash
-  }}},
+  // Cosmo Disruption (autor, 30/10/2026): Moment 3; custo adicional: descartar 1 carta. O alvo é a Spell na cadeia, escolhida na resolução.
+  'neutral-v6-476': {spell: {
+    check: (s, c, key) => {
+      if (!s.chain.some(i => i.spell)) throw new k.RuleError('alvo', 'COSMO INTERRUPTION: não há Moment ou Technique na cadeia');
+      if (s.players[key].hand.length < 2) throw new k.RuleError('custo', 'COSMO INTERRUPTION: precisa descartar 1 carta');
+    },
+    cost: (s, c, key) => k.discard(s, c, key, 1, 'COSMO INTERRUPTION'),
+    run: (s, c, key, self) => {
+      const t = targetSpellOnChain(s, c, key, 'COSMO INTERRUPTION', self);
+      if (t) k.counterSpell(s, c, t);
+      lose(s, key, 2); // Energy Backlash
+    },
+  }},
   // Desperate Resurrection
   'neutral-v6-477': {spell: {run: (s, c, key) => {
     const [t] = targetTartarusDevotees(s, c, key, 'FORBIDDEN RETURN', 1);
@@ -376,17 +396,17 @@ export default {
     }),
   },
   // Ohko, the Fallen Dragon
-  // pendente: Uncontrolled Rage ("must attack each turn if able"): a engine não força Strike.
   'neutral-v6-482': {
+    mustStrike: true, // Uncontrolled Rage (actions.js recusa o END TURN)
     declare: (s, c, key, self) => st => { // Tiger's Fury + Broken Discipline
-      if (live(st, self)) k.buff(st, self, 2, 0, 'this_turn');
+      if (live(st, self)) k.buff(st, self, 2, 0, 'this_round');
       hitGod(st, c, key, 1);
     },
   },
   // Leda, Chain Warrior
   // pendente: "attacks alongside another Devotee" lido como "outro Devotee seu já declarou Strike neste turno" (Strikes são um de cada vez).
   'neutral-v6-483': {
-    declare: (s, c, key, self) => mine(s, c, key).some(u => u !== self && s.strikes.get(u) === s.turn) && (st => { if (live(st, self)) k.buff(st, self, 1, 1, 'this_turn'); }), // Twin Chains
+    declare: (s, c, key, self) => mine(s, c, key).some(u => u !== self && s.strikes.get(u) === s.turn) && (st => { if (live(st, self)) k.buff(st, self, 1, 1, 'this_round'); }), // Twin Chains
     mods: (s, c, key) => (controls(s, c, key, SPICA) ? [{keywords: ['Guardian']}] : []), // Chain Coordination
   },
   // Spica, Chain Warrior
@@ -398,7 +418,7 @@ export default {
     }),
     declare: (s, c, key) => controls(s, c, key, LEDA) && foes(s, c, key).length > 0 && (st => { // Twin Assault
       const t = targetEnemy(st, c, key, 'TWIN ASSAULT');
-      if (t) k.buff(st, t, -2, 0, 'this_turn');
+      if (t) k.buff(st, t, -2, 0, 'this_round');
     }),
   },
   // Shiva, Peacock Saint
@@ -406,12 +426,16 @@ export default {
     enter: (s, c, key, self) => ready(s, key) >= 2 && foes(s, c, key).length > 0 && (st => { // Thousand Feather Strike
       if (pay(st, c, key, 2, 'THOUSAND FEATHER STRIKE', self)) distribute(st, c, key, 'THOUSAND FEATHER STRIKE', 2);
     }),
-    watchSpell: (s, c, key, self, caster, spellUid) => caster === key && isTechnique(c, spellUid) && (st => { if (live(st, self)) k.buff(st, self, 1, 0, 'this_turn'); }), // Mystic Meditation
+    watchSpell: (s, c, key, self, caster, spellUid) => caster === key && isTechnique(c, spellUid) && (st => { if (live(st, self)) k.buff(st, self, 1, 0, 'this_round'); }), // Mystic Meditation
   },
   // Agora, Lotus Saint
-  // pendente: Spiritual Barrier (custo extra de {2} para mirar Agora com Technique inimiga): sem alvo ao conjurar.
   'neutral-v6-486': {
-    watchSpell: (s, c, key, self, caster, spellUid) => { // Lotus Meditation: primeira Technique do turno
+    watchSpell: (s, c, key, self, caster, spellUid, targets = []) => { // Lotus Meditation: primeira Technique do turno
+      // Spiritual Barrier: Technique inimiga que mira Agora — quem conjurou paga {2} a mais ou ela é contrariada.
+      if (caster !== key && isTechnique(c, spellUid) && targets.includes(self)) return st => {
+        if (!k.spellOnChain(st, spellUid)) return;
+        if (!pay(st, c, caster, 2, 'SPIRITUAL BARRIER', self)) k.counterSpell(st, c, spellUid);
+      };
       if (caster !== key || !isTechnique(c, spellUid) || ready(s, key) < 2) return;
       const first = s.events.find(e => e.type === 'card_played' && e.kind === 'Spell' && e.player === key && e.turn === s.turn && isTechnique(c, e.uid));
       return first?.uid === spellUid && (st => { if (pay(st, c, key, 2, 'LOTUS MEDITATION', self)) draw(st, key, 1); });
@@ -448,7 +472,7 @@ export default {
   // Sanctuary Mercenary
   'neutral-v6-490': {
     startTurn: (s, c, key, self) => st => { // Paid Loyalty
-      if (live(st, self) && !pay(st, c, key, 1, 'PAID LOYALTY', self)) forbidStrike(st, self, 'this_turn');
+      if (live(st, self) && !pay(st, c, key, 1, 'PAID LOYALTY', self)) forbidStrike(st, self, 'this_round');
     },
   },
   // Cloth Repair Tools: dois modos em `choice.mode`: 'repair' ({2} + {T}, uma vez por Round) e 'salvage' (sacrifício).
@@ -474,9 +498,9 @@ export default {
     })(),
   },
   // Death Queen Mask
-  // pendente: Forbidden Power ("its controller loses 2 Soul"): lido como o controlador do portador (custo para quem usa a máscara).
+  // Forbidden Power (autor, 30/10/2026): o dono do Devotee derrotado perde 2 Soul.
   'neutral-v6-492': {
-    gearKillInCombat: (s, c, key) => st => lose(st, key, 2),
+    gearKillInCombat: (s, c, key, self, bearer, victim) => st => lose(st, c.objects[victim].owner, 2),
     gearWouldBeDefeated: (s, c, key, self, bearer) => { // Corrupted Protection
       if (!k.may(c, key, 'CORRUPTED PROTECTION', {uid: bearer, text: 'Sacrifice Death Queen Mask to prevent that defeat?'})) return false;
       k.toTartarus(s, c, self, 'battlefield');
@@ -525,7 +549,7 @@ export default {
   'neutral-v6-497': {spell: {run: (s, c, key) => {
     const t = targetAnyDevotee(s, c, key, 'DESPERATE PROTECTION');
     if (!t) return;
-    shield(s, t, Infinity, {duration: 'this_turn'}); // dano de combate = dano de Strike
+    shield(s, t, Infinity, {duration: 'this_round'}); // dano de combate = dano de Strike
     k.exhaust(s, t); // Exhaustion: não prepara no próximo Prepare do controlador (skipPrepare, core.js startTurn)
     s.units[t].skipPrepare = true;
   }}},

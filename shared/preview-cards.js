@@ -15,20 +15,42 @@ export function previewRecord(f) {
     f.tipo === 'Equipment' && (f.auto_equip_en?.length || f.equipar_custo_outros != null
       ? `Auto-Equip — ${f.auto_equip_en?.length ? f.auto_equip_en.join(' and/or ') : 'None'}` : 'Equip: None — Global'),
     f.equipar_custo_outros != null && `Equip {${f.equipar_custo_outros}} — ${f.auto_equip_en?.length ? 'Other Devotees' : 'Any friendly Devotee'}`,
+    armorBonusLine(f),
     ...(f.habilidades_en || [])].filter(Boolean).join('\n');
   return {id: f.id, name: f.nome_exibicao_en, type, approved_current_text_as_of_d268: text};
+}
+
+// Armor (sintaxe de 30/10/2026): bonus_poder/bonus_vida e "Equipped Devotee has X." viram a linha de bônus que parseCard lê.
+function armorBonusLine(f) {
+  if (f.bonus_poder == null && f.bonus_vida == null) return null;
+  const kw = (f.habilidades_en || []).map(h => h.match(/^Equipped Devotee has ([A-Z][\w ]*)\.$/)?.[1]).find(Boolean);
+  return `Equipped Devotee gets +${f.bonus_poder || 0} ATK / +${f.bonus_vida || 0} HP${kw ? ` and ${kw}` : ''}.`;
+}
+// Bônus, Equip e Resonance da Armor vindos do Forge por cima do texto congelado do D268 (Athena V6).
+function armorFromForge(card, f) {
+  if (!card?.armor || (f.bonus_poder == null && f.bonus_vida == null)) return card;
+  const kw = (f.habilidades_en || []).map(h => h.match(/^Equipped Devotee has ([A-Z][\w ]*)\.$/)?.[1]).filter(Boolean);
+  return {...card, hp: null, equipped: {atk: f.bonus_poder || 0, hp: f.bonus_vida || 0, keywords: kw},
+    autoEquip: f.auto_equip_en || [], equip: f.equipar_custo_outros != null ? {amount: f.equipar_custo_outros, who: 'any'} : card.equip};
+}
+
+// Carta da engine-v3 a partir do registro do Forge (também usada pela prévia do Forge, card-forge/studio-preview.js).
+export function forgeCard(f, r = previewRecord(f)) {
+  const card = armorFromForge({...parseCard(r), preview: true}, f);
+  // Artemis e neutras escrevem o bônus como "+2/+1" dentro de uma habilidade nomeada.
+  const short = !card.equipped && r.approved_current_text_as_of_d268.match(/Equipped Devotee gets \+(\d+)\/\+(\d+)[ .]/);
+  if (short) card.equipped = {atk: Number(short[1]), hp: Number(short[2]), keywords: []};
+  return card;
 }
 
 // Soma as cartas novas ao mapa de cartas (loadCanon) e, se vier, ao índice de validação (canonIndex).
 export function addPreviewCards(cards, index, forgeCards) {
   for (const f of forgeCards.filter(c => PREVIEW.test(c.id))) {
-    const r = previewRecord(f), card = {...parseCard(r), preview: true};
-    // Artemis e neutras escrevem o bônus como "+2/+1" dentro de uma habilidade nomeada.
-    const short = !card.equipped && r.approved_current_text_as_of_d268.match(/Equipped Devotee gets \+(\d+)\/\+(\d+)[ .]/);
-    if (short) card.equipped = {atk: Number(short[1]), hp: Number(short[2]), keywords: []};
-    cards.set(r.id, card);
+    const r = previewRecord(f);
+    cards.set(r.id, forgeCard(f, r));
     index?.set(r.id, r);
   }
+  for (const f of forgeCards.filter(c => !PREVIEW.test(c.id) && cards.get(c.id)?.armor)) cards.set(f.id, armorFromForge(cards.get(f.id), f));
   // Gods: Soul, Attack e Awaken vêm da carta do God no Forge (<facção>-001), por cima do D268 e da G3-042 (autor, 29/10/2026).
   for (const f of forgeCards.filter(c => /^(athena|poseidon|hades|ares|artemis)-001$/.test(c.id))) {
     const god = cards.get(`god-${f.id.slice(0, -4)}`);

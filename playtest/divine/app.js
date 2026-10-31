@@ -7,22 +7,23 @@ import {addPreviewCards} from '../../shared/preview-cards.js';
 import {createMatch, mulligan} from '../engine-v3/match.js';
 import {startTurn, endTurn, pass, placeBase, spellCategory, runCheckpoint} from '../engine-v3/core.js';
 import {declareStrike, strikeTargets} from '../engine-v3/strike.js';
-import {playDevotee, playEquipment, playSpell, activate, reequip, duplicateCharacter} from '../engine-v3/play.js';
+import {playDevotee, playEquipment, playSpell, activate, reequip, duplicateCharacter, resonant, castCost, mixed} from '../engine-v3/play.js';
 import {atkOf, hpOf, keywordsOf, gearOf, isSaint, isBronze, ABILITIES} from '../engine-v3/effects.js';
 import {v6Spell, entryOf} from '../engine-v3/v6/hooks.js';
 import {STEPS, ABILITY_STEPS} from '../choices-v3.js?v=2';
 import {createScene, THEMES} from './scene.js?v=20261028-5';
 import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudgment, greatFloodBlock, announceGreatFlood, GREAT_FLOOD_COST,
-  greatEclipseBlock, GREAT_ECLIPSE_COST, obliterationBlock, OBLITERATION_COST, bloodlustBlock, BLOODLUST_COST, moonHarvestBlock} from '../engine-v3/gods.js';
+  greatEclipseBlock, GREAT_ECLIPSE_COST, obliterationBlock, OBLITERATION_COST, bloodlustBlock, BLOODLUST_COST, moonHarvestBlock, moonAwakeningBlock, MOON_AWAKENING_COST} from '../engine-v3/gods.js';
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
 import {createDirector} from './director.js?v=11';
-import {createAI} from './ai.js?v=4';
+import {createAI} from './ai.js?v=5';
 import {findDeck} from '../deck-store.js';
 import {unlock, playMusic} from '../audio.js?v=20261030-telas';
 import {telas, anim, sound, imageUrl, applyColors, applyTexts} from '../telas.js?v=20261030-1';
-import {renderLiveCard} from '../../shared/live-card.js?v=20261030-art';
+import {renderLiveCard} from '../../shared/live-card.js?v=20261030-armor5';
+import {armorBonusText, printedEquipmentBonuses} from '../../shared/card-visual-values.js';
 
 const $ = (s, el = document) => el.querySelector(s), $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -69,7 +70,8 @@ function warn(text) { notice.textContent = text; notice.classList.add('show'); c
 const readyBases = key => S().players[key].bases.filter(b => b.prepared).length;
 function affordable(key, cost) {
   if (!cost) return true;
-  return cost.unit === 'latent' ? S().players[key].latent >= cost.amount : readyBases(key) >= cost.amount;
+  const latent = S().players[key].latent;
+  return cost.unit === 'latent' ? latent >= cost.amount : cost.unit === 'mixed' ? readyBases(key) + latent >= cost.amount : readyBases(key) >= cost.amount;
 }
 const idleFor = key => { const s = S(); return !pending && !s.victory && !s.setup && !s.window && !s.chain.length && s.active === key; };
 // Primeira escolha obrigatória sem candidato (ex.: Spell que pede um Saint aliado sem nenhum em campo).
@@ -79,24 +81,24 @@ function missingTarget(key, uid) {
   return step && !step.optional && !candidates(step, key).length ? `Needs ${PICK_NEED[step.pick] || 'a legal target'}.` : null;
 }
 function playableReason(key, uid) {
-  const s = S(), c = info(uid);
+  const s = S(), c0 = info(uid), c = {...c0, cost: castCost(s, ctx, key, uid, c0.cost)}; // custo com reduções V6 (costLess)
   if (s.victory || s.setup) return 'The match is not running.';
   if (pending) return 'Answer the pending decision first.';
   if (c.kind === 'Spell') {
     const cat = spellCat(uid);
     if (!cat) return 'This Technique or Moment is not playable yet.';
     if (cat.speed === 'instant' ? !(s.window ? s.window.priority === key : s.active === key && !s.chain.length) : !idleFor(key)) return cat.speed === 'instant' ? 'You need priority to cast a Moment.' : 'Techniques are cast on your turn, with no response pending.';
-    const cost = cat.v6 && s.window ? {amount: c.cost.amount, unit: 'latent'} : c.cost; // Moment V6 como resposta: só Latent
-    return affordable(key, cost) ? missingTarget(key, uid) : `Needs ${cost.amount} ${cost.unit === 'base' ? 'prepared Base' : 'Latent'} Cosmo.`;
+    const cost = s.window ? castCost(s, ctx, key, uid, {amount: c0.cost.amount, unit: 'latent'}) : mixed(c.cost); // guia §5: resposta só Latent; como AÇÃO, Base e/ou Latent
+    return affordable(key, cost) ? missingTarget(key, uid) : `Needs ${cost.amount} ${cost.unit === 'latent' ? 'Latent' : 'Cosmo (Base and/or Latent)'}.`;
   }
   if (!idleFor(key)) return s.active !== key ? "It's not your turn." : 'Wait for the response window to close.';
   if (c.kind === 'Equipment' && (c.global || c.armor) && affordable(key, c.cost)) return null; // Armor sem portador (§XII)
-  if (c.kind === 'Equipment' && c.global) return affordable(key, c.cost) ? null : `Needs ${c.cost.amount} prepared Base Cosmo.`;
+  if (c.kind === 'Equipment' && c.global) return affordable(key, mixed(c.cost)) ? null : `Needs ${c.cost.amount} Cosmo (Base and/or Latent).`;
   if (c.kind === 'Equipment') {
     const devs = s.players[key].battlefield.filter(u => info(u).kind === 'Devotee');
     if (!devs.length) return 'You need a Devotee to equip.';
-    const cheapest = Math.min(...devs.map(d => c.autoEquip.some(n => n.toUpperCase() === info(d).name.toUpperCase()) ? c.cost.amount : c.equip ? c.equip.amount : Infinity));
-    return readyBases(key) >= cheapest ? null : `Needs ${cheapest === Infinity ? '—' : cheapest} prepared Base Cosmo.`;
+    const cheapest = Math.min(...devs.map(d => c.autoEquip.some(n => n.toUpperCase() === info(d).name.toUpperCase()) ? c.cost.amount : c.equip ? castCost(s, ctx, key, uid, {amount: c.equip.amount, unit: 'base'}).amount : Infinity));
+    return readyBases(key) + s.players[key].latent >= cheapest ? null : `Needs ${cheapest === Infinity ? '—' : cheapest} Cosmo (Base and/or Latent).`;
   }
   return affordable(key, c.cost) ? null : `Needs ${c.cost.amount} prepared Base Cosmo.`;
 }
@@ -207,7 +209,9 @@ function candidates(step, key) {
     case 'ready-saint': return devs.filter(u => isSaint(ctx, u) && s.units[u]?.prepared);
     case 'bronze': return devs.filter(u => isBronze(ctx, u));
     case 'devotee': return devs;
-    case 'armor': return field.filter(u => info(u).armor && ctx.attached[u]);
+    case 'armor': return devs.filter(u => Object.keys(ctx.attached).some(g => ctx.attached[g] === u && info(g).armor)); // Devotee seu que veste Armor
+    case 'resonant': return devs.filter(u => resonant(s, ctx, key, info(step.armor), u));
+    case 'wearer': return devs.filter(u => ctx.attached[step.armor] !== u);
     case 'enemy': return s.players[other(key)].battlefield.filter(u => info(u).kind === 'Devotee');
     case 'strike': return strikeTargets(s, ctx, mode.uid).map(t => (t.kind === 'god' ? `god:${t.player}` : t.uid));
     default: return [];
@@ -240,7 +244,11 @@ function playFromHand(key, uid) {
     return begin('play', key, uid, STEPS[n] || [], choice => ({type: 'play', key, uid, choice}));
   }
   if (c.kind === 'Equipment') {
-    const steps = c.global ? [] : [{key: 'bearer', pick: 'devotee', optional: !!c.armor, label: c.armor ? `Drag ${c.name} to who wears it, or Skip to put it on the field without a bearer` : `Drag ${c.name} to who wears it`}];
+    // Armor (guia §28, 30/10/2026): só entra vestida num Resonant seu, sem Equip; senão entra sem portador.
+    const armorPick = c.armor && candidates({pick: 'resonant', armor: uid}, key).length;
+    const steps = c.global || (c.armor && !armorPick) ? [] : c.armor
+      ? [{key: 'bearer', pick: 'resonant', armor: uid, optional: true, label: `Resonance: drag ${c.name} to who wears it, or Skip to put it on the field without a bearer`}]
+      : [{key: 'bearer', pick: 'devotee', label: `Drag ${c.name} to who wears it`}];
     if (n === '019') steps.push({key: 'target', pick: 'devotee', optional: true, label: 'Pegasus God Cloth: which Devotee gets +3/+3 (if your God is behind)?'});
     return begin('play', key, uid, steps, choice => ({type: 'play', key, uid, choice}));
   }
@@ -290,12 +298,12 @@ function confirmMulligan() {
 // Ações divinas do jogador agora: Ultimate (pronto ou o motivo do bloqueio) e remover Divine Judgment.
 function godActions(key) {
   const s = S(), d = s.divine[key], mine = key === viewer() && !s.victory && !s.setup;
-  // Ultimate por God: bloqueio (motivo) e ação. Moon Awakening (Artemis) ainda não existe na engine.
+  // Ultimate por God: bloqueio (motivo) e ação.
   const ULT = {
     'god-poseidon': [() => greatFloodBlock(s, key), () => act({type: 'greatFlood', key}), `Great Flood needs ${GREAT_FLOOD_COST} prepared Bases.`],
     'god-hades': [() => greatEclipseBlock(s, key), () => act({type: 'greatEclipse', key}), `Great Eclipse needs ${GREAT_ECLIPSE_COST} prepared Bases.`],
     'god-ares': [() => obliterationBlock(s, key), () => act({type: 'obliteration', key}), `Obliteration needs ${OBLITERATION_COST} prepared Bases.`],
-    'god-artemis': [() => 'pendente', () => {}, ''],
+    'god-artemis': [() => moonAwakeningBlock(s, key), () => act({type: 'moonAwakening', key}), `Moon Awakening needs ${MOON_AWAKENING_COST} prepared Bases.`],
   }[d.god] || [() => ultimateBlock(s, ctx, key), () => startExclamation(key), ''];
   const block = ULT[0](), run = ULT[1];
   const why = {used: 'Ultimate already used this match.', sorcery: 'Ultimate: your turn, with no response pending.', cost: ULT[2] || 'Not enough prepared Bases.', 'only-athena': 'No Ultimate available.', pendente: 'This Ultimate is not available in the playtest yet.'}[block] || (block ? 'Not available now.' : '');
@@ -380,6 +388,14 @@ function chainLabel(c) {
   const title = [card?.name, named && ability.toUpperCase() !== card?.name?.toUpperCase() ? ability : ''].filter(Boolean).join(' · ') || 'Triggered ability';
   return {title, text, target: (c.targets?.length ? c.targets : [c.target]).filter(Boolean).map(u => (String(u).startsWith('god:') ? `God ${u.slice(4)}` : ctx.objects[u] ? info(u).name : '')).filter(Boolean).join(', ')}; // alvos escolhidos ao conjurar (item.targets)
 }
+// Arte do token de mesa: enquadramento do Forge; sem arte, o símbolo da facção ou o logo.
+function tokenArt(forge) {
+  const fr = forge.ilustracao_enquadramento, fac = String(forge.faccao).toLowerCase();
+  return forge.ilustracao ? `--art:url('${FORGE_ART + forge.ilustracao}');${fr?.w ? `--fx:${fr.x / 1488};--fy:${(fr.y - 160) / 1488};--fw:${fr.w / 1488};` : ''}`
+    : CARD_FACTIONS.has(fac) ? `--art:url('../../CARD-TEMPLATE/symbols/${fac}.png');` : `--art:url('../../LOGO/logo-web.webp');--noart-w:70%;`;
+}
+// Bônus impresso de qualquer Equipment (Armor: bonus_poder/bonus_vida; armas: linha "Equipped Devotee gets").
+const printedBonusFields = f => { const b = printedEquipmentBonuses(f); return {bonus_poder: b.power || 0, bonus_vida: b.hp || 0}; };
 function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
   if (hidden || !ctx.objects[uid]) return `<div class="dcard dcard--back ${size}" data-uid="${uid}" aria-label="Face-down card"><span></span></div>`;
   const s = S(), c = info(uid), n = num(uid), unit = s.units[uid];
@@ -398,6 +414,13 @@ function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
   // Dano não tem marcador: o HP impresso já mostra a vida restante, em vermelho.
   const marks = unit?.training || unit?.seal ? `<span class="dcard__tokens">${unit?.training ? token('training', unit.training, `Training|${unit.training} counter${unit.training > 1 ? 's' : ''}: +1 ATK / +1 HP each.`) : ''}${unit?.seal
     ? token('seal', unit.seal, `Seal|${unit.seal} counter${unit.seal > 1 ? 's' : ''}: each Prepare removes one instead of preparing.`) : ''}</span>` : '';
+  // Equipamento solto na mesa (Armor sem portador, arma caída): token compacto com arte, nome, bônus e selo EQUIP (autor, 30/10/2026).
+  if (forge && field && !size && c.kind === 'Equipment' && BOARD_TOKENS) {
+    const bonus = armorBonusText({...forge, ...printedBonusFields(forge)}), equip = forge.equipar_custo_outros ?? forge.equipar_custo;
+    return `<div class="${cls} dcard--board dcard--gear"${facAttr} data-uid="${uid}" tabindex="0" aria-label="${esc(c.name)}, no bearer${bonus ? `, ${bonus}` : ''}">
+      <div class="btok ${!forge.ilustracao ? 'is-noart' : ''}" style="${tokenArt(forge)}"><span class="btok__name">${esc(c.name)}</span>
+        ${bonus ? `<span class="btok__band">${esc(bonus)}</span>` : ''}${equip != null && !c.global ? `<b class="btok__equip" title="Equip ${equip}"><small>EQUIP</small>${equip}</b>` : ''}</div></div>`;
+  }
   if (forge && field && !size && c.kind === 'Devotee' && BOARD_TOKENS) { // só na mesa: inspetor (size xl) mostra a carta inteira
     // Carta na mesa no estilo MTG Arena (teste local, autor 30/10/2026): só arte, nome, ATK e HP.
     // A arte segue o enquadramento do Forge, recortada da altura do rosto; o texto inteiro fica no inspetor.
@@ -423,7 +446,7 @@ function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
     ${c.cost ? `<b class="dcard__cost ${c.cost.unit}" title="${c.cost.amount} ${c.cost.unit === 'base' ? 'Base' : 'Latent'} Cosmo">${c.cost.amount}</b>` : ''}
     <div class="dcard__plate"><strong>${esc(c.name)}</strong><small>${esc(subtype)}${kws.length ? ` · ${esc(kws.join(' · '))}` : ''}</small></div>
     ${c.kind === 'Devotee' ? `<div class="dcard__stats"><b class="atk ${statBuffed(atk, c.atk)}" title="ATK ${atk}">${atk}</b><b class="hp ${dmg ? 'hurt' : statBuffed(hp, c.hp)}" title="HP ${hp - dmg} of ${hp}">${hp - dmg}</b></div>` : ''}
-    ${c.armor && field ? `<div class="dcard__stats"><b class="hp">${c.hp - dmg}</b></div>` : ''}
+    ${c.armor && field && c.hp ? `<div class="dcard__stats"><b class="hp" title="+${c.hp} HP to the wearer">+${c.hp}</b></div>` : ''}
     ${marks}
   </div>`;
 }
@@ -545,7 +568,11 @@ function cosmoLane(key, side) {
 function fieldRow(key) {
   const s = S(), p = s.players[key];
   const units = p.battlefield.filter(u => !ctx.attached[u]).map(u => {
-    const gear = gearOf(ctx, u).map(g => `<div class="gear" data-uid="${g}" title="${esc(info(g).name)}">${esc(info(g).name)}${s.units[g]?.damage ? ` · ${s.units[g].damage} dmg` : ''}</div>`).join('');
+    // Equipamento preso: mini-token com arte, nome e bônus, ligado ao portador (clique abre o inspetor da carta).
+    const gear = gearOf(ctx, u).map(g => {
+      const f = FORGE.get(ctx.objects[g].cardId), bonus = f && armorBonusText({...f, ...printedBonusFields(f)});
+      return `<div class="gear ${info(g).armor ? 'gear--armor' : ''}" data-uid="${g}" tabindex="0" title="${esc(info(g).name)}${bonus ? ` · ${esc(bonus)}` : ''}"${f ? ` style="${tokenArt(f)}"` : ''}><span>${esc(info(g).name)}</span>${bonus ? `<b>${esc(bonus)}</b>` : ''}</div>`;
+    }).join('');
     return `<div class="slot">${cardFace(u, {field: true})}${gear ? `<div class="gears">${gear}</div>` : ''}</div>`;
   }).join('');
   return `<section class="field field--${key === viewer() ? 'me' : 'opp'}" data-field="${key}" aria-label="Player ${key} battlefield">${units || '<p class="field__empty">No Devotees</p>'}</section>`;
@@ -812,12 +839,13 @@ function logEvent(e) {
     fatigue: `${e.player} suffers Fatigue ${e.amount}.`,
     awaken_changed: `God ${e.player} ${e.awaken ? 'AWAKENS' : 'leaves Awaken'} (Soul ${e.soul}).`, divine_power: `God ${e.player}: ${e.ability}.`,
     defeat_prevented: `${n(e.uid)} survives with 1 HP (${e.ability}).`, ultimate_announced: `${e.player} announces ${e.ability} (paid ${e.cost} Base).`,
+    moon_awakened: `${n(e.uid)} awakens as a Moon Spirit.`, moon_reverted: `A Moon Spirit returns to being a Cosmo Base.`, control_changed: `${e.player} gains control of ${n(e.uid)}.`, entered: `${n(e.uid)} enters the battlefield.`, fizzled: `${n(e.uid)} fizzles: its bearer is gone.`,
     ultimate_resolved: e.loss === undefined ? `${e.ability} resolves.` : `${e.ability}: God loses ${e.loss} Soul.`, ultimate_failed: `${e.ability} fails: a chosen Saint is no longer valid. Cost not refunded.`,
     judgment_placed: `Divine Judgment on God ${e.player}: loses at the end of Round ${e.deadline}.`, judgment_removed: `Divine Judgment removed from God ${e.player}.`,
     soul_gained: `God ${e.player} recovers ${e.amount} Soul.`,
     seal_added: `${n(e.uid)} gets ${e.added} Seal (${e.counters} total).`, seal_removed: `${n(e.uid)} stays Unprepared: 1 Seal removed (${e.counters} left).`,
     seal_failed: `${e.source}: paid, but the Devotee is gone. No Seal.`, divine_power_declined: `God ${e.player} declines ${e.ability}.`,
-    mill: `${e.player} mills ${e.moved}${e.moved < e.requested ? ` of ${e.requested}` : ''}.`, discarded: `${e.player} discards ${e.uids?.length}.`,
+    mill: `${e.player} mills ${e.moved}${e.moved < e.requested ? ` of ${e.requested}` : ''}.`, discarded: `${e.player} discards ${e.uids ? `${e.uids.length} card${e.uids.length === 1 ? '' : 's'}` : n(e.uid)}.`,
     base_returned: `${e.player}: a Cosmo Base returns to hand.`, returned_to_hand: `${e.ability}: ${e.uids?.length} cards return to their owners' hands.`,
     TIMEOUT_AUTO_CHOICE: `TIMEOUT_AUTO_CHOICE (Player ${e.player}): ${e.result?.map(n).join(', ') || 'nothing'}.`, TIMEOUT_DECLINED: `TIMEOUT_DECLINED (Player ${e.player}): ${e.ability}.`,
     TIMEOUT_PASS_PRIORITY: `TIMEOUT_PASS_PRIORITY (Player ${e.player}).`, TIMEOUT_END_TURN: `TIMEOUT_END_TURN (Player ${e.player}).`, mulligan: `${e.player} mulligans ${e.count}.`, victory: e.draw ? 'Draw.' : `Player ${e.winner} wins.`}[e.type];
@@ -915,7 +943,9 @@ function fieldMenu(uid, el) {
   if (!idleFor(key)) return warn("Wait for your turn's main phase.");
   if (c.kind === 'Devotee' && strikeTargets(s, ctx, uid).length) items.push(['Strike', () => startStrike(uid)]);
   for (const a of cardAbilities(uid)) if (!a.why) items.push([a.label, a.run]);
-  if (c.kind === 'Equipment' && !c.global && !ctx.attached[uid]) items.push(['Re-equip', () => begin('reequip', key, uid, [{key: 'bearer', pick: 'devotee', label: 'Re-equip to which Devotee?'}], choice => ({type: 'reequip', key, uid, choice}))]);
+  if (c.kind === 'Equipment' && !c.global && !ctx.attached[uid]) items.push(['Re-equip', () => begin('reequip', key, uid, [{key: 'bearer', pick: c.armor ? 'wearer' : 'devotee', armor: uid, label: 'Re-equip to which Devotee?'}], choice => ({type: 'reequip', key, uid, choice}))]);
+  // Armor vestida pode passar a outro Devotee seu: AÇÃO + Equip impresso (guia §28).
+  else if (c.armor && ctx.attached[uid] && c.equip) items.push([`Move (Equip ${c.equip.amount})`, () => begin('reequip', key, uid, [{key: 'bearer', pick: 'wearer', armor: uid, label: `Move ${c.name} to which Devotee?`}], choice => ({type: 'reequip', key, uid, choice}))]);
   if (!items.length) return warn(s.units[uid]?.prepared === false ? 'Unprepared: it readies at the start of your turn.' : 'No action available for this card.');
   quickMenu(el, items);
 }
@@ -1081,7 +1111,7 @@ function loadout(uid) {
       ${gear.map(g => line(esc(info(g).name), sign(bonus(g).atk || 0), sign(bonus(g).hp || 0), 'is-gear')).join('')}
       ${otherAtk || otherHp ? line('Other effects', sign(otherAtk), sign(otherHp), 'is-other') : ''}
       ${line('Total', atk, dmg ? `${hp - dmg}<small>/${hp}</small>` : hp, 'is-total')}</ul>
-    ${gear.length ? `<h4>Equipped</h4><div class="loadout__gear">${gear.map(g => `<button class="loadout__card" data-open-card="${g}" data-tip="${esc(`${info(g).name}|Click to view this card.`)}">${cardFace(g, {field: true})}</button>`).join('')}</div>` : '<p class="loadout__none">Nothing equipped.</p>'}
+    ${gear.length ? `<h4>Equipped</h4><div class="loadout__gear">${gear.map(g => `<button class="loadout__card" data-open-card="${g}" data-tip="${esc(`${info(g).name}|Click to view this card.`)}">${cardFace(g, {field: true, size: 'dcard--sm'})}</button>`).join('')}</div>` : '<p class="loadout__none">Nothing equipped.</p>'}
   </aside>`;
 }
 function showBigCard(uid) {

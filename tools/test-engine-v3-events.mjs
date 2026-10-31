@@ -23,7 +23,7 @@ test('eventos têm seq contínuo e seguem a ordem real: mulligan, turno, compra,
   for (const p of Object.values(s.players)) for (const z of ['deck', 'hand']) { const i = p[z].indexOf(seiya); if (i >= 0) p[z].splice(i, 1); }
   s.players.A.hand.push(seiya);
   s.players.A.bases = s.players.A.deck.splice(0, 3).map(uid => ({uid, prepared: true}));
-  playDevotee(s, ctx, 'A', seiya);
+  playDevotee(s, ctx, 'A', seiya); passAll(s); // guia §56: resolve a pilha
   for (let i = 0; i < 2; i++) { endTurn(s); passAll(s); startTurn(s); }
   declareStrike(s, ctx, seiya, {kind: 'god', player: 'B'});
   passAll(s);

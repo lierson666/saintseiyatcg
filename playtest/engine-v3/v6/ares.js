@@ -171,8 +171,15 @@ export default {
       return st => { if (alive(st, bearer) && k.may(c, key, 'LAMASSU RESONANCE', {uid: bearer, text: 'Prepare Lior?'})) k.prepare(st, bearer); };
     },
   }),
-  // Lotis of Lamia. pendente: Illusory Escape (sem gancho "becomes the target of an enemy ability" nem cancelamento).
+  // Lotis of Lamia. Illusory Escape (gancho watchSpell: alvos escolhidos ao conjurar).
+  // shortcut: só Spell inimiga (habilidade ativada não avisa alvo); "cancel the effect on Lotis" contraria a Spell só quando
+  // Lotis é o único alvo — com vários alvos não há como tirar só a parte de Lotis.
   'ares-v6-277': {
+    watchSpell: (s, c, key, self, caster, spellUid, targets = []) => caster !== key && targets.length === 1 && targets[0] === self
+      && s.players[key].hand.length && !s.roundUses.has(`${self}:escape`) && (st => {
+        if (!k.spellOnChain(st, spellUid) || !k.may(c, key, 'ILLUSORY ESCAPE', {uid: self, cost: 'discard a card'})) return;
+        if (k.discard(st, c, key, 1, 'ILLUSORY ESCAPE').length) { k.once(st, `${self}:escape`); k.counterSpell(st, c, spellUid); }
+      }),
     enter: (s, c, key) => st => opponentDiscards(st, c, key, 'NIGHTMARE MANIFESTATION'),
     godDamage: (s, c, key) => st => opponentDiscards(st, c, key, 'TORMENT'),
   },

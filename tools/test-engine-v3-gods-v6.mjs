@@ -10,7 +10,7 @@ import {startTurn, passAll, runCheckpoint, gainLatent, RuleError, NotSpecified} 
 import {bindContext} from '../playtest/engine-v3/v6/registry.js';
 import {declareStrike, checkStrike} from '../playtest/engine-v3/strike.js';
 import {atkOf, keywordsOf, damageDevotee, checkDefeats, hpOf} from '../playtest/engine-v3/effects.js';
-import {refreshAwaken, announceGreatEclipse, greatEclipseBlock, activateBloodlust, announceObliteration, placeBaseMoonHarvest, moonAwakeningBlock} from '../playtest/engine-v3/gods.js';
+import {refreshAwaken, announceGreatEclipse, greatEclipseBlock, activateBloodlust, announceObliteration, placeBaseMoonHarvest, moonAwakeningBlock, announceMoonAwakening} from '../playtest/engine-v3/gods.js';
 import {putOntoField} from '../playtest/engine-v3/v6/kit.js';
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
@@ -51,6 +51,16 @@ test('Hades Offering of Life: só Devotee SEU derrotado → perde 2 Soul, compra
   kill(s, ctx, foe2);
   assert.equal(A.soul, soul - 2, 'segundo Devotee no mesmo Round não repete');
   assert.equal(count(s, 'divine_power', 'OFFERING OF LIFE'), 1);
+});
+
+test('Hades Offering of Life: um gatilho por Devotee; recusar o primeiro deixa usar o segundo do mesmo lote', () => {
+  const answers = [false, true];
+  const {s, ctx, A} = setup('god-hades', () => answers.shift() ?? false);
+  const a = ownDevotee(s, ctx), b = ownDevotee(s, ctx), soul = A.soul;
+  for (const u of [a, b]) damageDevotee(s, ctx, u, 99, false);
+  checkDefeats(s, ctx); runCheckpoint(s); passAll(s);
+  assert.equal(count(s, 'divine_power_declined'), 1);
+  assert.equal(A.soul, soul - 2);
 });
 
 test('Hades Offering of Life: recusar não gasta Soul nem o uso do Round', () => {
@@ -141,8 +151,6 @@ test('Ares Obliteration (Ultimate 6): prepara todos, +3 ATK/Pierce/Long Range no
   assert.equal(s.units[one].prepared, true);
   assert.equal(atkOf(s, ctx, two), before + 3);
   assert.ok(['Pierce', 'Long Range'].every(w => keywordsOf(s, ctx, two).includes(w)));
-  assert.throws(() => declareStrike(s, ctx, two, {kind: 'god', player: 'B'}), NotSpecified, 'Long Range ainda não tem efeito especificado no Strike');
-  for (const e of s.effects) if (e.keywords) e.keywords = e.keywords.filter(w => w !== 'Long Range'); // teste: tira o Long Range pendente para exercer o resto
   declareStrike(s, ctx, two, {kind: 'god', player: 'B'}); passAll(s);
   assert.equal(B.soul, 20 - (before + 3), 'Pierce/ATK +3 contam; Soul de B é 20');
   assert.ok(A.tartarus.includes(two), 'quem completou o Strike foi destruído');
@@ -181,6 +189,22 @@ test('Artemis Moonlight Blessing: respeita o teto de 3', () => {
   assert.equal(A.latent, 3);
 });
 
-test('Artemis Moon Awakening (Ultimate 9): pendente, bloqueada na interface', () => {
-  assert.equal(moonAwakeningBlock(), 'pendente');
+test('Artemis Moon Awakening (Ultimate 9): até 5 Bases viram Moon Spirit 3/3; sem dano de retaliação do God; +2 Soul; derrotada vai ao Tartarus como a carta real', () => {
+  const {s, ctx, bases, A, B} = setup('god-artemis', (p, q) => (q.options ? q.options[q.options.length - 1] : true));
+  bases('A', 11);
+  assert.equal(moonAwakeningBlock(s, 'A'), null);
+  announceMoonAwakening(s, ctx, 'A'); passAll(s);
+  const spirits = A.battlefield.filter(u => ctx.objects[u].moon);
+  assert.equal(spirits.length, 5);
+  assert.equal(A.bases.length, 6, 'as Bases escolhidas saem da área de recursos');
+  assert.ok(spirits.every(u => atkOf(s, ctx, u) === 3 && keywordsOf(s, ctx, u).includes('Long Range')));
+  assert.ok(spirits.every(u => s.units[u].prepared), 'Moon Spirits entram Prepared (autor, 30/10/2026)');
+  const ready = spirits[0], soul = B.soul;
+  assert.equal(moonAwakeningBlock(s, 'A'), 'used');
+  declareStrike(s, ctx, ready, {kind: 'god', player: 'B'}); passAll(s);
+  assert.equal(B.soul, soul - 5, '3 de dano + 2 de Moon Spirit');
+  assert.equal(s.units[ready].damage, 0, 'God não causa dano de retaliação');
+  const real = ctx.objects[ready].moon.cardId;
+  kill(s, ctx, ready);
+  assert.ok(A.tartarus.includes(ready) && ctx.objects[ready].cardId === real && !ctx.objects[ready].moon);
 });

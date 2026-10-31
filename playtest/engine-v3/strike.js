@@ -2,12 +2,11 @@
 // Declaração → janela de reação (P06 A) → dano simultâneo → verificação de destruição.
 // `ctx`: {cards (loadCanon), objects (uid -> {owner, cardId}), attached}. Estado de unidade em state.units[uid] = {prepared, damage}.
 import {RuleError, NotSpecified, recordStrike, loseSoul, destroyDevotee, assertIdle, openWindow, pushTriggers, emit, hooks} from './core.js';
-import {atkOf, keywordsOf, damageDevotee, preventGod, onDeclare, afterStrike, checkDefeats, gearOf, cannotStrike, cannotStrikeGod} from './effects.js';
+import {atkOf, keywordsOf, damageDevotee, preventGod, onDeclare, afterStrike, checkDefeats, gearOf, cannotStrike, cannotStrikeGod, controllerOf} from './effects.js';
 import {v6Declare} from './v6/hooks.js';
+import {entryOf} from './v6/registry.js';
 
 export {atkOf, hpOf, keywordsOf, gearOf} from './effects.js';
-
-const PENDING_KEYWORDS = ['Long Range']; // fora da P05: sem definição 3.0
 
 const card = (ctx, uid) => ctx.cards.get(ctx.objects[uid].cardId);
 const onField = (state, key, uid) => state.players[key].battlefield.includes(uid);
@@ -15,7 +14,7 @@ const onField = (state, key, uid) => state.players[key].battlefield.includes(uid
 // Legalidade da declaração, sem mexer no estado (a interface usa para destacar alvos legais).
 export function checkStrike(state, ctx, attacker, target) {
   if (state.victory) throw new RuleError('D52', 'a partida já terminou');
-  const key = ctx.objects[attacker]?.owner, enemy = state.order.find(k => k !== key);
+  const key = controllerOf(state, attacker) ?? ctx.objects[attacker]?.owner, enemy = state.order.find(k => k !== key); // controlador (265 troca controle)
   if (key !== state.active) throw new RuleError('D1', 'só o jogador ativo declara Strike no próprio turno');
   assertIdle(state);
   if (!onField(state, key, attacker) || card(ctx, attacker).kind !== 'Devotee') throw new RuleError('P04', 'o atacante precisa ser um Devotee seu no campo');
@@ -23,32 +22,36 @@ export function checkStrike(state, ctx, attacker, target) {
   const unit = state.units[attacker], impulse = unit?.entered === state.turn && keywordsOf(state, ctx, attacker).includes('Impulse'); // inclui Impulse dado por efeito (V6)
   if (unit?.prepared !== true && !impulse) throw new RuleError('P04', 'o atacante precisa estar Prepared');
   if (cannotStrike(state, attacker)) throw new RuleError('V6', 'este Devotee não pode declarar Strike neste Round'); // gancho cannotStrike
-  // §47 (autor, 29/10/2026): o Strike na rodada de entrada (Impulse) não pode ter um God como alvo; Pierce segue normal.
-  if (target.kind === 'god' && unit?.entered === state.turn) throw new RuleError('§47', 'Devotee que entrou nesta rodada não pode ter um God como alvo');
+  // §47 (autor, 30/10/2026): o Strike de Impulse na rodada de entrada pode mirar o God (restrição de 29/10 revertida).
   if (target.kind === 'god' && cannotStrikeGod(state, attacker)) throw new RuleError('V6', 'este Devotee não pode mirar um God nesta rodada');
   const legal = target.kind === 'god' ? target.player === enemy
     : target.kind === 'devotee' && onField(state, enemy, target.uid) && card(ctx, target.uid).kind === 'Devotee';
   if (!legal) throw new RuleError('P04', 'alvo precisa ser o God inimigo ou um Devotee inimigo');
   const defenders = state.players[enemy].battlefield.filter(uid => card(ctx, uid).kind === 'Devotee');
-  const keyword = [attacker, ...defenders].flatMap(uid => keywordsOf(state, ctx, uid)).find(k => PENDING_KEYWORDS.includes(k));
-  if (keyword) throw new NotSpecified(`efeito de ${keyword} no Strike (fora da ALPHA-P05)`);
   // P05 A + G3-038 (autor, 28/10/2026): qualquer Guardian em campo, Prepared ou não, obriga a mirar um Guardian;
   // Nimble ignora sempre; Cheater ignora contra God.
   const own = keywordsOf(state, ctx, attacker), isGuardian = uid => keywordsOf(state, ctx, uid).includes('Guardian');
   const guarded = defenders.some(isGuardian);
-  const ignores = own.includes('Nimble') || (own.includes('Cheater') && target.kind === 'god');
+  // La Scoumoune (363, autor 30/10/2026): mira Devotee inimigo Unprepared ignorando Guardian (gancho ignoresGuardian).
+  const hunts = target.kind === 'devotee' && !!entryOf(ctx, attacker)?.ignoresGuardian?.(state, ctx, attacker, target.uid);
+  const ignores = own.includes('Nimble') || (own.includes('Cheater') && target.kind === 'god') || hunts;
   if (guarded && !ignores && !(target.kind === 'devotee' && isGuardian(target.uid))) {
     throw new RuleError('P05', 'há Guardian em campo: o Strike precisa mirar um Devotee com Guardian');
   }
   if (state.strikes.get(attacker) === state.turn) throw new RuleError('D22', 'este Devotee já declarou Strike neste turno');
   // Para a UI explicar quando um Strike passa por Guardian (Nimble sempre; Cheater contra God).
-  const bypass = guarded && !(target.kind === 'devotee' && isGuardian(target.uid)) ? (own.includes('Nimble') ? 'Nimble' : 'Cheater') : null;
+  const bypass = guarded && !(target.kind === 'devotee' && isGuardian(target.uid)) ? (own.includes('Nimble') ? 'Nimble' : hunts ? 'Hunter\'s Instinct' : 'Cheater') : null;
   return {key, enemy, bypass};
 }
 
+// "Must attack each turn if able" (Ohko 482, gancho mustStrike; autor 30/10/2026): Devotees de `key` que ainda devem declarar
+// Strike neste turno e têm alvo legal. O END TURN é recusado enquanto houver algum (actions.js).
+export const mustStrike = (state, ctx, key) => state.players[key].battlefield.filter(uid => entryOf(ctx, uid)?.mustStrike
+  && state.strikes.get(uid) !== state.turn && strikeTargets(state, ctx, uid).length);
+
 // Alvos legais de um atacante agora: [] se ele não pode declarar Strike.
 export function strikeTargets(state, ctx, attacker) {
-  const key = ctx.objects[attacker]?.owner, enemy = state.order.find(k => k !== key);
+  const key = controllerOf(state, attacker) ?? ctx.objects[attacker]?.owner, enemy = state.order.find(k => k !== key); // controlador (265 troca controle)
   const all = [{kind: 'god', player: enemy}, ...state.players[enemy].battlefield.filter(uid => card(ctx, uid).kind === 'Devotee').map(uid => ({kind: 'devotee', uid}))];
   return all.filter(target => { try { checkStrike(state, ctx, attacker, target); return true; } catch { return false; } });
 }
@@ -84,33 +87,40 @@ export function resolveStrike(state, ctx, strike) {
     state.effects = state.effects.filter(e => e.duration !== 'this_strike'); // escudos/bônus do Strike anulado não sobram
     return null;
   }
-  const atk = atkOf(state, ctx, attacker), pierce = keywordsOf(state, ctx, attacker).includes('Pierce'); // lido antes do dano
+  const atk = atkOf(state, ctx, attacker), own = keywordsOf(state, ctx, attacker), pierce = own.includes('Pierce'); // lido antes do dano
+  // §25/§45: Long Range de quem inicia causa o dano primeiro; derrota verificada antes da retaliação. Cheater do alvo anula (§44).
+  const first = own.includes('Long Range') && !(target.kind === 'devotee' && keywordsOf(state, ctx, target.uid).includes('Cheater'));
+  strike.longRange = first;
   strike.atks = {[attacker]: atk};
   // Equipment presos antes do dano: gatilhos V6 "equipped Devotee …" valem mesmo se o portador morrer no Strike.
   strike.gearBefore = Object.fromEntries([attacker, target.uid].filter(Boolean).map(u => [u, gearOf(ctx, u)]));
   emit(state, 'strike_resolve', {player, attacker, target, atk});
   const mark = state.events.length;
   if (target.kind === 'devotee') {
-    const back = atkOf(state, ctx, target.uid), before = state.units[target.uid].damage;
+    // Black Phoenix Shadow (458, autor 30/10/2026): "cannot retaliate" (gancho noRetaliate).
+    const back = entryOf(ctx, target.uid)?.noRetaliate ? 0 : atkOf(state, ctx, target.uid), before = state.units[target.uid].damage;
     strike.atks[target.uid] = back;
     const excess = damageDevotee(state, ctx, target.uid, atk);
     strike.hits = {[target.uid]: lastHit(state, target.uid, mark)}; // gancho damagePrevented: o que a prevenção/Armor tirou de cada lado
     strike.dealt = (state.units[target.uid]?.damage ?? Infinity) - before; // dano que chegou ao Devotee (Libra Sword)
+    if (first) checkDefeats(state, ctx); // alvo derrotado não retalia
     const backBefore = state.units[attacker].damage;
-    damageDevotee(state, ctx, attacker, back);
+    if (!first || onField(state, enemy, target.uid)) damageDevotee(state, ctx, attacker, back);
     strike.hits[attacker] = lastHit(state, attacker, mark);
     strike.dealtBack = (state.units[attacker]?.damage ?? Infinity) - backBefore;
     // P05 A: Pierce leva o dano acima do HP restante do alvo ao Soul do God dele (prevenível como dano de Strike ao God).
     const toGod = pierce && excess > 0 ? preventGod(state, ctx, enemy, excess) : 0;
-    if (toGod > 0 && loseSoul(state, {[enemy]: toGod}, 'damage')) return state.victory;
+    if (toGod > 0 && loseSoul(state, {[enemy]: toGod + (ctx.objects[attacker]?.moon ? 2 : 0)}, 'damage')) return state.victory; // Moon Spirit: +2 Soul
   } else {
-    damageDevotee(state, ctx, attacker, ctx.cards.get(state.gods[enemy]).atk);
-    strike.hits = {[attacker]: lastHit(state, attacker, mark)};
+    // Moon Spirit (Moon Awakening): a retaliação do God acontece, mas não causa dano (D268).
+    const retaliate = () => { damageDevotee(state, ctx, attacker, ctx.objects[attacker]?.moon ? 0 : ctx.cards.get(state.gods[enemy]).atk); strike.hits = {[attacker]: lastHit(state, attacker, mark)}; };
+    if (!first) retaliate();
     const toGod = preventGod(state, ctx, enemy, atk);
     emit(state, 'god_damage', {player: enemy, incoming: atk, dealt: toGod});
     strike.godDealt = toGod;
     strike.godHit = {incoming: atk, prevented: atk - toGod, absorbed: 0, dealt: toGod}; // gancho damagePrevented (observadores)
-    if (toGod > 0 && loseSoul(state, {[enemy]: toGod}, 'damage')) return state.victory; // D52: encerra na hora
+    if (toGod > 0 && loseSoul(state, {[enemy]: toGod + (ctx.objects[attacker]?.moon ? 2 : 0)}, 'damage')) return state.victory; // D52 (Long Range: antes da retaliação, §25); Moon Spirit: +2 Soul
+    if (first) retaliate();
   }
   checkDefeats(state, ctx);
   afterStrike(state, ctx, strike);

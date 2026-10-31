@@ -4,7 +4,7 @@ import {loadCanon} from '../shared/canon-cards.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {canonIndex, validateDeck, DECK_SIZE, COPY_LIMIT} from '../shared/deck-v3.js';
 import {spellCategory} from './engine-v3/core.js';
-import {renderLiveCard} from '../shared/live-card.js?v=20261030-art';
+import {renderLiveCard} from '../shared/live-card.js?v=20261030-armor5';
 import {unlock, playMusic, setVolume, volume} from './audio.js?v=20261030-telas';
 import {loadMyDecks, saveMyDecks, findDeck, syncDecks, onDeckStatus, deckCovers, setDeckCover} from './deck-store.js?v=20261030-1';
 import {mountKV} from '../shared/kv-sky.js?v=20261029-2';
@@ -370,7 +370,8 @@ function cardInfo(id) {
   const c = cards.get(id), f = id.startsWith('god-') ? godForge(id) : forge.get(id);
   const lines = c.text.split('\n').map(l => l.trim()).filter(Boolean);
   const subtitle = lines[1] && !HEADER.test(lines[1]) ? lines[1] : '';
-  const rules = lines.slice(subtitle ? 2 : 1).filter(l => !HEADER.test(l)).map(l => {
+  // Armor (30/10/2026): o bônus vai para a ficha "Bonus", não para o texto.
+  const rules = lines.slice(subtitle ? 2 : 1).filter(l => !HEADER.test(l) && !(c.armor && /^Equipped Devotee gets /.test(l))).map(l => {
     const m = l.match(/^([A-Z][^—:.]{1,38}) — (.*)$/);
     return `<p>${m ? `<b>${esc(m[1])}</b> — ${esc(m[2])}` : esc(l)}</p>`;
   }).join('');
@@ -382,11 +383,11 @@ function cardInfo(id) {
     <p class="lb-info__type">${esc(typeText(c))}</p>
     <h2>${esc(c.name)}</h2>${subtitle ? `<p class="lb-info__sub">${esc(subtitle)}</p>` : ''}
     <div class="lb-chips">${chip('Cost', c.cost ? `${c.cost.amount} ${c.cost.unit === 'base' ? 'Base' : 'Latent'}` : null, 'is-cost')}
-      ${chip('ATK', c.atk, 'is-atk')}${chip('HP', c.hp, 'is-hp')}${chip('Soul', c.soul)}${chip('Awaken', c.awaken)}
+      ${c.armor ? chip('Bonus', [c.equipped?.atk ? `+${c.equipped.atk} ATK` : '', c.equipped?.hp ? `+${c.equipped.hp} HP` : ''].filter(Boolean).join(' / ')) : `${chip('ATK', c.atk, 'is-atk')}${chip('HP', c.hp, 'is-hp')}`}${chip('Soul', c.soul)}${chip('Awaken', c.awaken)}
       ${chip('Rarity', c.rarity)}${chip('Cosmoble', c.cosmoble == null ? null : c.cosmoble ? 'Yes' : 'No')}
-      ${chip('Auto-Equip', auto)}${chip('Equip', equip ? `${equip[1]} · ${equip[2]}` : null)}</div>
+      ${chip('Resonance', auto)}${chip('Equip', equip ? (c.armor ? equip[1] : `${equip[1]} · ${equip[2]}`) : null)}</div>
     ${c.keywords.length ? `<div class="lb-kws">${c.keywords.map(k => `<span>${esc(k)}</span>`).join('')}</div>` : ''}
-    <div class="lb-info__rules">${rules}</div>
+    <div class="lb-info__rules">${c.armor && c.equipped?.keywords?.length ? `<p>Equipped Devotee has ${esc(c.equipped.keywords.join(' and '))}.</p>` : ''}${rules}</div>
     ${f?.flavour_en ? `<p class="lb-info__flavour">${esc(f.flavour_en)}</p>` : ''}
     ${n == null ? '' : `<div class="lb-info__deck"><span>In deck <b>${n}</b> / ${COPY_LIMIT}</span>
       <button class="lb-ghost" data-act="remove" data-id="${id}" ${n ? '' : 'disabled'} aria-label="Remove one">−</button>

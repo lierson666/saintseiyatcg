@@ -67,6 +67,8 @@ function distribute(s, c, key, ability, total) {
   for (const t of targets) k.damage(s, c, t, dealt[t]);
 }
 
+// Devotees seus que vestem uma Armor (alvo do Repair, 30/10/2026).
+const armored = (s, c, key) => s.players[key].battlefield.filter(u => k.card(c, u)?.kind === 'Devotee' && Object.keys(c.attached).some(e => c.attached[e] === u && k.card(c, e)?.armor));
 export default {
   // Cygnus Cloth V2 (+1 ATK: genérico)
   'athena-v6-006': {
@@ -129,7 +131,6 @@ export default {
   },
 
   // Gemini Gold Cloth (+2 ATK: genérico)
-  // pendente: Resonance — Dragon Shiryu ("Pending design and approval" no próprio texto da carta).
   'athena-v6-014': {
     activate: {name: 'Galaxian Explosion', cost: 4, once: true, tap: false, check: (s, c, key) => needEnemy(s, c, key),
       // Resonance — Gemini Saga: 7 em vez de 5.
@@ -137,9 +138,9 @@ export default {
   },
 
   // Leo Gold Cloth (+2 ATK: genérico)
-  // pendente: Resonance — Phoenix Ikki ("Pending design and approval" no próprio texto da carta).
+  // Resonance — Phoenix Ikki (autor, 30/10/2026): Ikki ativa sem {T}, ou seja, sem o limite de uma vez por Round do Equipment.
   'athena-v6-016': {
-    activate: {name: 'Lightning Plasma', cost: 3, once: true, tap: false, check: (s, c, key) => needEnemy(s, c, key),
+    activate: {name: 'Lightning Plasma', cost: 3, once: (s, c, key, self) => !IKKI(c, k.bearerOf(c, self)), tap: false, check: (s, c, key) => needEnemy(s, c, key),
       run: (s, c, key, self) => {
         const extra = AIOLIA(c, k.bearerOf(c, self)) ? 1 : 0; // Resonance — Leo Aiolia: +1 em cada alvo
         for (const t of k.chooseUpTo(c, key, 'LIGHTNING PLASMA', k.enemies(s, c, key), 2, {text: 'Choose up to two target enemy Devotees.'})) k.damage(s, c, t, 2 + extra);
@@ -147,12 +148,12 @@ export default {
   },
 
   // Aquarius Gold Cloth (+1 ATK: genérico)
-  // pendente: Resonance — Cygnus Hyoga ("Pending design and approval" no próprio texto da carta).
   'athena-v6-018': {
     activate: {name: 'Aurora Execution', cost: 3, once: true, tap: false, check: (s, c, key) => needEnemy(s, c, key),
       run: (s, c, key, self, choice) => {
         const t = enemyTarget(s, c, key, 'AURORA EXECUTION', choice);
         if (!t) return;
+        if (HYOGA(c, k.bearerOf(c, self))) addSeal(s, c, [t], 1, 'RESONANCE — CYGNUS HYOGA'); // Seal antes do dano (autor, 30/10/2026)
         k.damage(s, c, t, sealed(s, t) ? 5 : 3); // 3, +2 se o alvo tem Seal
         // Resonance — Aquarius Camus: remove todos os Seals do alvo e causa 1 a mais por Seal removido (até 3).
         const n = s.units[t]?.seal || 0;
@@ -217,10 +218,11 @@ export default {
   // Jamir Repair Tools
   'athena-v6-050': {
     activate: {name: 'Repair Tools', cost: 1, once: true, tap: false,
-      check: (s, c, key) => { if (!s.players[key].battlefield.some(u => k.card(c, u)?.armor)) throw new k.RuleError('alvo', 'sem Armor sua em campo'); },
+      // Texto de 30/10/2026: "target friendly Devotee equipped with an Armor" (Armor não tem dano próprio).
+      check: (s, c, key) => { if (!armored(s, c, key).length) throw new k.RuleError('alvo', 'sem Devotee seu com Armor'); },
       run: (s, c, key, self, choice) => {
-        const armors = s.players[key].battlefield.filter(u => k.card(c, u)?.armor);
-        const t = armors.includes(choice?.target) ? choice.target : k.choose(c, key, 'REPAIR TOOLS', armors, {text: 'Choose target friendly Armor.'});
+        const armors = armored(s, c, key);
+        const t = armors.includes(choice?.target) ? choice.target : k.choose(c, key, 'REPAIR TOOLS', armors, {text: 'Choose target friendly Devotee equipped with an Armor.'});
         if (t) k.removeDamage(s, t, MU(c, k.bearerOf(c, self)) ? 2 : 1); // Resonance — Aries Mu: até 2
       }},
   },

@@ -35,35 +35,26 @@ test('parser: bônus fixo de Equipment só nas linhas incondicionais', () => {
   assert.equal(cards.get('athena-v6-004').equipped, null);
 });
 
-test('Armor dá ATK e absorve o dano primeiro; destruída vai ao Tartarus do Owner e o excesso passa ao Devotee', () => {
+test('Armor soma ATK e HP ao portador, não tem dano próprio e fica solta no campo quando o portador sai', () => {
   const {s, ctx, objects, field, equip, strike, next} = setup();
-  const seiya = field('A', '001'), cloth = equip('A', '002', seiya); // 2/4 + Cloth (+1 ATK, HP 4)
-  assert.deepEqual([atkOf(s, ctx, seiya), hpOf(s, ctx, seiya)], [3, 4]);
+  const seiya = field('A', '001'), cloth = equip('A', '002', seiya); // 2/4 + Cloth (+1 ATK, HP impresso 4 soma ao máximo)
+  assert.deepEqual([atkOf(s, ctx, seiya), hpOf(s, ctx, seiya)], [3, 8]);
   strike(seiya, {kind: 'god', player: 'B'});
   assert.equal(s.players.B.soul, 17);
-  assert.deepEqual([s.units[cloth].damage, s.units[seiya].damage], [3, 0], 'retaliação 3 toda na Armor');
+  assert.equal(s.units[cloth]?.damage ?? 0, 0, 'a Armor não recebe dano');
+  assert.equal(s.units[seiya].damage, 3, 'retaliação 3 toda no portador');
   next();
   strike(seiya, {kind: 'god', player: 'B'});
-  assert.ok(s.players.A.tartarus.includes(cloth), 'Armor com 4 de dano sai');
-  assert.equal(ctx.attached[cloth], undefined);
-  assert.deepEqual([s.units[seiya].damage, atkOf(s, ctx, seiya)], [2, 2], 'excesso 2 no Seiya; perde o +1');
-  assert.equal(s.players.B.soul, 14, 'o ATK foi lido antes do dano');
+  assert.equal(s.units[seiya].damage, 6);
+  assert.ok(s.players.A.battlefield.includes(cloth), 'Armor nunca é destruída por dano');
+  assert.equal(ctx.attached[cloth], seiya);
+  assert.equal(s.players.B.soul, 14);
   checkInvariants(s, objects);
 });
 
-test('várias Armor: absorvem na ordem em que foram equipadas', () => {
-  const {s, ctx, field, equip, strike, next} = setup();
-  const jabu = field('A', '028'), first = equip('A', '002', jabu), second = equip('A', '002', jabu); // HP 4 cada, +1 ATK cada
-  assert.equal(atkOf(s, ctx, jabu), 4);
-  strike(jabu, {kind: 'god', player: 'B'});
-  assert.deepEqual([s.units[first].damage, s.units[second].damage, s.units[jabu].damage], [3, 0, 0]);
-  next();
-  strike(jabu, {kind: 'god', player: 'B'});
-  assert.ok(s.players.A.tartarus.includes(first));
-  assert.deepEqual([s.units[second].damage, s.units[jabu].damage], [2, 0]);
-});
+// Removido: "várias Armor: absorvem na ordem em que foram equipadas" — Armor não absorve mais dano (guia §26A, 30/10/2026).
 
-test('Divine Weapon com +HP (049) segura o Devotee; Pierce não passa do que a Armor absorveu', () => {
+test('Divine Weapon com +HP (049) soma HP; a Armor (044) soma o HP impresso ao portador e o Pierce mede só o portador', () => {
   const {s, ctx, field, equip, strike} = setup({A: fortress, B: rush});
   const cassios = field('A', '027');
   equip('A', '049', cassios); // 2/3 com +0 ATK / +2 HP, não é Armor; Libra Defense previne 1
@@ -71,10 +62,13 @@ test('Divine Weapon com +HP (049) segura o Devotee; Pierce não passa do que a A
   assert.deepEqual([s.units[cassios].damage, hpOf(s, ctx, cassios)], [2, 5]);
   const t = setup();
   const seiya = t.field('A', '001'), repairer = t.field('B', '042');
-  const cracked = t.equip('B', '044', repairer); // Armor HP 2, +1 ATK, Last Protection previne 1
+  const cracked = t.equip('B', '044', repairer); // Armor HP 2 (soma ao portador), +1 ATK, Last Protection previne 1
   t.s.units[seiya].keywords = ['Pierce'];
+  const hp0 = hpOf(t.s, t.ctx, repairer);
   t.strike(seiya, {kind: 'devotee', uid: repairer});
-  assert.deepEqual([t.s.units[cracked].damage, t.s.units[repairer].damage, t.s.players.B.soul, t.s.units[seiya].damage], [1, 0, 20, 2]);
+  assert.equal(hp0, 4, 'HP 2 do Devotee + HP 2 da Armor');
+  assert.equal(t.s.units[cracked]?.damage ?? 0, 0, 'a Armor não guarda dano');
+  assert.deepEqual([t.s.units[repairer].damage, t.s.players.B.soul, t.s.units[seiya].damage], [1, 20, 2], 'sem excesso: Pierce não passa ao God');
 });
 
 test('019 equipada dá Cheater: ignora Guardian contra o God; texto da 019 intacto', () => {
@@ -114,7 +108,8 @@ test('item global (Equip: None — Global) paga o Casting Cost e fica no campo s
   ctx.cards.set(ctx.objects[uid].cardId, {...shield, id: ctx.objects[uid].cardId, cost: {amount: 1, unit: 'base'}});
   p.deck.splice(p.deck.indexOf(uid), 1); p.hand.push(uid);
   p.bases = p.deck.splice(0, 2).map(u => ({uid: u, prepared: true}));
-  assert.deepEqual(playEquipment(s, ctx, 'A', uid, null), {cost: {amount: 1, unit: 'base'}});
+  assert.deepEqual(playEquipment(s, ctx, 'A', uid, null), {cost: {amount: 1, unit: 'mixed'}}); // guia §5: Base e/ou Latent
+  passAll(s); // guia §56: resolve a pilha
   assert.ok(p.battlefield.includes(uid) && !ctx.attached[uid]);
   assert.throws(() => reequip(s, ctx, 'A', uid, uid), RuleError);
 });

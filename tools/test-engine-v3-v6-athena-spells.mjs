@@ -8,7 +8,7 @@ import {canonIndex} from '../shared/deck-v3.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
 import {startTurn, endTurn, passAll, runCheckpoint} from '../playtest/engine-v3/core.js';
-import {playSpell, activate} from '../playtest/engine-v3/play.js';
+import {playSpell, activate as activateRaw} from '../playtest/engine-v3/play.js';
 import {declareStrike} from '../playtest/engine-v3/strike.js';
 import {checkDefeats, atkOf, keywordsOf, hpOf} from '../playtest/engine-v3/effects.js';
 
@@ -41,6 +41,9 @@ function setup() {
   return {s, ctx, give};
 }
 import {V6, v6Spell} from '../playtest/engine-v3/v6/hooks.js';
+// Guia §56 (30/10/2026): jogada e {T} vão à pilha; aqui os dois passam e a pilha resolve na hora.
+const resolved = fn => (s, ...a) => { const r = fn(s, ...a); passAll(s); return r; };
+const activate = resolved(activateRaw);
 
 const A = n => `athena-v6-${n}`;
 const FOE = 'artemis-v6-399';
@@ -183,13 +186,13 @@ test('090 Will: com Soul acima de 5 não retorna Saint', () => {
   assert.ok(s.players.A.tartarus.includes(dead));
 });
 
-test('063 Jamir Tower: Cloth Restoration tira 1 de dano de Armor amiga', () => {
+test('063 Jamir Tower: Cloth Restoration tira 1 de dano de Devotee amigo com Armor', () => {
   const {s, ctx, give} = setup();
-  const shun = give('A', A('007')), armor = give('A', A('002'), 'battlefield', shun);
-  s.units[armor] ||= {prepared: true, damage: 0, entered: 0};
-  s.units[armor].damage = 2;
+  const shun = give('A', A('007'));
+  give('A', A('002'), 'battlefield', shun);
+  s.units[shun].damage = 2;
   V6[A('063')].activate.run(s, ctx, 'A');
-  assert.equal(s.units[armor].damage, 1);
+  assert.equal(s.units[shun].damage, 1);
 });
 
 test('Event e Miracle jogam como Technique (guia §54)', () => {
@@ -201,12 +204,12 @@ test('Event e Miracle jogam como Technique (guia §54)', () => {
 test('063 Jamir Tower: ativada de ponta a ponta por play.activate("domain:A"), paga {2}{C}, uma vez por Round', () => {
   const {s, ctx, give} = setup();
   s.domains.A = A('063');
-  const shun = give('A', A('007')), armor = give('A', A('002'), 'battlefield', shun);
-  s.units[armor] ||= {prepared: true, damage: 0, entered: 0};
-  s.units[armor].damage = 2;
+  const shun = give('A', A('007'));
+  give('A', A('002'), 'battlefield', shun);
+  s.units[shun].damage = 2;
   const before = s.players.A.bases.filter(b => b.prepared).length;
   activate(s, ctx, 'A', 'domain:A');
-  assert.equal(s.units[armor].damage, 1);
+  assert.equal(s.units[shun].damage, 1);
   assert.equal(s.players.A.bases.filter(b => b.prepared).length, before - 2);
   assert.throws(() => activate(s, ctx, 'A', 'domain:A'), /já foi usada/);
 });

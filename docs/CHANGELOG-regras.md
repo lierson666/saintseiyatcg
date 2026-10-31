@@ -4,6 +4,82 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-30 — §§61, 64 e engine — leituras confirmadas pelo autor (grilling)
+
+- **“Until end of turn” (§64):** o guia já dizia “until end of round” desde 29/10; a engine usava o fim do turno nas neutras V6. Agora dura até o fim do Round. Isso inclui 497 Last Moment Defense, que passa a proteger no turno do adversário.
+- **Distribuir dano (§64, novo):** cada alvo escolhido recebe pelo menos 1 (Galaxian Explosion 014). A engine já fazia assim.
+- **{T} de Domain (§61):** uma vez por Round, como Equipment (Jamir Tower 063). A engine já fazia assim.
+- **“Destroyed” (§61, novo):** só a saída do campo para o Tartarus conta; mão e exílio não. A engine já fazia assim.
+- **Hades 255 Gemini Saga:** o Devotee exilado volta **Unprepared** e sem dano (antes: Prepared).
+- **Hades Offering of Life:** **um gatilho por Devotee** derrotado (antes: um por lote). O limite de uma vez por Round continua, e recusar não gasta o uso: quem recusa o primeiro pode aceitar o segundo.
+- **Leituras que viram regra:** “Soul pago para ativar habilidade” = qualquer “you may pay N Soul” de Hades; reações a “target of an enemy ability” só veem Spells (habilidade ativada não anuncia alvo); Illusory Escape só contraria a Spell quando Lotis é o único alvo; Emperor's Dominion e Eternal Allegiance reduzem o custo sem piso.
+- **Sintaxe de Armor (§64):** o bônus volta às gemas de ATK/HP na linha de tipo (sai a faixa); a Resonance aparece num bloco só, “Resonance — Nome completo” e o efeito embaixo, no duelo e no Studio do Forge.
+- **Pendências:** nenhuma. Não publicado.
+
+## 2026-10-30 — Cartas e engine — Cosmo Disruption, Moon Awakening e inspetor do Forge
+
+- **476 Cosmo Disruption (`data/cards.json`):** Technique, custo 5 → **Moment, custo 3**. Texto: “Cosmo Interruption — As an additional cost to cast Cosmo Disruption, discard a card. Counter target Moment or Technique.” “Energy Backlash — You lose 2 Soul.” continua.
+- **Motivo:** autor, 30/10/2026 (grilling): Technique não acha alvo na pilha; como Moment de resposta paga só Latent (teto 3), o custo cai para 3, com o descarte e a perda de Soul como desvantagem.
+- **Engine:** gancho `spell.cost` (custo adicional pago ao conjurar, depois do Cosmo) em `playSpellV6`. 476 só conjura com uma Spell na cadeia e outra carta na mão; o alvo é escolhido na resolução.
+- **Moon Awakening (Artemis, Ultimate):** antes, a Base escolhida guardava o Prepared que tinha (D268/D215). **Depois:** as Moon Spirits entram **Prepared**. Desvio aprovado do D268 (autor, 30/10/2026). O texto da carta não muda.
+- **Card Forge:** a prévia/inspetor (`card-forge/studio-preview.js`) sai da engine-v2 e usa a conta de ATK/HP/keywords da engine-v3. Bônus de Armor agora inclui o `bonus_vida` (§26A): Pegasus Seiya + Pegasus Cloth V2 mostra 9 HP máximo, não 5. God e Domain ficam com os valores impressos.
+- **Pendências:** nenhuma de regra. Não publicado.
+
+## 2026-10-30 — §56 — Tudo vai à pilha (estilo Magic)
+
+- **Antes:** só Spells iam à pilha com janela; Devotee e Equipment entravam direto; habilidades ativadas resolviam na hora.
+- **Depois:** Devotee, Equipment (inclusive Armor), Spells e habilidades ativadas ({T}, {N}{C}, Domain, poder divino, Ultimate) entram na pilha e abrem janela de resposta. Só Moment responde. Devotee/Equipment entram em campo ao resolver; contrariados vão ao Tartarus. Colocar Base continua fora da pilha.
+- **Motivo:** autor, 30/10/2026 (grilling): “tudo deve ir pra pilha, tudo é cast igual Magic”.
+- **Cartas (mesma rodada, diff aprovado, `docs/pilha-e-pendencias-2026-10-30/cards.diff.md`):** 458 “cannot retaliate”; 492 o dono do Devotee derrotado perde 2 Soul; 224 “When equipped Devotee is defeated”; 363 ignora Guardian contra Devotee Unprepared; 397 primeiro Devotee do turno em que a Dryad gerou Cosmo; 014 sem Resonance de Shiryu; 016 Ikki ativa Lightning Plasma sem {T}; 018 Hyoga põe 1 Seal antes do dano.
+- **Só engine:** 482 Ohko impede o END TURN enquanto puder atacar; 483 leitura confirmada; 493 sem uso no Round seguinte; 496 Base Unprepared; 459 confirmado; Water Prison em Devotee já Sealed soma +1 Seal; 265 troca de controle até o fim do Round (controlador = campo onde está o objeto); Moon Awakening pelo D268 (até 5 Bases viram Moon Spirit 3/3 com Impulse, Long Range e Pierce; God não causa dano de retaliação; +2 Soul ao ferir o God; derrotada vai ao Tartarus como a carta real; volta a ser Base Unprepared no fim do Round); 384 luta na entrada; 461 Sky Defender redireciona a Technique.
+- **Pendências:** 476 Cosmo Disruption e Moon Awakening resolvidos na entrada acima. Não publicado.
+
+## 2026-10-30 — Engine v3 — regras e ganchos pendentes implementados (sem mudança de regra)
+
+- **Long Range (§25/§45):** implementado. Quem inicia o Strike com Long Range causa o dano primeiro; a derrota é verificada antes da retaliação; alvo derrotado não retalia; contra o God, Soul 0 encerra antes da retaliação; Cheater no alvo volta ao dano simultâneo. Corrige um bug: com um Devotee de Long Range em campo (Baian, Aiolia), a engine recusava todo Strike do adversário. Nos bots, Poseidon Counter Control 70,7% → 61,4% e Marina Tempo 61,1% → 47,0% (perderam essa imunidade indevida).
+- **Custo misto (§5):** a engine cobrava só Base em Moment como AÇÃO, Technique, Equipment que não é Armor, Equip/transferência e habilidades {N}{C}. Agora paga Base e/ou Latent (gasta Base primeiro e completa com Latent; o jogador ainda não escolhe a divisão). Devotee, Armor e Ultimate seguem só Base; Moment como resposta, só Latent.
+- **Ganchos novos:** `costLess` (redução de custo: neutral 464 e 470, Poseidon 170 e 178, Hades 242 Eternal Allegiance); efeito `noAbilities` (Poseidon 160 e 169); `skipDraw` lido na compra (neutral 453 Frozen Sacrifice); Seal removido e Soul pago lidos no checkpoint (Hades 183 Puppet Master, 191 Eternal Slumber, 254 Aurora Execution, 187 Dead End Symphony, 228 Pandora's Harp); `noBounce` (Poseidon 176 Unshaken Loyalty); reações a alvo de Spell inimiga via `watchSpell` (Hades 207 Coward's Escape, Ares 277 Illusory Escape, neutral 465 Aerial Interception, 471 Deceptive Presence, 486 Spiritual Barrier); `watchEquipCast` (neutral 470 Steel Production conta Equipment sem portador).
+- **Interpretações (o autor confirma):** "Soul pago para ativar habilidade" = qualquer "you may pay N Soul" de Hades; reações a "target of an enemy ability" só veem Spells (habilidade ativada não anuncia alvo); Illusory Escape contraria a Spell só quando Lotis é o único alvo; Emperor's Dominion e Eternal Allegiance sem piso de custo.
+- **Pendências que dependem do autor:** Sky Defender (461, redirecionar Spell), Cosmo Disruption (476, Technique não pode responder), Uncontrolled Rage (482, Strike obrigatório), False Wings (458, "cannot block"), Twin Chains (483), Forbidden Power (492), Overloaded Circuits (493), Cosmo Extraction (496), troca de controle (Hades 265), Moon Awakening (Artemis), Engage (Artemis 363, 384), Resonance "Pending design" (Athena 014, 016, 018), Water Prison em Devotee já Sealed (D269), Cracked Surplice 224 (Broken não existe mais), origem do Cosmo (Artemis 397).
+
+## 2026-10-30 — §§19, 47, 57, 59 — Impulse volta a mirar o God
+
+- **Antes:** o Strike na rodada de entrada (Impulse) não podia ter um God como alvo (entrada de 29/10/2026).
+- **Depois:** Impulse declara Strike na rodada de entrada contra qualquer alvo legal, inclusive o God. Pierce segue normal.
+- **Motivo:** autor, 30/10/2026: “com o balanceamento ares perdeu muita força”.
+- **Engine/IA:** filtro removido de `playtest/engine-v3/strike.js` (`checkStrike`); `strikeTargets` (IA e UI) passa a oferecer o God. `cannotStrikeGod` de cartas específicas continua valendo. Testes ajustados. Não publicado.
+
+## 2026-10-30 — data/cards.json — Cloth Restoration (Aries Mu 011, Jamir Tower 063)
+
+- **Antes:** 011 “{2}{C}, {T}: Once each round, remove up to 2 damage from target friendly Armor.”; 063 “{2}{C}, {T}: Remove 1 damage from target friendly Armor.”; engine da 011 e da 042 punha escudo na Armor.
+- **Depois:** 011 “Cloth Restoration — {1}{C}, {T}: Remove 1 damage from target friendly Devotee equipped with an Armor.”; 063 “Cloth Restoration — {2}{C}, {T}: Remove 1 damage from target friendly Devotee equipped with an Armor.” Engine de 011, 042, 050, 063 e 128 remove dano do Devotee que veste a Armor/Scale.
+- **Motivo:** Armor não tem dano próprio (§26A); autor pediu cura de 1 HP no Mu “pra ficar mais fácil” (grilling, 30/10/2026). 050 mantém o bônus de Resonance do Mu (até 2).
+- **Pendências:** não publicado.
+
+## 2026-10-30 — §64 e data/cards.json — sintaxe e layout das Armors
+
+- **Antes:** bônus escrito no texto em três formatos (“+1 ATK / +1 HP”, “+1 ATK”, “+N/+N”) e HP separado em `damage_cloth`; Resonance como Owner/Auto-Equip/“X Resonance — If equipped Devotee is …”; gemas de bônus no meio da carta.
+- **Depois:** Equip universal no selo EQUIP do canto inferior esquerdo (peça `athena/gem_equip`, de volta ao layout `relic_cloth`; autor, 30/10/2026); 1ª linha do texto “Resonance — Nome” (sem Equip); faixa “+ATK / +HP” na base (layout `relic_cloth`); campos `bonus_poder`/`bonus_vida` (= `damage_cloth` + HP do texto); donos viram Resonance (10 Warplates de Ares); saem `damage_cloth`, `equipar_auto`, `equipar_custo_ressonante`. Repair (042, 050, 128) cura “target friendly Devotee equipped with an Armor/a Scale”.
+- **Motivo:** decisão do autor em 30/10/2026 (grilling; referência visual: upgrades do Star Wars Unlimited).
+- **Pendências:** `data/cards.json` gravado com diff aprovado (`docs/armor-sintaxe-2026-10-30/cards.diff.md`, 67 cartas). Engine, Card Forge, carta ao vivo e lobby ajustados; Warplates de grupo (“a Flame Legion Berserker”) seguem condicionais, sem Resonance. Inspetor do Forge (engine-v2) ainda calcula Armor pela regra antiga. Não publicado.
+
+## 2026-10-30 — Cap. VI (§26–34), §61, §64, §65 — Armor simplificada
+
+- **Antes:** três termos para o vínculo (Owner, Resonance, Auto-Equip); dois custos (jogar + Equip 1 Resonant / 5 outros); Armor viva com HP próprio, Broken e Repair; estados Vanilla e Evolve com estágios; Armor podia entrar sem portador.
+- **Depois:**
+  - Só **Resonance**. Owner e Auto-Equip deixam de existir; em cartas antigas valem como Resonance.
+  - **Jogar:** AÇÃO + custo impresso (só Base). Com um Resonant seu em campo, pode entrar vestida nele sem Equip; senão entra sem portador (inclusive Armor sem Resonant).
+  - **Vestir em campo** (sem portador ou tirada de Devotee vivo seu): AÇÃO + Equip impresso, Base e/ou Latent, para qualquer Devotee, inclusive o Resonant.
+  - **Resonance ao entrar:** Resonant que entra em campo (mão, Tartarus ou efeito) pode puxar sua Armor sem Equip, mesmo de outro Devotee seu.
+  - **HP da Armor** é bônus de HP máximo do portador. Sem dano próprio, Broken nem Repair.
+  - **Portador morre:** a Armor fica em campo sem portador, sem efeito; só sai por efeito explícito.
+  - **Sem Vanilla/Evolve:** a Armor é o que está impresso; versões mais fortes são cartas separadas; evolução só se a carta descrever.
+  - Armas e acessórios: sem mudança (Equip impresso).
+- **Motivo:** decisão do autor em 30/10/2026 (grilling: “as armaduras estão muito confusas”). Na segunda rodada o autor trocou a taxa fixa de +2 pelo Equip impresso de cada carta e definiu Resonance como auto-equip no cast e na entrada do Resonant. HP impresso mantido; medir com bots.
+- **Pendências:**
+  - Cartas para revisar (`data/cards.json`, só com diff aprovado): Evolve — poseidon-v6-152, poseidon-v6-180; Repair — athena-v6-042, athena-v6-050, poseidon-v6-128, neutral-v6-491; Broken — poseidon-v6-122, poseidon-v6-161, hades-v6-224, ares-v6-309, artemis-v6-415, artemis-v6-438, neutral-v6-482. Textos “Owner:” e “Auto-Equip — X. Equip 5 — Other Devotees.” das Armor (canon D268 e V6) viram “Resonance — X”.
+  - Engine v3 (`play.js` playEquipment/reequip, `effects.js` HP de Armor, Evolve), Card Forge (campos Owner/Auto-Equip/Equip) e UI do duelo/deck builder (chips AUTO-EQUIP e EQUIP) ainda seguem a regra antiga.
+
 ## 2026-10-30 — Cartas de Hades — rebalanceamento, 3ª leva
 
 - **Antes:** Devotees de Hades de custo ≥ 3 com o HP da 2ª leva; Hades Castle (Dark Authority): "target enemy God loses 1 Soul and your God gains 1 Soul".

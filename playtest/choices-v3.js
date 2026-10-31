@@ -21,7 +21,7 @@ export const STEPS = {
 // Habilidades {T} (ABILITIES da engine): escolhas ao ativar, não ao jogar a carta.
 export const ABILITY_STEPS = {
   '041': [{key: 'target', pick: 'devotee', label: 'Remove up to 2 damage from which friendly Devotee?'}],
-  '042': [{key: 'target', pick: 'armor', label: 'Shield which friendly Armor?'}],
-  '011': [{key: 'target', pick: 'armor', label: 'Shield which friendly Armor?'}],
+  '042': [{key: 'target', pick: 'armor', label: 'Remove 1 damage from which friendly Devotee with an Armor?'}],
+  '011': [{key: 'target', pick: 'armor', label: 'Remove 1 damage from which friendly Devotee with an Armor?'}],
 };
 

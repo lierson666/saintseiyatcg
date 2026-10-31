@@ -16,7 +16,7 @@ export function resonantWearer(armor,bearer){
 }
 export function equipCost(c,bearer){
   if(!armorCard(c))return c.equipar_custo??1;
-  return resonantWearer(c,bearer)?c.equipar_custo_ressonante??c.equipar_custo??1:c.equipar_custo_outros??5;
+  return c.equipar_custo_outros??c.equipar_custo??1; // guia §28 (30/10/2026): Equip impresso para qualquer portador em campo
 }
 // Uma escolha única paga todos os custos, inclusive jogar Armor + Equip, sem gastar parcialmente.
 export function paymentPlans(resources,items){

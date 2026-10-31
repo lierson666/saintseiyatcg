@@ -50,3 +50,10 @@
 
 /* HP de Armor é independente dos bônus dados ao portador. */
 .live-card__armor-status{position:absolute;top:18%;left:14%;right:14%;z-index:4;padding:.25em .45em;border:1px solid #d9b762;background:#111827e8;color:#fff0b3;text-align:center;font:600 4cqw/1.2 sans-serif;pointer-events:none}.live-card__armor-status.is-broken{border-color:#e99587;color:#ffd4c9;background:#441d20ed}
+
+/* Faixa de bônus da Armor (autor, 30/10/2026): o que soma ao portador, na base da carta. */
+.live-card--psd .lc-band{position:absolute;transform:translate(-50%,-50%);display:inline-flex;align-items:center;gap:.45em;padding:.18em .9em;border:1px solid #bfa66e;border-radius:999px;background:#100e16e6;font:italic 700 1em/1 Futura,'Futura PT','Century Gothic',sans-serif;white-space:nowrap;box-shadow:0 0 .6em #0008}
+.live-card--psd .lc-band b{-webkit-text-stroke:.06em #141008;paint-order:stroke fill}
+.live-card--psd .lc-band .is-atk{color:#7fd8ff}
+.live-card--psd .lc-band .is-hp{color:#ffb347}
+.live-card--psd .lc-band i{color:#bfa66e;font-style:normal}

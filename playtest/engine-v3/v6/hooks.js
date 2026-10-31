@@ -1,5 +1,5 @@
 // Pontos da engine 3.0 que chamam os efeitos V6 (registry.js). A engine importa só este arquivo.
-import {hooks, pushTriggers} from '../core.js';
+import {hooks, pushTriggers, emit} from '../core.js';
 import {V6, entryOf, collect, trigger, contextOf, register, sources} from './registry.js';
 import {setDefeatedHooks, setEnteredHooks, setLeavesHooks, setDamagedHooks} from './kit.js';
 import hades from './hades.js';
@@ -23,8 +23,23 @@ const own = (state, ctx, key, uid, hook, args, label) => {
 
 // Entrou no campo (jogado da mão ou posto por efeito): "When X enters" + observadores "Whenever … enters".
 export function v6Entered(state, ctx, key, uid) {
-  pushTriggers(state, [...own(state, ctx, key, uid, 'enter', [], 'enters the battlefield'),
+  pushTriggers(state, [...resonanceOnEnter(state, ctx, key, uid), ...own(state, ctx, key, uid, 'enter', [], 'enters the battlefield'),
     ...collect(state, ctx, state.order, 'watchEnter', [uid], 'enters').filter(t => t.uid !== uid)]);
+}
+// Guia §28.3 (30/10/2026): Devotee Resonant que entra pode vestir, sem Equip, uma Armor sua dele — solta ou com outro Devotee seu.
+function resonanceOnEnter(state, ctx, key, uid) {
+  const dev = ctx.cards.get(ctx.objects[uid]?.cardId);
+  if (dev?.kind !== 'Devotee') return [];
+  const mine = a => state.players[key].battlefield.includes(a) && ctx.attached[a] !== uid;
+  const armors = state.players[key].battlefield.filter(a => ctx.objects[a]?.armor
+    && ctx.cards.get(ctx.objects[a].cardId).autoEquip.some(n => n.toUpperCase() === dev.name.toUpperCase()));
+  return armors.map(armor => trigger(key, armor, `${nameOf(ctx, armor)} · Resonance`, st => {
+    if (!mine(armor) || !st.players[key].battlefield.includes(uid) || !ctx.decide?.(key, {ability: 'Resonance', uid: armor, source: uid, text: `Equip ${nameOf(ctx, armor)} on ${nameOf(ctx, uid)} for free?`})) return;
+    for (const e of Object.keys(ctx.attached)) if (e !== armor && ctx.attached[e] === uid && ctx.objects[e].armor) delete ctx.attached[e];
+    ctx.attached[armor] = uid;
+    emit(st, 'equipped', {player: key, uid: armor, bearer: uid});
+    v6Attach(st, ctx, key, armor, uid);
+  }));
 }
 setEnteredHooks(v6Entered);
 export function v6Cast(state, ctx, key, uid) {
@@ -39,7 +54,6 @@ export function v6Defeated(state, ctx, key, uid, gear = []) {
     ...gear.flatMap(g => own(state, ctx, ctx.objects[g].owner, g, 'bearerDefeated', [uid], 'equipped Devotee defeated')),
     ...collect(state, ctx, state.order, 'watchDefeat', [uid, owner], 'a Devotee is defeated'),
     ...v6Leaves(state, ctx, key, uid, 'tartarus'),
-    ...gear.filter(g => ctx.objects[g].armor).flatMap(g => v6Leaves(state, ctx, ctx.objects[g].owner, g, 'tartarus')), // Armor vai junto
   ]);
 }
 setDefeatedHooks((state, ctx, owner, uid, gear) => v6Defeated(state, ctx, owner, uid, gear));

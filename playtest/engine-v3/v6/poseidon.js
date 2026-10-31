@@ -2,7 +2,7 @@
 // Cláusulas sem base na engine ficam como `// pendente:`; interpretações vão para docs/v6-efeitos-pendencias.md.
 import * as k from './kit.js';
 import {hooks, spendBase, addSeal} from '../core.js';
-import {shield} from '../effects.js';
+import {shield, silence} from '../effects.js';
 import {collect} from './registry.js';
 
 // ---------- leitura ----------
@@ -66,7 +66,7 @@ function mill(st, c, player, n) {
 // shortcut: retorno à mão por outras fontes (Great Flood, outras facções) não avisa watchBounce.
 function bounce(st, c, by, uid) {
   const ctrl = uid && k.controllerOf(st, uid), hadSeal = sealed(st, uid);
-  if (!ctrl || !k.toHand(st, c, uid, 'battlefield')) return null;
+  if (!ctrl || !k.toHand(st, c, uid, 'battlefield', by)) return null;
   k.watchers(st, c, 'watchBounce', [uid, ctrl, by], 'returned to hand');
   return {uid, ctrl, hadSeal};
 }
@@ -474,7 +474,9 @@ export default {
   'poseidon-v6-128': {
     activate: {name: 'Scale Restoration', cost: 1, once: true, tap: false,
       run: (s, c, key, self) => {
-        const t = k.choose(c, key, 'SCALE RESTORATION', s.players[key].battlefield.filter(u => isScale(c, u)), {text: 'Remove damage from target friendly Scale.'});
+        // Texto de 30/10/2026: "target friendly Devotee equipped with a Scale" (Armor não tem dano próprio).
+        const wearers = s.players[key].battlefield.filter(u => k.card(c, u)?.kind === 'Devotee' && Object.keys(c.attached).some(e => c.attached[e] === u && isScale(c, e)));
+        const t = k.choose(c, key, 'SCALE RESTORATION', wearers, {text: 'Remove damage from target friendly Devotee equipped with a Scale.'});
         const bearer = k.bearerOf(c, self);
         if (t) k.removeDamage(s, t, bearer && isMarina(c, bearer) ? 2 : 1); // Resonance — Marina: até 2
       }},
@@ -689,14 +691,14 @@ export default {
       if (pick === 'Denial') { const t = counterTarget(c, s, key, 'DENIAL'); if (t) k.counterSpell(s, c, t); }
       if (pick === 'Reversal') {
         const t = k.choose(c, key, 'REVERSAL', gear, {text: 'Return target enemy Equipment to its owner\'s hand.'});
-        if (t) k.toHand(s, c, t, 'battlefield');
+        if (t) k.toHand(s, c, t, 'battlefield', key);
       }
     }},
   },
   'poseidon-v6-160': {
     spell: {run: (s, c, key) => {
       const t = enemy(s, c, key, 'ABYSSAL SILENCE');
-      // pendente: "loses all activated abilities until the end of the round" — activate() não consulta bloqueio.
+      if (t) silence(s, t);
       if (t && sealed(s, t)) debuff(s, t, 1);
     }},
   },
@@ -746,7 +748,7 @@ export default {
       const foe = k.other(s, key), options = s.players[foe].battlefield.filter(u => ['Devotee', 'Equipment'].includes(k.card(c, u)?.kind));
       const t = k.choose(c, key, 'RETURN', options, {text: 'Return target enemy Devotee or Equipment to its owner\'s hand.'});
       if (t) { // alvo ilegal: o retorno e o Dimensional Distortion não acontecem; o draw de Kanon não depende dele
-        if (k.isDevotee(c, t)) bounce(s, c, key, t); else k.toHand(s, c, t, 'battlefield');
+        if (k.isDevotee(c, t)) bounce(s, c, key, t); else k.toHand(s, c, t, 'battlefield', key);
         const hand = s.players[foe].hand, top = hand.length ? c.decide?.(foe, {ability: 'DIMENSIONAL DISTORTION', options: [...hand], choose: 'top', text: 'Put a card from your hand on top of your deck.'}) : null;
         const put = hand.includes(top) ? top : hand[0];
         if (put) { hand.splice(hand.indexOf(put), 1); s.players[foe].deck.unshift(put); }
@@ -772,12 +774,13 @@ export default {
     spell: {run: (s, c, key) => {
       const t = enemy(s, c, key, 'ABSOLUTE CONFINEMENT');
       if (t) seal(s, c, [t], 3, 'ABSOLUTE CONFINEMENT');
-      // pendente: "loses all activated abilities until the end of the round" (ver 160).
+      if (t) silence(s, t); // Absolute Confinement
       if (controls(s, c, key, ISAAC) || controls(s, c, key, HYOGA)) k.draw(s, key, 1);
     }},
   },
-  // 170 Atlantean Royal Scepter — Royal Knowledge (gancho watchSpell). pendente: Emperor's Authority (sem redução de custo).
+  // 170 Atlantean Royal Scepter — Royal Knowledge (gancho watchSpell); Emperor's Authority (gancho costLess).
   'poseidon-v6-170': {
+    costLess: (s, c, key, self, uid) => k.card(c, uid)?.kind === 'Spell' && !s.roundUses.has(`authority:${self}`) && {n: 1, min: 1, tag: `authority:${self}`},
     watchSpell: onCast('royal', 'ROYAL KNOWLEDGE', 1, (st, c, key) => loot(st, c, key, 'ROYAL KNOWLEDGE')),
   },
   'poseidon-v6-171': {
@@ -841,7 +844,7 @@ export default {
         k.buff(s, t, 2, 2);
         if (isGeneral(c, t)) k.removeDamage(s, t, 2);
       }
-      // pendente: Unshaken Loyalty (imunidade a retorno à mão por efeito inimigo) — sem mecanismo de proteção na engine.
+      for (const t of k.devotees(s, c, key).filter(u => isGeneral(c, u))) k.addEffect(s, {kind: 'noBounce', target: t, duration: 'this_round'}); // Unshaken Loyalty
     }},
   },
   'poseidon-v6-177': {
@@ -855,7 +858,8 @@ export default {
     }},
   },
   'poseidon-v6-178': {
-    // Divine Sovereignty (gancho watchSpell): paga {1}{C} e compra 1. pendente: Emperor's Dominion (sem redução de custo).
+    // Divine Sovereignty (gancho watchSpell): paga {1}{C} e compra 1. Emperor's Dominion (gancho costLess), sem piso no texto.
+    costLess: (s, c, key, self, uid) => awakened(s, key) && k.card(c, uid)?.kind === 'Spell' && !s.roundUses.has(`dominion:${self}`) && {n: 1, tag: `dominion:${self}`},
     watchSpell: onCast('sovereignty', 'DIVINE SOVEREIGNTY', 1, (st, c, key) => k.draw(st, key, 1)),
     activate: {name: 'Oceanic Judgment', cost: 3, once: true, tap: false, check: (s, c, key) => needEnemy(s, c, key),
       run: (s, c, key) => seal(s, c, [enemy(s, c, key, 'OCEANIC JUDGMENT')], 1, 'OCEANIC JUDGMENT')},

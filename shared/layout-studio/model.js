@@ -1,4 +1,4 @@
-import {printedEquipmentBonuses,signedBonus,equipmentCostText} from '../card-visual-values.js';
+import {printedEquipmentBonuses,signedBonus,equipmentCostText,armorBonusText} from '../card-visual-values.js';
 import {isArmor,isEquipment} from '../card-model.js';
 import {textBlocks,ruleBlocksWithoutKeywords} from '../card-text.js';
 
@@ -24,7 +24,10 @@ function namedRule(text,fallback){
 export function ruleParts(card){
   const blocks=ruleBlocksWithoutKeywords(card.habilidades_en||[],card.keywords_en||[]).filter(b=>!pendingDesign(b.body)).map(block=>{if(block.heading)return block;const lines=block.body.split('\n');if(lines.length>1&&/ — (?:Divine Power|Awaken \d+|Ultimate)$/.test(lines[0]))return {...block,heading:lines[0],body:lines.slice(1).join('\n')};const m=block.body.match(/^([^—.\n]{2,60})\s*—\s*([\s\S]+)$/);return m&&!/^(Once|When|Whenever|If|At)\b/i.test(m[1])?{...block,heading:m[1],body:m[2]}:block;});
   const equip=equipmentCostText(card),divinePower=blocks.filter(b=>!['resonance','owner'].includes(b.kind)),awakenRules=namedRule(card.habilidade_awaken_en,'AWAKEN'),ultimateRules=namedRule(card.ultimate_en,'ULTIMATE');
-  return {rules:[...divinePower,...(equip&&!blocks.some(b=>/Equip \d|Equip cost:/i.test(b.body))?[{heading:'EQUIP',body:equip}]:[]),...awakenRules,...ultimateRules],divinePower,awakenRules,ultimateRules,resonance:[...blocks.filter(b=>b.kind==='resonance'),...(card.ressonancias||[]).filter(r=>!pendingDesign(r.habilidade_en)).map(r=>({heading:`RESONANCE — ${owner(r.personagem_id)}`,body:r.habilidade_en}))],owners:blocks.filter(b=>b.kind==='owner').map(b=>b.body).join(' / ')||(card.donos||[]).map(owner).join(' / ')};
+  // Armor (autor, 30/10/2026): Resonance num bloco só, com o nome completo do portador no título; sem efeito, só o título.
+  const armorRes=/^Resonance — /.test(equip||''),resBlocks=blocks.filter(b=>b.kind==='resonance').map(b=>armorRes?{...b,heading:equip}:b);
+  const equipRule=armorRes?(resBlocks.length?[]:[{heading:equip,body:''}]):equip&&!blocks.some(b=>/Equip \d|Equip cost:/i.test(b.body))?[{heading:'EQUIP',body:equip}]:[];
+  return {rules:[...equipRule,...divinePower,...awakenRules,...ultimateRules],divinePower,awakenRules,ultimateRules,resonance:[...resBlocks,...(card.ressonancias||[]).filter(r=>!pendingDesign(r.habilidade_en)).map(r=>({heading:`RESONANCE — ${owner(r.personagem_id)}`,body:r.habilidade_en}))],owners:blocks.filter(b=>b.kind==='owner').map(b=>b.body).join(' / ')||(card.donos||[]).map(owner).join(' / ')};
 }
 export function editorialWarnings(card){
   return textBlocks(card.habilidades_en||[]).filter(b=>pendingDesign(b.body)).map(b=>({layer:'resonance',kind:'pending',message:`${b.heading}: design pendente no catálogo; bloco sem efeito aprovado omitido da arte.`}));
@@ -50,7 +53,8 @@ export const BINDINGS={
   'card.equipCost':{label:'Equip / Auto-Equip',read:c=>equipmentCostText(c.card)},
   'card.equippedPowerBonus':{label:'Bônus impresso de ATK do portador',read:c=>signedBonus(printedEquipmentBonuses(c.card,c.instance?.stage||0).power)},
   'card.equippedHPBonus':{label:'Bônus impresso de HP do portador',read:c=>signedBonus(printedEquipmentBonuses(c.card,c.instance?.stage||0).hp)},
-  'card.armorHP':{label:'HP próprio da Armor',read:c=>isArmor(c.card)?c.card.damage_cloth??c.card.vida:null},
+  'card.armorHP':{label:'Bônus de HP da Armor (bonus_vida; sem HP próprio desde 30/10/2026)',read:c=>isArmor(c.card)?c.card.bonus_vida??c.card.damage_cloth??null:null},
+  'card.armorBonus':{label:'Faixa de bônus da Armor (+ATK / +HP)',read:c=>isArmor(c.card)?armorBonusText(c.card):null},
   'card.isArmor':{label:'Reconhecida como Armor',read:c=>isArmor(c.card)},
   'card.isEquipment':{label:'Reconhecida como Equipment',read:c=>isEquipment(c.card)},
   'card.power':{label:'Power impresso',read:c=>c.card.power},

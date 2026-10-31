@@ -94,7 +94,10 @@ export default {
     },
   },
   // LA SCOUMOUNE. Hunter's Instinct: sem efeito (Engage/disengaged removido do jogo); Guardian já vale.
-  'artemis-v6-363': {declare: (s, c, key, self, target) => vsDevotee(target) && (st => grow(st, c, key, self, 1))},
+  'artemis-v6-363': {
+    declare: (s, c, key, self, target) => vsDevotee(target) && (st => grow(st, c, key, self, 1)),
+    ignoresGuardian: (s, c, self, target) => s.units[target]?.prepared === false, // Hunter's Instinct
+  },
   'artemis-v6-364': {gearKillInCombat: growBearer},
   // DAPHNE. Interpretação: "becomes engaged" = Strike entre Daphne e um Devotee inimigo, atacando ou sendo alvo.
   'artemis-v6-365': {
@@ -184,10 +187,20 @@ export default {
   'artemis-v6-382': {mods: (s, c, key, self) => (k.devotees(s, c, key).some(u => u !== self && k.hasType(c, u, 'Sacred Beast')) ? [{atk: 1, hp: 0}] : [])},
   'artemis-v6-383': {killInCombat: growSelf(1)},
   // 384 Crushing Coils: pendente: "Engage" foi removido do jogo, sem mecânica equivalente.
-  'artemis-v6-384': {mods: (s, c, key, self) => {
-    const n = Math.min(3, k.devotees(s, c, key).filter(u => u !== self && k.hasType(c, u, 'Sacred Beast')).length);
-    return n ? [{atk: n, hp: n}] : [];
-  }},
+  'artemis-v6-384': {
+    mods: (s, c, key, self) => {
+      const n = Math.min(3, k.devotees(s, c, key).filter(u => u !== self && k.hasType(c, u, 'Sacred Beast')).length);
+      return n ? [{atk: n, hp: n}] : [];
+    },
+    // Crushing Coils (autor, 30/10/2026): "Engage" = lutam na hora, dano simultâneo pelo ATK, sem gastar o Strike da Serpent.
+    enter: run((st, c, key, self) => {
+      const t = k.choose(c, key, 'CRUSHING COILS', k.enemies(st, c, key).filter(u => k.atkOf(st, c, u) <= 3), {optional: true, text: 'Engage an enemy Devotee with ATTACK 3 or less?'});
+      if (!t || !k.onField(st, key, self)) return;
+      const mine = k.atkOf(st, c, self), theirs = k.atkOf(st, c, t);
+      k.damage(st, c, t, mine);
+      k.damage(st, c, self, theirs);
+    }),
+  },
   'artemis-v6-385': {declare: growSelf(1), killInCombat: drawOne},
   // 386 Lunar Offering: Cosmo gerado vira Latent comum, sem a restrição de uso (guia §63, autor 29/10/2026).
   'artemis-v6-386': {activate: {name: 'LUNAR OFFERING', cost: 0, run: (st, c, key) => k.gainLatent(st, key, 1)}},
@@ -219,7 +232,13 @@ export default {
   'artemis-v6-395': {watchCounter: (s, c, key, self, target) => target === self && (st => k.gainSoul(st, key, 1))},
   'artemis-v6-396': {defeated: run((st, c, key) => k.gainLatent(st, key, 1))},
   // 397 Living Roots: pendente: a engine não rastreia a origem do Cosmo gasto.
-  'artemis-v6-397': {activate: {name: 'VERDANT CHANNELING', cost: 0, run: (st, c, key) => k.gainLatent(st, key, 1)}},
+  'artemis-v6-397': {
+    activate: {name: 'VERDANT CHANNELING', cost: 0, run: (st, c, key, self) => { k.gainLatent(st, key, 1); (st.v6Dryad ||= {})[self] = st.turn; }},
+    // Living Roots (autor, 30/10/2026): se a Dryad gerou Cosmo neste turno, o primeiro Devotee conjurado no turno entra com +1/+1.
+    watchEnter: (s, c, key, self, entered) => s.v6Dryad?.[self] === s.turn && wasCast(s, entered) && k.controllerOf(s, entered) === key
+      && s.events.find(e => e.type === 'card_played' && e.kind === 'Devotee' && !e.from && e.player === key && e.turn === s.turn)?.uid === entered
+      && (st => grow(st, c, key, entered, 1)),
+  },
   'artemis-v6-398': {enter: run((st, c, key) => { const t = pickFriend(st, c, key, 'MOONLIT BLESSING'); if (t) grow(st, c, key, t, 1); })},
   'artemis-v6-399': {mods: (s, c, key, self) => (k.devotees(s, c, key).some(u => u !== self && k.hasType(c, u, 'Forest Guardian')) ? [{atk: 1, hp: 1}] : [])},
   // PRIMAL FOREST GUARDIAN

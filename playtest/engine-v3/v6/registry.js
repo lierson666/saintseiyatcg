@@ -46,6 +46,8 @@
 //                                                Gancho extra (não pedido): era a única forma exata de "whenever X is dealt damage, prevent 1".
 //   attach(s, c, key, self, bearer)              Equipment ficou preso a `bearer` (jogado já equipado ou equipado depois).
 //   watchAttach(s, c, key, self, gear, bearer)   observador: um Equipment ficou preso a `bearer` (ex.: "whenever an Equipment becomes attached to X").
+//   watchEquipCast(s, c, key, self, gear)        observador: o jogador `key` conjurou o Equipment `gear` (preso, global ou Armor sem portador).
+//   costLess(s, c, key, self, uid) -> {n, min, tag}|null   redução do custo de conjurar `uid` (play.js); `tag` = uso "first … each round".
 //   watchSpell(s, c, key, self, caster, spellUid, targets)   uma Spell foi posta na cadeia (observador); `targets`: os alvos que ela
 //                                                escolheu ao ser conjurada (uids, 'god:X'). A Spell espera na cadeia (janela aberta) e
 //                                                kit.counterSpell(s, c, spellUid) a contraria. kit.targetsMine/stillTarget leem os alvos.

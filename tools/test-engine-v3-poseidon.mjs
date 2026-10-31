@@ -59,8 +59,7 @@ test('Seal não é stun: Devotee Sealed e Prepared ainda declara Strike', () => 
   const seiya = field('A', '001');
   addSeal(s, ctx, [seiya], 1, 'fixture'); passAll(s);
   assert.ok(strikeTargets(s, ctx, seiya).length > 0);
-  assert.throws(() => declareStrike(s, ctx, seiya, {kind: 'god', player: 'B'}), NotSpecified, 'Water Prison em atacante já Sealed: D269 pendente');
-  s.roundUses.add('god:B:water-prison'); // sem a oportunidade, o Strike segue
+  // Water Prison em atacante já Sealed: soma +1 Seal (autor, 30/10/2026); o Strike segue.
   declareStrike(s, ctx, seiya, {kind: 'god', player: 'B'}); passAll(s);
   assert.ok(types(s).includes('god_damage'));
 });

@@ -8,11 +8,14 @@ import {canonIndex} from '../shared/deck-v3.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
 import {startTurn, endTurn, passAll, runCheckpoint, addSeal} from '../playtest/engine-v3/core.js';
-import {playDevotee, playSpell, playEquipment, activate} from '../playtest/engine-v3/play.js';
-import {declareStrike} from '../playtest/engine-v3/strike.js';
+import {playDevotee as playDevoteeRaw, playSpell, playEquipment as playEquipmentRaw, activate as activateRaw, castCost} from '../playtest/engine-v3/play.js';
+import {declareStrike, mustStrike} from '../playtest/engine-v3/strike.js';
 import {V6, bindContext} from '../playtest/engine-v3/v6/hooks.js';
 import {checkDefeats, atkOf, hpOf, modify} from '../playtest/engine-v3/effects.js';
 import * as k from '../playtest/engine-v3/v6/kit.js';
+// Guia §56 (30/10/2026): jogada e {T} vão à pilha; aqui os dois passam e a pilha resolve na hora.
+const resolved = fn => (s, ...a) => { const r = fn(s, ...a); passAll(s); return r; };
+const playDevotee = resolved(playDevoteeRaw), playEquipment = resolved(playEquipmentRaw), activate = resolved(activateRaw);
 const modifyAtk = (s, uid, atk) => modify(s, uid, {atk});
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
@@ -96,12 +99,17 @@ test('452 Dark Dragon Fist: sem alvo com 3 ou menos HP, não paga', () => {
   assert.equal(s.players.A.soul, a);
 });
 
-test('453 Black Blizzard: Seal no Devotee inimigo; Frozen Sacrifice só marca o pedido (pendente)', () => {
+test('453 Black Blizzard: Seal no Devotee inimigo; Frozen Sacrifice pula a próxima compra', () => {
   const {s, ctx, give} = setup();
   const foe = mkFoe(s, give), swan = give('A', N(453), 'hand');
   play(s, ctx, swan);
   assert.equal(s.units[foe].seal, 1);
   assert.equal(s.skipDraw.A, true);
+  s.active = 'A'; s.players.A.ownTurns = 3; s.window = null; s.chain.length = 0;
+  const hand = s.players.A.hand.length;
+  startTurn(s); passAll(s);
+  assert.equal(s.players.A.hand.length, hand, 'não comprou');
+  assert.ok(!s.skipDraw.A, 'marca consumida');
 });
 
 test('454 Black Andromeda: -1/-1 no atingido; inimigo com marcador derrotado: dono perde 1 Soul e você ganha 1', () => {
@@ -237,12 +245,11 @@ test('459 Unstable Power (aproximação): Prepared no início do turno depois de
   assert.equal(V6[N(459)].startTurn(s, ctx, 'A', whale), false);
 });
 
-test('460 Black Unicorn: Impulse na entrada não mira God (§47); depois compra ao ferir o God e descarta ao atacar', () => {
+test('460 Black Unicorn: Impulse; compra ao ferir o God e descarta ao atacar', () => {
   const {s, ctx, give} = setup();
   const uni = give('A', N(460), 'hand');
   playDevotee(s, ctx, 'A', uni, {}); passAll(s);
-  assert.throws(() => strike(s, ctx, uni, god), /§47/);
-  Object.assign(s.units[uni], {entered: s.turn - 1, prepared: true}); // rodada seguinte
+  Object.assign(s.units[uni], {entered: s.turn - 1, prepared: true});
   tough(s, uni);
   give('A', FOE, 'hand');
   const deck = s.players.A.deck.length;
@@ -436,16 +443,31 @@ test('475 Phantom Sea Ambush: com outro Ghost Saint em campo, Ghost Tactics comp
   assert.equal(s.players.A.tartarus.length, t + 2); // Spell + descarte
 });
 
-test('476 Cosmo Interruption: contraria a Spell da cadeia e perde 2 Soul (testado direto: Technique é Sorcery)', () => {
+test('476 Cosmo Disruption: Moment em resposta, descarta 1 como custo, contraria a Spell e perde 2 Soul', () => {
   const {s, ctx, give} = setup();
-  const target = give('B', N(479), 'hand'), mine = give('A', N(476), 'hand');
-  s.players.B.hand.splice(s.players.B.hand.indexOf(target), 1); s.players.B.stack.push(target);
-  s.chain.push({controller: 'B', uid: target, speed: 'instant', run: () => {}, spell: true});
-  const soul = s.players.A.soul;
-  V6[N(476)].spell.run(s, ctx, 'A', mine);
-  assert.equal(s.chain.length, 0);
-  assert.ok(s.players.B.tartarus.includes(target));
-  assert.equal(s.players.A.soul, soul - 2);
+  const target = give('A', N(479), 'hand'), mine = give('B', N(476), 'hand'), fodder = give('B', FOE, 'hand');
+  playSpell(s, ctx, 'A', target);
+  assert.equal(s.window.priority, 'B');
+  s.players.B.latent = 3;
+  const soul = s.players.B.soul, hand = s.players.A.hand.length;
+  playSpell(s, ctx, 'B', mine);
+  assert.ok(s.players.B.tartarus.includes(fodder)); // descarte pago ao conjurar
+  passAll(s);
+  assert.ok(s.players.A.tartarus.includes(target));
+  assert.equal(s.players.A.hand.length, hand); // 479 não comprou
+  assert.equal(s.players.B.soul, soul - 2);
+  assert.equal(s.players.B.latent, 0);
+});
+
+test('476 Cosmo Disruption: sem outra carta na mão ou sem Spell na cadeia, não conjura', () => {
+  const {s, ctx, give} = setup();
+  const target = give('A', N(479), 'hand'), mine = give('B', N(476), 'hand');
+  playSpell(s, ctx, 'A', target);
+  s.players.B.latent = 3;
+  assert.throws(() => playSpell(s, ctx, 'B', mine), /descartar/);
+  passAll(s);
+  s.active = 'B'; give('B', FOE, 'hand');
+  assert.throws(() => playSpell(s, ctx, 'B', mine));
 });
 
 test('477 Desperate Resurrection: devolve Devotee do Tartarus exhausted e perde 3 Soul', () => {
@@ -647,10 +669,10 @@ test('492 Death Queen Mask: dano de combate fatal ao inimigo custa 2 Soul; Corru
   const {s, ctx, give} = setup();
   const rec = give('A', N(468)), foe = mkFoe(s, give), mask = give('A', N(492), 'battlefield', rec);
   s.units[foe].damage = hpOf(s, ctx, foe) - 1; tough(s, rec);
-  const soul = s.players.A.soul;
+  const soul = s.players.B.soul;
   strike(s, ctx, rec, dev(foe));
   assert.ok(s.players.B.tartarus.includes(foe));
-  assert.equal(s.players.A.soul, soul - 2);
+  assert.equal(s.players.B.soul, soul - 2, 'Forbidden Power: o dono do derrotado perde 2 (autor, 30/10/2026)');
   kill(s, ctx, rec);
   assert.ok(s.players.A.battlefield.includes(rec));
   assert.equal(s.units[rec].damage, 0);
@@ -745,4 +767,67 @@ test('500 The Eighth Sense: devolve até 2 Devotees exhausted, imortais; perde 5
   assert.equal(s.units[d1].damage, hpOf(s, ctx, d1) - 1);
   kill(s, ctx, d1); // continua protegido
   assert.ok(s.players.A.battlefield.includes(d1));
+});
+
+test('464 Mechanical Engineering e 470 Technological Advancement: Equipment custa menos (mínimo 1); 470 só o primeiro do Round', () => {
+  const {s, ctx, give} = setup();
+  const eq = give('A', N(466), 'hand'), cost = ctx.cards.get(N(466)).cost;
+  assert.equal(castCost(s, ctx, 'A', eq, cost).amount, cost.amount);
+  give('A', N(464));
+  assert.equal(castCost(s, ctx, 'A', eq, cost).amount, Math.max(1, cost.amount - 1));
+  const lab = give('A', N(470));
+  assert.equal(castCost(s, ctx, 'A', eq, cost).amount, Math.max(1, cost.amount - 2));
+  assert.equal(castCost(s, ctx, 'A', eq, {amount: 1, unit: 'base'}).amount, 1, 'mínimo 1');
+  s.roundUses.add(`tech:${lab}`);
+  assert.equal(castCost(s, ctx, 'A', eq, cost).amount, Math.max(1, cost.amount - 1));
+});
+
+test('Unshaken Loyalty (Poseidon 176): noBounce barra retorno à mão por efeito inimigo, não pelo próprio', () => {
+  const {s, ctx, give} = setup();
+  const general = give('B', N(466));
+  k.addEffect(s, {kind: 'noBounce', target: general, duration: 'this_round'});
+  assert.equal(k.toHand(s, ctx, general, 'battlefield', 'A'), false);
+  assert.ok(s.players.B.battlefield.includes(general));
+  assert.equal(k.toHand(s, ctx, general, 'battlefield', 'B'), true);
+});
+
+test('Alvo de Technique inimiga: Geist (471) sacrifica outro e contraria; Agora (486) cobra {2} a mais', () => {
+  const t = setup();
+  const geist = t.give('B', N(471)), other = t.give('B', N(468));
+  const yesB = t.ctx.decide;
+  t.ctx.decide = (player, q) => (q.ability === 'DECEPTIVE PRESENCE' && !q.options ? true : yesB(player, q));
+  const spell = t.give('A', 'hades-v6-258', 'hand');
+  playSpell(t.s, t.ctx, 'A', spell, {}); passAll(t.s);
+  assert.ok(t.s.events.some(e => e.type === 'spell_countered' && e.uid === spell));
+  assert.ok(t.s.players.B.tartarus.includes(other), 'sacrificou o outro');
+  assert.ok(!t.s.units[geist]?.seal, 'Geist sem Seal');
+  const a = setup();
+  const agora = a.give('B', N(486));
+  const spell2 = a.give('A', 'hades-v6-258', 'hand'), before = a.s.players.A.bases.filter(b => b.prepared).length;
+  playSpell(a.s, a.ctx, 'A', spell2, {}); passAll(a.s);
+  assert.equal(a.s.players.A.bases.filter(b => b.prepared).length, before - a.ctx.cards.get('hades-v6-258').cost.amount - 2, 'pagou {2} a mais');
+  assert.equal(a.s.units[agora].seal, 2);
+});
+
+test('461 Sky Defender: paga 2 e a Technique inimiga que mirava outro Devotee vai para Sho', () => {
+  const {s, ctx, give} = setup();
+  const other = give('B', N(468)), sho = give('B', N(461));
+  const base = ctx.decide;
+  ctx.decide = (player, q) => (q.ability === 'SKY DEFENDER' && !q.options ? true : base(player, q));
+  s.players.B.bases = s.players.B.deck.splice(0, 3).map(uid => ({uid, prepared: true}));
+  const spell = give('A', 'hades-v6-258', 'hand');
+  playSpell(s, ctx, 'A', spell, {}); passAll(s);
+  assert.equal(s.units[sho].seal, 2, 'Sho recebeu o efeito');
+  assert.ok(!s.units[other].seal, 'o alvo original não');
+});
+
+test('458 False Wings: Black Phoenix Shadow não retalia; 482 Uncontrolled Rage: Ohko deve atacar antes do END TURN', () => {
+  const {s, ctx, give} = setup();
+  const foe = give('B', N(458)), att = give('A', N(468));
+  declareStrike(s, ctx, att, {kind: 'devotee', uid: foe}); passAll(s);
+  assert.equal(s.units[att]?.damage ?? 0, 0, 'sem retaliação');
+  const ohko = give('A', N(482));
+  assert.deepEqual(mustStrike(s, ctx, 'A'), [ohko]);
+  declareStrike(s, ctx, ohko, {kind: 'god', player: 'B'}); passAll(s);
+  assert.deepEqual(mustStrike(s, ctx, 'A'), []);
 });

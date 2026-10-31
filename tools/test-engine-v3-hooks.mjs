@@ -132,13 +132,13 @@ test('wouldBeDefeated: gancho do Equipment substitui a derrota; sem ele o Devote
   const {s, ctx, give} = setup();
   const b = give('B', 't-dev');
   const g = give('B', 't-gear', 'battlefield', b);
-  s.units[b].damage = 4;
+  s.units[b].damage = 9; // HP 4 + 5 da Armor (HP impresso soma ao portador)
   checkDefeats(s, ctx);
   assert.ok(s.players.B.battlefield.includes(b));
   assert.equal(s.units[b].damage, 0);
   assert.deepEqual(has('gearSaved'), [['gearSaved', b]]);
   log.push('gear-no'); // desliga o Equipment
-  s.units[b].damage = 4;
+  s.units[b].damage = 9; // HP 4 + 5 da Armor (HP impresso soma ao portador)
   checkDefeats(s, ctx);
   assert.ok(s.players.B.tartarus.includes(b));
   assert.ok(g);
@@ -238,7 +238,7 @@ test('Domain: activate em domain:${key} usa a habilidade do Domain, uma vez por 
   const {s, ctx} = setup();
   s.domains.A = 't-domain';
   const before = s.players.A.bases.filter(b => b.prepared).length;
-  activate(s, ctx, 'A', 'domain:A');
+  activate(s, ctx, 'A', 'domain:A'); passAll(s); // guia §56: resolve a pilha
   assert.deepEqual(has('domainActivated'), [['domainActivated', 'A']]);
   assert.equal(s.players.A.bases.filter(b => b.prepared).length, before - 1);
   assert.throws(() => activate(s, ctx, 'A', 'domain:A'), /já foi usada/);

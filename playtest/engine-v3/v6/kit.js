@@ -1,6 +1,6 @@
 // Kit das cartas V6: ações comuns de texto de carta sobre a engine 3.0. Toda escolha é uma pergunta da engine
 // (`ctx.decide`), respondida no modal de decisão da arena, pela IA ou pelo jogador remoto. Sem `decide`, recusa.
-import {RuleError, destroyDevotee, draw, emit, gainLatent, loseSoul, mill, prepareUnit, useOncePerRound, addEffect} from '../core.js';
+import {RuleError, destroyDevotee, draw, emit, gainLatent, loseSoul, mill, prepareUnit, useOncePerRound, addEffect, restoreMoon} from '../core.js';
 import {card, controllerOf, modify, damageDevotee, checkDefeats, atkOf, hpOf, keywordsOf} from '../effects.js';
 import {gainSoul} from '../gods.js';
 import {collect} from './registry.js';
@@ -114,6 +114,7 @@ export const buff = (s, uid, atk, hp, duration = 'this_round', keywords = []) =>
 function take(s, c, uid, from) {
   const p = s.players[c.objects[uid].owner];
   if (from === 'battlefield') {
+    restoreMoon(c.objects, uid);
     for (const pl of Object.values(s.players)) pl.battlefield = pl.battlefield.filter(x => x !== uid);
     delete s.units[uid];
     s.effects = s.effects.filter(e => e.target !== uid);
@@ -127,14 +128,16 @@ function take(s, c, uid, from) {
 }
 // Token (guia §63): ao sair do campo deixa de existir.
 const vanish = (c, uid) => (c.objects[uid]?.token ? (delete c.objects[uid], true) : false);
-export function toHand(s, c, uid, from = 'tartarus') {
+// `by`: jogador cujo efeito devolve (Unshaken Loyalty, Poseidon 176: efeito 'noBounce' barra retorno por efeito inimigo).
+export function toHand(s, c, uid, from = 'tartarus', by = null) {
   if (from === 'battlefield' && !controllerOf(s, uid)) return false;
+  if (from === 'battlefield' && by && by !== controllerOf(s, uid) && s.effects.some(e => e.kind === 'noBounce' && e.target === uid)) return false;
   const was = from === 'battlefield' ? controllerOf(s, uid) : null; // gancho leaves (Devotee ou Equipment)
   if (!take(s, c, uid, from)) return false;
   if (was) leavesHooks(s, c, was, uid, 'hand');
   if (vanish(c, uid)) return true;
   s.players[c.objects[uid].owner].hand.push(uid);
-  emit(s, 'returned_to_hand', {player: c.objects[uid].owner, uid});
+  emit(s, 'returned_to_hand', {player: c.objects[uid].owner, uid, from});
   return true;
 }
 export function toTartarus(s, c, uid, from = 'hand') {
@@ -236,7 +239,7 @@ export function watchers(s, c, hook, args, label) {
 // Contra-mágica (gancho watchSpell): tira a Spell `spellUid` da cadeia antes de resolver; vai para o Tartarus do Owner
 // sem efeito. Devolve false se ela já não está na cadeia.
 export function counterSpell(s, c, spellUid) {
-  const at = s.chain.findIndex(i => i.spell && i.uid === spellUid);
+  const at = s.chain.findIndex(i => (i.spell || i.card) && i.uid === spellUid); // Spell, Devotee ou Equipment na pilha (§56)
   if (at < 0) return false;
   const [item] = s.chain.splice(at, 1);
   for (const p of Object.values(s.players)) if (p.stack.includes(spellUid)) p.stack.splice(p.stack.indexOf(spellUid), 1);

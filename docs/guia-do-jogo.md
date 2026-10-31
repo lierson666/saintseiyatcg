@@ -78,7 +78,7 @@ Equipment — Armor (Cloth / Scale / Surplice / Warplate / Moonplate), armas e a
 
 Equipamentos que modificam os atributos e as habilidades de um Devotee.
 
-Alguns equipamentos podem evoluir quando utilizados por seus Owners.
+Algumas habilidades de Armor só funcionam com seu personagem Resonant.
 
 Support
 
@@ -244,7 +244,7 @@ Seções do Engage, ENG, Disengage e Multiguard removidas; a numeração foi man
 
 ### 19. Entrada em campo
 
-Devotees entram **Prepared**, em guarda, mas **não podem declarar Strike na rodada em que entraram**. **Impulse** remove essa restrição (o Strike na rodada de entrada não pode ter um God como alvo).
+Devotees entram **Prepared**, em guarda, mas **não podem declarar Strike na rodada em que entraram**. **Impulse** remove essa restrição.
 
 ---
 
@@ -257,7 +257,7 @@ Strike é a ação utilizada para causar dano.
 Para realizar Strike, o Devotee deve:
 
 1. Estar Prepared.
-2. Não ter entrado em campo nesta rodada (salvo Impulse; o Strike na rodada de entrada não pode ter um God como alvo).
+2. Não ter entrado em campo nesta rodada (salvo Impulse).
 3. Não estar Sealed.
 4. Escolher um alvo aberto (capítulo IV) e utilizar uma AÇÃO.
 
@@ -334,111 +334,65 @@ Long Range não concede essa vantagem quando o Devotee está defendendo um Strik
 
 Armor é a categoria universal de armadura: Athena — Cloth; Poseidon — Scale; Hades — Surplice; Ares — Warplate; Artemis — Moonplate. Moonplate é nomenclatura original do TCG; o exército de Artemis é formado pelas Satellites.
 
-Cada Devotee possui um slot de Armor. Armas e acessórios usam slots separados e mantêm suas regras anteriores. Qualquer Devotee elegível pode equipar Armor de estágio superior, independentemente de patente; custos e requisitos expressos continuam obrigatórios.
+Cada Devotee possui um slot de Armor. Armas e acessórios usam slots separados e mantêm suas regras anteriores. Qualquer Devotee elegível pode vestir qualquer Armor, independentemente de patente; custos e requisitos expressos continuam obrigatórios.
 
 A V1 está incorporada à identidade do Devotee: não é Equipment independente, não ocupa slot, não pode ser transferida nem destruída separadamente. V2 e posteriores são cartas independentes. O Vanilla Set prioriza V2; não exige criar todas as versões de todas as armaduras.
 
-### 26A. Living Armor, persistência e Repair
+### 26A. HP da Armor
 
-Todas as Armor (Cloth, Scale, Surplice, Warplate e Moonplate) são entidades vivas com HP próprio. Dano de Armor e Devotee são marcadores distintos. Trocar de portador, desequipar, renovar rodada ou retornar ao estágio Vanilla não repara Armor.
+Revisado em 30/10/2026. O HP impresso na Armor é um **bônus de HP máximo do portador**. A Armor não tem HP próprio, não recebe dano, não fica Broken e não é reparada. Todo dano fica marcado no Devotee. Quando a Armor deixa o Devotee, o HP máximo dele é recalculado e a destruição é verificada normalmente (§34).
 
-Quando o portador morre, ele vai ao Tartarus; a Armor fica no Battlefield sem portador, com o dano preservado e evolução vinculada reiniciada. Outro Devotee elegível pode herdar a Armor mediante AÇÃO e Equip.
+Living Armor, Broken e Repair foram retirados. Cartas que citam Repair aguardam revisão individual.
 
-Ao atingir HP máximo, a Armor fica **Broken**, sem destruição automática. Conforme esclarecimento aprovado, **todos os bônus e habilidades concedidos por ela ficam suspensos até Repair**. A redução de bônus de HP do portador segue a verificação normal de dano persistente. A nomenclatura formal de Broken continua sujeita a balanceamento.
+### 27. Resonance
 
-Repair restaura somente HP de Armor, limitado ao máximo impresso. Cura de Devotee não repara Armor. Aries Mu deve ter uma função de reparação, com custos e valores definidos na revisão de sua carta, preservando habilidades já aprovadas.
+Resonance é o único termo que liga uma Armor a personagens: “Resonance — Aries Mu”. Owner e Auto-Equip deixaram de existir; em cartas antigas, Owner e Auto-Equip valem como Resonance para o mesmo personagem. Uma Armor pode ter mais de um personagem Resonant. A identidade precisa corresponder exatamente.
 
-**Revisão pendente:** HP/resistência das cartas e distribuição exata do dano de combate entre Armor e Devotee. Até sua aprovação, a engine não inventa absorção ou redirecionamento automático de dano: combate preserva a atribuição atual; dano direcionado e Repair de Armor podem ser testados com definições de HP explícitas. Armor sem HP aprovado aparece como pendente, sem um número inventado. A V1 continua incorporada ao Devotee, sem Equipment transferível independente; sua separação numérica depende da revisão da identidade-base.
+Resonance faz duas coisas: equipa automaticamente, sem Equip, nos momentos do §28; e ativa as habilidades marcadas “Resonance — Nome”. As demais habilidades da Armor (“Equipped Devotee…”, “This Armor…”) funcionam com qualquer portador. Vestir a Armor não transforma outro Devotee naquele personagem.
 
-### 27. Owner
+### 28. Custo da Armor
 
-Algumas Cloths possuem a propriedade Owner.
+Revisado em 30/10/2026.
 
-Owner identifica quais personagens podem despertar a evolução daquele equipamento.
+1. **Jogar** uma Armor custa uma AÇÃO e o custo impresso, pago exclusivamente em Base. Se você controla um Devotee Resonant dela, você pode vesti-la nele na mesma AÇÃO, sem Equip; com mais de um, escolha um. Caso contrário — inclusive Armor sem personagem Resonant — ela entra sem portador.
+2. **Vestir** uma Armor que já está em campo, sem portador ou tirada de outro Devotee seu vivo, custa uma AÇÃO e o **Equip impresso** da carta, pago em Base e/ou Latent. Vale para qualquer Devotee, inclusive o Resonant.
+3. **Resonance ao entrar:** sempre que um Devotee Resonant entra em campo (jogado da mão, retornado do Tartarus ou por efeito), você pode vestir nele, sem Equip, uma Armor dele que você controla, mesmo que outro Devotee seu a esteja vestindo. Quem perde a Armor recalcula o HP máximo (§34).
 
-Uma Cloth pode possuir:
+Se o novo portador já vestia outra Armor, a anterior fica em campo sem portador.
 
-* um Owner;
-* dois Owners;
-* ou outra quantidade explicitamente indicada.
+Armas e acessórios mantêm o Equip impresso. Itens globais (“Equip: None — Global”, como Athena’s Shield) não se prendem: pagam o Casting Cost e ficam no campo sem portador, sem reequipar (autor, 29/10/2026).
 
-Owner não impede que outros Devotees elegíveis equipem a Cloth.
+### 29. Versões de Armor
 
-Um Devotee que não seja Owner recebe apenas os benefícios Vanilla.
+Revisado em 30/10/2026. A Armor é o que está impresso: não há estágios, estado Vanilla nem Evolve por regra geral. Versões mais fortes (V2, V3, God Cloth) são cartas separadas. Uma Armor só evolui se a própria carta descrever como.
 
-### 28. Vanilla
-
-Vanilla é o estado básico de uma Cloth.
-
-Toda Cloth entra em jogo no estado Vanilla, salvo efeito explícito.
-
-Os benefícios Vanilla são os benefícios básicos do equipamento.
-
-### 29. Progressão universal de Armor
-
-Todas as facções têm caminhos Voltron em quatro estágios de poder. São níveis de poder, sem bloqueio automático por patente. Cada carta define os estágios e requisitos disponíveis; não se criam versões automaticamente.
-
-Não é necessário possuir ou equipar versões anteriores para jogar uma Armor avançada, salvo requisito expresso na carta. Evolve pode alcançar um estágio posterior disponível pagando seu custo e cumprindo seus requisitos; sequência obrigatória só existe quando expressa na carta. Bônus numéricos são totais do estágio, sem somar os anteriores.
+Não é necessário possuir ou ter vestido versões anteriores para jogar uma Armor mais forte, salvo requisito expresso na carta.
 
 Athena progride por proteção, superação e transcendência; Poseidon por controle e domínio; Hades por persistência, morte e retorno; Ares por agressividade e conquista; Artemis por precisão e caça.
 
 ### 30. Evolve
 
-A Armor precisa estar equipada. Quando a carta exigir Owner, a identidade deve corresponder exatamente. Pagar uma AÇÃO e o custo em Base e/ou Latent do estágio escolhido, respeitando requisitos expressos e limite de uma evolução por carta física por rodada. A sequência não é obrigatória por regra geral.
-
-Evolve não exige nem altera Prepared e não encerra Rivalidades. Transferência e saída do campo mantêm o reset do vínculo para Vanilla.
+Retirado em 30/10/2026 (§29).
 
 ### 31. Vínculo de evolução
 
-A evolução pertence à combinação específica:
+Retirado em 30/10/2026 (§29).
 
-Cloth + Owner equipado.
+### 32. Morte do portador
 
-A evolução não é permanente no equipamento.
+Quando o portador morre, ele vai ao Tartarus e a Armor fica em campo sem portador. Outro Devotee pode vesti-la pelo procedimento do §28.
 
-Se a Cloth deixar de estar equipada naquele Owner, retorna imediatamente ao Vanilla.
+Armor sem portador não tem efeito. Ela só sai do campo por um efeito explícito que destrua, exile ou devolva Equipment ou Armor.
 
-Isso acontece quando:
+### 33. Equip de armas e acessórios
 
-* o Owner morre;
-* o equipamento é removido;
-* o equipamento é transferido;
-* o Owner deixa o campo.
-
-Mesmo que a Cloth seja transferida diretamente para outro Owner listado, retorna ao Vanilla.
-
-O novo Owner precisa desenvolver seu próprio vínculo.
-
-### 32. Morte do Owner
-
-Quando o Owner equipado morre:
-
-1. O Devotee é enviado ao Tartarus.
-2. A Cloth perde sua evolução.
-3. A Cloth retorna ao Vanilla.
-4. A Cloth permanece em jogo sem portador, conservando todo o dano próprio, salvo efeito que determine outro destino.
-
-Reequipar exige uma AÇÃO e o custo Equip da carta: Armor usa o padrão Resonant Wearer 1 / outros 5, salvo valores específicos. O procedimento de equipamentos está no capítulo XII.
-
-### 33. Resonance e Equip
-
-Resonance representa afinidade exata com personagens indicados. Uma Armor pode ter vários portadores designados, com habilidades distintas; o nome/identidade precisa corresponder exatamente. Equipar a Armor não transforma outro Devotee naquele personagem.
-
-Padrão inicial para Armor: Equip {1} para Resonant Wearer; Equip {5} para outros Devotees. Campos específicos da carta podem balancear esses valores. O custo de jogar é separado e Base-only; Equip e transferência aceitam Base e/ou Latent. Armas e acessórios mantêm o Equip impresso. Toda Cloth e todo Equipment que se prende a um Devotee tem custo de Equip impresso. Itens globais (“Equip: None — Global”, como Athena’s Shield) não se prendem: pagam o Casting Cost e ficam no campo sem portador, sem reequipar (autor, 29/10/2026).
-
-Owners continuam identificando requisitos de evolução quando impressos e também contam como portadores designados para Equip reduzido. Habilidades universais funcionam com qualquer portador elegível; apenas as habilidades específicas de Resonance exigem seu personagem. Use “Equipped Devotee”, “This Armor” e “Resonance — Pegasus Seiya”, sem presumir que o portador é o personagem original.
+Toda arma ou acessório que se prende a um Devotee tem custo de Equip impresso. O custo de jogar é Base-only; Equip e transferência aceitam Base e/ou Latent. Habilidades universais funcionam com qualquer portador; apenas habilidades “Resonance — Nome” exigem aquele personagem.
 
 ### 34. Bônus de atributos
 
-Os bônus de estágios diferentes substituem os anteriores, salvo indicação expressa.
+Quando uma Armor aumenta o HP máximo de um Devotee, o dano já marcado permanece inalterado.
 
-Eles não se acumulam automaticamente.
-
-Quando uma Cloth aumenta o HP máximo de um Devotee, o dano já marcado permanece inalterado.
-
-Quando uma Cloth perde seu bônus de HP, o HP máximo é recalculado.
-
-Se o dano acumulado for igual ou superior ao novo HP máximo, o Devotee é destruído.
+Quando o Devotee perde o bônus de HP, o HP máximo é recalculado.
 
 ### 35. God Armor e God Cloth
 
@@ -561,7 +515,7 @@ Trample não existe: a keyword é Pierce (§46). Cartas que diziam Trample foram
 
 ### 47. Impulse
 
-Pode declarar Strike na rodada em que entra em campo. Esse Strike não pode ter um God como alvo. Pierce continua funcionando normalmente.
+Pode declarar Strike na rodada em que entra em campo, contra qualquer alvo legal, inclusive o God. Pierce continua funcionando normalmente.
 
 ### 48. Sealed
 
@@ -626,12 +580,10 @@ Deck principal	60 cartas
 Mão inicial	7 cartas
 Cosmo Base por rodada	1
 Strike	1 AÇÃO
-Evolve	1 AÇÃO + Cosmo
-Evoluções por Cloth/rodada	1
 Dano entre rodadas	Persistente
 Duração média desejada	8–10 rodadas
 
-Os custos de Evolution e God Cloth serão determinados no balanceamento das cartas.
+Os custos de God Cloth serão determinados no balanceamento das cartas.
 
 ---
 
@@ -654,8 +606,9 @@ O autor aprovou a aplicação das recomendações de fechamento ao sistema do jo
 
 ### 56. Timing, respostas e resolução
 
-- Uma AÇÃO comum só é declarada na própria oportunidade e com a pilha vazia. Jogar Devotee, equipamento ou Technique; Strike, Evolve e habilidades marcadas como AÇÃO seguem essa regra.
+- Uma AÇÃO comum só é declarada na própria oportunidade e com a pilha vazia. Jogar Devotee, equipamento ou Technique; Strike e habilidades marcadas como AÇÃO seguem essa regra.
 - **Moment** pode ser jogado como AÇÃO na própria oportunidade ou como resposta em uma janela de prioridade. Como resposta, não gasta a próxima AÇÃO, mas paga integralmente seus custos exclusivamente em Latent Cosmo. **Technique** exige AÇÃO, salvo texto explícito (autor, 29/10/2026). **Event** e **Miracle** seguem a Technique: só como AÇÃO, pagos com Base ou Latent (autor, 29/10/2026). Toda Spell jogada (Technique, Moment, Event ou Miracle) entra na pilha e abre uma janela de resposta; só resolve depois que os dois jogadores passam em sequência (autor, 29/10/2026). Alvos de Spell são escolhidos ao jogá-la, antes da janela; respostas veem o alvo. Se o alvo não estiver mais disponível na resolução, a parte que dependia dele não acontece (autor, 29/10/2026).
+- **Tudo vai à pilha, como no Magic (autor, 30/10/2026):** jogar Devotee ou Equipment (inclusive Armor) e ativar habilidade ({T}, {N}{C}, Domain, poder divino e Ultimate) também entra na pilha e abre janela de resposta, como as Spells. Custos e alvos são pagos e anunciados ao declarar; o efeito acontece na resolução. Devotee e Equipment só entram em campo quando resolvem; se forem contrariados, vão ao Tartarus do dono. Só Moment responde; colocar Base continua fora da pilha.
 - Habilidades ativadas exigem AÇÃO por padrão; apenas as expressamente permitidas como resposta podem ser ativadas na prioridade. Passivas e gatilhos não gastam AÇÃO. Uma carta que disser como e quando a habilidade funciona fornece a exceção.
 - Ao declarar uma AÇÃO, anunciar escolhas e alvos e pagar custos. Strike deixa o atacante Unprepared nesse momento. O adversário recebe a primeira prioridade para responder.
 - Cada resposta entra no topo da pilha e entrega prioridade ao adversário. Dois passes de prioridade resolvem apenas o item do topo. Havendo itens restantes, a prioridade volta ao jogador da oportunidade atual; o processo continua até esvaziar a pilha e resolver os gatilhos produzidos.
@@ -670,9 +623,9 @@ O autor aprovou a aplicação das recomendações de fechamento ao sistema do jo
 
 ### 57. Entrada em campo e Prepared
 
-- Devotees entram **Prepared** (em guarda), mas não podem declarar Strike na rodada em que entraram. **Impulse** remove essa restrição (o Strike na rodada de entrada não pode ter um God como alvo); não concede AÇÃO extra.
+- Devotees entram **Prepared** (em guarda), mas não podem declarar Strike na rodada em que entraram. **Impulse** remove essa restrição; não concede AÇÃO extra.
 - A preparação normal acontece no início da rodada seguinte. Efeitos explícitos podem preparar antes disso ou impedir a preparação.
-- Evolve e retaliação não usam Prepared.
+- Retaliação não usa Prepared.
 - Um efeito que prepara pode permitir outro Strike na mesma rodada. O limite natural é Prepared mais AÇÕES disponíveis.
 
 **Por quê:** quem entra protege o campo de imediato, mas atacar exige esperar a rodada seguinte ou ter Impulse.
@@ -683,7 +636,7 @@ O autor aprovou a aplicação das recomendações de fechamento ao sistema do jo
 - Retaliação: o defensor retalia mesmo Unprepared, enquanto sobreviver ao dano simultâneo.
 - **Rivalidade:** criada quando ambos sobrevivem a um Strike entre Devotees ou por efeito de carta. É mútua e persistente; não pode existir mais de uma entre o mesmo par. Termina nas condições da seção 13.
 - **Mudança de controle:** deixa o Devotee Unprepared, sem curar dano nem apagar Awaken. Rivalidades que passem a ligar aliados terminam; as demais permanecem.
-- Uma carta vai para as zonas de seu proprietário, salvo efeito explícito. “Owner” da Cloth significa personagem elegível; não significa proprietário da carta.
+- Uma carta vai para as zonas de seu proprietário, salvo efeito explícito. “Resonance” da Armor indica personagem; não indica proprietário da carta.
 - Equipamentos não mudam de controlador automaticamente. Como a ligação normal exige equipamento e portador do mesmo controlador, um equipamento incompatível fica em campo sem portador e perde a evolução. Um efeito pode transferir expressamente ambos.
 
 ### 59. Combate e textos das keywords
@@ -697,8 +650,8 @@ O dano é marcado separadamente do HP máximo. Power negativo causa zero dano. H
 | Cheater | Durante um Strike contra este Devotee, o Devotee adversário não se beneficia de Long Range. Não ignora Guardian. |
 | Long Range | Ao iniciar Strike, causa seu dano primeiro. Verificar destruição/derrota antes da retaliação; alvo destruído não retalia. Defender com Long Range não concede dano primeiro. |
 | Pierce | Ao iniciar Strike contra um Devotee, o dano excedente ao HP restante daquele alvo é causado ao Soul do God que o controla. Não funciona por retaliação. Calcular depois de prevenção/modificação do dano e sem contar dano antigo como dano novo. |
-| Impulse | Pode declarar Strike na rodada em que entra em campo. Esse Strike não pode ter um God como alvo. Pierce continua funcionando normalmente. |
-| Sealed | Não pode declarar Strike nem ativar suas próprias habilidades, inclusive habilidades concedidas por equipamento. Mantém passivas, Rivalidades e retaliação; pode receber Evolve, que pertence à Cloth. Dura até o fim da rodada, salvo duração expressa diferente. |
+| Impulse | Pode declarar Strike na rodada em que entra em campo, contra qualquer alvo legal, inclusive o God. Pierce continua funcionando normalmente. |
+| Sealed | Não pode declarar Strike nem ativar suas próprias habilidades, inclusive habilidades concedidas por equipamento. Mantém passivas, Rivalidades e retaliação. Dura até o fim da rodada, salvo duração expressa diferente. |
 | Unfaith | Ao declarar Strike contra um God, pode escolher remover até 2 Latent Cosmo daquele jogador em lugar de causar dano ao Soul. A escolha é anunciada antes das respostas. O God retalia normalmente; sem Latent, o modo não causa dano ao Soul. |
 
 **Cheater e Unfaith foram confirmadas pelo autor com este complemento.** A primeira dá uma resposta específica a Long Range; a segunda cria uma decisão entre pressão no Soul e negação de recurso.
@@ -721,18 +674,15 @@ Se um Strike normal causar Soul zero aos dois Gods simultaneamente por efeitos a
 ### 61. Equipamentos, estágios e remoção
 
 - Cada Devotee tem **um espaço de armadura**, ocupado por uma Cloth, Scale, Surplice, Warplate ou Moonplate. Essas armaduras não se acumulam. Armas, acessórios e outras Relics não têm limite geral de quantidade, respeitando restrições impressas e cartas únicas.
-- Jogar qualquer Armor custa uma AÇÃO e seu custo de entrada exclusivamente em Base. Pode entrar sem portador ou entrar equipada pagando também seu custo de Equip, na mesma AÇÃO, com alvo elegível anunciado. Se apenas o portador ficar inválido, ela entra sem portador e não devolve o custo de Equip.
-- Equipar uma armadura em campo, reequipar ou transferir custa uma AÇÃO mais Equip. Usar **Equip 1 para portador designado / 5 para os outros** em Armor, salvo custos específicos; armas/acessórios usam o custo impresso ou 1. Equip pode ser pago com Base e/ou Latent. Trocar de armadura deixa a anterior em campo sem portador, em Vanilla; não a destrói.
+- Jogar uma Armor custa uma AÇÃO e o custo impresso, só em Base. Com um Devotee Resonant seu em campo, você pode vesti-la nele sem Equip; senão ela entra sem portador (§28).
+- Vestir uma Armor em campo (sem portador ou tirada de outro Devotee seu) custa uma AÇÃO e o Equip impresso, em Base e/ou Latent, inclusive para o Resonant. Ao entrar em campo, um Devotee Resonant pode puxar sua Armor sem Equip. Armas/acessórios usam o Equip impresso ou 1. Trocar de armadura deixa a anterior em campo sem portador; não a destrói.
 - Desequipar voluntariamente custa uma AÇÃO e zero Cosmo. Não exige Prepared. Transferência e troca são concluídas antes de recalcular os atributos e verificar destruição, evitando mortes por um estado intermediário de interface.
-- Equipment com {T} no custo (ex.: Pandora's Box, Kraken Scale, Lunar Amulet) usa a habilidade **uma vez por rodada**; Equipment não tem estado Prepared/Unprepared (autor, 29/10/2026).
+- Equipment com {T} no custo (ex.: Pandora's Box, Kraken Scale, Lunar Amulet) usa a habilidade **uma vez por rodada**; Equipment não tem estado Prepared/Unprepared (autor, 29/10/2026). O mesmo vale para o {T} de Domain (ex.: Jamir Tower), confirmado em 30/10/2026.
+- **“Destroyed”** em texto de Equipment/Armor é sair **do campo** para o Tartarus (destruída por efeito ou levada junto com o portador derrotado). Ir da mão ou do exílio para o Tartarus não conta (autor, 30/10/2026).
 - Destruir equipamento envia ao Tartarus; exilar envia ao Void; desequipar mantém no campo. Apenas Devotees ganham Afterlife no Tartarus. Equipamentos anexados não são enviados junto com o portador quando ele morre, retorna à mão ou é exilado, salvo texto explícito.
-- **Living Armor:** todas as Armor possuem HP próprio e dano independente do Devotee. O dano persiste entre rodadas, transferência, desequipamento e reset para Vanilla. Ao atingir HP máximo, a Armor permanece no Battlefield em estado Broken. Todos os bônus e habilidades concedidos por ela ficam suspensos até ser reparada (esclarecimento aprovado em 24/10/2026).
-- Evolução pertence a Cloth + Owner atual. Desanexar, transferir ou sair do campo reseta para Vanilla. A armadura continua tendo seus benefícios Vanilla quando equipada em um não Owner elegível.
-- Cada Evolve escolhe um estágio posterior disponível e exige AÇÃO, requisitos e Base e/ou Latent. Sequência obrigatória apenas se expressa na carta. Manter uma evolução por carta física por rodada; transferir, desequipar ou sair e voltar não renova esse limite na mesma rodada.
-- Os bônus numéricos indicados para cada estágio são **totais daquele estágio**, sem somar os anteriores. Habilidades desbloqueadas anteriormente permanecem, salvo texto contrário; uma habilidade escrita como exclusiva de um estágio só funciona nele. O padrão de Card Craft deve distinguir bônus numéricos de habilidades.
-- Para a mesa física, usar um único indicador de estágio junto à Cloth, com as posições dos até quatro estágios definidos na carta. Não exige outra cópia da carta nem uma carta de personagem adicional.
+- **HP da Armor** é bônus de HP máximo do portador; a Armor não tem dano próprio, Broken nem Repair (§26A, revisado em 30/10/2026). Não há estágios nem Evolve por regra geral (§29).
 
-**Por quê:** manter a armadura recuperável e o vínculo com o personagem como risco principal. O dano persistente de Armor e Devotee é registrado separadamente; a Armor pode ser herdada sem apagar suas marcas.
+**Por quê:** manter a armadura recuperável e simples de ler: um termo de vínculo (Resonance), custo e Equip impressos, nenhum marcador além do dano do Devotee.
 
 ### 62. Awaken, God Cloth, Ultimate e Afterlife
 
@@ -752,9 +702,9 @@ Se um Strike normal causar Soul zero aos dois Gods simultaneamente por efeitos a
 - Deck principal com 60 cartas, até **3 cópias da mesma identidade de carta**; artes alternativas e revisões da mesma carta não aumentam o limite. God e Domain ficam fora dessas 60.
 - Permitir cartas da facção do God, da facção do Domain e neutras. Se God e Domain forem da mesma facção, o deck é monofacção mais neutras. Não criar cinco tipos de mana nesta base.
 - Um mulligan parcial gratuito: separar qualquer quantidade da mão inicial, comprar a mesma quantidade e só então embaralhar as separadas no deck. Apenas uma troca; sem penalidade de Latent ao adversário.
-- Cada jogador pode controlar um Devotee de cada **personagem nomeado**, mesmo que existam versões diferentes da carta. Essa regra de lendário vale só para as classes de guerreiros: **Saints, Marines, Satellites, Specters e Berserkers**. Devotees de classe baixa (Warrior, Support e sem classe) não são lendários e podem ter mais de uma cópia no campo. Unidades genéricas também não têm essa exclusividade. Usar identidade estável de personagem para essa regra, Owner e Resonance; título e ilustração não bastam.
+- Cada jogador pode controlar um Devotee de cada **personagem nomeado**, mesmo que existam versões diferentes da carta. Essa regra de lendário vale só para as classes de guerreiros: **Saints, Marines, Satellites, Specters e Berserkers**. Devotees de classe baixa (Warrior, Support e sem classe) não são lendários e podem ter mais de uma cópia no campo. Unidades genéricas também não têm essa exclusividade. Usar identidade estável de personagem para essa regra e para Resonance; título e ilustração não bastam.
 - Uma segunda versão de personagem que já controla pode ser jogada da mão normalmente. Sempre que houver duplicidade (por jogada da mão ou por efeito), o controlador escolhe um para manter e envia os outros ao Tartarus, sem considerar isso destruição. Habilidades de entrada continuam seguindo o fato de a carta ter entrado; essa interação deve ser considerada no custo do efeito que a trouxe.
-- Relics só são únicas se isso estiver expresso. Retirar o desconto geral de 2 Cosmo por repetir nome; evolução de Cloth passa a ser a progressão geral, e uma carta específica pode autorizar substituir sua versão anterior.
+- Relics só são únicas se isso estiver expresso. Retirar o desconto geral de 2 Cosmo por repetir nome; versões de Armor são cartas separadas (§29), e uma carta específica pode autorizar substituir sua versão anterior.
 - Gods não iniciam Strike nem equipam armaduras. Possuem Soul e Attack; retaliação permanece disponível independentemente de Prepared. Custos de habilidades do God devem estar impressos, inclusive eventual esgotamento.
 - Domains permanecem em jogo, fora do deck, sem custo de entrada e protegidos de ataque, destruição, exílio, retorno à mão e mudança de controle adversária nesta base. Seus efeitos e limites de uso vêm do texto da carta. Galaxian Wars Arena (062), Tournament Spirit: conta quando o Bronze Saint amigo derrota o Devotee inimigo num Strike, tanto atacando quanto defendendo (dano de retaliação) (autor, 28/10/2026).
 - **Engage** (texto antigo de algumas cartas de Artemis): "engaged with X" significa estar num Strike com X, atacando ou defendendo; "Engage that Devotee" força esse Devotee num Strike contra o seu (autor, 29/10/2026). A mecânica de Engage separada não existe.
@@ -768,8 +718,10 @@ Se um Strike normal causar Soul zero aos dois Gods simultaneamente por efeitos a
 - Em textos existentes, **“once per turn” vale “once each round”** e **“until end of turn” vale “until end of round”** (autor, 29/10/2026).
 - “Until end of round” termina no encerramento atual; “until the beginning of the next round” termina no início da seguinte, antes da preparação. Uma duração diferente deve identificar precisamente o evento.
 - Cada texto antigo precisa de revisão contextual: “during your opponent's turn” pode virar “during an opponent's action”, mas isso não é substituição automática segura para todas as habilidades.
+- **Distribuir dano** (“distribute N damage among …”): cada alvo escolhido recebe pelo menos 1 (autor, 30/10/2026).
 - Habilidades de entrada aparecem primeiro na carta. A posição gráfica não antecipa a resolução de um gatilho em relação à pilha.
-- No Card Forge, separar: identidade e versão; custo e Cosmoble; Power/HP ou Soul/Attack; entrada; keywords; habilidades; Awaken/Ultimate; Owners; Resonance; estágios com bônus totais, requisitos e custos. Cloth e Scale precisam de identificação mecânica própria, ainda que reutilizem uma moldura.
+- **Sintaxe de Armor (autor, 30/10/2026):** o Equip universal fica no selo EQUIP do canto inferior esquerdo, fora do texto; a 1ª linha do texto é “Resonance — Nome” quando houver Resonant. O bônus ao portador fica nas gemas de ATK (esquerda) e HP (direita) na altura da linha de tipo, layout original das Cloths (autor, 30/10/2026), não no texto; keyword concedida fica como “Equipped Devotee has X.”. Habilidades específicas usam “Resonance — Nome: efeito” no catálogo; a carta mostra um bloco só, com o título “Resonance — Nome completo” e o efeito embaixo, sem repetir o nome (autor, 30/10/2026). Campos: `bonus_poder`, `bonus_vida`, `equipar_custo_outros` (Equip) e `auto_equip_en` (Resonance).
+- No Card Forge, separar: identidade e versão; custo e Cosmoble; Power/HP ou Soul/Attack; entrada; keywords; habilidades; Awaken/Ultimate; Resonance; custo e bônus da Armor. Cloth e Scale precisam de identificação mecânica própria, ainda que reutilizem uma moldura.
 - Dados de partida como dano, Prepared, Rivalidades, estágio atual e limites usados ficam fora da definição-base. A carta interativa recebe esses estados da engine. Impressão e jogo compartilham os mesmos textos, identidade e revisão.
 - São obrigatórios os textos que definem alvos, custo, duração e limite das habilidades, evitando que o importador complete esses elementos silenciosamente. O editor deve sinalizar conflitos entre texto e campos estruturados.
 
@@ -781,7 +733,6 @@ Se um Strike normal causar Soul zero aos dois Gods simultaneamente por efeitos a
 | Compras | 1 por rodada a partir da segunda |
 | Bases | 1 por jogador/rodada, sem AÇÃO |
 | Latent | Limite de 3; ganho geral uma vez por AÇÃO adversária com dano elegível; persiste e aceita conversão opcional de Bases no encerramento |
-| Evolve | Uma vez por Cloth/rodada |
 | Retorno do Tartarus | Uma vez por carta física/rodada |
 | Ultimate | Uma vez por personagem/jogador/partida |
 | Partida desejada | 8–10 rodadas; medir, sem prometer que a curva já entrega isso |
@@ -799,9 +750,9 @@ Para Devotees **sem habilidades nem keywords**, usaria esta régua provisória; 
 
 Guardian, Nimble, Impulse e, sobretudo, Long Range devem consumir parte dessa eficiência ou aumentar o custo. Não considero um Devotee com Long Range equivalente ao mesmo corpo sem a keyword: impedir retaliação conserva HP para rodadas futuras. Começaria comparando +1 Cosmo ou redução de atributo, e mediria antes de fixar uma tabela universal de preços.
 
-Exemplo de Cloth para testar, sem impor esses valores a todas: custo de entrada 2, Equip 1; Vanilla +1/+1; Evolve por 2 para bônus total +2/+2; Evolve por 4 para bônus total +4/+4. Cada Evolve respeita o limite de uma evolução por rodada; pode escolher o estágio final diretamente se a carta não exigir sequência. A carta só terá os estágios que seu design realmente definir.
+Exemplo de Cloth para testar, sem impor esses valores a todas: custo 2, Equip 3, +1 ATK e +1 HP ao portador, uma habilidade “Resonance — Nome”.
 
-Medir pelo menos: duração e vencedor com iniciativa; cartas disponíveis na mão e uso de Bases; duração das partidas e partidas travadas por “tartaruga” (todos em guarda); Strikes por rodada; Rivalidades formadas; dano evitado por Long Range; Strikes forçados em Guardian; frequência de evolução/God Cloth/Ultimate; quantidade de retornos e vantagem de cartas de Hades. Usar partidas espelhadas com iniciativa invertida antes de atribuir uma diferença à facção.
+Medir pelo menos: duração e vencedor com iniciativa; cartas disponíveis na mão e uso de Bases; duração das partidas e partidas travadas por “tartaruga” (todos em guarda); Strikes por rodada; Rivalidades formadas; dano evitado por Long Range; Strikes forçados em Guardian; frequência de God Cloth/Ultimate; quantidade de retornos e vantagem de cartas de Hades. Usar partidas espelhadas com iniciativa invertida antes de atribuir uma diferença à facção.
 
 
 ---

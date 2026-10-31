@@ -1,9 +1,9 @@
 // Ações serializáveis da partida (docs/duelo-online.md, passo 1). A tela local e o arena-server aplicam a mesma ação
 // com a mesma função da engine: a tela manda dados ({type, key, uid, choice…}), nunca uma função.
 import {startTurn, endTurn, pass, placeBase, RuleError} from './core.js';
-import {declareStrike} from './strike.js';
+import {declareStrike, mustStrike} from './strike.js';
 import {playDevotee, playEquipment, playSpell, activate, reequip} from './play.js';
-import {announceExclamation, removeJudgment, announceGreatFlood, announceGreatEclipse, announceObliteration, activateBloodlust, placeBaseMoonHarvest} from './gods.js';
+import {announceExclamation, removeJudgment, announceGreatFlood, announceGreatEclipse, announceObliteration, activateBloodlust, placeBaseMoonHarvest, announceMoonAwakening} from './gods.js';
 import {mulligan} from './match.js';
 import {applyTimeout} from './clock.js';
 
@@ -31,6 +31,7 @@ export function applyAction(match, ctx, action) {
     case 'pass': return pass(s, key);
     case 'endTurn':
       if (s.active !== key) throw new RuleError('D1', 'END TURN fora do próprio turno');
+      if (mustStrike(s, ctx, key).length) throw new RuleError('V6', 'Uncontrolled Rage: este Devotee precisa declarar Strike antes do END TURN');
       match.ending = true;
       return endTurn(s);
     case 'mulligan':
@@ -43,6 +44,7 @@ export function applyAction(match, ctx, action) {
     case 'greatFlood': return announceGreatFlood(s, ctx, key);
     case 'greatEclipse': return announceGreatEclipse(s, ctx, key);
     case 'obliteration': return announceObliteration(s, ctx, key);
+    case 'moonAwakening': return announceMoonAwakening(s, ctx, key);
     case 'bloodlust': return activateBloodlust(s, ctx, key, choice.uid);
     case 'moonHarvest': return placeBaseMoonHarvest(s, ctx, key, uid);
     case 'judgment': return removeJudgment(s, ctx, key, choice.devotees);

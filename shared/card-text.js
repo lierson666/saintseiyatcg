@@ -20,6 +20,8 @@ export function textBlocks(texts){
       chunk=chunk.trim();if(!chunk)continue;
       let m=chunk.match(/^\*\*([^*]+)\*\*\s*\n?([\s\S]*)$/);
       if(m){result.push({heading:m[1].replace(/:$/,''),body:m[2],kind:'ability'});continue;}
+      // 1ª linha da Armor (30/10/2026): "Resonance — Aries Mu" fica inteira, em destaque, sem virar título + corpo.
+      if(/^Resonance — [^.:]+$/.test(chunk)){result.push({heading:chunk,body:'',kind:'equip'});continue;}
       m=chunk.match(/^(Resonance\s*[—-]\s*[^.:]+)[.:]\s*([\s\S]*)$/i);
       if(m){result.push({heading:m[1],body:m[2],kind:'resonance'});continue;}
       m=chunk.match(/^(7th Sense|God Cloth)\s*[—-]\s*([^:]+):\s*([\s\S]*)$/i);
@@ -49,8 +51,14 @@ export function blocksMarkup(blocks){return blocks.map(b=>[b.heading?`**${b.head
 export function presentationRules(card){
   const raw=card.habilidades_en||[];
   const equipLine=equipmentCostText(card);
-  const armorHP=armorCard(card)&&card.vida>0?`Armor HP: ${card.vida}.`:null;
-  if(!card.estagios?.length)return [...raw,...(equipLine?[equipLine]:[]),...(armorHP?[armorHP]:[])];
+  const armorHP=null; // guia §26A: o HP da Armor é bônus do portador, mostrado na faixa da base (bonus_vida)
+  if(!card.estagios?.length&&armorCard(card)){
+    // Resonance num bloco só (autor, 30/10/2026): título "Resonance — <nome completo>" e o efeito embaixo, sem repetir o nome curto do texto.
+    const effects=raw.filter(t=>/^Resonance\s*[—-]\s*[^.:]+:\s*/i.test(t));
+    const merged=equipLine&&effects.length?effects.map(t=>`**${equipLine}**\n${t.replace(/^Resonance\s*[—-]\s*[^.:]+:\s*/i,'')}`):[];
+    return [...(equipLine&&!merged.length?[equipLine]:[]),...merged,...raw.filter(t=>!effects.includes(t)||!merged.length)];
+  }
+  if(!card.estagios?.length)return [...raw,...(equipLine?[equipLine]:[])];
   const stages=card.estagios,sign=n=>`${n<0?'':'+'}${n||0}`,bonus=s=>`${sign(s.bonus_poder)} Power / ${sign(s.bonus_vida)} HP`;
   const name=id=>id.split('-').map(s=>s.charAt(0).toUpperCase()+s.slice(1)).join(' ');
   // Os números editáveis têm uma única origem. As habilidades livres continuam no texto.

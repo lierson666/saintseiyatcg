@@ -156,21 +156,23 @@ test('estáticas: Tatsumi com Soul ≤ 5, Seika com Seiya, Shunrei com Shiryu', 
 test('Dragon Shield (003/004) previne 1 uma vez por Round e não acumula; Libra Defense previne 2 em Shiryu', () => {
   const {s, ctx, field, equip, strike, end} = setup({A: fortress, B: rush});
   const shiryu = field('A', '003');
-  const cloth = equip('A', '004', shiryu); // Armor HP 5 com Dragon Shield
+  const cloth = equip('A', '004', shiryu); // Armor HP 5 (soma ao portador) com Dragon Shield
   strike(shiryu, {kind: 'god', player: 'B'});
-  assert.deepEqual([s.units[cloth].damage, s.units[shiryu].damage], [2, 0], 'retaliação 3 menos 1');
+  assert.deepEqual([s.units[cloth]?.damage ?? 0, s.units[shiryu].damage], [0, 2], 'retaliação 3 menos 1, toda no portador');
   end(); startTurn(s); end(); startTurn(s);
   equip('A', '049', shiryu);
   strike(shiryu, {kind: 'god', player: 'B'});
-  assert.equal(s.units[cloth].damage, 2, 'Dragon Shield 1 + Libra 2 previnem os 3');
+  assert.equal(s.units[shiryu].damage, 2, 'Dragon Shield 1 + Libra 2 previnem os 3; o portador segue com 2');
+  assert.equal(s.units[cloth]?.damage ?? 0, 0, 'a Armor não tem dano próprio');
 });
 
-test('Dragon\'s Guard (045) em Shiryu: previne 1 e põe escudo de 1 na Armor dele até o fim do Round seguinte', () => {
+test('Dragon\'s Guard (045) em Shiryu: previne 1 e põe escudo de 1 na Armor dele até o fim do Round seguinte (o escudo protege o portador)', () => {
   const {s, ctx, field, equip, strike} = setup({A: fortress, B: rush});
   const shiryu = field('A', '003'), cloth = equip('A', '004', shiryu);
   equip('A', '045', shiryu);
   strike(shiryu, {kind: 'god', player: 'B'});
-  assert.equal(s.units[cloth].damage, 0, '3 - Dragon Shield 1 - Dragon\'s Guard 1 - escudo da Armor 1');
+  assert.equal(s.units[shiryu].damage, 0, '3 - Dragon Shield 1 - Dragon\'s Guard 1 - escudo posto na Armor 1');
+  assert.equal(s.units[cloth]?.damage ?? 0, 0);
 });
 
 test('opcionais pagos: Prayer of Rozan (1 Latent), Crystal Wall (2 Latent, também no God), Final Sacrifice (derrota Cassios)', () => {
