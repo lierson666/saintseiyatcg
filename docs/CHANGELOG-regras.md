@@ -8,7 +8,7 @@ Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências
 
 - **Antes:** só as Armors mostravam o Equip; armas, Relics e acessórios que se prendem tinham Equip no catálogo (1 a 4), mas sem selo na carta.
 - **Depois:** o selo EQUIP do canto inferior esquerdo aparece em todo Equipment com Equip impresso. Equipment Global (sem Equip) continua sem selo. Nenhuma regra muda. A linha “Equip N — Any friendly Devotee.” sai do texto (o selo já mostra).
-- **Texto das cartas:** regras em branco; só títulos de habilidade e keywords em negrito na cor do tema, como nas Armors (autor, 31/10/2026).
+- **Texto das cartas:** regras em branco; só títulos de habilidade e keywords em negrito na cor do tema, como nas Armors (autor, 31/10/2026). Keywords sempre em MAIÚSCULA e negrito (lista única em `shared/card-text.js`, usada também pelo Card Forge): Long Range, Multiguard, Guardian, Nimble, Cheater, Pierce, Impulse, Seal, Sealed, Unfaith, Afterlife, Prepare, Prepared, Unprepared, Training.
 - **Motivo:** autor, 31/10/2026: os valores de Equip do catálogo são dele; equipamento deve mostrar o custo de Equip.
 - **Pendências:** **Blessing** (tipo novo, equivalente à Aura do Magic) fica para um set futuro, por decisão do autor; nada entra no guia por enquanto. Não publicado.
 

@@ -2,7 +2,9 @@ import {armorCard} from './rules-policy.js';
 import {equipmentCostText} from './card-visual-values.js';
 // A sintaxe visual é compartilhada entre impressão e jogo; nunca altera as regras salvas.
 export const escapeText=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const words=['Long Range','Multiguard(?: \\d+)?','Guardian','Nimble','Cheater','Pierce','Impulse','Sealed','Unfaith','Afterlife','Prepare','Prepared'];
+// Keywords sempre em MAIÚSCULA e negrito no texto (autor, 31/10/2026); o Card Forge usa a mesma lista (forge.js).
+export const KEYWORD_WORDS=['Long Range','Multiguard(?: \\d+)?','Guardian','Nimble','Cheater','Pierce','Impulse','Sealed','Seal','Unfaith','Afterlife','Unprepared','Prepared','Prepare','Training'];
+const words=KEYWORD_WORDS;
 const emphasis=new RegExp(`\\b(${words.join('|')})\\b`,'gi');
 export function inlineMarkup(text){
   return String(text).split(/(\*\*[^*]+\*\*|\{[BCLST]\})/g).map(s=>{
