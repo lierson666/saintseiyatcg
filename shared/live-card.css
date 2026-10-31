@@ -35,6 +35,9 @@
 .live-card--psd .lc-text--flavour{font-family:'ITC Avant Garde Gothic Pro','Century Gothic',Avenir,sans-serif;font-style:italic;text-shadow:0 0 .3cqw #000}
 .live-card.live-card--psd .lc-rules{position:absolute;margin:0;padding:0;overflow:hidden;text-align:center;line-height:1.18;color:#f4efe6;font-family:Avenir,'Avenir Next',sans-serif;font-weight:300;text-shadow:0 0 .25cqw #000,0 0 .5cqw #000;display:block;-webkit-line-clamp:unset}
 /* Texto de regras em branco; só títulos de habilidade e keywords em negrito na cor do tema (autor, 31/10/2026). */
+/* Bloco de texto centralizado na vertical da área de regras (autor, 31/10/2026); "safe" evita cortar o topo se transbordar. */
+.live-card.live-card--psd .lc-rules{display:flex;flex-direction:column;justify-content:safe center}
+.live-card.live-card--psd .lc-rules>*{flex:none}
 .live-card--psd .lc-rules p{margin:0 0 .5em}
 .live-card--psd .lc-rules .rule-block{margin:0 0 .5em}
 .live-card--psd .lc-rules strong,.live-card--psd .lc-rules .rule-heading,.live-card--psd .lc-rules .live-card__keywords{font-weight:900;color:var(--psd-ink)}
@@ -61,3 +64,14 @@
 .live-card--psd .lc-band .is-atk{color:#7fd8ff}
 .live-card--psd .lc-band .is-hp{color:#ffb347}
 .live-card--psd .lc-band i{color:#bfa66e;font-style:normal}
+
+/* Texto da carta fora da arte (inspetor, ficha do lobby): mesmas regras do texto impresso (autor, 31/10/2026). */
+.card-text{color:#f4efe6}
+.card-text p{margin:0 0 .5em}
+.card-text .rule-block{margin:0 0 .7em}
+.card-text.card-text strong,.card-text.card-text .rule-heading,.card-text.card-text .live-card__keywords{font:inherit;font-weight:900;color:var(--psd-ink)}
+.card-text.card-text .rule-heading{display:block}
+.card-text .live-card__keywords{text-transform:uppercase;margin:0 0 .6em}
+.card-text .rule-symbol{color:var(--psd-ink)}
+.card-text.card-text .rule-stat--up{color:#8dffa6}
+.card-text.card-text .rule-stat--down{color:#ff5a4a}

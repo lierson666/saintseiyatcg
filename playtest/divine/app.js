@@ -22,8 +22,8 @@ import {createAI} from './ai.js?v=5';
 import {findDeck} from '../deck-store.js';
 import {unlock, playMusic} from '../audio.js?v=20261030-telas';
 import {telas, anim, sound, imageUrl, applyColors, applyTexts} from '../telas.js?v=20261030-1';
-import {renderLiveCard} from '../../shared/live-card.js?v=20261031-kw3';
-import {armorBonusText, printedEquipmentBonuses} from '../../shared/card-visual-values.js';
+import {renderLiveCard, renderCardText} from '../../shared/live-card.js?v=20261031-kw5';
+import {armorBonusText, printedEquipmentBonuses} from '../../shared/card-visual-values.js?v=20261031-kw5';
 
 const $ = (s, el = document) => el.querySelector(s), $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -1006,7 +1006,8 @@ document.addEventListener('pointercancel', endPress);
 function showInspect(uid) {
   const c = info(uid), box = $('#inspector');
   const lines = c.text.split('\n').slice(2).filter(l => !/^\s*(Rarity|Type|Casting Cost|ATK|HP|Cosmoble)/.test(l));
-  box.innerHTML = `${cardFace(uid, {size: 'dcard--xl', field: S().players[owner(uid)].battlefield.includes(uid)})}<div class="inspector__text"><strong>${esc(c.name)}</strong><small>${esc(c.type.replace(/^Spell\s*—\s*/, ''))}${c.cost ? ` · ${c.cost.amount} ${c.cost.unit === 'base' ? 'Base' : 'Latent'}` : ''}</small>${lines.map(l => `<p>${esc(l)}</p>`).join('')}</div>`;
+  const forgeOf = FORGE.get(ctx.objects[uid].cardId); // texto com as regras da carta impressa (autor, 31/10/2026)
+  box.innerHTML = `${cardFace(uid, {size: 'dcard--xl', field: S().players[owner(uid)].battlefield.includes(uid)})}<div class="inspector__text"><strong>${esc(c.name)}</strong><small>${esc(c.type.replace(/^Spell\s*—\s*/, ''))}${c.cost ? ` · ${c.cost.amount} ${c.cost.unit === 'base' ? 'Base' : 'Latent'}` : ''}</small>${forgeOf ? renderCardText(forgeOf) : lines.map(l => `<p>${esc(l)}</p>`).join('')}</div>`;
   box.classList.add('show');
 }
 // Clique direito no retrato do God: status base e atuais (Soul, Attack, Awaken, Ultimate) e o texto completo.

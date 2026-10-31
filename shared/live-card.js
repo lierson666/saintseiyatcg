@@ -1,7 +1,7 @@
-import {renderRules,inlineMarkup,presentationRules,ruleBlocksWithoutKeywords,blocksMarkup} from './card-text.js?v=20261031-kw3';
+import {renderRules,inlineMarkup,presentationRules,ruleBlocksWithoutKeywords,blocksMarkup} from './card-text.js?v=20261031-kw5';
 import {isArmor,isEquipment} from './card-model.js?v=20261024-4';
 import {renderPublishedCard,visualProject} from './layout-studio/runtime.js';
-import {printedEquipmentBonuses,signedBonus,armorBonusText} from './card-visual-values.js';
+import {printedEquipmentBonuses,signedBonus,armorBonusText} from './card-visual-values.js?v=20261031-kw5';
 // A ilustração é apenas fundo. Letras, números e estados são dados independentes no DOM.
 const escape=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const portraits={'athena-001':'athena-001','athena-002':'athena-002','athena-003':'athena-003','athena-004':'athena-004','athena-005':'athena-005','athena-006':'athena-006','sst-01-001':'athena-002','sst-01-002':'athena-003','sst-01-003':'athena-004','sst-01-004':'athena-005','sst-01-005':'athena-006'};
@@ -94,6 +94,13 @@ function renderPsdCard(card,{src,stage,hp,power,keywords,damage,rules,equipment,
 function armorStatus(card,hp,damage){
   if(!isArmor(card))return '';
   return ''; // guia §26A (30/10/2026): Armor sem HP próprio, sem Broken
+}
+// Texto da carta fora da arte (inspetor do duelo, ficha do lobby): mesmas regras do texto impresso
+// (autor, 31/10/2026): corpo branco; títulos, keywords e bônus em MAIÚSCULA e negrito; cor do tema da facção.
+export function renderCardText(card){
+  const f=String(card.faccao||'').toLowerCase(),ink=(PSD?.T.factions[f]||NEUTRAL).color;
+  const kws=card.keywords_en||[],rules=ruleBlocksWithoutKeywords(presentationRules(card),kws).map(block=>blocksMarkup([block]));
+  return `<div class="card-text" style="--psd-ink:${escape(ink)}">${kws.length?`<p class="live-card__keywords">${kws.map(k=>inlineMarkup(k)).join(', ')}</p>`:''}${renderRules(rules)}</div>`;
 }
 export function renderLiveCard(card,{stats=null,instance=null,art=null,compact=false,equipment:attachedEquipment=[],mode=null}={}){
   if(!card)return '<div class="live-card live-card--missing">Unknown card</div>';
