@@ -5,12 +5,16 @@ export const escapeText=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<'
 // Keywords sempre em MAIÚSCULA e negrito no texto (autor, 31/10/2026); o Card Forge usa a mesma lista (forge.js).
 export const KEYWORD_WORDS=['Long Range','Multiguard(?: \\d+)?','Guardian','Nimble','Cheater','Pierce','Impulse','Sealed','Seal','Unfaith','Afterlife','Unprepared','Prepared','Prepare','Training'];
 const words=KEYWORD_WORDS;
+// Bônus de atributo ("+1 ATK / +1 HP", "+2/+2", "-1 ATK") sempre em negrito e maiúscula (autor, 31/10/2026).
+// Só "+": verde (como bônus no duelo); só "-": vermelho; misto: cor do tema.
+export const statTrend=m=>/-\d/.test(m)?(/\+\d/.test(m)?'mixed':'down'):'up';
+export const STAT_RE=/(?<![\w])[+-]\d+(?:\s*(?:ATK|ATTACK|HP|Power))?(?:\s*\/\s*[+-]\d+(?:\s*(?:ATK|ATTACK|HP|Power))?)?/gi;
 const emphasis=new RegExp(`\\b(${words.join('|')})\\b`,'gi');
 export function inlineMarkup(text){
   return String(text).split(/(\*\*[^*]+\*\*|\{[BCLST]\})/g).map(s=>{
     if(s.startsWith('**'))return `<strong>${escapeText(s.slice(2,-2))}</strong>`;
     if(/^\{[BCLST]\}$/.test(s)){const names={B:'Base Cosmo',C:'Cosmo',L:'Latent Cosmo',S:'Soul',T:'Tap'};return `<span class="rule-symbol" title="${names[s[1]]}" aria-label="${names[s[1]]}">${s[1]==='T'?'↷':s[1]==='S'?'◇':'✺'}</span>`;}
-    return escapeText(s).replace(emphasis,m=>`<strong>${m.toUpperCase()}</strong>`).replace(/([+-]\d+\s*\/\s*[+-]\d+)/g,'<strong>$1</strong>');
+    return escapeText(s).replace(emphasis,m=>`<strong>${m.toUpperCase()}</strong>`).replace(STAT_RE,m=>`<strong class="rule-stat rule-stat--${statTrend(m)}">${m.toUpperCase()}</strong>`);
   }).join('');
 }
 export function textBlocks(texts){
@@ -32,6 +36,10 @@ export function textBlocks(texts){
       if(m){result.push({heading:m[1],body:m[2],kind:m[1].toLowerCase()});continue;}
       m=chunk.match(/^([^.—\n]{2,45})\s*—\s*(Cost:[^.]+)\.\s*([\s\S]*)$/);
       if(m){result.push({heading:`${m[1]} — ${m[2]}`,body:m[3],kind:'ability'});continue;}
+      // Nome de golpe/habilidade com travessão (autor, 31/10/2026): "Garuda Flap — When …" vira título + corpo.
+      // Custo ativado ("Name — {4}{C}, {T}: …") segue a regra de dois-pontos abaixo, com o custo no título.
+      m=chunk.match(/^([A-Z0-9][^.:—\n]{1,44}?)\s+—\s+(?![{]|Cost:)([\s\S]+)$/);
+      if(m&&!/^(When|Whenever|If|Once|At|As|While|Each|Until|This|Target|Choose|Put|You|Your)\b/.test(m[1])&&!/^Resonance$/i.test(m[1])){result.push({heading:m[1],body:m[2],kind:'ability'});continue;}
       m=chunk.match(/^([^.:\n]{2,40}):\s*([\s\S]*)$/);
       if(m&&!/^(When |Whenever |Once |If )/i.test(m[1])){result.push({heading:m[1],body:m[2],kind:'ability'});continue;}
       m=chunk.match(new RegExp(`^((?:(?:${words.slice(0,10).join('|')})[.,]?\\s*)+)$`,'i'));
@@ -49,7 +57,7 @@ export function ruleBlocksWithoutKeywords(texts,keywords=[]){
     return !tokens.length||!tokens.every(token=>selected.has(token));
   });
 }
-export function blocksMarkup(blocks){return blocks.map(b=>[b.heading?`**${b.heading.replace(/:$/,'')}:**`:'',b.body].filter(Boolean).join('\n')).join('\n\n');}
+export function blocksMarkup(blocks){return blocks.map(b=>[b.heading?`**${b.heading.replace(/:$/,'').toUpperCase()}:**`:'',b.body].filter(Boolean).join('\n')).join('\n\n');}
 export function presentationRules(card){
   const raw=card.habilidades_en||[];
   const equipLine=equipmentCostText(card);
@@ -72,4 +80,4 @@ export function presentationRules(card){
     ...stages.slice(1).map(s=>`${s.nome} — ACTION, pay ${s.custo??'?'} Cosmo: This equipment grants ${bonus(s)} instead. ${card.donos?.length?'Only its Owner may evolve it.':'Eligible wearers may evolve it.'}${s.exige_awaken?' Requires an Awakened Owner.':''}${s.habilidades_en?.length?' '+s.habilidades_en.join(' '):''}`),
     ...(card.ressonancias||[]).map(r=>`Resonance — ${name(r.personagem_id)}: ${r.habilidade_en}`)];
 }
-export function renderRules(texts){return textBlocks(texts).map(b=>`<div class="rule-block rule-block--${b.kind}">${b.heading?`<strong class="rule-heading">${inlineMarkup(b.heading)}${b.body?':':''}</strong>`:''}${b.body?`<p>${inlineMarkup(b.body)}</p>`:''}</div>`).join('');}
+export function renderRules(texts){return textBlocks(texts).map(b=>`<div class="rule-block rule-block--${b.kind}">${b.heading?`<strong class="rule-heading">${inlineMarkup(b.heading.toUpperCase())}${b.body?':':''}</strong>`:''}${b.body?`<p>${inlineMarkup(b.body)}</p>`:''}</div>`).join('');}

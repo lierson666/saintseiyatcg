@@ -41,6 +41,9 @@
 .live-card--psd .lc-rules .live-card__keywords{text-transform:uppercase;font-size:1em;margin:0 0 .5em}
 .live-card--psd .lc-rules .live-card__owners{font-size:.9em;color:var(--psd-ink);opacity:.9}
 .live-card--psd .lc-rules .rule-symbol{color:var(--psd-ink)}
+/* Bônus +X/+Y em verde e -X/-Y em vermelho, mesmas cores do ATK/HP alterado no duelo (autor, 31/10/2026). */
+.live-card--psd .lc-rules .rule-stat--up{color:#8dffa6}
+.live-card--psd .lc-rules .rule-stat--down{color:#ff5a4a}
 .live-card.live-card--psd .live-card__damage,.live-card.live-card--psd .live-card__state{position:absolute;left:5%;bottom:6.5%;padding:.6cqw 1.6cqw;font-size:3.2cqw;border-radius:.8cqw;background:#080d18ee}
 .live-card.live-card--psd .live-card__state{left:auto;right:5%}
 .live-card--compact.live-card--psd .lc-rules,.live-card--compact.live-card--psd .lc-text--flavour,.live-card--compact.live-card--psd .lc-text--subtitle{display:none}
