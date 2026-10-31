@@ -186,15 +186,16 @@ export default {
   'artemis-v6-381': {enter: run((st, c, key) => { const t = pickFriend(st, c, key, 'FOREST BLESSING', {optional: true}); if (t) grow(st, c, key, t, 1); })},
   'artemis-v6-382': {mods: (s, c, key, self) => (k.devotees(s, c, key).some(u => u !== self && k.hasType(c, u, 'Sacred Beast')) ? [{atk: 1, hp: 0}] : [])},
   'artemis-v6-383': {killInCombat: growSelf(1)},
-  // 384 Crushing Coils: pendente: "Engage" foi removido do jogo, sem mecânica equivalente.
   'artemis-v6-384': {
     mods: (s, c, key, self) => {
       const n = Math.min(3, k.devotees(s, c, key).filter(u => u !== self && k.hasType(c, u, 'Sacred Beast')).length);
       return n ? [{atk: n, hp: n}] : [];
     },
-    // Crushing Coils (autor, 30/10/2026): "Engage" = lutam na hora, dano simultâneo pelo ATK, sem gastar o Strike da Serpent.
+    // Crushing Coils (autor, 31/10/2026): "may have it Strike target enemy Devotee with ATK 3 or less. It ignores Guardian."
+    // shortcut: Strike resolvido aqui (dano simultâneo pelo ATK, sem gastar o Strike nem disparar gatilhos de Strike); usar o
+    // declareStrike quando ele aceitar um Strike fora da fase, sem Prepared.
     enter: run((st, c, key, self) => {
-      const t = k.choose(c, key, 'CRUSHING COILS', k.enemies(st, c, key).filter(u => k.atkOf(st, c, u) <= 3), {optional: true, text: 'Engage an enemy Devotee with ATTACK 3 or less?'});
+      const t = k.choose(c, key, 'CRUSHING COILS', k.enemies(st, c, key).filter(u => k.atkOf(st, c, u) <= 3), {optional: true, text: 'Strike an enemy Devotee with ATK 3 or less (ignores Guardian)?'});
       if (!t || !k.onField(st, key, self)) return;
       const mine = k.atkOf(st, c, self), theirs = k.atkOf(st, c, t);
       k.damage(st, c, t, mine);

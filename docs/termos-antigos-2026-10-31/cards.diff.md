@@ -1,6 +1,6 @@
 # Termos antigos → sintaxe atual (31/10/2026)
 
-Decisões do autor (grilling 31/10/2026): attacks → Strikes; ATTACK (atributo) → ATK; exhaust/exhausted → Unprepare/Unprepared; engage → Strike. **Não gravado.** Casos especiais do mesmo grilling: Equipment/Domain sem exhaust ("Once each round"); blocks → "Whenever an enemy Devotee Strikes X"; Exhaustion → não fica Prepared na próxima Prepare.
+Decisões do autor (grilling 31/10/2026): attacks → Strikes; ATTACK (atributo) → ATK; exhaust/exhausted → Unprepare/Unprepared; engage → Strike. **Gravado em data/cards.json e no Forge em 31/10/2026 (aprovado pelo autor).** Casos especiais do mesmo grilling: Equipment/Domain sem exhaust ("Once each round"); blocks → "Whenever an enemy Devotee Strikes X"; Exhaustion → não fica Prepared na próxima Prepare.
 
 ## athena-v6-007 — ANDROMEDA SHUN
 ```diff

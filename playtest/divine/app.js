@@ -508,7 +508,7 @@ function godHud(key, side) {
   const frame = FRAMES[god.name.toLowerCase()] ? god.name.toLowerCase() : 'athena', fr = FRAMES[frame];
   return `<section class="godhud godhud--${side} ${pick ? 'pickable' : ''} ${s.active === key ? 'is-active' : ''} ${d.awaken ? 'is-awaken' : ''} ${low ? 'is-low' : ''}" data-god="${key}" style="--glow:${GOD_GLOW[d.god] || GOD_GLOW['god-athena']}"
       ${pick ? `data-pick="god:${key}"` : ''} role="button" tabindex="0" aria-label="${esc(god.name)}, Soul ${p.soul} of ${max}${d.awaken ? ', Awaken' : ''}">
-    <div class="gh-frame" style="aspect-ratio:${fr.ratio}" data-tip="${esc(`God|${god.name}, Player ${key}. Devotees can attack it.`)}">
+    <div class="gh-frame" style="aspect-ratio:${fr.ratio}" data-tip="${esc(`God|${god.name}, Player ${key}. Devotees can Strike it.`)}">
       <div class="gh-hole godhud__portrait" style="${box(fr.hole)};${face}"></div>
       <img class="gh-frame__img gh-frame__img--${frame}" src="./assets/god-frames/${frame}.png" alt="">
       <span class="gh-name" style="${box(fr.plate)}">${esc(god.name)}</span>
@@ -671,7 +671,7 @@ const HINTS = {
   equip: ['EQUIP', 'Attach an Equipment or Cloth to one of your Devotees.'],
   technique: ['CAST A TECHNIQUE', 'Only on your turn, with the chain empty.'],
   moment: ['CAST A MOMENT', 'Now, or later as a response.'],
-  strike: ['STRIKE', 'A Prepared Devotee attacks an enemy Devotee or God.'],
+  strike: ['STRIKE', 'A Prepared Devotee Strikes an enemy Devotee or God.'],
   ability: ['USE AN ABILITY', '{T} and Cosmo abilities on your cards.'],
   ultimate: ['ULTIMATE', "Your God's once-per-match power is ready."],
   end: ['END TURN', "When you're done."],
