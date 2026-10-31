@@ -3,7 +3,7 @@
 export const KEYWORD_RULES = {
   'Guardian': 'While an enemy Guardian can be targeted, Strikes must target it, except against a Rival or with Nimble.',
   'Nimble': 'Ignores Guardian when declaring a Strike. It can still be targeted normally.',
-  'Cheater': "Devotees that Strike this Devotee don't benefit from Long Range. Cheater doesn't ignore Guardian.",
+  'Cheater': 'Can only be targeted by Strikes from Devotees that also have Cheater. It can Strike any legal target.',
   'Long Range': "When it starts a Strike, its damage resolves before retaliation. If the defender is destroyed, it doesn't retaliate.",
   'Pierce': "When it Strikes a Devotee, excess damage is dealt to that player's God Soul. Doesn't apply to retaliation.",
   'Impulse': 'Can declare a Strike the round it enters the battlefield, against any legal target, including the God.',
@@ -11,7 +11,7 @@ export const KEYWORD_RULES = {
   'Sealed': 'Has one or more Seal counters. It can still Strike and use abilities while Prepared.',
   'Unfaith': "When it Strikes a God, you may remove up to 2 of that player's Latent Cosmo instead of dealing Soul damage. The God still retaliates.",
   'Training': 'Each Training counter gives +1 ATK / +1 HP. Counters stack while the Devotee stays on the battlefield.',
-  'Afterlife': 'Every Devotee in a Tartarus has Afterlife. Cards use it to find and interact with Devotees there.',
+  'Afterlife': "Abilities marked Afterlife work only while this card is in its owner's Tartarus. Being in the Tartarus doesn't grant Afterlife.",
   'Prepared': 'On guard: can declare a Strike and protects itself and its God.',
   'Unprepared': 'Open: can be chosen as a Strike target.',
   'Prepare': 'Make it Prepared.',

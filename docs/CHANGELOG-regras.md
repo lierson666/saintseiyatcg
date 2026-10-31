@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-31 — §12, §40, §42, §44 e §62 — Cheater e Afterlife novos
+
+- **Antes:** Cheater ignorava Guardian ao mirar o God e anulava o Long Range de quem o atacava. Afterlife era keyword universal: todo Devotee no Tartarus tinha Afterlife.
+- **Depois:** Cheater só pode ser alvo de Strike de outro Devotee com Cheater (ele ataca qualquer alvo legal); um Guardian que o atacante não pode mirar não conta para a exigência de Guardian. Afterlife marca habilidade impressa que só funciona com a carta no Tartarus do dono, em qualquer tipo de carta; ativada usa AÇÃO e vai à pilha; gatilho dispara no Tartarus. Estar no Tartarus não dá Afterlife.
+- **Motivo:** autor, 31/10/2026 (grilling).
+- **Pendências:** motor (strike.js), lembretes de keyword (shared/keyword-glossary.js) e How to Play ajustados nesta data. Nenhuma carta usa Afterlife ainda; habilidades Afterlife no motor ficam para quando a primeira carta existir.
+
 ## 2026-10-31 — Caps. II–V, IX, XI, XII (§§2–9, 10–13, 19–20, 28, 42–47, 55–58, 59, 60–65) — Guia passa a turnos dentro do Round
 
 - **Antes:** o guia (2.1) descrevia AÇÕES alternadas (uma AÇÃO por oportunidade, Pass, iniciativa alternando), Devotee entrando Prepared, guarda por Prepared (alvo aberto só se Unprepared, Guardian ou Rival), Rivalidade, conversão opcional de Bases em Latent no encerramento do Round, ganho de 1 Latent por AÇÃO adversária com dano, Cheater só anulando Long Range e a tabela de Sealed impedindo Strike.

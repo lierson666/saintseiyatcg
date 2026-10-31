@@ -27,20 +27,24 @@ export function checkStrike(state, ctx, attacker, target) {
   const legal = target.kind === 'god' ? target.player === enemy
     : target.kind === 'devotee' && onField(state, enemy, target.uid) && card(ctx, target.uid).kind === 'Devotee';
   if (!legal) throw new RuleError('P04', 'alvo precisa ser o God inimigo ou um Devotee inimigo');
+  // §44 (autor, 31/10/2026): Devotee com Cheater só pode ser alvo de Strike de outro Devotee com Cheater.
+  const own = keywordsOf(state, ctx, attacker), has = (uid, kw) => keywordsOf(state, ctx, uid).includes(kw);
+  const reachable = uid => !has(uid, 'Cheater') || own.includes('Cheater');
+  if (target.kind === 'devotee' && !reachable(target.uid)) throw new RuleError('P04', 'só um Devotee com Cheater pode mirar um Devotee com Cheater');
   const defenders = state.players[enemy].battlefield.filter(uid => card(ctx, uid).kind === 'Devotee');
   // P05 A + G3-038 (autor, 28/10/2026): qualquer Guardian em campo, Prepared ou não, obriga a mirar um Guardian;
-  // Nimble ignora sempre; Cheater ignora contra God.
-  const own = keywordsOf(state, ctx, attacker), isGuardian = uid => keywordsOf(state, ctx, uid).includes('Guardian');
-  const guarded = defenders.some(isGuardian);
+  // Nimble ignora sempre. §12 (31/10/2026): Guardian que o atacante não pode mirar (Cheater) não obriga.
+  const isGuardian = uid => has(uid, 'Guardian');
+  const guarded = defenders.some(uid => isGuardian(uid) && reachable(uid));
   // La Scoumoune (363, autor 30/10/2026): mira Devotee inimigo Unprepared ignorando Guardian (gancho ignoresGuardian).
   const hunts = target.kind === 'devotee' && !!entryOf(ctx, attacker)?.ignoresGuardian?.(state, ctx, attacker, target.uid);
-  const ignores = own.includes('Nimble') || (own.includes('Cheater') && target.kind === 'god') || hunts;
+  const ignores = own.includes('Nimble') || hunts;
   if (guarded && !ignores && !(target.kind === 'devotee' && isGuardian(target.uid))) {
     throw new RuleError('P05', 'há Guardian em campo: o Strike precisa mirar um Devotee com Guardian');
   }
   if (state.strikes.get(attacker) === state.turn) throw new RuleError('D22', 'este Devotee já declarou Strike neste turno');
-  // Para a UI explicar quando um Strike passa por Guardian (Nimble sempre; Cheater contra God).
-  const bypass = guarded && !(target.kind === 'devotee' && isGuardian(target.uid)) ? (own.includes('Nimble') ? 'Nimble' : hunts ? 'Hunter\'s Instinct' : 'Cheater') : null;
+  // Para a UI explicar quando um Strike passa por Guardian.
+  const bypass = guarded && !(target.kind === 'devotee' && isGuardian(target.uid)) ? (own.includes('Nimble') ? 'Nimble' : 'Hunter\'s Instinct') : null;
   return {key, enemy, bypass};
 }
 
@@ -88,8 +92,8 @@ export function resolveStrike(state, ctx, strike) {
     return null;
   }
   const atk = atkOf(state, ctx, attacker), own = keywordsOf(state, ctx, attacker), pierce = own.includes('Pierce'); // lido antes do dano
-  // §25/§45: Long Range de quem inicia causa o dano primeiro; derrota verificada antes da retaliação. Cheater do alvo anula (§44).
-  const first = own.includes('Long Range') && !(target.kind === 'devotee' && keywordsOf(state, ctx, target.uid).includes('Cheater'));
+  // §25/§45: Long Range de quem inicia causa o dano primeiro; derrota verificada antes da retaliação.
+  const first = own.includes('Long Range');
   strike.longRange = first;
   strike.atks = {[attacker]: atk};
   // Equipment presos antes do dano: gatilhos V6 "equipped Devotee …" valem mesmo se o portador morrer no Strike.

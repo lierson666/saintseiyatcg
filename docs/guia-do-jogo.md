@@ -221,7 +221,7 @@ respeitando Guardian (seção 12). Se não houver alvo legal, o Devotee não pod
 Enquanto o adversário controlar ao menos um Devotee com Guardian em campo, **Prepared ou não** (G3-038), os Strikes devem mirar um Devotee com Guardian. Exceções:
 
 * **Nimble** ignora essa exigência.
-* **Cheater** ignora essa exigência ao mirar o God.
+* Um Guardian que o atacante não pode mirar (ex.: Guardian com **Cheater** contra atacante sem Cheater) não conta para essa exigência (autor, 31/10/2026).
 * Efeitos de carta podem criar exceções expressas (ex.: La Scoumoune, 363).
 
 ### 13. Rivalidade
@@ -447,21 +447,19 @@ Cartas e habilidades podem interagir com Devotees nessa zona.
 
 ### 40. Afterlife
 
-AFTERLIFE é a keyword universal que identifica Devotees enquanto estiverem no Tartarus.
+AFTERLIFE marca uma habilidade que só funciona enquanto a carta está no Tartarus do dono (autor, 31/10/2026). Vale para qualquer tipo de carta.
 
-Todo Devotee no Tartarus possui Afterlife, independentemente da facção.
+Escrita: “Afterlife — {custo}: efeito” (ativada) ou “Afterlife — When…/Whenever…” (gatilho).
 
-Afterlife não concede habilidades automaticamente.
+* A habilidade Afterlife ativada usa AÇÃO no próprio turno, com a pilha vazia, e entra na pilha como as outras ativações.
+* A habilidade Afterlife de gatilho dispara normalmente enquanto a carta está no Tartarus.
+* Fora do Tartarus (campo, mão, deck, Void), habilidades Afterlife não funcionam.
 
-A keyword permite que cartas e efeitos identifiquem e interajam com Devotees presentes no Tartarus.
-
-Um Devotee deixa de possuir Afterlife quando sai do Tartarus.
-
-Não são necessários marcadores.
+Estar no Tartarus não dá Afterlife a uma carta: só têm Afterlife as cartas com habilidade Afterlife impressa.
 
 Nomenclatura oficial
 
-* Afterlife: keyword universal.
+* Afterlife: marca de habilidade que funciona no Tartarus.
 * Arayashiki: não é keyword da engine.
 * Meikai: não é keyword da engine.
 
@@ -471,7 +469,7 @@ Devotees podem retornar do Tartarus apenas por efeitos que permitam essa movimen
 
 O custo, as condições e o estado de entrada são determinados pelo efeito.
 
-A keyword Afterlife, isoladamente, não permite retornar ao campo.
+Uma habilidade Afterlife só devolve a carta ao campo se o texto disser.
 
 ---
 
@@ -479,7 +477,7 @@ A keyword Afterlife, isoladamente, não permite retornar ao campo.
 
 ### 42. Guardian
 
-Enquanto houver Devotee inimigo com Guardian em campo, Prepared ou não, os Strikes devem mirar um Guardian (exceto com Nimble, ou Cheater mirando o God). Ver §12.
+Enquanto houver Devotee inimigo com Guardian em campo, Prepared ou não, os Strikes devem mirar um Guardian (exceto com Nimble; um Guardian que o atacante não pode mirar não conta). Ver §12.
 
 ### 43. Nimble
 
@@ -487,7 +485,7 @@ Ignora a exigência de escolher um Guardian ao declarar Strike. Pode ser atacado
 
 ### 44. Cheater
 
-Ao declarar Strike contra o God, ignora Guardian (ALPHA-P05). Durante um Strike contra este Devotee, o atacante não se beneficia de Long Range.
+Só pode ser alvo de Strike de um Devotee que também tenha Cheater (autor, 31/10/2026). O Devotee com Cheater ataca qualquer alvo legal. Substitui a versão anterior (ignorar Guardian contra o God e anular Long Range).
 
 ### 45. Long Range
 
@@ -638,20 +636,20 @@ O dano é marcado separadamente do HP máximo. Power negativo causa zero dano. H
 
 | Keyword | Definição |
 | --- | --- |
-| Guardian | Enquanto estiver em campo, Prepared ou não, Strikes inimigos devem mirar um Guardian, exceto com Nimble ou Cheater mirando o God. |
+| Guardian | Enquanto estiver em campo, Prepared ou não, Strikes inimigos devem mirar um Guardian, exceto com Nimble. Um Guardian que o atacante não pode mirar não conta. |
 | Nimble | Ignora a exigência de mirar Guardian ao declarar Strike. Pode ser alvo normalmente. |
-| Cheater | Ao mirar o God, ignora Guardian. Durante um Strike contra este Devotee, o atacante não se beneficia de Long Range. |
+| Cheater | Só pode ser alvo de Strike de outro Devotee com Cheater. |
 | Long Range | Ao iniciar Strike, causa seu dano primeiro. Verificar destruição/derrota antes da retaliação; alvo destruído não retalia. Defender com Long Range não concede dano primeiro. |
 | Pierce | Ao iniciar Strike contra um Devotee, o dano excedente ao HP restante daquele alvo é causado ao Soul do God que o controla. Não funciona por retaliação. Calcular depois de prevenção/modificação do dano e sem contar dano antigo como dano novo. |
 | Impulse | Pode declarar Strike no turno em que entra em campo, contra qualquer alvo legal, inclusive o God. Pierce continua funcionando normalmente. |
 | Sealed | Ter 1 ou mais marcadores Seal (§48). Quando ficaria Prepared, remove 1 marcador e continua Unprepared. Não impede Strike nem habilidades de um Devotee Prepared. |
 | Unfaith | Ao declarar Strike contra um God, pode escolher remover até 2 Latent Cosmo daquele jogador em lugar de causar dano ao Soul. A escolha é anunciada antes das respostas. O God retalia normalmente; sem Latent, o modo não causa dano ao Soul. |
 
-**Cheater e Unfaith foram confirmadas pelo autor com este complemento.** A primeira dá uma resposta específica a Long Range; a segunda cria uma decisão entre pressão no Soul e negação de recurso.
+**Unfaith foi confirmada pelo autor com este complemento:** cria uma decisão entre pressão no Soul e negação de recurso. Cheater mudou em 31/10/2026 (§44).
 
 Se um Strike causar Soul zero aos dois Gods simultaneamente por efeitos aplicáveis à mesma etapa, há empate. Se Long Range derrotar o God na etapa inicial, a partida termina antes da retaliação. Gatilhos futuros não desfazem uma derrota já verificada; substituições de derrota/dano precisam agir antes dessa verificação.
 
-**Exemplo:** A tem Power 4, HP 5 e 2 de dano; B tem Power 3, HP 4 e 1 de dano. Em Strike normal, ambos são destruídos. Se A inicia com Long Range, destrói B antes da retaliação e continua com seus 2 de dano. Cheater em B faz esse combate voltar à resolução simultânea.
+**Exemplo:** A tem Power 4, HP 5 e 2 de dano; B tem Power 3, HP 4 e 1 de dano. Em Strike normal, ambos são destruídos. Se A inicia com Long Range, destrói B antes da retaliação e continua com seus 2 de dano.
 
 ### 60. Cosmo, Latent e custos
 
@@ -671,7 +669,7 @@ Se um Strike causar Soul zero aos dois Gods simultaneamente por efeitos aplicáv
 - Desequipar voluntariamente, no próprio turno, custa zero Cosmo. Não exige Prepared. Transferência e troca são concluídas antes de recalcular os atributos e verificar destruição, evitando mortes por um estado intermediário de interface.
 - Equipment com {T} no custo (ex.: Pandora's Box, Kraken Scale, Lunar Amulet) usa a habilidade **uma vez por rodada**; Equipment não tem estado Prepared/Unprepared (autor, 29/10/2026). O mesmo vale para o {T} de Domain (ex.: Jamir Tower), confirmado em 30/10/2026.
 - **“Destroyed”** em texto de Equipment/Armor é sair **do campo** para o Tartarus (destruída por efeito ou levada junto com o portador derrotado). Ir da mão ou do exílio para o Tartarus não conta (autor, 30/10/2026).
-- Destruir equipamento envia ao Tartarus; exilar envia ao Void; desequipar mantém no campo. Apenas Devotees ganham Afterlife no Tartarus. Equipamentos anexados não são enviados junto com o portador quando ele morre, retorna à mão ou é exilado, salvo texto explícito.
+- Destruir equipamento envia ao Tartarus; exilar envia ao Void; desequipar mantém no campo. Equipamentos anexados não são enviados junto com o portador quando ele morre, retorna à mão ou é exilado, salvo texto explícito.
 - **HP da Armor** é bônus de HP máximo do portador; a Armor não tem dano próprio, Broken nem Repair (§26A, revisado em 30/10/2026). Não há estágios nem Evolve por regra geral (§29).
 
 **Por quê:** manter a armadura recuperável e simples de ler: um termo de vínculo (Resonance), custo e Equip impressos, nenhum marcador além do dano do Devotee.
@@ -683,7 +681,7 @@ Se um Strike causar Soul zero aos dois Gods simultaneamente por efeitos aplicáv
 - God Armor exige os custos e requisitos da própria carta; estágio anterior somente quando expressamente exigido. Nem toda armadura tem God Cloth, e o estágio não concede imunidade implícita contra Gods.
 - Retirar o antigo limiar universal de Awaken dos Gods. Uma nova carta de God pode ter seu próprio despertar, inteiramente descrito no texto, sem depender de uma regra herdada.
 - **Ultimate é usada no próprio turno, com uma utilização por identidade de personagem, por jogador e por partida**, além do pagamento exclusivamente em Base e dos requisitos impressos. Na ausência de personagem nomeado, usar a identidade da carta. Ressuscitar ou trocar a versão do mesmo personagem não recarrega essa utilização. Não exige God Cloth universalmente nem consome Prepared se isso não estiver no custo.
-- Afterlife é derivado de ser Devotee no Tartarus, inclusive se chegou lá por descarte. Não precisa estar impresso em todo Devotee, não oferece ativação por si só e não concede retorno.
+- Afterlife é uma marca de habilidade impressa que funciona no Tartarus (§40, autor 31/10/2026); estar no Tartarus não dá Afterlife.
 - Retornar do Tartarus exige um efeito. Por padrão, a carta retorna sob controle de seu proprietário, Prepared, sem dano, sem seu Awaken anterior e sem equipamentos automaticamente anexados; o efeito pode especificar exceções.
 - Limite experimental para evitar ciclos: **cada carta física pode retornar do Tartarus ao campo uma vez por rodada**. Hades pode retornar vários Devotees diferentes; exceções ao limite precisam estar explícitas. Sair de novo não renova o limite.
 
@@ -700,9 +698,9 @@ Se um Strike causar Soul zero aos dois Gods simultaneamente por efeitos aplicáv
 - Gods não iniciam Strike nem equipam armaduras. Possuem Soul e Attack; retaliação permanece disponível independentemente de Prepared. Custos de habilidades do God devem estar impressos, inclusive eventual esgotamento.
 - Domains permanecem em jogo, fora do deck, sem custo de entrada e protegidos de ataque, destruição, exílio, retorno à mão e mudança de controle adversária nesta base. Seus efeitos e limites de uso vêm do texto da carta. Galaxian Wars Arena (062), Tournament Spirit: conta quando o Bronze Saint amigo derrota o Devotee inimigo num Strike, tanto atacando quanto defendendo (dano de retaliação) (autor, 28/10/2026).
 - **Engage** (texto antigo de algumas cartas de Artemis): "engaged with X" significa estar num Strike com X, atacando ou defendendo; "Engage that Devotee" força esse Devotee num Strike contra o seu (autor, 29/10/2026). A mecânica de Engage separada não existe.
-- **Token** (ex.: Forest Guardian 3/3 de The Forest Invades Sanctuary): Devotee criado por efeito, sem carta. Entra Unprepared, não é lendário, não ganha Afterlife e deixa de existir quando sai do campo (não vai ao Tartarus, à mão nem ao Void). Não conta como carta para efeitos de deck, mão ou Tartarus (autor, 29/10/2026).
+- **Token** (ex.: Forest Guardian 3/3 de The Forest Invades Sanctuary): Devotee criado por efeito, sem carta. Entra Unprepared, não é lendário e deixa de existir quando sai do campo (não vai ao Tartarus, à mão nem ao Void). Não conta como carta para efeitos de deck, mão ou Tartarus (autor, 29/10/2026).
 - **Cosmo gerado por efeito** (“Generate {C}”, “Cosmo Latente”) entra como Latent Cosmo comum, respeitando o limite de 3. Restrições impressas de uso (“only during your turn”, “only to cast a Devotee”) não se aplicam nesta versão (autor, 29/10/2026).
-- Manter Tartarus e Void distintos. Void representa exílio e não concede Afterlife. Efeitos só alcançam as zonas e tipos que identificam; “target Devotee” não alcança automaticamente uma carta no Tartarus.
+- Manter Tartarus e Void distintos. Void representa exílio; habilidades Afterlife não funcionam no Void. Efeitos só alcançam as zonas e tipos que identificam; “target Devotee” não alcança automaticamente uma carta no Tartarus.
 
 ### 64. Duração dos efeitos e Card Craft
 
@@ -759,7 +757,7 @@ Um Cavaleiro ferido pode despertar seu Cosmo.
 
 Uma Cloth pode reconhecer seu verdadeiro dono.
 
-Um personagem derrotado pode continuar influenciando a partida através do Afterlife.
+Um personagem derrotado pode continuar influenciando a partida através de habilidades Afterlife.
 
 E um God pode ser derrotado quando seus adversários conseguem produzir o impossível.
 

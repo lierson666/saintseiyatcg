@@ -293,7 +293,7 @@ test('Guia §63 no protocolo de decisão: pergunta pendente ao controlador; time
   assert.deepEqual(s.players.A.battlefield, [[a, b].sort((x, y) => x.localeCompare(y, 'en', {numeric: true}))[0]]);
 });
 
-// §25/§45 Long Range: quem inicia causa o dano primeiro; alvo derrotado não retalia; Cheater no alvo anula (§44).
+// §25/§45 Long Range: quem inicia causa o dano primeiro; alvo derrotado não retalia.
 function longRange(foeKeywords = []) {
   const m = new Map(cards);
   m.set('athena-v6-001', {...cards.get('athena-v6-001'), keywords: ['Long Range']}); // cartas de teste, catálogo intacto
@@ -309,14 +309,17 @@ test('Long Range: derrota o alvo antes da retaliação', () => {
   assert.equal(s.units[seiya].damage, 0, 'sem retaliação');
 });
 
-test('Long Range: alvo que sobrevive retalia; Cheater no alvo volta ao dano simultâneo', () => {
+test('Long Range: alvo que sobrevive retalia; Cheater no alvo não anula mais (§44, 31/10/2026)', () => {
   const a = longRange();
   a.s.units[a.foe].damage = -20; // sobrevive ao primeiro dano
   declareStrike(a.s, a.ctx, a.seiya, {kind: 'devotee', uid: a.foe}); passAll(a.s);
   assert.ok(a.s.units[a.seiya].damage > 0, 'retaliou');
   const b = longRange(['Cheater']);
+  assert.throws(() => declareStrike(b.s, b.ctx, b.seiya, {kind: 'devotee', uid: b.foe}), /P04/, 'sem Cheater não mira Cheater');
+  b.s.units[b.seiya].keywords = ['Cheater']; // concedido por efeito
   declareStrike(b.s, b.ctx, b.seiya, {kind: 'devotee', uid: b.foe}); passAll(b.s);
-  assert.ok(b.s.units[b.seiya].damage > 0, 'Cheater: retaliação simultânea mesmo derrotado');
+  assert.ok(b.s.players.B.tartarus.includes(b.foe));
+  assert.equal(b.s.units[b.seiya].damage, 0, 'Long Range vale contra Cheater');
 });
 
 // Guia §5: Moment como AÇÃO, Technique e Equipment pagam em Base e/ou Latent; Devotee só Base.

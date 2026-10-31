@@ -105,17 +105,24 @@ test('G3-038: Guardian Unprepared também protege (o Strike precisa mirá-lo)', 
   assert.deepEqual(strikeTargets(s.state, s.ctx, seiya), [{kind: 'devotee', uid: guard}]);
 });
 
-test('P05 Nimble (021) ignora Guardian; Cheater ignora só contra God', () => {
+test('P05 Nimble (021) ignora Guardian; Cheater não ignora Guardian (§44, 31/10/2026)', () => {
   const s = setup();
   const marin = s.field('A', '021'), seiya = s.field('A', '001'), acolyte = s.field('B', '043');
   s.field('B', '040');
   strike(s, marin, {kind: 'devotee', uid: acolyte});
   assert.ok(s.state.players.B.tartarus.includes(acolyte));
   s.state.units[seiya].keywords = ['Cheater']; // concedido por efeito (ex.: 019 equipada); a carta não muda
-  const enemyDevotee = s.field('B', '042');
-  assert.throws(() => declareStrike(s.state, s.ctx, seiya, {kind: 'devotee', uid: enemyDevotee}), /P05/);
-  strike(s, seiya, {kind: 'god', player: 'B'});
-  assert.equal(s.state.players.B.soul, 18);
+  assert.throws(() => declareStrike(s.state, s.ctx, seiya, {kind: 'god', player: 'B'}), /P05/);
+});
+
+test('§44 Cheater: só é alvo de Cheater; Guardian com Cheater não obriga quem não pode mirá-lo (§12)', () => {
+  const s = setup();
+  const seiya = s.field('A', '001'), cheat = s.field('A', '021'), guard = s.field('B', '040');
+  s.state.units[guard].keywords = ['Cheater'];
+  assert.throws(() => declareStrike(s.state, s.ctx, seiya, {kind: 'devotee', uid: guard}), /P04/);
+  assert.deepEqual(strikeTargets(s.state, s.ctx, seiya), [{kind: 'god', player: 'B'}], 'Guardian inalcançável não obriga');
+  s.state.units[cheat].keywords = ['Cheater'];
+  assert.ok(strikeTargets(s.state, s.ctx, cheat).some(t => t.uid === guard), 'Cheater mira Cheater');
 });
 
 test('P05 Pierce: dano acima do HP restante do alvo vai para o Soul do God dele', () => {

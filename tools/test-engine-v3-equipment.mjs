@@ -71,14 +71,13 @@ test('Divine Weapon com +HP (049) soma HP; a Armor (044) soma o HP impresso ao p
   assert.deepEqual([t.s.units[repairer].damage, t.s.players.B.soul, t.s.units[seiya].damage], [1, 20, 2], 'sem excesso: Pierce não passa ao God');
 });
 
-test('019 equipada dá Cheater: ignora Guardian contra o God; texto da 019 intacto', () => {
+test('019 equipada dá Cheater: não ignora mais Guardian (§44, 31/10/2026); texto da 019 intacto', () => {
   const {s, ctx, field, equip, strike} = setup();
   const seiya = field('A', '001');
   field('B', '040');
   equip('A', '019', seiya);
   assert.ok(keywordsOf(s, ctx, seiya).includes('Cheater'));
-  strike(seiya, {kind: 'god', player: 'B'});
-  assert.equal(s.players.B.soul, 15);
+  assert.throws(() => strike(seiya, {kind: 'god', player: 'B'}), /P05/);
   const original = canon.cards.find(c => c.id.toLowerCase() === 'athena-v6-019');
   assert.equal(cards.get('athena-v6-019').text, original.original_text);
 });
