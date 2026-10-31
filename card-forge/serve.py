@@ -11,6 +11,7 @@ Endpoints (só 127.0.0.1):
   POST /api/art/<id>          PNG/JPG grava card-forge/art/<id>.<ext> (fica fora do git)
   GET  /api/boosters          lista os ids de pacote com arte em playtest/assets/boosters/
   POST /api/booster/<id>      WEBP/PNG grava a arte de fundo do pacote em playtest/assets/boosters/<id>.webp
+  POST /api/booster-logo/<id> WEBP/PNG grava o logo da edição do pacote em playtest/assets/boosters/logo/<id>.webp
 """
 import json
 import io
@@ -214,8 +215,9 @@ class Handler(SimpleHTTPRequestHandler):
                     return self.reply(415, {"erro": "só PNG ou JPG"})
                 atomic_write(FORGE / "art" / f"{parts[2]}.{kind}", raw)
                 return self.reply(200, {"ok": True, "path": f"card-forge/art/{parts[2]}.{kind}"})
-            if len(parts) == 3 and parts[:2] == ["api", "booster"] and ID_RE.match(parts[2]):
-                # O logo e o nome do pacote são desenhados por cima no lobby (.ec-pack); aqui só a arte de fundo.
+            if len(parts) == 3 and parts[1] in ("booster", "booster-logo") and parts[0] == "api" and ID_RE.match(parts[2]):
+                # Arte de fundo (sem transparência) ou logo da edição (com transparência), desenhados juntos no lobby (.ec-pack).
+                logo = parts[1] == "booster-logo"
                 if raw.startswith(b"\x89PNG"):
                     # Safari/WKWebView não gera WEBP no canvas: converte com Pillow se houver.
                     try:
@@ -223,12 +225,13 @@ class Handler(SimpleHTTPRequestHandler):
                     except ImportError:
                         return self.reply(415, {"erro": "Este navegador não gera WEBP e o Pillow não está instalado. Use o Chrome."})
                     out = io.BytesIO()
-                    Image.open(io.BytesIO(raw)).convert("RGB").save(out, "WEBP", quality=86)
+                    Image.open(io.BytesIO(raw)).convert("RGBA" if logo else "RGB").save(out, "WEBP", quality=86)
                     raw = out.getvalue()
                 if not (raw[:4] == b"RIFF" and raw[8:12] == b"WEBP"):
                     return self.reply(415, {"erro": "só WEBP ou PNG"})
-                atomic_write(BOOSTERS / f"{parts[2]}.webp", raw)
-                return self.reply(200, {"ok": True, "path": f"playtest/assets/boosters/{parts[2]}.webp"})
+                rel = f"playtest/assets/boosters/{'logo/' if logo else ''}{parts[2]}.webp"
+                atomic_write(ROOT / rel, raw)
+                return self.reply(200, {"ok": True, "path": rel})
             return self.reply(404, {"erro": "rota desconhecida"})
         except (ValueError, KeyError, AssertionError, TypeError) as e:
             return self.reply(400, {"erro": str(e)})

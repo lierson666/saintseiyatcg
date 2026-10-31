@@ -21,8 +21,8 @@ python3 card-forge/serve.py --selftest
 ## Mapa
 
 - `index.html`, `forge.css`, `forge.js`: a UI e o renderizador. Desenha no canvas nativo 1488×2091.
-- `serve.py`: serve arquivos estáticos e grava edições: `/api/card`, `/api/cards`, `/api/project/<id>`, `/api/art/<id>`, `/api/export/<nome>` e `/api/booster/<id>`.
-- `boosters.html`: arte de fundo de cada pacote de booster (arrastar + zoom, 800×1440). Grava `playtest/assets/boosters/<id>.webp`; o logo e o nome entram por cima no lobby (`.ec-pack`).
+- `serve.py`: serve arquivos estáticos e grava edições: `/api/card`, `/api/cards`, `/api/project/<id>`, `/api/art/<id>`, `/api/export/<nome>` e `/api/booster/<id>` e `/api/booster-logo/<id>`.
+- `boosters.html`: arte de fundo (arrastar + zoom, 800×1440) e logo da edição de cada pacote de booster. Grava `playtest/assets/boosters/<id>.webp` e `playtest/assets/boosters/logo/<id>.webp`; o lobby (`.ec-pack`) põe o logo embaixo da arte.
 - `tools/extract_template.py`: extrai as peças PNG dos PSDs. Só lê `FRAMES/`.
 
 ```bash

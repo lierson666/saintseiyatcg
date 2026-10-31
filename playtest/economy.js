@@ -3,8 +3,9 @@
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const fmt = n => Number(n || 0).toLocaleString('en');
 const COPY_LIMIT = 3;
-// Arte de fundo do booster: o logo vai por cima automaticamente (padrão MTG). Trocar o arquivo troca a arte.
+// Booster (padrão MTG): arte de fundo + logo da edição embaixo, ambos editados no Card Forge (card-forge/boosters.html).
 const PACK_ART = new URL('./assets/boosters/olympus.webp', import.meta.url).href;
+const PACK_LOGO = new URL('./assets/boosters/logo/olympus.webp', import.meta.url).href;
 const LOGO = new URL('../LOGO/logo-web.webp', import.meta.url).href;
 
 async function call(path, method = 'GET', body) {
@@ -25,8 +26,8 @@ export const missingCards = (e, deck, kindOf) => !e || e.full_access ? [] : deck
 export const coinBadge = e => `<button class="ec-coins" data-act="go" data-screen="store" aria-label="${fmt(e.coins)} Cosmo Coins. Open the Store">
   <i aria-hidden="true"></i><b>${fmt(e.coins)}</b></button>`;
 
-const pack = (label = 'Olympus') => `<div class="ec-pack" aria-hidden="true"><img class="ec-pack__art" src="${PACK_ART}" alt="" onerror="this.remove()">
-  <img class="ec-pack__logo" src="${LOGO}" alt=""><span class="ec-pack__name">${esc(label)}</span><span class="ec-pack__foil"></span></div>`;
+const pack = () => `<div class="ec-pack" aria-hidden="true"><img class="ec-pack__art" src="${PACK_ART}" alt="" onerror="this.remove()">
+  <img class="ec-pack__logo" src="${PACK_LOGO}" alt="" onerror="this.remove()"><span class="ec-pack__foil"></span></div>`;
 
 export function storeScreen(e) {
   if (!e) return `<section class="lb-page"><header class="lb-page__head"><h1>Store</h1><p>Sign in to buy and open boosters.</p></header></section>`;

@@ -5,16 +5,14 @@
   background: #0006; color: var(--kv-gold-2, #f1d68a); font: 600 13px var(--kv-sans, system-ui); cursor: pointer; white-space: nowrap; }
 .ec-coins:hover, .ec-coins:focus-visible { border-color: var(--kv-gold, #e9c45c); }
 
-/* Pacote: arte de fundo + logo por cima (padrão MTG); brilho de foil passando. */
+/* Pacote: arte de fundo + logo da edição embaixo (padrão MTG); brilho de foil passando. */
 .ec-pack { position: relative; width: 180px; aspect-ratio: 5 / 9; border-radius: 10px; overflow: hidden; flex: none;
   background: linear-gradient(160deg, #3a2a6b, #0b0d14); box-shadow: 0 18px 40px #000a, inset 0 0 0 1px #ffffff2a; }
 .ec-pack::before, .ec-pack::after { content: ""; position: absolute; left: 0; right: 0; height: 14px; z-index: 2;
   background: repeating-linear-gradient(90deg, #d8c48a 0 6px, #a88a42 6px 12px); opacity: .9; }
 .ec-pack::before { top: 0; } .ec-pack::after { bottom: 0; }
 .ec-pack__art { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.ec-pack__logo { position: absolute; z-index: 1; top: 9%; left: 10%; width: 80%; filter: drop-shadow(0 4px 10px #000c); }
-.ec-pack__name { position: absolute; z-index: 1; left: 0; right: 0; bottom: 12%; text-align: center; font: 700 18px Cinzel, serif;
-  color: #f6e6b0; letter-spacing: .12em; text-transform: uppercase; text-shadow: 0 2px 8px #000; }
+.ec-pack__logo { position: absolute; z-index: 1; bottom: 7%; left: 5%; width: 90%; filter: drop-shadow(0 4px 10px #000c); }
 .ec-pack__foil { position: absolute; inset: 0; z-index: 1; background: linear-gradient(115deg, transparent 35%, #ffffff40 50%, transparent 65%);
   background-size: 250% 100%; animation: ec-foil 3.5s ease-in-out infinite; mix-blend-mode: screen; }
 @keyframes ec-foil { from { background-position: 120% 0; } to { background-position: -120% 0; } }
