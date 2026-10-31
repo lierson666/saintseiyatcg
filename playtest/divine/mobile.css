@@ -60,7 +60,6 @@
   .olympus .godhud { --m: 38px; }
   .godhud__portrait { width: calc(var(--u) * 6.5); }
   .gh-cell b { font-size: 12px; }
-  .gh-ult b { font-size: 10px; }
   .godhud--me { bottom: calc(var(--u) * 4 + var(--sb)); left: auto; right: calc(var(--cmd-w) + 12px + var(--sr)); transform: none; }
   .godhud--opp { top: 4px; left: auto; right: calc(var(--cmd-w) + 12px + var(--sr)); transform: none; }
 

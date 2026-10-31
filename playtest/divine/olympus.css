@@ -594,19 +594,11 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .gh-cell b { font: 700 52cqh/1 Georgia, "Times New Roman", serif; font-variant-numeric: lining-nums tabular-nums; color: #fff; text-shadow: 0 2px 3px #000; white-space: nowrap; }
 /* Soul (autor, 31/10/2026): símbolo de Soul das cartas, em dourado; o número cabe na célula (tamanho pela altura do box). */
 .gh-soulicon { flex: none; height: 70cqh; aspect-ratio: 1; background: linear-gradient(160deg, #fff3c4, #e6c36a 45%, #a8771f); -webkit-mask: url(../../CARD-TEMPLATE/icons/soul.png) center / contain no-repeat; mask: url(../../CARD-TEMPLATE/icons/soul.png) center / contain no-repeat; filter: drop-shadow(0 0 3px rgba(230, 195, 106, .7)); }
-.gh-cell--soul { background: linear-gradient(180deg, rgba(48, 36, 18, .7), rgba(14, 10, 30, .75)); border: 1px solid rgba(230, 195, 106, .45); }
-.gh-cell--atk { background: linear-gradient(180deg, #5a2a16, #2a0e06); border: 2px solid #b8893a; }
-.gh-cell--awk { background: linear-gradient(180deg, rgba(20, 50, 120, .5), rgba(6, 16, 50, .55)); border: 1px solid rgba(110, 180, 255, .3); }
-.gh-ult { flex: none; position: relative; display: grid; place-items: center; height: 92%; aspect-ratio: 1; border-radius: 50%;
-  background: radial-gradient(circle, #2a1606 50%, #6a4a14 51%, #f6d98c 60%, #a8741f 68%, #3a2406 70%), radial-gradient(circle, transparent 69%, #e6c36a 70%, transparent 74%);
-  box-shadow: 0 0 0 2px #2a1c06, 0 0 12px rgba(255, 200, 100, .5); }
-.gh-ult b { font: 700 calc(var(--m) * .18)/1 Georgia, serif; color: #f6d98c; text-shadow: 0 0 6px rgba(255, 200, 100, .9); }
-.gh-ult.ready { animation: ult-ready 2s ease-in-out infinite; }
-.gh-ult.used { filter: grayscale(1) brightness(.5); animation: none; }
-@keyframes ult-ready { 50% { box-shadow: 0 0 0 2px #2a1c06, 0 0 24px rgba(255, 214, 120, 1); } }
+/* Sem box dentro da placa (autor, 31/10/2026): só Soul e Attack, separados por um filete dourado; o Attack ganha um brilho quente difuso. */
+.gh-cell--atk { background: linear-gradient(180deg, transparent, rgba(230, 195, 106, .85), transparent) left center / 1px 70% no-repeat,
+  radial-gradient(ellipse 60% 70% at 55% 50%, rgba(255, 140, 60, .5), transparent 72%); border-radius: 0; }
 .godhud.is-active .gh-hole { box-shadow: 0 0 0 2px #2a1c06, 0 0 40px rgba(255, 200, 90, .85), inset 0 0 0 2px rgba(255, 244, 200, .5); }
 .godhud.is-awaken .gh-hole { box-shadow: 0 0 0 2px #0a1430, 0 0 44px rgba(110, 190, 255, .85), inset 0 0 0 2px rgba(200, 235, 255, .6); }
-.godhud.is-awaken .gh-cell--awk { box-shadow: 0 0 16px rgba(110, 190, 255, .7); border-color: #8fd6ff; }
 .godhud.is-low .gh-soulicon { animation: heart-beat 1s ease-in-out infinite; }
 @keyframes heart-beat { 15% { transform: scale(1.22); } 30% { transform: scale(1); } 45% { transform: scale(1.14); } }
 .godhud.pickable .gh-hole, .godhud.aimed .gh-hole { box-shadow: 0 0 0 3px #ff6a5a, 0 0 40px rgba(255, 90, 70, .9); }
@@ -635,9 +627,9 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
   .godhud--opp .gh-name { display: grid; }
   .gh-cell--soul { flex: 1.8; }
   .gh-cell--soul b { font-size: 68cqh; color: #fff6dc; text-shadow: 0 2px 3px #000, 0 0 12px rgba(230, 195, 106, .55); }
-  .gh-cell--atk, .gh-cell--awk { flex: .85; }
-  .gh-cell--atk b, .gh-cell--awk b { font-size: 58cqh; }
-  .gh-cell--atk svg, .gh-cell--awk svg { height: 52%; }
+  .gh-cell--atk { flex: 1; }
+  .gh-cell--atk b { font-size: 58cqh; }
+  .gh-cell--atk svg { height: 52%; }
 
   .rail { --s: min(calc(var(--u, 8px) * 1.1), calc((100vh - 40px) / 78)); position: absolute; z-index: 6; left: 12px; top: 10px; bottom: 10px;
     width: calc(var(--s) * 19); display: flex; flex-direction: column; justify-content: space-between; gap: var(--s); pointer-events: none; }
@@ -1036,7 +1028,6 @@ body:has(.trigger-panel, .cast-slot) .command__clock { visibility: hidden; }
 .godhud.is-awaken .gh-hole::before, .godhud.is-awaken .gh-hole::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; pointer-events: none;
   border: 2px solid rgba(var(--glow), .8); box-shadow: 0 0 18px rgba(var(--glow), .8); animation: awakenWave 2.4s ease-out infinite; }
 .godhud.is-awaken .gh-hole::after { animation-delay: 1.2s; }
-.godhud.is-awaken .gh-cell--awk { box-shadow: 0 0 16px rgba(var(--glow), .8); border-color: rgb(var(--glow)); }
 @keyframes awakenAura { 50% { box-shadow: 0 0 0 2px rgba(0, 0, 0, .7), 0 0 36px 10px rgba(var(--glow), 1), 0 0 100px 30px rgba(var(--glow), .6), inset 0 0 24px rgba(var(--glow), .7); } }
 @keyframes awakenWave { from { transform: scale(1); opacity: .9; } to { transform: scale(1.55); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .godhud.is-awaken .gh-hole, .godhud.is-awaken .gh-hole::before, .godhud.is-awaken .gh-hole::after { animation: none; } .godhud.is-awaken .gh-hole::after { display: none; } }

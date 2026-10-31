@@ -476,12 +476,10 @@ function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
 // selos de Ultimate e Divine Judgment. O seu abre o menu dos poderes divinos.
 // HUD do God no layout do autor (arte de referência de 28/10/2026), desenhado em SVG para escalar sem perder nitidez:
 // medalhão com anel dourado, tridente no topo e asas douradas; faixa com o nome entre louros; placa com Soul (coração),
-// ATTACK (espadas), Awaken (escudo) e selo U da Ultimate, asas prateadas nas pontas e medalhão Ω com ponta embaixo.
+// ATTACK (espadas), asas prateadas nas pontas e medalhão Ω com ponta embaixo.
 const GOLD = id => `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6cf"/><stop offset=".35" stop-color="#f0cc6e"/><stop offset=".7" stop-color="#a8741f"/><stop offset="1" stop-color="#f6d98c"/></linearGradient>`;
 const SWORDS = id => `<svg viewBox="0 0 24 24" aria-hidden="true"><defs>${GOLD(id)}</defs><g stroke="url(#${id})" stroke-width="2.2" stroke-linecap="round">
   <path d="M4 4 L19 19"/><path d="M20 4 L5 19"/><path d="M15 21 L21 15" stroke-width="2.6"/><path d="M3 15 L9 21" stroke-width="2.6"/></g></svg>`;
-const SHIELD = id => `<svg viewBox="0 0 24 26" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d8f0ff"/><stop offset=".4" stop-color="#2f8dff"/><stop offset="1" stop-color="#062a7a"/></linearGradient></defs>
-  <path d="M12 1 L23 5 L21 16 L12 25 L3 16 L1 5Z" fill="url(#${id})" stroke="#bfe2ff" stroke-width="1"/><path d="M12 1 L12 25 M1 5 L12 12 L23 5" stroke="#e8f6ff" stroke-opacity=".45" stroke-width=".8" fill="none"/></svg>`;
 const PLATE = (gid, sid) => `<svg class="gh-plate__bg" viewBox="0 0 600 150" preserveAspectRatio="none" aria-hidden="true"><defs>${GOLD(gid)}
   <linearGradient id="${sid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2358"/><stop offset="1" stop-color="#0a0a22"/></linearGradient></defs>
   <path d="M44 12 H556 Q588 12 598 56 Q588 100 556 100 H44 Q12 100 2 56 Q12 12 44 12Z" fill="url(#${sid})" stroke="url(#${gid})" stroke-width="5"/>
@@ -502,7 +500,6 @@ const token = (kind, n, tip) => `<i class="token token--${kind}" data-tip="${esc
 function godHud(key, side) {
   const s = S(), p = s.players[key], d = s.divine[key], god = cards.get(s.gods[key]);
   const pick = (mode?.options || boardPick()?.refs)?.includes(`god:${key}`), max = soulMax(s, key);
-  const ult = d.ultimateUsed ? 'used' : ['god-athena', 'god-poseidon'].includes(d.god) ? 'ready' : 'none';
   const f = FORGE.get(`${god.name.toLowerCase()}-001`), art = f?.ilustracao ? FORGE_ART + f.ilustracao : GOD_ART[s.gods[key]] || '';
   const low = p.soul <= Math.max(d.awakenAt, Math.ceil(max / 4)), k = `gh${key}`;
   // Rosto escolhido no Card Forge (card-forge/god-hud.js): mesma conta da prévia de lá; sem escolha, a arte da carta.
@@ -521,8 +518,6 @@ function godHud(key, side) {
       <div class="gh-cells">
         <span class="gh-cell gh-cell--soul godhud__soul" data-soul="${key}" data-tip="Soul|${p.soul} of ${max}. When a God's Soul reaches 0, its player loses."><i class="gh-soulicon" aria-hidden="true"></i><b>${p.soul}</b></span>
         <span class="gh-cell gh-cell--atk" data-tip="Attack|${god.atk}. Damage the God deals back to a Devotee that strikes it.">${SWORDS(`${k}x`)}<b>${god.atk}</b></span>
-        <span class="gh-cell gh-cell--awk" data-tip="Awaken|Active while Soul ≤ ${d.awakenAt}${d.awaken ? ' — active now' : ''}.">${SHIELD(`${k}d`)}<b>${d.awakenAt}</b></span>
-        ${ult !== 'none' ? `<span class="gh-ult godhud__ult ${ult}" data-tip="Ultimate|Once per match. ${ult === 'used' ? 'Already used.' : 'Ready.'}"><b>U</b></span>` : ''}
       </div>
     </div></section>`;
 }
