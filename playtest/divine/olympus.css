@@ -979,3 +979,8 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .olympus.is-choosing { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32'%3E%3Cg fill='none' stroke='%23c8c2d8' stroke-width='2' opacity='.8'%3E%3Ccircle cx='16' cy='16' r='9'/%3E%3Cpath d='M16 2v8M16 22v8M2 16h8M22 16h8'/%3E%3C/g%3E%3C/svg%3E") 16 16, crosshair; }
 .olympus.is-choosing .pickable, .olympus.is-choosing .pickable *, .godhud.pickable, .godhud.pickable * { cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Cg fill='none' stroke='%23ff5a40' stroke-width='3'%3E%3Ccircle cx='20' cy='20' r='12'/%3E%3Cpath d='M20 2v10M20 28v10M2 20h10M28 20h10'/%3E%3C/g%3E%3Ccircle cx='20' cy='20' r='3' fill='%23ffd06a'/%3E%3C/svg%3E") 20 20, crosshair !important; }
 .olympus.is-choosing .field .dcard.dimmed { filter: saturate(.3) brightness(.45) !important; }
+
+/* Faixa CAST na cor do God de quem arrasta (autor, 31/10/2026). */
+.drag-zone--cast[data-godfx] { --z1: rgb(var(--glow)); --z2: #fff; --zg: rgba(var(--glow), .65); color: rgb(var(--glow)); border-color: rgb(var(--glow));
+  background: radial-gradient(ellipse at center, rgba(var(--glow), .33), rgba(10, 8, 30, .67) 70%); box-shadow: inset 0 0 40px rgba(var(--glow), .33), 0 0 18px rgba(var(--glow), .4); }
+.is-over-cast .drag-zone--cast[data-godfx] { box-shadow: inset 0 0 75px rgba(var(--glow), .47), 0 0 40px rgba(var(--glow), .85); }
