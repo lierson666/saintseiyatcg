@@ -128,14 +128,10 @@ export function createDirector({ui, getFx, settings}) {
         f.burst(src.x, src.y, {color: '#bfe6ff', count: 28, speed: 220});
       }
       pool[e.player] = 0;
-      const to = e.kind === 'Equipment' && e.bearer ? ui.rect(e.bearer) : ui.fieldRect(e.player);
-      await ui.flyCard(e.uid, ui.rect(e.uid) || ui.handRect(e.player), to, t(320), false, true);
-      const at = ui.center(to);
-      if (e.kind === 'Devotee') { fx()?.burst(at.x, at.y, {color: '#ffe7a8', count: 45, speed: 260}); fx()?.shockwave(at.x, at.y, {size: 140}); }
-      else if (e.kind === 'Equipment') fx()?.shockwave(at.x, at.y, {color: '#d8e4ff', size: 110});
-      else fx()?.charge(at.x, at.y, {color: e.category === 'Moment' ? '#c58cff' : '#ffd36e', count: 50});
+      // Cast estilo Arena (autor, 31/10/2026): a carta vai só para a pilha (app.js drawZoom); a chegada ao campo é na
+      // resolução (app.js flyResolved), nunca ao mesmo tempo.
       ui.log(e);
-      await pause(e.kind === 'Spell' ? 280 : 120);
+      await pause(120);
     },
     async spell_resolved(e) {
       const at = ui.center(ui.fieldRect(e.player));

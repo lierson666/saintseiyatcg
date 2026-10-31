@@ -18,7 +18,7 @@ import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudg
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
-import {createDirector} from './director.js?v=17';
+import {createDirector} from './director.js?v=18';
 import {createAI} from './ai.js?v=5';
 import {findDeck} from '../deck-store.js';
 import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-9';
@@ -781,7 +781,7 @@ function overlays() {
       <div class="row"><button class="primary-action" data-new>New match</button><a class="ghost" href="../">Main menu</a></div></div>`;
   }
   if (pending && !s.victory && pending.pending.player !== settings.ai) html += decisionModal();
-  else html += orderPanel() || opponentCast();
+  else html += orderPanel();
   if (logOpen) html += `<div class="drawer log" aria-label="Match log"><h3>Match log</h3><button class="drawer__x" data-toggle-log aria-label="Close log">×</button>${logLines.slice(-150).reverse().map(l => `<p><small>R${l.round}</small> ${esc(l.text)}</p>`).join('')}</div>`;
   if (settingsOpen) {
     const sel = (key, opts) => `<select data-setting="${key}">${Object.entries(opts).map(([v, l]) => `<option value="${v}" ${settings[key] === v ? 'selected' : ''}>${l}</option>`).join('')}</select>`;
@@ -806,6 +806,8 @@ const seenAt = new Map();
 const keepRect = n => { const r = n?.getBoundingClientRect(); if (r?.width) seenAt.set(n.dataset.uid, {r, t: performance.now()}); };
 const seenRect = uid => { const v = seenAt.get(uid); return v && performance.now() - v.t < 20000 ? v.r : null; };
 addEventListener('pointerdown', e => keepRect(e.target.closest?.('.hand .dcard[data-uid]')), true);
+// PADRÃO DO JOGO (autor, 31/10/2026): toda carta que entra no ponto da pilha (cast seu ou do oponente, gatilho, gatilho
+// com decisão) usa este mesmo voo, igual ao MTG Arena. Não criar animação de entrada paralela.
 const flyFrom = (node, a, pause = 0) => {
   const b = node?.getBoundingClientRect();
   if (!a?.width || !b?.width || settings.reduceMotion) return;
@@ -936,27 +938,34 @@ function drawZoom() {
 }
 // Resolução estilo Arena: o item brilha e voa para onde a carta foi (campo, Tartarus, Void); gatilho se desfaz em luz.
 function flyResolved(node) {
+  // Resolução estilo Arena (autor, 31/10/2026): a carta se desfaz em Cosmo no ponto da pilha e depois reaparece no
+  // destino (campo); feitiço e habilidade só se desfazem. Um passo de cada vez, sem voo paralelo.
   const seen = node.getBoundingClientRect(), r = seen.width ? seen : czRect.get(node.dataset.src);
   czRect.delete(node.dataset.src);
   if (!r?.width || settings.reduceMotion) return;
-  const ghost = node.cloneNode(true), ability = node.classList.contains('is-ability');
-  const land = () => { landing.delete(node.dataset.src); $$(`.field [data-uid="${node.dataset.src}"]`).forEach(n => n.classList.remove('is-landing')); };
-  if (!ability) landing.add(node.dataset.src); // esconde já no render que põe a carta na mesa
+  const uid = node.dataset.src, k = node.dataset.controller, ability = node.classList.contains('is-ability');
+  const ghost = node.cloneNode(true);
+  const land = () => { landing.delete(uid); $$(`.field [data-uid="${uid}"]`).forEach(n => n.classList.remove('is-landing')); };
+  if (!ability) landing.add(uid); // esconde já no render que põe a carta na mesa
   ghost.classList.add('cz-ghost');
-  setTimeout(() => { ghost.remove(); land(); }, 1600); // nunca fica cópia parada na tela, mesmo se o voo não rodar
+  setTimeout(() => { ghost.remove(); land(); }, 1600); // nunca fica cópia parada nem carta escondida, mesmo se a animação não rodar
   Object.assign(ghost.style, {left: `${r.left}px`, top: `${r.top}px`, width: `${r.width}px`, height: `${r.height}px`});
   document.body.append(ghost);
-  setTimeout(() => { // depois do render que põe a carta no destino (sem rAF: com a aba oculta ele não roda)
-    const s = S(), uid = node.dataset.src, k = node.dataset.controller;
-    const pile = ['tartarus', 'void'].find(z => s.players[k]?.[z]?.includes(uid));
-    const dest = (!ability && (elOf(uid) || (pile && $(`[data-pile="${k}:${pile}"]`)))) || null;
-    const d = dest?.getBoundingClientRect(), opts = {duration: 700, easing: 'cubic-bezier(.5,0,.2,1)', fill: 'forwards'};
-    const frames = d?.width
-      ? [{transform: 'none', filter: 'brightness(1)'}, {transform: 'scale(1.06)', filter: 'brightness(2.2)', offset: .3},
-        {transform: `translate(${d.left + d.width / 2 - r.left - r.width / 2}px, ${d.top + d.height / 2 - r.top - r.height / 2}px) scale(${Math.max(.15, d.width / r.width)})`, filter: 'brightness(1)', opacity: 1}]
-      : [{transform: 'none', filter: 'brightness(1)', opacity: 1}, {transform: 'scale(1.08)', filter: 'brightness(2.4)', offset: .35}, {transform: 'scale(1.25)', filter: 'brightness(3) blur(6px)', opacity: 0}];
-    ghost.animate(frames, opts).finished.then(() => { land(); ghost.remove(); });
-  }, 0);
+  const f = scene?.fx, cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+  setTimeout(() => f?.burst(cx, cy, {color: '#9fd8ff', count: 60, speed: 240}), 220);
+  ghost.animate([{transform: 'none', filter: 'brightness(1)', opacity: 1}, {transform: 'scale(1.05)', filter: 'brightness(2.2)', opacity: 1, offset: .45},
+    {transform: 'scale(.9)', filter: 'brightness(3) blur(8px)', opacity: 0}], {duration: 420, easing: 'cubic-bezier(.4,0,.2,1)', fill: 'forwards'})
+    .finished.then(() => {
+      ghost.remove();
+      const dest = !ability && S().players[k]?.battlefield?.includes(uid) && elOf(uid);
+      land();
+      const d = dest?.getBoundingClientRect();
+      if (!d?.width) return;
+      f?.burst(d.left + d.width / 2, d.top + d.height / 2, {color: '#ffe7a8', count: 45, speed: 260});
+      f?.shockwave(d.left + d.width / 2, d.top + d.height / 2, {size: 140});
+      dest.animate([{opacity: 0, transform: 'scale(.86)', filter: 'brightness(2.4)'}, {opacity: 1, transform: 'none', filter: 'brightness(1)'}],
+        {duration: 340, easing: 'cubic-bezier(.2,.8,.2,1)'});
+    }, () => {});
 }
 // Pilha estilo Arena (autor, 31/10/2026): toda carta jogada e todo gatilho, dos dois lados, vão direto para o ponto da
 // pilha (drawZoom), sem revelação no centro.
@@ -1659,8 +1668,6 @@ function drawIntents() {
   if (hoverItem) for (const target of hoverItem.targets) arrows.push({from: fromItem(hoverItem), to: elOf(target), kind: 'hover', label: ''});
   const czTop = $('#chain-zoom.is-on .cz-item.is-top'), chainTop = s.chain.at(-1);
   if (czTop && chainTop && hoverItem?.el !== czTop) for (const target of (chainTop.targets?.length ? chainTop.targets : [chainTop.target]).filter(u => u && (ctx.objects[u] || String(u).startsWith('god:')))) arrows.push({from: czTop, to: elOf(target), kind: 'spell', label: ''});
-  const opp = $('.trigger-panel--opp .dcard'), top = s.chain.at(-1);
-  if (opp && top) for (const target of (top.targets?.length ? top.targets : [top.target]).filter(u => u && (ctx.objects[u] || String(u).startsWith('god:')))) arrows.push({from: opp, to: elOf(target), kind: 'hover', label: ''});
   if (pending?.peek && pending.pending.uid && !targetReq(pending.pending)) arrows.push({from: $('.trigger-panel__card .dcard'), to: elOf(pending.pending.uid), kind: 'spell', label: '?'});
   const live = arrows.filter(a => a.from && a.to);
   if (!live.length) return;
@@ -1854,15 +1861,8 @@ function animateTrigger() {
   if (pending.flown === key || settings.reduceMotion || !a0.ligada) return;
   pending.flown = key;
   sound('gatilho');
-  if (!from) return void card.animate([{opacity: 0, transform: 'scale(.7)'}, {opacity: 1, transform: 'none'}], {duration: 320 / a0.velocidade, easing: 'cubic-bezier(.2,.8,.2,1)'});
-  const a = from.getBoundingClientRect(), b = card.getBoundingClientRect();
-  if (!b.width) return;
-  const dx = a.left + a.width / 2 - (b.left + b.width / 2), dy = a.top + a.height / 2 - (b.top + b.height / 2), k = a.width / b.width;
-  card.animate([
-    {transform: `translate(${dx}px, ${dy}px) scale(${k})`, filter: 'brightness(2.2)', offset: 0},
-    {transform: `translate(${dx}px, ${dy}px) scale(${k * 1.15})`, filter: 'brightness(2.6)', offset: .25},
-    {transform: 'none', filter: 'brightness(1)', offset: 1},
-  ], {duration: 620 / a0.velocidade, easing: 'cubic-bezier(.2,.8,.2,1)'});
+  // Mesmo voo do cast (padrão do jogo): da carta de origem no campo, ou do God de quem decide, até o ponto da pilha.
+  flyFrom(card, (from || $(`[data-god="${req.player}"] .godhud__portrait`))?.getBoundingClientRect());
 }
 function sidePanel(req, t, fx) {
   // Sempre há arte ao lado (autor, 30/10/2026): carta em jogo; senão a do catálogo (Domain); God pelo projeto do Forge
@@ -1900,18 +1900,6 @@ function sidePanel(req, t, fx) {
       ${fx ? `<div class="decision__effect card-text">${fx.lines.map(l => `<p>${inlineMarkup(l)}</p>`).join('')}</div>` : ''}
       <p>${inlineMarkup(t.body)}</p>${t.note ? `<p class="decision__note">${esc(t.note)}</p>` : ''}
       ${opts}<div class="trigger-panel__actions">${actions}${peek}</div>${queue}</div></aside>`;
-}
-
-// Conjuração do oponente na pilha (autor, 31/10/2026): a carta aparece na coluna da direita, só leitura, com a seta até o alvo.
-function opponentCast() {
-  const s = S(), top = s.chain.at(-1);
-  if (!s.window || mode || !top || top.controller === viewer() || !ctx.objects[top.uid] || s.victory) return '';
-  const t = chainLabel(top);
-  return `<aside class="trigger-panel trigger-panel--opp" aria-label="Opponent casts ${esc(t.name)}">
-    <div class="trigger-panel__card" ${godFx(top.controller)}><i class="cast-aura" aria-hidden="true"></i>${cardFace(top.uid, {size: 'dcard--lg'})}</div>
-    <div class="trigger-panel__box"><span class="decision__who">Player ${esc(top.controller)} casts</span><h3>${esc(t.name)}</h3>${t.sub ? `<small class="decision__kicker">${esc(t.sub)}</small>` : ''}
-      ${t.text ? `<div class="decision__effect card-text"><p>${inlineMarkup(t.text)}</p></div>` : ''}${t.target ? `<p>Target: <strong>${esc(t.target)}</strong></p>` : ''}
-      <p class="decision__note">${s.window.priority === viewer() ? 'Respond with a Moment or Pass.' : `Waiting for Player ${s.window.priority}.`}</p></div></aside>`;
 }
 
 // Gatilhos simultâneos do jogador (2+): ele arrasta (ou usa ↑↓) para escolher a ordem antes de passar (§56, APNAP).

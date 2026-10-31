@@ -40,7 +40,6 @@
 .cz-ghost { position: fixed; z-index: 60; margin: 0; pointer-events: none; transform: none; filter: none; }
 /* A pilha agora fica fora da coluna de comando: relógio visível; o painel de leitura do oponente repetia a pilha. */
 body.has-chain-zoom .command__clock { visibility: visible; }
-body.has-chain-zoom .trigger-panel--opp { display: none; }
 
 /* Cartinha de habilidade (gatilho/ativação) na pilha e na revelação. */
 .ability-card { --w: var(--cz-w, 200px); width: var(--w); aspect-ratio: 5 / 7; display: grid; grid-template-rows: 48% auto auto 1fr; overflow: hidden; border-radius: 12px;
@@ -156,7 +155,10 @@ body:not(.is-peeking):has(.trigger-panel.is-center, .trigger-panel--order) #chai
   .trigger-panel.is-targeting, .trigger-panel.is-center, body.has-chain-zoom .trigger-panel.is-center, .trigger-panel--order, body.has-chain-zoom .trigger-panel--order {
     left: auto; right: var(--stack-right, 298px); top: 50%; bottom: auto; transform: translateY(-50%); z-index: 45; flex-direction: row-reverse; align-items: center; gap: 32px;
     width: auto; max-width: calc(100vw - var(--stack-right, 298px) - 24px); max-height: 92dvh; animation: tp-in .26s cubic-bezier(.2, .8, .2, 1); }
-  @keyframes tp-in { from { opacity: 0; transform: translate(24px, -50%); } }
+  /* Só a caixa aparece (opacidade); a carta chega pelo voo padrão (app.js flyFrom), igual em cast e gatilho. */
+  @keyframes tp-in { from { opacity: 0; } }
+  .trigger-panel__box, .cast-slot .cast-prompt { animation: tp-box .22s ease-out .12s backwards; }
+  @keyframes tp-box { from { opacity: 0; } }
   .trigger-panel.is-center .trigger-panel__card, body.has-chain-zoom .trigger-panel.is-center .trigger-panel__card { display: grid; }
   .trigger-panel__card small { display: none; }
   .trigger-panel[class] .trigger-panel__card { position: relative; width: var(--cz-w); }
