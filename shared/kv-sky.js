@@ -30,7 +30,8 @@ export function mountKV({anchor: anchorSelector = null} = {}) {
   let W = 0, H = 0, dpr = 1, stars = [], sparks = [], figures = [], milky = null, heat = 0, t = 0;
   const me = {x: innerWidth * .7, y: innerHeight * .5, tx: innerWidth * .7, ty: innerHeight * .5, active: false};
   function resize() {
-    dpr = Math.min(devicePixelRatio || 1, 2); W = innerWidth; H = innerHeight;
+    // Desempenho (autor, 31/10/2026: ponteiro travando): céu e brasas em 1x; o céu é fundo difuso e Retina custava 4x por frame.
+    dpr = 1; W = innerWidth; H = innerHeight;
     sky.width = W * dpr; sky.height = H * dpr; g.setTransform(dpr, 0, 0, dpr, 0, 0);
     trail.width = W * dpr; trail.height = H * dpr; tg.setTransform(dpr, 0, 0, dpr, 0, 0);
     const n = Math.round(W * H / 2200);
@@ -63,7 +64,7 @@ export function mountKV({anchor: anchorSelector = null} = {}) {
   // Ponteiro com cosmo (autor, 29/10/2026): seta dourada em SVG acima de tudo e um rastro fino de brasas saindo da ponta.
   // Só com mouse; no toque fica o cursor do sistema. Digitar aquece o brilho; cadastrar solta um anel de brasas.
   const fine = matchMedia('(pointer: fine)').matches;
-  let tip = null, lastTip = null;
+  let tip = null, lastTip = null, glowStep = -1, trailDirty = false;
   if (fine && !still) document.documentElement.classList.add('cosmo-pointer');
   // Acima de tudo (autor, 31/10/2026): o ponteiro vive na camada do topo (popover) e volta ao topo sempre que
   // um <dialog> modal ou outro popover abre por cima dele. Sem suporte a popover, kv.css volta ao cursor do sistema nos modais.
@@ -80,6 +81,15 @@ export function mountKV({anchor: anchorSelector = null} = {}) {
       r: burst ? .8 + Math.random() * 1.6 : .5 + Math.random() * 1.1, hue: 28 + Math.random() * 22});
   }
   function paintTrail() {
+    if (!sparks.length && !(tip && lastTip && (tip.x !== lastTip.x || tip.y !== lastTip.y))) { // parado: nada a redesenhar
+      if (trailDirty) { tg.clearRect(0, 0, W, H); trailDirty = false; }
+      lastTip = tip && {...tip};
+    } else { trailDirty = true; paintSparks(); }
+    // Brilho do ponteiro só muda quando o calor muda de faixa: trocar filter a cada frame repintava a camada do topo.
+    const step = Math.round(heat * 10);
+    if (step !== glowStep) { glowStep = step; pointer.style.filter = `drop-shadow(0 0 ${4 + step * .6}px #ff8a2bcc) drop-shadow(0 0 ${12 + step * 1.4}px #e6c36a88)`; }
+  }
+  function paintSparks() {
     tg.clearRect(0, 0, W, H);
     if (tip && lastTip) { // brasas só quando o ponteiro anda
       const steps = Math.min(6, Math.hypot(tip.x - lastTip.x, tip.y - lastTip.y) / 6 | 0);
@@ -96,7 +106,6 @@ export function mountKV({anchor: anchorSelector = null} = {}) {
     }
     tg.globalCompositeOperation = 'source-over';
     if (sparks.length > 400) sparks.splice(0, sparks.length - 400);
-    pointer.style.filter = `drop-shadow(0 0 ${4 + heat * 6}px #ff8a2bcc) drop-shadow(0 0 ${12 + heat * 14 + Math.sin(t * .06) * 3}px #e6c36a88)`;
   }
   function paintSky(ox, oy) {
     const bg = g.createLinearGradient(0, 0, 0, H);
@@ -139,8 +148,7 @@ export function mountKV({anchor: anchorSelector = null} = {}) {
     me.x += ((me.active ? me.tx : target.x) - me.x) * .08; me.y += ((me.active ? me.ty : target.y) - me.y) * .08;
     heat *= .985;
     const ox = (me.x / W - .5) * 26, oy = (me.y / H - .5) * 18;
-    paintSky(ox, oy);
-    paintFigures(ox * .6, oy * .6);
+    if (t % 2 === 0) { paintSky(ox, oy); paintFigures(ox * .6, oy * .6); } // céu a 30 fps; brasas e ponteiro a 60
     paintTrail();
     if (!still && !document.hidden) requestAnimationFrame(frame);
   }
