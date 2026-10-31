@@ -517,9 +517,9 @@ Trample não existe: a keyword é Pierce (§46). Cartas que diziam Trample foram
 
 Pode declarar Strike na rodada em que entra em campo, contra qualquer alvo legal, inclusive o God. Pierce continua funcionando normalmente.
 
-### 48. Sealed
+### 48. Seal e Sealed
 
-Impede novas declarações de Strike e ativação das próprias habilidades. Preserva passivas, Rivalidades e retaliação. Dura até o fim da rodada, salvo duração expressa diferente.
+Seal é um marcador num Devotee (autor, 31/10/2026, seguindo a D211/D212). Sempre que um Devotee com Seal ficaria Prepared, em vez disso remove 1 marcador Seal e continua Unprepared. **Sealed** = ter 1 ou mais marcadores Seal; “becomes Sealed” é passar de 0 para 1 ou mais. Seal não impede Strike nem habilidades: um Devotee Sealed e Prepared pode agir. Os marcadores somem se o Devotee sai do campo.
 
 ### 48A. Training counter
 

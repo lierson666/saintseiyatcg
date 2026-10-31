@@ -4,6 +4,14 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-31 — §48 — Seal e Sealed seguem a D211; lembretes de keyword
+
+- **Antes:** §48 “Sealed” impedia Strike e ativação de habilidades até o fim da rodada; a engine seguia a D211 (marcador que atrasa o Prepare). Conflito registrado em 23/10.
+- **Depois:** §48 “Seal e Sealed”: o marcador Seal impede o próximo Prepare (remove 1 em vez de preparar); Sealed = ter 1+ marcadores; não bloqueia Strike nem habilidades.
+- **Motivo:** autor, 31/10/2026: vale o comportamento da engine.
+- **UI:** fichas de keyword no inspetor do duelo e na ficha do lobby, estilo MTG Arena (`shared/keyword-glossary.js`; textos aprovados em `docs/keyword-reminders-2026-10-31.md`).
+- **Pendências:** nenhuma de engine. Não publicado.
+
 ## 2026-10-31 — Cartas (visual) — selo EQUIP em armas e Relics; Blessing fica para o futuro
 
 - **Antes:** só as Armors mostravam o Equip; armas, Relics e acessórios que se prendem tinham Equip no catálogo (1 a 4), mas sem selo na carta.

@@ -75,3 +75,7 @@
 .card-text .rule-symbol{color:var(--psd-ink)}
 .card-text.card-text .rule-stat--up{color:#8dffa6}
 .card-text.card-text .rule-stat--down{color:#ff5a4a}
+/* Fichas de keyword (estilo MTG Arena, autor 31/10/2026): uma por keyword da carta, sempre abertas (toque e mouse). */
+.kw-notes{list-style:none;margin:.9em 0 0;padding:0;display:grid;gap:6px}
+.kw-note{padding:7px 10px;border:1px solid color-mix(in srgb,var(--psd-ink) 45%,transparent);border-radius:8px;background:#05040bcc;font-size:14px;line-height:1.35;color:#f4efe6;text-align:left}
+.card-text.card-text .kw-note strong{display:block;font-weight:900;letter-spacing:.04em;color:var(--psd-ink);margin-bottom:2px}
