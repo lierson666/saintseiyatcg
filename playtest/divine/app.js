@@ -800,9 +800,26 @@ function overlays() {
   return html;
 }
 
+// Último lugar visto da carta que sai da mão ou do slot de conjuração: o render seguinte já a tirou de lá, e é dali
+// que ela voa para a direita (slot ou pilha), como no Arena.
+const seenAt = new Map();
+const keepRect = n => { const r = n?.getBoundingClientRect(); if (r?.width) seenAt.set(n.dataset.uid, {r, t: performance.now()}); };
+const seenRect = uid => { const v = seenAt.get(uid); return v && performance.now() - v.t < 20000 ? v.r : null; };
+addEventListener('pointerdown', e => keepRect(e.target.closest?.('.hand .dcard[data-uid]')), true);
+const flyFrom = (node, a, ms = 520) => {
+  const b = node?.getBoundingClientRect();
+  if (!a?.width || !b?.width || settings.reduceMotion) return;
+  node.animate([
+    {transform: `translate(${a.left + a.width / 2 - b.left - b.width / 2}px, ${a.top + a.height / 2 - b.top - b.height / 2}px) scale(${a.width / b.width}) rotate(-4deg)`, filter: 'brightness(1.6)'},
+    {transform: 'translate(0, -6px) scale(1.04) rotate(1deg)', filter: 'brightness(1.25)', offset: .75},
+    {transform: 'none', filter: 'brightness(1)'}], {duration: ms, easing: 'cubic-bezier(.2,.8,.2,1)'});
+};
+let slotUid = null;
+
 function render() {
   if (!aim) $('.aim-follow')?.remove(); // a seta de mira volta no próximo movimento do mouse, se ainda houver alvo
   if (render.lock) return;
+  keepRect($('.cast-slot .dcard[data-uid]'));
   syncZoom();
   document.body.classList.toggle("reduce-motion", !!settings.reduceMotion);
   const s = S(), me = viewer(), them = other(me);
@@ -829,6 +846,9 @@ function render() {
   for (const uid of mode?.options || []) $$(`[data-uid="${uid}"]`).forEach(el => el.classList.add('pickable'));
   const bp = boardPick();
   if (bp?.uid) $$(`.hand .dcard[data-uid="${bp.uid}"]`).forEach(el => el.classList.add('is-casting'));
+  const slot = $('.cast-slot .dcard[data-uid]');
+  if (slot && slot.dataset.uid !== slotUid) flyFrom(slot, seenRect(slot.dataset.uid));
+  slotUid = slot?.dataset.uid || null;
   if (bp && !mode) for (const ref of bp.refs) if (!ref.startsWith('god:')) $$(`.field .dcard[data-uid="${ref}"]`).forEach(el => el.classList.add('pickable'));
   if (mode) $$('.dcard').forEach(el => { if (!el.classList.contains('pickable') && el.closest('.field')) el.classList.add('dimmed'); });
   if (scene) { const st = $('[data-stats]'); if (st) st.textContent = `WebGL on · ${JSON.stringify(scene.stats())}`; }
@@ -881,12 +901,9 @@ function drawZoom() {
   topEl.dataset.godfx = (S().divine?.[top.controller]?.god || 'god-athena').slice(4);
   // Entrada estilo Arena: o item novo sai da carta de origem (campo ou mão) e voa até o topo da pilha. A carta revelada do
   // oponente já chega voando pela revelação.
-  const from = top.uid !== lastTop && !revealQueue.some(x => x.uid === top.uid) && !$('.cast-reveal') && (elOf(top.uid) || $(`.hand .dcard[data-uid="${top.uid}"]`));
+  const fresh = top.uid !== lastTop && !revealQueue.some(x => x.uid === top.uid) && !$('.cast-reveal');
   lastTop = top.uid;
-  const a = from?.getBoundingClientRect(), b = topEl.lastElementChild?.getBoundingClientRect();
-  if (a?.width && b?.width && !settings.reduceMotion) topEl.lastElementChild.animate([
-    {transform: `translate(${a.left + a.width / 2 - b.left - b.width / 2}px, ${a.top + a.height / 2 - b.top - b.height / 2}px) scale(${a.width / b.width})`, opacity: .3, filter: 'brightness(2.2)'},
-    {transform: 'none', opacity: 1, filter: 'brightness(1)'}], {duration: 420, easing: 'cubic-bezier(.2,.8,.2,1)'});
+  if (fresh) flyFrom(topEl.lastElementChild, (elOf(top.uid) || $(`.hand .dcard[data-uid="${top.uid}"]`))?.getBoundingClientRect() || seenRect(top.uid));
   drawIntents();
 }
 // Resolução estilo Arena: o item brilha e voa para onde a carta foi (campo, Tartarus, Void); gatilho se desfaz em luz.
