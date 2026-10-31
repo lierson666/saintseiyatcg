@@ -21,7 +21,7 @@ import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
 import {createDirector} from './director.js?v=16';
 import {createAI} from './ai.js?v=5';
 import {findDeck} from '../deck-store.js';
-import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-4';
+import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-5';
 import {unlock, playMusic} from '../audio.js?v=20261030-telas';
 import {telas, anim, sound, imageUrl, applyColors, applyTexts} from '../telas.js?v=20261030-1';
 import {renderLiveCard, renderCardText} from '../../shared/live-card.js?v=20261031-ed5';
