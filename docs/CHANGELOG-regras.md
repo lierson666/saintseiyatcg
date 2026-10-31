@@ -4,6 +4,24 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-31 — Caps. II–V, IX, XI, XII (§§2–9, 10–13, 19–20, 28, 42–47, 55–58, 59, 60–65) — Guia passa a turnos dentro do Round
+
+- **Antes:** o guia (2.1) descrevia AÇÕES alternadas (uma AÇÃO por oportunidade, Pass, iniciativa alternando), Devotee entrando Prepared, guarda por Prepared (alvo aberto só se Unprepared, Guardian ou Rival), Rivalidade, conversão opcional de Bases em Latent no encerramento do Round, ganho de 1 Latent por AÇÃO adversária com dano, Cheater só anulando Long Range e a tabela de Sealed impedindo Strike.
+- **Depois:** o guia segue as regras Alpha aprovadas (ALPHA-P01 a P07, 28/10/2026; G3-035, G3-038; compra de 1 carta, 30/10/2026; Seal D211, 31/10/2026), como no `playtest/engine-v3`:
+  - Round = um turno de cada jogador; o primeiro jogador é sorteado e começa todos os Rounds; o ativo faz quantas jogadas puder pagar e encerra com END TURN.
+  - Início do turno: preparar Devotees, Equipment e Bases; gatilhos; comprar 1 (nada no primeiro turno próprio). Mulligan parcial único (P01).
+  - Uma Base por turno, entra Prepared e paga no mesmo turno (G3-035). Bases Prepared viram Latent no início da End Phase, num único evento, teto 3 (P03).
+  - Devotee entra Unprepared; Impulse ataca no turno de entrada (P02). Um Strike por Devotee por turno (D22).
+  - Alvo: God inimigo ou qualquer Devotee inimigo; Guardian em campo, Prepared ou não, obriga a mirar Guardian; Nimble ignora; Cheater ignora contra o God e mantém a anulação de Long Range (P05, G3-038).
+  - Não ativo só age em janelas: Moment pago só com Latent e habilidades marcadas como resposta.
+  - Tabela de keywords alinhada a Guardian, Cheater, Impulse e Sealed (§48). Textos voltam a usar “turn” (turno de um jogador) e “round” (par de turnos).
+- **Motivo:** autor, 31/10/2026 (“o turno agora é por ROUND, não existem mais actions”); o guia tinha ficado para trás do que foi aprovado e implementado.
+- **Pendências (decisão do autor):**
+  - **Rivalidade (§13, §58):** suspensa; o engine-v3 não cria Rivals. Retirar de vez ou adaptar aos turnos? Cartas que citam Rival aguardam.
+  - **Ganho de Latent por dano (§60):** suspenso; não está no engine-v3.
+  - O capítulo XII mantém o título “Consolidação 2.1”; renomear a versão do rulebook quando o autor decidir.
+  - Página pública `/how-to-play/` já segue estas regras.
+
 ## 2026-10-31 — §54 e cartas — Event vira Moment; motor segue os subtipos vigentes
 
 - **Antes:** o guia dizia que Event joga como Technique; o motor jogava 052, 055 e 083 como Technique e ainda tratava os ex-Miracles 054, 056, 058, 061, 076 e 079 como Moment (lista D194), permitindo jogá-los no turno do oponente.

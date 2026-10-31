@@ -55,7 +55,7 @@
     .legend li { counter-increment: part; display: grid; grid-template-columns: 34px 1fr; gap: 12px; margin: 0; }
     .legend li::before { content: counter(part); display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%;
       border: 1px solid #e6c36a88; color: var(--kv-gold-2); font: 600 13px var(--kv-title); }
-    .card-slot { width: 100%; aspect-ratio: 63 / 88; container-type: inline-size; overflow: clip; border-radius: 4.5cqi; }
+    .card-slot { width: 100%; aspect-ratio: 63 / 88; container-type: inline-size; overflow: clip; }
     .card-slot > * { width: 100%; height: 100%; }
 
     /* Tipos de carta */
@@ -65,6 +65,9 @@
     .type figcaption b { display: block; font: 600 12px var(--kv-title); letter-spacing: .28em; text-transform: uppercase; color: var(--kv-ink); margin-bottom: 4px; }
     .type figcaption { font-size: 15px; color: var(--kv-muted); line-height: 1.5; }
 
+    .gods { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 20px; margin-bottom: 28px; }
+    @media (max-width: 900px) { .gods { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (max-width: 560px) { .gods { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
     .grid2 .kv-card { padding: 26px; }
     .steps { counter-reset: step; list-style: none; padding: 0; display: grid; gap: 16px; }
@@ -110,16 +113,17 @@
         <p class="kv-stamp eyebrow">The essentials</p>
         <h2 id="t-index">Everything you need, step by step</h2>
         <nav class="tiles" aria-label="Topics">
-          <a class="tile kv-card" href="#basics" data-art="athena-001"><i class="n">1</i><b>The goal</b><span>Bring the enemy God's Soul to zero.</span></a>
+          <a class="tile kv-card" href="#basics" data-art="poseidon-001"><i class="n">1</i><b>The goal</b><span>Bring the enemy God's Soul to zero.</span></a>
           <a class="tile kv-card" href="#read" data-art="athena-v6-001"><i class="n">2</i><b>Read a card</b><span>Cost, Power, HP and abilities.</span></a>
-          <a class="tile kv-card" href="#types" data-art="athena-v6-002"><i class="n">3</i><b>Card types</b><span>God, Domain, Devotee, Armor and spells.</span></a>
-          <a class="tile kv-card" href="#setup" data-art="athena-v6-065"><i class="n">4</i><b>Setting up</b><span>Your deck, your hand and who starts.</span></a>
-          <a class="tile kv-card" href="#cosmo" data-art="athena-v6-053"><i class="n">5</i><b>Cosmo</b><span>Base and Latent Cosmo pay for everything.</span></a>
-          <a class="tile kv-card" href="#round" data-art="athena-v6-052"><i class="n">6</i><b>The round</b><span>Each Round, both players take one full turn.</span></a>
-          <a class="tile kv-card" href="#strike" data-art="athena-v6-009"><i class="n">7</i><b>Strike</b><span>Combat is simultaneous, and damage stays.</span></a>
-          <a class="tile kv-card" href="#guard" data-art="athena-v6-003"><i class="n">8</i><b>Targets</b><span>Who you can hit, and who must be hit.</span></a>
-          <a class="tile kv-card" href="#armor" data-art="athena-v6-012"><i class="n">9</i><b>Armor</b><span>Cloths, Scales, Surplices and Resonance.</span></a>
-          <a class="tile kv-card" href="#keywords" data-art="athena-v6-011"><i class="n">10</i><b>Keywords</b><span>Guardian, Long Range, Pierce and more.</span></a>
+          <a class="tile kv-card" href="#types" data-art="hades-v6-182"><i class="n">3</i><b>Card types</b><span>God, Domain, Devotee, Armor and spells.</span></a>
+          <a class="tile kv-card" href="#gods" data-art="hades-001"><i class="n">4</i><b>The five Gods</b><span>Divine Powers, Awaken and Ultimate.</span></a>
+          <a class="tile kv-card" href="#setup" data-art="athena-v6-065"><i class="n">5</i><b>Setting up</b><span>Your deck, your hand and who starts.</span></a>
+          <a class="tile kv-card" href="#cosmo" data-art="artemis-v6-374"><i class="n">6</i><b>Cosmo</b><span>Base and Latent Cosmo pay for everything.</span></a>
+          <a class="tile kv-card" href="#round" data-art="athena-v6-052"><i class="n">7</i><b>The round</b><span>Each Round, both players take one full turn.</span></a>
+          <a class="tile kv-card" href="#strike" data-art="ares-v6-271"><i class="n">8</i><b>Strike</b><span>Combat is simultaneous, and damage stays.</span></a>
+          <a class="tile kv-card" href="#guard" data-art="athena-v6-003"><i class="n">9</i><b>Targets</b><span>Who you can hit, and who must be hit.</span></a>
+          <a class="tile kv-card" href="#armor" data-art="ares-v6-272"><i class="n">10</i><b>Armor</b><span>Cloths, Scales, Surplices and Resonance.</span></a>
+          <a class="tile kv-card" href="#keywords" data-art="artemis-v6-363"><i class="n">11</i><b>Keywords</b><span>Guardian, Long Range, Pierce and more.</span></a>
         </nav>
       </section>
 
@@ -158,23 +162,47 @@
         <p class="kv-stamp eyebrow">3 · Card types</p>
         <h2 id="t-types">Your forces</h2>
         <div class="types">
-          <figure class="type"><div class="card-slot" data-card="athena-001" role="img" aria-label="Athena God card"></div>
+          <figure class="type"><div class="card-slot" data-card="poseidon-001" role="img" aria-label="Poseidon God card"></div>
             <figcaption><b>God</b>The divinity you command. Starts in play with its Soul, Attack and divine powers. If it falls, you lose.</figcaption></figure>
-          <figure class="type"><div class="card-slot" data-card="athena-v6-065" role="img" aria-label="A Domain card"></div>
+          <figure class="type"><div class="card-slot" data-card="athena-v6-065" role="img" aria-label="The Stairway to the Twelve Temples, an Athena Domain"></div>
             <figcaption><b>Domain</b>Your God's realm. Starts in play with its own abilities.</figcaption></figure>
-          <figure class="type"><div class="card-slot" data-card="athena-v6-001" role="img" aria-label="A Devotee card"></div>
+          <figure class="type"><div class="card-slot" data-card="hades-v6-181" role="img" aria-label="Wyvern Rhadamanthys, a Hades Devotee"></div>
             <figcaption><b>Devotee</b>Saints, Marinas, Specters and other warriors. They have Power and HP, and they Strike.</figcaption></figure>
-          <figure class="type"><div class="card-slot" data-card="athena-v6-002" role="img" aria-label="An Armor card"></div>
+          <figure class="type"><div class="card-slot" data-card="ares-v6-272" role="img" aria-label="Ethon Warplate, an Ares Armor"></div>
             <figcaption><b>Equipment</b>Armor (Cloth, Scale, Surplice, Warplate, Moonplate), weapons and accessories that empower a Devotee.</figcaption></figure>
-          <figure class="type"><div class="card-slot" data-card="athena-v6-053" role="img" aria-label="A Technique card"></div>
+          <figure class="type"><div class="card-slot" data-card="artemis-v6-374" role="img" aria-label="Silver Light of Selene, an Artemis Technique"></div>
             <figcaption><b>Technique</b>A special technique. Play it during your own turn.</figcaption></figure>
-          <figure class="type"><div class="card-slot" data-card="athena-v6-052" role="img" aria-label="A Moment card"></div>
+          <figure class="type"><div class="card-slot" data-card="hades-v6-235" role="img" aria-label="The Oath of the 108 Stars, a Hades Moment"></div>
             <figcaption><b>Moment</b>A sudden event. Play it in your turn, or as a response during your opponent's turn.</figcaption></figure>
         </div>
       </section>
 
+      <section class="block" id="gods" aria-labelledby="t-gods">
+        <p class="kv-stamp eyebrow">4 · The five Gods</p>
+        <h2 id="t-gods">Choose your divinity</h2>
+        <p class="intro">Each God leads a faction with its own style of war. Your God is your life total, your last line of defense and your most powerful card.</p>
+        <div class="gods">
+          <figure class="type"><div class="card-slot" data-card="athena-001" role="img" aria-label="Athena God card"></div>
+            <figcaption><b>Athena</b>The Unbreakable Will. Saints who protect each other and never give up.</figcaption></figure>
+          <figure class="type"><div class="card-slot" data-card="poseidon-001" role="img" aria-label="Poseidon God card"></div>
+            <figcaption><b>Poseidon</b>Control and pressure. Marinas who seal and drown the enemy.</figcaption></figure>
+          <figure class="type"><div class="card-slot" data-card="hades-001" role="img" aria-label="Hades God card"></div>
+            <figcaption><b>Hades</b>Persistence, sacrifice and return. Specters who come back from the Tartarus.</figcaption></figure>
+          <figure class="type"><div class="card-slot" data-card="ares-001" role="img" aria-label="Ares God card"></div>
+            <figcaption><b>Ares</b>Aggression and conquest. Berserkers who live for the fight.</figcaption></figure>
+          <figure class="type"><div class="card-slot" data-card="artemis-001" role="img" aria-label="Artemis God card"></div>
+            <figcaption><b>Artemis</b>The hunt. Satellites who pick their prey with precision.</figcaption></figure>
+        </div>
+        <div class="grid2 gods-rules">
+          <div class="kv-card"><h3>Soul and Attack</h3><p><strong>Soul</strong> is your God's life. At zero, you lose. <strong>Attack</strong> is the damage your God deals back to every Devotee that strikes it.</p></div>
+          <div class="kv-card"><h3>Divine Power</h3><p>Every God has unique powers printed on its card. Some you activate, some trigger on their own, some are always on. Most can be used once each Round.</p></div>
+          <div class="kv-card"><h3>Awaken</h3><p>A God's Awaken number is a threshold. While its Soul is at or below that number, the God is <strong>Awakened</strong> and gains extra power. The closer to defeat, the more dangerous a God becomes.</p></div>
+          <div class="kv-card"><h3>Ultimate</h3><p>The God's extraordinary move, once per match. Use it in your own turn with an empty stack, paying its cost with Base Cosmo. It does not need Awaken: choosing the moment is up to you.</p></div>
+        </div>
+      </section>
+
       <section class="block" id="setup" aria-labelledby="t-setup">
-        <p class="kv-stamp eyebrow">4 · Setting up</p>
+        <p class="kv-stamp eyebrow">5 · Setting up</p>
         <h2 id="t-setup">Before the first round</h2>
         <div class="grid2">
           <div class="kv-card"><h3>Your deck</h3><ul>
@@ -193,7 +221,7 @@
       </section>
 
       <section class="block" id="cosmo" aria-labelledby="t-cosmo">
-        <p class="kv-stamp eyebrow">5 · Cosmo</p>
+        <p class="kv-stamp eyebrow">6 · Cosmo</p>
         <h2 id="t-cosmo">The energy of the universe within you</h2>
         <div class="intro">
           <p>Cosmo pays for every card and ability. Cards marked <strong>Cosmoble</strong> can be placed as a <strong>Cosmo Base</strong>, once per turn. A new Base is ready at once and can pay in the same turn.</p>
@@ -214,7 +242,7 @@
       </section>
 
       <section class="block" id="round" aria-labelledby="t-round">
-        <p class="kv-stamp eyebrow">6 · The round</p>
+        <p class="kv-stamp eyebrow">7 · The round</p>
         <h2 id="t-round">A Round, two turns</h2>
         <p class="intro">The game is played in <strong>Rounds</strong>. In each Round, the first player takes a full turn, then the other player takes theirs. In your turn you can do as many things as your Cosmo and your Devotees allow.</p>
         <ol class="steps">
@@ -226,18 +254,19 @@
       </section>
 
       <section class="block" id="strike" aria-labelledby="t-strike">
-        <p class="kv-stamp eyebrow">7 · Strike</p>
+        <p class="kv-stamp eyebrow">8 · Strike</p>
         <h2 id="t-strike">Combat</h2>
         <div class="grid2">
           <div class="kv-card"><h3>Declaring a Strike</h3><p>In your turn, each <strong>Prepared</strong> Devotee can Strike once. Devotees enter play <strong>Unprepared</strong>, so a new Devotee strikes from your next turn on (unless it has Impulse). Striking leaves the attacker <strong>Unprepared</strong>.</p></div>
           <div class="kv-card"><h3>Devotee against Devotee</h3><p>Both deal damage equal to their <strong>Power</strong>, at the same time. The defender strikes back even if Unprepared. Even a Devotee destroyed in the clash still deals its damage.</p></div>
-          <div class="kv-card"><h3>Devotee against God</h3><p>The Devotee deals its Power to the God's <strong>Soul</strong>. The God strikes back at the same time with its <strong>Attack</strong>.</p></div>
+          <div class="kv-card"><h3>Devotee against God</h3><p>The Devotee deals its Power to the God's <strong>Soul</strong>. But a God is a God: it strikes back at the same time with its full <strong>Attack</strong>, every time, even against many attackers in a row. A weak Devotee that strikes a God may not come back.</p></div>
           <div class="kv-card"><h3>Damage stays</h3><p>Damage is not healed at the end of the round. A Devotee is destroyed when its damage equals or exceeds its HP, and goes to the <strong>Tartarus</strong>, where cards marked Afterlife can still reach it.</p></div>
         </div>
+        <p class="note"><strong>Every Strike has a price.</strong> Defenders always strike back, and Gods hit back with their Attack. Before you attack, compare Power and HP on both sides: strike where you survive, finish wounded enemies, use Long Range to hit before the answer, and save your strongest Devotees for the moment that wins the match.</p>
       </section>
 
       <section class="block" id="guard" aria-labelledby="t-guard">
-        <p class="kv-stamp eyebrow">8 · Targets</p>
+        <p class="kv-stamp eyebrow">9 · Targets</p>
         <h2 id="t-guard">Who you can hit</h2>
         <div class="grid2">
           <div class="kv-card"><h3>Prepared and Unprepared</h3><p>A <strong>Prepared</strong> Devotee is ready to Strike. Striking leaves it <strong>Unprepared</strong> until the start of your next turn. Unprepared Devotees still strike back when attacked.</p></div>
@@ -248,7 +277,7 @@
       </section>
 
       <section class="block" id="armor" aria-labelledby="t-armor">
-        <p class="kv-stamp eyebrow">9 · Armor</p>
+        <p class="kv-stamp eyebrow">10 · Armor</p>
         <h2 id="t-armor">Cloths, Scales and Surplices</h2>
         <div class="intro">
           <p>Each faction has its Armor: Athena's <strong>Cloth</strong>, Poseidon's <strong>Scale</strong>, Hades's <strong>Surplice</strong>, Ares's <strong>Warplate</strong> and Artemis's <strong>Moonplate</strong>. Each Devotee has one Armor slot; weapons and accessories use their own slots.</p>
@@ -262,7 +291,7 @@
       </section>
 
       <section class="block" id="keywords" aria-labelledby="t-keywords">
-        <p class="kv-stamp eyebrow">10 · Keywords</p>
+        <p class="kv-stamp eyebrow">11 · Keywords</p>
         <h2 id="t-keywords">Combat keywords</h2>
         <div class="kv-card pad table-wrap">
           <table>
