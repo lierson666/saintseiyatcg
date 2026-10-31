@@ -1,6 +1,6 @@
 import {createHistory} from '../shared/editor-history.js';
 import {compilePlaytest} from '../shared/import-playtest.js';
-import {renderLiveCard,illustration,statLine} from '../shared/live-card.js?v=20261031-gr4';
+import {renderLiveCard,illustration,statLine,EDITIONS,editionOf} from '../shared/live-card.js?v=20261031-ed5';
 import {textBlocks, blocksMarkup, presentationRules, ruleBlocksWithoutKeywords, KEYWORD_WORDS, STAT_RE, statTrend} from '../shared/card-text.js?v=20261031-sym2';
 import {isArmor,isEquipment,validateCard} from '../shared/card-model.js';
 // Card Forge — editor de cartas em vanilla JS. Renderiza no canvas nativo 1488x2091 usando
@@ -13,6 +13,7 @@ import {printedEquipmentBonuses,signedBonus,armorBonusText} from '../shared/card
 
 const T = await (await fetch('../CARD-TEMPLATE/templates.json')).json();
 const P = (await (await fetch('../CARD-TEMPLATE/pieces.json')).json()).pieces;
+document.querySelector('select[name=edicao]').innerHTML = EDITIONS.map((e) => `<option value="${e.code}">${e.name} (${e.code})</option>`).join(''); // lista única em shared/live-card.js
 const W = T.canvas.w, H = T.canvas.h;
 
 const $ = (s) => document.querySelector(s);
@@ -68,7 +69,7 @@ function blankState() {
   return {
     id: '', nome_exibicao_en: '', title: '', subtitle: '', tipo: 'Devotee', subtipos: '', faccao: 'Athena',
     revisao_regras: '2.1', cosmoble: false, personagem_unico: false, personagem_id: '', origem_personagem: '', referencias_mitologicas_texto: '', slot_equipamento: '', donos: '', estagios: [], resonanceText: '',
-    raridade: 'Common', custo: '', unidade_custo: 'cosmo', power: '', vida: '', resistance: '', bonusPower: '', bonusResistance: '', auto_equip: '', artista: '',
+    raridade: 'Common', custo: '', unidade_custo: 'cosmo', power: '', vida: '', resistance: '', bonusPower: '', bonusResistance: '', auto_equip: '', artista: '', edicao: 'DOC',
     equipar_custo: '', equipar_custo_ressonante: '', equipar_custo_outros: '', damage_cloth: '', soul: '', attack: '', awaken: '', keywords: '', rules: '',
     habilidade_awaken_en: '', ultimate_en: '', flavour: '', art: null,
   };
@@ -385,7 +386,6 @@ async function drawRules(el, s) {
 }
 
 const RULES_INK = '#f4efe6', STAT_INK = {up: '#8dffa6', down: '#ff5a4a'};
-const EDITION = {name: 'Dawn of Cosmo', code: 'DOC', language: 'EN', year: 2026}; // mesmo rodapé de shared/live-card.js
 
 async function drawArt(s) {
   ctx.fillStyle = '#05060c';
@@ -485,7 +485,7 @@ async function render() {
       case 'rarity': {
         // Rodapé de edição (autor, 31/10/2026; igual a shared/live-card.js): raridade • DOC • EN • artista • © ano SSTCG.
         const key = `athena/rarity_${S.raridade.toLowerCase()}`, p = P[key], size = 30, gh = size * 1.35, gw = p ? p.w * gh / p.h : 0;
-        const parts = [EDITION.code, EDITION.language, (S.artista || '').trim().toUpperCase(), `© ${EDITION.year} SSTCG`].filter(Boolean), sep = '  •  ';
+        const ed = editionOf(S), parts = [ed.code, ed.language, (S.artista || '').trim().toUpperCase(), `© ${ed.year} SSTCG`].filter(Boolean), sep = '  •  ';
         ctx.save();
         // Delicado (autor, 31/10/2026): fino, espaçado e translúcido para não brigar com o flavour.
         ctx.font = `400 ${size}px Avenir, 'Avenir Next', sans-serif`;
@@ -825,6 +825,7 @@ function buildCard() {
   const plain = (v) => (/\*\*|(?:\d|X) \{[BCLS]\}/.test(v || '') ? fromMarkup(v) : (v || '').trim()); // texto cru ({5}{C}, quebras de linha) fica como está
   if (S.tipo === 'God') Object.assign(base, { habilidade_awaken_en: plain(S.habilidade_awaken_en), ultimate_en: plain(S.ultimate_en) });
   if (has(S.artista) || (source && 'artista' in source)) base.artista = (S.artista || '').trim() || null; // rodapé de edição
+  if (S.edicao !== EDITIONS[0].code || (source && 'edicao' in source)) base.edicao = S.edicao; // sem campo = DOC
   if (has(base.custo)) base.unidade_custo = S.unidade_custo; else base.unidade_custo = null;
   // Armor (sintaxe de 30/10/2026): bônus em campos, Equip único, Resonance pelos nomes; HP próprio e Equip ressonante não existem.
   if (layoutKey(S) === 'relic_cloth') {

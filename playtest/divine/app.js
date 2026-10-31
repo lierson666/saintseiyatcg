@@ -24,7 +24,7 @@ import {findDeck} from '../deck-store.js';
 import {rankAfterMatch} from '../rank.js?v=20261031-1';
 import {unlock, playMusic} from '../audio.js?v=20261030-telas';
 import {telas, anim, sound, imageUrl, applyColors, applyTexts} from '../telas.js?v=20261030-1';
-import {renderLiveCard, renderCardText} from '../../shared/live-card.js?v=20261031-gr4';
+import {renderLiveCard, renderCardText} from '../../shared/live-card.js?v=20261031-ed5';
 import {armorBonusText, printedEquipmentBonuses} from '../../shared/card-visual-values.js?v=20261031-kw6';
 
 const $ = (s, el = document) => el.querySelector(s), $$ = (s, el = document) => [...el.querySelectorAll(s)];
