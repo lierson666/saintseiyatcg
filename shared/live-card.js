@@ -36,6 +36,8 @@ function rulesSize(texts,base,w,h){
   for(let s=base;s>22;s--){const per=w/(s*.5);let lines=0;for(const t of texts)lines+=Math.max(1,Math.ceil(t.length/per));if(lines*s*1.18+(texts.length-1)*s*.5<=h)return s;}
   return 22;
 }
+// Edição Dawn of Cosmo (autor, 31/10/2026); o artista vem do campo `artista` da carta.
+const EDITION={name:'Dawn of Cosmo',code:'DOC',language:'EN',year:2026};
 function renderPsdCard(card,{src,stage,hp,power,keywords,damage,rules,equipment,equip,ownerLine,instance,compact}){
   const savedArt=visualProject(card.id)?.art;
   const artworkStyle=savedArt?.w&&savedArt?.h?`position:absolute;max-width:none;width:${savedArt.w/14.88}%;height:${savedArt.h/20.91}%;left:${savedArt.x/14.88}%;top:${savedArt.y/20.91}%;object-fit:fill`:'';
@@ -88,7 +90,12 @@ function renderPsdCard(card,{src,stage,hp,power,keywords,damage,rules,equipment,
       const fs=rulesSize([kw,...rules,ownerLine].filter(Boolean),el.size,w,cut<0?h:h-280);
       out+=`<div class="lc-rules live-card__rules" style="${pct(x,y,w,h)};font-size:${cqw(fs)}">${kw?`<p class="live-card__keywords">${keywords.map(k=>inlineMarkup(k)).join(', ')}</p>`:''}${body}${ownerLine?`<p class="live-card__owners">${ownerLine}</p>`:''}</div>`;
     }
-    else if(el.kind==='rarity'){const p=P[`athena/rarity_${String(card.raridade||'').toLowerCase()}`];if(p){const hh=el.h||p.h,ww=p.w*hh/p.h;out+=piece(`athena/rarity_${card.raridade.toLowerCase()}`,[el.x-ww/2,el.y-hh/2,ww,hh],'lc-rarity');}}
+    // Rodapé de edição (autor, 31/10/2026): símbolo da raridade • edição • idioma • artista • ano. A gema sai do centro.
+    else if(el.kind==='rarity'){
+      const key=`athena/rarity_${String(card.raridade||'').toLowerCase()}`,gemImg=P[key]?`<img class="lc-footer__rarity" src="${escape(PSD.src(key))}" alt="${escape(card.raridade)}">`:'';
+      const parts=[gemImg,EDITION.code,EDITION.language,card.artista,`© ${EDITION.year} SSTCG`].filter(Boolean);
+      out+=`<div class="lc-footer" style="top:${el.y/20.91}%;font-size:${cqw(38)}" title="${escape(EDITION.name)}">${parts.map(x=>`<span>${x.startsWith('<img')?x:escape(x)}</span>`).join('<i>•</i>')}</div>`;
+    }
   }
   return `<div class="live-card live-card--psd live-card--${escape(f||'neutral')} ${compact?'live-card--compact':''} ${instance&&!instance.prepared&&card.tipo==='Devotee'?'live-card--unprepared':''}" data-live-card="${escape(card.id)}" style="--psd-ink:${pack.color};--psd-glow:${pack.glow}">
     <div class="live-card__illustration" aria-hidden="true">${src?`<img src="${escape(src)}" alt="" draggable="false" loading="lazy"${frame||(artworkStyle?` style="${artworkStyle}"`:'')}>`:'<span class="live-card__placeholder">✧<small>Illustration pending</small></span>'}</div>
