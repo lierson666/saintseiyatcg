@@ -11,6 +11,14 @@ export const SIGNATURES = {
   '001': {style: 'meteor', name: 'Pegasus Ryuseiken', color: '#9fd8ff'},
   '003': {style: 'dragon', name: 'Rozan Shoryuha', color: '#6ff0b0'},
 };
+// Partículas da morte de cada God, em dois tempos: o golpe e a queda (o resto é CSS: .die-<deus> e .ruin--<deus>).
+const DEATH_FX = {
+  athena: [(f, a) => f.charge(a.x, a.y, {color: '#ffe3a0', count: 70, radius: 120}), (f, a) => { f.burst(a.x, a.y, {color: '#e8e0cc', count: 140, speed: 320, grav: 900, life: 1.2, size: 14}); f.shockwave(a.x, a.y, {color: '#fff2c4', size: 260}); }],
+  poseidon: [(f, a) => f.burst(a.x, a.y, {color: '#7cc8ff', count: 90, speed: 260, grav: -120, life: 1}), (f, a) => { f.burst(a.x, a.y, {color: '#bfe6ff', count: 160, speed: 480, grav: 700, life: 1.1}); f.shockwave(a.x, a.y, {color: '#5ab4ff', size: 320}); }],
+  hades: [(f, a) => f.charge(a.x, a.y, {color: '#a064ff', count: 140, radius: 240, life: .9}), (f, a) => { f.charge(a.x, a.y, {color: '#2a0a4a', count: 120, radius: 300, life: .7}); f.shockwave(a.x, a.y, {color: '#7a3ad0', size: 360}); }],
+  ares: [(f, a) => f.burst(a.x, a.y, {color: '#ff7a3a', count: 60, speed: 200, grav: -200, life: .9}), (f, a) => { f.flash(.5); f.burst(a.x, a.y, {color: '#ff5a2a', count: 200, speed: 600, life: 1}); f.burst(a.x, a.y, {color: '#5a5048', count: 90, speed: 180, grav: -60, life: 1.6, size: 16}); f.shockwave(a.x, a.y, {color: '#ffb070', size: 380}); }],
+  artemis: [(f, a) => f.burst(a.x, a.y, {color: '#d8fff0', count: 80, speed: 120, grav: -160, life: 1.4}), (f, a) => { f.burst(a.x, a.y, {color: '#e8f4ff', count: 150, speed: 260, grav: -220, life: 1.8, size: 10}); f.shockwave(a.x, a.y, {color: '#c8f0ff', size: 280}); }],
+};
 const STYLE_BY_TYPE = [[/Gold Saint/, 'energy', '#ffd36e'], [/Silver Saint/, 'energy', '#d8e4ff'], [/Bronze Saint/, 'physical', '#ffe0a0']];
 
 export function createDirector({ui, getFx, settings}) {
@@ -280,7 +288,17 @@ export function createDirector({ui, getFx, settings}) {
     async judgment_removal(e) { return handlers.judgment_removed(e); }, // nome que a engine emite (gods.js)
     async judgment_removed(e) { ui.float(ui.center(ui.godRect(e.player)), 'Judgment removed', 'gain'); await pause(400); },
     async soul_gained(e) { if (e.amount) { ui.setSoul(e.player, e.soul); ui.float(ui.center(ui.godRect(e.player)), `+${e.amount} Soul`, 'gain'); } },
-    async victory(e) { sound(e.draw ? 'derrota' : ui.isViewer(e.winner) ? 'vitoria' : 'derrota'); await ui.banner(e.draw ? 'Draw' : ui.isViewer(e.winner) ? 'Victory' : `Player ${e.winner} wins`, e.winner, t(1200)); },
+    // Morte do God (autor, 31/10/2026): cada deus cai com o seu tema e a metade dele da arena desmorona; ~3 s antes da tela final.
+    async victory(e) {
+      const dead = t(1) ? ui.godDeath(e) : [];
+      if (dead.length) {
+        const f = fx(), at = dead.map(d => ({...d, at: ui.center(ui.godRect(d.key))}));
+        for (const d of at) if (f && d.at) DEATH_FX[d.god]?.[0](f, d.at);
+        shake(8); await pause(1100);
+        for (const d of at) if (f && d.at) DEATH_FX[d.god]?.[1](f, d.at);
+        shake(16); await pause(1700);
+      }
+      sound(e.draw ? 'derrota' : ui.isViewer(e.winner) ? 'vitoria' : 'derrota'); await ui.banner(e.draw ? 'Draw' : ui.isViewer(e.winner) ? 'Victory' : `Player ${e.winner} wins`, e.winner, t(1200)); },
     async window_open() {}, async window_close() {}, async pass(e) { ui.log(e); }, // Gatilho entrando na cadeia e resolvendo: a carta de origem pisca e cresce (estilo Arena), nada genérico.
     async chain_add(e) { ui.pulse(e.uid, 'trigger-pop'); await pause(240); },
     async trigger(e) { ui.pulse(e.uid, 'trigger-pop'); ui.log(e); if (!ui.isViewer(e.player)) ui.triggerNote(e); await pause(240); },

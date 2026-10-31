@@ -18,7 +18,7 @@ import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudg
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
-import {createDirector} from './director.js?v=15';
+import {createDirector} from './director.js?v=16';
 import {createAI} from './ai.js?v=5';
 import {findDeck} from '../deck-store.js';
 import {unlock, playMusic} from '../audio.js?v=20261030-telas';
@@ -641,6 +641,9 @@ function phaseBar() {
 // Área de conjuração na cor e no tema do God de quem conjura (autor, 31/10/2026).
 const godFx = key => { const g = S().divine?.[key]?.god || 'god-athena'; return `data-godfx="${g.slice(4)}" style="--glow:${GOD_GLOW[g] || GOD_GLOW['god-athena']}"`; };
 const GOD_GLOW = {'god-athena': '255, 205, 100', 'god-poseidon': '90, 180, 255', 'god-hades': '170, 100, 255', 'god-ares': '255, 90, 70', 'god-artemis': '170, 240, 210'};
+// Morte do God (autor, 31/10/2026): quem perdeu (os dois no empate); a metade dele da arena vira ruína com o tema do deus.
+const losers = s => (!s.victory ? [] : s.victory.draw ? s.order : s.order.filter(k => k !== s.victory.winner));
+const ruin = (key, done) => { const g = S().divine?.[key]?.god || 'god-athena'; return `<div class="ruin ruin--${key === viewer() ? 'me' : 'opp'} ruin--${g.slice(4)} ${done ? 'is-done' : ''}" style="--glow:${GOD_GLOW[g] || GOD_GLOW['god-athena']}" aria-hidden="true"></div>`; };
 function chainArt(c) {
   const s = S(), uid = String(c.uid || '');
   const id = ctx.objects[uid]?.cardId || (uid.startsWith('domain:') ? s.domains?.[uid.slice(7)] : null);
@@ -812,7 +815,7 @@ function render() {
   const s = S(), me = viewer(), them = other(me);
   if (mode) { const step = mode.steps[mode.i]; mode.options = step?.pick ? candidates(step, mode.key).filter(u => !mode.picked.includes(u)) : []; }
   boardRoot.innerHTML = `
-    <div class="olympus ${mode ? 'is-choosing' : ''} ${pending ? 'is-deciding' : ''}" ${pending && !pending.peek ? 'inert' : ''}>
+    <div class="olympus ${mode ? 'is-choosing' : ''} ${pending ? 'is-deciding' : ''} ${losers(s).map(k => `fallen-${k === me ? 'me' : 'opp'}`).join(' ')}" ${pending && !pending.peek ? 'inert' : ''}>
       ${handRow(them, settings.hideOpponent || settings.ai === them)}
       <main class="arena-field">${fieldRow(them)}<div class="midline"></div>${fieldRow(me)}</main>
       <div class="band band--opp">${cosmoLane(them, 'opp')}</div>
@@ -824,6 +827,7 @@ function render() {
       ${!s.setup && !s.victory ? `<div class="turn-glow turn-glow--${s.active === me ? 'me' : 'opp'}" style="--glow:${GOD_GLOW[s.divine?.[s.active]?.god] || GOD_GLOW['god-athena']}" aria-hidden="true"></div>` : ''}
       ${s.window && !s.victory ? `<div class="priority-glow priority-glow--${s.window.priority === me ? 'me' : 'opp'}" aria-hidden="true"></div>` : ''}
       ${castSlot()}
+      ${losers(s).map(k => ruin(k, true)).join('')}
     </div>${choiceBar()}`;
   if (drag?.ghost) showDragZones(drag.uid); // re-render no meio do arraste não apaga as zonas
   const focused = document.activeElement?.closest?.('.decision [data-focus]')?.dataset.focus;
@@ -904,6 +908,17 @@ const ui = {
   godColor: uid => { const k = S().order.find(k => S().players[k].battlefield.includes(uid)); return k && `rgb(${GOD_GLOW[S().divine?.[k]?.god] || GOD_GLOW['god-athena']})`; },
   cinematic(on) { stage.classList.toggle('cinematic', on); },
   isViewer: key => key === viewer(),
+  // Morte do God: avatar com animação do tema (die-<deus>), cartas e Bases dele caem, ruína por cima da metade dele.
+  godDeath(e) {
+    const s = S(), root = $('.olympus');
+    return losers({...s, victory: e}).map(key => {
+      const god = (s.divine?.[key]?.god || 'god-athena').slice(4);
+      $(`[data-god="${key}"]`)?.classList.add('is-dying', `die-${god}`);
+      $$(`[data-field="${key}"] .dcard, [data-lane="${key}"] .lane__base`).forEach((el, i) => { el.style.setProperty('--fall', i); el.classList.add('is-falling'); });
+      root?.insertAdjacentHTML('beforeend', ruin(key));
+      return {key, god};
+    });
+  },
   rect: uid => rectOf($(`[data-uid="${uid}"]`)),
   godRect: key => rectOf($(`[data-god="${key}"]`)),
   domainRect: key => rectOf($(`[data-domain="${key}"]`)),
@@ -2013,7 +2028,7 @@ async function init() {
   setInterval(aiTick, 700);
   scene = await createScene($('#arena'), {quality: settings.quality, theme: settings.theme, reduceFlashes: settings.reduceFlashes});
   stage.classList.toggle('no-webgl', !scene);
-  window.__divine = {get state() { return S(); }, get ctx() { return ctx; }, get scene() { return scene; }, get clock() { return clock; }, settings}; // inspeção no QA
+  window.__divine = {get state() { return S(); }, get ctx() { return ctx; }, get scene() { return scene; }, get clock() { return clock; }, present: (from) => present({}, null, from), settings}; // inspeção no QA
 }
 // Celular (autor, 30/10/2026): no primeiro toque, tela cheia e trava na horizontal onde o navegador deixa (Android);
 // no iPhone o aviso de girar (mobile.css) cobre o modo em pé.

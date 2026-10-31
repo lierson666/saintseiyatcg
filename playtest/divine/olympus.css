@@ -1059,3 +1059,77 @@ body.has-chain-zoom .command__clock { visibility: hidden; }
 /* Ares: o PNG do autor corta a crista do elmo reto no topo; esfuma a ponta para não parecer cortada (31/10/2026). */
 .gh-frame__img--ares { -webkit-mask-image: linear-gradient(to bottom, transparent 7%, #000 13%); mask-image: linear-gradient(to bottom, transparent 7%, #000 13%); }
 .bigcard { align-content: center; gap: 14px; } .bigcard__use { cursor: pointer; min-height: 44px; padding: 10px 22px; }
+
+/* Morte do God (autor, 31/10/2026): cada deus cai com o seu tema (~3 s) e a metade dele da arena desmorona.
+   Classes postas por ui.godDeath; .fallen-<lado> e .ruin.is-done seguram o estado final depois do render. */
+.godhud.is-dying { pointer-events: none; z-index: 9; }
+.godhud.is-dying > * { animation: 2.8s ease-in forwards; }
+.godhud.die-athena > * { animation-name: dieAthena; }
+.godhud.die-poseidon > * { animation-name: diePoseidon; }
+.godhud.die-hades > * { animation-name: dieHades; animation-timing-function: cubic-bezier(.6, 0, .9, .4); }
+.godhud.die-ares > * { animation-name: dieAres; }
+.godhud.die-artemis > * { animation-name: dieArtemis; animation-timing-function: ease-out; }
+@keyframes dieAthena { /* vira mármore, racha e desaba */
+  0% { filter: none; }
+  35% { filter: grayscale(1) sepia(.25) brightness(1.35) contrast(1.25); transform: none; }
+  45% { transform: translateX(-3px) rotate(-1deg); }
+  50% { transform: translateX(3px) rotate(1deg); filter: grayscale(1) sepia(.25) brightness(1.4) contrast(1.4); opacity: 1; }
+  100% { transform: translateY(60px) rotate(-8deg) scale(.9); filter: grayscale(1) brightness(1.2) blur(6px); opacity: 0; }
+}
+@keyframes diePoseidon { /* engolido pela onda, vira espuma */
+  0% { filter: none; }
+  35% { filter: hue-rotate(-20deg) saturate(1.6) brightness(1.1) drop-shadow(0 0 18px rgba(90, 180, 255, .9)); transform: none; }
+  60% { transform: translateY(-10px) skewX(-6deg); filter: saturate(2) brightness(1.6) blur(2px) drop-shadow(0 0 30px rgba(90, 180, 255, 1)); opacity: 1; }
+  100% { transform: translateY(40px) scaleY(.3) skewX(10deg); filter: brightness(2.4) saturate(0) blur(12px); opacity: 0; }
+}
+@keyframes dieHades { /* implode num vórtice negro */
+  0% { transform: none; filter: none; }
+  40% { transform: rotate(-20deg) scale(1.05); filter: brightness(.6) drop-shadow(0 0 26px rgba(170, 100, 255, 1)); }
+  100% { transform: rotate(540deg) scale(0); filter: brightness(0) drop-shadow(0 0 40px rgba(120, 40, 220, 1)); opacity: .2; }
+}
+@keyframes dieAres { /* treme em brasa e explode em cinza */
+  0% { transform: none; filter: none; }
+  10%, 30%, 50% { transform: translate(-4px, 2px); }
+  20%, 40% { transform: translate(4px, -2px); }
+  45% { filter: sepia(1) saturate(4) hue-rotate(-30deg) brightness(1.3) drop-shadow(0 0 24px rgba(255, 90, 40, 1)); }
+  58% { transform: scale(1.12); filter: brightness(4) drop-shadow(0 0 60px rgba(255, 160, 80, 1)); opacity: 1; }
+  100% { transform: scale(1.7); filter: brightness(.2) grayscale(1) blur(14px); opacity: 0; }
+}
+@keyframes dieArtemis { /* apaga em luar e sobe como poeira prateada */
+  0% { filter: none; transform: none; }
+  45% { filter: saturate(.2) brightness(1.8) drop-shadow(0 0 30px rgba(200, 255, 235, 1)); opacity: 1; }
+  100% { filter: saturate(0) brightness(3) blur(10px); transform: translateY(-50px) scale(1.05); opacity: 0; }
+}
+
+/* Cartas e Bases do perdedor despencam em cascata. */
+.is-falling { animation: ruinFall 1.5s cubic-bezier(.55, 0, .9, .5) forwards; animation-delay: calc(.9s + var(--fall, 0) * 70ms); pointer-events: none; }
+@keyframes ruinFall {
+  0% { transform: none; opacity: 1; }
+  15% { transform: translateY(-8px) rotate(-3deg); }
+  100% { transform: translateY(70vh) rotate(calc(18deg - var(--fall, 0) * 9deg)); opacity: 0; }
+}
+
+/* Ruína por cima da metade do perdedor: racha na cor do deus + véu do tema. */
+.ruin { position: absolute; left: 0; right: 0; z-index: 5; pointer-events: none; overflow: hidden; }
+.ruin--opp { top: 0; height: 50%; }
+.ruin--me { top: 50%; height: 50%; }
+.ruin::before { content: ''; position: absolute; left: -2%; right: -2%; top: 46%; height: 10%; background: linear-gradient(90deg, transparent, rgba(var(--glow), .95) 20%, #fff 50%, rgba(var(--glow), .95) 80%, transparent);
+  clip-path: polygon(0 50%, 8% 30%, 14% 62%, 22% 35%, 30% 70%, 38% 40%, 46% 66%, 54% 28%, 62% 64%, 70% 38%, 78% 72%, 86% 34%, 94% 60%, 100% 45%, 100% 55%, 94% 70%, 86% 44%, 78% 82%, 70% 48%, 62% 74%, 54% 38%, 46% 76%, 38% 50%, 30% 80%, 22% 45%, 14% 72%, 8% 40%, 0 60%);
+  filter: drop-shadow(0 0 10px rgba(var(--glow), 1)); transform: scaleX(0); animation: ruinCrack .7s .5s ease-out forwards; }
+.ruin::after { content: ''; position: absolute; inset: 0; opacity: 0; animation: ruinVeil 2s .8s ease-in forwards; }
+@keyframes ruinCrack { to { transform: scaleX(1); } }
+@keyframes ruinVeil { to { opacity: 1; } }
+.ruin--athena::after { background: radial-gradient(ellipse at 50% 60%, rgba(232, 222, 200, .35), rgba(40, 34, 24, .85) 75%); }
+.ruin--poseidon::after { background: linear-gradient(to top, rgba(10, 60, 130, .92), rgba(40, 140, 230, .55) 55%, rgba(160, 220, 255, .15)); transform-origin: bottom; animation-name: ruinFlood; }
+@keyframes ruinFlood { from { opacity: 1; transform: scaleY(0); } to { opacity: 1; transform: scaleY(1); } }
+.ruin--hades::after { background: radial-gradient(circle at 50% 50%, #000 0, rgba(20, 0, 40, .95) 35%, rgba(90, 30, 160, .5) 70%, rgba(0, 0, 0, .8)); animation-name: ruinVoid; }
+@keyframes ruinVoid { from { opacity: 0; transform: scale(1.6) rotate(-30deg); } to { opacity: 1; transform: none; } }
+.ruin--ares::after { background: radial-gradient(ellipse at 50% 100%, rgba(255, 140, 40, .75), rgba(160, 20, 0, .7) 45%, rgba(20, 8, 4, .9) 90%); animation-name: ruinBurn; }
+@keyframes ruinBurn { 0% { opacity: 0; } 30% { opacity: 1; filter: brightness(1.8); } 45% { filter: brightness(1); } 60% { filter: brightness(1.4); } 100% { opacity: 1; filter: brightness(.9); } }
+.ruin--artemis::after { background: radial-gradient(circle at 70% 20%, rgba(230, 255, 245, .45), rgba(10, 20, 40, .9) 60%); }
+
+/* Estado final (render com s.victory) e Reduce motion: sem animação, só o resultado. */
+.ruin.is-done::before, .ruin.is-done::after, .reduce-motion .ruin::before, .reduce-motion .ruin::after,
+.reduce-motion .godhud.is-dying > *, .reduce-motion .is-falling { animation-duration: 1ms; animation-delay: 0s; }
+.fallen-opp .godhud--opp, .fallen-me .godhud--me, .fallen-opp .field--opp .dcard, .fallen-me .field--me .dcard,
+.fallen-opp .lane--opp .lane__base, .fallen-me .lane--me .lane__base { visibility: hidden; }
