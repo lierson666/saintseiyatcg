@@ -2,10 +2,10 @@
 // e o ponteiro com cosmo. Vale para a home, o login e todas as telas fora da partida (ver docs/kv-oficial.md).
 // Uso: import {mountKV} from '/shared/kv-sky.js'; const kv = mountKV({anchor: 'h1 .cosmo'}); kv.warm(); kv.burst(el);
 const TEXT_FIELDS = 'input[type=text], input[type=email], input[type=password], input[type=search], textarea';
-const POINTER = `<svg class="kv-pointer" aria-hidden="true" width="34" height="38" viewBox="0 0 34 38">
+const POINTER = `<div class="kv-pointer" aria-hidden="true" popover="manual"><svg width="34" height="38" viewBox="0 0 34 38">
   <defs><linearGradient id="kv-pg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3c4"/><stop offset=".45" stop-color="#e6c36a"/><stop offset="1" stop-color="#ff8a2b"/></linearGradient></defs>
   <path d="M5 4 L5 31 L12.5 23.5 L28 25.5 Z" fill="#02040ca6" stroke="url(#kv-pg)" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round"/>
-  <path d="M7.4 9 L7.4 14" stroke="#fffbe8" stroke-width="1.4" stroke-linecap="round" opacity=".85"/></svg>`;
+  <path d="M7.4 9 L7.4 14" stroke="#fffbe8" stroke-width="1.4" stroke-linecap="round" opacity=".85"/></svg></div>`;
 
 export function mountKV({anchor: anchorSelector = null} = {}) {
   // Céu próprio, inspirado no estilo dos apps de astronomia (autor, 29/10/2026; nada copiado de app nenhum):
@@ -65,6 +65,15 @@ export function mountKV({anchor: anchorSelector = null} = {}) {
   const fine = matchMedia('(pointer: fine)').matches;
   let tip = null, lastTip = null;
   if (fine && !still) document.documentElement.classList.add('cosmo-pointer');
+  // Acima de tudo (autor, 31/10/2026): o ponteiro vive na camada do topo (popover) e volta ao topo sempre que
+  // um <dialog> modal ou outro popover abre por cima dele. Sem suporte a popover, kv.css volta ao cursor do sistema nos modais.
+  if (fine && !still && pointer.showPopover) {
+    const raise = () => { try { if (pointer.matches(':popover-open')) pointer.hidePopover(); pointer.showPopover(); } catch {} };
+    raise(); document.documentElement.classList.add('kv-pointer-top');
+    new MutationObserver(ms => { if (ms.some(m => m.target !== pointer && (m.target.open || m.target.matches?.(':popover-open')))) raise(); })
+      .observe(document.body, {subtree: true, attributes: true, attributeFilter: ['open']});
+    document.addEventListener('toggle', e => { if (e.target !== pointer && e.newState === 'open') raise(); }, true);
+  }
   function spawn(x, y, burst = 0) {
     const a = Math.random() * 6.28, v = burst ? 1.5 + Math.random() * 3.5 : Math.random() * .5;
     sparks.push({x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - (burst ? 0 : .35), life: 1, decay: burst ? .018 + Math.random() * .02 : .03 + Math.random() * .03,

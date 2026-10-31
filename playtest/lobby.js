@@ -7,7 +7,7 @@ import {spellCategory} from './engine-v3/core.js';
 import {renderLiveCard, renderCardText} from '../shared/live-card.js?v=20261031-kw6';
 import {unlock, playMusic, setVolume, volume} from './audio.js?v=20261030-telas';
 import {loadMyDecks, saveMyDecks, findDeck, syncDecks, onDeckStatus, deckCovers, setDeckCover} from './deck-store.js?v=20261030-1';
-import {mountKV} from '../shared/kv-sky.js?v=20261029-2';
+import {mountKV} from '../shared/kv-sky.js?v=20261031-top';
 import {countryOptions, countryName} from '../shared/countries.js?v=20261029-1';
 import {startPresence} from '../shared/presence.js?v=20261029-1';
 import {mountSocial} from './social.js?v=20261031-legend1';
