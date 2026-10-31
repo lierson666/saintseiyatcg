@@ -81,13 +81,13 @@
 .card-text.card-text .kw-note strong{display:block;font-weight:900;letter-spacing:.04em;color:var(--psd-ink);margin-bottom:2px}
 
 /* Cabeçalho do Awaken na carta de God (PSD dos Deuses, autor 31/10/2026): linha · gema com o número · "Awaken" · linha. */
-.live-card--psd .lc-rules .lc-awaken{display:flex;align-items:center;gap:1.2cqw;height:10.4cqw;margin:.15em -2cqw .25em}
+.live-card--psd .lc-rules .lc-awaken{display:flex;align-items:center;gap:1.2cqw;height:10.4cqw;margin:.15em -2cqw .25em;background:radial-gradient(ellipse 34% 62% at 50% 50%,rgba(0,0,0,.72),rgba(0,0,0,.45) 60%,transparent)} /* leitura sobre arte clara */
 .live-card--psd .lc-awaken__line{flex:1;min-width:0;height:.25cqw;object-fit:fill}
 .live-card--psd .lc-awaken__gem{position:relative;flex:none;width:10.6cqw;height:10.4cqw;display:grid;place-items:center}
 .live-card--psd .lc-awaken__gem img{position:absolute;inset:0;width:100%;height:100%}
 .live-card--psd .lc-awaken__gem b{position:relative;font:italic 700 5.4cqw/1 Futura,'Futura PT','Century Gothic',sans-serif;color:var(--psd-ink);text-shadow:0 0 .2cqw #000,0 0 .45cqw #000,0 0 3cqw var(--psd-glow)}
 .live-card--psd .lc-awaken__word{flex:none;height:6.45cqw;width:auto;margin-left:-2.6cqw}
-.live-card--psd .lc-awaken__word,.live-card--psd .lc-awaken__gem img{filter:drop-shadow(0 0 .25cqw #000) drop-shadow(0 0 .9cqw rgba(0,0,0,.85))}
+.live-card--psd .lc-awaken__word,.live-card--psd .lc-awaken__gem img{filter:drop-shadow(0 0 .25cqw #000) drop-shadow(0 0 .9cqw rgba(0,0,0,.95)) drop-shadow(0 0 2cqw rgba(0,0,0,.9))}
 
 /* Símbolos no texto (autor, 31/10/2026): número em negrito + ícone do PSD pintado com a cor do texto; Soul verde/vermelho. */
 .rule-sym{display:inline-flex;align-items:center;gap:.06em;vertical-align:-.12em;font-weight:900;color:var(--psd-ink,currentColor);white-space:nowrap}

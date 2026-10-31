@@ -319,7 +319,13 @@ async function drawAwaken(x, y, w, h, n) {
   const gw = h * gem.width / gem.height, wh = h * 0.62, ww = wh * word.width / word.height, pad = h * 0.12, overlap = h * 0.25;
   const mid = gw + ww - overlap, side = Math.max(0, (w - mid) / 2 - pad), gx = x + (w - mid) / 2;
   if (line) for (const lx of [x, gx + mid + pad]) ctx.drawImage(line, lx, cy - h * 0.012, side, h * 0.024);
-  paint(false, 0.6, () => { ctx.drawImage(gem, gx, y, gw, h); ctx.drawImage(word, gx + gw - overlap, cy - wh / 2, ww, wh); });
+  // Leitura sobre arte clara (autor, 31/10/2026): halo escuro atrás do cabeçalho e sombra forte no gem e na palavra.
+  const halo = ctx.createRadialGradient(gx + mid / 2, cy, 0, gx + mid / 2, cy, mid * 0.62);
+  halo.addColorStop(0, 'rgba(0,0,0,.72)'); halo.addColorStop(0.6, 'rgba(0,0,0,.45)'); halo.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.save(); ctx.fillStyle = halo; ctx.translate(gx + mid / 2, cy); ctx.scale(1, h * 0.75 / mid); ctx.beginPath(); ctx.arc(0, 0, mid * 0.62, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+  const icons = () => { ctx.drawImage(gem, gx, y, gw, h); ctx.drawImage(word, gx + gw - overlap, cy - wh / 2, ww, wh); };
+  ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.95)'; ctx.shadowBlur = h * 0.18; icons(); icons(); ctx.restore();
+  paint(false, 0.6, icons);
   ctx.font = `italic 700 ${h * 0.52}px Futura, 'Century Gothic', sans-serif`;
   ctx.textAlign = 'center'; ctx.fillStyle = fac().color;
   paint(true, 0.9, () => ctx.fillText(String(n), gx + gw / 2, cy + h * 0.02), () => { ctx.lineWidth = h * 0.06; ctx.strokeText(String(n), gx + gw / 2, cy + h * 0.02); });
