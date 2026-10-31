@@ -628,6 +628,8 @@ function phaseBar() {
 }
 
 // Arte de cada item da cadeia (autor, 30/10/2026): carta de origem; Domain pelo catálogo; God pelo projeto do Forge.
+// Cor do brilho do lado de quem joga o turno, pelo God (autor, 31/10/2026): r, g, b.
+const GOD_GLOW = {'god-athena': '255, 205, 100', 'god-poseidon': '90, 180, 255', 'god-hades': '170, 100, 255', 'god-ares': '255, 90, 70', 'god-artemis': '170, 240, 210'};
 function chainArt(c) {
   const s = S(), uid = String(c.uid || '');
   const id = ctx.objects[uid]?.cardId || (uid.startsWith('domain:') ? s.domains?.[uid.slice(7)] : null);
@@ -801,7 +803,7 @@ function render() {
       ${godHud(them, 'opp')}${godHud(me, 'me')}
       ${handRow(me, false)}
       ${command()}
-      ${!s.setup && !s.victory ? `<div class="turn-glow turn-glow--${s.active === me ? 'me' : 'opp'}" aria-hidden="true"></div>` : ''}
+      ${!s.setup && !s.victory ? `<div class="turn-glow turn-glow--${s.active === me ? 'me' : 'opp'}" style="--glow:${GOD_GLOW[s.divine?.[s.active]?.god] || GOD_GLOW['god-athena']}" aria-hidden="true"></div>` : ''}
       ${s.window && !s.victory ? `<div class="priority-glow priority-glow--${s.window.priority === me ? 'me' : 'opp'}" aria-hidden="true"></div>` : ''}
       ${castSlot()}
     </div>${choiceBar()}`;

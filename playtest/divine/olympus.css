@@ -444,10 +444,10 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .priority-glow--opp { top: 0; background: linear-gradient(to bottom, rgba(255, 130, 90, .95), rgba(255, 100, 70, .45) 18%, rgba(255, 90, 60, .15) 45%, transparent); box-shadow: inset 0 4px 0 #ffd6c4, inset 0 14px 24px rgba(255, 150, 110, .9); mix-blend-mode: screen; }
 @keyframes prio-in { from { opacity: 0; } }
 @keyframes prio-pulse { 50% { opacity: .65; } }
-/* Dono do turno: rodapé do seu lado sempre aceso (autor, 31/10/2026). */
-.turn-glow { position: fixed; left: 0; right: 0; height: 12vh; z-index: 2; pointer-events: none; animation: prio-in .35s ease-out; }
-.turn-glow--me { bottom: 0; background: linear-gradient(to top, rgba(255, 205, 100, .8), rgba(255, 185, 70, .3) 35%, transparent); box-shadow: inset 0 -3px 0 rgba(255, 228, 160, .9); }
-.turn-glow--opp { top: 0; background: linear-gradient(to bottom, rgba(255, 205, 100, .8), rgba(255, 185, 70, .3) 35%, transparent); box-shadow: inset 0 3px 0 rgba(255, 228, 160, .9); }
+/* Dono do turno: o lado inteiro dele brilha, da borda até o meio da mesa, na cor do God (autor, 31/10/2026). */
+.turn-glow { position: fixed; left: 0; right: 0; height: 50vh; z-index: 2; pointer-events: none; animation: prio-in .5s ease-out; }
+.turn-glow--me { bottom: 0; background: linear-gradient(to top, rgba(var(--glow), .42), rgba(var(--glow), .16) 35%, rgba(var(--glow), .04) 75%, transparent); box-shadow: inset 0 -3px 0 rgba(var(--glow), .9); }
+.turn-glow--opp { top: 0; background: linear-gradient(to bottom, rgba(var(--glow), .42), rgba(var(--glow), .16) 35%, rgba(var(--glow), .04) 75%, transparent); box-shadow: inset 0 3px 0 rgba(var(--glow), .9); }
 .reduce-motion .priority-glow { animation: prio-in .35s ease-out; }
 
 /* Proporção do MTG Arena (autor, 28/10/2026): tudo medido pela altura da tela (--u ≈ 1vh numa tela 16:9), então a mesa
