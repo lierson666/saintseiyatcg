@@ -4,7 +4,7 @@ const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '
 const fmt = n => Number(n || 0).toLocaleString('en');
 const COPY_LIMIT = 3;
 // Booster (padrão MTG): arte de fundo + logo da edição embaixo, ambos editados no Card Forge (card-forge/boosters.html).
-export const PACK_ART = new URL('./assets/boosters/olympus.webp', import.meta.url).href;
+export const PACK_ART = new URL('./assets/boosters/olympus.webp?v=20261031-athena', import.meta.url).href;
 const PACK_LOGO = new URL('./assets/boosters/logo/olympus.webp', import.meta.url).href;
 const LOGO = new URL('../LOGO/logo-web.webp', import.meta.url).href;
 

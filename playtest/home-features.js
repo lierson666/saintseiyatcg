@@ -1,6 +1,6 @@
 // Home vitrine (autor, 31/10/2026, estilo MTG Arena): abaixo do carrossel, um bloco para cada feature do jogo,
 // com arte do próprio jogo e informação ao vivo do jogador. PLAY continua sendo a ação principal (dock à direita).
-import {PACK_ART} from './economy.js?v=20261031-live3';
+import {PACK_ART} from './economy.js?v=20261031-pack4';
 import {rankName, rankEmblem} from './rank.js?v=20261031-9';
 
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
