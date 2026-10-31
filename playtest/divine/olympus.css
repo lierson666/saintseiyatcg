@@ -1041,8 +1041,8 @@ body:has(.trigger-panel, .cast-slot) .command__clock { visibility: hidden; }
 
 /* Zoom da pilha (autor, 31/10/2026): canto superior direito, aparece ao entrar na pilha e sai 1s depois de resolver;
    o painel de decisão desce para baixo dele. */
-:root { --zoom-card: clamp(150px, 12vw, 200px); --zoom-h: calc(var(--zoom-card) * 1.4 + 40px); }
-#chain-zoom { display: none; position: fixed; z-index: 43; right: clamp(12px, 1.5vw, 24px); top: 12px; width: clamp(240px, 20vw, 300px); justify-items: center; gap: 6px; pointer-events: none; }
+:root { --zoom-card: clamp(225px, 18vw, 300px); --zoom-h: calc(var(--zoom-card) * 1.4 + 40px); } /* 1,5x (autor, 31/10/2026) */
+#chain-zoom { display: none; position: fixed; z-index: 43; right: 8px; top: 8px; width: calc(var(--zoom-card) + 60px); justify-items: end; /* travada no canto superior direito */ gap: 6px; pointer-events: none; }
 #chain-zoom.is-on { display: grid; animation: cast-in-right .32s cubic-bezier(.2, .8, .2, 1); }
 #chain-zoom.is-leaving { opacity: 0; transition: opacity .3s ease .9s; }
 .chain-zoom__stack { position: relative; display: grid; justify-items: center; }
