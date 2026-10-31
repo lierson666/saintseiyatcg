@@ -141,3 +141,12 @@ body :is(input, textarea, [contenteditable]) { -webkit-user-select: text; user-s
 .pile__card.is-used { opacity: .55; }
 .pile__card small { display: block; margin-top: 4px; font: 600 11px/1 system-ui, sans-serif; color: #c9c3dc; }
 @media (prefers-reduced-motion: reduce) { .cosmo.is-pulse { animation: none; } }
+
+/* Celular deitado (autor, 31/10/2026): mesma revelação e decisão centrais, carta ~70% da altura; a pilha vira contador. */
+@media (orientation: landscape) and (max-height: 500px) {
+  .cast-reveal__card .dcard, .trigger-panel.is-center .trigger-panel__card .dcard { --card-w: calc(70dvh / 1.4); }
+  .trigger-panel.is-center, body.has-chain-zoom .trigger-panel.is-center { left: 50%; right: auto; top: 50%; width: auto; max-width: 96vw; gap: 10px; }
+  .trigger-panel.is-center .trigger-panel__box { width: min(360px, 48vw); max-height: 90dvh; }
+  #chain-zoom .chain-zoom__stack { display: none; }
+  .trigger-panel.is-center .trigger-panel__actions button { flex: 1 1 auto; white-space: nowrap; }
+}

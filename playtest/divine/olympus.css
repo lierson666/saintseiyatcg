@@ -1126,3 +1126,32 @@ body.has-chain-zoom .command__clock { visibility: hidden; }
 .reduce-motion .godhud.is-dying > *, .reduce-motion .is-falling { animation-duration: 1ms; animation-delay: 0s; }
 .fallen-opp .godhud--opp, .fallen-me .godhud--me, .fallen-opp .field--opp .dcard, .fallen-me .field--me .dcard,
 .fallen-opp .lane--opp .lane__base, .fallen-me .lane--me .lane__base { visibility: hidden; }
+
+/* Conjuração e decisão estilo Arena (autor, 31/10/2026). 1) Revelação do oponente: carta grande no centro, mesa 55% escura,
+   cliques travados (clique pula). 2) Pilha: mini-cartas no canto superior direito, hover amplia. 3) Decisão: bloco central com a
+   carta grande à esquerda e as opções à direita; "View board" esconde o bloco para olhar a mesa. */
+.cast-reveal { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; cursor: pointer; }
+.cast-reveal__veil { position: absolute; inset: 0; background: rgba(4, 4, 14, .55); backdrop-filter: blur(2px); }
+.cast-reveal__card { position: relative; display: grid; justify-items: center; gap: 10px; }
+.cast-reveal__card .dcard { --card-w: calc(45dvh / 1.4); width: var(--card-w); height: calc(var(--card-w) * 1.4);
+  box-shadow: 0 0 0 2px rgb(var(--glow)), 0 0 60px rgba(var(--glow), .7), 0 24px 60px rgba(0, 0, 0, .7); }
+.cast-reveal__card small { padding: 4px 14px; border: 1px solid rgb(var(--glow)); border-radius: 999px; background: rgba(10, 12, 34, .92);
+  color: #f3ead6; font: 600 13px/1.3 system-ui, sans-serif; letter-spacing: .03em; }
+
+:root { --zoom-card: clamp(120px, 9vw, 160px); }
+#chain-zoom .chain-zoom__top { pointer-events: auto; transform-origin: top right; transition: transform .2s cubic-bezier(.2, .8, .2, 1); }
+#chain-zoom .chain-zoom__top:hover { transform: scale(1.9); z-index: 5; }
+
+.decision-veil--center { z-index: 44; background: rgba(4, 4, 14, .55); }
+.trigger-panel.is-center, body.has-chain-zoom .trigger-panel.is-center { left: 50%; right: auto; top: 50%; transform: translate(-50%, -50%); z-index: 45;
+  flex-direction: row; align-items: center; gap: clamp(16px, 2vw, 28px); width: auto; max-width: min(1000px, 94vw); max-height: 92dvh; animation: decision-in .3s cubic-bezier(.2, .8, .2, 1); }
+body.has-chain-zoom .trigger-panel.is-center .trigger-panel__card { display: grid; }
+.trigger-panel.is-center .trigger-panel__card .dcard { --card-w: calc(45dvh / 1.4); }
+.trigger-panel.is-center .trigger-panel__box { width: min(440px, 40vw); max-height: 86dvh; }
+@keyframes decision-in { from { opacity: 0; transform: translate(-50%, -46%) scale(.96); } }
+.decision__peek { margin-left: auto; }
+.peek-return { display: none; }
+body.is-peeking .decision-veil--center, body.is-peeking .trigger-panel.is-center { opacity: 0; pointer-events: none; }
+body.is-peeking:has(.trigger-panel.is-center) .peek-return { display: block; position: fixed; z-index: 46; left: 50%; bottom: 18px; transform: translateX(-50%);
+  min-height: 44px; padding: 0 22px; border: 1px solid var(--gold); border-radius: 999px; background: rgba(10, 12, 34, .94); color: var(--gold-hi); font: 600 14px/1 system-ui; }
+.reduce-motion .trigger-panel.is-center { animation: none; }

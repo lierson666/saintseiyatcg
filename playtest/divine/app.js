@@ -873,8 +873,56 @@ function drawZoom() {
   el.innerHTML = `<div class="chain-zoom__stack"><i class="cast-aura" aria-hidden="true"></i>${below.map((it, i) => `<div class="chain-zoom__under" style="--i:${below.length - i}" aria-hidden="true">${zoomFace(it)}</div>`).join('')}<div class="chain-zoom__top">${zoomFace(top)}</div></div>
     <small class="chain-zoom__label">${zoomResolving === top.uid ? 'Resolving' : `Player ${esc(top.controller)}`} · ${esc(t.sub || t.name)}${zoomItems.length > 1 ? ` <b>+${zoomItems.length - 1}</b>` : ''}</small>`;
 }
+// Revelação estilo Arena (autor, 31/10/2026): carta do oponente surge grande no centro (~45% da altura) com a mesa
+// escurecida, fica 1,2s (clique ou tecla pula) e voa para a pilha. As suas vão direto para a pilha.
+const revealQueue = [];
+let revealing = false;
+function revealCast(it) {
+  const me = online ? online.key : viewer();
+  if (!it.uid || it.controller === me || S().victory || revealQueue.some(x => x.uid === it.uid)) return;
+  revealQueue.push(it);
+  if (!revealing) nextReveal();
+}
+function nextReveal() {
+  const it = revealQueue.shift();
+  if (!it) { revealing = false; return; }
+  const face = ctx.objects[it.uid] && !it.ability ? cardFace(it.uid, {size: 'dcard--lg'}) : zoomFace(it);
+  if (!face) return nextReveal();
+  revealing = true;
+  const g = S().divine?.[it.controller]?.god || 'god-athena', t = chainLabel(it);
+  const el = document.createElement('div');
+  el.className = 'cast-reveal';
+  el.setAttribute('role', 'status');
+  el.innerHTML = `<div class="cast-reveal__veil"></div><div class="cast-reveal__card" data-godfx="${g.slice(4)}" style="--glow:${GOD_GLOW[g] || GOD_GLOW['god-athena']}"><i class="cast-aura" aria-hidden="true"></i>${face.replace('tabindex="0"', 'tabindex="-1"')}<small>Player ${esc(it.controller)} · ${esc(t.sub || t.name)}</small></div>`;
+  document.body.appendChild(el);
+  const card = el.querySelector('.cast-reveal__card'), a = anim('gatilho'), still = settings.reduceMotion || !a.ligada, v = a.velocidade || 1;
+  const from = $(`[data-god="${it.controller}"] .godhud__portrait`)?.getBoundingClientRect(), b = card.getBoundingClientRect();
+  if (still) card.animate([{opacity: 0}, {opacity: 1}], {duration: 150});
+  else {
+    const dx = from ? from.left + from.width / 2 - (b.left + b.width / 2) : 0, dy = from ? from.top + from.height / 2 - (b.top + b.height / 2) : 40;
+    card.animate([{transform: `translate(${dx}px, ${dy}px) scale(.18)`, opacity: 0, filter: 'brightness(2.4)'},
+      {transform: 'translate(0, -6px) scale(1.04)', opacity: 1, filter: 'brightness(1.6)', offset: .7}, {transform: 'none', filter: 'brightness(1)'}],
+      {duration: 600 / v, easing: 'cubic-bezier(.2,.8,.2,1)'});
+    sound('gatilho');
+  }
+  let done = false, timer = 0;
+  const leave = () => {
+    if (done) return;
+    done = true; clearTimeout(timer); removeEventListener('keydown', leave, true);
+    const to = $('#chain-zoom.is-on .chain-zoom__top')?.getBoundingClientRect(), c = card.getBoundingClientRect();
+    const end = () => { el.remove(); nextReveal(); };
+    el.querySelector('.cast-reveal__veil').animate([{opacity: 1}, {opacity: 0}], {duration: 260, fill: 'forwards'});
+    if (still || !to?.width) return void card.animate([{opacity: 1}, {opacity: 0}], {duration: 200, fill: 'forwards'}).finished.then(end);
+    const dx = to.left + to.width / 2 - (c.left + c.width / 2), dy = to.top + to.height / 2 - (c.top + c.height / 2);
+    card.animate([{transform: 'none'}, {transform: `translate(${dx}px, ${dy}px) scale(${to.width / c.width})`, opacity: .4}],
+      {duration: 380 / v, easing: 'cubic-bezier(.5,0,.2,1)', fill: 'forwards'}).finished.then(end);
+  };
+  timer = setTimeout(leave, (still ? 150 : 600 / v) + 1200);
+  el.addEventListener('pointerdown', leave);
+  addEventListener('keydown', leave, true);
+}
 function zoomEvent(e) {
-  const push = it => { if (it.uid && !zoomItems.some(x => x.uid === it.uid)) zoomItems.push(it); };
+  const push = it => { if (it.uid && !zoomItems.some(x => x.uid === it.uid)) { zoomItems.push(it); if (e.type !== 'resolve') revealCast(it); } };
   if (e.type === 'trigger') push({uid: e.uid, controller: e.player, ability: e.ability});
   else if (e.type === 'ability') push({uid: e.uid, controller: e.player, ability: e.name, target: e.target});
   else if (e.type === 'chain_add' || (e.type === 'card_played' && !e.from && !e.token)) push({uid: e.uid, controller: e.player});
@@ -1135,7 +1183,8 @@ overlayRoot.addEventListener('click', e => {
   if (btn.dataset.orderOk !== undefined) return confirmOrder();
   if (btn.dataset.orderUp) return moveOrder(+btn.dataset.orderUp, +btn.dataset.orderUp - 1);
   if (btn.dataset.orderDown) return moveOrder(+btn.dataset.orderDown, +btn.dataset.orderDown + 1);
-  if (btn.closest('.decision, .decision-pill, .trigger-panel, .pick-modal')) return decisionClick(btn);
+  if (btn.dataset.peek !== undefined) return void document.body.classList.toggle('is-peeking');
+  if (btn.closest('.decision, .decision-pill, .trigger-panel, .pick-modal')) { document.body.classList.remove('is-peeking'); return decisionClick(btn); }
   if (btn.dataset.mull) { marked.has(btn.dataset.mull) ? marked.delete(btn.dataset.mull) : marked.add(btn.dataset.mull); return render(); }
   if (btn.dataset.primary !== undefined) return primary();
   if (btn.dataset.new !== undefined) return online ? concedeOnline() : newMatch();
@@ -1805,13 +1854,15 @@ function sidePanel(req, t, fx) {
     <small class="decision__kicker">${esc(t.kicker)}</small><h3 id="trigger-title">${esc(t.title)}</h3>
     ${fx ? `<div class="decision__effect card-text">${fx.lines.map(l => `<p>${inlineMarkup(l)}</p>`).join('')}</div>` : ''}
     <p class="pick-modal__ask">${inlineMarkup(t.body)}</p>${opts}<div class="trigger-panel__actions">${actions}</div></section>`;
-  return `<aside class="trigger-panel ${target ? 'is-targeting' : ''}" role="dialog" aria-labelledby="trigger-title">
+  // Decisão estilo Arena (autor, 31/10/2026): bloco central (carta grande + opções) sobre a mesa escurecida; "View board" espia a mesa.
+  const peek = target ? '' : '<button class="ghost decision__peek" data-peek>View board</button>';
+  return `${target ? '' : '<div class="decision-veil decision-veil--center" aria-hidden="true"></div><button class="peek-return" data-peek>Back to decision</button>'}<aside class="trigger-panel ${target ? 'is-targeting' : 'is-center'}" role="dialog" aria-labelledby="trigger-title">
     ${face ? `<div class="trigger-panel__card" ${godFx(req.player)}><i class="cast-aura" aria-hidden="true"></i>${face}${target && face ? '<small>Drag to a target</small>' : ''}</div>` : ''}
     <div class="trigger-panel__box"><span class="decision__who">${esc(t.who)} decides</span><span class="decision__clock" data-decision-clock></span>
       <small class="decision__kicker">${esc(t.kicker)}</small><h3 id="trigger-title">${esc(t.title)}</h3>
       ${fx ? `<div class="decision__effect card-text">${fx.lines.map(l => `<p>${inlineMarkup(l)}</p>`).join('')}</div>` : ''}
       <p>${inlineMarkup(t.body)}</p>${t.note ? `<p class="decision__note">${esc(t.note)}</p>` : ''}
-      ${opts}<div class="trigger-panel__actions">${actions}</div>${queue}</div></aside>`;
+      ${opts}<div class="trigger-panel__actions">${actions}${peek}</div>${queue}</div></aside>`;
 }
 
 // Conjuração do oponente na pilha (autor, 31/10/2026): a carta aparece na coluna da direita, só leitura, com a seta até o alvo.
@@ -2027,7 +2078,7 @@ async function init() {
   setInterval(aiTick, 700);
   scene = await createScene($('#arena'), {quality: settings.quality, theme: settings.theme, reduceFlashes: settings.reduceFlashes});
   stage.classList.toggle('no-webgl', !scene);
-  window.__divine = {get state() { return S(); }, get ctx() { return ctx; }, get scene() { return scene; }, get clock() { return clock; }, present: (from) => present({}, null, from), settings}; // inspeção no QA
+  window.__divine = {get state() { return S(); }, get ctx() { return ctx; }, get scene() { return scene; }, get clock() { return clock; }, present: (from) => present({}, null, from), reveal: revealCast, settings}; // inspeção no QA
 }
 // Celular (autor, 30/10/2026): no primeiro toque, tela cheia e trava na horizontal onde o navegador deixa (Android);
 // no iPhone o aviso de girar (mobile.css) cobre o modo em pé.
