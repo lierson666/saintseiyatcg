@@ -57,6 +57,12 @@
       border: 1px solid #e6c36a88; color: var(--kv-gold-2); font: 600 13px var(--kv-title); }
     .card-slot { width: 100%; aspect-ratio: 63 / 88; container-type: inline-size; overflow: clip; }
     .card-slot > * { width: 100%; height: 100%; }
+    main .card-slot { cursor: zoom-in; transition: transform .2s; }
+    main .card-slot:hover { transform: translateY(-3px); }
+    .zoom { border: 0; padding: 0; background: transparent; overflow: visible; max-width: none; max-height: none; }
+    .zoom::backdrop { background: #05060ce6; backdrop-filter: blur(6px); }
+    .zoom__card { width: min(92vw, calc(88vh * 63 / 88)); cursor: zoom-out; }
+    .zoom__close { position: fixed; top: 16px; right: 16px; color: var(--kv-ink); }
 
     /* Tipos de carta */
     .types { display: grid; grid-template-columns: repeat(3, minmax(0, 260px)); gap: 28px clamp(20px, 4vw, 48px); }
@@ -321,6 +327,10 @@
     </main>
     <footer class="kv-footer"><span class="kv-stamp">Saint Seiya TCG · Alpha rules</span><span><a href="/privacy/">Privacy</a> · <a href="/terms/">Terms</a></span></footer>
   </div>
+  <dialog id="zoom" class="zoom" aria-label="Card zoom">
+    <button class="zoom__close kv-ghost" type="button" aria-label="Close">Close</button>
+    <div class="zoom__card card-slot"></div>
+  </dialog>
   <script type="module">
     import {mountKV} from '/shared/kv-sky.js?v=20261029-2';
     mountKV({anchor: 'h1 .kv-cosmo'});
@@ -331,7 +341,21 @@
       const [{renderLiveCard}, data] = await Promise.all([import('/shared/live-card.js?v=20261031-kw6'), fetch(ART + 'cards.json').then(r => r.json())]);
       const byId = new Map(data.cartas.map(c => [c.id, c]));
       const art = c => c?.ilustracao && !/-ref\./.test(c.ilustracao) ? ART + c.ilustracao : null; // nunca arte provisória (-ref)
-      for (const slot of slots) { const c = byId.get(slot.dataset.card); if (c) slot.innerHTML = renderLiveCard(c, {art: art(c)}); else slot.remove(); }
+      for (const slot of slots) {
+        const c = byId.get(slot.dataset.card);
+        if (!c) { slot.remove(); continue; }
+        slot.innerHTML = renderLiveCard(c, {art: art(c)});
+        // O live-card marca a arte como lazy; dentro do slot recortado o Chrome não chegava a buscar algumas (Ares, Artemis).
+        slot.querySelectorAll('img[loading="lazy"]').forEach(img => { img.loading = 'eager'; });
+        Object.assign(slot, {tabIndex: 0}); slot.setAttribute('role', 'button');
+        slot.setAttribute('aria-label', `Zoom: ${c.nome_exibicao_en || slot.dataset.card}`);
+      }
+      // Zoom: clicar (ou Enter/Espaço) abre a carta grande; clicar fora, Esc ou no botão fecha.
+      const zoom = document.getElementById('zoom'), zoomCard = zoom.querySelector('.zoom__card');
+      const open = slot => { zoomCard.innerHTML = slot.innerHTML; zoom.showModal(); };
+      document.addEventListener('click', e => { const slot = e.target.closest('.card-slot'); if (slot) open(slot); });
+      document.addEventListener('keydown', e => { const slot = e.target.closest?.('.card-slot'); if (slot && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); open(slot); } });
+      zoom.addEventListener('click', e => { if (e.target === zoom || e.target.closest('.zoom__close')) zoom.close(); });
       for (const tile of tiles) { const src = art(byId.get(tile.dataset.art)); if (src) tile.style.backgroundImage = `url("${src}")`; }
     } catch { slots.forEach(s => s.remove()); }
   </script>
