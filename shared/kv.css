@@ -14,7 +14,9 @@
 .kv-pointer { position: fixed; left: 0; top: 0; z-index: 9999; pointer-events: none; opacity: 0; transform: translate3d(-100px, -100px, 0);
   filter: drop-shadow(0 0 4px #ff8a2bcc) drop-shadow(0 0 12px #e6c36a88); transition: opacity .2s; will-change: transform; }
 @media (pointer: fine) {
-  html.cosmo-pointer, html.cosmo-pointer * { cursor: none !important; }
+  /* Janela modal (<dialog>) fica acima do ponteiro desenhado: aí volta o cursor do sistema, para o ponteiro nunca sumir. */
+  html.cosmo-pointer:not(:has(dialog:modal)), html.cosmo-pointer:not(:has(dialog:modal)) * { cursor: none !important; }
+  html:has(dialog:modal) .kv-pointer { opacity: 0 !important; }
   html.cosmo-pointer :is(input[type=text], input[type=email], input[type=password], input[type=search], textarea) { cursor: text !important; }
 }
 .kv-veil { position: fixed; inset: 0; z-index: 0; pointer-events: none; background: linear-gradient(90deg, #05060cd9 0%, #05060c80 42%, #05060c00 70%); }
