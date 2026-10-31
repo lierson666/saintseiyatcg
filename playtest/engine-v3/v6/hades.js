@@ -349,9 +349,9 @@ export default {
     enter: (s, c, key) => st => k.mill(st, key, 1),
     activate: {name: 'SOUL OFFERING', cost: 0, once: true, tap: false, run: (s, c, key, self) => { k.sacrifice(s, c, self); gain(s, key, 1); }},
   },
-  'hades-v6-221': { // River Styx Ferryman
+  'hades-v6-221': { // Styx Soul Herder (era River Styx Ferryman até 30/10/2026)
     enter: (s, c, key) => st => {
-      if (inTartarus(st, c, key, devCost(2)).length && pay(st, c, key, 'PRICE OF PASSAGE', 1)) toHandFrom(st, c, key, 'PRICE OF PASSAGE', devCost(2));
+      if (inTartarus(st, c, key, devCost(2)).length && pay(st, c, key, 'GATHER THE LOST', 1)) toHandFrom(st, c, key, 'GATHER THE LOST', devCost(2));
     },
     defeated: (s, c, key) => st => k.mill(st, key, 2),
   },

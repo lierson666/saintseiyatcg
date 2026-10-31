@@ -33,7 +33,8 @@
 .live-card--psd .lc-text--typeline{font-family:Futura,'Futura PT','Century Gothic',sans-serif;font-weight:700}
 .live-card--psd .lc-text--subtitle{font-family:Avenir,'Avenir Next',sans-serif;font-weight:300;text-shadow:0 0 .3cqw #000}
 .live-card--psd .lc-text--flavour{font-family:'ITC Avant Garde Gothic Pro','Century Gothic',Avenir,sans-serif;font-style:italic;text-shadow:0 0 .3cqw #000}
-.live-card.live-card--psd .lc-rules{position:absolute;margin:0;padding:0;overflow:hidden;text-align:center;line-height:1.18;color:var(--psd-ink);font-family:Avenir,'Avenir Next',sans-serif;font-weight:300;text-shadow:0 0 .25cqw #000,0 0 .5cqw #000;display:block;-webkit-line-clamp:unset}
+.live-card.live-card--psd .lc-rules{position:absolute;margin:0;padding:0;overflow:hidden;text-align:center;line-height:1.18;color:#f4efe6;font-family:Avenir,'Avenir Next',sans-serif;font-weight:300;text-shadow:0 0 .25cqw #000,0 0 .5cqw #000;display:block;-webkit-line-clamp:unset}
+/* Texto de regras em branco; só títulos de habilidade e keywords em negrito na cor do tema (autor, 31/10/2026). */
 .live-card--psd .lc-rules p{margin:0 0 .5em}
 .live-card--psd .lc-rules .rule-block{margin:0 0 .5em}
 .live-card--psd .lc-rules strong,.live-card--psd .lc-rules .rule-heading,.live-card--psd .lc-rules .live-card__keywords{font-weight:900;color:var(--psd-ink)}

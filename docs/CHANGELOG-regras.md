@@ -4,6 +4,28 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-31 — Cartas (visual) — selo EQUIP em armas e Relics; Blessing fica para o futuro
+
+- **Antes:** só as Armors mostravam o Equip; armas, Relics e acessórios que se prendem tinham Equip no catálogo (1 a 4), mas sem selo na carta.
+- **Depois:** o selo EQUIP do canto inferior esquerdo aparece em todo Equipment com Equip impresso. Equipment Global (sem Equip) continua sem selo. Nenhuma regra muda. A linha “Equip N — Any friendly Devotee.” sai do texto (o selo já mostra).
+- **Texto das cartas:** regras em branco; só títulos de habilidade e keywords em negrito na cor do tema, como nas Armors (autor, 31/10/2026).
+- **Motivo:** autor, 31/10/2026: os valores de Equip do catálogo são dele; equipamento deve mostrar o custo de Equip.
+- **Pendências:** **Blessing** (tipo novo, equivalente à Aura do Magic) fica para um set futuro, por decisão do autor; nada entra no guia por enquanto. Não publicado.
+
+## 2026-10-30 — Cartas — hades-v6-221 vira Styx Soul Herder
+
+- **Antes:** RIVER STYX FERRYMAN (“The Keeper of the Crossing”; Price of Passage, Final Crossing).
+- **Depois:** STYX SOUL HERDER (“Shepherd of Lost Souls”; Gather the Lost, Last Herding). Custo, stats e efeito iguais.
+- **Motivo:** autor, 30/10/2026: o barqueiro do Styx e Acheron Charon (189) são o mesmo personagem no cânone; a 189 fica.
+- **Pendências:** arte nova (a referência do barqueiro não vale). Diff aprovado em `docs/styx-soul-herder-2026-10-30/cards.diff.md`. Não publicado.
+
+## 2026-10-30 — Cartas (§64) — “until end of turn” → “until end of round”
+
+- **Antes:** 74 textos em 68 cartas diziam “until end of turn”.
+- **Depois:** “until end of round” (`data/cards.json`, só `habilidades_en`; diff aprovado em `docs/until-end-of-round-2026-10-30/cards.diff.md`).
+- **Motivo:** autor, 30/10/2026; aplica ao texto o que o §64 já definia. A engine já usa a duração do Round.
+- **Pendências:** nenhuma. “Once per turn” continua no texto e vale como uma vez por Round (§64). Não publicado.
+
 ## 2026-10-30 — §§61, 64 e engine — leituras confirmadas pelo autor (grilling)
 
 - **“Until end of turn” (§64):** o guia já dizia “until end of round” desde 29/10; a engine usava o fim do turno nas neutras V6. Agora dura até o fim do Round. Isso inclui 497 Last Moment Defense, que passa a proteger no turno do adversário.

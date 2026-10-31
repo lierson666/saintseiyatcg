@@ -1,4 +1,4 @@
-import {renderRules,inlineMarkup,presentationRules,ruleBlocksWithoutKeywords,blocksMarkup} from './card-text.js?v=20261030-armor5';
+import {renderRules,inlineMarkup,presentationRules,ruleBlocksWithoutKeywords,blocksMarkup} from './card-text.js?v=20261031-equip1';
 import {isArmor,isEquipment} from './card-model.js?v=20261024-4';
 import {renderPublishedCard,visualProject} from './layout-studio/runtime.js';
 import {printedEquipmentBonuses,signedBonus,armorBonusText} from './card-visual-values.js';
@@ -65,7 +65,7 @@ function renderPsdCard(card,{src,stage,hp,power,keywords,damage,rules,equipment,
       out+=gem(key,[el.x-p.w/2,el.y-p.h/2,p.w,p.h],card.custo,'','live-card__cost',el.size);
     }
     else if(el.kind==='symbol'&&P[`symbols/${f}`])out+=`<img class="lc-piece lc-symbol" src="${escape(PSD.src(`symbols/${f}`))}" alt="${escape(card.faccao)}" style="${pct(...el.rect)}">`;
-    else if(el.kind==='gem'&&(el.field==='equip'?equipment:has(values[el.field]))){
+    else if(el.kind==='gem'&&(el.field==='equip'?equipment&&has(equip):has(values[el.field]))){
       const v=el.field==='equip'?(equip??'?'):values[el.field];
       const stat=el.field==='power'?' data-stat="power"':el.field==='resistance'?` data-stat="hp"${damage?' class="is-wounded"':''}`:'';
       out+=gem(el.piece,at(el.piece,el),v,el.label,el.field==='equip'?'live-card__equip':`lc-gem--${el.field}`,undefined,stat);

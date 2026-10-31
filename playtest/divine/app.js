@@ -22,7 +22,7 @@ import {createAI} from './ai.js?v=5';
 import {findDeck} from '../deck-store.js';
 import {unlock, playMusic} from '../audio.js?v=20261030-telas';
 import {telas, anim, sound, imageUrl, applyColors, applyTexts} from '../telas.js?v=20261030-1';
-import {renderLiveCard} from '../../shared/live-card.js?v=20261030-armor5';
+import {renderLiveCard} from '../../shared/live-card.js?v=20261031-equip1';
 import {armorBonusText, printedEquipmentBonuses} from '../../shared/card-visual-values.js';
 
 const $ = (s, el = document) => el.querySelector(s), $$ = (s, el = document) => [...el.querySelectorAll(s)];

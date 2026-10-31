@@ -35,6 +35,7 @@ export function equipmentCostText(card){
   if(card.equipar_auto&&auto)result.push(`Auto-Equip — ${auto}.`);
   if(card.equipar_custo_ressonante!=null&&!card.equipar_auto)result.push(`Equip ${card.equipar_custo_ressonante} — ${owner||'Resonant Wearer'}.`);
   const other=card.equipar_custo_outros??card.equipar_custo;
-  if(other!=null)result.push(`Equip ${other} — ${card.equipar_auto||owner?'Other Devotees':'Any friendly Devotee'}.`);
+  // Equip para qualquer Devotee seu: só no selo EQUIP do canto inferior esquerdo (autor, 31/10/2026), sem repetir no texto.
+  if(other!=null&&(card.equipar_auto||owner))result.push(`Equip ${other} — Other Devotees.`);
   return result.join('\n')||null;
 }

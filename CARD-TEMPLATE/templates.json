@@ -94,6 +94,7 @@
         { "kind": "text", "field": "typeLine", "style": "typeline", "x": 744, "y": 1575, "size": 42, "maxW": 1000, "upper": true },
         { "kind": "rules", "rect": [221, 1640, 1046, 190], "size": 42 },
         { "kind": "piece", "piece": "athena/divider", "dy": 3 },
+        { "kind": "gem", "piece": "athena/gem_equip", "field": "equip", "label": "EQUIP", "size": 80, "_nota_pt": "Equip de arma/Relic que se prende (autor, 31/10/2026); só aparece com Equip impresso" },
         { "kind": "text", "field": "flavour", "style": "flavour", "x": 753, "y": 1893, "size": 42, "maxW": 1100 },
         { "kind": "rarity", "x": 744, "y": 2013, "h": 72 }
       ]
@@ -112,6 +113,7 @@
         { "kind": "text", "field": "typeLine", "style": "typeline", "x": 744, "y": 1515, "size": 42, "maxW": 1000, "upper": true },
         { "kind": "rules", "rect": [184, 1580, 1120, 250], "size": 42 },
         { "kind": "piece", "piece": "athena/divider", "dy": 3 },
+        { "kind": "gem", "piece": "athena/gem_equip", "field": "equip", "label": "EQUIP", "size": 80, "_nota_pt": "Equip de arma/Relic que se prende (autor, 31/10/2026); só aparece com Equip impresso" },
         { "kind": "text", "field": "flavour", "style": "flavour", "x": 753, "y": 1894, "size": 42, "maxW": 1100 },
         { "kind": "rarity", "x": 744, "y": 2013, "h": 72 }
       ]
