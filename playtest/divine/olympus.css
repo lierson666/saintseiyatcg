@@ -1000,3 +1000,7 @@ body:has(.trigger-panel, .cast-slot) .command__clock { visibility: hidden; }
 .aim-follow marker path { fill: rgb(var(--glow, 255, 207, 122)); }
 .aim-follow .aim-arrow__glow { stroke: rgba(var(--glow, 255, 207, 122), .35); }
 .aim-follow .aim-arrow__reticle { stroke: rgb(var(--glow, 255, 207, 122)); }
+/* Lista de escolha no painel da direita (Great Eclipse, descartes…): as cartas não encolhem; o box rola inteiro. */
+.trigger-panel__box { grid-auto-rows: max-content; }
+.trigger-panel__opts { max-height: none; overflow: visible; }
+.trigger-panel .decision__effect { max-height: 28dvh; overflow: auto; }
