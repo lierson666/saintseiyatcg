@@ -8,6 +8,9 @@ const path = require('path');
 const START = process.env.SSTCG_URL || 'https://saintseiyatcg.com/playtest/';
 const ORIGIN = new URL(START).origin;
 
+// Notebook com duas placas: o duelo usa a dedicada (no Mac só, com Apple silicon, não muda nada).
+app.commandLine.appendSwitch('force_high_performance_gpu');
+
 if (!app.requestSingleInstanceLock()) app.quit();
 
 let win;

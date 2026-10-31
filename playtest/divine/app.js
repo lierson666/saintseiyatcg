@@ -27,6 +27,7 @@ import {telas, anim, sound, imageUrl, applyColors, applyTexts} from '../telas.js
 import {renderLiveCard, renderCardText} from '../../shared/live-card.js?v=20261031-ed5';
 import {armorBonusText, printedEquipmentBonuses} from '../../shared/card-visual-values.js?v=20261031-kw6';
 import {lightArt} from '../../shared/light-art.js';
+import {Idiomorph} from './vendor/idiomorph-0.7.4.esm.js';
 
 const $ = (s, el = document) => el.querySelector(s), $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -846,7 +847,8 @@ function render() {
   document.body.classList.toggle("reduce-motion", !!settings.reduceMotion);
   const s = S(), me = viewer(), them = other(me);
   if (mode) { const step = mode.steps[mode.i]; mode.options = step?.pick ? candidates(step, mode.key).filter(u => !mode.picked.includes(u)) : []; }
-  boardRoot.innerHTML = `
+  // Morph em vez de innerHTML: só o que mudou é trocado; imagens, animações CSS e camadas da GPU sobrevivem ao render (medição de 31/10/2026).
+  Idiomorph.morph(boardRoot, `
     <div class="olympus ${mode ? 'is-choosing' : ''} ${pending ? 'is-deciding' : ''} ${losers(s).map(k => `fallen-${k === me ? 'me' : 'opp'}`).join(' ')}" ${pending && !pending.peek ? 'inert' : ''}>
       ${handRow(them, settings.hideOpponent || settings.ai === them)}
       <main class="arena-field">${fieldRow(them)}<div class="midline"></div>${fieldRow(me)}</main>
@@ -860,7 +862,7 @@ function render() {
       ${s.window && !s.victory ? `<div class="priority-glow priority-glow--${s.window.priority === me ? 'me' : 'opp'}" aria-hidden="true"></div>` : ''}
       ${castSlot()}
       ${losers(s).map(k => ruin(k, true)).join('')}
-    </div>${choiceBar()}`;
+    </div>${choiceBar()}`, {morphStyle: 'innerHTML'});
   if (drag?.ghost) showDragZones(drag.uid); // re-render no meio do arraste não apaga as zonas
   const focused = document.activeElement?.closest?.('.decision [data-focus]')?.dataset.focus;
   overlayRoot.innerHTML = overlays();
