@@ -5,7 +5,7 @@ import {readFileSync} from 'node:fs';
 import {loadCanon} from '../shared/canon-cards.js';
 import {canonIndex} from '../shared/deck-v3.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
-import {startTurn, endTurn, passAll, checkInvariants, NotSpecified} from '../playtest/engine-v3/core.js';
+import {startTurn, endTurn, passAll, checkInvariants, NotSpecified, createCore, pushTriggers, ownBatch, orderTriggers, RuleError} from '../playtest/engine-v3/core.js';
 import {declareStrike} from '../playtest/engine-v3/strike.js';
 import {playDevotee, playEquipment, playSpell, activate} from '../playtest/engine-v3/play.js';
 import {atkOf, hpOf, SPELLS, silence} from '../playtest/engine-v3/effects.js';
@@ -182,4 +182,20 @@ test('Poseidon 160/169: Devotee silenciado não ativa habilidades até o fim do 
   s.effects = s.effects.filter(e => e.kind !== 'noAbilities'); // fim do Round
   activate(s, ctx, 'A', healer, {target: shiryu}); passAll(s);
   assert.equal(s.units[shiryu].damage, 0);
+});
+
+// §56 (autor, 31/10/2026): APNAP; cada jogador ordena os próprios gatilhos simultâneos.
+test('§56: APNAP e ordenação dos próprios gatilhos', () => {
+  const s = createCore({soul: {A: 30, B: 30}, decks: {A: ['a', 'b', 'c'], B: ['d', 'e', 'f']}});
+  startTurn(s);
+  const log = [], t = (controller, id) => ({controller, uid: id, run: () => log.push(id)});
+  pushTriggers(s, [t('A', 'a1'), t('B', 'b1'), t('A', 'a2'), t('A', 'a3')]);
+  assert.deepEqual(ownBatch(s, 'A').map(x => x.uid), ['a3', 'a2', 'a1']);
+  assert.deepEqual(ownBatch(s, 'B').map(x => x.uid), ['b1']);
+  assert.throws(() => orderTriggers(s, 'B', [0]), RuleError);
+  assert.throws(() => orderTriggers(s, 'A', [0, 0, 1]), RuleError);
+  orderTriggers(s, 'A', [2, 0, 1]); // a1 primeiro, depois a3, depois a2
+  passAll(s);
+  assert.deepEqual(log, ['b1', 'a1', 'a3', 'a2'], 'o não ativo resolve antes; os do ativo na ordem escolhida');
+  assert.deepEqual(ownBatch(s, 'A'), []);
 });

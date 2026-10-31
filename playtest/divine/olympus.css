@@ -444,6 +444,10 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .priority-glow--opp { top: 0; background: linear-gradient(to bottom, rgba(255, 130, 90, .95), rgba(255, 100, 70, .45) 18%, rgba(255, 90, 60, .15) 45%, transparent); box-shadow: inset 0 4px 0 #ffd6c4, inset 0 14px 24px rgba(255, 150, 110, .9); mix-blend-mode: screen; }
 @keyframes prio-in { from { opacity: 0; } }
 @keyframes prio-pulse { 50% { opacity: .65; } }
+/* Dono do turno: rodapé do seu lado sempre aceso (autor, 31/10/2026). */
+.turn-glow { position: fixed; left: 0; right: 0; height: 12vh; z-index: 2; pointer-events: none; animation: prio-in .35s ease-out; }
+.turn-glow--me { bottom: 0; background: linear-gradient(to top, rgba(255, 205, 100, .8), rgba(255, 185, 70, .3) 35%, transparent); box-shadow: inset 0 -3px 0 rgba(255, 228, 160, .9); }
+.turn-glow--opp { top: 0; background: linear-gradient(to bottom, rgba(255, 205, 100, .8), rgba(255, 185, 70, .3) 35%, transparent); box-shadow: inset 0 3px 0 rgba(255, 228, 160, .9); }
 .reduce-motion .priority-glow { animation: prio-in .35s ease-out; }
 
 /* Proporção do MTG Arena (autor, 28/10/2026): tudo medido pela altura da tela (--u ≈ 1vh numa tela 16:9), então a mesa
@@ -871,3 +875,27 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 
 /* Fundo do duelo escolhido no Star Hill (playtest/telas.js): sobre o cenário 3D, abaixo do tabuleiro. */
 .tela-fundo { position: absolute; inset: 0; background: center / cover no-repeat; pointer-events: none; }
+
+/* Triggers (autor, 31/10/2026): painel único com fila, ordenação dos próprios gatilhos, Full control, faixa do oponente e número no alvo. */
+.trigger-panel__box { max-height: min(86dvh, 640px); overflow: auto; }
+.trigger-panel__box .card-text p strong { color: var(--gold-hi); }
+.trigger-panel__opts { justify-content: flex-start; max-height: min(40dvh, 320px); overflow: auto; }
+.trigger-panel__opts .decision__opt .dcard { --card-w: clamp(56px, 5.4vw, 80px); }
+.trigger-queue { margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(255, 210, 120, .25); }
+.trigger-queue small { font: 600 10px/1.4 system-ui; letter-spacing: .08em; text-transform: uppercase; color: var(--gold); }
+.trigger-queue ol { margin: 2px 0 0; padding-left: 18px; font-size: 12px; color: #d9cfe8; }
+.order { display: grid; gap: 6px; margin: 4px 0 0; padding: 0; list-style: none; }
+.order__item { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border: 1px solid rgba(255, 210, 120, .35); border-radius: 10px; background: rgba(30, 22, 60, .8); cursor: grab; }
+.order__item > b { flex: none; min-width: 20px; border-radius: 10px; font: 700 11px/20px system-ui; text-align: center; color: #1a1204; background: var(--gold); }
+.order__item:first-child { border-color: var(--gold-hi); box-shadow: 0 0 12px rgba(255, 210, 120, .35); }
+.order__move { display: flex; flex-direction: column; gap: 2px; margin-left: auto; }
+.order__move button { min-width: 44px; min-height: 22px; padding: 0; line-height: 1; }
+.command__full { align-self: center; padding: 4px 12px; border: 1px solid rgba(255, 210, 120, .4); border-radius: 12px; background: rgba(10, 12, 34, .7); color: var(--muted); font: 600 11px/1.4 system-ui; letter-spacing: .04em; cursor: pointer; }
+.command__full[aria-pressed="true"] { color: #1a1204; background: var(--gold); border-color: var(--gold-hi); }
+.trigger-note { position: fixed; z-index: 46; top: 14px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 10px; padding: 6px 14px 6px 6px; border: 1px solid #ff9a7a; border-radius: 12px; background: rgba(34, 12, 18, .92); color: #fbe6dc; pointer-events: none; animation: note-in 1.5s ease forwards; }
+.trigger-note i { width: 34px; height: 46px; border-radius: 4px; background: #120a20 center 18% / cover no-repeat; box-shadow: 0 0 0 1px #ff9a7a; }
+.trigger-note span { display: grid; } .trigger-note small { font: 600 10px/1.3 system-ui; letter-spacing: .08em; text-transform: uppercase; color: #ffb79f; } .trigger-note b { font: 600 14px/1.25 Georgia, serif; }
+@keyframes note-in { 0% { opacity: 0; transform: translate(-50%, -8px); } 12%, 85% { opacity: 1; transform: translate(-50%, 0); } 100% { opacity: 0; } }
+.float.fx-num { font: 800 24px/1 Georgia, serif; } .float.fx-num--up { color: #8fe6a0; } .float.fx-num--down { color: #ff8a6a; }
+.reduce-motion .trigger-note { animation: none; } .reduce-motion .float.fx-num { animation: num-fade 1s ease forwards; }
+@keyframes num-fade { 0%, 70% { opacity: 1; } 100% { opacity: 0; } }

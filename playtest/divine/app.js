@@ -5,7 +5,8 @@ import {loadCanon} from '../../shared/canon-cards.js';
 import {canonIndex} from '../../shared/deck-v3.js';
 import {addPreviewCards} from '../../shared/preview-cards.js';
 import {createMatch, mulligan} from '../engine-v3/match.js';
-import {startTurn, endTurn, pass, placeBase, spellCategory, runCheckpoint} from '../engine-v3/core.js';
+import {startTurn, endTurn, pass, placeBase, spellCategory, runCheckpoint, ownBatch} from '../engine-v3/core.js';
+import {inlineMarkup} from '../../shared/card-text.js?v=20261031-kw6';
 import {declareStrike, strikeTargets} from '../engine-v3/strike.js';
 import {playDevotee, playEquipment, playSpell, activate, reequip, duplicateCharacter, resonant, castCost, mixed} from '../engine-v3/play.js';
 import {atkOf, hpOf, keywordsOf, gearOf, isSaint, isBronze, ABILITIES} from '../engine-v3/effects.js';
@@ -17,7 +18,7 @@ import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudg
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
-import {createDirector} from './director.js?v=11';
+import {createDirector} from './director.js?v=12';
 import {createAI} from './ai.js?v=5';
 import {findDeck} from '../deck-store.js';
 import {unlock, playMusic} from '../audio.js?v=20261030-telas';
@@ -124,7 +125,11 @@ const spellCat = uid => {
   if (v6) return {category: v6.category, speed: v6.category === 'Moment' ? 'instant' : 'sorcery', v6: true};
   return spellCategory(Number(num(uid)));
 };
-const hasResponse = key => S().players[key].hand.some(u => info(u).kind === 'Spell' && spellCat(u)?.speed === 'instant' && !playableReason(key, u));
+// Gatilhos simultâneos seus (2+) ainda sem ordem confirmada seguram o auto-pass (§56, 31/10/2026).
+const ordered = new Set();
+const batchKey = key => `${S().lastBatch?.id}:${key}`;
+const mustOrder = key => key !== settings.ai && ownBatch(S(), key).length > 1 && !ordered.has(batchKey(key));
+const hasResponse = key => mustOrder(key) || S().players[key].hand.some(u => info(u).kind === 'Spell' && spellCat(u)?.speed === 'instant' && !playableReason(key, u));
 
 // ---------- Execução de ações ----------
 
@@ -149,7 +154,7 @@ const autoAdvance = () => advanceMatch(match, key => settings.autoPass && !hasRe
 // Mostra só os eventos ainda não animados (o replay repete o prefixo já visto, idêntico) e, se houver pergunta, abre o modal.
 async function present(r, run, from) {
   const s = S(), shown = pending && pending.shown <= s.events.length ? pending.shown : from;
-  pending = r.pending ? {...r, run, shown: s.events.length, picked: [], peek: sideReq(r.pending)} : null;
+  pending = r.pending ? {...r, run, shown: s.events.length, picked: [], peek: true} : null;
   if (!pending) casting = null;
   const events = s.events.slice(shown);
   seenEvents = s.events.length;
@@ -645,6 +650,7 @@ function command() {
     <div class="command__clock">${clockMarkup()}</div>
     ${phaseBar()}
     <button class="action-btn" data-primary ${s.victory || aiControls() ? 'disabled' : ''}><span>${esc(label)}</span><i aria-hidden="true">›</i></button>
+    <button class="command__full" data-full-control aria-pressed="${!settings.autoPass}" title="Full control: stop at every priority window, even with no possible response">Full control</button>
     <button class="command__more" data-toggle-tools aria-expanded="${toolsOpen}" aria-label="Game menu">⋯</button>
     <div class="command__tools${toolsOpen ? ' is-open' : ''}"><button data-toggle-log aria-pressed="${logOpen}">Log</button><button data-toggle-settings>Settings</button><a href="../">Menu</a></div>
   </aside>`;
@@ -698,6 +704,7 @@ function overlays() {
       <div class="row"><button class="primary-action" data-new>New match</button><a class="ghost" href="../">Main menu</a></div></div>`;
   }
   if (pending && !s.victory && pending.pending.player !== settings.ai) html += decisionModal();
+  else html += orderPanel();
   if (logOpen) html += `<div class="drawer log" aria-label="Match log"><h3>Match log</h3><button class="drawer__x" data-toggle-log aria-label="Close log">×</button>${logLines.slice(-150).reverse().map(l => `<p><small>R${l.round}</small> ${esc(l.text)}</p>`).join('')}</div>`;
   if (settingsOpen) {
     const sel = (key, opts) => `<select data-setting="${key}">${Object.entries(opts).map(([v, l]) => `<option value="${v}" ${settings[key] === v ? 'selected' : ''}>${l}</option>`).join('')}</select>`;
@@ -708,7 +715,7 @@ function overlays() {
       <label class="set"><span>God of Player B (new match)</span>${sel('godB', {'god-athena': 'Athena', 'god-poseidon': 'Poseidon · fixture deck'})}</label>
       <label class="set"><span>Opponent (new match)</span>${sel('ai', {B: 'AI plays Player B', none: 'Hot-seat (two humans)'})}</label>
       <label class="set"><span>Animation speed</span>${sel('speed', {fast: 'Fast', normal: 'Normal', cinematic: 'Cinematic'})}</label>
-      ${chk('autoPass', 'Auto-pass when you have no response')}${chk('skipDraws', 'Skip draw animations')}${chk('reduceMotion', 'Reduce motion')}${chk('reduceFlashes', 'Reduce flashes')}${chk('hideOpponent', 'Hide the other hand (hot-seat)')}${chk('timeouts', 'Apply clock timeouts')}
+      ${chk('autoPass', 'Auto-pass when you have no response (off = Full control)')}${chk('skipDraws', 'Skip draw animations')}${chk('reduceMotion', 'Reduce motion')}${chk('reduceFlashes', 'Reduce flashes')}${chk('hideOpponent', 'Hide the other hand (hot-seat)')}${chk('timeouts', 'Apply clock timeouts')}
       <label class="set"><span>Screen shake</span><input type="range" min="0" max="1.5" step=".25" value="${settings.shake}" data-setting="shake"></label>
       <p class="stats" data-stats>${scene ? 'WebGL on' : 'WebGL off · 2D fallback'}</p>
       <button data-toggle-settings>Close</button></div>`;
@@ -731,6 +738,7 @@ function render() {
       ${godHud(them, 'opp')}${godHud(me, 'me')}
       ${handRow(me, false)}
       ${command()}
+      ${!s.setup && !s.victory ? `<div class="turn-glow turn-glow--${s.active === me ? 'me' : 'opp'}" aria-hidden="true"></div>` : ''}
       ${s.window && !s.victory ? `<div class="priority-glow priority-glow--${s.window.priority === me ? 'me' : 'opp'}" aria-hidden="true"></div>` : ''}
       ${castSlot()}
     </div>${choiceBar()}`;
@@ -776,6 +784,16 @@ const ui = {
     el.style.left = `${at.x}px`; el.style.top = `${at.y}px`;
     document.body.append(el);
     setTimeout(() => el.remove(), 1300);
+  },
+  refRect: ref => { const r = String(ref || ''); return r.startsWith('god:') || r.startsWith('ultimate:') ? ui.godRect(r.split(':')[1]) : r.startsWith('domain:') ? ui.domainRect(r.slice(7)) : ui.rect(r); },
+  // Gatilho do oponente: faixa no topo por ~1,5 s com a carta pequena e o nome da habilidade; não trava a partida.
+  triggerNote(e) {
+    const c = {uid: e.uid, controller: e.player, ability: e.ability}, t = chainLabel(c), art = chainArt(c);
+    const el = document.createElement('div');
+    el.className = 'trigger-note'; el.setAttribute('role', 'status');
+    el.innerHTML = `${art ? `<i style="background-image:url('${art}')" aria-hidden="true"></i>` : ''}<span><small>Player ${esc(e.player)} · trigger</small><b>${esc(t.title)}</b></span>`;
+    stage.append(el);
+    setTimeout(() => el.remove(), 1500);
   },
   pulse(uid, cls, on) { $$(String(uid).startsWith('domain:') ? `[data-domain="${String(uid).slice(7)}"]` : `[data-uid="${uid}"]`).forEach(el => { if (on === false) el.classList.remove(cls); else { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); } }); },
   aim(attacker, target) {
@@ -826,7 +844,9 @@ const ui = {
     const t = {card_played: `${e.player} plays ${n(e.uid)}${e.bearer ? ` on ${n(e.bearer)}` : ''}.`, spell_resolved: `${n(e.uid)} resolves.`, ability: `${e.player} uses ${e.name}.`,
       strike_declared: `${e.player}: ${n(e.attacker)} strikes ${e.target?.kind === 'god' ? `God ${e.target.player}` : n(e.target?.uid)}${e.bypass ? ` past Guardian (${e.bypass}${e.bypass === 'Cheater' ? ' ignores Guardian against the God' : ' ignores Guardian'})` : ''}.`, strike_fizzled: `${n(e.attacker)}'s Strike fizzles: attacker or target left the battlefield.`, destroyed: `${n(e.uid)} is destroyed.`, unique_removed: `${n(e.uid)} goes to the Tartarus: only one version of a character (not destroyed).`,
       pass: `${e.player} passes.`, end_phase: `${e.player} ends the turn.`, equipped: `${n(e.uid)} equipped to ${n(e.bearer)}.`,
-      returned_to_hand: `${n(e.uid)} returns to ${e.player}'s hand (${e.ability}).`}[e.type];
+      returned_to_hand: `${n(e.uid)} returns to ${e.player}'s hand (${e.ability}).`,
+      trigger: `${e.player}: ${chainLabel({uid: e.uid, controller: e.player, ability: e.ability}).title} triggers.`,
+      resolved: `${chainLabel({uid: e.uid, controller: e.player, ability: e.ability}).title}: ${(e.results || []).map(r => `${r.text} on ${String(r.ref).startsWith('god:') ? `God ${r.ref.slice(4)}` : n(r.ref)}`).join(', ')}.`}[e.type];
     if (t) say(t);
   },
 };
@@ -854,6 +874,10 @@ function logEvent(e) {
 
 // ---------- Entrada ----------
 
+// Arrastar para ordenar os gatilhos (o ↑↓ cobre teclado e toque).
+overlayRoot.addEventListener('dragstart', e => { const li = e.target.closest?.('.order__item'); if (li) { e.dataTransfer.setData('text/plain', li.dataset.order); e.dataTransfer.effectAllowed = 'move'; } });
+overlayRoot.addEventListener('dragover', e => { if (e.target.closest?.('.order__item')) e.preventDefault(); });
+overlayRoot.addEventListener('drop', e => { const li = e.target.closest?.('.order__item'); if (!li || !orderDraft) return; e.preventDefault(); moveOrder(+e.dataTransfer.getData('text/plain'), +li.dataset.order); });
 boardRoot.addEventListener('click', e => {
   if (Date.now() < noClickUntil) return; // fim de uma seta de ataque, não um clique
   if (director.busy) return director.skip();
@@ -868,6 +892,7 @@ boardRoot.addEventListener('click', e => {
   if (btn?.dataset.confirm) { mode.choice[mode.steps[mode.i].key] = btn.dataset.confirm === 'yes'; mode.i++; return advance(); }
   if (btn?.dataset.done !== undefined) return choose(null);
   if (btn?.dataset.toggleTools !== undefined) { toolsOpen = !toolsOpen; return render(); }
+  if (btn?.dataset.fullControl !== undefined) { settings.autoPass = !settings.autoPass; saveSettings(); return render(); }
   if (btn?.dataset.toggleLog !== undefined) { logOpen = !logOpen; toolsOpen = false; return render(); }
   if (btn?.dataset.toggleSettings !== undefined) { settingsOpen = !settingsOpen; toolsOpen = false; return render(); }
   const pile = t.closest('[data-pile]');
@@ -953,6 +978,9 @@ function fieldMenu(uid, el) {
 overlayRoot.addEventListener('click', e => {
   const btn = e.target.closest('button');
   if (!btn) return;
+  if (btn.dataset.orderOk !== undefined) return confirmOrder();
+  if (btn.dataset.orderUp) return moveOrder(+btn.dataset.orderUp, +btn.dataset.orderUp - 1);
+  if (btn.dataset.orderDown) return moveOrder(+btn.dataset.orderDown, +btn.dataset.orderDown + 1);
   if (btn.closest('.decision, .decision-pill, .trigger-panel')) return decisionClick(btn);
   if (btn.dataset.mull) { marked.has(btn.dataset.mull) ? marked.delete(btn.dataset.mull) : marked.add(btn.dataset.mull); return render(); }
   if (btn.dataset.primary !== undefined) return primary();
@@ -1505,7 +1533,7 @@ function abilityEffect(name) {
 const optName = uid => (String(uid).startsWith('god:') ? `${cards.get(S().gods[uid.slice(4)]).name} (Player ${uid.slice(4)})` : pending?.pending.choose === 'mode' ? String(uid) : info(uid).name);
 function decisionModal() {
   const req = pending.pending, t = decisionText(req), fx = abilityEffect(req.ability);
-  if (pending.peek && sideReq(req)) return sidePanel(req, t, fx);
+  return sidePanel(req, t, fx); // painel lateral único (autor, 31/10/2026); o modal abaixo ficou sem uso
   if (pending.peek) return `<button class="decision-pill" data-dec="peek" data-focus="peek">Back to decision · ${esc(t.title)} <kbd>Esc</kbd></button>`;
   const timeout = settings.timeouts ? `<small class="decision__timeout">On timeout: ${req.kind === 'optional' ? 'declined' : 'automatic choice, lowest stable ID'}</small>` : '';
   let body;
@@ -1570,17 +1598,55 @@ function sidePanel(req, t, fx) {
   const alt = !src && !f && (req.uid && ctx.objects[req.uid] ? req.uid : null), g = !src && !f && !alt && forgeGod(S().gods[req.player]);
   const live = c => `<div class="dcard dcard--lg art-full">${renderLiveCard(c, {art: c.ilustracao && FORGE_ART + c.ilustracao})}</div>`;
   const face = src ? cardFace(src, {size: 'dcard--lg'}) : f ? live(f) : alt ? cardFace(alt, {size: 'dcard--lg'}) : g ? live(g) : '';
-  const target = targetReq(req);
-  const actions = req.kind === 'optional'
-    ? `<button class="primary-action" data-dec="yes" data-focus="yes">${esc(t.yes)}</button><button class="ghost" data-dec="no" data-focus="no">${esc(t.no)}</button>`
-    : `<button class="ghost" data-dec="peek" data-focus="peek">List <kbd>Esc</kbd></button>${casting && !online ? '<button class="ghost" data-dec="cancel">Cancel</button>' : ''}`;
+  const target = targetReq(req), waiting = online && req.player !== online.key;
+  const cancel = casting && !online ? '<button class="ghost" data-dec="cancel">Cancel</button>' : '';
+  const picked = pending.picked;
+  // Escolha fora do tabuleiro (descartar, manter, modo…): as opções em lista dentro do painel.
+  const opts = req.kind === 'choice' && !target ? `<div class="decision__opts trigger-panel__opts" role="group" aria-label="Options">${req.options.map((uid, i) => `<button class="decision__opt ${picked.includes(uid) ? 'picked' : ''}" data-dec="opt" data-opt="${esc(uid)}" data-focus="opt:${esc(uid)}" aria-pressed="${picked.includes(uid)}" aria-label="${esc(optName(uid))}${i < 9 ? `, key ${i + 1}` : ''}">${String(uid).startsWith('god:') || req.choose === 'mode' || !ctx.objects[uid] ? `<span class="dcard decision__god">${esc(optName(uid))}</span>` : cardFace(uid, {size: 'dcard--sm'}).replace('tabindex="0"', 'tabindex="-1"')}${i < 9 ? `<kbd>${i + 1}</kbd>` : ''}</button>`).join('')}</div>` : '';
+  const actions = waiting ? `<p class="decision__note">Waiting for Player ${req.player}…</p>`
+    : req.kind === 'optional' ? `<button class="primary-action" data-dec="yes" data-focus="yes">${esc(t.yes)}</button><button class="ghost" data-dec="no" data-focus="no">${esc(t.no)}</button>`
+    : opts ? `<button class="primary-action" data-dec="confirm" data-focus="confirm" ${picked.length === req.count ? '' : 'disabled'}>Confirm · ${picked.length}/${req.count}</button>${cancel}` : cancel;
+  // Fila: o item que está resolvendo e os que vêm depois (topo da cadeia primeiro).
+  const next = [...S().chain].reverse(), queue = next.length ? `<div class="trigger-queue"><small>Trigger 1 of ${next.length + 1}</small><ol>${next.slice(0, 4).map(c => `<li>${esc(chainLabel(c).title)}</li>`).join('')}${next.length > 4 ? `<li>+${next.length - 4} more</li>` : ''}</ol></div>` : '';
   return `<aside class="trigger-panel ${target ? 'is-targeting' : ''}" role="dialog" aria-labelledby="trigger-title">
     ${face ? `<div class="trigger-panel__card">${face}${target && face ? '<small>Drag to a target</small>' : ''}</div>` : ''}
     <div class="trigger-panel__box"><span class="decision__who">${esc(t.who)} decides</span><span class="decision__clock" data-decision-clock></span>
       <small class="decision__kicker">${esc(t.kicker)}</small><h3 id="trigger-title">${esc(t.title)}</h3>
-      ${fx ? `<div class="decision__effect">${fx.lines.map(l => `<p>${esc(l)}</p>`).join('')}</div>` : ''}
-      <p>${esc(t.body)}</p>${t.note ? `<p class="decision__note">${esc(t.note)}</p>` : ''}
-      <div class="trigger-panel__actions">${actions}</div></div></aside>`;
+      ${fx ? `<div class="decision__effect card-text">${fx.lines.map(l => `<p>${inlineMarkup(l)}</p>`).join('')}</div>` : ''}
+      <p>${inlineMarkup(t.body)}</p>${t.note ? `<p class="decision__note">${esc(t.note)}</p>` : ''}
+      ${opts}<div class="trigger-panel__actions">${actions}</div>${queue}</div></aside>`;
+}
+
+// Gatilhos simultâneos do jogador (2+): ele arrasta (ou usa ↑↓) para escolher a ordem antes de passar (§56, APNAP).
+let orderDraft = null;
+function orderPanel() {
+  const s = S(), key = s.window && !s.victory && !pending ? [s.window.priority, ...s.order].find(mustOrder) : null;
+  if (!key) { orderDraft = null; return ''; }
+  const items = ownBatch(s, key);
+  if (orderDraft?.batch !== batchKey(key)) orderDraft = {batch: batchKey(key), key, order: items.map((_, i) => i)};
+  const row = (i, at) => { const t = chainLabel(items[i]), art = chainArt(items[i]); return `<li class="order__item" draggable="true" data-order="${at}">
+      <b>${at + 1}</b>${art ? `<i class="chain__art" style="background-image:url('${art}')" aria-hidden="true"></i>` : ''}<div class="chain__body"><strong>${esc(t.title)}</strong>${t.text ? `<em>${inlineMarkup(t.text)}</em>` : ''}</div>
+      <span class="order__move"><button class="ghost" data-order-up="${at}" aria-label="Move up" ${at ? '' : 'disabled'}>↑</button><button class="ghost" data-order-down="${at}" aria-label="Move down" ${at < items.length - 1 ? '' : 'disabled'}>↓</button></span></li>`; };
+  return `<aside class="trigger-panel trigger-panel--order" role="dialog" aria-labelledby="order-title">
+    <div class="trigger-panel__box"><span class="decision__who">Player ${key} decides</span>
+      <small class="decision__kicker">${items.length} triggers at the same time</small><h3 id="order-title">Order your triggers</h3>
+      <p>Drag to choose the order. Trigger 1 resolves first.</p>
+      <ol class="order" aria-label="Resolution order">${orderDraft.order.map(row).join('')}</ol>
+      <div class="trigger-panel__actions"><button class="primary-action" data-order-ok data-focus="order">Confirm order</button></div></div></aside>`;
+}
+function moveOrder(from, to) {
+  const o = orderDraft.order;
+  if (to < 0 || to >= o.length || from === to) return;
+  o.splice(to, 0, o.splice(from, 1)[0]);
+  render();
+}
+function confirmOrder() {
+  const {key, order} = orderDraft;
+  ordered.add(orderDraft.batch);
+  orderDraft = null;
+  if (order.some((v, i) => v !== i)) return act({type: 'orderTriggers', key, choice: {order}});
+  if (!online) return act(() => {}); // ordem mantida: só segue o auto-pass
+  render();
 }
 
 function togglePick(uid) {
@@ -1601,12 +1667,10 @@ function decisionClick(btn) {
   if (a === 'opt') return togglePick(btn.dataset.opt);
   if (a === 'confirm' && pending.picked.length === req.count) return reply({value: req.multiple ? [...pending.picked] : pending.picked[0]});
 }
-// Teclado: Esc alterna View board; 1–9 marcam opções; setas andam entre opções; Tab fica preso no modal.
+// Teclado: 1–9 marcam opções; setas andam entre opções; Tab fica preso no modal.
 function decisionKey(e) {
-  if (e.code === 'Escape') { e.preventDefault(); pending.peek = !pending.peek; render(); return focusDecision(); }
   if (e.key === 'l' || e.key === 'L') { logOpen = !logOpen; return render(); }
-  if (pending.peek) return;
-  const box = $('.decision'), focusables = box ? $$('button:not([disabled])', box) : [];
+  const box = $('.decision, .trigger-panel'), focusables = box ? $$('button:not([disabled])', box) : [];
   if (/^[1-9]$/.test(e.key) && pending.pending.options) { const uid = pending.pending.options[Number(e.key) - 1]; if (uid) { e.preventDefault(); togglePick(uid); $(`.decision [data-focus="opt:${CSS.escape(uid)}"]`)?.focus(); } return; }
   if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
     const opts = $$('.decision__opt', box), i = opts.indexOf(document.activeElement);
@@ -1667,8 +1731,7 @@ async function applyView(view) {
   match = {state: revive(view.state), objects: view.objects, attached: revive(view.attached), ending: view.ending};
   ctx = {cards, objects: match.objects, attached: match.attached};
   const s = S(), req = s.pending;
-  pending = req ? {pending: req, picked: [], peek: false, shown: s.events.length} : null;
-  if (pending && req.player !== view.you) pending = {pending: req, picked: [], peek: true, shown: s.events.length};
+  pending = req ? {pending: req, picked: [], peek: true, shown: s.events.length} : null;
   mode = null;
   if (first) { clock = createClock(s.order); seenEvents = s.events.length; watchEvents.seen = 0; return render(); }
   const events = s.events.slice(from);

@@ -87,7 +87,13 @@
   .pile__box h3 { font-size: 18px; }
   .pile__grid { grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: 8px; }
   /* Painéis laterais (gatilho, cadeia) ocupam menos. */
-  .trigger-panel { max-width: 46vw; left: calc(12px + var(--sl)); }
+  /* Celular deitado (autor, 31/10/2026): painel até 38% da largura, carta menor, texto rolando, botões de 44 px; o campo segue clicável. */
+  .trigger-panel { max-width: 38vw; left: calc(8px + var(--sl)); gap: 8px; }
+  .trigger-panel__card .dcard { --card-w: clamp(84px, 11vw, 120px); }
+  .trigger-panel__box { max-height: calc(100dvh - 24px); padding: 10px 12px; font-size: 12px; }
+  .trigger-panel__box h3 { font-size: 15px; }
+  .trigger-panel__actions button, .order__move button, .command__full { min-height: 44px; }
+  .trigger-panel__actions button { min-width: 0; flex: 1; }
   .inspector { left: calc(10px + var(--sl)); max-height: calc(100dvh - 16px); }
   .cast-slot { left: calc(12px + var(--sl) + var(--rail-w)); }
   .banner { right: calc(var(--cmd-w) + var(--sr)); }

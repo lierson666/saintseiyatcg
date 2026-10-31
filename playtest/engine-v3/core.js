@@ -264,10 +264,36 @@ export function assertIdle(state) {
 
 // D187: gatilhos simultâneos entram em APNAP (ativo primeiro), então o não ativo resolve primeiro.
 // `triggers`: [{controller, run(state)}], na ordem que cada controlador escolheu.
+// Cada lote ganha um id; o controlador pode reordenar os próprios itens dele enquanto todos seguem na cadeia (§56, 31/10/2026).
 export function pushTriggers(state, triggers, onClose) {
   if (!triggers.length) return;
-  for (const key of [state.active, other(state, state.active)]) state.chain.push(...triggers.filter(t => t.controller === key));
+  const batch = state.batchSeq = (state.batchSeq || 0) + 1;
+  state.lastBatch = {id: batch};
+  for (const key of [state.active, other(state, state.active)]) {
+    const mine = triggers.filter(t => t.controller === key).map(t => ({...t, batch}));
+    state.lastBatch[key] = mine.length;
+    state.chain.push(...mine);
+    for (const m of mine) emit(state, 'trigger', {player: key, uid: m.uid, ability: m.ability});
+  }
   if (state.window) reopen(state); else openWindow(state, onClose);
+}
+
+// Itens do último lote de `key`, na ordem de resolução (o primeiro resolve antes). Vazio se algum já saiu da cadeia.
+export function ownBatch(state, key) {
+  const b = state.lastBatch;
+  if (!b || !state.window) return [];
+  const seg = state.chain.filter(t => t.batch === b.id && t.controller === key);
+  return seg.length === b[key] ? seg.reverse() : [];
+}
+
+// `order`: índices de ownBatch na nova ordem de resolução.
+export function orderTriggers(state, key, order) {
+  const seg = ownBatch(state, key);
+  if (seg.length < 2) throw new RuleError('P06', 'não há gatilhos simultâneos seus para ordenar');
+  if (order.length !== seg.length || [...order].sort((a, b) => a - b).some((v, i) => v !== i)) throw new RuleError('alvo', 'ordem inválida');
+  const start = state.chain.indexOf(seg[seg.length - 1]);
+  state.chain.splice(start, seg.length, ...order.map(i => seg[i]).reverse());
+  emit(state, 'triggers_ordered', {player: key});
 }
 
 // Instant ou habilidade reativa (`speed: 'instant'`). Fora de janela, só o ativo, e isso abre a janela (Moment jogado).
@@ -293,8 +319,11 @@ export function pass(state, key) {
   if (++w.passes < 2) return undefined;
   if (state.chain.length) {
     const top = state.chain.pop();
-    emit(state, 'resolve', {player: top.controller, uid: top.uid});
+    emit(state, 'resolve', {player: top.controller, uid: top.uid, ability: top.ability});
+    const before = glance(state);
     top.run(state);
+    const results = outcome(state, before);
+    if (results.length) emit(state, 'resolved', {player: top.controller, uid: top.uid, ability: top.ability, results});
     if (state.victory) { state.window = null; state.chain = []; return state.victory; } // D52
     runCheckpoint(state);
     if (state.chain.length) { reopen(state); return undefined; }
@@ -304,6 +333,21 @@ export function pass(state, key) {
   const result = w.onClose(state);
   runCheckpoint(state);
   return result;
+}
+
+// Resumo do que um item da cadeia mudou, para a tela mostrar o número no alvo (+2/+2, −3, Draw 1, Soul −2).
+const glance = state => ({effects: state.effects.length, damage: Object.fromEntries(Object.entries(state.units).map(([u, x]) => [u, x.damage || 0])),
+  hand: Object.fromEntries(state.order.map(k => [k, state.players[k].hand.length])), soul: Object.fromEntries(state.order.map(k => [k, state.players[k].soul]))});
+function outcome(state, b) {
+  const out = [], sign = n => (n > 0 ? `+${n}` : `−${-n}`);
+  for (const e of state.effects.slice(b.effects)) if (e.kind === 'mod' && (e.atk || e.hp)) out.push({ref: e.target, text: `${sign(e.atk || 0)}/${sign(e.hp || 0)}`, trend: (e.atk || 0) + (e.hp || 0) < 0 ? 'down' : 'up'});
+  for (const [u, x] of Object.entries(state.units)) { const d = (x.damage || 0) - (b.damage[u] || 0); if (d > 0) out.push({ref: u, text: sign(-d), trend: 'down'}); }
+  for (const k of state.order) {
+    const h = state.players[k].hand.length - b.hand[k], s = state.players[k].soul - b.soul[k];
+    if (h > 0) out.push({ref: `god:${k}`, text: `Draw ${h}`, trend: 'up'});
+    if (s) out.push({ref: `god:${k}`, text: `Soul ${sign(s)}`, trend: s > 0 ? 'up' : 'down'});
+  }
+  return out;
 }
 
 // Os dois passam até não haver janela; devolve o resultado do último passo (vitória ou retorno do onClose).

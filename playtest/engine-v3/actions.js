@@ -1,6 +1,6 @@
 // Ações serializáveis da partida (docs/duelo-online.md, passo 1). A tela local e o arena-server aplicam a mesma ação
 // com a mesma função da engine: a tela manda dados ({type, key, uid, choice…}), nunca uma função.
-import {startTurn, endTurn, pass, placeBase, RuleError} from './core.js';
+import {startTurn, endTurn, pass, placeBase, orderTriggers, RuleError} from './core.js';
 import {declareStrike, mustStrike} from './strike.js';
 import {playDevotee, playEquipment, playSpell, activate, reequip} from './play.js';
 import {announceExclamation, removeJudgment, announceGreatFlood, announceGreatEclipse, announceObliteration, activateBloodlust, placeBaseMoonHarvest, announceMoonAwakening} from './gods.js';
@@ -29,6 +29,7 @@ export function applyAction(match, ctx, action) {
     case 'activate': return activate(s, ctx, key, uid, choice);
     case 'reequip': return reequip(s, ctx, key, uid, choice.bearer);
     case 'pass': return pass(s, key);
+    case 'orderTriggers': return orderTriggers(s, key, choice.order || []);
     case 'endTurn':
       if (s.active !== key) throw new RuleError('D1', 'END TURN fora do próprio turno');
       if (mustStrike(s, ctx, key).length) throw new RuleError('V6', 'Uncontrolled Rage: este Devotee precisa declarar Strike antes do END TURN');

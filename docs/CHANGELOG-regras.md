@@ -4,6 +4,14 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-31 — §56 — Gatilhos simultâneos (APNAP) e interface de triggers
+
+- **Antes:** o guia não dizia a ordem de gatilhos simultâneos; a engine empilhava os do jogador ativo primeiro, na ordem em que disparavam.
+- **Depois:** APNAP como no Magic: os do jogador ativo entram primeiro (resolvem por último); cada jogador ordena os próprios antes de qualquer passe.
+- **Motivo:** autor, 31/10/2026 (grilling da interface de triggers).
+- **UI decidida:** painel lateral único para decisões e triggers, fila “Trigger N of M” com ordenação, auto-pass sem resposta possível + “Full control”, linha de energia e número no alvo ao resolver, faixa não bloqueante para triggers do oponente, painel até 38% da largura no celular, brilho do rodapé do dono do turno.
+- **Pendências:** implementado no playtest local, não publicado. O duelo online só aceita a ordenação depois que o arena-server receber a engine nova (ação `orderTriggers`).
+
 ## 2026-10-31 — §54 e cartas — Miracle vira Technique
 
 - **Antes:** 15 Spells da Athena com subtipo “Miracle” (o motor já as jogava como Technique).

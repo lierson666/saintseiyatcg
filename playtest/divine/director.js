@@ -274,7 +274,19 @@ export function createDirector({ui, getFx, settings}) {
     async soul_gained(e) { if (e.amount) { ui.setSoul(e.player, e.soul); ui.float(ui.center(ui.godRect(e.player)), `+${e.amount} Soul`, 'gain'); } },
     async victory(e) { sound(e.draw ? 'derrota' : ui.isViewer(e.winner) ? 'vitoria' : 'derrota'); await ui.banner(e.draw ? 'Draw' : ui.isViewer(e.winner) ? 'Victory' : `Player ${e.winner} wins`, e.winner, t(1200)); },
     async window_open() {}, async window_close() {}, async pass(e) { ui.log(e); }, // Gatilho entrando na cadeia e resolvendo: a carta de origem pisca e cresce (estilo Arena), nada genérico.
-    async chain_add(e) { ui.pulse(e.uid, 'trigger-pop'); await pause(240); }, async resolve(e) { ui.pulse(e.uid, 'trigger-pop'); await pause(300); }, async end_phase(e) { ui.log(e); },
+    async chain_add(e) { ui.pulse(e.uid, 'trigger-pop'); await pause(240); },
+    async trigger(e) { ui.pulse(e.uid, 'trigger-pop'); ui.log(e); if (!ui.isViewer(e.player)) ui.triggerNote(e); await pause(240); },
+    // Ao resolver: linha de energia da fonte até cada alvo e o número no alvo (~1 s); com Reduce motion fica só o número.
+    async resolved(e) {
+      const from = ui.center(ui.refRect(e.uid));
+      for (const r of e.results) {
+        const to = ui.center(ui.refRect(r.ref));
+        if (from && to && from !== to) fx()?.beam(from, to, {color: r.trend === 'down' ? '#ff8a6a' : '#8fe6a0', width: 10, duration: .3});
+        ui.float(to, r.text, `fx-num fx-num--${r.trend}`);
+      }
+      ui.log(e);
+      await pause(360);
+    }, async resolve(e) { ui.pulse(e.uid, 'trigger-pop'); await pause(300); }, async end_phase(e) { ui.log(e); },
   };
 
   return {
