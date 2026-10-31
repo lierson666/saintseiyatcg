@@ -30,7 +30,7 @@
 #chain-zoom[data-side="opp"] { --side: 255, 96, 80; }
 .cz-stack { position: relative; width: calc(var(--cz-w) + var(--n) * 30px); height: calc(var(--cz-w) * 1.4 + var(--n) * 8px); perspective: 1400px; }
 .cz-item { position: absolute; left: 0; bottom: 0; width: var(--cz-w); border-radius: 10px; pointer-events: auto; cursor: zoom-in;
-  left: auto; right: 0; transform: translate(calc(var(--d) * -30px), calc(var(--d) * -8px)) rotateY(calc(var(--d) * 8deg - 6deg)); z-index: calc(10 - var(--d)); filter: brightness(calc(1 - var(--d) * .18));
+  left: auto; right: 0; transform: translate(calc(var(--d) * -30px), calc(var(--d) * -8px)) rotateY(calc(var(--d) * 8deg)); z-index: calc(10 - var(--d)); filter: brightness(calc(1 - var(--d) * .18));
   transform-origin: right center; transition: transform .22s cubic-bezier(.2, .8, .2, 1), filter .22s; }
 .cz-item .dcard { --card-w: var(--cz-w); width: var(--cz-w); height: calc(var(--cz-w) * 1.4); }
 .cz-item.is-top > .dcard, .cz-item.is-top > .ability-card { box-shadow: 0 0 0 2px rgb(var(--side)), 0 0 30px rgba(var(--side), .6), 0 14px 30px #000a; border-radius: 10px; }
@@ -89,18 +89,6 @@ body.has-chain-zoom .trigger-panel--opp { display: none; }
   .command .command__full[aria-pressed="true"] { border-color: #6cbcff; box-shadow: 0 0 14px rgba(90, 170, 255, .7); }
 }
 
-/* ---------- Escolhas como texto flutuando na mesa (Arena), sem caixa ---------- */
-@media (min-width: 761px) and (min-height: 501px) {
-  .cast-slot .cast-prompt { position: fixed; z-index: 46; left: 38%; top: 40%; transform: translate(-50%, -50%); width: min(560px, 44vw);
-    display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; padding: 0; border: 0; background: none; box-shadow: none; text-align: center; pointer-events: none; }
-  .cast-slot .cast-prompt > * { pointer-events: auto; }
-  .cast-slot .cast-prompt .choice__label { flex-basis: 100%; justify-content: center; font: 600 24px/1.3 system-ui, sans-serif; color: #fff;
-    text-shadow: 0 2px 6px #000, 0 0 18px rgba(0, 0, 0, .9); }
-  .cast-slot .cast-prompt .choice__reticle { display: none; }
-  .cast-slot .cast-prompt .cast-prompt__how { flex-basis: 100%; order: 3; font-size: 13px; color: #e6e0d0; text-shadow: 0 1px 4px #000; }
-  .cast-slot .cast-prompt button { min-width: 120px; box-shadow: 0 6px 16px rgba(0, 0, 0, .6); }
-}
-
 /* ---------- HUD do canto direito (autor, 31/10/2026): relógio, cartão do turno e ferramentas em cima;
    embaixo, sua placa com o ⏩ ao lado e o botão de ação, tudo alinhado na mesma largura. ---------- */
 @media (min-width: 761px) and (min-height: 501px) {
@@ -137,9 +125,6 @@ body.has-chain-zoom .trigger-panel--opp { display: none; }
   .ctrl.is-open .ctrl__head::after { transform: translateY(-30%) rotate(-135deg); }
   .ctrl__head:focus-visible { outline: 2px solid #fff; outline-offset: 2px; border-radius: 6px; }
 
-  /* Pergunta na mesa: faixa escura suave atrás do texto, para ler por cima das cartas do campo. */
-  .cast-slot .cast-prompt::before { content: ""; position: absolute; z-index: -1; inset: -26px -60px; border-radius: 50%;
-    background: radial-gradient(closest-side, rgba(4, 5, 14, .82), rgba(4, 5, 14, .55) 60%, transparent); pointer-events: none; }
 }
 @media (min-width: 761px) and (min-height: 501px) {
   /* Carta em conjuração fica onde fica a pilha (borda direita do campo, meia altura), como no Arena; sem transform,
@@ -150,13 +135,35 @@ body.has-chain-zoom .trigger-panel--opp { display: none; }
 }
 @media (min-width: 761px) and (min-height: 501px) {
   /* Pergunta à esquerda da carta, nunca por cima dela. */
-  .cast-slot .cast-prompt { left: 24px; right: calc(298px + clamp(170px, calc(46vh / 1.4), 300px) + 32px); width: auto; max-width: 520px; margin-left: auto; transform: translateY(-50%); }
+  .cast-slot .cast-prompt { position: fixed; z-index: 46; left: auto; top: 50%; right: calc(var(--stack-right, 298px) + var(--cz-w) + 32px); width: min(400px, max(260px, calc(100vw - var(--stack-right, 298px) - var(--cz-w) - 212px))); transform: translateY(-50%); }
 }
 /* Decisão central (gatilho opcional, escolha): a carta já aparece grande no bloco; a pilha some para não cobrir as opções.
    "View board" devolve a mesa inteira, pilha incluída. */
 body:not(.is-peeking):has(.trigger-panel.is-center, .trigger-panel--order) #chain-zoom { display: none; }
-/* Ordem de gatilhos simultâneos: mesmo bloco central, sobre a mesa escurecida (antes caía na borda direita, sob a pilha). */
-.trigger-panel--order, body.has-chain-zoom .trigger-panel--order { left: 50%; right: auto; top: 50%; transform: translate(-50%, -50%); z-index: 45; width: min(520px, calc(100vw - 32px)); max-width: none; animation: decision-in .3s cubic-bezier(.2, .8, .2, 1); }
-.trigger-panel--order .trigger-panel__box { width: 100%; max-height: 86dvh; overflow: auto; }
 .trigger-panel--order .order__item { min-height: 64px; padding: 8px 10px; }
-.trigger-panel--order .trigger-panel__actions { justify-content: center; }
+
+/* Um só ponto de pilha, como no Arena (vídeos de referência, 31/10/2026): toda carta jogada, dos dois lados, e todo
+   gatilho com alvo aparecem no mesmo lugar (direita do campo, meia altura), em pé, do mesmo tamanho e com a mesma borda.
+   --stack-right vem do render (borda esquerda da coluna de comando). */
+@media (min-width: 761px) and (min-height: 501px) {
+  body { --cz-w: clamp(170px, calc(46vh / 1.4), 300px); }
+  #chain-zoom, .cast-slot { right: var(--stack-right, 298px); }
+  .cast-slot { width: var(--cz-w); justify-items: end; }
+  .cast-slot .dcard, .trigger-panel[class] .trigger-panel__card .dcard { --card-w: var(--cz-w); width: var(--cz-w); height: calc(var(--cz-w) * 1.4);
+    border-radius: 10px; box-shadow: 0 0 0 2px rgb(255, 205, 100), 0 0 30px rgba(255, 205, 100, .6), 0 14px 30px #000a; }
+  .cast-slot .cast-aura, .trigger-panel__card .cast-aura { opacity: .35; width: 160%; }
+  /* Todo gatilho abre igual (opcional, com alvo, ordem): carta no ponto da pilha, caixa da pergunta à esquerda. */
+  .trigger-panel.is-targeting, .trigger-panel.is-center, body.has-chain-zoom .trigger-panel.is-center, .trigger-panel--order, body.has-chain-zoom .trigger-panel--order {
+    left: auto; right: var(--stack-right, 298px); top: 50%; bottom: auto; transform: translateY(-50%); z-index: 45; flex-direction: row-reverse; align-items: center; gap: 32px;
+    width: auto; max-width: calc(100vw - var(--stack-right, 298px) - 24px); max-height: 92dvh; animation: tp-in .26s cubic-bezier(.2, .8, .2, 1); }
+  @keyframes tp-in { from { opacity: 0; transform: translate(24px, -50%); } }
+  .trigger-panel.is-center .trigger-panel__card, body.has-chain-zoom .trigger-panel.is-center .trigger-panel__card { display: grid; }
+  .trigger-panel__card small { display: none; }
+  .trigger-panel[class] .trigger-panel__card { position: relative; width: var(--cz-w); }
+  .trigger-panel.is-targeting .trigger-panel__box, .trigger-panel.is-center .trigger-panel__box, .trigger-panel--order .trigger-panel__box { width: min(400px, max(260px, calc(100vw - var(--stack-right, 298px) - var(--cz-w) - 212px))); max-height: 86dvh; overflow: auto; }
+  /* Mesa visível atrás (Arena só escurece um pouco). */
+  .decision-veil--center { background: rgba(4, 4, 14, .38); backdrop-filter: none; }
+}
+/* Cast estilo Arena: fantasma parado onde a carta caiu (app.js holdCast) e carta da mesa escondida até o pouso. */
+.dcard.dragging.cast-hold { transition: none; }
+.field .is-landing { visibility: hidden; }

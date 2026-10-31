@@ -806,14 +806,34 @@ const seenAt = new Map();
 const keepRect = n => { const r = n?.getBoundingClientRect(); if (r?.width) seenAt.set(n.dataset.uid, {r, t: performance.now()}); };
 const seenRect = uid => { const v = seenAt.get(uid); return v && performance.now() - v.t < 20000 ? v.r : null; };
 addEventListener('pointerdown', e => keepRect(e.target.closest?.('.hand .dcard[data-uid]')), true);
-const flyFrom = (node, a, ms = 520) => {
+const flyFrom = (node, a, pause = 0) => {
   const b = node?.getBoundingClientRect();
   if (!a?.width || !b?.width || settings.reduceMotion) return;
+  const start = `translate(${a.left + a.width / 2 - b.left - b.width / 2}px, ${a.top + a.height / 2 - b.top - b.height / 2}px) scale(${a.width / b.width}) rotate(-4deg)`;
+  const ms = 560 + pause, p = pause / ms;
   node.animate([
-    {transform: `translate(${a.left + a.width / 2 - b.left - b.width / 2}px, ${a.top + a.height / 2 - b.top - b.height / 2}px) scale(${a.width / b.width}) rotate(-4deg)`, filter: 'brightness(1.6)'},
-    {transform: 'translate(0, -6px) scale(1.04) rotate(1deg)', filter: 'brightness(1.25)', offset: .75},
+    {transform: start, filter: 'brightness(1.3)'}, ...(pause ? [{transform: start, filter: 'brightness(1.3)', offset: p}] : []),
+    {transform: 'translate(0, -6px) scale(1.04) rotate(1deg)', filter: 'brightness(1.2)', offset: p + (1 - p) * .75},
     {transform: 'none', filter: 'brightness(1)'}], {duration: ms, easing: 'cubic-bezier(.2,.8,.2,1)'});
 };
+// Cast estilo Arena (autor, 31/10/2026): a carta solta pelo arraste fica parada onde caiu até a pilha (ou o slot de
+// conjuração) aparecer; então voa dali, sem sumir no meio. Se nada a reclamar em 4s (jogada recusada), some.
+let held = null;
+const holdCast = (uid, ghost) => {
+  dropHeld();
+  ghost.classList.add('cast-hold');
+  held = {uid, el: ghost, at: performance.now(), timer: setTimeout(dropHeld, 4000)};
+};
+function dropHeld() { if (held) { clearTimeout(held.timer); held.el.remove(); held = null; } }
+const takeHeld = uid => {
+  if (held?.uid !== uid) return null;
+  const r = held.el.getBoundingClientRect();
+  r.pause = Math.max(0, 250 - (performance.now() - held.at)); // parada curta no ponto de soltura, como no Arena
+  dropHeld();
+  return r;
+};
+// Pouso no campo: a carta da mesa só aparece quando a que voa da pilha chega (sem carta dupla).
+const landing = new Set();
 let slotUid = null;
 
 function render() {
@@ -846,12 +866,15 @@ function render() {
   for (const uid of mode?.options || []) $$(`[data-uid="${uid}"]`).forEach(el => el.classList.add('pickable'));
   const bp = boardPick();
   if (bp?.uid) $$(`.hand .dcard[data-uid="${bp.uid}"]`).forEach(el => el.classList.add('is-casting'));
+  for (const uid of landing) $$(`.field [data-uid="${uid}"]`).forEach(n => n.classList.add('is-landing'));
   const slot = $('.cast-slot .dcard[data-uid]');
-  if (slot && slot.dataset.uid !== slotUid) flyFrom(slot, seenRect(slot.dataset.uid));
+  if (slot && slot.dataset.uid !== slotUid) { const h = takeHeld(slot.dataset.uid); flyFrom(slot, h || seenRect(slot.dataset.uid), h?.pause || 0); }
   slotUid = slot?.dataset.uid || null;
   if (bp && !mode) for (const ref of bp.refs) if (!ref.startsWith('god:')) $$(`.field .dcard[data-uid="${ref}"]`).forEach(el => el.classList.add('pickable'));
   if (mode) $$('.dcard').forEach(el => { if (!el.classList.contains('pickable') && el.closest('.field')) el.classList.add('dimmed'); });
   if (scene) { const st = $('[data-stats]'); if (st) st.textContent = `WebGL on · ${JSON.stringify(scene.stats())}`; }
+  const cmd = $('.command')?.getBoundingClientRect();
+  document.body.style.setProperty('--stack-right', cmd?.width && innerWidth > 760 ? `${Math.round(innerWidth - cmd.left + 14)}px` : '');
   updateClock();
   animateTrigger();
   drawIntents();
@@ -861,6 +884,7 @@ function render() {
 // superior direito na hora (pelos eventos da animação: o render espera a fila) e fica até resolver + 1s. Topo grande,
 // as de baixo em leque atrás, na ordem em que resolvem. O render sincroniza com a pilha real.
 let zoomItems = [], zoomResolving = null, zoomTimer = 0, lastTop = null;
+const czRect = new Map(); // último lugar visível de cada item: uma escolha que abre junto esconde a pilha antes do voo
 function zoomFace(it) {
   if (ctx.objects[it.uid]) return cardFace(it.uid, {size: 'dcard--lg'}).replace('tabindex="0"', 'tabindex="-1"');
   const uid = String(it.uid || ''), id = uid.startsWith('domain:') ? S().domains?.[uid.slice(7)] : null;
@@ -885,8 +909,6 @@ function drawZoom() {
   clearTimeout(zoomTimer);
   [...el.querySelectorAll('.cz-item')].filter(n => !zoomItems.some(it => it.uid === n.dataset.src)).forEach(flyResolved);
   if (!top) { el.className = ''; el.innerHTML = ''; document.body.classList.remove('has-chain-zoom'); drawIntents(); return; }
-  const cmd = $('.command')?.getBoundingClientRect();
-  el.style.right = cmd?.width && innerWidth > 760 ? `${Math.round(innerWidth - cmd.left + 14)}px` : '';
   const me = online ? online.key : viewer(), who = it => it.controller === me ? 'You' : settings.ai !== 'none' ? 'AI' : `Player ${it.controller}`;
   const t = chainLabel(top), shown = zoomItems.slice(-5);
   el.className = 'chain-zoom is-on';
@@ -901,82 +923,45 @@ function drawZoom() {
   topEl.dataset.godfx = (S().divine?.[top.controller]?.god || 'god-athena').slice(4);
   // Entrada estilo Arena: o item novo sai da carta de origem (campo ou mão) e voa até o topo da pilha. A carta revelada do
   // oponente já chega voando pela revelação.
-  const fresh = top.uid !== lastTop && !revealQueue.some(x => x.uid === top.uid) && !$('.cast-reveal');
+  el.querySelectorAll('.cz-item').forEach(n => { const r = n.getBoundingClientRect(); if (r.width) czRect.set(n.dataset.src, r); });
+  const fresh = top.uid !== lastTop;
   lastTop = top.uid;
-  if (fresh) flyFrom(topEl.lastElementChild, (elOf(top.uid) || $(`.hand .dcard[data-uid="${top.uid}"]`))?.getBoundingClientRect() || seenRect(top.uid));
+  if (fresh) {
+    const h = takeHeld(top.uid);
+    flyFrom(topEl.lastElementChild, h || (elOf(top.uid) || $(`.hand .dcard[data-uid="${top.uid}"]`))?.getBoundingClientRect() || seenRect(top.uid)
+      || $(`[data-god="${top.controller}"] .godhud__portrait`)?.getBoundingClientRect(), h?.pause || 0);
+    if (top.controller !== me) sound('gatilho');
+  }
   drawIntents();
 }
 // Resolução estilo Arena: o item brilha e voa para onde a carta foi (campo, Tartarus, Void); gatilho se desfaz em luz.
 function flyResolved(node) {
-  const r = node.getBoundingClientRect();
-  if (!r.width || settings.reduceMotion) return;
-  const ghost = node.cloneNode(true);
+  const seen = node.getBoundingClientRect(), r = seen.width ? seen : czRect.get(node.dataset.src);
+  czRect.delete(node.dataset.src);
+  if (!r?.width || settings.reduceMotion) return;
+  const ghost = node.cloneNode(true), ability = node.classList.contains('is-ability');
+  const land = () => { landing.delete(node.dataset.src); $$(`.field [data-uid="${node.dataset.src}"]`).forEach(n => n.classList.remove('is-landing')); };
+  if (!ability) landing.add(node.dataset.src); // esconde já no render que põe a carta na mesa
   ghost.classList.add('cz-ghost');
+  setTimeout(() => { ghost.remove(); land(); }, 1600); // nunca fica cópia parada na tela, mesmo se o voo não rodar
   Object.assign(ghost.style, {left: `${r.left}px`, top: `${r.top}px`, width: `${r.width}px`, height: `${r.height}px`});
   document.body.append(ghost);
-  requestAnimationFrame(() => requestAnimationFrame(() => { // espera a mesa desenhar a carta no destino
+  setTimeout(() => { // depois do render que põe a carta no destino (sem rAF: com a aba oculta ele não roda)
     const s = S(), uid = node.dataset.src, k = node.dataset.controller;
     const pile = ['tartarus', 'void'].find(z => s.players[k]?.[z]?.includes(uid));
-    const dest = (!node.classList.contains('is-ability') && (elOf(uid) || (pile && $(`[data-pile="${k}:${pile}"]`)))) || null;
+    const dest = (!ability && (elOf(uid) || (pile && $(`[data-pile="${k}:${pile}"]`)))) || null;
     const d = dest?.getBoundingClientRect(), opts = {duration: 700, easing: 'cubic-bezier(.5,0,.2,1)', fill: 'forwards'};
     const frames = d?.width
       ? [{transform: 'none', filter: 'brightness(1)'}, {transform: 'scale(1.06)', filter: 'brightness(2.2)', offset: .3},
-        {transform: `translate(${d.left + d.width / 2 - r.left - r.width / 2}px, ${d.top + d.height / 2 - r.top - r.height / 2}px) scale(${Math.max(.15, d.width / r.width)})`, filter: 'brightness(1.2)', opacity: .5}]
+        {transform: `translate(${d.left + d.width / 2 - r.left - r.width / 2}px, ${d.top + d.height / 2 - r.top - r.height / 2}px) scale(${Math.max(.15, d.width / r.width)})`, filter: 'brightness(1)', opacity: 1}]
       : [{transform: 'none', filter: 'brightness(1)', opacity: 1}, {transform: 'scale(1.08)', filter: 'brightness(2.4)', offset: .35}, {transform: 'scale(1.25)', filter: 'brightness(3) blur(6px)', opacity: 0}];
-    ghost.animate(frames, opts).finished.then(() => ghost.remove());
-  }));
+    ghost.animate(frames, opts).finished.then(() => { land(); ghost.remove(); });
+  }, 0);
 }
-// Revelação estilo Arena (autor, 31/10/2026): carta do oponente surge grande no centro (~45% da altura) com a mesa
-// escurecida, fica 1,2s (clique ou tecla pula) e voa para a pilha. As suas vão direto para a pilha.
-const revealQueue = [];
-let revealing = false;
-function revealCast(it) {
-  const me = online ? online.key : viewer();
-  // Como no Arena: só a carta jogada pelo oponente é revelada; a sua e os gatilhos voam direto para a pilha (drawZoom).
-  if (!it.uid || it.ability || it.controller === me || S().victory || revealQueue.some(x => x.uid === it.uid)) return;
-  revealQueue.push(it);
-  if (!revealing) nextReveal();
-}
-function nextReveal() {
-  const it = revealQueue.shift();
-  if (!it) { revealing = false; return; }
-  const face = it.ability ? abilityCard(it) : ctx.objects[it.uid] ? cardFace(it.uid, {size: 'dcard--lg'}) : zoomFace(it);
-  if (!face) return nextReveal();
-  revealing = true;
-  const g = S().divine?.[it.controller]?.god || 'god-athena', t = chainLabel(it);
-  const el = document.createElement('div');
-  el.className = 'cast-reveal';
-  el.setAttribute('role', 'status');
-  el.innerHTML = `<div class="cast-reveal__veil"></div><div class="cast-reveal__card" data-godfx="${g.slice(4)}" style="--glow:${GOD_GLOW[g] || GOD_GLOW['god-athena']}"><i class="cast-aura" aria-hidden="true"></i>${face.replace('tabindex="0"', 'tabindex="-1"')}<small>Player ${esc(it.controller)} · ${esc(t.sub || t.name)}</small></div>`;
-  document.body.appendChild(el);
-  const card = el.querySelector('.cast-reveal__card'), a = anim('gatilho'), still = settings.reduceMotion || !a.ligada, v = a.velocidade || 1;
-  const from = $(`[data-god="${it.controller}"] .godhud__portrait`)?.getBoundingClientRect(), b = card.getBoundingClientRect();
-  if (still) card.animate([{opacity: 0}, {opacity: 1}], {duration: 150});
-  else {
-    const dx = from ? from.left + from.width / 2 - (b.left + b.width / 2) : 0, dy = from ? from.top + from.height / 2 - (b.top + b.height / 2) : 40;
-    card.animate([{transform: `translate(${dx}px, ${dy}px) scale(.18)`, opacity: 0, filter: 'brightness(2.4)'},
-      {transform: 'translate(0, -6px) scale(1.04)', opacity: 1, filter: 'brightness(1.6)', offset: .7}, {transform: 'none', filter: 'brightness(1)'}],
-      {duration: 600 / v, easing: 'cubic-bezier(.2,.8,.2,1)'});
-    sound('gatilho');
-  }
-  let done = false, timer = 0;
-  const leave = () => {
-    if (done) return;
-    done = true; clearTimeout(timer); removeEventListener('keydown', leave, true);
-    const to = $('#chain-zoom.is-on .cz-item.is-top')?.getBoundingClientRect(), c = card.getBoundingClientRect();
-    const end = () => { el.remove(); nextReveal(); };
-    el.querySelector('.cast-reveal__veil').animate([{opacity: 1}, {opacity: 0}], {duration: 260, fill: 'forwards'});
-    if (still || !to?.width) return void card.animate([{opacity: 1}, {opacity: 0}], {duration: 200, fill: 'forwards'}).finished.then(end);
-    const dx = to.left + to.width / 2 - (c.left + c.width / 2), dy = to.top + to.height / 2 - (c.top + c.height / 2);
-    card.animate([{transform: 'none'}, {transform: `translate(${dx}px, ${dy}px) scale(${to.width / c.width})`, opacity: .4}],
-      {duration: 380 / v, easing: 'cubic-bezier(.5,0,.2,1)', fill: 'forwards'}).finished.then(end);
-  };
-  timer = setTimeout(leave, (still ? 150 : 600 / v) + 1200);
-  el.addEventListener('pointerdown', leave);
-  addEventListener('keydown', leave, true);
-}
+// Pilha estilo Arena (autor, 31/10/2026): toda carta jogada e todo gatilho, dos dois lados, vão direto para o ponto da
+// pilha (drawZoom), sem revelação no centro.
 function zoomEvent(e) {
-  const push = it => { if (it.uid && !zoomItems.some(x => x.uid === it.uid)) { zoomItems.push(it); if (e.type !== 'resolve') revealCast(it); } };
+  const push = it => { if (it.uid && !zoomItems.some(x => x.uid === it.uid)) zoomItems.push(it); };
   if (e.type === 'trigger') push({uid: e.uid, controller: e.player, ability: e.ability});
   else if (e.type === 'ability') push({uid: e.uid, controller: e.player, ability: e.name, target: e.target});
   else if (e.type === 'chain_add' || (e.type === 'card_played' && !e.from && !e.token)) push({uid: e.uid, controller: e.player});
@@ -990,7 +975,9 @@ function zoomEvent(e) {
 }
 function syncZoom() {
   const s = S();
-  const resolving = pending && zoomItems.find(x => x.uid === zoomResolving); // decisão no meio da resolução: a carta fica
+  // Decisão no meio da resolução: a carta fica na pilha, a menos que já tenha entrado no campo (aí voa, como no Arena:
+  // pousa primeiro e a escolha vem depois).
+  const resolving = pending && zoomItems.find(x => x.uid === zoomResolving && !s.players[x.controller]?.battlefield?.includes(x.uid));
   zoomItems = s.victory ? [] : s.chain.map(c => ({uid: c.uid, controller: c.controller, ability: c.ability, source: c.source, target: c.target, targets: c.targets}));
   if (resolving && !zoomItems.some(x => x.uid === resolving.uid)) zoomItems.push(resolving);
   zoomResolving = resolving ? resolving.uid : null;
@@ -1619,18 +1606,19 @@ document.addEventListener('pointerup', e => {
   const {uid, ghost, el} = drag;
   drag = null;
   if (!ghost) return;
-  ghost.remove(); el.classList.remove('drag-source');
+  el.classList.remove('drag-source');
   $$('.cosmo.drop-target, .cosmo.drop-hover').forEach(b => b.classList.remove('drop-target', 'drop-hover'));
   const zone = dragZoneAt(uid, e.clientX, e.clientY);
   hideDragZones();
   const key = owner(uid), drop = document.elementsFromPoint(e.clientX, e.clientY);
   const onUnit = drop.find(d => d.dataset?.uid && S().players[key].battlefield.includes(d.dataset.uid));
   // Área de Cosmo ou metade COSMO vira Base; sobre um Devotee seu com a carta jogável, vale o portador/alvo.
-  if (bankAt(key, e.clientX, e.clientY) || (zone === 'cosmo' && !(onUnit && !playableReason(key, uid)))) return placeAsBase(key, uid);
+  if (bankAt(key, e.clientX, e.clientY) || (zone === 'cosmo' && !(onUnit && !playableReason(key, uid)))) { ghost.remove(); return placeAsBase(key, uid); }
   const onField = zone === 'cast' || drop.some(d => d.dataset?.field === key);
-  if (!onField && !onUnit) return;
+  if (!onField && !onUnit) return ghost.remove();
   const reason = playableReason(key, uid);
-  if (reason) return warn(reason);
+  if (reason) { ghost.remove(); return warn(reason); }
+  holdCast(uid, ghost);
   playFromHand(key, uid); // nada é escolhido pelo ponto onde a carta caiu: o alvo sai da seta do slot (autor, 30/10/2026)
 });
 
@@ -1868,6 +1856,7 @@ function animateTrigger() {
   sound('gatilho');
   if (!from) return void card.animate([{opacity: 0, transform: 'scale(.7)'}, {opacity: 1, transform: 'none'}], {duration: 320 / a0.velocidade, easing: 'cubic-bezier(.2,.8,.2,1)'});
   const a = from.getBoundingClientRect(), b = card.getBoundingClientRect();
+  if (!b.width) return;
   const dx = a.left + a.width / 2 - (b.left + b.width / 2), dy = a.top + a.height / 2 - (b.top + b.height / 2), k = a.width / b.width;
   card.animate([
     {transform: `translate(${dx}px, ${dy}px) scale(${k})`, filter: 'brightness(2.2)', offset: 0},
@@ -2126,7 +2115,7 @@ async function init() {
   setInterval(aiTick, 700);
   scene = await createScene($('#arena'), {quality: settings.quality, theme: settings.theme, reduceFlashes: settings.reduceFlashes});
   stage.classList.toggle('no-webgl', !scene);
-  window.__divine = {get state() { return S(); }, get ctx() { return ctx; }, get scene() { return scene; }, get clock() { return clock; }, present: (from) => present({}, null, from), reveal: revealCast, settings}; // inspeção no QA
+  window.__divine = {get state() { return S(); }, get ctx() { return ctx; }, get scene() { return scene; }, get clock() { return clock; }, present: (from) => present({}, null, from), settings}; // inspeção no QA
 }
 // Celular (autor, 30/10/2026): no primeiro toque, tela cheia e trava na horizontal onde o navegador deixa (Android);
 // no iPhone o aviso de girar (mobile.css) cobre o modo em pé.
