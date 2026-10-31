@@ -1166,3 +1166,7 @@ body.is-peeking:has(.trigger-panel.is-center) .peek-return { display: block; pos
 .gear-btn:focus-visible { outline: 2px solid var(--gold-hi, #ffe7a8); outline-offset: 2px; }
 .rk-plate--foe { right: 72px; }
 .reduce-motion .gear-btn { transition: none; }
+
+/* Tamanho da carta (Options › Accessibility › Card size; autor, 31/10/2026): mão, prévia do hover, pilha e cast.
+   O board mantém o layout. --card-scale vem de shared/stage-fit.js. */
+.olympus .hand--me .hand__slot, .inspector .dcard--xl, #chain-zoom .chain-zoom__top, .cast-reveal__card .dcard { zoom: var(--card-scale, 1); }

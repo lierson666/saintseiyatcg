@@ -25,7 +25,7 @@ import {findDeck} from '../deck-store.js';
 import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-face3';
 import {unlock, playMusic} from '../audio.js?v=20261030-telas';
 import {telas, anim, sound, imageUrl, applyColors, applyTexts} from '../telas.js?v=20261030-1';
-import {renderLiveCard, renderCardText} from '../../shared/live-card.js?v=20261031-ed5';
+import {renderLiveCard, renderCardText} from '../../shared/live-card.js?v=20261031-a11y1';
 import {armorBonusText, printedEquipmentBonuses} from '../../shared/card-visual-values.js?v=20261031-kw6';
 import {lightArt} from '../../shared/light-art.js';
 import {useGodPortraits} from '../avatar-face.js?v=20261031-3';
@@ -45,7 +45,7 @@ const why = e => WHY[e.decision] || (e.topic ? `Not in Alpha 0.1: ${e.topic}` : 
 
 const SETTINGS_KEY = 'ssTcgOlympusArena';
 const settings = {quality: 'high', theme: 'olympus', godB: 'god-athena', timeouts: false, speed: 'normal', skipDraws: false, reduceMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
-  reduceFlashes: false, shake: 1, hideOpponent: true, autoPass: true, phaseTips: true, ai: 'B'};
+  reduceFlashes: false, shake: 1, hideOpponent: true, autoPass: true, phaseTips: true, ai: 'B', cardText: '1.0', cardSize: '1.0'};
 try { Object.assign(settings, JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}')); } catch { /* sem armazenamento */ }
 const saveSettings = () => { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch { /* sem armazenamento */ } };
 
@@ -806,7 +806,7 @@ function overlays() {
       <label class="set"><span>God of Player B (new match)</span>${sel('godB', {'god-athena': 'Athena', 'god-poseidon': 'Poseidon · fixture deck'})}</label>
       <label class="set"><span>Opponent (new match)</span>${sel('ai', {B: 'AI plays Player B', none: 'Hot-seat (two humans)'})}</label>
       <label class="set"><span>Animation speed</span>${sel('speed', {fast: 'Fast', normal: 'Normal', cinematic: 'Cinematic'})}</label>
-      ${chk('phaseTips', 'Phase tips (control panel)')}${chk('autoPass', 'Auto-pass when you have no response (off = Full control)')}${chk('skipDraws', 'Skip draw animations')}${chk('reduceMotion', 'Reduce motion')}${chk('reduceFlashes', 'Reduce flashes')}${chk('hideOpponent', 'Hide the other hand (hot-seat)')}${chk('timeouts', 'Apply clock timeouts')}
+      ${chk('phaseTips', 'Phase tips (control panel)')}${chk('autoPass', 'Auto-pass when you have no response (off = Full control)')}${chk('skipDraws', 'Skip draw animations')}${window.ssStage ? `<label class="set"><span>Card text size</span>${sel('cardText', window.ssStage.SIZES)}</label><label class="set"><span>Card size (hand and previews)</span>${sel('cardSize', window.ssStage.CARD)}</label>` : ''}${chk('reduceMotion', 'Reduce motion')}${chk('reduceFlashes', 'Reduce flashes')}${chk('hideOpponent', 'Hide the other hand (hot-seat)')}${chk('timeouts', 'Apply clock timeouts')}
       <label class="set"><span>Screen shake</span><input type="range" min="0" max="1.5" step=".25" value="${settings.shake}" data-setting="shake"></label>
       <p class="stats" data-stats>${scene ? 'WebGL on' : 'WebGL off · 2D fallback'}</p>
       <button data-toggle-settings>Close</button></div>`;
@@ -1250,6 +1250,7 @@ overlayRoot.addEventListener('change', e => {
   settings[key] = e.target.type === 'checkbox' ? e.target.checked : e.target.type === 'range' ? Number(e.target.value) : e.target.value;
   saveSettings();
   if (key === 'resolution') window.ssStage?.set(settings.resolution); // palco 16:9 (shared/stage-fit.js)
+  if (key === 'cardText' || key === 'cardSize') window.ssStage?.a11y(); // acessibilidade das cartas (shared/stage-fit.js)
   if (key === 'quality') scene?.setQuality(settings.quality);
   if (key === 'theme') { scene?.setTheme(settings.theme); stage.dataset.theme = settings.theme; }
   if (key === 'reduceFlashes' && scene) scene.reduceFlashes = settings.reduceFlashes;

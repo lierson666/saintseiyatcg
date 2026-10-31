@@ -5,6 +5,18 @@
 (() => {
   const KEY = 'ssTcgOlympusArena', MIN = [1280, 720];
   const LIST = {auto: 'Auto', '1280x720': '1280 × 720', '1366x768': '1366 × 768', '1600x900': '1600 × 900', '1920x1080': '1920 × 1080', '2560x1440': '2560 × 1440'};
+  // Acessibilidade das cartas (autor, 31/10/2026): tamanho do texto (--lc-text, de Large para cima com placa e letra mais
+  // grossa: html.lc-a11y) e tamanho da carta na mão e nas prévias (--card-scale). Vale em todo aparelho, lobby e duelo.
+  const SIZES = {'0.9': 'Small', '1.0': 'Normal', '1.25': 'Large', '1.5': 'Extra large'};
+  const CARD = {'0.9': 'Small', '1.0': 'Normal', '1.15': 'Large', '1.3': 'Extra large'};
+  const stored = () => { try { return JSON.parse(localStorage.getItem(KEY) || '{}'); } catch { return {}; } };
+  const a11y = () => {
+    const o = stored(), text = String(o.cardText ?? '1.0') in SIZES ? Number(o.cardText ?? 1) : 1, size = String(o.cardSize ?? '1.0') in CARD ? Number(o.cardSize ?? 1) : 1;
+    const html = document.documentElement;
+    html.style.setProperty('--lc-text', text); html.style.setProperty('--card-scale', size);
+    html.classList.toggle('lc-a11y', text >= 1.25);
+  };
+  a11y();
   const read = () => { try { const v = JSON.parse(localStorage.getItem(KEY) || '{}').resolution; return v in LIST ? v : 'auto'; } catch { return 'auto'; } };
   const save = v => { try { localStorage.setItem(KEY, JSON.stringify({...JSON.parse(localStorage.getItem(KEY) || '{}'), resolution: v})); } catch { /* sem armazenamento */ } };
   const desktop = matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -22,10 +34,10 @@
     for (const m of ['pushState', 'replaceState']) { const f = history[m].bind(history); history[m] = (...a) => { f(...a); sync(); }; }
     addEventListener('hashchange', sync); addEventListener('popstate', sync); addEventListener('DOMContentLoaded', sync);
     new MutationObserver(sync).observe(document.querySelector('title') || document.head, {childList: true, characterData: true, subtree: true});
-    window.ssStage = {LIST, desktop: true, get: read, set: v => { save(v); outer.ssStage.layout(); }};
+    window.ssStage = {LIST, desktop: true, get: read, set: v => { save(v); outer.ssStage.layout(); }, SIZES, CARD, a11y};
     return;
   }
-  window.ssStage = {LIST, desktop, get: read, set: save};
+  window.ssStage = {LIST, desktop, get: read, set: save, SIZES, CARD, a11y};
   if (!desktop || self !== top) return;
 
   window.stop();

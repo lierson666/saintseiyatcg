@@ -4,7 +4,7 @@ import {loadCanon} from '../shared/canon-cards.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {canonIndex, validateDeck, colorErrors, splashCount, DECK_SIZE, COPY_LIMIT, SPLASH_LIMIT} from '../shared/deck-v3.js';
 import {spellCategory} from './engine-v3/core.js';
-import {renderLiveCard, renderCardText} from '../shared/live-card.js?v=20261031-kw6';
+import {renderLiveCard, renderCardText} from '../shared/live-card.js?v=20261031-a11y1';
 import {unlock, playMusic, setVolume, volume} from './audio.js?v=20261030-telas';
 import {loadMyDecks, saveMyDecks, findDeck, syncDecks, onDeckStatus, deckCovers, setDeckCover} from './deck-store.js?v=20261031-2';
 import {mountKV} from '../shared/kv-sky.js?v=20261031-fast';
@@ -203,7 +203,7 @@ function decksScreen() {
 // Opções (autor, 31/10/2026): as mesmas do duelo (mesma chave do localStorage de playtest/divine/app.js) + tela cheia.
 const MATCH_KEY = 'ssTcgOlympusArena';
 const MATCH_DEFAULTS = {quality: 'high', theme: 'olympus', speed: 'normal', skipDraws: false, reduceMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
-  reduceFlashes: false, shake: 1, autoPass: true, phaseTips: true, timeouts: false};
+  reduceFlashes: false, shake: 1, autoPass: true, phaseTips: true, timeouts: false, cardText: '1.0', cardSize: '1.0'};
 const matchSettings = () => { try { return {...MATCH_DEFAULTS, ...JSON.parse(localStorage.getItem(MATCH_KEY) || '{}')}; } catch { return {...MATCH_DEFAULTS}; } };
 const setMatch = (key, value) => { try { localStorage.setItem(MATCH_KEY, JSON.stringify({...matchSettings(), [key]: value})); } catch { /* sem armazenamento */ } };
 const THEME_LABELS = {olympus: 'Olympus Arena', athena: "Athena's Sanctuary", poseidon: "Poseidon's Undersea Temple"}; // = THEMES de divine/scene.js
@@ -223,6 +223,7 @@ function options() {
     ${sel('speed', 'Animation speed', {fast: 'Fast', normal: 'Normal', cinematic: 'Cinematic'})}
     ${chk('phaseTips', 'Phase tips (control panel)')}${chk('autoPass', 'Auto-pass when you have no response')}${chk('skipDraws', 'Skip draw animations')}${chk('timeouts', 'Apply clock timeouts')}
     <h2 class="lb-options__h">Accessibility</h2>
+    ${window.ssStage ? `${sel('cardText', 'Card text size', window.ssStage.SIZES)}${sel('cardSize', 'Card size (hand and previews)', window.ssStage.CARD)}` : ''}
     ${chk('reduceMotion', 'Reduce motion')}${chk('reduceFlashes', 'Reduce flashes')}
     <label class="lb-set"><span>Screen shake</span><input type="range" min="0" max="1.5" step=".25" value="${m.shake}" data-act="match-set" data-key="shake"></label>
     ${installBox()}</section>`;
@@ -631,6 +632,7 @@ root.addEventListener('input', e => {
   if (t.dataset.act === 'volume') { setVolume(t.dataset.kind, t.value / 100); t.nextElementSibling.value = `${t.value}%`; }
   if (t.dataset.act === 'match-set') setMatch(t.dataset.key, t.type === 'checkbox' ? t.checked : t.type === 'range' ? Number(t.value) : t.value);
   if (t.dataset.act === 'match-set' && t.dataset.key === 'resolution') window.ssStage?.set(t.value); // palco 16:9 (shared/stage-fit.js)
+  if (t.dataset.act === 'match-set' && /^card(Text|Size)$/.test(t.dataset.key)) window.ssStage?.a11y(); // acessibilidade das cartas
   if (t.dataset.act === 'fullscreen') toggleFullscreen();
   if (t.dataset.act === 'deck-search') {
     ui.deckQ = t.value; const q = t.value.toLowerCase();

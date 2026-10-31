@@ -1,6 +1,6 @@
 import {createHistory} from '../shared/editor-history.js';
 import {compilePlaytest} from '../shared/import-playtest.js';
-import {renderLiveCard,illustration,statLine,EDITIONS,editionOf} from '../shared/live-card.js?v=20261031-ed5';
+import {renderLiveCard,illustration,statLine,EDITIONS,editionOf} from '../shared/live-card.js?v=20261031-a11y1';
 import {textBlocks, blocksMarkup, presentationRules, ruleBlocksWithoutKeywords, KEYWORD_WORDS, STAT_RE, statTrend} from '../shared/card-text.js?v=20261031-sym2';
 import {isArmor,isEquipment,validateCard} from '../shared/card-model.js';
 // Card Forge — editor de cartas em vanilla JS. Renderiza no canvas nativo 1488x2091 usando
@@ -528,6 +528,8 @@ async function updateLivePreview(){
   const live=$('#representation').value==='live';$('#livePreview').hidden=!live;$('#liveControls').hidden=!live;$('#cardWrap').hidden=live;
   const c=buildCard();
   $('#rulesReview').textContent=c.motor_revisao_pendente?'Texto alterado: os efeitos jogáveis precisam de revisão antes de usar esta carta numa partida.':validateCard(c).join(' · ');
+  // Aviso de acessibilidade (autor, 31/10/2026): texto que não cabe a 100% faz a caixa crescer sobre a arte no jogo.
+  if(rulesOverflow(renderLiveCard(c,{art:S.art?.src})))$('#rulesReview').textContent=[$('#rulesReview').textContent,'Texto de regras não cabe a 100%: no jogo a caixa cresce sobre a arte (encurte o texto para manter a arte).'].filter(Boolean).join(' · ');
   if(!live)return;
   const simulationCards=[...db.cartas.filter(card=>card.id!==c.id),c];
   try{
@@ -537,6 +539,14 @@ async function updateLivePreview(){
   }catch{
     if(revision===livePreviewRevision)$('#livePreview').innerHTML=renderLiveCard(c,{art:S.art?.src});
   }
+}
+// Mede a carta viva fora da tela: a caixa de regras passou da altura mínima do layout?
+function rulesOverflow(html){
+  let box=document.getElementById('overflowProbe');
+  if(!box){box=document.body.appendChild(document.createElement('div'));box.id='overflowProbe';box.setAttribute('aria-hidden','true');box.style.cssText='position:absolute;left:-9999px;top:0;width:372px;container-type:inline-size;visibility:hidden';}
+  box.innerHTML=html;
+  const r=box.querySelector('.lc-rules'),card=r?.closest('.live-card');
+  return !!r&&!!card&&r.offsetHeight>card.offsetHeight*parseFloat(r.style.minHeight)/100+1;
 }
 for(const id of ['representation','previewDamage','previewPrepared','previewStage'])$('#'+id).addEventListener('input',updateLivePreview);
 

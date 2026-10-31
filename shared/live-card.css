@@ -33,7 +33,7 @@
 .live-card--psd .lc-text--typeline{font-family:Futura,'Futura PT','Century Gothic',sans-serif;font-weight:700}
 .live-card--psd .lc-text--subtitle{font-family:Avenir,'Avenir Next',sans-serif;font-weight:300;text-shadow:0 0 .3cqw #000}
 .live-card--psd .lc-text--flavour{font-family:'ITC Avant Garde Gothic Pro','Century Gothic',Avenir,sans-serif;font-style:italic;text-shadow:0 0 .3cqw #000}
-.live-card.live-card--psd .lc-rules{position:absolute;margin:0;padding:0;overflow:hidden;text-align:center;line-height:1.18;color:#f4efe6;font-family:Avenir,'Avenir Next',sans-serif;font-weight:300;text-shadow:0 0 .25cqw #000,0 0 .5cqw #000;display:block;-webkit-line-clamp:unset}
+.live-card.live-card--psd .lc-rules{position:absolute;margin:0;padding:0;overflow:visible;text-align:center;line-height:1.18;color:#f4efe6;font-family:Avenir,'Avenir Next',sans-serif;font-weight:300;text-shadow:0 0 .25cqw #000,0 0 .5cqw #000;display:block;-webkit-line-clamp:unset}
 /* Texto de regras em branco; só títulos de habilidade e keywords em negrito na cor do tema (autor, 31/10/2026). */
 /* Bloco de texto centralizado na vertical da área de regras (autor, 31/10/2026); "safe" evita cortar o topo se transbordar. */
 .live-card.live-card--psd .lc-rules{display:flex;flex-direction:column;justify-content:safe center}
@@ -102,3 +102,8 @@
 .live-card--psd .lc-footer{position:absolute;left:4%;right:4%;transform:translateY(-50%);display:flex;align-items:center;justify-content:center;gap:.55em;font-family:Avenir,'Avenir Next',sans-serif;font-weight:400;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;color:#f4efe6b8;text-shadow:0 0 .25cqw #000,0 0 .6cqw #000}
 .live-card--psd .lc-footer i{font-style:normal;opacity:.7}
 .live-card--psd .lc-footer__rarity{display:block;height:1.35em;width:auto}
+/* Texto que não cabe (autor, 31/10/2026): a caixa cresce para cima sobre a arte; a placa escura cobre só o que passou da
+   altura do layout (--lc-rules-h), com borda suave. Em Large/Extra large (html.lc-a11y) a placa cobre a caixa toda. */
+.live-card.live-card--psd .lc-rules{background:linear-gradient(180deg,transparent,rgba(4,6,14,.82) 2.2cqw) top/100% calc(100% - var(--lc-rules-h,100%)) no-repeat}
+html.lc-a11y .live-card.live-card--psd .lc-rules{font-weight:500;background:linear-gradient(180deg,transparent,rgba(4,6,14,.86) 2.2cqw) 0 0/100% 100% no-repeat;padding:1.4cqw 1.2cqw .6cqw;margin:0 -1.2cqw;text-shadow:0 0 .2cqw #000,0 0 .35cqw #000,0 .1cqw .5cqw #000}
+html.lc-a11y .live-card--psd .lc-rules strong,html.lc-a11y .live-card--psd .lc-rules .rule-heading{font-weight:900}
