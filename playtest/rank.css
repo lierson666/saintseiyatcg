@@ -1,12 +1,10 @@
 /* Ranking e XP (rank.js): selo do lobby, painel de rank e resumo no fim da partida. Carregado pelo lobby e pelo Olympus Arena. */
-.rk-steel { --rk: #8d99a6; } .rk-iron { --rk: #6b6f78; } .rk-bronze { --rk: #c07a3c; }
-.rk-silver { --rk: #d4dbe3; } .rk-gold { --rk: #e9c45c; } .rk-kamui { --rk: #c9a6ff; }
+.rk-steel { --rk: #c9d0d8; } .rk-iron { --rk: #8f7f72; } .rk-bronze { --rk: #d9803a; }
+.rk-silver { --rk: #7fb2ff; } .rk-gold { --rk: #f1c232; } .rk-kamui { --rk: #c9a6ff; }
 
-.rk-emblem { display: inline-grid; place-items: center; width: 28px; height: 28px; flex: none; border-radius: 50% 50% 46% 46%;
-  font: 700 11px/1 Cinzel, serif; color: #0b0d14; background: radial-gradient(circle at 35% 30%, #fff8, transparent 55%), var(--rk);
-  box-shadow: 0 0 0 1px #0008, 0 0 10px color-mix(in srgb, var(--rk) 55%, transparent); }
-.rk-emblem--big { width: 72px; height: 72px; font-size: 24px; }
-.rk-kamui.rk-emblem { box-shadow: 0 0 0 1px #0008, 0 0 18px #c9a6ffaa; }
+/* Símbolos em PNG (assets/rank/): escudo da divisão pequeno, emblema do tier grande. */
+.rk-emblem { display: block; flex: none; height: 32px; width: auto; filter: drop-shadow(0 2px 4px #000a); }
+.rk-emblem--big { height: 104px; }
 
 .rk-badge { display: inline-flex; align-items: center; gap: 8px; padding: 4px 10px 4px 4px; border: 1px solid var(--kv-line, #ffffff22);
   border-radius: 999px; background: #0006; color: inherit; font: inherit; cursor: pointer; }
@@ -16,17 +14,18 @@
 
 .rk-pips { display: inline-flex; gap: 4px; margin-top: 4px; }
 .rk-pips i { width: 14px; height: 6px; border-radius: 2px; background: #ffffff26; transition: background .4s ease-out; }
-.rk-pips i.on { background: var(--kv-gold, #e9c45c); }
+.rk-pips i.on { background: var(--rk, var(--kv-gold, #e9c45c)); box-shadow: 0 0 6px color-mix(in srgb, var(--rk, #e9c45c) 60%, transparent); }
 .rk-points { font: 600 13px Cinzel, serif; color: #c9a6ff; }
 .rk-xp { display: block; height: 6px; border-radius: 3px; background: #ffffff1f; overflow: hidden; margin-top: 6px; }
 .rk-xp i { display: block; height: 100%; background: linear-gradient(90deg, #7fb8ff, #c9a6ff); transition: width .9s cubic-bezier(.2, .8, .2, 1); }
 
-.rk-panel { width: min(440px, calc(100% - 32px)); max-height: calc(100% - 32px); overflow: auto; padding: 24px; color: var(--kv-ink, #eee); }
+.rk-panel { width: min(440px, calc(100% - 32px)); max-height: calc(100% - 32px); overflow: hidden auto; padding: 24px; color: var(--kv-ink, #eee); }
 .rk-panel::backdrop { background: #05060ccc; }
 .rk-panel__head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .rk-panel__rank { display: flex; gap: 16px; align-items: center; margin: 18px 0; }
 .rk-panel__rank h2 { margin: 0; font-family: Cinzel, serif; }
 .rk-panel__level { margin-bottom: 12px; }
+.rk-board__head { margin: 16px 0 0; } .rk-board__head img { display: block; height: 40px; width: auto; }
 .rk-board { margin: 8px 0 0; padding-left: 22px; }
 .rk-board li { padding: 3px 0; } .rk-board li span { float: right; opacity: .8; }
 

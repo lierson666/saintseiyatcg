@@ -7,9 +7,12 @@ const CACHE = 'sstcg.rank.v1'; // último rank visto: base do "antes → depois"
 const PIPS = 6;
 
 export const rankName = r => r.tier === 'Kamui' ? 'Kamui' : `${r.tier} ${ROMAN[r.division]}`;
-const emblem = (r, big) => `<span class="rk-emblem rk-${r.tier.toLowerCase()} ${big ? 'rk-emblem--big' : ''}" aria-hidden="true">${r.tier === 'Kamui' ? 'K' : ROMAN[r.division]}</span>`;
+// Símbolos do autor (LOGO/SSTCG_Ranked_Transparent_PNG.zip): emblema do tier; a divisão vai no texto.
+// Os escudos de divisão do zip vieram cortados com pedaços dos vizinhos; voltam quando chegarem recortados certo.
+const art = name => new URL(`./assets/rank/${name}.webp`, import.meta.url).href;
+const emblem = (r, big) => `<img class="rk-emblem ${big ? 'rk-emblem--big' : ''}" src="${art(r.tier === 'Kamui' ? 'kamui' : `${r.tier.toLowerCase()}-emblem`)}" alt="" draggable="false">`;
 const pips = r => r.tier === 'Kamui' ? `<span class="rk-points">${r.points} pts</span>`
-  : `<span class="rk-pips" aria-label="${r.pips} of ${PIPS} pips">${Array.from({length: PIPS}, (_, i) => `<i class="${i < r.pips ? 'on' : ''}"></i>`).join('')}</span>`;
+  : `<span class="rk-pips rk-${r.tier.toLowerCase()}" aria-label="${r.pips} of ${PIPS} pips">${Array.from({length: PIPS}, (_, i) => `<i class="${i < r.pips ? 'on' : ''}"></i>`).join('')}</span>`;
 const xpBar = r => `<span class="rk-xp" aria-label="${r.xp_in_level} of ${r.xp_level_size} XP"><i style="width:${100 * r.xp_in_level / r.xp_level_size}%"></i></span>`;
 const order = r => TIERS.indexOf(r.tier) * 10 - (r.division || 0);
 
@@ -42,7 +45,7 @@ export function openRankPanel(r, opener) {
     <section class="rk-panel__level"><h3 class="kv-stamp">Level ${r.level}${r.title ? ` · ${esc(r.title)}` : ''}</h3>${xpBar(r)}
       <p class="kv-status">${r.xp_in_level} / ${r.xp_level_size} XP · vs AI today ${r.ai_xp_today} / ${r.ai_xp_cap} XP</p></section>
     <p class="kv-status">Rank moves only in online duels. Matches vs the AI give XP.</p>
-    <h3 class="kv-stamp">Kamui</h3>
+    <h3 class="rk-board__head"><img src="${art('kamui-top20')}" alt="Kamui · Top 20"></h3>
     ${r.kamui?.length ? `<ol class="rk-board">${r.kamui.map(k => `<li><b>${esc(k.username)}</b><span>${k.points} pts</span></li>`).join('')}</ol>` : '<p class="kv-status">No one has reached Kamui yet.</p>'}`;
   document.body.append(dlg);
   dlg.showModal();
