@@ -16,6 +16,8 @@ export function previewRecord(f) {
       ? `Auto-Equip — ${f.auto_equip_en?.length ? f.auto_equip_en.join(' and/or ') : 'None'}` : 'Equip: None — Global'),
     f.equipar_custo_outros != null && `Equip {${f.equipar_custo_outros}} — ${f.auto_equip_en?.length ? 'Other Devotees' : 'Any friendly Devotee'}`,
     armorBonusLine(f),
+    // Keywords impressas (Guardian, Pierce…) em linha própria, como no D268, para o parseCard reconhecer (autor, 31/10/2026).
+    ...(f.tipo === 'Devotee' ? f.keywords_en || [] : []),
     ...(f.habilidades_en || [])].filter(Boolean).join('\n');
   return {id: f.id, name: f.nome_exibicao_en, type, approved_current_text_as_of_d268: text};
 }
