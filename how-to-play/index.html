@@ -7,6 +7,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex, nofollow"> <!-- site fora das buscas por enquanto (autor, 31/10/2026) -->
   <title>Saint Seiya TCG — How to Play</title>
   <meta name="description" content="Learn to play Saint Seiya TCG: your God and Devotees, Cosmo, Rounds and turns, Strike, Guardian, Armor and keywords.">
   <meta name="theme-color" content="#05060c">
@@ -53,6 +54,15 @@
     .anatomy { display: grid; grid-template-columns: minmax(220px, 300px) 1fr; gap: clamp(24px, 5vw, 64px); align-items: start; }
     .legend { counter-reset: part; list-style: none; padding: 0; display: grid; gap: 14px; }
     .legend li { counter-increment: part; display: grid; grid-template-columns: 34px 1fr; gap: 12px; margin: 0; }
+    .legend li { cursor: default; border-radius: 12px; transition: background .2s; }
+    .legend li.is-lit, .legend li:focus-visible { background: #e6c36a14; }
+    .legend li.is-lit::before { background: var(--kv-gold); color: #120d04; }
+    /* Destaque da área da carta (autor, 31/10/2026): o resto escurece e a área brilha em dourado. */
+    .anatomy .card-slot { position: relative; }
+    .hl { position: absolute; border-radius: 10px; opacity: 0; pointer-events: auto; transition: opacity .2s;
+      box-shadow: 0 0 0 200vmax #05060ca6, 0 0 0 2px var(--kv-gold-2), 0 0 28px 6px #e6c36acc, inset 0 0 18px #ffe7a366; }
+    .hl.round { border-radius: 50%; }
+    .hl.is-lit { opacity: 1; }
     .legend li::before { content: counter(part); display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%;
       border: 1px solid #e6c36a88; color: var(--kv-gold-2); font: 600 13px var(--kv-title); }
     .card-slot { width: 100%; aspect-ratio: 63 / 88; container-type: inline-size; overflow: clip; }
@@ -154,12 +164,12 @@
         <div class="anatomy">
           <div class="card-slot" data-card="athena-v6-001" role="img" aria-label="Pegasus Seiya card"></div>
           <ol class="legend">
-            <li><p><strong>Cost.</strong> How much Cosmo you pay to play the card. Devotees and Armor are paid only with Base Cosmo.</p></li>
-            <li><p><strong>Name and subtitle.</strong> The character. Effects that name a character only count that exact identity: wearing Pegasus Cloth does not make someone Pegasus Seiya.</p></li>
-            <li><p><strong>Type and subtype.</strong> Devotee, Equipment, Technique, Moment or Domain, plus subtypes such as Bronze Saint or Gold Saint.</p></li>
-            <li><p><strong>Abilities and keywords.</strong> What the card does. Keywords such as Guardian or Long Range are short rules explained below. When a card's text and a general rule disagree, the card wins.</p></li>
-            <li><p><strong>Power.</strong> The damage this Devotee deals in a Strike, both when attacking and when striking back.</p></li>
-            <li><p><strong>HP.</strong> How much damage it can hold. When its damage reaches its HP, it is destroyed and goes to the Tartarus.</p></li>
+            <li data-part="cost" tabindex="0"><p><strong>Cost.</strong> How much Cosmo you pay to play the card. Devotees and Armor are paid only with Base Cosmo.</p></li>
+            <li data-part="name" tabindex="0"><p><strong>Name and subtitle.</strong> The character. Effects that name a character only count that exact identity: wearing Pegasus Cloth does not make someone Pegasus Seiya.</p></li>
+            <li data-part="type" tabindex="0"><p><strong>Type and subtype.</strong> Devotee, Equipment, Technique, Moment or Domain, plus subtypes such as Bronze Saint or Gold Saint.</p></li>
+            <li data-part="text" tabindex="0"><p><strong>Abilities and keywords.</strong> What the card does. Keywords such as Guardian or Long Range are short rules explained below. When a card's text and a general rule disagree, the card wins.</p></li>
+            <li data-part="power" tabindex="0"><p><strong>Power.</strong> The damage this Devotee deals in a Strike, both when attacking and when striking back.</p></li>
+            <li data-part="hp" tabindex="0"><p><strong>HP.</strong> How much damage it can hold. When its damage reaches its HP, it is destroyed and goes to the Tartarus.</p></li>
           </ol>
         </div>
       </section>
@@ -343,7 +353,20 @@
     for (const tile of document.querySelectorAll('[data-art]')) tile.style.backgroundImage = `url("/how-to-play/art/${tile.dataset.art}.jpg")`;
     // Zoom: clicar (ou Enter/Espaço) abre a carta grande; clicar fora, Esc ou no botão fecha.
     const zoom = document.getElementById('zoom'), zoomCard = zoom.querySelector('.zoom__card');
-    const open = slot => { zoomCard.innerHTML = slot.innerHTML; zoom.showModal(); };
+    const open = slot => { zoomCard.innerHTML = slot.querySelector('img').outerHTML; zoom.showModal(); };
+    // Anatomia: áreas medidas na imagem 800×1124 da Pegasus Seiya (left, top, width, height em %).
+    const AREAS = {cost: [5.6, 4.4, 18.1, 12.5, 1], name: [25, 6.2, 50, 8.9], type: [20, 57.8, 60, 4.4],
+      text: [13.8, 65.4, 72.5, 22.7], power: [2.5, 55.3, 12.5, 8.9, 1], hp: [84.8, 55.3, 12.5, 8.9, 1]};
+    const anatomy = document.querySelector('.anatomy .card-slot'), items = document.querySelectorAll('.legend [data-part]');
+    for (const [part, [l, t, w, h, round]] of Object.entries(AREAS)) anatomy.insertAdjacentHTML('beforeend',
+      `<span class="hl${round ? ' round' : ''}" data-part="${part}" style="left:${l}%;top:${t}%;width:${w}%;height:${h}%"></span>`);
+    const light = part => document.querySelectorAll('.anatomy [data-part]').forEach(el => el.classList.toggle('is-lit', el.dataset.part === part));
+    for (const el of document.querySelectorAll('.anatomy [data-part]')) {
+      el.addEventListener('pointerenter', () => light(el.dataset.part));
+      el.addEventListener('pointerleave', () => light(null));
+      el.addEventListener('focus', () => light(el.dataset.part));
+      el.addEventListener('blur', () => light(null));
+    }
     document.addEventListener('click', e => { const slot = e.target.closest('main .card-slot'); if (slot) open(slot); });
     document.addEventListener('keydown', e => { const slot = e.target.closest?.('main .card-slot'); if (slot && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); open(slot); } });
     zoom.addEventListener('click', e => { if (e.target === zoom || e.target.closest('.zoom__close')) zoom.close(); });
