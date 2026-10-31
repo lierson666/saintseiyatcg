@@ -11,7 +11,7 @@ Status: **desenho aprovado pelo autor em 31/10/2026** (/grill-me). Implementaç�
 | Tiers | Steel → Iron → Bronze → Silver → Gold → Kamui. Steel a Gold têm 4 divisões (IV → I). |
 | Pips | 6 pips por divisão. Steel: vitória +2, derrota 0. Iron a Gold: vitória +1, derrota −1. Empate: 0. |
 | Proteção | Derrota com 0 pip volta uma divisão com 5 pips; nunca cai de tier (IV com 0 pip fica). |
-| Kamui | Sem divisões. Pontos: vitória +1, derrota −1, mínimo 0. Ranking Kamui (top 20) por pontos. |
+| Kamui | Sem divisões. Pontos: vitória +1, derrota −1, mínimo 0. Ranking Kamui (top 20) por pontos. A conta do autor (lierson#7547, `KAMUI_FIXED`) fica fixada em Kamui: começa nele e não cai, nem na virada (pedido de 31/10/2026). |
 | Temporada | Mês do calendário (UTC). Na virada: um tier abaixo, divisão IV, 0 pip (Kamui → Gold IV; Steel fica). O painel mostra o melhor rank da temporada e o da anterior. |
 | XP por partida | Online: vitória 100, derrota ou empate 50. IA: vitória 50, derrota ou empate 25. |
 | Teto da IA | 500 XP por dia (UTC) contra a IA; o resultado vem do navegador. Online não tem teto. |

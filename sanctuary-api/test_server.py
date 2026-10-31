@@ -264,6 +264,8 @@ class Api(unittest.TestCase):
         self.assertEqual((r['tier'], r['division'], r['points']), ('Kamui', None, 0))  # Kamui: pontos, mínimo 0, sem queda
         old = server.climb([(now - 40 * 86400, 'win')] * (12 + 24 * 4) + [(now - 60, 'draw')], now)
         self.assertEqual((old['tier'], old['division'], old['last_season']), ('Gold', 4, {'tier': 'Kamui', 'division': None}))  # virada: um tier abaixo
+        fixed = server.climb([(now - 40 * 86400, 'loss'), (now - 60, 'loss')], now, floor=server.KAMUI)
+        self.assertEqual((fixed['tier'], fixed['division'], fixed['points']), ('Kamui', None, 0))  # conta fixada: não cai de Kamui
         self.assertEqual(server.level_of(5200), {'xp': 5200, 'level': 6, 'xp_in_level': 200, 'xp_level_size': 1000, 'title': 'Trainee'})
 
     def test_rank_api(self):

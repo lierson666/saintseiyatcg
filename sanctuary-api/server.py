@@ -41,6 +41,8 @@ KAMUI, PIPS, XP_LEVEL, AI_XP_DAY = len(TIERS) - 1, 6, 1000, 500
 XP_ONLINE = {'win': 100, 'loss': 50, 'draw': 50}
 XP_AI = {'win': 50, 'loss': 25, 'draw': 25}
 TITLES = ((50, 'Seventh Sense'), (30, 'Cosmo Awakened'), (20, 'Cloth Bearer'), (10, 'Saint'), (5, 'Trainee'))
+# Contas fixadas em Kamui (pedido do autor, 31/10/2026): começam em Kamui e não caem dele, nem na virada da temporada.
+KAMUI_FIXED = {'limattenhauer@gmail.com'}
 ARENA_SECRET = os.environ.get('ARENA_SECRET', '')
 CHALLENGE_SECONDS = 60
 SUSPENDED = 'This account is suspended.'
@@ -141,12 +143,13 @@ def season_name(n):
     return f'{n // 12}-{n % 12 + 1:02d}'
 
 
-def climb(results, now=None):
+def climb(results, now=None, floor=0):
     """Refaz a escalada a partir dos duelos online [(finished_at, 'win'|'loss'|'draw')] em ordem.
     Steel: vitória +2 pips, derrota 0. Demais: +1/-1. 6 pips por divisão (IV→I); não cai de tier.
     Kamui não tem divisão: pontos (+1/-1, mínimo 0). Virada do mês: um tier abaixo, divisão IV, sem pips."""
     now = time.time() if now is None else now
-    r = {'tier': 0, 'division': 4, 'pips': 0, 'points': 0}
+    base = lambda t: {'tier': t, 'division': None if t == KAMUI else 4, 'pips': 0, 'points': 0}
+    r = base(floor)
     season, best, last = season_of(now), None, None
     key = lambda r: (r['tier'], -(r['division'] or 0), r['pips'] + r['points'])
     cur = None
@@ -155,7 +158,7 @@ def climb(results, now=None):
         if cur is not None and s > cur:
             last = best if s - cur == 1 else None
             for _ in range(min(s - cur, KAMUI)):
-                r = {'tier': max(0, r['tier'] - 1), 'division': 4, 'pips': 0, 'points': 0}
+                r = base(max(floor, r['tier'] - 1))
             best = None
         cur = s
         if res is None:
@@ -194,18 +197,24 @@ def online_results(uid):
     return [(d['finished_at'], 'draw' if not d['winner'] else 'win' if d['winner'] == side(d) else 'loss') for d in rows]
 
 
+def floor_of(uid):
+    email = db.execute('select email from users where id = ?', (uid,)).fetchone()
+    return KAMUI if email and email[0].lower() in KAMUI_FIXED else 0
+
+
 def rank_of(uid):
     results = online_results(uid)
     ai = db.execute('select coalesce(sum(xp), 0) from ai_xp where user_id = ?', (uid,)).fetchone()[0]
-    return {**climb(results), **level_of(ai + sum(XP_ONLINE[r] for _, r in results))}
+    return {**climb(results, floor=floor_of(uid)), **level_of(ai + sum(XP_ONLINE[r] for _, r in results))}
 
 
 def kamui_board(limit=20):
     # shortcut: refaz a escalada de todo jogador com duelo a cada pedido; trocar por tabela de rank quando houver centenas de jogadores.
     ids = [r[0] for r in db.execute('select distinct id from users join duels on id in (a_id, b_id) where suspended_at is null')]
+    ids += [r[0] for r in db.execute(f"select id from users where suspended_at is null and lower(email) in ({','.join('?' * len(KAMUI_FIXED))})", tuple(KAMUI_FIXED)) if r[0] not in ids]
     board = []
     for uid in ids:
-        r = climb(online_results(uid))
+        r = climb(online_results(uid), floor=floor_of(uid))
         if r['tier'] == TIERS[KAMUI]:
             name = db.execute('select username_display from users where id = ?', (uid,)).fetchone()[0]
             board.append({'username': name, 'points': r['points']})
