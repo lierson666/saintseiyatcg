@@ -1004,3 +1004,21 @@ body:has(.trigger-panel, .cast-slot) .command__clock { visibility: hidden; }
 .trigger-panel__box { grid-auto-rows: max-content; }
 .trigger-panel__opts { max-height: none; overflow: visible; }
 .trigger-panel .decision__effect { max-height: 28dvh; overflow: auto; }
+
+/* Busca (tutor) e escolhas fora do campo: popup no meio da tela com as cartas grandes, como no Arena (autor, 31/10/2026). */
+.pick-veil { position: fixed; inset: 0; z-index: 70; background: rgba(4, 4, 16, .72); backdrop-filter: blur(3px); }
+.pick-modal { position: fixed; z-index: 71; left: 50%; top: 50%; transform: translate(-50%, -50%); display: grid; gap: 8px; width: min(1100px, 94vw); max-height: 92dvh; overflow: auto;
+  padding: 18px 22px; border: 1px solid rgb(var(--glow, 255, 205, 100)); border-radius: 16px; background: rgba(10, 12, 34, .96); box-shadow: 0 0 40px rgba(var(--glow, 255, 205, 100), .35); color: #f3ead6;
+  animation: pick-in .28s cubic-bezier(.2, .8, .2, 1); }
+.pick-modal__head { display: flex; justify-content: space-between; gap: 12px; }
+.pick-modal .decision__who { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: rgb(var(--glow, 255, 205, 100)); }
+.pick-modal h3 { margin: 0; color: var(--gold-hi); font-size: 22px; letter-spacing: .06em; }
+.pick-modal .decision__effect { max-width: 70ch; }
+.pick-modal__ask { margin: 2px 0 4px; font-weight: 600; }
+.pick-modal .decision__opts { justify-content: center; gap: 16px; padding: 8px 4px; max-height: none; overflow: visible; }
+.pick-modal .decision__opt .dcard { --card-w: clamp(150px, 13vw, 210px); }
+.pick-modal .decision__opt:hover { transform: translateY(-4px); }
+.pick-modal .trigger-panel__actions { justify-content: center; }
+@keyframes pick-in { from { opacity: 0; transform: translate(-50%, -46%) scale(.97); } }
+.reduce-motion .pick-modal { animation: none; }
+@media (max-height: 520px) { .pick-modal { padding: 10px 12px; } .pick-modal .decision__opt .dcard { --card-w: clamp(96px, 16vh, 140px); } .pick-modal .decision__effect { display: none; } }

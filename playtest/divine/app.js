@@ -1056,7 +1056,7 @@ overlayRoot.addEventListener('click', e => {
   if (btn.dataset.orderOk !== undefined) return confirmOrder();
   if (btn.dataset.orderUp) return moveOrder(+btn.dataset.orderUp, +btn.dataset.orderUp - 1);
   if (btn.dataset.orderDown) return moveOrder(+btn.dataset.orderDown, +btn.dataset.orderDown + 1);
-  if (btn.closest('.decision, .decision-pill, .trigger-panel')) return decisionClick(btn);
+  if (btn.closest('.decision, .decision-pill, .trigger-panel, .pick-modal')) return decisionClick(btn);
   if (btn.dataset.mull) { marked.has(btn.dataset.mull) ? marked.delete(btn.dataset.mull) : marked.add(btn.dataset.mull); return render(); }
   if (btn.dataset.primary !== undefined) return primary();
   if (btn.dataset.new !== undefined) return online ? concedeOnline() : newMatch();
@@ -1712,12 +1712,20 @@ function sidePanel(req, t, fx) {
   const cancel = casting && !online ? '<button class="ghost" data-dec="cancel">Cancel</button>' : '';
   const picked = pending.picked;
   // Escolha fora do tabuleiro (descartar, manter, modo…): as opções em lista dentro do painel.
-  const opts = req.kind === 'choice' && !target ? `<div class="decision__opts trigger-panel__opts" role="group" aria-label="Options">${req.options.map((uid, i) => `<button class="decision__opt ${picked.includes(uid) ? 'picked' : ''}" data-dec="opt" data-opt="${esc(uid)}" data-focus="opt:${esc(uid)}" aria-pressed="${picked.includes(uid)}" aria-label="${esc(optName(uid))}${i < 9 ? `, key ${i + 1}` : ''}">${String(uid).startsWith('god:') || req.choose === 'mode' || !ctx.objects[uid] ? `<span class="dcard decision__god">${esc(optName(uid))}</span>` : cardFace(uid, {size: 'dcard--sm'}).replace('tabindex="0"', 'tabindex="-1"')}${i < 9 ? `<kbd>${i + 1}</kbd>` : ''}</button>`).join('')}</div>` : '';
+  // Busca no deck, Tartarus ou mão (tutor): popup no meio da tela com as cartas grandes, como no Arena (autor, 31/10/2026).
+  const offBoard = req.kind === 'choice' && !target && req.choose !== 'mode' && req.options.every(u => ctx.objects[u] && !S().order.some(k => S().players[k].battlefield.includes(u)));
+  const size = offBoard ? 'dcard--lg' : 'dcard--sm';
+  const opts = req.kind === 'choice' && !target ? `<div class="decision__opts trigger-panel__opts" role="group" aria-label="Options">${req.options.map((uid, i) => `<button class="decision__opt ${picked.includes(uid) ? 'picked' : ''}" data-dec="opt" data-opt="${esc(uid)}" data-focus="opt:${esc(uid)}" aria-pressed="${picked.includes(uid)}" aria-label="${esc(optName(uid))}${i < 9 ? `, key ${i + 1}` : ''}">${String(uid).startsWith('god:') || req.choose === 'mode' || !ctx.objects[uid] ? `<span class="dcard decision__god">${esc(optName(uid))}</span>` : cardFace(uid, {size}).replace('tabindex="0"', 'tabindex="-1"')}${i < 9 ? `<kbd>${i + 1}</kbd>` : ''}</button>`).join('')}</div>` : '';
   const actions = waiting ? `<p class="decision__note">Waiting for Player ${req.player}…</p>`
     : req.kind === 'optional' ? `<button class="primary-action" data-dec="yes" data-focus="yes">${esc(t.yes)}</button><button class="ghost" data-dec="no" data-focus="no">${esc(t.no)}</button>`
     : opts ? `<button class="primary-action" data-dec="confirm" data-focus="confirm" ${picked.length === req.count ? '' : 'disabled'}>Confirm · ${picked.length}/${req.count}</button>${cancel}` : cancel;
   // Fila: o item que está resolvendo e os que vêm depois (topo da cadeia primeiro).
   const next = [...S().chain].reverse(), queue = next.length ? `<div class="trigger-queue"><small>Trigger 1 of ${next.length + 1}</small><ol>${next.slice(0, 4).map(c => `<li ${srcAttrs(c)}>${esc(chainLabel(c).title)}</li>`).join('')}${next.length > 4 ? `<li>+${next.length - 4} more</li>` : ''}</ol></div>` : '';
+  if (offBoard && !waiting) return `<div class="pick-veil" aria-hidden="true"></div><section class="pick-modal" role="dialog" aria-modal="true" aria-labelledby="trigger-title" ${godFx(req.player)}>
+    <header class="pick-modal__head"><span class="decision__who">${esc(t.who)} decides</span><span class="decision__clock" data-decision-clock></span></header>
+    <small class="decision__kicker">${esc(t.kicker)}</small><h3 id="trigger-title">${esc(t.title)}</h3>
+    ${fx ? `<div class="decision__effect card-text">${fx.lines.map(l => `<p>${inlineMarkup(l)}</p>`).join('')}</div>` : ''}
+    <p class="pick-modal__ask">${inlineMarkup(t.body)}</p>${opts}<div class="trigger-panel__actions">${actions}</div></section>`;
   return `<aside class="trigger-panel ${target ? 'is-targeting' : ''}" role="dialog" aria-labelledby="trigger-title">
     ${face ? `<div class="trigger-panel__card" ${godFx(req.player)}><i class="cast-aura" aria-hidden="true"></i>${face}${target && face ? '<small>Drag to a target</small>' : ''}</div>` : ''}
     <div class="trigger-panel__box"><span class="decision__who">${esc(t.who)} decides</span><span class="decision__clock" data-decision-clock></span>
@@ -1792,7 +1800,7 @@ function decisionClick(btn) {
 // Teclado: 1–9 marcam opções; setas andam entre opções; Tab fica preso no modal.
 function decisionKey(e) {
   if (e.key === 'l' || e.key === 'L') { logOpen = !logOpen; return render(); }
-  const box = $('.decision, .trigger-panel'), focusables = box ? $$('button:not([disabled])', box) : [];
+  const box = $('.decision, .pick-modal, .trigger-panel'), focusables = box ? $$('button:not([disabled])', box) : [];
   if (/^[1-9]$/.test(e.key) && pending.pending.options) { const uid = pending.pending.options[Number(e.key) - 1]; if (uid) { e.preventDefault(); togglePick(uid); $(`.decision [data-focus="opt:${CSS.escape(uid)}"]`)?.focus(); } return; }
   if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
     const opts = $$('.decision__opt', box), i = opts.indexOf(document.activeElement);
@@ -1805,11 +1813,11 @@ function decisionKey(e) {
     return;
   }
   // Espaço/Enter fora de um botão do modal não passam o turno: devolvem o foco à decisão.
-  if ((e.code === 'Space' || e.code === 'Enter') && !document.activeElement?.closest?.('.decision, .decision-pill, .trigger-panel')) { e.preventDefault(); focusDecision(); }
+  if ((e.code === 'Space' || e.code === 'Enter') && !document.activeElement?.closest?.('.decision, .decision-pill, .trigger-panel, .pick-modal')) { e.preventDefault(); focusDecision(); }
 }
 function focusDecision() {
-  if (!pending || document.activeElement?.closest?.('.decision, .decision-pill, .trigger-panel')) return;
-  $('.decision [data-focus="yes"], .decision .decision__opt, .decision-pill, .trigger-panel [data-focus]')?.focus();
+  if (!pending || document.activeElement?.closest?.('.decision, .decision-pill, .trigger-panel, .pick-modal')) return;
+  $('.decision [data-focus="yes"], .decision .decision__opt, .decision-pill, .pick-modal .decision__opt, .trigger-panel [data-focus]')?.focus();
 }
 // O log também acompanha eventos que o orquestrador não descreve.
 function watchEvents() {
