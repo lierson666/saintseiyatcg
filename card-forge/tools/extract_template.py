@@ -2,7 +2,7 @@
 
 Só LÊ os PSDs em FRAMES/ — nunca grava nada lá.
 Uso (da raiz do projeto):
-    uv run --with psd-tools --with pillow --with scipy python card-forge/tools/extract_template.py
+    uv run --with psd-tools --with pillow --with scipy python card-forge/tools/extract_template.py [peça ...]
 Saída: CARD-TEMPLATE/<pasta>/<peça>.png + CARD-TEMPLATE/pieces.json (posição de cada peça no canvas 1488x2091).
 """
 import json
@@ -72,6 +72,15 @@ GODS = {
 for faction, (psd_path, parts) in GODS.items():
     PIECES += [(psd_path, name, xy, faction, piece) for piece, (name, xy) in parts.items()]
 
+# Cabeçalho do Awaken na carta de God (autor, 31/10/2026): gema, a palavra "Awaken" (LustScript com efeitos) e a linha.
+AWAKEN = {"athena": ((380, 1257), (517, 1283), (124, 1333)), "ares": ((384, 1309), (521, 1335), (129, 1385)),
+          "hades": ((381, 1221), (518, 1247), (126, 1297)), "artemis": ((381, 1363), (518, 1389), (126, 1439)),
+          "poseidon": ((381, 1266), (518, 1292), (126, 1342))}
+for faction, (gem, word, line) in AWAKEN.items():
+    psd_path = f"FRAMES/{faction.upper()}/{faction.upper()}.psd"
+    PIECES += [(psd_path, "Arte 11", gem, faction, "gem_awaken"), (psd_path, "Awaken", word, faction, "awaken_word"),
+               (psd_path, "LINHAN AWAKEN 1", line, faction, "awaken_line")]
+
 # modo de mesclagem do PSD -> globalCompositeOperation do canvas
 BLEND = {"EXCLUSION": "exclusion", "HARD_LIGHT": "hard-light", "MULTIPLY": "multiply", "SCREEN": "screen",
          "OVERLAY": "overlay", "SOFT_LIGHT": "soft-light", "COLOR_DODGE": "color-dodge", "LINEAR_DODGE": "lighter"}
@@ -95,10 +104,13 @@ def render_alone(psd, layer):
     return psd.composite(layer_filter=lambda l: id(l) in keep, force=False)
 
 
-def main():
-    spec = {"canvas": [1488, 2091], "pieces": {}, "linked_missing": []}
+def main(only=()):
+    # Com nomes de peça na linha de comando, extrai só essas e mescla no pieces.json existente.
+    spec = json.loads((OUT / "pieces.json").read_text(encoding="utf-8")) if only else {"canvas": [1488, 2091], "pieces": {}, "linked_missing": []}
     cache = {}
     for psd_path, name, xy, folder, piece in PIECES:
+        if only and piece not in only:
+            continue
         psd = cache.get(psd_path) or cache.setdefault(psd_path, PSDImage.open(ROOT / psd_path))
         layer = find_layer(psd, name, xy)
         blend = BLEND.get(layer.blend_mode.name)
@@ -123,7 +135,7 @@ def main():
             "src": f"{psd_path} :: {name}",
             **({"blend": blend} if blend else {}),
         }
-        if layer.kind == "smartobject" and layer.smart_object.kind == "external":
+        if layer.kind == "smartobject" and layer.smart_object.kind == "external" and not any(m["piece"] == f"{folder}/{piece}" for m in spec["linked_missing"]):
             spec["linked_missing"].append({"piece": f"{folder}/{piece}", "file": layer.smart_object.filename,
                                            "note": "arquivo vinculado ausente; exportado da prévia raster salva no PSD"})
         print("ok", folder, piece, box)
@@ -131,4 +143,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main(set(sys.argv[1:]))

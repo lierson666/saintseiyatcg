@@ -82,8 +82,11 @@ function renderPsdCard(card,{src,stage,hp,power,keywords,damage,rules,equipment,
     }
     else if(el.kind==='rules'){
       const [x,y,w,h]=el.rect,kw=keywords.length?`${keywords.join(', ').toUpperCase()}.`:'';
-      const fs=rulesSize([kw,...rules,ownerLine].filter(Boolean),el.size,w,h);
-      out+=`<div class="lc-rules live-card__rules" style="${pct(x,y,w,h)};font-size:${cqw(fs)}">${kw?`<p class="live-card__keywords">${keywords.map(k=>inlineMarkup(k)).join(', ')}</p>`:''}${renderRules(rules)}${ownerLine?`<p class="live-card__owners">${ownerLine}</p>`:''}</div>`;
+      // God: o marcador **AWAKEN N** vira o cabeçalho do PSD do Deus (linha, gema com o número, "Awaken", linha; autor, 31/10/2026).
+      const cut=card.tipo==='God'&&P[`${f}/gem_awaken`]?rules.findIndex(t=>/^\*\*AWAKEN\b/.test(t)):-1,head=cut<0?'':awakenHead(f,card.awaken);
+      const body=cut<0?renderRules(rules):`${renderRules(rules.slice(0,cut))}${head}${renderRules(rules.slice(cut+1))}`;
+      const fs=rulesSize([kw,...rules,ownerLine].filter(Boolean),el.size,w,cut<0?h:h-240);
+      out+=`<div class="lc-rules live-card__rules" style="${pct(x,y,w,h)};font-size:${cqw(fs)}">${kw?`<p class="live-card__keywords">${keywords.map(k=>inlineMarkup(k)).join(', ')}</p>`:''}${body}${ownerLine?`<p class="live-card__owners">${ownerLine}</p>`:''}</div>`;
     }
     else if(el.kind==='rarity'){const p=P[`athena/rarity_${String(card.raridade||'').toLowerCase()}`];if(p){const hh=el.h||p.h,ww=p.w*hh/p.h;out+=piece(`athena/rarity_${card.raridade.toLowerCase()}`,[el.x-ww/2,el.y-hh/2,ww,hh],'lc-rarity');}}
   }
@@ -91,6 +94,11 @@ function renderPsdCard(card,{src,stage,hp,power,keywords,damage,rules,equipment,
     <div class="live-card__illustration" aria-hidden="true">${src?`<img src="${escape(src)}" alt="" draggable="false" loading="lazy"${frame||(artworkStyle?` style="${artworkStyle}"`:'')}>`:'<span class="live-card__placeholder">✧<small>Illustration pending</small></span>'}</div>
     <div class="lc-psd">${out}</div>${damage?`<span class="live-card__damage">${damage} damage · ${escape(hp)} HP left</span>`:''}${instance&&card.tipo==='Devotee'?`<span class="live-card__state">${instance.prepared?'Prepared':'Unprepared'}${instance.awakened?' · Awakened':''}</span>`:''}
   </div>`;
+}
+// Cabeçalho do Awaken da carta de God, peças extraídas do PSD de cada Deus (card-forge/tools/extract_template.py).
+function awakenHead(f,n){
+  const img=(name,cls)=>`<img class="${cls}" src="${escape(PSD.src(`${f}/${name}`))}" alt="">`;
+  return `<div class="lc-awaken" aria-label="Awaken ${escape(n??'')}">${img('awaken_line','lc-awaken__line')}<span class="lc-awaken__gem">${img('gem_awaken','')}<b>${escape(n??'')}</b></span>${img('awaken_word','lc-awaken__word')}${img('awaken_line','lc-awaken__line')}</div>`;
 }
 function armorStatus(card,hp,damage){
   if(!isArmor(card))return '';
@@ -114,6 +122,7 @@ export function renderLiveCard(card,{stats=null,instance=null,art=null,compact=f
   const ownerName=id=>id.split('-').map(w=>w.charAt(0).toUpperCase()+w.slice(1)).join(' ');
   const rules=ruleBlocksWithoutKeywords(presentationRules(card).map(t=>{for(const k of keywords){const prefix=k+'.';if(t.toLowerCase().startsWith(prefix.toLowerCase()))t=t.slice(prefix.length).trim();}return t;}).filter(Boolean),keywords).map(block=>blocksMarkup([block])),equipment=isEquipment(card),equip=card.equipar_custo_outros??card.equipar_custo; // Armor: Equip universal no selo
   // God: Awaken e Ultimate vêm de campos próprios, com os mesmos títulos do Card Forge (drawRules).
+  // **AWAKEN N** vira o cabeçalho do PSD do Deus no renderPsdCard (autor, 31/10/2026).
   if(card.tipo==='God'){
     if(card.habilidade_awaken_en)rules.push(`**AWAKEN${card.awaken?` ${card.awaken}`:''}**`,...card.habilidade_awaken_en.split('\n'));
     if(card.ultimate_en)rules.push('**ULTIMATE:**',...card.ultimate_en.split('\n'));
