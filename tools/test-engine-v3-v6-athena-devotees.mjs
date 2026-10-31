@@ -129,11 +129,12 @@ test('015 Lion\'s Pride: após derrotar um inimigo, pode Preparar Aiolia', () =>
   assert.equal(s.units[leo].prepared, true);
 });
 
-test('022 Shaina: Seal no Strike; sem Seal prévio não há dano extra', () => {
+test('022 Shaina: -1 ATK no Strike (sem Seal, 31/10/2026); sem Seal prévio não há dano extra', () => {
   const {s, ctx, give} = setup();
-  const shaina = give('A', 'athena-v6-022'), foe = give('B', FOE);
+  const shaina = give('A', 'athena-v6-022'), foe = give('B', FOE), atk = atkOf(s, ctx, foe);
   strike(s, ctx, shaina, {kind: 'devotee', uid: foe});
-  assert.equal(s.units[foe].seal, 1);
+  assert.equal(s.units[foe].seal || 0, 0);
+  if (s.units[foe]) assert.equal(atkOf(s, ctx, foe), atk - 1);
   assert.equal(s.units[foe].damage, atkOf(s, ctx, shaina));
 });
 
@@ -272,7 +273,8 @@ test('075 Cerberus Chains e Three-Headed Assault', () => {
   const {s, ctx, give} = setup();
   const dante = give('A', 'athena-v6-075'), foe = give('B', 'athena-v6-007');
   strike(s, ctx, dante, {kind: 'devotee', uid: foe});
-  assert.equal(s.units[foe].seal, 1);
+  assert.equal(s.units[foe].seal || 0, 0);
+  assert.ok(s.effects.some(e => e.kind === 'noStrike' && e.target === foe), 'Cerberus Chains: não declara Strike no próximo turno');
   assert.equal(s.units[foe].damage, atkOf(s, ctx, dante));
   const t = setup(), d2 = t.give('A', 'athena-v6-075'), f2 = t.give('B', 'athena-v6-007');
   t.s.units[f2].seal = 1;

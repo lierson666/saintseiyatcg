@@ -237,24 +237,9 @@ test('020 Divine Aegis e Miracle: Saints amigos +0/+1; com 5 ou menos Soul, +1/+
   assert.equal(hpOf(s, ctx, warrior), 4); // não-Saint: sem bônus
 });
 
-test('020 The Last Miracle: com 5 ou menos Soul previne todo dano ao God e aos Saints até o fim do Round; uma vez por jogo', () => {
+test('020 Athena\'s Shield (31/10/2026): sem The Last Miracle, mesmo com 5 ou menos Soul', () => {
   const {s, ctx, give} = setup();
-  const saint = give('A', SAINT);
   s.players.A.soul = 5;
-  const shield1 = give('A', G(20), 'hand');
-  playEquipment(s, ctx, 'A', shield1, null);
-  passAll(s);
-  const foe = give('B', FOE);
-  s.active = 'B'; s.units[foe].prepared = true;
-  declareStrike(s, ctx, foe, {kind: 'god', player: 'A'}); passAll(s);
-  assert.equal(s.players.A.soul, 5, 'God não perde Soul');
-  assert.ok(s.v6Game['A:last-miracle']);
-  assert.equal(dmg(s, saint), 0);
-});
-
-test('020 The Last Miracle: acima de 5 Soul não dispara', () => {
-  const {s, ctx, give} = setup();
-  s.players.A.soul = 6;
   playEquipment(s, ctx, 'A', give('A', G(20), 'hand'), null);
   passAll(s);
   assert.ok(!s.v6Game?.['A:last-miracle']);
@@ -458,12 +443,13 @@ test('066 Eagle Silver Cloth: Marin sobrevive e põe 1 Training em outro Bronze 
   assert.ok(s.roundUses.has(`aerial:${cloth}`));
 });
 
-test('069 Medusa\'s Curse: o portador sobrevive como defensor e o atacante recebe 1 Seal', () => {
+test('069 Medusa\'s Curse: o portador sobrevive como defensor e o atacante fica com -1 ATK (31/10/2026)', () => {
   const {s, ctx, give} = setup();
-  const me = give('A', SAINT), cloth = give('A', G(69), 'battlefield', me), foe = give('B', FOE);
+  const me = give('A', SAINT), cloth = give('A', G(69), 'battlefield', me), foe = give('B', FOE), atk = atkOf(s, ctx, foe);
   tough(s, me);
   foeStrike(s, ctx, foe, {kind: 'devotee', uid: me});
-  assert.equal(s.units[foe].seal, 1);
+  assert.equal(s.units[foe].seal || 0, 0);
+  assert.equal(atkOf(s, ctx, foe), atk - 1);
   assert.ok(s.roundUses.has(`curse:${cloth}`));
 });
 

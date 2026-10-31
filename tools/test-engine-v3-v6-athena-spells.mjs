@@ -169,12 +169,12 @@ test('089 Wall: derrota Saints, compra 2 por cada e dá +2/+2 se houve Gold', ()
   assert.equal(atkOf(s, ctx, keep), atk + 2);
 });
 
-test('090 Will: +3/+3, God imune a Strike; com Soul baixa traz Saint de volta', () => {
+test('090 Will: +2/+2 (31/10/2026), God imune a Strike; com Soul baixa traz Saint de volta', () => {
   const {s, ctx, give} = setup();
   const shun = give('A', A('007')), dead = give('A', A('009'), 'tartarus'), atk = atkOf(s, ctx, shun);
   s.players.A.soul = 5;
   cast(s, ctx, '090');
-  assert.equal(atkOf(s, ctx, shun), atk + 3);
+  assert.equal(atkOf(s, ctx, shun), atk + 2);
   assert.ok(s.effects.some(e => e.kind === 'prevent' && e.target === 'god:A' && e.amount === Infinity));
   assert.ok(s.players.A.battlefield.includes(dead));
 });
@@ -196,10 +196,24 @@ test('063 Jamir Tower: Cloth Restoration tira 1 de dano de Devotee amigo com Arm
   assert.equal(s.units[shun].damage, 1);
 });
 
-test('Ex-Events (052, 055, 083) são Moment; ex-Miracles são Technique (autor, 31/10/2026)', () => {
+test('Ex-Events e truques defensivos são Moment; ex-Miracles são Technique (autor, 31/10/2026)', () => {
   const {ctx, give} = setup();
-  for (const id of ['athena-v6-055', 'athena-v6-083']) assert.equal(v6Spell(ctx, give('A', id, 'hand'))?.category, 'Moment');
-  for (const id of ['athena-v6-079', 'athena-v6-090']) assert.equal(v6Spell(ctx, give('A', id, 'hand')).category, 'Technique');
+  for (const n of ['055', '079', '082', '083']) assert.equal(v6Spell(ctx, give('A', A(n), 'hand'))?.category, 'Moment', n);
+  for (const n of ['089', '090']) assert.equal(v6Spell(ctx, give('A', A(n), 'hand')).category, 'Technique', n);
+});
+
+test('082 The Golden Arrow (Swords, 31/10/2026): Moment {1}; Devotee inimigo que declarou Strike vai ao Void e o God dele ganha Soul = ATK', () => {
+  const {s, ctx, give} = setup();
+  const foe = give('B', FOE), arrow = give('A', A('082'), 'hand');
+  s.players.B.soul = 10; // abaixo do teto, para o ganho inteiro aparecer
+  const soul = s.players.B.soul, atk = atkOf(s, ctx, foe), before = s.players.A.bases.filter(b => b.prepared).length;
+  s.strikes.set(foe, s.turn);
+  playSpell(s, ctx, 'A', arrow, {target: foe});
+  assert.ok(s.window, 'Moment: abre janela de resposta');
+  passAll(s);
+  assert.ok(s.players.B.void.includes(foe));
+  assert.equal(s.players.B.soul, soul + atk);
+  assert.equal(s.players.A.bases.filter(b => b.prepared).length, before - 1);
 });
 
 // ---- Completados com os ganchos novos (29/10/2026) ----

@@ -24,6 +24,20 @@ const againstAlly = (s, c, key, self, attacker, target) => k.controllerOf(s, att
   (target.kind === 'devotee' && target.uid !== self && k.controllerOf(s, target.uid) === key && isSaint(c, target.uid)));
 // "Cannot declare another Strike this round" (gancho cannotStrike): marca exata, vale até o fim do Round nos dois turnos.
 const lockStrike = (s, uid) => { if (s.units[uid]) forbidStrike(s, uid); };
+// "Choose one: Remove N damage from target friendly Devotee; or your God gains {S}{S}" (Miho 035, Healer 041; 31/10/2026).
+// `choice` ({target} ou {mode: 'soul'}) vem de play.activate; sem ele, pergunta. Sem Devotee ferido, só resta o Soul.
+function healOrSoul(s, c, key, ability, heal, soul, choice = {}) {
+  const modes = [`Remove ${heal} damage`, `Gain ${soul} Soul`];
+  const damaged = k.devotees(s, c, key).filter(u => s.units[u]?.damage > 0);
+  let t = choice.mode === 'soul' ? null : damaged.includes(choice.target) ? choice.target : undefined;
+  if (t === undefined) {
+    const m = !damaged.length ? modes[1] : c.decide ? c.decide(key, {ability, options: modes, choose: 'mode', text: 'Choose one.'}) : modes[0];
+    t = m === modes[0] ? k.choose(c, key, ability, damaged, {text: `Remove ${heal} damage from target friendly Devotee.`}) : null;
+  }
+  if (t) k.removeDamage(s, t, heal);
+  else k.gainSoul(s, key, soul);
+}
+const enchantress = (s, c, key, self, gear) => !k.card(c, gear)?.armor && k.once(s, `${self}:enchant`) && (st => k.draw(st, key, 1));
 // "Once each round, when X deals Strike damage to an enemy Devotee, <efeito>": uso gasto ao resolver (se o alvo ainda existir).
 const onHit = (tag, run) => (s, c, key, self, victim) => !s.roundUses.has(`${self}:${tag}`) && (st => {
   if (st.units[victim] && k.controllerOf(st, victim) !== key && k.once(st, `${self}:${tag}`)) run(st, c, key, self, victim);
@@ -112,7 +126,8 @@ export default {
       return (had || constrict) && (st => {
         if (!st.units[victim] || k.controllerOf(st, victim) === key) return;
         if (had) k.damage(st, c, victim, 2);
-        if (constrict && st.units[victim] && k.once(st, `${self}:constriction`)) addSeal(st, c, [victim], 1, 'SERPENT CONSTRICTION');
+        // Athena → Branco (31/10/2026): Seal só nos Saints do gelo; aqui vira -1 ATK.
+        if (constrict && st.units[victim] && k.once(st, `${self}:constriction`)) k.buff(st, victim, -1, 0);
       });
     },
   },
@@ -205,12 +220,12 @@ export default {
     mods: (s, c, key) => hasName(s, c, key, /Andromeda Shun/i) ? [{hp: 1}] : [], // Resonance — Andromeda Shun
   },
   // Miho: Kindness
-  'athena-v6-035': {
-    activate: {name: 'KINDNESS', cost: 1, run: (s, c, key) => {
-      const t = k.choose(c, key, 'KINDNESS', k.devotees(s, c, key), {text: 'Remove 1 damage from target friendly Devotee.'});
-      if (t) k.removeDamage(s, t, 1);
-    }},
-  },
+  'athena-v6-035': {activate: {name: 'KINDNESS', cost: 1, run: (s, c, key, self, ch) => healOrSoul(s, c, key, 'KINDNESS', 1, 1, ch)}},
+  // Sanctuary Healer: Sacred Recovery (substitui ABILITIES '041' de effects.js)
+  'athena-v6-041': {activate: {name: 'SACRED RECOVERY', cost: 1, run: (s, c, key, self, ch) => healOrSoul(s, c, key, 'SACRED RECOVERY', 2, 2, ch)}},
+  // Motor Enchantress (31/10/2026): "Whenever you play a non-Armor Equipment, draw a card." Uma vez por Round (§64).
+  'athena-v6-042': {watchEquipCast: enchantress},
+  'athena-v6-043': {watchEquipCast: enchantress},
   // Esmeralda
   'athena-v6-038': {
     // A Gentle Memory
@@ -264,7 +279,10 @@ export default {
   },
   // Cerberus Dante
   'athena-v6-075': {
-    combatDamage: seal('chains', 'CERBERUS CHAINS'),
+    // Cerberus Chains (31/10/2026): "can't declare a Strike during its controller's next turn". O próximo turno do dono do alvo
+    // ainda é neste Round só se agora é o seu turno e você é o primeiro jogador (§7); senão é no Round seguinte.
+    combatDamage: onHit('chains', (st, c, key, self, victim) =>
+      forbidStrike(st, victim, st.active === key && st.order[0] === key ? 'this_round' : 'next_round')),
     // Three-Headed Assault: sem limite por Round.
     declare: (s, c, key, self, target) => target.kind === 'devotee' && sealed(s, target.uid) && (st => k.buff(st, self, 1, 0, 'this_strike')),
   },

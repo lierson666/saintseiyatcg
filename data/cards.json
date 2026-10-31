@@ -740,7 +740,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 9,
+      "custo": 4,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -753,13 +753,12 @@
       "keywords_en": [],
       "habilidades_en": [
         "Divine Aegis — Friendly Saints get +0 ATK / +1 HP.",
-        "The Last Miracle — Once per game, when you cast Athena’s Shield, if your God has 5 or less Soul, prevent all damage that would be dealt to your God and friendly Saints until the end of the round.",
         "Divine Sanctuary — {3}{C}: Once each round, when your God would take Strike damage, prevent up to 3 of that damage.",
         "Miracle — While your God has 5 or less Soul, friendly Saints get an additional +1 ATK / +1 HP."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md.",
       "categoria_equipamento": "Artifact",
       "slot_equipamento": null,
       "auto_equip_en": [],
@@ -830,12 +829,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Serpent Constriction — Once each round, when Ophiuchus Shaina deals Strike damage to an enemy Devotee, put 1 Seal counter on that Devotee.",
+        "Serpent Constriction — Once each round, when Ophiuchus Shaina deals Strike damage to an enemy Devotee, that Devotee gets -1 ATK until the end of the round.",
         "Thunder Claw — When Ophiuchus Shaina deals Strike damage to an enemy Devotee that had a Seal counter when the Strike began, deal 2 additional damage to that Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
     },
     {
       "id": "athena-v6-023",
@@ -1265,11 +1264,11 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Kindness — {1}{C}, {T}: Remove 1 damage from target friendly Devotee."
+        "Kindness — {1}{C}, {T}: Choose one: Remove 1 damage from target friendly Devotee; or your God gains {1}{S}."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
     },
     {
       "id": "athena-v6-036",
@@ -1466,11 +1465,11 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Sacred Recovery — {1}{C}, {T}: Remove up to 2 damage from target friendly Devotee."
+        "Sacred Recovery — {1}{C}, {T}: Choose one: Remove up to 2 damage from target friendly Devotee; or your God gains {2}{S}."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
     },
     {
       "id": "athena-v6-042",
@@ -1487,7 +1486,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 3,
+      "custo": 2,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -1499,11 +1498,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Armor Repair — {1}{C}, {T}: Remove 1 damage from target friendly Devotee equipped with an Armor."
+        "Armor Repair — {1}{C}, {T}: Remove 1 damage from target friendly Devotee equipped with an Armor.",
+        "Craftsman's Insight — Whenever you play a non-Armor Equipment, draw a card. This ability triggers only once per turn."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
     },
     {
       "id": "athena-v6-043",
@@ -1532,11 +1532,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Sacred Knowledge — When Star Hill Acolyte enters the Battlefield, look at the top 2 cards of your deck. Put one on top and the other on the bottom in any order."
+        "Sacred Knowledge — When Star Hill Acolyte enters the Battlefield, look at the top 2 cards of your deck. Put one on top and the other on the bottom in any order.",
+        "Enchanted Wisdom — Whenever you play a non-Armor Equipment, draw a card. This ability triggers only once per turn."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
     },
     {
       "id": "athena-v6-044",
@@ -1942,7 +1943,7 @@
       "nome_interno_pt": "",
       "faccao": "Athena",
       "tipo": "Spell",
-      "subtipos": ["Technique"],
+      "subtipos": ["Moment"],
       "raridade": "Common",
       "status": "design-ready",
       "cosmoble": true,
@@ -1963,7 +1964,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
     },
     {
       "id": "athena-v6-055",
@@ -2009,7 +2010,7 @@
       "nome_interno_pt": "",
       "faccao": "Athena",
       "tipo": "Spell",
-      "subtipos": ["Technique"],
+      "subtipos": ["Moment"],
       "raridade": "Common",
       "status": "design-ready",
       "cosmoble": true,
@@ -2031,7 +2032,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
     },
     {
       "id": "athena-v6-057",
@@ -2077,7 +2078,7 @@
       "nome_interno_pt": "",
       "faccao": "Athena",
       "tipo": "Spell",
-      "subtipos": ["Technique"],
+      "subtipos": ["Moment"],
       "raridade": "Common",
       "status": "design-ready",
       "cosmoble": true,
@@ -2099,7 +2100,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
     },
     {
       "id": "athena-v6-059",
@@ -2179,7 +2180,7 @@
       "nome_interno_pt": "",
       "faccao": "Athena",
       "tipo": "Spell",
-      "subtipos": ["Technique"],
+      "subtipos": ["Moment"],
       "raridade": "Common",
       "status": "design-ready",
       "cosmoble": true,
@@ -2200,7 +2201,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
     },
     {
       "id": "athena-v6-062",
@@ -2484,12 +2485,12 @@
       "equipar_custo": 5,
       "keywords_en": [],
       "habilidades_en": [
-        "Medusa’s Curse — Once each round, when equipped Devotee survives a Strike as a defender, put 1 Seal counter on the Striking Devotee.",
+        "Medusa’s Curse — Once each round, when equipped Devotee survives a Strike as a defender, the Striking Devotee gets -1 ATK until the end of the round.",
         "Resonance — Perseus Algol: When Algol activates Medusa Shield, the Striking Devotee gets -1 ATK during that Strike."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md.",
       "categoria_equipamento": "Armor",
       "slot_equipamento": "armadura",
       "auto_equip_en": ["Perseus Algol"],
@@ -2700,12 +2701,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Cerberus Chains — Once each round, when Cerberus Dante deals Strike damage to an enemy Devotee, put 1 Seal counter on that Devotee.",
+        "Cerberus Chains — Once each round, when Cerberus Dante deals Strike damage to an enemy Devotee, that Devotee can't declare a Strike during its controller's next turn.",
         "Three-Headed Assault — When Cerberus Dante declares a Strike against an enemy Devotee that already has a Seal counter, he gets +1 ATK during that Strike."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
     },
     {
       "id": "athena-v6-076",
@@ -2717,7 +2718,7 @@
       "nome_interno_pt": "",
       "faccao": "Athena",
       "tipo": "Spell",
-      "subtipos": ["Technique"],
+      "subtipos": ["Moment"],
       "raridade": "Common",
       "status": "design-ready",
       "cosmoble": true,
@@ -2739,7 +2740,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
     },
     {
       "id": "athena-v6-077",
@@ -2821,7 +2822,7 @@
       "nome_interno_pt": "",
       "faccao": "Athena",
       "tipo": "Spell",
-      "subtipos": ["Technique"],
+      "subtipos": ["Moment"],
       "raridade": "Common",
       "status": "design-ready",
       "cosmoble": true,
@@ -2843,7 +2844,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
     },
     {
       "id": "athena-v6-080",
@@ -2890,12 +2891,12 @@
       "nome_interno_pt": "",
       "faccao": "Athena",
       "tipo": "Spell",
-      "subtipos": ["Technique"],
+      "subtipos": ["Moment"],
       "raridade": "Uncommon",
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 4,
+      "custo": 3,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -2912,7 +2913,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
     },
     {
       "id": "athena-v6-082",
@@ -2924,12 +2925,12 @@
       "nome_interno_pt": "",
       "faccao": "Athena",
       "tipo": "Spell",
-      "subtipos": ["Technique"],
+      "subtipos": ["Moment"],
       "raridade": "Legendary",
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 5,
+      "custo": 1,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -2941,13 +2942,11 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Deal 4 damage to target enemy Devotee.",
-        "If you control Pegasus Seiya, deal 6 damage instead.",
-        "Divine Intervention — If this Spell defeats an enemy Devotee, you may remove 1 damage from target friendly Saint."
+        "Send target enemy Devotee that declared a Strike this turn to the Void. Its controller's God gains Soul equal to that Devotee's ATK."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
     },
     {
       "id": "athena-v6-083",
@@ -3105,7 +3104,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 7,
+      "custo": 5,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -3118,12 +3117,11 @@
       "keywords_en": [],
       "habilidades_en": [
         "Divine Salvation — Prevent all damage that would be dealt to your God until the end of the round.",
-        "Athena’s Light — If you control Pegasus Seiya, remove up to 3 damage from each friendly Saint.",
-        "The Last Hope — If your God has 5 or less Soul, you may Prepare up to two friendly Saints. They cannot declare another Strike this round."
+        "Athena’s Light — If you control Pegasus Seiya, remove up to 3 damage from each friendly Saint."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
     },
     {
       "id": "athena-v6-088",
@@ -3140,7 +3138,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 6,
+      "custo": 5,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -3153,12 +3151,11 @@
       "keywords_en": [],
       "habilidades_en": [
         "Beyond the Seventh Sense — Choose target friendly Saint. Until the end of the round, that Saint gets +3 ATK / +3 HP.",
-        "Awakened Cosmo — If that Saint would be defeated by Strike damage this round, prevent that damage instead.",
-        "The Path to the Underworld — If your God has less Soul than the opposing God, you may Prepare that Saint. It cannot declare another Strike this round."
+        "Awakened Cosmo — If that Saint would be defeated by Strike damage this round, prevent that damage instead."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
     },
     {
       "id": "athena-v6-089",
@@ -3175,7 +3172,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 9,
+      "custo": 6,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -3187,12 +3184,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "The Final Sacrifice — You may defeat up to three friendly Saints. For each Saint defeated this way, choose one: Deal 3 damage to target enemy Devotee; prevent the next 3 Strike damage that would be dealt to your God this round; or draw two cards.",
+        "The Final Sacrifice — You may defeat up to two friendly Saints. For each Saint defeated this way, choose one: Deal 3 damage to target enemy Devotee; prevent the next 3 Strike damage that would be dealt to your God this round; or draw two cards.",
         "The Light of the Twelve — If you defeated at least one friendly Gold Saint this way, all remaining friendly Saints get +2 ATK / +2 HP until the end of the round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
     },
     {
       "id": "athena-v6-090",
@@ -3209,7 +3206,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 10,
+      "custo": 6,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -3221,13 +3218,13 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Divine Will — Choose up to three friendly Saints. Each gets +3 ATK / +3 HP until the end of the round.",
+        "Divine Will — Choose up to three friendly Saints. Each gets +2 ATK / +2 HP until the end of the round.",
         "Athena’s Protection — Prevent all Strike damage that would be dealt to your God this round.",
         "The Miracle of Hope — If your God has 5 or less Soul, return target defeated friendly Saint from your discard pile to the Battlefield Prepared. That Saint cannot declare a Strike this round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
     },
     {
       "id": "athena-001",

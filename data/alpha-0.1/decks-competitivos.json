@@ -1896,6 +1896,124 @@
           "quantity": 1
         }
       ]
+    },
+    {
+      "id": "comp-athena-saints",
+      "nome": "Athena Saints",
+      "god": "god-athena",
+      "domain_id": "athena-v6-062",
+      "arquetipo": "Referência do meta Premodern (White Weenie): curva de Bronze Saints de custo 2 e 3, The Golden Arrow como remoção, truques defensivos em Moment (Protect Saori, Shun's Embrace, Cassios's Sacrifice, The Call of Athena) e Athena's Shield como anthem. docs/meta-premodern.md e docs/rebalance-athena-premodern.md (31/10/2026).",
+      "tema": "White Weenie (aggro + proteção)",
+      "main_deck": [
+        {
+          "card_id": "athena-v6-028",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-031",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-032",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-030",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-034",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-040",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-029",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-001",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-003",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-007",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-021",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-041",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-015",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-020",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-048",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-051",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-082",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-056",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-079",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-076",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-061",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-058",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-081",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-053",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-052",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-060",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-083",
+          "quantity": 1
+        }
+      ]
     }
   ]
 }

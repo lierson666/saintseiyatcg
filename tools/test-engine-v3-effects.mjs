@@ -67,16 +67,18 @@ test('077 Shiryu\'s Sacrificed Sight: +2/+2 e Pierce em Shiryu; no fim do Round 
 });
 
 // Ex-Miracle, agora Technique (guia, autor 31/10/2026): não responde ao Strike; no próprio turno, paga Base e protege o God.
-test('061 The Call of Athena (God) é Technique: recusada em resposta ao Strike; como AÇÃO põe escudo de 3 no God', () => {
-  const {s, ctx, field, cast, end} = setup();
+test('061 The Call of Athena (God) é Moment: responde ao Strike pagando Latent e põe escudo de 3 no God', () => {
+  const {s, ctx, field, cast} = setup();
   const seiya = field('A', '001');
   declareStrike(s, ctx, seiya, {kind: 'god', player: 'B'});
-  assert.throws(() => cast('B', '061', {mode: 'god'}), /D1/);
-  passAll(s); end();
-  const p = s.players.B, call = p.hand.at(-1);
-  p.bases = p.deck.splice(0, 3).map(b => ({uid: b, prepared: true}));
-  playSpell(s, ctx, 'B', call, {mode: 'god'}); passAll(s);
-  assert.equal(s.effects.find(e => e.target === 'god:B').amount, 3);
+  s.players.B.latent = 3;
+  const soul = s.players.B.soul, atk = atkOf(s, ctx, seiya);
+  cast('B', '061', {mode: 'god'});
+  assert.equal(s.players.B.latent, 0);
+  passAll(s);
+  // O Moment resolve antes do Strike: o escudo de 3 absorve o dano de Seiya.
+  assert.equal(s.players.B.soul, soul);
+  assert.equal(s.effects.find(e => e.target === 'god:B').amount, 3 - atk);
 });
 
 test('081 The Testament of Aiolos: "both" só com Pegasus Seiya', () => {
@@ -88,13 +90,14 @@ test('081 The Testament of Aiolos: "both" só com Pegasus Seiya', () => {
   assert.deepEqual([atkOf(s, ctx, jabu), hpOf(s, ctx, jabu), s.effects.find(e => e.target === 'god:A').amount], [4, 4, 5]);
 });
 
-test('088 The Eighth Sense: +3/+3, salva de ser derrotado por Strike e prepara se o seu God tem menos Soul', () => {
+test('088 The Eighth Sense: +3/+3 e salva de ser derrotado por Strike; não prepara mais (31/10/2026)', () => {
   const {s, ctx, field, cast, strike} = setup();
   const seiya = field('A', '001');
   s.units[seiya].prepared = false;
   s.players.A.soul = 10;
   cast('A', '088', {target: seiya, prepare: true});
-  assert.deepEqual([atkOf(s, ctx, seiya), hpOf(s, ctx, seiya), s.units[seiya].prepared], [6, 7, true], '+1 do Miracle: Soul 10 < 20');
+  assert.deepEqual([atkOf(s, ctx, seiya), hpOf(s, ctx, seiya), s.units[seiya].prepared], [6, 7, false], '+1 do Miracle: Soul 10 < 20');
+  s.units[seiya].prepared = true;
   s.units[seiya].damage = 6;
   strike(seiya, {kind: 'god', player: 'B'});
   assert.deepEqual([s.players.B.soul, s.units[seiya].damage], [14, 6], 'retaliação 3 que derrotaria foi prevenida');
@@ -129,13 +132,13 @@ test('056 Protect Saori: 3, ou 5 se você controla um Saint com Guardian', () =>
   assert.equal(c.s.effects.find(e => e.target === 'god:A').amount, 3);
 });
 
-test('087 Seiya Raises Athena\'s Shield: God sem dano no Round; remove 3 de cada Saint com Seiya; prepara até dois com Soul ≤ 5', () => {
+test('087 Seiya Raises Athena\'s Shield: God sem dano no Round; remove 3 de cada Saint com Seiya; não prepara mais (31/10/2026)', () => {
   const {s, ctx, field, cast, end, strike} = setup();
   const seiya = field('A', '001'), jabu = field('A', '028');
   s.units[seiya].damage = 3; s.units[jabu].damage = 1; s.units[jabu].prepared = false;
   s.players.A.soul = 5;
-  cast('A', '087', {prepare: [jabu]});
-  assert.deepEqual([s.units[seiya].damage, s.units[jabu].damage, s.units[jabu].prepared], [0, 0, true]);
+  cast('A', '087', {});
+  assert.deepEqual([s.units[seiya].damage, s.units[jabu].damage, s.units[jabu].prepared], [0, 0, false]);
   end();
   const acolyte = field('B', '043');
   startTurn(s);

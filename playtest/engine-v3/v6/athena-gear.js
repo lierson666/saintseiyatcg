@@ -173,13 +173,6 @@ export default {
       const low = s.players[key].soul <= 5;
       return {atk: low ? 1 : 0, hp: low ? 2 : 1};
     },
-    // The Last Miracle: uma vez por jogo, ao jogar, com 5 ou menos Soul: previne todo dano ao God e aos Saints amigos até o fim do Round.
-    // pendente: vale para os Saints em campo na resolução; os que entrarem depois não são cobertos.
-    cast: (s, c, key) => (s.players[key].soul <= 5 && game(s, key, 'last-miracle') ? st => {
-      if (st.players[key].soul > 5 || !game(st, key, 'last-miracle')) return;
-      useGame(st, key, 'last-miracle');
-      for (const t of [k.godTarget(key), ...friendlySaints(st, c, key)]) shield(st, t, Infinity, {strikeOnly: false, duration: 'this_round'});
-    } : undefined),
     // Divine Sanctuary — {3}{C}: uma vez por Round, quando seu God receberia dano de Strike, previne até 3.
     watchDeclare: ward({tag: 'sanctuary', ability: 'DIVINE SANCTUARY', cost: 3, amount: 3, unit: (s, c, key) => k.godTarget(key),
       applies: (s, c, key, self, attacker, target) => target.kind === 'god' && target.player === key}),
@@ -275,9 +268,10 @@ export default {
   // Perseus Silver Cloth (+0/+1: genérico)
   // Resonance — Perseus Algol (Medusa Shield dá -1 ATK ao atacante): implementada no watchDeclare do Algol (athena-v6-024).
   'athena-v6-069': {
-    // Medusa's Curse (gancho gearSurvive): uma vez por Round, o portador sobreviveu como defensor: 1 Seal no atacante.
+    // Medusa's Curse (gancho gearSurvive): uma vez por Round, o portador sobreviveu como defensor: o atacante -1 ATK até o fim
+    // do Round (31/10/2026: Seal só nos Saints do gelo).
     gearSurvive: (s, c, key, self, bearer, role, foe) => role === 'defender' && foe && !s.roundUses.has(`curse:${self}`) && k.once(s, `curse:${self}`) && (st => {
-      if (st.units[foe]) addSeal(st, c, [foe], 1, "MEDUSA'S CURSE");
+      if (st.units[foe]) k.buff(st, foe, -1, 0);
     }),
   },
 

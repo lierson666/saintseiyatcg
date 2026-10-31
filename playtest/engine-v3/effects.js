@@ -321,17 +321,7 @@ export const SPELLS = {
       if (id(c, target) === '001') draw(s, k, 1);
     },
   },
-  // The Golden Arrow: 4 de dano (6 com Pegasus Seiya) num Devotee inimigo; se derrotar, pode remover 1 de dano de um Saint seu.
-  // (Sem categoria na D194.)
-  '082': {
-    check: (s, c, k, {target, heal}) => { enemyDevotee(s, c, k, target); if (heal) friendlySaint(s, c, k, heal); },
-    run: (s, c, k, {target, heal}) => {
-      if (!alive(s, other(s, k), target)) return;
-      damageDevotee(s, c, target, controls(s, c, k, '001') ? 6 : 4, false);
-      checkDefeats(s, c);
-      if (!s.units[target] && heal && alive(s, k, heal)) removeDamage(s, heal, 1);
-    },
-  },
+  // 082 The Golden Arrow: V6 (v6/athena-spells.js), texto de 31/10/2026.
   // Shiryu's Last Dragon: o Saint causa ATK + 3 (+2 se for Shiryu) ao Devotee inimigo; depois é derrotado. (Sem categoria na D194.)
   '085': {
     check: (s, c, k, {source, target}) => { friendlySaint(s, c, k, source); enemyDevotee(s, c, k, target); },
@@ -398,14 +388,13 @@ export const SPELLS = {
       if (mode !== 'atk') shield(s, `god:${k}`, 5);
     },
   },
-  // The Eighth Sense: +3/+3 e salvamento neste Round; se seu God tem menos Soul, pode Preparar (sem outro Strike).
+  // The Eighth Sense: +3/+3 e salvamento neste Round (31/10/2026: sem The Path to the Underworld).
   '088': {
     check: (s, c, k, {target}) => friendlySaint(s, c, k, target),
-    run: (s, c, k, {target, prepare}) => {
+    run: (s, c, k, {target}) => {
       if (!alive(s, k, target)) return;
       modify(s, target, {atk: 3, hp: 3});
       save(s, target);
-      if (prepare && s.players[k].soul < s.players[other(s, k)].soul) prepareNoStrike(s, target);
     },
   },
   // A Saint Never Surrenders: salvamento neste Round.
@@ -426,16 +415,12 @@ export const SPELLS = {
     },
   },
   // Seiya Raises Athena's Shield: todo dano ao seu God neste Round é prevenido; com Pegasus Seiya, remove até 3 de dano
-  // de cada Saint seu; com Soul ≤ 5, pode Preparar até dois Saints seus (sem outro Strike).
+  // de cada Saint seu (31/10/2026: sem The Last Hope).
   '087': {
-    check: (s, c, k, {prepare = []}) => {
-      if (prepare.length > 2) throw new RuleError('alvo', 'até dois Saints');
-      prepare.forEach(t => friendlySaint(s, c, k, t));
-    },
-    run: (s, c, k, {prepare = []}) => {
+    check: () => {},
+    run: (s, c, k) => {
       shield(s, `god:${k}`, Infinity, {strikeOnly: false});
       if (controls(s, c, k, '001')) devotees(s, c, k).filter(u => isSaint(c, u)).forEach(u => removeDamage(s, u, 3));
-      if (s.players[k].soul <= 5) prepare.filter(t => alive(s, k, t)).forEach(t => prepareNoStrike(s, t));
     },
   },
 };
@@ -474,9 +459,7 @@ export function onCastEquipment(state, ctx, key, uid, {target} = {}) {
 // Habilidades ativadas com {T} (D192/D24): Sorcery (D173), o Devotee precisa estar Prepared e vira Unprepared;
 // {N}{C} paga N Bases preparadas. `choice.target`: o alvo.
 export const ABILITIES = {
-  '041': {name: 'Sacred Recovery', cost: 1,
-    check: (s, c, k, {target}) => { if (!alive(s, k, target) || card(c, target).kind !== 'Devotee') throw new RuleError('alvo', 'Devotee seu'); },
-    run: (s, c, k, {target}) => { if (alive(s, k, target)) removeDamage(s, target, 2); }},
+  // 041 Sacred Recovery: V6 (v6/athena-devotees.js), texto de 31/10/2026.
   // 042 e 011 (texto de 30/10/2026): remove 1 dano de Devotee amigo que veste uma Armor (Armor não tem dano próprio).
   '042': {name: 'Armor Repair', cost: 1, check: (s, c, k, {target}) => armoredTarget(s, c, k, target), run: (s, c, k, {target}) => { if (alive(s, k, target)) removeDamage(s, target, 1); }},
   '011': {name: 'Cloth Restoration', cost: 1, check: (s, c, k, {target}) => armoredTarget(s, c, k, target), run: (s, c, k, {target}) => { if (alive(s, k, target)) removeDamage(s, target, 1); }},

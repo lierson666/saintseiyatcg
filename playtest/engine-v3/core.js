@@ -7,9 +7,10 @@ export const LATENT_CAP = 3; // D198, D226
 export const DRAWS_PER_TURN = 1; // §55: 1 por turno (autor, 30/10/2026; revoga G3-041, que tinha voltado a 2)
 // D194: classificação Moment/Technique pelo número da carta Athena V6.
 // 54, 56, 58, 61, 76 e 79 eram Miracle e são Technique; 52, 55 e 83 eram Event e são Moment (autor, 31/10/2026; cards.json).
-const MOMENTS = new Set([52, 55, 83]);
-// 53, 60, 82 e 85: Technique por decisão do autor em 28/10/2026 (custo {B}), fora da lista da D194.
-const TECHNIQUES = new Set([53, 54, 56, 58, 59, 60, 61, 76, 77, 79, 80, 81, 82, 85, 86, 87, 88, 89, 90]);
+// Athena → Branco (autor, 31/10/2026): os truques defensivos 54, 56, 58, 61, 76, 79 e 81 e The Golden Arrow (82) viram Moment.
+const MOMENTS = new Set([52, 54, 55, 56, 58, 61, 76, 79, 81, 82, 83]);
+// 53, 60 e 85: Technique por decisão do autor em 28/10/2026 (custo {B}), fora da lista da D194.
+const TECHNIQUES = new Set([53, 59, 60, 77, 80, 85, 86, 87, 88, 89, 90]);
 
 export class RuleError extends Error {
   constructor(decision, message) { super(`${decision}: ${message}`); this.decision = decision; }

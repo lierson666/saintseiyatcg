@@ -144,17 +144,8 @@ test('A Promise to Shunrei (059): remove 2 de dano e, com Shunrei, prepara', () 
   assert.deepEqual([s.units[shiryu].damage, s.units[shiryu].prepared], [1, true]);
 });
 
-test('dano que não é de Strike (082) vai direto ao portador (HP com a Armor) e ignora prevenções de Strike; 082 e 085 são Technique', () => {
-  const {s, ctx, field, equip, hand, bases} = setup();
-  const seiya = field('A', '001'), repairer = field('B', '042');
-  const cracked = equip('B', '044', repairer); // Last Protection é só contra Strike
-  const arrow = hand('A', '082');
-  bases('A', 5);
-  playSpell(s, ctx, 'A', arrow, {target: repairer});
-  assert.ok(s.window, 'Technique: abre janela de resposta (autor, 29/10/2026)');
-  passAll(s);
-  assert.ok(s.players.B.tartarus.includes(repairer), '6 com Seiya contra HP 2 + 2 da Armor');
-  assert.ok(s.players.B.battlefield.includes(cracked) && !ctx.attached[cracked], 'Armor fica solta no campo (guia §32)');
+// 082 The Golden Arrow (Moment c1, 31/10/2026): coberta em test-engine-v3-v6-athena-spells.mjs, que lê o custo do Forge.
+test('085 é Technique: Shiryu e o Devotee alvo vão ao Tartarus', () => {
   const t = setup({A: fortress, B: rush}), shiryu = t.field('A', '003'), guard = t.field('B', '040');
   t.bases('A', 6);
   playSpell(t.s, t.ctx, 'A', t.hand('A', '085'), {source: shiryu, target: guard}); passAll(t.s);

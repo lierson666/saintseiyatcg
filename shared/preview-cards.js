@@ -53,6 +53,13 @@ export function addPreviewCards(cards, index, forgeCards) {
     index?.set(r.id, r);
   }
   for (const f of forgeCards.filter(c => !PREVIEW.test(c.id) && cards.get(c.id)?.armor)) cards.set(f.id, armorFromForge(cards.get(f.id), f));
+  // Athena → Branco (autor, 31/10/2026): custo e Moment/Technique do Forge por cima do D268; os efeitos ficam no código da engine.
+  for (const f of forgeCards.filter(c => !PREVIEW.test(c.id) && cards.has(c.id))) {
+    const card = cards.get(f.id), sub = (f.subtipos || []).find(t => t === 'Moment' || t === 'Technique');
+    const cost = f.custo != null && card.cost && card.cost.amount !== f.custo ? {...card.cost, amount: f.custo} : card.cost;
+    const type = card.kind === 'Spell' && sub ? `Spell — ${sub}` : card.type;
+    if (cost !== card.cost || type !== card.type) cards.set(f.id, {...card, cost, type});
+  }
   // Gods: Soul, Attack e Awaken vêm da carta do God no Forge (<facção>-001), por cima do D268 e da G3-042 (autor, 29/10/2026).
   for (const f of forgeCards.filter(c => /^(athena|poseidon|hades|ares|artemis)-001$/.test(c.id))) {
     const god = cards.get(`god-${f.id.slice(0, -4)}`);

@@ -59,6 +59,17 @@ export default {
     shield(s, t, 4);
     if (named(c, t, 'ANDROMEDA SHUN') && k.may(c, key, "SHUN'S EMBRACE", {text: 'Also prevent the next 2 Strike damage to your God?'})) shield(s, k.godTarget(key), 2);
   }}},
+  // The Golden Arrow (31/10/2026, Swords to Plowshares): Devotee inimigo que declarou Strike neste turno vai ao Void;
+  // o God do controlador ganha Soul igual ao ATK dele. Substitui SPELLS '082' de effects.js.
+  'athena-v6-082': {spell: {run: (s, c, key, self, choice) => {
+    const legal = k.enemies(s, c, key).filter(u => s.strikes.get(u) === s.turn);
+    const t = legal.includes(choice?.target) ? choice.target
+      : k.choose(c, key, 'THE GOLDEN ARROW', legal, {text: 'Choose target enemy Devotee that declared a Strike this turn.'});
+    if (!t) return;
+    const atk = k.atkOf(s, c, t), owner = k.controllerOf(s, t);
+    k.exile(s, c, t);
+    k.gainSoul(s, owner, Math.max(0, atk));
+  }}},
   // The Return of the Phoenix: o Saint devolvido não declara Strike neste Round (gancho cannotStrike).
   'athena-v6-080': {spell: {run: (s, c, key) => {
     const dead = s.players[key].tartarus.filter(u => k.hasType(c, u, 'Bronze Saint') && c.objects[u].owner === key);
@@ -96,7 +107,7 @@ export default {
   }}},
   // The Wall of Lamentation
   'athena-v6-089': {spell: {run: (s, c, key) => {
-    const victims = k.chooseUpTo(c, key, 'THE FINAL SACRIFICE', saints(s, c, key), 3, {text: 'Defeat up to three friendly Saints.'});
+    const victims = k.chooseUpTo(c, key, 'THE FINAL SACRIFICE', saints(s, c, key), 2, {text: 'Defeat up to two friendly Saints.'});
     const gold = victims.some(u => k.hasType(c, u, 'Gold Saint'));
     for (const u of victims) k.defeat(s, c, u);
     for (let i = 0; i < victims.length; i++) {
@@ -110,7 +121,7 @@ export default {
   }}},
   // The Will of Athena: o Saint devolvido (Miracle of Hope) não declara Strike neste Round (gancho cannotStrike).
   'athena-v6-090': {spell: {run: (s, c, key) => {
-    for (const t of k.chooseUpTo(c, key, 'DIVINE WILL', saints(s, c, key), 3, {text: 'Choose up to three friendly Saints.'})) k.buff(s, t, 3, 3);
+    for (const t of k.chooseUpTo(c, key, 'DIVINE WILL', saints(s, c, key), 3, {text: 'Choose up to three friendly Saints.'})) k.buff(s, t, 2, 2);
     shield(s, k.godTarget(key), Infinity); // Athena's Protection
     if (s.players[key].soul > 5) return;
     const dead = s.players[key].tartarus.filter(u => isSaint(c, u) && k.isDevotee(c, u) && c.objects[u].owner === key);

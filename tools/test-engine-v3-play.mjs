@@ -202,14 +202,14 @@ test('Technique fora do próprio turno ou com janela aberta é recusada', () => 
 });
 
 // 056 era Miracle e virou Technique (guia, autor 31/10/2026): o defensor não responde com ela ao Strike.
-test('Technique (056) do defensor não responde ao Strike e não paga nada', () => {
+test('Moment (056) do defensor responde ao Strike pagando só Latent (autor, 31/10/2026)', () => {
   const {s, ctx, toHand, field} = setup();
   const seiya = field('A', '001'), protect = toHand('B', '056');
   s.players.B.latent = 2;
   startTurn(s);
   declareStrike(s, ctx, seiya, {kind: 'god', player: 'B'});
-  assert.throws(() => playSpell(s, ctx, 'B', protect, () => {}), /D1/);
-  assert.deepEqual([s.players.B.latent, s.players.B.stack], [2, []]);
+  playSpell(s, ctx, 'B', protect, () => {});
+  assert.deepEqual([s.players.B.latent, s.players.B.stack], [0, [protect]]);
 });
 
 test('Moment do ativo abre janela; 053 é Technique (autor, 28/10/2026)', () => {

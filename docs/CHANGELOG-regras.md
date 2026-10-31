@@ -4,6 +4,15 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-31 — Cartas de Athena — Branco (Saints + Enchantress, meta Premodern)
+
+- **Antes:** truques defensivos (054, 056, 058, 061, 076, 079, 081) eram Technique; Seal em Shaina, Dante e Perseus Silver Cloth; The Golden Arrow (082) c5; Healer (041) e 035 só curavam; magias caras de c7 a c10 (020 The Last Miracle, 087 The Last Hope, 088 The Path, 089, 090).
+- **Depois:** 20 cartas. Os sete truques e The Golden Arrow viram Moment (081 c3; 082 Moment c1: Devotee inimigo que declarou Strike neste turno vai ao Void e o God dele ganha Soul igual ao ATK). O Seal fica só nos Saints do gelo; 022 e 069 dão −1 ATK e 075 impede o Strike. 042 (c2) e 043 compram 1 quando você joga Equipment que não é Armor (1x por turno). 035 e 041 escolhem: curar ou ganhar {1}{S} / {2}{S}. 020 é o anthem c4 sem The Last Miracle; 087 c5 e 088 c5 sem preparar; 089 c6 com "up to two"; 090 c6 com +2/+2.
+- **Motivo:** meta Premodern aprovado pelo autor em 31/10/2026 (`docs/meta-premodern.md`); diff aprovado em 31/10/2026 (`docs/rebalance-athena-premodern.md`).
+- **Engine:** `v6/athena-devotees.js` (`healOrSoul`, `enchantress`), `v6/athena-gear.js`, `v6/athena-spells.js` (082 novo), legado em `effects.js` e conjuntos `MOMENTS`/`TECHNIQUES` em `core.js`. Athena lê o D268 congelado: `shared/preview-cards.js` sobrepõe custo e Moment/Technique do Forge. Suíte engine-v3 inteira passa (484 testes).
+- **Decks:** "Athena Saints" (`comp-athena-saints`) em `data/alpha-0.1/decks-competitivos.json`. Os decks Athena antigos não foram retunados.
+- **Pendências:** round-robin de bots (meta 45–55%); playtest do autor; lista Enchantress na etapa das duplas; `tools/test-card-presentation.mjs` tem 2 falhas que já existiam antes desta mudança.
+
 ## 2026-10-31 — Cartas de Ares — Sligh (meta Premodern), 2ª passada
 
 - **Antes:** Fear Legion fazia o oponente descartar; wraths de 6 a 8 (352, 358, 359); pings de entrada em 281, 287 e 343; Promethean Fire (271); Mind Reading (273); Flame of Annihilation (289).
