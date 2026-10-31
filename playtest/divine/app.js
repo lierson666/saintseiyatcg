@@ -406,7 +406,7 @@ function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
   const kws = [...new Set(field && c.kind === 'Devotee' ? keywordsOf(s, ctx, uid) : c.keywords)];
   const dmg = unit?.damage || 0;
   const cls = ['dcard', size, forge ? 'art-full' : '', `kind-${c.kind.toLowerCase()}`, `rarity-${(c.rarity || 'common').toLowerCase()}`, c.armor ? 'is-armor' : '', cat ? `cat-${cat.category.toLowerCase()}` : '',
-    field && c.kind === 'Devotee' && !unit?.prepared ? 'unprepared' : '', kws.includes('Guardian') && field ? 'guarding' : '',
+    field && c.kind === 'Devotee' && !unit?.prepared ? 'unprepared' : '', field && !size && c.kind === 'Devotee' && unit?.prepared ? 'is-prepared' : '', kws.includes('Guardian') && field ? 'guarding' : '',
     // Aura de Cosmo (autor, 30/10/2026): Devotee seu que pode atacar agora queima Cosmo atrás, na cor da facção.
     field && !size && c.kind === 'Devotee' && owner(uid) === viewer() && idleFor(owner(uid)) && strikeTargets(s, ctx, uid).length ? 'can-strike' : ''].join(' ');
   const facAttr = ` data-fac="${CARD_FACTIONS.has(String(forge?.faccao).toLowerCase()) ? String(forge.faccao).toLowerCase() : 'neutral'}"`;
@@ -1124,7 +1124,7 @@ function showBigCard(uid) {
   const field = S().players[owner(uid)].battlefield.includes(uid);
   const bearer = ctx.attached[uid];
   box.innerHTML = cardFace(uid, {size: 'dcard--big', field}) + (field && info(uid).kind === 'Devotee' ? loadout(uid)
-    : bearer ? `<aside class="loadout"><h3>${esc(info(uid).name)}</h3><h4>Equipped on</h4><div class="loadout__gear"><button class="loadout__card" data-open-card="${bearer}" data-tip="${esc(`${info(bearer).name}|Click to view the bearer.`)}">${cardFace(bearer, {field: true})}</button></div></aside>` : '');
+    : bearer ? `<aside class="loadout"><h3>${esc(info(uid).name)}</h3><h4>Equipped on</h4><div class="loadout__gear"><button class="loadout__card" data-open-card="${bearer}" data-tip="${esc(`${info(bearer).name}|Click to view the bearer.`)}">${cardFace(bearer, {size: 'dcard--sm', field: true})}</button></div></aside>` : '');
   // Habilidade ativada no próprio texto da carta (autor, 30/10/2026): passar o mouse destaca e mostra "Use"
   // (no toque fica sempre visível); se não dá para usar agora, o botão vem apagado com o motivo.
   const abilities = field && owner(uid) === viewer() ? cardAbilities(uid) : [];

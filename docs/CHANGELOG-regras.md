@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-31 — §54 e cartas — Miracle vira Technique
+
+- **Antes:** 15 Spells da Athena com subtipo “Miracle” (o motor já as jogava como Technique).
+- **Depois:** subtipo “Technique” (`data/cards.json`; diff aprovado em `docs/miracle-technique-2026-10-31/cards.diff.md`). Miracle fica só como pilar temático da Athena (§54).
+- **Motivo:** autor, 31/10/2026.
+- **Pendências:** nenhuma. Não publicado.
+
 ## 2026-10-31 — §48 — Seal e Sealed seguem a D211; lembretes de keyword
 
 - **Antes:** §48 “Sealed” impedia Strike e ativação de habilidades até o fim da rodada; a engine seguia a D211 (marcador que atrasa o Prepare). Conflito registrado em 23/10.

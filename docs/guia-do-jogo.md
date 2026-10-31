@@ -557,7 +557,7 @@ Essa é uma regra de apresentação das cartas, não uma alteração da ordem de
 
 ### 54. Facções e Card Craft
 
-Athena — **THE UNBREAKABLE WILL**. “No Saint fights alone.” Pilares: Voltron, Anthem, Brotherhood e Miracle. Anthems tribais priorizam Saint, sem beneficiar genericamente todos os Devotees.
+Athena — **THE UNBREAKABLE WILL**. “No Saint fights alone.” Pilares: Voltron, Anthem, Brotherhood e Miracle. As cartas que eram “Miracle” são **Technique** (autor, 31/10/2026); Miracle segue só como pilar temático, não como tipo. Anthems tribais priorizam Saint, sem beneficiar genericamente todos os Devotees.
 
 Afinidades aprovadas: Pegasus Seiya → Sagittarius; Dragon Shiryu → Libra; Cygnus Hyoga → Aquarius; Andromeda Shun → Virgo; Phoenix Ikki → Leo. Cada um também tem afinidade com sua própria Cloth; essas relações serão materializadas nas cartas após revisão do catálogo.
 

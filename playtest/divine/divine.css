@@ -114,7 +114,7 @@ kbd { font: 11px/1 ui-monospace, monospace; opacity: .7; border: 1px solid curre
 .is-armor { border-color: var(--armor); }
 
 /* Estados no campo */
-.field .dcard.unprepared { transform: rotate(8deg) scale(.95); filter: saturate(.55) brightness(.75); }
+.field .dcard.unprepared { transform: rotate(8deg) scale(.95); } /* virada mantém a cor; Prepared ganha a aura de Cosmo (autor, 31/10/2026) */
 .field .dcard.guarding { box-shadow: 0 0 0 2px var(--shield), 0 0 16px rgba(143, 216, 255, .6); }
 .field .dcard:hover, .hand--me .dcard:hover { z-index: 5; }
 .field .dcard:not(.unprepared):hover { transform: translateY(-4px) scale(1.04); }
