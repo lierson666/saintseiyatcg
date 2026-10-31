@@ -6,13 +6,15 @@ const number = (text, pattern) => { const m = text.match(pattern); return m ? Nu
 
 // G3-042 (autor, 28/10/2026): Soul dos Gods na Alpha entre 15 e 22, por cima do SOUL impresso no D268 (o snapshot não muda).
 const ALPHA_SOUL = {'god-athena': 20, 'god-poseidon': 18, 'god-hades': 22, 'god-artemis': 15, 'god-ares': 20};
-// Ex-Miracles da Athena são Technique pagas com Base (guia, autor 31/10/2026; cards.json), por cima do "Moment {L}" do D268.
+// Tipo vigente (autor, 31/10/2026; cards.json) por cima do D268: ex-Miracles são Technique pagas com Base (lá eram "Moment {L}");
+// ex-Events são Moment (lá eram "Event"; o custo impresso continua {B} e, como resposta, paga Latent).
 const EX_MIRACLE = new Set(['athena-v6-054', 'athena-v6-056', 'athena-v6-058', 'athena-v6-061', 'athena-v6-076', 'athena-v6-079']);
+const EX_EVENT = new Set(['athena-v6-052', 'athena-v6-055', 'athena-v6-083']);
 
 export function parseCard(record) {
   const text = record.approved_current_text_as_of_d268;
   const exMiracle = EX_MIRACLE.has(record.id.toLowerCase());
-  const type = exMiracle ? 'Spell — Technique' : record.type;
+  const type = exMiracle ? 'Spell — Technique' : EX_EVENT.has(record.id.toLowerCase()) ? 'Spell — Moment' : record.type;
   const kind = type.startsWith('God') ? 'God' : type.startsWith('Domain') ? 'Domain'
     : type.includes('Equipment') ? 'Equipment' : type.split(' — ')[0];
   const cost = text.match(/Casting Cost: (\d+) \{([BL])\}/);

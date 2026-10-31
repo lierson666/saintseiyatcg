@@ -272,7 +272,7 @@ const REQUIRED = {
   '5 Strike e alvos': ['strike-god', 'strike-devotee'], '6 Guardian': ['guardian-forced'], '7 Water Prison': ['water-prison-asked', 'water-prison'],
  '9 Prepare com Seal': ['prepare-with-seal'], '10 Pressure of the Deep': ['pressure'],
   '11 Great Flood': ['great-flood', 'great-flood-resolved', 'flood-base-choice', 'flood-discard-choice'], '12 descarte e Mill': ['discard', 'mill'],
-  '13 Awaken liga': ['awaken-on'], '14 Ultimate uma vez': ['ultimate-blocked-after-use'], '15 resposta e LIFO': ['chain-lifo'] /* os Moments da Athena viraram Technique (autor, 31/10/2026) */,
+  '13 Awaken liga': ['awaken-on'], '14 Ultimate uma vez': ['ultimate-blocked-after-use'], '15 resposta e LIFO': ['moment-response', 'chain-lifo'],
   '17 timeouts': [], '18 reconexão': ['reconnect', 'reconnect-pending'], '19 Soul zero': ['victory-soul-zero'],
 };
 for (const [label, keys] of Object.entries(REQUIRED)) {

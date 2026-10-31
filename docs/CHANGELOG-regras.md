@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-31 — §54 e cartas — Event vira Moment; motor segue os subtipos vigentes
+
+- **Antes:** o guia dizia que Event joga como Technique; o motor jogava 052, 055 e 083 como Technique e ainda tratava os ex-Miracles 054, 056, 058, 061, 076 e 079 como Moment (lista D194), permitindo jogá-los no turno do oponente.
+- **Depois:** Event deixa de ser subtipo. 052 The Galaxian Wars, 055 The Masked Saint’s Oath e 083 The Twelve Flames são **Moment**, como já estava em `data/cards.json` (custo impresso em Base; como resposta, paga Latent). Os ex-Miracles são Technique: só como AÇÃO, pagos com Base.
+- **Motivo:** autor, 31/10/2026 (Technique estava liberada no turno do oponente; conflito Moment × Event × Technique entre cards.json, Card Forge e motor).
+- **Pendências:** `card-forge/art-web/cards.json` alinhado (Event → Moment). `data/cards.json` não mudou. Detalhes em `docs/event-technique-2026-10-31/cards.diff.md`.
+
 ## 2026-10-31 — §56 — Gatilhos simultâneos (APNAP) e interface de triggers
 
 - **Antes:** o guia não dizia a ordem de gatilhos simultâneos; a engine empilhava os do jogador ativo primeiro, na ordem em que disparavam.

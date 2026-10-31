@@ -105,7 +105,8 @@ test('D22: um Strike por Devotee por turno próprio', () => {
 test('D194: Moment usa Latent e Instant; Technique usa Base e Sorcery', () => {
   // Ex-Miracles (54, 56, 58, 61, 76, 79) são Technique: só como AÇÃO, pagam Base (guia, autor 31/10/2026).
   for (const n of [54, 56, 58, 61, 76, 79]) assert.deepEqual(spellCategory(n), {category: 'Technique', resource: 'base', speed: 'sorcery'});
-  assert.deepEqual(spellCategory(52), {category: 'Technique', resource: 'base', speed: 'sorcery'});
+  assert.deepEqual(spellCategory(52), {category: 'Moment', resource: 'latent', speed: 'instant'}); // ex-Event (autor, 31/10/2026)
+  assert.deepEqual(spellCategory(53), {category: 'Technique', resource: 'base', speed: 'sorcery'});
   assert.equal(spellCategory(1), null);
   for (const n of [53, 60, 82, 85]) assert.equal(spellCategory(n).category, 'Technique', 'autor, 28/10/2026');
   assert.equal(spellCategory(57), null, 'fora dos decks, sem categoria');

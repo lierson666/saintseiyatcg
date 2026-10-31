@@ -196,9 +196,10 @@ test('063 Jamir Tower: Cloth Restoration tira 1 de dano de Devotee amigo com Arm
   assert.equal(s.units[shun].damage, 1);
 });
 
-test('Event e Miracle jogam como Technique (guia §54)', () => {
+test('Ex-Events (052, 055, 083) são Moment; ex-Miracles são Technique (autor, 31/10/2026)', () => {
   const {ctx, give} = setup();
-  for (const id of ['athena-v6-055', 'athena-v6-079', 'athena-v6-090']) assert.equal(v6Spell(ctx, give('A', id, 'hand')).category, 'Technique');
+  for (const id of ['athena-v6-055', 'athena-v6-083']) assert.equal(v6Spell(ctx, give('A', id, 'hand'))?.category, 'Moment');
+  for (const id of ['athena-v6-079', 'athena-v6-090']) assert.equal(v6Spell(ctx, give('A', id, 'hand')).category, 'Technique');
 });
 
 // ---- Completados com os ganchos novos (29/10/2026) ----
