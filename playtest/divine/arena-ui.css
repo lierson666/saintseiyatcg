@@ -1,0 +1,102 @@
+/* Acabamento estilo MTG Arena (autor, 31/10/2026): botões das escolhas, pilha legível e botão único. Carregado por último. */
+
+/* ---------- Botões das escolhas (conjuração, gatilho, decisão, barra de escolha) ---------- */
+.cast-prompt, .trigger-panel__box { gap: 10px; padding: 14px 16px; border-radius: 16px; background: linear-gradient(180deg, rgba(20, 22, 48, .96), rgba(8, 9, 24, .96));
+  border: 1px solid rgba(var(--glow, 255, 205, 100), .55); box-shadow: 0 18px 40px rgba(0, 0, 0, .55), 0 0 30px rgba(var(--glow, 255, 205, 100), .18); }
+.cast-prompt { justify-items: stretch; text-align: left; }
+.cast-prompt .choice__label { justify-content: flex-start; font: 600 15px/1.35 system-ui, sans-serif; color: #f6efdc; }
+.cast-prompt button, .trigger-panel__actions button, .decision__actions button, .choice button {
+  min-height: 40px; padding: 0 18px; border-radius: 999px; border: 1px solid rgba(255, 214, 140, .55); background: rgba(255, 214, 140, .08);
+  color: #f6e6bf; font: 600 14px/1 system-ui, sans-serif; letter-spacing: .02em; cursor: pointer; transition: background .15s, border-color .15s, transform .15s; }
+.cast-prompt button:hover, .trigger-panel__actions button:hover, .decision__actions button:hover, .choice button:hover { background: rgba(255, 214, 140, .18); border-color: #ffd98c; transform: translateY(-1px); }
+.cast-prompt button:focus-visible, .trigger-panel__actions button:focus-visible, .choice button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+/* Ação principal (Confirm, Yes, Done) em dourado cheio; Cancel e Skip discretos. */
+.trigger-panel__actions .primary-action, .cast-prompt [data-confirm="yes"], .cast-prompt [data-done]:not(:only-of-type), .choice [data-confirm="yes"] {
+  background: linear-gradient(180deg, #f6dc8a, #d9a93c); border-color: transparent; color: #1a1205; }
+.trigger-panel__actions .primary-action:hover, .cast-prompt [data-confirm="yes"]:hover { filter: brightness(1.08); }
+.cast-prompt .ghost, .trigger-panel__actions .ghost, .choice .ghost { border-color: rgba(255, 255, 255, .2); background: none; color: #d8d2c4; }
+.cast-prompt button[disabled], .trigger-panel__actions button[disabled] { opacity: .45; cursor: not-allowed; transform: none; }
+.cast-prompt kbd, .choice kbd { margin-left: 6px; padding: 1px 5px; border: 1px solid rgba(255, 255, 255, .3); border-radius: 4px; font: 600 11px system-ui; opacity: .8; }
+/* Botões lado a lado (Skip | Cancel), não empilhados. */
+.cast-prompt { grid-template-columns: 1fr 1fr; }
+.cast-prompt > :not(button) { grid-column: 1 / -1; }
+.cast-prompt > button:only-of-type, .cast-prompt > button:last-child:nth-child(odd) { grid-column: 1 / -1; }
+
+/* ---------- Pilha em cascata (app.js drawZoom), igual ao Arena ---------- */
+#chain-zoom { --cz-w: clamp(170px, calc(46vh / 1.4), 300px); --side: 255, 205, 100; top: 50%; right: 230px; width: auto; transform: translateY(-50%);
+  grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 10px; }
+#chain-zoom.is-on { animation: cz-in .28s cubic-bezier(.2, .8, .2, 1); }
+@keyframes cz-in { from { opacity: 0; transform: translate(24px, -50%); } }
+#chain-zoom[data-side="opp"] { --side: 255, 96, 80; }
+.cz-stack { position: relative; width: calc(var(--cz-w) + var(--n) * 30px); height: calc(var(--cz-w) * 1.4 + var(--n) * 8px); perspective: 1400px; }
+.cz-item { position: absolute; left: 0; bottom: 0; width: var(--cz-w); border-radius: 10px; pointer-events: auto; cursor: zoom-in;
+  left: auto; right: 0; transform: translate(calc(var(--d) * -30px), calc(var(--d) * -8px)) rotateY(calc(var(--d) * 8deg - 6deg)); z-index: calc(10 - var(--d)); filter: brightness(calc(1 - var(--d) * .18));
+  transform-origin: right center; transition: transform .22s cubic-bezier(.2, .8, .2, 1), filter .22s; }
+.cz-item .dcard { --card-w: var(--cz-w); width: var(--cz-w); height: calc(var(--cz-w) * 1.4); }
+.cz-item.is-top > .dcard, .cz-item.is-top > .ability-card { box-shadow: 0 0 0 2px rgb(var(--side)), 0 0 30px rgba(var(--side), .6), 0 14px 30px #000a; border-radius: 10px; }
+.cz-item:hover { z-index: 20; filter: none; transform: translate(calc(var(--d) * -30px), calc(var(--d) * -8px)) scale(1.25); }
+.cz-item .cast-aura { opacity: .35; width: 160%; }
+#chain-zoom .chain-zoom__label { max-width: calc(var(--cz-w) + 40px); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; border-color: rgb(var(--side)); }
+.cz-ghost { position: fixed; z-index: 60; margin: 0; pointer-events: none; transform: none; filter: none; }
+/* A pilha agora fica fora da coluna de comando: relógio visível; o painel de leitura do oponente repetia a pilha. */
+body.has-chain-zoom .command__clock { visibility: visible; }
+body.has-chain-zoom .trigger-panel--opp { display: none; }
+
+/* Cartinha de habilidade (gatilho/ativação) na pilha e na revelação. */
+.ability-card { --w: var(--cz-w, 200px); width: var(--w); aspect-ratio: 5 / 7; display: grid; grid-template-rows: 48% auto auto 1fr; overflow: hidden; border-radius: 12px;
+  border: 2px solid rgba(var(--glow, 255, 205, 100), .85); background: linear-gradient(180deg, #171a3a, #07081a); color: #f3ecdc; text-align: center; }
+.ability-card__art { background: #141826 center 20% / cover; border-bottom: 1px solid rgba(var(--glow, 255, 205, 100), .6); }
+.ability-card small { margin-top: 6px; font: 600 calc(var(--w) * .05) / 1.2 system-ui; letter-spacing: .12em; text-transform: uppercase; color: #bfb7a3; }
+.ability-card strong { padding: 2px 8px; font: 700 calc(var(--w) * .08) / 1.2 Cinzel, serif; color: rgb(var(--glow, 255, 205, 100)); }
+.ability-card p { margin: 0; padding: 4px 10px 10px; overflow: hidden; font: calc(var(--w) * .056) / 1.35 system-ui, sans-serif; }
+.cast-reveal .ability-card { --w: clamp(240px, 24vw, 340px); }
+
+@media (max-width: 760px) {
+  #chain-zoom { --cz-w: 96px; right: calc(8px + var(--sr, 0px)); }
+  .cz-item { transform: translate(calc(var(--d) * -16px), calc(var(--d) * -4px)); }
+  .cz-stack { width: calc(var(--cz-w) + var(--n) * 16px); height: calc(var(--cz-w) * 1.4 + var(--n) * 4px); }
+  .cz-item:hover { transform: translate(calc(var(--d) * -16px), calc(var(--d) * -4px)) scale(1.8); }
+}
+
+/* ---------- Botão único: azul quando é a sua vez de responder, apagado esperando ---------- */
+.action-btn[data-state="respond"] { background: linear-gradient(180deg, #7cc4ff, #2f7fd6); color: #04121f; border-color: #bfe2ff;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, .6), 0 0 28px rgba(90, 170, 255, .6); animation: arena-respond 1.6s ease-in-out infinite; }
+@keyframes arena-respond { 50% { box-shadow: 0 0 0 3px rgba(0, 0, 0, .6), 0 0 44px rgba(120, 190, 255, .85); } }
+.action-btn[data-state="wait"] { filter: saturate(.3) brightness(.8); }
+.reduce-motion .action-btn[data-state="respond"] { animation: none; }
+@media (prefers-reduced-motion: reduce) { .action-btn[data-state="respond"] { animation: none; } }
+.cast-prompt button, .trigger-panel__actions button, .choice button { white-space: nowrap; }
+.ability-card.no-text { grid-template-rows: 1fr auto auto; padding-bottom: 10px; }
+
+/* ---------- Botão de ação estilo Arena (desktop): pílula no canto inferior direito ---------- */
+@media (min-width: 761px) and (min-height: 501px) {
+  /* Centraliza a coluna sem transform: com transform, o botão fixo ficaria preso a ela e não ao canto da tela. */
+  .command { top: 0; bottom: 0; margin: auto 0; height: fit-content; transform: none; }
+  .command .action-btn { position: fixed; z-index: 30; right: 22px; bottom: 22px; width: auto; min-width: 172px; min-height: 52px; padding: 0 26px; gap: 0;
+    border-radius: 999px; border: 2px solid #ffd2a8; background: linear-gradient(180deg, #ffa25c, #e0532b); color: #fff;
+    font: 700 19px/1 Cinzel, serif; letter-spacing: .05em; text-shadow: 0 1px 3px rgba(0, 0, 0, .55);
+    box-shadow: 0 8px 22px rgba(0, 0, 0, .6), 0 0 26px rgba(255, 120, 60, .45); animation: none; }
+  .command .action-btn i { display: none; }
+  .command .action-btn:hover:not(:disabled) { filter: brightness(1.08); transform: translateY(-1px); }
+  .command .action-btn[data-state="respond"] { border-color: #cfe8ff; background: linear-gradient(180deg, #6cbcff, #1f6fd1); color: #fff;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, .6), 0 0 28px rgba(90, 170, 255, .6); animation: arena-respond 1.6s ease-in-out infinite; }
+  .command .action-btn[data-state="wait"], .command .action-btn:disabled { border-color: rgba(255, 255, 255, .18); background: linear-gradient(180deg, #2c3043, #1a1c28);
+    color: #b9b4a8; text-shadow: none; box-shadow: 0 8px 22px rgba(0, 0, 0, .6); filter: none; opacity: 1; }
+  /* Full control vira o botãozinho redondo ao lado, como o do Arena. */
+  .command .command__full { position: fixed; z-index: 30; right: 26px; bottom: 84px; width: 36px; height: 36px; padding: 0; overflow: hidden;
+    border-radius: 50%; font-size: 0; border: 1px solid rgba(255, 255, 255, .25); background: #141726 center / 18px no-repeat
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23f1d68a'%3E%3Cpath d='M3 5l8 7-8 7zM12 5l8 7-8 7z'/%3E%3C/svg%3E"); }
+  .command .command__full[aria-pressed="true"] { border-color: #6cbcff; box-shadow: 0 0 14px rgba(90, 170, 255, .7); }
+}
+
+/* ---------- Escolhas como texto flutuando na mesa (Arena), sem caixa ---------- */
+@media (min-width: 761px) and (min-height: 501px) {
+  .cast-slot .cast-prompt { position: fixed; z-index: 46; left: 38%; top: 40%; transform: translate(-50%, -50%); width: min(560px, 44vw);
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; padding: 0; border: 0; background: none; box-shadow: none; text-align: center; pointer-events: none; }
+  .cast-slot .cast-prompt > * { pointer-events: auto; }
+  .cast-slot .cast-prompt .choice__label { flex-basis: 100%; justify-content: center; font: 600 24px/1.3 system-ui, sans-serif; color: #fff;
+    text-shadow: 0 2px 6px #000, 0 0 18px rgba(0, 0, 0, .9); }
+  .cast-slot .cast-prompt .choice__reticle { display: none; }
+  .cast-slot .cast-prompt .cast-prompt__how { flex-basis: 100%; order: 3; font-size: 13px; color: #e6e0d0; text-shadow: 0 1px 4px #000; }
+  .cast-slot .cast-prompt button { min-width: 120px; box-shadow: 0 6px 16px rgba(0, 0, 0, .6); }
+}

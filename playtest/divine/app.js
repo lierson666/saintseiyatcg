@@ -21,7 +21,7 @@ import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
 import {createDirector} from './director.js?v=16';
 import {createAI} from './ai.js?v=5';
 import {findDeck} from '../deck-store.js';
-import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-5';
+import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-8';
 import {unlock, playMusic} from '../audio.js?v=20261030-telas';
 import {telas, anim, sound, imageUrl, applyColors, applyTexts} from '../telas.js?v=20261030-1';
 import {renderLiveCard, renderCardText} from '../../shared/live-card.js?v=20261031-ed5';
@@ -653,15 +653,16 @@ function chainArt(c) {
 // Comando (canto inferior direito): relógio das Doze Casas acima do botão de ações.
 function command() {
   const s = S(), v = viewer();
-  let label = 'End Turn';
-  if (s.victory) label = 'Match over';
-  else if (aiControls()) label = 'Opponent thinking…';
+  // Botão único estilo Arena (autor, 31/10/2026): o texto diz a próxima ação; azul quando é a sua vez de responder.
+  let label = 'End Turn', state = 'end';
+  if (s.victory) { label = 'Match over'; state = 'wait'; }
+  else if (aiControls()) { label = s.active === v ? 'Opponent thinking…' : "Opponent's turn"; state = 'wait'; }
   else if (s.setup) label = marked.size ? `Return ${marked.size}` : 'Keep Hand';
-  else if (s.window) label = s.chain.length ? 'Pass · Resolve' : 'Pass';
+  else if (s.window) { label = s.chain.length ? 'Resolve' : 'Pass'; state = 'respond'; }
   return `<aside class="command" aria-label="Turn actions">
     <div class="command__clock">${clockMarkup()}</div>
     ${phaseBar()}
-    <button class="action-btn" data-primary ${s.victory || aiControls() ? 'disabled' : ''}><span>${esc(label)}</span><i aria-hidden="true">›</i></button>
+    <button class="action-btn" data-primary data-state="${state}" ${s.victory || aiControls() ? 'disabled' : ''}><span>${esc(label)}</span><i aria-hidden="true">›</i></button>
     <button class="command__full" data-full-control aria-pressed="${!settings.autoPass}" title="Full control: stop at every priority window, even with no possible response">Full control</button>
     <button class="command__more" data-toggle-tools aria-expanded="${toolsOpen}" aria-label="Game menu">⋯</button>
     <div class="command__tools${toolsOpen ? ' is-open' : ''}"><button data-toggle-log aria-pressed="${logOpen}">Log</button><button data-toggle-settings>Settings</button><a href="../">Menu</a></div>
@@ -710,20 +711,13 @@ function controlPanel() {
   const h = phaseHints();
   hintRefs = h.refs;
   const items = Object.entries(h.refs).filter(([, r]) => r.length).map(([id, r]) => `<li><button class="ctrl__hint" data-hint="${id}" aria-label="${esc(HINTS[id][0])}: highlight ${r.length}"><strong>${esc(HINTS[id][0])}</strong><span>${inlineMarkup(HINTS[id][1])}</span></button></li>`).join('');
-  // Cadeia de cima para baixo: o topo resolve primeiro (LIFO, D186); gatilhos simultâneos em APNAP, cada um ordena os seus (§56).
-  const chain = s.chain.length ? `<ol class="chain" aria-label="Chain, top resolves first">${s.chain.map((c, i) => {
-    const t = chainLabel(c);
-    const art = chainArt(c);
-    return `<li data-chain="${i}" ${srcAttrs(c)} tabindex="0"><b>${s.chain.length - i}</b>${art ? `<i class="chain__art" style="background-image:url('${art}')" aria-hidden="true"></i>` : ''}<div class="chain__body"><strong>${esc(t.name)}</strong>${t.sub ? `<span class="chain__sub">${esc(t.sub)}</span>` : ''}${t.text ? `<em>${esc(t.text)}</em>` : ''}<small>${t.target ? `Target: ${esc(t.target)} · ` : ''}Player ${c.controller}</small></div></li>`;
-  }).reverse().join('')}</ol>
-    <small class="chain__hint">${s.chain.length > 1 ? 'Top resolves first' : 'Resolves when both pass'}</small>` : '';
   const tips = settings.phaseTips;
   if (!tips && !s.window) return '';
   // Com pilha, ela ocupa o box e a dica encolhe numa linha.
   return `<section class="ctrl ${busy ? 'is-busy' : ''} ${ctrlOpen ? 'is-open' : ''} ${s.window ? 'has-chain' : ''}" aria-label="Control panel">
     ${tips ? `<button class="ctrl__head" data-ctrl-toggle aria-expanded="${ctrlOpen}"><small>${s.active === viewer() ? 'Your turn' : `Player ${s.active}'s turn`}</small><strong>${esc(h.title)}</strong></button>
       ${h.note ? `<p class="ctrl__note">${inlineMarkup(h.note)}</p>` : ''}${items && !s.window ? `<ul class="ctrl__hints">${items}</ul>` : ''}` : ''}
-    ${s.window ? `<div class="priority ctrl__chain"><small>Priority</small><strong>Player ${s.window.priority}</strong>${chain}</div>` : ''}
+    ${s.window ? `<div class="priority ctrl__chain"><small>Priority</small><strong>${s.window.priority === viewer() ? 'You' : settings.ai !== 'none' ? 'AI' : `Player ${s.window.priority}`}</strong></div>` : ''}
   </section>`;
 }
 // Clique numa dica: acende por 2,5 s as cartas e botões que fazem aquela ação.
@@ -853,6 +847,15 @@ function zoomFace(it) {
   const f = (id && FORGE.get(id)) || FORGE.get(`${cards.get(S().gods[it.controller])?.name.toLowerCase()}-001`);
   return f ? `<div class="dcard dcard--lg art-full">${renderLiveCard(f, {art: f.ilustracao && forgeArt(f.ilustracao)})}</div>` : '';
 }
+// Cartinha de habilidade (estilo Arena): gatilho ou ativação na pilha, com a arte da origem, a habilidade e o texto dela.
+function abilityCard(it) {
+  const t = chainLabel(it);
+  return `<div class="ability-card ${t.text ? '' : 'no-text'}"><span class="ability-card__art" style="background-image:url('${chainArt(it)}')"></span>
+    <small>${esc(t.name)}</small><strong>${esc(t.sub || 'Triggered ability')}</strong>${t.text ? `<p>${inlineMarkup(t.text)}</p>` : ''}</div>`;
+}
+const stackFace = it => (it.ability ? abilityCard(it) : zoomFace(it));
+// Pilha em cascata (autor, 31/10/2026, igual ao Arena): à esquerda da coluna de comando, na altura do meio; o topo inteiro,
+// os de baixo aparecendo pela borda de cima. Até 5 itens; o hover amplia e mostra a seta de cada um.
 function drawZoom() {
   let el = document.getElementById('chain-zoom');
   if (!el) { el = document.createElement('div'); el.id = 'chain-zoom'; el.setAttribute('aria-live', 'polite'); document.body.appendChild(el); }
@@ -860,20 +863,42 @@ function drawZoom() {
   if (el.dataset.key === key) return;
   el.dataset.key = key;
   clearTimeout(zoomTimer);
-  if (!top) {
-    if (!el.classList.contains('is-on')) return;
-    el.classList.add('is-leaving');
-    zoomTimer = setTimeout(() => { el.className = ''; el.innerHTML = ''; document.body.classList.remove('has-chain-zoom'); }, 1300);
-    return;
-  }
-  const g = S().divine?.[top.controller]?.god;
-  el.dataset.godfx = (g || 'god-athena').slice(4);
-  el.style.setProperty('--glow', GOD_GLOW[g] || GOD_GLOW['god-athena']);
+  [...el.querySelectorAll('.cz-item')].filter(n => !zoomItems.some(it => it.uid === n.dataset.src)).forEach(flyResolved);
+  if (!top) { el.className = ''; el.innerHTML = ''; document.body.classList.remove('has-chain-zoom'); drawIntents(); return; }
+  const cmd = $('.command')?.getBoundingClientRect();
+  el.style.right = cmd?.width && innerWidth > 760 ? `${Math.round(innerWidth - cmd.left + 14)}px` : '';
+  const me = online ? online.key : viewer(), who = it => it.controller === me ? 'You' : settings.ai !== 'none' ? 'AI' : `Player ${it.controller}`;
+  const t = chainLabel(top), shown = zoomItems.slice(-5);
   el.className = 'chain-zoom is-on';
+  el.dataset.side = top.controller === me ? 'me' : 'opp';
   document.body.classList.add('has-chain-zoom');
-  const t = chainLabel(top), below = zoomItems.slice(-3, -1);
-  el.innerHTML = `<div class="chain-zoom__stack"><i class="cast-aura" aria-hidden="true"></i>${below.map((it, i) => `<div class="chain-zoom__under" style="--i:${below.length - i}" aria-hidden="true">${zoomFace(it)}</div>`).join('')}<div class="chain-zoom__top">${zoomFace(top)}</div></div>
-    <small class="chain-zoom__label">${zoomResolving === top.uid ? 'Resolving' : `Player ${esc(top.controller)}`} · ${esc(t.sub || t.name)}${zoomItems.length > 1 ? ` <b>+${zoomItems.length - 1}</b>` : ''}</small>`;
+  el.innerHTML = `<div class="cz-stack" style="--n:${shown.length - 1}">${shown.map((it, i) => {
+    const depth = shown.length - 1 - i, g = S().divine?.[it.controller]?.god || 'god-athena';
+    return `<div class="cz-item ${depth ? '' : 'is-top'} is-${it.controller === me ? 'me' : 'opp'} ${it.ability ? 'is-ability' : ''}" style="--d:${depth};--glow:${GOD_GLOW[g] || GOD_GLOW['god-athena']}" data-controller="${esc(it.controller)}" ${srcAttrs(it)}>${depth ? '' : '<i class="cast-aura" aria-hidden="true"></i>'}${stackFace(it)}</div>`;
+  }).join('')}</div>
+    <small class="chain-zoom__label">${zoomResolving === top.uid ? 'Resolving' : 'Resolves next'} · ${esc(who(top))} · ${esc(t.sub || t.name)}${zoomItems.length > 5 ? ` <b>+${zoomItems.length - 5}</b>` : ''}</small>`;
+  el.querySelector('.cz-item.is-top').dataset.godfx = (S().divine?.[top.controller]?.god || 'god-athena').slice(4);
+  drawIntents();
+}
+// Resolução estilo Arena: o item brilha e voa para onde a carta foi (campo, Tartarus, Void); gatilho se desfaz em luz.
+function flyResolved(node) {
+  const r = node.getBoundingClientRect();
+  if (!r.width || settings.reduceMotion) return;
+  const ghost = node.cloneNode(true);
+  ghost.classList.add('cz-ghost');
+  Object.assign(ghost.style, {left: `${r.left}px`, top: `${r.top}px`, width: `${r.width}px`, height: `${r.height}px`});
+  document.body.append(ghost);
+  requestAnimationFrame(() => requestAnimationFrame(() => { // espera a mesa desenhar a carta no destino
+    const s = S(), uid = node.dataset.src, k = node.dataset.controller;
+    const pile = ['tartarus', 'void'].find(z => s.players[k]?.[z]?.includes(uid));
+    const dest = !node.classList.contains('is-ability') && (elOf(uid) || (pile && $(`[data-pile="${k}:${pile}"]`)));
+    const d = dest?.getBoundingClientRect(), opts = {duration: 700, easing: 'cubic-bezier(.5,0,.2,1)', fill: 'forwards'};
+    const frames = d?.width
+      ? [{transform: 'none', filter: 'brightness(1)'}, {transform: 'scale(1.06)', filter: 'brightness(2.2)', offset: .3},
+        {transform: `translate(${d.left + d.width / 2 - r.left - r.width / 2}px, ${d.top + d.height / 2 - r.top - r.height / 2}px) scale(${Math.max(.15, d.width / r.width)})`, filter: 'brightness(1.2)', opacity: .5}]
+      : [{transform: 'none', filter: 'brightness(1)', opacity: 1}, {transform: 'scale(1.08)', filter: 'brightness(2.4)', offset: .35}, {transform: 'scale(1.25)', filter: 'brightness(3) blur(6px)', opacity: 0}];
+    ghost.animate(frames, opts).finished.then(() => ghost.remove());
+  }));
 }
 // Revelação estilo Arena (autor, 31/10/2026): carta do oponente surge grande no centro (~45% da altura) com a mesa
 // escurecida, fica 1,2s (clique ou tecla pula) e voa para a pilha. As suas vão direto para a pilha.
@@ -881,6 +906,7 @@ const revealQueue = [];
 let revealing = false;
 function revealCast(it) {
   const me = online ? online.key : viewer();
+  // Como no Arena: só a jogada do oponente é revelada; a sua vai direto para a pilha.
   if (!it.uid || it.controller === me || S().victory || revealQueue.some(x => x.uid === it.uid)) return;
   revealQueue.push(it);
   if (!revealing) nextReveal();
@@ -888,7 +914,7 @@ function revealCast(it) {
 function nextReveal() {
   const it = revealQueue.shift();
   if (!it) { revealing = false; return; }
-  const face = ctx.objects[it.uid] && !it.ability ? cardFace(it.uid, {size: 'dcard--lg'}) : zoomFace(it);
+  const face = it.ability ? abilityCard(it) : ctx.objects[it.uid] ? cardFace(it.uid, {size: 'dcard--lg'}) : zoomFace(it);
   if (!face) return nextReveal();
   revealing = true;
   const g = S().divine?.[it.controller]?.god || 'god-athena', t = chainLabel(it);
@@ -911,7 +937,7 @@ function nextReveal() {
   const leave = () => {
     if (done) return;
     done = true; clearTimeout(timer); removeEventListener('keydown', leave, true);
-    const to = $('#chain-zoom.is-on .chain-zoom__top')?.getBoundingClientRect(), c = card.getBoundingClientRect();
+    const to = $('#chain-zoom.is-on .cz-item.is-top')?.getBoundingClientRect(), c = card.getBoundingClientRect();
     const end = () => { el.remove(); nextReveal(); };
     el.querySelector('.cast-reveal__veil').animate([{opacity: 1}, {opacity: 0}], {duration: 260, fill: 'forwards'});
     if (still || !to?.width) return void card.animate([{opacity: 1}, {opacity: 0}], {duration: 200, fill: 'forwards'}).finished.then(end);
@@ -1624,7 +1650,10 @@ function drawIntents() {
   // Pilha (autor, 31/10/2026): sem setas paradas; a origem leva o selo com a ordem de resolução e a seta só aparece no hover do item.
   $$('.chain-badge').forEach(b => b.remove());
   s.chain.forEach((c, i) => { const el = elOf(c.uid); if (el && !el.querySelector('.chain-badge')) el.insertAdjacentHTML('beforeend', `<span class="chain-badge" aria-label="Chain ${s.chain.length - i}">${s.chain.length - i}</span>`); });
-  if (hoverItem) for (const target of hoverItem.targets) arrows.push({from: elOf(hoverItem.src), to: elOf(target), kind: 'hover', label: ''});
+  const fromItem = h => (h.el.closest('#chain-zoom') ? h.el : elOf(h.src));
+  if (hoverItem) for (const target of hoverItem.targets) arrows.push({from: fromItem(hoverItem), to: elOf(target), kind: 'hover', label: ''});
+  const czTop = $('#chain-zoom.is-on .cz-item.is-top'), chainTop = s.chain.at(-1);
+  if (czTop && chainTop && hoverItem?.el !== czTop) for (const target of (chainTop.targets?.length ? chainTop.targets : [chainTop.target]).filter(u => u && (ctx.objects[u] || String(u).startsWith('god:')))) arrows.push({from: czTop, to: elOf(target), kind: 'spell', label: ''});
   const opp = $('.trigger-panel--opp .dcard'), top = s.chain.at(-1);
   if (opp && top) for (const target of (top.targets?.length ? top.targets : [top.target]).filter(u => u && (ctx.objects[u] || String(u).startsWith('god:')))) arrows.push({from: opp, to: elOf(target), kind: 'hover', label: ''});
   if (pending?.peek && pending.pending.uid && !targetReq(pending.pending)) arrows.push({from: $('.trigger-panel__card .dcard'), to: elOf(pending.pending.uid), kind: 'spell', label: '?'});
