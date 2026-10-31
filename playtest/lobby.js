@@ -12,11 +12,11 @@ import {countryOptions, countryName} from '../shared/countries.js?v=20261029-1';
 import {startPresence} from '../shared/presence.js?v=20261029-1';
 import {mountSocial} from './social.js?v=20261031-ds3';
 import {telas, imageUrl, sound, applyColors, applyTexts} from './telas.js?v=20261030-1';
-import {loadEconomy, ownedLimit, missingCards, coinBadge, storeScreen, collectionScreen, openBooster, buyBooster, buyCosmetic} from './economy.js?v=20261031-face2';
+import {loadEconomy, ownedLimit, missingCards, coinBadge, storeScreen, collectionScreen, openBooster, buyBooster, buyCosmetic} from './economy.js?v=20261031-face3';
 import {lightArt} from '../shared/light-art.js';
-import {faceStyle} from './avatar-face.js?v=20261031-2';
-import {progressTrack} from './home-features.js?v=20261031-face2';
-import {loadRank, rankBadge, rankName, rankSummary, openRankPanel, playerName} from './rank.js?v=20261031-face2';
+import {faceStyle, useGodPortraits} from './avatar-face.js?v=20261031-3';
+import {progressTrack} from './home-features.js?v=20261031-face3';
+import {loadRank, rankBadge, rankName, rankSummary, openRankPanel, playerName} from './rank.js?v=20261031-face3';
 
 const root = document.getElementById('lobby');
 const ART = '../card-forge/art-web/';
@@ -649,6 +649,7 @@ async function init() {
     get(`${ART}cards.json`).catch(() => ({cartas: []})), get('../data/alpha-0.1/decks-preview.json').catch(() => ({decks: []})), get('../data/alpha-0.1/decks-competitivos.json').catch(() => ({decks: []}))]);
   cards = loadCanon(canon); index = canonIndex(canon);
   forge = new Map(art.cartas.map(c => [c.id, c]));
+  useGodPortraits(art.cartas);
   addPreviewCards(cards, index, art.cartas);
   presets = [...deckData.decks, ...previewDecks.decks, ...compDecks.decks];
   gods = canon.gods.map(g => cards.get(g.id.toLowerCase()));

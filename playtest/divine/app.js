@@ -21,12 +21,13 @@ import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
 import {createDirector} from './director.js?v=18';
 import {createAI} from './ai.js?v=5';
 import {findDeck} from '../deck-store.js';
-import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-face2';
+import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-face3';
 import {unlock, playMusic} from '../audio.js?v=20261030-telas';
 import {telas, anim, sound, imageUrl, applyColors, applyTexts} from '../telas.js?v=20261030-1';
 import {renderLiveCard, renderCardText} from '../../shared/live-card.js?v=20261031-ed5';
 import {armorBonusText, printedEquipmentBonuses} from '../../shared/card-visual-values.js?v=20261031-kw6';
 import {lightArt} from '../../shared/light-art.js';
+import {useGodPortraits} from '../avatar-face.js?v=20261031-3';
 import {Idiomorph} from './vendor/idiomorph-0.7.4.esm.js';
 
 const $ = (s, el = document) => el.querySelector(s), $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -384,6 +385,7 @@ const forgeArt = file => lightArt(FORGE_ART + file);
 const BOARD_TOKENS = new URLSearchParams(location.search).get('board') !== 'classic';
 const CARD_FACTIONS = new Set(['athena', 'poseidon', 'hades', 'ares', 'artemis']);
 const FORGE = new Map((await fetch(`${FORGE_ART}cards.json`).then(r => (r.ok ? r.json() : {cartas: []})).catch(() => ({cartas: []}))).cartas.map(c => [c.id, c]));
+useGodPortraits(FORGE.values()); // avatar do Deus nas placas = rosto da placa do God (rank.js)
 // Item da cadeia em texto de jogador: carta de origem, nome da habilidade, a linha impressa dela e o alvo.
 // `c.source` (número da carta) quando o texto vem de outra carta (gatilho atrasado de Spell); sem carta no jogo, o God do controlador.
 // Dados de um item da pilha para o hover: carta de origem, habilidade e alvos.

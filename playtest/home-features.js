@@ -1,7 +1,7 @@
 // Home estilo MTG Arena (autor, 31/10/2026: "não precisa desse exagero"): embaixo do carrossel, só a trilha de progresso
 // do jogador — nível, XP contra a IA hoje, rank e boosters para abrir —, cada marco clicável. PLAY fica no canto direito.
-import {PACK_ART} from './economy.js?v=20261031-face2';
-import {rankName, rankEmblem} from './rank.js?v=20261031-face2';
+import {PACK_ART} from './economy.js?v=20261031-face3';
+import {rankName, rankEmblem} from './rank.js?v=20261031-face3';
 
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const fmt = n => Number(n || 0).toLocaleString('en');

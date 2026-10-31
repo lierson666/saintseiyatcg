@@ -1,7 +1,7 @@
 // Ranking e XP do Olympus Arena (docs/ranking-xp.md, aprovado em 31/10/2026). O sanctuary-api calcula rank e XP;
 // aqui só se desenha: selo na barra do lobby, painel de rank e o resumo animado no fim da partida.
 import {lightArt} from '../shared/light-art.js';
-import {faceStyle} from './avatar-face.js?v=20261031-2';
+import {faceStyle} from './avatar-face.js?v=20261031-3';
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const ROMAN = ['', 'I', 'II', 'III', 'IV'];
 const TIERS = ['Steel', 'Iron', 'Bronze', 'Silver', 'Gold', 'Kamui'];

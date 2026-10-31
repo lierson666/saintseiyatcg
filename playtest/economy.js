@@ -1,6 +1,6 @@
 // Economia do Olympus Arena (docs/economia.md, autor 31/10/2026): saldo de Cosmo Coins, Store, Collection e abertura de booster.
 // O servidor decide tudo (saldo, coleção, conteúdo do pacote); aqui só se desenha. Visual da loja inspirado em MTG Arena e RipRush.
-import {faceStyle} from './avatar-face.js?v=20261031-2';
+import {faceStyle} from './avatar-face.js?v=20261031-3';
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const fmt = n => Number(n || 0).toLocaleString('en');
 const COPY_LIMIT = 3;
