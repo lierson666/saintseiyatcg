@@ -11,7 +11,7 @@ import {startTurn, endTurn, passAll, runCheckpoint, addSeal} from '../playtest/e
 import {playDevotee as playDevoteeRaw, playSpell, playEquipment as playEquipmentRaw, activate as activateRaw, castCost} from '../playtest/engine-v3/play.js';
 import {declareStrike, mustStrike} from '../playtest/engine-v3/strike.js';
 import {V6, bindContext} from '../playtest/engine-v3/v6/hooks.js';
-import {checkDefeats, atkOf, hpOf, modify} from '../playtest/engine-v3/effects.js';
+import {checkDefeats, atkOf, hpOf, modify, keywordsOf} from '../playtest/engine-v3/effects.js';
 import * as k from '../playtest/engine-v3/v6/kit.js';
 import {guardDecide} from './engine-test-upto.mjs';
 // Guia §56 (30/10/2026): jogada e {T} vão à pilha; aqui os dois passam e a pilha resolve na hora.
@@ -195,35 +195,18 @@ test('456 Rule Through Fear: se recusa o sacrifício, perde 3 Soul; sem outro Bl
   assert.equal(s2.players.A.soul, a - 3);
 });
 
-test('457 Blind Perception: paga 2 Cosmo e o atacante inimigo fica com -2 ATK', () => {
+test('457 Sanctuary Sentry: Guardian (keywords_en)', () => {
   const {s, ctx, give} = setup();
-  give('A', N(457));
-  const foe = mkFoe(s, give), r = ready(s, 'A'), soul = s.players.A.soul, atk = atkOf(s, ctx, foe);
-  foeStrike(s, ctx, foe, {kind: 'god', player: 'A'});
-  assert.equal(ready(s, 'A'), r - 2);
-  assert.equal(s.players.A.soul, soul - (atk - 2));
+  const sentry = give('A', N(457));
+  assert.ok(keywordsOf(s, ctx, sentry).includes('Guardian'));
 });
 
-test('457 Brother\'s Guidance: outro Black Saint seu que ataca ganha +1/+0; Shared Fate: derrota de outro Black Saint custa 1 Soul', () => {
+test('458 Last Report: derrotado, compra 1', () => {
   const {s, ctx, give} = setup();
-  give('A', N(457));
-  const peg = give('A', N(451)), foe = mkFoe(s, give);
-  tough(s, foe); tough(s, peg);
-  strike(s, ctx, peg, dev(foe));
-  assert.equal(s.units[foe].damage, k.card(ctx, peg).atk + 1);
-  const soul = s.players.A.soul;
-  const other = give('A', N(458));
-  kill(s, ctx, other);
-  assert.equal(s.players.A.soul, soul - 1 - 1); // Shared Fate + Disposable Shadow
-});
-
-test('458 Disposable Shadow: derrotada, compra 1, descarta 1 e perde 1 Soul', () => {
-  const {s, ctx, give} = setup();
-  const sh = give('A', N(458)), soul = s.players.A.soul, deck = s.players.A.deck.length;
-  kill(s, ctx, sh);
+  const sc = give('A', N(458)), deck = s.players.A.deck.length, hand = s.players.A.hand.length;
+  kill(s, ctx, sc);
   assert.equal(s.players.A.deck.length, deck - 1);
-  assert.equal(s.players.A.hand.length, 0);
-  assert.equal(s.players.A.soul, soul - 1);
+  assert.equal(s.players.A.hand.length, hand + 1);
 });
 
 test('459 Crushing Impact: ao atacar, paga 2 Cosmo e um Devotee inimigo fica com -2/-2 no turno', () => {
@@ -236,36 +219,14 @@ test('459 Crushing Impact: ao atacar, paga 2 Cosmo e um Devotee inimigo fica com
   assert.equal(hpOf(s, ctx, foe), k.card(ctx, foe).hp);
 });
 
-test('459 Unstable Power (aproximação): Prepared no início do turno depois de Exhausted custa 1 Soul', () => {
+test('460 War Charger: Impulse; compra ao causar dano de Strike ao God', () => {
   const {s, ctx, give} = setup();
-  const whale = give('A', N(459));
-  s.units[whale].v6Exh = true;
-  const soul = s.players.A.soul;
-  V6[N(459)].startTurn(s, ctx, 'A', whale)(s);
-  assert.equal(s.players.A.soul, soul - 1);
-  assert.equal(V6[N(459)].startTurn(s, ctx, 'A', whale), false);
-});
-
-test('460 Black Unicorn: Impulse; compra ao ferir o God e descarta ao atacar', () => {
-  const {s, ctx, give} = setup();
-  const uni = give('A', N(460), 'hand');
-  playDevotee(s, ctx, 'A', uni, {}); passAll(s);
-  Object.assign(s.units[uni], {entered: s.turn - 1, prepared: true});
-  tough(s, uni);
-  give('A', FOE, 'hand');
+  const ch = give('A', N(460));
+  assert.ok(keywordsOf(s, ctx, ch).includes('Impulse'));
+  tough(s, ch);
   const deck = s.players.A.deck.length;
-  strike(s, ctx, uni, god);
-  assert.ok(s.players.A.battlefield.includes(uni)); // tinha carta para descartar
-  assert.equal(s.players.A.hand.length, 1 - 1 + 1); // descartou a da mão, comprou 1
+  strike(s, ctx, ch, god);
   assert.equal(s.players.A.deck.length, deck - 1);
-});
-
-test('460 Reckless Charge: sem carta para descartar, é sacrificado no fim do combate', () => {
-  const {s, ctx, give} = setup();
-  const uni = give('A', N(460));
-  tough(s, uni);
-  strike(s, ctx, uni, god);
-  assert.ok(s.players.A.tartarus.includes(uni));
 });
 
 // ---------- Steel Saints ----------

@@ -7,10 +7,7 @@ Decisões do autor no grilling de 30/10/2026. **Não gravado.**
 - Atenção: custo 5. Como resposta o Moment paga só Latent (limite 3), então não daria para responder. Proposta: `custo` 5 → 3.
 
 ## neutral-v6-458 — BLACK PHOENIX SHADOW
-```diff
-- False Wings — Black Phoenix Shadow cannot block.
-+ False Wings — Black Phoenix Shadow cannot retaliate.
-```
+Obsoleto: carta trocada por MERCENARY SCOUT (autor, 31/10/2026).
 
 ## neutral-v6-492 — DEATH QUEEN MASK
 ```diff

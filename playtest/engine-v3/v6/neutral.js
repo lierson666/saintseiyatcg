@@ -168,61 +168,20 @@ export default {
       else lose(st, key, 3);
     }),
   },
-  // Hidden Black Dragon
-  'neutral-v6-457': {
-    watchDeclare: (s, c, key, self, attacker) => {
-      if (k.controllerOf(s, attacker) !== key) { // Blind Perception
-        return ready(s, key) >= 2 && (st => { if (live(st, attacker) && pay(st, c, key, 2, 'BLIND PERCEPTION', self)) k.buff(st, attacker, -2, 0, 'this_round'); });
-      }
-      return attacker !== self && black(c, attacker) && (st => { if (live(st, attacker)) k.buff(st, attacker, 1, 0, 'this_round'); }); // Brother's Guidance
-    },
-    watchDefeat: (s, c, key, self, dead, owner) => dead !== self && owner === key && black(c, dead) && (st => lose(st, key, 1)), // Shared Fate
-  },
-  // Black Phoenix Shadow
-  'neutral-v6-458': {
-    noRetaliate: true, // False Wings: "cannot retaliate"
-    defeated: (s, c, key) => st => { // Disposable Shadow
-      if (!k.may(c, key, 'DISPOSABLE SHADOW', {text: 'Draw 1 card? (then discard 1 card and lose 1 Soul)'})) return;
-      draw(st, key, 1);
-      if (st.victory) return;
-      k.discard(st, c, key, 1, 'DISPOSABLE SHADOW');
-      lose(st, key, 1);
-    },
-  },
-  // Black Whale
+  // 457–460: cartas genéricas que substituem as Black Saints (autor, 31/10/2026).
+  // Sanctuary Sentry (457): só Guardian, que vem de keywords_en.
+  // Mercenary Scout
+  'neutral-v6-458': {defeated: (s, c, key) => st => draw(st, key, 1)}, // Last Report
+  // Stone Colossus
   'neutral-v6-459': {
-    declare: (s, c, key, self) => { // Unstable Power (aproximação, ver abaixo): ficou Exhausted ao declarar
-      if (s.units[self]) s.units[self].v6Exh = true;
-      return ready(s, key) >= 2 && foes(s, c, key).length > 0 && (st => { // Crushing Impact
-        if (!pay(st, c, key, 2, 'CRUSHING IMPACT', self)) return;
-        const t = targetEnemy(st, c, key, 'CRUSHING IMPACT');
-        if (t) { k.buff(st, t, -2, -2, 'this_round'); k.checkDefeats(st, c); }
-      });
-    },
-    // Heavy Armor: todo Devotee entra Unprepared; nada a fazer. Marca para Unstable Power.
-    enter: (s, c, key, self) => { if (s.units[self]) s.units[self].v6Exh = true; },
-    // pendente: Unstable Power. Não há gancho "becomes disengaged"/Prepare. Aproximação: no início do turno, se está Prepared e
-    // tinha ficado Exhausted ao entrar ou ao declarar Strike, perde 1 Soul. Outros Exhaust/Prepare por efeito não contam.
-    startTurn: (s, c, key, self) => s.units[self]?.prepared && s.units[self].v6Exh && (st => {
-      if (st.units[self]) st.units[self].v6Exh = false;
-      lose(st, key, 1);
+    declare: (s, c, key, self) => ready(s, key) >= 2 && foes(s, c, key).length > 0 && (st => { // Crushing Impact
+      if (!pay(st, c, key, 2, 'CRUSHING IMPACT', self)) return;
+      const t = targetEnemy(st, c, key, 'CRUSHING IMPACT');
+      if (t) { k.buff(st, t, -2, -2, 'this_round'); k.checkDefeats(st, c); }
     }),
   },
-  // Black Unicorn
-  'neutral-v6-460': {
-    mods: () => [{keywords: ['Impulse']}], // Shadow Gallop
-    godDamage: (s, c, key) => st => draw(st, key, 1), // Piercing Horn
-    declare: (s, c, key, self) => st => { // Reckless Charge: sem descarte, sacrifica no fim do combate (survive)
-      if (!live(st, self)) return;
-      st.units[self].v6Reckless = !st.players[key].hand.length;
-      if (!st.units[self].v6Reckless) k.discard(st, c, key, 1, 'RECKLESS CHARGE');
-    },
-    survive: (s, c, key, self, role) => role === 'attacker' && s.units[self]?.v6Reckless && (st => {
-      if (!live(st, self)) return;
-      st.units[self].v6Reckless = false;
-      k.sacrifice(st, c, self);
-    }),
-  },
+  // War Charger: Impulse vem de keywords_en.
+  'neutral-v6-460': {godDamage: (s, c, key) => st => draw(st, key, 1)}, // Trampling Charge
 
   // ---------- Steel Saints e Scientist ----------
   // Sho, Sky Steel Saint
