@@ -1,6 +1,6 @@
 import {createHistory} from '../shared/editor-history.js';
 import {compilePlaytest} from '../shared/import-playtest.js';
-import {renderLiveCard,illustration} from '../shared/live-card.js?v=20261031-ft3';
+import {renderLiveCard,illustration,statLine} from '../shared/live-card.js?v=20261031-gr4';
 import {textBlocks, blocksMarkup, presentationRules, ruleBlocksWithoutKeywords, KEYWORD_WORDS, STAT_RE, statTrend} from '../shared/card-text.js?v=20261031-sym2';
 import {isArmor,isEquipment,validateCard} from '../shared/card-model.js';
 // Card Forge — editor de cartas em vanilla JS. Renderiza no canvas nativo 1488x2091 usando
@@ -233,6 +233,10 @@ const drawGlowPiece = (key, el) => drawPiece(key, el, true);
 
 async function drawFrame() {
   for (const key of fac().frame) {
+    if (key === 'athena/frame' && facKey() === 'athena') { // degradê da linha de Power/HP até o rodapé (igual a shared/live-card.js)
+      const y = statLine(T.layouts[layoutKey(S)], P), g = y && ctx.createLinearGradient(0, y - 160, 0, 2091);
+      if (g) { g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(0.32, 'rgba(0,0,0,.62)'); g.addColorStop(1, 'rgba(0,0,0,.8)'); ctx.fillStyle = g; ctx.fillRect(0, y - 160, 1488, 2091 - y + 160); }
+    }
     const p = P[key], im = await loadImg(pieceSrc(key));
     if (!p || !im) continue;
     ctx.save();

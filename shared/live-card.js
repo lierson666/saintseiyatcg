@@ -61,6 +61,8 @@ function renderPsdCard(card,{src,stage,hp,power,keywords,damage,rules,equipment,
   const elements=[...L.elements];
   let out='';
   for(const el of elements){
+    // Athena (autor, 31/10/2026): degradê escuro da linha de Power/HP até o rodapé, para o texto ler sobre a arte.
+    if(el.kind==='frame'&&f==='athena'){const y=statLine(L,P);if(y)out+=`<i class="lc-piece" style="${pct(0,y-160,1488,2091-y+160)};background:linear-gradient(transparent,rgba(0,0,0,.62) 32%,rgba(0,0,0,.8))"></i>`;}
     if(el.kind==='frame')out+=pack.frame.map(k=>P[k]?`<img class="lc-piece" src="${escape(PSD.src(k))}" alt="" style="${pct(P[k].x,P[k].y,P[k].w,P[k].h)}${P[k].blend?`;mix-blend-mode:${P[k].blend}`:''}">`:'').join('');
     else if(el.kind==='piece')out+=piece(el.piece,el.rect||at(el.piece,el));
     else if(el.kind==='cost'&&has(card.custo)&&!['God','Domain'].includes(card.tipo)){
@@ -103,6 +105,8 @@ function renderPsdCard(card,{src,stage,hp,power,keywords,damage,rules,equipment,
   </div>`;
 }
 // Cabeçalho do Awaken da carta de God, peças extraídas do PSD de cada Deus (card-forge/tools/extract_template.py).
+// Centro da linha de Power/HP (ou da faixa de tipo) no layout, em px do PSD 1488×2091.
+export function statLine(L,P){const e=L.elements.find(e=>e.piece==='athena/gem_power')||L.elements.find(e=>e.piece==='athena/box_type'),p=e&&P[e.piece];return p?p.y+(e.dy||0)+p.h/2:0;}
 function awakenHead(f,n){
   const img=(name,cls)=>`<img class="${cls}" src="${escape(PSD.src(`${f}/${name}`))}" alt="">`;
   return `<div class="lc-awaken" aria-label="Awaken ${escape(n??'')}">${img('awaken_line','lc-awaken__line')}<span class="lc-awaken__gem">${img('gem_awaken','')}<b>${escape(n??'')}</b></span>${img('awaken_word','lc-awaken__word')}${img('awaken_line','lc-awaken__line')}</div>`;
