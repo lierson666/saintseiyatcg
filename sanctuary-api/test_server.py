@@ -231,6 +231,8 @@ class Api(unittest.TestCase):
         self.assertEqual((p['recent'][0]['opponent'], p['recent'][0]['result'], p['recent'][0]['god']), ('Aiolos_G', 'win', 'god-ares'))
         self.assertEqual(self.call('GET', '/api/profile/Aiolos_G', cookie=b)[1]['stats']['losses'], 1)
         self.assertEqual(self.call('GET', '/api/profile/Aiolia_H')[0], 401)  # só logado
+        r = self.call('GET', '/api/rank', cookie=b)[1]
+        self.assertEqual((r['tier'], r['division'], r['pips'], r['xp']), ('Steel', 4, 2, 100))  # vitória online: +2 pips no Steel, 100 XP
         self.assertEqual(self.call('GET', '/api/profile/Nobody_X', cookie=a)[0], 404)
         # bloqueado: o perfil some
         self.call('POST', '/api/blocks', {'username': 'Aiolia_H'}, cookie=a)
@@ -244,6 +246,38 @@ class Api(unittest.TestCase):
         p = self.call('GET', '/api/profile/Aiolia_H', cookie=b)[1]
         self.assertEqual((p['stats']['played'], p['recent'][0]['opponent']), (1, 'Deleted player'))
         fake.shutdown()
+
+    def test_climb(self):
+        now = 1793491200 + 10 * 86400  # 11/11/2026: temporada 2026-11
+        c = lambda rs: server.climb([(now - 60, r) for r in rs], now)
+        self.assertEqual({k: c([])[k] for k in ('tier', 'division', 'pips', 'season')}, {'tier': 'Steel', 'division': 4, 'pips': 0, 'season': '2026-11'})
+        self.assertEqual(c(['loss', 'loss'])['pips'], 0)  # Steel não perde pip
+        r = c(['win'] * 3)
+        self.assertEqual((r['tier'], r['division'], r['pips']), ('Steel', 3, 0))  # +2 por vitória, 6 pips sobem a divisão
+        r = c(['win'] * 12 + ['win'] * 2 + ['loss'])  # Iron IV: +1 vitória, -1 derrota
+        self.assertEqual((r['tier'], r['division'], r['pips']), ('Iron', 4, 1))
+        r = c(['win'] * 12 + ['loss'] * 5)
+        self.assertEqual((r['tier'], r['division'], r['pips']), ('Iron', 4, 0))  # proteção de tier
+        r = c(['win'] * 12 + ['win'] * 6 + ['loss'])
+        self.assertEqual((r['tier'], r['division'], r['pips']), ('Iron', 4, 5))  # perde a divisão, volta com 5 pips
+        r = c(['win'] * (12 + 24 * 4) + ['win', 'win', 'loss', 'loss', 'loss'])
+        self.assertEqual((r['tier'], r['division'], r['points']), ('Kamui', None, 0))  # Kamui: pontos, mínimo 0, sem queda
+        old = server.climb([(now - 40 * 86400, 'win')] * (12 + 24 * 4) + [(now - 60, 'draw')], now)
+        self.assertEqual((old['tier'], old['division'], old['last_season']), ('Gold', 4, {'tier': 'Kamui', 'division': None}))  # virada: um tier abaixo
+        self.assertEqual(server.level_of(5200), {'xp': 5200, 'level': 6, 'xp_in_level': 200, 'xp_level_size': 1000, 'title': 'Trainee'})
+
+    def test_rank_api(self):
+        server.db.execute("insert or ignore into invites values ('rank@example.com', 1)")
+        c = self.call('POST', '/api/auth/register', {'email': 'rank@example.com', 'name': 'R Name', 'username': 'Mu_Rank', 'country': 'BR', 'password': 'x' * 12, 'accept_terms': True})[2]
+        self.assertEqual(self.call('GET', '/api/rank')[0], 401)
+        st, r, _, _ = self.call('GET', '/api/rank', cookie=c)
+        self.assertEqual((st, r['tier'], r['level'], r['xp'], r['ai_xp_cap']), (200, 'Steel', 1, 0, 500))
+        self.assertEqual(self.call('POST', '/api/xp/ai', {'result': 'cheat'}, cookie=c)[0], 400)
+        gains = [self.call('POST', '/api/xp/ai', {'result': 'win'}, cookie=c)[1]['gained'] for _ in range(11)]
+        self.assertEqual((sum(gains), gains[-1]), (500, 0))  # teto diário contra a IA
+        r = self.call('GET', '/api/rank', cookie=c)[1]
+        self.assertEqual((r['xp'], r['tier'], r['pips'], r['ai_xp_today']), (500, 'Steel', 0, 500))  # IA não mexe no rank
+        self.assertEqual(self.call('GET', '/api/profile/Mu_Rank', cookie=c)[1]['rank']['tier'], 'Steel')
 
     def test_decks_limites(self):
         server.db.execute("insert or ignore into invites values ('decks@example.com', 1)")

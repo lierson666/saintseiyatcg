@@ -1,0 +1,46 @@
+/* Ranking e XP (rank.js): selo do lobby, painel de rank e resumo no fim da partida. Carregado pelo lobby e pelo Olympus Arena. */
+.rk-steel { --rk: #8d99a6; } .rk-iron { --rk: #6b6f78; } .rk-bronze { --rk: #c07a3c; }
+.rk-silver { --rk: #d4dbe3; } .rk-gold { --rk: #e9c45c; } .rk-kamui { --rk: #c9a6ff; }
+
+.rk-emblem { display: inline-grid; place-items: center; width: 28px; height: 28px; flex: none; border-radius: 50% 50% 46% 46%;
+  font: 700 11px/1 Cinzel, serif; color: #0b0d14; background: radial-gradient(circle at 35% 30%, #fff8, transparent 55%), var(--rk);
+  box-shadow: 0 0 0 1px #0008, 0 0 10px color-mix(in srgb, var(--rk) 55%, transparent); }
+.rk-emblem--big { width: 72px; height: 72px; font-size: 24px; }
+.rk-kamui.rk-emblem { box-shadow: 0 0 0 1px #0008, 0 0 18px #c9a6ffaa; }
+
+.rk-badge { display: inline-flex; align-items: center; gap: 8px; padding: 4px 10px 4px 4px; border: 1px solid var(--kv-line, #ffffff22);
+  border-radius: 999px; background: #0006; color: inherit; font: inherit; cursor: pointer; }
+.rk-badge span { display: grid; text-align: left; line-height: 1.1; white-space: nowrap; }
+.rk-badge b { font: 600 12px Cinzel, serif; } .rk-badge small { font-size: 11px; opacity: .7; }
+.rk-badge:hover, .rk-badge:focus-visible { border-color: var(--kv-gold, #e9c45c); }
+
+.rk-pips { display: inline-flex; gap: 4px; margin-top: 4px; }
+.rk-pips i { width: 14px; height: 6px; border-radius: 2px; background: #ffffff26; transition: background .4s ease-out; }
+.rk-pips i.on { background: var(--kv-gold, #e9c45c); }
+.rk-points { font: 600 13px Cinzel, serif; color: #c9a6ff; }
+.rk-xp { display: block; height: 6px; border-radius: 3px; background: #ffffff1f; overflow: hidden; margin-top: 6px; }
+.rk-xp i { display: block; height: 100%; background: linear-gradient(90deg, #7fb8ff, #c9a6ff); transition: width .9s cubic-bezier(.2, .8, .2, 1); }
+
+.rk-panel { width: min(440px, calc(100% - 32px)); max-height: calc(100% - 32px); overflow: auto; padding: 24px; color: var(--kv-ink, #eee); }
+.rk-panel::backdrop { background: #05060ccc; }
+.rk-panel__head { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.rk-panel__rank { display: flex; gap: 16px; align-items: center; margin: 18px 0; }
+.rk-panel__rank h2 { margin: 0; font-family: Cinzel, serif; }
+.rk-panel__level { margin-bottom: 12px; }
+.rk-board { margin: 8px 0 0; padding-left: 22px; }
+.rk-board li { padding: 3px 0; } .rk-board li span { float: right; opacity: .8; }
+
+.rk-result { position: fixed; z-index: 1000; left: 50%; bottom: 24px; transform: translateX(-50%); width: min(360px, calc(100% - 32px));
+  display: grid; gap: 12px; padding: 16px 40px 16px 16px; border: 1px solid #e9c45c55; border-radius: 12px; background: #0b0d14ee;
+  color: #f1ead8; font: 14px Jost, system-ui, sans-serif; box-shadow: 0 10px 40px #000a; animation: rk-in .4s ease-out; }
+.rk-result__rank { display: flex; gap: 12px; align-items: center; }
+.rk-result__rank > div { display: grid; justify-items: start; }
+.rk-result__rank b { font-family: Cinzel, serif; }
+.rk-result__xp { display: grid; grid-template-columns: auto 1fr; gap: 0 10px; align-items: baseline; }
+.rk-result__xp .rk-xp { grid-column: 1 / -1; }
+.rk-result__lv { justify-self: end; opacity: .8; }
+.rk-result__promo { margin: 4px 0 0; color: #e9c45c; font: 700 13px Cinzel, serif; animation: rk-in .5s ease-out; }
+.rk-result__drop { margin: 4px 0 0; opacity: .7; font-size: 12px; }
+.rk-result__x { position: absolute; top: 6px; right: 8px; border: 0; background: none; color: inherit; font-size: 20px; cursor: pointer; opacity: .7; }
+@keyframes rk-in { from { opacity: 0; translate: 0 12px; } }
+@media (prefers-reduced-motion: reduce) { .rk-result, .rk-result__promo { animation: none; } .rk-xp i, .rk-pips i { transition: none; } }

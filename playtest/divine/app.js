@@ -21,6 +21,7 @@ import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
 import {createDirector} from './director.js?v=16';
 import {createAI} from './ai.js?v=5';
 import {findDeck} from '../deck-store.js';
+import {rankAfterMatch} from '../rank.js?v=20261031-1';
 import {unlock, playMusic} from '../audio.js?v=20261030-telas';
 import {telas, anim, sound, imageUrl, applyColors, applyTexts} from '../telas.js?v=20261030-1';
 import {renderLiveCard, renderCardText} from '../../shared/live-card.js?v=20261031-kw6';
@@ -164,6 +165,7 @@ async function present(r, run, from) {
   try { await director.play(events); } catch (err) { console.error(err); } // animação quebrada não pode travar a partida
   clockResume(clock, now());
   render.lock = false;
+  rankHook(events);
   if (pending) clockHandTo(clock, pending.pending.player, now()); // G3-026: a decisão usa o relógio de quem decide
   render();
   focusDecision();
@@ -333,6 +335,8 @@ function startExclamation(key) {
 // ---------- Relógio competitivo (G3-024..028) ----------
 
 const now = () => performance.now() / 1000;
+// Fim da partida: XP contra a IA, rank e XP online (docs/ranking-xp.md). Hot-seat não conta.
+const rankHook = events => { const v = events.find(e => e.type === 'victory'); if (v) rankAfterMatch({victory: v, online: !!online, me: online ? online.key : settings.ai === 'A' ? 'B' : settings.ai === 'B' ? 'A' : null}); };
 function syncClock(events) {
   const s = S();
   for (const e of events) {
@@ -1954,6 +1958,7 @@ async function applyView(view) {
   render.lock = true;
   try { await director.play(events); } catch (err) { console.error(err); }
   render.lock = false;
+  rankHook(events);
   render();
   focusDecision();
   // Auto-pass do lado do jogador: sem resposta possível, passa a prioridade sozinho.

@@ -4,7 +4,7 @@ Só biblioteca padrão: http.server + sqlite3 + hashlib.scrypt. Roda atrás do C
 GET /api/auth/check (forward_auth) para liberar o /playtest só a quem está logado.
 Cadastro só para emails convidados (tabela invites; SANCTUARY_INVITES semeia na partida).
 """
-import hashlib, hmac, json, os, re, secrets, sqlite3, threading, time, urllib.request, urllib.error
+import calendar, hashlib, hmac, json, os, re, secrets, sqlite3, threading, time, urllib.request, urllib.error
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, quote, urlparse
@@ -35,6 +35,12 @@ ADMINS = {e.strip().lower() for e in os.environ.get('SANCTUARY_ADMINS', '').spli
 REQUESTS_PER_HOUR = 5
 # Duelo online (docs/duelo-online.md, etapa 4): desafio pelo chat, expira em 60 s; a partida roda no arena-server.
 ARENA_URL = os.environ.get('ARENA_URL', 'http://arena-server:8090')
+# Ranking e XP (docs/ranking-xp.md, aprovado em 31/10/2026): rank só no duelo online; contra a IA só XP, com teto diário.
+TIERS = ('Steel', 'Iron', 'Bronze', 'Silver', 'Gold', 'Kamui')
+KAMUI, PIPS, XP_LEVEL, AI_XP_DAY = len(TIERS) - 1, 6, 1000, 500
+XP_ONLINE = {'win': 100, 'loss': 50, 'draw': 50}
+XP_AI = {'win': 50, 'loss': 25, 'draw': 25}
+TITLES = ((50, 'Seventh Sense'), (30, 'Cosmo Awakened'), (20, 'Cloth Bearer'), (10, 'Saint'), (5, 'Trainee'))
 ARENA_SECRET = os.environ.get('ARENA_SECRET', '')
 CHALLENGE_SECONDS = 60
 SUSPENDED = 'This account is suspended.'
@@ -66,6 +72,9 @@ create table if not exists duels (challenge_id integer primary key, a_id integer
   rounds integer, finished_at integer not null);
 create index if not exists duels_a on duels(a_id, finished_at);
 create index if not exists duels_b on duels(b_id, finished_at);
+create table if not exists ai_xp (id integer primary key, user_id integer not null, result text not null, xp integer not null,
+  created_at integer not null);
+create index if not exists ai_xp_user on ai_xp(user_id, created_at);
 create table if not exists blocks (user_id integer not null, blocked_id integer not null, created_at integer not null,
   primary key (user_id, blocked_id));
 """
@@ -121,6 +130,87 @@ def profile(u):  # dados que o próprio jogador vê
     return {'email': u['email'], 'name': u['display_name'], 'username': u['username_display'], 'friend_code': u['friend_code'],
             'country': u['country'], 'phone': u['phone'], 'avatar_card': u['avatar_card'], 'complete': bool(u['username']),
             'admin': u['email'] in ADMINS}
+
+
+def season_of(ts):  # temporada = mês do calendário (UTC)
+    t = time.gmtime(ts)
+    return t.tm_year * 12 + t.tm_mon - 1
+
+
+def season_name(n):
+    return f'{n // 12}-{n % 12 + 1:02d}'
+
+
+def climb(results, now=None):
+    """Refaz a escalada a partir dos duelos online [(finished_at, 'win'|'loss'|'draw')] em ordem.
+    Steel: vitória +2 pips, derrota 0. Demais: +1/-1. 6 pips por divisão (IV→I); não cai de tier.
+    Kamui não tem divisão: pontos (+1/-1, mínimo 0). Virada do mês: um tier abaixo, divisão IV, sem pips."""
+    now = time.time() if now is None else now
+    r = {'tier': 0, 'division': 4, 'pips': 0, 'points': 0}
+    season, best, last = season_of(now), None, None
+    key = lambda r: (r['tier'], -(r['division'] or 0), r['pips'] + r['points'])
+    cur = None
+    for ts, res in list(results) + [(now, None)]:
+        s = season_of(ts)
+        if cur is not None and s > cur:
+            last = best if s - cur == 1 else None
+            for _ in range(min(s - cur, KAMUI)):
+                r = {'tier': max(0, r['tier'] - 1), 'division': 4, 'pips': 0, 'points': 0}
+            best = None
+        cur = s
+        if res is None:
+            break
+        t = r['tier']
+        if t == KAMUI:
+            r['points'] = max(0, r['points'] + {'win': 1, 'loss': -1}.get(res, 0))
+        elif res == 'win':
+            r['pips'] += 2 if t == 0 else 1
+            if r['pips'] >= PIPS:
+                r['pips'] -= PIPS
+                if r['division'] > 1:
+                    r['division'] -= 1
+                else:
+                    r = {'tier': t + 1, 'division': None if t + 1 == KAMUI else 4, 'pips': 0, 'points': 0}
+        elif res == 'loss' and t > 0:
+            if r['pips']:
+                r['pips'] -= 1
+            elif r['division'] < 4:
+                r['division'] += 1
+                r['pips'] = PIPS - 1
+        best = dict(r) if best is None or key(r) > key(best) else best
+    show = lambda r: r and {'tier': TIERS[r['tier']], 'division': r['division']}
+    return {**r, 'tier': TIERS[r['tier']], 'season': season_name(season), 'season_ends': calendar.timegm(((season + 1) // 12, (season + 1) % 12 + 1, 1, 0, 0, 0)), 'best': show(best), 'last_season': show(last) if last else None}
+
+
+def level_of(xp):
+    level = xp // XP_LEVEL + 1
+    return {'xp': xp, 'level': level, 'xp_in_level': xp % XP_LEVEL, 'xp_level_size': XP_LEVEL,
+            'title': next((t for lv, t in TITLES if level >= lv), None)}
+
+
+def online_results(uid):
+    rows = db.execute('select * from duels where a_id = ? or b_id = ? order by finished_at, challenge_id', (uid, uid)).fetchall()
+    side = lambda d: 'A' if d['a_id'] == uid else 'B'
+    return [(d['finished_at'], 'draw' if not d['winner'] else 'win' if d['winner'] == side(d) else 'loss') for d in rows]
+
+
+def rank_of(uid):
+    results = online_results(uid)
+    ai = db.execute('select coalesce(sum(xp), 0) from ai_xp where user_id = ?', (uid,)).fetchone()[0]
+    return {**climb(results), **level_of(ai + sum(XP_ONLINE[r] for _, r in results))}
+
+
+def kamui_board(limit=20):
+    # shortcut: refaz a escalada de todo jogador com duelo a cada pedido; trocar por tabela de rank quando houver centenas de jogadores.
+    ids = [r[0] for r in db.execute('select distinct id from users join duels on id in (a_id, b_id) where suspended_at is null')]
+    board = []
+    for uid in ids:
+        r = climb(online_results(uid))
+        if r['tier'] == TIERS[KAMUI]:
+            name = db.execute('select username_display from users where id = ?', (uid,)).fetchone()[0]
+            board.append({'username': name, 'points': r['points']})
+    board.sort(key=lambda b: -b['points'])
+    return board[:limit]
 
 
 def clean_profile(body, partial=False):
@@ -290,6 +380,10 @@ class Handler(BaseHTTPRequestHandler):
             m = re.fullmatch(r'/api/challenges/(\d+)/(accept|decline|cancel)', path)
             if m and method == 'POST':
                 return self.challenge_answer(int(m[1]), m[2])
+            if method == 'GET' and path == '/api/rank':
+                return self.rank()
+            if method == 'POST' and path == '/api/xp/ai':
+                return self.ai_xp()
             if method == 'POST' and path == '/api/access-requests':
                 return self.access_request()
             if path.startswith('/api/admin/'):
@@ -407,6 +501,7 @@ class Handler(BaseHTTPRequestHandler):
             db.execute('delete from messages where from_id = ? or to_id = ?', (uid, uid))
             db.execute('delete from challenges where from_id = ? or to_id = ?', (uid, uid))
             db.execute('delete from reports where reporter_id = ?', (uid,))
+            db.execute('delete from ai_xp where user_id = ?', (uid,))
             db.execute('delete from access_requests where email = ?', (user['email'],))
             db.execute('delete from login_attempts where email = ?', (user['email'],))
             # duelos: o histórico do adversário fica, o apagado vira "Deleted player" (id nulo)
@@ -733,7 +828,8 @@ class Handler(BaseHTTPRequestHandler):
                 recent.append({'opponent': (d['b_name'] if side == 'A' else d['a_name']) or 'Deleted player', 'result': result,
                                'god': d['a_god'] if side == 'A' else d['b_god'], 'date': d['finished_at']})
         played = len(rows)
-        self.send_json(200, {'username': u['username_display'], 'country': u['country'], 'joined': u['created_at'],
+        r = rank_of(uid)
+        self.send_json(200, {'rank': {k: r[k] for k in ('tier', 'division', 'points', 'level', 'title')}, 'username': u['username_display'], 'country': u['country'], 'joined': u['created_at'],
                              'avatar_card': u['avatar_card'], 'stats': {'played': played, 'wins': wins, 'losses': losses,
                              'winrate': round(100 * wins / played) if played else 0}, 'recent': recent})
 
@@ -749,9 +845,32 @@ class Handler(BaseHTTPRequestHandler):
         except (urllib.error.URLError, OSError):
             raise ApiError(502, 'The duel server is not available. Try again in a moment.')
 
-    def settle_pair(self, a, b):  # resultado das partidas da conversa: vira mensagem no chat quando o duelo termina
-        rows = db.execute("select * from challenges where status = 'accepted' and settled_at is null and "
-                          '((from_id = ? and to_id = ?) or (from_id = ? and to_id = ?))', (a, b, b, a)).fetchall()
+    # ---------- ranking e XP ----------
+    def rank(self):
+        uid = self.require_user()['id']
+        with lock:
+            self.settle_pair(uid)  # duelo recém-terminado entra no rank sem esperar o chat
+            self.send_json(200, {**rank_of(uid), 'kamui': kamui_board(), **self.ai_today(uid)})
+
+    def ai_today(self, uid):
+        day = int(time.time()) // 86400 * 86400
+        used = db.execute('select coalesce(sum(xp), 0) from ai_xp where user_id = ? and created_at >= ?', (uid, day)).fetchone()[0]
+        return {'ai_xp_today': used, 'ai_xp_cap': AI_XP_DAY}
+
+    def ai_xp(self):  # resultado contra a IA vem do navegador: só XP, com teto diário
+        uid = self.require_user()['id']
+        result = self.read_json().get('result')
+        if result not in XP_AI:
+            raise ApiError(400, 'Invalid result.')
+        with lock:
+            gained = max(0, min(XP_AI[result], AI_XP_DAY - self.ai_today(uid)['ai_xp_today']))
+            if gained:
+                db.execute('insert into ai_xp (user_id, result, xp, created_at) values (?, ?, ?, ?)', (uid, result, gained, int(time.time())))
+            self.send_json(200, {**rank_of(uid), 'gained': gained, **self.ai_today(uid)})
+
+    def settle_pair(self, a, b=None):  # resultado das partidas da conversa (ou de todas do jogador, sem b): vira mensagem no chat
+        pair = ('((from_id = ? and to_id = ?) or (from_id = ? and to_id = ?))', (a, b, b, a)) if b else ('(from_id = ? or to_id = ?)', (a, a))
+        rows = db.execute("select * from challenges where status = 'accepted' and settled_at is null and " + pair[0], pair[1]).fetchall()
         for c in rows:
             try:
                 req = urllib.request.Request(f"{ARENA_URL}/arena/matches/{c['match_id']}/result", headers={'X-Arena-Secret': ARENA_SECRET})

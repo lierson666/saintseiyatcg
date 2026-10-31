@@ -12,6 +12,7 @@ import {countryOptions, countryName} from '../shared/countries.js?v=20261029-1';
 import {startPresence} from '../shared/presence.js?v=20261029-1';
 import {mountSocial} from './social.js?v=20261029-5';
 import {telas, imageUrl, sound, applyColors, applyTexts} from './telas.js?v=20261030-1';
+import {loadRank, rankBadge, rankName, openRankPanel} from './rank.js?v=20261031-1';
 
 const root = document.getElementById('lobby');
 const ART = '../card-forge/art-web/';
@@ -88,6 +89,7 @@ function topBar() {
     <nav class="lb-tabs">${tab('home', 'Home')}${tab('decks', 'Decks')}${tab('profile', 'Profile')}${tab('options', 'Options')}</nav>
     <span class="lb-top__tag">Alpha 0.1 · Engine 3.0</span>
     ${ui.user?.complete ? `<button class="lb-socialbtn" data-act="friends" aria-label="Friends">Friends ${socialBadge()}</button>` : ''}
+    ${ui.rank ? rankBadge(ui.rank) : ''}
     ${ui.user ? `<span class="lb-user"><i class="kv-dot" aria-hidden="true"></i>${ui.user.complete ? `<button class="kv-ghost" data-act="my-profile" aria-label="My player profile">${esc(ui.user.username)}</button>` : esc(ui.user.name)}<button class="kv-ghost" data-act="signout">Sign out</button></span>` : ''}
   </header>`;
 }
@@ -226,6 +228,7 @@ async function openProfile(username) {
         <button class="kv-ghost" data-pclose autofocus>Close</button></header>
       <dl class="lb-pstats"><div><dt class="kv-stamp">Played</dt><dd>${s.played}</dd></div><div><dt class="kv-stamp">Wins</dt><dd>${s.wins}</dd></div>
         <div><dt class="kv-stamp">Losses</dt><dd>${s.losses}</dd></div><div><dt class="kv-stamp">Win rate</dt><dd>${s.winrate}%</dd></div></dl>
+      ${p.rank ? `<p class="kv-stamp">${esc(rankName(p.rank))} · Level ${p.rank.level}${p.rank.title ? ` · ${esc(p.rank.title)}` : ''}</p>` : ''}
       <h3 class="kv-stamp">Recent duels</h3>
       ${p.recent.length ? `<ol class="lb-precent">${p.recent.map(r => `<li class="is-${r.result}"><b>${RESULT[r.result]}</b> vs ${esc(r.opponent)}<small>${god(r.god)} · ${when(r.date)}</small></li>`).join('')}</ol>` : '<p class="kv-status">No online duels yet.</p>'}`;
     dlg.querySelector('[data-pclose]').focus();
@@ -473,6 +476,7 @@ const actions = {
   avatar: async t => { try { ui.user = await api('/api/me', 'PATCH', {avatar_card: t.dataset.id}); } catch (e) { ui.profileMsg = {me: {text: e.message, kind: 'err'}}; } render(); },
   friends: () => social?.toggle(),
   'my-profile': () => openProfile(ui.user.username),
+  rank: t => openRankPanel(ui.rank, t),
   'copy-code': async () => { await navigator.clipboard?.writeText(ui.user.friend_code).catch(() => {}); ui.copied = true; setTimeout(() => { ui.copied = false; render(); }, 1500); },
   slide: t => { ui.slide = (ui.slide || 0) + Number(t.dataset.step); },
   signout: async () => {
@@ -579,7 +583,7 @@ async function init() {
   if (!findDeck(ui.deckB, presets)) ui.deckB = presets[1]?.id || presets[0]?.id;
   render();
   // Conta do sanctuary-api (login no /login/). Sem API (dev local), o lobby segue sem o nome no topo.
-  fetch('/api/me', {credentials: 'same-origin'}).then(r => r.ok ? r.json() : null).then(u => { if (u) { ui.user = u; if (!u.complete) ui.screen = 'profile'; render(); startSocial(); if (u.username) syncDecks(u.username, () => { if (ui.screen !== 'builder') render(); }); } }).catch(() => {});
+  fetch('/api/me', {credentials: 'same-origin'}).then(r => r.ok ? r.json() : null).then(u => { if (u) { ui.user = u; if (!u.complete) ui.screen = 'profile'; render(); startSocial(); loadRank().then(r => { ui.rank = r; if (r && ui.screen !== 'builder') render(); }); if (u.username) syncDecks(u.username, () => { if (ui.screen !== 'builder') render(); }); } }).catch(() => {});
 }
 // Aviso discreto do salvamento dos decks (conta ou só este aparelho); não bloqueia nada.
 let deckNote = null, deckNoteTimer = 0;
