@@ -525,7 +525,7 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .sanctum__domain small, .sanctum__domain strong { position: relative; padding: 3px 3px; color: #f4ecd8; text-shadow: 0 1px 3px #000; }
 .sanctum__domain small { font: 700 max(7px, calc(var(--s) * .85))/1 system-ui, sans-serif; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); }
 .sanctum__domain strong { font: 600 max(9px, calc(var(--s) * 1))/1.2 Georgia, serif; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.sanctum__domain.is-used { transform: rotate(90deg) scale(.72); filter: saturate(.4) brightness(.8); } /* Once per game usada (guia §63) */
+.sanctum__domain.is-used { filter: saturate(.4) brightness(.8); } /* usada: só apaga; girar invadia o trilho (autor, 01/11/2026) */
 .sanctum__domain:hover { transform: translateY(-3px); box-shadow: 0 8px 18px rgba(0, 0, 0, .7), 0 0 18px rgba(232, 196, 106, .55); }
 .sanctum .cosmo { position: static; transform: none; flex-direction: column; gap: calc(var(--s) * .7); }
 .sanctum .cosmo__hex { width: calc(var(--s) * 8.6); height: auto; aspect-ratio: 1; clip-path: none; border-radius: 50%; background: none;
@@ -594,7 +594,7 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .gh-name { position: absolute; z-index: 2; display: grid; place-items: center; font: 600 calc(var(--m) * .15)/1 "Cinzel", "Trajan Pro", Georgia, serif;
   letter-spacing: .12em; color: #f8e9c0; text-shadow: 0 1px 2px #000, 0 0 10px rgba(255, 210, 120, .55); }
 .godhud--opp .gh-name { display: none; }
-.gh-plate { position: relative; z-index: 3; width: calc(var(--m) * 2.7); aspect-ratio: 600 / 150; margin-top: calc(var(--m) * -.1); }
+.gh-plate { position: relative; z-index: 3; width: calc(var(--m) * 3.4); aspect-ratio: 600 / 150; margin-top: calc(var(--m) * -.1); }
 .gh-plate__bg { position: absolute; inset: 0; width: 100%; height: 100%; }
 .gh-cells { position: absolute; left: 6%; right: 6%; top: 13%; height: 54%; display: flex; align-items: center; justify-content: space-between; gap: 3%; }
 .gh-cell { flex: 1; height: 82%; min-width: 0; display: flex; align-items: center; justify-content: center; gap: 8%; padding: 0 6%; border-radius: calc(var(--m) * .08); container-type: size; overflow: hidden; }
@@ -602,9 +602,10 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .gh-cell b { font: 700 52cqh/1 Georgia, "Times New Roman", serif; font-variant-numeric: lining-nums tabular-nums; color: #fff; text-shadow: 0 2px 3px #000; white-space: nowrap; }
 /* Soul (autor, 31/10/2026): símbolo de Soul das cartas, em dourado; o número cabe na célula (tamanho pela altura do box). */
 .gh-soulicon { flex: none; height: 70cqh; aspect-ratio: 1; background: linear-gradient(160deg, #fff3c4, #e6c36a 45%, #a8771f); -webkit-mask: url(../../CARD-TEMPLATE/icons/soul.png) center / contain no-repeat; mask: url(../../CARD-TEMPLATE/icons/soul.png) center / contain no-repeat; filter: drop-shadow(0 0 3px rgba(230, 195, 106, .7)); }
-/* Sem box dentro da placa (autor, 31/10/2026): só Soul e Attack, separados por um filete dourado; o Attack ganha um brilho quente difuso. */
-.gh-cell--atk { background: linear-gradient(180deg, transparent, rgba(230, 195, 106, .85), transparent) left center / 1px 70% no-repeat,
-  radial-gradient(ellipse 60% 70% at 55% 50%, rgba(255, 140, 60, .5), transparent 72%); border-radius: 0; }
+/* Gods sem Attack (§24, 01/11/2026): a placa é só o Soul, com barra de vida (autor, 01/11/2026). */
+.gh-soulbar { flex: 1; min-width: 0; height: 46cqh; border-radius: 99px; background: rgba(4, 6, 18, .85); box-shadow: inset 0 0 0 1px rgba(230, 195, 106, .7), 0 0 10px rgba(0, 0, 0, .6); overflow: hidden; }
+.gh-soulbar u { display: block; height: 100%; width: var(--pct); background: linear-gradient(180deg, #fff3c4, #e6c36a 50%, #a8771f); box-shadow: 0 0 12px rgba(255, 210, 120, .7); transition: width .5s cubic-bezier(.2, .8, .2, 1); }
+.godhud.is-low .gh-soulbar u { background: linear-gradient(180deg, #ffb3a0, #e5533f 50%, #8f1d12); box-shadow: 0 0 14px rgba(255, 90, 70, .8); }
 .godhud.is-active .gh-hole { box-shadow: 0 0 0 2px #2a1c06, 0 0 40px rgba(255, 200, 90, .85), inset 0 0 0 2px rgba(255, 244, 200, .5); }
 .godhud.is-awaken .gh-hole { box-shadow: 0 0 0 2px #0a1430, 0 0 44px rgba(110, 190, 255, .85), inset 0 0 0 2px rgba(200, 235, 255, .6); }
 .godhud.is-low .gh-soulicon { animation: heart-beat 1s ease-in-out infinite; }
@@ -633,11 +634,8 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
   .godhud { --m: calc(var(--u, 8px) * 7.5); }
   .godhud--opp { --m: calc(var(--u, 8px) * 5.6); }
   .godhud--opp .gh-name { display: grid; }
-  .gh-cell--soul { flex: 1.8; }
+  .gh-cell--soul { flex: 1; justify-content: flex-start; gap: 4%; }
   .gh-cell--soul b { font-size: 68cqh; color: #fff6dc; text-shadow: 0 2px 3px #000, 0 0 12px rgba(230, 195, 106, .55); }
-  .gh-cell--atk { flex: 1; }
-  .gh-cell--atk b { font-size: 58cqh; }
-  .gh-cell--atk svg { height: 52%; }
 
   .rail { --s: min(calc(var(--u, 8px) * 1.1), calc((100vh - 40px) / 78)); position: absolute; z-index: 6; left: 12px; top: 10px; bottom: 10px;
     width: calc(var(--s) * 19); display: flex; flex-direction: column; justify-content: space-between; gap: var(--s); pointer-events: none; }

@@ -264,7 +264,8 @@ const targetReq = req => !!req && req.kind === 'choice' && req.count === 1 && re
 // em zoom ao lado do campo, o texto do efeito e uma seta até quem é afetado, sem cobrir o campo. Esc abre o modal clássico.
 const sideReq = req => !!req && req.player !== settings.ai && (req.kind === 'optional' || targetReq(req));
 function boardPick() {
-  if (mode?.kind === 'play') return {uid: mode.uid, refs: mode.options || [], pick: choose};
+  // Escolha com carta de origem (jogar, equipar, ativar): painel de conjuração à direita, como as outras (autor, 01/11/2026).
+  if (mode?.uid && ctx.objects[mode.uid]) return {uid: mode.uid, refs: mode.options || [], pick: choose};
   if (!pending?.peek || !targetReq(pending.pending)) return null;
   const req = pending.pending, src = [casting, req.uid, req.source].find(u => u && ctx.objects[u]);
   return {uid: src || null, refs: req.options, pick: v => reply({value: req.multiple ? [v] : v})};
@@ -551,7 +552,7 @@ function godHud(key, side) {
     <div class="gh-plate">
       ${PLATE(`${k}p`, `${k}q`)}
       <div class="gh-cells">
-        <span class="gh-cell gh-cell--soul godhud__soul" data-soul="${key}" data-tip="Soul|${p.soul} of ${max}. When a God's Soul reaches 0, its player loses."><i class="gh-soulicon" aria-hidden="true"></i><b>${p.soul}</b></span>
+        <span class="gh-cell gh-cell--soul godhud__soul" data-soul="${key}" data-tip="Soul|${p.soul} of ${max}. When a God's Soul reaches 0, its player loses."><i class="gh-soulicon" aria-hidden="true"></i><b>${p.soul}</b><i class="gh-soulbar" aria-hidden="true" style="--pct:${Math.max(0, Math.min(100, Math.round(p.soul / max * 100)))}%"><u></u></i></span>
       </div>
     </div></section>`;
 }
