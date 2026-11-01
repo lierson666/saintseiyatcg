@@ -457,8 +457,11 @@ function notice() {
     <h3 id="lb-notice-t">${esc(ui.notice.title)}</h3><p>${esc(ui.notice.text)}</p>
     <button class="lb-play lb-play--small" data-act="close-notice" autofocus>OK</button></div></div>` : '';
 }
+// Cosmo na cor do Deus atrás da carta do zoom (autor, 31/10/2026).
+const COSMO = {Athena: '#ffd66e', Poseidon: '#3fa9ff', Hades: '#a35cff', Ares: '#ff4b3a', Artemis: '#6fe39a', Neutral: '#cfd8e6'};
 function bigCard() {
-  return ui.big ? `<div class="lb-big" data-act="close-big" role="dialog" aria-label="Card">${face(ui.big, 'lb-card--big')}${cardInfo(ui.big)}</div>` : '';
+  const f = ui.big && (ui.big.startsWith('god-') ? godForge(ui.big) : forge.get(ui.big)), cosmo = COSMO[f?.faccao] || COSMO.Neutral;
+  return ui.big ? `<div class="lb-big" data-act="close-big" role="dialog" aria-label="Card" style="--cosmo: ${cosmo}">${face(ui.big, 'lb-card--big')}${cardInfo(ui.big)}</div>` : '';
 }
 
 // Redesenha tudo; guarda a rolagem das colunas para o clique não voltar a lista ao topo.

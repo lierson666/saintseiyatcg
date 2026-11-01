@@ -162,7 +162,12 @@ h1, h2, h3, .lb-play, .lb-tab, .lb-hero p { font-family: "Cinzel", "Trajan Pro",
 /* Carta grande (botão direito): altura máxima da tela, carta e detalhes centralizados (autor, 31/10/2026). */
 .lb-big { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; gap: 32px; padding: 12px; background: #000d; backdrop-filter: blur(6px); cursor: zoom-out; animation: lb-fade .18s ease-out; }
 @keyframes lb-fade { from { opacity: 0; } }
-.lb-card--big { flex: none; width: min(62vw, calc((100dvh - 24px) * 1488 / 2091)); box-shadow: 0 30px 80px #000, 0 0 60px #e6c36a22; }
+.lb-card--big { flex: none; width: min(62vw, calc((100dvh - 24px) * 1488 / 2091)); outline: 1px solid color-mix(in srgb, var(--cosmo, #e6c36a) 70%, transparent);
+  box-shadow: 0 30px 80px #000, 0 0 18px color-mix(in srgb, var(--cosmo, #e6c36a) 70%, transparent), 0 0 70px color-mix(in srgb, var(--cosmo, #e6c36a) 45%, transparent), 0 0 160px color-mix(in srgb, var(--cosmo, #e6c36a) 22%, transparent);
+  animation: lb-cosmo 3.2s ease-in-out infinite alternate; }
+/* Cosmo pulsando na cor do Deus (--cosmo vem de bigCard em lobby.js). */
+@keyframes lb-cosmo { to { box-shadow: 0 30px 80px #000, 0 0 26px color-mix(in srgb, var(--cosmo, #e6c36a) 85%, transparent), 0 0 100px color-mix(in srgb, var(--cosmo, #e6c36a) 55%, transparent), 0 0 220px color-mix(in srgb, var(--cosmo, #e6c36a) 30%, transparent); } }
+@media (prefers-reduced-motion: reduce) { .lb-card--big { animation: none; } }
 .lb-info { position: relative; width: min(440px, 44vw); max-height: 86vh; overflow: auto; padding: 26px 26px 22px; cursor: default; display: grid; gap: 14px; align-content: start;
   border: 1px solid #e6c36a55; border-radius: 14px; background: linear-gradient(180deg, #111830f5, #080c18f8); box-shadow: 0 24px 60px #000c; animation: lb-slide .22s ease-out; }
 .lb-info__close { position: absolute; top: 14px; right: 14px; }
