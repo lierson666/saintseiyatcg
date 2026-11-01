@@ -18,8 +18,8 @@ import {refreshAwaken} from '../playtest/engine-v3/gods.js';
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json'), cards = loadCanon(canon), index = canonIndex(canon);
 addPreviewCards(cards, index, read('../card-forge/art-web/cards.json').cartas);
-const previews = read('../data/alpha-0.1/decks-preview.json').decks;
-const [rush, fortress] = read('../data/alpha-0.1/decks-proposta-d171.json').decks;
+const previews = read('./fixtures/decks-preview.json').decks;
+const [rush, fortress] = read('./fixtures/decks-proposta-d171.json').decks;
 
 // Partida com `decks`/`gods`; `asked` guarda cada pergunta feita ao jogador (ability). Decisão: sim / primeira opção.
 function setup({decks, gods, seed = 1}) {

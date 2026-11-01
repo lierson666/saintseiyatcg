@@ -79,7 +79,7 @@ test('End Phase: gatilhos de fim de turno antes do checkpoint D204; Cleanup expi
 test('Strike declarado abre janela; Moment do defensor resolve antes do dano', () => {
   const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
   const canon = read('../data/canon/d268.json'), cards = loadCanon(canon);
-  const [rush, fortress] = read('../data/alpha-0.1/decks-proposta-d171.json').decks;
+  const [rush, fortress] = read('./fixtures/decks-proposta-d171.json').decks;
   const m = createMatch({cards, canonIndex: canonIndex(canon), decks: {A: rush, B: fortress}, first: 'A', seed: 3});
   for (const p of Object.values(m.state.players)) p.deck.push(...p.hand.splice(0)); m.state.setup = null; // cenário isolado: sem mão inicial (P01)
   const ctx = {cards, objects: m.objects, attached: m.attached}, s = m.state, log = [];

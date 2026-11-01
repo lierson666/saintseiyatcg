@@ -9,7 +9,7 @@ import {createArena} from './arena.mjs';
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json');
 const cards = loadCanon(canon), index = canonIndex(canon);
-const [rush, fortress] = read('../data/alpha-0.1/decks-proposta-d171.json').decks;
+const [rush, fortress] = read('../tools/fixtures/decks-proposta-d171.json').decks;
 let clock = 1000;
 const arena = createArena({cards, canonIndex: index, now: () => clock});
 const fresh = () => arena.create({players: {A: 'Seiya', B: 'Shiryu'}, decks: {A: rush, B: fortress}, seed: 42});

@@ -20,7 +20,7 @@ import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, cloc
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
 import {createDirector} from './director.js?v=18';
-import {createAI} from './ai.js?v=9';
+import {createAI} from './ai.js?v=10';
 import {findDeck} from '../deck-store.js';
 import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-face3';
 import {unlock, playMusic} from '../audio.js?v=20261030-telas';
@@ -1148,7 +1148,7 @@ function logEvent(e) {
     seal_added: `${n(e.uid)} gets ${e.added} Seal (${e.counters} total).`, seal_removed: `${n(e.uid)} stays Unprepared: 1 Seal removed (${e.counters} left).`,
     seal_failed: `${e.source}: paid, but the Devotee is gone. No Seal.`, divine_power_declined: `God ${e.player} declines ${e.ability}.`,
     mill: `${e.player} mills ${e.moved}${e.moved < e.requested ? ` of ${e.requested}` : ''}.`, discarded: `${e.player} discards ${e.uids ? `${e.uids.length} card${e.uids.length === 1 ? '' : 's'}` : n(e.uid)}.`,
-    base_returned: `${e.player}: a Cosmo Base returns to hand.`, returned_to_hand: `${e.ability}: ${e.uids?.length} cards return to their owners' hands.`,
+    base_returned: `${e.player}: a Cosmo Base returns to hand.`, returned_to_hand: e.uids ? `${e.ability}: ${e.uids.length} cards return to their owners' hands.` : `${n(e.uid)} returns to its owner's hand.`,
     TIMEOUT_AUTO_CHOICE: `TIMEOUT_AUTO_CHOICE (Player ${e.player}): ${e.result?.map(n).join(', ') || 'nothing'}.`, TIMEOUT_DECLINED: `TIMEOUT_DECLINED (Player ${e.player}): ${e.ability}.`,
     TIMEOUT_PASS_PRIORITY: `TIMEOUT_PASS_PRIORITY (Player ${e.player}).`, TIMEOUT_END_TURN: `TIMEOUT_END_TURN (Player ${e.player}).`, mulligan: `${e.player} mulligans ${e.count}.`, victory: e.draw ? 'Draw.' : `Player ${e.winner} wins.`}[e.type];
   if (t) say(t);
@@ -2231,7 +2231,7 @@ async function init() {
   canon = canonData; cards = loadCanon(canon); index = canonIndex(canon);
   addPreviewCards(cards, index, [...FORGE.values()]); // etapa 1: Poseidon, Hades, Ares, Artemis e neutras (shared/preview-cards.js)
   const presets = [...deckData.decks, ...previewDecks.decks, ...compDecks.decks];
-  const [rush, fortress] = deckData.decks, deckOf = id => findDeck(id, presets); // presets D171 e de prévia, ou decks do criador (../deck-store.js)
+  const [rush] = deckData.decks, fortress = previewDecks.decks[0] || rush, deckOf = id => findDeck(id, presets); // presets D171 e de prévia, ou decks do criador (../deck-store.js); B padrão: starter de Poseidon (deck de 50, 01/11/2026)
   const query = new URLSearchParams(location.search);
   decks = {A: deckOf(query.get('deckA')) || rush, B: deckOf(query.get('deckB')) || fortress}; // ?deckA=&deckB= vindos da seleção do menu
   director = createDirector({ui, getFx: () => scene?.fx, settings});

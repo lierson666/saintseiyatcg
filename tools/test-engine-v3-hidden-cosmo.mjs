@@ -15,7 +15,7 @@ import {guardDecide} from './engine-test-upto.mjs';
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json'), cards = loadCanon(canon), index = canonIndex(canon);
 addPreviewCards(cards, index, read('../card-forge/art-web/cards.json').cartas);
-const decks = read('../data/alpha-0.1/decks-preview.json').decks;
+const decks = read('./fixtures/decks-preview.json').decks;
 
 // A no próprio turno, mão vazia; `bases`: Bases Prepared além da carta com Hidden Cosmo.
 function setup(id, bases) {

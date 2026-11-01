@@ -11,7 +11,7 @@ import {declareStrike, strikeTargets} from '../playtest/engine-v3/strike.js';
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json');
 const cards = loadCanon(canon);
-const [rush, fortress] = read('../data/alpha-0.1/decks-proposta-d171.json').decks;
+const [rush, fortress] = read('./fixtures/decks-proposta-d171.json').decks;
 
 // Coloca no campo direto do deck: a entrada pela mão depende da ALPHA-P02 (estado de entrada).
 function setup() {

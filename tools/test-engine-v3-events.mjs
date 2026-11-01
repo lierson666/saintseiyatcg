@@ -12,7 +12,7 @@ import {playDevotee} from '../playtest/engine-v3/play.js';
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json');
 const cards = loadCanon(canon);
-const [rush, fortress] = read('../data/alpha-0.1/decks-proposta-d171.json').decks;
+const [rush, fortress] = read('./fixtures/decks-proposta-d171.json').decks;
 
 test('eventos têm seq contínuo e seguem a ordem real: mulligan, turno, compra, Base, jogada, Strike, dano, Soul', () => {
   const m = createMatch({cards, canonIndex: canonIndex(canon), decks: {A: rush, B: fortress}, first: 'A', seed: 3});

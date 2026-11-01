@@ -49,7 +49,7 @@
         },
         {
           "card_id": "poseidon-v6-100",
-          "quantity": 2
+          "quantity": 1
         },
         {
           "card_id": "poseidon-v6-092",
@@ -65,7 +65,7 @@
         },
         {
           "card_id": "poseidon-v6-131",
-          "quantity": 2
+          "quantity": 1
         },
         {
           "card_id": "poseidon-v6-133",
@@ -77,11 +77,11 @@
         },
         {
           "card_id": "poseidon-v6-132",
-          "quantity": 3
+          "quantity": 2
         },
         {
           "card_id": "poseidon-v6-137",
-          "quantity": 3
+          "quantity": 2
         },
         {
           "card_id": "poseidon-v6-152",
@@ -89,27 +89,23 @@
         },
         {
           "card_id": "poseidon-v6-156",
-          "quantity": 3
+          "quantity": 1
         },
         {
           "card_id": "poseidon-v6-153",
-          "quantity": 2
+          "quantity": 1
         },
         {
           "card_id": "poseidon-v6-162",
-          "quantity": 2
+          "quantity": 1
         },
         {
           "card_id": "poseidon-v6-166",
-          "quantity": 2
+          "quantity": 1
         },
         {
           "card_id": "poseidon-v6-141",
           "quantity": 2
-        },
-        {
-          "card_id": "poseidon-v6-172",
-          "quantity": 1
         },
         {
           "card_id": "poseidon-v6-180",
@@ -137,7 +133,7 @@
         },
         {
           "card_id": "hades-v6-211",
-          "quantity": 3
+          "quantity": 2
         },
         {
           "card_id": "hades-v6-215",
@@ -177,22 +173,18 @@
         },
         {
           "card_id": "hades-v6-190",
-          "quantity": 2
-        },
-        {
-          "card_id": "hades-v6-225",
-          "quantity": 2
-        },
-        {
-          "card_id": "hades-v6-226",
-          "quantity": 2
-        },
-        {
-          "card_id": "hades-v6-182",
           "quantity": 1
         },
         {
-          "card_id": "hades-v6-199",
+          "card_id": "hades-v6-225",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-226",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-182",
           "quantity": 1
         },
         {
@@ -205,15 +197,15 @@
         },
         {
           "card_id": "hades-v6-234",
-          "quantity": 3
+          "quantity": 2
         },
         {
           "card_id": "hades-v6-238",
-          "quantity": 3
+          "quantity": 2
         },
         {
           "card_id": "hades-v6-241",
-          "quantity": 3
+          "quantity": 2
         },
         {
           "card_id": "hades-v6-240",
@@ -221,15 +213,11 @@
         },
         {
           "card_id": "hades-v6-258",
-          "quantity": 2
+          "quantity": 1
         },
         {
           "card_id": "hades-v6-263",
           "quantity": 2
-        },
-        {
-          "card_id": "hades-v6-270",
-          "quantity": 1
         }
       ]
     },
@@ -269,7 +257,7 @@
         },
         {
           "card_id": "ares-v6-304",
-          "quantity": 3
+          "quantity": 2
         },
         {
           "card_id": "ares-v6-302",
@@ -297,19 +285,11 @@
         },
         {
           "card_id": "ares-v6-336",
-          "quantity": 2
+          "quantity": 1
         },
         {
           "card_id": "ares-v6-315",
           "quantity": 2
-        },
-        {
-          "card_id": "ares-v6-272",
-          "quantity": 1
-        },
-        {
-          "card_id": "ares-v6-289",
-          "quantity": 1
         },
         {
           "card_id": "ares-v6-322",
@@ -317,7 +297,7 @@
         },
         {
           "card_id": "ares-v6-323",
-          "quantity": 3
+          "quantity": 2
         },
         {
           "card_id": "ares-v6-325",
@@ -329,7 +309,7 @@
         },
         {
           "card_id": "ares-v6-331",
-          "quantity": 2
+          "quantity": 1
         },
         {
           "card_id": "ares-v6-350",
@@ -337,18 +317,14 @@
         },
         {
           "card_id": "ares-v6-354",
-          "quantity": 2
+          "quantity": 1
         },
         {
           "card_id": "ares-v6-346",
-          "quantity": 2
+          "quantity": 1
         },
         {
           "card_id": "ares-v6-351",
-          "quantity": 2
-        },
-        {
-          "card_id": "ares-v6-358",
           "quantity": 1
         }
       ]
@@ -377,7 +353,7 @@
         },
         {
           "card_id": "artemis-v6-395",
-          "quantity": 3
+          "quantity": 2
         },
         {
           "card_id": "artemis-v6-390",
@@ -425,10 +401,6 @@
         },
         {
           "card_id": "artemis-v6-415",
-          "quantity": 2
-        },
-        {
-          "card_id": "artemis-v6-362",
           "quantity": 1
         },
         {
@@ -441,7 +413,7 @@
         },
         {
           "card_id": "artemis-v6-419",
-          "quantity": 3
+          "quantity": 2
         },
         {
           "card_id": "artemis-v6-422",
@@ -453,26 +425,18 @@
         },
         {
           "card_id": "artemis-v6-417",
-          "quantity": 2
-        },
-        {
-          "card_id": "artemis-v6-376",
-          "quantity": 2
-        },
-        {
-          "card_id": "artemis-v6-441",
-          "quantity": 2
-        },
-        {
-          "card_id": "artemis-v6-374",
-          "quantity": 2
-        },
-        {
-          "card_id": "artemis-v6-426",
           "quantity": 1
         },
         {
-          "card_id": "artemis-v6-449",
+          "card_id": "artemis-v6-376",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-441",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-374",
           "quantity": 1
         }
       ]

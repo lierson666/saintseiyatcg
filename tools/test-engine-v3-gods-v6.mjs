@@ -17,7 +17,7 @@ import {guardDecide} from './engine-test-upto.mjs';
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json');
 const cards = loadCanon(canon);
-const [rush, fortress] = read('../data/alpha-0.1/decks-proposta-d171.json').decks;
+const [rush, fortress] = read('./fixtures/decks-proposta-d171.json').decks;
 
 // A joga o God `god`; B é Athena. `decide` padrão: sim / primeira opção (ou as primeiras `count`).
 function setup(god, decide = (p, q) => (q.options ? (q.count ? q.options.slice(0, q.count) : q.options[0]) : true)) {

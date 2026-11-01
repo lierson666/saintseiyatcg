@@ -21,7 +21,7 @@ const playEquipment = (s, ctx, key, uid, bearer, ch) => { const r = resolved(pla
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json'), cards = loadCanon(canon), index = canonIndex(canon);
 addPreviewCards(cards, index, read('../card-forge/art-web/cards.json').cartas);
-const decks = read('../data/alpha-0.1/decks-preview.json').decks;
+const decks = read('./fixtures/decks-preview.json').decks;
 
 // Artemis é A (ativo). Cartas injetadas por id; sem Domains, salvo o teste. `answer(q)` responde as escolhas;
 // "you may" responde `yes` (padrão sim).

@@ -10,9 +10,10 @@ const {decks} = read('../data/alpha-0.1/decks-experimentais.json');
 const deck = (entries, domain_id = 'athena-v6-062') => ({domain_id, main_deck: entries});
 const codes = errors => errors.map(e => e.code);
 
-test('deck de 60 com 3 cópias e Domain fora é válido', () => {
-  const ids = ['001', '002', '003', '004', '005', '006', '007', '008', '009', '010', '011', '012', '013', '014', '015', '016', '017', '018', '020', '021'];
-  assert.deepEqual(validateDeck(deck(ids.map(n => ({card_id: `athena-v6-${n}`, quantity: 3}))), index), []);
+test('deck de 50 (01/11/2026) com até 3 cópias e Domain fora é válido', () => {
+  const ids = ['001', '002', '003', '004', '005', '006', '007', '008', '009', '010', '011', '012', '013', '014', '015', '016', '017'];
+  const list = ids.map(n => ({card_id: `athena-v6-${n}`, quantity: 3})); list[0].quantity = 2; // 16×3 + 2 = 50
+  assert.deepEqual(validateDeck(deck(list), index), []);
 });
 
 test('quarta cópia, tamanho errado, Domain no deck e carta desconhecida são recusados', () => {
@@ -25,15 +26,15 @@ test('quarta cópia, tamanho errado, Domain no deck e carta desconhecida são re
 });
 
 test('as duas listas experimentais excedem o limite de 3 (D171) só nas cartas com 4 cópias', () => {
-  const excess = d => validateDeck(d, index).filter(e => e.code === 'copies').map(e => e.card_id.slice(-3)).sort();
+  const excess = d => validateDeck(d, index, {size: 60}).filter(e => e.code === 'copies').map(e => e.card_id.slice(-3)).sort();
   assert.deepEqual(excess(decks[0]), ['001', '002', '021', '028', '053', '054', '060']);
   assert.deepEqual(excess(decks[1]), ['003', '004', '011', '037', '040', '041', '042', '045', '058']);
-  for (const d of decks) assert.deepEqual(codes(validateDeck(d, index)).filter(c => c !== 'copies'), [], d.alpha_nome);
+  for (const d of decks) assert.deepEqual(codes(validateDeck(d, index, {size: 60})).filter(c => c !== 'copies'), [], d.alpha_nome); // listas históricas de 60
   // Com o limite antigo de 4, as listas passam: o conflito é só a D171.
-  for (const d of decks) assert.deepEqual(validateDeck(d, index, {copyLimit: 4}), [], d.alpha_nome);
+  for (const d of decks) assert.deepEqual(validateDeck(d, index, {copyLimit: 4, size: 60}), [], d.alpha_nome);
 });
 
-test('decks D171 aprovados fecham 60 com no máximo 3 cópias, sem 019 a mais e sem Kiki 026', () => {
+test('starter de Athena (D171) fecha 50 com no máximo 3 cópias, sem 019 a mais e sem Kiki 026', () => {
   const proposal = read('../data/alpha-0.1/decks-proposta-d171.json').decks;
   for (const d of proposal) {
     assert.deepEqual(validateDeck(d, index), [], d.alpha_nome);

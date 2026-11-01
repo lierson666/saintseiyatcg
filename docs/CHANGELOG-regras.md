@@ -4,6 +4,14 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-01 — §2, §63 — Deck de 50 cartas
+
+- **Antes:** deck principal de 60 cartas.
+- **Depois:** deck principal de 50 cartas (God e Domain fora). Continua o limite de 3 cópias e de até 15 cartas da facção do Domain fora da cor. A Fatigue (deck vazio) chega 10 cartas antes.
+- **Motivo:** autor, 01/11/2026, depois de um duelo Athena × Poseidon Control travado na rodada 10 com 44 cartas no deck: "deck de 50 cartas, perfeito! igual star wars!".
+- **Decks:** ficam 5 starters (1 por God) e 8 competitivos (dos 15 anteriores ao rebalanceamento Premodern), todos refeitos com 50; os outros saem. Decks salvos pelos jogadores com 60 aparecem inválidos até o ajuste.
+- **Engine/UI:** `shared/deck-v3.js` (`DECK_SIZE`), textos do site e do Star Hill.
+
 ## 2026-11-01 — Cartas (Fênix) — Sai o marcador de Renascimento
 
 - **Antes:** Phoenix Ikki (009) custo 5, Hidden Cosmo {6}, com Phoenix Rebirth (substituía a derrota uma vez e punha 1 marcador de Renascimento). Phoenix Cloth V2 (010) e Esmeralda (038) removiam marcadores; The Return of the Phoenix (080) punha 1 marcador; Leo Gold Cloth (016) deixava Ikki ativar Lightning Plasma sem {T}.

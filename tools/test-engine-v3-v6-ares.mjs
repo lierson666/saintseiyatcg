@@ -17,7 +17,7 @@ import {V6} from '../playtest/engine-v3/v6/hooks.js';
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json'), cards = loadCanon(canon), index = canonIndex(canon);
 addPreviewCards(cards, index, read('../card-forge/art-web/cards.json').cartas);
-const decks = read('../data/alpha-0.1/decks-preview.json').decks;
+const decks = read('./fixtures/decks-preview.json').decks;
 
 // A: Ares (Domain 332); B: sem Domain, só com cartas injetadas. Decisões: primeira opção (God se houver);
 // "you may" sim para A, não para B.

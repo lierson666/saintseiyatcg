@@ -1,8 +1,8 @@
 // Validação de deck para a engine 3.0 (Alpha 0.1), a partir do snapshot canônico D268.
-// Regras: 60 cartas, com God e Domain fora dos 60 (D196: "outside 60 main cards"),
+// Regras: 50 cartas (autor, 01/11/2026; eram 60), com God e Domain fora delas (D196),
 // limite de cópias por identidade mecânica (D171, confirmado pelo autor em 28/10/2026: 3).
 
-export const DECK_SIZE = 60;
+export const DECK_SIZE = 50;
 export const COPY_LIMIT = 3;
 export const SPLASH_LIMIT = 15;
 

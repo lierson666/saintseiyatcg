@@ -14,7 +14,7 @@ import {createDirector, SIGNATURES} from '../playtest/divine/director.js';
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json');
 const cards = loadCanon(canon);
-const [rush, fortress] = read('../data/alpha-0.1/decks-proposta-d171.json').decks;
+const [rush, fortress] = read('./fixtures/decks-proposta-d171.json').decks;
 
 // Mesma partida do teste de eventos: Seiya (001, assinatura) bate no God B.
 function scriptedMatch() {

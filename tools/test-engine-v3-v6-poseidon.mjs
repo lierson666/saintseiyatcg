@@ -17,7 +17,7 @@ import {guardDecide} from './engine-test-upto.mjs';
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json'), cards = loadCanon(canon), index = canonIndex(canon);
 addPreviewCards(cards, index, read('../card-forge/art-web/cards.json').cartas);
-const decks = read('../data/alpha-0.1/decks-preview.json').decks;
+const decks = read('./fixtures/decks-preview.json').decks;
 const P = n => `poseidon-v6-${n}`;
 
 // A: Poseidon (Tide of the Seven Seas, Domain 142); B: Hades. `answers[ability]`: resposta fixa ou função da pergunta;

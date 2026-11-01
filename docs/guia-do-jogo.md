@@ -35,7 +35,7 @@ Cada jogador utiliza:
 
 * 1 God;
 * 1 Domain;
-* 1 deck principal com 60 cartas.
+* 1 deck principal com 50 cartas.
 
 O God e o Domain começam a partida em suas respectivas posições de jogo, fora do deck principal.
 
@@ -573,7 +573,7 @@ Card Craft: identidade e flavor; mecânica; habilidades; cartas e progressão; r
 Os valores desta seção são hipóteses iniciais, não resultados de testes concluídos.
 
 Parâmetro	Valor experimental
-Deck principal	60 cartas
+Deck principal	50 cartas
 Mão inicial	7 cartas
 Cosmo Base por turno	1
 Compra por turno	1 (nada no primeiro turno próprio)
@@ -699,13 +699,13 @@ Se um Strike causar Soul zero aos dois Gods simultaneamente por efeitos aplicáv
 
 ### 63. Deck, identidade, mulligan, Gods e Domains
 
-- Deck principal com 60 cartas, até **3 cópias da mesma identidade de carta**; artes alternativas e revisões da mesma carta não aumentam o limite. God e Domain ficam fora dessas 60.
+- Deck principal com 50 cartas (autor, 01/11/2026; eram 60), até **3 cópias da mesma identidade de carta**; artes alternativas e revisões da mesma carta não aumentam o limite. God e Domain ficam fora dessas 50.
 - Permitir cartas da facção do God, da facção do Domain e neutras. Se God e Domain forem da mesma facção, o deck é monofacção mais neutras. Não criar cinco tipos de mana nesta base.
 - **Domain fora da cor** (autor, 31/10/2026). Se a facção do Domain for diferente da facção do God:
   1. Só a **primeira habilidade impressa** do Domain funciona; as demais são ignoradas.
   2. Habilidades **estáticas** do Domain não funcionam.
   3. Habilidade disparada ou ativada do Domain tem custo adicional de **{1}{S}** (o God do controlador perde 1 Soul), pago quando ela iria para a pilha. O pagamento é opcional: sem pagar, a habilidade não é usada. Disparo obrigatório passa a ser opcional.
-  4. O deck principal pode ter **até 15 cartas** da facção do Domain. Cartas neutras não contam nesse limite; God e Domain ficam fora dos 60.
+  4. O deck principal pode ter **até 15 cartas** da facção do Domain. Cartas neutras não contam nesse limite; God e Domain ficam fora das 50.
   - Domain da mesma facção do God funciona inteiro, sem custo extra; o bônus de ressonância é não sofrer essas restrições.
 - **Forma dos Domains e Once per game** (autor, 31/10/2026). Um Domain tem duas linhas: a primeira é um efeito simples e contínuo (estática de +1 ATK ou +1 HP num subtipo, ou gatilho/ativada de 1 ponto no máximo uma vez por rodada), sem compra de carta; a segunda é forte e marcada **Once per game**. Compra de carta em Domain só aparece na habilidade Once per game.
   - **Once per game:** habilidade ativada que o controlador usa no próprio turno, pagando o custo impresso; vai à pilha. Ao declará-la, o Domain fica marcado como usado (vira de lado) até o fim da partida; se for contrariada, continua usada.

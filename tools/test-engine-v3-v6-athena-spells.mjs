@@ -15,7 +15,7 @@ import {checkDefeats, atkOf, keywordsOf, hpOf} from '../playtest/engine-v3/effec
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json'), cards = loadCanon(canon), index = canonIndex(canon);
 addPreviewCards(cards, index, read('../card-forge/art-web/cards.json').cartas);
-const decks = read('../data/alpha-0.1/decks-preview.json').decks;
+const decks = read('./fixtures/decks-preview.json').decks;
 
 // A: Ares (Domain 332); B: sem Domain, só com cartas injetadas. Decisões: primeira opção (God se houver);
 // "you may" sim para A, não para B.
@@ -258,7 +258,7 @@ test('Domains de Athena (§63, 31/10/2026): texto do Forge por cima do D268; 501
   assert.equal(statue?.kind, 'Domain');
   assert.match(arena, /Once per game/);
   assert.doesNotMatch(arena, /you may draw a card/, 'a linha 1 antiga (compra) saiu');
-  const azorius = read('../data/alpha-0.1/decks-competitivos.json').decks.find(d => d.id === 'comp-azorius');
+  const azorius = read('./fixtures/decks-competitivos.json').decks.find(d => d.id === 'comp-azorius');
   assert.doesNotThrow(() => createMatch({cards, canonIndex: index, decks: {A: azorius, B: {...decks.find(d => d.id === 'preview-ares-legions')}}, first: 'A', seed: 1}));
 });
 

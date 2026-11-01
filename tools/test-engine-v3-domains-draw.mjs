@@ -16,7 +16,7 @@ import * as k from '../playtest/engine-v3/v6/kit.js';
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json'), cards = loadCanon(canon), index = canonIndex(canon);
 addPreviewCards(cards, index, read('../card-forge/art-web/cards.json').cartas);
-const decks = [...read('../data/alpha-0.1/decks-preview.json').decks, ...read('../data/alpha-0.1/decks-competitivos.json').decks];
+const decks = [...read('./fixtures/decks-preview.json').decks, ...read('./fixtures/decks-competitivos.json').decks];
 const deck = id => ({...decks.find(d => d.id === id)});
 
 // A joga `deckA` com o Domain `domain`; B, Ares sem Domain. Cartas avulsas entram por `field`.

@@ -11,7 +11,7 @@ const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json');
 const cards = loadCanon(canon);
 const index = canonIndex(canon);
-const [rush, fortress] = read('../data/alpha-0.1/decks-proposta-d171.json').decks;
+const [rush, fortress] = read('./fixtures/decks-proposta-d171.json').decks;
 const match = (seed = 7, first = 'A') => createMatch({cards, canonIndex: index, decks: {A: rush, B: fortress}, seed, first});
 const keepAll = m => m.state.order.forEach(k => mulligan(m, k, []));
 
@@ -28,10 +28,10 @@ test('parser lê os 95 registros sem alterar texto e com os números impressos (
   assert.deepEqual(cards.get('athena-v6-019').equip, {amount: 6, who: 'other'});
 });
 
-test('partida Athena × Athena: 60 objetos por deck, God e Domain fora, Soul do God', () => {
+test('partida Athena × Athena: 50 objetos por deck (01/11/2026), God e Domain fora, Soul do God', () => {
   const {state, objects} = match();
-  assert.equal(Object.keys(objects).length, 120);
-  assert.deepEqual([state.players.A.deck.length, state.players.B.deck.length, state.players.A.hand.length, state.players.B.hand.length], [53, 53, 7, 7]); // P01: mão de 7
+  assert.equal(Object.keys(objects).length, 100);
+  assert.deepEqual([state.players.A.deck.length, state.players.B.deck.length, state.players.A.hand.length, state.players.B.hand.length], [43, 43, 7, 7]); // P01: mão de 7
   assert.deepEqual([state.players.A.soul, state.players.B.soul], [20, 20]); // G3-042
   assert.deepEqual(state.domains, {A: 'athena-v6-062', B: 'athena-v6-064'});
   assert.ok(![...state.players.A.deck, ...state.players.A.hand].some(uid => /:06[2-5]:/.test(uid)));
@@ -80,12 +80,12 @@ test('simulação reproduzível de compra e Base até a Fatigue (P07) encerrar a
     endTurn(state); passAll(state);
     checkInvariants(state, objects);
   }
-  // P01: deck 53; D170 + §55 (1 por turno, autor 30/10/2026): 53 compras esvaziam o deck no 54º turno próprio. A partir do
-  // 55º, cada compra falha tira 1, 2, 3… (P07). A, inicial, chega à 6ª falha (1+…+6 = 21 ≥ 20, G3-042) no 60º turno, um antes de B.
+  // P01: deck 43 (deck de 50, 01/11/2026); 1 compra por turno: 43 compras esvaziam o deck no 44º turno próprio. Depois,
+  // cada compra falha tira 1, 2, 3… (P07) até a Fatigue derrotar A, um turno antes de B.
   assert.deepEqual(state.victory, {winner: 'B'});
-  assert.equal(log.length, 118);
-  assert.match(log[0], /^R1 A mão 6 deck 53 bases 1/);
-  assert.match(log.at(-1), /^R59 B .* soul 5$/);
+  assert.equal(log.length, 98);
+  assert.match(log[0], /^R1 A mão 6 deck 43 bases 1/);
+  assert.match(log.at(-1), /^R49 B .* soul 5$/);
   assert.ok(state.players.A.latent <= 3 && state.players.B.latent <= 3);
 });
 
@@ -108,7 +108,7 @@ test('P01: mulligan parcial devolve N, embaralha e compra N; mão fica com 7 e n
   mulligan(m, 'A', back);
   assert.equal(p.hand.length, 7);
   assert.deepEqual(p.hand.slice(0, 4), kept);
-  assert.equal(p.deck.length, 53);
+  assert.equal(p.deck.length, 43);
   mulligan(m, 'B', []);
   assert.equal(state.setup, null);
   checkInvariants(state, objects);

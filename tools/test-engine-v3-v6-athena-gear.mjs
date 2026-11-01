@@ -20,7 +20,7 @@ const activate = resolved(activateRaw), playEquipment = resolved(playEquipmentRa
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json'), cards = loadCanon(canon), index = canonIndex(canon);
 addPreviewCards(cards, index, read('../card-forge/art-web/cards.json').cartas);
-const decks = read('../data/alpha-0.1/decks-preview.json').decks;
+const decks = read('./fixtures/decks-preview.json').decks;
 
 const G = n => `athena-v6-${String(n).padStart(3, '0')}`;
 const FOE = 'artemis-v6-399'; // Wildwood Protector 3/4 Guardian

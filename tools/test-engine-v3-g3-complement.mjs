@@ -17,7 +17,7 @@ const CLOCK_3MIN = {basic: 60, reserveStart: 90, reserveMax: 180, carry: 0.5};
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json');
 const cards = loadCanon(canon);
-const [rush, fortress] = read('../data/alpha-0.1/decks-proposta-d171.json').decks;
+const [rush, fortress] = read('./fixtures/decks-proposta-d171.json').decks;
 
 // ---------- G3-029 ----------
 // FIXTURE: 'fixture-pegasus-seiya-v1' é uma reimpressão fictícia de Seiya (arte/subtítulo diferentes), só para o teste.

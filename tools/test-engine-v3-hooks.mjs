@@ -19,7 +19,7 @@ import * as k from '../playtest/engine-v3/v6/kit.js';
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json'), cards = loadCanon(canon), index = canonIndex(canon);
 addPreviewCards(cards, index, read('../card-forge/art-web/cards.json').cartas);
-const decks = read('../data/alpha-0.1/decks-preview.json').decks;
+const decks = read('./fixtures/decks-preview.json').decks;
 
 // Cartas de teste: Devotee 3/4, Equipment (Armor) e duas Techniques.
 const dev = (id, extra = {}) => cards.set(id, {id, name: id, kind: 'Devotee', type: 'Devotee — Warrior', cost: {amount: 1, unit: 'base'}, atk: 3, hp: 4, keywords: [], ...extra});

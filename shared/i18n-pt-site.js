@@ -29,7 +29,7 @@ Object.assign(self.ssI18nPT.strings, {
   'Control and steady pressure, like a rising tide.': 'Controle e pressão constante, como a maré subindo.', 'Persistence, sacrifice and the dead who return.': 'Persistência, sacrifício e os mortos que voltam.',
   'Aggression, combat and conquest.': 'Agressão, combate e conquista.', 'The hunt: precision and well-chosen eliminations.': 'A caçada: precisão e eliminações bem escolhidas.',
   'A match at a glance': 'Uma partida num relance', 'Two players, one God each. The full rules are on': 'Dois jogadores, um Deus cada. As regras completas estão em',
-  'One God, one Domain and a 60-card deck of Devotees, Equipment and Spells.': 'Um Deus, um Domínio e um deck de 60 cartas com Devotos, Equipamentos e Magias.',
+  'One God, one Domain and a 50-card deck of Devotees, Equipment and Spells.': 'Um Deus, um Domínio e um deck de 50 cartas com Devotos, Equipamentos e Magias.',
   'Play one Base each turn to build the Cosmo you spend on cards and powers.': 'Coloque uma Base por turno para formar o Cosmo que você gasta em cartas e poderes.',
   'Each Round, both players take a turn. Summon, equip and strike, then end your turn.': 'A cada Rodada, os dois jogadores jogam um turno. Invoque, equipe e golpeie, depois encerre seu turno.',
   "Reduce the enemy God's Soul to zero. Lose your own God, and you lose the match.": 'Reduza a Alma do Deus inimigo a zero. Se perder seu Deus, você perde a partida.',

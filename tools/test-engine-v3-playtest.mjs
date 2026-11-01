@@ -24,7 +24,7 @@ import {resumeFor, createCursor} from '../playtest/engine-v3/sync.js';
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json');
 const cards = loadCanon(canon);
-const [rush, fortress] = read('../data/alpha-0.1/decks-proposta-d171.json').decks;
+const [rush, fortress] = read('./fixtures/decks-proposta-d171.json').decks;
 const card = (g, uid) => cards.get(g.ctx.objects[uid].cardId);
 const other = (s, k) => s.order.find(x => x !== k);
 

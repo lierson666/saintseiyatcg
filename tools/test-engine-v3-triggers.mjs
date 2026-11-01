@@ -13,7 +13,7 @@ import {atkOf, hpOf, SPELLS, silence} from '../playtest/engine-v3/effects.js';
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json');
 const cards = loadCanon(canon);
-const [rush, fortress] = read('../data/alpha-0.1/decks-proposta-d171.json').decks;
+const [rush, fortress] = read('./fixtures/decks-proposta-d171.json').decks;
 
 function setup(decks = {A: rush, B: fortress}, decide) {
   const m = createMatch({cards, canonIndex: canonIndex(canon), decks, first: 'A', seed: 3});

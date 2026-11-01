@@ -1,0 +1,2941 @@
+{
+  "nota": "Decks competitivos do Olympus Arena (Alpha 0.1), 15 arquétipos clássicos de TCG montados para playtest (30/10/2026). 60 cartas, até 3 cópias, God e Domain fora das 60; só cartas da facção do God, da facção do Domain e neutras. Prontos para o playtest, o lobby e o Star Hill; não são decks aprovados pelo autor. Priorizam cartas com efeito implementado na engine 3.0.",
+  "decks": [
+    {
+      "id": "comp-athena-cloth-voltron",
+      "nome": "Armed with the Cloth",
+      "god": "god-athena",
+      "domain_id": "athena-v6-065",
+      "arquetipo": "Saints do Bronze e Gold com a Cloth própria (Resonance). Pegasus, Dragon e Phoenix sobem de ATK com Cloth, Training e Miracles; Aries Mu e Leo Aiolia fecham. Vence com um Saint grande e protegido que ataca todo turno.",
+      "tema": "Cloth Voltron",
+      "main_deck": [
+        {
+          "card_id": "athena-v6-001",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-002",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-003",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-004",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-009",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-010",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-005",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-006",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-007",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-008",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-028",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-027",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-044",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-021",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-053",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-054",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-060",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-058",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-061",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-011",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-015",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-013",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-077",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-081",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-088",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-082",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-047",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": "comp-athena-bronze-brotherhood",
+      "nome": "Bronze Brotherhood",
+      "god": "god-athena",
+      "domain_id": "athena-v6-065",
+      "arquetipo": "Muitos Bronze Saints baratos (Wolf Nachi, Jabu, Ban, June) com Galaxian Wars, Twelve Flames e Testament of Aiolos como anthem de rodada. Vence inundando o campo e atacando em massa.",
+      "tema": "Go-wide / anthem",
+      "main_deck": [
+        {
+          "card_id": "athena-v6-028",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-029",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-031",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-032",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-033",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-001",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-003",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-005",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-007",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-009",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-002",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-004",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-010",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-006",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-052",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-053",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-060",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-081",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-021",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-054",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-044",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-047",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-011",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-082",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-030",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": "comp-athena-seal-control",
+      "nome": "Frozen Sanctuary",
+      "god": "god-athena",
+      "domain_id": "athena-v6-065",
+      "arquetipo": "Hyoga, Camus, Shaina e Cerberus Dante põem Seal nos Devotees inimigos; Freezing Coffin e Absolute Zero terminam o trabalho. Defensores com prevenção seguram o campo até o Seal virar remoção.",
+      "tema": "Seal control",
+      "main_deck": [
+        {
+          "card_id": "athena-v6-006",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-017",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-018",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-075",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-078",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-084",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-007",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-028",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-030",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-029",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-032",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-044",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-054",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-031",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-071",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-024",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-011",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-009",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-010",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-001",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-002",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-021",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-073",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-005",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": "comp-poseidon-counter-control",
+      "nome": "Tides of Denial",
+      "god": "god-poseidon",
+      "domain_id": "poseidon-v6-142",
+      "arquetipo": "Contra-Moments (133, 136, 154, 156, 159, 167) para negar Spells inimigas, Water Prison do God para selar atacantes e muito saque/loot. Corpos Guardian seguram até Kanon e Kraken fecharem.",
+      "tema": "Counter-control / draw-go",
+      "main_deck": [
+        {
+          "card_id": "poseidon-v6-133",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-136",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-156",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-167",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-159",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-154",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-135",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-139",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-113",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-116",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-127",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-105",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-110",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-117",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-119",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-121",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-108",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-107",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-093",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-095",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-091",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-097",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-099",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-111",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-132",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-150",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-152",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-123",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-138",
+          "quantity": 3
+        }
+      ]
+    },
+    {
+      "id": "comp-poseidon-marina-tempo",
+      "nome": "Marina Tempest",
+      "god": "god-poseidon",
+      "domain_id": "poseidon-v6-143",
+      "arquetipo": "Marina Generals com Scales e muitos bounces (Rising Tide, Marine Whirlwind, God Breath) que desfazem o campo inimigo no turno do ataque. O Pillar do Atlântico compra a cada retorno.",
+      "tema": "Marina tempo / bounce",
+      "main_deck": [
+        {
+          "card_id": "poseidon-v6-091",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-093",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-095",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-097",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-092",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-096",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-099",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-103",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-106",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-107",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-108",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-111",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-118",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-104",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-132",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-152",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-150",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-134",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-140",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-122",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-125",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-129",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-164",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-133",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-119",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-121",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "id": "comp-hades-aristocrats",
+      "nome": "Feast of the Damned",
+      "god": "god-hades",
+      "domain_id": "hades-v6-243",
+      "arquetipo": "Esqueletos baratos, saída de sacrifício (Executioner, Golem Rock, Troll Iwan, Death Is Only the Beginning) e Offering of Life do God: cada morte vira carta e dreno de Soul. Vence pelo valor acumulado e pelo dreno.",
+      "tema": "Aristocrats / sacrifício",
+      "main_deck": [
+        {
+          "card_id": "hades-v6-206",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-218",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-220",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-221",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-222",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-223",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-208",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-210",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-211",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-217",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-212",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-219",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-201",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-234",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-237",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-261",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-238",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-225",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-230",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-215",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-193",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-251",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-266",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-213",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-214",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-205",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-204",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-209",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "id": "comp-hades-reanimator",
+      "nome": "Return from Tartarus",
+      "god": "god-hades",
+      "domain_id": "hades-v6-245",
+      "arquetipo": "Enche o Tartarus (Markino, Wandering Soul, Charon) e devolve ameaças grandes (Wyvern, Thanatos, Gold Saints) com Return from Death, Resurrection e Specters Invade Sanctuary. Gates of the Underworld recicla Specters.",
+      "tema": "Reanimator",
+      "main_deck": [
+        {
+          "card_id": "hades-v6-206",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-220",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-189",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-195",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-232",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-240",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-259",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-260",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-235",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-221",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-185",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-197",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-181",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-193",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-253",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-255",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-251",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-202",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-203",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-233",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-263",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-218",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-223",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-238",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-231",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-230",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-225",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-217",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": "comp-hades-specter-midrange",
+      "nome": "The Surplice Legion",
+      "god": "god-hades",
+      "domain_id": "hades-v6-242",
+      "arquetipo": "Curva de Specters de 3 a 5 (Harpy, Niobe, Sylphid, Lycaon, Minotaur) com Surplices e remoção ao entrar. Hades Castle e Souls of the Damned drenam o Soul do rival. Vence na mesa e fecha no God.",
+      "tema": "Specter midrange / Surplices",
+      "main_deck": [
+        {
+          "card_id": "hades-v6-182",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-201",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-204",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-205",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-213",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-214",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-215",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-216",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-209",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-250",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-184",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-236",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-238",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-217",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-219",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-223",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-224",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-212",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-206",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-207",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-218",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-220",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-221",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-210",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "id": "comp-ares-berserker-rush",
+      "nome": "Berserker Blitz",
+      "god": "god-ares",
+      "domain_id": "ares-v6-334",
+      "arquetipo": "Curva baixa de Berserkers com Impulse, Warplates/armas, No Mercy e remoção barata (First Blood, Rain of Spears). The Arena of Blood dá ATK a quem derrota. Sem cartas que ferem o próprio God; as taxas de Soul de Ares só valem com folga de Soul. Vence cedo batendo direto no God.",
+      "tema": "Berserker aggro / rush",
+      "main_deck": [
+        {
+          "card_id": "ares-v6-293",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-296",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-306",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-343",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-312",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-327",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-291",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-292",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-295",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-297",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-279",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-281",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-283",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-299",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-302",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-341",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-271",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-309",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-342",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-344",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-315",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-316",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-314",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-322",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-325",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-350",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-330",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-340",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-319",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-304",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": "comp-ares-glorious-demise",
+      "nome": "Glorious Demise",
+      "god": "god-ares",
+      "domain_id": "ares-v6-335",
+      "arquetipo": "Berserkers descartáveis (Disaster Legion) que causam dano ao God ao morrer, pagando a taxa de Soul; Blood for Blood e Suicide Orders alimentam Fields of Carnage. Corpos de meio de curva (Royal Guard, Berserker Champion, Crimson Fire Guardian, Lior) e remoção (First Blood, Rain of Spears, Azure, The Crimson Fire, The Fall of Ikki) seguram a mesa sem ferir o próprio God. Vence pelo dano acumulado ao God.",
+      "tema": "Glorious Demise / burn ao God",
+      "main_deck": [
+        {
+          "card_id": "ares-v6-293",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-301",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-313",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-343",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-275",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-309",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-302",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-345",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-341",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-338",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-317",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-314",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-316",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-322",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-326",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-347",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-327",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-351",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-350",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-354",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-330",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-328",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-299",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-305",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-342",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": "comp-artemis-counter-ramp",
+      "nome": "Forest of Growth",
+      "god": "god-artemis",
+      "domain_id": "artemis-v6-429",
+      "arquetipo": "Forest Guardians com +1/+1 counters (Primal Growth, Silver Light, Oath of the Seven Huntresses), ramp de Cosmo (Dryad, Shaman, Nature's Awakening) e Pierce nos grandes. Ancient Grove gera Latent a cada counter. Vence com um campo enorme.",
+      "tema": "+1/+1 counters ramp",
+      "main_deck": [
+        {
+          "card_id": "artemis-v6-381",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-387",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-390",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-398",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-397",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-407",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-365",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-367",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-371",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-377",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-399",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-400",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-405",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-421",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-374",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-376",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-426",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-417",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-423",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-420",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-401",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-402",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-403",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-395",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-391",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-369",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-385",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-416",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-389",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": "comp-artemis-huntress-precision",
+      "nome": "Silver Arrow Huntresses",
+      "god": "god-artemis",
+      "domain_id": "artemis-v6-430",
+      "arquetipo": "Satellites arqueiras com arcos/aljavas e remoção por dano igual ao ATK (Silver Arrow, Forest Answers, Hunter's Instinct, Sacred Hunt). Silver Arrow Commander e La Scoumoune limpam o campo; Lunar Hunting Grounds recompensa ATK 4+.",
+      "tema": "Huntress precision removal",
+      "main_deck": [
+        {
+          "card_id": "artemis-v6-418",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-422",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-424",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-443",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-448",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-388",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-393",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-394",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-406",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-363",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-431",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-435",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-361",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-364",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-436",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-409",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-410",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-411",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-413",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-379",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-380",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-386",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-389",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-382",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-392",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-419",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-421",
+          "quantity": 3
+        }
+      ]
+    },
+    {
+      "id": "comp-neutral-steel-armory",
+      "nome": "Steel Armory",
+      "god": "god-ares",
+      "domain_id": "ares-v6-334",
+      "arquetipo": "Steel Saints neutros (Recruit, Sho, Daichi) e suas Steel Cloths crescem equipados, ao lado de Berserkers de meio de curva (Alceu, Berserker Champion, Crimson Fire Guardian, Royal Guard) e do arsenal genérico de Ares (Helmet, Blade, Axe, Javelin, Champion Warplate). Remoção barata (First Blood, Rain of Spears, The Crimson Fire, The Fall of Ikki) abre caminho; Arena of Blood recompensa quem derrota. Vence com um corpo equipado que bate todo turno.",
+      "tema": "Steel Saints / artifacts",
+      "main_deck": [
+        {
+          "card_id": "neutral-v6-468",
+          "quantity": 3
+        },
+        {
+          "card_id": "neutral-v6-461",
+          "quantity": 2
+        },
+        {
+          "card_id": "neutral-v6-462",
+          "quantity": 2
+        },
+        {
+          "card_id": "neutral-v6-466",
+          "quantity": 2
+        },
+        {
+          "card_id": "neutral-v6-467",
+          "quantity": 2
+        },
+        {
+          "card_id": "neutral-v6-465",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-291",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-304",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-297",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-292",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-293",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-283",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-279",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-302",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-341",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-309",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-315",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-316",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-318",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-340",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-320",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-314",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-322",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-327",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-350",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-354",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-325",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-323",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": "comp-hades-black-saints",
+      "nome": "Death Queen Island",
+      "god": "god-hades",
+      "domain_id": "hades-v6-243",
+      "arquetipo": "Black Saints neutros (Black Pegasus, Black Dragon, Black Andromeda, Jango) que gastam Soul e morrem; Offering of Life do God de Hades transforma cada baixa em carta. The Battle of Death Queen Island varre com compra dupla.",
+      "tema": "Black Saints rogue",
+      "main_deck": [
+        {
+          "card_id": "neutral-v6-451",
+          "quantity": 3
+        },
+        {
+          "card_id": "neutral-v6-452",
+          "quantity": 3
+        },
+        {
+          "card_id": "neutral-v6-454",
+          "quantity": 3
+        },
+        {
+          "card_id": "neutral-v6-455",
+          "quantity": 1
+        },
+        {
+          "card_id": "neutral-v6-456",
+          "quantity": 1
+        },
+        {
+          "card_id": "neutral-v6-458",
+          "quantity": 3
+        },
+        {
+          "card_id": "neutral-v6-453",
+          "quantity": 2
+        },
+        {
+          "card_id": "neutral-v6-460",
+          "quantity": 2
+        },
+        {
+          "card_id": "neutral-v6-498",
+          "quantity": 2
+        },
+        {
+          "card_id": "neutral-v6-482",
+          "quantity": 1
+        },
+        {
+          "card_id": "neutral-v6-490",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-234",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-221",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-218",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-206",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-220",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-217",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-237",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-238",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-211",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-208",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-222",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-223",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-204",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-213",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-214",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-205",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-219",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-251",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": "comp-underworld-carnage",
+      "nome": "Carnage of the Underworld",
+      "god": "god-hades",
+      "domain_id": "ares-v6-335",
+      "arquetipo": "God de Hades (Offering of Life: morte vira carta) com Domain de Ares (Fields of Carnage: morte de Berserker queima o God). Splash de 15 cartas de Ares (guia §63): Berserkers baratos de Disaster Legion, Raging Hoplite e First Blood pressionam; Specters de meio de curva (Worm Raimi, Alraune, Gorgon Ox, Lycaon, Minotaur) seguram a mesa; Dullahan, Harpy e Souls of the Damned devolvem o Soul que as taxas de Ares gastam.",
+      "tema": "Dois facções: God Hades + Domain Ares",
+      "main_deck": [
+        {
+          "card_id": "ares-v6-293",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-301",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-313",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-304",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-322",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-217",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-238",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-220",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-223",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-237",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-208",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-226",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-219",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-204",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-218",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-206",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-207",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-221",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-209",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-215",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-216",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-213",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-214",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-224",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-225",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-233",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "id": "comp-ares-sligh",
+      "nome": "Ares Sligh",
+      "god": "god-ares",
+      "domain_id": "ares-v6-333",
+      "arquetipo": "Referência do meta Premodern (Mono-Red Sligh): curva 1-2-3 de Berserkers com Impulse, burn em Devotee e no God (First Blood, Rain of Spears, The Bloody Rain, The Apocalypse of Ares) e filtragem. Vence cedo; o burn fecha o God. docs/meta-premodern.md e docs/rebalance-ares-premodern.md (31/10/2026).",
+      "tema": "Sligh (aggro + burn)",
+      "main_deck": [
+        {
+          "card_id": "ares-v6-293",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-313",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-308",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-310",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-307",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-291",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-295",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-343",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-299",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-285",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-271",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-320",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-317",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-322",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-327",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-326",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-354",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-350",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-357",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-352",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-359",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-347",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-323",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-330",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-325",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": "comp-athena-saints",
+      "nome": "Athena Saints",
+      "god": "god-athena",
+      "domain_id": "athena-v6-062",
+      "arquetipo": "Referência do meta Premodern (White Weenie): curva de Bronze Saints de custo 2 e 3, The Golden Arrow como remoção, truques defensivos em Moment (Protect Saori, Shun's Embrace, Cassios's Sacrifice, The Call of Athena) e Athena's Shield como anthem. docs/meta-premodern.md e docs/rebalance-athena-premodern.md (31/10/2026).",
+      "tema": "White Weenie (aggro + proteção)",
+      "main_deck": [
+        {
+          "card_id": "athena-v6-028",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-031",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-032",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-030",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-034",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-040",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-029",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-001",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-003",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-007",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-021",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-041",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-015",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-020",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-048",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-082",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-056",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-079",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-076",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-061",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-058",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-081",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-053",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-052",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-060",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-083",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": "comp-poseidon-control",
+      "nome": "Poseidon Control",
+      "god": "god-poseidon",
+      "domain_id": "poseidon-v6-142",
+      "arquetipo": "Referência do meta Premodern (Mono-U Control): escada de counters em Moment de até c3 (Song of the Last Siren como Force of Will), compra e filtro, bounce e Seal; poucos finalizadores (Kanon, Sorrento, Isaac). docs/meta-premodern.md e docs/rebalance-poseidon-premodern.md (31/10/2026).",
+      "tema": "Control (counter + compra)",
+      "main_deck": [
+        {
+          "card_id": "poseidon-v6-167",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-159",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-133",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-154",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-136",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-135",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-139",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-113",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-116",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-132",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-152",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-174",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-105",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-117",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-119",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-091",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-093",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-097",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-101",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-171",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-170",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-178",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-138",
+          "quantity": 3
+        }
+      ]
+    },
+    {
+      "id": "comp-poseidon-marina",
+      "nome": "Poseidon Marina",
+      "god": "god-poseidon",
+      "domain_id": "poseidon-v6-143",
+      "arquetipo": "Referência do meta Premodern (Merfolk): Marinas baratas com dois lordes (Herald +1/+1, Standard Bearer +1 ATK), bounce no turno do ataque e counters leves. docs/meta-premodern.md e docs/rebalance-poseidon-premodern.md (31/10/2026).",
+      "tema": "Tempo (tribal Marina)",
+      "main_deck": [
+        {
+          "card_id": "poseidon-v6-107",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-106",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-115",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-103",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-118",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-108",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-111",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-112",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-099",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-104",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-121",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-095",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-093",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-125",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-123",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-122",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-132",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-152",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-133",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-159",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-167",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-135",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-140",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-136",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "id": "comp-hades-midrange",
+      "nome": "Hades Midrange",
+      "god": "god-hades",
+      "domain_id": "hades-v6-242",
+      "arquetipo": "Referência do meta Premodern (Mono-Black): discard cedo (Whispers of Pandora c1, Trial of the Dead c2), remoção dura (Divine Touch of Death c3, Ferryman's Price, Will of Hades), Specters eficientes com dreno e recursão do Tartarus. docs/meta-premodern.md e docs/rebalance-hades-premodern.md (31/10/2026).",
+      "tema": "Midrange (discard + remoção)",
+      "main_deck": [
+        {
+          "card_id": "hades-v6-218",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-220",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-217",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-206",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-221",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-215",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-209",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-216",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-219",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-201",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-202",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-213",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-252",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-251",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-181",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-193",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-194",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-237",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-241",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-262",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-239",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-257",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-238",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-240",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-234",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-226",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-269",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": "comp-artemis-hunt",
+      "nome": "Artemis Hunt",
+      "god": "god-artemis",
+      "domain_id": "artemis-v6-428",
+      "arquetipo": "Referência do meta Premodern (Elves): Devotees de mana de custo 1 (Moonlit Initiate, Sacred Grove Dryad), ramp de Base extra, lorde Satellite (Moonlight Huntress Captain), fight/bite como remoção e Overrun (The Wrath of Artemis c5). docs/meta-premodern.md e docs/rebalance-artemis-premodern.md (31/10/2026).",
+      "tema": "Ramp + tribal (Elves)",
+      "main_deck": [
+        {
+          "card_id": "artemis-v6-386",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-397",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-396",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-407",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-381",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-393",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-388",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-398",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-402",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-404",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-406",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-392",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-431",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-383",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-437",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-435",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-417",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-420",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-423",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-422",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-424",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-446",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-372",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-450",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-376",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-400",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-405",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": "comp-enchantress",
+      "nome": "Athena Enchantress",
+      "god": "god-athena",
+      "domain_id": "artemis-v6-504",
+      "arquetipo": "Referência do meta Premodern (Selesnya Enchantress): dupla com o God como motor e até 15 cartas da facção do Domain fora da cor. docs/meta-premodern.md e docs/duplas-premodern.md (31/10/2026).",
+      "tema": "Enchantress (Equipment + compra)",
+      "main_deck": [
+        {
+          "card_id": "athena-v6-043",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-042",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-020",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-045",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-046",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-047",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-048",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-049",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-050",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-051",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-028",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-031",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-032",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-040",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-041",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-082",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-056",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-061",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-053",
+          "quantity": 2
+        },
+        {
+          "card_id": "artemis-v6-414",
+          "quantity": 3
+        },
+        {
+          "card_id": "artemis-v6-409",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-413",
+          "quantity": 1
+        },
+        {
+          "card_id": "artemis-v6-386",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "id": "comp-reanimator",
+      "nome": "Hades Reanimator",
+      "god": "god-hades",
+      "domain_id": "poseidon-v6-144",
+      "arquetipo": "Referência do meta Premodern (Reanimator): dupla com o God como motor e até 15 cartas da facção do Domain fora da cor. docs/meta-premodern.md e docs/duplas-premodern.md (31/10/2026).",
+      "tema": "Reanimator (self-mill + Animate Dead)",
+      "main_deck": [
+        {
+          "card_id": "hades-v6-191",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-193",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-181",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-255",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-240",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-260",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-232",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-265",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-206",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-220",
+          "quantity": 3
+        },
+        {
+          "card_id": "hades-v6-221",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-189",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-251",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-218",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-194",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-237",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-239",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-257",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-234",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-109",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-120",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-113",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-139",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-135",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-133",
+          "quantity": 2
+        }
+      ]
+    },
+    {
+      "id": "comp-rakdos",
+      "nome": "Ares Rakdos",
+      "god": "god-ares",
+      "domain_id": "hades-v6-244",
+      "arquetipo": "Referência do meta Premodern (Rakdos Suicide): dupla com o God como motor e até 15 cartas da facção do Domain fora da cor. docs/meta-premodern.md e docs/duplas-premodern.md (31/10/2026).",
+      "tema": "Aggro + sacrifício",
+      "main_deck": [
+        {
+          "card_id": "ares-v6-293",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-313",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-308",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-310",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-307",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-291",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-295",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-343",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-299",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-320",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-317",
+          "quantity": 1
+        },
+        {
+          "card_id": "ares-v6-322",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-327",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-326",
+          "quantity": 2
+        },
+        {
+          "card_id": "ares-v6-357",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-323",
+          "quantity": 3
+        },
+        {
+          "card_id": "ares-v6-330",
+          "quantity": 2
+        },
+        {
+          "card_id": "hades-v6-239",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-257",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-194",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-237",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-234",
+          "quantity": 1
+        },
+        {
+          "card_id": "hades-v6-222",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": "comp-azorius",
+      "nome": "Poseidon Azorius",
+      "god": "god-poseidon",
+      "domain_id": "athena-v6-501",
+      "arquetipo": "Referência do meta Premodern (UW Control): dupla com o God como motor e até 15 cartas da facção do Domain fora da cor. docs/meta-premodern.md e docs/duplas-premodern.md (31/10/2026).",
+      "tema": "Control (counter + remoção)",
+      "main_deck": [
+        {
+          "card_id": "poseidon-v6-167",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-159",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-133",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-154",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-136",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-135",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-139",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-116",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-174",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-091",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-093",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-097",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-101",
+          "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-105",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-082",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-056",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-061",
+          "quantity": 2
+        },
+        {
+          "card_id": "athena-v6-040",
+          "quantity": 3
+        },
+        {
+          "card_id": "athena-v6-041",
+          "quantity": 1
+        },
+        {
+          "card_id": "athena-v6-035",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-138",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": "comp-poseidon-phoenix",
+      "nome": "Phoenix Tide",
+      "god": "god-poseidon",
+      "domain_id": "athena-v6-062",
+      "arquetipo": "Spells baratas de Poseidon e Ikki de Fênix splash: na terceira Moment ou Technique do turno, Ikki volta do Tártaro Preparado e com Impulso golpeia na hora; loot (Pearl Sanctuary Keeper, Deep Sea Hunter, Atlantean Acolyte) põe Ikki no Tártaro e anulações e bounces baratos (Tidal Veto, Undertow, Mist of the Deep) protegem a combinação.",
+      "tema": "Phoenix",
+      "main_deck": [
+        {
+          "card_id": "athena-v6-009",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-135",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-138",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-139",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-158",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-133",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-136",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-132",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-152",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-155",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-508",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-509",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-116",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-112",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-113",
+          "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-115",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-107",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-109",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-106",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-510",
+          "quantity": 3
+        }
+      ]
+    }
+  ]
+}
