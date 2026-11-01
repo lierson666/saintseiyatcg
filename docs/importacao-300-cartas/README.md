@@ -1,8 +1,6 @@
-> **Nota (24/10/2026):** registro histórico da importação. Os arquivos aqui citam Engage; ele foi removido do jogo (capítulo IV do `guia-do-jogo.md`, Guarda e Rivalidade). As 13 cartas afetadas foram revisadas em `shared/card-revisions.js`.
-
 # Importação das 300 cartas — diff para aprovação
 
-Catálogo: **57 → 357 cartas**. Adicionadas: 300; alteradas: 0; removidas: 0.
+Catálogo: **505 → 805 cartas**. Adicionadas: 300; alteradas: 0; removidas: 0.
 
 Os 57 registros antigos permanecem intactos. Os novos usam IDs `sst-XX-XXX`, preservando o ID original `SST-XX-XXX` em `id_fonte`, o texto literal e a localização da célula na proveniência.
 
@@ -87,8 +85,8 @@ Os 57 registros antigos permanecem intactos. Os novos usam IDs `sst-XX-XXX`, pre
 
 ## Integridade
 
-SHA-256 anterior: `349c8c88d8dae9d77cad331adcfd648c123fa1d01e3eeb9edffa5e6990d8afa0`
+SHA-256 anterior: `442e21cdf9181ab30d6af4717e99a4ca88eddd881f96ac4a549a481713496ee1`
 
-SHA-256 candidato: `ece32b3638eed797624104fe57c193a56c2adb3e5aef082c9e1b9c0de908a625`
+SHA-256 candidato: `c325c445c6dc8901bfd4a2b37f6ae4269b598b595c3f5239c6dfabccda10b9a2`
 
 Esta ferramenta somente prepara arquivos de revisão; `data/cards.json` aguarda a aprovação do diff.

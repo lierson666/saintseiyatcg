@@ -59,6 +59,7 @@
     "card.equippedPowerBonus",
     "card.equippedHPBonus",
     "card.armorHP",
+    "card.armorBonus",
     "card.isArmor",
     "card.isEquipment",
     "card.power",

@@ -19,7 +19,8 @@ function createWindow() {
     width: 1440, height: 900, minWidth: 960, minHeight: 600,
     backgroundColor: '#05070c', title: 'Saint Seiya TCG', show: false, autoHideMenuBar: true,
     icon: path.join(__dirname, 'build', 'icon.png'),
-    webPreferences: {contextIsolation: true, nodeIntegration: false, sandbox: true, backgroundThrottling: false, spellcheck: false},
+    // Janela minimizada ou coberta para de desenhar o duelo (Mac superaquecendo, 31/10/2026).
+    webPreferences: {contextIsolation: true, nodeIntegration: false, sandbox: true, backgroundThrottling: true, spellcheck: false},
   });
   win.once('ready-to-show', () => win.show());
 

@@ -1,18 +1,18 @@
 --- a/data/cards.json
 +++ b/data/cards.json
-@@ -3,7 +3,7 @@
-   "nome_set": "Set Inicial",
+@@ -4,7 +4,7 @@
+   "versao_catalogo": "athena-vanilla-v6",
    "idioma_codigo": "pt-BR",
    "idioma_jogo": "en",
--  "total_cartas": 57,
-+  "total_cartas": 357,
-   "convencoes": {
-     "campos_internos": "portugues",
-     "campos_publicos": "ingles",
-@@ -1669,6 +1669,20303 @@
-       "habilidade_awaken_en": "Pressure of the Deep — Whenever a Seal token is placed on a Devotee, that Devotee's controller mills 3 cards, and you draw 1 card.",
-       "ultimate_en": "Great Flood — Return all cards in play from all opponents to their owners' hands. Then, each opponent sends all cards from their hand to Tartarus and draws 3 cards. After that, each opponent mills 3 cards for each card they sent to Tartarus this way.",
-       "notas_pt": "Texto, Soul, Attack e Awaken extraidos de FRAMES/POSEIDON/POSEIDON.psd em 2026-10-22; revisar."
+-  "total_cartas": 505,
++  "total_cartas": 805,
+   "notas_pt": [
+     "Catálogo substitutivo: 90 cartas Athena Vanilla V6 + cinco Gods base, sem as cartas antigas.",
+     "026 Kiki segue pendente; Resonances em 014,016,018 pendentes.",
+@@ -17934,6 +17934,20346 @@
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+       "notas_pt": "Texto do autor, Neutral Set, 29/10/2026."
 +    },
 +    {
 +      "id": "sst-01-001",
@@ -3861,7 +3861,7 @@
 +      "id_fonte": "SST-02-010",
 +      "conjunto": "sstcg-playtest-300",
 +      "revisao_regras": "2.0",
-+      "revisao": 1,
++      "revisao": 2,
 +      "nome_interno_pt": "",
 +      "nome_exibicao_en": "Marina Sentinel",
 +      "faccao": "Poseidon",
@@ -3880,7 +3880,7 @@
 +      "equipar_custo": null,
 +      "keywords_en": [],
 +      "habilidades_en": [
-+        "When played: Change a friendly Engage without paying ENG."
++        "When played: Choose an enemy Devotee. It becomes a Rival of this Devotee."
 +      ],
 +      "habilidade_awaken_en": "",
 +      "ultimate_en": "",
@@ -3898,24 +3898,24 @@
 +        "texto_en": "When played: Change a friendly Engage without paying ENG.",
 +        "status_design": "PROVISIONAL — balance/timing"
 +      },
-+      "notas_pt": "Conceito de playtest fornecido pelo autor; balanceamento não testado.",
++      "notas_pt": "Conceito de playtest fornecido pelo autor; balanceamento não testado. Revisado em 24/10/2026: Engage removido; texto e programa reescritos para Guarda e Rivalidade.",
 +      "motor": {
 +        "efeitos": [],
 +        "gatilhos": [
 +          {
 +            "evento": "entrada",
++            "escopo": "self",
 +            "efeitos": [
 +              {
-+                "op": "trocar_engage",
++                "op": "rivalizar",
 +                "alvo": {
 +                  "zona": "battlefield",
 +                  "tipo": "Devotee",
-+                  "lado": "aliado",
-+                  "vinculado": true
-+                }
++                  "lado": "inimigo"
++                },
++                "com": "self"
 +              }
-+            ],
-+            "escopo": "self"
++            ]
 +          }
 +        ],
 +        "passivas": [],
@@ -4718,7 +4718,7 @@
 +      "id_fonte": "SST-02-021",
 +      "conjunto": "sstcg-playtest-300",
 +      "revisao_regras": "2.0",
-+      "revisao": 1,
++      "revisao": 2,
 +      "nome_interno_pt": "",
 +      "nome_exibicao_en": "Golden Triangle",
 +      "faccao": "Poseidon",
@@ -4737,7 +4737,7 @@
 +      "equipar_custo": null,
 +      "keywords_en": [],
 +      "habilidades_en": [
-+        "Change an enemy Engage to a legal target; its controller pays no ENG. Timing: during your action opportunity or an applicable Strike window (provisional)."
++        "Change the target of an enemy Strike to another legal target. Play only in response to an enemy Strike."
 +      ],
 +      "habilidade_awaken_en": "",
 +      "ultimate_en": "",
@@ -4755,17 +4755,11 @@
 +        "texto_en": "Change an enemy Engage to a legal target; its controller pays no ENG. Timing: during your action opportunity or an applicable Strike window (provisional).",
 +        "status_design": "PROVISIONAL — balance/timing"
 +      },
-+      "notas_pt": "Conceito de playtest fornecido pelo autor; balanceamento não testado.",
++      "notas_pt": "Conceito de playtest fornecido pelo autor; balanceamento não testado. Revisado em 24/10/2026: Engage removido; texto e programa reescritos para Guarda e Rivalidade.",
 +      "motor": {
 +        "efeitos": [
 +          {
-+            "op": "trocar_engage",
-+            "alvo": {
-+              "zona": "battlefield",
-+              "tipo": "Devotee",
-+              "lado": "inimigo",
-+              "vinculado": true
-+            }
++            "op": "redirecionar_strike"
 +          }
 +        ],
 +        "gatilhos": [],
@@ -5020,7 +5014,7 @@
 +      "id_fonte": "SST-02-026",
 +      "conjunto": "sstcg-playtest-300",
 +      "revisao_regras": "2.0",
-+      "revisao": 1,
++      "revisao": 2,
 +      "nome_interno_pt": "",
 +      "nome_exibicao_en": "Aurora Borealis",
 +      "faccao": "Poseidon",
@@ -5039,7 +5033,7 @@
 +      "equipar_custo": null,
 +      "keywords_en": [],
 +      "habilidades_en": [
-+        "Change an enemy Engage to a legal target; its controller pays no ENG. Timing: during your action opportunity or an applicable Strike window (provisional)."
++        "Target enemy Devotee becomes Unprepared. Timing: during your action opportunity or an applicable Strike window (provisional)."
 +      ],
 +      "habilidade_awaken_en": "",
 +      "ultimate_en": "",
@@ -5057,16 +5051,15 @@
 +        "texto_en": "Change an enemy Engage to a legal target; its controller pays no ENG. Timing: during your action opportunity or an applicable Strike window (provisional).",
 +        "status_design": "PROVISIONAL — balance/timing"
 +      },
-+      "notas_pt": "Conceito de playtest fornecido pelo autor; balanceamento não testado.",
++      "notas_pt": "Conceito de playtest fornecido pelo autor; balanceamento não testado. Revisado em 24/10/2026: Engage removido; texto e programa reescritos para Guarda e Rivalidade.",
 +      "motor": {
 +        "efeitos": [
 +          {
-+            "op": "trocar_engage",
++            "op": "esgotar",
 +            "alvo": {
 +              "zona": "battlefield",
 +              "tipo": "Devotee",
-+              "lado": "inimigo",
-+              "vinculado": true
++              "lado": "inimigo"
 +            }
 +          }
 +        ],
@@ -5441,7 +5434,7 @@
 +      "id_fonte": "SST-02-033",
 +      "conjunto": "sstcg-playtest-300",
 +      "revisao_regras": "2.0",
-+      "revisao": 1,
++      "revisao": 2,
 +      "nome_interno_pt": "",
 +      "nome_exibicao_en": "Oceanic Judgment",
 +      "faccao": "Poseidon",
@@ -5460,7 +5453,7 @@
 +      "equipar_custo": null,
 +      "keywords_en": [],
 +      "habilidades_en": [
-+        "Change one friendly Engage without paying ENG. Play only during your action opportunity."
++        "Choose a friendly Devotee and an enemy Devotee. They become Rivals. Play only during your action opportunity."
 +      ],
 +      "habilidade_awaken_en": "",
 +      "ultimate_en": "",
@@ -5478,16 +5471,20 @@
 +        "texto_en": "Change one friendly Engage without paying ENG. Play only during your action opportunity.",
 +        "status_design": "PROVISIONAL — balance/timing"
 +      },
-+      "notas_pt": "Conceito de playtest fornecido pelo autor; balanceamento não testado.",
++      "notas_pt": "Conceito de playtest fornecido pelo autor; balanceamento não testado. Revisado em 24/10/2026: Engage removido; texto e programa reescritos para Guarda e Rivalidade.",
 +      "motor": {
 +        "efeitos": [
 +          {
-+            "op": "trocar_engage",
++            "op": "rivalizar",
 +            "alvo": {
 +              "zona": "battlefield",
 +              "tipo": "Devotee",
-+              "lado": "aliado",
-+              "vinculado": true
++              "lado": "inimigo"
++            },
++            "com": {
++              "zona": "battlefield",
++              "tipo": "Devotee",
++              "lado": "aliado"
 +            }
 +          }
 +        ],
@@ -5742,7 +5739,7 @@
 +      "id_fonte": "SST-02-038",
 +      "conjunto": "sstcg-playtest-300",
 +      "revisao_regras": "2.0",
-+      "revisao": 1,
++      "revisao": 2,
 +      "nome_interno_pt": "",
 +      "nome_exibicao_en": "The Main Breadwinner",
 +      "faccao": "Poseidon",
@@ -5761,7 +5758,7 @@
 +      "equipar_custo": null,
 +      "keywords_en": [],
 +      "habilidades_en": [
-+        "Change one friendly Engage without paying ENG. Play only during your action opportunity."
++        "End a Rivalry involving a friendly Devotee. Play only during your action opportunity."
 +      ],
 +      "habilidade_awaken_en": "",
 +      "ultimate_en": "",
@@ -5779,16 +5776,16 @@
 +        "texto_en": "Change one friendly Engage without paying ENG. Play only during your action opportunity.",
 +        "status_design": "PROVISIONAL — balance/timing"
 +      },
-+      "notas_pt": "Conceito de playtest fornecido pelo autor; balanceamento não testado.",
++      "notas_pt": "Conceito de playtest fornecido pelo autor; balanceamento não testado. Revisado em 24/10/2026: Engage removido; texto e programa reescritos para Guarda e Rivalidade.",
 +      "motor": {
 +        "efeitos": [
 +          {
-+            "op": "trocar_engage",
++            "op": "encerrar_rivalidade",
 +            "alvo": {
 +              "zona": "battlefield",
 +              "tipo": "Devotee",
 +              "lado": "aliado",
-+              "vinculado": true
++              "rival": true
 +            }
 +          }
 +        ],
@@ -5924,7 +5921,7 @@
 +      "id_fonte": "SST-02-041",
 +      "conjunto": "sstcg-playtest-300",
 +      "revisao_regras": "2.0",
-+      "revisao": 1,
++      "revisao": 2,
 +      "nome_interno_pt": "",
 +      "nome_exibicao_en": "Atlantic Pillar",
 +      "faccao": "Poseidon",
@@ -5943,7 +5940,7 @@
 +      "equipar_custo": null,
 +      "keywords_en": [],
 +      "habilidades_en": [
-+        "Once per round, change a friendly Engage for 0 ENG; still costs an ACTION. Activation: Pay 1 Cosmo to give one friendly Devotee +1 HP this round. Once per round."
++        "Once per round, ACTION: a friendly Marina and an enemy Devotee become Rivals. Activation: Pay 1 Cosmo to give one friendly Devotee +1 HP this round. Once per round."
 +      ],
 +      "habilidade_awaken_en": "",
 +      "ultimate_en": "",
@@ -5961,15 +5958,10 @@
 +        "texto_en": "Once per round, change a friendly Engage for 0 ENG; still costs an ACTION. Activation: Pay 1 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
 +        "status_design": "PROVISIONAL — balance/timing"
 +      },
-+      "notas_pt": "Conceito de playtest fornecido pelo autor; balanceamento não testado.",
++      "notas_pt": "Conceito de playtest fornecido pelo autor; balanceamento não testado. Revisado em 24/10/2026: Engage removido; texto e programa reescritos para Guarda e Rivalidade.",
 +      "motor": {
 +        "efeitos": [],
-+        "passivas": [
-+          {
-+            "tipo": "troca_gratis",
-+            "limite_rodada": 1
-+          }
-+        ],
++        "passivas": [],
 +        "gatilhos": [],
 +        "habilidades": [
 +          {
@@ -5991,6 +5983,29 @@
 +                "duracao": "rodada"
 +              }
 +            ]
++          },
++          {
++            "id": "challenge",
++            "nome_en": "Challenge",
++            "zona": "battlefield",
++            "custo": 0,
++            "limite_rodada": 1,
++            "efeitos": [
++              {
++                "op": "rivalizar",
++                "alvo": {
++                  "zona": "battlefield",
++                  "tipo": "Devotee",
++                  "lado": "inimigo"
++                },
++                "com": {
++                  "zona": "battlefield",
++                  "tipo": "Devotee",
++                  "lado": "aliado",
++                  "subtipo": "Marina"
++                }
++              }
++            ]
 +          }
 +        ]
 +      }
@@ -6000,7 +6015,7 @@
 +      "id_fonte": "SST-02-042",
 +      "conjunto": "sstcg-playtest-300",
 +      "revisao_regras": "2.0",
-+      "revisao": 1,
++      "revisao": 2,
 +      "nome_interno_pt": "",
 +      "nome_exibicao_en": "Pacific Pillar",
 +      "faccao": "Poseidon",
@@ -6019,7 +6034,7 @@
 +      "equipar_custo": null,
 +      "keywords_en": [],
 +      "habilidades_en": [
-+        "Enemy Devotees in Engage with your Marinas get -1 Power. Activation: Pay 1 Cosmo to give one friendly Devotee +1 HP this round. Once per round."
++        "Rivals of your Marinas get -1 Power. Activation: Pay 1 Cosmo to give one friendly Devotee +1 HP this round. Once per round."
 +      ],
 +      "habilidade_awaken_en": "",
 +      "ultimate_en": "",
@@ -6037,12 +6052,12 @@
 +        "texto_en": "Enemy Devotees in Engage with your Marinas get -1 Power. Activation: Pay 1 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
 +        "status_design": "PROVISIONAL — balance/timing"
 +      },
-+      "notas_pt": "Conceito de playtest fornecido pelo autor; balanceamento não testado.",
++      "notas_pt": "Conceito de playtest fornecido pelo autor; balanceamento não testado. Revisado em 24/10/2026: Engage removido; texto e programa reescritos para Guarda e Rivalidade.",
 +      "motor": {
 +        "efeitos": [],
 +        "passivas": [
 +          {
-+            "tipo": "reduzir_engajados_marinas",
++            "tipo": "reduzir_rivais_marinas",
 +            "poder": -1
 +          }
 +        ],
@@ -6320,7 +6335,7 @@
 +      "id_fonte": "SST-02-046",
 +      "conjunto": "sstcg-playtest-300",
 +      "revisao_regras": "2.0",
-+      "revisao": 1,
++      "revisao": 2,
 +      "nome_interno_pt": "",
 +      "nome_exibicao_en": "South Atlantic Pillar",
 +      "faccao": "Poseidon",
@@ -6339,7 +6354,7 @@
 +      "equipar_custo": null,
 +      "keywords_en": [],
 +      "habilidades_en": [
-+        "Once per round, change a friendly Engage for 0 ENG; still costs an ACTION. Activation: Pay 2 Cosmo to give one friendly Devotee +1 HP this round. Once per round."
++        "Once per round, ACTION: a friendly Marina and an enemy Devotee become Rivals. Activation: Pay 2 Cosmo to give one friendly Devotee +1 HP this round. Once per round."
 +      ],
 +      "habilidade_awaken_en": "",
 +      "ultimate_en": "",
@@ -6357,15 +6372,10 @@
 +        "texto_en": "Once per round, change a friendly Engage for 0 ENG; still costs an ACTION. Activation: Pay 2 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
 +        "status_design": "PROVISIONAL — balance/timing"
 +      },
-+      "notas_pt": "Conceito de playtest fornecido pelo autor; balanceamento não testado.",
++      "notas_pt": "Conceito de playtest fornecido pelo autor; balanceamento não testado. Revisado em 24/10/2026: Engage removido; texto e programa reescritos para Guarda e Rivalidade.",
 +      "motor": {
 +        "efeitos": [],
-+        "passivas": [
-+          {
-+            "tipo": "troca_gratis",
-+            "limite_rodada": 1
-+          }
-+        ],
++        "passivas": [],
 +        "gatilhos": [],
 +        "habilidades": [
 +          {
@@ -6387,6 +6397,29 @@
 +                "duracao": "rodada"
 +              }
 +            ]
++          },
++          {
++            "id": "challenge",
++            "nome_en": "Challenge",
++            "zona": "battlefield",
++            "custo": 0,
++            "limite_rodada": 1,
++            "efeitos": [
++              {
++                "op": "rivalizar",
++                "alvo": {
++                  "zona": "battlefield",
++                  "tipo": "Devotee",
++                  "lado": "inimigo"
++                },
++                "com": {
++                  "zona": "battlefield",
++                  "tipo": "Devotee",
++                  "lado": "aliado",
++                  "subtipo": "Marina"
++                }
++              }
++            ]
 +          }
 +        ]
 +      }
@@ -6396,7 +6429,7 @@
 +      "id_fonte": "SST-02-047",
 +      "conjunto": "sstcg-playtest-300",
 +      "revisao_regras": "2.0",
-+      "revisao": 1,
++      "revisao": 2,
 +      "nome_interno_pt": "",
 +      "nome_exibicao_en": "North Pacific Pillar",
 +      "faccao": "Poseidon",
@@ -6415,7 +6448,7 @@
 +      "equipar_custo": null,
 +      "keywords_en": [],
 +      "habilidades_en": [
-+        "Enemy Devotees in Engage with your Marinas get -1 Power. Activation: Pay 2 Cosmo to give one friendly Devotee +1 HP this round. Once per round."
++        "Rivals of your Marinas get -1 Power. Activation: Pay 2 Cosmo to give one friendly Devotee +1 HP this round. Once per round."
 +      ],
 +      "habilidade_awaken_en": "",
 +      "ultimate_en": "",
@@ -6433,12 +6466,12 @@
 +        "texto_en": "Enemy Devotees in Engage with your Marinas get -1 Power. Activation: Pay 2 Cosmo to give one friendly Devotee +1 HP this round. Once per round.",
 +        "status_design": "PROVISIONAL — balance/timing"
 +      },
-+      "notas_pt": "Conceito de playtest fornecido pelo autor; balanceamento não testado.",
++      "notas_pt": "Conceito de playtest fornecido pelo autor; balanceamento não testado. Revisado em 24/10/2026: Engage removido; texto e programa reescritos para Guarda e Rivalidade.",
 +      "motor": {
 +        "efeitos": [],
 +        "passivas": [
 +          {
-+            "tipo": "reduzir_engajados_marinas",
++            "tipo": "reduzir_rivais_marinas",
 +            "poder": -1
 +          }
 +        ],
@@ -8961,7 +8994,7 @@
 +      "id_fonte": "SST-03-035",
 +      "conjunto": "sstcg-playtest-300",
 +      "revisao_regras": "2.0",
-+      "revisao": 1,
++      "revisao": 2,
 +      "nome_interno_pt": "",
 +      "nome_exibicao_en": "Hades Eclipse",
 +      "faccao": "Hades",
@@ -8980,7 +9013,7 @@
 +      "equipar_custo": null,
 +      "keywords_en": [],
 +      "habilidades_en": [
-+        "Deal 1 damage to each Devotee in one Engage. Play only during your action opportunity."
++        "Deal 1 damage to a Devotee and to each of its Rivals. Play only during your action opportunity."
 +      ],
 +      "habilidade_awaken_en": "",
 +      "ultimate_en": "",
@@ -8998,12 +9031,17 @@
 +        "texto_en": "Deal 1 damage to each Devotee in one Engage. Play only during your action opportunity.",
 +        "status_design": "PROVISIONAL — balance/timing"
 +      },
-+      "notas_pt": "Conceito de playtest fornecido pelo autor; balanceamento não testado.",
++      "notas_pt": "Conceito de playtest fornecido pelo autor; balanceamento não testado. Revisado em 24/10/2026: Engage removido; texto e programa reescritos para Guarda e Rivalidade.",
 +      "motor": {
 +        "efeitos": [
 +          {
-+            "op": "dano_engage",
-+            "n": 1
++            "op": "dano_rivais",
++            "n": 1,
++            "alvo": {
++              "zona": "battlefield",
++              "tipo": "Devotee",
++              "lado": "qualquer"
++            }
 +          }
 +        ],
 +        "gatilhos": [],
@@ -9256,7 +9294,7 @@
 +      "id_fonte": "SST-03-040",
 +      "conjunto": "sstcg-playtest-300",
 +      "revisao_regras": "2.0",
-+      "revisao": 1,
++      "revisao": 2,
 +      "nome_interno_pt": "",
 +      "nome_exibicao_en": "The Underworld Gate",
 +      "faccao": "Hades",
@@ -9275,7 +9313,7 @@
 +      "equipar_custo": null,
 +      "keywords_en": [],
 +      "habilidades_en": [
-+        "Deal 1 damage to each Devotee in one Engage. Play only during your action opportunity."
++        "Deal 1 damage to a Devotee and to each of its Rivals. Play only during your action opportunity."
 +      ],
 +      "habilidade_awaken_en": "",
 +      "ultimate_en": "",
@@ -9293,12 +9331,17 @@
 +        "texto_en": "Deal 1 damage to each Devotee in one Engage. Play only during your action opportunity.",
 +        "status_design": "PROVISIONAL — balance/timing"
 +      },
-+      "notas_pt": "Conceito de playtest fornecido pelo autor; balanceamento não testado.",
++      "notas_pt": "Conceito de playtest fornecido pelo autor; balanceamento não testado. Revisado em 24/10/2026: Engage removido; texto e programa reescritos para Guarda e Rivalidade.",
 +      "motor": {
 +        "efeitos": [
 +          {
-+            "op": "dano_engage",
-+            "n": 1
++            "op": "dano_rivais",
++            "n": 1,
++            "alvo": {
++              "zona": "battlefield",
++              "tipo": "Devotee",
++              "lado": "qualquer"
++            }
 +          }
 +        ],
 +        "gatilhos": [],
@@ -12476,7 +12519,7 @@
 +      "id_fonte": "SST-04-035",
 +      "conjunto": "sstcg-playtest-300",
 +      "revisao_regras": "2.0",
-+      "revisao": 1,
++      "revisao": 2,
 +      "nome_interno_pt": "",
 +      "nome_exibicao_en": "Glory in Ruin",
 +      "faccao": "Ares",
@@ -12495,7 +12538,7 @@
 +      "equipar_custo": null,
 +      "keywords_en": [],
 +      "habilidades_en": [
-+        "Deal 1 damage to all engaged Devotees. Play only during your action opportunity."
++        "Deal 1 damage to each Unprepared Devotee. Play only during your action opportunity."
 +      ],
 +      "habilidade_awaken_en": "",
 +      "ultimate_en": "",
@@ -12513,13 +12556,13 @@
 +        "texto_en": "Deal 1 damage to all engaged Devotees. Play only during your action opportunity.",
 +        "status_design": "PROVISIONAL — lore/name"
 +      },
-+      "notas_pt": "Conceito de playtest fornecido pelo autor; balanceamento não testado.",
++      "notas_pt": "Conceito de playtest fornecido pelo autor; balanceamento não testado. Revisado em 24/10/2026: Engage removido; texto e programa reescritos para Guarda e Rivalidade.",
 +      "motor": {
 +        "efeitos": [
 +          {
 +            "op": "dano_area",
 +            "n": 1,
-+            "alvo": "vinculados"
++            "alvo": "esgotados"
 +          }
 +        ],
 +        "gatilhos": [],
@@ -12768,7 +12811,7 @@
 +      "id_fonte": "SST-04-040",
 +      "conjunto": "sstcg-playtest-300",
 +      "revisao_regras": "2.0",
-+      "revisao": 1,
++      "revisao": 2,
 +      "nome_interno_pt": "",
 +      "nome_exibicao_en": "The Red Horizon",
 +      "faccao": "Ares",
@@ -12787,7 +12830,7 @@
 +      "equipar_custo": null,
 +      "keywords_en": [],
 +      "habilidades_en": [
-+        "Deal 1 damage to all engaged Devotees. Play only during your action opportunity."
++        "Deal 1 damage to each Unprepared Devotee. Play only during your action opportunity."
 +      ],
 +      "habilidade_awaken_en": "",
 +      "ultimate_en": "",
@@ -12805,13 +12848,13 @@
 +        "texto_en": "Deal 1 damage to all engaged Devotees. Play only during your action opportunity.",
 +        "status_design": "PROVISIONAL — lore/name"
 +      },
-+      "notas_pt": "Conceito de playtest fornecido pelo autor; balanceamento não testado.",
++      "notas_pt": "Conceito de playtest fornecido pelo autor; balanceamento não testado. Revisado em 24/10/2026: Engage removido; texto e programa reescritos para Guarda e Rivalidade.",
 +      "motor": {
 +        "efeitos": [
 +          {
 +            "op": "dano_area",
 +            "n": 1,
-+            "alvo": "vinculados"
++            "alvo": "esgotados"
 +          }
 +        ],
 +        "gatilhos": [],
