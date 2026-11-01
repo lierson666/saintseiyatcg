@@ -183,6 +183,16 @@ const oppSacrifices = (st, c, key, ability, n, each) => {
 };
 
 export default {
+  // Spells baratas da color pie (autor, 31/10/2026: docs/spells-baratas-proposta.md).
+  'hades-v6-511': {spell: {run: (s, c, key) => { // Touch of Death
+    const t = k.choose(c, key, 'TOUCH OF DEATH', k.enemies(s, c, key), {text: 'Choose target enemy Devotee.'});
+    if (t) k.buff(s, t, -2, -2);
+  }}},
+  'hades-v6-512': {spell: {run: (s, c, key) => { k.draw(s, key, 2); lose(s, key, 2); }}}, // Pact of the Underworld
+  'hades-v6-513': {spell: {run: (s, c, key) => { // Return from the Darkness
+    const t = k.choose(c, key, 'RETURN FROM THE DARKNESS', s.players[key].tartarus.filter(u => k.isDevotee(c, u) && k.costOf(c, u) <= 3), {text: 'Choose target Devotee card with cost 3 or less in your Tartarus.'});
+    if (t) k.toHand(s, c, t, 'tartarus');
+  }}},
   // Wyvern Rhadamanthys. Interpretação: "target Devotee" inclui os seus (e ele mesmo), leitura literal.
   'hades-v6-181': {
     enter: taxed(3, 'GREATEST CAUTION', (s, c, key) => st => { const t = k.choose(c, key, 'GREATEST CAUTION', k.allDevotees(st, c)); if (t) k.defeat(st, c, t); },

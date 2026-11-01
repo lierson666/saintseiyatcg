@@ -4,7 +4,7 @@
   "versao_catalogo": "athena-vanilla-v6",
   "idioma_codigo": "pt-BR",
   "idioma_jogo": "en",
-  "total_cartas": 505,
+  "total_cartas": 520,
   "notas_pt": [
     "Catálogo substitutivo: 90 cartas Athena Vanilla V6 + cinco Gods base, sem as cartas antigas.",
     "026 Kiki segue pendente; Resonances em 014,016,018 pendentes.",
@@ -21901,6 +21901,633 @@
         "Colheita ao Luar — Uma vez por jogo — {1}{C}, ponha uma Base de Cosmo que você controla no seu Tártaro: Compre 2 cartas e depois ponha a carta do topo do seu deck como Base de Cosmo Despreparada."
       ],
       "flavour_pt": "\"A lua troca o que você tem pelo que você precisa.\""
+    },
+    {
+      "id": "athena-v6-505",
+      "id_fonte": "ATHENA-V6-505",
+      "conjunto": "athena-vanilla-v6",
+      "numero_carta": 505,
+      "nome_exibicao_en": "ATHENA'S AEGIS",
+      "tagline_en": "Her Shield Never Falls",
+      "nome_interno_pt": "",
+      "faccao": "Athena",
+      "tipo": "Spell",
+      "subtipos": [
+        "Moment"
+      ],
+      "raridade": "Common",
+      "status": "design-ready",
+      "cosmoble": true,
+      "caminho_imagem": null,
+      "custo": 1,
+      "unidade_custo": "base_cosmo",
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "vida": null,
+      "resistance": null,
+      "damage_cloth": null,
+      "equipar_custo": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "Prevent the next 2 damage that would be dealt to target friendly Devotee this round.",
+        "Draw a card."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": "",
+      "notas_pt": "Spell barata da color pie (cantrip/escudo/remoção/bounce) para decks de Spell como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
+      "nome_exibicao_pt": "ÉGIDE DE ATHENA",
+      "subtitulo_pt": "Seu Escudo Nunca Cai",
+      "habilidades_pt": [
+        "Previna os próximos 2 de dano que seriam causados ao Devoto aliado alvo nesta rodada.",
+        "Compre uma carta."
+      ],
+      "tagline_pt": "Seu Escudo Nunca Cai"
+    },
+    {
+      "id": "athena-v6-506",
+      "id_fonte": "ATHENA-V6-506",
+      "conjunto": "athena-vanilla-v6",
+      "numero_carta": 506,
+      "nome_exibicao_en": "SANCTUARY'S JUDGMENT",
+      "tagline_en": "Those Who Attack the Sanctuary Answer for It",
+      "nome_interno_pt": "",
+      "faccao": "Athena",
+      "tipo": "Spell",
+      "subtipos": [
+        "Moment"
+      ],
+      "raridade": "Common",
+      "status": "design-ready",
+      "cosmoble": true,
+      "caminho_imagem": null,
+      "custo": 2,
+      "unidade_custo": "base_cosmo",
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "vida": null,
+      "resistance": null,
+      "damage_cloth": null,
+      "equipar_custo": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "Deal 3 damage to target enemy Devotee that declared a Strike this turn."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": "",
+      "notas_pt": "Spell barata da color pie (cantrip/escudo/remoção/bounce) para decks de Spell como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
+      "nome_exibicao_pt": "JULGAMENTO DO SANTUÁRIO",
+      "subtitulo_pt": "Quem Ataca o Santuário Responde por Isso",
+      "habilidades_pt": [
+        "Cause 3 de dano ao Devoto inimigo alvo que declarou um Golpe neste turno."
+      ],
+      "tagline_pt": "Quem Ataca o Santuário Responde por Isso"
+    },
+    {
+      "id": "athena-v6-507",
+      "id_fonte": "ATHENA-V6-507",
+      "conjunto": "athena-vanilla-v6",
+      "numero_carta": 507,
+      "nome_exibicao_en": "OATH OF THE SAINTS",
+      "tagline_en": "No Saint Fights Alone",
+      "nome_interno_pt": "",
+      "faccao": "Athena",
+      "tipo": "Spell",
+      "subtipos": [
+        "Technique"
+      ],
+      "raridade": "Common",
+      "status": "design-ready",
+      "cosmoble": true,
+      "caminho_imagem": null,
+      "custo": 1,
+      "unidade_custo": "base_cosmo",
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "vida": null,
+      "resistance": null,
+      "damage_cloth": null,
+      "equipar_custo": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "Target friendly Saint gets +1 ATK / +1 HP until the end of the round.",
+        "Draw a card."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": "",
+      "notas_pt": "Spell barata da color pie (cantrip/escudo/remoção/bounce) para decks de Spell como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
+      "nome_exibicao_pt": "JURAMENTO DOS CAVALEIROS",
+      "subtitulo_pt": "Nenhum Cavaleiro Luta Sozinho",
+      "habilidades_pt": [
+        "O Cavaleiro aliado alvo recebe +1 ATQ / +1 PV até o fim da rodada.",
+        "Compre uma carta."
+      ],
+      "tagline_pt": "Nenhum Cavaleiro Luta Sozinho"
+    },
+    {
+      "id": "poseidon-v6-508",
+      "id_fonte": "POSEIDON-V6-508",
+      "conjunto": "poseidon-vanilla-v6",
+      "numero_carta": 508,
+      "nome_exibicao_en": "UNDERTOW",
+      "tagline_en": "The Sea Takes Back the Small",
+      "nome_interno_pt": "",
+      "faccao": "Poseidon",
+      "tipo": "Spell",
+      "subtipos": [
+        "Moment"
+      ],
+      "raridade": "Common",
+      "status": "design-ready",
+      "cosmoble": true,
+      "caminho_imagem": null,
+      "custo": 1,
+      "unidade_custo": "base_cosmo",
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "vida": null,
+      "resistance": null,
+      "damage_cloth": null,
+      "equipar_custo": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "Return target enemy Devotee with cost 2 or less to its owner's hand."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": "",
+      "notas_pt": "Spell barata da color pie (cantrip/escudo/remoção/bounce) para decks de Spell como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
+      "nome_exibicao_pt": "RESSACA",
+      "subtitulo_pt": "O Mar Leva de Volta os Pequenos",
+      "habilidades_pt": [
+        "Devolva à mão do dono o Devoto inimigo alvo com custo 2 ou menos."
+      ],
+      "tagline_pt": "O Mar Leva de Volta os Pequenos"
+    },
+    {
+      "id": "poseidon-v6-509",
+      "id_fonte": "POSEIDON-V6-509",
+      "conjunto": "poseidon-vanilla-v6",
+      "numero_carta": 509,
+      "nome_exibicao_en": "TIDAL VETO",
+      "tagline_en": "The Tide Decides",
+      "nome_interno_pt": "",
+      "faccao": "Poseidon",
+      "tipo": "Spell",
+      "subtipos": [
+        "Moment"
+      ],
+      "raridade": "Common",
+      "status": "design-ready",
+      "cosmoble": true,
+      "caminho_imagem": null,
+      "custo": 1,
+      "unidade_custo": "base_cosmo",
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "vida": null,
+      "resistance": null,
+      "damage_cloth": null,
+      "equipar_custo": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "Counter target enemy Moment or Technique unless its controller pays {1}{C}."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": "",
+      "notas_pt": "Spell barata da color pie (cantrip/escudo/remoção/bounce) para decks de Spell como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
+      "nome_exibicao_pt": "VETO DA MARÉ",
+      "subtitulo_pt": "A Maré Decide",
+      "habilidades_pt": [
+        "Anule o Momento ou Técnica inimigo alvo a menos que seu controlador pague {1}{C}."
+      ],
+      "tagline_pt": "A Maré Decide"
+    },
+    {
+      "id": "poseidon-v6-510",
+      "id_fonte": "POSEIDON-V6-510",
+      "conjunto": "poseidon-vanilla-v6",
+      "numero_carta": 510,
+      "nome_exibicao_en": "MIST OF THE DEEP",
+      "tagline_en": "Gone Before the Blow Lands",
+      "nome_interno_pt": "",
+      "faccao": "Poseidon",
+      "tipo": "Spell",
+      "subtipos": [
+        "Moment"
+      ],
+      "raridade": "Common",
+      "status": "design-ready",
+      "cosmoble": true,
+      "caminho_imagem": null,
+      "custo": 1,
+      "unidade_custo": "base_cosmo",
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "vida": null,
+      "resistance": null,
+      "damage_cloth": null,
+      "equipar_custo": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "Return target friendly Devotee to its owner's hand.",
+        "Draw a card."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": "",
+      "notas_pt": "Spell barata da color pie (cantrip/escudo/remoção/bounce) para decks de Spell como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
+      "nome_exibicao_pt": "NÉVOA DAS PROFUNDEZAS",
+      "subtitulo_pt": "Sumiu Antes do Golpe Chegar",
+      "habilidades_pt": [
+        "Devolva o Devoto aliado alvo à mão do dono.",
+        "Compre uma carta."
+      ],
+      "tagline_pt": "Sumiu Antes do Golpe Chegar"
+    },
+    {
+      "id": "hades-v6-511",
+      "id_fonte": "HADES-V6-511",
+      "conjunto": "hades-vanilla-v6",
+      "numero_carta": 511,
+      "nome_exibicao_en": "TOUCH OF DEATH",
+      "tagline_en": "Every Life Has Its End",
+      "nome_interno_pt": "",
+      "faccao": "Hades",
+      "tipo": "Spell",
+      "subtipos": [
+        "Moment"
+      ],
+      "raridade": "Common",
+      "status": "design-ready",
+      "cosmoble": true,
+      "caminho_imagem": null,
+      "custo": 1,
+      "unidade_custo": "base_cosmo",
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "vida": null,
+      "resistance": null,
+      "damage_cloth": null,
+      "equipar_custo": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "Target enemy Devotee gets -2 ATK / -2 HP until the end of the round."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": "",
+      "notas_pt": "Spell barata da color pie (cantrip/escudo/remoção/bounce) para decks de Spell como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
+      "nome_exibicao_pt": "TOQUE DA MORTE",
+      "subtitulo_pt": "Toda Vida Tem Seu Fim",
+      "habilidades_pt": [
+        "O Devoto inimigo alvo recebe -2 ATQ / -2 PV até o fim da rodada."
+      ],
+      "tagline_pt": "Toda Vida Tem Seu Fim"
+    },
+    {
+      "id": "hades-v6-512",
+      "id_fonte": "HADES-V6-512",
+      "conjunto": "hades-vanilla-v6",
+      "numero_carta": 512,
+      "nome_exibicao_en": "PACT OF THE UNDERWORLD",
+      "tagline_en": "Knowledge Has a Price",
+      "nome_interno_pt": "",
+      "faccao": "Hades",
+      "tipo": "Spell",
+      "subtipos": [
+        "Technique"
+      ],
+      "raridade": "Common",
+      "status": "design-ready",
+      "cosmoble": true,
+      "caminho_imagem": null,
+      "custo": 2,
+      "unidade_custo": "base_cosmo",
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "vida": null,
+      "resistance": null,
+      "damage_cloth": null,
+      "equipar_custo": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "Draw two cards.",
+        "Your God loses {2}{S}."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": "",
+      "notas_pt": "Spell barata da color pie (cantrip/escudo/remoção/bounce) para decks de Spell como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
+      "nome_exibicao_pt": "PACTO DO SUBMUNDO",
+      "subtitulo_pt": "O Conhecimento Tem um Preço",
+      "habilidades_pt": [
+        "Compre duas cartas.",
+        "Seu Deus perde {2}{S}."
+      ],
+      "tagline_pt": "O Conhecimento Tem um Preço"
+    },
+    {
+      "id": "hades-v6-513",
+      "id_fonte": "HADES-V6-513",
+      "conjunto": "hades-vanilla-v6",
+      "numero_carta": 513,
+      "nome_exibicao_en": "RETURN FROM THE DARKNESS",
+      "tagline_en": "Death Is Not the End",
+      "nome_interno_pt": "",
+      "faccao": "Hades",
+      "tipo": "Spell",
+      "subtipos": [
+        "Technique"
+      ],
+      "raridade": "Common",
+      "status": "design-ready",
+      "cosmoble": true,
+      "caminho_imagem": null,
+      "custo": 1,
+      "unidade_custo": "base_cosmo",
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "vida": null,
+      "resistance": null,
+      "damage_cloth": null,
+      "equipar_custo": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "Return target Devotee card with cost 3 or less from your Tartarus to your hand."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": "",
+      "notas_pt": "Spell barata da color pie (cantrip/escudo/remoção/bounce) para decks de Spell como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
+      "nome_exibicao_pt": "RETORNO DAS TREVAS",
+      "subtitulo_pt": "A Morte Não É o Fim",
+      "habilidades_pt": [
+        "Devolva a carta de Devoto alvo com custo 3 ou menos do seu Tártaro para a sua mão."
+      ],
+      "tagline_pt": "A Morte Não É o Fim"
+    },
+    {
+      "id": "ares-v6-514",
+      "id_fonte": "ARES-V6-514",
+      "conjunto": "ares-vanilla-v6",
+      "numero_carta": 514,
+      "nome_exibicao_en": "SPARK OF WAR",
+      "tagline_en": "Every War Starts Small",
+      "nome_interno_pt": "",
+      "faccao": "Ares",
+      "tipo": "Spell",
+      "subtipos": [
+        "Moment"
+      ],
+      "raridade": "Common",
+      "status": "design-ready",
+      "cosmoble": true,
+      "caminho_imagem": null,
+      "custo": 1,
+      "unidade_custo": "base_cosmo",
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "vida": null,
+      "resistance": null,
+      "damage_cloth": null,
+      "equipar_custo": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "Deal 1 damage to target enemy Devotee.",
+        "Draw a card."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": "",
+      "notas_pt": "Spell barata da color pie (cantrip/escudo/remoção/bounce) para decks de Spell como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
+      "nome_exibicao_pt": "FAÍSCA DA GUERRA",
+      "subtitulo_pt": "Toda Guerra Começa Pequena",
+      "habilidades_pt": [
+        "Cause 1 de dano ao Devoto inimigo alvo.",
+        "Compre uma carta."
+      ],
+      "tagline_pt": "Toda Guerra Começa Pequena"
+    },
+    {
+      "id": "ares-v6-515",
+      "id_fonte": "ARES-V6-515",
+      "conjunto": "ares-vanilla-v6",
+      "numero_carta": 515,
+      "nome_exibicao_en": "RECKLESS INSIGHT",
+      "tagline_en": "Think Fast, Burn Faster",
+      "nome_interno_pt": "",
+      "faccao": "Ares",
+      "tipo": "Spell",
+      "subtipos": [
+        "Technique"
+      ],
+      "raridade": "Common",
+      "status": "design-ready",
+      "cosmoble": true,
+      "caminho_imagem": null,
+      "custo": 1,
+      "unidade_custo": "base_cosmo",
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "vida": null,
+      "resistance": null,
+      "damage_cloth": null,
+      "equipar_custo": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "Draw two cards, then discard two cards."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": "",
+      "notas_pt": "Spell barata da color pie (cantrip/escudo/remoção/bounce) para decks de Spell como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
+      "nome_exibicao_pt": "INTUIÇÃO IMPRUDENTE",
+      "subtitulo_pt": "Pense Rápido, Queime Mais Rápido",
+      "habilidades_pt": [
+        "Compre duas cartas e depois descarte duas cartas."
+      ],
+      "tagline_pt": "Pense Rápido, Queime Mais Rápido"
+    },
+    {
+      "id": "ares-v6-516",
+      "id_fonte": "ARES-V6-516",
+      "conjunto": "ares-vanilla-v6",
+      "numero_carta": 516,
+      "nome_exibicao_en": "FURY OF ARES",
+      "tagline_en": "Rage Is a Weapon",
+      "nome_interno_pt": "",
+      "faccao": "Ares",
+      "tipo": "Spell",
+      "subtipos": [
+        "Moment"
+      ],
+      "raridade": "Common",
+      "status": "design-ready",
+      "cosmoble": true,
+      "caminho_imagem": null,
+      "custo": 1,
+      "unidade_custo": "base_cosmo",
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "vida": null,
+      "resistance": null,
+      "damage_cloth": null,
+      "equipar_custo": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "Target friendly Devotee gets +2 ATK until the end of the round.",
+        "Draw a card."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": "",
+      "notas_pt": "Spell barata da color pie (cantrip/escudo/remoção/bounce) para decks de Spell como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
+      "nome_exibicao_pt": "FÚRIA DE ARES",
+      "subtitulo_pt": "A Fúria É uma Arma",
+      "habilidades_pt": [
+        "O Devoto aliado alvo recebe +2 ATQ até o fim da rodada.",
+        "Compre uma carta."
+      ],
+      "tagline_pt": "A Fúria É uma Arma"
+    },
+    {
+      "id": "artemis-v6-517",
+      "id_fonte": "ARTEMIS-V6-517",
+      "conjunto": "artemis-vanilla-v6",
+      "numero_carta": 517,
+      "nome_exibicao_en": "HUNTRESS'S NET",
+      "tagline_en": "The Bigger the Beast, the Harder It Falls",
+      "nome_interno_pt": "",
+      "faccao": "Artemis",
+      "tipo": "Spell",
+      "subtipos": [
+        "Moment"
+      ],
+      "raridade": "Common",
+      "status": "design-ready",
+      "cosmoble": true,
+      "caminho_imagem": null,
+      "custo": 1,
+      "unidade_custo": "base_cosmo",
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "vida": null,
+      "resistance": null,
+      "damage_cloth": null,
+      "equipar_custo": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "Deal 4 damage to target enemy Devotee with ATK 4 or more."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": "",
+      "notas_pt": "Spell barata da color pie (cantrip/escudo/remoção/bounce) para decks de Spell como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
+      "nome_exibicao_pt": "REDE DA CAÇADORA",
+      "subtitulo_pt": "Quanto Maior a Fera, Maior a Queda",
+      "habilidades_pt": [
+        "Cause 4 de dano ao Devoto inimigo alvo com ATQ 4 ou mais."
+      ],
+      "tagline_pt": "Quanto Maior a Fera, Maior a Queda"
+    },
+    {
+      "id": "artemis-v6-518",
+      "id_fonte": "ARTEMIS-V6-518",
+      "conjunto": "artemis-vanilla-v6",
+      "numero_carta": 518,
+      "nome_exibicao_en": "WILD VIGOR",
+      "tagline_en": "The Forest Protects Its Own",
+      "nome_interno_pt": "",
+      "faccao": "Artemis",
+      "tipo": "Spell",
+      "subtipos": [
+        "Moment"
+      ],
+      "raridade": "Common",
+      "status": "design-ready",
+      "cosmoble": true,
+      "caminho_imagem": null,
+      "custo": 1,
+      "unidade_custo": "base_cosmo",
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "vida": null,
+      "resistance": null,
+      "damage_cloth": null,
+      "equipar_custo": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "Target friendly Devotee gets +2 ATK / +2 HP until the end of the round."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": "",
+      "notas_pt": "Spell barata da color pie (cantrip/escudo/remoção/bounce) para decks de Spell como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
+      "nome_exibicao_pt": "VIGOR SELVAGEM",
+      "subtitulo_pt": "A Floresta Protege os Seus",
+      "habilidades_pt": [
+        "O Devoto aliado alvo recebe +2 ATQ / +2 PV até o fim da rodada."
+      ],
+      "tagline_pt": "A Floresta Protege os Seus"
+    },
+    {
+      "id": "artemis-v6-519",
+      "id_fonte": "ARTEMIS-V6-519",
+      "conjunto": "artemis-vanilla-v6",
+      "numero_carta": 519,
+      "nome_exibicao_en": "LUNAR VISION",
+      "tagline_en": "The Moon Shows the Way",
+      "nome_interno_pt": "",
+      "faccao": "Artemis",
+      "tipo": "Spell",
+      "subtipos": [
+        "Technique"
+      ],
+      "raridade": "Common",
+      "status": "design-ready",
+      "cosmoble": true,
+      "caminho_imagem": null,
+      "custo": 1,
+      "unidade_custo": "base_cosmo",
+      "soul": null,
+      "attack": null,
+      "awaken": null,
+      "power": null,
+      "vida": null,
+      "resistance": null,
+      "damage_cloth": null,
+      "equipar_custo": null,
+      "keywords_en": [],
+      "habilidades_en": [
+        "Look at the top three cards of your deck. You may reveal a Devotee card from among them and put it into your hand. Put the rest on the bottom of your deck in any order."
+      ],
+      "habilidade_awaken_en": "",
+      "ultimate_en": "",
+      "notas_pt": "Spell barata da color pie (cantrip/escudo/remoção/bounce) para decks de Spell como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
+      "nome_exibicao_pt": "VISÃO LUNAR",
+      "subtitulo_pt": "A Lua Mostra o Caminho",
+      "habilidades_pt": [
+        "Olhe as três cartas do topo do seu deck. Você pode revelar uma carta de Devoto entre elas e colocá-la na sua mão. Coloque o resto no fundo do seu deck em qualquer ordem."
+      ],
+      "tagline_pt": "A Lua Mostra o Caminho"
     }
   ]
 }

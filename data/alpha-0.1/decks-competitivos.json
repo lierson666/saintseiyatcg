@@ -2908,7 +2908,7 @@
       "nome": "Phoenix Tide",
       "god": "god-poseidon",
       "domain_id": "athena-v6-062",
-      "arquetipo": "Spells baratas de Poseidon e Ikki de Fênix splash: na terceira Moment ou Technique do turno, Ikki volta do Tártaro Preparado e com Impulso golpeia na hora; loot (Pearl Sanctuary Keeper, Deep Sea Hunter, Atlantean Acolyte) põe Ikki no Tártaro e anulações protegem a combinação.",
+      "arquetipo": "Spells baratas de Poseidon e Ikki de Fênix splash: na terceira Moment ou Technique do turno, Ikki volta do Tártaro Preparado e com Impulso golpeia na hora; loot (Pearl Sanctuary Keeper, Deep Sea Hunter, Atlantean Acolyte) põe Ikki no Tártaro e anulações e bounces baratos (Tidal Veto, Undertow, Mist of the Deep) protegem a combinação.",
       "tema": "Phoenix",
       "main_deck": [
         {
@@ -2952,11 +2952,11 @@
           "quantity": 3
         },
         {
-          "card_id": "poseidon-v6-134",
+          "card_id": "poseidon-v6-508",
           "quantity": 3
         },
         {
-          "card_id": "poseidon-v6-137",
+          "card_id": "poseidon-v6-509",
           "quantity": 3
         },
         {
@@ -2988,7 +2988,7 @@
           "quantity": 3
         },
         {
-          "card_id": "poseidon-v6-117",
+          "card_id": "poseidon-v6-510",
           "quantity": 3
         }
       ]

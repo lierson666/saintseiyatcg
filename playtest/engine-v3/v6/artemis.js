@@ -74,6 +74,23 @@ const perBank = (s, c, key) => { const n = Math.floor(bank(s, key) / 3); return 
 const search = (st, c, key, ability, filter) => k.search(st, c, key, ability, (card, uid) => card.kind === 'Devotee' && filter(card, uid));
 
 export default {
+  // Spells baratas da color pie (autor, 31/10/2026: docs/spells-baratas-proposta.md).
+  'artemis-v6-517': {spell: {run: (s, c, key) => { // Huntress's Net
+    k.damage(s, c, k.choose(c, key, "HUNTRESS'S NET", k.enemies(s, c, key).filter(u => k.atkOf(s, c, u) >= 4), {text: 'Choose target enemy Devotee with ATK 4 or more.'}), 4);
+  }}},
+  'artemis-v6-518': {spell: {run: (s, c, key) => { // Wild Vigor
+    const t = k.choose(c, key, 'WILD VIGOR', k.devotees(s, c, key), {text: 'Choose target friendly Devotee.'});
+    if (t) k.buff(s, t, 2, 2);
+  }}},
+  'artemis-v6-519': {spell: {run: (s, c, key) => { // Lunar Vision
+    // shortcut: o resto vai ao fundo na ordem em que estava ("in any order" sem pergunta); perguntar a ordem se fizer diferença.
+    const deck = s.players[key].deck, top = deck.slice(0, 3), devs = top.filter(u => k.isDevotee(c, u));
+    const pick = devs.length ? k.choose(c, key, 'LUNAR VISION', devs, {optional: true, text: 'You may reveal a Devotee card and put it into your hand.'}) : null;
+    if (pick) { k.toHand(s, c, pick, 'deck'); k.emit(s, 'revealed', {player: key, uid: pick}); }
+    const rest = top.filter(u => u !== pick && deck.includes(u));
+    for (const u of rest) deck.splice(deck.indexOf(u), 1);
+    deck.push(...rest);
+  }}},
   // The Hunter's Moon (rebalanceamento dos Domains, 31/10/2026): Moonlit Watch olha o topo no início do seu turno; a troca de Base
   // por carta fica na Once per game. shortcut: o custo (Base ao Tartarus) é pago na resolução.
   'artemis-v6-504': {

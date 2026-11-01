@@ -177,6 +177,13 @@ function thetisResonance(st, c, key, thetis) {
 const strikeBuff = (st, uid, n) => { if (n && st.units[uid]) k.buff(st, uid, n, 0, 'this_strike'); };
 
 export default {
+  // Spells baratas da color pie (autor, 31/10/2026: docs/spells-baratas-proposta.md).
+  'poseidon-v6-508': {spell: {run: (s, c, key) => { bounce(s, c, key, enemy(s, c, key, 'UNDERTOW', 'Choose target enemy Devotee with cost 2 or less.', u => k.costOf(c, u) <= 2)); }}},
+  'poseidon-v6-509': {spell: {check: needCounter(), run: (s, c, key) => { const t = counterTarget(c, s, key, 'TIDAL VETO'); if (t) counter(s, c, t, 'TIDAL VETO', 1); }}},
+  'poseidon-v6-510': {spell: {run: (s, c, key) => { // Mist of the Deep
+    bounce(s, c, key, k.choose(c, key, 'MIST OF THE DEEP', k.devotees(s, c, key), {text: 'Choose target friendly Devotee.'}));
+    k.draw(s, key, 1);
+  }}},
   // The Tidal Archive (rebalanceamento dos Domains, 31/10/2026): Drowned Knowledge olha o topo; a compra fica na Once per game.
   'poseidon-v6-502': {
     watchSealed: (s, c, key, self, transitions) => enemySealed(key, transitions).length > 0 && k.once(s, `${self}:drowned`)

@@ -20,6 +20,21 @@ const atRoundEnd = (s, key, self, ability, run) => s.delayed.push({controller: k
 // Devotees seus que vestem uma Armor (alvo do Cloth Restoration, 30/10/2026).
 const armored = (s, c, key) => s.players[key].battlefield.filter(u => k.card(c, u)?.kind === 'Devotee' && Object.keys(c.attached).some(e => c.attached[e] === u && k.card(c, e)?.armor));
 export default {
+  // Spells baratas da color pie (autor, 31/10/2026: docs/spells-baratas-proposta.md).
+  'athena-v6-505': {spell: {run: (s, c, key) => { // Athena's Aegis
+    const t = k.choose(c, key, "ATHENA'S AEGIS", k.devotees(s, c, key), {text: 'Choose target friendly Devotee.'});
+    if (t) shield(s, t, 2, {strikeOnly: false});
+    k.draw(s, key, 1);
+  }}},
+  'athena-v6-506': {spell: {run: (s, c, key) => { // Sanctuary's Judgment
+    const t = k.choose(c, key, "SANCTUARY'S JUDGMENT", k.enemies(s, c, key).filter(u => s.strikes.get(u) === s.turn), {text: 'Choose target enemy Devotee that declared a Strike this turn.'});
+    if (t) k.damage(s, c, t, 3);
+  }}},
+  'athena-v6-507': {spell: {run: (s, c, key) => { // Oath of the Saints
+    const t = friendlySaint(s, c, key, 'OATH OF THE SAINTS');
+    if (t) k.buff(s, t, 1, 1);
+    k.draw(s, key, 1);
+  }}},
   // Athena's Statue (rebalanceamento dos Domains, 31/10/2026): Saint's Resolve dá 1 Soul; a compra fica na Once per game.
   'athena-v6-501': {
     watchSurvive: (s, c, key, self, unit) => k.controllerOf(s, unit) === key && isSaint(c, unit) && k.once(s, `${self}:resolve`)
