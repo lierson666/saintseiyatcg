@@ -373,6 +373,12 @@ function filterBar(b) {
           ? '<span class="lb-godpick__neutral" aria-hidden="true"></span><span class="lb-sr">Neutral</span>' : `<img src="${symbol(f)}" alt="${f}">`}</button>`).join('')}</div>
         <div class="lb-pills lb-sizes" role="group" aria-label="Card size">${Object.keys(CARD_SIZES).map(k => `<button class="lb-pill ${(ui.cardSize || 'M') === k ? 'is-active' : ''}" data-act="card-size" data-size="${k}" aria-pressed="${(ui.cardSize || 'M') === k}">${k}</button>`).join('')}</div></div>`;
 }
+// Cosmoble (rebalanceamento de 31/10/2026): só aviso, sem regra; abaixo de 60% do deck a mana tende a travar.
+function cosmoLine(list, size) {
+  const n = list.filter(e => e.card.cosmoble).reduce((s, e) => s + e.quantity, 0), low = size > 0 && n < size * 0.6;
+  return `<div class="lb-list__cosmo ${low ? 'is-low' : ''}">Cosmoble <strong>${n}</strong> / ${size}${low ? '<small>Few cards can become a Cosmo Base. Most decks want about 40.</small>' : ''}</div>`;
+}
+
 function builder() {
   const b = ui.builder, d = b.deck, list = d.main_deck.map(e => ({...e, card: cards.get(e.card_id)})).filter(e => e.card).sort((x, y) => sortCards(x.card, y.card));
   const errors = deckErrors(d), size = deckSize(d), curve = [1, 2, 3, 4, 5, 6, 7].map(n => list.filter(e => (n === 7 ? (e.card.cost?.amount ?? 0) >= 7 : e.card.cost?.amount === n)).reduce((s, e) => s + e.quantity, 0));
@@ -397,6 +403,7 @@ function builder() {
       <div class="lb-picks">${[['god', 'God', d.god], ['domain', 'Domain', d.domain_id], ['thumb', 'Cover', d.thumb || d.god]].map(([k, label, id]) =>
         `<button class="lb-pick" data-act="open-picker" data-pick="${k}" aria-label="Choose ${label}">${id && cards.get(id) ? face(id, 'lb-card--mini') : '<span class="lb-pick__empty">+</span>'}<small>${label}</small></button>`).join('')}</div>
       <div class="lb-list__count ${size === DECK_SIZE ? 'is-full' : ''}"><strong>${size}</strong> / ${DECK_SIZE}</div>
+      ${cosmoLine(list, size)}
       <div class="lb-curve" aria-label="Cost curve">${curve.map((n, i) => `<span style="--h:${n / peak}"><i>${n || ''}</i><b>${i === 6 ? '7+' : i + 1}</b></span>`).join('')}</div>
       <ol class="lb-strips">${list.map(e => `<li><button class="lb-strip" data-act="remove" data-id="${e.card_id}" data-card="${e.card_id}" style="--art:url('${artOf(e.card_id, 'thumb') || ''}')">
         <b class="lb-gem ${e.card.cost?.unit || ''}">${e.card.cost?.amount ?? '–'}</b><span>${esc(e.card.name)}</span><em>×${e.quantity}</em></button></li>`).join('')

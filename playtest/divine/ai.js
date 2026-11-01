@@ -33,9 +33,12 @@ export function createAI(h) {
     const s = h.S(), p = s.players[key], id = a => `${s.turn}:${a}`;
     const fresh = a => !tried.has(id(a));
     const hand = [...p.hand];
-    // 1. Base: até 8, a carta Cosmoble menos útil agora (Spell/Equipment antes de Devotee; a mais cara primeiro).
+    // 1. Base: até 8, a carta Cosmoble menos útil para a curva (rebalanceamento de Cosmoble, 31/10/2026): cópia repetida
+    // na mão; depois a que não cabe no próximo turno; depois Spell/Equipment antes de Devotee; a mais cara primeiro.
     if (p.bases.length < 8) {
-      const pick = hand.filter(u => h.canBase(key, u)).sort((a, b) => (h.info(a).kind === 'Devotee') - (h.info(b).kind === 'Devotee') || cost(b) - cost(a))[0];
+      const dup = u => hand.some(o => o !== u && h.info(o) === h.info(u)), late = u => cost(u) > p.bases.length + 2;
+      const pick = hand.filter(u => h.canBase(key, u)).sort((a, b) => dup(b) - dup(a) || late(b) - late(a)
+        || (h.info(a).kind === 'Devotee') - (h.info(b).kind === 'Devotee') || cost(b) - cost(a))[0];
       if (pick && fresh(`base:${pick}`)) return {id: id(`base:${pick}`), run: () => h.placeBase(s, key, pick, h.info(pick))};
     }
     // 2. Ultimate: Athena Exclamation se for letal ou do Round 6 em diante; Great Flood com 2+ Devotees inimigos.

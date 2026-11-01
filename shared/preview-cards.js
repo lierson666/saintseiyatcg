@@ -65,7 +65,9 @@ export function addPreviewCards(cards, index, forgeCards) {
     const card = cards.get(f.id), sub = (f.subtipos || []).find(t => t === 'Moment' || t === 'Technique');
     const cost = f.custo != null && card.cost && card.cost.amount !== f.custo ? {...card.cost, amount: f.custo} : card.cost;
     const type = card.kind === 'Spell' && sub ? `Spell — ${sub}` : card.type;
-    if (cost !== card.cost || type !== card.type) cards.set(f.id, {...card, cost, type});
+    // Cosmoble do Forge (rebalanceamento de 31/10/2026): o D268 diz "Cosmoble: Yes" em quase todas.
+    const cosmoble = f.cosmoble != null && card.cosmoble != null ? Boolean(f.cosmoble) : card.cosmoble;
+    if (cost !== card.cost || type !== card.type || cosmoble !== card.cosmoble) cards.set(f.id, {...card, cost, type, cosmoble});
   }
   // Gods: Soul, Attack e Awaken vêm da carta do God no Forge (<facção>-001), por cima do D268 e da G3-042 (autor, 29/10/2026).
   for (const f of forgeCards.filter(c => /^(athena|poseidon|hades|ares|artemis)-001$/.test(c.id))) {

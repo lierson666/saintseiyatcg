@@ -4,6 +4,14 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-31 — Cartas (Cosmoble) — Rebalanceamento de Cosmoble
+
+- **Antes:** 499 das 509 cartas eram Cosmoble (98%); toda carta podia virar Cosmo Base.
+- **Depois:** 144 cartas perdem Cosmoble; cada facção e as neutras ficam com cerca de 70% Cosmoble. Perdem as cartas acima da curva e as de ramp. Lista completa e critério em `docs/rebalance-cosmoble.md`. A regra do §4 (Cosmo Base) não muda.
+- **Motivo:** autor, 31/10/2026: a escolha de quais cartas viram Cosmo é o que deixa o deckbuild interessante, como no Lorcana. Aprovado na mesma data.
+- **Engine e UI:** `shared/preview-cards.js` lê o Cosmoble do Forge também para Athena (o D268 dizia "Yes"); o construtor mostra "Cosmoble X / 60" e avisa abaixo de 60% (aviso, não regra); a IA (`playtest/divine/ai.js`) põe como Base a cópia repetida e depois a carta que não cabe no próximo turno; How to Play explica que nem toda carta é Cosmoble. Athena Seal Control, Ares Glorious Demise e Artemis Hunt reajustadas para 40–41 Cosmoble.
+- **Pendências:** Moon Harvest (Artemis) fica mais forte com mais cartas sem Cosmoble; medir no round-robin.
+
 ## 2026-10-31 — §63 — Revisão dos Domains, How to Play
 
 - **Antes:** 063 Jamir Tower tinha linha 1 ativada com {T} e {2}{C}, sem limite por rodada (o {T} conflita com o Domain que vira de lado no Once per game); 333 e 335 diziam "once per turn"; 332 dizia "gain +1 ATK"; 504 não dizia "once each round". Os Domains de Athena no D268 congelado tinham o texto antigo (062 comprava carta na linha 1). 501 Athena's Statue não existia na engine (fora do D268 e do filtro de prévia). O How to Play não explicava a forma dos Domains, o Once per game nem o Domain fora da cor.

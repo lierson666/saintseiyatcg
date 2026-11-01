@@ -99,7 +99,7 @@
       "subtipos": ["Bronze Saint"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 3,
       "unidade_custo": "base_cosmo",
@@ -119,7 +119,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "athena-v6-004",
@@ -174,7 +174,7 @@
       "subtipos": ["Bronze Saint"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 3,
       "unidade_custo": "base_cosmo",
@@ -193,7 +193,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "athena-v6-006",
@@ -208,7 +208,7 @@
       "subtipos": ["Armor", "Cloth"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 3,
       "unidade_custo": "base_cosmo",
@@ -226,7 +226,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
       "categoria_equipamento": "Armor",
       "slot_equipamento": "armadura",
       "auto_equip_en": ["Cygnus Hyoga"],
@@ -395,7 +395,7 @@
       "subtipos": ["Gold Saint"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -414,7 +414,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "athena-v6-012",
@@ -429,7 +429,7 @@
       "subtipos": ["Armor", "Cloth"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 4,
       "unidade_custo": "base_cosmo",
@@ -447,7 +447,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
       "categoria_equipamento": "Armor",
       "slot_equipamento": "armadura",
       "auto_equip_en": ["Aries Mu"],
@@ -469,7 +469,7 @@
       "subtipos": ["Gold Saint"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 6,
       "unidade_custo": "base_cosmo",
@@ -488,7 +488,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "athena-v6-014",
@@ -543,7 +543,7 @@
       "subtipos": ["Gold Saint"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -563,7 +563,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "athena-v6-016",
@@ -578,7 +578,7 @@
       "subtipos": ["Armor", "Cloth"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 4,
       "unidade_custo": "base_cosmo",
@@ -597,7 +597,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Resonance secundária pendente de design e aprovação.",
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Resonance secundária pendente de design e aprovação. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
       "categoria_equipamento": "Armor",
       "slot_equipamento": "armadura",
       "auto_equip_en": ["Leo Aiolia", "Phoenix Ikki"],
@@ -619,7 +619,7 @@
       "subtipos": ["Gold Saint"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -639,7 +639,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "athena-v6-018",
@@ -654,7 +654,7 @@
       "subtipos": ["Armor", "Cloth"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 4,
       "unidade_custo": "base_cosmo",
@@ -673,7 +673,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Resonance secundária pendente de design e aprovação.",
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Resonance secundária pendente de design e aprovação. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
       "categoria_equipamento": "Armor",
       "slot_equipamento": "armadura",
       "auto_equip_en": ["Aquarius Camus", "Cygnus Hyoga"],
@@ -738,7 +738,7 @@
       "subtipos": ["Divine Artifact"],
       "raridade": "Divine",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 4,
       "unidade_custo": "base_cosmo",
@@ -758,7 +758,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md.",
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
       "categoria_equipamento": "Artifact",
       "slot_equipamento": null,
       "auto_equip_en": [],
@@ -815,7 +815,7 @@
       "subtipos": ["Silver Saint"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 3,
       "unidade_custo": "base_cosmo",
@@ -834,7 +834,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "athena-v6-023",
@@ -2047,7 +2047,7 @@
       "subtipos": ["Technique"],
       "raridade": "Common",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 2,
       "unidade_custo": "base_cosmo",
@@ -2066,7 +2066,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "athena-v6-058",
@@ -2392,7 +2392,7 @@
       "subtipos": ["Armor", "Cloth"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 3,
       "unidade_custo": "base_cosmo",
@@ -2410,7 +2410,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
       "categoria_equipamento": "Armor",
       "slot_equipamento": "armadura",
       "auto_equip_en": ["Ophiuchus Shaina"],
@@ -2687,7 +2687,7 @@
       "subtipos": ["Silver Saint"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 4,
       "unidade_custo": "base_cosmo",
@@ -2706,7 +2706,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "athena-v6-076",
@@ -2790,7 +2790,7 @@
       "subtipos": ["Technique"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 4,
       "unidade_custo": "base_cosmo",
@@ -2810,7 +2810,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "athena-v6-079",
@@ -2859,7 +2859,7 @@
       "subtipos": ["Technique"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -2879,7 +2879,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "athena-v6-081",
@@ -2928,7 +2928,7 @@
       "subtipos": ["Moment"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 1,
       "unidade_custo": "base_cosmo",
@@ -2946,7 +2946,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "athena-v6-083",
@@ -2996,7 +2996,7 @@
       "subtipos": ["Technique"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -3016,7 +3016,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "athena-v6-085",
@@ -3031,7 +3031,7 @@
       "subtipos": ["Technique"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 6,
       "unidade_custo": "base_cosmo",
@@ -3052,7 +3052,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "athena-v6-086",
@@ -3067,7 +3067,7 @@
       "subtipos": ["Technique"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 6,
       "unidade_custo": "base_cosmo",
@@ -3087,7 +3087,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "athena-v6-087",
@@ -3102,7 +3102,7 @@
       "subtipos": ["Technique"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -3121,7 +3121,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "athena-v6-088",
@@ -3136,7 +3136,7 @@
       "subtipos": ["Technique"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -3155,7 +3155,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "athena-v6-089",
@@ -3170,7 +3170,7 @@
       "subtipos": ["Technique"],
       "raridade": "Divine",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 6,
       "unidade_custo": "base_cosmo",
@@ -3189,7 +3189,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "athena-v6-090",
@@ -3204,7 +3204,7 @@
       "subtipos": ["Technique"],
       "raridade": "Divine",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 6,
       "unidade_custo": "base_cosmo",
@@ -3224,7 +3224,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "athena-001",
@@ -3389,7 +3389,7 @@
       "subtipos": ["Marina General"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 6,
       "unidade_custo": "base_cosmo",
@@ -3410,7 +3410,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "poseidon-v6-092",
@@ -3465,7 +3465,7 @@
       "subtipos": ["Marina General"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -3485,7 +3485,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "poseidon-v6-094",
@@ -3540,7 +3540,7 @@
       "subtipos": ["Marina General"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -3560,7 +3560,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "poseidon-v6-096",
@@ -3615,7 +3615,7 @@
       "subtipos": ["Marina General"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -3635,7 +3635,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "poseidon-v6-098",
@@ -3766,7 +3766,7 @@
       "subtipos": ["Human", "Vessel"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 3,
       "unidade_custo": "base_cosmo",
@@ -3786,7 +3786,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "poseidon-v6-102",
@@ -5156,7 +5156,7 @@
       "subtipos": ["Moment"],
       "raridade": "Common",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 2,
       "unidade_custo": "base_cosmo",
@@ -5177,7 +5177,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "poseidon-v6-141",
@@ -5533,7 +5533,7 @@
       "subtipos": ["Technique"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 4,
       "unidade_custo": "base_cosmo",
@@ -5553,7 +5553,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Controle de combate com Seal condicional. Sorrento transforma a técnica em uma ameaça maior sem gerar compra líquida de cartas."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Controle de combate com Seal condicional. Sorrento transforma a técnica em uma ameaça maior sem gerar compra líquida de cartas. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "poseidon-v6-152",
@@ -5603,7 +5603,7 @@
       "subtipos": ["Technique"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 4,
       "unidade_custo": "base_cosmo",
@@ -5623,7 +5623,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Técnica de congelamento que pode ser usada sem Isaac, mas recompensa sua presença. Inclui a interação narrativa com Hyoga sem exigir ambos no Battlefield."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Técnica de congelamento que pode ser usada sem Isaac, mas recompensa sua presença. Inclui a interação narrativa com Hyoga sem exigir ambos no Battlefield. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "poseidon-v6-154",
@@ -5638,7 +5638,7 @@
       "subtipos": ["Moment"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 3,
       "unidade_custo": "base_cosmo",
@@ -5659,7 +5659,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Carta modal: bounce ou counter tributável. A presença de Kanon melhora a seleção de cartas sem produzir compra líquida adicional. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Carta modal: bounce ou counter tributável. A presença de Kanon melhora a seleção de cartas sem produzir compra líquida adicional. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "poseidon-v6-155",
@@ -5880,7 +5880,7 @@
       "subtipos": ["Moment"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 4,
       "unidade_custo": "base_cosmo",
@@ -5900,7 +5900,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Cantrip de proteção e reutilização de ETB, com recuperação adicional para decks dedicados aos Marinas."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Cantrip de proteção e reutilização de ETB, com recuperação adicional para decks dedicados aos Marinas. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "poseidon-v6-162",
@@ -5915,7 +5915,7 @@
       "subtipos": ["Technique"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -5935,7 +5935,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Bounce e descarte seletivo. Oferece informação sobre a mão adversária, mas só permite descartar Moment ou Technique. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Bounce e descarte seletivo. Oferece informação sobre a mão adversária, mas só permite descartar Moment ou Technique. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "poseidon-v6-163",
@@ -5950,7 +5950,7 @@
       "subtipos": ["Technique"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -5970,7 +5970,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Controle de combate e descarte. A presença de Sorrento melhora a qualidade da mão, sem gerar compra líquida adicional. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Controle de combate e descarte. A presença de Sorrento melhora a qualidade da mão, sem gerar compra líquida adicional. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "poseidon-v6-164",
@@ -6054,7 +6054,7 @@
       "subtipos": ["Moment"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -6074,7 +6074,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Bounce combinado com atraso de compra. A escolha da carta devolvida ao topo pertence ao oponente, evitando descarte seletivo excessivo."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Bounce combinado com atraso de compra. A escolha da carta devolvida ao topo pertence ao oponente, evitando descarte seletivo excessivo. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "poseidon-v6-167",
@@ -6123,7 +6123,7 @@
       "subtipos": ["Moment"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -6142,7 +6142,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Controle em área. Potencialmente muito forte com Pressure of the Deep, mas limitado a três Devotees e a um custo elevado."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Controle em área. Potencialmente muito forte com Pressure of the Deep, mas limitado a três Devotees e a um custo elevado. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "poseidon-v6-169",
@@ -6157,7 +6157,7 @@
       "subtipos": ["Technique"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 6,
       "unidade_custo": "base_cosmo",
@@ -6177,7 +6177,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Lock concentrado em uma ameaça. Sua força vem dos três Seal counters; o silêncio de habilidades é temporário."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Lock concentrado em uma ameaça. Sua força vem dos três Seal counters; o silêncio de habilidades é temporário. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "poseidon-v6-170",
@@ -6233,7 +6233,7 @@
       "subtipos": ["Moment"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 6,
       "unidade_custo": "base_cosmo",
@@ -6255,7 +6255,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Moment modal de alto custo. Permite combinar controle, resposta e recursos, mas exige a existência de alvos válidos para os modos escolhidos."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Moment modal de alto custo. Permite combinar controle, resposta e recursos, mas exige a existência de alvos válidos para os modos escolhidos. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "poseidon-v6-172",
@@ -6270,7 +6270,7 @@
       "subtipos": ["Moment"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 6,
       "unidade_custo": "base_cosmo",
@@ -6290,7 +6290,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Aumenta o alcance de Seal, mas não gera vários marcadores no mesmo Devotee. A compra direta exige Poseidon."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Aumenta o alcance de Seal, mas não gera vários marcadores no mesmo Devotee. A compra direta exige Poseidon. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "poseidon-v6-173",
@@ -6305,7 +6305,7 @@
       "subtipos": ["Moment"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 6,
       "unidade_custo": "base_cosmo",
@@ -6325,7 +6325,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Bounce múltiplo com pressão em recursos. Seu potencial máximo depende de controlar um Domain. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Bounce múltiplo com pressão em recursos. Seu potencial máximo depende de controlar um Domain. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "poseidon-v6-174",
@@ -6340,7 +6340,7 @@
       "subtipos": ["Technique"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 6,
       "unidade_custo": "base_cosmo",
@@ -6359,7 +6359,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Remoção em área. O bônus máximo exige dois Generais, uma condição relevante para o Vanilla. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Remoção em área. O bônus máximo exige dois Generais, uma condição relevante para o Vanilla. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "poseidon-v6-175",
@@ -6374,7 +6374,7 @@
       "subtipos": ["Moment"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 6,
       "unidade_custo": "base_cosmo",
@@ -6394,7 +6394,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Mill e descarte condicional. Recompensa Seal sem aplicar novos marcadores. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Mill e descarte condicional. Recompensa Seal sem aplicar novos marcadores. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "poseidon-v6-176",
@@ -6409,7 +6409,7 @@
       "subtipos": ["Moment"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 6,
       "unidade_custo": "base_cosmo",
@@ -6429,7 +6429,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Proteção e fortalecimento. A principal carta Mythic voltada ao combate dos próprios Marinas."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Proteção e fortalecimento. A principal carta Mythic voltada ao combate dos próprios Marinas. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "poseidon-v6-177",
@@ -6444,7 +6444,7 @@
       "subtipos": ["Moment"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 6,
       "unidade_custo": "base_cosmo",
@@ -6464,7 +6464,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Recuperação de uma ameaça Mythic e uma Scale. Forte no jogo longo, com restrição de ataque na rodada em que retorna. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Recuperação de uma ameaça Mythic e uma Scale. Forte no jogo longo, com restrição de ataque na rodada em que retorna. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "poseidon-v6-178",
@@ -6479,7 +6479,7 @@
       "subtipos": ["Divine Artifact"],
       "raridade": "Divine",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 6,
       "unidade_custo": "base_cosmo",
@@ -6499,7 +6499,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Artefato divino para o late game. Combina draw e Seal, mas exige investimento inicial de 9 Cosmo Base. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md.",
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Artefato divino para o late game. Combina draw e Seal, mas exige investimento inicial de 9 Cosmo Base. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
       "categoria_equipamento": "Artifact",
       "slot_equipamento": null,
       "auto_equip_en": [],
@@ -6521,7 +6521,7 @@
       "subtipos": ["Moment"],
       "raridade": "Divine",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 6,
       "unidade_custo": "base_cosmo",
@@ -6541,7 +6541,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Inspirada no Main Breadwinner, o grande pilar central do reino submarino. Atua como defesa absoluta temporária e grande virada de tempo. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Inspirada no Main Breadwinner, o grande pilar central do reino submarino. Atua como defesa absoluta temporária e grande virada de tempo. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "poseidon-v6-180",
@@ -6556,7 +6556,7 @@
       "subtipos": ["Moment"],
       "raridade": "Divine",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 7,
       "unidade_custo": "base_cosmo",
@@ -6576,7 +6576,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. O maior reset de Battlefield da coleção. Diferente do Ultimate de Poseidon, não devolve Equipment separadamente nem Cosmo Base, preservando uma distinção mecânica importante. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md."
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. O maior reset de Battlefield da coleção. Diferente do Ultimate de Poseidon, não devolve Equipment separadamente nem Cosmo Base, preservando uma distinção mecânica importante. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "hades-v6-181",
@@ -6591,7 +6591,7 @@
       "subtipos": ["Judge Specter"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -6610,7 +6610,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "hades-v6-182",
@@ -6664,7 +6664,7 @@
       "subtipos": ["Judge Specter"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -6683,7 +6683,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "hades-v6-184",
@@ -6737,7 +6737,7 @@
       "subtipos": ["Judge Specter"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -6756,7 +6756,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "hades-v6-186",
@@ -6883,7 +6883,7 @@
       "subtipos": ["Specter"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 3,
       "unidade_custo": "base_cosmo",
@@ -6902,7 +6902,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "hades-v6-190",
@@ -6956,7 +6956,7 @@
       "subtipos": ["Divinity"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 7,
       "unidade_custo": "base_cosmo",
@@ -6975,7 +6975,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "hades-v6-192",
@@ -6990,7 +6990,7 @@
       "subtipos": ["Technique"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -7009,7 +7009,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "hades-v6-193",
@@ -7024,7 +7024,7 @@
       "subtipos": ["Divinity"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 7,
       "unidade_custo": "base_cosmo",
@@ -7043,7 +7043,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "hades-v6-194",
@@ -7058,7 +7058,7 @@
       "subtipos": ["Technique"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 3,
       "unidade_custo": "base_cosmo",
@@ -7078,7 +7078,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "hades-v6-195",
@@ -7093,7 +7093,7 @@
       "subtipos": ["Human"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -7112,7 +7112,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "hades-v6-196",
@@ -7168,7 +7168,7 @@
       "subtipos": ["Gold Saint"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 6,
       "unidade_custo": "base_cosmo",
@@ -7187,7 +7187,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "hades-v6-198",
@@ -7241,7 +7241,7 @@
       "subtipos": ["Divine Relic"],
       "raridade": "Divine",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -7261,7 +7261,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md.",
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
       "categoria_equipamento": "Artifact",
       "slot_equipamento": "acessorio",
       "auto_equip_en": [],
@@ -7283,7 +7283,7 @@
       "subtipos": ["Divine Relic"],
       "raridade": "Divine",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 6,
       "unidade_custo": "base_cosmo",
@@ -7303,7 +7303,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Tipo no original: Item — Divine Relic; tratado como Equipment global (sem Equip).",
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Tipo no original: Item — Divine Relic; tratado como Equipment global (sem Equip). Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
       "categoria_equipamento": "Artifact",
       "slot_equipamento": null,
       "auto_equip_en": [],
@@ -7393,7 +7393,7 @@
       "subtipos": ["Specter"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -7412,7 +7412,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "hades-v6-204",
@@ -9173,7 +9173,7 @@
       "subtipos": ["Gold Saint"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -9192,7 +9192,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "hades-v6-254",
@@ -9241,7 +9241,7 @@
       "subtipos": ["Gold Saint"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 6,
       "unidade_custo": "base_cosmo",
@@ -9260,7 +9260,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "hades-v6-256",
@@ -9275,7 +9275,7 @@
       "subtipos": ["Moment"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 4,
       "unidade_custo": "base_cosmo",
@@ -9295,7 +9295,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "hades-v6-257",
@@ -9345,7 +9345,7 @@
       "subtipos": ["Technique"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 4,
       "unidade_custo": "base_cosmo",
@@ -9365,7 +9365,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "hades-v6-259",
@@ -9449,7 +9449,7 @@
       "subtipos": ["Moment"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 4,
       "unidade_custo": "base_cosmo",
@@ -9470,7 +9470,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "hades-v6-262",
@@ -9485,7 +9485,7 @@
       "subtipos": ["Moment"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 4,
       "unidade_custo": "base_cosmo",
@@ -9505,7 +9505,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "hades-v6-263",
@@ -9520,7 +9520,7 @@
       "subtipos": ["Moment"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -9540,7 +9540,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "hades-v6-264",
@@ -9589,7 +9589,7 @@
       "subtipos": ["Technique"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -9608,7 +9608,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "hades-v6-266",
@@ -9623,7 +9623,7 @@
       "subtipos": ["Moment"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 7,
       "unidade_custo": "base_cosmo",
@@ -9643,7 +9643,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "hades-v6-267",
@@ -9658,7 +9658,7 @@
       "subtipos": ["Technique"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 6,
       "unidade_custo": "base_cosmo",
@@ -9678,7 +9678,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "hades-v6-268",
@@ -9693,7 +9693,7 @@
       "subtipos": ["Technique"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 7,
       "unidade_custo": "base_cosmo",
@@ -9713,7 +9713,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "hades-v6-269",
@@ -9728,7 +9728,7 @@
       "subtipos": ["Moment"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 6,
       "unidade_custo": "base_cosmo",
@@ -9748,7 +9748,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "hades-v6-270",
@@ -9763,7 +9763,7 @@
       "subtipos": ["Moment"],
       "raridade": "Divine",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 7,
       "unidade_custo": "base_cosmo",
@@ -9783,7 +9783,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md."
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "ares-v6-271",
@@ -9798,7 +9798,7 @@
       "subtipos": ["Berserker", "Red Fire Legion"],
       "raridade": "Divine",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -9818,7 +9818,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "ares-v6-272",
@@ -9873,7 +9873,7 @@
       "subtipos": ["Berserker", "Flame Legion"],
       "raridade": "Divine",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 4,
       "unidade_custo": "base_cosmo",
@@ -9892,7 +9892,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "ares-v6-274",
@@ -9947,7 +9947,7 @@
       "subtipos": ["Berserker", "Disaster Legion"],
       "raridade": "Divine",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -9966,7 +9966,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "ares-v6-276",
@@ -10021,7 +10021,7 @@
       "subtipos": ["Berserker", "Fear Legion"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 4,
       "unidade_custo": "base_cosmo",
@@ -10041,7 +10041,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "ares-v6-278",
@@ -10096,7 +10096,7 @@
       "subtipos": ["Berserker", "Disaster Legion"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 3,
       "unidade_custo": "base_cosmo",
@@ -10115,7 +10115,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "ares-v6-280",
@@ -10170,7 +10170,7 @@
       "subtipos": ["Berserker", "Disaster Legion"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 3,
       "unidade_custo": "base_cosmo",
@@ -10189,7 +10189,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "ares-v6-282",
@@ -10244,7 +10244,7 @@
       "subtipos": ["Berserker", "Disaster Legion"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 3,
       "unidade_custo": "base_cosmo",
@@ -10263,7 +10263,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "ares-v6-284",
@@ -10318,7 +10318,7 @@
       "subtipos": ["Berserker"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 3,
       "unidade_custo": "base_cosmo",
@@ -10338,7 +10338,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "ares-v6-286",
@@ -10393,7 +10393,7 @@
       "subtipos": ["Berserker"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 3,
       "unidade_custo": "base_cosmo",
@@ -10412,7 +10412,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "ares-v6-288",
@@ -10467,7 +10467,7 @@
       "subtipos": ["Divine Relic"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -10487,7 +10487,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Sem custo de Equip no original: tratado como Equipment global. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md.",
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Sem custo de Equip no original: tratado como Equipment global. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
       "categoria_equipamento": "Artifact",
       "slot_equipamento": null,
       "auto_equip_en": [],
@@ -10509,7 +10509,7 @@
       "subtipos": ["Divine Relic"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 4,
       "unidade_custo": "base_cosmo",
@@ -10529,7 +10529,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Sem custo de Equip no original: tratado como Equipment global.",
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Sem custo de Equip no original: tratado como Equipment global. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
       "categoria_equipamento": "Artifact",
       "slot_equipamento": null,
       "auto_equip_en": [],
@@ -10917,7 +10917,7 @@
       "subtipos": ["Berserker"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 4,
       "unidade_custo": "base_cosmo",
@@ -10936,7 +10936,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "ares-v6-303",
@@ -11151,7 +11151,7 @@
       "subtipos": ["Berserker"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 4,
       "unidade_custo": "base_cosmo",
@@ -11170,7 +11170,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "ares-v6-310",
@@ -12314,7 +12314,7 @@
       "subtipos": ["Berserker", "Red Fire Legion"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 4,
       "unidade_custo": "base_cosmo",
@@ -12333,7 +12333,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "ares-v6-342",
@@ -12382,7 +12382,7 @@
       "subtipos": ["Berserker", "Disaster Legion"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 2,
       "unidade_custo": "base_cosmo",
@@ -12401,7 +12401,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "ares-v6-344",
@@ -12416,7 +12416,7 @@
       "subtipos": ["Berserker", "Fear Legion"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 3,
       "unidade_custo": "base_cosmo",
@@ -12436,7 +12436,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "ares-v6-345",
@@ -12451,7 +12451,7 @@
       "subtipos": ["Berserker"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 4,
       "unidade_custo": "base_cosmo",
@@ -12470,7 +12470,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "ares-v6-346",
@@ -12652,7 +12652,7 @@
       "subtipos": ["Moment"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 3,
       "unidade_custo": "base_cosmo",
@@ -12671,7 +12671,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "ares-v6-352",
@@ -12686,7 +12686,7 @@
       "subtipos": ["Moment"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 4,
       "unidade_custo": "base_cosmo",
@@ -12704,7 +12704,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "ares-v6-353",
@@ -12719,7 +12719,7 @@
       "subtipos": ["Moment"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -12738,7 +12738,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "ares-v6-354",
@@ -12753,7 +12753,7 @@
       "subtipos": ["Moment"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 4,
       "unidade_custo": "base_cosmo",
@@ -12772,7 +12772,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "ares-v6-355",
@@ -12787,7 +12787,7 @@
       "subtipos": ["Technique"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 4,
       "unidade_custo": "base_cosmo",
@@ -12806,7 +12806,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "ares-v6-356",
@@ -12821,7 +12821,7 @@
       "subtipos": ["Moment"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 3,
       "unidade_custo": "base_cosmo",
@@ -12840,7 +12840,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "ares-v6-357",
@@ -12889,7 +12889,7 @@
       "subtipos": ["Moment"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -12908,7 +12908,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "ares-v6-359",
@@ -12923,7 +12923,7 @@
       "subtipos": ["Moment"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -12941,7 +12941,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Ares → Sligh (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-ares-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "ares-v6-360",
@@ -12956,7 +12956,7 @@
       "subtipos": ["Moment"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 9,
       "unidade_custo": "base_cosmo",
@@ -12976,7 +12976,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "artemis-v6-361",
@@ -12991,7 +12991,7 @@
       "subtipos": ["Satellite", "Lunar Commander"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -13010,7 +13010,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "artemis-v6-362",
@@ -13285,7 +13285,7 @@
       "subtipos": ["Ancient Guardian"],
       "raridade": "Divine",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 6,
       "unidade_custo": "base_cosmo",
@@ -13305,7 +13305,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "artemis-v6-370",
@@ -13360,7 +13360,7 @@
       "subtipos": ["Divine Vessel", "Lunar"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 3,
       "unidade_custo": "base_cosmo",
@@ -13379,7 +13379,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "artemis-v6-372",
@@ -13428,7 +13428,7 @@
       "subtipos": ["Titan", "Lunar Divinity"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 7,
       "unidade_custo": "base_cosmo",
@@ -13448,7 +13448,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "artemis-v6-374",
@@ -13497,7 +13497,7 @@
       "subtipos": ["Lunar Guardian", "Satellite"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -13517,7 +13517,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "artemis-v6-376",
@@ -13566,7 +13566,7 @@
       "subtipos": ["Nature Divinity", "Floral Guardian"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 4,
       "unidade_custo": "base_cosmo",
@@ -13585,7 +13585,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "artemis-v6-378",
@@ -13640,7 +13640,7 @@
       "subtipos": ["Divine Relic", "Bow"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -13660,7 +13660,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md.",
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
       "categoria_equipamento": "Weapon",
       "slot_equipamento": "acessorio",
       "auto_equip_en": [],
@@ -13682,7 +13682,7 @@
       "subtipos": ["Divine Relic", "Arrow"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 4,
       "unidade_custo": "base_cosmo",
@@ -13702,7 +13702,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md.",
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
       "categoria_equipamento": "Weapon",
       "slot_equipamento": "acessorio",
       "auto_equip_en": [],
@@ -13858,7 +13858,7 @@
       "subtipos": ["Sacred Beast", "Hound"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 6,
       "unidade_custo": "base_cosmo",
@@ -13878,7 +13878,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "artemis-v6-386",
@@ -13893,7 +13893,7 @@
       "subtipos": ["Satellite", "Initiate"],
       "raridade": "Common",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 1,
       "unidade_custo": "base_cosmo",
@@ -13911,7 +13911,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "artemis-v6-387",
@@ -14226,7 +14226,7 @@
       "subtipos": ["Nature Spirit", "Forest"],
       "raridade": "Common",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 1,
       "unidade_custo": "base_cosmo",
@@ -14244,7 +14244,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "artemis-v6-397",
@@ -14259,7 +14259,7 @@
       "subtipos": ["Nature Spirit", "Dryad"],
       "raridade": "Common",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 1,
       "unidade_custo": "base_cosmo",
@@ -14278,7 +14278,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "artemis-v6-398",
@@ -14869,7 +14869,7 @@
       "subtipos": ["Artifact", "Amulet"],
       "raridade": "Common",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 2,
       "unidade_custo": "base_cosmo",
@@ -14888,7 +14888,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md.",
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
       "categoria_equipamento": "Artifact",
       "slot_equipamento": "acessorio",
       "auto_equip_en": [],
@@ -14990,7 +14990,7 @@
       "subtipos": ["Technique", "Nature", "Cosmo Ramp"],
       "raridade": "Common",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 2,
       "unidade_custo": "base_cosmo",
@@ -15008,7 +15008,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "artemis-v6-418",
@@ -15090,7 +15090,7 @@
       "subtipos": ["Moment", "Lunar", "Cosmo Ramp"],
       "raridade": "Common",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 3,
       "unidade_custo": "base_cosmo",
@@ -15108,7 +15108,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "artemis-v6-421",
@@ -15123,7 +15123,7 @@
       "subtipos": ["Technique", "Nature", "Growth"],
       "raridade": "Common",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 1,
       "unidade_custo": "base_cosmo",
@@ -15142,7 +15142,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "artemis-v6-422",
@@ -15190,7 +15190,7 @@
       "subtipos": ["Technique", "Nature", "Cosmo Ramp"],
       "raridade": "Common",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 3,
       "unidade_custo": "base_cosmo",
@@ -15208,7 +15208,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "artemis-v6-424",
@@ -15534,7 +15534,7 @@
       "subtipos": ["Forest Guardian", "Champion"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 6,
       "unidade_custo": "base_cosmo",
@@ -15554,7 +15554,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "artemis-v6-434",
@@ -15609,7 +15609,7 @@
       "subtipos": ["Satellite", "Archer Commander"],
       "raridade": "Divine",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -15629,7 +15629,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "artemis-v6-436",
@@ -15684,7 +15684,7 @@
       "subtipos": ["Lunar Guardian", "Satellite"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 4,
       "unidade_custo": "base_cosmo",
@@ -15703,7 +15703,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "artemis-v6-438",
@@ -15753,7 +15753,7 @@
       "subtipos": ["Lunar Guardian", "Satellite"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -15773,7 +15773,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "artemis-v6-440",
@@ -15788,7 +15788,7 @@
       "subtipos": ["Lunar Guardian", "Satellite"],
       "raridade": "Divine",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 7,
       "unidade_custo": "base_cosmo",
@@ -15809,7 +15809,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "artemis-v6-441",
@@ -15926,7 +15926,7 @@
       "subtipos": ["Moment", "Nature", "Invasion"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -15945,7 +15945,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "artemis-v6-445",
@@ -16028,7 +16028,7 @@
       "subtipos": ["Moment", "Tragedy", "Nature"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 3,
       "unidade_custo": "base_cosmo",
@@ -16047,7 +16047,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "artemis-v6-448",
@@ -16095,7 +16095,7 @@
       "subtipos": ["Moment", "Divine", "Nature"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -16113,7 +16113,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "artemis-v6-450",
@@ -16128,7 +16128,7 @@
       "subtipos": ["Moment", "Divine", "Nature"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 6,
       "unidade_custo": "base_cosmo",
@@ -16148,7 +16148,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md."
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "neutral-v6-451",
@@ -16197,7 +16197,7 @@
       "subtipos": ["Black Saint"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -16216,7 +16216,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "neutral-v6-453",
@@ -16300,7 +16300,7 @@
       "subtipos": ["Black Saint"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 6,
       "unidade_custo": "base_cosmo",
@@ -16319,7 +16319,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "neutral-v6-456",
@@ -16334,7 +16334,7 @@
       "subtipos": ["Black Saint"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 6,
       "unidade_custo": "base_cosmo",
@@ -16354,7 +16354,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "neutral-v6-457",
@@ -16874,7 +16874,7 @@
       "subtipos": ["Ghost Saint"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 6,
       "unidade_custo": "base_cosmo",
@@ -16894,7 +16894,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "neutral-v6-472",
@@ -17079,7 +17079,7 @@
       "subtipos": ["Technique"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 7,
       "unidade_custo": "base_cosmo",
@@ -17098,7 +17098,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "neutral-v6-478",
@@ -17113,7 +17113,7 @@
       "subtipos": ["Relic"],
       "raridade": "Common",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 4,
       "unidade_custo": "base_cosmo",
@@ -17132,7 +17132,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026. Tipo no original: Item — Relic; tratado como Equipment global (sem Equip).",
+      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026. Tipo no original: Item — Relic; tratado como Equipment global (sem Equip). Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
       "categoria_equipamento": "Artifact",
       "slot_equipamento": null,
       "auto_equip_en": [],
@@ -17154,7 +17154,7 @@
       "subtipos": ["Moment"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -17173,7 +17173,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "neutral-v6-480",
@@ -17188,7 +17188,7 @@
       "subtipos": ["Technique"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 7,
       "unidade_custo": "base_cosmo",
@@ -17207,7 +17207,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "neutral-v6-481",
@@ -17256,7 +17256,7 @@
       "subtipos": ["Warrior"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 4,
       "unidade_custo": "base_cosmo",
@@ -17276,7 +17276,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "neutral-v6-483",
@@ -17393,7 +17393,7 @@
       "subtipos": ["Saint"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -17412,7 +17412,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "neutral-v6-487",
@@ -17645,7 +17645,7 @@
       "subtipos": ["Device"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 4,
       "unidade_custo": "base_cosmo",
@@ -17664,7 +17664,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026. Tipo no original: Item — Device; tratado como Equipment global (sem Equip).",
+      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026. Tipo no original: Item — Device; tratado como Equipment global (sem Equip). Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
       "categoria_equipamento": "Artifact",
       "slot_equipamento": null,
       "auto_equip_en": [],
@@ -17727,7 +17727,7 @@
       "subtipos": ["Technique"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 7,
       "unidade_custo": "base_cosmo",
@@ -17746,7 +17746,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "neutral-v6-496",
@@ -17761,7 +17761,7 @@
       "subtipos": ["Technique"],
       "raridade": "Uncommon",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 5,
       "unidade_custo": "base_cosmo",
@@ -17780,7 +17780,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "neutral-v6-497",
@@ -17863,7 +17863,7 @@
       "subtipos": ["Moment"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 6,
       "unidade_custo": "base_cosmo",
@@ -17883,7 +17883,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "neutral-v6-500",
@@ -17898,7 +17898,7 @@
       "subtipos": ["Moment"],
       "raridade": "Legendary",
       "status": "design-ready",
-      "cosmoble": true,
+      "cosmoble": false,
       "caminho_imagem": null,
       "custo": 8,
       "unidade_custo": "base_cosmo",
@@ -17918,7 +17918,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026."
+      "notas_pt": "Texto do autor, Neutral Set, 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
     },
     {
       "id": "athena-v6-501",

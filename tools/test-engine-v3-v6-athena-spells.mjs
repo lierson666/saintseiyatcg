@@ -260,3 +260,8 @@ test('Domains de Athena (§63, 31/10/2026): texto do Forge por cima do D268; 501
   const azorius = read('../data/alpha-0.1/decks-competitivos.json').decks.find(d => d.id === 'comp-azorius');
   assert.doesNotThrow(() => createMatch({cards, canonIndex: index, decks: {A: azorius, B: {...decks.find(d => d.id === 'preview-ares-legions')}}, first: 'A', seed: 1}));
 });
+
+test('Cosmoble de Athena vem do Forge (rebalanceamento de 31/10/2026): Aquarius Camus deixa de ser Cosmoble', () => {
+  assert.equal(cards.get(A('017')).cosmoble, false);
+  assert.equal(cards.get(A('001')).cosmoble, true);
+});
