@@ -1,5 +1,5 @@
 /* Jogar (lobby.js playPanel): caminhos e confronto; a escolha de deck é um passo à parte, em tela cheia. Só o miolo rola; PLAY fica fixo no rodapé. */
-.ds { position: fixed; inset: 0; z-index: 40; display: grid; grid-template-rows: auto auto minmax(0, 1fr);
+.ds { position: fixed; inset: 0; z-index: 40; display: grid; grid-template-rows: auto auto minmax(0, 1fr); padding-top: env(safe-area-inset-top, 0px);
   background: color-mix(in srgb, var(--kv-bg) 35%, transparent); color: var(--kv-ink); }
 /* Céu do KV atrás do Jogar: o que fica por baixo some da tela e do Tab. */
 body:has(.ds) .lb-top, .lb-home:has(> .ds) > :not(.ds) { visibility: hidden; }

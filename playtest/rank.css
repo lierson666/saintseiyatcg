@@ -48,7 +48,7 @@
 .rk-plate { position: fixed; right: 16px; z-index: 40; display: flex; align-items: center; gap: 14px; padding: 8px 24px 8px 10px;
   border: 1px solid #e9c45c44; border-radius: 999px; background: #0b0d14cc; color: #f1ead8; font: 13px Jost, system-ui, sans-serif;
   pointer-events: none; max-width: min(560px, 60vw); }
-.rk-plate--foe { top: 16px; } .rk-plate--me { bottom: 16px; }
+.rk-plate--foe { top: calc(16px + env(safe-area-inset-top, 0px)); } .rk-plate--me { bottom: 16px; }
 /* Nome e rank 2,5x (autor, 31/10/2026); o emblema acompanha. */
 .rk-plate .rk-emblem { height: 80px; }
 .rk-plate > span { display: grid; line-height: 1.15; min-width: 0; }

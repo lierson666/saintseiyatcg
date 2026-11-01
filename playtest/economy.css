@@ -73,7 +73,7 @@
 /* Fundo = céu do site: o lobby some por baixo e o canvas .kv-sky aparece pelo backdrop quase transparente. */
 .ec-open::backdrop { background: #05060c40; }
 body.ec-opening #lobby { visibility: hidden; }
-.ec-zoom { position: fixed; inset: 0; z-index: 5; display: grid; place-items: center; background: #05060ccc; cursor: zoom-out; }
+.ec-zoom { position: fixed; inset: 0; z-index: 5; padding-top: env(safe-area-inset-top, 0px); display: grid; place-items: center; background: #05060ccc; cursor: zoom-out; }
 .ec-zoom[hidden] { display: none; }
 .ec-zoom .lb-card { width: min(380px, 80vw); }
 .ec-open__pack { display: grid; place-items: center; min-height: 60vh; }
@@ -235,7 +235,7 @@ body.ec-opening #lobby { visibility: hidden; }
 .ec-set__art { display: flex; align-items: center; gap: 12px; }
 .ec-tile--set .ec-cos-avatar { width: 120px; height: 120px; } .ec-tile--set .ec-cos-sleeve { width: 120px; height: 168px; }
 /* Confirmação de compra */
-.ec-confirm { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: 16px; background: #02030acc; backdrop-filter: blur(6px); animation: ec-fade .18s ease-out; }
+.ec-confirm { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: calc(16px + env(safe-area-inset-top, 0px)) 16px calc(16px + env(safe-area-inset-bottom, 0px)); background: #02030acc; backdrop-filter: blur(6px); animation: ec-fade .18s ease-out; }
 .ec-confirm__box { display: grid; grid-template-columns: auto minmax(0, 340px); align-items: center; gap: 36px; max-width: 760px; padding: 36px;
   border-radius: 22px; border: 1px solid #e9c45c55; background: linear-gradient(180deg, #141a2e, #0a0c14); box-shadow: 0 30px 80px #000c; }
 .ec-confirm__art { display: grid; place-items: center; min-width: 220px; }
