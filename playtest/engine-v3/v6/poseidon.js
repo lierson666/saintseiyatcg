@@ -45,6 +45,25 @@ function scry(st, c, key, ability) {
   const deck = st.players[key].deck;
   if (deck.length && k.may(c, key, ability, {uid: deck[0], text: 'Put the top card of your deck on the bottom?'})) deck.push(deck.shift());
 }
+// Põe `n` cartas de `from` (mão ou cartas olhadas) no topo do deck, uma a uma: a primeira escolhida fica por cima,
+// como "in any order". Sem escolha (ou recusa), vai a primeira da lista.
+function putBack(st, c, key, from, n, ability, text) {
+  const deck = st.players[key].deck, chosen = [];
+  for (let i = 0; i < n && from.length; i++) {
+    const pick = (from.length > 1 && k.choose(c, key, ability, from, {text})) || from[0];
+    from.splice(from.indexOf(pick), 1);
+    chosen.push(pick);
+  }
+  deck.unshift(...chosen);
+}
+// Embaralha o deck com sorteio determinístico pelo estado (a decisão é refeita do snapshot e precisa dar o mesmo deck).
+function shuffleDeck(st, key) {
+  const deck = st.players[key].deck;
+  let seed = (st.events.length * 2654435761 + st.turn * 40503 + deck.length) >>> 0;
+  const rand = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
+  for (let i = deck.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [deck[i], deck[j]] = [deck[j], deck[i]]; }
+  k.emit(st, 'shuffle', {player: key});
+}
 // "Look at the top N … put one into your hand … the rest on the bottom".
 // shortcut: o resto vai ao fundo na ordem atual, sem perguntar a ordem; perguntar quando a UI tiver escolha de ordem.
 function lookTop(st, c, key, n, ability, {filter = () => true, optional = false} = {}) {
@@ -524,8 +543,9 @@ export default {
       if (r) mill(s, c, r.ctrl, 1);
     }},
   },
+  // Cantrips de Poseidon (autor, 31/10/2026): 135 Opt, 138 Brainstorm, 139 Ponder, 158 Accumulated Knowledge.
   'poseidon-v6-135': {
-    spell: {run: (s, c, key) => lookTop(s, c, key, generals(s, c, key) ? 4 : 3, 'OCEANIC FORESIGHT')},
+    spell: {run: (s, c, key) => { scry(s, c, key, 'BENEATH THE SURFACE'); k.draw(s, key, 1); }},
   },
   // 136 The Sea Never Forgives: só contra Spell que mira o seu God ou um Devotee seu (alvos guardados ao conjurar).
   'poseidon-v6-136': {
@@ -535,17 +555,17 @@ export default {
     spell: {run: (s, c, key) => { const t = enemy(s, c, key, 'ABYSSAL WEIGHT'); if (t) seal(s, c, [t], sealed(s, t) ? 2 : 1, 'ABYSSAL WEIGHT'); }},
   },
   'poseidon-v6-138': {
-    // Safe Passage: lido na resolução; a Spell inimiga que o mirava continua na cadeia abaixo (ver docs/v6-efeitos-pendencias.md).
     spell: {run: (s, c, key) => {
-      const t = k.choose(c, key, 'RETURN', k.devotees(s, c, key), {text: 'Return target friendly Devotee to its owner\'s hand.'});
-      const targeted = !!t && counterable(s, c, key).some(u => k.spellTargets(s, u).includes(t));
-      if (bounce(s, c, key, t) && targeted) k.draw(s, key, 1);
+      k.draw(s, key, 3);
+      putBack(s, c, key, s.players[key].hand, 2, 'THE OCEAN\'S EMBRACE', 'Choose a card from your hand to put on top of your deck (the first one goes on top).');
     }},
   },
   'poseidon-v6-139': {
     spell: {run: (s, c, key) => {
-      k.draw(s, key, 2); k.discard(s, c, key, 1, 'DEEP KNOWLEDGE');
-      if (k.enemies(s, c, key).some(u => sealed(s, u))) scry(s, c, key, 'DEEP KNOWLEDGE');
+      const deck = s.players[key].deck, look = deck.slice(0, 3);
+      if (look.length && k.may(c, key, 'WHISPERS FROM THE ABYSS', {text: 'Shuffle your deck? (No: put the cards back in the order you choose)'})) shuffleDeck(s, key);
+      else if (look.length) { deck.splice(0, look.length); putBack(s, c, key, look, look.length, 'WHISPERS FROM THE ABYSS', 'Choose the card to put on top of your deck (then the next one below it).'); }
+      k.draw(s, key, 1);
     }},
   },
   'poseidon-v6-140': {
@@ -683,10 +703,8 @@ export default {
   },
   'poseidon-v6-158': {
     spell: {run: (s, c, key) => {
-      k.draw(s, key, 2);
-      if (!s.domains?.[key]) return;
-      const t = k.choose(c, key, 'ANCIENT DOMINION', s.players[key].tartarus.filter(u => k.card(c, u)?.kind === 'Equipment'), {optional: true, text: 'Return target Equipment from your Tartarus to your hand?'});
-      if (t) k.toHand(s, c, t, 'tartarus');
+      const copies = s.players[key].tartarus.filter(u => c.objects[u]?.cardId === 'poseidon-v6-158').length; // a própria ainda está na pilha
+      k.draw(s, key, 1 + copies);
     }},
   },
   // 159 (31/10/2026): Denial anula Devotee inimigo na pilha; ou Reversal. O modo e o alvo são escolhidos ao conjurar.

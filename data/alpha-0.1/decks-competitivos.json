@@ -449,19 +449,19 @@
         },
         {
           "card_id": "poseidon-v6-150",
-          "quantity": 2
+          "quantity": 1
         },
         {
           "card_id": "poseidon-v6-152",
           "quantity": 2
         },
         {
-          "card_id": "poseidon-v6-137",
+          "card_id": "poseidon-v6-123",
           "quantity": 2
         },
         {
-          "card_id": "poseidon-v6-123",
-          "quantity": 2
+          "card_id": "poseidon-v6-138",
+          "quantity": 3
         }
       ]
     },
@@ -2057,14 +2057,10 @@
         },
         {
           "card_id": "poseidon-v6-132",
-          "quantity": 2
+          "quantity": 1
         },
         {
           "card_id": "poseidon-v6-152",
-          "quantity": 2
-        },
-        {
-          "card_id": "poseidon-v6-137",
           "quantity": 2
         },
         {
@@ -2126,6 +2122,10 @@
         {
           "card_id": "poseidon-v6-180",
           "quantity": 1
+        },
+        {
+          "card_id": "poseidon-v6-138",
+          "quantity": 3
         }
       ]
     },
@@ -2843,14 +2843,10 @@
         },
         {
           "card_id": "poseidon-v6-132",
-          "quantity": 2
+          "quantity": 1
         },
         {
           "card_id": "poseidon-v6-152",
-          "quantity": 2
-        },
-        {
-          "card_id": "poseidon-v6-137",
           "quantity": 2
         },
         {
@@ -2900,6 +2896,10 @@
         {
           "card_id": "athena-v6-035",
           "quantity": 2
+        },
+        {
+          "card_id": "poseidon-v6-138",
+          "quantity": 3
         }
       ]
     }

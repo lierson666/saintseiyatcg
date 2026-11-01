@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-31 — Cartas (Poseidon) — Cantrips baratas
+
+- **Antes:** Poseidon não tinha Spell de custo 1; a seleção mais barata era 135 (c2, olhar 3 e pegar 1). 135, 138, 139 e 158 tinham textos de Seal/Domain.
+- **Depois:** 135 Beneath the Surface c1 Moment (Opt: olhe o topo, pode pôr no fundo, compre 1); 138 The Ocean's Embrace c1 Moment (Brainstorm: compre 3, ponha 2 da mão no topo); 139 Whispers from the Abyss c1 **Technique** (Ponder: olhe 3, devolva em qualquer ordem ou embaralhe, compre 1); 158 The Awakening of Atlantis c2 Moment (compre 1 + 1 por cópia no seu Tartarus). Todas Cosmoble; texto EN e PT.
+- **Motivo:** autor, 31/10/2026: faltavam Opt, Brainstorm e cantrips baratas em Poseidon (meta Premodern). Mapeamento aprovado na mesma data.
+- **Engine e listas:** `v6/poseidon.js` (helpers `putBack`, a primeira escolhida fica por cima, e `shuffleDeck`, sorteio determinístico pelo estado); perguntas traduzidas em `shared/i18n-pt.js`. Brainstorm ×3 em Poseidon Control, Counter Control e Azorius (saem 137 ×2 e 132 ou 150 ×1).
+
 ## 2026-10-31 — §56 — Gatilho opcional impossível não dispara
 
 - **Antes:** o guia não dizia; a engine punha na pilha (com janela e log) gatilhos opcionais impossíveis de usar e só descobria na resolução.

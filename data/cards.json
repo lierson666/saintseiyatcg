@@ -6000,7 +6000,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 2,
+      "custo": 1,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -6012,17 +6012,17 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Look at the top 3 cards of your deck. Put one into your hand and the rest on the bottom of your deck in any order.",
-        "Oceanic Foresight — If you control a Marina General, look at the top 4 cards instead."
+        "Look at the top card of your deck. You may put it on the bottom of your deck.",
+        "Draw a card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md.",
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md. Cantrip de Poseidon (Opt, Brainstorm, Ponder, Accumulated Knowledge), aprovado pelo autor em 31/10/2026.",
       "nome_exibicao_pt": "SOB A SUPERFÍCIE",
       "subtitulo_pt": "A Verdade Jaz Sob as Ondas",
       "habilidades_pt": [
-        "Olhe as 3 cartas do topo do seu deck. Ponha uma na sua mão e as restantes no fundo do deck em qualquer ordem.",
-        "Previsão Oceânica — Se você controlar um General Marina, olhe as 4 cartas do topo em vez disso."
+        "Olhe a carta do topo do seu deck. Você pode colocá-la no fundo do seu deck.",
+        "Compre uma carta."
       ],
       "tagline_pt": "A Verdade Jaz Sob as Ondas"
     },
@@ -6121,7 +6121,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 2,
+      "custo": 1,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -6133,17 +6133,15 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Return target friendly Devotee to its owner's hand.",
-        "Safe Passage — If that Devotee was the target of an enemy Moment or Technique when you cast this Moment, draw a card."
+        "Draw three cards, then put two cards from your hand on top of your deck in any order."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026.",
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Cantrip de Poseidon (Opt, Brainstorm, Ponder, Accumulated Knowledge), aprovado pelo autor em 31/10/2026.",
       "nome_exibicao_pt": "O ABRAÇO DO OCEANO",
       "subtitulo_pt": "O Que o Mar Toma, o Mar Guarda",
       "habilidades_pt": [
-        "Devolva o Devoto aliado alvo à mão do dono.",
-        "Passagem Segura — Se esse Devoto era alvo de um Momento ou Técnica inimigo quando você conjurou este Momento, compre uma carta."
+        "Compre três cartas, depois coloque duas cartas da sua mão no topo do seu deck em qualquer ordem."
       ],
       "tagline_pt": "O Que o Mar Toma, o Mar Guarda"
     },
@@ -6157,12 +6155,12 @@
       "nome_interno_pt": "",
       "faccao": "Poseidon",
       "tipo": "Spell",
-      "subtipos": ["Moment"],
+      "subtipos": ["Technique"],
       "raridade": "Common",
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 3,
+      "custo": 1,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -6174,17 +6172,17 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Draw two cards, then discard a card.",
-        "Deep Knowledge — If an enemy Devotee has a Seal counter, you may look at the top card of your deck. You may put it on the bottom of your deck."
+        "Look at the top three cards of your deck. Put them back in any order, or shuffle your deck.",
+        "Draw a card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026.",
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Cantrip de Poseidon (Opt, Brainstorm, Ponder, Accumulated Knowledge), aprovado pelo autor em 31/10/2026.",
       "nome_exibicao_pt": "SUSSURROS DO ABISMO",
       "subtitulo_pt": "O Oceano Sabe o Que Você Comprará",
       "habilidades_pt": [
-        "Compre duas cartas e depois descarte uma carta.",
-        "Conhecimento Profundo — Se um Devoto inimigo tiver um marcador de Selo, você pode olhar a carta do topo do seu deck. Você pode pô-la no fundo do deck."
+        "Olhe as três cartas do topo do seu deck. Devolva-as em qualquer ordem ou embaralhe o seu deck.",
+        "Compre uma carta."
       ],
       "tagline_pt": "O Oceano Sabe o Que Você Comprará"
     },
@@ -6957,7 +6955,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 4,
+      "custo": 2,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -6969,17 +6967,15 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Draw two cards.",
-        "Ancient Dominion — If you control a Domain, you may return target friendly Equipment from your Tartarus to your hand."
+        "Draw a card, then draw a card for each card named The Awakening of Atlantis in your Tartarus."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Card advantage direta, com recuperação de Equipment condicionada ao controle de um Domain. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md.",
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Card advantage direta, com recuperação de Equipment condicionada ao controle de um Domain. Poseidon → Azul (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-poseidon-premodern.md. Cantrip de Poseidon (Opt, Brainstorm, Ponder, Accumulated Knowledge), aprovado pelo autor em 31/10/2026.",
       "nome_exibicao_pt": "O DESPERTAR DE ATLÂNTIDA",
       "subtitulo_pt": "O Reino Perdido Ergue-se Mais Uma Vez",
       "habilidades_pt": [
-        "Compre duas cartas.",
-        "Domínio Ancestral — Se você controlar um Domínio, você pode devolver o Equipamento aliado alvo do seu Tártaro à sua mão."
+        "Compre uma carta e, depois, compre uma carta para cada carta chamada O Despertar de Atlântida no seu Tártaro."
       ],
       "tagline_pt": "O Reino Perdido Ergue-se Mais Uma Vez"
     },

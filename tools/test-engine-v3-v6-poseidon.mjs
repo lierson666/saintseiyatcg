@@ -406,17 +406,52 @@ test('171 The Emperor\'s Decree: Silence é modo escolhido ao conjurar (junto co
   assert.equal(B.hand.length, hand + 1); // +2 compradas, -1 descartada
 });
 
-test('138 The Ocean\'s Embrace: Safe Passage compra se o Devotee era alvo de Spell inimiga ao conjurar', () => {
-  for (const hit of [true, false]) {
-    const {s, B, put, minos, respond, answers} = duel();
-    const x = put('B', P('118'), 'battlefield'), y = put('B', P('115'), 'battlefield');
-    minos(x); // 115 reagiria a ser alvo; aqui o alvo é x e o 115 não é mirado
-    answers.RETURN = () => (hit ? x : y);
-    const hand = B.hand.length;
-    respond('138'); done(s);
-    // x devolvido: +1 carta (retorno) +1 (Safe Passage); y devolvido: só +1 (retorno)
-    assert.equal(B.hand.length - hand, hit ? 2 : 1);
+test('cantrips de Poseidon (31/10/2026): 135 Opt, 138 Brainstorm, 139 Ponder, 158 Accumulated Knowledge custam 1–2 e são Cosmoble', () => {
+  for (const [n, cost, sub] of [['135', 1, 'Moment'], ['138', 1, 'Moment'], ['139', 1, 'Technique'], ['158', 2, 'Moment']]) {
+    const c = cards.get(P(n));
+    assert.equal(c.cost.amount, cost, n); assert.equal(c.cosmoble, true, n); assert.match(c.type, new RegExp(sub), n);
   }
+});
+
+test('135 Opt: olha o topo, pode pôr no fundo, compra 1', () => {
+  const {s, ctx, A, put} = poseidon({'BENEATH THE SURFACE': true});
+  const top = A.deck[0], second = A.deck[1], hand = A.hand.length;
+  playSpell(s, ctx, 'A', put('A', P('135'))); done(s);
+  assert.equal(A.deck.at(-1), top, 'o topo foi ao fundo');
+  assert.ok(A.hand.includes(second));
+  assert.equal(A.hand.length, hand + 1 - 1 + 1 - 1 + 1); // +Spell -Spell +1 compra
+});
+
+test('138 Brainstorm: compra 3 e devolve 2 da mão ao topo; a primeira escolhida fica por cima', () => {
+  const {s, ctx, A, put} = poseidon();
+  const order = [];
+  const spell = put('A', P('138'));
+  const ctx2 = {...ctx, decide: (pl, q) => (q.ability === 'THE OCEAN\'S EMBRACE' ? (order.push(q.options.at(-1)), q.options.at(-1)) : ctx.decide(pl, q))};
+  const hand = A.hand.length - 1;
+  playSpell(s, ctx2, 'A', spell); done(s);
+  assert.equal(A.hand.length, hand + 3 - 2);
+  assert.equal(order.length, 2);
+  assert.deepEqual(A.deck.slice(0, 2), [order[0], order[1]]);
+});
+
+test('139 Ponder: sem embaralhar, devolve as 3 na ordem escolhida e compra a de cima; com embaralhar, compra 1', () => {
+  const {s, ctx, A, put} = poseidon({'WHISPERS FROM THE ABYSS': q => (q.options ? q.options.at(-1) : false)});
+  const look = A.deck.slice(0, 3), hand = A.hand.length;
+  playSpell(s, ctx, 'A', put('A', P('139'))); done(s);
+  assert.ok(A.hand.includes(look[2]), 'a primeira escolhida ficou por cima e foi comprada');
+  assert.deepEqual(A.deck.slice(0, 2), [look[1], look[0]]);
+  assert.equal(A.hand.length, hand + 1);
+  const t = poseidon({'WHISPERS FROM THE ABYSS': true}), size = t.A.deck.length;
+  playSpell(t.s, t.ctx, 'A', t.put('A', P('139'))); done(t.s);
+  assert.equal(t.A.deck.length, size - 1);
+});
+
+test('158 Accumulated Knowledge: compra 1 + 1 por cópia no Tartarus', () => {
+  const {s, ctx, A, put} = poseidon();
+  put('A', P('158'), 'tartarus'); put('A', P('158'), 'tartarus');
+  const hand = A.hand.length;
+  playSpell(s, ctx, 'A', put('A', P('158'))); done(s);
+  assert.equal(A.hand.length, hand + 3);
 });
 
 test('115 Tidal Escape: ao ser alvo de Spell inimiga volta à mão; a Spell perde o alvo e a parte dele não acontece', () => {

@@ -196,7 +196,7 @@ self.ssI18nPT = {
     'Choose up to three target friendly Saints.': 'Escolha até três Cavaleiros aliados alvo.', 'Choose target friendly Equipment.': 'Escolha o Equipamento aliado alvo.',
     'Choose target Devotee.': 'Escolha o Devoto alvo.', 'Choose target Devotee you control.': 'Escolha o Devoto alvo que você controla.',
     'Choose target Moment or Technique.': 'Escolha o Momento ou Técnica alvo.', 'Choose target enemy Moment or Technique.': 'Escolha o Momento ou Técnica inimigo alvo.',
-    'Send target enemy Devotee to the Void.': 'Mande o Devoto inimigo alvo ao Vazio.', 'Put the top card of your deck on the bottom?': 'Pôr a carta do topo do deck no fundo?',
+    'Choose a card from your hand to put on top of your deck (the first one goes on top).': 'Escolha uma carta da sua mão para colocar no topo do seu deck (a primeira fica por cima).', 'Choose the card to put on top of your deck (then the next one below it).': 'Escolha a carta que vai para o topo do seu deck (depois, a próxima logo abaixo).', 'Shuffle your deck? (No: put the cards back in the order you choose)': 'Embaralhar o seu deck? (Não: devolva as cartas na ordem que escolher)', 'Send target enemy Devotee to the Void.': 'Mande o Devoto inimigo alvo ao Vazio.', 'Put the top card of your deck on the bottom?': 'Pôr a carta do topo do deck no fundo?',
     'Choose the card to keep on top.': 'Escolha a carta que fica no topo.', 'Draw a card, then discard a card?': 'Comprar uma carta e depois descartar uma carta?',
     'Sacrifice another Devotee.': 'Sacrifique outro Devoto.', 'Sacrifice another Devotee you control.': 'Sacrifique outro Devoto que você controla.',
     'Choose a card in your Tartarus to return to your hand.': 'Escolha uma carta do seu Tártaro para voltar à mão.',
