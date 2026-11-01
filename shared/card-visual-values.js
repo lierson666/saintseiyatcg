@@ -1,5 +1,5 @@
 import {isEquipment} from './card-model.js';
-import {lang} from './card-i18n.js?v=20261031-pt3';
+import {lang} from './card-i18n.js?v=20261031-pt4';
 const pt=()=>lang()==='pt'; // texto gerado em PT quando o jogo está em PT-BR (docs/glossario-pt-br.md)
 
 // Somente leitura e formatação dos bônus impressos. Nunca soma nem aplica efeitos.

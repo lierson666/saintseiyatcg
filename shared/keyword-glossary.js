@@ -1,6 +1,6 @@
 // Lembretes de keyword estilo MTG Arena (autor, 31/10/2026): textos aprovados em docs/keyword-reminders-2026-10-31.md,
 // tirados do guia (capítulo IX, §40, §§21–23, §48). Usado pelo inspetor do duelo e pela ficha do lobby.
-import {KEYWORD_PT, lang} from './card-i18n.js?v=20261031-pt3';
+import {KEYWORD_PT, lang} from './card-i18n.js?v=20261031-pt4';
 
 export const KEYWORD_RULES = {
   'Guardian': 'While an enemy Guardian can be targeted, Strikes must target it, except against a Rival or with Nimble.',

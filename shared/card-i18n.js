@@ -1,7 +1,10 @@
 // Carta em PT-BR (autor, 31/10/2026; docs/glossario-pt-br.md): o texto em português fica nos campos *_pt de
 // data/cards.json, ao lado dos *_en. Só a exibição troca de idioma: displayCard() devolve uma cópia com os *_en
 // trocados pelos *_pt (campo vazio cai no inglês). Engine, preview-cards e keyword-glossary seguem lendo o inglês.
-export const lang = () => (globalThis.ssI18n?.lang === 'pt' ? 'pt' : 'en');
+// O Card Forge escolhe o idioma da carta por exportação (forceLang), sem mudar o idioma da página.
+let forced = null;
+export const forceLang = l => { forced = l === 'pt' || l === 'en' ? l : null; };
+export const lang = () => forced ?? (globalThis.ssI18n?.lang === 'pt' ? 'pt' : 'en');
 const FIELDS = ['nome_exibicao', 'subtitulo', 'tagline', 'flavour', 'habilidades', 'habilidade_awaken', 'ultimate'];
 // auto_equip_pt fica à parte: auto_equip_en é dado da engine (Resonance), lido em PT só por card-visual-values.js.
 const filled = v => (Array.isArray(v) ? v.length > 0 : v != null && String(v).trim() !== '');

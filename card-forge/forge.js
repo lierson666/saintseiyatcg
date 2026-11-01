@@ -1,15 +1,16 @@
 import {createHistory} from '../shared/editor-history.js';
 import {compilePlaytest} from '../shared/import-playtest.js';
-import {renderLiveCard,illustration,statLine,EDITIONS,editionOf} from '../shared/live-card.js?v=20261031-pt3';
-import {textBlocks, blocksMarkup, presentationRules, ruleBlocksWithoutKeywords, KEYWORD_WORDS, STAT_RE, statTrend} from '../shared/card-text.js?v=20261031-pt3';
+import {renderLiveCard,illustration,statLine,EDITIONS,editionOf} from '../shared/live-card.js?v=20261031-pt4';
+import {textBlocks, blocksMarkup, presentationRules, ruleBlocksWithoutKeywords, KEYWORD_WORDS, STAT_RE, statTrend} from '../shared/card-text.js?v=20261031-pt4';
 import {isArmor,isEquipment,validateCard} from '../shared/card-model.js';
 // Card Forge — editor de cartas em vanilla JS. Renderiza no canvas nativo 1488x2091 usando
 // as peças de CARD-TEMPLATE/ (extraídas dos PSDs) e o spec CARD-TEMPLATE/templates.json.
 
 import {publishedScene,visualProject} from '../shared/layout-studio/runtime.js';
+import {displayCard,forceLang,keywordName,typeWord} from '../shared/card-i18n.js?v=20261031-pt4';
 import {sceneCanvas} from '../shared/layout-studio/renderer.js';
 import {simulateCard} from './studio-preview.js';
-import {printedEquipmentBonuses,signedBonus,armorBonusText} from '../shared/card-visual-values.js?v=20261031-pt3';
+import {printedEquipmentBonuses,signedBonus,armorBonusText} from '../shared/card-visual-values.js?v=20261031-pt4';
 
 const T = await (await fetch('../CARD-TEMPLATE/templates.json')).json();
 const P = (await (await fetch('../CARD-TEMPLATE/pieces.json')).json()).pieces;
@@ -312,7 +313,7 @@ function godParas(c, awaken) {
   return textBlocks(raw).flatMap((b) => {
     const [tag, title] = b.heading?.includes(' § ') ? b.heading.split(' § ') : ['', b.heading];
     const body = sym([title ? `**${title.toUpperCase()}${b.body ? ':' : ''}**` : '', b.body].filter(Boolean).join('\n'));
-    if (/^Awaken\b/i.test(tag)) return [`⟦AWAKEN ${has(awaken) ? awaken : tag.replace(/\D+/g, '')}⟧`, body];
+    if (/^(Awaken|Despertar)\b/i.test(tag)) return [`⟦AWAKEN ${has(awaken) ? awaken : tag.replace(/\D+/g, '')}⟧`, body];
     return [tag ? `⟦${tag.toUpperCase()}⟧\n${body}` : body];
   });
 }
@@ -337,13 +338,15 @@ async function drawAwaken(x, y, w, h, n) {
   ctx.textAlign = 'left';
 }
 
-async function drawRules(el, s) {
+async function drawRules(el, s, pt = null) {
   const [rx, ry, rw, rh] = el.rect;
   const paras = [];
-  if (has(s.keywords)) paras.push(`**${list(s.keywords).join(', ').toUpperCase()}.**`);
-  const text=s.estagios.length||layoutKey(s)==='relic_cloth'?presentationRules(buildCard()).map(toMarkup):splitParas(s.rules); // Armor: 1ª linha Equip · Resonance
-  if (layoutKey(s) === 'god') paras.push(...godParas(buildCard(), s.awaken));
-  else paras.push(...splitParas(blocksMarkup(ruleBlocksWithoutKeywords(text,list(s.keywords)))));
+  const kws = list(s.keywords).map(k => (pt ? keywordName(k) : k));
+  if (kws.length) paras.push(`**${kws.join(', ').toUpperCase()}.**`);
+  // Em PT o texto vem pronto dos campos *_pt (displayCard), já com Equip/Ressonância.
+  const text=pt?(pt.habilidades_en||[]).map(toMarkup):s.estagios.length||layoutKey(s)==='relic_cloth'?presentationRules(buildCard()).map(toMarkup):splitParas(s.rules); // Armor: 1ª linha Equip · Resonance
+  if (layoutKey(s) === 'god') paras.push(...godParas(pt || buildCard(), s.awaken));
+  else paras.push(...splitParas(blocksMarkup(ruleBlocksWithoutKeywords(text,kws))));
   if (!paras.length) return;
   let size = el.size, L;
   // encolhe até caber na caixa
@@ -404,7 +407,7 @@ async function render() {
   if (db) {
     const illustration = S.art?.src ? await loadImg(S.art.src) : null;
     const art = illustration ? {...S.art,src:new URL(S.art.src,location.href).href,h:S.art.w*illustration.naturalHeight/illustration.naturalWidth} : null;
-    const composed = publishedScene(buildCard(), {project:S,art,assetRects:P,mode:'print'});
+    const composed = publishedScene(displayCard(buildCard()), {project:S,art,assetRects:P,mode:'print'});
     if (composed) {
       const rendered = await sceneCanvas(composed,{allowOverflow:true});
       if (seq !== renderSeq) return;
@@ -415,6 +418,8 @@ async function render() {
   }
   // pré-carrega tudo antes de desenhar, para o frame sair inteiro
   const L = structuredClone(T.layouts[layoutKey(S)]);
+  // Desenho antigo em PT: só os textos trocam (nome, subtítulo, flavour, tipo, regras); layout e símbolos seguem S.
+  const pt = displayCard(buildCard()), V = pt.__pt ? {...S, title: '', nome_exibicao_en: pt.nome_exibicao_en, subtitle: pt.subtitulo_en || pt.tagline_en || S.subtitle, flavour: pt.flavour_en || S.flavour} : S;
   await Promise.all([S.art?.src && loadImg(S.art.src), loadImg(pieceSrc(symbolKey(S.faccao))),
     ...Object.keys(P).map((k) => loadImg(pieceSrc(k)))]);
   if (seq !== renderSeq) return;
@@ -475,13 +480,13 @@ async function render() {
         break;
       }
       case 'text': {
-        let v = el.field === 'typeLine' ? typeLine(S, L.typeLine) : el.field === 'name' ? (S.title || S.nome_exibicao_en) : S[el.field];
+        let v = el.field === 'typeLine' ? typeLine(S, L.typeLine).split(' — ').map(typeWord).join(' — ') : el.field === 'name' ? (V.title || V.nome_exibicao_en) : V[el.field];
         if (!has(v)) break;
         v = String(v).trim();
         drawText(el.upper ? v.toUpperCase() : v, el.style, el.x, el.y, el.size, el.maxW);
         break;
       }
-      case 'rules': await drawRules(el, S); break;
+      case 'rules': await drawRules(el, S, pt.__pt ? pt : null); break;
       case 'rarity': {
         // Rodapé de edição (autor, 31/10/2026; igual a shared/live-card.js): raridade • DOC • EN • artista • © ano SSTCG.
         const key = `athena/rarity_${S.raridade.toLowerCase()}`, p = P[key], size = 30, gh = size * 1.35, gw = p ? p.w * gh / p.h : 0;
@@ -732,14 +737,18 @@ document.body.className = `view-${$('#viewSize').value}`;
 // ---------- export ----------
 const fileBase = () => (S.id || 'card');
 async function download(c, name) {
-  const composed=db?publishedScene(buildCard(),{project:S,mode:'print'}):null;
+  const composed=db?publishedScene(displayCard(buildCard()),{project:S,mode:'print'}):null;
   if(composed?.warnings.some(w=>w.kind==='overflow'))return say('Texto excede o layout publicado. Ajuste as caixas no Layout Studio antes de exportar.',true);
   const blob = await new Promise((ok) => c.toBlob(ok, 'image/png'));
   const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: name });
   a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 2000);
 }
-$('#exportHi').addEventListener('click', async () => { await render(); download(canvas, `${fileBase()}.png`); say('PNG 1488×2091 exportado'); });
+// Idioma da carta na prévia e na exportação (autor, 31/10/2026): EN ou PT (campos *_pt); o arquivo PT ganha -pt.
+forceLang('en');
+const langSuffix = () => ($('#cardLang').value === 'pt' ? '-pt' : '');
+$('#cardLang').addEventListener('change', () => { forceLang($('#cardLang').value); render(); });
+$('#exportHi').addEventListener('click', async () => { await render(); download(canvas, `${fileBase()}${langSuffix()}.png`); say('PNG 1488×2091 exportado'); });
 $('#exportWeb').addEventListener('click', async () => {
   await render();
   const w = 1100, h = Math.round(w * H / W);
@@ -747,7 +756,7 @@ $('#exportWeb').addEventListener('click', async () => {
   const g = c.getContext('2d');
   g.imageSmoothingQuality = 'high';
   g.drawImage(canvas, 0, 0, w, h);
-  download(c, `${fileBase()}-web.png`);
+  download(c, `${fileBase()}${langSuffix()}-web.png`);
   say(`PNG web ${w}×${h} exportado`);
 });
 
@@ -1063,11 +1072,11 @@ $('#batchExport').addEventListener('click', async () => {
       useItem(it);
       say(`exportando ${i + 1}/${batch.length}: ${S.id}`);
       await render();
-      await post(`/api/export/${S.id}`, await canvasBlob(canvas), 'image/png');
+      await post(`/api/export/${S.id}${langSuffix()}`, await canvasBlob(canvas), 'image/png');
       const w = 1100, h = Math.round(w * H / W);
       const c = Object.assign(document.createElement('canvas'), { width: w, height: h });
       const g = c.getContext('2d'); g.imageSmoothingQuality = 'high'; g.drawImage(canvas, 0, 0, w, h);
-      await post(`/api/export/${S.id}-web`, await canvasBlob(c), 'image/png');
+      await post(`/api/export/${S.id}${langSuffix()}-web`, await canvasBlob(c), 'image/png');
       it.done = 'PNG';
     }
     say(`${batch.length} cartas exportadas em card-forge/out/ (alta + web)`);

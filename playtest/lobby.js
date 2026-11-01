@@ -4,7 +4,8 @@ import {loadCanon} from '../shared/canon-cards.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {canonIndex, validateDeck, colorErrors, splashCount, DECK_SIZE, COPY_LIMIT, SPLASH_LIMIT} from '../shared/deck-v3.js';
 import {spellCategory} from './engine-v3/core.js';
-import {renderLiveCard, renderCardText} from '../shared/live-card.js?v=20261031-pt3';
+import {renderLiveCard, renderCardText} from '../shared/live-card.js?v=20261031-pt4';
+import {displayCard} from '../shared/card-i18n.js?v=20261031-pt4';
 import {unlock, playMusic, setVolume, volume} from './audio.js?v=20261030-telas';
 import {loadMyDecks, saveMyDecks, findDeck, syncDecks, onDeckStatus, deckCovers, setDeckCover} from './deck-store.js?v=20261031-2';
 import {mountKV} from '../shared/kv-sky.js?v=20261031-native';
@@ -420,9 +421,11 @@ function builder() {
 // Linhas de cabeçalho viram fichas (custo, tipo, ATK/HP...); o resto são habilidades, com o nome em destaque.
 const HEADER = /^(\d{3} — |Rarity:|Type:|Casting Cost:|ATK:|HP:|Cosmoble:|Auto-Equip|Equip \{|SOUL \d|God — )/;
 function cardInfo(id) {
-  const c = cards.get(id), f = id.startsWith('god-') ? godForge(id) : forge.get(id);
+  const c = cards.get(id), f = displayCard(id.startsWith('god-') ? godForge(id) : forge.get(id));
   const lines = c.text.split('\n').map(l => l.trim()).filter(Boolean);
-  const subtitle = lines[1] && !HEADER.test(lines[1]) ? lines[1] : '';
+  // Em PT (campos *_pt), nome e subtítulo vêm da carta traduzida; o texto do D268 segue em inglês.
+  const subtitle = (f?.__pt && f.subtitulo_en) || (lines[1] && !HEADER.test(lines[1]) ? lines[1] : '');
+  const name = (f?.__pt && f.nome_exibicao_en) || c.name;
   // Armor (30/10/2026): o bônus vai para a ficha "Bonus", não para o texto.
   const rules = lines.slice(subtitle ? 2 : 1).filter(l => !HEADER.test(l) && !(c.armor && /^Equipped Devotee gets /.test(l))).map(l => {
     const m = l.match(/^([A-Z][^—:.]{1,38}) — (.*)$/);
@@ -431,10 +434,10 @@ function cardInfo(id) {
   const chip = (label, value, cls = '') => (value == null || value === '' ? '' : `<span class="lb-chip ${cls}"><small>${label}</small>${esc(value)}</span>`);
   const equip = c.text.match(/Equip \{(\d+)\} — (.+)/), auto = c.autoEquip.join(' / ');
   const n = ui.screen === 'builder' && !['God', 'Domain'].includes(c.kind) ? count(ui.builder, id) : null;
-  return `<section class="lb-info" data-act="stay" aria-label="${esc(c.name)} details">
+  return `<section class="lb-info" data-act="stay" aria-label="${esc(name)} details">
     <button class="lb-x lb-info__close" data-act="close-big" aria-label="Close">×</button>
     <p class="lb-info__type">${esc(typeText(c))}</p>
-    <h2>${esc(c.name)}</h2>${subtitle ? `<p class="lb-info__sub">${esc(subtitle)}</p>` : ''}
+    <h2>${esc(name)}</h2>${subtitle ? `<p class="lb-info__sub">${esc(subtitle)}</p>` : ''}
     <div class="lb-chips">${chip('Cost', c.cost ? `${c.cost.amount} ${c.cost.unit === 'base' ? 'Base' : 'Latent'}` : null, 'is-cost')}
       ${c.armor ? chip('Bonus', [c.equipped?.atk ? `+${c.equipped.atk} ATK` : '', c.equipped?.hp ? `+${c.equipped.hp} HP` : ''].filter(Boolean).join(' / ')) : `${chip('ATK', c.atk, 'is-atk')}${chip('HP', c.hp, 'is-hp')}`}${chip('Soul', c.soul)}${chip('Awaken', c.awaken)}
       ${chip('Rarity', c.rarity)}${chip('Cosmoble', c.cosmoble == null ? null : c.cosmoble ? 'Yes' : 'No')}

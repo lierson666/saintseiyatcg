@@ -1,6 +1,6 @@
 import {armorCard} from './rules-policy.js';
-import {equipmentCostText} from './card-visual-values.js?v=20261031-pt3';
-import {KEYWORD_PT} from './card-i18n.js?v=20261031-pt3';
+import {equipmentCostText} from './card-visual-values.js?v=20261031-pt4';
+import {KEYWORD_PT} from './card-i18n.js?v=20261031-pt4';
 // A sintaxe visual é compartilhada entre impressão e jogo; nunca altera as regras salvas.
 export const escapeText=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 // Keywords sempre em MAIÚSCULA e negrito no texto (autor, 31/10/2026); o Card Forge usa a mesma lista (forge.js).
