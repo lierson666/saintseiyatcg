@@ -581,6 +581,19 @@ body { font: 300 15px/1.45 var(--kv-sans); }
 .lb-top { overflow-x: auto; scrollbar-width: none; }
 .lb-top::-webkit-scrollbar { display: none; }
 .lb-top > * { flex: none; }
+/* Palco de 1280 a 1700: tudo cabe na barra, sem precisar rolar. A versão já aparece no selo do rodapé. */
+@media (min-width: 901px) and (max-width: 1700px) {
+  .lb-top { gap: 12px; padding-inline: 20px; }
+  .lb-top__tag { display: none; }
+  .lb-top .lb-socialbtn, .lb-top__tag + .lb-socialbtn { margin-left: auto; }
+  .lb-tabs { gap: 0; }
+  .lb-tab { padding: 0 10px; letter-spacing: .2em; }
+  .lb-tab.is-active::after { left: 10px; right: 10px; }
+  .lb-top .lb-socialbtn { padding: 0 10px; }
+  .lb-user { gap: 6px; }
+  .lb-user .kv-ghost { padding: 0 10px; letter-spacing: .1em; }
+  .lb-user .kv-ghost[data-act="my-profile"] { max-width: 120px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+}
 
 /* Telas fora do telefone não têm engrenagem nem o bloco Conta das Opções. */
 .lb-gear, .lb-phone-only, .lb-step { display: none; }
