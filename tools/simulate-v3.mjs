@@ -1,5 +1,5 @@
 // Round-robin dos decks no engine-v3 com a IA do playtest nos dois lados, sem navegador.
-// node tools/simulate-v3.mjs [--games 100] [--out arquivo.json]
+// node tools/simulate-v3.mjs [--games 100] [--out arquivo.json] [--file decks-ultra.json,decks-competitivos.json] [--level hard|normal]
 // Espelha o aiTick de playtest/divine/app.js. A legalidade (playableReason etc.) vive dentro do app.js, que depende de DOM.
 // shortcut: cópia da legalidade do app.js; extrair para um módulo se ela divergir.
 import {readFileSync, writeFileSync} from 'node:fs';
@@ -25,7 +25,8 @@ import {createAI} from '../playtest/divine/ai.js';
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const MAX_ROUNDS = 80, MAX_STEPS = 20000;
 
-export function loadDecks() {
+export function loadDecks(files) {
+  if (files) return files.split(',').flatMap(f => read(`../data/alpha-0.1/${f}`).decks.map(d => ({...d, grupo: f.replace(/^decks-|\.json$/g, '')})));
   const starters = [...read('../data/alpha-0.1/decks-proposta-d171.json').decks, ...read('../data/alpha-0.1/decks-preview.json').decks];
   const competitive = read('../data/alpha-0.1/decks-competitivos.json').decks;
   return [...starters.map(d => ({...d, grupo: 'starter'})), ...competitive.map(d => ({...d, grupo: 'competitivo'}))];
@@ -172,10 +173,10 @@ export function playMatch({cards, index}, deckA, deckB, seed, first, trace = fal
 }
 
 if (!isMainThread && workerData?.jobs) {
-  const {jobs, decks} = workerData, cat = catalog();
+  const {jobs, decks, level} = workerData, cat = catalog();
   const results = jobs.map(j => {
     try {
-      const r = playMatch(cat, decks[j.a], decks[j.b], j.seed, j.first);
+      const r = playMatch(cat, decks[j.a], decks[j.b], j.seed, j.first, false, {A: level, B: level});
       return {...j, ...r};
     } catch (e) {
       return {...j, winner: null, reason: 'erro', round: 0, turn: 0, errors: {[String(e.message).slice(0, 120)]: 1}};
@@ -184,7 +185,7 @@ if (!isMainThread && workerData?.jobs) {
   parentPort.postMessage(results);
 } else if (isMainThread && process.argv[1] === fileURLToPath(import.meta.url)) {
   const arg = (n, d) => { const i = process.argv.indexOf(`--${n}`); return i < 0 ? d : process.argv[i + 1]; };
-  const games = Number(arg('games', 100)), out = arg('out', null), decks = loadDecks();
+  const games = Number(arg('games', 100)), out = arg('out', null), level = arg('level', 'hard'), decks = loadDecks(arg('file', null));
   const jobs = [];
   decks.forEach((_, a) => decks.forEach((_, b) => {
     if (a >= b) return;
@@ -193,7 +194,7 @@ if (!isMainThread && workerData?.jobs) {
   const N = 8, shards = Array.from({length: N}, (_, i) => jobs.filter((_, j) => j % N === i));
   const t0 = Date.now();
   const parts = await Promise.all(shards.map(sh => new Promise((ok, no) => {
-    const w = new Worker(new URL(import.meta.url), {workerData: {jobs: sh, decks}});
+    const w = new Worker(new URL(import.meta.url), {workerData: {jobs: sh, decks, level}});
     w.once('message', ok); w.once('error', no);
   })));
   const results = parts.flat();

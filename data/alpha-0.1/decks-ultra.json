@@ -1,0 +1,983 @@
+{
+ "nota": "Decks ULTRA competitivos (01/11/2026): 10 arquétipos, God e Domain fora das 50; até 3 cópias; Domain fora da cor com até 15 cartas. Medição em docs/decks-ultra.md. Não são decks aprovados pelo autor.",
+ "decks": [
+  {
+   "id": "ultra-aggro-ares-sligh",
+   "nome": "Crimson Sligh",
+   "tema": "Aggro",
+   "referencia": "Sligh",
+   "god": "god-ares",
+   "domain_id": "ares-v6-334",
+   "plano": "Curva 1-2-3 com Impulse; burn abre caminho e Bloody Rain fecha.",
+   "main_deck": [
+    {
+     "card_id": "ares-v6-308",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-310",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-311",
+     "quantity": 2
+    },
+    {
+     "card_id": "ares-v6-293",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-295",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-291",
+     "quantity": 2
+    },
+    {
+     "card_id": "ares-v6-292",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-343",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-299",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-285",
+     "quantity": 2
+    },
+    {
+     "card_id": "ares-v6-279",
+     "quantity": 2
+    },
+    {
+     "card_id": "ares-v6-305",
+     "quantity": 2
+    },
+    {
+     "card_id": "ares-v6-302",
+     "quantity": 2
+    },
+    {
+     "card_id": "ares-v6-271",
+     "quantity": 1
+    },
+    {
+     "card_id": "ares-v6-322",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-514",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-516",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-352",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-327",
+     "quantity": 2
+    },
+    {
+     "card_id": "ares-v6-317",
+     "quantity": 2
+    }
+   ]
+  },
+  {
+   "id": "ultra-tempo-poseidon-marina",
+   "nome": "Marina Tide",
+   "tema": "Tempo",
+   "referencia": "Merfolk",
+   "god": "god-poseidon",
+   "domain_id": "poseidon-v6-143",
+   "plano": "Marinas baratas e lordes (Herald, Standard Bearer); bounce no turno do ataque tira o bloqueador e ganha o turno.",
+   "main_deck": [
+    {
+     "card_id": "poseidon-v6-107",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-115",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-113",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-106",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-108",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-111",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-103",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-118",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-112",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-121",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-093",
+     "quantity": 1
+    },
+    {
+     "card_id": "poseidon-v6-091",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-095",
+     "quantity": 1
+    },
+    {
+     "card_id": "poseidon-v6-508",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-509",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-132",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-135",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-133",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-152",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-122",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-123",
+     "quantity": 1
+    },
+    {
+     "card_id": "poseidon-v6-138",
+     "quantity": 1
+    }
+   ]
+  },
+  {
+   "id": "ultra-midrange-hades-judges",
+   "nome": "Judgment of Elysion",
+   "tema": "Midrange",
+   "referencia": "Mono-Black",
+   "god": "god-hades",
+   "domain_id": "hades-v6-522",
+   "plano": "Discard cedo, remoção dura e Specters com valor na entrada; Elysion encolhe o bloqueador todo turno.",
+   "main_deck": [
+    {
+     "card_id": "hades-v6-217",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-221",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-215",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-216",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-219",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-201",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-202",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-213",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-251",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-252",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-181",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-253",
+     "quantity": 1
+    },
+    {
+     "card_id": "hades-v6-254",
+     "quantity": 1
+    },
+    {
+     "card_id": "hades-v6-511",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-239",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-257",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-194",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-237",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-512",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-238",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-262",
+     "quantity": 1
+    },
+    {
+     "card_id": "hades-v6-513",
+     "quantity": 2
+    }
+   ]
+  },
+  {
+   "id": "ultra-control-poseidon-drawgo",
+   "nome": "Silent Sanctuary",
+   "tema": "Control",
+   "referencia": "Mono-U Draw-Go",
+   "god": "god-poseidon",
+   "domain_id": "poseidon-v6-142",
+   "plano": "Guarda Latent para counters, compra no turno dele e fecha com Kanon e Great Flood.",
+   "main_deck": [
+    {
+     "card_id": "poseidon-v6-113",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-115",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-105",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-106",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-110",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-117",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-119",
+     "quantity": 1
+    },
+    {
+     "card_id": "poseidon-v6-091",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-095",
+     "quantity": 1
+    },
+    {
+     "card_id": "poseidon-v6-509",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-133",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-136",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-154",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-167",
+     "quantity": 1
+    },
+    {
+     "card_id": "poseidon-v6-135",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-138",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-139",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-158",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-132",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-141",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-180",
+     "quantity": 1
+    },
+    {
+     "card_id": "poseidon-v6-170",
+     "quantity": 1
+    },
+    {
+     "card_id": "poseidon-v6-159",
+     "quantity": 2
+    }
+   ]
+  },
+  {
+   "id": "ultra-combo-athena-exclamation",
+   "nome": "Twelve Temples Exclamation",
+   "tema": "Combo",
+   "referencia": "Trix",
+   "god": "god-athena",
+   "domain_id": "athena-v6-520",
+   "plano": "Protege a mesa até ter 3 Gold Saints Prepared; Athena Exclamation tira ATK + 3 por Gold e deixa Divine Judgment.",
+   "main_deck": [
+    {
+     "card_id": "athena-v6-011",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-013",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-015",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-017",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-003",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-007",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-040",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-034",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-043",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-021",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-023",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-024",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-056",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-505",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-507",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-506",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-082",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-061",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-044",
+     "quantity": 2
+    }
+   ]
+  },
+  {
+   "id": "ultra-reanimator-hades-gates",
+   "nome": "Gates of the Dead",
+   "tema": "Reanimator",
+   "referencia": "Reanimator",
+   "god": "god-hades",
+   "domain_id": "hades-v6-245",
+   "plano": "Markino, Wandering Soul e Styx enchem o Tartarus; Return from Death e Resurrection trazem Thanatos, Hypnos e os Judges cedo.",
+   "main_deck": [
+    {
+     "card_id": "hades-v6-206",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-220",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-221",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-189",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-217",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-219",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-215",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-251",
+     "quantity": 1
+    },
+    {
+     "card_id": "hades-v6-193",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-191",
+     "quantity": 1
+    },
+    {
+     "card_id": "hades-v6-181",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-185",
+     "quantity": 1
+    },
+    {
+     "card_id": "hades-v6-197",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-255",
+     "quantity": 1
+    },
+    {
+     "card_id": "hades-v6-240",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-260",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-232",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-270",
+     "quantity": 1
+    },
+    {
+     "card_id": "hades-v6-234",
+     "quantity": 1
+    },
+    {
+     "card_id": "hades-v6-512",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-513",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-511",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-237",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-223",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-227",
+     "quantity": 1
+    }
+   ]
+  },
+  {
+   "id": "ultra-mill-poseidon-trench",
+   "nome": "The Abyssal Clock",
+   "tema": "Mill",
+   "referencia": "Turbo Mill",
+   "god": "god-poseidon",
+   "domain_id": "poseidon-v6-149",
+   "plano": "Cada Seal mila 2 pela Trench; a Ressonância mila 3 por turno; Deluge e Fall of Atlantis fecham por deck vazio.",
+   "main_deck": [
+    {
+     "card_id": "poseidon-v6-101",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-109",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-120",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-093",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-094",
+     "quantity": 1
+    },
+    {
+     "card_id": "poseidon-v6-105",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-106",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-110",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-113",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-115",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-137",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-157",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-168",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-175",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-172",
+     "quantity": 1
+    },
+    {
+     "card_id": "poseidon-v6-180",
+     "quantity": 1
+    },
+    {
+     "card_id": "poseidon-v6-173",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-171",
+     "quantity": 1
+    },
+    {
+     "card_id": "poseidon-v6-141",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-134",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-509",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-135",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-165",
+     "quantity": 2
+    }
+   ]
+  },
+  {
+   "id": "ultra-stax-hades-prison",
+   "nome": "The First Prison",
+   "tema": "Stax/Lock",
+   "referencia": "The Rack / Pox",
+   "god": "god-hades",
+   "domain_id": "hades-v6-244",
+   "plano": "Tira a mão (Lune, Whispers, Trial, Ressonância da First Prison) e cada discard custa Soul; Gorgon e Camus impedem Strike; Hypnos e The Eternal Sleep travam a mesa com Seal.",
+   "main_deck": [
+    {
+     "card_id": "hades-v6-202",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-239",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-257",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-216",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-254",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-204",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-215",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-217",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-219",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-212",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-191",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-192",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-268",
+     "quantity": 1
+    },
+    {
+     "card_id": "hades-v6-194",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-511",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-237",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-264",
+     "quantity": 1
+    },
+    {
+     "card_id": "hades-v6-512",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-221",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-181",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-513",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-252",
+     "quantity": 1
+    }
+   ]
+  },
+  {
+   "id": "ultra-voltron-artemis-hunt",
+   "nome": "The Silver Arrow",
+   "tema": "Voltron",
+   "referencia": "Stompy + Armadillo Cloak",
+   "god": "god-artemis",
+   "domain_id": "artemis-v6-430",
+   "plano": "Um corpo grande com Training, Silver Arrow, Divine Bow e Pierce ataca todo turno; Vigor protege a aposta.",
+   "main_deck": [
+    {
+     "card_id": "artemis-v6-381",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-389",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-392",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-363",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-383",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-394",
+     "quantity": 2
+    },
+    {
+     "card_id": "artemis-v6-365",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-367",
+     "quantity": 2
+    },
+    {
+     "card_id": "artemis-v6-369",
+     "quantity": 2
+    },
+    {
+     "card_id": "artemis-v6-400",
+     "quantity": 1
+    },
+    {
+     "card_id": "artemis-v6-398",
+     "quantity": 2
+    },
+    {
+     "card_id": "artemis-v6-380",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-379",
+     "quantity": 2
+    },
+    {
+     "card_id": "artemis-v6-370",
+     "quantity": 2
+    },
+    {
+     "card_id": "artemis-v6-362",
+     "quantity": 2
+    },
+    {
+     "card_id": "artemis-v6-368",
+     "quantity": 2
+    },
+    {
+     "card_id": "artemis-v6-411",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-410",
+     "quantity": 2
+    },
+    {
+     "card_id": "artemis-v6-436",
+     "quantity": 2
+    },
+    {
+     "card_id": "artemis-v6-518",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-445",
+     "quantity": 1
+    },
+    {
+     "card_id": "artemis-v6-443",
+     "quantity": 1
+    }
+   ]
+  },
+  {
+   "id": "ultra-ramp-artemis-forest",
+   "nome": "Primordial Moon",
+   "tema": "Ramp",
+   "referencia": "Elves / Ramp verde",
+   "god": "god-artemis",
+   "domain_id": "artemis-v6-428",
+   "plano": "Bases extras (Nature's Awakening, Roots, Dryad, Forest) e, antes do round 5, Selene, Fifth Moon Guardian e Champion.",
+   "main_deck": [
+    {
+     "card_id": "artemis-v6-395",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-408",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-381",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-402",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-417",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-423",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-420",
+     "quantity": 2
+    },
+    {
+     "card_id": "artemis-v6-437",
+     "quantity": 2
+    },
+    {
+     "card_id": "artemis-v6-444",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-443",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-424",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-517",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-373",
+     "quantity": 2
+    },
+    {
+     "card_id": "artemis-v6-440",
+     "quantity": 2
+    },
+    {
+     "card_id": "artemis-v6-433",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-385",
+     "quantity": 2
+    },
+    {
+     "card_id": "artemis-v6-405",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-384",
+     "quantity": 2
+    },
+    {
+     "card_id": "artemis-v6-435",
+     "quantity": 2
+    }
+   ]
+  }
+ ]
+}

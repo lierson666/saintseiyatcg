@@ -733,7 +733,7 @@ body { font-family: "Jost", system-ui, sans-serif; }
   .drag-zone--band { position: absolute; inset: calc(var(--u) * -.6) 0; z-index: 20; } /* a linha inteira do God */
   .drag-zone--band strong { font-size: calc(var(--u) * 2.2); }
   .arena-field { grid-template-rows: auto auto auto; }
-  .olympus .field { --card-w: min(calc(var(--u) * 16), calc((100vh - var(--u) * 51.5) * .34)); --card-h: calc(var(--card-w) * 1.4); }
+  .olympus .field { --w0: min(calc(var(--u) * 16), calc((100vh - var(--u) * 51.5) * .34)); --card-w: var(--w0); --card-h: calc(var(--card-w) * 1.4); }
 }
 
 /* Carta grande com o equipamento do Devotee ao lado: status somados e as cartas equipadas (autor, 28/10/2026). */

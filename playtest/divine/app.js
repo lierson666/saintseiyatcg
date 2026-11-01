@@ -28,8 +28,8 @@ import {findDeck} from '../deck-store.js';
 import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-face3';
 import {unlock, playMusic} from '../audio.js?v=20261030-telas';
 import {telas, anim, sound, imageUrl, applyColors, applyTexts} from '../telas.js?v=20261030-1';
-import {renderLiveCard, renderCardText} from '../../shared/live-card.js?v=20261101-kw8';
-import {cardKeywords, renderKeywordIcons} from '../../shared/keyword-glossary.js?v=20261101-kw8';
+import {renderLiveCard, renderCardText} from '../../shared/live-card.js?v=20261101-kw10';
+import {renderKeywordNotes, renderKeywordIcons} from '../../shared/keyword-glossary.js?v=20261101-kw10';
 import {armorBonusText, printedEquipmentBonuses} from '../../shared/card-visual-values.js?v=20261031-kw1';
 import {lightArt} from '../../shared/light-art.js';
 import {useGodPortraits} from '../avatar-face.js?v=20261031-3';
@@ -544,7 +544,7 @@ function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
     const live = renderLiveCard(forge, {stats: {power: atk ?? null, hp: hp == null ? null : hp - dmg, damage: dmg, keywords: kws}, art: forge.ilustracao && forgeArt(forge.ilustracao)})
       .replace('data-stat="power"', `data-stat="power" data-trend="${statBuffed(atk, c.atk)}"`)
       .replace('data-stat="hp"', `data-stat="hp" data-trend="${dmg ? 'down' : statBuffed(hp, c.hp)}"`);
-    return `<div class="${cls}"${facAttr} data-uid="${uid}" tabindex="0" aria-label="${esc(c.name)}${c.kind === 'Devotee' ? `, ATK ${atk}, HP ${hp - dmg} of ${hp}` : ''}">${live}${renderKeywordIcons([...kws, ...cardKeywords(forge)])}${marks}</div>`;
+    return `<div class="${cls}"${facAttr} data-uid="${uid}" tabindex="0" aria-label="${esc(c.name)}${c.kind === 'Devotee' ? `, ATK ${atk}, HP ${hp - dmg} of ${hp}` : ''}">${live}${marks}</div>`;
   }
   return `<div class="${cls}" data-uid="${uid}" tabindex="0" aria-label="${esc(c.name)}">
     <div class="dcard__art"><span class="dcard__glyph">${esc(c.name.split(/[ ,’']/)[0].slice(0, 2))}</span></div>
@@ -552,7 +552,7 @@ function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
     <div class="dcard__plate"><strong>${esc(c.name)}</strong><small>${esc(subtype)}${kws.length ? ` · ${esc(kws.join(' · '))}` : ''}</small></div>
     ${c.kind === 'Devotee' ? `<div class="dcard__stats"><b class="atk ${statBuffed(atk, c.atk)}" title="ATK ${atk}">${atk}</b><b class="hp ${dmg ? 'hurt' : statBuffed(hp, c.hp)}" title="HP ${hp - dmg} of ${hp}">${hp - dmg}</b></div>` : ''}
     ${c.armor && field && c.hp ? `<div class="dcard__stats"><b class="hp" title="+${c.hp} HP to the wearer">+${c.hp}</b></div>` : ''}
-    ${renderKeywordIcons(kws)}${marks}
+    ${field && !size ? renderKeywordIcons(kws) : ''}${marks}
   </div>`;
 }
 
@@ -716,9 +716,16 @@ function cosmoLane(key, side) {
   return `<section class="lane lane--${side}" data-lane="${key}" style="--n:${bases.length};${sleeveVar(key)}" aria-label="Player ${key} Cosmo Bases">${slots || '<p class="lane__empty">Cosmo Bases</p>'}</section>`;
 }
 // Faixa do God (autor, 28/10/2026): Bases à esquerda do God; equipamento solto continua no campo.
+// Tela de vitória: a placa de quem venceu; a IA não tem avatar, então vai o rosto do God (autor, 01/11/2026).
+function victoryWho(key) {
+  const plate = $(`.rk-plate--${key === viewer() ? 'me' : 'foe'}`), name = plate?.querySelector('b')?.textContent || `Player ${key}`;
+  const avatar = plate?.querySelector('.rk-plate__avatar') ? '' : `<i class="rk-plate__avatar" style="${godFace(key)}" aria-hidden="true"></i>`;
+  return {name, html: `<div class="victory__who">${avatar}${plate?.innerHTML || `<span><b>${esc(name)}</b></span>`}</div>`};
+}
 function fieldRow(key) {
   const s = S(), p = s.players[key];
-  const units = p.battlefield.filter(u => !ctx.attached[u]).map(u => {
+  const row = p.battlefield.filter(u => !ctx.attached[u]), n = row.length;
+  const units = row.map(u => {
     // Equipamento preso: mini-token com arte, nome e bônus, ligado ao portador (clique abre o inspetor da carta).
     const gear = gearOf(ctx, u).map(g => {
       const f = FORGE.get(ctx.objects[g].cardId), bonus = f && armorBonusText({...f, ...printedBonusFields(f)});
@@ -726,7 +733,7 @@ function fieldRow(key) {
     }).join('');
     return `<div class="slot">${cardFace(u, {field: true})}${gear ? `<div class="gears">${gear}</div>` : ''}</div>`;
   }).join('');
-  return `<section class="field field--${key === viewer() ? 'me' : 'opp'}" data-field="${key}" aria-label="Player ${key} battlefield">${units || '<p class="field__empty">No Devotees</p>'}</section>`;
+  return `<section class="field field--${key === viewer() ? 'me' : 'opp'}" data-field="${key}" style="--cols:${Math.max(1, Math.min(n, 8))};--fit:${n > 16 ? .5 : n > 8 ? .7 : 1}" aria-label="Player ${key} battlefield">${units || '<p class="field__empty">No Devotees</p>'}</section>`;
 }
 
 function handRow(key, hidden) {
@@ -797,7 +804,7 @@ function command() {
     <button class="action-btn" data-primary data-state="${state}" ${s.victory || aiControls() ? 'disabled' : ''}><span>${esc(label)}</span><i aria-hidden="true">›</i></button>
     <button class="command__full" data-full-control aria-pressed="${!settings.autoPass}" title="Full control: stop at every priority window, even with no possible response">Full control</button>
     <button class="command__more" data-toggle-tools aria-expanded="${toolsOpen}" aria-label="Options">${GEAR_SVG}</button>
-    <div class="command__tools${toolsOpen ? ' is-open' : ''}"><button data-toggle-log aria-pressed="${logOpen}">Log</button><button data-toggle-settings>Settings</button>${match && !s.victory ? '<button class="tools__concede" data-concede>Concede</button>' : ''}<button data-leave>Leave</button></div>
+    <div class="command__tools${toolsOpen ? ' is-open' : ''}"><button data-tip="Log" data-toggle-log aria-pressed="${logOpen}">Log</button><button data-tip="Settings" data-toggle-settings>Settings</button>${match && !s.victory ? '<button class="tools__concede" data-concede>Concede</button>' : ''}<button data-leave>Leave</button></div>
   </aside>`;
 }
 
@@ -965,7 +972,8 @@ function overlays() {
       <button class="primary-action" data-primary>${marked.size ? `Return ${marked.size} and draw` : 'Keep hand'}</button></div>`;
   }
   if (s.victory) {
-    html += `<div class="overlay victory"><h2>${s.victory.draw ? 'Draw' : `Player ${s.victory.winner} wins`}</h2>${s.victory.reason === 'deck_out' ? '<p><span>Empty deck</span></p>' : ''}<p>Round ${s.round} · Soul ${s.order.map(k => `${k} ${s.players[k].soul}`).join(' · ')}</p>
+    const who = s.victory.draw ? null : victoryWho(s.victory.winner);
+    html += `<div class="overlay victory">${who?.html || ''}<h2>${who ? `${esc(who.name)} wins` : 'Draw'}</h2>${s.victory.reason === 'deck_out' ? '<p><span>Empty deck</span></p>' : ''}<p>Round ${s.round} · Soul ${s.order.map(k => s.players[k].soul).join(' × ')}</p>
       <div class="row"><button class="primary-action" data-new>New match</button><a class="ghost" href="../">Main menu</a></div></div>`;
   }
   if (pending && !s.victory && pending.pending.player !== settings.ai) html += decisionModal();
@@ -976,7 +984,7 @@ function overlays() {
   if (settingsOpen) {
     const sel = (key, opts) => `<select data-setting="${key}">${Object.entries(opts).map(([v, l]) => `<option value="${v}" ${settings[key] === v ? 'selected' : ''}>${l}</option>`).join('')}</select>`;
     const chk = (key, l) => `<label class="set"><span>${l}</span><input type="checkbox" data-setting="${key}" ${settings[key] ? 'checked' : ''}></label>`;
-    html += `<div class="drawer settings" role="dialog" aria-label="Settings"><h3>Settings</h3><button class="drawer__x" data-toggle-settings aria-label="Close settings">×</button>
+    html += `<button class="settings-veil" data-toggle-settings aria-label="Close settings"></button><div class="drawer settings" role="dialog" aria-modal="true" aria-label="Settings"><h3>Settings</h3><button class="drawer__x" data-toggle-settings aria-label="Close settings">×</button>
       <label class="set"><span>Full screen</span><input type="checkbox" data-fullscreen ${document.fullscreenElement ? 'checked' : ''}></label>
       ${window.ssI18n ? `<label class="set"><span>Language</span><select data-setting="lang">${Object.entries(window.ssI18n.LANGS).map(([v, l]) => `<option value="${v}" ${window.ssI18n.lang === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label>` : ''}
       ${window.ssStage?.desktop ? `<label class="set"><span>Resolution</span><select data-setting="resolution">${Object.entries(window.ssStage.LIST).map(([v, l]) => `<option value="${v}" ${window.ssStage.get() === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label>` : ''}
@@ -1715,7 +1723,10 @@ function showBigCard(uid, {sheet = false} = {}) {
     : bearer ? `<aside class="loadout"><h3>${esc(info(uid).name)}</h3><h4>Equipped on</h4><div class="loadout__gear"><button class="loadout__card" data-open-card="${bearer}" data-tip="${esc(`${info(bearer).name}|Click to view the bearer.`)}">${cardFace(bearer, {size: 'dcard--sm', field: true})}</button></div></aside>` : '');
   // Ações à direita da carta, junto com o fechar; em pé no celular descem para baixo dela (autor, 01/11/2026).
   const actions = field && owner(uid) === viewer() ? fieldActions(uid) : [];
-  if (actions.length || sheet) box.insertAdjacentHTML('beforeend', `<div class="bigcard__actions">${actions.map((a, i) => `<button class="ghost" data-use="${i}" ${a.why ? 'aria-disabled="true"' : ''}>${esc(a.label)}</button>`).join('')}${sheet ? '<button class="bigcard__close">Close</button>' : ''}</div>`);
+  // Toda keyword da carta explicada ao lado (autor, 01/11/2026); as ganhas em jogo entram junto.
+  const forge = ctx.objects[uid] && FORGE.get(ctx.objects[uid].cardId);
+  const notes = forge ? renderKeywordNotes({...forge, keywords_en: [...(forge.keywords_en || []), ...(field && info(uid).kind === 'Devotee' ? keywordsOf(S(), ctx, uid) : [])]}) : '';
+  if (actions.length || sheet || notes) box.insertAdjacentHTML('beforeend', `<div class="bigcard__actions">${notes}${actions.map((a, i) => `<button class="ghost" data-use="${i}" ${a.why ? 'aria-disabled="true"' : ''}>${esc(a.label)}</button>`).join('')}${sheet ? '<button class="bigcard__close">Close</button>' : ''}</div>`);
   // Cartas do painel abrem grandes (equipamento a partir do portador e vice-versa); clicar no painel não fecha; fora dele, fecha.
   box.addEventListener('pointerdown', e => {
     const use = e.target.closest('[data-use]');
@@ -1723,7 +1734,7 @@ function showBigCard(uid, {sheet = false} = {}) {
     const open = e.target.closest('[data-open-card]');
     if (open) return showBigCard(open.dataset.openCard, {sheet});
     if (sheet && e.target.closest('.dcard--big')) return; // preview pelo toque: tocar na carta não fecha
-    if (!e.target.closest('.loadout')) { if (sheet) swallowClickUntil = Date.now() + 400; closeBigCard(); }
+    if (!e.target.closest('.loadout, .kw-notes')) { if (sheet) swallowClickUntil = Date.now() + 400; closeBigCard(); }
   });
   box.addEventListener('contextmenu', e => { e.preventDefault(); if (!sheet) closeBigCard(); });
   document.body.append(box);

@@ -94,7 +94,7 @@ self.ssI18nPT = {
 
     // Opções
     'Saved on this device. The same options open from the gear during a match.': 'Salvo neste aparelho. As mesmas opções abrem pela engrenagem durante a partida.',
-    'Display': 'Tela', 'Full screen': 'Tela cheia', 'Sound': 'Som', 'Gameplay': 'Jogabilidade', 'Accessibility': 'Acessibilidade', 'Screen shake': 'Tremor de tela',
+    'Display': 'Tela', 'Full screen': 'Tela cheia', 'Show opponent activity': 'Mostrar atividade do oponente', 'AI plays Player B': 'IA joga como Jogador B', 'Sound': 'Som', 'Gameplay': 'Jogabilidade', 'Accessibility': 'Acessibilidade', 'Screen shake': 'Tremor de tela',
     'Resolution': 'Resolução', 'Graphics': 'Gráficos', 'Low': 'Baixo', 'Medium': 'Médio', 'High': 'Alto', 'Ultra': 'Ultra', 'Arena': 'Arena',
     'Music': 'Música', 'Sound effects': 'Efeitos sonoros', 'Animation speed': 'Velocidade das animações', 'Fast': 'Rápida', 'Normal': 'Normal', 'Cinematic': 'Cinematográfica',
     'Phase tips (control panel)': 'Dicas de fase (painel de controle)', 'Auto-pass when you have no response': 'Passar sozinho quando não houver resposta',
@@ -274,7 +274,7 @@ self.ssI18nPT = {
     ['{w0}s left', '{0}s restantes'], ['{w0} RESONANCE', 'RESSONÂNCIA DE {0}'], ['Source: {0}.', 'Origem: {0}.'], ['Return {0} and draw', 'Devolver {0} e comprar'], ['Prevents the next {0} damage', 'Previne os próximos {0} de dano'], ['Affects: {0}.', 'Afeta: {0}.'], ['Cost: {0}.', 'Custo: {0}.'], ['{w0} damage incoming.', '{0} de dano a caminho.'], ['Source: {0}. Use it?', 'Origem: {0}. Usar?'], ['Affects: {0}. Use it?', 'Afeta: {0}. Usar?'], ['Cost: {0}. Use it?', 'Custo: {0}. Usar?'], ['Source: {0}. Cost: {1}. Use it?', 'Origem: {0}. Custo: {1}. Usar?'], ['Affects: {0}. Cost: {1}. Use it?', 'Afeta: {0}. Custo: {1}. Usar?'], ['Pay {w0} to keep your Spell from being countered?', 'Pagar {0} para sua Magia não ser anulada?'], ['Pay {0} · Return', 'Pagar {0} · Devolver'], ['{0} can return to your hand. Pay {1}?', '{0} pode voltar à sua mão. Pagar {1}?'], ['Draw {w0}', 'Comprar {0}'], ['Soul {w0}', 'Alma {0}'], ['Choose up to {w0}', 'Escolha até {0}'], ['Choose {w0}.', 'Escolha {0}.'],
     ['Saint Seiya TCG — {t0}', 'Saint Seiya TCG — {0}'], ['Use {0}', 'Usar {0}'],
     ['Challenge sent to {0}. The duel starts when they accept.', 'Desafio enviado para {0}. O duelo começa quando for aceito.'],
-    ['Friends {0}', 'Amigos {0}'], ['{0} friend requests', '{0} pedidos de amizade'], ['Round {w0} · Player {w1}', 'Rodada {w0} · Jogador {1}'], ['Player {w0}', 'Jogador {0}'],
+    ['Friends {0}', 'Amigos {0}'], ['{0} friend requests', '{0} pedidos de amizade'], ['Round {w0} · Soul {w1} × {w2}', 'Rodada {0} · Alma {1} × {2}'], ['{0} wins', '{0} venceu'], ['Round {w0} · Player {w1}', 'Rodada {w0} · Jogador {1}'], ['Player {w0}', 'Jogador {0}'],
     ['Pool {w0}', 'Reserva {0}'], ['Done ({0})', 'Concluir ({0})'], ['Step {0} of {1}', 'Passo {0} de {1}'],
     ['Player {w0} · Opening hand', 'Jogador {0} · Mão inicial'], ['Player {w0} goes first', 'Jogador {0} começa'], ['Player {w0} won the toss', 'Jogador {0} venceu a moeda'], ['Player {w0} wins the toss. Player {w1} goes first.', 'Jogador {0} vence a moeda. Jogador {1} começa.'], ['Waiting for Player {w0}…', 'Aguardando o Jogador {0}…'], ['Trigger 1 of {0}', 'Gatilho 1 de {0}'],
     ['+{0} more', '+{0} a mais'], ['Confirm · {0}', 'Confirmar · {0}'], ['{0} decides', '{0} decide'], ['Back to decision · {0}', 'Voltar à decisão · {0}'],

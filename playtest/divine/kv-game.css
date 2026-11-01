@@ -63,3 +63,45 @@ body:has(#overlay-root > :not(.gear-btn), .pick-modal, .decision-veil, #bigcard)
   .bigcard:has(.bigcard__actions) .loadout { max-height: 62vh; }
   .bigcard__actions .bigcard__close { position: static; transform: none; width: 100%; min-width: 0; }
 }
+
+/* Tela de vitória com a placa de quem venceu (autor, 01/11/2026). */
+.victory__who { display: inline-flex; align-items: center; gap: 14px; box-sizing: border-box; max-width: min(92vw, 520px); margin-bottom: 14px; padding: 8px 26px 8px 8px; border: 1px solid var(--kv-line); border-radius: var(--kv-pill); background: var(--kv-glass); text-align: left; }
+.victory__who .rk-plate__avatar { width: 88px; height: 88px; }
+.victory__who .rk-emblem { flex: none; height: 64px; }
+.victory__who span { display: grid; gap: 2px; min-width: 0; }
+.victory__who b { overflow: hidden; font: 600 26px/1.1 Cinzel, serif; color: var(--kv-gold-2); text-overflow: ellipsis; white-space: nowrap; }
+.victory__who small { font-size: 14px; color: var(--kv-muted); white-space: nowrap; }
+
+/* Keywords: no board é a moeda; na carta aberta, ficha ao lado; no texto, dica ao passar o mouse (autor, 01/11/2026). */
+.kw-word { pointer-events: auto; cursor: help; }
+.bigcard__actions .kw-notes { --psd-ink: var(--kv-gold-2); max-height: 60vh; margin: 0 0 4px; overflow-y: auto; overscroll-behavior: contain; cursor: default; }
+.bigcard__actions .kw-note { font-size: 13px; }
+.bigcard__actions .kw-note strong { display: block; margin-bottom: 2px; font-weight: 900; letter-spacing: .04em; color: var(--psd-ink); }
+@media not all and (orientation: portrait) and (max-width: 600px) {
+  .bigcard:has(.kw-notes) { grid-template-columns: auto minmax(0, 300px); }
+  .bigcard:has(.kw-notes):has(.loadout) .loadout { max-height: 40vh; }
+  .bigcard:has(.loadout) .kw-notes { max-height: 28vh; }
+}
+@media (orientation: portrait) and (max-width: 600px) {
+  .bigcard__actions .kw-notes { flex: 1 0 100%; max-height: none; }
+}
+
+/* Configurações em pop-up central, em duas colunas, com Desistir em destaque (autor, 01/11/2026). No celular em pé segue a tela cheia. */
+.settings-veil { display: none; }
+@media not all and (orientation: portrait) and (max-width: 600px) {
+  .settings-veil { display: block; position: fixed; inset: 0; z-index: 44; padding: 0; border: 0; border-radius: 0; background: #04060ecc; cursor: default; }
+  .drawer.settings { inset: 50% auto auto 50%; bottom: auto; right: auto; transform: translate(-50%, -50%); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 28px; align-content: start; box-sizing: border-box; width: min(780px, 92vw); max-height: 90dvh; padding: 18px 24px 16px; border: 1px solid #e6c36a55; border-radius: var(--kv-radius); background: #0a0c1af7; box-shadow: 0 24px 70px #000c; color: var(--kv-ink); }
+  .drawer.settings h3 { grid-column: 1 / -1; margin: 0 40px 10px 0; font-size: 18px; letter-spacing: .08em; color: var(--kv-gold-2); }
+  .drawer.settings .drawer__x { top: 12px; right: 14px; width: 36px; height: 36px; padding: 0; font-size: 22px; }
+  .drawer.settings .set { min-height: 40px; padding: 4px 0; border-bottom: 1px solid var(--kv-line); font: 400 13px/1.25 var(--kv-sans); color: var(--kv-ink); }
+  .drawer.settings .set select { flex: none; max-width: 50%; min-height: 30px; padding: 0 8px; border: 1px solid var(--kv-line); border-radius: var(--kv-pill); background: #f5f1e60d; color: var(--kv-ink); font: 400 12px var(--kv-sans); }
+  .drawer.settings .set select option { color: #111; }
+  .drawer.settings .set input[type="checkbox"] { flex: none; width: 18px; height: 18px; accent-color: var(--kv-gold); }
+  .drawer.settings .set input[type="range"] { flex: none; width: 44%; accent-color: var(--kv-gold); }
+  .drawer.settings .stats { display: none; }
+  .drawer.settings .settings__end { grid-column: 1 / -1; position: sticky; bottom: -16px; display: flex; justify-content: space-between; gap: 12px; margin-top: 14px; padding: 10px 0; background: #0a0c1a; }
+  .drawer.settings .settings__end button { min-height: 44px; padding: 0 26px; }
+  .drawer.settings .settings__end .settings__concede { border: 1px solid var(--kv-error); background: linear-gradient(180deg, #8c2a1c, #561308); color: #fff; font-weight: 700; }
+  .drawer.settings .settings__end .settings__concede:hover { filter: brightness(1.15); background: linear-gradient(180deg, #8c2a1c, #561308); }
+  .drawer.settings .settings__end :last-child { margin-left: auto; }
+}

@@ -2,7 +2,7 @@ import {renderRules,inlineMarkup,presentationRules,ruleBlocksWithoutKeywords,blo
 import {isArmor,isEquipment} from './card-model.js?v=20261024-4';
 import {renderPublishedCard,visualProject} from './layout-studio/runtime.js?v=20261101-rules1';
 import {printedEquipmentBonuses,signedBonus,armorBonusText} from './card-visual-values.js?v=20261031-kw1';
-import {renderKeywordNotes} from './keyword-glossary.js?v=20261101-kw8';
+import {renderKeywordNotes,keywordTipAttr} from './keyword-glossary.js?v=20261101-kw10';
 import {displayCard,keywordName,typeWord,lang} from './card-i18n.js?v=20261101-tr1';
 // A ilustração é apenas fundo. Letras, números e estados são dados independentes no DOM.
 globalThis.document?.addEventListener('load', e => { if (e.target.matches?.('.live-card__illustration img')) e.target.classList.add('is-in'); }, true); // ver .is-in em live-card.css
@@ -99,7 +99,7 @@ function renderPsdCard(card,{src,stage,hp,power,keywords,damage,rules,equipment,
       const fs=rulesSize([kw,...rules,ownerLine].filter(Boolean),el.size,w,(cut<0?h:h-280)*(el.fit||1),el.minSize);
       // Caixa do layout (--lc-rules-h = altura máxima, com rolagem); --lc-text = tamanho do texto (Options › Accessibility).
       const box=`left:${x/14.88}%;bottom:${(2091-y-h)/20.91}%;width:${w/14.88}%;min-height:${h/20.91}%;--lc-rules-h:${cqw(h)}`;
-      out+=`<div class="lc-rules live-card__rules" style="${box};font-size:calc(${cqw(fs)} * var(--lc-text, 1))">${kw?`<p class="live-card__keywords">${keywords.map(k=>inlineMarkup(keywordName(k))).join(', ')}</p>`:''}${body}${ownerLine?`<p class="live-card__owners">${ownerLine}</p>`:''}</div>`;
+      out+=`<div class="lc-rules live-card__rules" style="${box};font-size:calc(${cqw(fs)} * var(--lc-text, 1))">${kw?`<p class="live-card__keywords">${keywords.map(k=>`<span class="kw-word"${keywordTipAttr(k)}>${inlineMarkup(keywordName(k))}</span>`).join(', ')}</p>`:''}${body}${ownerLine?`<p class="live-card__owners">${ownerLine}</p>`:''}</div>`;
     }
     // Rodapé de edição (autor, 31/10/2026): símbolo da raridade • edição • idioma • artista • ano. A gema sai do centro.
     else if(el.kind==='rarity'){

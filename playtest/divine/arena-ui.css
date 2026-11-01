@@ -71,7 +71,7 @@ body.has-chain-zoom .command__clock { visibility: visible; }
 @media (min-width: 761px) and (min-height: 501px) {
   /* Centraliza a coluna sem transform: com transform, o botão fixo ficaria preso a ela e não ao canto da tela. */
   .command { top: 0; bottom: 0; margin: auto 0; height: fit-content; transform: none; }
-  .command .action-btn { position: fixed; z-index: 30; right: 22px; bottom: 22px; width: 262px; min-height: 52px; padding: 0 18px; gap: 0;
+  .command .action-btn { position: fixed; z-index: 30; right: 22px; bottom: 22px; width: var(--col); min-height: 52px; padding: 0 18px; gap: 0;
     border-radius: 999px; border: 2px solid #ffd2a8; background: linear-gradient(180deg, #ffa25c, #e0532b); color: #fff;
     font: 700 19px/1 Cinzel, serif; letter-spacing: .05em; text-shadow: 0 1px 3px rgba(0, 0, 0, .55);
     box-shadow: 0 8px 22px rgba(0, 0, 0, .6), 0 0 26px rgba(255, 120, 60, .45); animation: none; }
@@ -91,7 +91,7 @@ body.has-chain-zoom .command__clock { visibility: visible; }
 /* ---------- HUD do canto direito (autor, 31/10/2026): relógio, cartão do turno e ferramentas em cima;
    embaixo, sua placa com o ⏩ ao lado e o botão de ação, tudo alinhado na mesma largura. ---------- */
 @media (min-width: 761px) and (min-height: 501px) {
-  .command { right: 22px; width: 262px; gap: 12px; }
+  .command { right: 22px; width: var(--col); gap: 12px; }
   .phasebar { gap: 10px; padding: 12px 14px; border-radius: 16px; background: linear-gradient(180deg, rgba(22, 20, 36, .92), rgba(10, 10, 22, .92));
     border-color: rgba(232, 196, 106, .35); box-shadow: 0 10px 28px rgba(0, 0, 0, .5); }
   .phasebar__turn { display: grid; justify-items: center; gap: 4px; text-align: center; }
@@ -106,7 +106,7 @@ body.has-chain-zoom .command__clock { visibility: visible; }
   .command__tools button:hover, .command__tools a:hover { color: #fff; border-color: rgba(232, 196, 106, .55); }
 
   /* Sua placa + ⏩ na mesma linha, logo acima do botão de ação; tudo com a largura da coluna (262px). */
-  .rk-plate--me { left: auto; top: auto; right: 68px; bottom: 88px; width: 216px; max-width: none; transform: none; gap: 10px; padding: 6px 14px 6px 6px;
+  .rk-plate--me { left: auto; top: auto; right: 62px; bottom: 88px; width: calc(var(--col) - 40px); max-width: none; transform: none; gap: 10px; padding: 6px 14px 6px 6px;
     border-radius: 16px; border-color: rgba(232, 196, 106, .35); background: linear-gradient(180deg, rgba(22, 20, 36, .92), rgba(10, 10, 22, .92)); box-shadow: 0 10px 28px rgba(0, 0, 0, .5); }
   .rk-plate--me .rk-emblem { height: 46px; }
   .rk-plate--me b { font-size: 19px; color: #f6e6bf; }
@@ -190,7 +190,7 @@ body:not(.is-peeking):has(.trigger-panel.is-center, .trigger-panel--order) #chai
   .trigger-panel:not(:has(.trigger-panel__opts)) .decision__clock { display: block; margin-top: 4px; font: 600 11px "Jost", system-ui; color: #bfb7a3; }
   /* Botões no lugar do botão de ação. */
   .cast-slot .choice__actions, .trigger-panel:not(:has(.trigger-panel__opts)) .trigger-panel__actions {
-    position: fixed; z-index: 47; right: 22px; bottom: 22px; width: 262px; display: flex; flex-direction: column-reverse; gap: 8px; pointer-events: auto; animation: tp-box .22s ease-out .12s backwards; }
+    position: fixed; z-index: 47; right: 22px; bottom: 22px; width: var(--col); display: flex; flex-direction: column-reverse; gap: 8px; pointer-events: auto; animation: tp-box .22s ease-out .12s backwards; }
   :is(.cast-slot .choice__actions, .trigger-panel .trigger-panel__actions) > button { order: 1; width: 100%; min-height: 38px; margin: 0; border-radius: 999px;
     border: 1px solid rgba(255, 255, 255, .25); background: rgba(10, 12, 30, .92); color: #e8e2d2; font: 600 14px "Jost", system-ui, sans-serif; box-shadow: 0 6px 16px rgba(0, 0, 0, .5); }
   :is(.cast-slot .choice__actions, .trigger-panel .trigger-panel__actions) > button:first-child { order: 0; min-height: 52px; border: 1px solid #ffd5a0;
@@ -231,7 +231,7 @@ body:not(.is-peeking):has(.trigger-panel.is-center, .trigger-panel--order) #chai
    a mão cabe entre as colunas e nenhuma carta passa por cima do botão. 720 é o mínimo do palco no desktop, que não muda. */
 @media (min-width: 761px) and (min-height: 501px) and (max-height: 719px) {
   .command { z-index: 8; padding-top: 52px; padding-bottom: 140px; }
-  .olympus .hand--me .hand__slot { margin: 0 min(calc(var(--hand-w) * -.1), calc((100vw - 620px - var(--n) * var(--hand-w)) / (2 * max(var(--n) - 1, 1)))); }
+  .olympus :is(.hand--me, .hand--opp) .hand__slot { margin: 0 min(calc(var(--hand-w) * -.1), calc((100vw - 2 * var(--side) - var(--n) * var(--hand-w)) / (2 * max(var(--n) - 1, 1)))); }
 }
 
 /* Tablet deitado (autor, 01/11/2026): o zoom do cast e da pilha vem do lado esquerdo, junto do trilho, e deixa livres a mesa e as informações da direita.
@@ -251,11 +251,65 @@ body:not(.is-peeking):has(.trigger-panel.is-center, .trigger-panel--order) #chai
 
 /* Coluna direita (autor, 01/11/2026): o nome do oponente fica no topo dela, nada passa da linha da vida; Configurações já está nos botões, sem engrenagem. */
 @media (min-width: 761px) and (min-height: 501px) {
-  .rk-plate--foe.rk-plate--foe { left: auto !important; right: 22px; top: 8px !important; width: 262px; max-width: none; box-sizing: border-box; justify-content: center; gap: 8px; padding: 4px 12px; transform: none; }
+  .rk-plate--foe.rk-plate--foe { left: auto !important; right: 22px; top: 8px !important; width: var(--col); max-width: none; box-sizing: border-box; justify-content: center; gap: 8px; padding: 4px 12px; transform: none; }
   .rk-plate--foe .rk-plate__avatar { width: 34px; height: 34px; box-shadow: none; }
   .rk-plate--foe .rk-emblem { height: 30px; }
   .rk-plate--foe b { font-size: 16px; }
   .rk-plate--foe small { font-size: 11px; }
   .gear-btn { display: none; }
   .phasebar__turn strong { font-size: 19px; }
+}
+
+/* Mesa simétrica (autor, 01/11/2026): a coluna direita tem a largura e o peso da esquerda (.rail) e o jogo fica no centro; só o relógio mantém a largura.
+   As cartas encolhem até 8 por linha; da 9ª em diante abre outra linha, da esquerda para a direita. */
+@property --fw { syntax: "<length>"; inherits: true; initial-value: 0px; }
+:root { --col: calc(min(min(1vh, .65vw) * 1.1, (100vh - 40px) / 78) * 19); --edge: 12px; --side: calc(var(--col) + 28px); }
+@media (min-width: 761px) and (min-height: 501px) {
+  .arena-field { right: var(--side); container-type: inline-size; }
+  .band { right: var(--side); }
+  .olympus .field { --fw: 100cqw; --field-gap: calc(var(--u) * 1); display: grid; grid-template-columns: repeat(var(--cols, 1), auto); justify-content: center; align-content: center; gap: var(--field-gap);
+    --card-w: min(calc(var(--w0) * var(--fit, 1)), calc((var(--fw) - var(--field-gap) * (var(--cols, 1) - 1) - 12px) / var(--cols, 1))); }
+
+  /* Leque do oponente: mesma largura do meu, atrás do God dele, para contar as cartas e ver onde ele mexe. */
+  .olympus .hand--opp { --hand-w: calc(var(--u) * 14); left: 50%; top: calc(var(--hand-w) * 1.4 * -.62); z-index: 4; }
+  .olympus .hand--opp .dcard--sm { --card-w: var(--hand-w); width: var(--hand-w); height: calc(var(--hand-w) * 1.4); }
+  .olympus .hand--opp .hand__slot { margin: 0 calc(var(--hand-w) * -.1); transform-origin: 50% -20%; transform: rotate(calc((var(--i) - (var(--n) - 1) / 2) * -4deg)); }
+
+  .command { right: var(--edge); gap: 8px; }
+  .command__clock { justify-content: center; }
+  .command .zclock { flex: none; --r: min(clamp(64px, 5.4vw, 86px), 10vh, calc(var(--col) / 2.3)); }
+  .phasebar { gap: 5px; padding: 7px 6px; border-radius: 12px; }
+  .phasebar__turn strong { font-size: 13px; white-space: normal; }
+  .phasebar__turn small { font-size: 9px; letter-spacing: .04em; line-height: 1.25; white-space: normal; }
+  .phasebar__steps { display: flex; justify-content: center; }
+  .phasebar__steps li:not(.on) { display: none; }
+  .phasebar__steps li.on { padding: 3px 10px; font-size: 9px; }
+  .phasebar__window { font-size: 9px; line-height: 1.25; overflow-wrap: anywhere; }
+
+  /* Registro, Configurações e Sair viram ícones; o texto segue para leitor de tela. */
+  .command__tools { flex-wrap: nowrap; gap: 6px; }
+  .command .command__tools > :is(button, a) { flex: none; box-sizing: border-box; width: 30px; min-width: 0; min-height: 30px; padding: 0; font-size: 0; background: center / 15px no-repeat; }
+  .command .command__tools > .tools__concede { display: none; } /* Desistir fica nas Configurações */
+  .command .command__tools > [data-toggle-log] { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e6c36a' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01'/%3E%3C/svg%3E"); }
+  .command .command__tools > [data-toggle-settings] { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e6c36a' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3Cpath d='M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1'/%3E%3C/svg%3E"); }
+  .command .command__tools > :last-child { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e6c36a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9'/%3E%3C/svg%3E"); }
+
+  .command .action-btn { right: var(--edge); bottom: var(--edge); min-height: 46px; padding: 0 6px; font-size: 11px; line-height: 1.15; letter-spacing: .04em; white-space: normal; }
+  .command .command__full { right: calc(var(--edge) + (var(--col) - 30px) / 2); bottom: 106px; width: 30px; height: 30px; }
+  .cast-slot .choice__actions, .trigger-panel:not(:has(.trigger-panel__opts)) .trigger-panel__actions { right: var(--edge); bottom: var(--edge); }
+  :is(.cast-slot .choice__actions, .trigger-panel:not(:has(.trigger-panel__opts)) .trigger-panel__actions) button { padding: 0 6px; font-size: 13px; white-space: normal; }
+
+  .rk-plate--foe.rk-plate--foe { right: var(--edge); top: 10px !important; gap: 6px; padding: 3px 8px; }
+  .rk-plate--foe .rk-plate__avatar { width: 24px; height: 24px; }
+  .rk-plate--foe .rk-emblem, .rk-plate--me .rk-emblem { display: none; }
+  .rk-plate--foe > span, .rk-plate--me > span { display: grid; min-width: 0; }
+  .rk-plate--foe.rk-plate--foe b { font-size: 11px; white-space: normal; text-align: center; }
+  .rk-plate--foe.rk-plate--foe small { font-size: 9px; text-align: center; }
+  .rk-plate--me { right: var(--edge); bottom: 66px; width: var(--col); gap: 6px; padding: 3px 6px 3px 3px; }
+  .rk-plate--me .rk-plate__avatar { width: 28px; height: 28px; box-shadow: none; }
+  .rk-plate--me b { font-size: 11px; }
+  .rk-plate--me small { font-size: 9px; letter-spacing: 0; }
+}
+@media (min-width: 761px) and (min-height: 501px) and (max-height: 719px) {
+  .command { padding-top: 44px; padding-bottom: 150px; }
 }

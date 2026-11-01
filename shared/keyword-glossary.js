@@ -26,7 +26,7 @@ export const KEYWORD_RULES_PT = {
   'Sealed': 'Tem um ou mais marcadores de Selo. Fica Despreparado até começar um turno sem nenhum.',
   'Training': 'Cada marcador de Treinamento dá +1 ATQ / +1 PV. Os marcadores se acumulam enquanto o Devoto estiver no campo de batalha.',
   'Afterlife': 'Ative do seu Tártaro pagando o custo de Além-Túmulo, no seu turno ou como resposta. Depois de resolver, esta carta vai para o Vazio.',
-  'Hidden Cosmo': 'Enquanto esta carta for uma das suas Bases de Cosmo, você pode jogá-la de lá pagando X no lugar do custo. A carta do topo do seu deck entra no lugar como Base Despreparada.', // guia §4A
+  'Hidden Cosmo': 'Enquanto esta carta for uma das suas Cosmo Bases, você pode jogá-la de lá pagando X no lugar do custo. A carta do topo do seu deck entra no lugar como Base Despreparada.', // guia §4A
 };
 
 const NAMES = Object.keys(KEYWORD_RULES).sort((a, b) => b.length - a.length);
@@ -51,6 +51,14 @@ const ICONS = {'Guardian': 'guardian', 'Nimble': 'nimble', 'Long Range': 'long-r
 export const keywordIconUrl = k => (ICONS[k] ? new URL(`./keyword-icons/${ICONS[k]}.webp`, import.meta.url).href : null);
 
 const esc = v => String(v).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+
+// Atributo data-tip da palavra-chave no texto da carta (a dica é do duelo); "Hidden Cosmo {3}" vale como Hidden Cosmo.
+export function keywordTipAttr(name) {
+  const k = NAMES.find(n => String(name).toLowerCase().startsWith(n.toLowerCase()));
+  if (!k) return '';
+  const pt = lang() === 'pt';
+  return ` data-tip="${esc(`${pt ? KEYWORD_PT[k] : k}|${(pt ? KEYWORD_RULES_PT : KEYWORD_RULES)[k]}`)}"`;
+}
 
 // Fichas: título em maiúscula e negrito na cor do tema (--psd-ink do contêiner), regra em branco.
 export function renderKeywordNotes(card) {
