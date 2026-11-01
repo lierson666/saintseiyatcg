@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "The Ocean Hides Its Deadliest Warriors",
-  "flavour": "\"The sea reveals its secrets only after the enemy has already disappeared beneath the waves.\""
+  "flavour": "\"The sea reveals its secrets only after the enemy has already disappeared beneath the waves.\"",
+  "art": {
+    "src": "art/neutral-v6-475-ref.jpg",
+    "w": 1575.21,
+    "x": -43.61,
+    "y": 0.0,
+    "zoom": 1,
+    "baseW": 1575.21,
+    "provisoria": true
+  }
 }

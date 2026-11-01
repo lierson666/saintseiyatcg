@@ -4,11 +4,11 @@
   "flavour": "\"Peace is a lie told by those too weak to wage war.\"",
   "art": {
     "src": "art/ares-v6-331-ref.jpg",
-    "w": 1491.65,
-    "x": -1.83,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -276.72,
     "zoom": 1,
-    "baseW": 1491.65,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

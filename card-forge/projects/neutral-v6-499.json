@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "The Will to Challenge the Gods",
-  "flavour": "\"When gods demanded submission, humanity answered with the courage to stand against them.\""
+  "flavour": "\"When gods demanded submission, humanity answered with the courage to stand against them.\"",
+  "art": {
+    "src": "art/neutral-v6-499-ref.jpg",
+    "w": 1570.38,
+    "x": -41.19,
+    "y": 0.0,
+    "zoom": 1,
+    "baseW": 1570.38,
+    "provisoria": true
+  }
 }

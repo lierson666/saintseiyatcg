@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "Power Taken by Force",
-  "flavour": "\"The universe grants power freely to those who understand it. Those who steal it must pay.\""
+  "flavour": "\"The universe grants power freely to those who understand it. Those who steal it must pay.\"",
+  "art": {
+    "src": "art/neutral-v6-496-ref.jpg",
+    "w": 1591.5,
+    "x": -51.75,
+    "y": 0.0,
+    "zoom": 1,
+    "baseW": 1591.5,
+    "provisoria": true
+  }
 }

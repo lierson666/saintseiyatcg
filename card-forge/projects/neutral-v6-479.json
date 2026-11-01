@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "The Secrets Beyond the Seventh Sense",
-  "flavour": "\"Some truths cannot be discovered without sacrificing a part of the soul.\""
+  "flavour": "\"Some truths cannot be discovered without sacrificing a part of the soul.\"",
+  "art": {
+    "src": "art/neutral-v6-479-ref.jpg",
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -70.5,
+    "zoom": 1,
+    "baseW": 1488.0,
+    "provisoria": true
+  }
 }

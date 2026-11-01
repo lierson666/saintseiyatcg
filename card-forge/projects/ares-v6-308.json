@@ -4,11 +4,11 @@
   "flavour": "\"His sword moves faster than thought, and his rage faster still.\"",
   "art": {
     "src": "art/ares-v6-308-ref.jpg",
-    "w": 2099.75,
-    "x": -305.87,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -442.5,
     "zoom": 1,
-    "baseW": 2099.75,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

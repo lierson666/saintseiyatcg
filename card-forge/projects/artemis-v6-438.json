@@ -4,11 +4,11 @@
   "flavour": "\"Her shield has endured storms that shattered entire kingdoms.\"",
   "art": {
     "src": "art/artemis-v6-438-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -49.27,
+    "w": 1584.94,
+    "x": -48.47,
+    "y": 0.0,
     "zoom": 1,
-    "baseW": 1488.0,
+    "baseW": 1584.94,
     "provisoria": true
   }
 }

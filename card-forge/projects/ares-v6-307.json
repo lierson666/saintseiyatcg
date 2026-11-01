@@ -4,11 +4,11 @@
   "flavour": "\"Master Ofir taught us that every flame has a purpose, and every enemy has a weakness.\"",
   "art": {
     "src": "art/ares-v6-307-ref.jpg",
-    "w": 4023.26,
-    "x": -1267.63,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -275.71,
     "zoom": 1,
-    "baseW": 4023.26,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

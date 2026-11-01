@@ -4,11 +4,11 @@
   "flavour": "\"The battlefield burns long after their footsteps fade.\"",
   "art": {
     "src": "art/ares-v6-299-ref.jpg",
-    "w": 1488.0,
-    "x": -0.0,
-    "y": -6.4,
+    "w": 1568.78,
+    "x": -40.39,
+    "y": 0.0,
     "zoom": 1,
-    "baseW": 1488.0,
+    "baseW": 1568.78,
     "provisoria": true
   }
 }

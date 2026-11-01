@@ -4,11 +4,11 @@
   "flavour": "\"The finest torment is the one that begins when the battle ends.\"",
   "art": {
     "src": "art/ares-v6-300-ref.jpg",
-    "w": 1488.0,
-    "x": 0.0,
-    "y": -75.06,
+    "w": 1528.28,
+    "x": -20.14,
+    "y": 0.0,
     "zoom": 1,
-    "baseW": 1488.0,
+    "baseW": 1528.28,
     "provisoria": true
   }
 }

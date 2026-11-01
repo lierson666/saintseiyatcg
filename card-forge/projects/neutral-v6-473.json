@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "The Venom Beneath the Surface",
-  "flavour": "\"The sea hides countless dangers, but few are as merciless as the serpent beneath its surface.\""
+  "flavour": "\"The sea hides countless dangers, but few are as merciless as the serpent beneath its surface.\"",
+  "art": {
+    "src": "art/neutral-v6-473-ref.jpg",
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -275.71,
+    "zoom": 1,
+    "baseW": 1488.0,
+    "provisoria": true
+  }
 }

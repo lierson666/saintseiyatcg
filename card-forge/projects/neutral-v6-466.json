@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "The Mechanical Armor of the Fox",
-  "flavour": "\"Its strength comes not from ancient legends, but from the earth beneath mankind's feet.\""
+  "flavour": "\"Its strength comes not from ancient legends, but from the earth beneath mankind's feet.\"",
+  "art": {
+    "src": "art/neutral-v6-466-ref.jpg",
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -464.52,
+    "zoom": 1,
+    "baseW": 1488.0,
+    "provisoria": true
+  }
 }

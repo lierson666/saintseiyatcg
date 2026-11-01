@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "The Rival of Andromeda",
-  "flavour": "\"His chains were forged for battle, but envy became the heaviest chain of all.\""
+  "flavour": "\"His chains were forged for battle, but envy became the heaviest chain of all.\"",
+  "art": {
+    "src": "art/neutral-v6-483-ref.jpg",
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -63.42,
+    "zoom": 1,
+    "baseW": 1488.0,
+    "provisoria": true
+  }
 }

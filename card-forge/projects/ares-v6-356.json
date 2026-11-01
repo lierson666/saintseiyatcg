@@ -4,11 +4,11 @@
   "flavour": "\"Even Athena's sacred barrier could not silence the drums of war.\"",
   "art": {
     "src": "art/ares-v6-356-ref.jpg",
-    "w": 1626.33,
-    "x": -69.17,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -120.49,
     "zoom": 1,
-    "baseW": 1626.33,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

@@ -4,11 +4,11 @@
   "flavour": "\"Where its hooves touch the earth, the ancient forest awakens.\"",
   "art": {
     "src": "art/artemis-v6-381-ref.jpg",
-    "w": 1674.66,
-    "x": -93.33,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -275.71,
     "zoom": 1,
-    "baseW": 1674.66,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

@@ -4,11 +4,11 @@
   "flavour": "",
   "art": {
     "src": "art/poseidon-v6-160-ref.jpg",
-    "w": 1654.34,
-    "x": -83.17,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -70.5,
     "zoom": 1,
-    "baseW": 1654.34,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

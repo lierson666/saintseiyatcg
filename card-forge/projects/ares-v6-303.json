@@ -4,11 +4,11 @@
   "flavour": "\"I stopped counting victories when the arena ran out of bodies.\"",
   "art": {
     "src": "art/ares-v6-303-ref.jpg",
-    "w": 2195.4,
-    "x": -353.7,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -144.69,
     "zoom": 1,
-    "baseW": 2195.4,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

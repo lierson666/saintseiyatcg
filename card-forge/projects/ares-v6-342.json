@@ -4,11 +4,11 @@
   "flavour": "\"Under Ofir's command, even the smallest soldier can decide the fate of a war.\"",
   "art": {
     "src": "art/ares-v6-342-ref.jpg",
-    "w": 1502.03,
-    "x": -7.02,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -281.77,
     "zoom": 1,
-    "baseW": 1502.03,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "The Wings of Steel",
-  "flavour": "\"His wings were not born from the stars, but from humanity's determination to reach them.\""
+  "flavour": "\"His wings were not born from the stars, but from humanity's determination to reach them.\"",
+  "art": {
+    "src": "art/neutral-v6-461-ref.jpg",
+    "w": 1721.45,
+    "x": -116.73,
+    "y": 0.0,
+    "zoom": 1,
+    "baseW": 1721.45,
+    "provisoria": true
+  }
 }

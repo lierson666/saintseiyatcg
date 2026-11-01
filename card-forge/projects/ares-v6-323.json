@@ -4,11 +4,11 @@
   "flavour": "\"The warriors of Ares do not wait for battle. They bring it.\"",
   "art": {
     "src": "art/ares-v6-323-ref.jpg",
-    "w": 2658.97,
-    "x": -585.49,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -276.72,
     "zoom": 1,
-    "baseW": 2658.97,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

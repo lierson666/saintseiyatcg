@@ -4,11 +4,11 @@
   "flavour": "\"The earth awakens, and with it, a power older than the gods.\"",
   "art": {
     "src": "art/artemis-v6-417-ref.jpg",
-    "w": 2944.22,
-    "x": -728.11,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -281.77,
     "zoom": 1,
-    "baseW": 2944.22,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

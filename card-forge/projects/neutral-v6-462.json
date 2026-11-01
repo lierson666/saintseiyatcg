@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "The Unbreakable Earth",
-  "flavour": "\"The ground itself trembles beneath the weight of his steel armor.\""
+  "flavour": "\"The ground itself trembles beneath the weight of his steel armor.\"",
+  "art": {
+    "src": "art/neutral-v6-462-ref.jpg",
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -279.75,
+    "zoom": 1,
+    "baseW": 1488.0,
+    "provisoria": true
+  }
 }

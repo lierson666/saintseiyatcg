@@ -4,11 +4,11 @@
   "flavour": "\"A single precise strike is worth a thousand reckless charges.\"",
   "art": {
     "src": "art/ares-v6-298-ref.jpg",
-    "w": 2612.86,
-    "x": -562.43,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -70.5,
     "zoom": 1,
-    "baseW": 2612.86,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

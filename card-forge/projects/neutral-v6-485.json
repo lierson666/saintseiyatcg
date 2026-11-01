@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "The Dance of a Thousand Feathers",
-  "flavour": "\"His movements were beautiful as a peacock's feathers and deadly as a storm of blades.\""
+  "flavour": "\"His movements were beautiful as a peacock's feathers and deadly as a storm of blades.\"",
+  "art": {
+    "src": "art/neutral-v6-485-ref.jpg",
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -276.72,
+    "zoom": 1,
+    "baseW": 1488.0,
+    "provisoria": true
+  }
 }

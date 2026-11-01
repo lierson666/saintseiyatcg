@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "No Warrior Stands Above Fate",
-  "flavour": "\"When judgment comes from beyond the stars, even the strongest armor offers no protection.\""
+  "flavour": "\"When judgment comes from beyond the stars, even the strongest armor offers no protection.\"",
+  "art": {
+    "src": "art/neutral-v6-480-ref.jpg",
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -275.71,
+    "zoom": 1,
+    "baseW": 1488.0,
+    "provisoria": true
+  }
 }

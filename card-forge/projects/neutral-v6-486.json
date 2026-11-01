@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "The Disciple of Enlightenment",
-  "flavour": "\"The lotus rises from the mud, untouched by the darkness from which it grows.\""
+  "flavour": "\"The lotus rises from the mud, untouched by the darkness from which it grows.\"",
+  "art": {
+    "src": "art/neutral-v6-486-ref.jpg",
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -55.0,
+    "zoom": 1,
+    "baseW": 1488.0,
+    "provisoria": true
+  }
 }

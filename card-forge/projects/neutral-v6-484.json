@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "The Second Chain of Andromeda",
-  "flavour": "\"Two chains, one ambition, and a rivalry neither warrior could overcome.\""
+  "flavour": "\"Two chains, one ambition, and a rivalry neither warrior could overcome.\"",
+  "art": {
+    "src": "art/neutral-v6-484-ref.jpg",
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -274.87,
+    "zoom": 1,
+    "baseW": 1488.0,
+    "provisoria": true
+  }
 }

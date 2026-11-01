@@ -6,11 +6,11 @@
   "bonusResistance": "",
   "art": {
     "src": "art/hades-v6-251-ref.jpg",
-    "w": 2087.13,
-    "x": -299.57,
-    "y": 0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -275.71,
     "zoom": 1,
-    "baseW": 2087.13,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

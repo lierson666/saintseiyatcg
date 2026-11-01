@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "The Seal of the Black Saints",
-  "flavour": "\"The mask concealed their faces, but never the darkness consuming their souls.\""
+  "flavour": "\"The mask concealed their faces, but never the darkness consuming their souls.\"",
+  "art": {
+    "src": "art/neutral-v6-492-ref.jpg",
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -26.02,
+    "zoom": 1,
+    "baseW": 1488.0,
+    "provisoria": true
+  }
 }

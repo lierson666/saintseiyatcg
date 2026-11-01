@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "The Eyes Within Darkness",
-  "flavour": "\"Though his eyes could see nothing, his senses revealed the movements hidden in darkness.\""
+  "flavour": "\"Though his eyes could see nothing, his senses revealed the movements hidden in darkness.\"",
+  "art": {
+    "src": "art/neutral-v6-457-ref.jpg",
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -276.72,
+    "zoom": 1,
+    "baseW": 1488.0,
+    "provisoria": true
+  }
 }

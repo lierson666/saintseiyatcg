@@ -4,11 +4,11 @@
   "flavour": "\"The flames of Ares recognize no boundary between victory and destruction.\"",
   "art": {
     "src": "art/ares-v6-328-ref.jpg",
-    "w": 1672.8,
-    "x": -92.4,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -270.42,
     "zoom": 1,
-    "baseW": 1672.8,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

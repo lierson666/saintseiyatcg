@@ -4,11 +4,11 @@
   "flavour": "\"Before the warrior arrives, the flames have already claimed their prey.\"",
   "art": {
     "src": "art/ares-v6-320-ref.jpg",
-    "w": 1672.8,
-    "x": -92.4,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -256.5,
     "zoom": 1,
-    "baseW": 1672.8,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "Resources for the Long War",
-  "flavour": "\"Warriors may survive on courage, but armies survive on preparation.\""
+  "flavour": "\"Warriors may survive on courage, but armies survive on preparation.\"",
+  "art": {
+    "src": "art/neutral-v6-494-ref.jpg",
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -277.17,
+    "zoom": 1,
+    "baseW": 1488.0,
+    "provisoria": true
+  }
 }

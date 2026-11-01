@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "The Architect of Betrayal",
-  "flavour": "\"He wielded neither legendary Cloth nor divine power, yet his ambitions threatened the Sanctuary itself.\""
+  "flavour": "\"He wielded neither legendary Cloth nor divine power, yet his ambitions threatened the Sanctuary itself.\"",
+  "art": {
+    "src": "art/neutral-v6-488-ref.jpg",
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -5.8,
+    "zoom": 1,
+    "baseW": 1488.0,
+    "provisoria": true
+  }
 }

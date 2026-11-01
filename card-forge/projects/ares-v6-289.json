@@ -4,11 +4,11 @@
   "flavour": "\"Enyo is not merely the spear of war. She is the destruction that follows it.\"",
   "art": {
     "src": "art/ares-v6-289-ref.jpg",
-    "w": 1542.11,
-    "x": -27.06,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -275.71,
     "zoom": 1,
-    "baseW": 1542.11,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

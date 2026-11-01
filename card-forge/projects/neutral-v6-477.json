@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "A Second Chance Bought With Blood",
-  "flavour": "\"To pull a warrior back from death is to surrender a fragment of your own existence.\""
+  "flavour": "\"To pull a warrior back from death is to surrender a fragment of your own existence.\"",
+  "art": {
+    "src": "art/neutral-v6-477-ref.jpg",
+    "w": 1721.04,
+    "x": -116.52,
+    "y": 0.0,
+    "zoom": 1,
+    "baseW": 1721.04,
+    "provisoria": true
+  }
 }

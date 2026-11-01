@@ -4,11 +4,11 @@
   "flavour": "\"Every scar is a victory. Every victory demands another battle.\"",
   "art": {
     "src": "art/ares-v6-340-ref.jpg",
-    "w": 2079.7,
-    "x": -295.85,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -70.5,
     "zoom": 1,
-    "baseW": 2079.7,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

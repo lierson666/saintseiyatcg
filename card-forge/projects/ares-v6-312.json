@@ -4,11 +4,11 @@
   "flavour": "\"The dead have no use for what they leave behind.\"",
   "art": {
     "src": "art/ares-v6-312-ref.jpg",
-    "w": 1647.73,
-    "x": -79.86,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -442.5,
     "zoom": 1,
-    "baseW": 1647.73,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

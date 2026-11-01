@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "Survival Against Impossible Odds",
-  "flavour": "\"Survival is sometimes the greatest victory a warrior can achieve.\""
+  "flavour": "\"Survival is sometimes the greatest victory a warrior can achieve.\"",
+  "art": {
+    "src": "art/neutral-v6-497-ref.jpg",
+    "w": 1791.59,
+    "x": -151.79,
+    "y": 0.0,
+    "zoom": 1,
+    "baseW": 1791.59,
+    "provisoria": true
+  }
 }

@@ -4,11 +4,11 @@
   "flavour": "\"Her roots reach the deepest memories of the world.\"",
   "art": {
     "src": "art/artemis-v6-397-ref.jpg",
-    "w": 1520.73,
-    "x": -16.36,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -442.5,
     "zoom": 1,
-    "baseW": 1520.73,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

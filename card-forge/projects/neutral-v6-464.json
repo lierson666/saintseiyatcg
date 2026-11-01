@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "The Genius Behind the Steel Saints",
-  "flavour": "\"Where others sought divine power, he discovered that human ingenuity could challenge the gods.\""
+  "flavour": "\"Where others sought divine power, he discovered that human ingenuity could challenge the gods.\"",
+  "art": {
+    "src": "art/neutral-v6-464-ref.jpg",
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -4.85,
+    "zoom": 1,
+    "baseW": 1488.0,
+    "provisoria": true
+  }
 }

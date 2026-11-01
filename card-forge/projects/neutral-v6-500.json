@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "Awakening Beyond Death",
-  "flavour": "\"Beyond the Seventh Sense lies a power that allows the living to cross the boundary between life and death.\""
+  "flavour": "\"Beyond the Seventh Sense lies a power that allows the living to cross the boundary between life and death.\"",
+  "art": {
+    "src": "art/neutral-v6-500-ref.jpg",
+    "w": 1698.65,
+    "x": -105.33,
+    "y": 0.0,
+    "zoom": 1,
+    "baseW": 1698.65,
+    "provisoria": true
+  }
 }

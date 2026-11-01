@@ -4,11 +4,11 @@
   "flavour": "\"Every root carries the memory of a world that existed before humanity.\"",
   "art": {
     "src": "art/artemis-v6-428-ref.jpg",
-    "w": 2091.0,
-    "x": -301.5,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -279.75,
     "zoom": 1,
-    "baseW": 2091.0,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

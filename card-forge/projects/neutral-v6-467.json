@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "The Mechanical Armor of the Swordfish",
-  "flavour": "\"Its mechanical resonance turns the silence of the ocean into a devastating force.\""
+  "flavour": "\"Its mechanical resonance turns the silence of the ocean into a devastating force.\"",
+  "art": {
+    "src": "art/neutral-v6-467-ref.jpg",
+    "w": 1568.78,
+    "x": -40.39,
+    "y": 0.0,
+    "zoom": 1,
+    "baseW": 1568.78,
+    "provisoria": true
+  }
 }

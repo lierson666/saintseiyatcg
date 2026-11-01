@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "The Living Paralysis",
-  "flavour": "\"His touch carries no visible wound, only the terrifying silence of a body that refuses to move.\""
+  "flavour": "\"His touch carries no visible wound, only the terrifying silence of a body that refuses to move.\"",
+  "art": {
+    "src": "art/neutral-v6-474-ref.jpg",
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -354.65,
+    "zoom": 1,
+    "baseW": 1488.0,
+    "provisoria": true
+  }
 }

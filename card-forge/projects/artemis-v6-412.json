@@ -4,11 +4,11 @@
   "flavour": "\"Even the fiercest storm grows silent beneath the moon's embrace.\"",
   "art": {
     "src": "art/artemis-v6-412-ref.jpg",
-    "w": 2878.62,
-    "x": -695.31,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -70.5,
     "zoom": 1,
-    "baseW": 2878.62,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

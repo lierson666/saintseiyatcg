@@ -4,11 +4,11 @@
   "flavour": "\"Alcmenes raised his Cosmo, and the divine fire of Prometheus swallowed everything in its path.\"",
   "art": {
     "src": "art/ares-v6-350-ref.jpg",
-    "w": 1847.22,
-    "x": -179.61,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -276.72,
     "zoom": 1,
-    "baseW": 1847.22,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

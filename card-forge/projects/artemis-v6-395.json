@@ -4,11 +4,11 @@
   "flavour": "\"The gates of the Moon Temple have never fallen to mortal hands.\"",
   "art": {
     "src": "art/artemis-v6-395-ref.jpg",
-    "w": 2091.0,
-    "x": -301.5,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -70.5,
     "zoom": 1,
-    "baseW": 2091.0,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

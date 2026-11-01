@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "The Instruments of Restoration",
-  "flavour": "\"Even the strongest armor cannot survive forever without the hands that restore it.\""
+  "flavour": "\"Even the strongest armor cannot survive forever without the hands that restore it.\"",
+  "art": {
+    "src": "art/neutral-v6-491-ref.jpg",
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -63.42,
+    "zoom": 1,
+    "baseW": 1488.0,
+    "provisoria": true
+  }
 }

@@ -4,11 +4,11 @@
   "flavour": "\"No tree stands alone. No guardian fights without the forest.\"",
   "art": {
     "src": "art/artemis-v6-399-ref.jpg",
-    "w": 1773.81,
-    "x": -142.91,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -277.17,
     "zoom": 1,
-    "baseW": 1773.81,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

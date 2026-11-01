@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "The Dark Gallop",
-  "flavour": "\"He charges without fear, for darkness has already taken everything he could lose.\""
+  "flavour": "\"He charges without fear, for darkness has already taken everything he could lose.\"",
+  "art": {
+    "src": "art/neutral-v6-460-ref.jpg",
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -275.71,
+    "zoom": 1,
+    "baseW": 1488.0,
+    "provisoria": true
+  }
 }

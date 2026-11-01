@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "The Mechanical Ocean",
-  "flavour": "\"His armor transforms the ocean's vibrations into weapons of extraordinary precision.\""
+  "flavour": "\"His armor transforms the ocean's vibrations into weapons of extraordinary precision.\"",
+  "art": {
+    "src": "art/neutral-v6-463-ref.jpg",
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -9.53,
+    "zoom": 1,
+    "baseW": 1488.0,
+    "provisoria": true
+  }
 }

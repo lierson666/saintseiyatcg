@@ -4,11 +4,11 @@
   "flavour": "\"Carved from the oldest trees, its point carries the fury of the wilderness.\"",
   "art": {
     "src": "art/artemis-v6-411-ref.jpg",
-    "w": 2091.0,
-    "x": -301.5,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -442.5,
     "zoom": 1,
-    "baseW": 2091.0,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

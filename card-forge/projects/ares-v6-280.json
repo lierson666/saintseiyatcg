@@ -4,11 +4,11 @@
   "flavour": "\"The serpent does not rush its prey. It simply ensures there is no escape.\"",
   "art": {
     "src": "art/ares-v6-280-ref.jpg",
-    "w": 1567.19,
-    "x": -39.59,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -195.82,
     "zoom": 1,
-    "baseW": 1567.19,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

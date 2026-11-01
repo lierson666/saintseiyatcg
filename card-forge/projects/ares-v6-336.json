@@ -4,11 +4,11 @@
   "flavour": "\"The flames of Ethon burn within every plate of crimson steel.\"",
   "art": {
     "src": "art/ares-v6-336-ref.jpg",
-    "w": 2170.74,
-    "x": -341.37,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -70.5,
     "zoom": 1,
-    "baseW": 2170.74,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

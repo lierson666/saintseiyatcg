@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "The Imitation of Immortality",
-  "flavour": "\"They wore the shape of the Phoenix, but possessed none of its eternal flame.\""
+  "flavour": "\"They wore the shape of the Phoenix, but possessed none of its eternal flame.\"",
+  "art": {
+    "src": "art/neutral-v6-458-ref.jpg",
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -455.69,
+    "zoom": 1,
+    "baseW": 1488.0,
+    "provisoria": true
+  }
 }

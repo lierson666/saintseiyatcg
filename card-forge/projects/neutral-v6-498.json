@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "Where Darkness Forged Its Warriors",
-  "flavour": "\"On Death Queen Island, victory was not earned through honor, but through the destruction of everyone who stood in the way.\""
+  "flavour": "\"On Death Queen Island, victory was not earned through honor, but through the destruction of everyone who stood in the way.\"",
+  "art": {
+    "src": "art/neutral-v6-498-ref.jpg",
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -276.72,
+    "zoom": 1,
+    "baseW": 1488.0,
+    "provisoria": true
+  }
 }

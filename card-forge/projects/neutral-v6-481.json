@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "The Master of Eternal Ice",
-  "flavour": "\"Before the Swan learned to fly, he was taught to master the silence of eternal ice.\""
+  "flavour": "\"Before the Swan learned to fly, he was taught to master the silence of eternal ice.\"",
+  "art": {
+    "src": "art/neutral-v6-481-ref.jpg",
+    "w": 1645.49,
+    "x": -78.75,
+    "y": 0.0,
+    "zoom": 1,
+    "baseW": 1645.49,
+    "provisoria": true
+  }
 }

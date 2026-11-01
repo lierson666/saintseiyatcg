@@ -4,11 +4,11 @@
   "flavour": "\"Lord Lior laughed as the fortress fell. We laughed even louder.\"",
   "art": {
     "src": "art/ares-v6-301-ref.jpg",
-    "w": 2091.0,
-    "x": -301.5,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -70.5,
     "zoom": 1,
-    "baseW": 2091.0,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

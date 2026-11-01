@@ -4,11 +4,11 @@
   "flavour": "\"Lord Lior promised us glory. He never promised survival.\"",
   "art": {
     "src": "art/ares-v6-293-ref.jpg",
-    "w": 1672.8,
-    "x": -92.4,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -276.72,
     "zoom": 1,
-    "baseW": 1672.8,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

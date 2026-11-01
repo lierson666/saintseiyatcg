@@ -6,11 +6,11 @@
   "bonusResistance": "",
   "art": {
     "src": "art/poseidon-v6-106-ref.jpg",
-    "w": 3986.98,
-    "x": -1266.5100461494087,
-    "y": -46.28515625,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -318.16,
     "zoom": 1,
-    "baseW": 3986.98,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

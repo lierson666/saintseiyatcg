@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "The Tiger of Rozan",
-  "flavour": "\"He possessed the strength of a tiger, but never learned the patience of a dragon.\""
+  "flavour": "\"He possessed the strength of a tiger, but never learned the patience of a dragon.\"",
+  "art": {
+    "src": "art/neutral-v6-482-ref.jpg",
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -274.7,
+    "zoom": 1,
+    "baseW": 1488.0,
+    "provisoria": true
+  }
 }

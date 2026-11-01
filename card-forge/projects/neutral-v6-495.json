@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "Beyond the Reach of the Stars",
-  "flavour": "\"To remove an enemy from existence is to disturb the balance of the universe itself.\""
+  "flavour": "\"To remove an enemy from existence is to disturb the balance of the universe itself.\"",
+  "art": {
+    "src": "art/neutral-v6-495-ref.jpg",
+    "w": 1575.21,
+    "x": -43.61,
+    "y": 0.0,
+    "zoom": 1,
+    "baseW": 1575.21,
+    "provisoria": true
+  }
 }

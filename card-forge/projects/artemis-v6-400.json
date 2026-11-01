@@ -4,11 +4,11 @@
   "flavour": "\"When the ancient forest rises, mountains tremble beneath its roots.\"",
   "art": {
     "src": "art/artemis-v6-400-ref.jpg",
-    "w": 1813.88,
-    "x": -162.94,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -279.75,
     "zoom": 1,
-    "baseW": 1813.88,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

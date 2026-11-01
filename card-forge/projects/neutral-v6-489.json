@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "The Hand of the False Pope",
-  "flavour": "\"He followed the Pope's commands without questioning the darkness behind the throne.\""
+  "flavour": "\"He followed the Pope's commands without questioning the darkness behind the throne.\"",
+  "art": {
+    "src": "art/neutral-v6-489-ref.jpg",
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -70.5,
+    "zoom": 1,
+    "baseW": 1488.0,
+    "provisoria": true
+  }
 }

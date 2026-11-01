@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "The First Step Toward Artificial Cosmo",
-  "flavour": "\"Every masterpiece begins as an experiment, and every experiment carries the risk of failure.\""
+  "flavour": "\"Every masterpiece begins as an experiment, and every experiment carries the risk of failure.\"",
+  "art": {
+    "src": "art/neutral-v6-469-ref.jpg",
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -276.72,
+    "zoom": 1,
+    "baseW": 1488.0,
+    "provisoria": true
+  }
 }

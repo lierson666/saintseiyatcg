@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "The Mechanical Wings of the Toucan",
-  "flavour": "\"Forged without divine blessings, its wings proved that humanity could challenge the heavens.\""
+  "flavour": "\"Forged without divine blessings, its wings proved that humanity could challenge the heavens.\"",
+  "art": {
+    "src": "art/neutral-v6-465-ref.jpg",
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -276.72,
+    "zoom": 1,
+    "baseW": 1488.0,
+    "provisoria": true
+  }
 }

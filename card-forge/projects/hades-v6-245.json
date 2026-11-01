@@ -4,11 +4,11 @@
   "flavour": "",
   "art": {
     "src": "art/hades-v6-245-ref.jpg",
-    "w": 1640.0,
-    "x": -76.0,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -70.5,
     "zoom": 1,
-    "baseW": 1640.0,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "A Fragment of the Infinite Universe",
-  "flavour": "\"Within a fragment of crystal, the endless energy of the universe waits to be awakened.\""
+  "flavour": "\"Within a fragment of crystal, the endless energy of the universe waits to be awakened.\"",
+  "art": {
+    "src": "art/neutral-v6-478-ref.jpg",
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -281.77,
+    "zoom": 1,
+    "baseW": 1488.0,
+    "provisoria": true
+  }
 }

@@ -4,11 +4,11 @@
   "flavour": "\"Every arrow is a prayer offered to the goddess of the hunt.\"",
   "art": {
     "src": "art/artemis-v6-409-ref.jpg",
-    "w": 3654.27,
-    "x": -1083.14,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -70.5,
     "zoom": 1,
-    "baseW": 3654.27,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

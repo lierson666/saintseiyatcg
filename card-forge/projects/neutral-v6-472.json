@@ -1,5 +1,14 @@
 {
   "title": "",
   "subtitle": "The Phantom of the Waves",
-  "flavour": "\"He strikes from beneath the waves and vanishes before his enemies understand what happened.\""
+  "flavour": "\"He strikes from beneath the waves and vanishes before his enemies understand what happened.\"",
+  "art": {
+    "src": "art/neutral-v6-472-ref.jpg",
+    "w": 1568.78,
+    "x": -40.39,
+    "y": 0.0,
+    "zoom": 1,
+    "baseW": 1568.78,
+    "provisoria": true
+  }
 }

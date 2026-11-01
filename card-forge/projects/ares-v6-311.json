@@ -4,11 +4,11 @@
   "flavour": "\"My blood belongs to Ares. My enemies shall pay the rest.\"",
   "art": {
     "src": "art/ares-v6-311-ref.jpg",
-    "w": 1560.29,
-    "x": -36.14,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -275.21,
     "zoom": 1,
-    "baseW": 1560.29,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

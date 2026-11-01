@@ -4,11 +4,11 @@
   "flavour": "\"The armor reflects the nightmares of those who dare to face it.\"",
   "art": {
     "src": "art/ares-v6-339-ref.jpg",
-    "w": 1693.04,
-    "x": -102.52,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -70.5,
     "zoom": 1,
-    "baseW": 1693.04,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

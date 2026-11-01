@@ -4,11 +4,11 @@
   "flavour": "\"Even beneath the coldest moon, her flowers remember the warmth of life.\"",
   "art": {
     "src": "art/artemis-v6-377-ref.jpg",
-    "w": 1988.34,
-    "x": -250.17,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -281.1,
     "zoom": 1,
-    "baseW": 1988.34,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }

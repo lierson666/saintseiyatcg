@@ -4,11 +4,11 @@
   "flavour": "\"A Berserker's greatest strength is also his final breath.\"",
   "art": {
     "src": "art/ares-v6-324-ref.jpg",
-    "w": 1542.11,
-    "x": -27.06,
-    "y": 0.0,
+    "w": 1488.0,
+    "x": 0.0,
+    "y": -276.72,
     "zoom": 1,
-    "baseW": 1542.11,
+    "baseW": 1488.0,
     "provisoria": true
   }
 }
