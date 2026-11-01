@@ -3441,7 +3441,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Return target defeated friendly Bronze Saint from your discard pile to the Battlefield Unprepared.",
+        "Return target defeated friendly Bronze Saint from your Tartarus to the Battlefield Unprepared.",
         "If that Saint is Phoenix Ikki, also return each other Phoenix Ikki card from your Tartarus to the Battlefield Unprepared.",
         "A Saint returned this way cannot declare a Strike this round."
       ],
@@ -3451,7 +3451,7 @@
       "nome_exibicao_pt": "O RETORNO DA FÊNIX",
       "subtitulo_pt": "Das Cinzas, Eu Renasço",
       "habilidades_pt": [
-        "Devolva o Cavaleiro de Bronze aliado derrotado alvo da sua pilha de descarte para o Campo de Batalha, Despreparado.",
+        "Devolva o Cavaleiro de Bronze aliado derrotado alvo do seu Tártaro para o Campo de Batalha, Despreparado.",
         "Se esse Cavaleiro for Ikki de Fênix, devolva também cada outro Ikki de Fênix do seu Tártaro para o Campo de Batalha, Despreparado.",
         "Um Cavaleiro devolvido assim não pode declarar um Golpe nesta rodada."
       ],
@@ -3863,7 +3863,7 @@
       "habilidades_en": [
         "Divine Will — Choose up to three friendly Saints. Each gets +2 ATK / +2 HP until the end of the round.",
         "Athena’s Protection — Prevent all Strike damage that would be dealt to your God this round.",
-        "The Miracle of Hope — If your God has 5 or less Soul, return target defeated friendly Saint from your discard pile to the Battlefield Prepared. That Saint cannot declare a Strike this round."
+        "The Miracle of Hope — If your God has 5 or less Soul, return target defeated friendly Saint from your Tartarus to the Battlefield Prepared. That Saint cannot declare a Strike this round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -3873,7 +3873,7 @@
       "habilidades_pt": [
         "Vontade Divina — Escolha até três Cavaleiros aliados. Cada um recebe +2 ATQ / +2 PV até o fim da rodada.",
         "A Proteção de Athena — Previna todo o dano de Golpe que seria causado ao seu Deus nesta rodada.",
-        "O Milagre da Esperança — Se seu Deus tiver 5 de Alma ou menos, devolva o Cavaleiro aliado derrotado alvo da sua pilha de descarte para o Campo de Batalha, Preparado. Esse Cavaleiro não pode declarar um Golpe nesta rodada."
+        "O Milagre da Esperança — Se seu Deus tiver 5 de Alma ou menos, devolva o Cavaleiro aliado derrotado alvo do seu Tártaro para o Campo de Batalha, Preparado. Esse Cavaleiro não pode declarar um Golpe nesta rodada."
       ],
       "tagline_pt": "A Esperança Nunca Morrerá"
     },
