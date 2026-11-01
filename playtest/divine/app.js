@@ -4,6 +4,7 @@
 import {loadCanon} from '../../shared/canon-cards.js';
 import {canonIndex} from '../../shared/deck-v3.js';
 import {addPreviewCards} from '../../shared/preview-cards.js';
+import {abilityText} from '../../shared/card-i18n.js';
 import {createMatch, mulligan} from '../engine-v3/match.js';
 import {startTurn, endTurn, pass, placeBase, spellCategory, runCheckpoint, ownBatch, loseGame} from '../engine-v3/core.js';
 import {inlineMarkup} from '../../shared/card-text.js?v=20261031-kw1';
@@ -434,6 +435,9 @@ function chainLabel(c) {
     text = named ? lines[i].slice(ability.length).replace(/^\s*[—:-]\s*/, '') : lines[i];
     if (text.length < 25) text = lines.slice(i + 1).find(l => l && !/^Cost:/.test(l)) || text;
   } else if (ability) text = lines.find(l => l.toLowerCase().includes(low)) || '';
+  // Texto do Forge no idioma da tela (autor, 01/11/2026): o `card.text` de Athena é o D268 congelado, sempre em inglês.
+  const forge = c.uid && ctx.objects[c.uid] ? FORGE.get(ctx.objects[c.uid].cardId) : card && FORGE.get(`${card.name.toLowerCase()}-001`);
+  text = abilityText(forge, ability) ?? text;
   const sub = ability && ability.toUpperCase() !== card?.name?.toUpperCase() ? ability[0].toUpperCase() + ability.slice(1) : '';
   const title = [card?.name, sub].filter(Boolean).join(' · ') || 'Triggered ability';
   return {title, name: card?.name || 'Triggered ability', sub, text, target: (c.targets?.length ? c.targets : [c.target]).filter(Boolean).map(u => (String(u).startsWith('god:') ? `God ${u.slice(4)}` : ctx.objects[u] ? info(u).name : '')).filter(Boolean).join(', ')}; // alvos escolhidos ao conjurar (item.targets)

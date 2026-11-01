@@ -127,5 +127,11 @@
     host.append(b);
   }
   addEventListener('DOMContentLoaded', toggle);
-  window.ssI18n = {LANGS, get lang() { return lang; }, set, t: tr, missing};
+  // Nomes de carta e de habilidade (shared/card-i18n.js, cardTerms): vêm dos campos *_pt, somados quando as cartas carregam.
+  function add(map) {
+    for (const [k, v] of Object.entries(map)) { const key = norm(k); if (!strings.has(key)) { strings.set(key, v); outputs.add(v); } }
+    cache.clear();
+    if (lang === 'pt' && document.body) walk(document.body);
+  }
+  window.ssI18n = {LANGS, get lang() { return lang; }, set, t: tr, missing, add};
 })();

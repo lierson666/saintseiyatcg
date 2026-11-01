@@ -3,6 +3,7 @@
 // Etapa 1 (autor, 29/10/2026): entram em partida com custo, ATK/HP, keywords e bônus fixo de Equipment;
 // habilidades escritas só valem depois de implementadas em engine-v3/effects.js.
 import {parseCard} from './canon-cards.js';
+import {registerCardTerms} from './card-i18n.js';
 import {KEYWORDS} from './card-model.js';
 
 export const PREVIEW = /^(poseidon|hades|ares|artemis|neutral)-v6-/;
@@ -48,6 +49,7 @@ export function forgeCard(f, r = previewRecord(f)) {
 
 // Soma as cartas novas ao mapa de cartas (loadCanon) e, se vier, ao índice de validação (canonIndex).
 export function addPreviewCards(cards, index, forgeCards) {
+  registerCardTerms(forgeCards); // nomes de carta e de habilidade em PT na tela (shared/i18n.js)
   for (const f of forgeCards.filter(c => PREVIEW.test(c.id))) {
     const r = previewRecord(f);
     cards.set(r.id, forgeCard(f, r));

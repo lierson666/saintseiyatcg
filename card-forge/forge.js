@@ -7,7 +7,7 @@ import {isArmor,isEquipment,validateCard} from '../shared/card-model.js';
 // as peças de CARD-TEMPLATE/ (extraídas dos PSDs) e o spec CARD-TEMPLATE/templates.json.
 
 import {publishedScene,visualProject} from '../shared/layout-studio/runtime.js';
-import {displayCard,forceLang,keywordName,typeWord} from '../shared/card-i18n.js?v=20261031-kw1';
+import {displayCard,forceLang,keywordName,typeWord,lang} from '../shared/card-i18n.js?v=20261101-tr1';
 import {sceneCanvas} from '../shared/layout-studio/renderer.js';
 import {simulateCard} from './studio-preview.js';
 import {printedEquipmentBonuses,signedBonus,armorBonusText} from '../shared/card-visual-values.js?v=20261031-kw1';
@@ -491,7 +491,7 @@ async function render() {
       case 'rarity': {
         // Rodapé de edição (autor, 31/10/2026; igual a shared/live-card.js): raridade • DOC • EN • artista • © ano SSTCG.
         const key = `athena/rarity_${S.raridade.toLowerCase()}`, p = P[key], size = 30, gh = size * 1.35, gw = p ? p.w * gh / p.h : 0;
-        const ed = editionOf(S), parts = [ed.code, ed.language, (S.artista || '').trim().toUpperCase(), `© ${ed.year} SSTCG`].filter(Boolean), sep = '  •  ';
+        const ed = editionOf(S), parts = [ed.code, lang() === 'pt' ? 'PT' : ed.language, (S.artista || '').trim().toUpperCase(), `© ${ed.year} SSTCG`].filter(Boolean), sep = '  •  ';
         ctx.save();
         // Delicado (autor, 31/10/2026): fino, espaçado e translúcido para não brigar com o flavour.
         ctx.font = `400 ${size}px Avenir, 'Avenir Next', sans-serif`;
