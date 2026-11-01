@@ -30,10 +30,9 @@ test('eventos têm seq contínuo e seguem a ordem real: mulligan, turno, compra,
   const ev = s.events;
   assert.deepEqual(ev.map(e => e.seq), ev.map((_, i) => i + 1));
   const types = ev.map(e => e.type);
-  const order = ['mulligan', 'turn_start', 'cosmo_spent', 'card_played', 'end_phase', 'draw', 'strike_declared', 'window_open', 'pass', 'window_close', 'strike_resolve', 'damage', 'god_damage', 'soul_lost'];
+  const order = ['mulligan', 'turn_start', 'cosmo_spent', 'card_played', 'end_phase', 'draw', 'strike_declared', 'window_open', 'pass', 'window_close', 'strike_resolve', 'god_damage', 'soul_lost'];
   let at = -1;
   for (const t of order) { const i = types.indexOf(t, at + 1); assert.ok(i > at, `${t} depois da posição ${at}`); at = i; }
-  const hit = ev.find(e => e.type === 'damage' && e.uid === seiya);
-  assert.deepEqual([hit.incoming, hit.dealt, hit.strike], [3, 3, true], 'retaliação do God');
+  assert.ok(!ev.some(e => e.type === 'damage' && e.uid === seiya), 'o God não retalia (01/11/2026): nenhum dano ao atacante');
   assert.deepEqual(ev.find(e => e.type === 'soul_lost'), {...ev.find(e => e.type === 'soul_lost'), player: 'B', amount: 2, soul: 18});
 });

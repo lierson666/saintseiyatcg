@@ -11,8 +11,18 @@ const ALPHA_SOUL = {'god-athena': 20, 'god-poseidon': 18, 'god-hades': 22, 'god-
 const EX_MIRACLE = new Set(['athena-v6-054', 'athena-v6-056', 'athena-v6-058', 'athena-v6-061', 'athena-v6-076', 'athena-v6-079']);
 const EX_EVENT = new Set(['athena-v6-052', 'athena-v6-055', 'athena-v6-083']);
 
+// Divine Command (autor, 01/11/2026; guia §63; texto de cards.json): entra no fim do texto do God. Gods não retaliam (§24): sem ATTACK.
+const GOD_COMMAND = {
+  'god-athena': "HEALING LIGHT — Divine Command\nCost: {1}{C}. Activate only during your turn, once each turn.\nRemove 1 damage from target friendly Devotee.\nAwakened: remove 2 damage instead and gain {1}{S}.",
+  'god-poseidon': "BINDING TIDE — Divine Command\nCost: {1}{C}. Activate only during your turn, once each turn.\nPut a Seal counter on target enemy Devotee with cost 2 or less.\nAwakened: that Devotee can have any cost.",
+  'god-hades': "DARK TOUCH — Divine Command\nCost: {1}{C}. Activate only during your turn, once each turn.\nTarget enemy Devotee gets -1 ATK / -1 HP until the end of the round.\nAwakened: -2 ATK / -2 HP instead.",
+  'god-artemis': "HUNTRESS TRAINING — Divine Command\nCost: {1}{C}. Activate only during your turn, once each turn.\nPut a Training counter on target friendly Devotee.\nAwakened: put two instead.",
+  'god-ares': "BLOOD TOLL — Divine Command\nCost: {1}{C}. Activate only during your turn, once each turn.\nDeal 1 damage to target enemy Devotee. Ares loses {1}{S}.",
+};
+
 export function parseCard(record) {
-  const text = record.approved_current_text_as_of_d268;
+  const command = GOD_COMMAND[record.id.toLowerCase()];
+  const text = record.approved_current_text_as_of_d268 + (command ? `\n${command}` : '');
   const exMiracle = EX_MIRACLE.has(record.id.toLowerCase());
   const type = exMiracle ? 'Spell — Technique' : EX_EVENT.has(record.id.toLowerCase()) ? 'Spell — Moment' : record.type;
   const kind = type.startsWith('God') ? 'God' : type.startsWith('Domain') ? 'Domain'
@@ -36,7 +46,7 @@ export function parseCard(record) {
     cosmoble: cosmoble ? cosmoble[1] === 'Yes' : null,
     // Guia §4A (autor, 31/10/2026): "Hidden Cosmo {X}" em linha própria; joga da Cosmo Base pagando X.
     hiddenCosmo: number(text, /^\s*Hidden Cosmo \{(\d+)\}\s*$/m),
-    atk: number(text, /ATK: (\d+)/) ?? number(text, /ATTACK (\d+)/),
+    atk: command ? null : number(text, /ATK: (\d+)/) ?? number(text, /ATTACK (\d+)/),
     hp: number(text, /HP: (\d+)/),
     soul: ALPHA_SOUL[record.id.toLowerCase()] ?? number(text, /SOUL (\d+)/),
     awaken: number(text, /AWAKEN (\d+)/),

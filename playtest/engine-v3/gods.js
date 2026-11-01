@@ -359,6 +359,53 @@ export function activateBloodlust(state, ctx, key, uid) {
   }}]);
 }
 
+// ---------- Divine Command (autor, 01/11/2026; guia §63) ----------
+// {1}{C} (Base preparada ou Latent), só no próprio turno com a pilha vazia, uma vez por turno; vai à pilha.
+// A versão Awakened vale se o God estiver Awakened na resolução.
+export const COMMAND_COST = 1;
+export const COMMANDS = {
+  'god-athena': {ability: 'HEALING LIGHT', side: 'friendly', run: (s, c, key, uid, awake) => {
+    k.removeDamage(s, uid, awake ? 2 : 1);
+    if (awake) gainSoul(s, key, 1);
+  }},
+  'god-poseidon': {ability: 'BINDING TIDE', side: 'enemy', legal: (s, c, key, uid) => s.divine[key].awaken || k.costOf(c, uid) <= 2,
+    run: (s, c, key, uid) => addSeal(s, c, [uid], 1, 'BINDING TIDE')},
+  'god-hades': {ability: 'DARK TOUCH', side: 'enemy', run: (s, c, key, uid, awake) => { k.buff(s, uid, awake ? -2 : -1, awake ? -2 : -1); k.checkDefeats(s, c); }},
+  'god-ares': {ability: 'BLOOD TOLL', side: 'enemy', run: (s, c, key, uid) => { k.damage(s, c, uid, 1); if (!s.victory) k.loseSoulOf(s, key, 1); }},
+  'god-artemis': {ability: 'HUNTRESS TRAINING', side: 'friendly', run: (s, c, key, uid, awake) => {
+    s.units[uid].training = (s.units[uid].training || 0) + (awake ? 2 : 1);
+    emit(s, 'training', {uid, amount: awake ? 2 : 1});
+  }},
+};
+const commandSplit = (state, key) => { const base = Math.min(COMMAND_COST, state.players[key].bases.filter(b => b.prepared).length); return {base, latent: COMMAND_COST - base}; };
+const commandSide = (state, key) => (COMMANDS[state.divine[key].god].side === 'friendly' ? key : other(state, key));
+export function commandTargets(state, ctx, key) {
+  const cmd = COMMANDS[state.divine[key]?.god];
+  return cmd ? k.devotees(state, ctx, commandSide(state, key)).filter(uid => !cmd.legal || cmd.legal(state, ctx, key, uid)) : [];
+}
+export function commandBlock(state, ctx, key, uid) {
+  if (state.victory) return 'D52';
+  if (!COMMANDS[state.divine[key]?.god]) return 'none';
+  if (state.active !== key || state.window || state.chain.length) return 'sorcery';
+  if (state.roundUses.has(`god:${key}:command`)) return 'used';
+  if (state.players[key].latent < commandSplit(state, key).latent) return 'cost';
+  const legal = commandTargets(state, ctx, key);
+  if (uid === undefined ? !legal.length : !legal.includes(uid)) return 'target';
+  return null;
+}
+export function activateCommand(state, ctx, key, uid) {
+  const why = commandBlock(state, ctx, key, uid);
+  if (why) throw new RuleError('§63', `Divine Command indisponível: ${why}`);
+  const cmd = COMMANDS[state.divine[key].god];
+  payMixed(state, key, commandSplit(state, key));
+  useOncePerRound(state, `god:${key}:command`); // cada jogador tem um turno por Round: equivale a "uma vez por turno"
+  emit(state, 'divine_power', {player: key, ability: cmd.ability, uid, command: true});
+  pushTriggers(state, [{controller: key, activated: true, uid: `command:${uid}`, ability: cmd.ability, run: st => {
+    if (!k.onField(st, commandSide(st, key), uid)) return; // alvo saiu do campo: não resolve
+    cmd.run(st, ctx, key, uid, !!st.divine[key].awaken);
+  }}]);
+}
+
 // ---------- Artemis ----------
 // Moon Harvest: no lugar do `placeBase` normal para carta não Cosmoble. Uma vez por Round; perde 2 Soul se usar.
 export function moonHarvestBlock(state, ctx, key, uid) {

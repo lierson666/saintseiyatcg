@@ -15,12 +15,12 @@ import {domainEntry} from '../engine-v3/v6/registry.js';
 import {STEPS, ABILITY_STEPS} from '../choices-v3.js?v=2';
 import {createScene, THEMES} from './scene.js?v=20261031-pool1';
 import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudgment, greatFloodBlock, announceGreatFlood, GREAT_FLOOD_COST,
-  greatEclipseBlock, GREAT_ECLIPSE_COST, obliterationBlock, OBLITERATION_COST, bloodlustBlock, BLOODLUST_COST, moonHarvestBlock, moonAwakeningBlock, MOON_AWAKENING_COST} from '../engine-v3/gods.js';
+  greatEclipseBlock, GREAT_ECLIPSE_COST, obliterationBlock, OBLITERATION_COST, bloodlustBlock, BLOODLUST_COST, commandBlock, commandTargets, activateCommand, COMMANDS, moonHarvestBlock, moonAwakeningBlock, MOON_AWAKENING_COST} from '../engine-v3/gods.js';
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout, clockBonus} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
 import {createDirector} from './director.js?v=18';
-import {createAI} from './ai.js?v=10';
+import {createAI} from './ai.js?v=11';
 import {findDeck} from '../deck-store.js';
 import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-face3';
 import {unlock, playMusic} from '../audio.js?v=20261030-telas';
@@ -247,6 +247,7 @@ function candidates(step, key) {
     case 'resonant': return devs.filter(u => resonant(s, ctx, key, info(step.armor), u));
     case 'wearer': return devs.filter(u => ctx.attached[step.armor] !== u);
     case 'enemy': return s.players[other(key)].battlefield.filter(u => info(u).kind === 'Devotee');
+    case 'command': return commandTargets(s, ctx, key); // Divine Command (§63): o lado e o filtro vêm do God
     case 'strike': return strikeTargets(s, ctx, mode.uid).map(t => (t.kind === 'god' ? `god:${t.player}` : t.uid));
     default: return [];
   }
@@ -342,7 +343,11 @@ function godActions(key) {
   const why = {used: 'Ultimate already used this match.', sorcery: 'Ultimate: your turn, with no response pending.', cost: ULT[2] || 'Not enough prepared Bases.', 'only-athena': 'No Ultimate available.', pendente: 'This Ultimate is not available in the playtest yet.'}[block] || (block ? 'Not available now.' : '');
   // Bloodlust (Ares): Divine Power ativado, escolhe o Devotee na barra de escolha.
   const blood = d.god === 'god-ares' && mine ? bloodlustBlock(s, ctx, key) : 'only-ares';
+  // Divine Command (guia §63, 01/11/2026): {1}{C}, no próprio turno, uma vez por turno; alvo na barra de escolha.
+  const cmd = COMMANDS[d.god], cmdWhy = mine ? commandBlock(s, ctx, key) : 'owner';
   return {
+    command: !cmd ? null : {ok: mine && !cmdWhy, why: {sorcery: 'Divine Command: your turn, with no response pending.', used: 'Divine Command already used this turn.', cost: 'Divine Command costs 1 Cosmo (prepared Base or Latent).', target: 'No legal target.', owner: "Only the God's controller uses it."}[cmdWhy] || 'Not available now.',
+      run: () => begin('command', key, null, [{key: 'uid', pick: 'command', label: `${cmd.ability}: choose a ${cmd.side === 'friendly' ? 'Devotee you control' : 'enemy Devotee'}`}], choice => ({type: 'command', key, choice}))},
     bloodlust: d.god !== 'god-ares' ? null : {ok: mine && !blood, why: {sorcery: 'Bloodlust: your turn, with no response pending.', used: 'Bloodlust already used this round.', cost: `Bloodlust costs ${BLOODLUST_COST} Cosmo (prepared Base or Latent).`, target: 'You control no Devotee.'}[blood] || 'Not available now.',
       run: () => begin('bloodlust', key, null, [{key: 'uid', pick: 'devotee', label: 'Bloodlust: choose a Devotee you control (Prepare it, +1 ATK this round)'}], choice => ({type: 'bloodlust', key, choice}))},
     ultimate: {ok: mine && !block, why: mine ? why : "Only the God's controller uses it.", run},
@@ -510,8 +515,6 @@ function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
 // medalhão com anel dourado, tridente no topo e asas douradas; faixa com o nome entre louros; placa com Soul (coração),
 // ATTACK (espadas), asas prateadas nas pontas e medalhão Ω com ponta embaixo.
 const GOLD = id => `<linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6cf"/><stop offset=".35" stop-color="#f0cc6e"/><stop offset=".7" stop-color="#a8741f"/><stop offset="1" stop-color="#f6d98c"/></linearGradient>`;
-const SWORDS = id => `<svg viewBox="0 0 24 24" aria-hidden="true"><defs>${GOLD(id)}</defs><g stroke="url(#${id})" stroke-width="2.2" stroke-linecap="round">
-  <path d="M4 4 L19 19"/><path d="M20 4 L5 19"/><path d="M15 21 L21 15" stroke-width="2.6"/><path d="M3 15 L9 21" stroke-width="2.6"/></g></svg>`;
 const PLATE = (gid, sid) => `<svg class="gh-plate__bg" viewBox="0 0 600 150" preserveAspectRatio="none" aria-hidden="true"><defs>${GOLD(gid)}
   <linearGradient id="${sid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2358"/><stop offset="1" stop-color="#0a0a22"/></linearGradient></defs>
   <path d="M44 12 H556 Q588 12 598 56 Q588 100 556 100 H44 Q12 100 2 56 Q12 12 44 12Z" fill="url(#${sid})" stroke="url(#${gid})" stroke-width="5"/>
@@ -549,7 +552,6 @@ function godHud(key, side) {
       ${PLATE(`${k}p`, `${k}q`)}
       <div class="gh-cells">
         <span class="gh-cell gh-cell--soul godhud__soul" data-soul="${key}" data-tip="Soul|${p.soul} of ${max}. When a God's Soul reaches 0, its player loses."><i class="gh-soulicon" aria-hidden="true"></i><b>${p.soul}</b></span>
-        <span class="gh-cell gh-cell--atk" data-tip="Attack|${god.atk}. Damage the God deals back to a Devotee that strikes it.">${SWORDS(`${k}x`)}<b>${god.atk}</b></span>
       </div>
     </div></section>`;
 }
@@ -1359,8 +1361,8 @@ function showInspect(uid, ability = '', beside = null) {
 function godPowers(god) {
   const lines = god.text.split('\n').slice(4).map(l => l.trim()).filter(Boolean), out = [];
   for (const l of lines) {
-    const h = l.match(/^([A-Z][A-Z' ]+?) — (Divine Power|Awaken \d+|Ultimate)$/);
-    if (h) out.push({name: h[1], tag: h[2], kind: h[2].split(' ')[0].toLowerCase(), text: []});
+    const h = l.match(/^([A-Z][A-Z' ]+?) — (Divine Power|Divine Command|Awaken \d+|Ultimate)$/);
+    if (h) out.push({name: h[1], tag: h[2], kind: h[2] === 'Divine Command' ? 'command' : h[2].split(' ')[0].toLowerCase(), text: []});
     else out.at(-1)?.text.push(l);
   }
   return out;
@@ -1371,12 +1373,13 @@ function showGodPanel(key) {
   const s = S(), p = s.players[key], d = s.divine[key], god = cards.get(s.gods[key]), max = soulMax(s, key), acts = godActions(key);
   const forge = FORGE.get(`${god.name.toLowerCase()}-001`);
   const art = forge?.ilustracao ? renderLiveCard(forge, {art: forgeArt(forge.ilustracao)}) : `<div class="godpanel__portrait" style="background-image:url('${GOD_ART[s.gods[key]] || ''}')"></div>`;
-  const state = pw => pw.name === 'BLOODLUST' && acts.bloodlust ? (acts.bloodlust.ok ? ['ready', 'Ready · click to use'] : ['locked', acts.bloodlust.why])
+  const state = pw => pw.kind === 'command' && acts.command ? (acts.command.ok ? ['ready', 'Ready · click to use'] : ['locked', acts.command.why])
+    : pw.name === 'BLOODLUST' && acts.bloodlust ? (acts.bloodlust.ok ? ['ready', 'Ready · click to use'] : ['locked', acts.bloodlust.why])
     : pw.kind === 'ultimate' ? (d.ultimateUsed ? ['used', 'Used'] : acts.ultimate.ok ? ['ready', 'Ready · click to use'] : ['locked', acts.ultimate.why])
     : pw.kind === 'awaken' ? (d.awaken ? ['active', 'Active'] : ['locked', `Awakens at Soul ≤ ${d.awakenAt}`]) : ['active', 'Always on'];
-  const icon = {divine: '✦', awaken: '☀', ultimate: '⚡'};
+  const icon = {divine: '✦', command: '⚔', awaken: '☀', ultimate: '⚡'};
   const powers = godPowers(god).map((pw, i) => {
-    const [st, label] = state(pw), click = (pw.kind === 'ultimate' || pw.name === 'BLOODLUST') && st === 'ready';
+    const [st, label] = state(pw), click = (pw.kind === 'ultimate' || pw.kind === 'command' || pw.name === 'BLOODLUST') && st === 'ready';
     return `<button class="power power--${pw.kind} is-${st}" data-power="${i}" ${click ? '' : 'aria-disabled="true"'} title="${esc(label)}">
       <span class="power__icon" aria-hidden="true">${icon[pw.kind]}</span>
       <span class="power__head"><strong>${esc(pw.name)}</strong><small>${esc(pw.tag)}</small></span>
@@ -1394,7 +1397,6 @@ function showGodPanel(key) {
       <header><h2>${esc(god.name)}</h2><small>${esc(god.text.split('\n')[1] || '')} · Player ${key}</small></header>
       <div class="godpanel__stats">
         <div class="gstat gstat--soul"><small>Soul</small><b>${p.soul}<span>/${max}</span></b><i><u style="width:${Math.round(p.soul / max * 100)}%"></u></i></div>
-        <div class="gstat"><small>Attack</small><b>${god.atk}</b><em>retaliation</em></div>
         <div class="gstat ${d.awaken ? 'is-on' : ''}"><small>Awaken</small><b>${d.awakenAt}</b><em>${d.awaken ? 'active' : `at Soul ≤ ${d.awakenAt}`}</em></div>
         <div class="gstat ${d.ultimateUsed ? '' : 'is-on'}"><small>Ultimate</small><b>${d.ultimateUsed ? 'Used' : 'Ready'}</b><em>once per match</em></div>
       </div>
@@ -1409,6 +1411,7 @@ function showGodPanel(key) {
     if (!b) return;
     if (b.dataset.power === 'judgment') { closeBigCard(); return acts.judgment(); }
     const pw = godPowers(god)[b.dataset.power];
+    if (pw.kind === 'command' && acts.command) { if (!acts.command.ok) return warn(acts.command.why); closeBigCard(); return acts.command.run(); }
     if (pw.name === 'BLOODLUST' && acts.bloodlust) { if (!acts.bloodlust.ok) return warn(acts.bloodlust.why); closeBigCard(); return acts.bloodlust.run(); }
     if (pw.kind !== 'ultimate') return warn(`${pw.name}: ${state(pw)[1]}. It works automatically.`);
     if (!acts.ultimate.ok) return warn(acts.ultimate.why);
@@ -2197,6 +2200,7 @@ const ai = createAI({
   S, info, num, known: uid => !!ctx.objects[uid], resonant: (key, armor, uid) => resonant(S(), ctx, key, armor, uid), duplicate: (key, uid) => !!duplicateCharacter(S(), ctx, key, uid), candidates, playableReason, canBase, STEPS,
   hp: uid => hpOf(S(), ctx, uid) - (S().units[uid]?.damage || 0), atk: uid => atkOf(S(), ctx, uid), isSaint: uid => isSaint(ctx, uid),
   strikeTargets: uid => strikeTargets(S(), ctx, uid), ultimateBlock: (key, trio) => ultimateBlock(S(), ctx, key, trio), greatFloodBlock: key => greatFloodBlock(S(), key),
+  commandBlock: key => commandBlock(S(), ctx, key), commandTargets: key => commandTargets(S(), ctx, key), activateCommand: (key, uid) => activateCommand(S(), ctx, key, uid),
   placeBase, playDevotee: (key, uid, ch) => playDevotee(S(), ctx, key, uid, ch), playEquipment: (key, uid, bearer, ch) => playEquipment(S(), ctx, key, uid, bearer, ch),
   reequip: (key, uid, bearer) => reequip(S(), ctx, key, uid, bearer), attached: uid => ctx.attached[uid],
   playSpell: (key, uid, ch) => playSpell(S(), ctx, key, uid, ch), declareStrike: (uid, target) => declareStrike(S(), ctx, uid, target),

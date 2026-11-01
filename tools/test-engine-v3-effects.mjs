@@ -99,8 +99,8 @@ test('088 The Eighth Sense: +3/+3 e salva de ser derrotado por Strike; não prep
   assert.deepEqual([atkOf(s, ctx, seiya), hpOf(s, ctx, seiya), s.units[seiya].prepared], [6, 7, false], '+1 do Miracle: Soul 10 < 20');
   s.units[seiya].prepared = true;
   s.units[seiya].damage = 6;
-  strike(seiya, {kind: 'god', player: 'B'});
-  assert.deepEqual([s.players.B.soul, s.units[seiya].damage], [14, 6], 'retaliação 3 que derrotaria foi prevenida');
+  strike(seiya, {kind: 'devotee', uid: field('B', '043')}); // retaliação 1 derrotaria Seiya (HP 7, dano 6)
+  assert.deepEqual([s.players.A.battlefield.includes(seiya), s.units[seiya].damage], [true, 6], 'a retaliação que derrotaria foi prevenida');
   s.units[seiya].prepared = true;
   assert.throws(() => declareStrike(s, ctx, seiya, {kind: 'god', player: 'B'}), /D22|outro Strike/);
 });
@@ -110,11 +110,11 @@ test('054 e 076: salvamento; 076 em Pegasus Seiya pode Preparar (escolha do joga
   const seiya = field('A', '001'), jabu = field('A', '028');
   cast('A', '054', {target: jabu});
   s.units[jabu].damage = 1;
-  strike(jabu, {kind: 'god', player: 'B'});
+  strike(jabu, {kind: 'devotee', uid: field('B', '043')}); // retaliação 1 derrotaria Jabu (HP 2, dano 1)
   assert.ok(s.players.A.battlefield.includes(jabu));
   cast('A', '076', {target: seiya});
   s.units[seiya].damage = 3;
-  strike(seiya, {kind: 'god', player: 'B'});
+  strike(seiya, {kind: 'devotee', uid: field('B', '042')}); // retaliação 1 derrotaria Seiya (HP 4, dano 3)
   assert.deepEqual([s.units[seiya].damage, s.units[seiya].prepared], [3, true]);
 });
 
@@ -163,11 +163,12 @@ test('Dragon Shield (003/004) previne 1 uma vez por Round e não acumula; Libra 
   const {s, ctx, field, equip, strike, end} = setup({A: fortress, B: rush});
   const shiryu = field('A', '003');
   const cloth = equip('A', '004', shiryu); // Armor HP 5 (soma ao portador) com Dragon Shield
-  strike(shiryu, {kind: 'god', player: 'B'});
+  const seiya = field('B', '001'); s.units[seiya].training = 1; // 3/5: retaliação 3 (God não retalia mais, 01/11/2026)
+  strike(shiryu, {kind: 'devotee', uid: seiya});
   assert.deepEqual([s.units[cloth]?.damage ?? 0, s.units[shiryu].damage], [0, 2], 'retaliação 3 menos 1, toda no portador');
   end(); startTurn(s); end(); startTurn(s);
   equip('A', '049', shiryu);
-  strike(shiryu, {kind: 'god', player: 'B'});
+  strike(shiryu, {kind: 'devotee', uid: seiya});
   assert.equal(s.units[shiryu].damage, 2, 'Dragon Shield 1 + Libra 2 previnem os 3; o portador segue com 2');
   assert.equal(s.units[cloth]?.damage ?? 0, 0, 'a Armor não tem dano próprio');
 });
@@ -176,7 +177,8 @@ test('Dragon\'s Guard (045) em Shiryu: previne 1 e põe escudo de 1 na Armor del
   const {s, ctx, field, equip, strike} = setup({A: fortress, B: rush});
   const shiryu = field('A', '003'), cloth = equip('A', '004', shiryu);
   equip('A', '045', shiryu);
-  strike(shiryu, {kind: 'god', player: 'B'});
+  const seiya = field('B', '001'); s.units[seiya].training = 1; // 3/5: retaliação 3
+  strike(shiryu, {kind: 'devotee', uid: seiya});
   assert.equal(s.units[shiryu].damage, 0, '3 - Dragon Shield 1 - Dragon\'s Guard 1 - escudo posto na Armor 1');
   assert.equal(s.units[cloth]?.damage ?? 0, 0);
 });

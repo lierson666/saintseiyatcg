@@ -78,6 +78,14 @@ export function createAI(h) {
       const ch = fresh(`hidden:${uid}`) && choicesFor(key, h.STEPS[h.num(uid)] || []);
       if (ch) return {id: id(`hidden:${uid}`), src: uid, aim: aimOf(ch), run: () => h.castHidden(key, uid, ch)};
     }
+    // 5c. Divine Command (§63, 01/11/2026): antes dos Strikes. Inimigo: o de menor HP restante; Athena: o aliado mais ferido
+    // (só se houver dano); Artemis: o aliado de maior ATK.
+    if (h.commandBlock && !h.commandBlock(key) && fresh('command')) {
+      const opts = h.commandTargets(key), friendly = god === 'god-athena' || god === 'god-artemis';
+      const uid = !friendly ? weakest(opts) : god === 'god-athena' ? opts.filter(u => s.units[u]?.damage).sort((a, b) => s.units[b].damage - s.units[a].damage)[0]
+        : [...opts].sort((a, b) => h.atk(b) - h.atk(a))[0];
+      if (uid) return {id: id('command'), aim: uid, run: () => h.activateCommand(key, uid)};
+    }
     // 6. Strikes: no God se puder; senão no Devotee alvo de menor HP restante.
     for (const uid of devotees(key)) {
       if (!s.units[uid]?.prepared || !fresh(`strike:${uid}`)) continue;

@@ -82,7 +82,7 @@ const lastHit = (state, uid, from) => {
   return e && {incoming: e.incoming, prevented: e.prevented, absorbed: e.absorbed, dealt: e.dealt};
 };
 
-// Dano simultâneo; God perde Soul 1:1 e retalia com ATTACK; dano persiste (sem limpeza no Cleanup).
+// Dano simultâneo entre Devotees; God perde Soul 1:1 e não retalia (§24); dano persiste (sem limpeza no Cleanup).
 export function resolveStrike(state, ctx, strike) {
   const {attacker, target, player} = strike, enemy = state.order.find(k => k !== player);
   if (!onField(state, player, attacker) || (target.kind === 'devotee' && !onField(state, enemy, target.uid))) {
@@ -116,15 +116,12 @@ export function resolveStrike(state, ctx, strike) {
     const toGod = pierce && excess > 0 ? preventGod(state, ctx, enemy, excess) : 0;
     if (toGod > 0 && loseSoul(state, {[enemy]: toGod + (ctx.objects[attacker]?.moon ? 2 : 0)}, 'damage')) return state.victory; // Moon Spirit: +2 Soul
   } else {
-    // Moon Spirit (Moon Awakening): a retaliação do God acontece, mas não causa dano (D268).
-    const retaliate = () => { damageDevotee(state, ctx, attacker, ctx.objects[attacker]?.moon ? 0 : ctx.cards.get(state.gods[enemy]).atk); strike.hits = {[attacker]: lastHit(state, attacker, mark)}; };
-    if (!first) retaliate();
+    // §24 (autor, 01/11/2026): Gods não retaliam.
     const toGod = preventGod(state, ctx, enemy, atk);
     emit(state, 'god_damage', {player: enemy, incoming: atk, dealt: toGod});
     strike.godDealt = toGod;
     strike.godHit = {incoming: atk, prevented: atk - toGod, absorbed: 0, dealt: toGod}; // gancho damagePrevented (observadores)
-    if (toGod > 0 && loseSoul(state, {[enemy]: toGod + (ctx.objects[attacker]?.moon ? 2 : 0)}, 'damage')) return state.victory; // D52 (Long Range: antes da retaliação, §25); Moon Spirit: +2 Soul
-    if (first) retaliate();
+    if (toGod > 0 && loseSoul(state, {[enemy]: toGod + (ctx.objects[attacker]?.moon ? 2 : 0)}, 'damage')) return state.victory; // D52; Moon Spirit: +2 Soul
   }
   checkDefeats(state, ctx);
   afterStrike(state, ctx, strike);

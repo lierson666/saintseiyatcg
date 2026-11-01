@@ -23,7 +23,7 @@ function namedRule(text,fallback){
   return rest.length&&/ — /.test(first)?[{heading:first,body:rest.join('\n')}]:[{heading:fallback,body:text}];
 }
 export function ruleParts(card){
-  const blocks=ruleBlocksWithoutKeywords(card.habilidades_en||[],card.keywords_en||[]).filter(b=>!pendingDesign(b.body)).map(block=>{if(block.heading)return block;const lines=block.body.split('\n');if(lines.length>1&&/ — (?:Divine Power|Awaken \d+|Ultimate)$/.test(lines[0]))return {...block,heading:lines[0],body:lines.slice(1).join('\n')};const m=block.body.match(/^([^—.\n]{2,60})\s*—\s*([\s\S]+)$/);return m&&!/^(Once|When|Whenever|If|At)\b/i.test(m[1])?{...block,heading:m[1],body:m[2]}:block;});
+  const blocks=ruleBlocksWithoutKeywords(card.habilidades_en||[],card.keywords_en||[]).filter(b=>!pendingDesign(b.body)).map(block=>{if(block.heading)return block;const lines=block.body.split('\n');if(lines.length>1&&/ — (?:Divine Power|Divine Command|Awaken \d+|Ultimate)$/.test(lines[0]))return {...block,heading:lines[0],body:lines.slice(1).join('\n')};const m=block.body.match(/^([^—.\n]{2,60})\s*—\s*([\s\S]+)$/);return m&&!/^(Once|When|Whenever|If|At)\b/i.test(m[1])?{...block,heading:m[1],body:m[2]}:block;});
   const equip=equipmentCostText(card),divinePower=blocks.filter(b=>!['resonance','owner'].includes(b.kind)),awakenRules=namedRule(card.habilidade_awaken_en,'AWAKEN'),ultimateRules=namedRule(card.ultimate_en,'ULTIMATE');
   // Armor (autor, 30/10/2026): Resonance num bloco só, com o nome completo do portador no título; sem efeito, só o título.
   const armorRes=/^Resonance — /.test(equip||''),resBlocks=blocks.filter(b=>b.kind==='resonance').map(b=>armorRes?{...b,heading:equip}:b);

@@ -58,7 +58,8 @@ test('Pegasus Cloth (002) Resonance prepara Seiya; Seika remove 1 de dano dele',
   const seiya = field('A', '001');
   equip('A', '002', seiya); field('A', '036');
   s.units[seiya].damage = 1;
-  strike(seiya, {kind: 'god', player: 'B'});
+  const repairer = field('B', '042'); s.units[repairer].training = 2; // 3/4: retaliação 3 (God não retalia mais, 01/11/2026)
+  strike(seiya, {kind: 'devotee', uid: repairer});
   assert.deepEqual([s.units[seiya].prepared, s.units[seiya].damage], [true, 3], 'retaliação inteira no portador (a Armor não recebe dano); Seika tira 1');
 });
 
@@ -104,14 +105,15 @@ test('Pegasus God Cloth (019): ao jogar com o God atrás, +3/+3 e prepara; Divin
   const {s, ctx, field, hand, bases, strike} = setup({A: rush, B: fortress}, yes);
   const seiya = field('A', '001'), jabu = field('A', '028'), kamui = hand('A', '019');
   s.units[jabu].prepared = false;
-  s.players.A.soul = 8; // continua atrás depois do Strike (B cai para 10) e sem Awaken (≤ 5)
+  s.players.A.soul = 8; // continua atrás do God de B e sem Awaken (≤ 5)
   bases('A', 11);
   playEquipment(s, ctx, 'A', kamui, seiya, {target: jabu});
   passAll(s);
   assert.deepEqual([atkOf(s, ctx, jabu), s.units[jabu].prepared], [5, true]);
   s.units[seiya].damage = 11; // HP 4 + 2 da Resonance + 7 da Armor = 13; folga de 2
-  strike(seiya, {kind: 'god', player: 'B'}); // 2 + Miracle 1 + 019 3 + Resonance 2 + Divine Cosmo 2 = 10
-  assert.equal(s.players.B.soul, 10);
+  const repairer = field('B', '042'); s.units[repairer].training = 3; // 4/5: retaliação 4 derrotaria Seiya (11 + 4 > 13)
+  strike(seiya, {kind: 'devotee', uid: repairer}); // ATK 2 + Miracle 1 + 019 3 + Resonance 2 + Divine Cosmo 2 = 10 derrota o alvo
+  assert.ok(s.players.B.tartarus.includes(repairer));
   assert.equal(s.players.A.bases.filter(b => b.prepared).length, 0, '6 + 3 + 2 Bases');
   assert.equal(s.units[seiya].damage, 11, 'Divine Protection preveniu a retaliação que derrotaria');
   assert.equal(s.units[kamui]?.damage ?? 0, 0, 'a Armor não tem dano próprio');

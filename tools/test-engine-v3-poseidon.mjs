@@ -260,9 +260,9 @@ test('Loader Poseidon V6: nenhuma carta canônica; as 4 fichas recuperadas ficam
   assert.deepEqual(officialDeckErrors(fortress, canonIndex(canon), catalog), [], 'D171: deck só com cartas canônicas passa');
 });
 
-test('God Poseidon canônico: Soul 18 (G3-042; impresso 27), Attack 2, Awaken 4', () => {
+test('God Poseidon canônico: Soul 18 (G3-042; impresso 27), sem Attack (§24, 01/11/2026), Awaken 4', () => {
   const g = cards.get('god-poseidon');
-  assert.deepEqual([g.soul, g.atk, g.awaken], [18, 2, 4]);
+  assert.deepEqual([g.soul, g.atk, g.awaken], [18, null, 4]);
 });
 
 // ---------- Duelo ----------

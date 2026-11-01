@@ -4,6 +4,19 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-01 — §24, §49, §63 — Gods sem retaliação; Divine Command
+
+- **Antes:** Strike contra God causava dano simultâneo: o God retaliava com o Attack dele, mesmo Unprepared. Gods tinham Soul e Attack e agiam só por Divine Power, Awaken e Ultimate.
+- **Depois:** Gods não retaliam e perdem o Attack; só o board protege o God. A retaliação entre Devotees continua. Cada God ganha um Divine Command ({1}{C}, no próprio turno, pilha vazia, uma vez por turno), com versão melhor quando Awakened:
+  - Athena: remove 1 dano de Devotee aliado (Awakened: 2 e ganha {1}{S}).
+  - Poseidon: Seal em Devotee inimigo de custo 2 ou menos (Awakened: qualquer custo).
+  - Hades: -1/-1 até o fim da rodada (Awakened: -2/-2).
+  - Ares: 1 dano a Devotee inimigo e Ares perde {1}{S} (sem versão Awakened).
+  - Artemis: 1 Training counter (Awakened: 2).
+  Saem as cláusulas sobre retaliação do God (Unfaith, Ultimate de Artemis).
+- **Motivo:** autor, 01/11/2026: a retaliação do God deixava o jogo "muito ruim no board"; o God passa a agir taticamente sem atacar. Fechado por grill.
+- **Pendências:** `data/cards.json` (textos dos 5 Gods, Ultimate de Artemis, campo de ataque), engine (`strike.js`, `gods.js`), IA, interface e arena-server.
+
 ## 2026-11-01 — §24, §55 — Deck vazio derrota; sai a Fatigue
 
 - **Antes:** comprar de deck vazio aplicava Fatigue (ALPHA-P07 opção A): o God perdia Soul 1, 2, 3… a cada compra falha. Mill não causava Fatigue (D233).

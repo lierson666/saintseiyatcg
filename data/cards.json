@@ -3892,7 +3892,7 @@
       "custo": null,
       "unidade_custo": null,
       "soul": 25,
-      "attack": 2,
+      "attack": null,
       "awaken": 5,
       "power": null,
       "resistance": null,
@@ -3901,7 +3901,8 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "COSMO OF HOPE — Divine Power\nOnce each round, when an Athena Devotee you control survives a Strike, gain {1}{L}."
+        "COSMO OF HOPE — Divine Power\nOnce each round, when an Athena Devotee you control survives a Strike, gain {1}{L}.",
+        "HEALING LIGHT — Divine Command\nCost: {1}{C}. Activate only during your turn, once each turn.\nRemove 1 damage from target friendly Devotee.\nAwakened: remove 2 damage instead and gain {1}{S}."
       ],
       "habilidade_awaken_en": "DIVINE PROTECTION — Awaken 5\nAthena Devotees you control get +1 Power and +1 HP.\nWhen an Athena Devotee you control would be destroyed, you may pay {3}{C}. If you do, prevent that destruction and leave it with 1 HP.",
       "ultimate_en": "ATHENA EXCLAMATION — Ultimate\nCost: {5}{C}\nChoose three Prepared Saints you control with different character identities. Pay an additional {2}{C} for each Silver Saint and {3}{C} for each Bronze Saint chosen. Gold Saints require no additional Cosmo.\nDestroy the chosen Saints. This destruction can't be prevented.\nThe enemy God loses Soul equal to their combined Power, plus {3}{S} for each Gold Saint destroyed this way.\nDivine Judgment — If the enemy God survives, place a Divine Judgment counter on that God.\nAt the end of the next round, if that God still has a Divine Judgment counter, its controller loses the game.\nThat God's controller may spend an Action and sacrifice three Devotees they control to remove the Divine Judgment counter.",
@@ -3910,7 +3911,8 @@
       "subtitulo_pt": "SAORI KIDO",
       "tagline_pt": "Deusa da Sabedoria e da Guerra",
       "habilidades_pt": [
-        "COSMO DA ESPERANÇA — Poder Divino\nUma vez por rodada, quando um Devoto de Athena que você controla sobrevive a um Golpe, ganhe {1}{L}."
+        "COSMO DA ESPERANÇA — Poder Divino\nUma vez por rodada, quando um Devoto de Athena que você controla sobrevive a um Golpe, ganhe {1}{L}.",
+        "LUZ CURADORA — Comando Divino\nCusto: {1}{C}. Ative apenas durante o seu turno, uma vez por turno.\nRemova 1 de dano do Devoto aliado alvo.\nDesperto: remova 2 de dano em vez disso e ganhe {1}{S}."
       ],
       "habilidade_awaken_pt": "PROTEÇÃO DIVINA — Despertar 5\nDevotos de Athena que você controla recebem +1 de Poder e +1 PV.\nQuando um Devoto de Athena que você controla seria destruído, você pode pagar {3}{C}. Se fizer isso, previna essa destruição e deixe-o com 1 PV.",
       "ultimate_pt": "EXCLAMAÇÃO DE ATHENA — Supremo\nCusto: {5}{C}\nEscolha três Cavaleiros Preparados que você controla, com identidades de personagem diferentes. Pague mais {2}{C} para cada Cavaleiro de Prata e {3}{C} para cada Cavaleiro de Bronze escolhido. Cavaleiros de Ouro não exigem Cosmo adicional.\nDestrua os Cavaleiros escolhidos. Essa destruição não pode ser prevenida.\nO Deus inimigo perde Alma igual ao Poder somado deles, mais {3}{S} para cada Cavaleiro de Ouro destruído assim.\nJulgamento Divino — Se o Deus inimigo sobreviver, coloque um marcador de Julgamento Divino nesse Deus.\nNo fim da próxima rodada, se esse Deus ainda tiver um marcador de Julgamento Divino, o controlador dele perde o jogo.\nO controlador desse Deus pode gastar uma Ação e sacrificar três Devotos que controla para remover o marcador de Julgamento Divino."
@@ -3930,7 +3932,7 @@
       "custo": null,
       "unidade_custo": null,
       "soul": 26,
-      "attack": 1,
+      "attack": null,
       "awaken": 4,
       "power": null,
       "resistance": null,
@@ -3939,7 +3941,8 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "WATER PRISON — Divine Power\nOnce each round, when an enemy Devotee declares a Strike, you may pay {2}{C}. If you do, Seal that Devotee."
+        "WATER PRISON — Divine Power\nOnce each round, when an enemy Devotee declares a Strike, you may pay {2}{C}. If you do, Seal that Devotee.",
+        "BINDING TIDE — Divine Command\nCost: {1}{C}. Activate only during your turn, once each turn.\nPut a Seal counter on target enemy Devotee with cost 2 or less.\nAwakened: that Devotee can have any cost."
       ],
       "habilidade_awaken_en": "PRESSURE OF THE DEEP — Awaken 4\nWhenever an enemy Devotee becomes Sealed, its controller mills two cards and you draw a card.",
       "ultimate_en": "GREAT FLOOD — Ultimate\nCost: {8}{C}\nReturn all enemy Devotees and Equipment to their owners' hands.\nFor each Devotee returned this way, return one Cosmo Base controlled by that Devotee's owner to its owner's hand, if able.\nEach opponent discards half the cards in their hand, rounded up.\nThen each opponent mills three cards for each card they discarded this way.",
@@ -3947,7 +3950,8 @@
       "nome_exibicao_pt": "POSEIDON",
       "subtitulo_pt": "Maré Alta",
       "habilidades_pt": [
-        "PRISÃO DE ÁGUA — Poder Divino\nUma vez por rodada, quando um Devoto inimigo declara um Golpe, você pode pagar {2}{C}. Se fizer isso, Sele esse Devoto."
+        "PRISÃO DE ÁGUA — Poder Divino\nUma vez por rodada, quando um Devoto inimigo declara um Golpe, você pode pagar {2}{C}. Se fizer isso, Sele esse Devoto.",
+        "MARÉ QUE PRENDE — Comando Divino\nCusto: {1}{C}. Ative apenas durante o seu turno, uma vez por turno.\nColoque 1 marcador de Selo no Devoto inimigo alvo de custo 2 ou menos.\nDesperto: o Devoto pode ter qualquer custo."
       ],
       "tagline_pt": "Imperador dos Sete Mares",
       "habilidade_awaken_pt": "PRESSÃO DAS PROFUNDEZAS — Despertar 4\nSempre que um Devoto inimigo fica Selado, seu controlador envia ao Tártaro as 2 cartas do topo do deck e você compra uma carta.",
@@ -3969,7 +3973,7 @@
       "custo": null,
       "unidade_custo": null,
       "soul": 24,
-      "attack": 2,
+      "attack": null,
       "awaken": 7,
       "power": null,
       "resistance": null,
@@ -3978,7 +3982,8 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "OFFERING OF LIFE — Divine Power Once each round, when a Devotee you control is defeated, you may lose {2}{S}. If you do, draw a card and gain {1}{L}."
+        "OFFERING OF LIFE — Divine Power Once each round, when a Devotee you control is defeated, you may lose {2}{S}. If you do, draw a card and gain {1}{L}.",
+        "DARK TOUCH — Divine Command\nCost: {1}{C}. Activate only during your turn, once each turn.\nTarget enemy Devotee gets -1 ATK / -1 HP until the end of the round.\nAwakened: -2 ATK / -2 HP instead."
       ],
       "habilidade_awaken_en": "KING OF TARTARUS — Awaken 7\nWhenever a Devotee returns from your Tartarus to the Battlefield under your control, the enemy God loses {1}{S} and Hades gains {1}{S}.",
       "ultimate_en": "GREAT ECLIPSE — Ultimate\nCost: {7}{C}\nReturn up to three Devotees from your Tartarus to the Battlefield under your control. They enter Unprepared and lose Impulse.\nFor each Devotee returned this way, the enemy God loses {2}{S}.\nHades gains Soul equal to half the Soul the enemy God lost from Great Eclipse, rounded up.",
@@ -3987,7 +3992,8 @@
       "subtitulo_pt": "Portador da Morte",
       "tagline_pt": "Imperador dos Sete Mares",
       "habilidades_pt": [
-        "OFERENDA DE VIDA — Poder Divino\nUma vez por rodada, quando um Devoto que você controla é derrotado, você pode perder {2}{S}. Se fizer isso, compre uma carta e ganhe {1}{L}."
+        "OFERENDA DE VIDA — Poder Divino\nUma vez por rodada, quando um Devoto que você controla é derrotado, você pode perder {2}{S}. Se fizer isso, compre uma carta e ganhe {1}{L}.",
+        "TOQUE SOMBRIO — Comando Divino\nCusto: {1}{C}. Ative apenas durante o seu turno, uma vez por turno.\nO Devoto inimigo alvo recebe -1 ATQ / -1 PV até o fim da rodada.\nDesperto: -2 ATQ / -2 PV em vez disso."
       ],
       "habilidade_awaken_pt": "REI DO TÁRTARO — Despertar 7\nSempre que um Devoto volta do seu Tártaro para o Campo de Batalha sob seu controle, o Deus inimigo perde {1}{S} e Hades ganha {1}{S}.",
       "ultimate_pt": "GRANDE ECLIPSE — Supremo\nCusto: {7}{C}\nDevolva até três Devotos do seu Tártaro para o Campo de Batalha sob seu controle. Eles entram Despreparados e perdem Impulso.\nPara cada Devoto devolvido assim, o Deus inimigo perde {2}{S}.\nHades ganha Alma igual à metade da Alma que o Deus inimigo perdeu com Grande Eclipse, arredondada para cima.",
@@ -4008,7 +4014,7 @@
       "custo": null,
       "unidade_custo": null,
       "soul": 25,
-      "attack": 1,
+      "attack": null,
       "awaken": 3,
       "power": null,
       "resistance": null,
@@ -4017,19 +4023,21 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "MOON HARVEST — Divine Power Once each round, when you place a card as a Cosmo Base, you may ignore its Cosmoble requirement. If you do, lose {2}{S}."
+        "MOON HARVEST — Divine Power Once each round, when you place a card as a Cosmo Base, you may ignore its Cosmoble requirement. If you do, lose {2}{S}.",
+        "HUNTRESS TRAINING — Divine Command\nCost: {1}{C}. Activate only during your turn, once each turn.\nPut a Training counter on target friendly Devotee.\nAwakened: put two instead."
       ],
       "habilidade_awaken_en": "MOONLIGHT BLESSING — Awaken 3\nOnce each round, when you would gain Latent Cosmo, gain an additional {1}{L}, up to the normal limit of 3.",
-      "ultimate_en": "MOON AWAKENING — Ultimate\nCost: {9}{C}\nChoose up to five Cosmo Bases you control.\nUntil the end of this round, they become 3/3 Moon Spirit Devotees with Impulse, Long Range and Pierce, in addition to being Cosmo Bases.\nMoon Spirits created this way take no retaliation damage from Gods.\nWhenever one of those Moon Spirits deals damage to an enemy God during a Strike, that God loses an additional {2}{S}.\nThose Cosmo Bases cannot produce Cosmo while transformed.\nAt the end of this round, they stop being Devotees and remain on the Battlefield as Cosmo Bases.",
+      "ultimate_en": "MOON AWAKENING — Ultimate\nCost: {9}{C}\nChoose up to five Cosmo Bases you control.\nUntil the end of this round, they become 3/3 Moon Spirit Devotees with Impulse, Long Range and Pierce, in addition to being Cosmo Bases.\nWhenever one of those Moon Spirits deals damage to an enemy God during a Strike, that God loses an additional {2}{S}.\nThose Cosmo Bases cannot produce Cosmo while transformed.\nAt the end of this round, they stop being Devotees and remain on the Battlefield as Cosmo Bases.",
       "notas_pt": "Versão nova fornecida pelo autor em 24/10/2026; texto preservado.",
       "nome_exibicao_pt": "ÁRTEMIS",
       "subtitulo_pt": "Canção de Ninar ao Luar",
       "tagline_pt": "Imperador dos Sete Mares",
       "habilidades_pt": [
-        "COLHEITA LUNAR — Poder Divino\nUma vez por rodada, quando você colocar uma carta como Base de Cosmo, você pode ignorar o requisito de Cosmável dela. Se fizer isso, perca {2}{S}."
+        "COLHEITA LUNAR — Poder Divino\nUma vez por rodada, quando você colocar uma carta como Base de Cosmo, você pode ignorar o requisito de Cosmável dela. Se fizer isso, perca {2}{S}.",
+        "TREINO DA CAÇA — Comando Divino\nCusto: {1}{C}. Ative apenas durante o seu turno, uma vez por turno.\nColoque 1 marcador de Treinamento no Devoto aliado alvo.\nDesperto: coloque 2 em vez disso."
       ],
       "habilidade_awaken_pt": "BÊNÇÃO DO LUAR — Despertar 3\nUma vez por rodada, quando você ganharia Cosmo Latente, ganhe {1}{L} adicional, até o limite normal de 3.",
-      "ultimate_pt": "DESPERTAR DA LUA — Supremo\nCusto: {9}{C}\nEscolha até cinco Bases de Cosmo que você controla.\nAté o fim desta rodada, elas se tornam Devotos Espíritos Lunares 3/3 com Impulso, Longo Alcance e Perfurar, além de continuarem sendo Bases de Cosmo.\nOs Espíritos Lunares criados assim não sofrem dano de revide de Deuses.\nSempre que um desses Espíritos Lunares causa dano a um Deus inimigo durante um Golpe, esse Deus perde {2}{S} adicionais.\nEssas Bases de Cosmo não podem produzir Cosmo enquanto estiverem transformadas.\nNo fim desta rodada, elas deixam de ser Devotos e permanecem no Campo de Batalha como Bases de Cosmo.",
+      "ultimate_pt": "DESPERTAR DA LUA — Supremo\nCusto: {9}{C}\nEscolha até cinco Bases de Cosmo que você controla.\nAté o fim desta rodada, elas se tornam Devotos Espíritos Lunares 3/3 com Impulso, Longo Alcance e Perfurar, além de continuarem sendo Bases de Cosmo.\nSempre que um desses Espíritos Lunares causa dano a um Deus inimigo durante um Golpe, esse Deus perde {2}{S} adicionais.\nEssas Bases de Cosmo não podem produzir Cosmo enquanto estiverem transformadas.\nNo fim desta rodada, elas deixam de ser Devotos e permanecem no Campo de Batalha como Bases de Cosmo.",
       "flavour_pt": "“Olhe para o céu… esse é o reino que você nunca alcançará.”"
     },
     {
@@ -4047,7 +4055,7 @@
       "custo": null,
       "unidade_custo": null,
       "soul": 21,
-      "attack": 3,
+      "attack": null,
       "awaken": 7,
       "power": null,
       "resistance": null,
@@ -4056,7 +4064,8 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "BLOODLUST — Divine Power\nCost: {3}{C}\nOnce each round, choose a Devotee you control. Prepare it. It gets +1 Power until the end of this round. It can't declare a Strike against a God this round."
+        "BLOODLUST — Divine Power\nCost: {3}{C}\nOnce each round, choose a Devotee you control. Prepare it. It gets +1 Power until the end of this round. It can't declare a Strike against a God this round.",
+        "BLOOD TOLL — Divine Command\nCost: {1}{C}. Activate only during your turn, once each turn.\nDeal 1 damage to target enemy Devotee. Ares loses {1}{S}."
       ],
       "habilidade_awaken_en": "BUTCHERY — Awaken 5\nWhenever a Devotee you control destroys an enemy Devotee during a Strike, the enemy God loses {1}{S}.",
       "ultimate_en": "OBLITERATION — Ultimate\nCost: {6}{C}\nPrepare all Devotees you control.\nUntil the end of this round, Devotees you control get +3 Power, Pierce and Long Range, and can declare Strikes as though they had Impulse.\nWhenever a Devotee you control completes a Strike this round, destroy it. This destruction can't be prevented.",
@@ -4065,7 +4074,8 @@
       "subtitulo_pt": "Movido pelo Ódio",
       "tagline_pt": "Deus da Guerra e da Destruição",
       "habilidades_pt": [
-        "SEDE DE SANGUE — Poder Divino\nCusto: {3}{C}\nUma vez por rodada, escolha um Devoto que você controla. Prepare-o. Ele recebe +1 de Poder até o fim da rodada. Ele não pode declarar um Golpe contra um Deus nesta rodada."
+        "SEDE DE SANGUE — Poder Divino\nCusto: {3}{C}\nUma vez por rodada, escolha um Devoto que você controla. Prepare-o. Ele recebe +1 de Poder até o fim da rodada. Ele não pode declarar um Golpe contra um Deus nesta rodada.",
+        "TRIBUTO DE SANGUE — Comando Divino\nCusto: {1}{C}. Ative apenas durante o seu turno, uma vez por turno.\nCause 1 de dano ao Devoto inimigo alvo. Ares perde {1}{S}."
       ],
       "habilidade_awaken_pt": "CARNIFICINA — Despertar 5\nSempre que um Devoto que você controla destrói um Devoto inimigo durante um Golpe, o Deus inimigo perde {1}{S}.",
       "ultimate_pt": "ANIQUILAÇÃO — Supremo\nCusto: {6}{C}\nPrepare todos os Devotos que você controla.\nAté o fim da rodada, os Devotos que você controla recebem +3 de Poder, Perfurar e Longo Alcance, e podem declarar Golpes como se tivessem Impulso.\nSempre que um Devoto que você controla conclui um Golpe nesta rodada, destrua-o. Essa destruição não pode ser prevenida.",

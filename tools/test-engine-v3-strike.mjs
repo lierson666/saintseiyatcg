@@ -51,17 +51,18 @@ test('dano persistente decide combate depois: os dois morrem na troca simultâne
   assert.ok(s.state.players.A.tartarus.includes(jabu) && s.state.players.B.tartarus.includes(acolyte));
 });
 
-test('Strike no God: Soul cai 1:1 e o God retalia com ATTACK; segunda troca destrói o atacante', () => {
+test('Strike no God: Soul cai 1:1 e o God não retalia (01/11/2026: God sem ATTACK); o atacante não leva dano', () => {
   const s = setup();
   const seiya = s.field('A', '001');
   strike(s, seiya, {kind: 'god', player: 'B'});
   assert.equal(s.state.players.B.soul, 18);
-  assert.equal(s.state.units[seiya].damage, 3); // Athena ATTACK 3
+  assert.equal(s.state.units[seiya].damage, 0, 'God não causa dano ao atacante');
   end(s); startTurn(s.state); end(s); startTurn(s.state);
   assert.equal(s.state.units[seiya].prepared, true, 'P02: prepara no início do turno');
   strike(s, seiya, {kind: 'god', player: 'B'});
   assert.equal(s.state.players.B.soul, 16);
-  assert.ok(s.state.players.A.tartarus.includes(seiya));
+  assert.equal(s.state.units[seiya].damage, 0);
+  assert.ok(s.state.players.A.battlefield.includes(seiya), 'sem retaliação, o atacante nunca morre no God');
 });
 
 test('Soul 0 por Strike encerra a partida na hora (D52)', () => {

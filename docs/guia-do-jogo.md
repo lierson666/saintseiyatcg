@@ -300,18 +300,9 @@ Devotees destruídos são enviados ao Tartarus, salvo efeito que determine outro
 
 ### 24. Strike contra Gods
 
-Quando um Devotee realiza Strike contra um God:
+Quando um Devotee realiza Strike contra um God, o Devotee causa dano ao Soul do God igual ao seu Power.
 
-* O Devotee causa dano ao Soul do God igual ao seu Power.
-* O God causa dano ao Devotee igual ao seu Attack.
-
-Esse dano é simultâneo.
-
-A retaliação do God:
-
-* não custa nada;
-* não exige Prepared;
-* acontece mesmo que o God esteja Unprepared.
+Gods não retaliam e não têm Attack (autor, 01/11/2026). Quem protege o God é o board: Devotees com Guardian e os que podem defender. A retaliação entre Devotees continua igual (§20).
 
 Gods não utilizam HP como os Devotees.
 
@@ -524,7 +515,7 @@ Cada Training counter num Devotee dá +1 ATK / +1 HP a ele. Os marcadores se acu
 
 ### 49. Unfaith
 
-Ao declarar Strike contra um God, o atacante pode escolher remover até 2 Latent Cosmo do adversário em lugar do dano ao Soul. O God retalia normalmente.
+Ao declarar Strike contra um God, o atacante pode escolher remover até 2 Latent Cosmo do adversário em lugar do dano ao Soul.
 
 ### 50. (reservado)
 
@@ -653,7 +644,7 @@ O dano é marcado separadamente do HP máximo. Power negativo causa zero dano. H
 | Pierce | Ao iniciar Strike contra um Devotee, o dano excedente ao HP restante daquele alvo é causado ao Soul do God que o controla. Não funciona por retaliação. Calcular depois de prevenção/modificação do dano e sem contar dano antigo como dano novo. |
 | Impulse | Pode declarar Strike no turno em que entra em campo, contra qualquer alvo legal, inclusive o God. Pierce continua funcionando normalmente. |
 | Sealed | Ter 1 ou mais marcadores Seal (§48). Quando ficaria Prepared, remove 1 marcador e continua Unprepared. Não impede Strike nem habilidades de um Devotee Prepared. |
-| Unfaith | Ao declarar Strike contra um God, pode escolher remover até 2 Latent Cosmo daquele jogador em lugar de causar dano ao Soul. A escolha é anunciada antes das respostas. O God retalia normalmente; sem Latent, o modo não causa dano ao Soul. |
+| Unfaith | Ao declarar Strike contra um God, pode escolher remover até 2 Latent Cosmo daquele jogador em lugar de causar dano ao Soul. A escolha é anunciada antes das respostas. Sem Latent, o modo não causa dano ao Soul. |
 
 **Unfaith foi confirmada pelo autor com este complemento:** cria uma decisão entre pressão no Soul e negação de recurso. Cheater mudou em 31/10/2026 (§44).
 
@@ -714,7 +705,8 @@ Se um Strike causar Soul zero aos dois Gods simultaneamente por efeitos aplicáv
 - Cada jogador pode controlar um Devotee de cada **personagem nomeado**, mesmo que existam versões diferentes da carta. Essa regra de lendário vale só para as classes de guerreiros: **Saints, Marines, Satellites, Specters e Berserkers**. Devotees de classe baixa (Warrior, Support e sem classe) não são lendários e podem ter mais de uma cópia no campo. Unidades genéricas também não têm essa exclusividade. Exceção: **Phoenix Ikki** (athena-v6-009) não é lendário; o jogador pode controlar qualquer número de cópias dele (autor, 01/11/2026). Usar identidade estável de personagem para essa regra e para Resonance; título e ilustração não bastam.
 - Uma segunda versão de personagem que já controla pode ser jogada da mão normalmente. Sempre que houver duplicidade (por jogada da mão ou por efeito), o controlador escolhe um para manter e envia os outros ao Tartarus, sem considerar isso destruição. Habilidades de entrada continuam seguindo o fato de a carta ter entrado; essa interação deve ser considerada no custo do efeito que a trouxe.
 - Relics só são únicas se isso estiver expresso. Retirar o desconto geral de 2 Cosmo por repetir nome; versões de Armor são cartas separadas (§29), e uma carta específica pode autorizar substituir sua versão anterior.
-- Gods não iniciam Strike nem equipam armaduras. Possuem Soul e Attack; retaliação permanece disponível independentemente de Prepared. Custos de habilidades do God devem estar impressos, inclusive eventual esgotamento.
+- Gods não iniciam Strike, não retaliam e não equipam armaduras. Possuem Soul, sem Attack (autor, 01/11/2026). Custos de habilidades do God devem estar impressos, inclusive eventual esgotamento.
+- **Divine Command / Comando Divino** (autor, 01/11/2026): cada God tem uma habilidade ativada de board, além do Divine Power. Custa {1}{C}, só no turno do controlador, com a pilha vazia, uma vez por turno; entra na pilha como as outras ativadas. A versão de Awaken, quando a carta tem, substitui a normal enquanto o God estiver Awakened.
 - Domains permanecem em jogo, fora do deck, sem custo de entrada e protegidos de ataque, destruição, exílio, retorno à mão e mudança de controle adversária nesta base. Seus efeitos e limites de uso vêm do texto da carta. Galaxian Wars Arena (062), Tournament Spirit: conta quando o Bronze Saint amigo derrota o Devotee inimigo num Strike, tanto atacando quanto defendendo (dano de retaliação) (autor, 28/10/2026).
 - **Engage** (texto antigo de algumas cartas de Artemis): "engaged with X" significa estar num Strike com X, atacando ou defendendo; "Engage that Devotee" força esse Devotee num Strike contra o seu (autor, 29/10/2026). A mecânica de Engage separada não existe.
 - **Token** (ex.: Forest Guardian 3/3 de The Forest Invades Sanctuary): Devotee criado por efeito, sem carta. Entra Unprepared, não é lendário e deixa de existir quando sai do campo (não vai ao Tartarus, à mão nem ao Void). Não conta como carta para efeitos de deck, mão ou Tartarus (autor, 29/10/2026).

@@ -39,16 +39,16 @@ test('Armor soma ATK e HP ao portador, não tem dano próprio e fica solta no ca
   const {s, ctx, objects, field, equip, strike, next} = setup();
   const seiya = field('A', '001'), cloth = equip('A', '002', seiya); // 2/4 + Cloth (+1 ATK, HP impresso 4 soma ao máximo)
   assert.deepEqual([atkOf(s, ctx, seiya), hpOf(s, ctx, seiya)], [3, 8]);
-  strike(seiya, {kind: 'god', player: 'B'});
-  assert.equal(s.players.B.soul, 17);
+  const repairer = field('B', '042'); s.units[repairer].training = 2; // 3/4: retaliação 3 (God não retalia mais, 01/11/2026)
+  strike(seiya, {kind: 'devotee', uid: repairer});
   assert.equal(s.units[cloth]?.damage ?? 0, 0, 'a Armor não recebe dano');
   assert.equal(s.units[seiya].damage, 3, 'retaliação 3 toda no portador');
   next();
-  strike(seiya, {kind: 'god', player: 'B'});
+  strike(seiya, {kind: 'devotee', uid: repairer});
   assert.equal(s.units[seiya].damage, 6);
   assert.ok(s.players.A.battlefield.includes(cloth), 'Armor nunca é destruída por dano');
   assert.equal(ctx.attached[cloth], seiya);
-  assert.equal(s.players.B.soul, 14);
+  assert.equal(s.players.B.soul, 20, 'Strike em Devotee não toca o Soul');
   checkInvariants(s, objects);
 });
 
@@ -58,7 +58,8 @@ test('Divine Weapon com +HP (049) soma HP; a Armor (044) soma o HP impresso ao p
   const {s, ctx, field, equip, strike} = setup({A: fortress, B: rush});
   const cassios = field('A', '027');
   equip('A', '049', cassios); // 2/3 com +0 ATK / +2 HP, não é Armor; Libra Defense previne 1
-  strike(cassios, {kind: 'god', player: 'B'});
+  const seiyaB = field('B', '001'); s.units[seiyaB].training = 1; // 3/5: retaliação 3
+  strike(cassios, {kind: 'devotee', uid: seiyaB});
   assert.deepEqual([s.units[cassios].damage, hpOf(s, ctx, cassios)], [2, 5]);
   const t = setup();
   const seiya = t.field('A', '001'), repairer = t.field('B', '042');
@@ -86,7 +87,8 @@ test('Equipment não-Armor fica solto quando o portador sai e é reequipado paga
   const {s, ctx, objects, field, equip, strike} = setup({A: fortress, B: rush});
   const cassios = field('A', '027'), weapon = equip('A', '049', cassios), acolyte = field('A', '043');
   s.units[cassios].damage = 3; // 2/3 + 2 HP: morre com a retaliação 3
-  strike(cassios, {kind: 'god', player: 'B'});
+  const seiyaB = field('B', '001'); s.units[seiyaB].training = 1; // 3/5: retaliação 3
+  strike(cassios, {kind: 'devotee', uid: seiyaB});
   assert.ok(s.players.A.tartarus.includes(cassios));
   assert.ok(s.players.A.battlefield.includes(weapon) && !ctx.attached[weapon]);
   checkInvariants(s, objects);

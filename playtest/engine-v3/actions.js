@@ -3,7 +3,7 @@
 import {startTurn, endTurn, pass, placeBase, orderTriggers, RuleError} from './core.js';
 import {declareStrike, mustStrike} from './strike.js';
 import {playDevotee, playEquipment, playSpell, activate, reequip, castHidden} from './play.js';
-import {announceExclamation, removeJudgment, announceGreatFlood, announceGreatEclipse, announceObliteration, activateBloodlust, placeBaseMoonHarvest, announceMoonAwakening} from './gods.js';
+import {announceExclamation, removeJudgment, announceGreatFlood, announceGreatEclipse, announceObliteration, activateBloodlust, activateCommand, placeBaseMoonHarvest, announceMoonAwakening} from './gods.js';
 import {mulligan} from './match.js';
 import {applyTimeout} from './clock.js';
 
@@ -48,6 +48,7 @@ export function applyAction(match, ctx, action) {
     case 'obliteration': return announceObliteration(s, ctx, key);
     case 'moonAwakening': return announceMoonAwakening(s, ctx, key);
     case 'bloodlust': return activateBloodlust(s, ctx, key, choice.uid);
+    case 'command': return activateCommand(s, ctx, key, choice.uid);
     case 'moonHarvest': return placeBaseMoonHarvest(s, ctx, key, uid);
     case 'judgment': return removeJudgment(s, ctx, key, choice.devotees);
     case 'timeout': if (applyTimeout(s, key) === 'TIMEOUT_END_TURN') match.ending = true; return;

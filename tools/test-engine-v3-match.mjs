@@ -17,7 +17,8 @@ const keepAll = m => m.state.order.forEach(k => mulligan(m, k, []));
 
 test('parser lê os 95 registros sem alterar texto e com os números impressos (Soul da Alpha pela G3-042)', () => {
   assert.equal(cards.size, 95);
-  for (const r of [...canon.cards, ...canon.gods]) assert.equal(cards.get(r.id.toLowerCase()).text, r.approved_current_text_as_of_d268);
+  // Gods: o Divine Command (01/11/2026) entra depois do texto D268, que fica intacto.
+  for (const r of [...canon.cards, ...canon.gods]) assert.ok(cards.get(r.id.toLowerCase()).text.startsWith(r.approved_current_text_as_of_d268));
   assert.deepEqual([...cards.values()].filter(c => c.kind === 'Devotee' && (c.atk == null || c.hp == null)), []);
   assert.equal(cards.get('athena-v6-019').cosmoble, false); // Kamui: Cosmoble No
   assert.deepEqual(['athena', 'poseidon', 'hades', 'artemis', 'ares'].map(g => cards.get(`god-${g}`).soul), [20, 18, 22, 15, 20]); // G3-042 por cima do SOUL impresso
