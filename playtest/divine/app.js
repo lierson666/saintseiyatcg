@@ -20,7 +20,7 @@ import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, cloc
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
 import {createDirector} from './director.js?v=18';
-import {createAI} from './ai.js?v=7';
+import {createAI} from './ai.js?v=9';
 import {findDeck} from '../deck-store.js';
 import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-face3';
 import {unlock, playMusic} from '../audio.js?v=20261030-telas';
@@ -29,7 +29,7 @@ import {renderLiveCard, renderCardText} from '../../shared/live-card.js?v=202611
 import {armorBonusText, printedEquipmentBonuses} from '../../shared/card-visual-values.js?v=20261031-kw1';
 import {lightArt} from '../../shared/light-art.js';
 import {useGodPortraits} from '../avatar-face.js?v=20261031-3';
-import {mountChatDock} from '../chat-dock.js?v=20261031-2';
+import {mountChatDock} from '../chat-dock.js?v=20261031-3';
 import {Idiomorph} from './vendor/idiomorph-0.7.4.esm.js';
 
 const $ = (s, el = document) => el.querySelector(s), $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -46,7 +46,7 @@ const why = e => WHY[e.decision] || (e.topic ? `Not in Alpha 0.1: ${e.topic}` : 
 
 const SETTINGS_KEY = 'ssTcgOlympusArena';
 const settings = {quality: 'high', theme: 'olympus', godB: 'god-athena', timeouts: false, speed: 'normal', skipDraws: false, reduceMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
-  reduceFlashes: false, shake: 1, hideOpponent: true, autoPass: true, phaseTips: true, ai: 'B', cardText: '1.0', cardSize: '1.0'};
+  reduceFlashes: false, shake: 1, hideOpponent: true, showActivity: true, autoPass: true, phaseTips: true, ai: 'B', cardText: '1.0', cardSize: '1.0'};
 try { Object.assign(settings, JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}')); } catch { /* sem armazenamento */ }
 settings.timeouts = true; // relógio do Arena sempre vale (autor, 31/10/2026); só ?timeouts=0 desliga, para QA
 const saveSettings = () => { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch { /* sem armazenamento */ } };
@@ -86,7 +86,10 @@ const idleFor = key => { const s = S(); return !pending && !s.victory && !s.setu
 const PICK_NEED = {saint: 'a friendly Saint', 'ready-saint': 'a Prepared friendly Saint', bronze: 'a friendly Bronze Saint', devotee: 'a friendly Devotee', armor: 'a friendly Armor', enemy: 'an enemy Devotee'};
 function missingTarget(key, uid) {
   const step = (STEPS[num(uid)] || []).find(st => st.pick && !st.when);
-  return step && !step.optional && !candidates(step, key).length ? `Needs ${PICK_NEED[step.pick] || 'a legal target'}.` : null;
+  if (step && !step.optional && !candidates(step, key).length) return `Needs ${PICK_NEED[step.pick] || 'a legal target'}.`;
+  // Spells V6 com alvo obrigatório (`spell.check`, ex.: 505–519): sem alvo legal, a carta não acende.
+  try { entryOf(ctx, uid)?.spell?.check?.(S(), ctx, key, {}); } catch { return 'Needs a legal target.'; }
+  return null;
 }
 function playableReason(key, uid) {
   const s = S(), c0 = info(uid), c = {...c0, cost: castCost(s, ctx, key, uid, c0.cost)}; // custo com reduções V6 (costLess)
@@ -100,14 +103,8 @@ function playableReason(key, uid) {
     return affordable(key, cost) ? missingTarget(key, uid) : `Needs ${cost.amount} ${cost.unit === 'latent' ? 'Latent' : 'Cosmo (Base and/or Latent)'}.`;
   }
   if (!idleFor(key)) return s.active !== key ? "It's not your turn." : 'Wait for the response window to close.';
-  if (c.kind === 'Equipment' && (c.global || c.armor) && affordable(key, c.cost)) return null; // Armor sem portador (§XII)
   if (c.kind === 'Equipment' && c.global) return affordable(key, mixed(c.cost)) ? null : `Needs ${c.cost.amount} Cosmo (Base and/or Latent).`;
-  if (c.kind === 'Equipment') {
-    const devs = s.players[key].battlefield.filter(u => info(u).kind === 'Devotee');
-    if (!devs.length) return 'You need a Devotee to equip.';
-    const cheapest = Math.min(...devs.map(d => resonant(s, ctx, key, c, d) ? c.cost.amount : c.equip ? castCost(s, ctx, key, uid, {amount: c.equip.amount, unit: 'base'}).amount : Infinity));
-    return readyBases(key) + s.players[key].latent >= cheapest ? null : `Needs ${cheapest === Infinity ? '—' : cheapest} Cosmo (Base and/or Latent).`;
-  }
+  // Arma/acessório e Armor sem Resonant entram sem portador, pagando só o custo em Base (guia §28, §33).
   return affordable(key, c.cost) ? null : `Needs ${c.cost.amount} prepared Base Cosmo.`;
 }
 // D4: uma Base Cosmoble por turno, no próprio turno, com a janela fechada. Motivo em texto para o jogador.
@@ -282,9 +279,8 @@ function playFromHand(key, uid) {
   if (c.kind === 'Equipment') {
     // Armor (guia §28, 30/10/2026): só entra vestida num Resonant seu, sem Equip; senão entra sem portador.
     const armorPick = c.armor && candidates({pick: 'resonant', armor: uid}, key).length;
-    const steps = c.global || (c.armor && !armorPick) ? [] : c.armor
-      ? [{key: 'bearer', pick: 'resonant', armor: uid, optional: true, label: `Choose who wears ${c.name}`}]
-      : [{key: 'bearer', pick: 'devotee', label: `Choose who wears ${c.name}`}];
+    // Arma/acessório (§33, 01/11/2026): entra sem portador; prender é a ação Equip no campo.
+    const steps = armorPick ? [{key: 'bearer', pick: 'resonant', armor: uid, optional: true, label: `Choose who wears ${c.name}`}] : [];
     if (n === '019') steps.push({key: 'target', pick: 'devotee', optional: true, label: 'Pegasus God Cloth: which Devotee gets +3/+3 (if your God is behind)?'});
     return begin('play', key, uid, steps, choice => ({type: 'play', key, uid, choice}));
   }
@@ -835,7 +831,7 @@ function overlays() {
       <label class="set"><span>God of Player B (new match)</span>${sel('godB', {'god-athena': 'Athena', 'god-poseidon': 'Poseidon · fixture deck'})}</label>
       <label class="set"><span>Opponent (new match)</span>${sel('ai', {B: 'AI plays Player B', none: 'Hot-seat (two humans)'})}</label>
       <label class="set"><span>Animation speed</span>${sel('speed', {fast: 'Fast', normal: 'Normal', cinematic: 'Cinematic'})}</label>
-      ${chk('phaseTips', 'Phase tips (control panel)')}${chk('autoPass', 'Auto-pass when you have no response (off = Full control)')}${chk('skipDraws', 'Skip draw animations')}${window.ssStage ? `<label class="set"><span>Card text size</span>${sel('cardText', window.ssStage.SIZES)}</label><label class="set"><span>Card size (hand and previews)</span>${sel('cardSize', window.ssStage.CARD)}</label>` : ''}${chk('reduceMotion', 'Reduce motion')}${chk('reduceFlashes', 'Reduce flashes')}${chk('hideOpponent', 'Hide the other hand (hot-seat)')}${chk('timeouts', 'Apply clock timeouts')}
+      ${chk('phaseTips', 'Phase tips (control panel)')}${chk('autoPass', 'Auto-pass when you have no response (off = Full control)')}${chk('skipDraws', 'Skip draw animations')}${chk('showActivity', 'Show opponent activity')}${window.ssStage ? `<label class="set"><span>Card text size</span>${sel('cardText', window.ssStage.SIZES)}</label><label class="set"><span>Card size (hand and previews)</span>${sel('cardSize', window.ssStage.CARD)}</label>` : ''}${chk('reduceMotion', 'Reduce motion')}${chk('reduceFlashes', 'Reduce flashes')}${chk('hideOpponent', 'Hide the other hand (hot-seat)')}${chk('timeouts', 'Apply clock timeouts')}
       <label class="set"><span>Screen shake</span><input type="range" min="0" max="1.5" step=".25" value="${settings.shake}" data-setting="shake"></label>
       <p class="stats" data-stats>${scene ? 'WebGL on' : 'WebGL off · 2D fallback'}</p>
       <div class="settings__end">${match && !S().victory ? '<button class="settings__concede" data-concede>Concede</button>' : ''}<button data-toggle-settings>Close</button></div></div>`;
@@ -924,6 +920,7 @@ function render() {
   updateClock();
   animateTrigger();
   drawIntents();
+  drawActivity();
 }
 
 // Zoom da pilha (autor, 31/10/2026): toda carta ou habilidade que entra na pilha, dos dois lados, aparece em zoom no canto
@@ -1253,7 +1250,7 @@ function fieldMenu(uid, el) {
   if (!idleFor(key)) return warn("Wait for your turn's main phase.");
   if (c.kind === 'Devotee' && strikeTargets(s, ctx, uid).length) items.push(['Strike', () => startStrike(uid)]);
   for (const a of cardAbilities(uid)) if (!a.why) items.push([a.label, a.run]);
-  if (c.kind === 'Equipment' && !c.global && !ctx.attached[uid]) items.push(['Re-equip', () => begin('reequip', key, uid, [{key: 'bearer', pick: c.armor ? 'wearer' : 'devotee', armor: uid, label: 'Re-equip to which Devotee?'}], choice => ({type: 'reequip', key, uid, choice}))]);
+  if (c.kind === 'Equipment' && !c.global && !ctx.attached[uid]) items.push([`Equip (${c.equip?.amount ?? c.cost.amount})`, () => begin('reequip', key, uid, [{key: 'bearer', pick: c.armor ? 'wearer' : 'devotee', armor: uid, label: `Equip ${c.name} to which Devotee?`}], choice => ({type: 'reequip', key, uid, choice}))]);
   // Armor vestida pode passar a outro Devotee seu: AÇÃO + Equip impresso (guia §28).
   else if (c.armor && ctx.attached[uid] && c.equip) items.push([`Move (Equip ${c.equip.amount})`, () => begin('reequip', key, uid, [{key: 'bearer', pick: 'wearer', armor: uid, label: `Move ${c.name} to which Devotee?`}], choice => ({type: 'reequip', key, uid, choice}))]);
   if (!items.length) return warn(s.units[uid]?.prepared === false ? 'Unprepared: it readies at the start of your turn.' : 'No action available for this card.');
@@ -1522,7 +1519,7 @@ function showPile(key, zone) {
 function hideInspect() { $('#inspector').classList.remove('show'); $$('.orb.preview').forEach(o => o.classList.remove('preview')); }
 // O zoom (#inspector, #chain-zoom) não recebe o mouse; a roda rola o texto que transborda, como no MTG Arena (autor, 31/10/2026).
 addEventListener('wheel', e => {
-  const zoom = $('#inspector.show') || $('#chain-zoom.is-on .cz-item.is-top');
+  const zoom = $('#bigcard:not(.pile)') || $('#inspector.show') || $('#chain-zoom.is-on .cz-item.is-top');
   const box = zoom && [...zoom.querySelectorAll('.lc-rules, .inspector__text')].find(b => b.scrollHeight > b.clientHeight + 1);
   if (!box) return;
   e.preventDefault();
@@ -1618,10 +1615,12 @@ function moveAim(e) {
   aim.svg.classList.toggle('is-locked', !!ref);
   $$('.aim-hover').forEach(el => el.classList.remove('aim-hover'));
   if (ref) refEls(ref).forEach(el => el.classList.add('aim-hover'));
+  if (online) sendActivity({aim: ref, src: aim.el.closest('.field') ? aim.uid : null});
 }
 function endAim(e) {
   const a = aim, ref = a.on && e ? aimTargetAt(e.clientX, e.clientY) : null;
   aim = null;
+  if (online) sendActivity({aim: null, src: null});
   if (!a.on) return; // clique simples: o menu do campo segue normal
   noClickUntil = Date.now() + 400;
   a.svg?.remove(); a.el.classList.remove('aiming');
@@ -1635,7 +1634,7 @@ document.addEventListener('pointermove', e => { if (aim) moveAim(e); else follow
 function followAim(e) {
   const card = $('.cast-slot .dcard, .trigger-panel.is-targeting .trigger-panel__card .dcard'), bp = card && boardPick();
   let svg = $('.aim-follow');
-  if (!bp?.refs.length || e.pointerType === 'touch') return svg?.remove();
+  if (!bp?.refs.length || e.pointerType === 'touch') { if (svg && online) sendActivity({aim: null}); return svg?.remove(); }
   if (!svg) {
     svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('class', 'aim-arrow aim-follow');
@@ -1648,7 +1647,9 @@ function followAim(e) {
   $$('path:not([d^="M0"])', svg).forEach(path => path.setAttribute('d', d));
   const ret = $('.aim-arrow__reticle', svg); ret.setAttribute('cx', x1); ret.setAttribute('cy', y1);
   const els = document.elementsFromPoint(x1, y1);
-  svg.classList.toggle('is-locked', bp.refs.some(ref => els.some(d => d.closest?.(ref.startsWith('god:') ? `[data-god="${ref.slice(4)}"]` : `.field .dcard[data-uid="${ref}"]`))));
+  const locked = bp.refs.find(ref => els.some(d => d.closest?.(ref.startsWith('god:') ? `[data-god="${ref.slice(4)}"]` : `.field .dcard[data-uid="${ref}"]`))) || null;
+  svg.classList.toggle('is-locked', !!locked);
+  if (online) sendActivity({aim: locked});
 }
 document.addEventListener('pointerup', e => { if (aim) endAim(e); });
 document.addEventListener('pointercancel', () => { if (aim) endAim(null); });
@@ -1744,13 +1745,70 @@ function drawIntents() {
     }).join('');
   document.body.append(svg);
 }
-addEventListener('resize', () => drawIntents());
+addEventListener('resize', () => { drawIntents(); drawActivity(); });
 function setHoverItem(el) {
   $$('.is-triggering').forEach(x => x.classList.remove('is-triggering'));
   hoverItem = el ? {el, src: el.dataset.src, targets: (el.dataset.targets || '').split(' ').filter(u => u && (ctx.objects[u] || u.startsWith('god:')))} : null;
   if (hoverItem) (elOf(hoverItem.src) || (hoverItem.src.startsWith('domain:') ? $(`[data-domain="${hoverItem.src.slice(7)}"]`) : null))?.classList.add('is-triggering');
   drawIntents();
 }
+// ---------- Atividade do adversário (docs/atividade-adversario.md, autor 01/11/2026) ----------
+// Sinais estilo Arena: carta virada da mão sobe, mira no alvo, God "pensando" e contorno na carta que ele inspeciona.
+// Contra a IA o jogo encena (aiStage); online o outro cliente manda {hand, aim, focus, src} e o arena-server só repassa.
+// Morph do render apaga as classes: drawActivity reaplica depois de cada render.
+const oppAct = {hand: null, aim: null, focus: null, src: null};
+const validRef = ref => typeof ref === 'string' && (/^god:[AB]$/.test(ref) || !!ctx.objects[ref]);
+function drawActivity() {
+  $$('.is-opp-thinking, .is-opp-peek, .is-opp-focus, .is-opp-aimed').forEach(el => el.classList.remove('is-opp-thinking', 'is-opp-peek', 'is-opp-focus', 'is-opp-aimed'));
+  $('.opp-aim')?.remove();
+  const them = settings.ai;
+  if (!match || them === 'none' || !settings.showActivity || S().victory) return;
+  const s = S(), waiting = pending ? pending.pending.player : s.setup ? s.setup[0] : s.window ? s.window.priority : s.active;
+  if (waiting === them) $(`[data-god="${them}"]`)?.classList.add('is-opp-thinking');
+  const slot = Number.isInteger(oppAct.hand) ? $$(`[data-hand="${them}"] .hand__slot`)[oppAct.hand] : null;
+  slot?.classList.add('is-opp-peek');
+  if (validRef(oppAct.focus)) elOf(oppAct.focus)?.classList.add('is-opp-focus');
+  const to = validRef(oppAct.aim) && elOf(oppAct.aim), from = (validRef(oppAct.src) && elOf(oppAct.src)) || slot || $(`[data-god="${them}"] .godhud__portrait`);
+  if (!to || !from) return;
+  to.classList.add('is-opp-aimed');
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('class', 'aim-arrow opp-aim is-locked');
+  const [x0, y0] = center(from), [x1, y1] = center(to);
+  const d = `M${x0},${y0} Q${(x0 + x1) / 2},${Math.max(y0, y1) + 80} ${x1},${y1}`; // arco para baixo: vem do lado de lá da mesa
+  svg.innerHTML = `<defs><marker id="opp-aim-head" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs><path class="aim-arrow__glow" d="${d}"/><path class="aim-arrow__line" marker-end="url(#opp-aim-head)" d="${d}"/><circle class="aim-arrow__reticle" r="26" cx="${x1}" cy="${y1}"/>`;
+  document.body.append(svg);
+}
+function setOppAct(patch) { Object.assign(oppAct, patch); drawActivity(); }
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+// IA: pausa de 0,5 a 1,5 s antes da jogada, a mão se mexe e a mira aparece antes do alvo. "Skip draw animations": sem pausa.
+async function aiStage(key, {src, aim} = {}) {
+  if (settings.skipDraws) return;
+  const total = 500 + Math.random() * 1000, hand = S().players[key].hand, at = hand.indexOf(src);
+  if (hand.length) { setOppAct({hand: Math.floor(Math.random() * hand.length)}); await sleep(total * .35); }
+  setOppAct({hand: at >= 0 ? at : null, src: at >= 0 ? null : src || null});
+  await sleep(total * (aim ? .3 : .65));
+  if (aim) { setOppAct({aim}); await sleep(total * .35); }
+}
+// Online: o próprio hover/mira vai ao outro jogador, no máximo 10 vezes por segundo e só quando muda. Da mão, só a posição.
+const myAct = {hand: null, aim: null, focus: null, src: null};
+let actSent = '', actTimer = null;
+function sendActivity(patch) {
+  if (!online?.key) return;
+  Object.assign(myAct, patch);
+  if (actTimer) return;
+  actTimer = setTimeout(() => {
+    actTimer = null;
+    const body = JSON.stringify(myAct);
+    if (body === actSent) return;
+    actSent = body;
+    fetch(`/arena/matches/${online.id}/activity`, {method: 'POST', credentials: 'same-origin', headers: {'Content-Type': 'application/json'}, body}).catch(() => {});
+  }, 100);
+}
+document.addEventListener('pointerover', e => {
+  if (!online || e.pointerType === 'touch') return;
+  const slot = e.target.closest?.('.hand--me .hand__slot'), hand = slot ? $$('.hand--me .hand__slot').indexOf(slot) : -1;
+  sendActivity({hand: hand >= 0 ? hand : null, focus: e.target.closest?.('.field .dcard[data-uid]')?.dataset.uid || null});
+});
 // Música de batalha (playlist de ../audio.js); só toca depois do primeiro gesto do jogador (política dos navegadores).
 addEventListener('pointerdown', () => { unlock(); playMusic('battle'); }, {once: true});
 
@@ -1933,8 +1991,10 @@ function sidePanel(req, t, fx) {
   // (`hades-001`, como o godHud); por último a carta afetada ou o God de quem decide.
   const forgeGod = id => cards.get(id) && FORGE.get(`${cards.get(id).name.toLowerCase()}-001`);
   const godOf = fx && Object.values(S().gods).includes(fx.id) ? fx.id : null;
-  const src = sourceUid(req, fx), f = !src && fx && (FORGE.get(fx.id) || (godOf && forgeGod(godOf)));
-  const alt = !src && !f && (req.uid && ctx.objects[req.uid] ? req.uid : null), g = !src && !f && !alt && forgeGod(S().gods[req.player]);
+  // "Olhe a carta do topo" (scry, 135 e afins): quem decide vê a carta do próprio deck, não a Spell (autor, 01/11/2026).
+  const look = req.uid && ctx.objects[req.uid]?.cardId && S().players[req.player].deck.includes(req.uid) && !(online && req.player !== online.key) ? req.uid : null;
+  const src = !look && sourceUid(req, fx), f = !look && !src && fx && (FORGE.get(fx.id) || (godOf && forgeGod(godOf)));
+  const alt = look || (!src && !f && (req.uid && ctx.objects[req.uid] ? req.uid : null)), g = !src && !f && !alt && forgeGod(S().gods[req.player]);
   const live = c => `<div class="dcard dcard--lg art-full">${renderLiveCard(c, {art: c.ilustracao && forgeArt(c.ilustracao)})}</div>`;
   const face = src ? cardFace(src, {size: 'dcard--lg'}) : f ? live(f) : alt ? cardFace(alt, {size: 'dcard--lg'}) : g ? live(g) : '';
   const target = targetReq(req), waiting = online && req.player !== online.key;
@@ -2113,6 +2173,7 @@ function serverClock(c) {
 function connectOnline() {
   online = {id: MATCH_ID, key: null, queue: Promise.resolve()};
   const es = new EventSource(`/arena/matches/${encodeURIComponent(MATCH_ID)}/stream`);
+  es.addEventListener('activity', e => { const a = JSON.parse(e.data); setOppAct({hand: Number.isInteger(a.hand) ? a.hand : null, aim: a.aim || null, focus: a.focus || null, src: a.src || null}); });
   es.addEventListener('view', e => { const view = JSON.parse(e.data); online.queue = online.queue.then(() => applyView(view)).catch(err => console.error(err)); });
   es.onerror = () => { if (!match) { es.close(); boardRoot.innerHTML = '<p class="fatal">This duel is not available. <a href="../">Back to the lobby</a></p>'; } else warn('Connection lost. Reconnecting…'); };
 }
@@ -2124,6 +2185,7 @@ const ai = createAI({
   hp: uid => hpOf(S(), ctx, uid) - (S().units[uid]?.damage || 0), atk: uid => atkOf(S(), ctx, uid), isSaint: uid => isSaint(ctx, uid),
   strikeTargets: uid => strikeTargets(S(), ctx, uid), ultimateBlock: (key, trio) => ultimateBlock(S(), ctx, key, trio), greatFloodBlock: key => greatFloodBlock(S(), key),
   placeBase, playDevotee: (key, uid, ch) => playDevotee(S(), ctx, key, uid, ch), playEquipment: (key, uid, bearer, ch) => playEquipment(S(), ctx, key, uid, bearer, ch),
+  reequip: (key, uid, bearer) => reequip(S(), ctx, key, uid, bearer), attached: uid => ctx.attached[uid],
   playSpell: (key, uid, ch) => playSpell(S(), ctx, key, uid, ch), declareStrike: (uid, target) => declareStrike(S(), ctx, uid, target),
   hiddenReason, castHidden: (key, uid, ch) => castHidden(S(), ctx, key, uid, ch),
   announceExclamation: (key, trio) => announceExclamation(S(), ctx, key, trio), announceGreatFlood: key => announceGreatFlood(S(), ctx, key),
@@ -2137,18 +2199,25 @@ async function aiTick() {
   try {
     if (pending) {
       const p = pending.pending;
-      if (p.player === key) { await reply(aiRefused === p ? {timeout: true} : {value: ai.answer(p)}); if (pending?.pending === p) aiRefused = p; }
+      if (p.player !== key) return;
+      const value = aiRefused === p ? null : ai.answer(p);
+      await aiStage(key, {aim: typeof value === 'string' && p.choose === 'target' ? value : null});
+      if (pending?.pending !== p) return;
+      await reply(aiRefused === p ? {timeout: true} : {value});
+      if (pending?.pending === p) aiRefused = p;
       return;
     }
-    if (s.setup) { if (s.setup[0] === key) await act({type: 'mulligan', key, choice: {uids: []}}); return; }
+    if (s.setup) { if (s.setup[0] === key) { await aiStage(key); await act({type: 'mulligan', key, choice: {uids: []}}); } return; }
     if (s.window) { if (s.window.priority === key) await act({type: 'pass', key}); return; }
     if (!idleFor(key)) return;
-    const a = ai.next(key);
+    const a = ai.next(key), before = s.events.length;
+    await aiStage(key, a || {});
+    if (S().events.length !== before || pending || mode || director.busy) return; // a mesa mudou durante a pausa: decide de novo
     if (!a) { await act({type: 'endTurn', key: s.active}); return; }
-    const before = s.events.length;
+    setOppAct({hand: null});
     await act(a.run);
     if (S().events.length === before && !pending) ai.refuse(a); // a engine recusou: não tenta de novo neste turno
-  } finally { aiBusy = false; }
+  } finally { aiBusy = false; if (oppAct.hand !== null || oppAct.aim || oppAct.src) setOppAct({hand: null, aim: null, src: null}); }
 }
 
 async function init() {

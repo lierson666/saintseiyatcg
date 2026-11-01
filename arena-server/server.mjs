@@ -58,7 +58,7 @@ function broadcast(rec) {
 
 async function handle(req, res) {
   const url = new URL(req.url, 'http://arena');
-  const m = url.pathname.match(/^\/arena\/matches(?:\/([\w-]{8,20})(?:\/(stream|action|answer|concede|result))?)?\/?$/);
+  const m = url.pathname.match(/^\/arena\/matches(?:\/([\w-]{8,20})(?:\/(stream|action|answer|concede|result|activity))?)?\/?$/);
   if (!m) return send(res, 404, {error: 'Not found.'});
   const [, id, verb] = m;
 
@@ -91,6 +91,12 @@ async function handle(req, res) {
   if (req.method !== 'POST') return send(res, 405, {error: 'Method not allowed.'});
   if (req.headers.origin !== ORIGIN) return send(res, 403, {error: 'Request origin is not allowed.'});
   const data = await body(req);
+  if (verb === 'activity') { // sinais de atividade (docs/atividade-adversario.md): só repassa ao outro jogador, sem engine e sem guardar
+    const ref = v => (typeof v === 'string' && /^[\w:#.-]{1,80}$/.test(v) ? v : null);
+    const sig = {hand: Number.isInteger(data?.hand) && data.hand >= 0 && data.hand < 60 ? data.hand : null, aim: ref(data?.aim), focus: ref(data?.focus), src: ref(data?.src)};
+    for (const sub of streams.get(rec.id) || []) if (sub.key !== key) sub.res.write(`event: activity\ndata: ${JSON.stringify(sig)}\n\n`);
+    return send(res, 200, {});
+  }
   try {
     if (verb === 'action') arena.act(rec, key, data.action || {});
     else if (verb === 'answer') arena.answer(rec, key, data.answer || {});

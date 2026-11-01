@@ -19,7 +19,7 @@ export function mountSocial({api, avatarOf, onCount, decks = () => [], onProfile
 
   const person = (p, extra = '') => `<div class="lb-friend ${p.status ? 'is-' + p.status : ''}">
     <button class="lb-friend__who" data-social="profile" data-user="${esc(p.username)}" aria-label="${esc(p.username)} · player profile"><span class="lb-friend__avatar" style="background-image:url('${avatarOf(p.avatar_card) || ''}')"></span></button>
-    <span class="lb-friend__name"><b>${playerName(p.username)}</b><small>${p.status ? LABEL[p.status] : esc(p.friend_code)}</small></span>${extra}</div>`;
+    <span class="lb-friend__name"><b translate="no">${playerName(p.username)}</b><small>${p.status ? LABEL[p.status] : esc(p.friend_code)}</small></span>${extra}</div>`;
   // Amigo: a linha abre o chat; mostra quantas mensagens não lidas.
   const friendRow = f => person(f, `${f.unread ? `<span class="lb-friend__unread" aria-label="${f.unread} unread">${f.unread}</span>` : ''}
     <button class="lb-friend__open" data-social="chat" data-user="${esc(f.username)}" aria-label="Chat with ${esc(f.username)}"></button>

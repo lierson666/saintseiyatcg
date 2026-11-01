@@ -106,20 +106,18 @@ export function playDevotee(state, ctx, key, uid, choice = {}) {
   });
 }
 
-// Equipment (custo alternativo, autor 28/10/2026): no Devotee nomeado em Auto-Equip, paga o Casting Cost;
-// em outro Devotee permitido por "Equip {N}", paga N em vez do Casting Cost. Sem portador legal, não joga.
+// Equipment (guia §33, 01/11/2026): arma/acessório paga o custo impresso, só Base, e entra sem portador;
+// prender é outra ação (`reequip`, Equip impresso). `bearer` só vale para Armor num Resonant (§28).
 // Vai à pilha (guia §56, 30/10/2026); ao resolver, entra em campo. Arma cujo portador saiu antes de resolver vai ao Tartarus;
 // Armor entra sem portador.
 // `choice.target`: alvo do gatilho "When you cast" (019).
 // Item global ("Equip: None — Global"): paga o Casting Cost e fica no campo sem portador; `bearer` é ignorado.
 export function playEquipment(state, ctx, key, uid, bearer, choice = {}) {
   const card = sorceryFromHand(state, ctx, key, uid, 'Equipment');
-  if (card.global) bearer = null;
-  if (!bearer && !card.global && !card.armor) throw new RuleError('Equip', `${card.name} precisa de um portador`);
+  if (!card.armor) bearer = null; // global e arma/acessório: sem portador (§33)
   // Guia §28 (30/10/2026): Armor paga só o custo impresso; entra vestida apenas num Resonant seu (sem Equip), senão sem portador.
   if (card.armor && bearer && !resonant(state, ctx, key, card, bearer)) throw new RuleError('Resonance', `${card.name} só entra vestida num Devotee Resonant; senão entra sem portador`);
-  const printed = card.global || !bearer || card.armor ? card.cost : equipCost(state, ctx, key, card, bearer);
-  const cost = payCast(state, ctx, key, uid, card.armor ? printed : mixed(printed)); // Armor: só Base (guia §5)
+  const cost = payCast(state, ctx, key, uid, card.global ? mixed(card.cost) : card.cost); // jogar: só Base (guia §5, §33)
   leaveHand(state, key, uid);
   castToStack(state, key, uid, {kind: 'Equipment', bearer}, st => {
     const holder = bearer && st.players[key].battlefield.includes(bearer) ? bearer : null;
@@ -167,7 +165,7 @@ export function activate(state, ctx, key, uid, choice = {}) {
   emit(state, 'chain_add', {player: key, uid: src});
 }
 
-// Equipment solto no campo (não-Armor cujo portador saiu) volta a um Devotee seu pagando Equip {N}
+// Equipment solto no campo (não-Armor recém-jogado ou cujo portador saiu) se prende a um Devotee seu pagando Equip {N}
 // (autor, 28/10/2026); no Devotee nomeado em Auto-Equip vale o Casting Cost, como ao jogar. Sorcery.
 // Armor (guia §28, 30/10/2026): sem portador ou tirada de outro Devotee seu; AÇÃO + Equip impresso para qualquer um, inclusive o Resonant.
 export function reequip(state, ctx, key, uid, bearer) {

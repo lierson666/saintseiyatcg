@@ -6,7 +6,7 @@ self.ssI18nPT = {
     // Geral
     'Play': 'Jogar', 'Home': 'Início', 'Decks': 'Decks', 'Collection': 'Coleção', 'Store': 'Loja', 'Profile': 'Perfil', 'Options': 'Opções',
     'Friends': 'Amigos', 'Sign out': 'Sair', 'Sign in': 'Entrar', 'Close': 'Fechar', 'Cancel': 'Cancelar', 'Done': 'Concluir', 'OK': 'OK',
-    'Save': 'Salvar', 'Delete': 'Excluir', 'Yes': 'Sim', 'No': 'Não', 'Skip': 'Pular', 'Send': 'Enviar', 'Accept': 'Aceitar', 'Decline': 'Recusar',
+    'Save': 'Salvar', 'Delete': 'Excluir', 'Yes': 'Sim', 'No': 'Não', 'Skip': 'Pular', 'Send': 'Enviar', 'New message': 'Nova mensagem', 'Accept': 'Aceitar', 'Decline': 'Recusar',
     'Open': 'Abrir', 'Minimize': 'Minimizar', 'Copy': 'Copiar', 'Copied': 'Copiado', 'Add': 'Adicionar', 'All': 'Todos', 'Random': 'Aleatório',
     'Loading…': 'Carregando…', 'Saved.': 'Salvo.', 'Not now': 'Agora não', 'Free': 'Grátis', 'New': 'Novo', 'Menu': 'Menu', 'Back': 'Voltar',
     'Something went wrong. Please try again.': 'Algo deu errado. Tente de novo.',
@@ -275,6 +275,8 @@ self.ssI18nPT = {
     ['{0} · player profile', '{0} · perfil de jogador'], ['Chat with {0}', 'Conversar com {0}'], ['Options for {0}', 'Opções de {0}'],
     ['Open chat with {0}', 'Abrir conversa com {0}'], ['Minimize chat with {0}', 'Minimizar conversa com {0}'], ['Close chat with {0}', 'Fechar conversa com {0}'],
     ['Messages with {0}', 'Mensagens com {0}'], ['Message {0}', 'Mensagem para {0}'],
+    ['New messages · {0}', 'Novas mensagens · {0}'], ['{0} · profile', '{0} · perfil'], ['Challenge {0}', 'Desafiar {0}'],
+    ['{0} challenged you to a duel', '{0} desafiou você para um duelo'], ['{0} won the duel', '{0} venceu o duelo'],
     ['Choose up to {0} target enemy Devotees.', 'Escolha até {0} Devotos inimigos alvo.'], ['Remove {0} damage from target friendly Devotee.', 'Remova {0} de dano do Devoto aliado alvo.'],
     ['Equip {0} on {1} for free?', 'Equipar {0} em {1} de graça?'], ['Prepare {0}?', 'Preparar {0}?'], ['Sacrifice {0}?', 'Sacrificar {0}?'],
     ['Messages can have up to {0} characters.', 'Mensagens podem ter até {0} caracteres.'], ['Open 1 to {0} boosters at a time.', 'Abra de 1 a {0} boosters por vez.'],

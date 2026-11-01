@@ -26,6 +26,8 @@ export function createAI(h) {
     }
     return choice;
   }
+  // Alvo encenado antes da jogada (docs/atividade-adversario.md): o primeiro uid/God escolhido.
+  const aimOf = ch => Object.values(ch || {}).flat().find(v => typeof v === 'string' && (v.startsWith('god:') || h.known(v))) || null;
   const weakest = uids => [...uids].sort((a, b) => h.hp(a) - h.hp(b))[0];
 
   // Próxima ação no próprio turno: {id, run} ou null (End Turn).
@@ -39,7 +41,7 @@ export function createAI(h) {
       const dup = u => hand.some(o => o !== u && h.info(o) === h.info(u)), late = u => cost(u) > p.bases.length + 2;
       const pick = hand.filter(u => h.canBase(key, u)).sort((a, b) => dup(b) - dup(a) || late(b) - late(a)
         || (h.info(a).kind === 'Devotee') - (h.info(b).kind === 'Devotee') || cost(b) - cost(a))[0];
-      if (pick && fresh(`base:${pick}`)) return {id: id(`base:${pick}`), run: () => h.placeBase(s, key, pick, h.info(pick))};
+      if (pick && fresh(`base:${pick}`)) return {id: id(`base:${pick}`), src: pick, run: () => h.placeBase(s, key, pick, h.info(pick))};
     }
     // 2. Ultimate: Athena Exclamation se for letal ou do Round 6 em diante; Great Flood com 2+ Devotees inimigos.
     const god = s.divine[key].god;
@@ -56,19 +58,24 @@ export function createAI(h) {
       if (!fresh(`play:${uid}`)) continue;
       const c = h.info(uid);
       if (c.kind === 'Equipment') {
-        const mine = devotees(key), named = mine.find(d => h.resonant(key, c, d));
-        const bearer = c.global ? null : c.armor ? named || null : named || mine[0]; // Armor: só no Resonant (guia §28)
-        if (bearer || c.global || c.armor) return {id: id(`play:${uid}`), run: () => h.playEquipment(key, uid, bearer, {})};
-        continue;
+        // Armor: veste só no Resonant (guia §28); arma/acessório entra sem portador e se prende depois (§33, 01/11/2026).
+        const bearer = c.armor ? devotees(key).find(d => h.resonant(key, c, d)) || null : null;
+        return {id: id(`play:${uid}`), src: uid, aim: bearer, run: () => h.playEquipment(key, uid, bearer, {})};
       }
       const ch = choicesFor(key, h.STEPS[h.num(uid)] || []);
       if (!ch) continue;
-      return {id: id(`play:${uid}`), run: () => (c.kind === 'Devotee' ? h.playDevotee(key, uid, ch) : h.playSpell(key, uid, ch))};
+      return {id: id(`play:${uid}`), src: uid, aim: aimOf(ch), run: () => (c.kind === 'Devotee' ? h.playDevotee(key, uid, ch) : h.playSpell(key, uid, ch))};
+    }
+    // 5a. Equip (§33): arma/acessório solto no campo se prende ao nomeado na Resonance, senão ao Devotee de maior ATK.
+    for (const uid of p.battlefield.filter(u => h.info(u).kind === 'Equipment' && !h.info(u).global && !h.info(u).armor && !h.attached(u))) {
+      const mine = devotees(key), c = h.info(uid);
+      const bearer = mine.find(d => h.resonant(key, c, d)) || [...mine].sort((a, b) => h.atk(b) - h.atk(a))[0];
+      if (bearer && fresh(`equip:${uid}`)) return {id: id(`equip:${uid}`), src: uid, aim: bearer, run: () => h.reequip(key, uid, bearer)};
     }
     // 5b. Hidden Cosmo (guia §4A, 31/10/2026): carta jogável da própria Base, depois da mão (a Base volta pelo topo do deck).
     for (const uid of h.hiddenReason ? p.bases.map(b => b.uid).filter(u => !h.hiddenReason(key, u)) : []) {
       const ch = fresh(`hidden:${uid}`) && choicesFor(key, h.STEPS[h.num(uid)] || []);
-      if (ch) return {id: id(`hidden:${uid}`), run: () => h.castHidden(key, uid, ch)};
+      if (ch) return {id: id(`hidden:${uid}`), src: uid, aim: aimOf(ch), run: () => h.castHidden(key, uid, ch)};
     }
     // 6. Strikes: no God se puder; senão no Devotee alvo de menor HP restante.
     for (const uid of devotees(key)) {
@@ -76,7 +83,7 @@ export function createAI(h) {
       const targets = h.strikeTargets(uid);
       if (!targets.length) continue;
       const target = targets.find(t => t.kind === 'god') || {kind: 'devotee', uid: weakest(targets.map(t => t.uid))};
-      return {id: id(`strike:${uid}`), run: () => h.declareStrike(uid, target)};
+      return {id: id(`strike:${uid}`), src: uid, aim: target.kind === 'god' ? `god:${target.player}` : target.uid, run: () => h.declareStrike(uid, target)};
     }
     return null;
   }

@@ -1185,3 +1185,14 @@ body.is-peeking:has(.trigger-panel.is-center) .peek-return { display: block; pos
 .settings .settings__end { display: flex; gap: 10px; justify-content: space-between; margin-top: 6px; }
 .settings .settings__concede { border-color: #ff5a4a88; color: #ffb4aa; }
 .settings .settings__concede:hover { background: #ff5a4a22; border-color: #ff5a4a; color: #fff; }
+
+/* Atividade do adversário (docs/atividade-adversario.md, autor 01/11/2026): God pensando, mão se mexendo, mira e foco. */
+.godhud.is-opp-thinking .godhud__portrait { animation: opp-think 1.4s ease-in-out infinite; }
+@keyframes opp-think { 0%, 100% { box-shadow: 0 0 0 2px rgba(150, 200, 255, .35), 0 0 14px rgba(120, 180, 255, .35); } 50% { box-shadow: 0 0 0 3px rgba(170, 215, 255, .9), 0 0 34px rgba(120, 180, 255, .85); } }
+.olympus .hand--opp .hand__slot { transition: translate .2s cubic-bezier(.2, .8, .2, 1); }
+.olympus .hand--opp .hand__slot.is-opp-peek { translate: 0 22px; z-index: 5; }
+.olympus .hand--opp .hand__slot.is-opp-peek .dcard { box-shadow: 0 0 0 2px rgba(170, 215, 255, .8), 0 0 18px rgba(120, 180, 255, .7); }
+.dcard.is-opp-focus { outline: 2px solid rgba(170, 215, 255, .95); outline-offset: 3px; }
+.dcard.is-opp-aimed, .godhud__portrait.is-opp-aimed { box-shadow: 0 0 0 3px #ff3a2a, 0 0 32px rgba(255, 60, 40, .9); }
+.reduce-motion .godhud.is-opp-thinking .godhud__portrait { animation: none; box-shadow: 0 0 0 3px rgba(170, 215, 255, .9), 0 0 24px rgba(120, 180, 255, .7); }
+.reduce-motion .olympus .hand--opp .hand__slot { transition: none; }

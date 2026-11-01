@@ -4,6 +4,20 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-01 — Cartas (Fênix) — Sai o marcador de Renascimento
+
+- **Antes:** Phoenix Ikki (009) custo 5, Hidden Cosmo {6}, com Phoenix Rebirth (substituía a derrota uma vez e punha 1 marcador de Renascimento). Phoenix Cloth V2 (010) e Esmeralda (038) removiam marcadores; The Return of the Phoenix (080) punha 1 marcador; Leo Gold Cloth (016) deixava Ikki ativar Lightning Plasma sem {T}.
+- **Depois:** Ikki custo 4, Hidden Cosmo {5}, sem Phoenix Rebirth: ele morre e volta pelo Tártaro (Arise from the Ashes, estilo Arclight Phoenix). 010: Ikki equipado derrotado → compre 1 carta. 038: Esmeralda derrotada → pode devolver um Phoenix Ikki do Tártaro à mão. 080: alvo Ikki traz também cada outro Ikki do Tártaro (Unprepared, sem Strike no Round). 016: sempre que um Phoenix Ikki volta do seu Tártaro, 1 de dano num Devotee inimigo alvo. O marcador de Renascimento sai do jogo.
+- **Motivo:** autor, 01/11/2026: Ikki resiliente demais; "eliminar essa habilidade de ikki e repensar as cartas que interagem com esse token", com o novo Ikki Arclight Phoenix. Diff do `cards.json` aprovado.
+- **Engine:** `v6/athena-devotees.js`, `v6/athena-gear.js`, `v6/athena-spells.js`. Leitura de 016: vale com a Cloth solta ou presa a um Ikki. Pendente: carta de descarte em Athena para mandar Ikki ao Tártaro.
+
+## 2026-11-01 — §28/§33 — Armas e acessórios entram sem portador
+
+- **Antes:** jogar arma ou acessório exigia um portador: pagava o Equip impresso (ou o custo, no Devotee nomeado) e já entrava preso ("auto equip").
+- **Depois:** jogar custa o custo impresso, só Base, e a carta entra em campo sem portador. Prender é outra ação, no próprio turno, pagando o Equip impresso em Base e/ou Latent (o nomeado na Resonance paga o custo impresso). Igual à Armor sem Devotee Resonant.
+- **Motivo:** autor, 01/11/2026: "ainda tá dando auto equipe, resolva esse problema do equip de uma vez por todas"; escolheu "Entra sem portador".
+- **Engine:** `engine-v3/play.js` (`playEquipment`, `reequip`), IA (`divine/ai.js`), UI (`divine/app.js`). Itens globais não mudam.
+
 ## 2026-11-01 — G3-024/G3-028 — Relógio de 4 minutos
 
 - **Antes:** 60 s básicos + reserva inicial 90 (teto 180); 12 tochas de 15 s.

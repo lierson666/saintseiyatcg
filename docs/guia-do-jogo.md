@@ -359,7 +359,7 @@ Revisado em 30/10/2026.
 
 Se o novo portador já vestia outra Armor, a anterior fica em campo sem portador.
 
-Armas e acessórios mantêm o Equip impresso. Itens globais (“Equip: None — Global”, como Athena’s Shield) não se prendem: pagam o Casting Cost e ficam no campo sem portador, sem reequipar (autor, 29/10/2026).
+Armas e acessórios seguem o §33: entram sem portador e se prendem pagando o Equip impresso. Itens globais (“Equip: None — Global”, como Athena’s Shield) não se prendem: pagam o Casting Cost e ficam no campo sem portador, sem reequipar (autor, 29/10/2026).
 
 ### 29. Versões de Armor
 
@@ -385,7 +385,7 @@ Armor sem portador não tem efeito. Ela só sai do campo por um efeito explícit
 
 ### 33. Equip de armas e acessórios
 
-Toda arma ou acessório que se prende a um Devotee tem custo de Equip impresso. O custo de jogar é Base-only; Equip e transferência aceitam Base e/ou Latent. Habilidades universais funcionam com qualquer portador; apenas habilidades “Resonance — Nome” exigem aquele personagem.
+Revisado em 01/11/2026. **Jogar** uma arma ou acessório, no próprio turno, custa o custo impresso, pago exclusivamente em Base, e a carta entra em campo **sem portador**. Não existe mais equipar ao jogar, nem para o Devotee nomeado. **Prender** a carta num Devotee seu é outra AÇÃO, no próprio turno, e custa o **Equip impresso**, pago em Base e/ou Latent; o Devotee nomeado na Resonance paga o custo impresso no lugar do Equip. A mesma ação move a carta solta de volta a um Devotee quando o portador sai. Arma ou acessório sem portador não tem efeito. Habilidades universais funcionam com qualquer portador; apenas habilidades “Resonance — Nome” exigem aquele personagem.
 
 ### 34. Bônus de atributos
 
@@ -675,7 +675,7 @@ Se um Strike causar Soul zero aos dois Gods simultaneamente por efeitos aplicáv
 
 - Cada Devotee tem **um espaço de armadura**, ocupado por uma Cloth, Scale, Surplice, Warplate ou Moonplate. Essas armaduras não se acumulam. Armas, acessórios e outras Relics não têm limite geral de quantidade, respeitando restrições impressas e cartas únicas.
 - Jogar uma Armor, no próprio turno, custa o custo impresso, só em Base. Com um Devotee Resonant seu em campo, você pode vesti-la nele sem Equip; senão ela entra sem portador (§28).
-- Vestir uma Armor em campo (sem portador ou tirada de outro Devotee seu), no próprio turno, custa o Equip impresso, em Base e/ou Latent, inclusive para o Resonant. Ao entrar em campo, um Devotee Resonant pode puxar sua Armor sem Equip. Armas/acessórios usam o Equip impresso ou 1. Trocar de armadura deixa a anterior em campo sem portador; não a destrói.
+- Vestir uma Armor em campo (sem portador ou tirada de outro Devotee seu), no próprio turno, custa o Equip impresso, em Base e/ou Latent, inclusive para o Resonant. Ao entrar em campo, um Devotee Resonant pode puxar sua Armor sem Equip. Armas/acessórios entram sem portador e se prendem por outra ação, pagando o Equip impresso (§33, 01/11/2026). Trocar de armadura deixa a anterior em campo sem portador; não a destrói.
 - Desequipar voluntariamente, no próprio turno, custa zero Cosmo. Não exige Prepared. Transferência e troca são concluídas antes de recalcular os atributos e verificar destruição, evitando mortes por um estado intermediário de interface.
 - Equipment com {T} no custo (ex.: Pandora's Box, Kraken Scale, Lunar Amulet) usa a habilidade **uma vez por rodada**; Equipment não tem estado Prepared/Unprepared (autor, 29/10/2026). O mesmo vale para o {T} de Domain (ex.: Jamir Tower), confirmado em 30/10/2026.
 - **“Destroyed”** em texto de Equipment/Armor é sair **do campo** para o Tartarus (destruída por efeito ou levada junto com o portador derrotado). Ir da mão ou do exílio para o Tartarus não conta (autor, 30/10/2026).

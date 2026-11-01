@@ -8,7 +8,7 @@ import {canonIndex} from '../shared/deck-v3.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
 import {startTurn, endTurn, passAll, runCheckpoint, addSeal} from '../playtest/engine-v3/core.js';
-import {playDevotee as playDevoteeRaw, playSpell, playEquipment as playEquipmentRaw, activate as activateRaw, castCost} from '../playtest/engine-v3/play.js';
+import {playDevotee as playDevoteeRaw, playSpell, playEquipment as playEquipmentRaw, activate as activateRaw, castCost, reequip} from '../playtest/engine-v3/play.js';
 import {declareStrike, mustStrike} from '../playtest/engine-v3/strike.js';
 import {V6, bindContext} from '../playtest/engine-v3/v6/hooks.js';
 import {checkDefeats, atkOf, hpOf, modify, keywordsOf} from '../playtest/engine-v3/effects.js';
@@ -16,7 +16,9 @@ import * as k from '../playtest/engine-v3/v6/kit.js';
 import {guardDecide} from './engine-test-upto.mjs';
 // Guia §56 (30/10/2026): jogada e {T} vão à pilha; aqui os dois passam e a pilha resolve na hora.
 const resolved = fn => (s, ...a) => { const r = fn(s, ...a); passAll(s); return r; };
-const playDevotee = resolved(playDevoteeRaw), playEquipment = resolved(playEquipmentRaw), activate = resolved(activateRaw);
+const playDevotee = resolved(playDevoteeRaw), activate = resolved(activateRaw);
+// Guia §33 (01/11/2026): arma/acessório entra sem portador; o portador do teste vem pela ação Equip.
+const playEquipment = (s, ctx, key, uid, bearer, ch) => { const r = resolved(playEquipmentRaw)(s, ctx, key, uid, bearer, ch); if (bearer && !ctx.attached[uid] && !ctx.cards.get(ctx.objects[uid].cardId).global) reequip(s, ctx, key, uid, bearer); return r; };
 const modifyAtk = (s, uid, atk) => modify(s, uid, {atk});
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));

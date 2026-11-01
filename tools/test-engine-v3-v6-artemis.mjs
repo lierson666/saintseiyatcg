@@ -14,7 +14,9 @@ import {atkOf, hpOf, keywordsOf, damageDevotee, checkDefeats} from '../playtest/
 import {bindContext} from '../playtest/engine-v3/v6/registry.js';
 // Guia §56 (30/10/2026): jogada e {T} vão à pilha; aqui os dois passam e a pilha resolve na hora.
 const resolved = fn => (s, ...a) => { const r = fn(s, ...a); passAll(s); return r; };
-const playDevotee = resolved(playDevoteeRaw), playEquipment = resolved(playEquipmentRaw), activate = resolved(activateRaw);
+const playDevotee = resolved(playDevoteeRaw), activate = resolved(activateRaw);
+// Guia §33 (01/11/2026): arma/acessório entra sem portador; o portador do teste vem pela ação Equip.
+const playEquipment = (s, ctx, key, uid, bearer, ch) => { const r = resolved(playEquipmentRaw)(s, ctx, key, uid, bearer, ch); if (bearer && !ctx.attached[uid] && !ctx.cards.get(ctx.objects[uid].cardId).global) reequip(s, ctx, key, uid, bearer); return r; };
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json'), cards = loadCanon(canon), index = canonIndex(canon);
@@ -293,7 +295,7 @@ test('388 Silver Arrow Huntress: Precise Hunt põe Training counter num Devotee 
 
 test('379 Divine Bow: Celestial Arrow dá +2 ATK contra Devotee, sem dano em outro alvo', () => {
   const {s, ctx, field, hand, id} = setup();
-  const archer = field('A', id(393)), foe = field('B', 'ares-v6-271'), other = field('B', 'ares-v6-271');
+  const archer = field('A', id(393)), foe = field('B', 'ares-v6-271'), other = field('B', 'ares-v6-273'); // personagens diferentes (§63)
   playEquipment(s, ctx, 'A', hand('A', id(379)), archer);
   const atk = atkOf(s, ctx, archer);
   declareStrike(s, ctx, archer, {kind: 'devotee', uid: foe}); passAll(s);

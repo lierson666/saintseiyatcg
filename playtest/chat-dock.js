@@ -58,7 +58,7 @@ export function mountChatDock({api, avatarOf, decks = () => [], play, inMatch = 
   const unreadSeen = new Map(); // amigo -> não lidas na última consulta (toast só quando sobe)
   const waiting = new Set(); // desafios que eu mandei: aceitos, levam à partida
   const friend = user => friends.find(f => f.username === user) || {username: user};
-  const deckSelect = name => { const list = decks(); return list.length ? `<select class="kv-input cd-duel__deck" name="${name}" aria-label="Deck">${list.map(d => `<option value="${esc(d.id)}">${esc(d.name)}</option>`).join('')}</select>` : '<p class="cd-status">Build a complete deck first.</p>'; };
+  const deckSelect = name => { const list = decks(); return list.length ? `<select class="kv-input cd-duel__deck" name="${name}" aria-label="Deck" translate="no">${list.map(d => `<option value="${esc(d.id)}">${esc(d.name)}</option>`).join('')}</select>` : '<p class="cd-status">Build a complete deck first.</p>'; };
   const deckById = id => decks().find(d => d.id === id)?.deck;
 
   // ---------- janelas ----------
@@ -67,7 +67,7 @@ export function mountChatDock({api, avatarOf, decks = () => [], play, inMatch = 
     return `<header class="cd-win__head">
         <button class="cd-win__who" data-cd="toggle" aria-expanded="${!c.min}" aria-label="${c.min ? 'Open' : 'Minimize'} chat with ${esc(c.user)}">
           <span class="cd-avatar" style="background-image:url('${avatarOf(f.avatar_card) || ''}');${faceStyle(f.avatar_card || 'god-athena')}"></span>
-          <span class="cd-win__name"><b>${playerName(c.user)}</b><small class="cd-dot is-${f.status || 'offline'}">${LABEL[f.status] || ''}</small></span>
+          <span class="cd-win__name"><b translate="no">${playerName(c.user)}</b><small class="cd-dot is-${f.status || 'offline'}">${LABEL[f.status] || ''}</small></span>
           <b class="cd-badge" hidden></b></button>
         ${onProfile ? `<button class="cd-icon" data-cd="profile" title="View profile" aria-label="${esc(c.user)} · profile">${ICON.user}</button>` : ''}
         ${inMatch ? '' : `<button class="cd-icon" data-cd="duel-open" ${canDuel ? '' : 'disabled'} title="${canDuel ? 'Challenge to a duel' : 'Your friend must be online'}" aria-label="Challenge ${esc(c.user)}">${ICON.swords}</button>`}
@@ -107,7 +107,7 @@ export function mountChatDock({api, avatarOf, decks = () => [], play, inMatch = 
       tabs ||= Object.assign(document.createElement('nav'), {className: 'cd-tabs'});
       tabs.setAttribute('aria-label', 'More chats');
       tabs.innerHTML = extra.map(c => { const n = friend(c.user).unread || 0;
-        return `<button class="cd-tab" data-cd="front" data-user="${esc(c.user)}">${playerName(c.user)}${n ? `<b class="cd-badge">${n}</b>` : ''}</button>`; }).join('');
+        return `<button class="cd-tab" data-cd="front" data-user="${esc(c.user)}"><span translate="no">${playerName(c.user)}</span>${n ? `<b class="cd-badge">${n}</b>` : ''}</button>`; }).join('');
       dock.append(tabs);
     }
     if (inMatch) launcher();
@@ -159,7 +159,7 @@ export function mountChatDock({api, avatarOf, decks = () => [], play, inMatch = 
       if (fresh) c.g++;
       c.group = {mine: m.mine, at: m.at};
       const f = friend(c.user), av = fresh && !m.mine ? `<span class="cd-avatar cd-msg__av" style="background-image:url('${avatarOf(f.avatar_card) || ''}');${faceStyle(f.avatar_card || 'god-athena')}"></span>` : '';
-      html += `<li class="cd-msg ${m.mine ? 'is-mine' : ''} ${fresh ? 'is-first' : ''}" data-id="${m.id}" data-g="${c.g}">${av}<p>${esc(m.body)}</p><time datetime="${new Date(m.at * 1000).toISOString()}">${time(m.at)}</time></li>`;
+      html += `<li class="cd-msg ${m.mine ? 'is-mine' : ''} ${fresh ? 'is-first' : ''}" data-id="${m.id}" data-g="${c.g}">${av}<p translate="no">${esc(m.body)}</p><time datetime="${new Date(m.at * 1000).toISOString()}">${time(m.at)}</time></li>`;
     }
     log.insertAdjacentHTML('beforeend', html);
     log.querySelectorAll('.cd-msg').forEach(li => li.classList.toggle('is-last', li.nextElementSibling?.dataset.g !== li.dataset.g));
@@ -202,7 +202,7 @@ export function mountChatDock({api, avatarOf, decks = () => [], play, inMatch = 
     document.querySelector('.cd-toast')?.remove();
     const t = document.createElement('button');
     t.className = 'cd-toast'; t.setAttribute('role', 'status');
-    t.innerHTML = `<span class="cd-avatar" style="background-image:url('${avatarOf(f.avatar_card) || ''}');${faceStyle(f.avatar_card || 'god-athena')}"></span><span><b>${playerName(f.username)}</b><small>New message${f.unread > 1 ? `s · ${f.unread}` : ''}</small></span>`;
+    t.innerHTML = `<span class="cd-avatar" style="background-image:url('${avatarOf(f.avatar_card) || ''}');${faceStyle(f.avatar_card || 'god-athena')}"></span><span><b translate="no">${playerName(f.username)}</b><small>New message${f.unread > 1 ? `s · ${f.unread}` : ''}</small></span>`;
     t.onclick = () => { t.remove(); open(f.username); };
     document.body.append(t);
     setTimeout(() => t.remove(), 6000);
@@ -243,7 +243,7 @@ export function mountChatDock({api, avatarOf, decks = () => [], play, inMatch = 
     const online = friends.filter(f => f.status !== 'offline');
     l.innerHTML = `<button class="cd-launch__btn" data-cd="picker-friends" aria-expanded="${picker}">Friends · ${online.length}<b class="cd-badge" hidden></b></button>
       ${picker ? `<div class="cd-launch__list" role="menu">${friends.length ? [...online, ...friends.filter(f => f.status === 'offline')].map(f => `<button role="menuitem" data-cd="open" data-user="${esc(f.username)}">
-        <span class="cd-avatar" style="background-image:url('${avatarOf(f.avatar_card) || ''}');${faceStyle(f.avatar_card || 'god-athena')}"></span><span class="cd-win__name"><b>${playerName(f.username)}</b><small class="cd-dot is-${f.status}">${LABEL[f.status]}</small></span>${f.unread ? `<b class="cd-badge">${f.unread}</b>` : ''}</button>`).join('') : '<p class="cd-status">No friends yet.</p>'}</div>` : ''}`;
+        <span class="cd-avatar" style="background-image:url('${avatarOf(f.avatar_card) || ''}');${faceStyle(f.avatar_card || 'god-athena')}"></span><span class="cd-win__name"><b translate="no">${playerName(f.username)}</b><small class="cd-dot is-${f.status}">${LABEL[f.status]}</small></span>${f.unread ? `<b class="cd-badge">${f.unread}</b>` : ''}</button>`).join('') : '<p class="cd-status">No friends yet.</p>'}</div>` : ''}`;
     dock.prepend(l); badges(); // primeiro filho = canto direito (fila invertida)
   }
 
@@ -262,7 +262,7 @@ export function mountChatDock({api, avatarOf, decks = () => [], play, inMatch = 
     if (act === 'picker') { const p = c.el.querySelector('.cd-picker'); p.hidden = !p.hidden; b.setAttribute('aria-expanded', !p.hidden); return; }
     if (act === 'emoji' || act === 'emote') {
       const input = c.el.querySelector('[name=msg]');
-      if (act === 'emote') return send(c, b.dataset.text);
+      if (act === 'emote') return send(c, b.textContent.trim()); // manda a resposta rápida no idioma em que aparece
       input.value += b.dataset.text; input.focus(); return;
     }
     if (act === 'duel-open' || act === 'duel-close') { if (c.min) toggle(c); c.el.querySelector('.cd-duel').hidden = act === 'duel-close'; return; }

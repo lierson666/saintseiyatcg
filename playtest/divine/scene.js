@@ -328,11 +328,15 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
   }
   const ro = new ResizeObserver(resize); ro.observe(host);
 
-  let last = performance.now(), running = true, frames = 0, fpsClock = last, fps = 60, lost = false;
+  // Teto de quadros (Mac superaquecendo, 31/10/2026): 60 fps com golpe na tela, 30 fps com a arena parada.
+  // Telas de 120 Hz desenhavam os dois canvas no dobro, sem ganho visível no cenário lento.
+  let last = performance.now(), running = true, frames = 0, fpsClock = last, fps = 60, lost = false, fxDrawn = false;
   function frame(now) {
     if (!running) return;
     requestAnimationFrame(frame);
     if (document.hidden || lost) { last = now; return; }
+    const busy = P.n || live.length || shakeAmp > .01 || punch > .01;
+    if (now - last < (busy ? 1000 / 62 : 1000 / 31)) return;
     const dt = Math.min(.05, (now - last) / 1000); last = now;
     uniforms.uTime.value += dt;
     frames++; if (now - fpsClock > 1000) { fps = frames * 1000 / (now - fpsClock); frames = 0; fpsClock = now; }
@@ -343,7 +347,10 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
     stepParticles(dt); stepShapes(dt);
     renderer.clear();
     renderer.render(world, camera);
-    fxRenderer.render(fxScene, fxCam);
+    // canvas de VFX vazio: desenha uma vez para limpar o último golpe e depois fica parado
+    const fxLive = P.n || live.length;
+    if (fxLive || fxDrawn) fxRenderer.render(fxScene, fxCam);
+    fxDrawn = !!fxLive;
   }
 
   // Perda de contexto: para o desenho e avisa; a interface DOM continua jogável.
