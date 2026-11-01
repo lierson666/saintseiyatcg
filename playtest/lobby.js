@@ -12,7 +12,7 @@ import {countryOptions, countryName} from '../shared/countries.js?v=20261029-1';
 import {startPresence} from '../shared/presence.js?v=20261029-1';
 import {mountSocial} from './social.js?v=20261031-ds3';
 import {telas, imageUrl, sound, applyColors, applyTexts} from './telas.js?v=20261030-1';
-import {loadEconomy, ownedLimit, missingCards, coinBadge, storeScreen, collectionScreen, openBooster, buyBooster, buyCosmetic} from './economy.js?v=20261031-face3';
+import {loadEconomy, ownedLimit, missingCards, coinBadge, storeScreen, collectionScreen, openBooster, buyBooster, buyCosmetic} from './economy.js?v=20261031-filt1';
 import {lightArt} from '../shared/light-art.js';
 import {faceStyle, useGodPortraits} from './avatar-face.js?v=20261031-3';
 import {progressTrack} from './home-features.js?v=20261031-face3';
@@ -361,24 +361,29 @@ function errorText(e) {
     unknown: `${name(e.card_id)} is not in the card pool.`, outside: `${name(e.card_id)} can't go in the main deck.`, identity: `${name(e.card_id)} is outside this deck's colors (God, Domain and neutral).`, quantity: `${name(e.card_id)}: invalid quantity.`, splash: `${e.count} cards from the Domain's faction (max ${SPLASH_LIMIT}).`}[e.code] || e.code;
 }
 const CARD_SIZES = {S: 130, M: 180, L: 250, XL: 330};
+// Barra de filtros do pool (editor de decks e Coleção): busca, custo, tipo, Deuses e tamanho das cartas.
+const filterState = () => (ui.screen === 'collection' ? (ui.colPool ||= {q: '', cost: 'All', kind: 'All', show: []}) : ui.builder);
+function filterBar(b) {
+  const pill = (key, v) => `<button class="lb-pill ${b[key] === v ? 'is-active' : ''}" data-act="filter" data-key="${key}" data-value="${v}">${v}</button>`;
+  return `<div class="lb-filters"><input type="search" placeholder="Search name or text" value="${esc(b.q)}" data-act="search" aria-label="Search cards">
+        <div class="lb-pills" aria-label="Cost">${COSTS.map(v => pill('cost', v)).join('')}</div>
+        <div class="lb-pills" aria-label="Type">${KINDS.map(v => pill('kind', v)).join('')}</div>
+        <div class="lb-gods" role="group" aria-label="Show cards of">${PICKS.map(f => `<button class="lb-godpick ${b.show.includes(f) ? 'is-active' : ''}"
+          data-act="show-god" data-faction="${f}" aria-pressed="${b.show.includes(f)}" title="${cards.get(`god-${f}`)?.name || 'Neutral'}">${f === 'neutral'
+          ? '<span class="lb-godpick__neutral" aria-hidden="true"></span><span class="lb-sr">Neutral</span>' : `<img src="${symbol(f)}" alt="${f}">`}</button>`).join('')}</div>
+        <div class="lb-pills lb-sizes" role="group" aria-label="Card size">${Object.keys(CARD_SIZES).map(k => `<button class="lb-pill ${(ui.cardSize || 'M') === k ? 'is-active' : ''}" data-act="card-size" data-size="${k}" aria-pressed="${(ui.cardSize || 'M') === k}">${k}</button>`).join('')}</div></div>`;
+}
 function builder() {
   const b = ui.builder, d = b.deck, list = d.main_deck.map(e => ({...e, card: cards.get(e.card_id)})).filter(e => e.card).sort((x, y) => sortCards(x.card, y.card));
   const errors = deckErrors(d), size = deckSize(d), curve = [1, 2, 3, 4, 5, 6, 7].map(n => list.filter(e => (n === 7 ? (e.card.cost?.amount ?? 0) >= 7 : e.card.cost?.amount === n)).reduce((s, e) => s + e.quantity, 0));
   const peak = Math.max(1, ...curve), cards_ = pool(b);
-  const pill = (key, v) => `<button class="lb-pill ${b[key] === v ? 'is-active' : ''}" data-act="filter" data-key="${key}" data-value="${v}">${v}</button>`;
   const domain = d.domain_id && cards.get(d.domain_id);
   // No celular a coleção e a lista do deck viram duas abas (Cards | Deck); no desktop ficam lado a lado.
   return `<section class="lb-builder is-${b.view || 'pool'}">
     <div class="lb-bview" role="group" aria-label="Builder view">${[['pool', 'Cards'], ['list', `Deck ${size}/${DECK_SIZE}`]].map(([v, label]) =>
       `<button class="lb-pill ${(b.view || 'pool') === v ? 'is-active' : ''}" data-act="builder-view" data-view="${v}" aria-pressed="${(b.view || 'pool') === v}">${label}</button>`).join('')}</div>
     <div class="lb-pool">
-      <div class="lb-filters"><input type="search" placeholder="Search name or text" value="${esc(b.q)}" data-act="search" aria-label="Search cards">
-        <div class="lb-pills" aria-label="Cost">${COSTS.map(v => pill('cost', v)).join('')}</div>
-        <div class="lb-pills" aria-label="Type">${KINDS.map(v => pill('kind', v)).join('')}</div>
-        <div class="lb-gods" role="group" aria-label="Show cards of">${PICKS.map(f => `<button class="lb-godpick ${b.show.includes(f) ? 'is-active' : ''}"
-          data-act="show-god" data-faction="${f}" aria-pressed="${b.show.includes(f)}" title="${cards.get(`god-${f}`)?.name || 'Neutral'}">${f === 'neutral'
-          ? '<span class="lb-godpick__neutral" aria-hidden="true"></span><span class="lb-sr">Neutral</span>' : `<img src="${symbol(f)}" alt="${f}">`}</button>`).join('')}</div>
-        <div class="lb-pills lb-sizes" role="group" aria-label="Card size">${Object.keys(CARD_SIZES).map(k => `<button class="lb-pill ${(ui.cardSize || 'M') === k ? 'is-active' : ''}" data-act="card-size" data-size="${k}" aria-pressed="${(ui.cardSize || 'M') === k}">${k}</button>`).join('')}</div></div>
+      ${filterBar(b)}
       <div class="lb-grid" style="--slot:${CARD_SIZES[ui.cardSize] || CARD_SIZES.M}px">${cards_.map(c => {
         const n = count(b, c.id), isDomain = c.kind === 'Domain', on = isDomain ? d.domain_id === c.id : n > 0, max = ownedLimit(ui.econ, c.id, c.kind);
         return `<button class="lb-slot ${on ? 'is-in' : ''} ${!isDomain && n >= max ? 'is-max' : ''} ${!isDomain && !max ? 'is-unowned' : ''}" data-act="${isDomain ? 'set-domain' : 'add'}" data-id="${c.id}" aria-label="${esc(c.name)}">
@@ -469,7 +474,7 @@ const SCROLLERS = ['.lb-body', '.lb-grid', '.lb-list', '.lb-panel'];
 function render() {
   const keep = SCROLLERS.map(sel => root.querySelector(sel)?.scrollTop || 0), screen = root.dataset.screen;
   const body = {home, decks: decksScreen, profile: profileScreen, options, builder,
-    collection: () => collectionScreen(ui.econ, [...cards.values()].filter(c => c.kind !== 'God').sort(sortCards), face, ui.colFilter),
+    collection: () => collectionScreen(ui.econ, pool(filterState()), face, ui.colFilter, {bar: filterBar(filterState()), slot: CARD_SIZES[ui.cardSize] || CARD_SIZES.M}),
     store: () => storeScreen(ui.econ, (id, size) => artOf(id, size), ui.user, {tab: ui.storeTab, group: ui.storeGroup, pick: ui.cosPick})}[ui.screen]();
   root.innerHTML = `${topBar()}<div class="lb-body lb-body--${ui.screen}">${body}</div>${bigCard()}${picker()}${notice()}`;
   if (screen === ui.screen) SCROLLERS.forEach((sel, i) => { const el = root.querySelector(sel); if (el) el.scrollTop = keep[i]; });
@@ -560,13 +565,13 @@ const actions = {
   'open-booster': t => openBooster(face, r => { ui.econ = r; render(); }, ui.econ?.boosters, +t.dataset.count || 1),
   'new-deck': () => openBuilder(null),
   'edit-deck': t => openBuilder(allDecks().find(d => d.id === t.dataset.deck)),
-  filter: t => { ui.builder[t.dataset.key] = t.dataset.value; },
+  filter: t => { filterState()[t.dataset.key] = t.dataset.value; },
   add: t => setCount(t.dataset.id, 1),
   remove: t => setCount(t.dataset.id, -1),
   'set-domain': t => { ui.builder.deck.domain_id = t.dataset.id; ui.builder.dirty = true; },
   'builder-view': t => { ui.builder.view = t.dataset.view; },
   'card-size': t => { ui.cardSize = t.dataset.size; remember(); },
-  'show-god': t => { const s = ui.builder.show, f = t.dataset.faction; ui.builder.show = s.includes(f) ? s.filter(x => x !== f) : [...s, f]; },
+  'show-god': t => { const b = filterState(), s = b.show, f = t.dataset.faction; b.show = s.includes(f) ? s.filter(x => x !== f) : [...s, f]; },
   'save-deck': () => { saveDeck(); ui.screen = 'decks'; },
   'delete-deck': () => {
     if (!confirm(`Delete "${ui.builder.deck.nome}"?`)) return;
@@ -643,7 +648,7 @@ root.addEventListener('input', e => {
     root.querySelectorAll('.ds-row').forEach(row => { row.hidden = row.previousElementSibling.hidden = !row.querySelector('.ds-deck:not([hidden])'); });
   }
   if (t.dataset.act === 'search') {
-    ui.builder.q = t.value;
+    filterState().q = t.value;
     const at = t.selectionStart;
     render();
     const input = root.querySelector('[data-act="search"]');

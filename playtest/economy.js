@@ -142,7 +142,7 @@ export function storeScreen(e, art = () => null, me = null, view = {}) {
 }
 
 // Coleção: todas as cartas jogáveis (sem Gods), com quantas o jogador tem; as que faltam ficam apagadas.
-export function collectionScreen(e, list, face, filter = 'all') {
+export function collectionScreen(e, list, face, filter = 'all', {bar = '', slot = 150} = {}) { // bar/slot: filtros do pool (lobby.js)
   if (!e) return `<section class="lb-page"><header class="lb-page__head"><h1>Collection</h1><p>Sign in to see your collection.</p></header></section>`;
   const owned = c => c.kind === 'Domain' || e.full_access ? COPY_LIMIT : e.collection[c.id] || 0;
   const shown = list.filter(c => filter === 'all' || (filter === 'owned' ? owned(c) > 0 : owned(c) === 0));
@@ -151,7 +151,8 @@ export function collectionScreen(e, list, face, filter = 'all') {
   return `<section class="lb-page ec-collection">
     <header class="lb-page__head"><h1>Collection</h1><p>${have} of ${list.length} cards${e.full_access ? ' · full access' : ''}. Open boosters to get more.</p>
       <div class="lb-pills">${pill('all', 'All')}${pill('owned', 'Owned')}${pill('missing', 'Missing')}</div></header>
-    <div class="lb-grid ec-grid" style="--slot:150px">${shown.map(c => `<div class="ec-card ${owned(c) ? '' : 'is-missing'}">${face(c.id)}
+    ${bar}
+    <div class="lb-grid ec-grid" style="--slot:${slot}px">${shown.map(c => `<div class="ec-card ${owned(c) ? '' : 'is-missing'}">${face(c.id)}
       <i class="lb-slot__count">${c.kind === 'Domain' ? 'Domain' : `${owned(c)} / ${COPY_LIMIT}`}</i></div>`).join('') || '<p class="lb-empty">Nothing here.</p>'}</div>
   </section>`;
 }
