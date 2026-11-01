@@ -3988,7 +3988,7 @@
         "OFERENDA DE VIDA — Poder Divino\nUma vez por rodada, quando um Devoto que você controla é derrotado, você pode perder {2}{S}. Se fizer isso, compre uma carta e ganhe {1}{L}."
       ],
       "habilidade_awaken_pt": "REI DO TÁRTARO — Despertar 7\nSempre que um Devoto volta do seu Tártaro para o Campo de Batalha sob seu controle, o Deus inimigo perde {1}{S} e Hades ganha {1}{S}.",
-      "ultimate_pt": "GRANDE ECLIPSE — Supremo\nCusto: {7}{C}\nDevolva até três Devotos do seu Tártaro para o Campo de Batalha sob seu controle. Eles entram Despreparados e perdem Ímpeto.\nPara cada Devoto devolvido assim, o Deus inimigo perde {2}{S}.\nHades ganha Alma igual à metade da Alma que o Deus inimigo perdeu com Grande Eclipse, arredondada para cima.",
+      "ultimate_pt": "GRANDE ECLIPSE — Supremo\nCusto: {7}{C}\nDevolva até três Devotos do seu Tártaro para o Campo de Batalha sob seu controle. Eles entram Despreparados e perdem Impulso.\nPara cada Devoto devolvido assim, o Deus inimigo perde {2}{S}.\nHades ganha Alma igual à metade da Alma que o Deus inimigo perdeu com Grande Eclipse, arredondada para cima.",
       "flavour_pt": "“Eu sou o fim de todas as coisas.”"
     },
     {
@@ -4027,7 +4027,7 @@
         "COLHEITA LUNAR — Poder Divino\nUma vez por rodada, quando você colocar uma carta como Base de Cosmo, você pode ignorar o requisito de Cosmável dela. Se fizer isso, perca {2}{S}."
       ],
       "habilidade_awaken_pt": "BÊNÇÃO DO LUAR — Despertar 3\nUma vez por rodada, quando você ganharia Cosmo Latente, ganhe {1}{L} adicional, até o limite normal de 3.",
-      "ultimate_pt": "DESPERTAR DA LUA — Supremo\nCusto: {9}{C}\nEscolha até cinco Bases de Cosmo que você controla.\nAté o fim desta rodada, elas se tornam Devotos Espíritos Lunares 3/3 com Ímpeto, Longo Alcance e Perfurar, além de continuarem sendo Bases de Cosmo.\nOs Espíritos Lunares criados assim não sofrem dano de revide de Deuses.\nSempre que um desses Espíritos Lunares causa dano a um Deus inimigo durante um Golpe, esse Deus perde {2}{S} adicionais.\nEssas Bases de Cosmo não podem produzir Cosmo enquanto estiverem transformadas.\nNo fim desta rodada, elas deixam de ser Devotos e permanecem no Campo de Batalha como Bases de Cosmo.",
+      "ultimate_pt": "DESPERTAR DA LUA — Supremo\nCusto: {9}{C}\nEscolha até cinco Bases de Cosmo que você controla.\nAté o fim desta rodada, elas se tornam Devotos Espíritos Lunares 3/3 com Impulso, Longo Alcance e Perfurar, além de continuarem sendo Bases de Cosmo.\nOs Espíritos Lunares criados assim não sofrem dano de revide de Deuses.\nSempre que um desses Espíritos Lunares causa dano a um Deus inimigo durante um Golpe, esse Deus perde {2}{S} adicionais.\nEssas Bases de Cosmo não podem produzir Cosmo enquanto estiverem transformadas.\nNo fim desta rodada, elas deixam de ser Devotos e permanecem no Campo de Batalha como Bases de Cosmo.",
       "flavour_pt": "“Olhe para o céu… esse é o reino que você nunca alcançará.”"
     },
     {
@@ -4066,7 +4066,7 @@
         "SEDE DE SANGUE — Poder Divino\nCusto: {3}{C}\nUma vez por rodada, escolha um Devoto que você controla. Prepare-o. Ele recebe +1 de Poder até o fim da rodada. Ele não pode declarar um Golpe contra um Deus nesta rodada."
       ],
       "habilidade_awaken_pt": "CARNIFICINA — Despertar 5\nSempre que um Devoto que você controla destrói um Devoto inimigo durante um Golpe, o Deus inimigo perde {1}{S}.",
-      "ultimate_pt": "ANIQUILAÇÃO — Supremo\nCusto: {6}{C}\nPrepare todos os Devotos que você controla.\nAté o fim da rodada, os Devotos que você controla recebem +3 de Poder, Perfurar e Longo Alcance, e podem declarar Golpes como se tivessem Ímpeto.\nSempre que um Devoto que você controla conclui um Golpe nesta rodada, destrua-o. Essa destruição não pode ser prevenida.",
+      "ultimate_pt": "ANIQUILAÇÃO — Supremo\nCusto: {6}{C}\nPrepare todos os Devotos que você controla.\nAté o fim da rodada, os Devotos que você controla recebem +3 de Poder, Perfurar e Longo Alcance, e podem declarar Golpes como se tivessem Impulso.\nSempre que um Devoto que você controla conclui um Golpe nesta rodada, destrua-o. Essa destruição não pode ser prevenida.",
       "flavour_pt": "“Ajoelhem-se diante do deus da guerra”"
     },
     {
@@ -11816,7 +11816,7 @@
       "nome_exibicao_pt": "ALCMENES DE ÉTON",
       "subtitulo_pt": "O Comandante Carmesim",
       "habilidades_pt": [
-        "Ímpeto",
+        "Impulso",
         "Chegada Carmesim — Quando Alcmenes entra no Campo de Batalha, cause 3 de dano ao Devoto inimigo alvo.",
         "Inferno Implacável — Sempre que Alcmenes derrota um Devoto inimigo em combate, Prepare Alcmenes. Esta habilidade só dispara uma vez por turno."
       ],
@@ -12457,7 +12457,7 @@
       "nome_exibicao_pt": "ARIONTE DE ANFISBENA",
       "subtitulo_pt": "O Caçador Implacável",
       "habilidades_pt": [
-        "Ímpeto",
+        "Impulso",
         "Chegada do Predador — Quando Arionte entra no Campo de Batalha, cause 1 de dano ao Devoto inimigo alvo que já sofreu dano neste turno.",
         "Perseguição Implacável — Sempre que Arionte derrota um Devoto inimigo em combate, Prepare Arionte. Esta habilidade só dispara uma vez por turno."
       ],
@@ -12902,7 +12902,7 @@
       "nome_exibicao_pt": "BERSERKER SEDENTO DE SANGUE",
       "subtitulo_pt": "A Fome de Batalha",
       "habilidades_pt": [
-        "Ímpeto",
+        "Impulso",
         "Sede de Sangue Imprudente — Sempre que este Devoto declara um Golpe, ele recebe +1 ATQ até o fim da rodada. No fim do seu turno, derrote este Devoto se ele declarou um Golpe neste turno."
       ],
       "flavour_pt": "\"Para um Berserker, uma vida curta é um preço pequeno por uma batalha gloriosa.\"",
@@ -12943,7 +12943,7 @@
       "nome_exibicao_pt": "ARAUTO DE GUERRA DE ARES",
       "subtitulo_pt": "A Voz do Conflito Sem Fim",
       "habilidades_pt": [
-        "Grito de Guerra — Quando o Arauto de Guerra de Ares entra no Campo de Batalha, o Berserker aliado alvo recebe +1 ATQ e Ímpeto até o fim da rodada."
+        "Grito de Guerra — Quando o Arauto de Guerra de Ares entra no Campo de Batalha, o Berserker aliado alvo recebe +1 ATQ e Impulso até o fim da rodada."
       ],
       "flavour_pt": "\"Quando o arauto chama, o mundo sabe que a paz acabou.\"",
       "tagline_pt": "A Voz do Conflito Sem Fim"
@@ -13064,7 +13064,7 @@
       "nome_exibicao_pt": "INVASOR DA LEGIÃO DO FOGO VERMELHO",
       "subtitulo_pt": "A Vanguarda Abrasadora",
       "habilidades_pt": [
-        "Ímpeto",
+        "Impulso",
         "Terra Arrasada — Sempre que o Invasor da Legião do Fogo Vermelho causa dano de Golpe a um Deus, cause 1 de dano ao Devoto inimigo alvo."
       ],
       "flavour_pt": "\"O campo de batalha arde muito depois que seus passos se apagam.\"",
@@ -13432,7 +13432,7 @@
       "nome_exibicao_pt": "ESPADACHIM FRENÉTICO",
       "subtitulo_pt": "A Lâmina Além da Razão",
       "habilidades_pt": [
-        "Ímpeto",
+        "Impulso",
         "Raiva Descontrolada — No fim do seu turno, se o Espadachim Frenético não declarou um Golpe neste turno, cause 1 de dano ao seu Deus."
       ],
       "flavour_pt": "\"Sua espada se move mais rápido que o pensamento, e sua raiva ainda mais.\"",
@@ -13515,7 +13515,7 @@
       "nome_exibicao_pt": "SOLDADO VINCULADO À GUERRA",
       "subtitulo_pt": "Preso ao Campo de Batalha",
       "habilidades_pt": [
-        "Juramento de Guerra — Quando o Soldado Vinculado à Guerra entra no Campo de Batalha, você pode causar 1 de dano ao seu Deus. Se fizer isso, o Soldado Vinculado à Guerra ganha Ímpeto até o fim da rodada."
+        "Juramento de Guerra — Quando o Soldado Vinculado à Guerra entra no Campo de Batalha, você pode causar 1 de dano ao seu Deus. Se fizer isso, o Soldado Vinculado à Guerra ganha Impulso até o fim da rodada."
       ],
       "flavour_pt": "\"Minha vida foi entregue a Ares muito antes de eu dar o primeiro respiro.\"",
       "tagline_pt": "Preso ao Campo de Batalha"
@@ -13637,7 +13637,7 @@
       "nome_exibicao_pt": "BERSERKER SUICIDA",
       "subtitulo_pt": "Uma Morte Gloriosa o Aguarda",
       "habilidades_pt": [
-        "Ímpeto",
+        "Impulso",
         "Explosão Final — Quando o Berserker Suicida é derrotado, você pode pagar {1}{S}. Se fizer isso, cause 1 de dano ao Devoto ou Deus inimigo alvo.",
         "Vida Ardente — No fim do seu turno, derrote o Berserker Suicida."
       ],
@@ -14112,7 +14112,7 @@
       "nome_exibicao_pt": "CARGA PARA A BATALHA",
       "subtitulo_pt": "Sem Tempo para o Medo",
       "habilidades_pt": [
-        "Carga de Batalha — O Berserker aliado alvo recebe +2 ATQ e Ímpeto até o fim da rodada."
+        "Carga de Batalha — O Berserker aliado alvo recebe +2 ATQ e Impulso até o fim da rodada."
       ],
       "flavour_pt": "\"Os guerreiros de Ares não esperam pela batalha. Eles a trazem.\"",
       "tagline_pt": "Sem Tempo para o Medo"
@@ -14966,7 +14966,7 @@
       "nome_exibicao_pt": "ASSASSINO DA ASA DO DESASTRE",
       "subtitulo_pt": "A Lâmina Levada pela Tempestade",
       "habilidades_pt": [
-        "Ímpeto",
+        "Impulso",
         "Último Suspiro da Tempestade — Quando o Assassino da Asa do Desastre é derrotado, você pode pagar {1}{S}. Se fizer isso, cause 1 de dano ao Devoto ou Deus inimigo alvo."
       ],
       "flavour_pt": "\"A risada de Lior é o último som ouvido antes de a tempestade despedaçar suas vítimas.\"",

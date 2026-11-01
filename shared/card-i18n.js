@@ -18,7 +18,7 @@ export function displayCard(card) {
 
 // Keywords: o nome em inglês é a chave (engine, KEYWORD_RULES); em PT só muda o que aparece.
 export const KEYWORD_PT = {
-  'Guardian': 'Guardião', 'Nimble': 'Ágil', 'Cheater': 'Trapaceiro', 'Long Range': 'Longo Alcance', 'Pierce': 'Perfurar', 'Impulse': 'Ímpeto',
+  'Guardian': 'Guardião', 'Nimble': 'Ágil', 'Cheater': 'Trapaceiro', 'Long Range': 'Longo Alcance', 'Pierce': 'Perfurar', 'Impulse': 'Impulso',
   'Seal': 'Selo', 'Sealed': 'Selado', 'Unfaith': 'Infiel', 'Training': 'Treinamento', 'Afterlife': 'Além-Túmulo',
   'Prepared': 'Preparado', 'Unprepared': 'Despreparado', 'Prepare': 'Preparar', 'Multiguard': 'Multiguarda',
 };

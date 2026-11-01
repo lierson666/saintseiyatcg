@@ -7,7 +7,7 @@ export const escapeText=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<'
 export const KEYWORD_WORDS=['Long Range','Multiguard(?: \\d+)?','Guardian','Nimble','Cheater','Pierce','Impulse','Sealed','Seal','Unfaith','Afterlife','Unprepared','Prepared','Prepare','Training'];
 const words=KEYWORD_WORDS;
 // Mesmas keywords em PT (docs/glossario-pt-br.md), para o texto das cartas em português (campos *_pt).
-export const KEYWORD_WORDS_PT=['Longo Alcance','Multiguarda(?: \\d+)?','Guardião','Ágil','Trapaceiro','Perfurar','Ímpeto','Selado','Selo','Infiel','Além-Túmulo','Despreparado','Preparado','Preparar','Treinamento'];
+export const KEYWORD_WORDS_PT=['Longo Alcance','Multiguarda(?: \\d+)?','Guardião','Ágil','Trapaceiro','Perfurar','Impulso','Selado','Selo','Infiel','Além-Túmulo','Despreparado','Preparado','Preparar','Treinamento'];
 // Bônus de atributo ("+1 ATK / +1 HP", "+2/+2", "-1 ATK") sempre em negrito e maiúscula (autor, 31/10/2026).
 // Só "+": verde (como bônus no duelo); só "-": vermelho; misto: cor do tema.
 export const statTrend=m=>/-\d/.test(m)?(/\+\d/.test(m)?'mixed':'down'):'up';

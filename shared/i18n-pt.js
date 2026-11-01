@@ -24,7 +24,7 @@ self.ssI18nPT = {
     'Prepared': 'Preparado', 'Unprepared': 'Despreparado', 'Prepare': 'Preparação', 'Draw': 'Compra', 'Main': 'Principal', 'End': 'Final',
     'Resonance': 'Ressonância', 'Equip': 'Equipar', 'EQUIP': 'EQUIPAR', 'Equipped': 'Equipado', 'Rarity': 'Raridade', 'Cost': 'Custo', 'Type': 'Tipo',
     'Common': 'Comum', 'Uncommon': 'Incomum', 'Rare': 'Rara', 'Legendary': 'Lendária', 'Divine': 'Divina', 'Legendary or Divine': 'Lendária ou Divina',
-    'Guardian': 'Guardião', 'Nimble': 'Ágil', 'Cheater': 'Trapaceiro', 'Long Range': 'Longo Alcance', 'Pierce': 'Perfurar', 'Impulse': 'Ímpeto',
+    'Guardian': 'Guardião', 'Nimble': 'Ágil', 'Cheater': 'Trapaceiro', 'Long Range': 'Longo Alcance', 'Pierce': 'Perfurar', 'Impulse': 'Impulso',
     'Seal': 'Selo', 'Sealed': 'Selado', 'Unfaith': 'Infiel', 'Training': 'Treinamento', 'Afterlife': 'Além-Túmulo',
     'Priority': 'Prioridade', 'Turn': 'Turno', 'Clock': 'Relógio', 'Pass': 'Passar', 'Resolve': 'Resolver', 'Resolving': 'Resolvendo',
     'Resolves next': 'Resolve em seguida', 'Concede': 'Desistir', 'Hidden': 'Oculta', 'Card': 'Carta', 'Cards': 'Cartas', 'Bonus': 'Bônus',

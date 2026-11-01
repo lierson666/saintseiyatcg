@@ -47,14 +47,14 @@
       "SEDE DE SANGUE — Poder Divino\nCusto: {3}{C}\nUma vez por rodada, escolha um Devoto que você controla. Prepare-o. Ele recebe +1 de Poder até o fim da rodada. Ele não pode declarar um Golpe contra um Deus nesta rodada."
     ],
     "a": "CARNIFICINA — Despertar 5\nSempre que um Devoto que você controla destrói um Devoto inimigo durante um Golpe, o Deus inimigo perde {1}{S}.",
-    "u": "ANIQUILAÇÃO — Supremo\nCusto: {6}{C}\nPrepare todos os Devotos que você controla.\nAté o fim da rodada, os Devotos que você controla recebem +3 de Poder, Perfurar e Longo Alcance, e podem declarar Golpes como se tivessem Ímpeto.\nSempre que um Devoto que você controla conclui um Golpe nesta rodada, destrua-o. Essa destruição não pode ser prevenida.",
+    "u": "ANIQUILAÇÃO — Supremo\nCusto: {6}{C}\nPrepare todos os Devotos que você controla.\nAté o fim da rodada, os Devotos que você controla recebem +3 de Poder, Perfurar e Longo Alcance, e podem declarar Golpes como se tivessem Impulso.\nSempre que um Devoto que você controla conclui um Golpe nesta rodada, destrua-o. Essa destruição não pode ser prevenida.",
     "f": "“Ajoelhem-se diante do deus da guerra”"
   },
   "ares-v6-271": {
     "n": "ALCMENES DE ÉTON",
     "s": "O Comandante Carmesim",
     "h": [
-      "Ímpeto",
+      "Impulso",
       "Chegada Carmesim — Quando Alcmenes entra no Campo de Batalha, cause 3 de dano ao Devoto inimigo alvo.",
       "Inferno Implacável — Sempre que Alcmenes derrota um Devoto inimigo em combate, Prepare Alcmenes. Esta habilidade só dispara uma vez por turno."
     ],
@@ -182,7 +182,7 @@
     "n": "ARIONTE DE ANFISBENA",
     "s": "O Caçador Implacável",
     "h": [
-      "Ímpeto",
+      "Impulso",
       "Chegada do Predador — Quando Arionte entra no Campo de Batalha, cause 1 de dano ao Devoto inimigo alvo que já sofreu dano neste turno.",
       "Perseguição Implacável — Sempre que Arionte derrota um Devoto inimigo em combate, Prepare Arionte. Esta habilidade só dispara uma vez por turno."
     ],
@@ -271,7 +271,7 @@
     "n": "BERSERKER SEDENTO DE SANGUE",
     "s": "A Fome de Batalha",
     "h": [
-      "Ímpeto",
+      "Impulso",
       "Sede de Sangue Imprudente — Sempre que este Devoto declara um Golpe, ele recebe +1 ATQ até o fim da rodada. No fim do seu turno, derrote este Devoto se ele declarou um Golpe neste turno."
     ],
     "f": "\"Para um Berserker, uma vida curta é um preço pequeno por uma batalha gloriosa.\""
@@ -280,7 +280,7 @@
     "n": "ARAUTO DE GUERRA DE ARES",
     "s": "A Voz do Conflito Sem Fim",
     "h": [
-      "Grito de Guerra — Quando o Arauto de Guerra de Ares entra no Campo de Batalha, o Berserker aliado alvo recebe +1 ATQ e Ímpeto até o fim da rodada."
+      "Grito de Guerra — Quando o Arauto de Guerra de Ares entra no Campo de Batalha, o Berserker aliado alvo recebe +1 ATQ e Impulso até o fim da rodada."
     ],
     "f": "\"Quando o arauto chama, o mundo sabe que a paz acabou.\""
   },
@@ -304,7 +304,7 @@
     "n": "INVASOR DA LEGIÃO DO FOGO VERMELHO",
     "s": "A Vanguarda Abrasadora",
     "h": [
-      "Ímpeto",
+      "Impulso",
       "Terra Arrasada — Sempre que o Invasor da Legião do Fogo Vermelho causa dano de Golpe a um Deus, cause 1 de dano ao Devoto inimigo alvo."
     ],
     "f": "\"O campo de batalha arde muito depois que seus passos se apagam.\""
@@ -380,7 +380,7 @@
     "n": "ESPADACHIM FRENÉTICO",
     "s": "A Lâmina Além da Razão",
     "h": [
-      "Ímpeto",
+      "Impulso",
       "Raiva Descontrolada — No fim do seu turno, se o Espadachim Frenético não declarou um Golpe neste turno, cause 1 de dano ao seu Deus."
     ],
     "f": "\"Sua espada se move mais rápido que o pensamento, e sua raiva ainda mais.\""
@@ -398,7 +398,7 @@
     "n": "SOLDADO VINCULADO À GUERRA",
     "s": "Preso ao Campo de Batalha",
     "h": [
-      "Juramento de Guerra — Quando o Soldado Vinculado à Guerra entra no Campo de Batalha, você pode causar 1 de dano ao seu Deus. Se fizer isso, o Soldado Vinculado à Guerra ganha Ímpeto até o fim da rodada."
+      "Juramento de Guerra — Quando o Soldado Vinculado à Guerra entra no Campo de Batalha, você pode causar 1 de dano ao seu Deus. Se fizer isso, o Soldado Vinculado à Guerra ganha Impulso até o fim da rodada."
     ],
     "f": "\"Minha vida foi entregue a Ares muito antes de eu dar o primeiro respiro.\""
   },
@@ -422,7 +422,7 @@
     "n": "BERSERKER SUICIDA",
     "s": "Uma Morte Gloriosa o Aguarda",
     "h": [
-      "Ímpeto",
+      "Impulso",
       "Explosão Final — Quando o Berserker Suicida é derrotado, você pode pagar {1}{S}. Se fizer isso, cause 1 de dano ao Devoto ou Deus inimigo alvo.",
       "Vida Ardente — No fim do seu turno, derrote o Berserker Suicida."
     ],
@@ -513,7 +513,7 @@
     "n": "CARGA PARA A BATALHA",
     "s": "Sem Tempo para o Medo",
     "h": [
-      "Carga de Batalha — O Berserker aliado alvo recebe +2 ATQ e Ímpeto até o fim da rodada."
+      "Carga de Batalha — O Berserker aliado alvo recebe +2 ATQ e Impulso até o fim da rodada."
     ],
     "f": "\"Os guerreiros de Ares não esperam pela batalha. Eles a trazem.\""
   },
@@ -685,7 +685,7 @@
     "n": "ASSASSINO DA ASA DO DESASTRE",
     "s": "A Lâmina Levada pela Tempestade",
     "h": [
-      "Ímpeto",
+      "Impulso",
       "Último Suspiro da Tempestade — Quando o Assassino da Asa do Desastre é derrotado, você pode pagar {1}{S}. Se fizer isso, cause 1 de dano ao Devoto ou Deus inimigo alvo."
     ],
     "f": "\"A risada de Lior é o último som ouvido antes de a tempestade despedaçar suas vítimas.\""

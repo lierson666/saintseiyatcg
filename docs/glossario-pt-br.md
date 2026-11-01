@@ -84,7 +84,7 @@ Regra: o mesmo termo em todo lugar. Termo vetado fica em inglês. Nomes de perso
 | Cheater | Trapaceiro |
 | Long Range | Longo Alcance |
 | Pierce | Perfurar |
-| Impulse | Ímpeto |
+| Impulse | Impulso |
 | Seal / Sealed | Selo / Selado |
 | Unfaith | Infiel |
 | Training | Treinamento |
