@@ -768,7 +768,7 @@ function phaseBar() {
   if (s.victory || s.setup) return `<div class="phasebar"><div class="phasebar__turn">${esc(phaseText())}</div></div>`;
   const now = PHASES.indexOf(currentPhase(s)), mine = s.active === v;
   return `<div class="phasebar ${mine ? 'is-mine' : 'is-theirs'}" aria-label="${esc(phaseText())}">
-    <div class="phasebar__turn"><strong>${mine ? 'Your turn' : `Opponent's turn`}</strong><small>Round ${s.round} · Player ${s.active}</small></div>
+    <div class="phasebar__turn"><strong>${mine ? 'Your turn' : `Opponent's turn`}</strong><small>Round ${s.round} · Player ${s.active}</small><b class="phasebar__now">${PHASES[now] || ''}</b></div>
     <ol class="phasebar__steps">${PHASES.map((p, i) => `<li class="${i < now ? 'done' : i === now ? 'on' : ''}">${p}</li>`).join('')}</ol>
     ${s.window ? `<div class="phasebar__window">${s.chain.length ? `Chain of ${s.chain.length} · ` : ''}Response · Player ${s.window.priority} to act</div>` : ''}
   </div>`;
