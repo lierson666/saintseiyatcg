@@ -3,6 +3,7 @@
 // Texto de carta não entra aqui: vem dos campos *_pt de cards.json (fase 3).
 self.ssI18nPT = {
   strings: {
+    'Cosmo Hub': 'Cosmo Hub', 'Guilds': 'Guildas', 'Tournaments': 'Torneios', 'Notifications': 'Notificações', 'Latest News': 'Últimas notícias', 'Featured Decks': 'Decks em destaque', 'Balance Updates': 'Atualizações de balanceamento', 'Tournament Highlights': 'Torneios em destaque', 'Nothing published yet.': 'Nada publicado ainda.', 'Card Database': 'Banco de cartas', 'Official Rules': 'Regras oficiais', 'Glossary': 'Glossário', 'Back to game': 'Voltar ao jogo', 'Balance Center': 'Central de balanceamento', 'My decks': 'Meus decks', 'Public decks': 'Decks públicos', 'Share a deck': 'Compartilhar um deck', 'Unlisted': 'Não listado', 'Reply': 'Responder', 'Discussion': 'Discussão', 'Create guild': 'Criar guilda', 'Create tournament': 'Criar torneio', 'Standings': 'Classificação', 'Check in': 'Fazer check-in', 'Drop': 'Sair do torneio', 'Start event': 'Iniciar evento', 'Next round': 'Próxima rodada', 'Close event': 'Encerrar evento',
     // Geral
     'Play': 'Jogar', 'Home': 'Início', 'Decks': 'Decks', 'Collection': 'Coleção', 'Store': 'Loja', 'Profile': 'Perfil', 'Options': 'Opções',
     'Friends': 'Amigos', 'Sign out': 'Sair', 'Sign in': 'Entrar', 'Close': 'Fechar', 'Cancel': 'Cancelar', 'Done': 'Concluir', 'OK': 'OK',

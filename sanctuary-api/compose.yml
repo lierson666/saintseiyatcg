@@ -10,8 +10,11 @@ services:
       SANCTUARY_ADMINS: ${SANCTUARY_ADMINS:-}
       ARENA_URL: http://arena-server:8090
       ARENA_SECRET: ${ARENA_SECRET:-}
+      SANCTUARY_ENV: playtest
+      COSMO_REGISTRY: /app/registry
     volumes:
       - sanctuary-data:/data
+      - /home/dev/saintseiyatcg/data/registry:/app/registry:ro
     networks: [casamamaco_default]
 volumes:
   sanctuary-data:

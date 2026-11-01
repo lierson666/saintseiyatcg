@@ -45,3 +45,6 @@ card-forge/art-web/
 # Galeria pública: renders gerados (scratchpad gallery/main.js), publicados por rsync
 gallery/img/
 gallery/thumb/
+
+# Identidade do build: gerada por tools/deploy-guard.py stamp a cada publicação
+playtest/build.json
