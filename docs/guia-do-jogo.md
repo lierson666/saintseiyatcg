@@ -315,7 +315,7 @@ A retaliação do God:
 
 Gods não utilizam HP como os Devotees.
 
-Sua condição de derrota é determinada pelo Soul.
+Sua condição de derrota é determinada pelo Soul. Há uma segunda: quem precisa comprar uma carta com o deck vazio perde a partida na hora (§55).
 
 ### 25. Long Range
 
@@ -599,7 +599,7 @@ Revisado em 31/10/2026 (ALPHA-P01, P02, P03 e P06, aprovadas em 28/10/2026; comp
 - O ativo pode colocar uma Base Cosmoble por turno, com a pilha vazia. A Base entra Prepared e paga no mesmo turno (G3-035). Colocar Base não entra na pilha.
 - O turno termina quando o ativo declara END TURN com a pilha vazia. End Phase: conversão das Bases Prepared em Latent (§5); gatilhos de fim de turno; no 2º turno do Round, gatilhos de fim de Round (D204); Cleanup.
 - Não há limite máximo de cartas na mão nesta base de regras.
-- Tentar comprar sem cartas suficientes aplica Fatigue (ALPHA-P07, `draw` no engine-v3).
+- Deck vazio: quem precisa comprar uma carta e não tem carta no deck perde a partida na hora. Vale para a compra do turno e para qualquer compra por efeito. Ficar com o deck vazio (por Mill, por exemplo) não derrota sozinho; a derrota vem na próxima compra. Por isso Mill é condição de vitória. Se um mesmo efeito fizer os dois jogadores comprarem de deck vazio, a partida empata. Não existe Fatigue (autor, 01/11/2026; `draw` no engine-v3).
 
 **Por quê:** comprar 2 cartas por turno gerava vantagem de cartas grande demais no playtest (autor, 28/10/2026; confirmado de novo em 30/10/2026). Com 1 compra, colocar Base passa a custar uma escolha real entre recurso e jogada.
 

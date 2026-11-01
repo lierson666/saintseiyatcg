@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-01 — §24, §55 — Deck vazio derrota; sai a Fatigue
+
+- **Antes:** comprar de deck vazio aplicava Fatigue (ALPHA-P07 opção A): o God perdia Soul 1, 2, 3… a cada compra falha. Mill não causava Fatigue (D233).
+- **Depois:** quem precisa comprar com o deck vazio perde a partida na hora (compra do turno ou por efeito). Deck vazio sozinho não derrota; a derrota vem na próxima compra. Mesmo efeito com os dois comprando de deck vazio: empate. A Fatigue sai do jogo. Mill vira condição de vitória.
+- **Motivo:** autor, 01/11/2026: "quando o deck acaba, o jogo acaba imediatamente. mill é win condition"; derrota na compra, sem Fatigue, empate se os dois.
+- **Engine/UI:** `draw` em `playtest/engine-v3/core.js` chama `loseGame(..., 'deck_out')`; testes de core e match atualizados. A tela de fim mostra o motivo. Pendente: o arena-server precisa reiniciar para o online.
+
 ## 2026-11-01 — §2, §63 — Deck de 50 cartas
 
 - **Antes:** deck principal de 60 cartas.

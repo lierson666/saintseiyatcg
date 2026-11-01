@@ -812,7 +812,7 @@ function overlays() {
       <button class="primary-action" data-primary>${marked.size ? `Return ${marked.size} and draw` : 'Keep hand'} <kbd>Space</kbd></button></div>`;
   }
   if (s.victory) {
-    html += `<div class="overlay victory"><h2>${s.victory.draw ? 'Draw' : `Player ${s.victory.winner} wins`}</h2><p>Round ${s.round} · Soul ${s.order.map(k => `${k} ${s.players[k].soul}`).join(' · ')}</p>
+    html += `<div class="overlay victory"><h2>${s.victory.draw ? 'Draw' : `Player ${s.victory.winner} wins`}</h2>${s.victory.reason === 'deck_out' ? '<p><span>Empty deck</span></p>' : ''}<p>Round ${s.round} · Soul ${s.order.map(k => `${k} ${s.players[k].soul}`).join(' · ')}</p>
       <div class="row"><button class="primary-action" data-new>New match</button><a class="ghost" href="../">Main menu</a></div></div>`;
   }
   if (pending && !s.victory && pending.pending.player !== settings.ai) html += decisionModal();

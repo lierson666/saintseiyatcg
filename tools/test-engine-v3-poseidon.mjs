@@ -167,7 +167,7 @@ test('D264: Devotee do próprio Poseidon selado não dispara Pressure', () => {
   assert.equal(s.chain.length, 0);
 });
 
-test('D265/D266/D233: Mill fica com quem controlava no Seal; gatilho resolve mesmo se o Devotee saiu; deck curto não dá Fatigue', () => {
+test('D265/D266/D233: Mill fica com quem controlava no Seal; gatilho resolve mesmo se o Devotee saiu; deck zerado por Mill não derrota sozinho', () => {
   const {s, ctx, field} = setup();
   const seiya = field('A', '001');
   awaken(s);
@@ -178,7 +178,7 @@ test('D265/D266/D233: Mill fica com quem controlava no Seal; gatilho resolve mes
   passAll(s);
   assert.equal(s.players.A.deck.length, 0);
   assert.deepEqual(s.events.filter(e => e.type === 'mill').map(e => [e.player, e.requested, e.moved]), [['A', 2, 1]]);
-  assert.equal(count(s, 'fatigue'), 0);
+  assert.equal(s.victory, null);
   assert.equal(s.players.B.hand.length, handB + 1, 'D234: a compra independe do Mill');
 });
 

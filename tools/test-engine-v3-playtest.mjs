@@ -247,7 +247,7 @@ function play(g, maxTurns = 240) { // G3-037 (1 compra por turno): partidas mais
     const loser = other(s, s.victory.winner);
     if (s.players[loser].soul === 0) mark(g, 'victory-soul-zero');
     const milled = ev.filter(e => e.type === 'mill' && e.player === loser).reduce((n, e) => n + e.moved, 0);
-    if (s.players[loser].deck.length === 0 && milled > 0 && has('fatigue', e => e.player === loser)) mark(g, 'victory-by-mill');
+    if (s.victory.reason === 'deck_out' && milled > 0) mark(g, 'victory-by-mill');
   }
   if (s.victory?.reason === 'divine_judgment') mark(g, 'victory-judgment');
   return g;

@@ -66,7 +66,7 @@ test('Destroy leva só o Devotee ao Tartarus do Owner; Armor e Equipment ficam s
   assert.deepEqual([p.battlefield, p.tartarus, a2], [[shield], [shiryu], {}]);
 });
 
-test('simulação reproduzível de compra e Base até a Fatigue (P07) encerrar a partida, sem perder objetos', () => {
+test('simulação reproduzível de compra e Base até o deck vazio (§55) encerrar a partida, sem perder objetos', () => {
   const m = match(42), {state, objects} = m;
   keepAll(m);
   const log = [];
@@ -80,12 +80,12 @@ test('simulação reproduzível de compra e Base até a Fatigue (P07) encerrar a
     endTurn(state); passAll(state);
     checkInvariants(state, objects);
   }
-  // P01: deck 43 (deck de 50, 01/11/2026); 1 compra por turno: 43 compras esvaziam o deck no 44º turno próprio. Depois,
-  // cada compra falha tira 1, 2, 3… (P07) até a Fatigue derrotar A, um turno antes de B.
-  assert.deepEqual(state.victory, {winner: 'B'});
-  assert.equal(log.length, 98);
+  // P01: deck 43 (deck de 50, 01/11/2026); 1 compra por turno: 43 compras esvaziam o deck no 44º turno próprio.
+  // §55 (01/11/2026): a compra do 45º turno próprio, com o deck vazio, derrota A na hora, antes de B.
+  assert.deepEqual(state.victory, {winner: 'B', reason: 'deck_out'});
+  assert.equal(log.length, 88);
   assert.match(log[0], /^R1 A mão 6 deck 43 bases 1/);
-  assert.match(log.at(-1), /^R49 B .* soul 5$/);
+  assert.match(log.at(-1), /^R44 B mão 6 deck 0 bases 44/);
   assert.ok(state.players.A.latent <= 3 && state.players.B.latent <= 3);
 });
 

@@ -19,7 +19,7 @@ self.ssI18nPT = {
     'Equipment': 'Equipamento', 'Spell': 'Magia', 'Spell —': 'Magia —', 'Technique': 'Técnica', 'Moment': 'Momento', 'Divine Artifact': 'Artefato Divino',
     'Armor': 'Armadura', 'Weapon': 'Arma', 'Support': 'Suporte', 'Neutral': 'Neutro', 'Soul': 'Alma', 'Cosmo': 'Cosmo', 'Cosmo Base': 'Base de Cosmo',
     'Cosmo Bases': 'Bases de Cosmo', 'Latent': 'Latente', 'Latent Cosmo': 'Cosmo Latente', 'Base': 'Base', 'Cosmoble': 'Cosmável',
-    'Deck': 'Deck', 'Hand': 'Mão', 'Tartarus': 'Tártaro', 'Void': 'Vazio', 'Fatigue': 'Fadiga', 'Battlefield': 'Campo de Batalha',
+    'Deck': 'Deck', 'Hand': 'Mão', 'Tartarus': 'Tártaro', 'Void': 'Vazio', 'Fatigue': 'Fadiga', 'Empty deck': 'Deck vazio', 'Battlefield': 'Campo de Batalha',
     'ATK': 'ATQ', 'HP': 'PV', 'Attack': 'Ataque', 'Awaken': 'Despertar', 'Awakened': 'Desperto', 'Ultimate': 'Supremo', 'Strike': 'Golpear',
     'Prepared': 'Preparado', 'Unprepared': 'Despreparado', 'Prepare': 'Preparação', 'Draw': 'Compra', 'Main': 'Principal', 'End': 'Final',
     'Resonance': 'Ressonância', 'Equip': 'Equipar', 'EQUIP': 'EQUIPAR', 'Equipped': 'Equipado', 'Rarity': 'Raridade', 'Cost': 'Custo', 'Type': 'Tipo',
