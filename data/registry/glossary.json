@@ -1,0 +1,342 @@
+[
+{
+"en": "Soul",
+"pt": "Alma",
+"note": "vida do Deus"
+},
+{
+"en": "Cosmo",
+"pt": "Cosmo",
+"note": ""
+},
+{
+"en": "Cosmo Base",
+"pt": "Base de Cosmo",
+"note": ""
+},
+{
+"en": "Latent Cosmo",
+"pt": "Cosmo Latente",
+"note": ""
+},
+{
+"en": "Cosmo Bank",
+"pt": "Banco de Cosmo",
+"note": ""
+},
+{
+"en": "Pool",
+"pt": "Reserva",
+"note": "Cosmo queimado aguardando custo"
+},
+{
+"en": "Cosmoble",
+"pt": "Cosmável",
+"note": "pode virar Base de Cosmo"
+},
+{
+"en": "Deck",
+"pt": "Deck",
+"note": "jargão de TCG no Brasil"
+},
+{
+"en": "Hand",
+"pt": "Mão",
+"note": ""
+},
+{
+"en": "Battlefield",
+"pt": "Campo de Batalha",
+"note": ""
+},
+{
+"en": "Tartarus",
+"pt": "Tártaro",
+"note": ""
+},
+{
+"en": "Void",
+"pt": "Vazio",
+"note": ""
+},
+{
+"en": "Chain",
+"pt": "Pilha",
+"note": "como no fluxo de cast"
+},
+{
+"en": "Empty deck (deck out)",
+"pt": "Deck vazio",
+"note": "quem precisa comprar com o deck vazio perde (§55, 01/11/2026); a Fatigue saiu do jogo"
+},
+{
+"en": "Round / Turn",
+"pt": "Rodada / Turno",
+"note": ""
+},
+{
+"en": "Phases: Prepare · Draw · Main · End",
+"pt": "Preparação · Compra · Principal · Final",
+"note": ""
+},
+{
+"en": "Priority / Response",
+"pt": "Prioridade / Resposta",
+"note": ""
+},
+{
+"en": "Mulligan / Opening hand",
+"pt": "Mulligan / Mão inicial",
+"note": ""
+},
+{
+"en": "God",
+"pt": "Deus",
+"note": ""
+},
+{
+"en": "Devotee",
+"pt": "Devoto",
+"note": ""
+},
+{
+"en": "Domain",
+"pt": "Domínio",
+"note": ""
+},
+{
+"en": "Equipment",
+"pt": "Equipamento",
+"note": ""
+},
+{
+"en": "Spell",
+"pt": "Magia",
+"note": ""
+},
+{
+"en": "Technique",
+"pt": "Técnica",
+"note": ""
+},
+{
+"en": "Moment",
+"pt": "Momento",
+"note": ""
+},
+{
+"en": "Divine Artifact",
+"pt": "Artefato Divino",
+"note": ""
+},
+{
+"en": "Armor",
+"pt": "Armadura",
+"note": ""
+},
+{
+"en": "Cloth",
+"pt": "Armadura (dublagem: \"Armadura de Pégaso\")",
+"note": ""
+},
+{
+"en": "Scale",
+"pt": "Escama (Escamas de Marina)",
+"note": ""
+},
+{
+"en": "Surplice",
+"pt": "Súplice",
+"note": ""
+},
+{
+"en": "Warplate",
+"pt": "Placa de Guerra",
+"note": ""
+},
+{
+"en": "Moonplate",
+"pt": "Placa Lunar",
+"note": ""
+},
+{
+"en": "Token",
+"pt": "Ficha",
+"note": ""
+},
+{
+"en": "Saint · Bronze / Silver / Gold / Black Saint",
+"pt": "Cavaleiro · de Bronze / de Prata / de Ouro / Cavaleiro Negro",
+"note": ""
+},
+{
+"en": "Marina · Marina General",
+"pt": "Marina · General Marina",
+"note": ""
+},
+{
+"en": "Specter",
+"pt": "Espectro",
+"note": ""
+},
+{
+"en": "Berserker",
+"pt": "Berserker",
+"note": ""
+},
+{
+"en": "Satellite",
+"pt": "Satélite",
+"note": ""
+},
+{
+"en": "Strike",
+"pt": "Golpe (verbo: Golpear)",
+"note": ""
+},
+{
+"en": "ATK / HP",
+"pt": "ATQ / PV",
+"note": ""
+},
+{
+"en": "Prepared / Unprepared / Prepare",
+"pt": "Preparado / Despreparado / Preparar",
+"note": ""
+},
+{
+"en": "Awaken",
+"pt": "Despertar",
+"note": ""
+},
+{
+"en": "Divine Power / Divine Command",
+"pt": "Poder Divino / Comando Divino",
+"note": ""
+},
+{
+"en": "Ultimate",
+"pt": "Supremo",
+"note": ""
+},
+{
+"en": "Resonance / Resonant",
+"pt": "Ressonância / Ressonante",
+"note": ""
+},
+{
+"en": "Equip / Auto-Equip",
+"pt": "Equipar / Autoequipar",
+"note": ""
+},
+{
+"en": "Cast",
+"pt": "Conjurar",
+"note": ""
+},
+{
+"en": "Sacrifice",
+"pt": "Sacrificar",
+"note": ""
+},
+{
+"en": "Defeat",
+"pt": "Derrotar",
+"note": ""
+},
+{
+"en": "Retaliation",
+"pt": "Revide (só entre Devotos; Deuses não revidam)",
+"note": ""
+},
+{
+"en": "Rival",
+"pt": "Rival",
+"note": ""
+},
+{
+"en": "Concede",
+"pt": "Desistir",
+"note": ""
+},
+{
+"en": "Counter (Training, Seal)",
+"pt": "Marcador (de Treinamento, de Selo)",
+"note": ""
+},
+{
+"en": "Guardian",
+"pt": "Guardião",
+"note": ""
+},
+{
+"en": "Nimble",
+"pt": "Ágil",
+"note": ""
+},
+{
+"en": "Cheater",
+"pt": "Trapaceiro",
+"note": ""
+},
+{
+"en": "Long Range",
+"pt": "Longo Alcance",
+"note": ""
+},
+{
+"en": "Pierce",
+"pt": "Perfurar",
+"note": ""
+},
+{
+"en": "Impulse",
+"pt": "Impulso",
+"note": ""
+},
+{
+"en": "Hidden Cosmo {X}",
+"pt": "Cosmo Oculto {X}",
+"note": ""
+},
+{
+"en": "Seal / Sealed",
+"pt": "Selo / Selado",
+"note": ""
+},
+{
+"en": "Unfaith",
+"pt": "Infiel",
+"note": ""
+},
+{
+"en": "Training",
+"pt": "Treinamento",
+"note": ""
+},
+{
+"en": "Afterlife",
+"pt": "Além-Túmulo",
+"note": ""
+},
+{
+"en": "Common · Uncommon · Rare · Legendary · Divine",
+"pt": "Comum · Incomum · Rara · Lendária · Divina",
+"note": ""
+},
+{
+"en": "Steel · Iron · Bronze · Silver · Gold · Legend · Kamui",
+"pt": "Aço · Ferro · Bronze · Prata · Ouro · Lenda · Kamui",
+"note": ""
+},
+{
+"en": "Cosmo Coins",
+"pt": "Moedas de Cosmo",
+"note": ""
+},
+{
+"en": "Booster · Sleeve · Avatar",
+"pt": "Booster · Sleeve · Avatar",
+"note": ""
+}
+]

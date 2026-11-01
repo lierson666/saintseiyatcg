@@ -1,0 +1,24 @@
+{
+  "_nota": "Alvos de deploy (docs/platform-4.0.md). tools/deploy-guard.py recusa qualquer alvo que não esteja aqui. Official não tem promoção implementada; só o autor autoriza.",
+  "playtest": {
+    "channel": "playtest",
+    "version": "0.4.0",
+    "deployable": true,
+    "host": "mamaco-dev",
+    "site_dir": "/home/dev/saintseiyatcg",
+    "route": "/playtest",
+    "url": "https://saintseiyatcg.com/playtest/",
+    "platform_db": "/data/platform-playtest.db"
+  },
+  "official": {
+    "channel": "official",
+    "version": null,
+    "status": "not-created",
+    "deployable": false,
+    "host": "mamaco-dev",
+    "site_dir": "/home/dev/saintseiyatcg/alpha",
+    "route": "/alpha",
+    "url": "https://saintseiyatcg.com/alpha/",
+    "platform_db": null
+  }
+}

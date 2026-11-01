@@ -99,6 +99,7 @@ function topBar() {
   return `<header class="lb-top">
     <img class="lb-top__logo" src="../LOGO/logo-web.webp" alt="Saint Seiya TCG">
     <nav class="lb-tabs">${tab('home', 'Home')}${tab('decks', 'Decks')}${tab('collection', 'Collection')}${tab('store', 'Store')}${tab('profile', 'Profile')}${tab('options', 'Options')}</nav>
+    <a class="lb-tab" href="./platform/" target="_top" style="text-decoration:none;white-space:nowrap">Cosmo Hub</a>
     <span class="lb-top__tag">Alpha 0.1 · Engine 3.0</span>
     ${ui.user?.complete ? `<button class="lb-socialbtn" data-act="friends" aria-label="Friends">Friends ${socialBadge()}</button>` : ''}
     ${ui.econ ? coinBadge(ui.econ) : ''}

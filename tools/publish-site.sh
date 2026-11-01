@@ -10,6 +10,7 @@ set -e
 ROOT="${1:-$(cd "$(dirname "$0")/.." && pwd)}"
 HOST="${SSTCG_HOST:-mamaco-dev}"
 REMOTE=/home/dev/saintseiyatcg/card-forge/art-web
+python3 "$ROOT/tools/deploy-guard.py" check --env playtest --host "$HOST" --path "$REMOTE" --path /home/dev/saintseiyatcg
 sh "$ROOT/tools/forge-art-web.sh" "$ROOT" >/dev/null
 STAGE="$(mktemp -d)"
 trap 'rm -rf "$STAGE"' EXIT

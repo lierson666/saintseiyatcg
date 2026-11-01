@@ -10,6 +10,8 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, quote, urlparse
 
+import cosmo
+
 DB_PATH = os.environ.get('SANCTUARY_DB', '/data/sanctuary.db')
 ORIGIN = os.environ.get('SANCTUARY_ORIGIN', 'https://saintseiyatcg.com')
 SECURE_COOKIE = os.environ.get('SANCTUARY_INSECURE_COOKIE') != '1'  # só testes locais desligam o Secure
@@ -166,6 +168,7 @@ def open_db(path=DB_PATH):
     db = sqlite3.connect(path, check_same_thread=False, isolation_level=None)
     db.row_factory = sqlite3.Row
     db.executescript('pragma journal_mode=wal; pragma foreign_keys=on;' + SCHEMA)
+    cosmo.open_db(path)
     # Migração do cadastro completo: colunas novas em contas antigas (ficam vazias até o perfil ser completado).
     have = {r['name'] for r in db.execute('pragma table_info(users)')}
     for col in ('username', 'username_display', 'country', 'phone', 'friend_code', 'avatar_card', 'sleeve', 'accepted_terms_at', 'last_seen', 'status', 'suspended_at', 'full_access'):
@@ -407,10 +410,7 @@ def token_hash(token):
     return hashlib.sha256(token.encode()).hexdigest()
 
 
-class ApiError(Exception):
-    def __init__(self, status, message):
-        super().__init__(message)
-        self.status, self.message = status, message
+ApiError = cosmo.ApiError
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -467,6 +467,12 @@ class Handler(BaseHTTPRequestHandler):
         if not user:
             raise ApiError(401, 'Sign in to continue.')
         return user
+
+    def admins(self):
+        return ADMINS
+
+    def query(self):
+        return cosmo.query_of(self.path)
 
     def require_admin(self):
         user = self.require_user()
@@ -552,6 +558,8 @@ class Handler(BaseHTTPRequestHandler):
                 return self.ai_xp()
             if method == 'POST' and path == '/api/access-requests':
                 return self.access_request()
+            if path.startswith('/api/platform/'):
+                return cosmo.route(self, method, path)
             if path.startswith('/api/admin/'):
                 return self.admin(method, path)
             if path == '/api/decks' and method == 'GET':

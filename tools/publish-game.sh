@@ -6,6 +6,10 @@ cd "$(dirname "$0")/.."
 
 REMOTE=mamaco-dev
 SITE=/home/dev/saintseiyatcg
+python3 tools/deploy-guard.py check --env playtest --host "$REMOTE" --path "$SITE/playtest" --path "$SITE/shared" --path "$SITE/data" --path "$SITE/card-forge/art-web"
+python3 tools/build-registry.py --check
+python3 tools/deploy-guard.py stamp --env playtest
+
 OPTS=(-az --checksum --itemize-changes --exclude='*.backup*' --exclude='node_modules' --exclude='.DS_Store')
 
 changes=$(rsync "${OPTS[@]}" card-forge/art-web/ "$REMOTE:$SITE/card-forge/art-web/")
