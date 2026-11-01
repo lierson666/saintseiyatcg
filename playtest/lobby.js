@@ -757,6 +757,8 @@ addEventListener('keydown', e => { if (e.key === 'Escape' && ui.play && ui.deckS
   if (e.key === 'Escape' && (ui.big || ui.play || ui.notice || ui.picker || ui.cosPick)) { ui.big = null; ui.play = false; ui.notice = null; ui.picker = null; ui.cosPick = null; render(); } });
 // Áudio só começa após o primeiro gesto do jogador (política dos navegadores).
 addEventListener('pointerdown', () => { unlock(); playMusic('menu'); }, {once: true});
+// iPhone: fechar o teclado pode deixar a página deslocada, com o conteúdo sob o notch e sem a barra de cima.
+addEventListener('focusout', () => { if (scrollY) scrollTo(0, 0); });
 
 async function init() {
   const get = u => fetch(u).then(r => { if (!r.ok) throw Error(`Missing ${u}`); return r.json(); });
