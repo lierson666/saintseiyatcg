@@ -3,6 +3,7 @@
 // Etapa 1 (autor, 29/10/2026): entram em partida com custo, ATK/HP, keywords e bônus fixo de Equipment;
 // habilidades escritas só valem depois de implementadas em engine-v3/effects.js.
 import {parseCard} from './canon-cards.js';
+import {KEYWORDS} from './card-model.js';
 
 export const PREVIEW = /^(poseidon|hades|ares|artemis|neutral)-v6-/;
 
@@ -69,7 +70,14 @@ export function addPreviewCards(cards, index, forgeCards) {
     const cosmoble = f.cosmoble != null && card.cosmoble != null ? Boolean(f.cosmoble) : card.cosmoble;
     // Hidden Cosmo (§4A, 31/10/2026) só existe no Forge para as cartas do D268.
     const hidden = Number((f.habilidades_en || []).map(h => h.match(/^Hidden Cosmo \{(\d+)\}$/)?.[1]).find(Boolean)) || card.hiddenCosmo;
-    if (cost !== card.cost || type !== card.type || cosmoble !== card.cosmoble || hidden !== card.hiddenCosmo) cards.set(f.id, {...card, cost, type, cosmoble, hiddenCosmo: hidden});
+    // Devotee: ATK/HP do Forge (cards.json vence o D268) e keywords válidas do Forge somadas às do D268 (ex.: Ikki 3/2 com
+    // Impulse, redesenho de 31/10/2026). Entrada que não é keyword (texto de habilidade no campo) é ignorada.
+    const dev = card.kind === 'Devotee' && f.tipo === 'Devotee';
+    const atk = dev && f.power != null ? f.power : card.atk, hp = dev && f.vida != null ? f.vida : card.hp;
+    const extra = dev ? (f.keywords_en || []).filter(w => KEYWORDS.includes(w) && !(card.keywords || []).includes(w)) : [];
+    const keywords = extra.length ? [...(card.keywords || []), ...extra] : card.keywords;
+    if (cost !== card.cost || type !== card.type || cosmoble !== card.cosmoble || hidden !== card.hiddenCosmo || atk !== card.atk || hp !== card.hp || keywords !== card.keywords)
+      cards.set(f.id, {...card, cost, type, cosmoble, hiddenCosmo: hidden, atk, hp, keywords});
   }
   // Gods: Soul, Attack e Awaken vêm da carta do God no Forge (<facção>-001), por cima do D268 e da G3-042 (autor, 29/10/2026).
   for (const f of forgeCards.filter(c => /^(athena|poseidon|hades|ares|artemis)-001$/.test(c.id))) {

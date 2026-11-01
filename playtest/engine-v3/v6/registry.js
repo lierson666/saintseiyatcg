@@ -65,6 +65,7 @@
 //       Por isso `run` deve ser puro sobre (s, c): efeito fora do estado roda também no ensaio. `targets` explícito (devolve a lista
 //       de alvos, perguntando pelo kit; o motor não ensaia) serve para alvo sem pergunta ("target enemy God") ou efeito externo.
 //   activate: {name, cost, once, tap, check?(s, c, key, self, choice), run(s, c, key, self, choice)}  habilidade ativada
+//   afterlife: {name, cost, once, check?, run}  habilidade ativada Além-Túmulo: usada com a carta no Tártaro do dono (sem {T})
 // `watch*` em Domain: `self` = `domain:${key}` (o Domain não é objeto de deck; fica em state.domains[key]).
 // Escolhas de alvo e de modo: perguntas da engine na CONJURAÇÃO (ver `spell` acima); "you may" e demais: na resolução, pelo kit (./kit.js).
 

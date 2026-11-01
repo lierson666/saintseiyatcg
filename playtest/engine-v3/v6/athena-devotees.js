@@ -88,7 +88,18 @@ export default {
       lockStrike(s, self);
       return true;
     },
-    mods: (s, c, key, self) => saints(s, c, key).every(u => u === self) ? [{atk: 2}] : [], // Lone Wolf
+    // Rebirth (Afterlife, redesenho estilo Arclight Phoenix, autor 31/10/2026): uma vez por rodada, no seu turno com a pilha
+    // vazia, com Ikki no seu Tartarus: três outras cartas do seu Tartarus vão ao Void e Ikki volta ao campo Prepared.
+    afterlife: {name: 'REBIRTH', cost: 0, once: true,
+      check: (s, c, key, self) => { if (s.players[key].tartarus.filter(u => u !== self).length < 3) throw new k.RuleError('V6', 'Rebirth: faltam três outras cartas no seu Tartarus'); },
+      run: (s, c, key, self) => {
+        const pool = s.players[key].tartarus.filter(u => u !== self);
+        if (!s.players[key].tartarus.includes(self) || pool.length < 3) return; // o Tartarus mudou em resposta
+        const picks = c.decide?.(key, {ability: 'REBIRTH', options: pool, choose: 'target', count: 3, min: 3, text: 'Choose three other cards in your Tartarus to send to the Void.'}) || [];
+        if (picks.length < 3) return;
+        for (const u of picks) k.exile(s, c, u, 'tartarus');
+        k.putOntoField(s, c, key, self, 'tartarus', {prepared: true});
+      }},
   },
   // Gemini Saga
   'athena-v6-013': {

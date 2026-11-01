@@ -383,31 +383,31 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 4,
+      "custo": 5,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
       "awaken": null,
       "power": 3,
-      "vida": 3,
-      "resistance": 3,
+      "vida": 2,
+      "resistance": 2,
       "damage_cloth": null,
       "equipar_custo": null,
-      "keywords_en": [],
+      "keywords_en": ["Impulse"],
       "habilidades_en": [
         "Hidden Cosmo {6}",
         "Phoenix Rebirth — If Phoenix Ikki would be defeated and has no Rebirth counters, instead remove all damage from him, make him Unprepared, and put 1 Rebirth counter on him. He cannot declare another Strike this round.",
-        "Lone Wolf — While you control no other Saints, Phoenix Ikki gets +2 ATK."
+        "Rebirth — Afterlife — Once each round, during your turn while the chain is empty, if Phoenix Ikki is in your Tartarus, you may send three other cards from your Tartarus to the Void. If you do, return Phoenix Ikki to the battlefield Prepared."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Hidden Cosmo (§4A), aprovado pelo autor em 31/10/2026.",
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Hidden Cosmo (§4A), aprovado pelo autor em 31/10/2026. Redesenho estilo Arclight Phoenix aprovado pelo autor em 31/10/2026: custo 5, 3/2, Impulse, Rebirth (Afterlife) do Tártaro; mantém Phoenix Rebirth (marcador); sai Lone Wolf.",
       "nome_exibicao_pt": "IKKI DE FÊNIX",
       "subtitulo_pt": "A Chama Imortal",
       "habilidades_pt": [
         "Cosmo Oculto {6}",
         "Renascimento da Fênix — Se Ikki de Fênix seria derrotado e não tem marcadores de Renascimento, em vez disso remova todo o dano dele, deixe-o Despreparado e coloque 1 marcador de Renascimento nele. Ele não pode declarar outro Golpe nesta rodada.",
-        "Lobo Solitário — Enquanto você não controlar outros Cavaleiros, Ikki de Fênix recebe +2 ATQ."
+        "Renascimento — Além-Túmulo — Uma vez por rodada, no seu turno com a pilha vazia, se Ikki de Fênix estiver no seu Tártaro, você pode enviar três outras cartas do seu Tártaro para o Vazio. Se fizer isso, devolva Ikki de Fênix ao Campo de Batalha Preparado."
       ],
       "tagline_pt": "A Chama Imortal"
     },
