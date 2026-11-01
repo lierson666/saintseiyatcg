@@ -190,6 +190,7 @@ async function present(r, run, from) {
   clockResume(clock, now());
   render.lock = false;
   rankHook(events);
+  lookedHook(events);
   if (pending) clockHandTo(clock, pending.pending.player, now()); // G3-026: a decisão usa o relógio de quem decide
   render();
   focusDecision();
@@ -1134,6 +1135,16 @@ const ui = {
 };
 
 // Eventos que não passam por log() acima também viram linhas (dano, Soul, turno, compra).
+// "Olhe o topo" (Thetis, Lunar Vision…): o dono vê as cartas; o adversário recebe `uids: null` (core.js PRIVATE).
+function lookedText(e) {
+  const n = uid => (uid && ctx.objects[uid] ? info(uid).name : '?');
+  if (!e.uids) return `${e.player} looks at the top of the deck (${e.ability}).`;
+  return `${e.ability}: looked at ${e.uids.map(n).join(', ')}${e.kept ? `; ${n(e.kept)} goes to hand` : '; none could be taken'}. The rest go to the bottom.`;
+}
+function lookedHook(events) {
+  const me = online ? online.key : viewer();
+  for (const e of events) if (e.type === 'looked' && e.uids && e.player === me) warn(lookedText(e));
+}
 function logEvent(e) {
   const n = uid => (uid && ctx.objects[uid] ? info(uid).name : '');
   const t = {turn_start: `Player ${e.player} begins a turn.`, damage: e.dealt || e.prevented || e.absorbed ? `${n(e.uid)}: ${e.dealt} damage${e.prevented ? `, ${e.prevented} prevented` : ''}${e.absorbed ? `, ${e.absorbed} to Armor` : ''}.` : '',
@@ -1148,6 +1159,7 @@ function logEvent(e) {
     seal_added: `${n(e.uid)} gets ${e.added} Seal (${e.counters} total).`, seal_removed: `${n(e.uid)} stays Unprepared: 1 Seal removed (${e.counters} left).`,
     seal_failed: `${e.source}: paid, but the Devotee is gone. No Seal.`, divine_power_declined: `God ${e.player} declines ${e.ability}.`,
     mill: `${e.player} mills ${e.moved}${e.moved < e.requested ? ` of ${e.requested}` : ''}.`, discarded: `${e.player} discards ${e.uids ? `${e.uids.length} card${e.uids.length === 1 ? '' : 's'}` : n(e.uid)}.`,
+    looked: lookedText(e), revealed: `${e.player} reveals ${n(e.uid)}.`,
     base_returned: `${e.player}: a Cosmo Base returns to hand.`, returned_to_hand: e.uids ? `${e.ability}: ${e.uids.length} cards return to their owners' hands.` : `${n(e.uid)} returns to its owner's hand.`,
     TIMEOUT_AUTO_CHOICE: `TIMEOUT_AUTO_CHOICE (Player ${e.player}): ${e.result?.map(n).join(', ') || 'nothing'}.`, TIMEOUT_DECLINED: `TIMEOUT_DECLINED (Player ${e.player}): ${e.ability}.`,
     TIMEOUT_PASS_PRIORITY: `TIMEOUT_PASS_PRIORITY (Player ${e.player}).`, TIMEOUT_END_TURN: `TIMEOUT_END_TURN (Player ${e.player}).`, mulligan: `${e.player} mulligans ${e.count}.`, victory: e.draw ? 'Draw.' : `Player ${e.winner} wins.`}[e.type];
@@ -2157,6 +2169,7 @@ async function applyView(view) {
   try { await director.play(events); } catch (err) { console.error(err); }
   render.lock = false;
   rankHook(events);
+  lookedHook(events);
   serverClock(view.clock);
   render();
   focusDecision();

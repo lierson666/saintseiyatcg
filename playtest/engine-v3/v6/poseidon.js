@@ -73,6 +73,7 @@ function lookTop(st, c, key, n, ability, {filter = () => true, optional = false}
   const pick = k.choose(c, key, ability, look.filter(filter), {optional, text: 'Choose a card to put into your hand.'});
   deck.splice(0, look.length);
   if (pick) { st.players[key].hand.push(pick); k.emit(st, 'revealed', {player: key, uid: pick}); }
+  if (look.length) k.emit(st, 'looked', {player: key, ability, uids: [...look], kept: pick || null}); // o dono vê o que olhou, mesmo sem escolha
   deck.push(...look.filter(u => u !== pick));
   return pick;
 }

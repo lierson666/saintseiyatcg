@@ -39,7 +39,7 @@ export const hooks = {checkpoint: [], roundEnd: [], strikeDeclared: [], sealed: 
 export function runCheckpoint(state) { if (!state.victory) for (const fn of hooks.checkpoint) fn(state); }
 
 // Visibilidade (G3-019): o adversário não vê qual carta foi comprada nem qual voltou no mulligan.
-const PRIVATE = {draw: 'uid'};
+const PRIVATE = {draw: 'uid', looked: 'uids'}; // looked: cartas do topo vistas só pelo dono
 export function eventsFor(state, viewer, from = 0) {
   return state.events.slice(from).map(e => (PRIVATE[e.type] && e.player !== viewer ? {...e, [PRIVATE[e.type]]: null} : e));
 }

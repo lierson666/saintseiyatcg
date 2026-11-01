@@ -87,6 +87,7 @@ export default {
     const deck = s.players[key].deck, top = deck.slice(0, 3), devs = top.filter(u => k.isDevotee(c, u));
     const pick = devs.length ? k.choose(c, key, 'LUNAR VISION', devs, {optional: true, text: 'You may reveal a Devotee card and put it into your hand.'}) : null;
     if (pick) { k.toHand(s, c, pick, 'deck'); k.emit(s, 'revealed', {player: key, uid: pick}); }
+    if (top.length) k.emit(s, 'looked', {player: key, ability: 'LUNAR VISION', uids: [...top], kept: pick || null});
     const rest = top.filter(u => u !== pick && deck.includes(u));
     for (const u of rest) deck.splice(deck.indexOf(u), 1);
     deck.push(...rest);

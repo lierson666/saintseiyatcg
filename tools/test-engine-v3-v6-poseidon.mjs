@@ -528,3 +528,15 @@ test('165 Viking Tiger Claw: Seal e -2 ATK, sem dano', () => {
   playSpell(s, ctx, 'A', put('A', P('165')), {}); passAll(s);
   assert.deepEqual([s.units[foe].seal, s.units[foe].damage, atkOf(s, ctx, foe)], [1, 0, atk - 2]);
 });
+
+test('099 Thetis: sem General nem Escama no topo, as 3 vão ao fundo e o dono vê quais eram (evento looked)', () => {
+  const {s, ctx, A, put} = poseidon();
+  const plain = A.deck.filter(u => !/General|Scale/.test(cards.get(s.players.A.deck.length && ctx.objects[u].cardId).type)).slice(0, 3);
+  for (const u of plain) A.deck.splice(A.deck.indexOf(u), 1);
+  A.deck.unshift(...plain);
+  playDevotee(s, ctx, 'A', put('A', P('099')), {}); done(s);
+  const e = s.events.find(x => x.type === 'looked');
+  assert.deepEqual(e.uids, plain);
+  assert.equal(e.kept, null);
+  assert.deepEqual(A.deck.slice(-3), plain);
+});
