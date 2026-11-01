@@ -59,7 +59,7 @@ function mods(state, ctx, uid) {
     // G3-039: cada Training counter é +1/+1 por si (acumula). Master's Guidance soma +1/+1 por Eagle Marin.
     if (state.units[uid]?.training) list.push({atk: state.units[uid].training, hp: state.units[uid].training, from: {uid, ability: 'Training counters'}});
     list.push(...v6Mods(state, ctx, key, uid)); // cartas V6: "While …", marcadores +1/+1 e auras (v6/hooks.js)
-    if (state.units[uid]?.training && isBronze(ctx, uid)) {
+    if (state.units[uid]?.training > 0 && isBronze(ctx, uid)) {
       for (const m of devotees(state, ctx, key).filter(u => id(ctx, u) === '021')) list.push({atk: 1, hp: 1, source: m, from: {uid: m, ability: "Master's Guidance"}});
     }
   }

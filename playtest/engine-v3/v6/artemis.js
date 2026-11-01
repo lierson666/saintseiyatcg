@@ -6,7 +6,7 @@ import * as k from './kit.js';
 import {spendBase} from '../core.js';
 import {shield} from '../effects.js';
 
-const counters = (s, uid) => s.units[uid]?.counters || 0;
+const counters = (s, uid) => s.units[uid]?.training || 0;
 const isArtemis = (c, uid) => k.isDevotee(c, uid) && k.id(c, uid).startsWith('artemis-');
 const named = (c, uid, name) => k.card(c, uid)?.name === name;
 const bank = (s, key) => s.players[key].bases.length; // Cosmo Bank = Bases (como em k.topToBase)
@@ -220,7 +220,7 @@ export default {
     gearDeclare: buffBearer(2, 0),
     gearKillInCombat: (s, c, key, self) => k.onceTurn(s, `${self}:aim`) && (st => { if (k.may(c, key, 'UNERRING AIM', {uid: self})) k.draw(st, key, 1); }),
   },
-  'artemis-v6-381': {enter: run((st, c, key) => { const t = pickFriend(st, c, key, 'FOREST BLESSING', {optional: true}); if (t) grow(st, c, key, t, 1); })},
+  'artemis-v6-381': {enter: run((st, c, key, self) => { const t = pickFriend(st, c, key, 'FOREST BLESSING', {optional: true, not: self}); if (t) grow(st, c, key, t, 1); })},
   'artemis-v6-382': {mods: (s, c, key, self) => (k.devotees(s, c, key).some(u => u !== self && k.hasType(c, u, 'Sacred Beast')) ? [{atk: 1, hp: 0}] : [])},
   'artemis-v6-383': {killInCombat: growSelf(1)},
   'artemis-v6-384': {

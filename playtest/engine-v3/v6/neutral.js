@@ -41,7 +41,7 @@ const steelToken = (st, c, key) => k.summonToken(st, c, key, {id: 'neutral-token
 // O objeto some do campo ao ser derrotado e leva os marcadores; o registro em s.v6Minus permite "enemy Devotee with a -1/-1 counter is defeated".
 // shortcut: o registro não é limpo se o Devotee voltar do Tartarus (marcador fantasma); limpar na entrada se surgir caso real.
 const putMinus = (s, uid) => { k.addCounter(s, uid, -1); (s.v6Minus ||= {})[uid] = true; };
-const cursed = (s, uid) => !!s.v6Minus?.[uid] || (s.units[uid]?.counters || 0) < 0;
+const cursed = (s, uid) => !!s.v6Minus?.[uid] || (s.units[uid]?.training || 0) < 0;
 
 // ---------- escolhas de alvo (um lugar por carta; mover para o cast quando houver alvo ao conjurar) ----------
 const targetAnyDevotee = (s, c, key, ability, text = 'Choose target Devotee.') => k.choose(c, key, ability, k.allDevotees(s, c), {text});

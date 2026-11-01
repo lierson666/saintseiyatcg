@@ -513,7 +513,7 @@ function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
   const facAttr = ` data-fac="${CARD_FACTIONS.has(String(forge?.faccao).toLowerCase()) ? String(forge.faccao).toLowerCase() : 'neutral'}"`;
   const statBuffed = (v, base) => (v > base ? 'up' : v < base ? 'down' : '');
   // Dano não tem marcador: o HP impresso já mostra a vida restante, em vermelho.
-  const marks = unit?.training || unit?.seal ? `<span class="dcard__tokens">${unit?.training ? token('training', unit.training, `Training|${unit.training} counter${unit.training > 1 ? 's' : ''}: +1 ATK / +1 HP each.`) : ''}${unit?.seal
+  const marks = unit?.training > 0 || unit?.seal ? `<span class="dcard__tokens">${unit?.training > 0 ? token('training', unit.training, `Training|${unit.training} counter${unit.training > 1 ? 's' : ''}: +1 ATK / +1 HP each.`) : ''}${unit?.seal
     ? token('seal', unit.seal, `Seal|At the start of its owner's turn, it removes one counter and does not Prepare.`) : ''}</span>` : '';
   // Equipamento solto na mesa (Armor sem portador, arma caída): token compacto com arte, nome, bônus e selo EQUIP (autor, 30/10/2026).
   if (forge && field && !size && c.kind === 'Equipment' && BOARD_TOKENS) {

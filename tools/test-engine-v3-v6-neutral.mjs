@@ -122,7 +122,7 @@ test('454 Black Andromeda: -1/-1 no atingido; inimigo com marcador derrotado: do
   s.players.A.soul = 15;
   const b = s.players.B.soul;
   strike(s, ctx, andro, dev(foe));
-  assert.equal(s.units[foe].counters, -1);
+  assert.equal(s.units[foe].training, -1);
   assert.equal(s.players.A.soul, 14); // Dark Reflection
   kill(s, ctx, foe);
   assert.ok(s.players.B.tartarus.includes(foe));
@@ -372,7 +372,7 @@ test('473 Sea Serpent: -1/-1 no atingido; Venomous Waters: derrotado com marcado
   const ser = give('A', N(473)), foe = mkFoe(s, give);
   tough(s, foe, 1); tough(s, ser);
   strike(s, ctx, ser, dev(foe));
-  assert.equal(s.units[foe].counters, -1);
+  assert.equal(s.units[foe].training, -1);
   const b = s.players.B.soul;
   kill(s, ctx, foe);
   assert.equal(s.players.B.soul, b - 1);

@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-01 — Cartas (Artemis) — 381 Sacred Stag só dá Training em outro Devotee
+
+- **Antes:** *you may put a Training counter on target friendly Devotee* (podia mirar a si mesmo).
+- **Depois:** *you may put a Training counter on another target friendly Devotee*, em EN e PT.
+- **Motivo:** autor, 01/11/2026: Stag + The Ancient Grove + Divine Command fazia um 4/5 no turno 2 por 2 Bases e 1 Latent.
+- **Engine:** Training num campo só (`units[uid].training`), como manda o §48A. Antes as cartas V6 gravavam em `counters` e o Divine Command, Athena e Eagle Marin em `training`: o selo mostrava só parte dos marcadores, e cartas que olham Training, como The Ancient Grove, ignoravam o do Command.
+
 ## 2026-11-01 — Termo em PT-BR — Cosmobase → Cosmo Base
 
 - **Antes:** "Cosmobase", junto.

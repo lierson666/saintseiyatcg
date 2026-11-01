@@ -445,8 +445,8 @@ test('427 Temple of the Moon: Satellites +0/+1 (qualquer God); Ressonância Trai
   assert.equal(k.hpOf(s, ctx, sat), cards.get('artemis-v6-386').hp + 1);
   const o = setup('artemis-v6-427'), s2 = o.field('A', 'artemis-v6-386'), other = o.field('A', 'athena-v6-028');
   res(o.s, o.ctx);
-  assert.equal(o.s.units[s2].counters, 1);
-  assert.ok(!o.s.units[other].counters);
+  assert.equal(o.s.units[s2].training, 1);
+  assert.ok(!o.s.units[other].training);
   gate('artemis-v6-427');
 });
 
@@ -473,7 +473,7 @@ test('429 The Ancient Grove: Devotee com Training counter +0/+1; Ressonância: e
     const o = setup('artemis-v6-429', g), x = o.field('A', 'athena-v6-028'), foe = o.field('B', 'artemis-v6-386');
     k.addCounter(o.s, x, 1); k.buff(o.s, x, 0, 10);
     o.strike(x, dev(foe));
-    return o.s.units[x].counters;
+    return o.s.units[x].training;
   };
   assert.equal(survive('god-artemis'), 2);
   assert.equal(survive('god-athena'), 1);

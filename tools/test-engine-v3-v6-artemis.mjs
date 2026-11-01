@@ -52,14 +52,14 @@ test('enter + watchCounter: Lunar Nymph põe marcador; Calisto compra 1 (uma por
   io.answer = q => (q.options.includes(wolf) ? wolf : q.options[0]);
   const cards0 = p.hand.length, soul0 = p.soul, atk0 = atkOf(s, ctx, wolf), hp0 = hpOf(s, ctx, wolf);
   playDevotee(s, ctx, 'A', nymph, {}); passAll(s);
-  assert.equal(s.units[wolf].counters, 1);
+  assert.equal(s.units[wolf].training, 1);
   assert.equal(atkOf(s, ctx, wolf), atk0 + 1);
   assert.equal(hpOf(s, ctx, wolf), hp0 + 2); // marcador + Rooted Endurance
   assert.equal(p.hand.length, cards0 - 1 + 1); // jogou a Nymph, Calisto comprou 1
   assert.equal(p.soul, soul0);
   // Segunda vez no mesmo Round/turno: nem Calisto nem o Domain disparam.
   playDevotee(s, ctx, 'A', hand('A', id(398)), {}); passAll(s);
-  assert.equal(s.units[wolf].counters, 2);
+  assert.equal(s.units[wolf].training, 2);
   assert.equal(p.hand.length, cards0); // pôs outra Nymph na mão e jogou; sem compra
   assert.equal(p.soul, soul0);
   assert.equal(atkOf(s, ctx, calisto), cards.get(id(361)).atk); // Divine Authority é só para os outros
@@ -71,7 +71,7 @@ test('declare + killInCombat: Great Lunar Hound ganha marcador ao declarar e com
   const cards0 = p.hand.length;
   declareStrike(s, ctx, hound, {kind: 'devotee', uid: prey}); passAll(s);
   if (s.chain.length || s.window) passAll(s);
-  assert.equal(s.units[hound].counters, 1);
+  assert.equal(s.units[hound].training, 1);
   assert.ok(s.players.B.tartarus.includes(prey));
   assert.equal(p.hand.length, cards0 + 1);
 });
@@ -123,24 +123,24 @@ test('startTurn: Ancient Sacred Armor põe marcador se não houver; Selene põe 
   endTurn(s); passAll(s); startTurn(s); if (s.window) passAll(s); // turno de B
   endTurn(s); passAll(s); startTurn(s); if (s.window) passAll(s); // volta para A
   assert.equal(s.active, 'A');
-  assert.equal(s.units[bear].counters, 1);
+  assert.equal(s.units[bear].training, 1);
   endTurn(s); passAll(s); startTurn(s); if (s.window) passAll(s);
   endTurn(s); passAll(s); startTurn(s); if (s.window) passAll(s);
-  assert.equal(s.units[bear].counters, 1); // já tinha marcador
+  assert.equal(s.units[bear].training, 1); // já tinha marcador
 });
 
 test('ativadas: Ancient Forest Guardian remove marcador e previne 2; Chloris {T} remove marcador e compra', () => {
   const {s, ctx, p, field} = setup();
   const guard = field('A', 'artemis-v6-391'), chloris = field('A', 'artemis-v6-377');
-  s.units[guard].counters = 2;
+  s.units[guard].training = 2;
   assert.ok(keywordsOf(s, ctx, guard).includes('Guardian'));
   activate(s, ctx, 'A', guard);
-  assert.equal(s.units[guard].counters, 1);
+  assert.equal(s.units[guard].training, 1);
   damageDevotee(s, ctx, guard, 3, false);
   assert.equal(s.units[guard].damage, 1);
   const cards0 = p.hand.length;
   activate(s, ctx, 'A', chloris);
-  assert.equal(s.units[guard].counters, 0);
+  assert.equal(s.units[guard].training, 0);
   assert.equal(p.hand.length, cards0 + 1);
   assert.equal(s.units[chloris].prepared, false);
   assert.throws(() => activate(s, ctx, 'A', guard)); // sem marcador
@@ -169,9 +169,9 @@ test('Hermia paga {1}{C} quando outro Devotee recebe marcador; Lunar Amulet só 
   playSpell(s, ctx, 'A', hand('A', 'artemis-v6-421'), {}); // Primal Blessing: o primeiro amigo (Hermia) é a escolha padrão
   if (s.window) passAll(s);
   // Escolha padrão = Hermia: ela recebe o marcador; Hermia não dispara para si mesma.
-  assert.equal(s.units[hermia].counters, 1);
+  assert.equal(s.units[hermia].training, 1);
   assert.equal(ready(), r0 - 1);
-  s.units[stag].counters = 1;
+  s.units[stag].training = 1;
   assert.equal(atkOf(s, ctx, hermia), atk + 1 + 1); // marcador + Lunar Resonance
 });
 
@@ -181,8 +181,8 @@ test('Domain 427 Temple of the Moon: Satellites +0/+1; Ressonância põe um Trai
   const archer = field('A', 'artemis-v6-393'), other = field('A', 'artemis-v6-404');
   assert.equal(hpOf(s, ctx, archer), cards.get('artemis-v6-393').hp + 1);
   activate(s, ctx, 'A', 'domain:A:res', {}); passAll(s);
-  assert.equal(s.units[archer].counters, 1);
-  assert.ok(!s.units[other].counters, 'não é Satellite');
+  assert.equal(s.units[archer].training, 1);
+  assert.ok(!s.units[other].training, 'não é Satellite');
   assert.throws(() => activate(s, ctx, 'A', 'domain:A:res', {}), /turno/);
 });
 
@@ -213,11 +213,11 @@ test('362 Moonlight Protection: remove um marcador +1/+1, evita a derrota e prev
   const {s, ctx, field, id} = setup();
   const wolf = field('A', id(404)), vest = field('A', id(362));
   ctx.attached[vest] = wolf;
-  s.units[wolf].counters = 2;
+  s.units[wolf].training = 2;
   s.units[wolf].damage = hpOf(s, ctx, wolf);
   checkDefeats(s, ctx);
   assert.ok(s.players.A.battlefield.includes(wolf));
-  assert.equal(s.units[wolf].counters, 1);
+  assert.equal(s.units[wolf].training, 1);
   assert.equal(s.units[wolf].damage, hpOf(s, ctx, wolf) - 1);
   assert.ok(s.roundUses.has(`${vest}:moonlight`));
   // Todo dano neste Round é prevenido (Strike ou efeito).
@@ -244,10 +244,10 @@ test('406 Divine Training: Equipment preso à Huntress (jogado ou equipado depoi
   const {s, ctx, field, hand, id} = setup();
   const huntress = field('A', id(406)), other = field('A', id(404)), gear = field('A', id(362));
   reequip(s, ctx, 'A', gear, huntress); passAll(s);
-  assert.equal(s.units[huntress].counters, 1);
+  assert.equal(s.units[huntress].training, 1);
   const gear2 = field('A', id(362));
   reequip(s, ctx, 'A', gear2, other); passAll(s);
-  assert.equal(s.units[huntress].counters, 1); // em outro Devotee não conta
+  assert.equal(s.units[huntress].training, 1); // em outro Devotee não conta
   assert.ok(hand);
 });
 
@@ -289,7 +289,7 @@ test('388 Silver Arrow Huntress: Precise Hunt põe Training counter num Devotee 
   const friend = field('A', id(382)), foe = field('B', 'ares-v6-271');
   io.answer = q => (q.options.includes(friend) ? friend : q.options[0]);
   playDevotee(s, ctx, 'A', hand('A', id(388)), {}); passAll(s);
-  assert.equal(s.units[friend].counters, 1);
+  assert.equal(s.units[friend].training, 1);
   assert.equal(s.units[foe].damage, 0);
 });
 
@@ -306,4 +306,20 @@ test('379 Divine Bow: Celestial Arrow dá +2 ATK contra Devotee, sem dano em out
 test('custos novos: 397 c1, 449 c5, 450 c6', () => {
   const {ctx, id} = setup();
   assert.deepEqual([397, 449, 450].map(n => ctx.cards.get(id(n)).cost.amount), [1, 5, 6]);
+});
+
+test('Sacred Stag: Forest Blessing só mira outro Devotee; sozinho fica 2/2 sem marcador', () => {
+  const alone = setup();
+  const stag = alone.hand('A', 'artemis-v6-381');
+  alone.p.bases.push({uid: 'b1', prepared: true}, {uid: 'b2', prepared: true});
+  playDevotee(alone.s, alone.ctx, 'A', stag);
+  assert.ok(!alone.s.units[stag].training);
+  assert.deepEqual([atkOf(alone.s, alone.ctx, stag), hpOf(alone.s, alone.ctx, stag)], [2, 2]);
+
+  const pair = setup();
+  const ally = pair.field('A', 'artemis-v6-381'), second = pair.hand('A', 'artemis-v6-381');
+  pair.p.bases.push({uid: 'b1', prepared: true}, {uid: 'b2', prepared: true});
+  playDevotee(pair.s, pair.ctx, 'A', second);
+  assert.equal(pair.s.units[ally].training, 1);
+  assert.ok(!pair.s.units[second].training);
 });

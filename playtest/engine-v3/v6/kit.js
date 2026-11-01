@@ -117,7 +117,7 @@ export function removeDamage(s, uid, n = Infinity) { if (s.units[uid]) s.units[u
 // Marcadores +1/+1 (e -1/-1): ficam no objeto enquanto ele estiver em campo; somados em mods() (effects.js).
 export function addCounter(s, uid, n = 1) {
   if (!s.units[uid]) return;
-  s.units[uid].counters = (s.units[uid].counters || 0) + n;
+  s.units[uid].training = (s.units[uid].training || 0) + n; // §48A: um campo só; negativo = marcador -1/-1 (neutras)
   emit(s, 'counter', {uid, amount: n});
 }
 // Marcadores com nome (Rebirth, etc.): só contagem, sem bônus.

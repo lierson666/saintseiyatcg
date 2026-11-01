@@ -16645,7 +16645,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Forest Blessing — When Sacred Stag enters the Battlefield, you may put a Training counter on target friendly Devotee."
+        "Forest Blessing — When Sacred Stag enters the Battlefield, you may put a Training counter on another target friendly Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -16653,7 +16653,7 @@
       "nome_exibicao_pt": "CERVO SAGRADO",
       "subtitulo_pt": "A Fera Escolhida da Lua",
       "habilidades_pt": [
-        "Bênção da Floresta — Quando o Cervo Sagrado entra no Campo de Batalha, você pode colocar 1 marcador de Treinamento no Devoto aliado alvo."
+        "Bênção da Floresta — Quando o Cervo Sagrado entra no Campo de Batalha, você pode colocar 1 marcador de Treinamento em outro Devoto aliado alvo."
       ],
       "flavour_pt": "\"Onde seus cascos tocam a terra, a floresta ancestral desperta.\"",
       "tagline_pt": "A Fera Escolhida da Lua"
