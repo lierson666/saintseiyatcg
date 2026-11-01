@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-01 — Cartas (sem mudança no guia) — Quatro Gold Saints custam 1 a menos
+
+- **Antes → depois (Casting Cost):** Leo Aiolia (`athena-v6-015`) 5 → 4; Aquarius Camus (`athena-v6-017`) 5 → 4; Aries Mu (`athena-v6-011`) 5 → 4; Gemini Saga (`athena-v6-013`) 6 → 5.
+- **Motivo:** diff aprovado pelo autor, 01/11/2026, para deixar o deck Combo (Athena Exclamation) em 45% nos dois níveis de IA. O Combo foi de 42% / 40% (`normal` / `hard`) para 49% / 43%, em 360 partidas por deck (±5 pontos): a meta fica atingida no `normal` e 2 pontos abaixo no `hard`. Detalhes em `docs/decks-ultra.md`.
+- **Arquivos:** `data/cards.json`, texto aprovado de `data/canon/d268.json` (o `original_text` não muda), `gallery/cards.json`, registro e hash em `tools/test-d268-integrity.mjs`. Diff em `docs/custo-golds-2026-11-01/cards.diff.md`.
+- **Pendência:** afeta todos os decks de Athena; playtest humano. Não publicado.
+
 ## 2026-11-01 — §55, Cap. XI — Limite de mão cai de 9 para 7 cartas
 
 - **Antes:** ao passar o turno, descarta o excesso acima de 9 cartas.

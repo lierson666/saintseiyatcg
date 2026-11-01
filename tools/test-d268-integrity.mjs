@@ -13,7 +13,8 @@ const records = [...canon.cards, ...canon.gods];
 
 // Projeção lida do Drive em 28/10/2026 (doc 04). Mudou o arquivo? Revise o diff com o autor antes de atualizar.
 // 29/10/2026: GOD-ARES AWAKEN 5 → 7 no texto aprovado (autor; docs/CHANGELOG-regras.md).
-const SNAPSHOT_SHA256 = 'a4691d2e0c1808a143f1b0799370dba9c7260379ade6135a66caac0358c4a9a1';
+// 01/11/2026: Aiolia, Camus e Mu 5 → 4 e Saga 6 → 5 no texto aprovado (autor; docs/CHANGELOG-regras.md).
+const SNAPSHOT_SHA256 = 'b7cb63de92f01a34d00bee112584d86df74349a92e6ec70bfa8da65c2f5464c0';
 const KAMUI_ORIGINAL_SHA256 = '153ad7e355b3fd87d9dc79ead14f62dfd7d2c03e8c703c56ec9bcee256ca5099';
 
 test('snapshot não foi editado desde a importação', () => {

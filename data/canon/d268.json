@@ -105,7 +105,7 @@
    "type": "Devotee — Gold Saint",
    "original_text": "011 — ARIES MU\nThe Guardian of Jamir\nRarity: Mythic\n Type: Devotee — Gold Saint\n Casting Cost: 5 {B}\n ATK: 3 | HP: 5\n Cosmoble: Yes\nCrystal Wall — Once each round, when your God or another friendly Saint would take Strike damage, you may pay {2}{C}. If you do, prevent up to 3 of that damage.\nCloth Restoration — {2}{C}, {T}: Once each round, remove up to 2 damage from target friendly Armor.",
    "original_sha256": "b2eb67783fe54270ba44dcd7adcd3ecefea0cdf215a6c36066cb4f003f41b635",
-   "approved_current_text_as_of_d268": "011 — ARIES MU\nThe Guardian of Jamir\nRarity: Mythic\n Type: Devotee — Gold Saint\n Casting Cost: 5 {B}\n ATK: 3 | HP: 5\n Cosmoble: Yes\nCrystal Wall — Once each round, when your God or another friendly Saint would take Strike damage, you may pay {2}{L}. If you do, prevent up to 3 of that damage.\nCloth Restoration — {2}{C}, {T}: Once each round, prevent the next 2 damage that would be dealt to target friendly Armor until the end of the next round."
+   "approved_current_text_as_of_d268": "011 — ARIES MU\nThe Guardian of Jamir\nRarity: Mythic\n Type: Devotee — Gold Saint\n Casting Cost: 4 {B}\n ATK: 3 | HP: 5\n Cosmoble: Yes\nCrystal Wall — Once each round, when your God or another friendly Saint would take Strike damage, you may pay {2}{L}. If you do, prevent up to 3 of that damage.\nCloth Restoration — {2}{C}, {T}: Once each round, prevent the next 2 damage that would be dealt to target friendly Armor until the end of the next round."
   },
   {
    "id": "ATHENA-V6-012",
@@ -123,7 +123,7 @@
    "type": "Devotee — Gold Saint",
    "original_text": "013 — GEMINI SAGA\nThe Two Faces of Fate\nRarity: Mythic\n Type: Devotee — Gold Saint\n Casting Cost: 6 {B}\n ATK: 4 | HP: 5\n Cosmoble: Yes\nAnother Dimension — {2}{C}, {T}: Return target enemy Devotee to its owner’s hand.\nDuality — While your God has more Soul than the opposing God, Gemini Saga gets +1 ATK. While your God has less Soul than the opposing God, he gets +1 HP.",
    "original_sha256": "70da5a315f6b2692f5194368c5e221468b3b2d7810bf46b06f9ca884b1c202d2",
-   "approved_current_text_as_of_d268": "013 — GEMINI SAGA\nThe Two Faces of Fate\nRarity: Mythic\n Type: Devotee — Gold Saint\n Casting Cost: 6 {B}\n ATK: 4 | HP: 5\n Cosmoble: Yes\nAnother Dimension — {2}{C}, {T}: Return target enemy Devotee to its owner’s hand.\nDuality — While your God has more Soul than the opposing God, Gemini Saga gets +1 ATK. While your God has less Soul than the opposing God, he gets +1 HP."
+   "approved_current_text_as_of_d268": "013 — GEMINI SAGA\nThe Two Faces of Fate\nRarity: Mythic\n Type: Devotee — Gold Saint\n Casting Cost: 5 {B}\n ATK: 4 | HP: 5\n Cosmoble: Yes\nAnother Dimension — {2}{C}, {T}: Return target enemy Devotee to its owner’s hand.\nDuality — While your God has more Soul than the opposing God, Gemini Saga gets +1 ATK. While your God has less Soul than the opposing God, he gets +1 HP."
   },
   {
    "id": "ATHENA-V6-014",
@@ -141,7 +141,7 @@
    "type": "Devotee — Gold Saint",
    "original_text": "015 — LEO AIOLIA\nThe Golden Lightning\nRarity: Mythic\n Type: Devotee — Gold Saint\n Casting Cost: 5 {B}\n ATK: 4 | HP: 4\n Cosmoble: Yes\nLong Range\nLightning Speed — Once each round, when Leo Aiolia declares a Strike, he gets +1 ATK during that Strike.\nLion’s Pride — Whenever Leo Aiolia defeats an enemy Devotee with a Strike, you may Prepare him. He cannot declare another Strike this round.",
    "original_sha256": "877a31dcc046f243a2136bc11f39deb69575b19be98d5dd89ded8ed920e31863",
-   "approved_current_text_as_of_d268": "015 — LEO AIOLIA\nThe Golden Lightning\nRarity: Mythic\n Type: Devotee — Gold Saint\n Casting Cost: 5 {B}\n ATK: 4 | HP: 4\n Cosmoble: Yes\nLong Range\nLightning Speed — Once each round, when Leo Aiolia declares a Strike, he gets +1 ATK during that Strike.\nLion’s Pride — Whenever Leo Aiolia defeats an enemy Devotee with a Strike, you may Prepare him. He cannot declare another Strike this round."
+   "approved_current_text_as_of_d268": "015 — LEO AIOLIA\nThe Golden Lightning\nRarity: Mythic\n Type: Devotee — Gold Saint\n Casting Cost: 4 {B}\n ATK: 4 | HP: 4\n Cosmoble: Yes\nLong Range\nLightning Speed — Once each round, when Leo Aiolia declares a Strike, he gets +1 ATK during that Strike.\nLion’s Pride — Whenever Leo Aiolia defeats an enemy Devotee with a Strike, you may Prepare him. He cannot declare another Strike this round."
   },
   {
    "id": "ATHENA-V6-016",
@@ -159,7 +159,7 @@
    "type": "Devotee — Gold Saint",
    "original_text": "017 — AQUARIUS CAMUS\nThe Master of Absolute Zero\nRarity: Mythic\n Type: Devotee — Gold Saint\n Casting Cost: 5 {B}\n ATK: 3 | HP: 5\n Cosmoble: Yes\nPierce\nFreezing Coffin — {2}{C}, {T}: Put 2 Seal counters on target enemy Devotee.\nAbsolute Zero — Whenever Aquarius Camus deals Strike damage to an enemy Devotee that already has a Seal counter, deal 2 additional damage to that Devotee.",
    "original_sha256": "c599dc4a9b11f0cf048c8c8568a39e2c36dc099a8cd6586c8fb5da7baff2e815",
-   "approved_current_text_as_of_d268": "017 — AQUARIUS CAMUS\nThe Master of Absolute Zero\nRarity: Mythic\n Type: Devotee — Gold Saint\n Casting Cost: 5 {B}\n ATK: 3 | HP: 5\n Cosmoble: Yes\nPierce\nFreezing Coffin — {2}{C}, {T}: Put 2 Seal counters on target enemy Devotee.\nAbsolute Zero — Whenever Aquarius Camus deals Strike damage to an enemy Devotee that already has a Seal counter, deal 2 additional damage to that Devotee."
+   "approved_current_text_as_of_d268": "017 — AQUARIUS CAMUS\nThe Master of Absolute Zero\nRarity: Mythic\n Type: Devotee — Gold Saint\n Casting Cost: 4 {B}\n ATK: 3 | HP: 5\n Cosmoble: Yes\nPierce\nFreezing Coffin — {2}{C}, {T}: Put 2 Seal counters on target enemy Devotee.\nAbsolute Zero — Whenever Aquarius Camus deals Strike damage to an enemy Devotee that already has a Seal counter, deal 2 additional damage to that Devotee."
   },
   {
    "id": "ATHENA-V6-018",
