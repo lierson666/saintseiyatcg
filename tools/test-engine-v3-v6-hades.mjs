@@ -307,3 +307,16 @@ test('Gorgon Ox (216, 31/10/2026): Petrifying Gaze impede o Strike do alvo no pr
   assert.equal(s.units[foe].seal ?? 0, 0);
   assert.ok(s.effects.some(e => e.kind === 'noStrike' && e.target === foe));
 });
+
+test('Guia §63 (lendário): segundo Acheron Charon obriga a escolher um; Specter genérico repete', () => {
+  const {s, ctx, p, add} = hades();
+  const first = add('hades-v6-189', 'A', 'battlefield'), second = add('hades-v6-189', 'A', 'battlefield');
+  const g1 = add('hades-v6-219', 'A', 'battlefield'), g2 = add('hades-v6-219', 'A', 'battlefield'); // HADES' ROYAL GUARD, genérico
+  const asked = [];
+  ctx.decide = (player, q) => { if (q.decision === '§63') asked.push(q.options); return q.options ? q.options.at(-1) : false; };
+  checkDefeats(s, ctx);
+  assert.deepEqual(asked, [[first, second]]);
+  assert.ok(p.battlefield.includes(second) && !p.battlefield.includes(first));
+  assert.ok(p.tartarus.includes(first));
+  assert.ok(p.battlefield.includes(g1) && p.battlefield.includes(g2));
+});

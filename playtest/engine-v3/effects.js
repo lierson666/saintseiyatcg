@@ -211,8 +211,8 @@ export function namedCharacter(ctx, uid) {
   const id = ctx.objects[uid].cardId.toLowerCase();
   if (!LEGENDARY.test(ctx.cards.get(ctx.objects[uid].cardId)?.type || '')) return null;
   if (id === 'athena-v6-009') return null; // Phoenix Ikki não é lendário (guia §63, autor 01/11/2026)
-  // shortcut: cartas da etapa 1 (shared/preview-cards.js) ainda sem tabela de identidade; contam como genéricas até a G3-029 cobri-las.
-  if (ctx.cards.get(ctx.objects[uid].cardId)?.preview) return null;
+  // Cartas da etapa 1 (shared/preview-cards.js): personagem nomeado da tabela é lendário; fora dela, genérico (sem lacuna).
+  if (ctx.cards.get(ctx.objects[uid].cardId)?.preview && !(ctx.identities && Object.hasOwn(ctx.identities, id)) && CHARACTER_IDENTITY[id] == null) return null;
   if (!(ctx.identities && Object.hasOwn(ctx.identities, id)) && CHARACTER_IDENTITY[id] === null) return null;
   return characterOf(id, ctx.identities);
 }

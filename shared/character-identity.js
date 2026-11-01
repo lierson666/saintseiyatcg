@@ -43,6 +43,75 @@ export const CHARACTER_IDENTITY = Object.freeze({
   'athena-v6-073': 'asterion', // HOUND ASTERION
   'athena-v6-074': 'jamian', // CROW JAMIAN
   'athena-v6-075': 'dante', // CERBERUS DANTE
+  // Cartas da etapa 1 (shared/preview-cards.js), 01/11/2026: só personagens nomeados das classes lendárias
+  // (Marinas, Specters, Saints, Berserkers, Satellites). Soldados genéricos ficam fora e podem repetir (guia §63).
+  'poseidon-v6-091': 'kanon', // SEA DRAGON KANON
+  'poseidon-v6-093': 'sorrento', // SIREN SORRENTO
+  'poseidon-v6-095': 'baian', // SEAHORSE BAIAN
+  'poseidon-v6-097': 'isaac', // KRAKEN ISAAC
+  'poseidon-v6-099': 'thetis', // MERMAID THETIS
+  'hades-v6-181': 'rhadamanthys', // WYVERN RHADAMANTHYS
+  'hades-v6-183': 'minos', // GRIFFON MINOS
+  'hades-v6-185': 'aiacos', // GARUDA AIACOS
+  'hades-v6-187': 'pharaoh', // SPHINX PHARAOH
+  'hades-v6-189': 'charon', // ACHERON CHARON
+  'hades-v6-197': 'shion', // ARIES SHION, THE RESURRECTED SAINT
+  'hades-v6-201': 'valentine', // HARPY VALENTINE
+  'hades-v6-202': 'lune', // BALRON LUNE
+  'hades-v6-203': 'myu', // PAPILLON MYU
+  'hades-v6-204': 'niobe', // DEEP NIOBE
+  'hades-v6-205': 'sylphid', // BASILISK SYLPHID
+  'hades-v6-207': 'zeros', // FROG ZEROS
+  'hades-v6-208': 'giganto', // CYCLOPS GIGANTO
+  'hades-v6-209': 'raimi', // WORM RAIMI
+  'hades-v6-210': 'rock', // GOLEM ROCK
+  'hades-v6-211': 'iwan', // TROLL IWAN
+  'hades-v6-212': 'stand', // DEADLY BEETLE STAND
+  'hades-v6-213': 'phlegyas', // LYCAON PHLEGYAS
+  'hades-v6-214': 'gordon', // MINOTAUR GORDON
+  'hades-v6-215': 'queen', // ALRAUNE QUEEN
+  'hades-v6-216': 'ox', // GORGON OX
+  'hades-v6-217': 'cube', // DULLAHAN CUBE
+  'hades-v6-251': 'deathmask', // CANCER DEATHMASK
+  'hades-v6-252': 'aphrodite', // PISCES APHRODITE, THE RESURRECTED SAINT
+  'hades-v6-253': 'shura', // CAPRICORN SHURA, THE RESURRECTED SAINT
+  'hades-v6-254': 'camus', // AQUARIUS CAMUS
+  'hades-v6-255': 'saga', // GEMINI SAGA, THE RESURRECTED SAINT
+  'ares-v6-271': 'alcmenes', // ETHON ALCMENES
+  'ares-v6-273': 'ofir', // OUROBOROS OFIR
+  'ares-v6-275': 'lior', // LAMASSU LIOR
+  'ares-v6-277': 'lotis', // LAMIA LOTIS
+  'ares-v6-279': 'iseu', // ISEU OF PYTHON
+  'ares-v6-281': 'catreu', // CATREU OF AKEPHALOS
+  'ares-v6-283': 'alceu', // ALCEU OF LAMASSU
+  'ares-v6-285': 'arionte', // ARIONTE OF ANFISTA
+  'ares-v6-287': 'basil', // BASIL OF MANTICORE
+  'artemis-v6-361': 'calisto', // CALISTO
+  'artemis-v6-363': 'la-scoumoune', // LA SCOUMOUNE
+  'artemis-v6-375': 'first-moon-guardian', // THE FIRST MOON GUARDIAN
+  'artemis-v6-437': 'second-moon-guardian', // THE SECOND MOON GUARDIAN
+  'artemis-v6-438': 'third-moon-guardian', // THE THIRD MOON GUARDIAN
+  'artemis-v6-439': 'fourth-moon-guardian', // THE FOURTH MOON GUARDIAN
+  'artemis-v6-440': 'fifth-moon-guardian', // THE FIFTH MOON GUARDIAN
+  'neutral-v6-451': 'black-pegasus', // BLACK PEGASUS
+  'neutral-v6-452': 'black-dragon', // BLACK DRAGON
+  'neutral-v6-453': 'black-swan', // BLACK SWAN
+  'neutral-v6-454': 'black-andromeda', // BLACK ANDROMEDA
+  'neutral-v6-455': 'black-phoenix', // BLACK PHOENIX
+  'neutral-v6-456': 'jango', // JANGO
+  'neutral-v6-461': 'sho', // SHO, SKY STEEL SAINT
+  'neutral-v6-462': 'daichi', // DAICHI, LAND STEEL SAINT
+  'neutral-v6-463': 'ushio', // USHIO, MARINE STEEL SAINT
+  'neutral-v6-471': 'geist', // GEIST, PHANTOM QUEEN
+  'neutral-v6-472': 'dolphin-ghost', // DOLPHIN GHOST SAINT
+  'neutral-v6-473': 'sea-serpent-ghost', // SEA SERPENT GHOST SAINT
+  'neutral-v6-474': 'jellyfish-ghost', // JELLYFISH GHOST SAINT
+  'neutral-v6-481': 'crystal-saint', // CRYSTAL SAINT
+  'neutral-v6-483': 'leda', // LEDA, CHAIN WARRIOR
+  'neutral-v6-484': 'spica', // SPICA, CHAIN WARRIOR
+  'neutral-v6-485': 'shiva', // SHIVA, PEACOCK SAINT
+  'neutral-v6-486': 'agora', // AGORA, LOTUS SAINT
+  'neutral-v6-487': 'arachne', // ARACHNE, TARANTULA SAINT
 });
 
 export class IdentityGap extends Error {

@@ -50,13 +50,17 @@ test('G3-029: reimpressão (outro ID, outro nome impresso) mantém a identidade;
 });
 
 test('G3-029: personagens distintos não se fundem; genéricos e cartas fora da tabela são lacuna', () => {
-  const named = Object.values(CHARACTER_IDENTITY).filter(Boolean);
-  assert.equal(new Set(named).size, named.length, 'cada personagem aparece uma vez no catálogo V6');
   const devotees = canon.cards.filter(c => c.type.startsWith('Devotee')).map(c => c.id.toLowerCase());
-  assert.deepEqual(Object.keys(CHARACTER_IDENTITY).sort(), devotees.sort(), 'a tabela cobre todos os Devotees do D268');
+  const named = devotees.map(id => CHARACTER_IDENTITY[id]).filter(Boolean);
+  assert.equal(new Set(named).size, named.length, 'cada personagem aparece uma vez no catálogo V6 do D268');
+  assert.ok(devotees.every(id => Object.hasOwn(CHARACTER_IDENTITY, id)), 'a tabela cobre todos os Devotees do D268');
+  // Etapa 1 (01/11/2026): versões de Hades dos mesmos Gold Saints compartilham a identidade (guia §63)
+  assert.equal(characterOf('hades-v6-254'), characterOf('athena-v6-017'), 'Camus de Hades = Camus de Athena');
+  assert.equal(characterOf('hades-v6-255'), characterOf('athena-v6-013'), 'Saga de Hades = Saga de Athena');
   assert.notEqual(characterOf('athena-v6-028'), characterOf('athena-v6-001'), 'Unicorn Jabu ≠ Pegasus Seiya');
   assert.throws(() => characterOf('athena-v6-040'), IdentityGap, 'Sanctuary Guard: genérico');
-  assert.throws(() => characterOf('poseidon-v6-091'), IdentityGap, 'Kanon: carta PARCIAL, fora da tabela');
+  assert.equal(characterOf('poseidon-v6-091'), 'kanon', 'Kanon: etapa 1 na tabela (01/11/2026)');
+  assert.throws(() => characterOf('poseidon-v6-107'), IdentityGap, 'Marina Spearman: soldado genérico, fora da tabela');
 });
 
 // ---------- G3-030 ----------
