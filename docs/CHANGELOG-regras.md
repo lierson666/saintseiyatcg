@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-01 — Cartas (Athena) — 082 The Golden Arrow sem condição de Strike
+
+- **Antes:** *Send target enemy Devotee that declared a Strike this turn to the Void…*; a engine só aceitava esse alvo, e a Spell resolvia sem efeito contra quem não atacou.
+- **Depois:** *Send target enemy Devotee to the Void. Its controller's God gains Soul equal to that Devotee's ATK.* Qualquer Devotee inimigo é alvo, em EN e PT.
+- **Motivo:** autor, 01/11/2026: texto novo no Forge, e a carta "não está exilando". É a versão incondicional do Swords to Plowshares.
+- **Engine:** `v6/athena-spells.js` sem o filtro `s.strikes`. `docs/rebalance-athena-premodern.md` fica como histórico do texto de 31/10/2026.
+
 ## 2026-11-01 — §63 — Domains: linha geral + Ressonância com o God
 
 - **Antes:** Domain com linha simples (sem compra) e linha forte Once per game; 28 Domains (Athena 5, Poseidon 9, Hades 4, Ares 5, Artemis 5).

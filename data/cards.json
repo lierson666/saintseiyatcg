@@ -3525,7 +3525,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Send target enemy Devotee that declared a Strike this turn to the Void. Its controller's God gains Soul equal to that Devotee's ATK."
+        "Send target enemy Devotee to the Void. Its controller's God gains Soul equal to that Devotee's ATK."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -3533,7 +3533,7 @@
       "nome_exibicao_pt": "A FLECHA DOURADA",
       "subtitulo_pt": "A Flecha do Destino",
       "habilidades_pt": [
-        "Mande ao Vazio o Devoto inimigo alvo que declarou um Golpe neste turno. O Deus do controlador dele ganha Alma igual ao ATQ desse Devoto."
+        "Mande ao Vazio o Devoto inimigo alvo. O Deus do controlador dele ganha Alma igual ao ATQ desse Devoto."
       ],
       "tagline_pt": "A Flecha do Destino"
     },

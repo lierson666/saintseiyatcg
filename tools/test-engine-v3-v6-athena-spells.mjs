@@ -203,12 +203,11 @@ test('Ex-Events e truques defensivos são Moment; ex-Miracles são Technique (au
   for (const n of ['089', '090']) assert.equal(v6Spell(ctx, give('A', A(n), 'hand')).category, 'Technique', n);
 });
 
-test('082 The Golden Arrow (Swords, 31/10/2026): Moment {1}; Devotee inimigo que declarou Strike vai ao Void e o God dele ganha Soul = ATK', () => {
+test('082 The Golden Arrow (Swords, 01/11/2026): Moment {1}; Devotee inimigo alvo, mesmo sem ter declarado Strike, vai ao Void e o God dele ganha Soul = ATK', () => {
   const {s, ctx, give} = setup();
   const foe = give('B', FOE), arrow = give('A', A('082'), 'hand');
   s.players.B.soul = 10; // abaixo do teto, para o ganho inteiro aparecer
   const soul = s.players.B.soul, atk = atkOf(s, ctx, foe), before = s.players.A.bases.filter(b => b.prepared).length;
-  s.strikes.set(foe, s.turn);
   playSpell(s, ctx, 'A', arrow, {target: foe});
   assert.ok(s.window, 'Moment: abre janela de resposta');
   passAll(s);
