@@ -66,12 +66,12 @@ export default {
     shield(s, t, 4);
     if (named(c, t, 'ANDROMEDA SHUN') && k.may(c, key, "SHUN'S EMBRACE", {text: 'Also prevent the next 2 Strike damage to your God?'})) shield(s, k.godTarget(key), 2);
   }}},
-  // The Golden Arrow (31/10/2026, Swords to Plowshares): Devotee inimigo que declarou Strike neste turno vai ao Void;
-  // o God do controlador ganha Soul igual ao ATK dele. Substitui SPELLS '082' de effects.js.
+  // The Golden Arrow (Swords to Plowshares; texto do autor, 01/11/2026, sem a condição de Strike): Devotee inimigo alvo vai
+  // ao Void; o God do controlador ganha Soul igual ao ATK dele. Substitui SPELLS '082' de effects.js.
   'athena-v6-082': {spell: {run: (s, c, key, self, choice) => {
-    const legal = k.enemies(s, c, key).filter(u => s.strikes.get(u) === s.turn);
+    const legal = k.enemies(s, c, key);
     const t = legal.includes(choice?.target) ? choice.target
-      : k.choose(c, key, 'THE GOLDEN ARROW', legal, {text: 'Choose target enemy Devotee that declared a Strike this turn.'});
+      : k.choose(c, key, 'THE GOLDEN ARROW', legal, {text: 'Choose target enemy Devotee.'});
     if (!t) return;
     const atk = k.atkOf(s, c, t), owner = k.controllerOf(s, t);
     k.exile(s, c, t);

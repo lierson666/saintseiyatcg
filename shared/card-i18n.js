@@ -54,3 +54,33 @@ export const TYPE_PT = {
   'Facility': 'Instalação', 'Mask': 'Máscara', 'Device': 'Dispositivo', 'Supply': 'Suprimento', 'Undersea': 'Submarino', 'Temple': 'Templo',
 };
 export const typeWord = w => (lang() === 'pt' ? TYPE_PT[w] ?? w : w);
+
+// ---------- Habilidades em jogo (autor, 01/11/2026): a engine fala em inglês ("SCAVENGER'S REWARD"); a tela mostra o *_pt. ----------
+const NAME = /^(.{2,60}?)(?: — |: )/;
+const lines = (c, l) => [...(c[`habilidades_${l}`] || []), c[`habilidade_awaken_${l}`], c[`ultimate_${l}`]].map(v => v || '');
+const title = s => s.toLowerCase().replace(/(^|[\s(-])(\p{L})/gu, (m, a, b) => a + b.toUpperCase()).replace(/ (De|Do|Da|Dos|Das|E|Of|The)(?= )/g, m => m.toLowerCase());
+// Dicionário EN → PT para shared/i18n.js: nome de carta e de habilidade, nas grafias que aparecem na tela.
+export function cardTerms(cards) {
+  const out = {}, put = (en, pt) => { if (!en || !pt || en === pt) return; out[en] ??= pt; out[en.toUpperCase()] ??= pt.toUpperCase(); out[title(en)] ??= title(pt); };
+  for (const c of cards) {
+    put(c.nome_exibicao_en, c.nome_exibicao_pt);
+    const en = lines(c, 'en'), pt = lines(c, 'pt');
+    en.forEach((l, i) => put(l.match(NAME)?.[1], pt[i]?.match(NAME)?.[1]));
+  }
+  return out;
+}
+export const registerCardTerms = cards => globalThis.ssI18n?.add?.(cardTerms(cards));
+// Efeito impresso da habilidade `ability` (nome, ou frase do gatilho) no idioma da tela, ou null. Sai sem o nome e sem a
+// etiqueta de God ("Divine Power", "Cost:"), que ficam na primeira linha ou na seguinte.
+export function abilityText(c, ability) {
+  if (!c || !ability) return null;
+  const en = lines(c, 'en'), low = ability.toLowerCase();
+  let i = en.findIndex(l => l.match(NAME)?.[1].toLowerCase() === low);
+  const named = i >= 0;
+  if (!named) i = en.findIndex(l => l.toLowerCase().includes(low));
+  if (i < 0) return null;
+  const line = (lang() === 'pt' && lines(c, 'pt')[i]) || en[i];
+  if (!named) return line;
+  const rows = line.split('\n'), first = rows[0].replace(NAME, '').trim();
+  return (rows.length > 1 ? rows.slice(1).filter(r => !/^(Cost|Custo):/.test(r)).join(' ') : first).trim() || first;
+}
