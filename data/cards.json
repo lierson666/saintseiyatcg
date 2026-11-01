@@ -45,7 +45,15 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "SEIYA DE PÉGASO",
+      "subtitulo_pt": "A Última Resistência de Atenas",
+      "habilidades_pt": [
+        "Sétimo Sentido — Uma vez por rodada, quando Seiya de Pégaso sobrevive a um Golpe contra um Devoto inimigo com ATQ maior, ele recebe +1 ATQ permanentemente.",
+        "Milagre — Enquanto seu Deus tiver menos Alma que o Deus oponente, Seiya de Pégaso recebe +1 ATQ."
+      ],
+      "flavour_pt": "\"Queime, cosmo, QUEIME!\"",
+      "tagline_pt": "A Última Resistência de Atenas"
     },
     {
       "id": "athena-v6-002",
@@ -84,7 +92,14 @@
       "donos": ["pegasus-seiya"],
       "equipar_custo_outros": 5,
       "bonus_poder": 1,
-      "bonus_vida": 4
+      "bonus_vida": 4,
+      "nome_exibicao_pt": "ARMADURA DE PÉGASO V2",
+      "subtitulo_pt": "As Asas da Esperança",
+      "habilidades_pt": [
+        "Ressonância — Seiya de Pégaso: Uma vez por rodada, depois que Seiya de Pégaso sobrevive a um Golpe, você pode Prepará-lo. Ele não pode declarar outro Golpe nesta rodada."
+      ],
+      "tagline_pt": "As Asas da Esperança",
+      "auto_equip_pt": ["Seiya de Pégaso"]
     },
     {
       "id": "athena-v6-003",
@@ -119,7 +134,15 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
+      "nome_exibicao_pt": "SHIRYU DE DRAGÃO",
+      "subtitulo_pt": "A Vontade Inquebrável",
+      "habilidades_pt": [
+        "Guardião",
+        "Escudo do Dragão — Uma vez por rodada, na primeira vez que Shiryu de Dragão sofreria dano de Golpe, previna 1 desse dano.",
+        "Dragão Nascente — Uma vez por rodada, quando Shiryu de Dragão sobrevive a um Golpe como defensor, ele recebe +1 ATQ até o fim da rodada."
+      ],
+      "tagline_pt": "A Vontade Inquebrável"
     },
     {
       "id": "athena-v6-004",
@@ -159,7 +182,15 @@
       "donos": ["dragon-shiryu"],
       "equipar_custo_outros": 5,
       "bonus_poder": 0,
-      "bonus_vida": 5
+      "bonus_vida": 5,
+      "nome_exibicao_pt": "ARMADURA DE DRAGÃO V2",
+      "subtitulo_pt": "O Escudo Mais Forte",
+      "habilidades_pt": [
+        "Escudo do Dragão — Uma vez por rodada, na primeira vez que o Devoto equipado sofreria dano de Golpe, previna 1 desse dano. Vários Escudos do Dragão não se acumulam.",
+        "Ressonância — Shiryu de Dragão: Uma vez por rodada, quando outro Cavaleiro aliado sofreria dano de um Golpe, você pode redirecionar até 2 desse dano para Shiryu de Dragão."
+      ],
+      "tagline_pt": "O Escudo Mais Forte",
+      "auto_equip_pt": ["Shiryu de Dragão"]
     },
     {
       "id": "athena-v6-005",
@@ -193,7 +224,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
+      "nome_exibicao_pt": "HYOGA DE CISNE",
+      "subtitulo_pt": "A Determinação Congelada",
+      "habilidades_pt": [
+        "Pó de Diamante — Uma vez por rodada, quando Hyoga de Cisne causa dano de Golpe a um Devoto inimigo, coloque 1 marcador de Selo nesse Devoto.",
+        "Zero Absoluto — Quando Hyoga de Cisne declara um Golpe contra um Devoto inimigo que já tem um marcador de Selo, previna todo o dano de revide desse Devoto durante esse Golpe."
+      ],
+      "tagline_pt": "A Determinação Congelada"
     },
     {
       "id": "athena-v6-006",
@@ -233,7 +271,15 @@
       "donos": ["cygnus-hyoga"],
       "equipar_custo_outros": 5,
       "bonus_poder": 1,
-      "bonus_vida": 4
+      "bonus_vida": 4,
+      "nome_exibicao_pt": "ARMADURA DE CISNE V2",
+      "subtitulo_pt": "O Gelo Eterno",
+      "habilidades_pt": [
+        "Aura Congelante — Uma vez por rodada, quando o Devoto equipado causa dano de Golpe a um Devoto inimigo, escolha um: coloque 1 marcador de Selo nesse Devoto; ou, se esse Devoto tinha um marcador de Selo quando o Golpe começou, compre uma carta.",
+        "Ressonância — Hyoga de Cisne: Se o Devoto defensor tiver um marcador de Selo quando o Golpe começar, Hyoga de Cisne recebe +2 ATQ durante esse Golpe."
+      ],
+      "tagline_pt": "O Gelo Eterno",
+      "auto_equip_pt": ["Hyoga de Cisne"]
     },
     {
       "id": "athena-v6-007",
@@ -267,7 +313,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "SHUN DE ANDRÔMEDA",
+      "subtitulo_pt": "O Protetor Gentil",
+      "habilidades_pt": [
+        "Corrente de Nebulosa — Uma vez por rodada, quando um Devoto inimigo declara um Golpe contra seu Deus ou outro Cavaleiro aliado, você pode deixar Shun de Andrômeda Despreparado. Se fizer isso, esse Golpe não causa dano.",
+        "Irmandade — Outros Cavaleiros aliados recebem +1 PV."
+      ],
+      "tagline_pt": "O Protetor Gentil"
     },
     {
       "id": "athena-v6-008",
@@ -306,7 +359,14 @@
       "donos": ["andromeda-shun"],
       "equipar_custo_outros": 5,
       "bonus_poder": 1,
-      "bonus_vida": 4
+      "bonus_vida": 4,
+      "nome_exibicao_pt": "ARMADURA DE ANDRÔMEDA V2",
+      "subtitulo_pt": "As Correntes da Proteção",
+      "habilidades_pt": [
+        "Ressonância — Shun de Andrômeda: Contra-ataque — Sempre que Shun de Andrômeda previne dano ao seu Deus ou a outro Cavaleiro aliado com a Corrente de Nebulosa, cause ao Devoto que Golpeia dano igual à metade do dano prevenido, arredondado para baixo."
+      ],
+      "tagline_pt": "As Correntes da Proteção",
+      "auto_equip_pt": ["Shun de Andrômeda"]
     },
     {
       "id": "athena-v6-009",
@@ -340,7 +400,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "IKKI DE FÊNIX",
+      "subtitulo_pt": "A Chama Imortal",
+      "habilidades_pt": [
+        "Renascimento da Fênix — Se Ikki de Fênix seria derrotado e não tem marcadores de Renascimento, em vez disso remova todo o dano dele, deixe-o Despreparado e coloque 1 marcador de Renascimento nele. Ele não pode declarar outro Golpe nesta rodada.",
+        "Lobo Solitário — Enquanto você não controlar outros Cavaleiros, Ikki de Fênix recebe +2 ATQ."
+      ],
+      "tagline_pt": "A Chama Imortal"
     },
     {
       "id": "athena-v6-010",
@@ -380,7 +447,15 @@
       "donos": ["phoenix-ikki"],
       "equipar_custo_outros": 5,
       "bonus_poder": 2,
-      "bonus_vida": 3
+      "bonus_vida": 3,
+      "nome_exibicao_pt": "ARMADURA DE FÊNIX V2",
+      "subtitulo_pt": "Das Cinzas",
+      "habilidades_pt": [
+        "Espírito Ardente — Enquanto o Devoto equipado tiver dano marcado, ele recebe +1 ATQ.",
+        "Ressonância — Ikki de Fênix: Uma vez por jogo, quando esta Armadura for equipada em Ikki de Fênix, você pode remover todos os marcadores de Renascimento dele. Você não pode usar esta habilidade de novo neste jogo, nem com outra cópia da Armadura de Fênix V2."
+      ],
+      "tagline_pt": "Das Cinzas",
+      "auto_equip_pt": ["Ikki de Fênix"]
     },
     {
       "id": "athena-v6-011",
@@ -414,7 +489,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
+      "nome_exibicao_pt": "MU DE ÁRIES",
+      "subtitulo_pt": "O Guardião de Jamir",
+      "habilidades_pt": [
+        "Parede de Cristal — Uma vez por rodada, quando seu Deus ou outro Cavaleiro aliado sofreria dano de Golpe, você pode pagar {2}{C}. Se fizer isso, previna até 3 desse dano.",
+        "Restauração de Armadura — {1}{C}, {T}: Remova 1 de dano do Devoto aliado alvo equipado com uma Armadura."
+      ],
+      "tagline_pt": "O Guardião de Jamir"
     },
     {
       "id": "athena-v6-012",
@@ -454,7 +536,15 @@
       "donos": ["aries-mu"],
       "equipar_custo_outros": 5,
       "bonus_poder": 1,
-      "bonus_vida": 5
+      "bonus_vida": 5,
+      "nome_exibicao_pt": "ARMADURA DE OURO DE ÁRIES",
+      "subtitulo_pt": "Revolução Estelar",
+      "habilidades_pt": [
+        "Revolução Estelar — {3}{C}, {T}: Cause 3 de dano ao Devoto inimigo alvo.",
+        "Ressonância — Mu de Áries: Sempre que Mu de Áries causa dano com a Revolução Estelar, cause 1 de dano a cada Devoto inimigo, inclusive o Devoto alvo."
+      ],
+      "tagline_pt": "Revolução Estelar",
+      "auto_equip_pt": ["Mu de Áries"]
     },
     {
       "id": "athena-v6-013",
@@ -488,7 +578,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
+      "nome_exibicao_pt": "SAGA DE GÊMEOS",
+      "subtitulo_pt": "As Duas Faces do Destino",
+      "habilidades_pt": [
+        "Outra Dimensão — Quando Saga de Gêmeos entra no Campo de Batalha, mande o Devoto inimigo alvo ao Vazio até Saga de Gêmeos sair do Campo de Batalha.",
+        "Dualidade — Enquanto seu Deus tiver mais Alma que o Deus oponente, Saga de Gêmeos recebe +1 ATQ. Enquanto seu Deus tiver menos Alma que o Deus oponente, ele recebe +1 PV."
+      ],
+      "tagline_pt": "As Duas Faces do Destino"
     },
     {
       "id": "athena-v6-014",
@@ -528,7 +625,15 @@
       "donos": ["gemini-saga", "dragon-shiryu"],
       "equipar_custo_outros": 5,
       "bonus_poder": 2,
-      "bonus_vida": 5
+      "bonus_vida": 5,
+      "nome_exibicao_pt": "ARMADURA DE OURO DE GÊMEOS",
+      "subtitulo_pt": "Explosão Galáctica",
+      "habilidades_pt": [
+        "Explosão Galáctica — {4}{C}, {T}: Distribua 5 de dano entre qualquer número de Devotos inimigos alvo.",
+        "Ressonância — Saga de Gêmeos: Quando Saga de Gêmeos ativa a Explosão Galáctica, distribua 7 de dano em vez de 5."
+      ],
+      "tagline_pt": "Explosão Galáctica",
+      "auto_equip_pt": ["Saga de Gêmeos"]
     },
     {
       "id": "athena-v6-015",
@@ -563,7 +668,15 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
+      "nome_exibicao_pt": "AIOLIA DE LEÃO",
+      "subtitulo_pt": "O Relâmpago Dourado",
+      "habilidades_pt": [
+        "Longo Alcance",
+        "Velocidade da Luz — Uma vez por rodada, quando Aiolia de Leão declara um Golpe, ele recebe +1 ATQ durante esse Golpe.",
+        "Orgulho do Leão — Sempre que Aiolia de Leão derrota um Devoto inimigo com um Golpe, você pode Prepará-lo. Ele não pode declarar outro Golpe nesta rodada."
+      ],
+      "tagline_pt": "O Relâmpago Dourado"
     },
     {
       "id": "athena-v6-016",
@@ -604,7 +717,16 @@
       "donos": ["leo-aiolia", "phoenix-ikki"],
       "equipar_custo_outros": 5,
       "bonus_poder": 2,
-      "bonus_vida": 4
+      "bonus_vida": 4,
+      "nome_exibicao_pt": "ARMADURA DE OURO DE LEÃO",
+      "subtitulo_pt": "Relâmpago de Plasma",
+      "habilidades_pt": [
+        "Relâmpago de Plasma — {3}{C}, {T}: Cause 2 de dano a até dois Devotos inimigos alvo diferentes.",
+        "Ressonância — Aiolia de Leão: O Relâmpago de Plasma causa 1 de dano adicional a cada um dos seus alvos.",
+        "Ressonância — Ikki de Fênix: Ikki de Fênix pode ativar o Relâmpago de Plasma sem {T}."
+      ],
+      "tagline_pt": "Relâmpago de Plasma",
+      "auto_equip_pt": ["Aiolia de Leão", "Ikki de Fênix"]
     },
     {
       "id": "athena-v6-017",
@@ -639,7 +761,15 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
+      "nome_exibicao_pt": "CAMUS DE AQUÁRIO",
+      "subtitulo_pt": "O Mestre do Zero Absoluto",
+      "habilidades_pt": [
+        "Perfurar",
+        "Esquife de Gelo — {2}{C}, {T}: Coloque 2 marcadores de Selo no Devoto inimigo alvo.",
+        "Zero Absoluto — Sempre que Camus de Aquário causa dano de Golpe a um Devoto inimigo que já tem um marcador de Selo, cause 2 de dano adicional a esse Devoto."
+      ],
+      "tagline_pt": "O Mestre do Zero Absoluto"
     },
     {
       "id": "athena-v6-018",
@@ -680,7 +810,16 @@
       "donos": ["aquarius-camus", "cygnus-hyoga"],
       "equipar_custo_outros": 5,
       "bonus_poder": 1,
-      "bonus_vida": 5
+      "bonus_vida": 5,
+      "nome_exibicao_pt": "ARMADURA DE OURO DE AQUÁRIO",
+      "subtitulo_pt": "Execução Aurora",
+      "habilidades_pt": [
+        "Execução Aurora — {3}{C}, {T}: Cause 3 de dano ao Devoto inimigo alvo. Se esse Devoto tiver um marcador de Selo, cause 2 de dano adicional.",
+        "Ressonância — Camus de Aquário: Quando Camus de Aquário causa dano a um Devoto com a Execução Aurora, se esse Devoto tiver marcadores de Selo, remova todos e cause 1 de dano adicional para cada marcador removido assim, até 3 de dano adicional.",
+        "Ressonância — Hyoga de Cisne: Quando Hyoga de Cisne ativa a Execução Aurora, coloque 1 marcador de Selo no alvo antes de causar o dano."
+      ],
+      "tagline_pt": "Execução Aurora",
+      "auto_equip_pt": ["Camus de Aquário", "Hyoga de Cisne"]
     },
     {
       "id": "athena-v6-019",
@@ -723,7 +862,18 @@
       "donos": ["pegasus-seiya"],
       "equipar_custo_outros": 6,
       "bonus_poder": 3,
-      "bonus_vida": 7
+      "bonus_vida": 7,
+      "nome_exibicao_pt": "ARMADURA DIVINA DE PÉGASO (KAMUI)",
+      "subtitulo_pt": "As Asas da Divindade",
+      "habilidades_pt": [
+        "O Devoto equipado tem Trapaceiro.",
+        "Quando você conjura a Armadura Divina de Pégaso, se seu Deus tiver menos Alma que o Deus oponente, escolha o Devoto aliado alvo. Esse Devoto recebe +3 ATQ / +3 PV até o fim da rodada. Prepare-o.",
+        "Proteção Divina — Uma vez por rodada, quando o Devoto equipado seria derrotado por dano de Golpe e seu Deus tiver menos Alma que o Deus oponente, você pode pagar {2}{C}. Se fizer isso, previna esse dano.",
+        "Cosmo Divino — {3}{C}: Uma vez por rodada, quando o Devoto equipado declara um Golpe, ele recebe +2 ATQ durante esse Golpe.",
+        "Ressonância — Seiya de Pégaso: Enquanto seu Deus tiver menos Alma que o Deus oponente, Seiya de Pégaso recebe +2 ATQ / +2 PV."
+      ],
+      "tagline_pt": "As Asas da Divindade",
+      "auto_equip_pt": ["Seiya de Pégaso"]
     },
     {
       "id": "athena-v6-020",
@@ -765,7 +915,15 @@
       "donos": [],
       "equipar_custo_outros": null,
       "equipar_custo_ressonante": null,
-      "equipar_auto": false
+      "equipar_auto": false,
+      "nome_exibicao_pt": "ESCUDO DE ATHENA",
+      "subtitulo_pt": "O Último Milagre",
+      "habilidades_pt": [
+        "Égide Divina — Cavaleiros aliados recebem +0 ATQ / +1 PV.",
+        "Santuário Divino — {3}{C}: Uma vez por rodada, quando seu Deus sofreria dano de Golpe, previna até 3 desse dano.",
+        "Milagre — Enquanto seu Deus tiver 5 de Alma ou menos, Cavaleiros aliados recebem mais +1 ATQ / +1 PV."
+      ],
+      "tagline_pt": "O Último Milagre"
     },
     {
       "id": "athena-v6-021",
@@ -800,7 +958,15 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "MARIN DE ÁGUIA",
+      "subtitulo_pt": "A Mestra Mascarada",
+      "habilidades_pt": [
+        "Ágil",
+        "Quando Marin de Águia entra no Campo de Batalha, coloque 1 marcador de Treinamento em outro Cavaleiro de Bronze aliado alvo.",
+        "Orientação da Mestra — Cavaleiros de Bronze aliados com marcadores de Treinamento recebem +1 ATQ / +1 PV enquanto Marin de Águia estiver no Campo de Batalha."
+      ],
+      "tagline_pt": "A Mestra Mascarada"
     },
     {
       "id": "athena-v6-022",
@@ -834,7 +1000,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
+      "nome_exibicao_pt": "SHINA DE COBRA",
+      "subtitulo_pt": "A Fúria da Serpente",
+      "habilidades_pt": [
+        "Constrição da Serpente — Uma vez por rodada, quando Shina de Cobra causa dano de Golpe a um Devoto inimigo, esse Devoto recebe -1 ATQ até o fim da rodada.",
+        "Garras do Trovão — Quando Shina de Cobra causa dano de Golpe a um Devoto inimigo que tinha um marcador de Selo quando o Golpe começou, cause 2 de dano adicional a esse Devoto."
+      ],
+      "tagline_pt": "A Fúria da Serpente"
     },
     {
       "id": "athena-v6-023",
@@ -868,7 +1041,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "MISTY DE LAGARTO",
+      "subtitulo_pt": "A Beleza Intocável",
+      "habilidades_pt": [
+        "Muralha de Mármore — Uma vez por rodada, quando Misty de Lagarto sofreria dano de Golpe, você pode pagar {1}{C}. Se fizer isso, previna até 3 desse dano.",
+        "Intocável — Uma vez por rodada, se a Muralha de Mármore preveniu todo o dano de Golpe que seria causado a Misty de Lagarto, você pode Prepará-lo. Ele não pode declarar outro Golpe nesta rodada."
+      ],
+      "tagline_pt": "A Beleza Intocável"
     },
     {
       "id": "athena-v6-024",
@@ -902,7 +1082,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "ALGOL DE PERSEU",
+      "subtitulo_pt": "O Olhar Petrificante",
+      "habilidades_pt": [
+        "Escudo da Medusa — Uma vez por rodada, quando um Devoto inimigo declara um Golpe contra Algol de Perseu, você pode pagar {2}{C}. Se fizer isso, esse Devoto não pode ser Preparado nem declarar outro Golpe nesta rodada.",
+        "Olhar de Pedra — Sempre que Algol de Perseu sobrevive a um Golpe como defensor, ele recebe +1 ATQ / +1 PV até o fim da rodada."
+      ],
+      "tagline_pt": "O Olhar Petrificante"
     },
     {
       "id": "athena-v6-025",
@@ -936,7 +1123,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "ORFEU DE LIRA",
+      "subtitulo_pt": "A Melodia do Mundo dos Mortos",
+      "habilidades_pt": [
+        "Noturno das Cordas — {2}{C}, {T}: Escolha até dois Cavaleiros aliados alvo. Eles recebem +0 ATQ / +2 PV até o fim da rodada.",
+        "Serenata da Viagem da Morte — Uma vez por rodada, quando um Devoto inimigo declara um Golpe contra seu Deus ou outro Cavaleiro aliado, você pode pagar {2}{C}. Se fizer isso, esse Devoto recebe -2 ATQ durante esse Golpe."
+      ],
+      "tagline_pt": "A Melodia do Mundo dos Mortos"
     },
     {
       "id": "athena-v6-026",
@@ -969,7 +1163,11 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "PENDENTE de aprovação final. Custo, ATK, HP e habilidade são proposta não aprovada do autor."
+      "notas_pt": "PENDENTE de aprovação final. Custo, ATK, HP e habilidade são proposta não aprovada do autor.",
+      "nome_exibicao_pt": "KIKI, APRENDIZ DE JAMIR",
+      "habilidades_pt": [
+        "Quando Kiki entra no Campo de Batalha, devolva o Equipamento aliado alvo para a mão do dono."
+      ]
     },
     {
       "id": "athena-v6-027",
@@ -1002,7 +1200,13 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "CÁSSIOS, O RIVAL CAÍDO",
+      "subtitulo_pt": "O Sacrifício Supremo",
+      "habilidades_pt": [
+        "Sacrifício Final — Quando outro Cavaleiro aliado sofreria dano de Golpe, você pode derrotar Cássios. Se fizer isso, previna até 3 desse dano."
+      ],
+      "tagline_pt": "O Sacrifício Supremo"
     },
     {
       "id": "athena-v6-028",
@@ -1035,7 +1239,13 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "JABU DE UNICÓRNIO",
+      "subtitulo_pt": "O Guerreiro Galopante",
+      "habilidades_pt": [
+        "Galope do Unicórnio — Uma vez por rodada, quando Jabu de Unicórnio declara um Golpe contra um Devoto inimigo, ele recebe +1 ATQ durante esse Golpe."
+      ],
+      "tagline_pt": "O Guerreiro Galopante"
     },
     {
       "id": "athena-v6-029",
@@ -1068,7 +1278,13 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "GEKI DE URSO",
+      "subtitulo_pt": "O Abraço Esmagador",
+      "habilidades_pt": [
+        "Abraço do Urso — Uma vez por rodada, quando Geki de Urso causa dano de Golpe a um Devoto inimigo, esse Devoto não pode declarar outro Golpe nesta rodada."
+      ],
+      "tagline_pt": "O Abraço Esmagador"
     },
     {
       "id": "athena-v6-030",
@@ -1101,7 +1317,13 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "ICHI DE HIDRA",
+      "subtitulo_pt": "A Presa Venenosa",
+      "habilidades_pt": [
+        "Garras Venenosas — Uma vez por rodada, quando Ichi de Hidra causa dano de Golpe a um Devoto inimigo, esse Devoto recebe -1 ATQ até o fim da rodada."
+      ],
+      "tagline_pt": "A Presa Venenosa"
     },
     {
       "id": "athena-v6-031",
@@ -1134,7 +1356,13 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "NACHI DE LOBO",
+      "subtitulo_pt": "O Caçador da Matilha",
+      "habilidades_pt": [
+        "Matilha de Lobos — Enquanto você controlar pelo menos dois outros Cavaleiros de Bronze aliados, Nachi de Lobo recebe +1 ATQ / +1 PV."
+      ],
+      "tagline_pt": "O Caçador da Matilha"
     },
     {
       "id": "athena-v6-032",
@@ -1167,7 +1395,13 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "BAN DE LEÃO MENOR",
+      "subtitulo_pt": "A Coragem do Leão",
+      "habilidades_pt": [
+        "Bombardeio do Leão Menor — Uma vez por rodada, quando Ban de Leão Menor declara um Golpe contra um Devoto inimigo com ATQ maior, ele recebe +1 ATQ durante esse Golpe."
+      ],
+      "tagline_pt": "A Coragem do Leão"
     },
     {
       "id": "athena-v6-033",
@@ -1201,7 +1435,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "JUNE DE CAMALEÃO",
+      "subtitulo_pt": "A Protetora Leal",
+      "habilidades_pt": [
+        "Chicote do Camaleão — Uma vez por rodada, quando June de Camaleão causa dano de Golpe a um Devoto inimigo, esse Devoto recebe -1 ATQ até o fim da rodada.",
+        "Ressonância — Shun de Andrômeda: Enquanto você controlar Shun de Andrômeda, June de Camaleão recebe +0 ATQ / +1 PV."
+      ],
+      "tagline_pt": "A Protetora Leal"
     },
     {
       "id": "athena-v6-034",
@@ -1235,7 +1476,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "TATSUMI, O GUARDIÃO DE SAORI",
+      "subtitulo_pt": "O Servo Inabalável",
+      "habilidades_pt": [
+        "Guardião",
+        "Servo Leal — Enquanto seu Deus tiver 5 de Alma ou menos, Tatsumi recebe +0 ATQ / +2 PV."
+      ],
+      "tagline_pt": "O Servo Inabalável"
     },
     {
       "id": "athena-v6-035",
@@ -1268,7 +1516,13 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md.",
+      "nome_exibicao_pt": "MIHO, A CUIDADORA DO ORFANATO",
+      "subtitulo_pt": "O Coração Gentil",
+      "habilidades_pt": [
+        "Bondade — {1}{C}, {T}: Escolha um: remova 1 de dano do Devoto aliado alvo; ou seu Deus ganha {1}{S}."
+      ],
+      "tagline_pt": "O Coração Gentil"
     },
     {
       "id": "athena-v6-036",
@@ -1302,7 +1556,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "SEIKA, A IRMÃ PERDIDA",
+      "subtitulo_pt": "O Laço Além da Memória",
+      "habilidades_pt": [
+        "Laço de Irmãos — Enquanto você controlar Seiya de Pégaso, Seika recebe +0 ATQ / +2 PV.",
+        "Esperança do Reencontro — Uma vez por rodada, quando Seiya de Pégaso sobrevive a um Golpe, você pode remover 1 de dano dele."
+      ],
+      "tagline_pt": "O Laço Além da Memória"
     },
     {
       "id": "athena-v6-037",
@@ -1336,7 +1597,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "SHUNREI, A PRECE DE ROZAN",
+      "subtitulo_pt": "A Voz que Alcança o Dragão",
+      "habilidades_pt": [
+        "Prece de Rozan — Uma vez por rodada, quando um Cavaleiro aliado sofreria dano de Golpe, você pode pagar {1}{C}. Se fizer isso, previna 1 desse dano.",
+        "Promessa do Dragão — Enquanto você controlar Shiryu de Dragão, Shunrei recebe +0 ATQ / +1 PV."
+      ],
+      "tagline_pt": "A Voz que Alcança o Dragão"
     },
     {
       "id": "athena-v6-038",
@@ -1370,7 +1638,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "ESMERALDA, O AMOR ESQUECIDO",
+      "subtitulo_pt": "A Luz da Ilha da Rainha da Morte",
+      "habilidades_pt": [
+        "Uma Doce Lembrança — Enquanto você controlar Ikki de Fênix, ele recebe +0 ATQ / +1 PV.",
+        "Amor Inesquecível — Quando Esmeralda é derrotada, você pode remover 1 marcador de Renascimento do Ikki de Fênix aliado alvo."
+      ],
+      "tagline_pt": "A Luz da Ilha da Rainha da Morte"
     },
     {
       "id": "athena-v6-039",
@@ -1403,7 +1678,13 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "GUILTY, MESTRE DA ILHA DA RAINHA DA MORTE",
+      "subtitulo_pt": "A Máscara do Ódio",
+      "habilidades_pt": [
+        "Treino pela Dor — Uma vez por rodada, quando outro Cavaleiro aliado sobrevive a um Golpe, você pode causar 1 de dano a esse Cavaleiro. Se fizer isso, ele recebe +1 ATQ até o fim da rodada."
+      ],
+      "tagline_pt": "A Máscara do Ódio"
     },
     {
       "id": "athena-v6-040",
@@ -1436,7 +1717,11 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "GUARDA DO SANTUÁRIO",
+      "subtitulo_pt": "Defensor das Doze Casas",
+      "habilidades_pt": ["Guardião"],
+      "tagline_pt": "Defensor das Doze Casas"
     },
     {
       "id": "athena-v6-041",
@@ -1469,7 +1754,13 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md.",
+      "nome_exibicao_pt": "CURANDEIRA DO SANTUÁRIO",
+      "subtitulo_pt": "Guardiã da Chama Sagrada",
+      "habilidades_pt": [
+        "Recuperação Sagrada — {1}{C}, {T}: Escolha um: remova até 2 de dano do Devoto aliado alvo; ou seu Deus ganha {2}{S}."
+      ],
+      "tagline_pt": "Guardiã da Chama Sagrada"
     },
     {
       "id": "athena-v6-042",
@@ -1503,7 +1794,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md.",
+      "nome_exibicao_pt": "RESTAURADOR DE ARMADURAS DE JAMIR",
+      "subtitulo_pt": "As Mãos que Restauram a Esperança",
+      "habilidades_pt": [
+        "Reparo de Armadura — {1}{C}, {T}: Remova 1 de dano do Devoto aliado alvo equipado com uma Armadura.",
+        "Olhar do Artesão — Sempre que você joga um Equipamento que não é Armadura, compre uma carta. Esta habilidade só dispara uma vez por turno."
+      ],
+      "tagline_pt": "As Mãos que Restauram a Esperança"
     },
     {
       "id": "athena-v6-043",
@@ -1537,7 +1835,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md.",
+      "nome_exibicao_pt": "ACÓLITO DE STAR HILL",
+      "subtitulo_pt": "Guardião do Conhecimento Proibido",
+      "habilidades_pt": [
+        "Conhecimento Sagrado — Quando o Acólito de Star Hill entra no Campo de Batalha, olhe as 2 cartas do topo do seu deck. Ponha uma no topo e a outra no fundo, em qualquer ordem.",
+        "Sabedoria Encantada — Sempre que você joga um Equipamento que não é Armadura, compre uma carta. Esta habilidade só dispara uma vez por turno."
+      ],
+      "tagline_pt": "Guardião do Conhecimento Proibido"
     },
     {
       "id": "athena-v6-044",
@@ -1576,7 +1881,13 @@
       "donos": [],
       "equipar_custo_outros": 2,
       "bonus_poder": 1,
-      "bonus_vida": 2
+      "bonus_vida": 2,
+      "nome_exibicao_pt": "ARMADURA DE BRONZE RACHADA",
+      "subtitulo_pt": "Armadura de um Cavaleiro Caído",
+      "habilidades_pt": [
+        "Última Proteção — Uma vez por rodada, quando o Devoto equipado sofreria dano de Golpe, previna 1 desse dano."
+      ],
+      "tagline_pt": "Armadura de um Cavaleiro Caído"
     },
     {
       "id": "athena-v6-045",
@@ -1617,7 +1928,15 @@
       "donos": ["dragon-shiryu"],
       "equipar_custo_outros": 3,
       "equipar_custo_ressonante": 0,
-      "equipar_auto": true
+      "equipar_auto": true,
+      "nome_exibicao_pt": "ESCUDO DO DRAGÃO",
+      "subtitulo_pt": "A Defesa Inquebrável",
+      "habilidades_pt": [
+        "Guarda do Dragão — Uma vez por rodada, quando o Devoto equipado sofreria dano de Golpe, previna 1 desse dano.",
+        "Ressonância — Shiryu de Dragão: Quando a Guarda do Dragão previne dano a Shiryu de Dragão, você pode remover 1 de dano da Armadura equipada nele."
+      ],
+      "tagline_pt": "A Defesa Inquebrável",
+      "auto_equip_pt": ["Shiryu de Dragão"]
     },
     {
       "id": "athena-v6-046",
@@ -1658,7 +1977,15 @@
       "donos": ["andromeda-shun"],
       "equipar_custo_outros": 3,
       "equipar_custo_ressonante": 0,
-      "equipar_auto": true
+      "equipar_auto": true,
+      "nome_exibicao_pt": "CORRENTE DE ANDRÔMEDA",
+      "subtitulo_pt": "A Corrente que Protege",
+      "habilidades_pt": [
+        "Defesa da Corrente — Uma vez por rodada, quando um Devoto inimigo declara um Golpe contra seu Deus ou outro Cavaleiro aliado, você pode pagar {1}{C}. Se fizer isso, esse Devoto recebe -1 ATQ durante esse Golpe.",
+        "Ressonância — Shun de Andrômeda: Equipada em Shun de Andrômeda, a Defesa da Corrente reduz o ATQ do Devoto que Golpeia em 2 em vez de 1."
+      ],
+      "tagline_pt": "A Corrente que Protege",
+      "auto_equip_pt": ["Shun de Andrômeda"]
     },
     {
       "id": "athena-v6-047",
@@ -1699,7 +2026,15 @@
       "donos": ["phoenix-ikki"],
       "equipar_custo_outros": 3,
       "equipar_custo_ressonante": 0,
-      "equipar_auto": true
+      "equipar_auto": true,
+      "nome_exibicao_pt": "PENA DA FÊNIX",
+      "subtitulo_pt": "A Chama que Nunca Morre",
+      "habilidades_pt": [
+        "Vontade Ardente — O Devoto equipado recebe +1 ATQ enquanto tiver dano marcado.",
+        "Ressonância — Ikki de Fênix: Uma vez por rodada, quando Ikki de Fênix sobrevive a um Golpe, você pode remover 1 de dano dele."
+      ],
+      "tagline_pt": "A Chama que Nunca Morre",
+      "auto_equip_pt": ["Ikki de Fênix"]
     },
     {
       "id": "athena-v6-048",
@@ -1740,7 +2075,15 @@
       "donos": ["dragon-shiryu"],
       "equipar_custo_outros": 4,
       "equipar_custo_ressonante": 0,
-      "equipar_auto": true
+      "equipar_auto": true,
+      "nome_exibicao_pt": "ESPADA DE LIBRA",
+      "subtitulo_pt": "A Lâmina da Justiça",
+      "habilidades_pt": [
+        "O Devoto equipado recebe +2 ATQ.",
+        "Ressonância — Shiryu de Dragão: Uma vez por rodada, quando Shiryu de Dragão causa dano de Golpe a um Devoto inimigo, você pode causar 1 de dano adicional a esse Devoto."
+      ],
+      "tagline_pt": "A Lâmina da Justiça",
+      "auto_equip_pt": ["Shiryu de Dragão"]
     },
     {
       "id": "athena-v6-049",
@@ -1782,7 +2125,16 @@
       "donos": ["dragon-shiryu"],
       "equipar_custo_outros": 4,
       "equipar_custo_ressonante": 0,
-      "equipar_auto": true
+      "equipar_auto": true,
+      "nome_exibicao_pt": "ESCUDO DE LIBRA",
+      "subtitulo_pt": "O Equilíbrio da Proteção",
+      "habilidades_pt": [
+        "O Devoto equipado recebe +0 ATQ / +2 PV.",
+        "Defesa de Libra — Uma vez por rodada, quando o Devoto equipado sofreria dano de Golpe, previna 1 desse dano.",
+        "Ressonância — Shiryu de Dragão: Equipado em Shiryu de Dragão, a Defesa de Libra previne 2 de dano em vez de 1."
+      ],
+      "tagline_pt": "O Equilíbrio da Proteção",
+      "auto_equip_pt": ["Shiryu de Dragão"]
     },
     {
       "id": "athena-v6-050",
@@ -1823,7 +2175,15 @@
       "donos": ["aries-mu"],
       "equipar_custo_outros": 3,
       "equipar_custo_ressonante": 0,
-      "equipar_auto": true
+      "equipar_auto": true,
+      "nome_exibicao_pt": "FERRAMENTAS DE REPARO DE JAMIR",
+      "subtitulo_pt": "A Arte da Restauração",
+      "habilidades_pt": [
+        "Ferramentas de Reparo — {1}{C}, {T}: Remova 1 de dano do Devoto aliado alvo equipado com uma Armadura.",
+        "Ressonância — Mu de Áries: Quando Mu de Áries ativa as Ferramentas de Reparo, remova até 2 de dano em vez de 1."
+      ],
+      "tagline_pt": "A Arte da Restauração",
+      "auto_equip_pt": ["Mu de Áries"]
     },
     {
       "id": "athena-v6-051",
@@ -1863,7 +2223,13 @@
       "donos": [],
       "equipar_custo_outros": 2,
       "equipar_custo_ressonante": null,
-      "equipar_auto": false
+      "equipar_auto": false,
+      "nome_exibicao_pt": "TOCHA DO SANTUÁRIO",
+      "subtitulo_pt": "A Chama de Athena",
+      "habilidades_pt": [
+        "Chama Sagrada — O Devoto equipado recebe +1 ATQ enquanto seu Deus tiver menos Alma que o Deus oponente."
+      ],
+      "tagline_pt": "A Chama de Athena"
     },
     {
       "id": "athena-v6-052",
@@ -1897,7 +2263,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "A GUERRA GALÁCTICA",
+      "subtitulo_pt": "O Torneio Começa",
+      "habilidades_pt": [
+        "Escolha até dois Cavaleiros de Bronze aliados. Cada Cavaleiro escolhido recebe +1 ATQ até o fim da rodada.",
+        "Compre uma carta se você controlar pelo menos três Cavaleiros de Bronze."
+      ],
+      "tagline_pt": "O Torneio Começa"
     },
     {
       "id": "athena-v6-053",
@@ -1931,7 +2304,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "A PRIMEIRA QUEIMA DO COSMO",
+      "subtitulo_pt": "Desperte seu Poder Interior",
+      "habilidades_pt": [
+        "O Cavaleiro aliado alvo recebe +2 ATQ até o fim da rodada.",
+        "Se esse Cavaleiro for um Cavaleiro de Bronze, ele também recebe +1 PV até o fim da rodada."
+      ],
+      "tagline_pt": "Desperte seu Poder Interior"
     },
     {
       "id": "athena-v6-054",
@@ -1964,7 +2344,13 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md.",
+      "nome_exibicao_pt": "UM CAVALEIRO NUNCA SE RENDE",
+      "subtitulo_pt": "Erga-se Além da Derrota",
+      "habilidades_pt": [
+        "Quando o Cavaleiro aliado alvo seria derrotado por dano de Golpe nesta rodada, previna esse dano em vez disso."
+      ],
+      "tagline_pt": "Erga-se Além da Derrota"
     },
     {
       "id": "athena-v6-055",
@@ -1998,7 +2384,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "O JURAMENTO DA AMAZONA MASCARADA",
+      "subtitulo_pt": "Por Trás da Máscara",
+      "habilidades_pt": [
+        "Escolha o Cavaleiro de Prata aliado alvo. Ele recebe +1 ATQ / +2 PV até o fim da rodada.",
+        "Se esse Cavaleiro for Marin de Águia ou Shina de Cobra, compre uma carta."
+      ],
+      "tagline_pt": "Por Trás da Máscara"
     },
     {
       "id": "athena-v6-056",
@@ -2032,7 +2425,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md.",
+      "nome_exibicao_pt": "PROTEJAM SAORI",
+      "subtitulo_pt": "Pela Deusa Athena",
+      "habilidades_pt": [
+        "Previna os próximos 3 de dano de Golpe que seriam causados ao seu Deus nesta rodada.",
+        "Se você controlar um Cavaleiro aliado com Guardião, previna os próximos 5 de dano de Golpe em vez disso."
+      ],
+      "tagline_pt": "Pela Deusa Athena"
     },
     {
       "id": "athena-v6-057",
@@ -2066,7 +2466,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
+      "nome_exibicao_pt": "TELECINESE DE KIKI",
+      "subtitulo_pt": "O Poder Oculto do Aprendiz",
+      "habilidades_pt": [
+        "Devolva o Equipamento aliado alvo para a mão do dono.",
+        "Se você controlar Kiki, Aprendiz de Jamir, compre uma carta."
+      ],
+      "tagline_pt": "O Poder Oculto do Aprendiz"
     },
     {
       "id": "athena-v6-058",
@@ -2100,7 +2507,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md.",
+      "nome_exibicao_pt": "SANGUE DO DRAGÃO",
+      "subtitulo_pt": "O Preço da Proteção",
+      "habilidades_pt": [
+        "O Cavaleiro aliado alvo recebe +0 ATQ / +2 PV até o fim da rodada.",
+        "Se esse Cavaleiro for Shiryu de Dragão, previna os próximos 2 de dano de Golpe que seriam causados a ele nesta rodada."
+      ],
+      "tagline_pt": "O Preço da Proteção"
     },
     {
       "id": "athena-v6-059",
@@ -2134,7 +2548,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "UMA PROMESSA A SHUNREI",
+      "subtitulo_pt": "A Força para Voltar",
+      "habilidades_pt": [
+        "Remova até 2 de dano do Cavaleiro aliado alvo.",
+        "Se você controlar Shunrei, a Prece de Rozan, você também pode Preparar esse Cavaleiro. Ele não pode declarar outro Golpe nesta rodada."
+      ],
+      "tagline_pt": "A Força para Voltar"
     },
     {
       "id": "athena-v6-060",
@@ -2168,7 +2589,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "O TREINAMENTO DE PÉGASO",
+      "subtitulo_pt": "O Caminho para se Tornar um Cavaleiro",
+      "habilidades_pt": [
+        "Coloque 1 marcador de Treinamento no Cavaleiro de Bronze aliado alvo.",
+        "Compre uma carta se esse Cavaleiro for Seiya de Pégaso."
+      ],
+      "tagline_pt": "O Caminho para se Tornar um Cavaleiro"
     },
     {
       "id": "athena-v6-061",
@@ -2201,7 +2629,13 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md.",
+      "nome_exibicao_pt": "O CHAMADO DE ATHENA",
+      "subtitulo_pt": "Atenda à Deusa",
+      "habilidades_pt": [
+        "Escolha um: o Cavaleiro aliado alvo recebe +2 ATQ até o fim da rodada; ou previna os próximos 3 de dano de Golpe que seriam causados ao seu Deus nesta rodada."
+      ],
+      "tagline_pt": "Atenda à Deusa"
     },
     {
       "id": "athena-v6-062",
@@ -2235,7 +2669,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "ARENA DA GUERRA GALÁCTICA",
+      "subtitulo_pt": "Onde Nascem as Lendas",
+      "habilidades_pt": [
+        "Espírito do Torneio — Uma vez por rodada, quando um Cavaleiro de Bronze aliado derrota um Devoto inimigo com um Golpe, ele recebe +1 ATQ até o fim da rodada.",
+        "A Guerra Galáctica — Uma vez por jogo — {2}{C}: Compre uma carta para cada Cavaleiro de Bronze aliado que você controla (até 3)."
+      ],
+      "tagline_pt": "Onde Nascem as Lendas"
     },
     {
       "id": "athena-v6-063",
@@ -2269,7 +2710,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Forma dos Domains (§63), correção aprovada pelo autor em 31/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Forma dos Domains (§63), correção aprovada pelo autor em 31/10/2026.",
+      "nome_exibicao_pt": "TORRE DE JAMIR",
+      "subtitulo_pt": "O Santuário da Restauração",
+      "habilidades_pt": [
+        "Restauração de Armadura — Uma vez por rodada, você pode pagar {1}{C}. Se fizer isso, remova 1 de dano do Devoto aliado alvo equipado com uma Armadura.",
+        "A Forja de Mu — Uma vez por jogo — {2}{C}: Devolva a carta de Armadura alvo do seu Tártaro para a sua mão."
+      ],
+      "tagline_pt": "O Santuário da Restauração"
     },
     {
       "id": "athena-v6-064",
@@ -2303,7 +2751,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "OS CINCO PICOS ANCIÃOS",
+      "subtitulo_pt": "A Sabedoria de Rozan",
+      "habilidades_pt": [
+        "Disciplina Antiga — Cavaleiros aliados com Guardião recebem +0 ATQ / +1 PV.",
+        "A Cachoeira de Rozan — Uma vez por jogo — {2}{C}: Remova todo o dano dos Cavaleiros aliados com Guardião."
+      ],
+      "tagline_pt": "A Sabedoria de Rozan"
     },
     {
       "id": "athena-v6-065",
@@ -2337,7 +2792,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "A ESCADARIA DAS DOZE CASAS",
+      "subtitulo_pt": "O Caminho até Athena",
+      "habilidades_pt": [
+        "Doze Casas — Uma vez por rodada, quando um Cavaleiro aliado sobrevive a um Golpe, você pode pagar {1}{C}. Se fizer isso, esse Cavaleiro recebe +1 ATQ até o fim da rodada.",
+        "O Relógio de Fogo — Uma vez por jogo — {3}{C}: Compre 2 cartas. Cavaleiros aliados recebem +1 ATQ até o fim da rodada."
+      ],
+      "tagline_pt": "O Caminho até Athena"
     },
     {
       "id": "athena-v6-066",
@@ -2377,7 +2839,15 @@
       "donos": ["eagle-marin"],
       "equipar_custo_outros": 5,
       "bonus_poder": 1,
-      "bonus_vida": 4
+      "bonus_vida": 4,
+      "nome_exibicao_pt": "ARMADURA DE PRATA DE ÁGUIA",
+      "subtitulo_pt": "As Asas da Mestra",
+      "habilidades_pt": [
+        "Graça Aérea — O Devoto equipado ganha Ágil.",
+        "Ressonância — Marin de Águia: Uma vez por rodada, quando Marin de Águia sobrevive a um Golpe, você pode colocar 1 marcador de Treinamento em outro Cavaleiro de Bronze aliado alvo."
+      ],
+      "tagline_pt": "As Asas da Mestra",
+      "auto_equip_pt": ["Marin de Águia"]
     },
     {
       "id": "athena-v6-067",
@@ -2417,7 +2887,15 @@
       "donos": ["ophiuchus-shaina"],
       "equipar_custo_outros": 5,
       "bonus_poder": 1,
-      "bonus_vida": 3
+      "bonus_vida": 3,
+      "nome_exibicao_pt": "ARMADURA DE PRATA DE COBRA",
+      "subtitulo_pt": "O Veneno da Serpente",
+      "habilidades_pt": [
+        "Presa da Serpente — Uma vez por rodada, quando o Devoto equipado causa dano de Golpe a um Devoto inimigo, esse Devoto recebe -1 ATQ até o fim da rodada.",
+        "Ressonância — Shina de Cobra: Quando Shina causa dano de Golpe a um Devoto inimigo que tinha um marcador de Selo quando o Golpe começou, cause 1 de dano adicional a esse Devoto."
+      ],
+      "tagline_pt": "O Veneno da Serpente",
+      "auto_equip_pt": ["Shina de Cobra"]
     },
     {
       "id": "athena-v6-068",
@@ -2457,7 +2935,15 @@
       "donos": ["lizard-misty"],
       "equipar_custo_outros": 5,
       "bonus_poder": 0,
-      "bonus_vida": 5
+      "bonus_vida": 5,
+      "nome_exibicao_pt": "ARMADURA DE PRATA DE LAGARTO",
+      "subtitulo_pt": "A Barreira Invisível",
+      "habilidades_pt": [
+        "Barreira de Ar — Uma vez por rodada, quando o Devoto equipado sofreria dano de Golpe, você pode pagar {1}{C}. Se fizer isso, previna 1 desse dano.",
+        "Ressonância — Misty de Lagarto: Sempre que a Muralha de Mármore de Misty previne todo o dano de Golpe que seria causado a ele, remova 1 de dano da Armadura de Prata de Lagarto."
+      ],
+      "tagline_pt": "A Barreira Invisível",
+      "auto_equip_pt": ["Misty de Lagarto"]
     },
     {
       "id": "athena-v6-069",
@@ -2497,7 +2983,15 @@
       "donos": ["perseus-algol"],
       "equipar_custo_outros": 5,
       "bonus_poder": 0,
-      "bonus_vida": 5
+      "bonus_vida": 5,
+      "nome_exibicao_pt": "ARMADURA DE PRATA DE PERSEU",
+      "subtitulo_pt": "O Escudo da Medusa",
+      "habilidades_pt": [
+        "Maldição da Medusa — Uma vez por rodada, quando o Devoto equipado sobrevive a um Golpe como defensor, o Devoto que Golpeia recebe -1 ATQ até o fim da rodada.",
+        "Ressonância — Algol de Perseu: Quando Algol ativa o Escudo da Medusa, o Devoto que Golpeia recebe -1 ATQ durante esse Golpe."
+      ],
+      "tagline_pt": "O Escudo da Medusa",
+      "auto_equip_pt": ["Algol de Perseu"]
     },
     {
       "id": "athena-v6-070",
@@ -2537,7 +3031,15 @@
       "donos": ["lyra-orphee"],
       "equipar_custo_outros": 5,
       "bonus_poder": 0,
-      "bonus_vida": 4
+      "bonus_vida": 4,
+      "nome_exibicao_pt": "ARMADURA DE PRATA DE LIRA",
+      "subtitulo_pt": "A Canção do Mundo dos Mortos",
+      "habilidades_pt": [
+        "Melodia Curativa — {1}{C}, {T}: Remova 1 de dano do Cavaleiro aliado alvo.",
+        "Ressonância — Orfeu de Lira: Quando Orfeu ativa a Melodia Curativa, você pode remover 1 de dano adicional de outro Cavaleiro aliado alvo."
+      ],
+      "tagline_pt": "A Canção do Mundo dos Mortos",
+      "auto_equip_pt": ["Orfeu de Lira"]
     },
     {
       "id": "athena-v6-071",
@@ -2570,7 +3072,13 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "BABEL DE CENTAURO",
+      "subtitulo_pt": "O Centauro em Chamas",
+      "habilidades_pt": [
+        "Chicote de Chamas — Uma vez por rodada, quando Babel de Centauro causa dano de Golpe a um Devoto inimigo, cause 1 de dano adicional a esse Devoto."
+      ],
+      "tagline_pt": "O Centauro em Chamas"
     },
     {
       "id": "athena-v6-072",
@@ -2604,7 +3112,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "MOSES DE BALEIA",
+      "subtitulo_pt": "A Maré Esmagadora",
+      "habilidades_pt": [
+        "Força da Baleia — Uma vez por rodada, quando Moses de Baleia declara um Golpe contra um Devoto inimigo com ATQ menor, ele recebe +1 ATQ durante esse Golpe.",
+        "Resistência Oceânica — Na primeira vez em cada rodada que Moses de Baleia sofreria dano de Golpe, previna 1 desse dano."
+      ],
+      "tagline_pt": "A Maré Esmagadora"
     },
     {
       "id": "athena-v6-073",
@@ -2638,7 +3153,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "ASTERION DE CÃES DE CAÇA",
+      "subtitulo_pt": "O Leitor de Mentes",
+      "habilidades_pt": [
+        "Leitura da Mente — Uma vez por rodada, quando um Devoto inimigo declara um Golpe contra Asterion de Cães de Caça, você pode pagar {1}{C}. Se fizer isso, esse Devoto recebe -2 ATQ durante esse Golpe.",
+        "Ataque do Milhão de Fantasmas — Sempre que Asterion de Cães de Caça sobrevive a um Golpe como defensor, ele recebe +1 ATQ até o fim da rodada."
+      ],
+      "tagline_pt": "O Leitor de Mentes"
     },
     {
       "id": "athena-v6-074",
@@ -2672,7 +3194,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "JAMIAN DE CORVO",
+      "subtitulo_pt": "As Asas Negras",
+      "habilidades_pt": [
+        "Formação das Asas Negras — Uma vez por rodada, quando Jamian de Corvo declara um Golpe contra um Devoto inimigo, você pode pagar {1}{C}. Se fizer isso, esse Devoto recebe -1 ATQ durante esse Golpe.",
+        "Fuga do Corvo — Uma vez por rodada, quando Jamian de Corvo sobrevive a um Golpe como defensor, você pode Prepará-lo. Ele não pode declarar outro Golpe nesta rodada."
+      ],
+      "tagline_pt": "As Asas Negras"
     },
     {
       "id": "athena-v6-075",
@@ -2706,7 +3235,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
+      "nome_exibicao_pt": "DANTE DE CÉRBERO",
+      "subtitulo_pt": "As Correntes de Cérbero",
+      "habilidades_pt": [
+        "Correntes de Cérbero — Uma vez por rodada, quando Dante de Cérbero causa dano de Golpe a um Devoto inimigo, esse Devoto não pode declarar um Golpe durante o próximo turno do controlador dele.",
+        "Ataque de Três Cabeças — Quando Dante de Cérbero declara um Golpe contra um Devoto inimigo que já tem um marcador de Selo, ele recebe +1 ATQ durante esse Golpe."
+      ],
+      "tagline_pt": "As Correntes de Cérbero"
     },
     {
       "id": "athena-v6-076",
@@ -2740,7 +3276,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md.",
+      "nome_exibicao_pt": "O SACRIFÍCIO DE CÁSSIOS",
+      "subtitulo_pt": "O Amor que Desafiou a Morte",
+      "habilidades_pt": [
+        "Quando o Cavaleiro aliado alvo seria derrotado por dano de Golpe nesta rodada, previna esse dano em vez disso.",
+        "Se esse Cavaleiro for Seiya de Pégaso, você também pode Prepará-lo. Ele não pode declarar outro Golpe nesta rodada."
+      ],
+      "tagline_pt": "O Amor que Desafiou a Morte"
     },
     {
       "id": "athena-v6-077",
@@ -2775,7 +3318,15 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "A VISÃO SACRIFICADA DE SHIRYU",
+      "subtitulo_pt": "Ver Além da Escuridão",
+      "habilidades_pt": [
+        "O Preço da Vitória — O Cavaleiro aliado alvo recebe +2 ATQ / +2 PV até o fim da rodada.",
+        "Se esse Cavaleiro for Shiryu de Dragão, ele também ganha Perfurar até o fim da rodada.",
+        "Sacrifício — No fim da rodada, deixe esse Cavaleiro Despreparado. Ele não pode ser Preparado na sua próxima Fase de Preparação."
+      ],
+      "tagline_pt": "Ver Além da Escuridão"
     },
     {
       "id": "athena-v6-078",
@@ -2810,7 +3361,15 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
+      "nome_exibicao_pt": "ESQUIFE DE GELO",
+      "subtitulo_pt": "Uma Prisão Eterna de Gelo",
+      "habilidades_pt": [
+        "Coloque 2 marcadores de Selo no Devoto inimigo alvo.",
+        "Se você controlar Camus de Aquário ou Hyoga de Cisne, coloque 3 marcadores de Selo nesse Devoto em vez disso.",
+        "Zero Absoluto — Se esse Devoto já tinha um marcador de Selo, cause 2 de dano a ele."
+      ],
+      "tagline_pt": "Uma Prisão Eterna de Gelo"
     },
     {
       "id": "athena-v6-079",
@@ -2844,7 +3403,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md.",
+      "nome_exibicao_pt": "O ABRAÇO DE SHUN",
+      "subtitulo_pt": "A Força da Compaixão",
+      "habilidades_pt": [
+        "Previna os próximos 4 de dano de Golpe que seriam causados ao Cavaleiro aliado alvo nesta rodada.",
+        "Se esse Cavaleiro for Shun de Andrômeda, você também pode prevenir os próximos 2 de dano de Golpe que seriam causados ao seu Deus nesta rodada."
+      ],
+      "tagline_pt": "A Força da Compaixão"
     },
     {
       "id": "athena-v6-080",
@@ -2879,7 +3445,15 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
+      "nome_exibicao_pt": "O RETORNO DA FÊNIX",
+      "subtitulo_pt": "Das Cinzas, Eu Renasço",
+      "habilidades_pt": [
+        "Devolva o Cavaleiro de Bronze aliado derrotado alvo da sua pilha de descarte para o Campo de Batalha, Despreparado.",
+        "Se esse Cavaleiro for Ikki de Fênix, remova todo o dano dele e coloque 1 marcador de Renascimento nele.",
+        "Um Cavaleiro devolvido assim não pode declarar um Golpe nesta rodada."
+      ],
+      "tagline_pt": "Das Cinzas, Eu Renasço"
     },
     {
       "id": "athena-v6-081",
@@ -2913,7 +3487,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md.",
+      "nome_exibicao_pt": "O TESTAMENTO DE AIOLOS",
+      "subtitulo_pt": "A Vontade de Sagitário",
+      "habilidades_pt": [
+        "Escolha um: Vontade Herdada — o Cavaleiro de Bronze aliado alvo recebe +2 ATQ / +2 PV até o fim da rodada; ou Proteção Final — previna os próximos 5 de dano de Golpe que seriam causados ao seu Deus nesta rodada.",
+        "Se você controlar Seiya de Pégaso, pode escolher os dois."
+      ],
+      "tagline_pt": "A Vontade de Sagitário"
     },
     {
       "id": "athena-v6-082",
@@ -2946,7 +3527,13 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
+      "nome_exibicao_pt": "A FLECHA DOURADA",
+      "subtitulo_pt": "A Flecha do Destino",
+      "habilidades_pt": [
+        "Mande ao Vazio o Devoto inimigo alvo que declarou um Golpe neste turno. O Deus do controlador dele ganha Alma igual ao ATQ desse Devoto."
+      ],
+      "tagline_pt": "A Flecha do Destino"
     },
     {
       "id": "athena-v6-083",
@@ -2981,7 +3568,15 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "nome_exibicao_pt": "AS DOZE CHAMAS",
+      "subtitulo_pt": "A Contagem Regressiva do Destino",
+      "habilidades_pt": [
+        "Coloque 1 marcador de Chama em cada um de até três Cavaleiros aliados alvo.",
+        "Determinação Ardente — Cavaleiros com marcadores de Chama recebem +1 ATQ até o fim da rodada.",
+        "Hora Final — No fim da rodada, remova todos os marcadores de Chama colocados por esta Magia. Para cada marcador removido assim, você pode remover 1 de dano do Cavaleiro que o tinha."
+      ],
+      "tagline_pt": "A Contagem Regressiva do Destino"
     },
     {
       "id": "athena-v6-084",
@@ -3016,7 +3611,15 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
+      "nome_exibicao_pt": "O ZERO ABSOLUTO DE HYOGA",
+      "subtitulo_pt": "O Frio Além da Morte",
+      "habilidades_pt": [
+        "Cause 3 de dano ao Devoto inimigo alvo.",
+        "Se esse Devoto tiver um marcador de Selo, cause 5 de dano em vez disso.",
+        "Zero Absoluto — Se você controlar Hyoga de Cisne, coloque 1 marcador de Selo nesse Devoto depois que esta Magia resolver."
+      ],
+      "tagline_pt": "O Frio Além da Morte"
     },
     {
       "id": "athena-v6-085",
@@ -3052,7 +3655,16 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
+      "nome_exibicao_pt": "O ÚLTIMO DRAGÃO DE SHIRYU",
+      "subtitulo_pt": "O Sacrifício Supremo",
+      "habilidades_pt": [
+        "Escolha o Cavaleiro aliado alvo e o Devoto inimigo alvo.",
+        "O Cavaleiro aliado causa ao Devoto inimigo dano igual ao seu ATQ mais 3.",
+        "Depois, derrote o Cavaleiro aliado.",
+        "O Voo Final do Dragão — Se o Cavaleiro aliado for Shiryu de Dragão, cause 2 de dano adicional ao Devoto inimigo antes de derrotar Shiryu."
+      ],
+      "tagline_pt": "O Sacrifício Supremo"
     },
     {
       "id": "athena-v6-086",
@@ -3087,7 +3699,15 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
+      "nome_exibicao_pt": "PRIVADO DOS SENTIDOS",
+      "subtitulo_pt": "O Homem que Desafiou um Deus",
+      "habilidades_pt": [
+        "O Cavaleiro aliado alvo recebe +3 ATQ / +3 PV até o fim da rodada.",
+        "Além do Sexto Sentido — Se esse Cavaleiro for Ikki de Fênix, ele também ganha Perfurar até o fim da rodada.",
+        "O Sacrifício Supremo — No fim da rodada, derrote esse Cavaleiro."
+      ],
+      "tagline_pt": "O Homem que Desafiou um Deus"
     },
     {
       "id": "athena-v6-087",
@@ -3121,7 +3741,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
+      "nome_exibicao_pt": "SEIYA ERGUE O ESCUDO DE ATHENA",
+      "subtitulo_pt": "A Luz que Salva uma Deusa",
+      "habilidades_pt": [
+        "Salvação Divina — Previna todo o dano que seria causado ao seu Deus até o fim da rodada.",
+        "A Luz de Athena — Se você controlar Seiya de Pégaso, remova até 3 de dano de cada Cavaleiro aliado."
+      ],
+      "tagline_pt": "A Luz que Salva uma Deusa"
     },
     {
       "id": "athena-v6-088",
@@ -3155,7 +3782,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
+      "nome_exibicao_pt": "O OITAVO SENTIDO",
+      "subtitulo_pt": "Despertar Além da Morte",
+      "habilidades_pt": [
+        "Além do Sétimo Sentido — Escolha o Cavaleiro aliado alvo. Até o fim da rodada, esse Cavaleiro recebe +3 ATQ / +3 PV.",
+        "Cosmo Desperto — Se esse Cavaleiro seria derrotado por dano de Golpe nesta rodada, previna esse dano em vez disso."
+      ],
+      "tagline_pt": "Despertar Além da Morte"
     },
     {
       "id": "athena-v6-089",
@@ -3189,7 +3823,14 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
+      "nome_exibicao_pt": "O MURO DAS LAMENTAÇÕES",
+      "subtitulo_pt": "A Luz Além da Escuridão",
+      "habilidades_pt": [
+        "O Sacrifício Final — Você pode derrotar até dois Cavaleiros aliados. Para cada Cavaleiro derrotado assim, escolha um: cause 3 de dano ao Devoto inimigo alvo; previna os próximos 3 de dano de Golpe que seriam causados ao seu Deus nesta rodada; ou compre duas cartas.",
+        "A Luz dos Doze — Se você derrotou pelo menos um Cavaleiro de Ouro aliado assim, todos os Cavaleiros aliados restantes recebem +2 ATQ / +2 PV até o fim da rodada."
+      ],
+      "tagline_pt": "A Luz Além da Escuridão"
     },
     {
       "id": "athena-v6-090",
@@ -3224,7 +3865,15 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção)."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Athena → Branco (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-athena-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
+      "nome_exibicao_pt": "A VONTADE DE ATHENA",
+      "subtitulo_pt": "A Esperança Nunca Morrerá",
+      "habilidades_pt": [
+        "Vontade Divina — Escolha até três Cavaleiros aliados. Cada um recebe +2 ATQ / +2 PV até o fim da rodada.",
+        "A Proteção de Athena — Previna todo o dano de Golpe que seria causado ao seu Deus nesta rodada.",
+        "O Milagre da Esperança — Se seu Deus tiver 5 de Alma ou menos, devolva o Cavaleiro aliado derrotado alvo da sua pilha de descarte para o Campo de Batalha, Preparado. Esse Cavaleiro não pode declarar um Golpe nesta rodada."
+      ],
+      "tagline_pt": "A Esperança Nunca Morrerá"
     },
     {
       "id": "athena-001",
@@ -3254,7 +3903,15 @@
       ],
       "habilidade_awaken_en": "DIVINE PROTECTION — Awaken 5\nAthena Devotees you control get +1 Power and +1 HP.\nWhen an Athena Devotee you control would be destroyed, you may pay {3}{C}. If you do, prevent that destruction and leave it with 1 HP.",
       "ultimate_en": "ATHENA EXCLAMATION — Ultimate\nCost: {5}{C}\nChoose three Prepared Saints you control with different character identities. Pay an additional {2}{C} for each Silver Saint and {3}{C} for each Bronze Saint chosen. Gold Saints require no additional Cosmo.\nDestroy the chosen Saints. This destruction can't be prevented.\nThe enemy God loses Soul equal to their combined Power, plus {3}{S} for each Gold Saint destroyed this way.\nDivine Judgment — If the enemy God survives, place a Divine Judgment counter on that God.\nAt the end of the next round, if that God still has a Divine Judgment counter, its controller loses the game.\nThat God's controller may spend an Action and sacrifice three Devotees they control to remove the Divine Judgment counter.",
-      "notas_pt": "Versão nova fornecida pelo autor em 24/10/2026; texto preservado."
+      "notas_pt": "Versão nova fornecida pelo autor em 24/10/2026; texto preservado.",
+      "nome_exibicao_pt": "ATHENA",
+      "subtitulo_pt": "SAORI KIDO",
+      "tagline_pt": "Deusa da Sabedoria e da Guerra",
+      "habilidades_pt": [
+        "COSMO DA ESPERANÇA — Poder Divino\nUma vez por rodada, quando um Devoto de Athena que você controla sobrevive a um Golpe, ganhe {1}{L}."
+      ],
+      "habilidade_awaken_pt": "PROTEÇÃO DIVINA — Despertar 5\nDevotos de Athena que você controla recebem +1 de Poder e +1 PV.\nQuando um Devoto de Athena que você controla seria destruído, você pode pagar {3}{C}. Se fizer isso, previna essa destruição e deixe-o com 1 PV.",
+      "ultimate_pt": "EXCLAMAÇÃO DE ATHENA — Supremo\nCusto: {5}{C}\nEscolha três Cavaleiros Preparados que você controla, com identidades de personagem diferentes. Pague mais {2}{C} para cada Cavaleiro de Prata e {3}{C} para cada Cavaleiro de Bronze escolhido. Cavaleiros de Ouro não exigem Cosmo adicional.\nDestrua os Cavaleiros escolhidos. Essa destruição não pode ser prevenida.\nO Deus inimigo perde Alma igual ao Poder somado deles, mais {3}{S} para cada Cavaleiro de Ouro destruído assim.\nJulgamento Divino — Se o Deus inimigo sobreviver, coloque um marcador de Julgamento Divino nesse Deus.\nNo fim da próxima rodada, se esse Deus ainda tiver um marcador de Julgamento Divino, o controlador dele perde o jogo.\nO controlador desse Deus pode gastar uma Ação e sacrificar três Devotos que controla para remover o marcador de Julgamento Divino."
     },
     {
       "id": "poseidon-001",
@@ -17953,7 +18610,14 @@
       "habilidade_awaken_en": "",
       "ultimate_en": "",
       "flavour_en": "\"Every wound they endure, she feels as her own.\"",
-      "notas_pt": "Domain de compra com drawback da facção (autor, 31/10/2026)."
+      "notas_pt": "Domain de compra com drawback da facção (autor, 31/10/2026).",
+      "nome_exibicao_pt": "ESTÁTUA DE ATHENA",
+      "tagline_pt": "A Deusa Zela por Todos",
+      "habilidades_pt": [
+        "Determinação do Cavaleiro — Uma vez por rodada, quando um Cavaleiro aliado sobrevive a um Golpe, seu Deus ganha {1}{S}.",
+        "A Proteção de Athena — Uma vez por jogo — {2}{C}: Compre 2 cartas. Previna todo o dano de Golpe ao seu Deus até o fim da rodada."
+      ],
+      "flavour_pt": "\"Cada ferida que eles suportam, ela sente como se fosse sua.\""
     },
     {
       "id": "poseidon-v6-502",
