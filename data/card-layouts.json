@@ -1095,11 +1095,7 @@
       "elements": [
         {
           "id": "rules",
-          "height": 540
-        },
-        {
-          "id": "resonance",
-          "visible": false
+          "height": 340
         }
       ],
       "revision": 0
@@ -1122,7 +1118,7 @@
           "id": "rules",
           "binding": "card.divinePower",
           "y": 530,
-          "height": 210,
+          "height": 370,
           "style": {
             "fontSize": 42,
             "minFontSize": 32
@@ -1134,7 +1130,7 @@
           "component": "RulesBox",
           "binding": "card.awakenRules",
           "x": 205,
-          "y": 755,
+          "y": 910,
           "width": 1078,
           "height": 300,
           "zIndex": 10,
@@ -1164,9 +1160,9 @@
           "component": "RulesBox",
           "binding": "card.ultimateRules",
           "x": 205,
-          "y": 1070,
+          "y": 1220,
           "width": 1078,
-          "height": 780,
+          "height": 630,
           "zIndex": 10,
           "rotation": 0,
           "opacity": 1,

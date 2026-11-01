@@ -27,7 +27,7 @@
     "Relic": "relic",
     "Technique": "relic",
     "Moment": "relic",
-    "Domain": "relic",
+    "Domain": "domain",
     "God": "god"
   },
   "layouts": {
@@ -118,6 +118,24 @@
         { "kind": "rarity", "x": 744, "y": 2013, "h": 72 }
       ]
     },
+    "domain": {
+      "label": "Domain — mesmo desenho de relic, com mais texto: linha geral + Ressonância (autor, 01/11/2026)",
+      "typeLine": "{tipo}",
+      "elements": [
+        { "kind": "art" },
+        { "kind": "frame" },
+        { "kind": "piece", "piece": "athena/box_name", "dy": 40 },
+        { "kind": "cost", "x": 203, "y": 222, "size": 162 },
+        { "kind": "symbol", "rect": [1155, 78, 263, 257] },
+        { "kind": "text", "field": "name", "style": "title", "x": 745, "y": 219, "size": 75, "maxW": 780, "upper": true },
+        { "kind": "piece", "piece": "athena/box_type", "dy": 48 },
+        { "kind": "text", "field": "typeLine", "style": "typeline", "x": 744, "y": 1305, "size": 42, "maxW": 1000, "upper": true },
+        { "kind": "rules", "rect": [184, 1370, 1120, 460], "size": 42, "minSize": 32, "fit": 0.78 },
+        { "kind": "piece", "piece": "athena/divider", "dy": 3 },
+        { "kind": "text", "field": "flavour", "style": "flavour", "x": 753, "y": 1894, "size": 42, "maxW": 1100 },
+        { "kind": "rarity", "x": 744, "y": 2013, "h": 72 }
+      ]
+    },
     "god": {
       "label": "God — base: FRAMES/ATHENA/ATHENA.psd (layout simplificado: Awaken vai no bloco de regras)",
       "typeLine": "{tipo} — {subtipos}",
@@ -129,10 +147,10 @@
         { "kind": "symbol", "rect": [993, 65, 315, 308] },
         { "kind": "text", "field": "name", "style": "title", "x": 552, "y": 184, "size": 84, "maxW": 760, "upper": true },
         { "kind": "text", "field": "subtitle", "style": "subtitle", "x": 552, "y": 282, "size": 42, "maxW": 760, "upper": true },
-        { "kind": "piece", "piece": "athena/box_type", "dy": -366 },
-        { "kind": "gem", "piece": "athena/gem_soul", "field": "soul", "size": 99 },
-        { "kind": "text", "field": "typeLine", "style": "typeline", "x": 744, "y": 891, "size": 42, "maxW": 980, "upper": true },
-        { "kind": "rules", "rect": [155, 990, 1178, 900], "size": 42 },
+        { "kind": "piece", "piece": "athena/box_type", "dy": -686 },
+        { "kind": "gem", "piece": "athena/gem_soul", "dy": -320, "field": "soul", "size": 99 },
+        { "kind": "text", "field": "typeLine", "style": "typeline", "x": 744, "y": 571, "size": 42, "maxW": 980, "upper": true },
+        { "kind": "rules", "rect": [155, 670, 1178, 1220], "size": 42, "minSize": 28, "fit": 0.72 },
         { "kind": "piece", "piece": "athena/divider", "dy": 70 },
         { "kind": "text", "field": "flavour", "style": "flavour", "x": 752, "y": 1958, "size": 42, "maxW": 1100 },
         { "kind": "rarity", "x": 744, "y": 2013, "h": 72 }

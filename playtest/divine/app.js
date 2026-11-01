@@ -26,7 +26,7 @@ import {findDeck} from '../deck-store.js';
 import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-face3';
 import {unlock, playMusic} from '../audio.js?v=20261030-telas';
 import {telas, anim, sound, imageUrl, applyColors, applyTexts} from '../telas.js?v=20261030-1';
-import {renderLiveCard, renderCardText} from '../../shared/live-card.js?v=20261101-tipo1';
+import {renderLiveCard, renderCardText} from '../../shared/live-card.js?v=20261101-fit1';
 import {armorBonusText, printedEquipmentBonuses} from '../../shared/card-visual-values.js?v=20261031-kw1';
 import {lightArt} from '../../shared/light-art.js';
 import {useGodPortraits} from '../avatar-face.js?v=20261031-3';
