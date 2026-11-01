@@ -783,6 +783,10 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .pile__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
 .pile__card { padding: 0; border: 0; background: none; cursor: zoom-in; transition: transform .15s; }
 .pile__card:hover { transform: translateY(-4px) scale(1.03); }
+.pile__slot { display: grid; gap: 6px; justify-items: center; }
+.pile__hidden { padding: 6px 10px; border: 1px solid #e6c36a; border-radius: 999px; background: rgba(230, 195, 106, .14); color: #f6dd94; font: 600 12px/1.2 system-ui, sans-serif; cursor: pointer; }
+.pile__hidden:hover { background: rgba(230, 195, 106, .28); }
+.pile__hidden[aria-disabled="true"] { opacity: .45; cursor: not-allowed; }
 .pile__card .dcard { --card-w: 150px; width: 100%; height: auto; aspect-ratio: 5 / 7; }
 .pile__empty { margin: 20px 0; opacity: .6; text-align: center; }
 .rail [data-pile] { cursor: pointer; }

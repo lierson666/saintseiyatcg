@@ -395,15 +395,17 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
+        "Hidden Cosmo {6}",
         "Phoenix Rebirth — If Phoenix Ikki would be defeated and has no Rebirth counters, instead remove all damage from him, make him Unprepared, and put 1 Rebirth counter on him. He cannot declare another Strike this round.",
         "Lone Wolf — While you control no other Saints, Phoenix Ikki gets +2 ATK."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Hidden Cosmo (§4A), aprovado pelo autor em 31/10/2026.",
       "nome_exibicao_pt": "IKKI DE FÊNIX",
       "subtitulo_pt": "A Chama Imortal",
       "habilidades_pt": [
+        "Cosmo Oculto {6}",
         "Renascimento da Fênix — Se Ikki de Fênix seria derrotado e não tem marcadores de Renascimento, em vez disso remova todo o dano dele, deixe-o Despreparado e coloque 1 marcador de Renascimento nele. Ele não pode declarar outro Golpe nesta rodada.",
         "Lobo Solitário — Enquanto você não controlar outros Cavaleiros, Ikki de Fênix recebe +2 ATQ."
       ],
@@ -6924,15 +6926,17 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
+        "Hidden Cosmo {5}",
         "Choose up to two target enemy Devotees. Put 1 Seal counter on each of them.",
         "Arctic Silence — If you control Kraken Isaac, one of those Devotees gets -2 ATK until the end of the round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Controle de duas ameaças com Seal, sem gerar mill ou compra diretamente. A pressão extra vem das sinergias já presentes no deck.",
+      "notas_pt": "Texto do autor, Poseidon Vanilla Set V6, 28/10/2026. Controle de duas ameaças com Seal, sem gerar mill ou compra diretamente. A pressão extra vem das sinergias já presentes no deck. Hidden Cosmo (§4A), aprovado pelo autor em 31/10/2026.",
       "nome_exibicao_pt": "AS PROFUNDEZAS CONGELADAS",
       "subtitulo_pt": "Onde Até o Tempo Para",
       "habilidades_pt": [
+        "Cosmo Oculto {5}",
         "Escolha até dois Devotos inimigos alvo. Coloque 1 marcador de Selo em cada um deles.",
         "Silêncio Ártico — Se você controlar Isaak de Kraken, um desses Devotos recebe -2 ATQ até o fim da rodada."
       ],
@@ -9162,15 +9166,17 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
+        "Hidden Cosmo {4}",
         "Worm's Bind — When Worm Raimi enters the battlefield, you may pay {1}{S}. If you do, target enemy Devotee gets -1 ATK / -1 HP until the end of the round.",
         "Underground Ambush — Whenever Worm Raimi Strikes a damaged Devotee, Worm Raimi gets +2 ATK until the end of the round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md.",
+      "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026. Hades → Preto (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-hades-premodern.md. Hidden Cosmo (§4A), aprovado pelo autor em 31/10/2026.",
       "nome_exibicao_pt": "RAIMI DE VERME",
       "subtitulo_pt": "O Espectro Sob a Terra",
       "habilidades_pt": [
+        "Cosmo Oculto {4}",
         "Prisão do Verme — Quando Raimi de Verme entra no Campo de Batalha, você pode pagar {1}{S}. Se fizer isso, o Devoto inimigo alvo recebe -1 ATQ / -1 PV até o fim da rodada.",
         "Emboscada Subterrânea — Sempre que Raimi de Verme Golpeia um Devoto com dano marcado, Raimi de Verme recebe +2 ATQ até o fim da rodada."
       ],
@@ -12893,15 +12899,17 @@
       "equipar_custo": null,
       "keywords_en": ["Impulse"],
       "habilidades_en": [
+        "Hidden Cosmo {3}",
         "Impulse",
         "Reckless Bloodlust — Whenever this Devotee declares a Strike, it gains +1 ATK until end of round. At the end of your turn, defeat this Devotee if it declared a Strike this turn."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026.",
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Hidden Cosmo (§4A), aprovado pelo autor em 31/10/2026.",
       "nome_exibicao_pt": "BERSERKER SEDENTO DE SANGUE",
       "subtitulo_pt": "A Fome de Batalha",
       "habilidades_pt": [
+        "Cosmo Oculto {3}",
         "Impulso",
         "Sede de Sangue Imprudente — Sempre que este Devoto declara um Golpe, ele recebe +1 ATQ até o fim da rodada. No fim do seu turno, derrote este Devoto se ele declarou um Golpe neste turno."
       ],
@@ -17133,14 +17141,16 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
+        "Hidden Cosmo {3}",
         "Lunar Ambush — When Black Satellite Soldier enters the battlefield, it gets +1/+0 until end of round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026.",
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Hidden Cosmo (§4A), aprovado pelo autor em 31/10/2026.",
       "nome_exibicao_pt": "SOLDADO SATÉLITE NEGRO",
       "subtitulo_pt": "Guerreiro da Lua Negra",
       "habilidades_pt": [
+        "Cosmo Oculto {3}",
         "Emboscada Lunar — Quando o Soldado Satélite Negro entra no Campo de Batalha, ele recebe +1 ATQ até o fim da rodada."
       ],
       "flavour_pt": "\"Eles surgem da escuridão onde até o luar teme chegar.\"",

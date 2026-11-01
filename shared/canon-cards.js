@@ -34,6 +34,8 @@ export function parseCard(record) {
     // D196: Domains sem custo e sem Cosmoble no texto exibido.
     cost: cost ? {amount: Number(cost[1]), unit: exMiracle ? 'base' : UNITS[cost[2]]} : null,
     cosmoble: cosmoble ? cosmoble[1] === 'Yes' : null,
+    // Guia §4A (autor, 31/10/2026): "Hidden Cosmo {X}" em linha própria; joga da Cosmo Base pagando X.
+    hiddenCosmo: number(text, /^\s*Hidden Cosmo \{(\d+)\}\s*$/m),
     atk: number(text, /ATK: (\d+)/) ?? number(text, /ATTACK (\d+)/),
     hp: number(text, /HP: (\d+)/),
     soul: ALPHA_SOUL[record.id.toLowerCase()] ?? number(text, /SOUL (\d+)/),

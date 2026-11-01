@@ -85,6 +85,7 @@ Regra: o mesmo termo em todo lugar. Termo vetado fica em inglês. Nomes de perso
 | Long Range | Longo Alcance |
 | Pierce | Perfurar |
 | Impulse | Impulso |
+| Hidden Cosmo {X} | Cosmo Oculto {X} |
 | Seal / Sealed | Selo / Selado |
 | Unfaith | Infiel |
 | Training | Treinamento |

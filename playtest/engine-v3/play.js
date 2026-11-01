@@ -57,6 +57,7 @@ export function duplicateCharacter(state, ctx, key, uid) {
 // Redução de custo V6 (gancho costLess): cada fonte do jogador devolve {n, min, tag}; `min` é o piso do texto
 // ("to a minimum of 1"), `tag` marca "the first … each round" e só é gasta quando o custo é pago.
 function discount(state, ctx, key, uid, cost) {
+  if (cost && state.hidden?.uid === uid) cost = {...cost, amount: state.hidden.amount}; // Hidden Cosmo (§4A): {X} no lugar do impresso
   let n = 0, min = 0;
   const tags = [];
   for (const {self, entry} of cost ? sources(state, ctx, key) : []) {
@@ -305,4 +306,30 @@ function playSpellV6(state, ctx, key, uid, choice) {
   announce();
   respond(state, key, item());
   pushTriggers(state, collect(state, ctx, state.order, 'watchSpell', [key, uid, aimed.values], 'a Spell is cast')); // gancho watchSpell (resposta)
+}
+
+// Guia §4A Hidden Cosmo {X} (autor, 31/10/2026): joga `uid` da própria Cosmo Base pagando X no lugar do custo impresso,
+// com o momento e a forma de pagar da carta (playDevotee/playSpell). Prepared e com Base valendo (não na resposta), a carta
+// paga 1 de si mesma. Depois de jogada, o topo do deck entra no lugar como Base Unprepared. Erro antes de pagar desfaz tudo.
+export function castHidden(state, ctx, key, uid, choice = {}) {
+  const card = ctx.cards.get(ctx.objects[uid]?.cardId), p = state.players[key];
+  if (!card?.hiddenCosmo) throw new RuleError('§4A', 'a carta não tem Hidden Cosmo');
+  const at = p.bases.findIndex(b => b.uid === uid);
+  if (at < 0) throw new RuleError('§4A', 'a carta não está nas suas Cosmo Bases');
+  if (!['Devotee', 'Spell'].includes(card.kind)) throw new NotSpecified('Hidden Cosmo em Equipment');
+  const base = p.bases[at], response = Boolean(state.window), self = base.prepared && !response ? 1 : 0;
+  p.bases.splice(at, 1);
+  p.hand.push(uid);
+  state.hidden = {uid, amount: Math.max(0, card.hiddenCosmo - self)};
+  try {
+    if (card.kind === 'Devotee') playDevotee(state, ctx, key, uid, choice); else playSpell(state, ctx, key, uid, choice);
+  } catch (e) {
+    const h = p.hand.indexOf(uid);
+    if (h >= 0) { p.hand.splice(h, 1); p.bases.splice(at, 0, base); }
+    throw e;
+  } finally { delete state.hidden; }
+  if (p.pool) p.pool = p.pool.filter(u => u !== uid); // pool visual da interface
+  const top = p.deck.shift();
+  if (top) p.bases.push({uid: top, prepared: false});
+  emit(state, 'hidden_cosmo', {player: key, uid, paid: card.hiddenCosmo, self, replacement: Boolean(top)});
 }

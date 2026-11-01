@@ -4,6 +4,20 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-31 — §56 — Gatilho opcional impossível não dispara
+
+- **Antes:** o guia não dizia; a engine punha na pilha (com janela e log) gatilhos opcionais impossíveis de usar e só descobria na resolução.
+- **Depois:** §56: gatilho opcional que não pode ser usado no disparo (custo não pagável, "once each round" já usado, sem alvo válido) não dispara: não vai à pilha, não abre janela, não aparece no log. Checa no disparo e de novo na resolução.
+- **Motivo:** autor, 31/10/2026, em playtest: "muitos gatilhos triggam mesmo que não seja possível usar o gatilho, principalmente de base e deus". Regra aprovada na mesma data.
+- **Engine:** ver itens abaixo nesta entrada quando aplicados.
+
+## 2026-10-31 — §4A — Hidden Cosmo (keyword nova)
+
+- **Antes:** carta na Cosmo Base só pagava Cosmo; não havia como jogá-la de lá.
+- **Depois:** §4A *Hidden Cosmo {X}*: a carta pode ser jogada da sua Base pagando {X}; pode pagar 1 de si mesma se estiver Prepared e Base valer para o custo; o topo do deck entra no lugar como Base Unprepared. Momento e forma de pagar seguem a carta (§5). Cinco cartas, uma por facção: 009 Phoenix Ikki {6}, 157 The Frozen Depths {5}, 209 Worm Raimi {4}, 295 Bloodthirsty Berserker {3}, 394 Black Satellite Soldier {3}.
+- **Motivo:** autor, 31/10/2026: mecânica do tipo Smuggle (Star Wars Unlimited), com nome próprio; regras e cartas aprovadas na mesma data.
+- **Engine e UI:** `castHidden` em `playtest/engine-v3/play.js` (ação `hidden`), botão na tela das Bases da arena, IA e How to Play.
+
 ## 2026-10-31 — Convenção de idioma — Jogo em PT-BR e EN
 
 - **Antes:** todo texto visível ao jogador era só em inglês (CLAUDE.md).

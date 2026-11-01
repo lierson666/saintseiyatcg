@@ -65,6 +65,11 @@ export function createAI(h) {
       if (!ch) continue;
       return {id: id(`play:${uid}`), run: () => (c.kind === 'Devotee' ? h.playDevotee(key, uid, ch) : h.playSpell(key, uid, ch))};
     }
+    // 5b. Hidden Cosmo (guia §4A, 31/10/2026): carta jogável da própria Base, depois da mão (a Base volta pelo topo do deck).
+    for (const uid of h.hiddenReason ? p.bases.map(b => b.uid).filter(u => !h.hiddenReason(key, u)) : []) {
+      const ch = fresh(`hidden:${uid}`) && choicesFor(key, h.STEPS[h.num(uid)] || []);
+      if (ch) return {id: id(`hidden:${uid}`), run: () => h.castHidden(key, uid, ch)};
+    }
     // 6. Strikes: no God se puder; senão no Devotee alvo de menor HP restante.
     for (const uid of devotees(key)) {
       if (!s.units[uid]?.prepared || !fresh(`strike:${uid}`)) continue;

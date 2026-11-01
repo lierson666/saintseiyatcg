@@ -67,7 +67,9 @@ export function addPreviewCards(cards, index, forgeCards) {
     const type = card.kind === 'Spell' && sub ? `Spell — ${sub}` : card.type;
     // Cosmoble do Forge (rebalanceamento de 31/10/2026): o D268 diz "Cosmoble: Yes" em quase todas.
     const cosmoble = f.cosmoble != null && card.cosmoble != null ? Boolean(f.cosmoble) : card.cosmoble;
-    if (cost !== card.cost || type !== card.type || cosmoble !== card.cosmoble) cards.set(f.id, {...card, cost, type, cosmoble});
+    // Hidden Cosmo (§4A, 31/10/2026) só existe no Forge para as cartas do D268.
+    const hidden = Number((f.habilidades_en || []).map(h => h.match(/^Hidden Cosmo \{(\d+)\}$/)?.[1]).find(Boolean)) || card.hiddenCosmo;
+    if (cost !== card.cost || type !== card.type || cosmoble !== card.cosmoble || hidden !== card.hiddenCosmo) cards.set(f.id, {...card, cost, type, cosmoble, hiddenCosmo: hidden});
   }
   // Gods: Soul, Attack e Awaken vêm da carta do God no Forge (<facção>-001), por cima do D268 e da G3-042 (autor, 29/10/2026).
   for (const f of forgeCards.filter(c => /^(athena|poseidon|hades|ares|artemis)-001$/.test(c.id))) {

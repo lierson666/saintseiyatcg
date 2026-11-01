@@ -8,7 +8,7 @@ import {createMatch, mulligan} from '../engine-v3/match.js';
 import {startTurn, endTurn, pass, placeBase, spellCategory, runCheckpoint, ownBatch, loseGame} from '../engine-v3/core.js';
 import {inlineMarkup} from '../../shared/card-text.js?v=20261031-pt4';
 import {declareStrike, strikeTargets} from '../engine-v3/strike.js';
-import {playDevotee, playEquipment, playSpell, activate, reequip, duplicateCharacter, resonant, castCost, mixed} from '../engine-v3/play.js';
+import {playDevotee, playEquipment, playSpell, activate, reequip, duplicateCharacter, resonant, castCost, mixed, castHidden} from '../engine-v3/play.js';
 import {atkOf, hpOf, keywordsOf, gearOf, isSaint, isBronze, ABILITIES} from '../engine-v3/effects.js';
 import {v6Spell, entryOf, V6} from '../engine-v3/v6/hooks.js';
 import {domainEntry} from '../engine-v3/v6/registry.js';
@@ -117,6 +117,25 @@ function baseReason(key, uid) {
   return null;
 }
 const canBase = (key, uid) => !baseReason(key, uid);
+// Hidden Cosmo {X} (guia §4A, 31/10/2026): jogar da própria Base. Prepared e com Base valendo, a carta paga 1 de si mesma.
+function hiddenReason(key, uid) {
+  const s = S(), c = info(uid), x = c.hiddenCosmo, base = s.players[key].bases.find(b => b.uid === uid);
+  if (!x || !base) return 'This card has no Hidden Cosmo.';
+  if (s.victory || s.setup) return 'The match is not running.';
+  if (pending) return 'Answer the pending decision first.';
+  const moment = c.kind === 'Spell' && spellCat(uid)?.speed === 'instant', response = !!s.window;
+  if (moment ? !(response ? s.window.priority === key : idleFor(key)) : !idleFor(key)) return moment ? 'You need priority to cast a Moment.' : s.active !== key ? "It's not your turn." : 'Wait for the response window to close.';
+  const self = base.prepared && !response ? 1 : 0, others = readyBases(key) - self, latent = s.players[key].latent, need = x - self;
+  const ok = response ? latent >= x : c.kind === 'Devotee' ? others >= need : others + latent >= need;
+  return ok ? null : `Needs ${x} ${response ? 'Latent' : c.kind === 'Devotee' ? 'Base Cosmo' : 'Cosmo (Base and/or Latent)'}${self ? ', this Base pays 1' : ''}.`;
+}
+function castFromBase(key, uid) {
+  const reason = hiddenReason(key, uid);
+  if (reason) return warn(reason);
+  closeBigCard();
+  casting = uid;
+  begin('play', key, uid, STEPS[num(uid)] || [], choice => ({type: 'hidden', key, uid, choice}));
+}
 // A Base nova entra Unprepared (D4: Bases preparam no início do turno); o aviso explica por que o hexágono não sobe agora.
 function placeAsBase(key, uid) {
   const reason = baseReason(key, uid);
@@ -1462,8 +1481,10 @@ function showBases(key) {
   box.className = 'bigcard pile';
   box.innerHTML = `<section class="pile__box" role="dialog" aria-label="Cosmo Bases of Player ${key}">
     <header><h3>Cosmo Bases</h3><small>Player ${key} · ${ready} prepared of ${p.bases.length} · Latent ${p.latent}/3</small></header>
-    ${!mine ? '<p class="pile__empty">Your opponent\'s Bases are face down.</p>' : p.bases.length ? `<div class="pile__grid">${p.bases.map(b => `<button class="pile__card ${b.prepared ? '' : 'is-used'}" data-pile-card="${b.uid}" aria-label="${b.prepared ? 'Prepared' : 'Used'} Base">${cardFace(b.uid)}<small>${b.prepared ? 'Prepared' : 'Used'}</small></button>`).join('')}</div>` : '<p class="pile__empty">No Cosmo Bases yet.</p>'}</section>`;
+    ${!mine ? '<p class="pile__empty">Your opponent\'s Bases are face down.</p>' : p.bases.length ? `<div class="pile__grid">${p.bases.map(b => `<div class="pile__slot"><button class="pile__card ${b.prepared ? '' : 'is-used'}" data-pile-card="${b.uid}" aria-label="${b.prepared ? 'Prepared' : 'Used'} Base">${cardFace(b.uid)}<small>${b.prepared ? 'Prepared' : 'Used'}</small></button>${info(b.uid).hiddenCosmo ? `<button class="pile__hidden" data-hidden="${b.uid}" ${hiddenReason(key, b.uid) ? `aria-disabled="true" title="${esc(hiddenReason(key, b.uid))}"` : ''}>Cast · Hidden Cosmo ${info(b.uid).hiddenCosmo}</button>` : ''}</div>`).join('')}</div>` : '<p class="pile__empty">No Cosmo Bases yet.</p>'}</section>`;
   box.addEventListener('click', e => {
+    const hidden = e.target.closest('[data-hidden]');
+    if (hidden) return castFromBase(key, hidden.dataset.hidden);
     const card = e.target.closest('[data-pile-card]');
     if (card) return showBigCard(card.dataset.pileCard);
     if (!e.target.closest('.pile__box')) closeBigCard();
@@ -2078,6 +2099,7 @@ const ai = createAI({
   strikeTargets: uid => strikeTargets(S(), ctx, uid), ultimateBlock: (key, trio) => ultimateBlock(S(), ctx, key, trio), greatFloodBlock: key => greatFloodBlock(S(), key),
   placeBase, playDevotee: (key, uid, ch) => playDevotee(S(), ctx, key, uid, ch), playEquipment: (key, uid, bearer, ch) => playEquipment(S(), ctx, key, uid, bearer, ch),
   playSpell: (key, uid, ch) => playSpell(S(), ctx, key, uid, ch), declareStrike: (uid, target) => declareStrike(S(), ctx, uid, target),
+  hiddenReason, castHidden: (key, uid, ch) => castHidden(S(), ctx, key, uid, ch),
   announceExclamation: (key, trio) => announceExclamation(S(), ctx, key, trio), announceGreatFlood: key => announceGreatFlood(S(), ctx, key),
 });
 let aiBusy = false, aiRefused = null; // pergunta cuja resposta da IA a engine recusou: na próxima vez responde por timeout

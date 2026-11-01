@@ -2,7 +2,7 @@
 // com a mesma função da engine: a tela manda dados ({type, key, uid, choice…}), nunca uma função.
 import {startTurn, endTurn, pass, placeBase, orderTriggers, RuleError} from './core.js';
 import {declareStrike, mustStrike} from './strike.js';
-import {playDevotee, playEquipment, playSpell, activate, reequip} from './play.js';
+import {playDevotee, playEquipment, playSpell, activate, reequip, castHidden} from './play.js';
 import {announceExclamation, removeJudgment, announceGreatFlood, announceGreatEclipse, announceObliteration, activateBloodlust, placeBaseMoonHarvest, announceMoonAwakening} from './gods.js';
 import {mulligan} from './match.js';
 import {applyTimeout} from './clock.js';
@@ -21,6 +21,7 @@ export function applyAction(match, ctx, action) {
       throw new RuleError('alvo', 'carta desconhecida');
     }
     case 'base': return placeBase(s, key, uid, card());
+    case 'hidden': return castHidden(s, ctx, key, uid, choice); // §4A: joga da Cosmo Base
     case 'strike': {
       if (s.active !== key) throw new RuleError('D1', 'Strike fora do próprio turno');
       const t = String(choice.target || '');
