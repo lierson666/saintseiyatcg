@@ -804,7 +804,7 @@ function command() {
     <button class="action-btn" data-primary data-state="${state}" ${s.victory || aiControls() ? 'disabled' : ''}><span>${esc(label)}</span><i aria-hidden="true">›</i></button>
     <button class="command__full" data-full-control aria-pressed="${!settings.autoPass}" title="Full control: stop at every priority window, even with no possible response">Full control</button>
     <button class="command__more" data-toggle-tools aria-expanded="${toolsOpen}" aria-label="Options">${GEAR_SVG}</button>
-    <div class="command__tools${toolsOpen ? ' is-open' : ''}"><button data-tip="Log" data-toggle-log aria-pressed="${logOpen}">Log</button><button data-tip="Settings" data-toggle-settings>Settings</button>${match && !s.victory ? '<button class="tools__concede" data-concede>Concede</button>' : ''}<button data-leave>Leave</button></div>
+    <div class="command__tools${toolsOpen ? ' is-open' : ''}"><button data-toggle-log aria-pressed="${logOpen}">Log</button><button data-toggle-settings>Settings</button>${match && !s.victory ? '<button class="tools__concede" data-concede>Concede</button>' : ''}<button data-leave>Leave</button></div>
   </aside>`;
 }
 

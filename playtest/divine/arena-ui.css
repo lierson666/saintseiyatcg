@@ -265,7 +265,9 @@ body:not(.is-peeking):has(.trigger-panel.is-center, .trigger-panel--order) #chai
 @property --fw { syntax: "<length>"; inherits: true; initial-value: 0px; }
 :root { --col: calc(min(min(1vh, .65vw) * 1.1, (100vh - 40px) / 78) * 19); --edge: 12px; --side: calc(var(--col) + 28px); }
 @media (min-width: 761px) and (min-height: 501px) {
-  .arena-field { right: var(--side); container-type: inline-size; }
+  /* Cada lado no meio da sua metade, sem encostar na vida do God nem na linha do meio (autor, 01/11/2026). */
+  .arena-field { right: var(--side); container-type: inline-size; grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr); align-content: stretch; }
+  .arena-field .field { align-self: stretch; height: auto; min-height: 0; align-items: center; }
   .band { right: var(--side); }
   .olympus .field { --fw: 100cqw; --field-gap: calc(var(--u) * 1); display: grid; grid-template-columns: repeat(var(--cols, 1), auto); justify-content: center; align-content: center; gap: var(--field-gap);
     --card-w: min(calc(var(--w0) * var(--fit, 1)), calc((var(--fw) - var(--field-gap) * (var(--cols, 1) - 1) - 12px) / var(--cols, 1))); }
@@ -278,7 +280,8 @@ body:not(.is-peeking):has(.trigger-panel.is-center, .trigger-panel--order) #chai
   .command { right: var(--edge); gap: 8px; }
   .command__clock { justify-content: center; }
   .command .zclock { flex: none; --r: min(clamp(64px, 5.4vw, 86px), 10vh, calc(var(--col) / 2.3)); }
-  .phasebar { gap: 5px; padding: 7px 6px; border-radius: 12px; }
+  .phasebar { box-sizing: border-box; width: 100%; gap: 5px; padding: 7px 6px; border-radius: 12px; }
+  .phasebar__turn { justify-self: stretch; }
   .phasebar__turn strong { font-size: 13px; white-space: normal; }
   .phasebar__turn small { font-size: 9px; letter-spacing: .04em; line-height: 1.25; white-space: normal; }
   /* Em cima a fase atual; embaixo todas, pequenas (autor, 01/11/2026). */
@@ -289,13 +292,12 @@ body:not(.is-peeking):has(.trigger-panel.is-center, .trigger-panel--order) #chai
   .phasebar__steps li.on, .phasebar.is-theirs .phasebar__steps li.on { background: none; box-shadow: none; color: var(--kv-gold-2); }
   .phasebar__window { font-size: 9px; line-height: 1.25; overflow-wrap: anywhere; }
 
-  /* Registro, Configurações e Sair viram ícones; o texto segue para leitor de tela. */
-  .command__tools { flex-wrap: nowrap; gap: 6px; }
-  .command .command__tools > :is(button, a) { flex: none; box-sizing: border-box; width: 30px; min-width: 0; min-height: 30px; padding: 0; font-size: 0; background: center / 15px no-repeat; }
+  /* Configurações em linha própria, Registro e Sair embaixo: sempre com o nome e com fundo (autor, 01/11/2026). */
+  .command .command__tools { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; width: 100%; }
+  .command .command__tools > :is(button, a) { box-sizing: border-box; justify-content: center; min-width: 0; min-height: 30px; padding: 0 4px; border: 1px solid #e6c36a66; background: #10111ceb; color: var(--kv-gold-2); font-size: clamp(9px, .75vw, 11px); letter-spacing: .02em; text-align: center; }
+  .command .command__tools > :is(button, a):hover { border-color: var(--kv-gold); background: #1c1e30; }
+  .command .command__tools > [data-toggle-settings] { grid-column: 1 / -1; order: -1; }
   .command .command__tools > .tools__concede { display: none; } /* Desistir fica nas Configurações */
-  .command .command__tools > [data-toggle-log] { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e6c36a' stroke-width='2' stroke-linecap='round'%3E%3Cpath d='M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01'/%3E%3C/svg%3E"); }
-  .command .command__tools > [data-toggle-settings] { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e6c36a' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3Cpath d='M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M4.9 19.1 7 17M17 7l2.1-2.1'/%3E%3C/svg%3E"); }
-  .command .command__tools > :last-child { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23e6c36a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9'/%3E%3C/svg%3E"); }
 
   .command .action-btn { right: var(--edge); bottom: var(--edge); min-height: 46px; padding: 0 6px; font-size: 11px; line-height: 1.15; letter-spacing: .04em; white-space: normal; }
   .command .command__full { right: calc(var(--edge) + (var(--col) - 30px) / 2); bottom: 106px; width: 30px; height: 30px; }
