@@ -12,6 +12,7 @@ Endpoints (só 127.0.0.1):
   GET  /api/boosters          lista os ids de pacote com arte em playtest/assets/boosters/
   POST /api/booster/<id>      WEBP/PNG grava a arte de fundo do pacote em playtest/assets/boosters/<id>.webp
   POST /api/booster-logo/<id> WEBP/PNG grava o logo da edição do pacote em playtest/assets/boosters/logo/<id>.webp
+  POST /api/translate         {card}  devolve os campos *_pt traduzidos do EN pela API da Claude (tools/translate_pt.py; não grava)
 """
 import json
 import io
@@ -182,6 +183,15 @@ class Handler(SimpleHTTPRequestHandler):
                 except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as error:
                     detail=(getattr(error, 'stderr', '') or str(error))[-500:]
                     return self.reply(502, {"erro": "Projeto salvo localmente, mas o envio ao jogo falhou: " + detail})
+            if parts == ["api", "translate"]:
+                # PT-BR automático a partir do EN (autor, 31/10/2026); o autor revisa no diff antes de gravar.
+                spec = importlib.util.spec_from_file_location("translate_pt", ROOT / "tools/translate_pt.py")
+                tr = importlib.util.module_from_spec(spec)
+                spec.loader.exec_module(tr)
+                try:
+                    return self.reply(200, tr.translate(json.loads(raw)))
+                except tr.TranslateError as error:
+                    return self.reply(502, {"erro": str(error)})
             if parts == ["api", "card"]:
                 card = json.loads(raw)
                 if not isinstance(card, dict) or not ID_RE.match(str(card.get("id", ""))):

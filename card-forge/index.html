@@ -123,6 +123,18 @@
       </fieldset>
 
       <fieldset>
+        <legend>Português (PT-BR)</legend>
+        <p class="hint">Sai do inglês, que é a base do jogo. “Traduzir do EN” usa a IA com o glossário; ao gravar com o EN mudado, o PT é regerado e aparece no diff para revisão.</p>
+        <button id="translatePt" type="button">Traduzir do EN</button>
+        <label>Nome <input name="pt_nome"></label>
+        <label>Subtítulo <input name="pt_subtitulo"></label>
+        <label>Regras <textarea name="pt_rules" rows="7" spellcheck="true"></textarea></label>
+        <label data-for="god">Despertar (texto) <textarea name="pt_awaken" rows="3"></textarea></label>
+        <label data-for="god">Supremo <textarea name="pt_ultimate" rows="3"></textarea></label>
+        <label>Flavour <input name="pt_flavour"></label>
+      </fieldset>
+
+      <fieldset>
         <legend>Arte</legend>
         <input id="artFile" type="file" accept="image/png,image/jpeg,image/webp">
         <p class="hint">Ou solte a imagem sobre a carta. Arraste para mover, roda do mouse para zoom.</p>
@@ -170,7 +182,7 @@
     </div>
   </dialog>
 
-  <script type="module" src="forge.js?v=20261031-pt4"></script>
+  <script type="module" src="forge.js?v=20261031-pt5"></script>
   <script type="module" src="god-hud.js?v=6"></script>
 </body>
 </html>

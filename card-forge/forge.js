@@ -73,6 +73,7 @@ function blankState() {
     raridade: 'Common', custo: '', unidade_custo: 'cosmo', power: '', vida: '', resistance: '', bonusPower: '', bonusResistance: '', auto_equip: '', artista: '', edicao: 'DOC',
     equipar_custo: '', equipar_custo_ressonante: '', equipar_custo_outros: '', damage_cloth: '', soul: '', attack: '', awaken: '', keywords: '', rules: '',
     habilidade_awaken_en: '', ultimate_en: '', flavour: '', art: null,
+    pt_nome: '', pt_subtitulo: '', pt_rules: '', pt_awaken: '', pt_ultimate: '', pt_flavour: '', pt_auto: [], ptFor: '',
   };
 }
 
@@ -585,6 +586,7 @@ function fromCard(c, proj = {}) {
   const s = blankState();
   for (const k of Object.keys(s)) if (k in c && c[k] !== null) s[k] = c[k];
   s.subtitle=c.tagline_en||c.subtitulo_en||''; // V6 canonical subtitle
+  Object.assign(s,{pt_nome:c.nome_exibicao_pt||'',pt_subtitulo:c.subtitulo_pt||c.tagline_pt||'',pt_rules:(c.habilidades_pt||[]).join('\n\n'),pt_awaken:c.habilidade_awaken_pt||'',pt_ultimate:c.ultimate_pt||'',pt_flavour:c.flavour_pt||'',pt_auto:c.auto_equip_pt||[]});
   s.revisao_regras=c.revisao_regras||'1.0';
   s.referencias_mitologicas_texto=(c.referencias_mitologicas||[]).join('\n');
   s.donos=(c.donos||[]).join(', ');s.estagios=structuredClone(c.estagios||[]);s.resonanceText=(c.ressonancias||[]).map(r=>`${r.personagem_id} | ${r.habilidade_en}`).join('\n');
@@ -598,7 +600,9 @@ function fromCard(c, proj = {}) {
   if (bonus && c.tipo === 'Relic') { s.bonusPower = bonus[1]; s.bonusResistance = bonus[2]; }
   // Armor (30/10/2026): bônus vem de bonus_poder/bonus_vida do cards.json, não do projeto visual antigo.
   const armorBonus = c.bonus_poder != null || c.bonus_vida != null ? { bonusPower: signedBonus(c.bonus_poder || 0), bonusResistance: signedBonus(c.bonus_vida || 0) } : {};
-  return Object.assign(s, proj, { subtitle: (typeof proj.subtitle==='string' && proj.subtitle.trim())?proj.subtitle:s.subtitle, art: proj.art || null }, armorBonus);
+  Object.assign(s, proj, { subtitle: (typeof proj.subtitle==='string' && proj.subtitle.trim())?proj.subtitle:s.subtitle, art: proj.art || null }, armorBonus);
+  if(c.habilidades_pt||c.nome_exibicao_pt)s.ptFor=enKey(c,s); // PT atual corresponde a este EN
+  return s;
 }
 
 let selectionRevision=0;
@@ -799,10 +803,11 @@ let pendingSaveBoth=false;
 $('#saveProject').addEventListener('click',async()=>{
   try{
     if(!S.id)throw new Error('Carta sem ID.');
+    const ptNote=await ensurePt();
     const current=buildCard(),changes=diffCards(orig,current);
     if(changes.length){
       pendingBatch=null;pendingSaveBoth=true;pending=current;
-      $('#diffTarget').textContent=`${S.id}: salvar dados da carta + visual (confirmação necessária)`;
+      $('#diffTarget').textContent=`${S.id}: salvar dados da carta + visual (confirmação necessária)`+ptNote;
       const body=$('#diffBody');
       body.replaceChildren(...changes.flatMap(({k,x,y})=>{
         const before=Object.assign(document.createElement('div'),{className:'del',textContent:`- ${k}: ${x}`});
@@ -843,6 +848,12 @@ function buildCard() {
   // texto com marcação ({L}, **) volta para o formato do cards.json; texto intacto fica como está
   const plain = (v) => (/\*\*|(?:\d|X) \{[BCLS]\}/.test(v || '') ? fromMarkup(v) : (v || '').trim()); // texto cru ({5}{C}, quebras de linha) fica como está
   if (S.tipo === 'God') Object.assign(base, { habilidade_awaken_en: plain(S.habilidade_awaken_en), ultimate_en: plain(S.ultimate_en) });
+  // PT-BR (campos *_pt): sai do inglês pela IA (tools/translate_pt.py) e pode ser ajustado à mão; campo vazio sai do cards.json.
+  const ptSub=S.pt_subtitulo.trim(),ptVal={nome_exibicao_pt:S.pt_nome.trim(),habilidades_pt:splitParas(S.pt_rules),flavour_pt:S.pt_flavour.trim(),auto_equip_pt:S.pt_auto||[]};
+  const subKey=source&&!('subtitulo_pt' in source)&&'tagline_pt' in source?'tagline_pt':'subtitulo_pt'; // carta só com tagline_pt fica assim
+  ptVal[subKey]=ptSub;if(subKey==='subtitulo_pt'&&ptSub!==(source?.subtitulo_pt||''))ptVal.tagline_pt=ptSub;
+  if(S.tipo==='God')Object.assign(ptVal,{habilidade_awaken_pt:S.pt_awaken.trim(),ultimate_pt:S.pt_ultimate.trim()});
+  for(const [k,v] of Object.entries(ptVal)){if(Array.isArray(v)?v.length:has(v))base[k]=v;else delete base[k];}
   if (has(S.artista) || (source && 'artista' in source)) base.artista = (S.artista || '').trim() || null; // rodapé de edição
   if (S.edicao !== EDITIONS[0].code || (source && 'edicao' in source)) base.edicao = S.edicao; // sem campo = DOC
   if (has(base.custo)) base.unidade_custo = S.unidade_custo; else base.unidade_custo = null;
@@ -864,15 +875,34 @@ function diffCards(a, b) {
   return lines;
 }
 
+// Chave do texto EN que gerou o PT: se o EN muda, o PT é regerado ao gravar (autor, 31/10/2026).
+function enKey(c,s=S){return JSON.stringify([(c.nome_exibicao_en||'').trim(),s.subtitle||'',c.habilidades_en||[],c.habilidade_awaken_en||'',c.ultimate_en||'',s.flavour||'']);}
+async function translatePt(){
+  const c=buildCard();
+  say('traduzindo do EN…');
+  const r=await post('/api/translate',JSON.stringify({...c,tagline_en:S.subtitle,flavour_en:S.flavour})),f=r.campos;
+  Object.assign(S,{pt_nome:f.nome_exibicao_pt||'',pt_subtitulo:f.subtitulo_pt||'',pt_rules:(f.habilidades_pt||[]).join('\n\n'),pt_awaken:f.habilidade_awaken_pt||'',pt_ultimate:f.ultimate_pt||'',pt_flavour:f.flavour_pt||'',pt_auto:f.auto_equip_pt||[],ptFor:enKey(c)});
+  fillForm();render();
+  return r.avisos||[];
+}
+$('#translatePt').addEventListener('click',async()=>{try{const w=await translatePt();say(w.length?`PT gerado — revise: ${w.join(' ')}`:'PT gerado do EN — revise antes de gravar.',w.length>0);}catch(e){say(e.message,true);}});
+// Ao gravar: EN mudou desde o PT atual (ou não há PT) → regera e devolve o aviso que vai no diff.
+async function ensurePt(){
+  if(S.ptFor===enKey(buildCard()))return '';
+  try{const w=await translatePt();return w.length?` · PT regerado do EN — revise: ${w.join(' ')}`:' · PT regerado do EN — revise abaixo';}
+  catch(e){return ` · PT NÃO regerado (${e.message})`;}
+}
+
 let pending = null;
-$('#saveCards').addEventListener('click', () => {
+$('#saveCards').addEventListener('click', async () => {
   pendingSaveBoth=false;
   if (!S.id) return say('carta sem id', true);
   pendingBatch = null;
+  const ptNote = await ensurePt();
   pending = buildCard();
   const d = diffCards(orig, pending);
   if (!d.length) return say('nada mudou em relação ao cards.json');
-  $('#diffTarget').textContent = orig ? `Carta ${S.id} (substitui)` : `Carta nova ${S.id} (adiciona ao fim)`;
+  $('#diffTarget').textContent = (orig ? `Carta ${S.id} (substitui)` : `Carta nova ${S.id} (adiciona ao fim)`) + ptNote;
   const body = $('#diffBody');
   body.replaceChildren(...d.flatMap(({ k, x, y }) => {
     const del = Object.assign(document.createElement('div'), { className: 'del', textContent: `- ${k}: ${x}` });
