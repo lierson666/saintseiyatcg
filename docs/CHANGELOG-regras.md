@@ -164,6 +164,13 @@ Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências
 - **Motivo:** autor, 01/11/2026: "ainda tá dando auto equipe, resolva esse problema do equip de uma vez por todas"; escolheu "Entra sem portador".
 - **Engine:** `engine-v3/play.js` (`playEquipment`, `reequip`), IA (`divine/ai.js`), UI (`divine/app.js`). Itens globais não mudam.
 
+## 2026-11-01 — G3-024/G3-028/G3-031 — 90 segundos por ação
+
+- **Antes:** 60 s básicos + reserva inicial 180 (teto 240), +50% do básico não usado, +5 s por ação; 12 tochas de 20 s.
+- **Depois:** 90 s por ação. O tempo volta cheio a cada ação feita e a cada decisão que chega ao jogador, inclusive resposta no turno do adversário e depois de um timeout. Sem básico, sem reserva guardada; 12 tochas de 7,5 s. Os efeitos de timeout (G3-027, G3-030) não mudam.
+- **Motivo:** autor, 01/11/2026: "O tempo ta muito longo por acao de jogador, deixe com 1 minuto e meio".
+- **Engine:** `engine-v3/clock.js` (`ALPHA_CLOCK.perAction`, `TORCH_SECONDS`); o arena-server usa o mesmo módulo. Rótulo do relógio em `divine/app.js`: `Turn` ou `Response`.
+
 ## 2026-11-01 — G3-024/G3-028 — Relógio de 4 minutos
 
 - **Antes:** 60 s básicos + reserva inicial 90 (teto 180); 12 tochas de 15 s.

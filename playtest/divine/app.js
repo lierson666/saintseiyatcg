@@ -423,7 +423,7 @@ function updateClock(force = false) {
   // só escreve se mudou: o tique é de 250 ms e cada escrita refaz layout e pintura. Compara com o original guardado: o i18n troca o texto na tela. O render reescreve a marcação, daí o force.
   const write = (el, text) => { if (el && (force || el.clockText !== text)) { el.clockText = text; el.textContent = text; } };
   write(time, key ? `${String(Math.floor(t / 60)).padStart(2, '0')}:${String(t % 60).padStart(2, '0')}` : '--:--');
-  write(label, !key ? 'Clock' : r.basic > 0 ? `Turn · ${key}` : `Reserve · ${key}`);
+  write(label, !key ? 'Clock' : key === S().active ? `Turn · ${key}` : `Response · ${key}`);
   const dc = $('[data-decision-clock]');
   if (dc && key) { write(dc, `${t}s left`); dc.classList.toggle('urgent', r.total <= 20); }
 }

@@ -49,7 +49,7 @@ function syncClock(g) {
 }
 function spend(g, key) {
   clockHandTo(g.clock, key, g.t);
-  g.t += key === g.slow ? 31 : g.think;
+  g.t += key === g.slow ? 91 : g.think; // 91: estoura os 90 s por ação
   // Cinemática depois da decisão não gasta relógio (G3-025): pausa, "anima" 3 s, retoma.
   clockPause(g.clock, g.t); g.t += 3; clockResume(g.clock, g.t);
   return clockExpired(g.clock, g.t) === key;

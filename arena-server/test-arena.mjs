@@ -60,14 +60,14 @@ test('relógio no servidor: tempo esgotado no turno encerra o turno e o relógio
   arena.act(rec, first, {type: 'mulligan', choice: {uids: []}});
   arena.act(rec, second, {type: 'mulligan', choice: {uids: []}});
   assert.equal(arena.view(rec, first).clock.running, first);
-  clock += 100; arena.heartbeat(rec, 'A'); arena.heartbeat(rec, 'B'); arena.sweep();
-  assert.ok(!s.events.some(e => e.type === 'TIMEOUT_END_TURN'), 'ainda tem reserva');
-  clock += 150; arena.heartbeat(rec, 'A'); arena.heartbeat(rec, 'B'); arena.sweep();
+  clock += 50; arena.heartbeat(rec, 'A'); arena.heartbeat(rec, 'B'); arena.sweep();
+  assert.ok(!s.events.some(e => e.type === 'TIMEOUT_END_TURN'), 'ainda tem tempo');
+  clock += 50; arena.heartbeat(rec, 'A'); arena.heartbeat(rec, 'B'); arena.sweep();
   assert.ok(s.events.some(e => e.type === 'TIMEOUT_END_TURN' && e.player === first));
   for (let i = 0; i < 10 && s.window; i++) arena.act(rec, s.window.priority, {type: 'pass'});
   assert.equal(s.active, second);
   assert.equal(arena.view(rec, second).clock.running, second);
-  assert.ok(arena.view(rec, second).clock.players[first].reserve <= 5 * 3, 'reserva zerou; só os bônus dos passes depois'); // +5 por ação (01/11/2026)
+  assert.equal(arena.view(rec, second).clock.players[second].reserve, 90, 'o outro recebe os 90 s cheios'); // 90 s por ação (01/11/2026)
 });
 
 test('§55: a moeda vem do servidor, igual para os dois; só o vencedor escolhe; as mãos só existem depois', () => {

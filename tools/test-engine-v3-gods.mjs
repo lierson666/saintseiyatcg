@@ -182,8 +182,30 @@ test('G3-015: Soul 0 encerra na hora; gatilho pendente não resolve depois', () 
   assert.deepEqual([s.victory, s.chain.length, s.players.A.latent], [{winner: 'A'}, 0, 0], 'Cosmo of Hope não chega a resolver');
 });
 
-test('Relógio Alpha: 60 s básicos, reserva 180 (teto 240), 50% do básico não usado vira reserva; animação pausa', () => {
+// Valores de 4 minutos (antes dos 90 s por ação): o teste confere a lógica de básico e reserva, não os números do ALPHA_CLOCK.
+const CLOCK_4MIN = {basic: 60, reserveStart: 180, reserveMax: 240, carry: 0.5, actionBonus: 5};
+test('Relógio Alpha: 90 s por ação; voltam cheios a cada ação, a cada decisão recebida e depois de um timeout', () => {
   const c = createClock(['A', 'B']);
+  clockStartTurn(c, 'A', 0);
+  assert.equal(clockRemaining(c, 'A', 0).total, 90);
+  assert.equal(clockExpired(c, 89), null);
+  clockBonus(c, 'A', 80);
+  assert.equal(clockRemaining(c, 'A', 80).total, 90, 'a ação devolve o tempo cheio');
+  clockHandTo(c, 'A', 80);
+  assert.equal(clockRemaining(c, 'A', 100).total, 70, 'continuar decidindo não reinicia sem ação');
+  clockHandTo(c, 'B', 100);
+  assert.equal(clockRemaining(c, 'B', 100).total, 90);
+  clockHandTo(c, 'A', 130);
+  assert.equal(clockRemaining(c, 'A', 130).total, 90, 'a decisão de volta vem com tempo cheio');
+  assert.equal(clockExpired(c, 220), 'A', 'esgotados os 90 s sem agir, o timeout vale');
+  clockHandTo(c, 'A', 220);
+  assert.equal(clockRemaining(c, 'A', 220).total, 90, 'o timeout não derruba a decisão seguinte');
+  assert.equal(clockEndTurn(c, 'A', 230), 0, 'sem sobra guardada');
+  assert.deepEqual([torchesLit(90), torchesLit(85), torchesLit(7.5), torchesLit(1), torchesLit(0), torchesLit(9999)], [12, 12, 1, 1, 0, 12]);
+});
+
+test('Relógio com básico e reserva: 50% do básico não usado vira reserva; animação pausa', () => {
+  const c = createClock(['A', 'B'], CLOCK_4MIN);
   clockStartTurn(c, 'A', 0);
   assert.equal(clockEndTurn(c, 'A', 35), 12.5);
   assert.equal(clockRemaining(c, 'A', 35).reserve, 192.5);
@@ -191,13 +213,12 @@ test('Relógio Alpha: 60 s básicos, reserva 180 (teto 240), 50% do básico não
   assert.equal(clockRemaining(c, 'B', 150).basic, 40, '30 s de animação não contam');
   clockHandTo(c, 'A', 150); // A responde numa janela: só a reserva dele corre
   assert.deepEqual(clockRemaining(c, 'A', 160), {basic: 0, reserve: 182.5, total: 182.5});
-  const full = createClock(['A']); full.players.A.reserve = 239; clockStartTurn(full, 'A', 0);
+  const full = createClock(['A'], CLOCK_4MIN); full.players.A.reserve = 239; clockStartTurn(full, 'A', 0);
   assert.equal(clockEndTurn(full, 'A', 0), 1, 'teto 240');
-  const out = createClock(['A']); clockStartTurn(out, 'A', 0);
-  assert.equal(clockExpired(out, ALPHA_CLOCK.basic + ALPHA_CLOCK.reserveStart), 'A');
-  const bonus = createClock(['A']); bonus.players.A.reserve = 237; clockBonus(bonus, 'A', 0);
+  const out = createClock(['A'], CLOCK_4MIN); clockStartTurn(out, 'A', 0);
+  assert.equal(clockExpired(out, CLOCK_4MIN.basic + CLOCK_4MIN.reserveStart), 'A');
+  const bonus = createClock(['A'], CLOCK_4MIN); bonus.players.A.reserve = 237; clockBonus(bonus, 'A', 0);
   assert.equal(bonus.players.A.reserve, 240, '+5 por ação, até o teto');
-  assert.deepEqual([torchesLit(240), torchesLit(220), torchesLit(81), torchesLit(80), torchesLit(20), torchesLit(1), torchesLit(0), torchesLit(9999)], [12, 11, 5, 4, 1, 1, 0, 12]);
 });
 
 test('Timeouts: janela passa prioridade; fase de ações encerra o turno; opcional recusa', () => {
