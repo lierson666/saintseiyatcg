@@ -159,8 +159,8 @@ h1, h2, h3, .lb-play, .lb-tab, .lb-hero p { font-family: "Cinzel", "Trajan Pro",
 .lb-ghost { padding: 10px 14px; border: 1px solid var(--line); border-radius: 8px; background: none; color: var(--muted); }
 .lb-ghost:hover { color: var(--text); border-color: var(--muted); }
 
-/* Carta grande (botão direito): altura máxima da tela, no canto esquerdo (autor, 31/10/2026); detalhes ao lado. */
-.lb-big { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: flex-start; gap: 32px; padding: 12px; background: #000d; backdrop-filter: blur(6px); cursor: zoom-out; animation: lb-fade .18s ease-out; }
+/* Carta grande (botão direito): altura máxima da tela, carta e detalhes centralizados (autor, 31/10/2026). */
+.lb-big { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; gap: 32px; padding: 12px; background: #000d; backdrop-filter: blur(6px); cursor: zoom-out; animation: lb-fade .18s ease-out; }
 @keyframes lb-fade { from { opacity: 0; } }
 .lb-card--big { flex: none; width: min(62vw, calc((100dvh - 24px) * 1488 / 2091)); box-shadow: 0 30px 80px #000, 0 0 60px #e6c36a22; }
 .lb-info { position: relative; width: min(440px, 44vw); max-height: 86vh; overflow: auto; padding: 26px 26px 22px; cursor: default; display: grid; gap: 14px; align-content: start;
