@@ -1274,7 +1274,7 @@ document.addEventListener('pointerover', e => {
   const el = e.target.closest?.('.dcard[data-uid]:not(.dcard--back), .gear[data-uid]'); // faixa do equipamento também abre a carta
   clearTimeout(inspectTimer);
   if (!el || mode) return hideInspect(); // mirando: sem preview por cima da mesa e da instrução
-  inspectTimer = setTimeout(() => showInspect(el.dataset.uid), 300);
+  inspectTimer = setTimeout(() => showInspect(el.dataset.uid, '', el.closest('.mulligan') ? el : null), 300); // mulligan: ao lado da carta, sem cobri-la
   previewCost(el.dataset.uid);
 });
 // Toque (celular, estilo Arena): segurar 450 ms numa carta mostra a versão grande; soltar fecha sem acionar o clique.
@@ -1301,13 +1301,14 @@ document.addEventListener('pointercancel', endPress);
 function showInspect(uid, ability = '', beside = null) {
   const c = info(uid), box = $('#inspector');
   // Aberto a partir de um painel (pilha, ordem): fica ao lado dele, sem cobrir a lista.
-  const r = beside?.getBoundingClientRect();
-  box.style.left = r && r.right + 12 + 300 < innerWidth ? `${Math.round(r.right + 12)}px` : '';
   const lines = c.text.split('\n').slice(2).filter(l => !/^\s*(Rarity|Type|Casting Cost|ATK|HP|Cosmoble)/.test(l));
   const forgeOf = FORGE.get(ctx.objects[uid].cardId); // texto com as regras da carta impressa (autor, 31/10/2026)
   box.innerHTML = `${cardFace(uid, {size: 'dcard--xl', field: S().players[owner(uid)].battlefield.includes(uid)})}<div class="inspector__text"><strong>${esc(c.name)}</strong><small>${esc(c.type.replace(/^Spell\s*—\s*/, ''))}${c.cost ? ` · ${c.cost.amount} ${c.cost.unit === 'base' ? 'Base' : 'Latent'}` : ''}</small>${forgeOf ? renderCardText(forgeOf) : lines.map(l => `<p>${esc(l)}</p>`).join('')}</div>`;
   if (ability) { const want = ability.toUpperCase(); $$('.rule-block', box).find(b => b.querySelector('.rule-heading')?.textContent.toUpperCase().includes(want))?.classList.add('is-hot'); }
   box.classList.add('show');
+  // À direita se couber; senão à esquerda (mulligan: a carta da ponta direita não fica coberta).
+  const r = beside?.getBoundingClientRect(), w = box.offsetWidth;
+  box.style.left = !r ? '' : r.right + 12 + w < innerWidth ? `${Math.round(r.right + 12)}px` : r.left - 12 - w >= 0 ? `${Math.round(r.left - 12 - w)}px` : '';
 }
 // Clique direito no retrato do God: status base e atuais (Soul, Attack, Awaken, Ultimate) e o texto completo.
 // Painel do God (clique ou clique direito no retrato): a carta do God, os status atuais e cada poder num bloco.
