@@ -1,4 +1,4 @@
-// §55 (autor, 01/11/2026): compra de 2 por turno e limite de 9 cartas na mão na End Phase.
+// §55 (autor, 01/11/2026): compra de 2 por turno e limite de 7 cartas na mão na End Phase.
 // node --test tools/test-engine-v3-hand-limit.mjs
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -37,21 +37,21 @@ test('compra 2 por turno; só quem começa não compra no 1º turno', () => {
   assert.equal(own.hand.length, (key === 'A' ? first : second) + 2);
 });
 
-test('END TURN com 12 cartas: escolhe 3, vão ao Tartarus e fica com 9', () => {
+test('END TURN com 10 cartas: escolhe 3, vão ao Tartarus e fica com 7', () => {
   const t = setup();
-  while (t.A.hand.length < 12) t.A.hand.push(t.A.deck.shift());
+  while (t.A.hand.length < 10) t.A.hand.push(t.A.deck.shift());
   const excess = t.A.hand.slice(0, 3), tartarus = t.A.tartarus.length;
   end(t);
-  assert.equal(t.A.hand.length, 9);
+  assert.equal(t.A.hand.length, 7);
   assert.equal(t.A.tartarus.length, tartarus + 3);
   assert.ok(excess.every(uid => t.A.tartarus.includes(uid)));
   assert.equal(t.asked.filter(q => q.ability === 'Hand limit').length, 3);
 });
 
-test('com 9 cartas ou menos não há descarte', () => {
+test('com 7 cartas ou menos não há descarte', () => {
   const t = setup();
-  while (t.A.hand.length < 9) t.A.hand.push(t.A.deck.shift());
+  while (t.A.hand.length < 7) t.A.hand.push(t.A.deck.shift());
   end(t);
-  assert.equal(t.A.hand.length, 9);
+  assert.equal(t.A.hand.length, 7);
   assert.equal(t.asked.length, 0);
 });

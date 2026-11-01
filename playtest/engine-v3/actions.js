@@ -8,7 +8,7 @@ import {announceExclamation, removeJudgment, announceGreatFlood, announceGreatEc
 import {mulligan, chooseFirst} from './match.js';
 import {applyTimeout} from './clock.js';
 
-// §55: depois da conversão das Bases, o ativo escolhe o excesso acima de 9 cartas; os gatilhos de descarte entram na janela aberta por endTurn.
+// §55: depois da conversão das Bases, o ativo escolhe o excesso acima de HAND_LIMIT cartas; os gatilhos de descarte entram na janela aberta por endTurn.
 const handLimit = (s, ctx, key) => { discard(s, ctx, key, s.players[key].hand.length - HAND_LIMIT, 'Hand limit'); };
 
 // Aplica `action` em `match` ({state, objects, attached, …}). `ctx` = {cards, objects, attached} da partida.

@@ -4,6 +4,14 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-01 — §55, Cap. XI — Limite de mão cai de 9 para 7 cartas
+
+- **Antes:** ao passar o turno, descarta o excesso acima de 9 cartas.
+- **Depois:** ao passar o turno, descarta o excesso acima de 7 cartas. Momento, escolha livre e destino Tartarus não mudam.
+- **Motivo:** pedido do autor, 01/11/2026.
+- **Engine/UI:** `engine-v3/core.js` (`HAND_LIMIT`), `engine-v3/actions.js`, How to Play e `shared/i18n-pt-site.js`.
+- **Pendência:** medir IA × IA; `docs/decks-ultra.md` foi medido com limite de 9. Não publicado.
+
 ## 2026-11-01 — Cartas (Artemis) — 381 Sacred Stag só dá Training em outro Devotee
 
 - **Antes:** *you may put a Training counter on target friendly Devotee* (podia mirar a si mesmo).

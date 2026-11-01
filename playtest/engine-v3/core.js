@@ -5,7 +5,7 @@
 
 export const LATENT_CAP = 3; // D198, D226
 export const DRAWS_PER_TURN = 2; // §55: 2 por turno (autor, 01/11/2026; revoga a compra de 1 de 30/10/2026)
-export const HAND_LIMIT = 9; // §55: excesso descartado na End Phase do próprio turno (autor, 01/11/2026)
+export const HAND_LIMIT = 7; // §55: excesso descartado na End Phase do próprio turno (autor, 01/11/2026)
 // D194: classificação Moment/Technique pelo número da carta Athena V6.
 // 54, 56, 58, 61, 76 e 79 eram Miracle e são Technique; 52, 55 e 83 eram Event e são Moment (autor, 31/10/2026; cards.json).
 // Athena → Branco (autor, 31/10/2026): os truques defensivos 54, 56, 58, 61, 76, 79 e 81 e The Golden Arrow (82) viram Moment.

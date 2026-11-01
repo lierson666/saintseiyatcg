@@ -583,7 +583,7 @@ Deck principal	50 cartas
 Mão inicial	7 cartas
 Cosmo Base por turno	1
 Compra por turno	2 (quem começa a partida não compra no primeiro turno dele)
-Limite de cartas na mão	9 (descarta o excesso na End Phase)
+Limite de cartas na mão	7 (descarta o excesso na End Phase)
 Strike	1 por Devotee por turno
 Dano entre turnos	Persistente
 Duração média desejada	8–10 Rounds
@@ -598,7 +598,7 @@ O autor aprovou a aplicação das recomendações de fechamento ao sistema do jo
 
 ### 55. Round, turnos, compras e mulligan
 
-Revisado em 31/10/2026 (ALPHA-P01, P02, P03 e P06, aprovadas em 28/10/2026; compra de 2 cartas e limite de 9 na mão, 01/11/2026; cara ou coroa e compra do segundo jogador, 01/11/2026).
+Revisado em 31/10/2026 (ALPHA-P01, P02, P03 e P06, aprovadas em 28/10/2026; compra de 2 cartas e limite de mão, 01/11/2026; cara ou coroa e compra do segundo jogador, 01/11/2026).
 
 - O primeiro jogador é definido por **cara ou coroa** antes de qualquer compra (autor, 01/11/2026). Cada jogador já tem uma face da moeda; ninguém escolhe a face. Quem vence escolhe começar ou passar o início ao adversário.
 - O primeiro jogador começa **todos** os Rounds. Cada Round tem um turno de cada jogador.
@@ -606,10 +606,10 @@ Revisado em 31/10/2026 (ALPHA-P01, P02, P03 e P06, aprovadas em 28/10/2026; comp
 - Início do turno: o ativo prepara seus Devotees, Equipment e Bases; resolvem-se os gatilhos de início de turno; ele compra **2 cartas**. Só quem começa a partida não compra no primeiro turno dele; o outro jogador já compra no primeiro turno dele (autor, 01/11/2026).
 - O ativo pode colocar uma Base Cosmoble por turno, com a pilha vazia. A Base entra Prepared e paga no mesmo turno (G3-035). Colocar Base não entra na pilha.
 - O turno termina quando o ativo declara END TURN com a pilha vazia. End Phase: conversão das Bases Prepared em Latent (§5); gatilhos de fim de turno; no 2º turno do Round, gatilhos de fim de Round (D204); Cleanup.
-- Limite de **9 cartas na mão** (autor, 01/11/2026): na End Phase do próprio turno, logo após a conversão das Bases em Latent, quem tem mais de 9 cartas escolhe e descarta o excesso para o Tartarus. Isso conta como descarte para efeitos de carta. Fora desse momento a mão pode passar de 9.
+- Limite de **7 cartas na mão** (autor, 01/11/2026): na End Phase do próprio turno, ao passar o turno, logo após a conversão das Bases em Latent, quem tem mais de 7 cartas escolhe e descarta o excesso para o Tartarus. Isso conta como descarte para efeitos de carta. Fora desse momento a mão pode passar de 7.
 - Deck vazio: quem precisa comprar uma carta e não tem carta no deck perde a partida na hora. Vale para a compra do turno e para qualquer compra por efeito. Ficar com o deck vazio (por Mill, por exemplo) não derrota sozinho; a derrota vem na próxima compra. Por isso Mill é condição de vitória. Se um mesmo efeito fizer os dois jogadores comprarem de deck vazio, a partida empata. Não existe Fatigue (autor, 01/11/2026; `draw` no engine-v3).
 
-**Por quê:** com 1 compra, dois decks agressivos esvaziavam a mão e a partida empacava com Soul alto, só em trocas de Devotees (autor, 01/11/2026, playtest real). A compra de 2 revoga a decisão de 30/10/2026; o limite de 9 segura o acúmulo de cartas.
+**Por quê:** com 1 compra, dois decks agressivos esvaziavam a mão e a partida empacava com Soul alto, só em trocas de Devotees (autor, 01/11/2026, playtest real). A compra de 2 revoga a decisão de 30/10/2026; o limite de 7 segura o acúmulo de cartas.
 
 ### 56. Timing, respostas e resolução
 
@@ -741,7 +741,7 @@ Se um Strike causar Soul zero aos dois Gods simultaneamente por efeitos aplicáv
 | Parâmetro | Parâmetro inicial |
 | --- | --- |
 | Soul / Attack de God de referência | 20 / 3; Soul entre 15 e 22 por God. Os valores de cada God (Soul, Attack, Awaken) são os da carta do God no Card Forge (`data/cards.json`, ids `<facção>-001`) desde 29/10/2026; em 29/10/2026: Athena 22/2/Awaken 5, Poseidon 22/1/4, Hades 18/2/7, Artemis 20/1/3, Ares 18/3/7 |
-| Compras | 2 por turno; quem começa a partida não compra no primeiro turno dele; limite de 9 cartas na mão |
+| Compras | 2 por turno; quem começa a partida não compra no primeiro turno dele; limite de 7 cartas na mão |
 | Bases | 1 por turno próprio; entra Prepared |
 | Latent | Limite de 3; Bases Prepared viram Latent no fim do seu turno; persiste |
 | Retorno do Tartarus | Uma vez por carta física/rodada |
