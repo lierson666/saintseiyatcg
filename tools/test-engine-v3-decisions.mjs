@@ -15,6 +15,7 @@ import {createClock, clockStartTurn, clockHandTo, clockExpired, clockRemaining, 
 const CLOCK_3MIN = {basic: 60, reserveStart: 90, reserveMax: 180, carry: 0.5};
 import {runDecisions, resume, PendingDecision} from '../playtest/engine-v3/decision.js';
 import {resumeFor} from '../playtest/engine-v3/sync.js';
+import {summonToken, toHand} from '../playtest/engine-v3/v6/kit.js';
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json');
@@ -31,6 +32,18 @@ function setup() {
   startTurn(s);
   return {m, s, ctx, take, field, bases};
 }
+// Replay com token: bounce antes da pergunta apaga o objeto; o snapshot precisa devolvê-lo para a ação rodar de novo (Poseidon × Ramp).
+test('token devolvido antes de uma pergunta sobrevive ao replay e some só no fim', () => {
+  const {s, ctx} = setup();
+  const uid = summonToken(s, ctx, 'B', {id: 'neutral-token-test', name: 'Token', atk: 3, hp: 3}) ?? s.players.B.battlefield.at(-1);
+  const run = () => { toHand(s, ctx, uid, 'battlefield'); ctx.decide('A', {ability: 'Depois do bounce'}); };
+  const r = runDecisions(s, ctx, run);
+  assert.ok(r.pending);
+  const end = resume(s, ctx, run, r, {value: true});
+  assert.ok(end.done);
+  assert.ok(!s.players.B.battlefield.includes(uid) && !s.players.B.hand.includes(uid) && !ctx.objects[uid]);
+  checkInvariants(s, ctx.objects);
+});
 const count = (s, type, ability) => s.events.filter(e => e.type === type && (!ability || e.ability === ability)).length;
 const types = s => s.events.map(e => e.type);
 // Water Prison: Strike de A com Poseidon (B) em Awaken e 3 Latent; tudo dentro do protocolo.

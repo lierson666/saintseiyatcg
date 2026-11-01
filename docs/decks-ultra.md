@@ -20,15 +20,15 @@ Status: montados e medidos em 01/11/2026. Arquétipos aprovados pelo autor antes
 | Deck | God / Domain | `hard` | `normal` | vs 8 decks antigos (`hard`) | Vence por (`hard`) |
 | --- | --- | --- | --- | --- | --- |
 | **Aggro**: Crimson Sligh | Ares / THE ARENA OF BLOOD | 47% | 64% | 64% | Soul 169 |
-| **Tempo**: Marina Tide | Poseidon / THE NORTH ATLANTIC PILLAR | 57% | 44% | 69% | Soul 107, deck vazio 99 |
+| **Tempo**: Marina Tide | Poseidon / THE NORTH ATLANTIC PILLAR | 59% | 44% | 69% | Soul 109, deck vazio 102 |
 | **Midrange**: Judgment of Elysion | Hades / ELYSION | 53% | 54% | 84% | Soul 190 |
-| **Control**: Silent Sanctuary | Poseidon / THE UNDERSEA SANCTUARY | 61% | 46% | 63% | deck vazio 179, Soul 40 |
+| **Control**: Silent Sanctuary | Poseidon / THE UNDERSEA SANCTUARY | 62% | 46% | 63% | deck vazio 182, Soul 40 |
 | **Combo**: Twelve Temples Exclamation | Athena / THE SANCTUARY GATES | 21% | 39% | 51% | Soul 76, deck vazio 1 |
-| **Reanimator**: Return from the Deep | Hades / THE NORTH ATLANTIC PILLAR | 55% | 47% | 80% | Soul 198 |
-| **Mill**: The Abyssal Clock | Poseidon / THE ABYSSAL TRENCH | 69% | 34% | 69% | deck vazio 244, Soul 4 |
+| **Reanimator**: Return from the Deep | Hades / THE NORTH ATLANTIC PILLAR | 56% | 47% | 80% | Soul 201 |
+| **Mill**: The Abyssal Clock | Poseidon / THE ABYSSAL TRENCH | 70% | 34% | 69% | deck vazio 249, Soul 4 |
 | **Stax/Lock**: The First Prison | Hades / THE FIRST PRISON | 44% | 44% | 70% | Soul 157 |
 | **Voltron**: The Silver Arrow | Artemis / THE LUNAR HUNTING GROUNDS | 32% | 58% | 61% | Soul 116 |
-| **Ramp**: Primordial Moon | Artemis / THE SACRED FOREST | 51% | 71% | 64% | Soul 185 |
+| **Ramp**: Primordial Moon | Artemis / THE SACRED FOREST | 57% | 71% | 71% | Soul 204 |
 
 Primeiro jogador vence 69% no `hard` e 76% no `normal`. Mediana de 8 e 7 rounds. Rodada mista com os 8 decks antigos: 10 partidas por confronto, primeiro jogador 71%.
 
@@ -49,7 +49,7 @@ Os 8 decks antigos vencem de 15% a 56% contra os ultra; só Marina Tempest fica 
 | Stax/Lock | Athena + Seal, Domain Arctic Ocean Pillar | **Hades, First Prison** (discard: The Rack/Pox) | Arctic Ocean Pillar não tem efeito na engine. Contra ultra + antigos (`hard` / `normal`): Athena 24% / 39%; Poseidon 46% / 39%; Hades 61% / 52% |
 | Reanimator | Gates of the Underworld | **North Atlantic Pillar** com 10 cartas Poseidon | Contra ultra + antigos: splash 67% / 56%; mono 61% / 51%, dentro da margem |
 | Combo | Stairway | **Sanctuary Gates** | Contra ultra + antigos: 47% / 53%; Stairway 40% / 55%, dentro da margem |
-| Ramp | Devotees de mana | **Sem Devotees de mana**: Initiate, Dryad, Shaman e Amulet saíram | A IA não os ativa. No `hard`, 29% no 1º round-robin e 51% no final (as outras listas também mudaram). Com piloto humano, testar a versão com eles |
+| Ramp | Devotees de mana | **Sem Devotees de mana**: Initiate, Dryad, Shaman e Amulet saíram | A IA não os ativa. No `hard`, 29% no 1º round-robin e 57% no final (as outras listas também mudaram). Com piloto humano, testar a versão com eles |
 
 Hades ficou com 3 decks, Poseidon com 3, Artemis com 2, Ares e Athena com 1.
 
@@ -60,15 +60,15 @@ Hades ficou com 3 decks, Poseidon com 3, Artemis com 2, Ares e Athena com 1.
 | vence → | Aggro | Tempo | Midrange | Control | Combo | Reanimator | Mill | Stax | Voltron | Ramp |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | **Aggro** | · | 68% | 33% | 50% | 50% | 20% | 45% | 40% | 58% | 60% |
-| **Tempo** | 33% | · | 50% | 50% | 90% | 50% | 43% | 55% | 88% | 58% |
+| **Tempo** | 33% | · | 50% | 50% | 90% | 50% | 43% | 55% | 88% | 70% |
 | **Midrange** | 68% | 50% | · | 43% | 63% | 43% | 38% | 68% | 78% | 28% |
-| **Control** | 50% | 50% | 58% | · | 95% | 70% | 43% | 68% | 73% | 43% |
+| **Control** | 50% | 50% | 58% | · | 95% | 70% | 43% | 68% | 73% | 50% |
 | **Combo** | 50% | 10% | 38% | 5% | · | 15% | 10% | 23% | 40% | 3% |
-| **Reanimator** | 80% | 50% | 58% | 30% | 85% | · | 18% | 70% | 63% | 43% |
-| **Mill** | 55% | 58% | 63% | 58% | 90% | 83% | · | 80% | 80% | 55% |
+| **Reanimator** | 80% | 50% | 58% | 30% | 85% | · | 18% | 70% | 63% | 50% |
+| **Mill** | 55% | 58% | 63% | 58% | 90% | 83% | · | 80% | 80% | 68% |
 | **Stax** | 60% | 45% | 33% | 33% | 78% | 30% | 20% | · | 60% | 35% |
 | **Voltron** | 43% | 13% | 23% | 28% | 60% | 38% | 20% | 40% | · | 28% |
-| **Ramp** | 40% | 23% | 73% | 38% | 83% | 40% | 30% | 65% | 73% | · |
+| **Ramp** | 40% | 30% | 73% | 50% | 98% | 50% | 33% | 65% | 73% | · |
 
 `normal`:
 
@@ -183,5 +183,4 @@ Bases extras (Nature's Awakening, Roots, Dryad, Forest) e, antes do round 5, Sel
 
 ## Pendências
 
-- Bug de engine: `TypeError: Cannot read properties of undefined (reading 'cardId')` em Poseidon × Ramp (37 ocorrências em 1800 partidas `hard`). A partida reproduzida parou em `janela`, sem vencedor. Causa provável, não confirmada: token (The Forest Invades Sanctuary) devolvido à mão some de `objects` (`vanish`, `v6/kit.js:149`) e algo ainda lê o uid.
 - Playtest humano: Combo, Stax, Voltron e Ramp são os mais afetados pelos limites da IA.

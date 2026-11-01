@@ -26,8 +26,9 @@ function assignInPlace(target, source) {
   for (const k of Object.keys(target)) if (!(k in source)) delete target[k];
   Object.assign(target, clone(source));
 }
-export function snapshot(state, ctx) { return {state: clone(state), attached: clone(ctx.attached)}; }
-export function restore(state, ctx, snap) { assignInPlace(state, snap.state); assignInPlace(ctx.attached, snap.attached); }
+// `objects` entra porque muda em jogo: token nasce e some (kit.js) e Moon Awakening marca Bases (gods.js).
+export function snapshot(state, ctx) { return {state: clone(state), attached: clone(ctx.attached), objects: clone(ctx.objects)}; }
+export function restore(state, ctx, snap) { assignInPlace(state, snap.state); assignInPlace(ctx.attached, snap.attached); assignInPlace(ctx.objects, snap.objects); }
 
 // Pergunta da engine → pedido para a interface. `kind`: 'optional' (sim/não) ou 'choice' (obrigatória, entre `options`).
 export function describe(player, q) {
