@@ -5,7 +5,7 @@
 // Duelo (etapa 4, docs/duelo-online.md): Challenge no chat com escolha de deck; o desafio vira mensagem com Accept/Decline,
 // expira em 60 s e, aceito, leva os dois para a mesma partida. Fora do chat, um aviso no topo mostra o desafio recebido.
 import {playerName} from './rank.js?v=20261031-face3';
-import {mountChatDock} from './chat-dock.js?v=20261031-2';
+import {mountChatDock} from './chat-dock.js?v=20261101-online1';
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const LABEL = {online: 'Online', match: 'In a match', offline: 'Offline'};
 
@@ -129,5 +129,5 @@ export function mountSocial({api, avatarOf, onCount, decks = () => [], onProfile
     open = state; el.hidden = !open;
     if (open) { msg = null; menu = null; refresh(); el.querySelector('[name=code]')?.focus(); }
   }
-  return {toggle, refresh, open: user => dock.open(user)};
+  return {toggle, refresh, open: user => dock.open(user), friends: () => data.friends, challenge: (user, deck) => dock.challenge(user, deck)};
 }

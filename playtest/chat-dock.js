@@ -309,5 +309,11 @@ export function mountChatDock({api, avatarOf, decks = () => [], play, inMatch = 
   setInterval(() => { if (!document.hidden) convs.forEach(pull); }, OPEN_POLL);
   setInterval(() => { if (!document.hidden) refreshFriends(); }, BACKGROUND_POLL);
   refreshFriends();
-  return {open, refreshFriends, challenges, friends: () => friends};
+  // Desafio de fora do chat (tela Jogar → Online, autor 01/11/2026): abre a conversa e manda o desafio como o botão da janela.
+  async function challenge(user, deck) {
+    const c = open(user, {focus: false}), r = await api('/api/challenges', 'POST', {to: user, deck});
+    waiting.add(r.id); pull(c);
+    return r;
+  }
+  return {open, refreshFriends, challenges, challenge, friends: () => friends};
 }

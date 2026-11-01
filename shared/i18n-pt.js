@@ -37,6 +37,11 @@ self.ssI18nPT = {
     // Lobby: início e jogar
     'Let your': 'Deixe seu', 'Cosmo burn': 'Cosmo queimar', 'Build a deck around your God and take it to the arena.': 'Monte um deck em torno do seu Deus e leve-o para a arena.',
     'My decks': 'Meus decks', 'Starters': 'Iniciais', 'Competitive': 'Competitivos', 'Mode': 'Modo', 'Battle vs AI': 'Batalha contra a IA',
+    'Online': 'Online', 'Ladder': 'Ranqueada', 'Soon': 'Em breve', 'Ranked ladder: coming soon': 'Ranqueada: em breve', 'Challenge': 'Desafiar',
+    'Friends online': 'Amigos online', 'Sign in to play online.': 'Entre na sua conta para jogar online.',
+    'No friends online right now. Add friends in Friends.': 'Nenhum amigo online agora. Adicione amigos em Amigos.',
+    'Pick a complete deck first': 'Escolha um deck completo antes', 'Your friend is busy': 'Seu amigo está ocupado',
+    'Challenge to a duel': 'Desafiar para um duelo',
     'Local battle': 'Batalha local', 'Search decks': 'Buscar decks', 'Who starts': 'Quem começa', 'starts': 'começa', 'Choose a deck': 'Escolha um deck',
     'Pick a deck': 'Escolha um deck', 'AI rival': 'Rival IA', 'Random deck': 'Deck aleatório', 'Choose rival': 'Escolher rival', 'VS': 'VS',
     'No deck matches these filters.': 'Nenhum deck com esses filtros.', 'My player profile': 'Meu perfil de jogador', 'Cover': 'Capa', 'Duplicate': 'Duplicar', 'Change cover': 'Trocar capa', 'Starter decks are read-only': 'Decks iniciais não podem ser alterados',

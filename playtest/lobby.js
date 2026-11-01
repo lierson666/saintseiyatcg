@@ -11,7 +11,7 @@ import {loadMyDecks, saveMyDecks, findDeck, syncDecks, onDeckStatus, deckCovers,
 import {mountKV} from '../shared/kv-sky.js?v=20261031-native';
 import {countryOptions, countryName} from '../shared/countries.js?v=20261031-i18n1';
 import {startPresence} from '../shared/presence.js?v=20261029-1';
-import {mountSocial} from './social.js?v=20261031-chat2';
+import {mountSocial} from './social.js?v=20261101-online1';
 import {telas, imageUrl, sound, applyColors, applyTexts} from './telas.js?v=20261030-1';
 import {loadEconomy, ownedLimit, missingCards, coinBadge, storeScreen, collectionScreen, openBooster, buyBooster, buyCosmetic} from './economy.js?v=20261031-filt1';
 import {lightArt} from '../shared/light-art.js';
@@ -117,6 +117,7 @@ function startSocial() {
     decks: () => allDecks().filter(deckValid).map(d => ({id: d.id, name: d.alpha_nome || d.nome, deck: d})), onCount: (online, requests) => {
     ui.online = online; ui.requests = requests;
     const b = root.querySelector('.lb-socialbtn'); if (b) b.innerHTML = `Friends ${socialBadge()}`;
+    const list = root.querySelector('.ds-friends'); if (list && ui.play && ui.mode === 'online') list.outerHTML = friendsBar(); // status dos amigos ao vivo
   }});
 }
 
@@ -164,12 +165,12 @@ function playPanel() {
   const first = [['random', 'Random'], ['A', ui.mode === 'ai' ? 'You' : 'Player A'], ['B', ui.mode === 'ai' ? 'AI' : 'Player B']];
   const randomRival = ui.mode === 'ai' && ui.rivalRandom !== false;
   const ready = [ui.deckA, ...(randomRival ? [] : [ui.deckB])].every(id => { const d = findDeck(id, presets); return d && deckValid(d); });
-  const choosing = side === 'a' ? (ui.mode === 'ai' ? 'Choose your deck' : 'Player A deck') : (ui.mode === 'ai' ? 'Choose the AI deck' : 'Player B deck');
+  const choosing = side === 'a' ? (ui.mode !== 'local' ? 'Choose your deck' : 'Player A deck') : (ui.mode === 'ai' ? 'Choose the AI deck' : 'Player B deck');
   const opening = ui.playOpening; ui.playOpening = false; // anima só ao abrir, não a cada clique
   return `<section class="ds ${opening ? 'is-opening' : ''}" role="dialog" aria-modal="true" aria-label="Play">
     <header class="ds-head">
       <h2>Play</h2>
-      <nav class="ds-modes" aria-label="Mode">${mode('ai', 'Battle vs AI')}${mode('local', 'Local battle')}</nav>
+      <nav class="ds-modes" aria-label="Mode">${mode('ai', 'Battle vs AI')}${mode('local', 'Local battle')}${mode('online', 'Online')}<button class="ds-mode" disabled title="Ranked ladder: coming soon">Ladder <small>Soon</small></button></nav>
       <button class="lb-x" data-act="close-play" aria-label="Close">×</button>
     </header>
     <div class="ds-tools">
@@ -179,18 +180,28 @@ function playPanel() {
     </div>
     <div class="ds-grid">${groups.length ? groups.map(([k, l]) => `<h3>${KIND_LABEL[k]} <span>${l.length}</span></h3>
       <div class="ds-row">${l.map(d => deckTile(d, act, d.id === current)).join('')}</div>`).join('') : '<p class="lb-empty">No deck matches these filters.</p>'}</div>
-    <footer class="ds-bar">
+    ${ui.mode === 'online' ? `<footer class="ds-bar ds-bar--online"><div class="ds-matchup">${slotChip('a')}</div>${friendsBar()}</footer>` : `<footer class="ds-bar">
       <div class="ds-matchup">${slotChip('a')}<span class="ds-vs" aria-hidden="true">VS</span>${randomRival
         ? `<button class="ds-slot ds-slot--random" data-act="choose-rival"><span class="ds-slot__art" aria-hidden="true">?</span><span><small>AI rival</small><strong>Random deck</strong><em>Choose rival</em></span></button>`
         : slotChip('b')}</div>
       <div class="lb-first" role="group" aria-label="Who starts">${first.map(([v, l]) => `<button class="lb-chip ${ui.first === v ? 'is-on' : ''}" data-act="first-pick" data-value="${v}" aria-pressed="${ui.first === v}">${l}</button>`).join('')}<span>starts</span></div>
       <button class="lb-play ds-play" data-act="start" ${ready ? '' : 'disabled'}>${ready ? 'Play' : 'Pick a deck'}</button>
-    </footer>
+    </footer>`}
   </section>`;
+}
+// Online contra amigo (autor, 01/11/2026): o desafio é o mesmo do chat (/api/challenges); aceito, a partida abre sozinha.
+function friendsBar() {
+  const deck = findDeck(ui.deckA, presets), ok = deck && deckValid(deck);
+  const list = (social?.friends() || []).filter(f => f.status !== 'offline');
+  const sent = ui.challengeSent ? `<p class="ds-friends__note" role="status">${esc(ui.challengeSent)}</p>` : '';
+  if (!ui.user?.complete) return '<div class="ds-friends"><p class="ds-friends__note">Sign in to play online.</p></div>';
+  if (!list.length) return `<div class="ds-friends"><p class="ds-friends__note">No friends online right now. Add friends in Friends.</p>${sent}</div>`;
+  return `<div class="ds-friends" role="list" aria-label="Friends online">${list.map(f => `<div class="ds-friend" role="listitem"><i class="kv-dot ${f.status === 'online' ? '' : 'is-busy'}" aria-hidden="true"></i><span>${esc(f.user)}</span>
+    <button class="lb-chip is-on" data-act="challenge" data-user="${esc(f.user)}" ${ok && f.status === 'online' ? '' : 'disabled'} title="${!ok ? 'Pick a complete deck first' : f.status !== 'online' ? 'Your friend is busy' : 'Challenge to a duel'}">Challenge</button></div>`).join('')}${sent}</div>`;
 }
 function slotChip(side) {
   const d = findDeck(side === 'a' ? ui.deckA : ui.deckB, presets), active = (ui.slot || 'a') === side, art = d && deckCover(d);
-  const who = side === 'a' ? (ui.mode === 'ai' ? 'You' : 'Player A') : (ui.mode === 'ai' ? 'AI rival' : 'Player B');
+  const who = side === 'a' ? (ui.mode !== 'local' ? 'You' : 'Player A') : (ui.mode === 'ai' ? 'AI rival' : 'Player B');
   return `<button class="ds-slot ${active ? 'is-active' : ''}" data-act="slot" data-slot="${side}" aria-pressed="${active}">
     <span class="ds-slot__art" style="${art ? `background-image:url('${art}')` : ''}"></span>
     <span><small>${who}</small><strong>${d ? esc(d.alpha_nome || d.nome) : 'Choose a deck'}</strong>${side === 'b' && ui.mode === 'ai' ? '<em data-act="random-rival">Random</em>' : ''}</span></button>`;
@@ -581,6 +592,13 @@ const actions = {
   'first-pick': t => { ui.first = t.dataset.value; remember(); },
   'random-b': () => { const ok = allDecks().filter(d => deckValid(d) && d.id !== ui.deckA); if (ok.length) ui.deckB = ok[Math.floor(Math.random() * ok.length)].id; remember(); },
   start: startMatch,
+  challenge: async t => {
+    const d = findDeck(ui.deckA, presets);
+    if (!d || !deckValid(d) || !social) return;
+    try { await social.challenge(t.dataset.user, d); ui.challengeSent = `Challenge sent to ${t.dataset.user}. The duel starts when they accept.`; }
+    catch (e) { ui.challengeSent = e.message; }
+    render();
+  },
   'collection-filter': t => { ui.colFilter = t.dataset.value; render(); },
   'buy-booster': async t => { try { ui.econ = await buyBooster(+t.dataset.qty || 1); } catch (e) { ui.notice = {title: 'Store', text: e.message}; } render(); },
   'open-booster': t => openBooster(face, r => { ui.econ = r; render(); }, ui.econ?.boosters, +t.dataset.count || 1),

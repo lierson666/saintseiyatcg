@@ -70,3 +70,13 @@
 @media (prefers-reduced-motion: reduce) { .ds, .ds-deck, .ds-deck__art { animation: none; transition: none; } }
 .ds-bar .lb-first { flex-wrap: nowrap; white-space: nowrap; }
 @media (max-width: 1100px) and (min-width: 761px) { .ds-slot { max-width: 200px; } .ds-play { width: 220px; } }
+
+/* Online contra amigo (01/11/2026): amigos online com Challenge no lugar do PLAY. */
+.ds-mode small { font-size: .7em; opacity: .7; margin-left: 4px; }
+.ds-mode:disabled { opacity: .45; cursor: not-allowed; }
+.ds-bar--online { align-items: center; }
+.ds-friends { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-left: auto; min-width: 0; }
+.ds-friend { display: flex; align-items: center; gap: 8px; padding: 6px 8px 6px 12px; border: 1px solid rgba(230, 195, 106, .3); border-radius: 999px; background: rgba(10, 14, 30, .7); }
+.ds-friend span { font-weight: 600; }
+.ds-friend .kv-dot.is-busy { background: #e0a040; box-shadow: 0 0 8px #e0a040; }
+.ds-friends__note { margin: 0; opacity: .8; }
