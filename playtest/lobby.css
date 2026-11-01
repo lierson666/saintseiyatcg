@@ -348,7 +348,7 @@ body { font: 300 15px/1.45 var(--kv-sans); }
 .lb-social__empty { color: var(--kv-muted); font-size: 14px; }
 .lb-friend { display: flex; align-items: center; gap: 12px; padding: 8px 10px; border: 1px solid transparent; border-radius: 14px; }
 .lb-friend:hover { border-color: var(--kv-line); background: #f5f1e608; }
-.lb-friend__avatar { position: relative; flex: none; width: 40px; height: 40px; border-radius: 50%; background: center 18% / cover, var(--kv-glass); border: 1px solid var(--kv-line); }
+.lb-friend__avatar { position: relative; display: block; flex: none; width: 40px; height: 40px; border-radius: 50%; background: center 18% / cover, var(--kv-glass); border: 1px solid var(--kv-line); }
 .lb-friend.is-online .lb-friend__avatar::after, .lb-friend.is-match .lb-friend__avatar::after { content: ""; position: absolute; right: -1px; bottom: -1px; width: 11px; height: 11px; border-radius: 50%; border: 2px solid #0b0c16; }
 .lb-friend.is-online .lb-friend__avatar::after { background: var(--kv-gold); box-shadow: 0 0 8px var(--kv-gold); }
 .lb-friend.is-match .lb-friend__avatar::after { background: var(--kv-ember); box-shadow: 0 0 8px var(--kv-ember); }
@@ -581,3 +581,83 @@ body { font: 300 15px/1.45 var(--kv-sans); }
 .lb-top { overflow-x: auto; scrollbar-width: none; }
 .lb-top::-webkit-scrollbar { display: none; }
 .lb-top > * { flex: none; }
+
+/* Telas fora do telefone não têm engrenagem nem o bloco Conta das Opções. */
+.lb-gear, .lb-phone-only, .lb-step { display: none; }
+.lb-cell { position: relative; min-width: 0; }
+
+/* Telefone em pé (autor, 01/11/2026: "pensado pra mobile"): uma ação por vez ao alcance do polegar.
+   Topo: logo, Amigos e engrenagem, fora da Dynamic Island. Cinco abas (Opções vira engrenagem). JOGAR sempre visível acima das abas. */
+@media (max-width: 600px) {
+  /* overflow na barra prendia as abas (fixed) no iOS: sumiam da tela. Sem o scroll, os selos e a conta saem do topo. */
+  .lb-top { flex: none; overflow: visible; height: calc(56px + var(--kv-safe-t)); padding-top: var(--kv-safe-t); }
+  .lb-top > :not(.lb-top__logo, .lb-tabs, .lb-socialbtn, .lb-gear) { display: none; }
+  .lb-socialbtn { margin-left: auto; min-height: 44px; }
+  .lb-gear { display: grid; place-items: center; width: 44px; height: 44px; margin-left: auto; border: 1px solid var(--kv-line); border-radius: 50%; background: none; color: var(--kv-muted); font-size: 20px; }
+  .lb-socialbtn + .lb-gear { margin-left: 0; }
+  .lb-gear.is-active { border-color: var(--kv-gold); color: var(--kv-gold-2); }
+  .lb-tabs [data-screen="options"] { display: none; }
+  .lb-tab { letter-spacing: .1em; }
+  .lb-phone-only { display: block; }
+  .lb-phone-links { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+  .lb-phone-links .kv-ghost { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; text-decoration: none; }
+
+  /* Home: destaque curto só com o título, progresso em uma linha, atalhos, e JOGAR preso acima das abas. */
+  /* O respiro das abas sai do .lb-body e entra na Home: padding no scroller muda a conta do sticky entre navegadores. */
+  .lb-body--home { padding-bottom: 0; }
+  .lb-body .lb-home { display: flex; flex-direction: column; gap: 12px; height: auto; min-height: 100%; overflow: visible; box-sizing: border-box; padding: 12px max(16px, var(--kv-safe-r)) calc(72px + var(--kv-safe-b)) max(16px, var(--kv-safe-l)); }
+  .lb-home .lb-hero { order: 1; flex: 1 1 164px; min-height: 164px; max-height: 280px; }
+  .lb-home .lb-hero::after { content: ""; position: absolute; inset: 30% 0 0; background: linear-gradient(0deg, var(--kv-bg), transparent); pointer-events: none; }
+  .lb-home .lb-hero__copy { z-index: 1; left: 16px; right: 16px; bottom: 14px; }
+  .lb-home .lb-hero__copy .kv-stamp { margin-bottom: 8px; font-size: 10px; letter-spacing: .28em; }
+  .lb-home .lb-hero__copy h1 { margin: 0; }
+  .lb-home .lb-hero__copy .kv-lyric { font-size: 28px; }
+  .lb-home .lb-hero__copy .kv-cosmo { font-size: 30px; }
+  .lb-home .lb-hero__copy > span, .lb-home .lb-hero__arrow, .lb-home .lb-hero__dots { display: none; }
+  .lb-home .lb-track { order: 2; display: grid; flex-wrap: nowrap; grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); gap: 4px; padding: 0; }
+  .lb-home .lb-mark { min-width: 0; min-height: 44px; gap: 2px; }
+  .lb-home .lb-mark__ring { width: 52px; height: 52px; } .lb-home .lb-mark__ring .rk-emblem { height: 40px; } .lb-home .lb-mark__pack { height: 42px; }
+  .lb-home .lb-mark__count { font-size: 11px; }
+  .lb-home .lb-mark__label { display: none; }
+  .lb-home .lb-news { order: 3; flex: none; margin-inline: -16px; }
+  .lb-home .lb-news__tile { flex-basis: 64%; min-height: 88px; }
+  .lb-home .lb-dock { order: 4; position: sticky; z-index: 5; bottom: calc(64px + var(--kv-safe-b)); margin-top: auto; flex-direction: row; align-items: stretch; gap: 8px; }
+  .lb-home .lb-dock__deck { flex: none; width: 56px; min-height: 56px; padding: 0; justify-content: center; }
+  .lb-home .lb-dock__deck strong { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .lb-home .lb-dock .lb-play { flex: 1; min-height: 56px; }
+
+  /* Selo de versão não cobre o jogo: aparece só nas Opções, acima das abas. */
+  #env-badge { display: none; }
+  body:has(.lb-options) #env-badge { display: block; top: calc(64px + var(--kv-safe-t)); left: auto !important; right: 16px; bottom: auto !important; transform: none !important; }
+  /* Aviso de deck salvo acima do JOGAR, sem cobrir as abas. */
+  body .lb-deckstatus { bottom: calc(136px + var(--kv-safe-b)); }
+
+  /* Painéis em tela cheia começam abaixo da Dynamic Island. */
+  .ds .ds-head { padding-top: calc(12px + var(--kv-safe-t)); padding-inline: max(16px, var(--kv-safe-l)) max(16px, var(--kv-safe-r)); }
+  /* Rodapé do Jogar: confronto, dificuldade e JOGAR inteiro. Quem começa fica no sorteio. */
+  .ds .ds-bar .lb-first:not(:has(select)) { display: none; }
+  .ds .ds-bar .lb-first:has(select) { flex: none; font-size: 0; }
+  .ds .ds-bar .ds-play { flex: 1 1 0; width: auto; min-width: 0; min-height: 56px; padding-inline: 8px; letter-spacing: .24em; }
+}
+
+/* Tela de toque: − n / máx + embaixo de cada carta, sem cobrir o texto dela. */
+@media (max-width: 760px), (pointer: coarse) {
+  .lb-cell .lb-slot { display: block; width: 100%; padding: 0; }
+  .lb-cell:has(.lb-step) .lb-slot__count { display: none; }
+  .lb-step { display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; align-items: center; margin-top: 6px; border: 1px solid var(--kv-line); border-radius: var(--kv-pill); background: var(--kv-glass); text-align: center; }
+  .lb-step b { font: 600 14px/1 var(--kv-sans); font-variant-numeric: tabular-nums; color: var(--kv-muted); white-space: nowrap; }
+  .lb-step.is-in { border-color: var(--kv-gold); } .lb-step.is-in b { color: var(--kv-gold-2); }
+  .lb-step button { height: 44px; border: 0; border-radius: 50%; background: none; color: var(--kv-gold-2); font: 500 24px/1 var(--kv-sans); cursor: pointer; touch-action: manipulation; }
+  .lb-step button:disabled { color: var(--kv-dim); cursor: default; }
+  .lb-step button:focus-visible { outline: 2px solid var(--kv-gold); outline-offset: -2px; }
+}
+
+/* Deck builder no telefone: busca em cima e todos os filtros numa só linha que desliza; as cartas ficam com a tela. */
+@media (max-width: 760px) {
+  .lb-filters { display: grid; grid-template-columns: repeat(3, max-content); gap: 8px 16px; overflow-x: auto; scrollbar-width: none; }
+  .lb-filters::-webkit-scrollbar { display: none; }
+  .lb-filters input[type=search] { grid-column: 1 / -1; position: sticky; left: 0; width: calc(100vw - 32px); }
+  .lb-filters .lb-pills, .lb-filters .lb-gods { flex-wrap: nowrap; }
+  .lb-filters .lb-pill { flex: none; }
+  .lb-sizes { display: none; }
+}

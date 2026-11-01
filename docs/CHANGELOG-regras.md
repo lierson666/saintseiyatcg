@@ -4,6 +4,39 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-01 — Termo em PT-BR — Base de Cosmo → Cosmobase
+
+- **Antes:** "Base de Cosmo" e "Cosmo de Base" no português.
+- **Depois:** "Cosmobase" (guia, glossário e texto da interface). Não muda regra.
+- **Motivo:** autor, 01/11/2026: "o termo é cosmobase".
+- **Pendente:** 19 ocorrências no texto em PT de `data/cards.json`, que dependem de diff aprovado; inglês ("Cosmo Base") sem mudança.
+
+## 2026-11-01 — §7, Cap. XI, §55 — Só quem começa não compra no 1º turno
+
+- **Antes:** nenhum jogador comprava no próprio primeiro turno.
+- **Depois:** só quem começa a partida não compra no primeiro turno dele. O outro jogador compra 2 cartas já no primeiro turno dele.
+- **Motivo:** autor, 01/11/2026: "quem ganha o coinflip escolhe se começa ou se o oponente começa ok. quem começa não compra ok? nova lei".
+- **Engine/UI:** `engine-v3/core.js` (`startTurn`), How to Play.
+- **Balanceamento:** muda a vantagem de começar (cerca de 74% em IA × IA antes desta regra); simulação ainda não refeita.
+
+## 2026-11-01 — §55 — Cara ou coroa na abertura; quem vence escolhe
+
+- **Antes:** o primeiro jogador era sorteado, sem escolha, e cada um já via a mão inicial.
+- **Depois:** antes de qualquer compra, uma moeda define quem vence. Cada jogador já tem uma face e ninguém a escolhe. Quem vence decide começar ou passar o início ao adversário. Só então cada um compra 7 e faz o mulligan.
+- **Motivo:** autor, 01/11/2026: "cara e coroa na abertura do jogo, mostra quem começa e aí mostra as mãos, como Pokémon"; o autor escolheu a opção em que o vencedor decide.
+- **Engine/UI:** `engine-v3/match.js` (`coin`, `chooseFirst`), `engine-v3/actions.js`, `arena-server/arena.mjs`, `playtest/divine/app.js`, How to Play. Sem a opção `coin`, `createMatch` segue sorteando sem moeda para simuladores e testes.
+- **Padrões de implementação, a confirmar com o autor:** no duelo online, quem vence e não escolhe em 30 s começa; a IA sempre escolhe começar.
+- **Moeda:** 3D, com face de cada jogador trocável por cosmético (autor, 01/11/2026). Preço: 1000 Moedas de Cosmo, o dobro para Deuses (autor, 01/11/2026). Fora do set.
+- **Balanceamento:** em IA × IA recente, o primeiro jogador vence cerca de 74%. Esta mudança não compensa isso.
+
+## 2026-11-01 — §48, tabela de keywords — Seal deixa Unprepared na hora
+
+- **Antes:** Seal só agia quando o Devotee ficaria Prepared; um Devotee Prepared que recebia Seal seguia Prepared e podia agir.
+- **Depois:** receber Seal deixa o Devotee Unprepared e põe o marcador. No início do turno do dono, ele tira 1 marcador e não prepara. Os textos explicam a sintaxe com exemplo.
+- **Motivo:** autor, 01/11/2026: "deixa o devoto despreparado, e ganha um marcador de selo. no início do turno do dono do devoto, ele tira um marcador de selo, mas não prepara".
+- **Engine/UI:** `addSeal` em `engine-v3/core.js`, teste novo, dica do marcador, glossário de keywords, How to Play. Cartas sem mudança de texto.
+- **Efeito que prepararia** fora do início do turno tira 1 marcador em vez de preparar (autor, 01/11/2026). 15 textos de 14 cartas ganham o lembrete, com diff aprovado pelo autor em `docs/selo-2026-11-01/cards.diff.md`. Pegasus God Cloth (Kamui) fica de fora por estar congelada (D268).
+
 ## 2026-11-01 — Cap. IX, §12, §40, §43, §44, §49, §59 — Lista final de keywords
 
 - **Antes:** listas diferentes no guia, Forge e jogo. Cheater: só alvo de Cheater. Nimble: ignora Guardian. Afterlife: marca ativada ou de gatilho, carta fica no Tartarus. Unfaith ativa sem cartas.
@@ -13,6 +46,14 @@ Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências
 - **Cartas:** diff em `docs/keywords-2026-11-01/cards.diff.md`. Phoenix Ikki não tem Afterlife. Hidden Cosmo só entra em mais cartas depois do teste do Afterlife.
 - **Engine/UI:** `engine-v3/strike.js`, `engine-v3/play.js` (`activateAfterlife`), `engine-v3/v6/afterlife.js`, IA, Tartarus do duelo, listas de keyword, glossários, How to Play.
 
+## 2026-11-01 — §7, Cap. XI, §55 — Compra volta a 2 por turno; limite de 9 cartas na mão
+
+- **Antes:** compra de 1 carta por turno (30/10/2026); sem limite de mão.
+- **Depois:** compra de 2 cartas por turno, nada no primeiro turno próprio. Limite de 9 cartas na mão: na End Phase do próprio turno, depois da conversão das Bases em Latent, o jogador escolhe e descarta o excesso para o Tartarus.
+- **Motivo:** autor, 01/11/2026: em partida real, dois decks agressivos ficaram sem mão com Soul alto, só em trocas de Devotees.
+- **Engine/UI:** `engine-v3/core.js` (`DRAWS_PER_TURN`, `HAND_LIMIT`), `engine-v3/actions.js` (descarte no END TURN e no timeout), textos da partida e How to Play.
+- **A confirmar com o autor:** momento do descarte, escolha livre e destino Tartarus seguem o padrão de TCG; o autor só definiu "limite de 9 na mão".
+- **Pendência:** medir IA × IA; deck-out e vitória do primeiro jogador podem mudar. Não publicado.
 
 ## 2026-11-01 — Cartas (Athena) — 082 The Golden Arrow sem condição de Strike
 

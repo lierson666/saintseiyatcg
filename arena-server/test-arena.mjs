@@ -12,7 +12,8 @@ const cards = loadCanon(canon), index = canonIndex(canon);
 const [rush, fortress] = read('../tools/fixtures/decks-proposta-d171.json').decks;
 let clock = 1000;
 const arena = createArena({cards, canonIndex: index, now: () => clock});
-const fresh = () => arena.create({players: {A: 'Seiya', B: 'Shiryu'}, decks: {A: rush, B: fortress}, seed: 42});
+const tossed = () => arena.create({players: {A: 'Seiya', B: 'Shiryu'}, decks: {A: rush, B: fortress}, seed: 42});
+const fresh = () => { const rec = tossed(), {winner} = rec.match.state.coin; arena.act(rec, winner, {type: 'chooseFirst', choice: {goFirst: true}}); return rec; };
 
 test('a visão de um jogador não revela a mão, o deck nem as Bases do adversário', () => {
   const rec = fresh(), s = rec.match.state;
@@ -67,4 +68,27 @@ test('relógio no servidor: tempo esgotado no turno encerra o turno e o relógio
   assert.equal(s.active, second);
   assert.equal(arena.view(rec, second).clock.running, second);
   assert.ok(arena.view(rec, second).clock.players[first].reserve <= 5 * 3, 'reserva zerou; só os bônus dos passes depois'); // +5 por ação (01/11/2026)
+});
+
+test('§55: a moeda vem do servidor, igual para os dois; só o vencedor escolhe; as mãos só existem depois', () => {
+  const rec = tossed(), s = rec.match.state, {winner} = s.coin, foe = winner === 'A' ? 'B' : 'A';
+  const a = arena.view(rec, 'A').state, b = arena.view(rec, 'B').state;
+  assert.deepEqual(a.coin, b.coin);
+  assert.deepEqual([a.coin.first, a.players.A.hand.length, a.players.B.hand.length], [null, 0, 0]);
+  assert.throws(() => arena.act(rec, foe, {type: 'chooseFirst', choice: {goFirst: true}}), e => e.decision === 'P01');
+  assert.throws(() => arena.act(rec, winner, {type: 'mulligan', choice: {uids: []}}), e => e.decision === 'P01');
+  arena.act(rec, winner, {type: 'chooseFirst', choice: {goFirst: false}});
+  const view = arena.view(rec, foe).state;
+  assert.deepEqual([view.coin.first, view.active, view.setup], [foe, foe, [foe, winner]]);
+  assert.equal(view.players[foe].hand.length, 7);
+});
+
+test('§55: sem escolha em 30 s, quem venceu a moeda começa', () => {
+  const rec = tossed(), s = rec.match.state, {winner} = s.coin;
+  arena.heartbeat(rec, 'A'); arena.heartbeat(rec, 'B');
+  clock += 29; arena.sweep();
+  assert.equal(s.coin.first, null);
+  arena.heartbeat(rec, 'A'); arena.heartbeat(rec, 'B');
+  clock += 2; arena.sweep();
+  assert.deepEqual([s.coin.first, s.active, s.setup[0]], [winner, winner, winner]);
 });

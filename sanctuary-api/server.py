@@ -61,9 +61,9 @@ def bundle_price(qty):
     return PRICES[BOOSTER] * qty * (100 - BUNDLES[qty]) // 100
 
 
-# Cosméticos (autor, 31/10/2026): avatar (rosto) e sleeve (verso das cartas) por personagem. Deck box saiu (a capa do deck já faz isso).
+# Cosméticos (autor, 31/10/2026): avatar (rosto), sleeve (verso das cartas) e moeda (cara ou coroa, 01/11/2026) por personagem. Deck box saiu (a capa do deck já faz isso).
 # Só personagens com arte final; arte -ref (provisória) nunca vai à loja. Deuses custam o dobro; avatar de Deus é grátis.
-# Item no inventário: 'avatar:<id>', 'sleeve:<id>'. O id é o da carta (Deus: 'god-<nome>').
+# Item no inventário: 'avatar:<id>', 'sleeve:<id>', 'coin:<id>'. O id é o da carta (Deus: 'god-<nome>').
 COSMETIC_GROUPS = (
     ('Gods', [('god-athena', 'Athena'), ('god-poseidon', 'Poseidon'), ('god-hades', 'Hades'), ('god-ares', 'Ares'), ('god-artemis', 'Artemis')]),
     ('Bronze Saints', [('athena-v6-001', 'Pegasus Seiya'), ('athena-v6-003', 'Dragon Shiryu'), ('athena-v6-005', 'Cygnus Hyoga'),
@@ -72,7 +72,8 @@ COSMETIC_GROUPS = (
                      ('athena-v6-017', 'Aquarius Camus'), ('hades-v6-197', 'Aries Shion'), ('hades-v6-253', 'Capricorn Shura')]),
     ('Judges of the Underworld', [('hades-v6-181', 'Wyvern Rhadamanthys'), ('hades-v6-183', 'Griffon Minos'), ('hades-v6-185', 'Garuda Aiacos')]),
 )
-COSMETIC_KINDS = {'avatar': 500, 'sleeve': 1500}
+COSMETIC_KINDS = {'avatar': 500, 'sleeve': 1500, 'coin': 1000}  # preço da moeda: autor, 01/11/2026
+SET_KINDS = ('avatar', 'sleeve')  # a moeda fica fora do set
 SET_OFF = 20  # avatar + sleeve do mesmo personagem
 COSMETICS = {cid: name for _, chars in COSMETIC_GROUPS for cid, name in chars}
 
@@ -84,7 +85,7 @@ def cosmetic_price(kind, cid):
 
 
 def set_price(cid):
-    return sum(cosmetic_price(k, cid) for k in COSMETIC_KINDS) * (100 - SET_OFF) // 100
+    return sum(cosmetic_price(k, cid) for k in SET_KINDS) * (100 - SET_OFF) // 100
 
 
 def owns_cosmetic(uid, kind, cid):
@@ -171,7 +172,7 @@ def open_db(path=DB_PATH):
     cosmo.open_db(path)
     # Migração do cadastro completo: colunas novas em contas antigas (ficam vazias até o perfil ser completado).
     have = {r['name'] for r in db.execute('pragma table_info(users)')}
-    for col in ('username', 'username_display', 'country', 'phone', 'friend_code', 'avatar_card', 'sleeve', 'accepted_terms_at', 'last_seen', 'status', 'suspended_at', 'full_access'):
+    for col in ('username', 'username_display', 'country', 'phone', 'friend_code', 'avatar_card', 'sleeve', 'coin', 'accepted_terms_at', 'last_seen', 'status', 'suspended_at', 'full_access'):
         if col not in have:
             db.execute(f'alter table users add column {col}')
     have = {r['name'] for r in db.execute('pragma table_info(messages)')}
@@ -209,7 +210,7 @@ def new_friend_code(display):  # Nome#1234, único
 
 def profile(u):  # dados que o próprio jogador vê
     return {'email': u['email'], 'name': u['display_name'], 'username': u['username_display'], 'friend_code': u['friend_code'],
-            'country': u['country'], 'phone': u['phone'], 'avatar_card': u['avatar_card'], 'sleeve': u['sleeve'], 'complete': bool(u['username']),
+            'country': u['country'], 'phone': u['phone'], 'avatar_card': u['avatar_card'], 'sleeve': u['sleeve'], 'coin': u['coin'], 'complete': bool(u['username']),
             'admin': u['email'] in ADMINS}
 
 
@@ -396,6 +397,8 @@ def clean_profile(body, partial=False):
         out['avatar_card'] = str(body.get('avatar_card') or '')[:80] or None
     if 'sleeve' in body:
         out['sleeve'] = str(body.get('sleeve') or '')[:80] or None
+    if 'coin' in body:
+        out['coin'] = str(body.get('coin') or '')[:80] or None
     return out
 
 
@@ -642,7 +645,7 @@ class Handler(BaseHTTPRequestHandler):
                 fields.update(username=username.lower(), username_display=username, friend_code=new_friend_code(username))
             if body.get('accept_terms') is True and not user['accepted_terms_at']:
                 fields['accepted_terms_at'] = int(time.time())
-            for kind, col in (('avatar', 'avatar_card'), ('sleeve', 'sleeve')):  # cosmético só se for do jogador
+            for kind, col in (('avatar', 'avatar_card'), ('sleeve', 'sleeve'), ('coin', 'coin')):  # cosmético só se for do jogador
                 if fields.get(col) and not owns_cosmetic(user['id'], kind, fields[col]):
                     raise ApiError(400, 'Get this in the Store first.')
             if fields:
@@ -1016,7 +1019,7 @@ class Handler(BaseHTTPRequestHandler):
         have = {'played': played, 'wins': wins, 'tier': tier, 'level': r['level'], 'ai_wins': ai_wins}
         achievements = [{'id': i, 'name': n, 'description': d, 'done': have[m] >= goal} for i, n, d, m, goal in ACHIEVEMENTS]
         self.send_json(200, {'rank': {k: r[k] for k in ('tier', 'division', 'pips', 'points', 'level', 'title')}, 'achievements': achievements, 'username': u['username_display'], 'country': u['country'], 'joined': u['created_at'],
-                             'avatar_card': u['avatar_card'], 'sleeve': u['sleeve'], 'stats': {'played': played, 'wins': wins, 'losses': losses,
+                             'avatar_card': u['avatar_card'], 'sleeve': u['sleeve'], 'coin': u['coin'], 'stats': {'played': played, 'wins': wins, 'losses': losses,
                              'winrate': round(100 * wins / played) if played else 0}, 'recent': recent})
 
     def arena_create(self, players, decks):
@@ -1134,11 +1137,11 @@ class Handler(BaseHTTPRequestHandler):
         if cid not in COSMETICS:
             raise ApiError(400, 'Unknown item.')
         with lock:
-            kinds = [k for k in COSMETIC_KINDS if not owns_cosmetic(uid, k, cid)] if kind == 'set' else [kind]
+            kinds = [k for k in SET_KINDS if not owns_cosmetic(uid, k, cid)] if kind == 'set' else [kind]
             if not kinds or kind != 'set' and owns_cosmetic(uid, kind, cid):
                 raise ApiError(400, 'You already have this.')
             # set: desconto só com tudo por comprar; com parte já comprada, paga só o que falta
-            paid = [k for k in COSMETIC_KINDS if cosmetic_price(k, cid)]
+            paid = [k for k in SET_KINDS if cosmetic_price(k, cid)]
             if kind == 'set' and len(paid) < 2:  # Deus: avatar grátis, não há set
                 raise ApiError(400, 'Unknown item.')
             price = set_price(cid) if kind == 'set' and kinds == paid else sum(cosmetic_price(k, cid) for k in kinds)

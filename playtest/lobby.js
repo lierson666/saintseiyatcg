@@ -4,7 +4,7 @@ import {loadCanon} from '../shared/canon-cards.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {canonIndex, validateDeck, colorErrors, splashCount, DECK_SIZE, COPY_LIMIT, SPLASH_LIMIT} from '../shared/deck-v3.js';
 import {spellCategory} from './engine-v3/core.js';
-import {renderLiveCard, renderCardText} from '../shared/live-card.js?v=20261101-tipo1';
+import {renderLiveCard, renderCardText} from '../shared/live-card.js?v=20261101-equip1';
 import {displayCard} from '../shared/card-i18n.js?v=20261031-kw1';
 import {unlock, playMusic, setVolume, volume} from './audio.js?v=20261030-telas';
 import {loadMyDecks, saveMyDecks, findDeck, syncDecks, onDeckStatus, deckCovers, setDeckCover} from './deck-store.js?v=20261031-2';
@@ -99,6 +99,7 @@ function topBar() {
   return `<header class="lb-top">
     <img class="lb-top__logo" src="../LOGO/logo-web.webp" alt="Saint Seiya TCG">
     <nav class="lb-tabs">${tab('home', 'Home')}${tab('decks', 'Decks')}${tab('collection', 'Collection')}${tab('store', 'Store')}${tab('profile', 'Profile')}${tab('options', 'Options')}</nav>
+    <button class="lb-gear ${ui.screen === 'options' ? 'is-active' : ''}" data-act="go" data-screen="options" aria-label="Options">⚙&#xFE0E;</button>
     <a class="lb-tab" href="./platform/" target="_top" style="text-decoration:none;white-space:nowrap">Cosmo Hub</a>
     <span class="lb-top__tag">Alpha 0.1 · Engine 3.0</span>
     ${ui.user?.complete ? `<button class="lb-socialbtn" data-act="friends" aria-label="Friends">Friends ${socialBadge()}</button>` : ''}
@@ -271,7 +272,8 @@ function options() {
     ${window.ssStage ? `${sel('cardText', 'Card text size', window.ssStage.SIZES)}${sel('cardSize', 'Card size (hand and previews)', window.ssStage.CARD)}` : ''}
     ${chk('reduceMotion', 'Reduce motion')}${chk('reduceFlashes', 'Reduce flashes')}
     <label class="lb-set"><span>Screen shake</span><input type="range" min="0" max="1.5" step=".25" value="${m.shake}" data-act="match-set" data-key="shake"></label>
-    ${installBox()}</section>`;
+    ${installBox()}
+    <div class="lb-phone-only"><h2 class="lb-options__h">Account</h2><div class="lb-phone-links"><a class="kv-ghost" href="./platform/" target="_top">Cosmo Hub</a>${ui.user ? '<button class="kv-ghost" data-act="signout">Sign out</button>' : ''}</div></div></section>`;
 }
 document.addEventListener('fullscreenchange', () => { if (ui.screen === 'options') render(); });
 
@@ -285,7 +287,7 @@ function installBox() {
     : installPrompt ? '<button class="lb-play lb-play--small" data-act="install">Install app</button>'
     : isIOS() ? '<p>In Safari, tap <b>Share</b> and then <b>Add to Home Screen</b>.</p>'
     : '<p>Open this page in Chrome on your phone and use <b>Install app</b> from the browser menu.</p>';
-  return `<section class="lb-install"><h2>Play as an app</h2><p>Full screen, in landscape, from your home screen.</p>${body}</section>`;
+  return `<section class="lb-install"><h2>Play as an app</h2><p>Full screen, from your home screen.</p>${body}</section>`;
 }
 
 // ---------- Perfil do jogador (modal): estatísticas e últimos duelos online ----------
@@ -437,8 +439,9 @@ function builder() {
       ${filterBar(b)}
       <div class="lb-grid" style="--slot:${CARD_SIZES[ui.cardSize] || CARD_SIZES.M}px">${cards_.map(c => {
         const n = count(b, c.id), isDomain = c.kind === 'Domain', on = isDomain ? d.domain_id === c.id : n > 0, max = ownedLimit(ui.econ, c.id, c.kind);
-        return `<button class="lb-slot ${on ? 'is-in' : ''} ${!isDomain && n >= max ? 'is-max' : ''} ${!isDomain && !max ? 'is-unowned' : ''}" data-act="${isDomain ? 'set-domain' : 'add'}" data-id="${c.id}" aria-label="${esc(c.name)}">
-          ${face(c.id)}<i class="lb-slot__count">${isDomain ? (on ? 'Domain' : 'Set Domain') : `${n} / ${max}`}</i></button>`;
+        return `<div class="lb-cell"><button class="lb-slot ${on ? 'is-in' : ''} ${!isDomain && n >= max ? 'is-max' : ''} ${!isDomain && !max ? 'is-unowned' : ''}" data-act="${isDomain ? 'set-domain' : 'slot-tap'}" data-id="${c.id}" aria-label="${esc(c.name)}">
+          ${face(c.id)}<i class="lb-slot__count">${isDomain ? (on ? 'Domain' : 'Set Domain') : `${n} / ${max}`}</i></button>
+          ${isDomain ? '' : `<div class="lb-step ${n ? 'is-in' : ''}" role="group" aria-label="${esc(c.name)}"><button data-act="remove" data-id="${c.id}" ${n ? '' : 'disabled'} aria-label="Remove one">−</button><b>${n} / ${max}</b><button data-act="add" data-id="${c.id}" ${n >= max || size >= DECK_SIZE ? 'disabled' : ''} aria-label="Add one">+</button></div>`}</div>`;
       }).join('') || '<p class="lb-empty">No cards for this God yet.</p>'}</div>
     </div>
     <aside class="lb-list">
@@ -599,6 +602,7 @@ const actions = {
   'copy-code': async () => { await navigator.clipboard?.writeText(ui.user.friend_code).catch(() => {}); ui.copied = true; setTimeout(() => { ui.copied = false; render(); }, 1500); },
   slide: t => { ui.slide = (ui.slide || 0) + Number(t.dataset.step); },
   signout: async () => {
+    if (!confirm('Sign out of your account?')) return;
     await fetch('/api/auth/logout', {method: 'POST', credentials: 'same-origin'}).catch(() => {});
     location.replace('/login/?v=3');
   },
@@ -629,6 +633,8 @@ const actions = {
   'edit-deck': t => openBuilder(allDecks().find(d => d.id === t.dataset.deck)),
   filter: t => { filterState()[t.dataset.key] = t.dataset.value; },
   add: t => setCount(t.dataset.id, 1),
+  // Com toque, a carta abre para leitura e o + e o − montam o deck (no iOS não há contextmenu); com mouse, o clique adiciona.
+  'slot-tap': t => { if (matchMedia('(max-width: 760px), (pointer: coarse)').matches) ui.big = t.dataset.id; else setCount(t.dataset.id, 1); },
   remove: t => setCount(t.dataset.id, -1),
   'set-domain': t => { ui.builder.deck.domain_id = t.dataset.id; ui.builder.dirty = true; },
   'builder-view': t => { ui.builder.view = t.dataset.view; },
@@ -665,7 +671,7 @@ const actions = {
   'cos-close': () => { ui.cosPick = null; },
   'buy-cos': async t => { try { ui.econ = await buyCosmetic(t.dataset.kind, t.dataset.id); } catch (e) { ui.notice = {title: 'Store', text: e.message}; } render(); },
   'use-cos': async t => {
-    try { ui.user = await api('/api/me', 'PATCH', {[t.dataset.kind === 'avatar' ? 'avatar_card' : 'sleeve']: t.dataset.id}); } catch (e) { ui.notice = {title: 'Store', text: e.message}; }
+    try { ui.user = await api('/api/me', 'PATCH', {[t.dataset.kind === 'avatar' ? 'avatar_card' : t.dataset.kind]: t.dataset.id}); } catch (e) { ui.notice = {title: 'Store', text: e.message}; }
     render();
   },
   picked: t => {

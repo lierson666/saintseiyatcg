@@ -255,7 +255,7 @@ function play(g, maxTurns = 240) { // G3-037 (1 compra por turno): partidas mais
 
 // ---------- Partidas ----------
 
-const SEEDS = Array.from({length: 24}, (_, i) => i + 1);
+const SEEDS = Array.from({length: 48}, (_, i) => i + 1);
 const results = SEEDS.map(seed => play(game(seed)));
 
 test('playtest: 24 partidas Athena × Poseidon terminam com vencedor, sem objeto perdido e reproduzíveis pela seed', () => {
@@ -293,7 +293,7 @@ test('playtest: Seal nunca passa de 1 marcador em partida real e nenhuma partida
 
 // Timeouts reais em partida inteira: B pensa 31 s por decisão e estoura a reserva; o jogo segue com os códigos homologados.
 test('playtest com jogador lento: timeouts homologados em partida inteira, e a partida termina', () => {
-  const runs = [3, 8, 13].flatMap(seed => [play(game(seed, {slow: 'B'})), play(game(seed, {slow: 'A'}))]);
+  const runs = [3, 8, 13].flatMap(seed => [play(game(seed, {slow: 'B', think: 2})), play(game(seed, {slow: 'A', think: 2}))]) // think 2: com a compra do 2º jogador os turnos são mais longos e 4 s esgotavam até o jogador rápido;
   const cov = new Set(runs.flatMap(g => [...g.cov]));
   for (const k of ['TIMEOUT_PASS_PRIORITY', 'TIMEOUT_END_TURN']) assert.ok(cov.has(k), `${k} aconteceu`);
   for (const g of runs) {

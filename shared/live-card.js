@@ -5,6 +5,7 @@ import {printedEquipmentBonuses,signedBonus,armorBonusText} from './card-visual-
 import {renderKeywordNotes} from './keyword-glossary.js?v=20261101-kw7';
 import {displayCard,keywordName,typeWord,lang} from './card-i18n.js?v=20261101-tr1';
 // A ilustração é apenas fundo. Letras, números e estados são dados independentes no DOM.
+globalThis.document?.addEventListener('load', e => { if (e.target.matches?.('.live-card__illustration img')) e.target.classList.add('is-in'); }, true); // ver .is-in em live-card.css
 const escape=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const portraits={'athena-001':'athena-001','athena-002':'athena-002','athena-003':'athena-003','athena-004':'athena-004','athena-005':'athena-005','athena-006':'athena-006','sst-01-001':'athena-002','sst-01-002':'athena-003','sst-01-003':'athena-004','sst-01-004':'athena-005','sst-01-005':'athena-006'};
 export function illustration(card){
@@ -18,7 +19,8 @@ let PSD=null;
 try{
   const url=p=>new URL(`../CARD-TEMPLATE/${p}`,import.meta.url);
   const [T,pieces]=await Promise.all(['templates.json','pieces.json'].map(f=>fetch(url(f)).then(r=>{if(!r.ok)throw r.status;return r.json();})));
-  PSD={T,P:pieces.pieces,src:k=>url(`${k}.webp`).href}; // .webp gerado por tools/light-assets.py
+  const ext=globalThis.matchMedia?.('(pointer: coarse)').matches?'sm.webp':'webp'; // toque: metade do tamanho (a 1488 px, a mão trava num tablet)
+  PSD={T,P:pieces.pieces,src:k=>url(`${k}.${ext}`).href}; // gerados por tools/light-assets.py
 }catch{/* sem spec: layout simples */}
 const NEUTRAL={color:'#ECE7DA',glow:'rgba(255,255,255,0.35)',frame:['athena/vignette','athena/frame']};
 // Mesmo mapeamento do layoutKey() do card-forge/forge.js.
@@ -26,7 +28,7 @@ function psdLayoutKey(card){
   const subs=card.subtipos||[];
   if(card.tipo==='Support')return 'relic';
   if(isArmor(card))return 'relic_cloth';
-  if(card.tipo==='Equipment')return subs.includes('Weapon')?'relic_weapon':'relic';
+  if(card.tipo==='Equipment')return 'relic_weapon';
   const sub=subs.find(x=>PSD.T.typeToLayout[`${card.tipo}:${x}`]);
   return PSD.T.typeToLayout[sub?`${card.tipo}:${sub}`:card.tipo]||'devotee';
 }

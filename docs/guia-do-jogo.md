@@ -159,7 +159,7 @@ Estrutura de um turno
 
 * O jogador ativo prepara todos os seus Devotees, Equipment e Bases.
 * Resolvem-se os gatilhos de início de turno (APNAP, LIFO, com janela).
-* O jogador ativo compra **1 carta** (nada no seu primeiro turno).
+* O jogador ativo compra **2 cartas** (quem começa a partida não compra no primeiro turno dele).
 
 2. Fase principal
 
@@ -510,7 +510,19 @@ Pode declarar Strike no turno em que entra em campo, contra qualquer alvo legal,
 
 ### 48. Seal e Sealed
 
-Seal é um marcador num Devotee (autor, 31/10/2026, seguindo a D211/D212). Sempre que um Devotee com Seal ficaria Prepared, em vez disso remove 1 marcador Seal e continua Unprepared. **Sealed** = ter 1 ou mais marcadores Seal; “becomes Sealed” é passar de 0 para 1 ou mais. Seal não impede Strike nem habilidades: um Devotee Sealed e Prepared pode agir. Os marcadores somem se o Devotee sai do campo.
+Revisado em 01/11/2026 (autor).
+
+**Receber Seal.** O Devotee fica **Unprepared** e ganha o marcador. Vale para qualquer forma de receber: "Seal that Devotee" põe 1 marcador; "Put N Seal counters" põe N. Os marcadores se acumulam.
+
+**Início do turno do dono.** O Devotee tira 1 marcador e **não prepara** naquele turno. Só no início de um turno em que já não tem marcador é que ele prepara.
+
+**Exemplo.** Um Devotee recebe 2 marcadores no seu turno. No próximo turno do dono: tira 1, fica com 1, não prepara. No turno seguinte: tira 1, fica com 0, não prepara. No outro: prepara normalmente.
+
+**Enquanto Unprepared por Seal.** Ele não declara Strike nem paga custo {T}. Ainda retalia, ainda conta como Guardian e ainda usa habilidades sem {T}. Seal não cancela um Strike já declarado (D212).
+
+**Sealed** = ter 1 ou mais marcadores Seal; "becomes Sealed" é passar de 0 para 1 ou mais. Os marcadores somem se o Devotee sai do campo.
+
+**Outro efeito que prepararia** um Devotee com Seal tira 1 marcador em vez de preparar (autor, 01/11/2026).
 
 ### 48A. Training counter
 
@@ -518,7 +530,7 @@ Cada Training counter num Devotee dá +1 ATK / +1 HP a ele. Os marcadores se acu
 
 ### 49. (Reservada: Unfaith)
 
-Ao declarar Strike contra um God, o atacante pode escolher remover até 2 Latent Cosmo do adversário em lugar do dano ao Soul.
+Fora do jogo atual (autor, 01/11/2026); nenhuma carta usa. Ideia guardada para um set futuro: ao declarar Strike contra um God, remover até 2 Latent Cosmo do adversário em lugar do dano ao Soul.
 
 ### 50. (reservado)
 
@@ -570,7 +582,8 @@ Parâmetro	Valor experimental
 Deck principal	50 cartas
 Mão inicial	7 cartas
 Cosmo Base por turno	1
-Compra por turno	1 (nada no primeiro turno próprio)
+Compra por turno	2 (quem começa a partida não compra no primeiro turno dele)
+Limite de cartas na mão	9 (descarta o excesso na End Phase)
 Strike	1 por Devotee por turno
 Dano entre turnos	Persistente
 Duração média desejada	8–10 Rounds
@@ -585,17 +598,18 @@ O autor aprovou a aplicação das recomendações de fechamento ao sistema do jo
 
 ### 55. Round, turnos, compras e mulligan
 
-Revisado em 31/10/2026 (ALPHA-P01, P02, P03 e P06, aprovadas em 28/10/2026; compra de 1 carta, 30/10/2026).
+Revisado em 31/10/2026 (ALPHA-P01, P02, P03 e P06, aprovadas em 28/10/2026; compra de 2 cartas e limite de 9 na mão, 01/11/2026; cara ou coroa e compra do segundo jogador, 01/11/2026).
 
-- O primeiro jogador é sorteado e começa **todos** os Rounds. Cada Round tem um turno de cada jogador.
-- Ambos compram 7 cartas. Começando pelo primeiro jogador, cada um pode, uma vez, devolver qualquer quantidade de cartas da mão ao deck, embaralhar e comprar o mesmo número. O primeiro turno só começa depois dos dois mulligans.
-- Início do turno: o ativo prepara seus Devotees, Equipment e Bases; resolvem-se os gatilhos de início de turno; ele compra **1 carta**. Ninguém compra no próprio primeiro turno.
+- O primeiro jogador é definido por **cara ou coroa** antes de qualquer compra (autor, 01/11/2026). Cada jogador já tem uma face da moeda; ninguém escolhe a face. Quem vence escolhe começar ou passar o início ao adversário.
+- O primeiro jogador começa **todos** os Rounds. Cada Round tem um turno de cada jogador.
+- Depois dessa escolha, ambos compram 7 cartas. Começando pelo primeiro jogador, cada um pode, uma vez, devolver qualquer quantidade de cartas da mão ao deck, embaralhar e comprar o mesmo número. O primeiro turno só começa depois dos dois mulligans.
+- Início do turno: o ativo prepara seus Devotees, Equipment e Bases; resolvem-se os gatilhos de início de turno; ele compra **2 cartas**. Só quem começa a partida não compra no primeiro turno dele; o outro jogador já compra no primeiro turno dele (autor, 01/11/2026).
 - O ativo pode colocar uma Base Cosmoble por turno, com a pilha vazia. A Base entra Prepared e paga no mesmo turno (G3-035). Colocar Base não entra na pilha.
 - O turno termina quando o ativo declara END TURN com a pilha vazia. End Phase: conversão das Bases Prepared em Latent (§5); gatilhos de fim de turno; no 2º turno do Round, gatilhos de fim de Round (D204); Cleanup.
-- Não há limite máximo de cartas na mão nesta base de regras.
+- Limite de **9 cartas na mão** (autor, 01/11/2026): na End Phase do próprio turno, logo após a conversão das Bases em Latent, quem tem mais de 9 cartas escolhe e descarta o excesso para o Tartarus. Isso conta como descarte para efeitos de carta. Fora desse momento a mão pode passar de 9.
 - Deck vazio: quem precisa comprar uma carta e não tem carta no deck perde a partida na hora. Vale para a compra do turno e para qualquer compra por efeito. Ficar com o deck vazio (por Mill, por exemplo) não derrota sozinho; a derrota vem na próxima compra. Por isso Mill é condição de vitória. Se um mesmo efeito fizer os dois jogadores comprarem de deck vazio, a partida empata. Não existe Fatigue (autor, 01/11/2026; `draw` no engine-v3).
 
-**Por quê:** comprar 2 cartas por turno gerava vantagem de cartas grande demais no playtest (autor, 28/10/2026; confirmado de novo em 30/10/2026). Com 1 compra, colocar Base passa a custar uma escolha real entre recurso e jogada.
+**Por quê:** com 1 compra, dois decks agressivos esvaziavam a mão e a partida empacava com Soul alto, só em trocas de Devotees (autor, 01/11/2026, playtest real). A compra de 2 revoga a decisão de 30/10/2026; o limite de 9 segura o acúmulo de cartas.
 
 ### 56. Timing, respostas e resolução
 
@@ -696,7 +710,7 @@ Se um Strike causar Soul zero aos dois Gods simultaneamente por efeitos aplicáv
   1. A linha geral funciona inteira, sem custo extra; a linha **Resonance** não funciona.
   2. O deck principal pode ter **até 15 cartas** da facção do Domain. Cartas neutras não contam nesse limite; God e Domain ficam fora das 50.
   - Domain da mesma facção do God funciona inteiro, com a Ressonância.
-- **Forma dos Domains e Ressonância** (autor, 01/11/2026; substitui a forma de 31/10/2026). São 30 Domains, 6 por God. Cada um tem duas linhas. A **linha geral** vale com qualquer God: efeito pequeno (estática de +1 ATK ou +1 HP num subtipo, ou gatilho/ativada de 1 ponto no máximo uma vez por rodada) que não quebra a color pie. A linha **Resonance — <God>** só vale se o God do jogador for da facção do Domain: efeito forte, no máximo uma vez por turno, com custo de {1}{C} a {3}{C}. Usar Domain de outra facção continua permitido (§2); o preço é perder a Ressonância. Em cada facção, um Domain compra 1 carta na linha geral, só com um drawback (Athena: exilar 1 carta da mão e perder {2}{S}; Poseidon: descartar 1 e milar 4; Hades: perder {3}{S}; Ares: sacrificar um Devotee e perder {2}{S}; Artemis: zerar o Latent e devolver uma Base de Cosmo à mão). Não existe mais linha Once per game em Domain.
+- **Forma dos Domains e Ressonância** (autor, 01/11/2026; substitui a forma de 31/10/2026). São 30 Domains, 6 por God. Cada um tem duas linhas. A **linha geral** vale com qualquer God: efeito pequeno (estática de +1 ATK ou +1 HP num subtipo, ou gatilho/ativada de 1 ponto no máximo uma vez por rodada) que não quebra a color pie. A linha **Resonance — <God>** só vale se o God do jogador for da facção do Domain: efeito forte, no máximo uma vez por turno, com custo de {1}{C} a {3}{C}. Usar Domain de outra facção continua permitido (§2); o preço é perder a Ressonância. Em cada facção, um Domain compra 1 carta na linha geral, só com um drawback (Athena: exilar 1 carta da mão e perder {2}{S}; Poseidon: descartar 1 e milar 4; Hades: perder {3}{S}; Ares: sacrificar um Devotee e perder {2}{S}; Artemis: zerar o Latent e devolver uma Cosmobase à mão). Não existe mais linha Once per game em Domain.
 - Um mulligan parcial gratuito: separar qualquer quantidade da mão inicial, comprar a mesma quantidade e só então embaralhar as separadas no deck. Apenas uma troca; sem penalidade de Latent ao adversário. Ver §55.
 - Cada jogador pode controlar um Devotee de cada **personagem nomeado**, mesmo que existam versões diferentes da carta. Essa regra de lendário vale só para as classes de guerreiros: **Saints, Marines, Satellites, Specters e Berserkers**. Devotees de classe baixa (Warrior, Support e sem classe) não são lendários e podem ter mais de uma cópia no campo. Unidades genéricas também não têm essa exclusividade. Exceção: **Phoenix Ikki** (athena-v6-009) não é lendário; o jogador pode controlar qualquer número de cópias dele (autor, 01/11/2026). Usar identidade estável de personagem para essa regra e para Resonance; título e ilustração não bastam.
 - Uma segunda versão de personagem que já controla pode ser jogada da mão normalmente. Sempre que houver duplicidade (por jogada da mão ou por efeito), o controlador escolhe um para manter e envia os outros ao Tartarus, sem considerar isso destruição. Habilidades de entrada continuam seguindo o fato de a carta ter entrado; essa interação deve ser considerada no custo do efeito que a trouxe.
@@ -727,7 +741,7 @@ Se um Strike causar Soul zero aos dois Gods simultaneamente por efeitos aplicáv
 | Parâmetro | Parâmetro inicial |
 | --- | --- |
 | Soul / Attack de God de referência | 20 / 3; Soul entre 15 e 22 por God. Os valores de cada God (Soul, Attack, Awaken) são os da carta do God no Card Forge (`data/cards.json`, ids `<facção>-001`) desde 29/10/2026; em 29/10/2026: Athena 22/2/Awaken 5, Poseidon 22/1/4, Hades 18/2/7, Artemis 20/1/3, Ares 18/3/7 |
-| Compras | 1 por turno, nada no primeiro turno próprio |
+| Compras | 2 por turno; quem começa a partida não compra no primeiro turno dele; limite de 9 cartas na mão |
 | Bases | 1 por turno próprio; entra Prepared |
 | Latent | Limite de 3; Bases Prepared viram Latent no fim do seu turno; persiste |
 | Retorno do Tartarus | Uma vez por carta física/rodada |

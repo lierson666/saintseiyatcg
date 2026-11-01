@@ -232,6 +232,8 @@ body.ec-opening #lobby { visibility: hidden; }
 /* Prévias em tamanho de vitrine */
 .ec-tile--avatar .ec-cos-avatar { width: 170px; height: 170px; border-width: 3px; }
 .ec-tile--sleeve .ec-cos-sleeve { width: 150px; height: 210px; border-radius: 9px; }
+.ec-cos-coin { display: block; flex: none; border-radius: 50%; border: 5px solid #d9b45f; box-shadow: 0 0 0 2px #7a5a1d, 0 0 18px rgba(255, 210, 120, .35); background: #141826 center 22% / cover no-repeat; }
+.ec-tile--coin .ec-cos-coin { width: 150px; height: 150px; }
 .ec-set__art { display: flex; align-items: center; gap: 12px; }
 .ec-tile--set .ec-cos-avatar { width: 120px; height: 120px; } .ec-tile--set .ec-cos-sleeve { width: 120px; height: 168px; }
 /* Confirmação de compra */

@@ -1,6 +1,6 @@
 /* Abas do site público (autor, 31/10/2026): mesmo visual da barra do deck builder (playtest/lobby.css .lb-top).
    Marcação estática em cada página; a aba atual leva aria-current="page". */
-.site-top { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 28px; height: 68px; padding: 0 clamp(16px, 3vw, 32px);
+.site-top { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 28px; height: calc(68px + var(--kv-safe-t)); padding: var(--kv-safe-t) max(clamp(16px, 3vw, 32px), var(--kv-safe-r)) 0 max(clamp(16px, 3vw, 32px), var(--kv-safe-l));
   background: #0b0c1699; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--kv-line); box-sizing: border-box;
   contain: inline-size; } /* as abas não alargam a página no celular; rolam dentro da barra */
 .site-top__logo { display: flex; flex: none; }
@@ -20,5 +20,12 @@
   .site-tab[aria-current="page"]::after { left: 12px; right: 12px; }
   .site-top__play { padding: 0 14px; }
 }
-@media (max-width: 560px) { .site-top__play { display: none; } }
+/* Celular: logo e idioma em cima, abas numa linha própria e inteiras, sem corte nas pontas. */
+@media (max-width: 560px) {
+  .site-top__play { display: none; }
+  .site-top { flex-wrap: wrap; justify-content: space-between; height: auto; padding-top: calc(8px + var(--kv-safe-t)); row-gap: 4px; }
+  .site-tabs { order: 3; flex: 1 0 100%; height: 44px; gap: 0; }
+  .site-tab { flex: 1 0 auto; justify-content: center; padding: 0 3px; font-size: 10px; letter-spacing: .04em; }
+  .site-tab[aria-current="page"]::after { left: 3px; right: 3px; }
+}
 @media (prefers-reduced-motion: reduce) { .site-tab { transition: none; } }

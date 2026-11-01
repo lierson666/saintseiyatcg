@@ -31,7 +31,8 @@ export function mountKV({anchor: anchorSelector = null} = {}) {
   const me = {x: innerWidth * .7, y: innerHeight * .5, tx: innerWidth * .7, ty: innerHeight * .5, active: false};
   function resize() {
     // Desempenho (autor, 31/10/2026: ponteiro travando): céu e brasas em 1x; o céu é fundo difuso e Retina custava 4x por frame.
-    dpr = 1; W = innerWidth; H = innerHeight;
+    // Tamanho do próprio canvas, não da janela: no iPhone innerHeight difere da área coberta e deixava uma emenda no céu.
+    dpr = 1; W = sky.clientWidth || innerWidth; H = sky.clientHeight || innerHeight;
     sky.width = W * dpr; sky.height = H * dpr; g.setTransform(dpr, 0, 0, dpr, 0, 0);
     trail.width = W * dpr; trail.height = H * dpr; tg.setTransform(dpr, 0, 0, dpr, 0, 0);
     const n = Math.round(W * H / 2200);
@@ -150,7 +151,7 @@ export function mountKV({anchor: anchorSelector = null} = {}) {
   }, {passive: true});
   addEventListener('pointerdown', e => { move(e.clientX, e.clientY); heat = Math.min(1, heat + .3); }, {passive: true});
   document.documentElement.addEventListener('pointerleave', () => { me.active = false; tip = lastTip = null; pointer.style.opacity = '0'; });
-  addEventListener('resize', () => { resize(); if (still) paintStill(); });
+  new ResizeObserver(() => { if (sky.clientWidth === W && sky.clientHeight === H) return; resize(); if (still) paintStill(); }).observe(sky);
   document.addEventListener('visibilitychange', () => { if (!document.hidden && !still) requestAnimationFrame(frame); });
   resize();
   if (still) paintStill(); else requestAnimationFrame(frame);

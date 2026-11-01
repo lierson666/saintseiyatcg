@@ -16,7 +16,8 @@
 .ss-lang { display: inline-flex; gap: 2px; margin-left: 12px; padding: 2px; border: 1px solid #e6c36a55; border-radius: 999px; background: #02040ccc; vertical-align: middle; }
 .ss-lang button { all: unset; cursor: pointer; padding: 4px 9px; border-radius: 999px; font: 700 11px/1 system-ui, sans-serif; letter-spacing: .08em; color: #cfd8e6; }
 .ss-lang button[aria-pressed="true"] { background: #e6c36a; color: #02040c; }
-.ss-lang button:focus-visible { outline: 2px solid #e6c36a; outline-offset: 2px; }`;
+.ss-lang button:focus-visible { outline: 2px solid #e6c36a; outline-offset: 2px; }
+@media (pointer: coarse) { .ss-lang { margin-left: 4px; } .ss-lang button { padding: 12px; } }`;
   document.head.append(css);
 
   const D = self.ssI18nPT || {strings: {}, patterns: []};

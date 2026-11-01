@@ -9,11 +9,11 @@ const core = (size = 20) => createCore({soul: {A: 30, B: 30}, decks: {A: deck(si
 const cosmoble = {cosmoble: true};
 const end = (s, triggers) => { endTurn(s, triggers); return passAll(s); }; // os dois passam na End Phase
 
-test('D170/D3: sem compra no 1º turno próprio; 2 cartas a partir do 2º', () => {
+test('§55: só quem começa não compra no 1º turno; o outro já compra 2', () => {
   const s = core();
   startTurn(s); assert.equal(s.players.A.hand.length, 0);
-  end(s); startTurn(s); assert.equal(s.players.B.hand.length, 0);
-  end(s); startTurn(s); assert.equal(s.players.A.hand.length, 1, '§55: 1 carta por turno (autor, 30/10/2026)');
+  end(s); startTurn(s); assert.equal(s.players.B.hand.length, 2);
+  end(s); startTurn(s); assert.equal(s.players.A.hand.length, 2, '§55: 2 cartas por turno (autor, 01/11/2026)');
 });
 
 test('D191: Round = um turno de cada jogador, na ordem do jogador inicial', () => {

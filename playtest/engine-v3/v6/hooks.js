@@ -200,16 +200,16 @@ export function v6AfterStrike(state, ctx, strike, gearBefore) {
 export function v6Mods(state, ctx, key, uid) {
   const list = [];
   const self = entryOf(ctx, uid)?.mods?.(state, ctx, key, uid);
-  if (self) list.push(...self);
+  if (self) list.push(...self.map(m => ({...m, from: {uid}})));
   const counters = state.units[uid]?.counters;
-  if (counters) list.push({atk: counters, hp: counters});
+  if (counters) list.push({atk: counters, hp: counters, from: {uid, ability: '+1/+1 counters'}});
   for (const k of state.order) {
     for (const src of state.players[k].battlefield) {
       const aura = src !== uid && V6[ctx.objects[src]?.cardId]?.aura?.(state, ctx, k, src, uid);
-      if (aura) list.push(aura);
+      if (aura) list.push({...aura, from: {uid: src}});
     }
     const domain = domainEntry(state, k)?.aura?.(state, ctx, k, `domain:${k}`, uid); // linha geral: vale com qualquer God
-    if (domain) list.push(domain);
+    if (domain) list.push({...domain, from: {uid: `domain:${k}`}});
   }
   return list;
 }

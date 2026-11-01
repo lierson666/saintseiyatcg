@@ -1,0 +1,43 @@
+/* Botões e fontes do jogo seguem o KV do site (autor, 01/11/2026; tokens em shared/kv.css). Vale no desktop e no celular.
+   As cartas não entram: elas têm as fontes próprias. */
+.banner span, .drawer h3, .trigger-panel h3, .pick-modal h3, .overlay h2, .decision h3 { font-family: var(--kv-title); }
+
+.primary-action, .trigger-panel__actions .primary-action, .cast-prompt [data-confirm="yes"], .choice [data-confirm="yes"], .command .action-btn[data-state="end"] {
+  border: 0; border-radius: var(--kv-pill); background: linear-gradient(180deg, var(--kv-gold-2), var(--kv-gold)); color: #1c1404;
+  font: 600 13px/1.1 var(--kv-title); letter-spacing: .14em; text-transform: uppercase; box-shadow: 0 8px 24px -10px #e6c36acc; }
+.primary-action:hover:not(:disabled), .trigger-panel__actions .primary-action:hover, .command .action-btn[data-state="end"]:hover:not(:disabled) { filter: brightness(1.06); box-shadow: 0 0 0 1px #ffe7a3aa, 0 10px 30px -10px #e6c36a; }
+
+.ghost, .quick button, .drawer button:not(.drawer__x), .choice button:not([data-confirm="yes"]), .cast-prompt button:not([data-confirm="yes"]), .command__tools button {
+  border: 1px solid var(--kv-line); border-radius: var(--kv-pill); background: #f5f1e60d; color: var(--kv-ink);
+  font: 600 11px/1.1 var(--kv-title); letter-spacing: .14em; text-transform: uppercase; }
+.ghost:hover, .quick button:hover, .drawer button:not(.drawer__x):hover, .choice button:hover, .command__tools button:hover { border-color: #e6c36a88; background: #e6c36a14; }
+.quick button:first-child { border-color: #e6c36a88; color: var(--kv-gold-2); }
+.settings .settings__concede { border-color: #ff9a8766; color: var(--kv-error); }
+.command__tools button { padding: 4px 8px; font-size: 10px; letter-spacing: .06em; }
+
+/* Mensagens rápidas da partida no KV (autor, 01/11/2026): vidro, linha dourada fina e texto claro. */
+.notice { padding: 12px 20px; border: 1px solid #e6c36a66; border-radius: var(--kv-radius); background: #10111ce6; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); color: var(--kv-ink); font: 400 15px/1.35 var(--kv-sans); box-shadow: 0 10px 30px -14px #000, 0 0 18px -8px #e6c36a80; }
+/* Aviso no meio da tela, em qualquer layout (autor, 01/11/2026). */
+.notice { top: 50%; bottom: auto; width: max-content; max-width: min(560px, calc(100vw - 32px)); box-sizing: border-box; text-align: center; transform: translate(-50%, calc(-50% + 12px)); }
+.notice.show { transform: translate(-50%, -50%); }
+/* Ações coladas em cima da carta escolhida, na largura dela (autor, 01/11/2026). */
+.olympus .hand--me:has(.is-lifted) { z-index: 40; }
+.quick--glued { box-sizing: border-box; padding: 4px; border-radius: 10px 10px 4px 4px; }
+.quick--glued { container-type: inline-size; }
+.quick--glued button { width: 100%; min-height: 40px; padding: 0 4px; font-size: min(11px, 6.6cqw); letter-spacing: .04em; text-align: center; white-space: nowrap; }
+
+/* Placa do jogador: não fica por cima de escolha, carta aberta ou mulligan (autor, 01/11/2026). */
+body:has(#overlay-root > :not(.gear-btn), .pick-modal, .decision-veil, #bigcard) .rk-plate { visibility: hidden; }
+/* Escolha de cartas (autor, 01/11/2026): todas apagadas até escolher; a escolhida sobe acesa e as outras ficam em preto e branco. */
+.decision__opt .dcard { filter: brightness(.72) saturate(.8); transition: filter .15s; }
+.decision__opts:has(.picked) .decision__opt:not(.picked) .dcard { filter: grayscale(1) brightness(.5); }
+.decision__opt.picked { transform: translateY(-14px); }
+.decision__opt.picked .dcard { filter: none; }
+/* Tela de busca: título à esquerda, o que a carta faz à direita, em texto corrido. */
+.pick-modal { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); column-gap: 20px; row-gap: 2px; align-items: start; }
+.pick-modal > :is(.pick-modal__head, .decision__opts, .trigger-panel__actions) { grid-column: 1 / -1; }
+.pick-modal > .decision__kicker { grid-column: 1; grid-row: 2; }
+.pick-modal > h3 { grid-column: 1; grid-row: 3; }
+.pick-modal > .decision__effect { grid-column: 2; grid-row: 2; max-width: none; margin: 0; padding: 0; border: 0; background: none; }
+.pick-modal > .decision__effect p { font: 400 14px/1.35 var(--kv-sans); color: var(--kv-ink); }
+.pick-modal > .pick-modal__ask { grid-column: 2; grid-row: 3; margin: 2px 0 0; font: 400 13px/1.35 var(--kv-sans); color: var(--kv-muted); }

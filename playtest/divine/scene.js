@@ -6,6 +6,7 @@ const THREE_URL = new URL('./vendor/three-0.160.0-slim.js', import.meta.url).hre
 
 // Perfis de qualidade (PERFORMANCE_BUDGET.md). Partículas = poeira de Cosmo ambiente; vfx = teto do pool de VFX.
 export const QUALITY = {
+  phone: {pixelRatio: globalThis.innerWidth >= 500 ? 1 : 1.25, ambient: 0, vfx: 400, columns: 8, antialias: false, rays: false},
   low: {pixelRatio: 1, ambient: 0, vfx: 600, columns: 8, antialias: false, rays: false},
   medium: {pixelRatio: 1.25, ambient: 500, vfx: 1500, columns: 12, antialias: true, rays: true},
   high: {pixelRatio: 1.75, ambient: 1400, vfx: 3000, columns: 16, antialias: true, rays: true},
@@ -101,7 +102,7 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
   try { THREE = await import(THREE_URL); } catch { return null; }
 
   let q = QUALITY[quality] || QUALITY.high;
-  const renderer = new THREE.WebGLRenderer({antialias: q.antialias, alpha: false, powerPreference: 'high-performance'});
+  const renderer = new THREE.WebGLRenderer({antialias: q.antialias, alpha: false, powerPreference: q === QUALITY.phone ? 'default' : 'high-performance'});
   renderer.autoClear = false;
   renderer.setPixelRatio(Math.min(q.pixelRatio, window.devicePixelRatio || 1));
   renderer.domElement.className = 'arena-canvas';
@@ -336,12 +337,14 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
     requestAnimationFrame(frame);
     if (document.hidden || lost) { last = now; return; }
     const busy = P.n || live.length || shakeAmp > .01 || punch > .01;
-    if (now - last < (busy ? 1000 / 62 : 1000 / 31)) return;
+    // Celular (autor, 01/11/2026, aquecendo): 30 fps só com efeito na tela; parado, 2 quadros por segundo, sem câmera flutuando.
+    const calm = q === QUALITY.phone;
+    if (now - last < (calm ? (busy || fxDrawn ? 1000 / 31 : 500) : busy ? 1000 / 62 : 1000 / 31)) return;
     const dt = Math.min(.05, (now - last) / 1000); last = now;
     uniforms.uTime.value += dt;
     frames++; if (now - fpsClock > 1000) { fps = frames * 1000 / (now - fpsClock); frames = 0; fpsClock = now; }
     shakeAmp *= Math.exp(-dt * 9); punch *= Math.exp(-dt * 7);
-    const drift = Math.sin(uniforms.uTime.value * .15) * .35;
+    const drift = calm ? 0 : Math.sin(uniforms.uTime.value * .15) * .35;
     camera.position.set(camHome.x + drift + (Math.random() - .5) * shakeAmp * .08, camHome.y - punch * .6 + (Math.random() - .5) * shakeAmp * .08, camHome.z - punch);
     camera.lookAt(look);
     stepParticles(dt); stepShapes(dt);

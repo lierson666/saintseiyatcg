@@ -113,7 +113,7 @@ function layoutKey(s) {
   const subs = list(s.subtipos);
   if(s.tipo==='Support')return 'relic';
   if(isArmor({...s,subtipos:subs}))return 'relic_cloth';
-  if(s.tipo==='Equipment')return subs.includes('Weapon')?'relic_weapon':'relic';
+  if(s.tipo==='Equipment')return 'relic_weapon';
   const sub = subs.find((x) => T.typeToLayout[`${s.tipo}:${x}`]);
   return T.typeToLayout[sub ? `${s.tipo}:${sub}` : s.tipo] || 'devotee';
 }

@@ -81,7 +81,7 @@
       "equipar_custo": 5,
       "keywords_en": [],
       "habilidades_en": [
-        "Resonance — Pegasus Seiya: Once each round, after Pegasus Seiya survives a Strike, you may Prepare him. He cannot declare another Strike this round."
+        "Resonance — Pegasus Seiya: Once each round, after Pegasus Seiya survives a Strike, you may Prepare him. (With a Seal counter, remove one instead.) He cannot declare another Strike this round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -96,7 +96,7 @@
       "nome_exibicao_pt": "ARMADURA DE PÉGASO V2",
       "subtitulo_pt": "As Asas da Esperança",
       "habilidades_pt": [
-        "Ressonância — Seiya de Pégaso: Uma vez por rodada, depois que Seiya de Pégaso sobrevive a um Golpe, você pode Prepará-lo. Ele não pode declarar outro Golpe nesta rodada."
+        "Ressonância — Seiya de Pégaso: Uma vez por rodada, depois que Seiya de Pégaso sobrevive a um Golpe, você pode Prepará-lo. (Com marcador de Selo, tire um em vez disso.) Ele não pode declarar outro Golpe nesta rodada."
       ],
       "tagline_pt": "As Asas da Esperança",
       "auto_equip_pt": ["Seiya de Pégaso"]
@@ -666,7 +666,7 @@
       "habilidades_en": [
         "Long Range",
         "Lightning Speed — Once each round, when Leo Aiolia declares a Strike, he gets +1 ATK during that Strike.",
-        "Lion’s Pride — Whenever Leo Aiolia defeats an enemy Devotee with a Strike, you may Prepare him. He cannot declare another Strike this round."
+        "Lion’s Pride — Whenever Leo Aiolia defeats an enemy Devotee with a Strike, you may Prepare him. (With a Seal counter, remove one instead.) He cannot declare another Strike this round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -676,7 +676,7 @@
       "habilidades_pt": [
         "Longo Alcance",
         "Velocidade da Luz — Uma vez por rodada, quando Aiolia de Leão declara um Golpe, ele recebe +1 ATQ durante esse Golpe.",
-        "Orgulho do Leão — Sempre que Aiolia de Leão derrota um Devoto inimigo com um Golpe, você pode Prepará-lo. Ele não pode declarar outro Golpe nesta rodada."
+        "Orgulho do Leão — Sempre que Aiolia de Leão derrota um Devoto inimigo com um Golpe, você pode Prepará-lo. (Com marcador de Selo, tire um em vez disso.) Ele não pode declarar outro Golpe nesta rodada."
       ],
       "tagline_pt": "O Relâmpago Dourado"
     },
@@ -2548,7 +2548,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Remove up to 2 damage from target friendly Saint.",
-        "If you control Shunrei, The Prayer of Rozan, you may also Prepare that Saint. It cannot declare another Strike this round."
+        "If you control Shunrei, The Prayer of Rozan, you may also Prepare that Saint. (With a Seal counter, remove one instead.) It cannot declare another Strike this round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -2557,7 +2557,7 @@
       "subtitulo_pt": "A Força para Voltar",
       "habilidades_pt": [
         "Remova até 2 de dano do Cavaleiro aliado alvo.",
-        "Se você controlar Shunrei, a Prece de Rozan, você também pode Preparar esse Cavaleiro. Ele não pode declarar outro Golpe nesta rodada."
+        "Se você controlar Shunrei, a Prece de Rozan, você também pode Preparar esse Cavaleiro. (Com marcador de Selo, tire um em vez disso.) Ele não pode declarar outro Golpe nesta rodada."
       ],
       "tagline_pt": "A Força para Voltar"
     },
@@ -3196,7 +3196,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Black Wing Formation — Once each round, when Crow Jamian declares a Strike against an enemy Devotee, you may pay {1}{C}. If you do, that Devotee gets -1 ATK during that Strike.",
-        "Crow’s Escape — Once each round, when Crow Jamian survives a Strike as a defender, you may Prepare him. He cannot declare another Strike this round."
+        "Crow’s Escape — Once each round, when Crow Jamian survives a Strike as a defender, you may Prepare him. (With a Seal counter, remove one instead.) He cannot declare another Strike this round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -3205,7 +3205,7 @@
       "subtitulo_pt": "As Asas Negras",
       "habilidades_pt": [
         "Formação das Asas Negras — Uma vez por rodada, quando Jamian de Corvo declara um Golpe contra um Devoto inimigo, você pode pagar {1}{C}. Se fizer isso, esse Devoto recebe -1 ATQ durante esse Golpe.",
-        "Fuga do Corvo — Uma vez por rodada, quando Jamian de Corvo sobrevive a um Golpe como defensor, você pode Prepará-lo. Ele não pode declarar outro Golpe nesta rodada."
+        "Fuga do Corvo — Uma vez por rodada, quando Jamian de Corvo sobrevive a um Golpe como defensor, você pode Prepará-lo. (Com marcador de Selo, tire um em vez disso.) Ele não pode declarar outro Golpe nesta rodada."
       ],
       "tagline_pt": "As Asas Negras"
     },
@@ -3278,7 +3278,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "When target friendly Saint would be defeated by Strike damage this round, prevent that damage instead.",
-        "If that Saint is Pegasus Seiya, you may also Prepare him. He cannot declare another Strike this round."
+        "If that Saint is Pegasus Seiya, you may also Prepare him. (With a Seal counter, remove one instead.) He cannot declare another Strike this round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -3287,7 +3287,7 @@
       "subtitulo_pt": "O Amor que Desafiou a Morte",
       "habilidades_pt": [
         "Quando o Cavaleiro aliado alvo seria derrotado por dano de Golpe nesta rodada, previna esse dano em vez disso.",
-        "Se esse Cavaleiro for Seiya de Pégaso, você também pode Prepará-lo. Ele não pode declarar outro Golpe nesta rodada."
+        "Se esse Cavaleiro for Seiya de Pégaso, você também pode Prepará-lo. (Com marcador de Selo, tire um em vez disso.) Ele não pode declarar outro Golpe nesta rodada."
       ],
       "tagline_pt": "O Amor que Desafiou a Morte"
     },
@@ -4068,21 +4068,21 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "BLOODLUST — Divine Power\nCost: {3}{C}\nOnce each round, choose a Devotee you control. Prepare it. It gets +1 Power until the end of this round. It can't declare a Strike against a God this round.",
+        "BLOODLUST — Divine Power\nCost: {3}{C}\nOnce each round, choose a Devotee you control. Prepare it. (With a Seal counter, remove one instead.) It gets +1 Power until the end of this round. It can't declare a Strike against a God this round.",
         "BLOOD TOLL — Divine Command\nCost: {1}{C}. Activate only during your turn, once each turn.\nDeal 1 damage to target enemy Devotee. Ares loses {1}{S}."
       ],
       "habilidade_awaken_en": "BUTCHERY — Awaken 5\nWhenever a Devotee you control destroys an enemy Devotee during a Strike, the enemy God loses {1}{S}.",
-      "ultimate_en": "OBLITERATION — Ultimate\nCost: {6}{C}\nPrepare all Devotees you control.\nUntil the end of this round, Devotees you control get +3 Power, Pierce and Long Range, and can declare Strikes as though they had Impulse.\nWhenever a Devotee you control completes a Strike this round, destroy it. This destruction can't be prevented.",
+      "ultimate_en": "OBLITERATION — Ultimate\nCost: {6}{C}\nPrepare all Devotees you control. (Each one with a Seal counter removes one instead.)\nUntil the end of this round, Devotees you control get +3 Power, Pierce and Long Range, and can declare Strikes as though they had Impulse.\nWhenever a Devotee you control completes a Strike this round, destroy it. This destruction can't be prevented.",
       "notas_pt": "Versão nova fornecida pelo autor em 24/10/2026; texto preservado.",
       "nome_exibicao_pt": "ARES",
       "subtitulo_pt": "Movido pelo Ódio",
       "tagline_pt": "Deus da Guerra e da Destruição",
       "habilidades_pt": [
-        "SEDE DE SANGUE — Poder Divino\nCusto: {3}{C}\nUma vez por rodada, escolha um Devoto que você controla. Prepare-o. Ele recebe +1 de Poder até o fim da rodada. Ele não pode declarar um Golpe contra um Deus nesta rodada.",
+        "SEDE DE SANGUE — Poder Divino\nCusto: {3}{C}\nUma vez por rodada, escolha um Devoto que você controla. Prepare-o. (Com marcador de Selo, tire um em vez disso.) Ele recebe +1 de Poder até o fim da rodada. Ele não pode declarar um Golpe contra um Deus nesta rodada.",
         "TRIBUTO DE SANGUE — Comando Divino\nCusto: {1}{C}. Ative apenas durante o seu turno, uma vez por turno.\nCause 1 de dano ao Devoto inimigo alvo. Ares perde {1}{S}."
       ],
       "habilidade_awaken_pt": "CARNIFICINA — Despertar 5\nSempre que um Devoto que você controla destrói um Devoto inimigo durante um Golpe, o Deus inimigo perde {1}{S}.",
-      "ultimate_pt": "ANIQUILAÇÃO — Supremo\nCusto: {6}{C}\nPrepare todos os Devotos que você controla.\nAté o fim da rodada, os Devotos que você controla recebem +3 de Poder, Perfurar e Longo Alcance, e podem declarar Golpes como se tivessem Impulso.\nSempre que um Devoto que você controla conclui um Golpe nesta rodada, destrua-o. Essa destruição não pode ser prevenida.",
+      "ultimate_pt": "ANIQUILAÇÃO — Supremo\nCusto: {6}{C}\nPrepare todos os Devotos que você controla. (Cada um com marcador de Selo tira um em vez disso.)\nAté o fim da rodada, os Devotos que você controla recebem +3 de Poder, Perfurar e Longo Alcance, e podem declarar Golpes como se tivessem Impulso.\nSempre que um Devoto que você controla conclui um Golpe nesta rodada, destrua-o. Essa destruição não pode ser prevenida.",
       "flavour_pt": "“Ajoelhem-se diante do deus da guerra”"
     },
     {
@@ -4858,7 +4858,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Relentless Advance — Once each round, when Marina Vanguard defeats an enemy Devotee with a Strike, you may Prepare Marina Vanguard. It cannot declare another Strike this round."
+        "Relentless Advance — Once each round, when Marina Vanguard defeats an enemy Devotee with a Strike, you may Prepare Marina Vanguard. (With a Seal counter, remove one instead.) It cannot declare another Strike this round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -4866,7 +4866,7 @@
       "nome_exibicao_pt": "VANGUARDA MARINA",
       "subtitulo_pt": "O Primeiro a Erguer-se, o Último a Cair",
       "habilidades_pt": [
-        "Avanço Implacável — Uma vez por rodada, quando a Vanguarda Marina derrota um Devoto inimigo com um Golpe, você pode Prepará-la. Ela não pode declarar outro Golpe nesta rodada."
+        "Avanço Implacável — Uma vez por rodada, quando a Vanguarda Marina derrota um Devoto inimigo com um Golpe, você pode Prepará-la. (Com marcador de Selo, tire um em vez disso.) Ela não pode declarar outro Golpe nesta rodada."
       ],
       "tagline_pt": "O Primeiro a Erguer-se, o Último a Cair"
     },
@@ -11840,7 +11840,7 @@
       "habilidades_en": [
         "Impulse",
         "Crimson Arrival — When Alcmenes enters the Battlefield, deal 3 damage to target enemy Devotee.",
-        "Unrelenting Inferno — Whenever Alcmenes defeats an enemy Devotee during combat, Prepare Alcmenes. This ability triggers only once per turn."
+        "Unrelenting Inferno — Whenever Alcmenes defeats an enemy Devotee during combat, Prepare Alcmenes. (With a Seal counter, remove one instead.) This ability triggers only once per turn."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -11850,7 +11850,7 @@
       "habilidades_pt": [
         "Impulso",
         "Chegada Carmesim — Quando Alcmenes entra no Campo de Batalha, cause 3 de dano ao Devoto inimigo alvo.",
-        "Inferno Implacável — Sempre que Alcmenes derrota um Devoto inimigo em combate, Prepare Alcmenes. Esta habilidade só dispara uma vez por turno."
+        "Inferno Implacável — Sempre que Alcmenes derrota um Devoto inimigo em combate, Prepare Alcmenes. (Com marcador de Selo, tire um em vez disso.) Esta habilidade só dispara uma vez por turno."
       ],
       "flavour_pt": "\"O fogo divino não distingue carne de aço. Tudo queima.\"",
       "tagline_pt": "O Comandante Carmesim"
@@ -12064,7 +12064,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Razor Winds — Whenever equipped Devotee declares a Strike, deal 1 damage to target enemy Devotee.",
-        "Resonance — Lior of Lamassu: Whenever another friendly Berserker is defeated, you may Prepare Lior."
+        "Resonance — Lior of Lamassu: Whenever another friendly Berserker is defeated, you may Prepare Lior. (With a Seal counter, remove one instead.)"
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -12080,7 +12080,7 @@
       "subtitulo_pt": "Asas da Catástrofe",
       "habilidades_pt": [
         "Ventos Cortantes — Sempre que o Devoto equipado declara um Golpe, cause 1 de dano ao Devoto inimigo alvo.",
-        "Ressonância — Lior de Lamassu: Sempre que outro Berserker aliado é derrotado, você pode Preparar Lior."
+        "Ressonância — Lior de Lamassu: Sempre que outro Berserker aliado é derrotado, você pode Preparar Lior. (Com marcador de Selo, tire um em vez disso.)"
       ],
       "flavour_pt": "\"Cada batida destas asas traz a promessa de mais um belo desastre.\"",
       "tagline_pt": "Asas da Catástrofe",
@@ -12481,7 +12481,7 @@
       "habilidades_en": [
         "Impulse",
         "Predator's Arrival — When Arionte enters the Battlefield, deal 1 damage to target enemy Devotee that has already taken damage this turn.",
-        "Relentless Pursuit — Whenever Arionte defeats an enemy Devotee during combat, Prepare Arionte. This ability triggers only once per turn."
+        "Relentless Pursuit — Whenever Arionte defeats an enemy Devotee during combat, Prepare Arionte. (With a Seal counter, remove one instead.) This ability triggers only once per turn."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -12491,7 +12491,7 @@
       "habilidades_pt": [
         "Impulso",
         "Chegada do Predador — Quando Arionte entra no Campo de Batalha, cause 1 de dano ao Devoto inimigo alvo que já sofreu dano neste turno.",
-        "Perseguição Implacável — Sempre que Arionte derrota um Devoto inimigo em combate, Prepare Arionte. Esta habilidade só dispara uma vez por turno."
+        "Perseguição Implacável — Sempre que Arionte derrota um Devoto inimigo em combate, Prepare Arionte. (Com marcador de Selo, tire um em vez disso.) Esta habilidade só dispara uma vez por turno."
       ],
       "flavour_pt": "\"Quando a caçada começa, não há mais para onde fugir.\"",
       "tagline_pt": "O Caçador Implacável"
@@ -14382,7 +14382,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Reckless Momentum — Prepare target friendly Berserker. That Berserker gains +1 ATK until end of round. At the end of your turn, deal 2 damage to your God."
+        "Reckless Momentum — Prepare target friendly Berserker. (With a Seal counter, remove one instead.) That Berserker gains +1 ATK until end of round. At the end of your turn, deal 2 damage to your God."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -14390,7 +14390,7 @@
       "nome_exibicao_pt": "ASSALTO IMPRUDENTE",
       "subtitulo_pt": "Vitória a Qualquer Custo",
       "habilidades_pt": [
-        "Impulso Imprudente — Prepare o Berserker aliado alvo. Esse Berserker recebe +1 ATQ até o fim da rodada. No fim do seu turno, cause 2 de dano ao seu Deus."
+        "Impulso Imprudente — Prepare o Berserker aliado alvo. (Com marcador de Selo, tire um em vez disso.) Esse Berserker recebe +1 ATQ até o fim da rodada. No fim do seu turno, cause 2 de dano ao seu Deus."
       ],
       "flavour_pt": "\"Recuar é impossível. Sobreviver é opcional.\"",
       "tagline_pt": "Vitória a Qualquer Custo"
@@ -15416,7 +15416,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "United Legions — Friendly Berserkers gain +2 ATK until end of round.",
-        "Fourfold Assault — If you control at least one Berserker from each of the four Legions — Red Fire, Flame, Disaster, and Fear — those Berserkers gain Pierce until end of round and you may Prepare up to four friendly Berserkers."
+        "Fourfold Assault — If you control at least one Berserker from each of the four Legions — Red Fire, Flame, Disaster, and Fear — those Berserkers gain Pierce until end of round and you may Prepare up to four friendly Berserkers. (Each one with a Seal counter removes one instead.)"
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -15425,7 +15425,7 @@
       "subtitulo_pt": "Os Exércitos do Apocalipse",
       "habilidades_pt": [
         "Legiões Unidas — Os Berserkers aliados recebem +2 ATQ até o fim da rodada.",
-        "Ataque Quádruplo — Se você controla pelo menos um Berserker de cada uma das quatro Legiões — Fogo Vermelho, Chama, Desastre e Medo —, esses Berserkers ganham Perfurar até o fim da rodada e você pode Preparar até quatro Berserkers aliados."
+        "Ataque Quádruplo — Se você controla pelo menos um Berserker de cada uma das quatro Legiões — Fogo Vermelho, Chama, Desastre e Medo —, esses Berserkers ganham Perfurar até o fim da rodada e você pode Preparar até quatro Berserkers aliados. (Cada um com marcador de Selo tira um em vez disso.)"
       ],
       "flavour_pt": "\"Quatro exércitos. Quatro comandantes. Um deus que não deseja nada além de guerra sem fim.\"",
       "tagline_pt": "Os Exércitos do Apocalipse"
@@ -16326,7 +16326,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Silver Radiance — Put two Training counters on target friendly Devotee.",
-        "Moonlight Renewal — Prepare that Devotee."
+        "Moonlight Renewal — Prepare that Devotee. (With a Seal counter, remove one instead.)"
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -16335,7 +16335,7 @@
       "subtitulo_pt": "A Bênção da Lua Ancestral",
       "habilidades_pt": [
         "Brilho Prateado — Coloque 2 marcadores de Treinamento no Devoto aliado alvo.",
-        "Renovação do Luar — Prepare esse Devoto."
+        "Renovação do Luar — Prepare esse Devoto. (Com marcador de Selo, tire um em vez disso.)"
       ],
       "flavour_pt": "\"A luz mais antiga dos céus desperta uma força que nem o próprio tempo pode diminuir.\"",
       "tagline_pt": "A Bênção da Lua Ancestral"

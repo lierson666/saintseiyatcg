@@ -1,11 +1,15 @@
 // Ações serializáveis da partida (docs/duelo-online.md, passo 1). A tela local e o arena-server aplicam a mesma ação
 // com a mesma função da engine: a tela manda dados ({type, key, uid, choice…}), nunca uma função.
-import {startTurn, endTurn, pass, placeBase, orderTriggers, RuleError} from './core.js';
+import {startTurn, endTurn, pass, placeBase, orderTriggers, RuleError, HAND_LIMIT} from './core.js';
+import {discard} from './v6/kit.js';
 import {declareStrike, mustStrike} from './strike.js';
 import {playDevotee, playEquipment, playSpell, activate, activateAfterlife, reequip, castHidden} from './play.js';
 import {announceExclamation, removeJudgment, announceGreatFlood, announceGreatEclipse, announceObliteration, activateBloodlust, activateCommand, placeBaseMoonHarvest, announceMoonAwakening} from './gods.js';
-import {mulligan} from './match.js';
+import {mulligan, chooseFirst} from './match.js';
 import {applyTimeout} from './clock.js';
+
+// §55: depois da conversão das Bases, o ativo escolhe o excesso acima de 9 cartas; os gatilhos de descarte entram na janela aberta por endTurn.
+const handLimit = (s, ctx, key) => { discard(s, ctx, key, s.players[key].hand.length - HAND_LIMIT, 'Hand limit'); };
 
 // Aplica `action` em `match` ({state, objects, attached, …}). `ctx` = {cards, objects, attached} da partida.
 // endTurn liga match.ending: o turno seguinte começa em advance(), quando a janela da End Phase fecha.
@@ -28,15 +32,17 @@ export function applyAction(match, ctx, action) {
       return declareStrike(s, ctx, uid, t.startsWith('god:') ? {kind: 'god', player: t.slice(4)} : {kind: 'devotee', uid: t});
     }
     case 'activate': return activate(s, ctx, key, uid, choice);
+    case 'afterlife': return activateAfterlife(s, ctx, key, uid); // §40: do Tartarus
     case 'reequip': return reequip(s, ctx, key, uid, choice.bearer);
     case 'pass': return pass(s, key);
     case 'orderTriggers': return orderTriggers(s, key, choice.order || []);
     case 'endTurn':
-    case 'afterlife': return activateAfterlife(s, ctx, key, uid); // §40: do Tartarus
       if (s.active !== key) throw new RuleError('D1', 'END TURN fora do próprio turno');
       if (mustStrike(s, ctx, key).length) throw new RuleError('V6', 'Uncontrolled Rage: este Devotee precisa declarar Strike antes do END TURN');
       match.ending = true;
-      return endTurn(s);
+      endTurn(s);
+      return handLimit(s, ctx, key);
+    case 'chooseFirst': return chooseFirst(match, key, choice.goFirst);
     case 'mulligan':
       mulligan(match, key, choice.uids || []);
       if (!s.setup) startTurn(s);
@@ -52,7 +58,7 @@ export function applyAction(match, ctx, action) {
     case 'command': return activateCommand(s, ctx, key, choice.uid);
     case 'moonHarvest': return placeBaseMoonHarvest(s, ctx, key, uid);
     case 'judgment': return removeJudgment(s, ctx, key, choice.devotees);
-    case 'timeout': if (applyTimeout(s, key) === 'TIMEOUT_END_TURN') match.ending = true; return;
+    case 'timeout': if (applyTimeout(s, key) === 'TIMEOUT_END_TURN') { match.ending = true; handLimit(s, ctx, key); } return;
     default: throw new RuleError('alvo', `ação desconhecida: ${type}`);
   }
 }

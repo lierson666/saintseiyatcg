@@ -20,6 +20,21 @@
   const read = () => { try { const v = JSON.parse(localStorage.getItem(KEY) || '{}').resolution; return v in LIST ? v : 'auto'; } catch { return 'auto'; } };
   const save = v => { try { localStorage.setItem(KEY, JSON.stringify({...JSON.parse(localStorage.getItem(KEY) || '{}'), resolution: v})); } catch { /* sem armazenamento */ } };
   const desktop = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  // Tablet (autor, 01/11/2026): em pé, a página se desenha com 600px de largura e cai no layout de celular, ampliado;
+  // deitado, volta à largura real e usa o layout de desktop. A orientação vem da tela porque 600px não muda em pé/deitado da página.
+  if (!desktop && self === top && Math.min(screen.width, screen.height) >= 600) {
+    const meta = document.querySelector('meta[name="viewport"]') || document.head.appendChild(Object.assign(document.createElement('meta'), {name: 'viewport'}));
+    const real = 'width=device-width, initial-scale=1, viewport-fit=cover';
+    const fit = () => {
+      const up = screen.orientation?.type ? screen.orientation.type.startsWith('portrait') : matchMedia('(orientation: portrait)').matches;
+      meta.content = up ? 'width=600, viewport-fit=cover' : real;
+    };
+    fit();
+    // Chrome em tela cheia ignora a largura do viewport e tiraria o layout de celular. O app instalado já abre em tela cheia pelo manifesto.
+    Element.prototype.requestFullscreen = () => Promise.resolve();
+    screen.orientation?.addEventListener?.('change', fit);
+    addEventListener('orientationchange', fit);
+  }
   let outer = null;
   try { outer = self !== top && top.ssStage?.outer ? top : null; } catch { /* outra origem */ }
 

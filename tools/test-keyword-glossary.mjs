@@ -8,6 +8,7 @@ test('fichas de keyword: impressas primeiro, depois as do texto, sem repetir', (
   assert.deepEqual(cardKeywords({habilidades_en: ['Hidden Cosmo {6}']}), ['Hidden Cosmo']);
   const html = renderKeywordNotes(card);
   assert.match(html, /<strong>LONG RANGE<\/strong>/);
-  assert.ok(html.includes(KEYWORD_RULES['Seal']));
+  assert.ok(html.includes('removes one Seal counter and does not Prepare'));
+  assert.match(KEYWORD_RULES['Seal'], /becomes Unprepared/);
   assert.equal(renderKeywordNotes({habilidades_en: ['Draw a card.']}), '');
 });

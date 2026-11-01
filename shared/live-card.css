@@ -4,7 +4,10 @@
    Profundidade: camadas escuras translúcidas e filetes de armadura. Espaço: base 4px. */
 .live-card{--card-accent:#d9b762;--card-ink:#f5edda;position:relative;isolation:isolate;width:100%;height:100%;min-height:0;aspect-ratio:1488/2091;overflow:hidden;display:flex;flex-direction:column;background:#111522;color:var(--card-ink);border:1px solid color-mix(in srgb,var(--card-accent),transparent 30%);border-radius:6px;text-align:left;font-family:'Avenir Next','Trebuchet MS',Arial,sans-serif;box-shadow:inset 0 0 0 3px #090c1677}
 .live-card--poseidon{--card-accent:#80cadd}.live-card--hades{--card-accent:#b39ada}.live-card--ares{--card-accent:#e69581}.live-card--artemis{--card-accent:#abd4c1}.live-card--neutral{--card-accent:#c6c2b5}
-.live-card__illustration,.live-card__surface{position:absolute;inset:0;z-index:-2}.live-card__illustration img{width:100%;height:100%;object-fit:cover;object-position:50% 28%}.live-card__surface{z-index:-1;background:linear-gradient(180deg,#080c18db,#080c1800 28%,#080c1888 44%,#080c18f2 72%)}
+.live-card__illustration,.live-card__surface{position:absolute;inset:0;z-index:-2}.live-card__illustration img{width:100%;height:100%;object-fit:cover;object-position:50% 28%}
+/* Antes de carregar, height:auto dá altura 0 e o top negativo do layout põe a imagem fora do recorte da carta: loading=lazy nunca dispara e a arte fica preta (deck builder). */
+.live-card__illustration img:not(.is-in){min-height:100%}
+.live-card__surface{z-index:-1;background:linear-gradient(180deg,#080c18db,#080c1800 28%,#080c1888 44%,#080c18f2 72%)}
 .live-card__placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:64px;color:var(--card-accent);background:radial-gradient(ellipse at 50% 30%,color-mix(in srgb,var(--card-accent),#17203b 70%),#0b101d 75%)}.live-card__placeholder small{font:10px Arial,sans-serif;opacity:.7;margin-top:8px}
 .live-card__heading{display:flex;gap:8px;align-items:flex-start;padding:10px 8px;min-height:44px;position:relative;font-size:14px}.live-card__heading strong{flex:1;font-family:Palatino,Georgia,serif;font-size:inherit;line-height:1.12;text-shadow:0 1px 3px #000}.live-card__cost{display:grid;place-items:center;flex:0 0 26px;height:26px;border:1px solid var(--card-accent);background:#080e1de0;border-radius:50%;font-size:16px;color:var(--card-accent)}
 .live-card__body{margin-top:auto;padding:8px;min-height:0;font-size:10px;line-height:1.4}.live-card__type{font-size:9px;color:var(--card-accent);margin:0 0 6px}.live-card__keywords{font-weight:700;color:var(--card-accent);margin:4px 0}.live-card__rules p,.live-card__entry p{margin:0 0 5px}.live-card__owners{font-size:9px;margin:4px 0;color:#dbd2bd}.live-card__entry{margin-bottom:5px}
@@ -112,3 +115,11 @@
 @keyframes lc-more{0%,96%{-webkit-mask-image:linear-gradient(#000 80%,transparent);mask-image:linear-gradient(#000 80%,transparent)}100%{-webkit-mask-image:none;mask-image:none}}
 html.lc-a11y .live-card.live-card--psd .lc-rules{font-weight:500;background:linear-gradient(180deg,transparent,rgba(4,6,14,.86) 2.2cqw) 0 0/100% 100% no-repeat;padding:1.4cqw 1.2cqw .6cqw;margin:0 -1.2cqw;text-shadow:0 0 .2cqw #000,0 0 .35cqw #000,0 .1cqw .5cqw #000}
 html.lc-a11y .live-card--psd .lc-rules strong,html.lc-a11y .live-card--psd .lc-rules .rule-heading{font-weight:900}
+/* Brilho mais sutil no celular em pé (autor, 01/11/2026): mesma fonte, cor e contorno; só o halo menor. Tirar o @media leva para o desktop. */
+@media (orientation:portrait) and (max-width:600px){
+.live-card.live-card--psd .lc-text{text-shadow:0 0 .2cqw #000,0 0 .45cqw #000,0 0 1.1cqw color-mix(in srgb,var(--psd-glow) 55%,transparent)}
+.live-card--psd .lc-gem>.lc-piece,.live-card--psd .lc-symbol{filter:drop-shadow(0 0 .6cqw color-mix(in srgb,var(--psd-glow) 55%,transparent)) drop-shadow(0 0 .25cqw #000)}
+.live-card.live-card--psd .lc-gem b{text-shadow:0 0 .2cqw #000,0 0 .45cqw #000,0 0 1.1cqw color-mix(in srgb,var(--psd-glow) 55%,transparent)}
+.live-card.live-card--psd .lc-gem--power b{text-shadow:0 0 .2cqw #000,0 0 .9cqw rgba(42,168,255,.55)}
+.live-card.live-card--psd .lc-gem--resistance b{text-shadow:0 0 .2cqw #000,0 0 .9cqw rgba(255,122,26,.55)}
+}

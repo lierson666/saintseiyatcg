@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {loadCanon} from '../shared/canon-cards.js';
 import {canonIndex} from '../shared/deck-v3.js';
-import {createMatch, mulligan} from '../playtest/engine-v3/match.js';
+import {createMatch, mulligan, chooseFirst} from '../playtest/engine-v3/match.js';
 import {startTurn, endTurn, passAll, RuleError, placeBase, destroyDevotee, checkInvariants, NotSpecified} from '../playtest/engine-v3/core.js';
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
@@ -81,12 +81,12 @@ test('simulação reproduzível de compra e Base até o deck vazio (§55) encerr
     endTurn(state); passAll(state);
     checkInvariants(state, objects);
   }
-  // P01: deck 43 (deck de 50, 01/11/2026); 1 compra por turno: 43 compras esvaziam o deck no 44º turno próprio.
-  // §55 (01/11/2026): a compra do 45º turno próprio, com o deck vazio, derrota A na hora, antes de B.
-  assert.deepEqual(state.victory, {winner: 'B', reason: 'deck_out'});
-  assert.equal(log.length, 88);
+  // P01: deck 43 (deck de 50, 01/11/2026); 2 compras por turno; A pula a do 1º turno: após 22 turnos próprios sobra 1 carta.
+  // §55 (01/11/2026): B compra desde o 1º turno, então a 2ª compra do 22º turno de B, com o deck vazio, derrota B na hora, antes de A.
+  assert.deepEqual(state.victory, {winner: 'A', reason: 'deck_out'});
+  assert.equal(log.length, 43);
   assert.match(log[0], /^R1 A mão 6 deck 43 bases 1/);
-  assert.match(log.at(-1), /^R44 B mão 6 deck 0 bases 44/);
+  assert.match(log.at(-1), /^R22 A mão \d+ deck 1 bases 22/);
   assert.ok(state.players.A.latent <= 3 && state.players.B.latent <= 3);
 });
 
@@ -115,4 +115,25 @@ test('P01: mulligan parcial devolve N, embaralha e compra N; mão fica com 7 e n
   checkInvariants(state, objects);
   startTurn(state);
   assert.equal(p.hand.length, 7, 'D170: sem compra no 1º turno');
+});
+
+test('§55: com moeda, ninguém tem mão antes da escolha; quem vence começa ou passa', () => {
+  const coin = (seed, first) => createMatch({cards, canonIndex: index, decks: {A: rush, B: fortress}, seed, first, coin: true});
+  const winners = new Set(Array.from({length: 20}, (_, seed) => coin(seed).state.coin.winner));
+  assert.deepEqual([...winners].sort(), ['A', 'B']);
+  const m = coin(9), s = m.state, {winner} = s.coin, foe = winner === 'A' ? 'B' : 'A';
+  assert.deepEqual([s.players.A.hand.length, s.players.B.hand.length, s.coin.first], [0, 0, null]);
+  assert.throws(() => mulligan(m, winner, []), e => e.decision === 'P01');
+  assert.throws(() => chooseFirst(m, foe, true), e => e.decision === 'P01');
+  chooseFirst(m, winner, false);
+  assert.deepEqual([s.coin.first, s.active, s.order, s.setup], [foe, foe, [foe, winner], [foe, winner]]);
+  assert.deepEqual([s.players.A.hand.length, s.players.B.hand.length], [7, 7]);
+  assert.throws(() => chooseFirst(m, winner, true), e => e.decision === 'P01');
+  mulligan(m, foe, []); mulligan(m, winner, []);
+  assert.equal(s.setup, null);
+});
+
+test('§55: `first` força a moeda para o QA e já vale como escolha feita', () => {
+  const {state: s} = createMatch({cards, canonIndex: index, decks: {A: rush, B: fortress}, seed: 3, first: 'B', coin: true});
+  assert.deepEqual([s.coin, s.active, s.setup, s.players.B.hand.length], [{winner: 'B', first: 'B'}, 'B', ['B', 'A'], 7]);
 });

@@ -8,7 +8,7 @@ import {createMatch} from '../playtest/engine-v3/match.js';
 import {createCore, startTurn, endTurn, placeBase, addEffect, pushTriggers, respond, pass, passAll, RuleError} from '../playtest/engine-v3/core.js';
 import {declareStrike} from '../playtest/engine-v3/strike.js';
 
-const core = () => createCore({soul: {A: 30, B: 30}, decks: {A: ['a1'], B: ['b1']}});
+const core = () => createCore({soul: {A: 30, B: 30}, decks: {A: ['a1', 'a2', 'a3'], B: ['b1', 'b2', 'b3']}}); // §55: o 2º jogador compra 2 no 1º turno
 const instant = (log, name, fn = () => {}) => ({speed: 'instant', run: st => { log.push(name); fn(st); }});
 
 test('ação comum não abre janela; com janela aberta, ação comum e Sorcery são recusadas', () => {

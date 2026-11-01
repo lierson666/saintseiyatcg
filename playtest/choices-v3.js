@@ -11,7 +11,7 @@ export const STEPS = {
     {...SAINT, when: c => c.mode === 'atk'}],
   '081': [{key: 'mode', options: {atk: '+2/+2 to a friendly Bronze Saint', god: 'Prevent the next 5 Strike damage to your God', both: 'Both (needs Pegasus Seiya)'}},
     {key: 'target', pick: 'bronze', label: 'Choose a friendly Bronze Saint', when: c => c.mode !== 'god'}],
-  '082': [{key: 'target', pick: 'enemy', label: 'Choose an enemy Devotee'}, {key: 'heal', pick: 'saint', optional: true, label: 'If it is defeated, remove 1 damage from which friendly Saint?'}],
+  '082': [{key: 'target', pick: 'enemy', label: 'Choose an enemy Devotee'}],
   '085': [{key: 'source', pick: 'saint', label: 'Choose the friendly Saint'}, {key: 'target', pick: 'enemy', label: 'Choose an enemy Devotee'}],
   '087': [{key: 'prepare', pick: 'saint', multi: 2, optional: true, label: 'If your God has 5 or less Soul, Prepare up to two friendly Saints'}],
   '088': [SAINT, {key: 'prepare', confirm: 'Prepare that Saint if your God is behind?'}],

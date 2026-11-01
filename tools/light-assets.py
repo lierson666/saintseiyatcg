@@ -5,6 +5,7 @@ Incremental: só reconverte o que mudou. Os originais ficam intactos (Card Forge
 - card-forge/art-web/*.jpg -> art-web/webp/<nome>.webp (lado maior até 1024 px) e art-web/thumb/<nome>.webp (até 320 px),
   mais art-web/light.json com a lista do que existe (shared/light-art.js só troca a URL quando a versão leve existe).
 - CARD-TEMPLATE/**/*.png e playtest/divine/assets/god-frames/*.png -> .webp ao lado, mesmo tamanho (molduras e peças).
+- CARD-TEMPLATE/**/*.png -> .sm.webp ao lado, metade do tamanho, para aparelhos de toque.
 Artes -ref (provisórias) entram também: o deploy já as filtra pelo nome."""
 import json
 from pathlib import Path
@@ -43,6 +44,12 @@ def main():
     (ART / 'light.json').write_text(json.dumps(light, separators=(',', ':')))
 
     frames = [*ROOT.glob('CARD-TEMPLATE/**/*.png'), *ROOT.glob('playtest/divine/assets/god-frames/*.png')]
+    # Aparelho de toque: peças da carta pela metade (.sm.webp); a 1488 px cada uma, a mão trava num tablet (shared/live-card.js escolhe).
+    for src in ROOT.glob('CARD-TEMPLATE/**/*.png'):
+        dst = src.with_suffix('.sm.webp')
+        if stale(src, dst):
+            side = max(Image.open(src).size)
+            save(src, dst, side // 2 if side > 600 else None); made += 1
     for src in frames:
         dst = src.with_suffix('.webp')
         if stale(src, dst):

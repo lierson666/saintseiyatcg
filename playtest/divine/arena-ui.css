@@ -4,10 +4,10 @@
 .cast-prompt, .trigger-panel__box { gap: 10px; padding: 14px 16px; border-radius: 16px; background: linear-gradient(180deg, rgba(20, 22, 48, .96), rgba(8, 9, 24, .96));
   border: 1px solid rgba(var(--glow, 255, 205, 100), .55); box-shadow: 0 18px 40px rgba(0, 0, 0, .55), 0 0 30px rgba(var(--glow, 255, 205, 100), .18); }
 .cast-prompt { justify-items: stretch; text-align: left; }
-.cast-prompt .choice__label { justify-content: flex-start; font: 600 15px/1.35 system-ui, sans-serif; color: #f6efdc; }
+.cast-prompt .choice__label { justify-content: flex-start; font: 600 15px/1.35 "Jost", system-ui, sans-serif; color: #f6efdc; }
 .cast-prompt button, .trigger-panel__actions button, .decision__actions button, .choice button {
   min-height: 40px; padding: 0 18px; border-radius: 999px; border: 1px solid rgba(255, 214, 140, .55); background: rgba(255, 214, 140, .08);
-  color: #f6e6bf; font: 600 14px/1 system-ui, sans-serif; letter-spacing: .02em; cursor: pointer; transition: background .15s, border-color .15s, transform .15s; }
+  color: #f6e6bf; font: 600 14px/1 "Jost", system-ui, sans-serif; letter-spacing: .02em; cursor: pointer; transition: background .15s, border-color .15s, transform .15s; }
 .cast-prompt button:hover, .trigger-panel__actions button:hover, .decision__actions button:hover, .choice button:hover { background: rgba(255, 214, 140, .18); border-color: #ffd98c; transform: translateY(-1px); }
 .cast-prompt button:focus-visible, .trigger-panel__actions button:focus-visible, .choice button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 /* Ação principal (Confirm, Yes, Done) em dourado cheio; Cancel e Skip discretos. */
@@ -16,7 +16,7 @@
 .trigger-panel__actions .primary-action:hover, .cast-prompt [data-confirm="yes"]:hover { filter: brightness(1.08); }
 .cast-prompt .ghost, .trigger-panel__actions .ghost, .choice .ghost { border-color: rgba(255, 255, 255, .2); background: none; color: #d8d2c4; }
 .cast-prompt button[disabled], .trigger-panel__actions button[disabled] { opacity: .45; cursor: not-allowed; transform: none; }
-.cast-prompt kbd, .choice kbd { margin-left: 6px; padding: 1px 5px; border: 1px solid rgba(255, 255, 255, .3); border-radius: 4px; font: 600 11px system-ui; opacity: .8; }
+.cast-prompt kbd, .choice kbd { margin-left: 6px; padding: 1px 5px; border: 1px solid rgba(255, 255, 255, .3); border-radius: 4px; font: 600 11px "Jost", system-ui; opacity: .8; }
 /* Botões lado a lado (Skip | Cancel), não empilhados. */
 .cast-prompt { grid-template-columns: 1fr 1fr; }
 .cast-prompt > :not(button) { grid-column: 1 / -1; }
@@ -45,9 +45,9 @@ body.has-chain-zoom .command__clock { visibility: visible; }
 .ability-card { --w: var(--cz-w, 200px); width: var(--w); aspect-ratio: 5 / 7; display: grid; grid-template-rows: 48% auto auto 1fr; overflow: hidden; border-radius: 12px;
   border: 2px solid rgba(var(--glow, 255, 205, 100), .85); background: linear-gradient(180deg, #171a3a, #07081a); color: #f3ecdc; text-align: center; }
 .ability-card__art { background: #141826 center 20% / cover; border-bottom: 1px solid rgba(var(--glow, 255, 205, 100), .6); }
-.ability-card small { margin-top: 6px; font: 600 calc(var(--w) * .05) / 1.2 system-ui; letter-spacing: .12em; text-transform: uppercase; color: #bfb7a3; }
+.ability-card small { margin-top: 6px; font: 600 calc(var(--w) * .05) / 1.2 "Jost", system-ui; letter-spacing: .12em; text-transform: uppercase; color: #bfb7a3; }
 .ability-card strong { padding: 2px 8px; font: 700 calc(var(--w) * .08) / 1.2 Cinzel, serif; color: rgb(var(--glow, 255, 205, 100)); }
-.ability-card p { margin: 0; padding: 4px 10px 10px; overflow: hidden; font: calc(var(--w) * .056) / 1.35 system-ui, sans-serif; }
+.ability-card p { margin: 0; padding: 4px 10px 10px; overflow: hidden; font: calc(var(--w) * .056) / 1.35 "Jost", system-ui, sans-serif; }
 .cast-reveal .ability-card { --w: clamp(240px, 24vw, 340px); }
 
 @media (max-width: 760px) {
@@ -96,13 +96,13 @@ body.has-chain-zoom .command__clock { visibility: visible; }
     border-color: rgba(232, 196, 106, .35); box-shadow: 0 10px 28px rgba(0, 0, 0, .5); }
   .phasebar__turn { display: grid; justify-items: center; gap: 4px; text-align: center; }
   .phasebar__turn strong { font: 700 22px/1.1 Cinzel, Georgia, serif; letter-spacing: .03em; white-space: nowrap; }
-  .phasebar__turn small { font: 600 11px/1 system-ui, sans-serif; letter-spacing: .16em; color: #a89a78; white-space: nowrap; }
+  .phasebar__turn small { font: 600 11px/1 "Jost", system-ui, sans-serif; letter-spacing: .16em; color: #a89a78; white-space: nowrap; }
   .phasebar__steps { gap: 4px; }
   .phasebar__steps li { padding: 6px 0; border-radius: 999px; font-size: 9.5px; letter-spacing: .08em; }
   .phasebar__window { padding-top: 6px; }
   .command__tools { justify-content: center; gap: 8px; }
   .command__tools button, .command__tools a { min-height: 30px; padding: 0 14px; border-radius: 999px; display: inline-flex; align-items: center;
-    font: 600 12px/1 system-ui, sans-serif; color: #d8d2c4; background: rgba(10, 12, 26, .75); border-color: rgba(255, 255, 255, .14); text-decoration: none; }
+    font: 600 12px/1 "Jost", system-ui, sans-serif; color: #d8d2c4; background: rgba(10, 12, 26, .75); border-color: rgba(255, 255, 255, .14); text-decoration: none; }
   .command__tools button:hover, .command__tools a:hover { color: #fff; border-color: rgba(232, 196, 106, .55); }
 
   /* Sua placa + ⏩ na mesma linha, logo acima do botão de ação; tudo com a largura da coluna (262px). */
@@ -182,22 +182,22 @@ body:not(.is-peeking):has(.trigger-panel.is-center, .trigger-panel--order) #chai
     position: fixed; z-index: 46; left: auto; bottom: auto; top: calc(50% + var(--cz-w) * .7 + 14px); right: var(--stack-right, 298px); width: var(--cz-w); max-height: none;
     display: block; margin: 0; padding: 9px 12px; overflow: visible; transform: none; text-align: center; pointer-events: none;
     border: 1px solid rgba(255, 205, 100, .45); border-radius: 12px; background: rgba(8, 9, 24, .9); box-shadow: 0 10px 24px rgba(0, 0, 0, .55); }
-  .cast-slot .cast-prompt .choice__label { display: block; font: 600 14px/1.35 system-ui, sans-serif; color: #f6efdc; text-shadow: none; }
+  .cast-slot .cast-prompt .choice__label { display: block; font: 600 14px/1.35 "Jost", system-ui, sans-serif; color: #f6efdc; text-shadow: none; }
   .cast-slot .cast-prompt :is(.choice__reticle, .cast-prompt__how) { display: none; }
   .trigger-panel:not(:has(.trigger-panel__opts)) .trigger-panel__box > :is(.decision__who, .decision__kicker, .decision__effect, .decision__note, .trigger-queue) { display: none; }
   .trigger-panel:not(:has(.trigger-panel__opts)) .trigger-panel__box h3 { margin: 0 0 2px; font: 700 15px/1.25 Cinzel, serif; color: var(--gold-hi, #f6dc8a); }
-  .trigger-panel:not(:has(.trigger-panel__opts)) .trigger-panel__box > p { margin: 0; font: 13px/1.35 system-ui, sans-serif; color: #e6e0d0; }
-  .trigger-panel:not(:has(.trigger-panel__opts)) .decision__clock { display: block; margin-top: 4px; font: 600 11px system-ui; color: #bfb7a3; }
+  .trigger-panel:not(:has(.trigger-panel__opts)) .trigger-panel__box > p { margin: 0; font: 13px/1.35 "Jost", system-ui, sans-serif; color: #e6e0d0; }
+  .trigger-panel:not(:has(.trigger-panel__opts)) .decision__clock { display: block; margin-top: 4px; font: 600 11px "Jost", system-ui; color: #bfb7a3; }
   /* Botões no lugar do botão de ação. */
   .cast-slot .choice__actions, .trigger-panel:not(:has(.trigger-panel__opts)) .trigger-panel__actions {
     position: fixed; z-index: 47; right: 22px; bottom: 22px; width: 262px; display: flex; flex-direction: column-reverse; gap: 8px; pointer-events: auto; animation: tp-box .22s ease-out .12s backwards; }
   :is(.cast-slot .choice__actions, .trigger-panel .trigger-panel__actions) > button { order: 1; width: 100%; min-height: 38px; margin: 0; border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, .25); background: rgba(10, 12, 30, .92); color: #e8e2d2; font: 600 14px system-ui, sans-serif; box-shadow: 0 6px 16px rgba(0, 0, 0, .5); }
+    border: 1px solid rgba(255, 255, 255, .25); background: rgba(10, 12, 30, .92); color: #e8e2d2; font: 600 14px "Jost", system-ui, sans-serif; box-shadow: 0 6px 16px rgba(0, 0, 0, .5); }
   :is(.cast-slot .choice__actions, .trigger-panel .trigger-panel__actions) > button:first-child { order: 0; min-height: 52px; border: 1px solid #ffd5a0;
     background: linear-gradient(180deg, #ffb35c, #e0651f); color: #fff; font: 700 20px Cinzel, serif; letter-spacing: .02em; text-shadow: 0 1px 2px #0006; }
   :is(.cast-slot .choice__actions, .trigger-panel .trigger-panel__actions) > button.ghost:first-child { border-color: #8a8fa0; background: linear-gradient(180deg, #5b6070, #3a3e4c); }
   :is(.cast-slot .choice__actions, .trigger-panel .trigger-panel__actions) kbd { display: none; }
-  .trigger-panel .trigger-panel__actions > .decision__note { display: grid; place-items: center; min-height: 52px; margin: 0; border-radius: 999px; background: rgba(40, 44, 60, .92); color: #cfc8b6; font: 600 15px system-ui; }
+  .trigger-panel .trigger-panel__actions > .decision__note { display: grid; place-items: center; min-height: 52px; margin: 0; border-radius: 999px; background: rgba(40, 44, 60, .92); color: #cfc8b6; font: 600 15px "Jost", system-ui; }
   /* Enquanto a pergunta usa o canto, o botão de ação, o ⏩ e a placa saem de cena. */
   body:has(.cast-slot .choice__actions, .trigger-panel:not(.has-opts) .trigger-panel__actions) :is(.command .action-btn, .command .command__full, .rk-plate--me) { visibility: hidden; }
 }
@@ -214,15 +214,38 @@ body:not(.is-peeking):has(.trigger-panel.is-center, .trigger-panel--order) #chai
 .order-tile.is-set { border-color: rgba(255, 205, 100, .85); box-shadow: 0 0 0 1px rgba(255, 205, 100, .35), 0 8px 20px rgba(0, 0, 0, .5); }
 .order-tile__art { background: #141826 center 20% / cover; }
 .order-tile__num { position: absolute; left: 32px; top: 50%; transform: translate(-50%, -50%); display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%;
-  border: 2px dashed rgba(255, 255, 255, .55); background: rgba(5, 6, 14, .7); font: 800 16px system-ui; color: #1a1205; }
+  border: 2px dashed rgba(255, 255, 255, .55); background: rgba(5, 6, 14, .7); font: 800 16px "Jost", system-ui; color: #1a1205; }
 .order-tile.is-set .order-tile__num { border: 0; background: linear-gradient(180deg, #f6dc8a, #d9a93c); box-shadow: 0 2px 8px #000a; }
 .order-tile__body { display: grid; align-content: center; gap: 1px; min-width: 0; padding: 8px 10px; }
 .order-tile__body b { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font: 700 14px/1.2 Cinzel, serif; color: #f6dc8a; }
-.order-tile__body small { font: 600 10px system-ui; letter-spacing: .12em; text-transform: uppercase; color: #bfb7a3; }
-.order-tile__body em { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font: 12px/1.3 system-ui, sans-serif; color: #ddd6c4; font-style: normal; }
+.order-tile__body small { font: 600 10px "Jost", system-ui; letter-spacing: .12em; text-transform: uppercase; color: #bfb7a3; }
+.order-tile__body em { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font: 12px/1.3 "Jost", system-ui, sans-serif; color: #ddd6c4; font-style: normal; }
 @media (min-width: 761px) and (min-height: 501px) {
   .trigger-panel.trigger-panel--order .trigger-panel__box { position: static; width: auto; }
 }
 @media (prefers-reduced-motion: reduce) { .order-tile { transition: none; } }
 /* A mesa escurecida da decisão não engole o mouse: preview e zoom das cartas por baixo continuam (app.js data-locked). */
 .decision-veil--center { pointer-events: none; }
+
+/* Tela baixa deitada (tablet, autor, 01/11/2026): relógio e box no centro da altura livre acima da placa, do mesmo tamanho de sempre;
+   a mão cabe entre as colunas e nenhuma carta passa por cima do botão. 720 é o mínimo do palco no desktop, que não muda. */
+@media (min-width: 761px) and (min-height: 501px) and (max-height: 719px) {
+  .command { z-index: 8; padding-bottom: 140px; }
+  .phasebar__turn strong { font-size: 19px; }
+  .olympus .hand--me .hand__slot { margin: 0 min(calc(var(--hand-w) * -.1), calc((100vw - 620px - var(--n) * var(--hand-w)) / (2 * max(var(--n) - 1, 1)))); }
+}
+
+/* Tablet deitado (autor, 01/11/2026): o zoom do cast e da pilha vem do lado esquerdo, junto do trilho, e deixa livres a mesa e as informações da direita.
+   Gatilho com lista de opções fica onde está: a caixa precisa da largura. */
+@media (min-width: 761px) and (min-height: 501px) and (pointer: coarse), (min-width: 761px) and (min-height: 501px) and (max-height: 719px) {
+  /* Placa do jogador enxuta: o nome cabe inteiro e o avatar não corta as informações. */
+  .rk-plate--me { gap: 8px; padding: 4px 10px 4px 4px; }
+  .rk-plate--me .rk-plate__avatar { width: 40px; height: 40px; box-shadow: none; }
+  .rk-plate--me .rk-emblem { height: 32px; }
+  .rk-plate--me b { font-size: 15px; }
+  .rk-plate--me small { font-size: 11px; }
+  #chain-zoom, .cast-slot { right: auto; left: 14vw; }
+  .cast-slot { justify-items: start; }
+  .cast-slot .cast-prompt, .trigger-panel:not(:has(.trigger-panel__opts)) .trigger-panel__box { right: auto; left: 14vw; }
+  body .trigger-panel:is(.is-targeting, .is-center, .trigger-panel--order):not(:has(.trigger-panel__opts)) { right: auto; left: 14vw; flex-direction: row; }
+}

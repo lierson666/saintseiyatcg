@@ -12,6 +12,7 @@ const RECONNECT_SECONDS = 90;
 // shortcut: o servidor não sabe quanto a animação demora na tela (G3-025); cada mudança dá esta folga ao relógio de quem
 // decide. Trocar por aviso de "animação terminou" do cliente se a folga ficar curta ou longa demais.
 const ANIMATION_GRACE = 3;
+const COIN_SECONDS = 30; // §55: quem vence a moeda e não escolhe nesse prazo começa (a partida não fica presa nessa tela)
 
 // Serialização da visão: Set e Map viram listas marcadas; funções (gatilhos, onClose) ficam no servidor.
 export function toJSON(v) {
@@ -33,7 +34,7 @@ export function createArena({cards, canonIndex, catalog = () => ({cards, canonIn
     const id = randomBytes(9).toString('base64url');
     const {cards, canonIndex} = catalog();
     const gods = {A: decks.A.god || 'god-athena', B: decks.B.god || 'god-athena'};
-    const match = createMatch({cards, canonIndex, decks, gods, seed, uidFor: opaque});
+    const match = createMatch({cards, canonIndex, decks, gods, seed, coin: true, uidFor: opaque});
     const rec = {id, players, match, ctx: {cards, objects: match.objects, attached: match.attached}, pending: null,
       seen: {A: now(), B: now()}, version: 0, created: now(), clock: createClock(match.state.order), clockSeen: 0};
     sync(rec);
@@ -105,6 +106,9 @@ export function createArena({cards, canonIndex, catalog = () => ({cards, canonIn
     for (const rec of matches.values()) {
       const s = rec.match.state;
       if (!s.victory) for (const key of ['A', 'B']) if (now() - rec.seen[key] > RECONNECT_SECONDS) { concede(rec, key, 'abandon'); break; }
+      if (!s.victory && s.coin && !s.coin.first && now() - rec.created > COIN_SECONDS) {
+        try { act(rec, s.coin.winner, {type: 'chooseFirst', choice: {goFirst: true}}); } catch (e) { console.error('coin', rec.id, e); }
+      }
       timeout(rec);
       if (s.victory && now() - rec.created > 6 * 3600) matches.delete(rec.id);
     }

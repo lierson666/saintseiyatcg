@@ -1,0 +1,318 @@
+/* Duelo com o celular em pé (autor, 01/11/2026): rival em cima, você embaixo, polegar na mão e no botão.
+   Só reposiciona a mesa existente: arrastar, tocar, mirar e segurar para ler continuam em app.js.
+   Sem fases, Bases na mesa nem texto de regra nas cartas; Cosmo e pilhas viram contadores de toque.
+   Protótipo aprovado para o jogo real: https://claude.ai/artifact/EaBNho4o6A4yHH7XbWJxHg */
+@media (orientation: portrait) and (max-width: 600px) {
+  :root { --st: env(safe-area-inset-top, 0px); --sb: env(safe-area-inset-bottom, 0px); --sl: 0px; --sr: 0px; --zoom-card: 96px; --zoom-h: calc(var(--zoom-card) * 1.4 + 30px); --p-hand: 114px; --p-low: var(--p-hand); }
+  .olympus { --u: 1.1vw; --p-hand: 114px; --p-bar: 78px; --p-zones: 38px; --rail-w: 0px; --cmd-w: 0px; --p-low: var(--p-hand); }
+
+  /* iPhone com status bar translúcida: 100% e inset:0 terminam a altura da barra antes do fim da tela (sobrava uma faixa morta embaixo).
+     dvh, não lvh: com a barra do navegador fixa (tablet, aba comum), lvh passa da área visível e corta a mão. */
+  html { overflow: visible; min-height: calc(100% + var(--st)); }
+  body { position: fixed; top: 0; left: 0; right: 0; height: max(100dvh, calc(100% + var(--st))); overflow: hidden; }
+  .stage { bottom: auto; height: max(100dvh, calc(100% + var(--st))); }
+
+  /* Fora da mesa em pé: mão do rival (é número), faixa de Bases, painel de dicas e engrenagem (Configurações está no ⋯). */
+  .rk-plate.rk-plate, .olympus .band--opp, .olympus .lane, .rail .ctrl, .demo-tag, .phasebar, .gear-btn { display: none; }
+
+  /* Soltar no Cosmo: faixa invisível sobre os contadores e a barra do Deus; ao arrastar, ganha a chamada de Cosmo. */
+  .olympus .band--me { position: absolute; z-index: 9; left: 0; right: 0; top: auto; bottom: var(--p-low); width: auto; height: calc(var(--p-bar) + var(--p-zones) + 6px); margin: 0; padding: 0; display: block; background: none; border: 0; box-shadow: none; pointer-events: none; }
+  .olympus .drag-zone--band { position: absolute; inset: 0; z-index: 20; }
+  .olympus .drag-zone--band strong { font-size: 18px; }
+
+  /* Campos: duas fileiras que dividem a altura entre as barras. */
+  .olympus .arena-field { position: absolute; inset: calc(var(--st) + 122px) 6px calc(var(--p-low) + var(--p-bar) + var(--p-zones) + 6px); width: auto; height: auto; margin: 0; transform: none; display: grid; grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr); gap: 2px; }
+  .olympus .midline { height: 6px; }
+  .olympus .midline > * { display: none; }
+  /* Campo (autor, 01/11/2026): até 5 por linha; da 6ª em diante abre linha embaixo, da esquerda para a direita, e as cartas encolhem. */
+  .olympus .field { --f-half: calc((100dvh - var(--st) - 122px - var(--p-low) - var(--p-bar) - var(--p-zones) - 20px) / 2); --card-w: min(29vw, calc(var(--f-half) / 1.4)); --card-h: calc(var(--card-w) * 1.4); min-height: 0; flex-wrap: nowrap; justify-content: center; gap: 5px; padding: 2px; overflow: visible; border: 0; background: none; }
+  .olympus .field:has(> :nth-child(4)) { --card-w: min(22.5vw, calc(var(--f-half) / 1.4)); }
+  .olympus .field:has(> :nth-child(5)) { --card-w: min(18vw, calc(var(--f-half) / 1.4)); }
+  .olympus .field:has(> :nth-child(6)) { --card-w: min(18vw, calc((var(--f-half) - 5px) / 2 / 1.4)); display: grid; grid-template-columns: repeat(5, var(--card-w)); justify-content: center; align-content: center; }
+  .olympus .field:has(> :nth-child(11)) { --card-w: min(18vw, calc((var(--f-half) - 10px) / 3 / 1.4)); }
+  .olympus .slot { flex: none; }
+  .olympus .slot .gears { gap: 2px; margin-top: 2px; }
+  .olympus .gear span { font-size: 9px; }
+  /* Carta estreita (4+ no campo): sem o retrato da faixa, para o bônus caber inteiro (autor, 01/11/2026). */
+  .olympus .field:has(> :nth-child(4)) .gear { padding-inline: 4px; }
+  .olympus .field:has(> :nth-child(4)) .gear::before { display: none; }
+  .olympus .dcard :is(.lc-rules, .lc-text--subtitle, .lc-text--typeline) { visibility: hidden; }
+  .olympus .dcard .lc-gem { transform: scale(1.2); }
+
+  /* Contadores: rival ao lado do Deus; os seus numa faixa acima da barra. Ícone e número; tocar abre a lista. */
+  .olympus .rail { position: static; display: contents; width: auto; }
+  .rail .sanctum::before, .rail .sanctum::after { display: none; }
+  .rail .sanctum { position: absolute; z-index: 6; display: flex; flex-direction: row; align-items: center; justify-content: flex-end; gap: 2px; height: var(--p-zones); width: auto; padding: 0 2px; margin: 0; transform: none; border: 0; border-radius: 10px; background: #05060c99; box-shadow: none; }
+  .rail .sanctum--opp { top: calc(var(--st) + 78px); left: 6px; right: 6px; bottom: auto; justify-content: space-between; }
+  .rail .sanctum--me { bottom: calc(var(--p-low) + var(--p-bar)); left: 6px; right: 6px; top: auto; justify-content: space-between; }
+  .rail .sanctum .cosmo { display: contents; }
+  .rail .rail__label, .rail .rail__who, .rail .sanctum__domain strong, .rail .sanctum__domain small { display: none; }
+  /* Recursos (autor, 01/11/2026): Base com o símbolo na cor do Deus; Latent com o seu símbolo, sempre turquesa. */
+  .rail .sanctum { z-index: 7; --latent: 64, 224, 208; display: grid; grid-template-columns: 1.25fr 1.15fr 1fr 1fr 1fr 1fr; gap: 3px; }
+  .rail .rail__row { display: grid; grid-template-columns: auto auto; grid-template-rows: 22px 9px; justify-content: center; align-items: center; column-gap: 3px; height: 36px; min-width: 0; padding: 1px 0; border: 1px solid #f5f1e61f; border-radius: 8px; background: #10111cb8; }
+  .rail .rail__row .rail__ico { display: flex; align-items: center; justify-content: center; width: auto; height: 22px; }
+  .rail .rail__row .rail__ico img { width: 20px; height: 20px; }
+  .rail .rail__row .rail__ico .zdeck__back { width: 15px; height: 21px; aspect-ratio: auto; }
+  .rail .rail__row .rail__ico .rail__hand { display: block; width: 12px; height: 17px; margin-right: 4px; border: 1px solid #c9a24e; border-radius: 2px; background: #1a1c38; transform: rotate(-8deg); box-shadow: 3px 1px 0 -1px #1a1c38, 4px 1px 0 -1px #c9a24e; }
+  .rail .rail__row b { font: 700 14px/1 "Cinzel", Georgia, serif; white-space: nowrap; color: #f5f1e6; }
+  .rail .rail__row b small { font-size: .72em; opacity: .7; }
+  .rail .rail__cap { display: block; grid-column: 1 / -1; font: 600 8px/9px "Jost", system-ui, sans-serif; letter-spacing: .05em; text-align: center; text-transform: uppercase; white-space: nowrap; color: #a8a397; }
+  .rail .rail__row--cosmo { --tone: var(--god); order: -2; cursor: pointer; }
+  .rail .rail__row--latent { --tone: var(--latent); order: -1; cursor: pointer; }
+  .rail .rail__row--cosmo, .rail .rail__row--latent { border-color: rgba(var(--tone), .5); background: linear-gradient(180deg, rgba(var(--tone), .16), #10111cb8); }
+  .rail .rail__row--cosmo b, .rail .rail__row--latent b { color: rgb(var(--tone)); }
+  .rail .rail__sym { display: block; width: 19px; height: 19px; background: rgb(var(--tone)); -webkit-mask: var(--m) center / contain no-repeat; mask: var(--m) center / contain no-repeat; filter: drop-shadow(0 0 4px rgb(var(--tone))); }
+  .rail .rail__sym--base { --m: url("../../CARD-TEMPLATE/athena/icon_cosmo.png"); }
+  .rail .rail__sym--latent { --m: url("../../CARD-TEMPLATE/athena/icon_latent.png"); }
+  .rail .is-zero { border-color: #f5f1e61f; background: #10111cb8; }
+  .rail .is-zero .rail__sym { filter: none; opacity: .55; }
+  .rail .is-zero b { opacity: .7; }
+  .rail .rail__row .cosmo__sigil, .rail .rail__row .orb.flame, .rail .cosmo__pips { display: none; }
+  /* Domain sob a barra de vida do Deus: nome à vista e aceso quando há o que usar. */
+  .rail .sanctum .sanctum__domain { position: absolute; left: 66px; width: 30vw; height: 30px; aspect-ratio: auto; display: flex; flex-direction: row; align-items: center; padding: 0 6px; overflow: visible; border: 1px solid #e6c36a66; border-radius: var(--kv-pill); background: var(--art) center 30% / cover no-repeat, #0b0d22; }
+  .rail .sanctum--me .sanctum__domain { top: calc(100% + 40px); }
+  .rail .sanctum--opp .sanctum__domain { bottom: calc(100% + 2px); }
+  .rail .sanctum__domain::before { border-radius: inherit; background: linear-gradient(90deg, rgba(5, 7, 22, .88), rgba(5, 7, 22, .55)); }
+  .rail .sanctum .sanctum__domain strong { display: -webkit-box; flex: 1; min-width: 0; padding: 0; overflow: hidden; font: 600 8.5px/1.15 var(--kv-title); letter-spacing: 0; text-align: left; white-space: normal; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+  .rail .sanctum .sanctum__domain.is-usable { border-color: var(--kv-gold); box-shadow: 0 0 12px #e6c36a99; }
+
+  /* Deuses à esquerda; o seu na barra de baixo, junto do botão. */
+  /* O Deus é o alvo de tudo: medalhão grande, Alma legível. */
+  .olympus .godhud { --m: 40px; left: 4px; right: auto; transform: none; }
+  .olympus .gh-plate { width: 30vw; margin-left: -8px; }
+  /* Vida e Domain na mesma faixa do botão Encerrar: nada encosta na mão (autor, 01/11/2026). */
+  /* Faixa de 52px do botão de ação: o topo da barra e a base do Domain batem com o topo e a base do botão. */
+  .olympus .godhud .gh-plate { position: absolute; left: 68px; height: 32px; aspect-ratio: auto; margin: 0; }
+  .olympus .godhud--me .gh-plate { bottom: 30.5px; }
+  .olympus .godhud--opp .gh-plate { top: 17.5px; }
+  .olympus .gh-plate__bg path:nth-last-of-type(-n+2) { display: none; } /* as pontas passavam da faixa */
+  .olympus .gh-cell--soul b { font-size: 17px; }
+  .godhud--opp { top: calc(var(--st) + 4px); bottom: auto; }
+  .godhud--me { bottom: var(--p-low); top: auto; }
+  .godhud__portrait { width: 46px; }
+
+  /* Botão principal no polegar e o resto atrás do ⋯. */
+  /* Relógio em pé (autor, 01/11/2026): pílula deitada ao lado da vida do oponente, na mesma coluna do botão de ação; as 12 chamas em fila. */
+  /* Leque do oponente no topo, passando por baixo do notch (autor, 01/11/2026). */
+  .olympus .hand--opp { --of-v: calc(max(var(--st), 30px) + 20px); --of-h: calc(var(--of-v) / .6); --of-w: calc(var(--of-h) / 1.4); position: absolute; z-index: 5; left: 0; right: 0; top: calc(var(--of-v) - var(--of-h)); display: flex; justify-content: center; width: auto; height: auto; margin: 0; transform: none; pointer-events: none; } /* 3/5 da carta à vista, como a minha mão */
+  .olympus .hand--opp .dcard--sm { --card-w: var(--of-w); width: var(--of-w); height: var(--of-h); }
+  .olympus .hand--opp .hand__slot { flex: none; margin: 0 min(2px, calc((100vw - 8px - var(--n) * var(--of-w)) / (2 * max(var(--n) - 1, 1)))); transform-origin: 50% 0; transform: translateY(calc(abs(var(--i) - (var(--n) - 1) / 2) * -3px)) rotate(calc((var(--i) - (var(--n) - 1) / 2) * -1deg)); }
+  /* Dono do turno (autor, 01/11/2026): o brilho sobe pela tela. */
+  .olympus .turn-glow { height: 72vh; }
+  .olympus .turn-glow--me { background: linear-gradient(to top, rgba(var(--glow), .6), rgba(var(--glow), .34) 32%, rgba(var(--glow), .14) 65%, transparent); }
+  .olympus .turn-glow--opp { background: linear-gradient(to bottom, rgba(var(--glow), .6), rgba(var(--glow), .34) 32%, rgba(var(--glow), .14) 65%, transparent); }
+  .olympus .command .command__clock { position: fixed; z-index: 8; top: calc(var(--st) + 24px); left: calc(72px + 30vw + 6px); right: 6px; display: block; transform: none; visibility: visible !important; }
+  .olympus .zclock { --r: 40px; display: grid; grid-template-columns: auto repeat(12, minmax(0, 1fr)); grid-template-rows: 13px 10px; align-items: center; justify-items: center; align-content: center; width: 100%; height: 36px; aspect-ratio: auto; box-sizing: border-box; padding: 0 12px; border: 1px solid #e6c36a59; border-radius: var(--kv-pill); background: #10111cd9; box-shadow: none; }
+  .olympus .zclock .zclock__dial { display: none; }
+  .olympus .zclock .torch { position: relative; left: auto; top: auto; grid-row: 1; width: 7px; height: 12px; margin: 0; transform: none; }
+  .olympus .zclock .zclock__time { display: contents; }
+  .olympus .zclock .zclock__time b { grid-column: 1; grid-row: 1 / -1; margin-right: 8px; font: 600 19px/1 "Cinzel", Georgia, serif; font-variant-numeric: lining-nums tabular-nums; }
+  .olympus .zclock .zclock__time small { grid-column: 2 / -1; grid-row: 2; font: 600 8.5px/10px "Jost", system-ui, sans-serif; letter-spacing: .06em; white-space: nowrap; color: #a8a397; }
+  .olympus .zclock.urgent { border-color: #ff8a60; box-shadow: 0 0 14px #ff6e4680; }
+  .olympus .command { position: absolute; z-index: 8; top: auto; left: auto; left: calc(72px + 30vw + 6px); right: 6px; bottom: calc(var(--p-low) + 8px); width: auto; height: auto; margin: 0; padding: 0; transform: none; display: flex; flex-direction: row; align-items: stretch; gap: 6px; }
+  .command > * { min-width: 0; box-sizing: border-box; }
+  /* Pílula dourada fina, uma linha, como no desktop; azul quando é para responder. */
+  .command .action-btn, .command .action-btn:hover:not(:disabled) { position: static; flex: 1; width: auto; min-height: 52px; padding: 0 4px; gap: 0; font-size: 10.5px; letter-spacing: .03em; white-space: nowrap; transform: none; }
+  .command .action-btn[data-state] { padding: 0 4px; font-size: clamp(11.5px, 3.2vw, 14px); letter-spacing: .03em; }
+  .command .action-btn i { display: none; }
+  .command .action-btn[data-state="respond"], .command .action-btn[data-state="respond"]:hover:not(:disabled) { border-color: #cfe8ff; background: linear-gradient(180deg, #6cbcff, #1f6fd1); color: #fff; }
+  .command .action-btn[data-state="wait"], .command .action-btn:disabled { border-color: rgba(255, 255, 255, .18); background: linear-gradient(180deg, #2c3043, #1a1c28); color: #b9bdd0; font-size: 11px; opacity: 1; filter: none; }
+  .command .command__more { display: flex; align-items: center; justify-content: center; flex: none; align-self: center; width: 44px; min-height: 44px; padding: 0; border-radius: 50%; border: 1px solid #ffffff33; background: #04081c80; color: #c9c3dc; font: 700 16px/1 "Jost", system-ui, sans-serif; letter-spacing: .1em; }
+  .command__more[aria-expanded="true"] { border-color: #e8c46a; color: #e8c46a; }
+  .command .command__full { display: none; }
+  .command .command__tools { position: absolute; right: 0; bottom: 60px; width: 170px; display: none; flex-direction: column; align-items: stretch; gap: 4px; padding: 6px; border-radius: 12px; background: #05060cf2; border: 1px solid #ffffff26; }
+  .command .command__tools.is-open { display: flex; }
+  .command__more svg { width: 22px; height: 22px; }
+  .command .command__tools .tools__concede { display: flex; }
+
+  .command__tools button, .command__tools a { display: flex; align-items: center; justify-content: center; min-height: 44px; padding: 4px 8px; font-size: 13px; text-align: center; }
+
+  /* Mão em leque grudada no rodapé: a tela corta o pé das cartas e a parte lida fica acima da barra de gestos. */
+  .olympus .hand--me { position: absolute; z-index: 7; left: 0; right: 0; top: auto; width: auto; height: var(--p-low); bottom: 0; margin: 0; transform: none; display: flex; justify-content: center; align-items: flex-start; overflow: visible; }
+  .olympus .hand--me:hover, .olympus .hand--me:focus-within { bottom: 0; }
+  /* A mão sempre ocupa a largura toda: poucas cartas crescem até encher a linha; muitas se sobrepõem. */
+  .olympus .hand--me .hand__slot { --hand-w: 118px; flex: none; margin: 4px min(2px, calc((100vw - 8px - var(--n) * var(--hand-w)) / (2 * max(var(--n) - 1, 1)))) 0; transform-origin: 50% 100%; transform: translateY(calc(abs(var(--i) - (var(--n) - 1) / 2) * 3px)) rotate(calc((var(--i) - (var(--n) - 1) / 2) * 1deg)); }
+  .olympus .hand--me .hand__slot:hover { transform: translateY(calc(abs(var(--i) - (var(--n) - 1) / 2) * 3px)) rotate(calc((var(--i) - (var(--n) - 1) / 2) * 1deg)); z-index: auto; }
+  /* Carta escolhida: acima de tudo na mesa e com brilho dourado. */
+  .olympus .hand--me:has(.is-lifted) { z-index: 40; }
+  .olympus .hand--me .hand__slot.is-lifted, .olympus .hand--me .hand__slot.is-lifted:hover { z-index: 20; transform: translateY(-60px); }
+  .olympus .hand--me .hand__slot.is-lifted .dcard { box-shadow: 0 0 0 2px var(--kv-gold), 0 0 28px 6px #e6c36abf, 0 14px 30px #000c; }
+
+  /* Painel do Deus: tela cheia com uma só rolagem; carta abaixo do notch e o fechar sempre à mão. */
+  .godpanel-wrap { display: block; overflow-y: auto; overscroll-behavior: contain; background: #07081a; backdrop-filter: none; }
+  .godpanel { display: block; box-sizing: border-box; width: 100%; min-height: 100%; max-height: none; margin: 0; padding: calc(var(--st) + 12px) 12px calc(var(--sb) + 16px); border: 0; border-radius: 0; box-shadow: none; }
+  .godpanel.is-awaken { box-shadow: none; }
+  .godpanel__card { width: min(52vw, 30dvh); margin: 0 auto 14px; }
+  .godpanel__info { max-height: none; overflow: visible; padding-right: 0; }
+  .godpanel header { text-align: center; }
+  .godpanel header h2 { font-size: 26px; }
+  .godpanel__stats { grid-template-columns: repeat(3, 1fr); }
+  .power { grid-template-columns: 40px 1fr; }
+  .power__state { grid-column: 2; justify-self: start; white-space: normal; }
+  .godpanel__close { position: fixed; z-index: 2; top: calc(var(--st) + 6px); right: 8px; width: 44px; height: 44px; font-size: 24px; background: rgba(0, 0, 0, .65); }
+
+  .bigcard--sheet { display: flex; flex-direction: column; align-items: center; justify-content: safe center; gap: 10px; box-sizing: border-box; overflow-y: auto; overscroll-behavior: contain; padding: calc(var(--st) + 8px) 8px calc(var(--sb) + 16px); background: rgba(4, 6, 14, .9); }
+  .bigcard--sheet > * { flex: none; }
+  .bigcard--sheet .loadout { position: static; width: 100%; max-width: none; max-height: none; box-sizing: border-box; margin: 0; transform: none; }
+  /* Carta de campo: grande no topo, texto no espaço de baixo e Fechar no fim (autor, 01/11/2026). */
+  .bigcard--sheet:has(.loadout) { justify-content: flex-start; overflow: hidden; padding-bottom: calc(var(--sb) + 72px); }
+  .bigcard--sheet:has(.loadout) .dcard--big { --card-w: min(80vw, calc((100dvh - var(--st) - var(--sb) - 300px) / 1.405)); }
+  .bigcard--sheet:has(.loadout) .loadout { flex: 1 1 0; min-height: 0; padding: 10px 14px; overflow-y: auto; }
+  .bigcard--sheet .loadout h3 { display: none; }
+  .sleeve-view .dcard--big { --card-w: min(76vw, calc((100dvh - var(--st) - var(--sb) - 150px) / 1.4)); width: var(--card-w); height: calc(var(--card-w) * 1.4); }
+  /* Fechar discreto no canto, fora da carta (autor, 01/11/2026). */
+  .bigcard__close { position: fixed; z-index: 2; top: calc(var(--st) + 8px); right: 8px; bottom: auto; left: auto; width: 44px; height: 44px; min-width: 0; min-height: 0; padding: 0; border-radius: 50%; transform: none; font-size: 0; background: #000a; }
+  .bigcard__close::before { content: "\00D7"; font: 400 24px/1 var(--kv-sans); }
+  .bigcard--sheet .dcard--big { --card-w: min(92vw, calc((100dvh - var(--st) - var(--sb) - 96px) / 1.405)); }
+
+  /* Carta em campo: brilho menor, como a carta grande (shared/live-card.css). */
+  .btok__name { text-shadow: 0 0 .06em #000, 0 0 .13em #000, 0 0 .3em #fffc0040; }
+  .btok__stat--atk { text-shadow: 0 0 .033em #000, 0 0 .14em #2aa8ff8c; }
+  .btok__stat--hp { text-shadow: 0 0 .033em #000, 0 0 .14em #ff7a1a8c; }
+  .btok__stat[data-trend="up"] { text-shadow: 0 0 .033em #000, 0 0 .14em #3ad06a8c; }
+  .btok__stat[data-trend="down"] { text-shadow: 0 0 .033em #000, 0 0 .14em #ff2a1a8c; }
+
+  /* Pedido de alvo: faixa fina no meio da mesa. */
+  .choice { top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 6px 12px; max-width: 92vw; font-size: 13px; z-index: 30; }
+  .choice strong { font-size: 13px; }
+  .choice kbd, .cast-prompt kbd, .trigger-panel kbd { display: none; }
+  /* Avisos rápidos e a faixa de turno no meio da tela (autor, 01/11/2026). */
+  .banner { left: 8px; right: 8px; top: 0; bottom: 0; }
+  .banner span { padding: 10px 24px; }
+  .notice { left: 16px; right: 16px; top: 50%; bottom: auto; width: auto; max-width: none; transform: translateY(calc(-50% + 12px)); box-sizing: border-box; text-align: center; pointer-events: none; }
+  .notice.show { transform: translateY(-50%); }
+  .overlay { padding: calc(var(--st) + 12px) 12px calc(var(--sb) + 12px); }
+
+  /* Mulligan: quatro por linha, botão embaixo. */
+  /* Mão inicial (autor, 01/11/2026): cartas grandes em 2-3-2 e o botão inteiro no alcance do polegar. */
+  .overlay.mulligan { --m: min(calc((100vw - 32px) / 3), calc((100dvh - var(--st) - var(--sb) - 190px) / 3 / 1.4)); display: flex; flex-direction: column; align-items: stretch; gap: 10px; box-sizing: border-box; padding: calc(var(--st) + 12px) 12px calc(var(--sb) + 14px); overflow-y: auto; }
+  .overlay.mulligan h2 { margin: 0; font-size: 20px; text-align: center; }
+  .overlay.mulligan > p { margin: 0; font-size: 14px; line-height: 1.3; text-align: center; }
+  .overlay.mulligan .mulligan__cards { flex: 1; align-content: center; justify-content: center; flex-wrap: wrap; gap: 4px; }
+  .overlay.mulligan .mulligan__cards:has(> :nth-child(7):last-child) { display: grid; grid-template-columns: repeat(6, calc((var(--m) - 4px) / 2)); }
+  .overlay.mulligan .mulligan__cards:has(> :nth-child(7):last-child) .mull { grid-column: span 2; }
+  .overlay.mulligan .mulligan__cards:has(> :nth-child(7):last-child) .mull:is(:nth-child(1), :nth-child(6)) { grid-column: 2 / span 2; }
+  .overlay.mulligan .mull { position: relative; flex: 0 0 var(--m); width: var(--m); max-width: none; }
+  .overlay.mulligan .mull .dcard { --card-w: var(--m); width: var(--card-w); height: calc(var(--card-w) * 1.4); }
+  .overlay.mulligan .mull.marked { transform: none; }
+  .overlay.mulligan .mull.marked .dcard { filter: grayscale(.7) brightness(.45); box-shadow: 0 0 0 2px var(--kv-gold); }
+  .overlay.mulligan .mull.marked::after { content: "↻"; position: absolute; left: 50%; top: 50%; display: grid; place-items: center; width: 44px; height: 44px; margin: -22px 0 0 -22px; border-radius: 50%; background: linear-gradient(180deg, var(--kv-gold-2), var(--kv-gold)); color: #1c1404; font: 700 24px/1 var(--kv-sans); pointer-events: none; }
+  .overlay.mulligan .primary-action { flex: none; width: 100%; min-height: 60px; font-size: 16px; }
+
+  /* Toque na carta: ela grande em cima e as ações em botões grandes no polegar (app.js: handMenu). */
+  .quick { position: fixed; z-index: 90; left: 8px !important; right: 8px; top: auto !important; bottom: calc(var(--p-low) + 68px); width: auto; max-width: none; transform: none; display: flex; gap: 6px; padding: 0; box-sizing: border-box; border: 0; background: none; box-shadow: none; }
+  .quick button { flex: 1 1 0; min-width: 0; min-height: 48px; padding: 4px 12px; background: #0b0d22f2; font-size: 11px; white-space: normal; text-align: center; }
+
+  /* Listas e leitura de carta: folha na largura toda. */
+  .pile__box { width: calc(100vw - 16px); max-width: none; max-height: calc(100dvh - var(--st) - var(--sb) - 24px); padding: 10px 12px 14px; }
+  .pile__box h3 { font-size: 18px; }
+  .pile__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .inspector { left: 8px !important; right: 8px; top: calc(var(--st) + 8px); bottom: auto; width: auto; max-width: none; max-height: calc(100dvh - var(--st) - var(--sb) - 150px); transform: none; display: none; flex-direction: column; align-items: center; gap: 8px; padding: 10px; box-sizing: border-box; overflow: auto; }
+  .inspector.show { display: flex; }
+  .inspector .dcard { --card-w: min(52vw, 30dvh); width: var(--card-w); height: calc(var(--card-w) * 1.4); flex: none; }
+  .inspector__text { width: 100%; max-height: none; }
+
+  /* Gatilho, conjuração e decisão: carta em cima, folha embaixo, sem cobrir a mão quando a mesa é o alvo. */
+  .trigger-panel, .cast-slot, body.has-chain-zoom .trigger-panel:not(.is-targeting) { left: 8px; right: 8px; top: auto; bottom: calc(var(--sb) + 8px); width: auto; max-width: none; max-height: calc(100dvh - var(--st) - var(--sb) - 24px); margin: 0; transform: none; gap: 8px; }
+  .trigger-panel__card .dcard, .cast-slot .dcard { --card-w: 96px; }
+  .trigger-panel__box { width: auto; max-height: 46dvh; padding: 10px 12px; font-size: 13px; overflow: auto; }
+  .trigger-panel__box h3 { font-size: 16px; }
+  .trigger-panel__actions button, .order__move button, .cast-slot .choice__actions button { min-height: 44px; }
+  .trigger-panel__actions button { min-width: 0; flex: 1; }
+  .trigger-panel.is-center, body.has-chain-zoom .trigger-panel.is-center { left: 8px; right: 8px; top: auto; bottom: calc(var(--sb) + 8px); width: auto; max-width: none; transform: none; flex-direction: column; align-items: center; }
+  .trigger-panel.is-center .trigger-panel__box { width: 100%; max-height: 40dvh; box-sizing: border-box; }
+  .trigger-panel.is-center .trigger-panel__card .dcard, .cast-reveal__card .dcard { --card-w: min(52vw, calc(38dvh / 1.4)); }
+  .trigger-panel.is-center .trigger-panel__actions button { flex: 1 1 auto; white-space: normal; }
+  /* Cartas do gatilho em leitura de gibi: esquerda para direita, depois a linha de baixo; a flecha aponta a próxima. */
+  .trigger-comic { --comic-w: min(44vw, calc((100dvh - var(--st) - var(--sb) - 340px) / var(--rows) / 1.4)); display: grid; grid-template-columns: repeat(2, var(--comic-w)); justify-content: center; gap: 12px 22px; flex: none; }
+  .trigger-panel[class] .trigger-comic .dcard { --card-w: var(--comic-w); width: var(--comic-w); height: calc(var(--comic-w) * 1.4); }
+  .trigger-panel[class] .trigger-comic .trigger-panel__card { width: auto; }
+  .trigger-comic .cast-aura { display: none; }
+  .comic__cell { position: relative; }
+  .comic__cell + .comic__cell::before { position: absolute; z-index: 3; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(232, 196, 106, .85); background: #0b0d22; color: #ffe7a3; font: 700 17px/1 "Jost", system-ui, sans-serif; pointer-events: none; }
+  .comic__cell:nth-child(even)::before { content: "→"; top: 50%; left: -25px; transform: translateY(-50%); }
+  .comic__cell:nth-child(odd):not(:first-child)::before { content: "↙"; top: -20px; right: -25px; }
+  .cast-slot .cast-prompt { position: static; width: auto; }
+  /* Pilha à direita, na altura do meio, como no desktop (autor, 01/11/2026). */
+  #chain-zoom { --cz-w: 118px; top: 50%; bottom: auto; right: 8px; left: auto; width: calc(var(--cz-w) + 8px); transform: translateY(-50%) !important; z-index: 30; }
+  #chain-zoom .chain-zoom__label { max-width: none; width: 100%; box-sizing: border-box; padding: 3px 6px; white-space: normal; font-size: 10px; line-height: 1.2; text-align: center; border-radius: 10px; }
+  .cz-item .cast-aura { display: none; }
+  .bigcard--sheet .ability-card { --w: min(92vw, 400px); aspect-ratio: auto; grid-template-rows: 38vw auto auto auto; max-height: calc(100dvh - var(--st) - var(--sb) - 96px); overflow: auto; }
+  .bigcard--sheet .ability-card p { overflow: visible; }
+  .bigcard--sheet .dcard--lg { --card-w: min(92vw, calc((100dvh - var(--st) - var(--sb) - 96px) / 1.405)); width: var(--card-w); height: calc(var(--card-w) * 1.405); }
+  #chain-zoom .chain-zoom__stack { display: none; }
+  .drawer .drawer__x { top: calc(6px + var(--st)); padding: 0; border: 0; border-radius: 50%; background: none; font-size: 24px; }
+  /* Configurações em tela cheia, com o que importa no celular. */
+  .drawer { inset: 0; width: auto; box-sizing: border-box; padding: calc(var(--st) + 14px) 16px calc(var(--sb) + 16px); border: 0; border-radius: 0; background: #07081af7; overscroll-behavior: contain; }
+  .drawer h3 { margin: 0 44px 12px 0; font: 600 12px/2.2 var(--kv-title); letter-spacing: .32em; text-transform: uppercase; color: var(--kv-gold-2); }
+  .set { min-height: 52px; padding: 4px 0; border-bottom: 1px solid var(--kv-line); font: 400 15px/1.25 var(--kv-sans); color: var(--kv-ink); }
+  .set select { flex: none; max-width: 52%; min-height: 40px; padding: 0 12px; border: 1px solid var(--kv-line); border-radius: var(--kv-pill); background: #f5f1e60d; color: var(--kv-ink); font: 400 14px var(--kv-sans); }
+  .set input[type="checkbox"] { flex: none; width: 24px; height: 24px; accent-color: var(--kv-gold); }
+  .set input[type="range"] { flex: none; width: 44%; accent-color: var(--kv-gold); }
+  .set:has([data-fullscreen], [data-setting="theme"], [data-setting="godB"], [data-setting="ai"], [data-setting="phaseTips"], [data-setting="showActivity"], [data-setting="cardSize"], [data-setting="hideOpponent"], [data-setting="timeouts"]), .settings .stats { display: none; }
+  .settings .settings__end { display: grid; grid-template-columns: 1fr 1fr; margin-top: 16px; }
+  .settings .settings__end button { min-height: 48px; }
+}
+
+/* Tablet em pé (autor, 01/11/2026): stage-fit.js desenha a página com 600px; sobra tela, então a mão cresce e mostra quase a carta inteira. */
+@media (orientation: portrait) and (min-width: 500px) and (max-width: 600px) {
+  :root, .olympus { --p-hand: 176px; }
+  .olympus .hand--me .hand__slot { --hand-w: 150px; }
+  .olympus .hand--me .dcard--sm { --card-w: var(--hand-w); width: var(--hand-w); height: calc(var(--hand-w) * 1.4); }
+  .olympus .hand--me .hand__slot.is-lifted, .olympus .hand--me .hand__slot.is-lifted:hover { transform: translateY(-40px); }
+}
+
+/* Leveza em todo aparelho de toque, em pé ou deitado (autor, 01/11/2026, tablet engasgando e celular aquecendo):
+   tudo que repinta a cada quadro sai; o brilho e a seta de mira ficam, parados. */
+@media (pointer: coarse) {
+  .olympus .torch.lit span, .olympus .orb.flame.ready, .olympus .priority-glow, .olympus .turn-glow, .olympus .godhud__portrait, .olympus .gh-soulicon, .olympus .pickable, .olympus .godhud.pickable .godhud__portrait, .olympus .is-triggering, [data-godfx] .dcard, .trigger-panel.is-targeting .trigger-panel__card .dcard, .drag-zone, .drag-zone::after, .drag-zone::before { animation: none !important; }
+  .olympus .torch.lit span { filter: none; }
+  .olympus .godhud { filter: none; }
+  .cast-aura { display: none !important; }
+  .olympus .dcard .lc-rules { animation: none; }
+  .olympus .hand__slot.playable .dcard, .olympus .dcard:is(.can-strike, .is-prepared) { animation: none; filter: none; box-shadow: 0 0 0 2px var(--fac), 0 0 12px var(--fac); }
+  .olympus .hand__slot.playable .dcard::before, .olympus .dcard:is(.can-strike, .is-prepared)::before, .olympus .hand__slot.playable .dcard::after, .olympus .dcard:is(.can-strike, .is-prepared)::after { display: none; }
+  .olympus .dcard .live-card--psd :is(.lc-symbol, .lc-gem > .lc-piece, .lc-awaken__word, .lc-awaken__gem img) { filter: none; }
+  .aim-arrow__line, .intent path, .intent circle, .cast-slot .dcard, .drag-zone strong, .drag-zone strong *, .sanctum .cosmo__hex::after, .cosmo__sigil, .priority .chain li:first-child .chain__art, .zclock.urgent { animation: none !important; }
+  .aim-arrow__glow, .drag-zone strong { filter: none; }
+  * { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+  /* O gesto é do jogo: sem isto, deitado, o navegador assume o dedo, dispara pointercancel e o arraste morre (autor, 01/11/2026). */
+  .olympus .dcard, .olympus .godhud { touch-action: none; }
+}
+
+/* Toque, em pé ou deitado (autor, 01/11/2026): tocar no Deus ou no Domínio abre só o que dá para fazer; a carta inteira vem depois, em "See full card". */
+@media (orientation: portrait) and (max-width: 600px), (pointer: coarse) {
+  /* Atalhos do Deus (app.js: showGodSheet). */
+  .god-sheet { display: flex; align-items: flex-end; cursor: default; }
+  .gs { width: 100%; box-sizing: border-box; display: grid; gap: 10px; padding: 14px 12px calc(var(--sb, 0px) + 12px); border-top: 1px solid rgba(232, 196, 106, .55); border-radius: 18px 18px 0 0; background: #0b0d22; color: #f5f1e6; }
+  .gs__head { display: flex; align-items: center; gap: 12px; }
+  .gs__face { flex: none; width: 60px; height: 60px; border-radius: 50%; border: 2px solid #e6c36a; background-color: #0b0e22; background-repeat: no-repeat; background-size: cover; background-position: center 18%; }
+  .gs__who { flex: 1; min-width: 0; display: grid; gap: 4px; }
+  .gs__who h2 { margin: 0; font: 700 19px/1 Cinzel, Georgia, serif; letter-spacing: .05em; color: #ffe7a3; }
+  .gs__soul { display: flex; align-items: baseline; gap: 2px; font: 13px/1 "Jost", system-ui; color: #a8a397; }
+  .gs__soul b { font: 700 24px/1 "Cinzel", Georgia, serif; color: #fff; }
+  .gs__soul i { flex: 1; align-self: center; height: 6px; margin-left: 10px; overflow: hidden; border-radius: 3px; background: #ffffff1f; }
+  .gs__soul u { display: block; height: 100%; background: linear-gradient(90deg, #c99a42, #f3dc9c); }
+  .gs__stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  .gs__stats span { display: grid; gap: 3px; padding: 7px 8px; border: 1px solid #f5f1e61f; border-radius: 10px; }
+  .gs__stats small { font: 600 10px/1 "Jost", system-ui; letter-spacing: .08em; text-transform: uppercase; color: #a8a397; }
+  .gs__stats b { font: 600 13px/1.15 "Jost", system-ui; }
+  .gs__acts { display: grid; gap: 6px; }
+  .gs-act { display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 6px 12px 6px 8px; border: 1px solid rgba(232, 196, 106, .6); border-radius: 12px; background: #151832; color: #f5f1e6; text-align: left; font: inherit; }
+  .gs-act.is-locked, .gs-act.is-used { border-color: #f5f1e61f; background: none; opacity: .62; }
+  .gs-act__cost { flex: none; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(180deg, #f3dc9c, #c99a42); color: #1c1404; font: 700 16px/1 "Cinzel", Georgia, serif; }
+  .gs-act__txt { display: grid; gap: 2px; min-width: 0; }
+  .gs-act__txt strong { font: 700 14px/1.15 Cinzel, Georgia, serif; }
+  .gs-act__rule { font: 12.5px/1.3 var(--kv-sans); color: #d6d2c6; }
+  .gs-act.is-active { border-color: #f5f1e61f; background: none; }
+  .gs__face--domain { border-radius: 12px; background-size: cover; background-position: center; }
+  .gs__kind { font: 600 10px/1 var(--kv-title); letter-spacing: .28em; text-transform: uppercase; color: #a8a397; }
+  .gs { max-height: calc(100dvh - var(--st, 0px)); overflow-y: auto; }
+  .gs-act__txt small { font: 12px/1.2 "Jost", system-ui; color: #a8a397; }
+  .gs__foot { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .gs__foot button { min-height: 44px; font-size: 14px; }
+}
+@media (pointer: coarse) and (orientation: landscape) {
+  .god-sheet { align-items: center; justify-content: center; }
+  .gs { width: min(460px, 92vw); max-height: calc(100dvh - 16px); padding-bottom: 12px; border: 1px solid rgba(232, 196, 106, .55); border-radius: 18px; }
+}

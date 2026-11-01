@@ -55,9 +55,10 @@ export const COS_KINDS = [['avatar', 'Avatar'], ['sleeve', 'Sleeve']]; // Deck b
 export const cosPreview = (kind, url, id) => `<span class="ec-cos-${kind}" style="background-image:url('${url || ''}');${kind === 'avatar' ? faceStyle(id) : ''}" aria-hidden="true"></span>`;
 // Loja estilo MTG Arena (autor, 31/10/2026): abas por categoria, um item grande por tile com o preço no botão,
 // filtro por grupo e confirmação de compra com a prévia grande. Textos: /design:ux-copy.
-const TABS = [['boosters', 'Boosters'], ['avatar', 'Avatars'], ['sleeve', 'Sleeves'], ['set', 'Sets']];
+const TABS = [['boosters', 'Boosters'], ['avatar', 'Avatars'], ['sleeve', 'Sleeves'], ['coin', 'Toss Coins'], ['set', 'Sets']];
 const KIND = {avatar: {one: 'Avatar', what: 'Your portrait in the lobby and at the table.'},
   sleeve: {one: 'Sleeve', what: 'The back of your cards. Your opponent sees it too.'},
+  coin: {one: 'Toss Coin', what: 'Your side of the opening coin toss. Your opponent sees it too.'},
   set: {one: 'Set', what: 'Avatar and Sleeve together.'}};
 const paidKinds = c => COS_KINDS.filter(([k]) => c[k].price).map(([k]) => k);
 const setFull = c => paidKinds(c).reduce((n, k) => n + c[k].price, 0);
@@ -93,7 +94,7 @@ function confirmBox(e, c, kind, art, using) {
       <div class="ec-actions">${cta}<button class="ec-cta ec-cta--open" data-act="cos-close">${owned ? 'Close' : 'Not now'}</button></div></div></div></div>`;
 }
 function cosmeticsTab(e, art, me, view) {
-  const using = {avatar: me?.avatar_card || 'god-athena', sleeve: me?.sleeve || null}, kind = view.tab;
+  const using = {avatar: me?.avatar_card || 'god-athena', sleeve: me?.sleeve || null, coin: me?.coin || null}, kind = view.tab;
   const groups = (e.cosmetics || []).map(g => g.group), group = groups.includes(view.group) ? view.group : 'all';
   const items = allItems(e).filter(c => group === 'all' || c.group === group).filter(c => kind !== 'set' || paidKinds(c).length > 1); // Deus: avatar grátis, sem set
   const chip = (v, label) => `<button class="lb-pill ${group === v ? 'is-active' : ''}" data-act="store-group" data-value="${esc(v)}">${esc(label)}</button>`;

@@ -11,7 +11,7 @@ import {loadCanon} from '../shared/canon-cards.js';
 import {canonIndex, validateDeck} from '../shared/deck-v3.js';
 import {loadPoseidonCatalog, officialDeckErrors} from '../shared/poseidon-v6.js';
 import {createMatch, mulligan} from '../playtest/engine-v3/match.js';
-import {startTurn, endTurn, passAll, pass, addSeal, destroyDevotee, placeBase, checkInvariants, NotSpecified, RuleError} from '../playtest/engine-v3/core.js';
+import {startTurn, endTurn, prepareUnit, passAll, pass, addSeal, destroyDevotee, placeBase, checkInvariants, NotSpecified, RuleError} from '../playtest/engine-v3/core.js';
 import {declareStrike, strikeTargets} from '../playtest/engine-v3/strike.js';
 import {playDevotee, duplicateCharacter} from '../playtest/engine-v3/play.js';
 import {refreshAwaken, announceGreatFlood, greatFloodBlock} from '../playtest/engine-v3/gods.js';
@@ -54,25 +54,34 @@ test('D211: Seal são marcadores; cada Prepare remove 1 em vez de preparar; N ma
   assert.equal(count(s, 'seal_removed'), 2);
 });
 
-test('Seal não é stun: Devotee Sealed e Prepared ainda declara Strike', () => {
+test('§48: receber Seal deixa Unprepared; sem Prepared não declara Strike', () => {
   const {s, ctx, field} = setup();
   const seiya = field('A', '001');
+  assert.equal(s.units[seiya].prepared, true);
   addSeal(s, ctx, [seiya], 1, 'fixture'); passAll(s);
-  assert.ok(strikeTargets(s, ctx, seiya).length > 0);
-  // Water Prison em atacante já Sealed: soma +1 Seal (autor, 30/10/2026); o Strike segue.
-  declareStrike(s, ctx, seiya, {kind: 'god', player: 'B'}); passAll(s);
-  assert.ok(types(s).includes('god_damage'));
+  assert.equal(s.units[seiya].prepared, false);
+  assert.throws(() => declareStrike(s, ctx, seiya, {kind: 'god', player: 'B'}));
 });
 
-test('G3-033: Prepare redundante em Devotee já Prepared não remove Seal; Unprepared segue a D211', () => {
+test('§48: no início do turno do dono tira 1 marcador e não prepara; sem marcador prepara', () => {
   const {s, ctx, field} = setup();
   const seiya = field('A', '001');
   addSeal(s, ctx, [seiya], 2, 'fixture'); passAll(s);
-  endTurn(s); passAll(s); startTurn(s); endTurn(s); passAll(s); startTurn(s);
-  assert.deepEqual([s.units[seiya].prepared, s.units[seiya].seal], [true, 2], 'Prepared com 2 marcadores continua assim');
-  s.units[seiya].prepared = false;
-  endTurn(s); passAll(s); startTurn(s); endTurn(s); passAll(s); startTurn(s);
+  const ownTurn = () => { endTurn(s); passAll(s); startTurn(s); endTurn(s); passAll(s); startTurn(s); };
+  ownTurn();
   assert.deepEqual([s.units[seiya].prepared, s.units[seiya].seal], [false, 1]);
+  ownTurn();
+  assert.deepEqual([s.units[seiya].prepared, s.units[seiya].seal], [false, 0]);
+  ownTurn();
+  assert.deepEqual([s.units[seiya].prepared, s.units[seiya].seal], [true, 0]);
+});
+
+test('G3-033: Prepare redundante em Devotee já Prepared não remove Seal', () => {
+  const {s, field} = setup();
+  const seiya = field('A', '001');
+  s.units[seiya].seal = 2; // shortcut: estado montado à mão; receber Seal já deixa Unprepared
+  assert.equal(prepareUnit(s, seiya), true);
+  assert.equal(s.units[seiya].seal, 2);
 });
 
 // ---------- Water Prison ----------

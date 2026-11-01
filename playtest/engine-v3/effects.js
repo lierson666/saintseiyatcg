@@ -38,33 +38,34 @@ const wears = (ctx, uid, number) => gearOf(ctx, uid).find(e => id(ctx, e) === nu
 
 // Bônus que valem agora: fixo do Equipment, habilidades "While …" das cartas dos decks e efeitos com duração.
 function mods(state, ctx, uid) {
-  const list = gearOf(ctx, uid).map(e => card(ctx, e).equipped).filter(Boolean);
+  const list = gearOf(ctx, uid).filter(e => card(ctx, e).equipped).map(e => ({...card(ctx, e).equipped, from: {uid: e}}));
   // Guia §26A (30/10/2026): o HP impresso da Armor (card.hp, texto D268 sem bonus_vida do Forge) soma ao HP máximo do portador.
-  for (const e of gearOf(ctx, uid)) if (card(ctx, e).armor && card(ctx, e).hp) list.push({atk: 0, hp: card(ctx, e).hp});
+  for (const e of gearOf(ctx, uid)) if (card(ctx, e).armor && card(ctx, e).hp) list.push({atk: 0, hp: card(ctx, e).hp, from: {uid: e}});
   const key = controllerOf(state, uid);
   if (key) {
     const n = id(ctx, uid);
-    if (n === '034' && state.players[key].soul <= 5) list.push({atk: 0, hp: 2}); // Loyal Servant
-    if (n === '036' && controls(state, ctx, key, '001')) list.push({atk: 0, hp: 2}); // Sibling Bond
-    if (n === '037' && controls(state, ctx, key, '003')) list.push({atk: 0, hp: 1}); // Dragon's Promise
-    if (n === '001' && behind(state, key)) list.push({atk: 1, hp: 0}); // Miracle
-    if (athenaAwaken(state, ctx, key, uid)) list.push({atk: 1, hp: 1}); // God Athena, Divine Protection (Awaken 5)
+    if (n === '034' && state.players[key].soul <= 5) list.push({atk: 0, hp: 2, from: {uid, ability: 'Loyal Servant'}}); // Loyal Servant
+    if (n === '036' && controls(state, ctx, key, '001')) list.push({atk: 0, hp: 2, from: {uid, ability: 'Sibling Bond'}}); // Sibling Bond
+    if (n === '037' && controls(state, ctx, key, '003')) list.push({atk: 0, hp: 1, from: {uid, ability: "Dragon's Promise"}}); // Dragon's Promise
+    if (n === '001' && behind(state, key)) list.push({atk: 1, hp: 0, from: {uid, ability: 'Miracle'}}); // Miracle
+    if (athenaAwaken(state, ctx, key, uid)) list.push({atk: 1, hp: 1, from: {uid: `god:${key}`, ability: 'Divine Protection'}}); // God Athena, Divine Protection (Awaken 5)
     // Domain 064 The Five Old Peaks, Ancient Discipline: Saints amigos com Guardian, +0/+1. Keywords lidas sem mods()
     // (keywordsOf chama mods: recursão). shortcut: Guardian dado por Equipment não conta; ampliar se surgir carta assim.
     if (state.domains?.[key] === 'athena-v6-064' && isSaint(ctx, uid) // linha geral: vale com qualquer God (01/11/2026)
       && [...card(ctx, uid).keywords, ...(state.units[uid]?.keywords || []), ...state.effects.filter(e => e.target === uid && e.kind === 'mod').flatMap(e => e.keywords || [])].includes('Guardian')) {
-      list.push({atk: 0, hp: 1, source: 'domain'});
+      list.push({atk: 0, hp: 1, source: 'domain', from: {uid: `domain:${key}`, ability: 'Ancient Discipline'}});
     }
-    if (n === '001' && wears(ctx, uid, '019') && behind(state, key)) list.push({atk: 2, hp: 2}); // 019 Resonance
+    if (n === '001' && wears(ctx, uid, '019') && behind(state, key)) list.push({atk: 2, hp: 2, from: {uid: wears(ctx, uid, '019'), ability: 'Resonance'}}); // 019 Resonance
     // G3-039: cada Training counter é +1/+1 por si (acumula). Master's Guidance soma +1/+1 por Eagle Marin.
-    if (state.units[uid]?.training) list.push({atk: state.units[uid].training, hp: state.units[uid].training});
+    if (state.units[uid]?.training) list.push({atk: state.units[uid].training, hp: state.units[uid].training, from: {uid, ability: 'Training counters'}});
     list.push(...v6Mods(state, ctx, key, uid)); // cartas V6: "While …", marcadores +1/+1 e auras (v6/hooks.js)
     if (state.units[uid]?.training && isBronze(ctx, uid)) {
-      for (const m of devotees(state, ctx, key).filter(u => id(ctx, u) === '021')) list.push({atk: 1, hp: 1, source: m});
+      for (const m of devotees(state, ctx, key).filter(u => id(ctx, u) === '021')) list.push({atk: 1, hp: 1, source: m, from: {uid: m, ability: "Master's Guidance"}});
     }
   }
   return [...list, ...state.effects.filter(e => e.target === uid && e.kind === 'mod')];
 }
+export const modsOf = mods; // cada bônus com `from`: o rastreio de status da carta lê daqui
 const sum = (list, field) => list.reduce((n, m) => n + (m[field] || 0), 0);
 export const atkOf = (state, ctx, uid) => card(ctx, uid).atk + sum(mods(state, ctx, uid), 'atk');
 export const hpOf = (state, ctx, uid) => card(ctx, uid).hp + sum(mods(state, ctx, uid), 'hp');

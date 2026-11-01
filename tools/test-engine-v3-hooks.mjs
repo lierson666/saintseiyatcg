@@ -8,7 +8,7 @@ import {loadCanon} from '../shared/canon-cards.js';
 import {canonIndex} from '../shared/deck-v3.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
-import {startTurn, passAll, runCheckpoint, prepareUnit, endTurn} from '../playtest/engine-v3/core.js';
+import {startTurn, passAll, runCheckpoint, prepareUnit, endTurn, addSeal} from '../playtest/engine-v3/core.js';
 import {playSpell, activate, reequip} from '../playtest/engine-v3/play.js';
 import {declareStrike, checkStrike} from '../playtest/engine-v3/strike.js';
 import '../playtest/engine-v3/v6/hooks.js';
@@ -167,6 +167,20 @@ test('cannotStrike: checkStrike recusa e a marca expira no fim do Round', () => 
   endTurn(s); passAll(s); // fim do 1º turno do Round
   s.active = 'B'; s.turnInRound = 1; endTurn(s); passAll(s); // fim do Round
   assert.equal(s.effects.some(e => e.kind === 'noStrike'), false);
+});
+
+test('§48: receber Seal deixa Unprepared; cada preparo tira 1 marcador e só prepara sem marcador', () => {
+  const {s, ctx, give} = setup();
+  const a = give('A', 't-dev');
+  s.units[a].prepared = true;
+  addSeal(s, ctx, [a], 2, 'teste');
+  assert.equal(s.units[a].prepared, false);
+  assert.equal(s.units[a].seal, 2);
+  assert.equal(prepareUnit(s, a), false);
+  assert.equal(prepareUnit(s, a), false);
+  assert.equal(s.units[a].seal, 0);
+  assert.equal(s.units[a].prepared, false);
+  assert.equal(prepareUnit(s, a), true);
 });
 
 test('cannotPrepare: prepareUnit não prepara (e não gasta Seal) enquanto a marca vale', () => {

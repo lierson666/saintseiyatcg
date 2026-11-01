@@ -4,7 +4,8 @@
 // nada aqui vem da engine 2.2. Fonte da matriz: docs/alpha-0.1/MATRIZ-BLOQUEIOS-ENGINE-3.0.md.
 
 export const LATENT_CAP = 3; // D198, D226
-export const DRAWS_PER_TURN = 1; // §55: 1 por turno (autor, 30/10/2026; revoga G3-041, que tinha voltado a 2)
+export const DRAWS_PER_TURN = 2; // §55: 2 por turno (autor, 01/11/2026; revoga a compra de 1 de 30/10/2026)
+export const HAND_LIMIT = 9; // §55: excesso descartado na End Phase do próprio turno (autor, 01/11/2026)
 // D194: classificação Moment/Technique pelo número da carta Athena V6.
 // 54, 56, 58, 61, 76 e 79 eram Miracle e são Technique; 52, 55 e 83 eram Event e são Moment (autor, 31/10/2026; cards.json).
 // Athena → Branco (autor, 31/10/2026): os truques defensivos 54, 56, 58, 61, 76, 79 e 81 e The Golden Arrow (82) viram Moment.
@@ -71,16 +72,17 @@ export function startTurn(state, startOfTurn = []) {
   emit(state, 'turn_start', {player: key});
   startOfTurn = [...startOfTurn, ...hooks.turnStart.flatMap(fn => fn(state))];
   // "Skip your next draw step" (neutral 453 Frozen Sacrifice): consome a marca na próxima compra do turno.
-  const drawStep = () => { if (p.ownTurns > 1) { if (state.skipDraw?.[key]) delete state.skipDraw[key]; else draw(state, key, DRAWS_PER_TURN); } runCheckpoint(state); };
+  const drawStep = () => { if (p.ownTurns > 1 || key !== state.order[0]) { // §55: só quem começa pula a compra do 1º turno
+      if (state.skipDraw?.[key]) delete state.skipDraw[key]; else draw(state, key, DRAWS_PER_TURN); } runCheckpoint(state); };
   if (startOfTurn.length) pushTriggers(state, startOfTurn, drawStep);
   else drawStep();
 }
 
 // ---------- Seal (D211, D212) ----------
 // Seal são marcadores num Devotee. "Sealed" = 1 ou mais marcadores; "becomes Sealed" = passagem de 0 para ≥1 (D211).
-// Única consequência canônica: cada evento que prepararia o Devotee remove 1 marcador em vez de prepará-lo;
-// N marcadores atrasam N desses eventos (D211, D212). Seal não é stun, não cancela Strike declarado (D212) e não
-// proíbe ações: um Devotee Sealed e Prepared pode agir. Marcadores ficam no objeto; se ele sai do campo, somem.
+// §48 (autor, 01/11/2026): receber Seal deixa o Devotee Unprepared. Cada evento que o prepararia (o início do turno do
+// dono, em geral) remove 1 marcador em vez de prepará-lo; N marcadores atrasam N desses eventos.
+// Não cancela Strike declarado (D212). Marcadores ficam no objeto; se ele sai do campo, somem.
 // Devolve os uids que passaram de 0 para ≥1 e põe os gatilhos de `hooks.sealed` na cadeia (D267: um por Devotee).
 export function addSeal(state, ctx, uids, n, source) {
   if (!Number.isInteger(n) || n < 1) throw new NotSpecified('número de marcadores Seal do efeito');
@@ -91,6 +93,7 @@ export function addSeal(state, ctx, uids, n, source) {
     const before = unit.seal || 0;
     unit.seal = before + n;
     emit(state, 'seal_added', {uid, added: n, counters: unit.seal, source});
+    if (unit.prepared) { unit.prepared = false; emit(state, 'exhausted', {uid}); }
     if (before === 0) transitions.push({uid, controller: state.order.find(k => state.players[k].battlefield.includes(uid))});
   }
   if (transitions.length) pushTriggers(state, hooks.sealed.flatMap(fn => fn(state, ctx, transitions)));
@@ -208,7 +211,8 @@ export function useOncePerRound(state, id) {
 
 // 'this_turn' ("until end of turn") expira em todo Cleanup (P06); D191: 'this_round' cobre os dois turnos;
 // 'next_round' termina no fim do Round seguinte ao da criação.
-export function addEffect(state, effect) { state.effects.push({...effect, round: state.round}); }
+// `from`: de onde veio o efeito (item da cadeia em resolução), para o rastreio de status na carta.
+export function addEffect(state, effect) { state.effects.push({...effect, round: state.round, ...(state.resolving && {from: state.resolving})}); }
 
 // Destroy (D197) de um Devotee: vai para o Tartarus do Owner.
 // `event`: 'unique_removed' para a saída do guia §63, que move igual mas não é destruição.
@@ -334,7 +338,8 @@ export function pass(state, key) {
     const top = state.chain.pop();
     emit(state, 'resolve', {player: top.controller, uid: top.uid, ability: top.ability});
     const before = glance(state);
-    top.run(state);
+    state.resolving = {uid: top.uid ?? null, ability: top.ability ?? null};
+    try { top.run(state); } finally { delete state.resolving; }
     const results = outcome(state, before);
     if (results.length) emit(state, 'resolved', {player: top.controller, uid: top.uid, ability: top.ability, results});
     if (state.victory) { state.window = null; state.chain = []; return state.victory; } // D52

@@ -21,7 +21,7 @@
   .rail .rail__row { display: flex; align-items: center; justify-content: center; gap: 3px; height: 30px; min-width: 0; padding: 0 2px; border-radius: 6px; background: none; }
   .rail .rail__row .rail__ico { display: flex; width: auto; height: 14px; }
   .rail .rail__row .rail__ico img, .rail .rail__row .rail__ico i { width: 14px; height: 14px; }
-  .rail .rail__row b { font: 700 13px/1 Georgia, serif; white-space: nowrap; }
+  .rail .rail__row b { font: 700 13px/1 "Cinzel", Georgia, serif; white-space: nowrap; }
   .rail .rail__row b small { font-size: .7em; opacity: .75; }
   .rail .rail__row--latent .rail__ico .orb:not(:first-child) { display: none; }
   .rail .rail__row--latent { gap: 1px; padding: 0; }
@@ -37,13 +37,13 @@
   .command__clock, .phasebar__turn small { display: none; }
   .phasebar { display: flex; align-items: baseline; justify-content: center; gap: 6px; min-height: 0; padding: 5px 8px; border-radius: 10px; }
   .phasebar__turn { display: block; }
-  .phasebar__turn strong { font: 600 11px/1 Georgia, serif; white-space: nowrap; }
+  .phasebar__turn strong { font: 600 11px/1 "Cinzel", Georgia, serif; white-space: nowrap; }
   .phasebar__steps { display: flex; margin: 0; padding: 0; list-style: none; }
-  .phasebar__steps li { display: none; font: 600 10px/1 system-ui, sans-serif; color: #e8c46a; white-space: nowrap; }
+  .phasebar__steps li { display: none; font: 600 10px/1 "Jost", system-ui, sans-serif; color: #e8c46a; white-space: nowrap; }
   .phasebar__steps li.on { display: block; }
   .action-btn { min-height: 40px; padding: 6px 10px; font-size: 13px; gap: 6px; }
   /* Log, Settings e Menu atrás de um botão só (⋯); abrem empilhados acima dele. */
-  .command .command__more { display: flex; align-items: center; justify-content: center; align-self: flex-end; width: 44px; min-height: 30px; border-radius: 10px; border: 1px solid #ffffff1a; background: #04081c80; color: #c9c3dc; font: 700 16px/1 system-ui, sans-serif; letter-spacing: .1em; }
+  .command .command__more { display: flex; align-items: center; justify-content: center; align-self: flex-end; width: 44px; min-height: 30px; border-radius: 10px; border: 1px solid #ffffff1a; background: #04081c80; color: #c9c3dc; font: 700 16px/1 "Jost", system-ui, sans-serif; letter-spacing: .1em; }
   .command__more[aria-expanded="true"] { border-color: #e8c46a; color: #e8c46a; }
   .command__tools { order: 9; display: none; flex-direction: column; gap: 4px; }
   .command__tools.is-open { display: flex; }
@@ -53,8 +53,8 @@
   /* Mão do oponente: só o número (no contador); a sua espia embaixo e sobe ao tocar. */
   .olympus .hand--opp { display: none; }
   .olympus .hand--me { --hand-w: calc(var(--u) * 13); bottom: calc(var(--hand-w) * -.85); left: calc(var(--rail-w) + 16px + var(--sl)); right: calc(var(--cmd-w) + 116px + var(--sr)); width: auto; transform: none; }
-  .olympus .hand--me:hover, .olympus .hand--me:focus-within { bottom: calc(var(--hand-w) * -.25); }
-  .olympus .hand--me .hand__slot:hover { transform: translateY(calc(var(--hand-w) * -.2)) scale(1.1); }
+  .olympus .hand--me:hover, .olympus .hand--me:focus-within, .olympus .hand--me:has(.is-lifted) { bottom: calc(var(--hand-w) * -.25); }
+  .olympus .hand--me .hand__slot:is(:hover, .is-lifted) { transform: translateY(calc(var(--hand-w) * -.2)) scale(1.1); }
 
   /* God: perto da mesa, à direita. Placa compacta, números a 12px. */
   .olympus .godhud { --m: 38px; }
@@ -118,28 +118,17 @@ body, body img { -webkit-touch-callout: none; -webkit-user-select: none; user-se
 body :is(input, textarea, [contenteditable]) { -webkit-user-select: text; user-select: text; }
 
 /* Fechar Log e Settings com um toque (no celular não há Esc). */
-.drawer__x { position: absolute; top: 6px; right: 6px; width: 44px; height: 44px; border: 0; border-radius: 50%; background: none; color: #c9c3dc; font: 400 24px/1 system-ui, sans-serif; cursor: pointer; }
+.drawer__x { position: absolute; top: 6px; right: 6px; width: 44px; height: 44px; border: 0; border-radius: 50%; background: none; color: #c9c3dc; font: 400 24px/1 "Jost", system-ui, sans-serif; cursor: pointer; }
 .drawer__x:hover, .drawer__x:focus-visible { color: #f4efe2; background: #ffffff14; }
 
 /* Botão ⋯ do menu de ferramentas: só no celular deitado. */
 .command__more { display: none; }
 
-/* Em pé no celular: o duelo pede para girar. */
-.rotate-hint { display: none; }
-@media (orientation: portrait) and (max-width: 600px) {
-  .rotate-hint { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; align-content: center; gap: 14px; padding: calc(24px + env(safe-area-inset-top, 0px)) 24px calc(24px + env(safe-area-inset-bottom, 0px));
-    background: #05060c; color: #f4efe2; text-align: center; font: 600 18px/1.4 "Cinzel", Georgia, serif; }
-  .rotate-hint svg { width: 72px; height: 72px; color: #e8c46a; animation: rotate-hint 1.8s ease-in-out infinite; }
-  .rotate-hint small { font: 400 14px/1.4 system-ui, sans-serif; color: #b8b1c9; }
-}
-@keyframes rotate-hint { 0%, 30% { transform: rotate(0); } 60%, 100% { transform: rotate(-90deg); } }
-@media (prefers-reduced-motion: reduce) { .rotate-hint svg { animation: none; } }
-
 /* Contador de Cosmo pulsa quando uma carta vira Base (director.js base_placed). */
 .cosmo.is-pulse { animation: bank-pulse .6s cubic-bezier(.2, .8, .2, 1); }
 @keyframes bank-pulse { 40% { transform: scale(1.12); filter: brightness(1.8) drop-shadow(0 0 10px #ffd36e); } }
 .pile__card.is-used { opacity: .55; }
-.pile__card small { display: block; margin-top: 4px; font: 600 11px/1 system-ui, sans-serif; color: #c9c3dc; }
+.pile__card small { display: block; margin-top: 4px; font: 600 11px/1 "Jost", system-ui, sans-serif; color: #c9c3dc; }
 @media (prefers-reduced-motion: reduce) { .cosmo.is-pulse { animation: none; } }
 
 /* Celular deitado (autor, 31/10/2026): mesma revelação e decisão centrais, carta ~70% da altura; a pilha vira contador. */
