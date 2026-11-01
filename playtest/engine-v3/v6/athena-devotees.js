@@ -10,6 +10,8 @@ const ready = (s, key) => s.players[key].bases.filter(b => b.prepared).length;
 const saints = (s, c, key) => k.devotees(s, c, key).filter(u => isSaint(c, u));
 const hasName = (s, c, key, re) => k.devotees(s, c, key).some(u => re.test(name(c, u)));
 const ikki = /Phoenix Ikki/i;
+// Moment ou Technique (Event e Miracle jogam como Technique, guia §54).
+const isMT = (c, uid) => /Moment|Technique|Event|Miracle/.test(k.card(c, uid)?.type || '');
 
 // "You may pay {N}{C}": Bases preparadas (mesma convenção de poseidon.js).
 function pay(st, c, key, n, ability, uid) {
@@ -88,18 +90,13 @@ export default {
       lockStrike(s, self);
       return true;
     },
-    // Rebirth (Afterlife, redesenho estilo Arclight Phoenix, autor 31/10/2026): uma vez por rodada, no seu turno com a pilha
-    // vazia, com Ikki no seu Tartarus: três outras cartas do seu Tartarus vão ao Void e Ikki volta ao campo Prepared.
-    afterlife: {name: 'REBIRTH', cost: 0, once: true,
-      check: (s, c, key, self) => { if (s.players[key].tartarus.filter(u => u !== self).length < 3) throw new k.RuleError('V6', 'Rebirth: faltam três outras cartas no seu Tartarus'); },
-      run: (s, c, key, self) => {
-        const pool = s.players[key].tartarus.filter(u => u !== self);
-        if (!s.players[key].tartarus.includes(self) || pool.length < 3) return; // o Tartarus mudou em resposta
-        const picks = c.decide?.(key, {ability: 'REBIRTH', options: pool, choose: 'target', count: 3, min: 3, text: 'Choose three other cards in your Tartarus to send to the Void.'}) || [];
-        if (picks.length < 3) return;
-        for (const u of picks) k.exile(s, c, u, 'tartarus');
-        k.putOntoField(s, c, key, self, 'tartarus', {prepared: true});
-      }},
+    // Rebirth (estilo Arclight Phoenix, autor 31/10/2026): gatilho obrigatório do Tártaro quando o dono conjura a terceira
+    // Moment ou Technique do turno; Ikki volta ao campo Prepared (Impulse deixa golpear na hora).
+    tartarus: {
+      watchSpell: (s, c, key, self, caster, spellUid) => caster === key && isMT(c, spellUid)
+        && s.events.filter(e => e.type === 'card_played' && e.kind === 'Spell' && e.player === key && e.turn === s.turn && isMT(c, e.uid)).length === 3
+        && (st => { if (st.players[key].tartarus.includes(self)) k.putOntoField(st, c, key, self, 'tartarus', {prepared: true}); }),
+    },
   },
   // Gemini Saga
   'athena-v6-013': {

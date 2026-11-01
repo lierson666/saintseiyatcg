@@ -144,13 +144,11 @@ export function activate(state, ctx, key, uid, choice = {}) {
   const domain = String(uid).startsWith('domain:'), opg = uid === `domain:${key}:opg`, dom = domain && domainEntry(state, key);
   if (domain && !(opg ? dom?.opg : uid === `domain:${key}` && dom?.activate)) throw new RuleError('{T}', 'sem habilidade ativada de Domain');
   if (opg && state.domainUsed?.[key]) throw new RuleError('§63', 'a habilidade Once per game já foi usada');
-  // Além-Túmulo (Afterlife): habilidade ativada da carta no Tártaro do próprio jogador (ex.: Rebirth do Ikki, autor 31/10/2026).
-  const grave = !domain && !!entryOf(ctx, uid)?.afterlife && state.players[key].tartarus.includes(uid);
-  const v6 = domain ? (opg ? dom.opg : dom.activate) : grave ? {...entryOf(ctx, uid).afterlife, tap: false} : entryOf(ctx, uid)?.activate;
+  const v6 = domain ? (opg ? dom.opg : dom.activate) : entryOf(ctx, uid)?.activate;
   const ability = v6 ? {...v6, ...(domain && {tap: false}), check: (s, c, k, ch) => v6.check?.(s, c, k, uid, ch), run: (s, c, k, ch) => v6.run(s, c, k, uid, ch)}
     : ABILITIES[ctx.objects[uid]?.cardId.slice(-3)];
-  if (!ability || (!domain && !grave && !state.players[key].battlefield.includes(uid))) throw new RuleError('{T}', 'sem habilidade ativada implementada');
-  if (!domain && !grave && silenced(state, uid)) throw new RuleError('V6', 'este Devotee perdeu as habilidades ativadas neste Round');
+  if (!ability || (!domain && !state.players[key].battlefield.includes(uid))) throw new RuleError('{T}', 'sem habilidade ativada implementada');
+  if (!domain && silenced(state, uid)) throw new RuleError('V6', 'este Devotee perdeu as habilidades ativadas neste Round');
   if (ability.tap !== false && state.units[uid]?.prepared !== true) throw new RuleError('D192', 'o Devotee precisa estar Prepared para {T}');
   const once = typeof ability.once === 'function' ? ability.once(state, ctx, key, uid) : ability.once; // ex.: 016 com Ikki não tem limite
   if (once && state.roundUses.has(`ability:${uid}`)) throw new RuleError('D191', `${ability.name} já foi usada neste Round`);

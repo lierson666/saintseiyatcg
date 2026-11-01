@@ -65,7 +65,7 @@
 //       Por isso `run` deve ser puro sobre (s, c): efeito fora do estado roda também no ensaio. `targets` explícito (devolve a lista
 //       de alvos, perguntando pelo kit; o motor não ensaia) serve para alvo sem pergunta ("target enemy God") ou efeito externo.
 //   activate: {name, cost, once, tap, check?(s, c, key, self, choice), run(s, c, key, self, choice)}  habilidade ativada
-//   afterlife: {name, cost, once, check?, run}  habilidade ativada Além-Túmulo: usada com a carta no Tártaro do dono (sem {T})
+//   tartarus: {watch*}  observadores que valem com a carta no Tártaro do dono (não no campo)
 // `watch*` em Domain: `self` = `domain:${key}` (o Domain não é objeto de deck; fica em state.domains[key]).
 // Escolhas de alvo e de modo: perguntas da engine na CONJURAÇÃO (ver `spell` acima); "you may" e demais: na resolução, pelo kit (./kit.js).
 
@@ -111,9 +111,11 @@ export const contextOf = state => CTX.get(state);
 export const entryOf = (ctx, uid) => CARDS[ctx.objects[uid]?.cardId];
 const owner = (state, uid) => state.order.find(k => state.players[k].battlefield.includes(uid));
 
-// Fontes que observam a partida para `key`: cartas no campo (Devotees e Equipment) e o Domain.
+// Fontes que observam a partida para `key`: cartas no campo (Devotees e Equipment), o Domain e as cartas do Tártaro com
+// observadores próprios em `tartarus` (ex.: Rebirth do Ikki).
 export function sources(state, ctx, key) {
   const list = state.players[key].battlefield.filter(uid => entryOf(ctx, uid)).map(uid => ({self: uid, entry: entryOf(ctx, uid)}));
+  for (const uid of state.players[key].tartarus) if (entryOf(ctx, uid)?.tartarus) list.push({self: uid, entry: entryOf(ctx, uid).tartarus});
   const domain = domainEntry(state, key);
   if (domain) list.push({self: `domain:${key}`, entry: domain});
   return list;

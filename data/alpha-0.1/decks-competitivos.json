@@ -2902,6 +2902,96 @@
           "quantity": 3
         }
       ]
+    },
+    {
+      "id": "comp-poseidon-phoenix",
+      "nome": "Phoenix Tide",
+      "god": "god-poseidon",
+      "domain_id": "athena-v6-062",
+      "arquetipo": "Spells baratas de Poseidon e Ikki de Fênix splash: na terceira Moment ou Technique do turno, Ikki volta do Tártaro Preparado e com Impulso golpeia na hora; loot (Pearl Sanctuary Keeper, Deep Sea Hunter, Atlantean Acolyte) põe Ikki no Tártaro e anulações protegem a combinação.",
+      "tema": "Phoenix",
+      "main_deck": [
+        {
+          "card_id": "athena-v6-009",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-135",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-138",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-139",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-158",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-133",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-136",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-132",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-152",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-155",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-134",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-137",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-116",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-112",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-113",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-115",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-107",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-109",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-106",
+          "quantity": 3
+        },
+        {
+          "card_id": "poseidon-v6-117",
+          "quantity": 3
+        }
+      ]
     }
   ]
 }

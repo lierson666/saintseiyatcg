@@ -1492,14 +1492,6 @@ function showBases(key) {
   box.addEventListener('contextmenu', e => { e.preventDefault(); closeBigCard(); });
   document.body.append(box);
 }
-// Habilidade Além-Túmulo (ex.: Rebirth do Ikki) direto do Tártaro do dono, com o motivo quando não dá para usar.
-function afterlifeButton(key, zone, uid) {
-  const a = zone === 'tartarus' && key === viewer() && entryOf(ctx, uid)?.afterlife;
-  if (!a) return '';
-  const s = S(), why = !idleFor(key) ? "Wait for your turn's main phase." : a.once && s.roundUses.has(`ability:${uid}`) ? 'Already used this round.'
-    : s.players[key].tartarus.filter(u => u !== uid).length < 3 ? 'Needs three other cards in your Tartarus.' : '';
-  return `<button class="pile__hidden" data-afterlife="${uid}" ${why ? `disabled aria-disabled="true" title="${esc(why)}"` : ''}>${esc(a.name)}</button>`;
-}
 function showPile(key, zone) {
   closeBigCard();
   const uids = [...S().players[key][zone]].reverse(), name = zone === 'tartarus' ? 'Tartarus' : 'Void';
@@ -1508,10 +1500,8 @@ function showPile(key, zone) {
   box.className = 'bigcard pile';
   box.innerHTML = `<section class="pile__box" role="dialog" aria-label="${name} of Player ${key}">
     <header><h3>${name}</h3><small>Player ${key} · ${uids.length} card${uids.length === 1 ? '' : 's'} · newest first</small></header>
-    ${uids.length ? `<div class="pile__grid">${uids.map(u => `<div class="pile__slot"><button class="pile__card" data-pile-card="${u}">${cardFace(u)}</button>${afterlifeButton(key, zone, u)}</div>`).join('')}</div>` : `<p class="pile__empty">No cards in the ${name}.</p>`}</section>`;
+    ${uids.length ? `<div class="pile__grid">${uids.map(u => `<button class="pile__card" data-pile-card="${u}">${cardFace(u)}</button>`).join('')}</div>` : `<p class="pile__empty">No cards in the ${name}.</p>`}</section>`;
   box.addEventListener('click', e => {
-    const use = e.target.closest('[data-afterlife]');
-    if (use) { if (!use.disabled) { closeBigCard(); act({type: 'activate', key, uid: use.dataset.afterlife, choice: {}}); } return; }
     const card = e.target.closest('[data-pile-card]');
     if (card) return showBigCard(card.dataset.pileCard);
     if (!e.target.closest('.pile__box')) closeBigCard();

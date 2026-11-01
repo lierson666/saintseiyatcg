@@ -89,30 +89,28 @@ test('009 Ikki estilo Arclight (autor 31/10/2026): 3/2, Impulse, sem Lone Wolf',
   give('A', 'athena-v6-005');
   assert.equal(atkOf(s, ctx, ikki), 3);
   assert.equal(hpOf(s, ctx, ikki), 2);
-  assert.ok(ctx.cards.get('athena-v6-009').keywords.includes('Impulse'));
+  assert.ok(['Impulse', 'Nimble'].every(w => ctx.cards.get('athena-v6-009').keywords.includes(w)));
 });
 
-test('009 Rebirth (Afterlife): três outras cartas do Tartarus vão ao Void e Ikki volta Prepared; uma vez por Round', () => {
-  const {s, ctx, give} = setup();
-  const ikki = give('A', 'athena-v6-009', 'tartarus'), others = [0, 1, 2, 3].map(() => give('A', 'athena-v6-005', 'tartarus'));
-  ctx.decide = (player, q) => (q.count ? q.options.slice(0, q.count) : q.options ? q.options[0] : true);
-  activate(s, ctx, 'A', ikki); passAll(s);
-  assert.ok(s.players.A.battlefield.includes(ikki));
-  assert.equal(s.units[ikki].prepared, true);
-  assert.deepEqual(s.players.A.void, others.slice(0, 3));
-  assert.deepEqual(s.players.A.tartarus, [others[3]]);
-  k.defeat(s, ctx, ikki); // volta ao Tartarus: no mesmo Round o Rebirth não roda de novo
-  assert.ok(s.players.A.tartarus.includes(ikki));
-  assert.throws(() => activate(s, ctx, 'A', ikki));
-});
-
-test('009 Rebirth: precisa de três outras cartas no Tartarus e não funciona do campo', () => {
+test('009 Rebirth (autor 31/10/2026): na terceira Moment ou Technique do turno Ikki volta do Tartarus Prepared', () => {
   const {s, ctx, give} = setup();
   const ikki = give('A', 'athena-v6-009', 'tartarus');
-  give('A', 'athena-v6-005', 'tartarus'); give('A', 'athena-v6-005', 'tartarus');
-  assert.throws(() => activate(s, ctx, 'A', ikki), /três outras cartas/);
-  const field = give('A', 'athena-v6-009');
-  assert.throws(() => activate(s, ctx, 'A', field));
+  const cast = () => { playSpell(s, ctx, 'A', give('A', 'poseidon-v6-135', 'hand')); if (s.window) passAll(s); };
+  cast(); cast();
+  assert.ok(s.players.A.tartarus.includes(ikki)); // duas Spells: ainda não
+  cast();
+  assert.ok(s.players.A.battlefield.includes(ikki));
+  assert.equal(s.units[ikki].prepared, true);
+  k.defeat(s, ctx, ikki); cast(); // a quarta Spell do turno não traz de novo
+  assert.ok(s.players.A.tartarus.includes(ikki));
+});
+
+test('009 Rebirth: só a partir do Tartarus; no campo a terceira Spell não faz nada', () => {
+  const {s, ctx, give} = setup();
+  const ikki = give('A', 'athena-v6-009');
+  for (let i = 0; i < 3; i++) { playSpell(s, ctx, 'A', give('A', 'poseidon-v6-135', 'hand')); if (s.window) passAll(s); }
+  assert.deepEqual(s.players.A.battlefield.filter(u => u === ikki), [ikki]);
+  assert.ok(!s.players.A.tartarus.includes(ikki));
 });
 
 test('013 Another Dimension: Saga manda o alvo ao Void e o devolve quando é derrotado', () => {
