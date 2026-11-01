@@ -37,7 +37,8 @@ export function createAI(h) {
     const hand = [...p.hand];
     // 1. Base: até 8, a carta Cosmoble menos útil para a curva (rebalanceamento de Cosmoble, 31/10/2026): cópia repetida
     // na mão; depois a que não cabe no próximo turno; depois Spell/Equipment antes de Devotee; a mais cara primeiro.
-    if (p.bases.length < 8) {
+    // Depois de 5 Bases, só põe Base se ainda sobrarem 2+ cartas na mão (stall de 01/11/2026: IA ficava sem jogada).
+    if (p.bases.length < 5 || (p.bases.length < 8 && hand.length >= 3)) {
       const dup = u => hand.some(o => o !== u && h.info(o) === h.info(u)), late = u => cost(u) > p.bases.length + 2;
       const pick = hand.filter(u => h.canBase(key, u)).sort((a, b) => dup(b) - dup(a) || late(b) - late(a)
         || (h.info(a).kind === 'Devotee') - (h.info(b).kind === 'Devotee') || cost(b) - cost(a))[0];
@@ -52,6 +53,12 @@ export function createAI(h) {
       if (trio && (loss >= s.players[enemyOf(key)].soul || s.round >= 6) && fresh('ultimate')) return {id: id('ultimate'), run: () => h.announceExclamation(key, trio)};
     }
     if (god === 'god-poseidon' && !h.greatFloodBlock(key) && devotees(enemyOf(key)).length >= 2 && fresh('flood')) return {id: id('flood'), run: () => h.announceGreatFlood(key)};
+    // 2b. Equip (§33), antes da mão: arma/acessório solto no campo se prende ao nomeado na Resonance, senão ao Devotee de maior ATK.
+    for (const uid of p.battlefield.filter(u => h.info(u).kind === 'Equipment' && !h.info(u).global && !h.info(u).armor && !h.attached(u))) {
+      const mine = devotees(key), c = h.info(uid);
+      const bearer = mine.find(d => h.resonant(key, c, d)) || [...mine].sort((a, b) => h.atk(b) - h.atk(a))[0];
+      if (bearer && fresh(`equip:${uid}`)) return {id: id(`equip:${uid}`), src: uid, aim: bearer, run: () => h.reequip(key, uid, bearer)};
+    }
     // 3–5. Cartas da mão jogáveis, da mais cara para a mais barata: Devotee, Equipment, Spell.
     const order = {Devotee: 0, Equipment: 1, Spell: 2};
     for (const uid of hand.filter(u => !h.playableReason(key, u) && !(h.info(u).kind === 'Devotee' && h.duplicate(key, u))).sort((a, b) => order[h.info(a).kind] - order[h.info(b).kind] || cost(b) - cost(a))) {
@@ -65,12 +72,6 @@ export function createAI(h) {
       const ch = choicesFor(key, h.STEPS[h.num(uid)] || []);
       if (!ch) continue;
       return {id: id(`play:${uid}`), src: uid, aim: aimOf(ch), run: () => (c.kind === 'Devotee' ? h.playDevotee(key, uid, ch) : h.playSpell(key, uid, ch))};
-    }
-    // 5a. Equip (§33): arma/acessório solto no campo se prende ao nomeado na Resonance, senão ao Devotee de maior ATK.
-    for (const uid of p.battlefield.filter(u => h.info(u).kind === 'Equipment' && !h.info(u).global && !h.info(u).armor && !h.attached(u))) {
-      const mine = devotees(key), c = h.info(uid);
-      const bearer = mine.find(d => h.resonant(key, c, d)) || [...mine].sort((a, b) => h.atk(b) - h.atk(a))[0];
-      if (bearer && fresh(`equip:${uid}`)) return {id: id(`equip:${uid}`), src: uid, aim: bearer, run: () => h.reequip(key, uid, bearer)};
     }
     // 5b. Hidden Cosmo (guia §4A, 31/10/2026): carta jogável da própria Base, depois da mão (a Base volta pelo topo do deck).
     for (const uid of h.hiddenReason ? p.bases.map(b => b.uid).filter(u => !h.hiddenReason(key, u)) : []) {
