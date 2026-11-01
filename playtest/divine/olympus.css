@@ -234,6 +234,12 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .lane__base .dcard--land { --card-w: var(--land-w); width: var(--land-w); height: var(--land-h); flex: none; border-radius: 5px; box-shadow: 0 3px 8px rgba(0, 0, 0, .6), 0 0 10px rgba(110, 180, 255, .35); transition: transform .35s cubic-bezier(.2, .8, .2, 1), filter .35s; }
 .lane__base .dcard--land .dcard__plate { padding: 1px 3px; } .lane__base .dcard--land .dcard__plate strong { font-size: 7px; } .lane__base .dcard--land .dcard__plate small, .lane__base .dcard--land .dcard__stats { display: none; }
 .lane__base .dcard--land .dcard__cost { transform: scale(.7); transform-origin: top left; }
+.lane__base { position: relative; }
+.lane__hidden { position: absolute; left: 50%; bottom: -6px; transform: translateX(-50%); z-index: 3; padding: 1px 6px; border: 1px solid #e6c36a; border-radius: 999px; background: rgba(20, 14, 4, .85); color: #f6dd94; font: 700 11px/1.2 system-ui, sans-serif; cursor: pointer; opacity: .55; }
+.lane__hidden.is-ready { opacity: 1; box-shadow: 0 0 10px rgba(230, 195, 106, .8); animation: hiddenPulse 1.6s ease-in-out infinite; }
+.lane__hidden:hover { opacity: 1; background: rgba(60, 42, 8, .95); }
+@keyframes hiddenPulse { 50% { box-shadow: 0 0 16px rgba(230, 195, 106, 1); } }
+@media (prefers-reduced-motion: reduce) { .lane__hidden.is-ready { animation: none; } }
 .lane__base.tapped .dcard--land { transform: rotate(90deg); filter: brightness(.55) saturate(.6); box-shadow: 0 3px 8px rgba(0, 0, 0, .6); }
 .lane__base.is-tapping .dcard--land { animation: land-tap .35s cubic-bezier(.2, .8, .2, 1); }
 .lane__base.is-untapping .dcard--land { animation: land-untap .45s cubic-bezier(.2, .8, .2, 1); }

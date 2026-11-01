@@ -611,7 +611,10 @@ function cosmoLane(key, side) {
     const pooled = b.prepared && pool.has(b.uid), mine = key === viewer();
     const tip = !b.prepared ? 'Cosmo Base|Used. Readies at the start of your turn.' : pooled ? 'Cosmo Base|Burning in your pool: your next cost uses it first. Click to take it back.'
       : mine ? 'Cosmo Base|Prepared. Click to burn its Cosmo into your pool.' : 'Cosmo Base|Prepared.';
-    return `<div class="lane__base ${b.prepared ? '' : 'tapped'} ${pooled ? 'pooled' : ''} ${anim}" data-slot="${b.uid}" data-tip="${tip}">${face}</div>`;
+    // Cosmo Oculto (§4A): o dono joga a carta direto da Base pelo selo; brilha quando dá para jogar agora.
+    const x = mine && ctx.objects[b.uid] && info(b.uid).hiddenCosmo, why = x && hiddenReason(key, b.uid);
+    const hidden = x ? `<button class="lane__hidden ${why ? '' : 'is-ready'}" data-hidden-lane="${b.uid}" data-tip="Hidden Cosmo {${x}}|${esc(why || 'Cast this card from your Cosmo Base.')}">✦${x}</button>` : '';
+    return `<div class="lane__base ${b.prepared ? '' : 'tapped'} ${pooled ? 'pooled' : ''} ${anim}" data-slot="${b.uid}" data-tip="${tip}">${face}${hidden}</div>`;
   }).join('');
   return `<section class="lane lane--${side}" data-lane="${key}" style="--n:${bases.length};${sleeveVar(key)}" aria-label="Player ${key} Cosmo Bases">${slots || '<p class="lane__empty">Cosmo Bases</p>'}</section>`;
 }
@@ -1176,6 +1179,8 @@ boardRoot.addEventListener('click', e => {
   if (pile) return showPile(...pile.dataset.pile.split(':'));
   const bank = t.closest('[data-bank]');
   if (bank && !mode) return showBases(bank.dataset.bank);
+  const hiddenLane = t.closest('[data-hidden-lane]');
+  if (hiddenLane && !mode) return castFromBase(viewer(), hiddenLane.dataset.hiddenLane);
   const slot = t.closest('.lane__base[data-slot]');
   if (slot) return togglePool(slot);
   const pickEl = t.closest('[data-pick], .pickable');
