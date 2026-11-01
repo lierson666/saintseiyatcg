@@ -396,7 +396,7 @@
       "keywords_en": ["Impulse", "Nimble"],
       "habilidades_en": [
         "Hidden Cosmo {5}",
-        "Arise from the Ashes — When you cast your third Moment or Technique each turn, if Phoenix Ikki is in your Tartarus, return him to the battlefield Prepared.",
+        "Arise from the Ashes — When you cast your third Moment or Technique each turn, if Phoenix Ikki is in your Tartarus, return him to the Battlefield Prepared.",
         "Eternal Phoenix — Phoenix Ikki is not legendary: you may control any number of them."
       ],
       "habilidade_awaken_en": "",
@@ -575,7 +575,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Another Dimension — When Gemini Saga enters the battlefield, send target enemy Devotee to the Void until Gemini Saga leaves the battlefield.",
+        "Another Dimension — When Gemini Saga enters the Battlefield, send target enemy Devotee to the Void until Gemini Saga leaves the Battlefield.",
         "Duality — While your God has more Soul than the opposing God, Gemini Saga gets +1 ATK. While your God has less Soul than the opposing God, he gets +1 HP."
       ],
       "habilidade_awaken_en": "",
@@ -708,7 +708,7 @@
       "habilidades_en": [
         "Lightning Plasma — {3}{C}, {T}: Deal 2 damage to up to two different target enemy Devotees.",
         "Resonance — Leo Aiolia: Lightning Plasma deals 1 additional damage to each of its targets.",
-        "Resonance — Phoenix Ikki: Whenever Phoenix Ikki returns to the battlefield from your Tartarus, deal 1 damage to target enemy Devotee."
+        "Resonance — Phoenix Ikki: Whenever Phoenix Ikki returns to the Battlefield from your Tartarus, deal 1 damage to target enemy Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -3980,8 +3980,8 @@
       "habilidades_en": [
         "OFFERING OF LIFE — Divine Power Once each round, when a Devotee you control is defeated, you may lose {2}{S}. If you do, draw a card and gain {1}{L}."
       ],
-      "habilidade_awaken_en": "KING OF TARTARUS — Awaken 7\nWhenever a Devotee returns from your Tartarus to the battlefield under your control, the enemy God loses {1}{S} and Hades gains {1}{S}.",
-      "ultimate_en": "GREAT ECLIPSE — Ultimate\nCost: {7}{C}\nReturn up to three Devotees from your Tartarus to the battlefield under your control. They enter Unprepared and lose Impulse.\nFor each Devotee returned this way, the enemy God loses {2}{S}.\nHades gains Soul equal to half the Soul the enemy God lost from Great Eclipse, rounded up.",
+      "habilidade_awaken_en": "KING OF TARTARUS — Awaken 7\nWhenever a Devotee returns from your Tartarus to the Battlefield under your control, the enemy God loses {1}{S} and Hades gains {1}{S}.",
+      "ultimate_en": "GREAT ECLIPSE — Ultimate\nCost: {7}{C}\nReturn up to three Devotees from your Tartarus to the Battlefield under your control. They enter Unprepared and lose Impulse.\nFor each Devotee returned this way, the enemy God loses {2}{S}.\nHades gains Soul equal to half the Soul the enemy God lost from Great Eclipse, rounded up.",
       "notas_pt": "Versão nova fornecida pelo autor em 24/10/2026; texto preservado.",
       "nome_exibicao_pt": "HADES",
       "subtitulo_pt": "Portador da Morte",
@@ -4020,7 +4020,7 @@
         "MOON HARVEST — Divine Power Once each round, when you place a card as a Cosmo Base, you may ignore its Cosmoble requirement. If you do, lose {2}{S}."
       ],
       "habilidade_awaken_en": "MOONLIGHT BLESSING — Awaken 3\nOnce each round, when you would gain Latent Cosmo, gain an additional {1}{L}, up to the normal limit of 3.",
-      "ultimate_en": "MOON AWAKENING — Ultimate\nCost: {9}{C}\nChoose up to five Cosmo Bases you control.\nUntil the end of this round, they become 3/3 Moon Spirit Devotees with Impulse, Long Range and Pierce, in addition to being Cosmo Bases.\nMoon Spirits created this way take no retaliation damage from Gods.\nWhenever one of those Moon Spirits deals damage to an enemy God during a Strike, that God loses an additional {2}{S}.\nThose Cosmo Bases cannot produce Cosmo while transformed.\nAt the end of this round, they stop being Devotees and remain on the battlefield as Cosmo Bases.",
+      "ultimate_en": "MOON AWAKENING — Ultimate\nCost: {9}{C}\nChoose up to five Cosmo Bases you control.\nUntil the end of this round, they become 3/3 Moon Spirit Devotees with Impulse, Long Range and Pierce, in addition to being Cosmo Bases.\nMoon Spirits created this way take no retaliation damage from Gods.\nWhenever one of those Moon Spirits deals damage to an enemy God during a Strike, that God loses an additional {2}{S}.\nThose Cosmo Bases cannot produce Cosmo while transformed.\nAt the end of this round, they stop being Devotees and remain on the Battlefield as Cosmo Bases.",
       "notas_pt": "Versão nova fornecida pelo autor em 24/10/2026; texto preservado.",
       "nome_exibicao_pt": "ÁRTEMIS",
       "subtitulo_pt": "Canção de Ninar ao Luar",
@@ -4099,7 +4099,7 @@
       "keywords_en": ["Pierce"],
       "habilidades_en": [
         "Pierce",
-        "When Sea Dragon Kanon enters the battlefield, return target Devotee to its owner's hand.",
+        "When Sea Dragon Kanon enters the Battlefield, return target Devotee to its owner's hand.",
         "Golden Triangle — {2}{C}, {T}: Return target enemy Devotee to its owner's hand. If that Devotee had a Seal counter, its controller mills two cards.",
         "Emperor's Shadow — Once each round, when Sea Dragon Kanon deals Strike damage to an enemy Devotee, you may put 1 Seal counter on another target enemy Devotee."
       ],
@@ -7960,7 +7960,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Greatest Caution — When Wyvern Rhadamanthys enters the battlefield, you may pay {3}{S}. If you do, defeat target Devotee.",
+        "Greatest Caution — When Wyvern Rhadamanthys enters the Battlefield, you may pay {3}{S}. If you do, defeat target Devotee.",
         "Judge's Authority — Once each round, whenever an enemy Devotee is destroyed, its controller loses {1}{S} and your God gains {1}{S}."
       ],
       "habilidade_awaken_en": "",
@@ -8047,7 +8047,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Cosmic Marionation — When Griffon Minos enters the battlefield, you may pay {1}{S}. If you do, target enemy Devotee gets -2 ATK / -2 HP until the end of the round.",
+        "Cosmic Marionation — When Griffon Minos enters the Battlefield, you may pay {1}{S}. If you do, target enemy Devotee gets -2 ATK / -2 HP until the end of the round.",
         "Puppet Master — Whenever an enemy Devotee is defeated during your turn, its controller loses {1}{S}."
       ],
       "habilidade_awaken_en": "",
@@ -8134,8 +8134,8 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Garuda Flap — When Garuda Aiacos enters the battlefield, you may return target Devotee with Casting Cost 3 or less from your Tartarus to your hand.",
-        "Galactica Illusion — Whenever Garuda Aiacos destroys an enemy Devotee in combat, you may return target Devotee with Casting Cost 2 or less from your Tartarus to the battlefield Unprepared."
+        "Garuda Flap — When Garuda Aiacos enters the Battlefield, you may return target Devotee with Casting Cost 3 or less from your Tartarus to your hand.",
+        "Galactica Illusion — Whenever Garuda Aiacos destroys an enemy Devotee in combat, you may return target Devotee with Casting Cost 2 or less from your Tartarus to the Battlefield Unprepared."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -8174,7 +8174,7 @@
       "equipar_custo": 5,
       "keywords_en": [],
       "habilidades_en": [
-        "Resonance — Aiacos: Once each round, when Garuda Aiacos returns a Devotee from your Tartarus to the battlefield, that Devotee gains +1 ATK until the end of the round."
+        "Resonance — Aiacos: Once each round, when Garuda Aiacos returns a Devotee from your Tartarus to the Battlefield, that Devotee gains +1 ATK until the end of the round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -8221,7 +8221,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Balance of Curse — When Sphinx Pharaoh enters the battlefield, you may pay {1}{S}. If you do, target enemy God loses {2}{S} and your God gains {2}{S}.",
+        "Balance of Curse — When Sphinx Pharaoh enters the Battlefield, you may pay {1}{S}. If you do, target enemy God loses {2}{S} and your God gains {2}{S}.",
         "Dead End Symphony — Once each round, whenever you pay Soul to activate an ability, you may pay an additional {1}{S}. If you do, draw 1 card."
       ],
       "habilidade_awaken_en": "",
@@ -8308,7 +8308,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "The Ferryman's Price — When Acheron Charon enters the battlefield, you may pay {2}{S}. If you do, search your deck for a Devotee with Casting Cost 3 or less, reveal it, put it into your hand, then shuffle your deck.",
+        "The Ferryman's Price — When Acheron Charon enters the Battlefield, you may pay {2}{S}. If you do, search your deck for a Devotee with Casting Cost 3 or less, reveal it, put it into your hand, then shuffle your deck.",
         "Passage to the Underworld — Once each round, when another friendly Devotee is destroyed, you may pay {1}{S}. If you do, put the top card of your deck into your Tartarus."
       ],
       "habilidade_awaken_en": "",
@@ -8395,7 +8395,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Eternal Drowsiness — When Hypnos enters the battlefield, you may pay {2}{S}. If you do, put 2 Seal counters on each enemy Devotee.",
+        "Eternal Drowsiness — When Hypnos enters the Battlefield, you may pay {2}{S}. If you do, put 2 Seal counters on each enemy Devotee.",
         "Eternal Slumber — Once each round, when an enemy Devotee loses its last Seal counter, you may pay {2}{S}. If you do, defeat that Devotee."
       ],
       "habilidade_awaken_en": "",
@@ -8474,7 +8474,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Terrible Providence — When Thanatos enters the battlefield, you may pay {3}{S}. If you do, defeat target enemy Devotee.",
+        "Terrible Providence — When Thanatos enters the Battlefield, you may pay {3}{S}. If you do, defeat target enemy Devotee.",
         "Divine Execution — Once each round, whenever an enemy Devotee is defeated, its controller loses {2}{S} and your God gains {2}{S}."
       ],
       "habilidade_awaken_en": "",
@@ -8558,7 +8558,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Pandora's Command — When Pandora enters the battlefield, you may pay {3}{S}. If you do, search your deck for a Specter card, reveal it, put it into your hand, then shuffle your deck.",
+        "Pandora's Command — When Pandora enters the Battlefield, you may pay {3}{S}. If you do, search your deck for a Specter card, reveal it, put it into your hand, then shuffle your deck.",
         "Queen of the Underworld — Once each round, when another friendly Devotee is defeated, you may pay {2}{S}. If you do, draw 2 cards."
       ],
       "habilidade_awaken_en": "",
@@ -8647,8 +8647,8 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Return from the Dead — When Shion enters the battlefield, return target Devotee with Casting Cost 4 or less from your Tartarus to the battlefield Unprepared.",
-        "Stardust Revolution — Once each round, when another friendly Devotee returns from your Tartarus to the battlefield, target enemy God loses {2}{S} and your God gains {2}{S}."
+        "Return from the Dead — When Shion enters the Battlefield, return target Devotee with Casting Cost 4 or less from your Tartarus to the Battlefield Unprepared.",
+        "Stardust Revolution — Once each round, when another friendly Devotee returns from your Tartarus to the Battlefield, target enemy God loses {2}{S} and your God gains {2}{S}."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -8687,7 +8687,7 @@
       "equipar_custo": 5,
       "keywords_en": [],
       "habilidades_en": [
-        "Resonance — Shion: Once each round, when Aries Shion returns a Devotee from your Tartarus to the battlefield, draw 1 card."
+        "Resonance — Shion: Once each round, when Aries Shion returns a Devotee from your Tartarus to the Battlefield, draw 1 card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -8784,9 +8784,9 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Forbidden Seal — When Pandora's Box enters the battlefield, each opponent sacrifices a Devotee.",
+        "Forbidden Seal — When Pandora's Box enters the Battlefield, each opponent sacrifices a Devotee.",
         "Open the Box — {3}{C}, {T}, Pay {3}{S}: Search your deck for a Devotee card, reveal it, put it into your hand, then shuffle your deck.",
-        "The Last Hope — When Pandora's Box leaves the battlefield, your God gains {3}{S} and you draw 1 card."
+        "The Last Hope — When Pandora's Box leaves the Battlefield, your God gains {3}{S} and you draw 1 card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -8834,7 +8834,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Greed the Life — When Harpy Valentine enters the battlefield, you may pay {1}{S}. If you do, target enemy God loses {2}{S} and your God gains {2}{S}.",
+        "Greed the Life — When Harpy Valentine enters the Battlefield, you may pay {1}{S}. If you do, target enemy God loses {2}{S} and your God gains {2}{S}.",
         "Loyal Servant — Whenever a friendly Judge Specter is defeated, you may sacrifice Harpy Valentine. If you do, return that Judge Specter from your Tartarus to your hand."
       ],
       "habilidade_awaken_en": "",
@@ -8875,7 +8875,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Reincarnation — When Balron Lune enters the battlefield, target opponent reveals their hand. Choose a Moment or Technique card from it. That player discards that card.",
+        "Reincarnation — When Balron Lune enters the Battlefield, target opponent reveals their hand. Choose a Moment or Technique card from it. That player discards that card.",
         "Fire Whip — Once each round, whenever an opponent discards a card, their God loses {1}{S} and your God gains {1}{S}."
       ],
       "habilidade_awaken_en": "",
@@ -8916,7 +8916,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Metamorphosis — When Papillon Myu enters the battlefield, you may pay {2}{S}. If you do, draw 2 cards.",
+        "Metamorphosis — When Papillon Myu enters the Battlefield, you may pay {2}{S}. If you do, draw 2 cards.",
         "Fairy Thronging — Whenever Papillon Myu deals combat damage to an enemy God, you may return target Devotee with Casting Cost 2 or less from your Tartarus to your hand."
       ],
       "habilidade_awaken_en": "",
@@ -8957,7 +8957,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Deep Fragrance — When Deep Niobe enters the battlefield, you may pay {2}{S}. If you do, target enemy Devotee gets -3 ATK / -3 HP until the end of the round.",
+        "Deep Fragrance — When Deep Niobe enters the Battlefield, you may pay {2}{S}. If you do, target enemy Devotee gets -3 ATK / -3 HP until the end of the round.",
         "Poisonous Death — When Deep Niobe is defeated, target enemy Devotee gets -2 ATK / -2 HP until the end of the round."
       ],
       "habilidade_awaken_en": "",
@@ -9039,7 +9039,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Servant of the Dead — When Skeleton Markino enters the battlefield, put the top 2 cards of your deck into your Tartarus.",
+        "Servant of the Dead — When Skeleton Markino enters the Battlefield, put the top 2 cards of your deck into your Tartarus.",
         "Expendable Servant — When Skeleton Markino is defeated, you may pay {1}{S}. If you do, draw 1 card."
       ],
       "habilidade_awaken_en": "",
@@ -9163,7 +9163,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Hidden Cosmo {4}",
-        "Worm's Bind — When Worm Raimi enters the battlefield, you may pay {1}{S}. If you do, target enemy Devotee gets -1 ATK / -1 HP until the end of the round.",
+        "Worm's Bind — When Worm Raimi enters the Battlefield, you may pay {1}{S}. If you do, target enemy Devotee gets -1 ATK / -1 HP until the end of the round.",
         "Underground Ambush — Whenever Worm Raimi Strikes a damaged Devotee, Worm Raimi gets +2 ATK until the end of the round."
       ],
       "habilidade_awaken_en": "",
@@ -9205,7 +9205,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Rolling Bomber Stone — When Golem Rock enters the battlefield, you may sacrifice another friendly Devotee. If you do, defeat target enemy Devotee with 3 HP or less.",
+        "Rolling Bomber Stone — When Golem Rock enters the Battlefield, you may sacrifice another friendly Devotee. If you do, defeat target enemy Devotee with 3 HP or less.",
         "Stone Colossus — Whenever another friendly Devotee is defeated, Golem Rock gets +1 ATK until the end of the round."
       ],
       "habilidade_awaken_en": "",
@@ -9246,7 +9246,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Greater Axe Crusher — When Troll Iwan enters the battlefield, you may sacrifice another friendly Devotee. If you do, target enemy Devotee gets -3 ATK / -3 HP until the end of the round.",
+        "Greater Axe Crusher — When Troll Iwan enters the Battlefield, you may sacrifice another friendly Devotee. If you do, target enemy Devotee gets -3 ATK / -3 HP until the end of the round.",
         "Bloodthirst — Whenever another friendly Devotee is defeated, Troll Iwan gets +1 ATK until the end of the round."
       ],
       "habilidade_awaken_en": "",
@@ -9326,7 +9326,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Howling Inferno — When Lycaon Phlegyas enters the battlefield, you may pay {1}{S}. If you do, target enemy Devotee gets -2 ATK / -2 HP until the end of the round.",
+        "Howling Inferno — When Lycaon Phlegyas enters the Battlefield, you may pay {1}{S}. If you do, target enemy Devotee gets -2 ATK / -2 HP until the end of the round.",
         "Savage Predator — Whenever Lycaon Phlegyas defeats an enemy Devotee in combat, your God gains {2}{S}."
       ],
       "habilidade_awaken_en": "",
@@ -9408,7 +9408,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Blood Flower Scissors — When Alraune Queen enters the battlefield, you may pay {2}{S}. If you do, defeat target enemy Devotee with 2 HP or less.",
+        "Blood Flower Scissors — When Alraune Queen enters the Battlefield, you may pay {2}{S}. If you do, defeat target enemy Devotee with 2 HP or less.",
         "Feed on Life — Whenever an enemy Devotee is defeated, your God gains {1}{S}."
       ],
       "habilidade_awaken_en": "",
@@ -9449,7 +9449,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Petrifying Gaze — When Gorgon Ox enters the battlefield, you may pay {1}{S}. If you do, target enemy Devotee can't declare a Strike during its controller's next turn.",
+        "Petrifying Gaze — When Gorgon Ox enters the Battlefield, you may pay {1}{S}. If you do, target enemy Devotee can't declare a Strike during its controller's next turn.",
         "Stone Curse — Once each round, whenever Gorgon Ox Strikes, the defending Devotee gets -2 ATK during that Strike."
       ],
       "habilidade_awaken_en": "",
@@ -9490,7 +9490,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Death Messenger — When Dullahan Cube enters the battlefield, target enemy God loses {1}{S} and your God gains {1}{S}.",
+        "Death Messenger — When Dullahan Cube enters the Battlefield, target enemy God loses {1}{S} and your God gains {1}{S}.",
         "Last Breath — When Dullahan Cube is defeated, you may return another target Devotee with Casting Cost 1 or less from your Tartarus to your hand."
       ],
       "habilidade_awaken_en": "",
@@ -9611,7 +9611,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Restless Spirit — When Wandering Soul enters the battlefield, put the top card of your deck into your Tartarus.",
+        "Restless Spirit — When Wandering Soul enters the Battlefield, put the top card of your deck into your Tartarus.",
         "Soul Offering — Sacrifice Wandering Soul: Your God gains {1}{S}. Activate only once each round."
       ],
       "habilidade_awaken_en": "",
@@ -9652,7 +9652,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Gather the Lost — When Styx Soul Herder enters the battlefield, you may pay {1}{S}. If you do, return target Devotee with Casting Cost 2 or less from your Tartarus to your hand.",
+        "Gather the Lost — When Styx Soul Herder enters the Battlefield, you may pay {1}{S}. If you do, return target Devotee with Casting Cost 2 or less from your Tartarus to your hand.",
         "Last Herding — When Styx Soul Herder is defeated, put the top 2 cards of your deck into your Tartarus."
       ],
       "habilidade_awaken_en": "",
@@ -9693,7 +9693,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Final Sentence — When Underworld Executioner enters the battlefield, you may sacrifice another friendly Devotee. If you do, defeat target enemy Devotee with 3 HP or less.",
+        "Final Sentence — When Underworld Executioner enters the Battlefield, you may sacrifice another friendly Devotee. If you do, defeat target enemy Devotee with 3 HP or less.",
         "Blood Tribute — Whenever you sacrifice another Devotee, target enemy God loses {1}{S} and your God gains {1}{S}. This ability triggers only once each round."
       ],
       "habilidade_awaken_en": "",
@@ -9734,7 +9734,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Eternal Devotion — When Elysium Servant enters the battlefield, your God gains {2}{S}.",
+        "Eternal Devotion — When Elysium Servant enters the Battlefield, your God gains {2}{S}.",
         "Servant's Sacrifice — Sacrifice Elysium Servant: Draw 1 card. Activate only once each round."
       ],
       "habilidade_awaken_en": "",
@@ -10009,7 +10009,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Equipped Devotee gets +1 ATK / +1 HP.",
-        "Eternal Binding — When Underworld Shackles enters the battlefield, target enemy Devotee gets -1 ATK / -1 HP until the end of the round.",
+        "Eternal Binding — When Underworld Shackles enters the Battlefield, target enemy Devotee gets -1 ATK / -1 HP until the end of the round.",
         "Cursed Chains — Whenever equipped Devotee defeats an enemy Devotee in combat, another target enemy Devotee gets -1 ATK / -1 HP until the end of the round."
       ],
       "habilidade_awaken_en": "",
@@ -10107,7 +10107,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Equipped Devotee gets +1 ATK / +1 HP.",
-        "Eternal Flame — Once each round, whenever a friendly Devotee returns from your Tartarus to the battlefield, your God gains {1}{S}.",
+        "Eternal Flame — Once each round, whenever a friendly Devotee returns from your Tartarus to the Battlefield, your God gains {1}{S}.",
         "Guiding Light — When Torch of the Underworld is destroyed, put the top 2 cards of your deck into your Tartarus."
       ],
       "habilidade_awaken_en": "",
@@ -10156,7 +10156,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Return target Specter with Casting Cost 3 or less from your Tartarus to the battlefield Unprepared.",
+        "Return target Specter with Casting Cost 3 or less from your Tartarus to the Battlefield Unprepared.",
         "That Devotee cannot Strike this round."
       ],
       "habilidade_awaken_en": "",
@@ -10480,7 +10480,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Return target Devotee from your Tartarus to the battlefield Unprepared.",
+        "Return target Devotee from your Tartarus to the Battlefield Unprepared.",
         "It cannot declare a Strike this round.",
         "Your God loses {3}{S}."
       ],
@@ -10691,8 +10691,8 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "The Dead Shall Rise — The first Devotee you return from your Tartarus to the battlefield each round enters with +1 ATK until the end of the round.",
-        "Gates of Death — Once per game — {3}{C}: Return target Specter card with Casting Cost 3 or less from your Tartarus to the battlefield."
+        "The Dead Shall Rise — The first Devotee you return from your Tartarus to the Battlefield each round enters with +1 ATK until the end of the round.",
+        "Gates of Death — Once per game — {3}{C}: Return target Specter card with Casting Cost 3 or less from your Tartarus to the Battlefield."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -10962,7 +10962,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Seki Shiki Meikai Ha — When Cancer Deathmask enters the battlefield, you may pay {2}{S}. If you do, target enemy Devotee gets -3 ATK / -3 HP until the end of the round.",
+        "Seki Shiki Meikai Ha — When Cancer Deathmask enters the Battlefield, you may pay {2}{S}. If you do, target enemy Devotee gets -3 ATK / -3 HP until the end of the round.",
         "Gateway to Yomotsu — Whenever an enemy Devotee is defeated, you may pay {1}{S}. If you do, put the top 2 cards of your deck into your Tartarus. This ability triggers only once each round."
       ],
       "habilidade_awaken_en": "",
@@ -11003,7 +11003,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Bloody Rose — When Pisces Aphrodite enters the battlefield, you may pay {1}{S}. If you do, target enemy Devotee gets -2 ATK / -2 HP until the end of the round.",
+        "Bloody Rose — When Pisces Aphrodite enters the Battlefield, you may pay {1}{S}. If you do, target enemy Devotee gets -2 ATK / -2 HP until the end of the round.",
         "Royal Demon Rose — Once each round, whenever an enemy Devotee is defeated, its controller loses {1}{S} and your God gains {1}{S}."
       ],
       "habilidade_awaken_en": "",
@@ -11044,7 +11044,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Excalibur — When Capricorn Shura enters the battlefield, you may pay {3}{S}. If you do, defeat target enemy Devotee with 3 HP or less.",
+        "Excalibur — When Capricorn Shura enters the Battlefield, you may pay {3}{S}. If you do, defeat target enemy Devotee with 3 HP or less.",
         "Blade of Sacrifice — Whenever Capricorn Shura defeats an enemy Devotee in combat, you may sacrifice another friendly Devotee. If you do, draw 2 cards."
       ],
       "habilidade_awaken_en": "",
@@ -11085,7 +11085,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Diamond Dust — When Aquarius Camus enters the battlefield, you may pay {1}{S}. If you do, target enemy Devotee can't declare a Strike during its controller's next turn.",
+        "Diamond Dust — When Aquarius Camus enters the Battlefield, you may pay {1}{S}. If you do, target enemy Devotee can't declare a Strike during its controller's next turn.",
         "Aurora Execution — Once each round, whenever an enemy Devotee is defeated, its controller loses {1}{S} and your God gains {1}{S}."
       ],
       "habilidade_awaken_en": "",
@@ -11126,7 +11126,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Another Dimension — When Gemini Saga enters the battlefield, you may pay {3}{S}. If you do, exile target enemy Devotee until Gemini Saga leaves the battlefield.",
+        "Another Dimension — When Gemini Saga enters the Battlefield, you may pay {3}{S}. If you do, send target enemy Devotee to the Void until Gemini Saga leaves the Battlefield.",
         "Galaxian Explosion — Once each round, whenever another friendly Devotee is defeated, target enemy God loses {2}{S}."
       ],
       "habilidade_awaken_en": "",
@@ -11296,7 +11296,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Return up to 2 target Specter cards with Casting Cost 3 or less from your Tartarus to the battlefield Unprepared.",
+        "Return up to 2 target Specter cards with Casting Cost 3 or less from your Tartarus to the Battlefield Unprepared.",
         "Those Devotees cannot Strike this round.",
         "Your God loses {3}{S}."
       ],
@@ -11339,7 +11339,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Return target Devotee with Casting Cost 5 or less from your Tartarus to the battlefield Unprepared.",
+        "Return target Devotee with Casting Cost 5 or less from your Tartarus to the Battlefield Unprepared.",
         "You may sacrifice another friendly Devotee. If you do, the returned Devotee gains +2 ATK / +2 HP until the end of the round."
       ],
       "habilidade_awaken_en": "",
@@ -11552,7 +11552,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Return target Devotee from an opponent's Tartarus to the battlefield under your control Unprepared.",
+        "Return target Devotee from an opponent's Tartarus to the Battlefield under your control Unprepared.",
         "Your God loses {3}{S}."
       ],
       "habilidade_awaken_en": "",
@@ -11765,7 +11765,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Return up to 3 target Devotees from your Tartarus to the battlefield Unprepared.",
+        "Return up to 3 target Devotees from your Tartarus to the Battlefield Unprepared.",
         "Those Devotees cannot Strike this round.",
         "For each Devotee returned this way, target enemy God loses {3}{S} and your God gains {3}{S}."
       ],
@@ -11809,7 +11809,7 @@
       "keywords_en": ["Impulse"],
       "habilidades_en": [
         "Impulse",
-        "Crimson Arrival — When Alcmenes enters the battlefield, deal 3 damage to target enemy Devotee.",
+        "Crimson Arrival — When Alcmenes enters the Battlefield, deal 3 damage to target enemy Devotee.",
         "Unrelenting Inferno — Whenever Alcmenes defeats an enemy Devotee during combat, Prepare Alcmenes. This ability triggers only once per turn."
       ],
       "habilidade_awaken_en": "",
@@ -11901,7 +11901,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Battlefield Insight — When Ofir enters the battlefield, look at the top three cards of your deck. Put one into your hand and the rest on the bottom of your deck in any order.",
+        "Battlefield Insight — When Ofir enters the Battlefield, look at the top three cards of your deck. Put one into your hand and the rest on the bottom of your deck in any order.",
         "Divine War Flames — Whenever another friendly Berserker declares a Strike, that Berserker gains +1 ATK until end of round."
       ],
       "habilidade_awaken_en": "",
@@ -12083,7 +12083,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Nightmare Manifestation — When Lotis enters the battlefield, target opponent loses {1}{L}.",
+        "Nightmare Manifestation — When Lotis enters the Battlefield, target opponent loses {1}{L}.",
         "Torment — Whenever Lotis deals damage to a God, that God's controller loses {1}{L}.",
         "Illusory Escape — Once per turn, when Lotis becomes the target of an enemy ability, you may discard a card. If you do, cancel that ability's effect on Lotis."
       ],
@@ -12176,7 +12176,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Serpent's Ambush — When Iseu enters the battlefield, deal 1 damage to target enemy Devotee.",
+        "Serpent's Ambush — When Iseu enters the Battlefield, deal 1 damage to target enemy Devotee.",
         "Lethal Opportunist — Whenever another friendly Berserker is defeated, Iseu gains +2 ATK until end of round."
       ],
       "habilidade_awaken_en": "",
@@ -12358,7 +12358,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Ravaging Winds — When Alceu enters the battlefield, deal 1 damage to up to two target enemy Devotees.",
+        "Ravaging Winds — When Alceu enters the Battlefield, deal 1 damage to up to two target enemy Devotees.",
         "Stormborn Assault — Whenever Alceu declares a Strike, he gains +1 ATK until end of round for each other friendly Berserker that has been defeated this turn, up to +3 ATK."
       ],
       "habilidade_awaken_en": "",
@@ -12450,7 +12450,7 @@
       "keywords_en": ["Impulse"],
       "habilidades_en": [
         "Impulse",
-        "Predator's Arrival — When Arionte enters the battlefield, deal 1 damage to target enemy Devotee that has already taken damage this turn.",
+        "Predator's Arrival — When Arionte enters the Battlefield, deal 1 damage to target enemy Devotee that has already taken damage this turn.",
         "Relentless Pursuit — Whenever Arionte defeats an enemy Devotee during combat, Prepare Arionte. This ability triggers only once per turn."
       ],
       "habilidade_awaken_en": "",
@@ -12939,7 +12939,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "War Cry — When Ares' War Herald enters the battlefield, target friendly Berserker gains +1 ATK and Impulse until end of round."
+        "War Cry — When Ares' War Herald enters the Battlefield, target friendly Berserker gains +1 ATK and Impulse until end of round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -12979,7 +12979,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Burning Execution — When Crimson Fire Executioner enters the battlefield, deal 1 damage to target enemy Devotee that has already taken damage this turn."
+        "Burning Execution — When Crimson Fire Executioner enters the Battlefield, deal 1 damage to target enemy Devotee that has already taken damage this turn."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -13019,7 +13019,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Tactical Opening — When Flame Legion Vanguard enters the battlefield, another target friendly Berserker gains +1 ATK until end of round."
+        "Tactical Opening — When Flame Legion Vanguard enters the Battlefield, another target friendly Berserker gains +1 ATK until end of round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -13101,7 +13101,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Crippling Terror — When Fear Legion Tormentor enters the battlefield, target enemy Devotee gets -1 ATK until end of round.",
+        "Crippling Terror — When Fear Legion Tormentor enters the Battlefield, target enemy Devotee gets -1 ATK until end of round.",
         "Lingering Nightmare — Whenever Fear Legion Tormentor deals combat damage to a God, that God's controller loses {1}{L}."
       ],
       "habilidade_awaken_en": "",
@@ -13511,7 +13511,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Warbound Oath — When Warbound Soldier enters the battlefield, you may deal 1 damage to your God. If you do, Warbound Soldier gains Impulse until end of round."
+        "Warbound Oath — When Warbound Soldier enters the Battlefield, you may deal 1 damage to your God. If you do, Warbound Soldier gains Impulse until end of round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -13551,7 +13551,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Blood Covenant — When Blood Oath Warrior enters the battlefield, you may deal 2 damage to your God. If you do, draw a card, then discard a card."
+        "Blood Covenant — When Blood Oath Warrior enters the Battlefield, you may deal 2 damage to your God. If you do, draw a card, then discard a card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -14919,7 +14919,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Strategic Deployment — When Divine Flame Tactician enters the battlefield, look at the top three cards of your deck. Put one into your hand and the rest on the bottom of your deck in any order.",
+        "Strategic Deployment — When Divine Flame Tactician enters the Battlefield, look at the top three cards of your deck. Put one into your hand and the rest on the bottom of your deck in any order.",
         "Calculated Assault — Once per turn, whenever another friendly Berserker declares a Strike, you may discard a card. If you do, that Berserker gains +2 ATK and Pierce until end of round."
       ],
       "habilidade_awaken_en": "",
@@ -15003,7 +15003,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Whispers of Terror — When Nightmare Weaver enters the battlefield, target opponent loses {1}{L}.",
+        "Whispers of Terror — When Nightmare Weaver enters the Battlefield, target opponent loses {1}{L}.",
         "Feast on Fear — Whenever an opponent loses Latent Cosmo, Nightmare Weaver gains +1 ATK until end of round. This ability triggers only once per turn.",
         "Illusory Torment — Whenever Nightmare Weaver deals combat damage to a God, deal 1 damage to target enemy Devotee."
       ],
@@ -15047,7 +15047,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Apocalyptic Arrival — When Berserker of the Apocalypse enters the battlefield, deal 1 damage to each other Devotee.",
+        "Apocalyptic Arrival — When Berserker of the Apocalypse enters the Battlefield, deal 1 damage to each other Devotee.",
         "Born from Destruction — Whenever another Devotee is defeated, Berserker of the Apocalypse gains +1 ATK until end of round."
       ],
       "habilidade_awaken_en": "",
@@ -15543,8 +15543,8 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Divine Weakness — Target enemy God loses 3 SOUL.",
-        "Opportunity for War — If that God has 10 or fewer SOUL after this effect resolves, draw a card, then discard a card."
+        "Divine Weakness — Target enemy God loses {3}{S}.",
+        "Opportunity for War — If that God has 10 or less Soul after this effect resolves, draw a card, then discard a card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -15552,8 +15552,8 @@
       "nome_exibicao_pt": "O CAJADO PERDIDO DE NICE",
       "subtitulo_pt": "O Poder Ausente da Vitória",
       "habilidades_pt": [
-        "Fraqueza Divina — O Deus inimigo alvo perde 3 de ALMA.",
-        "Oportunidade para a Guerra — Se esse Deus tem 10 ou menos de ALMA depois que este efeito é resolvido, compre uma carta e depois descarte uma carta."
+        "Fraqueza Divina — O Deus inimigo alvo perde {3}{S}.",
+        "Oportunidade para a Guerra — Se esse Deus tem 10 ou menos de Alma depois que este efeito é resolvido, compre uma carta e depois descarte uma carta."
       ],
       "flavour_pt": "\"Sem Nice, a deusa da vitória enfrentava uma guerra que não poderia vencer com facilidade.\"",
       "tagline_pt": "O Poder Ausente da Vitória"
@@ -16157,7 +16157,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Divine Awakening — When Chandra enters the battlefield, put a Training counter on target friendly Devotee.",
+        "Divine Awakening — When Chandra enters the Battlefield, put a Training counter on target friendly Devotee.",
         "Moonlit Communion — Whenever you put one or more Training counters on another friendly Devotee, you may generate {1}{L}. This ability triggers only once each round."
       ],
       "habilidade_awaken_en": "",
@@ -16413,7 +16413,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Blooming Presence — Whenever another friendly Devotee enters the battlefield, put a Training counter on that Devotee. This ability triggers only once each round.",
+        "Blooming Presence — Whenever another friendly Devotee enters the Battlefield, put a Training counter on that Devotee. This ability triggers only once each round.",
         "Spring's Renewal — {T}: Remove a Training counter from target friendly Devotee. If you do, draw 1 card."
       ],
       "habilidade_awaken_en": "",
@@ -16605,7 +16605,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Forest Blessing — When Sacred Stag enters the battlefield, you may put a Training counter on target friendly Devotee."
+        "Forest Blessing — When Sacred Stag enters the Battlefield, you may put a Training counter on target friendly Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -16727,7 +16727,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Crushing Coils — When Ancient Forest Serpent enters the battlefield, you may have it Strike target enemy Devotee with ATK 3 or less. It ignores Guardian.",
+        "Crushing Coils — When Ancient Forest Serpent enters the Battlefield, you may have it Strike target enemy Devotee with ATK 3 or less. It ignores Guardian.",
         "Verdant Might — Ancient Forest Serpent gets +1/+1 for each other friendly Sacred Beast, up to +3/+3."
       ],
       "habilidade_awaken_en": "",
@@ -16893,7 +16893,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Precise Hunt — When Silver Arrow Huntress enters the battlefield, you may pay {1}{C}. If you do, put a Training counter on target friendly Devotee."
+        "Precise Hunt — When Silver Arrow Huntress enters the Battlefield, you may pay {1}{C}. If you do, put a Training counter on target friendly Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -16973,7 +16973,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Celestial Cultivation — When Moon Temple Acolyte enters the battlefield, put a Training counter on another target friendly Devotee.",
+        "Celestial Cultivation — When Moon Temple Acolyte enters the Battlefield, put a Training counter on another target friendly Devotee.",
         "Lunar Guidance — Whenever Moon Temple Acolyte declares a Strike, you may move one Training counter from another friendly Devotee to Moon Temple Acolyte."
       ],
       "habilidade_awaken_en": "",
@@ -17138,7 +17138,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Hidden Cosmo {3}",
-        "Lunar Ambush — When Black Satellite Soldier enters the battlefield, it gets +1/+0 until end of round."
+        "Lunar Ambush — When Black Satellite Soldier enters the Battlefield, it gets +1/+0 until end of round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -17262,7 +17262,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Verdant Channeling — {T}: Generate {1}{L}.",
-        "Living Roots — If Sacred Grove Dryad generated Cosmo this turn, the first Devotee you cast this turn enters the battlefield with a Training counter."
+        "Living Roots — If Sacred Grove Dryad generated Cosmo this turn, the first Devotee you cast this turn enters the Battlefield with a Training counter."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -17303,7 +17303,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Moonlit Blessing — When Lunar Nymph enters the battlefield, put a Training counter on target friendly Devotee."
+        "Moonlit Blessing — When Lunar Nymph enters the Battlefield, put a Training counter on target friendly Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -17469,7 +17469,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Lunar Guidance — When Celestial Stag enters the battlefield, look at the top three cards of your deck. You may reveal a Devotee among them and put it into your hand. Put the remaining cards on the bottom of your deck in any order."
+        "Lunar Guidance — When Celestial Stag enters the Battlefield, look at the top three cards of your deck. You may reveal a Devotee among them and put it into your hand. Put the remaining cards on the bottom of your deck in any order."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -17509,7 +17509,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Forest Foraging — When Moonbound Fox enters the battlefield, look at the top card of your deck. You may put that card on the bottom of your deck."
+        "Forest Foraging — When Moonbound Fox enters the Battlefield, look at the top card of your deck. You may put that card on the bottom of your deck."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -17592,7 +17592,7 @@
       "keywords_en": ["Guardian"],
       "habilidades_en": [
         "Guardian",
-        "Ancient Growth — When Ancient Grove Treant enters the battlefield, put a Training counter on each of up to two other target friendly Devotees.",
+        "Ancient Growth — When Ancient Grove Treant enters the Battlefield, put a Training counter on each of up to two other target friendly Devotees.",
         "Rooted Majesty — Ancient Grove Treant gets +1/+1 for each other friendly Devotee with a Training counter, up to +3/+3."
       ],
       "habilidade_awaken_en": "",
@@ -17719,7 +17719,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Spring's Blessing — When Guardian of the Sacred Spring enters the battlefield, gain {2}{S}."
+        "Spring's Blessing — When Guardian of the Sacred Spring enters the Battlefield, gain {2}{S}."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -18101,7 +18101,7 @@
       "equipar_custo": 2,
       "keywords_en": [],
       "habilidades_en": [
-        "Ancient Growth — Whenever another friendly Devotee enters the battlefield, you may put a Training counter on equipped Devotee. This ability triggers only once each round."
+        "Ancient Growth — Whenever another friendly Devotee enters the Battlefield, you may put a Training counter on equipped Devotee. This ability triggers only once each round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -18148,7 +18148,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Natural Expansion — Put the top card of your deck into your Cosmo Bank face down as unprepared Cosmo Base."
+        "Natural Expansion — Put the top card of your deck into your Cosmo Bank face down as Unprepared Cosmo Base."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -18270,7 +18270,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Lunar Prosperity — Look at the top three cards of your deck. Put one of them into your Cosmo Bank face down as unprepared Cosmo Base. Put the remaining cards on the bottom of your deck in any order."
+        "Lunar Prosperity — Look at the top three cards of your deck. Put one of them into your Cosmo Bank face down as Unprepared Cosmo Base. Put the remaining cards on the bottom of your deck in any order."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -18311,7 +18311,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Primal Blessing — Put a Training counter on target friendly Devotee.",
-        "Natural Expansion — If that Devotee has ATK 4 or greater, look at the top card of your deck. You may put it into your Cosmo Bank face down as unprepared Cosmo Base."
+        "Natural Expansion — If that Devotee has ATK 4 or greater, look at the top card of your deck. You may put it into your Cosmo Bank face down as Unprepared Cosmo Base."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -18392,7 +18392,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Ancient Expansion — Put the top two cards of your deck into your Cosmo Bank face down as unprepared Cosmo Base."
+        "Ancient Expansion — Put the top two cards of your deck into your Cosmo Bank face down as Unprepared Cosmo Base."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -18600,8 +18600,8 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Forest Blessing — Once each round, when a friendly Devotee with Casting Cost 4 or greater enters the battlefield, your God gains {1}{S}.",
-        "Verdant Expansion — Once per game — {2}{C}: Put the top card of your deck into your Cosmo Bank face down as unprepared Cosmo Base."
+        "Forest Blessing — Once each round, when a friendly Devotee with Casting Cost 4 or greater enters the Battlefield, your God gains {1}{S}.",
+        "Verdant Expansion — Once per game — {2}{C}: Put the top card of your deck into your Cosmo Bank face down as Unprepared Cosmo Base."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -18727,7 +18727,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Lunar Leadership — Other friendly Satellites get +1/+1.",
-        "Moonlit Ambush — When Moonlight Huntress Captain enters the battlefield, target friendly Satellite deals damage equal to its ATK to target enemy Devotee."
+        "Moonlit Ambush — When Moonlight Huntress Captain enters the Battlefield, target friendly Satellite deals damage equal to its ATK to target enemy Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -18815,7 +18815,7 @@
       "keywords_en": ["Pierce"],
       "habilidades_en": [
         "Pierce",
-        "Primal Arrival — When Primal Forest Champion enters the battlefield, it deals damage equal to its ATK to target enemy Devotee.",
+        "Primal Arrival — When Primal Forest Champion enters the Battlefield, it deals damage equal to its ATK to target enemy Devotee.",
         "Verdant Dominion — Primal Forest Champion gets +1/+1 for every three cards in your Cosmo Bank."
       ],
       "habilidade_awaken_en": "",
@@ -18906,7 +18906,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Precise Execution — When Silver Arrow Commander enters the battlefield, you may have it fight target enemy Devotee. Each deals damage equal to its ATK to the other.",
+        "Precise Execution — When Silver Arrow Commander enters the Battlefield, you may have it fight target enemy Devotee. Each deals damage equal to its ATK to the other.",
         "Hunter's Mastery — Whenever a friendly Satellite declares a Strike against an enemy Devotee, that Satellite gets +1/+0 until end of round.",
         "Lunar Precision — Whenever Silver Arrow Commander defeats an enemy Devotee during combat, draw 1 card."
       ],
@@ -18998,7 +18998,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Verdant Arrival — When the Second Moon Guardian enters the battlefield, put the top card of your deck into your Cosmo Bank face down as unprepared Cosmo Base.",
+        "Verdant Arrival — When the Second Moon Guardian enters the Battlefield, put the top card of your deck into your Cosmo Bank face down as Unprepared Cosmo Base.",
         "Sacred Endurance — While you have six or more cards in your Cosmo Bank, the Second Moon Guardian gets +2/+2."
       ],
       "habilidade_awaken_en": "",
@@ -19086,7 +19086,7 @@
       "habilidades_en": [
         "Pierce",
         "Divine Hunt — Whenever the Fourth Moon Guardian declares a Strike against an enemy Devotee, it gets +2/+0 until end of round.",
-        "Predator's Triumph — Whenever the Fourth Moon Guardian defeats an enemy Devotee during combat, put the top card of your deck into your Cosmo Bank face down as unprepared Cosmo Base."
+        "Predator's Triumph — Whenever the Fourth Moon Guardian defeats an enemy Devotee during combat, put the top card of your deck into your Cosmo Bank face down as Unprepared Cosmo Base."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -19130,7 +19130,7 @@
       "habilidades_en": [
         "Pierce",
         "Primordial Strength — The Fifth Moon Guardian gets +1/+1 for every three cards in your Cosmo Bank.",
-        "Lunar Devastation — When the Fifth Moon Guardian enters the battlefield, it deals damage equal to its ATK to target enemy Devotee.",
+        "Lunar Devastation — When the Fifth Moon Guardian enters the Battlefield, it deals damage equal to its ATK to target enemy Devotee.",
         "Nature's Sovereignty — Whenever the Fifth Moon Guardian defeats an enemy Devotee during combat, put a Training counter on each other friendly Devotee."
       ],
       "habilidade_awaken_en": "",
@@ -19300,8 +19300,8 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Verdant Invasion — Put the top two cards of your deck into your Cosmo Bank face down as unprepared Cosmo Base.",
-        "Nature's Army — Summon two 3/3 Forest Guardian Devotee tokens."
+        "Verdant Invasion — Put the top two cards of your deck into your Cosmo Bank face down as Unprepared Cosmo Base.",
+        "Nature's Army — Create two 3/3 Forest Guardian Devotee Tokens."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -19310,7 +19310,7 @@
       "subtitulo_pt": "A Terra Retoma o Solo Sagrado",
       "habilidades_pt": [
         "Invasão Verdejante — Ponha as 2 cartas do topo do seu deck no seu Banco de Cosmo, viradas para baixo, como Bases de Cosmo Despreparadas.",
-        "Exército da Natureza — Invoque 2 fichas de Devoto Guardião da Floresta 3/3."
+        "Exército da Natureza — Crie 2 Fichas de Devoto Guardião da Floresta 3/3."
       ],
       "flavour_pt": "\"Os pilares de pedra do Santuário racharam quando raízes ancestrais se ergueram para retomar a terra.\"",
       "tagline_pt": "A Terra Retoma o Solo Sagrado"
@@ -19426,7 +19426,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Sacred Sacrifice — You may defeat a friendly Devotee. If you do, draw 2 cards and put the top card of your deck into your Cosmo Bank face down as unprepared Cosmo Base.",
+        "Sacred Sacrifice — You may defeat a friendly Devotee. If you do, draw 2 cards and put the top card of your deck into your Cosmo Bank face down as Unprepared Cosmo Base.",
         "Eternal Memory — If the defeated Devotee was a Lunar Guardian, put a Training counter on each remaining friendly Devotee."
       ],
       "habilidade_awaken_en": "",
@@ -19548,7 +19548,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Primordial Ascension — Put the top three cards of your deck into your Cosmo Bank face down as unprepared Cosmo Base.",
+        "Primordial Ascension — Put the top three cards of your deck into your Cosmo Bank face down as Unprepared Cosmo Base.",
         "Nature's Dominion — Put two Training counters on each friendly Devotee.",
         "Eternal Wilderness — For each friendly Devotee with ATK 6 or greater, draw 1 card, up to a maximum of three cards."
       ],
@@ -19634,7 +19634,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Dark Dragon Fist — When Black Dragon enters the battlefield, you may pay {2}{S}. If you do, defeat target Devotee with 3 or less HP.",
+        "Dark Dragon Fist — When Black Dragon enters the Battlefield, you may pay {2}{S}. If you do, defeat target Devotee with 3 or less HP.",
         "Cruel Strength — Whenever Black Dragon defeats an enemy Devotee during combat, you lose {1}{S}."
       ],
       "habilidade_awaken_en": "",
@@ -19676,8 +19676,8 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Black Blizzard — When Black Swan enters the battlefield, Seal target enemy Devotee.",
-        "Frozen Sacrifice — When Black Swan enters the battlefield, skip your next draw step."
+        "Black Blizzard — When Black Swan enters the Battlefield, Seal target enemy Devotee.",
+        "Frozen Sacrifice — When Black Swan enters the Battlefield, skip your next draw step."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -19762,7 +19762,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "False Rebirth — When Black Phoenix is defeated, you may pay {3}{C}, discard 2 cards, and lose {2}{S}. If you do, return Black Phoenix from your Tartarus to the battlefield Unprepared.",
+        "False Rebirth — When Black Phoenix is defeated, you may pay {3}{C}, discard 2 cards, and lose {2}{S}. If you do, return Black Phoenix from your Tartarus to the Battlefield Unprepared.",
         "Shadow Flame — Whenever Black Phoenix Strikes, deal 1 damage to each enemy Devotee and 1 damage to your God."
       ],
       "habilidade_awaken_en": "",
@@ -19804,7 +19804,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Death Queen Inferno — When Jango enters the battlefield, deal 3 damage to target Devotee and 2 damage to your God.",
+        "Death Queen Inferno — When Jango enters the Battlefield, deal 3 damage to target Devotee and 2 damage to your God.",
         "Tyrant's Command — Other Black Saint Devotees you control get +1/+0.",
         "Rule Through Fear — At the beginning of your end step, if you control another Black Saint, sacrifice another Black Saint or lose {3}{S}."
       ],
@@ -20093,7 +20093,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Sonic Wave — When Ushio enters the battlefield, draw 1 card, then discard 1 card.",
+        "Sonic Wave — When Ushio enters the Battlefield, draw 1 card, then discard 1 card.",
         "Resonance Engine — Whenever you equip an Item to Ushio, you may pay {1}{C}. If you do, return target enemy Devotee with Casting Cost 2 or less to its owner's hand."
       ],
       "habilidade_awaken_en": "",
@@ -20409,7 +20409,7 @@
       "habilidades_en": [
         "Research Facility — Once each round, you may pay {2}{C}. If you do, draw 1 card, then discard 1 card.",
         "Technological Advancement — The first Equipment card you cast each turn costs 1 less Cosmo, to a minimum of 1.",
-        "Steel Production — Whenever you cast your second Equipment card in a turn, create a 1/1 colorless Steel Recruit Devotee token."
+        "Steel Production — Whenever you cast your second Equipment card in a turn, create a 1/1 colorless Steel Recruit Devotee Token."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -20426,7 +20426,7 @@
       "habilidades_pt": [
         "Instalação de Pesquisa — Uma vez por rodada, você pode pagar {2}{C}. Se fizer isso, compre uma carta e depois descarte uma carta.",
         "Avanço Tecnológico — O primeiro Equipamento que você conjura a cada turno custa 1 Cosmo a menos, no mínimo 1.",
-        "Produção de Aço — Sempre que você conjura seu segundo Equipamento em um turno, crie uma ficha de Devoto incolor 1/1 chamada Recruta de Aço."
+        "Produção de Aço — Sempre que você conjura seu segundo Equipamento em um turno, crie uma Ficha de Devoto incolor 1/1 chamada Recruta de Aço."
       ],
       "flavour_pt": "\"Entre estas paredes, a ciência se tornou a resposta da humanidade ao poder divino.\"",
       "tagline_pt": "Onde a Humanidade Desafia os Deuses"
@@ -20458,7 +20458,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Phantom Illusion — When Geist enters the battlefield, return target enemy Devotee to its owner's hand.",
+        "Phantom Illusion — When Geist enters the Battlefield, return target enemy Devotee to its owner's hand.",
         "Ghost Command — Other Ghost Saints you control get +1/+1.",
         "Deceptive Presence — Whenever Geist becomes the target of an enemy Technique, you may sacrifice another Devotee. If you do, counter that Technique."
       ],
@@ -20502,7 +20502,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Aquatic Ambush — When Dolphin Ghost Saint enters the battlefield, you may pay {2}{C}. If you do, make target enemy Devotee Unprepared.",
+        "Aquatic Ambush — When Dolphin Ghost Saint enters the Battlefield, you may pay {2}{C}. If you do, make target enemy Devotee Unprepared.",
         "Phantom Retreat — Whenever Dolphin Ghost Saint deals combat damage to an enemy God, you may return Dolphin Ghost Saint to its owner's hand."
       ],
       "habilidade_awaken_en": "",
@@ -20712,7 +20712,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Forbidden Return — Return target Devotee card from your Tartarus to the battlefield Unprepared.",
+        "Forbidden Return — Return target Devotee card from your Tartarus to the Battlefield Unprepared.",
         "Soul Sacrifice — You lose {3}{S}."
       ],
       "habilidade_awaken_en": "",
@@ -20755,7 +20755,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Cosmo Amplification — Once each round, you may generate {1}{L}.",
-        "Crystal Overload — Sacrifice Universal Cosmo Crystal: Generate {2}{C} Latente. Activate only during your turn."
+        "Crystal Overload — Sacrifice Universal Cosmo Crystal: Generate {2}{L}. Activate only during your turn."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -20771,7 +20771,7 @@
       "subtitulo_pt": "Um Fragmento do Universo Infinito",
       "habilidades_pt": [
         "Amplificação de Cosmo — Uma vez por rodada, você pode gerar {1}{L}.",
-        "Sobrecarga de Cristal — Sacrifique Cristal de Cosmo Universal: Gere {2}{C} Latente. Ative apenas durante o seu turno."
+        "Sobrecarga de Cristal — Sacrifique Cristal de Cosmo Universal: Gere {2}{L}. Ative apenas durante o seu turno."
       ],
       "flavour_pt": "\"Dentro de um fragmento de cristal, a energia infinita do universo espera para ser despertada.\"",
       "tagline_pt": "Um Fragmento do Universo Infinito"
@@ -20887,7 +20887,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Freezing Coffin — When Crystal Saint enters the battlefield, you may pay {2}{C}. If you do, Seal target enemy Devotee.",
+        "Freezing Coffin — When Crystal Saint enters the Battlefield, you may pay {2}{C}. If you do, Seal target enemy Devotee.",
         "Frozen Discipline — Whenever an enemy Devotee becomes Sealed, Crystal Saint gets +1/+1 until end of round."
       ],
       "habilidade_awaken_en": "",
@@ -21015,7 +21015,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Binding Chains — When Spica enters the battlefield, you may pay {2}{C}. If you do, make target enemy Devotee Unprepared.",
+        "Binding Chains — When Spica enters the Battlefield, you may pay {2}{C}. If you do, make target enemy Devotee Unprepared.",
         "Twin Assault — Whenever Spica Strikes, if you control Leda, target enemy Devotee gets -2/-0 until end of round."
       ],
       "habilidade_awaken_en": "",
@@ -21057,7 +21057,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Thousand Feather Strike — When Shiva enters the battlefield, you may pay {2}{C}. If you do, deal 2 damage divided as you choose among up to two target enemy Devotees.",
+        "Thousand Feather Strike — When Shiva enters the Battlefield, you may pay {2}{C}. If you do, deal 2 damage divided as you choose among up to two target enemy Devotees.",
         "Mystic Meditation — Whenever you cast a Technique, Shiva gets +1/+0 until end of round."
       ],
       "habilidade_awaken_en": "",
@@ -21141,7 +21141,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Spider Web — When Arachne enters the battlefield, make target enemy Devotee Unprepared.",
+        "Spider Web — When Arachne enters the Battlefield, make target enemy Devotee Unprepared.",
         "Venomous Trap — Whenever an Unprepared enemy Devotee is defeated, you may draw 1 card, then discard 1 card. This ability triggers only once per turn."
       ],
       "habilidade_awaken_en": "",
@@ -21183,7 +21183,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Sanctuary Orders — When Gigas enters the battlefield, create a 1/1 colorless Sanctuary Soldier Devotee token.",
+        "Sanctuary Orders — When Gigas enters the Battlefield, create a 1/1 colorless Sanctuary Soldier Devotee Token.",
         "Political Manipulation — Once during your turn, you may pay {3}{C} and sacrifice another Devotee. If you do, draw 2 cards."
       ],
       "habilidade_awaken_en": "",
@@ -21192,7 +21192,7 @@
       "nome_exibicao_pt": "GIGAS, COMANDANTE DO SANTUÁRIO",
       "subtitulo_pt": "O Arquiteto da Traição",
       "habilidades_pt": [
-        "Ordens do Santuário — Quando Gigas entra no Campo de Batalha, crie uma ficha de Devoto incolor 1/1 chamada Soldado do Santuário.",
+        "Ordens do Santuário — Quando Gigas entra no Campo de Batalha, crie uma Ficha de Devoto incolor 1/1 chamada Soldado do Santuário.",
         "Manipulação Política — Uma vez durante o seu turno, você pode pagar {3}{C} e sacrificar outro Devoto. Se fizer isso, compre 2 cartas."
       ],
       "flavour_pt": "\"Ele não empunhava Armadura lendária nem poder divino, mas sua ambição ameaçava o próprio Santuário.\"",
@@ -21226,7 +21226,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Military Orders — Other Soldier Devotees you control get +1/+0.",
-        "Reinforcements — When Phaeton enters the battlefield, you may pay {2}{C}. If you do, create a 1/1 colorless Sanctuary Soldier Devotee token."
+        "Reinforcements — When Phaeton enters the Battlefield, you may pay {2}{C}. If you do, create a 1/1 colorless Sanctuary Soldier Devotee Token."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -21235,7 +21235,7 @@
       "subtitulo_pt": "A Mão do Falso Grande Mestre",
       "habilidades_pt": [
         "Ordens Militares — Os outros Devotos Soldados que você controla recebem +1 ATQ.",
-        "Reforços — Quando Faeton entra no Campo de Batalha, você pode pagar {2}{C}. Se fizer isso, crie uma ficha de Devoto incolor 1/1 chamada Soldado do Santuário."
+        "Reforços — Quando Faeton entra no Campo de Batalha, você pode pagar {2}{C}. Se fizer isso, crie uma Ficha de Devoto incolor 1/1 chamada Soldado do Santuário."
       ],
       "flavour_pt": "\"Ele seguia as ordens do Grande Mestre sem questionar as trevas por trás do trono.\"",
       "tagline_pt": "A Mão do Falso Grande Mestre"
@@ -21408,7 +21408,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Energy Conversion — Once each round, you may pay {1}{S}. If you do, generate {2}{L}.",
-        "Overloaded Circuits — Whenever Cosmo Converter generates Cosmo Latente, it does not ready during your next ready step."
+        "Overloaded Circuits — Whenever Cosmo Converter generates Latent Cosmo, it is not Prepared during your next Prepare Phase."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -21456,7 +21456,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Emergency Supplies — When Sanctuary Supply Chest enters the battlefield, draw 1 card, then discard 1 card.",
+        "Emergency Supplies — When Sanctuary Supply Chest enters the Battlefield, draw 1 card, then discard 1 card.",
         "Last Reserves — Pay {3}{C} and sacrifice Sanctuary Supply Chest: Draw 2 cards."
       ],
       "habilidade_awaken_en": "",
@@ -21717,7 +21717,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Arayashiki — Return up to 2 target Devotee cards from your Tartarus to the battlefield Unprepared.",
+        "Arayashiki — Return up to 2 target Devotee cards from your Tartarus to the Battlefield Unprepared.",
         "Transcend Mortality — Those Devotees cannot be defeated until the end of your next turn.",
         "The Price of Awakening — Lose {5}{S}."
       ],
