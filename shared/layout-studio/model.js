@@ -40,7 +40,7 @@ export const BINDINGS={
   'card.rarity':{label:'Raridade',read:c=>c.card.raridade},
   'card.type':{label:'Tipo',read:c=>c.card.tipo},
   'card.subtypes':{label:'Subtipos',read:c=>c.card.subtipos||[]},
-  'card.typeLine':{label:'Linha de tipo',read:c=>[c.card.tipo==='Spell'?null:c.card.tipo,...(c.card.subtipos||[]),c.card.faccao].filter(Boolean).map(typeWord).join(' — ')}, // PT: shared/card-i18n.js
+  'card.typeLine':{label:'Linha de tipo',read:c=>[c.card.tipo==='Spell'?null:c.card.tipo,...(c.card.subtipos||[])].filter(Boolean).map(typeWord).join(' — ')}, // PT: shared/card-i18n.js; sem a facção: o símbolo já mostra (autor, 01/11/2026)
   'card.cost':{label:'Custo impresso',read:c=>c.card.custo},
   'card.cosmoble':{label:'Cosmoble',read:c=>c.card.cosmoble},
   'card.rules':{label:'Habilidades aprovadas',read:c=>ruleParts(c.card).rules},

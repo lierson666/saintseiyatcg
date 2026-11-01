@@ -1,6 +1,6 @@
 import {renderRules,inlineMarkup,presentationRules,ruleBlocksWithoutKeywords,blocksMarkup} from './card-text.js?v=20261031-kw1';
 import {isArmor,isEquipment} from './card-model.js?v=20261024-4';
-import {renderPublishedCard,visualProject} from './layout-studio/runtime.js?v=20261031-kw1';
+import {renderPublishedCard,visualProject} from './layout-studio/runtime.js?v=20261101-tipo1';
 import {printedEquipmentBonuses,signedBonus,armorBonusText} from './card-visual-values.js?v=20261031-kw1';
 import {renderKeywordNotes} from './keyword-glossary.js?v=20261031-kw1';
 import {displayCard,keywordName,typeWord} from './card-i18n.js?v=20261031-kw1';

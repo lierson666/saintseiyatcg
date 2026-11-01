@@ -33,7 +33,7 @@
   "layouts": {
     "devotee": {
       "label": "Devotee (Saint) — base: FRAMES/ATHENA/BRONZE/PEGASUSV1.psd",
-      "typeLine": "{tipo} — {subtipos} — {faccao}",
+      "typeLine": "{tipo} — {subtipos}",
       "elements": [
         { "kind": "art" },
         { "kind": "frame" },
@@ -55,7 +55,7 @@
     },
     "relic_cloth": {
       "label": "Relic — Cloth — base: FRAMES/ATHENA/CLOTH/SAGGITARIUS-CLOTH.psd",
-      "typeLine": "{tipo} - {faccao} - {subtipos}",
+      "typeLine": "{tipo} - {subtipos}",
       "elements": [
         { "kind": "art" },
         { "kind": "frame" },
@@ -78,7 +78,7 @@
     },
     "relic_weapon": {
       "label": "Relic — Weapon — base: FRAMES/ATHENA/RELICS/LIBRA-SWORD.psd",
-      "typeLine": "{tipo} - {faccao} - {subtipos}",
+      "typeLine": "{tipo} - {subtipos}",
       "elements": [
         { "kind": "art" },
         { "kind": "frame" },
@@ -101,7 +101,7 @@
     },
     "relic": {
       "label": "Relic / Technique / Moment / Domain — base: FRAMES/ATHENA/RELICS/STAFFOFATHENA.psd e TECHNIQUE|MOMENT/ATHENSJUDGMENT.psd",
-      "typeLine": "{tipo} - {faccao}",
+      "typeLine": "{tipo}",
       "elements": [
         { "kind": "art" },
         { "kind": "frame" },
@@ -120,7 +120,7 @@
     },
     "god": {
       "label": "God — base: FRAMES/ATHENA/ATHENA.psd (layout simplificado: Awaken vai no bloco de regras)",
-      "typeLine": "{tipo} — {faccao} — {subtipos}",
+      "typeLine": "{tipo} — {subtipos}",
       "elements": [
         { "kind": "art" },
         { "kind": "frame" },
