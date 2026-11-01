@@ -41,6 +41,10 @@ self.ssI18nPT = {
     'Let your': 'Deixe seu', 'Cosmo burn': 'Cosmo queimar', 'Build a deck around your God and take it to the arena.': 'Monte um deck em torno do seu Deus e leve-o para a arena.',
     'My decks': 'Meus decks', 'Starters': 'Iniciais', 'Competitive': 'Competitivos', 'Mode': 'Modo', 'Battle vs AI': 'Batalha contra a IA',
     'Online': 'Online', 'Ladder': 'Ranqueada', 'Soon': 'Em breve', 'Ranked ladder: coming soon': 'Ranqueada: em breve', 'Challenge': 'Desafiar',
+    'Story': 'História', "The anime's story, single player": 'A história do anime, para um jogador', 'Ranked matches': 'Partidas ranqueadas',
+    'Challenge a friend to a duel': 'Desafie um amigo para um duelo', 'Choose your deck and the difficulty': 'Escolha seu deck e a dificuldade', 'Two players on this device': 'Dois jogadores neste aparelho',
+    'None online': 'Nenhum online', 'Open Friends': 'Abrir Amigos', 'Change deck': 'Trocar deck', '‹ Back': '‹ Voltar',
+    'Choose your deck': 'Escolha seu deck', 'Choose the AI deck': 'Escolha o deck da IA', 'Player A deck': 'Deck do Jogador A', 'Player B deck': 'Deck do Jogador B',
     'Friends online': 'Amigos online', 'Sign in to play online.': 'Entre na sua conta para jogar online.',
     'No friends online right now. Add friends in Friends.': 'Nenhum amigo online agora. Adicione amigos em Amigos.',
     'Pick a complete deck first': 'Escolha um deck completo antes', 'Your friend is busy': 'Seu amigo está ocupado',
@@ -252,6 +256,7 @@ self.ssI18nPT = {
   patterns: [
     ['{w0}s left', '{0}s restantes'], ['{w0} RESONANCE', 'RESSONÂNCIA DE {0}'], ['Source: {0}.', 'Origem: {0}.'], ['Affects: {0}.', 'Afeta: {0}.'], ['Cost: {0}.', 'Custo: {0}.'], ['{w0} damage incoming.', '{0} de dano a caminho.'], ['Source: {0}. Use it?', 'Origem: {0}. Usar?'], ['Affects: {0}. Use it?', 'Afeta: {0}. Usar?'], ['Cost: {0}. Use it?', 'Custo: {0}. Usar?'], ['Source: {0}. Cost: {1}. Use it?', 'Origem: {0}. Custo: {1}. Usar?'], ['Affects: {0}. Cost: {1}. Use it?', 'Afeta: {0}. Custo: {1}. Usar?'], ['Pay {w0} to keep your Spell from being countered?', 'Pagar {0} para sua Magia não ser anulada?'], ['Pay {0} · Return', 'Pagar {0} · Devolver'], ['{0} can return to your hand. Pay {1}?', '{0} pode voltar à sua mão. Pagar {1}?'], ['Draw {w0}', 'Comprar {0}'], ['Soul {w0}', 'Alma {0}'], ['Choose up to {w0}', 'Escolha até {0}'], ['Choose {w0}.', 'Escolha {0}.'],
     ['Saint Seiya TCG — {t0}', 'Saint Seiya TCG — {0}'], ['Use {0}', 'Usar {0}'],
+    ['Challenge sent to {0}. The duel starts when they accept.', 'Desafio enviado para {0}. O duelo começa quando for aceito.'],
     ['Friends {0}', 'Amigos {0}'], ['{0} friend requests', '{0} pedidos de amizade'], ['Round {w0} · Player {w1}', 'Rodada {w0} · Jogador {1}'], ['Player {w0}', 'Jogador {0}'],
     ['Pool {w0}', 'Reserva {0}'], ['Done ({0})', 'Concluir ({0})'], ['Step {0} of {1}', 'Passo {0} de {1}'],
     ['Player {w0} · Opening hand', 'Jogador {0} · Mão inicial'], ['Waiting for Player {w0}…', 'Aguardando o Jogador {0}…'], ['Trigger 1 of {0}', 'Gatilho 1 de {0}'],

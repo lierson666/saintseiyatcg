@@ -28,6 +28,8 @@ assert.equal(t('Pegasus Seiya enters the battlefield.'), 'Pegasus Seiya entra no
 assert.equal(t('Seiya · Ikki'), 'Seiya · Ikki'); // {t}: genérico só vale com um lado traduzido
 assert.equal(t('Bronze · Lv 3'), 'Bronze · Nv 3');
 assert.equal(t('Saint Seiya TCG — How to Play'), 'Saint Seiya TCG — Como Jogar');
+assert.equal(t('Story'), 'História'); // tela Jogar
+assert.equal(t('Challenge sent to Shiryu. The duel starts when they accept.'), 'Desafio enviado para Shiryu. O duelo começa quando for aceito.');
 assert.equal(t('Some new sentence.'), 'Some new sentence.'); // sem tradução: inglês
 assert.ok(ctx.ssI18n.missing.has('Some new sentence.'));
 assert.equal(t('Jogador A'), 'Jogador A'); // já traduzido não volta a passar

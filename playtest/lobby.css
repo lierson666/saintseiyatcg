@@ -576,3 +576,8 @@ body { font: 300 15px/1.45 var(--kv-sans); }
 .lb-achievements li { display: grid; gap: 2px; padding: 10px; border: 1px solid var(--kv-line); border-radius: 12px; opacity: .45; filter: grayscale(1); }
 .lb-achievements li.is-done { opacity: 1; filter: none; border-color: #e9c45c66; background: #e9c45c0f; }
 .lb-achievements b { font: 600 13px var(--kv-title); color: var(--kv-gold-2); } .lb-achievements small { font-size: 11px; color: var(--kv-muted); }
+
+/* Conta logada: Cosmo Hub e selos alargavam a barra e, com ela, a página inteira (cortava o JOGAR em 1440 e no celular). A barra rola sozinha. */
+.lb-top { overflow-x: auto; scrollbar-width: none; }
+.lb-top::-webkit-scrollbar { display: none; }
+.lb-top > * { flex: none; }

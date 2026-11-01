@@ -1,19 +1,18 @@
-/* Escolha de deck em tela cheia, estilo MTG Arena (lobby.js playPanel). Só a grade rola; PLAY fica fixo no rodapé. */
-.ds { position: fixed; inset: 0; z-index: 40; display: grid; grid-template-rows: auto auto minmax(0, 1fr) auto;
-  background: radial-gradient(120% 80% at 50% 0%, #1a2350f0, #05060cf7 70%); backdrop-filter: blur(10px); color: #f6ecd0; }
+/* Jogar (lobby.js playPanel): caminhos e confronto; a escolha de deck é um passo à parte, em tela cheia. Só o miolo rola; PLAY fica fixo no rodapé. */
+.ds { position: fixed; inset: 0; z-index: 40; display: grid; grid-template-rows: auto auto minmax(0, 1fr);
+  background: color-mix(in srgb, var(--kv-bg) 35%, transparent); color: var(--kv-ink); }
+/* Céu do KV atrás do Jogar: o que fica por baixo some da tela e do Tab. */
+body:has(.ds) .lb-top, .lb-home:has(> .ds) > :not(.ds) { visibility: hidden; }
 .ds.is-opening { animation: ds-in .32s cubic-bezier(.2, .8, .2, 1); }
 @keyframes ds-in { from { opacity: 0; transform: scale(1.02); } }
 
 .ds-head { display: flex; align-items: center; gap: 24px; padding: 18px clamp(16px, 4vw, 48px) 10px; }
-.ds-head h2 { margin: 0; font: italic 600 34px/1 var(--kv-title, Cinzel, serif); }
+.ds-head h2 { margin: 0; font: italic 400 36px/1 var(--kv-serif); letter-spacing: -.03em; outline: none; }
+.ds .lb-chip, .ds .lb-x, .ds select { min-height: 44px; min-width: 44px; }
+.ds .lb-x { width: 44px; height: 44px; }
 .ds-head .lb-x { margin-left: auto; }
-.ds-modes { display: flex; gap: 6px; padding: 4px; border: 1px solid #ffffff1f; border-radius: 999px; background: #0b0d14b3; }
-.ds-mode { min-height: 40px; padding: 0 20px; border: 0; border-radius: 999px; background: none; color: #d6d0c0; font: 600 14px var(--kv-sans, system-ui); letter-spacing: .04em; cursor: pointer; transition: background .2s, color .2s; }
-.ds-mode:hover { color: #fff; }
-.ds-mode.is-active { background: linear-gradient(180deg, #f6dc8a, #d9a93c); color: #1a1205; }
 
 .ds-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; padding: 6px clamp(16px, 4vw, 48px) 14px; border-bottom: 1px solid #ffffff14; }
-.ds-tools__title { margin: 0; font: 600 12px var(--kv-sans, system-ui); letter-spacing: .2em; text-transform: uppercase; color: var(--kv-gold, #e9c45c); }
 .ds-tools .lb-chips { margin: 0; }
 .ds-search { margin-left: auto; min-width: 220px; min-height: 40px; padding: 0 16px; border: 1px solid #ffffff26; border-radius: 999px; background: #0b0d14cc; color: #fff; font: 14px var(--kv-sans, system-ui); }
 .ds-search:focus-visible { outline: 2px solid var(--kv-gold, #e9c45c); outline-offset: 1px; }
@@ -57,9 +56,7 @@
 .ds-play { flex: none; width: min(300px, 32vw); }
 
 @media (max-width: 760px) {
-  .ds-head { gap: 12px; padding-top: 12px; } .ds-head h2 { font-size: 26px; }
-  .ds-modes { order: 3; width: 100%; } .ds-mode { flex: 1; padding: 0 10px; }
-  .ds-head { flex-wrap: wrap; } .ds-head .lb-x { order: 2; }
+  .ds-head { gap: 12px; padding-top: 12px; } .ds-head h2 { font-size: 30px; }
   .ds-search { margin-left: 0; width: 100%; min-width: 0; }
   .ds-row { grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 10px; }
   .ds-bar { flex-wrap: wrap; gap: 10px; }
@@ -71,12 +68,58 @@
 .ds-bar .lb-first { flex-wrap: nowrap; white-space: nowrap; }
 @media (max-width: 1100px) and (min-width: 761px) { .ds-slot { max-width: 200px; } .ds-play { width: 220px; } }
 
-/* Online contra amigo (01/11/2026): amigos online com Challenge no lugar do PLAY. */
-.ds-mode small { font-size: .7em; opacity: .7; margin-left: 4px; }
-.ds-mode:disabled { opacity: .45; cursor: not-allowed; }
+/* Online contra amigo (01/11/2026): amigos online com Challenge no lugar do PLAY, à esquerda porque o chat acoplado abre no canto direito. */
 .ds-bar--online { align-items: center; }
-.ds-friends { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-left: auto; min-width: 0; }
+.ds-friends { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; flex: 1; min-width: 0; max-height: 132px; overflow: auto; padding: 2px; }
 .ds-friend { display: flex; align-items: center; gap: 8px; padding: 6px 8px 6px 12px; border: 1px solid rgba(230, 195, 106, .3); border-radius: 999px; background: rgba(10, 14, 30, .7); }
 .ds-friend span { font-weight: 600; }
+.ds-friend small { font-size: 12px; opacity: .75; }
+.ds-friend .lb-chip:disabled { opacity: .45; cursor: not-allowed; }
+.ds-friends a.lb-chip { display: inline-flex; align-items: center; text-decoration: none; }
+.ds-friends__note { flex-basis: auto; }
 .ds-friend .kv-dot.is-busy { background: #e0a040; box-shadow: 0 0 8px #e0a040; }
 .ds-friends__note { margin: 0; opacity: .8; }
+
+/* Caminhos de Jogar (01/11/2026): quatro entradas de primeiro nível; Batalha local fica abaixo, em segundo plano. */
+.ds--hub { grid-template-rows: auto minmax(0, 1fr) auto; }
+.ds-back { flex: none; }
+.ds-body { display: flex; flex-direction: column; gap: 12px; min-height: 0; overflow: auto; padding: 6px clamp(16px, 4vw, 48px) 16px; overscroll-behavior: contain; }
+.ds-paths { flex: 1 0 auto; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: minmax(220px, 1fr); gap: 16px; }
+.ds-path { position: relative; isolation: isolate; display: flex; flex-direction: column; justify-content: flex-end; gap: 4px; padding: 18px; overflow: hidden; text-align: left; cursor: pointer;
+  border: 1px solid var(--kv-line); border-radius: var(--kv-radius); background: var(--kv-bg); color: var(--kv-ink); font: inherit; transition: transform .2s cubic-bezier(.2, .8, .2, 1), border-color .2s; }
+.ds-path::before { content: ""; position: absolute; inset: 0; z-index: -2; background: var(--art) center 20% / cover; transition: transform .5s cubic-bezier(.2, .8, .2, 1); }
+.ds-path::after { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(0deg, var(--kv-bg), color-mix(in srgb, var(--kv-bg) 88%, transparent) 96px, transparent 190px); } /* em px: cobre o texto em qualquer altura de cartão */
+.ds-path strong { font: 700 clamp(18px, 1.9vw, 26px)/1.15 var(--kv-title, Cinzel, serif); }
+.ds-path small { font-size: 14px; line-height: 1.35; color: var(--kv-ink); }
+.ds-path:not(.is-soon):hover { transform: translateY(-3px); border-color: var(--kv-gold); }
+.ds-path:not(.is-soon):hover::before { transform: scale(1.04); }
+.ds-path:focus-visible, .ds-local:focus-visible, .ds-slot:focus-visible { outline: 2px solid var(--kv-gold-2); outline-offset: 3px; }
+.ds-path.is-active { border-color: var(--kv-gold); }
+.ds-path.is-active > strong::before { content: "✓ "; color: var(--kv-gold); } /* selecionado não depende só da cor */
+.ds-path.is-soon { cursor: not-allowed; }
+.ds-path.is-soon::before { filter: grayscale(.85) brightness(.6); }
+.ds-path__soon { position: absolute; top: 12px; right: 12px; padding: 7px 10px 7px 14px; border: 1px solid var(--kv-line); border-radius: var(--kv-pill); background: var(--kv-bg); color: var(--kv-ink); }
+.ds-path__count { align-self: flex-start; margin-top: 4px; font-weight: 500; font-size: 14px; color: var(--kv-gold); }
+.ds-local { flex: none; align-self: flex-start; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; min-height: 44px; padding: 8px 18px; border: 1px solid var(--kv-line); border-radius: var(--kv-pill); background: var(--kv-glass); color: var(--kv-ink); font: inherit; text-align: left; cursor: pointer; transition: border-color .2s; }
+.ds-local strong { font-size: 14px; font-weight: 600; }
+.ds-local small { font-size: 14px; color: var(--kv-muted); }
+.ds-local:hover, .ds-local.is-active { border-color: var(--kv-gold); }
+.ds-local.is-active > strong::before { content: "✓ "; color: var(--kv-gold); }
+@media (max-width: 760px) {
+  .ds-paths { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: minmax(150px, 1fr); gap: 10px; }
+  .ds-path { padding: 12px; } .ds-path small { font-size: 12px; }
+  .ds-local { align-self: stretch; border-radius: 14px; }
+  .ds-friends { flex-basis: 100%; }
+  .ds-bar { padding-bottom: max(36px, env(safe-area-inset-bottom)); } /* selo de versão centrado no rodapé */
+}
+/* Telefone deitado: pouca altura, cartões baixos e o rodapé sem empilhar. */
+@media (max-height: 520px) {
+  .ds-head { padding-top: 8px; padding-bottom: 4px; } .ds-head h2 { font-size: 28px; }
+  .ds-paths { grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: minmax(116px, 1fr); gap: 8px; }
+  .ds-path { padding: 10px; }
+  .ds-bar { flex-wrap: wrap; gap: 8px; padding-top: 8px; padding-bottom: 8px; }
+  .ds-slot { padding-block: 3px; min-height: 44px; } .ds-slot__art { width: 28px; height: 36px; } .ds-slot small { display: none; }
+  .ds-play { height: 44px; min-height: 44px; }
+  .ds-friends { max-height: 72px; }
+}
+@media (prefers-reduced-motion: reduce) { .ds-path, .ds-path::before { transition: none; } }
