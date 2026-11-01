@@ -8,7 +8,7 @@ import {abilityText} from '../../shared/card-i18n.js';
 import {createMatch, mulligan} from '../engine-v3/match.js';
 import {startTurn, endTurn, pass, placeBase, spellCategory, runCheckpoint, ownBatch, loseGame} from '../engine-v3/core.js';
 import {inlineMarkup} from '../../shared/card-text.js?v=20261031-kw1';
-import {declareStrike, strikeTargets} from '../engine-v3/strike.js';
+import {declareStrike, strikeTargets, mustStrike} from '../engine-v3/strike.js';
 import {playDevotee, playEquipment, playSpell, activate, reequip, duplicateCharacter, resonant, castCost, mixed, castHidden} from '../engine-v3/play.js';
 import {atkOf, hpOf, keywordsOf, gearOf, isSaint, isBronze, ABILITIES} from '../engine-v3/effects.js';
 import {v6Spell, entryOf, V6} from '../engine-v3/v6/hooks.js';
@@ -21,7 +21,7 @@ import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, cloc
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
 import {createDirector} from './director.js?v=19';
-import {createAI} from './ai.js?v=12';
+import {createAI} from './ai.js?v=14';
 import {findDeck} from '../deck-store.js';
 import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-face3';
 import {unlock, playMusic} from '../audio.js?v=20261030-telas';
@@ -47,7 +47,7 @@ const why = e => WHY[e.decision] || (e.topic ? `Not in Alpha 0.1: ${e.topic}` : 
 
 const SETTINGS_KEY = 'ssTcgOlympusArena';
 const settings = {quality: 'high', theme: 'olympus', godB: 'god-athena', timeouts: false, speed: 'normal', skipDraws: false, reduceMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
-  reduceFlashes: false, shake: 1, hideOpponent: true, showActivity: true, autoPass: true, phaseTips: true, ai: 'B', cardText: '1.0', cardSize: '1.0'};
+  reduceFlashes: false, shake: 1, hideOpponent: true, showActivity: true, autoPass: true, phaseTips: true, ai: 'B', aiLevel: 'normal', cardText: '1.0', cardSize: '1.0'};
 try { Object.assign(settings, JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}')); } catch { /* sem armazenamento */ }
 settings.timeouts = true; // relógio do Arena sempre vale (autor, 31/10/2026); só ?timeouts=0 desliga, para QA
 const saveSettings = () => { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch { /* sem armazenamento */ } };
@@ -838,6 +838,7 @@ function overlays() {
       <label class="set"><span>Arena</span>${sel('theme', Object.fromEntries(Object.entries(THEMES).map(([k, t]) => [k, t.label])))}</label>
       <label class="set"><span>God of Player B (new match)</span>${sel('godB', {'god-athena': 'Athena', 'god-poseidon': 'Poseidon · fixture deck'})}</label>
       <label class="set"><span>Opponent (new match)</span>${sel('ai', {B: 'AI plays Player B', none: 'Hot-seat (two humans)'})}</label>
+      <label class="set"><span>AI difficulty</span>${sel('aiLevel', {easy: 'Easy', normal: 'Normal', hard: 'Hard'})}</label>
       <label class="set"><span>Animation speed</span>${sel('speed', {fast: 'Fast', normal: 'Normal', cinematic: 'Cinematic'})}</label>
       ${chk('phaseTips', 'Phase tips (control panel)')}${chk('autoPass', 'Auto-pass when you have no response (off = Full control)')}${chk('skipDraws', 'Skip draw animations')}${chk('showActivity', 'Show opponent activity')}${window.ssStage ? `<label class="set"><span>Card text size</span>${sel('cardText', window.ssStage.SIZES)}</label><label class="set"><span>Card size (hand and previews)</span>${sel('cardSize', window.ssStage.CARD)}</label>` : ''}${chk('reduceMotion', 'Reduce motion')}${chk('reduceFlashes', 'Reduce flashes')}${chk('hideOpponent', 'Hide the other hand (hot-seat)')}${chk('timeouts', 'Apply clock timeouts')}
       <label class="set"><span>Screen shake</span><input type="range" min="0" max="1.5" step=".25" value="${settings.shake}" data-setting="shake"></label>
@@ -2202,6 +2203,7 @@ function connectOnline() {
 // ---------- Oponente IA (settings.ai: 'B' ou 'none') ----------
 // A IA só escolhe; cada ação passa pela engine 3.0 como a do humano (mesmo act/reply, mesmas regras e animações).
 const ai = createAI({
+  level: () => settings.aiLevel, ctx: () => ctx, mustStrike: key => mustStrike(S(), ctx, key),
   S, info, num, known: uid => !!ctx.objects[uid], resonant: (key, armor, uid) => resonant(S(), ctx, key, armor, uid), duplicate: (key, uid) => !!duplicateCharacter(S(), ctx, key, uid), candidates, playableReason, canBase, STEPS,
   hp: uid => hpOf(S(), ctx, uid) - (S().units[uid]?.damage || 0), atk: uid => atkOf(S(), ctx, uid), isSaint: uid => isSaint(ctx, uid),
   strikeTargets: uid => strikeTargets(S(), ctx, uid), ultimateBlock: (key, trio) => ultimateBlock(S(), ctx, key, trio), greatFloodBlock: key => greatFloodBlock(S(), key),
@@ -2230,8 +2232,17 @@ async function aiTick() {
       if (pending?.pending === p) aiRefused = p;
       return;
     }
-    if (s.setup) { if (s.setup[0] === key) { await aiStage(key); await act({type: 'mulligan', key, choice: {uids: []}}); } return; }
-    if (s.window) { if (s.window.priority === key) await act({type: 'pass', key}); return; }
+    if (s.setup) { if (s.setup[0] === key) { await aiStage(key); await act({type: 'mulligan', key, choice: {uids: ai.mulligan(key)}}); } return; }
+    if (s.window) {
+      if (s.window.priority !== key) return;
+      const a = ai.respond(key), before = s.events.length;
+      if (!a) { await act({type: 'pass', key}); return; }
+      await aiStage(key, a);
+      if (S().events.length !== before || pending || mode || director.busy) return;
+      await act(a.run);
+      if (S().events.length === before && !pending) ai.refuse(a); // a engine recusou: passa na próxima vez
+      return;
+    }
     if (!idleFor(key)) return;
     const a = ai.next(key), before = s.events.length;
     await aiStage(key, a || {});
@@ -2264,6 +2275,7 @@ async function init() {
   const params = new URLSearchParams(location.search);
   if (params.get('godB')) settings.godB = `god-${params.get('godB')}`; // ?godB=poseidon
   if (params.get('ai')) settings.ai = params.get('ai'); // ?ai=B (padrão) ou ?ai=none (hot-seat)
+  if (['easy', 'normal', 'hard'].includes(params.get('level'))) settings.aiLevel = params.get('level'); // ?level=hard (QA)
   if (params.get('timeouts')) settings.timeouts = params.get('timeouts') === '1'; // ?timeouts=1 (QA)
   if (MATCH_ID) connectOnline(); // duelo online: a partida vem do servidor (a primeira visão chama render)
   else {

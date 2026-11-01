@@ -22,7 +22,7 @@ test('IA guarda a carta que cabe no próximo turno e põe como Base a que não c
 
 // Domains (rebalanceamento, 01/11/2026): a IA usa a Ressonância antes dos Strikes; a ativada de compra só com Soul de sobra.
 test('IA usa a Ressonância do Domain e, com Soul baixo, não usa a ativada de compra', () => {
-  const s = {turn: 3, divine: {A: {god: 'god-hades'}}, players: {A: {hand: [], bases: [], battlefield: [], soul: 8}}, order: ['A', 'B']};
+  const s = {turn: 3, divine: {A: {god: 'god-hades'}}, players: {A: {hand: [], bases: [], battlefield: [], soul: 8, deck: Array(30)}}, order: ['A', 'B']};
   const calls = [];
   const ai = createAI({S: () => s, info: () => ({}), known: () => true, canBase: () => false, playableReason: () => 'x', STEPS: {},
     domainUses: () => ({res: true, general: {cost: 0}}), activate: (key, uid) => calls.push(uid)});
@@ -33,4 +33,19 @@ test('IA usa a Ressonância do Domain e, com Soul baixo, não usa a ativada de c
   s.players.A.soul = 20;
   ai.next('A').run();
   assert.deepEqual(calls, ['domain:A:res', 'domain:A']);
+});
+
+// Dificuldade (autor, 01/11/2026): só easy deixa de responder; com deck curto, a IA não usa a compra que mói (deck vazio perde, §55).
+test('Moment de contra-mágica: easy passa, normal responde à Spell inimiga', () => {
+  const s = {turn: 4, active: 'B', events: [], chain: [{controller: 'B', uid: 'B:1', spell: true}], window: {priority: 'A'},
+    players: {A: {hand: ['A:9'], soul: 20}, B: {battlefield: []}}, order: ['A', 'B']};
+  const cards = {'A:9': {kind: 'Spell', text: 'Counter target enemy Moment or Technique.', cost: {amount: 2}}, 'B:1': {kind: 'Spell', cost: {amount: 3}}};
+  const make = level => createAI({level: () => level, S: () => s, info: u => cards[u], known: () => true, num: () => '133', STEPS: {}, playableReason: () => null, playSpell: () => {}});
+  assert.equal(make('easy').respond('A'), null);
+  assert.equal(make('normal').respond('A').src, 'A:9');
+});
+test('Compra que mói: com deck curto a IA não ativa', () => {
+  const s = {turn: 3, divine: {A: {god: 'god-hades'}}, players: {A: {hand: [], bases: [], battlefield: [], soul: 20, deck: Array(20)}}, order: ['A', 'B']};
+  const ai = createAI({S: () => s, info: () => ({}), known: () => true, canBase: () => false, playableReason: () => 'x', STEPS: {}, domainUses: () => ({res: false, general: {cost: 0}}), activate: () => {}});
+  assert.equal(ai.next('A'), null);
 });

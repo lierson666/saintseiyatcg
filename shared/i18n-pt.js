@@ -45,7 +45,7 @@ self.ssI18nPT = {
     'Pick a complete deck first': 'Escolha um deck completo antes', 'Your friend is busy': 'Seu amigo está ocupado',
     'Challenge to a duel': 'Desafiar para um duelo',
     'Local battle': 'Batalha local', 'Search decks': 'Buscar decks', 'Who starts': 'Quem começa', 'starts': 'começa', 'Choose a deck': 'Escolha um deck',
-    'Pick a deck': 'Escolha um deck', 'AI rival': 'Rival IA', 'Random deck': 'Deck aleatório', 'Choose rival': 'Escolher rival', 'VS': 'VS',
+    'AI difficulty': 'Dificuldade da IA', 'Easy': 'Fácil', 'Hard': 'Difícil', 'Pick a deck': 'Escolha um deck', 'AI rival': 'Rival IA', 'Random deck': 'Deck aleatório', 'Choose rival': 'Escolher rival', 'VS': 'VS',
     'No deck matches these filters.': 'Nenhum deck com esses filtros.', 'My player profile': 'Meu perfil de jogador', 'Cover': 'Capa', 'Duplicate': 'Duplicar', 'Change cover': 'Trocar capa', 'Starter decks are read-only': 'Decks iniciais não podem ser alterados',
 
     // Decks e editor

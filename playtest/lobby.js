@@ -185,6 +185,7 @@ function playPanel() {
         ? `<button class="ds-slot ds-slot--random" data-act="choose-rival"><span class="ds-slot__art" aria-hidden="true">?</span><span><small>AI rival</small><strong>Random deck</strong><em>Choose rival</em></span></button>`
         : slotChip('b')}</div>
       <div class="lb-first" role="group" aria-label="Who starts">${first.map(([v, l]) => `<button class="lb-chip ${ui.first === v ? 'is-on' : ''}" data-act="first-pick" data-value="${v}" aria-pressed="${ui.first === v}">${l}</button>`).join('')}<span>starts</span></div>
+      ${ui.mode === 'ai' ? `<label class="lb-first"><span>AI difficulty</span><select class="kv-input" style="width:auto;min-width:112px" data-act="match-set" data-key="aiLevel">${[['easy', 'Easy'], ['normal', 'Normal'], ['hard', 'Hard']].map(([v, l]) => `<option value="${v}" ${matchSettings().aiLevel === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label>` : ''}
       <button class="lb-play ds-play" data-act="start" ${ready ? '' : 'disabled'}>${ready ? 'Play' : 'Pick a deck'}</button>
     </footer>`}
   </section>`;
@@ -225,7 +226,7 @@ function decksScreen() {
 // Opções (autor, 31/10/2026): as mesmas do duelo (mesma chave do localStorage de playtest/divine/app.js) + tela cheia.
 const MATCH_KEY = 'ssTcgOlympusArena';
 const MATCH_DEFAULTS = {quality: 'high', theme: 'olympus', speed: 'normal', skipDraws: false, reduceMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
-  reduceFlashes: false, shake: 1, autoPass: true, phaseTips: true, cardText: '1.0', cardSize: '1.0'};
+  reduceFlashes: false, shake: 1, autoPass: true, phaseTips: true, aiLevel: 'normal', cardText: '1.0', cardSize: '1.0'};
 const matchSettings = () => { try { return {...MATCH_DEFAULTS, ...JSON.parse(localStorage.getItem(MATCH_KEY) || '{}')}; } catch { return {...MATCH_DEFAULTS}; } };
 const setMatch = (key, value) => { try { localStorage.setItem(MATCH_KEY, JSON.stringify({...matchSettings(), [key]: value})); } catch { /* sem armazenamento */ } };
 const THEME_LABELS = {olympus: 'Olympus Arena', athena: "Athena's Sanctuary", poseidon: "Poseidon's Undersea Temple"}; // = THEMES de divine/scene.js
@@ -243,6 +244,7 @@ function options() {
     ${sel('quality', 'Graphics', {low: 'Low', medium: 'Medium', high: 'High', ultra: 'Ultra'})}${sel('theme', 'Arena', THEME_LABELS)}
     <h2 class="lb-options__h">Sound</h2>${row('music', 'Music')}${row('sfx', 'Sound effects')}
     <h2 class="lb-options__h">Gameplay</h2>
+    ${sel('aiLevel', 'AI difficulty', {easy: 'Easy', normal: 'Normal', hard: 'Hard'})}
     ${sel('speed', 'Animation speed', {fast: 'Fast', normal: 'Normal', cinematic: 'Cinematic'})}
     ${chk('phaseTips', 'Phase tips (control panel)')}${chk('autoPass', 'Auto-pass when you have no response')}${chk('skipDraws', 'Skip draw animations')}
     <h2 class="lb-options__h">Accessibility</h2>
