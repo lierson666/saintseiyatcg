@@ -104,12 +104,12 @@ async function handle(req, res) {
   send(res, 200, {version: rec.version});
 }
 
-// Abandono: confere a cada 10 s quem está sem conexão há mais de 90 s.
+// Abandono (sem conexão há mais de 90 s) e relógio do Arena: confere a cada segundo.
 setInterval(() => {
   const before = new Map([...arena.matches.values()].map(r => [r, r.version]));
   arena.sweep();
   for (const [rec, v] of before) if (rec.version !== v) broadcast(rec);
-}, 10000);
+}, 1000);
 
 http.createServer((req, res) => handle(req, res).catch(e => { console.error(e); if (!res.headersSent) send(res, e.status || 500, {error: e.status ? e.message : 'Server error.'}); }))
   .listen(PORT, () => console.log(`arena-server on :${PORT}`));

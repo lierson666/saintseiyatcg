@@ -214,7 +214,7 @@ function decksScreen() {
 // Opções (autor, 31/10/2026): as mesmas do duelo (mesma chave do localStorage de playtest/divine/app.js) + tela cheia.
 const MATCH_KEY = 'ssTcgOlympusArena';
 const MATCH_DEFAULTS = {quality: 'high', theme: 'olympus', speed: 'normal', skipDraws: false, reduceMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
-  reduceFlashes: false, shake: 1, autoPass: true, phaseTips: true, timeouts: false, cardText: '1.0', cardSize: '1.0'};
+  reduceFlashes: false, shake: 1, autoPass: true, phaseTips: true, cardText: '1.0', cardSize: '1.0'};
 const matchSettings = () => { try { return {...MATCH_DEFAULTS, ...JSON.parse(localStorage.getItem(MATCH_KEY) || '{}')}; } catch { return {...MATCH_DEFAULTS}; } };
 const setMatch = (key, value) => { try { localStorage.setItem(MATCH_KEY, JSON.stringify({...matchSettings(), [key]: value})); } catch { /* sem armazenamento */ } };
 const THEME_LABELS = {olympus: 'Olympus Arena', athena: "Athena's Sanctuary", poseidon: "Poseidon's Undersea Temple"}; // = THEMES de divine/scene.js
@@ -233,7 +233,7 @@ function options() {
     <h2 class="lb-options__h">Sound</h2>${row('music', 'Music')}${row('sfx', 'Sound effects')}
     <h2 class="lb-options__h">Gameplay</h2>
     ${sel('speed', 'Animation speed', {fast: 'Fast', normal: 'Normal', cinematic: 'Cinematic'})}
-    ${chk('phaseTips', 'Phase tips (control panel)')}${chk('autoPass', 'Auto-pass when you have no response')}${chk('skipDraws', 'Skip draw animations')}${chk('timeouts', 'Apply clock timeouts')}
+    ${chk('phaseTips', 'Phase tips (control panel)')}${chk('autoPass', 'Auto-pass when you have no response')}${chk('skipDraws', 'Skip draw animations')}
     <h2 class="lb-options__h">Accessibility</h2>
     ${window.ssStage ? `${sel('cardText', 'Card text size', window.ssStage.SIZES)}${sel('cardSize', 'Card size (hand and previews)', window.ssStage.CARD)}` : ''}
     ${chk('reduceMotion', 'Reduce motion')}${chk('reduceFlashes', 'Reduce flashes')}

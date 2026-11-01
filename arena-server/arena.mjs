@@ -5,9 +5,13 @@ import {createMatch} from '../playtest/engine-v3/match.js';
 import {applyAction, advance} from '../playtest/engine-v3/actions.js';
 import {runDecisions, resume, restore, snapshot, PendingDecision} from '../playtest/engine-v3/decision.js';
 import {eventsFor, loseGame} from '../playtest/engine-v3/core.js';
+import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockIdle, clockRemaining, clockExpired} from '../playtest/engine-v3/clock.js';
 
 const opaque = key => `${key}:${randomBytes(6).toString('hex')}`; // uid sem o número da carta (não revela carta escondida)
 const RECONNECT_SECONDS = 90;
+// shortcut: o servidor não sabe quanto a animação demora na tela (G3-025); cada mudança dá esta folga ao relógio de quem
+// decide. Trocar por aviso de "animação terminou" do cliente se a folga ficar curta ou longa demais.
+const ANIMATION_GRACE = 3;
 
 // Serialização da visão: Set e Map viram listas marcadas; funções (gatilhos, onClose) ficam no servidor.
 export function toJSON(v) {
@@ -31,7 +35,8 @@ export function createArena({cards, canonIndex, catalog = () => ({cards, canonIn
     const gods = {A: decks.A.god || 'god-athena', B: decks.B.god || 'god-athena'};
     const match = createMatch({cards, canonIndex, decks, gods, seed, uidFor: opaque});
     const rec = {id, players, match, ctx: {cards, objects: match.objects, attached: match.attached}, pending: null,
-      seen: {A: now(), B: now()}, version: 0, created: now()};
+      seen: {A: now(), B: now()}, version: 0, created: now(), clock: createClock(match.state.order), clockSeen: 0};
+    sync(rec);
     matches.set(id, rec);
     return rec;
   }
@@ -40,6 +45,28 @@ export function createArena({cards, canonIndex, catalog = () => ({cards, canonIn
   function commit(rec, r, run) {
     rec.pending = r.pending ? {...r, run} : null;
     rec.version++;
+    sync(rec);
+  }
+  // Relógio do Arena (G3-024..031) no servidor: segue os eventos novos e corre para quem decide agora.
+  function sync(rec) {
+    const s = rec.match.state, c = rec.clock, t = now();
+    for (const e of s.events.slice(Math.min(rec.clockSeen, s.events.length))) {
+      if (e.type === 'end_phase') clockEndTurn(c, e.player, t);
+      if (e.type === 'turn_start') clockStartTurn(c, e.player, t);
+    }
+    rec.clockSeen = s.events.length;
+    if (s.victory || s.setup || !s.turn) return clockIdle(c, t);
+    clockHandTo(c, rec.pending ? rec.pending.pending.player : s.window ? s.window.priority : s.active, t);
+    c.running.since = t + ANIMATION_GRACE;
+  }
+  // Tempo esgotado (G3-027): escolha pendente → {timeout: true} (G3-030); janela → passa; fase principal → END TURN.
+  function timeout(rec) {
+    const key = !rec.match.state.victory && clockExpired(rec.clock, now());
+    if (!key) return;
+    try {
+      if (!rec.pending) act(rec, key, {type: 'timeout'});
+      else if (rec.pending.pending.player === key) answer(rec, key, {timeout: true});
+    } catch (e) { console.error('timeout', rec.id, e); clockIdle(rec.clock, now()); } // não tenta de novo a cada segundo
   }
   // Ação do jogador `key` (o servidor sobrescreve a chave: ninguém age pelo outro). Erro de regra desfaz tudo.
   function act(rec, key, action) {
@@ -69,6 +96,7 @@ export function createArena({cards, canonIndex, catalog = () => ({cards, canonIn
     if (rec.pending) { restore(s, rec.ctx, rec.pending.snap); rec.pending = null; }
     loseGame(s, key, reason);
     rec.version++;
+    sync(rec);
   }
   // Batimento da conexão; quem some por mais de 90 s perde por abandono.
   function heartbeat(rec, key) { rec.seen[key] = now(); }
@@ -76,6 +104,7 @@ export function createArena({cards, canonIndex, catalog = () => ({cards, canonIn
     for (const rec of matches.values()) {
       const s = rec.match.state;
       if (!s.victory) for (const key of ['A', 'B']) if (now() - rec.seen[key] > RECONNECT_SECONDS) { concede(rec, key, 'abandon'); break; }
+      timeout(rec);
       if (s.victory && now() - rec.created > 6 * 3600) matches.delete(rec.id);
     }
   }
@@ -90,7 +119,8 @@ export function createArena({cards, canonIndex, catalog = () => ({cards, canonIn
     const objects = Object.fromEntries(Object.entries(rec.match.objects).filter(([uid]) => !hidden.has(uid)));
     const state = toJSON({...s, events: eventsFor(s, viewer), pending});
     state.players[foe].bases = s.players[foe].bases.map(b => ({uid: b.uid, prepared: b.prepared}));
-    return {id: rec.id, version: rec.version, you: viewer, players: rec.players, state, objects, attached: toJSON(rec.match.attached), ending: !!rec.match.ending};
+    const clock = {running: rec.clock.running?.key || null, players: Object.fromEntries(s.order.map(k => [k, clockRemaining(rec.clock, k, now())]))};
+    return {id: rec.id, version: rec.version, you: viewer, players: rec.players, state, objects, attached: toJSON(rec.match.attached), ending: !!rec.match.ending, clock};
   }
 
   return {matches, create, keyOf, act, answer, concede, heartbeat, sweep, view, get: id => matches.get(id)};

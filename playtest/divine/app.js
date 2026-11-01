@@ -48,6 +48,7 @@ const SETTINGS_KEY = 'ssTcgOlympusArena';
 const settings = {quality: 'high', theme: 'olympus', godB: 'god-athena', timeouts: false, speed: 'normal', skipDraws: false, reduceMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
   reduceFlashes: false, shake: 1, hideOpponent: true, autoPass: true, phaseTips: true, ai: 'B', cardText: '1.0', cardSize: '1.0'};
 try { Object.assign(settings, JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}')); } catch { /* sem armazenamento */ }
+settings.timeouts = true; // relógio do Arena sempre vale (autor, 31/10/2026); só ?timeouts=0 desliga, para QA
 const saveSettings = () => { try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings)); } catch { /* sem armazenamento */ } };
 
 let canon, cards, index, decks, match, ctx, scene = null, director, clock;
@@ -384,12 +385,13 @@ function updateClock() {
   const dc = $('[data-decision-clock]');
   if (dc && key) { dc.textContent = `${t}s left`; dc.classList.toggle('urgent', r.total <= 20); }
 }
-// Timeout (desligado por padrão no playtest local; Settings ou ?timeouts=1 ligam). G3-027: escolha opcional pendente →
+// Timeout (sempre ligado; ?timeouts=0 desliga para QA; online quem aplica é o arena-server). G3-027: escolha opcional pendente →
 // TIMEOUT_DECLINED; obrigatória → TIMEOUT_AUTO_CHOICE (G3-030, na engine); janela → TIMEOUT_PASS_PRIORITY; fase de
 // ações → TIMEOUT_END_TURN. Uma escolha de alvo começada pela interface (mode) não é decisão da engine: é cancelada e
 // o timeout da janela ou do turno vale. Fechar o modal (View board) não é timeout.
 function tickClock() {
   updateClock();
+  if (online) return; // online o servidor tem o relógio e aplica o timeout (arena-server/arena.mjs)
   const s = S(), key = clock && !clock.paused && clockExpired(clock, now());
   if (!settings.timeouts || !key || director.busy || s.victory || s.setup) return;
   if (pending) { if (pending.pending.player === key) reply({timeout: true}); return; }
@@ -2073,13 +2075,13 @@ function concedeOnline() {
 async function applyView(view) {
   const first = !match, from = first ? 0 : S().events.length;
   online.key = view.you;
-  settings.ai = view.state.order.find(k => k !== view.you); settings.hideOpponent = true; settings.timeouts = false;
+  settings.ai = view.state.order.find(k => k !== view.you); settings.hideOpponent = true;
   match = {state: revive(view.state), objects: view.objects, attached: revive(view.attached), ending: view.ending};
   ctx = {cards, objects: match.objects, attached: match.attached};
   const s = S(), req = s.pending;
   pending = req ? {pending: req, picked: [], peek: true, shown: s.events.length} : null;
   mode = null;
-  if (first) { mountNameplates({online: true, players: view.players, you: view.you}).then(r => useSleeves(r, view.you)); clock = createClock(s.order); seenEvents = s.events.length; watchEvents.seen = 0; return render(); }
+  if (first) { mountNameplates({online: true, players: view.players, you: view.you}).then(r => useSleeves(r, view.you)); clock = createClock(s.order); serverClock(view.clock); seenEvents = s.events.length; watchEvents.seen = 0; return render(); }
   const events = s.events.slice(from);
   seenEvents = s.events.length;
   syncClock(events);
@@ -2087,10 +2089,18 @@ async function applyView(view) {
   try { await director.play(events); } catch (err) { console.error(err); }
   render.lock = false;
   rankHook(events);
+  serverClock(view.clock);
   render();
   focusDecision();
   // Auto-pass do lado do jogador: sem resposta possível, passa a prioridade sozinho.
   if (s.window && !s.victory && !pending && s.window.priority === view.you && settings.autoPass && !hasResponse(view.you)) sendOnline('action', {action: {type: 'pass'}});
+}
+// Relógio online: o do servidor manda; entre uma visão e outra a tela só conta para mostrar.
+function serverClock(c) {
+  if (!c) return;
+  for (const [k, r] of Object.entries(c.players)) Object.assign(clock.players[k], {basic: r.basic, reserve: r.reserve});
+  clock.running = c.running ? {key: c.running, since: now()} : null;
+  clock.paused = false;
 }
 function connectOnline() {
   online = {id: MATCH_ID, key: null, queue: Promise.resolve()};
