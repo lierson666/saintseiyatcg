@@ -110,7 +110,7 @@ export function announceExclamation(state, ctx, key, saints) {
   spendBase(state, key, cost);
   state.divine[key].ultimateUsed = true;
   emit(state, 'ultimate_announced', {player: key, ability: 'ATHENA EXCLAMATION', cost, saints: [...saints]});
-  pushTriggers(state, [{controller: key, uid: `ultimate:${key}`, ability: 'ATHENA EXCLAMATION', run: st => resolveExclamation(st, ctx, key, saints)}]);
+  pushTriggers(state, [{controller: key, activated: true, uid: `ultimate:${key}`, ability: 'ATHENA EXCLAMATION', run: st => resolveExclamation(st, ctx, key, saints)}]);
 }
 
 function resolveExclamation(state, ctx, key, saints) {
@@ -155,7 +155,7 @@ export function removeJudgment(state, ctx, key, devotees) {
   }
   for (const uid of devotees) destroyDevotee(state, uid, ctx.objects, ctx.attached);
   emit(state, 'judgment_removal', {player: key, sacrificed: [...devotees], id: j.id});
-  pushTriggers(state, [{controller: key, uid: `judgment-removal:${j.id}`, ability: 'DIVINE JUDGMENT', run: st => {
+  pushTriggers(state, [{controller: key, activated: true, uid: `judgment-removal:${j.id}`, ability: 'DIVINE JUDGMENT', run: st => {
     if (st.divine[key].judgment?.id === j.id) { st.divine[key].judgment = null; emit(st, 'judgment_removed', {player: key, id: j.id}); }
   }}]);
 }
@@ -174,7 +174,7 @@ hooks.strikeDeclared.push((state, ctx, attacker, controller) => poseidons(state)
   .filter(key => key !== controller && !state.roundUses.has(`god:${key}:water-prison`))
   .map(key => {
     // Water Prison sobre atacante já Sealed: soma +1 Seal (autor, 30/10/2026).
-    return {controller: key, uid: `water-prison:${attacker}`, ability: 'WATER PRISON', run: st => {
+    return {controller: key, ctx, uid: `water-prison:${attacker}`, ability: 'WATER PRISON', run: st => {
       const once = `god:${key}:water-prison`;
       if (st.roundUses.has(once) || st.players[key].latent < 2) return;
       if (!ask(ctx, key, {ability: 'WATER PRISON', uid: attacker, cost: {latent: 2}})) {
@@ -196,7 +196,7 @@ hooks.strikeDeclared.push((state, ctx, attacker, controller) => poseidons(state)
 hooks.sealed.push((state, ctx, transitions) => poseidons(state)
   .filter(key => state.divine[key].awaken)
   .flatMap(key => transitions.filter(t => t.controller && t.controller !== key).map(({uid, controller}) => (
-    {controller: key, uid: `pressure:${uid}`, ability: 'PRESSURE OF THE DEEP', millPlayer: controller, run: st => {
+    {controller: key, ctx, uid: `pressure:${uid}`, ability: 'PRESSURE OF THE DEEP', millPlayer: controller, run: st => {
       emit(st, 'divine_power', {player: key, ability: 'PRESSURE OF THE DEEP', uid, millPlayer: controller});
       mill(st, controller, 2);
       draw(st, key, 1);
@@ -219,7 +219,7 @@ export function announceGreatFlood(state, ctx, key) {
   spendBase(state, key, GREAT_FLOOD_COST);
   state.divine[key].ultimateUsed = true;
   emit(state, 'ultimate_announced', {player: key, ability: 'GREAT FLOOD', cost: GREAT_FLOOD_COST});
-  pushTriggers(state, [{controller: key, uid: `ultimate:${key}`, ability: 'GREAT FLOOD', run: st => resolveGreatFlood(st, ctx, key)}]);
+  pushTriggers(state, [{controller: key, activated: true, uid: `ultimate:${key}`, ability: 'GREAT FLOOD', run: st => resolveGreatFlood(st, ctx, key)}]);
 }
 
 // Escolha de quem decide (D231; descarte pela G3-034): `ctx.decide` devolve a escolha; fora das opções legais é erro,
@@ -292,7 +292,7 @@ function announceUltimate(state, ctx, key, god, ability, cost, resolve) {
   spendBase(state, key, cost);
   state.divine[key].ultimateUsed = true;
   emit(state, 'ultimate_announced', {player: key, ability, cost});
-  pushTriggers(state, [{controller: key, uid: `ultimate:${key}`, ability, run: st => resolve(st, ctx, key)}]);
+  pushTriggers(state, [{controller: key, activated: true, uid: `ultimate:${key}`, ability, run: st => resolve(st, ctx, key)}]);
 }
 
 // ---------- Hades ----------
@@ -351,7 +351,7 @@ export function activateBloodlust(state, ctx, key, uid) {
   payMixed(state, key, bloodlustSplit(state, key));
   useOncePerRound(state, `god:${key}:bloodlust`);
   emit(state, 'divine_power', {player: key, ability: 'BLOODLUST', uid});
-  pushTriggers(state, [{controller: key, uid: `bloodlust:${uid}`, ability: 'BLOODLUST', run: st => {
+  pushTriggers(state, [{controller: key, activated: true, uid: `bloodlust:${uid}`, ability: 'BLOODLUST', run: st => {
     if (!k.onField(st, key, uid)) return;
     k.prepare(st, uid);
     k.buff(st, uid, 1, 0, 'this_round');
@@ -435,7 +435,7 @@ function scanGods(state) {
     const mine = gone.filter(e => ctx.objects[e.uid].owner === key); // shortcut: dono, não controlador; trocar quando houver troca de controle
     const once = `god:${key}:offering`;
     for (const {uid: first} of mine) {
-      triggers.push({controller: key, uid: `offering:${first}`, ability: 'OFFERING OF LIFE', run: st => {
+      triggers.push({controller: key, ctx, uid: `offering:${first}`, ability: 'OFFERING OF LIFE', run: st => {
         if (st.victory || st.roundUses.has(once) || st.players[key].soul < 1) return;
         if (!ask(ctx, key, {ability: 'OFFERING OF LIFE', uid: first, cost: {soul: 2}})) { emit(st, 'divine_power_declined', {player: key, ability: 'OFFERING OF LIFE', uid: first}); return; }
         useOncePerRound(st, once);
@@ -447,7 +447,7 @@ function scanGods(state) {
     }
     // King of Tartarus (Awaken): um gatilho por Devotee que voltou do próprio Tartarus.
     if (state.divine[key].awaken) for (const e of events.filter(e => e.type === 'card_played' && e.from === 'tartarus' && e.player === key && e.kind === 'Devotee')) {
-      triggers.push({controller: key, uid: `king:${e.uid}`, ability: 'KING OF TARTARUS', run: st => {
+      triggers.push({controller: key, ctx, uid: `king:${e.uid}`, ability: 'KING OF TARTARUS', run: st => {
         if (st.victory) return;
         emit(st, 'divine_power', {player: key, ability: 'KING OF TARTARUS', uid: e.uid});
         if (loseSoul(st, {[other(st, key)]: 1}, 'loss')) return;
@@ -466,7 +466,7 @@ function scanGods(state) {
         strike = e;
         const key = e.player;
         if (ares.includes(key) && state.divine[key].obliteration === e.round) {
-          triggers.push({controller: key, uid: `obliteration:${e.attacker}`, ability: 'OBLITERATION', run: st => {
+          triggers.push({controller: key, ctx, uid: `obliteration:${e.attacker}`, ability: 'OBLITERATION', run: st => {
             if (st.victory || !k.onField(st, key, e.attacker)) return;
             k.defeat(st, ctx, e.attacker); // D205: derrota que não pode ser prevenida (k.defeat ignora prevenção)
           }});
@@ -474,7 +474,7 @@ function scanGods(state) {
       } else if (strike && e.type === 'destroyed' && strike.target?.kind === 'devotee' && (e.uid === strike.target.uid || e.uid === strike.attacker) && isDevoteeUid(ctx, e.uid)) {
         const killerSide = e.uid === strike.target.uid ? strike.player : other(state, strike.player);
         if (ares.includes(killerSide) && state.divine[killerSide].awaken) {
-          triggers.push({controller: killerSide, uid: `butchery:${e.uid}`, ability: 'BUTCHERY', run: st => {
+          triggers.push({controller: killerSide, ctx, uid: `butchery:${e.uid}`, ability: 'BUTCHERY', run: st => {
             if (st.victory) return;
             emit(st, 'divine_power', {player: killerSide, ability: 'BUTCHERY', uid: e.uid});
             loseSoul(st, {[other(st, killerSide)]: 1}, 'loss');

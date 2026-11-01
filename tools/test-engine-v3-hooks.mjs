@@ -39,9 +39,11 @@ register({
     watchSurvive: (s, c, key, self, unit, role) => { log.push(['watchSurvive', unit, role]); },
     watchDamagePrevented: (s, c, key, self, unit, info) => { log.push(['watchPrevented', unit, info.prevented]); },
     watchLeaves: (s, c, key, self, left, where) => st => { log.push(['watchLeaves', left, where]); },
-    watchSpell: (s, c, key, self, caster, spellUid) => caster !== key && (st => { if (k.counterSpell(st, c, spellUid)) log.push(['countered', spellUid]); }),
+    // st === s: o ensaio do §56 (gatilho sem efeito não dispara) roda o corpo numa cópia; o log é só da resolução real.
+    watchSpell: (s, c, key, self, caster, spellUid) => caster !== key && (st => { if (k.counterSpell(st, c, spellUid) && st === s) log.push(['countered', spellUid]); }),
   },
-  't-obs2': {watchSpell: (s, c, key, self, caster, spellUid) => st => { log.push(['sawSpell', spellUid, k.spellOnChain(st, spellUid)]); }},
+  // `seen`: o gatilho precisa ter efeito para disparar (§56); o log só na resolução real.
+  't-obs2': {watchSpell: (s, c, key, self, caster, spellUid) => st => { st.seen = (st.seen || 0) + 1; if (st === s) log.push(['sawSpell', spellUid, k.spellOnChain(st, spellUid)]); }},
   't-gear': {
     gearSurvive: (s, c, key, self, bearer, role) => { log.push(['gearSurvive', bearer, role]); },
     gearDamagePrevented: (s, c, key, self, bearer, info) => { log.push(['gearPrevented', bearer, info.prevented]); },

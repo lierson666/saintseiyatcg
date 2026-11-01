@@ -35,7 +35,7 @@ export function emit(state, type, data = {}) {
 // passagens de turno (G3-003); `roundEnd`: gatilhos extras do checkpoint de fim de Round (D204), ex.: Divine Judgment;
 // `strikeDeclared(state, ctx, attacker, controller)` e `sealed(state, ctx, transitions)` devolvem gatilhos (ex.: Poseidon).
 // `turnStart`/`turnEnd(state)`: gatilhos de início/fim do turno do ativo (cartas V6, v6/hooks.js).
-export const hooks = {checkpoint: [], roundEnd: [], strikeDeclared: [], sealed: [], turnStart: [], turnEnd: []};
+export const hooks = {checkpoint: [], roundEnd: [], strikeDeclared: [], sealed: [], turnStart: [], turnEnd: [], idleTrigger: []};
 export function runCheckpoint(state) { if (!state.victory) for (const fn of hooks.checkpoint) fn(state); }
 
 // Visibilidade (G3-019): o adversário não vê qual carta foi comprada nem qual voltou no mulligan.
@@ -267,12 +267,21 @@ export function assertIdle(state) {
 // D187: gatilhos simultâneos entram em APNAP (ativo primeiro), então o não ativo resolve primeiro.
 // `triggers`: [{controller, run(state)}], na ordem que cada controlador escolheu.
 // Cada lote ganha um id; o controlador pode reordenar os próprios itens dele enquanto todos seguem na cadeia (§56, 31/10/2026).
+// Guia §56 (autor, 31/10/2026): gatilho que não pode ser usado no disparo não dispara (nem cadeia, nem janela, nem log).
+// `hooks.idleTrigger(state, t)` diz se ele resolveria sem efeito agora (v6/hooks.js, só gatilho com `t.ctx`); a resolução checa de novo.
+// O "once each round" gasto ao gerá-lo (`t.uses`) volta. `activated`: habilidade paga (Ultimate etc.), sempre vai à cadeia.
+const fires = state => t => {
+  if (t.activated || !hooks.idleTrigger.some(fn => fn(state, t))) return true;
+  for (const tag of t.uses || []) state.roundUses.delete(tag);
+  return false;
+};
 export function pushTriggers(state, triggers, onClose) {
-  if (!triggers.length) return;
+  triggers = triggers.filter(fires(state));
+  if (!triggers.length) { onClose?.(state); return; }
   const batch = state.batchSeq = (state.batchSeq || 0) + 1;
   state.lastBatch = {id: batch};
   for (const key of [state.active, other(state, state.active)]) {
-    const mine = triggers.filter(t => t.controller === key).map(t => ({...t, batch}));
+    const mine = triggers.filter(t => t.controller === key).map(({ctx, uses, ...t}) => ({...t, batch})); // ctx/uses: só para o ensaio
     state.lastBatch[key] = mine.length;
     state.chain.push(...mine);
     for (const m of mine) emit(state, 'trigger', {player: key, uid: m.uid, ability: m.ability});

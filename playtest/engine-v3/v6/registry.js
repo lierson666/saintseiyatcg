@@ -128,8 +128,8 @@ const nameOf = (ctx, self, fallback) => (String(self).startsWith('domain:') ? 'D
 export function collect(state, ctx, keys, hook, args, label) {
   const out = [];
   for (const key of keys) for (const {self, entry} of sources(state, ctx, key)) {
-    const run = entry[hook]?.(state, ctx, key, self, ...args);
-    if (run) out.push(trigger(key, self, `${nameOf(ctx, self, label)} · ${label}`, run));
+    const used = state.roundUses.size, run = entry[hook]?.(state, ctx, key, self, ...args);
+    if (run) out.push({...trigger(key, self, `${nameOf(ctx, self, label)} · ${label}`, run), ctx, uses: [...state.roundUses].slice(used)});
   }
   return out;
 }

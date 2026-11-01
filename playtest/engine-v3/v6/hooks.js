@@ -1,7 +1,8 @@
 // Pontos da engine 3.0 que chamam os efeitos V6 (registry.js). A engine importa só este arquivo.
 import {hooks, pushTriggers, emit} from '../core.js';
 import {resonates} from '../../../shared/canon-cards.js';
-import {V6, entryOf, collect, trigger, contextOf, register, sources, domainEntry} from './registry.js';
+import {V6, entryOf, collect, trigger, contextOf, bindContext, register, sources, domainEntry} from './registry.js';
+import {clone} from '../decision.js';
 import {setDefeatedHooks, setEnteredHooks, setLeavesHooks, setDamagedHooks} from './kit.js';
 import hades from './hades.js';
 import poseidon from './poseidon.js';
@@ -18,9 +19,24 @@ export {V6, entryOf, bindContext, contextOf} from './registry.js';
 
 const nameOf = (ctx, uid) => ctx.cards.get(ctx.objects[uid]?.cardId)?.name || uid;
 const own = (state, ctx, key, uid, hook, args, label) => {
-  const run = entryOf(ctx, uid)?.[hook]?.(state, ctx, key, uid, ...args);
-  return run ? [trigger(key, uid, `${nameOf(ctx, uid)} · ${label}`, run)] : [];
+  const used = state.roundUses.size, run = entryOf(ctx, uid)?.[hook]?.(state, ctx, key, uid, ...args);
+  return run ? [{...trigger(key, uid, `${nameOf(ctx, uid)} · ${label}`, run), ctx, uses: [...state.roundUses].slice(used)}] : [];
 };
+
+// Guia §56 (autor, 31/10/2026): o gatilho resolveria sem efeito agora? Ensaio do `run` numa cópia do estado, com o ctx
+// do gatilho (`t.ctx`, o que os fechamentos guardam) apontado para cópias. Pergunta ao jogador ou erro no ensaio: dispara.
+// shortcut: fechamento que mexa no `state` de fora (em vez do `st` recebido) escaparia do ensaio; nenhum faz isso hoje.
+const ASKED = Symbol('asked');
+const plain = (_, v) => (v instanceof Set || v instanceof Map ? [...v] : v);
+hooks.idleTrigger.push((state, t) => {
+  const c = t.ctx;
+  if (!c) return false;
+  const saved = {objects: c.objects, attached: c.attached, cards: c.cards, decide: c.decide}, s2 = clone(state);
+  Object.assign(c, {objects: clone(c.objects), attached: clone(c.attached), cards: new Map(c.cards), decide: () => { throw ASKED; }});
+  bindContext(s2, c);
+  const look = () => JSON.stringify([s2, c.objects, c.attached], plain), before = look();
+  try { t.run(s2); return look() === before; } catch { return false; } finally { Object.assign(c, saved); }
+});
 
 // Entrou no campo (jogado da mão ou posto por efeito): "When X enters" + observadores "Whenever … enters".
 export function v6Entered(state, ctx, key, uid) {

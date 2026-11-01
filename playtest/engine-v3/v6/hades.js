@@ -373,7 +373,7 @@ export default {
   'hades-v6-225': {
     bearerDefeated: (s, c, key, self) => st => {
       const p = st.players[c.objects[self].owner], zone = ['battlefield', 'tartarus'].find(z => p[z].includes(self));
-      if (!zone || (zone === 'battlefield' && c.attached[self])) return;
+      if (!zone || (zone === 'battlefield' && c.attached[self]) || st.players[key].soul < 1) return;
       if (k.may(c, key, 'BONE RECLAMATION', {uid: self, cost: '1 Soul'}) && k.paySoul(st, key, 1)) k.toHand(st, c, self, zone);
     },
   },

@@ -9,7 +9,8 @@ Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências
 - **Antes:** o guia não dizia; a engine punha na pilha (com janela e log) gatilhos opcionais impossíveis de usar e só descobria na resolução.
 - **Depois:** §56: gatilho opcional que não pode ser usado no disparo (custo não pagável, "once each round" já usado, sem alvo válido) não dispara: não vai à pilha, não abre janela, não aparece no log. Checa no disparo e de novo na resolução.
 - **Motivo:** autor, 31/10/2026, em playtest: "muitos gatilhos triggam mesmo que não seja possível usar o gatilho, principalmente de base e deus". Regra aprovada na mesma data.
-- **Engine:** ver itens abaixo nesta entrada quando aplicados.
+- **Engine:** `pushTriggers` (`playtest/engine-v3/core.js`) só põe na cadeia o gatilho que tem efeito agora: `hooks.idleTrigger` (`v6/hooks.js`) ensaia o corpo do gatilho numa cópia do estado; se ele não pergunta nada e não muda nada, não dispara, e o "once each round" gasto ao gerá-lo volta. Vale para gatilhos de carta e de Domain (`collect`/`own`) e dos Gods (Water Prison, Offering of Life, King of Tartarus, Obliteration, Butchery, Pressure of the Deep). Ultimate, Bloodlust e Divine Judgment (`activated`) sempre vão à cadeia. 380 Bone Reclamation passou a checar a Soul antes de perguntar. Teste: `tools/test-trigger-impossible.mjs`.
+- **Pendências (para o autor):** gatilho obrigatório que resolveria sem efeito nenhum (ex.: "deal 1 damage to target enemy Devotee" sem inimigo) também deixa de disparar; a engine não distingue um do outro. Se ele precisar ir à cadeia mesmo sem efeito, marcar a exceção.
 
 ## 2026-10-31 — §4A — Hidden Cosmo (keyword nova)
 
