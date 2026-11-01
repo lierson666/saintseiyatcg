@@ -11,6 +11,13 @@ Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências
 - **Motivo:** autor, 01/11/2026: texto novo no Forge, e a carta "não está exilando". É a versão incondicional do Swords to Plowshares.
 - **Engine:** `v6/athena-spells.js` sem o filtro `s.strikes`. `docs/rebalance-athena-premodern.md` fica como histórico do texto de 31/10/2026.
 
+## 2026-11-01 — §13, §60, composição do set — Sai a Rivalidade e o Latent por dano; God Armor adiada
+
+- **Antes:** Rivalidade (§13) e ganho de Latent por dano (§60) suspensas, aguardando decisão. Vanilla Set com uma God Armor por facção, Ares a definir.
+- **Depois:** as duas regras saem de vez. Latent vem das Bases Prepared e de cartas. Uma God Armor por facção vira meta do próximo set; o Divine Artifact por facção segue como estava.
+- **Motivo:** autor, 01/11/2026 (grill): nenhuma das duas regras está no engine-v3 nem faz falta ao sistema de turnos; só Pegasus God Cloth existe hoje.
+- **Engine/cartas:** sem mudança. "Rival" nas cartas é só nome ou subtítulo. Fecha também a pendência da carta de descarte de Athena: Ikki só vai ao Tártaro morrendo, sem carta nova.
+
 ## 2026-11-01 — §63 — Domains: linha geral + Ressonância com o God
 
 - **Antes:** Domain com linha simples (sem compra) e linha forte Once per game; 28 Domains (Athena 5, Poseidon 9, Hades 4, Ares 5, Artemis 5).

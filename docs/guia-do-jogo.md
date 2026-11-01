@@ -233,9 +233,9 @@ Enquanto o adversário controlar ao menos um Devotee com Guardian em campo, **Pr
 * Um Guardian que o atacante não pode mirar (ex.: Guardian com **Cheater** contra atacante sem Cheater) não conta para essa exigência (autor, 31/10/2026).
 * Efeitos de carta podem criar exceções expressas (ex.: La Scoumoune, 363).
 
-### 13. Rivalidade
+### 13. (retirada)
 
-**Suspensa no sistema de turnos (31/10/2026).** O `engine-v3` não cria Rivals, e as regras Alpha aprovadas não a incluem. Pendente decisão do autor: retirar de vez ou reintroduzir adaptada aos turnos. Cartas que citem Rival aguardam essa decisão.
+A Rivalidade saiu do jogo (autor, 01/11/2026). "Rival" em nome ou subtítulo de carta é só tema, sem efeito de regra.
 
 ### 14–18. (reservado)
 
@@ -551,7 +551,7 @@ Afinidades aprovadas: Pegasus Seiya → Sagittarius; Dragon Shiryu → Libra; Cy
 
 Poseidon: controle, pressão progressiva e domínio. Hades: persistência, sacrifício e retorno. Ares: agressividade, combate e conquista. Artemis: caça, precisão e eliminação estratégica. Estas quatro identidades são preliminares; desenvolvimento e aprovação seguem uma facção por vez, começando por Athena.
 
-No Vanilla Set haverá exatamente uma God Armor e um Divine Artifact por facção: cinco de cada. Trata-se de composição editorial do conjunto, não de limite de decks. Seleções de trabalho de God Armor: Athena — Pegasus Seiya; Poseidon — Sea Dragon Kanon; Hades — Wyvern Rhadamanthys; Ares — a definir; Artemis — Callisto. Nomes finais e cartas dependem do Card Craft; não criar automaticamente os dez itens. Respeitar a distinção narrativa entre God Cloth e Kamui e documentar criações do TCG.
+No Vanilla Set haverá exatamente um Divine Artifact por facção: cinco no total. Uma God Armor por facção fica como meta do próximo set (autor, 01/11/2026); no conjunto atual só existe Pegasus God Cloth. Trata-se de composição editorial, não de limite de decks. Seleções de trabalho de God Armor: Athena — Pegasus Seiya; Poseidon — Sea Dragon Kanon; Hades — Wyvern Rhadamanthys; Artemis — Callisto. Nomes finais e cartas dependem do Card Craft; não criar automaticamente os dez itens. Respeitar a distinção narrativa entre God Cloth e Kamui e documentar criações do TCG.
 
 Personagens usam classificação de origem: CANON — KURUMADA; SAINT SEIYA — OUTRAS OBRAS; MITOLOGIA ADAPTADA; ORIGINAL TCG. Referências mitológicas devem ser documentadas e não tornam personagens canônicos. Priorizar personagens disponíveis nas obras antes de criar originais; nenhum novo personagem é aprovado por este guia.
 
@@ -626,7 +626,6 @@ Revisado em 31/10/2026 (ALPHA-P01, P02, P03 e P06, aprovadas em 28/10/2026; comp
 
 - Alvos e exigência de Guardian: capítulo IV. A validade do alvo é reavaliada na resolução.
 - Retaliação: o defensor retalia mesmo Unprepared, enquanto sobreviver ao dano simultâneo.
-- **Rivalidade:** suspensa no sistema de turnos (§13).
 - **Mudança de controle:** deixa o Devotee Unprepared, sem curar dano nem apagar Awaken. 
 - Uma carta vai para as zonas de seu proprietário, salvo efeito explícito. “Resonance” da Armor indica personagem; não indica proprietário da carta.
 - Equipamentos não mudam de controlador automaticamente. Como a ligação normal exige equipamento e portador do mesmo controlador, um equipamento incompatível fica em campo sem portador e perde a evolução. Um efeito pode transferir expressamente ambos.
@@ -656,7 +655,7 @@ Se um Strike causar Soul zero aos dois Gods simultaneamente por efeitos aplicáv
 
 - Uma Base disponível paga 1 Cosmo e fica indisponível até a renovação. Gastar Bases para pagar é parte do pagamento; não cria jogada adicional nem exige guardar um estoque de Cosmo gerado sem uso.
 - Aplicar a matriz da seção 5: Devotee, Armor e Ultimate usam somente Base; Moment como resposta usa somente Latent; os demais custos aceitam ambos, respeitando restrições expressas. Cosmo temporário só paga custos genéricos, salvo texto específico, e não é armazenado automaticamente.
-- **Ganho de Latent por dano: suspenso no sistema de turnos (31/10/2026).** A regra da 2.1 (1 Latent uma vez por AÇÃO adversária com dano) dependia das AÇÕES e não está no engine-v3. Pendente decisão do autor. Cartas podem criar suas próprias fontes de Latent.
+- Receber dano não gera Latent (regra da 2.1 retirada pelo autor, 01/11/2026). Latent vem das Bases Prepared na End Phase e de cartas que o criem.
 - Limite de **3 Latent por jogador**, persistente entre turnos. As Bases Prepared viram Latent no início da End Phase do seu turno (§5).
 - Escolhas e custos são validados antes de gastar; pagamento insuficiente não produz gasto parcial. Recursos pagos em uma declaração válida não retornam se o efeito depois falhar.
 
