@@ -849,7 +849,7 @@
       "equipar_custo": 6,
       "keywords_en": [],
       "habilidades_en": [
-        "Equipped Devotee has Cheater.",
+        "Equipped Devotee has Nimble.",
         "When you cast Pegasus God Cloth, if your God has less Soul than the opposing God, choose target friendly Devotee. That Devotee gets +3 ATK / +3 HP until the end of the round. Prepare it.",
         "Divine Protection — Once each round, when equipped Devotee would be defeated by Strike damage and your God has less Soul than the opposing God, you may pay {2}{C}. If you do, prevent that damage.",
         "Divine Cosmo — {3}{C}: Once each round, when equipped Devotee declares a Strike, it gets +2 ATK during that Strike.",
@@ -868,7 +868,7 @@
       "nome_exibicao_pt": "ARMADURA DIVINA DE PÉGASO (KAMUI)",
       "subtitulo_pt": "As Asas da Divindade",
       "habilidades_pt": [
-        "O Devoto equipado tem Trapaceiro.",
+        "O Devoto equipado tem Ágil.",
         "Quando você conjura a Armadura Divina de Pégaso, se seu Deus tiver menos Alma que o Deus oponente, escolha o Devoto aliado alvo. Esse Devoto recebe +3 ATQ / +3 PV até o fim da rodada. Prepare-o.",
         "Proteção Divina — Uma vez por rodada, quando o Devoto equipado seria derrotado por dano de Golpe e seu Deus tiver menos Alma que o Deus oponente, você pode pagar {2}{C}. Se fizer isso, previna esse dano.",
         "Cosmo Divino — {3}{C}: Uma vez por rodada, quando o Devoto equipado declara um Golpe, ele recebe +2 ATQ durante esse Golpe.",
@@ -1036,10 +1036,11 @@
       "resistance": 3,
       "damage_cloth": null,
       "equipar_custo": null,
-      "keywords_en": [],
+      "keywords_en": ["Nimble"],
       "habilidades_en": [
+        "Nimble",
         "Marble Wall — Once each round, when Lizard Misty would take Strike damage, you may pay {1}{C}. If you do, prevent up to 3 of that damage.",
-        "Untouchable — Once each round, if Marble Wall prevented all Strike damage that would be dealt to Lizard Misty, you may Prepare him. He cannot declare another Strike this round."
+        "Untouchable — Once each round, if Marble Wall prevented all Strike damage that would be dealt to Lizard Misty, you may Prepare him. (With a Seal counter, remove one instead.) He cannot declare another Strike this round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -1047,8 +1048,9 @@
       "nome_exibicao_pt": "MISTY DE LAGARTO",
       "subtitulo_pt": "A Beleza Intocável",
       "habilidades_pt": [
+        "Ágil",
         "Muralha de Mármore — Uma vez por rodada, quando Misty de Lagarto sofreria dano de Golpe, você pode pagar {1}{C}. Se fizer isso, previna até 3 desse dano.",
-        "Intocável — Uma vez por rodada, se a Muralha de Mármore preveniu todo o dano de Golpe que seria causado a Misty de Lagarto, você pode Prepará-lo. Ele não pode declarar outro Golpe nesta rodada."
+        "Intocável — Uma vez por rodada, se a Muralha de Mármore preveniu todo o dano de Golpe que seria causado a Misty de Lagarto, você pode Prepará-lo. (Com marcador de Selo, tire um em vez disso.) Ele não pode declarar outro Golpe nesta rodada."
       ],
       "tagline_pt": "A Beleza Intocável"
     },
@@ -3148,8 +3150,9 @@
       "resistance": 3,
       "damage_cloth": null,
       "equipar_custo": null,
-      "keywords_en": [],
+      "keywords_en": ["Nimble"],
       "habilidades_en": [
+        "Nimble",
         "Mind Reading — Once each round, when an enemy Devotee declares a Strike against Hound Asterion, you may pay {1}{C}. If you do, that Devotee gets -2 ATK during that Strike.",
         "Million Ghost Attack — Whenever Hound Asterion survives a Strike as a defender, he gets +1 ATK until the end of the round."
       ],
@@ -3159,6 +3162,7 @@
       "nome_exibicao_pt": "ASTERION DE CÃES DE CAÇA",
       "subtitulo_pt": "O Leitor de Mentes",
       "habilidades_pt": [
+        "Ágil",
         "Leitura da Mente — Uma vez por rodada, quando um Devoto inimigo declara um Golpe contra Asterion de Cães de Caça, você pode pagar {1}{C}. Se fizer isso, esse Devoto recebe -2 ATQ durante esse Golpe.",
         "Ataque do Milhão de Fantasmas — Sempre que Asterion de Cães de Caça sobrevive a um Golpe como defensor, ele recebe +1 ATQ até o fim da rodada."
       ],
@@ -8924,8 +8928,9 @@
       "resistance": 5,
       "damage_cloth": null,
       "equipar_custo": null,
-      "keywords_en": [],
+      "keywords_en": ["Nimble"],
       "habilidades_en": [
+        "Nimble",
         "Metamorphosis — When Papillon Myu enters the Battlefield, you may pay {2}{S}. If you do, draw 2 cards.",
         "Fairy Thronging — Whenever Papillon Myu deals combat damage to an enemy God, you may return target Devotee with Casting Cost 2 or less from your Tartarus to your hand."
       ],
@@ -8935,6 +8940,7 @@
       "nome_exibicao_pt": "MYU DE PAPILLON",
       "subtitulo_pt": "O Espectro da Metamorfose",
       "habilidades_pt": [
+        "Ágil",
         "Metamorfose — Quando Myu de Papillon entra no Campo de Batalha, você pode pagar {2}{S}. Se fizer isso, compre 2 cartas.",
         "Enxame de Fadas — Sempre que Myu de Papillon causa dano de Golpe a um Deus inimigo, você pode devolver o Devoto alvo com Custo de Conjuração 2 ou menos do seu Tártaro para a sua mão."
       ],
@@ -9088,8 +9094,9 @@
       "resistance": 3,
       "damage_cloth": null,
       "equipar_custo": null,
-      "keywords_en": [],
+      "keywords_en": ["Nimble"],
       "habilidades_en": [
+        "Nimble",
         "Coward's Escape — Once each round, when Frog Zeros is chosen as the target of an enemy ability, you may pay {2}{S}. If you do, return Frog Zeros to its owner's hand.",
         "Opportunist — Whenever another friendly Devotee is defeated, target enemy God loses {1}{S}."
       ],
@@ -9099,6 +9106,7 @@
       "nome_exibicao_pt": "ZELOS DE SAPO",
       "subtitulo_pt": "O Servo Covarde",
       "habilidades_pt": [
+        "Ágil",
         "Fuga do Covarde — Uma vez por rodada, quando Zelos de Sapo é escolhido como alvo de uma habilidade inimiga, você pode pagar {2}{S}. Se fizer isso, devolva Zelos de Sapo para a mão do dono dele.",
         "Oportunista — Sempre que outro Devoto aliado é derrotado, o Deus inimigo alvo perde {1}{S}."
       ],
@@ -9378,7 +9386,8 @@
       "keywords_en": [],
       "habilidades_en": [
         "Grand Axe Crusher — Whenever Minotaur Gordon deals combat damage to a Devotee, that Devotee gets -2 HP until the end of the round.",
-        "Executioner — Whenever Minotaur Gordon defeats an enemy Devotee, the enemy God loses {1}{S}."
+        "Executioner — Whenever Minotaur Gordon defeats an enemy Devotee, the enemy God loses {1}{S}.",
+        "Afterlife {3}{C}: Deal 2 damage to target enemy Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -9387,7 +9396,8 @@
       "subtitulo_pt": "O Machado do Carrasco",
       "habilidades_pt": [
         "Machado Esmagador Superior — Sempre que Gordon de Minotauro causa dano de Golpe a um Devoto, esse Devoto recebe -2 PV até o fim da rodada.",
-        "Carrasco — Sempre que Gordon de Minotauro derrota um Devoto inimigo, o Deus inimigo perde {1}{S}."
+        "Carrasco — Sempre que Gordon de Minotauro derrota um Devoto inimigo, o Deus inimigo perde {1}{S}.",
+        "Além-Túmulo {3}{C}: Cause 2 de dano ao Devoto inimigo alvo."
       ],
       "tagline_pt": "O Machado do Carrasco"
     },
@@ -9419,7 +9429,8 @@
       "keywords_en": [],
       "habilidades_en": [
         "Blood Flower Scissors — When Alraune Queen enters the Battlefield, you may pay {2}{S}. If you do, defeat target enemy Devotee with 2 HP or less.",
-        "Feed on Life — Whenever an enemy Devotee is defeated, your God gains {1}{S}."
+        "Feed on Life — Whenever an enemy Devotee is defeated, your God gains {1}{S}.",
+        "Afterlife {2}{C}: Target enemy Devotee gets -2 ATK until the end of the round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -9428,7 +9439,8 @@
       "subtitulo_pt": "A Flor Sedenta de Sangue",
       "habilidades_pt": [
         "Tesoura Flor de Sangue — Quando Queen de Alraune entra no Campo de Batalha, você pode pagar {2}{S}. Se fizer isso, derrote o Devoto inimigo alvo com 2 PV ou menos.",
-        "Alimentar-se da Vida — Sempre que um Devoto inimigo é derrotado, seu Deus ganha {1}{S}."
+        "Alimentar-se da Vida — Sempre que um Devoto inimigo é derrotado, seu Deus ganha {1}{S}.",
+        "Além-Túmulo {2}{C}: O Devoto inimigo alvo recebe -2 ATQ até o fim da rodada."
       ],
       "tagline_pt": "A Flor Sedenta de Sangue"
     },
@@ -9460,7 +9472,8 @@
       "keywords_en": [],
       "habilidades_en": [
         "Petrifying Gaze — When Gorgon Ox enters the Battlefield, you may pay {1}{S}. If you do, target enemy Devotee can't declare a Strike during its controller's next turn.",
-        "Stone Curse — Once each round, whenever Gorgon Ox Strikes, the defending Devotee gets -2 ATK during that Strike."
+        "Stone Curse — Once each round, whenever Gorgon Ox Strikes, the defending Devotee gets -2 ATK during that Strike.",
+        "Afterlife {2}{C}: Target enemy Devotee becomes Unprepared."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -9469,7 +9482,8 @@
       "subtitulo_pt": "A Estrela Petrificante",
       "habilidades_pt": [
         "Olhar Petrificante — Quando Ox de Górgona entra no Campo de Batalha, você pode pagar {1}{S}. Se fizer isso, o Devoto inimigo alvo não pode declarar um Golpe durante o próximo turno do controlador dele.",
-        "Maldição de Pedra — Uma vez por rodada, sempre que Ox de Górgona Golpeia, o Devoto defensor recebe -2 ATQ durante esse Golpe."
+        "Maldição de Pedra — Uma vez por rodada, sempre que Ox de Górgona Golpeia, o Devoto defensor recebe -2 ATQ durante esse Golpe.",
+        "Além-Túmulo {2}{C}: O Devoto inimigo alvo fica Despreparado."
       ],
       "tagline_pt": "A Estrela Petrificante"
     },
@@ -9501,7 +9515,8 @@
       "keywords_en": [],
       "habilidades_en": [
         "Death Messenger — When Dullahan Cube enters the Battlefield, target enemy God loses {1}{S} and your God gains {1}{S}.",
-        "Last Breath — When Dullahan Cube is defeated, you may return another target Devotee with Casting Cost 1 or less from your Tartarus to your hand."
+        "Last Breath — When Dullahan Cube is defeated, you may return another target Devotee with Casting Cost 1 or less from your Tartarus to your hand.",
+        "Afterlife {2}{C}: Target enemy God loses {1}{S}."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -9510,7 +9525,8 @@
       "subtitulo_pt": "O Carrasco Sem Cabeça",
       "habilidades_pt": [
         "Mensageiro da Morte — Quando Cube de Dullahan entra no Campo de Batalha, o Deus inimigo alvo perde {1}{S} e seu Deus ganha {1}{S}.",
-        "Último Suspiro — Quando Cube de Dullahan é derrotado, você pode devolver outro Devoto alvo com Custo de Conjuração 1 ou menos do seu Tártaro para a sua mão."
+        "Último Suspiro — Quando Cube de Dullahan é derrotado, você pode devolver outro Devoto alvo com Custo de Conjuração 1 ou menos do seu Tártaro para a sua mão.",
+        "Além-Túmulo {2}{C}: O Deus inimigo alvo perde {1}{S}."
       ],
       "tagline_pt": "O Carrasco Sem Cabeça"
     },
@@ -9622,7 +9638,8 @@
       "keywords_en": [],
       "habilidades_en": [
         "Restless Spirit — When Wandering Soul enters the Battlefield, put the top card of your deck into your Tartarus.",
-        "Soul Offering — Sacrifice Wandering Soul: Your God gains {1}{S}. Activate only once each round."
+        "Soul Offering — Sacrifice Wandering Soul: Your God gains {1}{S}. Activate only once each round.",
+        "Afterlife {1}{C}: Your God gains {1}{S}."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -9631,7 +9648,8 @@
       "subtitulo_pt": "Os Mortos Esquecidos",
       "habilidades_pt": [
         "Espírito Inquieto — Quando Alma Errante entra no Campo de Batalha, coloque a carta do topo do seu Deck no seu Tártaro.",
-        "Oferenda de Alma — Sacrifique Alma Errante: Seu Deus ganha {1}{S}. Ative apenas uma vez por rodada."
+        "Oferenda de Alma — Sacrifique Alma Errante: Seu Deus ganha {1}{S}. Ative apenas uma vez por rodada.",
+        "Além-Túmulo {1}{C}: Seu Deus ganha {1}{S}."
       ],
       "tagline_pt": "Os Mortos Esquecidos"
     },
@@ -9663,7 +9681,8 @@
       "keywords_en": [],
       "habilidades_en": [
         "Gather the Lost — When Styx Soul Herder enters the Battlefield, you may pay {1}{S}. If you do, return target Devotee with Casting Cost 2 or less from your Tartarus to your hand.",
-        "Last Herding — When Styx Soul Herder is defeated, put the top 2 cards of your deck into your Tartarus."
+        "Last Herding — When Styx Soul Herder is defeated, put the top 2 cards of your deck into your Tartarus.",
+        "Afterlife {3}{C}: Return another target Devotee with cost 2 or less from your Tartarus to your hand."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -9672,7 +9691,8 @@
       "subtitulo_pt": "Pastor das Almas Perdidas",
       "habilidades_pt": [
         "Reunir os Perdidos — Quando Pastor de Almas do Estige entra no Campo de Batalha, você pode pagar {1}{S}. Se fizer isso, devolva o Devoto alvo com Custo de Conjuração 2 ou menos do seu Tártaro para a sua mão.",
-        "Último Rebanho — Quando Pastor de Almas do Estige é derrotado, coloque as 2 cartas do topo do seu Deck no seu Tártaro."
+        "Último Rebanho — Quando Pastor de Almas do Estige é derrotado, coloque as 2 cartas do topo do seu Deck no seu Tártaro.",
+        "Além-Túmulo {3}{C}: Devolva outro Devoto alvo de custo 2 ou menos do seu Tártaro para a sua mão."
       ],
       "tagline_pt": "Pastor das Almas Perdidas"
     },
@@ -12825,7 +12845,8 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Glorious Demise — When this Devotee is defeated, you may pay {1}{S}. If you do, deal 1 damage to target enemy God."
+        "Glorious Demise — When this Devotee is defeated, you may pay {1}{S}. If you do, deal 1 damage to target enemy God.",
+        "Afterlife {1}{C}: Deal 1 damage to target enemy Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -12833,7 +12854,8 @@
       "nome_exibicao_pt": "BERSERKER DA LEGIÃO DO DESASTRE",
       "subtitulo_pt": "Uma Vida Feita para Ser Gasta",
       "habilidades_pt": [
-        "Morte Gloriosa — Quando este Devoto é derrotado, você pode pagar {1}{S}. Se fizer isso, cause 1 de dano ao Deus inimigo alvo."
+        "Morte Gloriosa — Quando este Devoto é derrotado, você pode pagar {1}{S}. Se fizer isso, cause 1 de dano ao Deus inimigo alvo.",
+        "Além-Túmulo {1}{C}: Cause 1 de dano ao Devoto inimigo alvo."
       ],
       "flavour_pt": "\"O Lorde Lior nos prometeu glória. Nunca prometeu que sobreviveríamos.\"",
       "tagline_pt": "Uma Vida Feita para Ser Gasta"
@@ -13153,7 +13175,8 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Catastrophic End — When Disaster Legion Destroyer is defeated, deal 1 damage to target enemy Devotee."
+        "Catastrophic End — When Disaster Legion Destroyer is defeated, deal 1 damage to target enemy Devotee.",
+        "Afterlife {2}{C}: Deal 2 damage to target enemy Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -13161,7 +13184,8 @@
       "nome_exibicao_pt": "DESTRUIDOR DA LEGIÃO DO DESASTRE",
       "subtitulo_pt": "A Alegria da Destruição",
       "habilidades_pt": [
-        "Fim Catastrófico — Quando o Destruidor da Legião do Desastre é derrotado, cause 1 de dano ao Devoto inimigo alvo."
+        "Fim Catastrófico — Quando o Destruidor da Legião do Desastre é derrotado, cause 1 de dano ao Devoto inimigo alvo.",
+        "Além-Túmulo {2}{C}: Cause 2 de dano ao Devoto inimigo alvo."
       ],
       "flavour_pt": "\"O Lorde Lior riu quando a fortaleza caiu. Nós rimos ainda mais alto.\"",
       "tagline_pt": "A Alegria da Destruição"
@@ -13235,7 +13259,8 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Bloodied Pride — Whenever Bloodstained Gladiator is dealt damage, deal 1 damage to your God."
+        "Bloodied Pride — Whenever Bloodstained Gladiator is dealt damage, deal 1 damage to your God.",
+        "Afterlife {2}{C}: Target friendly Devotee gets +2 ATK until the end of the round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -13243,7 +13268,8 @@
       "nome_exibicao_pt": "GLADIADOR MANCHADO DE SANGUE",
       "subtitulo_pt": "O Último Sobrevivente da Arena",
       "habilidades_pt": [
-        "Orgulho Ensanguentado — Sempre que o Gladiador Manchado de Sangue sofre dano, cause 1 de dano ao seu Deus."
+        "Orgulho Ensanguentado — Sempre que o Gladiador Manchado de Sangue sofre dano, cause 1 de dano ao seu Deus.",
+        "Além-Túmulo {2}{C}: O Devoto aliado alvo recebe +2 ATQ até o fim da rodada."
       ],
       "flavour_pt": "\"Parei de contar vitórias quando a arena ficou sem corpos.\"",
       "tagline_pt": "O Último Sobrevivente da Arena"
@@ -14969,8 +14995,9 @@
       "resistance": 1,
       "damage_cloth": null,
       "equipar_custo": null,
-      "keywords_en": ["Impulse"],
+      "keywords_en": ["Nimble", "Impulse"],
       "habilidades_en": [
+        "Nimble",
         "Impulse",
         "Last Breath of the Storm — When Disaster Wing Assassin is defeated, you may pay {1}{S}. If you do, deal 1 damage to target enemy Devotee or God."
       ],
@@ -14980,6 +15007,7 @@
       "nome_exibicao_pt": "ASSASSINO DA ASA DO DESASTRE",
       "subtitulo_pt": "A Lâmina Levada pela Tempestade",
       "habilidades_pt": [
+        "Ágil",
         "Impulso",
         "Último Suspiro da Tempestade — Quando o Assassino da Asa do Desastre é derrotado, você pode pagar {1}{S}. Se fizer isso, cause 1 de dano ao Devoto ou Deus inimigo alvo."
       ],
@@ -15011,8 +15039,9 @@
       "resistance": 3,
       "damage_cloth": null,
       "equipar_custo": null,
-      "keywords_en": [],
+      "keywords_en": ["Nimble"],
       "habilidades_en": [
+        "Nimble",
         "Whispers of Terror — When Nightmare Weaver enters the Battlefield, target opponent loses {1}{L}.",
         "Feast on Fear — Whenever an opponent loses Latent Cosmo, Nightmare Weaver gains +1 ATK until end of round. This ability triggers only once per turn.",
         "Illusory Torment — Whenever Nightmare Weaver deals combat damage to a God, deal 1 damage to target enemy Devotee."
@@ -15023,6 +15052,7 @@
       "nome_exibicao_pt": "TECELÃO DE PESADELOS",
       "subtitulo_pt": "A Sombra Dentro da Sua Mente",
       "habilidades_pt": [
+        "Ágil",
         "Sussurros de Terror — Quando o Tecelão de Pesadelos entra no Campo de Batalha, o oponente alvo perde {1}{L}.",
         "Banquete de Medo — Sempre que um oponente perde Cosmo Latente, o Tecelão de Pesadelos recebe +1 ATQ até o fim da rodada. Esta habilidade só dispara uma vez por turno.",
         "Tormento Ilusório — Sempre que o Tecelão de Pesadelos causa dano de Golpe a um Deus, cause 1 de dano ao Devoto inimigo alvo."
@@ -16901,8 +16931,9 @@
       "resistance": 2,
       "damage_cloth": null,
       "equipar_custo": null,
-      "keywords_en": [],
+      "keywords_en": ["Long Range"],
       "habilidades_en": [
+        "Long Range",
         "Precise Hunt — When Silver Arrow Huntress enters the Battlefield, you may pay {1}{C}. If you do, put a Training counter on target friendly Devotee."
       ],
       "habilidade_awaken_en": "",
@@ -16911,6 +16942,7 @@
       "nome_exibicao_pt": "CAÇADORA DA FLECHA DE PRATA",
       "subtitulo_pt": "Olhos sob a Lua",
       "habilidades_pt": [
+        "Longo Alcance",
         "Caçada Precisa — Quando a Caçadora da Flecha de Prata entra no Campo de Batalha, você pode pagar {1}{C}. Se fizer isso, coloque 1 marcador de Treinamento no Devoto aliado alvo."
       ],
       "flavour_pt": "\"Sua flecha alcança a presa antes do som do arco.\"",
@@ -17105,8 +17137,9 @@
       "resistance": 2,
       "damage_cloth": null,
       "equipar_custo": null,
-      "keywords_en": [],
+      "keywords_en": ["Long Range"],
       "habilidades_en": [
+        "Long Range",
         "Hunter's Formation — Satellite Archer gets +1/+0 while you control another Satellite."
       ],
       "habilidade_awaken_en": "",
@@ -17115,6 +17148,7 @@
       "nome_exibicao_pt": "ARQUEIRO SATÉLITE",
       "subtitulo_pt": "O Vigia Silencioso",
       "habilidades_pt": [
+        "Longo Alcance",
         "Formação de Caça — O Arqueiro Satélite recebe +1 ATQ enquanto você controlar outro Satélite."
       ],
       "flavour_pt": "\"A primeira flecha é um aviso. A segunda é uma promessa.\"",
@@ -17643,8 +17677,9 @@
       "resistance": 2,
       "damage_cloth": null,
       "equipar_custo": null,
-      "keywords_en": [],
+      "keywords_en": ["Long Range"],
       "habilidades_en": [
+        "Long Range",
         "Sacred Precision — Whenever Artemis' Royal Huntress declares a Strike against an enemy Devotee, it gets +1/+1 until end of round.",
         "Divine Training — Whenever an Equipment becomes attached to Artemis' Royal Huntress, put a Training counter on it."
       ],
@@ -17654,6 +17689,7 @@
       "nome_exibicao_pt": "CAÇADORA REAL DE ÁRTEMIS",
       "subtitulo_pt": "A Flecha Escolhida da Deusa",
       "habilidades_pt": [
+        "Longo Alcance",
         "Precisão Sagrada — Sempre que a Caçadora Real de Ártemis declara um Golpe contra um Devoto inimigo, ela recebe +1 ATQ / +1 PV até o fim da rodada.",
         "Treinamento Divino — Sempre que um Equipamento é equipado na Caçadora Real de Ártemis, coloque 1 marcador de Treinamento nela."
       ],
@@ -18914,8 +18950,9 @@
       "resistance": 4,
       "damage_cloth": null,
       "equipar_custo": null,
-      "keywords_en": [],
+      "keywords_en": ["Long Range"],
       "habilidades_en": [
+        "Long Range",
         "Precise Execution — When Silver Arrow Commander enters the Battlefield, you may have it fight target enemy Devotee. Each deals damage equal to its ATK to the other.",
         "Hunter's Mastery — Whenever a friendly Satellite declares a Strike against an enemy Devotee, that Satellite gets +1/+0 until end of round.",
         "Lunar Precision — Whenever Silver Arrow Commander defeats an enemy Devotee during combat, draw 1 card."
@@ -18926,6 +18963,7 @@
       "nome_exibicao_pt": "COMANDANTE DA FLECHA DE PRATA",
       "subtitulo_pt": "A Caçadora que Nunca Erra",
       "habilidades_pt": [
+        "Longo Alcance",
         "Execução Precisa — Quando a Comandante da Flecha de Prata entra no Campo de Batalha, você pode fazer com que ela lute contra o Devoto inimigo alvo. Cada um causa dano igual ao seu ATQ ao outro.",
         "Maestria do Caçador — Sempre que um Satélite aliado declara um Golpe contra um Devoto inimigo, esse Satélite recebe +1 ATQ até o fim da rodada.",
         "Precisão Lunar — Sempre que a Comandante da Flecha de Prata derrota um Devoto inimigo em combate, compre uma carta."
@@ -20466,8 +20504,9 @@
       "resistance": 4,
       "damage_cloth": null,
       "equipar_custo": null,
-      "keywords_en": [],
+      "keywords_en": ["Nimble"],
       "habilidades_en": [
+        "Nimble",
         "Phantom Illusion — When Geist enters the Battlefield, return target enemy Devotee to its owner's hand.",
         "Ghost Command — Other Ghost Saints you control get +1/+1.",
         "Deceptive Presence — Whenever Geist becomes the target of an enemy Technique, you may sacrifice another Devotee. If you do, counter that Technique."
@@ -20478,6 +20517,7 @@
       "nome_exibicao_pt": "GEIST, A RAINHA FANTASMA",
       "subtitulo_pt": "A Senhora das Ilusões",
       "habilidades_pt": [
+        "Ágil",
         "Ilusão Fantasma — Quando Geist entra no Campo de Batalha, devolva o Devoto inimigo alvo para a mão do dono.",
         "Comando Fantasma — Os outros Cavaleiros Fantasma que você controla recebem +1 ATQ / +1 PV.",
         "Presença Enganosa — Sempre que Geist se torna alvo de uma Técnica inimiga, você pode sacrificar outro Devoto. Se fizer isso, anule essa Técnica."
@@ -20510,8 +20550,9 @@
       "resistance": 2,
       "damage_cloth": null,
       "equipar_custo": null,
-      "keywords_en": [],
+      "keywords_en": ["Nimble"],
       "habilidades_en": [
+        "Nimble",
         "Aquatic Ambush — When Dolphin Ghost Saint enters the Battlefield, you may pay {2}{C}. If you do, make target enemy Devotee Unprepared.",
         "Phantom Retreat — Whenever Dolphin Ghost Saint deals combat damage to an enemy God, you may return Dolphin Ghost Saint to its owner's hand."
       ],
@@ -20521,6 +20562,7 @@
       "nome_exibicao_pt": "CAVALEIRO FANTASMA DE GOLFINHO",
       "subtitulo_pt": "O Fantasma das Ondas",
       "habilidades_pt": [
+        "Ágil",
         "Emboscada Aquática — Quando Cavaleiro Fantasma de Golfinho entra no Campo de Batalha, você pode pagar {2}{C}. Se fizer isso, deixe o Devoto inimigo alvo Despreparado.",
         "Retirada Fantasma — Sempre que Cavaleiro Fantasma de Golfinho causa dano de Golpe a um Deus inimigo, você pode devolvê-lo para a mão do dono."
       ],

@@ -9,7 +9,8 @@ import {createMatch, mulligan} from '../engine-v3/match.js';
 import {startTurn, endTurn, pass, placeBase, spellCategory, runCheckpoint, ownBatch, loseGame} from '../engine-v3/core.js';
 import {inlineMarkup} from '../../shared/card-text.js?v=20261031-kw1';
 import {declareStrike, strikeTargets, mustStrike} from '../engine-v3/strike.js';
-import {playDevotee, playEquipment, playSpell, activate, reequip, duplicateCharacter, resonant, castCost, mixed, castHidden} from '../engine-v3/play.js';
+import {playDevotee, playEquipment, playSpell, activate, reequip, duplicateCharacter, resonant, castCost, mixed, castHidden, afterlifeBlock, activateAfterlife} from '../engine-v3/play.js';
+import {AFTERLIFE} from '../engine-v3/v6/afterlife.js';
 import {atkOf, hpOf, keywordsOf, gearOf, isSaint, isBronze, ABILITIES} from '../engine-v3/effects.js';
 import {v6Spell, entryOf, V6} from '../engine-v3/v6/hooks.js';
 import {domainEntry} from '../engine-v3/v6/registry.js';
@@ -153,7 +154,8 @@ const spellCat = uid => {
 const ordered = new Set();
 const batchKey = key => `${S().lastBatch?.id}:${key}`;
 const mustOrder = key => key !== settings.ai && ownBatch(S(), key).length > 1 && !ordered.has(batchKey(key));
-const hasResponse = key => mustOrder(key) || S().players[key].hand.some(u => info(u).kind === 'Spell' && spellCat(u)?.speed === 'instant' && !playableReason(key, u));
+const hasResponse = key => mustOrder(key) || S().players[key].hand.some(u => info(u).kind === 'Spell' && spellCat(u)?.speed === 'instant' && !playableReason(key, u))
+  || S().players[key].tartarus.some(u => !afterlifeBlock(S(), ctx, key, u));
 
 // ---------- Execução de ações ----------
 
@@ -1525,7 +1527,7 @@ function showPile(key, zone) {
   box.className = 'bigcard pile';
   box.innerHTML = `<section class="pile__box" role="dialog" aria-label="${name} of Player ${key}">
     <header><h3>${name}</h3><small>Player ${key} · ${uids.length} card${uids.length === 1 ? '' : 's'} · newest first</small></header>
-    ${uids.length ? `<div class="pile__grid">${uids.map(u => `<button class="pile__card" data-pile-card="${u}">${cardFace(u)}</button>`).join('')}</div>` : `<p class="pile__empty">No cards in the ${name}.</p>`}</section>`;
+    ${uids.length ? `<div class="pile__grid">${uids.map(u => `<div class="pile__slot"><button class="pile__card" data-pile-card="${u}">${cardFace(u)}</button>${afterlifeButton(key, zone, u)}</div>`).join('')}</div>` : `<p class="pile__empty">No cards in the ${name}.</p>`}</section>`;
   box.addEventListener('click', e => {
     const card = e.target.closest('[data-pile-card]');
     if (card) return showBigCard(card.dataset.pileCard);
@@ -1763,12 +1765,22 @@ function drawIntents() {
     }).join('');
   document.body.append(svg);
 }
+    const after = e.target.closest('[data-afterlife]');
+    if (after) { closeBigCard(); return act({type: 'afterlife', key, uid: after.dataset.afterlife}); }
 addEventListener('resize', () => { drawIntents(); drawActivity(); });
 function setHoverItem(el) {
   $$('.is-triggering').forEach(x => x.classList.remove('is-triggering'));
   hoverItem = el ? {el, src: el.dataset.src, targets: (el.dataset.targets || '').split(' ').filter(u => u && (ctx.objects[u] || u.startsWith('god:')))} : null;
   if (hoverItem) (elOf(hoverItem.src) || (hoverItem.src.startsWith('domain:') ? $(`[data-domain="${hoverItem.src.slice(7)}"]`) : null))?.classList.add('is-triggering');
   drawIntents();
+}
+// §40: botão de Afterlife na carta do seu Tartarus. Desabilitado mostra o motivo.
+const AFTERLIFE_WHY = {chain: 'Already on the stack.', timing: 'You need priority or an empty stack on your turn.', cost: 'Not enough Cosmo. In response, pay with Latent only.', target: 'No legal target.'};
+function afterlifeButton(key, zone, uid) {
+  const ability = zone === 'tartarus' && key === viewer() && AFTERLIFE[ctx.objects[uid]?.cardId];
+  if (!ability) return '';
+  const block = pending ? 'timing' : afterlifeBlock(S(), ctx, key, uid);
+  return `<button class="pile__hidden" data-afterlife="${uid}" ${block ? `disabled title="${AFTERLIFE_WHY[block] || ''}"` : ''}>Afterlife {${ability.cost}}</button>`;
 }
 // ---------- Atividade do adversário (docs/atividade-adversario.md, autor 01/11/2026) ----------
 // Sinais estilo Arena: carta virada da mão sobe, mira no alvo, God "pensando" e contorno na carta que ele inspeciona.
@@ -2314,3 +2326,4 @@ document.addEventListener('pointerover', showTip);
 document.addEventListener('focusin', showTip);
 document.addEventListener('pointerdown', () => tip.classList.remove('on'));
 init().catch(e => { boardRoot.innerHTML = `<p class="fatal">${esc(e.message)}</p>`; console.error(e); });
+  afterlifeBlock: (key, uid) => afterlifeBlock(S(), ctx, key, uid), activateAfterlife: (key, uid) => activateAfterlife(S(), ctx, key, uid),

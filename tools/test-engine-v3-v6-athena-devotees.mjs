@@ -52,7 +52,8 @@ const god = {kind: 'god', player: 'B'};
 const FOE = 'artemis-v6-399'; // 3/4
 const ready = (s, key) => s.players[key].bases.filter(b => b.prepared).length;
 // B declara Strike (turno de B) contra o alvo de A.
-const foeStrike = (s, ctx, attacker, target) => { s.active = 'B'; strike(s, ctx, attacker, target); };
+// Misty e Asterion têm Nimble (§43): o atacante de teste também precisa ter.
+const foeStrike = (s, ctx, attacker, target) => { s.active = 'B'; s.units[attacker].keywords = ['Nimble']; strike(s, ctx, attacker, target); };
 
 test('007 Nebula Chain: Shun se cansa e o Strike inimigo contra o God não causa dano', () => {
   const {s, ctx, give} = setup();

@@ -15,7 +15,7 @@
 
 | Keyword | Texto | Fonte |
 | --- | --- | --- |
-| GUARDIAN | While an enemy Guardian can be targeted, Strikes must target it, except against a Rival or with Nimble. | §42 |
+| GUARDIAN | While an enemy Guardian can be targeted, Strikes must target it. Nimble ignores Guardians without Nimble. | §42 |
 | NIMBLE | Ignores Guardian when declaring a Strike. It can still be targeted normally. | §43 |
 | CHEATER | Can only be targeted by Strikes from Devotees that also have Cheater. It can Strike any legal target. | §44 |
 | LONG RANGE | When it starts a Strike, its damage resolves before retaliation. If the defender is destroyed, it doesn't retaliate. | §45 |

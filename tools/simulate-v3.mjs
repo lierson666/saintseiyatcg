@@ -11,7 +11,7 @@ import {addPreviewCards} from '../shared/preview-cards.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
 import {placeBase, RuleError} from '../playtest/engine-v3/core.js';
 import {declareStrike, strikeTargets, mustStrike} from '../playtest/engine-v3/strike.js';
-import {playDevotee, playEquipment, playSpell, activate, reequip, duplicateCharacter, resonant, castCost, mixed, castHidden} from '../playtest/engine-v3/play.js';
+import {playDevotee, playEquipment, playSpell, activate, reequip, duplicateCharacter, resonant, castCost, mixed, castHidden, afterlifeBlock, activateAfterlife} from '../playtest/engine-v3/play.js';
 import {atkOf, hpOf, isSaint, isBronze} from '../playtest/engine-v3/effects.js';
 import {v6Spell, entryOf} from '../playtest/engine-v3/v6/hooks.js';
 import {domainEntry} from '../playtest/engine-v3/v6/registry.js';
@@ -113,6 +113,7 @@ export function playMatch({cards, index}, deckA, deckB, seed, first, trace = fal
     domainUses: key => { const d = domainEntry(s, key), general = domainUse === 'never' ? null : domainUse === 'always' && d?.activate ? {...d.activate, cost: d.activate.cost || 1} : d?.activate || null; return {res: !!d?.res, general}; }, activate: (key, uid) => activate(s, ctx, key, uid, {}),
     playSpell: (key, uid, ch) => playSpell(s, ctx, key, uid, ch), declareStrike: (uid, target) => declareStrike(s, ctx, uid, target),
     hiddenReason, castHidden: (key, uid, ch) => castHidden(s, ctx, key, uid, ch),
+    afterlifeBlock: (key, uid) => afterlifeBlock(s, ctx, key, uid), activateAfterlife: (key, uid) => activateAfterlife(s, ctx, key, uid),
     announceExclamation: (key, trio) => announceExclamation(s, ctx, key, trio), announceGreatFlood: key => announceGreatFlood(s, ctx, key),
   });
 

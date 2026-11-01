@@ -96,6 +96,7 @@ export function createAI(h) {
       const ch = choicesFor(key, h.STEPS[h.num(uid)] || []);
       if (ch) add(`hidden:${uid}`, {src: uid, aim: aimOf(ch), run: () => h.castHidden(key, uid, ch)});
     }
+    for (const uid of p.tartarus.filter(u => h.afterlifeBlock && !h.afterlifeBlock(key, u))) add(`afterlife:${uid}`, {src: uid, run: () => h.activateAfterlife(key, uid)});
     if (h.commandBlock && !h.commandBlock(key)) for (const uid of h.commandTargets(key)) add(`command:${uid}`, {aim: uid, run: () => h.activateCommand(key, uid)});
     const dom = h.domainUses?.(key);
     if (dom?.res) add('domain-res', {run: () => h.activate(key, `domain:${key}:res`)});
@@ -172,6 +173,10 @@ export function createAI(h) {
     for (const uid of h.hiddenReason ? p.bases.map(b => b.uid).filter(u => !h.hiddenReason(key, u)) : []) {
       const ch = fresh(`hidden:${uid}`) && choicesFor(key, h.STEPS[h.num(uid)] || []);
       if (ch) return {id: id(`hidden:${uid}`), src: uid, aim: aimOf(ch), run: () => h.castHidden(key, uid, ch)};
+    }
+    // 5b2. Afterlife (§40, 01/11/2026): o que sobrou de Cosmo, depois da mão.
+    for (const uid of h.afterlifeBlock ? p.tartarus.filter(u => !h.afterlifeBlock(key, u)) : []) {
+      if (fresh(`afterlife:${uid}`) && p.hand.every(u => h.playableReason(key, u))) return {id: id(`afterlife:${uid}`), src: uid, run: () => h.activateAfterlife(key, uid)};
     }
     // 5c. Divine Command (§63, 01/11/2026): antes dos Strikes. Inimigo: o de menor HP restante; Athena: o aliado mais ferido
     // (só se houver dano); Artemis: o aliado de maior ATK.

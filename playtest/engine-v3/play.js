@@ -6,6 +6,8 @@ import {RuleError, NotSpecified, assertIdle, spendBase, spellCategory, respond, 
 import {SPELLS, ABILITIES, onEnter, onCastEquipment, checkDefeats, namedCharacter, enforceUniqueness, silenced} from './effects.js';
 import {v6Spell, entryOf, V6, v6Attach} from './v6/hooks.js';
 import {collect, sources, domainEntry, domainResonant, resonanceTag} from './v6/registry.js';
+import {AFTERLIFE} from './v6/afterlife.js';
+import {exile} from './v6/kit.js';
 import {aim, withTargets} from './v6/targets.js';
 import {resonates} from '../../shared/canon-cards.js';
 
@@ -133,6 +135,33 @@ export function playEquipment(state, ctx, key, uid, bearer, choice = {}) {
 }
 
 // Habilidade ativada com {T} de um Devotee seu (ABILITIES em effects.js).
+// Afterlife (guia §40, autor 01/11/2026): do Tartarus, no próprio turno com a pilha vazia ou como resposta (só Latent).
+// Devolve o motivo do bloqueio ou null. Motivos: 'none', 'zone', 'chain', 'timing', 'cost', 'target'.
+export function afterlifeBlock(state, ctx, key, uid) {
+  const ability = AFTERLIFE[ctx.objects[uid]?.cardId], p = state.players[key];
+  if (!ability) return 'none';
+  if (!p.tartarus.includes(uid)) return 'zone';
+  if (state.chain.some(item => item.afterlife === uid)) return 'chain';
+  const response = Boolean(state.window);
+  if (state.victory || state.setup || (response ? state.window.priority !== key : key !== state.active || state.chain.length)) return 'timing';
+  if ((response ? p.latent : p.bases.filter(b => b.prepared).length + p.latent) < ability.cost) return 'cost';
+  try { ability.check?.(state, ctx, key, uid); } catch (e) { if (e instanceof RuleError) return 'target'; throw e; }
+  return null;
+}
+
+export function activateAfterlife(state, ctx, key, uid) {
+  const block = afterlifeBlock(state, ctx, key, uid);
+  if (block) throw new RuleError('§40', `Afterlife indisponível: ${block}`);
+  const ability = AFTERLIFE[ctx.objects[uid].cardId], cost = {amount: ability.cost, unit: 'base'};
+  payCost(state, key, state.window ? {amount: ability.cost, unit: 'latent'} : mixed(cost));
+  emit(state, 'ability', {player: key, uid, name: ability.name});
+  respond(state, key, {speed: 'instant', uid, ability: ability.name, afterlife: uid, run: st => {
+    ability.run(st, ctx, key, uid);
+    if (st.players[key].tartarus.includes(uid)) exile(st, ctx, uid, 'tartarus');
+    checkDefeats(st, ctx);
+  }});
+}
+
 export function activate(state, ctx, key, uid, choice = {}) {
   if (state.victory) throw new RuleError('D52', 'a partida já terminou');
   if (key !== state.active) throw new RuleError('D1', 'só o jogador ativo age, no próprio turno');

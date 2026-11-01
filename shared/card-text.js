@@ -4,10 +4,10 @@ import {KEYWORD_PT} from './card-i18n.js?v=20261031-kw1';
 // A sintaxe visual é compartilhada entre impressão e jogo; nunca altera as regras salvas.
 export const escapeText=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 // Keywords sempre em MAIÚSCULA e negrito no texto (autor, 31/10/2026); o Card Forge usa a mesma lista (forge.js).
-export const KEYWORD_WORDS=['Long Range','Multiguard(?: \\d+)?','Guardian','Nimble','Cheater','Pierce','Impulse','Hidden Cosmo','Sealed','Seal','Unfaith','Afterlife','Training'];
+export const KEYWORD_WORDS=['Long Range','Guardian','Nimble','Pierce','Impulse','Hidden Cosmo','Sealed','Seal','Afterlife','Training'];
 const words=KEYWORD_WORDS;
 // Mesmas keywords em PT (docs/glossario-pt-br.md), para o texto das cartas em português (campos *_pt).
-export const KEYWORD_WORDS_PT=['Longo Alcance','Multiguarda(?: \\d+)?','Guardião','Ágil','Trapaceiro','Perfurar','Impulso','Cosmo Oculto','Selado','Selo','Infiel','Além-Túmulo','Treinamento'];
+export const KEYWORD_WORDS_PT=['Longo Alcance','Guardião','Ágil','Perfurar','Impulso','Cosmo Oculto','Selado','Selo','Além-Túmulo','Treinamento'];
 // Bônus de atributo ("+1 ATK / +1 HP", "+2/+2", "-1 ATK") sempre em negrito e maiúscula (autor, 31/10/2026).
 // Só "+": verde (como bônus no duelo); só "-": vermelho; misto: cor do tema.
 export const statTrend=m=>/-\d/.test(m)?(/\+\d/.test(m)?'mixed':'down'):'up';

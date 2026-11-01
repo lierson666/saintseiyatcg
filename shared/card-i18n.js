@@ -18,11 +18,11 @@ export function displayCard(card) {
 
 // Keywords: o nome em inglês é a chave (engine, KEYWORD_RULES); em PT só muda o que aparece.
 export const KEYWORD_PT = {
-  'Guardian': 'Guardião', 'Nimble': 'Ágil', 'Cheater': 'Trapaceiro', 'Long Range': 'Longo Alcance', 'Pierce': 'Perfurar', 'Impulse': 'Impulso', 'Hidden Cosmo': 'Cosmo Oculto',
-  'Seal': 'Selo', 'Sealed': 'Selado', 'Unfaith': 'Infiel', 'Training': 'Treinamento', 'Afterlife': 'Além-Túmulo',
-  'Prepared': 'Preparado', 'Unprepared': 'Despreparado', 'Prepare': 'Preparar', 'Multiguard': 'Multiguarda',
+  'Guardian': 'Guardião', 'Nimble': 'Ágil', 'Long Range': 'Longo Alcance', 'Pierce': 'Perfurar', 'Impulse': 'Impulso', 'Hidden Cosmo': 'Cosmo Oculto',
+  'Seal': 'Selo', 'Sealed': 'Selado', 'Training': 'Treinamento', 'Afterlife': 'Além-Túmulo',
+  'Prepared': 'Preparado', 'Unprepared': 'Despreparado', 'Prepare': 'Preparar',
 };
-export const keywordName = k => (lang() === 'pt' ? String(k).replace(/^(Long Range|Multiguard|[A-Z][a-z]+)/, m => KEYWORD_PT[m] ?? m) : k);
+export const keywordName = k => (lang() === 'pt' ? String(k).replace(/^(Long Range|[A-Z][a-z]+)/, m => KEYWORD_PT[m] ?? m) : k);
 
 // Linha de tipo (tipo, subtipos, facção) em PT. tipo/subtipos continuam em inglês nos dados: a engine lê esses valores.
 export const TYPE_PT = {

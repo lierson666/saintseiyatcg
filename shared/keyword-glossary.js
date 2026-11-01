@@ -3,33 +3,29 @@
 import {KEYWORD_PT, lang} from './card-i18n.js?v=20261031-kw1';
 
 export const KEYWORD_RULES = {
-  'Guardian': 'While an enemy Guardian can be targeted, Strikes must target it, except against a Rival or with Nimble.',
-  'Nimble': 'Ignores Guardian when declaring a Strike. It can still be targeted normally.',
-  'Cheater': 'Can only be targeted by Strikes from Devotees that also have Cheater. It can Strike any legal target.',
+  'Guardian': 'While an enemy Guardian can be targeted, Strikes must target it. Nimble ignores Guardians without Nimble.',
+  'Nimble': 'Can only be targeted by Strikes from Devotees with Nimble. Ignores Guardians without Nimble when declaring a Strike.',
   'Long Range': "When it starts a Strike, its damage resolves before retaliation. If the defender is destroyed, it doesn't retaliate.",
   'Pierce': "When it Strikes a Devotee, excess damage is dealt to that player's God Soul. Doesn't apply to retaliation.",
   'Impulse': 'Can declare a Strike the round it enters the battlefield, against any legal target, including the God.',
-  'Seal': 'Whenever this Devotee would become Prepared, remove a Seal counter from it instead.',
-  'Sealed': 'Has one or more Seal counters. It can still Strike and use abilities while Prepared.',
-  'Unfaith': "When it Strikes a God, you may remove up to 2 of that player's Latent Cosmo instead of dealing Soul damage.",
+  'Seal': 'This Devotee becomes Unprepared and gets a Seal counter. At the start of its owner\'s turn, it removes one Seal counter and does not Prepare.',
+  'Sealed': 'Has one or more Seal counters. It stays Unprepared until it starts a turn with none.',
   'Training': 'Each Training counter gives +1 ATK / +1 HP. Counters stack while the Devotee stays on the battlefield.',
-  'Afterlife': "Abilities marked Afterlife work only while this card is in its owner's Tartarus. Being in the Tartarus doesn't grant Afterlife.",
+  'Afterlife': 'Activate from your Tartarus by paying its Afterlife cost, on your turn or in response. After it resolves, this card goes to the Void.',
   'Hidden Cosmo': 'While this card is one of your Cosmo Bases, you can play it from there by paying X instead of its cost. The top card of your deck replaces it as an Unprepared Base.', // guia §4A
 };
 
 // Mesmos lembretes em PT-BR (docs/glossario-pt-br.md), mostrados quando o jogo está em português (shared/card-i18n.js).
 export const KEYWORD_RULES_PT = {
-  'Guardian': 'Enquanto um Guardião inimigo puder ser alvo, os Golpes precisam mirá-lo, exceto contra um Rival ou com Ágil.',
-  'Nimble': 'Ignora Guardião ao declarar um Golpe. Ainda pode ser alvo normalmente.',
-  'Cheater': 'Só pode ser alvo de Golpes de Devotos que também tenham Trapaceiro. Pode Golpear qualquer alvo válido.',
+  'Guardian': 'Enquanto um Guardião inimigo puder ser alvo, os Golpes precisam mirá-lo. Ágil ignora Guardiões sem Ágil.',
+  'Nimble': 'Só pode ser alvo de Golpes de Devotos com Ágil. Ignora Guardiões sem Ágil ao declarar um Golpe.',
   'Long Range': 'Quando começa um Golpe, seu dano resolve antes do revide. Se o defensor for destruído, ele não revida.',
   'Pierce': 'Quando Golpeia um Devoto, o dano excedente vai para a Alma do Deus daquele jogador. Não vale no revide.',
   'Impulse': 'Pode declarar um Golpe na rodada em que entra no campo de batalha, contra qualquer alvo válido, inclusive o Deus.',
-  'Seal': 'Sempre que este Devoto ficaria Preparado, remova dele um marcador de Selo em vez disso.',
-  'Sealed': 'Tem um ou mais marcadores de Selo. Ainda pode Golpear e usar habilidades enquanto estiver Preparado.',
-  'Unfaith': 'Quando Golpeia um Deus, você pode remover até 2 de Cosmo Latente daquele jogador em vez de causar dano na Alma.',
+  'Seal': 'Este Devoto fica Despreparado e ganha um marcador de Selo. No início do turno do dono, ele tira um marcador de Selo e não prepara.',
+  'Sealed': 'Tem um ou mais marcadores de Selo. Fica Despreparado até começar um turno sem nenhum.',
   'Training': 'Cada marcador de Treinamento dá +1 ATQ / +1 PV. Os marcadores se acumulam enquanto o Devoto estiver no campo de batalha.',
-  'Afterlife': 'Habilidades marcadas Além-Túmulo só funcionam enquanto esta carta estiver no Tártaro do dono. Estar no Tártaro não dá Além-Túmulo.',
+  'Afterlife': 'Ative do seu Tártaro pagando o custo de Além-Túmulo, no seu turno ou como resposta. Depois de resolver, esta carta vai para o Vazio.',
   'Hidden Cosmo': 'Enquanto esta carta for uma das suas Bases de Cosmo, você pode jogá-la de lá pagando X no lugar do custo. A carta do topo do seu deck entra no lugar como Base Despreparada.', // guia §4A
 };
 

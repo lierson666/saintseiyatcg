@@ -4,6 +4,16 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-01 — Cap. IX, §12, §40, §43, §44, §49, §59 — Lista final de keywords
+
+- **Antes:** listas diferentes no guia, Forge e jogo. Cheater: só alvo de Cheater. Nimble: ignora Guardian. Afterlife: marca ativada ou de gatilho, carta fica no Tartarus. Unfaith ativa sem cartas.
+- **Depois:** 7 keywords: Guardian, Pierce, Impulse, Nimble, Long Range, Hidden Cosmo, Afterlife. Nimble é o “voar”: só Nimble mira Nimble e ignora Guardian sem Nimble. Cheater sai, absorvida por Nimble. Unfaith fica reservada. Afterlife é ativada, do Tartarus, no próprio turno ou como resposta; depois vai para o Void. Seal, Sealed e Training são marcadores; Cosmoble, Equip, Resonance e Awaken são mecânicas.
+- **Motivo:** grill do autor, 01/11/2026.
+- **A confirmar com o autor:** Afterlife como resposta paga só com Latent, seguindo o Moment.
+- **Cartas:** diff em `docs/keywords-2026-11-01/cards.diff.md`. Phoenix Ikki não tem Afterlife. Hidden Cosmo só entra em mais cartas depois do teste do Afterlife.
+- **Engine/UI:** `engine-v3/strike.js`, `engine-v3/play.js` (`activateAfterlife`), `engine-v3/v6/afterlife.js`, IA, Tartarus do duelo, listas de keyword, glossários, How to Play.
+
+
 ## 2026-11-01 — Cartas (Athena) — 082 The Golden Arrow sem condição de Strike
 
 - **Antes:** *Send target enemy Devotee that declared a Strike this turn to the Void…*; a engine só aceitava esse alvo, e a Spell resolvia sem efeito contra quem não atacou.

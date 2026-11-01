@@ -27,24 +27,24 @@ export function checkStrike(state, ctx, attacker, target) {
   const legal = target.kind === 'god' ? target.player === enemy
     : target.kind === 'devotee' && onField(state, enemy, target.uid) && card(ctx, target.uid).kind === 'Devotee';
   if (!legal) throw new RuleError('P04', 'alvo precisa ser o God inimigo ou um Devotee inimigo');
-  // §44 (autor, 31/10/2026): Devotee com Cheater só pode ser alvo de Strike de outro Devotee com Cheater.
+  // §43 (autor, 01/11/2026): Nimble é o "voar": só outro Nimble mira um Devotee com Nimble.
   const own = keywordsOf(state, ctx, attacker), has = (uid, kw) => keywordsOf(state, ctx, uid).includes(kw);
-  const reachable = uid => !has(uid, 'Cheater') || own.includes('Cheater');
-  if (target.kind === 'devotee' && !reachable(target.uid)) throw new RuleError('P04', 'só um Devotee com Cheater pode mirar um Devotee com Cheater');
+  const flies = own.includes('Nimble'), reachable = uid => !has(uid, 'Nimble') || flies;
+  if (target.kind === 'devotee' && !reachable(target.uid)) throw new RuleError('P04', 'só um Devotee com Nimble pode mirar um Devotee com Nimble');
   const defenders = state.players[enemy].battlefield.filter(uid => card(ctx, uid).kind === 'Devotee');
   // P05 A + G3-038 (autor, 28/10/2026): qualquer Guardian em campo, Prepared ou não, obriga a mirar um Guardian;
-  // Nimble ignora sempre. §12 (31/10/2026): Guardian que o atacante não pode mirar (Cheater) não obriga.
+  // §12 (01/11/2026): Nimble ignora Guardian sem Nimble; Guardian com Nimble não obriga quem não pode mirá-lo.
   const isGuardian = uid => has(uid, 'Guardian');
-  const guarded = defenders.some(uid => isGuardian(uid) && reachable(uid));
+  const guards = defenders.filter(uid => isGuardian(uid) && reachable(uid)), guarded = guards.length > 0;
   // La Scoumoune (363, autor 30/10/2026): mira Devotee inimigo Unprepared ignorando Guardian (gancho ignoresGuardian).
   const hunts = target.kind === 'devotee' && !!entryOf(ctx, attacker)?.ignoresGuardian?.(state, ctx, attacker, target.uid);
-  const ignores = own.includes('Nimble') || hunts;
+  const ignores = (flies && !guards.some(uid => has(uid, 'Nimble'))) || hunts;
   if (guarded && !ignores && !(target.kind === 'devotee' && isGuardian(target.uid))) {
     throw new RuleError('P05', 'há Guardian em campo: o Strike precisa mirar um Devotee com Guardian');
   }
   if (state.strikes.get(attacker) === state.turn) throw new RuleError('D22', 'este Devotee já declarou Strike neste turno');
   // Para a UI explicar quando um Strike passa por Guardian.
-  const bypass = guarded && !(target.kind === 'devotee' && isGuardian(target.uid)) ? (own.includes('Nimble') ? 'Nimble' : 'Hunter\'s Instinct') : null;
+  const bypass = guarded && !(target.kind === 'devotee' && isGuardian(target.uid)) ? (flies ? 'Nimble' : 'Hunter\'s Instinct') : null;
   return {key, enemy, bypass};
 }
 

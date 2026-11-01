@@ -2,7 +2,7 @@
 // com a mesma função da engine: a tela manda dados ({type, key, uid, choice…}), nunca uma função.
 import {startTurn, endTurn, pass, placeBase, orderTriggers, RuleError} from './core.js';
 import {declareStrike, mustStrike} from './strike.js';
-import {playDevotee, playEquipment, playSpell, activate, reequip, castHidden} from './play.js';
+import {playDevotee, playEquipment, playSpell, activate, activateAfterlife, reequip, castHidden} from './play.js';
 import {announceExclamation, removeJudgment, announceGreatFlood, announceGreatEclipse, announceObliteration, activateBloodlust, activateCommand, placeBaseMoonHarvest, announceMoonAwakening} from './gods.js';
 import {mulligan} from './match.js';
 import {applyTimeout} from './clock.js';
@@ -32,6 +32,7 @@ export function applyAction(match, ctx, action) {
     case 'pass': return pass(s, key);
     case 'orderTriggers': return orderTriggers(s, key, choice.order || []);
     case 'endTurn':
+    case 'afterlife': return activateAfterlife(s, ctx, key, uid); // §40: do Tartarus
       if (s.active !== key) throw new RuleError('D1', 'END TURN fora do próprio turno');
       if (mustStrike(s, ctx, key).length) throw new RuleError('V6', 'Uncontrolled Rage: este Devotee precisa declarar Strike antes do END TURN');
       match.ending = true;

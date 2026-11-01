@@ -29,7 +29,7 @@ function setup(decks = {A: rush, B: fortress}) {
 
 test('parser: bônus fixo de Equipment só nas linhas incondicionais', () => {
   assert.deepEqual(cards.get('athena-v6-002').equipped, {atk: 1, hp: 0, keywords: []});
-  assert.deepEqual(cards.get('athena-v6-019').equipped, {atk: 3, hp: 0, keywords: ['Cheater']});
+  assert.deepEqual(cards.get('athena-v6-019').equipped, {atk: 3, hp: 0, keywords: ['Nimble']});
   assert.deepEqual(cards.get('athena-v6-049').equipped, {atk: 0, hp: 2, keywords: []});
   assert.equal(cards.get('athena-v6-047').equipped, null, '"while it has damage" fica para os efeitos');
   assert.equal(cards.get('athena-v6-004').equipped, null);
@@ -72,13 +72,13 @@ test('Divine Weapon com +HP (049) soma HP; a Armor (044) soma o HP impresso ao p
   assert.deepEqual([t.s.units[repairer].damage, t.s.players.B.soul, t.s.units[seiya].damage], [1, 20, 2], 'sem excesso: Pierce não passa ao God');
 });
 
-test('019 equipada dá Cheater: não ignora mais Guardian (§44, 31/10/2026); texto da 019 intacto', () => {
+test('019 equipada dá Nimble: ignora Guardian sem Nimble (§43, 01/11/2026)', () => {
   const {s, ctx, field, equip, strike} = setup();
   const seiya = field('A', '001');
   field('B', '040');
   equip('A', '019', seiya);
-  assert.ok(keywordsOf(s, ctx, seiya).includes('Cheater'));
-  assert.throws(() => strike(seiya, {kind: 'god', player: 'B'}), /P05/);
+  assert.ok(keywordsOf(s, ctx, seiya).includes('Nimble'));
+  strike(seiya, {kind: 'god', player: 'B'});
   const original = canon.cards.find(c => c.id.toLowerCase() === 'athena-v6-019');
   assert.equal(cards.get('athena-v6-019').text, original.original_text);
 });

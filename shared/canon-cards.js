@@ -54,8 +54,9 @@ export function parseCard(record) {
     equip: equip ? {amount: Number(equip[1]), who: /^Other/.test(equip[2]) ? 'other' : 'any'} : null,
     // "Equip: None — Global" (020 e itens globais): fica no campo sem portador (guia §33).
     global: /Equip: None — Global/.test(text),
-    equipped: bonus ? {atk: Number(bonus[1]), hp: Number(bonus[2] ?? 0), keywords: bonus[3] ? [bonus[3]] : []} : null,
-    keywords: ['Guardian', 'Cheater', 'Nimble', 'Pierce', 'Impulse', 'Long Range']
+    // D268 é congelado; Cheater foi absorvida por Nimble (guia §44, 01/11/2026).
+    equipped: bonus ? {atk: Number(bonus[1]), hp: Number(bonus[2] ?? 0), keywords: bonus[3] ? [bonus[3] === 'Cheater' ? 'Nimble' : bonus[3]] : []} : null,
+    keywords: ['Guardian', 'Nimble', 'Pierce', 'Impulse', 'Long Range']
       .filter(k => new RegExp(`^\\s*${k}\\s*$`, 'm').test(text)),
     text,
   };

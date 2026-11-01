@@ -2,7 +2,7 @@ import {renderRules,inlineMarkup,presentationRules,ruleBlocksWithoutKeywords,blo
 import {isArmor,isEquipment} from './card-model.js?v=20261024-4';
 import {renderPublishedCard,visualProject} from './layout-studio/runtime.js?v=20261101-rules1';
 import {printedEquipmentBonuses,signedBonus,armorBonusText} from './card-visual-values.js?v=20261031-kw1';
-import {renderKeywordNotes} from './keyword-glossary.js?v=20261101-rules1';
+import {renderKeywordNotes} from './keyword-glossary.js?v=20261101-kw7';
 import {displayCard,keywordName,typeWord,lang} from './card-i18n.js?v=20261101-tr1';
 // A ilustração é apenas fundo. Letras, números e estados são dados independentes no DOM.
 const escape=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

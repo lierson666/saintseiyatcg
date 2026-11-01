@@ -229,8 +229,8 @@ respeitando Guardian (seção 12). Se não houver alvo legal, o Devotee não pod
 
 Enquanto o adversário controlar ao menos um Devotee com Guardian em campo, **Prepared ou não** (G3-038), os Strikes devem mirar um Devotee com Guardian. Exceções:
 
-* **Nimble** ignora essa exigência.
-* Um Guardian que o atacante não pode mirar (ex.: Guardian com **Cheater** contra atacante sem Cheater) não conta para essa exigência (autor, 31/10/2026).
+* **Nimble** ignora Guardian sem Nimble: só um Guardian com Nimble obriga um atacante com Nimble (autor, 01/11/2026).
+* Um Guardian que o atacante não pode mirar (Guardian com **Nimble** contra atacante sem Nimble) não conta para essa exigência.
 * Efeitos de carta podem criar exceções expressas (ex.: La Scoumoune, 363).
 
 ### 13. (retirada)
@@ -447,19 +447,20 @@ Cartas e habilidades podem interagir com Devotees nessa zona.
 
 ### 40. Afterlife
 
-AFTERLIFE marca uma habilidade que só funciona enquanto a carta está no Tartarus do dono (autor, 31/10/2026). Vale para qualquer tipo de carta.
+AFTERLIFE é uma habilidade ativada que só funciona enquanto a carta está no Tartarus do dono (autor, 01/11/2026). Vale para qualquer tipo de carta.
 
-Escrita: “Afterlife — {custo}: efeito” (ativada) ou “Afterlife — When…/Whenever…” (gatilho).
+Escrita: “Afterlife {custo}: efeito”.
 
-* A habilidade Afterlife ativada usa AÇÃO no próprio turno, com a pilha vazia, e entra na pilha como as outras ativações.
-* A habilidade Afterlife de gatilho dispara normalmente enquanto a carta está no Tartarus.
-* Fora do Tartarus (campo, mão, deck, Void), habilidades Afterlife não funcionam.
+* Pode ser usada no próprio turno, com a pilha vazia, ou como resposta, quando o jogador tem prioridade. Como resposta, o custo é pago só com Latent, como um Moment (§5).
+* Entra na pilha como as outras ativações. Depois de resolver, a carta vai para o Void.
+* Fora do Tartarus (campo, mão, deck, Void), a habilidade não funciona. A mesma carta não pode ter duas ativações de Afterlife na pilha.
+* Gatilho de derrota não é Afterlife, mesmo que devolva a carta do Tartarus (ex.: Deadly Beetle Stand, Underworld Skeleton, Phoenix Ikki).
 
 Estar no Tartarus não dá Afterlife a uma carta: só têm Afterlife as cartas com habilidade Afterlife impressa.
 
 Nomenclatura oficial
 
-* Afterlife: marca de habilidade que funciona no Tartarus.
+* Afterlife: habilidade ativada usada do Tartarus; depois a carta vai para o Void.
 * Arayashiki: não é keyword da engine.
 * Meikai: não é keyword da engine.
 
@@ -475,17 +476,19 @@ Uma habilidade Afterlife só devolve a carta ao campo se o texto disser.
 
 ## CAPÍTULO IX — KEYWORDS DE COMBATE
 
+Keyword é uma palavra que resume uma habilidade da carta (autor, 01/11/2026). A lista oficial tem 7: **Guardian, Pierce, Impulse, Nimble, Long Range, Hidden Cosmo e Afterlife**. Seal, Sealed e Training são marcadores. Cosmoble, Equip, Resonance e Awaken são mecânicas.
+
 ### 42. Guardian
 
-Enquanto houver Devotee inimigo com Guardian em campo, Prepared ou não, os Strikes devem mirar um Guardian (exceto com Nimble; um Guardian que o atacante não pode mirar não conta). Ver §12.
+Enquanto houver Devotee inimigo com Guardian em campo, Prepared ou não, os Strikes devem mirar um Guardian (exceto Nimble contra Guardian sem Nimble; um Guardian que o atacante não pode mirar não conta). Ver §12.
 
 ### 43. Nimble
 
-Ignora a exigência de escolher um Guardian ao declarar Strike. Pode ser atacado normalmente.
+É o “voar” do jogo (autor, 01/11/2026). Só pode ser alvo de Strike de um Devotee com Nimble, e ignora Guardian sem Nimble ao declarar Strike. Efeitos que não são Strike o alcançam normalmente. PT: Ágil.
 
-### 44. Cheater
+### 44. (Removida)
 
-Só pode ser alvo de Strike de um Devotee que também tenha Cheater (autor, 31/10/2026). O Devotee com Cheater ataca qualquer alvo legal. Substitui a versão anterior (ignorar Guardian contra o God e anular Long Range).
+Cheater saiu do jogo em 01/11/2026 e foi absorvida por Nimble (§43).
 
 ### 45. Long Range
 
@@ -513,7 +516,7 @@ Seal é um marcador num Devotee (autor, 31/10/2026, seguindo a D211/D212). Sempr
 
 Cada Training counter num Devotee dá +1 ATK / +1 HP a ele. Os marcadores se acumulam (2 marcadores = +2/+2) e ficam enquanto o Devotee estiver no campo. Efeitos que citam Training counters (ex.: Master's Guidance, de Eagle Marin) somam ao bônus do próprio marcador.
 
-### 49. Unfaith
+### 49. (Reservada: Unfaith)
 
 Ao declarar Strike contra um God, o atacante pode escolher remover até 2 Latent Cosmo do adversário em lugar do dano ao Soul.
 
@@ -636,16 +639,14 @@ O dano é marcado separadamente do HP máximo. Power negativo causa zero dano. H
 
 | Keyword | Definição |
 | --- | --- |
-| Guardian | Enquanto estiver em campo, Prepared ou não, Strikes inimigos devem mirar um Guardian, exceto com Nimble. Um Guardian que o atacante não pode mirar não conta. |
-| Nimble | Ignora a exigência de mirar Guardian ao declarar Strike. Pode ser alvo normalmente. |
-| Cheater | Só pode ser alvo de Strike de outro Devotee com Cheater. |
+| Guardian | Enquanto estiver em campo, Prepared ou não, Strikes inimigos devem mirar um Guardian, exceto Nimble contra Guardian sem Nimble. Um Guardian que o atacante não pode mirar não conta. |
+| Nimble | Só pode ser alvo de Strike de outro Devotee com Nimble. Ignora Guardian sem Nimble ao declarar Strike. |
 | Long Range | Ao iniciar Strike, causa seu dano primeiro. Verificar destruição/derrota antes da retaliação; alvo destruído não retalia. Defender com Long Range não concede dano primeiro. |
 | Pierce | Ao iniciar Strike contra um Devotee, o dano excedente ao HP restante daquele alvo é causado ao Soul do God que o controla. Não funciona por retaliação. Calcular depois de prevenção/modificação do dano e sem contar dano antigo como dano novo. |
 | Impulse | Pode declarar Strike no turno em que entra em campo, contra qualquer alvo legal, inclusive o God. Pierce continua funcionando normalmente. |
-| Sealed | Ter 1 ou mais marcadores Seal (§48). Quando ficaria Prepared, remove 1 marcador e continua Unprepared. Não impede Strike nem habilidades de um Devotee Prepared. |
-| Unfaith | Ao declarar Strike contra um God, pode escolher remover até 2 Latent Cosmo daquele jogador em lugar de causar dano ao Soul. A escolha é anunciada antes das respostas. Sem Latent, o modo não causa dano ao Soul. |
+| Sealed | Ter 1 ou mais marcadores Seal (§48). Receber Seal deixa o Devotee Unprepared. No início do turno do dono, ele tira 1 marcador e não prepara. |
 
-**Unfaith foi confirmada pelo autor com este complemento:** cria uma decisão entre pressão no Soul e negação de recurso. Cheater mudou em 31/10/2026 (§44).
+Cheater e Unfaith saíram das keywords em 01/11/2026 (§44, §49).
 
 Se um Strike causar Soul zero aos dois Gods simultaneamente por efeitos aplicáveis à mesma etapa, há empate. Se Long Range derrotar o God na etapa inicial, a partida termina antes da retaliação. Gatilhos futuros não desfazem uma derrota já verificada; substituições de derrota/dano precisam agir antes dessa verificação.
 
@@ -659,7 +660,7 @@ Se um Strike causar Soul zero aos dois Gods simultaneamente por efeitos aplicáv
 - Limite de **3 Latent por jogador**, persistente entre turnos. As Bases Prepared viram Latent no início da End Phase do seu turno (§5).
 - Escolhas e custos são validados antes de gastar; pagamento insuficiente não produz gasto parcial. Recursos pagos em uma declaração válida não retornam se o efeito depois falhar.
 
-**Por quê:** a conversão no fim do turno garante Latent para responder no turno do adversário. O limite do banco limita explosões e torna Unfaith útil sem decidir a partida sozinho.
+**Por quê:** a conversão no fim do turno garante Latent para responder no turno do adversário. O limite do banco limita explosões.
 
 ### 61. Equipamentos, estágios e remoção
 
@@ -681,7 +682,7 @@ Se um Strike causar Soul zero aos dois Gods simultaneamente por efeitos aplicáv
 - God Armor exige os custos e requisitos da própria carta; estágio anterior somente quando expressamente exigido. Nem toda armadura tem God Cloth, e o estágio não concede imunidade implícita contra Gods.
 - Retirar o antigo limiar universal de Awaken dos Gods. Uma nova carta de God pode ter seu próprio despertar, inteiramente descrito no texto, sem depender de uma regra herdada.
 - **Ultimate é usada no próprio turno, com uma utilização por identidade de personagem, por jogador e por partida**, além do pagamento exclusivamente em Base e dos requisitos impressos. Na ausência de personagem nomeado, usar a identidade da carta. Ressuscitar ou trocar a versão do mesmo personagem não recarrega essa utilização. Não exige God Cloth universalmente nem consome Prepared se isso não estiver no custo.
-- Afterlife é uma marca de habilidade impressa que funciona no Tartarus (§40, autor 31/10/2026); estar no Tartarus não dá Afterlife.
+- Afterlife é uma habilidade ativada impressa, usada do Tartarus; depois a carta vai para o Void (§40, autor 01/11/2026). Estar no Tartarus não dá Afterlife.
 - Retornar do Tartarus exige um efeito. Por padrão, a carta retorna sob controle de seu proprietário, Prepared, sem dano, sem seu Awaken anterior e sem equipamentos automaticamente anexados; o efeito pode especificar exceções.
 - Limite experimental para evitar ciclos: **cada carta física pode retornar do Tartarus ao campo uma vez por rodada**. Hades pode retornar vários Devotees diferentes; exceções ao limite precisam estar explícitas. Sair de novo não renova o limite.
 

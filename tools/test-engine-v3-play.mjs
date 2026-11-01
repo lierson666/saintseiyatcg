@@ -309,17 +309,17 @@ test('Long Range: derrota o alvo antes da retaliação', () => {
   assert.equal(s.units[seiya].damage, 0, 'sem retaliação');
 });
 
-test('Long Range: alvo que sobrevive retalia; Cheater no alvo não anula mais (§44, 31/10/2026)', () => {
+test('Long Range: alvo que sobrevive retalia; vale contra Nimble (§43, 01/11/2026)', () => {
   const a = longRange();
   a.s.units[a.foe].damage = -20; // sobrevive ao primeiro dano
   declareStrike(a.s, a.ctx, a.seiya, {kind: 'devotee', uid: a.foe}); passAll(a.s);
   assert.ok(a.s.units[a.seiya].damage > 0, 'retaliou');
-  const b = longRange(['Cheater']);
-  assert.throws(() => declareStrike(b.s, b.ctx, b.seiya, {kind: 'devotee', uid: b.foe}), /P04/, 'sem Cheater não mira Cheater');
-  b.s.units[b.seiya].keywords = ['Cheater']; // concedido por efeito
+  const b = longRange(['Nimble']);
+  assert.throws(() => declareStrike(b.s, b.ctx, b.seiya, {kind: 'devotee', uid: b.foe}), /P04/, 'sem Nimble não mira Nimble');
+  b.s.units[b.seiya].keywords = ['Nimble']; // concedido por efeito
   declareStrike(b.s, b.ctx, b.seiya, {kind: 'devotee', uid: b.foe}); passAll(b.s);
   assert.ok(b.s.players.B.tartarus.includes(b.foe));
-  assert.equal(b.s.units[b.seiya].damage, 0, 'Long Range vale contra Cheater');
+  assert.equal(b.s.units[b.seiya].damage, 0, 'Long Range vale contra Nimble');
 });
 
 // Guia §5: Moment como AÇÃO, Technique e Equipment pagam em Base e/ou Latent; Devotee só Base.
