@@ -28,7 +28,7 @@ const decks = read('./fixtures/decks-preview.json').decks;
 function setup() {
   const deck = id => ({...decks.find(d => d.id === id)});
   const m = createMatch({cards, canonIndex: index, decks: {A: deck('preview-artemis-hunt'), B: deck('preview-ares-legions')}, first: 'A', seed: 1});
-  m.state.gods.A = 'god-artemis'; // Domain da mesma facção do God (guia §63)
+  m.state.gods.A = m.state.divine.A.god = 'god-artemis'; // Ressonância dos Domains lê s.divine[key].god (01/11/2026)
   const s = m.state, ctx = {cards, objects: m.objects, attached: m.attached}, p = s.players.A;
   bindContext(s, ctx);
   for (const pl of Object.values(s.players)) pl.deck.push(...pl.hand.splice(0)); s.setup = null;
@@ -175,15 +175,15 @@ test('Hermia paga {1}{C} quando outro Devotee recebe marcador; Lunar Amulet só 
   assert.equal(atkOf(s, ctx, hermia), atk + 1 + 1); // marcador + Lunar Resonance
 });
 
-test('Domain 427 Temple of the Moon: Satellites +0/+1; Lunar Communion (Once per game) põe +1/+1 em cada Devotee de Artemis', () => {
-  const {s, ctx, p, field} = setup();
+test('Domain 427 Temple of the Moon: Satellites +0/+1; Ressonância põe um Training counter em cada Satellite, uma vez por turno', () => {
+  const {s, ctx, field} = setup();
   s.domains.A = 'artemis-v6-427';
   const archer = field('A', 'artemis-v6-393'), other = field('A', 'artemis-v6-404');
   assert.equal(hpOf(s, ctx, archer), cards.get('artemis-v6-393').hp + 1);
-  activate(s, ctx, 'A', 'domain:A:opg', {});
+  activate(s, ctx, 'A', 'domain:A:res', {}); passAll(s);
   assert.equal(s.units[archer].counters, 1);
-  assert.equal(s.units[other].counters, 1);
-  assert.throws(() => activate(s, ctx, 'A', 'domain:A:opg', {}), /Once per game/);
+  assert.ok(!s.units[other].counters, 'não é Satellite');
+  assert.throws(() => activate(s, ctx, 'A', 'domain:A:res', {}), /turno/);
 });
 
 test('tokens (guia §63): The Forest Invades Sanctuary cria 2 Forest Guardian 3/3 Unprepared; token derrotado some', async () => {

@@ -130,7 +130,6 @@
         { "kind": "text", "field": "name", "style": "title", "x": 552, "y": 184, "size": 84, "maxW": 760, "upper": true },
         { "kind": "text", "field": "subtitle", "style": "subtitle", "x": 552, "y": 282, "size": 42, "maxW": 760, "upper": true },
         { "kind": "piece", "piece": "athena/box_type", "dy": -366 },
-        { "kind": "gem", "piece": "athena/gem_power", "field": "attack", "size": 99, "dx": 4, "dy": -368 },
         { "kind": "gem", "piece": "athena/gem_soul", "field": "soul", "size": 99 },
         { "kind": "text", "field": "typeLine", "style": "typeline", "x": 744, "y": 891, "size": 42, "maxW": 980, "upper": true },
         { "kind": "rules", "rect": [155, 990, 1178, 900], "size": 42 },

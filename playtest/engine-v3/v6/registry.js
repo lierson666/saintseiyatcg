@@ -69,38 +69,29 @@
 // `watch*` em Domain: `self` = `domain:${key}` (o Domain não é objeto de deck; fica em state.domains[key]).
 // Escolhas de alvo e de modo: perguntas da engine na CONJURAÇÃO (ver `spell` acima); "you may" e demais: na resolução, pelo kit (./kit.js).
 
-import {loseSoul} from '../core.js';
-
 const CARDS = {};
 export const V6 = CARDS;
 export function register(table) { Object.assign(CARDS, table); }
 
-// Domain fora da cor (guia §63, autor 31/10/2026): facção do Domain diferente da do God.
+// Domains (rebalanceamento aprovado pelo autor em 01/11/2026, docs/domains-rebalance-proposta.md): cada Domain tem a linha
+// geral, que vale com qualquer God, e a Ressonância, que só vale se o God do controlador for da facção do Domain.
+// Entrada de Domain: ganchos da linha geral (`activate` = ativada da linha geral, uid `domain:${key}`) + `res` (ativada da
+// Ressonância, uid `domain:${key}:res`, via play.activate) + `resonance` (ganchos de gatilho da Ressonância, mesmo contrato).
+// Sem custo extra fora da facção: o preço é perder a Ressonância.
 const factionOf = id => String(id || '').replace(/^god-/, '').split('-')[0];
-export const offColor = (state, key) => Boolean(state.gods?.[key]) && factionOf(state.gods?.[key]) !== factionOf(state.domains?.[key]);
-// Ganchos estáticos (desligados fora da cor). Os demais ganchos de Domain são gatilhos.
-const STATIC = new Set(['aura', 'mods', 'costLess']);
-// Custo adicional {1}{S} do Domain fora da cor: opcional; sem pagar, a habilidade não é usada.
-export function payOffColor(state, ctx, key, ability) {
-  const p = state.players[key];
-  if (p.soul < 1 || !ctx.decide?.(key, {ability, uid: `domain:${key}`, cost: '1 Soul', text: "Domain outside your God's faction: pay {1}{S} to use this ability?"})) return false;
-  loseSoul(state, {[key]: 1}, 'payment');
-  return true;
-}
-// Domain efetivo de `key`. Entrada de Domain: ganchos da linha 1 + `opg` (linha 2, Once per game, só via play.activate).
-// Fora da cor: estáticas e `opg` somem; `activate` leva `offColor`; cada gatilho paga {1}{S} antes de resolver.
-// shortcut: o "once each round" do gatilho é gasto ao disparar, mesmo se o jogador recusar o {1}{S}.
+export const domainResonant = (state, key) => {
+  const god = state.divine?.[key]?.god ?? state.gods?.[key];
+  return Boolean(god && state.domains?.[key]) && factionOf(god) === factionOf(state.domains[key]);
+};
+// Domain efetivo de `key`: sem Ressonância (`res` e `resonance` somem) quando o God é de outra facção.
 export function domainEntry(state, key) {
   const entry = CARDS[state.domains?.[key]];
-  if (!entry || !offColor(state, key)) return entry;
-  const out = {};
-  for (const [hook, fn] of Object.entries(entry)) {
-    if (STATIC.has(hook) || hook === 'opg') continue;
-    if (hook === 'activate') { out.activate = {...fn, offColor: true}; continue; }
-    out[hook] = (s, c, ...rest) => { const run = fn(s, c, ...rest); return run && (st => { if (payOffColor(st, c, key, 'DOMAIN')) run(st); }); };
-  }
-  return out;
+  if (!entry || domainResonant(state, key)) return entry;
+  const {res, resonance, ...general} = entry;
+  return general;
 }
+// "Once each turn" da Ressonância: marca com o turno (o gatilho pode nascer no turno do adversário).
+export const resonanceTag = (state, key, name) => `domain:${key}:res:${name}:t${state.turn}`;
 
 // ctx da partida por estado: ganchos de turno (core.js) não recebem ctx. O snapshot das decisões restaura o estado
 // no mesmo objeto, então a chave do WeakMap continua válida.
@@ -118,6 +109,7 @@ export function sources(state, ctx, key) {
   for (const uid of state.players[key].tartarus) if (entryOf(ctx, uid)?.tartarus) list.push({self: uid, entry: entryOf(ctx, uid).tartarus});
   const domain = domainEntry(state, key);
   if (domain) list.push({self: `domain:${key}`, entry: domain});
+  if (domain?.resonance) list.push({self: `domain:${key}`, entry: domain.resonance}); // Ressonância: fonte própria (mesmos ganchos da linha geral)
   return list;
 }
 

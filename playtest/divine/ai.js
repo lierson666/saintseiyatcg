@@ -86,6 +86,11 @@ export function createAI(h) {
         : [...opts].sort((a, b) => h.atk(b) - h.atk(a))[0];
       if (uid) return {id: id('command'), aim: uid, run: () => h.activateCommand(key, uid)};
     }
+    // 5d. Domain (rebalanceamento, 01/11/2026): Ressonância quando a engine aceitar (alvos pelas perguntas, em `answer`);
+    // ativada da linha geral: as de compra (custo 0, com drawback de Soul/cartas) só com Soul de sobra.
+    const dom = h.domainUses?.(key);
+    if (dom?.res && fresh('domain-res')) return {id: id('domain-res'), run: () => h.activate(key, `domain:${key}:res`)};
+    if (dom?.general && (dom.general.cost || p.soul > 12) && fresh('domain')) return {id: id('domain'), run: () => h.activate(key, `domain:${key}`)};
     // 6. Strikes: no God se puder; senão no Devotee alvo de menor HP restante.
     for (const uid of devotees(key)) {
       if (!s.units[uid]?.prepared || !fresh(`strike:${uid}`)) continue;

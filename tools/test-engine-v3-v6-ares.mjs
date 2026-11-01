@@ -19,14 +19,14 @@ const canon = read('../data/canon/d268.json'), cards = loadCanon(canon), index =
 addPreviewCards(cards, index, read('../card-forge/art-web/cards.json').cartas);
 const decks = read('./fixtures/decks-preview.json').decks;
 
-// A: Ares (Domain 332); B: sem Domain, só com cartas injetadas. Decisões: primeira opção (God se houver);
+// A: Ares; A e B sem Domain (Domains: test-engine-v3-domains.mjs), só com cartas injetadas. Decisões: primeira opção (God se houver);
 // "you may" sim para A, não para B.
 function setup() {
   const deck = id => ({...decks.find(d => d.id === id)});
   const m = createMatch({cards, canonIndex: index, decks: {A: deck('preview-ares-legions'), B: deck('preview-artemis-hunt')}, first: 'A', seed: 1});
   const s = m.state, ctx = {cards, objects: m.objects, attached: m.attached}, p = s.players.A;
   for (const pl of Object.values(s.players)) pl.deck.push(...pl.hand.splice(0)); s.setup = null;
-  s.domains.B = null;
+  s.domains = {A: null, B: null};
   startTurn(s);
   p.bases = p.deck.splice(0, 10).map(uid => ({uid, prepared: true}));
   ctx.decide = (player, q) => (q.options ? (q.options.find(o => String(o).startsWith('god:')) ?? q.options[0]) : player === 'A');

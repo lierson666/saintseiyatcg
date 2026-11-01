@@ -11,7 +11,7 @@ export const KEYWORD_RULES = {
   'Impulse': 'Can declare a Strike the round it enters the battlefield, against any legal target, including the God.',
   'Seal': 'Whenever this Devotee would become Prepared, remove a Seal counter from it instead.',
   'Sealed': 'Has one or more Seal counters. It can still Strike and use abilities while Prepared.',
-  'Unfaith': "When it Strikes a God, you may remove up to 2 of that player's Latent Cosmo instead of dealing Soul damage. The God still retaliates.",
+  'Unfaith': "When it Strikes a God, you may remove up to 2 of that player's Latent Cosmo instead of dealing Soul damage.",
   'Training': 'Each Training counter gives +1 ATK / +1 HP. Counters stack while the Devotee stays on the battlefield.',
   'Afterlife': "Abilities marked Afterlife work only while this card is in its owner's Tartarus. Being in the Tartarus doesn't grant Afterlife.",
   'Hidden Cosmo': 'While this card is one of your Cosmo Bases, you can play it from there by paying X instead of its cost. The top card of your deck replaces it as an Unprepared Base.', // guia §4A
@@ -27,7 +27,7 @@ export const KEYWORD_RULES_PT = {
   'Impulse': 'Pode declarar um Golpe na rodada em que entra no campo de batalha, contra qualquer alvo válido, inclusive o Deus.',
   'Seal': 'Sempre que este Devoto ficaria Preparado, remova dele um marcador de Selo em vez disso.',
   'Sealed': 'Tem um ou mais marcadores de Selo. Ainda pode Golpear e usar habilidades enquanto estiver Preparado.',
-  'Unfaith': 'Quando Golpeia um Deus, você pode remover até 2 de Cosmo Latente daquele jogador em vez de causar dano na Alma. O Deus ainda revida.',
+  'Unfaith': 'Quando Golpeia um Deus, você pode remover até 2 de Cosmo Latente daquele jogador em vez de causar dano na Alma.',
   'Training': 'Cada marcador de Treinamento dá +1 ATQ / +1 PV. Os marcadores se acumulam enquanto o Devoto estiver no campo de batalha.',
   'Afterlife': 'Habilidades marcadas Além-Túmulo só funcionam enquanto esta carta estiver no Tártaro do dono. Estar no Tártaro não dá Além-Túmulo.',
   'Hidden Cosmo': 'Enquanto esta carta for uma das suas Bases de Cosmo, você pode jogá-la de lá pagando X no lugar do custo. A carta do topo do seu deck entra no lugar como Base Despreparada.', // guia §4A

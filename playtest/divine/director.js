@@ -156,10 +156,11 @@ export function createDirector({ui, getFx, settings}) {
       await pause(40 + p * 160); // hit stop: mais longo quanto mais forte
       if (!skipping) strikeSound(p);
       impact(to, {color: style.color, strength: (style.name ? 1.4 : 1) * (1 + p * 1.3)});
-      // Retaliação: do alvo de volta ao atacante (o God usa o raio divino).
-      await pause(140);
-      const back = e.target.kind === 'god' ? {style: 'energy', color: '#ffd36e'} : styleOf(e.target.uid);
-      if (fx() && !skipping) await fx().beam(to, from, {color: back.color, width: e.target.kind === 'god' ? 26 : 12, duration: .22});
+      // Retaliação: do Devotee alvo de volta ao atacante. God não retalia (§24, autor 01/11/2026).
+      if (e.target.kind !== 'god') {
+        await pause(140);
+        if (fx() && !skipping) await fx().beam(to, from, {color: styleOf(e.target.uid).color, width: 12, duration: .22});
+      }
       ui.aim(null);
       ui.pulse(e.attacker, 'attacking', false);
     },

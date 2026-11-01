@@ -25,7 +25,6 @@ export function makeDefaults(legacy,cards=[]){
     layer('armor-hp','Armor HP','ArmorHPBadge','runtime.currentHP',1155,1880,245,140,{visible:false,label:'ARMOR HP',conditions:all(eq('card.isArmor',true),{binding:'card.armorHP',op:'gt',value:0}),style:{fontSize:78,fontWeight:700,background:'#100e16ee',borderColor:'#bfa66e',borderWidth:2,borderRadius:30,align:'center'}}),
     layer('equip','Equip Cost','EquipCostBlock','card.equipCost',80,1880,240,140,{visible:false,conditions:eq('card.isEquipment',true),style:{fontSize:30,fontWeight:700,background:'#100e16ee',borderColor:'#bfa66e',borderWidth:2,borderRadius:12,align:'center'}}),
     layer('soul','Soul','SoulBadge','runtime.soul',90,1880,230,140,{label:'SOUL',conditions:eq('card.type','God'),style:{fontSize:86,fontWeight:700,align:'center'}}),
-    layer('attack','God Attack','StatBadge','card.attack',625,1880,230,140,{label:'ATTACK',conditions:eq('card.type','God'),style:{fontSize:86,fontWeight:700,align:'center'}}),
     layer('awaken','Awaken','AwakenBadge','card.awaken',1165,1880,230,140,{label:'AWAKEN',conditions:eq('card.type','God'),style:{fontSize:86,fontWeight:700,align:'center'}}),
     layer('rarity','Rarity','RarityMark','card.rarity',530,2030,430,46,{style:{fontSize:26,fontWeight:700,align:'center'}}),
     layer('counters','Counters','CounterBadge','runtime.counters',230,360,1030,70,{conditions:all({binding:'runtime.counters',op:'exists'},{binding:'context.mode',op:'neq',value:'print'}),style:{fontSize:30,background:'#100e16e8',align:'center'}}),

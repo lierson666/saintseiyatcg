@@ -256,7 +256,7 @@ test('065 Stairway: Saint amigo sobrevive a um Strike; paga {1}{C} e ganha +1 AT
 test('Domains de Athena (§63, 31/10/2026): texto do Forge por cima do D268; 501 Athena\'s Statue existe na engine', () => {
   const statue = cards.get(A('501')), arena = index.get(A('062')).approved_current_text_as_of_d268;
   assert.equal(statue?.kind, 'Domain');
-  assert.match(arena, /Once per game/);
+  assert.match(arena, /Once per game|Resonance/); // Resonance quando art-web for regerado do cards.json (Domains de 01/11/2026)
   assert.doesNotMatch(arena, /you may draw a card/, 'a linha 1 antiga (compra) saiu');
   const azorius = read('./fixtures/decks-competitivos.json').decks.find(d => d.id === 'comp-azorius');
   assert.doesNotThrow(() => createMatch({cards, canonIndex: index, decks: {A: azorius, B: {...decks.find(d => d.id === 'preview-ares-legions')}}, first: 'A', seed: 1}));

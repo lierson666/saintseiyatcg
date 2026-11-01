@@ -1,5 +1,5 @@
 // Efeitos de carta da engine 3.0: valores em jogo, modificadores com duração e prevenção de dano de Strike.
-// Texto das cartas: snapshot D268, sem alteração. Durações: D191 ('this_round', 'next_round') e 'this_strike'.
+// Texto das cartas: snapshot D268, sem alteração. Durações: D191 ('this_round', 'next_round'), 'this_strike' e 'until_next_turn' (com `owner`).
 // Prevenção checada antes do evento (D199). Escolhas opcionais ("you may") vêm de `ctx.decide(player, pergunta)`;
 // sem `decide`, o jogador recusa.
 // Ordem de aplicação numa mesma porção de dano (confirmada pelo autor em 28/10/2026):
@@ -9,7 +9,6 @@
 // dano redirecionado pela Resonance da 004 é dano de Strike em Shiryu.
 import {CHARACTER_IDENTITY, characterOf} from '../../shared/character-identity.js';
 import {v6Mods, v6Entered, v6Cast, v6Defeated, v6AfterStrike, v6WouldBeDefeated, v6Leaves, v6Prevent, contextOf} from './v6/hooks.js';
-import {offColor, payOffColor} from './v6/registry.js';
 import {hooks, RuleError, useOncePerRound, addEffect, destroyDevotee, draw, spendBase, pushTriggers, emit, gainLatent, prepareUnit, loseSoul} from './core.js';
 
 export const card = (ctx, uid) => ctx.cards.get(ctx.objects[uid].cardId);
@@ -52,7 +51,7 @@ function mods(state, ctx, uid) {
     if (athenaAwaken(state, ctx, key, uid)) list.push({atk: 1, hp: 1}); // God Athena, Divine Protection (Awaken 5)
     // Domain 064 The Five Old Peaks, Ancient Discipline: Saints amigos com Guardian, +0/+1. Keywords lidas sem mods()
     // (keywordsOf chama mods: recursão). shortcut: Guardian dado por Equipment não conta; ampliar se surgir carta assim.
-    if (state.domains?.[key] === 'athena-v6-064' && !offColor(state, key) && isSaint(ctx, uid) // estática: some fora da cor (§63)
+    if (state.domains?.[key] === 'athena-v6-064' && isSaint(ctx, uid) // linha geral: vale com qualquer God (01/11/2026)
       && [...card(ctx, uid).keywords, ...(state.units[uid]?.keywords || []), ...state.effects.filter(e => e.target === uid && e.kind === 'mod').flatMap(e => e.keywords || [])].includes('Guardian')) {
       list.push({atk: 0, hp: 1, source: 'domain'});
     }
@@ -75,8 +74,9 @@ export const keywordsOf = (state, ctx, uid) => [...card(ctx, uid).keywords, ...m
 export const modify = (state, target, {atk = 0, hp = 0, keywords = []}, duration = 'this_round') =>
   addEffect(state, {kind: 'mod', target, atk, hp, keywords, duration});
 // Escudo "prevent the next N [Strike] damage": `target` é um uid ou 'god:A'; amount Infinity = todo o dano.
-export const shield = (state, target, amount, {strikeOnly = true, duration = 'this_round'} = {}) =>
-  addEffect(state, {kind: 'prevent', target, amount, strikeOnly, duration});
+// `owner` só com duration 'until_next_turn' ("before the start of your next turn"): vence no início do turno dele (core.startTurn).
+export const shield = (state, target, amount, {strikeOnly = true, duration = 'this_round', owner} = {}) =>
+  addEffect(state, {kind: 'prevent', target, amount, strikeOnly, duration, ...(owner && {owner})});
 // "When target … would be defeated by Strike damage this round, prevent that damage instead."
 export const save = (state, target, onSave, {anyDamage = false} = {}) => addEffect(state, {kind: 'save', target, onSave, anyDamage, duration: 'this_round'});
 // Gancho cannotStrike / cannotPrepare (v6/registry.js): marcas com duração, lidas por checkStrike (strike.js) e prepareUnit (core.js).
@@ -258,9 +258,8 @@ export function checkDefeats(state, ctx) {
       }
       // Gancho wouldBeDefeated: substituição antes da derrota (efeito 'save' com anyDamage e ganchos V6); pode cancelá-la.
       if (replaceDefeat(state, ctx, key, uid)) continue;
-      const berserker = /Berserker/.test(card(ctx, uid).type), gear = Object.keys(ctx.attached).filter(e => ctx.attached[e] === uid);
+      const gear = Object.keys(ctx.attached).filter(e => ctx.attached[e] === uid);
       destroyDevotee(state, uid, ctx.objects, ctx.attached);
-      if (berserker) harvestOfTheFallen(state, ctx, key);
       v6Defeated(state, ctx, key, uid, gear);
     }
   }
@@ -268,21 +267,6 @@ export function checkDefeats(state, ctx) {
 }
 // Checagem de estado: dano ≥ HP derrota mesmo sem Strike (ex.: aura +1/+1 que sumiu com a fonte).
 hooks.checkpoint.push(state => { const ctx = contextOf(state); if (ctx) checkDefeats(state, ctx); });
-// Domain 335 The Fields of Carnage, Harvest of the Fallen: Berserker amigo derrotado; você pode pagar 1 Soul para causar 1
-// de dano ao God inimigo (rebalanceamento, autor 30/10/2026), uma vez por rodada (guia §64). Unending Slaughter: v6/ares.js.
-function harvestOfTheFallen(state, ctx, key) {
-  const once = `domain:${key}:harvest`;
-  if (state.domains?.[key] !== 'ares-v6-335' || state.victory || state.roundUses.has(once)) return;
-  useOncePerRound(state, once);
-  pushTriggers(state, [{controller: key, uid: `domain:${key}`, ability: 'HARVEST OF THE FALLEN', run: st => {
-    if (st.victory || (offColor(st, key) && !payOffColor(st, ctx, key, 'HARVEST OF THE FALLEN'))) return;
-    if (st.players[key].soul < 1 || !ask(ctx, key, {ability: 'HARVEST OF THE FALLEN', uid: `domain:${key}`, cost: '1 Soul'})) return;
-    loseSoul(st, {[key]: 1}, 'payment');
-    if (st.victory) return;
-    emit(st, 'domain_power', {player: key, ability: 'HARVEST OF THE FALLEN'});
-    loseSoul(st, {[other(st, key)]: 1}, 'damage');
-  }}]);
-}
 const enemyDevotee = (state, ctx, key, uid) => {
   if (!uid || controllerOf(state, uid) !== other(state, key) || card(ctx, uid).kind !== 'Devotee') {
     throw new RuleError('alvo', 'alvo precisa ser um Devotee inimigo no campo');
@@ -547,7 +531,6 @@ export function afterStrike(state, ctx, strike) {
     add(arena, st => {
       if (st.roundUses.has(spirit) || !st.units[saint]) return;
       useOncePerRound(st, spirit);
-      if (offColor(st, arena) && !payOffColor(st, ctx, arena, 'TOURNAMENT SPIRIT')) return;
       emit(st, 'domain_power', {player: arena, ability: 'TOURNAMENT SPIRIT'});
       modify(st, saint, {atk: 1});
     }, {uid: `domain:${arena}`, ability: 'TOURNAMENT SPIRIT'});

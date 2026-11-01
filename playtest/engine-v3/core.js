@@ -35,7 +35,7 @@ export function emit(state, type, data = {}) {
 // passagens de turno (G3-003); `roundEnd`: gatilhos extras do checkpoint de fim de Round (D204), ex.: Divine Judgment;
 // `strikeDeclared(state, ctx, attacker, controller)` e `sealed(state, ctx, transitions)` devolvem gatilhos (ex.: Poseidon).
 // `turnStart`/`turnEnd(state)`: gatilhos de início/fim do turno do ativo (cartas V6, v6/hooks.js).
-export const hooks = {checkpoint: [], roundEnd: [], strikeDeclared: [], sealed: [], turnStart: [], turnEnd: [], idleTrigger: []};
+export const hooks = {checkpoint: [], roundEnd: [], strikeDeclared: [], sealed: [], turnStart: [], turnEnd: [], idleTrigger: [], basePlaced: []};
 export function runCheckpoint(state) { if (!state.victory) for (const fn of hooks.checkpoint) fn(state); }
 
 // Visibilidade (G3-019): o adversário não vê qual carta foi comprada nem qual voltou no mulligan.
@@ -59,6 +59,8 @@ export function startTurn(state, startOfTurn = []) {
   const key = state.active, p = state.players[key];
   state.turn++;
   p.ownTurns++;
+  // Duração 'until_next_turn' ("before the start of your next turn", Domains de 01/11/2026): vence no início do turno de `owner`.
+  state.effects = state.effects.filter(e => !(e.duration === 'until_next_turn' && e.owner === key));
   for (const base of p.bases) base.prepared = true;
   for (const uid of p.battlefield) {
     const unit = state.units[uid];
@@ -141,6 +143,7 @@ export function placeBase(state, key, uid, card) {
   p.bases.push({uid, prepared: true});
   p.baseTurn = state.turn;
   emit(state, 'base_placed', {player: key, uid});
+  for (const fn of hooks.basePlaced) fn(state, key, uid); // "when you place a Cosmo Base" (v6/hooks.js, watchBase)
 }
 
 export function spendBase(state, key, n) {

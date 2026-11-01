@@ -4,7 +4,7 @@ import * as k from './kit.js';
 // "Target enemy God": único alvo possível, guardado ao conjurar sem pergunta (v6/targets.js; reações como Poseidon 136 o enxergam).
 const godOfFoe = (s, c, key) => [k.godTarget(k.other(s, key))];
 import {addSeal, hooks, pushTriggers} from '../core.js';
-import {collect, contextOf, offColor, payOffColor} from './registry.js';
+import {collect, contextOf} from './registry.js';
 import {forbidStrike} from '../effects.js';
 
 // ---------- ajudantes locais ----------
@@ -61,14 +61,9 @@ const fromTartarus = (s, uid) => s.events.findLast(e => e.type === 'card_played'
 
 // ---------- Tartarus ----------
 const inTartarus = (s, c, key, test) => s.players[key].tartarus.filter(u => test(k.card(c, u), u));
-// Tartarus → mão. The River Acheron (243), Ferry of the Dead: +1 Soul no primeiro retorno de Devotee do Round.
-// shortcut: só vê retornos feitos por cartas deste arquivo; virar observador quando o kit tiver gancho de retorno à mão.
-function recall(s, c, key, uid) {
-  if (!k.toHand(s, c, uid, 'tartarus')) return false;
-  if (s.domains?.[key] === 'hades-v6-243' && k.isDevotee(c, uid) && k.once(s, `domain:${key}:ferry`)
-    && (!offColor(s, key) || payOffColor(s, c, key, 'FERRY OF THE DEAD'))) gain(s, key, 1); // fora da cor: {1}{S} (§63)
-  return true;
-}
+const needIn = (s, c, key, test, text) => { if (!inTartarus(s, c, key, test).length) throw new k.RuleError('alvo', text); };
+// Tartarus → mão (o kit avisa watchRecall: Ressonância da The River Acheron, 243).
+const recall = (s, c, key, uid) => k.toHand(s, c, uid, 'tartarus');
 function toHandFrom(s, c, key, ability, test, {optional = false, exclude} = {}) {
   const uid = k.choose(c, key, ability, inTartarus(s, c, key, (cd, u) => u !== exclude && test(cd)), {optional, text: 'Choose a card in your Tartarus to return to your hand.'});
   return uid && recall(s, c, key, uid) ? uid : null;
@@ -449,26 +444,51 @@ export default {
     if (mode === 'recall') done = !!toHandFrom(s, c, key, 'THE WILL OF HADES', specter(2));
     if (done) lose(s, key, 1);
   }}},
-  // ---------- Domains (rebalanceamento, autor 31/10/2026): linha 1 simples; linha 2 `opg` (Once per game, guia §63) ----------
+  // ---------- Domains (rebalanceamento aprovado pelo autor em 01/11/2026, docs/domains-rebalance-proposta.md) ----------
+  // Linha geral (qualquer God): ganchos e `activate`. Ressonância — Hades (só com God Hades): `res` (ativada, uid
+  // `domain:${key}:res`, uma vez por turno) e `resonance` (gatilhos). Ver registry.js.
   'hades-v6-242': { // Hades Castle
-    // Dark Authority (rebalanceamento 30/10/2026): só o God inimigo perde 1 Soul; Hades não ganha.
+    // Dark Authority: Specter amigo derrotado, o God inimigo perde 1 Soul (uma vez por Round).
     watchDefeat: (s, c, key, self, dead, owner) => owner === key && k.hasType(c, dead, 'Specter') && k.once(s, `${self}:dark`) && (st => lose(st, k.other(st, key), 1)),
-    opg: {name: 'ETERNAL ALLEGIANCE', cost: 3, run: (s, c, key) => {
-      const pool = inTartarus(s, c, key, cd => /Specter/.test(cd.type));
-      for (const u of k.chooseUpTo(c, key, 'ETERNAL ALLEGIANCE', pool, 2, {text: 'Choose up to two Specter cards in your Tartarus.'})) recall(s, c, key, u);
-    }},
+    res: {name: 'RESONANCE', cost: 2, check: (s, c, key) => needIn(s, c, key, specter(3), 'sem Specter de custo 3 ou menos no seu Tartarus'),
+      run: (s, c, key) => { toHandFrom(s, c, key, 'RESONANCE', specter(3)); }},
   },
-  'hades-v6-243': { // The River Acheron. Ferry of the Dead: em recall() acima.
-    opg: {name: 'PRICE OF PASSAGE', cost: 2, run: (s, c, key) => k.draw(s, key, Math.min(3, k.defeatedThisRound(s, c).filter(e => e.owner === key).length))},
+  'hades-v6-243': { // The River Acheron — Charon's Toll (compra da facção): perde {3}{S} inteiro ou não compra.
+    activate: {name: "CHARON'S TOLL", cost: 0, once: true, tap: false,
+      check: (s, c, key) => { if (s.players[key].soul < 3) throw new k.RuleError("CHARON'S TOLL", 'Soul insuficiente para perder {3}{S}'); },
+      run: (s, c, key) => { if (s.players[key].soul < 3) return; lose(s, key, 3); if (!s.victory) k.draw(s, key, 1); }},
+    resonance: {watchRecall: (s, c, key, self, player, uid) => player === key && k.isDevotee(c, uid)
+      && k.resPay(s, c, key, 'recall', 1, 'RESONANCE', st => gain(st, key, 2), {text: 'Pay {1}{C}: your God gains {2}{S}?'})},
   },
   'hades-v6-244': { // The First Prison
     watchDiscard: (s, c, key, self, player) => player !== key && k.once(s, `${self}:judgment`) && (st => lose(st, player, 1)),
-    opg: {name: 'ETERNAL PUNISHMENT', cost: 3, run: (s, c, key) => k.discard(s, c, k.other(s, key), 2, 'ETERNAL PUNISHMENT')},
+    res: {name: 'RESONANCE', cost: 3, run: (s, c, key) => k.discard(s, c, k.other(s, key), 1, 'RESONANCE')},
   },
   'hades-v6-245': { // The Gates of the Underworld
     // Interpretação: "enters with +1 ATK" vira gatilho de entrada (+1 ATK até o fim do Round), não substituição.
     watchEnter: onReturn(false, (st, c, key, self, entered) => k.buff(st, entered, 1, 0), 'rise'),
-    opg: {name: 'GATES OF DEATH', cost: 3, run: (s, c, key) => toFieldFrom(s, c, key, 'GATES OF DEATH', specter(3))},
+    res: {name: 'RESONANCE', cost: 3, check: (s, c, key) => { if (!returnable(s, c, key, specter(2)).length) throw new k.RuleError('alvo', 'sem Specter de custo 2 ou menos no seu Tartarus'); },
+      run: (s, c, key) => { toFieldFrom(s, c, key, 'RESONANCE', specter(2)); }},
+  },
+  'hades-v6-521': { // Cocytus — Frozen Lament: Devotee amigo derrotado, alvo inimigo -1 ATK até o fim do Round.
+    watchDefeat: (s, c, key, self, dead, owner) => owner === key && k.enemies(s, c, key).length > 0 && k.once(s, `${self}:lament`)
+      && (st => { const t = enemy(st, c, key, 'FROZEN LAMENT', () => true, {text: 'Choose target enemy Devotee.'}); if (t) k.buff(st, t, -1, 0); }),
+    // shortcut: o sacrifício do custo acontece na resolução (o motor não tem custo de sacrifício ao declarar), como 503.
+    res: {name: 'RESONANCE', cost: 3,
+      check: (s, c, key) => {
+        if (!k.devotees(s, c, key).length) throw new k.RuleError('RESONANCE', 'sem Devotee para sacrificar');
+        if (!k.enemies(s, c, key).some(u => k.costOf(c, u) <= 3)) throw new k.RuleError('alvo', 'sem Devotee inimigo de custo 3 ou menos');
+      },
+      run: (s, c, key) => {
+        if (!sacrificeOne(s, c, key, 'RESONANCE', null)) return;
+        const t = enemy(s, c, key, 'RESONANCE', u => k.costOf(c, u) <= 3, {text: 'Choose target enemy Devotee with cost 3 or less.'});
+        if (t) k.defeat(s, c, t);
+      }},
+  },
+  'hades-v6-522': { // Elysion — Fields of the Blessed: Specters amigos +1 ATK com o seu God em 12 Soul ou menos.
+    aura: (s, c, key, self, unit) => (friendly(s, key, unit) && k.hasType(c, unit, 'Specter') && s.players[key].soul <= 12 ? {atk: 1} : null),
+    res: {name: 'RESONANCE', cost: 2, check: (s, c, key) => { if (!k.enemies(s, c, key).length) throw new k.RuleError('alvo', 'sem Devotee inimigo'); },
+      run: (s, c, key) => { const t = enemy(s, c, key, 'RESONANCE', () => true, {text: 'Choose target enemy Devotee.'}); if (t) weaken(s, c, t, 2, 2); }},
   },
   // 246–249: Resonances dentro das habilidades de Valentine (201), Lune (202), Myu (203) e Niobe (204).
   'hades-v6-250': { // Basilisk Surplice

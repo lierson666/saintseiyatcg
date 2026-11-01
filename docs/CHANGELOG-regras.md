@@ -10,6 +10,7 @@ Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências
 - **Depois:** 30 Domains, 6 por God. Linha geral para qualquer God; linha Resonance — <God> forte, uma vez por turno, {1}{C} a {3}{C}, só com o God da mesma facção. Um Domain por facção compra 1 carta com drawback. Saem poseidon-v6-146, 147 e 148; entram athena-v6-520, hades-v6-521, hades-v6-522, ares-v6-523 e artemis-v6-524. Textos em `docs/domains-rebalance-proposta.md`.
 - **Motivo:** autor, 01/11/2026: Domain fora da facção do God deve ter drawback; a linha geral fica ok para todos, sem quebrar a color pie, e a Ressonância corrige isso. Fechado por grill e aprovado.
 - **Pendências:** engine e testes dos 30 Domains; decks que usavam 146/147/148 trocam para 149/144/502.
+- **Domain fora da cor** (autor, 01/11/2026, mesma data): saem a restrição de estáticas e o custo extra de {1}{S} da regra de 31/10; fora da cor só se perde a Ressonância. Continua o limite de 15 cartas da facção do Domain. Sai o marcador de Once per game (Domain virado de lado).
 
 ## 2026-11-01 — §24, §49, §63 — Gods sem retaliação; Divine Command
 

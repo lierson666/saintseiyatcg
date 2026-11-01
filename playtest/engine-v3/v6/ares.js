@@ -1,6 +1,5 @@
 // Efeitos V6 de Ares, por id de carta (contrato em ./registry.js; kit em ./kit.js).
-// Já tratados fora daqui: bônus fixo de Equipment (preview-cards.js), Impulse (play.js) e Harvest of the Fallen do
-// Domain 335 (effects.js, harvestOfTheFallen).
+// Já tratados fora daqui: bônus fixo de Equipment (preview-cards.js) e Impulse (play.js).
 // Interpretações (registrar em docs/v6-efeitos-pendencias.md; o autor confirma):
 // - "the defending God"/"the opposing God" = God do adversário, mesmo quando o Strike mira um Devotee.
 // - "gains Impulse until end of turn" = fica Prepared se entrou neste turno (a engine lê Impulse só da carta impressa).
@@ -149,24 +148,28 @@ export default {
     if (t) k.buff(s, t, 2, 0);
     k.draw(s, key, 1);
   }}},
-  // The Altar of Slaughter (rebalanceamento dos Domains, 31/10/2026): Blood Offering vira dano; a compra fica na Once per game.
+  // The Altar of Slaughter — Blood Offering (compra da facção): sacrifica um Devotee seu e perde {2}{S}; sem os dois, não compra.
+  // shortcut: os sacrifícios de custo acontecem na resolução (o motor não tem custo de sacrifício ao declarar).
   'ares-v6-503': {
     activate: {name: 'BLOOD OFFERING', cost: 0, once: true, tap: false,
-      check: (s, c, key) => { if (!k.devotees(s, c, key).length) throw new k.RuleError('BLOOD OFFERING', 'sem Devotee para sacrificar'); },
+      check: (s, c, key) => {
+        if (!k.devotees(s, c, key).length) throw new k.RuleError('BLOOD OFFERING', 'sem Devotee para sacrificar');
+        if (s.players[key].soul < 2) throw new k.RuleError('BLOOD OFFERING', 'Soul insuficiente para perder {2}{S}');
+      },
       run: (s, c, key) => {
-        const t = k.choose(c, key, 'BLOOD OFFERING', k.devotees(s, c, key), {text: 'Choose a friendly Devotee to sacrifice.'});
+        const t = s.players[key].soul >= 2 && k.choose(c, key, 'BLOOD OFFERING', k.devotees(s, c, key), {text: 'Choose a friendly Devotee to sacrifice.'});
         if (!t) return;
         k.sacrifice(s, c, t);
-        hit(s, c, k.choose(c, key, 'BLOOD OFFERING', k.enemies(s, c, key), {text: 'Choose target enemy Devotee.'}), 1);
+        k.loseSoulOf(s, key, 2);
+        draw(s, key, 1);
       }},
-    // shortcut: o sacrifício do custo acontece na resolução (o motor não tem custo de sacrifício ao declarar).
-    opg: {name: 'GREAT SACRIFICE', cost: 1,
-      check: (s, c, key) => { if (!k.devotees(s, c, key).length) throw new k.RuleError('GREAT SACRIFICE', 'sem Devotee para sacrificar'); },
+    res: {name: 'RESONANCE', cost: 1,
+      check: (s, c, key) => { if (!k.devotees(s, c, key).length) throw new k.RuleError('RESONANCE', 'sem Devotee para sacrificar'); },
       run: (s, c, key) => {
-        const t = k.choose(c, key, 'GREAT SACRIFICE', k.devotees(s, c, key), {text: 'Choose a friendly Devotee to sacrifice.'});
+        const t = k.choose(c, key, 'RESONANCE', k.devotees(s, c, key), {text: 'Choose a friendly Devotee to sacrifice.'});
         if (!t) return;
         k.sacrifice(s, c, t);
-        if (!s.victory) k.draw(s, key, 3);
+        hit(s, c, enemyOrGod(s, c, key, 'RESONANCE'), 2);
       }},
   },
   // Alcmenes of Ethon
@@ -458,27 +461,55 @@ export default {
     later(s, key, self, 'BLOOD OFFERING', {kind: 'bloodOffering'});
   }}},
 
-  // ---------- Domains (self = `domain:${key}`). Rebalanceamento, autor 31/10/2026: linha 1 simples; linha 2 `opg` (Once per game, §63) ----------
-  // Ares' War Temple
+  // ---------- Domains (rebalanceamento aprovado pelo autor em 01/11/2026, docs/domains-rebalance-proposta.md) ----------
+  // self = `domain:${key}`. Linha geral (qualquer God): ganchos e `activate`. Ressonância — Ares (só com God Ares): `res`
+  // (ativada, uid `domain:${key}:res`, uma vez por turno) e `resonance` (gatilhos). Ver registry.js.
+  // Ares' War Temple — God of War's Blessing: o primeiro Berserker amigo que declara Strike no Round, +1 ATK nesse Strike.
   'ares-v6-332': {
-    aura: (s, c, key, self, unit) => (k.controllerOf(s, unit) === key && berserker(c, unit) ? {atk: 1} : null),
-    opg: {name: 'ETERNAL BLOODSHED', cost: 3, run: (s, c, key) => hit(s, c, foeGod(s, key), Math.min(3, k.devotees(s, c, key).filter(u => berserker(c, u)).length))},
+    watchDeclare: (s, c, key, self, attacker) => friendlyBerserkerDeclared(s, c, key, null, attacker) && k.once(s, `${self}:blessing`)
+      && (st => { if (alive(st, attacker)) k.buff(st, attacker, 1, 0, 'this_strike'); }),
+    res: {name: 'RESONANCE', cost: 2, run: (s, c, key) => friends(s, c, key).forEach(u => buff(s, u, 1))},
   },
+  // The Burning Battlefield — Scorched Ground: pode pagar {1}{S} para 1 de dano num Devotee inimigo.
   'ares-v6-333': {
-    watchDeclare: (s, c, key, self, attacker) =>
-      friendlyBerserkerDeclared(s, c, key, null, attacker) && k.onceTurn(s, `${self}:scorched`) && (st => { if (taxed(st, c, key, 'SCORCHED GROUND', 1, self)) hit(st, c, foeGod(st, key), 1); }),
-    opg: {name: 'SCORCHED EARTH', cost: 3, run: (s, c, key) => k.enemies(s, c, key).forEach(u => hit(s, c, u, 1))},
+    watchDeclare: (s, c, key, self, attacker) => friendlyBerserkerDeclared(s, c, key, null, attacker) && k.enemies(s, c, key).length > 0
+      && !s.roundUses.has(`${self}:scorched`) && (st => {
+        if (st.roundUses.has(`${self}:scorched`) || !k.enemies(st, c, key).length || !taxed(st, c, key, 'SCORCHED GROUND', 1, self)) return;
+        k.once(st, `${self}:scorched`);
+        hit(st, c, enemyDevotee(st, c, key, 'SCORCHED GROUND'), 1);
+      }),
+    res: {name: 'RESONANCE', cost: 3, run: (s, c, key) => k.enemies(s, c, key).forEach(u => hit(s, c, u, 1))},
   },
+  // The Arena of Blood — Gladiator's Glory.
   'ares-v6-334': {
     watchKill: (s, c, key, self, killer) => berserker(c, killer) && k.once(s, `${self}:glory`) && (st => buff(st, killer, 1)),
-    opg: {name: 'BLOOD SPECTACLE', cost: 2, run: (s, c, key) => {
-      k.draw(s, key, 2);
-      if (!s.victory) k.devotees(s, c, key).filter(u => berserker(c, u)).forEach(u => buff(s, u, 1));
+    // "Impulse until the end of the turn": como 296, fica Prepared se entrou neste turno (interpretação no topo).
+    res: {name: 'RESONANCE', cost: 2, check: k.needTarget(k.devotees, 'sem Devotee aliado'), run: (s, c, key) => {
+      const t = k.choose(c, key, 'RESONANCE', k.devotees(s, c, key), {text: 'Choose target friendly Devotee.'});
+      if (!alive(s, t)) return;
+      k.buff(s, t, 2, 0, 'this_turn', ['Impulse']);
+      if (s.units[t].entered === s.turn) k.prepare(s, t);
     }},
   },
-  // The Fields of Carnage: Harvest of the Fallen fica em effects.js.
+  // The Fields of Carnage — Harvest of the Fallen: outro Berserker amigo derrotado; pode pagar {1}{S} e o God inimigo perde {1}{S}.
   'ares-v6-335': {
-    opg: {name: 'UNENDING SLAUGHTER', cost: 2, run: (s, c, key) => k.draw(s, key, Math.min(3, k.defeatedThisRound(s, c).length))},
+    watchDefeat: (s, c, key, self, dead, owner) => owner === key && berserker(c, dead) && !s.roundUses.has(`${self}:harvest`) && (st => {
+      if (st.roundUses.has(`${self}:harvest`) || !taxed(st, c, key, 'HARVEST OF THE FALLEN', 1, self)) return;
+      k.once(st, `${self}:harvest`);
+      if (!st.victory) k.loseSoulOf(st, k.other(st, key), 1);
+    }),
+    res: {name: 'RESONANCE', cost: 2, check: k.needTarget(k.enemies, 'sem Devotee inimigo'),
+      run: (s, c, key) => hit(s, c, enemyDevotee(s, c, key, 'RESONANCE'), 2)},
+  },
+  // The Forge of War — Tempered Steel: Devotee amigo com Equipment declara Strike, +1 ATK nesse Strike (uma vez por Round).
+  'ares-v6-523': {
+    watchDeclare: (s, c, key, self, attacker) => k.controllerOf(s, attacker) === key && k.gearOf(c, attacker).length > 0 && k.once(s, `${self}:steel`)
+      && (st => { if (alive(st, attacker)) k.buff(st, attacker, 1, 0, 'this_strike'); }),
+    res: {name: 'RESONANCE', cost: 2, check: k.needTarget((s, c, key) => s.players[key].tartarus.filter(u => k.card(c, u)?.kind === 'Equipment'), 'sem Equipment no seu Tartarus'),
+      run: (s, c, key) => {
+        const t = k.choose(c, key, 'RESONANCE', s.players[key].tartarus.filter(u => k.card(c, u)?.kind === 'Equipment'), {text: 'Choose target Equipment card in your Tartarus.'});
+        if (t) k.toHand(s, c, t, 'tartarus');
+      }},
   },
 
   // ---------- Legion Warplates ----------

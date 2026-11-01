@@ -6,7 +6,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <script src="/shared/i18n-pt.js?v=20261031-i18n2"></script><script src="/shared/i18n-pt-site.js?v=20261031-i18n1"></script><script src="/shared/i18n.js?v=20261031-i18n1"></script> <!-- idioma PT-BR/EN -->
+  <script src="/shared/i18n-pt.js?v=20261031-i18n2"></script><script src="/shared/i18n-pt-site.js?v=20261101-rules1"></script><script src="/shared/i18n.js?v=20261031-i18n1"></script> <!-- idioma PT-BR/EN -->
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex, nofollow"> <!-- site fora das buscas por enquanto (autor, 31/10/2026) -->
   <title>Saint Seiya TCG — How to Play</title>
@@ -127,7 +127,7 @@
           <a class="tile kv-card" href="#basics" data-art="poseidon-001"><i class="n">1</i><b>The goal</b><span>Bring the enemy God's Soul to zero.</span></a>
           <a class="tile kv-card" href="#read" data-art="athena-v6-001"><i class="n">2</i><b>Read a card</b><span>Cost, Power, HP and abilities.</span></a>
           <a class="tile kv-card" href="#types" data-art="hades-v6-182"><i class="n">3</i><b>Card types</b><span>God, Domain, Devotee, Armor and spells.</span></a>
-          <a class="tile kv-card" href="#gods" data-art="hades-001"><i class="n">4</i><b>The five Gods</b><span>Divine Powers, Awaken and Ultimate.</span></a>
+          <a class="tile kv-card" href="#gods" data-art="hades-001"><i class="n">4</i><b>The five Gods</b><span>Divine Power, Divine Command, Awaken and Ultimate.</span></a>
           <a class="tile kv-card" href="#setup" data-art="athena-v6-065"><i class="n">5</i><b>Setting up</b><span>Your deck, your Domain, your hand and who starts.</span></a>
           <a class="tile kv-card" href="#cosmo" data-art="artemis-v6-374"><i class="n">6</i><b>Cosmo</b><span>Base and Latent Cosmo pay for everything.</span></a>
           <a class="tile kv-card" href="#round" data-art="athena-v6-052"><i class="n">7</i><b>The round</b><span>Each Round, both players take one full turn.</span></a>
@@ -142,7 +142,7 @@
         <p class="kv-stamp eyebrow">1 · The goal</p>
         <h2 id="t-basics">Defeat the enemy God</h2>
         <div class="intro">
-          <p>Each player controls one <strong>God</strong>. Gods have <strong>Soul</strong> instead of HP. When a God's Soul reaches <strong>zero</strong>, its player loses the match. If both Gods fall at the same moment, the match is a draw.</p>
+          <p>Each player controls one <strong>God</strong>. Gods have <strong>Soul</strong> instead of HP. When a God's Soul reaches <strong>zero</strong>, its player loses the match. A player who must draw a card from an empty deck also loses on the spot. If both players lose at the same moment, the match is a draw.</p>
           <p>Your Devotees do the fighting. They strike enemy Devotees and the enemy God, protect your own God, and grow stronger with Armor, Awaken and Ultimates.</p>
         </div>
         <div class="grid2">
@@ -174,9 +174,9 @@
         <h2 id="t-types">Your forces</h2>
         <div class="types">
           <figure class="type"><div class="card-slot" data-card="poseidon-001" role="img" aria-label="Poseidon God card"></div>
-            <figcaption><b>God</b>The divinity you command. Starts in play with its Soul, Attack and divine powers. If it falls, you lose.</figcaption></figure>
+            <figcaption><b>God</b>The divinity you command. Starts in play with its Soul, Divine Power and Divine Command. It never strikes and never strikes back. If it falls, you lose.</figcaption></figure>
           <figure class="type"><div class="card-slot" data-card="athena-v6-065" role="img" aria-label="The Stairway to the Twelve Temples, an Athena Domain"></div>
-            <figcaption><b>Domain</b>Your God's realm. Starts in play and can't be attacked or destroyed. One simple ability, plus a strong one you use once per game.</figcaption></figure>
+            <figcaption><b>Domain</b>Your God's realm. Starts in play and can't be attacked or destroyed. A general ability for any God, plus a stronger Resonance ability that only works with its own God.</figcaption></figure>
           <figure class="type"><div class="card-slot" data-card="hades-v6-181" role="img" aria-label="Wyvern Rhadamanthys, a Hades Devotee"></div>
             <figcaption><b>Devotee</b>Saints, Marinas, Specters and other warriors. They have Power and HP, and they Strike.</figcaption></figure>
           <figure class="type"><div class="card-slot" data-card="ares-v6-272" role="img" aria-label="Ethon Warplate, an Ares Armor"></div>
@@ -191,7 +191,7 @@
       <section class="block" id="gods" aria-labelledby="t-gods">
         <p class="kv-stamp eyebrow">4 · The five Gods</p>
         <h2 id="t-gods">Choose your divinity</h2>
-        <p class="intro">Each God leads a faction with its own style of war. Your God is your life total, your last line of defense and your most powerful card.</p>
+        <p class="intro">Each God leads a faction with its own style of war. Your God is your life total and your most powerful card. Your Devotees are its only defense.</p>
         <div class="gods">
           <figure class="type"><div class="card-slot" data-card="athena-001" role="img" aria-label="Athena God card"></div>
             <figcaption><b>Athena</b>The Unbreakable Will. Saints who protect each other and never give up.</figcaption></figure>
@@ -205,8 +205,9 @@
             <figcaption><b>Artemis</b>The hunt. Satellites who pick their prey with precision.</figcaption></figure>
         </div>
         <div class="grid2 gods-rules">
-          <div class="kv-card"><h3>Soul and Attack</h3><p><strong>Soul</strong> is your God's life. At zero, you lose. <strong>Attack</strong> is the damage your God deals back to every Devotee that strikes it.</p></div>
+          <div class="kv-card"><h3>Soul</h3><p><strong>Soul</strong> is your God's life. At zero, you lose. Gods have no Attack: they never strike and never strike back. Only your board protects your God.</p></div>
           <div class="kv-card"><h3>Divine Power</h3><p>Every God has unique powers printed on its card. Some you activate, some trigger on their own, some are always on. Most can be used once each Round.</p></div>
+          <div class="kv-card"><h3>Divine Command</h3><p>Every God also has a <strong>Divine Command</strong>, a tactical ability for the board. It costs <strong>1 Cosmo</strong>; use it in your own turn, with an empty stack, once each turn. Most Gods have a stronger version while Awakened.</p></div>
           <div class="kv-card"><h3>Awaken</h3><p>A God's Awaken number is a threshold. While its Soul is at or below that number, the God is <strong>Awakened</strong> and gains extra power. The closer to defeat, the more dangerous a God becomes.</p></div>
           <div class="kv-card"><h3>Ultimate</h3><p>The God's extraordinary move, once per match. Use it in your own turn with an empty stack, paying its cost with Base Cosmo. It does not need Awaken: choosing the moment is up to you.</p></div>
         </div>
@@ -224,11 +225,9 @@
             <li>A Domain from another faction lets you add up to <strong>15 cards</strong> of that faction.</li>
             <li>Not every card is Cosmoble. Keep enough of them, about <strong>40</strong>, so you always have Cosmo to grow.</li>
           </ul></div>
-          <div class="kv-card"><h3>Your Domain</h3><p>Every Domain has two abilities. The first is simple: a small bonus, or an effect worth 1 point at most once each Round. It never draws cards.</p><p>The second is marked <strong>Once per game</strong>. Use it in your own turn, paying its cost. It goes on the stack, and the Domain turns sideways: it stays used for the rest of the match, even if the ability is countered.</p></div>
+          <div class="kv-card"><h3>Your Domain</h3><p>Every Domain has two abilities. The first is the general ability: a small bonus, or an effect worth 1 point at most once each Round. It works with any God. Only one Domain per faction draws a card with it, and always at a price.</p><p>The second is marked <strong>Resonance</strong> with the name of a God. It works only if your God is from the Domain's faction. It is stronger, costs 1 to 3 Cosmo and can be used once each turn.</p></div>
           <div class="kv-card"><h3>A Domain from another faction</h3><p>Your Domain matches your God? It works in full. If it belongs to another faction:</p><ul>
-            <li>Only its <strong>first ability</strong> works. The Once per game ability is lost.</li>
-            <li>Always-on bonuses don't work.</li>
-            <li>Its other abilities cost an extra <strong>1 Soul</strong> each time. You choose whether to pay; if you don't, nothing happens.</li>
+            <li>Its <strong>general ability</strong> works in full. The <strong>Resonance</strong> ability is lost.</li>
             <li>Your deck may hold up to <strong>15 cards</strong> of the Domain's faction.</li>
           </ul></div>
           <div class="kv-card"><h3>Starting the match</h3><ul>
@@ -279,10 +278,10 @@
         <div class="grid2">
           <div class="kv-card"><h3>Declaring a Strike</h3><p>In your turn, each <strong>Prepared</strong> Devotee can Strike once. Devotees enter play <strong>Unprepared</strong>, so a new Devotee strikes from your next turn on (unless it has Impulse). Striking leaves the attacker <strong>Unprepared</strong>.</p></div>
           <div class="kv-card"><h3>Devotee against Devotee</h3><p>Both deal damage equal to their <strong>Power</strong>, at the same time. The defender strikes back even if Unprepared. Even a Devotee destroyed in the clash still deals its damage.</p></div>
-          <div class="kv-card"><h3>Devotee against God</h3><p>The Devotee deals its Power to the God's <strong>Soul</strong>. But a God is a God: it strikes back at the same time with its full <strong>Attack</strong>, every time, even against many attackers in a row. A weak Devotee that strikes a God may not come back.</p></div>
+          <div class="kv-card"><h3>Devotee against God</h3><p>The Devotee deals its Power to the God's <strong>Soul</strong>. Gods never strike back: only Devotees can protect a God. An open board leaves your God exposed.</p></div>
           <div class="kv-card"><h3>Damage stays</h3><p>Damage is not healed at the end of the round. A Devotee is destroyed when its damage equals or exceeds its HP, and goes to the <strong>Tartarus</strong>, where abilities marked Afterlife can still be used.</p></div>
         </div>
-        <p class="note"><strong>Every Strike has a price.</strong> Defenders always strike back, and Gods hit back with their Attack. Before you attack, compare Power and HP on both sides: strike where you survive, finish wounded enemies, use Long Range to hit before the answer, and save your strongest Devotees for the moment that wins the match.</p>
+        <p class="note"><strong>Every Strike has a price.</strong> Defending Devotees always strike back; Gods don't. Before you attack, compare Power and HP on both sides: strike where you survive, finish wounded enemies, use Long Range to hit before the answer, and save your strongest Devotees for the moment that wins the match.</p>
       </section>
 
       <section class="block" id="guard" aria-labelledby="t-guard">
@@ -325,7 +324,7 @@
               <tr><td>Impulse</td><td>Can Strike in the turn it enters play, against any legal target, including the God.</td></tr>
               <tr><td>Hidden Cosmo {X}</td><td>While this card is one of your Cosmo Bases, you may cast it from there by paying {X}. It can pay 1 for itself if Prepared. The top card of your deck takes its place as a spent Base.</td></tr>
               <tr><td>Seal</td><td>A counter on a Devotee. When it would become Prepared, it removes one Seal counter and stays Unprepared instead. A Prepared Devotee with Seal can still Strike.</td></tr>
-              <tr><td>Unfaith</td><td>When it Strikes a God, it may remove up to 2 of that player's Latent Cosmo instead of dealing Soul damage. The God still strikes back.</td></tr>
+              <tr><td>Unfaith</td><td>When it Strikes a God, it may remove up to 2 of that player's Latent Cosmo instead of dealing Soul damage.</td></tr>
               <tr><td>Training</td><td>Each Training counter gives the Devotee +1 Power and +1 HP while it stays in play.</td></tr>
               <tr><td>Afterlife</td><td>Abilities marked Afterlife work only while this card is in its owner's Tartarus. Being in the Tartarus doesn't grant Afterlife.</td></tr>
             </tbody>

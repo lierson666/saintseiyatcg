@@ -208,7 +208,7 @@ export function v6Mods(state, ctx, key, uid) {
       const aura = src !== uid && V6[ctx.objects[src]?.cardId]?.aura?.(state, ctx, k, src, uid);
       if (aura) list.push(aura);
     }
-    const domain = domainEntry(state, k)?.aura?.(state, ctx, k, `domain:${k}`, uid); // fora da cor: sem estáticas (§63)
+    const domain = domainEntry(state, k)?.aura?.(state, ctx, k, `domain:${k}`, uid); // linha geral: vale com qualquer God
     if (domain) list.push(domain);
   }
   return list;
@@ -220,6 +220,11 @@ const turnHook = hook => state => {
   return ctx ? collect(state, ctx, [state.active], hook, [], hook === 'startTurn' ? 'beginning of turn' : 'end of turn') : [];
 };
 hooks.turnStart.push(turnHook('startTurn'));
+// Base de Cosmo posta pelo jogador (core.placeBase): observadores `watchBase(s, c, key, self, player, uid)`.
+hooks.basePlaced.push((state, player, uid) => {
+  const ctx = contextOf(state);
+  if (ctx) pushTriggers(state, collect(state, ctx, state.order, 'watchBase', [player, uid], 'a Cosmo Base is placed'));
+});
 hooks.turnEnd.push(turnHook('endTurn'));
 
 // Spell V6: categoria pelo subtipo impresso (Technique/Moment), não pela tabela D194 (números do D268).

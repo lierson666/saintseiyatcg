@@ -59,13 +59,7 @@ function putBack(st, c, key, from, n, ability, text) {
   deck.unshift(...chosen);
 }
 // Embaralha o deck com sorteio determinístico pelo estado (a decisão é refeita do snapshot e precisa dar o mesmo deck).
-function shuffleDeck(st, key) {
-  const deck = st.players[key].deck;
-  let seed = (st.events.length * 2654435761 + st.turn * 40503 + deck.length) >>> 0;
-  const rand = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
-  for (let i = deck.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [deck[i], deck[j]] = [deck[j], deck[i]]; }
-  k.emit(st, 'shuffle', {player: key});
-}
+const shuffleDeck = k.shuffleDeck;
 // "Look at the top N … put one into your hand … the rest on the bottom".
 // shortcut: o resto vai ao fundo na ordem atual, sem perguntar a ordem; perguntar quando a UI tiver escolha de ordem.
 function lookTop(st, c, key, n, ability, {filter = () => true, optional = false} = {}) {
@@ -188,11 +182,12 @@ export default {
     bounce(s, c, key, k.choose(c, key, 'MIST OF THE DEEP', k.devotees(s, c, key), {text: 'Choose target friendly Devotee.'}));
     k.draw(s, key, 1);
   }}},
-  // The Tidal Archive (rebalanceamento dos Domains, 31/10/2026): Drowned Knowledge olha o topo; a compra fica na Once per game.
+  // The Tidal Archive — Drowned Knowledge (linha geral) olha o topo; Ressonância compra pagando {1}{C}.
   'poseidon-v6-502': {
     watchSealed: (s, c, key, self, transitions) => enemySealed(key, transitions).length > 0 && k.once(s, `${self}:drowned`)
       && (st => scry(st, c, key, 'DROWNED KNOWLEDGE')),
-    opg: {name: 'TIDAL RECALL', cost: 2, run: (s, c, key) => { k.draw(s, key, 2); if (!s.victory) mill(s, c, key, 2); }},
+    resonance: {watchSealed: (s, c, key, self, transitions) => enemySealed(key, transitions).length > 0
+      && k.resPay(s, c, key, 'sealed', 1, 'RESONANCE', st => k.draw(st, key, 1), {text: 'Pay {1}{C}: draw a card?'})},
   },
   // Sea Dragon Kanon
   'poseidon-v6-091': {
@@ -593,17 +588,26 @@ export default {
       for (const t of enemies(s, c, key, 'GATHERING STORM', 2)) { const r = bounce(s, c, key, t); if (r?.hadSeal) mill(s, c, r.ctrl, 1); }
     }},
   },
-  // ---------- Domains (rebalanceamento, autor 31/10/2026): linha 1 simples; linha 2 `opg` (Once per game, guia §63) ----------
-  'poseidon-v6-142': {
-    watchSpell: (s, c, key, self, caster, spellUid) => caster === key && castMT(c, spellUid) && k.once(s, `oceanic:${self}`)
-      && (st => k.gainSoul(st, key, 1)), // Oceanic Dominion
-    opg: {name: 'DIVINE TERRITORY', cost: 2, run: (s, c, key) => { k.draw(s, key, 2); if (!s.victory) k.discard(s, c, key, 1, 'DIVINE TERRITORY'); }},
+  // ---------- Domains (rebalanceamento aprovado pelo autor em 01/11/2026, docs/domains-rebalance-proposta.md) ----------
+  // Linha geral (qualquer God): ganchos e `activate`. Ressonância — Poseidon (só com God Poseidon): `res` (ativada, uid
+  // `domain:${key}:res`, uma vez por turno) e `resonance` (gatilhos). 146, 147 e 148 saíram do jogo.
+  'poseidon-v6-142': { // The Undersea Sanctuary — Oceanic Tribute (compra da facção): compra, descarta 1 e mói 4; sem 5 cartas no deck, não usa.
+    activate: {name: 'OCEANIC TRIBUTE', cost: 0, once: true, tap: false,
+      check: (s, c, key) => { if (s.players[key].deck.length < 5) throw new k.RuleError('OCEANIC TRIBUTE', 'deck sem cartas para comprar 1 e moer 4'); },
+      run: (s, c, key) => {
+        if (s.players[key].deck.length < 5) return;
+        k.draw(s, key, 1);
+        k.discard(s, c, key, 1, 'OCEANIC TRIBUTE');
+        mill(s, c, key, 4);
+      }},
+    resonance: {watchSpell: (s, c, key, self, caster, spellUid) => caster === key && castMT(c, spellUid)
+      && k.resPay(s, c, key, 'cast', 2, 'RESONANCE', st => k.draw(st, key, 1), {text: 'Pay {2}{C}: draw a card?'})},
   },
   'poseidon-v6-143': {
     // Dimensional Currents: o controlador do Devotee devolvido moe 1.
     watchBounce: (s, c, key, self, uid, ctrl, by) => by === key && ctrl !== key && k.once(s, `currents:${self}`) && (st => mill(st, c, ctrl, 1)),
-    opg: {name: 'GOLDEN TRIANGLE', cost: 3, check: (s, c, key) => needEnemy(s, c, key),
-      run: (s, c, key) => { bounce(s, c, key, enemy(s, c, key, 'GOLDEN TRIANGLE')); k.draw(s, key, 1); }},
+    res: {name: 'RESONANCE', cost: 3, check: (s, c, key) => needEnemy(s, c, key, u => k.costOf(c, u) <= 3),
+      run: (s, c, key) => { bounce(s, c, key, enemy(s, c, key, 'RESONANCE', 'Choose target enemy Devotee with cost 3 or less.', u => k.costOf(c, u) <= 3)); }},
   },
   'poseidon-v6-144': {
     watchDeclare: (s, c, key, self, attacker) => {
@@ -611,39 +615,24 @@ export default {
       if (k.controllerOf(s, attacker) === key || s.roundUses.has(tag)) return;
       return st => { if (!st.roundUses.has(tag) && st.units[attacker] && pay(st, c, key, 1, 'SILENT SYMPHONY', attacker)) { k.once(st, tag); strikeBuff(st, attacker, -1); } };
     },
-    opg: {name: 'DEAD END SYMPHONY', cost: 2, check: (s, c, key) => needEnemy(s, c, key),
-      run: (s, c, key) => { const t = enemy(s, c, key, 'DEAD END SYMPHONY'); if (t) seal(s, c, [t], 1, 'DEAD END SYMPHONY'); }},
+    res: {name: 'RESONANCE', cost: 2, check: (s, c, key) => needEnemy(s, c, key),
+      run: (s, c, key) => { const t = enemy(s, c, key, 'RESONANCE'); if (t) seal(s, c, [t], 1, 'RESONANCE'); }},
   },
   'poseidon-v6-145': {
     watchDeclare: ward({cost: 1, ability: 'WALL OF THE PACIFIC',
       unit: (s, c, key, self, attacker, target) => inStrike(attacker, target).find(u => k.controllerOf(s, u) === key)}),
-    opg: {name: 'RISING BILLOWS', cost: 3, run: (s, c, key) => k.devotees(s, c, key).forEach(u => shield(s, u, Infinity))},
-  },
-  'poseidon-v6-146': {
-    watchSealed: (s, c, key, self, transitions) => {
-      const hit = enemySealed(key, transitions)[0];
-      if (!hit || !k.once(s, `frozen-waters:${self}`)) return;
-      return st => mill(st, c, hit.controller, 1);
-    },
-    opg: {name: 'AURORA BOREALIS', cost: 2, run: (s, c, key) => k.draw(s, key, Math.min(3, k.enemies(s, c, key).filter(u => sealed(s, u)).length))},
-  },
-  'poseidon-v6-147': {
-    // Lost in the Reef: o primeiro Devotee inimigo que declara Strike contra o seu God em cada Round, -1 ATK nesse Strike.
-    watchDeclare: (s, c, key, self, attacker, target) => target.kind === 'god' && target.player === key && k.once(s, `reef:${self}`)
-      && (st => strikeBuff(st, attacker, -1)),
-    opg: {name: 'THE ENDLESS REEF', cost: 3, run: (s, c, key) => {
-      const pool = k.enemies(s, c, key).filter(u => k.costOf(c, u) <= 3);
-      for (const t of k.chooseUpTo(c, key, 'THE ENDLESS REEF', pool, 2, {text: 'Choose up to two enemy Devotees with Casting Cost 3 or less.'})) bounce(s, c, key, t);
+    res: {name: 'RESONANCE', cost: 2, check: k.needTarget(k.devotees, 'sem Devotee aliado'), run: (s, c, key) => {
+      const t = k.choose(c, key, 'RESONANCE', k.devotees(s, c, key), {text: 'Choose target friendly Devotee.'});
+      if (t) shield(s, t, Infinity, {duration: 'until_next_turn', owner: key});
     }},
   },
-  'poseidon-v6-148': {
-    watchSpell: (s, c, key, self, caster, spellUid) => caster === key && castMT(c, spellUid) && k.once(s, `secrets:${self}`)
-      && (st => scry(st, c, key, 'ANCIENT SECRETS')),
-    opg: {name: 'FORGOTTEN KNOWLEDGE', cost: 2, run: (s, c, key) => { k.draw(s, key, 3); if (!s.victory) k.discard(s, c, key, 2, 'FORGOTTEN KNOWLEDGE'); }},
-  },
-  'poseidon-v6-149': {
-    watchSealed: onSealed('crushing', (st, c, key, self, uid) => (st.units[uid] && pay(st, c, key, 1, 'CRUSHING DEPTHS', uid) ? (debuff(st, uid, 1), true) : false)),
-    opg: {name: 'ECHOES OF THE ABYSS', cost: 3, run: (s, c, key) => mill(s, c, k.other(s, key), 4)},
+  'poseidon-v6-149': { // The Abyssal Trench — Crushing Depths: Devotee inimigo fica Sealed, o controlador dele mói 2 (uma vez por Round).
+    watchSealed: (s, c, key, self, transitions) => {
+      const hit = enemySealed(key, transitions)[0];
+      if (!hit || !k.once(s, `crushing:${self}`)) return;
+      return st => mill(st, c, hit.controller, 2);
+    },
+    res: {name: 'RESONANCE', cost: 3, run: (s, c, key) => mill(s, c, k.other(s, key), 3)},
   },
   'poseidon-v6-150': {
     spell: {run: (s, c, key) => {

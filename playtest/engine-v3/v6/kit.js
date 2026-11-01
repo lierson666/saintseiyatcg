@@ -1,9 +1,9 @@
 // Kit das cartas V6: ações comuns de texto de carta sobre a engine 3.0. Toda escolha é uma pergunta da engine
 // (`ctx.decide`), respondida no modal de decisão da arena, pela IA ou pelo jogador remoto. Sem `decide`, recusa.
-import {RuleError, destroyDevotee, draw, emit, gainLatent, loseSoul, mill, prepareUnit, useOncePerRound, addEffect, restoreMoon} from '../core.js';
+import {RuleError, destroyDevotee, draw, emit, gainLatent, loseSoul, mill, prepareUnit, useOncePerRound, addEffect, restoreMoon, spendBase} from '../core.js';
 import {card, controllerOf, modify, damageDevotee, checkDefeats, atkOf, hpOf, keywordsOf} from '../effects.js';
 import {gainSoul} from '../gods.js';
-import {collect} from './registry.js';
+import {collect, resonanceTag} from './registry.js';
 
 export {card, controllerOf, modify, damageDevotee, checkDefeats, atkOf, hpOf, keywordsOf, gainSoul, loseSoul, draw, mill, gainLatent, emit, RuleError, addEffect};
 export const other = (s, key) => s.order.find(k => k !== key);
@@ -22,6 +22,26 @@ export const gearOf = (c, uid) => Object.keys(c.attached).filter(e => c.attached
 export const once = (s, tag) => (s.roundUses.has(tag) ? false : (useOncePerRound(s, tag), true));
 // Guia §64 (autor, 29/10/2026): "once per turn" vale uma vez por rodada.
 export const onceTurn = (s, tag) => once(s, tag);
+// Ressonância dos Domains (autor, 01/11/2026): só com God da facção; "once each turn" de verdade (tag com o turno).
+export {domainResonant} from './registry.js';
+export const resTag = (s, key, name) => resonanceTag(s, key, name);
+// {N}{C} de gatilho opcional ("you may pay {N}{C}"): Base preparada primeiro, depois Latent (como play.payCost misto).
+export const canPayCosmo = (s, key, n) => s.players[key].bases.filter(b => b.prepared).length + s.players[key].latent >= n;
+// Gatilho da Ressonância "once each turn, when …, you may pay {N}{C}. If you do, …": o uso do turno é gasto ao pagar.
+export const resPay = (s, c, key, name, n, ability, run, extra = {}) => !s.roundUses.has(resTag(s, key, name)) && canPayCosmo(s, key, n) && (st => {
+  const tag = resTag(st, key, name);
+  if (st.roundUses.has(tag) || !canPayCosmo(st, key, n) || !may(c, key, ability, {uid: `domain:${key}`, cost: `${n} Cosmo`, ...extra})) return;
+  payCosmo(st, key, n);
+  useOncePerRound(st, tag);
+  run(st);
+});
+export function payCosmo(s, key, n) {
+  if (!canPayCosmo(s, key, n)) return false;
+  const fromBase = Math.min(n, s.players[key].bases.filter(b => b.prepared).length);
+  if (fromBase) spendBase(s, key, fromBase);
+  if (n - fromBase) payLatent(s, key, n - fromBase);
+  return true;
+}
 
 // ---------- perguntas ----------
 // "You may …": sim/não. `cost` aparece no modal (ex.: '1 Soul').
@@ -60,8 +80,6 @@ export function damage(s, c, target, amount) {
   checkDefeats(s, c);
 }
 export const loseSoulOf = (s, key, n) => loseSoul(s, {[key]: n}, 'loss');
-// Devotees derrotados (destruídos ou sacrificados) neste Round: eventos com `owner` (Domains Once per game, 31/10/2026).
-export const defeatedThisRound = (s, c) => s.events.filter(e => e.round === s.round && (e.type === 'destroyed' || e.type === 'sacrificed') && isDevotee(c, e.uid));
 // "Pay N Soul": custo. Não paga se não tiver Soul suficiente (devolve false).
 export function paySoul(s, key, n) {
   if (s.players[key].soul < n) return false;
@@ -139,6 +157,8 @@ export function toHand(s, c, uid, from = 'tartarus', by = null) {
   if (vanish(c, uid)) return true;
   s.players[c.objects[uid].owner].hand.push(uid);
   emit(s, 'returned_to_hand', {player: c.objects[uid].owner, uid, from});
+  // Observadores `watchRecall(s, c, key, self, player, uid)`: carta voltou do Tartarus para a mão do dono (Domain 243).
+  if (from === 'tartarus') watchers(s, c, 'watchRecall', [c.objects[uid].owner, uid], 'returned from the Tartarus');
   return true;
 }
 export function toTartarus(s, c, uid, from = 'hand') {
@@ -221,6 +241,14 @@ export function search(s, c, key, ability, filter) {
   const pick = options.length ? c.decide?.(key, {ability, options, choose: 'search', text: 'Choose a card to put into your hand.'}) : null;
   if (pick && take(s, c, pick, 'deck')) { s.players[key].hand.push(pick); emit(s, 'revealed', {player: key, uid: pick}); }
   return pick || null;
+}
+// Embaralha o deck de `key` (determinístico pelo estado: o replay das decisões repete a ordem).
+export function shuffleDeck(st, key) {
+  const deck = st.players[key].deck;
+  let seed = (st.events.length * 2654435761 + st.turn * 40503 + deck.length) >>> 0;
+  const rand = () => ((seed = (seed * 1664525 + 1013904223) >>> 0) / 4294967296);
+  for (let i = deck.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [deck[i], deck[j]] = [deck[j], deck[i]]; }
+  emit(st, 'shuffle', {player: key});
 }
 // Carta do topo do deck para a reserva de Cosmo (Base) — "put … into your Cosmo Bank face down as an unprepared Cosmo Base".
 export function topToBase(s, key, prepared = false) {

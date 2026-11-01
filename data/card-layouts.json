@@ -715,42 +715,6 @@
           }
         },
         {
-          "id": "attack",
-          "name": "God Attack",
-          "component": "StatBadge",
-          "binding": "card.attack",
-          "x": 625,
-          "y": 1880,
-          "width": 230,
-          "height": 140,
-          "zIndex": 10,
-          "rotation": 0,
-          "opacity": 1,
-          "visible": true,
-          "locked": false,
-          "label": "ATTACK",
-          "conditions": {
-            "binding": "card.type",
-            "op": "eq",
-            "value": "God"
-          },
-          "style": {
-            "fontFamily": "Avenir",
-            "fontSize": 86,
-            "fontWeight": 700,
-            "lineHeight": 1.2,
-            "letterSpacing": 0,
-            "align": "center",
-            "background": "transparent",
-            "borderWidth": 0,
-            "borderRadius": 0,
-            "padding": 8,
-            "autoFit": true,
-            "minFontSize": 24,
-            "overflow": "visible"
-          }
-        },
-        {
           "id": "awaken",
           "name": "Awaken",
           "component": "AwakenBadge",

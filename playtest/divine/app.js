@@ -19,8 +19,8 @@ import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudg
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout, clockBonus} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
-import {createDirector} from './director.js?v=18';
-import {createAI} from './ai.js?v=11';
+import {createDirector} from './director.js?v=19';
+import {createAI} from './ai.js?v=12';
 import {findDeck} from '../deck-store.js';
 import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-face3';
 import {unlock, playMusic} from '../audio.js?v=20261030-telas';
@@ -568,7 +568,7 @@ function sanctum(key, side) {
   const plural = (k, w) => `${k} ${w}${k === 1 ? '' : 's'}`;
   return `<section class="sanctum sanctum--${side}" aria-label="${side === 'me' ? 'Your' : 'Opponent'} resources">
     <header class="rail__who">${side === 'me' ? 'You' : 'Opponent'} <small>Player ${key}</small></header>
-    <button class="sanctum__domain${S().domainUsed?.[key] ? ' is-used' : ''}" data-domain="${key}" style="--art:url('${f?.ilustracao ? forgeArt(f.ilustracao) : ''}')" data-tip="${esc(`Domain|${dom?.name || '—'}. Click to view the card.`)}">
+    <button class="sanctum__domain" data-domain="${key}" style="--art:url('${f?.ilustracao ? forgeArt(f.ilustracao) : ''}')" data-tip="${esc(`Domain|${dom?.name || '—'}. Click to view the card.`)}">
       <small>Domain</small><strong>${esc(dom?.name || '—')}</strong></button>
     <div class="cosmo" data-bank="${key}" style="--burn:${burn}">
       ${row('rail__row--cosmo', `<img class="cosmo__sigil" src="../../CARD-TEMPLATE/athena/gem_cost.png" alt="">`, `Cosmo Base${pooled ? `<em class="rail__pool">Pool ${pooled}</em>` : ''}`, `${ready}<small>/${p.bases.length}</small><span class="cosmo__pips">${pips}</span>`,
@@ -588,10 +588,10 @@ function showDomainCard(key) {
   closeBigCard(); hideInspect();
   const box = document.createElement('div');
   box.id = 'bigcard'; box.className = 'bigcard';
-  // Domain: botão da habilidade ativada (linha 1) e da Once per game (linha 2, guia §63), no seu turno e com a mesa parada.
-  // Fora da cor, domainEntry tira a Once per game.
+  // Domain: botão da ativada da linha geral e da Ressonância (rebalanceamento, autor 01/11/2026), no seu turno e com a mesa parada.
+  // Com God de outra facção, domainEntry tira a Ressonância; o texto das duas linhas vem da carta (renderLiveCard).
   const dom = domainEntry(S(), key), idle = key === viewer() && idleFor(key);
-  const uses = [dom?.activate && [`domain:${key}`, dom.activate.name], dom?.opg && !S().domainUsed?.[key] && [`domain:${key}:opg`, `${dom.opg.name} (once per game)`]].filter(Boolean);
+  const uses = [dom?.activate && [`domain:${key}`, dom.activate.name], dom?.res && [`domain:${key}:res`, 'Resonance']].filter(Boolean);
   box.innerHTML = `<div class="dcard dcard--big art-full">${renderLiveCard(f, {art: f.ilustracao && forgeArt(f.ilustracao)})}</div>
     ${idle ? uses.map(([uid, name]) => `<button class="primary-action bigcard__use" data-domain-use="${uid}">Use ${esc(name)}</button>`).join('') : ''}`;
   box.querySelectorAll('[data-domain-use]').forEach(b => b.addEventListener('pointerdown', e => { e.stopPropagation(); closeBigCard(); act({type: 'activate', key, uid: b.dataset.domainUse, choice: {}}); }));
@@ -2204,6 +2204,7 @@ const ai = createAI({
   commandBlock: key => commandBlock(S(), ctx, key), commandTargets: key => commandTargets(S(), ctx, key), activateCommand: (key, uid) => activateCommand(S(), ctx, key, uid),
   placeBase, playDevotee: (key, uid, ch) => playDevotee(S(), ctx, key, uid, ch), playEquipment: (key, uid, bearer, ch) => playEquipment(S(), ctx, key, uid, bearer, ch),
   reequip: (key, uid, bearer) => reequip(S(), ctx, key, uid, bearer), attached: uid => ctx.attached[uid],
+  domainUses: key => { const d = domainEntry(S(), key); return {res: !!d?.res, general: d?.activate || null}; }, activate: (key, uid) => activate(S(), ctx, key, uid, {}),
   playSpell: (key, uid, ch) => playSpell(S(), ctx, key, uid, ch), declareStrike: (uid, target) => declareStrike(S(), ctx, uid, target),
   hiddenReason, castHidden: (key, uid, ch) => castHidden(S(), ctx, key, uid, ch),
   announceExclamation: (key, trio) => announceExclamation(S(), ctx, key, trio), announceGreatFlood: key => announceGreatFlood(S(), ctx, key),

@@ -19,3 +19,18 @@ test('IA põe como Base a cópia repetida antes de qualquer outra', () => {
 test('IA guarda a carta que cabe no próximo turno e põe como Base a que não cabe', () => {
   assert.equal(pick({curve: {kind: 'Spell', cost: {amount: 2}}, top: {kind: 'Devotee', cost: {amount: 6}}}, 1), 'top');
 });
+
+// Domains (rebalanceamento, 01/11/2026): a IA usa a Ressonância antes dos Strikes; a ativada de compra só com Soul de sobra.
+test('IA usa a Ressonância do Domain e, com Soul baixo, não usa a ativada de compra', () => {
+  const s = {turn: 3, divine: {A: {god: 'god-hades'}}, players: {A: {hand: [], bases: [], battlefield: [], soul: 8}}, order: ['A', 'B']};
+  const calls = [];
+  const ai = createAI({S: () => s, info: () => ({}), known: () => true, canBase: () => false, playableReason: () => 'x', STEPS: {},
+    domainUses: () => ({res: true, general: {cost: 0}}), activate: (key, uid) => calls.push(uid)});
+  const first = ai.next('A');
+  first.run(); ai.refuse(first);
+  assert.deepEqual(calls, ['domain:A:res']);
+  assert.equal(ai.next('A'), null, 'compra com drawback de Soul: só com Soul acima de 12');
+  s.players.A.soul = 20;
+  ai.next('A').run();
+  assert.deepEqual(calls, ['domain:A:res', 'domain:A']);
+});

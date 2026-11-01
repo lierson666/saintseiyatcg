@@ -1,4 +1,4 @@
-import {resolveLayout,validateTemplate} from './model.js?v=20261101-tipo1';
+import {resolveLayout,validateTemplate} from './model.js?v=20261101-rules1';
 import {makeScene,renderScene} from './renderer.js';
 import {displayCard} from '../card-i18n.js?v=20261031-kw1';
 

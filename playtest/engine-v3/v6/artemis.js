@@ -92,24 +92,24 @@ export default {
     for (const u of rest) deck.splice(deck.indexOf(u), 1);
     deck.push(...rest);
   }}},
-  // The Hunter's Moon (rebalanceamento dos Domains, 31/10/2026): Moonlit Watch olha o topo no início do seu turno; a troca de Base
-  // por carta fica na Once per game. shortcut: o custo (Base ao Tartarus) é pago na resolução.
+  // The Hunter's Moon — Moonlit Sacrifice (compra da facção): perde todo o Latent e devolve uma Base sua à mão; sem Base, não compra.
   'artemis-v6-504': {
-    startTurn: (s, c, key) => s.players[key].deck.length > 0 && (st => { // Moonlit Watch
-      const p = st.players[key];
-      if (p.deck.length && k.may(c, key, 'MOONLIT WATCH', {uid: p.deck[0], text: 'Put the top card of your deck on the bottom of your deck?'})) p.deck.push(p.deck.shift());
-    }),
-    opg: {name: 'MOONLIT HARVEST', cost: 1,
-      check: (s, c, key) => { if (!s.players[key].bases.length) throw new k.RuleError('MOONLIT HARVEST', 'sem Cosmo Base para pôr no Tartarus'); },
+    activate: {name: 'MOONLIT SACRIFICE', cost: 0, once: true, tap: false,
+      check: (s, c, key) => { if (!s.players[key].bases.length) throw new k.RuleError('MOONLIT SACRIFICE', 'sem Cosmo Base para devolver à mão'); },
       run: (st, c, key) => {
         const p = st.players[key];
-        const b = k.choose(c, key, 'MOONLIT HARVEST', p.bases.map(x => x.uid), {text: 'Choose a Cosmo Base to put into your Tartarus.'});
+        const b = p.bases.length === 1 ? p.bases[0].uid : k.choose(c, key, 'MOONLIT SACRIFICE', p.bases.map(x => x.uid), {text: 'Choose a Cosmo Base to return to your hand.'});
         if (!b) return;
+        if (p.latent) k.payLatent(st, key, p.latent);
         p.bases = p.bases.filter(x => x.uid !== b);
-        p.tartarus.push(b);
-        k.draw(st, key, 2);
-        if (!st.victory) k.topToBase(st, key, false);
+        p.hand.push(b);
+        k.emit(st, 'returned_to_hand', {player: key, uid: b, from: 'bank'});
+        k.draw(st, key, 1);
       }},
+    res: {name: 'RESONANCE', cost: 3, run: (st, c, key) => {
+      k.search(st, c, key, 'RESONANCE', cd => cd?.kind === 'Devotee' && (cd.cost?.amount ?? 0) >= 5);
+      k.shuffleDeck(st, key); // "Shuffle your deck" vale mesmo sem achar
+    }},
   },
   // CALISTO
   'artemis-v6-361': {
@@ -388,27 +388,38 @@ export default {
     growEach(st, c, key, k.devotees(st, c, key), 2);
     k.devotees(st, c, key).filter(u => k.atkOf(st, c, u) >= 5).forEach(u => k.buff(st, u, 0, 0, 'this_round', ['Pierce']));
   }}},
-  // ---------- Domains (rebalanceamento, autor 31/10/2026): linha 1 simples; linha 2 `opg` (Once per game, guia §63) ----------
+  // ---------- Domains (rebalanceamento aprovado pelo autor em 01/11/2026, docs/domains-rebalance-proposta.md) ----------
+  // Linha geral (qualquer God): ganchos e `activate`. Ressonância — Artemis (só com God Artemis): `res` (ativada, uid
+  // `domain:${key}:res`, uma vez por turno) e `resonance` (gatilhos). Training counter = marcador +1/+1 (grow).
   'artemis-v6-427': {
     aura: (s, c, key, self, unit) => (k.controllerOf(s, unit) === key && k.hasType(c, unit, 'Satellite') ? {atk: 0, hp: 1} : null),
-    opg: {name: 'LUNAR COMMUNION', cost: 3, run: (s, c, key) => k.devotees(s, c, key).filter(u => isArtemis(c, u)).forEach(u => grow(s, c, key, u, 1))},
+    res: {name: 'RESONANCE', cost: 3, run: (s, c, key) => growEach(s, c, key, k.devotees(s, c, key).filter(u => k.hasType(c, u, 'Satellite')), 1)},
   },
   'artemis-v6-428': {
     watchEnter: (s, c, key, self, entered) => k.controllerOf(s, entered) === key && k.isDevotee(c, entered) && k.costOf(c, entered) >= 4
       && k.once(s, `${self}:forest`) && (st => k.gainSoul(st, key, 1)), // Forest Blessing
-    opg: {name: 'VERDANT EXPANSION', cost: 2, run: (s, c, key) => k.topToBase(s, key, false)},
+    res: {name: 'RESONANCE', cost: 2, run: (s, c, key) => { k.topToBase(s, key, false); }},
   },
   'artemis-v6-429': {
     aura: (s, c, key, self, unit) => (k.controllerOf(s, unit) === key && counters(s, unit) > 0 ? {atk: 0, hp: 1} : null),
-    opg: {name: 'ANCIENT BLESSING', cost: 2, run: (s, c, key) => {
-      const t = k.choose(c, key, 'ANCIENT BLESSING', k.devotees(s, c, key), {text: 'Choose target friendly Devotee.'});
-      if (t) grow(s, c, key, t, 2);
-    }},
+    resonance: {watchSurvive: (s, c, key, self, unit) => k.controllerOf(s, unit) === key && counters(s, unit) > 0
+      && k.resPay(s, c, key, 'survive', 1, 'RESONANCE', st => grow(st, c, key, unit, 1), {text: 'Pay {1}{C}: put a Training counter on it?'})},
   },
   'artemis-v6-430': {
     watchDeclare: (s, c, key, self, attacker, target) => k.controllerOf(s, attacker) === key && vsDevotee(target) && k.atkOf(s, c, attacker) >= 4
       && k.once(s, `${self}:hunter`) && (st => k.buff(st, attacker, 1, 0, 'this_strike')),
-    opg: {name: "PREDATOR'S REWARD", cost: 2, run: (s, c, key) => k.draw(s, key, Math.min(3, k.defeatedThisRound(s, c).filter(e => e.owner !== key).length))},
+    res: {name: 'RESONANCE', cost: 2, check: k.needTarget((s, c, key) => k.devotees(s, c, key).filter(u => k.atkOf(s, c, u) >= 4), 'sem Devotee aliado com ATK 4 ou mais'),
+      run: (s, c, key) => {
+        const t = k.choose(c, key, 'RESONANCE', k.devotees(s, c, key).filter(u => k.atkOf(s, c, u) >= 4), {text: 'Choose target friendly Devotee with ATK 4 or greater.'});
+        if (t) k.buff(s, t, 0, 0, 'this_round', ['Pierce']);
+      }},
+  },
+  // The Night Vale — Night Hunt: você põe uma Base (placeBase), alvo amigo +1 ATK até o fim do Round (uma vez por Round).
+  'artemis-v6-524': {
+    watchBase: (s, c, key, self, player) => player === key && k.devotees(s, c, key).length > 0 && k.once(s, `${self}:night`)
+      && (st => { const t = pickFriend(st, c, key, 'NIGHT HUNT'); if (t) k.buff(st, t, 1, 0); }),
+    res: {name: 'RESONANCE', cost: 2, check: k.needTarget(k.devotees, 'sem Devotee aliado'),
+      run: (s, c, key) => { const t = pickFriend(s, c, key, 'RESONANCE'); if (t) k.buff(s, t, 2, 2); }},
   },
   'artemis-v6-431': {
     aura: lord((c, u) => k.hasType(c, u, 'Satellite'), 1, 1),

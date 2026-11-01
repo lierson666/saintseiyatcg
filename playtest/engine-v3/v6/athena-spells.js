@@ -36,15 +36,6 @@ export default {
     if (t) k.buff(s, t, 1, 1);
     k.draw(s, key, 1);
   }}},
-  // Athena's Statue (rebalanceamento dos Domains, 31/10/2026): Saint's Resolve dá 1 Soul; a compra fica na Once per game.
-  'athena-v6-501': {
-    watchSurvive: (s, c, key, self, unit) => k.controllerOf(s, unit) === key && isSaint(c, unit) && k.once(s, `${self}:resolve`)
-      && (st => k.gainSoul(st, key, 1)), // Saint's Resolve
-    opg: {name: "ATHENA'S PROTECTION", cost: 2, run: (s, c, key) => {
-      k.draw(s, key, 2);
-      shield(s, k.godTarget(key), Infinity); // "Prevent all Strike damage to your God until the end of the round"
-    }},
-  },
   // ---------- Spells ----------
   // The Masked Saint's Oath
   'athena-v6-055': {spell: {run: (s, c, key) => {
@@ -146,29 +137,33 @@ export default {
     if (t && k.putOntoField(s, c, key, t, 'tartarus', {prepared: true})) forbidStrike(s, t);
   }}},
 
-  // ---------- Domains ----------
-  // Linha 2 de cada Domain: `opg` (Once per game, guia §63), ativada pelo play.activate com uid `domain:${key}:opg`.
-  // 062 Galaxian Wars Arena: Tournament Spirit fica em effects.js (afterStrike).
-  'athena-v6-062': {opg: {name: 'THE GALAXIAN WARS', cost: 2,
-    run: (s, c, key) => k.draw(s, key, Math.min(3, k.devotees(s, c, key).filter(u => isBronze(c, u)).length))}},
-  // 064 The Five Old Peaks: Ancient Discipline (estática) fica em effects.js (mods).
-  'athena-v6-064': {opg: {name: "ROZAN'S WATERFALL", cost: 2,
-    run: (s, c, key) => saints(s, c, key).filter(u => keywordsOf(s, c, u).includes('Guardian')).forEach(u => k.removeDamage(s, u))}},
-  // Jamir Tower: ativada pelo play.activate com uid `domain:${key}`. O {T} do Domain vale uma vez por Round (como o Equipment, §61).
+  // ---------- Domains (rebalanceamento aprovado pelo autor em 01/11/2026, docs/domains-rebalance-proposta.md) ----------
+  // Linha geral (qualquer God): ganchos e `activate` (uid `domain:${key}`). Ressonância — Athena (só com God Athena):
+  // `res` (ativada, uid `domain:${key}:res`, uma vez por turno, registry.js) e `resonance` (gatilhos).
+  // 062 Galaxian Wars Arena: Tournament Spirit (linha geral) fica em effects.js (afterStrike).
+  'athena-v6-062': {res: {name: 'RESONANCE', cost: 2, check: k.needTarget((s, c, key) => saints(s, c, key, 'Bronze Saint'), 'sem Bronze Saint aliado'),
+    run: (s, c, key) => { const t = friendlySaint(s, c, key, 'RESONANCE', 'Bronze Saint'); if (t) k.buff(s, t, 2, 2); }}},
+  // 064 The Five Old Peaks: Ancient Discipline (estática, linha geral) fica em effects.js (mods).
+  'athena-v6-064': {res: {name: 'RESONANCE', cost: 1, check: k.needTarget((s, c, key) => saints(s, c, key), 'sem Saint aliado'),
+    run: (s, c, key) => {
+      const t = friendlySaint(s, c, key, 'RESONANCE');
+      if (t) { k.buff(s, t, 0, 0, 'this_round', ['Guardian']); k.removeDamage(s, t, 1); }
+    }}},
+  // Jamir Tower: Cloth Restoration, once each round, {1}{C}, sem {T}; "target friendly Devotee equipped with an Armor".
   'athena-v6-063': {
     activate: {
       name: 'CLOTH RESTORATION', cost: 1, once: true, tap: false,
-      // Texto de 31/10/2026 (§63): once each round, {1}{C}, sem {T}; "target friendly Devotee equipped with an Armor".
       check: (s, c, key) => { if (!armored(s, c, key).length) throw new k.RuleError('alvo', 'sem Devotee seu com Armor'); },
       run: (s, c, key) => {
         const t = k.choose(c, key, 'CLOTH RESTORATION', armored(s, c, key), {text: 'Choose target friendly Devotee equipped with an Armor.'});
         if (t) k.removeDamage(s, t, 1);
       },
     },
-    opg: {name: "MU'S FORGE", cost: 2, run: (s, c, key) => {
-      const t = k.choose(c, key, "MU'S FORGE", s.players[key].tartarus.filter(u => k.card(c, u)?.armor), {text: 'Choose target Armor card in your Tartarus.'});
-      if (t) k.toHand(s, c, t, 'tartarus');
-    }},
+    res: {name: 'RESONANCE', cost: 2, check: k.needTarget((s, c, key) => s.players[key].tartarus.filter(u => k.card(c, u)?.armor), 'sem Armor no seu Tartarus'),
+      run: (s, c, key) => {
+        const t = k.choose(c, key, 'RESONANCE', s.players[key].tartarus.filter(u => k.card(c, u)?.armor), {text: 'Choose target Armor card in your Tartarus.'});
+        if (t) k.toHand(s, c, t, 'tartarus');
+      }},
   },
   // The Stairway to the Twelve Temples — Twelve Temples (gancho watchSurvive): uma vez por Round, um Saint amigo sobreviveu a um
   // Strike; pode pagar {1}{C} para ele ganhar +1 ATK até o fim do Round.
@@ -181,9 +176,30 @@ export default {
       k.once(st, tag);
       k.buff(st, unit, 1, 0);
     }),
-    opg: {name: 'THE FIRE CLOCK', cost: 3, run: (s, c, key) => {
-      k.draw(s, key, 2);
-      if (!s.victory) saints(s, c, key).forEach(u => k.buff(s, u, 1, 0));
-    }},
+    res: {name: 'RESONANCE', cost: 3, run: (s, c, key) => saints(s, c, key).forEach(u => k.buff(s, u, 1, 0))},
+  },
+  // Athena's Statue — Saint's Offering (compra da facção): ativada opcional no seu turno, uma vez por Round; sem carta na mão
+  // ou sem {2}{S} o custo não é pago inteiro e a ativada não pode ser usada.
+  'athena-v6-501': {
+    activate: {name: "SAINT'S OFFERING", cost: 0, once: true, tap: false,
+      check: (s, c, key) => {
+        if (!s.players[key].hand.length) throw new k.RuleError("SAINT'S OFFERING", 'sem carta na mão para pôr no Void');
+        if (s.players[key].soul < 2) throw new k.RuleError("SAINT'S OFFERING", 'Soul insuficiente para perder {2}{S}');
+      },
+      run: (s, c, key) => {
+        const p = s.players[key];
+        const t = p.hand.length === 1 ? p.hand[0] : c.decide?.(key, {ability: "SAINT'S OFFERING", options: [...p.hand], choose: 'discard-one', text: 'Choose a card to put into the Void.'});
+        if (!t || p.soul < 2 || !k.exile(s, c, t, 'hand')) return;
+        k.loseSoulOf(s, key, 2);
+        if (!s.victory) k.draw(s, key, 1);
+      }},
+    resonance: {watchSurvive: (s, c, key, self, unit) => k.controllerOf(s, unit) === key && isSaint(c, unit)
+      && k.resPay(s, c, key, 'survive', 1, 'RESONANCE', st => k.gainSoul(st, key, 2), {text: 'Pay {1}{C}: your God gains {2}{S}?'})},
+  },
+  // The Sanctuary Gates — Sacred Threshold: o primeiro Devotee inimigo que declara Strike contra o seu God em cada Round, -1 ATK nesse Strike.
+  'athena-v6-520': {
+    watchDeclare: (s, c, key, self, attacker, target) => target.kind === 'god' && target.player === key && k.controllerOf(s, attacker) !== key
+      && k.once(s, `${self}:threshold`) && (st => { if (st.units[attacker]) k.buff(st, attacker, -1, 0, 'this_strike'); }),
+    res: {name: 'RESONANCE', cost: 2, run: (s, c, key) => shield(s, k.godTarget(key), 3, {duration: 'until_next_turn', owner: key})},
   },
 };

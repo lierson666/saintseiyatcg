@@ -34,6 +34,7 @@ function poseidon(answers = {}) {
   };
   const ctx = guardDecide({cards, objects: m.objects, attached: m.attached, decide}), A = s.players.A, B = s.players.B;
   for (const pl of Object.values(s.players)) pl.deck.push(...pl.hand.splice(0)); s.setup = null;
+  s.domains = {A: null, B: null}; // Domains (Ressonância do 142 compra ao conjurar): test-engine-v3-domains.mjs
   startTurn(s);
   A.bases = A.deck.splice(-12).map(uid => ({uid, prepared: true}));
   let n = 0;
@@ -111,6 +112,7 @@ test('activate em Equipment: Kraken Scale sela um inimigo, uma vez por Round, pa
 
 test('mods e aura: Herald dá +0/+1 aos Marina; Ocean Temple Guard +0/+1 com Domain de Poseidon', () => {
   const {s, ctx, put} = poseidon();
+  s.domains.A = P('142');
   const temple = put('A', P('106'), 'battlefield'), base = hpOf(s, ctx, temple);
   assert.equal(base, 4, '3 impresso + 1 do Domain');
   put('A', P('103'), 'battlefield');
@@ -159,27 +161,6 @@ test('watchSpell: Pearl Sanctuary Keeper compra e descarta ao conjurar Technique
   const b1 = bases(A);
   playSpell(s, ctx, 'A', put('A', P('137')), {}); done(s);
   assert.equal(bases(A), b1 - cards.get(P('137')).cost.amount, 'segunda conjuração no Round: Pearl Divination não paga de novo');
-});
-
-test('watchSpell (Domain): Oceanic Dominion dá 1 Soul ao conjurar; Ancient Secrets (148) e Forgotten Knowledge Once per game (domain:A:opg)', () => {
-  const {s, ctx, A, put} = poseidon();
-  s.domains.A = P('142');
-  A.soul -= 3;
-  const soul0 = A.soul;
-  playSpell(s, ctx, 'A', put('A', P('137')), {}); done(s);
-  assert.equal(A.soul, soul0 + 1);
-  const {s: s2, ctx: c2, A: A2, put: put2, asked: asked2} = poseidon();
-  s2.domains.A = P('148');
-  assert.throws(() => activate(s2, c2, 'A', 'domain:A'), /Domain/); // 148 não tem mais ativada na linha 1
-  const tartarus0 = A2.tartarus.length, bases0 = bases(A2), hand0 = A2.hand.length;
-  activate(s2, c2, 'A', 'domain:A:opg'); done(s2);
-  assert.equal(A2.tartarus.length, tartarus0 + 2); // comprou 3 e descartou 2
-  assert.equal(A2.hand.length, hand0 + 1);
-  assert.equal(bases(A2), bases0 - 2);
-  assert.throws(() => activate(s2, c2, 'A', 'domain:A:opg'), /Once per game/);
-  playSpell(s2, c2, 'A', put2('A', P('137')), {}); done(s2);
-  assert.ok(asked2.some(q => q.ability === 'ANCIENT SECRETS'));
-  assert.ok(A2);
 });
 
 test('watchSpell: Poseidon\'s Trident (178) compra ao conjurar Technique e Royal Scepter (170) saqueia', () => {
@@ -255,15 +236,6 @@ test('gearSurvive: Atlantean War Helm (130) olha o topo do deck como defensor (u
   assert.ok(s.roundUses.has(`awareness:${helm}`));
 });
 
-test('Domain 145 sem Resonance de Baian (rebalanceamento 31/10/2026); Rising Billows previne todo dano de Strike no Round', () => {
-  const {s, ctx, A, put} = poseidon();
-  s.domains.A = P('145');
-  assert.equal(V6[P('145')].watchSurvive, undefined);
-  const me = put('A', 'poseidon-v6-101', 'battlefield');
-  activate(s, ctx, 'A', 'domain:A:opg'); done(s);
-  assert.ok(s.effects.some(e => e.kind === 'prevent' && e.target === me && e.amount === Infinity));
-});
-
 // ---------- Contra-mágicas e reações a alvo de Spell (guia §54: toda Spell abre janela; alvos escolhidos ao conjurar) ----------
 // Aqui Poseidon é B (responde); A (Hades, ativo) conjura Eternal Slumber (hades-v6-192, Technique: 3 Seal no Devotee inimigo alvo).
 function duel(answers = {}) {
@@ -278,6 +250,7 @@ function duel(answers = {}) {
   };
   const ctx = guardDecide({cards, objects: m.objects, attached: m.attached, decide}), A = s.players.A, B = s.players.B;
   for (const pl of Object.values(s.players)) pl.deck.push(...pl.hand.splice(0)); s.setup = null;
+  s.domains = {A: null, B: null}; // Domains (Ressonância do 142 compra ao conjurar): test-engine-v3-domains.mjs
   startTurn(s);
   A.bases = A.deck.splice(-12).map(uid => ({uid, prepared: true}));
   B.bases = B.deck.splice(-12).map(uid => ({uid, prepared: true}));
@@ -387,7 +360,7 @@ test('167 Song of the Last Siren (Force of Will, 31/10/2026): anula qualquer car
   respond('167'); done(s);
   assert.equal(sealed(x), 0); assert.ok(s.players.A.tartarus.includes(sp));
   assert.ok(s.events.some(e => e.type === 'soul_lost' && e.player === 'B' && e.amount === 3 && e.cause === 'cost'));
-  assert.equal(B.soul, soul - 3 + 1, 'o Domain 142 devolve {1}{S} ao conjurar Moment');
+  assert.equal(B.soul, soul - 3, 'sem Domain: só o custo');
   assert.equal(B.hand.length, hand - 1, 'descartou 1 (a 167 foi conjurada a partir da mão nova)');
   const d = duel(), foe = d.put('A', 'hades-v6-206');
   d.put('B', P('133'));

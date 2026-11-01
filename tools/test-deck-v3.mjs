@@ -46,7 +46,7 @@ test('starter de Athena (D171) fecha 50 com no máximo 3 cópias, sem 019 a mais
 test('Domain fora da cor libera até 15 cartas da facção dele; neutras não contam (guia §63)', async () => {
   const {colorErrors, splashCount} = await import('../shared/deck-v3.js');
   const factionOf = id => id && id.replace(/^god-/, '').split('-')[0];
-  const d = (poseidon, neutral = 0) => ({god: 'god-athena', domain_id: 'poseidon-v6-148', main_deck: [
+  const d = (poseidon, neutral = 0) => ({god: 'god-athena', domain_id: 'poseidon-v6-502', main_deck: [
     {card_id: 'athena-v6-001', quantity: 60 - poseidon - neutral},
     {card_id: 'poseidon-v6-101', quantity: poseidon},
     ...(neutral ? [{card_id: 'neutral-v6-001', quantity: neutral}] : []),

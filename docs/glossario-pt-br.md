@@ -20,7 +20,7 @@ Regra: o mesmo termo em todo lugar. Termo vetado fica em inglês. Nomes de perso
 | Tartarus | Tártaro | |
 | Void | Vazio | |
 | Chain | Pilha | como no fluxo de cast |
-| Fatigue | Fadiga | |
+| Empty deck (deck out) | Deck vazio | quem precisa comprar com o deck vazio perde (§55, 01/11/2026); a Fatigue saiu do jogo |
 | Round / Turn | Rodada / Turno | |
 | Phases: Prepare · Draw · Main · End | Preparação · Compra · Principal · Final | |
 | Priority / Response | Prioridade / Resposta | |
@@ -64,13 +64,14 @@ Regra: o mesmo termo em todo lugar. Termo vetado fica em inglês. Nomes de perso
 | ATK / HP | ATQ / PV |
 | Prepared / Unprepared / Prepare | Preparado / Despreparado / Preparar |
 | Awaken | Despertar |
+| Divine Power / Divine Command | Poder Divino / Comando Divino |
 | Ultimate | Supremo |
 | Resonance / Resonant | Ressonância / Ressonante |
 | Equip / Auto-Equip | Equipar / Autoequipar |
 | Cast | Conjurar |
 | Sacrifice | Sacrificar |
 | Defeat | Derrotar |
-| Retaliation | Revide |
+| Retaliation | Revide (só entre Devotos; Deuses não revidam) |
 | Rival | Rival |
 | Concede | Desistir |
 | Counter (Training, Seal) | Marcador (de Treinamento, de Selo) |
