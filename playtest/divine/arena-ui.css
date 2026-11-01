@@ -262,15 +262,15 @@ body:not(.is-peeking):has(.trigger-panel.is-center, .trigger-panel--order) #chai
 
 /* Mesa simétrica (autor, 01/11/2026): a coluna direita tem a largura e o peso da esquerda (.rail) e o jogo fica no centro; só o relógio mantém a largura.
    As cartas encolhem até 8 por linha; da 9ª em diante abre outra linha, da esquerda para a direita. */
-@property --fw { syntax: "<length>"; inherits: true; initial-value: 0px; }
+@property --field-w { syntax: "<length>"; inherits: true; initial-value: 0px; }
 :root { --col: calc(min(min(1vh, .65vw) * 1.1, (100vh - 40px) / 78) * 19); --edge: 12px; --side: calc(var(--col) + 28px); }
 @media (min-width: 761px) and (min-height: 501px) {
   /* Cada lado no meio da sua metade, sem encostar na vida do God nem na linha do meio (autor, 01/11/2026). */
   .arena-field { right: var(--side); container-type: inline-size; grid-template-rows: minmax(0, 1fr) auto minmax(0, 1fr); align-content: stretch; }
   .arena-field .field { align-self: stretch; height: auto; min-height: 0; align-items: center; }
   .band { right: var(--side); }
-  .olympus .field { --fw: 100cqw; --field-gap: calc(var(--u) * 1); display: grid; grid-template-columns: repeat(var(--cols, 1), auto); justify-content: center; align-content: center; gap: var(--field-gap);
-    --card-w: min(calc(var(--w0) * var(--fit, 1)), calc((var(--fw) - var(--field-gap) * (var(--cols, 1) - 1) - 12px) / var(--cols, 1))); }
+  .olympus .field { --field-w: 100cqw; --field-gap: calc(var(--u) * 1); display: grid; grid-template-columns: repeat(var(--cols, 1), auto); justify-content: center; align-content: center; gap: var(--field-gap);
+    --card-w: min(calc(var(--w0) * var(--fit, 1)), calc((var(--field-w) - var(--field-gap) * (var(--cols, 1) - 1) - 12px) / var(--cols, 1))); }
 
   /* Leque do oponente: mesma largura do meu, atrás do God dele, para contar as cartas e ver onde ele mexe. */
   .olympus .hand--opp { --hand-w: calc(var(--u) * 14); left: 50%; top: calc(var(--hand-w) * 1.4 * -.62); z-index: 4; }
@@ -281,11 +281,11 @@ body:not(.is-peeking):has(.trigger-panel.is-center, .trigger-panel--order) #chai
   .command__clock { justify-content: center; }
   .command .zclock { flex: none; --r: min(clamp(64px, 5.4vw, 86px), 10vh, calc(var(--col) / 2.3)); }
   .phasebar { box-sizing: border-box; width: 100%; gap: 5px; padding: 7px 6px; border-radius: 12px; }
-  .phasebar__turn { justify-self: stretch; }
+  .phasebar .phasebar__turn { display: flex; flex-direction: column; align-items: center; justify-self: stretch; text-align: center; }
   .phasebar__turn strong { font-size: 13px; white-space: normal; }
   .phasebar__turn small { font-size: 9px; letter-spacing: .04em; line-height: 1.25; white-space: normal; }
   /* Em cima a fase atual; embaixo todas, pequenas (autor, 01/11/2026). */
-  .phasebar__now { justify-self: center; margin-top: 2px; padding: 3px 12px; border-radius: 999px; background: linear-gradient(180deg, #ffe7a8, #d9a94a); color: #1a1204; font: 700 10px/1 "Jost", system-ui, sans-serif; letter-spacing: .08em; text-transform: uppercase; }
+  .phasebar .phasebar__now { margin-top: 2px; padding: 3px 12px; border-radius: 999px; background: linear-gradient(180deg, #ffe7a8, #d9a94a); color: #1a1204; font: 700 10px/1 "Jost", system-ui, sans-serif; letter-spacing: .08em; text-transform: uppercase; }
   .phasebar.is-theirs .phasebar__now { background: linear-gradient(180deg, #ffc2b0, #d95a3a); }
   .phasebar__steps { grid-template-columns: auto auto; justify-content: space-around; gap: 2px 6px; }
   .phasebar__steps li, .phasebar__steps li.on { padding: 2px 0; border: 0; background: none; box-shadow: none; font-size: 8px; letter-spacing: 0; }
@@ -320,3 +320,4 @@ body:not(.is-peeking):has(.trigger-panel.is-center, .trigger-panel--order) #chai
 }
 .phasebar__now { display: none; }
 @media (min-width: 761px) and (min-height: 501px) { .phasebar__now { display: block; } }
+.phasebar__line { display: none; }

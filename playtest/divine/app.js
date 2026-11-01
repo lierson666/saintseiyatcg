@@ -16,7 +16,7 @@ import {atkOf, hpOf, keywordsOf, gearOf, isSaint, isBronze, ABILITIES, modsOf} f
 import {v6Spell, entryOf, V6} from '../engine-v3/v6/hooks.js';
 import {domainEntry, resonanceTag} from '../engine-v3/v6/registry.js';
 import {STEPS, ABILITY_STEPS} from '../choices-v3.js?v=3';
-import {createScene, THEMES} from './scene.js?v=20261101-tab1';
+import {createScene, THEMES} from './scene.js?v=20261101-perf3';
 import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudgment, greatFloodBlock, announceGreatFlood, GREAT_FLOOD_COST,
   greatEclipseBlock, GREAT_ECLIPSE_COST, obliterationBlock, OBLITERATION_COST, bloodlustBlock, BLOODLUST_COST, commandBlock, commandTargets, activateCommand, COMMANDS, moonHarvestBlock, moonAwakeningBlock, MOON_AWAKENING_COST} from '../engine-v3/gods.js';
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout, clockBonus} from '../engine-v3/clock.js';
@@ -28,8 +28,8 @@ import {findDeck} from '../deck-store.js';
 import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-face3';
 import {unlock, playMusic} from '../audio.js?v=20261030-telas';
 import {telas, anim, sound, imageUrl, applyColors, applyTexts} from '../telas.js?v=20261030-1';
-import {renderLiveCard, renderCardText} from '../../shared/live-card.js?v=20261101-kw10';
-import {renderKeywordNotes, renderKeywordIcons} from '../../shared/keyword-glossary.js?v=20261101-kw10';
+import {renderLiveCard, renderCardText, fullSizePieces} from '../../shared/live-card.js?v=20261101-perf3';
+import {renderKeywordNotes, renderKeywordIcons} from '../../shared/keyword-glossary.js?v=20261101-kw11';
 import {armorBonusText, printedEquipmentBonuses} from '../../shared/card-visual-values.js?v=20261031-kw1';
 import {lightArt} from '../../shared/light-art.js';
 import {useGodPortraits} from '../avatar-face.js?v=20261031-3';
@@ -104,7 +104,7 @@ function playableReason(key, uid) {
     const cat = spellCat(uid);
     if (!cat) return 'This Technique or Moment is not playable yet.';
     if (cat.speed === 'instant' ? !(s.window ? s.window.priority === key : s.active === key && !s.chain.length) : !idleFor(key)) return cat.speed === 'instant' ? 'You need priority to cast a Moment.' : 'Techniques are cast on your turn, with no response pending.';
-    const cost = s.window ? castCost(s, ctx, key, uid, {amount: c0.cost.amount, unit: 'latent'}) : mixed(c.cost); // guia §5: resposta só Latent; como AÇÃO, Base e/ou Latent
+    const cost = s.window && s.active !== key ? castCost(s, ctx, key, uid, {amount: c0.cost.amount, unit: 'latent'}) : mixed(c.cost); // guia §5: resposta no turno do adversário só Latent; no próprio turno, Base e/ou Latent
     return affordable(key, cost) ? missingTarget(key, uid) : `Needs ${cost.amount} ${cost.unit === 'latent' ? 'Latent' : 'Cosmo (Base and/or Latent)'}.`;
   }
   if (!idleFor(key)) return s.active !== key ? "It's not your turn." : 'Wait for the response window to close.';
@@ -412,7 +412,7 @@ function syncClock(events) {
   if (s.victory || s.setup || !s.turn) return;
   clockHandTo(clock, s.window ? s.window.priority : s.active, now());
 }
-function updateClock() {
+function updateClock(force = false) {
   const box = $('[data-clock]');
   if (!box || !clock) return;
   const key = clock.running?.key, r = key ? clockRemaining(clock, key, now()) : {total: 0, basic: 0};
@@ -420,10 +420,12 @@ function updateClock() {
   $$('.torch', box).forEach((t, i) => t.classList.toggle('lit', i < lit));
   box.classList.toggle('urgent', !!key && r.total <= 20);
   const t = Math.max(0, Math.ceil(r.total)), time = $('[data-clock-time]'), label = $('[data-clock-label]');
-  if (time) time.textContent = key ? `${String(Math.floor(t / 60)).padStart(2, '0')}:${String(t % 60).padStart(2, '0')}` : '--:--';
-  if (label) label.textContent = !key ? 'Clock' : r.basic > 0 ? `Turn · ${key}` : `Reserve · ${key}`;
+  // só escreve se mudou: o tique é de 250 ms e cada escrita refaz layout e pintura. Compara com o original guardado: o i18n troca o texto na tela. O render reescreve a marcação, daí o force.
+  const write = (el, text) => { if (el && (force || el.clockText !== text)) { el.clockText = text; el.textContent = text; } };
+  write(time, key ? `${String(Math.floor(t / 60)).padStart(2, '0')}:${String(t % 60).padStart(2, '0')}` : '--:--');
+  write(label, !key ? 'Clock' : r.basic > 0 ? `Turn · ${key}` : `Reserve · ${key}`);
   const dc = $('[data-decision-clock]');
-  if (dc && key) { dc.textContent = `${t}s left`; dc.classList.toggle('urgent', r.total <= 20); }
+  if (dc && key) { write(dc, `${t}s left`); dc.classList.toggle('urgent', r.total <= 20); }
 }
 // Timeout (sempre ligado; ?timeouts=0 desliga para QA; online quem aplica é o arena-server). G3-027: escolha opcional pendente →
 // TIMEOUT_DECLINED; obrigatória → TIMEOUT_AUTO_CHOICE (G3-030, na engine); janela → TIMEOUT_PASS_PRIORITY; fase de
@@ -497,6 +499,8 @@ const useSleeves = (r, me) => {
   for (const k of [me, foe]) coin3d?.setFace(k, coinArt(k));
   render();
 };
+document.documentElement.style.setProperty('--screen-h', `${Math.max(screen.width, screen.height)}px`); // teto da altura em pé (portrait.css)
+const PHONE_PIECES = matchMedia('(pointer: coarse)').matches && Math.min(screen.width, screen.height) < 600;
 function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
   if (hidden || !ctx.objects[uid]) return `<div class="dcard dcard--back ${size}" data-uid="${uid}" aria-label="Face-down card"><span></span></div>`;
   const s = S(), c = info(uid), n = num(uid), unit = s.units[uid];
@@ -513,8 +517,10 @@ function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
   const facAttr = ` data-fac="${CARD_FACTIONS.has(String(forge?.faccao).toLowerCase()) ? String(forge.faccao).toLowerCase() : 'neutral'}"`;
   const statBuffed = (v, base) => (v > base ? 'up' : v < base ? 'down' : '');
   // Dano não tem marcador: o HP impresso já mostra a vida restante, em vermelho.
-  const marks = unit?.training > 0 || unit?.seal ? `<span class="dcard__tokens">${unit?.training > 0 ? token('training', unit.training, `Training|${unit.training} counter${unit.training > 1 ? 's' : ''}: +1 ATK / +1 HP each.`) : ''}${unit?.seal
-    ? token('seal', unit.seal, `Seal|At the start of its owner's turn, it removes one counter and does not Prepare.`) : ''}</span>` : '';
+  const markList = [unit?.training > 0 && token('training', unit.training, `Training|${unit.training} counter${unit.training > 1 ? 's' : ''}: +1 ATK / +1 HP each.`),
+    unit?.seal && token('seal', unit.seal, `Seal|At the start of its owner's turn, it removes one counter and does not Prepare.`),
+    ...(field && c.kind === 'Devotee' ? fadingTokens(s, uid, unit) : [])].filter(Boolean);
+  const marks = markList.length ? `<span class="dcard__tokens">${markList.join('')}</span>` : '';
   // Equipamento solto na mesa (Armor sem portador, arma caída): token compacto com arte, nome, bônus e selo EQUIP (autor, 30/10/2026).
   if (forge && field && !size && c.kind === 'Equipment' && BOARD_TOKENS) {
     const bonus = armorBonusText({...forge, ...printedBonusFields(forge)}), equip = forge.equipar_custo_outros ?? forge.equipar_custo;
@@ -537,11 +543,13 @@ function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
     const gem = (kind, v, trend) => `<b class="btok__stat btok__stat--${kind}" data-trend="${trend}" style="--gem:url('../../CARD-TEMPLATE/${fac}/gem_${kind === 'atk' ? 'power' : fac === 'athena' ? 'resistance' : 'soul'}.png')">${v}</b>`;
     return `<div class="${cls} dcard--board"${facAttr} data-uid="${uid}" tabindex="0" aria-label="${esc(c.name)}, ATK ${atk}, HP ${hp - dmg} of ${hp}">
       <div class="btok ${!forge.ilustracao ? 'is-noart' : fr?.w ? 'is-framed' : ''}" style="${art}"><span class="btok__name">${esc(c.name)}</span>
-        ${gem('atk', atk, statBuffed(atk, c.atk))}${gem('hp', hp - dmg, dmg ? 'down' : statBuffed(hp, c.hp))}</div>${renderKeywordIcons(kws)}${marks}</div>`;
+        ${gem('atk', atk, statBuffed(atk, c.atk))}${gem('hp', hp - dmg, dmg ? 'down' : statBuffed(hp, c.hp))}</div>${renderKeywordIcons(kws, markList)}</div>`;
   }
   if (forge) {
     // ATK e HP ao vivo no próprio número impresso: verde com bônus, vermelho com dano ou redução.
-    const live = renderLiveCard(forge, {stats: {power: atk ?? null, hp: hp == null ? null : hp - dmg, damage: dmg, keywords: kws}, art: forge.ilustracao && forgeArt(forge.ilustracao)})
+    const face = renderLiveCard(forge, {stats: {power: atk ?? null, hp: hp == null ? null : hp - dmg, damage: dmg, keywords: kws}, art: forge.ilustracao && forgeArt(forge.ilustracao)});
+    // Celular (autor, 01/11/2026, aquecendo só no duelo): mão com peças de um quarto do tamanho; zoom (size) segue nítido.
+    const live = (PHONE_PIECES && !size ? face.replaceAll('.sm.webp', '.xs.webp') : face)
       .replace('data-stat="power"', `data-stat="power" data-trend="${statBuffed(atk, c.atk)}"`)
       .replace('data-stat="hp"', `data-stat="hp" data-trend="${dmg ? 'down' : statBuffed(hp, c.hp)}"`);
     return `<div class="${cls}"${facAttr} data-uid="${uid}" tabindex="0" aria-label="${esc(c.name)}${c.kind === 'Devotee' ? `, ATK ${atk}, HP ${hp - dmg} of ${hp}` : ''}">${live}${marks}</div>`;
@@ -580,6 +588,17 @@ const FRAMES = {
 const box = ([x, y, w, h]) => `left:${x}%;top:${y}%;width:${w}%;height:${h}%`;
 // Marcador como moeda (autor, 28/10/2026): dourada para Training, prata e azul para Seal, dourada com balança para Divine Judgment.
 const token = (kind, n, tip) => `<i class="token token--${kind}" data-tip="${esc(tip)}"><b>${n}</b></i>`;
+// Bônus e penalidades que passam (autor, 01/11/2026): -1/-1 vermelho e +1/+1 dourado, somados por sinal; somem quando o efeito vence.
+// O marcador -1/-1 permanente (neutras) entra no vermelho. HP chegando a 0 derrota o Devotee; ATK 0 não.
+function fadingTokens(s, uid, unit) {
+  const signed = v => (v > 0 ? `+${v}` : `${v}`);
+  const net = {up: [0, 0], down: [Math.min(unit?.training || 0, 0), Math.min(unit?.training || 0, 0)]};
+  for (const e of s.effects) if (e.target === uid && e.kind === 'mod') [e.atk || 0, e.hp || 0].forEach((v, i) => { net[v > 0 ? 'up' : 'down'][i] += v; });
+  return [['down', 'minus', 'Weakened'], ['up', 'boost', 'Boosted']].filter(([k]) => net[k][0] || net[k][1]).map(([k, kind, name]) => {
+    const [a, h] = net[k];
+    return token(kind, a === h ? signed(a) : `${signed(a)}/${signed(h)}`, `${name}|${signed(a)} ATK / ${signed(h)} HP until the effect ends.`);
+  });
+}
 // Rosto escolhido no Card Forge (card-forge/god-hud.js): mesma conta da prévia de lá; sem escolha, a arte da carta.
 function godFace(key) {
   const id = S().gods[key], f = FORGE.get(`${cards.get(id).name.toLowerCase()}-001`), h = f?.hud_rosto;
@@ -686,7 +705,7 @@ function showDomainCard(key) {
   // Com God de outra facção, domainEntry tira a Ressonância; o texto das duas linhas vem da carta (renderLiveCard).
   const dom = domainEntry(S(), key), idle = key === viewer() && idleFor(key);
   const uses = [dom?.activate && [`domain:${key}`, dom.activate.name], dom?.res && [`domain:${key}:res`, 'Resonance']].filter(Boolean);
-  box.innerHTML = `<div class="dcard dcard--big art-full">${renderLiveCard(f, {art: f.ilustracao && forgeArt(f.ilustracao)})}</div>
+  box.innerHTML = `<div class="dcard dcard--big art-full">${fullSizePieces(renderLiveCard(f, {art: f.ilustracao && forgeArt(f.ilustracao)}))}</div>
     ${idle ? uses.map(([uid, name]) => `<button class="primary-action bigcard__use" data-domain-use="${uid}">Use ${esc(name)}</button>`).join('') : ''}`;
   box.querySelectorAll('[data-domain-use]').forEach(b => b.addEventListener('pointerdown', e => { e.stopPropagation(); closeBigCard(); act({type: 'activate', key, uid: b.dataset.domainUse, choice: {}}); }));
   box.addEventListener('pointerdown', closeBigCard);
@@ -768,7 +787,7 @@ function phaseBar() {
   if (s.victory || s.setup) return `<div class="phasebar"><div class="phasebar__turn">${esc(phaseText())}</div></div>`;
   const now = PHASES.indexOf(currentPhase(s)), mine = s.active === v;
   return `<div class="phasebar ${mine ? 'is-mine' : 'is-theirs'}" aria-label="${esc(phaseText())}">
-    <div class="phasebar__turn"><strong>${mine ? 'Your turn' : `Opponent's turn`}</strong><small>Round ${s.round} · Player ${s.active}</small><b class="phasebar__now">${PHASES[now] || ''}</b></div>
+    <div class="phasebar__turn"><strong>${mine ? 'Your turn' : `Opponent's turn`}</strong><small>Round ${s.round} · Player ${s.active}</small><b class="phasebar__now">${PHASES[now] || ''}</b><i class="phasebar__line"><span>Round ${s.round}</span> · <span>${PHASES[now] || ''}</span></i></div>
     <ol class="phasebar__steps">${PHASES.map((p, i) => `<li class="${i < now ? 'done' : i === now ? 'on' : ''}">${p}</li>`).join('')}</ol>
     ${s.window ? `<div class="phasebar__window">${s.chain.length ? `Chain of ${s.chain.length} · ` : ''}Response · Player ${s.window.priority} to act</div>` : ''}
   </div>`;
@@ -797,7 +816,7 @@ function command() {
   if (s.victory) { label = 'Match over'; state = 'wait'; }
   else if (aiControls()) { label = s.active === v ? 'Opponent thinking…' : "Opponent's turn"; state = 'wait'; }
   else if (s.setup) label = marked.size ? `Return ${marked.size}` : 'Keep Hand';
-  else if (s.window) { label = s.chain.length ? 'Resolve' : 'Pass'; state = 'respond'; }
+  else if (s.window) { label = s.chain.length ? 'Resolve' : s.active !== v && currentPhase(s) === 'End' ? 'Start my turn' : 'Pass'; state = 'respond'; }
   return `<aside class="command" aria-label="Turn actions">
     <div class="command__clock">${clockMarkup()}</div>
     ${phaseBar()}
@@ -827,7 +846,7 @@ function phaseHints() {
   const hand = (test) => p.hand.filter(u => !playableReason(v, u) && test(info(u), u)).map(u => `.hand [data-uid="${u}"]`);
   const moments = hand((c, u) => c.kind === 'Spell' && spellCat(u)?.category === 'Moment');
   if (s.setup) return {title: 'OPENING HAND', note: 'Send any cards to the bottom and draw that many. Once.', refs: {}};
-  if (s.window && s.window.priority === v) return {title: 'RESPOND', note: 'Play a Moment, paid with Latent Cosmo, or Pass. When both players pass, the top of the chain resolves.', refs: {moment: moments}};
+  if (s.window && s.window.priority === v) return {title: 'RESPOND', note: s.active === v ? 'Play a Moment, paid with Base and/or Latent Cosmo, or Pass. When both players pass, the top of the chain resolves.' : 'Play a Moment, paid with Latent Cosmo, or Pass. When both players pass, the top of the chain resolves.', refs: {moment: moments}};
   if (s.active !== v) return {title: `${phase.toUpperCase()} PHASE`, note: moments.length ? 'You can respond with a Moment when you get priority.' : '', refs: {}};
   if (phase !== 'Main') return {title: `${phase.toUpperCase()} PHASE`, note: {Prepare: 'Your Cosmo Bases and Devotees become Prepared.', Draw: 'You draw 2 cards.', End: 'End-of-turn effects resolve.'}[phase], refs: {}};
   const field = p.battlefield.filter(u => ctx.objects[u]);
@@ -1082,7 +1101,7 @@ function render() {
   if (scene) { const st = $('[data-stats]'); if (st) st.textContent = `WebGL on · ${JSON.stringify(scene.stats())}`; }
   const cmd = $('.command')?.getBoundingClientRect();
   document.body.style.setProperty('--stack-right', cmd?.width && innerWidth > 760 ? `${Math.round(innerWidth - cmd.left + 14)}px` : '');
-  updateClock();
+  updateClock(true);
   animateTrigger();
   drawIntents();
   drawActivity();
@@ -1385,12 +1404,13 @@ function quickMenu(anchor, items, {always = false} = {}) {
   menu.innerHTML = items.map(([label, , why], i) => `<button data-q="${i}" ${why ? 'aria-disabled="true"' : ''}>${esc(label)}</button>`).join('');
   menu.addEventListener('click', ev => { const i = ev.target.closest('[data-q]')?.dataset.q; if (i === undefined) return; if (items[i][2]) return warn(items[i][2]); closeQuick(); items[i][1](); });
   document.body.append(menu);
-  if (phoneUp()) return menu.querySelector('button')?.focus();
-  // Deitado e no desktop: as ações ficam coladas em cima da carta, na largura dela (autor, 01/11/2026); a medida espera a carta terminar de subir.
+  // Em toda tela as ações ficam em lista colada em cima da carta, na largura dela (autor, 01/11/2026); a medida espera a carta terminar de subir.
   menu.classList.add('quick--glued'); menu.style.visibility = 'hidden';
-  requestAnimationFrame(() => Promise.allSettled((anchor.closest('.hand__slot') || anchor).getAnimations().map(a => a.finished)).then(() => {
+  requestAnimationFrame(() => Promise.race([Promise.allSettled((anchor.closest('.hand__slot') || anchor).getAnimations().map(a => a.finished)), new Promise(r => setTimeout(r, 350))]).then(() => { // animação longa não segura a lista
+    if (!menu.isConnected) return;
     const r = anchor.getBoundingClientRect(), w = Math.max(r.width, 120);
-    menu.style.width = `${w}px`; menu.style.top = `${r.top - 2}px`;
+    menu.style.width = `${w}px`;
+    menu.style.top = `${r.top - 2 - menu.offsetHeight < 8 ? r.bottom + 2 + menu.offsetHeight : r.top - 2}px`; // sem espaço em cima, a lista vai para baixo da carta
     menu.style.left = `${Math.max(w / 2 + 4, Math.min(innerWidth - w / 2 - 4, r.left + r.width / 2))}px`;
     menu.style.visibility = ''; menu.querySelector('button')?.focus();
   }));
@@ -2126,19 +2146,19 @@ addEventListener('pointerdown', () => { unlock(); playMusic('battle'); }, {once:
 // ---------- Partida ----------
 
 function newMatch(seed = Date.now() % 100000, first, coin = true) {
-  // Poseidon V6 não tem cartas canônicas: o God Poseidon pilota o deck Athena V6 do jogador B, como FIXTURE rotulada.
-  match = createMatch({cards, canonIndex: index, decks, gods: {A: decks.A.god || 'god-athena', B: settings.godB}, seed, first, coin});
+  // God Poseidon com deck Athena V6 no jogador B (fixtures de demo): FIXTURE rotulada.
+  match =createMatch({cards, canonIndex: index, decks, gods: {A: decks.A.god || 'god-athena', B: settings.godB}, seed, first, coin});
   ctx = {cards, objects: match.objects, attached: match.attached}; // ctx.decide vem do protocolo de decisão (act)
   logLines = []; mode = null; pending = null; marked = new Set(); seenEvents = 0;
   clock = createClock(match.state.order);
   say(`Seed ${seed}.`);
   startCoin();
   $('.fixture-tag')?.remove();
-  if (settings.godB === 'god-poseidon') {
+  if (settings.godB === 'god-poseidon' && decks.B.god !== 'god-poseidon') {
     const tag = document.createElement('div');
     tag.className = 'demo-tag fixture-tag'; tag.textContent = 'Fixture · Poseidon with an Athena V6 deck — not an official deck';
     stage.append(tag);
-    say('FIXTURE: God Poseidon (canonical) pilots the Dragon Fortress Athena V6 deck. Poseidon V6 has no canonical cards yet.');
+    say('FIXTURE: God Poseidon (canonical) pilots an Athena V6 deck.');
   }
   render();
 }
@@ -2154,7 +2174,7 @@ function applyDemo(kind) {
   const field = (key, id) => { const uid = take(key, id); s.players[key].battlefield.push(uid); s.units[uid] = {prepared: true, damage: 0, entered: 0}; return uid; };
   startTurn(s);
   ['001', '028', '021'].forEach(id => field('A', id));
-  ['003', '040', '011'].forEach(id => field('B', id));
+  ['003', '040', '027'].forEach(id => field('B', id));
   for (const key of ['A', 'B']) {
     const p = s.players[key], n = key === 'A' ? 13 : 8;
     p.bases = p.deck.splice(-n).map(uid => ({uid, prepared: true}));
@@ -2577,12 +2597,15 @@ async function init() {
   const [rush] = deckData.decks, fortress = previewDecks.decks[0] || rush, deckOf = id => findDeck(id, presets); // presets D171 e de prévia, ou decks do criador (../deck-store.js); B padrão: starter de Poseidon (deck de 50, 01/11/2026)
   const query = new URLSearchParams(location.search);
   decks = {A: deckOf(query.get('deckA')) || rush, B: deckOf(query.get('deckB')) || fortress}; // ?deckA=&deckB= vindos da seleção do menu
+  if (query.get('demo')) decks = {A: rush, B: rush}; // as fixtures posicionam cartas por número: precisam destes decks
   director = createDirector({ui, getFx: () => scene?.fx, settings});
   // Star Hill (data/olympus-telas.json): cores, textos e imagem de fundo do duelo, por cima do cenário 3D.
   applyColors('duelo'); applyTexts(stage);
   if (telas.fundos?.duelo) $('#arena').insertAdjacentHTML('afterend', `<div class="tela-fundo" aria-hidden="true" style="background-image:url('${imageUrl(telas.fundos.duelo, id => { const f = FORGE.get(id); return f?.ilustracao ? forgeArt(f.ilustracao) : ''; })}');opacity:${Number(telas.fundos.duelo_opacidade ?? .35)}"></div>`);
   const params = new URLSearchParams(location.search);
   if (params.get('godB')) settings.godB = `god-${params.get('godB')}`; // ?godB=poseidon
+  if (['water-prison', 'great-flood'].includes(params.get('demo'))) settings.godB = 'god-poseidon';
+  if (params.get('demo') === 'great-flood') settings.ai = 'none'; // é o turno de B: quem anuncia é o jogador, não a IA
   if (params.get('ai')) settings.ai = params.get('ai'); // ?ai=B (padrão) ou ?ai=none (hot-seat)
   if (['easy', 'normal', 'hard'].includes(params.get('level'))) settings.aiLevel = params.get('level'); // ?level=hard (QA)
   if (params.get('timeouts')) settings.timeouts = params.get('timeouts') === '1'; // ?timeouts=1 (QA)
@@ -2599,7 +2622,7 @@ async function init() {
     api: (path, method = 'GET', body) => fetch(path, {method, credentials: 'same-origin', headers: body ? {'Content-Type': 'application/json'} : {}, body: body && JSON.stringify(body)})
       .then(async r => { const data = await r.json().catch(() => ({})); if (!r.ok) throw Error(data.error || 'Something went wrong. Please try again.'); return data; })});
   requestAnimationFrame(watchEvents);
-  setInterval(tickClock, 250);
+  setInterval(tickClock, matchMedia('(pointer: coarse)').matches ? 1000 : 250); // toque: menos despertares; o relógio mostra segundos
   setInterval(aiTick, 700);
   scene = await createScene($('#arena'), {quality: settings.quality, theme: settings.theme, reduceFlashes: settings.reduceFlashes});
   stage.classList.toggle('no-webgl', !scene);

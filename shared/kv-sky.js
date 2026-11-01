@@ -18,6 +18,8 @@ export function mountKV({anchor: anchorSelector = null} = {}) {
   document.body.insertAdjacentHTML('beforeend', POINTER);
   const pointer = document.body.lastElementChild;
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Toque (autor, 01/11/2026, iPhone aquecendo): sem ponteiro para seguir, o céu pinta a 10 fps em vez de 30.
+  const touch = matchMedia('(pointer: coarse)').matches; let nap = 0;
   // Constelações simplificadas: pontos num quadro 0..1 e ligações por índice; `at` = centro em fração da tela, `s` = tamanho.
   const FIGURES = [
     {name: 'Pegasus', at: [.78, .26], s: .30, p: [[.30,.55],[.30,.25],[.65,.25],[.65,.55],[.15,.62],[.05,.72],[0,.86],[.14,.16],[.02,.08]], l: [[0,1],[1,2],[2,3],[3,0],[0,4],[4,5],[5,6],[1,7],[7,8]]},
@@ -141,8 +143,9 @@ export function mountKV({anchor: anchorSelector = null} = {}) {
     me.x += ((me.active ? me.tx : target.x) - me.x) * .08; me.y += ((me.active ? me.ty : target.y) - me.y) * .08;
     heat *= .985;
     const ox = (me.x / W - .5) * 26, oy = (me.y / H - .5) * 18;
-    if (t % 2 === 0) { paintSky(ox, oy); paintFigures(ox * .6, oy * .6); } // céu a 30 fps; brasas e ponteiro a 60
-    if (!still && !document.hidden) requestAnimationFrame(frame);
+    if (touch || t % 2 === 0) { paintSky(ox, oy); paintFigures(ox * .6, oy * .6); } // céu a 30 fps; brasas e ponteiro a 60
+    if (still || document.hidden) return;
+    if (touch) { clearTimeout(nap); nap = setTimeout(() => requestAnimationFrame(frame), 100); } else requestAnimationFrame(frame);
   }
   function paintStill() { paintSky(0, 0); paintFigures(0, 0); } // movimento reduzido: céu e constelações parados
   const move = (x, y) => { me.tx = x; me.ty = y; me.active = true; };

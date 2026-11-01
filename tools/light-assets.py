@@ -50,6 +50,11 @@ def main():
         if stale(src, dst):
             side = max(Image.open(src).size)
             save(src, dst, side // 2 if side > 600 else None); made += 1
+        # Celular: mão a 114 px em tela 3x pede 342 px; um quarto do tamanho, 16 vezes menos memória (playtest/divine/app.js escolhe).
+        dst = src.with_suffix('.xs.webp')
+        if stale(src, dst):
+            side = max(Image.open(src).size)
+            save(src, dst, side // 4 if side > 1200 else side // 2 if side > 300 else None); made += 1
     for src in frames:
         dst = src.with_suffix('.webp')
         if stale(src, dst):

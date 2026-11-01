@@ -19,7 +19,8 @@ let PSD=null;
 try{
   const url=p=>new URL(`../CARD-TEMPLATE/${p}`,import.meta.url);
   const [T,pieces]=await Promise.all(['templates.json','pieces.json'].map(f=>fetch(url(f)).then(r=>{if(!r.ok)throw r.status;return r.json();})));
-  const ext=globalThis.matchMedia?.('(pointer: coarse)').matches?'sm.webp':'webp'; // toque: metade do tamanho (a 1488 px, a mão trava num tablet)
+  // Toque e jogo no desktop: metade do tamanho (a 1488 px, a mão trava num tablet; no duelo a maior carta fixa pede 676 px, 2x). Forge e Star Hill seguem com o original.
+  const ext=globalThis.matchMedia?.('(pointer: coarse)').matches||globalThis.location?.pathname?.startsWith('/playtest/')?'sm.webp':'webp';
   PSD={T,P:pieces.pieces,src:k=>url(`${k}.${ext}`).href}; // gerados por tools/light-assets.py
 }catch{/* sem spec: layout simples */}
 const NEUTRAL={color:'#ECE7DA',glow:'rgba(255,255,255,0.35)',frame:['athena/vignette','athena/frame']};
@@ -126,6 +127,8 @@ function armorStatus(card,hp,damage){
 }
 // Texto da carta fora da arte (inspetor do duelo, ficha do lobby): mesmas regras do texto impresso
 // (autor, 31/10/2026): corpo branco; títulos, keywords e bônus em MAIÚSCULA e negrito; cor do tema da facção.
+// Carta em tela cheia no desktop (ampliação): volta às peças originais, que ali aparecem a mais de 1000 px em tela 2x.
+export const fullSizePieces=html=>globalThis.matchMedia?.('(pointer: coarse)').matches?html:html.replaceAll('.sm.webp','.webp');
 export function renderCardText(card){
   card=displayCard(card); // texto em PT quando houver (shared/card-i18n.js)
   const f=String(card.faccao||'').toLowerCase(),ink=(PSD?.T.factions[f]||NEUTRAL).color;

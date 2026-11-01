@@ -9,8 +9,9 @@
   /* iPhone com status bar translúcida: 100% e inset:0 terminam a altura da barra antes do fim da tela (sobrava uma faixa morta embaixo).
      dvh, não lvh: com a barra do navegador fixa (tablet, aba comum), lvh passa da área visível e corta a mão. */
   html { overflow: visible; min-height: calc(100% + var(--st)); }
-  body { position: fixed; top: 0; left: 0; right: 0; height: max(100dvh, calc(100% + var(--st))); overflow: hidden; }
-  .stage { bottom: auto; height: max(100dvh, calc(100% + var(--st))); }
+  /* Teto na altura da tela (autor, 01/11/2026): quando o iPhone já dá a tela toda em 100%, somar o notch empurrava a mão 59 px para fora. */
+  body { position: fixed; top: 0; left: 0; right: 0; height: min(max(100dvh, calc(100% + var(--st))), var(--screen-h, 9999px)); overflow: hidden; }
+  .stage { bottom: auto; height: min(max(100dvh, calc(100% + var(--st))), var(--screen-h, 9999px)); }
 
   /* Fora da mesa em pé: mão do rival (é número), faixa de Bases, painel de dicas e engrenagem (Configurações está no ⋯). */
   .rk-plate.rk-plate, .olympus .band--opp, .olympus .lane, .rail .ctrl, .demo-tag, .phasebar, .gear-btn { display: none; }
@@ -109,6 +110,20 @@
   .olympus .zclock .zclock__time b { grid-column: 1; grid-row: 1 / -1; margin-right: 8px; font: 600 19px/1 "Cinzel", Georgia, serif; font-variant-numeric: lining-nums tabular-nums; }
   .olympus .zclock .zclock__time small { grid-column: 2 / -1; grid-row: 2; font: 600 8.5px/10px "Jost", system-ui, sans-serif; letter-spacing: .06em; white-space: nowrap; color: #a8a397; }
   .olympus .zclock.urgent { border-color: #ff8a60; box-shadow: 0 0 14px #ff6e4680; }
+  /* Caixa do tempo na altura da vida + Domínio, com a vez, a rodada e a fase (autor, 01/11/2026). */
+  .olympus .command .command__clock { top: calc(var(--st) + 21.5px); }
+  .olympus .zclock { grid-template-rows: 12px 28px; height: 55px; }
+  .olympus .zclock .zclock__time b { grid-row: 1 / -1; align-self: center; justify-self: center; translate: 0 -6px; }
+  .olympus .zclock .zclock__time small { grid-column: 1; grid-row: 1 / -1; align-self: center; justify-self: center; margin-right: 8px; font-size: 7.5px; line-height: 11px; translate: 0 10px; }
+  /* Avatar, vida + Domínio e tempo na mesma linha central (autor, 01/11/2026). */
+  .olympus .godhud--opp .gh-frame { translate: 0 5.5px; }
+  .olympus .godhud--me .gh-frame { translate: 0 -2.5px; }
+  .olympus .command .phasebar.is-mine, .olympus .command .phasebar.is-theirs { position: fixed; z-index: 9; display: block; top: calc(var(--st) + 21.5px + 21.5px); left: calc(72px + 30vw + 6px + 73px); right: 21px; width: auto; margin: 0; padding: 0; border: 0; background: none; box-shadow: none; pointer-events: none; }
+  .olympus .phasebar .phasebar__turn { display: flex; flex-direction: column; align-items: center; gap: 2px; width: 100%; text-align: center; }
+  .olympus .phasebar .phasebar__turn strong { max-width: 100%; overflow: hidden; font: 700 11px/13px "Cinzel", Georgia, serif; color: var(--kv-ink); text-overflow: ellipsis; white-space: nowrap; }
+  .olympus .phasebar.is-theirs .phasebar__turn strong { color: #ffc2b0; }
+  .olympus .phasebar .phasebar__turn > small, .olympus .phasebar .phasebar__now, .olympus .phasebar__steps, .olympus .phasebar__window { display: none; }
+  .olympus .phasebar .phasebar__line { display: block; max-width: 100%; overflow: hidden; font: 600 9px/11px "Jost", system-ui, sans-serif; font-style: normal; letter-spacing: .04em; text-transform: uppercase; text-overflow: ellipsis; white-space: nowrap; color: var(--kv-gold-2); }
   .olympus .command { position: absolute; z-index: 8; top: auto; left: auto; left: calc(72px + 30vw + 6px); right: 6px; bottom: calc(var(--p-low) + 8px); width: auto; height: auto; margin: 0; padding: 0; transform: none; display: flex; flex-direction: row; align-items: stretch; gap: 6px; }
   .command > * { min-width: 0; box-sizing: border-box; }
   /* Pílula dourada fina, uma linha, como no desktop; azul quando é para responder. */
@@ -204,8 +219,8 @@
   .overlay.mulligan .primary-action { flex: none; width: 100%; min-height: 60px; font-size: 16px; }
 
   /* Toque na carta: ela grande em cima e as ações em botões grandes no polegar (app.js: handMenu). */
-  .quick { position: fixed; z-index: 90; left: 8px !important; right: 8px; top: auto !important; bottom: calc(var(--p-low) + 68px); width: auto; max-width: none; transform: none; display: flex; gap: 6px; padding: 0; box-sizing: border-box; border: 0; background: none; box-shadow: none; }
-  .quick button { flex: 1 1 0; min-width: 0; min-height: 48px; padding: 4px 12px; background: #0b0d22f2; font-size: 11px; white-space: normal; text-align: center; }
+  .quick { z-index: 90; }
+  .quick--glued button { min-height: 44px; }
 
   /* Listas e leitura de carta: folha na largura toda. */
   .pile__box { width: calc(100vw - 16px); max-width: none; max-height: calc(100dvh - var(--st) - var(--sb) - 24px); padding: 10px 12px 14px; }

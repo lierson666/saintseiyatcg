@@ -4,7 +4,7 @@ import {loadCanon} from '../shared/canon-cards.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {canonIndex, validateDeck, colorErrors, splashCount, DECK_SIZE, COPY_LIMIT, SPLASH_LIMIT} from '../shared/deck-v3.js';
 import {spellCategory} from './engine-v3/core.js';
-import {renderLiveCard, renderCardText} from '../shared/live-card.js?v=20261101-equip1';
+import {renderLiveCard, renderCardText, fullSizePieces} from '../shared/live-card.js?v=20261101-perf3';
 import {displayCard} from '../shared/card-i18n.js?v=20261031-kw1';
 import {unlock, playMusic, setVolume, volume} from './audio.js?v=20261030-telas';
 import {loadMyDecks, saveMyDecks, findDeck, syncDecks, onDeckStatus, deckCovers, setDeckCover} from './deck-store.js?v=20261031-2';
@@ -523,7 +523,7 @@ function notice() {
 const COSMO = {Athena: '#ffd66e', Poseidon: '#3fa9ff', Hades: '#a35cff', Ares: '#ff4b3a', Artemis: '#6fe39a', Neutral: '#cfd8e6'};
 function bigCard() {
   const f = ui.big && (ui.big.startsWith('god-') ? godForge(ui.big) : forge.get(ui.big)), cosmo = COSMO[f?.faccao] || COSMO.Neutral;
-  return ui.big ? `<div class="lb-big" data-act="close-big" role="dialog" aria-label="Card" style="--cosmo: ${cosmo}">${face(ui.big, 'lb-card--big')}${cardInfo(ui.big)}</div>` : '';
+  return ui.big ? `<div class="lb-big" data-act="close-big" role="dialog" aria-label="Card" style="--cosmo: ${cosmo}">${fullSizePieces(face(ui.big, 'lb-card--big'))}${cardInfo(ui.big)}</div>` : '';
 }
 
 // Redesenha tudo; guarda a rolagem das colunas para o clique não voltar a lista ao topo.

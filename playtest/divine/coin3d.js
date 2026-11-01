@@ -1,6 +1,6 @@
 // Moeda 3D do cara ou coroa (§55): um cilindro de metal lançado no ar. Só mostra o resultado que a engine já decidiu.
 // Cara é a face do jogador A; Coroa, a do jogador B. Cada face leva o cosmético do dono (arte do personagem) ou o desenho padrão.
-const THREE_URL = new URL('./vendor/three-0.160.0-slim.js', import.meta.url).href;
+const THREE_URL = new URL('./vendor/three-0.160.0-slim.js?v=2', import.meta.url).href;
 export const COIN_TOSS_MS = 2100;
 const SIZE = 512, SPINS = 6;
 const METAL = {A: ['#fff1b8', '#e6c36a', '#9a7322', '#5a3f10'], B: ['#f4f6ff', '#b9c2d8', '#69738d', '#2c3347']};

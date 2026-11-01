@@ -69,12 +69,14 @@ export function renderKeywordNotes(card) {
 }
 
 // Fileira de moedas na carta: data-tip é a dica do duelo (mouse, foco; toque em playtest/divine/app.js). Keyword sem moeda fica de fora.
-export function renderKeywordIcons(list) {
+// Moedas da mesa (autor, 01/11/2026): coluna à esquerda que diminui a cada uma; da 4ª em diante, à direita. `extra`: marcadores que dividem a coluna.
+export function renderKeywordIcons(list, extra = []) {
   const pt = lang() === 'pt', seen = new Set();
   const coins = list.map(n => NAMES.find(k => k.toLowerCase() === String(n).toLowerCase())).filter(k => k && ICONS[k] && !seen.has(ICONS[k]) && seen.add(ICONS[k]));
-  if (!coins.length) return '';
-  return `<span class="kw-icons">${coins.map(k => {
+  if (!coins.length && !extra.length) return '';
+  const items = [...coins.map(k => {
     const name = pt ? KEYWORD_PT[k] : k, rule = (pt ? KEYWORD_RULES_PT : KEYWORD_RULES)[k];
     return `<span class="kw-icon" role="button" tabindex="0" aria-label="${esc(`${name}: ${rule}`)}" data-tip="${esc(`${name}|${rule}`)}"><img src="${esc(keywordIconUrl(k))}" alt="" draggable="false"></span>`;
-  }).join('')}</span>`;
+  }), ...extra], right = items.slice(3).join('');
+  return `<span class="kw-icons kw-n${Math.min(items.length, 3)}"><span class="kw-col">${items.slice(0, 3).join('')}</span>${right ? `<span class="kw-col kw-col--r">${right}</span>` : ''}</span>`;
 }
