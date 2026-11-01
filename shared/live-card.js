@@ -1,9 +1,9 @@
-import {renderRules,inlineMarkup,presentationRules,ruleBlocksWithoutKeywords,blocksMarkup} from './card-text.js?v=20261031-pt4';
+import {renderRules,inlineMarkup,presentationRules,ruleBlocksWithoutKeywords,blocksMarkup} from './card-text.js?v=20261031-kw1';
 import {isArmor,isEquipment} from './card-model.js?v=20261024-4';
-import {renderPublishedCard,visualProject} from './layout-studio/runtime.js?v=20261031-pt4';
-import {printedEquipmentBonuses,signedBonus,armorBonusText} from './card-visual-values.js?v=20261031-pt4';
-import {renderKeywordNotes} from './keyword-glossary.js?v=20261031-pt4';
-import {displayCard,keywordName,typeWord} from './card-i18n.js?v=20261031-pt4';
+import {renderPublishedCard,visualProject} from './layout-studio/runtime.js?v=20261031-kw1';
+import {printedEquipmentBonuses,signedBonus,armorBonusText} from './card-visual-values.js?v=20261031-kw1';
+import {renderKeywordNotes} from './keyword-glossary.js?v=20261031-kw1';
+import {displayCard,keywordName,typeWord} from './card-i18n.js?v=20261031-kw1';
 // A ilustração é apenas fundo. Letras, números e estados são dados independentes no DOM.
 const escape=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const portraits={'athena-001':'athena-001','athena-002':'athena-002','athena-003':'athena-003','athena-004':'athena-004','athena-005':'athena-005','athena-006':'athena-006','sst-01-001':'athena-002','sst-01-002':'athena-003','sst-01-003':'athena-004','sst-01-004':'athena-005','sst-01-005':'athena-006'};

@@ -1,6 +1,6 @@
-import {resolveLayout,validateTemplate} from './model.js?v=20261031-pt4';
+import {resolveLayout,validateTemplate} from './model.js?v=20261031-kw1';
 import {makeScene,renderScene} from './renderer.js';
-import {displayCard} from '../card-i18n.js?v=20261031-pt4';
+import {displayCard} from '../card-i18n.js?v=20261031-kw1';
 
 let library=null,inflight=null,lastRead=0,projects={},assetRects={},projectsInflight=null,projectsRead=0;
 const publishedKey=value=>JSON.stringify((value?.published||[]).map(t=>[t.id,t.revision]));

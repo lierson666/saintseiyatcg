@@ -1,6 +1,6 @@
 // Lembretes de keyword estilo MTG Arena (autor, 31/10/2026): textos aprovados em docs/keyword-reminders-2026-10-31.md,
 // tirados do guia (capítulo IX, §40, §§21–23, §48). Usado pelo inspetor do duelo e pela ficha do lobby.
-import {KEYWORD_PT, lang} from './card-i18n.js?v=20261031-pt4';
+import {KEYWORD_PT, lang} from './card-i18n.js?v=20261031-kw1';
 
 export const KEYWORD_RULES = {
   'Guardian': 'While an enemy Guardian can be targeted, Strikes must target it, except against a Rival or with Nimble.',
@@ -14,9 +14,7 @@ export const KEYWORD_RULES = {
   'Unfaith': "When it Strikes a God, you may remove up to 2 of that player's Latent Cosmo instead of dealing Soul damage. The God still retaliates.",
   'Training': 'Each Training counter gives +1 ATK / +1 HP. Counters stack while the Devotee stays on the battlefield.',
   'Afterlife': "Abilities marked Afterlife work only while this card is in its owner's Tartarus. Being in the Tartarus doesn't grant Afterlife.",
-  'Prepared': 'On guard: can declare a Strike and protects itself and its God.',
-  'Unprepared': 'Open: can be chosen as a Strike target.',
-  'Prepare': 'Make it Prepared.',
+  'Hidden Cosmo': 'While this card is one of your Cosmo Bases, you can play it from there by paying X instead of its cost. The top card of your deck replaces it as an Unprepared Base.', // guia §4A
 };
 
 // Mesmos lembretes em PT-BR (docs/glossario-pt-br.md), mostrados quando o jogo está em português (shared/card-i18n.js).
@@ -32,9 +30,7 @@ export const KEYWORD_RULES_PT = {
   'Unfaith': 'Quando Golpeia um Deus, você pode remover até 2 de Cosmo Latente daquele jogador em vez de causar dano na Alma. O Deus ainda revida.',
   'Training': 'Cada marcador de Treinamento dá +1 ATQ / +1 PV. Os marcadores se acumulam enquanto o Devoto estiver no campo de batalha.',
   'Afterlife': 'Habilidades marcadas Além-Túmulo só funcionam enquanto esta carta estiver no Tártaro do dono. Estar no Tártaro não dá Além-Túmulo.',
-  'Prepared': 'Em guarda: pode declarar um Golpe e protege a si mesmo e ao seu Deus.',
-  'Unprepared': 'Exposto: pode ser escolhido como alvo de um Golpe.',
-  'Prepare': 'Deixe-o Preparado.',
+  'Hidden Cosmo': 'Enquanto esta carta for uma das suas Bases de Cosmo, você pode jogá-la de lá pagando X no lugar do custo. A carta do topo do seu deck entra no lugar como Base Despreparada.', // guia §4A
 };
 
 const NAMES = Object.keys(KEYWORD_RULES).sort((a, b) => b.length - a.length);
