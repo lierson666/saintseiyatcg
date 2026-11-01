@@ -75,10 +75,10 @@ const search = (st, c, key, ability, filter) => k.search(st, c, key, ability, (c
 
 export default {
   // Spells baratas da color pie (autor, 31/10/2026: docs/spells-baratas-proposta.md).
-  'artemis-v6-517': {spell: {run: (s, c, key) => { // Huntress's Net
+  'artemis-v6-517': {spell: {check: k.needTarget((s, c, key) => k.enemies(s, c, key).filter(u => k.atkOf(s, c, u) >= 4), 'sem Devotee inimigo com ATK 4 ou mais'), run: (s, c, key) => { // Huntress's Net
     k.damage(s, c, k.choose(c, key, "HUNTRESS'S NET", k.enemies(s, c, key).filter(u => k.atkOf(s, c, u) >= 4), {text: 'Choose target enemy Devotee with ATK 4 or more.'}), 4);
   }}},
-  'artemis-v6-518': {spell: {run: (s, c, key) => { // Wild Vigor
+  'artemis-v6-518': {spell: {check: k.needTarget(k.devotees, 'sem Devotee aliado'), run: (s, c, key) => { // Wild Vigor
     const t = k.choose(c, key, 'WILD VIGOR', k.devotees(s, c, key), {text: 'Choose target friendly Devotee.'});
     if (t) k.buff(s, t, 2, 2);
   }}},

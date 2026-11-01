@@ -25,6 +25,8 @@ export const onceTurn = (s, tag) => once(s, tag);
 
 // ---------- perguntas ----------
 // "You may …": sim/não. `cost` aparece no modal (ex.: '1 Soul').
+// Spell com alvo obrigatório só pode ser conjurada com ao menos um alvo legal (como 509 Tidal Veto): `spell.check`.
+export const needTarget = (list, text = 'sem alvo legal') => (s, c, key) => { if (!list(s, c, key).length) throw new RuleError('alvo', text); };
 export const may = (c, key, ability, extra = {}) => Boolean(c.decide?.(key, {ability, ...extra}));
 // Escolha de alvo entre `options` (uids). Sem opção: null. `optional`: inclui recusar (null). `text`: frase do modal.
 export function choose(c, key, ability, options, {optional = false, text} = {}) {

@@ -139,12 +139,12 @@ const merge = (...parts) => Object.assign({}, ...parts);
 
 export default {
   // Spells baratas da color pie (autor, 31/10/2026: docs/spells-baratas-proposta.md).
-  'ares-v6-514': {spell: {run: (s, c, key) => { // Spark of War
+  'ares-v6-514': {spell: {check: k.needTarget(k.enemies, 'sem Devotee inimigo'), run: (s, c, key) => { // Spark of War
     k.damage(s, c, k.choose(c, key, 'SPARK OF WAR', k.enemies(s, c, key), {text: 'Choose target enemy Devotee.'}), 1);
     k.draw(s, key, 1);
   }}},
   'ares-v6-515': {spell: {run: (s, c, key) => { k.draw(s, key, 2); k.discard(s, c, key, 2, 'RECKLESS INSIGHT'); }}},
-  'ares-v6-516': {spell: {run: (s, c, key) => { // Fury of Ares
+  'ares-v6-516': {spell: {check: k.needTarget(k.devotees, 'sem Devotee aliado'), run: (s, c, key) => { // Fury of Ares
     const t = k.choose(c, key, 'FURY OF ARES', k.devotees(s, c, key), {text: 'Choose target friendly Devotee.'});
     if (t) k.buff(s, t, 2, 0);
     k.draw(s, key, 1);

@@ -180,9 +180,10 @@ const strikeBuff = (st, uid, n) => { if (n && st.units[uid]) k.buff(st, uid, n, 
 
 export default {
   // Spells baratas da color pie (autor, 31/10/2026: docs/spells-baratas-proposta.md).
-  'poseidon-v6-508': {spell: {run: (s, c, key) => { bounce(s, c, key, enemy(s, c, key, 'UNDERTOW', 'Choose target enemy Devotee with cost 2 or less.', u => k.costOf(c, u) <= 2)); }}},
+  'poseidon-v6-508': {spell: {check: k.needTarget((s, c, key) => k.enemies(s, c, key).filter(u => k.costOf(c, u) <= 2), 'sem Devotee inimigo de custo 2 ou menos'),
+    run: (s, c, key) => { bounce(s, c, key, enemy(s, c, key, 'UNDERTOW', 'Choose target enemy Devotee with cost 2 or less.', u => k.costOf(c, u) <= 2)); }}},
   'poseidon-v6-509': {spell: {check: needCounter(), run: (s, c, key) => { const t = counterTarget(c, s, key, 'TIDAL VETO'); if (t) counter(s, c, t, 'TIDAL VETO', 1); }}},
-  'poseidon-v6-510': {spell: {run: (s, c, key) => { // Mist of the Deep
+  'poseidon-v6-510': {spell: {check: k.needTarget(k.devotees, 'sem Devotee aliado'), run: (s, c, key) => { // Mist of the Deep
     bounce(s, c, key, k.choose(c, key, 'MIST OF THE DEEP', k.devotees(s, c, key), {text: 'Choose target friendly Devotee.'}));
     k.draw(s, key, 1);
   }}},

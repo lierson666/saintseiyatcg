@@ -171,3 +171,12 @@ test('519 Lunar Vision: pega um Devoto das três do topo e o resto vai ao fundo'
   assert.ok(s.players.A.hand.includes(dev));
   assert.deepEqual(deck.slice(-2), [a, c3].filter(u => u !== dev));
 });
+
+test('505–519 com alvo obrigatório: sem alvo legal não podem ser conjuradas (a carta fica na mão)', () => {
+  const {s, ctx, give} = setup();
+  for (const id of ['athena-v6-506', 'poseidon-v6-508', 'hades-v6-511', 'ares-v6-514', 'artemis-v6-517', 'artemis-v6-518']) {
+    const spell = give('A', id, 'hand');
+    assert.throws(() => playSpell(s, ctx, 'A', spell), /alvo/, id);
+    assert.ok(s.players.A.hand.includes(spell), id);
+  }
+});
