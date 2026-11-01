@@ -39,7 +39,7 @@ self.ssI18nPT = {
     'My decks': 'Meus decks', 'Starters': 'Iniciais', 'Competitive': 'Competitivos', 'Mode': 'Modo', 'Battle vs AI': 'Batalha contra a IA',
     'Local battle': 'Batalha local', 'Search decks': 'Buscar decks', 'Who starts': 'Quem começa', 'starts': 'começa', 'Choose a deck': 'Escolha um deck',
     'Pick a deck': 'Escolha um deck', 'AI rival': 'Rival IA', 'Random deck': 'Deck aleatório', 'Choose rival': 'Escolher rival', 'VS': 'VS',
-    'No deck matches these filters.': 'Nenhum deck com esses filtros.', 'My player profile': 'Meu perfil de jogador', 'Cover': 'Capa',
+    'No deck matches these filters.': 'Nenhum deck com esses filtros.', 'My player profile': 'Meu perfil de jogador', 'Cover': 'Capa', 'Duplicate': 'Duplicar', 'Change cover': 'Trocar capa', 'Starter decks are read-only': 'Decks iniciais não podem ser alterados',
 
     // Decks e editor
     'Starter decks are read-only. Open one to save your own copy.': 'Decks iniciais são só leitura. Abra um para salvar sua própria cópia.',

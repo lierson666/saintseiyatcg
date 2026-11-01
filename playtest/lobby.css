@@ -425,6 +425,10 @@ body { font: 300 15px/1.45 var(--kv-sans); }
 .lb-deckwrap > .lb-deck { flex: 1; }
 .lb-deck__cover { position: absolute; top: 8px; right: 8px; z-index: 2; min-height: 32px; padding: 6px 12px; border: 1px solid var(--gold, #e6c36a); border-radius: 999px; background: #0b0d1ce6; color: var(--gold, #e6c36a); font: 500 12px/1 Jost, system-ui, sans-serif; letter-spacing: .06em; cursor: pointer; opacity: .85; transition: opacity .15s, background .15s; }
 .lb-deck__cover:hover, .lb-deck__cover:focus-visible { opacity: 1; background: #1a1630; }
+.lb-ctx { position: absolute; z-index: 5; display: grid; min-width: 168px; padding: 6px; border: 1px solid var(--gold, #e6c36a); border-radius: 10px; background: #0b0d1cf2; box-shadow: 0 12px 32px #000a; }
+.lb-ctx button { all: unset; cursor: pointer; padding: 10px 12px; border-radius: 6px; color: #f4efe6; font: 500 14px/1.2 Jost, system-ui, sans-serif; }
+.lb-ctx button:hover, .lb-ctx button:focus-visible { background: #1a1630; color: var(--gold, #e6c36a); }
+.lb-ctx button[disabled] { cursor: not-allowed; opacity: .4; }
 @media (hover: hover) { .lb-deckwrap .lb-deck__cover { opacity: 0; } .lb-deckwrap:hover .lb-deck__cover, .lb-deck__cover:focus-visible { opacity: 1; } }
 
 /* Play · seleção de decks (lobby.js playPanel) */

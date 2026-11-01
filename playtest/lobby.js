@@ -71,7 +71,17 @@ function deckCover(d) {
 function deckBox(d, act) {
   const box = deckButton(d, act);
   // Tela Decks: botão de capa em qualquer deck, inclusive Starter (autor, 30/10/2026).
-  return act === 'edit-deck' ? `<div class="lb-deckwrap">${box}<button class="lb-deck__cover" data-act="cover" data-deck="${esc(d.id)}" aria-label="Choose the cover of ${esc(d.alpha_nome || d.nome)}">Cover</button></div>` : box;
+  return act === 'edit-deck' ? `<div class="lb-deckwrap">${box}<button class="lb-deck__cover" data-act="cover" data-deck="${esc(d.id)}" aria-label="Choose the cover of ${esc(d.alpha_nome || d.nome)}">Cover</button>${deckMenu(d)}</div>` : box;
+}
+// Botão direito num deck da tela Decks (autor, 31/10/2026): duplicar, trocar capa, excluir (Starter não exclui).
+function deckMenu(d) {
+  const m = ui.deckMenu;
+  if (m?.id !== d.id) return '';
+  const own = loadMyDecks().some(x => x.id === d.id);
+  return `<div class="lb-ctx" role="menu" style="left:${m.x}px;top:${m.y}px">
+    <button role="menuitem" data-act="deck-dup" data-deck="${esc(d.id)}">Duplicate</button>
+    <button role="menuitem" data-act="cover" data-deck="${esc(d.id)}">Change cover</button>
+    <button role="menuitem" data-act="deck-del" data-deck="${esc(d.id)}" ${own ? '' : 'disabled title="Starter decks are read-only"'}>Delete</button></div>`;
 }
 function deckButton(d, act) {
   const ok = deckValid(d), art = deckCover(d);
@@ -594,6 +604,20 @@ const actions = {
   'open-picker': t => { ui.picker = t.dataset.pick; },
   'close-picker': () => { ui.picker = null; ui.coverFor = null; },
   cover: t => { ui.coverFor = t.dataset.deck; ui.picker = 'thumb'; },
+  'deck-dup': t => {
+    const d = findDeck(t.dataset.deck, presets);
+    if (!d) return;
+    const copy = {...structuredClone(d), id: `my-${Date.now().toString(36)}`, nome: `${d.alpha_nome || d.nome} (copy)`, thumb: thumbOf(d) || undefined};
+    delete copy.alpha_nome;
+    saveMyDecks([...loadMyDecks(), copy]);
+  },
+  'deck-del': t => {
+    const d = loadMyDecks().find(x => x.id === t.dataset.deck);
+    if (!d || !confirm(`Delete "${d.nome}"?`)) return;
+    saveMyDecks(loadMyDecks().filter(x => x.id !== d.id));
+    if (ui.deckA === d.id) ui.deckA = null;
+    remember();
+  },
   'store-tab': t => { ui.storeTab = t.dataset.value; ui.cosPick = null; },
   'store-group': t => { ui.storeGroup = t.dataset.value; },
   'cos-pick': t => { ui.cosPick = {kind: t.dataset.kind, id: t.dataset.id}; },
@@ -620,6 +644,7 @@ const actions = {
 
 root.addEventListener('click', e => {
   const t = e.target.closest('[data-act]');
+  if (ui.deckMenu && !t?.disabled) { ui.deckMenu = null; if (!t || !actions[t.dataset.act]) return render(); }
   if (!t || !actions[t.dataset.act] || t.disabled) return;
   if (t.dataset.act === 'go' && ui.screen === 'builder' && ui.builder.dirty && !confirm('Leave without saving this deck?')) return;
   sound(t.dataset.act === 'play' ? 'play' : 'clique');
@@ -633,6 +658,13 @@ root.addEventListener('submit', e => {
   e.preventDefault(); submitProfile(form);
 });
 root.addEventListener('contextmenu', e => {
+  const wrap = e.target.closest('.lb-deckwrap'), deck = wrap?.querySelector('[data-act="edit-deck"]');
+  if (deck) { // posição dentro do deck, já descontada a escala da tela (stage-fit)
+    e.preventDefault();
+    const r = wrap.getBoundingClientRect(), k = wrap.offsetWidth / r.width;
+    ui.deckMenu = {id: deck.dataset.deck, x: Math.round((e.clientX - r.left) * k), y: Math.round((e.clientY - r.top) * k)};
+    return render();
+  }
   const t = e.target.closest('[data-card]');
   if (!t) return;
   e.preventDefault();
