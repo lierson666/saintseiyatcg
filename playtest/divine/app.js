@@ -1510,6 +1510,14 @@ function showPile(key, zone) {
   document.body.append(box);
 }
 function hideInspect() { $('#inspector').classList.remove('show'); $$('.orb.preview').forEach(o => o.classList.remove('preview')); }
+// O zoom (#inspector, #chain-zoom) não recebe o mouse; a roda rola o texto que transborda, como no MTG Arena (autor, 31/10/2026).
+addEventListener('wheel', e => {
+  const zoom = $('#inspector.show') || $('#chain-zoom.is-on .cz-item.is-top');
+  const box = zoom && [...zoom.querySelectorAll('.lc-rules, .inspector__text')].find(b => b.scrollHeight > b.clientHeight + 1);
+  if (!box) return;
+  e.preventDefault();
+  box.scrollTop += e.deltaY;
+}, {passive: false});
 // Prévia de pagamento: as esferas que esta carta gastaria piscam antes do clique.
 function previewCost(uid) {
   $$('.orb.preview').forEach(o => o.classList.remove('preview'));
