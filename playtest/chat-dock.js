@@ -53,6 +53,18 @@ export function mountChatDock({api, avatarOf, decks = () => [], play, inMatch = 
   dock.className = `cd-dock ${inMatch ? 'is-match' : ''}`;
   dock.setAttribute('aria-label', 'Chats');
   document.body.append(dock);
+  // Teclado do celular: o iOS empurra a tela para cima e o topo da janela sumia atrás do notch (autor, 01/11/2026).
+  // O dock acompanha a área visível: fica em cima do teclado e a altura nunca passa da linha do notch.
+  const vv = window.visualViewport;
+  const fitViewport = () => {
+    if (!vv) return;
+    const kb = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+    dock.style.setProperty('--cd-kb', `${Math.round(kb)}px`);
+    dock.style.setProperty('--cd-vh', `${Math.round(vv.height)}px`);
+  };
+  vv?.addEventListener('resize', fitViewport);
+  vv?.addEventListener('scroll', fitViewport);
+  fitViewport();
   let friends = [], ready = false, picker = false;
   const convs = []; // {user, min, last, seenUpTo, lastDay, el, group, g}; as MAX_OPEN primeiras são janelas, o resto abas
   const unreadSeen = new Map(); // amigo -> não lidas na última consulta (toast só quando sobe)

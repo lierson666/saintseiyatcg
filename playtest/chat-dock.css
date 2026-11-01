@@ -1,10 +1,11 @@
 /* Chat dos amigos estilo MTG Arena (chat-dock.js): janelas acopladas no canto inferior direito, abas, toasts.
+   Nunca passa da linha do notch (autor, 01/11/2026): --cd-kb e --cd-vh vêm do visualViewport (teclado aberto).
    Autossuficiente: carrega no lobby e no duelo (que não tem lobby.css). */
 .cd-dock { --cd-gold: var(--kv-gold, #e9c45c); --cd-ink: #f5f1e6; --cd-muted: #cfc8b6; --cd-line: #ffffff1f; --cd-glass: #0b0d16f2;
-  position: fixed; right: 16px; bottom: 0; z-index: 950; display: flex; flex-direction: row-reverse; align-items: flex-end; gap: 10px;
+  position: fixed; right: 16px; bottom: var(--cd-kb, 0px); z-index: 950; display: flex; flex-direction: row-reverse; align-items: flex-end; gap: 10px;
   max-width: calc(100vw - 32px); pointer-events: none; font: 400 14px/1.4 var(--kv-sans, Jost, system-ui, sans-serif); color: var(--cd-ink); }
 .cd-dock > * { pointer-events: auto; }
-.cd-win { display: flex; flex-direction: column; width: 320px; height: 440px; max-height: calc(100dvh - 120px); border: 1px solid var(--cd-line);
+.cd-win { display: flex; flex-direction: column; width: 320px; height: 440px; max-height: min(calc(100dvh - 120px), calc(var(--cd-vh, 100dvh) - env(safe-area-inset-top, 0px) - 8px)); border: 1px solid var(--cd-line);
   border-bottom: 0; border-radius: 14px 14px 0 0; background: var(--cd-glass); backdrop-filter: blur(16px); box-shadow: 0 -10px 40px #000b; overflow: hidden; }
 .cd-win.is-min { height: auto; }
 .cd-win.is-min .cd-win__body { display: none; }
@@ -91,14 +92,14 @@
 .cd-launch__list button:hover { background: #ffffff0d; }
 .cd-launch__list .cd-win__name { flex: 1; }
 /* Toast de mensagem nova */
-.cd-toast { position: fixed; right: 16px; bottom: 470px; z-index: 960; display: flex; align-items: center; gap: 10px; max-width: 280px; padding: 10px 16px 10px 10px;
+.cd-toast { position: fixed; right: 16px; bottom: min(470px, calc(100dvh - 88px - env(safe-area-inset-top, 0px))); z-index: 960; display: flex; align-items: center; gap: 10px; max-width: 280px; padding: 10px 16px 10px 10px;
   border: 1px solid #e9c45c88; border-radius: 14px; background: #0b0d16f2; color: #f5f1e6; text-align: left; cursor: pointer; box-shadow: 0 10px 40px #000b; animation: cd-in .22s ease-out; }
 .cd-toast { font: 400 14px var(--kv-sans, system-ui); } .cd-toast span:last-child { display: grid; } .cd-toast small { color: #b9b3a3; font-size: 12px; }
 @keyframes cd-in { from { opacity: 0; transform: translateY(8px); } }
 .cd-dock button:focus-visible, .cd-dock a:focus-visible, .cd-toast:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 @media (max-width: 700px) {
   .cd-dock { right: 0; left: 0; max-width: none; justify-content: flex-start; padding: 0 8px; }
-  .cd-win { width: 100%; } .cd-win:not(:first-of-type) { display: none; }
+  .cd-win { width: 100%; max-height: calc(var(--cd-vh, 100dvh) - env(safe-area-inset-top, 0px) - 8px); } .cd-win:not(:first-of-type) { display: none; }
   .cd-toast { left: 16px; bottom: 80px; max-width: none; }
 }
 @media (prefers-reduced-motion: reduce) { .cd-toast { animation: none; } }

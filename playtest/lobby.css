@@ -10,7 +10,7 @@ body { font: 15px/1.4 "Avenir Next", "Segoe UI", system-ui, sans-serif; overflow
 button, input, select { font: inherit; color: inherit; }
 button { cursor: pointer; }
 h1, h2, h3, .lb-play, .lb-tab, .lb-hero p { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif; }
-.lobby { position: fixed; inset: 0; display: grid; grid-template-rows: auto 1fr;
+.lobby { position: fixed; inset: 0; display: grid; grid-template-rows: auto 1fr; padding-top: env(safe-area-inset-top, 0px); /* nada acima da linha do notch (autor, 01/11/2026) */
   background: radial-gradient(120% 80% at 70% 0%, #1a2340 0%, transparent 60%), var(--lobby-fundo, url('./assets/sanctuary.webp')) center / cover, var(--bg); }
 .lobby::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, #05070cdd, #05070cf2 40%, #05070c); pointer-events: none; }
 .lobby > * { position: relative; }
@@ -164,7 +164,7 @@ h1, h2, h3, .lb-play, .lb-tab, .lb-hero p { font-family: "Cinzel", "Trajan Pro",
 .lb-ghost:hover { color: var(--text); border-color: var(--muted); }
 
 /* Carta grande (botão direito): altura máxima da tela, carta e detalhes centralizados (autor, 31/10/2026). */
-.lb-big { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; gap: 32px; padding: 12px; background: #000d; backdrop-filter: blur(6px); cursor: zoom-out; animation: lb-fade .18s ease-out; }
+.lb-big { position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; gap: 32px; padding: calc(12px + env(safe-area-inset-top, 0px)) 12px calc(12px + env(safe-area-inset-bottom, 0px)); background: #000d; backdrop-filter: blur(6px); cursor: zoom-out; animation: lb-fade .18s ease-out; }
 @keyframes lb-fade { from { opacity: 0; } }
 .lb-card--big { flex: none; width: min(62vw, calc((100dvh - 24px) * 1488 / 2091)); outline: 1px solid color-mix(in srgb, var(--cosmo, #e6c36a) 70%, transparent);
   box-shadow: 0 30px 80px #000, 0 0 18px color-mix(in srgb, var(--cosmo, #e6c36a) 70%, transparent), 0 0 70px color-mix(in srgb, var(--cosmo, #e6c36a) 45%, transparent), 0 0 160px color-mix(in srgb, var(--cosmo, #e6c36a) 22%, transparent);
@@ -213,7 +213,7 @@ h1, h2, h3, .lb-play, .lb-tab, .lb-hero p { font-family: "Cinzel", "Trajan Pro",
 }
 .lb-godpick__neutral { width: 22px; height: 22px; border-radius: 50%; background: #d6d8dd; box-shadow: inset 0 0 0 3px #9ea2ab; }
 .lb-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.lb-notice { position: fixed; inset: 0; z-index: 1100; display: grid; place-items: center; padding: 16px; background: #000b; backdrop-filter: blur(4px); animation: lb-fade .18s ease-out; }
+.lb-notice { position: fixed; inset: 0; z-index: 1100; display: grid; place-items: center; padding: calc(16px + env(safe-area-inset-top, 0px)) 16px calc(16px + env(safe-area-inset-bottom, 0px)); background: #000b; backdrop-filter: blur(4px); animation: lb-fade .18s ease-out; }
 .lb-notice__box { max-width: 420px; padding: 22px 24px; border: 1px solid var(--gold); border-radius: 14px; background: #141621; box-shadow: 0 12px 40px #000c; text-align: center; }
 .lb-notice__box h3 { margin: 0 0 8px; color: var(--gold); }
 .lb-notice__box p { margin: 0 0 16px; line-height: 1.45; }
@@ -225,7 +225,7 @@ h1, h2, h3, .lb-play, .lb-tab, .lb-hero p { font-family: "Cinzel", "Trajan Pro",
 .lb-pick small { color: var(--muted); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
 .lb-card--mini { box-shadow: 0 4px 10px #0008; }
 .lb-pick__empty { width: 100%; aspect-ratio: 1488 / 2091; display: grid; place-items: center; border: 1px dashed var(--line); border-radius: 6px; color: var(--muted); font-size: 28px; }
-.lb-picker { position: fixed; inset: 0; z-index: 1050; display: grid; place-items: center; padding: 16px; background: #000c; backdrop-filter: blur(6px); animation: lb-fade .18s ease-out; }
+.lb-picker { position: fixed; inset: 0; z-index: 1050; display: grid; place-items: center; padding: calc(16px + env(safe-area-inset-top, 0px)) 16px calc(16px + env(safe-area-inset-bottom, 0px)); background: #000c; backdrop-filter: blur(6px); animation: lb-fade .18s ease-out; }
 .lb-picker__box { width: min(1100px, 100%); max-height: calc(100dvh - 32px); display: flex; flex-direction: column; border: 1px solid var(--gold); border-radius: 14px; background: #10131d; box-shadow: 0 20px 60px #000c; }
 .lb-picker__box header { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 16px 20px; border-bottom: 1px solid var(--line); }
 .lb-picker__box h2 { margin: 0; font-family: "Cinzel", Georgia, serif; color: var(--gold); font-size: 20px; }
@@ -400,7 +400,7 @@ body { font: 300 15px/1.45 var(--kv-sans); }
 .lb-duel__state a { color: var(--kv-gold); }
 .lb-msg.is-system { align-self: center; max-width: 100%; }
 .lb-msg.is-system p { border-color: #e6c36a55; color: var(--kv-gold); text-align: center; }
-.lb-notice.kv-card { position: fixed; top: 16px; bottom: auto; right: auto; height: auto; align-content: start; left: 50%; transform: translateX(-50%); z-index: 60; width: min(420px, calc(100vw - 32px)); padding: 16px 18px; display: grid; gap: 10px; box-sizing: border-box; }
+.lb-notice.kv-card { position: fixed; top: calc(16px + env(safe-area-inset-top, 0px)); bottom: auto; right: auto; height: auto; align-content: start; left: 50%; transform: translateX(-50%); z-index: 60; width: min(420px, calc(100vw - 32px)); padding: 16px 18px; display: grid; gap: 10px; box-sizing: border-box; }
 .lb-notice p { margin: 0; }
 
 /* Aviso de salvamento dos decks e modal de perfil do jogador */

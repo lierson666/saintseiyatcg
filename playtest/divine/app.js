@@ -30,7 +30,7 @@ import {renderLiveCard, renderCardText} from '../../shared/live-card.js?v=202611
 import {armorBonusText, printedEquipmentBonuses} from '../../shared/card-visual-values.js?v=20261031-kw1';
 import {lightArt} from '../../shared/light-art.js';
 import {useGodPortraits} from '../avatar-face.js?v=20261031-3';
-import {mountChatDock} from '../chat-dock.js?v=20261031-3';
+import {mountChatDock} from '../chat-dock.js?v=20261101-notch1';
 import {Idiomorph} from './vendor/idiomorph-0.7.4.esm.js';
 
 const $ = (s, el = document) => el.querySelector(s), $$ = (s, el = document) => [...el.querySelectorAll(s)];

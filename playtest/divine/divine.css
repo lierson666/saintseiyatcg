@@ -170,7 +170,7 @@ kbd { font: 11px/1 ui-monospace, monospace; opacity: .7; border: 1px solid curre
 .quick button { text-align: left; font-size: 13px; }
 
 /* Overlays e gavetas */
-.overlay { position: fixed; inset: 0; z-index: 40; display: grid; place-content: center; justify-items: center; gap: 14px; padding: 16px; background: rgba(4, 4, 14, .82); backdrop-filter: blur(4px); text-align: center; }
+.overlay { position: fixed; inset: 0; z-index: 40; display: grid; place-content: center; justify-items: center; gap: 14px; padding: calc(16px + env(safe-area-inset-top, 0px)) 16px calc(16px + env(safe-area-inset-bottom, 0px)); background: rgba(4, 4, 14, .82); backdrop-filter: blur(4px); text-align: center; }
 .overlay h2 { margin: 0; font-size: clamp(22px, 3vw, 38px); letter-spacing: .1em; color: var(--gold-hi); text-shadow: 0 0 20px rgba(255, 210, 120, .5); }
 .overlay p { margin: 0; color: var(--muted); font-family: system-ui, sans-serif; }
 .overlay .row { display: flex; gap: 10px; }
@@ -180,7 +180,7 @@ kbd { font: 11px/1 ui-monospace, monospace; opacity: .7; border: 1px solid curre
 .mull.marked .dcard { filter: grayscale(.8) brightness(.6); box-shadow: 0 0 0 2px var(--red); }
 .victory h2 { font-size: clamp(32px, 6vw, 72px); animation: rise 1s var(--ease); }
 @keyframes rise { from { transform: translateY(30px) scale(.9); opacity: 0; } }
-.drawer { position: fixed; z-index: 45; top: 12px; bottom: 12px; right: clamp(158px, 15.5vw, 228px); width: min(360px, 90vw); overflow: auto; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: rgba(8, 8, 20, .95); font: 13px/1.4 system-ui, sans-serif; }
+.drawer { position: fixed; z-index: 45; top: calc(12px + env(safe-area-inset-top, 0px)); bottom: 12px; right: clamp(158px, 15.5vw, 228px); width: min(360px, 90vw); overflow: auto; padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px; background: rgba(8, 8, 20, .95); font: 13px/1.4 system-ui, sans-serif; }
 .drawer h3 { margin: 0 0 8px; font: 16px/1.2 Georgia, serif; color: var(--gold-hi); }
 .log p { margin: 0 0 4px; } .log small { color: var(--muted); margin-right: 4px; }
 .set { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid rgba(255, 255, 255, .06); }

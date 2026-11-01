@@ -164,7 +164,7 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 
 /* Decisão pendente da engine (Water Prison, Great Flood, "you may"): modal central no HUD Olympus. */
 .decision-veil { position: fixed; inset: 0; z-index: 44; background: rgba(4, 4, 14, .62); backdrop-filter: blur(3px); }
-.decision { position: fixed; z-index: 45; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(560px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto;
+.decision { position: fixed; z-index: 45; left: 50%; top: calc(50% + (env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) / 2); transform: translate(-50%, -50%); width: min(560px, calc(100vw - 32px)); max-height: calc(100dvh - 32px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); overflow: auto;
   display: grid; gap: 10px; padding: 18px 20px; border: 1px solid var(--gold); border-radius: 14px; background: rgba(10, 12, 34, .96); box-shadow: 0 0 40px rgba(255, 200, 110, .3); color: var(--ink, #f4efe2); text-align: center; }
 .decision__head { display: flex; justify-content: space-between; gap: 8px; align-items: center; font: 600 12px/1.3 system-ui, sans-serif; letter-spacing: .06em; text-transform: uppercase; }
 .decision__who { color: var(--gold-hi); }
@@ -191,7 +191,7 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .decision__actions button[disabled] { opacity: .45; cursor: not-allowed; }
 .decision__foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
 .decision__timeout { color: var(--muted, #b8b1c9); font: 11px/1.3 system-ui, sans-serif; }
-.decision-pill { position: fixed; z-index: 45; left: 50%; top: 12px; transform: translateX(-50%); padding: 8px 14px; border: 1px solid var(--gold); border-radius: 18px; background: rgba(10, 12, 34, .94); color: var(--gold-hi); font: 600 12px/1.2 system-ui; cursor: pointer; box-shadow: 0 0 20px rgba(255, 200, 110, .35); }
+.decision-pill { position: fixed; z-index: 45; left: 50%; top: calc(12px + env(safe-area-inset-top, 0px)); transform: translateX(-50%); padding: 8px 14px; border: 1px solid var(--gold); border-radius: 18px; background: rgba(10, 12, 34, .94); color: var(--gold-hi); font: 600 12px/1.2 system-ui; cursor: pointer; box-shadow: 0 0 20px rgba(255, 200, 110, .35); }
 .olympus.is-deciding .hand__slot.playable .dcard { box-shadow: none; }
 @media (max-width: 760px) { .decision { padding: 14px; } .decision__opt .dcard { --card-w: 64px; } }
 .priority .chain { list-style: none; padding-left: 0; }
@@ -338,7 +338,7 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .olympus .field { --card-w: calc(clamp(70px, 6.2vw, 110px) * 1.56); /* +30% sobre o ×1.2 (autor, 28/10/2026) */ --card-h: calc(var(--card-w) * 1.4); }
 @media (max-width: 760px) { .olympus .field { --card-w: 65px; } }
 /* Clique direito: a carta real grande no centro; clique, clique direito ou Esc fecha. */
-.bigcard { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; background: rgba(4, 6, 14, .72); backdrop-filter: blur(3px); cursor: zoom-out; animation: bigcard-in .18s ease-out; }
+.bigcard { position: fixed; inset: 0; z-index: 1000; padding-top: env(safe-area-inset-top, 0px); display: grid; place-items: center; background: rgba(4, 6, 14, .72); backdrop-filter: blur(3px); cursor: zoom-out; animation: bigcard-in .18s ease-out; }
 .bigcard .dcard--big { --card-w: min(62vh, 92vw); width: var(--card-w); height: calc(var(--card-w) * 1.405); border-radius: 18px; transform: none; filter: none; box-shadow: 0 20px 60px rgba(0, 0, 0, .8), 0 0 40px rgba(232, 196, 106, .25); }
 @keyframes bigcard-in { from { opacity: 0; transform: scale(.94); } }
 @media (prefers-reduced-motion: reduce) { .bigcard { animation: none; } }
@@ -895,7 +895,7 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .order__move button { min-width: 44px; min-height: 22px; padding: 0; line-height: 1; }
 .command__full { align-self: center; padding: 4px 12px; border: 1px solid rgba(255, 210, 120, .4); border-radius: 12px; background: rgba(10, 12, 34, .7); color: var(--muted); font: 600 11px/1.4 system-ui; letter-spacing: .04em; cursor: pointer; }
 .command__full[aria-pressed="true"] { color: #1a1204; background: var(--gold); border-color: var(--gold-hi); }
-.trigger-note { position: fixed; z-index: 46; top: 14px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 10px; padding: 6px 14px 6px 6px; border: 1px solid #ff9a7a; border-radius: 12px; background: rgba(34, 12, 18, .92); color: #fbe6dc; pointer-events: none; animation: note-in 1.5s ease forwards; }
+.trigger-note { position: fixed; z-index: 46; top: calc(14px + env(safe-area-inset-top, 0px)); left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 10px; padding: 6px 14px 6px 6px; border: 1px solid #ff9a7a; border-radius: 12px; background: rgba(34, 12, 18, .92); color: #fbe6dc; pointer-events: none; animation: note-in 1.5s ease forwards; }
 .trigger-note i { width: 34px; height: 46px; border-radius: 4px; background: #120a20 center 18% / cover no-repeat; box-shadow: 0 0 0 1px #ff9a7a; }
 .trigger-note span { display: grid; } .trigger-note small { font: 600 10px/1.3 system-ui; letter-spacing: .08em; text-transform: uppercase; color: #ffb79f; } .trigger-note b { font: 600 14px/1.25 Georgia, serif; }
 @keyframes note-in { 0% { opacity: 0; transform: translate(-50%, -8px); } 12%, 85% { opacity: 1; transform: translate(-50%, 0); } 100% { opacity: 0; } }
@@ -1016,7 +1016,7 @@ body:has(.trigger-panel, .cast-slot) .command__clock { visibility: hidden; }
 
 /* Busca (tutor) e escolhas fora do campo: popup no meio da tela com as cartas grandes, como no Arena (autor, 31/10/2026). */
 .pick-veil { position: fixed; inset: 0; z-index: 70; background: rgba(4, 4, 16, .72); backdrop-filter: blur(3px); }
-.pick-modal { position: fixed; z-index: 71; left: 50%; top: 50%; transform: translate(-50%, -50%); display: grid; gap: 8px; width: min(1100px, 94vw); max-height: 92dvh; overflow: auto;
+.pick-modal { position: fixed; z-index: 71; left: 50%; top: calc(50% + (env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)) / 2); transform: translate(-50%, -50%); display: grid; gap: 8px; width: min(1100px, 94vw); max-height: calc(92dvh - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); overflow: auto;
   padding: 18px 22px; border: 1px solid rgb(var(--glow, 255, 205, 100)); border-radius: 16px; background: rgba(10, 12, 34, .96); box-shadow: 0 0 40px rgba(var(--glow, 255, 205, 100), .35); color: #f3ead6;
   animation: pick-in .28s cubic-bezier(.2, .8, .2, 1); }
 .pick-modal__head { display: flex; justify-content: space-between; gap: 12px; }
@@ -1044,7 +1044,7 @@ body:has(.trigger-panel, .cast-slot) .command__clock { visibility: hidden; }
 /* Zoom da pilha (autor, 31/10/2026): canto superior direito, aparece ao entrar na pilha e sai 1s depois de resolver;
    o painel de decisão desce para baixo dele. */
 :root { --zoom-card: clamp(225px, 18vw, 300px); --zoom-h: calc(var(--zoom-card) * 1.4 + 40px); } /* 1,5x (autor, 31/10/2026) */
-#chain-zoom { display: none; position: fixed; z-index: 43; right: 8px; top: 8px; width: calc(var(--zoom-card) + 60px); justify-items: end; /* travada no canto superior direito */ gap: 6px; pointer-events: none; }
+#chain-zoom { display: none; position: fixed; z-index: 43; right: 8px; top: calc(8px + env(safe-area-inset-top, 0px)); width: calc(var(--zoom-card) + 60px); justify-items: end; /* travada no canto superior direito */ gap: 6px; pointer-events: none; }
 #chain-zoom.is-on { display: grid; animation: cast-in-right .32s cubic-bezier(.2, .8, .2, 1); }
 #chain-zoom.is-leaving { opacity: 0; transition: opacity .3s ease .9s; }
 .chain-zoom__stack { position: relative; display: grid; justify-items: center; }
@@ -1166,7 +1166,7 @@ body.is-peeking:has(.trigger-panel.is-center) .peek-return { display: block; pos
 .reduce-motion .trigger-panel.is-center { animation: none; }
 
 /* Engrenagem de opções (autor, 31/10/2026): canto superior direito, como no MTG Arena; a placa do oponente fica ao lado. */
-.gear-btn { position: fixed; z-index: 46; top: 16px; right: 16px; width: 44px; height: 44px; display: grid; place-items: center; padding: 0; border: 1px solid rgba(201, 164, 92, .55);
+.gear-btn { position: fixed; z-index: 46; top: calc(16px + env(safe-area-inset-top, 0px)); right: 16px; width: 44px; height: 44px; display: grid; place-items: center; padding: 0; border: 1px solid rgba(201, 164, 92, .55);
   border-radius: 50%; background: rgba(8, 10, 28, .82); color: var(--gold-hi, #ffe7a8); box-shadow: 0 4px 14px rgba(0, 0, 0, .5); cursor: pointer; transition: transform .25s cubic-bezier(.2, .8, .2, 1), border-color .2s; }
 .gear-btn svg { width: 24px; height: 24px; }
 .gear-btn:hover, .gear-btn[aria-expanded="true"] { transform: rotate(45deg); border-color: var(--gold-hi, #ffe7a8); }

@@ -88,7 +88,7 @@
   /* Painéis laterais (gatilho, cadeia) ocupam menos. */
   /* Zoom da pilha no celular deitado: mesmo canto, menor. */
   :root { --zoom-card: clamp(84px, 11vw, 120px); --zoom-h: calc(var(--zoom-card) * 1.4 + 30px); }
-  #chain-zoom { width: min(38vw, 260px); right: calc(8px + var(--sr)); top: 6px; }
+  #chain-zoom { width: min(38vw, 260px); right: calc(8px + var(--sr)); top: calc(6px + env(safe-area-inset-top, 0px)); }
   body.has-chain-zoom .trigger-panel:not(.is-targeting) { top: calc(6px + var(--zoom-h)); max-height: calc(100dvh - 12px - var(--zoom-h)); }
   /* Celular deitado (autor, 31/10/2026): painel até 38% da largura, carta menor, texto rolando, botões de 44 px; o campo segue clicável. */
   .trigger-panel, .cast-slot { width: min(38vw, 260px); left: auto; right: calc(8px + var(--sr)); top: 6px; gap: 6px; }
@@ -103,7 +103,7 @@
   .rail .ctrl { padding: 6px 8px; font-size: 11px; }
   .ctrl__head { cursor: pointer; min-height: 44px; align-content: center; }
   .ctrl:not(.is-open) .ctrl__hints { display: none; }
-  .rail .ctrl.is-open { position: fixed; left: calc(6px + var(--sl)); top: 6px; bottom: calc(6px + var(--sb)); width: min(260px, 38vw); z-index: 45; }
+  .rail .ctrl.is-open { position: fixed; left: calc(6px + var(--sl)); top: calc(6px + env(safe-area-inset-top, 0px)); bottom: calc(6px + var(--sb)); width: min(260px, 38vw); z-index: 45; }
   .ctrl:not(.is-open) .ctrl__note { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .ctrl__hint { min-height: 44px; }
   .inspector { left: calc(10px + var(--sl)); max-height: calc(100dvh - 16px); }
@@ -127,7 +127,7 @@ body :is(input, textarea, [contenteditable]) { -webkit-user-select: text; user-s
 /* Em pé no celular: o duelo pede para girar. */
 .rotate-hint { display: none; }
 @media (orientation: portrait) and (max-width: 600px) {
-  .rotate-hint { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; align-content: center; gap: 14px; padding: 24px;
+  .rotate-hint { position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center; align-content: center; gap: 14px; padding: calc(24px + env(safe-area-inset-top, 0px)) 24px calc(24px + env(safe-area-inset-bottom, 0px));
     background: #05060c; color: #f4efe2; text-align: center; font: 600 18px/1.4 "Cinzel", Georgia, serif; }
   .rotate-hint svg { width: 72px; height: 72px; color: #e8c46a; animation: rotate-hint 1.8s ease-in-out infinite; }
   .rotate-hint small { font: 400 14px/1.4 system-ui, sans-serif; color: #b8b1c9; }
