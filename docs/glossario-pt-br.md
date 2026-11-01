@@ -9,11 +9,11 @@ Regra: o mesmo termo em todo lugar. Termo vetado fica em inglês. Nomes de perso
 | --- | --- | --- |
 | Soul | Alma | vida do Deus |
 | Cosmo | Cosmo | |
-| Cosmo Base | Cosmobase | |
+| Cosmo Base | Cosmo Base | |
 | Latent Cosmo | Cosmo Latente | |
 | Cosmo Bank | Banco de Cosmo | |
 | Pool | Reserva | Cosmo queimado aguardando custo |
-| Cosmoble | Cosmável | pode virar Cosmobase |
+| Cosmoble | Cosmável | pode virar Cosmo Base |
 | Deck | Deck | jargão de TCG no Brasil |
 | Hand | Mão | |
 | Battlefield | Campo de Batalha | |

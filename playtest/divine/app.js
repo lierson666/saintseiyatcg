@@ -28,7 +28,8 @@ import {findDeck} from '../deck-store.js';
 import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-face3';
 import {unlock, playMusic} from '../audio.js?v=20261030-telas';
 import {telas, anim, sound, imageUrl, applyColors, applyTexts} from '../telas.js?v=20261030-1';
-import {renderLiveCard, renderCardText} from '../../shared/live-card.js?v=20261101-tab1';
+import {renderLiveCard, renderCardText} from '../../shared/live-card.js?v=20261101-kw8';
+import {cardKeywords, renderKeywordIcons} from '../../shared/keyword-glossary.js?v=20261101-kw8';
 import {armorBonusText, printedEquipmentBonuses} from '../../shared/card-visual-values.js?v=20261031-kw1';
 import {lightArt} from '../../shared/light-art.js';
 import {useGodPortraits} from '../avatar-face.js?v=20261031-3';
@@ -536,14 +537,14 @@ function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
     const gem = (kind, v, trend) => `<b class="btok__stat btok__stat--${kind}" data-trend="${trend}" style="--gem:url('../../CARD-TEMPLATE/${fac}/gem_${kind === 'atk' ? 'power' : fac === 'athena' ? 'resistance' : 'soul'}.png')">${v}</b>`;
     return `<div class="${cls} dcard--board"${facAttr} data-uid="${uid}" tabindex="0" aria-label="${esc(c.name)}, ATK ${atk}, HP ${hp - dmg} of ${hp}">
       <div class="btok ${!forge.ilustracao ? 'is-noart' : fr?.w ? 'is-framed' : ''}" style="${art}"><span class="btok__name">${esc(c.name)}</span>
-        ${gem('atk', atk, statBuffed(atk, c.atk))}${gem('hp', hp - dmg, dmg ? 'down' : statBuffed(hp, c.hp))}</div>${marks}</div>`;
+        ${gem('atk', atk, statBuffed(atk, c.atk))}${gem('hp', hp - dmg, dmg ? 'down' : statBuffed(hp, c.hp))}</div>${renderKeywordIcons(kws)}${marks}</div>`;
   }
   if (forge) {
     // ATK e HP ao vivo no próprio número impresso: verde com bônus, vermelho com dano ou redução.
     const live = renderLiveCard(forge, {stats: {power: atk ?? null, hp: hp == null ? null : hp - dmg, damage: dmg, keywords: kws}, art: forge.ilustracao && forgeArt(forge.ilustracao)})
       .replace('data-stat="power"', `data-stat="power" data-trend="${statBuffed(atk, c.atk)}"`)
       .replace('data-stat="hp"', `data-stat="hp" data-trend="${dmg ? 'down' : statBuffed(hp, c.hp)}"`);
-    return `<div class="${cls}"${facAttr} data-uid="${uid}" tabindex="0" aria-label="${esc(c.name)}${c.kind === 'Devotee' ? `, ATK ${atk}, HP ${hp - dmg} of ${hp}` : ''}">${live}${marks}</div>`;
+    return `<div class="${cls}"${facAttr} data-uid="${uid}" tabindex="0" aria-label="${esc(c.name)}${c.kind === 'Devotee' ? `, ATK ${atk}, HP ${hp - dmg} of ${hp}` : ''}">${live}${renderKeywordIcons([...kws, ...cardKeywords(forge)])}${marks}</div>`;
   }
   return `<div class="${cls}" data-uid="${uid}" tabindex="0" aria-label="${esc(c.name)}">
     <div class="dcard__art"><span class="dcard__glyph">${esc(c.name.split(/[ ,’']/)[0].slice(0, 2))}</span></div>
@@ -551,7 +552,7 @@ function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
     <div class="dcard__plate"><strong>${esc(c.name)}</strong><small>${esc(subtype)}${kws.length ? ` · ${esc(kws.join(' · '))}` : ''}</small></div>
     ${c.kind === 'Devotee' ? `<div class="dcard__stats"><b class="atk ${statBuffed(atk, c.atk)}" title="ATK ${atk}">${atk}</b><b class="hp ${dmg ? 'hurt' : statBuffed(hp, c.hp)}" title="HP ${hp - dmg} of ${hp}">${hp - dmg}</b></div>` : ''}
     ${c.armor && field && c.hp ? `<div class="dcard__stats"><b class="hp" title="+${c.hp} HP to the wearer">+${c.hp}</b></div>` : ''}
-    ${marks}
+    ${renderKeywordIcons(kws)}${marks}
   </div>`;
 }
 
@@ -820,7 +821,7 @@ function phaseHints() {
   const moments = hand((c, u) => c.kind === 'Spell' && spellCat(u)?.category === 'Moment');
   if (s.setup) return {title: 'OPENING HAND', note: 'Send any cards to the bottom and draw that many. Once.', refs: {}};
   if (s.window && s.window.priority === v) return {title: 'RESPOND', note: 'Play a Moment, paid with Latent Cosmo, or Pass. When both players pass, the top of the chain resolves.', refs: {moment: moments}};
-  if (s.active !== v) return {title: `OPPONENT'S ${phase.toUpperCase()} PHASE`, note: moments.length ? 'You can respond with a Moment when you get priority.' : '', refs: {}};
+  if (s.active !== v) return {title: `${phase.toUpperCase()} PHASE`, note: moments.length ? 'You can respond with a Moment when you get priority.' : '', refs: {}};
   if (phase !== 'Main') return {title: `${phase.toUpperCase()} PHASE`, note: {Prepare: 'Your Cosmo Bases and Devotees become Prepared.', Draw: 'You draw 2 cards.', End: 'End-of-turn effects resolve.'}[phase], refs: {}};
   const field = p.battlefield.filter(u => ctx.objects[u]);
   return {title: 'MAIN PHASE', note: '', refs: {
@@ -1362,7 +1363,7 @@ boardRoot.addEventListener('click', e => {
   const cardEl = t.closest('.dcard[data-uid]');
   if (!cardEl || cardEl.classList.contains('dcard--back')) return;
   const uid = cardEl.dataset.uid, key = owner(uid), me = viewer();
-  if (key !== me) return;
+  if (key !== me) return s.players[key].battlefield.includes(uid) ? quickMenu(cardEl, [['Info', () => showBigCard(uid, {sheet: sheetUp()})]], {always: true}) : undefined; // Info em toda carta visível
   if (s.players[key].hand.includes(uid)) return handMenu(uid, cardEl);
   if (s.players[key].battlefield.includes(uid)) return fieldMenu(uid, cardEl);
 });
@@ -1373,8 +1374,8 @@ function quickMenu(anchor, items, {always = false} = {}) {
   if (items.length === 1 && !always) return items[0][1]();
   const r = anchor.getBoundingClientRect(), menu = document.createElement('div');
   menu.className = 'quick'; menu.style.left = `${r.left + r.width / 2}px`; menu.style.top = `${r.top - 8}px`;
-  menu.innerHTML = items.map(([label], i) => `<button data-q="${i}">${esc(label)}</button>`).join('');
-  menu.addEventListener('click', ev => { const i = ev.target.closest('[data-q]')?.dataset.q; if (i !== undefined) { closeQuick(); items[i][1](); } });
+  menu.innerHTML = items.map(([label, , why], i) => `<button data-q="${i}" ${why ? 'aria-disabled="true"' : ''}>${esc(label)}</button>`).join('');
+  menu.addEventListener('click', ev => { const i = ev.target.closest('[data-q]')?.dataset.q; if (i === undefined) return; if (items[i][2]) return warn(items[i][2]); closeQuick(); items[i][1](); });
   document.body.append(menu);
   if (phoneUp()) return menu.querySelector('button')?.focus();
   // Deitado e no desktop: as ações ficam coladas em cima da carta, na largura dela (autor, 01/11/2026); a medida espera a carta terminar de subir.
@@ -1393,15 +1394,14 @@ const closeQuick = () => { lifted = null; $$('.hand__slot.is-lifted').forEach(s 
 function handMenu(uid, el) {
   if (lifted === uid) return closeQuick(); // tocar de novo abaixa a carta
   const key = owner(uid), items = [];
-  const reason = playableReason(key, uid);
-  if (!reason) items.push(['Play', () => playFromHand(key, uid)]);
-  if (canBase(key, uid)) items.push(['Place as Cosmo Base', () => placeAsBase(key, uid)]);
+  // Sempre Jogar, Cosmo Base e Info; o que não dá agora vem apagado e diz o motivo (autor, 01/11/2026).
+  items.push(['Play', () => playFromHand(key, uid), playableReason(key, uid)], ['Cosmo Base', () => placeAsBase(key, uid), baseReason(key, uid)]);
   // Moon Harvest (Artemis): carta não Cosmoble vira Base, uma vez por rodada, perdendo 2 Soul.
   if (!info(uid).cosmoble && S().divine?.[key]?.god === 'god-artemis' && !moonHarvestBlock(S(), ctx, key, uid) && idleFor(key) && S().players[key].baseTurn !== S().turn)
-    items.push(['Moon Harvest: place as Cosmo Base (lose 2 Soul)', () => act({type: 'moonHarvest', key, uid})]);
+    items.push(['Moon Harvest (−2 Soul)', () => act({type: 'moonHarvest', key, uid})]);
+  items.push(['Info', () => showBigCard(uid, {sheet: sheetUp()})]);
   closeQuick();
-  if (items.length) quickMenu(el, items, {always: true}); // carta da mão nunca sai sem o jogador escolher o que fazer
-  else warn(reason || 'Not playable now.');
+  quickMenu(el, items, {always: true}); // carta da mão nunca sai sem o jogador escolher o que fazer
   lifted = uid; el.closest('.hand__slot')?.classList.add('is-lifted'); // estilo Arena: a carta sobe e as ações ficam acima dela
 }
 // Área de Cosmo do jogador (hexágono e chamas) como alvo de soltar.
@@ -1427,16 +1427,20 @@ function cardAbilities(uid) {
     run: () => act({type: 'activate', key, uid, choice: {}})});
   return out;
 }
-function fieldMenu(uid, el) {
-  const s = S(), key = owner(uid), c = info(uid), items = [];
-  if (!idleFor(key)) return warn("Wait for your turn's main phase.");
-  if (c.kind === 'Devotee' && strikeTargets(s, ctx, uid).length) items.push(['Strike', () => startStrike(uid)]);
-  for (const a of cardAbilities(uid)) if (!a.why) items.push([a.label, a.run]);
-  if (c.kind === 'Equipment' && !c.global && !ctx.attached[uid]) items.push([`Equip (${c.equip?.amount ?? c.cost.amount})`, () => begin('reequip', key, uid, [{key: 'bearer', pick: c.armor ? 'wearer' : 'devotee', armor: uid, label: `Equip ${c.name} to which Devotee?`}], choice => ({type: 'reequip', key, uid, choice}))]);
+// Ações da carta em jogo: o menu mostra só as disponíveis; a carta inteira mostra todas, à direita, com o motivo das apagadas (autor, 01/11/2026).
+function fieldActions(uid) {
+  const s = S(), key = owner(uid), c = info(uid), idle = idleFor(key), items = [];
+  if (idle && c.kind === 'Devotee' && strikeTargets(s, ctx, uid).length) items.push({label: 'Strike', run: () => startStrike(uid)});
+  for (const a of cardAbilities(uid)) items.push({label: `${a.name}${/\d/.test(a.cost || '') ? ` (${a.cost.replace(/\{T\}( · )?/, '')})` : ''}`, run: a.run, why: a.why || (idle ? '' : "Wait for your turn's main phase.")});
+  if (idle && c.kind === 'Equipment' && !c.global && !ctx.attached[uid]) items.push({label: `Equip (${c.equip?.amount ?? c.cost.amount})`, run: () => begin('reequip', key, uid, [{key: 'bearer', pick: c.armor ? 'wearer' : 'devotee', armor: uid, label: `Equip ${c.name} to which Devotee?`}], choice => ({type: 'reequip', key, uid, choice}))});
   // Armor vestida pode passar a outro Devotee seu: AÇÃO + Equip impresso (guia §28).
-  else if (c.armor && ctx.attached[uid] && c.equip) items.push([`Move (Equip ${c.equip.amount})`, () => begin('reequip', key, uid, [{key: 'bearer', pick: 'wearer', armor: uid, label: `Move ${c.name} to which Devotee?`}], choice => ({type: 'reequip', key, uid, choice}))]);
-  if (!items.length) return warn(s.units[uid]?.prepared === false ? 'Unprepared: it readies at the start of your turn.' : 'No action available for this card.');
-  quickMenu(el, items);
+  else if (idle && c.armor && ctx.attached[uid] && c.equip) items.push({label: `Move (Equip ${c.equip.amount})`, run: () => begin('reequip', key, uid, [{key: 'bearer', pick: 'wearer', armor: uid, label: `Move ${c.name} to which Devotee?`}], choice => ({type: 'reequip', key, uid, choice}))});
+  return items;
+}
+function fieldMenu(uid, el) {
+  const items = fieldActions(uid).filter(a => !a.why).map(a => [a.label, a.run]);
+  items.push(['Info', () => showBigCard(uid, {sheet: sheetUp()})]); // as ações primeiro; a carta inteira só se o jogador quiser (autor, 01/11/2026)
+  quickMenu(el, items, {always: true});
 }
 
 overlayRoot.addEventListener('click', e => {
@@ -1709,20 +1713,13 @@ function showBigCard(uid, {sheet = false} = {}) {
   const bearer = ctx.attached[uid];
   box.innerHTML = cardFace(uid, {size: 'dcard--big', field}) + (field && info(uid).kind === 'Devotee' ? loadout(uid)
     : bearer ? `<aside class="loadout"><h3>${esc(info(uid).name)}</h3><h4>Equipped on</h4><div class="loadout__gear"><button class="loadout__card" data-open-card="${bearer}" data-tip="${esc(`${info(bearer).name}|Click to view the bearer.`)}">${cardFace(bearer, {size: 'dcard--sm', field: true})}</button></div></aside>` : '');
-  // Habilidade ativada no próprio texto da carta (autor, 30/10/2026): passar o mouse destaca e mostra "Use"
-  // (no toque fica sempre visível); se não dá para usar agora, o botão vem apagado com o motivo.
-  const abilities = field && owner(uid) === viewer() ? cardAbilities(uid) : [];
-  abilities.forEach((a, i) => {
-    const block = [...box.querySelectorAll('.rule-block')].find(b => b.textContent.trim().toLowerCase().startsWith(a.name.toLowerCase()));
-    if (!block) return;
-    block.classList.add('rule-block--usable');
-    block.insertAdjacentHTML('beforeend', `<button class="rule-use" data-use="${i}" ${a.why ? 'aria-disabled="true"' : ''} data-tip="${esc(`${a.name}|${a.why || `Use now: ${a.cost || 'free'}.`}`)}">${a.why ? 'Not now' : 'Use'}<small>${esc(a.cost)}</small></button>`);
-  });
-  if (sheet) box.insertAdjacentHTML('beforeend', '<button class="bigcard__close">Close</button>');
+  // Ações à direita da carta, junto com o fechar; em pé no celular descem para baixo dela (autor, 01/11/2026).
+  const actions = field && owner(uid) === viewer() ? fieldActions(uid) : [];
+  if (actions.length || sheet) box.insertAdjacentHTML('beforeend', `<div class="bigcard__actions">${actions.map((a, i) => `<button class="ghost" data-use="${i}" ${a.why ? 'aria-disabled="true"' : ''}>${esc(a.label)}</button>`).join('')}${sheet ? '<button class="bigcard__close">Close</button>' : ''}</div>`);
   // Cartas do painel abrem grandes (equipamento a partir do portador e vice-versa); clicar no painel não fecha; fora dele, fecha.
   box.addEventListener('pointerdown', e => {
     const use = e.target.closest('[data-use]');
-    if (use) { e.preventDefault(); const a = abilities[+use.dataset.use]; if (a.why) return warn(a.why); closeBigCard(); return a.run(); }
+    if (use) { e.preventDefault(); const a = actions[+use.dataset.use]; if (a.why) return warn(a.why); closeBigCard(); return a.run(); }
     const open = e.target.closest('[data-open-card]');
     if (open) return showBigCard(open.dataset.openCard, {sheet});
     if (sheet && e.target.closest('.dcard--big')) return; // preview pelo toque: tocar na carta não fecha
@@ -1905,7 +1902,7 @@ function moveAim(e) {
     aim.svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     aim.svg.setAttribute('class', `aim-arrow ${aim.cast ? 'aim-follow' : ''}`);
     if (aim.cast) aim.svg.style.cssText = aim.el.closest('[data-godfx], .godhud')?.style.cssText || '';
-    aim.svg.innerHTML = '<defs><marker id="aim-head" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs><path class="aim-arrow__glow"/><path class="aim-arrow__line" marker-end="url(#aim-head)"/><circle class="aim-arrow__reticle" r="16"/>';
+    aim.svg.innerHTML = '<defs><marker id="aim-head" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs><path class="aim-arrow__glow"/><path class="aim-arrow__line" marker-end="url(#aim-head)"/><circle class="aim-arrow__reticle" r="16"/>';
     document.body.append(aim.svg);
   }
   const r = aim.el.getBoundingClientRect(), x0 = r.left + r.width / 2, y0 = r.top + r.height / 2, x1 = e.clientX, y1 = e.clientY;
@@ -1940,7 +1937,7 @@ function followAim(e) {
   if (!svg) {
     svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('class', 'aim-arrow aim-follow');
-    svg.innerHTML = '<defs><marker id="aim-follow-head" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs><path class="aim-arrow__glow"/><path class="aim-arrow__line" marker-end="url(#aim-follow-head)"/><circle class="aim-arrow__reticle" r="16"/>';
+    svg.innerHTML = '<defs><marker id="aim-follow-head" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs><path class="aim-arrow__glow"/><path class="aim-arrow__line" marker-end="url(#aim-follow-head)"/><circle class="aim-arrow__reticle" r="16"/>';
     document.body.append(svg);
   }
   svg.style.cssText = card.closest('[data-godfx]')?.style.cssText || '';
@@ -2078,7 +2075,7 @@ function drawActivity() {
   svg.setAttribute('class', 'aim-arrow opp-aim is-locked');
   const [x0, y0] = center(from), [x1, y1] = center(to);
   const d = `M${x0},${y0} Q${(x0 + x1) / 2},${Math.max(y0, y1) + 80} ${x1},${y1}`; // arco para baixo: vem do lado de lá da mesa
-  svg.innerHTML = `<defs><marker id="opp-aim-head" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs><path class="aim-arrow__glow" d="${d}"/><path class="aim-arrow__line" marker-end="url(#opp-aim-head)" d="${d}"/><circle class="aim-arrow__reticle" r="26" cx="${x1}" cy="${y1}"/>`;
+  svg.innerHTML = `<defs><marker id="opp-aim-head" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z"/></marker></defs><path class="aim-arrow__glow" d="${d}"/><path class="aim-arrow__line" marker-end="url(#opp-aim-head)" d="${d}"/><circle class="aim-arrow__reticle" r="26" cx="${x1}" cy="${y1}"/>`;
   document.body.append(svg);
 }
 function setOppAct(patch) { Object.assign(oppAct, patch); drawActivity(); }
@@ -2316,7 +2313,7 @@ function sidePanel(req, t, fx) {
   // Busca no deck, Tartarus ou mão (tutor): popup no meio da tela com as cartas grandes, como no Arena (autor, 31/10/2026).
   const offBoard = req.kind === 'choice' && !target && req.choose !== 'mode' && req.options.every(u => ctx.objects[u] && !S().order.some(k => S().players[k].battlefield.includes(u)));
   const size = offBoard ? 'dcard--lg' : 'dcard--sm';
-  const opts = req.kind === 'choice' && !target ? `<div class="decision__opts trigger-panel__opts" role="group" aria-label="Options">${req.options.map((uid, i) => `<button class="decision__opt ${picked.includes(uid) ? 'picked' : ''}" data-dec="opt" data-opt="${esc(uid)}" data-focus="opt:${esc(uid)}" aria-pressed="${picked.includes(uid)}" aria-label="${esc(optName(uid))}${i < 9 ? `, key ${i + 1}` : ''}">${String(uid).startsWith('god:') || req.choose === 'mode' || !ctx.objects[uid] ? `<span class="dcard decision__god">${esc(optName(uid))}</span>` : cardFace(uid, {size}).replace('tabindex="0"', 'tabindex="-1"')}${i < 9 ? `<kbd>${i + 1}</kbd>` : ''}</button>`).join('')}</div>` : '';
+  const opts = req.kind === 'choice' && !target ? `<div class="decision__opts trigger-panel__opts" role="group" aria-label="Options">${req.options.map((uid, i) => `<button class="decision__opt ${picked.includes(uid) ? 'picked' : ''}" data-dec="opt" data-opt="${esc(uid)}" data-focus="opt:${esc(uid)}" aria-pressed="${picked.includes(uid)}" aria-label="${esc(optName(uid))}${i < 9 ? `, key ${i + 1}` : ''}">${String(uid).startsWith('god:') || req.choose === 'mode' || !ctx.objects[uid] ? `<span class="dcard decision__god">${esc(optName(uid))}</span>` : cardFace(uid, {size}).replace('tabindex="0"', 'tabindex="-1"')}${i < 9 ? `<kbd>${i + 1}</kbd>` : ''}${picked.includes(uid) ? `<b class="decision__order">${picked.indexOf(uid) + 1}</b>` : ''}</button>`).join('')}</div>` : '';
   const actions = waiting ? `<p class="decision__note">Waiting for Player ${req.player}…</p>`
     : req.kind === 'optional' ? `<button class="primary-action" data-dec="yes" data-focus="yes">${esc(t.yes)}</button><button class="ghost" data-dec="no" data-focus="no">${esc(t.no)}</button>`
     : opts ? `<button class="primary-action" data-dec="confirm" data-focus="confirm" ${pickedOk(req, picked) ? '' : 'disabled'}>Confirm · ${picked.length}/${req.count}</button>${cancel}` : cancel;
@@ -2604,10 +2601,11 @@ if (matchMedia('(pointer: coarse)').matches) addEventListener('pointerdown', () 
 // Dica flutuante (autor, 28/10/2026): tudo com data-tip="Título|texto" explica o que é ao passar o mouse ou focar.
 const tip = document.body.appendChild(Object.assign(document.createElement('div'), {className: 'tip', role: 'tooltip'}));
 function showTip(e) {
+  if (e.pointerType === 'touch') return; // no toque, o pointerdown logo em seguida fecharia a dica
   const t = e.target.closest?.('[data-tip]');
   if (!t || drag) return tip.classList.remove('on');
   const [title, body] = t.dataset.tip.split('|');
-  tip.innerHTML = body ? `<strong>${esc(title)}</strong>${esc(body)}` : esc(title);
+  tip.innerHTML = (t.querySelector(':scope.kw-icon > img')?.outerHTML || '') + (body ? `<strong>${esc(title)}</strong>${esc(body)}` : esc(title));
   const r = t.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight, room = r.right + 12 + w < innerWidth;
   tip.style.left = `${room ? r.right + 12 : Math.max(8, r.left - 12 - w)}px`;
   tip.style.top = `${Math.min(innerHeight - h - 8, Math.max(8, r.top + r.height / 2 - h / 2))}px`;
@@ -2616,4 +2614,19 @@ function showTip(e) {
 document.addEventListener('pointerover', showTip);
 document.addEventListener('focusin', showTip);
 document.addEventListener('pointerdown', () => tip.classList.remove('on'));
+document.addEventListener('keydown', e => { if (e.key === 'Escape') tip.classList.remove('on'); });
+// Moeda de keyword no toque: tocar abre a dica e tocar de novo fecha, sem acionar a carta embaixo nem o segurar para ampliar.
+let kwPress = null, kwOpen = false;
+addEventListener('pointerdown', e => {
+  const coin = e.target.closest?.('.kw-icon');
+  if (!coin || e.pointerType === 'mouse') return;
+  e.stopPropagation();
+  kwOpen = kwPress === coin && tip.classList.contains('on'); kwPress = coin;
+}, true);
+addEventListener('click', e => {
+  const coin = e.target.closest?.('.kw-icon');
+  if (!coin || coin !== kwPress) return;
+  e.stopPropagation(); e.preventDefault();
+  if (kwOpen) { tip.classList.remove('on'); kwPress = null; } else showTip({target: coin});
+}, true);
 init().catch(e => { boardRoot.innerHTML = `<p class="fatal">${esc(e.message)}</p>`; console.error(e); });

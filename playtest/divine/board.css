@@ -98,21 +98,6 @@
   .olympus .dcard[data-fac]:is(.can-strike, .is-prepared, .hand__slot.playable *)::after { animation: none; }
 }
 
-/* Habilidade ativada na carta grande (autor, 30/10/2026): o bloco da habilidade acende ao passar o mouse
-   e mostra o botão Use flutuando no canto, sem empurrar o texto. No toque o botão fica sempre visível. */
-.bigcard .rule-block--usable { position: relative; border-radius: 4px; pointer-events: auto; transition: background .15s, box-shadow .15s; }
-.bigcard .rule-block--usable:hover, .bigcard .rule-block--usable:focus-within { background: #e6c36a1f; box-shadow: 0 0 0 1px #e6c36a8c; }
-.bigcard .rule-use { position: absolute; z-index: 3; right: 0; top: 0; transform: translateY(-70%); display: inline-flex; align-items: baseline; gap: 6px;
-  min-height: 30px; padding: 5px 12px; border: 1px solid #ffd36e; border-radius: 999px; background: linear-gradient(#3a2a0c, #1a1206);
-  color: #ffe6a6; font: 700 13px/1 "Jost", system-ui, sans-serif; letter-spacing: .04em; white-space: nowrap; cursor: pointer;
-  box-shadow: 0 4px 12px #000a, 0 0 12px #ffd36e55; opacity: 0; pointer-events: none; transition: opacity .15s, transform .15s; }
-.bigcard .rule-use small { font-weight: 500; font-size: 11px; color: #e8d6a8; }
-.bigcard .rule-block--usable:hover .rule-use, .bigcard .rule-block--usable:focus-within .rule-use, .bigcard .rule-use:focus-visible { opacity: 1; pointer-events: auto; transform: translateY(-85%); }
-.bigcard .rule-use:hover { background: linear-gradient(#5a3f10, #2a1c08); }
-.bigcard .rule-use[aria-disabled="true"] { border-color: #ffffff40; background: #12131c; color: #b8b1c9; box-shadow: 0 4px 12px #000a; cursor: not-allowed; }
-@media (hover: none) { .bigcard .rule-use { opacity: 1; pointer-events: auto; transform: translateY(-85%); min-height: 36px; } }
-@media (prefers-reduced-motion: reduce) { .bigcard .rule-use { transition: none; } }
-
 /* Equipamento na mesa (autor, 30/10/2026). Solto: token compacto com bônus e selo EQUIP. Preso: mini-token sob o portador. */
 .dcard--gear .btok__band { position: absolute; z-index: 1; left: 50%; bottom: 6cqw; transform: translateX(-50%); padding: 1.5cqw 5cqw; border: 1px solid #bfa66e; border-radius: 99px;
   background: #100e16e6; color: #f4efe2; font: italic 700 9cqw/1 Futura, 'Futura PT', 'Century Gothic', sans-serif; white-space: nowrap; }
@@ -127,3 +112,19 @@
 .slot .gear span { max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .slot .gear b { color: #ffb347; font-size: 9px; }
 .slot .gear--armor { border-color: #e8c46a; }
+
+/* Moedas de keyword na carta (autor, 01/11/2026). Texto e toque: renderKeywordIcons em shared/keyword-glossary.js e dica em app.js. */
+/* A .dcard corta o que sai dela: as moedas ficam dentro, sob o nome e à esquerda, porque na mão a carta seguinte cobre a direita. */
+.kw-icons { position: absolute; z-index: 4; top: 19%; left: 4%; display: flex; flex-wrap: wrap; gap: 3px; width: 92%; }
+.kw-icon { position: relative; display: block; flex: 0 0 22%; min-width: 18px; max-width: 44px; aspect-ratio: 1; border-radius: 50%; cursor: help; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .7)); transition: transform .12s ease-out; }
+.kw-icon img { display: block; width: 100%; height: 100%; }
+.kw-icon:hover { transform: scale(1.18); }
+.kw-icon:focus-visible { outline: 2px solid #fff6cf; outline-offset: 1px; }
+.reduce-motion .kw-icon { transition: none; }
+@media (pointer: coarse) { .kw-icon::before { content: ""; position: absolute; inset: -5px; } } /* alvo de toque maior que a moeda */
+.tip img { float: left; width: 38px; height: 38px; margin: 0 9px 2px 0; }
+/* Marcadores na mesa usam as mesmas moedas; o número vira um selo no canto. */
+.token--training, .token--seal { background: url('../../shared/keyword-icons/training.webp') center / contain no-repeat; box-shadow: none; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .7)); }
+.token--seal { background-image: url('../../shared/keyword-icons/seal.webp'); }
+.token--training::before, .token--training::after, .token--seal::before, .token--seal::after { content: none; }
+.token--training b, .token--seal b { position: absolute; top: auto; right: -8%; bottom: -8%; min-width: 1.35em; padding: .1em .2em; border-radius: 999px; background: #1a1206; border: 1px solid #e8c46a; color: #fff6cf; text-align: center; font-size: clamp(9px, calc(var(--card-w, 90px) * .11), 13px); text-shadow: none; }

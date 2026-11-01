@@ -46,6 +46,10 @@ export function cardKeywords(card) {
   return out;
 }
 
+// Moedas de keyword (autor, 01/11/2026). Seal e Sealed dividem o cadeado. Mestres em LOGO/keyword-icons/.
+const ICONS = {'Guardian': 'guardian', 'Nimble': 'nimble', 'Long Range': 'long-range', 'Pierce': 'pierce', 'Impulse': 'impulse', 'Seal': 'seal', 'Sealed': 'seal', 'Training': 'training', 'Afterlife': 'afterlife', 'Hidden Cosmo': 'hidden-cosmo'};
+export const keywordIconUrl = k => (ICONS[k] ? new URL(`./keyword-icons/${ICONS[k]}.webp`, import.meta.url).href : null);
+
 const esc = v => String(v).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 
 // Fichas: título em maiúscula e negrito na cor do tema (--psd-ink do contêiner), regra em branco.
@@ -53,5 +57,16 @@ export function renderKeywordNotes(card) {
   const list = cardKeywords(card);
   if (!list.length) return '';
   const pt = lang() === 'pt';
-  return `<ul class="kw-notes" aria-label="${pt ? 'Regras das palavras-chave' : 'Keyword rules'}">${list.map(k => `<li class="kw-note"><strong>${esc((pt ? KEYWORD_PT[k] : k).toUpperCase())}</strong><span>${esc((pt ? KEYWORD_RULES_PT : KEYWORD_RULES)[k])}</span></li>`).join('')}</ul>`;
+  return `<ul class="kw-notes" aria-label="${pt ? 'Regras das palavras-chave' : 'Keyword rules'}">${list.map(k => `<li class="kw-note"><img src="${esc(keywordIconUrl(k))}" alt="" draggable="false"><strong>${esc((pt ? KEYWORD_PT[k] : k).toUpperCase())}</strong><span>${esc((pt ? KEYWORD_RULES_PT : KEYWORD_RULES)[k])}</span></li>`).join('')}</ul>`;
+}
+
+// Fileira de moedas na carta: data-tip é a dica do duelo (mouse, foco; toque em playtest/divine/app.js). Keyword sem moeda fica de fora.
+export function renderKeywordIcons(list) {
+  const pt = lang() === 'pt', seen = new Set();
+  const coins = list.map(n => NAMES.find(k => k.toLowerCase() === String(n).toLowerCase())).filter(k => k && ICONS[k] && !seen.has(ICONS[k]) && seen.add(ICONS[k]));
+  if (!coins.length) return '';
+  return `<span class="kw-icons">${coins.map(k => {
+    const name = pt ? KEYWORD_PT[k] : k, rule = (pt ? KEYWORD_RULES_PT : KEYWORD_RULES)[k];
+    return `<span class="kw-icon" role="button" tabindex="0" aria-label="${esc(`${name}: ${rule}`)}" data-tip="${esc(`${name}|${rule}`)}"><img src="${esc(keywordIconUrl(k))}" alt="" draggable="false"></span>`;
+  }).join('')}</span>`;
 }

@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-01 — Termo em PT-BR — Cosmobase → Cosmo Base
+
+- **Antes:** "Cosmobase", junto.
+- **Depois:** "Cosmo Base", separado, igual ao inglês (guia, glossário e texto da interface). Não muda regra.
+- **Motivo:** autor, 01/11/2026: "a sintaxe do Cosmo Base é separada e não junto".
+- **Pendente:** as 19 ocorrências de "Base de Cosmo"/"Cosmo de Base" no texto em PT de `data/cards.json` passam a virar "Cosmo Base", com diff aprovado.
+
 ## 2026-11-01 — Termo em PT-BR — Base de Cosmo → Cosmobase
 
 - **Antes:** "Base de Cosmo" e "Cosmo de Base" no português.

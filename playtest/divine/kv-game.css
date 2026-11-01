@@ -22,9 +22,12 @@
 .notice.show { transform: translate(-50%, -50%); }
 /* Ações coladas em cima da carta escolhida, na largura dela (autor, 01/11/2026). */
 .olympus .hand--me:has(.is-lifted) { z-index: 40; }
+.quick button[aria-disabled="true"] { opacity: .45; cursor: not-allowed; }
 .quick--glued { box-sizing: border-box; padding: 4px; border-radius: 10px 10px 4px 4px; }
 .quick--glued { container-type: inline-size; }
-.quick--glued button { width: 100%; min-height: 40px; padding: 0 4px; font-size: min(11px, 6.6cqw); letter-spacing: .04em; text-align: center; white-space: nowrap; }
+.quick--glued button { width: 100%; min-height: 40px; padding: 4px; font-size: min(11px, 6.6cqw); text-align: center; text-wrap: balance; }
+/* Nenhuma letra escapa do botão, em qualquer tela. */
+.quick button { box-sizing: border-box; min-width: 0; max-width: 100%; letter-spacing: .04em; white-space: normal; overflow-wrap: anywhere; }
 
 /* Placa do jogador: não fica por cima de escolha, carta aberta ou mulligan (autor, 01/11/2026). */
 body:has(#overlay-root > :not(.gear-btn), .pick-modal, .decision-veil, #bigcard) .rk-plate { visibility: hidden; }
@@ -32,6 +35,12 @@ body:has(#overlay-root > :not(.gear-btn), .pick-modal, .decision-veil, #bigcard)
 .decision__opt .dcard { filter: brightness(.72) saturate(.8); transition: filter .15s; }
 .decision__opts:has(.picked) .decision__opt:not(.picked) .dcard { filter: grayscale(1) brightness(.5); }
 .decision__opt.picked { transform: translateY(-14px); }
+.pick-modal .decision__opt .dcard { animation: none; box-shadow: none; }
+.pick-modal .decision__opt.picked .dcard { box-shadow: 0 0 0 2px var(--kv-gold), 0 0 18px #e6c36a99; }
+/* Número da ordem de escolha no lugar do visto; o atalho de teclado sai da escolhida e não aparece no toque. */
+.decision__opt.picked::after, .decision__opt.picked kbd { display: none; }
+.decision__order { position: absolute; z-index: 3; left: -6px; top: -6px; width: 26px; height: 26px; border-radius: 50%; font: 700 15px/26px var(--kv-title); text-align: center; color: #1a1204; background: var(--kv-gold); box-shadow: 0 2px 8px #000a; }
+@media (pointer: coarse) { .decision__opt kbd { display: none; } }
 .decision__opt.picked .dcard { filter: none; }
 /* Tela de busca: título à esquerda, o que a carta faz à direita, em texto corrido. */
 .pick-modal { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); column-gap: 20px; row-gap: 2px; align-items: start; }
@@ -41,3 +50,16 @@ body:has(#overlay-root > :not(.gear-btn), .pick-modal, .decision-veil, #bigcard)
 .pick-modal > .decision__effect { grid-column: 2; grid-row: 2; max-width: none; margin: 0; padding: 0; border: 0; background: none; }
 .pick-modal > .decision__effect p { font: 400 14px/1.35 var(--kv-sans); color: var(--kv-ink); }
 .pick-modal > .pick-modal__ask { grid-column: 2; grid-row: 3; margin: 2px 0 0; font: 400 13px/1.35 var(--kv-sans); color: var(--kv-muted); }
+
+/* Carta inteira (autor, 01/11/2026): ações e fechar numa coluna à direita, o conjunto centrado na tela; nada cobre a carta. */
+.bigcard__actions { display: grid; gap: 8px; width: 100%; box-sizing: border-box; cursor: default; }
+.bigcard__actions button { box-sizing: border-box; width: 100%; min-height: 44px; padding: 8px 14px; letter-spacing: .04em; text-align: center; white-space: normal; overflow-wrap: anywhere; cursor: pointer; }
+.bigcard__actions button[aria-disabled="true"] { opacity: .45; cursor: not-allowed; }
+@media not all and (orientation: portrait) and (max-width: 600px) {
+  .bigcard:has(.bigcard__actions) { grid-template-columns: auto minmax(0, 240px); column-gap: 28px; justify-content: center; align-content: center; }
+  .bigcard:has(.bigcard__actions) .dcard--big { --card-w: min(62vh, 56vw); }
+  .bigcard:has(.bigcard__actions):has(.loadout) { grid-template-columns: auto minmax(0, 340px); }
+  .bigcard:has(.bigcard__actions):has(.loadout) > .dcard--big { --card-w: min(56vh, 46vw); grid-row: 1 / span 2; }
+  .bigcard:has(.bigcard__actions) .loadout { max-height: 62vh; }
+  .bigcard__actions .bigcard__close { position: static; transform: none; width: 100%; min-width: 0; }
+}

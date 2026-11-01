@@ -267,13 +267,13 @@ body { font-family: "Jost", system-ui, sans-serif; }
 /* Seta de ataque (arrastar Devotee até o alvo). */
 .aim-arrow { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 60; pointer-events: none; overflow: visible; }
 .aim-arrow path { fill: none; stroke-linecap: round; }
-.aim-arrow__glow { stroke: rgba(255, 120, 70, .35); stroke-width: 18; filter: blur(4px); }
-.aim-arrow__line { stroke: #ffcf7a; stroke-width: 6; stroke-dasharray: 14 9; animation: aim-flow .5s linear infinite; }
+.aim-arrow__glow { stroke: rgba(255, 120, 70, .14); stroke-width: 7; } /* flecha fina e leve (autor, 01/11/2026) */
+.aim-arrow__line { stroke: #ffcf7a; stroke-width: 2; stroke-dasharray: 14 9; animation: aim-flow .5s linear infinite; }
 .aim-arrow marker path { fill: #ffcf7a; stroke: none; }
-.aim-arrow__reticle { fill: none; stroke: #ffcf7a; stroke-width: 2; opacity: .5; transition: r .15s, opacity .15s; }
+.aim-arrow__reticle { fill: none; stroke: #ffcf7a; stroke-width: 1; opacity: .5; transition: r .15s, opacity .15s; }
 .aim-arrow.is-locked .aim-arrow__line { stroke: #ff6a4a; }
 .aim-arrow.is-locked marker path { fill: #ff6a4a; stroke: none; }
-.aim-arrow.is-locked .aim-arrow__glow { stroke: rgba(255, 70, 50, .55); }
+.aim-arrow.is-locked .aim-arrow__glow { stroke: rgba(255, 70, 50, .22); }
 .aim-arrow.is-locked .aim-arrow__reticle { stroke: #ff6a4a; opacity: 1; r: 26; }
 .dcard.aiming { box-shadow: 0 0 0 2px #ffcf7a, 0 0 26px rgba(255, 200, 110, .8); transform: translateY(-6px) scale(1.06); }
 .dcard.aim-hover, .godhud.aim-hover .godhud__portrait { box-shadow: 0 0 0 3px #ff3a2a, 0 0 40px rgba(255, 60, 40, 1); transform: scale(1.08); }
@@ -288,7 +288,7 @@ body { font-family: "Jost", system-ui, sans-serif; }
 
 /* Setas de intenção: translúcidas, fixas enquanto o Strike ou a cadeia esperam resolver. */
 .intent-arrows { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 30; pointer-events: none; overflow: visible; }
-.intent path { fill: none; stroke-width: 5; stroke-linecap: round; stroke-dasharray: 12 8; opacity: .55; animation: aim-flow .9s linear infinite; }
+.intent path { fill: none; stroke-width: 2; stroke-linecap: round; stroke-dasharray: 12 8; opacity: .55; animation: aim-flow .9s linear infinite; }
 .intent circle { fill: none; stroke-width: 2; opacity: .5; animation: intent-pulse 1.4s ease-in-out infinite; }
 .intent text { font: 700 12px/1 "Jost", system-ui, sans-serif; letter-spacing: .08em; text-anchor: middle; paint-order: stroke; stroke: rgba(4, 6, 20, .85); stroke-width: 4px; }
 .intent--strike path, .intent--strike circle { stroke: #ff5a40; } .intent--strike text, .ih--strike { fill: #ff8a70; }
@@ -1008,7 +1008,7 @@ body:has(.trigger-panel, .cast-slot) .command__clock { visibility: hidden; }
 /* Seta da carta em conjuração: sólida, na cor do God. */
 .aim-follow .aim-arrow__line { stroke: rgb(var(--glow, 255, 207, 122)); stroke-dasharray: none; animation: none; }
 .aim-follow marker path { fill: rgb(var(--glow, 255, 207, 122)); }
-.aim-follow .aim-arrow__glow { stroke: rgba(var(--glow, 255, 207, 122), .35); }
+.aim-follow .aim-arrow__glow { stroke: rgba(var(--glow, 255, 207, 122), .14); }
 .aim-follow .aim-arrow__reticle { stroke: rgb(var(--glow, 255, 207, 122)); }
 /* Lista de escolha no painel da direita (Great Eclipse, descartes…): as cartas não encolhem; o box rola inteiro. */
 .trigger-panel__box { grid-auto-rows: max-content; }

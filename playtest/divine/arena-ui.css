@@ -230,8 +230,7 @@ body:not(.is-peeking):has(.trigger-panel.is-center, .trigger-panel--order) #chai
 /* Tela baixa deitada (tablet, autor, 01/11/2026): relógio e box no centro da altura livre acima da placa, do mesmo tamanho de sempre;
    a mão cabe entre as colunas e nenhuma carta passa por cima do botão. 720 é o mínimo do palco no desktop, que não muda. */
 @media (min-width: 761px) and (min-height: 501px) and (max-height: 719px) {
-  .command { z-index: 8; padding-bottom: 140px; }
-  .phasebar__turn strong { font-size: 19px; }
+  .command { z-index: 8; padding-top: 52px; padding-bottom: 140px; }
   .olympus .hand--me .hand__slot { margin: 0 min(calc(var(--hand-w) * -.1), calc((100vw - 620px - var(--n) * var(--hand-w)) / (2 * max(var(--n) - 1, 1)))); }
 }
 
@@ -248,4 +247,15 @@ body:not(.is-peeking):has(.trigger-panel.is-center, .trigger-panel--order) #chai
   .cast-slot { justify-items: start; }
   .cast-slot .cast-prompt, .trigger-panel:not(:has(.trigger-panel__opts)) .trigger-panel__box { right: auto; left: 14vw; }
   body .trigger-panel:is(.is-targeting, .is-center, .trigger-panel--order):not(:has(.trigger-panel__opts)) { right: auto; left: 14vw; flex-direction: row; }
+}
+
+/* Coluna direita (autor, 01/11/2026): o nome do oponente fica no topo dela, nada passa da linha da vida; Configurações já está nos botões, sem engrenagem. */
+@media (min-width: 761px) and (min-height: 501px) {
+  .rk-plate--foe.rk-plate--foe { left: auto !important; right: 22px; top: 8px !important; width: 262px; max-width: none; box-sizing: border-box; justify-content: center; gap: 8px; padding: 4px 12px; transform: none; }
+  .rk-plate--foe .rk-plate__avatar { width: 34px; height: 34px; box-shadow: none; }
+  .rk-plate--foe .rk-emblem { height: 30px; }
+  .rk-plate--foe b { font-size: 16px; }
+  .rk-plate--foe small { font-size: 11px; }
+  .gear-btn { display: none; }
+  .phasebar__turn strong { font-size: 19px; }
 }
