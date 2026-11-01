@@ -140,8 +140,8 @@ export default {
   // Jamir Tower: ativada pelo play.activate com uid `domain:${key}`. O {T} do Domain vale uma vez por Round (como o Equipment, §61).
   'athena-v6-063': {
     activate: {
-      name: 'CLOTH RESTORATION', cost: 2, once: true, tap: false,
-      // Texto de 30/10/2026: "target friendly Devotee equipped with an Armor" (Armor não tem dano próprio).
+      name: 'CLOTH RESTORATION', cost: 1, once: true, tap: false,
+      // Texto de 31/10/2026 (§63): once each round, {1}{C}, sem {T}; "target friendly Devotee equipped with an Armor".
       check: (s, c, key) => { if (!armored(s, c, key).length) throw new k.RuleError('alvo', 'sem Devotee seu com Armor'); },
       run: (s, c, key) => {
         const t = k.choose(c, key, 'CLOTH RESTORATION', armored(s, c, key), {text: 'Choose target friendly Devotee equipped with an Armor.'});

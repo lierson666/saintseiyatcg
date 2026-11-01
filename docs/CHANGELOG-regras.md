@@ -4,6 +4,14 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-31 — §63 — Revisão dos Domains, How to Play
+
+- **Antes:** 063 Jamir Tower tinha linha 1 ativada com {T} e {2}{C}, sem limite por rodada (o {T} conflita com o Domain que vira de lado no Once per game); 333 e 335 diziam "once per turn"; 332 dizia "gain +1 ATK"; 504 não dizia "once each round". Os Domains de Athena no D268 congelado tinham o texto antigo (062 comprava carta na linha 1). 501 Athena's Statue não existia na engine (fora do D268 e do filtro de prévia). O How to Play não explicava a forma dos Domains, o Once per game nem o Domain fora da cor.
+- **Depois:** 063: *Once each round, you may pay {1}{C}. If you do, remove 1 damage from target friendly Devotee equipped with an Armor.*; 333 e 335: "once each round"; 332: "get +1 ATK"; 504: *Once each round, at the start of your turn…*. `shared/preview-cards.js` monta os Domains de Athena e as cartas de Athena fora do D268 a partir do Forge. How to Play: Domain no tipo de carta, "Your Domain" (duas linhas, Once per game) e "A Domain from another faction" (só a primeira habilidade, estáticas desligadas, {1}{S}, até 15 cartas); Seal não impede o Strike de Devotee Prepared.
+- **Motivo:** autor, 31/10/2026: "as cartas não estão respeitando as regras novas de domain"; correções aprovadas na mesma data.
+- **Engine:** `v6/athena-spells.js` (063 custa {1}). Auditoria: os 28 Domains têm linha 1 e Once per game implementados; fora da cor, `domainEntry` desliga estáticas e Once per game e cobra {1}{S} nos gatilhos; os do `effects.js` (062, 064, 335) e o 243 (`hades.js`) checam `offColor`. Suíte engine-v3 inteira passa (495 testes).
+- **Pendências (para o autor):** 106, 158 e 173 dizem "if you control a Domain", sempre verdadeiro (todo jogador tem Domain); 147 e 245 têm linha 1 escrita como estática mas implementada como gatilho (fora da cor pede {1}{S} em vez de desligar); Domains cuja linha 1 é ganho de 1 Soul (142, 243, 428, 501) não rendem nada fora da cor ({1}{S} para ganhar {1}{S}); `star-hill/deck-builder.js` (editor antigo do Star Hill) ainda usa 4 cópias e não tem o limite de 15, enquanto o lobby e o editor Olympus usam 3 e 15; `tools/test-card-presentation.mjs` segue com 2 falhas antigas.
+
 ## 2026-10-31 — Decks — Duplas do meta Premodern
 
 - **Antes:** o meta tinha as 6 listas das facções solo.

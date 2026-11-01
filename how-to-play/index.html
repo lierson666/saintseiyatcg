@@ -127,7 +127,7 @@
           <a class="tile kv-card" href="#read" data-art="athena-v6-001"><i class="n">2</i><b>Read a card</b><span>Cost, Power, HP and abilities.</span></a>
           <a class="tile kv-card" href="#types" data-art="hades-v6-182"><i class="n">3</i><b>Card types</b><span>God, Domain, Devotee, Armor and spells.</span></a>
           <a class="tile kv-card" href="#gods" data-art="hades-001"><i class="n">4</i><b>The five Gods</b><span>Divine Powers, Awaken and Ultimate.</span></a>
-          <a class="tile kv-card" href="#setup" data-art="athena-v6-065"><i class="n">5</i><b>Setting up</b><span>Your deck, your hand and who starts.</span></a>
+          <a class="tile kv-card" href="#setup" data-art="athena-v6-065"><i class="n">5</i><b>Setting up</b><span>Your deck, your Domain, your hand and who starts.</span></a>
           <a class="tile kv-card" href="#cosmo" data-art="artemis-v6-374"><i class="n">6</i><b>Cosmo</b><span>Base and Latent Cosmo pay for everything.</span></a>
           <a class="tile kv-card" href="#round" data-art="athena-v6-052"><i class="n">7</i><b>The round</b><span>Each Round, both players take one full turn.</span></a>
           <a class="tile kv-card" href="#strike" data-art="ares-v6-271"><i class="n">8</i><b>Strike</b><span>Combat is simultaneous, and damage stays.</span></a>
@@ -175,7 +175,7 @@
           <figure class="type"><div class="card-slot" data-card="poseidon-001" role="img" aria-label="Poseidon God card"></div>
             <figcaption><b>God</b>The divinity you command. Starts in play with its Soul, Attack and divine powers. If it falls, you lose.</figcaption></figure>
           <figure class="type"><div class="card-slot" data-card="athena-v6-065" role="img" aria-label="The Stairway to the Twelve Temples, an Athena Domain"></div>
-            <figcaption><b>Domain</b>Your God's realm. Starts in play with its own abilities.</figcaption></figure>
+            <figcaption><b>Domain</b>Your God's realm. Starts in play and can't be attacked or destroyed. One simple ability, plus a strong one you use once per game.</figcaption></figure>
           <figure class="type"><div class="card-slot" data-card="hades-v6-181" role="img" aria-label="Wyvern Rhadamanthys, a Hades Devotee"></div>
             <figcaption><b>Devotee</b>Saints, Marinas, Specters and other warriors. They have Power and HP, and they Strike.</figcaption></figure>
           <figure class="type"><div class="card-slot" data-card="ares-v6-272" role="img" aria-label="Ethon Warplate, an Ares Armor"></div>
@@ -219,7 +219,15 @@
             <li><strong>1 God</strong> and <strong>1 Domain</strong>, which start in play.</li>
             <li>A main deck of exactly <strong>60 cards</strong>.</li>
             <li>Up to <strong>3 copies</strong> of each card.</li>
-            <li>Cards from your God's and Domain's factions, plus neutral cards.</li>
+            <li>Cards from your God's faction, plus neutral cards.</li>
+            <li>A Domain from another faction lets you add up to <strong>15 cards</strong> of that faction.</li>
+          </ul></div>
+          <div class="kv-card"><h3>Your Domain</h3><p>Every Domain has two abilities. The first is simple: a small bonus, or an effect worth 1 point at most once each Round. It never draws cards.</p><p>The second is marked <strong>Once per game</strong>. Use it in your own turn, paying its cost. It goes on the stack, and the Domain turns sideways: it stays used for the rest of the match, even if the ability is countered.</p></div>
+          <div class="kv-card"><h3>A Domain from another faction</h3><p>Your Domain matches your God? It works in full. If it belongs to another faction:</p><ul>
+            <li>Only its <strong>first ability</strong> works. The Once per game ability is lost.</li>
+            <li>Always-on bonuses don't work.</li>
+            <li>Its other abilities cost an extra <strong>1 Soul</strong> each time. You choose whether to pay; if you don't, nothing happens.</li>
+            <li>Your deck may hold up to <strong>15 cards</strong> of the Domain's faction.</li>
           </ul></div>
           <div class="kv-card"><h3>Starting the match</h3><ul>
             <li>Shuffle and draw <strong>7 cards</strong>.</li>
@@ -313,7 +321,7 @@
               <tr><td>Cheater</td><td>Can only be targeted by Strikes from Devotees that also have Cheater. It can Strike any legal target.</td></tr>
               <tr><td>Pierce</td><td>When it starts a Strike against a Devotee, damage beyond the target's remaining HP hits the enemy God's Soul.</td></tr>
               <tr><td>Impulse</td><td>Can Strike in the turn it enters play, against any legal target, including the God.</td></tr>
-              <tr><td>Seal</td><td>A counter on a Devotee. When it would become Prepared, it removes one Seal counter and stays Unprepared instead.</td></tr>
+              <tr><td>Seal</td><td>A counter on a Devotee. When it would become Prepared, it removes one Seal counter and stays Unprepared instead. A Prepared Devotee with Seal can still Strike.</td></tr>
               <tr><td>Unfaith</td><td>When it Strikes a God, it may remove up to 2 of that player's Latent Cosmo instead of dealing Soul damage. The God still strikes back.</td></tr>
               <tr><td>Training</td><td>Each Training counter gives the Devotee +1 Power and +1 HP while it stays in play.</td></tr>
               <tr><td>Afterlife</td><td>Abilities marked Afterlife work only while this card is in its owner's Tartarus. Being in the Tartarus doesn't grant Afterlife.</td></tr>

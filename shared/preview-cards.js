@@ -54,6 +54,13 @@ export function addPreviewCards(cards, index, forgeCards) {
   }
   for (const f of forgeCards.filter(c => !PREVIEW.test(c.id) && cards.get(c.id)?.armor)) cards.set(f.id, armorFromForge(cards.get(f.id), f));
   // Athena → Branco (autor, 31/10/2026): custo e Moment/Technique do Forge por cima do D268; os efeitos ficam no código da engine.
+  for (const f of forgeCards.filter(c => /^athena-v6-/.test(c.id) && (!cards.has(c.id) || cards.get(c.id).kind === 'Domain'))) {
+    // Domains de Athena (forma do §63, 31/10/2026): texto inteiro do Forge, porque o D268 tem o texto antigo; cartas de
+    // Athena fora do D268 (ex.: 501 Athena's Statue) entram como as das outras facções.
+    const r = previewRecord(f);
+    cards.set(r.id, forgeCard(f, r));
+    index?.set(r.id, r);
+  }
   for (const f of forgeCards.filter(c => !PREVIEW.test(c.id) && cards.has(c.id))) {
     const card = cards.get(f.id), sub = (f.subtipos || []).find(t => t === 'Moment' || t === 'Technique');
     const cost = f.custo != null && card.cost && card.cost.amount !== f.custo ? {...card.cost, amount: f.custo} : card.cost;

@@ -2264,12 +2264,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Cloth Restoration — {2}{C}, {T}: Remove 1 damage from target friendly Devotee equipped with an Armor.",
+        "Cloth Restoration — Once each round, you may pay {1}{C}. If you do, remove 1 damage from target friendly Devotee equipped with an Armor.",
         "Mu's Forge — Once per game — {2}{C}: Return target Armor card from your Tartarus to your hand."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026."
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Forma dos Domains (§63), correção aprovada pelo autor em 31/10/2026."
     },
     {
       "id": "athena-v6-064",
@@ -11992,12 +11992,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "God of War's Blessing — Friendly Berserkers gain +1 ATK.",
+        "God of War's Blessing — Friendly Berserkers get +1 ATK.",
         "Eternal Bloodshed — Once per game — {3}{C}: Deal 1 damage to the opposing God for each friendly Berserker you control (up to 3)."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Forma dos Domains (§63), correção aprovada pelo autor em 31/10/2026."
     },
     {
       "id": "ares-v6-333",
@@ -12026,12 +12026,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Scorched Ground — Whenever a friendly Berserker declares a Strike, you may pay {1}{S}. If you do, deal 1 damage to the defending God. This ability triggers only once per turn.",
+        "Scorched Ground — Whenever a friendly Berserker declares a Strike, you may pay {1}{S}. If you do, deal 1 damage to the defending God. This ability triggers only once each round.",
         "Scorched Earth — Once per game — {3}{C}: Deal 1 damage to each enemy Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Forma dos Domains (§63), correção aprovada pelo autor em 31/10/2026."
     },
     {
       "id": "ares-v6-334",
@@ -12094,12 +12094,12 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Harvest of the Fallen — Whenever another friendly Berserker is defeated, you may pay {1}{S}. If you do, deal 1 damage to target enemy God. This ability triggers only once per turn.",
+        "Harvest of the Fallen — Whenever another friendly Berserker is defeated, you may pay {1}{S}. If you do, deal 1 damage to target enemy God. This ability triggers only once each round.",
         "Unending Slaughter — Once per game — {2}{C}: Draw a card for each Devotee defeated this round (up to 3)."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026."
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Forma dos Domains (§63), correção aprovada pelo autor em 31/10/2026."
     },
     {
       "id": "ares-v6-336",
@@ -18052,13 +18052,13 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Moonlit Watch — At the start of your turn, you may look at the top card of your deck. You may put that card on the bottom of your deck.",
+        "Moonlit Watch — Once each round, at the start of your turn, you may look at the top card of your deck. You may put that card on the bottom of your deck.",
         "Moonlit Harvest — Once per game — {1}{C}, put a Cosmo Base you control into your Tartarus: Draw 2 cards, then put the top card of your deck onto your Cosmo Bases Unprepared."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
       "flavour_en": "\"The moon trades what you have for what you need.\"",
-      "notas_pt": "Domain de compra com drawback da facção (autor, 31/10/2026)."
+      "notas_pt": "Domain de compra com drawback da facção (autor, 31/10/2026). Forma dos Domains (§63), correção aprovada pelo autor em 31/10/2026."
     }
   ]
 }
