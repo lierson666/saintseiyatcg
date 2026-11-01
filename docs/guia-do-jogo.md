@@ -159,7 +159,7 @@ Estrutura de um turno
 
 * O jogador ativo prepara todos os seus Devotees, Equipment e Bases.
 * Resolvem-se os gatilhos de início de turno (APNAP, LIFO, com janela).
-* O jogador ativo compra **2 cartas** (quem começa a partida não compra no primeiro turno dele).
+* O jogador ativo compra **1 carta** (quem começa a partida não compra no primeiro turno dele).
 
 2. Fase principal
 
@@ -598,18 +598,18 @@ O autor aprovou a aplicação das recomendações de fechamento ao sistema do jo
 
 ### 55. Round, turnos, compras e mulligan
 
-Revisado em 31/10/2026 (ALPHA-P01, P02, P03 e P06, aprovadas em 28/10/2026; compra de 2 cartas e limite de mão, 01/11/2026; cara ou coroa e compra do segundo jogador, 01/11/2026).
+Revisado em 31/10/2026 (ALPHA-P01, P02, P03 e P06, aprovadas em 28/10/2026; limite de mão, 01/11/2026; cara ou coroa e compra do segundo jogador, 01/11/2026; compra de 1 carta, 01/11/2026).
 
 - O primeiro jogador é definido por **cara ou coroa** antes de qualquer compra (autor, 01/11/2026). Cada jogador já tem uma face da moeda; ninguém escolhe a face. Quem vence escolhe começar ou passar o início ao adversário.
 - O primeiro jogador começa **todos** os Rounds. Cada Round tem um turno de cada jogador.
 - Depois dessa escolha, ambos compram 7 cartas. Começando pelo primeiro jogador, cada um pode, uma vez, devolver qualquer quantidade de cartas da mão ao deck, embaralhar e comprar o mesmo número. O primeiro turno só começa depois dos dois mulligans.
-- Início do turno: o ativo prepara seus Devotees, Equipment e Bases; resolvem-se os gatilhos de início de turno; ele compra **2 cartas**. Só quem começa a partida não compra no primeiro turno dele; o outro jogador já compra no primeiro turno dele (autor, 01/11/2026).
+- Início do turno: o ativo prepara seus Devotees, Equipment e Bases; resolvem-se os gatilhos de início de turno; ele compra **1 carta**. Só quem começa a partida não compra no primeiro turno dele; o outro jogador já compra no primeiro turno dele (autor, 01/11/2026).
 - O ativo pode colocar uma Base Cosmoble por turno, com a pilha vazia. A Base entra Prepared e paga no mesmo turno (G3-035). Colocar Base não entra na pilha.
 - O turno termina quando o ativo declara END TURN com a pilha vazia. End Phase: conversão das Bases Prepared em Latent (§5); gatilhos de fim de turno; no 2º turno do Round, gatilhos de fim de Round (D204); Cleanup.
 - Limite de **7 cartas na mão** (autor, 01/11/2026): na End Phase do próprio turno, ao passar o turno, logo após a conversão das Bases em Latent, quem tem mais de 7 cartas escolhe e descarta o excesso para o Tartarus. Isso conta como descarte para efeitos de carta. Fora desse momento a mão pode passar de 7.
 - Deck vazio: quem precisa comprar uma carta e não tem carta no deck perde a partida na hora. Vale para a compra do turno e para qualquer compra por efeito. Ficar com o deck vazio (por Mill, por exemplo) não derrota sozinho; a derrota vem na próxima compra. Por isso Mill é condição de vitória. Se um mesmo efeito fizer os dois jogadores comprarem de deck vazio, a partida empata. Não existe Fatigue (autor, 01/11/2026; `draw` no engine-v3).
 
-**Por quê:** com 1 compra, dois decks agressivos esvaziavam a mão e a partida empacava com Soul alto, só em trocas de Devotees (autor, 01/11/2026, playtest real). A compra de 2 revoga a decisão de 30/10/2026; o limite de 7 segura o acúmulo de cartas.
+**Por quê:** a compra de 2 manteve quem começa vencendo 74–78% em IA × IA; a compra de 1 reduz para 65% e corta as vitórias por deck vazio. O risco conhecido é a mão acabar em decks agressivos, como no playtest real que levou à compra de 2: a resposta prevista são cartas de compra em Ares e Athena, não mais compra para todos (autor, 01/11/2026). O limite de 7 continua.
 
 ### 56. Timing, respostas e resolução
 

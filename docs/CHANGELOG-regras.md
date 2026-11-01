@@ -4,6 +4,14 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-01 — §7, Cap. XI, §55 — Compra volta a 1 carta por turno
+
+- **Antes:** compra de 2 cartas por turno. Quem começa não compra no 1º turno dele.
+- **Depois:** compra de 1 carta por turno. A exceção de quem começa e o limite de 7 na mão não mudam.
+- **Motivo:** decisão do autor, 01/11/2026, para reduzir a vantagem de quem começa. Em IA × IA (900 partidas por nível), quem começa foi de 78% / 74% (`normal` / `hard`) para 65% / 65%, e a vitória por deck vazio de 12% / 26% para 7% / 12%. Revoga a compra de 2 da mesma data, adotada porque decks agressivos ficavam sem mão.
+- **Engine/UI:** `engine-v3/core.js` (`DRAWS_PER_TURN`), `playtest/divine/app.js`, How to Play e `shared/i18n*`.
+- **Pendência:** cartas de compra em Ares e Athena, com diff a aprovar; medir mão vazia; quem começa segue acima da meta de 60%; `docs/decks-ultra.md` foi medido com compra de 2; ajustar listas. Não publicado.
+
 ## 2026-11-01 — Cartas (sem mudança no guia) — Quatro Gold Saints custam 1 a menos
 
 - **Antes → depois (Casting Cost):** Leo Aiolia (`athena-v6-015`) 5 → 4; Aquarius Camus (`athena-v6-017`) 5 → 4; Aries Mu (`athena-v6-011`) 5 → 4; Gemini Saga (`athena-v6-013`) 6 → 5.

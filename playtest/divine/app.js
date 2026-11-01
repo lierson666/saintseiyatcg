@@ -645,7 +645,7 @@ function sanctum(key, side) {
         `Cosmo Base|${ready} of ${p.bases.length} prepared${pooled ? `, ${pooled} burning in your pool` : ''}. Prepared Bases pay card and ability costs. Click a Base on the field to burn it into your pool. Once per round you may place a Cosmoble card as a Base.`, 'data-bank-unit="base"')}
       ${row(`rail__row--latent ${p.latent ? '' : 'is-zero'}`, `<i class="rail__sym rail__sym--latent"></i>${flames}`, 'Latent', `${p.latent}<small>/3</small>`, `Latent Cosmo|${p.latent} of 3 stored. At round end, unused Bases can be stored here.`, 'data-bank-unit="latent"')}
     </div>
-    ${row(`zdeck ${n ? '' : 'is-empty'}`, '<i class="zdeck__back"></i>', 'Deck', n, `Deck|${plural(n, 'card')} left. Each player draws 2 cards per turn.`, `data-deck="${key}" style="${sleeveVar(key)}"`)}
+    ${row(`zdeck ${n ? '' : 'is-empty'}`, '<i class="zdeck__back"></i>', 'Deck', n, `Deck|${plural(n, 'card')} left. Each player draws 1 card per turn.`, `data-deck="${key}" style="${sleeveVar(key)}"`)}
     ${row('rail__row--hand', '<i class="rail__hand"></i>', 'Hand', p.hand.length, `Hand|${plural(p.hand.length, 'card')}.`)}
     ${row('zpile zpile--tartarus', '<img class="zicon" src="./assets/tartarus.png" alt="">', 'Tartarus', p.tartarus.length, `Tartarus|${plural(p.tartarus.length, 'card')}. Destroyed Devotees go here. Afterlife abilities work from here. Click to view.`, `data-pile="${key}:tartarus"`)}
     ${row('zpile zpile--void', '<img class="zicon" src="./assets/void.png" alt="">', 'Void', p.void.length, `Void|${plural(p.void.length, 'card')}. Exiled cards go here. Click to view.`, `data-pile="${key}:void"`)}
@@ -848,7 +848,7 @@ function phaseHints() {
   if (s.setup) return {title: 'OPENING HAND', note: 'Send any cards to the bottom and draw that many. Once.', refs: {}};
   if (s.window && s.window.priority === v) return {title: 'RESPOND', note: s.active === v ? 'Play a Moment, paid with Base and/or Latent Cosmo, or Pass. When both players pass, the top of the chain resolves.' : 'Play a Moment, paid with Latent Cosmo, or Pass. When both players pass, the top of the chain resolves.', refs: {moment: moments}};
   if (s.active !== v) return {title: `${phase.toUpperCase()} PHASE`, note: moments.length ? 'You can respond with a Moment when you get priority.' : '', refs: {}};
-  if (phase !== 'Main') return {title: `${phase.toUpperCase()} PHASE`, note: {Prepare: 'Your Cosmo Bases and Devotees become Prepared.', Draw: 'You draw 2 cards.', End: 'End-of-turn effects resolve.'}[phase], refs: {}};
+  if (phase !== 'Main') return {title: `${phase.toUpperCase()} PHASE`, note: {Prepare: 'Your Cosmo Bases and Devotees become Prepared.', Draw: 'You draw 1 card.', End: 'End-of-turn effects resolve.'}[phase], refs: {}};
   const field = p.battlefield.filter(u => ctx.objects[u]);
   return {title: 'MAIN PHASE', note: '', refs: {
     base: p.hand.filter(u => canBase(v, u)).map(u => `.hand [data-uid="${u}"]`),

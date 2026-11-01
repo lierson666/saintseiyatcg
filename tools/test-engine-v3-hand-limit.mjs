@@ -25,16 +25,16 @@ function setup() {
 }
 const end = ({m, ctx}, key = 'A') => applyAction(m, ctx, {type: 'endTurn', key});
 
-test('compra 2 por turno; só quem começa não compra no 1º turno', () => {
+test('compra 1 por turno; só quem começa não compra no 1º turno', () => {
   const t = setup(), first = t.A.hand.length, second = t.B.hand.length;
   assert.equal(t.A.hand.length, first);
   end(t); passAll(t.s); advance(t.m);
   assert.equal(t.s.active, 'B');
-  assert.equal(t.B.hand.length, second + 2, 'B compra já no primeiro turno');
+  assert.equal(t.B.hand.length, second + 1, 'B compra já no primeiro turno');
   end(t, 'B'); passAll(t.s); advance(t.m); // novo Round
   const key = t.s.active, own = t.s.players[key];
   assert.equal(own.ownTurns, 2);
-  assert.equal(own.hand.length, (key === 'A' ? first : second) + 2);
+  assert.equal(own.hand.length, (key === 'A' ? first : second) + 1);
 });
 
 test('END TURN com 10 cartas: escolhe 3, vão ao Tartarus e fica com 7', () => {

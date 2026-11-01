@@ -1,0 +1,673 @@
+[
+{
+"id": "R-1",
+"number": "1",
+"title": "Objetivo do jogo",
+"chapter": "CAPÍTULO I — FUNDAMENTOS",
+"body": "Cada jogador controla um God.\n\nO objetivo principal é reduzir o Soul do God adversário a zero.\n\nQuando o Soul de um God chega a zero, seu controlador perde a partida.\n\nSe ambos os Gods chegarem a zero simultaneamente, a partida termina empatada, salvo efeito que determine outro resultado.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-2",
+"number": "2",
+"title": "Construção do deck",
+"chapter": "CAPÍTULO I — FUNDAMENTOS",
+"body": "Cada jogador utiliza:\n\n* 1 God;\n* 1 Domain;\n* 1 deck principal com 50 cartas.\n\nO God e o Domain começam a partida em suas respectivas posições de jogo, fora do deck principal.\n\nO jogador começa com uma mão de 7 cartas.\n\nO limite é de 3 cópias por identidade de carta. O deck aceita a facção do God, cartas neutras e, se o Domain for de outra facção, até 15 cartas dessa facção (Domain fora da cor: ver §63). Há um mulligan parcial gratuito, uma vez por jogador; o procedimento completo está no capítulo XII (§55).",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-3",
+"number": "3",
+"title": "Tipos de cartas",
+"chapter": "CAPÍTULO I — FUNDAMENTOS",
+"body": "God\n\nRepresenta a divindade comandada pelo jogador.\n\nPossui, entre outras propriedades:\n\n* Soul;\n* Attack;\n* facção;\n* habilidades próprias.\n\nDomain\n\nRepresenta o domínio associado ao God.\n\nComeça em jogo e possui habilidades específicas.\n\nDevotee\n\nRepresenta Cavaleiros, Marinas, Specters e outros personagens.\n\nPossui:\n\n* Power;\n* HP;\n* facção;\n* habilidades;\n* possíveis keywords.\n\nEquipment — Armor (Cloth / Scale / Surplice / Warplate / Moonplate), armas e acessórios\n\nEquipamentos que modificam os atributos e as habilidades de um Devotee.\n\nAlgumas habilidades de Armor só funcionam com seu personagem Resonant.\n\nSupport\n\nPermanente de apoio com efeitos contínuos, gatilhos ou habilidades ativadas conforme seu texto. Não ocupa slot de equipamento.\n\nTechnique\n\nCarta que representa uma técnica ou habilidade especial.\n\nMoment\n\nCarta que representa um acontecimento ou intervenção.\n\nMoment pode ser jogado no próprio turno ou como resposta em uma janela de prioridade, inclusive no turno do adversário. Technique só é jogada no próprio turno. Custos, prioridade e resolução estão definidos no capítulo XII (autor, 29/10/2026; turnos, 31/10/2026).\n\n---",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-4",
+"number": "4",
+"title": "Cosmo Base",
+"chapter": "CAPÍTULO II — COSMO",
+"body": "O Cosmo é o principal recurso utilizado para jogar cartas e pagar habilidades.\n\nCartas com a propriedade Cosmoble podem ser utilizadas como Cosmo Base.\n\nUma vez por turno, no próprio turno e com a pilha vazia, o jogador ativo pode colocar uma carta Cosmoble da mão como Cosmo Base.\n\nA Base nova entra Prepared e já paga custos no mesmo turno (G3-035, autor, 28/10/2026).\n\nUma carta utilizada como Cosmo Base deixa de funcionar como sua carta original enquanto permanecer nessa zona, salvo efeito explícito.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-4A",
+"number": "4A",
+"title": "Hidden Cosmo",
+"chapter": "CAPÍTULO II — COSMO",
+"body": "**Hidden Cosmo {X}** (PT: Cosmo Oculto) é uma keyword impressa (autor, 31/10/2026). Uma carta com Hidden Cosmo que está como sua Cosmo Base pode ser jogada da Base, pagando **{X}** no lugar do custo impresso.\n\n- Momento e forma de pagar: os mesmos da carta (§5). Devotee e Technique no próprio turno, com a pilha vazia; Moment como ação ou como resposta, e na resposta no turno do adversário só com Latent. Vai à pilha normalmente e pode ser respondida.\n- A própria carta pode pagar 1 do {X} antes de sair, se estiver Prepared e se Base puder pagar aquele custo (não na resposta).\n- Ao sair da Base, a carta do topo do seu deck entra no lugar como Cosmo Base, virada para baixo e Unprepared. O número de Bases não cai. Deck vazio: nada entra no lugar.\n- Reduções de custo valem sobre {X}. Cartas com Hidden Cosmo são sempre Cosmoble.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-5",
+"number": "5",
+"title": "Utilização de Cosmo",
+"chapter": "CAPÍTULO II — COSMO",
+"body": "Uma Base Prepared paga 1 Base Cosmo e fica indisponível até a renovação. Soul não substitui Cosmo.\n\n| Utilização | Base | Latent |\n| --- | --- | --- |\n| Jogar Devotee | Sim | Não |\n| Jogar qualquer Armor | Sim | Não |\n| Ativar Ultimate | Sim | Não |\n| Moment no próprio turno, inclusive como resposta | Sim | Sim |\n| Moment como resposta no turno do adversário | Não | Sim |\n| Technique e Equipment que não seja Armor | Sim | Sim |\n| Equip, transferência, evolução e habilidades comuns | Sim | Sim |\n\nCustos expressamente restritos na carta continuam restritos. A proibição de usar Latent para jogar Devotee/Armor ou Ultimate não pode ser contornada por um custo genérico de Cosmo.\n\nLatent Cosmo é um banco persistente com limite de 3. No início da End Phase do seu turno, cada Base sua ainda Prepared vira 1 Latent, num único evento de ganho, antes dos efeitos de fim de turno (ALPHA-P03); o excesso acima de 3 se perde. As Bases convertidas ficam Unprepared até o início do seu próximo turno; não são sacrificadas. Assim o jogador tem Latent para responder no turno do adversário. Cosmo temporário não é Base armazenável, salvo efeito explícito.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-6",
+"number": "6",
+"title": "Limite de Cosmo Base",
+"chapter": "CAPÍTULO II — COSMO",
+"body": "Cada jogador pode adicionar normalmente uma Cosmo Base por turno próprio.\n\nEfeitos específicos podem modificar esse limite.\n\n---",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-7",
+"number": "7",
+"title": "Estrutura geral",
+"chapter": "CAPÍTULO III — ROUNDS E TURNOS",
+"body": "A partida é jogada em **Rounds**. Cada Round tem **dois turnos**, um de cada jogador. O primeiro jogador é sorteado e começa todos os Rounds.\n\nEstrutura de um turno\n\n1. Início do turno\n\n* O jogador ativo prepara todos os seus Devotees, Equipment e Bases.\n* Resolvem-se os gatilhos de início de turno (APNAP, LIFO, com janela).\n* O jogador ativo compra **1 carta** (quem começa a partida não compra no primeiro turno dele).\n\n2. Fase principal\n\nO jogador ativo faz, em qualquer ordem e quantas vezes puder pagar, as jogadas da seção 8. O adversário só age respondendo nas janelas de prioridade (capítulo XII).\n\n3. End Phase (END TURN)\n\n* Bases ainda Prepared viram Latent (seção 5).\n* Resolvem-se os gatilhos de fim de turno.\n* No segundo turno do Round, resolvem-se também os gatilhos de fim de Round.\n* Cleanup: expiram os efeitos “until end of turn”; no segundo turno do Round, também os de “this round” e renovam-se os limites “once each round”. O dano marcado não sai.\n\nDepois do Cleanup, o turno passa ao outro jogador ou começa um novo Round.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-8",
+"number": "8",
+"title": "O que o jogador ativo pode fazer",
+"chapter": "CAPÍTULO III — ROUNDS E TURNOS",
+"body": "No próprio turno, com a pilha vazia, o jogador ativo pode:\n\n* Colocar uma Cosmo Base (uma vez por turno).\n* Jogar Devotees e Equipment (inclusive Armor).\n* Jogar Techniques e Moments.\n* Vestir, transferir ou desequipar equipamentos.\n* Ativar habilidades.\n* Declarar Strike com cada Devotee Prepared, **uma vez por Devotee por turno** (D22).\n* Encerrar o turno (END TURN).\n\nNão há limite de jogadas por turno além do Cosmo, das condições impressas e dos limites de uso.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-9",
+"number": "9",
+"title": "Prepared e Unprepared",
+"chapter": "CAPÍTULO III — ROUNDS E TURNOS",
+"body": "Um Devotee pode estar em dois estados:\n\nPrepared: disponível para declarar Strike.\n\nUnprepared: indisponível para declarar Strike (salvo Impulse no turno de entrada).\n\nDeclarar Strike deixa o atacante Unprepared. O jogador prepara os seus Devotees no início do próprio turno.\n\nUm Devotee Unprepared continua podendo:\n\n* causar dano de retaliação;\n* receber dano;\n* beneficiar-se de habilidades passivas.\n\nPrepared não protege o Devotee de ser alvo (capítulo IV).\n\n---",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-10",
+"number": "10",
+"title": "Conceito",
+"chapter": "CAPÍTULO IV — ALVOS E GUARDIAN",
+"body": "O alvo é escolhido no momento da declaração do Strike. Não existe vínculo prévio.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-11",
+"number": "11",
+"title": "Alvos de Strike",
+"chapter": "CAPÍTULO IV — ALVOS E GUARDIAN",
+"body": "Ao declarar Strike, o atacante escolhe como alvo:\n\n* o God inimigo; ou\n* qualquer Devotee inimigo, Prepared ou Unprepared,\n\nrespeitando Guardian (seção 12). Se não houver alvo legal, o Devotee não pode declarar Strike.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-12",
+"number": "12",
+"title": "Guardian",
+"chapter": "CAPÍTULO IV — ALVOS E GUARDIAN",
+"body": "Enquanto o adversário controlar ao menos um Devotee com Guardian em campo, **Prepared ou não** (G3-038), os Strikes devem mirar um Devotee com Guardian. Exceções:\n\n* **Nimble** ignora Guardian sem Nimble: só um Guardian com Nimble obriga um atacante com Nimble (autor, 01/11/2026).\n* Um Guardian que o atacante não pode mirar (Guardian com **Nimble** contra atacante sem Nimble) não conta para essa exigência.\n* Efeitos de carta podem criar exceções expressas (ex.: La Scoumoune, 363).",
+"status": "published",
+"cards": [
+"athena-v6-003",
+"athena-v6-011",
+"athena-v6-034",
+"athena-v6-040",
+"poseidon-v6-104",
+"poseidon-v6-105",
+"poseidon-v6-106",
+"poseidon-v6-110",
+"poseidon-v6-117",
+"hades-v6-212",
+"hades-v6-219",
+"artemis-v6-375",
+"artemis-v6-395",
+"artemis-v6-399",
+"artemis-v6-405",
+"artemis-v6-438",
+"neutral-v6-457",
+"neutral-v6-462"
+]
+},
+{
+"id": "R-13",
+"number": "13",
+"title": "(retirada)",
+"chapter": "CAPÍTULO IV — ALVOS E GUARDIAN",
+"body": "A Rivalidade saiu do jogo (autor, 01/11/2026). \"Rival\" em nome ou subtítulo de carta é só tema, sem efeito de regra.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-14-18",
+"number": "14–18",
+"title": "(reservado)",
+"chapter": "CAPÍTULO IV — ALVOS E GUARDIAN",
+"body": "Seções do Engage, ENG, Disengage e Multiguard removidas; a numeração foi mantida para preservar as referências.",
+"status": "review",
+"cards": []
+},
+{
+"id": "R-19",
+"number": "19",
+"title": "Entrada em campo",
+"chapter": "CAPÍTULO IV — ALVOS E GUARDIAN",
+"body": "Devotees entram **Unprepared** (ALPHA-P02) e não podem declarar Strike no turno em que entraram. **Impulse** permite declarar Strike nesse turno, contra qualquer alvo legal, inclusive o God (§47).\n\n---",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-20",
+"number": "20",
+"title": "Strike",
+"chapter": "CAPÍTULO V — STRIKE E COMBATE",
+"body": "Strike é a ação utilizada para causar dano.\n\nPara realizar Strike, o Devotee deve:\n\n1. Ser o seu turno, com a pilha vazia.\n2. Estar Prepared (ou ter Impulse no turno em que entrou).\n3. Não ter declarado Strike neste turno.\n4. Não estar impedido por efeito.\n5. Escolher um alvo legal (capítulo IV).\n\nO alvo é escolhido na declaração. Após declarar Strike, o atacante fica Unprepared. Se o alvo deixar de ser válido antes da resolução, o Strike não causa dano.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-21",
+"number": "21",
+"title": "Dano simultâneo",
+"chapter": "CAPÍTULO V — STRIKE E COMBATE",
+"body": "Quando um Devotee realiza Strike contra outro Devotee:\n\n* O atacante causa dano igual ao seu Power.\n* O defensor causa dano igual ao seu Power.\n\nO dano é simultâneo.\n\nO defensor não precisa estar Prepared.\n\nA retaliação não custa nada ao defensor.\n\nMesmo que um combatente seja destruído durante o confronto, ele ainda causa o dano simultâneo correspondente.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-22",
+"number": "22",
+"title": "Dano persistente",
+"chapter": "CAPÍTULO V — STRIKE E COMBATE",
+"body": "O dano recebido por Devotees permanece marcado.\n\nEle não desaparece automaticamente ao final do turno nem do Round.\n\nO dano também permanece quando:\n\n* o Devotee fica Prepared;\n* o Devotee fica Unprepared;\n* uma Cloth evolui.\n\nEfeitos de cura ou remoção de dano podem alterar essa condição.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-23",
+"number": "23",
+"title": "Destruição",
+"chapter": "CAPÍTULO V — STRIKE E COMBATE",
+"body": "Um Devotee é destruído quando o dano acumulado sobre ele é igual ou superior ao seu HP máximo.\n\nDevotees destruídos são enviados ao Tartarus, salvo efeito que determine outro destino.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-24",
+"number": "24",
+"title": "Strike contra Gods",
+"chapter": "CAPÍTULO V — STRIKE E COMBATE",
+"body": "Quando um Devotee realiza Strike contra um God, o Devotee causa dano ao Soul do God igual ao seu Power.\n\nGods não retaliam e não têm Attack (autor, 01/11/2026). Quem protege o God é o board: Devotees com Guardian e os que podem defender. A retaliação entre Devotees continua igual (§20).\n\nGods não utilizam HP como os Devotees.\n\nSua condição de derrota é determinada pelo Soul. Há uma segunda: quem precisa comprar uma carta com o deck vazio perde a partida na hora (§55).",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-25",
+"number": "25",
+"title": "Long Range",
+"chapter": "CAPÍTULO V — STRIKE E COMBATE",
+"body": "Quando um Devotee com Long Range inicia um Strike, seu dano é resolvido antes da retaliação do alvo.\n\nSe o alvo for destruído por esse dano, ele não causa a retaliação daquele Strike.\n\nLong Range não concede essa vantagem quando o Devotee está defendendo um Strike.\n\n---",
+"status": "published",
+"cards": [
+"athena-v6-015",
+"poseidon-v6-095",
+"artemis-v6-388",
+"artemis-v6-393",
+"artemis-v6-406",
+"artemis-v6-435"
+]
+},
+{
+"id": "R-26",
+"number": "26",
+"title": "Armor e equipamentos",
+"chapter": "CAPÍTULO VI — ARMOR, EQUIPMENT E RESONANCE",
+"body": "Armor é a categoria universal de armadura: Athena — Cloth; Poseidon — Scale; Hades — Surplice; Ares — Warplate; Artemis — Moonplate. Moonplate é nomenclatura original do TCG; o exército de Artemis é formado pelas Satellites.\n\nCada Devotee possui um slot de Armor. Armas e acessórios usam slots separados e mantêm suas regras anteriores. Qualquer Devotee elegível pode vestir qualquer Armor, independentemente de patente; custos e requisitos expressos continuam obrigatórios.\n\nA V1 está incorporada à identidade do Devotee: não é Equipment independente, não ocupa slot, não pode ser transferida nem destruída separadamente. V2 e posteriores são cartas independentes. O Vanilla Set prioriza V2; não exige criar todas as versões de todas as armaduras.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-26A",
+"number": "26A",
+"title": "HP da Armor",
+"chapter": "CAPÍTULO VI — ARMOR, EQUIPMENT E RESONANCE",
+"body": "Revisado em 30/10/2026. O HP impresso na Armor é um **bônus de HP máximo do portador**. A Armor não tem HP próprio, não recebe dano, não fica Broken e não é reparada. Todo dano fica marcado no Devotee. Quando a Armor deixa o Devotee, o HP máximo dele é recalculado e a destruição é verificada normalmente (§34).\n\nLiving Armor, Broken e Repair foram retirados. Cartas que citam Repair aguardam revisão individual.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-27",
+"number": "27",
+"title": "Resonance",
+"chapter": "CAPÍTULO VI — ARMOR, EQUIPMENT E RESONANCE",
+"body": "Resonance é o único termo que liga uma Armor a personagens: “Resonance — Aries Mu”. Owner e Auto-Equip deixaram de existir; em cartas antigas, Owner e Auto-Equip valem como Resonance para o mesmo personagem. Uma Armor pode ter mais de um personagem Resonant. A identidade precisa corresponder exatamente.\n\nResonance faz duas coisas: equipa automaticamente, sem Equip, nos momentos do §28; e ativa as habilidades marcadas “Resonance — Nome”. As demais habilidades da Armor (“Equipped Devotee…”, “This Armor…”) funcionam com qualquer portador. Vestir a Armor não transforma outro Devotee naquele personagem.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-28",
+"number": "28",
+"title": "Custo da Armor",
+"chapter": "CAPÍTULO VI — ARMOR, EQUIPMENT E RESONANCE",
+"body": "Revisado em 30/10/2026.\n\n1. **Jogar** uma Armor, no próprio turno, custa o custo impresso, pago exclusivamente em Base. Se você controla um Devotee Resonant dela, você pode vesti-la nele na mesma AÇÃO, sem Equip; com mais de um, escolha um. Caso contrário — inclusive Armor sem personagem Resonant — ela entra sem portador.\n2. **Vestir** uma Armor que já está em campo, sem portador ou tirada de outro Devotee seu vivo, no próprio turno, custa o **Equip impresso** da carta, pago em Base e/ou Latent. Vale para qualquer Devotee, inclusive o Resonant.\n3. **Resonance ao entrar:** sempre que um Devotee Resonant entra em campo (jogado da mão, retornado do Tartarus ou por efeito), você pode vestir nele, sem Equip, uma Armor dele que você controla, mesmo que outro Devotee seu a esteja vestindo. Quem perde a Armor recalcula o HP máximo (§34).\n\nSe o novo portador já vestia outra Armor, a anterior fica em campo sem portador.\n\nArmas e acessórios seguem o §33: entram sem portador e se prendem pagando o Equip impresso. Itens globais (“Equip: None — Global”, como Athena’s Shield) não se prendem: pagam o Casting Cost e ficam no campo sem portador, sem reequipar (autor, 29/10/2026).",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-29",
+"number": "29",
+"title": "Versões de Armor",
+"chapter": "CAPÍTULO VI — ARMOR, EQUIPMENT E RESONANCE",
+"body": "Revisado em 30/10/2026. A Armor é o que está impresso: não há estágios, estado Vanilla nem Evolve por regra geral. Versões mais fortes (V2, V3, God Cloth) são cartas separadas. Uma Armor só evolui se a própria carta descrever como.\n\nNão é necessário possuir ou ter vestido versões anteriores para jogar uma Armor mais forte, salvo requisito expresso na carta.\n\nAthena progride por proteção, superação e transcendência; Poseidon por controle e domínio; Hades por persistência, morte e retorno; Ares por agressividade e conquista; Artemis por precisão e caça.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-30",
+"number": "30",
+"title": "Evolve",
+"chapter": "CAPÍTULO VI — ARMOR, EQUIPMENT E RESONANCE",
+"body": "Retirado em 30/10/2026 (§29).",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-31",
+"number": "31",
+"title": "Vínculo de evolução",
+"chapter": "CAPÍTULO VI — ARMOR, EQUIPMENT E RESONANCE",
+"body": "Retirado em 30/10/2026 (§29).",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-32",
+"number": "32",
+"title": "Morte do portador",
+"chapter": "CAPÍTULO VI — ARMOR, EQUIPMENT E RESONANCE",
+"body": "Quando o portador morre, ele vai ao Tartarus e a Armor fica em campo sem portador. Outro Devotee pode vesti-la pelo procedimento do §28.\n\nArmor sem portador não tem efeito. Ela só sai do campo por um efeito explícito que destrua, exile ou devolva Equipment ou Armor.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-33",
+"number": "33",
+"title": "Equip de armas e acessórios",
+"chapter": "CAPÍTULO VI — ARMOR, EQUIPMENT E RESONANCE",
+"body": "Revisado em 01/11/2026. **Jogar** uma arma ou acessório, no próprio turno, custa o custo impresso, pago exclusivamente em Base, e a carta entra em campo **sem portador**. Não existe mais equipar ao jogar, nem para o Devotee nomeado. **Prender** a carta num Devotee seu é outra AÇÃO, no próprio turno, e custa o **Equip impresso**, pago em Base e/ou Latent; o Devotee nomeado na Resonance paga o custo impresso no lugar do Equip. A mesma ação move a carta solta de volta a um Devotee quando o portador sai. Arma ou acessório sem portador não tem efeito. Habilidades universais funcionam com qualquer portador; apenas habilidades “Resonance — Nome” exigem aquele personagem.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-34",
+"number": "34",
+"title": "Bônus de atributos",
+"chapter": "CAPÍTULO VI — ARMOR, EQUIPMENT E RESONANCE",
+"body": "Quando uma Armor aumenta o HP máximo de um Devotee, o dano já marcado permanece inalterado.\n\nQuando o Devotee perde o bônus de HP, o HP máximo é recalculado.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-35",
+"number": "35",
+"title": "God Armor e God Cloth",
+"chapter": "CAPÍTULO VI — ARMOR, EQUIPMENT E RESONANCE",
+"body": "God Cloth representa uma evolução divina disponível apenas para equipamentos específicos.\n\nNem toda Cloth possui God Cloth.\n\nGod Cloth pode conceder:\n\n* bônus de Power;\n* bônus de HP;\n* habilidades especiais;\n* proteção contra Gods;\n* novas interações de combate;\n* acesso a Ultimates específicas.\n\nO estágio God Cloth não torna o Devotee automaticamente invencível.\n\n---",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-36",
+"number": "36",
+"title": "Awaken",
+"chapter": "CAPÍTULO VII — AWAKEN E ULTIMATE",
+"body": "Awaken representa o despertar de habilidades próprias de um Devotee.\n\nAwaken pertence ao personagem, não ao equipamento.\n\nUm Devotee pode possuir Awaken mesmo sem estar equipado com uma Cloth.\n\nOs requisitos e efeitos são determinados pelo texto da carta.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-37",
+"number": "37",
+"title": "Seventh Sense",
+"chapter": "CAPÍTULO VII — AWAKEN E ULTIMATE",
+"body": "Seventh Sense é uma habilidade temática individual, não uma keyword universal obrigatória. Cartas já definidas podem usar o nome em um estágio, sem impor a mesma estrutura a todos os personagens. Awaken e evolução de Armor são independentes, salvo relação expressa na carta.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-38",
+"number": "38",
+"title": "Ultimate",
+"chapter": "CAPÍTULO VII — AWAKEN E ULTIMATE",
+"body": "Ultimate representa uma habilidade extraordinária.\n\nAs condições de utilização são determinadas pela carta.\n\nAlgumas Ultimates podem exigir:\n\n* Awaken;\n* uma Cloth específica;\n* 7th Sense;\n* God Cloth;\n* outra condição especial.\n\nUltimate exige exclusivamente Base Cosmo e não exige universalmente uma God Cloth.\n\n---",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-39",
+"number": "39",
+"title": "Tartarus",
+"chapter": "CAPÍTULO VIII — TARTARUS",
+"body": "Tartarus é a zona para onde Devotees destruídos são enviados normalmente.\n\nCartas e habilidades podem interagir com Devotees nessa zona.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-40",
+"number": "40",
+"title": "Afterlife",
+"chapter": "CAPÍTULO VIII — TARTARUS",
+"body": "AFTERLIFE é uma habilidade ativada que só funciona enquanto a carta está no Tartarus do dono (autor, 01/11/2026). Vale para qualquer tipo de carta.\n\nEscrita: “Afterlife {custo}: efeito”.\n\n* Pode ser usada no próprio turno, com a pilha vazia, ou como resposta, quando o jogador tem prioridade. Como resposta, o custo é pago só com Latent.\n* Entra na pilha como as outras ativações. Depois de resolver, a carta vai para o Void.\n* Fora do Tartarus (campo, mão, deck, Void), a habilidade não funciona. A mesma carta não pode ter duas ativações de Afterlife na pilha.\n* Gatilho de derrota não é Afterlife, mesmo que devolva a carta do Tartarus (ex.: Deadly Beetle Stand, Underworld Skeleton, Phoenix Ikki).\n\nEstar no Tartarus não dá Afterlife a uma carta: só têm Afterlife as cartas com habilidade Afterlife impressa.\n\nNomenclatura oficial\n\n* Afterlife: habilidade ativada usada do Tartarus; depois a carta vai para o Void.\n* Arayashiki: não é keyword da engine.\n* Meikai: não é keyword da engine.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-41",
+"number": "41",
+"title": "Retorno do Tartarus",
+"chapter": "CAPÍTULO VIII — TARTARUS",
+"body": "Devotees podem retornar do Tartarus apenas por efeitos que permitam essa movimentação.\n\nO custo, as condições e o estado de entrada são determinados pelo efeito.\n\nUma habilidade Afterlife só devolve a carta ao campo se o texto disser.\n\n---",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-42",
+"number": "42",
+"title": "Guardian",
+"chapter": "CAPÍTULO IX — KEYWORDS DE COMBATE",
+"body": "Enquanto houver Devotee inimigo com Guardian em campo, Prepared ou não, os Strikes devem mirar um Guardian (exceto Nimble contra Guardian sem Nimble; um Guardian que o atacante não pode mirar não conta). Ver §12.",
+"status": "published",
+"cards": [
+"athena-v6-003",
+"athena-v6-011",
+"athena-v6-034",
+"athena-v6-040",
+"poseidon-v6-104",
+"poseidon-v6-105",
+"poseidon-v6-106",
+"poseidon-v6-110",
+"poseidon-v6-117",
+"hades-v6-212",
+"hades-v6-219",
+"artemis-v6-375",
+"artemis-v6-395",
+"artemis-v6-399",
+"artemis-v6-405",
+"artemis-v6-438",
+"neutral-v6-457",
+"neutral-v6-462"
+]
+},
+{
+"id": "R-43",
+"number": "43",
+"title": "Nimble",
+"chapter": "CAPÍTULO IX — KEYWORDS DE COMBATE",
+"body": "É o “voar” do jogo (autor, 01/11/2026). Só pode ser alvo de Strike de um Devotee com Nimble, e ignora Guardian sem Nimble ao declarar Strike. Efeitos que não são Strike o alcançam normalmente. PT: Ágil.",
+"status": "published",
+"cards": [
+"athena-v6-009",
+"athena-v6-021",
+"athena-v6-023",
+"athena-v6-073",
+"poseidon-v6-093",
+"hades-v6-203",
+"hades-v6-207",
+"ares-v6-343",
+"ares-v6-344",
+"neutral-v6-471",
+"neutral-v6-472"
+]
+},
+{
+"id": "R-44",
+"number": "44",
+"title": "(Removida)",
+"chapter": "CAPÍTULO IX — KEYWORDS DE COMBATE",
+"body": "Cheater saiu do jogo em 01/11/2026 e foi absorvida por Nimble (§43).",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-45",
+"number": "45",
+"title": "Long Range",
+"chapter": "CAPÍTULO IX — KEYWORDS DE COMBATE",
+"body": "O dano do Devotee atacante é resolvido antes da retaliação.\n\nSe o defensor for destruído, não retaliará.",
+"status": "published",
+"cards": [
+"athena-v6-015",
+"poseidon-v6-095",
+"artemis-v6-388",
+"artemis-v6-393",
+"artemis-v6-406",
+"artemis-v6-435"
+]
+},
+{
+"id": "R-46",
+"number": "46",
+"title": "Pierce",
+"chapter": "CAPÍTULO IX — KEYWORDS DE COMBATE",
+"body": "Ao iniciar Strike contra um Devotee, o dano excedente ao HP restante do alvo é causado ao Soul do God que o controla. Não se aplica à retaliação.",
+"status": "published",
+"cards": [
+"athena-v6-017",
+"poseidon-v6-091",
+"ares-v6-305",
+"ares-v6-317",
+"artemis-v6-369",
+"artemis-v6-383",
+"artemis-v6-385",
+"artemis-v6-400",
+"artemis-v6-433",
+"artemis-v6-439",
+"artemis-v6-440"
+]
+},
+{
+"id": "R-46A",
+"number": "46A",
+"title": "(Removida)",
+"chapter": "CAPÍTULO IX — KEYWORDS DE COMBATE",
+"body": "Trample não existe: a keyword é Pierce (§46). Cartas que diziam Trample foram corrigidas para Pierce (autor, 29/10/2026).",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-47",
+"number": "47",
+"title": "Impulse",
+"chapter": "CAPÍTULO IX — KEYWORDS DE COMBATE",
+"body": "Pode declarar Strike no turno em que entra em campo, contra qualquer alvo legal, inclusive o God. Pierce continua funcionando normalmente.",
+"status": "published",
+"cards": [
+"athena-v6-009",
+"ares-v6-271",
+"ares-v6-285",
+"ares-v6-295",
+"ares-v6-299",
+"ares-v6-308",
+"ares-v6-313",
+"ares-v6-343",
+"neutral-v6-460"
+]
+},
+{
+"id": "R-48",
+"number": "48",
+"title": "Seal e Sealed",
+"chapter": "CAPÍTULO IX — KEYWORDS DE COMBATE",
+"body": "Revisado em 01/11/2026 (autor).\n\n**Receber Seal.** O Devotee fica **Unprepared** e ganha o marcador. Vale para qualquer forma de receber: \"Seal that Devotee\" põe 1 marcador; \"Put N Seal counters\" põe N. Os marcadores se acumulam.\n\n**Início do turno do dono.** O Devotee tira 1 marcador e **não prepara** naquele turno. Só no início de um turno em que já não tem marcador é que ele prepara.\n\n**Exemplo.** Um Devotee recebe 2 marcadores no seu turno. No próximo turno do dono: tira 1, fica com 1, não prepara. No turno seguinte: tira 1, fica com 0, não prepara. No outro: prepara normalmente.\n\n**Enquanto Unprepared por Seal.** Ele não declara Strike nem paga custo {T}. Ainda retalia, ainda conta como Guardian e ainda usa habilidades sem {T}. Seal não cancela um Strike já declarado (D212).\n\n**Sealed** = ter 1 ou mais marcadores Seal; \"becomes Sealed\" é passar de 0 para 1 ou mais. Os marcadores somem se o Devotee sai do campo.\n\n**Outro efeito que prepararia** um Devotee com Seal tira 1 marcador em vez de preparar (autor, 01/11/2026).",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-48A",
+"number": "48A",
+"title": "Training counter",
+"chapter": "CAPÍTULO IX — KEYWORDS DE COMBATE",
+"body": "Cada Training counter num Devotee dá +1 ATK / +1 HP a ele. Os marcadores se acumulam (2 marcadores = +2/+2) e ficam enquanto o Devotee estiver no campo. Efeitos que citam Training counters (ex.: Master's Guidance, de Eagle Marin) somam ao bônus do próprio marcador.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-49",
+"number": "49",
+"title": "(Reservada: Unfaith)",
+"chapter": "CAPÍTULO IX — KEYWORDS DE COMBATE",
+"body": "Fora do jogo atual (autor, 01/11/2026); nenhuma carta usa. Ideia guardada para um set futuro: ao declarar Strike contra um God, remover até 2 Latent Cosmo do adversário em lugar do dano ao Soul.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-50",
+"number": "50",
+"title": "(reservado)",
+"chapter": "CAPÍTULO IX — KEYWORDS DE COMBATE",
+"body": "Multiguard foi removida do jogo junto com o Engage.\n\n---",
+"status": "review",
+"cards": []
+},
+{
+"id": "R-51",
+"number": "51",
+"title": "Texto das cartas",
+"chapter": "CAPÍTULO X — REGRAS GERAIS",
+"body": "Quando o texto de uma carta contradiz uma regra geral, o texto da carta prevalece, desde que o efeito seja válido e não viole uma proibição expressa.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-52",
+"number": "52",
+"title": "Identidade das cartas",
+"chapter": "CAPÍTULO X — REGRAS GERAIS",
+"body": "Uma carta só é considerada um personagem específico quando corresponde à identidade exigida pelo efeito.\n\nExemplo:\n\nUma habilidade que exige Pegasus Seiya não é ativada por outro Devotee que esteja equipado com Pegasus Cloth.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-53",
+"number": "53",
+"title": "Efeitos de entrada",
+"chapter": "CAPÍTULO X — REGRAS GERAIS",
+"body": "Habilidades ativadas quando uma carta entra em jogo devem aparecer antes das informações de atributos e keywords no padrão de Card Craft.\n\nEssa é uma regra de apresentação das cartas, não uma alteração da ordem de resolução.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-54",
+"number": "54",
+"title": "Facções e Card Craft",
+"chapter": "CAPÍTULO X — REGRAS GERAIS",
+"body": "Athena — **THE UNBREAKABLE WILL**. “No Saint fights alone.” Pilares: Voltron, Anthem, Brotherhood e Miracle. As cartas que eram “Miracle” são **Technique** (autor, 31/10/2026); Miracle segue só como pilar temático, não como tipo. Anthems tribais priorizam Saint, sem beneficiar genericamente todos os Devotees.\n\nAfinidades aprovadas: Pegasus Seiya → Sagittarius; Dragon Shiryu → Libra; Cygnus Hyoga → Aquarius; Andromeda Shun → Virgo; Phoenix Ikki → Leo. Cada um também tem afinidade com sua própria Cloth; essas relações serão materializadas nas cartas após revisão do catálogo.\n\nPoseidon: controle, pressão progressiva e domínio. Hades: persistência, sacrifício e retorno. Ares: agressividade, combate e conquista. Artemis: caça, precisão e eliminação estratégica. Estas quatro identidades são preliminares; desenvolvimento e aprovação seguem uma facção por vez, começando por Athena.\n\nNo Vanilla Set haverá exatamente um Divine Artifact por facção: cinco no total. Uma God Armor por facção fica como meta do próximo set (autor, 01/11/2026); no conjunto atual só existe Pegasus God Cloth. Trata-se de composição editorial, não de limite de decks. Seleções de trabalho de God Armor: Athena — Pegasus Seiya; Poseidon — Sea Dragon Kanon; Hades — Wyvern Rhadamanthys; Artemis — Callisto. Nomes finais e cartas dependem do Card Craft; não criar automaticamente os dez itens. Respeitar a distinção narrativa entre God Cloth e Kamui e documentar criações do TCG.\n\nPersonagens usam classificação de origem: CANON — KURUMADA; SAINT SEIYA — OUTRAS OBRAS; MITOLOGIA ADAPTADA; ORIGINAL TCG. Referências mitológicas devem ser documentadas e não tornam personagens canônicos. Priorizar personagens disponíveis nas obras antes de criar originais; nenhum novo personagem é aprovado por este guia.\n\nCard Craft: identidade e flavor; mecânica; habilidades; cartas e progressão; revisão de custos; balanceamento; aprovação; registro no catálogo. Propostas não são definitivas antes da aprovação.\n\n---",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-55",
+"number": "55",
+"title": "Round, turnos, compras e mulligan",
+"chapter": "CAPÍTULO XII — TIMING E CONSOLIDAÇÃO 2.1",
+"body": "Revisado em 31/10/2026 (ALPHA-P01, P02, P03 e P06, aprovadas em 28/10/2026; limite de mão, 01/11/2026; cara ou coroa e compra do segundo jogador, 01/11/2026; compra de 1 carta, 01/11/2026).\n\n- O primeiro jogador é definido por **cara ou coroa** antes de qualquer compra (autor, 01/11/2026). Cada jogador já tem uma face da moeda; ninguém escolhe a face. Quem vence escolhe começar ou passar o início ao adversário.\n- O primeiro jogador começa **todos** os Rounds. Cada Round tem um turno de cada jogador.\n- Depois dessa escolha, ambos compram 7 cartas. Começando pelo primeiro jogador, cada um pode, uma vez, devolver qualquer quantidade de cartas da mão ao deck, embaralhar e comprar o mesmo número. O primeiro turno só começa depois dos dois mulligans.\n- Início do turno: o ativo prepara seus Devotees, Equipment e Bases; resolvem-se os gatilhos de início de turno; ele compra **1 carta**. Só quem começa a partida não compra no primeiro turno dele; o outro jogador já compra no primeiro turno dele (autor, 01/11/2026).\n- O ativo pode colocar uma Base Cosmoble por turno, com a pilha vazia. A Base entra Prepared e paga no mesmo turno (G3-035). Colocar Base não entra na pilha.\n- O turno termina quando o ativo declara END TURN com a pilha vazia. End Phase: conversão das Bases Prepared em Latent (§5); gatilhos de fim de turno; no 2º turno do Round, gatilhos de fim de Round (D204); Cleanup.\n- Limite de **7 cartas na mão** (autor, 01/11/2026): na End Phase do próprio turno, ao passar o turno, logo após a conversão das Bases em Latent, quem tem mais de 7 cartas escolhe e descarta o excesso para o Tartarus. Isso conta como descarte para efeitos de carta. Fora desse momento a mão pode passar de 7.\n- Deck vazio: quem precisa comprar uma carta e não tem carta no deck perde a partida na hora. Vale para a compra do turno e para qualquer compra por efeito. Ficar com o deck vazio (por Mill, por exemplo) não derrota sozinho; a derrota vem na próxima compra. Por isso Mill é condição de vitória. Se um mesmo efeito fizer os dois jogadores comprarem de deck vazio, a partida empata. Não existe Fatigue (autor, 01/11/2026; `draw` no engine-v3).\n\n**Por quê:** a compra de 2 manteve quem começa vencendo 74–78% em IA × IA; a compra de 1 reduz para 65% e corta as vitórias por deck vazio. O risco conhecido é a mão acabar em decks agressivos, como no playtest real que levou à compra de 2: a resposta prevista são cartas de compra em Ares e Athena, não mais compra para todos (autor, 01/11/2026). O limite de 7 continua.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-56",
+"number": "56",
+"title": "Timing, respostas e resolução",
+"chapter": "CAPÍTULO XII — TIMING E CONSOLIDAÇÃO 2.1",
+"body": "- Fora de uma janela, só o jogador ativo joga cartas, ativa habilidades e declara Strike, sempre com a pilha vazia. O jogador não ativo só age respondendo nas janelas.\n- **Moment** pode ser jogado no próprio turno ou como resposta em uma janela de prioridade, inclusive no turno do adversário. Como resposta no turno do adversário, paga integralmente seus custos exclusivamente em Latent Cosmo; no próprio turno, inclusive como resposta, paga em Base e/ou Latent (autor, 01/11/2026). **Technique** só é jogada no próprio turno, salvo texto explícito (autor, 29/10/2026). Event e Miracle não são subtipos: as cartas que eram Event (052, 055, 083) são **Moment** e as que eram Miracle são **Technique** (autor, 31/10/2026). Toda Spell jogada (Technique ou Moment) entra na pilha e abre uma janela de resposta; só resolve depois que os dois jogadores passam em sequência (autor, 29/10/2026). Alvos de Spell são escolhidos ao jogá-la, antes da janela; respostas veem o alvo. Se o alvo não estiver mais disponível na resolução, a parte que dependia dele não acontece (autor, 29/10/2026).\n- **Tudo vai à pilha, como no Magic (autor, 30/10/2026):** jogar Devotee ou Equipment (inclusive Armor) e ativar habilidade ({T}, {N}{C}, Domain, poder divino e Ultimate) também entra na pilha e abre janela de resposta, como as Spells. Custos e alvos são pagos e anunciados ao declarar; o efeito acontece na resolução. Devotee e Equipment só entram em campo quando resolvem; se forem contrariados, vão ao Tartarus do dono. Só Moment responde; colocar Base continua fora da pilha.\n- **Gatilhos simultâneos (APNAP, autor, 31/10/2026):** quando vários gatilhos disparam ao mesmo tempo, os do jogador ativo entram na pilha primeiro e os do outro jogador por cima (resolvem antes). Cada jogador escolhe a ordem dos próprios gatilhos antes de qualquer passe de prioridade; sem escolha, vale a ordem em que dispararam.\n- **Gatilho opcional impossível não dispara (autor, 31/10/2026):** um gatilho opcional (“you may”, custo a pagar, “once each round”) que não pode ser usado no momento do disparo — custo que o controlador não consegue pagar, limite por rodada já usado ou nenhum alvo válido — não dispara: não vai à pilha, não abre janela e não aparece no log. A condição é checada no disparo e de novo na resolução; se na resolução já não der para usar, ele resolve sem efeito. Vale também para gatilho obrigatório que não teria efeito nenhum (sem alvo ou efeito possível): não dispara.\n- Habilidades ativadas são usadas no próprio turno por padrão; apenas as expressamente permitidas como resposta podem ser ativadas na prioridade. Passivas e gatilhos funcionam a qualquer momento. Uma carta que disser como e quando a habilidade funciona fornece a exceção.\n- Ao jogar uma carta, ativar uma habilidade ou declarar Strike, anunciar escolhas e alvos e pagar custos. Strike deixa o atacante Unprepared nesse momento. O adversário recebe a primeira prioridade para responder.\n- Cada resposta entra no topo da pilha e entrega prioridade ao adversário. Dois passes de prioridade resolvem apenas o item do topo. Havendo itens restantes, a prioridade volta ao jogador da oportunidade atual; o processo continua até esvaziar a pilha e resolver os gatilhos produzidos.\n- Quando a pilha esvazia, o jogador ativo continua o seu turno. Respostas não encerram nem passam o turno.\n- Gatilhos simultâneos entram primeiro na ordem escolhida pelo jogador ativo e depois na ordem escolhida pelo adversário (APNAP). O último colocado resolve primeiro.\n- Ao resolver, verificar novamente os alvos. Um efeito com todos os alvos inválidos não produz efeito; custos não são devolvidos. Com alvos válidos restantes, resolver o que for possível, salvo exigência expressa de todos os alvos.\n- Verificar HP, Soul e derrotas após cada resolução e cada etapa de dano. Processar destruições simultâneas em conjunto; depois colocar seus gatilhos na pilha. Repetir verificações até estabilizar.\n- Strike resolve como uma sequência única, sem jogar Techniques entre dano inicial e retaliação. As respostas acontecem antes da resolução. Prevenção e substituição já aplicáveis continuam funcionando durante essa resolução.\n- Perder Prepared depois de declarar não cancela um Strike já pago. Sair do campo ou deixar de ser alvo válido antes da resolução impede o combate. Sealed impede novas declarações, sem cancelar automaticamente uma já declarada.\n\n**Por quê:** uma única lógica de resposta atende cartas, habilidades e combate, no turno de qualquer jogador.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-57",
+"number": "57",
+"title": "Entrada em campo e Prepared",
+"chapter": "CAPÍTULO XII — TIMING E CONSOLIDAÇÃO 2.1",
+"body": "- Devotees entram **Unprepared** (ALPHA-P02) e não declaram Strike no turno em que entraram. **Impulse** remove essa restrição.\n- A preparação normal acontece no início do próximo turno do controlador. Efeitos explícitos podem preparar antes disso ou impedir a preparação (ex.: 077, “cannot be Prepared during your next Prepare Phase”).\n- Retaliação não usa Prepared.\n- Cada Devotee declara no máximo um Strike por turno (D22), mesmo que um efeito o prepare de novo.\n\n**Por quê:** bate com o texto das cartas (“They enter Unprepared and lose Impulse”, “as though they had Impulse”): sem Impulse, quem entra só ataca no turno seguinte.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-58",
+"number": "58",
+"title": "Alvos, Guardian e controle",
+"chapter": "CAPÍTULO XII — TIMING E CONSOLIDAÇÃO 2.1",
+"body": "- Alvos e exigência de Guardian: capítulo IV. A validade do alvo é reavaliada na resolução.\n- Retaliação: o defensor retalia mesmo Unprepared, enquanto sobreviver ao dano simultâneo.\n- **Mudança de controle:** deixa o Devotee Unprepared, sem curar dano nem apagar Awaken. \n- Uma carta vai para as zonas de seu proprietário, salvo efeito explícito. “Resonance” da Armor indica personagem; não indica proprietário da carta.\n- Equipamentos não mudam de controlador automaticamente. Como a ligação normal exige equipamento e portador do mesmo controlador, um equipamento incompatível fica em campo sem portador e perde a evolução. Um efeito pode transferir expressamente ambos.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-59",
+"number": "59",
+"title": "Combate e textos das keywords",
+"chapter": "CAPÍTULO XII — TIMING E CONSOLIDAÇÃO 2.1",
+"body": "O dano é marcado separadamente do HP máximo. Power negativo causa zero dano. HP máximo zero ou negativo destrói o Devotee. Soul zero ou negativo derrota o jogador. O excesso de dano não é cura nem recurso.\n\n| Keyword | Definição |\n| --- | --- |\n| Guardian | Enquanto estiver em campo, Prepared ou não, Strikes inimigos devem mirar um Guardian, exceto Nimble contra Guardian sem Nimble. Um Guardian que o atacante não pode mirar não conta. |\n| Nimble | Só pode ser alvo de Strike de outro Devotee com Nimble. Ignora Guardian sem Nimble ao declarar Strike. |\n| Long Range | Ao iniciar Strike, causa seu dano primeiro. Verificar destruição/derrota antes da retaliação; alvo destruído não retalia. Defender com Long Range não concede dano primeiro. |\n| Pierce | Ao iniciar Strike contra um Devotee, o dano excedente ao HP restante daquele alvo é causado ao Soul do God que o controla. Não funciona por retaliação. Calcular depois de prevenção/modificação do dano e sem contar dano antigo como dano novo. |\n| Impulse | Pode declarar Strike no turno em que entra em campo, contra qualquer alvo legal, inclusive o God. Pierce continua funcionando normalmente. |\n| Sealed | Ter 1 ou mais marcadores Seal (§48). Receber Seal deixa o Devotee Unprepared. No início do turno do dono, ele tira 1 marcador e não prepara. |\n\nCheater e Unfaith saíram das keywords em 01/11/2026 (§44, §49).\n\nSe um Strike causar Soul zero aos dois Gods simultaneamente por efeitos aplicáveis à mesma etapa, há empate. Se Long Range derrotar o God na etapa inicial, a partida termina antes da retaliação. Gatilhos futuros não desfazem uma derrota já verificada; substituições de derrota/dano precisam agir antes dessa verificação.\n\n**Exemplo:** A tem Power 4, HP 5 e 2 de dano; B tem Power 3, HP 4 e 1 de dano. Em Strike normal, ambos são destruídos. Se A inicia com Long Range, destrói B antes da retaliação e continua com seus 2 de dano.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-60",
+"number": "60",
+"title": "Cosmo, Latent e custos",
+"chapter": "CAPÍTULO XII — TIMING E CONSOLIDAÇÃO 2.1",
+"body": "- Uma Base disponível paga 1 Cosmo e fica indisponível até a renovação. Gastar Bases para pagar é parte do pagamento; não cria jogada adicional nem exige guardar um estoque de Cosmo gerado sem uso.\n- Aplicar a matriz da seção 5: Devotee, Armor e Ultimate usam somente Base; Moment como resposta no turno do adversário usa somente Latent; os demais custos aceitam ambos, respeitando restrições expressas. Cosmo temporário só paga custos genéricos, salvo texto específico, e não é armazenado automaticamente.\n- Receber dano não gera Latent (regra da 2.1 retirada pelo autor, 01/11/2026). Latent vem das Bases Prepared na End Phase e de cartas que o criem.\n- Limite de **3 Latent por jogador**, persistente entre turnos. As Bases Prepared viram Latent no início da End Phase do seu turno (§5).\n- Escolhas e custos são validados antes de gastar; pagamento insuficiente não produz gasto parcial. Recursos pagos em uma declaração válida não retornam se o efeito depois falhar.\n\n**Por quê:** a conversão no fim do turno garante Latent para responder no turno do adversário. O limite do banco limita explosões.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-61",
+"number": "61",
+"title": "Equipamentos, estágios e remoção",
+"chapter": "CAPÍTULO XII — TIMING E CONSOLIDAÇÃO 2.1",
+"body": "- Cada Devotee tem **um espaço de armadura**, ocupado por uma Cloth, Scale, Surplice, Warplate ou Moonplate. Essas armaduras não se acumulam. Armas, acessórios e outras Relics não têm limite geral de quantidade, respeitando restrições impressas e cartas únicas.\n- Jogar uma Armor, no próprio turno, custa o custo impresso, só em Base. Com um Devotee Resonant seu em campo, você pode vesti-la nele sem Equip; senão ela entra sem portador (§28).\n- Vestir uma Armor em campo (sem portador ou tirada de outro Devotee seu), no próprio turno, custa o Equip impresso, em Base e/ou Latent, inclusive para o Resonant. Ao entrar em campo, um Devotee Resonant pode puxar sua Armor sem Equip. Armas/acessórios entram sem portador e se prendem por outra ação, pagando o Equip impresso (§33, 01/11/2026). Trocar de armadura deixa a anterior em campo sem portador; não a destrói.\n- Desequipar voluntariamente, no próprio turno, custa zero Cosmo. Não exige Prepared. Transferência e troca são concluídas antes de recalcular os atributos e verificar destruição, evitando mortes por um estado intermediário de interface.\n- Equipment com {T} no custo (ex.: Pandora's Box, Kraken Scale, Lunar Amulet) usa a habilidade **uma vez por rodada**; Equipment não tem estado Prepared/Unprepared (autor, 29/10/2026). O mesmo vale para o {T} de Domain (ex.: Jamir Tower), confirmado em 30/10/2026.\n- **“Destroyed”** em texto de Equipment/Armor é sair **do campo** para o Tartarus (destruída por efeito ou levada junto com o portador derrotado). Ir da mão ou do exílio para o Tartarus não conta (autor, 30/10/2026).\n- Destruir equipamento envia ao Tartarus; exilar envia ao Void; desequipar mantém no campo. Equipamentos anexados não são enviados junto com o portador quando ele morre, retorna à mão ou é exilado, salvo texto explícito.\n- **HP da Armor** é bônus de HP máximo do portador; a Armor não tem dano próprio, Broken nem Repair (§26A, revisado em 30/10/2026). Não há estágios nem Evolve por regra geral (§29).\n\n**Por quê:** manter a armadura recuperável e simples de ler: um termo de vínculo (Resonance), custo e Equip impressos, nenhum marcador além do dano do Devotee.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-62",
+"number": "62",
+"title": "Awaken, God Cloth, Ultimate e Afterlife",
+"chapter": "CAPÍTULO XII — TIMING E CONSOLIDAÇÃO 2.1",
+"body": "- **Awaken é do Devotee.** Padronizar o despertar ativável como uma habilidade do próprio turno, com o custo/requisito impresso, sem exigir ou alterar Prepared por regra geral. Um gatilho automático impresso é uma exceção. O estado dura enquanto a instância permanecer em campo, salvo texto diferente.\n- **Seventh Sense é temático e individual**, não uma keyword universal. Awaken e evolução continuam independentes, salvo relação impressa.\n- God Armor exige os custos e requisitos da própria carta; estágio anterior somente quando expressamente exigido. Nem toda armadura tem God Cloth, e o estágio não concede imunidade implícita contra Gods.\n- Retirar o antigo limiar universal de Awaken dos Gods. Uma nova carta de God pode ter seu próprio despertar, inteiramente descrito no texto, sem depender de uma regra herdada.\n- **Ultimate é usada no próprio turno, com uma utilização por identidade de personagem, por jogador e por partida**, além do pagamento exclusivamente em Base e dos requisitos impressos. Na ausência de personagem nomeado, usar a identidade da carta. Ressuscitar ou trocar a versão do mesmo personagem não recarrega essa utilização. Não exige God Cloth universalmente nem consome Prepared se isso não estiver no custo.\n- Afterlife é uma habilidade ativada impressa, usada do Tartarus; depois a carta vai para o Void (§40, autor 01/11/2026). Estar no Tartarus não dá Afterlife.\n- Retornar do Tartarus exige um efeito. Por padrão, a carta retorna sob controle de seu proprietário, Prepared, sem dano, sem seu Awaken anterior e sem equipamentos automaticamente anexados; o efeito pode especificar exceções.\n- Limite experimental para evitar ciclos: **cada carta física pode retornar do Tartarus ao campo uma vez por rodada**. Hades pode retornar vários Devotees diferentes; exceções ao limite precisam estar explícitas. Sair de novo não renova o limite.\n\n**Por quê:** três progressões distintas, com papéis claros: despertar do personagem, vínculo com a armadura e golpe extraordinário. O retorno continua relevante sem reciclar infinitamente a mesma entrada em campo.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-63",
+"number": "63",
+"title": "Deck, identidade, mulligan, Gods e Domains",
+"chapter": "CAPÍTULO XII — TIMING E CONSOLIDAÇÃO 2.1",
+"body": "- Deck principal com 50 cartas (autor, 01/11/2026; eram 60), até **3 cópias da mesma identidade de carta**; artes alternativas e revisões da mesma carta não aumentam o limite. God e Domain ficam fora dessas 50.\n- Permitir cartas da facção do God, da facção do Domain e neutras. Se God e Domain forem da mesma facção, o deck é monofacção mais neutras. Não criar cinco tipos de mana nesta base.\n- **Domain fora da cor** (autor, 31/10/2026; revisto em 01/11/2026). Se a facção do Domain for diferente da facção do God:\n  1. A linha geral funciona inteira, sem custo extra; a linha **Resonance** não funciona.\n  2. O deck principal pode ter **até 15 cartas** da facção do Domain. Cartas neutras não contam nesse limite; God e Domain ficam fora das 50.\n  - Domain da mesma facção do God funciona inteiro, com a Ressonância.\n- **Forma dos Domains e Ressonância** (autor, 01/11/2026; substitui a forma de 31/10/2026). São 30 Domains, 6 por God. Cada um tem duas linhas. A **linha geral** vale com qualquer God: efeito pequeno (estática de +1 ATK ou +1 HP num subtipo, ou gatilho/ativada de 1 ponto no máximo uma vez por rodada) que não quebra a color pie. A linha **Resonance — <God>** só vale se o God do jogador for da facção do Domain: efeito forte, no máximo uma vez por turno, com custo de {1}{C} a {3}{C}. Usar Domain de outra facção continua permitido (§2); o preço é perder a Ressonância. Em cada facção, um Domain compra 1 carta na linha geral, só com um drawback (Athena: exilar 1 carta da mão e perder {2}{S}; Poseidon: descartar 1 e milar 4; Hades: perder {3}{S}; Ares: sacrificar um Devotee e perder {2}{S}; Artemis: zerar o Latent e devolver uma Cosmo Base à mão). Não existe mais linha Once per game em Domain.\n- Um mulligan parcial gratuito: separar qualquer quantidade da mão inicial, comprar a mesma quantidade e só então embaralhar as separadas no deck. Apenas uma troca; sem penalidade de Latent ao adversário. Ver §55.\n- Cada jogador pode controlar um Devotee de cada **personagem nomeado**, mesmo que existam versões diferentes da carta. Essa regra de lendário vale só para as classes de guerreiros: **Saints, Marines, Satellites, Specters e Berserkers**. Devotees de classe baixa (Warrior, Support e sem classe) não são lendários e podem ter mais de uma cópia no campo. Unidades genéricas também não têm essa exclusividade. Exceção: **Phoenix Ikki** (athena-v6-009) não é lendário; o jogador pode controlar qualquer número de cópias dele (autor, 01/11/2026). Usar identidade estável de personagem para essa regra e para Resonance; título e ilustração não bastam.\n- Uma segunda versão de personagem que já controla pode ser jogada da mão normalmente. Sempre que houver duplicidade (por jogada da mão ou por efeito), o controlador escolhe um para manter e envia os outros ao Tartarus, sem considerar isso destruição. Habilidades de entrada continuam seguindo o fato de a carta ter entrado; essa interação deve ser considerada no custo do efeito que a trouxe.\n- Relics só são únicas se isso estiver expresso. Retirar o desconto geral de 2 Cosmo por repetir nome; versões de Armor são cartas separadas (§29), e uma carta específica pode autorizar substituir sua versão anterior.\n- Gods não iniciam Strike, não retaliam e não equipam armaduras. Possuem Soul, sem Attack (autor, 01/11/2026). Custos de habilidades do God devem estar impressos, inclusive eventual esgotamento.\n- **Divine Command / Comando Divino** (autor, 01/11/2026): cada God tem uma habilidade ativada de board, além do Divine Power. Custa {1}{C}, só no turno do controlador, com a pilha vazia, uma vez por turno; entra na pilha como as outras ativadas. A versão de Awaken, quando a carta tem, substitui a normal enquanto o God estiver Awakened.\n- Domains permanecem em jogo, fora do deck, sem custo de entrada e protegidos de ataque, destruição, exílio, retorno à mão e mudança de controle adversária nesta base. Seus efeitos e limites de uso vêm do texto da carta. Galaxian Wars Arena (062), Tournament Spirit: conta quando o Bronze Saint amigo derrota o Devotee inimigo num Strike, tanto atacando quanto defendendo (dano de retaliação) (autor, 28/10/2026).\n- **Engage** (texto antigo de algumas cartas de Artemis): \"engaged with X\" significa estar num Strike com X, atacando ou defendendo; \"Engage that Devotee\" força esse Devotee num Strike contra o seu (autor, 29/10/2026). A mecânica de Engage separada não existe.\n- **Token** (ex.: Forest Guardian 3/3 de The Forest Invades Sanctuary): Devotee criado por efeito, sem carta. Entra Unprepared, não é lendário e deixa de existir quando sai do campo (não vai ao Tartarus, à mão nem ao Void). Não conta como carta para efeitos de deck, mão ou Tartarus (autor, 29/10/2026).\n- **Cosmo gerado por efeito** (“Generate {C}”, “Cosmo Latente”) entra como Latent Cosmo comum, respeitando o limite de 3. Restrições impressas de uso (“only during your turn”, “only to cast a Devotee”) não se aplicam nesta versão (autor, 29/10/2026).\n- Manter Tartarus e Void distintos. Void representa exílio; habilidades Afterlife não funcionam no Void. Efeitos só alcançam as zonas e tipos que identificam; “target Devotee” não alcança automaticamente uma carta no Tartarus.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-64",
+"number": "64",
+"title": "Duração dos efeitos e Card Craft",
+"chapter": "CAPÍTULO XII — TIMING E CONSOLIDAÇÃO 2.1",
+"body": "- Textos usam **turn** para o turno de um jogador e **round** para o par de turnos (31/10/2026). “Once each round” renova no fim do Round; “until end of turn” acaba no Cleanup do turno.\n- Em textos existentes, **“once per turn” vale “once each round”** e **“until end of turn” vale “until end of round”** (autor, 29/10/2026).\n- “Until end of round” termina no encerramento atual; “until the beginning of the next round” termina no início da seguinte, antes da preparação. Uma duração diferente deve identificar precisamente o evento.\n- “During your opponent's turn” volta a valer literalmente.\n- **Distribuir dano** (“distribute N damage among …”): cada alvo escolhido recebe pelo menos 1 (autor, 30/10/2026).\n- Habilidades de entrada aparecem primeiro na carta. A posição gráfica não antecipa a resolução de um gatilho em relação à pilha.\n- **Sintaxe de Armor (autor, 30/10/2026):** o Equip universal fica no selo EQUIP do canto inferior esquerdo, fora do texto; a 1ª linha do texto é “Resonance — Nome” quando houver Resonant. O bônus ao portador fica nas gemas de ATK (esquerda) e HP (direita) na altura da linha de tipo, layout original das Cloths (autor, 30/10/2026), não no texto; keyword concedida fica como “Equipped Devotee has X.”. Habilidades específicas usam “Resonance — Nome: efeito” no catálogo; a carta mostra um bloco só, com o título “Resonance — Nome completo” e o efeito embaixo, sem repetir o nome (autor, 30/10/2026). Campos: `bonus_poder`, `bonus_vida`, `equipar_custo_outros` (Equip) e `auto_equip_en` (Resonance).\n- No Card Forge, separar: identidade e versão; custo e Cosmoble; Power/HP ou Soul; entrada; keywords; habilidades; Awaken/Ultimate; Resonance; custo e bônus da Armor. Cloth e Scale precisam de identificação mecânica própria, ainda que reutilizem uma moldura.\n- Dados de partida como dano, Prepared, estágio atual e limites usados ficam fora da definição-base. A carta interativa recebe esses estados da engine. Impressão e jogo compartilham os mesmos textos, identidade e revisão.\n- São obrigatórios os textos que definem alvos, custo, duração e limite das habilidades, evitando que o importador complete esses elementos silenciosamente. O editor deve sinalizar conflitos entre texto e campos estruturados.",
+"status": "published",
+"cards": []
+},
+{
+"id": "R-65",
+"number": "65",
+"title": "Valores iniciais e o que medir",
+"chapter": "CAPÍTULO XII — TIMING E CONSOLIDAÇÃO 2.1",
+"body": "| Parâmetro | Parâmetro inicial |\n| --- | --- |\n| Soul / Attack de God de referência | 20 / 3; Soul entre 15 e 22 por God. Os valores de cada God (Soul, Attack, Awaken) são os da carta do God no Card Forge (`data/cards.json`, ids `<facção>-001`) desde 29/10/2026; em 29/10/2026: Athena 22/2/Awaken 5, Poseidon 22/1/4, Hades 18/2/7, Artemis 20/1/3, Ares 18/3/7 |\n| Compras | 2 por turno; quem começa a partida não compra no primeiro turno dele; limite de 7 cartas na mão |\n| Bases | 1 por turno próprio; entra Prepared |\n| Latent | Limite de 3; Bases Prepared viram Latent no fim do seu turno; persiste |\n| Retorno do Tartarus | Uma vez por carta física/rodada |\n| Ultimate | Uma vez por personagem/jogador/partida |\n| Partida desejada | 8–10 Rounds; medir, sem prometer que a curva já entrega isso |\n\nPara Devotees **sem habilidades nem keywords**, usaria esta régua provisória; não é uma conversão automática das cartas:\n\n| Custo | Power / HP de referência |\n| --- | --- |\n| 1 | 1 / 2 |\n| 2 | 2 / 3 |\n| 3 | 3 / 4 |\n| 4 | 4 / 5 |\n| 5 | 5 / 6 |\n| 6 | 6 / 7 |\n\nGuardian, Nimble, Impulse e, sobretudo, Long Range devem consumir parte dessa eficiência ou aumentar o custo. Não considero um Devotee com Long Range equivalente ao mesmo corpo sem a keyword: impedir retaliação conserva HP para rodadas futuras. Começaria comparando +1 Cosmo ou redução de atributo, e mediria antes de fixar uma tabela universal de preços.\n\nExemplo de Cloth para testar, sem impor esses valores a todas: custo 2, Equip 3, +1 ATK e +1 HP ao portador, uma habilidade “Resonance — Nome”.\n\nMedir pelo menos: duração e vencedor com iniciativa; cartas disponíveis na mão e uso de Bases; duração das partidas e partidas travadas por “tartaruga” (muros de Guardian); Strikes por turno; dano evitado por Long Range; Strikes forçados em Guardian; frequência de God Cloth/Ultimate; quantidade de retornos e vantagem de cartas de Hades. Usar partidas espelhadas com iniciativa invertida antes de atribuir uma diferença à facção.\n\n\n---",
+"status": "published",
+"cards": []
+}
+]

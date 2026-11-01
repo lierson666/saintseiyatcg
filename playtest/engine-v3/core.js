@@ -4,7 +4,7 @@
 // nada aqui vem da engine 2.2. Fonte da matriz: docs/alpha-0.1/MATRIZ-BLOQUEIOS-ENGINE-3.0.md.
 
 export const LATENT_CAP = 3; // D198, D226
-export const DRAWS_PER_TURN = 2; // §55: 2 por turno (autor, 01/11/2026; revoga a compra de 1 de 30/10/2026)
+export const DRAWS_PER_TURN = 1; // §55: 1 por turno (autor, 01/11/2026; revoga a compra de 2 da mesma data)
 export const HAND_LIMIT = 7; // §55: excesso descartado na End Phase do próprio turno (autor, 01/11/2026)
 // D194: classificação Moment/Technique pelo número da carta Athena V6.
 // 54, 56, 58, 61, 76 e 79 eram Miracle e são Technique; 52, 55 e 83 eram Event e são Moment (autor, 31/10/2026; cards.json).

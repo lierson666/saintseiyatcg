@@ -81,12 +81,12 @@ test('simulação reproduzível de compra e Base até o deck vazio (§55) encerr
     endTurn(state); passAll(state);
     checkInvariants(state, objects);
   }
-  // P01: deck 43 (deck de 50, 01/11/2026); 2 compras por turno; A pula a do 1º turno: após 22 turnos próprios sobra 1 carta.
-  // §55 (01/11/2026): B compra desde o 1º turno, então a 2ª compra do 22º turno de B, com o deck vazio, derrota B na hora, antes de A.
+  // P01: deck 43 (deck de 50, 01/11/2026); 1 compra por turno; A pula a do 1º turno: no 44º turno próprio compra a última.
+  // §55 (01/11/2026): B compra desde o 1º turno, então a compra do 44º turno de B, com o deck vazio, derrota B na hora.
   assert.deepEqual(state.victory, {winner: 'A', reason: 'deck_out'});
-  assert.equal(log.length, 43);
+  assert.equal(log.length, 87);
   assert.match(log[0], /^R1 A mão 6 deck 43 bases 1/);
-  assert.match(log.at(-1), /^R22 A mão \d+ deck 1 bases 22/);
+  assert.match(log.at(-1), /^R44 A mão \d+ deck 0 bases \d+/);
   assert.ok(state.players.A.latent <= 3 && state.players.B.latent <= 3);
 });
 
