@@ -29,6 +29,7 @@ import {renderLiveCard, renderCardText} from '../../shared/live-card.js?v=202610
 import {armorBonusText, printedEquipmentBonuses} from '../../shared/card-visual-values.js?v=20261031-kw6';
 import {lightArt} from '../../shared/light-art.js';
 import {useGodPortraits} from '../avatar-face.js?v=20261031-3';
+import {mountChatDock} from '../chat-dock.js?v=20261031-2';
 import {Idiomorph} from './vendor/idiomorph-0.7.4.esm.js';
 
 const $ = (s, el = document) => el.querySelector(s), $$ = (s, el = document) => [...el.querySelectorAll(s)];
@@ -2129,6 +2130,11 @@ async function init() {
     render();
     if (settings.ai !== 'none') mountNameplates({online: false}).then(r => useSleeves(r, settings.ai === 'A' ? 'B' : 'A')); // hot-seat não tem dono de conta em cada lado
   }
+  // Chat dos amigos na partida (autor, 31/10/2026): só amigos, janelas minimizadas, toasts sem som; oponente que não é amigo fica só nos emotes.
+  mountChatDock({inMatch: true, play: id => location.assign(`/playtest/divine/?match=${encodeURIComponent(id)}`),
+    avatarOf: id => { const f = FORGE.get(String(id || 'god-athena').replace(/^god-(.+)$/, '$1-001')); return f?.ilustracao ? forgeArt(f.ilustracao) : ''; },
+    api: (path, method = 'GET', body) => fetch(path, {method, credentials: 'same-origin', headers: body ? {'Content-Type': 'application/json'} : {}, body: body && JSON.stringify(body)})
+      .then(async r => { const data = await r.json().catch(() => ({})); if (!r.ok) throw Error(data.error || 'Something went wrong. Please try again.'); return data; })});
   requestAnimationFrame(watchEvents);
   setInterval(tickClock, 250);
   setInterval(aiTick, 700);

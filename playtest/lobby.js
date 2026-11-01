@@ -10,7 +10,7 @@ import {loadMyDecks, saveMyDecks, findDeck, syncDecks, onDeckStatus, deckCovers,
 import {mountKV} from '../shared/kv-sky.js?v=20261031-native';
 import {countryOptions, countryName} from '../shared/countries.js?v=20261029-1';
 import {startPresence} from '../shared/presence.js?v=20261029-1';
-import {mountSocial} from './social.js?v=20261031-ds3';
+import {mountSocial} from './social.js?v=20261031-chat2';
 import {telas, imageUrl, sound, applyColors, applyTexts} from './telas.js?v=20261030-1';
 import {loadEconomy, ownedLimit, missingCards, coinBadge, storeScreen, collectionScreen, openBooster, buyBooster, buyCosmetic} from './economy.js?v=20261031-filt1';
 import {lightArt} from '../shared/light-art.js';

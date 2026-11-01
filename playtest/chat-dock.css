@@ -1,0 +1,105 @@
+/* Chat dos amigos estilo MTG Arena (chat-dock.js): janelas acopladas no canto inferior direito, abas, toasts.
+   Autossuficiente: carrega no lobby e no duelo (que não tem lobby.css). */
+.cd-dock { --cd-gold: var(--kv-gold, #e9c45c); --cd-ink: #f5f1e6; --cd-muted: #cfc8b6; --cd-line: #ffffff1f; --cd-glass: #0b0d16f2;
+  position: fixed; right: 16px; bottom: 0; z-index: 950; display: flex; flex-direction: row-reverse; align-items: flex-end; gap: 10px;
+  max-width: calc(100vw - 32px); pointer-events: none; font: 400 14px/1.4 var(--kv-sans, Jost, system-ui, sans-serif); color: var(--cd-ink); }
+.cd-dock > * { pointer-events: auto; }
+.cd-win { display: flex; flex-direction: column; width: 320px; height: 440px; max-height: calc(100dvh - 120px); border: 1px solid var(--cd-line);
+  border-bottom: 0; border-radius: 14px 14px 0 0; background: var(--cd-glass); backdrop-filter: blur(16px); box-shadow: 0 -10px 40px #000b; overflow: hidden; }
+.cd-win.is-min { height: auto; }
+.cd-win.is-min .cd-win__body { display: none; }
+.cd-win__head { display: flex; align-items: center; gap: 2px; min-height: 48px; padding: 4px 6px 4px 4px; border-bottom: 1px solid var(--cd-line); background: linear-gradient(180deg, #1a1f36, #10142400); }
+.cd-win.is-min .cd-win__head { border-bottom: 0; }
+.cd-win__who { flex: 1; min-width: 0; display: flex; align-items: center; gap: 10px; padding: 4px 6px; border: 0; border-radius: 10px; background: none; color: inherit; text-align: left; cursor: pointer; }
+.cd-win__who:hover { background: #ffffff0d; }
+.cd-avatar { flex: none; width: 34px; height: 34px; position: relative; border-radius: 50%; border: 1px solid #e9c45c88; background: #141826 center 20% / cover no-repeat; }
+.cd-win__name { display: grid; min-width: 0; line-height: 1.2; }
+.cd-win__name b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
+.cd-dot { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: var(--cd-muted); }
+.cd-dot::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #6b6f80; }
+.cd-dot.is-online::before { background: #5fd38a; } .cd-dot.is-match::before { background: #e9a23c; }
+.cd-badge { min-width: 20px; height: 20px; padding: 0 6px; display: inline-grid; place-items: center; border-radius: 999px; background: #e0453a; color: #fff; font: 700 11px/1 system-ui; }
+.cd-badge[hidden] { display: none; }
+.cd-icon { flex: none; width: 32px; height: 32px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 8px; background: none; color: var(--cd-muted); cursor: pointer; transition: background-color .15s, color .15s; }
+.cd-icon svg, .cd-send svg, .cd-sys__row svg { width: 18px; height: 18px; }
+.cd-icon:hover:not(:disabled), .cd-icon:focus-visible { background: #ffffff14; color: var(--cd-ink); }
+.cd-icon:disabled { opacity: .35; cursor: not-allowed; }
+.cd-win__body { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.cd-log { flex: 1; min-height: 0; overflow: auto; margin: 0; padding: 10px 12px 6px; list-style: none; display: flex; flex-direction: column; gap: 2px; }
+.cd-log > :first-child { margin-top: auto; } /* conversa ancorada embaixo, junto do campo */
+.cd-day { align-self: stretch; display: flex; align-items: center; gap: 10px; margin: 10px 0 6px; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--cd-muted); }
+.cd-day::before, .cd-day::after { content: ''; flex: 1; height: 1px; background: var(--cd-line); }
+/* Bolhas: amigo neutro à esquerda (avatar no início do grupo); minhas preenchidas em dourado à direita. Horário só no fim do grupo. */
+.cd-msg { position: relative; max-width: 80%; display: grid; gap: 3px; align-self: flex-start; margin-left: 30px; }
+.cd-msg.is-first { margin-top: 8px; }
+.cd-msg__av { position: absolute; left: -30px; top: 0; width: 24px; height: 24px; }
+.cd-msg p { margin: 0; padding: 7px 12px; border-radius: 6px 16px 16px 6px; background: #ffffff14; overflow-wrap: anywhere; }
+.cd-msg.is-first p { border-top-left-radius: 16px; }
+.cd-msg.is-last p { border-bottom-left-radius: 16px; }
+.cd-msg time { display: none; padding: 0 4px; font-size: 11px; color: var(--cd-muted); }
+.cd-msg.is-last time { display: block; }
+.cd-msg.is-mine { align-self: flex-end; margin-left: 0; text-align: right; }
+.cd-msg.is-mine p { border-radius: 16px 6px 6px 16px; background: linear-gradient(180deg, #f2d27a, #d9ad45); color: #160f02; text-align: left; }
+.cd-msg.is-mine.is-first p { border-top-right-radius: 16px; }
+.cd-msg.is-mine.is-last p { border-bottom-right-radius: 16px; }
+/* Cartões de sistema: desafio e resultado, centralizados e compactos */
+.cd-sys { align-self: center; width: min(100%, 260px); display: grid; gap: 8px; margin: 10px 0; padding: 10px 12px; border: 1px solid var(--cd-line); border-radius: 12px; background: #ffffff08; font-size: 12px; }
+.cd-sys__row { display: flex; align-items: center; gap: 8px; }
+.cd-sys__row svg { flex: none; color: var(--cd-gold); }
+.cd-sys__row b { flex: 1; min-width: 0; font-weight: 600; }
+.cd-sys__acts { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; color: var(--cd-muted); }
+.cd-sys__acts small { flex: 1; font-size: 12px; }
+.cd-seal { flex: none; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; background: #ffffff14; color: var(--cd-ink); }
+.cd-seal.is-accepted { background: #5fd38a26; color: #8ee6ad; }
+.cd-seal.is-pending { background: #e9c45c26; color: var(--cd-gold); }
+.cd-seal.is-declined, .cd-seal.is-cancelled { background: #e0453a26; color: #ffa99f; }
+.cd-duel__acts { display: flex; gap: 8px; }
+.cd-dock .cd-duel__deck { width: 100%; height: 32px; min-height: 32px; margin: 0; padding: 0 10px; font-size: 12px; }
+.cd-duel .cd-duel__deck { flex: 1 1 140px; width: auto; }
+.cd-seen { margin: 0; padding: 0 14px 4px; font-size: 11px; text-align: right; color: var(--cd-gold); }
+.cd-seen[hidden], .cd-picker[hidden], .cd-duel[hidden] { display: none; }
+.cd-duel { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 10px 12px; border-bottom: 1px solid var(--cd-line); font-size: 12px; color: var(--cd-muted); }
+.cd-picker { display: grid; gap: 8px; padding: 10px 12px; border-top: 1px solid var(--cd-line); }
+.cd-emote { justify-self: start; display: inline; margin: 0 6px 0 0; padding: 4px 10px; border: 1px solid var(--cd-line); border-radius: 999px; background: #ffffff08; color: var(--cd-ink); font-size: 12px; cursor: pointer; }
+.cd-picker { grid-template-columns: repeat(3, auto); justify-content: start; }
+.cd-emote:hover { border-color: var(--cd-gold); }
+.cd-emoji { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 2px; }
+.cd-emoji button { width: 32px; height: 32px; border: 0; border-radius: 8px; background: none; font-size: 18px; cursor: pointer; }
+.cd-emoji button:hover { background: #ffffff14; }
+.cd-form { display: flex; align-items: center; gap: 6px; padding: 8px 8px 4px; border-top: 1px solid var(--cd-line); }
+.cd-dock .cd-input { flex: 1; min-width: 0; height: 40px; margin: 0; padding: 0 14px; border: 1px solid var(--cd-line); border-radius: 999px; background: #05060c; color: var(--cd-ink); font: inherit; box-shadow: none; outline: none; }
+.cd-dock .cd-input:focus { border-color: var(--cd-gold); box-shadow: none; }
+.cd-send { flex: none; width: 40px; height: 40px; display: grid; place-items: center; padding: 0; border: 0; border-radius: 50%; background: linear-gradient(180deg, #f6dc8a, var(--cd-gold)); color: #120d04; cursor: pointer; transition: transform .1s; }
+.cd-send:active { transform: scale(.94); }
+.cd-btn { min-height: 34px; padding: 0 14px; border: 1px solid var(--cd-line); border-radius: 999px; background: none; color: var(--cd-ink); font: 600 13px var(--kv-sans, system-ui); cursor: pointer; }
+.cd-btn.is-small { min-height: 28px; padding: 0 12px; font-size: 12px; text-decoration: none; display: inline-grid; place-items: center; }
+.cd-btn.is-gold { border-color: var(--cd-gold); color: #120d04; background: linear-gradient(180deg, #f6dc8a, var(--cd-gold)); }
+.cd-foot { display: flex; align-items: center; gap: 10px; margin: 0; padding: 0 12px 8px; font-size: 11px; }
+.cd-foot .cd-status { flex: 1; color: #ff9b8a; }
+.cd-foot button { border: 0; background: none; color: var(--cd-muted); font: inherit; text-decoration: underline; cursor: pointer; padding: 0; }
+.cd-foot button:hover { color: var(--cd-ink); }
+.cd-status { font-size: 12px; color: var(--cd-muted); }
+/* Abas: conversas além das 3 janelas */
+.cd-tabs { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+.cd-tab { display: flex; align-items: center; gap: 8px; max-width: 160px; padding: 8px 12px; border: 1px solid var(--cd-line); border-radius: 999px; background: var(--cd-glass); color: var(--cd-ink); font: 600 12px var(--kv-sans, system-ui); cursor: pointer; white-space: nowrap; overflow: hidden; }
+.cd-tab:hover { border-color: var(--cd-gold); }
+/* Partida: botão Friends no canto e a lista */
+.cd-launch { position: relative; margin-bottom: 8px; }
+.cd-launch__btn { display: flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 16px; border: 1px solid var(--cd-line); border-radius: 999px; background: var(--cd-glass); color: var(--cd-ink); font: 600 12px var(--kv-sans, system-ui); letter-spacing: .08em; cursor: pointer; }
+.cd-launch__list { position: absolute; right: 0; bottom: 48px; width: 260px; max-height: 50dvh; overflow: auto; padding: 6px; border: 1px solid var(--cd-line); border-radius: 14px; background: var(--cd-glass); box-shadow: 0 10px 40px #000b; }
+.cd-launch__list button { width: 100%; display: flex; align-items: center; gap: 10px; padding: 6px 8px; border: 0; border-radius: 10px; background: none; color: inherit; text-align: left; cursor: pointer; }
+.cd-launch__list button:hover { background: #ffffff0d; }
+.cd-launch__list .cd-win__name { flex: 1; }
+/* Toast de mensagem nova */
+.cd-toast { position: fixed; right: 16px; bottom: 470px; z-index: 960; display: flex; align-items: center; gap: 10px; max-width: 280px; padding: 10px 16px 10px 10px;
+  border: 1px solid #e9c45c88; border-radius: 14px; background: #0b0d16f2; color: #f5f1e6; text-align: left; cursor: pointer; box-shadow: 0 10px 40px #000b; animation: cd-in .22s ease-out; }
+.cd-toast { font: 400 14px var(--kv-sans, system-ui); } .cd-toast span:last-child { display: grid; } .cd-toast small { color: #b9b3a3; font-size: 12px; }
+@keyframes cd-in { from { opacity: 0; transform: translateY(8px); } }
+.cd-dock button:focus-visible, .cd-dock a:focus-visible, .cd-toast:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+@media (max-width: 700px) {
+  .cd-dock { right: 0; left: 0; max-width: none; justify-content: flex-start; padding: 0 8px; }
+  .cd-win { width: 100%; } .cd-win:not(:first-of-type) { display: none; }
+  .cd-toast { left: 16px; bottom: 80px; max-width: none; }
+}
+@media (prefers-reduced-motion: reduce) { .cd-toast { animation: none; } }
+.cd-dock[hidden] { display: none; }
