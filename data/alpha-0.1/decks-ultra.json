@@ -379,43 +379,31 @@
    "tema": "Combo",
    "referencia": "Trix",
    "god": "god-athena",
-   "domain_id": "athena-v6-520",
-   "plano": "Protege a mesa até ter 3 Gold Saints Prepared; Athena Exclamation tira ATK + 3 por Gold e deixa Divine Judgment.",
+   "domain_id": "artemis-v6-524",
+   "plano": "Ramp de Artemis (Nature's Awakening, Roots, Forest Invades) paga cedo Silvers e Golds; com 3 Saints Prepared, Athena Exclamation tira ATK + 3 por Gold e deixa Divine Judgment. Domain Artemis só pelo splash, sem Ressonância.",
    "main_deck": [
     {
-     "card_id": "athena-v6-011",
-     "quantity": 3
-    },
-    {
-     "card_id": "athena-v6-013",
-     "quantity": 3
-    },
-    {
      "card_id": "athena-v6-015",
-     "quantity": 3
+     "quantity": 2
     },
     {
      "card_id": "athena-v6-017",
-     "quantity": 3
-    },
-    {
-     "card_id": "athena-v6-003",
-     "quantity": 3
-    },
-    {
-     "card_id": "athena-v6-007",
      "quantity": 2
     },
     {
-     "card_id": "athena-v6-040",
+     "card_id": "athena-v6-011",
+     "quantity": 1
+    },
+    {
+     "card_id": "athena-v6-013",
+     "quantity": 1
+    },
+    {
+     "card_id": "athena-v6-071",
      "quantity": 3
     },
     {
-     "card_id": "athena-v6-034",
-     "quantity": 2
-    },
-    {
-     "card_id": "athena-v6-043",
+     "card_id": "athena-v6-022",
      "quantity": 3
     },
     {
@@ -423,15 +411,19 @@
      "quantity": 2
     },
     {
-     "card_id": "athena-v6-023",
-     "quantity": 2
+     "card_id": "athena-v6-075",
+     "quantity": 3
     },
     {
      "card_id": "athena-v6-024",
-     "quantity": 2
+     "quantity": 3
     },
     {
-     "card_id": "athena-v6-056",
+     "card_id": "athena-v6-072",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-040",
      "quantity": 3
     },
     {
@@ -439,7 +431,7 @@
      "quantity": 3
     },
     {
-     "card_id": "athena-v6-507",
+     "card_id": "athena-v6-082",
      "quantity": 3
     },
     {
@@ -447,15 +439,27 @@
      "quantity": 3
     },
     {
-     "card_id": "athena-v6-082",
+     "card_id": "artemis-v6-417",
      "quantity": 3
     },
     {
-     "card_id": "athena-v6-061",
+     "card_id": "artemis-v6-423",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-444",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-420",
      "quantity": 2
     },
     {
-     "card_id": "athena-v6-044",
+     "card_id": "artemis-v6-437",
+     "quantity": 2
+    },
+    {
+     "card_id": "artemis-v6-443",
      "quantity": 2
     }
    ]
