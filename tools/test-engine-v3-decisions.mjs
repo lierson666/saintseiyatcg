@@ -11,6 +11,8 @@ import {startTurn, endTurn, pass, passAll, checkInvariants, RuleError} from '../
 import {declareStrike} from '../playtest/engine-v3/strike.js';
 import {refreshAwaken, announceGreatFlood} from '../playtest/engine-v3/gods.js';
 import {createClock, clockStartTurn, clockHandTo, clockExpired, clockRemaining, clockEndTurn, applyTimeout} from '../playtest/engine-v3/clock.js';
+// Valores de 3 minutos (antes de 01/11/2026): os testes conferem a lógica G3-024/031, não os números do ALPHA_CLOCK.
+const CLOCK_3MIN = {basic: 60, reserveStart: 90, reserveMax: 180, carry: 0.5};
 import {runDecisions, resume, PendingDecision} from '../playtest/engine-v3/decision.js';
 import {resumeFor} from '../playtest/engine-v3/sync.js';
 
@@ -177,7 +179,7 @@ test('G3-027: applyTimeout passa a prioridade na janela e encerra o turno fora d
 
 test('relógio + decisão: Water Prison no turno de A gasta só a reserva de B; reserva zerada → TIMEOUT_DECLINED', () => {
   const {s, ctx, run} = waterPrison();
-  const clock = createClock(s.order);
+  const clock = createClock(s.order, CLOCK_3MIN);
   clockStartTurn(clock, 'A', 0);
   const r = runDecisions(s, ctx, run);
   clockHandTo(clock, r.pending.player, 10); // G3-026: a decisão usa o relógio de quem decide
@@ -190,7 +192,7 @@ test('relógio + decisão: Water Prison no turno de A gasta só a reserva de B; 
 });
 
 test('G3-024: 60 s básicos, 90 de reserva, 50% do básico não usado vira reserva, teto 180', () => {
-  const clock = createClock(['A', 'B']);
+  const clock = createClock(['A', 'B'], CLOCK_3MIN);
   clockStartTurn(clock, 'A', 0);
   assert.equal(clockEndTurn(clock, 'A', 20), 20, '40 s não usados → +20');
   assert.equal(clockRemaining(clock, 'A', 20).reserve, 110);

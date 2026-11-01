@@ -6,7 +6,9 @@
 // turno adversário nunca reduz o básico seguinte; reserva no teto 180; sem decisão atribuída, nenhum relógio corre.
 import {emit, pass, endTurn, RuleError} from './core.js';
 
-export const ALPHA_CLOCK = Object.freeze({basic: 60, reserveStart: 90, reserveMax: 180, carry: 0.5});
+// Autor, 01/11/2026: 4 minutos no começo do turno (60 básicos + reserva 180, teto 240); antes reserva 90, teto 180.
+// `actionBonus`: como no MTG Arena, cada ação do jogador devolve alguns segundos à reserva dele (até o teto).
+export const ALPHA_CLOCK = Object.freeze({basic: 60, reserveStart: 180, reserveMax: 240, carry: 0.5, actionBonus: 5});
 
 export function createClock(order, cfg = ALPHA_CLOCK) {
   return {cfg, players: Object.fromEntries(order.map(k => [k, {basic: 0, reserve: cfg.reserveStart}])), running: null, paused: false};
@@ -35,6 +37,13 @@ export function clockResume(clock, now) { if (clock.running) clock.running.since
 // Nenhuma decisão atribuída (G3-031): o relógio de ninguém corre até o próximo `clockHandTo`/`clockStartTurn`.
 export function clockIdle(clock, now) { settle(clock, now); clock.running = null; }
 
+// Ação feita por `key` (não timeout): +actionBonus na reserva, até o teto (autor, 01/11/2026).
+export function clockBonus(clock, key, now) {
+  settle(clock, now);
+  const p = clock.players[key];
+  p.reserve = Math.min(clock.cfg.reserveMax, p.reserve + (clock.cfg.actionBonus || 0));
+}
+
 // Fim do turno próprio: 50% do básico não usado vira reserva, até o teto (35 s usados → +12,5 s).
 export function clockEndTurn(clock, key, now) {
   settle(clock, now);
@@ -56,8 +65,8 @@ export function clockExpired(clock, now) {
   return r && clockRemaining(clock, r.key, now).total <= 0 ? r.key : null;
 }
 
-// Mapeamento do autor (28/10/2026, revisto): 1 tocha acesa por 15 s restantes, arredondando para cima, teto 12.
-export const TORCH_SECONDS = 15;   // 12 tochas dividem os 3 minutos do relógio (G3-028, autor 28/10/2026)
+// Mapeamento do autor (28/10/2026, revisto): 1 tocha acesa por 20 s restantes, arredondando para cima, teto 12.
+export const TORCH_SECONDS = 20;   // 12 tochas dividem os 4 minutos do relógio (G3-028; 4 min desde 01/11/2026)
 export const torchesLit = seconds => Math.max(0, Math.min(12, Math.ceil(seconds / TORCH_SECONDS)));
 
 // O que o timeout faz (G3-027). Escolha obrigatória: `timeoutAutoChoice` (G3-030).

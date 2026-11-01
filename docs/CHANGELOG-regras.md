@@ -4,6 +4,14 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-01 — G3-024/G3-028 — Relógio de 4 minutos
+
+- **Antes:** 60 s básicos + reserva inicial 90 (teto 180); 12 tochas de 15 s.
+- **Depois:** 60 s básicos + reserva inicial 180 (teto 240): 4 minutos no começo do turno; 12 tochas de 20 s. Ainda vale G3-031 (o básico só no turno próprio) e +50% do básico não usado.
+- **Bônus por ação (como no MTG Arena):** cada ação ou resposta do jogador (não timeout) devolve 5 s à reserva dele, até o teto (`clockBonus`).
+- **Motivo:** autor, 01/11/2026: "aumente o tempo para 4 minutos, está atrapalhando muito" e "a cada ação do jogador o timer aumenta um pouco".
+- **Engine:** `engine-v3/clock.js` (`ALPHA_CLOCK`, `TORCH_SECONDS`); o arena-server usa o mesmo módulo.
+
 ## 2026-11-01 — §63 — Phoenix Ikki não é lendário
 
 - **Antes:** Phoenix Ikki (athena-v6-009), Saint, seguia a regra de lendário: uma cópia por jogador no campo.

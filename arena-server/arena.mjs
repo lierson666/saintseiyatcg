@@ -5,7 +5,7 @@ import {createMatch} from '../playtest/engine-v3/match.js';
 import {applyAction, advance} from '../playtest/engine-v3/actions.js';
 import {runDecisions, resume, restore, snapshot, PendingDecision} from '../playtest/engine-v3/decision.js';
 import {eventsFor, loseGame} from '../playtest/engine-v3/core.js';
-import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockIdle, clockRemaining, clockExpired} from '../playtest/engine-v3/clock.js';
+import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockIdle, clockRemaining, clockExpired, clockBonus} from '../playtest/engine-v3/clock.js';
 
 const opaque = key => `${key}:${randomBytes(6).toString('hex')}`; // uid sem o número da carta (não revela carta escondida)
 const RECONNECT_SECONDS = 90;
@@ -77,12 +77,13 @@ export function createArena({cards, canonIndex, catalog = () => ({cards, canonIn
     const run = () => { rec.match.ending = wasEnding; applyAction(rec.match, rec.ctx, a); advance(rec.match); };
     try { commit(rec, runDecisions(s, rec.ctx, run, [], snap), run); }
     catch (e) { restore(s, rec.ctx, snap); rec.match.ending = wasEnding; throw e; }
+    if (a.type !== 'timeout') clockBonus(rec.clock, key, now());
   }
   // Resposta à decisão pendente: só quem decide responde. Resposta recusada volta ao ponto da pergunta.
   function answer(rec, key, reply) {
     const p = rec.pending;
     if (!p || p.pending.player !== key) throw Object.assign(new Error('no decision'), {decision: 'pending'});
-    try { commit(rec, resume(rec.match.state, rec.ctx, p.run, p, reply), p.run); }
+    try { commit(rec, resume(rec.match.state, rec.ctx, p.run, p, reply), p.run); if (!reply.timeout) clockBonus(rec.clock, key, now()); }
     catch (e) {
       if (e instanceof PendingDecision) throw e;
       restore(rec.match.state, rec.ctx, p.snap);

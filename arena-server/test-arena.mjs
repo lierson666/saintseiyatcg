@@ -61,10 +61,10 @@ test('relógio no servidor: tempo esgotado no turno encerra o turno e o relógio
   assert.equal(arena.view(rec, first).clock.running, first);
   clock += 100; arena.heartbeat(rec, 'A'); arena.heartbeat(rec, 'B'); arena.sweep();
   assert.ok(!s.events.some(e => e.type === 'TIMEOUT_END_TURN'), 'ainda tem reserva');
-  clock += 60; arena.heartbeat(rec, 'A'); arena.heartbeat(rec, 'B'); arena.sweep();
+  clock += 150; arena.heartbeat(rec, 'A'); arena.heartbeat(rec, 'B'); arena.sweep();
   assert.ok(s.events.some(e => e.type === 'TIMEOUT_END_TURN' && e.player === first));
   for (let i = 0; i < 10 && s.window; i++) arena.act(rec, s.window.priority, {type: 'pass'});
   assert.equal(s.active, second);
   assert.equal(arena.view(rec, second).clock.running, second);
-  assert.equal(arena.view(rec, second).clock.players[first].reserve, 0);
+  assert.ok(arena.view(rec, second).clock.players[first].reserve <= 5 * 3, 'reserva zerou; só os bônus dos passes depois'); // +5 por ação (01/11/2026)
 });

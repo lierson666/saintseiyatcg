@@ -10,7 +10,7 @@ import {startTurn, endTurn, passAll, pass, loseSoul, checkInvariants, eventsFor,
 import {declareStrike} from '../playtest/engine-v3/strike.js';
 import {atkOf, hpOf, damageDevotee, checkDefeats} from '../playtest/engine-v3/effects.js';
 import {announceExclamation, exclamationCost, ultimateBlock, removeJudgment, computeSoulMax, soulMax, addSoulMaxEffect, gainSoul, payMixed, refreshAwaken} from '../playtest/engine-v3/gods.js';
-import {createClock, clockStartTurn, clockEndTurn, clockRemaining, clockHandTo, clockPause, clockResume, clockExpired, torchesLit, timeoutAction, ALPHA_CLOCK} from '../playtest/engine-v3/clock.js';
+import {createClock, clockStartTurn, clockEndTurn, clockRemaining, clockHandTo, clockPause, clockResume, clockExpired, torchesLit, timeoutAction, ALPHA_CLOCK, clockBonus} from '../playtest/engine-v3/clock.js';
 import {createCursor, resumeFor} from '../playtest/engine-v3/sync.js';
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
@@ -182,20 +182,22 @@ test('G3-015: Soul 0 encerra na hora; gatilho pendente não resolve depois', () 
   assert.deepEqual([s.victory, s.chain.length, s.players.A.latent], [{winner: 'A'}, 0, 0], 'Cosmo of Hope não chega a resolver');
 });
 
-test('Relógio Alpha: 60 s básicos, reserva 90 (teto 180), 50% do básico não usado vira reserva; animação pausa', () => {
+test('Relógio Alpha: 60 s básicos, reserva 180 (teto 240), 50% do básico não usado vira reserva; animação pausa', () => {
   const c = createClock(['A', 'B']);
   clockStartTurn(c, 'A', 0);
   assert.equal(clockEndTurn(c, 'A', 35), 12.5);
-  assert.equal(clockRemaining(c, 'A', 35).reserve, 102.5);
+  assert.equal(clockRemaining(c, 'A', 35).reserve, 192.5);
   clockStartTurn(c, 'B', 100); clockPause(c, 110); clockResume(c, 140);
   assert.equal(clockRemaining(c, 'B', 150).basic, 40, '30 s de animação não contam');
   clockHandTo(c, 'A', 150); // A responde numa janela: só a reserva dele corre
-  assert.deepEqual(clockRemaining(c, 'A', 160), {basic: 0, reserve: 92.5, total: 92.5});
-  const full = createClock(['A']); full.players.A.reserve = 179; clockStartTurn(full, 'A', 0);
-  assert.equal(clockEndTurn(full, 'A', 0), 1, 'teto 180');
+  assert.deepEqual(clockRemaining(c, 'A', 160), {basic: 0, reserve: 182.5, total: 182.5});
+  const full = createClock(['A']); full.players.A.reserve = 239; clockStartTurn(full, 'A', 0);
+  assert.equal(clockEndTurn(full, 'A', 0), 1, 'teto 240');
   const out = createClock(['A']); clockStartTurn(out, 'A', 0);
   assert.equal(clockExpired(out, ALPHA_CLOCK.basic + ALPHA_CLOCK.reserveStart), 'A');
-  assert.deepEqual([torchesLit(180), torchesLit(165), torchesLit(61), torchesLit(60), torchesLit(15), torchesLit(1), torchesLit(0), torchesLit(9999)], [12, 11, 5, 4, 1, 1, 0, 12]);
+  const bonus = createClock(['A']); bonus.players.A.reserve = 237; clockBonus(bonus, 'A', 0);
+  assert.equal(bonus.players.A.reserve, 240, '+5 por ação, até o teto');
+  assert.deepEqual([torchesLit(240), torchesLit(220), torchesLit(81), torchesLit(80), torchesLit(20), torchesLit(1), torchesLit(0), torchesLit(9999)], [12, 11, 5, 4, 1, 1, 0, 12]);
 });
 
 test('Timeouts: janela passa prioridade; fase de ações encerra o turno; opcional recusa', () => {

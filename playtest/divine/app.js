@@ -16,7 +16,7 @@ import {STEPS, ABILITY_STEPS} from '../choices-v3.js?v=2';
 import {createScene, THEMES} from './scene.js?v=20261031-pool1';
 import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudgment, greatFloodBlock, announceGreatFlood, GREAT_FLOOD_COST,
   greatEclipseBlock, GREAT_ECLIPSE_COST, obliterationBlock, OBLITERATION_COST, bloodlustBlock, BLOODLUST_COST, moonHarvestBlock, moonAwakeningBlock, MOON_AWAKENING_COST} from '../engine-v3/gods.js';
-import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout} from '../engine-v3/clock.js';
+import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout, clockBonus} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
 import {createDirector} from './director.js?v=18';
@@ -172,7 +172,9 @@ async function act(action) {
     try { autoAdvance(); } catch (e) { if (e instanceof PendingDecision) throw e; warn(why(e)); }
   };
   let r;
+  const actor = clock?.running?.key; // quem decidia: ganha o bônus de ação do relógio (como no MTG Arena)
   try { r = runDecisions(s, ctx, run); } catch (e) { match.ending = wasEnding; warn(why(e)); console.debug(e); render(); return; }
+  if (actor && action?.type !== 'timeout') clockBonus(clock, actor, now());
   return present(r, run, from);
 }
 // Avança o que não precisa de escolha: início do turno seguinte e passes automáticos.
@@ -202,7 +204,8 @@ function reply(answer) {
   const p = pending, s = S();
   $$('.pick-modal, .pick-veil').forEach(el => el.remove()); // respondeu: o popup sai já, sem esperar a animação da resolução
   let r;
-  try { r = resume(s, ctx, p.run, p, answer); } catch (e) {
+  const actor = p.pending.player;
+  try { r = resume(s, ctx, p.run, p, answer); if (!answer.timeout) clockBonus(clock, actor, now()); } catch (e) {
     warn(why(e)); console.debug(e);
     restore(s, ctx, p.snap);
     runDecisions(s, ctx, p.run, p.answers, p.snap);

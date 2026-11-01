@@ -11,6 +11,8 @@ import {createMatch} from '../playtest/engine-v3/match.js';
 import {startTurn, openWindow} from '../playtest/engine-v3/core.js';
 import {ultimateBlock} from '../playtest/engine-v3/gods.js';
 import {createClock, clockStartTurn, clockEndTurn, clockRemaining, clockHandTo, clockPause, clockResume, clockIdle, clockExpired, timeoutAction, timeoutAutoChoice, stableOrder} from '../playtest/engine-v3/clock.js';
+// Valores de 3 minutos (antes de 01/11/2026): os testes conferem a lógica G3-024/031, não os números do ALPHA_CLOCK.
+const CLOCK_3MIN = {basic: 60, reserveStart: 90, reserveMax: 180, carry: 0.5};
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json');
@@ -95,7 +97,7 @@ test('G3-030: registra TIMEOUT_AUTO_CHOICE com opções elegíveis, critério e 
 
 // ---------- G3-031 ----------
 test('G3-031: resposta no turno adversário gasta só a reserva; o básico do ativo não corre; o próximo básico vem cheio', () => {
-  const c = createClock(['A', 'B']);
+  const c = createClock(['A', 'B'], CLOCK_3MIN);
   clockStartTurn(c, 'A', 0);
   clockHandTo(c, 'B', 10); // B responde por 20 s
   clockHandTo(c, 'A', 30);
@@ -107,14 +109,14 @@ test('G3-031: resposta no turno adversário gasta só a reserva; o básico do at
 });
 
 test('G3-031: vários gatilhos na mesma janela gastam a reserva de forma acumulada', () => {
-  const c = createClock(['A', 'B']);
+  const c = createClock(['A', 'B'], CLOCK_3MIN);
   clockStartTurn(c, 'A', 0);
   for (const [from, to] of [[0, 15], [20, 45], [50, 60]]) { clockHandTo(c, 'B', from); clockHandTo(c, 'A', to); }
   assert.equal(clockRemaining(c, 'B', 60).reserve, 90 - 15 - 25 - 10);
 });
 
 test('G3-031: reserva esgotada fora do turno → timeout homologado (passar prioridade)', () => {
-  const c = createClock(['A', 'B']), s = {window: null};
+  const c = createClock(['A', 'B'], CLOCK_3MIN), s = {window: null};
   clockStartTurn(c, 'A', 0);
   clockHandTo(c, 'B', 0);
   assert.equal(clockExpired(c, 89), null);
@@ -124,7 +126,7 @@ test('G3-031: reserva esgotada fora do turno → timeout homologado (passar prio
 });
 
 test('G3-031: sem decisão atribuída e em cinemática, ninguém gasta tempo; END TURN e virada de Round mantêm teto 180', () => {
-  const c = createClock(['A', 'B']);
+  const c = createClock(['A', 'B'], CLOCK_3MIN);
   clockStartTurn(c, 'A', 0);
   clockIdle(c, 5);
   assert.deepEqual(clockRemaining(c, 'A', 500).basic, 55);
