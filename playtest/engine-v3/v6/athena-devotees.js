@@ -90,8 +90,8 @@ export default {
       lockStrike(s, self);
       return true;
     },
-    // Rebirth (estilo Arclight Phoenix, autor 31/10/2026): gatilho obrigatório do Tártaro quando o dono conjura a terceira
-    // Moment ou Technique do turno; Ikki volta ao campo Prepared (Impulse deixa golpear na hora).
+    // Arise from the Ashes (estilo Arclight Phoenix, autor 31/10/2026; nome de 01/11/2026): gatilho obrigatório do Tártaro
+    // quando o dono conjura a terceira Moment ou Technique do turno; cada cópia dispara e volta sozinha, Prepared.
     tartarus: {
       watchSpell: (s, c, key, self, caster, spellUid) => caster === key && isMT(c, spellUid)
         && s.events.filter(e => e.type === 'card_played' && e.kind === 'Spell' && e.player === key && e.turn === s.turn && isMT(c, e.uid)).length === 3

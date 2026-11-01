@@ -112,6 +112,13 @@ test('009 Eternal Phoenix (autor 01/11/2026): Ikki não é lendário, várias c�
   assert.ok(s.players.A.battlefield.includes(a) && s.players.A.battlefield.includes(b));
 });
 
+test('009 Arise from the Ashes: todas as cópias no Tartarus voltam na terceira Spell', () => {
+  const {s, ctx, give} = setup();
+  const a = give('A', 'athena-v6-009', 'tartarus'), b = give('A', 'athena-v6-009', 'tartarus');
+  for (let i = 0; i < 3; i++) { playSpell(s, ctx, 'A', give('A', 'poseidon-v6-135', 'hand')); if (s.window) passAll(s); }
+  assert.ok(s.players.A.battlefield.includes(a) && s.players.A.battlefield.includes(b));
+});
+
 test('009 Rebirth: só a partir do Tartarus; no campo a terceira Spell não faz nada', () => {
   const {s, ctx, give} = setup();
   const ikki = give('A', 'athena-v6-009');
