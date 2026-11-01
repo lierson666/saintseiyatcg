@@ -4028,7 +4028,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "MOON HARVEST — Divine Power Once each round, when you place a card as a Cosmo Base, you may ignore its Cosmoble requirement. If you do, lose {2}{S}.",
-        "HUNTRESS TRAINING — Divine Command\nCost: {1}{C}. Activate only during your turn, once each turn.\nPut a Training counter on target friendly Devotee.\nAwakened: put two instead."
+        "HUNTRESS TRAINING — Divine Command\nCost: {1}{C}. Activate only during your turn, once each turn.\nTarget friendly Devotee gets +1 ATK / +1 HP until the end of the round.\nAwakened: put a Training counter on it instead."
       ],
       "habilidade_awaken_en": "MOONLIGHT BLESSING — Awaken 3\nOnce each round, when you would gain Latent Cosmo, gain an additional {1}{L}, up to the normal limit of 3.",
       "ultimate_en": "MOON AWAKENING — Ultimate\nCost: {9}{C}\nChoose up to five Cosmo Bases you control.\nUntil the end of this round, they become 3/3 Moon Spirit Devotees with Impulse, Long Range and Pierce, in addition to being Cosmo Bases.\nWhenever one of those Moon Spirits deals damage to an enemy God during a Strike, that God loses an additional {2}{S}.\nThose Cosmo Bases cannot produce Cosmo while transformed.\nAt the end of this round, they stop being Devotees and remain on the Battlefield as Cosmo Bases.",
@@ -4038,7 +4038,7 @@
       "tagline_pt": "Imperador dos Sete Mares",
       "habilidades_pt": [
         "COLHEITA LUNAR — Poder Divino\nUma vez por rodada, quando você colocar uma carta como Base de Cosmo, você pode ignorar o requisito de Cosmável dela. Se fizer isso, perca {2}{S}.",
-        "TREINO DA CAÇA — Comando Divino\nCusto: {1}{C}. Ative apenas durante o seu turno, uma vez por turno.\nColoque 1 marcador de Treinamento no Devoto aliado alvo.\nDesperto: coloque 2 em vez disso."
+        "TREINO DA CAÇA — Comando Divino\nCusto: {1}{C}. Ative apenas durante o seu turno, uma vez por turno.\nO Devoto aliado alvo recebe +1 ATQ / +1 PV até o fim da rodada.\nDesperto: coloque 1 marcador de Treinamento nele em vez disso."
       ],
       "habilidade_awaken_pt": "BÊNÇÃO DO LUAR — Despertar 3\nUma vez por rodada, quando você ganharia Cosmo Latente, ganhe {1}{L} adicional, até o limite normal de 3.",
       "ultimate_pt": "DESPERTAR DA LUA — Supremo\nCusto: {9}{C}\nEscolha até cinco Bases de Cosmo que você controla.\nAté o fim desta rodada, elas se tornam Devotos Espíritos Lunares 3/3 com Impulso, Longo Alcance e Perfurar, além de continuarem sendo Bases de Cosmo.\nSempre que um desses Espíritos Lunares causa dano a um Deus inimigo durante um Golpe, esse Deus perde {2}{S} adicionais.\nEssas Bases de Cosmo não podem produzir Cosmo enquanto estiverem transformadas.\nNo fim desta rodada, elas deixam de ser Devotos e permanecem no Campo de Batalha como Bases de Cosmo.",

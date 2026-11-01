@@ -74,14 +74,16 @@ test('Ares BLOOD TOLL: 1 dano no Devotee inimigo e Ares perde 1 Soul, mesmo Awak
   assert.deepEqual([t.s.units[foe].damage, t.A.soul], [1, soul - 1]);
 });
 
-test('Artemis HUNTRESS TRAINING: 1 Training counter; Awakened 2', () => {
+test('Artemis HUNTRESS TRAINING: +1/+1 até o fim do Round; Awakened 1 Training counter', () => {
   const t = setup('god-artemis'), ally = t.devotee('A');
+  const [atk, hp] = [atkOf(t.s, t.ctx, ally), hpOf(t.s, t.ctx, ally)];
   use(t.s, t.ctx, ally);
-  assert.equal(t.s.units[ally].training, 1);
+  assert.ok(!t.s.units[ally].training);
+  assert.deepEqual([atkOf(t.s, t.ctx, ally), hpOf(t.s, t.ctx, ally)], [atk + 1, hp + 1]);
   const w = setup('god-artemis'); w.awaken();
   const ally2 = w.devotee('A');
   use(w.s, w.ctx, ally2);
-  assert.equal(w.s.units[ally2].training, 2);
+  assert.equal(w.s.units[ally2].training, 1);
 });
 
 test('Divine Command: custa {1}{C}, uma vez por turno, só no próprio turno com a pilha vazia', () => {
@@ -94,4 +96,17 @@ test('Divine Command: custa {1}{C}, uma vez por turno, só no próprio turno com
   assert.throws(() => activateCommand(t.s, t.ctx, 'A', foe), RuleError);
   endTurn(t.s); passAll(t.s);
   assert.equal(commandBlock(t.s, t.ctx, 'A', foe), 'sorcery', 'turno do oponente');
+});
+
+test('Hades DARK TOUCH: HP restante 0 derrota o Devotee; só ATK 0 não derrota', () => {
+  const t = setup('god-hades'), thin = t.devotee('B', u => hpOf(t.s, t.ctx, u) >= 2);
+  t.s.units[thin].damage = hpOf(t.s, t.ctx, thin) - 1;
+  use(t.s, t.ctx, thin);
+  assert.ok(!t.B.battlefield.includes(thin), 'HP restante 0 sai do campo');
+
+  const w = setup('god-hades'), weak = w.devotee('B', u => hpOf(w.s, w.ctx, u) >= 2);
+  w.s.effects.push({kind: 'mod', target: weak, atk: 1 - atkOf(w.s, w.ctx, weak), duration: 'this_round', round: w.s.round});
+  use(w.s, w.ctx, weak);
+  assert.equal(atkOf(w.s, w.ctx, weak), 0);
+  assert.ok(w.B.battlefield.includes(weak), 'ATK 0 fica em campo');
 });

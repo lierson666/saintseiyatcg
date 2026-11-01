@@ -322,6 +322,24 @@ test('Long Range: alvo que sobrevive retalia; vale contra Nimble (§43, 01/11/20
   assert.equal(b.s.units[b.seiya].damage, 0, 'Long Range vale contra Nimble');
 });
 
+test('Moment como resposta no próprio turno paga em Base; no turno do adversário, Base não serve (autor, 01/11/2026)', () => {
+  const {s, ctx, toHand, field} = setup();
+  const seiya = field('A', '001'), mine = toHand('A', '056'), theirs = toHand('B', '056');
+  const pa = s.players.A, pb = s.players.B, cost = 3;
+  pa.bases = pa.deck.splice(0, cost).map(uid => ({uid, prepared: true}));
+  pb.bases = pb.deck.splice(0, cost).map(uid => ({uid, prepared: true}));
+  startTurn(s);
+  pa.bases.forEach(b => { b.prepared = true; }); pb.bases.forEach(b => { b.prepared = true; });
+  pa.latent = pb.latent = 0;
+  declareStrike(s, ctx, seiya, {kind: 'god', player: 'B'});
+  assert.throws(() => playSpell(s, ctx, 'B', theirs, () => {}), RuleError); // turno de A: B só paga com Latent
+  s.window.priority = 'A';
+  const before = pa.bases.filter(b => b.prepared).length;
+  playSpell(s, ctx, 'A', mine, () => {});
+  assert.ok(pa.bases.filter(b => b.prepared).length < before);
+  assert.deepEqual([pa.latent, pa.stack], [0, [mine]]);
+});
+
 // Guia §5: Moment como AÇÃO, Technique e Equipment pagam em Base e/ou Latent; Devotee só Base.
 test('custo misto: 1 Base + 2 Latent pagam uma Spell de custo 3 no próprio turno; Devotee não usa Latent', () => {
   const {s} = setup();

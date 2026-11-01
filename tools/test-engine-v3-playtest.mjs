@@ -255,7 +255,7 @@ function play(g, maxTurns = 240) { // G3-037 (1 compra por turno): partidas mais
 
 // ---------- Partidas ----------
 
-const SEEDS = Array.from({length: 48}, (_, i) => i + 1);
+const SEEDS = Array.from({length: 64}, (_, i) => i + 1); // cobertura por sorteio do bot: 48 deixava de alcançar Pressure quando a regra de pagamento mudou
 const results = SEEDS.map(seed => play(game(seed)));
 
 test('playtest: 24 partidas Athena × Poseidon terminam com vencedor, sem objeto perdido e reproduzíveis pela seed', () => {

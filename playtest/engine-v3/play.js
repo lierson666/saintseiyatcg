@@ -12,8 +12,9 @@ import {aim, withTargets} from './v6/targets.js';
 import {resonates} from '../../shared/canon-cards.js';
 
 // Guia §5: Moment como AÇÃO, Technique, Equipment que não é Armor, Equip e habilidades comuns pagam em Base e/ou Latent.
-// Devotee, Armor e Ultimate: só Base; Moment como resposta: só Latent.
+// Devotee, Armor e Ultimate: só Base; Moment como resposta: só Latent no turno do adversário, Base e/ou Latent no próprio.
 export const mixed = cost => cost && {...cost, unit: 'mixed'};
+const responseCost = (state, key, cost) => (state.active === key ? mixed(cost) : {amount: cost.amount, unit: 'latent'});
 
 // Custo impresso: Base (D4), Latent ou misto. Valida tudo antes de mexer no estado.
 // shortcut: no misto gasta Base primeiro e completa com Latent (o jogador não escolhe a divisão); Latent persiste, Base renova.
@@ -274,7 +275,7 @@ export function playSpell(state, ctx, key, uid, choice = {}) {
   const card = fromHand(state, ctx, key, uid, 'Spell');
   // Instant: fora de janela só o ativo; dentro, quem tem prioridade (P06). Checa antes de pagar.
   if (state.window ? state.window.priority !== key : key !== state.active) throw new RuleError('P06', `${key} não pode jogar Instant agora`);
-  payCost(state, key, state.window ? {amount: card.cost.amount, unit: 'latent'} : mixed(card.cost)); // resposta: só Latent (guia §5)
+  payCost(state, key, state.window ? responseCost(state, key, card.cost) : mixed(card.cost)); // guia §5
   leaveHand(state, key, uid);
   p.stack.push(uid);
   emit(state, 'card_played', {player: key, uid, kind: 'Spell', category: category.category});
@@ -326,7 +327,7 @@ function playSpellV6(state, ctx, key, uid, choice) {
   if (state.window.priority !== key) throw new RuleError('P06', `${key} não tem prioridade`);
   entry.spell.check?.(state, ctx, key, choice);
   aimed = aim(state, ctx, key, uid, entry, choice);
-  payCast(state, ctx, key, uid, {amount: card.cost.amount, unit: 'latent'}); // resposta: só Latent (guia §XII)
+  payCast(state, ctx, key, uid, responseCost(state, key, card.cost)); // guia §5
   leaveHand(state, key, uid);
   entry.spell.cost?.(state, ctx, key, uid);
   state.players[key].stack.push(uid);

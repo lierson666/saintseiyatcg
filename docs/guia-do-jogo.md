@@ -114,7 +114,7 @@ Uma carta utilizada como Cosmo Base deixa de funcionar como sua carta original e
 
 **Hidden Cosmo {X}** (PT: Cosmo Oculto) é uma keyword impressa (autor, 31/10/2026). Uma carta com Hidden Cosmo que está como sua Cosmo Base pode ser jogada da Base, pagando **{X}** no lugar do custo impresso.
 
-- Momento e forma de pagar: os mesmos da carta (§5). Devotee e Technique no próprio turno, com a pilha vazia; Moment como ação ou como resposta, e na resposta só com Latent. Vai à pilha normalmente e pode ser respondida.
+- Momento e forma de pagar: os mesmos da carta (§5). Devotee e Technique no próprio turno, com a pilha vazia; Moment como ação ou como resposta, e na resposta no turno do adversário só com Latent. Vai à pilha normalmente e pode ser respondida.
 - A própria carta pode pagar 1 do {X} antes de sair, se estiver Prepared e se Base puder pagar aquele custo (não na resposta).
 - Ao sair da Base, a carta do topo do seu deck entra no lugar como Cosmo Base, virada para baixo e Unprepared. O número de Bases não cai. Deck vazio: nada entra no lugar.
 - Reduções de custo valem sobre {X}. Cartas com Hidden Cosmo são sempre Cosmoble.
@@ -128,8 +128,8 @@ Uma Base Prepared paga 1 Base Cosmo e fica indisponível até a renovação. Sou
 | Jogar Devotee | Sim | Não |
 | Jogar qualquer Armor | Sim | Não |
 | Ativar Ultimate | Sim | Não |
-| Moment no próprio turno | Sim | Sim |
-| Moment como resposta | Não | Sim |
+| Moment no próprio turno, inclusive como resposta | Sim | Sim |
+| Moment como resposta no turno do adversário | Não | Sim |
 | Technique e Equipment que não seja Armor | Sim | Sim |
 | Equip, transferência, evolução e habilidades comuns | Sim | Sim |
 
@@ -451,7 +451,7 @@ AFTERLIFE é uma habilidade ativada que só funciona enquanto a carta está no T
 
 Escrita: “Afterlife {custo}: efeito”.
 
-* Pode ser usada no próprio turno, com a pilha vazia, ou como resposta, quando o jogador tem prioridade. Como resposta, o custo é pago só com Latent, como um Moment (§5).
+* Pode ser usada no próprio turno, com a pilha vazia, ou como resposta, quando o jogador tem prioridade. Como resposta, o custo é pago só com Latent.
 * Entra na pilha como as outras ativações. Depois de resolver, a carta vai para o Void.
 * Fora do Tartarus (campo, mão, deck, Void), a habilidade não funciona. A mesma carta não pode ter duas ativações de Afterlife na pilha.
 * Gatilho de derrota não é Afterlife, mesmo que devolva a carta do Tartarus (ex.: Deadly Beetle Stand, Underworld Skeleton, Phoenix Ikki).
@@ -614,7 +614,7 @@ Revisado em 31/10/2026 (ALPHA-P01, P02, P03 e P06, aprovadas em 28/10/2026; comp
 ### 56. Timing, respostas e resolução
 
 - Fora de uma janela, só o jogador ativo joga cartas, ativa habilidades e declara Strike, sempre com a pilha vazia. O jogador não ativo só age respondendo nas janelas.
-- **Moment** pode ser jogado no próprio turno ou como resposta em uma janela de prioridade, inclusive no turno do adversário. Como resposta, paga integralmente seus custos exclusivamente em Latent Cosmo. **Technique** só é jogada no próprio turno, salvo texto explícito (autor, 29/10/2026). Event e Miracle não são subtipos: as cartas que eram Event (052, 055, 083) são **Moment** e as que eram Miracle são **Technique** (autor, 31/10/2026). Toda Spell jogada (Technique ou Moment) entra na pilha e abre uma janela de resposta; só resolve depois que os dois jogadores passam em sequência (autor, 29/10/2026). Alvos de Spell são escolhidos ao jogá-la, antes da janela; respostas veem o alvo. Se o alvo não estiver mais disponível na resolução, a parte que dependia dele não acontece (autor, 29/10/2026).
+- **Moment** pode ser jogado no próprio turno ou como resposta em uma janela de prioridade, inclusive no turno do adversário. Como resposta no turno do adversário, paga integralmente seus custos exclusivamente em Latent Cosmo; no próprio turno, inclusive como resposta, paga em Base e/ou Latent (autor, 01/11/2026). **Technique** só é jogada no próprio turno, salvo texto explícito (autor, 29/10/2026). Event e Miracle não são subtipos: as cartas que eram Event (052, 055, 083) são **Moment** e as que eram Miracle são **Technique** (autor, 31/10/2026). Toda Spell jogada (Technique ou Moment) entra na pilha e abre uma janela de resposta; só resolve depois que os dois jogadores passam em sequência (autor, 29/10/2026). Alvos de Spell são escolhidos ao jogá-la, antes da janela; respostas veem o alvo. Se o alvo não estiver mais disponível na resolução, a parte que dependia dele não acontece (autor, 29/10/2026).
 - **Tudo vai à pilha, como no Magic (autor, 30/10/2026):** jogar Devotee ou Equipment (inclusive Armor) e ativar habilidade ({T}, {N}{C}, Domain, poder divino e Ultimate) também entra na pilha e abre janela de resposta, como as Spells. Custos e alvos são pagos e anunciados ao declarar; o efeito acontece na resolução. Devotee e Equipment só entram em campo quando resolvem; se forem contrariados, vão ao Tartarus do dono. Só Moment responde; colocar Base continua fora da pilha.
 - **Gatilhos simultâneos (APNAP, autor, 31/10/2026):** quando vários gatilhos disparam ao mesmo tempo, os do jogador ativo entram na pilha primeiro e os do outro jogador por cima (resolvem antes). Cada jogador escolhe a ordem dos próprios gatilhos antes de qualquer passe de prioridade; sem escolha, vale a ordem em que dispararam.
 - **Gatilho opcional impossível não dispara (autor, 31/10/2026):** um gatilho opcional (“you may”, custo a pagar, “once each round”) que não pode ser usado no momento do disparo — custo que o controlador não consegue pagar, limite por rodada já usado ou nenhum alvo válido — não dispara: não vai à pilha, não abre janela e não aparece no log. A condição é checada no disparo e de novo na resolução; se na resolução já não der para usar, ele resolve sem efeito. Vale também para gatilho obrigatório que não teria efeito nenhum (sem alvo ou efeito possível): não dispara.
@@ -669,7 +669,7 @@ Se um Strike causar Soul zero aos dois Gods simultaneamente por efeitos aplicáv
 ### 60. Cosmo, Latent e custos
 
 - Uma Base disponível paga 1 Cosmo e fica indisponível até a renovação. Gastar Bases para pagar é parte do pagamento; não cria jogada adicional nem exige guardar um estoque de Cosmo gerado sem uso.
-- Aplicar a matriz da seção 5: Devotee, Armor e Ultimate usam somente Base; Moment como resposta usa somente Latent; os demais custos aceitam ambos, respeitando restrições expressas. Cosmo temporário só paga custos genéricos, salvo texto específico, e não é armazenado automaticamente.
+- Aplicar a matriz da seção 5: Devotee, Armor e Ultimate usam somente Base; Moment como resposta no turno do adversário usa somente Latent; os demais custos aceitam ambos, respeitando restrições expressas. Cosmo temporário só paga custos genéricos, salvo texto específico, e não é armazenado automaticamente.
 - Receber dano não gera Latent (regra da 2.1 retirada pelo autor, 01/11/2026). Latent vem das Bases Prepared na End Phase e de cartas que o criem.
 - Limite de **3 Latent por jogador**, persistente entre turnos. As Bases Prepared viram Latent no início da End Phase do seu turno (§5).
 - Escolhas e custos são validados antes de gastar; pagamento insuficiente não produz gasto parcial. Recursos pagos em uma declaração válida não retornam se o efeito depois falhar.

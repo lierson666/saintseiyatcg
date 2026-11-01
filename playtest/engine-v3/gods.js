@@ -95,9 +95,11 @@ export function ultimateBlock(state, ctx, key, saints) {
   if (saints) {
     try { if (!validSaints(state, ctx, key, saints)) return 'saints'; } catch (e) { if (e instanceof IdentityGap) return 'identity'; throw e; }
   }
-  if (saints && state.players[key].bases.filter(b => b.prepared).length < exclamationCost(ctx, saints)) return 'cost';
+  if (saints && exclamationFunds(state, key) < exclamationCost(ctx, saints)) return 'cost';
   return null;
 }
+// `state.exclamationLatent`: teste de regra só do simulador (desligado no jogo): Latent completa o que as Bases não pagam.
+const exclamationFunds = (state, key) => state.players[key].bases.filter(b => b.prepared).length + (state.exclamationLatent ? state.players[key].latent : 0);
 
 // G3-005/006 + D229: anúncio na fase de ações do próprio turno, cadeia vazia; escolhe os 3 Saints e paga tudo
 // (Base preparada, decisão do autor de 28/10/2026). Anúncio ilegal não gasta nada nem consome o uso.
@@ -106,8 +108,9 @@ export function announceExclamation(state, ctx, key, saints) {
   const why = ultimateBlock(state, ctx, key, saints);
   if (why) throw new RuleError('G3-005', `Athena Exclamation indisponível: ${why}`);
   assertIdle(state);
-  const cost = exclamationCost(ctx, saints);
-  spendBase(state, key, cost);
+  const cost = exclamationCost(ctx, saints), bases = state.players[key].bases.filter(b => b.prepared).length;
+  spendBase(state, key, Math.min(bases, cost));
+  if (cost > bases) { state.players[key].latent -= cost - bases; emit(state, 'cosmo_spent', {player: key, unit: 'latent', amount: cost - bases}); }
   state.divine[key].ultimateUsed = true;
   emit(state, 'ultimate_announced', {player: key, ability: 'ATHENA EXCLAMATION', cost, saints: [...saints]});
   pushTriggers(state, [{controller: key, activated: true, uid: `ultimate:${key}`, ability: 'ATHENA EXCLAMATION', run: st => resolveExclamation(st, ctx, key, saints)}]);
@@ -373,8 +376,9 @@ export const COMMANDS = {
   'god-hades': {ability: 'DARK TOUCH', side: 'enemy', run: (s, c, key, uid, awake) => { k.buff(s, uid, awake ? -2 : -1, awake ? -2 : -1); k.checkDefeats(s, c); }},
   'god-ares': {ability: 'BLOOD TOLL', side: 'enemy', run: (s, c, key, uid) => { k.damage(s, c, uid, 1); if (!s.victory) k.loseSoulOf(s, key, 1); }},
   'god-artemis': {ability: 'HUNTRESS TRAINING', side: 'friendly', run: (s, c, key, uid, awake) => {
-    s.units[uid].training = (s.units[uid].training || 0) + (awake ? 2 : 1);
-    emit(s, 'training', {uid, amount: awake ? 2 : 1});
+    if (!awake) { k.buff(s, uid, 1, 1); return; } // +1/+1 até o fim do Round; Training permanente só Awakened (autor, 01/11/2026)
+    s.units[uid].training = (s.units[uid].training || 0) + 1;
+    emit(s, 'training', {uid, amount: 1});
   }},
 };
 const commandSplit = (state, key) => { const base = Math.min(COMMAND_COST, state.players[key].bases.filter(b => b.prepared).length); return {base, latent: COMMAND_COST - base}; };

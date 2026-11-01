@@ -6,6 +6,7 @@
 
 import {runDecisions, resume, restore, snapshot} from '../engine-v3/decision.js';
 import {passAll} from '../engine-v3/core.js';
+import {removeJudgment} from '../engine-v3/gods.js';
 
 const COMBO = (list, k) => (k === 0 ? [[]] : list.flatMap((x, i) => COMBO(list.slice(i + 1), k - 1).map(c => [x, ...c])));
 
@@ -108,7 +109,7 @@ export function createAI(h) {
   // hard: a Base vem antes (a IA simples já escolhe); depois, a jogada que mais melhora a mesa, ou End Turn se nenhuma melhorar.
   function next(key) {
     const simple = nextSimple(key);
-    if (level() !== 'hard' || !h.ctx || simple?.base) return simple;
+    if (level() !== 'hard' || !h.ctx || simple?.base || simple?.must) return simple; // `must`: a avaliação não enxerga o Judgment
     const stay = evaluate(key);
     let best = null, top = stay + 0.01;
     for (const a of simple ? [simple, ...allPlays(key)] : allPlays(key)) {
@@ -116,6 +117,27 @@ export function createAI(h) {
       if (score != null && score > top) { top = score; best = a; }
     }
     return best;
+  }
+
+  // Athena Exclamation: o trio Prepared de maior perda de Soul, se for letal, se o adversário não tiver 3 Devotees para
+  // pagar o Divine Judgment agora, ou do Round 6 em diante.
+  function exclamation(key) {
+    const s = h.S(), id = `${s.turn}:ultimate`;
+    if (s.divine[key].god !== 'god-athena' || s.divine[key].ultimateUsed || tried.has(id)) return null;
+    const loss = trio => trio.reduce((n, u) => n + h.atk(u) + (/Gold Saint/.test(h.info(u).type) ? 3 : 0), 0);
+    const saints = devotees(key).filter(u => h.isSaint(u) && s.units[u]?.prepared);
+    const trio = COMBO(saints, 3).filter(t => !h.ultimateBlock(key, t)).sort((a, b) => loss(b) - loss(a))[0];
+    const foe = enemyOf(key);
+    globalThis.EXCL_PROBE?.(key, s, saints.length, COMBO(saints, 3).length, !!trio);
+    if (!trio || !(loss(trio) >= s.players[foe].soul || devotees(foe).length < 3 || s.round >= (globalThis.EXCL_ROUND ?? 6))) return null;
+    return {id, must: true, run: () => h.announceExclamation(key, trio)};
+  }
+  // Divine Judgment (D206): no último Round do prazo, paga com os 3 Devotees mais baratos. easy não se defende.
+  function judgmentDefense(key) {
+    const s = h.S(), j = s.divine?.[key]?.judgment, id = `${s.turn}:judgment`, mine = devotees(key);
+    if (!j || level() === 'easy' || s.round < j.deadline || mine.length < 3 || tried.has(id)) return null;
+    const trio = [...mine].sort((a, b) => cost(a) - cost(b)).slice(0, 3);
+    return {id, must: true, run: () => removeJudgment(s, h.ctx(), key, trio)};
   }
 
   // Próxima ação no próprio turno: {id, run} ou null (End Turn).
@@ -140,14 +162,11 @@ export function createAI(h) {
         : (a, b) => dup(b) - dup(a) || late(b) - late(a) || keep(a) - keep(b) || cost(b) - cost(a))[0];
       if (pick && fresh(`base:${pick}`)) return {id: id(`base:${pick}`), src: pick, base: true, run: () => h.placeBase(s, key, pick, h.info(pick))};
     }
-    // 2. Ultimate: Athena Exclamation se for letal ou do Round 6 em diante; Great Flood com 2+ Devotees inimigos.
-    const god = s.divine[key].god;
-    if (god === 'god-athena' && !s.divine[key].ultimateUsed) {
-      const saints = devotees(key).filter(u => h.isSaint(u) && s.units[u]?.prepared);
-      const trio = COMBO(saints, 3).find(t => !h.ultimateBlock(key, t));
-      const loss = trio && trio.reduce((n, u) => n + h.atk(u) + (/Gold Saint/.test(h.info(u).type) ? 3 : 0), 0);
-      if (trio && (loss >= s.players[enemyOf(key)].soul || s.round >= 6) && fresh('ultimate')) return {id: id('ultimate'), run: () => h.announceExclamation(key, trio)};
-    }
+    const defense = judgmentDefense(key);
+    if (defense) return defense;
+    // 2. Ultimate: Athena Exclamation (regra em `exclamation`); Great Flood com 2+ Devotees inimigos.
+    const god = s.divine[key].god, ult = exclamation(key);
+    if (ult) return ult;
     if (god === 'god-poseidon' && !h.greatFloodBlock(key) && devotees(enemyOf(key)).length >= 2 && fresh('flood')) return {id: id('flood'), run: () => h.announceGreatFlood(key)};
     // 2b. Equip (§33), antes da mão: arma/acessório solto no campo se prende ao nomeado na Resonance, senão ao Devotee de maior ATK.
     for (const uid of p.battlefield.filter(u => h.info(u).kind === 'Equipment' && !h.info(u).global && (level() !== 'easy' || !h.info(u).armor) && !h.attached(u))) {

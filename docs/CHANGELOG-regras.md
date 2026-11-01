@@ -12,6 +12,22 @@ Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências
 - **Engine/UI:** `engine-v3/core.js` (`HAND_LIMIT`), `engine-v3/actions.js`, How to Play e `shared/i18n-pt-site.js`.
 - **Pendência:** medir IA × IA; `docs/decks-ultra.md` foi medido com limite de 9. Não publicado.
 
+## 2026-11-01 — God (Artemis) — Huntress Training perde o marcador permanente antes do Awaken
+
+- **Antes:** {1}{C}: 1 Training counter no Devotee aliado alvo; Awakened: 2.
+- **Depois:** {1}{C}: o Devotee aliado alvo recebe +1 ATK / +1 HP até o fim do Round; Awakened: 1 Training counter em vez disso. EN e PT.
+- **Motivo:** autor, 01/11/2026: o Command estava "roubadíssimo"; no turno 2 fazia Lunar Nymph 3/6 e, sendo permanente, crescia todo turno. Os Commands dos outros Gods não deixam bônus permanente.
+- **Awakened:** cair de 2 para 1 marcador foi aprovado pelo autor em 01/11/2026.
+- **Pendência:** medir IA × IA.
+
+## 2026-11-01 — §5 e capítulo XII — Moment como resposta no próprio turno paga em Base e/ou Latent
+
+- **Antes:** Moment como resposta pagava só com Latent, em qualquer turno.
+- **Depois:** só com Latent no turno do adversário. No próprio turno, inclusive como resposta, paga em Base e/ou Latent.
+- **Motivo:** decisão do autor, 01/11/2026.
+- **Mantido:** Afterlife (§40) como resposta continua só com Latent; o autor não pediu mudança nessa habilidade.
+- **Engine e UI:** `playSpell` e `playSpellV6` em `playtest/engine-v3/play.js`, `playableReason` e a dica de resposta em `playtest/divine/app.js`.
+
 ## 2026-11-01 — Cartas (Artemis) — 381 Sacred Stag só dá Training em outro Devotee
 
 - **Antes:** *you may put a Training counter on target friendly Devotee* (podia mirar a si mesmo).
