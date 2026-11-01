@@ -43,6 +43,15 @@ test('starter de Athena (D171) fecha 50 com no máximo 3 cópias, sem 019 a mais
   }
 });
 
+test('decks ultra: 10 listas válidas de 50, dentro das cores (guia §2 e §63)', async () => {
+  const {colorErrors} = await import('../shared/deck-v3.js');
+  const {catalog} = await import('./simulate-v3.mjs');
+  const factionOf = id => id.replace(/^god-/, '').split('-')[0];
+  const ultra = read('../data/alpha-0.1/decks-ultra.json').decks;
+  assert.equal(ultra.length, 10);
+  for (const d of ultra) assert.deepEqual([...validateDeck(d, catalog().index), ...colorErrors(d, factionOf)], [], d.id);
+});
+
 test('Domain fora da cor libera até 15 cartas da facção dele; neutras não contam (guia §63)', async () => {
   const {colorErrors, splashCount} = await import('../shared/deck-v3.js');
   const factionOf = id => id && id.replace(/^god-/, '').split('-')[0];

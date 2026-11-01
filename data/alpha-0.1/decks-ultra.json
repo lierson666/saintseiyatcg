@@ -138,8 +138,12 @@
      "quantity": 2
     },
     {
-     "card_id": "poseidon-v6-121",
+     "card_id": "poseidon-v6-104",
      "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-121",
+     "quantity": 1
     },
     {
      "card_id": "poseidon-v6-093",
@@ -151,7 +155,7 @@
     },
     {
      "card_id": "poseidon-v6-095",
-     "quantity": 1
+     "quantity": 2
     },
     {
      "card_id": "poseidon-v6-508",
@@ -163,31 +167,19 @@
     },
     {
      "card_id": "poseidon-v6-132",
-     "quantity": 2
+     "quantity": 3
     },
     {
      "card_id": "poseidon-v6-135",
      "quantity": 3
     },
     {
-     "card_id": "poseidon-v6-133",
-     "quantity": 2
-    },
-    {
      "card_id": "poseidon-v6-152",
-     "quantity": 2
+     "quantity": 3
     },
     {
      "card_id": "poseidon-v6-122",
      "quantity": 2
-    },
-    {
-     "card_id": "poseidon-v6-123",
-     "quantity": 1
-    },
-    {
-     "card_id": "poseidon-v6-138",
-     "quantity": 1
     }
    ]
   },
@@ -313,19 +305,19 @@
     },
     {
      "card_id": "poseidon-v6-106",
-     "quantity": 2
+     "quantity": 3
     },
     {
      "card_id": "poseidon-v6-110",
      "quantity": 2
     },
     {
-     "card_id": "poseidon-v6-117",
-     "quantity": 2
+     "card_id": "poseidon-v6-104",
+     "quantity": 3
     },
     {
-     "card_id": "poseidon-v6-119",
-     "quantity": 1
+     "card_id": "poseidon-v6-117",
+     "quantity": 2
     },
     {
      "card_id": "poseidon-v6-091",
@@ -333,7 +325,7 @@
     },
     {
      "card_id": "poseidon-v6-095",
-     "quantity": 1
+     "quantity": 2
     },
     {
      "card_id": "poseidon-v6-509",
@@ -352,23 +344,15 @@
      "quantity": 3
     },
     {
-     "card_id": "poseidon-v6-167",
-     "quantity": 1
-    },
-    {
      "card_id": "poseidon-v6-135",
      "quantity": 3
     },
     {
-     "card_id": "poseidon-v6-138",
-     "quantity": 2
-    },
-    {
-     "card_id": "poseidon-v6-139",
-     "quantity": 2
-    },
-    {
      "card_id": "poseidon-v6-158",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-508",
      "quantity": 3
     },
     {
@@ -384,12 +368,8 @@
      "quantity": 1
     },
     {
-     "card_id": "poseidon-v6-170",
+     "card_id": "poseidon-v6-112",
      "quantity": 1
-    },
-    {
-     "card_id": "poseidon-v6-159",
-     "quantity": 2
     }
    ]
   },
@@ -481,13 +461,13 @@
    ]
   },
   {
-   "id": "ultra-reanimator-hades-gates",
-   "nome": "Gates of the Dead",
+   "id": "ultra-reanimator-hades-tide",
+   "nome": "Return from the Deep",
    "tema": "Reanimator",
    "referencia": "Reanimator",
    "god": "god-hades",
-   "domain_id": "hades-v6-245",
-   "plano": "Markino, Wandering Soul e Styx enchem o Tartarus; Return from Death e Resurrection trazem Thanatos, Hypnos e os Judges cedo.",
+   "domain_id": "poseidon-v6-143",
+   "plano": "Markino, Wandering Soul, Styx e Abyssal Watcher enchem o Tartarus; Return from Death e Resurrection trazem Thanatos, Hypnos e Wyvern cedo; Undertow compra o tempo. Domain Poseidon só pelo splash, sem Ressonância.",
    "main_deck": [
     {
      "card_id": "hades-v6-206",
@@ -518,10 +498,6 @@
      "quantity": 2
     },
     {
-     "card_id": "hades-v6-251",
-     "quantity": 1
-    },
-    {
      "card_id": "hades-v6-193",
      "quantity": 2
     },
@@ -534,16 +510,8 @@
      "quantity": 2
     },
     {
-     "card_id": "hades-v6-185",
-     "quantity": 1
-    },
-    {
      "card_id": "hades-v6-197",
      "quantity": 3
-    },
-    {
-     "card_id": "hades-v6-255",
-     "quantity": 1
     },
     {
      "card_id": "hades-v6-240",
@@ -555,18 +523,6 @@
     },
     {
      "card_id": "hades-v6-232",
-     "quantity": 2
-    },
-    {
-     "card_id": "hades-v6-270",
-     "quantity": 1
-    },
-    {
-     "card_id": "hades-v6-234",
-     "quantity": 1
-    },
-    {
-     "card_id": "hades-v6-512",
      "quantity": 2
     },
     {
@@ -582,12 +538,20 @@
      "quantity": 2
     },
     {
-     "card_id": "hades-v6-223",
-     "quantity": 2
+     "card_id": "poseidon-v6-109",
+     "quantity": 3
     },
     {
-     "card_id": "hades-v6-227",
+     "card_id": "poseidon-v6-113",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-135",
      "quantity": 1
+    },
+    {
+     "card_id": "poseidon-v6-508",
+     "quantity": 3
     }
    ]
   },
@@ -617,8 +581,8 @@
      "quantity": 2
     },
     {
-     "card_id": "poseidon-v6-094",
-     "quantity": 1
+     "card_id": "poseidon-v6-104",
+     "quantity": 3
     },
     {
      "card_id": "poseidon-v6-105",
@@ -638,10 +602,14 @@
     },
     {
      "card_id": "poseidon-v6-115",
-     "quantity": 2
+     "quantity": 3
     },
     {
      "card_id": "poseidon-v6-137",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-165",
      "quantity": 3
     },
     {
@@ -649,36 +617,20 @@
      "quantity": 2
     },
     {
-     "card_id": "poseidon-v6-168",
-     "quantity": 2
-    },
-    {
      "card_id": "poseidon-v6-175",
      "quantity": 3
-    },
-    {
-     "card_id": "poseidon-v6-172",
-     "quantity": 1
-    },
-    {
-     "card_id": "poseidon-v6-180",
-     "quantity": 1
     },
     {
      "card_id": "poseidon-v6-173",
      "quantity": 2
     },
     {
-     "card_id": "poseidon-v6-171",
+     "card_id": "poseidon-v6-180",
      "quantity": 1
     },
     {
-     "card_id": "poseidon-v6-141",
-     "quantity": 2
-    },
-    {
-     "card_id": "poseidon-v6-134",
-     "quantity": 2
+     "card_id": "poseidon-v6-508",
+     "quantity": 3
     },
     {
      "card_id": "poseidon-v6-509",
@@ -686,11 +638,7 @@
     },
     {
      "card_id": "poseidon-v6-135",
-     "quantity": 2
-    },
-    {
-     "card_id": "poseidon-v6-165",
-     "quantity": 2
+     "quantity": 3
     }
    ]
   },
