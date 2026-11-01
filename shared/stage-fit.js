@@ -77,11 +77,19 @@ body.ss-stage { background:
     const v = read(), W = innerWidth, H = innerHeight;
     let [w, h] = v === 'auto' ? [Math.floor(Math.min(W, H * 16 / 9)), 0] : v.split('x').map(Number);
     if (v === 'auto') { h = Math.floor(w * 9 / 16); if (w < MIN[0]) [w, h] = MIN; }
-    const k = Math.min(W / w, H / h);
+    // Tela cheia (autor): sem faixas no teto e no rodapé, o palco assume a proporção da tela (ex.: 16:10 do MacBook).
+    // Tela cheia nativa do Mac não dá fullscreenElement, e o notch tira uns 40 px da janela: daí a folga de 60 na altura.
+    const full = document.fullscreenElement || (W >= screen.width - 1 && H >= screen.height - 60);
+    if (full) {
+      if (W / H > w / h) w = Math.round(h * W / H); else h = Math.round(w * H / W);
+      if (v === 'auto' && W >= MIN[0] && H >= MIN[1]) [w, h] = [W, H];
+    }
+    const k = full ? Math.max(W / w, H / h) : Math.min(W / w, H / h);
     Object.assign(frame.style, {width: `${w}px`, height: `${h}px`, transform: `translate(-50%, -50%) scale(${v === 'auto' && k >= 1 ? 1 : k})`});
   };
   window.ssStage = {...window.ssStage, outer: true, layout};
   addEventListener('resize', layout);
+  document.addEventListener('fullscreenchange', layout);
   layout();
   frame.src = src;
 })();
