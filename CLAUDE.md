@@ -28,4 +28,5 @@ Encontrou código ou carta que contradiz o guia? Aponte ao usuário; não corrij
 ## Convenção de idioma
 
 - Desenvolvimento, campos internos e anotações: português.
-- Nomes de cartas, keywords e texto visível ao jogador: inglês.
+- Texto visível ao jogador (interface, cartas, keywords, site): PT-BR e EN (autor, 31/10/2026). O código escreve em inglês; `shared/i18n.js` traduz na tela pelos dicionários `shared/i18n-pt.js` (jogo) e `shared/i18n-pt-site.js` (site). Texto novo na interface entra também no dicionário.
+- Termos de jogo em PT seguem `docs/glossario-pt-br.md` (aprovado). Texto de carta em PT fica em campos `*_pt` ao lado dos `*_en` em `cards.json` (diff aprovado antes de gravar); campo vazio cai no inglês.

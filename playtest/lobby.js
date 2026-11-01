@@ -8,7 +8,7 @@ import {renderLiveCard, renderCardText} from '../shared/live-card.js?v=20261031-
 import {unlock, playMusic, setVolume, volume} from './audio.js?v=20261030-telas';
 import {loadMyDecks, saveMyDecks, findDeck, syncDecks, onDeckStatus, deckCovers, setDeckCover} from './deck-store.js?v=20261031-2';
 import {mountKV} from '../shared/kv-sky.js?v=20261031-native';
-import {countryOptions, countryName} from '../shared/countries.js?v=20261029-1';
+import {countryOptions, countryName} from '../shared/countries.js?v=20261031-i18n1';
 import {startPresence} from '../shared/presence.js?v=20261029-1';
 import {mountSocial} from './social.js?v=20261031-chat2';
 import {telas, imageUrl, sound, applyColors, applyTexts} from './telas.js?v=20261030-1';
@@ -209,12 +209,13 @@ const setMatch = (key, value) => { try { localStorage.setItem(MATCH_KEY, JSON.st
 const THEME_LABELS = {olympus: 'Olympus Arena', athena: "Athena's Sanctuary", poseidon: "Poseidon's Undersea Temple"}; // = THEMES de divine/scene.js
 export const toggleFullscreen = () => (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.())?.catch?.(() => {});
 function options() {
-  const m = matchSettings();
+  const m = {...matchSettings(), lang: window.ssI18n?.lang}; // idioma: o efetivo (salvo ou do navegador), shared/i18n.js
   const row = (k, label) => `<label class="lb-field lb-volume">${label}<input type="range" min="0" max="100" value="${Math.round(volume[k] * 100)}" data-act="volume" data-kind="${k}"><output>${Math.round(volume[k] * 100)}%</output></label>`;
   const sel = (k, label, opts) => `<label class="lb-set"><span>${label}</span><select class="kv-input" data-act="match-set" data-key="${k}">${Object.entries(opts).map(([v, l]) => `<option value="${v}" ${m[k] === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label>`;
   const chk = (k, label) => `<label class="lb-set"><span>${label}</span><input type="checkbox" data-act="match-set" data-key="${k}" ${m[k] ? 'checked' : ''}></label>`;
   return `<section class="lb-page lb-options"><header class="lb-page__head"><h1>Options</h1><p>Saved on this device. The same options open from the gear during a match.</p></header>
     <h2 class="lb-options__h">Display</h2>
+    ${window.ssI18n ? sel('lang', 'Language', window.ssI18n.LANGS) : ''}
     <label class="lb-set"><span>Full screen</span><input type="checkbox" data-act="fullscreen" ${document.fullscreenElement ? 'checked' : ''}></label>
     ${window.ssStage?.desktop ? sel('resolution', 'Resolution', window.ssStage.LIST) : ''}
     ${sel('quality', 'Graphics', {low: 'Low', medium: 'Medium', high: 'High', ultra: 'Ultra'})}${sel('theme', 'Arena', THEME_LABELS)}
@@ -648,6 +649,7 @@ root.addEventListener('input', e => {
   if (t.dataset.act === 'match-set') setMatch(t.dataset.key, t.type === 'checkbox' ? t.checked : t.type === 'range' ? Number(t.value) : t.value);
   if (t.dataset.act === 'match-set' && t.dataset.key === 'resolution') window.ssStage?.set(t.value); // palco 16:9 (shared/stage-fit.js)
   if (t.dataset.act === 'match-set' && /^card(Text|Size)$/.test(t.dataset.key)) window.ssStage?.a11y(); // acessibilidade das cartas
+  if (t.dataset.act === 'match-set' && t.dataset.key === 'lang') { window.ssI18n?.set(t.value); render(); } // idioma PT-BR/EN (shared/i18n.js)
   if (t.dataset.act === 'fullscreen') toggleFullscreen();
   if (t.dataset.act === 'deck-search') {
     ui.deckQ = t.value; const q = t.value.toLowerCase();

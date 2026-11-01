@@ -801,6 +801,7 @@ function overlays() {
     const chk = (key, l) => `<label class="set"><span>${l}</span><input type="checkbox" data-setting="${key}" ${settings[key] ? 'checked' : ''}></label>`;
     html += `<div class="drawer settings" role="dialog" aria-label="Settings"><h3>Settings</h3><button class="drawer__x" data-toggle-settings aria-label="Close settings">×</button>
       <label class="set"><span>Full screen</span><input type="checkbox" data-fullscreen ${document.fullscreenElement ? 'checked' : ''}></label>
+      ${window.ssI18n ? `<label class="set"><span>Language</span><select data-setting="lang">${Object.entries(window.ssI18n.LANGS).map(([v, l]) => `<option value="${v}" ${window.ssI18n.lang === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label>` : ''}
       ${window.ssStage?.desktop ? `<label class="set"><span>Resolution</span><select data-setting="resolution">${Object.entries(window.ssStage.LIST).map(([v, l]) => `<option value="${v}" ${window.ssStage.get() === v ? 'selected' : ''}>${l}</option>`).join('')}</select></label>` : ''}
       <label class="set"><span>Graphics</span>${sel('quality', {low: 'Low', medium: 'Medium', high: 'High', ultra: 'Ultra'})}</label>
       <label class="set"><span>Arena</span>${sel('theme', Object.fromEntries(Object.entries(THEMES).map(([k, t]) => [k, t.label])))}</label>
@@ -1254,6 +1255,7 @@ overlayRoot.addEventListener('change', e => {
   saveSettings();
   if (key === 'resolution') window.ssStage?.set(settings.resolution); // palco 16:9 (shared/stage-fit.js)
   if (key === 'cardText' || key === 'cardSize') window.ssStage?.a11y(); // acessibilidade das cartas (shared/stage-fit.js)
+  if (key === 'lang') window.ssI18n?.set(settings.lang); // idioma PT-BR/EN (shared/i18n.js)
   if (key === 'quality') scene?.setQuality(settings.quality);
   if (key === 'theme') { scene?.setTheme(settings.theme); stage.dataset.theme = settings.theme; }
   if (key === 'reduceFlashes' && scene) scene.reduceFlashes = settings.reduceFlashes;

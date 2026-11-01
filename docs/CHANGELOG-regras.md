@@ -4,6 +4,14 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-10-31 — Convenção de idioma — Jogo em PT-BR e EN
+
+- **Antes:** todo texto visível ao jogador era só em inglês (CLAUDE.md).
+- **Depois:** o jogo inteiro (site, lobby, duelo, Card Forge, How to Play, Termos e Privacidade) tem PT-BR e EN. Abre em PT-BR quando o navegador está em português; senão em EN. Troca em Options › Language (lobby e duelo) e na chave PT/EN do cabeçalho do site; uma configuração só (`ssTcgOlympusArena.lang`). Online, cada jogador vê o próprio idioma. Termos de jogo: `docs/glossario-pt-br.md` (Golpe, ATQ/PV, Magia, Despreparado, Alma, Base de Cosmo, Tártaro, Vazio, Pilha…). Nomes de cartas e personagens seguirão a dublagem clássica (Seiya de Pégaso).
+- **Motivo:** autor, 31/10/2026: "é um jogo feito por brasileiros". Escopo, glossário e fases aprovados na mesma data.
+- **Código:** `shared/i18n.js` traduz o texto na entrada da página (MutationObserver), sem mudar a engine nem o servidor; o guia de regras não muda.
+- **Pendências:** fase 3 — texto das cartas em campos `*_pt` (rascunho meu, diff para aprovação), nomes dos decks iniciais, notas de keyword e PT/EN na exportação do Forge. Termos e Privacidade em PT são rascunho para o autor revisar.
+
 ## 2026-10-31 — Cartas (Cosmoble) — Rebalanceamento de Cosmoble
 
 - **Antes:** 499 das 509 cartas eram Cosmoble (98%); toda carta podia virar Cosmo Base.

@@ -4,6 +4,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+  <script src="/shared/i18n-pt.js?v=20261031-i18n1"></script><script src="/shared/i18n-pt-site.js?v=20261031-i18n1"></script><script src="/shared/i18n.js?v=20261031-i18n1"></script> <!-- idioma PT-BR/EN -->
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Saint Seiya TCG — Sign in</title>
   <meta name="robots" content="noindex">
@@ -102,7 +103,7 @@
   </div>
   <script type="module">
     import {mountKV} from '/shared/kv-sky.js?v=20261031-native';
-    import {countryOptions} from '/shared/countries.js?v=20261029-1';
+    import {countryOptions} from '/shared/countries.js?v=20261031-i18n1';
     const kv = mountKV({anchor: 'h1 .kv-cosmo'});
     // Só destinos do próprio site (evita redirecionar para fora).
     const raw = new URLSearchParams(location.search).get('next') || '/playtest/';
