@@ -5,7 +5,7 @@ import {loadCanon} from '../../shared/canon-cards.js';
 import {canonIndex} from '../../shared/deck-v3.js';
 import {addPreviewCards} from '../../shared/preview-cards.js';
 import {createMatch, mulligan} from '../engine-v3/match.js';
-import {startTurn, endTurn, pass, placeBase, spellCategory, runCheckpoint, ownBatch} from '../engine-v3/core.js';
+import {startTurn, endTurn, pass, placeBase, spellCategory, runCheckpoint, ownBatch, loseGame} from '../engine-v3/core.js';
 import {inlineMarkup} from '../../shared/card-text.js?v=20261031-sym2';
 import {declareStrike, strikeTargets} from '../engine-v3/strike.js';
 import {playDevotee, playEquipment, playSpell, activate, reequip, duplicateCharacter, resonant, castCost, mixed} from '../engine-v3/play.js';
@@ -809,7 +809,7 @@ function overlays() {
       ${chk('phaseTips', 'Phase tips (control panel)')}${chk('autoPass', 'Auto-pass when you have no response (off = Full control)')}${chk('skipDraws', 'Skip draw animations')}${window.ssStage ? `<label class="set"><span>Card text size</span>${sel('cardText', window.ssStage.SIZES)}</label><label class="set"><span>Card size (hand and previews)</span>${sel('cardSize', window.ssStage.CARD)}</label>` : ''}${chk('reduceMotion', 'Reduce motion')}${chk('reduceFlashes', 'Reduce flashes')}${chk('hideOpponent', 'Hide the other hand (hot-seat)')}${chk('timeouts', 'Apply clock timeouts')}
       <label class="set"><span>Screen shake</span><input type="range" min="0" max="1.5" step=".25" value="${settings.shake}" data-setting="shake"></label>
       <p class="stats" data-stats>${scene ? 'WebGL on' : 'WebGL off · 2D fallback'}</p>
-      <button data-toggle-settings>Close</button></div>`;
+      <div class="settings__end">${match && !S().victory ? '<button class="settings__concede" data-concede>Concede</button>' : ''}<button data-toggle-settings>Close</button></div></div>`;
   }
   return html;
 }
@@ -1239,6 +1239,8 @@ overlayRoot.addEventListener('click', e => {
   if (btn.dataset.mull) { marked.has(btn.dataset.mull) ? marked.delete(btn.dataset.mull) : marked.add(btn.dataset.mull); return render(); }
   if (btn.dataset.primary !== undefined) return primary();
   if (btn.dataset.new !== undefined) return online ? concedeOnline() : newMatch();
+  // Concede nas opções, como no MTG Arena (autor, 31/10/2026): online avisa o servidor; local, quem está jogando perde.
+  if (btn.dataset.concede !== undefined) { settingsOpen = false; if (online) return concedeOnline(); if (confirm('Concede this duel?')) return act(() => loseGame(S(), viewer(), 'concede')); return render(); }
   if (btn.dataset.toggleSettings !== undefined) { settingsOpen = !settingsOpen; toolsOpen = false; return render(); }
   if (btn.dataset.toggleLog !== undefined) { logOpen = false; return render(); }
 });
