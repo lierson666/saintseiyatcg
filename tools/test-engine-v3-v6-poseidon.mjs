@@ -109,13 +109,13 @@ test('activate em Equipment: Kraken Scale sela um inimigo, uma vez por Round, pa
   assert.throws(() => activate(s, ctx, 'A', scale, {}), RuleError);
 });
 
-test('mods e aura: Herald dá +0/+1 aos Marina; Ocean Temple Guard +0/+1 com Domain', () => {
+test('mods e aura: Herald dá +0/+1 aos Marina; Ocean Temple Guard +0/+1 com Domain de Poseidon', () => {
   const {s, ctx, put} = poseidon();
   const temple = put('A', P('106'), 'battlefield'), base = hpOf(s, ctx, temple);
   assert.equal(base, 4, '3 impresso + 1 do Domain');
   put('A', P('103'), 'battlefield');
   assert.equal(hpOf(s, ctx, temple), 5);
-  s.domains.A = null;
+  s.domains.A = 'athena-v6-062'; // Domain de outra facção não conta (autor, 01/11/2026)
   assert.equal(hpOf(s, ctx, temple), 4);
 });
 

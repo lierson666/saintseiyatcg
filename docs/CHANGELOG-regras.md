@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-01 — Cartas — "If you control a Domain" vira Domain da facção
+
+- **Antes:** 106 Ocean Temple Guard e 173 The Fall of Atlantis diziam "if you control a Domain", sempre verdadeiro (todo jogador tem Domain; pendência de 31/10/2026).
+- **Depois:** "if you control a Poseidon Domain" (PT: "um Domínio de Poseidon"). Regra de Card Craft: condição de Domain sempre nomeia o Domain do Deus da cor da carta.
+- **Motivo:** autor, 01/11/2026: "quando for assim, coloque quando o domínio for o do deus da cor da carta".
+- **Engine:** `v6/poseidon.js` (`poseidonDomain`). A 158 já não tinha a condição.
+
 ## 2026-10-31 — Cartas (Poseidon) — Cantrips baratas
 
 - **Antes:** Poseidon não tinha Spell de custo 1; a seleção mais barata era 135 (c2, olhar 3 e pegar 1). 135, 138, 139 e 158 tinham textos de Seal/Domain.

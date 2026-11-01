@@ -4765,7 +4765,7 @@
       "keywords_en": ["Guardian"],
       "habilidades_en": [
         "Guardian",
-        "Sacred Duty — While you control a Domain, Ocean Temple Guard gets +0 ATK / +1 HP."
+        "Sacred Duty — While you control a Poseidon Domain, Ocean Temple Guard gets +0 ATK / +1 HP."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -4774,7 +4774,7 @@
       "subtitulo_pt": "Defensor dos Pilares Sagrados",
       "habilidades_pt": [
         "Guardião",
-        "Dever Sagrado — Enquanto você controlar um Domínio, o Guarda do Templo Oceânico recebe +0 ATQ / +1 PV."
+        "Dever Sagrado — Enquanto você controlar um Domínio de Poseidon, o Guarda do Templo Oceânico recebe +0 ATQ / +1 PV."
       ],
       "tagline_pt": "Defensor dos Pilares Sagrados"
     },
@@ -7613,7 +7613,7 @@
       "habilidades_en": [
         "Sunken Empire — Return up to two target enemy Devotees to their owners' hands.",
         "Buried Civilization — For each Devotee returned this way, its controller mills two cards.",
-        "Lost Beneath the Waves — If you control a Domain, draw a card."
+        "Lost Beneath the Waves — If you control a Poseidon Domain, draw a card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -7623,7 +7623,7 @@
       "habilidades_pt": [
         "Império Submerso — Devolva até dois Devotos inimigos alvo às mãos dos donos.",
         "Civilização Sepultada — Para cada Devoto devolvido assim, seu controlador envia ao Tártaro as 2 cartas do topo do deck.",
-        "Perdido Sob as Ondas — Se você controlar um Domínio, compre uma carta."
+        "Perdido Sob as Ondas — Se você controlar um Domínio de Poseidon, compre uma carta."
       ],
       "tagline_pt": "Até os Impérios Devem Afogar-se"
     },

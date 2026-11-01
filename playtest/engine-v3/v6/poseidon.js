@@ -20,6 +20,8 @@ const ready = (s, key) => s.players[key].bases.filter(b => b.prepared).length;
 // Resonance de Equipment só vale equipado no Devotee nomeado (autor, 28/10/2026).
 const wears = (c, gear, re) => { const b = k.bearerOf(c, gear); return b && re.test(name(c, b)) ? b : null; };
 const opponents = (s, key) => s.order.filter(p => p !== key);
+// "If you control a Poseidon Domain": todo jogador tem Domain, então a condição é a facção dele (autor, 01/11/2026).
+const poseidonDomain = (s, key) => /^poseidon-/.test(s.domains?.[key] || '');
 
 // ---------- ações ----------
 // "You may pay {N}{C}": Bases preparadas, como as habilidades ativadas (autor, 28/10/2026). Só pergunta se dá para pagar.
@@ -340,7 +342,7 @@ export default {
     }),
   },
   'poseidon-v6-106': {
-    mods: (s, c, key) => (s.domains?.[key] ? [{atk: 0, hp: 1}] : []),
+    mods: (s, c, key) => (poseidonDomain(s, key) ? [{atk: 0, hp: 1}] : []),
   },
   'poseidon-v6-107': {
     declare: (s, c, key, self, target) => {
@@ -841,7 +843,7 @@ export default {
   'poseidon-v6-173': {
     spell: {run: (s, c, key) => {
       for (const t of enemies(s, c, key, 'SUNKEN EMPIRE', 2)) { const r = bounce(s, c, key, t); if (r) mill(s, c, r.ctrl, 2); }
-      if (s.domains?.[key]) k.draw(s, key, 1); // Lost Beneath the Waves (31/10/2026): discard → compra
+      if (poseidonDomain(s, key)) k.draw(s, key, 1); // Lost Beneath the Waves (31/10/2026): discard → compra
     }},
   },
   'poseidon-v6-174': {
