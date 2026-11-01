@@ -1,5 +1,7 @@
 // Lembretes de keyword estilo MTG Arena (autor, 31/10/2026): textos aprovados em docs/keyword-reminders-2026-10-31.md,
 // tirados do guia (capítulo IX, §40, §§21–23, §48). Usado pelo inspetor do duelo e pela ficha do lobby.
+import {KEYWORD_PT, lang} from './card-i18n.js?v=20261031-pt3';
+
 export const KEYWORD_RULES = {
   'Guardian': 'While an enemy Guardian can be targeted, Strikes must target it, except against a Rival or with Nimble.',
   'Nimble': 'Ignores Guardian when declaring a Strike. It can still be targeted normally.',
@@ -17,8 +19,29 @@ export const KEYWORD_RULES = {
   'Prepare': 'Make it Prepared.',
 };
 
+// Mesmos lembretes em PT-BR (docs/glossario-pt-br.md), mostrados quando o jogo está em português (shared/card-i18n.js).
+export const KEYWORD_RULES_PT = {
+  'Guardian': 'Enquanto um Guardião inimigo puder ser alvo, os Golpes precisam mirá-lo, exceto contra um Rival ou com Ágil.',
+  'Nimble': 'Ignora Guardião ao declarar um Golpe. Ainda pode ser alvo normalmente.',
+  'Cheater': 'Só pode ser alvo de Golpes de Devotos que também tenham Trapaceiro. Pode Golpear qualquer alvo válido.',
+  'Long Range': 'Quando começa um Golpe, seu dano resolve antes do revide. Se o defensor for destruído, ele não revida.',
+  'Pierce': 'Quando Golpeia um Devoto, o dano excedente vai para a Alma do Deus daquele jogador. Não vale no revide.',
+  'Impulse': 'Pode declarar um Golpe na rodada em que entra no campo de batalha, contra qualquer alvo válido, inclusive o Deus.',
+  'Seal': 'Sempre que este Devoto ficaria Preparado, remova dele um marcador de Selo em vez disso.',
+  'Sealed': 'Tem um ou mais marcadores de Selo. Ainda pode Golpear e usar habilidades enquanto estiver Preparado.',
+  'Unfaith': 'Quando Golpeia um Deus, você pode remover até 2 de Cosmo Latente daquele jogador em vez de causar dano na Alma. O Deus ainda revida.',
+  'Training': 'Cada marcador de Treinamento dá +1 ATQ / +1 PV. Os marcadores se acumulam enquanto o Devoto estiver no campo de batalha.',
+  'Afterlife': 'Habilidades marcadas Além-Túmulo só funcionam enquanto esta carta estiver no Tártaro do dono. Estar no Tártaro não dá Além-Túmulo.',
+  'Prepared': 'Em guarda: pode declarar um Golpe e protege a si mesmo e ao seu Deus.',
+  'Unprepared': 'Exposto: pode ser escolhido como alvo de um Golpe.',
+  'Prepare': 'Deixe-o Preparado.',
+};
+
 const NAMES = Object.keys(KEYWORD_RULES).sort((a, b) => b.length - a.length);
 const FIND = new RegExp(`\\b(${NAMES.join('|')})\\b`, 'gi');
+// Texto em PT (campos *_pt): o nome em português aponta para a mesma keyword (chave em inglês).
+const FROM_PT = Object.fromEntries(Object.keys(KEYWORD_RULES_PT).map(k => [KEYWORD_PT[k].toLowerCase(), k]));
+const FIND_PT = new RegExp(`(?<!\\p{L})(${Object.keys(FROM_PT).sort((a, b) => b.length - a.length).join('|')})(?!\\p{L})`, 'giu');
 
 // Keywords da carta (impressas primeiro, depois as citadas no texto), cada uma uma vez, na ordem em que aparecem.
 export function cardKeywords(card) {
@@ -27,6 +50,7 @@ export function cardKeywords(card) {
   for (const k of card.keywords_en || []) add(k);
   const text = [...(card.habilidades_en || []), card.habilidade_awaken_en || '', card.ultimate_en || ''].join('\n');
   for (const m of text.matchAll(FIND)) add(m[1]);
+  for (const m of text.matchAll(FIND_PT)) add(FROM_PT[m[1].toLowerCase()]);
   return out;
 }
 
@@ -36,5 +60,6 @@ const esc = v => String(v).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;',
 export function renderKeywordNotes(card) {
   const list = cardKeywords(card);
   if (!list.length) return '';
-  return `<ul class="kw-notes" aria-label="Keyword rules">${list.map(k => `<li class="kw-note"><strong>${esc(k.toUpperCase())}</strong><span>${esc(KEYWORD_RULES[k])}</span></li>`).join('')}</ul>`;
+  const pt = lang() === 'pt';
+  return `<ul class="kw-notes" aria-label="${pt ? 'Regras das palavras-chave' : 'Keyword rules'}">${list.map(k => `<li class="kw-note"><strong>${esc((pt ? KEYWORD_PT[k] : k).toUpperCase())}</strong><span>${esc((pt ? KEYWORD_RULES_PT : KEYWORD_RULES)[k])}</span></li>`).join('')}</ul>`;
 }

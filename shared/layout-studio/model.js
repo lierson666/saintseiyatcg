@@ -1,6 +1,7 @@
-import {printedEquipmentBonuses,signedBonus,equipmentCostText,armorBonusText} from '../card-visual-values.js';
+import {printedEquipmentBonuses,signedBonus,equipmentCostText,armorBonusText} from '../card-visual-values.js?v=20261031-pt3';
 import {isArmor,isEquipment} from '../card-model.js';
-import {textBlocks,ruleBlocksWithoutKeywords} from '../card-text.js';
+import {typeWord} from '../card-i18n.js?v=20261031-pt3';
+import {textBlocks,ruleBlocksWithoutKeywords} from '../card-text.js?v=20261031-pt3';
 
 // Contrato visual puro: lê o catálogo e o resultado da engine, sem executar regras.
 export const SCHEMA_VERSION=1;
@@ -33,13 +34,13 @@ export function editorialWarnings(card){
   return textBlocks(card.habilidades_en||[]).filter(b=>pendingDesign(b.body)).map(b=>({layer:'resonance',kind:'pending',message:`${b.heading}: design pendente no catálogo; bloco sem efeito aprovado omitido da arte.`}));
 }
 export const BINDINGS={
-  'card.name':{label:'Nome',read:c=>c.project?.title||c.card.nome_exibicao_en},
-  'card.tagline':{label:'Tagline',read:c=>c.project?.subtitle?.trim()||c.card.tagline_en||c.card.subtitulo_en},
+  'card.name':{label:'Nome',read:c=>(c.card.__pt&&c.card.nome_exibicao_pt)||c.project?.title||c.card.nome_exibicao_en}, // PT (shared/card-i18n.js) vence o título do projeto
+  'card.tagline':{label:'Tagline',read:c=>(c.card.__pt&&(c.card.subtitulo_pt||c.card.tagline_pt))||c.project?.subtitle?.trim()||c.card.tagline_en||c.card.subtitulo_en},
   'card.faction':{label:'Facção',read:c=>c.card.faccao},
   'card.rarity':{label:'Raridade',read:c=>c.card.raridade},
   'card.type':{label:'Tipo',read:c=>c.card.tipo},
   'card.subtypes':{label:'Subtipos',read:c=>c.card.subtipos||[]},
-  'card.typeLine':{label:'Linha de tipo',read:c=>[c.card.tipo==='Spell'?null:c.card.tipo,...(c.card.subtipos||[]),c.card.faccao].filter(Boolean).join(' — ')},
+  'card.typeLine':{label:'Linha de tipo',read:c=>[c.card.tipo==='Spell'?null:c.card.tipo,...(c.card.subtipos||[]),c.card.faccao].filter(Boolean).map(typeWord).join(' — ')}, // PT: shared/card-i18n.js
   'card.cost':{label:'Custo impresso',read:c=>c.card.custo},
   'card.cosmoble':{label:'Cosmoble',read:c=>c.card.cosmoble},
   'card.rules':{label:'Habilidades aprovadas',read:c=>ruleParts(c.card).rules},
@@ -48,7 +49,7 @@ export const BINDINGS={
   'card.ultimateRules':{label:'God — Ultimate',read:c=>ruleParts(c.card).ultimateRules},
   'card.resonance':{label:'Resonance',read:c=>ruleParts(c.card).resonance},
   'card.owner':{label:'Owner',read:c=>ruleParts(c.card).owners},
-  'card.flavor':{label:'Flavour',read:c=>c.project?.flavour||c.card.flavour_en||c.card.flavour},
+  'card.flavor':{label:'Flavour',read:c=>(c.card.__pt&&c.card.flavour_pt)||c.project?.flavour||c.card.flavour_en||c.card.flavour},
   'card.reminder':{label:'Reminder aprovado',read:c=>c.card.reminder_en},
   'card.equipCost':{label:'Equip / Auto-Equip',read:c=>equipmentCostText(c.card)},
   'card.equippedPowerBonus':{label:'Bônus impresso de ATK do portador',read:c=>signedBonus(printedEquipmentBonuses(c.card,c.instance?.stage||0).power)},

@@ -1,5 +1,6 @@
-import {resolveLayout,validateTemplate} from './model.js';
+import {resolveLayout,validateTemplate} from './model.js?v=20261031-pt3';
 import {makeScene,renderScene} from './renderer.js';
+import {displayCard} from '../card-i18n.js?v=20261031-pt3';
 
 let library=null,inflight=null,lastRead=0,projects={},assetRects={},projectsInflight=null,projectsRead=0;
 const publishedKey=value=>JSON.stringify((value?.published||[]).map(t=>[t.id,t.revision]));
@@ -50,8 +51,8 @@ export function publishedScene(card,context={},surface='card'){
   return makeScene(layout,{card,...context},{key:`published-${surface}-${card.id}`,nestedCard:nested});
 }
 function artworkContext(card,context){const project=context.project||visualProject(card.id);return{...context,project,art:context.art&&typeof context.art==='object'?context.art:project.art||context.art,assetRects:context.assetRects||assetRects};}
-export function renderPublishedCard(card,context={}){const scene=publishedScene(card,artworkContext(card,context));return scene?renderScene(scene):null;}
-export function renderPublishedInspector(card,context={}){const scene=publishedScene(card,{...artworkContext(card,context),mode:'inspector'},'inspector');return scene?renderScene(scene):null;}
+export function renderPublishedCard(card,context={}){card=displayCard(card);const scene=publishedScene(card,artworkContext(card,context));return scene?renderScene(scene):null;}
+export function renderPublishedInspector(card,context={}){card=displayCard(card);const scene=publishedScene(card,{...artworkContext(card,context),mode:'inspector'},'inspector');return scene?renderScene(scene):null;}
 if(typeof window!=='undefined'){
   if(typeof BroadcastChannel!=='undefined'){const channel=new BroadcastChannel('saint-seiya-layout-studio');channel.onmessage=()=>{refreshLayouts({force:true});refreshCardProjects({force:true});};}
   window.addEventListener('focus',()=>{refreshLayouts();refreshCardProjects();});
