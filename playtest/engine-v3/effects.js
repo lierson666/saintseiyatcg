@@ -419,13 +419,13 @@ export function onEnter(state, ctx, key, uid, {target} = {}) {
   if (n === '021' && target && target !== uid && alive(state, key, target) && isBronze(ctx, target)) {
     pushTriggers(state, [{controller: key, uid, ability: 'enters the Battlefield', target, run: st => { if (alive(st, key, target)) st.units[target].training = (st.units[target].training || 0) + 1; }}]);
   }
-  // Star Hill Acolyte: olha as 2 do topo; uma fica no topo, a outra vai para o fundo. `decide` devolve a que fica no topo.
+  // Star Hill Acolyte (autor, 01/11/2026): olha as 2 do topo; uma vai para a mão, a outra para o fundo. `decide` devolve a da mão.
   if (n === '043') {
     pushTriggers(state, [{controller: key, uid, ability: 'Sacred Knowledge', run: st => {
       const deck = st.players[key].deck, look = deck.splice(0, 2);
       const pick = look.length === 2 ? ctx.decide?.(key, {ability: 'Sacred Knowledge', cards: look}) : look[0];
       const top = look.includes(pick) ? pick : look[0]; // resposta fora das 2 cartas = sem escolha (não cria objeto)
-      if (top) deck.unshift(top);
+      if (top) st.players[key].hand.push(top);
       deck.push(...look.filter(u => u !== top));
     }}]);
   }

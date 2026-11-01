@@ -1163,14 +1163,14 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "When Kiki enters the Battlefield, return target friendly Equipment to its owner’s hand."
+        "When Kiki enters the Battlefield, search your deck for an Equipment card, reveal it and put it into your hand. Then shuffle your deck."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
       "notas_pt": "PENDENTE de aprovação final. Custo, ATK, HP e habilidade são proposta não aprovada do autor.",
       "nome_exibicao_pt": "KIKI, APRENDIZ DE JAMIR",
       "habilidades_pt": [
-        "Quando Kiki entra no Campo de Batalha, devolva o Equipamento aliado alvo para a mão do dono."
+        "Quando Kiki entra no Campo de Batalha, procure no seu deck uma carta de Equipamento, revele-a e ponha-a na sua mão. Depois embaralhe o seu deck."
       ]
     },
     {
@@ -1516,7 +1516,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Kindness — {1}{C}, {T}: Choose one: Remove 1 damage from target friendly Devotee; or your God gains {1}{S}."
+        "Orphanage Bond — Whenever another friendly Bronze Saint enters the Battlefield, draw a card. This ability triggers only once per turn."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -1524,7 +1524,7 @@
       "nome_exibicao_pt": "MIHO, A CUIDADORA DO ORFANATO",
       "subtitulo_pt": "O Coração Gentil",
       "habilidades_pt": [
-        "Bondade — {1}{C}, {T}: Escolha um: remova 1 de dano do Devoto aliado alvo; ou seu Deus ganha {1}{S}."
+        "Laço do Orfanato — Sempre que outro Cavaleiro de Bronze aliado entra no Campo de Batalha, compre uma carta. Esta habilidade só dispara uma vez por turno."
       ],
       "tagline_pt": "O Coração Gentil"
     },
@@ -1794,7 +1794,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Armor Repair — {1}{C}, {T}: Remove 1 damage from target friendly Devotee equipped with an Armor.",
-        "Craftsman's Insight — Whenever you play a non-Armor Equipment, draw a card. This ability triggers only once per turn."
+        "Craftsman's Insight — Whenever you play an Equipment, draw a card. This ability triggers only once per turn."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -1803,7 +1803,7 @@
       "subtitulo_pt": "As Mãos que Restauram a Esperança",
       "habilidades_pt": [
         "Reparo de Armadura — {1}{C}, {T}: Remova 1 de dano do Devoto aliado alvo equipado com uma Armadura.",
-        "Olhar do Artesão — Sempre que você joga um Equipamento que não é Armadura, compre uma carta. Esta habilidade só dispara uma vez por turno."
+        "Intuição do Artesão — Sempre que você joga um Equipamento, compre uma carta. Esta habilidade só dispara uma vez por turno."
       ],
       "tagline_pt": "As Mãos que Restauram a Esperança"
     },
@@ -1834,7 +1834,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Sacred Knowledge — When Star Hill Acolyte enters the Battlefield, look at the top 2 cards of your deck. Put one on top and the other on the bottom in any order.",
+        "Sacred Knowledge — When Star Hill Acolyte enters the Battlefield, look at the top 2 cards of your deck. Put one into your hand and the other on the bottom.",
         "Enchanted Wisdom — Whenever you play a non-Armor Equipment, draw a card. This ability triggers only once per turn."
       ],
       "habilidade_awaken_en": "",
@@ -1843,7 +1843,7 @@
       "nome_exibicao_pt": "ACÓLITO DE STAR HILL",
       "subtitulo_pt": "Guardião do Conhecimento Proibido",
       "habilidades_pt": [
-        "Conhecimento Sagrado — Quando o Acólito de Star Hill entra no Campo de Batalha, olhe as 2 cartas do topo do seu deck. Ponha uma no topo e a outra no fundo, em qualquer ordem.",
+        "Conhecimento Sagrado — Quando o Acólito de Star Hill entra no Campo de Batalha, olhe as 2 cartas do topo do seu deck. Ponha uma na sua mão e a outra no fundo.",
         "Sabedoria Encantada — Sempre que você joga um Equipamento que não é Armadura, compre uma carta. Esta habilidade só dispara uma vez por turno."
       ],
       "tagline_pt": "Guardião do Conhecimento Proibido"
@@ -2216,7 +2216,7 @@
       "equipar_custo": 2,
       "keywords_en": [],
       "habilidades_en": [
-        "Sacred Flame — Equipped Devotee gets +1 ATK while your God has less Soul than the opposing God."
+        "Sacred Watch — The first time an opponent casts a Spell each turn, draw a card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -2231,7 +2231,7 @@
       "nome_exibicao_pt": "TOCHA DO SANTUÁRIO",
       "subtitulo_pt": "A Chama de Athena",
       "habilidades_pt": [
-        "Chama Sagrada — O Devoto equipado recebe +1 ATQ enquanto seu Deus tiver menos Alma que o Deus oponente."
+        "Vigília Sagrada — A primeira vez que um oponente conjura uma Magia em cada turno, compre uma carta."
       ],
       "tagline_pt": "A Chama de Athena"
     },
@@ -13411,19 +13411,19 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 2,
+      "custo": 3,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
       "awaken": null,
-      "power": 1,
+      "power": 2,
       "vida": 2,
       "resistance": 2,
       "damage_cloth": null,
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Warflame — {1}{C}, {T}, send two cards from your Tartarus to the Void: Deal 2 damage to target enemy Devotee or 1 damage to target enemy God."
+        "Embers of War — When Divine Flame Disciple enters the Battlefield, discard two cards, then draw two cards. For each Devotee card discarded this way, create a 1/1 Sanctuary Soldier token."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -13431,7 +13431,7 @@
       "nome_exibicao_pt": "DISCÍPULO DA CHAMA DIVINA",
       "subtitulo_pt": "Aluno da Chama de Guerra Eterna",
       "habilidades_pt": [
-        "Chama de Guerra — {1}{C}, {T}, envie duas cartas do seu Tártaro para o Vazio: Cause 2 de dano ao Devoto inimigo alvo ou 1 de dano ao Deus inimigo alvo."
+        "Brasas da Guerra — Quando o Discípulo da Chama Divina entra no Campo de Batalha, descarte duas cartas e depois compre duas cartas. Para cada carta de Devoto descartada assim, crie um token Soldado do Santuário 1/1."
       ],
       "flavour_pt": "\"O Mestre Ofir nos ensinou que toda chama tem um propósito, e todo inimigo tem uma fraqueza.\"",
       "tagline_pt": "Aluno da Chama de Guerra Eterna"
@@ -13587,7 +13587,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Blood Covenant — When Blood Oath Warrior enters the Battlefield, you may deal 2 damage to your God. If you do, draw a card, then discard a card."
+        "Blood Covenant — When Blood Oath Warrior enters the Battlefield, you may deal 2 damage to your God. If you do, draw a card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -13595,7 +13595,7 @@
       "nome_exibicao_pt": "GUERREIRO DO JURAMENTO DE SANGUE",
       "subtitulo_pt": "Unido pelo Sangue, Forjado para a Guerra",
       "habilidades_pt": [
-        "Pacto de Sangue — Quando o Guerreiro do Juramento de Sangue entra no Campo de Batalha, você pode causar 2 de dano ao seu Deus. Se fizer isso, compre uma carta e depois descarte uma carta."
+        "Pacto de Sangue — Quando o Guerreiro do Juramento de Sangue entra no Campo de Batalha, você pode causar 2 de dano ao seu Deus. Se fizer isso, compre uma carta."
       ],
       "flavour_pt": "\"Meu sangue pertence a Ares. Meus inimigos pagarão o resto.\"",
       "tagline_pt": "Unido pelo Sangue, Forjado para a Guerra"
@@ -13627,7 +13627,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Scavenger's Reward — Whenever another friendly Berserker is defeated, you may discard a card. If you do, draw a card. This ability triggers only once per turn."
+        "Scavenger's Reward — Whenever another friendly Berserker is defeated, draw a card. This ability triggers only once per turn."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -13635,7 +13635,7 @@
       "nome_exibicao_pt": "CATADOR DO CAMPO DE BATALHA",
       "subtitulo_pt": "Os Espólios do Massacre",
       "habilidades_pt": [
-        "Recompensa do Catador — Sempre que outro Berserker aliado é derrotado, você pode descartar uma carta. Se fizer isso, compre uma carta. Esta habilidade só dispara uma vez por turno."
+        "Recompensa do Catador — Sempre que outro Berserker aliado é derrotado, compre uma carta. Esta habilidade só dispara uma vez por turno."
       ],
       "flavour_pt": "\"Os mortos não têm uso para o que deixam para trás.\"",
       "tagline_pt": "Os Espólios do Massacre"
@@ -13943,7 +13943,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 2,
+      "custo": 3,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -13956,7 +13956,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Equipped Devotee gets +0 ATK / +1 HP.",
-        "Rhythm of Destruction — Whenever equipped Devotee declares a Strike, another target friendly Berserker gains +1 ATK until end of round."
+        "War Call — Once each round, when War Drums becomes attached to a Devotee, reveal the top four cards of your deck. Put the Berserker cards among them into your hand and the rest on the bottom of your deck."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -13972,7 +13972,7 @@
       "subtitulo_pt": "A Marcha do Massacre Sem Fim",
       "habilidades_pt": [
         "O Devoto equipado recebe +0 ATQ / +1 PV.",
-        "Ritmo da Destruição — Sempre que o Devoto equipado declara um Golpe, outro Berserker aliado alvo recebe +1 ATQ até o fim da rodada."
+        "Chamado de Guerra — Uma vez por rodada, quando os Tambores de Guerra são presos a um Devoto, revele as 4 cartas do topo do seu deck. Ponha as cartas de Berserker entre elas na sua mão e o resto no fundo do seu deck."
       ],
       "flavour_pt": "\"Os tambores nunca param. A guerra também não.\"",
       "tagline_pt": "A Marcha do Massacre Sem Fim"
@@ -14054,8 +14054,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Equipped Devotee gets +1 ATK.",
-        "Unchained Violence — Whenever equipped Devotee declares a Strike, it gains +2 ATK until end of round.",
-        "Bloodbound Chains — At the end of your turn, if equipped Devotee declared a Strike this turn, deal 1 damage to your God."
+        "Feeding Chains — Whenever equipped Devotee deals combat damage to a God, draw a card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -14071,8 +14070,7 @@
       "subtitulo_pt": "Presos pela Raiva",
       "habilidades_pt": [
         "O Devoto equipado recebe +1 ATQ.",
-        "Violência Desacorrentada — Sempre que o Devoto equipado declara um Golpe, ele recebe +2 ATQ até o fim da rodada.",
-        "Correntes de Sangue — No fim do seu turno, se o Devoto equipado declarou um Golpe neste turno, cause 1 de dano ao seu Deus."
+        "Correntes Famintas — Sempre que o Devoto equipado causa dano de combate a um Deus, compre uma carta."
       ],
       "flavour_pt": "\"As correntes não contêm a raiva deles. Elas a alimentam.\"",
       "tagline_pt": "Presos pela Raiva"
@@ -14422,7 +14420,8 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Raging Renewal — Discard up to two cards, then draw that many cards plus one. Deal 1 damage to your God."
+        "Raging Renewal — Discard up to two cards, then draw that many cards plus one. Deal 1 damage to your God.",
+        "Afterlife {3}{C}: Draw a card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -14430,7 +14429,8 @@
       "nome_exibicao_pt": "ALIMENTE A RAIVA",
       "subtitulo_pt": "O Fogo Interior",
       "habilidades_pt": [
-        "Renovação Furiosa — Descarte até duas cartas e depois compre essa quantidade de cartas mais uma. Cause 1 de dano ao seu Deus."
+        "Renovação Furiosa — Descarte até duas cartas e depois compre essa quantidade de cartas mais uma. Cause 1 de dano ao seu Deus.",
+        "Vida Após a Morte {3}{C}: Compre uma carta."
       ],
       "flavour_pt": "\"Cada sacrifício alimenta o fogo que consumirá nossos inimigos.\"",
       "tagline_pt": "O Fogo Interior"
@@ -15087,8 +15087,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Apocalyptic Arrival — When Berserker of the Apocalypse enters the Battlefield, deal 1 damage to each other Devotee.",
-        "Born from Destruction — Whenever another Devotee is defeated, Berserker of the Apocalypse gains +1 ATK until end of round."
+        "Final Reckoning — When Berserker of the Apocalypse enters the Battlefield, each player discards their hand, then draws three cards."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -15096,8 +15095,7 @@
       "nome_exibicao_pt": "BERSERKER DO APOCALIPSE",
       "subtitulo_pt": "O Último Guerreiro de Pé",
       "habilidades_pt": [
-        "Chegada Apocalíptica — Quando o Berserker do Apocalipse entra no Campo de Batalha, cause 1 de dano a cada outro Devoto.",
-        "Nascido da Destruição — Sempre que outro Devoto é derrotado, o Berserker do Apocalipse recebe +1 ATQ até o fim da rodada."
+        "Acerto Final — Quando o Berserker do Apocalipse entra no Campo de Batalha, cada jogador descarta a própria mão e depois compra três cartas."
       ],
       "flavour_pt": "\"Quando a batalha final terminar, só restarão os servos da guerra.\"",
       "tagline_pt": "O Último Guerreiro de Pé"
@@ -16886,14 +16884,16 @@
       "soul": null,
       "attack": null,
       "awaken": null,
-      "power": 1,
-      "vida": 3,
-      "resistance": 3,
+      "power": 0,
+      "vida": 4,
+      "resistance": 4,
       "damage_cloth": null,
       "equipar_custo": null,
-      "keywords_en": [],
+      "keywords_en": [
+        "Guardian"
+      ],
       "habilidades_en": [
-        "Rooted Strength — Whenever you put one or more Training counters on another friendly Devotee, Sacred Grove Keeper gets +1/+1 until end of round."
+        "Forest Welcome — When Sacred Grove Keeper enters the Battlefield, draw a card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -16901,7 +16901,7 @@
       "nome_exibicao_pt": "GUARDA DO BOSQUE SAGRADO",
       "subtitulo_pt": "Protetor das Matas Ancestrais",
       "habilidades_pt": [
-        "Força Enraizada — Sempre que você colocar 1 ou mais marcadores de Treinamento em outro Devoto aliado, o Guarda do Bosque Sagrado recebe +1 ATQ / +1 PV até o fim da rodada."
+        "Acolhida da Floresta — Quando o Guarda do Bosque Sagrado entra no Campo de Batalha, compre uma carta."
       ],
       "flavour_pt": "\"As árvores mais antigas abrigam os guerreiros mais fortes.\"",
       "tagline_pt": "Protetor das Matas Ancestrais"
@@ -17461,7 +17461,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 1,
+      "custo": 2,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -17473,7 +17473,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Hunter's Training — Whenever Huntress Apprentice receives one or more Training counters, it gets +1/+0 until end of round."
+        "Hunter's Call — Whenever another friendly Sacred Beast enters the Battlefield, draw a card. This ability triggers only once per turn."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -17481,7 +17481,7 @@
       "nome_exibicao_pt": "APRENDIZ DE CAÇADORA",
       "subtitulo_pt": "A Primeira Flecha",
       "habilidades_pt": [
-        "Treino da Caçadora — Sempre que a Aprendiz de Caçadora receber 1 ou mais marcadores de Treinamento, ela recebe +1 ATQ até o fim da rodada."
+        "Chamado da Caçadora — Sempre que outra Besta Sagrada aliada entra no Campo de Batalha, compre uma carta. Esta habilidade só dispara uma vez por turno."
       ],
       "flavour_pt": "\"Antes de aprender a golpear, a caçadora precisa aprender a escutar.\"",
       "tagline_pt": "A Primeira Flecha"
@@ -18050,7 +18050,7 @@
       "equipar_custo": 1,
       "keywords_en": [],
       "habilidades_en": [
-        "Verdant Channeling — {T}: Generate {1}{L}. Spend this Cosmo only to cast a Devotee.",
+        "Ancient Rhythm — At the beginning of your turn, you may lose {2}{S}. If you do, draw a card.",
         "Lunar Resonance — Equipped Devotee gets +1/+1 while you control another Devotee with a Training counter."
       ],
       "habilidade_awaken_en": "",
@@ -18066,7 +18066,7 @@
       "nome_exibicao_pt": "AMULETO DE PEDRA DA LUA",
       "subtitulo_pt": "O Coração da Floresta Lunar",
       "habilidades_pt": [
-        "Canalização Verdejante — {T}: Gere {1}{L}. Gaste esse Cosmo apenas para conjurar um Devoto.",
+        "Ritmo Ancestral — No início do seu turno, você pode perder {2}{S}. Se fizer isso, compre uma carta.",
         "Ressonância Lunar — O Devoto equipado recebe +1 ATQ / +1 PV enquanto você controlar outro Devoto com um marcador de Treinamento."
       ],
       "flavour_pt": "\"Dentro da pedra da lua, o ritmo do mundo antigo continua a pulsar.\"",
@@ -18147,7 +18147,7 @@
       "equipar_custo": 2,
       "keywords_en": [],
       "habilidades_en": [
-        "Ancient Growth — Whenever another friendly Devotee enters the Battlefield, you may put a Training counter on equipped Devotee. This ability triggers only once each round."
+        "Ancient Growth — Whenever another friendly Devotee with 4 or more ATK enters the Battlefield, draw a card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -18162,7 +18162,7 @@
       "nome_exibicao_pt": "ARMADURA DE RAÍZES ANTIGAS",
       "subtitulo_pt": "A Armadura Viva da Natureza",
       "habilidades_pt": [
-        "Crescimento Ancestral — Sempre que outro Devoto aliado entra no Campo de Batalha, você pode colocar 1 marcador de Treinamento no Devoto equipado. Essa habilidade ativa apenas uma vez por rodada."
+        "Crescimento Ancestral — Sempre que outro Devoto aliado com 4 ou mais de ATQ entra no Campo de Batalha, compre uma carta."
       ],
       "flavour_pt": "\"Ela não apenas protege quem a veste. Cresce junto com o seu Cosmo.\"",
       "tagline_pt": "A Armadura Viva da Natureza"
@@ -18520,8 +18520,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Natural Renewal — Return target Devotee card from your Tartarus to your hand.",
-        "Verdant Recovery — If that Devotee has Casting Cost 4 or greater, gain {2}{S}."
+        "Natural Renewal — Shuffle up to three cards from your Tartarus into your deck. Draw a card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -18529,8 +18528,7 @@
       "nome_exibicao_pt": "NATUREZA RENASCIDA",
       "subtitulo_pt": "A Vida Encontra um Caminho",
       "habilidades_pt": [
-        "Renovação Natural — Devolva a carta de Devoto alvo do seu Tártaro para a sua mão.",
-        "Recuperação Verdejante — Se esse Devoto tiver custo de Conjuração 4 ou mais, ganhe {2}{S}."
+        "Renovação Natural — Embaralhe até três cartas do seu Tártaro no seu deck. Compre uma carta."
       ],
       "flavour_pt": "\"O que o mundo leva, a floresta acaba devolvendo.\"",
       "tagline_pt": "A Vida Encontra um Caminho"
@@ -18562,8 +18560,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Divine Growth — Put two Training counters on each friendly Devotee.",
-        "Primal Supremacy — Friendly Devotees with ATK 5 or greater gain Pierce until end of round."
+        "Revelation of the Wild — Draw a card for each friendly Devotee. Your God gains {2}{S} for each friendly Devotee with 4 or more ATK."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -18571,8 +18568,7 @@
       "nome_exibicao_pt": "A VONTADE DE ÁRTEMIS",
       "subtitulo_pt": "A Ordem Divina da Natureza",
       "habilidades_pt": [
-        "Crescimento Divino — Coloque 2 marcadores de Treinamento em cada Devoto aliado.",
-        "Supremacia Primitiva — Devotos aliados com ATQ 5 ou mais ganham Perfurar até o fim da rodada."
+        "Revelação da Natureza — Compre uma carta para cada Devoto aliado. Seu Deus ganha {2}{S} para cada Devoto aliado com 4 ou mais de ATQ."
       ],
       "flavour_pt": "\"A humanidade nunca foi feita para conquistar a natureza. Foi feita para viver sob a sua vontade.\"",
       "tagline_pt": "A Ordem Divina da Natureza"
@@ -22403,7 +22399,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Draw two cards, then discard two cards."
+        "Draw a card. If an enemy God lost Soul this turn, draw two cards instead."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -22411,7 +22407,7 @@
       "nome_exibicao_pt": "INTUIÇÃO IMPRUDENTE",
       "subtitulo_pt": "Pense Rápido, Queime Mais Rápido",
       "habilidades_pt": [
-        "Compre duas cartas e depois descarte duas cartas."
+        "Compre uma carta. Se um Deus inimigo perdeu Alma neste turno, compre duas cartas em vez disso."
       ],
       "tagline_pt": "Pense Rápido, Queime Mais Rápido"
     },

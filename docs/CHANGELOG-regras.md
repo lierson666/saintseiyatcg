@@ -4,13 +4,20 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-01 — Cartas (sem mudança no guia) — Draw engines em Ares, Athena e Artemis
+
+- **Antes → depois:** 19 cartas, em `docs/draw-engines-2026-11-01/cards.diff.md`.
+- **Motivo:** pedido do autor, 01/11/2026, com a compra de 1: dar compra de carta a Ares e Athena, que ficavam sem mão, e efeitos do mesmo tema a Artemis. Adaptados de Magic: wheels, Seasoned Pyromancer, Goblin Ringleader, Light Up the Stage, Sram, Stoneforge Mystic, Mentor of the Meek, Esper Sentinel, Wall of Blossoms, Wirewood Savage, Shamanic Revelation, Gaea's Blessing, Garruk's Uprising e Sylvan Library.
+- **Engine/dados:** `data/cards.json`, texto aprovado de `data/canon/d268.json`, `playtest/engine-v3/v6/` e listas de `decks-ultra.json`.
+- **Pendência:** o autor testa jogando; a medição completa foi interrompida a pedido dele. Enyo (Embercleave) não entrou: pede engine nova. Moonstone Amulet não reordena o topo do deck. O token do Disciple usa o Sanctuary Soldier, não um Berserker. Publicado.
+
 ## 2026-11-01 — §7, Cap. XI, §55 — Compra volta a 1 carta por turno
 
 - **Antes:** compra de 2 cartas por turno. Quem começa não compra no 1º turno dele.
 - **Depois:** compra de 1 carta por turno. A exceção de quem começa e o limite de 7 na mão não mudam.
 - **Motivo:** decisão do autor, 01/11/2026, para reduzir a vantagem de quem começa. Em IA × IA (900 partidas por nível), quem começa foi de 78% / 74% (`normal` / `hard`) para 65% / 65%, e a vitória por deck vazio de 12% / 26% para 7% / 12%. Revoga a compra de 2 da mesma data, adotada porque decks agressivos ficavam sem mão.
 - **Engine/UI:** `engine-v3/core.js` (`DRAWS_PER_TURN`), `playtest/divine/app.js`, How to Play e `shared/i18n*`.
-- **Pendência:** cartas de compra em Ares e Athena, com diff a aprovar; medir mão vazia; quem começa segue acima da meta de 60%; `docs/decks-ultra.md` foi medido com compra de 2; ajustar listas. Não publicado.
+- **Pendência:** cartas de compra em Ares e Athena, com diff a aprovar; medir mão vazia; quem começa segue acima da meta de 60%; `docs/decks-ultra.md` foi medido com compra de 2; ajustar listas. Publicado junto com as draw engines.
 
 ## 2026-11-01 — Cartas (sem mudança no guia) — Quatro Gold Saints custam 1 a menos
 

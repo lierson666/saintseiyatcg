@@ -31,10 +31,6 @@
      "quantity": 3
     },
     {
-     "card_id": "ares-v6-291",
-     "quantity": 2
-    },
-    {
      "card_id": "ares-v6-292",
      "quantity": 3
     },
@@ -47,15 +43,7 @@
      "quantity": 3
     },
     {
-     "card_id": "ares-v6-285",
-     "quantity": 2
-    },
-    {
      "card_id": "ares-v6-279",
-     "quantity": 2
-    },
-    {
-     "card_id": "ares-v6-305",
      "quantity": 2
     },
     {
@@ -83,11 +71,23 @@
      "quantity": 3
     },
     {
-     "card_id": "ares-v6-327",
+     "card_id": "ares-v6-321",
      "quantity": 2
     },
     {
-     "card_id": "ares-v6-317",
+     "card_id": "ares-v6-345",
+     "quantity": 2
+    },
+    {
+     "card_id": "ares-v6-307",
+     "quantity": 2
+    },
+    {
+     "card_id": "ares-v6-319",
+     "quantity": 2
+    },
+    {
+     "card_id": "ares-v6-515",
      "quantity": 2
     }
    ]
@@ -423,10 +423,6 @@
      "quantity": 3
     },
     {
-     "card_id": "athena-v6-034",
-     "quantity": 2
-    },
-    {
      "card_id": "athena-v6-043",
      "quantity": 3
     },
@@ -461,6 +457,10 @@
     {
      "card_id": "artemis-v6-518",
      "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-035",
+     "quantity": 2
     }
    ]
   },
@@ -791,14 +791,6 @@
      "quantity": 2
     },
     {
-     "card_id": "artemis-v6-400",
-     "quantity": 1
-    },
-    {
-     "card_id": "artemis-v6-398",
-     "quantity": 2
-    },
-    {
      "card_id": "artemis-v6-380",
      "quantity": 3
     },
@@ -827,20 +819,20 @@
      "quantity": 2
     },
     {
-     "card_id": "artemis-v6-436",
-     "quantity": 2
-    },
-    {
      "card_id": "artemis-v6-518",
      "quantity": 3
     },
     {
-     "card_id": "artemis-v6-445",
-     "quantity": 1
+     "card_id": "artemis-v6-387",
+     "quantity": 3
     },
     {
-     "card_id": "artemis-v6-443",
-     "quantity": 1
+     "card_id": "artemis-v6-414",
+     "quantity": 2
+    },
+    {
+     "card_id": "artemis-v6-401",
+     "quantity": 2
     }
    ]
   },
@@ -878,14 +870,6 @@
      "quantity": 3
     },
     {
-     "card_id": "artemis-v6-420",
-     "quantity": 2
-    },
-    {
-     "card_id": "artemis-v6-437",
-     "quantity": 2
-    },
-    {
      "card_id": "artemis-v6-444",
      "quantity": 3
     },
@@ -900,10 +884,6 @@
     {
      "card_id": "artemis-v6-517",
      "quantity": 3
-    },
-    {
-     "card_id": "artemis-v6-373",
-     "quantity": 2
     },
     {
      "card_id": "artemis-v6-440",
@@ -926,7 +906,19 @@
      "quantity": 2
     },
     {
-     "card_id": "artemis-v6-435",
+     "card_id": "artemis-v6-387",
+     "quantity": 2
+    },
+    {
+     "card_id": "artemis-v6-425",
+     "quantity": 2
+    },
+    {
+     "card_id": "artemis-v6-416",
+     "quantity": 2
+    },
+    {
+     "card_id": "artemis-v6-426",
      "quantity": 2
     }
    ]

@@ -36,8 +36,8 @@ function setup(cardId) {
   return {s, ctx, uid, foe, A: s.players.A, B: s.players.B};
 }
 
-test('todas as 9 cartas da tabela existem no catálogo', () => {
-  assert.equal(Object.keys(AFTERLIFE).length, 9);
+test('todas as 10 cartas da tabela existem no catálogo', () => {
+  assert.equal(Object.keys(AFTERLIFE).length, 10);
   for (const id of Object.keys(AFTERLIFE)) assert.ok(cards.get(id), id);
 });
 

@@ -386,14 +386,13 @@ export default {
     enter: (s, c, key, self) => st => {
       if (st.victory || !k.may(c, key, 'BLOOD COVENANT', {uid: self, cost: '2 damage to your God'})) return;
       hit(st, c, ownGod(key), 2);
-      loot(st, c, key, 'BLOOD COVENANT');
+      draw(st, key, 1);
     },
   },
   'ares-v6-312': {
     watchDefeat: (s, c, key, self, dead, owner) => otherFriendlyBerserkerDied(c, key, self, dead, owner) && k.onceTurn(s, `${self}:scavenger`)
       && (st => {
-        if (!st.players[key].hand.length || !k.may(c, key, "SCAVENGER'S REWARD", {uid: self, text: 'Discard a card to draw a card?'})) return;
-        if (k.discard(st, c, key, 1, "SCAVENGER'S REWARD").length) draw(st, key, 1);
+        draw(st, key, 1);
       }),
   },
   'ares-v6-313': merge(deathAny(1, 'FINAL EXPLOSION'), {
@@ -635,4 +634,27 @@ export default {
     draw(s, key, 3);
     if (!s.victory) k.discard(s, c, key, 2, 'UNENDING CONFLICT');
   }}},
+
+  // ---------- Draw engines (autor, 01/11/2026; docs/draw-engines-2026-11-01/cards.diff.md): vencem as chaves acima ----------
+  'ares-v6-345': {enter: (s, c, key) => st => {
+    for (const p of [key, k.other(st, key)]) {
+      for (const uid of [...st.players[p].hand]) k.toTartarus(st, c, uid, 'hand'); // a mão toda: não há o que escolher
+      if (!st.victory) draw(st, p, 3);
+    }
+  }},
+  'ares-v6-307': {enter: (s, c, key) => st => {
+    const out = k.discard(st, c, key, 2, 'EMBERS OF WAR');
+    draw(st, key, 2);
+    for (const u of out) if (k.card(c, u)?.kind === 'Devotee') k.summonToken(st, c, key, {id: 'neutral-token-sanctuary-soldier', name: 'Sanctuary Soldier', atk: 1, hp: 1, type: 'Soldier'});
+  }},
+  'ares-v6-319': {attach: (s, c, key, self) => k.once(s, `${self}:drums`) && (st => {
+    const p = st.players[key], top = p.deck.splice(0, 4);
+    for (const u of top) { if (berserker(c, u)) p.hand.push(u); else p.deck.push(u); }
+  })},
+  'ares-v6-515': {spell: {run: (s, c, key) => {
+    let lost = false;
+    for (let i = s.events.length - 1; i >= 0 && s.events[i].type !== 'turn_start'; i--) if (s.events[i].type === 'soul_lost' && s.events[i].player !== key) lost = true;
+    k.draw(s, key, lost ? 2 : 1);
+  }}},
+  'ares-v6-321': {gearGodDamage: (s, c, key) => st => k.draw(st, key, 1)},
 };

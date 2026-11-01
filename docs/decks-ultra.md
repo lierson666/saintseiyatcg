@@ -4,6 +4,7 @@ Status: montados e medidos em 01/11/2026. Arquétipos aprovados pelo autor antes
 
 ## Como ler os números
 
+- **Listas de Aggro, Combo, Ramp e Voltron mudaram depois desta medição (draw engines, 01/11/2026); os números abaixo são das listas e cartas antigas.**
 - Medição IA × IA, regra anterior à compra de 1 (changelog, 01/11/2026): 50 cartas, compra de 2, limite de 7 na mão, só quem começa não compra no 1º turno. Primeiro jogador alternado (a simulação não sorteia a moeda).
 - 40 partidas por confronto, 360 por deck em cada nível. Margem de cerca de ±5 pontos no winrate por deck e de ±15 pontos em cada confronto.
 - **Os dois níveis medem coisas diferentes.** `hard` só faz a jogada que melhora Soul, mesa ou mão na avaliação da IA. `normal` joga as cartas em ordem de custo. Por isso os decks trocam de posição entre eles.

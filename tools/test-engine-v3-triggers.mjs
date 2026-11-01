@@ -91,14 +91,15 @@ test('G3-039: Training counter é +1/+1 por si e acumula, sem Eagle Marin', () =
   assert.deepEqual([atkOf(s, ctx, seiya), hpOf(s, ctx, seiya)], [4, 6]);
 });
 
-test('Star Hill Acolyte: olha as 2 do topo, uma fica e a outra vai ao fundo', () => {
+test('Star Hill Acolyte: olha as 2 do topo, uma vai para a mão e a outra ao fundo', () => {
   const {s, ctx, hand, bases} = setup({A: rush, B: fortress}, (k, q) => q.cards?.[1]);
   const acolyte = hand('A', '043');
   bases('A', 2);
   const [a, b] = s.players.A.deck;
   playDevotee(s, ctx, 'A', acolyte);
   passAll(s);
-  assert.deepEqual([s.players.A.deck[0], s.players.A.deck.at(-1)], [b, a]);
+  assert.ok(s.players.A.hand.includes(b));
+  assert.equal(s.players.A.deck.at(-1), a);
 });
 
 test('Pegasus God Cloth (019): ao jogar com o God atrás, +3/+3 e prepara; Divine Cosmo e Divine Protection pagam Base', () => {

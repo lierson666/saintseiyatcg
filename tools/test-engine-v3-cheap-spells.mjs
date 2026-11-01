@@ -130,12 +130,25 @@ test('514 Spark of War: 1 de dano e compra', () => {
   assert.equal(hand(s), h + 1);
 });
 
-test('515 Reckless Insight: compra 2 e descarta 2', () => {
-  const {s, ctx, give} = setup();
-  const h = hand(s), t = s.players.A.tartarus.length;
+test('515 Reckless Insight: compra 1; compra 2 se o God inimigo perdeu Soul no turno', () => {
+  let {s, ctx, give} = setup();
+  let h = hand(s);
   cast(s, ctx, give, 'ares-v6-515');
-  assert.equal(hand(s), h);
-  assert.equal(s.players.A.tartarus.length, t + 3); // as duas descartadas e a própria Spell
+  assert.equal(hand(s), h + 1);
+  ({s, ctx, give} = setup());
+  s.events.push({type: 'soul_lost', player: 'B'});
+  h = hand(s);
+  cast(s, ctx, give, 'ares-v6-515');
+  assert.equal(hand(s), h + 2);
+});
+
+test('425 Wilderness Reborn: devolve até 3 do Tártaro ao deck e compra 1', () => {
+  const {s, ctx, give} = setup(), p = s.players.A;
+  p.tartarus.push(...p.deck.splice(0, 4));
+  const h = hand(s), t = p.tartarus.length;
+  cast(s, ctx, give, 'artemis-v6-425');
+  assert.equal(hand(s), h + 1);
+  assert.equal(p.tartarus.length, t - 3 + 1); // a própria Spell vai ao Tártaro
 });
 
 test('516 Fury of Ares: +2 ATK e compra', () => {

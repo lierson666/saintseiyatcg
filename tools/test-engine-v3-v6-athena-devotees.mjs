@@ -209,12 +209,13 @@ test('025 Death Trip Serenade: atacante inimigo perde 2 ATK durante o Strike con
   assert.ok(s.roundUses.has(`${orphee}:serenade`));
 });
 
-test('026 Kiki: devolve Equipment amigo à mão', () => {
+test('026 Kiki: busca um Equipment no deck para a mão', () => {
   const {s, ctx, give} = setup();
-  const kiki = give('A', 'athena-v6-026', 'hand'), host = give('A', 'athena-v6-005'), gear = give('A', 'athena-v6-002', 'battlefield', host);
+  const isGear = u => ctx.cards.get(ctx.objects[u].cardId).kind === 'Equipment', inDeck = s.players.A.deck.filter(isGear).length;
+  const kiki = give('A', 'athena-v6-026', 'hand');
   playDevotee(s, ctx, 'A', kiki, {}); passAll(s);
-  assert.ok(s.players.A.hand.includes(gear));
-  assert.ok(!s.players.A.battlefield.includes(gear));
+  assert.equal(s.players.A.hand.filter(isGear).length, 1);
+  assert.equal(s.players.A.deck.filter(isGear).length, inDeck - 1);
 });
 
 test('029 Hanging Bear: o Devotee atingido não declara Strike no turno seguinte do Round', () => {
@@ -258,12 +259,25 @@ test('033 Resonance: +0/+1 enquanto controla Andromeda Shun', () => {
   assert.equal(hpOf(s, ctx, june), hp + 2); // +1 de Resonance e +1 de Brotherhood (Shun)
 });
 
-test('035 Kindness: remove 1 de dano de Devotee amigo', () => {
+test('035 Miho: compra 1 por turno quando outro Bronze Saint aliado entra', () => {
   const {s, ctx, give} = setup();
-  const miho = give('A', 'athena-v6-035');
-  s.units[miho].damage = 1;
-  activate(s, ctx, 'A', miho); passAll(s);
-  assert.equal(s.units[miho].damage, 0);
+  give('A', 'athena-v6-035');
+  const hand = () => s.players.A.hand.length;
+  for (const [id, delta] of [['athena-v6-040', 0], ['athena-v6-028', 1], ['athena-v6-031', 0]]) {
+    const uid = give('A', id, 'hand'), h = hand();
+    playDevotee(s, ctx, 'A', uid, {}); passAll(s);
+    assert.equal(hand(), h - 1 + delta, id);
+  }
+});
+
+test('345 Berserker of the Apocalypse: cada jogador descarta a mão e compra 3', () => {
+  const {s, ctx, give} = setup();
+  s.players.A.hand.push(...s.players.A.deck.splice(0, 2)); s.players.B.hand.push(...s.players.B.deck.splice(0, 4));
+  const old = [...s.players.B.hand], w = give('A', 'ares-v6-345', 'hand');
+  playDevotee(s, ctx, 'A', w, {}); passAll(s);
+  assert.equal(s.players.A.hand.length, 3);
+  assert.equal(s.players.B.hand.length, 3);
+  assert.ok(old.every(u => s.players.B.tartarus.includes(u)));
 });
 
 test('038 Esmeralda: Ikki ganha +0/+1; ao ser derrotada pode devolver um Ikki do Tártaro à mão', () => {

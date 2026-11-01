@@ -195,14 +195,8 @@ export default {
       };
     },
   },
-  // Kiki
-  'athena-v6-026': {
-    enter: (s, c, key) => st => {
-      const gear = st.players[key].battlefield.filter(u => k.card(c, u)?.kind === 'Equipment');
-      const t = k.choose(c, key, 'KIKI', gear, {text: "Return target friendly Equipment to its owner's hand."});
-      if (t) k.toHand(st, c, t, 'battlefield');
-    },
-  },
+  // Kiki: busca um Equipment (autor, 01/11/2026)
+  'athena-v6-026': {enter: (s, c, key) => st => { k.search(st, c, key, 'FORGE OF JAMIR', cd => cd?.kind === 'Equipment'); }},
   // Bear Geki: Hanging Bear
   'athena-v6-029': {combatDamage: onHit('hanging', (st, c, key, self, victim) => lockStrike(st, victim))},
   // Hydra Ichi: Poisonous Claws
@@ -219,11 +213,13 @@ export default {
     mods: (s, c, key) => hasName(s, c, key, /Andromeda Shun/i) ? [{hp: 1}] : [], // Resonance — Andromeda Shun
   },
   // Miho: Kindness
-  'athena-v6-035': {activate: {name: 'KINDNESS', cost: 1, run: (s, c, key, self, ch) => healOrSoul(s, c, key, 'KINDNESS', 1, 1, ch)}},
+  'athena-v6-035': {watchEnter: (s, c, key, self, entered) => entered !== self && k.controllerOf(s, entered) === key && isBronze(c, entered) && k.onceTurn(s, `${self}:mentor`) && (st => k.draw(st, key, 1))},
   // Sanctuary Healer: Sacred Recovery (substitui ABILITIES '041' de effects.js)
   'athena-v6-041': {activate: {name: 'SACRED RECOVERY', cost: 1, run: (s, c, key, self, ch) => healOrSoul(s, c, key, 'SACRED RECOVERY', 2, 2, ch)}},
   // Motor Enchantress (31/10/2026): "Whenever you play a non-Armor Equipment, draw a card." Uma vez por Round (§64).
-  'athena-v6-042': {watchEquipCast: enchantress},
+  // 042 vale para qualquer Equipment (autor, 01/11/2026).
+  'athena-v6-042': {watchEquipCast: (s, c, key, self) => k.once(s, `${self}:enchant`) && (st => k.draw(st, key, 1))},
+  'athena-v6-051': {watchSpell: (s, c, key, self, caster) => caster !== key && k.onceTurn(s, `${self}:torch`) && (st => k.draw(st, key, 1))},
   'athena-v6-043': {watchEquipCast: enchantress},
   // Esmeralda
   'athena-v6-038': {

@@ -18,6 +18,7 @@ export const AFTERLIFE = {
     check: (s, c, key, self) => { if (!herded(s, c, key, self).length) throw new k.RuleError('LAST CROSSING', 'sem Devotee de custo 2 ou menos no seu Tartarus'); },
     run: (s, c, key, self) => { const uid = k.choose(c, key, 'LAST CROSSING', herded(s, c, key, self), {text: 'Choose a Devotee in your Tartarus to return to your hand.'}); if (uid) k.toHand(s, c, uid, 'tartarus', self); },
   }),
+  'ares-v6-330': entry('RAGE RETURNS', 3, {run: (s, c, key) => k.draw(s, key, 1)}), // Fuel the Rage
   'ares-v6-293': entry('EMBERS OF DISASTER', 1, foe('EMBERS OF DISASTER', (s, c, uid) => k.damage(s, c, uid, 1))), // Disaster Legion Berserker
   'ares-v6-301': entry('LAST DESTRUCTION', 2, foe('LAST DESTRUCTION', (s, c, uid) => k.damage(s, c, uid, 2))), // Disaster Legion Destroyer
   'ares-v6-303': entry('BLOOD REMEMBERED', 2, { // Bloodstained Gladiator

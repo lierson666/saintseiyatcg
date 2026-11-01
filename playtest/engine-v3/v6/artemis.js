@@ -388,6 +388,32 @@ export default {
     growEach(st, c, key, k.devotees(st, c, key), 2);
     k.devotees(st, c, key).filter(u => k.atkOf(st, c, u) >= 5).forEach(u => k.buff(st, u, 0, 0, 'this_round', ['Pierce']));
   }}},
+
+  // ---------- Draw engines (autor, 01/11/2026; docs/draw-engines-2026-11-01/cards.diff.md): vencem as chaves acima ----------
+  'artemis-v6-387': {enter: (s, c, key) => st => k.draw(st, key, 1)},
+  'artemis-v6-401': {watchEnter: (s, c, key, self, entered) => entered !== self && k.controllerOf(s, entered) === key && /Sacred Beast/.test(k.card(c, entered)?.type || '') && k.onceTurn(s, `${self}:call`) && (st => k.draw(st, key, 1))},
+  'artemis-v6-426': {spell: {run: (st, c, key) => {
+    const mine = k.devotees(st, c, key), big = mine.filter(u => k.atkOf(st, c, u) >= 4).length;
+    k.draw(st, key, mine.length);
+    if (!st.victory && big) k.gainSoul(st, key, 2 * big);
+  }}},
+  'artemis-v6-425': {spell: {run: (st, c, key) => {
+    const p = st.players[key];
+    for (let i = 0; i < 3 && p.tartarus.length; i++) {
+      const t = k.choose(c, key, 'NATURAL RENEWAL', [...p.tartarus], {optional: true, text: 'Shuffle a card from your Tartarus into your deck?'});
+      if (!t) break;
+      p.tartarus.splice(p.tartarus.indexOf(t), 1); p.deck.push(t);
+    }
+    k.shuffleDeck(st, key);
+    k.draw(st, key, 1);
+  }}},
+  'artemis-v6-416': {watchEnter: (s, c, key, self, entered) => {
+    const b = bearer(s, c, key, self);
+    return b && entered !== b && k.controllerOf(s, entered) === key && k.isDevotee(c, entered) && k.atkOf(s, c, entered) >= 4 && (st => k.draw(st, key, 1));
+  }},
+  'artemis-v6-414': {aura: gearAura((s, c, key, unit) => !k.devotees(s, c, key).some(u => u !== unit && counters(s, u)), {atk: -1, hp: -1}), startTurn: (s, c, key, self) => bearer(s, c, key, self) && (st => {
+    if (st.players[key].soul > 2 && k.may(c, key, 'ANCIENT RHYTHM', {uid: self, text: 'Lose 2 Soul to draw a card?'})) { k.loseSoulOf(st, key, 2); if (!st.victory) k.draw(st, key, 1); }
+  })},
   // ---------- Domains (rebalanceamento aprovado pelo autor em 01/11/2026, docs/domains-rebalance-proposta.md) ----------
   // Linha geral (qualquer God): ganchos e `activate`. Ressonância — Artemis (só com God Artemis): `res` (ativada, uid
   // `domain:${key}:res`, uma vez por turno) e `resonance` (gatilhos). Training counter = marcador +1/+1 (grow).
