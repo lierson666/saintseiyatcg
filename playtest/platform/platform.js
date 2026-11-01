@@ -1,7 +1,11 @@
 // Cosmo Hub (docs/platform-4.0.md). Cartas e regras vêm só do registro canônico; permissão é sempre decidida pelo servidor.
 import {renderLiveCard} from '/shared/live-card.js';
+import {mountKV} from '/shared/kv-sky.js';
 
 const API = '/api/platform';
+// Sem a API da plataforma no servidor, Codex e home seguem funcionando; o resto diz que abre em breve em vez de dar erro.
+const apiUp = await fetch(`${API}/health`).then(r => r.ok).catch(() => false);
+const NEEDS_API = new Set(['article', 'decks', 'deck', 'guilds', 'guild', 'tournaments', 'tournament', 'notifications', 'console']);
 const root = document.getElementById('hub');
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const when = t => t ? new Date(t * 1000).toLocaleDateString() : '';
@@ -14,6 +18,8 @@ async function call(path, method = 'GET', body) {
   return data;
 }
 const api = (path, method, body) => call(API + path, method, body);
+const soon = () => `<section class="kv-card hub-soon"><p class="kv-stamp kv-stamp--gold">Opening soon</p><p>This part of the Sanctuary is being prepared. The Codex is already open.</p><div class="hub-cta"><a class="kv-ghost" href="#/codex">Open the Codex</a></div></section>`;
+const TITLES = {decks: 'Decks', guilds: 'Guilds', tournaments: 'Tournaments', notifications: 'Notifications', console: 'Console', article: 'Nexus', deck: 'Decks', guild: 'Guilds', tournament: 'Tournaments'};
 const empty = text => `<p class="hub-empty">${esc(text)}</p>`;
 const tiles = (items, html, none) => items.length ? `<div class="hub-grid">${items.map(html).join('')}</div>` : empty(none);
 const formData = form => {
@@ -24,7 +30,7 @@ const formData = form => {
 };
 
 // ---------- Registro canônico ----------
-let registry = null;
+let registry = null, artCards = null;
 async function loadRegistry() {
   if (registry) return registry;
   const index = await call('/data/registry/index.json');
@@ -38,13 +44,40 @@ const newsTile = n => `<a class="hub-tile" href="#/article/${esc(n.slug)}"><b>${
 const deckTile = d => `<a class="hub-tile" href="#/deck/${esc(d.id)}"><b>${esc(d.name)}</b><small>${esc(d.god || '')}${d.archetype ? ` · ${esc(d.archetype)}` : ''} · ${esc(d.author || '')}${d.rating ? ` · ★ ${d.rating}` : ''}</small></a>`;
 const eventTile = t => `<a class="hub-tile" href="#/tournament/${esc(t.id)}"><b>${esc(t.name)}</b><small>${esc(t.format)} · ${esc(t.category)} · ${esc(t.status)}</small></a>`;
 
+const artOf = id => artCards?.get(id)?.ilustracao;
+const thumb = id => {
+  const file = artOf(id);
+  return file ? `/card-forge/art-web/webp/${esc(file.replace(/\.[a-z]+$/i, '.webp'))}` : '';
+};
+const fallbackArt = id => `/card-forge/art-web/${esc(artOf(id) || '')}`;
+const artImg = (id, alt = '', eager = false) => artOf(id) ? `<img src="${thumb(id)}" data-fallback="${fallbackArt(id)}" alt="${esc(alt)}" loading="${eager ? 'eager' : 'lazy'}">` : '';
+const loadArt = async () => { artCards ??= await call('/card-forge/art-web/cards.json').then(d => new Map(d.cartas.map(x => [x.id, x]))).catch(() => new Map()); };
+
 async function home() {
-  const f = await api('/home');
-  return `<h1>Cosmo Hub</h1>
-    <h2>Latest News</h2>${tiles(f.news, newsTile, 'Nothing published yet.')}
+  const [reg, f] = await Promise.all([loadRegistry(), apiUp ? api('/home').catch(() => null) : null, loadArt()]);
+  const live = reg.cards.filter(c => c.publication !== 'cut');
+  const gods = live.filter(c => c.type === 'God');
+  const module = (href, stamp, title, text, wide, art) => `<a class="kv-card hub-module ${wide ? 'hub-module--wide' : ''}" href="${href}">${art ? artImg(art) : ''}<p class="kv-stamp">${stamp}</p><b>${title}</b><span>${text}</span></a>`;
+  return `<section class="hub-hero">
+      <div><p class="kv-stamp kv-stamp--gold">The official portal of the game</p>
+        <h1><span class="kv-lyric">Enter the</span><span class="kv-cosmo">Sanctuary</span></h1>
+        <p class="hub-lead">Every card, every rule, every deck and every battle of the Holy War, in one place.</p>
+        <div class="hub-cta"><a class="kv-button" href="/playtest/">Play now</a><a class="kv-ghost" href="#/codex">Open the Codex</a></div></div>
+      <div class="hub-fan">${gods.slice(0, 5).map(g => `<a href="#/card/${esc(g.id)}" aria-label="${esc(g.name)}">${artImg(g.id, g.name, true)}</a>`).join('')}</div>
+    </section>
+    <dl class="hub-numbers"><div><dd>${live.length}</dd><dt>Cards</dt></div><div><dd>${reg.rules.length}</dd><dt>Rules</dt></div><div><dd>${gods.length}</dd><dt>Gods</dt></div><div><dd>${reg.glossary.length}</dd><dt>Terms</dt></div></dl>
+    <h2>Explore</h2><div class="hub-bento">
+      ${module('#/codex', 'Codex', 'Every card and every rule', 'Search every card and the official rulebook.', true, gods[0]?.id)}
+      ${module('#/nexus', 'Nexus', 'News and the meta', 'Newsroom, Meta Hub and the balance archive.', true, gods[1]?.id)}
+      ${module('#/decks', 'Decks', 'Share your deck', 'Public lists, versions and discussion.')}
+      ${module('#/guilds', 'Guilds', 'Find your order', 'Members, teams and announcements.')}
+      ${module('#/tournaments', 'Tournaments', 'Prove your Cosmo', 'Community events, online and in person.')}
+    </div>
+    <h2>The Gods</h2><div class="hub-gods">${gods.map(g => `<a class="hub-god" href="#/codex/cards/${q(g.faction)}">${artImg(g.id, '')}<span>${esc(g.name)}</span></a>`).join('')}</div>
+    ${f ? `<h2>Latest News</h2>${tiles(f.news, newsTile, 'Nothing published yet.')}
     <h2>Featured Decks</h2>${tiles(f.decks, deckTile, 'Nothing published yet.')}
     <h2>Balance Updates</h2>${tiles(f.balance, newsTile, 'Nothing published yet.')}
-    <h2>Tournament Highlights</h2>${tiles(f.tournaments, eventTile, 'Nothing published yet.')}`;
+    <h2>Tournament Highlights</h2>${tiles(f.tournaments, eventTile, 'Nothing published yet.')}` : ''}`;
 }
 
 async function article(slug) {
@@ -58,22 +91,29 @@ const balanceDetails = m => `<h2>Change</h2><div class="hub-scroll"><table class
 // ---------- Codex ----------
 const codexTabs = cur => `<nav class="hub-tabs">${[['cards', 'Card Database'], ['rules', 'Official Rules'], ['glossary', 'Glossary'], ['rulings', 'Rulings'], ['academy', 'Academy']].map(([k, l]) => `<a href="#/codex/${k}" ${cur === k ? 'aria-current="page"' : ''}>${l}</a>`).join('')}</nav>`;
 
-async function codex(tab = 'cards') {
+async function codex(tab = 'cards', faction = '') {
   const reg = await loadRegistry();
-  const head = `<h1>Codex</h1><p class="hub-muted">Rules ${esc(reg.index.current.rules)} · Catalog ${esc(reg.index.current.catalog)} · ${esc(reg.index.current.set_name || '')}</p>${codexTabs(tab)}`;
+  await loadArt();
+  const head = `<h1>Codex</h1><p class="hub-lead">Every card and every rule of the game, always in sync with what the game plays.</p>${codexTabs(tab)}`;
   if (tab === 'rules') return `${head}<div class="hub-row"><input id="rule-q" type="search" placeholder="Search" aria-label="Search rules"></div><div id="rule-list"></div>`;
   if (tab === 'glossary') return `${head}<div class="hub-scroll"><table class="hub-table"><thead><tr><th>EN</th><th>PT-BR</th><th>Note</th></tr></thead><tbody>${reg.glossary.map(g => `<tr><td>${esc(g.en)}</td><td>${esc(g.pt)}</td><td>${esc(g.note)}</td></tr>`).join('')}</tbody></table></div>`;
   if (tab === 'rulings' || tab === 'academy') {
+    if (!apiUp) return head + soon();
     const kind = tab === 'rulings' ? 'ruling' : 'lesson';
     const {items} = await api(`/content?kind=${kind}`);
     return `${head}${tiles(items, newsTile, 'Nothing published yet.')}`;
   }
-  const opts = (key) => [...new Set(reg.cards.map(c => c[key]).filter(Boolean))].sort().map(v => `<option>${esc(v)}</option>`).join('');
+  const opts = (key, chosen) => [...new Set(reg.cards.map(c => c[key]).filter(Boolean))].sort().map(v => `<option ${v === chosen ? 'selected' : ''}>${esc(v)}</option>`).join('');
   return `${head}<div class="hub-row"><input id="card-q" type="search" placeholder="Search" aria-label="Search cards">
-    <select id="card-faction" aria-label="Faction"><option value="">All factions</option>${opts('faction')}</select>
+    <select id="card-faction" aria-label="Faction"><option value="">All factions</option>${opts('faction', faction)}</select>
     <select id="card-type" aria-label="Type"><option value="">All types</option>${opts('type')}</select>
     <select id="card-rarity" aria-label="Rarity"><option value="">All rarities</option>${opts('rarity')}</select>
     <input id="card-cost" type="number" min="0" placeholder="Cost" aria-label="Cost"></div><div id="card-list"></div>`;
+}
+
+// Arte ainda sem versão leve cai no JPG original.
+function armFallback(img) {
+  img.addEventListener('error', () => { if (img.getAttribute('src') !== img.dataset.fallback) img.src = img.dataset.fallback; }, {once: true});
 }
 
 function filterCards() {
@@ -85,7 +125,8 @@ function filterCards() {
     && (!term || [c.name, c.name_pt, ...c.abilities, ...c.keywords].join(' ').toLowerCase().includes(term))
     && (!val('card-faction') || c.faction === val('card-faction')) && (!val('card-type') || c.type === val('card-type'))
     && (!val('card-rarity') || c.rarity === val('card-rarity')) && (val('card-cost') === '' || c.cost === Number(val('card-cost'))));
-  list.innerHTML = `<p class="hub-muted">${found.length} cards</p>` + tiles(found.slice(0, 120), c => `<a class="hub-tile" href="#/card/${esc(c.id)}"><b>${esc(c.name)}</b><small>${esc(c.faction)} · ${esc(c.type)} · ${esc(c.rarity || '')}${c.cost != null ? ` · ${c.cost}` : ''}</small></a>`, 'No cards match.');
+  list.innerHTML = `<p class="hub-muted">${found.length} cards</p>` + (found.length ? `<div class="hub-cards">${found.slice(0, 120).map(c => `<a class="hub-thumb" href="#/card/${esc(c.id)}"><i>${artImg(c.id)}</i><b>${esc(c.name)}</b><small>${esc(c.faction)} · ${esc(c.type)}${c.cost != null ? ` · ${c.cost}` : ''}</small></a>`).join('')}</div>` : empty('No cards match.'));
+  list.querySelectorAll('img[data-fallback]').forEach(armFallback);
 }
 
 function filterRules() {
@@ -96,18 +137,17 @@ function filterRules() {
   list.innerHTML = tiles(found, r => `<a class="hub-tile" href="#/rule/${esc(r.id)}"><b>${esc(r.number)}. ${esc(r.title)}</b><small>${esc(r.chapter || '')}${r.status === 'review' ? ' · under review' : ''}</small></a>`, 'No rules match.');
 }
 
-let artCards = null;
 async function cardPage(id) {
   const reg = await loadRegistry();
   const c = reg.cards.find(x => x.id === id);
   if (!c) return empty('Card not found.');
-  artCards ??= await call('/card-forge/art-web/cards.json').then(d => new Map(d.cartas.map(x => [x.id, x]))).catch(() => new Map());
+  await loadArt();
   const art = artCards.get(id);
   let picture = '';
   try {
     picture = art ? renderLiveCard(art, {art: art.ilustracao ? `/card-forge/art-web/${art.ilustracao}` : null}) : '';
   } catch { picture = ''; }
-  const {items} = await api('/content?kind=ruling');
+  const {items} = apiUp ? await api('/content?kind=ruling') : {items: []};
   const rulings = items.filter(r => (r.meta.card_refs || []).includes(id));
   const rules = reg.rules.filter(r => r.cards.includes(id));
   const stat = (k, v) => v == null || v === '' ? '' : `<tr><th>${k}</th><td>${esc(v)}</td></tr>`;
@@ -132,6 +172,7 @@ async function rulePage(id) {
 // ---------- Nexus ----------
 async function nexus(tab = 'news') {
   const nav = `<h1>Nexus</h1><nav class="hub-tabs">${[['news', 'Newsroom'], ['meta', 'Meta Hub'], ['balance', 'Balance Center']].map(([k, l]) => `<a href="#/nexus/${k}" ${tab === k ? 'aria-current="page"' : ''}>${l}</a>`).join('')}</nav>`;
+  if (!apiUp) return nav + soon();
   if (tab === 'meta') {
     const m = await api('/meta');
     return `${nav}<p class="hub-muted">${m.matches} online duels in ${esc(m.environment)}. Win rates need at least ${m.min_sample} matches. Excluded: ${esc(m.excluded.join(', '))}. These are not Official statistics.</p>
@@ -338,10 +379,13 @@ document.addEventListener('input', e => {
 const ROUTES = {'': home, codex, card: cardPage, rule: rulePage, nexus, article, decks, deck: deckPage, guilds, guild: guildPage, tournaments, tournament: tournamentPage, notifications: inbox, console: consolePage};
 
 async function render() {
-  const [, name = '', arg] = location.hash.split('/');
+  const [, name = '', arg, arg2] = location.hash.split('/');
+  const section = {card: 'codex', rule: 'codex', article: 'nexus', deck: 'decks', guild: 'guilds', tournament: 'tournaments'}[name] || name;
+  document.querySelectorAll('.hub-nav a').forEach(a => (a.dataset.section === section ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current')));
   const view = ROUTES[name];
   try {
-    root.innerHTML = view ? await view(arg && decodeURIComponent(arg)) : empty('Page not found.');
+    root.innerHTML = !view ? empty('Page not found.') : !apiUp && NEEDS_API.has(name) ? `<h1>${TITLES[name]}</h1>${soon()}` : await view(arg && decodeURIComponent(arg), arg2 && decodeURIComponent(arg2));
+    root.querySelectorAll('img[data-fallback]').forEach(armFallback);
     filterCards();
     filterRules();
   } catch (e) {
@@ -353,8 +397,10 @@ async function refreshMe() {
   const me = await api('/me').catch(() => null);
   document.getElementById('hub-unread').textContent = me?.unread || '';
   document.getElementById('hub-console').hidden = !me?.developer;
+  document.getElementById('hub-inbox').hidden = !me;
 }
 
-addEventListener('hashchange', render);
+mountKV();
+addEventListener('hashchange', () => { scrollTo(0, 0); render(); });
 render();
 refreshMe();
