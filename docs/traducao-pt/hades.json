@@ -1,0 +1,813 @@
+{
+  "_nota": "Rascunho PT-BR das cartas de Hades (fase 3, 31/10/2026). Mesmo formato de athena.json.",
+  "_nomes": {
+    "Hades": "Hades",
+    "Wyvern Rhadamanthys": "Radamanthys de Wyvern",
+    "Rhadamanthys": "Radamanthys",
+    "Griffon Minos": "Minos de Grifo",
+    "Minos": "Minos",
+    "Garuda Aiacos": "Aiacos de Garuda",
+    "Aiacos": "Aiacos",
+    "Sphinx Pharaoh": "Pharaó de Esfinge",
+    "Pharaoh": "Pharaó",
+    "Acheron Charon": "Caronte de Aqueronte",
+    "Charon": "Caronte",
+    "Hypnos, God of Sleep": "Hypnos, Deus do Sono",
+    "Hypnos": "Hypnos",
+    "Thanatos, God of Death": "Thanatos, Deus da Morte",
+    "Thanatos": "Thanatos",
+    "Pandora": "Pandora",
+    "Pandora, Queen of the Underworld": "Pandora, Rainha do Mundo dos Mortos",
+    "Aries Shion, the Resurrected Saint": "Shion de Áries, o Cavaleiro Ressuscitado",
+    "Aries Shion": "Shion de Áries",
+    "Shion": "Shion",
+    "Harpy Valentine": "Valentine de Harpia",
+    "Valentine": "Valentine",
+    "Balron Lune": "Lune de Balrog",
+    "Lune": "Lune",
+    "Papillon Myu": "Myu de Papillon",
+    "Myu": "Myu",
+    "Deep Niobe": "Niobe de Deep",
+    "Niobe": "Niobe",
+    "Basilisk Sylphid": "Sylphid de Basilisco",
+    "Sylphid": "Sylphid",
+    "Skeleton Markino": "Markino de Esqueleto",
+    "Frog Zeros": "Zelos de Sapo",
+    "Cyclops Giganto": "Giganto de Ciclope",
+    "Worm Raimi": "Raimi de Verme",
+    "Golem Rock": "Rock de Golem",
+    "Troll Iwan": "Iwan de Troll",
+    "Deadly Beetle Stand": "Stand de Besouro Mortal",
+    "Lycaon Phlegyas": "Flegias de Licaão",
+    "Minotaur Gordon": "Gordon de Minotauro",
+    "Alraune Queen": "Queen de Alraune",
+    "Gorgon Ox": "Ox de Górgona",
+    "Dullahan Cube": "Cube de Dullahan",
+    "Cancer Deathmask": "Máscara da Morte de Câncer",
+    "Pisces Aphrodite, the Resurrected Saint": "Afrodite de Peixes, o Cavaleiro Ressuscitado",
+    "Pisces Aphrodite": "Afrodite de Peixes",
+    "Capricorn Shura, the Resurrected Saint": "Shura de Capricórnio, o Cavaleiro Ressuscitado",
+    "Capricorn Shura": "Shura de Capricórnio",
+    "Aquarius Camus": "Camus de Aquário",
+    "Gemini Saga, the Resurrected Saint": "Saga de Gêmeos, o Cavaleiro Ressuscitado",
+    "Gemini Saga": "Saga de Gêmeos",
+    "Shun": "Shun",
+    "Athena": "Athena",
+    "Hades' Sword": "Espada de Hades",
+    "Hades' Royal Guard": "Guarda Real de Hades",
+    "Styx Soul Herder": "Pastor de Almas do Estige",
+    "Underworld Executioner": "Carrasco do Mundo dos Mortos",
+    "Underworld Skeleton": "Esqueleto do Mundo dos Mortos",
+    "Elysium Servant": "Servo do Elísio",
+    "Wandering Soul": "Alma Errante",
+    "Pandora's Box": "Caixa de Pandora"
+  },
+  "hades-001": {
+    "n": "HADES",
+    "s": "Portador da Morte",
+    "t": "Imperador dos Sete Mares",
+    "h": [
+      "OFERENDA DE VIDA — Poder Divino\nUma vez por rodada, quando um Devoto que você controla é derrotado, você pode perder {2}{S}. Se fizer isso, compre uma carta e ganhe {1}{L}."
+    ],
+    "a": "REI DO TÁRTARO — Despertar 7\nSempre que um Devoto volta do seu Tártaro para o Campo de Batalha sob seu controle, o Deus inimigo perde {1}{S} e Hades ganha {1}{S}.",
+    "u": "GRANDE ECLIPSE — Supremo\nCusto: {7}{C}\nDevolva até três Devotos do seu Tártaro para o Campo de Batalha sob seu controle. Eles entram Despreparados e perdem Ímpeto.\nPara cada Devoto devolvido assim, o Deus inimigo perde {2}{S}.\nHades ganha Alma igual à metade da Alma que o Deus inimigo perdeu com Grande Eclipse, arredondada para cima.",
+    "f": "“Eu sou o fim de todas as coisas.”"
+  },
+  "hades-v6-181": {
+    "n": "RADAMANTHYS DE WYVERN",
+    "s": "O Juiz Implacável",
+    "h": [
+      "Grande Precaução — Quando Radamanthys de Wyvern entra no Campo de Batalha, você pode pagar {3}{S}. Se fizer isso, derrote o Devoto alvo.",
+      "Autoridade do Juiz — Uma vez por rodada, sempre que um Devoto inimigo é destruído, o controlador dele perde {1}{S} e seu Deus ganha {1}{S}."
+    ]
+  },
+  "hades-v6-182": {
+    "n": "SÚPLICE DE WYVERN",
+    "s": "Armadura do Juiz Implacável",
+    "h": [
+      "Ressonância — Radamanthys: Sempre que Radamanthys de Wyvern destrói um Devoto inimigo em combate, o Deus inimigo perde {2}{S} e seu Deus ganha {2}{S}."
+    ]
+  },
+  "hades-v6-183": {
+    "n": "MINOS DE GRIFO",
+    "s": "O Mestre da Marionete Cósmica",
+    "h": [
+      "Marionete Cósmica — Quando Minos de Grifo entra no Campo de Batalha, você pode pagar {1}{S}. Se fizer isso, o Devoto inimigo alvo recebe -2 ATQ / -2 PV até o fim da rodada.",
+      "Mestre dos Fantoches — Sempre que um Devoto inimigo é derrotado durante o seu turno, o controlador dele perde {1}{S}."
+    ]
+  },
+  "hades-v6-184": {
+    "n": "SÚPLICE DE GRIFO",
+    "s": "Os Fios da Submissão Eterna",
+    "h": [
+      "Ressonância — Minos: Uma vez por rodada, quando Minos de Grifo declara um Golpe, o Devoto inimigo alvo recebe -1 ATQ / -1 PV até o fim da rodada."
+    ]
+  },
+  "hades-v6-185": {
+    "n": "AIACOS DE GARUDA",
+    "s": "A Asa Infernal",
+    "h": [
+      "Bater de Asas de Garuda — Quando Aiacos de Garuda entra no Campo de Batalha, você pode devolver o Devoto alvo com Custo de Conjuração 3 ou menos do seu Tártaro para a sua mão.",
+      "Ilusão Galáctica — Sempre que Aiacos de Garuda destrói um Devoto inimigo em combate, você pode devolver o Devoto alvo com Custo de Conjuração 2 ou menos do seu Tártaro para o Campo de Batalha Despreparado."
+    ]
+  },
+  "hades-v6-186": {
+    "n": "SÚPLICE DE GARUDA",
+    "s": "As Asas da Estrela Infernal",
+    "h": [
+      "Ressonância — Aiacos: Uma vez por rodada, quando Aiacos de Garuda devolve um Devoto do seu Tártaro para o Campo de Batalha, esse Devoto recebe +1 ATQ até o fim da rodada."
+    ]
+  },
+  "hades-v6-187": {
+    "n": "PHARAÓ DE ESFINGE",
+    "s": "O Juiz das Almas",
+    "h": [
+      "Balança da Maldição — Quando Pharaó de Esfinge entra no Campo de Batalha, você pode pagar {1}{S}. Se fizer isso, o Deus inimigo alvo perde {2}{S} e seu Deus ganha {2}{S}.",
+      "Sinfonia do Fim — Uma vez por rodada, sempre que você paga Alma para ativar uma habilidade, você pode pagar {1}{S} adicional. Se fizer isso, compre 1 carta."
+    ]
+  },
+  "hades-v6-188": {
+    "n": "SÚPLICE DE ESFINGE",
+    "s": "As Balanças dos Condenados",
+    "h": [
+      "Ressonância — Pharaó: Uma vez por rodada, sempre que Pharaó de Esfinge faz o Deus inimigo perder Alma por uma habilidade, você pode pagar {2}{S}. Se fizer isso, compre 1 carta."
+    ]
+  },
+  "hades-v6-189": {
+    "n": "CARONTE DE AQUERONTE",
+    "s": "Barqueiro dos Mortos",
+    "t": "O Barqueiro dos Mortos",
+    "h": [
+      "O Preço do Barqueiro — Quando Caronte de Aqueronte entra no Campo de Batalha, você pode pagar {2}{S}. Se fizer isso, procure no seu Deck por um Devoto com Custo de Conjuração 3 ou menos, revele-o, coloque-o na sua mão e embaralhe seu Deck.",
+      "Passagem para o Mundo dos Mortos — Uma vez por rodada, quando outro Devoto aliado é destruído, você pode pagar {1}{S}. Se fizer isso, coloque a carta do topo do seu Deck no seu Tártaro."
+    ]
+  },
+  "hades-v6-190": {
+    "n": "SÚPLICE DE AQUERONTE",
+    "s": "O Preço da Passagem",
+    "h": [
+      "Ressonância — Caronte: Uma vez por rodada, quando Caronte de Aqueronte coloca uma ou mais cartas do seu Deck no seu Tártaro, você pode devolver o Devoto alvo com Custo de Conjuração 2 ou menos do seu Tártaro para a sua mão."
+    ]
+  },
+  "hades-v6-191": {
+    "n": "HYPNOS, DEUS DO SONO",
+    "s": "O Sono Eterno",
+    "h": [
+      "Sonolência Eterna — Quando Hypnos entra no Campo de Batalha, você pode pagar {2}{S}. Se fizer isso, coloque 2 marcadores de Selo em cada Devoto inimigo.",
+      "Letargia Eterna — Uma vez por rodada, quando um Devoto inimigo perde seu último marcador de Selo, você pode pagar {2}{S}. Se fizer isso, derrote esse Devoto."
+    ]
+  },
+  "hades-v6-192": {
+    "n": "LETARGIA ETERNA",
+    "s": "O Sono do Qual Ninguém Desperta",
+    "h": [
+      "Coloque 3 marcadores de Selo no Devoto alvo.",
+      "Compre 1 carta."
+    ]
+  },
+  "hades-v6-193": {
+    "n": "THANATOS, DEUS DA MORTE",
+    "s": "O Deus Impiedoso da Morte",
+    "h": [
+      "Providência Terrível — Quando Thanatos entra no Campo de Batalha, você pode pagar {3}{S}. Se fizer isso, derrote o Devoto inimigo alvo.",
+      "Execução Divina — Uma vez por rodada, sempre que um Devoto inimigo é derrotado, o controlador dele perde {2}{S} e seu Deus ganha {2}{S}."
+    ]
+  },
+  "hades-v6-194": {
+    "n": "TOQUE DIVINO DA MORTE",
+    "s": "Nenhum Mortal Escapa da Morte",
+    "h": [
+      "Derrote o Devoto alvo.",
+      "O controlador dele perde {2}{S}.",
+      "Se você controlar Thanatos, Deus da Morte, seu Deus ganha {2}{S}."
+    ]
+  },
+  "hades-v6-195": {
+    "n": "PANDORA",
+    "s": "RAINHA DO MUNDO DOS MORTOS",
+    "t": "A Voz de Hades",
+    "h": [
+      "Ordem de Pandora — Quando Pandora entra no Campo de Batalha, você pode pagar {3}{S}. Se fizer isso, procure no seu Deck por uma carta de Espectro, revele-a, coloque-a na sua mão e embaralhe seu Deck.",
+      "Rainha do Mundo dos Mortos — Uma vez por rodada, quando outro Devoto aliado é derrotado, você pode pagar {2}{S}. Se fizer isso, compre 2 cartas."
+    ]
+  },
+  "hades-v6-196": {
+    "n": "TRIDENTE DE PANDORA",
+    "s": "O Instrumento da Autoridade Divina",
+    "h": [
+      "O Devoto equipado recebe +1 ATQ / +2 PV.",
+      "Ressonância — Pandora: Uma vez por rodada, quando Pandora faz você pagar Alma por uma habilidade, seu Deus ganha {1}{L}."
+    ]
+  },
+  "hades-v6-197": {
+    "n": "SHION DE ÁRIES, O CAVALEIRO RESSUSCITADO",
+    "s": "O Grão-Mestre que Voltou da Morte",
+    "h": [
+      "Retorno dos Mortos — Quando Shion entra no Campo de Batalha, devolva o Devoto alvo com Custo de Conjuração 4 ou menos do seu Tártaro para o Campo de Batalha Despreparado.",
+      "Revolução de Poeira de Estrelas — Uma vez por rodada, quando outro Devoto aliado volta do seu Tártaro para o Campo de Batalha, o Deus inimigo alvo perde {2}{S} e seu Deus ganha {2}{S}."
+    ]
+  },
+  "hades-v6-198": {
+    "n": "SÚPLICE DE ÁRIES",
+    "s": "A Armadura do Grão-Mestre Ressuscitado",
+    "h": [
+      "Ressonância — Shion: Uma vez por rodada, quando Shion de Áries devolve um Devoto do seu Tártaro para o Campo de Batalha, compre 1 carta."
+    ]
+  },
+  "hades-v6-199": {
+    "n": "ESPADA DE HADES",
+    "s": "A Lâmina que Perfura os Deuses",
+    "h": [
+      "O Devoto equipado recebe +4 ATQ / +2 PV.",
+      "Execução Divina — Sempre que o Devoto equipado causa dano de Golpe a um Deus inimigo, esse Deus perde {3}{S} adicional.",
+      "Maldição do Mundo dos Mortos — Sempre que o Devoto equipado derrota um Devoto inimigo com um Golpe, o controlador dele perde {3}{S} e seu Deus ganha {3}{S}."
+    ]
+  },
+  "hades-v6-200": {
+    "n": "CAIXA DE PANDORA",
+    "s": "O Recipiente dos Males Proibidos",
+    "h": [
+      "Selo Proibido — Quando a Caixa de Pandora entra no Campo de Batalha, cada oponente sacrifica um Devoto.",
+      "Abrir a Caixa — {3}{C}, {T}, pague {3}{S}: Procure no seu Deck por uma carta de Devoto, revele-a, coloque-a na sua mão e embaralhe seu Deck.",
+      "A Última Esperança — Quando a Caixa de Pandora sai do Campo de Batalha, seu Deus ganha {3}{S} e você compra 1 carta."
+    ]
+  },
+  "hades-v6-201": {
+    "n": "VALENTINE DE HARPIA",
+    "s": "O Servo Leal de Wyvern",
+    "h": [
+      "Ganância pela Vida — Quando Valentine de Harpia entra no Campo de Batalha, você pode pagar {1}{S}. Se fizer isso, o Deus inimigo alvo perde {2}{S} e seu Deus ganha {2}{S}.",
+      "Servo Leal — Sempre que um Juiz do Inferno aliado é derrotado, você pode sacrificar Valentine de Harpia. Se fizer isso, devolva esse Juiz do Inferno do seu Tártaro para a sua mão."
+    ]
+  },
+  "hades-v6-202": {
+    "n": "LUNE DE BALROG",
+    "s": "O Juiz Infernal dos Pecados",
+    "h": [
+      "Reencarnação — Quando Lune de Balrog entra no Campo de Batalha, o oponente alvo revela sua mão. Escolha uma carta de Momento ou Técnica dela. Esse jogador descarta essa carta.",
+      "Chicote de Fogo — Uma vez por rodada, sempre que um oponente descarta uma carta, o Deus dele perde {1}{S} e seu Deus ganha {1}{S}."
+    ]
+  },
+  "hades-v6-203": {
+    "n": "MYU DE PAPILLON",
+    "s": "O Espectro da Metamorfose",
+    "h": [
+      "Metamorfose — Quando Myu de Papillon entra no Campo de Batalha, você pode pagar {2}{S}. Se fizer isso, compre 2 cartas.",
+      "Enxame de Fadas — Sempre que Myu de Papillon causa dano de Golpe a um Deus inimigo, você pode devolver o Devoto alvo com Custo de Conjuração 2 ou menos do seu Tártaro para a sua mão."
+    ]
+  },
+  "hades-v6-204": {
+    "n": "NIOBE DE DEEP",
+    "s": "A Fragrância Mortal",
+    "h": [
+      "Perfume de Deep — Quando Niobe de Deep entra no Campo de Batalha, você pode pagar {2}{S}. Se fizer isso, o Devoto inimigo alvo recebe -3 ATQ / -3 PV até o fim da rodada.",
+      "Morte Venenosa — Quando Niobe de Deep é derrotado, o Devoto inimigo alvo recebe -2 ATQ / -2 PV até o fim da rodada."
+    ]
+  },
+  "hades-v6-205": {
+    "n": "SYLPHID DE BASILISCO",
+    "s": "A Estrela Venenosa",
+    "h": [
+      "Batida da Aniquilação — Sempre que Sylphid de Basilisco causa dano de Golpe a um Devoto inimigo, esse Devoto recebe -2 ATQ / -2 PV até o fim da rodada.",
+      "Perseguição Mortal — Sempre que um Devoto inimigo é derrotado durante o seu turno, Sylphid de Basilisco recebe +2 ATQ até o fim da rodada."
+    ]
+  },
+  "hades-v6-206": {
+    "n": "MARKINO DE ESQUELETO",
+    "s": "O Servo da Primeira Prisão",
+    "h": [
+      "Servo dos Mortos — Quando Markino de Esqueleto entra no Campo de Batalha, coloque as 2 cartas do topo do seu Deck no seu Tártaro.",
+      "Servo Descartável — Quando Markino de Esqueleto é derrotado, você pode pagar {1}{S}. Se fizer isso, compre 1 carta."
+    ]
+  },
+  "hades-v6-207": {
+    "n": "ZELOS DE SAPO",
+    "s": "O Servo Covarde",
+    "h": [
+      "Fuga do Covarde — Uma vez por rodada, quando Zelos de Sapo é escolhido como alvo de uma habilidade inimiga, você pode pagar {2}{S}. Se fizer isso, devolva Zelos de Sapo para a mão do dono dele.",
+      "Oportunista — Sempre que outro Devoto aliado é derrotado, o Deus inimigo alvo perde {1}{S}."
+    ]
+  },
+  "hades-v6-208": {
+    "n": "GIGANTO DE CICLOPE",
+    "s": "O Gigante do Mundo dos Mortos",
+    "h": [
+      "Força Brutal — Sempre que Giganto de Ciclope Golpeia, você pode sacrificar outro Devoto aliado. Se fizer isso, Giganto de Ciclope recebe +2 ATQ até o fim da rodada.",
+      "Banquete da Morte — Sempre que você sacrifica um Devoto, seu Deus ganha {1}{S}."
+    ]
+  },
+  "hades-v6-209": {
+    "n": "RAIMI DE VERME",
+    "s": "O Espectro Sob a Terra",
+    "h": [
+      "Prisão do Verme — Quando Raimi de Verme entra no Campo de Batalha, você pode pagar {1}{S}. Se fizer isso, o Devoto inimigo alvo recebe -1 ATQ / -1 PV até o fim da rodada.",
+      "Emboscada Subterrânea — Sempre que Raimi de Verme Golpeia um Devoto com dano marcado, Raimi de Verme recebe +2 ATQ até o fim da rodada."
+    ]
+  },
+  "hades-v6-210": {
+    "n": "ROCK DE GOLEM",
+    "s": "A Estrela Esmagadora",
+    "h": [
+      "Bomba de Pedra Rolante — Quando Rock de Golem entra no Campo de Batalha, você pode sacrificar outro Devoto aliado. Se fizer isso, derrote o Devoto inimigo alvo com 3 PV ou menos.",
+      "Colosso de Pedra — Sempre que outro Devoto aliado é derrotado, Rock de Golem recebe +1 ATQ até o fim da rodada."
+    ]
+  },
+  "hades-v6-211": {
+    "n": "IWAN DE TROLL",
+    "s": "A Estrela Brutal",
+    "h": [
+      "Grande Machado Esmagador — Quando Iwan de Troll entra no Campo de Batalha, você pode sacrificar outro Devoto aliado. Se fizer isso, o Devoto inimigo alvo recebe -3 ATQ / -3 PV até o fim da rodada.",
+      "Sede de Sangue — Sempre que outro Devoto aliado é derrotado, Iwan de Troll recebe +1 ATQ até o fim da rodada."
+    ]
+  },
+  "hades-v6-212": {
+    "n": "STAND DE BESOURO MORTAL",
+    "s": "A Estrela Esmagadora",
+    "k": [
+      "Guardião"
+    ],
+    "h": [
+      "Defensor Eterno — Quando Stand de Besouro Mortal é derrotado, você pode pagar {2}{S}. Se fizer isso, devolva-o do seu Tártaro para a sua mão."
+    ]
+  },
+  "hades-v6-213": {
+    "n": "FLEGIAS DE LICAÃO",
+    "s": "A Estrela Selvagem",
+    "h": [
+      "Inferno Uivante — Quando Flegias de Licaão entra no Campo de Batalha, você pode pagar {1}{S}. Se fizer isso, o Devoto inimigo alvo recebe -2 ATQ / -2 PV até o fim da rodada.",
+      "Predador Selvagem — Sempre que Flegias de Licaão derrota um Devoto inimigo com um Golpe, seu Deus ganha {2}{S}."
+    ]
+  },
+  "hades-v6-214": {
+    "n": "GORDON DE MINOTAURO",
+    "s": "O Machado do Carrasco",
+    "h": [
+      "Machado Esmagador Superior — Sempre que Gordon de Minotauro causa dano de Golpe a um Devoto, esse Devoto recebe -2 PV até o fim da rodada.",
+      "Carrasco — Sempre que Gordon de Minotauro derrota um Devoto inimigo, o Deus inimigo perde {1}{S}."
+    ]
+  },
+  "hades-v6-215": {
+    "n": "QUEEN DE ALRAUNE",
+    "s": "A Flor Sedenta de Sangue",
+    "h": [
+      "Tesoura Flor de Sangue — Quando Queen de Alraune entra no Campo de Batalha, você pode pagar {2}{S}. Se fizer isso, derrote o Devoto inimigo alvo com 2 PV ou menos.",
+      "Alimentar-se da Vida — Sempre que um Devoto inimigo é derrotado, seu Deus ganha {1}{S}."
+    ]
+  },
+  "hades-v6-216": {
+    "n": "OX DE GÓRGONA",
+    "s": "A Estrela Petrificante",
+    "h": [
+      "Olhar Petrificante — Quando Ox de Górgona entra no Campo de Batalha, você pode pagar {1}{S}. Se fizer isso, o Devoto inimigo alvo não pode declarar um Golpe durante o próximo turno do controlador dele.",
+      "Maldição de Pedra — Uma vez por rodada, sempre que Ox de Górgona Golpeia, o Devoto defensor recebe -2 ATQ durante esse Golpe."
+    ]
+  },
+  "hades-v6-217": {
+    "n": "CUBE DE DULLAHAN",
+    "s": "O Carrasco Sem Cabeça",
+    "h": [
+      "Mensageiro da Morte — Quando Cube de Dullahan entra no Campo de Batalha, o Deus inimigo alvo perde {1}{S} e seu Deus ganha {1}{S}.",
+      "Último Suspiro — Quando Cube de Dullahan é derrotado, você pode devolver outro Devoto alvo com Custo de Conjuração 1 ou menos do seu Tártaro para a sua mão."
+    ]
+  },
+  "hades-v6-218": {
+    "n": "ESQUELETO DO MUNDO DOS MORTOS",
+    "s": "O Servo Interminável",
+    "h": [
+      "Erguer-se de Novo — Quando Esqueleto do Mundo dos Mortos é derrotado, você pode pagar {1}{S}. Se fizer isso, devolva-o do seu Tártaro para a sua mão."
+    ]
+  },
+  "hades-v6-219": {
+    "n": "GUARDA REAL DE HADES",
+    "s": "O Guardião de Judeca",
+    "k": [
+      "Guardião"
+    ],
+    "h": [
+      "Guardião — A Guarda Real de Hades tem Guardião.",
+      "Lealdade até a Morte — Quando a Guarda Real de Hades é derrotada, o Deus inimigo alvo perde {2}{S} e seu Deus ganha {2}{S}."
+    ]
+  },
+  "hades-v6-220": {
+    "n": "ALMA ERRANTE",
+    "s": "Os Mortos Esquecidos",
+    "h": [
+      "Espírito Inquieto — Quando Alma Errante entra no Campo de Batalha, coloque a carta do topo do seu Deck no seu Tártaro.",
+      "Oferenda de Alma — Sacrifique Alma Errante: Seu Deus ganha {1}{S}. Ative apenas uma vez por rodada."
+    ]
+  },
+  "hades-v6-221": {
+    "n": "PASTOR DE ALMAS DO ESTIGE",
+    "s": "Pastor das Almas Perdidas",
+    "h": [
+      "Reunir os Perdidos — Quando Pastor de Almas do Estige entra no Campo de Batalha, você pode pagar {1}{S}. Se fizer isso, devolva o Devoto alvo com Custo de Conjuração 2 ou menos do seu Tártaro para a sua mão.",
+      "Último Rebanho — Quando Pastor de Almas do Estige é derrotado, coloque as 2 cartas do topo do seu Deck no seu Tártaro."
+    ]
+  },
+  "hades-v6-222": {
+    "n": "CARRASCO DO MUNDO DOS MORTOS",
+    "s": "A Lâmina do Julgamento Final",
+    "h": [
+      "Sentença Final — Quando Carrasco do Mundo dos Mortos entra no Campo de Batalha, você pode sacrificar outro Devoto aliado. Se fizer isso, derrote o Devoto inimigo alvo com 3 PV ou menos.",
+      "Tributo de Sangue — Sempre que você sacrifica outro Devoto, o Deus inimigo alvo perde {1}{S} e seu Deus ganha {1}{S}. Esta habilidade ativa apenas uma vez por rodada."
+    ]
+  },
+  "hades-v6-223": {
+    "n": "SERVO DO ELÍSIO",
+    "s": "O Guardião Silencioso do Paraíso",
+    "h": [
+      "Devoção Eterna — Quando Servo do Elísio entra no Campo de Batalha, seu Deus ganha {2}{S}.",
+      "Sacrifício do Servo — Sacrifique Servo do Elísio: Compre 1 carta. Ative apenas uma vez por rodada."
+    ]
+  },
+  "hades-v6-224": {
+    "n": "SÚPLICE RACHADA",
+    "s": "Até Armadura Quebrada Serve aos Mortos",
+    "h": [
+      "Oferenda Quebrada — Quando o Devoto equipado é derrotado, você pode pagar {1}{S}. Se fizer isso, devolva o Devoto alvo com Custo de Conjuração 1 ou menos do seu Tártaro para a sua mão."
+    ]
+  },
+  "hades-v6-225": {
+    "n": "ARMADURA DE ESQUELETO",
+    "s": "Proteção Além da Sepultura",
+    "h": [
+      "Recuperação de Ossos — Quando o Devoto equipado é derrotado, você pode pagar {1}{S}. Se fizer isso, devolva a Armadura de Esqueleto para a mão do dono dela."
+    ]
+  },
+  "hades-v6-226": {
+    "n": "CORRENTE DOS CONDENADOS",
+    "s": "Presa ao Sofrimento Eterno",
+    "h": [
+      "O Devoto equipado recebe +1 ATQ / +1 PV.",
+      "Grilhões da Alma — Sempre que o Devoto equipado causa dano de Golpe a um Deus inimigo, esse Deus perde {1}{S} adicional e seu Deus ganha {1}{S}."
+    ]
+  },
+  "hades-v6-227": {
+    "n": "UMA MOEDA PARA O BARQUEIRO",
+    "s": "O Preço da Última Viagem",
+    "h": [
+      "Pagar o Barqueiro — {1}{C}, {T}, sacrifique este equipamento: Devolva o Devoto alvo com Custo de Conjuração 2 ou menos do seu Tártaro para a sua mão. Seu Deus perde {1}{S}. Compre 1 carta."
+    ],
+    "f": "Uma moeda para Caronte; ele precisa ser recompensado."
+  },
+  "hades-v6-228": {
+    "n": "HARPA DE PANDORA",
+    "s": "A Melodia do Mundo dos Mortos",
+    "h": [
+      "O Devoto equipado recebe +0 ATQ / +2 PV.",
+      "Melodia Dolorosa — Uma vez por rodada, sempre que você paga Alma para ativar uma habilidade do Devoto equipado, o Deus inimigo alvo perde {1}{S}."
+    ]
+  },
+  "hades-v6-229": {
+    "n": "GRILHÕES DO MUNDO DOS MORTOS",
+    "s": "Correntes que Prendem os Vivos e os Mortos",
+    "h": [
+      "O Devoto equipado recebe +1 ATQ / +1 PV.",
+      "Prisão Eterna — Quando os Grilhões do Mundo dos Mortos entram no Campo de Batalha, o Devoto inimigo alvo recebe -1 ATQ / -1 PV até o fim da rodada.",
+      "Correntes Amaldiçoadas — Sempre que o Devoto equipado derrota um Devoto inimigo com um Golpe, outro Devoto inimigo alvo recebe -1 ATQ / -1 PV até o fim da rodada."
+    ]
+  },
+  "hades-v6-230": {
+    "n": "MORTALHA FÚNEBRE",
+    "s": "A Vestimenta dos Partidos",
+    "h": [
+      "O Devoto equipado recebe +0 ATQ / +2 PV.",
+      "Abraço da Morte — Quando o Devoto equipado é derrotado, você pode pagar {2}{S}. Se fizer isso, devolva esse Devoto do seu Tártaro para a sua mão."
+    ]
+  },
+  "hades-v6-231": {
+    "n": "TOCHA DO MUNDO DOS MORTOS",
+    "s": "A Chama que Guia os Mortos",
+    "h": [
+      "O Devoto equipado recebe +1 ATQ / +1 PV.",
+      "Chama Eterna — Uma vez por rodada, sempre que um Devoto aliado volta do seu Tártaro para o Campo de Batalha, seu Deus ganha {1}{S}.",
+      "Luz Guia — Quando a Tocha do Mundo dos Mortos é destruída, coloque as 2 cartas do topo do seu Deck no seu Tártaro."
+    ]
+  },
+  "hades-v6-232": {
+    "n": "O DESPERTAR DOS ESPECTROS",
+    "s": "Os Mortos Se Erguerão de Novo",
+    "h": [
+      "Devolva o Espectro alvo com Custo de Conjuração 3 ou menos do seu Tártaro para o Campo de Batalha Despreparado.",
+      "Esse Devoto não pode declarar um Golpe nesta rodada."
+    ]
+  },
+  "hades-v6-233": {
+    "n": "O CHAMADO DO MUNDO DOS MORTOS",
+    "s": "Atenda à Voz da Morte",
+    "h": [
+      "Procure no seu Deck por uma carta de Espectro com Custo de Conjuração 3 ou menos, revele-a, coloque-a na sua mão e embaralhe seu Deck.",
+      "Seu Deus perde {2}{S}."
+    ]
+  },
+  "hades-v6-234": {
+    "n": "A MORTE É APENAS O COMEÇO",
+    "s": "Da Morte Vem o Poder",
+    "h": [
+      "Sacrifique um Devoto aliado.",
+      "Compre 2 cartas e ganhe {1}{L}."
+    ]
+  },
+  "hades-v6-235": {
+    "n": "O JURAMENTO DAS 108 ESTRELAS",
+    "s": "Unidos Além da Vida e da Morte",
+    "h": [
+      "Devolva até 2 cartas de Espectro alvo do seu Tártaro para a sua mão.",
+      "Seu Deus perde {1}{S} para cada carta devolvida assim."
+    ]
+  },
+  "hades-v6-236": {
+    "n": "SIRVA AO SENHOR DAS TREVAS",
+    "s": "Obediência Além da Sepultura",
+    "h": [
+      "O Devoto aliado alvo recebe +2 ATQ / +1 PV até o fim da rodada.",
+      "Você pode pagar {2}{S}. Se fizer isso, esse Devoto ganha Perfurar até o fim da rodada."
+    ]
+  },
+  "hades-v6-237": {
+    "n": "O PREÇO DO BARQUEIRO",
+    "s": "Toda Alma Deve Pagar",
+    "h": [
+      "O oponente alvo escolhe um Devoto que controla e o sacrifica.",
+      "Você pode pagar {2}{S}. Se fizer isso, compre 1 carta."
+    ]
+  },
+  "hades-v6-238": {
+    "n": "ALMAS DOS CONDENADOS",
+    "s": "O Sofrimento Eterno dos Mortos",
+    "h": [
+      "O Deus inimigo alvo perde {3}{S}.",
+      "Seu Deus ganha {3}{S}."
+    ]
+  },
+  "hades-v6-239": {
+    "n": "OS SUSSURROS DE PANDORA",
+    "s": "A Voz que Comanda os Mortos",
+    "h": [
+      "O oponente alvo revela sua mão.",
+      "Escolha dela uma carta que não seja Devoto. Esse jogador descarta essa carta.",
+      "Seu Deus perde {1}{S}."
+    ]
+  },
+  "hades-v6-240": {
+    "n": "O RETORNO DA MORTE",
+    "s": "A Morte Não Pode Prender os Fiéis",
+    "h": [
+      "Devolva o Devoto alvo do seu Tártaro para o Campo de Batalha Despreparado.",
+      "Ele não pode declarar um Golpe nesta rodada.",
+      "Seu Deus perde {3}{S}."
+    ]
+  },
+  "hades-v6-241": {
+    "n": "A VONTADE DE HADES",
+    "s": "A Morte É a Vontade do Mundo dos Mortos",
+    "h": [
+      "Escolha um:",
+      "O Devoto inimigo alvo recebe -3 ATQ / -3 PV até o fim da rodada.",
+      "Devolva a carta de Espectro alvo com Custo de Conjuração 2 ou menos do seu Tártaro para a sua mão.",
+      "Seu Deus perde {1}{S}."
+    ]
+  },
+  "hades-v6-242": {
+    "n": "CASTELO DE HADES",
+    "s": "A Fortaleza do Mundo dos Mortos",
+    "h": [
+      "Autoridade Sombria — Uma vez por rodada, sempre que um Espectro aliado é derrotado, o Deus inimigo alvo perde {1}{S}.",
+      "Lealdade Eterna — Uma vez por jogo — {3}{C}: Devolva até duas cartas de Espectro alvo do seu Tártaro para a sua mão."
+    ]
+  },
+  "hades-v6-243": {
+    "n": "O RIO AQUERONTE",
+    "s": "A Travessia Entre a Vida e a Morte",
+    "h": [
+      "Travessia dos Mortos — Uma vez por rodada, quando você devolve um Devoto do seu Tártaro para a sua mão, seu Deus ganha {1}{S}.",
+      "Preço da Passagem — Uma vez por jogo — {2}{C}: Compre uma carta para cada Devoto aliado derrotado nesta rodada (até 3)."
+    ]
+  },
+  "hades-v6-244": {
+    "n": "A PRIMEIRA PRISÃO",
+    "s": "A Corte do Julgamento Eterno",
+    "h": [
+      "Julgamento dos Pecadores — Sempre que um oponente descarta uma carta, o Deus dele perde {1}{S}. Esta habilidade ativa apenas uma vez por rodada.",
+      "Punição Eterna — Uma vez por jogo — {3}{C}: O oponente alvo descarta duas cartas."
+    ]
+  },
+  "hades-v6-245": {
+    "n": "OS PORTÕES DO MUNDO DOS MORTOS",
+    "s": "Abandonai Toda Esperança, Vós que Entrais",
+    "h": [
+      "Os Mortos Se Erguerão — O primeiro Devoto que você devolve do seu Tártaro para o Campo de Batalha a cada rodada entra com +1 ATQ até o fim da rodada.",
+      "Portões da Morte — Uma vez por jogo — {3}{C}: Devolva a carta de Espectro alvo com Custo de Conjuração 3 ou menos do seu Tártaro para o Campo de Batalha."
+    ]
+  },
+  "hades-v6-246": {
+    "n": "SÚPLICE DE HARPIA",
+    "s": "As Asas da Estrela Celeste do Pranto",
+    "h": [
+      "Ressonância — Valentine: Sempre que Valentine de Harpia faz o Deus inimigo perder Alma por uma habilidade, seu Deus ganha {1}{S} adicional. Esta habilidade ativa apenas uma vez por rodada."
+    ]
+  },
+  "hades-v6-247": {
+    "n": "SÚPLICE DE BALROG",
+    "s": "A Armadura do Julgamento Infernal",
+    "h": [
+      "Ressonância — Lune: Uma vez por rodada, sempre que um oponente descarta uma carta devido a uma habilidade controlada por Lune de Balrog, compre 1 carta e seu Deus perde {1}{S}."
+    ]
+  },
+  "hades-v6-248": {
+    "n": "SÚPLICE DE PAPILLON",
+    "s": "As Asas da Metamorfose",
+    "h": [
+      "Ressonância — Myu: Uma vez por rodada, quando Myu de Papillon devolve uma carta de Devoto do seu Tártaro para a sua mão, você pode pagar {1}{S}. Se fizer isso, devolva outra carta de Devoto alvo com Custo de Conjuração 2 ou menos do seu Tártaro para a sua mão."
+    ]
+  },
+  "hades-v6-249": {
+    "n": "SÚPLICE DE DEEP",
+    "s": "A Armadura da Fragrância Mortal",
+    "h": [
+      "Ressonância — Niobe: Sempre que Niobe de Deep faz o PV de um Devoto inimigo ser reduzido a 0 ou menos por uma habilidade, o Deus inimigo alvo perde {2}{S} e seu Deus ganha {2}{S}. Esta habilidade ativa apenas uma vez por rodada."
+    ]
+  },
+  "hades-v6-250": {
+    "n": "SÚPLICE DE BASILISCO",
+    "s": "O Veneno da Estrela Celeste Veloz",
+    "h": [
+      "Ressonância — Sylphid: Sempre que Sylphid de Basilisco derrota um Devoto inimigo com um Golpe, você pode devolver a carta de Espectro alvo com Custo de Conjuração 2 ou menos do seu Tártaro para a sua mão."
+    ]
+  },
+  "hades-v6-251": {
+    "n": "MÁSCARA DA MORTE DE CÂNCER",
+    "s": "Retorno do Buscador da Morte",
+    "t": "O Retorno do Buscador da Morte",
+    "h": [
+      "Ondas do Inferno — Quando Máscara da Morte de Câncer entra no Campo de Batalha, você pode pagar {2}{S}. Se fizer isso, o Devoto inimigo alvo recebe -3 ATQ / -3 PV até o fim da rodada.",
+      "Portal de Yomotsu — Sempre que um Devoto inimigo é derrotado, você pode pagar {1}{S}. Se fizer isso, coloque as 2 cartas do topo do seu Deck no seu Tártaro. Esta habilidade ativa apenas uma vez por rodada."
+    ]
+  },
+  "hades-v6-252": {
+    "n": "AFRODITE DE PEIXES, O CAVALEIRO RESSUSCITADO",
+    "s": "A Beleza da Morte Eterna",
+    "h": [
+      "Rosa Sangrenta — Quando Afrodite de Peixes entra no Campo de Batalha, você pode pagar {1}{S}. Se fizer isso, o Devoto inimigo alvo recebe -2 ATQ / -2 PV até o fim da rodada.",
+      "Rosa Demoníaca Real — Uma vez por rodada, sempre que um Devoto inimigo é derrotado, o controlador dele perde {1}{S} e seu Deus ganha {1}{S}."
+    ]
+  },
+  "hades-v6-253": {
+    "n": "SHURA DE CAPRICÓRNIO, O CAVALEIRO RESSUSCITADO",
+    "s": "A Lâmina que Voltou da Morte",
+    "h": [
+      "Excalibur — Quando Shura de Capricórnio entra no Campo de Batalha, você pode pagar {3}{S}. Se fizer isso, derrote o Devoto inimigo alvo com 3 PV ou menos.",
+      "Lâmina do Sacrifício — Sempre que Shura de Capricórnio derrota um Devoto inimigo com um Golpe, você pode sacrificar outro Devoto aliado. Se fizer isso, compre 2 cartas."
+    ]
+  },
+  "hades-v6-254": {
+    "n": "CAMUS DE AQUÁRIO",
+    "s": "Alma Congelada do Mundo dos Mortos",
+    "t": "A Alma Congelada do Mundo dos Mortos",
+    "h": [
+      "Pó de Diamante — Quando Camus de Aquário entra no Campo de Batalha, você pode pagar {1}{S}. Se fizer isso, o Devoto inimigo alvo não pode declarar um Golpe durante o próximo turno do controlador dele.",
+      "Execução Aurora — Uma vez por rodada, sempre que um Devoto inimigo é derrotado, o controlador dele perde {1}{S} e seu Deus ganha {1}{S}."
+    ]
+  },
+  "hades-v6-255": {
+    "n": "SAGA DE GÊMEOS, O CAVALEIRO RESSUSCITADO",
+    "s": "O Imperador Caído Retorna",
+    "h": [
+      "Outra Dimensão — Quando Saga de Gêmeos entra no Campo de Batalha, você pode pagar {3}{S}. Se fizer isso, envie o Devoto inimigo alvo para o Vazio até Saga de Gêmeos sair do Campo de Batalha.",
+      "Explosão Galáctica — Uma vez por rodada, sempre que outro Devoto aliado é derrotado, o Deus inimigo alvo perde {2}{S}."
+    ]
+  },
+  "hades-v6-256": {
+    "n": "A TRAIÇÃO DOS CAVALEIROS DE OURO",
+    "s": "Os Mortos Voltam como Inimigos",
+    "h": [
+      "Devolva até 2 cartas de Cavaleiro de Ouro alvo do seu Tártaro para a sua mão.",
+      "Seu Deus perde {2}{S} para cada carta devolvida assim.",
+      "Compre 1 carta."
+    ]
+  },
+  "hades-v6-257": {
+    "n": "O JULGAMENTO DOS MORTOS",
+    "s": "Todo Pecado Exige Julgamento",
+    "h": [
+      "O oponente alvo revela sua mão.",
+      "Escolha uma carta dela. Esse jogador descarta essa carta.",
+      "Seu Deus perde {2}{S}."
+    ]
+  },
+  "hades-v6-258": {
+    "n": "O JULGAMENTO DE MINOS",
+    "s": "Nenhuma Alma Escapa da Marionete",
+    "h": [
+      "O Devoto inimigo alvo recebe -2 ATQ / -2 PV até o fim da rodada.",
+      "Se você controlar um Juiz do Inferno, ele recebe -4 ATQ / -4 PV em vez disso.",
+      "Compre 1 carta."
+    ]
+  },
+  "hades-v6-259": {
+    "n": "OS ESPECTROS INVADEM O SANTUÁRIO",
+    "s": "O Mundo dos Mortos Marcha Sobre Athena",
+    "h": [
+      "Devolva até 2 cartas de Espectro alvo com Custo de Conjuração 3 ou menos do seu Tártaro para o Campo de Batalha Despreparado.",
+      "Esses Devotos não podem declarar um Golpe nesta rodada.",
+      "Seu Deus perde {3}{S}."
+    ]
+  },
+  "hades-v6-260": {
+    "n": "A RESSURREIÇÃO DOS CAÍDOS",
+    "s": "A Morte É Apenas Outro Começo",
+    "h": [
+      "Devolva o Devoto alvo com Custo de Conjuração 5 ou menos do seu Tártaro para o Campo de Batalha Despreparado.",
+      "Você pode sacrificar outro Devoto aliado. Se fizer isso, o Devoto devolvido recebe +2 ATQ / +2 PV até o fim da rodada."
+    ]
+  },
+  "hades-v6-261": {
+    "n": "O ADEUS DE PANDORA",
+    "s": "Seu Último Ato de Desafio",
+    "h": [
+      "Sacrifique um Devoto aliado.",
+      "Compre 3 cartas.",
+      "Seu Deus perde {3}{S}.",
+      "Se o Devoto sacrificado era Pandora, Rainha do Mundo dos Mortos, procure no seu Deck por uma carta, coloque-a na sua mão e embaralhe seu Deck."
+    ]
+  },
+  "hades-v6-262": {
+    "n": "A DESTRUIÇÃO DAS ARMADURAS DE OURO",
+    "s": "Nem o Ouro Resiste à Morte",
+    "h": [
+      "Derrote o Devoto inimigo alvo.",
+      "Destrua todos os Equipamentos equipados nesse Devoto.",
+      "Para cada Equipamento destruído assim, o controlador dele perde {2}{S}."
+    ]
+  },
+  "hades-v6-263": {
+    "n": "OS TRÊS JUÍZES DO INFERNO",
+    "s": "As Autoridades Supremas do Mundo dos Mortos",
+    "h": [
+      "Procure no seu Deck por até 2 cartas de Juiz do Inferno, revele-as, coloque-as na sua mão e embaralhe seu Deck.",
+      "Seu Deus perde {3}{S}.",
+      "Se você controlar um Juiz do Inferno, compre 1 carta."
+    ]
+  },
+  "hades-v6-264": {
+    "n": "A MALDIÇÃO DO MUNDO DOS MORTOS",
+    "s": "Os Vivos Se Unirão aos Mortos",
+    "h": [
+      "Cada oponente sacrifica 2 Devotos.",
+      "Para cada Devoto sacrificado assim, o controlador dele perde {1}{S} e seu Deus ganha {1}{S}."
+    ]
+  },
+  "hades-v6-265": {
+    "n": "A POSSESSÃO DE SHUN",
+    "s": "A Alma Mais Pura Torna-se o Recipiente",
+    "h": [
+      "Devolva o Devoto alvo do Tártaro de um oponente para o Campo de Batalha sob seu controle Despreparado.",
+      "Seu Deus perde {3}{S}."
+    ]
+  },
+  "hades-v6-266": {
+    "n": "A QUEDA DO SANTUÁRIO",
+    "s": "Os Mortos Marcham Contra os Vivos",
+    "h": [
+      "Derrote todos os Devotos.",
+      "Para cada Devoto aliado derrotado assim, seu Deus ganha {1}{S}.",
+      "Para cada Devoto inimigo derrotado assim, o controlador dele perde {1}{S}."
+    ]
+  },
+  "hades-v6-267": {
+    "n": "A ESPADA QUE PERFURA ATHENA",
+    "s": "A Ferida que Desafiou a Divindade",
+    "h": [
+      "O Deus inimigo alvo perde {5}{S}.",
+      "Se você controlar a Espada de Hades, esse Deus perde {3}{S} adicional.",
+      "Você pode pagar {3}{S}. Se fizer isso, compre 2 cartas."
+    ]
+  },
+  "hades-v6-268": {
+    "n": "O SONO ETERNO",
+    "s": "Uma Eternidade Sem Despertar",
+    "h": [
+      "Coloque 3 marcadores de Selo em cada Devoto inimigo.",
+      "Se você controlar Hypnos, Deus do Sono, derrote até 2 Devotos inimigos Selados alvo.",
+      "Compre 2 cartas."
+    ]
+  },
+  "hades-v6-269": {
+    "n": "A MORTE DE THANATOS",
+    "s": "Até a Própria Morte Pode Cair",
+    "h": [
+      "Derrote todos os Devotos inimigos.",
+      "Para cada Devoto derrotado assim, o controlador dele perde {2}{S} e seu Deus ganha {2}{S}.",
+      "Seu Deus perde {4}{S}."
+    ]
+  },
+  "hades-v6-270": {
+    "n": "O MAIOR ECLIPSE",
+    "s": "A Escuridão Eterna de Hades",
+    "h": [
+      "Devolva até 3 Devotos alvo do seu Tártaro para o Campo de Batalha Despreparados.",
+      "Esses Devotos não podem declarar um Golpe nesta rodada.",
+      "Para cada Devoto devolvido assim, o Deus inimigo alvo perde {3}{S} e seu Deus ganha {3}{S}."
+    ]
+  }
+}

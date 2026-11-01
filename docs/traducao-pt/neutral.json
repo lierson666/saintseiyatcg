@@ -1,0 +1,506 @@
+{
+ "_nota": "Rascunho PT-BR das cartas Neutras (fase 3, 31/10/2026). Mesmo formato de athena.json.",
+ "_nomes": {
+  "Black Pegasus": "Pégaso Negro",
+  "Black Dragon": "Dragão Negro",
+  "Black Swan": "Cisne Negro",
+  "Black Andromeda": "Andrômeda Negro",
+  "Black Phoenix": "Fênix Negro",
+  "Jango": "Jango",
+  "Sanctuary Sentry": "Sentinela do Santuário",
+  "Mercenary Scout": "Batedor Mercenário",
+  "Stone Colossus": "Colosso de Pedra",
+  "War Charger": "Cavalo de Guerra",
+  "Sho": "Shô",
+  "Daichi": "Daichi",
+  "Ushio": "Ushio",
+  "Dr. Asamori": "Doutor Asamori",
+  "Steel Saint Recruit": "Recruta Cavaleiro de Aço",
+  "Steel Recruit": "Recruta de Aço",
+  "Geist": "Geist",
+  "Dolphin Ghost Saint": "Cavaleiro Fantasma de Golfinho",
+  "Sea Serpent Ghost Saint": "Cavaleiro Fantasma de Serpente Marinha",
+  "Jellyfish Ghost Saint": "Cavaleiro Fantasma de Água-Viva",
+  "Cosmo Disruption": "Ruptura de Cosmo",
+  "Universal Cosmo Crystal": "Cristal de Cosmo Universal",
+  "Crystal Saint": "Cavaleiro de Cristal",
+  "Ohko": "Ohko",
+  "Leda": "Leda",
+  "Spica": "Spica",
+  "Shiva": "Shiva",
+  "Agora": "Agora",
+  "Arachne": "Aracne",
+  "Gigas": "Gigas",
+  "Phaeton": "Faeton",
+  "Sanctuary Soldier": "Soldado do Santuário",
+  "Sanctuary Mercenary": "Mercenário do Santuário",
+  "Cloth Repair Tools": "Ferramentas de Reparo de Armadura",
+  "Death Queen Mask": "Máscara da Rainha da Morte",
+  "Cosmo Converter": "Conversor de Cosmo",
+  "Sanctuary Supply Chest": "Baú de Suprimentos do Santuário",
+  "Death Queen Island": "Ilha da Rainha da Morte",
+  "Graad Foundation": "Fundação Graad"
+ },
+ "neutral-v6-451": {
+  "n": "PÉGASO NEGRO",
+  "s": "O Punho da Morte Negra",
+  "h": [
+   "Meteoro Negro — Sempre que Pégaso Negro causa dano de Golpe a um Devoto inimigo, cause 1 de dano ao Deus do controlador desse Devoto.",
+   "Cosmo Corrompido — Sempre que Pégaso Negro declara um Golpe, você perde {1}{S}."
+  ],
+  "f": "\"Seus punhos carregam as mesmas estrelas de Pégaso, mas todas as estrelas se tornaram negras.\""
+ },
+ "neutral-v6-452": {
+  "n": "DRAGÃO NEGRO",
+  "s": "O Dragão das Trevas",
+  "h": [
+   "Punho do Dragão Negro — Quando Dragão Negro entra no Campo de Batalha, você pode pagar {2}{S}. Se fizer isso, derrote o Devoto alvo com 3 ou menos de PV.",
+   "Força Cruel — Sempre que Dragão Negro derrota um Devoto inimigo com um Golpe, você perde {1}{S}."
+  ],
+  "f": "\"Sua força rivaliza com a do Dragão, mas seu coração esqueceu o significado de honra.\""
+ },
+ "neutral-v6-453": {
+  "n": "CISNE NEGRO",
+  "s": "A Sombra Congelada",
+  "h": [
+   "Nevasca Negra — Quando Cisne Negro entra no Campo de Batalha, Sele o Devoto inimigo alvo.",
+   "Sacrifício Congelado — Quando Cisne Negro entra no Campo de Batalha, pule sua próxima fase de Compra."
+  ],
+  "f": "\"Seu gelo não brilha como diamante. Ele engole todo vestígio de luz.\""
+ },
+ "neutral-v6-454": {
+  "n": "ANDRÔMEDA NEGRO",
+  "s": "As Correntes da Corrupção",
+  "h": [
+   "Nebulosa das Presas Negras — Sempre que Andrômeda Negro causa dano de Golpe a um Devoto inimigo, coloque 1 marcador de -1/-1 nesse Devoto.",
+   "Correntes Sedentas de Sangue — Sempre que um Devoto inimigo com um marcador de -1/-1 é derrotado, o controlador dele perde {1}{S} e você ganha {1}{S}.",
+   "Reflexo Sombrio — Sempre que Andrômeda Negro declara um Golpe, você perde {1}{S}."
+  ],
+  "f": "\"Ao contrário das correntes de Andrômeda, estas serpentes não protegem. Elas têm fome.\""
+ },
+ "neutral-v6-455": {
+  "n": "FÊNIX NEGRO",
+  "s": "O Falso Imortal",
+  "h": [
+   "Falso Renascimento — Quando Fênix Negro é derrotado, você pode pagar {3}{C}, descartar 2 cartas e perder {2}{S}. Se fizer isso, devolva Fênix Negro do seu Tártaro ao Campo de Batalha Despreparado.",
+   "Chama Sombria — Sempre que Fênix Negro declara um Golpe, cause 1 de dano a cada Devoto inimigo e 1 de dano ao seu Deus."
+  ],
+  "f": "\"Ele imita o renascimento da Fênix, mas cada retorno consome outro pedaço de sua alma.\""
+ },
+ "neutral-v6-456": {
+  "n": "JANGO",
+  "s": "O Tirano da Ilha da Rainha da Morte",
+  "h": [
+   "Inferno da Rainha da Morte — Quando Jango entra no Campo de Batalha, cause 3 de dano ao Devoto alvo e 2 de dano ao seu Deus.",
+   "Comando do Tirano — Os outros Devotos Cavaleiros Negros que você controla recebem +1 ATQ.",
+   "Reinar pelo Medo — No início da sua fase Final, se você controla outro Cavaleiro Negro, sacrifique outro Cavaleiro Negro ou perca {3}{S}."
+  ],
+  "f": "\"Na Ilha da Rainha da Morte, o poder era a única lei, e Jango se declarou seu rei.\""
+ },
+ "neutral-v6-457": {
+  "n": "SENTINELA DO SANTUÁRIO",
+  "s": "Os Olhos na Escuridão",
+  "t": "A Muralha do Portão",
+  "k": [
+   "Guardião"
+  ],
+  "f": "\"Embora seus olhos nada vissem, seus sentidos revelavam os movimentos ocultos na escuridão.\""
+ },
+ "neutral-v6-458": {
+  "n": "BATEDOR MERCENÁRIO",
+  "s": "A Imitação da Imortalidade",
+  "t": "Olhos de Aluguel",
+  "h": [
+   "Último Relatório — Quando Batedor Mercenário é derrotado, compre uma carta."
+  ],
+  "f": "\"Vestiam a forma da Fênix, mas não possuíam nada de sua chama eterna.\""
+ },
+ "neutral-v6-459": {
+  "n": "COLOSSO DE PEDRA",
+  "s": "A Sombra Esmagadora do Mar",
+  "t": "O Guardião Ancestral Desperta",
+  "h": [
+   "Impacto Esmagador — Sempre que Colosso de Pedra declara um Golpe, você pode pagar {2}{C}. Se fizer isso, o Devoto inimigo alvo recebe -2 ATQ / -2 PV até o fim da rodada."
+  ],
+  "f": "\"O peso das trevas é maior que o peso de qualquer armadura.\""
+ },
+ "neutral-v6-460": {
+  "n": "CAVALO DE GUERRA",
+  "s": "O Galope Sombrio",
+  "t": "Trovão no Campo de Batalha",
+  "k": [
+   "Ímpeto"
+  ],
+  "h": [
+   "Investida Pisoteadora — Sempre que Cavalo de Guerra causa dano de Golpe a um Deus inimigo, compre uma carta."
+  ],
+  "f": "\"Ele avança sem medo, pois as trevas já levaram tudo o que ele poderia perder.\""
+ },
+ "neutral-v6-461": {
+  "n": "SHÔ, CAVALEIRO DE AÇO DO CÉU",
+  "s": "As Asas de Aço",
+  "h": [
+   "Defensor do Céu — Sempre que uma Técnica inimiga tem como alvo um Devoto que você controla, você pode pagar {2}{C}. Se fizer isso, redirecione essa Técnica para Shô, se ele for um alvo legal.",
+   "Precisão Mecânica — Sempre que você equipa um Equipamento em Shô, compre uma carta e depois descarte uma carta. Esta habilidade ativa apenas uma vez por turno."
+  ],
+  "f": "\"Suas asas não nasceram das estrelas, mas da determinação da humanidade em alcançá-las.\""
+ },
+ "neutral-v6-462": {
+  "n": "DAICHI, CAVALEIRO DE AÇO DA TERRA",
+  "s": "A Terra Inquebrável",
+  "k": [
+   "Guardião"
+  ],
+  "h": [
+   "Guardião",
+   "Fortaleza de Aço — Daichi recebe +0 ATQ / +2 PV enquanto estiver equipado.",
+   "Gerador de Terremoto — Sempre que um Devoto inimigo Golpeia Daichi, você pode pagar {2}{C}. Se fizer isso, cause 1 de dano a cada Devoto inimigo que Golpeia."
+  ],
+  "f": "\"O próprio chão treme sob o peso de sua armadura de aço.\""
+ },
+ "neutral-v6-463": {
+  "n": "USHIO, CAVALEIRO DE AÇO DO MAR",
+  "s": "O Oceano Mecânico",
+  "h": [
+   "Onda Sônica — Quando Ushio entra no Campo de Batalha, compre uma carta e depois descarte uma carta.",
+   "Motor Ressonante — Sempre que você equipa um Equipamento em Ushio, você pode pagar {1}{C}. Se fizer isso, devolva o Devoto inimigo alvo com Custo de Conjuração 2 ou menos para a mão do dono."
+  ],
+  "f": "\"Sua armadura transforma as vibrações do oceano em armas de precisão extraordinária.\""
+ },
+ "neutral-v6-464": {
+  "n": "DOUTOR ASAMORI",
+  "s": "O Gênio por Trás dos Cavaleiros de Aço",
+  "h": [
+   "Engenharia Mecânica — Os Equipamentos que você conjura custam 1 Cosmo a menos, no mínimo 1.",
+   "Inovação em Aço — Uma vez durante o seu turno, você pode pagar {2}{C} e deixar Doutor Asamori Despreparado. Se fizer isso, procure em seu Deck um Equipamento, revele-o, coloque-o na sua mão e embaralhe seu Deck."
+  ],
+  "f": "\"Onde outros buscavam poder divino, ele descobriu que a engenhosidade humana podia desafiar os deuses.\""
+ },
+ "neutral-v6-465": {
+  "n": "ARMADURA DE AÇO DO CÉU",
+  "s": "As Asas Mecânicas do Tucano",
+  "h": [
+   "Interceptação Aérea — Sempre que o Devoto equipado é alvo de uma Técnica inimiga, você pode pagar {3}{C}. Se fizer isso, anule essa Técnica.",
+   "Sincronia de Aço — Se o Devoto equipado for um Cavaleiro de Aço, a Interceptação Aérea custa 1 Cosmo a menos para ativar."
+  ],
+  "f": "\"Forjadas sem bênçãos divinas, suas asas provaram que a humanidade podia desafiar os céus.\""
+ },
+ "neutral-v6-466": {
+  "n": "ARMADURA DE AÇO DA TERRA",
+  "s": "A Armadura Mecânica da Raposa",
+  "h": [
+   "Resistência Sísmica — Previna os primeiros 1 de dano que seria causado ao Devoto equipado a cada turno.",
+   "Sincronia de Aço — Se o Devoto equipado for um Cavaleiro de Aço, ele também recebe +1 ATQ / +1 PV."
+  ],
+  "f": "\"Sua força não vem de lendas antigas, mas da terra sob os pés da humanidade.\""
+ },
+ "neutral-v6-467": {
+  "n": "ARMADURA DE AÇO DO MAR",
+  "s": "A Armadura Mecânica do Espadarte",
+  "h": [
+   "Ruptura Sônica — Sempre que o Devoto equipado causa dano de Golpe a um Devoto inimigo, esse Devoto recebe -2 ATQ até o fim da rodada.",
+   "Sincronia de Aço — Se o Devoto equipado for um Cavaleiro de Aço, compre uma carta e depois descarte uma carta sempre que ele derrotar um Devoto inimigo com um Golpe. Esta habilidade ativa apenas uma vez por turno."
+  ],
+  "f": "\"Sua ressonância mecânica transforma o silêncio do oceano em uma força devastadora.\""
+ },
+ "neutral-v6-468": {
+  "n": "RECRUTA CAVALEIRO DE AÇO",
+  "s": "Um Guerreiro sem Constelação",
+  "h": [
+   "Treino Mecânico — Recruta Cavaleiro de Aço recebe +1 ATQ / +1 PV enquanto estiver equipado."
+  ],
+  "f": "\"Nem todo herói é escolhido pelas estrelas. Alguns constroem o próprio destino.\""
+ },
+ "neutral-v6-469": {
+  "n": "PROTÓTIPO DE ARMADURA DE AÇO",
+  "s": "O Primeiro Passo Rumo ao Cosmo Artificial",
+  "h": [
+   "Mecanismo Instável — Sempre que o Devoto equipado declara um Golpe, você pode pagar {1}{C}. Se fizer isso, ele recebe +1 ATQ até o fim da rodada."
+  ],
+  "f": "\"Toda obra-prima começa como um experimento, e todo experimento carrega o risco de falha.\""
+ },
+ "neutral-v6-470": {
+  "n": "LABORATÓRIO DA FUNDAÇÃO GRAAD",
+  "s": "Onde a Humanidade Desafia os Deuses",
+  "h": [
+   "Instalação de Pesquisa — Uma vez por rodada, você pode pagar {2}{C}. Se fizer isso, compre uma carta e depois descarte uma carta.",
+   "Avanço Tecnológico — O primeiro Equipamento que você conjura a cada turno custa 1 Cosmo a menos, no mínimo 1.",
+   "Produção de Aço — Sempre que você conjura seu segundo Equipamento em um turno, crie uma ficha de Devoto incolor 1/1 chamada Recruta de Aço."
+  ],
+  "f": "\"Entre estas paredes, a ciência se tornou a resposta da humanidade ao poder divino.\""
+ },
+ "neutral-v6-471": {
+  "n": "GEIST, A RAINHA FANTASMA",
+  "s": "A Senhora das Ilusões",
+  "h": [
+   "Ilusão Fantasma — Quando Geist entra no Campo de Batalha, devolva o Devoto inimigo alvo para a mão do dono.",
+   "Comando Fantasma — Os outros Cavaleiros Fantasma que você controla recebem +1 ATQ / +1 PV.",
+   "Presença Enganosa — Sempre que Geist se torna alvo de uma Técnica inimiga, você pode sacrificar outro Devoto. Se fizer isso, anule essa Técnica."
+  ],
+  "f": "\"Sua maior arma nunca foi a força, mas as ilusões que faziam os inimigos duvidarem dos próprios sentidos.\""
+ },
+ "neutral-v6-472": {
+  "n": "CAVALEIRO FANTASMA DE GOLFINHO",
+  "s": "O Fantasma das Ondas",
+  "h": [
+   "Emboscada Aquática — Quando Cavaleiro Fantasma de Golfinho entra no Campo de Batalha, você pode pagar {2}{C}. Se fizer isso, deixe o Devoto inimigo alvo Despreparado.",
+   "Retirada Fantasma — Sempre que Cavaleiro Fantasma de Golfinho causa dano de Golpe a um Deus inimigo, você pode devolvê-lo para a mão do dono."
+  ],
+  "f": "\"Ele ataca de baixo das ondas e some antes que os inimigos entendam o que aconteceu.\""
+ },
+ "neutral-v6-473": {
+  "n": "CAVALEIRO FANTASMA DE SERPENTE MARINHA",
+  "s": "O Veneno Sob a Superfície",
+  "h": [
+   "Aperto da Serpente — Sempre que Cavaleiro Fantasma de Serpente Marinha causa dano de Golpe a um Devoto inimigo, coloque 1 marcador de -1/-1 nesse Devoto.",
+   "Águas Venenosas — Sempre que um Devoto inimigo com um marcador de -1/-1 é derrotado, o controlador dele perde {1}{S}."
+  ],
+  "f": "\"O mar esconde incontáveis perigos, mas poucos são tão impiedosos quanto a serpente sob sua superfície.\""
+ },
+ "neutral-v6-474": {
+  "n": "CAVALEIRO FANTASMA DE ÁGUA-VIVA",
+  "s": "A Paralisia Viva",
+  "h": [
+   "Toque Paralisante — Sempre que Cavaleiro Fantasma de Água-Viva causa dano de Golpe a um Devoto inimigo, Sele esse Devoto.",
+   "Defesa Tóxica — Sempre que um Devoto inimigo Golpeia Cavaleiro Fantasma de Água-Viva, esse Devoto recebe -1 ATQ / -1 PV até o fim da rodada."
+  ],
+  "f": "\"Seu toque não deixa ferida visível, apenas o silêncio aterrador de um corpo que se recusa a se mover.\""
+ },
+ "neutral-v6-475": {
+  "n": "EMBOSCADA DO MAR FANTASMA",
+  "s": "O Oceano Esconde Seus Guerreiros Mais Mortais",
+  "h": [
+   "Ataque Espectral — Devolva o Devoto alvo que você controla para a mão do dono. Depois, devolva o Devoto inimigo alvo para a mão do dono.",
+   "Tática Fantasma — Se você controla um Cavaleiro Fantasma, compre uma carta e depois descarte uma carta."
+  ],
+  "f": "\"O mar só revela seus segredos depois que o inimigo já desapareceu sob as ondas.\""
+ },
+ "neutral-v6-476": {
+  "n": "RUPTURA DE COSMO",
+  "s": "O Universo Silencia",
+  "h": [
+   "Interrupção de Cosmo — Como custo adicional para conjurar Ruptura de Cosmo, descarte uma carta. Anule o Momento ou a Técnica alvo.",
+   "Retorno de Energia — Você perde {2}{S}."
+  ],
+  "f": "\"Até a maior técnica perde o sentido quando o fluxo de Cosmo é cortado.\""
+ },
+ "neutral-v6-477": {
+  "n": "RESSURREIÇÃO DESESPERADA",
+  "s": "Uma Segunda Chance Comprada com Sangue",
+  "h": [
+   "Retorno Proibido — Devolva uma carta de Devoto alvo do seu Tártaro ao Campo de Batalha, Despreparado.",
+   "Sacrifício de Alma — Você perde {3}{S}."
+  ],
+  "f": "\"Trazer um guerreiro de volta da morte é entregar um fragmento da própria existência.\""
+ },
+ "neutral-v6-478": {
+  "n": "CRISTAL DE COSMO UNIVERSAL",
+  "s": "Um Fragmento do Universo Infinito",
+  "h": [
+   "Amplificação de Cosmo — Uma vez por rodada, você pode gerar {1}{L}.",
+   "Sobrecarga de Cristal — Sacrifique Cristal de Cosmo Universal: Gere {2}{C} Latente. Ative apenas durante o seu turno."
+  ],
+  "f": "\"Dentro de um fragmento de cristal, a energia infinita do universo espera para ser despertada.\""
+ },
+ "neutral-v6-479": {
+  "n": "CONHECIMENTO PROIBIDO",
+  "s": "Os Segredos Além do Sétimo Sentido",
+  "h": [
+   "Visão Irrestrita — Compre 3 cartas.",
+   "Preço do Saber — Descarte uma carta e perca {2}{S}."
+  ],
+  "f": "\"Algumas verdades não podem ser descobertas sem sacrificar uma parte da alma.\""
+ },
+ "neutral-v6-480": {
+  "n": "JULGAMENTO DIVINO",
+  "s": "Nenhum Guerreiro Está Acima do Destino",
+  "h": [
+   "Julgamento Absoluto — Derrote o Devoto alvo.",
+   "Consequência Cósmica — Sacrifique um Devoto que você controla. Se não puder, perca {4}{S}."
+  ],
+  "f": "\"Quando o julgamento vem de além das estrelas, nem a armadura mais forte oferece proteção.\""
+ },
+ "neutral-v6-481": {
+  "n": "CAVALEIRO DE CRISTAL",
+  "s": "O Mestre do Gelo Eterno",
+  "h": [
+   "Caixão de Gelo — Quando Cavaleiro de Cristal entra no Campo de Batalha, você pode pagar {2}{C}. Se fizer isso, Sele o Devoto inimigo alvo.",
+   "Disciplina Congelada — Sempre que um Devoto inimigo fica Selado, Cavaleiro de Cristal recebe +1 ATQ / +1 PV até o fim da rodada."
+  ],
+  "f": "\"Antes de aprender a voar, o Cisne foi ensinado a dominar o silêncio do gelo eterno.\""
+ },
+ "neutral-v6-482": {
+  "n": "OHKO, O DRAGÃO CAÍDO",
+  "s": "O Tigre de Rozan",
+  "h": [
+   "Fúria do Tigre — Sempre que Ohko declara um Golpe, ele recebe +2 ATQ até o fim da rodada.",
+   "Raiva Descontrolada — Ohko deve declarar um Golpe a cada turno, se puder.",
+   "Disciplina Quebrada — Sempre que Ohko declara um Golpe, cause 1 de dano ao seu Deus."
+  ],
+  "f": "\"Ele tinha a força de um tigre, mas nunca aprendeu a paciência de um dragão.\""
+ },
+ "neutral-v6-483": {
+  "n": "LEDA, GUERREIRO DA CORRENTE",
+  "s": "O Rival de Andrômeda",
+  "h": [
+   "Correntes Gêmeas — Sempre que Leda declara um Golpe junto com outro Devoto, Leda recebe +1 ATQ / +1 PV até o fim da rodada.",
+   "Coordenação de Correntes — Se você controla Spica, Leda tem Guardião."
+  ],
+  "f": "\"Suas correntes foram forjadas para a batalha, mas a inveja se tornou a corrente mais pesada de todas.\""
+ },
+ "neutral-v6-484": {
+  "n": "SPICA, GUERREIRO DA CORRENTE",
+  "s": "A Segunda Corrente de Andrômeda",
+  "h": [
+   "Correntes Atadoras — Quando Spica entra no Campo de Batalha, você pode pagar {2}{C}. Se fizer isso, deixe o Devoto inimigo alvo Despreparado.",
+   "Assalto Gêmeo — Sempre que Spica declara um Golpe, se você controla Leda, o Devoto inimigo alvo recebe -2 ATQ até o fim da rodada."
+  ],
+  "f": "\"Duas correntes, uma ambição e uma rivalidade que nenhum dos guerreiros conseguiu superar.\""
+ },
+ "neutral-v6-485": {
+  "n": "SHIVA, CAVALEIRO DE PAVÃO",
+  "s": "A Dança das Mil Penas",
+  "h": [
+   "Golpe das Mil Penas — Quando Shiva entra no Campo de Batalha, você pode pagar {2}{C}. Se fizer isso, cause 2 de dano, dividido como quiser, entre até dois Devotos inimigos alvo.",
+   "Meditação Mística — Sempre que você conjura uma Técnica, Shiva recebe +1 ATQ até o fim da rodada."
+  ],
+  "f": "\"Seus movimentos eram belos como as penas de um pavão e mortais como uma tempestade de lâminas.\""
+ },
+ "neutral-v6-486": {
+  "n": "AGORA, CAVALEIRO DE LÓTUS",
+  "s": "O Discípulo da Iluminação",
+  "h": [
+   "Meditação do Lótus — Sempre que você conjura sua primeira Técnica a cada turno, você pode pagar {2}{C}. Se fizer isso, compre uma carta.",
+   "Barreira Espiritual — Sempre que Agora se torna alvo de uma Técnica inimiga, o controlador dela deve pagar {2}{C} adicionais ou essa Técnica é anulada."
+  ],
+  "f": "\"O lótus nasce da lama, intocado pelas trevas de onde cresce.\""
+ },
+ "neutral-v6-487": {
+  "n": "ARACNE, CAVALEIRO DE TARÂNTULA",
+  "s": "O Caçador das Montanhas",
+  "h": [
+   "Teia de Aranha — Quando Aracne entra no Campo de Batalha, deixe o Devoto inimigo alvo Despreparado.",
+   "Armadilha Venenosa — Sempre que um Devoto inimigo Despreparado é derrotado, você pode comprar uma carta e depois descartar uma carta. Esta habilidade ativa apenas uma vez por turno."
+  ],
+  "f": "\"Sua teia era invisível até a presa descobrir que a fuga já era impossível.\""
+ },
+ "neutral-v6-488": {
+  "n": "GIGAS, COMANDANTE DO SANTUÁRIO",
+  "s": "O Arquiteto da Traição",
+  "h": [
+   "Ordens do Santuário — Quando Gigas entra no Campo de Batalha, crie uma ficha de Devoto incolor 1/1 chamada Soldado do Santuário.",
+   "Manipulação Política — Uma vez durante o seu turno, você pode pagar {3}{C} e sacrificar outro Devoto. Se fizer isso, compre 2 cartas."
+  ],
+  "f": "\"Ele não empunhava Armadura lendária nem poder divino, mas sua ambição ameaçava o próprio Santuário.\""
+ },
+ "neutral-v6-489": {
+  "n": "FAETON, OFICIAL DO SANTUÁRIO",
+  "s": "A Mão do Falso Grande Mestre",
+  "h": [
+   "Ordens Militares — Os outros Devotos Soldados que você controla recebem +1 ATQ.",
+   "Reforços — Quando Faeton entra no Campo de Batalha, você pode pagar {2}{C}. Se fizer isso, crie uma ficha de Devoto incolor 1/1 chamada Soldado do Santuário."
+  ],
+  "f": "\"Ele seguia as ordens do Grande Mestre sem questionar as trevas por trás do trono.\""
+ },
+ "neutral-v6-490": {
+  "n": "MERCENÁRIO DO SANTUÁRIO",
+  "s": "Força sem Lealdade",
+  "h": [
+   "Lealdade Paga — No início do seu turno, você pode pagar {1}{C}. Se não fizer isso, Mercenário do Santuário não pode declarar Golpe neste turno."
+  ],
+  "f": "\"Alguns guerreiros lutam por deuses. Outros lutam por quem paga mais.\""
+ },
+ "neutral-v6-491": {
+  "n": "FERRAMENTAS DE REPARO DE ARMADURA",
+  "s": "Os Instrumentos da Restauração",
+  "h": [
+   "Reparos de Emergência — Uma vez por rodada, você pode pagar {2}{C}. Se fizer isso, remova até 2 de dano do Devoto alvo.",
+   "Manutenção Sagrada — Sacrifique Ferramentas de Reparo de Armadura: Devolva a carta de Equipamento alvo do seu Tártaro para a sua mão."
+  ],
+  "f": "\"Até a armadura mais forte não sobrevive para sempre sem as mãos que a restauram.\""
+ },
+ "neutral-v6-492": {
+  "n": "MÁSCARA DA RAINHA DA MORTE",
+  "s": "O Selo dos Cavaleiros Negros",
+  "h": [
+   "Autoridade Sombria — O Devoto equipado recebe +2 ATQ / +1 PV.",
+   "Poder Proibido — Sempre que o Devoto equipado derrota um Devoto inimigo com um Golpe, o controlador desse Devoto perde {2}{S}.",
+   "Proteção Corrompida — Sempre que o Devoto equipado seria derrotado, você pode sacrificar Máscara da Rainha da Morte. Se fizer isso, previna essa derrota e remova todo o dano do Devoto equipado."
+  ],
+  "f": "\"A máscara escondia seus rostos, mas nunca as trevas que consumiam suas almas.\""
+ },
+ "neutral-v6-493": {
+  "n": "CONVERSOR DE COSMO",
+  "s": "Regulagem de Energia Artificial",
+  "h": [
+   "Conversão de Energia — Uma vez por rodada, você pode pagar {1}{S}. Se fizer isso, gere {2}{L}.",
+   "Circuitos Sobrecarregados — Sempre que Conversor de Cosmo gera Cosmo Latente, ele não é Preparado na sua próxima fase de Preparação."
+  ],
+  "f": "\"A humanidade aprendeu a manipular o Cosmo, mas todo milagre artificial exigia um sacrifício.\""
+ },
+ "neutral-v6-494": {
+  "n": "BAÚ DE SUPRIMENTOS DO SANTUÁRIO",
+  "s": "Recursos para a Longa Guerra",
+  "h": [
+   "Suprimentos de Emergência — Quando Baú de Suprimentos do Santuário entra no Campo de Batalha, compre uma carta e depois descarte uma carta.",
+   "Últimas Reservas — Pague {3}{C} e sacrifique Baú de Suprimentos do Santuário: Compre 2 cartas."
+  ],
+  "f": "\"Guerreiros podem sobreviver de coragem, mas exércitos sobrevivem de preparação.\""
+ },
+ "neutral-v6-495": {
+  "n": "EXÍLIO FORÇADO",
+  "s": "Além do Alcance das Estrelas",
+  "h": [
+   "Banimento Dimensional — Mande o Devoto alvo ao Vazio.",
+   "Instabilidade Cósmica — Devolva um Devoto que você controla para a mão do dono."
+  ],
+  "f": "\"Remover um inimigo da existência é perturbar o próprio equilíbrio do universo.\""
+ },
+ "neutral-v6-496": {
+  "n": "EXTRAÇÃO DE COSMO",
+  "s": "Poder Tomado à Força",
+  "h": [
+   "Energia Roubada — Coloque a carta do topo do seu Deck no seu Banco de Cosmo como Base de Cosmo.",
+   "Dívida de Energia — Perca {2}{S} e descarte uma carta."
+  ],
+  "f": "\"O universo concede poder livremente a quem o compreende. Quem o rouba precisa pagar.\""
+ },
+ "neutral-v6-497": {
+  "n": "DEFESA NO ÚLTIMO MOMENTO",
+  "s": "Sobrevivência Contra Todas as Chances",
+  "h": [
+   "Proteção Desesperada — Previna todo o dano de Golpe que seria causado ao Devoto alvo neste turno.",
+   "Exaustão — Deixe esse Devoto Despreparado. Ele não é Preparado na próxima fase de Preparação do controlador dele."
+  ],
+  "f": "\"Sobreviver é, às vezes, a maior vitória que um guerreiro pode alcançar.\""
+ },
+ "neutral-v6-498": {
+  "n": "A BATALHA DA ILHA DA RAINHA DA MORTE",
+  "s": "Onde as Trevas Forjaram Seus Guerreiros",
+  "h": [
+   "Torneio Sombrio — Cada jogador sacrifica um Devoto.",
+   "Sobrevivência dos Mais Cruéis — Se você controla um Cavaleiro Negro, compre 2 cartas e depois descarte uma carta."
+  ],
+  "f": "\"Na Ilha da Rainha da Morte, a vitória não se conquistava com honra, mas destruindo todos que estivessem no caminho.\""
+ },
+ "neutral-v6-499": {
+  "n": "DESAFIO DA HUMANIDADE",
+  "s": "A Vontade de Desafiar os Deuses",
+  "h": [
+   "Além do Poder Divino — Os Devotos que você controla recebem +2 ATQ / +2 PV até o fim da rodada.",
+   "Determinação Inquebrável — Os Devotos que você controla ganham Perfurar até o fim da rodada.",
+   "Sacrifício Supremo — No início da sua próxima fase Final, sacrifique um Devoto."
+  ],
+  "f": "\"Quando os deuses exigiram submissão, a humanidade respondeu com a coragem de se erguer contra eles.\""
+ },
+ "neutral-v6-500": {
+  "n": "O OITAVO SENTIDO",
+  "s": "Despertar Além da Morte",
+  "h": [
+   "Arayashiki — Devolva até 2 cartas de Devoto alvo do seu Tártaro ao Campo de Batalha, Despreparados.",
+   "Transcender a Mortalidade — Esses Devotos não podem ser derrotados até o fim do seu próximo turno.",
+   "O Preço do Despertar — Perca {5}{S}."
+  ],
+  "f": "\"Além do Sétimo Sentido existe um poder que permite aos vivos cruzar a fronteira entre a vida e a morte.\""
+ }
+}

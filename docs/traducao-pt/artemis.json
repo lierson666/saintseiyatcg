@@ -1,0 +1,871 @@
+{
+ "_nota": "Rascunho PT-BR das cartas de Ártemis (fase 3, 31/10/2026). Mesmo formato de athena.json.",
+ "_nomes": {
+  "Artemis": "Ártemis",
+  "Callisto": "Calisto",
+  "Calisto": "Calisto",
+  "La Scoumoune": "La Scoumoune",
+  "Daphne": "Daphne",
+  "Hermia": "Hermia",
+  "Satyr": "Sátiro",
+  "Chandra": "Chandra",
+  "Selene": "Selene",
+  "Chloris": "Chloris",
+  "Athena": "Athena",
+  "Titaness of the Moon": "Titânide da Lua",
+  "Sacred Stag": "Cervo Sagrado",
+  "Moonlit Wolf": "Lobo do Luar",
+  "Silver Moon Bear": "Urso da Lua Prateada",
+  "Ancient Forest Serpent": "Serpente da Floresta Antiga",
+  "The Great Lunar Hound": "O Grande Cão Lunar",
+  "Sacred Grove Keeper": "Guarda do Bosque Sagrado",
+  "Silver Arrow Huntress": "Caçadora da Flecha de Prata",
+  "Wildwood Stalker": "Perseguidor da Mata Selvagem",
+  "Moon Temple Acolyte": "Acólito do Templo da Lua",
+  "Ancient Forest Guardian": "Guardião da Floresta Antiga",
+  "Lunar Beast": "Besta Lunar",
+  "Satellite Archer": "Arqueiro Satélite",
+  "Black Satellite Soldier": "Soldado Satélite Negro",
+  "Moon Temple Sentinel": "Sentinela do Templo da Lua",
+  "Forest Spirit": "Espírito da Floresta",
+  "Sacred Grove Dryad": "Dríade do Bosque Sagrado",
+  "Lunar Nymph": "Ninfa Lunar",
+  "Wildwood Protector": "Protetor da Mata Selvagem",
+  "Primal Forest Guardian": "Guardião Primordial da Floresta",
+  "Huntress Apprentice": "Aprendiz de Caçadora",
+  "Celestial Stag": "Cervo Celestial",
+  "Moonbound Fox": "Raposa do Luar",
+  "Silver Fang Wolf": "Lobo Presa de Prata",
+  "Ancient Grove Treant": "Ent do Bosque Antigo",
+  "Artemis' Royal Huntress": "Caçadora Real de Ártemis",
+  "Guardian of the Sacred Spring": "Guardião da Fonte Sagrada",
+  "Moonlight Huntress Captain": "Capitã das Caçadoras do Luar",
+  "Primal Forest Champion": "Campeão Primordial da Floresta",
+  "Silver Arrow Commander": "Comandante da Flecha de Prata",
+  "The First Moon Guardian": "A Primeira Guardiã Lunar",
+  "The Second Moon Guardian": "A Segunda Guardiã Lunar",
+  "The Third Moon Guardian": "A Terceira Guardiã Lunar",
+  "The Fourth Moon Guardian": "A Quarta Guardiã Lunar",
+  "The Fifth Moon Guardian": "A Quinta Guardiã Lunar",
+  "Moonlit Initiate": "Iniciado do Luar",
+  "Satyr Sacred Armor": "Armadura Sagrada do Sátiro"
+ },
+ "artemis-001": {
+  "n": "ÁRTEMIS",
+  "s": "Canção de Ninar ao Luar",
+  "t": "Imperador dos Sete Mares",
+  "h": [
+   "COLHEITA LUNAR — Poder Divino\nUma vez por rodada, quando você colocar uma carta como Base de Cosmo, você pode ignorar o requisito de Cosmável dela. Se fizer isso, perca {2}{S}."
+  ],
+  "a": "BÊNÇÃO DO LUAR — Despertar 3\nUma vez por rodada, quando você ganharia Cosmo Latente, ganhe {1}{L} adicional, até o limite normal de 3.",
+  "u": "DESPERTAR DA LUA — Supremo\nCusto: {9}{C}\nEscolha até cinco Bases de Cosmo que você controla.\nAté o fim desta rodada, elas se tornam Devotos Espíritos Lunares 3/3 com Ímpeto, Longo Alcance e Perfurar, além de continuarem sendo Bases de Cosmo.\nOs Espíritos Lunares criados assim não sofrem dano de revide de Deuses.\nSempre que um desses Espíritos Lunares causa dano a um Deus inimigo durante um Golpe, esse Deus perde {2}{S} adicionais.\nEssas Bases de Cosmo não podem produzir Cosmo enquanto estiverem transformadas.\nNo fim desta rodada, elas deixam de ser Devotos e permanecem no Campo de Batalha como Bases de Cosmo.",
+  "f": "“Olhe para o céu… esse é o reino que você nunca alcançará.”"
+ },
+ "artemis-v6-361": {
+  "n": "CALISTO",
+  "s": "A Alta Sacerdotisa de Ártemis",
+  "h": [
+   "Autoridade Divina — Outros Devotos de Ártemis aliados recebem +1 ATQ / +1 PV.",
+   "Comando Lunar — Uma vez por rodada, sempre que você colocar 1 ou mais marcadores de Treinamento em um Devoto aliado, compre uma carta."
+  ],
+  "f": "\"Desafiar a Deusa da Lua é desafiar os próprios céus.\""
+ },
+ "artemis-v6-362": {
+  "n": "VESTIMENTA LUNAR DE CALISTO",
+  "s": "Traje da Alta Sacerdotisa",
+  "h": [
+   "Proteção do Luar — Uma vez por rodada, quando o Devoto equipado seria derrotado, você pode remover 1 marcador de Treinamento dele. Se fizer isso, previna essa derrota e todo o dano que seria causado a ele nesta rodada."
+  ],
+  "f": "\"A lua abriga aqueles que servem à sua vontade.\""
+ },
+ "artemis-v6-363": {
+  "n": "LA SCOUMOUNE",
+  "s": "A Caçadora Implacável",
+  "h": [
+   "Perseguição Implacável — Sempre que La Scoumoune declara um Golpe contra um Devoto inimigo, coloque 1 marcador de Treinamento em La Scoumoune.",
+   "Instinto do Caçador — La Scoumoune pode declarar um Golpe contra um Devoto inimigo Despreparado, ignorando Guardião."
+  ],
+  "f": "\"Nenhuma presa escapa da sombra da lua.\""
+ },
+ "artemis-v6-364": {
+  "n": "ARMADURA DO SATÉLITE NEGRO",
+  "s": "Armadura da Sombra da Lua",
+  "h": [
+   "Caçada nas Sombras — Sempre que o Devoto equipado derrota um Devoto inimigo em combate, coloque 1 marcador de Treinamento no Devoto equipado."
+  ],
+  "f": "\"Forjada para aqueles que caçam além do alcance da luz do sol.\""
+ },
+ "artemis-v6-365": {
+  "n": "DAPHNE",
+  "s": "Guardiã da Lua Sagrada",
+  "h": [
+   "Guardião",
+   "Abraço da Floresta — Sempre que Daphne entra em combate com um Devoto inimigo, coloque 1 marcador de Treinamento em Daphne."
+  ],
+  "f": "\"Minha vida pertence à deusa. Minha força pertence à floresta.\""
+ },
+ "artemis-v6-366": {
+  "n": "ARMADURA SAGRADA DE DAPHNE",
+  "s": "Proteção do Bosque Ancestral",
+  "h": [
+   "Resistência Ancestral — No início do seu turno, se o Devoto equipado não tiver marcadores de Treinamento, coloque 1 marcador de Treinamento nele."
+  ],
+  "f": "\"Mesmo despedaçadas, as raízes do mundo antigo voltam a crescer.\""
+ },
+ "artemis-v6-367": {
+  "n": "HERMIA",
+  "s": "A Protetora da Lua Prateada",
+  "h": [
+   "Harmonia Lunar — Sempre que outro Devoto aliado receber 1 ou mais marcadores de Treinamento, você pode pagar {1}{C}. Se fizer isso, coloque 1 marcador de Treinamento em Hermia.",
+   "Laço de Irmãs — Enquanto você controlar Daphne, Hermia recebe +2 ATQ / +2 PV."
+  ],
+  "f": "\"Onde minha irmã estiver, eu jamais recuarei.\""
+ },
+ "artemis-v6-368": {
+  "n": "ARMADURA SAGRADA DE HERMIA",
+  "s": "Proteção Prateada da Caçada",
+  "h": [
+   "Precisão Lunar — Sempre que o Devoto equipado declara um Golpe, se ele tiver um marcador de Treinamento, recebe +1 ATQ / +1 PV até o fim da rodada."
+  ],
+  "f": "\"Sob a lua prateada, cada movimento se torna uma caçada perfeita.\""
+ },
+ "artemis-v6-369": {
+  "n": "SÁTIRO",
+  "s": "O Guardião Ancestral",
+  "h": [
+   "Perfurar",
+   "Domínio Primitivo — Sempre que o Sátiro derrota um Devoto inimigo em combate, coloque 2 marcadores de Treinamento no Sátiro.",
+   "Força Ancestral — O Sátiro recebe +1 ATQ / +1 PV para cada Equipamento equipado nele."
+  ],
+  "f": "\"Antes de o primeiro santuário ser erguido, a natureza selvagem já tinha seus campeões.\""
+ },
+ "artemis-v6-370": {
+  "n": "ARMADURA SAGRADA DO SÁTIRO",
+  "s": "Relíquia da Natureza Primordial",
+  "h": [
+   "O Devoto equipado tem Perfurar.",
+   "Despertar Primordial — Quando a Armadura Sagrada do Sátiro é equipada em um Devoto, coloque 2 marcadores de Treinamento nesse Devoto."
+  ],
+  "f": "\"O poder do mundo antigo não pode ser contido por mãos mortais.\""
+ },
+ "artemis-v6-371": {
+  "n": "CHANDRA",
+  "s": "RECEPTÁCULO DE ÁRTEMIS",
+  "t": "O Receptáculo Mortal da Deusa da Lua",
+  "h": [
+   "Despertar Divino — Quando Chandra entra no Campo de Batalha, coloque 1 marcador de Treinamento no Devoto aliado alvo.",
+   "Comunhão Lunar — Sempre que você colocar 1 ou mais marcadores de Treinamento em outro Devoto aliado, você pode gerar {1}{L}. Essa habilidade ativa apenas uma vez por rodada."
+  ],
+  "f": "\"Dentro do frágil coração de uma criança, uma deusa ancestral abriu os olhos.\""
+ },
+ "artemis-v6-372": {
+  "n": "A DEUSA DESPERTA",
+  "s": "O Retorno da Deusa da Lua",
+  "h": [
+   "Surgimento Divino — Procure no seu deck um Devoto de Ártemis com custo de Conjuração 4 ou menos, revele-o e ponha-o na sua mão. Depois, embaralhe o seu deck.",
+   "Bênção Lunar — Coloque 1 marcador de Treinamento em até dois Devotos aliados."
+  ],
+  "f": "\"A lua nunca abandonou o mundo. Ela apenas esperava.\""
+ },
+ "artemis-v6-373": {
+  "n": "SELENE, TITÂNIDE DA LUA",
+  "s": "A Luz Primordial da Noite",
+  "h": [
+   "Majestade Lunar — Outros Devotos de Ártemis aliados recebem +1 ATQ / +1 PV.",
+   "Luar Eterno — No início do seu turno, coloque 1 marcador de Treinamento em até dois Devotos aliados alvo.",
+   "Esplendor Celestial — Sempre que Selene declara um Golpe, você pode pagar {2}{C}. Se fizer isso, Selene ganha Perfurar até o fim da rodada."
+  ],
+  "f": "\"Antes de Ártemis empunhar seu primeiro arco, Selene já iluminava os céus.\""
+ },
+ "artemis-v6-374": {
+  "n": "LUZ PRATEADA DE SELENE",
+  "s": "A Bênção da Lua Ancestral",
+  "h": [
+   "Brilho Prateado — Coloque 2 marcadores de Treinamento no Devoto aliado alvo.",
+   "Renovação do Luar — Prepare esse Devoto."
+  ],
+  "f": "\"A luz mais antiga dos céus desperta uma força que nem o próprio tempo pode diminuir.\""
+ },
+ "artemis-v6-375": {
+  "n": "A PRIMEIRA GUARDIÃ LUNAR",
+  "s": "Guardiã do Santuário Lunar",
+  "h": [
+   "Guardião",
+   "Vigília Sagrada — Sempre que um Devoto inimigo declara um Golpe contra um Devoto aliado, coloque 1 marcador de Treinamento na Primeira Guardiã Lunar. Essa habilidade ativa apenas uma vez por rodada.",
+   "Fortaleza Lunar — Outros Devotos aliados com marcadores de Treinamento recebem +0 ATQ / +1 PV."
+  ],
+  "f": "\"Seu juramento foi feito antes que o primeiro templo mortal tocasse a terra.\""
+ },
+ "artemis-v6-376": {
+  "n": "JURAMENTO DAS SETE CAÇADORAS",
+  "s": "Sete Guerreiras, Uma Só Vontade Divina",
+  "h": [
+   "Pacto Sagrado — Coloque 1 marcador de Treinamento em cada um de até três Devotos de Ártemis aliados alvo.",
+   "Caçada Unida — Se você controlar três ou mais Devotos de Ártemis, compre uma carta."
+  ],
+  "f": "\"Sete votos sob uma única lua. Sete flechas guiadas por uma só vontade divina.\""
+ },
+ "artemis-v6-377": {
+  "n": "CHLORIS, ESPÍRITO DAS FLORES",
+  "s": "A Primavera Eterna",
+  "h": [
+   "Presença Florescente — Sempre que outro Devoto aliado entra no Campo de Batalha, coloque 1 marcador de Treinamento nesse Devoto. Essa habilidade ativa apenas uma vez por rodada.",
+   "Renovação da Primavera — {T}: Remova 1 marcador de Treinamento do Devoto aliado alvo. Se fizer isso, compre uma carta."
+  ],
+  "f": "\"Mesmo sob a lua mais fria, suas flores se lembram do calor da vida.\""
+ },
+ "artemis-v6-378": {
+  "n": "ARMADURA SAGRADA DE CHLORIS",
+  "s": "A Armadura da Primavera Eterna",
+  "h": [
+   "Flor Perpétua — No início do seu turno, coloque 1 marcador de Treinamento no Devoto equipado.",
+   "Renascimento da Natureza — Quando o Devoto equipado é derrotado, você pode devolver outro Devoto alvo com custo de Conjuração 2 ou menos do seu Tártaro para a sua mão."
+  ],
+  "f": "\"Suas pétalas nunca murcham, pois a deusa da primavera se recusa a se render à morte.\""
+ },
+ "artemis-v6-379": {
+  "n": "ARCO DIVINO DE ÁRTEMIS",
+  "s": "A Arma da Caçada Celestial",
+  "h": [
+   "Precisão Divina — O Devoto equipado recebe +3 ATQ / +2 PV.",
+   "Flecha Celestial — Sempre que o Devoto equipado declara um Golpe contra um Devoto inimigo, ele recebe +2 ATQ até o fim da rodada.",
+   "Bênção da Deusa da Lua — Se o Devoto equipado for um Satélite ou Guardião Lunar, coloque 1 marcador de Treinamento nele sempre que ele derrotar um Devoto inimigo em combate."
+  ],
+  "f": "\"Nenhuma distância mortal pode proteger uma alma do julgamento de Ártemis.\""
+ },
+ "artemis-v6-380": {
+  "n": "A FLECHA DE PRATA DA LUA",
+  "s": "A Flecha que Nunca Erra",
+  "h": [
+   "Perfuração Prateada — O Devoto equipado recebe +2 ATQ / +1 PV e ganha Perfurar.",
+   "Caçada Divina — Sempre que o Devoto equipado declara um Golpe contra um Devoto inimigo, ele recebe +2 ATQ / +0 PV até o fim da rodada.",
+   "Mira Infalível — Sempre que o Devoto equipado derrota um Devoto inimigo em combate, você pode comprar uma carta. Essa habilidade ativa apenas uma vez por rodada."
+  ],
+  "f": "\"Uma vez lançada, a flecha de prata persegue sua presa além do alcance do destino.\""
+ },
+ "artemis-v6-381": {
+  "n": "CERVO SAGRADO",
+  "s": "A Fera Escolhida da Lua",
+  "h": [
+   "Bênção da Floresta — Quando o Cervo Sagrado entra no Campo de Batalha, você pode colocar 1 marcador de Treinamento no Devoto aliado alvo."
+  ],
+  "f": "\"Onde seus cascos tocam a terra, a floresta ancestral desperta.\""
+ },
+ "artemis-v6-382": {
+  "n": "LOBO DO LUAR",
+  "s": "Predador sob a Lua Prateada",
+  "h": [
+   "Instinto de Matilha — O Lobo do Luar recebe +1 ATQ enquanto você controlar outra Fera Sagrada."
+  ],
+  "f": "\"Um uivo convoca a matilha. Uma sombra anuncia a caçada.\""
+ },
+ "artemis-v6-383": {
+  "n": "URSO DA LUA PRATEADA",
+  "s": "A Força da Natureza Selvagem",
+  "h": [
+   "Perfurar",
+   "Crescimento Primitivo — Sempre que o Urso da Lua Prateada derrota um Devoto inimigo em combate, coloque 1 marcador de Treinamento no Urso da Lua Prateada."
+  ],
+  "f": "\"Sua força se mede não pelas presas que abate, mas pelas florestas que protege.\""
+ },
+ "artemis-v6-384": {
+  "n": "SERPENTE DA FLORESTA ANTIGA",
+  "s": "As Espirais do Mundo Esquecido",
+  "h": [
+   "Espirais Esmagadoras — Quando a Serpente da Floresta Antiga entra no Campo de Batalha, você pode fazer com que ela Golpeie o Devoto inimigo alvo com ATQ 3 ou menos. Ela ignora Guardião.",
+   "Poder Verdejante — A Serpente da Floresta Antiga recebe +1 ATQ / +1 PV para cada outra Fera Sagrada aliada, até +3 ATQ / +3 PV."
+  ],
+  "f": "\"Sob as raízes mais antigas, algo ancestral espera que o mundo se lembre do medo.\""
+ },
+ "artemis-v6-385": {
+  "n": "O GRANDE CÃO LUNAR",
+  "s": "O Caçador Eterno",
+  "h": [
+   "Perfurar",
+   "Caçada Implacável — Sempre que o Grande Cão Lunar declara um Golpe, coloque 1 marcador de Treinamento nele.",
+   "Recompensa do Predador — Sempre que o Grande Cão Lunar derrota um Devoto inimigo em combate, compre uma carta."
+  ],
+  "f": "\"Até as estrelas se calam quando o maior dos caçadores inicia sua perseguição.\""
+ },
+ "artemis-v6-386": {
+  "n": "INICIADO DO LUAR",
+  "s": "O Primeiro Juramento",
+  "h": [
+   "Oferenda Lunar — {T}: Gere 1 {C}. Use esse Cosmo apenas durante o seu turno."
+  ],
+  "f": "\"Todo caçador começa aprendendo a escutar a floresta.\""
+ },
+ "artemis-v6-387": {
+  "n": "GUARDA DO BOSQUE SAGRADO",
+  "s": "Protetor das Matas Ancestrais",
+  "h": [
+   "Força Enraizada — Sempre que você colocar 1 ou mais marcadores de Treinamento em outro Devoto aliado, o Guarda do Bosque Sagrado recebe +1 ATQ / +1 PV até o fim da rodada."
+  ],
+  "f": "\"As árvores mais antigas abrigam os guerreiros mais fortes.\""
+ },
+ "artemis-v6-388": {
+  "n": "CAÇADORA DA FLECHA DE PRATA",
+  "s": "Olhos sob a Lua",
+  "h": [
+   "Caçada Precisa — Quando a Caçadora da Flecha de Prata entra no Campo de Batalha, você pode pagar {1}{C}. Se fizer isso, coloque 1 marcador de Treinamento no Devoto aliado alvo."
+  ],
+  "f": "\"Sua flecha alcança a presa antes do som do arco.\""
+ },
+ "artemis-v6-389": {
+  "n": "PERSEGUIDOR DA MATA SELVAGEM",
+  "s": "Predador da Floresta Sagrada",
+  "h": [
+   "Instinto Feroz — Sempre que o Perseguidor da Mata Selvagem declara um Golpe, se ele tiver um marcador de Treinamento, recebe +1 ATQ até o fim da rodada."
+  ],
+  "f": "\"A floresta recompensa aqueles que abraçam a caçada.\""
+ },
+ "artemis-v6-390": {
+  "n": "ACÓLITO DO TEMPLO DA LUA",
+  "s": "Guardião dos Ritos Celestiais",
+  "h": [
+   "Cultivo Celestial — Quando o Acólito do Templo da Lua entra no Campo de Batalha, coloque 1 marcador de Treinamento em outro Devoto aliado alvo.",
+   "Orientação Lunar — Sempre que o Acólito do Templo da Lua declara um Golpe, você pode mover 1 marcador de Treinamento de outro Devoto aliado para o Acólito do Templo da Lua."
+  ],
+  "f": "\"Sob o olhar de Ártemis, até o espírito mais fraco pode florescer.\""
+ },
+ "artemis-v6-391": {
+  "n": "GUARDIÃO DA FLORESTA ANTIGA",
+  "s": "As Raízes Inquebrantáveis",
+  "h": [
+   "Resistência Ancestral — Remova 1 marcador de Treinamento do Guardião da Floresta Antiga: Previna os próximos 2 pontos de dano que seria causado ao Guardião da Floresta Antiga neste turno.",
+   "Defesa Enraizada — Enquanto o Guardião da Floresta Antiga tiver um marcador de Treinamento, ele ganha Guardião."
+  ],
+  "f": "\"As árvores mais antigas não temem a tempestade. Elas se lembram de quando a tempestade nasceu.\""
+ },
+ "artemis-v6-392": {
+  "n": "BESTA LUNAR",
+  "s": "Nascida sob a Lua Prateada",
+  "h": [
+   "Fúria Primitiva — A Besta Lunar ganha Perfurar enquanto tiver um marcador de Treinamento."
+  ],
+  "f": "\"Seu rugido ecoa por florestas intocadas pela humanidade.\""
+ },
+ "artemis-v6-393": {
+  "n": "ARQUEIRO SATÉLITE",
+  "s": "O Vigia Silencioso",
+  "h": [
+   "Formação de Caça — O Arqueiro Satélite recebe +1 ATQ enquanto você controlar outro Satélite."
+  ],
+  "f": "\"A primeira flecha é um aviso. A segunda é uma promessa.\""
+ },
+ "artemis-v6-394": {
+  "n": "SOLDADO SATÉLITE NEGRO",
+  "s": "Guerreiro da Lua Negra",
+  "h": [
+   "Emboscada Lunar — Quando o Soldado Satélite Negro entra no Campo de Batalha, ele recebe +1 ATQ até o fim da rodada."
+  ],
+  "f": "\"Eles surgem da escuridão onde até o luar teme chegar.\""
+ },
+ "artemis-v6-395": {
+  "n": "SENTINELA DO TEMPLO DA LUA",
+  "s": "Protetor dos Portões Sagrados",
+  "h": [
+   "Guardião",
+   "Vigia Sagrada — Sempre que a Sentinela do Templo da Lua receber 1 ou mais marcadores de Treinamento, ganhe {1}{S}."
+  ],
+  "f": "\"Os portões do Templo da Lua jamais caíram em mãos mortais.\""
+ },
+ "artemis-v6-396": {
+  "n": "ESPÍRITO DA FLORESTA",
+  "s": "Sussurro das Matas Antigas",
+  "h": [
+   "Oferenda Natural — Quando o Espírito da Floresta é derrotado, gere {1}{L}."
+  ],
+  "f": "\"Uma folha caída nunca é o fim da vida, mas o começo de outra.\""
+ },
+ "artemis-v6-397": {
+  "n": "DRÍADE DO BOSQUE SAGRADO",
+  "s": "Filha da Floresta Eterna",
+  "h": [
+   "Canalização Verdejante — {T}: Gere {1}{L}.",
+   "Raízes Vivas — Se a Dríade do Bosque Sagrado gerou Cosmo neste turno, o primeiro Devoto que você conjurar neste turno entra no Campo de Batalha com 1 marcador de Treinamento."
+  ],
+  "f": "\"Suas raízes alcançam as memórias mais profundas do mundo.\""
+ },
+ "artemis-v6-398": {
+  "n": "NINFA LUNAR",
+  "s": "O Suave Sussurro da Lua",
+  "h": [
+   "Bênção do Luar — Quando a Ninfa Lunar entra no Campo de Batalha, coloque 1 marcador de Treinamento no Devoto aliado alvo."
+  ],
+  "f": "\"Até a menor das luzes pode despertar a força de mil estrelas.\""
+ },
+ "artemis-v6-399": {
+  "n": "PROTETOR DA MATA SELVAGEM",
+  "s": "Defensor da Natureza Sagrada",
+  "h": [
+   "Guardião",
+   "União da Floresta — O Protetor da Mata Selvagem recebe +1 ATQ / +1 PV enquanto você controlar outro Guardião da Floresta."
+  ],
+  "f": "\"Nenhuma árvore está sozinha. Nenhum guardião luta sem a floresta.\""
+ },
+ "artemis-v6-400": {
+  "n": "GUARDIÃO PRIMORDIAL DA FLORESTA",
+  "s": "O Poder Ancestral Desperta",
+  "h": [
+   "Perfurar",
+   "Crescimento Primitivo — Sempre que outro Devoto aliado receber 1 ou mais marcadores de Treinamento, coloque 1 marcador de Treinamento no Guardião Primordial da Floresta. Essa habilidade ativa apenas uma vez por rodada.",
+   "Domínio da Natureza — Enquanto o Guardião Primordial da Floresta tiver 3 ou mais marcadores de Treinamento, outros Devotos aliados ganham Perfurar."
+  ],
+  "f": "\"Quando a floresta ancestral se ergue, as montanhas tremem sob suas raízes.\""
+ },
+ "artemis-v6-401": {
+  "n": "APRENDIZ DE CAÇADORA",
+  "s": "A Primeira Flecha",
+  "h": [
+   "Treino da Caçadora — Sempre que a Aprendiz de Caçadora receber 1 ou mais marcadores de Treinamento, ela recebe +1 ATQ até o fim da rodada."
+  ],
+  "f": "\"Antes de aprender a golpear, a caçadora precisa aprender a escutar.\""
+ },
+ "artemis-v6-402": {
+  "n": "CERVO CELESTIAL",
+  "s": "O Mensageiro da Lua",
+  "h": [
+   "Orientação Lunar — Quando o Cervo Celestial entra no Campo de Batalha, olhe as 3 cartas do topo do seu deck. Você pode revelar um Devoto entre elas e pô-lo na sua mão. Ponha as demais no fundo do seu deck, em qualquer ordem."
+  ],
+  "f": "\"Seus chifres prateados iluminam caminhos que nenhum caçador mortal jamais encontraria.\""
+ },
+ "artemis-v6-403": {
+  "n": "RAPOSA DO LUAR",
+  "s": "O Esperto Espírito da Floresta",
+  "h": [
+   "Busca na Floresta — Quando a Raposa do Luar entra no Campo de Batalha, olhe a carta do topo do seu deck. Você pode pôr essa carta no fundo do seu deck."
+  ],
+  "f": "\"As menores criaturas costumam conhecer os segredos das florestas mais antigas.\""
+ },
+ "artemis-v6-404": {
+  "n": "LOBO PRESA DE PRATA",
+  "s": "Alfa da Matilha Lunar",
+  "h": [
+   "Liderança da Matilha — Outras Feras Sagradas aliadas recebem +1 ATQ.",
+   "Crescimento do Predador — Sempre que outra Fera Sagrada aliada derrota um Devoto inimigo em combate, coloque 1 marcador de Treinamento no Lobo Presa de Prata."
+  ],
+  "f": "\"A matilha não segue o mais forte nem o mais veloz, mas aquele escolhido pela lua.\""
+ },
+ "artemis-v6-405": {
+  "n": "ENT DO BOSQUE ANTIGO",
+  "s": "A Floresta que Anda",
+  "h": [
+   "Guardião",
+   "Crescimento Ancestral — Quando o Ent do Bosque Antigo entra no Campo de Batalha, coloque 1 marcador de Treinamento em cada um de até dois outros Devotos aliados alvo.",
+   "Majestade Enraizada — O Ent do Bosque Antigo recebe +1 ATQ / +1 PV para cada outro Devoto aliado com um marcador de Treinamento, até +3 ATQ / +3 PV."
+  ],
+  "f": "\"Quando as árvores ancestrais abandonam suas raízes, até as montanhas sabem que a guerra começou.\""
+ },
+ "artemis-v6-406": {
+  "n": "CAÇADORA REAL DE ÁRTEMIS",
+  "s": "A Flecha Escolhida da Deusa",
+  "h": [
+   "Precisão Sagrada — Sempre que a Caçadora Real de Ártemis declara um Golpe contra um Devoto inimigo, ela recebe +1 ATQ / +1 PV até o fim da rodada.",
+   "Treinamento Divino — Sempre que um Equipamento é equipado na Caçadora Real de Ártemis, coloque 1 marcador de Treinamento nela."
+  ],
+  "f": "\"Sua flecha carrega não apenas aço, mas a vontade inquestionável da deusa.\""
+ },
+ "artemis-v6-407": {
+  "n": "XAMÃ DA NATUREZA SELVAGEM",
+  "s": "Voz do Mundo Antigo",
+  "h": [
+   "Canalização Primitiva — {T}: O próximo Devoto que você conjurar neste turno custa 1 a menos.",
+   "Sabedoria da Natureza — Sempre que você conjurar um Devoto com custo de Conjuração 5 ou mais, você pode comprar uma carta. Essa habilidade ativa apenas uma vez por rodada."
+  ],
+  "f": "\"Ela não comanda a floresta. Apenas fala, e a floresta responde.\""
+ },
+ "artemis-v6-408": {
+  "n": "GUARDIÃO DA FONTE SAGRADA",
+  "s": "Guardião das Águas Eternas",
+  "h": [
+   "Bênção da Fonte — Quando o Guardião da Fonte Sagrada entra no Campo de Batalha, ganhe {2}{S}."
+  ],
+  "f": "\"As águas sagradas se lembram de cada vida que a floresta já abrigou.\""
+ },
+ "artemis-v6-409": {
+  "n": "ARCO SATÉLITE",
+  "s": "Arma das Caçadoras da Lua",
+  "h": [
+   "Mira do Caçador — O Devoto equipado recebe +1 ATQ / +0 PV.",
+   "Tiro Preciso — Sempre que o Devoto equipado declara um Golpe contra um Devoto inimigo, ele recebe +1 ATQ até o fim da rodada."
+  ],
+  "f": "\"Cada flecha é uma prece oferecida à deusa da caçada.\""
+ },
+ "artemis-v6-410": {
+  "n": "ALJAVA DO CAÇADOR",
+  "s": "Flechas para a Caçada Sem Fim",
+  "h": [
+   "Flechas Infinitas — O Devoto equipado recebe +1 ATQ / +0 PV.",
+   "Suprimento do Caçador — Sempre que o Devoto equipado derrota um Devoto inimigo em combate, você pode comprar uma carta e depois descartar uma carta. Essa habilidade ativa apenas uma vez por rodada."
+  ],
+  "f": "\"Uma verdadeira caçadora nunca conta suas flechas. Conta as presas que escaparam.\""
+ },
+ "artemis-v6-411": {
+  "n": "LANÇA DE MADEIRA PRATEADA",
+  "s": "A Arma da Caçada Ancestral",
+  "h": [
+   "Força do Caçador — O Devoto equipado recebe +2 ATQ / +0 PV.",
+   "Caçada Perfurante — Sempre que o Devoto equipado declara um Golpe contra um Devoto inimigo, ele ganha Perfurar até o fim da rodada."
+  ],
+  "f": "\"Esculpida nas árvores mais antigas, sua ponta carrega a fúria da natureza selvagem.\""
+ },
+ "artemis-v6-412": {
+  "n": "CAPA LUNAR PROTETORA",
+  "s": "Abrigo sob a Lua Prateada",
+  "h": [
+   "Proteção do Luar — O Devoto equipado recebe +0 ATQ / +2 PV.",
+   "Abrigo Lunar — Remova 1 marcador de Treinamento do Devoto equipado: Previna os próximos 2 pontos de dano que seria causado a ele neste turno."
+  ],
+  "f": "\"Até a mais feroz das tempestades silencia no abraço da lua.\""
+ },
+ "artemis-v6-413": {
+  "n": "FACA DE CAÇA SAGRADA",
+  "s": "A Resposta Final do Caçador",
+  "h": [
+   "Gume do Caçador — O Devoto equipado recebe +1 ATQ / +0 PV.",
+   "Golpe do Predador — Sempre que o Devoto equipado derrota um Devoto inimigo em combate, coloque 1 marcador de Treinamento no Devoto equipado."
+  ],
+  "f": "\"Um verdadeiro caçador carrega apenas o que a natureza selvagem não pode lhe dar.\""
+ },
+ "artemis-v6-414": {
+  "n": "AMULETO DE PEDRA DA LUA",
+  "s": "O Coração da Floresta Lunar",
+  "h": [
+   "Canalização Verdejante — {T}: Gere {1}{L}. Gaste esse Cosmo apenas para conjurar um Devoto.",
+   "Ressonância Lunar — O Devoto equipado recebe +1 ATQ / +1 PV enquanto você controlar outro Devoto com um marcador de Treinamento."
+  ],
+  "f": "\"Dentro da pedra da lua, o ritmo do mundo antigo continua a pulsar.\""
+ },
+ "artemis-v6-415": {
+  "n": "ESCUDO DO GUARDIÃO DA FLORESTA",
+  "s": "A Defesa Inquebrável",
+  "h": [
+   "Defesa Enraizada — O Devoto equipado recebe +0 ATQ / +3 PV.",
+   "Proteção da Floresta — O Devoto equipado ganha Guardião enquanto tiver um marcador de Treinamento."
+  ],
+  "f": "\"A floresta resistiu a mil guerras. Seus guardiões aprenderam a resistir a todas.\""
+ },
+ "artemis-v6-416": {
+  "n": "ARMADURA DE RAÍZES ANTIGAS",
+  "s": "A Armadura Viva da Natureza",
+  "h": [
+   "Crescimento Ancestral — Sempre que outro Devoto aliado entra no Campo de Batalha, você pode colocar 1 marcador de Treinamento no Devoto equipado. Essa habilidade ativa apenas uma vez por rodada."
+  ],
+  "f": "\"Ela não apenas protege quem a veste. Cresce junto com o seu Cosmo.\""
+ },
+ "artemis-v6-417": {
+  "n": "DESPERTAR DA NATUREZA",
+  "s": "O Mundo Reclama Seu Poder",
+  "h": [
+   "Expansão Natural — Ponha a carta do topo do seu deck no seu Banco de Cosmo, virada para baixo, como Base de Cosmo Despreparada."
+  ],
+  "f": "\"A terra desperta e, com ela, um poder mais antigo que os deuses.\""
+ },
+ "artemis-v6-418": {
+  "n": "A FLORESTA RESPONDE",
+  "s": "A Ira da Natureza Ancestral",
+  "h": [
+   "Golpe Primitivo — O Devoto aliado alvo causa dano igual ao seu ATQ ao Devoto inimigo alvo."
+  ],
+  "f": "\"Quando a floresta golpeia, nem a armadura mais forte pode silenciar sua fúria.\""
+ },
+ "artemis-v6-419": {
+  "n": "CHAMADO DA NATUREZA SELVAGEM",
+  "s": "A Força do Mundo Vivo",
+  "h": [
+   "Força Selvagem — O Devoto aliado alvo recebe +3 ATQ / +3 PV até o fim da rodada.",
+   "Instinto do Predador — Esse Devoto ganha Perfurar até o fim da rodada."
+  ],
+  "f": "\"A natureza selvagem não ensina misericórdia. Ensina sobrevivência.\""
+ },
+ "artemis-v6-420": {
+  "n": "BÊNÇÃO DA LUA",
+  "s": "A Deusa Provê",
+  "h": [
+   "Prosperidade Lunar — Olhe as 3 cartas do topo do seu deck. Ponha uma delas no seu Banco de Cosmo, virada para baixo, como Base de Cosmo Despreparada. Ponha as demais no fundo do seu deck, em qualquer ordem."
+  ],
+  "f": "\"Sob sua luz prateada, os escolhidos descobrem força onde outros veem apenas escuridão.\""
+ },
+ "artemis-v6-421": {
+  "n": "CRESCIMENTO PRIMITIVO",
+  "s": "A Força Sob a Terra",
+  "h": [
+   "Bênção Primitiva — Coloque 1 marcador de Treinamento no Devoto aliado alvo.",
+   "Expansão Natural — Se esse Devoto tiver ATQ 4 ou mais, olhe a carta do topo do seu deck. Você pode pô-la no seu Banco de Cosmo, virada para baixo, como Base de Cosmo Despreparada."
+  ],
+  "f": "\"A menor das sementes pode um dia se tornar uma floresta que eclipsa os céus.\""
+ },
+ "artemis-v6-422": {
+  "n": "O INSTINTO DO CAÇADOR",
+  "s": "Os Fortes Devoram os Fracos",
+  "h": [
+   "Desafio do Predador — O Devoto aliado alvo luta contra o Devoto inimigo alvo. Cada um causa dano igual ao seu ATQ ao outro."
+  ],
+  "f": "\"Na natureza selvagem, a força é a única lei que não pode ser quebrada.\""
+ },
+ "artemis-v6-423": {
+  "n": "RAÍZES DO MUNDO ANTIGO",
+  "s": "A Terra Lembra",
+  "h": [
+   "Expansão Ancestral — Ponha as 2 cartas do topo do seu deck no seu Banco de Cosmo, viradas para baixo, como Bases de Cosmo Despreparadas."
+  ],
+  "f": "\"Sob todo reino jaz um mundo mais antigo, esperando para renascer.\""
+ },
+ "artemis-v6-424": {
+  "n": "A FLECHA DE PRATA",
+  "s": "Julgamento da Lua",
+  "h": [
+   "Execução ao Luar — O Devoto aliado alvo causa dano igual ao seu ATQ ao Devoto inimigo alvo.",
+   "Precisão do Caçador — Se o Devoto escolhido for um Satélite, ele causa 1 de dano adicional."
+  ],
+  "f": "\"A flecha não escolhe sua vítima. A deusa já escolheu.\""
+ },
+ "artemis-v6-425": {
+  "n": "NATUREZA RENASCIDA",
+  "s": "A Vida Encontra um Caminho",
+  "h": [
+   "Renovação Natural — Devolva a carta de Devoto alvo do seu Tártaro para a sua mão.",
+   "Recuperação Verdejante — Se esse Devoto tiver custo de Conjuração 4 ou mais, ganhe {2}{S}."
+  ],
+  "f": "\"O que o mundo leva, a floresta acaba devolvendo.\""
+ },
+ "artemis-v6-426": {
+  "n": "A VONTADE DE ÁRTEMIS",
+  "s": "A Ordem Divina da Natureza",
+  "h": [
+   "Crescimento Divino — Coloque 2 marcadores de Treinamento em cada Devoto aliado.",
+   "Supremacia Primitiva — Devotos aliados com ATQ 5 ou mais ganham Perfurar até o fim da rodada."
+  ],
+  "f": "\"A humanidade nunca foi feita para conquistar a natureza. Foi feita para viver sob a sua vontade.\""
+ },
+ "artemis-v6-427": {
+  "n": "TEMPLO DA LUA",
+  "s": "O Santuário da Deusa Lunar",
+  "h": [
+   "Santuário do Luar — Satélites aliados recebem +0 ATQ / +1 PV.",
+   "Comunhão Lunar — Uma vez por jogo — {3}{C}: Coloque 1 marcador de Treinamento em cada Devoto de Ártemis aliado."
+  ],
+  "f": "\"Muito além do alcance dos olhos mortais, a deusa vela por seus guerreiros escolhidos.\""
+ },
+ "artemis-v6-428": {
+  "n": "A FLORESTA SAGRADA",
+  "s": "O Coração do Mundo Vivo",
+  "h": [
+   "Bênção da Floresta — Uma vez por rodada, quando um Devoto aliado com custo de Conjuração 4 ou mais entra no Campo de Batalha, seu Deus ganha {1}{S}.",
+   "Expansão Verdejante — Uma vez por jogo — {2}{C}: Ponha a carta do topo do seu deck no seu Banco de Cosmo, virada para baixo, como Base de Cosmo Despreparada."
+  ],
+  "f": "\"Cada raiz guarda a memória de um mundo que existia antes da humanidade.\""
+ },
+ "artemis-v6-429": {
+  "n": "O BOSQUE ANTIGO",
+  "s": "Onde as Primeiras Árvores Ainda Estão de Pé",
+  "h": [
+   "Resistência Enraizada — Devotos aliados com marcadores de Treinamento recebem +0 ATQ / +1 PV.",
+   "Bênção Ancestral — Uma vez por jogo — {2}{C}: Coloque 2 marcadores de Treinamento no Devoto aliado alvo."
+  ],
+  "f": "\"As árvores mais antigas testemunharam a ascensão e a queda dos deuses. E continuam de pé.\""
+ },
+ "artemis-v6-430": {
+  "n": "OS CAMPOS DE CAÇA LUNARES",
+  "s": "A Perseguição Eterna",
+  "h": [
+   "Vantagem do Caçador — Uma vez por rodada, quando um Devoto aliado com ATQ 4 ou mais declara um Golpe contra um Devoto inimigo, ele recebe +1 ATQ durante esse Golpe.",
+   "Recompensa do Predador — Uma vez por jogo — {2}{C}: Compre uma carta para cada Devoto inimigo derrotado nesta rodada (até 3)."
+  ],
+  "f": "\"Dentro destes campos sagrados, toda criatura viva se torna caçador ou presa.\""
+ },
+ "artemis-v6-431": {
+  "n": "CAPITÃ DAS CAÇADORAS DO LUAR",
+  "s": "Comandante da Caçada Prateada",
+  "h": [
+   "Liderança Lunar — Outros Satélites aliados recebem +1 ATQ / +1 PV.",
+   "Emboscada ao Luar — Quando a Capitã das Caçadoras do Luar entra no Campo de Batalha, o Satélite aliado alvo causa dano igual ao seu ATQ ao Devoto inimigo alvo."
+  ],
+  "f": "\"Sob seu comando, mil flechas voam como uma só.\""
+ },
+ "artemis-v6-432": {
+  "n": "ARMADURA DAS CAÇADORAS DO LUAR",
+  "s": "Vestimenta da Comandante Prateada",
+  "h": [
+   "Supremacia do Luar — Sempre que o Devoto equipado derrota um Devoto inimigo em combate, coloque 1 marcador de Treinamento em cada um de até dois outros Devotos aliados alvo."
+  ],
+  "f": "\"A lua recompensa a vitória com força, e a força com glória eterna.\""
+ },
+ "artemis-v6-433": {
+  "n": "CAMPEÃO PRIMORDIAL DA FLORESTA",
+  "s": "A Natureza Selvagem Encarnada",
+  "h": [
+   "Perfurar",
+   "Chegada Primitiva — Quando o Campeão Primordial da Floresta entra no Campo de Batalha, ele causa dano igual ao seu ATQ ao Devoto inimigo alvo.",
+   "Domínio Verdejante — O Campeão Primordial da Floresta recebe +1 ATQ / +1 PV para cada 3 cartas no seu Banco de Cosmo."
+  ],
+  "f": "\"A floresta não envia exércitos. Envia seus filhos mais fortes.\""
+ },
+ "artemis-v6-434": {
+  "n": "ARMADURA GUARDIÃ PRIMORDIAL",
+  "s": "A Casca Viva do Mundo Antigo",
+  "h": [
+   "Proteção Ancestral — O Devoto equipado ganha Guardião.",
+   "Crescimento Enraizado — No início do seu turno, se você tiver 6 ou mais cartas no seu Banco de Cosmo, coloque 1 marcador de Treinamento no Devoto equipado."
+  ],
+  "f": "\"Suas raízes bebem da própria terra, e sua força não conhece estação.\""
+ },
+ "artemis-v6-435": {
+  "n": "COMANDANTE DA FLECHA DE PRATA",
+  "s": "A Caçadora que Nunca Erra",
+  "h": [
+   "Execução Precisa — Quando a Comandante da Flecha de Prata entra no Campo de Batalha, você pode fazer com que ela lute contra o Devoto inimigo alvo. Cada um causa dano igual ao seu ATQ ao outro.",
+   "Maestria do Caçador — Sempre que um Satélite aliado declara um Golpe contra um Devoto inimigo, esse Satélite recebe +1 ATQ até o fim da rodada.",
+   "Precisão Lunar — Sempre que a Comandante da Flecha de Prata derrota um Devoto inimigo em combate, compre uma carta."
+  ],
+  "f": "\"A maior das caçadoras não procura a presa. Ela sabe onde a presa vai cair.\""
+ },
+ "artemis-v6-436": {
+  "n": "ARMADURA DA FLECHA DE PRATA",
+  "s": "A Armadura da Precisão Infalível",
+  "h": [
+   "Precisão do Caçador — Sempre que o Devoto equipado declara um Golpe contra um Devoto inimigo, ele recebe +2 ATQ até o fim da rodada.",
+   "Pontaria Divina — Sempre que o Devoto equipado derrota um Devoto inimigo em combate, compre uma carta. Essa habilidade ativa apenas uma vez por rodada."
+  ],
+  "f": "\"Nenhuma sombra pode esconder o que a lua escolheu revelar.\""
+ },
+ "artemis-v6-437": {
+  "n": "A SEGUNDA GUARDIÃ LUNAR",
+  "s": "Guardiã da Trilha Verdejante",
+  "h": [
+   "Chegada Verdejante — Quando a Segunda Guardiã Lunar entra no Campo de Batalha, ponha a carta do topo do seu deck no seu Banco de Cosmo, virada para baixo, como Base de Cosmo Despreparada.",
+   "Resistência Sagrada — Enquanto você tiver 6 ou mais cartas no seu Banco de Cosmo, a Segunda Guardiã Lunar recebe +2 ATQ / +2 PV."
+  ],
+  "f": "\"Toda trilha pela floresta sagrada leva mais fundo ao domínio da deusa.\""
+ },
+ "artemis-v6-438": {
+  "n": "A TERCEIRA GUARDIÃ LUNAR",
+  "s": "O Escudo Lunar Inquebrável",
+  "h": [
+   "Guardião",
+   "Resistência Lunar — Sempre que a Terceira Guardiã Lunar sofrer dano, previna 1 desse dano.",
+   "Bênção Ancestral — Sempre que você colocar 1 ou mais marcadores de Treinamento na Terceira Guardiã Lunar, ganhe {2}{S}. Essa habilidade ativa apenas uma vez por rodada."
+  ],
+  "f": "\"Seu escudo resistiu a tempestades que destruíram reinos inteiros.\""
+ },
+ "artemis-v6-439": {
+  "n": "A QUARTA GUARDIÃ LUNAR",
+  "s": "A Caçadora da Presa Divina",
+  "h": [
+   "Perfurar",
+   "Caçada Divina — Sempre que a Quarta Guardiã Lunar declara um Golpe contra um Devoto inimigo, ela recebe +2 ATQ até o fim da rodada.",
+   "Triunfo do Predador — Sempre que a Quarta Guardiã Lunar derrota um Devoto inimigo em combate, ponha a carta do topo do seu deck no seu Banco de Cosmo, virada para baixo, como Base de Cosmo Despreparada."
+  ],
+  "f": "\"Cada inimigo caído é mais um passo rumo à vitória suprema da deusa.\""
+ },
+ "artemis-v6-440": {
+  "n": "A QUINTA GUARDIÃ LUNAR",
+  "s": "A Última Sentinela da Lua Ancestral",
+  "h": [
+   "Perfurar",
+   "Força Primordial — A Quinta Guardiã Lunar recebe +1 ATQ / +1 PV para cada 3 cartas no seu Banco de Cosmo.",
+   "Devastação Lunar — Quando a Quinta Guardiã Lunar entra no Campo de Batalha, ela causa dano igual ao seu ATQ ao Devoto inimigo alvo.",
+   "Soberania da Natureza — Sempre que a Quinta Guardiã Lunar derrota um Devoto inimigo em combate, coloque 1 marcador de Treinamento em cada outro Devoto aliado."
+  ],
+  "f": "\"A última guardiã não defende a lua sagrada. Ela é o julgamento que segue o seu nascer.\""
+ },
+ "artemis-v6-441": {
+  "n": "O RETORNO DA DEUSA",
+  "s": "A Lua Se Ergue Mais Uma Vez",
+  "h": [
+   "Retorno Divino — Olhe as 4 cartas do topo do seu deck. Você pode revelar um Devoto de Ártemis entre elas e pô-lo na sua mão. Ponha as demais no fundo do seu deck, em qualquer ordem.",
+   "Bênção Lunar — Coloque 1 marcador de Treinamento no Devoto aliado alvo."
+  ],
+  "f": "\"Após séculos de silêncio, a lua finalmente respondeu às preces de seus escolhidos.\""
+ },
+ "artemis-v6-442": {
+  "n": "OS SETE GUARDIÕES SE REÚNEM",
+  "s": "O Juramento Sagrado Renovado",
+  "h": [
+   "Reunião Sagrada — Procure no seu deck um Devoto Guardião Lunar, revele-o e ponha-o na sua mão. Depois, embaralhe o seu deck.",
+   "Força Unida — Se você controlar três ou mais Devotos de Ártemis, coloque 1 marcador de Treinamento em cada um deles."
+  ],
+  "f": "\"Sete guerreiras atenderam ao chamado. Sete destinos se tornaram um.\""
+ },
+ "artemis-v6-443": {
+  "n": "A PRIMEIRA CAÇADA SAGRADA",
+  "s": "A Caçada Começa",
+  "h": [
+   "Desafio do Caçador — O Devoto aliado alvo luta contra o Devoto inimigo alvo. Cada um causa dano igual ao seu ATQ ao outro.",
+   "Recompensa do Predador — Se o Devoto inimigo for derrotado assim, compre uma carta."
+  ],
+  "f": "\"O primeiro sangue derramado sob a lua marcou o início de uma guerra sem misericórdia.\""
+ },
+ "artemis-v6-444": {
+  "n": "A FLORESTA INVADE O SANTUÁRIO",
+  "s": "A Terra Retoma o Solo Sagrado",
+  "h": [
+   "Invasão Verdejante — Ponha as 2 cartas do topo do seu deck no seu Banco de Cosmo, viradas para baixo, como Bases de Cosmo Despreparadas.",
+   "Exército da Natureza — Invoque 2 fichas de Devoto Guardião da Floresta 3/3."
+  ],
+  "f": "\"Os pilares de pedra do Santuário racharam quando raízes ancestrais se ergueram para retomar a terra.\""
+ },
+ "artemis-v6-445": {
+  "n": "A DISCORDÂNCIA DAS IRMÃS",
+  "s": "Duas Deusas, Um Só Mundo",
+  "h": [
+   "Desafio Divino — O Devoto aliado alvo recebe +3 ATQ / +3 PV até o fim da rodada.",
+   "Resistência Sagrada — Previna todo o dano que seria causado a esse Devoto neste turno."
+  ],
+  "f": "\"Athena viu o potencial da humanidade. Ártemis viu a destruição que ela já havia causado.\""
+ },
+ "artemis-v6-446": {
+  "n": "O DESPERTAR DE CHANDRA",
+  "s": "O Receptáculo Mortal Transformado",
+  "h": [
+   "Transformação Divina — Procure no seu deck um Devoto de Ártemis com custo de Conjuração 5 ou menos, revele-o e ponha-o na sua mão. Depois, embaralhe o seu deck.",
+   "Dádiva da Deusa da Lua — Coloque 2 marcadores de Treinamento no Devoto aliado alvo."
+  ],
+  "f": "\"Os olhos de uma criança se abriram, mas a alma que olhava através deles pertencia a uma deusa.\""
+ },
+ "artemis-v6-447": {
+  "n": "A QUEDA DE DAPHNE E HERMIA",
+  "s": "O Preço da Lealdade Divina",
+  "h": [
+   "Sacrifício Sagrado — Você pode derrotar um Devoto aliado. Se fizer isso, compre 2 cartas e ponha a carta do topo do seu deck no seu Banco de Cosmo, virada para baixo, como Base de Cosmo Despreparada.",
+   "Memória Eterna — Se o Devoto derrotado era um Guardião Lunar, coloque 1 marcador de Treinamento em cada Devoto aliado restante."
+  ],
+  "f": "\"Elas caíram sob a mesma lua, com seus votos intactos até na morte.\""
+ },
+ "artemis-v6-448": {
+  "n": "O JULGAMENTO DA HUMANIDADE",
+  "s": "A Deusa Exige Equilíbrio",
+  "h": [
+   "Seleção Natural — Escolha um Devoto aliado alvo. Ele causa dano igual ao seu ATQ a cada Devoto inimigo com ATQ menor que o dele."
+  ],
+  "f": "\"A deusa não viu crueldade em seu julgamento. Viu a restauração do equilíbrio.\""
+ },
+ "artemis-v6-449": {
+  "n": "A IRA DE ÁRTEMIS",
+  "s": "O Julgamento Final da Natureza",
+  "h": [
+   "Avanço Primitivo — Todos os Devotos aliados recebem +3 ATQ / +3 PV e ganham Perfurar até o fim da rodada."
+  ],
+  "f": "\"Quando a deusa ordena que a natureza selvagem se ergua, até os céus tremem.\""
+ },
+ "artemis-v6-450": {
+  "n": "O MUNDO RECLAMADO",
+  "s": "O Fim do Domínio da Humanidade",
+  "h": [
+   "Ascensão Primordial — Ponha as 3 cartas do topo do seu deck no seu Banco de Cosmo, viradas para baixo, como Bases de Cosmo Despreparadas.",
+   "Domínio da Natureza — Coloque 2 marcadores de Treinamento em cada Devoto aliado.",
+   "Natureza Eterna — Para cada Devoto aliado com ATQ 6 ou mais, compre uma carta, até um máximo de três cartas."
+  ],
+  "f": "\"O mundo não acabou. Apenas se lembrou de quem o governava antes da humanidade.\""
+ },
+ "artemis-v6-504": {
+  "n": "A LUA DO CAÇADOR",
+  "t": "A Caçada Começa ao Amanhecer",
+  "h": [
+   "Vigília ao Luar — Uma vez por rodada, no início do seu turno, você pode olhar a carta do topo do seu deck. Você pode pôr essa carta no fundo do seu deck.",
+   "Colheita ao Luar — Uma vez por jogo — {1}{C}, ponha uma Base de Cosmo que você controla no seu Tártaro: Compre 2 cartas e depois ponha a carta do topo do seu deck como Base de Cosmo Despreparada."
+  ],
+  "f": "\"A lua troca o que você tem pelo que você precisa.\""
+ }
+}

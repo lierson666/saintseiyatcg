@@ -1,0 +1,783 @@
+{
+ "_nota": "Rascunho PT-BR das cartas de Poseidon (fase 3, 31/10/2026). Mesmo formato de athena.json.",
+ "_nomes": {
+  "Poseidon": "Poseidon",
+  "Sea Dragon Kanon": "Kanon de Dragão Marinho",
+  "Siren Sorrento": "Sorento de Sirene",
+  "Seahorse Baian": "Baian de Cavalo Marinho",
+  "Kraken Isaac": "Isaak de Kraken",
+  "Mermaid Thetis": "Thetis de Sereia",
+  "Cygnus Hyoga": "Hyoga de Cisne",
+  "Julian Solo": "Julian Solo",
+  "Marina": "Marina"
+ },
+ "poseidon-001": {
+  "n": "POSEIDON",
+  "s": "Maré Alta",
+  "h": [
+   "PRISÃO DE ÁGUA — Poder Divino\nUma vez por rodada, quando um Devoto inimigo declara um Golpe, você pode pagar {2}{C}. Se fizer isso, Sele esse Devoto."
+  ],
+  "t": "Imperador dos Sete Mares",
+  "a": "PRESSÃO DAS PROFUNDEZAS — Despertar 4\nSempre que um Devoto inimigo fica Selado, seu controlador envia ao Tártaro as 2 cartas do topo do deck e você compra uma carta.",
+  "u": "GRANDE DILÚVIO — Supremo\nCusto: {8}{C}\nDevolva todos os Devotos e Equipamentos inimigos às mãos dos donos.\nPara cada Devoto devolvido assim, devolva uma Base de Cosmo controlada pelo dono desse Devoto à mão do dono, se possível.\nCada oponente descarta metade das cartas da sua mão, arredondado para cima.\nEm seguida, cada oponente envia ao Tártaro 3 cartas do topo do deck para cada carta que descartou assim.",
+  "f": "\"Os oceanos são eternos. A humanidade não.\""
+ },
+ "poseidon-v6-091": {
+  "n": "KANON DE DRAGÃO MARINHO",
+  "s": "O Mestre Oculto das Profundezas",
+  "h": [
+   "Perfurar",
+   "Quando Kanon de Dragão Marinho entra no Campo de Batalha, devolva o Devoto alvo à mão do dono.",
+   "Triângulo Dourado — {2}{C}, {T}: Devolva o Devoto inimigo alvo à mão do dono. Se esse Devoto tinha um marcador de Selo, seu controlador envia ao Tártaro as 2 cartas do topo do deck.",
+   "Sombra do Imperador — Uma vez por rodada, quando Kanon de Dragão Marinho causa dano de Golpe a um Devoto inimigo, você pode colocar 1 marcador de Selo em outro Devoto inimigo alvo."
+  ]
+ },
+ "poseidon-v6-092": {
+  "n": "ESCAMA DE DRAGÃO MARINHO",
+  "s": "A Armadura do Mestre do Oceano",
+  "h": [
+   "Triângulo Dourado — {3}{C}, {T}: Devolva o Devoto inimigo alvo à mão do dono.",
+   "Ressonância — Kanon de Dragão Marinho: Quando Kanon de Dragão Marinho ativa o Triângulo Dourado desta Escama, seu controlador pode escolher outro Devoto inimigo alvo e colocar 1 marcador de Selo nele."
+  ]
+ },
+ "poseidon-v6-093": {
+  "n": "SORENTO DE SIRENE",
+  "s": "A Melodia dos Sete Mares",
+  "h": [
+   "Ágil",
+   "Sinfonia Sem Saída — Uma vez por rodada, quando Sorento de Sirene declara um Golpe, o Devoto inimigo defensor recebe -2 ATQ durante esse Golpe.",
+   "Clímax Sem Saída — Sempre que Sorento de Sirene causa dano de Golpe a um Deus inimigo, o controlador desse Deus envia ao Tártaro as 2 cartas do topo do deck."
+  ]
+ },
+ "poseidon-v6-094": {
+  "n": "ESCAMA DE SIRENE",
+  "s": "A Canção da Tristeza Eterna",
+  "h": [
+   "Melodia da Sirene — Uma vez por rodada, quando o Devoto equipado declara um Golpe, o Devoto inimigo defensor recebe -1 ATQ durante esse Golpe.",
+   "Ressonância — Sorento de Sirene: Sempre que Sorento de Sirene causa dano de Golpe a um Deus inimigo, o controlador desse Deus envia ao Tártaro mais 2 cartas do topo do deck."
+  ]
+ },
+ "poseidon-v6-095": {
+  "n": "BAIAN DE CAVALO MARINHO",
+  "s": "A Muralha Impenetrável do Pacífico",
+  "h": [
+   "Longo Alcance",
+   "Sopro Divino — Uma vez por rodada, quando Baian de Cavalo Marinho declara um Golpe contra um Devoto inimigo, esse Devoto recebe -1 ATQ durante esse Golpe.",
+   "Ondas Crescentes — Sempre que Baian de Cavalo Marinho causa dano de Golpe a um Devoto inimigo, você pode pagar {2}{C}. Se fizer isso, devolva esse Devoto à mão do dono."
+  ]
+ },
+ "poseidon-v6-096": {
+  "n": "ESCAMA DE CAVALO MARINHO",
+  "s": "A Muralha Inquebrável do Pacífico",
+  "h": [
+   "Muralha de Ar — Uma vez por rodada, quando o Devoto equipado sofreria dano de Golpe, previna até 2 desse dano.",
+   "Ressonância — Baian de Cavalo Marinho: Sempre que Baian de Cavalo Marinho previne dano de Golpe com a Muralha de Ar, você pode pagar {1}{C}. Se fizer isso, coloque 1 marcador de Selo no Devoto que Golpeia."
+  ]
+ },
+ "poseidon-v6-097": {
+  "n": "ISAAK DE KRAKEN",
+  "s": "A Vingança Gelada do Ártico",
+  "h": [
+   "Aurora Boreal — Uma vez por rodada, quando Isaak de Kraken causa dano de Golpe a um Devoto inimigo, coloque 1 marcador de Selo nesse Devoto.",
+   "Vingança Gelada — Sempre que Isaak de Kraken declara um Golpe contra um Devoto inimigo que já tem um marcador de Selo, ele recebe +2 ATQ durante esse Golpe.",
+   "Irmandade Gelada — Sempre que Isaak de Kraken declara um Golpe contra Hyoga de Cisne, ambos os Devotos recebem +2 ATQ durante esse Golpe. Se qualquer um dos Devotos sobreviver, remova 1 marcador de Selo de cada Devoto sobrevivente."
+  ]
+ },
+ "poseidon-v6-098": {
+  "n": "ESCAMA DE KRAKEN",
+  "s": "O Gelo Eterno do Oceano Ártico",
+  "h": [
+   "Aurora Boreal — {2}{C}, {T}: Coloque 1 marcador de Selo no Devoto inimigo alvo.",
+   "Ressonância — Isaak de Kraken: Sempre que Isaak de Kraken declara um Golpe contra um Devoto inimigo que já tem um marcador de Selo, esse Devoto recebe -1 ATQ durante esse Golpe.",
+   "Ressonância — Hyoga de Cisne: Sempre que Hyoga de Cisne causa dano de Golpe a um Devoto inimigo, você pode pagar {1}{C}. Se fizer isso, coloque 1 marcador de Selo adicional nesse Devoto."
+  ]
+ },
+ "poseidon-v6-099": {
+  "n": "THETIS DE SEREIA",
+  "s": "A Voz Leal do Imperador dos Mares",
+  "h": [
+   "Arauto do Oceano — Quando Thetis de Sereia entra no Campo de Batalha, olhe as 3 cartas do topo do seu deck. Você pode revelar um General Marina ou uma Escama dentre elas e pôr essa carta na sua mão. Ponha as cartas restantes no fundo do deck em qualquer ordem.",
+   "Devoção a Poseidon — Uma vez por rodada, quando seu Deus sofreria dano de Golpe, você pode pagar {1}{C} e deixar Thetis de Sereia Despreparada. Se fizer isso, previna até 2 desse dano.",
+   "Favor do Imperador — Enquanto seu Deus for Poseidon, Thetis de Sereia recebe +0 ATQ / +1 PV."
+  ]
+ },
+ "poseidon-v6-100": {
+  "n": "ESCAMA DE SEREIA",
+  "s": "A Pérola dos Sete Mares",
+  "h": [
+   "Bênção do Oceano — Uma vez por rodada, quando o Devoto equipado sofreria dano de Golpe, você pode pagar {1}{C}. Se fizer isso, previna até 2 desse dano.",
+   "Ressonância — Thetis de Sereia: Sempre que Thetis de Sereia previne dano de Golpe com a Bênção do Oceano ou a Devoção a Poseidon, você pode comprar uma carta e depois descartar uma carta. Esta habilidade só dispara uma vez por rodada."
+  ]
+ },
+ "poseidon-v6-101": {
+  "n": "JULIAN SOLO, O RECEPTÁCULO ESCOLHIDO",
+  "s": "O Corpo Mortal de um Deus",
+  "h": [
+   "Despertar Divino — Quando Julian Solo entra no Campo de Batalha, você pode colocar 1 marcador de Selo no Devoto inimigo alvo.",
+   "Receptáculo de Poseidon — Enquanto seu Deus for Poseidon e estiver Desperto, Julian Solo recebe +2 ATQ / +1 PV.",
+   "A Vontade do Imperador — Uma vez por rodada, sempre que um Devoto inimigo fica Selado, você pode pagar {1}{C}. Se fizer isso, compre uma carta e depois descarte uma carta."
+  ]
+ },
+ "poseidon-v6-102": {
+  "n": "SACERDOTE DO ABISMO",
+  "s": "Guardião das Profundezas Esquecidas",
+  "h": [
+   "Ritual Abissal — {1}{C}, {T}: O Devoto inimigo alvo com um marcador de Selo recebe -1 ATQ até o fim da rodada.",
+   "Sussurros Abaixo — Uma vez por rodada, quando um Devoto inimigo fica Selado, você pode olhar a carta do topo do seu deck. Você pode pô-la no fundo do deck."
+  ]
+ },
+ "poseidon-v6-103": {
+  "n": "ARAUTO DOS SETE MARES",
+  "s": "A Voz do Imperador Alcança Todos os Oceanos",
+  "h": [
+   "Autoridade do Imperador — Os outros Devotos Marinas aliados recebem +1 ATQ / +1 PV."
+  ]
+ },
+ "poseidon-v6-104": {
+  "n": "GUARDA REAL DO TRIDENTE",
+  "s": "Nenhum Inimigo Alcançará o Imperador",
+  "h": [
+   "Guardião",
+   "Formação do Tridente — Enquanto você controlar outro Devoto Marina aliado, o Guarda Real do Tridente recebe +0 ATQ / +1 PV.",
+   "Defesa Oceânica — Uma vez por rodada, quando o Guarda Real do Tridente sofreria dano de Golpe, previna 1 desse dano."
+  ]
+ },
+ "poseidon-v6-105": {
+  "n": "SENTINELA ATLANTE",
+  "s": "O Último Vigia de Atlântida",
+  "h": [
+   "Guardião",
+   "Vigília Ancestral — Sempre que a Sentinela Atlante sobrevive a um Golpe como defensora, você pode pagar {1}{C}. Se fizer isso, coloque 1 marcador de Selo no Devoto que Golpeia."
+  ]
+ },
+ "poseidon-v6-106": {
+  "n": "GUARDA DO TEMPLO OCEÂNICO",
+  "s": "Defensor dos Pilares Sagrados",
+  "h": [
+   "Guardião",
+   "Dever Sagrado — Enquanto você controlar um Domínio, o Guarda do Templo Oceânico recebe +0 ATQ / +1 PV."
+  ]
+ },
+ "poseidon-v6-107": {
+  "n": "LANCEIRO MARINA",
+  "s": "A Lança que Perfura as Ondas",
+  "h": [
+   "Estocada da Maré — Uma vez por rodada, quando o Lanceiro Marina declara um Golpe contra um Devoto inimigo com um marcador de Selo, o Lanceiro Marina recebe +1 ATQ durante esse Golpe."
+  ]
+ },
+ "poseidon-v6-108": {
+  "n": "VANGUARDA MARINA",
+  "s": "O Primeiro a Erguer-se, o Último a Cair",
+  "h": [
+   "Avanço Implacável — Uma vez por rodada, quando a Vanguarda Marina derrota um Devoto inimigo com um Golpe, você pode Prepará-la. Ela não pode declarar outro Golpe nesta rodada."
+  ]
+ },
+ "poseidon-v6-109": {
+  "n": "VIGIA ABISSAL",
+  "s": "Nada Escapa das Profundezas",
+  "h": [
+   "Olhos do Abismo — Quando o Vigia Abissal entra no Campo de Batalha, o jogador alvo envia ao Tártaro as 2 cartas do topo do seu deck."
+  ]
+ },
+ "poseidon-v6-110": {
+  "n": "DEFENSOR DO RECIFE DE CORAL",
+  "s": "A Muralha Viva do Oceano",
+  "h": [
+   "Guardião",
+   "Armadura de Coral — Uma vez por rodada, na primeira vez que o Defensor do Recife de Coral sofreria dano de Golpe, previna 1 desse dano."
+  ]
+ },
+ "poseidon-v6-111": {
+  "n": "ASSALTANTE DA MARÉ",
+  "s": "A Maré Ataca Sem Aviso",
+  "h": [
+   "Onda Devastadora — Uma vez por rodada, quando o Assaltante da Maré declara um Golpe contra um Devoto inimigo, você pode pagar {1}{C}. Se fizer isso, esse Devoto recebe -1 ATQ durante esse Golpe."
+  ]
+ },
+ "poseidon-v6-112": {
+  "n": "CAÇADOR DAS PROFUNDEZAS",
+  "s": "Nada Escapa ao Olhar do Oceano",
+  "h": [
+   "Instinto de Caçador — Quando o Caçador das Profundezas entra no Campo de Batalha, compre uma carta e depois descarte uma carta.",
+   "Predador das Profundezas — Sempre que o Caçador das Profundezas declara um Golpe contra um Devoto com um marcador de Selo, ele recebe +1 ATQ durante esse Golpe."
+  ]
+ },
+ "poseidon-v6-113": {
+  "n": "ACÓLITO ATLANTE",
+  "s": "Guardião do Conhecimento Perdido do Oceano",
+  "h": [
+   "Conhecimento Ancestral — Quando o Acólito Atlante entra no Campo de Batalha, compre uma carta.",
+   "Estudo Proibido — {2}{C}, {T}: Compre uma carta e depois descarte uma carta."
+  ]
+ },
+ "poseidon-v6-114": {
+  "n": "TEMPLO DA SACERDOTISA DO MAR",
+  "s": "Suas Preces Ecoam Pelas Profundezas",
+  "h": [
+   "Visão Oceânica — Uma vez por rodada, sempre que um Devoto inimigo fica Selado, você pode pagar {1}{C}. Se fizer isso, compre uma carta e depois descarte uma carta.",
+   "Águas Sagradas — {1}{C}, {T}: Remova 1 de dano do Devoto aliado alvo."
+  ]
+ },
+ "poseidon-v6-115": {
+  "n": "BATEDOR DA CORRENTE OCEÂNICA",
+  "s": "Cada Corrente Carrega um Segredo",
+  "h": [
+   "Leitura das Correntes — Quando o Batedor da Corrente Oceânica entra no Campo de Batalha, olhe as 3 cartas do topo do seu deck. Ponha uma na sua mão e as restantes no fundo do deck em qualquer ordem.",
+   "Fuga da Maré — Uma vez por rodada, quando o Batedor da Corrente Oceânica se torna alvo de um Momento ou Técnica inimigo, você pode devolvê-lo à mão do dono."
+  ]
+ },
+ "poseidon-v6-116": {
+  "n": "GUARDIÃO DO SANTUÁRIO DA PÉROLA",
+  "s": "A Verdade Mais Profunda Jaz Dentro da Pérola",
+  "h": [
+   "Adivinhação da Pérola — Uma vez por rodada, quando você conjura um Momento ou Técnica, você pode pagar {1}{C}. Se fizer isso, compre uma carta e depois descarte uma carta.",
+   "Pérola de Proteção — Sempre que você descarta uma carta, você pode pagar {1}{C}. Se fizer isso, previna os próximos 1 de dano de Golpe que seriam causados ao Devoto aliado alvo nesta rodada. Esta habilidade só dispara uma vez por rodada."
+  ]
+ },
+ "poseidon-v6-117": {
+  "n": "ANTIGO GUARDIÃO DO MAR",
+  "s": "O Oceano Rejeita Todos os Intrusos",
+  "h": [
+   "Guardião",
+   "Rejeição da Maré — Uma vez por rodada, quando um inimigo conjura um Momento ou Técnica que tem como alvo seu Deus ou um Devoto aliado, você pode pagar {2}{C} e deixar o Antigo Guardião do Mar Despreparado. Se fizer isso, anule esse Momento ou Técnica."
+  ]
+ },
+ "poseidon-v6-118": {
+  "n": "PORTA-ESTANDARTE MARINA",
+  "s": "Sob Uma Só Bandeira, os Sete Mares Marcham",
+  "h": [
+   "Chamado dos Fuzileiros — Quando o Porta-Estandarte Marina entra no Campo de Batalha, compre uma carta se você controlar outro Devoto Marina aliado.",
+   "Estandarte do Imperador — Os outros Devotos Marinas aliados recebem +1 ATQ."
+  ]
+ },
+ "poseidon-v6-119": {
+  "n": "ZELADOR DO TEMPLO DO TRIDENTE",
+  "s": "Nenhum Feitiço Perturbará o Templo Sagrado",
+  "h": [
+   "Interdição Sagrada — Uma vez por rodada, quando um inimigo conjura um Momento ou Técnica, você pode pagar {2}{C} e deixar o Zelador do Templo do Tridente Despreparado. Se fizer isso, anule esse Momento ou Técnica a menos que seu controlador pague {2}{C}."
+  ]
+ },
+ "poseidon-v6-120": {
+  "n": "O PROFETA AFOGADO",
+  "s": "Ele Viu o Fim de Todas as Costas",
+  "h": [
+   "Profecia do Abismo — Uma vez por rodada, sempre que um oponente envia uma ou mais cartas do deck ao Tártaro, você pode pagar {1}{C}. Se fizer isso, compre uma carta.",
+   "Revelação Sombria — Quando O Profeta Afogado entra no Campo de Batalha, o jogador alvo envia ao Tártaro as 2 cartas do topo do seu deck."
+  ]
+ },
+ "poseidon-v6-121": {
+  "n": "MESTRE DO TRIDENTE ATLANTE",
+  "s": "A Sabedoria do Imperador É uma Arma",
+  "h": [
+   "Contracorrente — Uma vez por rodada, quando um inimigo conjura um Momento ou Técnica que tem como alvo um Devoto Marina aliado, você pode pagar {1}{C}. Se fizer isso, devolva esse Devoto Marina à mão do dono. Se esse Momento ou Técnica não tiver mais alvos legais, anule-o.",
+   "Retirada Tática — Sempre que um Devoto Marina aliado volta à mão do dono, você pode pagar {1}{C}. Se fizer isso, compre uma carta e depois descarte uma carta. Esta habilidade só dispara uma vez por rodada."
+  ]
+ },
+ "poseidon-v6-122": {
+  "n": "ESCAMA MARINA RACHADA",
+  "s": "Até a Armadura Quebrada Lembra do Mar",
+  "h": [
+   "Última Proteção — Uma vez por rodada, quando o Devoto equipado sofreria dano de Golpe, previna 1 desse dano."
+  ]
+ },
+ "poseidon-v6-123": {
+  "n": "TRIDENTE ATLANTE",
+  "s": "A Lança do Reino Esquecido",
+  "h": [
+   "O Devoto equipado recebe +1 ATQ.",
+   "Estocada Oceânica — Uma vez por rodada, quando o Devoto equipado causa dano de Golpe a um Devoto inimigo, você pode pagar {1}{C}. Se fizer isso, compre uma carta e depois descarte uma carta.",
+   "Ressonância — Marina: Se o Devoto equipado for uma Marina, a Estocada Oceânica custa {0}{C} em vez disso."
+  ]
+ },
+ "poseidon-v6-124": {
+  "n": "BARREIRA DE CORAL",
+  "s": "O Recife Protege os Seus",
+  "h": [
+   "O Devoto equipado recebe +0 ATQ / +1 PV.",
+   "Recife Vivo — Uma vez por rodada, quando o Devoto equipado se torna alvo de um Momento ou Técnica inimigo, você pode pagar {2}{C}. Se fizer isso, anule esse Momento ou Técnica a menos que seu controlador pague {2}{C}."
+  ]
+ },
+ "poseidon-v6-125": {
+  "n": "LANÇA OCEÂNICA",
+  "s": "Mil Correntes, Um Só Golpe",
+  "h": [
+   "O Devoto equipado recebe +1 ATQ.",
+   "Corrente Perfurante — Uma vez por rodada, quando o Devoto equipado declara um Golpe contra um Devoto inimigo Selado, ele recebe +1 ATQ adicional durante esse Golpe."
+  ]
+ },
+ "poseidon-v6-126": {
+  "n": "CORRENTES ABISSAIS",
+  "s": "Nenhuma Prisão É Mais Funda que o Mar",
+  "h": [
+   "Contenção Profunda — {2}{C}, {T}: Coloque 1 marcador de Selo no Devoto inimigo alvo.",
+   "Ressonância — Marina: Sempre que um Devoto inimigo fica Selado pela Contenção Profunda, você pode comprar uma carta e depois descartar uma carta, se as Correntes Abissais estiverem equipadas em um Devoto Marina."
+  ]
+ },
+ "poseidon-v6-127": {
+  "n": "PÉROLA DAS PROFUNDEZAS",
+  "s": "O Oceano Guarda Conhecimentos Esquecidos",
+  "h": [
+   "Conhecimento Oculto — Quando a Pérola das Profundezas entra no Campo de Batalha, compre uma carta e depois descarte uma carta.",
+   "Visão Oceânica — {2}{C}, {T}: Olhe as 2 cartas do topo do seu deck. Ponha uma no topo e a outra no fundo."
+  ]
+ },
+ "poseidon-v6-128": {
+  "n": "FERRAMENTAS DE REPARO DE ESCAMA",
+  "s": "A Arte de Restaurar a Armadura do Imperador",
+  "h": [
+   "Restauração de Escama — {1}{C}, {T}: Remova 1 de dano do Devoto aliado alvo equipado com uma Escama.",
+   "Ressonância — Marina: Sempre que o Devoto Marina equipado ativa a Restauração de Escama, remova até 2 de dano em vez de 1."
+  ]
+ },
+ "poseidon-v6-129": {
+  "n": "PRESA DA SERPENTE MARINHA",
+  "s": "O Veneno Sob as Ondas",
+  "h": [
+   "O Devoto equipado recebe +1 ATQ.",
+   "Veneno da Serpente — Uma vez por rodada, quando o Devoto equipado causa dano de Golpe a um Devoto inimigo, esse Devoto recebe -1 ATQ até o fim da rodada."
+  ]
+ },
+ "poseidon-v6-130": {
+  "n": "ELMO DE GUERRA ATLANTE",
+  "s": "A Coroa dos Soldados do Oceano",
+  "h": [
+   "O Devoto equipado recebe +0 ATQ / +1 PV.",
+   "Consciência de Batalha — Uma vez por rodada, quando o Devoto equipado sobrevive a um Golpe como defensor, você pode olhar a carta do topo do seu deck. Você pode pô-la no fundo do deck."
+  ]
+ },
+ "poseidon-v6-131": {
+  "n": "ESCUDO DO GUARDA DO TEMPLO",
+  "s": "O Escudo que Guarda os Mares Sagrados",
+  "h": [
+   "O Devoto equipado recebe +0 ATQ / +2 PV.",
+   "Defesa Sagrada — Uma vez por rodada, quando o Devoto equipado sofreria dano de Golpe, previna 1 desse dano.",
+   "Ressonância — Marina: Enquanto o Devoto equipado for uma Marina, a Defesa Sagrada previne 2 de dano em vez de 1."
+  ]
+ },
+ "poseidon-v6-132": {
+  "n": "A MARÉ QUE SOBE",
+  "s": "Cada Onda É um Aviso",
+  "h": [
+   "Devolva o Devoto inimigo alvo à mão do dono.",
+   "Sabedoria do Oceano — Se esse Devoto tinha um marcador de Selo, compre uma carta e depois descarte uma carta."
+  ]
+ },
+ "poseidon-v6-133": {
+  "n": "CHAMADO DO OCEANO",
+  "s": "As Profundezas Têm Suas Próprias Respostas",
+  "h": [
+   "Anule o Momento ou Técnica inimigo alvo a menos que seu controlador pague {2}{C}."
+  ]
+ },
+ "poseidon-v6-134": {
+  "n": "ONDAS DE DESTRUIÇÃO",
+  "s": "O Mar Golpeia Sem Piedade",
+  "h": [
+   "Devolva o Devoto inimigo alvo com ATQ 3 ou menos à mão do dono.",
+   "Correnteza Esmagadora — O controlador desse Devoto envia ao Tártaro a carta do topo do deck."
+  ]
+ },
+ "poseidon-v6-135": {
+  "n": "SOB A SUPERFÍCIE",
+  "s": "A Verdade Jaz Sob as Ondas",
+  "h": [
+   "Olhe as 3 cartas do topo do seu deck. Ponha uma na sua mão e as restantes no fundo do deck em qualquer ordem.",
+   "Previsão Oceânica — Se você controlar um General Marina, olhe as 4 cartas do topo em vez disso."
+  ]
+ },
+ "poseidon-v6-136": {
+  "n": "O MAR NUNCA PERDOA",
+  "s": "Toda Dívida Volta com a Maré",
+  "h": [
+   "Anule o Momento ou Técnica inimigo alvo que tem como alvo seu Deus ou um Devoto aliado."
+  ]
+ },
+ "poseidon-v6-137": {
+  "n": "PRESSÃO DA ÁGUA ESMAGADORA",
+  "s": "As Águas Mais Fundas Não Permitem Movimento",
+  "h": [
+   "Coloque 1 marcador de Selo no Devoto inimigo alvo.",
+   "Peso Abissal — Se esse Devoto já tinha um marcador de Selo antes de esta Técnica ser resolvida, coloque 2 marcadores de Selo nele em vez disso."
+  ]
+ },
+ "poseidon-v6-138": {
+  "n": "O ABRAÇO DO OCEANO",
+  "s": "O Que o Mar Toma, o Mar Guarda",
+  "h": [
+   "Devolva o Devoto aliado alvo à mão do dono.",
+   "Passagem Segura — Se esse Devoto era alvo de um Momento ou Técnica inimigo quando você conjurou este Momento, compre uma carta."
+  ]
+ },
+ "poseidon-v6-139": {
+  "n": "SUSSURROS DO ABISMO",
+  "s": "O Oceano Sabe o Que Você Comprará",
+  "h": [
+   "Compre duas cartas e depois descarte uma carta.",
+   "Conhecimento Profundo — Se um Devoto inimigo tiver um marcador de Selo, você pode olhar a carta do topo do seu deck. Você pode pô-la no fundo do deck."
+  ]
+ },
+ "poseidon-v6-140": {
+  "n": "JURAMENTO DA MARINA",
+  "s": "Nossas Vidas Pertencem ao Imperador",
+  "h": [
+   "Escolha um:",
+   "Lealdade — O Devoto Marina aliado alvo recebe +0 ATQ / +2 PV até o fim da rodada.",
+   "Disciplina — Devolva o Devoto Marina aliado alvo à mão do dono.",
+   "Recompensa do Oceano — Se você controlar um General Marina, compre uma carta e depois descarte uma carta."
+  ]
+ },
+ "poseidon-v6-141": {
+  "n": "A PRIMEIRA GRANDE TEMPESTADE",
+  "s": "Antes do Dilúvio, Há Silêncio",
+  "h": [
+   "Devolva até dois Devotos inimigos alvo às mãos dos donos.",
+   "Tempestade Crescente — Para cada Devoto devolvido assim que tinha um marcador de Selo, seu controlador envia ao Tártaro a carta do topo do deck."
+  ]
+ },
+ "poseidon-v6-142": {
+  "n": "O SANTUÁRIO SUBMARINO",
+  "s": "O Trono Sob as Ondas",
+  "h": [
+   "Domínio Oceânico — Uma vez por rodada, quando você conjura um Momento ou Técnica, seu Deus ganha {1}{S}.",
+   "Território Divino — Uma vez por jogo — {2}{C}: Compre 2 cartas e depois descarte uma carta."
+  ]
+ },
+ "poseidon-v6-143": {
+  "n": "O PILAR DO ATLÂNTICO NORTE",
+  "s": "O Domínio do Dragão Marinho",
+  "h": [
+   "Correntes Dimensionais — Uma vez por rodada, quando você devolve um Devoto inimigo à mão do dono, seu controlador envia ao Tártaro a carta do topo do deck.",
+   "Triângulo Dourado — Uma vez por jogo — {3}{C}: Devolva o Devoto inimigo alvo à mão do dono. Compre uma carta."
+  ]
+ },
+ "poseidon-v6-144": {
+  "n": "O PILAR DO ATLÂNTICO SUL",
+  "s": "O Domínio da Sirene",
+  "h": [
+   "Sinfonia Silenciosa — Uma vez por rodada, quando um Devoto inimigo declara um Golpe, você pode pagar {1}{C}. Se fizer isso, esse Devoto recebe -1 ATQ durante esse Golpe.",
+   "Sinfonia Sem Saída — Uma vez por jogo — {2}{C}: Coloque 1 marcador de Selo no Devoto inimigo alvo."
+  ]
+ },
+ "poseidon-v6-145": {
+  "n": "O PILAR DO PACÍFICO NORTE",
+  "s": "O Domínio do Cavalo Marinho",
+  "h": [
+   "Muralha do Pacífico — Uma vez por rodada, quando um Devoto aliado sofreria dano de Golpe, você pode pagar {1}{C}. Se fizer isso, previna 1 desse dano.",
+   "Ondas Crescentes — Uma vez por jogo — {3}{C}: Previna todo o dano de Golpe aos Devotos aliados até o fim da rodada."
+  ]
+ },
+ "poseidon-v6-146": {
+  "n": "O PILAR DO OCEANO ÁRTICO",
+  "s": "O Domínio do Kraken",
+  "h": [
+   "Águas Congeladas — Uma vez por rodada, quando um Devoto inimigo fica Selado, seu controlador envia ao Tártaro a carta do topo do deck.",
+   "Aurora Boreal — Uma vez por jogo — {2}{C}: Compre uma carta para cada Devoto inimigo com um marcador de Selo (até 3)."
+  ]
+ },
+ "poseidon-v6-147": {
+  "n": "O LABIRINTO DE CORAL",
+  "s": "Mil Caminhos, Nenhum Leva para Casa",
+  "h": [
+   "Perdido no Recife — O primeiro Devoto inimigo que declara um Golpe contra seu Deus a cada rodada recebe -1 ATQ durante esse Golpe.",
+   "O Recife sem Fim — Uma vez por jogo — {3}{C}: Devolva até dois Devotos inimigos alvo com Custo de Conjuração 3 ou menos às mãos dos donos."
+  ]
+ },
+ "poseidon-v6-148": {
+  "n": "O TEMPLO AFUNDADO",
+  "s": "O Conhecimento Enterrado Sob o Oceano",
+  "h": [
+   "Segredos Ancestrais — Uma vez por rodada, quando você conjura um Momento ou Técnica, você pode olhar a carta do topo do seu deck. Você pode pô-la no fundo do deck.",
+   "Conhecimento Esquecido — Uma vez por jogo — {2}{C}: Compre 3 cartas e depois descarte 2 cartas."
+  ]
+ },
+ "poseidon-v6-149": {
+  "n": "A FOSSA ABISSAL",
+  "s": "Onde a Luz e a Esperança Desaparecem",
+  "h": [
+   "Profundezas Esmagadoras — Uma vez por rodada, quando um Devoto inimigo fica Selado, você pode pagar {1}{C}. Se fizer isso, esse Devoto recebe -1 ATQ até o fim da rodada.",
+   "Ecos do Abismo — Uma vez por jogo — {3}{C}: O oponente alvo envia ao Tártaro as 4 cartas do topo do seu deck."
+  ]
+ },
+ "poseidon-v6-150": {
+  "n": "SOPRO DIVINO",
+  "s": "O Sopro que Repele os Céus",
+  "h": [
+   "Devolva o Devoto inimigo alvo à mão do dono.",
+   "Muralha de Ar — Se você controlar Baian de Cavalo Marinho, previna os próximos 3 de dano de Golpe que seriam causados ao seu Deus nesta rodada.",
+   "Pressão Oceânica — Se esse Devoto tinha um marcador de Selo, seu controlador envia ao Tártaro as 2 cartas do topo do deck."
+  ]
+ },
+ "poseidon-v6-151": {
+  "n": "SINFONIA SEM SAÍDA",
+  "s": "A Melodia que Silencia a Alma",
+  "h": [
+   "Escolha até dois Devotos inimigos alvo. Cada um recebe -2 ATQ até o fim da rodada.",
+   "Melodia da Sirene — Se você controlar Sorento de Sirene, coloque 1 marcador de Selo em um desses Devotos.",
+   "Nota Final — Se pelo menos um Devoto ficou Selado por esta Técnica, compre uma carta e depois descarte uma carta."
+  ]
+ },
+ "poseidon-v6-152": {
+  "n": "TURBILHÃO MARINHO",
+  "s": "O Oceano se Volta Contra Seus Inimigos",
+  "h": [
+   "Devolva o Devoto inimigo alvo à mão do dono.",
+   "Correnteza Crescente — Se você controlar um General Marina, você pode devolver o Devoto aliado alvo à mão do dono.",
+   "Recompensa do Oceano — Se você devolveu um Devoto aliado assim, compre uma carta e depois descarte uma carta."
+  ]
+ },
+ "poseidon-v6-153": {
+  "n": "AURORA BOREAL",
+  "s": "O Frio que Alcança Além da Alma",
+  "h": [
+   "Coloque 2 marcadores de Selo no Devoto inimigo alvo.",
+   "Vingança Gelada — Se você controlar Isaak de Kraken, esse Devoto recebe -2 ATQ até o fim da rodada.",
+   "Irmandade Gelada — Se você controlar Hyoga de Cisne, compre uma carta e depois descarte uma carta."
+  ]
+ },
+ "poseidon-v6-154": {
+  "n": "O COMANDO DO DRAGÃO MARINHO",
+  "s": "Toda Corrente Obedece ao Mestre",
+  "h": [
+   "Escolha um:",
+   "Reversão Dimensional — Devolva o Devoto inimigo alvo à mão do dono.",
+   "Interdição Real — Anule o Momento ou Técnica inimigo alvo a menos que seu controlador pague {3}{C}.",
+   "Estratégia de Kanon — Se você controlar Kanon de Dragão Marinho, compre uma carta e depois descarte uma carta."
+  ]
+ },
+ "poseidon-v6-155": {
+  "n": "O LAMENTO DA SIRENE",
+  "s": "Uma Canção a que Nenhum Guerreiro Resiste",
+  "h": [
+   "O Devoto inimigo alvo recebe -2 ATQ até o fim da rodada.",
+   "Melodia Encantada — Se esse Devoto tiver um marcador de Selo, seu controlador envia ao Tártaro as 2 cartas do topo do deck.",
+   "Eco Pesaroso — Se você controlar Sorento de Sirene, compre uma carta e depois descarte uma carta."
+  ]
+ },
+ "poseidon-v6-156": {
+  "n": "MURALHA DE CORRENTES OCEÂNICAS",
+  "s": "O Mar Recusa Seu Comando",
+  "h": [
+   "Anule o Equipamento inimigo alvo na pilha."
+  ]
+ },
+ "poseidon-v6-157": {
+  "n": "AS PROFUNDEZAS CONGELADAS",
+  "s": "Onde Até o Tempo Para",
+  "h": [
+   "Escolha até dois Devotos inimigos alvo. Coloque 1 marcador de Selo em cada um deles.",
+   "Silêncio Ártico — Se você controlar Isaak de Kraken, um desses Devotos recebe -2 ATQ até o fim da rodada."
+  ]
+ },
+ "poseidon-v6-158": {
+  "n": "O DESPERTAR DE ATLÂNTIDA",
+  "s": "O Reino Perdido Ergue-se Mais Uma Vez",
+  "h": [
+   "Compre duas cartas.",
+   "Domínio Ancestral — Se você controlar um Domínio, você pode devolver o Equipamento aliado alvo do seu Tártaro à sua mão."
+  ]
+ },
+ "poseidon-v6-159": {
+  "n": "OS SETE MARES RESPONDEM",
+  "s": "O Oceano Tem a Palavra Final",
+  "h": [
+   "Escolha um:",
+   "Negação — Anule o Devoto inimigo alvo na pilha.",
+   "Reversão — Devolva o Equipamento inimigo alvo à mão do dono."
+  ]
+ },
+ "poseidon-v6-160": {
+  "n": "O SILÊNCIO ABAIXO",
+  "s": "Nem um Sussurro Sobrevive",
+  "h": [
+   "Escolha o Devoto inimigo alvo.",
+   "Esse Devoto perde todas as habilidades ativadas até o fim da rodada.",
+   "Silêncio Abissal — Se esse Devoto tiver um marcador de Selo, ele também recebe -1 ATQ até o fim da rodada."
+  ]
+ },
+ "poseidon-v6-161": {
+  "n": "A MARÉ INQUEBRÁVEL",
+  "s": "O Oceano Sempre Retorna",
+  "h": [
+   "Devolva o Devoto aliado alvo à mão do dono.",
+   "Compre uma carta.",
+   "Correnteza Sem Fim — Se o Devoto devolvido era uma Marina, você pode remover até 2 de dano de outro Devoto aliado alvo."
+  ]
+ },
+ "poseidon-v6-162": {
+  "n": "ILUSÃO GALÁCTICA",
+  "s": "A Mente É o Primeiro Campo de Batalha",
+  "h": [
+   "Devolva o Devoto inimigo alvo à mão do dono.",
+   "Controle Ilusório — Compre uma carta.",
+   "Ressonância — Kanon de Dragão Marinho: Se você controlar Kanon de Dragão Marinho, esse jogador envia ao Tártaro as 2 cartas do topo do seu deck."
+  ]
+ },
+ "poseidon-v6-163": {
+  "n": "CLÍMAX SEM SAÍDA",
+  "s": "A Nota Final do Desespero",
+  "h": [
+   "Escolha até dois Devotos inimigos alvo. Cada um recebe -3 ATQ até o fim da rodada.",
+   "Réquiem da Sirene — Cada oponente envia ao Tártaro as 2 cartas do topo do seu deck.",
+   "Ressonância — Sorento de Sirene: Se você controlar Sorento de Sirene, compre uma carta e depois descarte uma carta."
+  ]
+ },
+ "poseidon-v6-164": {
+  "n": "ONDAS CRESCENTES",
+  "s": "O Oceano Rejeita Toda Resistência",
+  "h": [
+   "Devolva até dois Devotos inimigos alvo às mãos dos donos.",
+   "Força Esmagadora — Para cada Devoto devolvido assim, seu controlador envia ao Tártaro a carta do topo do deck.",
+   "Ressonância — Baian de Cavalo Marinho: Se você controlar Baian de Cavalo Marinho, previna os próximos 3 de dano de Golpe que seriam causados ao seu Deus nesta rodada."
+  ]
+ },
+ "poseidon-v6-165": {
+  "n": "GARRA DO TIGRE VIKING",
+  "s": "A Presa do Oceano Congelado",
+  "h": [
+   "Coloque 1 marcador de Selo no Devoto inimigo alvo. Ele recebe -2 ATQ até o fim da rodada.",
+   "Ressonância — Isaak de Kraken: Se você controlar Isaak de Kraken, coloque 1 marcador de Selo adicional nele."
+  ]
+ },
+ "poseidon-v6-166": {
+  "n": "O TRIÂNGULO DOURADO",
+  "s": "Além dos Limites da Realidade",
+  "h": [
+   "Devolva o Devoto ou Equipamento inimigo alvo à mão do dono.",
+   "Distorção Dimensional — O controlador dele coloca uma carta da sua mão no topo do seu deck.",
+   "Engano de Kanon — Se você controlar Kanon de Dragão Marinho, compre uma carta."
+  ]
+ },
+ "poseidon-v6-167": {
+  "n": "CANÇÃO DA ÚLTIMA SIRENE",
+  "s": "Uma Melodia que Rouba Toda Esperança",
+  "h": [
+   "Como custo adicional para conjurar este Momento, seu Deus perde {3}{S} e você descarta uma carta.",
+   "Anule a carta ou habilidade inimiga alvo na pilha."
+  ]
+ },
+ "poseidon-v6-168": {
+  "n": "A TEMPESTADE DO NORTE",
+  "s": "O Ártico Responde com Fúria",
+  "h": [
+   "Coloque 1 marcador de Selo em cada um de até três Devotos inimigos alvo.",
+   "Domínio Gelado — Cada oponente envia ao Tártaro 2 cartas do topo do seu deck para cada um dos seus Devotos que ficou Selado assim."
+  ]
+ },
+ "poseidon-v6-169": {
+  "n": "O ICEBERG ETERNO",
+  "s": "Uma Prisão Além do Tempo",
+  "h": [
+   "Coloque 3 marcadores de Selo no Devoto inimigo alvo.",
+   "Confinamento Absoluto — Esse Devoto perde todas as habilidades ativadas até o fim da rodada.",
+   "Legado Gelado — Se você controlar Isaak de Kraken ou Hyoga de Cisne, compre uma carta."
+  ]
+ },
+ "poseidon-v6-170": {
+  "n": "CETRO REAL ATLANTE",
+  "s": "Autoridade Forjada Sob as Ondas",
+  "h": [
+   "Conhecimento Real — Uma vez por rodada, quando você conjura um Momento ou Técnica, você pode pagar {1}{C}. Se fizer isso, compre uma carta e depois descarte uma carta.",
+   "Autoridade do Imperador — O primeiro Momento ou Técnica que você conjura a cada rodada custa {1}{C} a menos para conjurar, até um mínimo de {1}{B}."
+  ]
+ },
+ "poseidon-v6-171": {
+  "n": "O DECRETO DO IMPERADOR",
+  "s": "Todos os Mares Obedecerão",
+  "h": [
+   "Escolha dois:",
+   "Submissão — Devolva o Devoto inimigo alvo à mão do dono.",
+   "Silêncio — Anule o Momento ou Técnica inimigo alvo.",
+   "Opressão — O oponente alvo envia ao Tártaro as 4 cartas do topo do seu deck.",
+   "Domínio — Compre duas cartas e depois descarte uma carta."
+  ]
+ },
+ "poseidon-v6-172": {
+  "n": "O DESPERTAR DE POSEIDON",
+  "s": "O Mar Se Erguerá Novamente",
+  "h": [
+   "Presença Divina — Coloque 1 marcador de Selo em cada um de até dois Devotos inimigos alvo.",
+   "Domínio Crescente — Para cada Devoto que já tinha um marcador de Selo antes de este Momento ser resolvido, seu controlador envia ao Tártaro as 2 cartas do topo do deck.",
+   "Comando do Imperador — Se seu Deus for Poseidon, compre uma carta."
+  ]
+ },
+ "poseidon-v6-173": {
+  "n": "A QUEDA DE ATLÂNTIDA",
+  "s": "Até os Impérios Devem Afogar-se",
+  "h": [
+   "Império Submerso — Devolva até dois Devotos inimigos alvo às mãos dos donos.",
+   "Civilização Sepultada — Para cada Devoto devolvido assim, seu controlador envia ao Tártaro as 2 cartas do topo do deck.",
+   "Perdido Sob as Ondas — Se você controlar um Domínio, compre uma carta."
+  ]
+ },
+ "poseidon-v6-174": {
+  "n": "A IRA DOS SETE MARES",
+  "s": "Nenhuma Costa Está Fora de Seu Alcance",
+  "h": [
+   "Fúria Oceânica — Coloque 1 marcador de Selo em cada Devoto inimigo.",
+   "Retribuição Divina — Se você controlar pelo menos dois Generais Marinas, compre uma carta."
+  ]
+ },
+ "poseidon-v6-175": {
+  "n": "O DILÚVIO INTERMINÁVEL",
+  "s": "Não Há Escapatória da Maré",
+  "h": [
+   "Águas Implacáveis — Cada oponente envia ao Tártaro as 4 cartas do topo do seu deck.",
+   "Pressão Crescente — Cada oponente que controla pelo menos dois Devotos com marcadores de Selo envia ao Tártaro mais 2 cartas do topo do seu deck.",
+   "O Profundo Lembra — Compre uma carta."
+  ]
+ },
+ "poseidon-v6-176": {
+  "n": "A VONTADE DO OCEANO",
+  "s": "Os Mares Se Curvam a um Só Mestre",
+  "h": [
+   "Poder Soberano — Escolha até dois Devotos aliados alvo. Cada um recebe +2 ATQ / +2 PV até o fim da rodada.",
+   "Bênção do Oceano — Remova até 2 de dano de cada General Marina escolhido.",
+   "Lealdade Inabalável — Os Generais Marinas aliados não podem ser devolvidos às mãos dos donos por efeitos inimigos até o fim da rodada."
+  ]
+ },
+ "poseidon-v6-177": {
+  "n": "O RETORNO DO IMPERADOR",
+  "s": "A Era dos Mares Começa",
+  "h": [
+   "Chamado do Imperador — Devolva o General Marina alvo do seu Tártaro para o Campo de Batalha sob seu controle, Despreparado. Ele não pode declarar um Golpe nesta rodada.",
+   "Restauração Oceânica — Você pode devolver a Escama alvo do seu Tártaro à sua mão.",
+   "Os Sete Mares Perduram — Se seu Deus for Poseidon, remova até 2 de dano desse General Marina."
+  ]
+ },
+ "poseidon-v6-178": {
+  "n": "TRIDENTE DE POSEIDON",
+  "s": "A Autoridade dos Sete Mares",
+  "h": [
+   "Soberania Divina — Uma vez por rodada, quando você conjura um Momento ou Técnica, você pode pagar {1}{C}. Se fizer isso, compre uma carta.",
+   "Julgamento Oceânico — {3}{C}: Uma vez por rodada, coloque 1 marcador de Selo no Devoto inimigo alvo.",
+   "Domínio do Imperador — Enquanto seu Deus for Poseidon e estiver Desperto, o primeiro Momento ou Técnica que você conjura a cada rodada custa {1}{B} a menos."
+  ]
+ },
+ "poseidon-v6-179": {
+  "n": "O PRINCIPAL PROVEDOR",
+  "s": "O Pilar que Sustenta o Mundo",
+  "h": [
+   "O Último Pilar — Até o fim da rodada, previna todo o dano de Golpe que seria causado ao seu Deus.",
+   "Alicerce Inquebrável — Devolva até dois Devotos inimigos alvo às mãos dos donos.",
+   "Resistência Divina — Se seu Deus for Poseidon, compre uma carta para cada Devoto devolvido assim, até duas cartas."
+  ]
+ },
+ "poseidon-v6-180": {
+  "n": "O GRANDE DILÚVIO",
+  "s": "Que o Mundo Retorne ao Mar",
+  "h": [
+   "Os Oceanos que Sobem — Devolva todos os Devotos inimigos às mãos dos donos.",
+   "Civilização Afogada — Cada oponente envia ao Tártaro 3 cartas do topo do seu deck para cada Devoto devolvido à mão assim, até 12 cartas por oponente.",
+   "A Ira do Imperador — Se seu Deus for Poseidon e estiver Desperto, compre duas cartas."
+  ]
+ },
+ "poseidon-v6-502": {
+  "n": "O ARQUIVO DA MARÉ",
+  "h": [
+   "Conhecimento Afogado — Uma vez por rodada, quando um Devoto inimigo fica Selado, você pode olhar a carta do topo do seu deck. Você pode pô-la no fundo do deck.",
+   "Memória da Maré — Uma vez por jogo — {2}{C}: Compre 2 cartas e depois envie ao Tártaro as 2 cartas do topo do seu deck."
+  ],
+  "t": "Conhecimento Afogado nas Profundezas",
+  "f": "\"O mar dá, e o mar toma de volta.\""
+ }
+}

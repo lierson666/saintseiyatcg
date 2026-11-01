@@ -1,0 +1,852 @@
+{
+  "_nota": "Rascunho PT-BR das cartas de Ares (fase 3, 31/10/2026). Mesmo formato de athena.json.",
+  "_nomes": {
+    "Alcmenes of Ethon": "Alcmenes de Éton",
+    "Ethon Alcmenes": "Alcmenes de Éton",
+    "Alcmenes": "Alcmenes",
+    "Ofir of Ouroboros": "Ofir de Ouroboros",
+    "Ouroboros Ofir": "Ofir de Ouroboros",
+    "Ofir": "Ofir",
+    "Lior of Lamassu": "Lior de Lamassu",
+    "Lamassu Lior": "Lior de Lamassu",
+    "Lior": "Lior",
+    "Lord Lior": "Lorde Lior",
+    "Lotis of Lamia": "Lotis de Lâmia",
+    "Lamia Lotis": "Lotis de Lâmia",
+    "Lotis": "Lotis",
+    "Lady Lotis": "Lady Lotis",
+    "Iseu of Python": "Iseu de Píton",
+    "Python Iseu": "Iseu de Píton",
+    "Iseu": "Iseu",
+    "Catreu of Akephalos": "Catreu de Acéfalo",
+    "Akephalos Catreu": "Catreu de Acéfalo",
+    "Catreu": "Catreu",
+    "Alceu of Lamassu": "Alceu de Lamassu",
+    "Lamassu Alceu": "Alceu de Lamassu",
+    "Alceu": "Alceu",
+    "Arionte of Anfista": "Arionte de Anfisbena",
+    "Anfista Arionte": "Arionte de Anfisbena",
+    "Arionte": "Arionte",
+    "Basil of Manticore": "Basil de Mantícora",
+    "Manticore Basil": "Basil de Mantícora",
+    "Basil": "Basil",
+    "Berserker Champion": "Campeão Berserker",
+    "Ikki": "Ikki",
+    "Phoenix": "Fênix",
+    "Athena": "Athena",
+    "Ares": "Ares",
+    "Nike": "Nice",
+    "Enyo": "Enio",
+    "Prometheus": "Prometeu"
+  },
+  "ares-001": {
+    "n": "ARES",
+    "s": "Movido pelo Ódio",
+    "t": "Deus da Guerra e da Destruição",
+    "h": [
+      "SEDE DE SANGUE — Poder Divino\nCusto: {3}{C}\nUma vez por rodada, escolha um Devoto que você controla. Prepare-o. Ele recebe +1 de Poder até o fim da rodada. Ele não pode declarar um Golpe contra um Deus nesta rodada."
+    ],
+    "a": "CARNIFICINA — Despertar 5\nSempre que um Devoto que você controla destrói um Devoto inimigo durante um Golpe, o Deus inimigo perde {1}{S}.",
+    "u": "ANIQUILAÇÃO — Supremo\nCusto: {6}{C}\nPrepare todos os Devotos que você controla.\nAté o fim da rodada, os Devotos que você controla recebem +3 de Poder, Perfurar e Longo Alcance, e podem declarar Golpes como se tivessem Ímpeto.\nSempre que um Devoto que você controla conclui um Golpe nesta rodada, destrua-o. Essa destruição não pode ser prevenida.",
+    "f": "“Ajoelhem-se diante do deus da guerra”"
+  },
+  "ares-v6-271": {
+    "n": "ALCMENES DE ÉTON",
+    "s": "O Comandante Carmesim",
+    "h": [
+      "Ímpeto",
+      "Chegada Carmesim — Quando Alcmenes entra no Campo de Batalha, cause 3 de dano ao Devoto inimigo alvo.",
+      "Inferno Implacável — Sempre que Alcmenes derrota um Devoto inimigo em combate, Prepare Alcmenes. Esta habilidade só dispara uma vez por turno."
+    ],
+    "f": "\"O fogo divino não distingue carne de aço. Tudo queima.\""
+  },
+  "ares-v6-272": {
+    "n": "PLACA DE GUERRA DE ÉTON",
+    "s": "O Devorador de Prometeu",
+    "h": [
+      "Impacto Ardente — Sempre que o Devoto equipado causa dano de Golpe a um Devoto inimigo, você pode pagar {1}{S}. Se fizer isso, cause 1 de dano ao Deus desse Devoto.",
+      "Ressonância — Alcmenes de Éton: O Devoto equipado ganha Perfurar."
+    ],
+    "f": "\"Do tormento de Prometeu nasceram as chamas da guerra.\""
+  },
+  "ares-v6-273": {
+    "n": "OFIR DE OUROBOROS",
+    "s": "O Estrategista Divino",
+    "h": [
+      "Visão do Campo de Batalha — Quando Ofir entra no Campo de Batalha, olhe as 3 cartas do topo do seu deck. Ponha uma na sua mão e as outras no fundo do deck, em qualquer ordem.",
+      "Chamas Divinas da Guerra — Sempre que outro Berserker aliado declara um Golpe, esse Berserker recebe +1 ATQ até o fim da rodada."
+    ],
+    "f": "\"Eu já vi cada movimento que você está prestes a fazer.\""
+  },
+  "ares-v6-274": {
+    "n": "PLACA DE GUERRA DE OUROBOROS",
+    "s": "A Chama Eterna da Sabedoria",
+    "h": [
+      "Coordenação das Chamas — Sempre que o Devoto equipado declara um Golpe, outro Berserker aliado alvo recebe +2 ATQ até o fim da rodada.",
+      "Ressonância — Ofir de Ouroboros: Sempre que um Berserker aliado derrota um Devoto inimigo em combate, compre uma carta e depois descarte uma carta."
+    ],
+    "f": "\"A chama da guerra revela cada fraqueza antes de a batalha começar.\""
+  },
+  "ares-v6-275": {
+    "n": "LIOR DE LAMASSU",
+    "s": "A Calamidade Risonha",
+    "h": [
+      "Entretenimento Cruel — Sempre que outro Berserker aliado é derrotado, você pode pagar {1}{S}. Se fizer isso, cause 1 de dano ao Devoto ou Deus inimigo alvo.",
+      "Ordens Suicidas — Uma vez por turno, você pode derrotar outro Berserker aliado. Se fizer isso, Lior recebe +3 ATQ e Perfurar até o fim da rodada."
+    ],
+    "f": "\"Vão, meus soldados! Morram com glória! Estou precisando de uma boa risada.\""
+  },
+  "ares-v6-276": {
+    "n": "PLACA DE GUERRA DE LAMASSU",
+    "s": "Asas da Catástrofe",
+    "h": [
+      "Ventos Cortantes — Sempre que o Devoto equipado declara um Golpe, cause 1 de dano ao Devoto inimigo alvo.",
+      "Ressonância — Lior de Lamassu: Sempre que outro Berserker aliado é derrotado, você pode Preparar Lior."
+    ],
+    "f": "\"Cada batida destas asas traz a promessa de mais um belo desastre.\""
+  },
+  "ares-v6-277": {
+    "n": "LOTIS DE LÂMIA",
+    "s": "A Senhora dos Pesadelos",
+    "h": [
+      "Manifestação do Pesadelo — Quando Lotis entra no Campo de Batalha, o oponente alvo perde {1}{L}.",
+      "Tormento — Sempre que Lotis causa dano a um Deus, o controlador desse Deus perde {1}{L}.",
+      "Fuga Ilusória — Uma vez por turno, quando Lotis se torna alvo de uma habilidade inimiga, você pode descartar uma carta. Se fizer isso, cancele o efeito dessa habilidade sobre Lotis."
+    ],
+    "f": "\"Seu maior medo não é a morte. É o que vou lhe mostrar antes dela.\""
+  },
+  "ares-v6-278": {
+    "n": "PLACA DE GUERRA DE LÂMIA",
+    "s": "A Armadura dos Pesadelos Sem Fim",
+    "h": [
+      "Presença Assombrosa — Sempre que o Devoto equipado causa dano de Golpe a um Deus, o controlador desse Deus perde {1}{L}.",
+      "Ressonância — Lotis de Lâmia: Sempre que um oponente perde Cosmo Latente, você pode pagar {1}{S}. Se fizer isso, cause 1 de dano ao Deus desse oponente. Esta habilidade só dispara uma vez por turno."
+    ],
+    "f": "\"Quem sobrevive às suas ilusões reza para nunca mais sonhar.\""
+  },
+  "ares-v6-279": {
+    "n": "ISEU DE PÍTON",
+    "s": "A Serpente do Desastre",
+    "h": [
+      "Emboscada da Serpente — Quando Iseu entra no Campo de Batalha, cause 1 de dano ao Devoto inimigo alvo.",
+      "Oportunista Letal — Sempre que outro Berserker aliado é derrotado, Iseu recebe +2 ATQ até o fim da rodada."
+    ],
+    "f": "\"Na sombra do desastre, até o menor ferimento se torna fatal.\""
+  },
+  "ares-v6-280": {
+    "n": "PLACA DE GUERRA DE PÍTON",
+    "s": "O Abraço do Constritor",
+    "h": [
+      "Golpe Constritor — Sempre que o Devoto equipado causa dano de Golpe a um Devoto inimigo, esse Devoto não pode Preparar durante a próxima etapa de Preparação do seu controlador.",
+      "Ressonância — Iseu de Píton: Sempre que outro Berserker aliado é derrotado, cause 1 de dano ao Devoto inimigo alvo."
+    ],
+    "f": "\"A serpente não apressa a presa. Apenas garante que não haja escapatória.\""
+  },
+  "ares-v6-281": {
+    "n": "CATREU DE ACÉFALO",
+    "s": "O Carrasco sem Cabeça",
+    "h": [
+      "Fúria Sem Cabeça — Sempre que outro Berserker aliado é derrotado, Catreu recebe +1 ATQ até o fim da rodada.",
+      "Morte Sem Medo — Quando Catreu é derrotado, você pode pagar {1}{S}. Se fizer isso, cause 1 de dano ao Deus inimigo alvo."
+    ],
+    "f": "\"Um guerreiro sem cabeça não tem motivo para temer a lâmina.\""
+  },
+  "ares-v6-282": {
+    "n": "PLACA DE GUERRA DE ACÉFALO",
+    "s": "Armadura do Horror sem Cabeça",
+    "h": [
+      "Execução Implacável — Sempre que o Devoto equipado derrota um Devoto inimigo em combate, você pode pagar {1}{S}. Se fizer isso, cause 1 de dano ao Deus inimigo alvo.",
+      "Ressonância — Catreu de Acéfalo: Quando esse Devoto é derrotado, você pode pagar {2}{S}. Se fizer isso, cause 2 de dano ao Devoto ou Deus inimigo alvo."
+    ],
+    "f": "\"O carrasco nunca precisa ver o rosto da vítima.\""
+  },
+  "ares-v6-283": {
+    "n": "ALCEU DE LAMASSU",
+    "s": "O Devastador Alado",
+    "h": [
+      "Ventos Devastadores — Quando Alceu entra no Campo de Batalha, cause 1 de dano a até dois Devotos inimigos alvo.",
+      "Ataque Nascido da Tempestade — Sempre que Alceu declara um Golpe, ele recebe +1 ATQ até o fim da rodada para cada outro Berserker aliado que foi derrotado neste turno, até +3 ATQ."
+    ],
+    "f": "\"A tempestade não escolhe suas vítimas. Eu também não.\""
+  },
+  "ares-v6-284": {
+    "n": "PLACA DE GUERRA DE ALCEU",
+    "s": "Asas do Céu em Ruínas",
+    "h": [
+      "Ataque da Ventania — Sempre que o Devoto equipado declara um Golpe, cause 1 de dano ao Devoto inimigo alvo.",
+      "Ressonância — Alceu de Lamassu: Sempre que outro Berserker aliado é derrotado, o Devoto equipado recebe +1 ATQ até o fim da rodada."
+    ],
+    "f": "\"Os próprios céus tremem diante das asas do desastre.\""
+  },
+  "ares-v6-285": {
+    "n": "ARIONTE DE ANFISBENA",
+    "s": "O Caçador Implacável",
+    "h": [
+      "Ímpeto",
+      "Chegada do Predador — Quando Arionte entra no Campo de Batalha, cause 1 de dano ao Devoto inimigo alvo que já sofreu dano neste turno.",
+      "Perseguição Implacável — Sempre que Arionte derrota um Devoto inimigo em combate, Prepare Arionte. Esta habilidade só dispara uma vez por turno."
+    ],
+    "f": "\"Quando a caçada começa, não há mais para onde fugir.\""
+  },
+  "ares-v6-286": {
+    "n": "PLACA DE GUERRA DE ANFISBENA",
+    "s": "O Abraço Cruel do Caçador",
+    "h": [
+      "Perseguição de Sangue — O Devoto equipado recebe +2 ATQ enquanto golpeia um Devoto inimigo ferido.",
+      "Ressonância — Arionte de Anfisbena: Sempre que Arionte derrota um Devoto inimigo em combate, você pode pagar {1}{S}. Se fizer isso, cause 1 de dano ao Deus oponente."
+    ],
+    "f": "\"Um único ferimento é tudo de que o caçador precisa.\""
+  },
+  "ares-v6-287": {
+    "n": "BASIL DE MANTÍCORA",
+    "s": "O Carrasco Venenoso",
+    "h": [
+      "Ferrão da Mantícora — Sempre que Basil causa dano de Golpe a um Devoto inimigo, esse Devoto recebe -1 ATQ até o fim da rodada.",
+      "Crueldade Predatória — Sempre que um Devoto inimigo é derrotado depois de sofrer dano de Basil neste turno, cause 1 de dano ao Deus desse Devoto."
+    ],
+    "f": "\"A dor do meu veneno é apenas o começo.\""
+  },
+  "ares-v6-288": {
+    "n": "PLACA DE GUERRA DE MANTÍCORA",
+    "s": "O Horror de Cauda de Escorpião",
+    "h": [
+      "Golpe Venenoso — Sempre que o Devoto equipado causa dano de Golpe a um Devoto inimigo, esse Devoto recebe -1 ATQ até o fim da rodada.",
+      "Ressonância — Basil de Mantícora: Sempre que um Devoto inimigo que sofreu dano de Basil neste turno é derrotado, compre uma carta e depois descarte uma carta."
+    ],
+    "f": "\"Seu ferrão carrega uma morte que nenhuma armadura pode impedir.\""
+  },
+  "ares-v6-289": {
+    "n": "ENIO, LANÇA DA DESTRUIÇÃO",
+    "s": "A Chama Divina da Obliteração",
+    "h": [
+      "O Devoto equipado recebe +3 ATQ.",
+      "Destruição Divina — Sempre que o Devoto equipado derrota um Devoto inimigo em combate, você pode pagar {3}{S}. Se fizer isso, cause 3 de dano ao Deus oponente.",
+      "Arma Sagrada de Ares — Se o Devoto equipado é um Berserker, ele ganha Perfurar."
+    ],
+    "f": "\"Enio não é apenas a lança da guerra. Ela é a destruição que vem depois.\""
+  },
+  "ares-v6-290": {
+    "n": "ESCUDO DO DEUS DA GUERRA",
+    "s": "A Última Defesa Antes da Vitória",
+    "h": [
+      "O Devoto equipado recebe +1 ATQ / +3 PV.",
+      "Desafio do Guerreiro — Sempre que o Devoto equipado sobrevive a um combate, cause 2 de dano ao Devoto inimigo envolvido nesse combate.",
+      "Fúria Inabalável — Sempre que o Devoto equipado sofre dano, ele recebe +2 ATQ até o fim da rodada."
+    ],
+    "f": "\"Até o escudo de Ares foi forjado para trazer destruição.\""
+  },
+  "ares-v6-291": {
+    "n": "BERSERKER DA LEGIÃO DO FOGO VERMELHO",
+    "s": "Nascido nas Chamas de Prometeu",
+    "h": [
+      "Ataque Ardente — Sempre que este Devoto declara um Golpe, você pode pagar {1}{S}. Se fizer isso, cause 1 de dano ao Deus defensor."
+    ],
+    "f": "\"O fogo carmesim de Ares não deixa nada além de cinzas.\""
+  },
+  "ares-v6-292": {
+    "n": "BERSERKER DA LEGIÃO DA CHAMA",
+    "s": "A Chama que Guia a Lâmina",
+    "h": [
+      "Ataque Coordenado — Sempre que outro Berserker aliado declara um Golpe, este Devoto recebe +1 ATQ até o fim da rodada."
+    ],
+    "f": "\"Não atacamos primeiro. Atacamos onde o inimigo é mais fraco.\""
+  },
+  "ares-v6-293": {
+    "n": "BERSERKER DA LEGIÃO DO DESASTRE",
+    "s": "Uma Vida Feita para Ser Gasta",
+    "h": [
+      "Morte Gloriosa — Quando este Devoto é derrotado, você pode pagar {1}{S}. Se fizer isso, cause 1 de dano ao Deus inimigo alvo."
+    ],
+    "f": "\"O Lorde Lior nos prometeu glória. Nunca prometeu que sobreviveríamos.\""
+  },
+  "ares-v6-294": {
+    "n": "BERSERKER DA LEGIÃO DO MEDO",
+    "s": "O Sussurro Antes do Grito",
+    "h": [
+      "Guerra Psicológica — Sempre que este Devoto causa dano de Golpe a um Deus, o controlador desse Deus perde {1}{L}."
+    ],
+    "f": "\"O medo é a ferida que nunca cicatriza.\""
+  },
+  "ares-v6-295": {
+    "n": "BERSERKER SEDENTO DE SANGUE",
+    "s": "A Fome de Batalha",
+    "h": [
+      "Ímpeto",
+      "Sede de Sangue Imprudente — Sempre que este Devoto declara um Golpe, ele recebe +1 ATQ até o fim da rodada. No fim do seu turno, derrote este Devoto se ele declarou um Golpe neste turno."
+    ],
+    "f": "\"Para um Berserker, uma vida curta é um preço pequeno por uma batalha gloriosa.\""
+  },
+  "ares-v6-296": {
+    "n": "ARAUTO DE GUERRA DE ARES",
+    "s": "A Voz do Conflito Sem Fim",
+    "h": [
+      "Grito de Guerra — Quando o Arauto de Guerra de Ares entra no Campo de Batalha, o Berserker aliado alvo recebe +1 ATQ e Ímpeto até o fim da rodada."
+    ],
+    "f": "\"Quando o arauto chama, o mundo sabe que a paz acabou.\""
+  },
+  "ares-v6-297": {
+    "n": "CARRASCO DO FOGO CARMESIM",
+    "s": "A Chama que Julga a Todos",
+    "h": [
+      "Execução Ardente — Quando o Carrasco do Fogo Carmesim entra no Campo de Batalha, cause 1 de dano ao Devoto inimigo alvo que já sofreu dano neste turno."
+    ],
+    "f": "\"Piedade é uma fraqueza que a chama carmesim não pode se permitir.\""
+  },
+  "ares-v6-298": {
+    "n": "VANGUARDA DA LEGIÃO DA CHAMA",
+    "s": "O Primeiro Movimento da Vitória",
+    "h": [
+      "Abertura Tática — Quando a Vanguarda da Legião da Chama entra no Campo de Batalha, outro Berserker aliado alvo recebe +1 ATQ até o fim da rodada."
+    ],
+    "f": "\"Um único golpe preciso vale mais que mil cargas imprudentes.\""
+  },
+  "ares-v6-299": {
+    "n": "INVASOR DA LEGIÃO DO FOGO VERMELHO",
+    "s": "A Vanguarda Abrasadora",
+    "h": [
+      "Ímpeto",
+      "Terra Arrasada — Sempre que o Invasor da Legião do Fogo Vermelho causa dano de Golpe a um Deus, cause 1 de dano ao Devoto inimigo alvo."
+    ],
+    "f": "\"O campo de batalha arde muito depois que seus passos se apagam.\""
+  },
+  "ares-v6-300": {
+    "n": "ATORMENTADOR DA LEGIÃO DO MEDO",
+    "s": "O Artista do Sofrimento",
+    "h": [
+      "Terror Paralisante — Quando o Atormentador da Legião do Medo entra no Campo de Batalha, o Devoto inimigo alvo recebe -1 ATQ até o fim da rodada.",
+      "Pesadelo Persistente — Sempre que o Atormentador da Legião do Medo causa dano de Golpe a um Deus, o controlador desse Deus perde {1}{L}."
+    ],
+    "f": "\"O melhor tormento é o que começa quando a batalha termina.\""
+  },
+  "ares-v6-301": {
+    "n": "DESTRUIDOR DA LEGIÃO DO DESASTRE",
+    "s": "A Alegria da Destruição",
+    "h": [
+      "Fim Catastrófico — Quando o Destruidor da Legião do Desastre é derrotado, cause 1 de dano ao Devoto inimigo alvo."
+    ],
+    "f": "\"O Lorde Lior riu quando a fortaleza caiu. Nós rimos ainda mais alto.\""
+  },
+  "ares-v6-302": {
+    "n": "CAMPEÃO BERSERKER",
+    "s": "Nascido para o Massacre",
+    "h": [
+      "Campeão de Sangue — Sempre que outro Berserker aliado declara um Golpe, o Campeão Berserker recebe +1 ATQ até o fim da rodada.",
+      "Fúria Inesgotável — Sempre que o Campeão Berserker derrota um Devoto inimigo em combate, você pode pagar {2}{S}. Se fizer isso, cause 2 de dano ao Deus desse Devoto."
+    ],
+    "f": "\"A vitória se mede pelos inimigos que continuam de pé. Pretendo não deixar nenhum.\""
+  },
+  "ares-v6-303": {
+    "n": "GLADIADOR MANCHADO DE SANGUE",
+    "s": "O Último Sobrevivente da Arena",
+    "h": [
+      "Orgulho Ensanguentado — Sempre que o Gladiador Manchado de Sangue sofre dano, cause 1 de dano ao seu Deus."
+    ],
+    "f": "\"Parei de contar vitórias quando a arena ficou sem corpos.\""
+  },
+  "ares-v6-304": {
+    "n": "HOPLITA FURIOSO",
+    "s": "Quebra-Escudos do Deus da Guerra",
+    "h": [
+      "Quebra-Escudos — Sempre que o Hoplita Furioso declara um Golpe contra um Devoto com Guardião, o Hoplita Furioso recebe +2 ATQ até o fim da rodada."
+    ],
+    "f": "\"Não existe escudo forjado capaz de resistir à ira de Ares.\""
+  },
+  "ares-v6-305": {
+    "n": "LANCEIRO IMPLACÁVEL",
+    "s": "Sem Recuo, Sem Piedade",
+    "h": [
+      "Perfurar",
+      "Preço de Sangue — Sempre que o Lanceiro Implacável declara um Golpe, cause 1 de dano ao seu Deus."
+    ],
+    "f": "\"Cada estocada me aproxima da vitória, mesmo que me aproxime da morte.\""
+  },
+  "ares-v6-306": {
+    "n": "TAMBOREIRO DE GUERRA",
+    "s": "O Ritmo da Carnificina",
+    "h": [
+      "Tambores de Guerra — Sempre que outro Berserker aliado declara um Golpe, esse Berserker recebe +1 ATQ até o fim da rodada. Esta habilidade só dispara uma vez por turno."
+    ],
+    "f": "\"Cada batida é mais um coração roubado do inimigo.\""
+  },
+  "ares-v6-307": {
+    "n": "DISCÍPULO DA CHAMA DIVINA",
+    "s": "Aluno da Chama de Guerra Eterna",
+    "h": [
+      "Chama de Guerra — {1}{C}, {T}, envie duas cartas do seu Tártaro para o Vazio: Cause 2 de dano ao Devoto inimigo alvo ou 1 de dano ao Deus inimigo alvo."
+    ],
+    "f": "\"O Mestre Ofir nos ensinou que toda chama tem um propósito, e todo inimigo tem uma fraqueza.\""
+  },
+  "ares-v6-308": {
+    "n": "ESPADACHIM FRENÉTICO",
+    "s": "A Lâmina Além da Razão",
+    "h": [
+      "Ímpeto",
+      "Raiva Descontrolada — No fim do seu turno, se o Espadachim Frenético não declarou um Golpe neste turno, cause 1 de dano ao seu Deus."
+    ],
+    "f": "\"Sua espada se move mais rápido que o pensamento, e sua raiva ainda mais.\""
+  },
+  "ares-v6-309": {
+    "n": "GUARDA REAL DE ARES",
+    "s": "A Lança Inquebrável",
+    "h": [
+      "Proteção do Deus da Guerra — Sempre que outro Berserker aliado sofre dano, você pode causar 1 de dano ao Devoto inimigo alvo.",
+      "Disciplina Implacável — A Guarda Real de Ares recebe +1 ATQ para cada outro Berserker aliado que declarou um Golpe neste turno, até +3 ATQ."
+    ],
+    "f": "\"Eles guardam o deus da guerra não porque ele precise de proteção, mas porque exige lealdade absoluta.\""
+  },
+  "ares-v6-310": {
+    "n": "SOLDADO VINCULADO À GUERRA",
+    "s": "Preso ao Campo de Batalha",
+    "h": [
+      "Juramento de Guerra — Quando o Soldado Vinculado à Guerra entra no Campo de Batalha, você pode causar 1 de dano ao seu Deus. Se fizer isso, o Soldado Vinculado à Guerra ganha Ímpeto até o fim da rodada."
+    ],
+    "f": "\"Minha vida foi entregue a Ares muito antes de eu dar o primeiro respiro.\""
+  },
+  "ares-v6-311": {
+    "n": "GUERREIRO DO JURAMENTO DE SANGUE",
+    "s": "Unido pelo Sangue, Forjado para a Guerra",
+    "h": [
+      "Pacto de Sangue — Quando o Guerreiro do Juramento de Sangue entra no Campo de Batalha, você pode causar 2 de dano ao seu Deus. Se fizer isso, compre uma carta e depois descarte uma carta."
+    ],
+    "f": "\"Meu sangue pertence a Ares. Meus inimigos pagarão o resto.\""
+  },
+  "ares-v6-312": {
+    "n": "CATADOR DO CAMPO DE BATALHA",
+    "s": "Os Espólios do Massacre",
+    "h": [
+      "Recompensa do Catador — Sempre que outro Berserker aliado é derrotado, você pode descartar uma carta. Se fizer isso, compre uma carta. Esta habilidade só dispara uma vez por turno."
+    ],
+    "f": "\"Os mortos não têm uso para o que deixam para trás.\""
+  },
+  "ares-v6-313": {
+    "n": "BERSERKER SUICIDA",
+    "s": "Uma Morte Gloriosa o Aguarda",
+    "h": [
+      "Ímpeto",
+      "Explosão Final — Quando o Berserker Suicida é derrotado, você pode pagar {1}{S}. Se fizer isso, cause 1 de dano ao Devoto ou Deus inimigo alvo.",
+      "Vida Ardente — No fim do seu turno, derrote o Berserker Suicida."
+    ],
+    "f": "\"O Lorde Lior nos mandou morrer. Pretendo fazê-lo rir.\""
+  },
+  "ares-v6-314": {
+    "n": "PLACA DE GUERRA RACHADA",
+    "s": "Armadura dos Caídos",
+    "h": [
+      "Última Proteção — Quando o Devoto equipado é derrotado, você pode pagar {1}{S}. Se fizer isso, cause 1 de dano ao Deus inimigo alvo."
+    ],
+    "f": "\"Uma Placa de Guerra quebrada ainda é capaz de tirar uma última vida.\""
+  },
+  "ares-v6-315": {
+    "n": "ELMO DE BERSERKER",
+    "s": "O Rosto da Guerra",
+    "h": [
+      "O Devoto equipado recebe +1 ATQ.",
+      "Frenesi de Batalha — Sempre que o Devoto equipado declara um Golpe, ele recebe +1 ATQ até o fim da rodada."
+    ],
+    "f": "\"Atrás da máscara de ferro, só resta o desejo de sangue.\""
+  },
+  "ares-v6-316": {
+    "n": "LÂMINA MANCHADA DE SANGUE",
+    "s": "Uma Arma que Nunca Descansa",
+    "h": [
+      "O Devoto equipado recebe +2 ATQ.",
+      "Fome de Sangue — Sempre que o Devoto equipado derrota um Devoto inimigo em combate, você pode pagar {1}{S}. Se fizer isso, cause 1 de dano ao Deus oponente."
+    ],
+    "f": "\"A lâmina se lembra de cada vida que tomou.\""
+  },
+  "ares-v6-317": {
+    "n": "LANÇA DOS CAÍDOS",
+    "s": "A Última Arma de Pé",
+    "h": [
+      "O Devoto equipado recebe +2 ATQ.",
+      "Perfurar",
+      "Tributo da Morte — Quando o Devoto equipado é derrotado, você pode pagar {1}{S}. Se fizer isso, cause 1 de dano ao Deus inimigo alvo."
+    ],
+    "f": "\"Mesmo na morte, a lança do guerreiro busca uma última vítima.\""
+  },
+  "ares-v6-318": {
+    "n": "MACHADO DO CAMPO DE BATALHA",
+    "s": "O Gume Brutal da Guerra",
+    "h": [
+      "O Devoto equipado recebe +3 ATQ.",
+      "Golpe Selvagem — Sempre que o Devoto equipado causa dano de Golpe a um Devoto inimigo, cause 1 de dano a outro Devoto inimigo alvo."
+    ],
+    "f": "\"Um golpe. Dois corpos. Nenhum sobrevivente.\""
+  },
+  "ares-v6-319": {
+    "n": "TAMBORES DE GUERRA",
+    "s": "A Marcha do Massacre Sem Fim",
+    "h": [
+      "O Devoto equipado recebe +0 ATQ / +1 PV.",
+      "Ritmo da Destruição — Sempre que o Devoto equipado declara um Golpe, outro Berserker aliado alvo recebe +1 ATQ até o fim da rodada."
+    ],
+    "f": "\"Os tambores nunca param. A guerra também não.\""
+  },
+  "ares-v6-320": {
+    "n": "JAVALINA ARDENTE",
+    "s": "A Lança do Fogo Carmesim",
+    "h": [
+      "O Devoto equipado recebe +1 ATQ.",
+      "Projétil Flamejante — Sempre que o Devoto equipado declara um Golpe, cause 1 de dano ao Devoto inimigo alvo."
+    ],
+    "f": "\"Antes de o guerreiro chegar, as chamas já reclamaram a presa.\""
+  },
+  "ares-v6-321": {
+    "n": "CORRENTES DA FÚRIA",
+    "s": "Presos pela Raiva",
+    "h": [
+      "O Devoto equipado recebe +1 ATQ.",
+      "Violência Desacorrentada — Sempre que o Devoto equipado declara um Golpe, ele recebe +2 ATQ até o fim da rodada.",
+      "Correntes de Sangue — No fim do seu turno, se o Devoto equipado declarou um Golpe neste turno, cause 1 de dano ao seu Deus."
+    ],
+    "f": "\"As correntes não contêm a raiva deles. Elas a alimentam.\""
+  },
+  "ares-v6-322": {
+    "n": "PRIMEIRO SANGUE",
+    "s": "A Primeira Ferida da Guerra",
+    "h": [
+      "Primeiro Golpe — Cause 3 de dano ao Devoto inimigo alvo ou 1 de dano ao Deus inimigo alvo."
+    ],
+    "f": "\"Toda guerra começa com uma única ferida.\""
+  },
+  "ares-v6-323": {
+    "n": "CARGA PARA A BATALHA",
+    "s": "Sem Tempo para o Medo",
+    "h": [
+      "Carga de Batalha — O Berserker aliado alvo recebe +2 ATQ e Ímpeto até o fim da rodada."
+    ],
+    "f": "\"Os guerreiros de Ares não esperam pela batalha. Eles a trazem.\""
+  },
+  "ares-v6-324": {
+    "n": "LIBERTE A FÚRIA",
+    "s": "Raiva Sem Limites",
+    "h": [
+      "Poder Descontrolado — O Devoto aliado alvo recebe +4 ATQ até o fim da rodada. No fim do seu turno, derrote esse Devoto."
+    ],
+    "f": "\"A maior força de um Berserker é também o seu último suspiro.\""
+  },
+  "ares-v6-325": {
+    "n": "SEM PIEDADE",
+    "s": "Os Fracos Cairão",
+    "h": [
+      "Golpe Impiedoso — O Berserker aliado alvo ganha Perfurar e recebe +2 ATQ até o fim da rodada."
+    ],
+    "f": "\"Piedade é um luxo reservado a quem sobrevive.\""
+  },
+  "ares-v6-326": {
+    "n": "SANGUE POR SANGUE",
+    "s": "O Preço da Vingança",
+    "h": [
+      "Troca de Sangue — Derrote o Berserker aliado alvo. Se fizer isso, cause dano igual ao ATQ desse Berserker ao Devoto inimigo alvo."
+    ],
+    "f": "\"O sangue de um guerreiro comprará a morte de outro.\""
+  },
+  "ares-v6-327": {
+    "n": "CHUVA DE LANÇAS",
+    "s": "A Morte que Vem do Alto",
+    "h": [
+      "Saraivada de Lanças — Distribua 3 de dano entre um ou dois Devotos inimigos alvo."
+    ],
+    "f": "\"O céu escureceu, não com nuvens, mas com as armas da guerra.\""
+  },
+  "ares-v6-328": {
+    "n": "QUEIME TUDO",
+    "s": "Não Deixe Nada de Pé",
+    "h": [
+      "Campo de Batalha Queimado — Cause 2 de dano a cada Devoto."
+    ],
+    "f": "\"As chamas de Ares não reconhecem fronteira entre a vitória e a destruição.\""
+  },
+  "ares-v6-329": {
+    "n": "ASSALTO IMPRUDENTE",
+    "s": "Vitória a Qualquer Custo",
+    "h": [
+      "Impulso Imprudente — Prepare o Berserker aliado alvo. Esse Berserker recebe +1 ATQ até o fim da rodada. No fim do seu turno, cause 2 de dano ao seu Deus."
+    ],
+    "f": "\"Recuar é impossível. Sobreviver é opcional.\""
+  },
+  "ares-v6-330": {
+    "n": "ALIMENTE A RAIVA",
+    "s": "O Fogo Interior",
+    "h": [
+      "Renovação Furiosa — Descarte até duas cartas e depois compre essa quantidade de cartas mais uma. Cause 1 de dano ao seu Deus."
+    ],
+    "f": "\"Cada sacrifício alimenta o fogo que consumirá nossos inimigos.\""
+  },
+  "ares-v6-331": {
+    "n": "A VONTADE DE ARES",
+    "s": "A Guerra É a Única Verdade",
+    "h": [
+      "Comando Divino — Os Berserkers aliados recebem +2 ATQ até o fim da rodada.",
+      "Oferenda de Sangue — No fim do seu turno, cause 1 de dano ao seu Deus para cada Berserker aliado que declarou um Golpe neste turno."
+    ],
+    "f": "\"A paz é uma mentira contada por quem é fraco demais para guerrear.\""
+  },
+  "ares-v6-332": {
+    "n": "TEMPLO DE GUERRA DE ARES",
+    "s": "O Trono do Conflito Sem Fim",
+    "h": [
+      "Bênção do Deus da Guerra — Os Berserkers aliados recebem +1 ATQ.",
+      "Derramamento de Sangue Eterno — Uma vez por jogo — {3}{C}: Cause 1 de dano ao Deus oponente para cada Berserker aliado que você controla (até 3)."
+    ],
+    "f": "\"Entre estas paredes, toda prece é respondida com o som do aço se chocando.\""
+  },
+  "ares-v6-333": {
+    "n": "O CAMPO DE BATALHA EM CHAMAS",
+    "s": "Onde a Própria Terra Arde",
+    "h": [
+      "Terra Queimada — Sempre que um Berserker aliado declara um Golpe, você pode pagar {1}{S}. Se fizer isso, cause 1 de dano ao Deus defensor. Esta habilidade só dispara uma vez por rodada.",
+      "Terra Arrasada — Uma vez por jogo — {3}{C}: Cause 1 de dano a cada Devoto inimigo."
+    ],
+    "f": "\"As chamas não seguem o exército. O exército segue as chamas.\""
+  },
+  "ares-v6-334": {
+    "n": "A ARENA DE SANGUE",
+    "s": "Só os Fortes Permanecerão",
+    "h": [
+      "Glória do Gladiador — Uma vez por rodada, quando um Berserker aliado derrota um Devoto inimigo em combate, esse Berserker recebe +1 ATQ até o fim da rodada.",
+      "Espetáculo de Sangue — Uma vez por jogo — {2}{C}: Compre 2 cartas. Os Berserkers aliados recebem +1 ATQ até o fim da rodada."
+    ],
+    "f": "\"A multidão não aclama a vitória. Ela aclama o sangue.\""
+  },
+  "ares-v6-335": {
+    "n": "OS CAMPOS DA CARNIFICINA",
+    "s": "Mil Túmulos, Um Campo de Batalha",
+    "h": [
+      "Colheita dos Caídos — Sempre que outro Berserker aliado é derrotado, você pode pagar {1}{S}. Se fizer isso, cause 1 de dano ao Deus inimigo alvo. Esta habilidade só dispara uma vez por rodada.",
+      "Massacre Sem Fim — Uma vez por jogo — {2}{C}: Compre uma carta para cada Devoto derrotado nesta rodada (até 3)."
+    ],
+    "f": "\"Aqui não há vencedores. Apenas aqueles que ainda não caíram.\""
+  },
+  "ares-v6-336": {
+    "n": "PLACA DE GUERRA DA LEGIÃO DO FOGO VERMELHO",
+    "s": "Armadura do Inferno Carmesim",
+    "h": [
+      "Golpe Ardente — Sempre que o Devoto equipado declara um Golpe, você pode pagar {1}{S}. Se fizer isso, cause 1 de dano ao Deus defensor.",
+      "Ressonância do Fogo Vermelho — Se o Devoto equipado é um Berserker da Legião do Fogo Vermelho, ele ganha Perfurar."
+    ],
+    "f": "\"As chamas de Éton queimam dentro de cada placa de aço carmesim.\""
+  },
+  "ares-v6-337": {
+    "n": "PLACA DE GUERRA DA LEGIÃO DA CHAMA",
+    "s": "Armadura da Estratégia Divina",
+    "h": [
+      "Golpe Calculado — Sempre que o Devoto equipado declara um Golpe, outro Berserker aliado alvo recebe +1 ATQ até o fim da rodada.",
+      "Ressonância da Chama — Se o Devoto equipado é um Berserker da Legião da Chama, sempre que você conjura um Momento ou Técnica, o Devoto equipado recebe +1 ATQ até o fim da rodada."
+    ],
+    "f": "\"Um guerreiro guiado pela sabedoria de Ofir nunca desperdiça uma só chama.\""
+  },
+  "ares-v6-338": {
+    "n": "PLACA DE GUERRA DA LEGIÃO DO DESASTRE",
+    "s": "Armadura da Morte Risonha",
+    "h": [
+      "Última Risada — Quando o Devoto equipado é derrotado, cause 2 de dano ao Devoto inimigo alvo.",
+      "Ressonância do Desastre — Se o Devoto equipado é um Berserker da Legião do Desastre, quando esse Devoto é derrotado, você pode pagar {1}{S}. Se fizer isso, cause 1 de dano ao Deus inimigo alvo."
+    ],
+    "f": "\"Até suas mortes são oferecidas como diversão ao Lorde Lior.\""
+  },
+  "ares-v6-339": {
+    "n": "PLACA DE GUERRA DA LEGIÃO DO MEDO",
+    "s": "Armadura do Terror Silencioso",
+    "h": [
+      "Golpe do Pesadelo — Sempre que o Devoto equipado causa dano de Golpe a um Deus, o controlador desse Deus perde {1}{L}.",
+      "Ressonância do Medo — Se o Devoto equipado é um Berserker da Legião do Medo, sempre que um oponente perde Cosmo Latente, o Devoto equipado recebe +1 ATQ até o fim da rodada. Esta habilidade só dispara uma vez por turno."
+    ],
+    "f": "\"A armadura reflete os pesadelos de quem ousa enfrentá-la.\""
+  },
+  "ares-v6-340": {
+    "n": "PLACA DE GUERRA DO CAMPEÃO BERSERKER",
+    "s": "A Armadura de Mil Batalhas",
+    "h": [
+      "Ferocidade do Campeão — Sempre que o Devoto equipado derrota um Devoto inimigo em combate, você pode pagar {1}{S}. Se fizer isso, cause 1 de dano ao Deus oponente.",
+      "Ressonância — Campeão Berserker: Sempre que outro Berserker aliado declara um Golpe, o Devoto equipado recebe +1 ATQ até o fim da rodada."
+    ],
+    "f": "\"Cada cicatriz é uma vitória. Cada vitória exige outra batalha.\""
+  },
+  "ares-v6-341": {
+    "n": "GUARDIÃO DO FOGO CARMESIM",
+    "s": "A Chama Inabalável",
+    "h": [
+      "Revide Carmesim — Sempre que o Guardião do Fogo Carmesim sofre dano de Golpe de um Devoto inimigo, cause 2 de dano a esse Devoto.",
+      "Orgulho Ardente — Sempre que o Guardião do Fogo Carmesim derrota um Devoto inimigo em combate, você pode pagar {2}{S}. Se fizer isso, cause 2 de dano ao Deus oponente."
+    ],
+    "f": "\"Os guerreiros de Éton não recuam. Eles transformam o chão sob os inimigos em cinzas.\""
+  },
+  "ares-v6-342": {
+    "n": "TÁTICO DA CHAMA DIVINA",
+    "s": "A Mente por Trás da Lâmina",
+    "h": [
+      "Posicionamento Estratégico — Quando o Tático da Chama Divina entra no Campo de Batalha, olhe as 3 cartas do topo do seu deck. Ponha uma na sua mão e as outras no fundo do deck, em qualquer ordem.",
+      "Ataque Calculado — Uma vez por turno, sempre que outro Berserker aliado declara um Golpe, você pode descartar uma carta. Se fizer isso, esse Berserker recebe +2 ATQ e Perfurar até o fim da rodada."
+    ],
+    "f": "\"Sob o comando de Ofir, até o menor soldado pode decidir o destino de uma guerra.\""
+  },
+  "ares-v6-343": {
+    "n": "ASSASSINO DA ASA DO DESASTRE",
+    "s": "A Lâmina Levada pela Tempestade",
+    "h": [
+      "Ímpeto",
+      "Último Suspiro da Tempestade — Quando o Assassino da Asa do Desastre é derrotado, você pode pagar {1}{S}. Se fizer isso, cause 1 de dano ao Devoto ou Deus inimigo alvo."
+    ],
+    "f": "\"A risada de Lior é o último som ouvido antes de a tempestade despedaçar suas vítimas.\""
+  },
+  "ares-v6-344": {
+    "n": "TECELÃO DE PESADELOS",
+    "s": "A Sombra Dentro da Sua Mente",
+    "h": [
+      "Sussurros de Terror — Quando o Tecelão de Pesadelos entra no Campo de Batalha, o oponente alvo perde {1}{L}.",
+      "Banquete de Medo — Sempre que um oponente perde Cosmo Latente, o Tecelão de Pesadelos recebe +1 ATQ até o fim da rodada. Esta habilidade só dispara uma vez por turno.",
+      "Tormento Ilusório — Sempre que o Tecelão de Pesadelos causa dano de Golpe a um Deus, cause 1 de dano ao Devoto inimigo alvo."
+    ],
+    "f": "\"A Lady Lotis nos ensinou que o campo de batalha mais terrível fica dentro da mente do inimigo.\""
+  },
+  "ares-v6-345": {
+    "n": "BERSERKER DO APOCALIPSE",
+    "s": "O Último Guerreiro de Pé",
+    "h": [
+      "Chegada Apocalíptica — Quando o Berserker do Apocalipse entra no Campo de Batalha, cause 1 de dano a cada outro Devoto.",
+      "Nascido da Destruição — Sempre que outro Devoto é derrotado, o Berserker do Apocalipse recebe +1 ATQ até o fim da rodada."
+    ],
+    "f": "\"Quando a batalha final terminar, só restarão os servos da guerra.\""
+  },
+  "ares-v6-346": {
+    "n": "A MARCHA DOS BERSERKERS",
+    "s": "O Exército do Deus da Guerra Avança",
+    "h": [
+      "Avanço Implacável — Os Berserkers aliados ganham +2 ATQ e Perfurar até o fim da rodada.",
+      "Marcha para o Esquecimento — No fim do seu turno, derrote cada Berserker aliado que declarou um Golpe neste turno."
+    ],
+    "f": "\"A terra tremeu sob seus passos, e os céus souberam que Ares havia retornado.\""
+  },
+  "ares-v6-347": {
+    "n": "ORDENS SUICIDAS",
+    "s": "A Diversão Cruel do Comandante",
+    "h": [
+      "Soldados Descartáveis — Derrote até dois Berserkers aliados alvo. Cause 2 de dano ao Devoto ou Deus inimigo alvo para cada Berserker derrotado dessa forma."
+    ],
+    "f": "\"Lior viu seus soldados marcharem para a morte certa e sorriu. A batalha finalmente estava ficando divertida.\""
+  },
+  "ares-v6-348": {
+    "n": "MANIFESTAÇÃO DO PESADELO",
+    "s": "O Medo que Toma Forma",
+    "h": [
+      "Pesadelo Vivo — O oponente alvo perde até {2}{L}. Cause 1 de dano ao Deus desse oponente para cada Cosmo Latente perdido dessa forma."
+    ],
+    "f": "\"Lotis abriu os portões de suas mentes e deixou seus pesadelos mais profundos virarem realidade.\""
+  },
+  "ares-v6-349": {
+    "n": "CHAMAS DIVINAS DA GUERRA",
+    "s": "A Sabedoria Concedida por Ares",
+    "h": [
+      "Visão Divina — Olhe as 4 cartas do topo do seu deck. Ponha uma na sua mão e as outras no fundo do deck, em qualquer ordem.",
+      "Coordenação das Chamas — Até dois Berserkers aliados alvo recebem +2 ATQ até o fim da rodada."
+    ],
+    "f": "\"As chamas divinas não apenas queimam. Elas revelam o caminho para a vitória.\""
+  },
+  "ares-v6-350": {
+    "n": "O FOGO CARMESIM",
+    "s": "A Chama que Consome Tudo",
+    "h": [
+      "Inferno de Prometeu — Cause 4 de dano ao Devoto inimigo alvo e 2 de dano ao Deus desse Devoto."
+    ],
+    "f": "\"Alcmenes elevou seu Cosmo, e o fogo divino de Prometeu engoliu tudo em seu caminho.\""
+  },
+  "ares-v6-351": {
+    "n": "AZUL, A MORTE AZUL",
+    "s": "A Praga do Deus da Guerra",
+    "h": [
+      "Praga Azul — Cause 1 de dano a cada Devoto inimigo.",
+      "Morte que se Espalha — Para cada Devoto inimigo derrotado por este Momento, cause 1 de dano ao Deus oponente."
+    ],
+    "f": "\"Antes de os exércitos chegarem, a morte já havia tomado a terra.\""
+  },
+  "ares-v6-352": {
+    "n": "A CHUVA DE SANGUE",
+    "s": "Quando os Céus Choraram Sangue",
+    "h": [
+      "Chuva de Destruição — Cause 4 de dano ao Deus inimigo alvo. Cause 1 de dano ao seu Deus."
+    ],
+    "f": "\"O céu se tingiu de carmesim, e o mundo aprendeu o verdadeiro significado da guerra.\""
+  },
+  "ares-v6-353": {
+    "n": "AS QUATRO LEGIÕES DA GUERRA",
+    "s": "Os Exércitos do Apocalipse",
+    "h": [
+      "Legiões Unidas — Os Berserkers aliados recebem +2 ATQ até o fim da rodada.",
+      "Ataque Quádruplo — Se você controla pelo menos um Berserker de cada uma das quatro Legiões — Fogo Vermelho, Chama, Desastre e Medo —, esses Berserkers ganham Perfurar até o fim da rodada e você pode Preparar até quatro Berserkers aliados."
+    ],
+    "f": "\"Quatro exércitos. Quatro comandantes. Um deus que não deseja nada além de guerra sem fim.\""
+  },
+  "ares-v6-354": {
+    "n": "A QUEDA DE IKKI",
+    "s": "A Chama Carmesim Reclama uma Lenda",
+    "h": [
+      "Derrota Lendária — Cause 5 de dano ao Devoto inimigo alvo.",
+      "Triunfo Carmesim — Se esse Devoto é derrotado por este Momento, cause 2 de dano ao Deus do controlador dele."
+    ],
+    "f": "\"Até a lendária Fênix caiu diante das chamas divinas de Éton.\""
+  },
+  "ares-v6-355": {
+    "n": "A FÚRIA DO DEUS DA GUERRA",
+    "s": "Não Haverá Paz",
+    "h": [
+      "Ira Divina — O Berserker aliado alvo recebe +5 ATQ e ganha Perfurar até o fim da rodada.",
+      "Preço de Sangue — No fim do seu turno, cause 3 de dano ao seu Deus."
+    ],
+    "f": "\"Ares não exige vitória. Ele exige destruição.\""
+  },
+  "ares-v6-356": {
+    "n": "A DEFESA DESESPERADA DE ATENA",
+    "s": "A Última Barreira do Santuário",
+    "h": [
+      "Santuário Despedaçado — Cause 3 de dano ao Devoto inimigo alvo com Guardião.",
+      "Guerra Contra o Divino — Se esse Devoto é derrotado por este Momento, cause 2 de dano ao Deus do controlador dele."
+    ],
+    "f": "\"Nem a barreira sagrada de Athena pôde silenciar os tambores da guerra.\""
+  },
+  "ares-v6-357": {
+    "n": "O CAJADO PERDIDO DE NICE",
+    "s": "O Poder Ausente da Vitória",
+    "h": [
+      "Fraqueza Divina — O Deus inimigo alvo perde 3 de ALMA.",
+      "Oportunidade para a Guerra — Se esse Deus tem 10 ou menos de ALMA depois que este efeito é resolvido, compre uma carta e depois descarte uma carta."
+    ],
+    "f": "\"Sem Nice, a deusa da vitória enfrentava uma guerra que não poderia vencer com facilidade.\""
+  },
+  "ares-v6-358": {
+    "n": "O DEUS DA GUERRA DESPERTA",
+    "s": "O Retorno do Deus Sedento de Sangue",
+    "h": [
+      "Despertar Divino — Os Berserkers aliados ganham +2 ATQ e Perfurar até o fim da rodada.",
+      "Sede de Sangue Liberada — Cause 2 de dano a cada Devoto inimigo com Guardião."
+    ],
+    "f": "\"Os céus tremeram quando o deus da guerra abriu os olhos, e a era da paz chegou ao fim.\""
+  },
+  "ares-v6-359": {
+    "n": "O APOCALIPSE DE ARES",
+    "s": "O Mundo Há de Queimar",
+    "h": [
+      "Destruição Apocalíptica — Cause ao Deus inimigo alvo dano igual ao número de cartas de Devoto no seu Tártaro, até 5."
+    ],
+    "f": "\"Ares não veio conquistar o mundo. Veio vê-lo queimar.\""
+  },
+  "ares-v6-360": {
+    "n": "A GUERRA SANTA SEM FIM",
+    "s": "A Guerra Nunca Termina de Verdade",
+    "h": [
+      "Derramamento de Sangue Eterno — Derrote todos os Devotos.",
+      "Último Ato de Guerra — Para cada Berserker derrotado dessa forma, cause 1 de dano ao Deus oponente.",
+      "Conflito Sem Fim — Compre três cartas e depois descarte duas cartas."
+    ],
+    "f": "\"Enquanto o ódio arder no coração de deuses e homens, a guerra de Ares jamais terá fim.\""
+  },
+  "ares-v6-503": {
+    "n": "O ALTAR DO MASSACRE",
+    "t": "O Sangue Alimenta o Deus da Guerra",
+    "h": [
+      "Oferenda de Sangue — Uma vez por rodada, você pode sacrificar um Devoto aliado. Se fizer isso, cause 1 de dano ao Devoto inimigo alvo.",
+      "Grande Sacrifício — Uma vez por jogo — {1}{C}, sacrifique um Devoto aliado: Compre 3 cartas."
+    ],
+    "f": "\"Só o sangue compra o favor da guerra.\""
+  }
+}
