@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-01 — §63 — Domains: linha geral + Ressonância com o God
+
+- **Antes:** Domain com linha simples (sem compra) e linha forte Once per game; 28 Domains (Athena 5, Poseidon 9, Hades 4, Ares 5, Artemis 5).
+- **Depois:** 30 Domains, 6 por God. Linha geral para qualquer God; linha Resonance — <God> forte, uma vez por turno, {1}{C} a {3}{C}, só com o God da mesma facção. Um Domain por facção compra 1 carta com drawback. Saem poseidon-v6-146, 147 e 148; entram athena-v6-520, hades-v6-521, hades-v6-522, ares-v6-523 e artemis-v6-524. Textos em `docs/domains-rebalance-proposta.md`.
+- **Motivo:** autor, 01/11/2026: Domain fora da facção do God deve ter drawback; a linha geral fica ok para todos, sem quebrar a color pie, e a Ressonância corrige isso. Fechado por grill e aprovado.
+- **Pendências:** engine e testes dos 30 Domains; decks que usavam 146/147/148 trocam para 149/144/502.
+
 ## 2026-11-01 — §24, §49, §63 — Gods sem retaliação; Divine Command
 
 - **Antes:** Strike contra God causava dano simultâneo: o God retaliava com o Attack dele, mesmo Unprepared. Gods tinham Soul e Attack e agiam só por Divine Power, Awaken e Ultimate.
