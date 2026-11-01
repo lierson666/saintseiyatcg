@@ -27,10 +27,6 @@ export function createAI(h) {
   const cost = uid => (h.known(uid) ? h.info(uid).cost?.amount ?? 0 : 0);
   const devotees = key => h.S().players[key].battlefield.filter(u => h.info(u).kind === 'Devotee');
   const enemyOf = key => h.S().order.find(k => k !== key);
-  // Athena com a Exclamation por usar guarda Saints para o trio: não vira Base e, com 2+ em campo, não entra em Strike que o mata.
-  const savingSaints = key => { const d = h.S().divine?.[key]; return level() !== 'easy' && d?.god === 'god-athena' && !d.ultimateUsed; };
-  const risky = (key, uid, t) => t.kind !== 'god' && savingSaints(key) && h.isSaint(uid) && devotees(key).filter(h.isSaint).length >= 2
-    && h.atk(t.uid) >= h.hp(uid) && !h.mustStrike?.(key).includes(uid);
 
   // Escolhas de uma carta (STEPS): primeiro candidato; opcional com candidato é usado; confirmação = sim.
   function choicesFor(key, steps) {
@@ -107,7 +103,7 @@ export function createAI(h) {
     if (dom?.res) add('domain-res', {run: () => h.activate(key, `domain:${key}:res`)});
     if (dom?.general && (dom.general.cost || p.deck.length > 25)) add('domain', {run: () => h.activate(key, `domain:${key}`)});
     for (const uid of devotees(key).filter(u => s.units[u]?.prepared))
-      for (const t of h.strikeTargets(uid).filter(t => !risky(key, uid, t))) add(`strike:${uid}>${t.uid || 'god'}`, {src: uid, aim: t.kind === 'god' ? `god:${t.player}` : t.uid, run: () => h.declareStrike(uid, t)});
+      for (const t of h.strikeTargets(uid)) add(`strike:${uid}>${t.uid || 'god'}`, {src: uid, aim: t.kind === 'god' ? `god:${t.player}` : t.uid, run: () => h.declareStrike(uid, t)});
     return list;
   }
   // hard: a Base vem antes (a IA simples já escolhe); depois, a jogada que mais melhora a mesa, ou End Turn se nenhuma melhorar.
@@ -156,7 +152,7 @@ export function createAI(h) {
       // easy entrega Spells e Equipment primeiro. Os outros guardam o que dá para jogar: Devotee com pouco campo, Armor com portador.
       const keep = u => {
         const c = h.info(u);
-        if (c.kind === 'Devotee') return devotees(key).length < 3 || (savingSaints(key) && h.isSaint(u)) ? 2 : 0;
+        if (c.kind === 'Devotee') return devotees(key).length < 3 ? 2 : 0;
         if (c.armor) return devotees(key).some(d => h.resonant(key, c, d)) ? 2 : 0;
         return 1;
       };
@@ -216,7 +212,7 @@ export function createAI(h) {
     // 6. Strikes: no God se puder; senão no Devotee alvo de menor HP restante.
     for (const uid of devotees(key)) {
       if (!s.units[uid]?.prepared || !fresh(`strike:${uid}`)) continue;
-      const targets = h.strikeTargets(uid).filter(t => !risky(key, uid, t));
+      const targets = h.strikeTargets(uid);
       if (!targets.length) continue;
       const god = targets.find(t => t.kind === 'god');
       const target = god || (level() === 'easy' ? {kind: 'devotee', uid: weakest(targets.map(t => t.uid))} : bestTrade(key, uid, targets));

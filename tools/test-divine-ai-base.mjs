@@ -47,17 +47,6 @@ test('Judgment: a IA espera o último Round do prazo e easy não paga', () => {
   assert.equal(asks({round: 4, mine: ['g1', 'g2']}), false);
 });
 
-test('Athena com Exclamation por usar não põe Saint como Base nem entra em Strike que mata o Saint', () => {
-  const type = {saint: 'Devotee — Silver Saint', spell: 'Spell'};
-  const info = u => ({saint: {kind: 'Devotee', type: type.saint, cost: {amount: 3}}, other: {kind: 'Devotee', type: 'Devotee — Warrior', cost: {amount: 3}}, s1: {kind: 'Devotee', type: type.saint, cost: {amount: 3}}, s2: {kind: 'Devotee', type: type.saint, cost: {amount: 3}}, s3: {kind: 'Devotee', type: 'Devotee — Warrior', cost: {amount: 1}}, big: {kind: 'Devotee', type: 'Devotee — Warrior', cost: {amount: 5}}}[u]);
-  const s = g => ({turn: 2, round: 1, active: 'A', order: ['A', 'B'], units: {s1: {prepared: true}, s2: {prepared: false}, s3: {prepared: false}}, divine: {A: {god: g, ultimateUsed: false}, B: {}},
-    players: {A: {hand: ['saint', 'other'], bases: [], battlefield: ['s1', 's2', 's3'], tartarus: [], soul: 20, latent: 0}, B: {hand: [], battlefield: ['big'], soul: 20, latent: 0}}});
-  const make = (st, canBase) => createAI({level: () => 'normal', S: () => st, info, known: () => true, canBase, placeBase: () => {}, playableReason: () => 'x', STEPS: {}, isSaint: u => /Saint/.test(info(u).type),
-    atk: u => (u === 'big' ? 5 : 2), hp: () => 3, ultimateBlock: () => 'x', strikeTargets: () => [{kind: 'devotee', uid: 'big'}], declareStrike: () => {}});
-  assert.ok(make(s('god-athena'), () => true).next('A').id.endsWith('base:other'));
-  assert.ok(make(s('god-hades'), () => true).next('A').id.includes('base:'));
-  assert.equal(make(s('god-athena'), () => false).next('A'), null); // 5 de ATK mata o Saint e ele não derrota: fica de fora
-});
 
 // Domains (rebalanceamento, 01/11/2026): a IA usa a Ressonância antes dos Strikes; a ativada de compra só com Soul de sobra.
 test('IA usa a Ressonância do Domain e, com Soul baixo, não usa a ativada de compra', () => {

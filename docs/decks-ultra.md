@@ -13,34 +13,53 @@ Status: montados e medidos em 01/11/2026. Arquétipos aprovados pelo autor antes
 1. Ataca o God sempre que for legal; subestima controle e combo e não reproduz o jogo humano.
 2. Nunca ativa habilidade {T} de Devotee ou Equipment. Sem efeito na medição: Moonlit Initiate, Dryad, Golden Triangle, Stardust Revolution, Freezing Coffin do Camus.
 3. No `hard`, Seal e Base extra não contam na avaliação. Essas jogadas só saem se trouxerem outro ganho.
-4. No `hard`, Athena Exclamation raramente melhora a avaliação, porque sacrifica 3 Saints.
+4. Athena Exclamation e o pagamento do Divine Judgment seguem regra fixa, fora da avaliação do `hard`. Essa regra é simples e não planeja o trio com antecedência.
 
 ## Resultado
 
 | Deck | God / Domain | `hard` | `normal` | vs 8 decks antigos (`hard`) | Vence por (`hard`) |
 | --- | --- | --- | --- | --- | --- |
-| **Aggro**: Crimson Sligh | Ares / THE ARENA OF BLOOD | 47% | 64% | 64% | Soul 169 |
-| **Tempo**: Marina Tide | Poseidon / THE NORTH ATLANTIC PILLAR | 59% | 44% | 69% | Soul 109, deck vazio 102 |
-| **Midrange**: Judgment of Elysion | Hades / ELYSION | 53% | 54% | 84% | Soul 190 |
-| **Control**: Silent Sanctuary | Poseidon / THE UNDERSEA SANCTUARY | 62% | 46% | 63% | deck vazio 182, Soul 40 |
-| **Combo**: Twelve Temples Exclamation | Athena / THE SANCTUARY GATES | 21% | 39% | 51% | Soul 76, deck vazio 1 |
-| **Reanimator**: Return from the Deep | Hades / THE NORTH ATLANTIC PILLAR | 56% | 47% | 80% | Soul 201 |
-| **Mill**: The Abyssal Clock | Poseidon / THE ABYSSAL TRENCH | 70% | 34% | 69% | deck vazio 249, Soul 4 |
-| **Stax/Lock**: The First Prison | Hades / THE FIRST PRISON | 44% | 44% | 70% | Soul 157 |
-| **Voltron**: The Silver Arrow | Artemis / THE LUNAR HUNTING GROUNDS | 32% | 58% | 61% | Soul 116 |
-| **Ramp**: Primordial Moon | Artemis / THE SACRED FOREST | 57% | 71% | 71% | Soul 204 |
+| **Aggro**: Crimson Sligh | Ares / THE ARENA OF BLOOD | 52% | 66% | 63% | Soul 186 |
+| **Tempo**: Marina Tide | Poseidon / THE NORTH ATLANTIC PILLAR | 55% | 45% | 66% | Soul 120, deck vazio 78 |
+| **Midrange**: Judgment of Elysion | Hades / ELYSION | 54% | 57% | 85% | Soul 194 |
+| **Control**: Silent Sanctuary | Poseidon / THE UNDERSEA SANCTUARY | 60% | 45% | 61% | deck vazio 157, Soul 60 |
+| **Combo**: Twelve Temples Exclamation | Athena / THE NIGHT VALE | 40% | 42% | 51% | Soul 143 |
+| **Reanimator**: Return from the Deep | Hades / THE NORTH ATLANTIC PILLAR | 53% | 50% | 79% | Soul 189 |
+| **Mill**: The Abyssal Clock | Poseidon / THE ABYSSAL TRENCH | 70% | 36% | 69% | deck vazio 245, Soul 7 |
+| **Stax/Lock**: The First Prison | Hades / THE FIRST PRISON | 49% | 49% | 71% | Soul 177 |
+| **Voltron**: The Silver Arrow | Artemis / THE LUNAR HUNTING GROUNDS | 25% | 51% | 45% | Soul 89 |
+| **Ramp**: Primordial Moon | Artemis / THE SACRED FOREST | 43% | 58% | 63% | Soul 155 |
 
-Primeiro jogador vence 69% no `hard` e 76% no `normal`. Mediana de 8 e 7 rounds. Rodada mista com os 8 decks antigos: 10 partidas por confronto, primeiro jogador 71%.
+Primeiro jogador vence 74% no `hard` e 79% no `normal`. Mediana de 8 e 7 rounds. Rodada mista com os 8 decks antigos: 10 partidas por confronto, primeiro jogador 75%.
 
-Os 8 decks antigos vencem de 15% a 56% contra os ultra; só Marina Tempest fica acima de 50%.
+Os 8 decks antigos vencem de 23% a 52% contra os ultra; só Marina Tempest fica acima de 50%.
+
+Medição feita depois dos nerfs de Artemis e da mudança de custo do Moment (commit 2978ff2, de outra sessão), que derrubaram Voltron e Ramp.
 
 ## O que a medição mostra
 
-- **Great Flood parece pesar demais.** Nas partidas em que o Ultimate resolve, Poseidon vence de 92% a 99% (Tempo, Control e Mill, nos dois níveis). É correlação: ele custa 8 e pode sair em mesa já ganha. A IA dispara com 2+ Devotees inimigos, e o texto mila 3 cartas por carta descartada, num deck de 50. Control e Tempo vencem muito por deck vazio sem serem deck de mill; não isolei quanto disso vem do Flood. Vale testar partidas sem o Ultimate.
-- **Vantagem de quem começa está alta** (69–76%, meta de `docs/meta-premodern.md`: abaixo de 55%). A medição anterior, com outros decks, deu 74,6%. A simulação alterna quem começa, então a moeda não muda este número.
-- **Combo é o mais fraco**: 21% no `hard`, 39% no `normal`. Quando Exclamation resolve, vence 95–100%, mas resolve só em 15% e 29% das partidas: 3 Gold de custo 5–6 em mediana de 7–8 rounds é lento. Com piloto humano deve subir, mas o número medido é fraco.
-- **Voltron oscila**: 58% no `normal` e 32% no `hard`. Não investiguei a causa.
+- **Great Flood parece pesar demais.** Nas partidas em que o Ultimate resolve, Poseidon vence de 90% a 100% (Tempo, Control e Mill, nos dois níveis). É correlação: ele custa 8 e pode sair em mesa já ganha. A IA dispara com 2+ Devotees inimigos, e o texto mila 3 cartas por carta descartada, num deck de 50. Control e Tempo vencem muito por deck vazio sem serem deck de mill; não isolei quanto disso vem do Flood. Vale testar partidas sem o Ultimate.
+- **Vantagem de quem começa está alta** (74–79%, meta de `docs/meta-premodern.md`: abaixo de 55%). A medição anterior, com outros decks, deu 74,6%. A simulação alterna quem começa, então a moeda não muda este número.
+- **Combo subiu, mas segue abaixo da meta de 45%** (seção seguinte). Na maioria das vitórias a Exclamation nem dispara; o deck vence como midrange.
+- **Voltron oscila**: 51% no `normal` e 25% no `hard`, o pior número do relatório. Não investiguei a causa.
 - **Metas do meta-premodern não foram atingidas**: há confrontos fora de 40–60% e winrates fora de 45–55%. Estas listas buscam força, não equilíbrio.
+
+## Combo: o que foi testado
+
+Sabatina com o autor em 01/11/2026. Meta: 45% nos dois níveis. Resultado: 40% no `hard` e 42% no `normal`, partindo de 21% e 39%. A Exclamation dispara em 6% e 20% das partidas.
+
+| Teste | Resultado (`hard` / `normal`) | Decisão |
+| --- | --- | --- |
+| IA dispara se for letal, se o adversário tiver menos de 3 Devotees, ou no Round 6+; e paga o Judgment no último Round do prazo | 21% / 35%. Vitórias por Judgment no `normal`: de 24 para 1 | Fica: número honesto |
+| Splash de ramp Artemis e trio Gold + Silver | Cerca de 34% / 38% | Fica, com o ajuste abaixo |
+| Regra: Latent também paga a Exclamation | Sem ganho: 32% / 39% com ela, 34% / 43% sem | **Descartada. A regra não muda** |
+| IA dispara a partir do Round 4 | Sem diferença mensurável | Descartada |
+| IA guarda Saints: não vira Base e não entra em Strike que o mata | 34% / 39%: sem efeito | Revertida |
+| Mais cartas baratas com Cosmoble que não são Saint | 41% / 39% contra 32% / 39%, na mesma rodada | Fica: é a lista atual |
+
+**Causa medida:** em 7 rounds, a lista anterior punha cerca de 3 Saints como Base, porque quase todo o Cosmoble dela era Silver. Com 2 Golds e Silvers de custo 3–4, o trio raramente fica junto e Prepared.
+
+**Não testado:** diff de cartas, como reduzir o custo de um Gold. Afeta todos os decks de Athena e depende de aprovação.
 
 ## Mudanças em relação à tabela aprovada
 
@@ -48,8 +67,8 @@ Os 8 decks antigos vencem de 15% a 56% contra os ultra; só Marina Tempest fica 
 | --- | --- | --- | --- |
 | Stax/Lock | Athena + Seal, Domain Arctic Ocean Pillar | **Hades, First Prison** (discard: The Rack/Pox) | Arctic Ocean Pillar não tem efeito na engine. Contra ultra + antigos (`hard` / `normal`): Athena 24% / 39%; Poseidon 46% / 39%; Hades 61% / 52% |
 | Reanimator | Gates of the Underworld | **North Atlantic Pillar** com 10 cartas Poseidon | Contra ultra + antigos: splash 67% / 56%; mono 61% / 51%, dentro da margem |
-| Combo | Stairway | **Sanctuary Gates** | Contra ultra + antigos: 47% / 53%; Stairway 40% / 55%, dentro da margem |
-| Ramp | Devotees de mana | **Sem Devotees de mana**: Initiate, Dryad, Shaman e Amulet saíram | A IA não os ativa. No `hard`, 29% no 1º round-robin e 57% no final (as outras listas também mudaram). Com piloto humano, testar a versão com eles |
+| Combo | Stairway, mono Athena, 3 Golds | **The Night Vale** com 12 cartas Artemis, trio Gold + Silver | Ver "Combo: o que foi testado" |
+| Ramp | Devotees de mana | **Sem Devotees de mana**: Initiate, Dryad, Shaman e Amulet saíram | A IA não os ativa. No `hard`, 29% no 1º round-robin e 57% depois da troca; 43% após os nerfs de Artemis (as outras listas também mudaram). Com piloto humano, testar a versão com eles |
 
 Hades ficou com 3 decks, Poseidon com 3, Artemis com 2, Ares e Athena com 1.
 
@@ -59,31 +78,31 @@ Hades ficou com 3 decks, Poseidon com 3, Artemis com 2, Ares e Athena com 1.
 
 | vence → | Aggro | Tempo | Midrange | Control | Combo | Reanimator | Mill | Stax | Voltron | Ramp |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| **Aggro** | · | 68% | 33% | 50% | 50% | 20% | 45% | 40% | 58% | 60% |
-| **Tempo** | 33% | · | 50% | 50% | 90% | 50% | 43% | 55% | 88% | 70% |
-| **Midrange** | 68% | 50% | · | 43% | 63% | 43% | 38% | 68% | 78% | 28% |
-| **Control** | 50% | 50% | 58% | · | 95% | 70% | 43% | 68% | 73% | 50% |
-| **Combo** | 50% | 10% | 38% | 5% | · | 15% | 10% | 23% | 40% | 3% |
-| **Reanimator** | 80% | 50% | 58% | 30% | 85% | · | 18% | 70% | 63% | 50% |
-| **Mill** | 55% | 58% | 63% | 58% | 90% | 83% | · | 80% | 80% | 68% |
-| **Stax** | 60% | 45% | 33% | 33% | 78% | 30% | 20% | · | 60% | 35% |
-| **Voltron** | 43% | 13% | 23% | 28% | 60% | 38% | 20% | 40% | · | 28% |
-| **Ramp** | 40% | 30% | 73% | 50% | 98% | 50% | 33% | 65% | 73% | · |
+| **Aggro** | · | 65% | 38% | 48% | 55% | 28% | 45% | 38% | 83% | 68% |
+| **Tempo** | 35% | · | 43% | 65% | 58% | 53% | 40% | 50% | 90% | 63% |
+| **Midrange** | 63% | 58% | · | 40% | 55% | 50% | 33% | 60% | 80% | 48% |
+| **Control** | 53% | 35% | 60% | · | 70% | 73% | 50% | 55% | 80% | 68% |
+| **Combo** | 45% | 43% | 45% | 30% | · | 25% | 23% | 43% | 63% | 43% |
+| **Reanimator** | 73% | 48% | 50% | 28% | 75% | · | 23% | 50% | 68% | 60% |
+| **Mill** | 55% | 60% | 68% | 50% | 78% | 78% | · | 83% | 85% | 75% |
+| **Stax** | 63% | 50% | 40% | 45% | 58% | 50% | 18% | · | 65% | 55% |
+| **Voltron** | 18% | 10% | 20% | 20% | 38% | 33% | 15% | 35% | · | 35% |
+| **Ramp** | 33% | 38% | 53% | 33% | 58% | 40% | 25% | 45% | 65% | · |
 
 `normal`:
 
 | vence → | Aggro | Tempo | Midrange | Control | Combo | Reanimator | Mill | Stax | Voltron | Ramp |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| **Aggro** | · | 55% | 40% | 80% | 65% | 75% | 93% | 60% | 55% | 53% |
-| **Tempo** | 45% | · | 30% | 48% | 65% | 40% | 70% | 40% | 35% | 20% |
-| **Midrange** | 60% | 70% | · | 53% | 53% | 50% | 60% | 53% | 58% | 28% |
-| **Control** | 20% | 53% | 48% | · | 60% | 65% | 35% | 60% | 33% | 38% |
-| **Combo** | 35% | 35% | 48% | 40% | · | 43% | 68% | 33% | 35% | 18% |
-| **Reanimator** | 25% | 60% | 50% | 35% | 58% | · | 63% | 63% | 45% | 28% |
-| **Mill** | 8% | 30% | 40% | 65% | 33% | 38% | · | 53% | 23% | 15% |
-| **Stax** | 40% | 60% | 48% | 40% | 68% | 38% | 48% | · | 43% | 18% |
-| **Voltron** | 45% | 65% | 43% | 68% | 65% | 55% | 78% | 58% | · | 45% |
-| **Ramp** | 48% | 80% | 73% | 63% | 83% | 73% | 85% | 83% | 55% | · |
+| **Aggro** | · | 53% | 45% | 80% | 60% | 75% | 90% | 58% | 68% | 68% |
+| **Tempo** | 48% | · | 33% | 48% | 55% | 38% | 65% | 43% | 48% | 33% |
+| **Midrange** | 55% | 68% | · | 53% | 65% | 58% | 55% | 58% | 60% | 45% |
+| **Control** | 20% | 53% | 48% | · | 58% | 65% | 35% | 53% | 38% | 40% |
+| **Combo** | 40% | 45% | 35% | 43% | · | 33% | 58% | 40% | 43% | 43% |
+| **Reanimator** | 25% | 63% | 43% | 35% | 68% | · | 65% | 53% | 45% | 53% |
+| **Mill** | 10% | 35% | 45% | 65% | 43% | 35% | · | 48% | 20% | 23% |
+| **Stax** | 43% | 58% | 43% | 48% | 60% | 48% | 53% | · | 53% | 43% |
+| **Voltron** | 33% | 53% | 40% | 63% | 58% | 55% | 80% | 48% | · | 35% |
+| **Ramp** | 33% | 68% | 55% | 60% | 58% | 48% | 78% | 58% | 65% | · |
 
 ## Planos e listas
 
@@ -127,13 +146,12 @@ Guarda Latent para counters, compra no turno dele e fecha com Kanon e Great Floo
 
 ### Combo: Twelve Temples Exclamation
 
-Athena / THE SANCTUARY GATES. Referência: Trix.
+Athena / THE NIGHT VALE. Referência: Trix.
 
-Protege a mesa até ter 3 Gold Saints Prepared; Athena Exclamation tira ATK + 3 por Gold e deixa Divine Judgment.
+Cartas baratas com Cosmoble viram Base para os Saints ficarem na mão; Forest Invades e Nature's Awakening aceleram, First Sacred Hunt e Golden Arrow limpam a mesa. Com 3 Saints Prepared, Athena Exclamation tira ATK + 3 por Gold e deixa Divine Judgment. Domain Artemis só pelo splash, sem Ressonância.
 
-- **Devotee (31):** 3 SANCTUARY GUARD, 2 TATSUMI, SAORI’S GUARDIAN, 3 STAR HILL ACOLYTE, 3 DRAGON SHIRYU, 2 ANDROMEDA SHUN, 2 EAGLE MARIN, 2 LIZARD MISTY, 2 PERSEUS ALGOL, 3 ARIES MU, 3 LEO AIOLIA, 3 AQUARIUS CAMUS, 3 GEMINI SAGA
-- **Equipment (2):** 2 CRACKED BRONZE CLOTH
-- **Spell (17):** 3 ATHENA'S AEGIS, 3 OATH OF THE SAINTS, 3 THE GOLDEN ARROW, 3 PROTECT SAORI, 3 SANCTUARY'S JUDGMENT, 2 THE CALL OF ATHENA
+- **Devotee (26):** 3 SANCTUARY GUARD, 2 TATSUMI, SAORI’S GUARDIAN, 3 STAR HILL ACOLYTE, 3 CENTAUR BABEL, 3 OPHIUCHUS SHAINA, 2 CERBERUS DANTE, 2 PERSEUS ALGOL, 2 WHALE MOSES, 2 LEO AIOLIA, 2 AQUARIUS CAMUS, 1 ARIES MU, 1 GEMINI SAGA
+- **Spell (24):** 3 ATHENA'S AEGIS, 3 THE GOLDEN ARROW, 3 WILD VIGOR, 3 SANCTUARY'S JUDGMENT, 3 PROTECT SAORI, 3 NATURE'S AWAKENING, 3 THE FIRST SACRED HUNT, 3 THE FOREST INVADES SANCTUARY
 
 ### Reanimator: Return from the Deep
 

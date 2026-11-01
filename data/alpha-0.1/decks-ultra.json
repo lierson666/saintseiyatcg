@@ -380,7 +380,7 @@
    "referencia": "Trix",
    "god": "god-athena",
    "domain_id": "artemis-v6-524",
-   "plano": "Ramp de Artemis (Nature's Awakening, Roots, Forest Invades) paga cedo Silvers e Golds; com 3 Saints Prepared, Athena Exclamation tira ATK + 3 por Gold e deixa Divine Judgment. Domain Artemis só pelo splash, sem Ressonância.",
+   "plano": "Cartas baratas com Cosmoble viram Base para os Saints ficarem na mão; Forest Invades e Nature's Awakening aceleram, First Sacred Hunt e Golden Arrow limpam a mesa. Com 3 Saints Prepared, Athena Exclamation tira ATK + 3 por Gold e deixa Divine Judgment. Domain Artemis só pelo splash, sem Ressonância.",
    "main_deck": [
     {
      "card_id": "athena-v6-015",
@@ -407,23 +407,27 @@
      "quantity": 3
     },
     {
-     "card_id": "athena-v6-021",
+     "card_id": "athena-v6-075",
      "quantity": 2
     },
     {
-     "card_id": "athena-v6-075",
-     "quantity": 3
-    },
-    {
      "card_id": "athena-v6-024",
-     "quantity": 3
+     "quantity": 2
     },
     {
      "card_id": "athena-v6-072",
-     "quantity": 3
+     "quantity": 2
     },
     {
      "card_id": "athena-v6-040",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-034",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-043",
      "quantity": 3
     },
     {
@@ -439,11 +443,11 @@
      "quantity": 3
     },
     {
-     "card_id": "artemis-v6-417",
+     "card_id": "athena-v6-056",
      "quantity": 3
     },
     {
-     "card_id": "artemis-v6-423",
+     "card_id": "artemis-v6-417",
      "quantity": 3
     },
     {
@@ -451,16 +455,12 @@
      "quantity": 3
     },
     {
-     "card_id": "artemis-v6-420",
-     "quantity": 2
-    },
-    {
-     "card_id": "artemis-v6-437",
-     "quantity": 2
-    },
-    {
      "card_id": "artemis-v6-443",
-     "quantity": 2
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-518",
+     "quantity": 3
     }
    ]
   },
