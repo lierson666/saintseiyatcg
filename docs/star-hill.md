@@ -25,7 +25,7 @@ O menu **Visualizar** oferece os módulos por `⌘1` a `⌘8`. **Editar** encami
 
 - **Música e FX:** escolher menu, abertura de cada duelo, playlist posterior, volumes iniciais e sons das ações; ouvir os arquivos e importar WAV, OGG, MP3 ou ZIP.
 - **Cartas · Card Forge:** pesquisar o catálogo real e abrir a carta no editor. O fluxo de revisão e aprovação do diff de `cards.json` permanece no Card Forge.
-- **Decks iniciais:** editar os seis decks, seus nomes, God, Domain e quantidades. Validação de 60 cartas, até quatro por identidade e facções permitidas pelo God/Domain; líderes ficam fora do deck principal.
+- **Decks iniciais:** editar os seis decks, seus nomes, God, Domain e quantidades. Validação de 50 cartas, até três por identidade e facções permitidas pelo God/Domain; líderes ficam fora do deck principal.
 - **Editor de HUD:** 44 áreas da arena, incluindo token, Soul, ENG, Latent, Bases, Gods, Domains, zonas, mão, campo, ação principal, guia, pilha, histórico e fundo.
 - **Editor de telas:** abertura, menu, preparação, decks, coleção, opções, mulligan, carta ampliada, pausa, resultado, ajuda, privacidade, mão, zonas e emotes.
 - **Interações e animações:** eventos de interface, declaração de ações, início de resolução, efeitos e gatilhos. Configuração geral, por carta de origem ou por par origem → alvo.
@@ -50,7 +50,7 @@ A composição segue a referência do [editor do MTG Arena](https://magic.wizard
 - Clique na carta da coleção para adicionar uma cópia; clique no nome da carta no deck para remover. Botões de quantidade e arraste entre as áreas oferecem as mesmas operações.
 - **Ampliar** ou botão direito abre a carta com texto completo. Todas as cartas usam a representação interativa compartilhada com a arena: ilustração no fundo e informações em camadas próprias. Cartas sem ilustração têm fundo provisório; nenhuma arte é inventada ou reexportada.
 - Busque por nome, ID, texto, subtipo ou keyword; filtre facção, tipo, custo e Cosmoble. As facções permitidas pelo God/Domain aparecem por padrão. Mostrar as demais permite consultar, com a inclusão bloqueada.
-- God e Domain ficam na liderança. A curva mostra custos, média, tipos e Cosmoble. O painel sinaliza composição incompleta e facções inválidas. O limite de quatro cópias é por identidade, inclusive entre variantes; gravar exige 60 cartas válidas.
+- God e Domain ficam na liderança. A curva mostra custos, média, tipos e Cosmoble. O painel sinaliza composição incompleta e facções inválidas. O limite de três cópias é por identidade, inclusive entre variantes; gravar exige 60 cartas válidas.
 - Importe e exporte listas de texto com `God: ID`, `Domain: ID` e `quantidade ID` por linha. A importação valida tudo antes de substituir o rascunho. Os seis decks iniciais continuam sendo os baralhos configuráveis usados pelo jogo.
 - No mobile, os botões **Coleção** e **Deck** alternam as áreas, preservando os filtros e o rascunho.
 

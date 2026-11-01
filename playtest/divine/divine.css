@@ -63,7 +63,6 @@ kbd { font: 11px/1 ui-monospace, monospace; opacity: .7; border: 1px solid curre
 .piles { display: flex; gap: 8px; margin-left: auto; }
 .pile { display: grid; place-items: center; min-width: 52px; padding: 4px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--panel); font-size: 18px; color: var(--gold-hi); line-height: 1; }
 .pile small { font-size: 10px; color: var(--muted); margin-top: 2px; }
-.pile--fatigue { color: var(--red); }
 
 /* Campo */
 .field { display: flex; justify-content: center; align-items: center; gap: 14px; min-height: calc(var(--card-h) + 26px); padding: 6px; border-radius: 14px; transition: background .3s; }

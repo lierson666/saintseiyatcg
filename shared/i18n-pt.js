@@ -145,6 +145,7 @@ self.ssI18nPT = {
     'Not playable now.': 'Não dá para jogar agora.', "Wait for your turn's main phase.": 'Espere a fase principal do seu turno.',
     'Unprepared: it readies at the start of your turn.': 'Despreparado: fica pronto no início do seu turno.', 'Re-equip': 'Reequipar',
     'Re-equip to which Devotee?': 'Reequipar em qual Devoto?', 'No action available for this card.': 'Nenhuma ação disponível para esta carta.',
+    'once per match': 'uma vez por partida', 'Divine Command: your turn, with no response pending.': 'Comando Divino: no seu turno, sem resposta pendente.', 'Divine Command already used this turn.': 'Comando Divino já usado neste turno.', 'Divine Command costs 1 Cosmo (prepared Base or Latent).': 'Comando Divino custa 1 Cosmo (Base preparada ou Latente).', "Only the God's controller uses it.": 'Só o controlador do Deus pode usar.',
     'Concede this duel?': 'Desistir deste duelo?', 'Ready · click to use': 'Pronto · clique para usar', 'Used': 'Usado', 'Active': 'Ativo', 'Always on': 'Sempre ativo',
     'Ready': 'Pronto', 'Printed': 'Impresso', 'Other effects': 'Outros efeitos', 'Total': 'Total', 'Use': 'Usar',
     'Release to cast as Devotee, Armor or effect': 'Solte para conjurar como Devoto, Armadura ou efeito', 'Release to set as Cosmo Base': 'Solte para colocar como Base de Cosmo',
@@ -294,6 +295,8 @@ self.ssI18nPT = {
     ['{0}, Soul {1} of {2}, Awaken', '{0}, Alma {1} de {2}, Despertar'], ['{0}, Soul {1} of {2}', '{0}, Alma {1} de {2}'], ['{0}, ATK {1}, HP {2} of {3}', '{0}, ATQ {1}, PV {2} de {3}'],
 
     // Registro da partida (app.js logEvent/say)
+    ['Awakens at Soul ≤ {0}', 'Desperta com Alma ≤ {0}'], ['at Soul ≤ {0}', 'com Alma ≤ {0}'], ['{0}: choose a Devotee you control', '{0}: escolha um Devoto que você controla'], ['{0}: choose an enemy Devotee', '{0}: escolha um Devoto inimigo'],
+    ['Equip {0} to which Devotee?', 'Equipar {0} em qual Devoto?'],
     ['Player {w0} begins a turn.', 'Jogador {0} começa um turno.'], ['{w0} mulligans {w1}.', '{0} faz mulligan de {1}.'], ['Seed {w0}. Player {w1} goes first.', 'Semente {0}. Jogador {1} começa.'],
     ['{0}: {w1} damage, {w2} prevented, {w3} to Armor.', '{0}: {1} de dano, {2} prevenido, {3} na Armadura.'], ['{0}: {w1} damage, {w2} prevented.', '{0}: {1} de dano, {2} prevenido.'],
     ['{0}: {w1} damage, {w2} to Armor.', '{0}: {1} de dano, {2} na Armadura.'], ['{0}: {w1} damage.', '{0}: {1} de dano.'],

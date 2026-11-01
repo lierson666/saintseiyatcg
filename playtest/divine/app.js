@@ -4,7 +4,7 @@
 import {loadCanon} from '../../shared/canon-cards.js';
 import {canonIndex} from '../../shared/deck-v3.js';
 import {addPreviewCards} from '../../shared/preview-cards.js';
-import {abilityText} from '../../shared/card-i18n.js';
+import {abilityText, displayCard} from '../../shared/card-i18n.js';
 import {createMatch, mulligan} from '../engine-v3/match.js';
 import {startTurn, endTurn, pass, placeBase, spellCategory, runCheckpoint, ownBatch, loseGame} from '../engine-v3/core.js';
 import {inlineMarkup} from '../../shared/card-text.js?v=20261031-kw1';
@@ -20,7 +20,7 @@ import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudg
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout, clockBonus} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
-import {createDirector} from './director.js?v=19';
+import {createDirector} from './director.js?v=20';
 import {createAI} from './ai.js?v=14';
 import {findDeck} from '../deck-store.js';
 import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-face3';
@@ -349,7 +349,7 @@ function godActions(key) {
   const cmd = COMMANDS[d.god], cmdWhy = mine ? commandBlock(s, ctx, key) : 'owner';
   return {
     command: !cmd ? null : {ok: mine && !cmdWhy, why: {sorcery: 'Divine Command: your turn, with no response pending.', used: 'Divine Command already used this turn.', cost: 'Divine Command costs 1 Cosmo (prepared Base or Latent).', target: 'No legal target.', owner: "Only the God's controller uses it."}[cmdWhy] || 'Not available now.',
-      run: () => begin('command', key, null, [{key: 'uid', pick: 'command', label: `${cmd.ability}: choose a ${cmd.side === 'friendly' ? 'Devotee you control' : 'enemy Devotee'}`}], choice => ({type: 'command', key, choice}))},
+      run: () => begin('command', key, null, [{key: 'uid', pick: 'command', label: `${godPowers(cards.get(s.gods[key])).find(pw => pw.kind === 'command')?.label || cmd.ability}: choose ${cmd.side === 'friendly' ? 'a Devotee you control' : 'an enemy Devotee'}`}], choice => ({type: 'command', key, choice}))},
     bloodlust: d.god !== 'god-ares' ? null : {ok: mine && !blood, why: {sorcery: 'Bloodlust: your turn, with no response pending.', used: 'Bloodlust already used this round.', cost: `Bloodlust costs ${BLOODLUST_COST} Cosmo (prepared Base or Latent).`, target: 'You control no Devotee.'}[blood] || 'Not available now.',
       run: () => begin('bloodlust', key, null, [{key: 'uid', pick: 'devotee', label: 'Bloodlust: choose a Devotee you control (Prepare it, +1 ATK this round)'}], choice => ({type: 'bloodlust', key, choice}))},
     ultimate: {ok: mine && !block, why: mine ? why : "Only the God's controller uses it.", run},
@@ -583,7 +583,6 @@ function sanctum(key, side) {
     ${row('rail__row--hand', '<i class="rail__hand"></i>', 'Hand', p.hand.length, `Hand|${plural(p.hand.length, 'card')}.`)}
     ${row('zpile zpile--tartarus', '<img class="zicon" src="./assets/tartarus.png" alt="">', 'Tartarus', p.tartarus.length, `Tartarus|${plural(p.tartarus.length, 'card')}. Destroyed Devotees go here. Afterlife abilities work from here. Click to view.`, `data-pile="${key}:tartarus"`)}
     ${row('zpile zpile--void', '<img class="zicon" src="./assets/void.png" alt="">', 'Void', p.void.length, `Void|${plural(p.void.length, 'card')}. Exiled cards go here. Click to view.`, `data-pile="${key}:void"`)}
-    ${p.fatigue ? row('zpile--fatigue', '⚠', 'Fatigue', p.fatigue, 'Fatigue|Drawing from an empty deck.') : ''}
   </section>`;
 }
 function showDomainCard(key) {
@@ -1157,7 +1156,6 @@ function logEvent(e) {
   const n = uid => (uid && ctx.objects[uid] ? info(uid).name : '');
   const t = {turn_start: `Player ${e.player} begins a turn.`, damage: e.dealt || e.prevented || e.absorbed ? `${n(e.uid)}: ${e.dealt} damage${e.prevented ? `, ${e.prevented} prevented` : ''}${e.absorbed ? `, ${e.absorbed} to Armor` : ''}.` : '',
     soul_lost: `God ${e.player} loses ${e.amount} Soul (${e.soul}).`, base_placed: `${e.player} places a Cosmo Base.`, latent_gained: `${e.player} gains ${e.amount} Latent.`,
-    fatigue: `${e.player} suffers Fatigue ${e.amount}.`,
     awaken_changed: `God ${e.player} ${e.awaken ? 'AWAKENS' : 'leaves Awaken'} (Soul ${e.soul}).`, divine_power: `God ${e.player}: ${e.ability}.`,
     defeat_prevented: `${n(e.uid)} survives with 1 HP (${e.ability}).`, ultimate_announced: `${e.player} announces ${e.ability} (paid ${e.cost} Base).`,
     moon_awakened: `${n(e.uid)} awakens as a Moon Spirit.`, moon_reverted: `A Moon Spirit returns to being a Cosmo Base.`, control_changed: `${e.player} gains control of ${n(e.uid)}.`, entered: `${n(e.uid)} enters the battlefield.`, fizzled: `${n(e.uid)} fizzles: its bearer is gone.`,
@@ -1364,14 +1362,13 @@ function showInspect(uid, ability = '', beside = null) {
 // Clique direito no retrato do God: status base e atuais (Soul, Attack, Awaken, Ultimate) e o texto completo.
 // Painel do God (clique ou clique direito no retrato): a carta do God, os status atuais e cada poder num bloco.
 // Ultimate pronto é clicável e dispara o poder; passivos mostram se estão ativos. Fecha com clique fora ou Esc.
+// Poderes do Deus vêm da carta (data/cards.json), no idioma do jogador; name fica em EN porque a lógica do painel o usa.
 function godPowers(god) {
-  const lines = god.text.split('\n').slice(4).map(l => l.trim()).filter(Boolean), out = [];
-  for (const l of lines) {
-    const h = l.match(/^([A-Z][A-Z' ]+?) — (Divine Power|Divine Command|Awaken \d+|Ultimate)$/);
-    if (h) out.push({name: h[1], tag: h[2], kind: h[2] === 'Divine Command' ? 'command' : h[2].split(' ')[0].toLowerCase(), text: []});
-    else out.at(-1)?.text.push(l);
-  }
-  return out;
+  const forge = FORGE.get(`${god.name.toLowerCase()}-001`);
+  const blocks = c => [...(c.habilidades_en || []), c.habilidade_awaken_en, c.ultimate_en].filter(Boolean);
+  const parse = t => { const [head, ...rest] = t.split('\n'), [, name, tag, inline] = head.match(/^(.+?) — (\S+(?: \S+)?(?: \d+)?)(?:\s+([A-Z].*))?$/) || [, head, '']; return {name, tag, text: [inline, ...rest].filter(Boolean)}; };
+  const en = blocks(forge).map(parse), shown = blocks(displayCard(forge)).map(parse);
+  return en.map((pw, i) => ({...pw, ...shown[i], name: pw.name, label: shown[i]?.name || pw.name, kind: /Command/.test(pw.tag) ? 'command' : /Awaken/.test(pw.tag) ? 'awaken' : /Ultimate/.test(pw.tag) ? 'ultimate' : 'divine'}));
 }
 function showGodPanel(key) {
   closeBigCard();
@@ -1388,9 +1385,9 @@ function showGodPanel(key) {
     const [st, label] = state(pw), click = (pw.kind === 'ultimate' || pw.kind === 'command' || pw.name === 'BLOODLUST') && st === 'ready';
     return `<button class="power power--${pw.kind} is-${st}" data-power="${i}" ${click ? '' : 'aria-disabled="true"'} title="${esc(label)}">
       <span class="power__icon" aria-hidden="true">${icon[pw.kind]}</span>
-      <span class="power__head"><strong>${esc(pw.name)}</strong><small>${esc(pw.tag)}</small></span>
+      <span class="power__head"><strong>${esc(pw.label)}</strong><small>${esc(pw.tag)}</small></span>
       <em class="power__state">${esc(label)}</em>
-      <span class="power__text">${pw.text.map(t => `<span>${esc(t)}</span>`).join('')}</span>
+      <span class="power__text">${pw.text.map(t => `<span>${inlineMarkup(t)}</span>`).join('')}</span>
     </button>`;
   });
   if (acts.judgment) powers.push(`<button class="power power--judgment is-ready" data-power="judgment"><span class="power__icon" aria-hidden="true">⚖</span><span class="power__head"><strong>REMOVE DIVINE JUDGMENT</strong><small>Action</small></span><em class="power__state">Sacrifice three Devotees</em></button>`);
@@ -1400,7 +1397,7 @@ function showGodPanel(key) {
   box.innerHTML = `<section class="godpanel godpanel--${god.name.toLowerCase()} ${d.awaken ? 'is-awaken' : ''}" role="dialog" aria-label="${esc(god.name)}, Player ${key}">
     <div class="godpanel__card">${art}</div>
     <div class="godpanel__info">
-      <header><h2>${esc(god.name)}</h2><small>${esc(god.text.split('\n')[1] || '')} · Player ${key}</small></header>
+      <header><h2>${esc(god.name)}</h2><small>${esc(displayCard(forge)?.tagline_en || god.text.split('\n')[1] || '')} · Player ${key}</small></header>
       <div class="godpanel__stats">
         <div class="gstat gstat--soul"><small>Soul</small><b>${p.soul}<span>/${max}</span></b><i><u style="width:${Math.round(p.soul / max * 100)}%"></u></i></div>
         <div class="gstat ${d.awaken ? 'is-on' : ''}"><small>Awaken</small><b>${d.awakenAt}</b><em>${d.awaken ? 'active' : `at Soul ≤ ${d.awakenAt}`}</em></div>
@@ -1419,7 +1416,7 @@ function showGodPanel(key) {
     const pw = godPowers(god)[b.dataset.power];
     if (pw.kind === 'command' && acts.command) { if (!acts.command.ok) return warn(acts.command.why); closeBigCard(); return acts.command.run(); }
     if (pw.name === 'BLOODLUST' && acts.bloodlust) { if (!acts.bloodlust.ok) return warn(acts.bloodlust.why); closeBigCard(); return acts.bloodlust.run(); }
-    if (pw.kind !== 'ultimate') return warn(`${pw.name}: ${state(pw)[1]}. It works automatically.`);
+    if (pw.kind !== 'ultimate') return warn(`${pw.label}: ${state(pw)[1]}. It works automatically.`);
     if (!acts.ultimate.ok) return warn(acts.ultimate.why);
     closeBigCard();
     acts.ultimate.run();

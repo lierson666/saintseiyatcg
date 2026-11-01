@@ -43,8 +43,8 @@ export function validateDeck(deck,cards) {
     if(['God','Domain'].includes(c.tipo))errors.push('God e Domain ficam fora do deck principal');
     if(!allowed.has(c.faccao))errors.push(`Facção não permitida: ${c.nome_exibicao_en}`);
   }
-  if(total!==60)errors.push(`Deck deve ter 60 cartas; possui ${total}`);
-  for(const [id,n] of counts)if(n>4)errors.push(`Mais de 4 cópias: ${id}`);
+  if(total!==50)errors.push(`Deck deve ter 50 cartas; possui ${total}`);
+  for(const [id,n] of counts)if(n>3)errors.push(`Mais de 3 cópias: ${id}`);
   return errors;
 }
 

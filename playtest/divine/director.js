@@ -87,12 +87,6 @@ export function createDirector({ui, getFx, settings}) {
     async turn_start(e) { pool.A = pool.B = 0; ui.clearPool(); // o que sobrou na pool volta sem perda
       await ui.banner(ui.isViewer(e.player) ? 'Your turn' : `Player ${e.player}'s turn`, e.player, t(900)); },
     async draw(e) { if (!settings.skipDraws) await ui.flyCard(e.uid, ui.deckRect(e.player), ui.handRect(e.player), t(220), !ui.isViewer(e.player)); },
-    async fatigue(e) {
-      const at = ui.center(ui.deckRect(e.player));
-      fx()?.burst(at.x, at.y, {color: '#8a5cff', count: 40});
-      ui.float(at, `Fatigue ${e.amount}`, 'damage');
-      await pause(500);
-    },
     async mulligan() {},
     async base_placed(e) {
       const at = ui.center(ui.bankRect(e.player, 'base'));

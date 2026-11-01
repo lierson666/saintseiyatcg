@@ -363,7 +363,6 @@ body { font-family: "Cinzel", "Trajan Pro", "Cormorant Garamond", Georgia, serif
 .zpile { display: grid; grid-template-columns: auto auto; column-gap: 5px; align-items: center; padding-left: 12px; border-left: 1px solid rgba(255, 255, 255, .15); }
 .zpile small { grid-column: 1 / -1; font: 600 8px/1.2 system-ui, sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #9aa3c3; }
 .ico-void { width: 16px; height: 16px; border-radius: 50%; background: radial-gradient(circle, #000 35%, #7a4dff 55%, transparent 72%); box-shadow: 0 0 6px rgba(140, 100, 255, .7); }
-.zpile--fatigue { color: var(--red); font: 700 13px/1 system-ui; }
 
 /* Layout do autor (28/10/2026): quatro faixas no centro — Cosmo do oponente, Battlefield do oponente,
    seu Battlefield, seu Cosmo —; as faixas de Cosmo mais estreitas, entre os HUDs dos Gods.
