@@ -265,14 +265,13 @@ test('035 Kindness: remove 1 de dano de Devotee amigo', () => {
   assert.equal(s.units[miho].damage, 0);
 });
 
-test('038 Esmeralda: Ikki ganha +0/+1; ao ser derrotada remove 1 Rebirth de Ikki', () => {
+test('038 Esmeralda: Ikki ganha +0/+1; ao ser derrotada pode devolver um Ikki do Tártaro à mão', () => {
   const {s, ctx, give} = setup();
-  const esme = give('A', 'athena-v6-038'), ikki = give('A', 'athena-v6-009');
+  const esme = give('A', 'athena-v6-038'), ikki = give('A', 'athena-v6-009'), dead = give('A', 'athena-v6-009', 'tartarus');
   assert.equal(hpOf(s, ctx, ikki), 3); // Ikki 3/2 (31/10/2026) + 1
-  s.units[ikki].markers = {Rebirth: 1};
   s.units[esme].damage = hpOf(s, ctx, esme);
   checkDefeats(s, ctx); passAll(s); // ctx do teste tem o decide; o checkpoint usa o ctx da partida
-  assert.equal(s.units[ikki].markers.Rebirth, 0);
+  assert.ok(s.players.A.hand.includes(dead));
 });
 
 test('071 Flame Whip: 1 de dano adicional', () => {
@@ -319,19 +318,12 @@ test('075 Cerberus Chains e Three-Headed Assault', () => {
 });
 
 // ---- Completados com os ganchos novos (29/10/2026) ----
-test('009 Phoenix Rebirth: em vez de ser derrotado, tira o dano, cansa, ganha Rebirth e não ataca neste Round; só uma vez', () => {
+test('009 sem Phoenix Rebirth (01/11/2026): Ikki derrotado vai ao Tártaro', () => {
   const {s, ctx, give} = setup();
   const ikki = give('A', 'athena-v6-009');
   s.units[ikki].damage = hpOf(s, ctx, ikki);
   checkDefeats(s, ctx);
-  assert.ok(s.players.A.battlefield.includes(ikki));
-  assert.equal(s.units[ikki].damage, 0);
-  assert.equal(s.units[ikki].prepared, false);
-  assert.equal(s.units[ikki].markers.Rebirth, 1);
-  assert.ok(s.effects.some(e => e.kind === 'noStrike' && e.target === ikki));
-  s.units[ikki].damage = hpOf(s, ctx, ikki);
-  checkDefeats(s, ctx);
-  assert.ok(s.players.A.tartarus.includes(ikki)); // com Rebirth já é derrotado
+  assert.ok(s.players.A.tartarus.includes(ikki));
 });
 
 test('013 Another Dimension: Saga devolve o alvo ao sair por qualquer via (aqui, de volta à mão)', () => {

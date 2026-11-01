@@ -113,14 +113,15 @@ test('079 Shun: previne 4 de Strike no Saint; Shun protege também o God (2)', (
   assert.ok(s.effects.some(e => e.kind === 'prevent' && e.target === 'god:A' && e.amount === 2));
 });
 
-test('080 Phoenix: Bronze Saint volta Exhausted; Ikki ganha Rebirth e perde dano', () => {
+test('080 Phoenix (01/11/2026): alvo Ikki traz todos os Ikki do Tártaro, Unprepared e sem Strike', () => {
   const {s, ctx, give} = setup();
-  const ikki = give('A', A('009'), 'tartarus');
+  const ikki = give('A', A('009'), 'tartarus'), ikki2 = give('A', A('009'), 'tartarus');
   cast(s, ctx, '080');
-  assert.ok(s.players.A.battlefield.includes(ikki));
-  assert.equal(s.units[ikki].prepared, false);
-  assert.equal(hp(s, ikki), 0);
-  assert.equal(s.units[ikki].markers.Rebirth, 1);
+  for (const u of [ikki, ikki2]) {
+    assert.ok(s.players.A.battlefield.includes(u));
+    assert.equal(s.units[u].prepared, false);
+    assert.ok(s.effects.some(e => e.kind === 'noStrike' && e.target === u));
+  }
 });
 
 test('083 Twelve Flames: Flame + 1 ATK; no fim da rodada remove Flame e cura', () => {

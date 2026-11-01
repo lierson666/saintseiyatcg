@@ -383,7 +383,7 @@
       "status": "design-ready",
       "cosmoble": true,
       "caminho_imagem": null,
-      "custo": 5,
+      "custo": 4,
       "unidade_custo": "base_cosmo",
       "soul": null,
       "attack": null,
@@ -395,19 +395,17 @@
       "equipar_custo": null,
       "keywords_en": ["Impulse", "Nimble"],
       "habilidades_en": [
-        "Hidden Cosmo {6}",
-        "Phoenix Rebirth — If Phoenix Ikki would be defeated and has no Rebirth counters, instead remove all damage from him, make him Unprepared, and put 1 Rebirth counter on him. He cannot declare another Strike this round.",
+        "Hidden Cosmo {5}",
         "Arise from the Ashes — When you cast your third Moment or Technique each turn, if Phoenix Ikki is in your Tartarus, return him to the battlefield Prepared.",
         "Eternal Phoenix — Phoenix Ikki is not legendary: you may control any number of them."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Hidden Cosmo (§4A), aprovado pelo autor em 31/10/2026. Redesenho estilo Arclight Phoenix aprovado pelo autor em 31/10/2026: custo 5, 3/2, Impulse, Arise from the Ashes (volta do Tártaro na terceira Moment ou Technique do turno, gatilho obrigatório, cada cópia volta sozinha; aprovado em 31/10/2026, nome de 01/11/2026, substitui o Afterlife de 3 cartas para o Void); Eternal Phoenix: não é lendário (01/11/2026); mantém Phoenix Rebirth (marcador); sai Lone Wolf.",
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Hidden Cosmo (§4A), aprovado pelo autor em 31/10/2026. Redesenho estilo Arclight Phoenix aprovado pelo autor em 31/10/2026: custo 5, 3/2, Impulse, Arise from the Ashes (volta do Tártaro na terceira Moment ou Technique do turno, gatilho obrigatório, cada cópia volta sozinha; aprovado em 31/10/2026, nome de 01/11/2026, substitui o Afterlife de 3 cartas para o Void); Eternal Phoenix: não é lendário (01/11/2026); sai Lone Wolf. Fênix sem Phoenix Rebirth (autor, 01/11/2026): sai o marcador de Renascimento do jogo. Custo 5 → 4, Hidden Cosmo {6} → {5}.",
       "nome_exibicao_pt": "IKKI DE FÊNIX",
       "subtitulo_pt": "A Chama Imortal",
       "habilidades_pt": [
-        "Cosmo Oculto {6}",
-        "Renascimento da Fênix — Se Ikki de Fênix seria derrotado e não tem marcadores de Renascimento, em vez disso remova todo o dano dele, deixe-o Despreparado e coloque 1 marcador de Renascimento nele. Ele não pode declarar outro Golpe nesta rodada.",
+        "Cosmo Oculto {5}",
         "Das Cinzas — Quando você conjurar seu terceiro Momento ou Técnica em cada turno, se Ikki de Fênix estiver no seu Tártaro, devolva-o ao Campo de Batalha Preparado.",
         "Fênix Eterna — Ikki de Fênix não é lendário: você pode controlar qualquer número deles."
       ],
@@ -440,11 +438,11 @@
       "keywords_en": [],
       "habilidades_en": [
         "Burning Spirit — While equipped Devotee has damage marked on it, it gets +1 ATK.",
-        "Resonance — Phoenix Ikki: Once per game, when this Armor becomes equipped to Phoenix Ikki, you may remove all Rebirth counters from him. You cannot use this ability again this game, even from another copy of Phoenix Cloth V2."
+        "Resonance — Phoenix Ikki: When equipped Phoenix Ikki is defeated, draw a card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Fênix sem Phoenix Rebirth (autor, 01/11/2026): sai o marcador de Renascimento do jogo.",
       "categoria_equipamento": "Armor",
       "slot_equipamento": "armadura",
       "auto_equip_en": ["Phoenix Ikki"],
@@ -456,7 +454,7 @@
       "subtitulo_pt": "Das Cinzas",
       "habilidades_pt": [
         "Espírito Ardente — Enquanto o Devoto equipado tiver dano marcado, ele recebe +1 ATQ.",
-        "Ressonância — Ikki de Fênix: Uma vez por jogo, quando esta Armadura for equipada em Ikki de Fênix, você pode remover todos os marcadores de Renascimento dele. Você não pode usar esta habilidade de novo neste jogo, nem com outra cópia da Armadura de Fênix V2."
+        "Ressonância — Ikki de Fênix: Quando o Ikki de Fênix equipado é derrotado, compre uma carta."
       ],
       "tagline_pt": "Das Cinzas",
       "auto_equip_pt": ["Ikki de Fênix"]
@@ -710,11 +708,11 @@
       "habilidades_en": [
         "Lightning Plasma — {3}{C}, {T}: Deal 2 damage to up to two different target enemy Devotees.",
         "Resonance — Leo Aiolia: Lightning Plasma deals 1 additional damage to each of its targets.",
-        "Resonance — Phoenix Ikki: Phoenix Ikki may activate Lightning Plasma without {T}."
+        "Resonance — Phoenix Ikki: Whenever Phoenix Ikki returns to the battlefield from your Tartarus, deal 1 damage to target enemy Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Resonance secundária pendente de design e aprovação. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção). Resonance — Phoenix Ikki (dano ao voltar do Tártaro) aprovada pelo autor em 01/11/2026; substitui \"ativa sem {T}\".",
       "categoria_equipamento": "Armor",
       "slot_equipamento": "armadura",
       "auto_equip_en": ["Leo Aiolia", "Phoenix Ikki"],
@@ -727,7 +725,7 @@
       "habilidades_pt": [
         "Relâmpago de Plasma — {3}{C}, {T}: Cause 2 de dano a até dois Devotos inimigos alvo diferentes.",
         "Ressonância — Aiolia de Leão: O Relâmpago de Plasma causa 1 de dano adicional a cada um dos seus alvos.",
-        "Ressonância — Ikki de Fênix: Ikki de Fênix pode ativar o Relâmpago de Plasma sem {T}."
+        "Ressonância — Ikki de Fênix: Sempre que Ikki de Fênix voltar do seu Tártaro para o Campo de Batalha, cause 1 de dano a um Devoto inimigo alvo."
       ],
       "tagline_pt": "Relâmpago de Plasma",
       "auto_equip_pt": ["Aiolia de Leão", "Ikki de Fênix"]
@@ -1638,16 +1636,16 @@
       "keywords_en": [],
       "habilidades_en": [
         "A Gentle Memory — While you control Phoenix Ikki, he gets +0 ATK / +1 HP.",
-        "Unforgotten Love — When Esmeralda is defeated, you may remove 1 Rebirth counter from target friendly Phoenix Ikki."
+        "Unforgotten Love — When Esmeralda is defeated, you may return a Phoenix Ikki card from your Tartarus to your hand."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Fênix sem Phoenix Rebirth (autor, 01/11/2026): sai o marcador de Renascimento do jogo.",
       "nome_exibicao_pt": "ESMERALDA, O AMOR ESQUECIDO",
       "subtitulo_pt": "A Luz da Ilha da Rainha da Morte",
       "habilidades_pt": [
         "Uma Doce Lembrança — Enquanto você controlar Ikki de Fênix, ele recebe +0 ATQ / +1 PV.",
-        "Amor Inesquecível — Quando Esmeralda é derrotada, você pode remover 1 marcador de Renascimento do Ikki de Fênix aliado alvo."
+        "Amor Inesquecível — Quando Esmeralda é derrotada, você pode devolver uma carta de Ikki de Fênix do seu Tártaro para a sua mão."
       ],
       "tagline_pt": "A Luz da Ilha da Rainha da Morte"
     },
@@ -3444,17 +3442,17 @@
       "keywords_en": [],
       "habilidades_en": [
         "Return target defeated friendly Bronze Saint from your discard pile to the Battlefield Unprepared.",
-        "If that Saint is Phoenix Ikki, remove all damage from him and put 1 Rebirth counter on him.",
+        "If that Saint is Phoenix Ikki, also return each other Phoenix Ikki card from your Tartarus to the Battlefield Unprepared.",
         "A Saint returned this way cannot declare a Strike this round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção). Fênix sem Phoenix Rebirth (autor, 01/11/2026): sai o marcador de Renascimento do jogo.",
       "nome_exibicao_pt": "O RETORNO DA FÊNIX",
       "subtitulo_pt": "Das Cinzas, Eu Renasço",
       "habilidades_pt": [
         "Devolva o Cavaleiro de Bronze aliado derrotado alvo da sua pilha de descarte para o Campo de Batalha, Despreparado.",
-        "Se esse Cavaleiro for Ikki de Fênix, remova todo o dano dele e coloque 1 marcador de Renascimento nele.",
+        "Se esse Cavaleiro for Ikki de Fênix, devolva também cada outro Ikki de Fênix do seu Tártaro para o Campo de Batalha, Despreparado.",
         "Um Cavaleiro devolvido assim não pode declarar um Golpe nesta rodada."
       ],
       "tagline_pt": "Das Cinzas, Eu Renasço"

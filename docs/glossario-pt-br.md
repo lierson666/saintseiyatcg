@@ -73,7 +73,7 @@ Regra: o mesmo termo em todo lugar. Termo vetado fica em inglês. Nomes de perso
 | Retaliation | Revide |
 | Rival | Rival |
 | Concede | Desistir |
-| Counter (Training, Seal, Rebirth) | Marcador (de Treinamento, de Selo, de Renascimento) |
+| Counter (Training, Seal) | Marcador (de Treinamento, de Selo) |
 
 ## Keywords
 

@@ -80,16 +80,7 @@ export default {
   },
   // Phoenix Ikki
   'athena-v6-009': {
-    // Phoenix Rebirth (gancho wouldBeDefeated): sem Rebirth, em vez de ser derrotado tira todo o dano, fica Exhausted,
-    // ganha 1 Rebirth e não declara Strike neste Round. O marcador 'Rebirth' (addMarker) é lido por Esmeralda.
-    wouldBeDefeated: (s, c, key, self) => {
-      if (k.markers(s, self, 'Rebirth') > 0) return false;
-      k.removeDamage(s, self);
-      k.exhaust(s, self);
-      k.addMarker(s, self, 'Rebirth', 1);
-      lockStrike(s, self);
-      return true;
-    },
+    // Phoenix Rebirth e o marcador de Renascimento saíram do jogo (autor, 01/11/2026): Ikki morre e volta pelo Tártaro.
     // Arise from the Ashes (estilo Arclight Phoenix, autor 31/10/2026; nome de 01/11/2026): gatilho obrigatório do Tártaro
     // quando o dono conjura a terceira Moment ou Technique do turno; cada cópia dispara e volta sozinha, Prepared.
     tartarus: {
@@ -238,11 +229,11 @@ export default {
   'athena-v6-038': {
     // A Gentle Memory
     aura: (s, c, key, self, unit) => k.controllerOf(s, unit) === key && ikki.test(name(c, unit)) ? {hp: 1} : null,
-    // Unforgotten Love
+    // Unforgotten Love (01/11/2026): pode devolver um Phoenix Ikki do Tártaro à mão.
     defeated: (s, c, key) => st => {
-      const t = k.choose(c, key, 'UNFORGOTTEN LOVE', k.devotees(st, c, key).filter(u => ikki.test(name(c, u)) && k.markers(st, u, 'Rebirth') > 0),
-        {optional: true, text: 'Remove 1 Rebirth counter from Phoenix Ikki?'});
-      if (t) k.addMarker(st, t, 'Rebirth', -1);
+      const t = k.choose(c, key, 'UNFORGOTTEN LOVE', st.players[key].tartarus.filter(u => ikki.test(name(c, u))),
+        {optional: true, text: 'Return a Phoenix Ikki card from your Tartarus to your hand?'});
+      if (t) k.toHand(st, c, t, 'tartarus');
     },
   },
   // Guilty — Training Through Pain (gancho watchSurvive): outro Saint amigo sobreviveu a um Strike; uma vez por Round,

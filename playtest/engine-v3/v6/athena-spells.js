@@ -14,6 +14,7 @@ const sealOf = (s, u) => s.units[u]?.seal || 0;
 const foe = (s, c, key, ability) => k.choose(c, key, ability, k.enemies(s, c, key), {text: 'Choose target enemy Devotee.'});
 const friendlySaint = (s, c, key, ability, type) => k.choose(c, key, ability, saints(s, c, key, type), {text: 'Choose target friendly Saint.'});
 const alive = (s, key, u) => k.onField(s, key, u);
+const struck = (s, c, key) => k.enemies(s, c, key).filter(u => s.strikes.get(u) === s.turn); // 506
 // "At the end of the round": gatilho atrasado, resolvido no checkpoint de fim de Round (core.js `delayed`).
 const atRoundEnd = (s, key, self, ability, run) => s.delayed.push({controller: key, uid: self, ability, run});
 
@@ -21,16 +22,16 @@ const atRoundEnd = (s, key, self, ability, run) => s.delayed.push({controller: k
 const armored = (s, c, key) => s.players[key].battlefield.filter(u => k.card(c, u)?.kind === 'Devotee' && Object.keys(c.attached).some(e => c.attached[e] === u && k.card(c, e)?.armor));
 export default {
   // Spells baratas da color pie (autor, 31/10/2026: docs/spells-baratas-proposta.md).
-  'athena-v6-505': {spell: {run: (s, c, key) => { // Athena's Aegis
+  'athena-v6-505': {spell: {check: k.needTarget(k.devotees, 'sem Devotee aliado'), run: (s, c, key) => { // Athena's Aegis
     const t = k.choose(c, key, "ATHENA'S AEGIS", k.devotees(s, c, key), {text: 'Choose target friendly Devotee.'});
     if (t) shield(s, t, 2, {strikeOnly: false});
     k.draw(s, key, 1);
   }}},
-  'athena-v6-506': {spell: {run: (s, c, key) => { // Sanctuary's Judgment
-    const t = k.choose(c, key, "SANCTUARY'S JUDGMENT", k.enemies(s, c, key).filter(u => s.strikes.get(u) === s.turn), {text: 'Choose target enemy Devotee that declared a Strike this turn.'});
+  'athena-v6-506': {spell: {check: k.needTarget(struck, 'sem Devotee inimigo que declarou Strike neste turno'), run: (s, c, key) => { // Sanctuary's Judgment
+    const t = k.choose(c, key, "SANCTUARY'S JUDGMENT", struck(s, c, key), {text: 'Choose target enemy Devotee that declared a Strike this turn.'});
     if (t) k.damage(s, c, t, 3);
   }}},
-  'athena-v6-507': {spell: {run: (s, c, key) => { // Oath of the Saints
+  'athena-v6-507': {spell: {check: k.needTarget((s, c, key) => saints(s, c, key), 'sem Saint aliado'), run: (s, c, key) => { // Oath of the Saints
     const t = friendlySaint(s, c, key, 'OATH OF THE SAINTS');
     if (t) k.buff(s, t, 1, 1);
     k.draw(s, key, 1);
@@ -91,7 +92,8 @@ export default {
     const t = k.choose(c, key, 'THE RETURN OF THE PHOENIX', dead, {text: 'Choose target defeated friendly Bronze Saint.'});
     if (!t || !k.putOntoField(s, c, key, t, 'tartarus', {prepared: false})) return; // Exhausted
     forbidStrike(s, t);
-    if (named(c, t, 'PHOENIX IKKI')) { k.removeDamage(s, t); k.addMarker(s, t, 'Rebirth', 1); }
+    // 01/11/2026: alvo Phoenix Ikki traz também cada outro Phoenix Ikki do seu Tártaro, Unprepared.
+    if (named(c, t, 'PHOENIX IKKI')) for (const u of s.players[key].tartarus.filter(u => named(c, u, 'PHOENIX IKKI') && c.objects[u].owner === key)) { if (k.putOntoField(s, c, key, u, 'tartarus', {prepared: false})) forbidStrike(s, u); }
   }}},
   // The Twelve Flames
   'athena-v6-083': {spell: {run: (s, c, key, self) => {

@@ -20,9 +20,6 @@ function pay(st, c, key, n, ability, uid) {
   if (n) spendBase(st, key, n);
   return true;
 }
-// "Once per game" por jogador. shortcut: guardado em state.v6Game (objeto simples); a engine não tem campo próprio.
-const game = (s, key, tag) => !(s.v6Game ||= {})[`${key}:${tag}`];
-const useGame = (s, key, tag) => { (s.v6Game ||= {})[`${key}:${tag}`] = true; };
 // "Choose one": um modo só não pergunta.
 const mode = (c, key, ability, list) => (list.length <= 1 ? list[0] ?? null : c.decide?.(key, {ability, options: list, choose: 'mode', text: 'Choose one.'}) ?? null);
 
@@ -104,18 +101,8 @@ export default {
   'athena-v6-010': {
     // Burning Spirit: +1 ATK enquanto o portador tem dano marcado.
     aura: (s, c, key, self, unit) => (k.bearerOf(c, self) === unit && (s.units[unit]?.damage || 0) > 0 ? {atk: 1, hp: 0} : null),
-    // Resonance — Phoenix Ikki: uma vez por jogo, ao ficar equipada em Ikki, pode remover todos os Rebirth dele.
-    // Gancho attach: vale ao jogar já equipada em Ikki e ao equipar depois (reequip).
-    attach: (s, c, key, self) => {
-      const b = k.bearerOf(c, self);
-      if (!IKKI(c, b) || !game(s, key, 'phoenix-cloth-v2') || !k.markers(s, b, 'Rebirth')) return;
-      return st => {
-        const n = k.markers(st, b, 'Rebirth');
-        if (!st.units[b] || !n || !game(st, key, 'phoenix-cloth-v2') || !k.may(c, key, 'RESONANCE — PHOENIX IKKI', {uid: b, text: 'Remove all Rebirth counters from Phoenix Ikki?'})) return;
-        useGame(st, key, 'phoenix-cloth-v2');
-        k.addMarker(st, b, 'Rebirth', -n);
-      };
-    },
+    // Resonance — Phoenix Ikki (01/11/2026): quando o Ikki equipado é derrotado, compre 1 carta.
+    bearerDefeated: (s, c, key, self, unit) => IKKI(c, unit) && (st => { k.draw(st, key, 1); }),
   },
 
   // Aries Gold Cloth (+1 ATK: genérico)
@@ -140,7 +127,13 @@ export default {
   // Leo Gold Cloth (+2 ATK: genérico)
   // Resonance — Phoenix Ikki (autor, 30/10/2026): Ikki ativa sem {T}, ou seja, sem o limite de uma vez por Round do Equipment.
   'athena-v6-016': {
-    activate: {name: 'Lightning Plasma', cost: 3, once: (s, c, key, self) => !IKKI(c, k.bearerOf(c, self)), tap: false, check: (s, c, key) => needEnemy(s, c, key),
+    // Resonance — Phoenix Ikki (01/11/2026): sempre que um Phoenix Ikki seu volta do Tártaro, 1 de dano em Devotee inimigo alvo.
+    // shortcut: vale com esta Cloth solta ou presa a um Ikki (o Ikki que volta pode puxá-la, §28); presa a outro Devotee, não.
+    watchEnter: (s, c, key, self, entered) => k.controllerOf(s, entered) === key && IKKI(c, entered)
+      && s.events.findLast(e => e.type === 'card_played' && e.uid === entered)?.from === 'tartarus'
+      && (!k.bearerOf(c, self) || IKKI(c, k.bearerOf(c, self))) && k.enemies(s, c, key).length
+      && (st => { k.damage(st, c, k.choose(c, key, 'RESONANCE — PHOENIX IKKI', k.enemies(st, c, key), {text: 'Deal 1 damage to target enemy Devotee.'}), 1); }),
+    activate: {name: 'Lightning Plasma', cost: 3, once: true, tap: false, check: (s, c, key) => needEnemy(s, c, key),
       run: (s, c, key, self) => {
         const extra = AIOLIA(c, k.bearerOf(c, self)) ? 1 : 0; // Resonance — Leo Aiolia: +1 em cada alvo
         for (const t of k.chooseUpTo(c, key, 'LIGHTNING PLASMA', k.enemies(s, c, key), 2, {text: 'Choose up to two target enemy Devotees.'})) k.damage(s, c, t, 2 + extra);

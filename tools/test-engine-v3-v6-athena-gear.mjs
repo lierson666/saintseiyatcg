@@ -101,35 +101,21 @@ test('010 Burning Spirit: +1 ATK só com dano marcado no portador', () => {
   assert.equal(atkOf(s, ctx, bear), base + 1);
 });
 
-test('010 Resonance Ikki: ao ser jogada em Ikki, remove os Rebirth uma vez por jogo (inclusive de outra cópia)', () => {
-  const {s, ctx, give} = setup();
-  const ikki = give('A', IKKI);
-  s.units[ikki].markers = {Rebirth: 2};
-  const c1 = give('A', G(10), 'hand');
-  playEquipment(s, ctx, 'A', c1, ikki);
-  passAll(s);
-  assert.equal(s.units[ikki].markers.Rebirth, 0);
-  s.units[ikki].markers.Rebirth = 1;
-  const c2 = give('A', G(10), 'hand');
-  playEquipment(s, ctx, 'A', c2, ikki);
-  passAll(s);
-  assert.equal(s.units[ikki].markers.Rebirth, 1, 'segunda cópia não pode usar de novo');
-});
-
-test('010 Resonance Ikki: recusar não gasta o uso; fora de Ikki a Armor não entra vestida', () => {
+test('010 Resonance Ikki (01/11/2026): Ikki equipado derrotado compra 1; outro portador não', () => {
   const {s, ctx, give} = setup();
   const ikki = give('A', IKKI), other = give('A', SAINT);
-  s.units[ikki].markers = {Rebirth: 2};
-  ctx.decide = () => false;
-  const c1 = give('A', G(10), 'hand');
-  playEquipment(s, ctx, 'A', c1, ikki);
-  passAll(s);
-  assert.equal(s.units[ikki].markers.Rebirth, 2);
-  assert.ok(!s.v6Game?.['A:phoenix-cloth-v2']);
-  const c2 = give('A', G(10), 'hand');
-  s.units[other].markers = {Rebirth: 1};
-  assert.throws(() => playEquipment(s, ctx, 'A', c2, other), /Resonant/, 'só entra vestida num Resonant (guia §28)');
-  assert.equal(s.units[other].markers.Rebirth, 1);
+  give('A', G(10), 'battlefield', ikki); give('A', G(10), 'battlefield', other);
+  const hand = s.players.A.hand.length;
+  s.units[ikki].damage = 99; s.units[other].damage = 99;
+  k.checkDefeats(s, ctx); passAll(s);
+  assert.ok(s.players.A.tartarus.includes(ikki));
+  assert.equal(s.players.A.hand.length, hand + 1);
+});
+
+test('010 Phoenix Cloth V2: fora de Ikki a Armor não entra vestida (guia §28)', () => {
+  const {s, ctx, give} = setup();
+  const other = give('A', SAINT), c2 = give('A', G(10), 'hand');
+  assert.throws(() => playEquipment(s, ctx, 'A', c2, other), /Resonant/);
 });
 
 test('012 Stardust Revolution: 3 de dano no alvo; custo 3 Base; uma vez por Round', () => {
@@ -415,13 +401,15 @@ test('008 Counterattack: vale também para Strike contra o God; sem Nebula Chain
   assert.ok(dmg(s2, ally2) > 0);
 });
 
-test('010 Phoenix Cloth V2: equipar depois (reequip) em Ikki também dispara a Resonance', () => {
+test('016 Leo Gold Cloth, Resonance Ikki (01/11/2026): Ikki voltando do Tártaro causa 1 de dano', () => {
   const {s, ctx, give} = setup();
-  const ikki = give('A', IKKI), cloth = give('A', G(10));
-  k.addMarker(s, ikki, 'Rebirth', 1);
-  reequip(s, ctx, 'A', cloth, ikki); passAll(s);
-  assert.equal(k.markers(s, ikki, 'Rebirth'), 0);
-  assert.equal(s.v6Game['A:phoenix-cloth-v2'], true);
+  give('A', G(16)); // solta no campo
+  const ikki = give('A', IKKI, 'tartarus'), foe = give('B', FOE);
+  k.putOntoField(s, ctx, 'A', ikki, 'tartarus'); passAll(s);
+  assert.equal(s.units[foe].damage, 1);
+  const other = give('A', SAINT, 'tartarus');
+  k.putOntoField(s, ctx, 'A', other, 'tartarus'); passAll(s);
+  assert.equal(s.units[foe].damage, 1, 'só Ikki dispara');
 });
 
 test('047 Phoenix Feather: Ikki sobrevive a um Strike e pode remover 1 dano (uma vez por Round)', () => {

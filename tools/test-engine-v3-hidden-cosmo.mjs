@@ -34,7 +34,7 @@ function setup(id, bases) {
 }
 
 test('as 5 cartas têm Hidden Cosmo; Athena vem do Forge por cima do D268', () => {
-  const x = {'athena-v6-009': 6, 'poseidon-v6-157': 5, 'hades-v6-209': 4, 'ares-v6-295': 3, 'artemis-v6-394': 3};
+  const x = {'athena-v6-009': 5, 'poseidon-v6-157': 5, 'hades-v6-209': 4, 'ares-v6-295': 3, 'artemis-v6-394': 3}; // Ikki {5} (01/11/2026)
   for (const [id, n] of Object.entries(x)) assert.equal(cards.get(id).hiddenCosmo, n, id);
   assert.equal(cards.get('ares-v6-291').hiddenCosmo, null);
 });
