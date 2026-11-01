@@ -397,7 +397,8 @@
       "habilidades_en": [
         "Hidden Cosmo {6}",
         "Phoenix Rebirth — If Phoenix Ikki would be defeated and has no Rebirth counters, instead remove all damage from him, make him Unprepared, and put 1 Rebirth counter on him. He cannot declare another Strike this round.",
-        "Rebirth — When you cast your third Moment or Technique each turn, if Phoenix Ikki is in your Tartarus, return him to the battlefield Prepared."
+        "Rebirth — When you cast your third Moment or Technique each turn, if Phoenix Ikki is in your Tartarus, return him to the battlefield Prepared.",
+        "Eternal Phoenix — Phoenix Ikki is not legendary: you may control any number of them."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -407,7 +408,8 @@
       "habilidades_pt": [
         "Cosmo Oculto {6}",
         "Renascimento da Fênix — Se Ikki de Fênix seria derrotado e não tem marcadores de Renascimento, em vez disso remova todo o dano dele, deixe-o Despreparado e coloque 1 marcador de Renascimento nele. Ele não pode declarar outro Golpe nesta rodada.",
-        "Renascimento — Quando você conjurar seu terceiro Momento ou Técnica em cada turno, se Ikki de Fênix estiver no seu Tártaro, devolva-o ao Campo de Batalha Preparado."
+        "Renascimento — Quando você conjurar seu terceiro Momento ou Técnica em cada turno, se Ikki de Fênix estiver no seu Tártaro, devolva-o ao Campo de Batalha Preparado.",
+        "Fênix Eterna — Ikki de Fênix não é lendário: você pode controlar qualquer número deles."
       ],
       "tagline_pt": "A Chama Imortal"
     },

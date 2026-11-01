@@ -11,7 +11,7 @@ import {startTurn, endTurn, passAll, runCheckpoint} from '../playtest/engine-v3/
 import {playDevotee, playSpell, activate} from '../playtest/engine-v3/play.js';
 import {declareStrike} from '../playtest/engine-v3/strike.js';
 import {V6} from '../playtest/engine-v3/v6/hooks.js';
-import {checkDefeats, atkOf, hpOf, modify} from '../playtest/engine-v3/effects.js';
+import {checkDefeats, atkOf, hpOf, modify, enforceUniqueness} from '../playtest/engine-v3/effects.js';
 import * as k from '../playtest/engine-v3/v6/kit.js';
 import {guardDecide} from './engine-test-upto.mjs';
 const modifyAtk = (s, uid, atk) => modify(s, uid, {atk});
@@ -103,6 +103,13 @@ test('009 Rebirth (autor 31/10/2026): na terceira Moment ou Technique do turno I
   assert.equal(s.units[ikki].prepared, true);
   k.defeat(s, ctx, ikki); cast(); // a quarta Spell do turno não traz de novo
   assert.ok(s.players.A.tartarus.includes(ikki));
+});
+
+test('009 Eternal Phoenix (autor 01/11/2026): Ikki não é lendário, várias cópias ficam no campo', () => {
+  const {s, ctx, give} = setup();
+  const a = give('A', 'athena-v6-009'), b = give('A', 'athena-v6-009');
+  enforceUniqueness(s, ctx);
+  assert.ok(s.players.A.battlefield.includes(a) && s.players.A.battlefield.includes(b));
 });
 
 test('009 Rebirth: só a partir do Tartarus; no campo a terceira Spell não faz nada', () => {

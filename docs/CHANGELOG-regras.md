@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-01 — §63 — Phoenix Ikki não é lendário
+
+- **Antes:** Phoenix Ikki (athena-v6-009), Saint, seguia a regra de lendário: uma cópia por jogador no campo.
+- **Depois:** exceção no §63: o jogador pode controlar qualquer número de Phoenix Ikki. Texto da carta: *Eternal Phoenix — Phoenix Ikki is not legendary: you may control any number of them.*
+- **Motivo:** autor, 01/11/2026 ("a regra de lendário não se aplica a Ikki"), para o Rebirth estilo Arclight Phoenix trazer mais de um.
+- **Engine:** `effects.js` `namedCharacter` devolve null para 009.
+
 ## 2026-11-01 — Cartas — "If you control a Domain" vira Domain da facção
 
 - **Antes:** 106 Ocean Temple Guard e 173 The Fall of Atlantis diziam "if you control a Domain", sempre verdadeiro (todo jogador tem Domain; pendência de 31/10/2026).
