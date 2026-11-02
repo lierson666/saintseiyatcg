@@ -6,8 +6,8 @@ import {printedEquipmentBonuses,signedBonus,armorBonusText} from './card-visual-
 import {renderKeywordNotes,keywordTipAttr} from './keyword-glossary.js?v=20261102-arroba1';
 import {displayCard,keywordName,typeWord,lang} from './card-i18n.js?v=20261101-tr1';
 import {EDITIONS,editionOf} from './editions.js?v=20261102-1';
-import {scrimCss} from './card-scrim.js?v=20261102-deus3';
-import {godFaceLayout} from './god-face.js?v=20261102-deus3';
+import {scrimCss} from './card-scrim.js?v=20261102-vinheta1';
+import {godFaceLayout} from './god-face.js?v=20261102-vinheta1';
 // A ilustração é apenas fundo. Letras, números e estados são dados independentes no DOM.
 // Virar o God (guia §63): as duas faces já estão na carta; captura antes do clique abrir a carta ou o painel do duelo.
 const flipGod=e=>{const b=e.target.closest?.('.lc-flip');if(!b||e.type==='keydown'&&e.key!=='Enter'&&e.key!==' ')return;e.preventDefault();e.stopPropagation();const c=b.closest('[data-face]');c.dataset.face=c.dataset.face==='back'?'front':'back';};

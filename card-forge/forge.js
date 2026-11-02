@@ -4,9 +4,9 @@ import {AUDIT_STATUS,auditOf,mountCardFinder,reviewQueue} from './card-finder.js
 import {mountRulesRows} from './rules-rows.js?v=20261102-banco1';
 import {createHistory} from '../shared/editor-history.js';
 import {compilePlaytest} from '../shared/import-playtest.js';
-import {renderLiveCard,illustration,EDITIONS,editionOf} from '../shared/live-card.js?v=20261102-deus3';
-import {scrimStops} from '../shared/card-scrim.js?v=20261102-deus3';
-import {godFaceLayout,godFaceTexts} from '../shared/god-face.js?v=20261102-deus3';
+import {renderLiveCard,illustration,EDITIONS,editionOf} from '../shared/live-card.js?v=20261102-vinheta1';
+import {cardVignette} from '../shared/card-scrim.js?v=20261102-vinheta1';
+import {godFaceLayout,godFaceTexts} from '../shared/god-face.js?v=20261102-vinheta1';
 import {EQUIPMENT_SUBTYPES,ARMOR_FAMILY,PATENTES_ARMADURA,patentesDe,belongsToEquipmentGroup,formatCardTypeLine,printedSubtypes,subtypesText,toggleSubtype,validateEquipmentSubtypes} from '../shared/equipment-types.js?v=20261102-eq6';
 import {textBlocks, blocksMarkup, presentationRules, ruleBlocksWithoutKeywords, KEYWORD_WORDS, KEYWORD_WORDS_PT, STAT_RE, statTrend, statSymbols, costSymbols, keywordLine} from '../shared/card-text.js?v=20261102-eq2';
 import {isArmor,isEquipment,validateCard,LINE_KEYWORDS,keywordsOfLine} from '../shared/card-model.js?v=20261102-kw1';
@@ -284,9 +284,10 @@ const drawGlowPiece = (key, el) => drawPiece(key, el, true);
 
 let godFace = 'front', scrimTop; // face do God na prévia e na exportação (guia §63)
 async function drawFrame() {
-  const scrim = ctx.createLinearGradient(0, 0, 0, 2091);
-  for (const [at, alpha] of scrimStops(scrimTop)) scrim.addColorStop(at, `rgba(0,0,0,${alpha})`);
-  ctx.fillStyle = scrim; ctx.fillRect(0, 0, 1488, 2091);
+  const v = cardVignette(scrimTop), scrim = ctx.createRadialGradient(0, 0, 0, 0, 0, 1);
+  for (const [at, alpha] of v.stops) scrim.addColorStop(at, `rgba(0,0,0,${alpha})`);
+  ctx.save(); ctx.translate(v.cx * 1488, v.cy * 2091); ctx.scale(v.rx * 1488, v.ry * 2091); // elipse: círculo de raio 1 esticado
+  ctx.fillStyle = scrim; ctx.fillRect(-20, -20, 40, 40); ctx.restore();
   for (const key of fac().frame) {
     const p = P[key], im = await loadImg(pieceSrc(key));
     if (!p || !im) continue;

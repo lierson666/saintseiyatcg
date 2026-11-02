@@ -5,7 +5,7 @@ import {addPreviewCards} from '../shared/preview-cards.js';
 import {canonIndex, validateDeck, colorErrors, splashCount, DECK_SIZE, COPY_LIMIT, SPLASH_LIMIT} from '../shared/deck-v3.js';
 import {spellCategory} from './engine-v3/core.js';
 import {ARMOR_FAMILY, EQUIPMENT_SUBTYPES, belongsToEquipmentGroup, hasSubtype} from '../shared/equipment-types.js?v=20261102-eq6';
-import {renderLiveCard, renderCardText, fullSizePieces} from '../shared/live-card.js?v=20261102-deus3';
+import {renderLiveCard, renderCardText, fullSizePieces} from '../shared/live-card.js?v=20261102-vinheta1';
 import {printedEquipmentBonuses, signedBonus} from '../shared/card-visual-values.js';
 import {displayCard, typeWord} from '../shared/card-i18n.js?v=20261031-kw1';
 import {unlock, playMusic, setVolume, volume} from './audio.js?v=20261102-voz4';
