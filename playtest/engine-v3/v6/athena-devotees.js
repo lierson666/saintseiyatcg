@@ -67,7 +67,7 @@ export default {
     watchDeclare: (s, c, key, self, attacker, target) => {
       if (s.units[self]) s.units[self].nebulaOpen = false;
       return againstAlly(s, c, key, self, attacker, target) && s.units[self]?.prepared && !s.roundUses.has(`${self}:nebula`) && (st => {
-        if (!st.units[self]?.prepared || st.roundUses.has(`${self}:nebula`) || !k.may(c, key, 'NEBULA CHAIN', {uid: self})) return;
+        if (!st.units[self]?.prepared || st.roundUses.has(`${self}:nebula`) || !k.may(c, key, 'ROLLING DEFENSE', {uid: self})) return;
         k.once(st, `${self}:nebula`);
         st.units[self].nebulaOpen = true;
         k.exhaust(st, self);
