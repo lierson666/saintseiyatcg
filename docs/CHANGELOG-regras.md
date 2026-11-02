@@ -4,6 +4,14 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-02 — Cap. IX e §53 — Sintaxe das keywords no texto da carta
+
+- **Antes:** o guia não definia a linha de keywords, e o §53 pedia efeitos de entrada antes das keywords.
+- **Depois:** Guardian, Pierce, Impulse, Nimble e Long Range ficam na primeira linha do texto, separadas por vírgula. Cada habilidade inteira tem linha própria. Hidden Cosmo, Afterlife e Imune seguem em linha própria. O §53 continua valendo para os atributos.
+- **Motivo:** decisão do autor, 02/11/2026. A apresentação das cartas já usava essa ordem; nenhum efeito muda.
+- **Card Forge:** caixa de habilidade só com essas keywords grava `keywords_en`. A caixa própria de keywords saiu.
+- **Pendências:** nenhuma carta foi alterada.
+
 ## 2026-11-02 — Athena Exclamation (D229) — Taxa de Bronze e Silver passa de Cosmo a Soul
 
 - **Antes:** 5 Cosmo, mais 3 Cosmo por Bronze Saint e 2 por Silver Saint, tudo em Base preparada.

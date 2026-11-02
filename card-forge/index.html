@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Card Forge</title>
   <link rel="icon" href="../LOGO/favicon.png?v=20261030">
-  <link rel="stylesheet" href="forge.css">
+  <link rel="stylesheet" href="forge.css?v=20261102-vozes1">
   <link rel="stylesheet" href="../shared/live-card.css?v=20261102-sym1">
   <script>if(parent!==window)document.documentElement.classList.add("embedded");</script>
 </head>
@@ -69,15 +69,13 @@
 
       <fieldset>
         <legend>Números</legend>
+        <label class="check"><input name="cosmoble" type="checkbox"> Cosmoble — pode virar Base</label>
         <div class="row">
           <label data-for="devotee relic_cloth relic_weapon relic">Custo <input name="custo" type="number" min="0"></label>
-          <label data-for="devotee relic_cloth relic_weapon relic">Unidade
-            <select name="unidade_custo"><option value="cosmo">cosmo</option><option value="base_cosmo">base_cosmo</option></select>
-          </label>
         </div>
         <div class="row">
           <label data-for="devotee">Power <input name="power" type="number"></label>
-          <label data-for="devotee">HP próprio <input name="vida" type="number" min="1"></label><label data-for="devotee" id="legacyResistance">Resistance (legado) <input name="resistance" type="number"></label>
+          <label data-for="devotee">HP próprio <input name="vida" type="number" min="1"></label>
           <label data-for="relic_cloth relic_weapon">Bônus ATK <input name="bonusPower" placeholder="+2"></label>
           <label data-for="relic_cloth relic_weapon">Bônus HP <input name="bonusResistance" placeholder="+0"></label>
         </div>
@@ -92,30 +90,21 @@
       </fieldset>
 
       <fieldset id="rulesV2">
-        <legend>Rulebook 2.1</legend>
-        <label class="check"><input name="cosmoble" type="checkbox"> Cosmoble — pode virar Base</label>
-        <div id="characterFields"><label>Origem do personagem<select name="origem_personagem"><option value="">— revisar no Card Craft —</option><option>CANON — KURUMADA</option><option>SAINT SEIYA — OUTRAS OBRAS</option><option>MITOLOGIA ADAPTADA</option><option>ORIGINAL TCG</option></select></label><label>Referências mitológicas (uma por linha)<textarea name="referencias_mitologicas_texto" rows="2"></textarea></label><label>Identidade do personagem <input name="personagem_id" placeholder="pegasus-seiya"></label><label class="check"><input name="personagem_unico" type="checkbox"> Personagem único no campo</label></div>
+        <legend>Equipamento</legend>
         <div id="equipmentFields"><label>Slot do equipamento<select name="slot_equipamento"><option value="">— selecionar —</option><option value="armadura">Armadura (uma por Devotee)</option><option value="arma">Arma</option><option value="acessorio">Acessório</option></select></label>
         <label>Owners (IDs separados por vírgula)<input name="donos" placeholder="pegasus-seiya, sagittarius-aiolos"></label>
         
         <p class="hint">Armor: Cloth, Scale, Surplice, Warplate ou Moonplate. V1 está no Devotee; versões independentes começam em V2. Armor (30/10/2026): sem HP próprio; Bônus ATK/HP somam ao portador e aparecem na faixa da base. 1ª linha do texto: “Equip N · Resonance — Nome”. Resonance equipa sozinho ao conjurar; em campo, qualquer portador paga Equip.</p>
         <div id="stageEditor"></div><button id="addStage" type="button">Adicionar estágio</button>
         <label>Ressonâncias (uma por linha: ID | texto em inglês)<textarea name="resonanceText" rows="3"></textarea></label></div>
-        <p id="rulesReview" class="hint" role="status"></p>
-      </fieldset>
-      <fieldset id="keywordEditor">
-        <legend>Keywords</legend>
-        <label>Selecionadas <input name="keywords" placeholder="Long Range, Pierce"></label>
-        <select id="kwSelect" aria-label="Adicionar keyword à carta"><option value="">+ Keyword</option></select>
-        <p class="hint">As keywords ficam na área própria da carta. Selecione aqui; não é preciso repeti-las nas regras.</p>
       </fieldset>
       <fieldset>
         <legend>Texto</legend>
-        <div class="symbar" id="symbar" role="toolbar" aria-label="Inserir símbolo no texto"></div>
+        <div class="symbar" id="symbar" role="toolbar" aria-label="Inserir símbolo no texto"><select id="kwSelect" aria-label="Adicionar keyword à carta"><option value="">+ Keyword</option></select></div>
         <label>Regras
           <textarea name="rules" rows="9" spellcheck="true"></textarea>
         </label>
-        <p class="hint">Clique num símbolo para inserir no cursor. Cada caixa é uma habilidade, de cima para baixo; <code>**negrito**</code>. Keywords saem em negrito maiúsculo sozinhas.</p>
+        <p class="hint">Clique num símbolo para inserir no cursor. Cada caixa é uma habilidade, de cima para baixo; <code>**negrito**</code>. Só <code>@</code> puxa: <code>@Guardian</code> é a keyword, <code>@ATK</code> e <code>@COSMO</code> são símbolos; sem <code>@</code> é texto comum. Caixa só com keywords (<code>Guardian, Pierce</code>) vai para a linha do topo da carta.</p>
         <label data-for="god">Awaken (texto) <textarea name="habilidade_awaken_en" rows="4"></textarea></label>
         <label data-for="god">Ultimate <textarea name="ultimate_en" rows="3"></textarea></label>
         <label>Flavour <input name="flavour" placeholder="“Burn cosmo, burn!”"></label>
@@ -141,6 +130,7 @@
         <button id="artCover" type="button">Cobrir a carta</button>
       </fieldset>
 
+      <p id="rulesReview" class="hint" role="status"></p>
       <fieldset class="actions">
         <legend>Salvar</legend>
         <label>Idioma da carta <select id="cardLang"><option value="en">EN</option><option value="pt">PT-BR</option></select></label>
@@ -150,6 +140,8 @@
         <button id="saveCards" type="button" class="primary">Gravar no cards.json…</button>
       </fieldset>
     </form>
+
+    <div id="formResizer" role="separator" aria-orientation="vertical" aria-label="Largura do painel de edição" tabindex="0" title="Arraste para ajustar · duplo clique volta ao padrão"></div>
 
     <section id="stage">
       <div class="toolbar">
@@ -181,7 +173,7 @@
     </div>
   </dialog>
 
-  <script type="module" src="forge.js?v=20261102-sym1"></script>
+  <script type="module" src="forge.js?v=20261102-arroba1"></script>
   <script type="module" src="god-hud.js?v=6"></script>
 </body>
 </html>

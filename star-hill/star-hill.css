@@ -86,3 +86,43 @@ main.deck-mode{max-width:none;padding:28px 28px 0}.deck-mode .page-header{margin
 .tl-sound-list li{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}
 .tl-sound-list small{display:block;color:var(--muted);font-size:.78rem}
 @media (max-width:720px){.tl-anim{grid-template-columns:1fr}}
+
+/* Menu lateral recolhível: aberto com ícone e nome, fechado só com ícones. */
+.nav-icon{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.sidebar nav a,.open-game{display:flex;align-items:center;gap:10px}
+.open-game{width:fit-content}
+.sidebar-toggle{position:absolute;top:6px;right:6px;display:grid;place-items:center;width:32px;height:32px;min-height:0;padding:0;color:var(--muted);background:transparent;border-color:transparent}
+.sidebar-toggle:hover{color:var(--gold);background:var(--raised)}
+.menu-closed .toggle-chevron{transform:rotate(180deg);transform-origin:14.5px 12px}
+@media(min-width:701px){
+  .app-shell.menu-closed{grid-template-columns:68px minmax(0,1fr)}
+  .menu-closed .sidebar{padding:12px 10px 24px;align-items:center}
+  .menu-closed .sidebar-toggle{position:static;order:-1;margin-bottom:14px}
+  .menu-closed .brand{padding:0 0 18px}
+  .menu-closed .brand>span{font-size:34px}
+  .menu-closed .brand strong,.menu-closed .sidebar-label,.menu-closed .nav-label{display:none}
+  .menu-closed .sidebar nav{width:100%;justify-items:center}
+  .menu-closed .sidebar nav a{justify-content:center;width:44px;height:44px;padding:0}
+  .menu-closed .sidebar footer{display:grid;justify-items:center;gap:14px;padding:18px 0 0}
+  .menu-closed .sidebar footer a{margin:0}
+}
+@media(max-width:700px){.sidebar-toggle{display:none}}
+
+/* Edições: a escolha vem antes de qualquer carta. */
+.edition-picker{display:grid;place-items:center;min-height:calc(100dvh - 230px)}
+.edition-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),460px));gap:20px;justify-content:center;width:100%}
+.edition-card{display:grid;justify-items:center;gap:8px;padding:28px;text-align:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;transition:border-color .16s ease-out,background-color .16s ease-out}
+.edition-card:hover{border-color:var(--gold);background:var(--raised)}
+.edition-card img{width:100%;height:auto;margin-bottom:8px}
+.edition-code{font-size:12px;letter-spacing:.14em;color:var(--muted)}
+.edition-card h2{margin:0;font-size:24px;font-weight:500}
+.edition-total{margin:0;color:var(--muted)}
+.edition-total b{color:var(--ink);font-size:18px}
+.edition-tally{display:flex;flex-wrap:wrap;justify-content:center;gap:6px 14px;margin:8px 0;padding:0;list-style:none;font-size:12px;color:var(--muted)}
+.edition-tally li::before{content:'';display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--tone);margin-right:6px}
+.edition-tally b{color:var(--ink);font-weight:600}
+.edition-open{margin-top:8px;padding:10px 20px;border-radius:5px;background:var(--gold);color:#1b1811;font-weight:700}
+.edition-bar{display:flex;align-items:center;gap:8px;min-width:0;font-size:13px}
+.edition-bar a{display:inline-flex;align-items:center;gap:4px;min-height:32px;padding-right:8px;color:var(--gold);white-space:nowrap}
+.edition-bar b{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
+@media(prefers-reduced-motion:reduce){.edition-card{transition:none}}

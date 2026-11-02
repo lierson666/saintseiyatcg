@@ -5,6 +5,7 @@ import {loadCanon} from '../shared/canon-cards.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {canonIndex, validateDeck, colorErrors, DECK_SIZE, SPLASH_LIMIT} from '../shared/deck-v3.js';
 import {loadTelas, mountTelas} from './telas-editor.js?v=20261030-4';
+import {EDITIONS, editionOf} from '../shared/editions.js?v=20261102-1';
 
 const $ = s => document.querySelector(s);
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -69,12 +70,35 @@ function overview() {
 }
 // Lista de cartas com filtros de tipo e de facção, combináveis (autor, 31/10/2026), ao lado do Forge.
 const CARD_TYPES = ['God', 'Devotee', 'Spell', 'Equipment', 'Domain'];
-let cardFaction = '', cardType = '', cardCurrent = '';
+let cardFaction = '', cardType = '', cardCurrent = '', cardEdition = null;
+const editionCards = edition => forge.filter(c => editionOf(c).code === edition.code);
+const forgeUrl = () => `../card-forge/?edicao=${encodeURIComponent(cardEdition.code)}${cardCurrent ? `&card=${encodeURIComponent(cardCurrent)}` : ''}`;
+// Entrar em outra edição limpa os filtros e abre a 1ª carta dela.
+function openEdition(edition) {
+  if (edition === cardEdition) return;
+  cardEdition = edition;
+  cardFaction = cardType = '';
+  cardCurrent = edition ? editionCards(edition)[0]?.id || '' : '';
+}
+function editionsPage() {
+  return `<section class="edition-picker" aria-label="Edições do jogo"><div class="edition-grid">${EDITIONS.map(e => {
+    const list = editionCards(e);
+    const tally = FACTIONS.map(f => [f, list.filter(c => c.faccao === f).length]).filter(([, n]) => n);
+    return `<a class="edition-card" href="#cartas/${encodeURIComponent(e.code)}">
+      <img src="../${esc(e.logo)}" alt="" width="900" height="300">
+      <span class="edition-code">${esc(e.code)} · ${esc(e.language)} · ${e.year}</span>
+      <h2>${esc(e.name)}</h2>
+      <p class="edition-total"><b>${list.length}</b> cartas</p>
+      <ul class="edition-tally">${tally.map(([f, n]) => `<li data-tone="${f}">${f} <b>${n}</b></li>`).join('')}</ul>
+      <span class="edition-open">Abrir edição <span aria-hidden="true">→</span></span></a>`;
+  }).join('')}</div></section>`;
+}
 function cardList() {
   const q = ($('#card-search')?.value || '').toLowerCase();
-  const list = forge.filter(c => (!cardType || c.tipo === cardType) && (!cardFaction || c.faccao === cardFaction) && `${c.nome_exibicao_en} ${c.id} ${c.faccao}`.toLowerCase().includes(q));
+  const all = editionCards(cardEdition);
+  const list = all.filter(c => (!cardType || c.tipo === cardType) && (!cardFaction || c.faccao === cardFaction) && `${c.nome_exibicao_en} ${c.id} ${c.faccao}`.toLowerCase().includes(q));
   const counter = $('#card-count');
-  if (counter) counter.textContent = `${list.length} de ${forge.length} cartas`;
+  if (counter) counter.textContent = `${list.length} de ${all.length} cartas`;
   return list.length ? list.map(c => `<button class="card-row" data-action="edit-card" data-card="${esc(c.id)}" data-tone="${esc(c.faccao)}" aria-current="${c.id === cardCurrent}">
     <i aria-hidden="true"></i><span><b>${esc(c.nome_exibicao_en)}</b><small>${esc(c.id)}</small></span><em>${esc(c.tipo)}</em></button>`).join('') : '<p class="hint card-empty">Nenhuma carta encontrada.</p>';
 }
@@ -82,11 +106,12 @@ function cardsPage() {
   const chip = (f, label) => `<button class="chip" data-action="card-faction" data-faction="${f}" ${FACTIONS.includes(f) ? `data-tone="${f}"` : ''} aria-pressed="${f === cardFaction}">${label}</button>`;
   const typeChip = (t, label) => `<button class="chip" data-action="card-type" data-type="${t}" aria-pressed="${t === cardType}">${label}</button>`;
   return `${publishBox(true)}<div class="cards-workbench" style="margin-top:16px"><aside class="card-browser" aria-label="Catálogo de cartas"><div class="card-browser-head">
+    <div class="edition-bar"><a href="#cartas" title="Trocar de edição"><span aria-hidden="true">←</span> Edições</a><b>${esc(cardEdition.name)}</b><span class="tag">${esc(cardEdition.code)}</span></div>
     <input class="search" id="card-search" placeholder="Buscar nome, ID ou facção" aria-label="Buscar carta">
     <div class="chips" role="group" aria-label="Filtrar por tipo">${typeChip('', 'Todos os tipos')}${CARD_TYPES.map(t => typeChip(t, t)).join('')}</div>
     <div class="chips" role="group" aria-label="Filtrar por facção">${chip('', 'Todas as facções')}${FACTIONS.map(f => chip(f, f)).join('')}</div>
     <small class="card-count" id="card-count"></small></div><div id="card-list" style="overflow:auto">${cardList()}</div></aside>
-    <iframe class="forge-frame" id="forge" title="Card Forge — editor de cartas" src="../card-forge/${cardCurrent ? `?card=${encodeURIComponent(cardCurrent)}` : ''}"></iframe></div>`;
+    <iframe class="forge-frame" id="forge" title="Card Forge — editor de cartas" src="${esc(forgeUrl())}"></iframe></div>`;
 }
 const ERR = {identity: 'carta fora das cores do God e do Domain', splash: `mais de ${SPLASH_LIMIT} cartas da facção do Domain`, copies: 'mais de 3 cópias', size: `deck sem ${DECK_SIZE} cartas`, domain: 'sem Domain', unknown: 'carta inexistente', outside: 'carta que não vai no deck', quantity: 'quantidade inválida'};
 function decksPage() {
@@ -104,21 +129,39 @@ async function rulesPage() {
 }
 
 async function render() {
-  const id = PAGES[location.hash.slice(1)] ? location.hash.slice(1) : 'visao';
-  $('#breadcrumb').textContent = PAGES[id][0];
-  $('#page-title').textContent = PAGES[id][1];
+  const [route, editionCode] = location.hash.slice(1).split('/');
+  const id = PAGES[route] ? route : 'visao';
+  const edition = id === 'cartas' && EDITIONS.find(e => e.code === decodeURIComponent(editionCode || '')) || null;
+  openEdition(edition);
+  $('#breadcrumb').textContent = edition ? `${PAGES[id][0]} / ${edition.name}` : PAGES[id][0];
+  $('#page-title').textContent = id === 'cartas' && !edition ? 'Qual edição você vai abrir?' : PAGES[id][1];
   for (const a of document.querySelectorAll('.sidebar nav a')) a.toggleAttribute('aria-current', a.hash === '#' + id);
   if (id === 'telas') { await loadTelas(api); return mountTelas($('#content'), {api, notice}); }
-  $('#content').innerHTML = id === 'cartas' ? cardsPage() : id === 'decks' ? decksPage() : id === 'regras' ? await rulesPage() : overview();
-  if (id === 'cartas') $('#card-list').innerHTML = cardList(); // contador só existe depois do HTML
+  $('#content').innerHTML = id === 'cartas' ? (edition ? cardsPage() : editionsPage()) : id === 'decks' ? decksPage() : id === 'regras' ? await rulesPage() : overview();
+  if (edition) $('#card-list').innerHTML = cardList(); // contador só existe depois do HTML
 }
 async function refresh() {
   try { notice(''); await load(); await render(); } catch (e) { notice(`Não foi possível carregar o projeto: ${e.message}`); }
 }
 
+function setMenu(closed) {
+  const label = closed ? 'Abrir menu' : 'Recolher menu', toggle = $('#sidebarToggle');
+  document.querySelector('.app-shell').classList.toggle('menu-closed', closed);
+  toggle.setAttribute('aria-expanded', String(!closed));
+  toggle.setAttribute('aria-label', label);
+  toggle.title = label;
+}
+try { setMenu(localStorage.getItem('starhill.menu') === 'closed'); } catch {}
+
 document.addEventListener('click', async e => {
   const b = e.target.closest('button');
   if (!b) return;
+  if (b.id === 'sidebarToggle') {
+    const closed = !document.querySelector('.app-shell').classList.contains('menu-closed');
+    setMenu(closed);
+    try { localStorage.setItem('starhill.menu', closed ? 'closed' : 'open'); } catch {}
+    return;
+  }
   if (b.id === 'reload') return refresh();
   if (b.dataset.action === 'card-faction' || b.dataset.action === 'card-type') {
     if (b.dataset.action === 'card-type') cardType = b.dataset.type; else cardFaction = b.dataset.faction;
@@ -129,7 +172,7 @@ document.addEventListener('click', async e => {
     cardCurrent = b.dataset.card;
     const frame = $('#forge')?.contentWindow;
     // Forge já aberto: troca a carta sem recarregar; senão abre pelo ?card=.
-    if (frame?.forge?.selectCard) frame.forge.selectCard(cardCurrent); else $('#forge').src = `../card-forge/?card=${encodeURIComponent(cardCurrent)}`;
+    if (frame?.forge?.selectCard) frame.forge.selectCard(cardCurrent); else $('#forge').src = forgeUrl();
     document.querySelectorAll('.card-row').forEach(r => r.setAttribute('aria-current', String(r === b)));
   }
   if (b.dataset.action === 'publish') {

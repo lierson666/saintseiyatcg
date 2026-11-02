@@ -478,6 +478,8 @@ Uma habilidade Afterlife só devolve a carta ao campo se o texto disser.
 
 Keyword é uma palavra que resume uma habilidade da carta (autor, 01/11/2026). A lista oficial tem 8: **Guardian, Pierce, Impulse, Nimble, Long Range, Hidden Cosmo, Afterlife e Imune**. Seal, Sealed e Training são marcadores. Cosmoble, Equip, Resonance e Awaken são mecânicas.
 
+**Sintaxe no texto da carta (autor, 02/11/2026):** Guardian, Pierce, Impulse, Nimble e Long Range ficam juntas na primeira linha do texto, separadas por vírgula e terminadas em ponto: “GUARDIAN, PIERCE.”. Cada habilidade inteira ocupa a própria linha abaixo. Hidden Cosmo, Afterlife e Imune têm valor ou efeito: seguem em linha própria, como habilidades. É regra de apresentação, não muda nenhum efeito.
+
 ### 42. Guardian
 
 Enquanto houver Devotee inimigo com Guardian em campo, Prepared ou não, os Strikes devem mirar um Guardian (exceto Nimble contra Guardian sem Nimble; um Guardian que o atacante não pode mirar não conta). Ver §12.
@@ -558,7 +560,7 @@ Uma habilidade que exige Pegasus Seiya não é ativada por outro Devotee que est
 
 ### 53. Efeitos de entrada
 
-Habilidades ativadas quando uma carta entra em jogo devem aparecer antes das informações de atributos e keywords no padrão de Card Craft.
+Habilidades ativadas quando uma carta entra em jogo devem aparecer antes das informações de atributos no padrão de Card Craft. As keywords ficam sempre na primeira linha do texto (Cap. IX, autor, 02/11/2026).
 
 Essa é uma regra de apresentação das cartas, não uma alteração da ordem de resolução.
 

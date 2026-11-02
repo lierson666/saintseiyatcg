@@ -1,9 +1,10 @@
-import {renderRules,inlineMarkup,presentationRules,ruleBlocksWithoutKeywords,blocksMarkup} from './card-text.js?v=20261102-sym1';
+import {renderRules,inlineMarkup,presentationRules,ruleBlocksWithoutKeywords,blocksMarkup} from './card-text.js?v=20261102-arroba1';
 import {isArmor,isEquipment} from './card-model.js?v=20261024-4';
 import {renderPublishedCard,visualProject} from './layout-studio/runtime.js?v=20261101-rules1';
-import {printedEquipmentBonuses,signedBonus,armorBonusText} from './card-visual-values.js?v=20261031-kw1';
-import {renderKeywordNotes,keywordTipAttr} from './keyword-glossary.js?v=20261101-kw10';
+import {printedEquipmentBonuses,signedBonus,armorBonusText} from './card-visual-values.js?v=20261102-arroba1';
+import {renderKeywordNotes,keywordTipAttr} from './keyword-glossary.js?v=20261102-arroba1';
 import {displayCard,keywordName,typeWord,lang} from './card-i18n.js?v=20261101-tr1';
+import {EDITIONS,editionOf} from './editions.js?v=20261102-1';
 // A ilustração é apenas fundo. Letras, números e estados são dados independentes no DOM.
 globalThis.document?.addEventListener('load', e => { if (e.target.matches?.('.live-card__illustration img')) e.target.classList.add('is-in'); }, true); // ver .is-in em live-card.css
 const escape=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -43,9 +44,8 @@ function rulesSize(texts,base,w,h,min){
   for(let s=base;s>floor;s--){const per=w/(s*.5);let lines=0;for(const t of texts)lines+=Math.max(1,Math.ceil(t.length/per));if(lines*s*1.18+(texts.length-1)*s*.5<=h)return s;}
   return floor;
 }
-// Edições (autor, 31/10/2026): a 1ª é Dawn of Cosmo. Carta sem `edicao` é DOC. O artista vem do campo `artista`.
-export const EDITIONS=[{name:'Dawn of Cosmo',code:'DOC',language:'EN',year:2026}];
-export const editionOf=card=>EDITIONS.find(e=>e.code===card?.edicao)||EDITIONS[0];
+// O artista vem do campo `artista`; a lista de edições fica em editions.js.
+export {EDITIONS,editionOf};
 function renderPsdCard(card,{src,stage,hp,power,keywords,damage,rules,equipment,equip,ownerLine,instance,compact}){
   const savedArt=visualProject(card.id)?.art;
   const artworkStyle=savedArt?.w&&savedArt?.h?`position:absolute;max-width:none;width:${savedArt.w/14.88}%;height:${savedArt.h/20.91}%;left:${savedArt.x/14.88}%;top:${savedArt.y/20.91}%;object-fit:fill`:'';

@@ -1,9 +1,9 @@
-import {mountRulesRows} from './rules-rows.js';
+import {mountRulesRows} from './rules-rows.js?v=20261102-kw2';
 import {createHistory} from '../shared/editor-history.js';
 import {compilePlaytest} from '../shared/import-playtest.js';
-import {renderLiveCard,illustration,statLine,EDITIONS,editionOf} from '../shared/live-card.js?v=20261102-sym1';
-import {textBlocks, blocksMarkup, presentationRules, ruleBlocksWithoutKeywords, KEYWORD_WORDS, STAT_RE, statTrend, statSymbols} from '../shared/card-text.js?v=20261102-sym1';
-import {isArmor,isEquipment,validateCard} from '../shared/card-model.js';
+import {renderLiveCard,illustration,statLine,EDITIONS,editionOf} from '../shared/live-card.js?v=20261102-arroba1';
+import {textBlocks, blocksMarkup, presentationRules, ruleBlocksWithoutKeywords, KEYWORD_WORDS, KEYWORD_WORDS_PT, STAT_RE, statTrend, statSymbols, costSymbols, keywordLine} from '../shared/card-text.js?v=20261102-arroba1';
+import {isArmor,isEquipment,validateCard,LINE_KEYWORDS,keywordsOfLine} from '../shared/card-model.js?v=20261102-kw1';
 // Card Forge — editor de cartas em vanilla JS. Renderiza no canvas nativo 1488x2091 usando
 // as peças de CARD-TEMPLATE/ (extraídas dos PSDs) e o spec CARD-TEMPLATE/templates.json.
 
@@ -11,7 +11,7 @@ import {publishedScene,visualProject} from '../shared/layout-studio/runtime.js';
 import {displayCard,forceLang,keywordName,typeWord,lang} from '../shared/card-i18n.js?v=20261101-tr1';
 import {sceneCanvas} from '../shared/layout-studio/renderer.js';
 import {simulateCard} from './studio-preview.js';
-import {printedEquipmentBonuses,signedBonus,armorBonusText} from '../shared/card-visual-values.js?v=20261031-kw1';
+import {printedEquipmentBonuses,signedBonus,armorBonusText} from '../shared/card-visual-values.js?v=20261102-arroba1';
 
 const T = await (await fetch('../CARD-TEMPLATE/templates.json')).json();
 const P = (await (await fetch('../CARD-TEMPLATE/pieces.json')).json()).pieces;
@@ -71,7 +71,7 @@ function blankState() {
   return {
     id: '', nome_exibicao_en: '', title: '', subtitle: '', tipo: 'Devotee', subtipos: '', faccao: 'Athena',
     revisao_regras: '2.1', cosmoble: false, personagem_unico: false, personagem_id: '', origem_personagem: '', referencias_mitologicas_texto: '', slot_equipamento: '', donos: '', estagios: [], resonanceText: '',
-    raridade: 'Common', custo: '', unidade_custo: 'cosmo', power: '', vida: '', resistance: '', bonusPower: '', bonusResistance: '', auto_equip: '', artista: '', edicao: 'DOC',
+    raridade: 'Common', custo: '', unidade_custo: 'base_cosmo', power: '', vida: '', resistance: '', bonusPower: '', bonusResistance: '', auto_equip: '', artista: '', edicao: new URLSearchParams(location.search).get('edicao') || EDITIONS[0].code,
     equipar_custo: '', equipar_custo_ressonante: '', equipar_custo_outros: '', damage_cloth: '', soul: '', attack: '', awaken: '', keywords: '', rules: '',
     habilidade_awaken_en: '', ultimate_en: '', flavour: '', art: null,
     pt_nome: '', pt_subtitulo: '', pt_rules: '', pt_awaken: '', pt_ultimate: '', pt_flavour: '', pt_auto: [], ptFor: '',
@@ -254,8 +254,16 @@ async function drawFrame() {
 const ICONS = { '{C}': 'athena/icon_cosmo', '{B}': 'athena/icon_cosmo', '{L}': 'athena/icon_latent', '{S}': 'icons/soul', '{T}': 'icons/tap', '{A}': 'icons/atk-mini', '{H}': 'icons/soul' };
 // Keywords (docs/guia-do-jogo.md §24 + ações dos Deuses) saem em NEGRITO MAIÚSCULO no texto de regras, como nos PSDs.
 export const KEYWORDS = ['Guardian', 'Pierce', 'Impulse', 'Nimble', 'Long Range', 'Hidden Cosmo', 'Afterlife', 'Immune'];
-const KW_RE = new RegExp(`\\b(${[...KEYWORD_WORDS].sort((a, b) => b.length - a.length).join('|')})\\b`, 'gi'); // mesma lista do duelo (shared/card-text.js)
-const boldKeywords = (para) => statSymbols(para.split(/(\*\*[^*]*\*\*)/).map((seg, i) => (i % 2 ? seg : seg.replace(KW_RE, (m) => `**${m.toUpperCase()}**`).replace(STAT_RE, (m) => `⟪${statTrend(m)}|${m.toUpperCase()}⟫`))).join(''));
+// As caixas de regras mandam nas keywords da linha (guia Cap. IX); outra entrada antiga de keywords_en fica como está.
+const boxKeywords = (rules) => splitParas(rules).flatMap((p) => keywordsOfLine(p) || []);
+const cardKeywords = (s) => [...new Set([...list(s.keywords).filter((k) => !LINE_KEYWORDS.includes(k)), ...boxKeywords(s.rules)])];
+// Keyword gravada sem caixa ganha uma no fim, para não deslocar as falas ligadas a cada habilidade.
+function keywordsWithoutBox(s) {
+  const boxed = boxKeywords(s.rules);
+  return list(s.keywords).filter((k) => LINE_KEYWORDS.includes(k) && !boxed.includes(k)).join(', ');
+}
+const KW_RE = new RegExp(`@(${[...KEYWORD_WORDS, ...KEYWORD_WORDS_PT].sort((a, b) => b.length - a.length).join('|')})(?!\\p{L})`, 'giu'); // mesma lista do duelo (shared/card-text.js)
+const boldKeywords = (para) => statSymbols(keywordLine(para).split(/(\*\*[^*]*\*\*)/).map((seg, i) => (i % 2 ? seg : seg.replace(KW_RE, (_, k) => `**${k.toUpperCase()}**`).replace(STAT_RE, (m) => `⟪${statTrend(m)}|${m.toUpperCase()}⟫`))).join('').replace(/@(?=\p{L})(?!(?:ATK|ATQ|POWER|PODER|HP|PV|COSMO|BASECOSMO|LATENT|LATENTE|SOUL|ALMA|TAP)(?!\p{L}))/giu, ''));
 
 function tokenize(para) {
   const toks = [];
@@ -343,7 +351,7 @@ async function drawAwaken(x, y, w, h, n) {
 async function drawRules(el, s, pt = null) {
   const [rx, ry, rw, rh] = el.rect;
   const paras = [];
-  const kws = list(s.keywords).map(k => (pt ? keywordName(k) : k));
+  const kws = cardKeywords(s).map(k => (pt ? keywordName(k) : k));
   if (kws.length) paras.push(`**${kws.join(', ').toUpperCase()}.**`);
   // Em PT o texto vem pronto dos campos *_pt (displayCard), já com Equip/Ressonância.
   const text=pt?(pt.habilidades_en||[]).map(toMarkup):s.estagios.length||layoutKey(s)==='relic_cloth'?presentationRules(buildCard()).map(toMarkup):splitParas(s.rules); // Armor: 1ª linha Equip · Resonance
@@ -571,8 +579,7 @@ function fillForm() {
 function syncVisibility() {
   const lk = layoutKey(S);
   form.querySelectorAll('[data-for]').forEach((el) => { el.hidden = !el.dataset.for.split(' ').includes(lk); });
-  $('#legacyResistance').hidden=['2.0','2.1'].includes(S.revisao_regras);
-  $('#characterFields').hidden=S.tipo!=='Devotee';$('#equipmentFields').hidden=!isEquipment({...S,subtipos:list(S.subtipos)});
+  $('#rulesV2').hidden=!isEquipment({...S,subtipos:list(S.subtipos)});
 }
 
 form.addEventListener('input', (e) => {
@@ -599,6 +606,8 @@ function fromCard(c, proj = {}) {
   s.keywords = (c.keywords_en || []).join(', ');
   gen = (c.habilidades_en || []).map((text) => ({ text, markup: toMarkup(text) }));
   s.rules = gen.map((g) => g.markup).join('\n\n');
+  const unboxed = keywordsWithoutBox(s);
+  if (unboxed) { gen.push({ text: unboxed, markup: unboxed }); s.rules = gen.map((g) => g.markup).join('\n\n'); }
   const bonus = (c.habilidades_en || []).join(' ').match(/gets ([+-]\d+)\/([+-]\d+)/);
   if (bonus && c.tipo === 'Relic') { s.bonusPower = bonus[1]; s.bonusResistance = bonus[2]; }
   // Armor (30/10/2026): bônus vem de bonus_poder/bonus_vida do cards.json, não do projeto visual antigo.
@@ -831,10 +840,18 @@ function buildCard() {
   const base = source ? structuredClone(source) : Object.fromEntries(Object.keys(db.cartas[0] || {}).map((k) => [k, null]));
   const n = (v) => (has(v) ? Number(v) : null);
   const paras = splitParas(S.rules);
-  const habilidades = paras.map((md, i) => (gen[i] && gen[i].markup === md ? gen[i].text : fromMarkup(md)));
+  let habilidades = paras.map((md, i) => (gen[i] && gen[i].markup === md ? gen[i].text : fromMarkup(md)));
+  let keywords = cardKeywords(S);
+  // Só a caixa da keyword mudou de forma ou lugar: mantém os campos da carta como estavam, sem diff à toa.
+  const abilities = (texts) => JSON.stringify((texts || []).filter((t) => !keywordsOfLine(t)));
+  const sameKeywords = source && [...keywords].sort().join() === [...(source.keywords_en || [])].sort().join();
+  if (sameKeywords && abilities(habilidades) === abilities(source.habilidades_en)) {
+    habilidades = source.habilidades_en;
+    keywords = source.keywords_en || [];
+  }
   Object.assign(base, {
     id: S.id, nome_exibicao_en: S.nome_exibicao_en.trim(), faccao: S.faccao, tipo: S.tipo,
-    subtipos: list(S.subtipos), raridade: S.raridade, keywords_en: list(S.keywords), habilidades_en: habilidades,
+    subtipos: list(S.subtipos), raridade: S.raridade, keywords_en: keywords, habilidades_en: habilidades,
   });
   if (!source) Object.assign(base, { nome_interno_pt: '', status: 'needs-review', cosmoble: false, caminho_imagem: null, habilidade_awaken_en: '', ultimate_en: '', notas_pt: '' });
   for(const k of NUM)if(!source||k in source||has(S[k]))base[k]=n(S[k]);
@@ -849,7 +866,7 @@ function buildCard() {
     if(mechanicalTextChanged||!source)base.motor_revisao_pendente=true;
   }
   // texto com marcação ({L}, **) volta para o formato do cards.json; texto intacto fica como está
-  const plain = (v) => (/\*\*|(?:\d|X) \{[BCLS]\}/.test(v || '') ? fromMarkup(v) : (v || '').trim()); // texto cru ({5}{C}, quebras de linha) fica como está
+  const plain = (v) => costSymbols(/\*\*|(?:\d|X) \{[BCLS]\}/.test(v || '') ? fromMarkup(v) : (v || '').trim()); // texto cru ({5}{C}, quebras de linha) fica como está
   if (S.tipo === 'God') Object.assign(base, { habilidade_awaken_en: plain(S.habilidade_awaken_en), ultimate_en: plain(S.ultimate_en) });
   // PT-BR (campos *_pt): sai do inglês pela IA (tools/translate_pt.py) e pode ser ajustado à mão; campo vazio sai do cards.json.
   const ptSub=S.pt_subtitulo.trim(),ptVal={nome_exibicao_pt:S.pt_nome.trim(),habilidades_pt:splitParas(S.pt_rules),flavour_pt:S.pt_flavour.trim(),auto_equip_pt:S.pt_auto||[]};
@@ -945,31 +962,45 @@ refreshRulesRows = () => refreshRules.forEach(r => r());
 refreshRulesRows();
 function insertAtCursor(text) {
   const t = lastText, a = t.selectionStart ?? t.value.length, b = t.selectionEnd ?? a;
-  const pre = t.value.slice(0, a), sp = pre && !/\s$/.test(pre) && /^\w/.test(text) ? ' ' : '';
+  const pre = t.value.slice(0, a), sp = pre && !/\s$/.test(pre) && /^[\w@]/.test(text) ? ' ' : '';
   t.value = pre + sp + text + t.value.slice(b);
   t.focus();
   t.selectionStart = t.selectionEnd = a + sp.length + text.length;
   t.dispatchEvent(new Event('input', { bubbles: true }));
 }
-// ATK e HP entram como palavra (ATQ e PV no texto PT): a prévia mostra o símbolo e engine e IA seguem lendo o dado.
-for (const [token, label, word, wordPt] of [['{C}', 'Cosmo'], ['{B}', 'Base Cosmo'], ['{L}', 'Latent Cosmo'], ['{S}', 'Soul'], ['{T}', 'Tap'], ['{A}', 'ATK', 'ATK', 'ATQ'], ['{H}', 'HP', 'HP', 'PV']]) {
-  const b = Object.assign(document.createElement('button'), { type: 'button', title: `${label} ${token}` });
+// Só @ puxa símbolo (autor, 02/11/2026): a palavra sem @ fica como texto na carta.
+for (const [token, label, at] of [['{C}', 'Cosmo', '@COSMO'], ['{B}', 'Base Cosmo', '@BASECOSMO'], ['{L}', 'Latent Cosmo', '@LATENT'], ['{S}', 'Soul', '@SOUL'], ['{T}', 'Tap', '@TAP'], ['{A}', 'ATK', '@ATK'], ['{H}', 'HP', '@HP']]) {
+  const b = Object.assign(document.createElement('button'), { type: 'button', title: `${label} ${at}` });
   b.setAttribute('aria-label', `Inserir ${label}`);
   b.append(Object.assign(new Image(), { src: pieceSrc(ICONS[token]), alt: '' }), label);
   b.addEventListener('mousedown', (e) => e.preventDefault()); // não tira o foco/cursor do texto
-  b.addEventListener('click', () => insertAtCursor(!word ? token : lastText.name?.startsWith('pt_') ? wordPt : word));
+  b.addEventListener('click', () => insertAtCursor(at));
   $('#symbar').append(b);
 }
+// + Keyword: da linha entra na caixa de keywords (com vírgula); Hidden Cosmo, Afterlife e Imune entram no cursor.
 const kwSel = $('#kwSelect');
 kwSel.append(...KEYWORDS.map((k) => new Option(k, k)));
-kwSel.addEventListener('change', () => {
-  const keyword=kwSel.value,field=form.elements.keywords,selected=list(field.value);
-  if(keyword&&!selected.some(k=>k.toLowerCase()===keyword.toLowerCase())){
-    field.value=[...selected,keyword].join(', ');
-    field.dispatchEvent(new Event('input',{bubbles:true}));
+$('#symbar').append(kwSel);
+function addKeyword(keyword) {
+  const boxes = [...form.elements.rules.closest('label').nextElementSibling.querySelectorAll('.rr-text')];
+  const focused = boxes.includes(lastText) ? lastText : null;
+  if (!LINE_KEYWORDS.includes(keyword) && focused) return insertAtCursor(keyword);
+  if (LINE_KEYWORDS.includes(keyword)) {
+    if (boxKeywords(form.elements.rules.value).includes(keyword)) return;
+    const target = focused && (!focused.value.trim() || keywordsOfLine(focused.value)) ? focused : boxes.find((b) => keywordsOfLine(b.value));
+    if (target) {
+      target.value = [...(keywordsOfLine(target.value) || []), keyword].join(', ');
+      target.dispatchEvent(new Event('input', { bubbles: true }));
+      target.focus();
+      return;
+    }
   }
-  kwSel.value='';
-});
+  const area = form.elements.rules;
+  area.value = [area.value.trim(), keyword].filter(Boolean).join('\n\n');
+  area.dispatchEvent(new Event('input', { bubbles: true }));
+  refreshRulesRows();
+}
+kwSel.addEventListener('change', () => { if (kwSel.value) addKeyword(kwSel.value); kwSel.value = ''; });
 
 // ---------- lote: várias cartas de um arquivo de texto ----------
 // Formato (card-forge/import/modelo.txt): blocos "Campo: valor", cartas separadas por uma linha "---".
@@ -1034,6 +1065,8 @@ async function prepareItem(raw, used) {
   const g = gen;
   const { art, ...fields } = raw;
   Object.assign(s, fields);
+  const unboxed = keywordsWithoutBox(s);
+  if (unboxed) s.rules = [s.rules.trim(), unboxed].filter(Boolean).join('\n\n');
   if (!o) {
     const f = s.faccao.toLowerCase();
     const nums = [...db.cartas.map((c) => c.id), ...used].map((id) => id.match(new RegExp(`^${f}-(\\d+)$`))?.[1]).filter(Boolean).map(Number);
@@ -1167,14 +1200,58 @@ window.addEventListener('card-layouts:published',()=>render());
 
 try {
   db = await (await fetch('../data/cards.json')).json();
-  const requested = new URLSearchParams(location.search).get('card') || 'athena-002';
-  const start = db.cartas.find(c => c.id === requested)?.id || db.cartas[0]?.id;
+  const query = new URLSearchParams(location.search), requested = query.get('card') || 'athena-002';
+  // Edição aberta sem nenhuma carta ainda (STAR HILL): começa em uma carta nova dela.
+  const start = query.has('edicao') && !query.has('card') ? null : db.cartas.find(c => c.id === requested)?.id || db.cartas[0]?.id;
   fillCardSelect(start);
   if (start) await selectCard(start); else newCard();
 } catch (e) {
   say(`falha ao carregar cards.json: ${e.message}`, true);
 }
 
+// Divisória entre o formulário e a prévia: a largura escolhida fica guardada neste navegador.
+{
+  const bar = document.getElementById('formResizer'), main = bar.parentElement, form = document.getElementById('form'), KEY = 'forge.formWidth';
+  let want = 0;
+  try { want = Number(localStorage.getItem(KEY)) || 0; } catch {}
+  // Painel oculto mede 0: só encaixa a largura quando ele aparece, sem perder a escolha guardada.
+  const fit = () => {
+    if (!want || !main.clientWidth) return;
+    const pad = parseFloat(getComputedStyle(main).paddingLeft) * 2;
+    const px = Math.round(Math.max(240, Math.min(want, main.clientWidth - pad - bar.offsetWidth - 240)));
+    main.style.setProperty('--form-w', `${px}px`);
+    return px;
+  };
+  const set = w => {
+    want = w;
+    want = fit() || w;
+    try { localStorage.setItem(KEY, want); } catch {}
+  };
+  new ResizeObserver(fit).observe(main);
+  bar.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    bar.setPointerCapture(e.pointerId);
+    bar.classList.add('dragging');
+    const from = e.clientX, width = form.getBoundingClientRect().width;
+    const move = m => set(width + m.clientX - from);
+    const up = () => { bar.classList.remove('dragging'); bar.removeEventListener('pointermove', move); bar.removeEventListener('pointerup', up); bar.removeEventListener('pointercancel', up); };
+    bar.addEventListener('pointermove', move);
+    bar.addEventListener('pointerup', up);
+    bar.addEventListener('pointercancel', up);
+  });
+  bar.addEventListener('keydown', e => {
+    const step = { ArrowLeft: -24, ArrowRight: 24 }[e.key];
+    if (!step) return;
+    e.preventDefault();
+    set(form.getBoundingClientRect().width + step);
+  });
+  bar.addEventListener('dblclick', () => {
+    want = 0;
+    main.style.removeProperty('--form-w');
+    try { localStorage.removeItem(KEY); } catch {}
+  });
+}
+
 function checkCatalog(){const keep={orig,gen,S};try{return db.cartas.map(c=>{orig=c;S=fromCard(c);return {id:c.id,diff:diffCards(c,buildCard())};}).filter(r=>r.diff.length);}finally{({orig,gen,S}=keep);}}
-function layoutReport(){const keep={orig,gen,S};try{return db.cartas.map(c=>{orig=c;S=fromCard(c);const el=T.layouts[layoutKey(S)].elements.find(e=>e.kind==='rules');const paras=[...(has(S.keywords)?[`**${list(S.keywords).join(', ')}.**`]:[]),...splitParas(blocksMarkup(ruleBlocksWithoutKeywords(splitParas(S.rules),list(S.keywords))))];let size=el.size,L;for(;size>=22;size--){L=layoutRules(paras,size,el.rect[2]);if(L.h<=el.rect[3])break;}return{id:c.id,size,overflow:L.h>el.rect[3]};});}finally{({orig,gen,S}=keep);}}
+function layoutReport(){const keep={orig,gen,S};try{return db.cartas.map(c=>{orig=c;S=fromCard(c);const el=T.layouts[layoutKey(S)].elements.find(e=>e.kind==='rules');const paras=[...(cardKeywords(S).length?[`**${cardKeywords(S).join(', ')}.**`]:[]),...splitParas(blocksMarkup(ruleBlocksWithoutKeywords(splitParas(S.rules),list(S.keywords))))];let size=el.size,L;for(;size>=22;size--){L=layoutRules(paras,size,el.rect[2]);if(L.h<=el.rect[3])break;}return{id:c.id,size,overflow:L.h>el.rect[3]};});}finally{({orig,gen,S}=keep);}}
 window.forge = { history:{undo:()=>travelEdit('undo'),redo:()=>travelEdit('redo'),get canUndo(){return !!editHistory?.canUndo;},get canRedo(){return !!editHistory?.canRedo;}},checkCatalog,layoutReport,S: () => S, render, toMarkup, fromMarkup, buildCard, selectCard, parseBatch };

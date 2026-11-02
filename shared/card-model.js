@@ -4,6 +4,14 @@ export const RULES_VERSION = '2.1';
 export const TYPES = ['God','Domain','Devotee','Equipment','Support','Relic','Spell','Technique','Moment'];
 export const FACTIONS = ['Athena','Poseidon','Hades','Ares','Artemis','Neutral'];
 export const KEYWORDS = ['Guardian','Pierce','Impulse','Nimble','Long Range','Hidden Cosmo','Afterlife','Immune']; // lista oficial: guia Cap. IX (autor, 01/11/2026)
+// Sintaxe da carta (guia Cap. IX): estas vão juntas na linha de keywords; as demais têm valor ou efeito e ficam em linha própria.
+export const LINE_KEYWORDS = ['Guardian','Pierce','Impulse','Nimble','Long Range'];
+// Texto feito só dessas keywords ("Guardian, Pierce.") devolve os nomes oficiais; qualquer outro texto devolve null.
+export function keywordsOfLine(text){
+  const parts=String(text).replace(/\*\*|@/g,'').split(/[,.:;]/).map(part=>part.trim().toLowerCase()).filter(Boolean);
+  const names=parts.map(part=>LINE_KEYWORDS.find(k=>k.toLowerCase()===part));
+  return names.length&&names.every(Boolean)?[...new Set(names)]:null;
+}
 export const OPERATIONS = new Set(['curar','alma','comprar','descartar','atributo','keyword','prevenir','preparar','esgotar','mover','dano','dano_area','mover_dano','rivalizar','encerrar_rivalidade','redirecionar_strike','desconto','olhar','base_extra','anular','opcional','retornar','remover_guardian','dano_rivais','controlar','cosmo_temporario','reparar']);
 export const slug = value => String(value||'').normalize('NFD').replace(/\p{M}/gu,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 export const isArmor = armorCard;
