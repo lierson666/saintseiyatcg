@@ -28,15 +28,22 @@ const picker = (key, value) => {
 };
 
 // sound: onde ficam os seletores de som (a aba Som do Forge); as caixas de texto ficam só com o texto.
-const abilityName = (t, i) => t.match(/\*\*(.+?):?\*\*/)?.[1] || t.trim().slice(0, 28) || `Habilidade ${i + 1}`;
+// Nome e texto em campos separados (autor, 02/11/2026): o nome vira **Nome:** em cima do texto; caixa só com keywords fica sem nome.
+const parseAbility = t => {
+  const m = t.match(/^\*\*([^*]+?):\*\*\s*([\s\S]*)$/) || t.match(/^\*\*([^*]+)\*\*()$/);
+  return m ? {name: m[1].trim(), text: m[2].trim()} : {name: '', text: t.trim()};
+};
+const composeAbility = (name, text) => (name.trim() ? `**${name.trim()}${text.trim() ? ':' : ''}**${text.trim() ? `\n${text.trim()}` : ''}` : text.trim());
+const abilityName = (t, i) => parseAbility(t).name || t.trim().slice(0, 28) || `Habilidade ${i + 1}`;
 
 export function mountRulesRows(area, {getId = null, moments = null, sound = null} = {}) {
   area.hidden = true;
   const box = document.createElement('div');
   box.className = 'rr';
   (area.closest('label') || area).after(box);
+  const current = () => [...box.querySelectorAll('.rr-row')].map(r => composeAbility(r.querySelector('.rr-name').value, r.querySelector('.rr-text').value));
   const sync = () => {
-    const value = [...box.querySelectorAll('.rr-text')].map(t => t.value.trim()).filter(Boolean).join('\n\n');
+    const value = current().filter(Boolean).join('\n\n');
     if (value !== area.value.trim()) { area.value = value; area.dispatchEvent(new Event('input', {bubbles: true})); }
   };
   const drawSound = lines => {
@@ -46,12 +53,12 @@ export function mountRulesRows(area, {getId = null, moments = null, sound = null
       ${moments ? `<h3 class="rr-head">Momentos da carta</h3>${moments().map(([key, label]) => row(label, key, v[key])).join('')}` : ''}`;
   };
   const draw = (lines = split(area.value)) => {
-    box.innerHTML = `${lines.map((t, i) => `<div class="rr-row" data-i="${i}"><textarea class="rr-text" rows="3" spellcheck="true" aria-label="Habilidade ${i + 1}">${esc(t)}</textarea>
+    box.innerHTML = `${lines.map((t, i) => `<div class="rr-row" data-i="${i}"><div class="rr-fields"><input class="rr-name" placeholder="Nome da habilidade (vazio se for só keyword)" aria-label="Nome da habilidade ${i + 1}" value="${esc(parseAbility(t).name)}"><textarea class="rr-text" rows="3" spellcheck="true" placeholder="Texto da habilidade" aria-label="Texto da habilidade ${i + 1}">${esc(parseAbility(t).text)}</textarea></div>
       <div class="rr-tools"><button type="button" data-move="-1" ${i ? '' : 'disabled'} aria-label="Subir">↑</button><button type="button" data-move="1" ${i < lines.length - 1 ? '' : 'disabled'} aria-label="Descer">↓</button><button type="button" data-del aria-label="Remover">✕</button></div></div>`).join('')}
       <button type="button" data-add>+ Habilidade</button>`;
     drawSound(lines);
   };
-  box.addEventListener('input', e => { if (e.target.classList.contains('rr-text')) { sync(); drawSound([...box.querySelectorAll('.rr-text')].map(t => t.value)); } });
+  box.addEventListener('input', e => { if (e.target.matches('.rr-text, .rr-name')) { sync(); drawSound(current()); } });
   const onClick = e => {
     const b = e.target.closest('button');
     if (!b) return;
@@ -63,7 +70,7 @@ export function mountRulesRows(area, {getId = null, moments = null, sound = null
       const key = b.dataset.mute, v = entry(getId()), set = value => { if (/^\d+$/.test(key)) { v.linhas[Number(key)] = value; for (let i = 0; i < v.linhas.length; i++) v.linhas[i] ??= null; } else v[key] = value; };
       set(b.getAttribute('aria-pressed') === 'true' ? null : false);
       save(getId());
-      draw([...box.querySelectorAll('.rr-text')].map(t => t.value));
+      draw(current());
       return;
     }
     if (b.dataset.voice !== undefined) {
@@ -72,11 +79,11 @@ export function mountRulesRows(area, {getId = null, moments = null, sound = null
         const v = entry(getId()), value = picked?.id ?? false; // o botão Sem som do seletor chega como null
         if (/^\d+$/.test(key)) { v.linhas[Number(key)] = value; for (let i = 0; i < v.linhas.length; i++) v.linhas[i] ??= null; } else v[key] = value;
         save(getId());
-        draw([...box.querySelectorAll('.rr-text')].map(t => t.value));
+        draw(current());
       }});
       return;
     }
-    const lines = [...box.querySelectorAll('.rr-text')].map(t => t.value), i = Number(b.closest('.rr-row')?.dataset.i), v = getId && entry(getId());
+    const lines = current(), i = Number(b.closest('.rr-row')?.dataset.i), v = getId && entry(getId());
     if (b.dataset.add !== undefined) lines.push('');
     if (b.dataset.del !== undefined) { lines.splice(i, 1); v?.linhas.splice(i, 1); }
     if (b.dataset.move) {
@@ -87,15 +94,15 @@ export function mountRulesRows(area, {getId = null, moments = null, sound = null
     if (v && !b.dataset.add) save(getId());
     draw(lines);
     sync();
-    if (b.dataset.add !== undefined) [...box.querySelectorAll('.rr-text')].at(-1)?.focus();
+    if (b.dataset.add !== undefined) [...box.querySelectorAll('.rr-name')].at(-1)?.focus();
   };
   box.addEventListener('click', onClick);
   sound?.addEventListener('click', onClick);
   // Texto trocado de fora (outra carta, desfazer): redesenha sem atrapalhar quem está digitando.
   let drawnId = null;
   const refresh = () => {
-    const typing = box.contains(document.activeElement) && document.activeElement.classList.contains('rr-text');
-    const same = [...box.querySelectorAll('.rr-text')].map(t => t.value.trim()).filter(Boolean).join('\n\n') === area.value.trim();
+    const typing = box.contains(document.activeElement) && document.activeElement.matches('.rr-text, .rr-name');
+    const same = current().filter(Boolean).join('\n\n') === area.value.trim();
     const id = getId?.() ?? null;
     if (typing && same && id === drawnId) return;
     drawnId = id;
