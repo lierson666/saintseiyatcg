@@ -5,6 +5,7 @@ import {addPreviewCards} from '../shared/preview-cards.js';
 import {canonIndex, validateDeck, colorErrors, splashCount, DECK_SIZE, COPY_LIMIT, SPLASH_LIMIT} from '../shared/deck-v3.js';
 import {spellCategory} from './engine-v3/core.js';
 import {renderLiveCard, renderCardText, fullSizePieces} from '../shared/live-card.js?v=20261101-perf3';
+import {armorBonusText} from '../shared/card-visual-values.js';
 import {displayCard} from '../shared/card-i18n.js?v=20261031-kw1';
 import {unlock, playMusic, setVolume, volume} from './audio.js?v=20261030-telas';
 import {loadMyDecks, saveMyDecks, findDeck, syncDecks, onDeckStatus, deckCovers, setDeckCover} from './deck-store.js?v=20261031-2';
@@ -22,8 +23,8 @@ import {loadRank, rankBadge, rankName, rankSummary, openRankPanel, playerName} f
 const root = document.getElementById('lobby');
 const ART = '../card-forge/art-web/';
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
-const KINDS = ['All', 'Devotee', 'Equipment', 'Technique', 'Moment', 'Domain'];
-const COSTS = ['All', '1', '2', '3', '4', '5', '6', '7+'];
+const KINDS = ['Devotee', 'Equipment', 'Technique', 'Moment', 'Domain'];
+const COSTS = ['1', '2', '3', '4', '5', '6', '7+'];
 const FACTIONS = ['athena', 'poseidon', 'hades', 'ares', 'artemis'];
 const symbol = f => `../CARD-TEMPLATE/symbols/${f}.png`;
 // Filtro da coleção: os 5 Gods e as neutras (sem símbolo; botão cinza claro como o frame).
@@ -33,7 +34,7 @@ const cap = f => f[0].toUpperCase() + f.slice(1);
 let cards, index, forge, presets = [], gods = [];
 const ui = {screen: 'home', play: false, mode: 'ai', deckA: null, deckB: null, first: 'random', big: null, notice: null, picker: null, builder: null};
 try { Object.assign(ui, JSON.parse(localStorage.getItem('sstcg.lobby.v1')) || {}, {screen: 'home', play: false, big: null, builder: null}); } catch { /* sem preferências salvas */ }
-const remember = () => { try { localStorage.setItem('sstcg.lobby.v1', JSON.stringify({mode: ui.mode, deckA: ui.deckA, deckB: ui.deckB, first: ui.first, cardSize: ui.cardSize, rivalRandom: ui.rivalRandom})); } catch { /* idem */ } };
+const remember = () => { try { localStorage.setItem('sstcg.lobby.v1', JSON.stringify({mode: ui.mode, deckA: ui.deckA, deckB: ui.deckB, first: ui.first, cardSize: ui.cardSize, poolView: ui.poolView, rivalRandom: ui.rivalRandom})); } catch { /* idem */ } };
 
 // ---------- Cartas ----------
 const faction = card => (forge.get(card.id)?.faccao || card.id.replace(/^god-/, '').split('-')[0]).toLowerCase();
@@ -389,7 +390,7 @@ function openBuilder(deck) {
   if (deck?.preset) { base.id = null; base.nome = `${deck.alpha_nome || deck.nome} (copy)`; delete base.preset; }
   base.god ||= 'god-athena';
   // show: facções visíveis na coleção (símbolos dos Gods, várias ao mesmo tempo); começa nas cores do deck.
-  ui.builder = {deck: base, q: '', cost: 'All', kind: 'All', dirty: false, show: [...deckFactions(base)]};
+  ui.builder = {deck: base, q: '', cost: [], kind: [], dirty: false, show: [...deckFactions(base)]};
   ui.screen = 'builder';
 }
 const count = (b, id) => b.deck.main_deck.find(e => e.card_id === id)?.quantity || 0;
@@ -398,8 +399,8 @@ function pool(b) {
   const q = b.q.trim().toLowerCase();
   // A coleção mostra os Gods marcados; a identidade do deck (God + Domain + neutras) é validada em deckErrors.
   return [...cards.values()].filter(c => c.kind !== 'God' && factions.has(faction(c))
-    && (b.kind === 'All' || kindOf(c) === b.kind)
-    && (b.cost === 'All' || (b.cost === '7+' ? (c.cost?.amount ?? 0) >= 7 : c.cost?.amount === Number(b.cost)))
+    && (!b.kind.length || b.kind.includes(kindOf(c)))
+    && (!b.cost.length || b.cost.some(v => (v === '7+' ? (c.cost?.amount ?? 0) >= 7 : c.cost?.amount === Number(v))))
     && (!q || `${c.name} ${c.text}`.toLowerCase().includes(q))).sort(sortCards);
 }
 function errorText(e) {
@@ -408,17 +409,42 @@ function errorText(e) {
     unknown: `${name(e.card_id)} is not in the card pool.`, outside: `${name(e.card_id)} can't go in the main deck.`, identity: `${name(e.card_id)} is outside this deck's colors (God, Domain and neutral).`, quantity: `${name(e.card_id)}: invalid quantity.`, splash: `${e.count} cards from the Domain's faction (max ${SPLASH_LIMIT}).`}[e.code] || e.code;
 }
 const CARD_SIZES = {S: 130, M: 180, L: 250, XL: 330};
-// Barra de filtros do pool (editor de decks e Coleção): busca, custo, tipo, Deuses e tamanho das cartas.
-const filterState = () => (ui.screen === 'collection' ? (ui.colPool ||= {q: '', cost: 'All', kind: 'All', show: []}) : ui.builder);
+// Barra de filtros do pool (editor de decks e Coleção): busca e dropdowns de várias escolhas (autor, 02/11/2026).
+const filterState = () => (ui.screen === 'collection' ? (ui.colPool ||= {q: '', cost: [], kind: [], show: []}) : ui.builder);
+function filterDrop(key, label, options, picked) {
+  const open = ui.filterOpen === key, names = options.filter(o => picked.includes(o.value)).map(o => o.label);
+  return `<div class="lb-drop ${open ? 'is-open' : ''}"><button class="lb-drop__btn ${picked.length ? 'is-on' : ''}" data-act="filter-open" data-key="${key}" aria-expanded="${open}" aria-haspopup="true">
+      <small>${label}</small><b>${!names.length ? 'All' : names.length > 2 ? names.length : esc(names.join(', '))}</b><i aria-hidden="true"></i></button>
+    ${open ? `<div class="lb-drop__menu" role="group" aria-label="${label}">${options.map(o => `<button class="lb-drop__opt ${picked.includes(o.value) ? 'is-on' : ''}" role="checkbox" aria-checked="${picked.includes(o.value)}" data-act="filter-toggle" data-key="${key}" data-value="${o.value}">
+        <span class="lb-drop__box" aria-hidden="true"></span>${o.icon || ''}<span>${esc(o.label)}</span></button>`).join('')}
+      <button class="lb-drop__clear" data-act="filter-clear" data-key="${key}" ${picked.length ? '' : 'disabled'}>Clear</button></div>` : ''}</div>`;
+}
 function filterBar(b) {
-  const pill = (key, v) => `<button class="lb-pill ${b[key] === v ? 'is-active' : ''}" data-act="filter" data-key="${key}" data-value="${v}">${v}</button>`;
+  const size = ui.cardSize || 'M', sizes = Object.keys(CARD_SIZES), view = ui.screen === 'builder' ? ui.poolView || 'card' : 'card';
+  const gods = PICKS.map(f => ({value: f, label: cards.get(`god-${f}`)?.name || 'Neutral', icon: f === 'neutral' ? '<span class="lb-godpick__neutral" aria-hidden="true"></span>' : `<img src="${symbol(f)}" alt="">`}));
   return `<div class="lb-filters"><input type="search" placeholder="Search name or text" value="${esc(b.q)}" data-act="search" aria-label="Search cards">
-        <div class="lb-pills" aria-label="Cost">${COSTS.map(v => pill('cost', v)).join('')}</div>
-        <div class="lb-pills" aria-label="Type">${KINDS.map(v => pill('kind', v)).join('')}</div>
-        <div class="lb-gods" role="group" aria-label="Show cards of">${PICKS.map(f => `<button class="lb-godpick ${b.show.includes(f) ? 'is-active' : ''}"
-          data-act="show-god" data-faction="${f}" aria-pressed="${b.show.includes(f)}" title="${cards.get(`god-${f}`)?.name || 'Neutral'}">${f === 'neutral'
-          ? '<span class="lb-godpick__neutral" aria-hidden="true"></span><span class="lb-sr">Neutral</span>' : `<img src="${symbol(f)}" alt="${f}">`}</button>`).join('')}</div>
-        <div class="lb-pills lb-sizes" role="group" aria-label="Card size">${Object.keys(CARD_SIZES).map(k => `<button class="lb-pill ${(ui.cardSize || 'M') === k ? 'is-active' : ''}" data-act="card-size" data-size="${k}" aria-pressed="${(ui.cardSize || 'M') === k}">${k}</button>`).join('')}</div></div>`;
+        <div class="lb-drops">${filterDrop('cost', 'Cost', COSTS.map(v => ({value: v, label: v})), b.cost)}${filterDrop('kind', 'Type', KINDS.map(v => ({value: v, label: v})), b.kind)}${filterDrop('show', 'God', gods, b.show)}</div>
+        <div class="lb-viewbar">${ui.screen === 'builder' ? `<div class="lb-seg" role="group" aria-label="View">${POOL_VIEWS.map(([v, label]) => `<button class="${view === v ? 'is-active' : ''}" data-act="pool-view" data-view="${v}" aria-pressed="${view === v}">${label}</button>`).join('')}</div>` : ''}
+          ${view === 'list' ? '' : `<div class="lb-zoom" role="group" aria-label="Card size"><button data-act="card-zoom" data-dir="-1" ${size === sizes[0] ? 'disabled' : ''} aria-label="Smaller cards">−</button><b>${size}</b><button data-act="card-zoom" data-dir="1" ${size === sizes.at(-1) ? 'disabled' : ''} aria-label="Bigger cards">+</button></div>`}</div></div>`;
+}
+const POOL_VIEWS = [['card', 'Cards'], ['list', 'List'], ['field', 'Battlefield']];
+// Linha com arte e − n + no canto direito (lista do deck e visão Lista do pool). Tocar abre a carta.
+function cardRow(c, b, tag = 'div') {
+  const d = b.deck, n = count(b, c.id), max = ownedLimit(ui.econ, c.id, c.kind), full = deckSize(d) >= DECK_SIZE, isDomain = c.kind === 'Domain', on = isDomain && d.domain_id === c.id;
+  return `<${tag} class="lb-crow ${n || on ? 'is-in' : ''}"><button class="lb-strip" data-act="show-card" data-id="${c.id}" data-card="${c.id}" style="--art:url('${artOf(c.id, 'thumb') || ''}')">
+    <b class="lb-gem ${c.cost?.unit || ''}">${c.cost?.amount ?? '–'}</b><span>${esc(c.name)}</span></button>
+    ${isDomain ? `<button class="lb-rowset" data-act="set-domain" data-id="${c.id}" aria-pressed="${on}">${on ? 'Domain' : 'Set Domain'}</button>`
+    : `<div class="lb-rowstep" role="group" aria-label="${esc(c.name)}"><button data-act="remove" data-id="${c.id}" ${n ? '' : 'disabled'} aria-label="Remove one">−</button><b>${n}</b><button data-act="add" data-id="${c.id}" ${n >= max || full ? 'disabled' : ''} aria-label="Add one">+</button></div>`}</${tag}>`;
+}
+// Carta menor, igual à do campo no duelo (playtest/divine/board.css): arte, nome e gemas.
+function fieldFace(c) {
+  const f = forge.get(c.id), art = artOf(c.id, 'thumb'), fr = f?.ilustracao_enquadramento, fac = String(f?.faccao || '').toLowerCase();
+  const pieces = ['athena', 'poseidon', 'hades', 'ares', 'artemis'].includes(fac) ? fac : 'athena';
+  const style = art ? `--art:url('${art}');${fr?.w ? `--fx:${fr.x / 1488};--fy:${(fr.y - 160) / 1488};--fw:${fr.w / 1488};` : ''}` : `--art:url('../LOGO/logo-web.webp');--noart-w:70%;`;
+  const gem = (kind, v) => `<b class="btok__stat btok__stat--${kind}" style="--gem:url('../CARD-TEMPLATE/${pieces}/gem_${kind === 'atk' ? 'power' : pieces === 'athena' ? 'resistance' : 'soul'}.sm.webp')">${v}</b>`;
+  const bonus = f && c.kind === 'Equipment' ? armorBonusText(f) : null;
+  return `<div class="lb-fcard" data-card="${c.id}"><div class="btok ${!art ? 'is-noart' : fr?.w ? 'is-framed' : ''}" style="${style}"><span class="btok__name">${esc(c.name)}</span>
+    ${c.cost ? `<b class="lb-gem lb-fcard__cost ${c.cost.unit || ''}">${c.cost.amount}</b>` : ''}${c.kind === 'Devotee' ? gem('atk', c.atk) + gem('hp', c.hp) : ''}${bonus ? `<span class="btok__band">${esc(bonus)}</span>` : ''}</div></div>`;
 }
 // Cosmoble (rebalanceamento de 31/10/2026): só aviso, sem regra; abaixo de 60% do deck a mana tende a travar.
 function cosmoLine(list, size) {
@@ -437,12 +463,12 @@ function builder() {
       `<button class="lb-pill ${(b.view || 'pool') === v ? 'is-active' : ''}" data-act="builder-view" data-view="${v}" aria-pressed="${(b.view || 'pool') === v}">${label}</button>`).join('')}</div>
     <div class="lb-pool">
       ${filterBar(b)}
-      <div class="lb-grid" style="--slot:${CARD_SIZES[ui.cardSize] || CARD_SIZES.M}px">${cards_.map(c => {
+      ${(ui.poolView || 'card') === 'list' ? `<div class="lb-grid lb-grid--list">${cards_.map(c => cardRow(c, b)).join('') || '<p class="lb-empty">No cards for this God yet.</p>'}</div>` : `<div class="lb-grid ${ui.poolView === 'field' ? 'lb-grid--field' : ''}" style="--slot:${(CARD_SIZES[ui.cardSize] || CARD_SIZES.M) * (ui.poolView === 'field' ? .72 : 1)}px">${cards_.map(c => {
         const n = count(b, c.id), isDomain = c.kind === 'Domain', on = isDomain ? d.domain_id === c.id : n > 0, max = ownedLimit(ui.econ, c.id, c.kind);
         return `<div class="lb-cell"><button class="lb-slot ${on ? 'is-in' : ''} ${!isDomain && n >= max ? 'is-max' : ''} ${!isDomain && !max ? 'is-unowned' : ''}" data-act="${isDomain ? 'set-domain' : 'slot-tap'}" data-id="${c.id}" aria-label="${esc(c.name)}">
-          ${face(c.id)}<i class="lb-slot__count">${isDomain ? (on ? 'Domain' : 'Set Domain') : `${n} / ${max}`}</i></button>
+          ${ui.poolView === 'field' ? fieldFace(c) : face(c.id)}<i class="lb-slot__count">${isDomain ? (on ? 'Domain' : 'Set Domain') : `${n} / ${max}`}</i></button>
           ${isDomain ? '' : `<div class="lb-step ${n ? 'is-in' : ''}" role="group" aria-label="${esc(c.name)}"><button data-act="remove" data-id="${c.id}" ${n ? '' : 'disabled'} aria-label="Remove one">−</button><b>${n} / ${max}</b><button data-act="add" data-id="${c.id}" ${n >= max || size >= DECK_SIZE ? 'disabled' : ''} aria-label="Add one">+</button></div>`}</div>`;
-      }).join('') || '<p class="lb-empty">No cards for this God yet.</p>'}</div>
+      }).join('') || '<p class="lb-empty">No cards for this God yet.</p>'}</div>`}
     </div>
     <aside class="lb-list">
       <input class="lb-list__name" value="${esc(d.nome)}" data-act="rename" aria-label="Deck name">
@@ -453,8 +479,7 @@ function builder() {
       <div class="lb-list__count ${size === DECK_SIZE ? 'is-full' : ''}"><strong>${size}</strong> / ${DECK_SIZE}</div>
       ${cosmoLine(list, size)}
       <div class="lb-curve" aria-label="Cost curve">${curve.map((n, i) => `<span style="--h:${n / peak}"><i>${n || ''}</i><b>${i === 6 ? '7+' : i + 1}</b></span>`).join('')}</div>
-      <ol class="lb-strips">${list.map(e => `<li><button class="lb-strip" data-act="remove" data-id="${e.card_id}" data-card="${e.card_id}" style="--art:url('${artOf(e.card_id, 'thumb') || ''}')">
-        <b class="lb-gem ${e.card.cost?.unit || ''}">${e.card.cost?.amount ?? '–'}</b><span>${esc(e.card.name)}</span><em>×${e.quantity}</em></button></li>`).join('')
+      <ol class="lb-strips">${list.map(e => cardRow(e.card, b, 'li')).join('')
         || '<li class="lb-empty">Click cards in the collection to add them.</li>'}</ol>
       ${errors.length ? `<ul class="lb-errors">${errors.slice(0, 4).map(e => `<li>${errorText(e)}</li>`).join('')}</ul>` : '<p class="lb-ok">Deck ready to play.</p>'}
       <div class="lb-list__actions">${d.id ? '<button class="lb-ghost" data-act="delete-deck">Delete</button>' : ''}
@@ -631,15 +656,18 @@ const actions = {
   'open-booster': t => openBooster(face, r => { ui.econ = r; render(); }, ui.econ?.boosters, +t.dataset.count || 1),
   'new-deck': () => openBuilder(null),
   'edit-deck': t => openBuilder(allDecks().find(d => d.id === t.dataset.deck)),
-  filter: t => { filterState()[t.dataset.key] = t.dataset.value; },
+  'filter-open': t => { ui.filterOpen = ui.filterOpen === t.dataset.key ? null : t.dataset.key; },
+  'filter-toggle': t => { const b = filterState(), k = t.dataset.key, v = t.dataset.value; b[k] = b[k].includes(v) ? b[k].filter(x => x !== v) : [...b[k], v]; },
+  'filter-clear': t => { filterState()[t.dataset.key] = []; },
+  'pool-view': t => { ui.poolView = t.dataset.view; remember(); },
+  'card-zoom': t => { const s = Object.keys(CARD_SIZES), i = s.indexOf(ui.cardSize || 'M') + Number(t.dataset.dir); ui.cardSize = s[Math.max(0, Math.min(s.length - 1, i))]; remember(); },
+  'show-card': t => { ui.big = t.dataset.id; },
   add: t => setCount(t.dataset.id, 1),
   // Com toque, a carta abre para leitura e o + e o − montam o deck (no iOS não há contextmenu); com mouse, o clique adiciona.
   'slot-tap': t => { if (matchMedia('(max-width: 760px), (pointer: coarse)').matches) ui.big = t.dataset.id; else setCount(t.dataset.id, 1); },
   remove: t => setCount(t.dataset.id, -1),
   'set-domain': t => { ui.builder.deck.domain_id = t.dataset.id; ui.builder.dirty = true; },
   'builder-view': t => { ui.builder.view = t.dataset.view; },
-  'card-size': t => { ui.cardSize = t.dataset.size; remember(); },
-  'show-god': t => { const b = filterState(), s = b.show, f = t.dataset.faction; b.show = s.includes(f) ? s.filter(x => x !== f) : [...s, f]; },
   'save-deck': () => { saveDeck(); ui.screen = 'decks'; },
   'delete-deck': () => {
     if (!confirm(`Delete "${ui.builder.deck.nome}"?`)) return;
@@ -698,6 +726,10 @@ function refocusPlay(t) {
 root.addEventListener('click', e => {
   const t = e.target.closest('[data-act]');
   if (ui.deckMenu && !t?.disabled) { ui.deckMenu = null; if (!t || !actions[t.dataset.act]) return render(); }
+  if (ui.filterOpen && !e.target.closest('.lb-drop')) { // tocar fora fecha o dropdown
+    ui.filterOpen = null;
+    if (!t || !actions[t.dataset.act]) { render(); if (t?.dataset.act === 'search') root.querySelector('[data-act="search"]')?.focus(); return; }
+  }
   if (!t || !actions[t.dataset.act] || t.disabled) return;
   if (t.dataset.act === 'go' && ui.screen === 'builder' && ui.builder.dirty && !confirm('Leave without saving this deck?')) return;
   sound(t.dataset.act === 'play' ? 'play' : 'clique');
@@ -723,6 +755,7 @@ root.addEventListener('pointerdown', e => {
   holdTimer = setTimeout(() => { held = true; ui.big = t.dataset.card; render(); }, 450);
 });
 root.addEventListener('pointermove', e => { if (holdFrom && Math.hypot(e.clientX - holdFrom.x, e.clientY - holdFrom.y) > 10) cancelHold(); });
+root.addEventListener('dragstart', e => { if (e.target.closest('[data-card]')) e.preventDefault(); }); // arrastar a imagem cancelaria o toque no iOS
 addEventListener('pointerup', cancelHold);
 addEventListener('pointercancel', cancelHold);
 root.addEventListener('click', e => { if (held) { held = false; e.preventDefault(); e.stopPropagation(); } }, true);
@@ -768,7 +801,8 @@ root.addEventListener('input', e => {
     input.focus(); input.setSelectionRange(at, at);
   }
 });
-addEventListener('keydown', e => { if (e.key === 'Escape' && ui.play && ui.deckStep && !ui.big && !ui.notice && !ui.picker && !ui.cosPick) { ui.deckStep = false; render(); refocusPlay(); return; }
+addEventListener('keydown', e => { if (e.key === 'Escape' && ui.filterOpen) { ui.filterOpen = null; render(); return; }
+  if (e.key === 'Escape' && ui.play && ui.deckStep && !ui.big && !ui.notice && !ui.picker && !ui.cosPick) { ui.deckStep = false; render(); refocusPlay(); return; }
   if (e.key === 'Escape' && (ui.big || ui.play || ui.notice || ui.picker || ui.cosPick)) { ui.big = null; ui.play = false; ui.notice = null; ui.picker = null; ui.cosPick = null; render(); } });
 // Áudio só começa após o primeiro gesto do jogador (política dos navegadores).
 addEventListener('pointerdown', () => { unlock(); playMusic('menu'); }, {once: true});
