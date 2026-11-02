@@ -184,7 +184,7 @@ let loaded = [];
 const clearSearch = () => { state.q = ''; dialog.querySelector('.sb-search').value = ''; };
 
 // `value`: id do som em uso. `extra`: sons do projeto ({id, url, nome, secao, grupo, cod, langs: []}). `onPick(som | null, idioma)`.
-export async function openSoundBrowser({title = 'Escolher som', value = '', extra = [], onPick, onUpload = null, secao = null}) {
+export async function openSoundBrowser({title = 'Escolher som', value = '', extra = [], onPick, onUpload = null, secao = null, silence = false}) {
   if (!dialog) build();
   opts = {value, extra, onPick, onUpload};
   const lib = await loadLibrary();
@@ -202,7 +202,7 @@ export async function openSoundBrowser({title = 'Escolher som', value = '', extr
   dialog.querySelector('h2').textContent = title;
   const cur = dialog.querySelector('.sb-current');
   cur.textContent = `${now ? `Em uso: ${label(now)}` : value ? `Em uso: ${value}` : 'Nenhum som escolhido'} · vale nos 3 idiomas`;
-  dialog.querySelector('.sb-clear').disabled = !value;
+  dialog.querySelector('.sb-clear').disabled = !value && !silence; // silence: Sem som é uma escolha, mesmo sem som em uso
   dialog.showModal();
   dialog.querySelector('.sb-search').focus();
   await draw();

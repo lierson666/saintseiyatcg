@@ -1249,7 +1249,8 @@ const ui = {
     const id = obj ? obj.cardId : `${name.toLowerCase()}-001`, mine = cardVoices[id];
     // A carta manda; o que ela não tem vem do padrão da facção (autor, 02/11/2026).
     const faction = cardVoices[`faccao-${FORGE.get(id)?.faccao?.toLowerCase()}`];
-    const own = kind === 'linha' ? mine?.linhas?.[triggerLine(FORGE.get(id), ability.split(' · ').pop())] || faction?.habilidade : mine?.[kind] || faction?.[kind];
+    const own = kind === 'linha' ? mine?.linhas?.[triggerLine(FORGE.get(id), ability.split(' · ').pop())] ?? faction?.habilidade : mine?.[kind] ?? faction?.[kind];
+    if (own === false) return; // Sem som escolhido na carta: não cai no som da facção nem no do personagem
     voice(kind, name, settings.voiceLang === 'auto' ? (window.ssI18n?.lang === 'pt' ? 'pt' : 'jp') : settings.voiceLang, own);
   },
   // Morte do God: avatar com animação do tema (die-<deus>), cartas e Bases dele caem, ruína por cima da metade dele.

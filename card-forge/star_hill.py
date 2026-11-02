@@ -520,14 +520,14 @@ def save_card_voice(body, atomic_write, root=ROOT):
         raise ValueError('Voz da carta inválida.')
     lines = [*(body.get(k) for k in VOICE_MOMENTS), *body['linhas']]
     for line in lines:
-        if line is not None and not (isinstance(line, str) and VOICE_LINE.fullmatch(line)):
+        if line is not None and line is not False and not (isinstance(line, str) and VOICE_LINE.fullmatch(line)):  # False: sem som de propósito
             raise ValueError('Fala inválida.')
     for line in filter(None, lines):
         install_voice(line, root)
     path = root / CARD_VOICES
     voices = json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
     voices[card] = {**{k: body.get(k) for k in VOICE_MOMENTS}, 'linhas': body['linhas']}
-    if not any(lines):
+    if all(line is None for line in lines):
         del voices[card]
     atomic_write(path, (json.dumps(voices, ensure_ascii=False, indent=2, sort_keys=True) + '\n').encode('utf-8'))
     return voices

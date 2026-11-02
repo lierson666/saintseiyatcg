@@ -2,7 +2,7 @@
 // O textarea original segue sendo a fonte do texto (linha em branco separa habilidades); as falas ficam em data/card-voices.json.
 const split = t => t.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
-import {openSoundBrowser, soundUrl} from '/shared/sound-browser.js?v=8';
+import {openSoundBrowser, soundUrl} from '/shared/sound-browser.js?v=9';
 let falas = {}, vozes = {}, player = null;
 const ready = Promise.all([
   fetch('/biblioteca-sons/falas-pt.json', {cache: 'no-store'}).then(r => (r.ok ? r.json() : {})).catch(() => ({})),
@@ -24,7 +24,7 @@ const hear = value => {
 };
 const picker = (key, value) => {
   const text = lineText(value);
-  return `<span class="rr-voice"><button type="button" class="rr-voice-open" data-voice="${key}" data-value="${esc(value)}" aria-haspopup="dialog" title="Escolher som">${value ? `<b>${esc(value)}</b> ${esc(text ?? '')}` : '— som da facção —'}</button><button type="button" data-hear="${key}" aria-label="Ouvir" ${value ? '' : 'disabled'}>▶</button></span>`;
+  return `<span class="rr-voice"><button type="button" class="rr-voice-open" data-voice="${key}" data-value="${esc(value || '')}" aria-haspopup="dialog" title="Escolher som">${value ? `<b>${esc(value)}</b> ${esc(text ?? '')}` : value === false ? '— sem som —' : '— som da facção —'}</button><button type="button" data-hear="${key}" aria-label="Ouvir" ${value ? '' : 'disabled'}>▶</button><button type="button" class="rr-mute" data-mute="${key}" aria-pressed="${value === false}" title="Passiva ou efeito sem fala: não toca nem o som da facção">Sem som</button></span>`;
 };
 
 export function mountRulesRows(area, {getId = null, moments = null} = {}) {
@@ -39,9 +39,9 @@ export function mountRulesRows(area, {getId = null, moments = null} = {}) {
   const draw = (lines = split(area.value)) => {
     const v = getId && entry(getId());
     box.innerHTML = `${lines.map((t, i) => `<div class="rr-row" data-i="${i}"><textarea class="rr-text" rows="3" spellcheck="true" aria-label="Habilidade ${i + 1}">${esc(t)}</textarea>
-      <div class="rr-tools">${v ? picker(i, v.linhas[i] || '') : ''}<button type="button" data-move="-1" ${i ? '' : 'disabled'} aria-label="Subir">↑</button><button type="button" data-move="1" ${i < lines.length - 1 ? '' : 'disabled'} aria-label="Descer">↓</button><button type="button" data-del aria-label="Remover">✕</button></div></div>`).join('')}
+      <div class="rr-tools">${v ? picker(i, v.linhas[i] ?? '') : ''}<button type="button" data-move="-1" ${i ? '' : 'disabled'} aria-label="Subir">↑</button><button type="button" data-move="1" ${i < lines.length - 1 ? '' : 'disabled'} aria-label="Descer">↓</button><button type="button" data-del aria-label="Remover">✕</button></div></div>`).join('')}
       <button type="button" data-add>+ Habilidade</button>
-      ${v && moments ? moments().map(([key, label]) => `<label class="rr-moment"><span>${label}</span>${picker(key, v[key] || '')}</label>`).join('') : ''}`;
+      ${v && moments ? moments().map(([key, label]) => `<label class="rr-moment"><span>${label}</span>${picker(key, v[key] ?? '')}</label>`).join('') : ''}`;
   };
   box.addEventListener('input', e => { if (e.target.classList.contains('rr-text')) sync(); });
   box.addEventListener('click', e => {
@@ -51,10 +51,17 @@ export function mountRulesRows(area, {getId = null, moments = null} = {}) {
       hear(box.querySelector(`[data-voice="${b.dataset.hear}"]`).dataset.value);
       return;
     }
+    if (b.dataset.mute !== undefined) { // false: mudo de propósito; null: volta ao som da facção
+      const key = b.dataset.mute, v = entry(getId()), set = value => { if (/^\d+$/.test(key)) { v.linhas[Number(key)] = value; for (let i = 0; i < v.linhas.length; i++) v.linhas[i] ??= null; } else v[key] = value; };
+      set(b.getAttribute('aria-pressed') === 'true' ? null : false);
+      save(getId());
+      draw([...box.querySelectorAll('.rr-text')].map(t => t.value));
+      return;
+    }
     if (b.dataset.voice !== undefined) {
       const key = b.dataset.voice;
-      openSoundBrowser({title: 'Escolher som da carta', value: b.dataset.value, secao: key === 'golpe' || key === 'ultimate' ? 'voz-golpe' : 'voz-batalha', onPick: picked => {
-        const v = entry(getId()), value = picked?.id || null;
+      openSoundBrowser({title: 'Escolher som da carta', value: b.dataset.value, silence: true, secao: key === 'golpe' || key === 'ultimate' ? 'voz-golpe' : 'voz-batalha', onPick: picked => {
+        const v = entry(getId()), value = picked?.id ?? false; // o botão Sem som do seletor chega como null
         if (/^\d+$/.test(key)) { v.linhas[Number(key)] = value; for (let i = 0; i < v.linhas.length; i++) v.linhas[i] ??= null; } else v[key] = value;
         save(getId());
         draw([...box.querySelectorAll('.rr-text')].map(t => t.value));

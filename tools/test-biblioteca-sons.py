@@ -49,6 +49,7 @@ with tempfile.TemporaryDirectory() as tmp:
         raise AssertionError('momento inexistente aceito')
     except ValueError:
         pass
+    assert star_hill.save_card_voice({'id': 'athena-v6-009', 'linhas': [False, None]}, write, root)['athena-v6-009']['linhas'] == [False, None]  # Sem som fica guardado
     out = star_hill.import_library_sound({'id': 'BT_SEY_SE/5000', 'lang': 'pt', 'tipo': 'se'}, root)
     assert out['arquivo'] == 'MUSIC/fx/ps3-se-BT_SEY_SE-pt/5000.mp3' and (root / out['arquivo']).exists()
     assert json.loads((root / 'data/card-voices.json').read_text())['athena-v6-001']['cast']

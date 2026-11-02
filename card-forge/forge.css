@@ -91,6 +91,8 @@ dialog h2 { margin: 0 0 6px; font-size: 16px; color: var(--gold); }
 .rr-tools { display: flex; align-items: center; gap: 4px; }
 .rr-voice { display: flex; flex: 1; min-width: 0; gap: 4px; }
 .rr-voice-open { flex: 1; min-width: 0; overflow: hidden; text-align: left; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); }
+.rr-mute { flex: none; padding-inline: 10px; color: var(--muted); white-space: nowrap; }
+.rr-mute[aria-pressed=true] { color: var(--gold); border-color: var(--gold); }
 .rr-voice-open b { color: var(--gold); font-weight: 600; }
 .rr-moment { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2px; }
 

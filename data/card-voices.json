@@ -1,11 +1,16 @@
 {
   "athena-v6-001": {
-    "cast": null,
+    "cast": "SEY/5174",
+    "entrada": "SEY/5184",
     "golpe": "SEY/5046",
+    "habilidade": null,
     "linhas": [
       "SEY/5063",
       "SEY/5041"
     ],
+    "morte": "SEY/5159",
+    "retorno": "SEY/5171",
+    "strike": "SEY/5002",
     "ultimate": null
   },
   "athena-v6-002": {
@@ -16,38 +21,102 @@
     "ultimate": null
   },
   "athena-v6-003": {
+    "cast": "SRU/5138",
+    "entrada": "SRU/5139",
     "golpe": "SRU/5046",
+    "habilidade": null,
     "linhas": [
       null,
       "SRU/5032",
       "SRU/5064"
     ],
+    "morte": "SRU/024",
+    "retorno": "SRU/5141",
+    "strike": "SRU/5003",
     "ultimate": null
   },
   "athena-v6-005": {
+    "cast": "HYG/5130",
+    "entrada": "HYG/5131",
     "golpe": "HYG/5047",
+    "habilidade": null,
     "linhas": [
       "HYG/5046",
       "HYG/5009"
     ],
+    "morte": "HYG/015",
+    "retorno": "HYG/5129",
+    "strike": "HYG/5023",
     "ultimate": null
   },
   "athena-v6-007": {
+    "cast": "SYN/5130",
+    "entrada": "SYN/5136",
     "golpe": "SYN/5046",
+    "habilidade": null,
     "linhas": [
       "SYN/5061",
-      "SYN/5130"
+      "SYN/5134"
     ],
+    "morte": "SYN/5064",
+    "retorno": "SYN/5148",
+    "strike": "SYN/5022",
     "ultimate": null
   },
   "athena-v6-009": {
+    "cast": "IKI/5129",
+    "entrada": "IKI/5076",
     "golpe": "IKI/5046",
+    "habilidade": null,
     "linhas": [
       null,
       "IKI/5032",
-      "IKI/5110",
       null
     ],
+    "morte": "IKI/5032",
+    "retorno": "IKI/5079",
+    "strike": "IKI/5022",
+    "ultimate": null
+  },
+  "athena-v6-011": {
+    "cast": "MUU/5101",
+    "entrada": "MUU/5058",
+    "golpe": "MUU/5005",
+    "habilidade": null,
+    "linhas": [
+      "MUU/5046",
+      "MUU/5096"
+    ],
+    "morte": "MUU/020",
+    "retorno": "MUU/5106",
+    "strike": "MUU/5001",
+    "ultimate": null
+  },
+  "athena-v6-013": {
+    "cast": "SGA/5173",
+    "entrada": "SGA/5172",
+    "golpe": "SGA/5054",
+    "habilidade": null,
+    "linhas": [
+      "BBA_SGA_ADS_VC/5000"
+    ],
+    "morte": "SGA/021",
+    "retorno": "SGA/004",
+    "strike": "SGA/5057",
+    "ultimate": null
+  },
+  "athena-v6-015": {
+    "cast": null,
+    "entrada": null,
+    "golpe": null,
+    "habilidade": null,
+    "linhas": [
+      false,
+      false
+    ],
+    "morte": null,
+    "retorno": null,
+    "strike": null,
     "ultimate": null
   }
 }
