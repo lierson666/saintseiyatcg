@@ -3903,7 +3903,7 @@
     {
       "id": "athena-001",
       "nome_exibicao_en": "ATHENA",
-      "tagline_en": "Goddess of Wisdom and War",
+      "tagline_en": "Saori Kido",
       "nome_interno_pt": "Athena",
       "faccao": "Athena",
       "tipo": "God",
@@ -3932,7 +3932,7 @@
       "notas_pt": "Versão nova fornecida pelo autor em 24/10/2026; texto preservado.",
       "nome_exibicao_pt": "ATHENA",
       "subtitulo_pt": "SAORI KIDO",
-      "tagline_pt": "Deusa da Sabedoria e da Guerra",
+      "tagline_pt": "Saori Kido",
       "habilidades_pt": [
         "COSMO DA ESPERANÇA — Poder Divino\nUma vez por rodada, quando um Devoto de Athena que você controla sobrevive a um Golpe, ganhe {1}{L}.",
         "LUZ CURADORA — Comando Divino\nCusto: {1}{C}. Ative apenas durante o seu turno, uma vez por turno.\nRemova 1 de dano do Devoto aliado alvo.\nDesperto: remova 2 de dano em vez disso e ganhe {1}{S}."
@@ -3943,7 +3943,7 @@
     {
       "id": "poseidon-001",
       "nome_exibicao_en": "POSEIDON",
-      "tagline_en": "Emperor of the Seven Seas",
+      "tagline_en": "High Tide",
       "nome_interno_pt": "Poseidon",
       "faccao": "Poseidon",
       "tipo": "God",
@@ -3976,7 +3976,7 @@
         "PRISÃO DE ÁGUA — Poder Divino\nUma vez por rodada, quando um Devoto inimigo declara um Golpe, você pode pagar {2}{C}. Se fizer isso, Sele esse Devoto.",
         "MARÉ QUE PRENDE — Comando Divino\nCusto: {1}{C}. Ative apenas durante o seu turno, uma vez por turno.\nColoque 1 marcador de @Selo no Devoto inimigo alvo de custo 2 ou menos.\nDesperto: o Devoto pode ter qualquer custo."
       ],
-      "tagline_pt": "Imperador dos Sete Mares",
+      "tagline_pt": "Maré Alta",
       "habilidade_awaken_pt": "PRESSÃO DAS PROFUNDEZAS — Despertar 4\nSempre que um Devoto inimigo fica @Selado, seu controlador envia ao Tártaro as 2 cartas do topo do deck e você compra uma carta.",
       "ultimate_pt": "GRANDE DILÚVIO — Supremo\nCusto: {8}{C}\nDevolva todos os Devotos e Equipamentos inimigos às mãos dos donos.\nPara cada Devoto devolvido assim, devolva uma Base de Cosmo controlada pelo dono desse Devoto à mão do dono, se possível.\nCada oponente descarta metade das cartas da sua mão, arredondado para cima.\nEm seguida, cada oponente envia ao Tártaro 3 cartas do topo do deck para cada carta que descartou assim.",
       "flavour_pt": "\"Os oceanos são eternos. A humanidade não.\""
@@ -3984,7 +3984,7 @@
     {
       "id": "hades-001",
       "nome_exibicao_en": "HADES",
-      "tagline_en": "Emperor of the Seven Seas",
+      "tagline_en": "Deathbringer",
       "nome_interno_pt": "Poseidon",
       "faccao": "Hades",
       "tipo": "God",
@@ -4013,7 +4013,7 @@
       "notas_pt": "Versão nova fornecida pelo autor em 24/10/2026; texto preservado.",
       "nome_exibicao_pt": "HADES",
       "subtitulo_pt": "Portador da Morte",
-      "tagline_pt": "Imperador dos Sete Mares",
+      "tagline_pt": "Portador da Morte",
       "habilidades_pt": [
         "OFERENDA DE VIDA — Poder Divino\nUma vez por rodada, quando um Devoto que você controla é derrotado, você pode perder {2}{S}. Se fizer isso, compre uma carta e ganhe {1}{L}.",
         "TOQUE SOMBRIO — Comando Divino\nCusto: {1}{C}. Ative apenas durante o seu turno, uma vez por turno.\nO Devoto inimigo alvo recebe -1 @ATQ / -1 @PV até o fim da rodada.\nDesperto: -2 @ATQ / -2 @PV em vez disso."
@@ -4025,7 +4025,7 @@
     {
       "id": "artemis-001",
       "nome_exibicao_en": "ARTEMIS",
-      "tagline_en": "Emperor of the Seven Seas",
+      "tagline_en": "Moonlight Lullaby",
       "nome_interno_pt": "Poseidon",
       "faccao": "Artemis",
       "tipo": "God",
@@ -4054,7 +4054,7 @@
       "notas_pt": "Versão nova fornecida pelo autor em 24/10/2026; texto preservado.",
       "nome_exibicao_pt": "ÁRTEMIS",
       "subtitulo_pt": "Canção de Ninar ao Luar",
-      "tagline_pt": "Imperador dos Sete Mares",
+      "tagline_pt": "Canção de Ninar ao Luar",
       "habilidades_pt": [
         "COLHEITA LUNAR — Poder Divino\nUma vez por rodada, quando você colocar uma carta como Base de Cosmo, você pode ignorar o requisito de Cosmável dela. Se fizer isso, perca {2}{S}.",
         "TREINO DA CAÇA — Comando Divino\nCusto: {1}{C}. Ative apenas durante o seu turno, uma vez por turno.\nO Devoto aliado alvo recebe +1 @ATQ / +1 @PV até o fim da rodada.\nDesperto: coloque 1 marcador de @Treinamento nele em vez disso."
@@ -4066,7 +4066,7 @@
     {
       "id": "ares-001",
       "nome_exibicao_en": "ARES",
-      "tagline_en": "God of War and Destruction",
+      "tagline_en": "Driven by Hate",
       "nome_interno_pt": "Ares",
       "faccao": "Ares",
       "tipo": "God",
@@ -4095,7 +4095,7 @@
       "notas_pt": "Versão nova fornecida pelo autor em 24/10/2026; texto preservado.",
       "nome_exibicao_pt": "ARES",
       "subtitulo_pt": "Movido pelo Ódio",
-      "tagline_pt": "Deus da Guerra e da Destruição",
+      "tagline_pt": "Movido pelo Ódio",
       "habilidades_pt": [
         "SEDE DE SANGUE — Poder Divino\nCusto: {3}{C}\nUma vez por rodada, escolha um Devoto que você controla. Prepare-o. (Com marcador de @Selo, tire um em vez disso.) Ele recebe +1 de Poder até o fim da rodada. Ele não pode declarar um Golpe contra um Deus nesta rodada.",
         "TRIBUTO DE SANGUE — Comando Divino\nCusto: {1}{C}. Ative apenas durante o seu turno, uma vez por turno.\nCause 1 de dano ao Devoto inimigo alvo. Ares perde {1}{S}."
