@@ -132,7 +132,9 @@
       "morte": null,
       "vitoria": null,
       "derrota": null,
-      "ultimate": null
+      "ultimate": null,
+      "equipar_armadura": "MUSIC/fx/soldiers-soul/BT_SYS_SE-15--GoldGuardHitSE_01--8b46e64b19f0.wav",
+      "equipar_arma": "MUSIC/fx/soldiers-soul/BT_SYS_SE-31--hit_m_sword--668be5353711.wav"
     },
     "vozes": [
       {

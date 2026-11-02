@@ -377,7 +377,7 @@ def publish_site(root=ROOT):
 # Telas do Olympus Arena (autor, 30/10/2026): home, fundos, cores, textos, animações e áudio que o jogo lê em playtest/telas.js.
 TELAS = 'data/olympus-telas.json'
 ANIM_GROUPS = {'compra', 'conjurar', 'cosmo', 'gatilho', 'ataque', 'dano', 'morte', 'turno', 'ultimate'}
-SOUND_EVENTS = {'ultimate', 'clique', 'play', 'voltar', 'turno', 'compra', 'conjurar', 'cosmo', 'gatilho', 'ataque', 'dano', 'morte', 'vitoria', 'derrota'}
+SOUND_EVENTS = {'ultimate', 'clique', 'play', 'voltar', 'turno', 'compra', 'conjurar', 'equipar_armadura', 'equipar_arma', 'cosmo', 'gatilho', 'ataque', 'dano', 'morte', 'vitoria', 'derrota'}
 IMAGE_DIRS = ('card-forge/art-web/', 'star-hill/assets/', 'playtest/assets/', 'LOGO/')
 
 

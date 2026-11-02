@@ -52,7 +52,7 @@ main.deck-mode{max-width:none;padding:28px 28px 0}.deck-mode .page-header{margin
 /* Barra de publicação compacta na página Cartas: o editor ganha altura (auditoria ui-ux-pro-max, 29/10/2026). */
 .publish-bar{display:flex;align-items:center;gap:12px 16px;flex-wrap:wrap;padding:12px 16px}.publish-bar h2{font-size:18px;margin:0}.publish-bar .actions{margin:0 0 0 auto}.publish-bar small{color:var(--muted)}
 /* Telas e som (telas-editor.js) */
-.tl-bar{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
+.tl-bar{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
 .tl h3{margin:18px 0 8px;font-size:.95rem;color:var(--muted)}
 .tl-card{display:grid;grid-template-columns:minmax(220px,300px) 1fr;gap:14px;padding:12px;margin:10px 0;border:1px solid var(--line);border-radius:12px;background:var(--raised)}
 .tl-card .tl-row-actions{grid-column:1/-1}
@@ -74,7 +74,27 @@ main.deck-mode{max-width:none;padding:28px 28px 0}.deck-mode .page-header{margin
 .tl-audio select{flex:1;min-width:200px}
 .tl-playlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:6px}
 @media (max-width:720px){.tl-card{grid-template-columns:1fr}.tl-text{grid-template-columns:1fr}}
-.tl-anim{display:grid;grid-template-columns:minmax(200px,1fr) minmax(220px,1.4fr) auto;align-items:center}
+.tl-anim{display:grid;grid-template-columns:minmax(240px,1fr) minmax(280px,1.3fr) 190px;align-items:center;padding:10px 0}
+.tl-anim--head{padding:0 0 6px;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.tl-anim__what{display:flex;align-items:center;gap:12px;min-width:0}
+.tl-anim__what small{display:block;margin-top:2px;font-size:.8rem;color:var(--muted)}
+.tl-anim.is-off .tl-anim__what>span{opacity:.55}
+.tl-switch,.tl-switch-gap{flex:none;width:36px;height:20px}
+.tl-switch{appearance:none;position:relative;margin:0;border-radius:999px;border:1px solid var(--line);background:var(--raised);cursor:pointer;transition:background .15s}
+.tl-switch::after{content:"";position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:var(--muted);transition:transform .15s,background .15s}
+.tl-switch:checked{background:var(--gold)}
+.tl-switch:checked::after{transform:translateX(16px);background:var(--night)}
+.tl-switch:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.tl-speed b{min-width:3ch;text-align:right;color:var(--ink)}
+.tl-speed input{flex:1;min-width:0;accent-color:var(--gold)}
+.tl-speed--none{font-size:.8rem}
+.tl-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.tl-nav{flex-basis:100%;display:flex;flex-wrap:wrap;gap:6px}
+.tl-nav button{min-height:30px;padding:3px 10px;font-size:.82rem}
+.panel.tl{scroll-margin-top:150px}
+.tl-audio select{min-height:40px;padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--raised);color:var(--ink)}
+.tl-chooser.is-empty .tl-chooser__pick{border-style:dashed;color:var(--muted)}
+.tl-chooser button[disabled]{opacity:.3;cursor:not-allowed}
 .tl-chooser{display:flex;align-items:center;gap:6px;min-width:0}
 .tl-chooser__pick{flex:1;min-width:0;min-height:36px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left}
 .tl-dialog{width:min(720px,94vw);max-height:84vh;padding:0;border:1px solid var(--line);border-radius:14px;background:var(--panel);color:var(--ink)}
@@ -85,7 +105,8 @@ main.deck-mode{max-width:none;padding:28px 28px 0}.deck-mode .page-header{margin
 .tl-sound-list{list-style:none;margin:0;padding:0 16px 16px;max-height:60vh;overflow:auto}
 .tl-sound-list li{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}
 .tl-sound-list small{display:block;color:var(--muted);font-size:.78rem}
-@media (max-width:720px){.tl-anim{grid-template-columns:1fr}}
+@media (max-width:900px){.tl-anim{grid-template-columns:1fr;gap:8px}.tl-anim--head{display:none}}
+@media (max-width:720px){.tl-bar{position:static}.panel.tl{scroll-margin-top:0}}
 
 /* Menu lateral recolhível: aberto com ícone e nome, fechado só com ícones. */
 .nav-icon{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
