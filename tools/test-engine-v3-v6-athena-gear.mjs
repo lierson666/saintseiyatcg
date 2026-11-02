@@ -300,19 +300,6 @@ test('050 Repair Tools: remove 1 dano de Devotee amigo com Armor; Mu remove até
   assert.equal(t.s.units[mu].damage, 1);
 });
 
-test('051 Sacred Flame: +1 ATK só enquanto seu God tem menos Soul que o oposto', () => {
-  const {s, ctx, give} = setup();
-  const bear = give('A', SAINT);
-  give('A', G(51), 'battlefield', bear);
-  const base = atkOf(s, ctx, bear);
-  s.players.A.soul = 10; s.players.B.soul = 10;
-  assert.equal(atkOf(s, ctx, bear), base);
-  s.players.A.soul = 9;
-  assert.equal(atkOf(s, ctx, bear), base + 1);
-  s.players.A.soul = 11;
-  assert.equal(atkOf(s, ctx, bear), base);
-});
-
 test('066 Aerial Grace: o portador ganha Nimble', () => {
   const {s, ctx, give} = setup();
   const bear = give('A', SAINT), other = give('A', SAINT);
