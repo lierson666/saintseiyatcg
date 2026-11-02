@@ -313,7 +313,7 @@ function playSpellV6(state, ctx, key, uid, choice) {
     state.players[key].stack.push(uid);
     announce();
     // Toda Spell espera na cadeia e abre janela de resposta (autor, 29/10/2026); watchSpell (contra-mágica) entra junto.
-    const watchers = collect(state, ctx, state.order, 'watchSpell', [key, uid, aimed.values], 'a Spell is cast');
+    const watchers = collect(state, ctx, state.order, 'watchSpell', [key, uid, aimed.values], 'a Moment or Technique is cast');
     openWindow(state);
     state.chain.push({controller: key, ...item()});
     emit(state, 'chain_add', {player: key, uid});
@@ -331,7 +331,7 @@ function playSpellV6(state, ctx, key, uid, choice) {
   state.players[key].stack.push(uid);
   announce();
   respond(state, key, item());
-  pushTriggers(state, collect(state, ctx, state.order, 'watchSpell', [key, uid, aimed.values], 'a Spell is cast')); // gancho watchSpell (resposta)
+  pushTriggers(state, collect(state, ctx, state.order, 'watchSpell', [key, uid, aimed.values], 'a Moment or Technique is cast')); // gancho watchSpell (resposta)
 }
 
 // Guia §4A Hidden Cosmo {X} (autor, 31/10/2026): joga `uid` da própria Cosmo Base pagando X no lugar do custo impresso,

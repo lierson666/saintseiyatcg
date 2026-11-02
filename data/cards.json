@@ -2230,7 +2230,7 @@
       "equipar_custo": 2,
       "keywords_en": [],
       "habilidades_en": [
-        "Sacred Watch — The first time an opponent casts a Spell each turn, draw a card."
+        "Sacred Watch — The first time an opponent casts a Moment or Technique each turn, draw a card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -2245,7 +2245,7 @@
       "nome_exibicao_pt": "TOCHA DO SANTUÁRIO",
       "subtitulo_pt": "A Chama de Athena",
       "habilidades_pt": [
-        "Vigília Sagrada — A primeira vez que um oponente conjura uma Magia em cada turno, compre uma carta."
+        "Vigília Sagrada — A primeira vez que um oponente conjura um Momento ou Técnica em cada turno, compre uma carta."
       ],
       "tagline_pt": "A Chama de Athena"
     },
@@ -3589,7 +3589,7 @@
       "habilidades_en": [
         "Put 1 Flame counter on each of up to three target friendly Saints.",
         "Burning Determination — Saints with Flame counters get +1 @ATK until the end of the round.",
-        "Final Hour — At the end of the round, remove all Flame counters placed by this Spell. For each counter removed this way, you may remove 1 damage from the Saint that had it."
+        "Final Hour — At the end of the round, remove all Flame counters placed by this Moment. For each counter removed this way, you may remove 1 damage from the Saint that had it."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -3599,7 +3599,7 @@
       "habilidades_pt": [
         "Coloque 1 marcador de Chama em cada um de até três Cavaleiros aliados alvo.",
         "Determinação Ardente — Cavaleiros com marcadores de Chama recebem +1 @ATQ até o fim da rodada.",
-        "Hora Final — No fim da rodada, remova todos os marcadores de Chama colocados por esta Magia. Para cada marcador removido assim, você pode remover 1 de dano do Cavaleiro que o tinha."
+        "Hora Final — No fim da rodada, remova todos os marcadores de Chama colocados por este Momento. Para cada marcador removido assim, você pode remover 1 de dano do Cavaleiro que o tinha."
       ],
       "tagline_pt": "A Contagem Regressiva do Destino"
     },
@@ -3632,7 +3632,7 @@
       "habilidades_en": [
         "Deal 3 damage to target enemy Devotee.",
         "If that Devotee has a @Seal counter, deal 5 damage instead.",
-        "Absolute Zero — If you control Cygnus Hyoga, put 1 @Seal counter on that Devotee after this Spell resolves."
+        "Absolute Zero — If you control Cygnus Hyoga, put 1 @Seal counter on that Devotee after this Technique resolves."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -3642,7 +3642,7 @@
       "habilidades_pt": [
         "Cause 3 de dano ao Devoto inimigo alvo.",
         "Se esse Devoto tiver um marcador de @Selo, cause 5 de dano em vez disso.",
-        "Zero Absoluto — Se você controlar Hyoga de Cisne, coloque 1 marcador de @Selo nesse Devoto depois que esta Magia resolver."
+        "Zero Absoluto — Se você controlar Hyoga de Cisne, coloque 1 marcador de @Selo nesse Devoto depois que esta Técnica resolver."
       ],
       "tagline_pt": "O Frio Além da Morte"
     },
@@ -22041,7 +22041,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Spell barata da color pie (cantrip/escudo/remoção/bounce) para decks de Spell como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
+      "notas_pt": "Moment barata da color pie (cantrip/escudo/remoção/bounce) para decks de Moment e Technique como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
       "nome_exibicao_pt": "ÉGIDE DE ATHENA",
       "subtitulo_pt": "Seu Escudo Nunca Cai",
       "habilidades_pt": [
@@ -22083,7 +22083,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Spell barata da color pie (cantrip/escudo/remoção/bounce) para decks de Spell como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
+      "notas_pt": "Moment barata da color pie (cantrip/escudo/remoção/bounce) para decks de Moment e Technique como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
       "nome_exibicao_pt": "JULGAMENTO DO SANTUÁRIO",
       "subtitulo_pt": "Quem Ataca o Santuário Responde por Isso",
       "habilidades_pt": [
@@ -22125,7 +22125,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Spell barata da color pie (cantrip/escudo/remoção/bounce) para decks de Spell como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
+      "notas_pt": "Technique barata da color pie (cantrip/escudo/remoção/bounce) para decks de Moment e Technique como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
       "nome_exibicao_pt": "JURAMENTO DOS CAVALEIROS",
       "subtitulo_pt": "Nenhum Cavaleiro Luta Sozinho",
       "habilidades_pt": [
@@ -22167,7 +22167,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Spell barata da color pie (cantrip/escudo/remoção/bounce) para decks de Spell como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
+      "notas_pt": "Moment barata da color pie (cantrip/escudo/remoção/bounce) para decks de Moment e Technique como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
       "nome_exibicao_pt": "RESSACA",
       "subtitulo_pt": "O Mar Leva de Volta os Pequenos",
       "habilidades_pt": [
@@ -22208,7 +22208,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Spell barata da color pie (cantrip/escudo/remoção/bounce) para decks de Spell como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
+      "notas_pt": "Moment barata da color pie (cantrip/escudo/remoção/bounce) para decks de Moment e Technique como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
       "nome_exibicao_pt": "VETO DA MARÉ",
       "subtitulo_pt": "A Maré Decide",
       "habilidades_pt": [
@@ -22250,7 +22250,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Spell barata da color pie (cantrip/escudo/remoção/bounce) para decks de Spell como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
+      "notas_pt": "Moment barata da color pie (cantrip/escudo/remoção/bounce) para decks de Moment e Technique como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
       "nome_exibicao_pt": "NÉVOA DAS PROFUNDEZAS",
       "subtitulo_pt": "Sumiu Antes do Golpe Chegar",
       "habilidades_pt": [
@@ -22292,7 +22292,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Spell barata da color pie (cantrip/escudo/remoção/bounce) para decks de Spell como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
+      "notas_pt": "Moment barata da color pie (cantrip/escudo/remoção/bounce) para decks de Moment e Technique como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
       "nome_exibicao_pt": "TOQUE DA MORTE",
       "subtitulo_pt": "Toda Vida Tem Seu Fim",
       "habilidades_pt": [
@@ -22334,7 +22334,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Spell barata da color pie (cantrip/escudo/remoção/bounce) para decks de Spell como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
+      "notas_pt": "Technique barata da color pie (cantrip/escudo/remoção/bounce) para decks de Moment e Technique como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
       "nome_exibicao_pt": "PACTO DO SUBMUNDO",
       "subtitulo_pt": "O Conhecimento Tem um Preço",
       "habilidades_pt": [
@@ -22376,7 +22376,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Spell barata da color pie (cantrip/escudo/remoção/bounce) para decks de Spell como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
+      "notas_pt": "Technique barata da color pie (cantrip/escudo/remoção/bounce) para decks de Moment e Technique como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
       "nome_exibicao_pt": "RETORNO DAS TREVAS",
       "subtitulo_pt": "A Morte Não É o Fim",
       "habilidades_pt": [
@@ -22418,7 +22418,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Spell barata da color pie (cantrip/escudo/remoção/bounce) para decks de Spell como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
+      "notas_pt": "Moment barata da color pie (cantrip/escudo/remoção/bounce) para decks de Moment e Technique como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
       "nome_exibicao_pt": "FAÍSCA DA GUERRA",
       "subtitulo_pt": "Toda Guerra Começa Pequena",
       "habilidades_pt": [
@@ -22460,7 +22460,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Spell barata da color pie (cantrip/escudo/remoção/bounce) para decks de Spell como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
+      "notas_pt": "Technique barata da color pie (cantrip/escudo/remoção/bounce) para decks de Moment e Technique como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
       "nome_exibicao_pt": "INTUIÇÃO IMPRUDENTE",
       "subtitulo_pt": "Pense Rápido, Queime Mais Rápido",
       "habilidades_pt": [
@@ -22502,7 +22502,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Spell barata da color pie (cantrip/escudo/remoção/bounce) para decks de Spell como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
+      "notas_pt": "Moment barata da color pie (cantrip/escudo/remoção/bounce) para decks de Moment e Technique como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
       "nome_exibicao_pt": "FÚRIA DE ARES",
       "subtitulo_pt": "A Fúria É uma Arma",
       "habilidades_pt": [
@@ -22544,7 +22544,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Spell barata da color pie (cantrip/escudo/remoção/bounce) para decks de Spell como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
+      "notas_pt": "Moment barata da color pie (cantrip/escudo/remoção/bounce) para decks de Moment e Technique como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
       "nome_exibicao_pt": "REDE DA CAÇADORA",
       "subtitulo_pt": "Quanto Maior a Fera, Maior a Queda",
       "habilidades_pt": [
@@ -22585,7 +22585,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Spell barata da color pie (cantrip/escudo/remoção/bounce) para decks de Spell como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
+      "notas_pt": "Moment barata da color pie (cantrip/escudo/remoção/bounce) para decks de Moment e Technique como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
       "nome_exibicao_pt": "VIGOR SELVAGEM",
       "subtitulo_pt": "A Floresta Protege os Seus",
       "habilidades_pt": [
@@ -22626,7 +22626,7 @@
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Spell barata da color pie (cantrip/escudo/remoção/bounce) para decks de Spell como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
+      "notas_pt": "Technique barata da color pie (cantrip/escudo/remoção/bounce) para decks de Moment e Technique como o Phoenix Tide; aprovada pelo autor em 31/10/2026 (docs/spells-baratas-proposta.md).",
       "nome_exibicao_pt": "VISÃO LUNAR",
       "subtitulo_pt": "A Lua Mostra o Caminho",
       "habilidades_pt": [

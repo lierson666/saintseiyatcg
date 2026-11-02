@@ -4,6 +4,8 @@ export const LATENT_CAP=3;
 export const ARMOR_SUBTYPES=ARMOR_SUBTYPE_NAMES;
 export const CHARACTER_ORIGINS=['CANON — KURUMADA','SAINT SEIYA — OUTRAS OBRAS','MITOLOGIA ADAPTADA','ORIGINAL TCG'];
 export const armorCard=c=>c?.tipo!=='Devotee'&&(c?.slot_equipamento==='armadura'||(c?.subtipos||[]).some(s=>ARMOR_SUBTYPES.includes(s)));
+// Moment e Technique são o tipo impresso (autor, 02/11/2026): `tipo: 'Spell'` é só o campo interno e nunca aparece.
+export const printedKind=c=>c?.tipo==='Spell'?(c.subtipos?.includes('Moment')?'Moment':'Technique'):c?.tipo;
 export const techniqueCard=c=>c?.tipo==='Technique'||c?.tipo==='Spell'&&c.subtipos?.includes('Technique');
 export function paymentUnit(type,c={},response=false,printed='cosmo'){
   if(type==='ultimate'||type==='play'&&(c.tipo==='Devotee'||armorCard(c)))return 'base_cosmo';

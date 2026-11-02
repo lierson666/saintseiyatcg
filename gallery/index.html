@@ -8,7 +8,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="robots" content="noindex, nofollow"> <!-- site fora das buscas por enquanto (autor, 31/10/2026) -->
   <title>Saint Seiya TCG — Card Gallery</title>
-  <meta name="description" content="Browse every Saint Seiya TCG card with final art: Gods, Devotees, Equipment, Spells and Domains.">
+  <meta name="description" content="Browse every Saint Seiya TCG card with final art: Gods, Devotees, Equipment, Moments, Techniques and Domains.">
   <meta name="theme-color" content="#05060c">
   <link rel="icon" href="/LOGO/favicon.png?v=20261030">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Cormorant+Garamond:ital,wght@1,400&family=Jost:wght@300;400;500&display=swap">
@@ -75,14 +75,14 @@
     import {mountKV} from '/shared/kv-sky.js?v=20261031-native';
     mountKV({anchor: 'h1 .kv-cosmo'});
     document.querySelector('.site-tab[aria-current]')?.scrollIntoView({inline: 'center', block: 'nearest'}); // celular: aba atual visível
-    const V = '20261031-1';
+    const V = '20261102-1';
     const cards = await fetch('/gallery/cards.json?v=' + V).then(r => r.json());
     const FILTERS = {
       faction: ['All', 'Athena', 'Poseidon', 'Hades', 'Ares', 'Artemis', 'Neutral'],
-      type: ['All', 'God', 'Devotee', 'Equipment', 'Spell', 'Domain'],
+      type: ['All', 'God', 'Devotee', 'Equipment', 'Moment', 'Technique', 'Domain'],
     };
     const state = {faction: 'All', type: 'All', q: ''};
-    const label = {Spell: 'Spells', Devotee: 'Devotees', God: 'Gods', Domain: 'Domains'};
+    const label = {Moment: 'Moments', Technique: 'Techniques', Devotee: 'Devotees', God: 'Gods', Domain: 'Domains'};
     for (const [key, values] of Object.entries(FILTERS)) {
       const row = document.querySelector(`[data-filter="${key}"]`);
       row.innerHTML = values.filter(v => v === 'All' || cards.some(c => c[key] === v))

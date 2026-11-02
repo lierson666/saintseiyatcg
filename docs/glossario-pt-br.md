@@ -34,7 +34,6 @@ Regra: o mesmo termo em todo lugar. Termo vetado fica em inglês. Nomes de perso
 | Devotee | Devoto |
 | Domain | Domínio |
 | Equipment | Equipamento |
-| Spell | Magia |
 | Technique | Técnica |
 | Moment | Momento |
 | Divine Artifact | Artefato Divino |

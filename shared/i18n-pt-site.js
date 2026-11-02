@@ -29,7 +29,7 @@ Object.assign(self.ssI18nPT.strings, {
   'Control and steady pressure, like a rising tide.': 'Controle e pressão constante, como a maré subindo.', 'Persistence, sacrifice and the dead who return.': 'Persistência, sacrifício e os mortos que voltam.',
   'Aggression, combat and conquest.': 'Agressão, combate e conquista.', 'The hunt: precision and well-chosen eliminations.': 'A caçada: precisão e eliminações bem escolhidas.',
   'A match at a glance': 'Uma partida num relance', 'Two players, one God each. The full rules are on': 'Dois jogadores, um Deus cada. As regras completas estão em',
-  'One God, one Domain and a 50-card deck of Devotees, Equipment and Spells.': 'Um Deus, um Domínio e um deck de 50 cartas com Devotos, Equipamentos e Magias.',
+  'One God, one Domain and a 50-card deck of Devotees, Equipment, Moments and Techniques.': 'Um Deus, um Domínio e um deck de 50 cartas com Devotos, Equipamentos e Magias.',
   'Play one Base each turn to build the Cosmo you spend on cards and powers.': 'Coloque uma Base por turno para formar o Cosmo que você gasta em cartas e poderes.',
   'Each Round, both players take a turn. Summon, equip and strike, then end your turn.': 'A cada Rodada, os dois jogadores jogam um turno. Invoque, equipe e golpeie, depois encerre seu turno.',
   "Reduce the enemy God's Soul to zero. Lose your own God, or have to draw from an empty deck, and you lose the match.": 'Reduza a Alma do Deus inimigo a zero. Se perder seu Deus, ou precisar comprar com o deck vazio, você perde a partida.',
@@ -67,7 +67,7 @@ Object.assign(self.ssI18nPT.strings, {
   // Gallery
   'Saint Seiya TCG — Card Gallery': 'Saint Seiya TCG — Galeria de cartas', 'Faction': 'Facção', 'Search by name': 'Buscar por nome', 'Every Saint,': 'Cada Cavaleiro,', 'Every God': 'Cada Deus',
   'The cards of the beta that already have their final art. Filter by faction or type, search by name, and select a card to see it up close.': 'As cartas do beta que já têm a arte final. Filtre por facção ou tipo, busque pelo nome e selecione uma carta para vê-la de perto.',
-  'No card matches these filters.': 'Nenhuma carta com esses filtros.', 'Spells': 'Magias', 'Domains': 'Domínios',
+  'No card matches these filters.': 'Nenhuma carta com esses filtros.', 'Moments': 'Momentos', 'Techniques': 'Técnicas', 'Domains': 'Domínios',
 
   // Login
   'Saint Seiya TCG — Sign in': 'Saint Seiya TCG — Entrar', 'The gates of the Sanctuary': 'Os portões do Santuário',

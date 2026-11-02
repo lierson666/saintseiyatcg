@@ -2,6 +2,7 @@
 // cartas do Card Forge (publicadas em card-forge/art-web/), decks iniciais de data/alpha-0.1/ e o guia de regras.
 // Os módulos do jogo antigo (game-settings.json: áudio, HUD, telas, interações, cosméticos) ficam em star-hill.js, fora do menu.
 import {loadCanon} from '../shared/canon-cards.js';
+import {printedKind} from '../shared/rules-policy.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {canonIndex, validateDeck, colorErrors, DECK_SIZE, SPLASH_LIMIT} from '../shared/deck-v3.js';
 import {loadTelas, mountTelas} from './telas-editor.js?v=20261102-barulho3';
@@ -69,7 +70,7 @@ function overview() {
     <div class="actions"><a href="#cartas">Editar cartas</a><a href="#decks">Ver decks</a><a href="#regras">Consultar regras</a></div></section></div>`;
 }
 // Lista de cartas com filtros de tipo e de facção, combináveis (autor, 31/10/2026), ao lado do Forge.
-const CARD_TYPES = ['God', 'Devotee', 'Spell', 'Equipment', 'Domain'];
+const CARD_TYPES = ['God', 'Devotee', 'Moment', 'Technique', 'Equipment', 'Domain'];
 let cardFaction = '', cardType = '', cardCurrent = '', cardEdition = null;
 const editionCards = edition => forge.filter(c => editionOf(c).code === edition.code);
 const forgeUrl = () => `../card-forge/?edicao=${encodeURIComponent(cardEdition.code)}${cardCurrent ? `&card=${encodeURIComponent(cardCurrent)}` : ''}`;
@@ -96,11 +97,11 @@ function editionsPage() {
 function cardList() {
   const q = ($('#card-search')?.value || '').toLowerCase();
   const all = editionCards(cardEdition);
-  const list = all.filter(c => (!cardType || c.tipo === cardType) && (!cardFaction || c.faccao === cardFaction) && `${c.nome_exibicao_en} ${c.id} ${c.faccao}`.toLowerCase().includes(q));
+  const list = all.filter(c => (!cardType || printedKind(c) === cardType) && (!cardFaction || c.faccao === cardFaction) && `${c.nome_exibicao_en} ${c.id} ${c.faccao}`.toLowerCase().includes(q));
   const counter = $('#card-count');
   if (counter) counter.textContent = `${list.length} de ${all.length} cartas`;
   return list.length ? list.map(c => `<button class="card-row" data-action="edit-card" data-card="${esc(c.id)}" data-tone="${esc(c.faccao)}" aria-current="${c.id === cardCurrent}">
-    <i aria-hidden="true"></i><span><b>${esc(c.nome_exibicao_en)}</b><small>${esc(c.id)}</small></span><em>${esc(c.tipo)}</em></button>`).join('') : '<p class="hint card-empty">Nenhuma carta encontrada.</p>';
+    <i aria-hidden="true"></i><span><b>${esc(c.nome_exibicao_en)}</b><small>${esc(c.id)}</small></span><em>${esc(printedKind(c))}</em></button>`).join('') : '<p class="hint card-empty">Nenhuma carta encontrada.</p>';
 }
 function cardsPage() {
   // Tipo e facção em menus lado a lado (autor, 02/11/2026): os chips tomavam metade do painel e a lista ficava sem lugar.

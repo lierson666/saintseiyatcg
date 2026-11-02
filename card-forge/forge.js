@@ -1,5 +1,5 @@
-import {cardsToXlsx} from './cards-xlsx.js?v=20261102-xlsx1';
-import {AUDIT_STATUS,auditOf,mountCardFinder,reviewQueue} from './card-finder.js?v=20261102-lista1';
+import {cardsToXlsx} from './cards-xlsx.js?v=20261102-momento1';
+import {AUDIT_STATUS,auditOf,mountCardFinder,reviewQueue} from './card-finder.js?v=20261102-momento1';
 import {mountRulesRows} from './rules-rows.js?v=20261102-banco1';
 import {createHistory} from '../shared/editor-history.js';
 import {compilePlaytest} from '../shared/import-playtest.js';

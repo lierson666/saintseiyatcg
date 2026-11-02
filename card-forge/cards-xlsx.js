@@ -1,10 +1,12 @@
 // Exporta o catálogo para Excel (autor, 02/11/2026), sem biblioteca: um .xlsx é um zip de XMLs; aqui, sem compressão.
+import {printedKind} from '../shared/rules-policy.js';
+
 const list = (v) => (v || []).join(' | ');
 const abilities = (v) => (v || []).join('\n\n');
 export const COLUNAS = [
   ['ID', (c) => c.id, 18], ['Número', (c) => c.numero_carta, 9], ['Nome', (c) => c.nome_exibicao_en, 30], ['Nome PT', (c) => c.nome_exibicao_pt, 30],
   ['Subtítulo', (c) => c.tagline_en, 26], ['Subtítulo PT', (c) => c.subtitulo_pt || c.tagline_pt, 26],
-  ['Tipo', (c) => c.tipo, 12], ['Subtipos', (c) => list(c.subtipos), 22], ['Patente', (c) => c.patente_armadura, 12], ['Facção', (c) => c.faccao, 10],
+  ['Tipo', printedKind, 12], ['Subtipos', (c) => list(c.subtipos), 22], ['Patente', (c) => c.patente_armadura, 12], ['Facção', (c) => c.faccao, 10],
   ['Raridade', (c) => c.raridade, 11], ['Coleção', (c) => c.conjunto, 18], ['Status', (c) => c.status, 13],
   ['Custo', (c) => c.custo, 7], ['Unidade do custo', (c) => c.unidade_custo, 14], ['Cosmoble', (c) => (c.cosmoble == null ? null : c.cosmoble ? 'Sim' : 'Não'), 10],
   ['ATK', (c) => c.power ?? c.attack, 6], ['HP', (c) => c.vida ?? c.resistance, 6], ['Soul', (c) => c.soul, 6], ['Awaken', (c) => c.awaken, 8],

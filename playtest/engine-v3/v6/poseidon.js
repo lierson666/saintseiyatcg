@@ -108,7 +108,7 @@ const counterTarget = (c, s, key, ability, only) => k.choose(c, key, ability, co
 function counter(st, c, uid, ability, unless = 0) {
   const item = st.chain.find(i => i.spell && i.uid === uid);
   if (!item) return false; // alvo já resolveu ou saiu da cadeia: a parte que dependia dele não acontece
-  if (unless && ready(st, item.controller) >= unless && k.may(c, item.controller, ability, {cost: `${unless} Cosmo`, text: `Pay {${unless}}{C} to keep your Spell from being countered?`})) { spendBase(st, item.controller, unless); return false; }
+  if (unless && ready(st, item.controller) >= unless && k.may(c, item.controller, ability, {cost: `${unless} Cosmo`, text: `Pay {${unless}}{C} to keep your Moment or Technique from being countered?`})) { spendBase(st, item.controller, unless); return false; }
   return k.counterSpell(st, c, uid);
 }
 
@@ -430,7 +430,7 @@ export default {
       !s.roundUses.has(`interdiction:${self}`) && k.once(s, `interdiction:${self}`) && (st => {
         if (!st.units[self]?.prepared || !k.spellOnChain(st, spellUid) || !pay(st, c, key, 2, 'SACRED INTERDICTION', self)) return;
         k.exhaust(st, self);
-        if (ready(st, caster) >= 2 && k.may(c, caster, 'SACRED INTERDICTION', {cost: '2 Cosmo', text: 'Pay {2}{C} to keep your Spell from being countered?'})) { spendBase(st, caster, 2); return; }
+        if (ready(st, caster) >= 2 && k.may(c, caster, 'SACRED INTERDICTION', {cost: '2 Cosmo', text: 'Pay {2}{C} to keep your Moment or Technique from being countered?'})) { spendBase(st, caster, 2); return; }
         k.counterSpell(st, c, spellUid);
       }),
   },

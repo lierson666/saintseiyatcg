@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-02 — §56 — Moment e Technique no lugar de Spell
+
+- **Antes:** o guia, filtros e alguns textos diziam Spell (Magia em PT).
+- **Depois:** só se diz Moment, Technique ou Moment or Technique (Momento, Técnica, Momento ou Técnica).
+- **Motivo:** pedido do autor, 02/11/2026. Nenhum efeito muda.
+- **Pendências:** `tipo: "Spell"` e `kind: 'Spell'` seguem como nome interno em `data/cards.json` e na engine; cartas com o texto antigo dependem do diff aprovado.
+
 ## 2026-11-02 — §26 — Equipment System V1: linha de tipo e subtipos
 
 - **Antes:** `Armor` era impresso junto da família (`ARMOR — CLOTH`), e os subtipos de objeto não tinham lista fechada.

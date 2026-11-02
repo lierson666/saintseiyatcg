@@ -26,7 +26,7 @@ export const keywordName = k => (lang() === 'pt' ? String(k).replace(/^(Long Ran
 
 // Linha de tipo (tipo, subtipos, facção) em PT. tipo/subtipos continuam em inglês nos dados: a engine lê esses valores.
 export const TYPE_PT = {
-  'Devotee': 'Devoto', 'Spell': 'Magia', 'Equipment': 'Equipamento', 'Domain': 'Domínio', 'God': 'Deus', 'Moment': 'Momento', 'Technique': 'Técnica',
+  'Devotee': 'Devoto', 'Spell': 'Momento ou Técnica', 'Equipment': 'Equipamento', 'Domain': 'Domínio', 'God': 'Deus', 'Moment': 'Momento', 'Technique': 'Técnica',
   'Athena': 'Athena', 'Poseidon': 'Poseidon', 'Hades': 'Hades', 'Ares': 'Ares', 'Artemis': 'Ártemis', 'Neutral': 'Neutro',
   'Saint': 'Cavaleiro', 'Bronze Saint': 'Cavaleiro de Bronze', 'Silver Saint': 'Cavaleiro de Prata', 'Gold Saint': 'Cavaleiro de Ouro', 'Black Saint': 'Cavaleiro Negro',
   'Steel Saint': 'Cavaleiro de Aço', 'Ghost Saint': 'Cavaleiro Fantasma', 'Marina': 'Marina', 'Marina General': 'General Marina', 'Specter': 'Espectro',

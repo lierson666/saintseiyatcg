@@ -1,5 +1,6 @@
 // Lista de cartas do Card Forge: busca, filtros e fila de revisão da auditoria do Equipment System V2.
 import {formatCardTypeLine} from '../shared/equipment-types.js';
+import {printedKind} from '../shared/rules-policy.js';
 
 export const AUDIT_STATUS = {CONFIRMED_EXPORT: 'Confirmada', RECOMMENDED_VERIFY: 'A conferir', REVIEW_REQUIRED: 'Pendente', SPECIAL_NO_RANK: 'Especial', CATEGORY_REVIEW: 'Categoria a revisar'};
 const CLASSES = {CLOTH: 'Cloth', SCALE: 'Scale', SURPLICE: 'Surplice', WARPLATE: 'Warplate', MOONPLATE: 'Moonplate', STEEL_ARMOR: 'Steel', LUNAR_VESTMENT: 'Lunar Vestment', LIVING_ARMOR: 'Living Armor', OTHER_ARMOR: 'Outra armadura', WEAPON: 'Arma', OTHER_EQUIPMENT: 'Outro equipamento'};
@@ -22,7 +23,7 @@ export function filterCards(cards, audit, {q = '', faccao = '', tipo = '', class
   const words = fold(q).split(/\s+/).filter(Boolean);
   return cards.filter((c) => {
     if (faccao && c.faccao !== faccao) return false;
-    if (tipo && c.tipo !== tipo) return false;
+    if (tipo && printedKind(c) !== tipo) return false;
     if (classe && classOf(c, audit) !== classe) return false;
     const st = auditOf(c, audit)?.status;
     if (status === QUEUE_FILTER ? !QUEUE.includes(st) : status && st !== status) return false;
@@ -34,11 +35,11 @@ export function filterCards(cards, audit, {q = '', faccao = '', tipo = '', class
 const options = (label, pairs) => `<option value="">${label}</option>${pairs.map(([v, t]) => `<option value="${esc(v)}">${esc(t)}</option>`).join('')}`;
 
 export function mountCardFinder(root, {cards, audit, current, pick}) {
-  const values = (key) => [...new Set(cards().map((c) => c[key]).filter(Boolean))].sort().map((v) => [v, v]);
+  const values = (read) => [...new Set(cards().map(read).filter(Boolean))].sort().map((v) => [v, v]);
   root.innerHTML = `<input class="cf-search" name="cfBusca" type="search" placeholder="Nome, número, id ou subtipo" aria-label="Buscar carta">
     <div class="cf-filters">
-      <label>Facção <select name="faccao">${options('Todas', values('faccao'))}</select></label>
-      <label>Tipo <select name="tipo">${options('Todos', values('tipo'))}</select></label>
+      <label>Facção <select name="faccao">${options('Todas', values((c) => c.faccao))}</select></label>
+      <label>Tipo <select name="tipo">${options('Todos', values(printedKind))}</select></label>
       <label>Equipment <select name="classe">${options('Todos', Object.entries(CLASSES))}</select></label>
       <label>Auditoria <select name="status">${options('Todos', [[QUEUE_FILTER, 'Fila de revisão'], ...Object.entries(AUDIT_STATUS)])}</select></label>
     </div>
