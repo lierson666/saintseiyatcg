@@ -8057,7 +8057,8 @@
         "Ressonância — Radamanthys: Sempre que Radamanthys de Wyvern destrói um Devoto inimigo em combate, o Deus inimigo perde {2}{S} e seu Deus ganha {2}{S}."
       ],
       "tagline_pt": "Armadura do Juiz Implacável",
-      "auto_equip_pt": ["Radamanthys de Wyvern"]
+      "auto_equip_pt": ["Radamanthys de Wyvern"],
+      "patente_armadura": "Judge"
     },
     {
       "id": "hades-v6-183",
@@ -8144,7 +8145,8 @@
         "Ressonância — Minos: Uma vez por rodada, quando Minos de Grifo declara um Golpe, o Devoto inimigo alvo recebe -1 @ATQ / -1 @PV até o fim da rodada."
       ],
       "tagline_pt": "Os Fios da Submissão Eterna",
-      "auto_equip_pt": ["Minos de Grifo"]
+      "auto_equip_pt": ["Minos de Grifo"],
+      "patente_armadura": "Judge"
     },
     {
       "id": "hades-v6-185",
@@ -8231,7 +8233,8 @@
         "Ressonância — Aiacos: Uma vez por rodada, quando Aiacos de Garuda devolve um Devoto do seu Tártaro para o Campo de Batalha, esse Devoto recebe +1 @ATQ até o fim da rodada."
       ],
       "tagline_pt": "As Asas da Estrela Infernal",
-      "auto_equip_pt": ["Aiacos de Garuda"]
+      "auto_equip_pt": ["Aiacos de Garuda"],
+      "patente_armadura": "Judge"
     },
     {
       "id": "hades-v6-187",
@@ -8318,7 +8321,8 @@
         "Ressonância — Pharaó: Uma vez por rodada, sempre que Pharaó de Esfinge faz o Deus inimigo perder Alma por uma habilidade, você pode pagar {2}{S}. Se fizer isso, compre 1 carta."
       ],
       "tagline_pt": "As Balanças dos Condenados",
-      "auto_equip_pt": ["Pharaó de Esfinge"]
+      "auto_equip_pt": ["Pharaó de Esfinge"],
+      "patente_armadura": "Terrestrial"
     },
     {
       "id": "hades-v6-189",
@@ -8405,7 +8409,8 @@
         "Ressonância — Caronte: Uma vez por rodada, quando Caronte de Aqueronte coloca uma ou mais cartas do seu Deck no seu Tártaro, você pode devolver o Devoto alvo com Custo de Conjuração 2 ou menos do seu Tártaro para a sua mão."
       ],
       "tagline_pt": "O Preço da Passagem",
-      "auto_equip_pt": ["Caronte de Aqueronte"]
+      "auto_equip_pt": ["Caronte de Aqueronte"],
+      "patente_armadura": "Terrestrial"
     },
     {
       "id": "hades-v6-191",
@@ -9845,7 +9850,8 @@
       "habilidades_pt": [
         "Oferenda Quebrada — Quando o Devoto equipado é derrotado, você pode pagar {1}{S}. Se fizer isso, devolva o Devoto alvo com Custo de Conjuração 1 ou menos do seu Tártaro para a sua mão."
       ],
-      "tagline_pt": "Até Armadura Quebrada Serve aos Mortos"
+      "tagline_pt": "Até Armadura Quebrada Serve aos Mortos",
+      "patente_armadura": "Terrestrial"
     },
     {
       "id": "hades-v6-225",
@@ -10802,7 +10808,8 @@
         "Ressonância — Valentine: Sempre que Valentine de Harpia faz o Deus inimigo perder Alma por uma habilidade, seu Deus ganha {1}{S} adicional. Esta habilidade ativa apenas uma vez por rodada."
       ],
       "tagline_pt": "As Asas da Estrela Celeste do Pranto",
-      "auto_equip_pt": ["Valentine de Harpia"]
+      "auto_equip_pt": ["Valentine de Harpia"],
+      "patente_armadura": "Terrestrial"
     },
     {
       "id": "hades-v6-247",
@@ -10848,7 +10855,8 @@
         "Ressonância — Lune: Uma vez por rodada, sempre que um oponente descarta uma carta devido a uma habilidade controlada por Lune de Balrog, compre 1 carta e seu Deus perde {1}{S}."
       ],
       "tagline_pt": "A Armadura do Julgamento Infernal",
-      "auto_equip_pt": ["Lune de Balrog"]
+      "auto_equip_pt": ["Lune de Balrog"],
+      "patente_armadura": "Terrestrial"
     },
     {
       "id": "hades-v6-248",
@@ -10894,7 +10902,8 @@
         "Ressonância — Myu: Uma vez por rodada, quando Myu de Papillon devolve uma carta de Devoto do seu Tártaro para a sua mão, você pode pagar {1}{S}. Se fizer isso, devolva outra carta de Devoto alvo com Custo de Conjuração 2 ou menos do seu Tártaro para a sua mão."
       ],
       "tagline_pt": "As Asas da Metamorfose",
-      "auto_equip_pt": ["Myu de Papillon"]
+      "auto_equip_pt": ["Myu de Papillon"],
+      "patente_armadura": "Celestial"
     },
     {
       "id": "hades-v6-249",
@@ -10940,7 +10949,8 @@
         "Ressonância — Niobe: Sempre que Niobe de Deep faz o @PV de um Devoto inimigo ser reduzido a 0 ou menos por uma habilidade, o Deus inimigo alvo perde {2}{S} e seu Deus ganha {2}{S}. Esta habilidade ativa apenas uma vez por rodada."
       ],
       "tagline_pt": "A Armadura da Fragrância Mortal",
-      "auto_equip_pt": ["Niobe de Deep"]
+      "auto_equip_pt": ["Niobe de Deep"],
+      "patente_armadura": "Terrestrial"
     },
     {
       "id": "hades-v6-250",
@@ -10986,7 +10996,8 @@
         "Ressonância — Sylphid: Sempre que Sylphid de Basilisco derrota um Devoto inimigo com um Golpe, você pode devolver a carta de Espectro alvo com Custo de Conjuração 2 ou menos do seu Tártaro para a sua mão."
       ],
       "tagline_pt": "O Veneno da Estrela Celeste Veloz",
-      "auto_equip_pt": ["Sylphid de Basilisco"]
+      "auto_equip_pt": ["Sylphid de Basilisco"],
+      "patente_armadura": "Celestial"
     },
     {
       "id": "hades-v6-251",
@@ -11901,7 +11912,7 @@
       "power": null,
       "vida": null,
       "resistance": null,
-      "equipar_custo": null,
+      "equipar_custo": 5,
       "keywords_en": [],
       "habilidades_en": [
         "Scorching Impact — Whenever equipped Devotee deals combat damage to an enemy Devotee, you may pay {1}{S}. If you do, deal 1 damage to that Devotee's God.",
@@ -11925,7 +11936,8 @@
       ],
       "flavour_pt": "\"Do tormento de Prometeu nasceram as chamas da guerra.\"",
       "tagline_pt": "O Devorador de Prometeu",
-      "auto_equip_pt": ["Alcmenes de Éton"]
+      "auto_equip_pt": ["Alcmenes de Éton"],
+      "patente_armadura": "Warlord"
     },
     {
       "id": "ares-v6-273",
@@ -11992,7 +12004,7 @@
       "power": null,
       "vida": null,
       "resistance": null,
-      "equipar_custo": null,
+      "equipar_custo": 4,
       "keywords_en": [],
       "habilidades_en": [
         "Flame Coordination — Whenever equipped Devotee declares a Strike, another target friendly Berserker gains +2 @ATK until end of round.",
@@ -12016,7 +12028,8 @@
       ],
       "flavour_pt": "\"A chama da guerra revela cada fraqueza antes de a batalha começar.\"",
       "tagline_pt": "A Chama Eterna da Sabedoria",
-      "auto_equip_pt": ["Ofir de Ouroboros"]
+      "auto_equip_pt": ["Ofir de Ouroboros"],
+      "patente_armadura": "Warlord"
     },
     {
       "id": "ares-v6-275",
@@ -12083,7 +12096,7 @@
       "power": null,
       "vida": null,
       "resistance": null,
-      "equipar_custo": null,
+      "equipar_custo": 4,
       "keywords_en": [],
       "habilidades_en": [
         "Razor Winds — Whenever equipped Devotee declares a Strike, deal 1 damage to target enemy Devotee.",
@@ -12107,7 +12120,8 @@
       ],
       "flavour_pt": "\"Cada batida destas asas traz a promessa de mais um belo desastre.\"",
       "tagline_pt": "Asas da Catástrofe",
-      "auto_equip_pt": ["Lior de Lamassu"]
+      "auto_equip_pt": ["Lior de Lamassu"],
+      "patente_armadura": "Warlord"
     },
     {
       "id": "ares-v6-277",
@@ -12176,7 +12190,7 @@
       "power": null,
       "vida": null,
       "resistance": null,
-      "equipar_custo": null,
+      "equipar_custo": 3,
       "keywords_en": [],
       "habilidades_en": [
         "Haunting Presence — Whenever equipped Devotee deals combat damage to a God, that God's controller loses {1}{L}.",
@@ -12200,7 +12214,8 @@
       ],
       "flavour_pt": "\"Quem sobrevive às suas ilusões reza para nunca mais sonhar.\"",
       "tagline_pt": "A Armadura dos Pesadelos Sem Fim",
-      "auto_equip_pt": ["Lotis de Lâmia"]
+      "auto_equip_pt": ["Lotis de Lâmia"],
+      "patente_armadura": "Warlord"
     },
     {
       "id": "ares-v6-279",
@@ -12267,7 +12282,7 @@
       "power": null,
       "vida": null,
       "resistance": null,
-      "equipar_custo": null,
+      "equipar_custo": 3,
       "keywords_en": [],
       "habilidades_en": [
         "Constricting Strike — Whenever equipped Devotee deals combat damage to an enemy Devotee, that Devotee cannot Prepare during its controller's next Prepare step.",
@@ -12291,7 +12306,8 @@
       ],
       "flavour_pt": "\"A serpente não apressa a presa. Apenas garante que não haja escapatória.\"",
       "tagline_pt": "O Abraço do Constritor",
-      "auto_equip_pt": ["Iseu de Píton"]
+      "auto_equip_pt": ["Iseu de Píton"],
+      "patente_armadura": "Berserker"
     },
     {
       "id": "ares-v6-281",
@@ -12358,7 +12374,7 @@
       "power": null,
       "vida": null,
       "resistance": null,
-      "equipar_custo": null,
+      "equipar_custo": 3,
       "keywords_en": [],
       "habilidades_en": [
         "Relentless Execution — Whenever equipped Devotee defeats an enemy Devotee during combat, you may pay {1}{S}. If you do, deal 1 damage to target enemy God.",
@@ -12382,7 +12398,8 @@
       ],
       "flavour_pt": "\"O carrasco nunca precisa ver o rosto da vítima.\"",
       "tagline_pt": "Armadura do Horror sem Cabeça",
-      "auto_equip_pt": ["Catreu de Acéfalo"]
+      "auto_equip_pt": ["Catreu de Acéfalo"],
+      "patente_armadura": "Warlord"
     },
     {
       "id": "ares-v6-283",
@@ -12449,7 +12466,7 @@
       "power": null,
       "vida": null,
       "resistance": null,
-      "equipar_custo": null,
+      "equipar_custo": 3,
       "keywords_en": [],
       "habilidades_en": [
         "Gale Assault — Whenever equipped Devotee declares a Strike, deal 1 damage to target enemy Devotee.",
@@ -12473,7 +12490,8 @@
       ],
       "flavour_pt": "\"Os próprios céus tremem diante das asas do desastre.\"",
       "tagline_pt": "Asas do Céu em Ruínas",
-      "auto_equip_pt": ["Alceu de Lamassu"]
+      "auto_equip_pt": ["Alceu de Lamassu"],
+      "patente_armadura": "Elite"
     },
     {
       "id": "ares-v6-285",
@@ -12542,7 +12560,7 @@
       "power": null,
       "vida": null,
       "resistance": null,
-      "equipar_custo": null,
+      "equipar_custo": 3,
       "keywords_en": [],
       "habilidades_en": [
         "Blood Pursuit — Equipped Devotee gains +2 @ATK while striking a damaged enemy Devotee.",
@@ -12566,7 +12584,8 @@
       ],
       "flavour_pt": "\"Um único ferimento é tudo de que o caçador precisa.\"",
       "tagline_pt": "O Abraço Cruel do Caçador",
-      "auto_equip_pt": ["Arionte de Anfisbena"]
+      "auto_equip_pt": ["Arionte de Anfisbena"],
+      "patente_armadura": "Elite"
     },
     {
       "id": "ares-v6-287",
@@ -12633,7 +12652,7 @@
       "power": null,
       "vida": null,
       "resistance": null,
-      "equipar_custo": null,
+      "equipar_custo": 4,
       "keywords_en": [],
       "habilidades_en": [
         "Venomous Strike — Whenever equipped Devotee deals combat damage to an enemy Devotee, that Devotee gets -1 @ATK until end of round.",
@@ -12657,7 +12676,8 @@
       ],
       "flavour_pt": "\"Seu ferrão carrega uma morte que nenhuma armadura pode impedir.\"",
       "tagline_pt": "O Horror de Cauda de Escorpião",
-      "auto_equip_pt": ["Basil de Mantícora"]
+      "auto_equip_pt": ["Basil de Mantícora"],
+      "patente_armadura": "Elite"
     },
     {
       "id": "ares-v6-289",
@@ -13730,7 +13750,7 @@
       "power": null,
       "vida": null,
       "resistance": null,
-      "equipar_custo": null,
+      "equipar_custo": 1,
       "keywords_en": [],
       "habilidades_en": [
         "Last Protection — When equipped Devotee is defeated, you may pay {1}{S}. If you do, deal 1 damage to target enemy God."
@@ -13751,7 +13771,8 @@
         "Última Proteção — Quando o Devoto equipado é derrotado, você pode pagar {1}{S}. Se fizer isso, cause 1 de dano ao Deus inimigo alvo."
       ],
       "flavour_pt": "\"Uma Placa de Guerra quebrada ainda é capaz de tirar uma última vida.\"",
-      "tagline_pt": "Armadura dos Caídos"
+      "tagline_pt": "Armadura dos Caídos",
+      "patente_armadura": "Berserker"
     },
     {
       "id": "ares-v6-315",
@@ -14691,7 +14712,7 @@
       "power": null,
       "vida": null,
       "resistance": null,
-      "equipar_custo": null,
+      "equipar_custo": 4,
       "keywords_en": [],
       "habilidades_en": [
         "Burning Strike — Whenever equipped Devotee declares a Strike, you may pay {1}{S}. If you do, deal 1 damage to the defending God.",
@@ -14714,7 +14735,8 @@
         "Ressonância do Fogo Vermelho — Se o Devoto equipado é um Berserker da Legião do Fogo Vermelho, ele ganha @Perfurar."
       ],
       "flavour_pt": "\"As chamas de Éton queimam dentro de cada placa de aço carmesim.\"",
-      "tagline_pt": "Armadura do Inferno Carmesim"
+      "tagline_pt": "Armadura do Inferno Carmesim",
+      "patente_armadura": "Berserker"
     },
     {
       "id": "ares-v6-337",
@@ -14739,7 +14761,7 @@
       "power": null,
       "vida": null,
       "resistance": null,
-      "equipar_custo": null,
+      "equipar_custo": 3,
       "keywords_en": [],
       "habilidades_en": [
         "Calculated Strike — Whenever equipped Devotee declares a Strike, another target friendly Berserker gains +1 @ATK until end of round.",
@@ -14762,7 +14784,8 @@
         "Ressonância da Chama — Se o Devoto equipado é um Berserker da Legião da Chama, sempre que você conjura um Momento ou Técnica, o Devoto equipado recebe +1 @ATQ até o fim da rodada."
       ],
       "flavour_pt": "\"Um guerreiro guiado pela sabedoria de Ofir nunca desperdiça uma só chama.\"",
-      "tagline_pt": "Armadura da Estratégia Divina"
+      "tagline_pt": "Armadura da Estratégia Divina",
+      "patente_armadura": "Berserker"
     },
     {
       "id": "ares-v6-338",
@@ -14787,7 +14810,7 @@
       "power": null,
       "vida": null,
       "resistance": null,
-      "equipar_custo": null,
+      "equipar_custo": 3,
       "keywords_en": [],
       "habilidades_en": [
         "Last Laugh — When equipped Devotee is defeated, deal 2 damage to target enemy Devotee.",
@@ -14810,7 +14833,8 @@
         "Ressonância do Desastre — Se o Devoto equipado é um Berserker da Legião do Desastre, quando esse Devoto é derrotado, você pode pagar {1}{S}. Se fizer isso, cause 1 de dano ao Deus inimigo alvo."
       ],
       "flavour_pt": "\"Até suas mortes são oferecidas como diversão ao Lorde Lior.\"",
-      "tagline_pt": "Armadura da Morte Risonha"
+      "tagline_pt": "Armadura da Morte Risonha",
+      "patente_armadura": "Berserker"
     },
     {
       "id": "ares-v6-339",
@@ -14835,7 +14859,7 @@
       "power": null,
       "vida": null,
       "resistance": null,
-      "equipar_custo": null,
+      "equipar_custo": 3,
       "keywords_en": [],
       "habilidades_en": [
         "Nightmare Strike — Whenever equipped Devotee deals combat damage to a God, that God's controller loses {1}{L}.",
@@ -14858,7 +14882,8 @@
         "Ressonância do Medo — Se o Devoto equipado é um Berserker da Legião do Medo, sempre que um oponente perde Cosmo Latente, o Devoto equipado recebe +1 @ATQ até o fim da rodada. Esta habilidade só dispara uma vez por turno."
       ],
       "flavour_pt": "\"A armadura reflete os pesadelos de quem ousa enfrentá-la.\"",
-      "tagline_pt": "Armadura do Terror Silencioso"
+      "tagline_pt": "Armadura do Terror Silencioso",
+      "patente_armadura": "Berserker"
     },
     {
       "id": "ares-v6-340",
@@ -14883,7 +14908,7 @@
       "power": null,
       "vida": null,
       "resistance": null,
-      "equipar_custo": null,
+      "equipar_custo": 4,
       "keywords_en": [],
       "habilidades_en": [
         "Champion's Ferocity — Whenever equipped Devotee defeats an enemy Devotee during combat, you may pay {1}{S}. If you do, deal 1 damage to the opposing God.",
@@ -14907,7 +14932,8 @@
       ],
       "flavour_pt": "\"Cada cicatriz é uma vitória. Cada vitória exige outra batalha.\"",
       "tagline_pt": "A Armadura de Mil Batalhas",
-      "auto_equip_pt": ["Campeão Berserker"]
+      "auto_equip_pt": ["Campeão Berserker"],
+      "patente_armadura": "Elite"
     },
     {
       "id": "ares-v6-341",
@@ -15919,7 +15945,8 @@
         "Caçada nas Sombras — Sempre que o Devoto equipado derrota um Devoto inimigo em combate, coloque 1 marcador de @Treinamento no Devoto equipado."
       ],
       "flavour_pt": "\"Forjada para aqueles que caçam além do alcance da luz do sol.\"",
-      "tagline_pt": "Armadura da Sombra da Lua"
+      "tagline_pt": "Armadura da Sombra da Lua",
+      "patente_armadura": "Full"
     },
     {
       "id": "artemis-v6-365",
@@ -16009,7 +16036,8 @@
         "Resistência Ancestral — No início do seu turno, se o Devoto equipado não tiver marcadores de @Treinamento, coloque 1 marcador de @Treinamento nele."
       ],
       "flavour_pt": "\"Mesmo despedaçadas, as raízes do mundo antigo voltam a crescer.\"",
-      "tagline_pt": "Proteção do Bosque Ancestral"
+      "tagline_pt": "Proteção do Bosque Ancestral",
+      "patente_armadura": "Full"
     },
     {
       "id": "artemis-v6-367",
@@ -16097,7 +16125,8 @@
         "Precisão Lunar — Sempre que o Devoto equipado declara um Golpe, se ele tiver um marcador de @Treinamento, recebe +1 @ATQ / +1 @PV até o fim da rodada."
       ],
       "flavour_pt": "\"Sob a lua prateada, cada movimento se torna uma caçada perfeita.\"",
-      "tagline_pt": "Proteção Prateada da Caçada"
+      "tagline_pt": "Proteção Prateada da Caçada",
+      "patente_armadura": "Full"
     },
     {
       "id": "artemis-v6-369",
@@ -16189,7 +16218,8 @@
         "Despertar Primordial — Quando a Armadura Sagrada do Sátiro é equipada em um Devoto, coloque 2 marcadores de @Treinamento nesse Devoto."
       ],
       "flavour_pt": "\"O poder do mundo antigo não pode ser contido por mãos mortais.\"",
-      "tagline_pt": "Relíquia da Natureza Primordial"
+      "tagline_pt": "Relíquia da Natureza Primordial",
+      "patente_armadura": "Full"
     },
     {
       "id": "artemis-v6-371",
@@ -16535,7 +16565,8 @@
         "Renascimento da Natureza — Quando o Devoto equipado é derrotado, você pode devolver outro Devoto alvo com custo de Conjuração 2 ou menos do seu Tártaro para a sua mão."
       ],
       "flavour_pt": "\"Suas pétalas nunca murcham, pois a deusa da primavera se recusa a se render à morte.\"",
-      "tagline_pt": "A Armadura da Primavera Eterna"
+      "tagline_pt": "A Armadura da Primavera Eterna",
+      "patente_armadura": "Full"
     },
     {
       "id": "artemis-v6-379",
@@ -18850,7 +18881,8 @@
         "Supremacia do Luar — Sempre que o Devoto equipado derrota um Devoto inimigo em combate, coloque 1 marcador de @Treinamento em cada um de até dois outros Devotos aliados alvo."
       ],
       "flavour_pt": "\"A lua recompensa a vitória com força, e a força com glória eterna.\"",
-      "tagline_pt": "Vestimenta da Comandante Prateada"
+      "tagline_pt": "Vestimenta da Comandante Prateada",
+      "patente_armadura": "Half"
     },
     {
       "id": "artemis-v6-433",
@@ -18942,7 +18974,8 @@
         "Crescimento Enraizado — No início do seu turno, se você tiver 6 ou mais cartas no seu Banco de Cosmo, coloque 1 marcador de @Treinamento no Devoto equipado."
       ],
       "flavour_pt": "\"Suas raízes bebem da própria terra, e sua força não conhece estação.\"",
-      "tagline_pt": "A Casca Viva do Mundo Antigo"
+      "tagline_pt": "A Casca Viva do Mundo Antigo",
+      "patente_armadura": "Full"
     },
     {
       "id": "artemis-v6-435",
@@ -19036,7 +19069,8 @@
         "Pontaria Divina — Sempre que o Devoto equipado derrota um Devoto inimigo em combate, compre uma carta. Essa habilidade ativa apenas uma vez por rodada."
       ],
       "flavour_pt": "\"Nenhuma sombra pode esconder o que a lua escolheu revelar.\"",
-      "tagline_pt": "A Armadura da Precisão Infalível"
+      "tagline_pt": "A Armadura da Precisão Infalível",
+      "patente_armadura": "Half"
     },
     {
       "id": "artemis-v6-437",
