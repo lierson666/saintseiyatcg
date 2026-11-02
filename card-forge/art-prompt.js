@@ -55,40 +55,81 @@ export const EXPRESSIONS = [
   ['Confident, faint smile', 'Sorriso confiante'], ['Cruel, sadistic grin', 'Sorriso cruel'], ['Eyes closed in concentration', 'Olhos fechados, concentração'], ['Divine, unreadable calm', 'Calma divina'],
 ];
 export const VERSIONS = [
-  ['classic 1980s anime', 'Anime clássico'], ['original manga', 'Mangá original'], ['Hades chapter OVAs', 'OVAs de Hades'],
+  ['', 'Livre, só pelas referências'], ['classic 1980s anime', 'Anime clássico'], ['original manga', 'Mangá original'], ['Hades chapter OVAs', 'OVAs de Hades'],
+  ['The Lost Canvas', 'Lost Canvas'], ['Episode.G', 'Episode.G'], ['Next Dimension', 'Next Dimension'], ['Soul of Gold', 'Soul of Gold'], ['Saint Seiya Omega', 'Omega'], ['Legend of Sanctuary CGI film', 'Legend of Sanctuary'],
 ];
 export const EPIC_LEVELS = [
   ['1', '1 Contido', 'clean, small scale, simple lighting'], ['2', '2 Heroico', 'striking pose, recognizable setting, moderate effects'], ['3', '3 Épico', 'dramatic composition, elaborate energy and lighting'],
   ['4', '4 Lendário', 'monumental scale, intense atmosphere, extraordinary composition'], ['5', '5 Divino', 'exceptional impact, supernatural scale, sense of absolute power'],
 ];
-export const STYLES = [
-  ['elegant anatomy, dramatic flowing hair, expressive faces, ornate armor, classic heroism, 1980s anime cel shadows', 'Anime clássico (Shingo Araki, Michi Himeno)'],
-  ['vigorous ink line, intense movement, dramatic energy bursts, original 1980s shonen manga language', 'Mangá original (Masami Kurumada)'],
-  ['organic anatomy, expressive faces, traditional hand-drawn composition', 'Anime tradicional (Yoshikazu Yasuhiko)'],
-  ['striking silhouettes, clean economical drawing, highly readable movement', 'Silhueta limpa (Akira Toriyama)'],
-  ['complex armor, dense crosshatching, heavy blacks, dark fantasy, monumental scale', 'Fantasia sombria (Kentaro Miura)'],
-  ['powerful muscular anatomy, intimidating expressions, stark contrast and drama', 'Anatomia poderosa (Tetsuo Hara)'],
-  ['realistic anatomy, expressive brushwork, sumi ink washes, emotional realism', 'Pincel realista (Takehiko Inoue)'],
-  ['monumental architecture, oppressive atmosphere, dark science-fiction scale', 'Arquitetura opressiva (Tsutomu Nihei)'],
-  ['organic textures, gestural ink, visceral movement', 'Tinta gestual (Hiroaki Samura)'],
-  ['extreme anatomical detail, intense metallic reflections, dynamic action', 'Detalhe e reflexo (Boichi)'],
-  ['extreme perspective, action anatomy, spectacular destruction', 'Ação extrema (Yusuke Murata)'],
-  ['ethereal elegance, delicate painting, divine figures, sophisticated ornament', 'Pintura etérea (Yoshitaka Amano)'],
-  ['gothic fantasy, aristocratic costume, dark romantic atmosphere, fine painted rendering', 'Gótico romântico (Ayami Kojima)'],
-  ['elongated silhouettes, ornamental composition, elegant fantasy', 'Fantasia ornamental (CLAMP)'],
-  ['cinematic digital compositing, glowing energy effects, dynamic camera, volumetric light', 'Animação atual (Ufotable)'],
-  ['aggressive action, expressive motion, dramatic hard shadows', 'Ação agressiva (MAPPA)'],
-  ['visual exaggeration, radical perspective, explosive motion, bold shapes', 'Exagero explosivo (Studio Trigger, Hiroyuki Imaishi)'],
-  ['theatrical sculptural poses, bold unexpected color, graphic contour', 'Poses teatrais (Hirohiko Araki)'],
-  ['realism and highly detailed environments, precise mechanical drawing', 'Realismo de cenário (Katsuhiro Otomo)'],
-  ['elegance, stark black and white contrasts, clean striking silhouettes', 'Contraste elegante (Tite Kubo)'],
-  ['experimental painted textures, melancholic atmosphere', 'Pintura melancólica (Sui Ishida)'],
-  ['horror, creeping tension, fine unsettling line detail', 'Horror (Junji Ito)'],
-  ['atmospheric light, vibrant luminous skies and environments', 'Luz atmosférica (Makoto Shinkai)'],
-  ['rich traditional oil look, painterly chiaroscuro, grand heroic realism for an epic fantasy card', 'Pintura épica de Magic (Greg Staples, Chris Rahn)'],
-  ['flowing organic linework, jewel-like glazes, decorative halos and patterned robes', 'Art nouveau de Magic (Terese Nielsen, Rebecca Guay)'],
-  ['haunting symbolic imagery, muted palette, surreal dreamlike painting', 'Surreal de Magic (Seb McKinnon)'],
-];
+// Agrupados no popup (autor, 02/11/2026): anime, mangá e HQ, para as artes não saírem todas iguais.
+export const STYLE_GROUPS = {
+  'Anime': [
+    ['elegant anatomy, dramatic flowing hair, expressive faces, ornate armor, classic heroism, 1980s anime cel shadows', 'Anime clássico (Shingo Araki, Michi Himeno)'],
+    ['organic anatomy, expressive faces, traditional hand-drawn composition', 'Anime tradicional (Yoshikazu Yasuhiko)'],
+    ['cinematic digital compositing, glowing energy effects, dynamic camera, volumetric light', 'Animação atual (Ufotable)'],
+    ['aggressive action, expressive motion, dramatic hard shadows', 'Ação agressiva (MAPPA)'],
+    ['visual exaggeration, radical perspective, explosive motion, bold shapes', 'Exagero explosivo (Studio Trigger, Hiroyuki Imaishi)'],
+    ['theatrical sculptural poses, bold unexpected color, graphic contour', 'Poses teatrais (Hirohiko Araki)'],
+    ['atmospheric light, vibrant luminous skies and environments', 'Luz atmosférica (Makoto Shinkai)'],
+    ['thin hand-painted 1990s cels, saturated flat colors, bold ink outlines, film grain', 'Shonen anos 90 (Noriyuki Abe, Studio Pierrot)'],
+    ['long limbs, sharp jawlines, moody low-key shadows, noir atmosphere, lush 1990s theatrical animation', 'Anime noir (Yoshiaki Kawajiri, Madhouse)'],
+    ['hard-edged armor panels, technical plating, weathered metal, cockpit-grade mechanical logic', 'Metal de mecha (Kunio Okawara, Sunrise)'],
+    ['restrained realistic proportions, understated detail, precise grounded animation drawing, cool natural color', 'Realismo contido (Hiroyuki Okiura, Production I.G)'],
+    ['soft refined shading, delicate eyes, gentle luminous color, polished modern finish', 'Anime refinado (Naoko Yamada, Kyoto Animation)'],
+    ['painted watercolor environments, warm natural light, gentle rounded character drawing', 'Aquarela de cenário (Kazuo Oga, Studio Ghibli)'],
+    ['neon rim light, glossy airbrushed highlights, 1980s video-tape colors, cyberpunk night', 'OVA cyberpunk (Kenichi Sonoda, Artmic)'],
+    ['toon-rendered 3D look, crisp hard shadows, stylized action frames, flat color with sharp specular', 'Cel-shading de luta (Arc System Works)'],
+    ['romantic 1970s shoujo, large sparkling eyes, flowing ribbons of hair, rose and lace ornament', 'Shoujo clássico (Riyoko Ikeda)'],
+  ],
+  'Mangá': [
+    ['vigorous ink line, intense movement, dramatic energy bursts, original 1980s shonen manga language', 'Mangá original (Masami Kurumada)'],
+    ['striking silhouettes, clean economical drawing, highly readable movement', 'Silhueta limpa (Akira Toriyama)'],
+    ['complex armor, dense crosshatching, heavy blacks, dark fantasy, monumental scale', 'Fantasia sombria (Kentaro Miura)'],
+    ['powerful muscular anatomy, intimidating expressions, stark contrast and drama', 'Anatomia poderosa (Tetsuo Hara)'],
+    ['realistic anatomy, expressive brushwork, sumi ink washes, emotional realism', 'Pincel realista (Takehiko Inoue)'],
+    ['monumental architecture, oppressive atmosphere, dark science-fiction scale', 'Arquitetura opressiva (Tsutomu Nihei)'],
+    ['organic textures, gestural ink, visceral movement', 'Tinta gestual (Hiroaki Samura)'],
+    ['extreme anatomical detail, intense metallic reflections, dynamic action', 'Detalhe e reflexo (Boichi)'],
+    ['extreme perspective, action anatomy, spectacular destruction', 'Ação extrema (Yusuke Murata)'],
+    ['elongated silhouettes, ornamental composition, elegant fantasy', 'Fantasia ornamental (CLAMP)'],
+    ['realism and highly detailed environments, precise mechanical drawing', 'Realismo de cenário (Katsuhiro Otomo)'],
+    ['elegance, stark black and white contrasts, clean striking silhouettes', 'Contraste elegante (Tite Kubo)'],
+    ['experimental painted textures, melancholic atmosphere', 'Pintura melancólica (Sui Ishida)'],
+    ['horror, creeping tension, fine unsettling line detail', 'Horror (Junji Ito)'],
+    ['cinematic realism, heavy brush inking, adult weathered faces, stark dramatic gekiga shadows', 'Gekiga (Ryoichi Ikegami, Goseki Kojima)'],
+    ['demonic bold contours, screaming energy, raw 1970s screen tone, aggressive graphic power', 'Demônios setentistas (Go Nagai)'],
+    ['hyper-detailed armor engraving, burning energy, muscular crosshatching, flames filling the page', 'Armadura flamejante (Megumu Okada)'],
+    ['slender graceful figures, thin precise line, soft gray tones, melancholic tragic beauty', 'Traço delicado (Shiori Teshirogi)'],
+    ['sparkling magical motifs, slender elegant poses, flowing lines, ornamental shoujo heroism', 'Heroína ornamental (Naoko Takeuchi)'],
+    ['angular dynamic poses, bold clean ink, speed lines, sharp shonen energy', 'Shonen angular (Masashi Kishimoto)'],
+    ['rubber cartoon exaggeration, huge expressive faces, bursting adventure, thick playful contour', 'Cartum épico (Eiichiro Oda)'],
+    ['loose raw ink, scratchy unfinished energy, off-kilter cinematic framing', 'Tinta crua (Tatsuki Fujimoto, Yoshihiro Togashi)'],
+  ],
+  'HQ ocidental': [
+    ['cosmic crackling dots of energy, blocky powerful figures, colossal alien machinery, primary colors', 'Cósmico dos anos 60 (Jack Kirby)'],
+    ['1990s superhero rendering, dense crosshatching, heroic musculature, splash-page dynamism', 'Super-herói anos 90 (Jim Lee)'],
+    ['solid pure black and white, one violent spot color, brutal noir silhouettes', 'Noir preto e branco (Frank Miller)'],
+    ['massive angular blocks of shadow, minimal detail, gothic folklore, limited palette', 'Sombra gótica (Mike Mignola)'],
+    ['photorealistic gouache, reverent monumental heroes, painted cover lighting', 'Realismo em guache (Alex Ross)'],
+    ['clear even line, flat pastel color, vast surreal landscapes, serene alien calm', 'Linha clara (Moebius)'],
+    ['obsessive pen feathering, decaying textures, classic horror comics inking', 'Horror a bico de pena (Bernie Wrightson)'],
+    ['savage painted heavy metal, brutal flesh and steel, smeared grimy color', 'Heavy metal pintado (Simon Bisley)'],
+    ['simple geometric shapes, art deco elegance, minimal line, dark flat backgrounds', 'Deco animado (Bruce Timm)'],
+    ['gritty kinetic ink, scratchy mechanical detail, wet nocturnal city grime', 'Tinta suja (Sean Gordon Murphy)'],
+    ['ultra-fine meticulous line, baroque costume detail, clean modern coloring', 'Linha milimétrica (Travis Charest)'],
+    ['spectral thin figures emerging from black, sparse elegant ink, haunting negative space', 'Espectral (Jae Lee)'],
+  ],
+  'Pintura e fantasia': [
+    ['ethereal elegance, delicate painting, divine figures, sophisticated ornament', 'Pintura etérea (Yoshitaka Amano)'],
+    ['gothic fantasy, aristocratic costume, dark romantic atmosphere, fine painted rendering', 'Gótico romântico (Ayami Kojima)'],
+    ['rich traditional oil look, painterly chiaroscuro, grand heroic realism for an epic fantasy card', 'Pintura épica de Magic (Greg Staples, Chris Rahn)'],
+    ['flowing organic linework, jewel-like glazes, decorative halos and patterned robes', 'Art nouveau de Magic (Terese Nielsen, Rebecca Guay)'],
+    ['haunting symbolic imagery, muted palette, surreal dreamlike painting', 'Surreal de Magic (Seb McKinnon)'],
+    ['oil-painted barbarian fantasy, muscular motion, dark earthy tones, raw primal drama', 'Óleo bárbaro (Frank Frazetta)'],
+  ],
+};
+export const STYLES = Object.values(STYLE_GROUPS).flat();
 const styleWith = (name) => STYLES.find(([, label]) => label.includes(name))[0];
 export const LIGHTS = [
   ['Cosmo aura erupting behind the figure as key light, warm rim on hair and armor edges, soft reflected fill keeping the face readable', 'Aura de Cosmo atrás'],
@@ -144,7 +185,7 @@ export function cardFacts(card, cards = []) {
 export function defaultParams(f) {
   const god = GODS[f.faction], scene = f.kind === 'Domain', object = f.kind === 'Equipment';
   return {
-    mode: 'director', version: VERSIONS[0][0], god: god ? f.faction : '', person: f.person, armor: f.armors[0]?.name || '', technique: f.isSpell ? f.name : '', arc: '', theme: '',
+    mode: 'director', version: '', god: god ? f.faction : '', person: f.person, armor: f.armors[0]?.name || '', technique: f.isSpell ? f.name : '', arc: '', theme: '',
     epic: f.kind === 'God' ? '5' : EPIC_BY_RARITY[f.rarity] || '3',
     shot: scene ? 'Wide Environmental Shot' : object ? SHOTS[6][0] : f.isSpell ? SHOTS[3][0] : SHOTS[4][0], angle: ANGLES[1][0], pose: f.isSpell ? POSES[6][0] : POSES[9][0], motion: f.isSelf || f.isSpell ? MOTIONS[1][0] : '',
     expression: EXPRESSIONS[0][0], style: styleWith(god?.style || 'Araki'), accent: '', light: LIGHTS[god?.light ?? 0][0], before: '', now: '', next: '', viewer: '', usePowers: true, notes: '',
@@ -174,8 +215,9 @@ export function buildImagePrompt(f, p) {
     `CARD: ${f.name}${f.subtitle ? ` — "${f.subtitle}"` : ''} (${f.typeLine || f.kind}, ${f.rarity || 'Common'}).`,
     `CARD TYPE DIRECTION: ${TYPE_RULES[f.kind] || TYPE_RULES.Devotee}`,
     `SUBJECT: ${subject}`,
-    `VISUAL VERSION: ${p.version}. Do not mix versions.`,
-    'REFERENCES: reference images are attached to this prompt. They are the priority source for appearance; follow them over any written description.',
+    `ART STYLE (top priority for the whole image: line, shading, color treatment and rendering): ${p.style}.${p.accent ? ` Complementary finish: ${p.accent}.` : ''}`,
+    p.version && `DESIGN CANON: costume and armor shapes follow ${p.version}, only as design. Draw them in the ART STYLE above, not in the look of that version.`,
+    'REFERENCES: reference images are attached to this prompt. Use them only for character identity and armor design (face, hair, silhouette, parts, colors); follow them over any written description of those. Do not copy their drawing style, line or shading: redraw everything in the ART STYLE.',
     god && `FACTION IDENTITY: ${p.god}, ${god.title}. Palette identity, not monochrome: ${god.palette}. Feeling: ${god.mood}.`,
     `SETTING: ${p.theme || (god ? god.setting : 'an epic mythological setting from the Saint Seiya universe')}.${p.arc ? ` Inspired by: ${p.arc}.` : ''}`,
     story && `STORY: ${story}`,
@@ -185,7 +227,6 @@ export function buildImagePrompt(f, p) {
     'COMPOSITION: card interface may cover parts of the image, so concentrate the most important elements in the central region and keep a silhouette readable at small size.',
     person && 'ANATOMY: exactly five fingers on each visible hand; no duplicate limbs; coherent joints, hands, feet and neck; the armor follows the body correctly.',
     p.technique && `TECHNIQUE IN USE: ${p.technique}${power ? ` — ${power.text}` : ''}. Show its origin, trajectory and consequence visually with cosmo energy; no written effects.`,
-    `ART STYLE: ${p.style}.${p.accent ? ` Complementary finish: ${p.accent}.` : ''}`,
     `LIGHTING: ${p.light}.`,
     epic && `EPIC LEVEL ${epic[0]} OF 5: ${epic[2]}, without hurting character fidelity or card legibility.`,
     p.usePowers && f.powers.length ? `POWERS TO EVOKE (visual inspiration, do not write them): ${f.powers.slice(0, 4).map((x) => x.name ? `${x.name}: ${x.text}` : x.text).join(' | ')}` : '',
@@ -201,6 +242,7 @@ export const buildDirectorPrompt = (master, f, p) => `${master.trim()}\n\n---\nS
 
 const esc = (t) => String(t ?? '').replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
 const select = (name, label, opts, value) => `<label>${label}<select name="${name}">${opts.map(([v, t]) => `<option value="${esc(v)}"${v === value ? ' selected' : ''}>${esc(t ?? v)}</option>`).join('')}</select></label>`;
+const groupedSelect = (name, label, first, value) => `<label>${label}<select name="${name}">${first.map(([v, t]) => `<option value="${esc(v)}"${v === value ? ' selected' : ''}>${esc(t)}</option>`).join('')}${Object.entries(STYLE_GROUPS).map(([group, opts]) => `<optgroup label="${esc(group)}">${opts.map(([v, t]) => `<option value="${esc(v)}"${v === value ? ' selected' : ''}>${esc(t)}</option>`).join('')}</optgroup>`).join('')}</select></label>`;
 const input = (name, label, value, placeholder = '') => `<label>${label}<input name="${name}" value="${esc(value)}" placeholder="${esc(placeholder)}"></label>`;
 const GPT_URL = 'https://chatgpt.com/';
 const URL_LIMIT = 7000; // acima disso o link pode falhar: o GPT abre vazio e o prompt fica copiado
@@ -222,12 +264,12 @@ export function mountArtPrompt(dialog, {getCard, getCards, say, masterUrl}) {
       <div class="ap-wide">${select('mode', 'Saída', [['director', 'Diretor de arte: Master completo + pedido da carta'], ['image', 'Prompt direto de imagem']], p.mode)}</div>
       ${f.isSelf ? '' : select('person', 'Personagem', [...none('Sem personagem'), ...f.people.map((n) => [n])], p.person)}
       ${f.armors.length ? select('armor', 'Armadura', [...none('Sem armadura'), ...f.armors.map((a) => [a.name, `${a.name} (${a.line})`])], p.armor) : ''}
-      ${select('god', 'Deus', [...none('Nenhum'), ...Object.keys(GODS).map((g) => [g])], p.god)}${select('version', 'Versão visual', VERSIONS, p.version)}
+      ${select('god', 'Deus', [...none('Nenhum'), ...Object.keys(GODS).map((g) => [g])], p.god)}${select('version', 'Base do design', VERSIONS, p.version)}
       ${select('epic', 'Grandiosidade', EPIC_LEVELS, p.epic)}${select('technique', 'Técnica em uso', [...none('Nenhuma'), ...f.techniques.map((t) => [t])], p.technique)}
       ${select('shot', 'Plano', SHOTS, p.shot)}${select('angle', 'Ângulo', ANGLES, p.angle)}
       ${select('pose', 'Pose', POSES, p.pose)}${select('expression', 'Expressão', EXPRESSIONS, p.expression)}
       ${select('motion', 'Movimento', MOTIONS, p.motion)}${select('light', 'Luz', LIGHTS, p.light)}
-      ${select('style', 'Traço dominante', STYLES, p.style)}${select('accent', 'Traço complementar', [...none('Nenhum'), ...STYLES], p.accent)}
+      ${groupedSelect('style', 'Traço dominante', [], p.style)}${groupedSelect('accent', 'Traço complementar', none('Nenhum'), p.accent)}
       ${select('theme', 'Tema e cenário', THEMES, p.theme)}${select('arc', 'Arco ou acontecimento', ARCS, p.arc)}
       ${select('before', 'Acabou de acontecer', BEFORE, p.before)}${select('now', 'Está acontecendo', NOW, p.now)}${select('next', 'Vai acontecer', NEXT, p.next)}${select('viewer', 'O observador sente', VIEWER, p.viewer)}
       <div class="ap-wide">${input('notes', 'Observações', p.notes, 'Algo mais para a imagem')}</div>

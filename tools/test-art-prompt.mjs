@@ -3,7 +3,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {ARCS, BEFORE, NEXT, NOW, STYLES, THEMES, VIEWER, buildDirectorPrompt, buildImagePrompt, cardFacts, defaultParams, randomParams} from '../card-forge/art-prompt.js';
+import {ARCS, BEFORE, NEXT, NOW, STYLE_GROUPS, STYLES, THEMES, VIEWER, buildDirectorPrompt, buildImagePrompt, cardFacts, defaultParams, randomParams} from '../card-forge/art-prompt.js';
 
 const {cartas} = JSON.parse(readFileSync(new URL('../data/cards.json', import.meta.url)));
 const master = readFileSync(new URL('../card-forge/art-master-prompt.md', import.meta.url), 'utf8');
@@ -56,6 +56,21 @@ test('Equipment começa sozinho, e o portador fica só como opção', () => {
   assert.match(alone, /alone as a sacred object/);
   assert.doesNotMatch(alone, /FACE PLACEMENT|POSE:|EXPRESSION:|extra fingers/);
   assert.match(promptOf('hades-v6-182', {person: f.people[0]}), /WYVERN RHADAMANTHYS, wearing WYVERN SURPLICE \(Equipment — Judge Surplice\)/);
+});
+
+test('traço manda no desenho: versão e referências só definem o design', () => {
+  const free = promptOf('athena-v6-001', {style: STYLE_GROUPS['HQ ocidental'][0][0]});
+  assert.ok(free.indexOf('ART STYLE') < free.indexOf('REFERENCES'));
+  assert.match(free, /ART STYLE \(top priority.*cosmic crackling/);
+  assert.match(free, /Do not copy their drawing style/);
+  assert.doesNotMatch(free, /DESIGN CANON|Do not mix versions/);
+  assert.match(promptOf('athena-v6-001', {version: 'The Lost Canvas'}), /DESIGN CANON: costume and armor shapes follow The Lost Canvas, only as design/);
+});
+
+test('tem anime, mangá e HQ à escolha, sem traço repetido', () => {
+  for (const group of ['Anime', 'Mangá', 'HQ ocidental']) assert.ok(STYLE_GROUPS[group].length >= 10, group);
+  assert.equal(new Set(STYLES.map(([prompt]) => prompt)).size, STYLES.length);
+  assert.equal(new Set(STYLES.map(([, label]) => label)).size, STYLES.length);
 });
 
 test('grandiosidade segue a raridade e God é divino', () => {
