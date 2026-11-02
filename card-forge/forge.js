@@ -1,10 +1,12 @@
-import {mountArtPrompt} from './art-prompt.js?v=20261102-arte3';
+import {mountArtPrompt} from './art-prompt.js?v=20261102-arte5';
 import {cardsToXlsx} from './cards-xlsx.js?v=20261102-momento1';
 import {AUDIT_STATUS,auditOf,mountCardFinder,reviewQueue} from './card-finder.js?v=20261102-momento1';
 import {mountRulesRows} from './rules-rows.js?v=20261102-banco1';
 import {createHistory} from '../shared/editor-history.js';
 import {compilePlaytest} from '../shared/import-playtest.js';
-import {renderLiveCard,illustration,statLine,EDITIONS,editionOf} from '../shared/live-card.js?v=20261102-eq6';
+import {renderLiveCard,illustration,EDITIONS,editionOf} from '../shared/live-card.js?v=20261102-deus3';
+import {scrimStops} from '../shared/card-scrim.js?v=20261102-deus3';
+import {godFaceLayout,godFaceTexts} from '../shared/god-face.js?v=20261102-deus3';
 import {EQUIPMENT_SUBTYPES,ARMOR_FAMILY,PATENTES_ARMADURA,patentesDe,belongsToEquipmentGroup,formatCardTypeLine,printedSubtypes,subtypesText,toggleSubtype,validateEquipmentSubtypes} from '../shared/equipment-types.js?v=20261102-eq6';
 import {textBlocks, blocksMarkup, presentationRules, ruleBlocksWithoutKeywords, KEYWORD_WORDS, KEYWORD_WORDS_PT, STAT_RE, statTrend, statSymbols, costSymbols, keywordLine} from '../shared/card-text.js?v=20261102-eq2';
 import {isArmor,isEquipment,validateCard,LINE_KEYWORDS,keywordsOfLine} from '../shared/card-model.js?v=20261102-kw1';
@@ -223,7 +225,7 @@ function paint(glow, shadowAlpha, draw, outline) {
   }
   ctx.save();
   ctx.shadowColor = `rgba(0,0,0,${shadowAlpha})`;
-  ctx.shadowBlur = 6;
+  ctx.shadowBlur = 16; // sombra de leitura sobre a arte clara (autor, 02/11/2026)
   if (outline) {
     ctx.strokeStyle = `rgba(20,16,8,${shadowAlpha})`; // preto em Multiply sobre o brilho
     ctx.lineJoin = 'round';
@@ -280,12 +282,12 @@ async function drawPiece(key, el = {}, glow = false) {
 }
 const drawGlowPiece = (key, el) => drawPiece(key, el, true);
 
+let godFace = 'front', scrimTop; // face do God na prévia e na exportação (guia §63)
 async function drawFrame() {
+  const scrim = ctx.createLinearGradient(0, 0, 0, 2091);
+  for (const [at, alpha] of scrimStops(scrimTop)) scrim.addColorStop(at, `rgba(0,0,0,${alpha})`);
+  ctx.fillStyle = scrim; ctx.fillRect(0, 0, 1488, 2091);
   for (const key of fac().frame) {
-    if (key === 'athena/frame' && facKey() === 'athena') { // degradê da linha de Power/HP até o rodapé (igual a shared/live-card.js)
-      const y = statLine(T.layouts[layoutKey(S)], P), g = y && ctx.createLinearGradient(0, y - 160, 0, 2091);
-      if (g) { g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(0.32, 'rgba(0,0,0,.62)'); g.addColorStop(1, 'rgba(0,0,0,.8)'); ctx.fillStyle = g; ctx.fillRect(0, y - 160, 1488, 2091 - y + 160); }
-    }
     const p = P[key], im = await loadImg(pieceSrc(key));
     if (!p || !im) continue;
     ctx.save();
@@ -362,9 +364,9 @@ function layoutRules(paras, size, maxW) {
 
 // God (autor, 31/10/2026): mesmos blocos do duelo (shared/card-text.js): etiqueta pequena, "{custo} NOME:" e o efeito embaixo.
 // O bloco do Awaken leva o cabeçalho do PSD no lugar da etiqueta.
-function godParas(c, awaken) {
+function godParas(c, awaken, face) {
   const sym = (t) => t.replace(/\{(\d+|X)\}(?=\{[BCLS]\})/g, '$1 ');
-  const raw = [...(c.habilidades_en || []), c.habilidade_awaken_en, c.ultimate_en].filter(has);
+  const raw = godFaceTexts(c, face).filter(has);
   return textBlocks(raw).flatMap((b) => {
     const [tag, title] = b.heading?.includes(' § ') ? b.heading.split(' § ') : ['', b.heading];
     const body = sym([title ? `**${title.toUpperCase()}${b.body ? ':' : ''}**` : '', b.body].filter(Boolean).join('\n'));
@@ -386,7 +388,7 @@ async function drawAwaken(x, y, w, h, n) {
   ctx.save(); ctx.fillStyle = halo; ctx.translate(gx + mid / 2, cy); ctx.scale(1, h * 0.75 / mid); ctx.beginPath(); ctx.arc(0, 0, mid * 0.62, 0, Math.PI * 2); ctx.fill(); ctx.restore();
   const icons = () => { ctx.drawImage(gem, gx, y, gw, h); ctx.drawImage(word, gx + gw - overlap, cy - wh / 2, ww, wh); };
   ctx.save(); ctx.shadowColor = 'rgba(0,0,0,.95)'; ctx.shadowBlur = h * 0.18; icons(); icons(); ctx.restore();
-  paint(false, 0.6, icons);
+  paint(false, 0.85, icons);
   ctx.font = `italic 700 ${h * 0.52}px Futura, 'Century Gothic', sans-serif`;
   ctx.textAlign = 'center'; ctx.fillStyle = fac().color;
   paint(true, 0.9, () => ctx.fillText(String(n), gx + gw / 2, cy + h * 0.02), () => { ctx.lineWidth = h * 0.06; ctx.strokeText(String(n), gx + gw / 2, cy + h * 0.02); });
@@ -400,7 +402,7 @@ async function drawRules(el, s, pt = null) {
   if (kws.length) paras.push(`**${kws.join(', ').toUpperCase()}.**`);
   // Em PT o texto vem pronto dos campos *_pt (displayCard), já com Equip/Ressonância.
   const text=pt?(pt.habilidades_en||[]).map(toMarkup):s.estagios.length||layoutKey(s)==='relic_cloth'?presentationRules(buildCard()).map(toMarkup):splitParas(s.rules); // Armor: 1ª linha Equip · Resonance
-  if (layoutKey(s) === 'god') paras.push(...godParas(pt || buildCard(), s.awaken));
+  if (layoutKey(s) === 'god') paras.push(...godParas(pt || buildCard(), s.awaken, godFace));
   else paras.push(...splitParas(blocksMarkup(ruleBlocksWithoutKeywords(text,kws))));
   if (!paras.length) return;
   let size = el.size, L;
@@ -419,7 +421,7 @@ async function drawRules(el, s, pt = null) {
     if (ln.tag) {
       ctx.font = T.styles.rules.bold.replace('{s}', Math.round(size * 0.66));
       ctx.letterSpacing = `${size * 0.08}px`; ctx.textAlign = 'center'; ctx.fillStyle = fac().color;
-      paint(false, 0.5, () => ctx.fillText(ln.tag, rx + rw / 2, y + ln.h / 2), () => { ctx.lineWidth = size * 0.12; ctx.strokeText(ln.tag, rx + rw / 2, y + ln.h / 2); });
+      paint(false, 0.85, () => ctx.fillText(ln.tag, rx + rw / 2, y + ln.h / 2), () => { ctx.lineWidth = size * 0.12; ctx.strokeText(ln.tag, rx + rw / 2, y + ln.h / 2); });
       ctx.letterSpacing = '0px'; ctx.textAlign = 'left'; y += ln.h; continue;
     }
     const x0 = rx + (rw - ln.w) / 2, cy = y + L.lh / 2;
@@ -439,7 +441,7 @@ async function drawRules(el, s, pt = null) {
         }
       }
     };
-    paint(false, 0.5, () => run(false), () => { ctx.lineWidth = size * 0.17; run(true); });
+    paint(false, 0.85, () => run(false), () => { ctx.lineWidth = size * 0.17; run(true); });
     y += L.lh;
   }
 }
@@ -476,6 +478,8 @@ async function render() {
   const L = structuredClone(T.layouts[layoutKey(S)]);
   // Desenho antigo em PT: só os textos trocam (nome, subtítulo, flavour, tipo, regras); layout e símbolos seguem S.
   const pt = displayCard(buildCard()), V = pt.__pt ? {...S, title: '', nome_exibicao_en: pt.nome_exibicao_en, subtitle: pt.subtitulo_en || pt.tagline_en || S.subtitle, flavour: pt.flavour_en || S.flavour} : S;
+  scrimTop = undefined;
+  if (layoutKey(S) === 'god') { const g = godFaceLayout(L, pt, godFace); L.elements = g.layout.elements; scrimTop = g.top; }
   await Promise.all([S.art?.src && loadImg(S.art.src), loadImg(pieceSrc(symbolKey(S.faccao))),
     ...Object.keys(P).map((k) => loadImg(pieceSrc(k)))]);
   if (seq !== renderSeq) return;
@@ -536,7 +540,7 @@ async function render() {
         break;
       }
       case 'text': {
-        let v = el.field === 'typeLine' ? typeLine(S, L.typeLine, typeWord) : el.field === 'name' ? V.nome_exibicao_en : V[el.field];
+        let v = el.value ? el.value : el.field === 'typeLine' ? typeLine(S, L.typeLine, typeWord) : el.field === 'name' ? V.nome_exibicao_en : V[el.field];
         if (!has(v)) break;
         v = String(v).trim();
         drawText(el.upper ? v.toUpperCase() : v, el.style, el.x, el.y, el.size, el.maxW);
@@ -590,15 +594,15 @@ async function updateLivePreview(){
   const c=buildCard();
   $('#rulesReview').textContent=c.motor_revisao_pendente?'Texto alterado: os efeitos jogáveis precisam de revisão antes de usar esta carta numa partida.':validateCard(c).join(' · ');
   // Aviso de acessibilidade (autor, 31/10/2026): texto que não cabe a 100% ganha rolagem no jogo.
-  if(rulesOverflow(renderLiveCard(c,{art:S.art?.src})))$('#rulesReview').textContent=[$('#rulesReview').textContent,'Texto de regras não cabe a 100%: no jogo ganha rolagem dentro do frame (encurte o texto para ler sem rolar).'].filter(Boolean).join(' · ');
+  if(rulesOverflow(renderLiveCard(c,{art:S.art?.src}))||c.tipo==='God'&&rulesOverflow(renderLiveCard(c,{art:S.art?.src,face:'back'})))$('#rulesReview').textContent=[$('#rulesReview').textContent,'Texto de regras não cabe a 100%: no jogo ganha rolagem dentro do frame (encurte o texto para ler sem rolar).'].filter(Boolean).join(' · ');
   if(!live)return;
   const simulationCards=[...db.cartas.filter(card=>card.id!==c.id),c];
   try{
     const result=await simulateCard(simulationCards,c,{mode:'battlefield',damage:Number($('#previewDamage').value)||0,stage:Number($('#previewStage').value)||0,prepared:$('#previewPrepared').checked});
     if(revision!==livePreviewRevision)return;
-    $('#livePreview').innerHTML=renderLiveCard(c,{art:S.art?.src,stats:result.stats,instance:result.instance});
+    $('#livePreview').innerHTML=renderLiveCard(c,{art:S.art?.src,stats:result.stats,instance:result.instance,face:godFace});
   }catch{
-    if(revision===livePreviewRevision)$('#livePreview').innerHTML=renderLiveCard(c,{art:S.art?.src});
+    if(revision===livePreviewRevision)$('#livePreview').innerHTML=renderLiveCard(c,{art:S.art?.src,face:godFace});
   }
 }
 // Mede a carta viva fora da tela: o texto de regras transborda a caixa do layout?
@@ -606,8 +610,7 @@ function rulesOverflow(html){
   let box=document.getElementById('overflowProbe');
   if(!box){box=document.body.appendChild(document.createElement('div'));box.id='overflowProbe';box.setAttribute('aria-hidden','true');box.style.cssText='position:absolute;left:-9999px;top:0;width:372px;container-type:inline-size;visibility:hidden';}
   box.innerHTML=html;
-  const r=box.querySelector('.lc-rules');
-  return !!r&&r.scrollHeight>r.clientHeight+1;
+  return [...box.querySelectorAll('.lc-rules')].some(r=>r.scrollHeight>r.clientHeight+1);
 }
 for(const id of ['representation','previewDamage','previewPrepared','previewStage'])$('#'+id).addEventListener('input',updateLivePreview);
 
@@ -701,6 +704,7 @@ $('#eqSubtypes').addEventListener('click',(e)=>{
 function syncVisibility() {
   const lk = layoutKey(S);
   form.querySelectorAll('[data-for]').forEach((el) => { el.hidden = !el.dataset.for.split(' ').includes(lk); });
+  $('#godFlip').hidden = lk !== 'god';
   $('#rulesV2').hidden=!isEquipment({...S,subtipos:list(S.subtipos)});
   drawEqSubtypes();
   syncPtStatus();
@@ -904,17 +908,23 @@ $('#exportXlsx').addEventListener('click', () => { // catálogo gravado: ediçã
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
   say(`Excel com ${db.cartas.length} cartas exportado.`);
 });
-$('#exportHi').addEventListener('click', async () => { await render(); download(canvas, `${fileBase()}${langSuffix()}.png`); say('PNG 1488×2091 exportado'); });
-$('#exportWeb').addEventListener('click', async () => {
-  await render();
+// God exporta as duas faces: a frente com o nome de sempre, o verso com -verso.
+async function eachFace(save) {
+  const keep = godFace;
+  for (const face of layoutKey(S) === 'god' ? ['front', 'back'] : [keep]) { godFace = face; await render(); await save(face === 'back' ? '-verso' : ''); }
+  godFace = keep; await render();
+}
+$('#godFlip').addEventListener('click', () => { godFace = godFace === 'back' ? 'front' : 'back'; $('#godFlip').textContent = godFace === 'back' ? 'Ver a frente do God' : 'Ver o verso do God'; render(); });
+$('#exportHi').addEventListener('click', () => eachFace(async (face) => { await download(canvas, `${fileBase()}${face}${langSuffix()}.png`); say('PNG 1488×2091 exportado'); }));
+$('#exportWeb').addEventListener('click', () => eachFace(async (face) => {
   const w = 1100, h = Math.round(w * H / W);
   const c = Object.assign(document.createElement('canvas'), { width: w, height: h });
   const g = c.getContext('2d');
   g.imageSmoothingQuality = 'high';
   g.drawImage(canvas, 0, 0, w, h);
-  download(c, `${fileBase()}${langSuffix()}-web.png`);
+  download(c, `${fileBase()}${face}${langSuffix()}-web.png`);
   say(`PNG web ${w}×${h} exportado`);
-});
+}));
 
 // ---------- salvar ----------
 async function post(url, body, type = 'application/json') {

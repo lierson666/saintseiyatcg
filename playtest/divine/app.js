@@ -28,7 +28,7 @@ import {findDeck} from '../deck-store.js';
 import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-face3';
 import {unlock, playMusic, playFxFile, setVolume, volume} from '../audio.js?v=20261102-voz4';
 import {telas, cardVoices, anim, sound, voice, imageUrl, applyColors, applyTexts} from '../telas.js?v=20261102-barulho1';
-import {renderLiveCard, renderCardText, fullSizePieces} from '../../shared/live-card.js?v=20261102-eq6';
+import {renderLiveCard, renderCardText, fullSizePieces} from '../../shared/live-card.js?v=20261102-deus3';
 import {renderKeywordNotes, renderKeywordIcons} from '../../shared/keyword-glossary.js?v=20261102-arroba1';
 import {armorBonusText, printedEquipmentBonuses} from '../../shared/card-visual-values.js?v=20261102-arroba1';
 import {lightArt} from '../../shared/light-art.js';
@@ -1656,7 +1656,8 @@ function showGodPanel(key) {
   hideInspect();
   const s = S(), p = s.players[key], d = s.divine[key], god = cards.get(s.gods[key]), max = soulMax(s, key), acts = godActions(key);
   const forge = FORGE.get(`${god.name.toLowerCase()}-001`);
-  const art = forge?.ilustracao ? renderLiveCard(forge, {art: forgeArt(forge.ilustracao)}) : `<div class="godpanel__portrait" style="background-image:url('${GOD_ART[s.gods[key]] || ''}')"></div>`;
+  // O God desperto mostra o verso (guia §63).
+  const art = forge?.ilustracao ? renderLiveCard(forge, {art: forgeArt(forge.ilustracao), face: d.awaken ? 'back' : 'front'}) : `<div class="godpanel__portrait" style="background-image:url('${GOD_ART[s.gods[key]] || ''}')"></div>`;
   const state = pw => powerState(d, acts, pw);
   const icon = {divine: '✦', command: '⚔', awaken: '☀', ultimate: '⚡'};
   const powers = godPowers(god).map((pw, i) => {

@@ -125,3 +125,13 @@ html.lc-a11y .live-card--psd .lc-rules strong,html.lc-a11y .live-card--psd .lc-r
 .live-card.live-card--psd .lc-gem--power b{text-shadow:0 0 .2cqw #000,0 0 .9cqw rgba(42,168,255,.55)}
 .live-card.live-card--psd .lc-gem--resistance b{text-shadow:0 0 .2cqw #000,0 0 .9cqw rgba(255,122,26,.55)}
 }
+/* Sombra de leitura em letras, símbolos e custos (autor, 02/11/2026), já que o meio da arte ficou sem escuro. */
+.live-card.live-card--psd .lc-text,.live-card--psd .lc-gem b,.live-card--psd .lc-gem small{text-shadow:0 .2cqw .35cqw #000,0 0 1.1cqw rgba(0,0,0,.95),0 0 3cqw var(--psd-glow)}
+.live-card.live-card--psd .lc-rules,.live-card--psd .lc-footer{text-shadow:0 .15cqw .3cqw #000,0 0 .9cqw rgba(0,0,0,.95)}
+.live-card.live-card--psd .lc-gem>.lc-piece,.live-card.live-card--psd .lc-symbol{filter:drop-shadow(0 .2cqw .5cqw #000) drop-shadow(0 0 1cqw color-mix(in srgb,var(--psd-glow) 55%,#000))}
+/* God com duas faces (guia §63, autor 02/11/2026). O botão de virar some em carta pequena demais para tocar. */
+.live-card[data-face=front] .lc-psd--back,.live-card[data-face=back] .lc-psd--front{display:none}
+.lc-flip{position:absolute;right:3%;bottom:1.2%;z-index:6;width:7.5cqw;height:7.5cqw;min-width:28px;min-height:28px;display:grid;place-items:center;border-radius:50%;background:rgba(0,0,0,.72);border:1px solid var(--psd-ink);color:var(--psd-ink);cursor:pointer}
+.lc-flip svg{width:62%;height:62%}
+.lc-flip:focus-visible{outline:2px solid #fff;outline-offset:2px}
+@container (max-width:240px){.lc-flip{display:none}}

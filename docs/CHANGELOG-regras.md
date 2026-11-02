@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-02 — §63 — Carta de God com duas faces
+
+- **Antes:** todo o texto do God (Divine Power, Divine Command, Awaken e Ultimate) ficava em uma face só, com fonte pequena e a arte coberta.
+- **Depois:** a frente traz Divine Power e Divine Command; o verso traz Awaken e Ultimate, com os poderes da frente que seguem ativos. O God vira ao despertar e volta se sair do Awaken.
+- **Motivo:** pedido do autor, 02/11/2026, para dar leitura e mostrar a arte. Só apresentação: nenhum efeito muda.
+- **Pendências:** nenhum texto de carta mudou em `data/cards.json`. O Layout Studio segue com o God de uma face, sem uso em tela de jogo por enquanto.
+
 ## 2026-11-02 — §56 — Moment e Technique no lugar de Spell
 
 - **Antes:** o guia, filtros e alguns textos diziam Spell (Magia em PT).

@@ -1278,7 +1278,6 @@
         "ink": "#FFF0BF",
         "accent": "#FFF0BF",
         "frames": [
-          "CARD-TEMPLATE/athena/vignette.png",
           "CARD-TEMPLATE/athena/frame.png"
         ],
         "symbol": "CARD-TEMPLATE/symbols/athena.png"
@@ -1299,7 +1298,6 @@
         "ink": "#C07CFF",
         "accent": "#C07CFF",
         "frames": [
-          "CARD-TEMPLATE/hades/frame_1.png",
           "CARD-TEMPLATE/hades/frame_2.png"
         ],
         "symbol": "CARD-TEMPLATE/symbols/hades.png"
@@ -1320,7 +1318,6 @@
         "ink": "#FF6D6D",
         "accent": "#FF6D6D",
         "frames": [
-          "CARD-TEMPLATE/ares/frame_1.png",
           "CARD-TEMPLATE/ares/frame_2.png"
         ],
         "symbol": "CARD-TEMPLATE/symbols/ares.png"
@@ -1341,7 +1338,6 @@
         "ink": "#BFFFCD",
         "accent": "#BFFFCD",
         "frames": [
-          "CARD-TEMPLATE/artemis/frame_1.png",
           "CARD-TEMPLATE/artemis/frame_2.png"
         ],
         "symbol": "CARD-TEMPLATE/symbols/artemis.png"
@@ -1362,8 +1358,6 @@
         "ink": "#8FEEFF",
         "accent": "#8FEEFF",
         "frames": [
-          "CARD-TEMPLATE/poseidon/frame_1.png",
-          "CARD-TEMPLATE/poseidon/frame_2.png",
           "CARD-TEMPLATE/poseidon/frame_3.png"
         ],
         "symbol": "CARD-TEMPLATE/symbols/poseidon.png"

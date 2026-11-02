@@ -7,7 +7,7 @@
   <title>Card Forge</title>
   <link rel="icon" href="../LOGO/favicon.png?v=20261030">
   <link rel="stylesheet" href="forge.css?v=20261102-arte4">
-  <link rel="stylesheet" href="../shared/live-card.css?v=20261102-sym1">
+  <link rel="stylesheet" href="../shared/live-card.css?v=20261102-deus3">
   <script>if(parent!==window)document.documentElement.classList.add("embedded");</script>
 </head>
 <body>
@@ -156,6 +156,7 @@
       <div id="liveControls" hidden><label>Dano marcado <input id="previewDamage" type="number" value="0" min="0" max="100"></label><label><input id="previewPrepared" type="checkbox" checked> Prepared</label><label>Estágio<select id="previewStage"><option value="0">Vanilla</option></select></label></div>
       <div id="livePreview" class="forge-live" hidden></div>
       <div id="cardWrap">
+        <button id="godFlip" type="button" hidden>Ver o verso do God</button>
         <canvas id="card" width="1488" height="2091" aria-label="Prévia da carta"></canvas>
         <img id="ref" alt="" hidden>
       </div>
@@ -173,7 +174,7 @@
     </div>
   </dialog>
 
-  <script type="module" src="forge.js?v=20261102-arte3"></script>
+  <script type="module" src="forge.js?v=20261102-deus3"></script>
   <script type="module" src="god-hud.js?v=6"></script>
 </body>
 </html>

@@ -712,6 +712,7 @@ Se um Strike causar Soul zero aos dois Gods simultaneamente por efeitos aplicáv
 
 ### 63. Deck, identidade, mulligan, Gods e Domains
 
+- **A carta de God tem duas faces** (autor, 02/11/2026). Frente: Divine Power e Divine Command. Verso: Awaken e Ultimate, com a lista dos poderes da frente que seguem ativos. O God vira ao despertar e volta se sair do Awaken; virar é só apresentação e não muda nenhum efeito. Como o God fica fora do deck, a impressão frente e verso não revela informação.
 - Deck principal com 50 cartas (autor, 01/11/2026; eram 60), até **3 cópias da mesma identidade de carta**; artes alternativas e revisões da mesma carta não aumentam o limite. God e Domain ficam fora dessas 50.
 - Permitir cartas da facção do God, da facção do Domain e neutras. Se God e Domain forem da mesma facção, o deck é monofacção mais neutras. Não criar cinco tipos de mana nesta base.
 - **Domain fora da cor** (autor, 31/10/2026; revisto em 01/11/2026). Se a facção do Domain for diferente da facção do God:

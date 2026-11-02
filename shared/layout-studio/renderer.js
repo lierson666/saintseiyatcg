@@ -1,3 +1,4 @@
+import {scrimStops} from '../card-scrim.js?v=20261102-deus3';
 import {bindingValue,evaluateLayer,assetURL,esc,editorialWarnings} from './model.js';
 
 // Uma cena vetorial serve ao editor, à arena e às exportações. Não calcula bônus.
@@ -50,7 +51,7 @@ export function makeScene(layout,context,{transparent=false,omitFrame=false,sele
     if(flow&&layer.component==='RulesBox'&&flow.size<32)warnings.push({layer:layer.id,kind:'legibility',message:`${layer.name}: fonte de ${flow.size}px pequena para impressão; amplie a área ou escolha uma variante de leitura.`});
     commands.push({layer,value,flow,label,badge,bodyLayer,nestedCard:layer.component==='CardPreview'?nestedCard:null});
   }
-  return{canvas:layout.canvas,theme:layout.theme,commands,warnings,transparent,selection,key,cosmoble:Boolean(context.card?.cosmoble),art:context.art,assetRects:context.assetRects||{},cardId:context.card?.id};
+  return{canvas:layout.canvas,theme:layout.theme,commands,warnings,transparent,selection,key,cosmoble:Boolean(context.card?.cosmoble),art:context.art,assetRects:context.assetRects||{},cardId:context.card?.id,scrimGod:context.card?.tipo==='God'};
 }
 const safeKey=value=>String(value).replace(/[^a-zA-Z0-9-]/g,'-');
 function renderCommand(command,scene){
@@ -59,6 +60,7 @@ function renderCommand(command,scene){
   const fx=s.shadow||s.glow?`<defs><filter id="${id}-fx" x="-100%" y="-100%" width="300%" height="300%"><feDropShadow dx="0" dy="${s.shadow?3:0}" stdDeviation="${s.glow||s.shadow}" flood-color="${s.glow?scene.theme.accent:'#000000'}" flood-opacity="0.65"/></filter></defs>`:'';
   const rect=(fill=s.background||'transparent')=>`<rect x="${l.x}" y="${l.y}" width="${l.width}" height="${l.height}" rx="${s.borderRadius||0}" fill="${fill}" stroke="${s.borderColor||'transparent'}" stroke-width="${s.borderWidth||0}"/>`;
   let body=rect();
+  if(l.component==='Frame')body+=`<defs><linearGradient id="${id}-scrim" x1="0" y1="0" x2="0" y2="1">${scrimStops(scene.scrimGod?.345:undefined).map(([at,alpha])=>`<stop offset="${at}" stop-color="#000" stop-opacity="${alpha}"/>`).join('')}</linearGradient></defs><rect x="${l.x}" y="${l.y}" width="${l.width}" height="${l.height}" fill="url(#${id}-scrim)"/>`;
   if(l.asset||l.component==='CastingCost'||['ArtworkFrame','FactionIcon','Frame','DecorativeLayer'].includes(l.component)){
     const paths=l.asset?[l.asset]:l.component==='CastingCost'?[`CARD-TEMPLATE/athena/${scene.cosmoble?'gem_cost':'gem_cost_base'}.png`]:l.component==='Frame'?value:l.component==='ArtworkFrame'||l.component==='FactionIcon'?[value]:[];
     for(const path of Array.isArray(paths)?paths:[]){const url=assetURL(path),r=l.component==='Frame'?scene.assetRects[String(path).replace(/^CARD-TEMPLATE\//,'').replace(/\.png$/,'')]:null,art=l.component==='ArtworkFrame'&&typeof scene.art==='object'&&scene.art?.w&&scene.art?.h?scene.art:null;const imageRect=r?{x:r.x/1488*l.width,y:r.y/2091*l.height,width:r.w/1488*l.width,height:r.h/2091*l.height}:art?{x:art.x/1488*l.width,y:art.y/2091*l.height,width:art.w/1488*l.width,height:art.h/2091*l.height}:{x:0,y:0,width:l.width,height:l.height};if(url)body+=`<svg x="${l.x}" y="${l.y}" width="${l.width}" height="${l.height}" overflow="hidden"><image href="${esc(url)}" x="${imageRect.x}" y="${imageRect.y}" width="${imageRect.width}" height="${imageRect.height}" preserveAspectRatio="${art?'none':s.imageFit==='contain'||['FactionIcon','CastingCost','StatBadge'].includes(l.component)?'xMidYMid meet':'xMidYMid slice'}"/></svg>`;}
