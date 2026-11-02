@@ -1,4 +1,4 @@
-import {mountRulesRows} from './rules-rows.js?v=20261102-som4';
+import {mountRulesRows} from './rules-rows.js?v=20261102-som5';
 import {createHistory} from '../shared/editor-history.js';
 import {compilePlaytest} from '../shared/import-playtest.js';
 import {renderLiveCard,illustration,statLine,EDITIONS,editionOf} from '../shared/live-card.js?v=20261102-arroba1';

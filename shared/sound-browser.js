@@ -8,13 +8,14 @@ const SECOES = [
 const NOME_SECAO = Object.fromEntries(SECOES.flatMap(([, itens]) => itens));
 const LANGS = [['jp', 'JP'], ['pt', 'PT'], ['es', 'ES']];
 const PAGE = 200;
+const ORDENS = [['', 'Ordem padrão'], ['asc', 'Menor tempo primeiro'], ['desc', 'Maior tempo primeiro']];
 const PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>', STOP = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h10v10H7z"/></svg>';
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 
 let library = null, dialog = null, audio = null, opts = {};
 // Idioma só para ouvir e escolher: a fala tem o mesmo número nos 3 idiomas, e o duelo toca a do idioma do jogador (autor, 02/11/2026).
 const savedLang = () => { try { return localStorage.getItem('sb-lang'); } catch { return null; } };
-const state = {jogo: 'soldiers-soul', secao: 'voz-golpe', cod: null, grupo: null, lang: LANGS.some(([k]) => k === savedLang()) ? savedLang() : 'pt', q: '', limit: PAGE, playing: null};
+const state = {jogo: 'soldiers-soul', secao: 'voz-golpe', cod: null, grupo: null, lang: LANGS.some(([k]) => k === savedLang()) ? savedLang() : 'pt', q: '', limit: PAGE, ordem: '', playing: null};
 
 const NO_LIB = 'A biblioteca não respondeu. Feche e abra o STAR HILL ou o Card Forge para atualizar o servidor.';
 const toSound = ([id, secao, cod, grupo, cue, s, langs, texto]) => ({id, secao, cod, grupo, cue, s, langs, texto, jogo: 'soldiers-soul'});
@@ -57,6 +58,8 @@ function filtered(lib) {
   if (q.length) return allSounds(lib).filter(x => { const hay = `${x.texto} ${x.nome} ${x.cue} ${x.id} ${charName(lib, x.cod)} ${x.grupo}`.toLowerCase(); return q.every(w => hay.includes(w)); });
   return allSounds(lib).filter(x => x.jogo === state.jogo && x.secao === state.secao);
 }
+// Por duração (autor, 02/11/2026); som sem duração conhecida fica por último nas duas ordens.
+const ordered = list => (!state.ordem ? list : [...list].sort((a, b) => (!a.s - !b.s) || (state.ordem === 'asc' ? a.s - b.s : b.s - a.s)));
 const counted = (list, key) => { const out = new Map(); for (const x of list) out.set(x[key], (out.get(x[key]) || 0) + 1); return out; };
 
 function drawRail(lib) {
@@ -107,7 +110,7 @@ function draw() {
     drawChars(lib, base);
     const byChar = state.cod !== null && !state.q ? base.filter(x => x.cod === state.cod) : base;
     drawGroups(byChar);
-    view = state.grupo && !state.q ? byChar.filter(x => x.grupo === state.grupo) : byChar;
+    view = ordered(state.grupo && !state.q ? byChar.filter(x => x.grupo === state.grupo) : byChar);
     drawList(lib, view);
     dialog.querySelectorAll('[data-lang]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === state.lang)));
   });
@@ -115,7 +118,7 @@ function draw() {
 const reset = () => { state.cod = null; state.grupo = null; state.limit = PAGE; dialog.querySelector('.sb-list').scrollTop = 0; };
 
 function build() {
-  if (!document.querySelector('link[data-sound-browser]')) document.head.insertAdjacentHTML('beforeend', `<link rel="stylesheet" data-sound-browser href="/shared/sound-browser.css?v=3">`);
+  if (!document.querySelector('link[data-sound-browser]')) document.head.insertAdjacentHTML('beforeend', `<link rel="stylesheet" data-sound-browser href="/shared/sound-browser.css?v=4">`);
   dialog = document.createElement('dialog');
   dialog.className = 'sb';
   dialog.innerHTML = `<header class="sb-head"><div class="sb-title"><h2></h2><small class="sb-current"></small></div>
@@ -124,7 +127,7 @@ function build() {
       <button type="button" class="sb-clear" data-clear>Sem som</button><button type="button" class="sb-close" data-close aria-label="Fechar">✕</button></header>
     <div class="sb-body"><nav class="sb-rail" aria-label="Seções"><div class="sb-games" role="group" aria-label="Jogo"></div><div class="sb-sections"></div></nav>
       <nav class="sb-chars" aria-label="Personagens"></nav>
-      <section class="sb-main"><div class="sb-bar"><div class="sb-groups" role="group" aria-label="Estilo"></div><span class="sb-count" role="status"></span></div>
+      <section class="sb-main"><div class="sb-bar"><div class="sb-groups" role="group" aria-label="Estilo"></div><select class="sb-sort" aria-label="Ordenar sons">${ORDENS.map(([k, l]) => `<option value="${k}">${l}</option>`).join('')}</select><span class="sb-count" role="status"></span></div>
         <ul class="sb-list"></ul><button type="button" class="sb-more" hidden></button></section></div>`;
   document.body.append(dialog);
   dialog.addEventListener('close', stop);
@@ -132,6 +135,7 @@ function build() {
   dialog.querySelector('.sb-search').addEventListener('input', e => { clearTimeout(typing); typing = setTimeout(() => { state.q = e.target.value; state.limit = PAGE; draw(); }, 120); });
   dialog.addEventListener('change', async e => {
     if (e.target.matches('[data-grupo-select]')) { state.grupo = e.target.value || null; state.limit = PAGE; draw(); }
+    if (e.target.matches('.sb-sort')) { state.ordem = e.target.value; state.limit = PAGE; dialog.querySelector('.sb-list').scrollTop = 0; draw(); }
     if (e.target.closest('.sb-upload') && e.target.files?.[0]) { const file = e.target.files[0]; dialog.close(); await opts.onUpload(file); }
   });
   dialog.addEventListener('click', e => {
