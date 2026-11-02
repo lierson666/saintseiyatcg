@@ -715,6 +715,12 @@ body { font: 300 15px/1.45 var(--kv-sans); }
 .lb-zoom button { height: 44px; border: 0; background: none; color: var(--kv-gold-2); font: 500 22px/1 var(--kv-sans); cursor: pointer; touch-action: manipulation; }
 .lb-zoom button:disabled { color: var(--kv-dim); cursor: default; }
 .lb-zoom b { font: 600 13px var(--kv-sans); color: var(--kv-muted); }
+/* Filtros e visão numa linha só (autor, 02/11/2026): a busca cede espaço e o Deus corta com reticências; só quebra se faltar lugar de verdade. */
+@media (min-width: 761px) {
+  .lb-filters { gap: 8px 10px; }
+  .lb-filters input[type=search] { flex: 1 1 180px; width: auto; min-width: 0; }
+  .lb-drop:last-child { max-width: 170px; }
+}
 
 /* Linha: tocar abre a carta; − n + no canto direito. */
 .lb-crow { position: relative; list-style: none; }
