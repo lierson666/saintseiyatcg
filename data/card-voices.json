@@ -6,7 +6,8 @@
     "habilidade": null,
     "linhas": [
       "SEY/5063",
-      "SEY/5041"
+      false,
+      false
     ],
     "morte": "SEY/5159",
     "retorno": "SEY/5171",
@@ -26,7 +27,7 @@
     "golpe": "SRU/5046",
     "habilidade": null,
     "linhas": [
-      null,
+      false,
       "SRU/5032",
       "SRU/5064"
     ],
@@ -42,7 +43,7 @@
     "habilidade": null,
     "linhas": [
       "HYG/5046",
-      "HYG/5009"
+      false
     ],
     "morte": "HYG/015",
     "retorno": "HYG/5129",
@@ -55,6 +56,7 @@
     "golpe": "SYN/5046",
     "habilidade": null,
     "linhas": [
+      false,
       "SYN/5061",
       "SYN/5134"
     ],
