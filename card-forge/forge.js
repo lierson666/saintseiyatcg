@@ -939,12 +939,32 @@ async function translatePt(){
   fillForm();render();
   return r.avisos||[];
 }
-// Aba Português só mostra o texto (autor, 02/11/2026): o PT sai do inglês; mudou o inglês, o aviso e o botão chamam o Claude Code.
+// Aba Português (autor, 02/11/2026): as habilidades canônicas vêm do inglês, mostrado acima de cada caixa; o texto em PT se corrige à mão.
+// Mudou o inglês, o aviso e o botão chamam o Claude Code. Em dia, o botão fica desligado para não apagar a correção manual.
+function drawPtRules(){
+  const box=$('#ptRules');
+  if(box.contains(document.activeElement))return;
+  const en=splitParas(S.rules||''),pt=splitParas(S.pt_rules||'');
+  box.replaceChildren(...Array.from({length:Math.max(en.length,pt.length)},(_,i)=>{
+    const row=document.createElement('div');row.className='pt-rule';
+    const base=document.createElement('small');base.textContent=(en[i]||'Sem habilidade correspondente no inglês').replace(/\*\*/g,'');
+    const area=Object.assign(document.createElement('textarea'),{value:pt[i]||'',spellcheck:true});
+    area.setAttribute('aria-label',`Habilidade ${i+1} em português`);
+    row.append(base,area);return row;
+  }));
+}
+$('#ptRules').addEventListener('input',()=>{
+  const f=form.elements.pt_rules;
+  f.value=[...$('#ptRules').querySelectorAll('textarea')].map(t=>t.value.trim()).filter(Boolean).join('\n\n');
+  f.dispatchEvent(new Event('input',{bubbles:true}));
+});
 function syncPtStatus(){
   const stale=S.ptFor!==enKey(buildCard()),b=$('#translatePt');
   $('#ptStatus').textContent=stale?(S.pt_nome||S.pt_rules?'O inglês mudou: esta tradução está desatualizada.':'Esta carta ainda não tem tradução.'):'Tradução em dia com o inglês.';
   $('#ptStatus').classList.toggle('is-stale',stale);
   b.classList.toggle('primary',stale);
+  b.disabled=!stale;
+  drawPtRules();
 }
 form.addEventListener('input',syncPtStatus);
 $('#translatePt').addEventListener('click',async(e)=>{
@@ -952,7 +972,7 @@ $('#translatePt').addEventListener('click',async(e)=>{
   b.disabled=true;b.textContent='Traduzindo…';
   try{const w=await translatePt();say(w.length?`PT gerado — revise: ${w.join(' ')}`:'PT gerado do EN — grave a carta para salvar.',w.length>0);}
   catch(err){say(err.message,true);}
-  finally{b.disabled=false;b.textContent=label;syncPtStatus();}
+  finally{b.textContent=label;syncPtStatus();}
 });
 // Flavour EN → PT ao sair do campo (autor, 02/11/2026), pelo claude do Mac: só esse campo muda e o autor revisa no diff.
 let flavourBefore = '';

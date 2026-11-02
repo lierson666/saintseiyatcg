@@ -134,4 +134,7 @@ form > fieldset > legend { display: none; }
 .fields--pt > button { justify-self: start; }
 .pt-status { margin: 0; color: var(--muted); font-size: 12px; }
 .pt-status.is-stale { color: var(--gold); }
-.fields--pt [readonly] { border-color: transparent; background: none; padding-inline: 0; resize: none; field-sizing: content; color: var(--text); }
+.pt-rules { display: grid; gap: 8px; }
+.pt-rule { display: grid; gap: 2px; }
+.pt-rule small { color: var(--muted); font-size: 11px; }
+.pt-rule textarea { width: 100%; box-sizing: border-box; resize: vertical; field-sizing: content; }

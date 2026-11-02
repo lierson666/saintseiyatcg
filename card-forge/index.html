@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Card Forge</title>
   <link rel="icon" href="../LOGO/favicon.png?v=20261030">
-  <link rel="stylesheet" href="forge.css?v=20261102-pt1">
+  <link rel="stylesheet" href="forge.css?v=20261102-pt2">
   <link rel="stylesheet" href="../shared/live-card.css?v=20261102-sym1">
   <script>if(parent!==window)document.documentElement.classList.add("embedded");</script>
 </head>
@@ -121,12 +121,13 @@
         <legend>Português (PT-BR)</legend>
         <p id="ptStatus" class="pt-status" role="status"></p>
         <button id="translatePt" type="button">Traduzir com Claude Code</button>
-        <label class="half">Nome <input name="pt_nome" readonly></label>
-        <label class="half">Subtítulo <input name="pt_subtitulo" readonly></label>
-        <label>Regras <textarea name="pt_rules" rows="7" readonly></textarea></label>
-        <label data-for="god">Despertar (texto) <textarea name="pt_awaken" rows="3" readonly></textarea></label>
-        <label data-for="god">Supremo <textarea name="pt_ultimate" rows="3" readonly></textarea></label>
-        <label>Flavour <input name="pt_flavour" readonly></label>
+        <label class="half">Nome <input name="pt_nome"></label>
+        <label class="half">Subtítulo <input name="pt_subtitulo"></label>
+        <label>Regras <textarea name="pt_rules" hidden></textarea></label>
+        <div id="ptRules" class="pt-rules"></div>
+        <label data-for="god">Despertar (texto) <textarea name="pt_awaken" rows="3" spellcheck="true"></textarea></label>
+        <label data-for="god">Supremo <textarea name="pt_ultimate" rows="3" spellcheck="true"></textarea></label>
+        <label>Flavour <input name="pt_flavour"></label>
       </fieldset>
 
       <p id="rulesReview" class="hint" role="status"></p>
@@ -164,7 +165,7 @@
     </div>
   </dialog>
 
-  <script type="module" src="forge.js?v=20261102-pt1"></script>
+  <script type="module" src="forge.js?v=20261102-pt2"></script>
   <script type="module" src="god-hud.js?v=6"></script>
 </body>
 </html>
