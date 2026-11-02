@@ -32,7 +32,7 @@ uv run --with psd-tools --with pillow --with scipy python card-forge/tools/extra
 - `../CARD-TEMPLATE/templates.json`: layouts por tipo de carta e pacotes de facção (cor, brilho, moldura). Coordenadas no canvas 1488×2091.
 - `../CARD-TEMPLATE/pieces.json`: posição e origem (PSD :: camada) de cada peça.
 - `projects/<id>.json`: dados que não existem no cards.json (título na carta, subtítulo, flavour, enquadramento da arte).
-- `import/modelo.txt`: formato do lote (várias cartas num `.txt`).
+- `import/modelo.txt`: formato do antigo lote; a importação saiu do Forge em 02/11/2026.
 
 ## Regras
 
@@ -62,4 +62,4 @@ uv run --with psd-tools --with pillow --with scipy python card-forge/tools/extra
 
 ## Verificar uma mudança visual
 
-`window.forge` expõe `render`, `selectCard`, `buildCard`, `parseBatch`, `toMarkup` e `fromMarkup`. Para comparar com o original, use "Sobrepor PNG original" na UI, ou exporte o canvas e compare com `CARDS/…png` ou com o composite do PSD (`psd-tools`).
+`window.forge` expõe `render`, `selectCard`, `buildCard`, `toMarkup` e `fromMarkup`. Para comparar com o original, use "Sobrepor PNG original" na UI, ou exporte o canvas e compare com `CARDS/…png` ou com o composite do PSD (`psd-tools`).

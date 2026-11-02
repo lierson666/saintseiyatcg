@@ -63,31 +63,9 @@ Power/HP, dano, marcadores e estados mudam visualmente conforme o resultado forn
 
 A opção **Representação** alterna entre o canvas de impressão e a carta interativa compartilhada com o jogo. Dano, Prepared e estágio podem ser simulados na prévia sem mudar o catálogo. Custos de EQUIP, Owners, Resonance e evolução usam blocos próprios; números de estágios vêm dos campos estruturados. O contrato e os critérios de aceitação estão em [cartas-print-e-interativas.md](../docs/cartas-print-e-interativas.md).
 
-## Lote (várias cartas de um arquivo de texto)
+## Lote
 
-No topo do editor, abra "Lote", escolha `.txt`, `.json` ou `.xlsx`, ou cole o texto, e clique em "Ler lote". O formato está em [`import/modelo.txt`](import/modelo.txt): um bloco `Campo: valor` por carta, cartas separadas por `---`, e `Text:` / `Awaken Text:` / `Ultimate:` em várias linhas.
-
-- A lista mostra cada carta: id, se é nova ou atualiza uma existente (pelo `Id` ou pelo `Name`), e erros linha a linha. Clicar numa carta abre ela no editor para ajustar a arte e o texto.
-- "Exportar PNGs de todas" grava `card-forge/out/<id>.png` (1488×2091) e `<id>-web.png` (1100px). Essa pasta fica fora do git.
-- "Gravar todas no cards.json…" mostra o diff de todas e só grava depois de confirmar. Junto, salva o projeto de cada carta (título, subtítulo, flavour e arte).
-
-### Dados novos e revisão
-
-- HP, Cosmoble, identidade de personagem, unicidade, slot, Owners, ressonâncias e estágios têm campos próprios. Cloth, Scale, Surplice, Warplate e Moonplate ocupam o mesmo slot de armadura; armas e acessórios são separados.
-- O custo no topo é o custo de jogar. **EQUIP** continua nas regras e no Inspector. Pela orientação visual de 25/10/2026, os badges EQUIP e DAMAGE/Armor HP saem do rodapé padrão; os valores laterais de Equipment mostram os bônus concedidos ao portador. Bônus Vanilla e de evolução são totais do estágio, nunca uma soma automática.
-- Importação XLSX lê valores literais em memória, sem executar fórmulas ou modificar o original. O compilador reconhece os textos do primeiro conjunto; texto sem mapeamento pede revisão em vez de inventar efeitos.
-- Alterar texto de habilidade sinaliza revisão dos efeitos jogáveis e bloqueia seu uso na arena até revisão. A edição numérica mantém a estrutura de efeitos; alterações de estágios/Owners atualizam o texto correspondente no diff.
-- "Gravar" continua exigindo a revisão do diff no diálogo. Carregar planilha, trocar representação e simular dano não gravam `data/cards.json`.
-
-### Verificação
-
-```bash
-node --test tools/test-rules-v2.mjs tools/test-card-presentation.mjs
-python3 card-forge/serve.py --selftest
-python3 tools/test-ui-v2.py
-```
-
-O teste de navegador usa o pacote Python Playwright e Chrome em modo headless. Não é dependência do editor. As capturas ficam em `card-forge/out/qa-v2/`, fora do Git. `forge.checkCatalog()` verifica o roundtrip do catálogo carregado e `forge.layoutReport()` verifica o encaixe tipográfico.
+A importação de lote saiu do Forge em 02/11/2026: o autor sobe os arquivos direto no Claude.
 
 ## Templates
 

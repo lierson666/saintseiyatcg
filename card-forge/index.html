@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Card Forge</title>
   <link rel="icon" href="../LOGO/favicon.png?v=20261030">
-  <link rel="stylesheet" href="forge.css?v=20261102-abas1">
+  <link rel="stylesheet" href="forge.css?v=20261102-pt1">
   <link rel="stylesheet" href="../shared/live-card.css?v=20261102-sym1">
   <script>if(parent!==window)document.documentElement.classList.add("embedded");</script>
 </head>
@@ -40,26 +40,13 @@
 
   <main>
     <form id="form" autocomplete="off">
-      <details class="batch" id="batch" open>
-        <summary>Lote — importar TXT, JSON ou XLSX</summary>
-        <p class="hint">Uma carta por bloco <code>Campo: valor</code>, cartas separadas por <code>---</code>. Veja o <a href="import/modelo.txt" target="_blank">modelo</a>. Se o <code>Id</code> ou o <code>Nome</code> já existir, a carta é atualizada; senão vira carta nova.</p>
-        <input id="batchFile" type="file" accept=".txt,.json,.xlsx,text/plain,application/json,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" aria-label="Arquivo com as cartas">
-        <textarea id="batchText" rows="8" spellcheck="false" aria-label="Texto das cartas" placeholder="Name: Hyoga, Cygnus Saint&#10;Type: Devotee&#10;…&#10;---"></textarea>
-        <div class="row">
-          <button id="batchRead" type="button">Ler lote</button>
-          <button id="batchExport" type="button" disabled>Exportar PNGs de todas</button>
-          <button id="batchSave" type="button" class="primary" disabled>Gravar todas no cards.json…</button>
-        </div>
-        <ol id="batchList" class="batch-list"></ol>
-      </details>
-      <fieldset class="fields fields--id">
+<fieldset class="fields fields--id">
         <legend>Identidade</legend>
         <label>ID <input name="id" readonly></label>
-        <label>Nome (cards.json) <input name="nome_exibicao_en"></label>
-        <label>Título na carta <input name="title" placeholder="= nome"></label>
-        <label>Artista <input name="artista" placeholder="vazio: fora do rodapé" title="Nome do ilustrador (vazio: fora do rodapé)"></label>
-        <label class="wide" data-for="devotee relic_cloth relic_weapon god">Subtítulo <input name="subtitle"></label>
+        <label class="name">Nome (cards.json) <input name="nome_exibicao_en"></label>
+        <label class="subtitle" data-for="devotee relic_cloth relic_weapon god">Subtítulo <input name="subtitle"></label>
         <label class="wide">Subtipos <input name="subtipos" placeholder="Bronze Saint, Cloth…"></label>
+        <label class="wide">Artista <input name="artista" placeholder="Nome do ilustrador (vazio: fora do rodapé)"></label>
         <label>Tipo
           <select name="tipo">
             <option>Devotee</option><option>Equipment</option><option>Support</option><option>Relic</option><option>Spell</option><option>Technique</option>
@@ -119,22 +106,27 @@
         <label>Regras
           <textarea name="rules" rows="9" spellcheck="true"></textarea>
         </label>
-        <p class="hint">Clique num símbolo para inserir no cursor. Cada caixa é uma habilidade, de cima para baixo; <code>**negrito**</code>. Só <code>@</code> puxa: <code>@Guardian</code> é a keyword, <code>@ATK</code> e <code>@COSMO</code> são símbolos; sem <code>@</code> é texto comum. Caixa só com keywords (<code>Guardian, Pierce</code>) vai para a linha do topo da carta.</p>
         <label data-for="god">Awaken (texto) <textarea name="habilidade_awaken_en" rows="4"></textarea></label>
         <label data-for="god">Ultimate <textarea name="ultimate_en" rows="3"></textarea></label>
         <label>Flavour <input name="flavour" placeholder="“Burn cosmo, burn!”"></label>
+        <p class="hint">Clique num símbolo para inserir no cursor. Cada caixa é uma habilidade, de cima para baixo; <code>**negrito**</code>. Só <code>@</code> puxa: <code>@Guardian</code> é a keyword, <code>@ATK</code> e <code>@COSMO</code> são símbolos; sem <code>@</code> é texto comum. Caixa só com keywords (<code>Guardian, Pierce</code>) vai para a linha do topo da carta.</p>
       </fieldset>
 
       <fieldset>
+        <legend>Som</legend>
+        <div id="soundFields" class="rr-sounds"></div>
+      </fieldset>
+
+      <fieldset class="fields fields--pt">
         <legend>Português (PT-BR)</legend>
-        <p class="hint">Sai do inglês, que é a base do jogo. O flavour é traduzido ao sair do campo. “Traduzir do EN” usa a IA com o glossário; ao gravar com o EN mudado, o PT é regerado e aparece no diff para revisão.</p>
-        <button id="translatePt" type="button">Traduzir do EN</button>
-        <label>Nome <input name="pt_nome"></label>
-        <label>Subtítulo <input name="pt_subtitulo"></label>
-        <label>Regras <textarea name="pt_rules" rows="7" spellcheck="true"></textarea></label>
-        <label data-for="god">Despertar (texto) <textarea name="pt_awaken" rows="3"></textarea></label>
-        <label data-for="god">Supremo <textarea name="pt_ultimate" rows="3"></textarea></label>
-        <label>Flavour <input name="pt_flavour"></label>
+        <p id="ptStatus" class="pt-status" role="status"></p>
+        <button id="translatePt" type="button">Traduzir com Claude Code</button>
+        <label class="half">Nome <input name="pt_nome" readonly></label>
+        <label class="half">Subtítulo <input name="pt_subtitulo" readonly></label>
+        <label>Regras <textarea name="pt_rules" rows="7" readonly></textarea></label>
+        <label data-for="god">Despertar (texto) <textarea name="pt_awaken" rows="3" readonly></textarea></label>
+        <label data-for="god">Supremo <textarea name="pt_ultimate" rows="3" readonly></textarea></label>
+        <label>Flavour <input name="pt_flavour" readonly></label>
       </fieldset>
 
       <p id="rulesReview" class="hint" role="status"></p>
@@ -172,7 +164,7 @@
     </div>
   </dialog>
 
-  <script type="module" src="forge.js?v=20261102-abas1"></script>
+  <script type="module" src="forge.js?v=20261102-pt1"></script>
   <script type="module" src="god-hud.js?v=6"></script>
 </body>
 </html>

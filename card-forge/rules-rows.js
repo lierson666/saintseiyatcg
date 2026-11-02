@@ -27,7 +27,10 @@ const picker = (key, value) => {
   return `<span class="rr-voice"><button type="button" class="rr-voice-open" data-voice="${key}" data-value="${esc(value || '')}" aria-haspopup="dialog" title="Escolher som">${value ? `<b>${esc(value)}</b> ${esc(text ?? '')}` : value === false ? '— sem som —' : '— som da facção —'}</button><button type="button" data-hear="${key}" aria-label="Ouvir" ${value ? '' : 'disabled'}>▶</button><button type="button" class="rr-mute" data-mute="${key}" aria-pressed="${value === false}" title="Passiva ou efeito sem fala: não toca nem o som da facção">Sem som</button></span>`;
 };
 
-export function mountRulesRows(area, {getId = null, moments = null} = {}) {
+// sound: onde ficam os seletores de som (a aba Som do Forge); as caixas de texto ficam só com o texto.
+const abilityName = (t, i) => t.match(/\*\*(.+?):?\*\*/)?.[1] || t.trim().slice(0, 28) || `Habilidade ${i + 1}`;
+
+export function mountRulesRows(area, {getId = null, moments = null, sound = null} = {}) {
   area.hidden = true;
   const box = document.createElement('div');
   box.className = 'rr';
@@ -36,19 +39,24 @@ export function mountRulesRows(area, {getId = null, moments = null} = {}) {
     const value = [...box.querySelectorAll('.rr-text')].map(t => t.value.trim()).filter(Boolean).join('\n\n');
     if (value !== area.value.trim()) { area.value = value; area.dispatchEvent(new Event('input', {bubbles: true})); }
   };
-  const draw = (lines = split(area.value)) => {
-    const v = getId && entry(getId());
-    box.innerHTML = `${lines.map((t, i) => `<div class="rr-row" data-i="${i}"><textarea class="rr-text" rows="3" spellcheck="true" aria-label="Habilidade ${i + 1}">${esc(t)}</textarea>
-      <div class="rr-tools">${v ? picker(i, v.linhas[i] ?? '') : ''}<button type="button" data-move="-1" ${i ? '' : 'disabled'} aria-label="Subir">↑</button><button type="button" data-move="1" ${i < lines.length - 1 ? '' : 'disabled'} aria-label="Descer">↓</button><button type="button" data-del aria-label="Remover">✕</button></div></div>`).join('')}
-      <button type="button" data-add>+ Habilidade</button>
-      ${v && moments ? moments().map(([key, label]) => `<label class="rr-moment"><span>${label}</span>${picker(key, v[key] ?? '')}</label>`).join('') : ''}`;
+  const drawSound = lines => {
+    if (!sound || !getId) return;
+    const v = entry(getId()), row = (label, key, value) => `<div class="rr-sound"><span title="${esc(label)}">${esc(label)}</span>${picker(key, value ?? '')}</div>`;
+    sound.innerHTML = `<h3 class="rr-head">Habilidades</h3>${lines.map((t, i) => row(abilityName(t, i), i, v.linhas[i])).join('') || '<p class="hint">Esta carta não tem habilidades.</p>'}
+      ${moments ? `<h3 class="rr-head">Momentos da carta</h3>${moments().map(([key, label]) => row(label, key, v[key])).join('')}` : ''}`;
   };
-  box.addEventListener('input', e => { if (e.target.classList.contains('rr-text')) sync(); });
-  box.addEventListener('click', e => {
+  const draw = (lines = split(area.value)) => {
+    box.innerHTML = `${lines.map((t, i) => `<div class="rr-row" data-i="${i}"><textarea class="rr-text" rows="3" spellcheck="true" aria-label="Habilidade ${i + 1}">${esc(t)}</textarea>
+      <div class="rr-tools"><button type="button" data-move="-1" ${i ? '' : 'disabled'} aria-label="Subir">↑</button><button type="button" data-move="1" ${i < lines.length - 1 ? '' : 'disabled'} aria-label="Descer">↓</button><button type="button" data-del aria-label="Remover">✕</button></div></div>`).join('')}
+      <button type="button" data-add>+ Habilidade</button>`;
+    drawSound(lines);
+  };
+  box.addEventListener('input', e => { if (e.target.classList.contains('rr-text')) { sync(); drawSound([...box.querySelectorAll('.rr-text')].map(t => t.value)); } });
+  const onClick = e => {
     const b = e.target.closest('button');
     if (!b) return;
     if (b.dataset.hear !== undefined) {
-      hear(box.querySelector(`[data-voice="${b.dataset.hear}"]`).dataset.value);
+      hear(sound.querySelector(`[data-voice="${b.dataset.hear}"]`).dataset.value);
       return;
     }
     if (b.dataset.mute !== undefined) { // false: mudo de propósito; null: volta ao som da facção
@@ -80,7 +88,9 @@ export function mountRulesRows(area, {getId = null, moments = null} = {}) {
     draw(lines);
     sync();
     if (b.dataset.add !== undefined) [...box.querySelectorAll('.rr-text')].at(-1)?.focus();
-  });
+  };
+  box.addEventListener('click', onClick);
+  sound?.addEventListener('click', onClick);
   // Texto trocado de fora (outra carta, desfazer): redesenha sem atrapalhar quem está digitando.
   let drawnId = null;
   const refresh = () => {

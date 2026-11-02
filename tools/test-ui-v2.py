@@ -73,12 +73,6 @@ with sync_playwright() as p:
     assert page.locator('#livePreview .rule-block--owner').count() == 1
     assert page.locator('#livePreview .rule-block--evolution').count() == 1
     page.screenshot(path=str(output / 'forge-equipment.png'), full_page=True)
-    page.locator('#batch').evaluate('(e)=>e.open=true')
-    page.locator('#batchFile').set_input_files(ROOT / 'CARDS/TABELA/SSTCG_300_cartas_playtest.xlsx')
-    page.wait_for_function('document.querySelectorAll("#batchList li").length===300')
-    page.locator('#batchSave').click()
-    assert 'nada muda' in page.locator('#status').inner_text()
-    page.locator('#batch').evaluate('(e)=>e.open=false')
     page.select_option('#cardSelect', 'sst-01-001')
     page.wait_for_function('document.querySelector("[name=id]").value==="sst-01-001"')
     page.locator('#previewDamage').fill('1')

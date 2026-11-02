@@ -1,4 +1,4 @@
-import {mountRulesRows} from './rules-rows.js?v=20261102-mudo1';
+import {mountRulesRows} from './rules-rows.js?v=20261102-som1';
 import {createHistory} from '../shared/editor-history.js';
 import {compilePlaytest} from '../shared/import-playtest.js';
 import {renderLiveCard,illustration,statLine,EDITIONS,editionOf} from '../shared/live-card.js?v=20261102-arroba1';
@@ -65,14 +65,14 @@ $('#forgeUndo').addEventListener('click',()=>travelEdit('undo'));
 $('#forgeRedo').addEventListener('click',()=>travelEdit('redo'));
 form.addEventListener('focusout',()=>editHistory?.breakGroup());
 // Seções do formulário em abas (autor, 02/11/2026): uma por vez, menos rolagem. Os rótulos vêm das legendas.
-const formSections = [...form.querySelectorAll(':scope > fieldset'), $('#batch')];
+const formSections = [...form.querySelectorAll(':scope > fieldset')];
 const formTabs = document.createElement('nav');
 formTabs.className = 'forge-tabs';
 formTabs.setAttribute('aria-label', 'Seções da carta');
 formTabs.append(...formSections.map((section) => {
   const tab = document.createElement('button');
   tab.type = 'button';
-  tab.textContent = section.querySelector(':scope > legend')?.textContent.replace(' (PT-BR)', '') || 'Lote';
+  tab.textContent = section.querySelector(':scope > legend').textContent.replace(' (PT-BR)', '');
   tab.addEventListener('click', () => { showSection(section); form.scrollTop = 0; try { localStorage.setItem('forge.tab', tab.textContent); } catch {} });
   section.tab = tab;
   return tab;
@@ -519,7 +519,7 @@ async function render() {
         break;
       }
       case 'text': {
-        let v = el.field === 'typeLine' ? typeLine(S, L.typeLine).split(' — ').map(typeWord).join(' — ') : el.field === 'name' ? (V.title || V.nome_exibicao_en) : V[el.field];
+        let v = el.field === 'typeLine' ? typeLine(S, L.typeLine).split(' — ').map(typeWord).join(' — ') : el.field === 'name' ? V.nome_exibicao_en : V[el.field];
         if (!has(v)) break;
         v = String(v).trim();
         drawText(el.upper ? v.toUpperCase() : v, el.style, el.x, el.y, el.size, el.maxW);
@@ -609,6 +609,7 @@ function syncVisibility() {
   form.querySelectorAll('[data-for]').forEach((el) => { el.hidden = !el.dataset.for.split(' ').includes(lk); });
   $('#rulesV2').hidden=!isEquipment({...S,subtipos:list(S.subtipos)});
   syncFormTabs();
+  syncPtStatus();
 }
 
 form.addEventListener('input', (e) => {
@@ -851,7 +852,7 @@ $('#saveProject').addEventListener('click',async()=>{
     const ptNote=await ensurePt();
     const current=buildCard(),changes=diffCards(orig,current);
     if(changes.length){
-      pendingBatch=null;pendingSaveBoth=true;pending=current;
+      pendingSaveBoth=true;pending=current;
       $('#diffTarget').textContent=`${S.id}: salvar dados da carta + visual (confirmação necessária)`+ptNote;
       const body=$('#diffBody');
       body.replaceChildren(...changes.flatMap(({k,x,y})=>{
@@ -901,7 +902,7 @@ function buildCard() {
   // texto com marcação ({L}, **) volta para o formato do cards.json; texto intacto fica como está
   const plain = (v) => costSymbols(/\*\*|(?:\d|X) \{[BCLS]\}/.test(v || '') ? fromMarkup(v) : (v || '').trim()); // texto cru ({5}{C}, quebras de linha) fica como está
   if (S.tipo === 'God') Object.assign(base, { habilidade_awaken_en: plain(S.habilidade_awaken_en), ultimate_en: plain(S.ultimate_en) });
-  // PT-BR (campos *_pt): sai do inglês pela IA (tools/translate_pt.py) e pode ser ajustado à mão; campo vazio sai do cards.json.
+  // PT-BR (campos *_pt): sai do inglês pelo Claude Code (tools/translate_pt.py); campo vazio sai do cards.json.
   const ptSub=S.pt_subtitulo.trim(),ptVal={nome_exibicao_pt:S.pt_nome.trim(),habilidades_pt:splitParas(S.pt_rules),flavour_pt:S.pt_flavour.trim(),auto_equip_pt:S.pt_auto||[]};
   const subKey=source&&!('subtitulo_pt' in source)&&'tagline_pt' in source?'tagline_pt':'subtitulo_pt'; // carta só com tagline_pt fica assim
   ptVal[subKey]=ptSub;if(subKey==='subtitulo_pt'&&ptSub!==(source?.subtitulo_pt||''))ptVal.tagline_pt=ptSub;
@@ -938,7 +939,21 @@ async function translatePt(){
   fillForm();render();
   return r.avisos||[];
 }
-$('#translatePt').addEventListener('click',async()=>{try{const w=await translatePt();say(w.length?`PT gerado — revise: ${w.join(' ')}`:'PT gerado do EN — revise antes de gravar.',w.length>0);}catch(e){say(e.message,true);}});
+// Aba Português só mostra o texto (autor, 02/11/2026): o PT sai do inglês; mudou o inglês, o aviso e o botão chamam o Claude Code.
+function syncPtStatus(){
+  const stale=S.ptFor!==enKey(buildCard()),b=$('#translatePt');
+  $('#ptStatus').textContent=stale?(S.pt_nome||S.pt_rules?'O inglês mudou: esta tradução está desatualizada.':'Esta carta ainda não tem tradução.'):'Tradução em dia com o inglês.';
+  $('#ptStatus').classList.toggle('is-stale',stale);
+  b.classList.toggle('primary',stale);
+}
+form.addEventListener('input',syncPtStatus);
+$('#translatePt').addEventListener('click',async(e)=>{
+  const b=e.currentTarget,label=b.textContent;
+  b.disabled=true;b.textContent='Traduzindo…';
+  try{const w=await translatePt();say(w.length?`PT gerado — revise: ${w.join(' ')}`:'PT gerado do EN — grave a carta para salvar.',w.length>0);}
+  catch(err){say(err.message,true);}
+  finally{b.disabled=false;b.textContent=label;syncPtStatus();}
+});
 // Flavour EN → PT ao sair do campo (autor, 02/11/2026), pelo claude do Mac: só esse campo muda e o autor revisa no diff.
 let flavourBefore = '';
 form.elements.flavour.addEventListener('focus', () => { flavourBefore = S.flavour; });
@@ -965,7 +980,6 @@ let pending = null;
 $('#saveCards').addEventListener('click', async () => {
   pendingSaveBoth=false;
   if (!S.id) return say('carta sem id', true);
-  pendingBatch = null;
   const ptNote = await ensurePt();
   pending = buildCard();
   const d = diffCards(orig, pending);
@@ -979,11 +993,10 @@ $('#saveCards').addEventListener('click', async () => {
   }));
   $('#diffDialog').showModal();
 });
-$('#diffCancel').addEventListener('click', () => { pendingBatch = null; pendingSaveBoth=false; $('#diffDialog').close(); });
+$('#diffCancel').addEventListener('click', () => { pendingSaveBoth=false; $('#diffDialog').close(); });
 $('#diffConfirm').addEventListener('click', async () => {
   $('#diffDialog').close();
   try {
-    if (pendingBatch) return await saveBatch();
     await post('/api/card', JSON.stringify(pending));
     if(pendingSaveBoth){
       await saveVisualProject();
@@ -1005,7 +1018,7 @@ $('#diffConfirm').addEventListener('click', async () => {
 // ---------- barra de símbolos e keywords ----------
 let lastText = form.elements.rules;
 form.addEventListener('focusin', (e) => { if (e.target.tagName === 'TEXTAREA') lastText = e.target; });
-const refreshRules = [mountRulesRows(form.elements.rules, {getId: () => S.id, moments: () => [['cast', 'Ao conjurar'], ['entrada', 'Entrada no campo'], ['golpe', 'Ao atacar'], ['strike', 'Ao receber Strike'], ['morte', 'Ao morrer'], ['retorno', 'Volta do Tartarus'], ...(layoutKey(S) === 'god' ? [['ultimate', 'Voz da Ultimate']] : [])]}), mountRulesRows(form.elements.pt_rules)];
+const refreshRules = [mountRulesRows(form.elements.rules, {getId: () => S.id, sound: $('#soundFields'), moments: () => [['cast', 'Ao conjurar'], ['entrada', 'Entrada no campo'], ['golpe', 'Ao atacar'], ['strike', 'Ao receber Strike'], ['morte', 'Ao morrer'], ['retorno', 'Volta do Tartarus'], ...(layoutKey(S) === 'god' ? [['ultimate', 'Voz da Ultimate']] : [])]})];
 refreshRulesRows = () => refreshRules.forEach(r => r());
 refreshRulesRows();
 function insertAtCursor(text) {
@@ -1049,191 +1062,6 @@ function addKeyword(keyword) {
   refreshRulesRows();
 }
 kwSel.addEventListener('change', () => { if (kwSel.value) addKeyword(kwSel.value); kwSel.value = ''; });
-
-// ---------- lote: várias cartas de um arquivo de texto ----------
-// Formato (card-forge/import/modelo.txt): blocos "Campo: valor", cartas separadas por uma linha "---".
-// Texto, Awaken Text e Ultimate aceitam várias linhas até o próximo campo.
-const fold = (k) => k.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/\s+/g, ' ').trim();
-const FIELDS = {
-  cosmoble: 'cosmoble', owners: 'donos', donos: 'donos', personagem: 'personagem_id', character: 'personagem_id', unique: 'personagem_unico', slot: 'slot_equipamento',
-  id: 'id', name: 'nome_exibicao_en', nome: 'nome_exibicao_en', title: 'title', titulo: 'title',
-  subtitle: 'subtitle', subtitulo: 'subtitle', type: 'tipo', tipo: 'tipo', subtypes: 'subtipos', subtipos: 'subtipos',
-  faction: 'faccao', faccao: 'faccao', rarity: 'raridade', raridade: 'raridade', cost: 'custo', custo: 'custo',
-  unit: 'unidade_custo', unidade: 'unidade_custo', power: 'power', hp: 'vida', vida: 'vida', resistance: 'resistance', resistencia: 'resistance',
-  bonus: 'bonus', equip: 'equipar_custo', damage: 'damage_cloth', dano: 'damage_cloth', soul: 'soul',
-  attack: 'attack', ataque: 'attack', awaken: 'awaken', keywords: 'keywords', flavour: 'flavour', flavor: 'flavour',
-  art: 'art', arte: 'art', text: 'rules', texto: 'rules', rules: 'rules', regras: 'rules',
-  'awaken text': 'habilidade_awaken_en', 'texto awaken': 'habilidade_awaken_en', ultimate: 'ultimate_en',
-};
-const MULTI = new Set(['rules', 'habilidade_awaken_en', 'ultimate_en']);
-const pick = (v, opts) => opts.find((o) => fold(o) === fold(v));
-const TIPOS = ['Devotee', 'Equipment', 'Support', 'Relic', 'Spell', 'Technique', 'Moment', 'Domain', 'God'];
-const FACCOES = ['Athena', 'Ares', 'Artemis', 'Hades', 'Poseidon', 'Neutral'];
-const RARIDADES = ['Common', 'Uncommon', 'Legendary', 'Divine', 'Playtest']; // 4 raridades (autor, 31/10/2026)
-
-export function parseBatch(text) {
-  const out = [];
-  for (const block of text.replace(/\r\n?/g, '\n').split(/^\s*-{3,}\s*$/m)) {
-    if (!block.trim()) continue;
-    const raw = {}, errors = [];
-    let cur = null;
-    for (const line of block.split('\n')) {
-      if (/^\s*#/.test(line)) continue; // comentário
-      const m = line.match(/^\s*([\p{L} ]{2,20}?)\s*:\s?(.*)$/u);
-      const key = m && FIELDS[fold(m[1])];
-      if (key) { cur = key; raw[key] = m[2].trim(); continue; }
-      if (cur && MULTI.has(cur)) raw[cur] += `\n${line}`;
-      else if (line.trim()) errors.push(`linha sem campo: “${line.trim().slice(0, 40)}”`);
-    }
-    for (const k of MULTI) if (k in raw) raw[k] = raw[k].replace(/^\n+|\s+$/g, '');
-    if (!raw.nome_exibicao_en && !raw.id) errors.push('falta Name');
-    if (raw.tipo && !(raw.tipo = pick(raw.tipo, TIPOS))) errors.push(`Type inválido (use ${TIPOS.join(', ')})`);
-    if (raw.faccao && !(raw.faccao = pick(raw.faccao, FACCOES))) errors.push(`Faction inválida (use ${FACCOES.join(', ')})`);
-    if (raw.raridade && !(raw.raridade = pick(raw.raridade, RARIDADES))) errors.push(`Rarity inválida (use ${RARIDADES.join(', ')})`);
-    if ('unidade_custo' in raw) raw.unidade_custo = /base/i.test(raw.unidade_custo) ? 'base_cosmo' : 'cosmo';
-    for (const k of NUM) if (has(raw[k]) && !/^-?\d+$/.test(raw[k])) errors.push(`${k} não é número: ${raw[k]}`);
-    for(const k of ['cosmoble','personagem_unico'])if(k in raw){if(!/^(true|false|yes|no|sim|nao|não|1|0)$/i.test(raw[k]))errors.push(`${k}: use true ou false`);raw[k]=/^(true|yes|sim|1)$/i.test(raw[k]);}
-    if ('bonus' in raw) {
-      const b = raw.bonus.match(/^([+-]?\d+)\s*\/\s*([+-]?\d+)$/);
-      if (b) [raw.bonusPower, raw.bonusResistance] = [b[1], b[2]].map((x) => (x.startsWith('-') || x.startsWith('+') ? x : `+${x}`));
-      else errors.push(`Bonus deve ser +P/+R: ${raw.bonus}`);
-      delete raw.bonus;
-    }
-    out.push({ raw, errors });
-  }
-  return out;
-}
-
-// Junta o texto com a carta existente (por Id ou Name) e devolve o estado pronto do editor.
-async function prepareItem(raw, used) {
-  const o = db.cartas.find((c) => (raw.id && c.id === raw.id) || (!raw.id && fold(c.nome_exibicao_en) === fold(raw.nome_exibicao_en || '')));
-  let proj = {};
-  if (o) try { const r = await fetch(`projects/${o.id}.json`); if (r.ok) proj = await r.json(); } catch { /* sem projeto */ }
-  const s = o ? fromCard(o, proj) : blankState();
-  const g = gen;
-  const { art, ...fields } = raw;
-  Object.assign(s, fields);
-  const unboxed = keywordsWithoutBox(s);
-  if (unboxed) s.rules = [s.rules.trim(), unboxed].filter(Boolean).join('\n\n');
-  if (!o) {
-    const f = s.faccao.toLowerCase();
-    const nums = [...db.cartas.map((c) => c.id), ...used].map((id) => id.match(new RegExp(`^${f}-(\\d+)$`))?.[1]).filter(Boolean).map(Number);
-    s.id = raw.id || `${f}-${String(Math.max(0, ...nums) + 1).padStart(3, '0')}`;
-  }
-  used.add(s.id);
-  const artFile = art || (!s.art && o?.caminho_imagem ? o.caminho_imagem.split('/').pop() : '');
-  if (artFile) {
-    for (const src of [`../ARTS/${artFile}`, `art/${artFile}`, `../${artFile}`]) {
-      const im = await loadImg(src);
-      if (im) { s.art = { src }; coverArt(im, s.art); break; }
-    }
-  }
-  return { orig: o || null, gen: o ? g : [], state: s, artMissing: !!artFile && !s.art };
-}
-
-let batch = [];
-function useItem(it) { orig = it.orig; gen = it.gen; S = it.state;S.importBase=it.imported||null; }
-
-function renderBatchList() {
-  const ol = $('#batchList');
-  ol.replaceChildren(...batch.map((it, i) => {
-    const li = document.createElement('li');
-    const b = Object.assign(document.createElement('button'), { type: 'button', textContent: it.state ? `${it.state.id} · ${it.state.nome_exibicao_en || '(sem nome)'}` : `#${i + 1}` });
-    b.addEventListener('click', () => {
-      if (!it.state) return;
-      useItem(it); fillForm();resetEditHistory(); setRef(it.orig?.caminho_imagem ? `../${it.orig.caminho_imagem}` : null); render();
-      say(`lote: editando ${it.state.id} (as mudanças valem para o lote)`);
-    });
-    const tag = Object.assign(document.createElement('span'), { className: 'tag', textContent: ` — ${it.state?.tipo || '?'}, ${it.orig ? 'atualiza' : 'nova'}${it.artMissing ? ', arte não achada' : ''}${it.state && !it.state.art ? ', sem arte' : ''}` });
-    li.append(b, tag);
-    if (it.done) li.append(Object.assign(document.createElement('span'), { className: 'done', textContent: ` ✓ ${it.done}` }));
-    for (const e of it.errors) li.append(Object.assign(document.createElement('span'), { className: 'err', textContent: e }));
-    return li;
-  }));
-  const ok = batch.length && batch.every((it) => !it.errors.length);
-  $('#batchExport').disabled = $('#batchSave').disabled = !ok;
-}
-
-$('#batchFile').addEventListener('change',async e=>{
-  const f=e.target.files[0];if(!f)return;
-  try{
-    if(!/\.(xlsx|json)$/i.test(f.name)){$('#batchText').value=await f.text();$('#batchRead').click();return;}
-    let imported;
-    if(/\.xlsx$/i.test(f.name)){
-      say('Lendo planilha sem alterar o arquivo…');const r=await fetch('/api/import-xlsx',{method:'POST',headers:{'X-File-Name':encodeURIComponent(f.name)},body:f});const source=await r.json();if(!r.ok)throw Error(source.erro||'Reinicie o servidor local para habilitar a leitura XLSX.');imported=await compilePlaytest(source);
-    }else{const source=JSON.parse(await f.text());imported=Array.isArray(source)?source:source.cartas;}
-    if(!Array.isArray(imported)||!imported.length)throw Error('Arquivo sem cartas.');
-    const keep={orig,gen,S};
-    try{batch=imported.map(c=>{const previous=db.cartas.find(x=>x.id===c.id),merged={...previous,...c};const errors=validateCard(merged);const state=fromCard(merged);const generated=gen;return{orig:previous||null,gen:generated,state,errors,imported:structuredClone(merged)};});}finally{({orig,gen,S}=keep);}
-    renderBatchList();say(`Lote carregado: ${batch.length} cartas. Revise os dados e o diff antes de gravar.`);$('#batch').open=true;
-    if(!batch.some(i=>i.errors.length))$('#batchList button')?.click();
-  }catch(error){say(error.message,true);}
-});
-$('#batchRead').addEventListener('click', async () => {
-  const parsed = parseBatch($('#batchText').value);
-  const used = new Set();
-  const keep = { orig, gen, S };
-  batch = [];
-  for (const p of parsed) batch.push(p.errors.length ? { ...p, state: null } : { ...p, ...(await prepareItem(p.raw, used)) });
-  ({ orig, gen, S } = keep);
-  renderBatchList();
-  const bad = batch.filter((it) => it.errors.length).length;
-  say(bad ? `lote: ${batch.length} cartas, ${bad} com erro — corrija o texto e leia de novo` : `lote: ${batch.length} cartas prontas`, !!bad);
-  if (!bad && batch.length) batch[0] && $('#batchList button').click();
-});
-
-async function canvasBlob(c) { return new Promise((ok) => c.toBlob(ok, 'image/png')); }
-$('#batchExport').addEventListener('click', async () => {
-  const keep = { orig, gen, S };
-  try {
-    for (const [i, it] of batch.entries()) {
-      useItem(it);
-      say(`exportando ${i + 1}/${batch.length}: ${S.id}`);
-      await render();
-      await post(`/api/export/${S.id}${langSuffix()}`, await canvasBlob(canvas), 'image/png');
-      const w = 1100, h = Math.round(w * H / W);
-      const c = Object.assign(document.createElement('canvas'), { width: w, height: h });
-      const g = c.getContext('2d'); g.imageSmoothingQuality = 'high'; g.drawImage(canvas, 0, 0, w, h);
-      await post(`/api/export/${S.id}${langSuffix()}-web`, await canvasBlob(c), 'image/png');
-      it.done = 'PNG';
-    }
-    say(`${batch.length} cartas exportadas em card-forge/out/ (alta + web)`);
-  } catch (e) { say(e.message, true); }
-  ({ orig, gen, S } = keep);
-  renderBatchList();
-  render();
-});
-
-let pendingBatch = null;
-$('#batchSave').addEventListener('click', () => {
-  const keep = { orig, gen, S };
-  pendingBatch = batch.map((it) => { useItem(it); return { it, card: buildCard() }; }).filter(({ it, card }) => diffCards(it.orig, card).length);
-  ({ orig, gen, S } = keep);
-  if (!pendingBatch.length) return say('lote: nada muda no cards.json');
-  $('#diffTarget').textContent = `${pendingBatch.length} cartas: ${pendingBatch.filter((p) => !p.it.orig).length} novas, ${pendingBatch.filter((p) => p.it.orig).length} atualizadas`;
-  $('#diffBody').replaceChildren(...pendingBatch.flatMap(({ it, card }) => [
-    Object.assign(document.createElement('div'), { textContent: `\n== ${card.id} · ${card.nome_exibicao_en} (${it.orig ? 'substitui' : 'nova'})` }),
-    ...diffCards(it.orig, card).flatMap(({ k, x, y }) => [
-      ...(it.orig ? [Object.assign(document.createElement('div'), { className: 'del', textContent: `- ${k}: ${x}` })] : []),
-      Object.assign(document.createElement('div'), { className: 'add', textContent: `+ ${k}: ${y}` })]),
-  ]));
-  pending = null;
-  $('#diffDialog').showModal();
-});
-
-async function saveBatch() {
-  await post('/api/cards', JSON.stringify(pendingBatch.map((p) => p.card)));
-  for (const { it } of pendingBatch) {
-    const s = it.state;
-    await post(`/api/project/${s.id}`, JSON.stringify({ title: s.title, subtitle: s.subtitle, flavour: s.flavour, bonusPower: s.bonusPower, bonusResistance: s.bonusResistance, art: s.art }));
-  }
-  db = await (await fetch('../data/cards.json')).json();
-  for (const it of batch) { it.orig = db.cartas.find((c) => c.id === it.state.id) || null; it.gen = (it.orig?.habilidades_en || []).map((text) => ({ text, markup: toMarkup(text) })); it.done = `${it.done ? `${it.done} + ` : ''}cards.json`; }
-  fillCardSelect(S.id);
-  renderBatchList();
-  say(`cards.json gravado: ${pendingBatch.length} cartas`);
-  pendingBatch = null;
-}
 
 // ---------- início ----------
 function fillCardSelect(selected) {
@@ -1302,4 +1130,4 @@ try {
 
 function checkCatalog(){const keep={orig,gen,S};try{return db.cartas.map(c=>{orig=c;S=fromCard(c);return {id:c.id,diff:diffCards(c,buildCard())};}).filter(r=>r.diff.length);}finally{({orig,gen,S}=keep);}}
 function layoutReport(){const keep={orig,gen,S};try{return db.cartas.map(c=>{orig=c;S=fromCard(c);const el=T.layouts[layoutKey(S)].elements.find(e=>e.kind==='rules');const paras=[...(cardKeywords(S).length?[`**${cardKeywords(S).join(', ')}.**`]:[]),...splitParas(blocksMarkup(ruleBlocksWithoutKeywords(splitParas(S.rules),list(S.keywords))))];let size=el.size,L;for(;size>=22;size--){L=layoutRules(paras,size,el.rect[2]);if(L.h<=el.rect[3])break;}return{id:c.id,size,overflow:L.h>el.rect[3]};});}finally{({orig,gen,S}=keep);}}
-window.forge = { history:{undo:()=>travelEdit('undo'),redo:()=>travelEdit('redo'),get canUndo(){return !!editHistory?.canUndo;},get canRedo(){return !!editHistory?.canRedo;}},checkCatalog,layoutReport,S: () => S, render, toMarkup, fromMarkup, buildCard, selectCard, parseBatch };
+window.forge = { history:{undo:()=>travelEdit('undo'),redo:()=>travelEdit('redo'),get canUndo(){return !!editHistory?.canUndo;},get canRedo(){return !!editHistory?.canRedo;}},checkCatalog,layoutReport,S: () => S, render, toMarkup, fromMarkup, buildCard, selectCard };

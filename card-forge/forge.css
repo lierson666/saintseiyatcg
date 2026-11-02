@@ -45,17 +45,6 @@ button.primary { background: #4a3d16; border-color: var(--gold); }
 .symbar button { display: inline-flex; align-items: center; gap: 5px; padding: 4px 8px; font-size: 12px; }
 .symbar img { width: 20px; height: 20px; object-fit: contain; }
 .symbar select { font-size: 12px; padding: 4px 6px; }
-.batch { border: 1px solid var(--gold); border-radius: 8px; background: var(--panel); padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; }
-.batch summary { color: var(--gold); cursor: pointer; }
-.batch[open] { gap: 8px; }
-.batch[open] > * + * { margin-top: 8px; }
-.batch a { color: var(--gold); }
-.batch-list { margin: 0; padding-left: 22px; max-height: 260px; overflow: auto; font-size: 12.5px; }
-.batch-list li { padding: 3px 0; }
-.batch-list button { background: none; border: 0; padding: 0; color: var(--text); text-align: left; text-decoration: underline dotted; }
-.batch-list .tag { color: var(--muted); }
-.batch-list .err { color: var(--danger); display: block; }
-.batch-list .done { color: #9fe39a; }
 .hint { margin: 0; color: var(--muted); font-size: 12px; }
 code { color: var(--gold); }
 .actions { flex-direction: row; flex-wrap: wrap; }
@@ -112,12 +101,14 @@ form label { gap: 1px; }
 form input:not([type=checkbox], [type=range], [type=file]), form select, form textarea { padding: 3px 6px; }
 .fields { display: grid; gap: 6px 8px; align-items: end; }
 .fields .row { display: contents; }
-.fields--id { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.fields--id { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-flow: dense; }
+.fields--id .name, .fields--id .subtitle { grid-column: 1 / -1; }
 .fields--num { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .fields--num .check { grid-column: 1 / -1; }
 @container (min-width: 440px) {
   .fields--id { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .fields--id .wide { grid-column: span 2; }
+  .fields--id .name { grid-column: span 3; }
   .fields--num { grid-template-columns: repeat(5, minmax(0, 1fr)); }
   .fields--num .check { grid-column: span 2; align-self: center; }
 }
@@ -125,5 +116,22 @@ form input:not([type=checkbox], [type=range], [type=file]), form select, form te
 .forge-tabs button { padding: 3px 10px; border-color: transparent; background: none; color: var(--muted); white-space: nowrap; }
 .forge-tabs button[aria-current] { border-color: var(--gold); background: #4a3d16; color: var(--text); }
 .section-off { display: none !important; }
-form > fieldset > legend, form > .batch > summary { display: none; }
-form > .batch { border-color: var(--line); }
+form > fieldset > legend { display: none; }
+/* Disposição das abas (autor, 02/11/2026): botões da habilidade ao lado do texto, Som em linhas rótulo + seletor, Português com Nome e Subtítulo lado a lado. */
+.rr-row { grid-template-columns: minmax(0, 1fr) auto; }
+.rr-tools { flex-direction: column; gap: 2px; }
+.rr-tools button { padding: 0 6px; line-height: 1.5; }
+.symbar button { padding: 2px 6px; }
+.rr-sounds { display: grid; gap: 4px; }
+.rr-head { margin: 8px 0 2px; color: var(--gold); font-size: 12px; font-weight: 600; }
+.rr-head:first-child { margin-top: 0; }
+.rr-sound { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 8px; align-items: center; }
+.rr-sound > span:first-child { overflow: hidden; color: var(--muted); font-size: 12px; white-space: nowrap; text-overflow: ellipsis; }
+.rr-sound button { padding: 3px 8px; }
+.fields--pt { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.fields--pt > * { grid-column: 1 / -1; }
+.fields--pt > .half { grid-column: auto; }
+.fields--pt > button { justify-self: start; }
+.pt-status { margin: 0; color: var(--muted); font-size: 12px; }
+.pt-status.is-stale { color: var(--gold); }
+.fields--pt [readonly] { border-color: transparent; background: none; padding-inline: 0; resize: none; field-sizing: content; color: var(--text); }

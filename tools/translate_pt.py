@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
 """Tradução automática EN → PT-BR de uma carta (autor, 31/10/2026: o inglês é a base; o PT sai dele).
 
-Usa a API da Claude com o glossário aprovado (docs/glossario-pt-br.md), os nomes da dublagem
-(docs/traducao-pt/nomes-pt.json) e cartas de Athena já aprovadas como exemplo de estilo.
-Chave: variável de ambiente ANTHROPIC_API_KEY (nunca gravada no projeto).
+Usa o comando claude deste Mac (autor, 02/11/2026: Claude Code, sem chave de API) com o glossário aprovado
+(docs/glossario-pt-br.md), os nomes da dublagem (docs/traducao-pt/nomes-pt.json) e cartas de Athena já aprovadas como exemplo de estilo.
 
 Uso pelo Card Forge: POST /api/translate {card} (card-forge/serve.py).
-Uso direto:  ANTHROPIC_API_KEY=... python3 tools/translate_pt.py athena-v6-001
+Uso direto:  python3 tools/translate_pt.py athena-v6-001
 """
-import json, os, pathlib, re, sys, urllib.request, urllib.error
+import json, pathlib, re, shutil, subprocess, sys, tempfile
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-MODEL = 'claude-sonnet-5-5'
+MODEL = 'sonnet'
 SYMBOL = re.compile(r'\{[^}]*\}')
 KEYS = {'n': 'nome_exibicao_pt', 's': 'subtitulo_pt', 'h': 'habilidades_pt', 'a': 'habilidade_awaken_pt', 'u': 'ultimate_pt', 'f': 'flavour_pt'}
 
@@ -70,18 +69,16 @@ Traduza a carta abaixo. Responda SÓ com um objeto JSON com as mesmas chaves do 
 {json.dumps(source(card), ensure_ascii=False)}"""
 
 
-def call(text, key):
-    body = json.dumps({'model': MODEL, 'max_tokens': 4000, 'messages': [{'role': 'user', 'content': text}]}).encode()
-    req = urllib.request.Request('https://api.anthropic.com/v1/messages', body, {
-        'x-api-key': key, 'anthropic-version': '2023-06-01', 'content-type': 'application/json'})
-    try:
-        with urllib.request.urlopen(req, timeout=120) as r:
-            data = json.load(r)
-    except urllib.error.HTTPError as e:
-        raise TranslateError(f'API da Claude respondeu {e.code}: {e.read().decode(errors="replace")[:300]}')
-    except urllib.error.URLError as e:
-        raise TranslateError(f'Sem conexão com a API da Claude: {e.reason}')
-    out = ''.join(b.get('text', '') for b in data.get('content', []))
+def call(text):
+    claude = shutil.which('claude') or str(pathlib.Path.home() / '.local/bin/claude')
+    try:  # sem ferramentas, hooks nem sessão guardada: o texto da carta é só para traduzir
+        result = subprocess.run(
+            [claude, '-p', '--model', MODEL, '--tools', '', '--setting-sources', '', '--strict-mcp-config',
+             '--no-session-persistence', '--disable-slash-commands'],
+            input=text, capture_output=True, text=True, timeout=240, check=True, cwd=tempfile.gettempdir())
+    except (OSError, subprocess.SubprocessError) as e:
+        raise TranslateError(f'O Claude Code não traduziu: {getattr(e, "stderr", "") or e}')
+    out = result.stdout
     m = re.search(r'\{.*\}', out, re.S)
     if not m:
         raise TranslateError('A resposta da IA não trouxe JSON.')
@@ -102,12 +99,9 @@ def check(en, pt):
     return warn
 
 
-def translate(card, key=None):
-    key = key or os.environ.get('ANTHROPIC_API_KEY')
-    if not key:
-        raise TranslateError('Falta a chave: inicie o Forge com ANTHROPIC_API_KEY=... python3 card-forge/serve.py')
+def translate(card):
     en = source(card)
-    pt = call(prompt(card), key)
+    pt = call(prompt(card))
     fields = {KEYS[k]: pt[k] for k in KEYS if pt.get(k)}
     if 'subtitulo_pt' in fields:
         fields['tagline_pt'] = fields['subtitulo_pt']
