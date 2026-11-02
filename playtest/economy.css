@@ -1,6 +1,5 @@
 /* Economia (economy.js): saldo de Cosmo Coins, Store, Collection e abertura de booster. */
-.ec-coin, .ec-coins i { display: inline-block; width: 16px; height: 16px; flex: none; border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #fff6c8, #e9c45c 45%, #9a6b1c); box-shadow: 0 0 8px #e9c45c88; }
+.ec-coin, .ec-coins i { display: inline-block; width: 20px; height: 20px; flex: none; background: url('../LOGO/cosmo-coin.webp') center / contain no-repeat; } /* logo da Cosmo Coin (autor, 02/11/2026) */
 .ec-coins { display: inline-flex; align-items: center; gap: 8px; padding: 6px 12px; border: 1px solid var(--kv-line, #ffffff22); border-radius: 999px;
   background: #0006; color: var(--kv-gold-2, #f1d68a); font: 600 13px var(--kv-sans, system-ui); cursor: pointer; white-space: nowrap; }
 .ec-coins:hover, .ec-coins:focus-visible { border-color: var(--kv-gold, #e9c45c); }
@@ -26,7 +25,7 @@
 .ec-wallet span + span { border-left: 1px solid #e9c45c22; }
 .ec-wallet b { font: 700 22px var(--kv-title, Cinzel, serif); color: var(--kv-gold-2, #f1d68a); font-variant-numeric: tabular-nums; }
 .ec-wallet small { grid-column: 1 / -1; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--kv-muted, #b9b3a3); }
-.ec-wallet .ec-coin { width: 18px; height: 18px; }
+.ec-wallet .ec-coin { width: 24px; height: 24px; }
 
 .ec-feature { display: grid; grid-template-columns: auto 1fr; gap: 48px; align-items: center; padding: 40px 48px; border-radius: 24px;
   border: 1px solid #e9c45c33; background: radial-gradient(ellipse at 18% 50%, #e9c45c26, transparent 55%), linear-gradient(135deg, #12101fe6, #07080ee6);
@@ -180,7 +179,7 @@ body.ec-opening #lobby { visibility: hidden; }
 .ec-bundle__off { position: absolute; top: -10px; right: -6px; padding: 3px 8px; border-radius: 999px; background: linear-gradient(180deg, #ff8a5c, #d9452b);
   color: #fff; font: 800 12px var(--kv-sans, system-ui); box-shadow: 0 4px 10px #0008; }
 .ec-bundle__buy { width: 100%; min-height: 48px; margin-top: 10px; padding: 6px 8px; flex-wrap: wrap; justify-content: center; gap: 0 6px; border-radius: 12px; font-size: 15px; line-height: 1.1; }
-.ec-bundle__buy s { flex-basis: 100%; text-align: center; opacity: .6; font-weight: 500; font-size: 12px; }
+.ec-bundle__buy s { order: -1; flex-basis: 100%; text-align: center; opacity: .6; font-weight: 500; font-size: 12px; }
 
 /* Resumo de vários boosters: uma tela, raras primeiro e brilhando; clique direito amplia. */
 .ec-sum__head { text-align: center; color: #f6ecd0; }
@@ -222,7 +221,7 @@ body.ec-opening #lobby { visibility: hidden; }
 .ec-tile h4 { margin: 0; font: 700 15px var(--kv-title, Cinzel, serif); color: #f6ecd0; text-align: center; text-wrap: balance; }
 .ec-tile > small { margin-bottom: 10px; font: 600 10px var(--kv-sans, system-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--kv-muted, #b9b3a3); }
 .ec-tile__price { min-height: 40px; padding: 0 18px; gap: 6px; border-radius: 12px; font-size: 15px; }
-.ec-tile__price .ec-coin, .ec-confirm .ec-coin { width: 16px; height: 16px; }
+.ec-tile__price .ec-coin, .ec-confirm .ec-coin { width: 20px; height: 20px; }
 .ec-tile__price s, .ec-confirm s { opacity: .55; font-weight: 500; }
 .ec-tile__equip { min-height: 40px; padding: 0 22px; border-radius: 12px; border: 1px solid #e9c45c88; background: transparent; cursor: pointer;
   color: var(--kv-gold-2, #f1d68a); font: 600 14px var(--kv-sans, system-ui); }
