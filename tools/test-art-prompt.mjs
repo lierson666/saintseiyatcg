@@ -102,3 +102,43 @@ test('traço descreve o estilo sem nome de ilustrador no prompt direto', () => {
     for (const name of label.match(/\(([^)]+)\)/)[1].split(', ')) assert.ok(!prompt.includes(name), name);
   }
 });
+
+test('pose inicial varia por carta e nada de mão vindo para a câmera', () => {
+  const devotees = cartas.filter((c) => c.tipo === 'Devotee'), start = devotees.map((c) => defaultParams(cardFacts(c, cartas)));
+  for (const key of ['pose', 'angle']) {
+    const counts = {};
+    for (const p of start) counts[p[key]] = (counts[p[key]] || 0) + 1;
+    assert.ok(Object.keys(counts).length >= 5, key);
+    assert.ok(Math.max(...Object.values(counts)) < devotees.length * 0.3, key);
+  }
+  assert.equal(defaultParams(cardFacts(card('athena-v6-001'), cartas)).pose, start[devotees.findIndex((c) => c.id === 'athena-v6-001')].pose);
+  const text = promptOf('athena-v6-001');
+  assert.match(text, /No arm reaching or fist punching toward the camera/);
+  assert.match(text, /NEGATIVE PROMPT: .*oversized foreshortened hand/);
+});
+
+test('carta genérica: personagem original, sem referência, sem regras e sem cânone', () => {
+  const herald = card('poseidon-v6-103'), f = cardFacts(herald, cartas), text = promptOf('poseidon-v6-103');
+  assert.equal(f.generic, true);
+  assert.equal(defaultParams(f).mode, 'image');
+  assert.match(text, /HERALD OF THE SEVEN SEAS, an original character created for this card, serving Poseidon/);
+  assert.match(text, /Exactly one figure/);
+  assert.doesNotMatch(text, /REFERENCES|reference images|Saint Seiya|DESIGN CANON|POWERS TO EVOKE|Marina Devotees/);
+  assert.match(text, /NEGATIVE PROMPT: .*existing anime characters/);
+  assert.doesNotMatch(promptOf('poseidon-v6-103', {version: 'The Lost Canvas', arc: ARCS[4][0], technique: f.techniques[0]}), /Lost Canvas|Poseidon chapter|Other friendly/);
+  assert.doesNotMatch(buildDirectorPrompt('MASTER', f, defaultParams(f)), /vão anexadas/);
+});
+
+test('cânone continua com referências, e criatura genérica não ganha dedos', () => {
+  const byName = (n) => cartas.find((c) => c.nome_exibicao_en === n);
+  for (const n of ['PEGASUS SEIYA', 'MERMAID THETIS', 'MERMAID SCALE', 'GALACTIC ILLUSION', 'THE BETRAYAL OF THE GOLD SAINTS', 'ATHENA', 'HADES CASTLE']) assert.equal(cardFacts(byName(n), cartas).generic, false, n);
+  for (const n of ['MARINA SPEARMAN', 'OCEANIC SPEAR', 'THE RISING TIDE', 'THE SUNKEN TEMPLE']) {
+    const f = cardFacts(byName(n), cartas), text = buildImagePrompt(f, defaultParams(f));
+    assert.equal(f.generic, true, n);
+    assert.doesNotMatch(text, /reference|Saint Seiya/i, n);
+  }
+  const wolf = cardFacts(byName('MOONLIT WOLF'), cartas), text = buildImagePrompt(wolf, defaultParams(wolf));
+  assert.equal(wolf.creature, true);
+  assert.doesNotMatch(text, /fingers|POSE:|EXPRESSION:/);
+  assert.match(text, /an original creature/);
+});

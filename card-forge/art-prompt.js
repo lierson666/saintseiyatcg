@@ -15,7 +15,12 @@ export const POSES = [
   pair('Looking over the shoulder', 'olhando por cima do ombro'), pair('Hands in pockets', 'mãos nos bolsos'), pair('Crossing arms', 'braços cruzados'),
   pair('Dynamic action pose', 'ação em movimento, corpo inclinado'), pair('Mid-air jump', 'no meio de um salto'), pair('Running sprint', 'correndo em velocidade máxima'),
   pair('Combat stance', 'postura de luta, punhos erguidos'), pair('Crouching low', 'agachado, pronto para saltar'),
+  pair('Standing still, arms lowered at the sides, cosmo rising around the body', 'parado, braços baixos, Cosmo subindo'), pair('Kneeling on one knee, head lowered', 'ajoelhado, cabeça baixa'),
+  pair('Walking forward unhurried', 'andando devagar para a frente'), pair('Weapon planted on the ground, both hands resting on it', 'arma fincada no chão, mãos sobre ela'),
+  pair('Mid-strike seen in profile, side-on to the camera', 'golpe visto de perfil'), pair('Both arms raised overhead, gathering energy', 'braços erguidos, juntando energia'),
 ];
+// A pose inicial varia por carta (autor, 02/11/2026): com uma só, todas as artes saíam iguais, com a mão vindo para a câmera.
+const START_POSES = ['Standing straight', 'Looking over the shoulder', 'Crossing arms', 'Dynamic action pose', 'Combat stance', 'Crouching low', 'Standing still, arms lowered at the sides, cosmo rising around the body', 'Kneeling on one knee, head lowered', 'Walking forward unhurried', 'Mid-strike seen in profile, side-on to the camera', 'Both arms raised overhead, gathering energy'];
 export const ANGLES = [
   pair('Eye-level shot', 'nível dos olhos, confronto direto'), pair('Low-angle shot', 'de baixo para cima, dominante'), pair('Extreme low-angle shot', 'figura colossal ou aterrorizante'),
   pair('High-angle shot', 'de cima para baixo, vulnerável'), pair("Bird's-eye view", 'visão aérea total'), pair('Dutch angle', 'inclinada, instabilidade e violência'), pair('Over-the-shoulder shot', 'confronto narrativo'),
@@ -156,9 +161,32 @@ const TYPE_RULES = {
   Domain: 'The environment is the protagonist: architecture, atmosphere, scale and faction identity.',
   God: 'Recognizable divine presence, carefully handled scale, imposing composition, perceptible supernatural power. Never hide the face with effects.',
 };
+const GENERIC_RULES = {
+  Devotee: 'The character is the main focal point, with a clear readable face and a pose coherent with the card name. Show action or dramatic presence.',
+  Equipment: 'The equipment is the protagonist. Show structure and materials clearly, in a collectible art composition.',
+  Technique: 'Show the execution or impact of the power, with its origin, trajectory and consequence.',
+};
 const NEGATIVE_FIGURE = 'extra fingers, missing fingers, fused fingers, extra limbs, duplicate arms, malformed hands, broken anatomy, distorted face, incorrect character design, cropped face';
 const NEGATIVE_ALWAYS = 'inaccurate armor, inconsistent lighting, unreadable silhouette, excessive visual clutter, text, typography, card borders, watermarks, logos, UI elements, low resolution';
 const EPIC_BY_RARITY = {Common: '2', Uncommon: '3', Legendary: '4', Divine: '5'};
+const START_ANGLES = ['Eye-level shot', 'Low-angle shot', 'High-angle shot', 'Dutch angle', 'Over-the-shoulder shot'];
+const START_SHOTS = ['Medium Shot (MS)', 'Medium Full Shot (MFS)', 'Three-Quarter Shot', 'Full Body Shot (FBS)'];
+const pickBy = (seed, list) => list[[...seed].reduce((n, c) => (n * 31 + c.charCodeAt(0)) >>> 0, 0) % list.length]; // mesma carta, mesmo início
+// O gerador puxa o braço para a câmera sozinho, ainda mais em ângulo baixo e com técnica: só proibir resolve.
+const HANDS_RULE = 'HANDS AND ARMS: keep them in the plane of the figure, close to the body or out to the side. No arm reaching or fist punching toward the camera, no oversized foreshortened hand in the foreground.';
+const NEGATIVE_HANDS = 'hand reaching toward the camera, fist punching toward the viewer, oversized foreshortened hand';
+const NEGATIVE_GENERIC = 'existing anime characters, recognizable named characters, canon armor designs, extra characters, crowd, giant faces or ghostly figures in the background';
+// Carta genérica (autor, 02/11/2026): sem história no cânone não há referência, então o prompt pede personagem original e não cita regras, que trazem outros personagens.
+// O que está aqui é do cânone; o resto começa como genérico, e o autor troca na caixa do popup.
+const CANON = new RegExp(`(^|[^A-Z])(${[
+  'SEIYA', 'SHIRYU', 'HYOGA', 'SHUN', 'IKKI', 'MU', 'SAGA', 'AIOLIA', 'AIOLOS', 'CAMUS', 'MARIN', 'SHAINA', 'MISTY', 'ALGOL', 'ORPHEE', 'KIKI', 'CASSIOS', 'JABU', 'GEKI', 'ICHI', 'NACHI', 'BAN', 'JUNE', 'TATSUMI', 'MIHO', 'SEIKA', 'SHUNREI', 'ESMERALDA', 'GUILTY', 'BABEL', 'MOSES', 'ASTERION', 'JAMIAN', 'DANTE', 'SAORI', 'ATHENA',
+  'PEGASUS', 'DRAGON', 'CYGNUS', 'ANDROMEDA', 'PHOENIX', 'ARIES', 'GEMINI', 'LEO', 'CANCER', 'VIRGO', 'LIBRA', 'SCORPIO', 'SAGITTARIUS', 'CAPRICORN', 'AQUARIUS', 'PISCES', 'EAGLE', 'OPHIUCHUS', 'LIZARD', 'PERSEUS', 'LYRA', 'UNICORN', 'KAMUI',
+  'KANON', 'SORRENTO', 'BAIAN', 'ISAAC', 'THETIS', 'JULIAN', 'SIREN', 'SEAHORSE', 'KRAKEN', 'MERMAID', 'POSEIDON', 'GALACTIC ILLUSION', 'DEAD END', 'RISING BILLOWS', 'VIKING TIGER', 'GOLDEN TRIANGLE', 'AURORA BOREALIS', 'GOD BREATH', 'PILLAR', 'UNDERSEA SANCTUARY',
+  'RHADAMANTHYS', 'MINOS', 'AIACOS', 'WYVERN', 'GRIFFON', 'GARUDA', 'SPHINX', 'PHARAOH', 'ACHERON', 'CHARON', 'HYPNOS', 'THANATOS', 'PANDORA', 'SHION', 'HARPY', 'VALENTINE', 'BALRON', 'LUNE', 'PAPILLON', 'MYU', 'NIOBE', 'BASILISK', 'SYLPHID', 'MARKINO', 'FROG ZEROS', 'GIGANTO', 'RAIMI', 'GOLEM ROCK', 'TROLL IWAN', 'DEADLY BEETLE', 'PHLEGYAS', 'MINOTAUR GORDON', 'ALRAUNE', 'GORGON OX', 'DULLAHAN CUBE', 'DEATHMASK', 'APHRODITE', 'SHURA', 'SURPLICE', 'HADES', 'COCYTUS', 'ELYSION', 'FIRST PRISON',
+  'BLACK SWAN', 'JANGO', 'SHO', 'DAICHI', 'USHIO', 'ASAMORI', 'GEIST', 'GHOST SAINT', 'CRYSTAL SAINT', 'OHKO', 'LEDA', 'SPICA', 'SHIVA', 'AGORA', 'ARACHNE', 'GIGAS', 'PHAETON', 'GALAXIAN', 'JAMIR', 'FIVE OLD PEAKS', 'TWELVE', 'SANCTUARY GATES', 'GRAAD', 'DEATH QUEEN', 'STEEL CLOTH',
+  'GOLD SAINTS', 'GOLD CLOTHS', 'SPECTERS', 'THREE JUDGES', '108 STARS', 'FREEZING COFFIN', 'GOLDEN ARROW', 'EIGHTH SENSE', 'WALL OF LAMENTATION', 'DEPRIVED OF SENSES', 'MASKED SAINT',
+].join('|')})($|[^A-Z])`);
+const CREATURE = /Beast|Wolf|Stag|Bear|Fox|Hound|Serpent|Treant|Construct|Skeleton/;
 
 const clean = (t) => String(t || '').replace(/[@{}]/g, '').replace(/\s+/g, ' ').trim();
 const same = (a, b) => clean(a).toLowerCase() === clean(b).toLowerCase();
@@ -174,8 +202,9 @@ export function cardFacts(card, cards = []) {
   const caster = owner ? faction.find((n) => n.split(' ').includes(owner)) : null;
   const wearer = (card.auto_equip_en || [])[0] ? clean(card.auto_equip_en[0]).toUpperCase() : null;
   const isSelf = card.tipo === 'Devotee' || card.tipo === 'God', isSpell = card.tipo === 'Spell';
+  const generic = card.tipo !== 'God' && !CANON.test(caster || '') && !CANON.test(name) && !CANON.test(wearer || '') && !CANON.test(clean(card.habilidades_en?.join(' ')).match(/Resonance: ([^:]+):/)?.[1]?.toUpperCase() || '');
   return {
-    name, kind, typeLine: formatCardTypeLine(card), faction: card.faccao, isSelf, isSpell, armors, powers,
+    generic, creature: generic && isSelf && (card.subtipos || []).some((s) => CREATURE.test(s)), name, kind, typeLine: formatCardTypeLine(card), faction: card.faccao, isSelf, isSpell, armors, powers,
     subtitle: clean(card.tagline_en || card.subtitulo_en), flavour: clean(card.flavour_en || card.flavour_pt), keywords: card.keywords_en || [], rarity: card.raridade,
     people: [...new Set([...(wearer ? [wearer] : []), ...faction])], person: isSelf ? name : isSpell ? caster || '' : '', // Equipment e Domain: só com personagem se o autor pedir (seção 10)
     techniques: [...new Set([...(isSpell ? [name] : []), ...powers.map((p) => p.name).filter((n) => n && !/^resonance\b/i.test(n))])],
@@ -185,9 +214,9 @@ export function cardFacts(card, cards = []) {
 export function defaultParams(f) {
   const god = GODS[f.faction], scene = f.kind === 'Domain', object = f.kind === 'Equipment';
   return {
-    mode: 'director', version: '', god: god ? f.faction : '', person: f.person, armor: f.armors[0]?.name || '', technique: f.isSpell ? f.name : '', arc: '', theme: '',
+    mode: f.generic ? 'image' : 'director', generic: f.generic, version: '', god: god ? f.faction : '', person: f.person, armor: f.armors[0]?.name || '', technique: f.isSpell ? f.name : '', arc: '', theme: '',
     epic: f.kind === 'God' ? '5' : EPIC_BY_RARITY[f.rarity] || '3',
-    shot: scene ? 'Wide Environmental Shot' : object ? SHOTS[6][0] : f.isSpell ? SHOTS[3][0] : SHOTS[4][0], angle: ANGLES[1][0], pose: f.isSpell ? POSES[6][0] : POSES[9][0], motion: f.isSelf || f.isSpell ? MOTIONS[1][0] : '',
+    shot: scene ? 'Wide Environmental Shot' : object ? SHOTS[6][0] : pickBy(`${f.name} shot`, START_SHOTS), angle: pickBy(`${f.name} angle`, START_ANGLES), pose: pickBy(`${f.name} pose`, START_POSES), motion: f.isSelf || f.isSpell ? MOTIONS[1][0] : '',
     expression: EXPRESSIONS[0][0], style: styleWith(god?.style || 'Araki'), accent: '', light: LIGHTS[god?.light ?? 0][0], before: '', now: '', next: '', viewer: '', usePowers: true, notes: '',
   };
 }
@@ -203,42 +232,51 @@ export function randomParams(f, p, rand = Math.random) {
   return out;
 }
 
+function genericSubject(f, p, army) {
+  const original = 'Invent the design from the card name and the faction; it is not based on any existing character or armor.';
+  if (f.kind === 'Equipment') return `${f.name} (${f.typeLine}), an original sacred object alone, with no wearer. ${original} Show its structure and materials clearly.`;
+  if (f.kind === 'Domain') return `${f.name}, an original place, with no characters. ${original}`;
+  if (f.isSelf) return `${f.name}, an original ${f.creature ? 'creature' : 'character'} created for this card, ${army}. ${original} Exactly one figure in the image: no other characters, no faces or giant figures in the background.`;
+  return `${f.name}, an original scene created for this card, told by the environment and the energy, with at most one anonymous figure. ${original}`;
+}
+
 export function buildImagePrompt(f, p) {
-  const god = GODS[p.god], person = p.person, isEquipment = f.kind === 'Equipment', power = f.powers.find((x) => x.name === p.technique), epic = EPIC_LEVELS.find(([v]) => v === p.epic);
-  const subject = person
+  const generic = p.generic, god = GODS[p.god], person = p.person, figure = person && !(generic && (f.creature || !f.isSelf)), isEquipment = f.kind === 'Equipment', power = f.powers.find((x) => x.name === p.technique), epic = EPIC_LEVELS.find(([v]) => v === p.epic);
+  const subject = generic ? genericSubject(f, p, god ? `serving ${p.god}` : 'an independent warrior') : person
     ? `${person}${isEquipment ? `, wearing ${f.name} (${f.typeLine})` : p.armor ? `, wearing ${p.armor}` : ''}. Match the attached reference images: face, hair, eyes, armor, ornaments, helmet and characteristic colors. Do not invent armor changes.`
     : isEquipment ? `${f.name} (${f.typeLine}) alone as a sacred object, with no wearer; show its structure and materials clearly and preserve the symbols, colors and geometry of the attached reference images.`
       : f.kind === 'Domain' ? `${f.name}, as a place, with no characters.` : `${f.name}, as an event, with no main character.`;
   const story = [p.before && `Just happened: ${p.before}.`, p.now && `Happening now: ${p.now}.`, p.next && `About to happen: ${p.next}.`, p.viewer && `The viewer must feel: ${p.viewer}.`].filter(Boolean).join(' ');
   const body = [
-    'Vertical 3:4 high-resolution illustration for a Saint Seiya trading card. Illustration only: no card frame, no text, no names, no logos, no numbers, no stats, no interface symbols, no watermarks.',
+    `Vertical 3:4 high-resolution illustration for ${generic ? 'a mythological anime trading card, in a world of sacred armors and Greek gods' : 'a Saint Seiya trading card'}. Illustration only: no card frame, no text, no names, no logos, no numbers, no stats, no interface symbols, no watermarks.`,
     `CARD: ${f.name}${f.subtitle ? ` — "${f.subtitle}"` : ''} (${f.typeLine || f.kind}, ${f.rarity || 'Common'}).`,
-    `CARD TYPE DIRECTION: ${TYPE_RULES[f.kind] || TYPE_RULES.Devotee}`,
+    `CARD TYPE DIRECTION: ${f.creature ? 'The creature is the main focal point, with a clear readable silhouette.' : (generic && GENERIC_RULES[f.kind]) || TYPE_RULES[f.kind] || TYPE_RULES.Devotee}`,
     `SUBJECT: ${subject}`,
     `ART STYLE (top priority for the whole image: line, shading, color treatment and rendering): ${p.style}.${p.accent ? ` Complementary finish: ${p.accent}.` : ''}`,
-    p.version && `DESIGN CANON: costume and armor shapes follow ${p.version}, only as design. Draw them in the ART STYLE above, not in the look of that version.`,
-    'REFERENCES: reference images are attached to this prompt. Use them only for character identity and armor design (face, hair, silhouette, parts, colors); follow them over any written description of those. Do not copy their drawing style, line or shading: redraw everything in the ART STYLE.',
+    !generic && p.version && `DESIGN CANON: costume and armor shapes follow ${p.version}, only as design. Draw them in the ART STYLE above, not in the look of that version.`,
+    !generic && 'REFERENCES: reference images are attached to this prompt. Use them only for character identity and armor design (face, hair, silhouette, parts, colors); follow them over any written description of those. Do not copy their drawing style, line or shading: redraw everything in the ART STYLE.',
     god && `FACTION IDENTITY: ${p.god}, ${god.title}. Palette identity, not monochrome: ${god.palette}. Feeling: ${god.mood}.`,
-    `SETTING: ${p.theme || (god ? god.setting : 'an epic mythological setting from the Saint Seiya universe')}.${p.arc ? ` Inspired by: ${p.arc}.` : ''}`,
+    `SETTING: ${p.theme || (god ? god.setting : generic ? 'an epic mythological setting' : 'an epic mythological setting from the Saint Seiya universe')}.${p.arc && !generic ? ` Inspired by: ${p.arc}.` : ''}`,
     story && `STORY: ${story}`,
-    `FRAMING: ${p.shot}. CAMERA: ${p.angle}.${person ? ` POSE: ${p.pose}.` : ''}${p.motion ? ` MOTION: ${p.motion}.` : ''}`,
-    person && 'FACE PLACEMENT, 7/10 RULE (mandatory): place the eyes at about 7/10 of the image height measured from the bottom, never above that line, in the central part of the image and away from the edges. Keep the top free for card interface without hiding the face.',
-    person && `EXPRESSION: ${p.expression}.`,
+    `FRAMING: ${p.shot}. CAMERA: ${p.angle}.${figure ? ` POSE: ${p.pose}.` : ''}${p.motion ? ` MOTION: ${p.motion}.` : ''}`,
+    figure && 'FACE PLACEMENT, 7/10 RULE (mandatory): place the eyes at about 7/10 of the image height measured from the bottom, never above that line, in the central part of the image and away from the edges. Keep the top free for card interface without hiding the face.',
+    figure && `EXPRESSION: ${p.expression}.`,
+    figure && HANDS_RULE,
     'COMPOSITION: card interface may cover parts of the image, so concentrate the most important elements in the central region and keep a silhouette readable at small size.',
-    person && 'ANATOMY: exactly five fingers on each visible hand; no duplicate limbs; coherent joints, hands, feet and neck; the armor follows the body correctly.',
-    p.technique && `TECHNIQUE IN USE: ${p.technique}${power ? ` — ${power.text}` : ''}. Show its origin, trajectory and consequence visually with cosmo energy; no written effects.`,
+    figure && 'ANATOMY: exactly five fingers on each visible hand; no duplicate limbs; coherent joints, hands, feet and neck; the armor follows the body correctly.',
+    p.technique && `TECHNIQUE IN USE: ${p.technique}${power && !generic ? ` — ${power.text}` : ''}. Show its origin, trajectory and consequence visually with cosmo energy; no written effects.`,
     `LIGHTING: ${p.light}.`,
     epic && `EPIC LEVEL ${epic[0]} OF 5: ${epic[2]}, without hurting character fidelity or card legibility.`,
-    p.usePowers && f.powers.length ? `POWERS TO EVOKE (visual inspiration, do not write them): ${f.powers.slice(0, 4).map((x) => x.name ? `${x.name}: ${x.text}` : x.text).join(' | ')}` : '',
-    p.usePowers && f.keywords.length ? `KEYWORDS: ${f.keywords.join(', ')}.` : '',
+    !generic && p.usePowers && f.powers.length ? `POWERS TO EVOKE (visual inspiration, do not write them): ${f.powers.slice(0, 4).map((x) => x.name ? `${x.name}: ${x.text}` : x.text).join(' | ')}` : '',
+    !generic && p.usePowers && f.keywords.length ? `KEYWORDS: ${f.keywords.join(', ')}.` : '',
     f.flavour && `MOOD LINE: ${f.flavour}`,
     clean(p.notes) && `NOTES: ${clean(p.notes)}`,
   ].filter(Boolean).join('\n');
-  return `${body}\n\nNEGATIVE PROMPT: ${person ? `${NEGATIVE_FIGURE}, ` : ''}${NEGATIVE_ALWAYS}.`;
+  return `${body}\n\nNEGATIVE PROMPT: ${figure ? `${(generic ? NEGATIVE_FIGURE.replace(', incorrect character design', '') : NEGATIVE_FIGURE)}, ${NEGATIVE_HANDS}, ` : ''}${generic ? `${NEGATIVE_GENERIC}, ${NEGATIVE_ALWAYS.replace('inaccurate armor, ', '')}` : NEGATIVE_ALWAYS}.`;
 }
 
 // Sistema completo: o GPT recebe o Master, trata o que veio escolhido como decisão do autor e responde no formato da seção 12.
-export const buildDirectorPrompt = (master, f, p) => `${master.trim()}\n\n---\nSOLICITAÇÃO DE ARTE\nExecute o processo da seção 11 para a carta abaixo e responda no formato obrigatório da seção 12. Não gere a imagem. Os parâmetros são decisões do autor; desenvolva-os com especificidade. Onde a narrativa estiver em branco, proponha a cena. As imagens de referência vão anexadas a esta mensagem: analise-as na Etapa 2.\n\n${buildImagePrompt(f, p)}`;
+export const buildDirectorPrompt = (master, f, p) => `${master.trim()}\n\n---\nSOLICITAÇÃO DE ARTE\nExecute o processo da seção 11 para a carta abaixo e responda no formato obrigatório da seção 12. Não gere a imagem. Os parâmetros são decisões do autor; desenvolva-os com especificidade. Onde a narrativa estiver em branco, proponha a cena. ${p.generic ? 'Esta carta é genérica e não tem imagens de referência: crie um design original, sem usar personagens, armaduras ou fatos do cânone.' : 'As imagens de referência vão anexadas a esta mensagem: analise-as na Etapa 2.'}\n\n${buildImagePrompt(f, p)}`;
 
 const esc = (t) => String(t ?? '').replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
 const select = (name, label, opts, value) => `<label>${label}<select name="${name}">${opts.map(([v, t]) => `<option value="${esc(v)}"${v === value ? ' selected' : ''}>${esc(t ?? v)}</option>`).join('')}</select></label>`;
@@ -261,21 +299,22 @@ export function mountArtPrompt(dialog, {getCard, getCards, say, masterUrl}) {
   function draw() {
     const f = facts, p = params, none = (t) => [['', t]];
     dialog.innerHTML = `<form method="dialog" class="ap"><h2>Gerar arte: <span translate="no">${esc(f.name)}</span></h2><div class="ap-grid"><div class="ap-fields">
+      <label class="ap-check ap-wide"><input type="checkbox" name="generic"${p.generic ? ' checked' : ''}> Carta genérica: sem história no cânone, personagem original e sem referências</label>
       <div class="ap-wide">${select('mode', 'Saída', [['director', 'Diretor de arte: Master completo + pedido da carta'], ['image', 'Prompt direto de imagem']], p.mode)}</div>
-      ${f.isSelf ? '' : select('person', 'Personagem', [...none('Sem personagem'), ...f.people.map((n) => [n])], p.person)}
+      ${f.isSelf || p.generic ? '' : select('person', 'Personagem', [...none('Sem personagem'), ...f.people.map((n) => [n])], p.person)}
       ${f.armors.length ? select('armor', 'Armadura', [...none('Sem armadura'), ...f.armors.map((a) => [a.name, `${a.name} (${a.line})`])], p.armor) : ''}
-      ${select('god', 'Deus', [...none('Nenhum'), ...Object.keys(GODS).map((g) => [g])], p.god)}${select('version', 'Base do design', VERSIONS, p.version)}
+      ${select('god', 'Deus', [...none('Nenhum'), ...Object.keys(GODS).map((g) => [g])], p.god)}${p.generic ? '' : select('version', 'Base do design', VERSIONS, p.version)}
       ${select('epic', 'Grandiosidade', EPIC_LEVELS, p.epic)}${select('technique', 'Técnica em uso', [...none('Nenhuma'), ...f.techniques.map((t) => [t])], p.technique)}
       ${select('shot', 'Plano', SHOTS, p.shot)}${select('angle', 'Ângulo', ANGLES, p.angle)}
       ${select('pose', 'Pose', POSES, p.pose)}${select('expression', 'Expressão', EXPRESSIONS, p.expression)}
       ${select('motion', 'Movimento', MOTIONS, p.motion)}${select('light', 'Luz', LIGHTS, p.light)}
       ${groupedSelect('style', 'Traço dominante', [], p.style)}${groupedSelect('accent', 'Traço complementar', none('Nenhum'), p.accent)}
-      ${select('theme', 'Tema e cenário', THEMES, p.theme)}${select('arc', 'Arco ou acontecimento', ARCS, p.arc)}
+      ${select('theme', 'Tema e cenário', THEMES, p.theme)}${p.generic ? '' : select('arc', 'Arco ou acontecimento', ARCS, p.arc)}
       ${select('before', 'Acabou de acontecer', BEFORE, p.before)}${select('now', 'Está acontecendo', NOW, p.now)}${select('next', 'Vai acontecer', NEXT, p.next)}${select('viewer', 'O observador sente', VIEWER, p.viewer)}
       <div class="ap-wide">${input('notes', 'Observações', p.notes, 'Algo mais para a imagem')}</div>
-      <label class="ap-check ap-wide"><input type="checkbox" name="usePowers"${p.usePowers ? ' checked' : ''}> Incluir poderes e keywords da carta</label>
+      ${p.generic ? '' : `<label class="ap-check ap-wide"><input type="checkbox" name="usePowers"${p.usePowers ? ' checked' : ''}> Incluir poderes e keywords da carta</label>`}
     </div><label class="ap-out">Prompt (pode editar)<textarea name="prompt" rows="20" spellcheck="false" translate="no"></textarea></label></div>
-    <p class="hint">Anexe as imagens de referência junto do prompt. O Master completo não cabe no link: o ChatGPT abre vazio e você cola o prompt, que já fica copiado.</p>
+    <p class="hint">${p.generic ? 'Sem referência: é só colar o prompt direto no ChatGPT e pedir a imagem.' : 'Anexe as imagens de referência junto do prompt.'} O Master completo não cabe no link: o ChatGPT abre vazio e você cola o prompt, que já fica copiado.</p>
     <div class="row"><button type="button" data-ap="copy" class="primary">Copiar prompt</button><button type="button" data-ap="gpt">Abrir no ChatGPT</button><button type="button" data-ap="random">Randomizar</button><button type="button" data-ap="reset">Restaurar</button><button value="close">Fechar</button></div></form>`;
     refresh();
   }
@@ -283,6 +322,7 @@ export function mountArtPrompt(dialog, {getCard, getCards, say, masterUrl}) {
     const {name, type, value, checked} = e.target;
     if (name === 'prompt' || !(name in params)) return;
     params[name] = type === 'checkbox' ? checked : value;
+    if (name === 'generic') { params.mode = checked ? 'image' : 'director'; if (checked && !facts.isSelf) params.person = ''; return draw(); }
     refresh();
   });
   dialog.addEventListener('click', async (e) => {
