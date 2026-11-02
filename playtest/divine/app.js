@@ -745,8 +745,10 @@ function cosmoLane(key, side) {
 }
 // Faixa do God (autor, 28/10/2026): Bases à esquerda do God; equipamento solto continua no campo.
 // Tela de vitória: a placa de quem venceu; a IA não tem avatar, então vai o rosto do God (autor, 01/11/2026).
+// Nome de quem joga, tirado da placa da mesa (autor, 02/11/2026); no hot-seat não há placa e fica "Player A".
+const seatName = key => $(`.rk-plate--${key === viewer() ? 'me' : 'foe'} b`)?.textContent || `Player ${key}`;
 function victoryWho(key) {
-  const plate = $(`.rk-plate--${key === viewer() ? 'me' : 'foe'}`), name = plate?.querySelector('b')?.textContent || `Player ${key}`;
+  const plate = $(`.rk-plate--${key === viewer() ? 'me' : 'foe'}`), name = seatName(key);
   const avatar = plate?.querySelector('.rk-plate__avatar') ? '' : `<i class="rk-plate__avatar" style="${godFace(key)}" aria-hidden="true"></i>`;
   return {name, html: `<div class="victory__who">${avatar}${plate?.innerHTML || `<span><b>${esc(name)}</b></span>`}</div>`};
 }
@@ -775,9 +777,9 @@ function handRow(key, hidden) {
 function phaseText() {
   const s = S();
   if (s.victory) return 'Match over';
-  if (s.setup) return `Mulligan · Player ${s.setup[0]}`;
-  if (s.window) return `${s.chain.length ? `Chain of ${s.chain.length} · ` : ''}Response window · Player ${s.window.priority} to act`;
-  return `Round ${s.round} · Player ${s.active} · Main`;
+  if (s.setup) return `Mulligan · ${seatName(s.setup[0])}`;
+  if (s.window) return `${s.chain.length ? `Chain of ${s.chain.length} · ` : ''}Response window · ${seatName(s.window.priority)} to act`;
+  return `Round ${s.round} · ${seatName(s.active)} · Main`;
 }
 
 // Faixa de fases acima do End Turn (padrão de cliente digital de TCG): de quem é o turno, as fases do turno com a
@@ -796,9 +798,9 @@ function phaseBar() {
   if (s.victory || s.setup) return `<div class="phasebar"><div class="phasebar__turn">${esc(phaseText())}</div></div>`;
   const now = PHASES.indexOf(currentPhase(s)), mine = s.active === v;
   return `<div class="phasebar ${mine ? 'is-mine' : 'is-theirs'}" aria-label="${esc(phaseText())}">
-    <div class="phasebar__turn"><strong>${mine ? 'Your turn' : `Opponent's turn`}</strong><small>Round ${s.round} · Player ${s.active}</small><b class="phasebar__now">${PHASES[now] || ''}</b><i class="phasebar__line"><span>Round ${s.round}</span> · <span>${PHASES[now] || ''}</span></i></div>
+    <div class="phasebar__turn"><strong>${mine ? 'Your turn' : `Opponent's turn`}</strong><small>Round ${s.round} · ${esc(seatName(s.active))}</small><b class="phasebar__now">${PHASES[now] || ''}</b><i class="phasebar__line"><span>Round ${s.round}</span> · <span>${PHASES[now] || ''}</span></i></div>
     <ol class="phasebar__steps">${PHASES.map((p, i) => `<li class="${i < now ? 'done' : i === now ? 'on' : ''}">${p}</li>`).join('')}</ol>
-    ${s.window ? `<div class="phasebar__window">${s.chain.length ? `Chain of ${s.chain.length} · ` : ''}Response · Player ${s.window.priority} to act</div>` : ''}
+    ${s.window ? `<div class="phasebar__window">${s.chain.length ? `Chain of ${s.chain.length} · ` : ''}Response · ${esc(seatName(s.window.priority))} to act</div>` : ''}
   </div>`;
 }
 
@@ -882,7 +884,7 @@ function controlPanel() {
   if (!tips && !s.window) return '';
   // Com pilha, ela ocupa o box e a dica encolhe numa linha.
   return `<section class="ctrl ${busy ? 'is-busy' : ''} ${ctrlOpen ? 'is-open' : ''} ${s.window ? 'has-chain' : ''}" aria-label="Control panel">
-    ${tips ? `<button class="ctrl__head" data-ctrl-toggle aria-expanded="${ctrlOpen}"><small>${s.active === viewer() ? 'Your turn' : `Player ${s.active}'s turn`}</small><strong>${esc(h.title)}</strong></button>
+    ${tips ? `<button class="ctrl__head" data-ctrl-toggle aria-expanded="${ctrlOpen}"><small>${s.active === viewer() ? 'Your turn' : esc(`${seatName(s.active)}'s turn`)}</small><strong>${esc(h.title)}</strong></button>
       ${h.note ? `<p class="ctrl__note">${inlineMarkup(h.note)}</p>` : ''}${items && !s.window ? `<ul class="ctrl__hints">${items}</ul>` : ''}` : ''}
     ${s.window ? `<div class="priority ctrl__chain"><small>Priority</small><strong>${s.window.priority === viewer() ? 'You' : settings.ai !== 'none' ? 'AI' : `Player ${s.window.priority}`}</strong></div>` : ''}
   </section>`;
@@ -995,7 +997,7 @@ function overlays() {
   // Só a mão de quem está olhando: contra a IA ou online, a mão inicial do adversário nunca aparece (hot-seat mostra a de quem decide).
   if (s.setup && !coinStage && s.setup[0] === (online ? online.key : viewer())) {
     const key = s.setup[0];
-    html += `<div class="overlay mulligan"><h2>Player ${key} · Opening hand</h2><p>${phoneUp() ? 'Tap the cards you want to swap. Hold to read. Once.' : 'Send any number of cards to the bottom of your deck, shuffle and draw that many. Once.'}</p>
+    html += `<div class="overlay mulligan"><h2>${esc(seatName(key))} · Opening hand</h2><p>${phoneUp() ? 'Tap the cards you want to swap. Hold to read. Once.' : 'Send any number of cards to the bottom of your deck, shuffle and draw that many. Once.'}</p>
       <div class="mulligan__cards">${s.players[key].hand.map(u => `<button class="mull ${marked.has(u) ? 'marked' : ''}" data-mull="${u}">${cardFace(u, {size: 'dcard--lg'})}</button>`).join('')}</div>
       <button class="primary-action" data-primary>${marked.size ? `Return ${marked.size} and draw` : 'Keep hand'}</button></div>`;
   }
@@ -1025,9 +1027,9 @@ function overlays() {
       ${chk('phaseTips', 'Phase tips (control panel)')}${chk('autoPass', 'Auto-pass when you have no response (off = Full control)')}${chk('castGrace', 'Time to cancel a cast (3 s)')}${chk('skipDraws', 'Skip draw animations')}${chk('showActivity', 'Show opponent activity')}${window.ssStage ? `<label class="set"><span>Card text size</span>${sel('cardText', window.ssStage.SIZES)}</label><label class="set"><span>Card size (hand and previews)</span>${sel('cardSize', window.ssStage.CARD)}</label>` : ''}${chk('reduceMotion', 'Reduce motion')}${chk('reduceFlashes', 'Reduce flashes')}${chk('hideOpponent', 'Hide the other hand (hot-seat)')}${chk('timeouts', 'Apply clock timeouts')}
       <label class="set"><span>Voice language</span>${sel('voiceLang', {auto: 'Same as the game', jp: 'Japanese', pt: 'Portuguese', es: 'Spanish'})}</label>
       <label class="set"><span>Voice volume</span><input type="range" min="0" max="1" step=".05" value="${settings.voiceVolume}" data-setting="voiceVolume"></label>
+      <label class="set"><span>Music volume</span><input type="range" min="0" max="1" step=".05" value="${volume.music}" data-setting="musicVolume"></label>
       <label class="set"><span>Screen shake</span><input type="range" min="0" max="1.5" step=".25" value="${settings.shake}" data-setting="shake"></label>
       <p class="stats" data-stats>${scene ? 'WebGL on' : 'WebGL off · 2D fallback'}</p>
-      <label class="set"><span>Music volume</span><input type="range" min="0" max="1" step=".05" value="${volume.music}" data-setting="musicVolume"></label>
       <div class="settings__end">${match && !S().victory ? '<button class="settings__concede" data-concede>Concede</button>' : ''}<button data-toggle-settings>Close</button></div></div>`;
   }
   return html;
@@ -1240,7 +1242,7 @@ const ui = {
   // Cor do God de quem controla o Devotee (golpes básicos no tema do deus, autor 31/10/2026).
   godColor: uid => { const k = S().order.find(k => S().players[k].battlefield.includes(uid)); return k && `rgb(${GOD_GLOW[S().divine?.[k]?.god] || GOD_GLOW['god-athena']})`; },
   cinematic(on) { stage.classList.toggle('cinematic', on); },
-  isViewer: key => key === viewer(), isArmor: uid => !!info(uid).armor,
+  isViewer: key => key === viewer(), seatName, isArmor: uid => !!info(uid).armor,
   // Idioma da voz: segue o jogo (português ou japonês) até o jogador escolher (autor, 02/11/2026).
   speak(kind, ref, ability = '') {
     const obj = ctx.objects[ref], name = obj ? info(ref).name : cards.get(S().gods[ref])?.name || '';
@@ -1515,9 +1517,9 @@ overlayRoot.addEventListener('change', e => {
   settings[key] = e.target.type === 'checkbox' ? e.target.checked : e.target.type === 'range' ? Number(e.target.value) : e.target.value;
   saveSettings();
   if (key === 'voiceVolume') setVolume('voice', settings.voiceVolume);
+  if (key === 'musicVolume') setVolume('music', settings.musicVolume);
   if (key === 'resolution') window.ssStage?.set(settings.resolution); // palco 16:9 (shared/stage-fit.js)
   if (key === 'cardText' || key === 'cardSize') window.ssStage?.a11y(); // acessibilidade das cartas (shared/stage-fit.js)
-  if (key === 'musicVolume') setVolume('music', settings.musicVolume);
   if (key === 'lang') window.ssI18n?.set(settings.lang); // idioma PT-BR/EN (shared/i18n.js)
   if (key === 'quality') scene?.setQuality(settings.quality);
   if (key === 'theme') { scene?.setTheme(settings.theme); stage.dataset.theme = settings.theme; }
@@ -2672,8 +2674,6 @@ function showTip(e) {
   tip.classList.add('on');
 }
 document.addEventListener('pointerover', showTip);
-document.addEventListener('focusin', showTip);
-document.addEventListener('pointerdown', () => tip.classList.remove('on'));
 // Sons de passar o mouse (Star Hill): só quando entra em outro alvo, senão o mesmo elemento dispara a cada filho.
 let hovered = null;
 document.addEventListener('pointerover', e => {
@@ -2684,6 +2684,8 @@ document.addEventListener('pointerover', e => {
   hovered = el;
   if (el) sound(hand ? 'hover_mao' : base ? 'hover_base' : 'hover');
 });
+document.addEventListener('focusin', showTip);
+document.addEventListener('pointerdown', () => tip.classList.remove('on'));
 document.addEventListener('keydown', e => { if (e.key === 'Escape') tip.classList.remove('on'); });
 // Moeda de keyword no toque: tocar abre a dica e tocar de novo fecha, sem acionar a carta embaixo nem o segurar para ampliar.
 let kwPress = null, kwOpen = false;

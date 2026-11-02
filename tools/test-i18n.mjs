@@ -22,6 +22,10 @@ assert.equal(ctx.document.documentElement.lang, 'pt-BR');
 assert.equal(t('Player A begins a turn.'), 'Jogador A começa um turno.'); // {w} não deixa "Player {0}" engolir a frase
 assert.equal(t('Player B'), 'Jogador B');
 assert.equal(t('Round 3 · Player A'), 'Rodada 3 · Jogador A');
+assert.equal(t('Round 3 · Seiya'), 'Rodada 3 · Seiya');
+assert.equal(t("Seiya's turn"), 'Turno do Seiya');
+assert.equal(t('Seiya · Opening hand'), 'Seiya · Mão inicial');
+assert.equal(t('Response · Seiya to act'), 'Resposta · vez de Seiya');
 assert.equal(t('Hand|7 cards.'), 'Mão|7 cartas.'); // captura traduzida por outro padrão
 assert.equal(t('  End Turn '), '  Encerrar turno '); // espaços das pontas preservados
 assert.equal(t('Pegasus Seiya enters the battlefield.'), 'Pegasus Seiya entra no campo de batalha.'); // nome de carta fica (fase 3)

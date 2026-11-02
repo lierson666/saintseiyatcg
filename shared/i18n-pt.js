@@ -315,7 +315,7 @@ self.ssI18nPT = {
     ['Weakened|{w0} ATK / {w1} HP until the effect ends.', 'Enfraquecido|{w0} ATQ / {w1} PV até o efeito acabar.'], ['Boosted|{w0} ATK / {w1} HP until the effect ends.', 'Fortalecido|{w0} ATQ / {w1} PV até o efeito acabar.'],
     ['Deck|{0} cards left. Each player draws 1 card per turn.', 'Deck|{0} cartas restantes. Cada jogador compra 1 carta por turno.'], ['Deck|{0} card left. Each player draws 1 card per turn.', 'Deck|{0} carta restante. Cada jogador compra 1 carta por turno.'],
     ['Hand|{t0}.', 'Mão|{0}.'], ['Tartarus|{0}. Destroyed Devotees go here. Afterlife abilities work from here. Click to view.', 'Tártaro|{0}. Devotos destruídos vêm para cá. Habilidades de Além-Túmulo funcionam daqui. Clique para ver.'],
-    ['Void|{0}. Exiled cards go here. Click to view.', 'Vazio|{0}. Cartas exiladas vêm para cá. Clique para ver.'], ["{0}'s turn", 'Turno do {0}'],
+    ['Void|{0}. Exiled cards go here. Click to view.', 'Vazio|{0}. Cartas exiladas vêm para cá. Clique para ver.'], ["{0}'s turn", 'Turno do {0}'], ['Mulligan · {0}', 'Mulligan · {0}'], ['{0} · Opening hand', '{0} · Mão inicial'], ['Round {w0} · {1}', 'Rodada {0} · {1}'], ['Response · {0} to act', 'Resposta · vez de {0}'], ['Response window · {0} to act', 'Janela de resposta · vez de {0}'],
     ['{0}, Soul {1} of {2}, Awaken', '{0}, Alma {1} de {2}, Despertar'], ['{0}, Soul {1} of {2}', '{0}, Alma {1} de {2}'], ['{0}, ATK {1}, HP {2} of {3}', '{0}, ATQ {1}, PV {2} de {3}'],
 
     // Registro da partida (app.js logEvent/say)
