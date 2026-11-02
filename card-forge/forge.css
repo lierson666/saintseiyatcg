@@ -116,7 +116,11 @@ form input:not([type=checkbox], [type=range], [type=file]), form select, form te
 .forge-tabs button { padding: 3px 10px; border-color: transparent; background: none; color: var(--muted); white-space: nowrap; }
 .forge-tabs button[aria-current] { border-color: var(--gold); background: #4a3d16; color: var(--text); }
 .section-off { display: none !important; }
-form > fieldset > legend { display: none; }
+form > fieldset:not([data-tab="Informações"]) > legend { display: none; }
+.forge-subtabs { position: sticky; top: 33px; z-index: 5; display: flex; gap: 4px; padding-bottom: 2px; background: var(--bg, #15141b); }
+.forge-subtabs button { padding: 2px 10px; border-color: transparent; background: none; color: var(--muted); font-size: 12px; }
+.forge-subtabs button[aria-current] { color: var(--gold); border-color: var(--gold); }
+.forge-subtabs button.is-stale::after { content: ""; display: inline-block; width: 6px; height: 6px; margin-left: 6px; border-radius: 50%; background: var(--gold); }
 /* Disposição das abas (autor, 02/11/2026): botões da habilidade ao lado do texto, Som em linhas rótulo + seletor, Português com Nome e Subtítulo lado a lado. */
 .rr-row { grid-template-columns: minmax(0, 1fr) auto; }
 .rr-tools { flex-direction: column; gap: 2px; }

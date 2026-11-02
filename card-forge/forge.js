@@ -64,34 +64,41 @@ function travelEdit(direction){
 $('#forgeUndo').addEventListener('click',()=>travelEdit('undo'));
 $('#forgeRedo').addEventListener('click',()=>travelEdit('redo'));
 form.addEventListener('focusout',()=>editHistory?.breakGroup());
-// Seções do formulário em abas (autor, 02/11/2026): uma por vez, menos rolagem. Os rótulos vêm das legendas.
+// Abas do formulário (autor, 02/11/2026): Informações, Habilidades (Inglês e Português) e Sons. Saem de data-tab e data-sub das seções.
 const formSections = [...form.querySelectorAll(':scope > fieldset')];
-const formTabs = document.createElement('nav');
-formTabs.className = 'forge-tabs';
-formTabs.setAttribute('aria-label', 'Seções da carta');
-formTabs.append(...formSections.map((section) => {
-  const tab = document.createElement('button');
-  tab.type = 'button';
-  tab.textContent = section.querySelector(':scope > legend').textContent.replace(' (PT-BR)', '');
-  tab.addEventListener('click', () => { showSection(section); form.scrollTop = 0; try { localStorage.setItem('forge.tab', tab.textContent); } catch {} });
-  section.tab = tab;
-  return tab;
-}));
-form.prepend(formTabs);
-function showSection(active) {
-  formSections.forEach((section) => {
-    section.classList.toggle('section-off', section !== active);
-    if (section === active) section.tab.setAttribute('aria-current', 'true'); else section.tab.removeAttribute('aria-current');
-  });
+const unique = (list) => [...new Set(list.filter(Boolean))];
+const makeTabs = (className, label, names, onPick) => {
+  const nav = document.createElement('nav');
+  nav.className = className;
+  nav.setAttribute('aria-label', label);
+  nav.append(...names.map((name) => {
+    const tab = Object.assign(document.createElement('button'), {type: 'button', textContent: name});
+    tab.addEventListener('click', () => onPick(name));
+    return tab;
+  }));
+  return nav;
+};
+const stored = (key) => { try { return localStorage.getItem(key); } catch { return null; } };
+const tabNames = unique(formSections.map((section) => section.dataset.tab));
+let activeTab = tabNames.includes(stored('forge.tab')) ? stored('forge.tab') : tabNames[0];
+let activeSub = stored('forge.sub');
+const subsOf = (tab) => unique(formSections.filter((section) => section.dataset.tab === tab).map((section) => section.dataset.sub));
+const formTabs = makeTabs('forge-tabs', 'Seções da carta', tabNames, (name) => pickTab(name, activeSub));
+const formSubTabs = makeTabs('forge-subtabs', 'Idioma das habilidades', unique(formSections.map((section) => section.dataset.sub)), (name) => pickTab(activeTab, name));
+form.prepend(formTabs, formSubTabs);
+function pickTab(tab, sub) {
+  const subs = subsOf(tab);
+  activeTab = tab;
+  if (subs.length) activeSub = subs.includes(sub) ? sub : subs[0];
+  formSections.forEach((section) => section.classList.toggle('section-off', section.dataset.tab !== tab || (section.dataset.sub && section.dataset.sub !== activeSub)));
+  formSubTabs.hidden = !subs.length;
+  const mark = (nav, name) => [...nav.children].forEach((b) => { if (b.textContent === name) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current'); });
+  mark(formTabs, activeTab);
+  mark(formSubTabs, activeSub);
+  form.scrollTop = 0;
+  try { localStorage.setItem('forge.tab', activeTab); localStorage.setItem('forge.sub', activeSub || ''); } catch {}
 }
-function syncFormTabs() {
-  formSections.forEach((section) => { section.tab.hidden = section.hidden; });
-  const active = formSections.find((section) => !section.classList.contains('section-off'));
-  if (active?.hidden) showSection(formSections[0]);
-}
-let savedTab = null;
-try { savedTab = localStorage.getItem('forge.tab'); } catch {}
-showSection(formSections.find((section) => section.tab.textContent === savedTab) || formSections[0]);
+pickTab(activeTab, activeSub);
 window.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&!e.altKey&&!document.querySelector('dialog[open]')&&['z','y'].includes(e.key.toLowerCase())){e.preventDefault();travelEdit(e.shiftKey||e.key.toLowerCase()==='y'?'redo':'undo');}});
 
 
@@ -608,7 +615,6 @@ function syncVisibility() {
   const lk = layoutKey(S);
   form.querySelectorAll('[data-for]').forEach((el) => { el.hidden = !el.dataset.for.split(' ').includes(lk); });
   $('#rulesV2').hidden=!isEquipment({...S,subtipos:list(S.subtipos)});
-  syncFormTabs();
   syncPtStatus();
 }
 
@@ -963,6 +969,7 @@ function syncPtStatus(){
   $('#ptStatus').textContent=stale?(S.pt_nome||S.pt_rules?'O inglês mudou: esta tradução está desatualizada.':'Esta carta ainda não tem tradução.'):'Tradução em dia com o inglês.';
   $('#ptStatus').classList.toggle('is-stale',stale);
   b.classList.toggle('primary',stale);
+  [...formSubTabs.children].find((t)=>t.textContent==='Português')?.classList.toggle('is-stale',stale); // avisa também de dentro da subaba Inglês
   b.disabled=!stale;
   drawPtRules();
 }

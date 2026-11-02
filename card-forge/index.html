@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Card Forge</title>
   <link rel="icon" href="../LOGO/favicon.png?v=20261030">
-  <link rel="stylesheet" href="forge.css?v=20261102-pt2">
+  <link rel="stylesheet" href="forge.css?v=20261102-abas3">
   <link rel="stylesheet" href="../shared/live-card.css?v=20261102-sym1">
   <script>if(parent!==window)document.documentElement.classList.add("embedded");</script>
 </head>
@@ -40,7 +40,7 @@
 
   <main>
     <form id="form" autocomplete="off">
-<fieldset class="fields fields--id">
+<fieldset class="fields fields--id" data-tab="Informações">
         <legend>Identidade</legend>
         <label>ID <input name="id" readonly></label>
         <label class="name">Nome (cards.json) <input name="nome_exibicao_en"></label>
@@ -69,7 +69,7 @@
         </label>
       </fieldset>
 
-      <fieldset class="fields fields--num">
+      <fieldset class="fields fields--num" data-tab="Informações">
         <legend>Números</legend>
         <label class="check"><input name="cosmoble" type="checkbox"> Cosmoble — pode virar Base</label>
         <div class="row">
@@ -91,7 +91,7 @@
         </div>
       </fieldset>
 
-      <fieldset id="rulesV2">
+      <fieldset id="rulesV2" data-tab="Informações">
         <legend>Equipamento</legend>
         <div id="equipmentFields"><label>Slot do equipamento<select name="slot_equipamento"><option value="">— selecionar —</option><option value="armadura">Armadura (uma por Devotee)</option><option value="arma">Arma</option><option value="acessorio">Acessório</option></select></label>
         <label>Owners (IDs separados por vírgula)<input name="donos" placeholder="pegasus-seiya, sagittarius-aiolos"></label>
@@ -100,7 +100,7 @@
         <div id="stageEditor"></div><button id="addStage" type="button">Adicionar estágio</button>
         <label>Ressonâncias (uma por linha: ID | texto em inglês)<textarea name="resonanceText" rows="3"></textarea></label></div>
       </fieldset>
-      <fieldset>
+      <fieldset data-tab="Habilidades" data-sub="Inglês">
         <legend>Texto</legend>
         <div class="symbar" id="symbar" role="toolbar" aria-label="Inserir símbolo no texto"><select id="kwSelect" aria-label="Adicionar keyword à carta"><option value="">+ Keyword</option></select></div>
         <label>Regras
@@ -112,12 +112,12 @@
         <p class="hint">Clique num símbolo para inserir no cursor. Cada caixa é uma habilidade, de cima para baixo; <code>**negrito**</code>. Só <code>@</code> puxa: <code>@Guardian</code> é a keyword, <code>@ATK</code> e <code>@COSMO</code> são símbolos; sem <code>@</code> é texto comum. Caixa só com keywords (<code>Guardian, Pierce</code>) vai para a linha do topo da carta.</p>
       </fieldset>
 
-      <fieldset>
+      <fieldset data-tab="Sons">
         <legend>Som</legend>
         <div id="soundFields" class="rr-sounds"></div>
       </fieldset>
 
-      <fieldset class="fields fields--pt">
+      <fieldset class="fields fields--pt" data-tab="Habilidades" data-sub="Português">
         <legend>Português (PT-BR)</legend>
         <p id="ptStatus" class="pt-status" role="status"></p>
         <button id="translatePt" type="button">Traduzir com Claude Code</button>
@@ -165,7 +165,7 @@
     </div>
   </dialog>
 
-  <script type="module" src="forge.js?v=20261102-pt2"></script>
+  <script type="module" src="forge.js?v=20261102-abas3"></script>
   <script type="module" src="god-hud.js?v=6"></script>
 </body>
 </html>
