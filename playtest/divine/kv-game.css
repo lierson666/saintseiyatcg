@@ -114,3 +114,6 @@ body:has(#overlay-root > :not(.gear-btn), .pick-modal, .decision-veil, #bigcard)
 .chain-zoom__label { font-family: var(--kv-title); letter-spacing: .08em; }
 .decision__kicker, .decision__effect small { font-family: var(--kv-title); font-weight: 600; letter-spacing: .2em; }
 .decision__effect p { font-family: var(--kv-sans); }
+
+/* Preview da carta levantada na mão: só a linha de tipo da própria carta, discreta (autor, 02/11/2026). */
+.olympus .hand--me .hand__slot.is-lifted .lc-text--typeline { visibility: visible; font-family: Avenir, 'Avenir Next', sans-serif; font-size: calc(var(--hand-w, 120px) * .065) !important; font-weight: 300; letter-spacing: .04em; -webkit-text-stroke: 0; }

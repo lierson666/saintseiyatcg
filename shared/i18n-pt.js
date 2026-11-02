@@ -174,7 +174,7 @@ self.ssI18nPT = {
     'Triggered ability': 'Habilidade desencadeada', 'Optional ability': 'Habilidade opcional', 'Mandatory choice': 'Escolha obrigatória', 'Face-down card': 'Carta virada para baixo',
     'Choose the card to keep on top of your deck. The other goes to the bottom.': 'Escolha a carta que fica no topo do deck. A outra vai para o fundo.',
     'automatic choice, lowest stable ID': 'escolha automática, menor ID estável', 'declined': 'recusado', 'Draw a card': 'Comprar uma carta',
-    'Divine Power · once each Round': 'Poder Divino · uma vez por Rodada', 'Domain · once each Round': 'Domínio · uma vez por Rodada', 'Pay 2 Latent · Seal': 'Pagar 2 Latentes · Selo',
+    'Divine Power · once each Round': 'Poder Divino · uma vez por Rodada', 'Domain · once each Round': 'Domínio · uma vez por Rodada', 'Voice language': 'Idioma das vozes', 'Voice volume': 'Volume das vozes', 'Same as the game': 'Igual ao jogo', 'Japanese': 'Japonês', 'Portuguese': 'Português', 'Spanish': 'Espanhol', 'Pay 2 Latent · Seal': 'Pagar 2 Latentes · Selo',
     'Your Bronze Saint defeated an enemy Devotee with a Strike. Draw a card?': 'Seu Cavaleiro de Bronze derrotou um Devoto inimigo com um Golpe. Comprar uma carta?',
     'ONE PER CHARACTER': 'UM POR PERSONAGEM', 'Victory': 'Vitória', 'Defeat': 'Derrota', 'Divine Protection': 'Proteção Divina', 'Ultimate failed': 'Supremo falhou',
     'Divine Judgment': 'Julgamento Divino', 'Judgment removed': 'Julgamento removido', 'Awaken ends': 'Despertar termina', 'Seal −1 · stays Unprepared': 'Selo −1 · continua Despreparado',

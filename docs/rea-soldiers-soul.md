@@ -77,4 +77,4 @@ uv run --no-project --with pillow python -I tools/rea-ps3/sheet.py <prancha.png>
 - **Modelos 3D (`.emo`) e animações (`.ema`):** não convertidos. As ferramentas de Xenoverse que existem esperam PC little-endian e não PS3 big-endian.
 - **Áudio (ACB/AWB → HCA):** não decodificado. Para isso precisa do `vgmstream`.
 - **Vídeos `.usm`:** não demuxados.
-- **Direitos autorais:** tudo é propriedade da Bandai Namco e da Toei. Use só como referência de técnica e estilo; não coloque arte, voz ou modelo deles no TCG.
+- **Direitos autorais:** tudo é propriedade da Bandai Namco e da Toei. O autor liberou o uso no TCG em 02/11/2026. O áudio extraído fica só atrás do login, fora do Git e de `MUSIC/` (pública), e os detentores dos direitos podem pedir a retirada.

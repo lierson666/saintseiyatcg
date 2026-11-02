@@ -1,6 +1,6 @@
 // Telas, sons, músicas e animações editados no Star Hill (data/olympus-telas.json). O lobby e o duelo leem daqui;
 // sem o arquivo valem os padrões abaixo. Imagem: "card:<id>" usa a arte atual da carta no Card Forge; senão é um caminho do projeto.
-import {configureAudio, playFxFile} from './audio.js?v=20261030-telas';
+import {configureAudio, playFxFile, playVoice} from './audio.js?v=20261102-voz2';
 
 const ROOT = new URL('../', import.meta.url);
 export const ANIM_GROUPS = ['compra', 'conjurar', 'cosmo', 'gatilho', 'ataque', 'dano', 'morte', 'turno', 'ultimate'];
@@ -17,7 +17,12 @@ try {
   if (r.ok) telas = {...telas, ...(await r.json())};
 } catch { /* sem arquivo: padrões do jogo */ }
 if (telas.audio) configureAudio({...telas.audio, efeitos: {}});
-export {telas};
+let cardVoices = {};
+try {
+  const r = await fetch(new URL('data/card-voices.json', ROOT), {cache: 'no-cache'});
+  if (r.ok) cardVoices = await r.json();
+} catch { /* sem falas por carta */ }
+export {telas, cardVoices};
 
 export const mediaUrl = path => path ? new URL(path.split('/').map(encodeURIComponent).join('/'), ROOT).href : '';
 // `artOf(id)` vem de quem chama (lobby ou duelo), que já conhece as artes do Forge.
@@ -26,7 +31,15 @@ export const anim = group => ({ligada: telas.animacoes[group]?.ligada !== false,
 
 export function sound(evento) {
   const path = telas.audio?.efeitos?.[evento];
-  if (path) playFxFile(path);
+  // Som extraído do jogo fica atrás do login (tools/rea-ps3/sons-aprovados.py); MUSIC/ é público.
+  if (path) playFxFile(path.replace(/^MUSIC\/fx\/(ps3-[^/]+|soldiers-soul)\//, 'playtest/divine/assets/sons/$1/'));
+}
+// Fala aprovada no Star Hill para o personagem do nome; sem fala, fica só o som de impacto.
+// A fala escolhida na própria carta vem antes da fala padrão do personagem.
+export function voice(kind, name, lang, own = null) {
+  const v = (telas.audio?.vozes || []).find(x => new RegExp(`\\b${x.nome}\\b`, 'i').test(name)), ids = v?.[kind] || [];
+  const line = own || (ids.length && `${v.codigo}/${ids[Math.floor(Math.random() * ids.length)]}`);
+  if (line) playVoice(`playtest/divine/assets/vozes/${lang}/${line}.mp3`);
 }
 
 // Cores: variáveis CSS da tela (lobby: --kv-*, duelo: --gold, --panel...).

@@ -22,12 +22,12 @@ import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudg
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout, clockBonus} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
-import {createDirector} from './director.js?v=20';
+import {createDirector} from './director.js?v=20261102-voz2';
 import {createAI} from './ai.js?v=14';
 import {findDeck} from '../deck-store.js';
 import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-face3';
-import {unlock, playMusic} from '../audio.js?v=20261030-telas';
-import {telas, anim, sound, imageUrl, applyColors, applyTexts} from '../telas.js?v=20261030-1';
+import {unlock, playMusic, setVolume} from '../audio.js?v=20261102-voz2';
+import {telas, cardVoices, anim, sound, voice, imageUrl, applyColors, applyTexts} from '../telas.js?v=20261102-voz2';
 import {renderLiveCard, renderCardText, fullSizePieces} from '../../shared/live-card.js?v=20261101-perf3';
 import {renderKeywordNotes, renderKeywordIcons} from '../../shared/keyword-glossary.js?v=20261101-kw11';
 import {armorBonusText, printedEquipmentBonuses} from '../../shared/card-visual-values.js?v=20261031-kw1';
@@ -49,7 +49,7 @@ const WHY = {'G3-005': 'Athena Exclamation needs three Prepared Saints with diff
 const why = e => WHY[e.decision] || (e.topic ? `Not in Alpha 0.1: ${e.topic}` : "That can't be done right now.");
 
 const SETTINGS_KEY = 'ssTcgOlympusArena';
-const settings = {quality: 'high', theme: 'olympus', godB: 'god-athena', timeouts: false, speed: 'normal', skipDraws: false, reduceMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
+const settings = {voiceLang: 'auto', voiceVolume: 0.9, quality: 'high', theme: 'olympus', godB: 'god-athena', timeouts: false, speed: 'normal', skipDraws: false, reduceMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
   reduceFlashes: false, shake: 1, hideOpponent: true, showActivity: true, autoPass: true, castGrace: true, phaseTips: true, ai: 'B', aiLevel: 'normal', cardText: '1.0', cardSize: '1.0'};
 try { Object.assign(settings, JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}')); } catch { /* sem armazenamento */ }
 if (matchMedia('(pointer: coarse)').matches) settings.quality = 'phone'; // toque: cena leve, sempre
@@ -556,6 +556,8 @@ function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
     const face = renderLiveCard(forge, {stats: {power: atk ?? null, hp: hp == null ? null : hp - dmg, damage: dmg, keywords: kws}, art: forge.ilustracao && forgeArt(forge.ilustracao)});
     // Celular (autor, 01/11/2026, aquecendo só no duelo): mão com peças de um quarto do tamanho; zoom (size) segue nítido.
     const live = (PHONE_PIECES && !size ? face.replaceAll('.sm.webp', '.xs.webp') : face)
+      // Mão: a linha de tipo fica só com o tipo principal, que o preview mostra (autor, 02/11/2026).
+      .replace(/(lc-text--typeline[^>]*>)([^<]*?)(?:\s[—-]\s[^<]*)?</, field || size ? '$&' : '$1$2<')
       .replace('data-stat="power"', `data-stat="power" data-trend="${statBuffed(atk, c.atk)}"`)
       .replace('data-stat="hp"', `data-stat="hp" data-trend="${dmg ? 'down' : statBuffed(hp, c.hp)}"`);
     return `<div class="${cls}"${facAttr} data-uid="${uid}" tabindex="0" aria-label="${esc(c.name)}${c.kind === 'Devotee' ? `, ATK ${atk}, HP ${hp - dmg} of ${hp}` : ''}">${live}${marks}</div>`;
@@ -1020,6 +1022,8 @@ function overlays() {
       <label class="set"><span>AI difficulty</span>${sel('aiLevel', {easy: 'Easy', normal: 'Normal', hard: 'Hard'})}</label>
       <label class="set"><span>Animation speed</span>${sel('speed', {fast: 'Fast', normal: 'Normal', cinematic: 'Cinematic'})}</label>
       ${chk('phaseTips', 'Phase tips (control panel)')}${chk('autoPass', 'Auto-pass when you have no response (off = Full control)')}${chk('castGrace', 'Time to cancel a cast (3 s)')}${chk('skipDraws', 'Skip draw animations')}${chk('showActivity', 'Show opponent activity')}${window.ssStage ? `<label class="set"><span>Card text size</span>${sel('cardText', window.ssStage.SIZES)}</label><label class="set"><span>Card size (hand and previews)</span>${sel('cardSize', window.ssStage.CARD)}</label>` : ''}${chk('reduceMotion', 'Reduce motion')}${chk('reduceFlashes', 'Reduce flashes')}${chk('hideOpponent', 'Hide the other hand (hot-seat)')}${chk('timeouts', 'Apply clock timeouts')}
+      <label class="set"><span>Voice language</span>${sel('voiceLang', {auto: 'Same as the game', jp: 'Japanese', pt: 'Portuguese', es: 'Spanish'})}</label>
+      <label class="set"><span>Voice volume</span><input type="range" min="0" max="1" step=".05" value="${settings.voiceVolume}" data-setting="voiceVolume"></label>
       <label class="set"><span>Screen shake</span><input type="range" min="0" max="1.5" step=".25" value="${settings.shake}" data-setting="shake"></label>
       <p class="stats" data-stats>${scene ? 'WebGL on' : 'WebGL off · 2D fallback'}</p>
       <div class="settings__end">${match && !S().victory ? '<button class="settings__concede" data-concede>Concede</button>' : ''}<button data-toggle-settings>Close</button></div></div>`;
@@ -1235,6 +1239,13 @@ const ui = {
   godColor: uid => { const k = S().order.find(k => S().players[k].battlefield.includes(uid)); return k && `rgb(${GOD_GLOW[S().divine?.[k]?.god] || GOD_GLOW['god-athena']})`; },
   cinematic(on) { stage.classList.toggle('cinematic', on); },
   isViewer: key => key === viewer(),
+  // Idioma da voz: segue o jogo (português ou japonês) até o jogador escolher (autor, 02/11/2026).
+  speak(kind, ref, ability = '') {
+    const obj = ctx.objects[ref], name = obj ? info(ref).name : cards.get(S().gods[ref])?.name || '';
+    const id = obj ? obj.cardId : `${name.toLowerCase()}-001`, mine = cardVoices[id];
+    const own = kind === 'linha' ? mine?.linhas?.[triggerLine(FORGE.get(id), ability.split(' · ').pop())] : mine?.[kind];
+    voice(kind, name, settings.voiceLang === 'auto' ? (window.ssI18n?.lang === 'pt' ? 'pt' : 'jp') : settings.voiceLang, own);
+  },
   // Morte do God: avatar com animação do tema (die-<deus>), cartas e Bases dele caem, ruína por cima da metade dele.
   godDeath(e) {
     const s = S(), root = $('.olympus');
@@ -1499,6 +1510,7 @@ overlayRoot.addEventListener('change', e => {
   if (!key) return;
   settings[key] = e.target.type === 'checkbox' ? e.target.checked : e.target.type === 'range' ? Number(e.target.value) : e.target.value;
   saveSettings();
+  if (key === 'voiceVolume') setVolume('voice', settings.voiceVolume);
   if (key === 'resolution') window.ssStage?.set(settings.resolution); // palco 16:9 (shared/stage-fit.js)
   if (key === 'cardText' || key === 'cardSize') window.ssStage?.a11y(); // acessibilidade das cartas (shared/stage-fit.js)
   if (key === 'lang') window.ssI18n?.set(settings.lang); // idioma PT-BR/EN (shared/i18n.js)

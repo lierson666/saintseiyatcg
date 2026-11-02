@@ -5,15 +5,15 @@ import {addPreviewCards} from '../shared/preview-cards.js';
 import {canonIndex, validateDeck, colorErrors, splashCount, DECK_SIZE, COPY_LIMIT, SPLASH_LIMIT} from '../shared/deck-v3.js';
 import {spellCategory} from './engine-v3/core.js';
 import {renderLiveCard, renderCardText, fullSizePieces} from '../shared/live-card.js?v=20261101-perf3';
-import {armorBonusText} from '../shared/card-visual-values.js';
+import {printedEquipmentBonuses, signedBonus} from '../shared/card-visual-values.js';
 import {displayCard, typeWord} from '../shared/card-i18n.js?v=20261031-kw1';
-import {unlock, playMusic, setVolume, volume} from './audio.js?v=20261030-telas';
+import {unlock, playMusic, setVolume, volume} from './audio.js?v=20261102-voz2';
 import {loadMyDecks, saveMyDecks, findDeck, syncDecks, onDeckStatus, deckCovers, setDeckCover} from './deck-store.js?v=20261031-2';
 import {mountKV} from '../shared/kv-sky.js?v=20261031-native';
 import {countryOptions, countryName} from '../shared/countries.js?v=20261031-i18n1';
 import {startPresence} from '../shared/presence.js?v=20261029-1';
 import {mountSocial} from './social.js?v=20261101-notch1';
-import {telas, imageUrl, sound, applyColors, applyTexts} from './telas.js?v=20261030-1';
+import {telas, imageUrl, sound, applyColors, applyTexts} from './telas.js?v=20261102-voz2';
 import {loadEconomy, ownedLimit, missingCards, coinBadge, storeScreen, collectionScreen, openBooster, buyBooster, buyCosmetic} from './economy.js?v=20261031-filt1';
 import {lightArt} from '../shared/light-art.js';
 import {faceStyle, useGodPortraits} from './avatar-face.js?v=20261031-3';
@@ -438,13 +438,15 @@ function cardRow(c, b, tag = 'div') {
 }
 // Carta menor, igual à do campo no duelo (playtest/divine/board.css): arte, nome e gemas.
 function fieldFace(c) {
-  const f = forge.get(c.id), art = artOf(c.id, 'thumb'), fr = f?.ilustracao_enquadramento, fac = String(f?.faccao || '').toLowerCase();
-  const pieces = ['athena', 'poseidon', 'hades', 'ares', 'artemis'].includes(fac) ? fac : 'athena';
+  const f = forge.get(c.id), art = artOf(c.id, 'thumb'), fr = f?.ilustracao_enquadramento;
   const style = art ? `--art:url('${art}');${fr?.w ? `--fx:${fr.x / 1488};--fy:${(fr.y - 160) / 1488};--fw:${fr.w / 1488};` : ''}` : `--art:url('../LOGO/logo-web.webp');--noart-w:70%;`;
-  const gem = (kind, v) => `<b class="btok__stat btok__stat--${kind}" style="--gem:url('../CARD-TEMPLATE/${pieces}/gem_${kind === 'atk' ? 'power' : pieces === 'athena' ? 'resistance' : 'soul'}.sm.webp')">${v}</b>`;
-  const bonus = f && c.kind === 'Equipment' ? armorBonusText(f) : null;
+  // Barra de baixo (autor, 02/11/2026): custo com o símbolo de Cosmoble ou o quadrado, depois ATK e vida.
+  const stat = (kind, v, icon) => `<span class="lb-fstat lb-fstat--${kind}"><i style="--ico:url('../CARD-TEMPLATE/${icon}')"></i>${v}</span>`;
+  const gear = f && c.kind === 'Equipment' ? printedEquipmentBonuses(f) : {};
+  const bar = (c.cost ? stat(c.cosmoble ? 'cost' : 'cost lb-fstat--flat', c.cost.amount, c.cosmoble ? 'athena/gem_cost.sm.webp' : 'icons/base-mini.svg') : '') + (c.kind === 'Devotee' ? stat('atk', c.atk, 'icons/atk-mini.svg') + stat('hp', c.hp, 'icons/soul.sm.webp') : '')
+    + (gear.power ? stat('atk', signedBonus(gear.power), 'icons/atk-mini.svg') : '') + (gear.hp ? stat('hp', signedBonus(gear.hp), 'icons/soul.sm.webp') : '');
   return `<div class="lb-fcard" data-card="${c.id}"><div class="btok ${!art ? 'is-noart' : fr?.w ? 'is-framed' : ''}" style="${style}"><span class="btok__name">${esc(c.name)}</span>
-    ${c.cost ? `<b class="lb-gem lb-fcard__cost ${c.cost.unit || ''}">${c.cost.amount}</b>` : ''}${c.kind === 'Devotee' ? gem('atk', c.atk) + gem('hp', c.hp) : ''}${bonus ? `<span class="btok__band">${esc(bonus)}</span>` : ''}</div></div>`;
+    ${bar ? `<div class="lb-fbar ${gear.power || gear.hp ? 'lb-fbar--gear' : ''}">${bar}</div>` : ''}</div></div>`;
 }
 // Cosmoble (rebalanceamento de 31/10/2026): só aviso, sem regra; abaixo de 60% do deck a mana tende a travar.
 function cosmoLine(list, size) {

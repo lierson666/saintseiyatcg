@@ -78,3 +78,12 @@ dialog h2 { margin: 0 0 6px; font-size: 16px; color: var(--gold); }
   .embedded form { max-height: calc(100vh - 70px); }
   .embedded .view-fit #card { height: calc(100vh - 130px); width: auto; }
 }
+
+/* Regras habilidade por habilidade, cada uma com a sua fala */
+.rr { display: grid; gap: 8px; }
+.rr-row { display: grid; gap: 4px; }
+.rr-text { width: 100%; box-sizing: border-box; }
+.rr-tools { display: flex; align-items: center; gap: 4px; }
+.rr-voice { display: flex; flex: 1; min-width: 0; gap: 4px; }
+.rr-voice select { flex: 1; min-width: 0; }
+.rr-moment { display: grid; gap: 2px; }

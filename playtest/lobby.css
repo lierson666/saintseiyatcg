@@ -737,11 +737,15 @@ body { font: 300 15px/1.45 var(--kv-sans); }
 .lb-fcard .btok.is-noart { background: var(--art) center 46% / var(--noart-w, 38%) auto no-repeat, radial-gradient(circle at 50% 46%, #2a2350, #0b0c16 70%); }
 .lb-fcard .btok::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, #000c 0, #0000 26%, #0000 62%, #000b 100%); }
 .lb-fcard .btok__name { position: absolute; z-index: 1; left: 6cqw; right: 6cqw; top: 4cqw; overflow: hidden; text-align: center; white-space: nowrap; text-overflow: ellipsis; font: italic 700 8.4cqw/1.1 Futura, "Futura PT", "Century Gothic", sans-serif; color: #fff0bf; -webkit-text-stroke: .09em #141008; paint-order: stroke fill; text-shadow: 0 0 .06em #000, 0 0 .13em #000; }
-.lb-fcard .btok__stat { position: absolute; z-index: 1; bottom: 2cqw; display: grid; place-items: center; width: 30cqw; aspect-ratio: 1; background: var(--gem) center / contain no-repeat; font: 700 15cqw/1 Futura, "Futura PT", "Century Gothic", sans-serif; -webkit-text-stroke: .1em #120a04; paint-order: stroke fill; }
-.lb-fcard .btok__stat--atk { left: 2cqw; color: #7fd8ff; }
-.lb-fcard .btok__stat--hp { right: 2cqw; color: #ffb347; }
-.lb-fcard .btok__band { position: absolute; z-index: 1; left: 50%; bottom: 6cqw; transform: translateX(-50%); padding: 1.5cqw 5cqw; border: 1px solid #bfa66e; border-radius: 99px; background: #0b0c16e6; color: #fff0bf; font: 700 7cqw/1.2 var(--kv-sans); white-space: nowrap; }
-.lb-fcard__cost { position: absolute; z-index: 2; left: 3cqw; top: 16cqw; }
+.lb-fbar { position: absolute; z-index: 1; left: 0; right: 0; bottom: 3cqw; display: flex; justify-content: center; align-items: center; font: 700 13cqw/1 Futura, "Futura PT", "Century Gothic", sans-serif; -webkit-text-stroke: .1em #120a04; paint-order: stroke fill; }
+.lb-fbar--gear { font-size: 11cqw; --fstat-ico: 10cqw; --fstat-gap: 1.5cqw; }
+.lb-fstat { display: inline-flex; align-items: center; gap: 1.5cqw; }
+.lb-fstat + .lb-fstat::before { content: "/"; margin: 0 var(--fstat-gap, 2.5cqw); color: #fff0bf; font-size: .8em; }
+.lb-fstat i { width: var(--fstat-ico, 12cqw); aspect-ratio: 1; background: var(--ico) center / contain no-repeat; }
+.lb-fstat--cost { color: #ffd86b; }
+.lb-fstat--atk { color: #7fd8ff; }
+.lb-fstat--hp { color: #ff7f9e; }
+.lb-fstat:is(.lb-fstat--flat, .lb-fstat--atk, .lb-fstat--hp) i { background: currentColor; -webkit-mask: var(--ico) center / contain no-repeat; mask: var(--ico) center / contain no-repeat; }
 
 /* Excluir, Cancelar e Concluir sempre à vista no celular, acima do menu de baixo. */
 .lb-builder > .lb-list__actions { display: none; }

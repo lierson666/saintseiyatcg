@@ -1,3 +1,4 @@
+import {mountRulesRows} from './rules-rows.js';
 import {createHistory} from '../shared/editor-history.js';
 import {compilePlaytest} from '../shared/import-playtest.js';
 import {renderLiveCard,illustration,statLine,EDITIONS,editionOf} from '../shared/live-card.js?v=20261101-kw7';
@@ -556,13 +557,14 @@ function rulesOverflow(html){
 }
 for(const id of ['representation','previewDamage','previewPrepared','previewStage'])$('#'+id).addEventListener('input',updateLivePreview);
 
+let refreshRulesRows = () => {};
 function fillForm() {
   for (const [k, v] of Object.entries(S)) {
     const f = form.elements[k];
     if(f){if(f.type==='checkbox')f.checked=Boolean(v);else f.value=v??'';}
   }
   $('#artZoom').value = S.art?.zoom ?? 1;
-  syncVisibility();renderStageEditor();
+  refreshRulesRows();syncVisibility();renderStageEditor();
 }
 
 function syncVisibility() {
@@ -936,7 +938,10 @@ $('#diffConfirm').addEventListener('click', async () => {
 
 // ---------- barra de símbolos e keywords ----------
 let lastText = form.elements.rules;
-form.querySelectorAll('textarea').forEach((t) => t.addEventListener('focus', () => { lastText = t; }));
+form.addEventListener('focusin', (e) => { if (e.target.tagName === 'TEXTAREA') lastText = e.target; });
+const refreshRules = [mountRulesRows(form.elements.rules, {getId: () => S.id, moments: () => [['golpe', 'Voz ao atacar'], ...(layoutKey(S) === 'god' ? [['ultimate', 'Voz da Ultimate']] : [])]}), mountRulesRows(form.elements.pt_rules)];
+refreshRulesRows = () => refreshRules.forEach(r => r());
+refreshRulesRows();
 function insertAtCursor(text) {
   const t = lastText, a = t.selectionStart ?? t.value.length, b = t.selectionEnd ?? a;
   const pre = t.value.slice(0, a), sp = pre && !/\s$/.test(pre) && /^\w/.test(text) ? ' ' : '';

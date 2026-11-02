@@ -48,3 +48,5 @@ gallery/thumb/
 
 # Identidade do build: gerada por tools/deploy-guard.py stamp a cada publicação
 playtest/build.json
+playtest/divine/assets/vozes/
+playtest/divine/assets/sons/

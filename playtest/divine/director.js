@@ -2,8 +2,8 @@
 // dramatiza em sequência. Nunca decide resultado: os números exibidos vêm dos próprios eventos.
 // `ui` é o adaptador do DOM (posições e textos); `fx` é a camada WebGL (pode faltar: tudo vira só DOM).
 import {wait} from './scene.js?v=20261031-pool1';
-import {strikeSound, chargeSound} from '../audio.js?v=20261030-telas';
-import {anim, ANIM_OF, sound} from '../telas.js?v=20261030-1';
+import {strikeSound, chargeSound} from '../audio.js?v=20261102-voz2';
+import {anim, ANIM_OF, sound} from '../telas.js?v=20261102-voz2';
 
 // Hierarquia visual dos golpes (COMBAT_CINEMATICS.md): comum < Saint < assinatura < divino.
 // As assinaturas são só visuais e disparam pelo número da carta atacante; não criam regra.
@@ -133,9 +133,10 @@ export function createDirector({ui, getFx, settings}) {
       ui.log(e);
       await pause(260);
     },
-    async ability(e) { ui.pulse(e.uid, 'activate'); ui.log(e); await pause(260); },
+    async ability(e) { ui.speak?.('linha', e.uid, e.name); ui.pulse(e.uid, 'activate'); ui.log(e); await pause(260); },
     async equipped(e) { ui.log(e); await pause(120); },
     async strike_declared(e) {
+      ui.speak?.('golpe', e.attacker);
       ui.pulse(e.attacker, 'attacking', true);
       ui.aim(e.attacker, e.target);
       ui.log(e);
@@ -236,6 +237,7 @@ export function createDirector({ui, getFx, settings}) {
     },
     // Cinemática divina (nível mais alto da hierarquia): nome do Ultimate, Cosmo convergindo, raios dos Saints ao God.
     async ultimate_announced(e) {
+      ui.speak?.('ultimate', e.player);
       ui.cinematic?.(true);
       for (const uid of e.saints || []) ui.pulse(uid, 'attacking', true);
       const god = ui.center(ui.godRect(e.player));
@@ -292,7 +294,7 @@ export function createDirector({ui, getFx, settings}) {
       sound(e.draw ? 'derrota' : ui.isViewer(e.winner) ? 'vitoria' : 'derrota'); await ui.banner(e.draw ? 'Draw' : ui.isViewer(e.winner) ? 'Victory' : `Player ${e.winner} wins`, e.winner, t(1200)); },
     async window_open() {}, async window_close() {}, async pass(e) { ui.log(e); }, // Gatilho entrando na cadeia e resolvendo: a carta de origem pisca e cresce (estilo Arena), nada genérico.
     async chain_add(e) { ui.pulse(e.uid, 'trigger-pop'); await pause(240); },
-    async trigger(e) { ui.pulse(e.uid, 'trigger-pop'); ui.log(e); await pause(240); }, // a origem pisca e o item voa para a pilha (app.js drawZoom)
+    async trigger(e) { ui.speak?.('linha', e.uid, e.ability); ui.pulse(e.uid, 'trigger-pop'); ui.log(e); await pause(240); }, // a origem pisca e o item voa para a pilha (app.js drawZoom)
     // Ao resolver: linha de energia da fonte até cada alvo e o número no alvo (~1 s); com Reduce motion fica só o número.
     async resolved(e) {
       const from = ui.center(ui.refRect(e.uid));

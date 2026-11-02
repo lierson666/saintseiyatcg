@@ -446,7 +446,7 @@ def validate_telas(value, root=ROOT):
         if not isinstance(a, dict) or set(a) != {'ligada', 'velocidade'} or type(a['ligada']) is not bool or type(a['velocidade']) not in (int, float) or not 0.25 <= a['velocidade'] <= 3:
             fail('Animação inválida: velocidade entre 0,25× e 3×.')
     audio = value['audio']
-    if not isinstance(audio, dict) or set(audio) != {'menu', 'inicio_batalha', 'playlist', 'efeitos'}:
+    if not isinstance(audio, dict) or set(audio) - {'vozes'} != {'menu', 'inicio_batalha', 'playlist', 'efeitos'}:
         fail('Áudio inválido.')
     paths = {item['arquivo'] for item in catalog(root) if item['grupo'] != 'visual'}
     def media(p, optional=False):
@@ -462,7 +462,33 @@ def validate_telas(value, root=ROOT):
         fail('Sons por evento inválidos.')
     for p in audio['efeitos'].values():
         media(p, True)
+    for v in audio.get('vozes', []):
+        if not isinstance(v, dict) or set(v) != {'nome', 'codigo', 'golpe', 'ultimate'} or not re.fullmatch(r'[A-Z]+', v['nome']) or not re.fullmatch(r'[A-Z0-9]{3}', v['codigo']):
+            fail('Voz inválida.')
+        if not all(isinstance(i, str) and re.fullmatch(r'\d{3,4}', i) for i in v['golpe'] + v['ultimate']):
+            fail('Fala inválida.')
     return copy.deepcopy(value)
+
+
+CARD_VOICES = 'data/card-voices.json'
+VOICE_LINE = re.compile(r'[A-Z0-9]{3}/\d{3,4}')
+
+
+def save_card_voice(body, atomic_write, root=ROOT):
+    """Falas de uma carta: golpe, Ultimate e uma por linha de habilidade; vale para os 3 idiomas."""
+    card = body.get('id') if isinstance(body, dict) else None
+    if not isinstance(card, str) or not re.fullmatch(r'[a-z0-9-]{1,60}', card) or set(body) != {'id', 'golpe', 'ultimate', 'linhas'} or not isinstance(body['linhas'], list):
+        raise ValueError('Voz da carta inválida.')
+    for line in [body['golpe'], body['ultimate'], *body['linhas']]:
+        if line is not None and not (isinstance(line, str) and VOICE_LINE.fullmatch(line)):
+            raise ValueError('Fala inválida.')
+    path = root / CARD_VOICES
+    voices = json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
+    voices[card] = {k: body[k] for k in ('golpe', 'ultimate', 'linhas')}
+    if not any([body['golpe'], body['ultimate'], *body['linhas']]):
+        del voices[card]
+    atomic_write(path, (json.dumps(voices, ensure_ascii=False, indent=2, sort_keys=True) + '\n').encode('utf-8'))
+    return voices
 
 
 def save_telas(body, atomic_write, root=ROOT):
@@ -508,6 +534,8 @@ def post(handler, path, raw, atomic_write):
         body = json.loads(raw)
         if not isinstance(body, dict):
             raise ValueError('Pedido inválido.')
+        if path == '/api/star-hill/card-voice':
+            return handler.reply(200, {'vozes': save_card_voice(body, atomic_write)})
         if path.startswith('/api/star-hill/motor/'):
             motor = engine_updates.manager(ROOT, atomic_write)
             action = path.rsplit('/', 1)[1]

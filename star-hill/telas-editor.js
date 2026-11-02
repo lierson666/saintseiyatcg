@@ -97,7 +97,22 @@ function page() {
       ${audios.filter(a => a.grupo === 'musica').map(a => `<label><input type="checkbox" data-playlist="${esc(a.arquivo)}" ${doc.audio.playlist.includes(a.arquivo) ? 'checked' : ''}> ${esc(a.nome)}</label>`).join('')}</div></section>
     <section class="panel tl"><h2>Sons dos menus e do fim da partida</h2>
       ${Object.entries(SOUNDS).filter(([k]) => !ANIMS[k]).map(([k, l]) => `<div class="tl-sound"><span>${l}</span>${soundChooser(`audio.efeitos.${k}`)}</div>`).join('')}</section>
+    ${vozes()}
     <dialog id="tl-sounds" class="tl-dialog"></dialog>`;
+}
+
+// Falas do jogo (MUSIC/fx/ps3-voz-<código>-<idioma>): o mesmo número é a mesma fala nos 3 idiomas; a marcada vale para os 3.
+const VOZES = {SEY: 'SEIYA', SRU: 'SHIRYU', HYG: 'HYOGA', SYN: 'SHUN', IKI: 'IKKI', ATG: 'ATHENA'};
+const vozDe = c => (doc.audio.vozes || []).find(v => v.codigo === c) || {golpe: [], ultimate: []};
+function vozes() {
+  const linhas = Object.entries(VOZES).map(([c, nome]) => {
+    const jp = audios.filter(a => a.origem === `ps3-voz-${c}-jp`), v = vozDe(c);
+    if (!jp.length) return '';
+    return `<details class="tl-voz"><summary>${nome} · ${jp.length} falas · golpe ${v.golpe.length} · Ultimate ${v.ultimate.length}</summary>${jp.map(a => { const id = a.nome.match(/\d{3,4}/)?.[0], f = l => a.arquivo.replace(`-${c}-jp/`, `-${c}-${l}/`);
+      return `<div class="tl-sound"><span>${id}</span><button type="button" data-tl="ouvir" data-src="${esc(a.arquivo)}">▶ JP</button><button type="button" data-tl="ouvir" data-src="${esc(f('pt'))}">▶ PT</button><button type="button" data-tl="ouvir" data-src="${esc(f('es'))}">▶ ES</button>
+        ${['golpe', 'ultimate'].map(k => `<label><input type="checkbox" data-voz="${c}" data-voz-kind="${k}" data-voz-id="${id}" ${v[k].includes(id) ? 'checked' : ''}> ${k === 'golpe' ? 'Golpe' : 'Ultimate'}</label>`).join('')}</div>`; }).join('')}</details>`;
+  }).join('');
+  return linhas ? `<section class="panel tl"><h2>Vozes dos personagens</h2><p class="hint">Marque o que toca em cada momento. Áudio extraído do jogo: fica só atrás do login.</p>${linhas}</section>` : '';
 }
 
 // Biblioteca de FX (MUSIC/fx/<fonte>, a mesma do Star Hill antigo): botão com o som atual e lista com busca e Ouvir.
@@ -158,6 +173,13 @@ document.addEventListener('input', e => {
     doc.cores[t.dataset.color][t.dataset.var] = t.value; dirty = true; status();
   } else if (t.dataset.textFrom || t.dataset.textTo) {
     pairs[Number(t.dataset.textFrom ?? t.dataset.textTo)][t.dataset.textFrom !== undefined ? 0 : 1] = t.value;
+    dirty = true; status();
+  } else if (t.dataset.voz) {
+    const c = t.dataset.voz, k = t.dataset.vozKind, id = t.dataset.vozId, list = doc.audio.vozes ||= [];
+    let v = list.find(x => x.codigo === c);
+    if (!v) list.push(v = {nome: VOZES[c], codigo: c, golpe: [], ultimate: []});
+    v[k] = v[k].filter(x => x !== id);
+    if (t.checked) v[k].push(id);
     dirty = true; status();
   } else if (t.dataset.playlist) {
     const list = doc.audio.playlist.filter(p => p !== t.dataset.playlist);

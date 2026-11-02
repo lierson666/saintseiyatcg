@@ -55,11 +55,15 @@ const save = (key, value) => {
   }
 };
 
-export const volume = { music: read("ss-music", 0.45), sfx: read("ss-sfx", 0.7) };
+export const volume = { music: read("ss-music", 0.45), sfx: read("ss-sfx", 0.7), voice: read("ss-voice", 0.9) };
 
 let ctx = null;
 let musicBus;
 let sfxBus;
+let voiceBus;
+let duckBus;
+let speaking = false;
+const voices = new Map();
 let reverb;
 let wantedTheme = null;
 let music = null;
@@ -94,17 +98,27 @@ export function unlock() {
     sfxBus.gain.value = volume.sfx;
     musicBus.connect(master);
     sfxBus.connect(master);
+    voiceBus = ctx.createGain();
+    voiceBus.gain.value = volume.voice;
+    voiceBus.connect(master);
+    duckBus = ctx.createGain();
+    duckBus.connect(master);
     musicBus.connect(reverb);
     sfxBus.connect(reverb);
     if (wantedTheme) playMusic(wantedTheme);
   }
-  if (ctx.state === "suspended") ctx.resume();
+  if (ctx.state !== "running") ctx.resume();
   if (music?.audio?.paused) music.audio.play().catch(() => {});
+}
+// No celular o pointerdown não conta como gesto: repete a cada toque até o áudio destravar de fato.
+if (typeof window !== "undefined") for (const event of ["pointerup", "touchend", "click", "keydown"]) {
+  window.addEventListener(event, () => { if (ctx && (ctx.state !== "running" || music?.audio?.paused)) unlock(); }, true);
 }
 
 export function setVolume(kind, value) {
   volume[kind] = value;
   save(`ss-${kind}`, value);
+  if (kind === "voice") return void voiceBus?.gain.setTargetAtTime(value, ctx.currentTime, 0.05);
   const bus = kind === "music" ? musicBus : sfxBus;
   bus?.gain.setTargetAtTime(value, ctx.currentTime, 0.05);
   if (kind === "music" && music?.audio) music.audio.volume = value;
@@ -217,6 +231,22 @@ export function playFxFile(path,gain=1){
   playingEffects.add(audio);audio.addEventListener('ended',()=>playingEffects.delete(audio),{once:true});
   audio.play().catch(()=>playingEffects.delete(audio));
 }
+// Uma voz por vez; a música abaixa enquanto fala. Por WebAudio porque o iOS ignora audio.volume.
+export async function playVoice(path) {
+  unlock();
+  if (!ctx || speaking || !path) return;
+  speaking = true;
+  const url = localMedia(path);
+  try {
+    if (!voices.has(url)) voices.set(url, await fetch(url).then(r => r.arrayBuffer()).then(b => ctx.decodeAudioData(b)));
+    const source = ctx.createBufferSource();
+    source.buffer = voices.get(url);
+    source.connect(voiceBus);
+    duckBus.gain.setTargetAtTime(0.3, ctx.currentTime, 0.08);
+    await new Promise(done => { source.onended = done; source.start(); });
+    duckBus.gain.setTargetAtTime(1, ctx.currentTime, 0.25);
+  } catch { /* sem o arquivo: fica só o som de impacto */ } finally { speaking = false; }
+}
 export function sfx(name) {
   if (!ctx || ctx.state !== "running" || !SFX[name]) return;
   if (recordedEffects[name]) {
@@ -292,6 +322,7 @@ export function playMusic(name, { restart = false } = {}) {
     const state = { name, audio, queue: [] };
     audio.loop = name !== 'battle';
     audio.volume = volume.music;
+    ctx.createMediaElementSource(audio).connect(duckBus);
     if (name === 'battle') audio.addEventListener('ended', () => {
       if (music !== state) return;
       if (!state.queue.length) state.queue = shuffledBattleTracks(audio.src);

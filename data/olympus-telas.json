@@ -133,6 +133,65 @@
       "vitoria": null,
       "derrota": null,
       "ultimate": null
-    }
+    },
+    "vozes": [
+      {
+        "nome": "SEIYA",
+        "codigo": "SEY",
+        "golpe": [
+          "5046",
+          "5049",
+          "5052"
+        ],
+        "ultimate": []
+      },
+      {
+        "nome": "SHIRYU",
+        "codigo": "SRU",
+        "golpe": [
+          "5059",
+          "5046",
+          "5049"
+        ],
+        "ultimate": []
+      },
+      {
+        "nome": "HYOGA",
+        "codigo": "HYG",
+        "golpe": [
+          "5055",
+          "5051",
+          "5009"
+        ],
+        "ultimate": []
+      },
+      {
+        "nome": "SHUN",
+        "codigo": "SYN",
+        "golpe": [
+          "5046",
+          "5049",
+          "5055"
+        ],
+        "ultimate": []
+      },
+      {
+        "nome": "IKKI",
+        "codigo": "IKI",
+        "golpe": [
+          "5059",
+          "5054"
+        ],
+        "ultimate": []
+      },
+      {
+        "nome": "ATHENA",
+        "codigo": "ATG",
+        "golpe": [],
+        "ultimate": [
+          "5106"
+        ]
+      }
+    ]
   }
 }
