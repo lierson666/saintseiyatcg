@@ -105,3 +105,12 @@ body:has(#overlay-root > :not(.gear-btn), .pick-modal, .decision-veil, #bigcard)
   .drawer.settings .settings__end .settings__concede:hover { filter: brightness(1.15); background: linear-gradient(180deg, #8c2a1c, #561308); }
   .drawer.settings .settings__end :last-child { margin-left: auto; }
 }
+
+/* Gatilhos na pilha e nas decisões: mesma tipografia do KV (autor, 02/11/2026). */
+.ability-card small { font: 600 calc(var(--w) * .042) / 1.2 var(--kv-title); letter-spacing: .24em; color: var(--kv-muted); }
+.ability-card > strong { font: 700 calc(var(--w) * .078) / 1.2 var(--kv-title); color: var(--kv-gold-2); }
+.ability-card p { font: 400 calc(var(--w) * .056) / 1.35 var(--kv-sans); color: var(--kv-ink); text-align: left; }
+.ability-card p strong { font: inherit; font-weight: 500; color: var(--kv-gold-2); }
+.chain-zoom__label { font-family: var(--kv-title); letter-spacing: .08em; }
+.decision__kicker, .decision__effect small { font-family: var(--kv-title); font-weight: 600; letter-spacing: .2em; }
+.decision__effect p { font-family: var(--kv-sans); }

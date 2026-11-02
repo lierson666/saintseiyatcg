@@ -46,7 +46,7 @@ body.has-chain-zoom .command__clock { visibility: visible; }
   border: 2px solid rgba(var(--glow, 255, 205, 100), .85); background: linear-gradient(180deg, #171a3a, #07081a); color: #f3ecdc; text-align: center; }
 .ability-card__art { background: #141826 center 20% / cover; border-bottom: 1px solid rgba(var(--glow, 255, 205, 100), .6); }
 .ability-card small { margin-top: 6px; font: 600 calc(var(--w) * .05) / 1.2 "Jost", system-ui; letter-spacing: .12em; text-transform: uppercase; color: #bfb7a3; }
-.ability-card strong { padding: 2px 8px; font: 700 calc(var(--w) * .08) / 1.2 Cinzel, serif; color: rgb(var(--glow, 255, 205, 100)); }
+.ability-card > strong { padding: 2px 8px; font: 700 calc(var(--w) * .08) / 1.2 Cinzel, serif; color: rgb(var(--glow, 255, 205, 100)); }
 .ability-card p { margin: 0; padding: 4px 10px 10px; overflow: hidden; font: calc(var(--w) * .056) / 1.35 "Jost", system-ui, sans-serif; }
 .cast-reveal .ability-card { --w: clamp(240px, 24vw, 340px); }
 

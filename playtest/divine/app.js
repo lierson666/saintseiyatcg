@@ -4,7 +4,7 @@
 import {loadCanon} from '../../shared/canon-cards.js';
 import {canonIndex} from '../../shared/deck-v3.js';
 import {addPreviewCards} from '../../shared/preview-cards.js';
-import {abilityText, displayCard} from '../../shared/card-i18n.js';
+import {abilityText, displayCard, triggerLine} from '../../shared/card-i18n.js';
 import {createMatch, mulligan} from '../engine-v3/match.js';
 import {createCoin3D, COIN_TOSS_MS} from './coin3d.js';
 import {startTurn, endTurn, pass, placeBase, spellCategory, runCheckpoint, ownBatch, loseGame} from '../engine-v3/core.js';
@@ -456,6 +456,12 @@ useGodPortraits(FORGE.values()); // avatar do Deus nas placas = rosto da placa d
 // Dados de um item da pilha para o hover: carta de origem, habilidade e alvos.
 const srcAttrs = c => `data-src="${esc(c.uid || '')}" data-ability="${esc(chainLabel(c).sub || c.ability || '')}" data-targets="${esc((c.targets?.length ? c.targets : [c.target]).filter(Boolean).join(' '))}"`;
 let hoverItem = null; // item da pilha sob o mouse: desenha a seta da origem até os alvos
+// Domain não é objeto de deck: nome e texto vêm da carta dele, não do God (autor, 02/11/2026).
+function domainLabel(f, ability) {
+  const shown = displayCard(f), [name, ...rest] = (shown.habilidades_en?.[triggerLine(f, ability.replace(/^Domain · /, ''))] || '').split(' — ');
+  const a = resonanceTitle({name, text: rest.join(' — ')}), card = shown.nome_exibicao_en || f.nome_exibicao_en;
+  return {title: a.name ? `${card} · ${a.name}` : card, name: card, sub: a.name, text: a.text};
+}
 function chainLabel(c) {
   const card = c.source ? [...cards.values()].find(x => x.id.endsWith(`-${c.source}`))
     : c.uid && ctx.objects[c.uid] ? info(c.uid) : cards.get(S().gods[c.controller]);
@@ -475,7 +481,8 @@ function chainLabel(c) {
   text = abilityText(forge, ability) ?? text;
   const sub = ability && ability.toUpperCase() !== card?.name?.toUpperCase() ? ability[0].toUpperCase() + ability.slice(1) : '';
   const title = [card?.name, sub].filter(Boolean).join(' · ') || 'Triggered ability';
-  return {title, name: card?.name || 'Triggered ability', sub, text, target: (c.targets?.length ? c.targets : [c.target]).filter(Boolean).map(u => (String(u).startsWith('god:') ? `God ${u.slice(4)}` : ctx.objects[u] ? info(u).name : '')).filter(Boolean).join(', ')}; // alvos escolhidos ao conjurar (item.targets)
+  const dom = String(c.uid).startsWith('domain:') && FORGE.get(S().domains?.[String(c.uid).slice(7)]);
+  return {title, name: card?.name || 'Triggered ability', sub, text, ...(dom && domainLabel(dom, raw)), target: (c.targets?.length ? c.targets : [c.target]).filter(Boolean).map(u => (String(u).startsWith('god:') ? `God ${u.slice(4)}` : ctx.objects[u] ? info(u).name : '')).filter(Boolean).join(', ')}; // alvos escolhidos ao conjurar (item.targets)
 }
 // Arte do token de mesa: enquadramento do Forge; sem arte, o símbolo da facção ou o logo.
 function tokenArt(forge) {

@@ -72,6 +72,14 @@ export function cardTerms(cards) {
 export const registerCardTerms = cards => globalThis.ssI18n?.add?.(cardTerms(cards));
 // Efeito impresso da habilidade `ability` (nome, ou frase do gatilho) no idioma da tela, ou null. Sai sem o nome e sem a
 // etiqueta de God ("Divine Power", "Cost:"), que ficam na primeira linha ou na seguinte.
+// Gatilho de Domain chega como "Domain · evento", sem nome de habilidade: a linha é a de gatilho que mais cita o evento.
+export function triggerLine(c, event) {
+  const en = c?.habilidades_en || [], low = event.toLowerCase(), words = low.match(/\p{L}{4,}/gu) || [];
+  const named = en.findIndex(l => l.match(NAME)?.[1].toLowerCase() === low);
+  if (named >= 0) return named;
+  const score = l => words.filter(w => l.toLowerCase().includes(w.slice(0, 5))).length;
+  return en.map((l, i) => i).filter(i => /\b(when|whenever|at the (beginning|start|end))\b/i.test(en[i])).sort((a, b) => score(en[b]) - score(en[a]))[0] ?? -1;
+}
 export function abilityText(c, ability) {
   if (!c || !ability) return null;
   const en = lines(c, 'en'), low = ability.toLowerCase();
