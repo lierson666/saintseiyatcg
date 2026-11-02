@@ -97,6 +97,7 @@
 .rule-sym{display:inline-flex;align-items:center;gap:.06em;vertical-align:-.12em;font-weight:900;color:var(--psd-ink,currentColor);white-space:nowrap}
 .rule-sym i{display:inline-block;width:1.05em;height:1.05em;background:currentColor;-webkit-mask:var(--m) center/contain no-repeat;mask:var(--m) center/contain no-repeat}
 .rule-sym--T i{width:.85em}
+.rule-stat .rule-sym{color:inherit}
 .rule-sym.rule-sym--up{color:#8dffa6}
 .rule-sym.rule-sym--down{color:#ff5a4a}
 .rule-tag{display:block;font-size:.72em;font-weight:900;letter-spacing:.12em;opacity:.8;color:var(--psd-ink,inherit);line-height:1.2}

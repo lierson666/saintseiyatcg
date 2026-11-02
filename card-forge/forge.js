@@ -1,8 +1,8 @@
 import {mountRulesRows} from './rules-rows.js';
 import {createHistory} from '../shared/editor-history.js';
 import {compilePlaytest} from '../shared/import-playtest.js';
-import {renderLiveCard,illustration,statLine,EDITIONS,editionOf} from '../shared/live-card.js?v=20261101-kw7';
-import {textBlocks, blocksMarkup, presentationRules, ruleBlocksWithoutKeywords, KEYWORD_WORDS, STAT_RE, statTrend} from '../shared/card-text.js?v=20261031-kw1';
+import {renderLiveCard,illustration,statLine,EDITIONS,editionOf} from '../shared/live-card.js?v=20261102-sym1';
+import {textBlocks, blocksMarkup, presentationRules, ruleBlocksWithoutKeywords, KEYWORD_WORDS, STAT_RE, statTrend, statSymbols} from '../shared/card-text.js?v=20261102-sym1';
 import {isArmor,isEquipment,validateCard} from '../shared/card-model.js';
 // Card Forge — editor de cartas em vanilla JS. Renderiza no canvas nativo 1488x2091 usando
 // as peças de CARD-TEMPLATE/ (extraídas dos PSDs) e o spec CARD-TEMPLATE/templates.json.
@@ -144,10 +144,10 @@ function resolvePiece(key) {
 
 // Tinge uma peça clara na cor da facção mantendo o sombreado (luminância relativa).
 const tintCache = new Map();
-async function pieceImage(key, tint) {
+async function pieceImage(key, tint, color = fac().color) {
   const im = await loadImg(pieceSrc(key));
   if (!im || !tint) return im;
-  const color = fac().color, id = `${key}|${color}`;
+  const id = `${key}|${color}`;
   if (tintCache.has(id)) return tintCache.get(id);
   const c = Object.assign(document.createElement('canvas'), { width: im.naturalWidth, height: im.naturalHeight });
   const g = c.getContext('2d');
@@ -251,24 +251,24 @@ async function drawFrame() {
 }
 
 // Símbolos de texto: token -> peça. {C}/{B} usam o mesmo ícone de Cosmo.
-const ICONS = { '{C}': 'athena/icon_cosmo', '{B}': 'athena/icon_cosmo', '{L}': 'athena/icon_latent', '{S}': 'icons/soul', '{T}': 'icons/tap' };
+const ICONS = { '{C}': 'athena/icon_cosmo', '{B}': 'athena/icon_cosmo', '{L}': 'athena/icon_latent', '{S}': 'icons/soul', '{T}': 'icons/tap', '{A}': 'icons/atk-mini', '{H}': 'icons/soul' };
 // Keywords (docs/guia-do-jogo.md §24 + ações dos Deuses) saem em NEGRITO MAIÚSCULO no texto de regras, como nos PSDs.
 export const KEYWORDS = ['Guardian', 'Pierce', 'Impulse', 'Nimble', 'Long Range', 'Hidden Cosmo', 'Afterlife', 'Immune'];
 const KW_RE = new RegExp(`\\b(${[...KEYWORD_WORDS].sort((a, b) => b.length - a.length).join('|')})\\b`, 'gi'); // mesma lista do duelo (shared/card-text.js)
-const boldKeywords = (para) => para.split(/(\*\*[^*]*\*\*)/).map((seg, i) => (i % 2 ? seg : seg.replace(KW_RE, (m) => `**${m.toUpperCase()}**`).replace(STAT_RE, (m) => `⟪${statTrend(m)}|${m.toUpperCase()}⟫`))).join('');
+const boldKeywords = (para) => statSymbols(para.split(/(\*\*[^*]*\*\*)/).map((seg, i) => (i % 2 ? seg : seg.replace(KW_RE, (m) => `**${m.toUpperCase()}**`).replace(STAT_RE, (m) => `⟪${statTrend(m)}|${m.toUpperCase()}⟫`))).join(''));
 
 function tokenize(para) {
   const toks = [];
   let bold = false, stat = null;
   // ⟪up|…⟫ / ⟪down|…⟫: bônus de atributo, negrito e colorido (verde/vermelho).
-  for (const part of boldKeywords(para).split(/(\*\*|⟪(?:up|down|mixed)\||⟫|\{[BCLST]\}|\n|[ \t]+)/)) {
+  for (const part of boldKeywords(para).split(/(\*\*|⟪(?:up|down|mixed)\||⟫|\{[BCLSTAH]\}|\n|[ \t]+)/)) {
     if (!part) continue;
     if (part === '**') bold = !bold;
     else if (part.startsWith('⟪')) { stat = part.slice(1, -1); bold = true; }
     else if (part === '⟫') { stat = null; bold = false; }
     else if (part === '\n') toks.push({ t: 'br' });
     else if (/^[ \t]+$/.test(part)) toks.push({ t: 'sp' });
-    else if (ICONS[part]) toks.push({ t: 'icon', key: ICONS[part], bold });
+    else if (ICONS[part]) toks.push({ t: 'icon', key: ICONS[part], bold, stat });
     else toks.push({ t: 'w', text: part, bold, stat });
   }
   return toks;
@@ -355,6 +355,7 @@ async function drawRules(el, s, pt = null) {
   for (; size >= 22; size -= 1) { L = layoutRules(paras, size, rw); if (L.h <= rh) break; }
   const icons = {};
   for (const k of new Set(Object.values(ICONS))) icons[k] = await pieceImage(k, facKey() !== 'athena' || !k.startsWith('athena/'));
+  for (const k of ['{A}', '{H}']) for (const [stat, ink] of Object.entries(STAT_INK)) icons[`${ICONS[k]}|${stat}`] = await pieceImage(ICONS[k], true, ink); // verde/vermelho como o número
   ctx.fillStyle = fac().color;
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
@@ -372,7 +373,7 @@ async function drawRules(el, s, pt = null) {
     const run = (stroke) => {
       for (const it of ln.items) {
         if (it.t === 'icon') {
-          const im = icons[it.key], d = size * 1.0;
+          const im = icons[`${it.key}|${it.stat}`] || icons[it.key], d = size * 1.0;
           if (im) {
             const iw = d * Math.min(1, im.width / im.height), ih = d * Math.min(1, im.height / im.width);
             ctx.drawImage(im, x0 + it.x + (it.w - iw) / 2, cy - ih / 2, iw, ih);
@@ -950,12 +951,13 @@ function insertAtCursor(text) {
   t.selectionStart = t.selectionEnd = a + sp.length + text.length;
   t.dispatchEvent(new Event('input', { bubbles: true }));
 }
-for (const [token, label] of [['{C}', 'Cosmo'], ['{B}', 'Base Cosmo'], ['{L}', 'Latent Cosmo'], ['{S}', 'Soul'], ['{T}', 'Tap']]) {
+// ATK e HP entram como palavra (ATQ e PV no texto PT): a prévia mostra o símbolo e engine e IA seguem lendo o dado.
+for (const [token, label, word, wordPt] of [['{C}', 'Cosmo'], ['{B}', 'Base Cosmo'], ['{L}', 'Latent Cosmo'], ['{S}', 'Soul'], ['{T}', 'Tap'], ['{A}', 'ATK', 'ATK', 'ATQ'], ['{H}', 'HP', 'HP', 'PV']]) {
   const b = Object.assign(document.createElement('button'), { type: 'button', title: `${label} ${token}` });
   b.setAttribute('aria-label', `Inserir ${label}`);
   b.append(Object.assign(new Image(), { src: pieceSrc(ICONS[token]), alt: '' }), label);
   b.addEventListener('mousedown', (e) => e.preventDefault()); // não tira o foco/cursor do texto
-  b.addEventListener('click', () => insertAtCursor(token));
+  b.addEventListener('click', () => insertAtCursor(!word ? token : lastText.name?.startsWith('pt_') ? wordPt : word));
   $('#symbar').append(b);
 }
 const kwSel = $('#kwSelect');

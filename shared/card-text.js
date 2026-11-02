@@ -16,18 +16,23 @@ export const STAT_RE=/(?<![\w])[+-]\d+(?:\s*(?:ATK|ATTACK|HP|Power|ATQ|PV|Poder)
 const emphasis=new RegExp(`(?<!\\p{L})(${[...words,...KEYWORD_WORDS_PT].join('|')})(?!\\p{L})`,'giu');
 // Símbolos do texto (autor, 31/10/2026): {N}{C} Cosmo (ícone de Base), {N}{L} Latent, {N}{B} Base, {N}{S} Soul, {T} Tap.
 // Ícones dos PSDs (CARD-TEMPLATE), pintados com a cor do texto; Soul verde ao ganhar e vermelho ao perder ou pagar.
-const SYMBOLS={B:['athena/icon_cosmo','Base Cosmo'],C:['athena/icon_cosmo','Cosmo'],L:['athena/icon_latent','Latent Cosmo'],S:['icons/soul','Soul'],T:['icons/tap','Tap']};
+const SYMBOLS={B:['athena/icon_cosmo','Base Cosmo'],C:['athena/icon_cosmo','Cosmo'],L:['athena/icon_latent','Latent Cosmo'],S:['icons/soul','Soul'],T:['icons/tap','Tap'],A:['icons/atk-mini','ATK'],H:['icons/soul','HP']};
 const symbolUrl=k=>new URL(`../CARD-TEMPLATE/${k}.png`,import.meta.url).href;
-const SYMBOL_RE=/(?:\{(?:\d+|X)\})?\{[BCLST]\}/;
+const SYMBOL_RE=/(?:\{(?:\d+|X)\})?\{[BCLSTAH]\}/;
+// ATK e HP viram símbolo só na apresentação (autor, 02/11/2026): o dado segue em palavras porque engine e IA leem "+1 ATK".
+// "Power" só com número: "Divine Power" e nomes de golpe ficam como estão.
+export const statSymbols=t=>String(t).replace(/([+-]\d+\s*)(?:Power|Poder)(?!\p{L})/giu,'$1{A}').replace(/(?<!\p{L})(?:ATK|ATTACK|ATQ)(?!\p{L})/gu,'{A}').replace(/(?<!\p{L})(?:HP|PV)(?!\p{L})/gu,'{H}');
+const STAT_SYMBOL_RE=/(?<![\w])[+-]\d+\s*\{[AH]\}(?:\s*\/\s*[+-]\d+\s*\{[AH]\})?/;
 function symbolMarkup(token,before=''){
-  const [,n,k]=token.match(/^(?:\{(\d+|X)\})?\{([BCLST])\}$/),[icon,name]=SYMBOLS[k];
+  const [,n,k]=token.match(/^(?:\{(\d+|X)\})?\{([BCLSTAH])\}$/),[icon,name]=SYMBOLS[k];
   const trend=k!=='S'?'':/\b(gains?|gained|restores?|ganha|ganham|ganhar|recupera)\s+(?:up to\s+|an additional\s+|até\s+)?$/i.test(before)?' rule-sym--up':/\b(lose|loses|lost|pay|pays|paid|perde|perdem|perder|paga|pague|pagar)\s+(?:up to\s+|an additional\s+|até\s+|mais\s+)?$/i.test(before)?' rule-sym--down':'';
   return `<span class="rule-sym rule-sym--${k}${trend}" title="${n?`${n} `:''}${name}" aria-label="${n?`${n} `:''}${name}">${n?`<b>${n}</b>`:''}<i style="--m:url('${symbolUrl(icon)}')"></i></span>`;
 }
 export function inlineMarkup(text){
   let before='';
-  return String(text).split(new RegExp(`(\\*\\*[^*]+\\*\\*|${SYMBOL_RE.source})`,'g')).filter(s=>s!==undefined).map(s=>{
+  return statSymbols(text).split(new RegExp(`(\\*\\*[^*]+\\*\\*|${STAT_SYMBOL_RE.source}|${SYMBOL_RE.source})`,'g')).filter(s=>s!==undefined).map(s=>{
     if(s.startsWith('**'))return `<strong>${inlineMarkup(s.slice(2,-2))}</strong>`;
+    if(new RegExp(`^${STAT_SYMBOL_RE.source}$`).test(s))return `<strong class="rule-stat rule-stat--${statTrend(s)}">${s.split(/(\{[AH]\})/).map(p=>/^\{/.test(p)?symbolMarkup(p):escapeText(p)).join('')}</strong>`;
     if(new RegExp(`^${SYMBOL_RE.source}$`).test(s)){const out=symbolMarkup(s,before);before='';return out;}
     before=s;
     return escapeText(s).replace(emphasis,m=>`<strong>${m.toUpperCase()}</strong>`).replace(STAT_RE,m=>`<strong class="rule-stat rule-stat--${statTrend(m)}">${m.toUpperCase()}</strong>`);
