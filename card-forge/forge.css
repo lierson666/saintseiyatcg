@@ -13,7 +13,16 @@ body { margin: 0; background: var(--bg); color: var(--text); font: 14px/1.4 -app
 header { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 10px 16px; border-bottom: 1px solid var(--line); }
 h1 { font-size: 18px; margin: 0 12px 0 0; color: var(--gold); }
 h1 small { color: var(--muted); font-weight: 400; font-size: 13px; }
-#status { color: var(--muted); }
+#status { flex: 1 1 120px; min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: var(--muted); }
+/* Arte e Salvar em menus no canto direito do topo (autor, 02/11/2026): sempre à vista, sem rolar o formulário até o fim. */
+.forge-menus { display: flex; gap: 6px; align-items: center; margin-left: auto; }
+.forge-drop { position: relative; }
+.forge-drop summary { list-style: none; display: flex; align-items: center; gap: 6px; min-height: 34px; box-sizing: border-box; padding: 0 12px; border: 1px solid var(--line); border-radius: 6px; background: #262430; color: var(--text); cursor: pointer; }
+.forge-drop summary::-webkit-details-marker { display: none; }
+.forge-drop summary::after { content: ""; width: 6px; height: 6px; margin-top: -3px; border-right: 1.5px solid var(--gold); border-bottom: 1.5px solid var(--gold); transform: rotate(45deg); }
+.forge-drop[open] summary, .forge-drop--save summary { border-color: var(--gold); }
+.forge-drop > div { position: absolute; z-index: 40; top: calc(100% + 4px); right: 0; width: 260px; box-sizing: border-box; display: grid; gap: 8px; padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); box-shadow: 0 12px 30px #000a; }
+.forge-drop .hint { margin: 0; }
 #status.error { color: var(--danger); }
 main { display: grid; grid-template-columns: var(--form-w, minmax(300px, 420px)) 16px minmax(0, 1fr); padding: 16px; }
 form { display: flex; flex-direction: column; gap: 12px; min-width: 0; max-height: calc(100vh - 90px); overflow: hidden auto; padding-right: 4px; }
@@ -96,3 +105,25 @@ dialog h2 { margin: 0 0 6px; font-size: 16px; color: var(--gold); }
 .rr-voice-open b { color: var(--gold); font-weight: 600; }
 .rr-moment { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2px; }
 
+/* Formulário compacto (autor, 02/11/2026): campos curtos e em colunas, para caber mais com menos rolagem. As colunas seguem a largura do painel. */
+form { gap: 8px; container-type: inline-size; }
+form fieldset { padding: 6px 10px 8px; gap: 6px; }
+form label { gap: 1px; }
+form input:not([type=checkbox], [type=range], [type=file]), form select, form textarea { padding: 3px 6px; }
+.fields { display: grid; gap: 6px 8px; align-items: end; }
+.fields .row { display: contents; }
+.fields--id { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.fields--num { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.fields--num .check { grid-column: 1 / -1; }
+@container (min-width: 440px) {
+  .fields--id { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .fields--id .wide { grid-column: span 2; }
+  .fields--num { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .fields--num .check { grid-column: span 2; align-self: center; }
+}
+.forge-tabs { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; gap: 4px; padding-bottom: 6px; border-bottom: 1px solid var(--line); background: var(--bg, #15141b); }
+.forge-tabs button { padding: 3px 10px; border-color: transparent; background: none; color: var(--muted); white-space: nowrap; }
+.forge-tabs button[aria-current] { border-color: var(--gold); background: #4a3d16; color: var(--text); }
+.section-off { display: none !important; }
+form > fieldset > legend, form > .batch > summary { display: none; }
+form > .batch { border-color: var(--line); }

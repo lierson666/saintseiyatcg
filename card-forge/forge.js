@@ -64,6 +64,34 @@ function travelEdit(direction){
 $('#forgeUndo').addEventListener('click',()=>travelEdit('undo'));
 $('#forgeRedo').addEventListener('click',()=>travelEdit('redo'));
 form.addEventListener('focusout',()=>editHistory?.breakGroup());
+// Seções do formulário em abas (autor, 02/11/2026): uma por vez, menos rolagem. Os rótulos vêm das legendas.
+const formSections = [...form.querySelectorAll(':scope > fieldset'), $('#batch')];
+const formTabs = document.createElement('nav');
+formTabs.className = 'forge-tabs';
+formTabs.setAttribute('aria-label', 'Seções da carta');
+formTabs.append(...formSections.map((section) => {
+  const tab = document.createElement('button');
+  tab.type = 'button';
+  tab.textContent = section.querySelector(':scope > legend')?.textContent.replace(' (PT-BR)', '') || 'Lote';
+  tab.addEventListener('click', () => { showSection(section); form.scrollTop = 0; try { localStorage.setItem('forge.tab', tab.textContent); } catch {} });
+  section.tab = tab;
+  return tab;
+}));
+form.prepend(formTabs);
+function showSection(active) {
+  formSections.forEach((section) => {
+    section.classList.toggle('section-off', section !== active);
+    if (section === active) section.tab.setAttribute('aria-current', 'true'); else section.tab.removeAttribute('aria-current');
+  });
+}
+function syncFormTabs() {
+  formSections.forEach((section) => { section.tab.hidden = section.hidden; });
+  const active = formSections.find((section) => !section.classList.contains('section-off'));
+  if (active?.hidden) showSection(formSections[0]);
+}
+let savedTab = null;
+try { savedTab = localStorage.getItem('forge.tab'); } catch {}
+showSection(formSections.find((section) => section.tab.textContent === savedTab) || formSections[0]);
 window.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&!e.altKey&&!document.querySelector('dialog[open]')&&['z','y'].includes(e.key.toLowerCase())){e.preventDefault();travelEdit(e.shiftKey||e.key.toLowerCase()==='y'?'redo':'undo');}});
 
 
@@ -580,6 +608,7 @@ function syncVisibility() {
   const lk = layoutKey(S);
   form.querySelectorAll('[data-for]').forEach((el) => { el.hidden = !el.dataset.for.split(' ').includes(lk); });
   $('#rulesV2').hidden=!isEquipment({...S,subtipos:list(S.subtipos)});
+  syncFormTabs();
 }
 
 form.addEventListener('input', (e) => {
@@ -764,6 +793,10 @@ async function download(c, name) {
 forceLang('en');
 const langSuffix = () => ($('#cardLang').value === 'pt' ? '-pt' : '');
 $('#cardLang').addEventListener('change', () => { forceLang($('#cardLang').value); render(); });
+// Menus Arte e Salvar do topo: um aberto por vez; fecham ao clicar fora e no Esc. Salvar fecha também ao escolher a ação.
+const topMenus = [...document.querySelectorAll('.forge-drop')];
+document.addEventListener('click', (e) => topMenus.forEach((m) => { if (m.open && (!m.contains(e.target) || (m.matches('.forge-drop--save') && e.target.closest('button')))) m.open = false; }));
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') topMenus.forEach((m) => { m.open = false; }); });
 $('#exportHi').addEventListener('click', async () => { await render(); download(canvas, `${fileBase()}${langSuffix()}.png`); say('PNG 1488×2091 exportado'); });
 $('#exportWeb').addEventListener('click', async () => {
   await render();

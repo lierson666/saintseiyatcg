@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Card Forge</title>
   <link rel="icon" href="../LOGO/favicon.png?v=20261030">
-  <link rel="stylesheet" href="forge.css?v=20261102-mudo1">
+  <link rel="stylesheet" href="forge.css?v=20261102-abas1">
   <link rel="stylesheet" href="../shared/live-card.css?v=20261102-sym1">
   <script>if(parent!==window)document.documentElement.classList.add("embedded");</script>
 </head>
@@ -21,11 +21,26 @@
     <button id="newCard" type="button">Nova carta</button>
     <div class="forge-history" role="group" aria-label="Histórico da carta"><button id="forgeUndo" type="button" disabled title="Desfazer · ⌘Z / Ctrl+Z">↶ Desfazer</button><button id="forgeRedo" type="button" disabled title="Refazer · ⌘⇧Z / Ctrl+Shift+Z">↷ Refazer</button></div>
     <span id="status" role="status"></span>
+    <div class="forge-menus">
+      <details class="forge-drop forge-drop--art"><summary>Arte</summary><div>
+        <input id="artFile" type="file" accept="image/png,image/jpeg,image/webp" aria-label="Escolher arte">
+        <p class="hint">Ou solte a imagem sobre a carta. Arraste para mover, roda do mouse para zoom.</p>
+        <label>Zoom <input id="artZoom" type="range" min="0.3" max="3" step="0.01" value="1"></label>
+        <button id="artCover" type="button">Cobrir a carta</button>
+      </div></details>
+      <details class="forge-drop forge-drop--save"><summary>Salvar</summary><div>
+        <label>Idioma da carta <select id="cardLang"><option value="en">EN</option><option value="pt">PT-BR</option></select></label>
+        <button id="exportHi" type="button">PNG alta (1488×2091)</button>
+        <button id="exportWeb" type="button">PNG web (1100px)</button>
+        <button id="saveProject" type="button">Salvar carta + visual</button>
+        <button id="saveCards" type="button" class="primary">Gravar no cards.json…</button>
+      </div></details>
+    </div>
   </header>
 
   <main>
     <form id="form" autocomplete="off">
-      <details class="batch" id="batch">
+      <details class="batch" id="batch" open>
         <summary>Lote — importar TXT, JSON ou XLSX</summary>
         <p class="hint">Uma carta por bloco <code>Campo: valor</code>, cartas separadas por <code>---</code>. Veja o <a href="import/modelo.txt" target="_blank">modelo</a>. Se o <code>Id</code> ou o <code>Nome</code> já existir, a carta é atualizada; senão vira carta nova.</p>
         <input id="batchFile" type="file" accept=".txt,.json,.xlsx,text/plain,application/json,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" aria-label="Arquivo com as cartas">
@@ -37,19 +52,20 @@
         </div>
         <ol id="batchList" class="batch-list"></ol>
       </details>
-      <fieldset>
+      <fieldset class="fields fields--id">
         <legend>Identidade</legend>
         <label>ID <input name="id" readonly></label>
         <label>Nome (cards.json) <input name="nome_exibicao_en"></label>
         <label>Título na carta <input name="title" placeholder="= nome"></label>
-        <label data-for="devotee relic_cloth relic_weapon god">Subtítulo <input name="subtitle"></label>
+        <label>Artista <input name="artista" placeholder="vazio: fora do rodapé" title="Nome do ilustrador (vazio: fora do rodapé)"></label>
+        <label class="wide" data-for="devotee relic_cloth relic_weapon god">Subtítulo <input name="subtitle"></label>
+        <label class="wide">Subtipos <input name="subtipos" placeholder="Bronze Saint, Cloth…"></label>
         <label>Tipo
           <select name="tipo">
             <option>Devotee</option><option>Equipment</option><option>Support</option><option>Relic</option><option>Spell</option><option>Technique</option>
             <option>Moment</option><option>Domain</option><option>God</option>
           </select>
         </label>
-        <label>Subtipos <input name="subtipos" placeholder="Bronze Saint, Cloth…"></label>
         <label>Facção
           <select name="faccao">
             <option>Athena</option><option>Ares</option><option>Artemis</option>
@@ -64,10 +80,9 @@
         <label>Edição
           <select name="edicao"><option value="DOC">Dawn of Cosmo (DOC)</option></select>
         </label>
-        <label>Artista <input name="artista" placeholder="Nome do ilustrador (vazio: fora do rodapé)"></label>
       </fieldset>
 
-      <fieldset>
+      <fieldset class="fields fields--num">
         <legend>Números</legend>
         <label class="check"><input name="cosmoble" type="checkbox"> Cosmoble — pode virar Base</label>
         <div class="row">
@@ -122,23 +137,7 @@
         <label>Flavour <input name="pt_flavour"></label>
       </fieldset>
 
-      <fieldset>
-        <legend>Arte</legend>
-        <input id="artFile" type="file" accept="image/png,image/jpeg,image/webp">
-        <p class="hint">Ou solte a imagem sobre a carta. Arraste para mover, roda do mouse para zoom.</p>
-        <label>Zoom <input id="artZoom" type="range" min="0.3" max="3" step="0.01" value="1"></label>
-        <button id="artCover" type="button">Cobrir a carta</button>
-      </fieldset>
-
       <p id="rulesReview" class="hint" role="status"></p>
-      <fieldset class="actions">
-        <legend>Salvar</legend>
-        <label>Idioma da carta <select id="cardLang"><option value="en">EN</option><option value="pt">PT-BR</option></select></label>
-        <button id="exportHi" type="button">PNG alta (1488×2091)</button>
-        <button id="exportWeb" type="button">PNG web (1100px)</button>
-        <button id="saveProject" type="button">Salvar carta + visual</button>
-        <button id="saveCards" type="button" class="primary">Gravar no cards.json…</button>
-      </fieldset>
     </form>
 
     <div id="formResizer" role="separator" aria-orientation="vertical" aria-label="Largura do painel de edição" tabindex="0" title="Arraste para ajustar · duplo clique volta ao padrão"></div>
@@ -173,7 +172,7 @@
     </div>
   </dialog>
 
-  <script type="module" src="forge.js?v=20261102-mudo1"></script>
+  <script type="module" src="forge.js?v=20261102-abas1"></script>
   <script type="module" src="god-hud.js?v=6"></script>
 </body>
 </html>
