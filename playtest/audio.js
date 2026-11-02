@@ -62,7 +62,7 @@ let musicBus;
 let sfxBus;
 let voiceBus;
 let duckBus;
-let speaking = false;
+let voiceSource = null, voiceTurn = 0;
 const voices = new Map();
 let reverb;
 let wantedTheme = null;
@@ -232,20 +232,23 @@ export function playFxFile(path,gain=1){
   audio.play().catch(()=>playingEffects.delete(audio));
 }
 // Uma voz por vez; a música abaixa enquanto fala. Por WebAudio porque o iOS ignora audio.volume.
-export async function playVoice(path) {
+export async function playVoice(path, overlap = false) { // overlap: fala junto com a voz atual, sem cortá-la (quem recebe o Strike)
   unlock();
-  if (!ctx || speaking || !path) return;
-  speaking = true;
+  if (!ctx || !path) return;
+  const turn = overlap ? voiceTurn : ++voiceTurn; // a fala mais nova vence: a anterior não pode engolir a fala de um gatilho ou de um cast
   const url = localMedia(path);
   try {
     if (!voices.has(url)) voices.set(url, await fetch(url).then(r => r.arrayBuffer()).then(b => ctx.decodeAudioData(b)));
+    if (turn !== voiceTurn) return;
+    if (!overlap) try { voiceSource?.stop(); } catch { /* já tinha terminado */ }
     const source = ctx.createBufferSource();
+    if (!overlap) voiceSource = source;
     source.buffer = voices.get(url);
     source.connect(voiceBus);
     duckBus.gain.setTargetAtTime(0.3, ctx.currentTime, 0.08);
     await new Promise(done => { source.onended = done; source.start(); });
-    duckBus.gain.setTargetAtTime(1, ctx.currentTime, 0.25);
-  } catch { /* sem o arquivo: fica só o som de impacto */ } finally { speaking = false; }
+    if (turn === voiceTurn) duckBus.gain.setTargetAtTime(1, ctx.currentTime, 0.25);
+  } catch { /* sem o arquivo: fica só o som de impacto */ }
 }
 export function sfx(name) {
   if (!ctx || ctx.state !== "running" || !SFX[name]) return;

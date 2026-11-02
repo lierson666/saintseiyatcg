@@ -1,5 +1,6 @@
 // STAR HILL · Telas e som (autor, 30/10/2026): edita data/olympus-telas.json, que o jogo lê em playtest/telas.js.
 // Home (carrossel e blocos), fundos, cores, textos, animações (ligada e velocidade) e áudio (músicas e sons por evento).
+import {openSoundBrowser, soundUrl} from '/shared/sound-browser.js?v=4';
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const ANIMS = {compra: 'Compra de carta', conjurar: 'Conjurar carta e Base', cosmo: 'Cosmo pago e Latent', gatilho: 'Gatilhos e habilidades',
   ataque: 'Ataque (Strike)', dano: 'Dano e Soul', morte: 'Carta derrotada', turno: 'Início de turno e rodada', ultimate: 'Ultimate'};
@@ -12,11 +13,18 @@ const DUELO = [
   {titulo: 'Combate', linhas: [
     {som: 'gatilho', anim: 'gatilho', quando: 'Habilidade ou gatilho disparou'}, {som: 'ataque', anim: 'ataque', quando: 'Devotee declarou o Strike'},
     {som: 'dano', anim: 'dano', quando: 'Dano em Devotee ou no Soul'}, {som: 'morte', anim: 'morte', quando: 'Devotee foi derrotado'}, {som: 'ultimate', anim: 'ultimate', quando: 'God usou a Ultimate'}]},
-  {titulo: 'Partida', linhas: [{som: 'turno', anim: 'turno', quando: 'Novo turno ou nova rodada'}]},
+  {titulo: 'Partida', linhas: [{som: 'turno', anim: 'turno', quando: 'Novo turno ou nova rodada'}, {som: 'passar_turno', nome: 'Passar o turno', quando: 'Clicou em End Turn ou passou a prioridade', nota: ''}, {som: 'receber_turno', nome: 'Receber o turno', quando: 'Começou o seu turno', nota: ''}]},
+  {titulo: 'Mouse', linhas: [{som: 'hover', nome: 'Passar o mouse', quando: 'Botão ou carta na mesa', nota: ''}, {som: 'hover_mao', nome: 'Carta na mão', quando: 'Mouse sobre uma carta da mão', nota: ''}, {som: 'hover_base', nome: 'Base de Cosmo', quando: 'Mouse sobre uma Base ou o Cosmo', nota: ''}]},
 ];
+// Padrão por facção (card-voices.json, id faccao-<nome>): vale para toda carta dela que não tiver som próprio no Card Forge.
+const FACCOES = ['Athena', 'Poseidon', 'Hades', 'Ares', 'Artemis', 'Neutral'];
+const MOMENTOS = [['cast', 'Ao conjurar', 'A carta foi jogada'], ['entrada', 'Entrada no campo', 'Devotee ou Equipment entrou no campo'], ['golpe', 'Ao atacar', 'Devotee declarou o Strike'],
+  ['strike', 'Ao receber Strike', 'Foi atingido por um Strike'], ['morte', 'Ao morrer', 'Foi derrotado'], ['retorno', 'Volta do Tartarus', 'Voltou ao campo ou à mão'],
+  ['habilidade', 'Habilidade', 'Gatilho ou habilidade resolveu'], ['ultimate', 'Ultimate', 'God usou a Ultimate']];
+let cardVoices = {}, faccao = 'Athena';
 const SECOES = [['home', 'Home'], ['fundos', 'Fundos'], ['cores', 'Cores'], ['textos', 'Textos'], ['duelo', 'Duelo'], ['musicas', 'Músicas'], ['sons', 'Sons dos menus'], ['vozes', 'Vozes']];
 const SOUNDS = {ultimate: 'Ultimate', clique: 'Clique nos menus', play: 'Botão Play', voltar: 'Voltar', turno: 'Início de turno', compra: 'Compra de carta', conjurar: 'Conjurar carta', equipar_armadura: 'Equipar armadura', equipar_arma: 'Equipar arma',
-  cosmo: 'Cosmo pago', gatilho: 'Gatilho', ataque: 'Ataque', dano: 'Dano', morte: 'Carta derrotada', vitoria: 'Vitória', derrota: 'Derrota'};
+  cosmo: 'Cosmo pago', hover: 'Passar o mouse', hover_mao: 'Carta na mão', hover_base: 'Base de Cosmo', passar_turno: 'Passar o turno', receber_turno: 'Receber o turno', gatilho: 'Gatilho', ataque: 'Ataque', dano: 'Dano', morte: 'Carta derrotada', vitoria: 'Vitória', derrota: 'Derrota'};
 // Cores com o valor padrão do CSS (shared/kv.css e playtest/divine/divine.css).
 const COLORS = {
   lobby: {'--kv-bg': '#05060c', '--kv-ink': '#f5f1e6', '--kv-muted': '#a8a397', '--kv-gold': '#e6c36a', '--kv-gold-2': '#ffe7a3', '--kv-ember': '#ff8a2b', '--kv-error': '#ff9a87'},
@@ -37,6 +45,7 @@ const artUrl = v => !v ? '' : v.startsWith('card:') ? (arts.find(a => a.value ==
 
 export async function loadTelas(api) {
   const [t, assets, exported] = await Promise.all([api('telas'), api('assets'), fetch(`../card-forge/art-web/cards.json?t=${Date.now()}`, {cache: 'no-store'}).then(r => r.json())]);
+  cardVoices = await fetch('../data/card-voices.json', {cache: 'no-store'}).then(r => (r.ok ? r.json() : {})).catch(() => ({}));
   doc = t.conteudo; revisao = t.revisao; dirty = false; pairs = Object.entries(doc.textos);
   // Artes -ref (provisórias, de terceiros) não entram: não vão para o site.
   arts = exported.cartas.filter(c => c.ilustracao && !c.ilustracao.includes('-ref.'))
@@ -107,8 +116,7 @@ function page() {
       ${audios.filter(a => a.grupo === 'musica').map(a => `<label><input type="checkbox" data-playlist="${esc(a.arquivo)}" ${doc.audio.playlist.includes(a.arquivo) ? 'checked' : ''}> ${esc(a.nome)}</label>`).join('')}</div></section>
     <section class="panel tl" id="tl-sons"><h2>Sons dos menus e do fim da partida</h2>
       ${Object.entries(SOUNDS).filter(([k]) => !DUELO.some(g => g.linhas.some(l => l.som === k))).map(([k, l]) => `<div class="tl-sound"><span>${l}</span>${soundChooser(`audio.efeitos.${k}`)}</div>`).join('')}</section>
-    ${vozes()}
-    <dialog id="tl-sounds" class="tl-dialog"></dialog>`;
+    ${vozes()}`;
 }
 
 function duelo() {
@@ -118,11 +126,24 @@ function duelo() {
     return `<div class="tl-anim${a && !a.ligada ? ' is-off' : ''}"><div class="tl-anim__what">${a ? `<input type="checkbox" class="tl-switch" role="switch" aria-label="Animação: ${esc(nome)}" title="Ligar ou desligar a animação" data-path="animacoes.${l.anim}.ligada" data-kind="bool" ${a.ligada ? 'checked' : ''}>` : '<span class="tl-switch-gap"></span>'}
         <span>${esc(nome)}<small>${esc(l.quando)}</small></span></div>
       ${soundChooser(`audio.efeitos.${l.som}`)}
-      ${a ? `<label class="tl-speed"><input type="range" aria-label="Velocidade: ${esc(nome)}" min="0.25" max="3" step="0.25" data-path="animacoes.${l.anim}.velocidade" data-kind="number" value="${a.velocidade}" ${a.ligada ? '' : 'disabled'}><b>${a.velocidade}×</b></label>` : '<span class="tl-speed tl-speed--none">Usa Conjurar</span>'}</div>`;
+      ${a ? `<label class="tl-speed"><input type="range" aria-label="Velocidade: ${esc(nome)}" min="0.25" max="3" step="0.25" data-path="animacoes.${l.anim}.velocidade" data-kind="number" value="${a.velocidade}" ${a.ligada ? '' : 'disabled'}><b>${a.velocidade}×</b></label>` : '<span class="tl-speed tl-speed--none">' + (l.nota ?? 'Usa Conjurar') + '</span>'}</div>`;
   };
   return `<section class="panel tl" id="tl-duelo"><div class="tl-head"><h2>Animações e sons do duelo</h2><span class="tag">${comSom} de ${todas.length} com som</span></div>
     <div class="tl-anim tl-anim--head" aria-hidden="true"><span>Evento</span><span>Som</span><span>Velocidade</span></div>
-    ${DUELO.map(g => `<h3>${g.titulo}</h3>${g.linhas.map(linha).join('')}`).join('')}</section>`;
+    ${DUELO.map(g => `<h3>${g.titulo}</h3>${g.linhas.map(linha).join('')}`).join('')}</section>
+    ${faccoes()}`;
+}
+function faccoes() {
+  const v = cardVoices[`faccao-${faccao.toLowerCase()}`] || {};
+  return `<section class="panel tl" id="tl-faccoes"><div class="tl-head"><h2>Sons por facção</h2><span class="tag">A carta com som próprio passa por cima</span></div>
+    <div class="tl-faccao-tabs" role="group" aria-label="Facção">${FACCOES.map(f => `<button type="button" data-tl="faccao" data-f="${f}" aria-pressed="${f === faccao}">${f}</button>`).join('')}</div>
+    ${MOMENTOS.map(([k, nome, quando]) => `<div class="tl-anim tl-anim--faccao"><div class="tl-anim__what"><span>${nome}<small>${quando}</small></span></div>
+      <div class="tl-chooser${v[k] ? '' : ' is-empty'}"><button type="button" class="tl-chooser__pick" data-tl="faccao-pick" data-k="${k}">${v[k] ? `♪ ${esc(v[k])}` : '+ Escolher som'}</button>
+      <button type="button" data-tl="faccao-ouvir" data-id="${esc(v[k] || '')}" aria-label="Ouvir" title="Ouvir" ${v[k] ? '' : 'disabled'}>▶</button><button type="button" data-tl="faccao-tirar" data-k="${k}" aria-label="Tirar som" title="Tirar som" ${v[k] ? '' : 'disabled'}>✕</button></div></div>`).join('')}</section>`;
+}
+async function saveFaction(key, value) {
+  const id = `faccao-${faccao.toLowerCase()}`, entry = {linhas: [], ...cardVoices[id], [key]: value};
+  try { cardVoices = (await hooks.api('card-voice', {id, ...entry})).vozes; draw(); } catch (error) { hooks.notice?.(error.message); }
 }
 
 // Falas do jogo (MUSIC/fx/ps3-voz-<código>-<idioma>): o mesmo número é a mesma fala nos 3 idiomas; a marcada vale para os 3.
@@ -140,25 +161,26 @@ function vozes() {
 }
 
 // Biblioteca de FX (MUSIC/fx/<fonte>, a mesma do Star Hill antigo): botão com o som atual e lista com busca e Ouvir.
-const fxName = path => (audios.find(a => a.arquivo === path)?.nome || path?.split('/').pop() || '').replace(/^[A-Z_]+-\d+--/, '').replace(/--[0-9a-f]{12}.*$/, '');
+const fxName = path => /ps3-(?:voz|se)-(.+)-(?:jp|pt|es)\/(\d+)\.mp3$/.exec(path || '')?.slice(1).join('/') || (audios.find(a => a.arquivo === path)?.nome || path?.split('/').pop() || '').replace(/^[A-Z_]+-\d+--/, '').replace(/--[0-9a-f]{12}.*$/, '');
 const soundChooser = path => { const v = get(doc, path); return `<div class="tl-chooser${v ? '' : ' is-empty'}"><button type="button" class="tl-chooser__pick" data-tl="pick-sound" data-path="${path}">${v ? `♪ ${esc(fxName(v))}` : '+ Escolher som'}</button>
   <button type="button" data-tl="ouvir" data-src="${esc(v || '')}" aria-label="Ouvir" title="Ouvir" ${v ? '' : 'disabled'}>▶</button><button type="button" data-tl="clear-sound" data-path="${path}" aria-label="Tirar som" title="Tirar som" ${v ? '' : 'disabled'}>✕</button></div>`; };
-let picking = null;
-function soundList() {
-  const q = (document.querySelector('#tl-sound-q')?.value || '').toLowerCase(), src = document.querySelector('#tl-sound-src')?.value || '';
-  const list = audios.filter(a => (!src || (src === 'musica' ? a.grupo === 'musica' : a.origem === src)) && (!q || `${a.nome} ${a.origem}`.toLowerCase().includes(q)));
-  return list.length ? list.map(a => `<li><button type="button" data-tl="ouvir" data-src="${esc(a.arquivo)}" aria-label="Ouvir ${esc(a.nome)}">▶</button><span>${esc(a.nome)}<small>${esc(a.grupo === 'musica' ? 'música' : a.origem)} · ${(a.bytes / 1024).toFixed(0)} KB</small></span>
-    <button type="button" class="primary" data-tl="use-sound" data-src="${esc(a.arquivo)}">Usar</button></li>`).join('') : '<li class="hint">Nenhum som com esse filtro.</li>';
-}
+// Sons do projeto (enviados e músicas); o que veio do jogo mora na biblioteca, em seções (shared/sound-browser.js).
+const projectSounds = () => audios.filter(a => !a.origem?.startsWith('ps3-voz-')).map(a => ({id: a.arquivo, url: `/${a.arquivo.split('/').map(encodeURIComponent).join('/')}`, nome: fxName(a.arquivo) || a.nome,
+  secao: a.grupo === 'musica' ? 'Músicas' : 'Efeitos', cod: a.grupo === 'musica' ? '' : a.origem, grupo: a.origem, s: 0, langs: []}));
+const libraryId = path => { const m = /ps3-(?:voz|se)-(.+)-(?:jp|pt|es)\/(\d+)\.mp3$/.exec(path || ''); return m ? `${m[1]}/${m[2]}` : path || ''; };
 function openSounds(path) {
-  picking = path;
-  const dlg = root.querySelector('#tl-sounds'), sources = [...new Set(audios.filter(a => a.grupo === 'fx').map(a => a.origem))];
-  dlg.innerHTML = `<form method="dialog" class="tl-dialog__head"><strong>Escolher som</strong><button aria-label="Fechar">✕</button></form>
-    <div class="tl-dialog__filters"><input id="tl-sound-q" type="search" placeholder="Buscar (hit, cosmo, punch…)" autocomplete="off">
-    <select id="tl-sound-src"><option value="">Todas as fontes</option>${sources.map(o => `<option value="${esc(o)}">${esc(o)}</option>`).join('')}<option value="musica">Músicas</option></select>
-    <label class="tl-upload">Enviar áudio<input type="file" accept="audio/mpeg,audio/ogg,audio/wav,.mp3,.ogg,.wav,.zip" data-upload="${path}" hidden></label></div>
-    <ul id="tl-sound-list" class="tl-sound-list">${soundList()}</ul>`;
-  dlg.showModal(); dlg.querySelector('#tl-sound-q').focus();
+  openSoundBrowser({title: 'Escolher som', value: libraryId(get(doc, path)), extra: projectSounds(), secao: 'fx-golpe',
+    onUpload: async file => { try { const arquivo = await upload(file, path); if (arquivo) { set(path, arquivo); draw(); } } catch (error) { hooks.notice?.(error.message); } },
+    onPick: async (sound, lang) => {
+      if (!sound) { set(path, null); return draw(); }
+      if (sound.jogo === 'meus') { set(path, sound.id); return draw(); }
+      try {
+        const {arquivo} = await hooks.api('som-biblioteca', {id: sound.id, lang, tipo: sound.secao.startsWith('fx') ? 'se' : 'voz'});
+        library(await hooks.api('assets'));
+        set(path, arquivo);
+        draw();
+      } catch (error) { hooks.notice?.(error.message); }
+    }});
 }
 
 function status() {
@@ -223,8 +245,6 @@ document.addEventListener('change', async e => {
   } catch (err) { hooks.notice(err.message); }
 });
 let player = null;
-document.addEventListener('input', e => { if (e.target.id === 'tl-sound-q' || e.target.id === 'tl-sound-src') root.querySelector('#tl-sound-list').innerHTML = soundList(); });
-document.addEventListener('change', e => { if (e.target.id === 'tl-sound-src') root.querySelector('#tl-sound-list').innerHTML = soundList(); });
 document.addEventListener('click', async e => {
   const b = e.target.closest('[data-tl]');
   if (!b || !root?.contains(b)) return;
@@ -239,7 +259,10 @@ document.addEventListener('click', async e => {
   if (act === 'ouvir') { player?.pause(); player = new Audio(url(b.dataset.src)); player.play().catch(() => {}); return; }
   if (act === 'jump') return document.getElementById(b.dataset.to)?.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});
   if (act === 'pick-sound') return openSounds(b.dataset.path);
-  if (act === 'use-sound') { player?.pause(); set(picking, b.dataset.src); root.querySelector('#tl-sounds').close(); }
+  if (act === 'faccao') { faccao = b.dataset.f; return draw(); }
+  if (act === 'faccao-pick') return openSoundBrowser({title: `Som de ${faccao}`, value: cardVoices[`faccao-${faccao.toLowerCase()}`]?.[b.dataset.k] || '', secao: 'voz-batalha', onPick: s => saveFaction(b.dataset.k, s?.id || null)});
+  if (act === 'faccao-tirar') return saveFaction(b.dataset.k, null);
+  if (act === 'faccao-ouvir') { player?.pause(); player = new Audio(soundUrl(b.dataset.id)); player.play().catch(() => {}); return; }
   if (act === 'clear-sound') set(b.dataset.path, null);
   if (act === 'save') {
     // Linhas de texto sem original são descartadas ao salvar.

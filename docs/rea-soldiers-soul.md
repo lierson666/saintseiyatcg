@@ -72,9 +72,17 @@ uv run --no-project --with pillow python -I tools/rea-ps3/sheet.py <prancha.png>
 - `cpk.py`: lê o TOC `@UTF` e descomprime CRILAYLA.
 - `emb2png.py`: converte GTF DXT1/3/5 e A8R8G8B8 em PNG. Em 3.275 texturas convertidas, 19 falharam por estarem num formato raro.
 
+## Biblioteca de sons (02/11/2026)
+
+`tools/rea-ps3/biblioteca-sons.py <resource/sound extraída> ~/worktrees/sstcg-biblioteca-sons --falas MUSIC/fx/ps3-voz-falas.json` converte todo ACB/AWB (menos as músicas de fundo) em MP3 e gera `indice.json`. A pasta fica fora do repositório e o `card-forge/serve.py` a serve só localmente, em `/biblioteca-sons/`; `shared/sound-browser.js` é o seletor do Card Forge e do Star Hill.
+
+- **Resultado:** 23.375 sons, 57.806 arquivos (JP, PT, ES), 1,9 GB. 538 falas japonesas não existem no disco: o ACB aponta para um AWB que o jogo não traz.
+- **Escolha:** a fala tem o mesmo número nos 3 idiomas. Ao salvar na carta, o servidor copia os 3 para `playtest/divine/assets/vozes/`; FX sem idioma usa o mesmo arquivo nos 3.
+- **Nomes de personagem:** deduzidos do código e dos golpes; o que não deu para deduzir aparece só pelo código.
+- **Transcrição:** `tools/rea-ps3/transcrever-sons.py` roda Whisper na própria máquina e grava `falas-pt.json` na biblioteca, que o seletor lê a cada abertura. Pode parar e continuar. Gritos com menos de 1 s ficam de fora; é transcrição automática, com erros em nomes próprios.
+
 ## Não feito / limites
 
 - **Modelos 3D (`.emo`) e animações (`.ema`):** não convertidos. As ferramentas de Xenoverse que existem esperam PC little-endian e não PS3 big-endian.
-- **Áudio (ACB/AWB → HCA):** não decodificado. Para isso precisa do `vgmstream`.
 - **Vídeos `.usm`:** não demuxados.
 - **Direitos autorais:** tudo é propriedade da Bandai Namco e da Toei. O autor liberou o uso no TCG em 02/11/2026. O áudio extraído fica só atrás do login, fora do Git e de `MUSIC/` (pública), e os detentores dos direitos podem pedir a retirada.

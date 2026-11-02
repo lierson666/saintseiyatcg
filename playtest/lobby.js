@@ -7,7 +7,7 @@ import {spellCategory} from './engine-v3/core.js';
 import {renderLiveCard, renderCardText, fullSizePieces} from '../shared/live-card.js?v=20261102-arroba1';
 import {printedEquipmentBonuses, signedBonus} from '../shared/card-visual-values.js';
 import {displayCard, typeWord} from '../shared/card-i18n.js?v=20261031-kw1';
-import {unlock, playMusic, setVolume, volume} from './audio.js?v=20261102-voz2';
+import {unlock, playMusic, setVolume, volume} from './audio.js?v=20261102-voz4';
 import {loadMyDecks, saveMyDecks, findDeck, syncDecks, onDeckStatus, deckCovers, setDeckCover} from './deck-store.js?v=20261031-2';
 import {mountKV} from '../shared/kv-sky.js?v=20261031-native';
 import {countryOptions, countryName} from '../shared/countries.js?v=20261031-i18n1';

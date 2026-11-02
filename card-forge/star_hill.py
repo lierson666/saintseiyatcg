@@ -5,8 +5,10 @@ import hashlib
 import io
 import importlib.util
 import json
+import os
 import re
 import secrets
+import shutil
 import subprocess
 import threading
 import time
@@ -377,7 +379,8 @@ def publish_site(root=ROOT):
 # Telas do Olympus Arena (autor, 30/10/2026): home, fundos, cores, textos, animações e áudio que o jogo lê em playtest/telas.js.
 TELAS = 'data/olympus-telas.json'
 ANIM_GROUPS = {'compra', 'conjurar', 'cosmo', 'gatilho', 'ataque', 'dano', 'morte', 'turno', 'ultimate'}
-SOUND_EVENTS = {'ultimate', 'clique', 'play', 'voltar', 'turno', 'compra', 'conjurar', 'equipar_armadura', 'equipar_arma', 'cosmo', 'gatilho', 'ataque', 'dano', 'morte', 'vitoria', 'derrota'}
+SOUND_EVENTS = {'ultimate', 'clique', 'play', 'voltar', 'turno', 'compra', 'conjurar', 'equipar_armadura', 'equipar_arma', 'cosmo', 'gatilho', 'ataque', 'dano', 'morte', 'vitoria', 'derrota',
+                'hover', 'hover_mao', 'hover_base', 'passar_turno', 'receber_turno'}
 IMAGE_DIRS = ('card-forge/art-web/', 'star-hill/assets/', 'playtest/assets/', 'LOGO/')
 
 
@@ -458,7 +461,7 @@ def validate_telas(value, root=ROOT):
         fail('A playlist da batalha precisa de 1 a 100 faixas.')
     for p in audio['playlist']:
         media(p)
-    if not isinstance(audio['efeitos'], dict) or set(audio['efeitos']) != SOUND_EVENTS:
+    if not isinstance(audio['efeitos'], dict) or set(audio['efeitos']) - SOUND_EVENTS:  # evento novo ainda sem som pode faltar
         fail('Sons por evento inválidos.')
     for p in audio['efeitos'].values():
         media(p, True)
@@ -471,21 +474,60 @@ def validate_telas(value, root=ROOT):
 
 
 CARD_VOICES = 'data/card-voices.json'
-VOICE_LINE = re.compile(r'[A-Z0-9]{3}/\d{3,4}')
+VOICE_LINE = re.compile(r'[A-Za-z0-9_]{3,40}/\d{3,4}')
+VOICE_LANGS = ('jp', 'pt', 'es')
+VOICE_MOMENTS = ('cast', 'entrada', 'golpe', 'strike', 'morte', 'retorno', 'habilidade', 'ultimate')
+LIBRARY = Path(os.environ.get('SSTCG_BIBLIOTECA', Path.home() / 'worktrees/sstcg-biblioteca-sons'))  # tools/rea-ps3/biblioteca-sons.py
+
+
+def library_file(line, lang):
+    """MP3 da fala no idioma pedido; som sem esse idioma (FX, falas só em japonês) usa o que houver."""
+    return next((p for l in (lang, *VOICE_LANGS) if (p := LIBRARY / l / f'{line}.mp3').is_file()), None)
+
+
+def install_voice(line, root=ROOT):
+    """Põe a fala onde o duelo a procura, nos 3 idiomas (o duelo fica atrás do login)."""
+    for lang in VOICE_LANGS:
+        dest, source = root / 'playtest/divine/assets/vozes' / lang / f'{line}.mp3', library_file(line, lang)
+        if dest.exists():
+            continue
+        if not source:
+            raise ValueError(f'Som não encontrado na biblioteca: {line}.')
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source, dest)
+
+
+def import_library_sound(body, root=ROOT):
+    """Som da biblioteca escolhido no Star Hill: vira arquivo de MUSIC/fx, que é o que o catálogo e o olympus-telas.json aceitam."""
+    line, lang, kind = body.get('id'), body.get('lang'), body.get('tipo')
+    if not isinstance(line, str) or not VOICE_LINE.fullmatch(line) or lang not in VOICE_LANGS or kind not in ('voz', 'se'):
+        raise ValueError('Som inválido.')
+    source = library_file(line, lang)
+    if not source:
+        raise ValueError(f'Som não encontrado na biblioteca: {line}.')
+    bank, fala = line.split('/')
+    folder = f'ps3-{kind}-{bank}-{lang}'
+    for dest in (root / 'MUSIC/fx' / folder / f'{fala}.mp3', root / 'playtest/divine/assets/sons' / folder / f'{fala}.mp3'):
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source, dest)
+    return {'ok': True, 'arquivo': f'MUSIC/fx/{folder}/{fala}.mp3'}
 
 
 def save_card_voice(body, atomic_write, root=ROOT):
-    """Falas de uma carta: golpe, Ultimate e uma por linha de habilidade; vale para os 3 idiomas."""
+    """Sons de uma carta (ou de uma facção, id faccao-<nome>): um por momento e um por linha de habilidade; vale para os 3 idiomas."""
     card = body.get('id') if isinstance(body, dict) else None
-    if not isinstance(card, str) or not re.fullmatch(r'[a-z0-9-]{1,60}', card) or set(body) != {'id', 'golpe', 'ultimate', 'linhas'} or not isinstance(body['linhas'], list):
+    if not isinstance(card, str) or not re.fullmatch(r'[a-z0-9-]{1,60}', card) or set(body) - {'id', 'linhas', *VOICE_MOMENTS} or not isinstance(body.get('linhas'), list):
         raise ValueError('Voz da carta inválida.')
-    for line in [body['golpe'], body['ultimate'], *body['linhas']]:
+    lines = [*(body.get(k) for k in VOICE_MOMENTS), *body['linhas']]
+    for line in lines:
         if line is not None and not (isinstance(line, str) and VOICE_LINE.fullmatch(line)):
             raise ValueError('Fala inválida.')
+    for line in filter(None, lines):
+        install_voice(line, root)
     path = root / CARD_VOICES
     voices = json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
-    voices[card] = {k: body[k] for k in ('golpe', 'ultimate', 'linhas')}
-    if not any([body['golpe'], body['ultimate'], *body['linhas']]):
+    voices[card] = {**{k: body.get(k) for k in VOICE_MOMENTS}, 'linhas': body['linhas']}
+    if not any(lines):
         del voices[card]
     atomic_write(path, (json.dumps(voices, ensure_ascii=False, indent=2, sort_keys=True) + '\n').encode('utf-8'))
     return voices
@@ -536,6 +578,8 @@ def post(handler, path, raw, atomic_write):
             raise ValueError('Pedido inválido.')
         if path == '/api/star-hill/card-voice':
             return handler.reply(200, {'vozes': save_card_voice(body, atomic_write)})
+        if path == '/api/star-hill/som-biblioteca':
+            return handler.reply(200, import_library_sound(body))
         if path.startswith('/api/star-hill/motor/'):
             motor = engine_updates.manager(ROOT, atomic_write)
             action = path.rsplit('/', 1)[1]

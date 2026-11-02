@@ -1,1 +1,53 @@
-{}
+{
+  "athena-v6-001": {
+    "cast": null,
+    "golpe": "SEY/5046",
+    "linhas": [
+      "SEY/5063",
+      "SEY/5041"
+    ],
+    "ultimate": null
+  },
+  "athena-v6-002": {
+    "golpe": null,
+    "linhas": [
+      "SEY/5027"
+    ],
+    "ultimate": null
+  },
+  "athena-v6-003": {
+    "golpe": "SRU/5046",
+    "linhas": [
+      null,
+      "SRU/5032",
+      "SRU/5064"
+    ],
+    "ultimate": null
+  },
+  "athena-v6-005": {
+    "golpe": "HYG/5047",
+    "linhas": [
+      "HYG/5046",
+      "HYG/5009"
+    ],
+    "ultimate": null
+  },
+  "athena-v6-007": {
+    "golpe": "SYN/5046",
+    "linhas": [
+      "SYN/5061",
+      "SYN/5130"
+    ],
+    "ultimate": null
+  },
+  "athena-v6-009": {
+    "golpe": "IKI/5046",
+    "linhas": [
+      null,
+      "IKI/5032",
+      "IKI/5110",
+      null
+    ],
+    "ultimate": null
+  }
+}

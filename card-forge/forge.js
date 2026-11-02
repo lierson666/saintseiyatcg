@@ -1,4 +1,4 @@
-import {mountRulesRows} from './rules-rows.js?v=20261102-kw2';
+import {mountRulesRows} from './rules-rows.js?v=20261102-som4';
 import {createHistory} from '../shared/editor-history.js';
 import {compilePlaytest} from '../shared/import-playtest.js';
 import {renderLiveCard,illustration,statLine,EDITIONS,editionOf} from '../shared/live-card.js?v=20261102-arroba1';
@@ -972,7 +972,7 @@ $('#diffConfirm').addEventListener('click', async () => {
 // ---------- barra de símbolos e keywords ----------
 let lastText = form.elements.rules;
 form.addEventListener('focusin', (e) => { if (e.target.tagName === 'TEXTAREA') lastText = e.target; });
-const refreshRules = [mountRulesRows(form.elements.rules, {getId: () => S.id, moments: () => [['golpe', 'Voz ao atacar'], ...(layoutKey(S) === 'god' ? [['ultimate', 'Voz da Ultimate']] : [])]}), mountRulesRows(form.elements.pt_rules)];
+const refreshRules = [mountRulesRows(form.elements.rules, {getId: () => S.id, moments: () => [['cast', 'Ao conjurar'], ['entrada', 'Entrada no campo'], ['golpe', 'Ao atacar'], ['strike', 'Ao receber Strike'], ['morte', 'Ao morrer'], ['retorno', 'Volta do Tartarus'], ...(layoutKey(S) === 'god' ? [['ultimate', 'Voz da Ultimate']] : [])]}), mountRulesRows(form.elements.pt_rules)];
 refreshRulesRows = () => refreshRules.forEach(r => r());
 refreshRulesRows();
 function insertAtCursor(text) {

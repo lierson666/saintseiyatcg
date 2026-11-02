@@ -2,8 +2,8 @@
 // dramatiza em sequência. Nunca decide resultado: os números exibidos vêm dos próprios eventos.
 // `ui` é o adaptador do DOM (posições e textos); `fx` é a camada WebGL (pode faltar: tudo vira só DOM).
 import {wait} from './scene.js?v=20261031-pool1';
-import {strikeSound, chargeSound} from '../audio.js?v=20261102-voz2';
-import {anim, ANIM_OF, sound} from '../telas.js?v=20261102-voz2';
+import {strikeSound, chargeSound} from '../audio.js?v=20261102-voz4';
+import {anim, ANIM_OF, sound} from '../telas.js?v=20261102-voz4';
 
 // Hierarquia visual dos golpes (COMBAT_CINEMATICS.md): comum < Saint < assinatura < divino.
 // As assinaturas são só visuais e disparam pelo número da carta atacante; não criam regra.
@@ -85,7 +85,7 @@ export function createDirector({ui, getFx, settings}) {
   // Cada tipo de evento: o que mostrar e quanto tempo segurar a fila.
   const pool = {A: 0, B: 0}; // Cosmo pago e ainda não entregue a uma carta
   const handlers = {
-    async turn_start(e) { pool.A = pool.B = 0; ui.clearPool(); // o que sobrou na pool volta sem perda
+    async turn_start(e) { if (ui.isViewer(e.player)) sound('receber_turno'); pool.A = pool.B = 0; ui.clearPool(); // o que sobrou na pool volta sem perda
       await ui.banner(ui.isViewer(e.player) ? 'Your turn' : `Player ${e.player}'s turn`, e.player, t(900)); },
     async draw(e) { if (!settings.skipDraws && !e.opening) await ui.flyCard(e.uid, ui.deckRect(e.player), ui.handRect(e.player), t(220), !ui.isViewer(e.player)); },
     async mulligan() {},
@@ -116,6 +116,7 @@ export function createDirector({ui, getFx, settings}) {
       await pause(380);
     },
     async card_played(e) {
+      ui.speak?.(e.from === 'tartarus' ? 'retorno' : e.from ? 'entrada' : 'cast', e.uid); // som próprio da carta (autor, 02/11/2026); `from`: posta em campo sem conjurar
       const f = fx(), poolAt = ui.center(ui.bankRect(e.player, 'base')), src = ui.center(ui.rect(e.uid) || ui.handRect(e.player));
       if (pool[e.player] && f && !skipping && poolAt && src) { // o pool encontra a carta e a energia a vira para o campo
         f.beam(poolAt, src, {color: '#a8e4ff', width: 14 + 4 * Math.min(pool[e.player], 6), duration: .38});
@@ -134,9 +135,10 @@ export function createDirector({ui, getFx, settings}) {
       ui.log(e);
       await pause(260);
     },
-    async ability(e) { ui.speak?.('linha', e.uid, e.name); ui.pulse(e.uid, 'activate'); ui.log(e); await pause(260); },
+    async ability(e) { ui.pulse(e.uid, 'activate'); ui.log(e); await pause(260); },
     async equipped(e) { equipSound(e.uid); ui.log(e); await pause(120); },
-    async entered(e) { if (e.bearer) equipSound(e.uid); }, // Equipment conjurado já preso no portador
+    async returned_to_hand(e) { if (e.from === 'tartarus') ui.speak?.('retorno', e.uid); },
+    async entered(e) { ui.speak?.('entrada', e.uid); if (e.bearer) equipSound(e.uid); }, // Equipment conjurado já preso no portador
     async strike_declared(e) {
       ui.speak?.('golpe', e.attacker);
       ui.pulse(e.attacker, 'attacking', true);
@@ -145,6 +147,7 @@ export function createDirector({ui, getFx, settings}) {
       await pause(260);
     },
     async strike_resolve(e) {
+      if (e.target.kind !== 'god') ui.speak?.('strike', e.target.uid);
       const from = ui.center(ui.rect(e.attacker)), targetRect = e.target.kind === 'god' ? ui.godRect(e.target.player) : ui.rect(e.target.uid);
       const to = ui.center(targetRect), style = styleOf(e.attacker), p = powerOf(e.atk);
       if (style.name) await ui.callout(style.name, e.player, t(650 + p * 350));
@@ -178,6 +181,7 @@ export function createDirector({ui, getFx, settings}) {
       await pause(420);
     },
     async destroyed(e) {
+      ui.speak?.('morte', e.uid);
       const at = ui.center(ui.rect(e.uid));
       ui.pulse(e.uid, 'shatter');
       if (at) fx()?.burst(at.x, at.y, {color: '#cbbfa8', count: 70, speed: 300, grav: 600, life: .9});
@@ -296,7 +300,7 @@ export function createDirector({ui, getFx, settings}) {
       sound(e.draw ? 'derrota' : ui.isViewer(e.winner) ? 'vitoria' : 'derrota'); await ui.banner(e.draw ? 'Draw' : ui.isViewer(e.winner) ? 'Victory' : `Player ${e.winner} wins`, e.winner, t(1200)); },
     async window_open() {}, async window_close() {}, async pass(e) { ui.log(e); }, // Gatilho entrando na cadeia e resolvendo: a carta de origem pisca e cresce (estilo Arena), nada genérico.
     async chain_add(e) { ui.pulse(e.uid, 'trigger-pop'); await pause(240); },
-    async trigger(e) { ui.speak?.('linha', e.uid, e.ability); ui.pulse(e.uid, 'trigger-pop'); ui.log(e); await pause(240); }, // a origem pisca e o item voa para a pilha (app.js drawZoom)
+    async trigger(e) { ui.pulse(e.uid, 'trigger-pop'); ui.log(e); await pause(240); }, // a origem pisca e o item voa para a pilha (app.js drawZoom)
     // Ao resolver: linha de energia da fonte até cada alvo e o número no alvo (~1 s); com Reduce motion fica só o número.
     async resolved(e) {
       const from = ui.center(ui.refRect(e.uid));
@@ -307,7 +311,7 @@ export function createDirector({ui, getFx, settings}) {
       }
       ui.log(e);
       await pause(360);
-    }, async resolve(e) { ui.pulse(e.uid, 'trigger-pop'); await pause(300); }, async end_phase(e) { ui.log(e); },
+    }, async resolve(e) { if (e.ability) ui.speak?.('linha', e.uid, e.ability); /* a fala sai quando resolve, não quando vai à pilha (autor, 02/11/2026) */ ui.pulse(e.uid, 'trigger-pop'); await pause(300); }, async end_phase(e) { ui.log(e); },
   };
 
   return {

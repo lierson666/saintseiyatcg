@@ -22,12 +22,12 @@ import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudg
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout, clockBonus} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
-import {createDirector} from './director.js?v=20261102-equip1';
+import {createDirector} from './director.js?v=20261102-voz4';
 import {createAI} from './ai.js?v=14';
 import {findDeck} from '../deck-store.js';
 import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-face3';
-import {unlock, playMusic, setVolume} from '../audio.js?v=20261102-voz2';
-import {telas, cardVoices, anim, sound, voice, imageUrl, applyColors, applyTexts} from '../telas.js?v=20261102-voz2';
+import {unlock, playMusic, setVolume, volume} from '../audio.js?v=20261102-voz4';
+import {telas, cardVoices, anim, sound, voice, imageUrl, applyColors, applyTexts} from '../telas.js?v=20261102-voz4';
 import {renderLiveCard, renderCardText, fullSizePieces} from '../../shared/live-card.js?v=20261102-arroba1';
 import {renderKeywordNotes, renderKeywordIcons} from '../../shared/keyword-glossary.js?v=20261102-arroba1';
 import {armorBonusText, printedEquipmentBonuses} from '../../shared/card-visual-values.js?v=20261102-arroba1';
@@ -340,6 +340,7 @@ function primary() {
   if (s.victory) return;
   if (aiControls()) return; // vez da IA: o botão não age por ela
   if (s.setup) return confirmMulligan();
+  sound('passar_turno');
   if (s.window) return act({type: 'pass', key: s.window.priority});
   act({type: 'endTurn', key: s.active});
 }
@@ -1026,6 +1027,7 @@ function overlays() {
       <label class="set"><span>Voice volume</span><input type="range" min="0" max="1" step=".05" value="${settings.voiceVolume}" data-setting="voiceVolume"></label>
       <label class="set"><span>Screen shake</span><input type="range" min="0" max="1.5" step=".25" value="${settings.shake}" data-setting="shake"></label>
       <p class="stats" data-stats>${scene ? 'WebGL on' : 'WebGL off · 2D fallback'}</p>
+      <label class="set"><span>Music volume</span><input type="range" min="0" max="1" step=".05" value="${volume.music}" data-setting="musicVolume"></label>
       <div class="settings__end">${match && !S().victory ? '<button class="settings__concede" data-concede>Concede</button>' : ''}<button data-toggle-settings>Close</button></div></div>`;
   }
   return html;
@@ -1243,7 +1245,9 @@ const ui = {
   speak(kind, ref, ability = '') {
     const obj = ctx.objects[ref], name = obj ? info(ref).name : cards.get(S().gods[ref])?.name || '';
     const id = obj ? obj.cardId : `${name.toLowerCase()}-001`, mine = cardVoices[id];
-    const own = kind === 'linha' ? mine?.linhas?.[triggerLine(FORGE.get(id), ability.split(' · ').pop())] : mine?.[kind];
+    // A carta manda; o que ela não tem vem do padrão da facção (autor, 02/11/2026).
+    const faction = cardVoices[`faccao-${FORGE.get(id)?.faccao?.toLowerCase()}`];
+    const own = kind === 'linha' ? mine?.linhas?.[triggerLine(FORGE.get(id), ability.split(' · ').pop())] || faction?.habilidade : mine?.[kind] || faction?.[kind];
     voice(kind, name, settings.voiceLang === 'auto' ? (window.ssI18n?.lang === 'pt' ? 'pt' : 'jp') : settings.voiceLang, own);
   },
   // Morte do God: avatar com animação do tema (die-<deus>), cartas e Bases dele caem, ruína por cima da metade dele.
@@ -1513,6 +1517,7 @@ overlayRoot.addEventListener('change', e => {
   if (key === 'voiceVolume') setVolume('voice', settings.voiceVolume);
   if (key === 'resolution') window.ssStage?.set(settings.resolution); // palco 16:9 (shared/stage-fit.js)
   if (key === 'cardText' || key === 'cardSize') window.ssStage?.a11y(); // acessibilidade das cartas (shared/stage-fit.js)
+  if (key === 'musicVolume') setVolume('music', settings.musicVolume);
   if (key === 'lang') window.ssI18n?.set(settings.lang); // idioma PT-BR/EN (shared/i18n.js)
   if (key === 'quality') scene?.setQuality(settings.quality);
   if (key === 'theme') { scene?.setTheme(settings.theme); stage.dataset.theme = settings.theme; }
@@ -2669,6 +2674,16 @@ function showTip(e) {
 document.addEventListener('pointerover', showTip);
 document.addEventListener('focusin', showTip);
 document.addEventListener('pointerdown', () => tip.classList.remove('on'));
+// Sons de passar o mouse (Star Hill): só quando entra em outro alvo, senão o mesmo elemento dispara a cada filho.
+let hovered = null;
+document.addEventListener('pointerover', e => {
+  if (e.pointerType === 'touch' || !e.target.closest) return;
+  const hand = e.target.closest('.hand--me .hand__slot'), base = !hand && e.target.closest('.dcard[data-base], [data-bank-unit], .rail__row--cosmo'), other = !hand && !base && e.target.closest('button, a, [role=button], .dcard');
+  const el = hand || base || other;
+  if (el === hovered) return;
+  hovered = el;
+  if (el) sound(hand ? 'hover_mao' : base ? 'hover_base' : 'hover');
+});
 document.addEventListener('keydown', e => { if (e.key === 'Escape') tip.classList.remove('on'); });
 // Moeda de keyword no toque: tocar abre a dica e tocar de novo fecha, sem acionar a carta embaixo nem o segurar para ampliar.
 let kwPress = null, kwOpen = false;

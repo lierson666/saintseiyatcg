@@ -157,6 +157,9 @@ class Handler(SimpleHTTPRequestHandler):
             return layout_studio.handle(self, path)
         if path == '/api/boosters':
             return self.reply(200, sorted(f.stem for f in BOOSTERS.glob('*.webp')))
+        if path.startswith('/biblioteca-sons/'):  # sons extraídos ficam fora do projeto: só o servidor local os lê
+            self.directory, self.path = str(star_hill.LIBRARY), self.path[len('/biblioteca-sons'):]
+            return super().do_GET()
         if path.startswith('/api/star-hill/'):
             try:
                 return star_hill.get(self, path)

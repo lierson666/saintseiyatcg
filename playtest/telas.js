@@ -1,10 +1,10 @@
 // Telas, sons, músicas e animações editados no Star Hill (data/olympus-telas.json). O lobby e o duelo leem daqui;
 // sem o arquivo valem os padrões abaixo. Imagem: "card:<id>" usa a arte atual da carta no Card Forge; senão é um caminho do projeto.
-import {configureAudio, playFxFile, playVoice} from './audio.js?v=20261102-voz2';
+import {configureAudio, playFxFile, playVoice} from './audio.js?v=20261102-voz4';
 
 const ROOT = new URL('../', import.meta.url);
 export const ANIM_GROUPS = ['compra', 'conjurar', 'cosmo', 'gatilho', 'ataque', 'dano', 'morte', 'turno', 'ultimate'];
-export const SOUND_EVENTS = ['ultimate', 'clique', 'play', 'voltar', 'turno', 'compra', 'conjurar', 'equipar_armadura', 'equipar_arma', 'cosmo', 'gatilho', 'ataque', 'dano', 'morte', 'vitoria', 'derrota'];
+export const SOUND_EVENTS = ['ultimate', 'clique', 'play', 'voltar', 'turno', 'compra', 'conjurar', 'equipar_armadura', 'equipar_arma', 'cosmo', 'gatilho', 'ataque', 'dano', 'morte', 'vitoria', 'derrota', 'hover', 'hover_mao', 'hover_base', 'passar_turno', 'receber_turno'];
 // Evento da engine → grupo de animação (director.js).
 export const ANIM_OF = {draw: 'compra', fatigue: 'compra', base_placed: 'conjurar', card_played: 'conjurar', equipped: 'conjurar', cosmo_spent: 'cosmo',
   latent_gained: 'cosmo', spell_resolved: 'gatilho', ability: 'gatilho', divine_power: 'gatilho', domain_power: 'gatilho', strike_declared: 'ataque',
@@ -39,7 +39,7 @@ export function sound(evento) {
 export function voice(kind, name, lang, own = null) {
   const v = (telas.audio?.vozes || []).find(x => new RegExp(`\\b${x.nome}\\b`, 'i').test(name)), ids = v?.[kind] || [];
   const line = own || (ids.length && `${v.codigo}/${ids[Math.floor(Math.random() * ids.length)]}`);
-  if (line) playVoice(`playtest/divine/assets/vozes/${lang}/${line}.mp3`);
+  if (line) playVoice(`playtest/divine/assets/vozes/${lang}/${line}.mp3`, kind === 'strike');
 }
 
 // Cores: variáveis CSS da tela (lobby: --kv-*, duelo: --gold, --panel...).
