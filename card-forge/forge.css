@@ -190,3 +190,5 @@ form > fieldset:not([data-tab="Informações"]) > legend { display: none; }
 .eq-audit-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 12px; font-size: 13px; }
 .eq-audit-nav { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 12px; }
 .eq-audit .hint { margin: 0; }
+.eq-tag { display: inline-flex; align-items: center; min-height: 26px; padding: 2px 8px; box-sizing: border-box; color: var(--gold); border: 1px dashed var(--gold); border-radius: 6px; font-size: 12px; }
+.eq-chips small { align-self: center; color: var(--muted); font-size: 12px; }

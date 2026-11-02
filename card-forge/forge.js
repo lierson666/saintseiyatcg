@@ -644,9 +644,11 @@ function mountGodBlock(sel, field, kind) {
 
 // Equipment System V1: subtipos vêm do registro; marcar traz a dependência e o campo de texto continua sendo o dado.
 const esc=(t)=>String(t).replace(/[&<>"]/g,(c)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const EQ_GROUPS=[['Armadura',['armor']],['Arma',['weapon','weapon_kind']],['Instrumento',['instrument','instrument_kind']],['Objeto',['object']]];
+const EQ_GROUPS=[['Família',['armor']],['Arma',['weapon','weapon_kind']],['Instrumento',['instrument','instrument_kind']],['Objeto',['object']]];
 // Auditoria V2: só propõe. Aceitar preenche a patente como um clique normal; o catálogo só muda pelo diff do Gravar.
 let audit={},drawFinder=()=>{};
+const EQ_SPECIAL={STEEL_HIERARCHY:'Steel Armor',RENEGADE_SURPLICE:'Renegade Surplice',SKELETON_ARMOR:'Skeleton Armor',LUNAR_VESTMENT:'Lunar Vestment',LIVING_ARMOR:'Living Armor'};
+const EQ_MARKS={CRACKED:['Condição','Cracked','Dano; não define a patente.'],KAMUI:['Qualificador','Kamui','Soma à patente; não a substitui.']};
 const unsavedRank=()=>orig&&(S.patente_armadura||'')!==(orig.patente_armadura||'');
 function goToCard(id){
   if(unsavedRank())return say('Grave a patente ou desfaça antes de trocar de carta.',true);
@@ -667,15 +669,18 @@ function drawEqSubtypes(){
   box.hidden=!isEq;
   form.elements.subtipos.closest('label').hidden=isEq;
   if(!isEq)return;
-  const card={tipo:'Equipment',subtipos:list(S.subtipos),patente_armadura:S.patente_armadura||undefined},on=printedSubtypes(card.subtipos),{errors,warnings}=validateEquipmentSubtypes(card),ranks=patentesDe(card.subtipos);
+  const noted=orig&&orig.id===S.id?audit[orig.id]:null,special=EQ_SPECIAL[noted?.especial];
+  const card={tipo:'Equipment',subtipos:list(S.subtipos),patente_armadura:S.patente_armadura||undefined},on=printedSubtypes(card.subtipos),{errors,warnings:allWarnings}=validateEquipmentSubtypes(card),ranks=special?[]:patentesDe(card.subtipos);
+  const warnings=special?[]:allWarnings; // especial não se converte em família: a sugestão do registro não vale aqui
   const chip=(t)=>`<button type="button" class="eq-chip" data-eq-sub="${esc(t.name)}" aria-pressed="${on.includes(t.name)}"${t.name==='Armor'?' title="Armadura fora das cinco famílias"':''}>${esc(t.name)}</button>`;
   const shown=(t)=>on.includes(t.name)||!t.requires.length||t.requires.every((r)=>on.some((n)=>n.toUpperCase()===r));
   const old=on.filter((n)=>!EQUIPMENT_SUBTYPES.some((t)=>t.name===n&&t.status==='approved')).map((name)=>({name}));
   const row=(label,html)=>`<div class="eq-group"><span>${label}</span><div class="eq-chips" translate="no">${html}</div></div>`;
+  const tag=(text,title)=>`<span class="eq-tag"${title?` title="${esc(title)}"`:''}>${esc(text)}</span>`,mark=EQ_MARKS[noted?.condicao||noted?.qualificador];
   box.innerHTML=`<div class="eq-head"><b>Classificação</b><output class="eq-line" translate="no">${esc(formatCardTypeLine(card).toUpperCase())}</output></div>${auditBox()}`
     +EQ_GROUPS.map(([label,kinds])=>row(label,EQUIPMENT_SUBTYPES.filter((t)=>kinds.includes(t.kind)&&shown(t)).map(chip).join(''))
-      +(label==='Armadura'&&ranks.length?row('Patente',['',...ranks].map((p)=>`<button type="button" class="eq-chip" data-eq-rank="${p}" aria-pressed="${(S.patente_armadura||'')===p}">${p||'Nenhuma'}</button>`).join('')):'')).join('')
-    +(old.length?row('Anterior ao V1',old.map(chip).join('')):'')
+      +(label==='Família'&&ranks.length?row('Patente',['',...ranks].map((p)=>`<button type="button" class="eq-chip" data-eq-rank="${p}" aria-pressed="${(S.patente_armadura||'')===p}">${p||'Nenhuma'}</button>`).join('')):'')+(label==='Família'?(special?row('Especial',(old.some((t)=>t.name===special)?'':tag(special))+old.map(chip).join('')+'<small>Sem patente.</small>'):'')+(mark?row(mark[0],tag(mark[1])+`<small>${mark[2]}</small>`):''):'')).join('')
+    +(!special&&old.length?row('Anterior ao V1',old.map(chip).join('')):'')
     +[...errors.map((m)=>`<p class="eq-error" role="alert">${esc(m)}</p>`),...warnings.map((m)=>`<p class="hint">${esc(m)}</p>`)].join('');
 }
 form.elements.patente_armadura.innerHTML=[...new Set(['',...Object.values(PATENTES_ARMADURA).flat()])].map((p)=>`<option value="${p}">${p||'—'}</option>`).join('');
@@ -1208,7 +1213,7 @@ window.addEventListener('card-layouts:published',()=>render());
 
 try {
   db = await (await fetch('../data/cards.json')).json();
-  try { audit = (await (await fetch('equipment-audit-v2.json?v=20261102-lista1')).json()).cartas; } catch { audit = {}; } // sem a auditoria, a lista funciona sem status
+  try { audit = (await (await fetch('equipment-audit-v2.json?v=20261102-lista3')).json()).cartas; } catch { audit = {}; } // sem a auditoria, a lista funciona sem status
   drawFinder = mountCardFinder($('#cardFinder'), {cards: () => db.cartas, audit, current: () => $('#cardSelect').value, pick: goToCard});
   const query = new URLSearchParams(location.search), requested = query.get('card') || 'athena-002';
   // Edição aberta sem nenhuma carta ainda (STAR HILL): começa em uma carta nova dela.

@@ -40,6 +40,13 @@ test('auditoria cobre todo Equipment, e nada além dele', () => {
   assert.deepEqual(Object.keys(audit).sort(), equipment);
 });
 
+test('condição e qualificador marcam só as cartas das decisões da auditoria', () => {
+  const marked = (key) => Object.keys(audit).filter((id) => audit[id][key]).sort();
+  const named = (word) => cartas.filter((c) => c.tipo === 'Equipment' && c.nome_exibicao_en.includes(word)).map((c) => c.id).sort();
+  assert.deepEqual(marked('condicao'), named('CRACKED'));
+  assert.deepEqual(marked('qualificador'), named('KAMUI'));
+});
+
 test('toda patente proposta existe na família da carta e carta especial não tem proposta', () => {
   const byId = new Map(cartas.map((c) => [c.id, c]));
   for (const [id, a] of Object.entries(audit)) {
