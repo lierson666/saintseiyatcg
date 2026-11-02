@@ -252,7 +252,7 @@ async function drawFrame() {
 // Símbolos de texto: token -> peça. {C}/{B} usam o mesmo ícone de Cosmo.
 const ICONS = { '{C}': 'athena/icon_cosmo', '{B}': 'athena/icon_cosmo', '{L}': 'athena/icon_latent', '{S}': 'icons/soul', '{T}': 'icons/tap' };
 // Keywords (docs/guia-do-jogo.md §24 + ações dos Deuses) saem em NEGRITO MAIÚSCULO no texto de regras, como nos PSDs.
-export const KEYWORDS = ['Guardian', 'Pierce', 'Impulse', 'Nimble', 'Long Range', 'Hidden Cosmo', 'Afterlife'];
+export const KEYWORDS = ['Guardian', 'Pierce', 'Impulse', 'Nimble', 'Long Range', 'Hidden Cosmo', 'Afterlife', 'Immune'];
 const KW_RE = new RegExp(`\\b(${[...KEYWORD_WORDS].sort((a, b) => b.length - a.length).join('|')})\\b`, 'gi'); // mesma lista do duelo (shared/card-text.js)
 const boldKeywords = (para) => para.split(/(\*\*[^*]*\*\*)/).map((seg, i) => (i % 2 ? seg : seg.replace(KW_RE, (m) => `**${m.toUpperCase()}**`).replace(STAT_RE, (m) => `⟪${statTrend(m)}|${m.toUpperCase()}⟫`))).join('');
 

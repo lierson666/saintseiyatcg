@@ -2,7 +2,7 @@
 // Declaração → janela de reação (P06 A) → dano simultâneo → verificação de destruição.
 // `ctx`: {cards (loadCanon), objects (uid -> {owner, cardId}), attached}. Estado de unidade em state.units[uid] = {prepared, damage}.
 import {RuleError, NotSpecified, recordStrike, loseSoul, destroyDevotee, assertIdle, openWindow, pushTriggers, emit, hooks} from './core.js';
-import {atkOf, keywordsOf, damageDevotee, preventGod, onDeclare, afterStrike, checkDefeats, gearOf, cannotStrike, cannotStrikeGod, controllerOf} from './effects.js';
+import {atkOf, keywordsOf, damageDevotee, preventGod, onDeclare, afterStrike, checkDefeats, gearOf, cannotStrike, cannotStrikeGod, controllerOf, immuneFrom, cardSource} from './effects.js';
 import {v6Declare} from './v6/hooks.js';
 import {entryOf} from './v6/registry.js';
 
@@ -29,7 +29,9 @@ export function checkStrike(state, ctx, attacker, target) {
   if (!legal) throw new RuleError('P04', 'alvo precisa ser o God inimigo ou um Devotee inimigo');
   // §43 (autor, 01/11/2026): Nimble é o "voar": só outro Nimble mira um Devotee com Nimble.
   const own = keywordsOf(state, ctx, attacker), has = (uid, kw) => keywordsOf(state, ctx, uid).includes(kw);
-  const flies = own.includes('Nimble'), reachable = uid => !has(uid, 'Nimble') || flies;
+  const src = cardSource(state, ctx, attacker), shielded = uid => immuneFrom(state, ctx, uid, src); // §43A
+  if (target.kind === 'devotee' && shielded(target.uid)) throw new RuleError('P04', 'o alvo é Imune a este Devotee');
+  const flies = own.includes('Nimble'), reachable = uid => (!has(uid, 'Nimble') || flies) && !shielded(uid);
   if (target.kind === 'devotee' && !reachable(target.uid)) throw new RuleError('P04', 'só um Devotee com Nimble pode mirar um Devotee com Nimble');
   const defenders = state.players[enemy].battlefield.filter(uid => card(ctx, uid).kind === 'Devotee');
   // P05 A + G3-038 (autor, 28/10/2026): qualquer Guardian em campo, Prepared ou não, obriga a mirar um Guardian;
@@ -102,9 +104,9 @@ export function resolveStrike(state, ctx, strike) {
   const mark = state.events.length;
   if (target.kind === 'devotee') {
     // Black Phoenix Shadow (458, autor 30/10/2026): "cannot retaliate" (gancho noRetaliate).
-    const back = entryOf(ctx, target.uid)?.noRetaliate ? 0 : atkOf(state, ctx, target.uid), before = state.units[target.uid].damage;
+    const back = entryOf(ctx, target.uid)?.noRetaliate || immuneFrom(state, ctx, attacker, cardSource(state, ctx, target.uid)) ? 0 : atkOf(state, ctx, target.uid), before = state.units[target.uid].damage;
     strike.atks[target.uid] = back;
-    const excess = damageDevotee(state, ctx, target.uid, atk);
+    const excess = damageDevotee(state, ctx, target.uid, immuneFrom(state, ctx, target.uid, cardSource(state, ctx, attacker)) ? 0 : atk);
     strike.hits = {[target.uid]: lastHit(state, target.uid, mark)}; // gancho damagePrevented: o que a prevenção/Armor tirou de cada lado
     strike.dealt = (state.units[target.uid]?.damage ?? Infinity) - before; // dano que chegou ao Devotee (Libra Sword)
     if (first) checkDefeats(state, ctx); // alvo derrotado não retalia

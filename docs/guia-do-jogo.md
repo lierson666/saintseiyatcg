@@ -476,7 +476,7 @@ Uma habilidade Afterlife só devolve a carta ao campo se o texto disser.
 
 ## CAPÍTULO IX — KEYWORDS DE COMBATE
 
-Keyword é uma palavra que resume uma habilidade da carta (autor, 01/11/2026). A lista oficial tem 7: **Guardian, Pierce, Impulse, Nimble, Long Range, Hidden Cosmo e Afterlife**. Seal, Sealed e Training são marcadores. Cosmoble, Equip, Resonance e Awaken são mecânicas.
+Keyword é uma palavra que resume uma habilidade da carta (autor, 01/11/2026). A lista oficial tem 8: **Guardian, Pierce, Impulse, Nimble, Long Range, Hidden Cosmo, Afterlife e Imune**. Seal, Sealed e Training são marcadores. Cosmoble, Equip, Resonance e Awaken são mecânicas.
 
 ### 42. Guardian
 
@@ -485,6 +485,10 @@ Enquanto houver Devotee inimigo com Guardian em campo, Prepared ou não, os Stri
 ### 43. Nimble
 
 É o “voar” do jogo (autor, 01/11/2026). Só pode ser alvo de Strike de um Devotee com Nimble, e ignora Guardian sem Nimble ao declarar Strike. Efeitos que não são Strike o alcançam normalmente. PT: Ágil.
+
+### 43A. Imune
+
+Escreve-se **Imune a X** (EN: Immune to X), em que X é um atributo, como uma facção ou "Devotees de custo 3 ou menos" (autor, 02/11/2026). Fontes inimigas X não podem mirar o Devotee, nem com Strike. O dano delas é prevenido, inclusive a retaliação, e nenhum efeito delas o afeta, mesmo sem alvo. Isso inclui God e Domain da facção X. Efeitos de X aplicados antes de ele ficar Imune continuam até acabar. Um Guardian Imune a X não obriga atacantes X a mirá-lo (§12). Fontes aliadas não são afetadas.
 
 ### 44. (Removida)
 

@@ -3,7 +3,7 @@ import {armorCard,ARMOR_SUBTYPES,CHARACTER_ORIGINS} from './rules-policy.js';
 export const RULES_VERSION = '2.1';
 export const TYPES = ['God','Domain','Devotee','Equipment','Support','Relic','Spell','Technique','Moment'];
 export const FACTIONS = ['Athena','Poseidon','Hades','Ares','Artemis','Neutral'];
-export const KEYWORDS = ['Guardian','Pierce','Impulse','Nimble','Long Range','Hidden Cosmo','Afterlife']; // lista oficial: guia Cap. IX (autor, 01/11/2026)
+export const KEYWORDS = ['Guardian','Pierce','Impulse','Nimble','Long Range','Hidden Cosmo','Afterlife','Immune']; // lista oficial: guia Cap. IX (autor, 01/11/2026)
 export const OPERATIONS = new Set(['curar','alma','comprar','descartar','atributo','keyword','prevenir','preparar','esgotar','mover','dano','dano_area','mover_dano','rivalizar','encerrar_rivalidade','redirecionar_strike','desconto','olhar','base_extra','anular','opcional','retornar','remover_guardian','dano_rivais','controlar','cosmo_temporario','reparar']);
 export const slug = value => String(value||'').normalize('NFD').replace(/\p{M}/gu,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
 export const isArmor = armorCard;

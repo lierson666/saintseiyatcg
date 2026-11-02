@@ -63,16 +63,6 @@ test('Pegasus Cloth (002) Resonance prepara Seiya; Seika remove 1 de dano dele',
   assert.deepEqual([s.units[seiya].prepared, s.units[seiya].damage], [true, 3], 'retaliação inteira no portador (a Armor não recebe dano); Seika tira 1');
 });
 
-test('Libra Sword (048) em Shiryu: 1 de dano adicional ao Devotee que recebeu dano de Strike', () => {
-  const {s, ctx, field, equip, strike} = setup({A: fortress, B: rush}, yes);
-  const shiryu = field('A', '003'), tatsumi = field('B', '034');
-  equip('A', '048', shiryu);
-  s.players.B.soul = 5; // Tatsumi 1/5, e Athena de B fica Awaken no checkpoint: +1/+1 (Divine Protection), 2/6
-  s.units[tatsumi].damage = 1;
-  strike(shiryu, {kind: 'devotee', uid: tatsumi});
-  assert.ok(s.players.B.tartarus.includes(tatsumi), '1 anterior + 4 do Strike + 1 adicional = 6');
-});
-
 test('Eagle Marin: Training counter ao entrar; Master\'s Guidance dá +1/+1 enquanto ela está em campo', () => {
   const {s, ctx, field, hand, bases} = setup();
   const seiya = field('A', '001'), marin = hand('A', '021');

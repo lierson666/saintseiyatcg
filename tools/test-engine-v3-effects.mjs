@@ -159,17 +159,13 @@ test('estáticas: Tatsumi com Soul ≤ 5, Seika com Seiya, Shunrei com Shiryu', 
   assert.equal(hpOf(t.s, t.ctx, shunrei), 4);
 });
 
-test('Dragon Shield (003/004) previne 1 uma vez por Round e não acumula; Libra Defense previne 2 em Shiryu', () => {
+test('Dragon Shield (003/004) previne 1 uma vez por Round e não acumula', () => {
   const {s, ctx, field, equip, strike, end} = setup({A: fortress, B: rush});
   const shiryu = field('A', '003');
   const cloth = equip('A', '004', shiryu); // Armor HP 5 (soma ao portador) com Dragon Shield
   const seiya = field('B', '001'); s.units[seiya].training = 1; // 3/5: retaliação 3 (God não retalia mais, 01/11/2026)
   strike(shiryu, {kind: 'devotee', uid: seiya});
   assert.deepEqual([s.units[cloth]?.damage ?? 0, s.units[shiryu].damage], [0, 2], 'retaliação 3 menos 1, toda no portador');
-  end(); startTurn(s); end(); startTurn(s);
-  equip('A', '049', shiryu);
-  strike(shiryu, {kind: 'devotee', uid: seiya});
-  assert.equal(s.units[shiryu].damage, 2, 'Dragon Shield 1 + Libra 2 previnem os 3; o portador segue com 2');
   assert.equal(s.units[cloth]?.damage ?? 0, 0, 'a Armor não tem dano próprio');
 });
 

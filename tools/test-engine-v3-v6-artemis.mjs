@@ -44,7 +44,7 @@ function setup() {
   return {s, ctx, p, field, hand, io, id: cardId => `artemis-v6-${cardId}`};
 }
 
-test('enter + watchCounter: Lunar Nymph põe marcador; Calisto compra 1 (uma por Round); Ancient Grove dá +0/+1 (sem Soul desde 31/10/2026)', () => {
+test('enter + watchCounter: Lunar Nymph põe marcador; Calisto compra 1 (uma por Round); Ancient Grove sem PV fixo (sem Soul desde 31/10/2026)', () => {
   const {s, ctx, p, field, hand, io, id} = setup();
   s.domains.A = id(429);
   p.soul -= 5;
@@ -54,7 +54,7 @@ test('enter + watchCounter: Lunar Nymph põe marcador; Calisto compra 1 (uma por
   playDevotee(s, ctx, 'A', nymph, {}); passAll(s);
   assert.equal(s.units[wolf].training, 1);
   assert.equal(atkOf(s, ctx, wolf), atk0 + 1);
-  assert.equal(hpOf(s, ctx, wolf), hp0 + 2); // marcador + Rooted Endurance
+  assert.equal(hpOf(s, ctx, wolf), hp0 + 1); // só o marcador: Rooted Endurance vale ao declarar Strike
   assert.equal(p.hand.length, cards0 - 1 + 1); // jogou a Nymph, Calisto comprou 1
   assert.equal(p.soul, soul0);
   // Segunda vez no mesmo Round/turno: nem Calisto nem o Domain disparam.

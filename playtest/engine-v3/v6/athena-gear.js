@@ -5,6 +5,7 @@
 import * as k from './kit.js';
 import {spendBase, addSeal} from '../core.js';
 import {shield, isBronze} from '../effects.js';
+import {gainSoul} from '../gods.js';
 
 const name = (c, uid) => k.card(c, uid)?.name || '';
 const isSaint = (c, uid) => k.isDevotee(c, uid) && /Saint/.test(k.card(c, uid).type);
@@ -202,6 +203,19 @@ export default {
   },
 
   // Jamir Repair Tools
+  // Armas de Libra (autor, 02/11/2026): molde das espadas de duas cores do Magic. Sem limite por rodada.
+  // shortcut: dano de Pierce que passa por um Devotee não dispara (gancho gearGodDamage só no Strike direto ao God).
+  'athena-v6-048': {
+    immune: src => src.card?.kind === 'Devotee' && src.card.cost?.amount <= 3,
+    gearGodDamage: (s, c, key) => st => {
+      k.discard(st, c, k.other(st, key), 1, 'LIBRA SWORD');
+      for (const base of st.players[key].bases) base.prepared = true;
+    },
+  },
+  'athena-v6-049': {
+    immune: src => /^(god-)?(hades|poseidon)/.test(src.cardId || ''),
+    gearGodDamage: (s, c, key) => st => { gainSoul(st, key, 2); k.draw(st, key, 1); },
+  },
   'athena-v6-050': {
     activate: {name: 'Repair Tools', cost: 1, once: true, tap: false,
       // Texto de 30/10/2026: "target friendly Devotee equipped with an Armor" (Armor não tem dano próprio).

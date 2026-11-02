@@ -1,7 +1,7 @@
 // Kit das cartas V6: ações comuns de texto de carta sobre a engine 3.0. Toda escolha é uma pergunta da engine
 // (`ctx.decide`), respondida no modal de decisão da arena, pela IA ou pelo jogador remoto. Sem `decide`, recusa.
 import {RuleError, destroyDevotee, draw, emit, gainLatent, loseSoul, mill, prepareUnit, useOncePerRound, addEffect, restoreMoon, spendBase} from '../core.js';
-import {card, controllerOf, modify, damageDevotee, checkDefeats, atkOf, hpOf, keywordsOf} from '../effects.js';
+import {card, controllerOf, modify, damageDevotee, checkDefeats, atkOf, hpOf, keywordsOf, blockedNow} from '../effects.js';
 import {gainSoul} from '../gods.js';
 import {collect, resonanceTag} from './registry.js';
 
@@ -12,7 +12,7 @@ export const isDevotee = (c, uid) => card(c, uid)?.kind === 'Devotee';
 // Subtipo na linha de tipo ("Devotee — Specter"): Specter, Skeleton, Berserker, Marina, Hunter…
 export const hasType = (c, uid, type) => new RegExp(`\\b${type}`, 'i').test(card(c, uid)?.type || '');
 export const devotees = (s, c, key) => s.players[key].battlefield.filter(u => isDevotee(c, u));
-export const enemies = (s, c, key) => devotees(s, c, other(s, key));
+export const enemies = (s, c, key) => devotees(s, c, other(s, key)).filter(u => !blockedNow(s, u)); // §43A Imune
 export const allDevotees = (s, c) => s.order.flatMap(k => devotees(s, c, k));
 export const onField = (s, key, uid) => !!uid && controllerOf(s, uid) === key;
 export const costOf = (c, uid) => card(c, uid)?.cost?.amount ?? 0;
@@ -94,7 +94,7 @@ export function payLatent(s, key, n) {
   return true;
 }
 export function defeat(s, c, uid, event = 'destroyed') {
-  if (!controllerOf(s, uid)) return;
+  if (!controllerOf(s, uid) || blockedNow(s, uid)) return;
   const owner = c.objects[uid].owner, gear = gearOf(c, uid); // antes da derrota: gatilhos "equipped Devotee is defeated"
   destroyDevotee(s, uid, c.objects, c.attached, event);
   emit(s, 'v6_defeat', {uid, owner});
@@ -111,23 +111,23 @@ export const setDamagedHooks = fn => { damagedHooks = fn; };
 export const setLeavesHooks = fn => { leavesHooks = fn; };
 export const setDefeatedHooks = fn => { defeatedHooks = fn; };
 
-export function exhaust(s, uid) { if (s.units[uid]) { s.units[uid].prepared = false; emit(s, 'exhausted', {uid}); } }
+export function exhaust(s, uid) { if (s.units[uid] && !blockedNow(s, uid)) { s.units[uid].prepared = false; emit(s, 'exhausted', {uid}); } }
 export const prepare = (s, uid) => { if (s.units[uid]) prepareUnit(s, uid); };
 export function removeDamage(s, uid, n = Infinity) { if (s.units[uid]) s.units[uid].damage = Math.max(0, s.units[uid].damage - n); }
 // Marcadores +1/+1 (e -1/-1): ficam no objeto enquanto ele estiver em campo; somados em mods() (effects.js).
 export function addCounter(s, uid, n = 1) {
-  if (!s.units[uid]) return;
+  if (!s.units[uid] || blockedNow(s, uid)) return;
   s.units[uid].training = (s.units[uid].training || 0) + n; // §48A: um campo só; negativo = marcador -1/-1 (neutras)
   emit(s, 'counter', {uid, amount: n});
 }
 // Marcadores com nome (Rebirth, etc.): só contagem, sem bônus.
 export function addMarker(s, uid, name, n = 1) {
-  if (!s.units[uid]) return;
+  if (!s.units[uid] || blockedNow(s, uid)) return;
   const m = (s.units[uid].markers ||= {});
   m[name] = Math.max(0, (m[name] || 0) + n);
 }
 export const markers = (s, uid, name) => s.units[uid]?.markers?.[name] || 0;
-export const buff = (s, uid, atk, hp, duration = 'this_round', keywords = []) => { if (s.units[uid]) modify(s, uid, {atk, hp, keywords}, duration); };
+export const buff = (s, uid, atk, hp, duration = 'this_round', keywords = []) => { if (s.units[uid] && !blockedNow(s, uid)) modify(s, uid, {atk, hp, keywords}, duration); };
 
 // Zonas. `from` 'tartarus' | 'hand' | 'deck' | 'battlefield'.
 function take(s, c, uid, from) {
@@ -149,7 +149,7 @@ function take(s, c, uid, from) {
 const vanish = (c, uid) => (c.objects[uid]?.token ? (delete c.objects[uid], true) : false);
 // `by`: jogador cujo efeito devolve (Unshaken Loyalty, Poseidon 176: efeito 'noBounce' barra retorno por efeito inimigo).
 export function toHand(s, c, uid, from = 'tartarus', by = null) {
-  if (from === 'battlefield' && !controllerOf(s, uid)) return false;
+  if (from === 'battlefield' && (!controllerOf(s, uid) || blockedNow(s, uid))) return false;
   if (from === 'battlefield' && by && by !== controllerOf(s, uid) && s.effects.some(e => e.kind === 'noBounce' && e.target === uid)) return false;
   const was = from === 'battlefield' ? controllerOf(s, uid) : null; // gancho leaves (Devotee ou Equipment)
   if (!take(s, c, uid, from)) return false;
@@ -162,7 +162,7 @@ export function toHand(s, c, uid, from = 'tartarus', by = null) {
   return true;
 }
 export function toTartarus(s, c, uid, from = 'hand') {
-  if (from === 'battlefield' && !controllerOf(s, uid)) return false;
+  if (from === 'battlefield' && (!controllerOf(s, uid) || blockedNow(s, uid))) return false;
   const was = from === 'battlefield' ? controllerOf(s, uid) : null; // gancho leaves (Devotee ou Equipment)
   if (!take(s, c, uid, from)) return false;
   if (was) leavesHooks(s, c, was, uid, 'tartarus');
@@ -171,7 +171,7 @@ export function toTartarus(s, c, uid, from = 'hand') {
   return true;
 }
 export function exile(s, c, uid, from = 'battlefield') {
-  if (from === 'battlefield' && !controllerOf(s, uid)) return false;
+  if (from === 'battlefield' && (!controllerOf(s, uid) || blockedNow(s, uid))) return false;
   const was = from === 'battlefield' ? controllerOf(s, uid) : null; // gancho leaves (Devotee ou Equipment)
   if (!take(s, c, uid, from)) return false;
   if (was) leavesHooks(s, c, was, uid, 'void');

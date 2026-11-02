@@ -8,7 +8,7 @@
 // equipado no Devotee nomeado; dano que não é de Strike também passa pela Armor (prevenções "Strike damage" não valem);
 // dano redirecionado pela Resonance da 004 é dano de Strike em Shiryu.
 import {CHARACTER_IDENTITY, characterOf} from '../../shared/character-identity.js';
-import {v6Mods, v6Entered, v6Cast, v6Defeated, v6AfterStrike, v6WouldBeDefeated, v6Leaves, v6Prevent, contextOf} from './v6/hooks.js';
+import {v6Mods, v6Entered, v6Cast, v6Defeated, v6AfterStrike, v6WouldBeDefeated, v6Leaves, v6Prevent, contextOf, entryOf} from './v6/hooks.js';
 import {hooks, RuleError, useOncePerRound, addEffect, destroyDevotee, draw, spendBase, pushTriggers, emit, gainLatent, prepareUnit, loseSoul} from './core.js';
 
 export const card = (ctx, uid) => ctx.cards.get(ctx.objects[uid].cardId);
@@ -111,9 +111,9 @@ function preventDevotee(state, ctx, uid, amount, strike) {
   for (const e of gear) {
     const n = id(ctx, e);
     if (amount <= 0) break;
-    if ((n === '044' || n === '045' || n === '049') && useOncePerRound(state, `prevent:${e}`)) {
+    if ((n === '044' || n === '045') && useOncePerRound(state, `prevent:${e}`)) {
       const before = amount;
-      amount = Math.max(0, amount - (n === '049' && shiryu ? 2 : 1)); // Libra Defense: 2 em Dragon Shiryu
+      amount = Math.max(0, amount - 1);
       // Dragon's Guard, Resonance: ao prevenir dano em Dragon Shiryu, 1 de escudo numa Armor dele até o fim do Round seguinte.
       const armor = gear.find(g => card(ctx, g).armor);
       if (n === '045' && shiryu && before > amount && armor) shield(state, armor, 1, {strikeOnly: false, duration: 'next_round'});
@@ -185,9 +185,27 @@ export function preventGod(state, ctx, key, amount, strike = true) {
 
 // Dano num Devotee (`strike`: se é dano de Strike): prevenção, escudos das Armor, depois o Devotee.
 // Devolve o dano que passou do HP restante do Devotee (base do Pierce).
+// §43A Imune a X (autor, 02/11/2026): X inimigo não mira, não causa dano e não afeta o portador; o que já estava aplicado fica.
+// Quem diz X é o gancho `immune(src)` do Equipment preso. Fonte: {controller, cardId, card}; poder de God só tem cardId 'god-…'.
+// shortcut: fora de Spell e gatilho da cadeia (state.resolving) não há fonte conhecida, então nada é bloqueado; ligar se surgir carta assim.
+export const godSource = (state, key) => ({controller: key, cardId: state.divine?.[key]?.god});
+export const cardSource = (state, ctx, uid) => ({controller: controllerOf(state, uid), cardId: ctx.objects[uid]?.cardId, card: card(ctx, uid)});
+export function immuneFrom(state, ctx, uid, src) {
+  const key = controllerOf(state, uid);
+  return !!key && !!src && src.controller !== key && gearOf(ctx, uid).some(e => entryOf(ctx, e)?.immune?.(src));
+}
+export function blockedNow(state, uid) {
+  const r = state.resolving, ctx = r?.controller && contextOf(state);
+  if (!ctx) return false;
+  const obj = ctx.objects[r.uid]; // gatilho com uid de objeto do outro jogador (Water Prison) ou sem objeto (Command) vem do God
+  return immuneFrom(state, ctx, uid, obj?.owner === r.controller ? {controller: r.controller, cardId: obj.cardId, card: ctx.cards.get(obj.cardId)} : godSource(state, r.controller));
+}
+hooks.blockedNow = blockedNow;
+
 export function damageDevotee(state, ctx, uid, amount, strike = true) {
   if (!state.units[uid]) return 0; // já saiu (ex.: Final Sacrifice)
   const incoming = amount;
+  if (!strike && blockedNow(state, uid)) amount = 0;
   amount = preventDevotee(state, ctx, uid, amount, strike);
   const afterPrevention = amount;
   // Guia §26A (30/10/2026): a Armor não tem dano próprio; escudos postos nela protegem o portador.
@@ -511,16 +529,6 @@ export function afterStrike(state, ctx, strike) {
   // Rising Dragon (003): sobreviveu como defensor, +1 ATK até o fim do Round.
   if (survived(t) && id(ctx, t) === '003' && useOncePerRound(state, `rising-dragon:${t}`)) {
     add(controllerOf(state, t), st => { if (st.units[t]) modify(st, t, {atk: 1}); }, {uid: t, ability: 'Rising Dragon'});
-  }
-  // Libra Sword (048), Resonance: Shiryu causou dano de Strike a Devotee inimigo; pode causar mais 1 a ele.
-  const sword = wears(ctx, attacker, '048') && id(ctx, attacker) === '003' ? wears(ctx, attacker, '048') : null;
-  if (sword && t && strike.dealt > 0 && !state.roundUses.has(`resonance:${sword}`)) {
-    const key = strike.player;
-    add(key, st => {
-      if (survived(t) && !st.roundUses.has(`resonance:${sword}`) && ask(ctx, key, {ability: 'Libra Sword Resonance', uid: t})) {
-        useOncePerRound(st, `resonance:${sword}`); damageDevotee(st, ctx, t, 1, false); checkDefeats(st, ctx);
-      }
-    }, {uid: sword, ability: 'Resonance', target: t});
   }
   // Domain 062 Galaxian Wars Arena, Tournament Spirit: Bronze Saint amigo derrotou o Devotee inimigo no Strike, atacando
   // ou defendendo na retaliação (autor, 28/10/2026; guia §63); uma vez por Round, o Saint ganha +1 ATK até o fim do Round

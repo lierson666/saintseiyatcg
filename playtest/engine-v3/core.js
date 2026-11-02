@@ -87,7 +87,7 @@ export function startTurn(state, startOfTurn = []) {
 export function addSeal(state, ctx, uids, n, source) {
   if (!Number.isInteger(n) || n < 1) throw new NotSpecified('número de marcadores Seal do efeito');
   const transitions = [];
-  for (const uid of uids) {
+  for (const uid of uids.filter(u => !hooks.blockedNow?.(state, u))) { // §43A Imune
     const unit = state.units[uid];
     if (!unit) continue;
     const before = unit.seal || 0;
@@ -338,7 +338,7 @@ export function pass(state, key) {
     const top = state.chain.pop();
     emit(state, 'resolve', {player: top.controller, uid: top.uid, ability: top.ability});
     const before = glance(state);
-    state.resolving = {uid: top.uid ?? null, ability: top.ability ?? null};
+    state.resolving = {uid: top.uid ?? null, ability: top.ability ?? null, controller: top.controller};
     try { top.run(state); } finally { delete state.resolving; }
     const results = outcome(state, before);
     if (results.length) emit(state, 'resolved', {player: top.controller, uid: top.uid, ability: top.ability, results});

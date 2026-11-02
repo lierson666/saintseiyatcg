@@ -30,7 +30,7 @@ function setup(decks = {A: rush, B: fortress}) {
 test('parser: bônus fixo de Equipment só nas linhas incondicionais', () => {
   assert.deepEqual(cards.get('athena-v6-002').equipped, {atk: 1, hp: 0, keywords: []});
   assert.deepEqual(cards.get('athena-v6-019').equipped, {atk: 3, hp: 0, keywords: ['Nimble']});
-  assert.deepEqual(cards.get('athena-v6-049').equipped, {atk: 0, hp: 2, keywords: []});
+  assert.deepEqual(cards.get('athena-v6-049').equipped, {atk: 2, hp: 2, keywords: []});
   assert.equal(cards.get('athena-v6-047').equipped, null, '"while it has damage" fica para os efeitos');
   assert.equal(cards.get('athena-v6-004').equipped, null);
 });
@@ -57,10 +57,10 @@ test('Armor soma ATK e HP ao portador, não tem dano próprio e fica solta no ca
 test('Divine Weapon com +HP (049) soma HP; a Armor (044) soma o HP impresso ao portador e o Pierce mede só o portador', () => {
   const {s, ctx, field, equip, strike} = setup({A: fortress, B: rush});
   const cassios = field('A', '027');
-  equip('A', '049', cassios); // 2/3 com +0 ATK / +2 HP, não é Armor; Libra Defense previne 1
+  equip('A', '049', cassios); // 2/3 com +2 ATK / +2 HP, não é Armor
   const seiyaB = field('B', '001'); s.units[seiyaB].training = 1; // 3/5: retaliação 3
   strike(cassios, {kind: 'devotee', uid: seiyaB});
-  assert.deepEqual([s.units[cassios].damage, hpOf(s, ctx, cassios)], [2, 5]);
+  assert.deepEqual([s.units[cassios].damage, hpOf(s, ctx, cassios)], [3, 5]);
   const t = setup();
   const seiya = t.field('A', '001'), repairer = t.field('B', '042');
   const cracked = t.equip('B', '044', repairer); // Armor HP 2 (soma ao portador), +1 ATK, Last Protection previne 1
@@ -92,9 +92,9 @@ test('Equipment não-Armor fica solto quando o portador sai e é reequipado paga
   assert.ok(s.players.A.tartarus.includes(cassios));
   assert.ok(s.players.A.battlefield.includes(weapon) && !ctx.attached[weapon]);
   checkInvariants(s, objects);
-  s.players.A.bases = s.players.A.deck.splice(0, 4).map(uid => ({uid, prepared: true}));
+  s.players.A.bases = s.players.A.deck.splice(0, 5).map(uid => ({uid, prepared: true}));
   assert.throws(() => reequip(s, ctx, 'B', weapon, acolyte), /D1/);
-  assert.deepEqual(reequip(s, ctx, 'A', weapon, acolyte), {cost: {amount: 4, unit: 'base'}});
+  assert.deepEqual(reequip(s, ctx, 'A', weapon, acolyte), {cost: {amount: 5, unit: 'base'}});
   assert.equal(ctx.attached[weapon], acolyte);
   assert.throws(() => reequip(s, ctx, 'A', weapon, acolyte), e => e instanceof RuleError && /solto/.test(e.message));
 });

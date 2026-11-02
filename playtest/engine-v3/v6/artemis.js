@@ -162,7 +162,7 @@ export default {
   },
   // CHANDRA
   'artemis-v6-371': {
-    enter: run((st, c, key) => { const t = pickFriend(st, c, key, 'DIVINE AWAKENING'); if (t) grow(st, c, key, t, 1); }),
+    enter: run((st, c, key, self) => { const t = pickFriend(st, c, key, 'DIVINE AWAKENING', {not: self}); if (t) grow(st, c, key, t, 1); }),
     watchCounter: (s, c, key, self, target, n, by) => by === key && target !== self && k.controllerOf(s, target) === key
       && k.onceTurn(s, `${self}:communion`) && (st => { if (k.may(c, key, 'MOONLIT COMMUNION', {uid: self})) k.gainLatent(st, key, 1); }),
   },
@@ -279,7 +279,7 @@ export default {
       && s.events.find(e => e.type === 'card_played' && e.kind === 'Devotee' && !e.from && e.player === key && e.turn === s.turn)?.uid === entered
       && (st => grow(st, c, key, entered, 1)),
   },
-  'artemis-v6-398': {enter: run((st, c, key) => { const t = pickFriend(st, c, key, 'MOONLIT BLESSING'); if (t) grow(st, c, key, t, 1); })},
+  'artemis-v6-398': {enter: run((st, c, key, self) => { const t = pickFriend(st, c, key, 'MOONLIT BLESSING', {not: self}); if (t) grow(st, c, key, t, 1); })},
   'artemis-v6-399': {mods: (s, c, key, self) => (k.devotees(s, c, key).some(u => u !== self && k.hasType(c, u, 'Forest Guardian')) ? [{atk: 1, hp: 1}] : [])},
   // PRIMAL FOREST GUARDIAN
   'artemis-v6-400': {
@@ -427,9 +427,11 @@ export default {
     res: {name: 'RESONANCE', cost: 2, run: (s, c, key) => { k.topToBase(s, key, false); }},
   },
   'artemis-v6-429': {
-    aura: (s, c, key, self, unit) => (k.controllerOf(s, unit) === key && counters(s, unit) > 0 ? {atk: 0, hp: 1} : null),
+    // Nerf (autor, 02/11/2026): o +1 PV deixou de ser fixo; vale só para quem declara Strike, até o fim do turno.
+    watchDeclare: (s, c, key, self, attacker) => k.controllerOf(s, attacker) === key && counters(s, attacker) > 0
+      && (st => k.buff(st, attacker, 0, 1, 'this_turn')),
     resonance: {watchSurvive: (s, c, key, self, unit) => k.controllerOf(s, unit) === key && counters(s, unit) > 0
-      && k.resPay(s, c, key, 'survive', 1, 'RESONANCE', st => grow(st, c, key, unit, 1), {text: 'Pay {1}{C}: put a Training counter on it?'})},
+      && k.resPay(s, c, key, 'survive', 2, 'RESONANCE', st => grow(st, c, key, unit, 1), {text: 'Pay {2}{C}: put a Training counter on it?'})},
   },
   'artemis-v6-430': {
     watchDeclare: (s, c, key, self, attacker, target) => k.controllerOf(s, attacker) === key && vsDevotee(target) && k.atkOf(s, c, attacker) >= 4

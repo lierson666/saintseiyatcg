@@ -23,13 +23,14 @@ export function aim(s, c, key, self, entry, choice = {}) {
   const real = c.decide, records = [];
   if (!real) return {records, values: []};
   if (entry.spell.targets) {
-    const values = entry.spell.targets(s, c, key, self) || [];
-    return {records: null, values: values.filter(Boolean)};
+    s.resolving = {uid: self, controller: key}; // fonte do Imune (§43A): nada resolve aqui, a cadeia só abre depois
+    try { return {records: null, values: (entry.spell.targets(s, c, key, self) || []).filter(Boolean)}; } finally { delete s.resolving; }
   }
   // Ensaio numa CÓPIA do estado e do ctx: o estado real (e as referências que a interface e os testes guardam) não muda.
   let asked = null; // erro vindo do jogador (pergunta pendente, resposta ilegal): nunca engolido pelo ensaio
   const s2 = clone(s), c2 = {...c, objects: {...c.objects}, attached: clone(c.attached), cards: new Map(c.cards)};
   bindContext(s2, c2);
+  s2.resolving = {uid: self, controller: key}; // fonte do Imune (§43A)
   c2.decide = (player, q) => {
     if (!isTargetQ(key, player, q)) return dummy(q);
     let value;

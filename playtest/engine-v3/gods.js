@@ -3,7 +3,7 @@
 // docs/alpha-0.1/GODS-3.0-SUPPLEMENT.md (G3-xxx). Nada aqui vem da engine 2.2.
 // Habilidades da Athena que mexem em Devotees (Divine Protection, Cosmo of Hope) ficam em effects.js e leem `state.divine`.
 import {RuleError, NotSpecified, emit, hooks, assertIdle, pushTriggers, loseSoul, loseGame, destroyDevotee, spendBase, gainLatent, placeBase, addSeal, mill, draw, useOncePerRound} from './core.js';
-import {card, controllerOf, isSaint, atkOf, forbidGodStrike} from './effects.js';
+import {card, controllerOf, isSaint, atkOf, forbidGodStrike, immuneFrom, godSource} from './effects.js';
 import {characterOf, IdentityGap} from '../../shared/character-identity.js';
 import * as k from './v6/kit.js'; // ciclo gods↔kit é seguro: kit só usa gainSoul dentro de funções
 import {contextOf} from './v6/registry.js';
@@ -177,6 +177,7 @@ hooks.strikeDeclared.push((state, ctx, attacker, controller) => poseidons(state)
     return {controller: key, ctx, uid: `water-prison:${attacker}`, ability: 'WATER PRISON', run: st => {
       const once = `god:${key}:water-prison`;
       if (st.roundUses.has(once) || st.players[key].latent < 2) return;
+      if (immuneFrom(st, ctx, attacker, godSource(st, key))) return; // §43A
       if (!ask(ctx, key, {ability: 'WATER PRISON', uid: attacker, cost: {latent: 2}})) {
         emit(st, 'divine_power_declined', {player: key, ability: 'WATER PRISON', uid: attacker});
         return;
@@ -382,11 +383,12 @@ const commandSplit = (state, key) => { const base = Math.min(COMMAND_COST, state
 const commandSide = (state, key) => (COMMANDS[state.divine[key].god].side === 'friendly' ? key : other(state, key));
 export function commandTargets(state, ctx, key) {
   const cmd = COMMANDS[state.divine[key]?.god];
-  return cmd ? k.devotees(state, ctx, commandSide(state, key)).filter(uid => !cmd.legal || cmd.legal(state, ctx, key, uid)) : [];
+  return cmd ? k.devotees(state, ctx, commandSide(state, key)).filter(uid => !immuneFrom(state, ctx, uid, godSource(state, key)) && (!cmd.legal || cmd.legal(state, ctx, key, uid))) : [];
 }
 export function commandBlock(state, ctx, key, uid) {
   if (state.victory) return 'D52';
   if (!COMMANDS[state.divine[key]?.god]) return 'none';
+  if (immuneFrom(state, ctx, uid, godSource(state, key))) return 'immune'; // §43A
   if (state.active !== key || state.window || state.chain.length) return 'sorcery';
   if (state.roundUses.has(`god:${key}:command`)) return 'used';
   if (state.players[key].latent < commandSplit(state, key).latent) return 'cost';

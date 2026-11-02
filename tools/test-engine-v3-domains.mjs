@@ -464,15 +464,17 @@ test('428 The Sacred Forest: Devotee de custo 4+ entra, +1 Soul; Ressonância p�
   gate('artemis-v6-428');
 });
 
-test('429 The Ancient Grove: Devotee com Training counter +0/+1; Ressonância: ele sobrevive a um Strike, paga {1}{C} e ganha outro', () => {
+test('429 The Ancient Grove: quem tem Training counter ganha +0/+1 ao declarar Strike, até o fim do turno; Ressonância: sobrevive, paga {2}{C} e ganha outro', () => {
   const {s, ctx, field} = setup('artemis-v6-429', 'god-athena');
   const u = field('A', 'athena-v6-028'), hp = k.hpOf(s, ctx, u);
   k.addCounter(s, u, 1);
-  assert.equal(k.hpOf(s, ctx, u), hp + 2, 'marcador + Domain');
+  assert.equal(k.hpOf(s, ctx, u), hp + 1, 'só o marcador: o Domain não dá PV fixo');
   const survive = g => {
     const o = setup('artemis-v6-429', g), x = o.field('A', 'athena-v6-028'), foe = o.field('B', 'artemis-v6-386');
     k.addCounter(o.s, x, 1); k.buff(o.s, x, 0, 10);
+    const hp0 = k.hpOf(o.s, o.ctx, x);
     o.strike(x, dev(foe));
+    assert.equal(k.hpOf(o.s, o.ctx, x) - (o.s.units[x].training - 1), hp0 + 1, 'Strike declarado: +1 PV até o fim do turno');
     return o.s.units[x].training;
   };
   assert.equal(survive('god-artemis'), 2);

@@ -44,7 +44,7 @@ self.ssI18nPT = {
     'No legal target.': 'Sem alvo válido.',
     'Resonance': 'Ressonância', 'Equip': 'Equipar', 'EQUIP': 'EQUIPAR', 'Equipped': 'Equipado', 'Rarity': 'Raridade', 'Cost': 'Custo', 'Type': 'Tipo',
     'Common': 'Comum', 'Uncommon': 'Incomum', 'Rare': 'Rara', 'Legendary': 'Lendária', 'Divine': 'Divina', 'Legendary or Divine': 'Lendária ou Divina',
-    'Guardian': 'Guardião', 'Nimble': 'Ágil', 'Long Range': 'Longo Alcance', 'Pierce': 'Perfurar', 'Impulse': 'Impulso',
+    'Guardian': 'Guardião', 'Nimble': 'Ágil', 'Immune': 'Imune', 'Long Range': 'Longo Alcance', 'Pierce': 'Perfurar', 'Impulse': 'Impulso',
     'Seal': 'Selo', 'Sealed': 'Selado', 'Training': 'Treinamento', 'Afterlife': 'Além-Túmulo',
     'Priority': 'Prioridade', 'Turn': 'Turno', 'Clock': 'Relógio', 'Pass': 'Passar', 'Resolve': 'Resolver', 'Resolving': 'Resolvendo',
     'Resolves next': 'Resolve em seguida', 'Concede': 'Desistir', 'Hidden': 'Oculta', 'Card': 'Carta', 'Cards': 'Cartas', 'Bonus': 'Bônus',

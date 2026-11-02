@@ -2064,11 +2064,12 @@
       "vida": null,
       "resistance": null,
       "damage_cloth": null,
-      "equipar_custo": 4,
+      "equipar_custo": 5,
       "keywords_en": [],
       "habilidades_en": [
-        "Equipped Devotee gets +2 ATK.",
-        "Resonance — Dragon Shiryu: Once each round, when Dragon Shiryu deals Strike damage to an enemy Devotee, you may deal 1 additional damage to that Devotee."
+        "Equipped Devotee gets +2 ATK / +2 HP and Nimble.",
+        "Equipped Devotee is Immune to Devotees with cost 3 or less.",
+        "Whenever equipped Devotee deals Strike damage to a God, that God's player discards a card and you prepare all your Cosmo Bases."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -2077,14 +2078,15 @@
       "slot_equipamento": "acessorio",
       "auto_equip_en": ["Dragon Shiryu"],
       "donos": ["dragon-shiryu"],
-      "equipar_custo_outros": 4,
+      "equipar_custo_outros": 5,
       "equipar_custo_ressonante": 0,
       "equipar_auto": true,
       "nome_exibicao_pt": "ESPADA DE LIBRA",
       "subtitulo_pt": "A Lâmina da Justiça",
       "habilidades_pt": [
-        "O Devoto equipado recebe +2 ATQ.",
-        "Ressonância — Shiryu de Dragão: Uma vez por rodada, quando Shiryu de Dragão causa dano de Golpe a um Devoto inimigo, você pode causar 1 de dano adicional a esse Devoto."
+        "O Devoto equipado recebe +2 ATQ / +2 PV e Ágil.",
+        "O Devoto equipado é Imune a Devotos de custo 3 ou menos.",
+        "Sempre que o Devoto equipado causar dano de Golpe a um Deus, o jogador desse Deus descarta 1 carta e você prepara todas as suas Bases de Cosmo."
       ],
       "tagline_pt": "A Lâmina da Justiça",
       "auto_equip_pt": ["Shiryu de Dragão"]
@@ -2113,12 +2115,12 @@
       "vida": null,
       "resistance": null,
       "damage_cloth": null,
-      "equipar_custo": 4,
+      "equipar_custo": 5,
       "keywords_en": [],
       "habilidades_en": [
-        "Equipped Devotee gets +0 ATK / +2 HP.",
-        "Libra Defense — Once each round, when equipped Devotee would take Strike damage, prevent 1 of that damage.",
-        "Resonance — Dragon Shiryu: While equipped to Dragon Shiryu, Libra Defense prevents 2 damage instead of 1."
+        "Equipped Devotee gets +2 ATK / +2 HP.",
+        "Equipped Devotee is Immune to Hades and Poseidon.",
+        "Whenever equipped Devotee deals Strike damage to a God, you gain {2}{S} and draw a card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -2127,15 +2129,15 @@
       "slot_equipamento": "acessorio",
       "auto_equip_en": ["Dragon Shiryu"],
       "donos": ["dragon-shiryu"],
-      "equipar_custo_outros": 4,
+      "equipar_custo_outros": 5,
       "equipar_custo_ressonante": 0,
       "equipar_auto": true,
       "nome_exibicao_pt": "ESCUDO DE LIBRA",
       "subtitulo_pt": "O Equilíbrio da Proteção",
       "habilidades_pt": [
-        "O Devoto equipado recebe +0 ATQ / +2 PV.",
-        "Defesa de Libra — Uma vez por rodada, quando o Devoto equipado sofreria dano de Golpe, previna 1 desse dano.",
-        "Ressonância — Shiryu de Dragão: Equipado em Shiryu de Dragão, a Defesa de Libra previne 2 de dano em vez de 1."
+        "O Devoto equipado recebe +2 ATQ / +2 PV.",
+        "O Devoto equipado é Imune a Hades e Poseidon.",
+        "Sempre que o Devoto equipado causar dano de Golpe a um Deus, você ganha {2}{S} e compra 1 carta."
       ],
       "tagline_pt": "O Equilíbrio da Proteção",
       "auto_equip_pt": ["Shiryu de Dragão"]
@@ -16195,7 +16197,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Divine Awakening — When Chandra enters the Battlefield, put a Training counter on target friendly Devotee.",
+        "Divine Awakening — When Chandra enters the Battlefield, put a Training counter on another target friendly Devotee.",
         "Moonlit Communion — Whenever you put one or more Training counters on another friendly Devotee, you may generate {1}{L}. This ability triggers only once each round."
       ],
       "habilidade_awaken_en": "",
@@ -16205,7 +16207,7 @@
       "subtitulo_pt": "RECEPTÁCULO DE ÁRTEMIS",
       "tagline_pt": "O Receptáculo Mortal da Deusa da Lua",
       "habilidades_pt": [
-        "Despertar Divino — Quando Chandra entra no Campo de Batalha, coloque 1 marcador de Treinamento no Devoto aliado alvo.",
+        "Despertar Divino — Quando Chandra entra no Campo de Batalha, coloque 1 marcador de Treinamento em outro Devoto aliado alvo.",
         "Comunhão Lunar — Sempre que você colocar 1 ou mais marcadores de Treinamento em outro Devoto aliado, você pode gerar {1}{L}. Essa habilidade ativa apenas uma vez por rodada."
       ],
       "flavour_pt": "\"Dentro do frágil coração de uma criança, uma deusa ancestral abriu os olhos.\""
@@ -17347,7 +17349,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Moonlit Blessing — When Lunar Nymph enters the Battlefield, put a Training counter on target friendly Devotee."
+        "Moonlit Blessing — When Lunar Nymph enters the Battlefield, put a Training counter on another target friendly Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -17355,7 +17357,7 @@
       "nome_exibicao_pt": "NINFA LUNAR",
       "subtitulo_pt": "O Suave Sussurro da Lua",
       "habilidades_pt": [
-        "Bênção do Luar — Quando a Ninfa Lunar entra no Campo de Batalha, coloque 1 marcador de Treinamento no Devoto aliado alvo."
+        "Bênção do Luar — Quando a Ninfa Lunar entra no Campo de Batalha, coloque 1 marcador de Treinamento em outro Devoto aliado alvo."
       ],
       "flavour_pt": "\"Até a menor das luzes pode despertar a força de mil estrelas.\"",
       "tagline_pt": "O Suave Sussurro da Lua"
@@ -18684,8 +18686,8 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Rooted Endurance — Friendly Devotees with Training counters get +0 ATK / +1 HP.",
-        "Resonance — Artemis: Once each turn, when a friendly Devotee with a Training counter survives a Strike, you may pay {1}{C}. If you do, put a Training counter on it."
+        "Rooted Endurance — Whenever a friendly Devotee with a Training counter declares a Strike, it gets +0 ATK / +1 HP until the end of the turn.",
+        "Resonance — Artemis: Once each turn, when a friendly Devotee with a Training counter survives a Strike, you may pay {2}{C}. If you do, put a Training counter on it."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -18693,8 +18695,8 @@
       "nome_exibicao_pt": "O BOSQUE ANTIGO",
       "subtitulo_pt": "Onde as Primeiras Árvores Ainda Estão de Pé",
       "habilidades_pt": [
-        "Resistência Enraizada — Devotos aliados com marcadores de Treinamento recebem +0 ATQ / +1 PV.",
-        "Ressonância — Artemis: Uma vez por turno, quando um Devoto aliado com marcador de Treinamento sobrevive a um Golpe, você pode pagar {1}{C}. Se fizer isso, coloque 1 marcador de Treinamento nele."
+        "Resistência Enraizada — Sempre que um Devoto aliado com marcador de Treinamento declarar um Golpe, ele recebe +0 ATQ / +1 PV até o fim do turno.",
+        "Ressonância — Artemis: Uma vez por turno, quando um Devoto aliado com marcador de Treinamento sobrevive a um Golpe, você pode pagar {2}{C}. Se fizer isso, coloque 1 marcador de Treinamento nele."
       ],
       "flavour_pt": "\"As árvores mais antigas testemunharam a ascensão e a queda dos deuses. E continuam de pé.\"",
       "tagline_pt": "Onde as Primeiras Árvores Ainda Estão de Pé"

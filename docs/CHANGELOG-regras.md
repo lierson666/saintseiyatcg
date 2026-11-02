@@ -4,6 +4,23 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-02 — Cartas (sem mudança no guia) — Nerf de The Ancient Grove
+
+- **Antes:** Devotees aliados com marcador de Treinamento têm +0 ATK / +1 HP, sempre. Resonance paga {1}{C} por 1 marcador ao sobreviver a um Strike.
+- **Depois:** ao declarar Strike, Devotee aliado com marcador recebe +0 ATK / +1 HP até o fim do turno. Resonance paga {2}{C}.
+- **Motivo:** decisão do autor, 02/11/2026, após partida no celular com Artemis forte no início do jogo.
+- **Engine/dados:** `data/cards.json`, `card-forge/art-web/cards.json`, `playtest/engine-v3/v6/artemis.js`.
+- **Pendência:** não medido com este texto. Tirar o +1 PV por inteiro levou The Silver Hunt de cerca de 70% para 65% (IA × IA, 240 partidas). Não publicado.
+
+## 2026-11-02 — §41, §43A — Keyword Imune e armas de Libra
+
+- **Antes:** 7 keywords. Libra Sword: +2 ATK, 1 de dano extra em Shiryu. Libra Shield: +2 HP, previne 1 de dano de Strike (2 em Shiryu). Equip 4 nas duas.
+- **Depois:** 8ª keyword, **Imune a X** (§43A). Libra Sword: +2 ATK / +2 HP e Nimble; Imune a Devotees de custo 3 ou menos; ao causar dano de Strike a um God, o jogador dele descarta 1 carta e você prepara todas as Bases. Libra Shield: +2 ATK / +2 HP; Imune a Hades e Poseidon; ao causar dano de Strike a um God, ganha {2}{S} e compra 1 carta. Custo 3, Equip 5, grátis em Shiryu. Sem limite por rodada.
+- **Motivo:** decisão do autor, 02/11/2026, no molde das espadas de duas cores do Magic.
+- **Cartas de Artemis:** Lunar Nymph e Chandra passam a mirar "another target friendly Devotee". O autor aprovou no mesmo grill, depois da partida no celular.
+- **Engine/dados:** `data/cards.json`, `card-forge/art-web/cards.json`, `data/canon/d268.json` (o `original_text` não muda), `playtest/engine-v3/`, `shared/card-model.js`, `card-forge/forge.js`, `shared/i18n-pt.js`.
+- **Pendência:** efeitos fora da cadeia não têm fonte conhecida e não são bloqueados. Dano de Pierce que passa por um Devotee não dispara os efeitos no God. Não publicado.
+
 ## 2026-11-01 — Cartas (sem mudança no guia) — Draw engines em Ares, Athena e Artemis
 
 - **Antes → depois:** 19 cartas, em `docs/draw-engines-2026-11-01/cards.diff.md`.
