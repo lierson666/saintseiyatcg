@@ -234,7 +234,7 @@ test('460 War Charger: Impulse; compra ao causar dano de Strike ao God', () => {
 // ---------- Steel Saints ----------
 test('461 Mechanical Precision: ao equipar Item em Sho, compra 1 e descarta 1 (uma vez por turno)', () => {
   const {s, ctx, give} = setup();
-  const sho = give('A', N(461)), junk = give('A', FOE, 'hand'), g1 = give('A', N(469), 'hand'), g2 = give('A', N(469), 'hand');
+  const sho = give('A', N(461)), junk = give('A', FOE, 'hand'), g1 = give('A', N(492), 'hand'), g2 = give('A', N(492), 'hand');
   const t = s.players.A.tartarus.length;
   equip(s, ctx, g1, sho);
   assert.equal(s.players.A.tartarus.length, t + 1);
@@ -262,7 +262,7 @@ test('463 Ushio: compra 1 e descarta 1 ao entrar; Resonance Engine devolve Devot
   play(s, ctx, ushio);
   assert.equal(s.players.A.tartarus.length, t + 1);
   const cheap = give('B', N(468)), pricey = mkFoe(s, give);
-  const gear = give('A', N(469), 'hand');
+  const gear = give('A', N(492), 'hand');
   equip(s, ctx, gear, ushio);
   assert.ok(s.players.B.hand.includes(cheap));
   assert.ok(s.players.B.battlefield.includes(pricey));
@@ -335,9 +335,9 @@ test('470 Research Facility: paga 2, compra 1 e descarta 1; segundo Equipment do
   assert.equal(ready(s, 'A'), r - 2);
   assert.equal(s.players.A.hand.length, 0);
   const g1 = give('A', N(469), 'hand'), g2 = give('A', N(469), 'hand');
-  equip(s, ctx, g1, rec);
+  equip(s, ctx, g1, null);
   const before = s.players.A.battlefield.length;
-  equip(s, ctx, g2, rec);
+  equip(s, ctx, g2, null);
   assert.equal(s.players.A.battlefield.length, before + 2); // Equipment + token
   const token = s.players.A.battlefield.find(u => ctx.objects[u].token);
   assert.equal(atkOf(s, ctx, token), 1);
