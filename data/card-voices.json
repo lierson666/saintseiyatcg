@@ -1,4 +1,18 @@
 {
+  "athena-001": {
+    "cast": null,
+    "entrada": null,
+    "golpe": null,
+    "habilidade": null,
+    "linhas": [
+      "ATG/5005",
+      "ATG/5008"
+    ],
+    "morte": null,
+    "retorno": null,
+    "strike": "ATG/5024",
+    "ultimate": "ATG/5106"
+  },
   "athena-v6-001": {
     "cast": "SEY/5174",
     "entrada": "SEY/5184",
@@ -15,10 +29,16 @@
     "ultimate": null
   },
   "athena-v6-002": {
+    "cast": null,
+    "entrada": null,
     "golpe": null,
+    "habilidade": null,
     "linhas": [
       "SEY/5027"
     ],
+    "morte": null,
+    "retorno": null,
+    "strike": null,
     "ultimate": null
   },
   "athena-v6-003": {
@@ -29,7 +49,7 @@
     "linhas": [
       false,
       "SRU/5032",
-      "SRU/5064"
+      "SRU/5041"
     ],
     "morte": "SRU/024",
     "retorno": "SRU/5141",
@@ -108,13 +128,125 @@
     "ultimate": null
   },
   "athena-v6-015": {
+    "cast": "IOR/5061",
+    "entrada": "IOR/003",
+    "golpe": "IOR/5058",
+    "habilidade": null,
+    "linhas": [
+      false,
+      false,
+      "IOR/002"
+    ],
+    "morte": "IOR/019",
+    "retorno": "IOR/5097",
+    "strike": "IOR/5054",
+    "ultimate": null
+  },
+  "athena-v6-017": {
+    "cast": "KMU/5131",
+    "entrada": "KMU/5097",
+    "golpe": "KMU/5010",
+    "habilidade": null,
+    "linhas": [
+      false,
+      "KMU/5049",
+      "KMU/023"
+    ],
+    "morte": "KMU/019",
+    "retorno": "KMU/020",
+    "strike": "KMU/5017",
+    "ultimate": null
+  },
+  "athena-v6-022": {
+    "cast": "SNA/5031",
+    "entrada": "SNA/5039",
+    "golpe": "SNA/5000",
+    "habilidade": null,
+    "linhas": [
+      false,
+      "SNA/5044"
+    ],
+    "morte": "SNA/5026",
+    "retorno": "SNA/5031",
+    "strike": "SNA/5013",
+    "ultimate": null
+  },
+  "athena-v6-023": {
     "cast": null,
     "entrada": null,
     "golpe": null,
     "habilidade": null,
     "linhas": [
-      false,
       false
+    ],
+    "morte": null,
+    "retorno": null,
+    "strike": null,
+    "ultimate": null
+  },
+  "athena-v6-025": {
+    "cast": "ORF/5066",
+    "entrada": "ORF/5074",
+    "golpe": "ORF/5081",
+    "habilidade": null,
+    "linhas": [
+      null,
+      "ORF/5095"
+    ],
+    "morte": "ORF/5069",
+    "retorno": "ORF/5017",
+    "strike": "ORF/5080",
+    "ultimate": null
+  },
+  "athena-v6-026": {
+    "cast": "AP_VC/096",
+    "entrada": null,
+    "golpe": null,
+    "habilidade": null,
+    "linhas": [],
+    "morte": null,
+    "retorno": null,
+    "strike": null,
+    "ultimate": null
+  },
+  "athena-v6-028": {
+    "cast": "JAB/5073",
+    "entrada": "JAB/5029",
+    "golpe": "JAB/5012",
+    "habilidade": null,
+    "linhas": [
+      "JAB/5046"
+    ],
+    "morte": "JAB/5025",
+    "retorno": "JAB/5098",
+    "strike": "JAB/5049",
+    "ultimate": null
+  },
+  "faccao-athena": {
+    "awaken": null,
+    "carga": null,
+    "cast": null,
+    "declarar": null,
+    "entrada": "BT_SYS_SE/5008",
+    "golpe": "BT_SYS_SE/5062",
+    "habilidade": "SYS_SE/5017",
+    "impacto": null,
+    "impacto_deus": null,
+    "linhas": [],
+    "morte": "ATG/5042",
+    "poder_divino": null,
+    "poder_dominio": null,
+    "retorno": null,
+    "strike": "ATG/5004",
+    "ultimate": "ATG/5054"
+  },
+  "poseidon-001": {
+    "cast": null,
+    "entrada": null,
+    "golpe": null,
+    "habilidade": null,
+    "linhas": [
+      "PSD/5058"
     ],
     "morte": null,
     "retorno": null,

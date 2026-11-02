@@ -3,7 +3,7 @@
 // `ui` é o adaptador do DOM (posições e textos); `fx` é a camada WebGL (pode faltar: tudo vira só DOM).
 import {wait} from './scene.js?v=20261031-pool1';
 import {strikeSound, chargeSound} from '../audio.js?v=20261102-voz4';
-import {anim, ANIM_OF, sound} from '../telas.js?v=20261102-voz4';
+import {anim, ANIM_OF, sound} from '../telas.js?v=20261102-barulho1';
 
 // Hierarquia visual dos golpes (COMBAT_CINEMATICS.md): comum < Saint < assinatura < divino.
 // As assinaturas são só visuais e disparam pelo número da carta atacante; não criam regra.
@@ -39,14 +39,18 @@ export function createDirector({ui, getFx, settings}) {
     return {style: hit ? hit[1] : 'physical', color: ui.godColor?.(uid) || (hit ? hit[2] : '#ffe0a0')};
   }
 
+  // Som sai quando o gatilho resolve, não quando vai à pilha (autor, 02/11/2026); null: evento sem som próprio.
+  const SOM_DE = {strike_declared: 'declarar_ataque', god_damage: 'dano_deus', soul_lost: 'dano_deus', ability: null, ultimate_announced: null, ultimate_resolved: 'ultimate'};
+  const somDe = e => e.type === 'resolve' ? (e.ability ? 'gatilho' : null) : e.type in SOM_DE ? SOM_DE[e.type] : ANIM_OF[e.type];
+
   // Força do golpe pelo ATK (autor, 28/10/2026): 0 num ATK 2, 1 num ATK 10. Só apresentação; o dano vem da engine.
   const powerOf = atk => Math.max(0, Math.min(1, ((atk || 0) - 2) / 8));
 
   // Golpe do atacante até o alvo; resolve no momento do impacto. `p` (0..1) engrossa tudo.
-  async function strikeVfx(from, to, style, p = 0) {
+  async function strikeVfx(from, to, style, p = 0, attacker) {
     const f = fx();
     if (skipping) return;
-    chargeSound(p);
+    if (!ui.noise?.('carga', attacker)) chargeSound(p);
     if (!f) return;
     f.charge(from.x, from.y, {color: style.color, count: Math.round((style.style === 'physical' ? 30 : 60) * (1 + p * 2))});
     if (p > .6) f.shake(p * 3); // o chão treme enquanto o Cosmo sobe
@@ -140,21 +144,23 @@ export function createDirector({ui, getFx, settings}) {
     async returned_to_hand(e) { if (e.from === 'tartarus') ui.speak?.('retorno', e.uid); },
     async entered(e) { ui.speak?.('entrada', e.uid); if (e.bearer) equipSound(e.uid); }, // Equipment conjurado já preso no portador
     async strike_declared(e) {
-      ui.speak?.('golpe', e.attacker);
+      ui.speak?.('declarar', e.attacker);
       ui.pulse(e.attacker, 'attacking', true);
       ui.aim(e.attacker, e.target);
       ui.log(e);
       await pause(260);
     },
     async strike_resolve(e) {
-      if (e.target.kind !== 'god') ui.speak?.('strike', e.target.uid);
+      const onGod = e.target.kind === 'god';
+      ui.speak?.('golpe', e.attacker); // a fala do ataque sai quando ele resolve, não ao declarar (autor, 02/11/2026)
+      ui.speak?.('strike', onGod ? e.target.player : e.target.uid);
       const from = ui.center(ui.rect(e.attacker)), targetRect = e.target.kind === 'god' ? ui.godRect(e.target.player) : ui.rect(e.target.uid);
       const to = ui.center(targetRect), style = styleOf(e.attacker), p = powerOf(e.atk);
       if (style.name) await ui.callout(style.name, e.player, t(650 + p * 350));
       ui.pulse(e.attacker, 'lunge');
-      await strikeVfx(from, to, style, p);
+      await strikeVfx(from, to, style, p, e.attacker);
       await pause(40 + p * 160); // hit stop: mais longo quanto mais forte
-      if (!skipping) strikeSound(p);
+      if (!skipping && !(onGod ? ui.noise?.('impacto_deus', e.attacker, e.target.player) : ui.noise?.('impacto', e.attacker))) strikeSound(p);
       impact(to, {color: style.color, strength: (style.name ? 1.4 : 1) * (1 + p * 1.3)});
       // Retaliação: do Devotee alvo de volta ao atacante. God não retalia (§24, autor 01/11/2026).
       if (e.target.kind !== 'god') {
@@ -193,6 +199,7 @@ export function createDirector({ui, getFx, settings}) {
     async awaken_changed(e) {
       const at = ui.center(ui.godRect(e.player));
       if (e.awaken) {
+        if (!skipping) ui.noise?.('awaken', e.player);
         fx()?.charge(at.x, at.y, {color: '#9fd0ff', count: 90, radius: 140});
         await ui.banner('Awaken', e.player, t(900));
         fx()?.shockwave(at.x, at.y, {color: '#bfe2ff', size: 220});
@@ -201,10 +208,11 @@ export function createDirector({ui, getFx, settings}) {
     // Poder do God (autor, 28/10/2026: precisa ser sentido): Cosmo sobe no God, nome em destaque, onda e estrondo.
     async divine_power(e) {
       const at = ui.center(ui.godRect(e.player)), f = fx();
-      if (!skipping) chargeSound(.5);
+      const custom = !skipping && ui.noise?.('poder_divino', e.player);
+      if (!skipping && !custom) chargeSound(.5);
       f?.charge(at.x, at.y, {color: '#bfe2ff', count: 110, radius: 170});
       await ui.callout(e.ability, e.player, t(900));
-      if (!skipping) strikeSound(.35);
+      if (!skipping && !custom) strikeSound(.35);
       f?.shockwave(at.x, at.y, {color: '#bfe2ff', size: 260});
       f?.burst(at.x, at.y, {color: '#e6f4ff', count: 90, speed: 420});
       shake(4);
@@ -214,7 +222,7 @@ export function createDirector({ui, getFx, settings}) {
     // Domain: a energia sai do Domain no painel e chega ao God do dono.
     async domain_power(e) {
       const from = ui.center(ui.domainRect(e.player)), to = ui.center(ui.godRect(e.player)), f = fx();
-      if (!skipping) chargeSound(.4);
+      if (!skipping && !ui.noise?.('poder_dominio', e.player)) chargeSound(.4);
       if (from) f?.charge(from.x, from.y, {color: '#ffe4a0', count: 80, radius: 110});
       await ui.callout(e.ability, e.player, t(800));
       if (from && to && f && !skipping) await f.beam(from, to, {color: '#ffe4a0', width: 26, duration: .35});
@@ -243,7 +251,6 @@ export function createDirector({ui, getFx, settings}) {
     },
     // Cinemática divina (nível mais alto da hierarquia): nome do Ultimate, Cosmo convergindo, raios dos Saints ao God.
     async ultimate_announced(e) {
-      ui.speak?.('ultimate', e.player);
       ui.cinematic?.(true);
       for (const uid of e.saints || []) ui.pulse(uid, 'attacking', true);
       const god = ui.center(ui.godRect(e.player));
@@ -252,6 +259,7 @@ export function createDirector({ui, getFx, settings}) {
       ui.cinematic?.(false); // a janela de resposta (G3-005) volta com o HUD inteiro
     },
     async ultimate_resolved(e) {
+      ui.speak?.('ultimate', e.player);
       ui.cinematic?.(true);
       if (e.ability === 'GREAT FLOOD') { // onda sobre o campo inimigo; o retorno às mãos aparece no render seguinte
         const enemy = ui.enemyOf(e.player), god = ui.center(ui.godRect(e.player)), to = ui.center(ui.godRect(enemy));
@@ -325,8 +333,9 @@ export function createDirector({ui, getFx, settings}) {
         for (const e of events) {
           const group = ANIM_OF[e.type];
           cur = group ? anim(group) : {ligada: true, velocidade: 1};
-          if (group && group !== last && !skipping) sound(group); // um som por sequência do mesmo grupo
-          last = group;
+          const som = somDe(e);
+          if (som && som !== last && !skipping) sound(som) || (som === 'dano_deus' && sound('dano')); // um som por sequência do mesmo grupo
+          last = som;
           ui.onEvent?.(e); // zoom da pilha acompanha a animação, não o render
           await (handlers[e.type] || (async () => {}))(e);
         }

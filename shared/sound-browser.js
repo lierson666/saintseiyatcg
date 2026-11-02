@@ -129,10 +129,10 @@ function draw() {
 const reset = () => { state.cod = null; state.grupo = null; state.limit = PAGE; dialog.querySelector('.sb-list').scrollTop = 0; };
 
 function build() {
-  if (!document.querySelector('link[data-sound-browser]')) document.head.insertAdjacentHTML('beforeend', `<link rel="stylesheet" data-sound-browser href="/shared/sound-browser.css?v=4">`);
+  if (!document.querySelector('link[data-sound-browser]')) document.head.insertAdjacentHTML('beforeend', `<link rel="stylesheet" data-sound-browser href="/shared/sound-browser.css?v=6">`);
   dialog = document.createElement('dialog');
   dialog.className = 'sb';
-  dialog.innerHTML = `<header class="sb-head"><div class="sb-title"><h2></h2><small class="sb-current"></small></div>
+  dialog.innerHTML = `<p class="sb-target" hidden></p><header class="sb-head"><div class="sb-title"><h2></h2><small class="sb-current"></small></div>
       <input class="sb-search" type="search" placeholder="Buscar em tudo: fala, personagem, golpe" aria-label="Buscar som" autocomplete="off">
       <span class="sb-lang-label">Ouvir em</span><div class="sb-langs" role="group" aria-label="Idioma ao ouvir" title="Escolha em qualquer idioma: os outros vêm junto">${LANGS.map(([k, l]) => `<button type="button" data-lang="${k}">${l}</button>`).join('')}</div>
       <button type="button" class="sb-clear" data-clear>Sem som</button><button type="button" class="sb-close" data-close aria-label="Fechar">✕</button></header>
@@ -184,7 +184,7 @@ let loaded = [];
 const clearSearch = () => { state.q = ''; dialog.querySelector('.sb-search').value = ''; };
 
 // `value`: id do som em uso. `extra`: sons do projeto ({id, url, nome, secao, grupo, cod, langs: []}). `onPick(som | null, idioma)`.
-export async function openSoundBrowser({title = 'Escolher som', value = '', extra = [], onPick, onUpload = null, secao = null, silence = false}) {
+export async function openSoundBrowser({title = 'Escolher som', alvo = '', value = '', extra = [], onPick, onUpload = null, secao = null, silence = false}) {
   if (!dialog) build();
   opts = {value, extra, onPick, onUpload};
   const lib = await loadLibrary();
@@ -200,6 +200,8 @@ export async function openSoundBrowser({title = 'Escolher som', value = '', extr
   state.limit = back?.limit || PAGE;
   clearSearch();
   dialog.querySelector('h2').textContent = title;
+  const target = dialog.querySelector('.sb-target'); // para onde vai o som: não se perder depois de procurar um tempo (autor, 02/11/2026)
+  target.textContent = alvo; target.hidden = !alvo;
   const cur = dialog.querySelector('.sb-current');
   cur.textContent = `${now ? `Em uso: ${label(now)}` : value ? `Em uso: ${value}` : 'Nenhum som escolhido'} · vale nos 3 idiomas`;
   dialog.querySelector('.sb-clear').disabled = !value && !silence; // silence: Sem som é uma escolha, mesmo sem som em uso

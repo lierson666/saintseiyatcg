@@ -44,6 +44,8 @@ with tempfile.TemporaryDirectory() as tmp:
         pass
     god = star_hill.save_card_voice({'id': 'faccao-athena', 'morte': 'BT_SEY_SE/5000', 'linhas': []}, write, root)['faccao-athena']
     assert god['morte'] and god['cast'] is None  # padrão por facção usa o mesmo formato
+    keep = star_hill.save_card_voice({'id': 'faccao-athena', 'impacto_deus': 'BT_SEY_SE/5000', 'linhas': []}, write, root)['faccao-athena']
+    assert keep['morte'] and keep['impacto_deus']  # momento ausente no corpo não apaga o que já estava salvo
     try:
         star_hill.save_card_voice({'id': 'faccao-athena', 'inventado': 'BT_SEY_SE/5000', 'linhas': []}, write, root)
         raise AssertionError('momento inexistente aceito')

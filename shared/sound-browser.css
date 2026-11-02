@@ -7,6 +7,8 @@
 .sb button:focus-visible, .sb input:focus-visible, .sb select:focus-visible { outline: 2px solid var(--sb-gold); outline-offset: 1px; }
 .sb h2, .sb h3 { margin: 0; }
 
+.sb-target { flex: none; margin: 0; padding: 10px 16px; overflow: hidden; color: var(--sb-gold-ink); background: var(--sb-gold); font-size: 16px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+.sb-target[hidden] { display: none; }
 .sb-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 12px 16px; border-bottom: 1px solid var(--sb-line); background: var(--sb-panel); }
 .sb-title { min-width: 170px; max-width: 280px; }
 .sb-title h2 { font-size: 17px; }
@@ -41,14 +43,14 @@
 
 .sb-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
 .sb-bar { display: flex; align-items: flex-start; gap: 12px; padding: 10px 14px; border-bottom: 1px solid var(--sb-line); }
-.sb-groups { flex: 1; display: flex; flex-wrap: wrap; gap: 6px; }
-.sb-groups button { min-height: 34px; padding: 2px 11px; background: var(--sb-raised); border: 1px solid var(--sb-line); border-radius: 999px; }
+.sb-groups { flex: 1 1 0; min-width: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.sb-groups button { min-height: 34px; padding: 2px 11px; white-space: nowrap; background: var(--sb-raised); border: 1px solid var(--sb-line); border-radius: 999px; }
 .sb-groups [aria-pressed=true] { color: var(--sb-gold-ink); background: var(--sb-gold); border-color: var(--sb-gold); font-weight: 700; }
 .sb-groups [aria-pressed=true] small { color: inherit; }
 .sb-groups small { color: var(--sb-muted); font-size: 11px; }
 .sb-groups label { display: flex; align-items: center; gap: 8px; color: var(--sb-muted); }
 .sb-groups select { max-width: 280px; min-height: 36px; padding: 0 8px; color: var(--sb-ink); background: var(--sb-bg); border: 1px solid var(--sb-line); border-radius: 8px; font: inherit; }
-.sb-sort { flex: none; min-height: 34px; padding: 0 8px; color: var(--sb-ink); background: var(--sb-bg); border: 1px solid var(--sb-line); border-radius: 8px; font: inherit; }
+.sb .sb-sort { flex: none; width: auto; max-width: 200px; min-height: 34px; padding: 0 8px; color: var(--sb-ink); background: var(--sb-bg); border: 1px solid var(--sb-line); border-radius: 8px; font: inherit; }
 .sb-count { flex: none; margin-left: auto; padding-top: 7px; color: var(--sb-muted); font-size: 12px; font-variant-numeric: tabular-nums; }
 
 .sb-list { flex: 1; min-height: 0; margin: 0; padding: 0; overflow-y: auto; list-style: none; }

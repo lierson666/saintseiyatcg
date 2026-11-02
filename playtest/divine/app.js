@@ -22,12 +22,12 @@ import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudg
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout, clockBonus} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
-import {createDirector} from './director.js?v=20261102-voz4';
+import {createDirector} from './director.js?v=20261102-barulho2';
 import {createAI} from './ai.js?v=14';
 import {findDeck} from '../deck-store.js';
 import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-face3';
-import {unlock, playMusic, setVolume, volume} from '../audio.js?v=20261102-voz4';
-import {telas, cardVoices, anim, sound, voice, imageUrl, applyColors, applyTexts} from '../telas.js?v=20261102-voz4';
+import {unlock, playMusic, playFxFile, setVolume, volume} from '../audio.js?v=20261102-voz4';
+import {telas, cardVoices, anim, sound, voice, imageUrl, applyColors, applyTexts} from '../telas.js?v=20261102-barulho1';
 import {renderLiveCard, renderCardText, fullSizePieces} from '../../shared/live-card.js?v=20261102-arroba1';
 import {renderKeywordNotes, renderKeywordIcons} from '../../shared/keyword-glossary.js?v=20261102-arroba1';
 import {armorBonusText, printedEquipmentBonuses} from '../../shared/card-visual-values.js?v=20261102-arroba1';
@@ -1172,7 +1172,6 @@ function drawZoom() {
     const h = takeHeld(top.uid);
     flyFrom(topEl.lastElementChild, h || (elOf(top.uid) || $(`.hand .dcard[data-uid="${top.uid}"]`))?.getBoundingClientRect() || seenRect(top.uid)
       || $(`[data-god="${top.controller}"] .godhud__portrait`)?.getBoundingClientRect(), h?.pause || 0);
-    if (top.controller !== me) sound('gatilho');
   }
   drawIntents();
 }
@@ -1245,13 +1244,17 @@ const ui = {
   isViewer: key => key === viewer(), seatName, isArmor: uid => !!info(uid).armor,
   // Idioma da voz: segue o jogo (português ou japonês) até o jogador escolher (autor, 02/11/2026).
   speak(kind, ref, ability = '') {
-    const obj = ctx.objects[ref], name = obj ? info(ref).name : cards.get(S().gods[ref])?.name || '';
-    const id = obj ? obj.cardId : `${name.toLowerCase()}-001`, mine = cardVoices[id];
-    // A carta manda; o que ela não tem vem do padrão da facção (autor, 02/11/2026).
-    const faction = cardVoices[`faccao-${FORGE.get(id)?.faccao?.toLowerCase()}`];
+    const {name, id, mine, faction} = voicesOf(ref);
     const own = kind === 'linha' ? mine?.linhas?.[triggerLine(FORGE.get(id), ability.split(' · ').pop())] ?? faction?.habilidade : mine?.[kind] ?? faction?.[kind];
     if (own === false) return; // Sem som escolhido na carta: não cai no som da facção nem no do personagem
-    voice(kind, name, settings.voiceLang === 'auto' ? (window.ssI18n?.lang === 'pt' ? 'pt' : 'jp') : settings.voiceLang, own);
+    voice(kind, name, voiceLang(), own);
+  },
+  // Barulho do combate: true se a carta, a facção ou o Star Hill decidiram; false mantém o som sintetizado. Primeira carta da lista manda.
+  noise(kind, ...refs) {
+    const all = refs.map(voicesOf), own = all.map(v => v.mine?.[kind]).find(v => v != null) ?? all.map(v => v.faction?.[kind]).find(v => v != null);
+    if (own === false) return true;
+    if (own) { playFxFile(`playtest/divine/assets/vozes/${voiceLang()}/${own}.mp3`); return true; }
+    return sound(kind);
   },
   // Morte do God: avatar com animação do tema (die-<deus>), cartas e Bases dele caem, ruína por cima da metade dele.
   godDeath(e) {
@@ -1929,6 +1932,13 @@ document.addEventListener('pointerdown', e => {
 // Strike. Os alvos legais vêm de strikeTargets (a engine valida de novo no declareStrike). Clique sem puxar abre o menu.
 // A mesma seta sai do slot de conjuração para escolher o alvo da carta jogada. Alvos como ref: uid ou 'god:X'.
 let aim = null, noClickUntil = 0;
+const voiceLang = () => settings.voiceLang === 'auto' ? (window.ssI18n?.lang === 'pt' ? 'pt' : 'jp') : settings.voiceLang;
+// A carta manda; o que ela não tem vem do padrão da facção (autor, 02/11/2026). `ref`: uid de carta ou chave do jogador (God).
+function voicesOf(ref) {
+  const obj = ctx.objects[ref], name = obj ? info(ref).name : cards.get(S().gods[ref])?.name || '';
+  const id = obj ? obj.cardId : `${name.toLowerCase()}-001`;
+  return {name, id, mine: cardVoices[id], faction: cardVoices[`faccao-${FORGE.get(id)?.faccao?.toLowerCase()}`]};
+}
 const refOf = tg => (tg.kind === 'god' ? `god:${tg.player}` : tg.uid);
 function startAim(el, e) {
   const uid = el.dataset.uid, key = owner(uid);
@@ -2349,7 +2359,6 @@ function animateTrigger() {
   const a0 = anim('gatilho');
   if (pending.flown === key || settings.reduceMotion || !a0.ligada) return;
   pending.flown = key;
-  sound('gatilho');
   // Mesmo voo do cast (padrão do jogo): da carta de origem no campo, ou do God de quem decide, até o ponto da pilha.
   flyFrom(card, (from || $(`[data-god="${req.player}"] .godhud__portrait`))?.getBoundingClientRect());
 }

@@ -1,4 +1,4 @@
-import {mountRulesRows} from './rules-rows.js?v=20261102-res2';
+import {mountRulesRows} from './rules-rows.js?v=20261102-barulho2';
 import {createHistory} from '../shared/editor-history.js';
 import {compilePlaytest} from '../shared/import-playtest.js';
 import {renderLiveCard,illustration,statLine,EDITIONS,editionOf} from '../shared/live-card.js?v=20261102-arroba1';
@@ -1057,7 +1057,7 @@ const refreshRules = [mountRulesRows(form.elements.rules, {getId: () => S.id, so
 }, onResonance: (name) => { // Equipment sem ninguém na Resonance: o campo de Números acompanha, e o diff mostra antes de gravar
   const f = form.elements.auto_equip;
   if (f && !f.closest('[hidden]') && !f.closest('label').hidden && !f.value.trim()) { f.value = name; f.dispatchEvent(new Event('input', {bubbles: true})); }
-}, moments: () => [['cast', 'Ao conjurar'], ['entrada', 'Entrada no campo'], ['golpe', 'Ao atacar'], ['strike', 'Ao receber Strike'], ['morte', 'Ao morrer'], ['retorno', 'Volta do Tartarus'], ...(layoutKey(S) === 'god' ? [['ultimate', 'Voz da Ultimate']] : [])]})];
+}, moments: () => [['cast', 'Ao conjurar'], ['entrada', 'Entrada no campo'], ['declarar', 'Ao declarar ataque'], ['golpe', 'Quando o ataque resolve'], ['strike', 'Ao receber Strike'], ['morte', 'Ao morrer'], ['retorno', 'Volta do Tartarus'], ['carga', 'Barulho: carga do golpe'], ['impacto', 'Barulho: impacto em Devotee'], ['impacto_deus', 'Barulho: impacto no Deus'], ...(layoutKey(S) === 'god' ? [['ultimate', 'Voz da Ultimate'], ['poder_divino', 'Barulho: Poder Divino'], ['poder_dominio', 'Barulho: poder do Domain'], ['awaken', 'Barulho: Awaken']] : [])]})];
 refreshRulesRows = () => refreshRules.forEach(r => r());
 refreshRulesRows();
 function insertAtCursor(text) {

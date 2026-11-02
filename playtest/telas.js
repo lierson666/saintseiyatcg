@@ -4,7 +4,7 @@ import {configureAudio, playFxFile, playVoice} from './audio.js?v=20261102-voz4'
 
 const ROOT = new URL('../', import.meta.url);
 export const ANIM_GROUPS = ['compra', 'conjurar', 'cosmo', 'gatilho', 'ataque', 'dano', 'morte', 'turno', 'ultimate'];
-export const SOUND_EVENTS = ['ultimate', 'clique', 'play', 'voltar', 'turno', 'compra', 'conjurar', 'equipar_armadura', 'equipar_arma', 'cosmo', 'gatilho', 'ataque', 'dano', 'morte', 'vitoria', 'derrota', 'hover', 'hover_mao', 'hover_base', 'passar_turno', 'receber_turno'];
+export const SOUND_EVENTS = ['ultimate', 'clique', 'play', 'voltar', 'turno', 'compra', 'conjurar', 'equipar_armadura', 'equipar_arma', 'cosmo', 'gatilho', 'ataque', 'dano', 'morte', 'vitoria', 'derrota', 'hover', 'hover_mao', 'hover_base', 'passar_turno', 'receber_turno', 'declarar_ataque', 'carga', 'impacto', 'impacto_deus', 'dano_deus', 'poder_divino', 'poder_dominio', 'awaken'];
 // Evento da engine → grupo de animação (director.js).
 export const ANIM_OF = {draw: 'compra', fatigue: 'compra', base_placed: 'conjurar', card_played: 'conjurar', equipped: 'conjurar', cosmo_spent: 'cosmo',
   latent_gained: 'cosmo', spell_resolved: 'gatilho', ability: 'gatilho', divine_power: 'gatilho', domain_power: 'gatilho', strike_declared: 'ataque',
@@ -33,6 +33,7 @@ export function sound(evento) {
   const path = telas.audio?.efeitos?.[evento];
   // Som extraído do jogo fica atrás do login (tools/rea-ps3/sons-aprovados.py); MUSIC/ é público.
   if (path) playFxFile(path.replace(/^MUSIC\/fx\/(ps3-[^/]+|soldiers-soul)\//, 'playtest/divine/assets/sons/$1/'));
+  return !!path;
 }
 // Fala aprovada no Star Hill para o personagem do nome; sem fala, fica só o som de impacto.
 // A fala escolhida na própria carta vem antes da fala padrão do personagem.

@@ -1,6 +1,6 @@
 // STAR HILL · Telas e som (autor, 30/10/2026): edita data/olympus-telas.json, que o jogo lê em playtest/telas.js.
 // Home (carrossel e blocos), fundos, cores, textos, animações (ligada e velocidade) e áudio (músicas e sons por evento).
-import {openSoundBrowser, soundUrl} from '/shared/sound-browser.js?v=9';
+import {openSoundBrowser, soundUrl} from '/shared/sound-browser.js?v=11';
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const ANIMS = {compra: 'Compra de carta', conjurar: 'Conjurar carta e Base', cosmo: 'Cosmo pago e Latent', gatilho: 'Gatilhos e habilidades',
   ataque: 'Ataque (Strike)', dano: 'Dano e Soul', morte: 'Carta derrotada', turno: 'Início de turno e rodada', ultimate: 'Ultimate'};
@@ -11,20 +11,24 @@ const DUELO = [
     {som: 'equipar_armadura', nome: 'Equipar armadura', quando: 'Armadura presa no Devotee'}, {som: 'equipar_arma', nome: 'Equipar arma', quando: 'Arma ou item preso no Devotee'},
     {som: 'cosmo', anim: 'cosmo', quando: 'Pagou Cosmo ou ganhou Latent'}]},
   {titulo: 'Combate', linhas: [
-    {som: 'gatilho', anim: 'gatilho', quando: 'Habilidade ou gatilho disparou'}, {som: 'ataque', anim: 'ataque', quando: 'Devotee declarou o Strike'},
-    {som: 'dano', anim: 'dano', quando: 'Dano em Devotee ou no Soul'}, {som: 'morte', anim: 'morte', quando: 'Devotee foi derrotado'}, {som: 'ultimate', anim: 'ultimate', quando: 'God usou a Ultimate'}]},
+    {som: 'gatilho', anim: 'gatilho', quando: 'Habilidade ou gatilho resolveu'}, {som: 'declarar_ataque', nome: 'Declarar ataque', quando: 'Devotee declarou o Strike', nota: ''}, {som: 'ataque', anim: 'ataque', quando: 'O Strike resolveu'},
+    {som: 'carga', nome: 'Carga do golpe', quando: 'Vazio: som sintetizado do jogo', nota: ''}, {som: 'impacto', nome: 'Impacto em Devotee', quando: 'Vazio: som sintetizado do jogo', nota: ''}, {som: 'impacto_deus', nome: 'Impacto no Deus', quando: 'Vazio: som sintetizado do jogo', nota: ''}, {som: 'dano_deus', nome: 'Dano no Soul', quando: 'Vazio: usa o som de Dano', nota: ''},
+    {som: 'poder_divino', nome: 'Poder Divino', quando: 'Vazio: som sintetizado do jogo', nota: ''}, {som: 'poder_dominio', nome: 'Poder do Domain', quando: 'Vazio: som sintetizado do jogo', nota: ''}, {som: 'awaken', nome: 'Awaken', quando: 'God despertou', nota: ''},
+    {som: 'dano', anim: 'dano', quando: 'Dano em Devotee'}, {som: 'morte', anim: 'morte', quando: 'Devotee foi derrotado'}, {som: 'ultimate', anim: 'ultimate', quando: 'A Ultimate resolveu'}]},
   {titulo: 'Partida', linhas: [{som: 'turno', anim: 'turno', quando: 'Novo turno ou nova rodada'}, {som: 'passar_turno', nome: 'Passar o turno', quando: 'Clicou em End Turn ou passou a prioridade', nota: ''}, {som: 'receber_turno', nome: 'Receber o turno', quando: 'Começou o seu turno', nota: ''}]},
   {titulo: 'Mouse', linhas: [{som: 'hover', nome: 'Passar o mouse', quando: 'Botão ou carta na mesa', nota: ''}, {som: 'hover_mao', nome: 'Carta na mão', quando: 'Mouse sobre uma carta da mão', nota: ''}, {som: 'hover_base', nome: 'Base de Cosmo', quando: 'Mouse sobre uma Base ou o Cosmo', nota: ''}]},
 ];
 // Padrão por facção (card-voices.json, id faccao-<nome>): vale para toda carta dela que não tiver som próprio no Card Forge.
 const FACCOES = ['Athena', 'Poseidon', 'Hades', 'Ares', 'Artemis', 'Neutral'];
-const MOMENTOS = [['cast', 'Ao conjurar', 'A carta foi jogada'], ['entrada', 'Entrada no campo', 'Devotee ou Equipment entrou no campo'], ['golpe', 'Ao atacar', 'Devotee declarou o Strike'],
+const MOMENTOS = [['cast', 'Ao conjurar', 'A carta foi jogada'], ['entrada', 'Entrada no campo', 'Devotee ou Equipment entrou no campo'], ['declarar', 'Ao declarar ataque', 'Devotee declarou o Strike'], ['golpe', 'Quando o ataque resolve', 'O Strike resolveu'],
   ['strike', 'Ao receber Strike', 'Foi atingido por um Strike'], ['morte', 'Ao morrer', 'Foi derrotado'], ['retorno', 'Volta do Tartarus', 'Voltou ao campo ou à mão'],
-  ['habilidade', 'Habilidade', 'Gatilho ou habilidade resolveu'], ['ultimate', 'Ultimate', 'God usou a Ultimate']];
+  ['habilidade', 'Habilidade', 'Gatilho ou habilidade resolveu'], ['ultimate', 'Ultimate', 'A Ultimate resolveu'],
+  ['carga', 'Barulho: carga do golpe', 'Cosmo sobe antes do impacto'], ['impacto', 'Barulho: impacto em Devotee', 'Strike acertou um Devotee'], ['impacto_deus', 'Barulho: impacto no Deus', 'Strike acertou o Deus'],
+  ['poder_divino', 'Barulho: Poder Divino', 'God usou o Poder Divino'], ['poder_dominio', 'Barulho: poder do Domain', 'Domain usou o poder'], ['awaken', 'Barulho: Awaken', 'God despertou']];
 let cardVoices = {}, faccao = 'Athena';
 const SECOES = [['home', 'Home'], ['fundos', 'Fundos'], ['cores', 'Cores'], ['textos', 'Textos'], ['duelo', 'Duelo'], ['musicas', 'Músicas'], ['sons', 'Sons dos menus'], ['vozes', 'Vozes']];
 const SOUNDS = {ultimate: 'Ultimate', clique: 'Clique nos menus', play: 'Botão Play', voltar: 'Voltar', turno: 'Início de turno', compra: 'Compra de carta', conjurar: 'Conjurar carta', equipar_armadura: 'Equipar armadura', equipar_arma: 'Equipar arma',
-  cosmo: 'Cosmo pago', hover: 'Passar o mouse', hover_mao: 'Carta na mão', hover_base: 'Base de Cosmo', passar_turno: 'Passar o turno', receber_turno: 'Receber o turno', gatilho: 'Gatilho', ataque: 'Ataque', dano: 'Dano', morte: 'Carta derrotada', vitoria: 'Vitória', derrota: 'Derrota'};
+  cosmo: 'Cosmo pago', hover: 'Passar o mouse', hover_mao: 'Carta na mão', hover_base: 'Base de Cosmo', passar_turno: 'Passar o turno', receber_turno: 'Receber o turno', declarar_ataque: 'Declarar ataque', carga: 'Carga do golpe', impacto: 'Impacto em Devotee', impacto_deus: 'Impacto no Deus', dano_deus: 'Dano no Soul', poder_divino: 'Poder Divino', poder_dominio: 'Poder do Domain', awaken: 'Awaken', gatilho: 'Gatilho', ataque: 'Ataque', dano: 'Dano', morte: 'Carta derrotada', vitoria: 'Vitória', derrota: 'Derrota'};
 // Cores com o valor padrão do CSS (shared/kv.css e playtest/divine/divine.css).
 const COLORS = {
   lobby: {'--kv-bg': '#05060c', '--kv-ink': '#f5f1e6', '--kv-muted': '#a8a397', '--kv-gold': '#e6c36a', '--kv-gold-2': '#ffe7a3', '--kv-ember': '#ff8a2b', '--kv-error': '#ff9a87'},
@@ -169,7 +173,7 @@ const projectSounds = () => audios.filter(a => !a.origem?.startsWith('ps3-voz-')
   secao: a.grupo === 'musica' ? 'Músicas' : 'Efeitos', cod: a.grupo === 'musica' ? '' : a.origem, grupo: a.origem, s: 0, langs: []}));
 const libraryId = path => { const m = /ps3-(?:voz|se)-(.+)-(?:jp|pt|es)\/(\d+)\.mp3$/.exec(path || ''); return m ? `${m[1]}/${m[2]}` : path || ''; };
 function openSounds(path) {
-  openSoundBrowser({title: 'Escolher som', value: libraryId(get(doc, path)), extra: projectSounds(), secao: 'fx-golpe',
+  openSoundBrowser({title: 'Escolher som', alvo: SOUNDS[path.split('.').pop()] ? `Todas as cartas · ${SOUNDS[path.split('.').pop()]}` : '', value: libraryId(get(doc, path)), extra: projectSounds(), secao: 'fx-golpe',
     onUpload: async file => { try { const arquivo = await upload(file, path); if (arquivo) { set(path, arquivo); draw(); } } catch (error) { hooks.notice?.(error.message); } },
     onPick: async (sound, lang) => {
       if (!sound) { set(path, null); return draw(); }
@@ -260,7 +264,7 @@ document.addEventListener('click', async e => {
   if (act === 'jump') return document.getElementById(b.dataset.to)?.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});
   if (act === 'pick-sound') return openSounds(b.dataset.path);
   if (act === 'faccao') { faccao = b.dataset.f; return draw(); }
-  if (act === 'faccao-pick') return openSoundBrowser({title: `Som de ${faccao}`, value: cardVoices[`faccao-${faccao.toLowerCase()}`]?.[b.dataset.k] || '', secao: 'voz-batalha', onPick: s => saveFaction(b.dataset.k, s?.id || null)});
+  if (act === 'faccao-pick') return openSoundBrowser({title: `Som de ${faccao}`, alvo: `Facção ${faccao} · ${MOMENTOS.find(([k]) => k === b.dataset.k)?.[1] || b.dataset.k}`, value: cardVoices[`faccao-${faccao.toLowerCase()}`]?.[b.dataset.k] || '', secao: 'voz-batalha', onPick: s => saveFaction(b.dataset.k, s?.id || null)});
   if (act === 'faccao-tirar') return saveFaction(b.dataset.k, null);
   if (act === 'faccao-ouvir') { player?.pause(); player = new Audio(soundUrl(b.dataset.id)); player.play().catch(() => {}); return; }
   if (act === 'clear-sound') set(b.dataset.path, null);

@@ -380,7 +380,8 @@ def publish_site(root=ROOT):
 TELAS = 'data/olympus-telas.json'
 ANIM_GROUPS = {'compra', 'conjurar', 'cosmo', 'gatilho', 'ataque', 'dano', 'morte', 'turno', 'ultimate'}
 SOUND_EVENTS = {'ultimate', 'clique', 'play', 'voltar', 'turno', 'compra', 'conjurar', 'equipar_armadura', 'equipar_arma', 'cosmo', 'gatilho', 'ataque', 'dano', 'morte', 'vitoria', 'derrota',
-                'hover', 'hover_mao', 'hover_base', 'passar_turno', 'receber_turno'}
+                'hover', 'hover_mao', 'hover_base', 'passar_turno', 'receber_turno',
+                'declarar_ataque', 'carga', 'impacto', 'impacto_deus', 'dano_deus', 'poder_divino', 'poder_dominio', 'awaken'}
 IMAGE_DIRS = ('card-forge/art-web/', 'star-hill/assets/', 'playtest/assets/', 'LOGO/')
 
 
@@ -476,7 +477,7 @@ def validate_telas(value, root=ROOT):
 CARD_VOICES = 'data/card-voices.json'
 VOICE_LINE = re.compile(r'[A-Za-z0-9_]{3,40}/\d{3,4}')
 VOICE_LANGS = ('jp', 'pt', 'es')
-VOICE_MOMENTS = ('cast', 'entrada', 'golpe', 'strike', 'morte', 'retorno', 'habilidade', 'ultimate')
+VOICE_MOMENTS = ('cast', 'entrada', 'declarar', 'golpe', 'strike', 'morte', 'retorno', 'habilidade', 'ultimate', 'carga', 'impacto', 'impacto_deus', 'poder_divino', 'poder_dominio', 'awaken')
 LIBRARY = Path(os.environ.get('SSTCG_BIBLIOTECA', Path.home() / 'worktrees/sstcg-biblioteca-sons'))  # tools/rea-ps3/biblioteca-sons.py
 
 
@@ -526,8 +527,9 @@ def save_card_voice(body, atomic_write, root=ROOT):
         install_voice(line, root)
     path = root / CARD_VOICES
     voices = json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
-    voices[card] = {**{k: body.get(k) for k in VOICE_MOMENTS}, 'linhas': body['linhas']}
-    if all(line is None for line in lines):
+    old = voices.get(card, {})
+    voices[card] = {**{k: body[k] if k in body else old.get(k) for k in VOICE_MOMENTS}, 'linhas': body['linhas']}  # momento ausente: página antiga aberta não apaga o que ela não conhece
+    if all(line is None for line in [*(voices[card][k] for k in VOICE_MOMENTS), *body['linhas']]):
         del voices[card]
     atomic_write(path, (json.dumps(voices, ensure_ascii=False, indent=2, sort_keys=True) + '\n').encode('utf-8'))
     return voices

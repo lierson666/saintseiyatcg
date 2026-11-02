@@ -2,7 +2,7 @@
 // O textarea original segue sendo a fonte do texto (linha em branco separa habilidades); as falas ficam em data/card-voices.json.
 const split = t => t.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
-import {openSoundBrowser, soundUrl} from '/shared/sound-browser.js?v=9';
+import {openSoundBrowser, soundUrl} from '/shared/sound-browser.js?v=11';
 let falas = {}, vozes = {}, player = null;
 const ready = Promise.all([
   fetch('/biblioteca-sons/falas-pt.json', {cache: 'no-store'}).then(r => (r.ok ? r.json() : {})).catch(() => ({})),
@@ -115,7 +115,8 @@ export function mountRulesRows(area, {getId = null, moments = null, sound = null
     }
     if (b.dataset.voice !== undefined) {
       const key = b.dataset.voice;
-      openSoundBrowser({title: 'Escolher som da carta', value: b.dataset.value, silence: true, secao: key === 'golpe' || key === 'ultimate' ? 'voz-golpe' : 'voz-batalha', onPick: picked => {
+      const what = /^\d+$/.test(key) ? `Habilidade: ${parseAbility(current()[Number(key)] || '').name || Number(key) + 1}` : moments?.().find(([k]) => k === key)?.[1] || key;
+      openSoundBrowser({title: 'Escolher som da carta', alvo: `${area.form?.elements.nome_exibicao_en?.value || getId()} · ${what}`, value: b.dataset.value, silence: true, secao: /^(carga|impacto|poder|awaken)/.test(key) ? 'fx-golpe' : key === 'golpe' || key === 'ultimate' ? 'voz-golpe' : 'voz-batalha', onPick: picked => {
         const v = entry(getId()), value = picked?.id ?? false; // o botão Sem som do seletor chega como null
         if (/^\d+$/.test(key)) { v.linhas[Number(key)] = value; for (let i = 0; i < v.linhas.length; i++) v.linhas[i] ??= null; } else v[key] = value;
         save(getId());
