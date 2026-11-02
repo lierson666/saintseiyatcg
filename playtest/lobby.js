@@ -6,7 +6,7 @@ import {canonIndex, validateDeck, colorErrors, splashCount, DECK_SIZE, COPY_LIMI
 import {spellCategory} from './engine-v3/core.js';
 import {renderLiveCard, renderCardText, fullSizePieces} from '../shared/live-card.js?v=20261101-perf3';
 import {armorBonusText} from '../shared/card-visual-values.js';
-import {displayCard} from '../shared/card-i18n.js?v=20261031-kw1';
+import {displayCard, typeWord} from '../shared/card-i18n.js?v=20261031-kw1';
 import {unlock, playMusic, setVolume, volume} from './audio.js?v=20261030-telas';
 import {loadMyDecks, saveMyDecks, findDeck, syncDecks, onDeckStatus, deckCovers, setDeckCover} from './deck-store.js?v=20261031-2';
 import {mountKV} from '../shared/kv-sky.js?v=20261031-native';
@@ -431,7 +431,7 @@ const POOL_VIEWS = [['card', 'Cards'], ['list', 'List'], ['field', 'Battlefield'
 // Linha com arte e − n + no canto direito (lista do deck e visão Lista do pool). Tocar abre a carta.
 function cardRow(c, b, tag = 'div') {
   const d = b.deck, n = count(b, c.id), max = ownedLimit(ui.econ, c.id, c.kind), full = deckSize(d) >= DECK_SIZE, isDomain = c.kind === 'Domain', on = isDomain && d.domain_id === c.id;
-  return `<${tag} class="lb-crow ${n || on ? 'is-in' : ''}"><button class="lb-strip" data-act="show-card" data-id="${c.id}" data-card="${c.id}" style="--art:url('${artOf(c.id, 'thumb') || ''}')">
+  return `<${tag} class="lb-crow ${n || on ? 'is-in' : ''}"><button class="lb-strip" data-act="show-card" data-id="${c.id}" data-card="${c.id}" style="--art:url('${artOf(c.id) || ''}')">
     <b class="lb-gem ${c.cost?.unit || ''}">${c.cost?.amount ?? '–'}</b><span>${esc(c.name)}</span></button>
     ${isDomain ? `<button class="lb-rowset" data-act="set-domain" data-id="${c.id}" aria-pressed="${on}">${on ? 'Domain' : 'Set Domain'}</button>`
     : `<div class="lb-rowstep" role="group" aria-label="${esc(c.name)}"><button data-act="remove" data-id="${c.id}" ${n ? '' : 'disabled'} aria-label="Remove one">−</button><b>${n}</b><button data-act="add" data-id="${c.id}" ${n >= max || full ? 'disabled' : ''} aria-label="Add one">+</button></div>`}</${tag}>`;
@@ -452,14 +452,54 @@ function cosmoLine(list, size) {
   return `<div class="lb-list__cosmo ${low ? 'is-low' : ''}">Cosmoble <strong>${n}</strong> / ${size}${low ? '<small>Few cards can become a Cosmo Base. Most decks want about 40.</small>' : ''}</div>`;
 }
 
+// Análise do deck (autor, 02/11/2026). Paletas conferidas com o validador do skill dataviz, contra #0b0c16; o cinza do Neutro é proposital.
+const FACTION_COLORS = {athena: '#b0872a', poseidon: '#2f86d6', ares: '#d9533e', hades: '#8f5fe0', artemis: '#35a56b', neutral: '#99a2b1'};
+const KIND_COLORS = {Devotee: '#b0872a', Equipment: '#1f98ba', Technique: '#d0587a', Moment: '#7a80e8'};
+const tally = (list, keyOf) => { const m = new Map(); for (const e of list) for (const k of [keyOf(e.card)].flat()) if (k) m.set(k, (m.get(k) || 0) + e.quantity); return m; };
+function donut(title, rows, total) { // rows: {label, n, color, icon}; legenda com número e %, para a cor nunca ser o único sinal
+  let at = 0;
+  const gap = rows.length > 1 ? 1 : 0, pct = n => Math.round(n / total * 100);
+  return `<section class="lb-statcard"><h3>${title}</h3><div class="lb-donut"><div class="lb-donut__ring" role="img" aria-label="${esc(title)}: ${rows.map(r => `${esc(r.label)} ${r.n}`).join(', ')}">
+      <svg viewBox="0 0 42 42" aria-hidden="true"><g transform="rotate(-90 21 21)">${rows.map(r => { const p = r.n / total * 100, s = `<circle cx="21" cy="21" r="15.915" fill="none" stroke="${r.color}" stroke-width="6.5" stroke-dasharray="${Math.max(p - gap, .5)} ${100 - Math.max(p - gap, .5)}" stroke-dashoffset="${-at}"><title>${esc(r.label)}: ${r.n} (${pct(r.n)}%)</title></circle>`; at += p; return s; }).join('')}</g></svg>
+      <span><b>${total}</b></span></div>
+    <ul class="lb-legend">${rows.map(r => `<li><i style="background:${r.color}"></i>${r.icon || ''}<span>${esc(r.label)}</span><b>${r.n}</b><small>${pct(r.n)}%</small></li>`).join('')}</ul></div></section>`;
+}
+function statBars(title, map, limit = 6) {
+  const all = [...map].sort((a, b) => b[1] - a[1]), rest = all.slice(limit).reduce((s, [, n]) => s + n, 0), rows = rest ? [...all.slice(0, limit), ['Other', rest]] : all;
+  if (!rows.length) return '';
+  const peak = rows[0][1];
+  return `<section class="lb-statcard"><h3>${title}</h3><ul class="lb-bars">${rows.map(([k, n]) => `<li><span>${esc(typeWord(k))}</span><i><u style="width:${n / peak * 100}%"></u></i><b>${n}</b></li>`).join('')}</ul></section>`;
+}
+function deckStats(d, list, size, curveHtml) {
+  if (!size) return '<p class="lb-empty">Add cards to see the deck analysis.</p>';
+  const sum = (arr, f) => arr.reduce((s, e) => s + f(e) * e.quantity, 0), devs = list.filter(e => e.card.kind === 'Devotee'), nDevs = sum(devs, () => 1);
+  const costed = list.filter(e => e.card.cost), avg = sum(costed, e => e.card.cost.amount) / Math.max(1, sum(costed, () => 1));
+  const cosmo = sum(list, e => (e.card.cosmoble ? 1 : 0)), early = sum(costed, e => (e.card.cost.amount <= 2 ? 1 : 0));
+  const kinds = tally(list, kindOf), factions = tally(list, faction);
+  const tile = (value, label, note = '') => `<div class="lb-tile"><b>${value}</b><span>${label}</span>${note ? `<small>${note}</small>` : ''}</div>`;
+  return `<div class="lb-tiles">${tile(avg.toFixed(1), 'Average cost')}${tile(`${Math.round(cosmo / size * 100)}%`, 'Cosmoble', `${cosmo} / ${size}`)}
+      ${tile(nDevs, 'Devotees', nDevs ? `${(sum(devs, e => e.card.atk || 0) / nDevs).toFixed(1)} ATK · ${(sum(devs, e => e.card.hp || 0) / nDevs).toFixed(1)} HP` : '')}${tile(early, 'Early plays', 'Cost 2 or less')}</div>
+    ${donut('Card type', Object.keys(KIND_COLORS).filter(k => kinds.get(k)).map(k => ({label: k, n: kinds.get(k), color: KIND_COLORS[k]})), size)}
+    ${donut('Faction', Object.keys(FACTION_COLORS).filter(f => factions.get(f)).map(f => ({label: cards.get(`god-${f}`)?.name || 'Neutral', n: factions.get(f), color: FACTION_COLORS[f], icon: f === 'neutral' ? '' : `<img src="${symbol(f)}" alt="">`})), size)}
+    <section class="lb-statcard"><h3>Cost curve</h3>${curveHtml}</section>
+    ${statBars('Devotee class', tally(devs, c => forge.get(c.id)?.subtipos?.[0] || c.type.split(' — ')[1]))}
+    ${statBars('Keywords', tally(devs, c => c.keywords))}
+    ${statBars('Equipment', tally(list.filter(e => e.card.kind === 'Equipment'), c => forge.get(c.id)?.categoria_equipamento || (c.armor ? 'Armor' : 'Artifact')))}
+    ${statBars('Rarity', tally(list, c => forge.get(c.id)?.raridade || c.rarity))}`;
+}
+
 function builder() {
   const b = ui.builder, d = b.deck, list = d.main_deck.map(e => ({...e, card: cards.get(e.card_id)})).filter(e => e.card).sort((x, y) => sortCards(x.card, y.card));
   const errors = deckErrors(d), size = deckSize(d), curve = [1, 2, 3, 4, 5, 6, 7].map(n => list.filter(e => (n === 7 ? (e.card.cost?.amount ?? 0) >= 7 : e.card.cost?.amount === n)).reduce((s, e) => s + e.quantity, 0));
   const peak = Math.max(1, ...curve), cards_ = pool(b);
   const domain = d.domain_id && cards.get(d.domain_id);
+  const curveHtml = `<div class="lb-curve" aria-label="Cost curve">${curve.map((n, i) => `<span style="--h:${n / peak}"><i>${n || ''}</i><b>${i === 6 ? '7+' : i + 1}</b></span>`).join('')}</div>`;
+  // Duas cópias: no fim da lista no desktop; no celular, barra fixa nas duas abas (autor, 02/11/2026).
+  const actions_ = `<div class="lb-list__actions">${d.id ? '<button class="lb-ghost" data-act="delete-deck">Delete</button>' : ''}
+        <button class="lb-ghost" data-act="go" data-screen="decks">Cancel</button><button class="lb-play lb-play--small" data-act="save-deck">Done</button></div>`;
   // No celular a coleção e a lista do deck viram duas abas (Cards | Deck); no desktop ficam lado a lado.
   return `<section class="lb-builder is-${b.view || 'pool'}">
-    <div class="lb-bview" role="group" aria-label="Builder view">${[['pool', 'Cards'], ['list', `Deck ${size}/${DECK_SIZE}`]].map(([v, label]) =>
+    <div class="lb-bview" role="group" aria-label="Builder view">${[['pool', 'Cards'], ['list', `Deck ${size}/${DECK_SIZE}`], ['stats', 'Analysis']].map(([v, label]) =>
       `<button class="lb-pill ${(b.view || 'pool') === v ? 'is-active' : ''}" data-act="builder-view" data-view="${v}" aria-pressed="${(b.view || 'pool') === v}">${label}</button>`).join('')}</div>
     <div class="lb-pool">
       ${filterBar(b)}
@@ -471,6 +511,8 @@ function builder() {
       }).join('') || '<p class="lb-empty">No cards for this God yet.</p>'}</div>`}
     </div>
     <aside class="lb-list">
+      <div class="lb-seg lb-aseg" role="group" aria-label="Deck panel">${[['list', 'Deck'], ['stats', 'Analysis']].map(([v, label]) => `<button class="${(b.view === 'stats') === (v === 'stats') ? 'is-active' : ''}" data-act="builder-view" data-view="${v}" aria-pressed="${(b.view === 'stats') === (v === 'stats')}">${label}</button>`).join('')}</div>
+      <div class="lb-stats">${deckStats(d, list, size, curveHtml)}</div>
       <input class="lb-list__name" value="${esc(d.nome)}" data-act="rename" aria-label="Deck name">
       <div class="lb-cover" style="background-image:url('${deckCover(d) || ''}')"><span>${[...deckFactions(d)].filter(f => f !== 'neutral').map(f => `<img src="${symbol(f)}" alt="">`).join('')}${esc(cards.get(d.god)?.name || '')}</span>
         <small>${domain ? esc(domain.name) : 'No Domain yet'}</small></div>
@@ -478,13 +520,13 @@ function builder() {
         `<button class="lb-pick" data-act="open-picker" data-pick="${k}" aria-label="Choose ${label}">${id && cards.get(id) ? face(id, 'lb-card--mini') : '<span class="lb-pick__empty">+</span>'}<small>${label}</small></button>`).join('')}</div>
       <div class="lb-list__count ${size === DECK_SIZE ? 'is-full' : ''}"><strong>${size}</strong> / ${DECK_SIZE}</div>
       ${cosmoLine(list, size)}
-      <div class="lb-curve" aria-label="Cost curve">${curve.map((n, i) => `<span style="--h:${n / peak}"><i>${n || ''}</i><b>${i === 6 ? '7+' : i + 1}</b></span>`).join('')}</div>
+      ${curveHtml}
       <ol class="lb-strips">${list.map(e => cardRow(e.card, b, 'li')).join('')
         || '<li class="lb-empty">Click cards in the collection to add them.</li>'}</ol>
       ${errors.length ? `<ul class="lb-errors">${errors.slice(0, 4).map(e => `<li>${errorText(e)}</li>`).join('')}</ul>` : '<p class="lb-ok">Deck ready to play.</p>'}
-      <div class="lb-list__actions">${d.id ? '<button class="lb-ghost" data-act="delete-deck">Delete</button>' : ''}
-        <button class="lb-ghost" data-act="go" data-screen="decks">Cancel</button><button class="lb-play lb-play--small" data-act="save-deck">Done</button></div>
+      ${actions_}
     </aside>
+    ${actions_}
   </section>`;
 }
 
