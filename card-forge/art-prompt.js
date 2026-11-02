@@ -35,9 +35,9 @@ export const POSES = [
   pair('Sidestepping an attack, torso twisted away', 'esquivando, tronco torcido'), pair('Blocking with both forearms crossed in front of the chest', 'defesa, antebraços cruzados no peito'),
   pair('Bracing against a great force, leaning into it, feet dug in', 'resistindo a uma força, pés fincados'), pair('Holding a weapon overhead with both hands, ready to bring it down', 'arma erguida com as duas mãos'),
   pair('Wielding a weapon low and behind the body, ready to swing', 'arma baixa atrás do corpo'), pair('Wounded, on one knee, one hand on the ribs, still looking up', 'ferido, um joelho no chão, mão nas costelas'),
-  pair('Pulling themselves up, hand gripping a broken column', 'se erguendo, mão numa coluna quebrada'), pair('Meditating cross-legged in the air, eyes closed, cosmo swirling', 'meditando no ar, Cosmo girando'),
+  pair('Pulling themselves up, hand gripping a broken column', 'se erguendo, mão numa coluna quebrada'), pair('Meditating cross-legged in the air, eyes closed, cosmo swirling', 'meditando no ar, Cosmo girando'), pair('One hand reaching toward the camera', 'mão vindo para a câmera'),
 ];
-// A pose inicial varia por carta (autor, 02/11/2026): com uma só, todas as artes saíam iguais, com a mão vindo para a câmera.
+// A pose inicial varia por carta (autor, 02/11/2026): com uma só, todas as artes saíam iguais. A mão para a câmera existe, mas não é pose inicial: o gerador já cai nela sozinho.
 const START_POSES = ['Standing straight', 'Looking over the shoulder', 'Crossing arms', 'Dynamic action pose', 'Combat stance', 'Crouching low', 'Standing still, arms lowered at the sides, cosmo rising around the body', 'Kneeling on one knee, head lowered', 'Walking forward unhurried', 'Mid-strike seen in profile, side-on to the camera', 'Both arms raised overhead, gathering energy', 'Back to the viewer, head turned in profile', 'Seen from behind, cape and hair blown sideways', 'Half-turned in three-quarter view, chin raised', 'Leaning forward, one foot on a broken stone', 'Seated on a throne or fallen column, elbow on the knee', 'Kneeling in prayer, hands joined at the chest', 'Bowing low in salute, one fist over the heart', 'Head thrown back, shouting at the sky, arms out to the sides', 'One arm raised straight up, palm to the sky', 'Leaping sideways across the frame, body stretched', 'Falling backward through the air, limbs loose', 'Hovering above the ground, feet together, arms relaxed', 'Sliding to a stop, one knee and one hand on the ground', 'Low wide stance, weight on the back leg, arms drawn back', 'Spinning mid-attack, hair and cape following the turn', 'High kick seen from the side', 'Sidestepping an attack, torso twisted away', 'Blocking with both forearms crossed in front of the chest', 'Bracing against a great force, leaning into it, feet dug in', 'Holding a weapon overhead with both hands, ready to bring it down', 'Wielding a weapon low and behind the body, ready to swing', 'Wounded, on one knee, one hand on the ribs, still looking up', 'Pulling themselves up, hand gripping a broken column', 'Meditating cross-legged in the air, eyes closed, cosmo swirling'];
 export const ANGLES = [
   pair('Eye-level shot', 'nível dos olhos, confronto direto'), pair('Low-angle shot', 'de baixo para cima, dominante'), pair('Extreme low-angle shot', 'figura colossal ou aterrorizante'),
@@ -128,6 +128,45 @@ export const EXPRESSIONS = [
   ['Fierce, unbreakable determination', 'Determinação feroz'], ['Cold, contemptuous stare', 'Frieza e desprezo'], ['Serene and compassionate', 'Serenidade compassiva'],
   ['Battle fury, teeth clenched, shouting', 'Fúria de batalha, gritando'], ['Wounded but refusing to fall', 'Ferido, sem cair'], ['Grief and tears held back', 'Dor e lágrimas contidas'],
   ['Confident, faint smile', 'Sorriso confiante'], ['Cruel, sadistic grin', 'Sorriso cruel'], ['Eyes closed in concentration', 'Olhos fechados, concentração'], ['Divine, unreadable calm', 'Calma divina'],
+];
+// Personagem original de carta genérica (autor, 02/11/2026: saía sempre branco e de cabelo loiro). Personagem do cânone mantém o design dele.
+export const ETHNICITIES = [
+  ['West African heritage, deep dark brown skin', 'África Ocidental'], ['East African heritage, Ethiopian or Somali, dark brown skin', 'África Oriental'],
+  ['Southern African heritage, Zulu or Xhosa, dark brown skin', 'África Austral'], ['North African heritage, Amazigh or Egyptian, warm olive-brown skin', 'Norte da África'],
+  ['Afro-Caribbean heritage, rich brown skin', 'Afro-caribenha'], ['Afro-Brazilian heritage, brown skin', 'Afro-brasileira'],
+  ['Arab heritage, warm olive skin', 'Árabe'], ['Persian heritage, light olive skin', 'Persa'],
+  ['Turkish heritage, light olive skin', 'Turca'], ['South Indian heritage, deep brown skin', 'Sul da Índia'],
+  ['North Indian heritage, medium brown skin', 'Norte da Índia'], ['Southeast Asian heritage, Thai or Filipino, golden-brown skin', 'Sudeste Asiático'],
+  ['Japanese heritage, light skin', 'Japonesa'], ['Korean heritage, light skin', 'Coreana'],
+  ['Chinese heritage, light skin', 'Chinesa'], ['Central Asian heritage, Mongolian or Kazakh, tan skin', 'Ásia Central'],
+  ['Andean Indigenous heritage, Quechua, copper-brown skin', 'Indígena andina'], ['Amazonian Indigenous heritage, reddish-brown skin', 'Indígena amazônica'],
+  ['Native North American heritage, copper-brown skin', 'Indígena norte-americana'], ['Mestizo Latin American heritage, tan skin', 'Latino-americana mestiça'],
+  ['Polynesian heritage, Samoan or Maori, warm brown skin', 'Polinésia'], ['Aboriginal Australian heritage, deep brown skin', 'Aborígine australiana'],
+  ['Mediterranean Greek heritage, olive skin', 'Mediterrânea grega'], ['Northern European heritage, fair skin', 'Norte da Europa'],
+  ['Eastern European Slavic heritage, fair skin', 'Leste Europeu'],
+];
+export const HAIRSTYLES = [
+  ['short coily black afro', 'Afro curto preto'], ['big rounded black afro', 'Afro volumoso preto'],
+  ['tight black cornrows', 'Tranças nagô pretas'], ['long black box braids', 'Box braids longas pretas'],
+  ['shoulder-length black locs', 'Dreads pretos médios'], ['long auburn locs tied back', 'Dreads ruivo-escuros presos'],
+  ['bantu knots', 'Bantu knots'], ['shaved head', 'Cabeça raspada'],
+  ['buzz cut, dark brown', 'Raspado rente castanho'], ['clean bald head with a faded line pattern', 'Careca com desenho'],
+  ['high-top fade, black', 'High-top fade preto'], ['short curly dark brown hair', 'Curto cacheado castanho'],
+  ['medium curly copper-red hair', 'Médio cacheado ruivo'], ['long loose curly black hair', 'Longo cacheado preto'],
+  ['short wavy chestnut hair', 'Curto ondulado castanho-claro'], ['shoulder-length wavy black hair', 'Médio ondulado preto'],
+  ['long wavy silver-grey hair', 'Longo ondulado grisalho'], ['straight black bowl cut', 'Tigela preta lisa'],
+  ['straight jet-black hair, chin length', 'Liso preto até o queixo'], ['long straight black hair, center part', 'Longo liso preto'],
+  ['long straight dark brown hair in a low ponytail', 'Rabo baixo castanho'], ['high black ponytail', 'Rabo alto preto'],
+  ['topknot, black', 'Coque no topo preto'], ['samurai-style half-up knot, dark brown', 'Meio coque castanho'],
+  ['low bun, dark brown', 'Coque baixo castanho'], ['double buns, black', 'Dois coques pretos'],
+  ['a single thick black braid', 'Trança única grossa preta'], ['twin dark brown braids', 'Duas tranças castanhas'],
+  ['a warrior braid crown, auburn', 'Coroa de tranças ruiva'], ['side-shaved black undercut', 'Undercut preto'],
+  ['mohawk, dark red', 'Moicano vermelho-escuro'], ['slicked-back black hair', 'Penteado para trás preto'],
+  ['short spiky dark brown hair', 'Curto espetado castanho'], ['messy shaggy brown hair', 'Bagunçado castanho'],
+  ['pixie cut, black', 'Pixie preto'], ['blunt bob, dark brown', 'Chanel castanho'],
+  ['short white-grey hair', 'Curto grisalho'], ['long snow-white hair', 'Longo branco'],
+  ['deep blue-black hair, wavy', 'Preto-azulado ondulado'], ['sea-green dyed locs', 'Dreads verde-mar'],
+  ['long platinum blond hair', 'Longo loiro platinado'], ['short golden blond hair', 'Curto loiro dourado'],
 ];
 export const VERSIONS = [
   ['', 'Livre, só pelas referências'], ['classic 1980s anime', 'Anime clássico'], ['original manga', 'Mangá original'], ['Hades chapter OVAs', 'OVAs de Hades'],
@@ -239,12 +278,27 @@ const GENERIC_RULES = {
 const NEGATIVE_FIGURE = 'extra fingers, missing fingers, fused fingers, extra limbs, duplicate arms, malformed hands, broken anatomy, distorted face, incorrect character design, cropped face';
 const NEGATIVE_ALWAYS = 'inaccurate armor, inconsistent lighting, unreadable silhouette, excessive visual clutter, text, typography, card borders, watermarks, logos, UI elements, low resolution';
 const EPIC_BY_RARITY = {Common: '2', Uncommon: '3', Legendary: '4', Divine: '5'};
+// O gerador de imagem tende ao herói visto de baixo (autor, 02/11/2026: pode sair, só não sempre): o ponto de vista escolhido vem descrito em termos físicos, sem proibir nenhum.
 const START_ANGLES = ['Eye-level shot', 'Low-angle shot', 'High-angle shot', 'Dutch angle', 'Over-the-shoulder shot', 'Three-quarter front view', 'Profile view', 'Rear three-quarter view', 'Slight low angle', 'Slight high angle', 'Telephoto side view, flat perspective'];
+const ANGLE_VIEW = {
+  'Eye-level shot': 'camera at the height of the eyes, level horizon behind the head, head and feet in natural proportion, the underside of the chin not visible',
+  'Low-angle shot': 'camera below the waist looking up',
+  'Extreme low-angle shot': 'camera on the ground looking steeply up, colossal figure',
+  'High-angle shot': 'camera well above the head looking down, top of the head and shoulders visible, the ground fills the background, no sky',
+  "Bird's-eye view": 'camera directly overhead looking straight down, the figure seen from the top against the ground',
+  'Dutch angle': 'camera at chest height with the horizon tilted about 20 degrees, not looking up',
+  'Over-the-shoulder shot': 'camera at head height behind one shoulder of an out-of-focus foreground shape, looking level at the subject',
+  'Three-quarter front view': 'camera at chest height, level, the body turned about 45 degrees from the camera',
+  'Profile view': 'camera at chest height, level, the body seen exactly from the side',
+  'Rear three-quarter view': 'camera at chest height, level, behind the figure and to one side, the back and the side of the face visible',
+  'Slight low angle': 'camera at hip height looking slightly up',
+  'Slight high angle': 'camera just above head height looking slightly down, the top of the shoulders visible, more ground than sky',
+  "Worm's-eye view from ground level": 'camera on the ground looking straight up',
+  'Telephoto side view, flat perspective': 'distant camera at chest height with a long lens, level, flat perspective, no foreshortening',
+  'Tilted high angle': 'camera above the head looking down with the horizon tilted, the ground fills the background',
+};
 const START_SHOTS = ['Medium Shot (MS)', 'Medium Full Shot (MFS)', 'Three-Quarter Shot', 'Full Body Shot (FBS)', 'Bust Shot', 'Waist-Up Portrait, centered', 'Cowboy Shot', 'Profile Medium Shot', 'Off-Center Medium Shot, figure on one third of the frame', 'Diagonal Full Body, figure along the diagonal of the frame', 'Long Shot (LS)'];
 const pickBy = (seed, list) => list[[...seed].reduce((n, c) => (n * 31 + c.charCodeAt(0)) >>> 0, 0) % list.length]; // mesma carta, mesmo início
-// O gerador puxa o braço para a câmera sozinho, ainda mais em ângulo baixo e com técnica: só proibir resolve.
-const HANDS_RULE = 'HANDS AND ARMS: keep them in the plane of the figure, close to the body or out to the side. No arm reaching or fist punching toward the camera, no oversized foreshortened hand in the foreground.';
-const NEGATIVE_HANDS = 'hand reaching toward the camera, fist punching toward the viewer, oversized foreshortened hand';
 const NEGATIVE_GENERIC = 'existing anime characters, recognizable named characters, canon armor designs, extra characters, crowd, giant faces or ghostly figures in the background';
 // Carta genérica (autor, 02/11/2026): sem história no cânone não há referência, então o prompt pede personagem original e não cita regras, que trazem outros personagens.
 // O que está aqui é do cânone; o resto começa como genérico, e o autor troca na caixa do popup.
@@ -284,7 +338,7 @@ export function cardFacts(card, cards = []) {
 export function defaultParams(f) {
   const god = GODS[f.faction], scene = f.kind === 'Domain', object = f.kind === 'Equipment';
   return {
-    mode: f.generic ? 'image' : 'director', generic: f.generic, version: '', god: god ? f.faction : '', person: f.person, armor: f.armors[0]?.name || '', technique: f.isSpell ? f.name : '', arc: '', theme: '',
+    mode: f.generic ? 'image' : 'director', generic: f.generic, ethnicity: pickBy(`${f.name} ethnicity`, ETHNICITIES)[0], hair: pickBy(`${f.name} hair`, HAIRSTYLES)[0], version: '', god: god ? f.faction : '', person: f.person, armor: f.armors[0]?.name || '', technique: f.isSpell ? f.name : '', arc: '', theme: '',
     epic: f.kind === 'God' ? '5' : EPIC_BY_RARITY[f.rarity] || '3',
     shot: scene ? 'Wide Environmental Shot' : object ? SHOTS[6][0] : pickBy(`${f.name} shot`, START_SHOTS), angle: pickBy(`${f.name} angle`, START_ANGLES), pose: pickBy(`${f.name} pose`, START_POSES), motion: f.isSelf || f.isSpell ? MOTIONS[1][0] : '',
     expression: EXPRESSIONS[0][0], style: styleWith(god?.style || 'Araki'), accent: '', light: LIGHTS[god?.light ?? 0][0], before: '', now: '', next: '', viewer: '', usePowers: true, notes: '',
@@ -292,7 +346,7 @@ export function defaultParams(f) {
 }
 
 // Sorteia a direção de arte. Personagem, armadura, deus e técnica de Moment/Technique vêm da carta e ficam como estão.
-const RANDOM_LISTS = {version: VERSIONS, epic: EPIC_LEVELS, shot: SHOTS, angle: ANGLES, pose: POSES, motion: MOTIONS, expression: EXPRESSIONS, style: STYLES, accent: STYLES, light: LIGHTS, theme: THEMES, arc: ARCS, before: BEFORE, now: NOW, next: NEXT, viewer: VIEWER};
+const RANDOM_LISTS = {ethnicity: ETHNICITIES, hair: HAIRSTYLES, version: VERSIONS, epic: EPIC_LEVELS, shot: SHOTS, angle: ANGLES, pose: POSES, motion: MOTIONS, expression: EXPRESSIONS, style: STYLES, accent: STYLES, light: LIGHTS, theme: THEMES, arc: ARCS, before: BEFORE, now: NOW, next: NEXT, viewer: VIEWER};
 export function randomParams(f, p, rand = Math.random) {
   const pick = (list) => list[Math.floor(rand() * list.length)];
   const out = {...p};
@@ -323,16 +377,17 @@ export function buildImagePrompt(f, p) {
     `CARD: ${f.name}${f.subtitle ? ` — "${f.subtitle}"` : ''} (${f.typeLine || f.kind}, ${f.rarity || 'Common'}).`,
     `CARD TYPE DIRECTION: ${f.creature ? 'The creature is the main focal point, with a clear readable silhouette.' : (generic && GENERIC_RULES[f.kind]) || TYPE_RULES[f.kind] || TYPE_RULES.Devotee}`,
     `SUBJECT: ${subject}`,
+    generic && figure && f.isSelf && `APPEARANCE (mandatory, clearly visible in the face and skin): ${p.ethnicity}. HAIR, visible and not hidden by a helmet: ${p.hair}.`,
+    `CAMERA VIEWPOINT (mandatory, overrides any other hint about viewpoint): ${p.angle}: ${ANGLE_VIEW[p.angle] || p.angle}.`,
     `ART STYLE (top priority for the whole image: line, shading, color treatment and rendering): ${p.style}.${p.accent ? ` Complementary finish: ${p.accent}.` : ''}`,
     !generic && p.version && `DESIGN CANON: costume and armor shapes follow ${p.version}, only as design. Draw them in the ART STYLE above, not in the look of that version.`,
     !generic && 'REFERENCES: reference images are attached to this prompt. Use them only for character identity and armor design (face, hair, silhouette, parts, colors); follow them over any written description of those. Do not copy their drawing style, line or shading: redraw everything in the ART STYLE.',
     god && `FACTION IDENTITY: ${p.god}, ${god.title}. Palette identity, not monochrome: ${god.palette}. Feeling: ${god.mood}.`,
     `SETTING: ${p.theme || (god ? god.setting : generic ? 'an epic mythological setting' : 'an epic mythological setting from the Saint Seiya universe')}.${p.arc && !generic ? ` Inspired by: ${p.arc}.` : ''}`,
     story && `STORY: ${story}`,
-    `FRAMING: ${p.shot}. CAMERA: ${p.angle}.${figure ? ` POSE: ${p.pose}.` : ''}${p.motion ? ` MOTION: ${p.motion}.` : ''}`,
+    `FRAMING: ${p.shot}.${figure ? ` POSE: ${p.pose}.` : ''}${p.motion ? ` MOTION: ${p.motion}.` : ''}`,
     figure && 'FACE PLACEMENT, 7/10 RULE (mandatory): place the eyes at about 7/10 of the image height measured from the bottom, never above that line, in the central part of the image and away from the edges. Keep the top free for card interface without hiding the face.',
     figure && `EXPRESSION: ${p.expression}.`,
-    figure && HANDS_RULE,
     'COMPOSITION: card interface may cover parts of the image, so concentrate the most important elements in the central region and keep a silhouette readable at small size.',
     figure && 'ANATOMY: exactly five fingers on each visible hand; no duplicate limbs; coherent joints, hands, feet and neck; the armor follows the body correctly.',
     p.technique && `TECHNIQUE IN USE: ${p.technique}${power && !generic ? ` — ${power.text}` : ''}. Show its origin, trajectory and consequence visually with cosmo energy; no written effects.`,
@@ -343,7 +398,7 @@ export function buildImagePrompt(f, p) {
     f.flavour && `MOOD LINE: ${f.flavour}`,
     clean(p.notes) && `NOTES: ${clean(p.notes)}`,
   ].filter(Boolean).join('\n');
-  return `${body}\n\nNEGATIVE PROMPT: ${figure ? `${(generic ? NEGATIVE_FIGURE.replace(', incorrect character design', '') : NEGATIVE_FIGURE)}, ${NEGATIVE_HANDS}, ` : ''}${generic ? `${NEGATIVE_GENERIC}, ${NEGATIVE_ALWAYS.replace('inaccurate armor, ', '')}` : NEGATIVE_ALWAYS}.`;
+  return `${body}\n\nNEGATIVE PROMPT: ${figure ? `${(generic ? NEGATIVE_FIGURE.replace(', incorrect character design', '') : NEGATIVE_FIGURE)}, ` : ''}${generic ? `${NEGATIVE_GENERIC}, ${NEGATIVE_ALWAYS.replace('inaccurate armor, ', '')}` : NEGATIVE_ALWAYS}.`;
 }
 
 // Sistema completo: o GPT recebe o Master, trata o que veio escolhido como decisão do autor e responde no formato da seção 12.
@@ -377,6 +432,7 @@ export function mountArtPrompt(dialog, {getCard, getCards, say, masterUrl}) {
       ${select('god', 'Deus', [...none('Nenhum'), ...Object.keys(GODS).map((g) => [g])], p.god)}${p.generic ? '' : select('version', 'Base do design', VERSIONS, p.version)}
       ${select('epic', 'Grandiosidade', EPIC_LEVELS, p.epic)}${select('technique', 'Técnica em uso', [...none('Nenhuma'), ...f.techniques.map((t) => [t])], p.technique)}
       ${select('shot', 'Plano', SHOTS, p.shot)}${select('angle', 'Ângulo', ANGLES, p.angle)}
+      ${p.generic && f.isSelf && !f.creature ? `${select('ethnicity', 'Etnia', ETHNICITIES, p.ethnicity)}${select('hair', 'Cabelo', HAIRSTYLES, p.hair)}` : ''}
       ${select('pose', 'Pose', POSES, p.pose)}${select('expression', 'Expressão', EXPRESSIONS, p.expression)}
       ${select('motion', 'Movimento', MOTIONS, p.motion)}${select('light', 'Luz', LIGHTS, p.light)}
       ${groupedSelect('style', 'Traço dominante', [], p.style)}${groupedSelect('accent', 'Traço complementar', none('Nenhum'), p.accent)}

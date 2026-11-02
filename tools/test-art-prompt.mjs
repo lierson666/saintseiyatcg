@@ -3,7 +3,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {ANGLES, ARCS, BEFORE, NEXT, NOW, POSES, SHOTS, STYLE_GROUPS, STYLES, THEMES, VIEWER, buildDirectorPrompt, buildImagePrompt, cardFacts, defaultParams, randomParams} from '../card-forge/art-prompt.js';
+import {ANGLES, ARCS, BEFORE, ETHNICITIES, HAIRSTYLES, NEXT, NOW, POSES, SHOTS, STYLE_GROUPS, STYLES, THEMES, VIEWER, buildDirectorPrompt, buildImagePrompt, cardFacts, defaultParams, randomParams} from '../card-forge/art-prompt.js';
 
 const {cartas} = JSON.parse(readFileSync(new URL('../data/cards.json', import.meta.url)));
 const master = readFileSync(new URL('../card-forge/art-master-prompt.md', import.meta.url), 'utf8');
@@ -103,7 +103,7 @@ test('traço descreve o estilo sem nome de ilustrador no prompt direto', () => {
   }
 });
 
-test('pose inicial varia por carta e nada de mão vindo para a câmera', () => {
+test('pose e ângulo iniciais variam por carta', () => {
   const devotees = cartas.filter((c) => c.tipo === 'Devotee'), start = devotees.map((c) => defaultParams(cardFacts(c, cartas)));
   for (const key of ['pose', 'angle']) {
     const counts = {};
@@ -112,15 +112,11 @@ test('pose inicial varia por carta e nada de mão vindo para a câmera', () => {
     assert.ok(Math.max(...Object.values(counts)) < devotees.length * 0.3, key);
   }
   assert.equal(defaultParams(cardFacts(card('athena-v6-001'), cartas)).pose, start[devotees.findIndex((c) => c.id === 'athena-v6-001')].pose);
-  const text = promptOf('athena-v6-001');
-  assert.match(text, /No arm reaching or fist punching toward the camera/);
-  assert.match(text, /NEGATIVE PROMPT: .*oversized foreshortened hand/);
 });
 
-test('lista de poses é grande, sem repetir, e nenhuma aponta para a câmera', () => {
+test('listas de pose, plano e ângulo são grandes e sem repetir', () => {
   assert.ok(POSES.length >= 40);
   assert.equal(new Set(POSES.map(([en]) => en)).size, POSES.length);
-  for (const [en] of POSES) assert.doesNotMatch(en, /toward the (camera|viewer)|at the (camera|viewer)/i, en);
   for (const [list, size] of [[SHOTS, 24], [ANGLES, 15]]) {
     assert.ok(list.length >= size);
     assert.equal(new Set(list.map(([en]) => en)).size, list.length);
@@ -144,6 +140,37 @@ test('listas de cena cresceram sem repetir, e genérica não sorteia lugar do c�
   for (let i = 0; i < 100; i++) themes.add(randomParams(f, defaultParams(f), () => i / 100).theme);
   assert.ok(themes.size >= 5);
   for (const t of themes) assert.doesNotMatch(t, /Twelve Houses|Sanctuary|undersea|Underworld|Elysion|Jamir|Asgard|Olympus/, t);
+});
+
+test('todo ângulo vem descrito antes do traço, sem proibir nenhum', () => {
+  for (const [angle] of ANGLES) {
+    const text = promptOf('athena-v6-001', {angle});
+    assert.ok(text.includes(`CAMERA VIEWPOINT (mandatory, overrides any other hint about viewpoint): ${angle}: `), angle);
+    assert.ok(text.indexOf('CAMERA VIEWPOINT') < text.indexOf('ART STYLE'), angle);
+    assert.doesNotMatch(text, /Do not use a low camera|camera looking up at the figure|oversized foreshortened hand/, angle);
+  }
+  const f = cardFacts(card('athena-v6-001'), cartas), angles = new Set();
+  for (let i = 0; i < ANGLES.length; i++) angles.add(randomParams(f, defaultParams(f), () => i / ANGLES.length).angle);
+  assert.equal(angles.size, ANGLES.length);
+});
+
+test('personagem genérico varia etnia e cabelo; cânone e criatura não recebem', () => {
+  assert.ok(ETHNICITIES.length >= 15);
+  assert.ok(HAIRSTYLES.length >= 40);
+  for (const list of [ETHNICITIES, HAIRSTYLES]) assert.equal(new Set(list.map(([en]) => en)).size, list.length);
+  const generic = cartas.filter((c) => c.tipo === 'Devotee').map((c) => cardFacts(c, cartas)).filter((f) => f.generic && !f.creature);
+  assert.ok(generic.length > 50);
+  for (const key of ['ethnicity', 'hair']) {
+    const counts = {};
+    for (const f of generic) { const v = defaultParams(f)[key]; counts[v] = (counts[v] || 0) + 1; }
+    assert.ok(Object.keys(counts).length >= 12, key);
+    assert.ok(Math.max(...Object.values(counts)) <= generic.length * 0.2, key);
+  }
+  const herald = cardFacts(card('poseidon-v6-103'), cartas), p = defaultParams(herald);
+  assert.ok(buildImagePrompt(herald, p).includes(`APPEARANCE (mandatory, clearly visible in the face and skin): ${p.ethnicity}. HAIR, visible and not hidden by a helmet: ${p.hair}.`));
+  assert.doesNotMatch(promptOf('athena-v6-001'), /APPEARANCE/);
+  assert.doesNotMatch(buildImagePrompt(cardFacts(cartas.find((c) => c.nome_exibicao_en === 'MOONLIT WOLF'), cartas), defaultParams(cardFacts(cartas.find((c) => c.nome_exibicao_en === 'MOONLIT WOLF'), cartas))), /APPEARANCE/);
+  assert.doesNotMatch(promptOf('poseidon-v6-103').split('NEGATIVE')[0].replace(/APPEARANCE.*\n/, ''), /heritage/);
 });
 
 test('carta genérica: personagem original, sem referência, sem regras e sem cânone', () => {
