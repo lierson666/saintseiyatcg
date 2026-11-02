@@ -3,7 +3,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {STYLES, buildDirectorPrompt, buildImagePrompt, cardFacts, defaultParams} from '../card-forge/art-prompt.js';
+import {ARCS, BEFORE, NEXT, NOW, STYLES, THEMES, VIEWER, buildDirectorPrompt, buildImagePrompt, cardFacts, defaultParams, randomParams} from '../card-forge/art-prompt.js';
 
 const {cartas} = JSON.parse(readFileSync(new URL('../data/cards.json', import.meta.url)));
 const master = readFileSync(new URL('../card-forge/art-master-prompt.md', import.meta.url), 'utf8');
@@ -18,6 +18,28 @@ test('Devotee: personagem, armadura ligada, poder, regra de 7/10 e 3:4', () => {
   assert.match(text, /exactly five fingers/);
   assert.match(text, /FACTION IDENTITY: Athena/);
   assert.match(text, /Seventh Sense/);
+});
+
+test('referência vai sempre no prompt, e cena só vem de lista', () => {
+  assert.match(promptOf('athena-v6-001'), /REFERENCES: reference images are attached/);
+  assert.match(promptOf('hades-v6-182'), /REFERENCES: reference images are attached/);
+  const text = promptOf('athena-v6-001', {theme: THEMES[2][0], arc: ARCS[3][0], before: BEFORE[1][0], now: NOW[1][0], next: NEXT[1][0], viewer: VIEWER[1][0]});
+  assert.match(text, /SETTING: the stairway .*Inspired by: Battle of the Twelve Houses\./);
+  assert.match(text, /STORY: Just happened: a blow .*Happening now: unleashing .*About to happen: the decisive .*The viewer must feel: awe\./);
+});
+
+test('randomizar muda a direção de arte e preserva o que vem da carta', () => {
+  const f = cardFacts(card('athena-v6-001'), cartas), base = {...defaultParams(f), notes: 'manter', mode: 'image'};
+  const first = randomParams(f, base, () => 0), last = randomParams(f, base, () => 0.999);
+  assert.notEqual(first.shot, last.shot);
+  assert.notEqual(first.style, last.style);
+  for (const p of [first, last]) {
+    for (const key of ['person', 'armor', 'god', 'notes', 'mode', 'usePowers']) assert.deepEqual(p[key], base[key], key);
+    assert.doesNotMatch(buildImagePrompt(f, p), /undefined|null/);
+  }
+  assert.equal(first.accent, '');
+  const spell = cardFacts(card('athena-v6-084'), cartas);
+  assert.equal(randomParams(spell, defaultParams(spell), () => 0.5).technique, spell.name);
 });
 
 test('Technique: conjurador vem do nome da carta e a técnica já vem marcada', () => {

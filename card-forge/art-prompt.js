@@ -24,6 +24,31 @@ export const MOTIONS = [
   ['', 'Nenhum'], ['Motion frozen at the decisive instant', 'Congelado no instante decisivo'], ['Hair and cloth reacting to the energy', 'Cabelos e tecidos reagindo à energia'], ['Debris thrown outward by the force', 'Detritos projetados pela força'],
   ['Dynamic perspective', 'Perspectiva dinâmica'], ['Strong action lines through the whole figure', 'Linhas de ação'], ['Motionless figure against a moving environment', 'Figura imóvel, ambiente em movimento'],
 ];
+// Tudo aqui é escolha em lista (autor, 02/11/2026): só Observações é texto livre. Vazio deixa a cena para o diretor de arte propor.
+export const THEMES = [
+  ['', 'Cenário da facção'], ['ruined battlefield after a clash of cosmos', 'Campo de batalha em ruínas'], ['the stairway and temples of the Twelve Houses', 'Doze Casas'], ['the Sanctuary at dawn', 'Santuário ao amanhecer'],
+  ['a colosseum arena', 'Coliseu'], ['open starry cosmos with constellations', 'Cosmo estrelado'], ['the undersea temple and the pillars of Poseidon', 'Templo submarino'], ['the Underworld and its prisons', 'Mundo dos Mortos'],
+  ['the fields of Elysion', 'Elísios'], ['a sacred moonlit forest', 'Floresta sagrada ao luar'], ['a bare mountain training ground', 'Montanha de treinamento'], ['a neutral void of pure energy', 'Vazio de energia pura'],
+];
+export const ARCS = [
+  ['', 'Sem arco específico'], ['Galaxian Wars', 'Guerra Galáctica'], ['Silver Saints', 'Cavaleiros de Prata'], ['Battle of the Twelve Houses', 'Doze Casas'], ['Poseidon chapter', 'Saga de Poseidon'],
+  ['Hades Sanctuary chapter', 'Hades: Santuário'], ['Hades Inferno chapter', 'Hades: Inferno'], ['Hades Elysion chapter', 'Hades: Elísios'], ['original scene created for this card, not canon', 'Cena original da carta'],
+];
+export const BEFORE = [
+  ['', 'Deixar para o diretor'], ['a blow has just been exchanged', 'Golpe trocado'], ['survived a fatal attack', 'Sobreviveu a um golpe fatal'], ['arrived on the battlefield', 'Chegou à batalha'],
+  ['an ally has just fallen', 'Um aliado caiu'], ['cosmo has just awakened', 'O Cosmo despertou'], ['the armor has just been shattered', 'A armadura se partiu'], ['the enemy has just revealed their full power', 'O inimigo revelou o poder'],
+];
+export const NOW = [
+  ['', 'Deixar para o diretor'], ['unleashing the finishing technique', 'Solta o golpe final'], ['charging cosmo before the attack', 'Concentra o Cosmo'], ['locked in direct combat', 'Combate direto'],
+  ['standing over a defeated enemy', 'De pé sobre o inimigo'], ['protecting someone behind them', 'Protege alguém'], ['rising back to their feet', 'Levanta de novo'], ['receiving a divine order', 'Recebe uma ordem divina'],
+];
+export const NEXT = [
+  ['', 'Deixar para o diretor'], ['the decisive blow will land', 'O golpe decisivo acerta'], ['the enemy will be destroyed', 'O inimigo cai'], ['they will collapse, spent', 'Desaba sem forças'],
+  ['they will rise stronger', 'Volta mais forte'], ['they will sacrifice themselves', 'Vai se sacrificar'], ['the battle will turn', 'A batalha vira'],
+];
+export const VIEWER = [
+  ['', 'Deixar para o diretor'], ['awe', 'Assombro'], ['terror', 'Terror'], ['hope', 'Esperança'], ['sorrow', 'Tristeza'], ['menace', 'Ameaça'], ['reverence', 'Reverência'], ['tension', 'Tensão'],
+];
 export const EXPRESSIONS = [
   ['Fierce, unbreakable determination', 'Determinação feroz'], ['Cold, contemptuous stare', 'Frieza e desprezo'], ['Serene and compassionate', 'Serenidade compassiva'],
   ['Battle fury, teeth clenched, shouting', 'Fúria de batalha, gritando'], ['Wounded but refusing to fall', 'Ferido, sem cair'], ['Grief and tears held back', 'Dor e lágrimas contidas'],
@@ -119,29 +144,40 @@ export function cardFacts(card, cards = []) {
 export function defaultParams(f) {
   const god = GODS[f.faction], scene = f.kind === 'Domain', object = f.kind === 'Equipment';
   return {
-    mode: 'director', version: VERSIONS[0][0], references: false, god: god ? f.faction : '', person: f.person, armor: f.armors[0]?.name || '', technique: f.isSpell ? f.name : '', arc: '', theme: '',
+    mode: 'director', version: VERSIONS[0][0], god: god ? f.faction : '', person: f.person, armor: f.armors[0]?.name || '', technique: f.isSpell ? f.name : '', arc: '', theme: '',
     epic: f.kind === 'God' ? '5' : EPIC_BY_RARITY[f.rarity] || '3',
     shot: scene ? 'Wide Environmental Shot' : object ? SHOTS[6][0] : f.isSpell ? SHOTS[3][0] : SHOTS[4][0], angle: ANGLES[1][0], pose: f.isSpell ? POSES[6][0] : POSES[9][0], motion: f.isSelf || f.isSpell ? MOTIONS[1][0] : '',
     expression: EXPRESSIONS[0][0], style: styleWith(god?.style || 'Araki'), accent: '', light: LIGHTS[god?.light ?? 0][0], before: '', now: '', next: '', viewer: '', usePowers: true, notes: '',
   };
 }
 
+// Sorteia a direção de arte. Personagem, armadura, deus e técnica de Moment/Technique vêm da carta e ficam como estão.
+const RANDOM_LISTS = {version: VERSIONS, epic: EPIC_LEVELS, shot: SHOTS, angle: ANGLES, pose: POSES, motion: MOTIONS, expression: EXPRESSIONS, style: STYLES, accent: STYLES, light: LIGHTS, theme: THEMES, arc: ARCS, before: BEFORE, now: NOW, next: NEXT, viewer: VIEWER};
+export function randomParams(f, p, rand = Math.random) {
+  const pick = (list) => list[Math.floor(rand() * list.length)];
+  const out = {...p};
+  for (const [key, list] of Object.entries(RANDOM_LISTS)) out[key] = pick(list)[0];
+  if (out.accent === out.style) out.accent = '';
+  if (!f.isSpell) out.technique = pick(['', ...f.techniques]);
+  return out;
+}
+
 export function buildImagePrompt(f, p) {
   const god = GODS[p.god], person = p.person, isEquipment = f.kind === 'Equipment', power = f.powers.find((x) => x.name === p.technique), epic = EPIC_LEVELS.find(([v]) => v === p.epic);
   const subject = person
-    ? `${person}${isEquipment ? `, wearing ${f.name} (${f.typeLine})` : p.armor ? `, wearing ${p.armor}` : ''}. Follow the established canonical design of this Saint Seiya character: face, hair, eyes, armor, ornaments, helmet and characteristic colors. Do not invent armor changes.`
-    : isEquipment ? `${f.name} (${f.typeLine}) alone as a sacred object, with no wearer; show its structure and materials clearly and preserve its symbols, colors and geometry.`
+    ? `${person}${isEquipment ? `, wearing ${f.name} (${f.typeLine})` : p.armor ? `, wearing ${p.armor}` : ''}. Match the attached reference images: face, hair, eyes, armor, ornaments, helmet and characteristic colors. Do not invent armor changes.`
+    : isEquipment ? `${f.name} (${f.typeLine}) alone as a sacred object, with no wearer; show its structure and materials clearly and preserve the symbols, colors and geometry of the attached reference images.`
       : f.kind === 'Domain' ? `${f.name}, as a place, with no characters.` : `${f.name}, as an event, with no main character.`;
-  const story = [p.before && `Just happened: ${clean(p.before)}.`, p.now && `Happening now: ${clean(p.now)}.`, p.next && `About to happen: ${clean(p.next)}.`, p.viewer && `The viewer must feel: ${clean(p.viewer)}.`].filter(Boolean).join(' ');
+  const story = [p.before && `Just happened: ${p.before}.`, p.now && `Happening now: ${p.now}.`, p.next && `About to happen: ${p.next}.`, p.viewer && `The viewer must feel: ${p.viewer}.`].filter(Boolean).join(' ');
   const body = [
     'Vertical 3:4 high-resolution illustration for a Saint Seiya trading card. Illustration only: no card frame, no text, no names, no logos, no numbers, no stats, no interface symbols, no watermarks.',
     `CARD: ${f.name}${f.subtitle ? ` — "${f.subtitle}"` : ''} (${f.typeLine || f.kind}, ${f.rarity || 'Common'}).`,
     `CARD TYPE DIRECTION: ${TYPE_RULES[f.kind] || TYPE_RULES.Devotee}`,
     `SUBJECT: ${subject}`,
     `VISUAL VERSION: ${p.version}. Do not mix versions.`,
-    p.references && 'REFERENCES: follow the attached reference images as the priority source for appearance.',
+    'REFERENCES: reference images are attached to this prompt. They are the priority source for appearance; follow them over any written description.',
     god && `FACTION IDENTITY: ${p.god}, ${god.title}. Palette identity, not monochrome: ${god.palette}. Feeling: ${god.mood}.`,
-    `SETTING: ${clean(p.theme) || (god ? god.setting : 'an epic mythological setting from the Saint Seiya universe')}.${p.arc ? ` Inspired by: ${clean(p.arc)}.` : ''}`,
+    `SETTING: ${p.theme || (god ? god.setting : 'an epic mythological setting from the Saint Seiya universe')}.${p.arc ? ` Inspired by: ${p.arc}.` : ''}`,
     story && `STORY: ${story}`,
     `FRAMING: ${p.shot}. CAMERA: ${p.angle}.${person ? ` POSE: ${p.pose}.` : ''}${p.motion ? ` MOTION: ${p.motion}.` : ''}`,
     person && 'FACE PLACEMENT, 7/10 RULE (mandatory): place the eyes at about 7/10 of the image height measured from the bottom, never above that line, in the central part of the image and away from the edges. Keep the top free for card interface without hiding the face.',
@@ -161,7 +197,7 @@ export function buildImagePrompt(f, p) {
 }
 
 // Sistema completo: o GPT recebe o Master, trata o que veio escolhido como decisão do autor e responde no formato da seção 12.
-export const buildDirectorPrompt = (master, f, p) => `${master.trim()}\n\n---\nSOLICITAÇÃO DE ARTE\nExecute o processo da seção 11 para a carta abaixo e responda no formato obrigatório da seção 12. Não gere a imagem. Os parâmetros são decisões do autor; desenvolva-os com especificidade. Onde a narrativa estiver em branco, proponha a cena.\n\n${buildImagePrompt(f, p)}`;
+export const buildDirectorPrompt = (master, f, p) => `${master.trim()}\n\n---\nSOLICITAÇÃO DE ARTE\nExecute o processo da seção 11 para a carta abaixo e responda no formato obrigatório da seção 12. Não gere a imagem. Os parâmetros são decisões do autor; desenvolva-os com especificidade. Onde a narrativa estiver em branco, proponha a cena. As imagens de referência vão anexadas a esta mensagem: analise-as na Etapa 2.\n\n${buildImagePrompt(f, p)}`;
 
 const esc = (t) => String(t ?? '').replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
 const select = (name, label, opts, value) => `<label>${label}<select name="${name}">${opts.map(([v, t]) => `<option value="${esc(v)}"${v === value ? ' selected' : ''}>${esc(t ?? v)}</option>`).join('')}</select></label>`;
@@ -192,15 +228,13 @@ export function mountArtPrompt(dialog, {getCard, getCards, say, masterUrl}) {
       ${select('pose', 'Pose', POSES, p.pose)}${select('expression', 'Expressão', EXPRESSIONS, p.expression)}
       ${select('motion', 'Movimento', MOTIONS, p.motion)}${select('light', 'Luz', LIGHTS, p.light)}
       ${select('style', 'Traço dominante', STYLES, p.style)}${select('accent', 'Traço complementar', [...none('Nenhum'), ...STYLES], p.accent)}
-      <div class="ap-wide">${input('theme', 'Tema e cenário', p.theme, 'Vazio: cenário da facção')}</div>
-      <div class="ap-wide">${input('arc', 'Arco ou acontecimento', p.arc, 'Ex.: Doze Casas, saga de Hades')}</div>
-      ${input('before', 'Acabou de acontecer', p.before)}${input('now', 'Está acontecendo', p.now)}${input('next', 'Vai acontecer', p.next)}${input('viewer', 'O observador sente', p.viewer)}
+      ${select('theme', 'Tema e cenário', THEMES, p.theme)}${select('arc', 'Arco ou acontecimento', ARCS, p.arc)}
+      ${select('before', 'Acabou de acontecer', BEFORE, p.before)}${select('now', 'Está acontecendo', NOW, p.now)}${select('next', 'Vai acontecer', NEXT, p.next)}${select('viewer', 'O observador sente', VIEWER, p.viewer)}
       <div class="ap-wide">${input('notes', 'Observações', p.notes, 'Algo mais para a imagem')}</div>
       <label class="ap-check ap-wide"><input type="checkbox" name="usePowers"${p.usePowers ? ' checked' : ''}> Incluir poderes e keywords da carta</label>
-      <label class="ap-check ap-wide"><input type="checkbox" name="references"${p.references ? ' checked' : ''}> Vou anexar imagens de referência</label>
     </div><label class="ap-out">Prompt (pode editar)<textarea name="prompt" rows="20" spellcheck="false" translate="no"></textarea></label></div>
-    <p class="hint">O Master completo não cabe no link: o ChatGPT abre vazio e você cola o prompt, que já fica copiado.</p>
-    <div class="row"><button type="button" data-ap="copy" class="primary">Copiar prompt</button><button type="button" data-ap="gpt">Abrir no ChatGPT</button><button type="button" data-ap="reset">Restaurar</button><button value="close">Fechar</button></div></form>`;
+    <p class="hint">Anexe as imagens de referência junto do prompt. O Master completo não cabe no link: o ChatGPT abre vazio e você cola o prompt, que já fica copiado.</p>
+    <div class="row"><button type="button" data-ap="copy" class="primary">Copiar prompt</button><button type="button" data-ap="gpt">Abrir no ChatGPT</button><button type="button" data-ap="random">Randomizar</button><button type="button" data-ap="reset">Restaurar</button><button value="close">Fechar</button></div></form>`;
     refresh();
   }
   dialog.addEventListener('input', (e) => {
@@ -213,6 +247,7 @@ export function mountArtPrompt(dialog, {getCard, getCards, say, masterUrl}) {
     const action = e.target.closest('[data-ap]')?.dataset.ap;
     if (!action) return;
     if (action === 'reset') { params = defaultParams(facts); draw(); return; }
+    if (action === 'random') { params = randomParams(facts, params); draw(); return; }
     const copied = await copy();
     if (action === 'copy') return void say(copied ? 'Prompt copiado.' : 'Não consegui copiar: selecione o texto do prompt.', !copied);
     const url = `${GPT_URL}?q=${encodeURIComponent(output().value)}`, fits = url.length <= URL_LIMIT;
