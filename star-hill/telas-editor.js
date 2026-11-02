@@ -87,7 +87,7 @@ function page() {
   const h = doc.home;
   return `<div class="tl-bar panel"><span id="tl-status" class="tag"></span>
       <div class="actions"><button class="primary" data-tl="save">Salvar</button><a href="../playtest/" target="_blank" rel="noopener">Abrir jogo ↗</a>
-      <button data-action="publish-site" title="Envia cartas, artes, telas e sons ao saintseiyatcg.com (sem as artes -ref).">Publicar no site</button></div>
+      <button data-action="publish-site" title="Envia cartas, artes, telas e sons ao saintseiyatcg.com.">Publicar no site</button></div>
       <nav class="tl-nav" aria-label="Seções">${SECOES.filter(([id]) => id !== 'vozes' || audios.some(a => a.origem?.startsWith('ps3-voz-'))).map(([id, l]) => `<button type="button" data-tl="jump" data-to="tl-${id}">${l}</button>`).join('')}</nav></div>
     <section class="panel tl" id="tl-home"><h2>Home · carrossel</h2><p class="hint">Cada slide: imagem de fundo e textos. A ordem aqui é a ordem no jogo.</p>
       ${h.slides.map((s, i) => `<div class="tl-card">${imagePicker(`home.slides.${i}.imagem`)}

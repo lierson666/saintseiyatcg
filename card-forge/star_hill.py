@@ -367,7 +367,7 @@ def publish(root=ROOT):
     return {'mensagem': (run.stdout.strip().splitlines() or ['Cartas publicadas.'])[-1], **game_status(root)}
 
 
-# Jogo online (autor, 30/10/2026): tools/publish-site.sh gera o export e envia ao servidor sem as artes -ref.
+# Jogo online (autor, 30/10/2026): tools/publish-site.sh gera o export e envia ao servidor, inclusive as artes -ref (autor, 01/11/2026).
 def publish_site(root=ROOT):
     with LOCK:
         run = subprocess.run(['/bin/sh', str(root / 'tools/publish-site.sh'), str(root)], capture_output=True, text=True, timeout=1800)
