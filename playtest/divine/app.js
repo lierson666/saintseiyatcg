@@ -22,7 +22,7 @@ import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudg
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout, clockBonus} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
-import {createDirector} from './director.js?v=20261102-voz2';
+import {createDirector} from './director.js?v=20261102-equip1';
 import {createAI} from './ai.js?v=14';
 import {findDeck} from '../deck-store.js';
 import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-face3';
@@ -1238,7 +1238,7 @@ const ui = {
   // Cor do God de quem controla o Devotee (golpes básicos no tema do deus, autor 31/10/2026).
   godColor: uid => { const k = S().order.find(k => S().players[k].battlefield.includes(uid)); return k && `rgb(${GOD_GLOW[S().divine?.[k]?.god] || GOD_GLOW['god-athena']})`; },
   cinematic(on) { stage.classList.toggle('cinematic', on); },
-  isViewer: key => key === viewer(),
+  isViewer: key => key === viewer(), isArmor: uid => !!info(uid).armor,
   // Idioma da voz: segue o jogo (português ou japonês) até o jogador escolher (autor, 02/11/2026).
   speak(kind, ref, ability = '') {
     const obj = ctx.objects[ref], name = obj ? info(ref).name : cards.get(S().gods[ref])?.name || '';

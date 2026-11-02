@@ -22,6 +22,7 @@ const DEATH_FX = {
 const STYLE_BY_TYPE = [[/Gold Saint/, 'energy', '#ffd36e'], [/Silver Saint/, 'energy', '#d8e4ff'], [/Bronze Saint/, 'physical', '#ffe0a0']];
 
 export function createDirector({ui, getFx, settings}) {
+  const equipSound = uid => { if (!skipping) sound(ui.isArmor?.(uid) ? 'equipar_armadura' : 'equipar_arma'); };
   let skipping = false, busy = false;
   // Grupo do evento em curso (Star Hill: ligada e velocidade por grupo); desligada = sem efeito e sem espera.
   let cur = {ligada: true, velocidade: 1};
@@ -134,7 +135,8 @@ export function createDirector({ui, getFx, settings}) {
       await pause(260);
     },
     async ability(e) { ui.speak?.('linha', e.uid, e.name); ui.pulse(e.uid, 'activate'); ui.log(e); await pause(260); },
-    async equipped(e) { ui.log(e); await pause(120); },
+    async equipped(e) { equipSound(e.uid); ui.log(e); await pause(120); },
+    async entered(e) { if (e.bearer) equipSound(e.uid); }, // Equipment conjurado já preso no portador
     async strike_declared(e) {
       ui.speak?.('golpe', e.attacker);
       ui.pulse(e.attacker, 'attacking', true);
