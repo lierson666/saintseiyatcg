@@ -263,7 +263,7 @@ function keywordsWithoutBox(s) {
   return list(s.keywords).filter((k) => LINE_KEYWORDS.includes(k) && !boxed.includes(k)).join(', ');
 }
 const KW_RE = new RegExp(`@(${[...KEYWORD_WORDS, ...KEYWORD_WORDS_PT].sort((a, b) => b.length - a.length).join('|')})(?!\\p{L})`, 'giu'); // mesma lista do duelo (shared/card-text.js)
-const boldKeywords = (para) => statSymbols(keywordLine(para).split(/(\*\*[^*]*\*\*)/).map((seg, i) => (i % 2 ? seg : seg.replace(KW_RE, (_, k) => `**${k.toUpperCase()}**`).replace(STAT_RE, (m) => `⟪${statTrend(m)}|${m.toUpperCase()}⟫`))).join('').replace(/@(?=\p{L})(?!(?:ATK|ATQ|POWER|PODER|HP|PV|COSMO|BASECOSMO|LATENT|LATENTE|SOUL|ALMA|TAP)(?!\p{L}))/giu, ''));
+const boldKeywords = (para) => statSymbols(keywordLine(para).split(/(\*\*[^*]*\*\*)/).map((seg, i) => (i % 2 ? seg : seg.replace(KW_RE, (_, k) => `**${k.toUpperCase()}**`).replace(STAT_RE, (m) => `⟪${statTrend(m)}|${m.toUpperCase()}⟫`))).join('').replace(/@(?=\p{L})(?!(?:ATK|ATQ|POWER|PODER|HP|PV|COSMO|BASECOSMO|LATENT|LATENTE|SOUL|ALMA|TAP)(?!\p{L}))/giu, '')).replace(/\{(\d+|X)\}(?=\{[BCLS]\})/g, '$1 ');
 
 function tokenize(para) {
   const toks = [];
@@ -906,6 +906,21 @@ async function translatePt(){
   return r.avisos||[];
 }
 $('#translatePt').addEventListener('click',async()=>{try{const w=await translatePt();say(w.length?`PT gerado — revise: ${w.join(' ')}`:'PT gerado do EN — revise antes de gravar.',w.length>0);}catch(e){say(e.message,true);}});
+// Flavour EN → PT ao sair do campo (autor, 02/11/2026), pelo claude do Mac: só esse campo muda e o autor revisa no diff.
+let flavourBefore = '';
+form.elements.flavour.addEventListener('focus', () => { flavourBefore = S.flavour; });
+form.elements.flavour.addEventListener('change', async () => {
+  const id = S.id, text = S.flavour.trim(), wasCurrent = S.ptFor === enKey(buildCard(), { ...S, flavour: flavourBefore });
+  try {
+    if (text) say('traduzindo o flavour…');
+    const translated = text ? (await post('/api/translate-flavour', JSON.stringify({ text }))).flavour_pt : '';
+    if (S.id !== id || S.flavour.trim() !== text) return; // trocou de carta ou de texto durante a tradução
+    form.elements.pt_flavour.value = translated;
+    form.elements.pt_flavour.dispatchEvent(new Event('input', { bubbles: true }));
+    if (wasCurrent) S.ptFor = enKey(buildCard());
+    if (text) say('flavour traduzido — revise antes de gravar.');
+  } catch (e) { say(e.message, true); }
+});
 // Ao gravar: EN mudou desde o PT atual (ou não há PT) → regera e devolve o aviso que vai no diff.
 async function ensurePt(){
   if(S.ptFor===enKey(buildCard()))return '';
