@@ -1,4 +1,5 @@
 import {cardsToXlsx} from './cards-xlsx.js?v=20261102-xlsx1';
+import {AUDIT_STATUS,auditOf,mountCardFinder,reviewQueue} from './card-finder.js?v=20261102-lista1';
 import {mountRulesRows} from './rules-rows.js?v=20261102-banco1';
 import {createHistory} from '../shared/editor-history.js';
 import {compilePlaytest} from '../shared/import-playtest.js';
@@ -92,7 +93,7 @@ function pickTab(tab, sub) {
   const subs = subsOf(tab);
   activeTab = tab;
   if (subs.length) activeSub = subs.includes(sub) ? sub : subs[0];
-  formSections.forEach((section) => section.classList.toggle('section-off', section.dataset.tab !== tab || (section.dataset.sub && section.dataset.sub !== activeSub)));
+  formSections.forEach((section) => section.classList.toggle('section-off', section.dataset.tab !== tab || Boolean(section.dataset.sub && section.dataset.sub !== activeSub)));
   formSubTabs.hidden = !subs.length;
   const mark = (nav, name) => [...nav.children].forEach((b) => { if (b.textContent === name) b.setAttribute('aria-current', 'true'); else b.removeAttribute('aria-current'); });
   mark(formTabs, activeTab);
@@ -644,6 +645,23 @@ function mountGodBlock(sel, field, kind) {
 // Equipment System V1: subtipos vêm do registro; marcar traz a dependência e o campo de texto continua sendo o dado.
 const esc=(t)=>String(t).replace(/[&<>"]/g,(c)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const EQ_GROUPS=[['Armadura',['armor']],['Arma',['weapon','weapon_kind']],['Instrumento',['instrument','instrument_kind']],['Objeto',['object']]];
+// Auditoria V2: só propõe. Aceitar preenche a patente como um clique normal; o catálogo só muda pelo diff do Gravar.
+let audit={},drawFinder=()=>{};
+const unsavedRank=()=>orig&&(S.patente_armadura||'')!==(orig.patente_armadura||'');
+function goToCard(id){
+  if(unsavedRank())return say('Grave a patente ou desfaça antes de trocar de carta.',true);
+  $('#cardSelect').value=id;
+  return selectCard(id);
+}
+function auditBox(){
+  const a=orig&&auditOf(orig,audit);
+  if(!a)return '';
+  const queue=reviewQueue(db.cartas,audit),i=queue.findIndex((c)=>c.id===orig.id),go=(c,label,title)=>c?`<button type="button" class="eq-chip" data-eq-go="${esc(c.id)}" title="${title}">${label}</button>`:'';
+  const nav=!queue.length?'':i<0?go(queue[0],`Ir para a fila (${queue.length})`,'Primeira armadura da fila de revisão'):`${go(queue[(i-1+queue.length)%queue.length],'‹','Armadura anterior da fila')}<span>${i+1} de ${queue.length}</span>${go(queue[(i+1)%queue.length],'›','Próxima armadura da fila')}`;
+  const accept=!orig.patente_armadura&&a.patente&&S.patente_armadura!==a.patente?`<button type="button" class="eq-chip" data-eq-rank="${esc(a.patente)}">Aceitar proposta: ${esc(a.patente)}</button>`:'';
+  const save=unsavedRank()?'<button type="button" class="eq-chip primary" data-eq-save>Gravar patente…</button>':'';
+  return `<div class="eq-audit" data-status="${esc(a.status)}"><div class="eq-audit-head"><b>Auditoria V2: ${esc(AUDIT_STATUS[a.status]||a.status)}</b><div class="eq-audit-nav">${nav}</div></div><p class="hint">${esc(a.motivo)}</p>${accept||save?`<div class="eq-chips">${accept}${save}</div>`:''}</div>`;
+}
 function drawEqSubtypes(){
   const box=$('#eqSubtypes'),isEq=S.tipo==='Equipment';
   box.hidden=!isEq;
@@ -654,7 +672,7 @@ function drawEqSubtypes(){
   const shown=(t)=>on.includes(t.name)||!t.requires.length||t.requires.every((r)=>on.some((n)=>n.toUpperCase()===r));
   const old=on.filter((n)=>!EQUIPMENT_SUBTYPES.some((t)=>t.name===n&&t.status==='approved')).map((name)=>({name}));
   const row=(label,html)=>`<div class="eq-group"><span>${label}</span><div class="eq-chips" translate="no">${html}</div></div>`;
-  box.innerHTML=`<div class="eq-head"><b>Classificação</b><output class="eq-line" translate="no">${esc(formatCardTypeLine(card).toUpperCase())}</output></div>`
+  box.innerHTML=`<div class="eq-head"><b>Classificação</b><output class="eq-line" translate="no">${esc(formatCardTypeLine(card).toUpperCase())}</output></div>${auditBox()}`
     +EQ_GROUPS.map(([label,kinds])=>row(label,EQUIPMENT_SUBTYPES.filter((t)=>kinds.includes(t.kind)&&shown(t)).map(chip).join(''))
       +(label==='Armadura'&&ranks.length?row('Patente',['',...ranks].map((p)=>`<button type="button" class="eq-chip" data-eq-rank="${p}" aria-pressed="${(S.patente_armadura||'')===p}">${p||'Nenhuma'}</button>`).join('')):'')).join('')
     +(old.length?row('Anterior ao V1',old.map(chip).join('')):'')
@@ -662,6 +680,9 @@ function drawEqSubtypes(){
 }
 form.elements.patente_armadura.innerHTML=[...new Set(['',...Object.values(PATENTES_ARMADURA).flat()])].map((p)=>`<option value="${p}">${p||'—'}</option>`).join('');
 $('#eqSubtypes').addEventListener('click',(e)=>{
+  const target=e.target.closest('[data-eq-go]');
+  if(target)return void goToCard(target.dataset.eqGo);
+  if(e.target.closest('[data-eq-save]'))return void $('#saveCards').click();
   const rank=e.target.closest('[data-eq-rank]');
   if(rank){const f=form.elements.patente_armadura;f.value=rank.dataset.eqRank;f.dispatchEvent(new Event('input',{bubbles:true}));drawEqSubtypes();return;}
   const b=e.target.closest('[data-eq-sub]');if(!b)return;
@@ -747,6 +768,7 @@ async function selectCard(id) {
   fillForm();resetEditHistory();
   setRef(c.caminho_imagem ? `../${c.caminho_imagem}` : null);
   say(S.art ? `${c.id} carregada` : `${c.id} carregada — sem arte, envie uma imagem`);
+  drawFinder();
   render();
 }
 
@@ -762,6 +784,7 @@ function newCard() {
   S.nome_exibicao_en = 'New Card';
   $('#cardSelect').value = '';
   fillForm();resetEditHistory();
+  drawFinder();
   setRef(null);
   say(`nova carta ${S.id}`);
   render();
@@ -1109,6 +1132,7 @@ $('#diffConfirm').addEventListener('click', async () => {
     if(!orig||JSON.stringify(orig)!==JSON.stringify(pending))throw Error('O catálogo não corresponde à versão enviada.');
     gen=(orig.habilidades_en||[]).map(text=>({text,markup:toMarkup(text)}));
     fillCardSelect(orig.id);
+    drawFinder();drawEqSubtypes();
     say(pendingSaveBoth?`✓ ${pending.id}: carta + visual gravados e conferidos.`:`✓ ${pending.id}: cards.json gravado e conferido.`);
     pendingSaveBoth=false;
   } catch (e) { say(e.message, true); }
@@ -1184,6 +1208,8 @@ window.addEventListener('card-layouts:published',()=>render());
 
 try {
   db = await (await fetch('../data/cards.json')).json();
+  try { audit = (await (await fetch('equipment-audit-v2.json?v=20261102-lista1')).json()).cartas; } catch { audit = {}; } // sem a auditoria, a lista funciona sem status
+  drawFinder = mountCardFinder($('#cardFinder'), {cards: () => db.cartas, audit, current: () => $('#cardSelect').value, pick: goToCard});
   const query = new URLSearchParams(location.search), requested = query.get('card') || 'athena-002';
   // Edição aberta sem nenhuma carta ainda (STAR HILL): começa em uma carta nova dela.
   const start = query.has('edicao') && !query.has('card') ? null : db.cartas.find(c => c.id === requested)?.id || db.cartas[0]?.id;
