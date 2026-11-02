@@ -147,7 +147,7 @@ function faccoes() {
 }
 async function saveFaction(key, value) {
   const id = `faccao-${faccao.toLowerCase()}`, entry = {linhas: [], ...cardVoices[id], [key]: value};
-  try { cardVoices = (await hooks.api('card-voice', {id, ...entry})).vozes; draw(); } catch (error) { hooks.notice?.(error.message); }
+  try { cardVoices = (await hooks.api('card-voice', {id, ...entry})).vozes; draw(); hooks.notice?.(`Som de ${faccao} salvo.`, true); } catch (error) { hooks.notice?.(error.message); }
 }
 
 // Falas do jogo (MUSIC/fx/ps3-voz-<código>-<idioma>): o mesmo número é a mesma fala nos 3 idiomas; a marcada vale para os 3.
@@ -271,7 +271,7 @@ document.addEventListener('click', async e => {
   if (act === 'save') {
     // Linhas de texto sem original são descartadas ao salvar.
     doc.textos = Object.fromEntries(pairs.filter(([a]) => a.trim()));
-    try { const r = await hooks.api('telas', {conteudo: doc, revisao}); revisao = r.revisao; dirty = false; hooks.notice('Telas salvas. Recarregue o jogo para ver; use Publicar no site para levar ao jogo online.'); }
+    try { const r = await hooks.api('telas', {conteudo: doc, revisao}); revisao = r.revisao; dirty = false; hooks.notice('Salvo. Recarregue o jogo para ver; use Publicar no site para levar ao jogo online.', true); }
     catch (err) { hooks.notice(err.message); }
   }
   draw();

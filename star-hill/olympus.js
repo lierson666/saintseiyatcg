@@ -5,7 +5,7 @@ import {loadCanon} from '../shared/canon-cards.js';
 import {printedKind} from '../shared/rules-policy.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {canonIndex, validateDeck, colorErrors, DECK_SIZE, SPLASH_LIMIT} from '../shared/deck-v3.js';
-import {loadTelas, mountTelas} from './telas-editor.js?v=20261102-banco1';
+import {loadTelas, mountTelas} from './telas-editor.js?v=20261102-aviso1';
 import {EDITIONS, editionOf} from '../shared/editions.js?v=20261102-1';
 
 const $ = s => document.querySelector(s);
@@ -28,7 +28,15 @@ async function api(path, body) {
   return data;
 }
 const json = url => fetch(`${url}?t=${Date.now()}`, {cache: 'no-store'}).then(r => r.json());
-function notice(text) { $('#notice').className = text ? 'notice' : ''; $('#notice').textContent = text || ''; }
+// Aviso fixo na tela, para aparecer mesmo com a página rolada (autor, 02/11/2026). ok: confirmação verde que some sozinha; erro fica até clicar.
+let noticeTimer = 0;
+function notice(text, ok = false) {
+  const box = $('#notice');
+  clearTimeout(noticeTimer);
+  box.className = text ? `notice${ok ? ' notice--ok' : ''}` : ''; box.textContent = text || '';
+  box.onclick = () => notice('');
+  if (text && ok) noticeTimer = setTimeout(() => notice(''), 6000);
+}
 
 // Mesmas fontes do lobby: D268 + cartas novas do export do Forge.
 async function load() {
