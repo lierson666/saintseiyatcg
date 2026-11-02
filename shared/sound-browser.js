@@ -5,7 +5,13 @@ const SECOES = [
   ['Vozes', [['voz-golpe', 'Golpes especiais'], ['voz-batalha', 'Batalha'], ['voz-historia', 'História'], ['voz-narracao', 'Narração e menus']]],
   ['Efeitos (FX)', [['fx-golpe', 'Golpes'], ['fx-sistema', 'Combate e sistema'], ['fx-ambiente', 'Ambiente']]],
 ];
-const NOME_SECAO = Object.fromEntries(SECOES.flatMap(([, itens]) => itens));
+// Banco de sons (autor, 02/11/2026): efeitos de terceiros, nunca misturados aos do Saint Seiya. Fonte: tools/banco-sons.py.
+const BANCO = [
+  ['Temas dos deuses', [['athena', 'Athena · luz e sagrado'], ['poseidon', 'Poseidon · água e mar'], ['hades', 'Hades · noite e macabro'], ['ares', 'Ares · guerra e explosão'], ['artemis', 'Artemis · lua e natureza']]],
+  ['Efeitos', [['impactos', 'Impactos'], ['whoosh', 'Whooshes e transições'], ['magia', 'Magia e energia'], ['interface', 'Interface'], ['ambiente', 'Ambientes'], ['vozes', 'Vozes e criaturas'], ['outros', 'Outros']]],
+];
+const BANCO_ID = /^(SNS|KNY|FSD)\//;
+const NOME_SECAO = Object.fromEntries([...SECOES, ...BANCO].flatMap(([, itens]) => itens));
 const LANGS = [['jp', 'JP'], ['pt', 'PT'], ['es', 'ES']];
 const PAGE = 200;
 const ORDENS = [['', 'Ordem padrão'], ['asc', 'Menor tempo primeiro'], ['desc', 'Maior tempo primeiro']];
@@ -28,16 +34,16 @@ function savePlace() { // a cada mudança: o evento close chega tarde, com o dia
 }
 
 const NO_LIB = 'A biblioteca não respondeu. Feche e abra o STAR HILL ou o Card Forge para atualizar o servidor.';
-const toSound = ([id, secao, cod, grupo, cue, s, langs, texto]) => ({id, secao, cod, grupo, cue, s, langs, texto, jogo: 'soldiers-soul'});
-export const soundUrl = (id, lang = state.lang) => `${LIB}${lang}/${id}.mp3`;
+const toSound = jogo => ([id, secao, cod, grupo, cue, s, langs, texto]) => ({id, secao, cod, grupo, cue, s, langs, texto, jogo});
+export const soundUrl = (id, lang = state.lang) => (BANCO_ID.test(id) ? `${LIB}banco/${id}.mp3` : `${LIB}${lang}/${id}.mp3`);
 export const soundLang = () => state.lang;
 function loadLibrary() {
   // Textos à parte do índice: a transcrição (tools/rea-ps3/transcrever-sons.py) aparece aos poucos, sem regerar nada.
-  return library ||= Promise.all(['indice', 'falas-pt'].map(f => fetch(`${LIB}${f}.json`, {cache: 'no-cache'}).then(r => (r.ok ? r.json() : null)).catch(() => null))).then(([d, falas]) => {
+  return library ||= Promise.all(['indice', 'falas-pt', 'banco/indice'].map(f => fetch(`${LIB}${f}.json`, {cache: 'no-cache'}).then(r => (r.ok ? r.json() : null)).catch(() => null))).then(([d, falas, banco]) => {
     if (!d) library = null;
-    const sons = (d?.sons || []).map(toSound);
+    const sons = (d?.sons || []).map(toSound('soldiers-soul'));
     for (const x of sons) { const [bank, fala] = x.id.split('/'); x.texto ||= falas?.[bank]?.[fala] || ''; }
-    return {ok: !!d, jogos: d?.jogos || [], nomes: d?.nomes || {}, sons: sons.sort((a, b) => !a.texto - !b.texto)}; // com fala transcrita primeiro: é o que dá para ler antes de ouvir
+    return {ok: !!d, jogos: [...(d?.jogos || []), ...(banco ? [{id: 'banco', nome: 'Banco de sons'}] : [])], nomes: d?.nomes || {}, sons: [...sons.sort((a, b) => !a.texto - !b.texto), ...(banco?.sons || []).map(toSound('banco'))]}; // com fala transcrita primeiro: é o que dá para ler antes de ouvir
   });
 }
 const mine = () => (opts.extra || []).map(x => ({...x, jogo: 'meus'}));
@@ -65,7 +71,7 @@ function play(x, button) {
 
 function filtered(lib) {
   const q = state.q.trim().toLowerCase().split(/\s+/).filter(Boolean);
-  if (q.length) return allSounds(lib).filter(x => { const hay = `${x.texto} ${x.nome} ${x.cue} ${x.id} ${charName(lib, x.cod)} ${x.grupo}`.toLowerCase(); return q.every(w => hay.includes(w)); });
+  if (q.length) return allSounds(lib).filter(x => x.jogo === state.jogo).filter(x => { const hay = `${x.texto} ${x.nome} ${x.cue} ${x.id} ${charName(lib, x.cod)} ${x.grupo}`.toLowerCase(); return q.every(w => hay.includes(w)); });
   return allSounds(lib).filter(x => x.jogo === state.jogo && x.secao === state.secao);
 }
 // Por duração (autor, 02/11/2026); som sem duração conhecida fica por último nas duas ordens.
@@ -75,7 +81,7 @@ const counted = (list, key) => { const out = new Map(); for (const x of list) ou
 function drawRail(lib) {
   const by = counted(allSounds(lib).filter(x => x.jogo === state.jogo), 'secao');
   const games = [...lib.jogos, ...(opts.extra?.length || opts.onUpload ? [{id: 'meus', nome: 'Meus sons'}] : [])];
-  const sections = state.jogo === 'meus' ? [['Meus sons', [...by.keys()].map(k => [k, k])]] : SECOES;
+  const sections = state.jogo === 'meus' ? [['Meus sons', [...by.keys()].map(k => [k, k])]] : state.jogo === 'banco' ? BANCO : SECOES;
   dialog.querySelector('.sb-games').innerHTML = games.map(j => `<button type="button" data-jogo="${esc(j.id)}" aria-pressed="${state.jogo === j.id}">${esc(j.nome)}</button>`).join('');
   dialog.querySelector('.sb-sections').innerHTML = sections.map(([titulo, itens]) => `<h3>${esc(titulo)}</h3>${itens.map(([id, nome]) =>
     `<button type="button" data-secao="${esc(id)}" aria-current="${!state.q && state.secao === id}"><span>${esc(nome)}</span><small>${(by.get(id) || 0).toLocaleString('pt-BR')}</small></button>`).join('')}`).join('')
@@ -86,7 +92,7 @@ function drawChars(lib, list) {
   box.hidden = !show;
   if (!show) return;
   const rows = [...by.entries()].sort((a, b) => charName(lib, a[0]).localeCompare(charName(lib, b[0]), 'pt-BR'));
-  box.innerHTML = `<h3>Personagem</h3><button type="button" data-cod="" data-all aria-current="${state.cod === null}"><span>Todos</span><small>${list.length.toLocaleString('pt-BR')}</small></button>
+  box.innerHTML = `<h3>${state.jogo === 'banco' ? 'Biblioteca' : 'Personagem'}</h3><button type="button" data-cod="" data-all aria-current="${state.cod === null}"><span>Todos</span><small>${list.length.toLocaleString('pt-BR')}</small></button>
     ${rows.map(([c, n]) => `<button type="button" data-cod="${esc(c)}" aria-current="${state.cod === c && state.cod !== null}"><span>${esc(charName(lib, c))}${c && charName(lib, c) !== c ? ` <i>${esc(c)}</i>` : ''}</span><small>${n.toLocaleString('pt-BR')}</small></button>`).join('')}`;
 }
 function drawGroups(list) {
@@ -133,7 +139,7 @@ function build() {
   dialog = document.createElement('dialog');
   dialog.className = 'sb';
   dialog.innerHTML = `<p class="sb-target" hidden></p><header class="sb-head"><div class="sb-title"><h2></h2><small class="sb-current"></small></div>
-      <input class="sb-search" type="search" placeholder="Buscar em tudo: fala, personagem, golpe" aria-label="Buscar som" autocomplete="off">
+      <input class="sb-search" type="search" placeholder="Buscar neste banco: nome, fala, personagem" aria-label="Buscar som" autocomplete="off">
       <span class="sb-lang-label">Ouvir em</span><div class="sb-langs" role="group" aria-label="Idioma ao ouvir" title="Escolha em qualquer idioma: os outros vêm junto">${LANGS.map(([k, l]) => `<button type="button" data-lang="${k}">${l}</button>`).join('')}</div>
       <button type="button" class="sb-clear" data-clear>Sem som</button><button type="button" class="sb-close" data-close aria-label="Fechar">✕</button></header>
     <div class="sb-body"><nav class="sb-rail" aria-label="Seções"><div class="sb-games" role="group" aria-label="Jogo"></div><div class="sb-sections"></div></nav>

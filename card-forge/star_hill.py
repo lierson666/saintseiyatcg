@@ -483,7 +483,8 @@ LIBRARY = Path(os.environ.get('SSTCG_BIBLIOTECA', Path.home() / 'worktrees/sstcg
 
 def library_file(line, lang):
     """MP3 da fala no idioma pedido; som sem esse idioma (FX, falas só em japonês) usa o que houver."""
-    return next((p for l in (lang, *VOICE_LANGS) if (p := LIBRARY / l / f'{line}.mp3').is_file()), None)
+    banco = LIBRARY / 'banco' / f'{line}.mp3'  # efeitos de terceiros: mesmo arquivo nos 3 idiomas (tools/banco-sons.py)
+    return banco if banco.is_file() else next((p for l in (lang, *VOICE_LANGS) if (p := LIBRARY / l / f'{line}.mp3').is_file()), None)
 
 
 def install_voice(line, root=ROOT):

@@ -11,6 +11,14 @@ spec.loader.exec_module(bib)
 import star_hill
 
 assert bib.classificar('BBA_SEY_PSK_VC', 'x', 5) == ('voz-golpe', 'SEY', 'Golpe PSK')
+banco_spec = importlib.util.spec_from_file_location('banco', Path(__file__).parent / 'banco-sons.py')
+banco = importlib.util.module_from_spec(banco_spec)
+banco_spec.loader.exec_module(banco)
+assert banco.classificar('344 Audio - Anime Fight Voices Vol. 1', "VOXMale_Warrior Opponent Attack_344 Audio_Anime.wav")[0] == 'vozes'  # guerreiro falando não é som de guerra
+assert banco.classificar('Ivo Vicic - Church Bells', '04 Church Bells.wav') == ('athena', 'Sino')
+assert banco.classificar('x', 'WATRImpt_Impact Water Deep_ESM_EMWI.wav') == ('poseidon', 'Impacto')
+assert banco.classificar('InMotionAudio - Velcro', 'VelcroRip29.wav')[0] == 'outros'
+assert banco.titulo('WATRImpt_Impact Water Deep_ESM_EMWI.wav') == 'Impact Water Deep'
 assert bib.classificar('BBA_SEY_PSK', 'x', 5) == ('fx-golpe', 'SEY', 'Golpe PSK')
 assert bib.classificar('SEY', 'B_SEY_01', .3) == ('voz-batalha', 'SEY', 'Grito')
 assert bib.classificar('SEY', 'SEY_win00_01', 2) == ('voz-batalha', 'SEY', 'Vitória')
