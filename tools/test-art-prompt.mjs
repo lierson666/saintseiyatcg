@@ -140,6 +140,11 @@ test('listas de cena cresceram sem repetir, e genérica não sorteia lugar do c�
   for (let i = 0; i < 100; i++) themes.add(randomParams(f, defaultParams(f), () => i / 100).theme);
   assert.ok(themes.size >= 5);
   for (const t of themes) assert.doesNotMatch(t, /Twelve Houses|Sanctuary|undersea|Underworld|Elysion|Jamir|Asgard|Olympus/, t);
+  assert.ok([...themes].some((t) => /Coral Labyrinth/.test(t)));
+  assert.ok(THEMES.filter(([, pt]) => /^(Atlântida|Poseidon):/.test(pt)).length >= 20);
+  const athena = cardFacts(cartas.find((c) => c.nome_exibicao_en === 'SANCTUARY GUARD'), cartas), other = new Set();
+  for (let i = 0; i < 100; i++) other.add(randomParams(athena, defaultParams(athena), () => i / 100).theme);
+  assert.ok(![...other].some((t) => /Coral Labyrinth|Abyssal Trench/.test(t)));
 });
 
 test('todo ângulo vem descrito antes do traço, sem proibir nenhum', () => {

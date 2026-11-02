@@ -64,6 +64,18 @@ export const THEMES = [
   ['the Galaxian Wars colosseum of the Graad Foundation in Tokyo', 'Tóquio: Coliseu da Graad'], ['the Kido mansion and its gardens', 'Tóquio: Mansão Kido'],
   ['the Valhalla Palace in snow-covered Asgard', 'Asgard: Palácio de Valhalla'], ['the giant statue of Odin in the snows of Asgard', 'Asgard: Estátua de Odin'],
   ['the Main Temple of Poseidon under the sea, a sky of water above it', 'Atlântida: Templo Principal'], ['the Central Pillar that holds up the ocean, the Mammoth Pillar', 'Atlântida: Pilar Central'],
+  ['the North Atlantic Pillar of the undersea kingdom', 'Atlântida: Pilar do Atlântico Norte'], ['the South Atlantic Pillar of the undersea kingdom', 'Atlântida: Pilar do Atlântico Sul'],
+  ['the North Pacific Pillar of the undersea kingdom', 'Atlântida: Pilar do Pacífico Norte'], ['the South Pacific Pillar of the undersea kingdom', 'Atlântida: Pilar do Pacífico Sul'],
+  ['the Indian Ocean Pillar of the undersea kingdom', 'Atlântida: Pilar do Índico'], ['the Arctic Ocean Pillar of the undersea kingdom, ice in the walls', 'Atlântida: Pilar do Ártico'],
+  ['the Antarctic Ocean Pillar of the undersea kingdom, ice in the walls', 'Atlântida: Pilar da Antártida'], ['the great stairway of the Undersea Sanctuary', 'Atlântida: Escadaria do Santuário'],
+  ['the throne room of Poseidon in the Main Temple', 'Atlântida: Sala do Trono'], ['the inside of the Central Pillar, water pouring down its walls', 'Atlântida: Dentro do Pilar Central'],
+  ['ruined colonnades of the Undersea Sanctuary under a sky of ocean', 'Atlântida: Colunatas sob o céu de água'], ['the shrine of the amphora that seals the soul of Poseidon', 'Atlântida: Santuário da Ânfora'],
+  ['the Solo family mansion overlooking the Mediterranean', 'Grécia: Mansão Solo'], ['the temple of Poseidon on the cliff of Cape Sounion at dusk', 'Grécia: Templo de Cabo Sounion'],
+  ["a coastal city flooded by Poseidon's endless rain", 'Dilúvio: Cidade inundada'],
+  ['the Coral Labyrinth, walls of living coral and blue shadow', 'Poseidon: Labirinto de Coral'], ['a sunken temple half buried in sand, shafts of light through the water', 'Poseidon: Templo Afundado'],
+  ['the Abyssal Trench, black depths lit by pale glowing creatures', 'Poseidon: Fossa Abissal'], ['the Tidal Archive, stone tablets among drifting currents', 'Poseidon: Arquivo das Marés'],
+  ['a pearl sanctuary inside a giant open shell', 'Poseidon: Santuário da Pérola'], ['a drowned city of marble towers overgrown with kelp', 'Poseidon: Cidade Afogada'],
+  ['a cathedral built from the bones of a colossal whale', 'Poseidon: Catedral de Ossos'],
   ['one of the seven Mammoth Pillars rising through the undersea kingdom', 'Atlântida: Pilares dos Mares'], ['the watery prison in the cliff of Cape Sounion, the tide rising', 'Grécia: Prisão de Cabo Sounion'],
   ['Hades Castle at Heinstein, dark gothic towers', 'Hades: Castelo de Heinstein'], ['Yomotsu Hirasaka, the hill of the dead and its endless line of souls', 'Hades: Yomotsu Hirasaka'],
   ["the River Acheron, a black river with the ferryman's boat", 'Hades: Rio Aqueronte'], ['the Hall of Judgment of the First Prison', 'Hades: Tribunal'],
@@ -74,6 +86,7 @@ export const THEMES = [
   ['the Lost Canvas, an immense painting floating in the sky', 'Lost Canvas: Tela no céu'], ['Bluegrad, a frozen citadel in the far north', 'Lost Canvas: Bluegrad'],
 ];
 // Só estes não são lugares do cânone: o Randomizar de carta genérica não sorteia os outros, que puxam personagens de Saint Seiya.
+const OCEAN_THEMES = THEMES.filter(([, label]) => label.startsWith('Poseidon: ')); // criados para o jogo: Randomizar de genérica só em carta de Poseidon
 const GENERIC_THEMES = THEMES.filter(([, label]) => ['Cenário da facção', 'Campo de batalha em ruínas', 'Coliseu', 'Cosmo estrelado', 'Floresta sagrada ao luar', 'Montanha de treinamento', 'Vazio de energia pura'].includes(label));
 export const ARCS = [
   ['', 'Sem arco específico'], ['Galaxian Wars', 'Guerra Galáctica'], ['Silver Saints', 'Cavaleiros de Prata'], ['Battle of the Twelve Houses', 'Doze Casas'], ['Poseidon chapter', 'Saga de Poseidon'],
@@ -352,7 +365,7 @@ export function randomParams(f, p, rand = Math.random) {
   const out = {...p};
   for (const [key, list] of Object.entries(RANDOM_LISTS)) out[key] = pick(list)[0];
   if (out.accent === out.style) out.accent = '';
-  if (p.generic) out.theme = pick(GENERIC_THEMES)[0];
+  if (p.generic) out.theme = pick(p.god === 'Poseidon' ? [...GENERIC_THEMES, ...OCEAN_THEMES] : GENERIC_THEMES)[0];
   if (!f.isSpell) out.technique = pick(['', ...f.techniques]);
   return out;
 }
