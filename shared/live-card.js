@@ -1,13 +1,13 @@
-import {printedSubtypes,subtypesText} from './equipment-types.js?v=20261102-eq6';
+import {printedSubtypes,subtypesText} from './equipment-types.js?v=20261102-escala1';
 import {renderRules,inlineMarkup,presentationRules,ruleBlocksWithoutKeywords,blocksMarkup} from './card-text.js?v=20261102-eq2';
 import {isArmor,isEquipment} from './card-model.js?v=20261024-4';
 import {renderPublishedCard,visualProject} from './layout-studio/runtime.js?v=20261102-eq6';
 import {printedEquipmentBonuses,signedBonus,armorBonusText} from './card-visual-values.js?v=20261102-arroba1';
 import {renderKeywordNotes,keywordTipAttr} from './keyword-glossary.js?v=20261102-arroba1';
-import {displayCard,keywordName,typeWord,lang} from './card-i18n.js?v=20261101-tr1';
+import {displayCard,keywordName,typeWord,lang} from './card-i18n.js?v=20261102-escala1';
 import {EDITIONS,editionOf} from './editions.js?v=20261102-1';
-import {scrimCss} from './card-scrim.js?v=20261102-vinheta1';
-import {godFaceLayout} from './god-face.js?v=20261102-vinheta1';
+import {scrimCss} from './card-scrim.js?v=20261102-escala1';
+import {godFaceLayout} from './god-face.js?v=20261102-escala1';
 // A ilustração é apenas fundo. Letras, números e estados são dados independentes no DOM.
 // Virar o God (guia §63): as duas faces já estão na carta; captura antes do clique abrir a carta ou o painel do duelo.
 const flipGod=e=>{const b=e.target.closest?.('.lc-flip');if(!b||e.type==='keydown'&&e.key!=='Enter'&&e.key!==' ')return;e.preventDefault();e.stopPropagation();const c=b.closest('[data-face]');c.dataset.face=c.dataset.face==='back'?'front':'back';};

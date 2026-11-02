@@ -1,4 +1,4 @@
-import {cardVignette} from '../card-scrim.js?v=20261102-vinheta1';
+import {cardVignette} from '../card-scrim.js?v=20261102-escala1';
 import {bindingValue,evaluateLayer,assetURL,esc,editorialWarnings} from './model.js';
 
 // Uma cena vetorial serve ao editor, à arena e às exportações. Não calcula bônus.

@@ -3,7 +3,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {ARMOR_FAMILY, ARMOR_FAMILY_NAMES, belongsToEquipmentGroup, formatCardTypeLine, getCardTypes, hasAnySubtype, hasSubtype, normalizeSubtypes, toggleSubtype, typeTextIsArmor, validateEquipmentSubtypes} from '../shared/equipment-types.js';
+import {ARMOR_FAMILY, PATENTES_ARMADURA, patentesDe, ARMOR_FAMILY_NAMES, belongsToEquipmentGroup, formatCardTypeLine, getCardTypes, hasAnySubtype, hasSubtype, normalizeSubtypes, toggleSubtype, typeTextIsArmor, validateEquipmentSubtypes} from '../shared/equipment-types.js';
 
 const eq = (...subtipos) => ({tipo: 'Equipment', subtipos});
 const line = c => formatCardTypeLine(c).toUpperCase();
@@ -98,7 +98,8 @@ test('slot de Armor da Engine: formato antigo e novo dão o mesmo resultado', ()
     assert.equal(typeTextIsArmor(a), true);
     assert.equal(typeTextIsArmor(b), true);
   }
-  for (const t of ['Equipment — Weapon Sword', 'Equipment — Relic', 'Equipment — Steel Cloth', 'Equipment — Lunar Vestment', 'Equipment — Prototype']) assert.equal(typeTextIsArmor(t), false, t);
+  assert.equal(typeTextIsArmor('Equipment — Steel Cloth'), true); // guia §26, autor 02/11/2026
+  for (const t of ['Equipment — Weapon Sword', 'Equipment — Relic']) assert.equal(typeTextIsArmor(t), false, t);
 });
 
 const table = JSON.parse(readFileSync(new URL('./equipment-migration-v1.json', import.meta.url)));
@@ -113,13 +114,22 @@ test('migração: a tabela completa deixa o catálogo sem erro de subtipo', () =
   assert.deepEqual(errors, []);
 });
 
-test('migração: slot de Armor da Engine não muda em nenhuma carta', () => {
+test('migração: slot de Armor só muda nas cartas decididas pelo autor (guia §26)', () => {
+  const decided = new Set(['neutral-v6-465', 'neutral-v6-466', 'neutral-v6-467', 'neutral-v6-469', 'artemis-v6-362']);
   const {cartas} = JSON.parse(readFileSync(new URL('../data/cards.json', import.meta.url)));
   const typeOf = c => [c.tipo, (c.subtipos || []).join(' ')].filter(Boolean).join(' — ');
   const old = t => /Armor|Warplate|Moonplate/.test(t);
   const before = c => (table.cartas[c.id] ? {...c, subtipos: table.cartas[c.id].antes} : c); // a tabela guarda o estado anterior à gravação
-  const changed = cartas.filter(c => old(typeOf(before(c))) !== typeTextIsArmor(typeOf(migrated(c)))).map(c => c.id);
+  const changed = cartas.filter(c => !decided.has(c.id) && old(typeOf(before(c))) !== typeTextIsArmor(typeOf(migrated(c)))).map(c => c.id);
   assert.deepEqual(changed, []);
+});
+
+test('Steel é patente de Cloth fora da progressão', () => {
+  assert.ok(patentesDe(['Cloth']).includes('Steel'));
+  assert.ok(!PATENTES_ARMADURA.Cloth.includes('Steel'));
+  assert.ok(!patentesDe(['Scale']).includes('Steel'));
+  assert.deepEqual(validateEquipmentSubtypes({...eq('Cloth'), patente_armadura: 'Steel'}).errors, []);
+  assert.equal(line({...eq('Cloth'), patente_armadura: 'Steel'}), 'EQUIPMENT — STEEL CLOTH');
 });
 
 test('migração: só Equipment e sem carta inventada', () => {

@@ -23,7 +23,7 @@ export const EQUIPMENT_SUBTYPES = [
   s('Relic', 'object', 60), s('Artifact', 'object', 61),
   // Subtipos anteriores ao V1, aceitos com aviso até a migração do catálogo: tools/migrate-equipment-v1.py.
   old('God Armor'), old('Divine Artifact'), old('Divine Weapon', 'Weapon'), old('Divine Relic', 'Relic'), old('War Gear'), old('War Artifact'),
-  old('Sacred Armor', 'Moonplate'), old('Satellite Armor', 'Moonplate'), old('Living Armor', 'Moonplate'), old('Lunar Vestment'), old('Steel Cloth'), old('Prototype'),
+  old('Sacred Armor', 'Moonplate'), old('Satellite Armor', 'Moonplate'), old('Living Armor', 'Moonplate'), old('Lunar Vestment', 'Moonplate'), old('Steel Cloth', 'Cloth'), old('Prototype', 'Cloth'),
   old('Arrow'), old('Quiver'), old('Cloak'), old('Amulet'), old('Mask'), old('Device'), old('Supply'), old('Facility'),
 ];
 
@@ -43,7 +43,9 @@ export const PATENTES_ARMADURA = {
   Warplate: ['Berserker', 'Elite', 'Warlord', 'Divine'],
   Moonplate: ['Crescent', 'Half', 'Full', 'Divine'],
 };
-export const patentesDe = list => normalizeSubtypes(list).flatMap(n => PATENTES_ARMADURA[n] || []);
+// Steel (autor, 02/11/2026): patente de Cloth fora da progressão, sem nível acima ou abaixo de outra.
+export const PATENTES_FORA_DA_ESCALA = {Cloth: ['Steel']};
+export const patentesDe = list => normalizeSubtypes(list).flatMap(n => [...(PATENTES_ARMADURA[n] || []), ...(PATENTES_FORA_DA_ESCALA[n] || [])]);
 
 const isEquipmentCard = c => c?.tipo === 'Equipment' || c?.kind === 'Equipment' || /^Equipment\b/.test(c?.type || '');
 // Carta do catálogo traz `subtipos`; carta da Engine traz o texto `type` ("Equipment — Weapon Sword").
@@ -117,6 +119,5 @@ export function toggleSubtype(list, subtype) {
 // Escopo de layout por subtipo. "God Armor" virou patente de nível V (autor, 02/11/2026) e segue valendo para os layouts já salvos.
 export const matchesLayoutSubtype = (card, subtype) => Boolean(card?.subtipos?.includes(subtype) || (subtype === 'God Armor' && ['God', 'Divine'].includes(card?.patente_armadura)));
 
-// Texto `type` da Engine: é o que decide o slot de Armor. "Steel Cloth" e "Lunar Vestment" ficam de fora como hoje
-// até a decisão do autor (docs/equipment-system-v1.md, pendências): mudar isso muda a regra da carta.
-export const typeTextIsArmor = type => /Armor|Warplate|Moonplate|\bScale\b|\bSurplice\b|(?<!Steel )\bCloth\b/.test(type);
+// Texto `type` da Engine: é o que decide o slot de Armor (guia §26).
+export const typeTextIsArmor = type => /Armor|Warplate|Moonplate|\bScale\b|\bSurplice\b|\bCloth\b/.test(type);

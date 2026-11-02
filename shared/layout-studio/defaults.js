@@ -1,4 +1,4 @@
-import {matchesLayoutSubtype} from '../equipment-types.js?v=20261102-eq6';
+import {matchesLayoutSubtype} from '../equipment-types.js?v=20261102-escala1';
 // Bases visuais independentes dos dados mecânicos. Nenhuma base é um novo tipo de carta.
 const exists=binding=>({binding,op:'exists'}),eq=(binding,value)=>({binding,op:'eq',value}),all=(...rules)=>({all:rules});
 export function makeDefaults(legacy,cards=[]){

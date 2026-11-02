@@ -1,6 +1,6 @@
 // Carta de God com duas faces (guia §63, autor 02/11/2026): frente com Divine Power e Command, verso com Awaken e Ultimate.
 // A linha de tipo, a gema de Soul e as regras descem juntas, para o personagem ficar à vista; Forge e carta ao vivo usam a mesma conta.
-import {lang} from './card-i18n.js?v=20261101-tr1';
+import {lang} from './card-i18n.js?v=20261102-escala1';
 
 const LAYOUT_RULES_Y = 670, FRONT_TOP = 0.58, FRONT_FIT = 0.62, BACK_FIT = 0.95;
 const words = (texts) => texts.filter(Boolean).join(' ').split(/\s+/).length;

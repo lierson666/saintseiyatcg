@@ -35,7 +35,7 @@ export const TYPE_PT = {
   'Steel Cloth': 'Armadura de Aço', 'Sacred Armor': 'Armadura Sagrada', 'Satellite Armor': 'Armadura de Satélite', 'Living Armor': 'Armadura Viva',
   'Artifact': 'Artefato', 'Divine Artifact': 'Artefato Divino', 'War Artifact': 'Artefato de Guerra', 'Relic': 'Relíquia', 'Divine Relic': 'Relíquia Divina',
   'Sword': 'Espada', 'Trident': 'Tridente', 'Chain': 'Corrente', 'Dagger': 'Adaga', 'Staff': 'Cajado', 'Axe': 'Machado', 'Whip': 'Chicote', 'Instrument': 'Instrumento', 'Lyre': 'Lira', 'Flute': 'Flauta', 'Harp': 'Harpa', 'Horn': 'Trompa',
-  'Bronze': 'Bronze', 'Silver': 'Prata', 'Gold': 'Ouro', 'General': 'General',
+  'Bronze': 'Bronze', 'Silver': 'Prata', 'Gold': 'Ouro', 'Steel': 'de Aço', 'General': 'General',
   'Marine': 'Marina', 'Captain': 'Capitão', 'Terrestrial': 'Terrestre', 'Celestial': 'Celestial', 'Judge': 'Juiz', 'Elite': 'Elite', 'Warlord': 'Senhor da Guerra', 'Crescent': 'Crescente', 'Half': 'Meia', 'Full': 'Cheia',
   'Weapon': 'Arma', 'Divine Weapon': 'Arma Divina', 'War Gear': 'Equipamento de Guerra', 'Nature': 'Natureza', 'Sacred Beast': 'Fera Sagrada',
   'Disaster Legion': 'Legião do Desastre', 'Red Fire Legion': 'Legião do Fogo Vermelho', 'Flame Legion': 'Legião da Chama', 'Fear Legion': 'Legião do Medo',

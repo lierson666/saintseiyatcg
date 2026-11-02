@@ -27,13 +27,9 @@ Catálogo: 116 Equipment. 55 migrados, 27 em revisão, 34 sem alteração.
 
 ## Pendências de decisão do autor
 
-### Mudam regra se aplicadas; não entram na tabela
+### Decididas pelo autor em 02/11/2026 (guia §26)
 
-Hoje a Engine não trata estas cartas como Armor (`armor: false`), embora `slot_equipamento` diga armadura. Virar família ou Armor faria a carta ocupar o slot.
-
-- `artemis-v6-362` Callisto's Lunar Vestment (`Lunar Vestment`)
-- `neutral-v6-465`, `466`, `467` Steel Cloth (`Steel Cloth`)
-- `neutral-v6-469` Steel Armor Prototype (`Prototype`)
+Ocupam o slot de Armor. `neutral-v6-465`, `466`, `467` e `469` são Cloth com patente Steel, fora da progressão. `artemis-v6-362` é Moonplate Full. `artemis-v6-416` é Moonplate sem patente. `hades-v6-198` é Surplice Celestial.
 
 ### Classificação em revisão
 

@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-02 — §26 — Steel, Cracked, Kamui e armaduras especiais
+
+- **Antes:** Steel, Lunar Vestment, Living Armor e Prototype não tinham família nem patente, e a partida não tratava Steel, Lunar Vestment e Prototype como Armor, apesar do `slot_equipamento`. Cracked e Kamui constavam só como marca da auditoria.
+- **Depois:** Steel é patente de Cloth fora da progressão. Steel Cloth e Steel Armor Prototype são Cloth Steel; Lunar Vestment é Moonplate Full; Living Armor é Moonplate sem patente; Aries Surplice é Surplice Celestial. Todas ocupam o slot de Armor. Cracked só identifica. Kamui é God Cloth.
+- **Motivo:** decisão do autor, 02/11/2026. Muda regra: um Devotee já não pode vestir uma dessas cartas junto de outra Armor.
+- **Pendências:** nenhuma. Diff de `data/cards.json` aprovado e gravado.
+
 ## 2026-11-02 — §63 — Carta de God com duas faces
 
 - **Antes:** todo o texto do God (Divine Power, Divine Command, Awaken e Ultimate) ficava em uma face só, com fonte pequena e a arte coberta.

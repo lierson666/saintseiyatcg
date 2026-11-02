@@ -4,17 +4,17 @@ import {AUDIT_STATUS,auditOf,mountCardFinder,reviewQueue} from './card-finder.js
 import {mountRulesRows} from './rules-rows.js?v=20261102-banco1';
 import {createHistory} from '../shared/editor-history.js';
 import {compilePlaytest} from '../shared/import-playtest.js';
-import {renderLiveCard,illustration,EDITIONS,editionOf} from '../shared/live-card.js?v=20261102-vinheta1';
-import {cardVignette} from '../shared/card-scrim.js?v=20261102-vinheta1';
-import {godFaceLayout,godFaceTexts} from '../shared/god-face.js?v=20261102-vinheta1';
-import {EQUIPMENT_SUBTYPES,ARMOR_FAMILY,PATENTES_ARMADURA,patentesDe,belongsToEquipmentGroup,formatCardTypeLine,printedSubtypes,subtypesText,toggleSubtype,validateEquipmentSubtypes} from '../shared/equipment-types.js?v=20261102-eq6';
+import {renderLiveCard,illustration,EDITIONS,editionOf} from '../shared/live-card.js?v=20261102-escala1';
+import {cardVignette} from '../shared/card-scrim.js?v=20261102-escala1';
+import {godFaceLayout,godFaceTexts} from '../shared/god-face.js?v=20261102-escala1';
+import {EQUIPMENT_SUBTYPES,ARMOR_FAMILY,PATENTES_ARMADURA,PATENTES_FORA_DA_ESCALA,patentesDe,belongsToEquipmentGroup,formatCardTypeLine,printedSubtypes,subtypesText,toggleSubtype,validateEquipmentSubtypes} from '../shared/equipment-types.js?v=20261102-escala1';
 import {textBlocks, blocksMarkup, presentationRules, ruleBlocksWithoutKeywords, KEYWORD_WORDS, KEYWORD_WORDS_PT, STAT_RE, statTrend, statSymbols, costSymbols, keywordLine} from '../shared/card-text.js?v=20261102-eq2';
 import {isArmor,isEquipment,validateCard,LINE_KEYWORDS,keywordsOfLine} from '../shared/card-model.js?v=20261102-kw1';
 // Card Forge — editor de cartas em vanilla JS. Renderiza no canvas nativo 1488x2091 usando
 // as peças de CARD-TEMPLATE/ (extraídas dos PSDs) e o spec CARD-TEMPLATE/templates.json.
 
 import {publishedScene,visualProject} from '../shared/layout-studio/runtime.js';
-import {displayCard,forceLang,keywordName,typeWord,lang} from '../shared/card-i18n.js?v=20261101-tr1';
+import {displayCard,forceLang,keywordName,typeWord,lang} from '../shared/card-i18n.js?v=20261102-escala1';
 import {sceneCanvas} from '../shared/layout-studio/renderer.js';
 import {simulateCard} from './studio-preview.js';
 import {printedEquipmentBonuses,signedBonus,armorBonusText} from '../shared/card-visual-values.js?v=20261102-arroba1';
@@ -652,8 +652,8 @@ const esc=(t)=>String(t).replace(/[&<>"]/g,(c)=>({'&':'&amp;','<':'&lt;','>':'&g
 const EQ_GROUPS=[['Família',['armor']],['Arma',['weapon','weapon_kind']],['Instrumento',['instrument','instrument_kind']],['Objeto',['object']]];
 // Auditoria V2: só propõe. Aceitar preenche a patente como um clique normal; o catálogo só muda pelo diff do Gravar.
 let audit={},drawFinder=()=>{};
-const EQ_SPECIAL={STEEL_HIERARCHY:'Steel Armor',RENEGADE_SURPLICE:'Renegade Surplice',SKELETON_ARMOR:'Skeleton Armor',LUNAR_VESTMENT:'Lunar Vestment',LIVING_ARMOR:'Living Armor'};
-const EQ_MARKS={CRACKED:['Condição','Cracked','Dano; não define a patente.'],KAMUI:['Qualificador','Kamui','Soma à patente; não a substitui.']};
+const EQ_SPECIAL={SKELETON_ARMOR:'Skeleton Armor'};
+const EQ_MARKS={CRACKED:['Condição','Cracked','Só identifica a carta; não define a patente.']};
 const unsavedRank=()=>orig&&(S.patente_armadura||'')!==(orig.patente_armadura||'');
 function goToCard(id){
   if(unsavedRank())return say('Grave a patente ou desfaça antes de trocar de carta.',true);
@@ -688,7 +688,7 @@ function drawEqSubtypes(){
     +(!special&&old.length?row('Anterior ao V1',old.map(chip).join('')):'')
     +[...errors.map((m)=>`<p class="eq-error" role="alert">${esc(m)}</p>`),...warnings.map((m)=>`<p class="hint">${esc(m)}</p>`)].join('');
 }
-form.elements.patente_armadura.innerHTML=[...new Set(['',...Object.values(PATENTES_ARMADURA).flat()])].map((p)=>`<option value="${p}">${p||'—'}</option>`).join('');
+form.elements.patente_armadura.innerHTML=[...new Set(['',...Object.values(PATENTES_ARMADURA).flat(),...Object.values(PATENTES_FORA_DA_ESCALA).flat()])].map((p)=>`<option value="${p}">${p||'—'}</option>`).join('');
 $('#eqSubtypes').addEventListener('click',(e)=>{
   const target=e.target.closest('[data-eq-go]');
   if(target)return void goToCard(target.dataset.eqGo);
@@ -1227,7 +1227,7 @@ window.addEventListener('card-layouts:published',()=>render());
 
 try {
   db = await (await fetch('../data/cards.json')).json();
-  try { audit = (await (await fetch('equipment-audit-v2.json?v=20261102-lista3')).json()).cartas; } catch { audit = {}; } // sem a auditoria, a lista funciona sem status
+  try { audit = (await (await fetch('equipment-audit-v2.json?v=20261102-escala1')).json()).cartas; } catch { audit = {}; } // sem a auditoria, a lista funciona sem status
   drawFinder = mountCardFinder($('#cardFinder'), {cards: () => db.cartas, audit, current: () => $('#cardSelect').value, pick: goToCard});
   const query = new URLSearchParams(location.search), requested = query.get('card') || 'athena-002';
   // Edição aberta sem nenhuma carta ainda (STAR HILL): começa em uma carta nova dela.

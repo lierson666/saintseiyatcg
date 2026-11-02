@@ -1,4 +1,4 @@
-import {matchesLayoutSubtype} from '../shared/equipment-types.js?v=20261102-eq6';
+import {matchesLayoutSubtype} from '../shared/equipment-types.js?v=20261102-escala1';
 import {BINDINGS,COMPONENTS,LEVELS,clone,esc,color,validateTemplate,resolveLayout,discoverOptions,assetURL} from '../shared/layout-studio/model.js';
 import {makeScene,exportScene} from '../shared/layout-studio/renderer.js';
 import {installLibrary,visualProject} from '../shared/layout-studio/runtime.js';
