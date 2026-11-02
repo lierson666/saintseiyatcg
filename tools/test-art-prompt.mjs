@@ -3,7 +3,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {ARCS, BEFORE, NEXT, NOW, STYLE_GROUPS, STYLES, THEMES, VIEWER, buildDirectorPrompt, buildImagePrompt, cardFacts, defaultParams, randomParams} from '../card-forge/art-prompt.js';
+import {ANGLES, ARCS, BEFORE, NEXT, NOW, POSES, SHOTS, STYLE_GROUPS, STYLES, THEMES, VIEWER, buildDirectorPrompt, buildImagePrompt, cardFacts, defaultParams, randomParams} from '../card-forge/art-prompt.js';
 
 const {cartas} = JSON.parse(readFileSync(new URL('../data/cards.json', import.meta.url)));
 const master = readFileSync(new URL('../card-forge/art-master-prompt.md', import.meta.url), 'utf8');
@@ -115,6 +115,35 @@ test('pose inicial varia por carta e nada de mão vindo para a câmera', () => {
   const text = promptOf('athena-v6-001');
   assert.match(text, /No arm reaching or fist punching toward the camera/);
   assert.match(text, /NEGATIVE PROMPT: .*oversized foreshortened hand/);
+});
+
+test('lista de poses é grande, sem repetir, e nenhuma aponta para a câmera', () => {
+  assert.ok(POSES.length >= 40);
+  assert.equal(new Set(POSES.map(([en]) => en)).size, POSES.length);
+  for (const [en] of POSES) assert.doesNotMatch(en, /toward the (camera|viewer)|at the (camera|viewer)/i, en);
+  for (const [list, size] of [[SHOTS, 24], [ANGLES, 15]]) {
+    assert.ok(list.length >= size);
+    assert.equal(new Set(list.map(([en]) => en)).size, list.length);
+  }
+  for (const c of cartas.filter((x) => x.tipo === 'Devotee')) {
+    const p = defaultParams(cardFacts(c, cartas));
+    assert.ok(SHOTS.some(([en]) => en === p.shot) && ANGLES.some(([en]) => en === p.angle) && POSES.some(([en]) => en === p.pose), c.id);
+  }
+  const f = cardFacts(card('athena-v6-001'), cartas), seen = new Set();
+  for (let i = 0; i < POSES.length; i++) seen.add(randomParams(f, defaultParams(f), () => i / POSES.length).pose);
+  assert.equal(seen.size, POSES.length);
+});
+
+test('listas de cena cresceram sem repetir, e genérica não sorteia lugar do cânone', () => {
+  for (const [list, size] of [[THEMES, 40], [BEFORE, 20], [NOW, 25], [NEXT, 20], [VIEWER, 20]]) {
+    assert.ok(list.length >= size, String(size));
+    assert.equal(new Set(list.map(([en]) => en)).size, list.length);
+    assert.equal(new Set(list.map(([, pt]) => pt)).size, list.length);
+  }
+  const f = cardFacts(card('poseidon-v6-103'), cartas), themes = new Set();
+  for (let i = 0; i < 100; i++) themes.add(randomParams(f, defaultParams(f), () => i / 100).theme);
+  assert.ok(themes.size >= 5);
+  for (const t of themes) assert.doesNotMatch(t, /Twelve Houses|Sanctuary|undersea|Underworld|Elysion|Jamir|Asgard|Olympus/, t);
 });
 
 test('carta genérica: personagem original, sem referência, sem regras e sem cânone', () => {

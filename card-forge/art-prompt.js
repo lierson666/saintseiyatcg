@@ -9,6 +9,12 @@ export const SHOTS = [
   pair('Extreme Close-Up (ECU)', 'parte específica, como olhos ou boca'), pair('Close-Up (CU)', 'rosto e ombros'), pair('Medium Close-Up', 'peito para cima'),
   pair('Medium Shot (MS)', 'corta na cintura'), pair('Medium Full Shot (MFS)', 'plano americano, corta nos joelhos'), pair('Three-Quarter Shot', 'três quartos do corpo'),
   pair('Full Body Shot (FBS)', 'corpo inteiro'), pair('Wide Shot (WS)', 'personagem menor, cenário em destaque'), pair('Wide Environmental Shot', 'o ambiente é o assunto'),
+  pair('Tight Close-Up', 'da testa ao queixo'), pair('Bust Shot', 'busto e ombros'), pair('Waist-Up Portrait, centered', 'retrato da cintura para cima, centrado'),
+  pair('Cowboy Shot', 'corta no meio da coxa'), pair('Profile Medium Shot', 'da cintura para cima, de perfil'), pair('Off-Center Medium Shot, figure on one third of the frame', 'figura num terço do quadro'),
+  pair('Upper Body with Cape Filling the Frame', 'tronco, capa ocupando o quadro'), pair('Full Body, Tight Margins', 'corpo inteiro, quase tocando as bordas'), pair('Diagonal Full Body, figure along the diagonal of the frame', 'corpo inteiro na diagonal'),
+  pair('Full Body Silhouette against a bright background', 'silhueta contra o fundo claro'), pair('Long Shot (LS)', 'corpo inteiro com chão e cenário'), pair('Extreme Wide Shot (EWS)', 'figura minúscula, cenário imenso'),
+  pair('Foreground Framing, figure seen through columns or debris', 'figura vista entre colunas ou destroços'), pair('Reflection Shot, figure and its reflection in water', 'figura e reflexo na água'), pair('Deep Focus Shot, figure in the middle ground, foreground and background sharp', 'figura no meio, tudo em foco'),
+  pair('Vertical Tower Shot, figure small at the base of tall architecture', 'figura pequena sob arquitetura alta'),
 ];
 export const POSES = [
   pair('Standing straight', 'em pé, postura reta'), pair('Casual lean against a wall', 'encostado na parede'), pair('Sitting cross-legged', 'sentado de pernas cruzadas'),
@@ -18,12 +24,27 @@ export const POSES = [
   pair('Standing still, arms lowered at the sides, cosmo rising around the body', 'parado, braços baixos, Cosmo subindo'), pair('Kneeling on one knee, head lowered', 'ajoelhado, cabeça baixa'),
   pair('Walking forward unhurried', 'andando devagar para a frente'), pair('Weapon planted on the ground, both hands resting on it', 'arma fincada no chão, mãos sobre ela'),
   pair('Mid-strike seen in profile, side-on to the camera', 'golpe visto de perfil'), pair('Both arms raised overhead, gathering energy', 'braços erguidos, juntando energia'),
+  pair('Back to the viewer, head turned in profile', 'de costas, rosto de perfil'), pair('Seen from behind, cape and hair blown sideways', 'de costas, capa e cabelo ao vento'),
+  pair('Half-turned in three-quarter view, chin raised', 'meio de lado, queixo erguido'), pair('Leaning forward, one foot on a broken stone', 'inclinado, pé sobre uma pedra'),
+  pair('Seated on a throne or fallen column, elbow on the knee', 'sentado em trono ou coluna, cotovelo no joelho'), pair('Kneeling in prayer, hands joined at the chest', 'ajoelhado em prece, mãos no peito'),
+  pair('Bowing low in salute, one fist over the heart', 'curvado em saudação, punho no coração'), pair('Head thrown back, shouting at the sky, arms out to the sides', 'cabeça para trás, gritando para o céu'),
+  pair('One arm raised straight up, palm to the sky', 'um braço erguido, palma para o céu'), pair('Leaping sideways across the frame, body stretched', 'saltando de lado, corpo esticado'),
+  pair('Falling backward through the air, limbs loose', 'caindo de costas no ar'), pair('Hovering above the ground, feet together, arms relaxed', 'flutuando, pés juntos, braços soltos'),
+  pair('Sliding to a stop, one knee and one hand on the ground', 'freando no chão, joelho e mão apoiados'), pair('Low wide stance, weight on the back leg, arms drawn back', 'base baixa, peso atrás, braços recuados'),
+  pair('Spinning mid-attack, hair and cape following the turn', 'girando no ataque, cabelo e capa seguindo'), pair('High kick seen from the side', 'chute alto visto de lado'),
+  pair('Sidestepping an attack, torso twisted away', 'esquivando, tronco torcido'), pair('Blocking with both forearms crossed in front of the chest', 'defesa, antebraços cruzados no peito'),
+  pair('Bracing against a great force, leaning into it, feet dug in', 'resistindo a uma força, pés fincados'), pair('Holding a weapon overhead with both hands, ready to bring it down', 'arma erguida com as duas mãos'),
+  pair('Wielding a weapon low and behind the body, ready to swing', 'arma baixa atrás do corpo'), pair('Wounded, on one knee, one hand on the ribs, still looking up', 'ferido, um joelho no chão, mão nas costelas'),
+  pair('Pulling themselves up, hand gripping a broken column', 'se erguendo, mão numa coluna quebrada'), pair('Meditating cross-legged in the air, eyes closed, cosmo swirling', 'meditando no ar, Cosmo girando'),
 ];
 // A pose inicial varia por carta (autor, 02/11/2026): com uma só, todas as artes saíam iguais, com a mão vindo para a câmera.
-const START_POSES = ['Standing straight', 'Looking over the shoulder', 'Crossing arms', 'Dynamic action pose', 'Combat stance', 'Crouching low', 'Standing still, arms lowered at the sides, cosmo rising around the body', 'Kneeling on one knee, head lowered', 'Walking forward unhurried', 'Mid-strike seen in profile, side-on to the camera', 'Both arms raised overhead, gathering energy'];
+const START_POSES = ['Standing straight', 'Looking over the shoulder', 'Crossing arms', 'Dynamic action pose', 'Combat stance', 'Crouching low', 'Standing still, arms lowered at the sides, cosmo rising around the body', 'Kneeling on one knee, head lowered', 'Walking forward unhurried', 'Mid-strike seen in profile, side-on to the camera', 'Both arms raised overhead, gathering energy', 'Back to the viewer, head turned in profile', 'Seen from behind, cape and hair blown sideways', 'Half-turned in three-quarter view, chin raised', 'Leaning forward, one foot on a broken stone', 'Seated on a throne or fallen column, elbow on the knee', 'Kneeling in prayer, hands joined at the chest', 'Bowing low in salute, one fist over the heart', 'Head thrown back, shouting at the sky, arms out to the sides', 'One arm raised straight up, palm to the sky', 'Leaping sideways across the frame, body stretched', 'Falling backward through the air, limbs loose', 'Hovering above the ground, feet together, arms relaxed', 'Sliding to a stop, one knee and one hand on the ground', 'Low wide stance, weight on the back leg, arms drawn back', 'Spinning mid-attack, hair and cape following the turn', 'High kick seen from the side', 'Sidestepping an attack, torso twisted away', 'Blocking with both forearms crossed in front of the chest', 'Bracing against a great force, leaning into it, feet dug in', 'Holding a weapon overhead with both hands, ready to bring it down', 'Wielding a weapon low and behind the body, ready to swing', 'Wounded, on one knee, one hand on the ribs, still looking up', 'Pulling themselves up, hand gripping a broken column', 'Meditating cross-legged in the air, eyes closed, cosmo swirling'];
 export const ANGLES = [
   pair('Eye-level shot', 'nível dos olhos, confronto direto'), pair('Low-angle shot', 'de baixo para cima, dominante'), pair('Extreme low-angle shot', 'figura colossal ou aterrorizante'),
   pair('High-angle shot', 'de cima para baixo, vulnerável'), pair("Bird's-eye view", 'visão aérea total'), pair('Dutch angle', 'inclinada, instabilidade e violência'), pair('Over-the-shoulder shot', 'confronto narrativo'),
+  pair('Three-quarter front view', 'três quartos de frente'), pair('Profile view', 'de perfil'), pair('Rear three-quarter view', 'três quartos de costas'),
+  pair('Slight low angle', 'levemente de baixo'), pair('Slight high angle', 'levemente de cima'), pair("Worm's-eye view from ground level", 'do chão, olhando para cima'),
+  pair('Telephoto side view, flat perspective', 'lateral com teleobjetiva, perspectiva plana'), pair('Tilted high angle', 'de cima e inclinada'),
 ];
 export const MOTIONS = [
   ['', 'Nenhum'], ['Motion frozen at the decisive instant', 'Congelado no instante decisivo'], ['Hair and cloth reacting to the energy', 'Cabelos e tecidos reagindo à energia'], ['Debris thrown outward by the force', 'Detritos projetados pela força'],
@@ -34,7 +55,26 @@ export const THEMES = [
   ['', 'Cenário da facção'], ['ruined battlefield after a clash of cosmos', 'Campo de batalha em ruínas'], ['the stairway and temples of the Twelve Houses', 'Doze Casas'], ['the Sanctuary at dawn', 'Santuário ao amanhecer'],
   ['a colosseum arena', 'Coliseu'], ['open starry cosmos with constellations', 'Cosmo estrelado'], ['the undersea temple and the pillars of Poseidon', 'Templo submarino'], ['the Underworld and its prisons', 'Mundo dos Mortos'],
   ['the fields of Elysion', 'Elísios'], ['a sacred moonlit forest', 'Floresta sagrada ao luar'], ['a bare mountain training ground', 'Montanha de treinamento'], ['a neutral void of pure energy', 'Vazio de energia pura'],
+  ["the Grand Pope's Chamber at the top of the Twelve Houses", 'Santuário: Câmara do Mestre'], ['Star Hill, a cathedral on an isolated steep peak of the Sanctuary', 'Santuário: Star Hill'],
+  ['Rodorio, the village at the foot of the Sanctuary', 'Santuário: Vila de Rodorio'], ['the colossal statue of Athena above the Sanctuary', 'Santuário: Estátua de Atena'],
+  ['the Fire Clock of the Twelve Houses, zodiac flames burning at night', 'Santuário: Relógio de Fogo'], ['the garden of the twin sala trees in the House of Virgo', 'Santuário: Jardim das Salas Gêmeas'],
+  ['the tower of Jamir among the Himalayan peaks', 'Jamir: Torre'], ['the Cloth Graveyard on the way to Jamir, ruined armors among the rocks', 'Jamir: Cemitério de Armaduras'],
+  ['the great waterfall of Rozan at the Five Old Peaks', 'China: Cachoeira de Rozan'], ['Death Queen Island, black volcanic rock and burning sky', 'Ilha da Rainha da Morte'],
+  ['the frozen sea of Eastern Siberia, a sunken ship under the ice', 'Sibéria: Mar congelado'], ['Andromeda Island, barren rocks and chained cliffs', 'Ilha de Andrômeda'],
+  ['the Galaxian Wars colosseum of the Graad Foundation in Tokyo', 'Tóquio: Coliseu da Graad'], ['the Kido mansion and its gardens', 'Tóquio: Mansão Kido'],
+  ['the Valhalla Palace in snow-covered Asgard', 'Asgard: Palácio de Valhalla'], ['the giant statue of Odin in the snows of Asgard', 'Asgard: Estátua de Odin'],
+  ['the Main Temple of Poseidon under the sea, a sky of water above it', 'Atlântida: Templo Principal'], ['the Central Pillar that holds up the ocean, the Mammoth Pillar', 'Atlântida: Pilar Central'],
+  ['one of the seven Mammoth Pillars rising through the undersea kingdom', 'Atlântida: Pilares dos Mares'], ['the watery prison in the cliff of Cape Sounion, the tide rising', 'Grécia: Prisão de Cabo Sounion'],
+  ['Hades Castle at Heinstein, dark gothic towers', 'Hades: Castelo de Heinstein'], ['Yomotsu Hirasaka, the hill of the dead and its endless line of souls', 'Hades: Yomotsu Hirasaka'],
+  ["the River Acheron, a black river with the ferryman's boat", 'Hades: Rio Aqueronte'], ['the Hall of Judgment of the First Prison', 'Hades: Tribunal'],
+  ['the Blood Pond of the Underworld prisons', 'Hades: Lago de Sangue'], ['the burning coffins of the Underworld prisons', 'Hades: Túmulos em chamas'],
+  ['Cocytus, the frozen Eighth Prison, bodies trapped in the ice', 'Hades: Cócito'], ["Giudecca, Pandora's cold palace in the Underworld", 'Hades: Giudecca'],
+  ['the Wailing Wall at the end of the Underworld', 'Hades: Muro das Lamentações'], ['the Hyperdimension between the Underworld and Elysion', 'Hades: Hiperdimensão'],
+  ['the temples of Hypnos and Thanatos in the fields of Elysion', 'Elísios: Templos dos Gêmeos'], ['the peak of Mount Olympus above the clouds', 'Monte Olimpo'],
+  ['the Lost Canvas, an immense painting floating in the sky', 'Lost Canvas: Tela no céu'], ['Bluegrad, a frozen citadel in the far north', 'Lost Canvas: Bluegrad'],
 ];
+// Só estes não são lugares do cânone: o Randomizar de carta genérica não sorteia os outros, que puxam personagens de Saint Seiya.
+const GENERIC_THEMES = THEMES.filter(([, label]) => ['Cenário da facção', 'Campo de batalha em ruínas', 'Coliseu', 'Cosmo estrelado', 'Floresta sagrada ao luar', 'Montanha de treinamento', 'Vazio de energia pura'].includes(label));
 export const ARCS = [
   ['', 'Sem arco específico'], ['Galaxian Wars', 'Guerra Galáctica'], ['Silver Saints', 'Cavaleiros de Prata'], ['Battle of the Twelve Houses', 'Doze Casas'], ['Poseidon chapter', 'Saga de Poseidon'],
   ['Hades Sanctuary chapter', 'Hades: Santuário'], ['Hades Inferno chapter', 'Hades: Inferno'], ['Hades Elysion chapter', 'Hades: Elísios'], ['original scene created for this card, not canon', 'Cena original da carta'],
@@ -42,17 +82,47 @@ export const ARCS = [
 export const BEFORE = [
   ['', 'Deixar para o diretor'], ['a blow has just been exchanged', 'Golpe trocado'], ['survived a fatal attack', 'Sobreviveu a um golpe fatal'], ['arrived on the battlefield', 'Chegou à batalha'],
   ['an ally has just fallen', 'Um aliado caiu'], ['cosmo has just awakened', 'O Cosmo despertou'], ['the armor has just been shattered', 'A armadura se partiu'], ['the enemy has just revealed their full power', 'O inimigo revelou o poder'],
+  ['a wave of cosmo has just flung them against the rocks', 'Arremessado pela onda de Cosmo'], ['a technique has just been deflected', 'Desviou uma técnica'],
+  ['one of their senses has just been lost', 'Perdeu um dos sentidos'], ['their cosmo has just reached its limit', 'Cosmo no limite'],
+  ['a sacred threshold has just been crossed', 'Cruzou um limiar sagrado'], ['an oath has just been sworn', 'Fez um juramento'],
+  ['a comrade has just sacrificed themselves', 'Um aliado se sacrificou'], ['they have just been betrayed', 'Foi traído'],
+  ['they have just returned from death', 'Voltou da morte'], ['a powerful enemy has just been defeated', 'Venceu um inimigo poderoso'],
+  ['a sacred seal has just been broken', 'Um selo sagrado se rompeu'], ['a temple has just collapsed', 'O templo desabou'],
+  ['they have just woken from a long sleep', 'Despertou de um longo sono'], ['a divine voice has just spoken', 'Uma voz divina falou'],
+  ['the armor has just answered their call', 'A armadura atendeu ao chamado'], ['an illusion has just been shattered', 'Quebrou uma ilusão'],
 ];
 export const NOW = [
   ['', 'Deixar para o diretor'], ['unleashing the finishing technique', 'Solta o golpe final'], ['charging cosmo before the attack', 'Concentra o Cosmo'], ['locked in direct combat', 'Combate direto'],
   ['standing over a defeated enemy', 'De pé sobre o inimigo'], ['protecting someone behind them', 'Protege alguém'], ['rising back to their feet', 'Levanta de novo'], ['receiving a divine order', 'Recebe uma ordem divina'],
+  ['dodging at the speed of light', 'Desvia na velocidade da luz'], ['breaking through a defense', 'Rompe uma defesa'],
+  ['crossing weapons with an unseen enemy', 'Cruza armas'], ['holding back a massive force', 'Segura uma força imensa'],
+  ['resisting an illusion', 'Resiste a uma ilusão'], ['praying for a lost comrade', 'Reza por um aliado'],
+  ['kneeling before their god', 'Ajoelha diante do deus'], ['swearing an oath', 'Faz um juramento'],
+  ['receiving the armor as it assembles around the body', 'A armadura se monta no corpo'], ['walking alone through ruins', 'Anda sozinho nas ruínas'],
+  ['climbing toward the next temple', 'Sobe para o próximo templo'], ['watching the enemy from the shadows', 'Observa das sombras'],
+  ['burning cosmo to its limit', 'Queima o Cosmo ao limite'], ['guarding a sacred gate', 'Guarda um portão sagrado'],
+  ['training alone', 'Treina sozinho'], ['absorbing an enemy technique', 'Absorve uma técnica inimiga'],
+  ['calling on their guardian constellation', 'Invoca a constelação'], ['challenging a far stronger enemy', 'Desafia alguém mais forte'],
+  ['meditating before the battle', 'Medita antes da batalha'], ['shattering the ground with a single blow', 'Parte o chão com um golpe'],
 ];
 export const NEXT = [
   ['', 'Deixar para o diretor'], ['the decisive blow will land', 'O golpe decisivo acerta'], ['the enemy will be destroyed', 'O inimigo cai'], ['they will collapse, spent', 'Desaba sem forças'],
   ['they will rise stronger', 'Volta mais forte'], ['they will sacrifice themselves', 'Vai se sacrificar'], ['the battle will turn', 'A batalha vira'],
+  ['the ground itself will give way', 'O chão vai ceder'], ['a new cosmo will awaken', 'Um novo Cosmo desperta'],
+  ['the armor will shatter', 'A armadura vai se partir'], ['a god will intervene', 'Um deus vai intervir'],
+  ['the sky will tear open', 'O céu vai se abrir'], ['they will fall in silence', 'Cai em silêncio'],
+  ['help will arrive too late', 'A ajuda chega tarde'], ['the enemy will strike back', 'O inimigo contra-ataca'],
+  ['the seal will break', 'O selo se rompe'], ['they will pass on their will', 'Passa o legado adiante'],
+  ['they will be dragged into the dark', 'Arrastado para as trevas'], ['the temple will collapse', 'O templo desaba'],
+  ['a betrayal will be revealed', 'Uma traição é revelada'], ['they will reach the seventh sense', 'Chega ao Sétimo Sentido'],
+  ['they will leave without looking back', 'Vai embora sem olhar para trás'], ['everything will be swallowed', 'Tudo será engolido'],
 ];
 export const VIEWER = [
   ['', 'Deixar para o diretor'], ['awe', 'Assombro'], ['terror', 'Terror'], ['hope', 'Esperança'], ['sorrow', 'Tristeza'], ['menace', 'Ameaça'], ['reverence', 'Reverência'], ['tension', 'Tensão'],
+  ['despair', 'Desespero'], ['wonder', 'Encanto'], ['rage', 'Fúria'], ['courage', 'Coragem'],
+  ['loneliness', 'Solidão'], ['mercy', 'Compaixão'], ['dread', 'Pavor'], ['triumph', 'Triunfo'],
+  ['nostalgia', 'Nostalgia'], ['pride', 'Orgulho'], ['melancholy', 'Melancolia'], ['mystery', 'Mistério'],
+  ['serenity', 'Serenidade'], ['loss', 'Perda'], ['inevitability', 'Inevitabilidade'], ['devotion', 'Devoção'],
 ];
 export const EXPRESSIONS = [
   ['Fierce, unbreakable determination', 'Determinação feroz'], ['Cold, contemptuous stare', 'Frieza e desprezo'], ['Serene and compassionate', 'Serenidade compassiva'],
@@ -169,8 +239,8 @@ const GENERIC_RULES = {
 const NEGATIVE_FIGURE = 'extra fingers, missing fingers, fused fingers, extra limbs, duplicate arms, malformed hands, broken anatomy, distorted face, incorrect character design, cropped face';
 const NEGATIVE_ALWAYS = 'inaccurate armor, inconsistent lighting, unreadable silhouette, excessive visual clutter, text, typography, card borders, watermarks, logos, UI elements, low resolution';
 const EPIC_BY_RARITY = {Common: '2', Uncommon: '3', Legendary: '4', Divine: '5'};
-const START_ANGLES = ['Eye-level shot', 'Low-angle shot', 'High-angle shot', 'Dutch angle', 'Over-the-shoulder shot'];
-const START_SHOTS = ['Medium Shot (MS)', 'Medium Full Shot (MFS)', 'Three-Quarter Shot', 'Full Body Shot (FBS)'];
+const START_ANGLES = ['Eye-level shot', 'Low-angle shot', 'High-angle shot', 'Dutch angle', 'Over-the-shoulder shot', 'Three-quarter front view', 'Profile view', 'Rear three-quarter view', 'Slight low angle', 'Slight high angle', 'Telephoto side view, flat perspective'];
+const START_SHOTS = ['Medium Shot (MS)', 'Medium Full Shot (MFS)', 'Three-Quarter Shot', 'Full Body Shot (FBS)', 'Bust Shot', 'Waist-Up Portrait, centered', 'Cowboy Shot', 'Profile Medium Shot', 'Off-Center Medium Shot, figure on one third of the frame', 'Diagonal Full Body, figure along the diagonal of the frame', 'Long Shot (LS)'];
 const pickBy = (seed, list) => list[[...seed].reduce((n, c) => (n * 31 + c.charCodeAt(0)) >>> 0, 0) % list.length]; // mesma carta, mesmo início
 // O gerador puxa o braço para a câmera sozinho, ainda mais em ângulo baixo e com técnica: só proibir resolve.
 const HANDS_RULE = 'HANDS AND ARMS: keep them in the plane of the figure, close to the body or out to the side. No arm reaching or fist punching toward the camera, no oversized foreshortened hand in the foreground.';
@@ -228,6 +298,7 @@ export function randomParams(f, p, rand = Math.random) {
   const out = {...p};
   for (const [key, list] of Object.entries(RANDOM_LISTS)) out[key] = pick(list)[0];
   if (out.accent === out.style) out.accent = '';
+  if (p.generic) out.theme = pick(GENERIC_THEMES)[0];
   if (!f.isSpell) out.technique = pick(['', ...f.techniques]);
   return out;
 }
