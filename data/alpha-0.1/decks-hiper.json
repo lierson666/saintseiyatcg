@@ -91,7 +91,7 @@
    "referencia": "Goblin Sac",
    "god": "god-ares",
    "domain_id": "ares-v6-335",
-   "plano": "Berserkers que rendem ao morrer e sacrifício (Blood for Blood, Suicide Orders); Scavenger compra, Catreu e Champion crescem, Apocalypse fecha pelo Tartarus.",
+   "plano": "Berserkers que rendem ao morrer e sacrifício (Blood for Blood, Suicide Orders); Scavenger compra, Catreu e Champion crescem, Apocalypse of Berserker e Blood Oath mantêm a pressão.",
    "main_deck": [
     {
      "card_id": "ares-v6-312",
@@ -134,24 +134,24 @@
      "quantity": 3
     },
     {
-     "card_id": "ares-v6-275",
+     "card_id": "ares-v6-311",
      "quantity": 2
     },
     {
      "card_id": "ares-v6-302",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-345",
+     "quantity": 2
+    },
+    {
+     "card_id": "ares-v6-347",
      "quantity": 2
     },
     {
      "card_id": "ares-v6-326",
      "quantity": 3
-    },
-    {
-     "card_id": "ares-v6-347",
-     "quantity": 3
-    },
-    {
-     "card_id": "ares-v6-359",
-     "quantity": 2
     },
     {
      "card_id": "ares-v6-322",
@@ -343,16 +343,12 @@
    "tema": "Freeze",
    "referencia": "Frozen Shade / Icy",
    "god": "god-poseidon",
-   "domain_id": "poseidon-v6-502",
-   "plano": "Seal mantém o inimigo parado enquanto Marinas batem: Spearman e Vanguard rendem contra Seal, Herald sobe a tropa e Rising Tide compra.",
+   "domain_id": "hades-v6-522",
+   "plano": "Seal segura o inimigo enquanto Marinas batem; o Domain de Hades traz 15 cartas de remoção e pressão (Touch of Death, Divine Touch, Harpy, Dullahan).",
    "main_deck": [
     {
      "card_id": "poseidon-v6-107",
      "quantity": 3
-    },
-    {
-     "card_id": "poseidon-v6-106",
-     "quantity": 2
     },
     {
      "card_id": "poseidon-v6-113",
@@ -367,24 +363,8 @@
      "quantity": 3
     },
     {
-     "card_id": "poseidon-v6-103",
-     "quantity": 3
-    },
-    {
-     "card_id": "poseidon-v6-111",
-     "quantity": 3
-    },
-    {
-     "card_id": "poseidon-v6-105",
-     "quantity": 2
-    },
-    {
      "card_id": "poseidon-v6-101",
      "quantity": 1
-    },
-    {
-     "card_id": "poseidon-v6-114",
-     "quantity": 2
     },
     {
      "card_id": "poseidon-v6-097",
@@ -411,20 +391,36 @@
      "quantity": 2
     },
     {
-     "card_id": "poseidon-v6-168",
-     "quantity": 2
-    },
-    {
      "card_id": "poseidon-v6-132",
      "quantity": 3
     },
     {
      "card_id": "poseidon-v6-135",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-105",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-217",
      "quantity": 3
     },
     {
-     "card_id": "poseidon-v6-508",
-     "quantity": 2
+     "card_id": "hades-v6-215",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-201",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-511",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-194",
+     "quantity": 3
     }
    ]
   },
@@ -434,8 +430,8 @@
    "tema": "Spellslinger",
    "referencia": "Spiral Tide",
    "god": "god-poseidon",
-   "domain_id": "poseidon-v6-142",
-   "plano": "Pearl Keeper, Scout, Acolyte e feitiços baratos enchem a mão; Marinas batem, bounce atrasa a mesa até Kanon e Great Flood fecharem.",
+   "domain_id": "poseidon-v6-143",
+   "plano": "20 feitiços e 30 corpos: Pearl Keeper, Scout e Acolyte compram, bounce barato atrasa a mesa, Marinas batem e Kanon fecha.",
    "main_deck": [
     {
      "card_id": "poseidon-v6-116",
@@ -482,12 +478,12 @@
      "quantity": 1
     },
     {
-     "card_id": "poseidon-v6-135",
+     "card_id": "poseidon-v6-134",
      "quantity": 3
     },
     {
-     "card_id": "poseidon-v6-510",
-     "quantity": 2
+     "card_id": "poseidon-v6-135",
+     "quantity": 3
     },
     {
      "card_id": "poseidon-v6-508",
@@ -511,10 +507,6 @@
     },
     {
      "card_id": "poseidon-v6-162",
-     "quantity": 1
-    },
-    {
-     "card_id": "poseidon-v6-178",
      "quantity": 1
     },
     {
