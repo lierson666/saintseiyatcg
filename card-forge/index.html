@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Card Forge</title>
   <link rel="icon" href="../LOGO/favicon.png?v=20261030">
-  <link rel="stylesheet" href="forge.css?v=20261102-lista2">
+  <link rel="stylesheet" href="forge.css?v=20261102-arte4">
   <link rel="stylesheet" href="../shared/live-card.css?v=20261102-sym1">
   <script>if(parent!==window)document.documentElement.classList.add("embedded");</script>
 </head>
@@ -28,6 +28,7 @@
         <p class="hint">Ou solte a imagem sobre a carta. Arraste para mover, roda do mouse para zoom.</p>
         <label>Zoom <input id="artZoom" type="range" min="0.3" max="3" step="0.01" value="1"></label>
         <button id="artCover" type="button">Cobrir a carta</button>
+        <button id="artPrompt" type="button" class="primary">Gerar arte para a carta…</button>
       </div></details>
       <details class="forge-drop forge-drop--save"><summary>Salvar</summary><div>
         <label>Idioma da carta <select id="cardLang"><option value="en">EN</option><option value="pt">PT-BR</option></select></label>
@@ -161,6 +162,7 @@
     </section>
   </main>
 
+  <dialog id="artPromptDialog" aria-label="Gerar arte para a carta"></dialog>
   <dialog id="diffDialog">
     <h2>Mudanças em data/cards.json</h2>
     <p id="diffTarget"></p>
@@ -171,7 +173,7 @@
     </div>
   </dialog>
 
-  <script type="module" src="forge.js?v=20261102-momento1"></script>
+  <script type="module" src="forge.js?v=20261102-arte3"></script>
   <script type="module" src="god-hud.js?v=6"></script>
 </body>
 </html>

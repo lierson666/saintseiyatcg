@@ -1,3 +1,4 @@
+import {mountArtPrompt} from './art-prompt.js?v=20261102-arte3';
 import {cardsToXlsx} from './cards-xlsx.js?v=20261102-momento1';
 import {AUDIT_STATUS,auditOf,mountCardFinder,reviewQueue} from './card-finder.js?v=20261102-momento1';
 import {mountRulesRows} from './rules-rows.js?v=20261102-banco1';
@@ -894,6 +895,8 @@ $('#cardLang').addEventListener('change', () => { forceLang($('#cardLang').value
 const topMenus = [...document.querySelectorAll('.forge-drop')];
 document.addEventListener('click', (e) => topMenus.forEach((m) => { if (m.open && (!m.contains(e.target) || (m.matches('.forge-drop--save') && e.target.closest('button')))) m.open = false; }));
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') topMenus.forEach((m) => { m.open = false; }); });
+const openArtPrompt = mountArtPrompt($('#artPromptDialog'), {getCard: () => buildCard(), getCards: () => db.cartas, say, masterUrl: 'art-master-prompt.md?v=20261102-1'});
+$('#artPrompt').addEventListener('click', () => { $('.forge-drop--art').open = false; openArtPrompt(); });
 $('#exportXlsx').addEventListener('click', () => { // catálogo gravado: edição ainda não salva fica de fora
   const blob = new Blob([cardsToXlsx(db.cartas)], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
   const a = Object.assign(document.createElement('a'), {href: URL.createObjectURL(blob), download: `saint-seiya-cartas-${new Date().toISOString().slice(0, 10)}.xlsx`});
