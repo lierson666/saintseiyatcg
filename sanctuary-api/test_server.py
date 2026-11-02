@@ -340,6 +340,9 @@ class Api(unittest.TestCase):
         self.assertEqual(before - e['coins'], 2000)
         st, me, _, _ = self.call('PATCH', '/api/me', {'sleeve': 'athena-v6-001', 'avatar_card': 'athena-v6-001'}, cookie=c)
         self.assertEqual((st, me['sleeve'], me['avatar_card']), (200, 'athena-v6-001', 'athena-v6-001'))
+        # voltar ao cardback vanilla é ficar sem sleeve, e o sleeve comprado continua dele
+        self.assertIsNone(self.call('PATCH', '/api/me', {'sleeve': ''}, cookie=c)[1]['sleeve'])
+        self.assertEqual(self.call('PATCH', '/api/me', {'sleeve': 'athena-v6-001'}, cookie=c)[0], 200)
         self.assertEqual(self.call('POST', '/api/store/buy', {'item': 'set', 'id': 'god-ares'}, cookie=c)[0], 400)  # Deus: avatar grátis, sem set
         # moeda do cara ou coroa: cosmético à parte, fora do set; só equipa quem tem; o oponente vê no perfil
         self.assertEqual(self.call('PATCH', '/api/me', {'coin': 'athena-v6-001'}, cookie=c)[0], 400)

@@ -15,7 +15,7 @@ import {countryOptions, countryName} from '../shared/countries.js?v=20261031-i18
 import {startPresence} from '../shared/presence.js?v=20261029-1';
 import {mountSocial} from './social.js?v=20261101-notch1';
 import {telas, imageUrl, sound, applyColors, applyTexts} from './telas.js?v=20261102-voz2';
-import {loadEconomy, ownedLimit, missingCards, coinBadge, storeScreen, collectionScreen, openBooster, buyBooster, buyCosmetic} from './economy.js?v=20261031-filt1';
+import {loadEconomy, ownedLimit, missingCards, coinBadge, storeScreen, collectionScreen, openBooster, buyBooster, buyCosmetic} from './economy.js?v=20261102-verso1';
 import {lightArt} from '../shared/light-art.js';
 import {faceStyle, useGodPortraits} from './avatar-face.js?v=20261031-3';
 import {progressTrack} from './home-features.js?v=20261031-face3';

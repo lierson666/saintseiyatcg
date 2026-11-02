@@ -80,6 +80,12 @@ function itemTile(e, c, kind, art, using) {
     <button class="ec-tile__look" data-act="cos-pick" data-kind="${kind}" data-id="${c.id}" aria-label="See ${esc(c.name)} ${KIND[kind].one}">${set ? setArt(c, art) : cosPreview(kind, art(c.id, 'webp'), c.id)}</button>
     <h4>${esc(c.name)}</h4><small>${esc(c.group)}</small>${action}</article>`;
 }
+// Cardback vanilla (autor, 02/11/2026): grátis e sempre na vitrine, para voltar a ele de qualquer sleeve. Equipar é ficar sem sleeve.
+function vanillaTile(using) {
+  const preview = `<span class="ec-cos-sleeve" style="background-image:url('${new URL('../LOGO/cardback-vanilla.webp', import.meta.url).href}')" aria-hidden="true"></span>`;
+  return `<article class="ec-tile ec-tile--sleeve is-owned"><div class="ec-tile__look" style="cursor:default">${preview}</div><h4>Vanilla</h4><small>Saint Seiya TCG</small>
+    ${using.sleeve ? '<button class="ec-tile__equip" data-act="use-cos" data-kind="sleeve" data-id="">Equip</button>' : '<span class="ec-tile__state is-on">Equipped</span>'}</article>`;
+}
 // Confirmação (o que compra, quanto custa, quanto falta); dono do item: só a prévia e o atalho de equipar.
 function confirmBox(e, c, kind, art, using) {
   const set = kind === 'set', owned = set ? !setOpen(c) : c[kind].owned, price = set ? c.set : c[kind].price, short = price - e.coins;
@@ -101,7 +107,7 @@ function cosmeticsTab(e, art, me, view) {
   const pick = view.pick && allItems(e).find(c => c.id === view.pick.id);
   return `<p class="ec-tabnote">${KIND[kind].what}${kind === 'set' ? ` Save ${e.set_off}%.` : ''}</p>
     <div class="lb-pills ec-groups">${chip('all', 'All')}${groups.map(g => chip(g, g)).join('')}</div>
-    <div class="ec-tiles ec-tiles--${kind}">${items.map(c => itemTile(e, c, kind, art, using)).join('')}</div>
+    <div class="ec-tiles ec-tiles--${kind}">${kind === 'sleeve' ? vanillaTile(using) : ''}${items.map(c => itemTile(e, c, kind, art, using)).join('')}</div>
     ${pick ? confirmBox(e, pick, view.pick.kind, art, using) : ''}`;
 }
 
