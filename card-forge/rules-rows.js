@@ -36,7 +36,10 @@ const parseAbility = t => {
 const composeAbility = (name, text) => (name.trim() ? `**${name.trim()}${text.trim() ? ':' : ''}**${text.trim() ? `\n${text.trim()}` : ''}` : text.trim());
 const abilityName = (t, i) => parseAbility(t).name || t.trim().slice(0, 28) || `Habilidade ${i + 1}`;
 
-export function mountRulesRows(area, {getId = null, moments = null, sound = null} = {}) {
+// @Resonance no nome ou no texto abre a lista de personagens; escolher preenche "Resonance — Nome" (guia §27).
+const RESONANCE_TOKEN = /@res\p{L}*(?:\s+([^@\n]*))?$/iu;
+
+export function mountRulesRows(area, {getId = null, moments = null, sound = null, resonanceCards = null, onResonance = null} = {}) {
   area.hidden = true;
   const box = document.createElement('div');
   box.className = 'rr';
@@ -53,12 +56,49 @@ export function mountRulesRows(area, {getId = null, moments = null, sound = null
       ${moments ? `<h3 class="rr-head">Momentos da carta</h3>${moments().map(([key, label]) => row(label, key, v[key])).join('')}` : ''}`;
   };
   const draw = (lines = split(area.value)) => {
+    suggest = null; // a lista some junto com as linhas redesenhadas
     box.innerHTML = `${lines.map((t, i) => `<div class="rr-row" data-i="${i}"><div class="rr-fields"><input class="rr-name" placeholder="Nome da habilidade (vazio se for só keyword)" aria-label="Nome da habilidade ${i + 1}" value="${esc(parseAbility(t).name)}"><textarea class="rr-text" rows="3" spellcheck="true" placeholder="Texto da habilidade" aria-label="Texto da habilidade ${i + 1}">${esc(parseAbility(t).text)}</textarea></div>
       <div class="rr-tools"><button type="button" data-move="-1" ${i ? '' : 'disabled'} aria-label="Subir">↑</button><button type="button" data-move="1" ${i < lines.length - 1 ? '' : 'disabled'} aria-label="Descer">↓</button><button type="button" data-del aria-label="Remover">✕</button></div></div>`).join('')}
       <button type="button" data-add>+ Habilidade</button>`;
     drawSound(lines);
   };
   box.addEventListener('input', e => { if (e.target.matches('.rr-text, .rr-name')) { sync(); drawSound(current()); } });
+  let suggest = null; // {field, row, options, active, el}
+  const closeSuggest = () => { suggest?.el.remove(); suggest = null; };
+  const paintSuggest = () => {
+    suggest.el.innerHTML = suggest.options.map((o, i) => `<div role="option" class="rr-option" data-res="${esc(o.name)}" aria-selected="${i === suggest.active}"><b>${esc(o.name)}</b><small>${esc(o.detail || '')}</small></div>`).join('') || '<p class="hint">Nenhuma carta com esse nome.</p>';
+    suggest.el.querySelector('[aria-selected=true]')?.scrollIntoView({block: 'nearest'});
+  };
+  const updateSuggest = field => {
+    const m = resonanceCards && field.value.slice(0, field.selectionEnd).match(RESONANCE_TOKEN);
+    if (!m) return closeSuggest();
+    const q = (m[1] || '').trim().toLowerCase(), options = resonanceCards().filter(o => o.name.toLowerCase().includes(q)).slice(0, 40), row = field.closest('.rr-row');
+    if (suggest?.row !== row) { closeSuggest(); suggest = {row, el: Object.assign(document.createElement('div'), {className: 'rr-suggest'})}; suggest.el.setAttribute('role', 'listbox'); suggest.el.setAttribute('aria-label', 'Personagem da Resonance'); row.querySelector('.rr-fields').append(suggest.el); }
+    Object.assign(suggest, {field, options, active: 0});
+    paintSuggest();
+  };
+  const pickResonance = name => {
+    const {field, row} = suggest, nameField = row.querySelector('.rr-name'), textField = row.querySelector('.rr-text'), end = field.selectionEnd;
+    field.value = field.value.slice(0, end).replace(RESONANCE_TOKEN, '').trimEnd() + field.value.slice(end);
+    const old = nameField.value.trim();
+    if (old && !/^Resonance\b/i.test(old)) textField.value = `${old} — ${textField.value.trim()}`; // o nome antigo vira começo do texto, como em "Resonance — Shun: Counterattack — …"
+    nameField.value = `Resonance — ${name}`;
+    closeSuggest();
+    sync();
+    drawSound(current());
+    onResonance?.(name);
+    textField.focus();
+  };
+  box.addEventListener('input', e => { if (e.target.matches('.rr-text, .rr-name')) updateSuggest(e.target); });
+  box.addEventListener('keydown', e => {
+    if (!suggest) return;
+    if (e.key === 'Escape') { e.preventDefault(); e.stopPropagation(); return closeSuggest(); }
+    if (!suggest.options.length) return;
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); suggest.active = (suggest.active + (e.key === 'ArrowDown' ? 1 : -1) + suggest.options.length) % suggest.options.length; paintSuggest(); }
+    if (e.key === 'Enter' || e.key === 'Tab') { e.preventDefault(); pickResonance(suggest.options[suggest.active].name); }
+  });
+  box.addEventListener('mousedown', e => { const o = e.target.closest('[data-res]'); if (o) { e.preventDefault(); pickResonance(o.dataset.res); } });
+  box.addEventListener('focusout', e => { if (suggest && !box.contains(e.relatedTarget)) closeSuggest(); });
   const onClick = e => {
     const b = e.target.closest('button');
     if (!b) return;

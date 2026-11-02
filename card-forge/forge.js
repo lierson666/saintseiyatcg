@@ -1,4 +1,4 @@
-import {mountRulesRows} from './rules-rows.js?v=20261102-nome1';
+import {mountRulesRows} from './rules-rows.js?v=20261102-res2';
 import {createHistory} from '../shared/editor-history.js';
 import {compilePlaytest} from '../shared/import-playtest.js';
 import {renderLiveCard,illustration,statLine,EDITIONS,editionOf} from '../shared/live-card.js?v=20261102-arroba1';
@@ -122,9 +122,11 @@ const TOKEN_WORD = { L: 'Latent Cosmo', B: 'Base Cosmo', C: 'Cosmo' };
 export function toMarkup(text) {
   text = text.replace(/\{(\d+|X)\}\{([BCL])\}/g, (_, n, k) => `${n} ${TOKEN_WORD[k]}`).replace(/\{(\d+|X)\}\{S\}/g, '$1 {S}');
   if (/^Resonance — [^.:]+$/.test(text)) return `**${text}**`; // 1ª linha da Armor, inteira (30/10/2026)
-  let m = text.match(/^(.+?) — Cost: (\d+) (Latent Cosmo|Base Cosmo|Cosmo)\. (.*)$/);
-  let out = m ? `**${m[2]} ${COST[m[3]]} ${m[1].toUpperCase()}:**\n${m[4]}` : text;
-  if (!m && (m = text.match(/^([^.—]{2,30}) — ([^.—]{1,25})\. (.*)$/))) out = `**${m[1]} — ${m[2]}:**\n${m[3]}`;
+  const res = text.match(/^(Resonance — [^.:—]+): (.*)$/); // guia §27: o nome do personagem faz parte do nome da habilidade
+  let m = !res && text.match(/^(.+?) — Cost: (\d+) (Latent Cosmo|Base Cosmo|Cosmo)\. (.*)$/);
+  let out = res ? `**${res[1]}:**\n${res[2]}` : m ? `**${m[2]} ${COST[m[3]]} ${m[1].toUpperCase()}:**\n${m[4]}` : text;
+  if (res) { /* já resolvido */ }
+  else if (!m && (m = text.match(/^([^.—]{2,30}) — ([^.—]{1,25})\. (.*)$/))) out = `**${m[1]} — ${m[2]}:**\n${m[3]}`;
   else if (!m && (m = text.match(/^([^.—]{2,40}) — (.*)$/))) out = `**${m[1]}:**\n${m[2]}`;
   return out
     .replace(/(\d+) (Latent Cosmo|Base Cosmo|Cosmo)\b/g, (_, n, u) => `${n} ${COST[u]}`)
@@ -135,6 +137,7 @@ export function fromMarkup(md) {
   let s = md.trim();
   let m = s.match(/^\*\*(\d+) \{([BCL])\} (.+?):\*\*\s*\n?([\s\S]*)$/);
   if (m) s = `${titleCase(m[3])} — Cost: {${m[1]}}{${m[2]}}. ${m[4]}`;
+  else if ((m = s.match(/^\*\*(Resonance — [^*:]+):\*\*\s*\n?([\s\S]*)$/))) s = `${m[1]}: ${m[2]}`;
   else if ((m = s.match(/^\*\*([^*—]{2,30}) — ([^*—]{1,25}):\*\*\s*\n?([\s\S]*)$/))) s = `${m[1]} — ${m[2]}. ${m[3]}`;
   else if ((m = s.match(/^\*\*([^*]{2,40}):\*\*\s*\n?([\s\S]*)$/))) s = `${m[1]} — ${m[2]}`;
   return s
@@ -1045,7 +1048,16 @@ $('#diffConfirm').addEventListener('click', async () => {
 // ---------- barra de símbolos e keywords ----------
 let lastText = form.elements.rules;
 form.addEventListener('focusin', (e) => { if (e.target.tagName === 'TEXTAREA') lastText = e.target; });
-const refreshRules = [mountRulesRows(form.elements.rules, {getId: () => S.id, sound: $('#soundFields'), moments: () => [['cast', 'Ao conjurar'], ['entrada', 'Entrada no campo'], ['golpe', 'Ao atacar'], ['strike', 'Ao receber Strike'], ['morte', 'Ao morrer'], ['retorno', 'Volta do Tartarus'], ...(layoutKey(S) === 'god' ? [['ultimate', 'Voz da Ultimate']] : [])]})];
+const refreshRules = [mountRulesRows(form.elements.rules, {getId: () => S.id, sound: $('#soundFields'), resonanceCards: () => {
+  const titled = (n) => n.toLowerCase().replace(/(^|[\s'-])(\p{L})/gu, (m, a, b) => a + b.toUpperCase()), seen = new Set();
+  return db.cartas.filter((c) => (c.tipo === 'Devotee' || c.tipo === 'God') && c.nome_exibicao_en)
+    .sort((a, b) => (b.faccao === S.faccao) - (a.faccao === S.faccao) || a.nome_exibicao_en.localeCompare(b.nome_exibicao_en))
+    .map((c) => ({name: titled(c.nome_exibicao_en), detail: `${c.faccao} · ${c.tipo}`}))
+    .filter((o) => !seen.has(o.name) && seen.add(o.name));
+}, onResonance: (name) => { // Equipment sem ninguém na Resonance: o campo de Números acompanha, e o diff mostra antes de gravar
+  const f = form.elements.auto_equip;
+  if (f && !f.closest('[hidden]') && !f.closest('label').hidden && !f.value.trim()) { f.value = name; f.dispatchEvent(new Event('input', {bubbles: true})); }
+}, moments: () => [['cast', 'Ao conjurar'], ['entrada', 'Entrada no campo'], ['golpe', 'Ao atacar'], ['strike', 'Ao receber Strike'], ['morte', 'Ao morrer'], ['retorno', 'Volta do Tartarus'], ...(layoutKey(S) === 'god' ? [['ultimate', 'Voz da Ultimate']] : [])]})];
 refreshRulesRows = () => refreshRules.forEach(r => r());
 refreshRulesRows();
 function insertAtCursor(text) {
