@@ -1028,6 +1028,7 @@ function overlays() {
       <label class="set"><span>Voice language</span>${sel('voiceLang', {auto: 'Same as the game', jp: 'Japanese', pt: 'Portuguese', es: 'Spanish'})}</label>
       <label class="set"><span>Voice volume</span><input type="range" min="0" max="1" step=".05" value="${settings.voiceVolume}" data-setting="voiceVolume"></label>
       <label class="set"><span>Music volume</span><input type="range" min="0" max="1" step=".05" value="${volume.music}" data-setting="musicVolume"></label>
+      <label class="set"><span>Effects volume</span><input type="range" min="0" max="1" step=".05" value="${volume.sfx}" data-setting="sfxVolume"></label>
       <label class="set"><span>Screen shake</span><input type="range" min="0" max="1.5" step=".25" value="${settings.shake}" data-setting="shake"></label>
       <p class="stats" data-stats>${scene ? 'WebGL on' : 'WebGL off · 2D fallback'}</p>
       <div class="settings__end">${match && !S().victory ? '<button class="settings__concede" data-concede>Concede</button>' : ''}<button data-toggle-settings>Close</button></div></div>`;
@@ -1522,6 +1523,7 @@ overlayRoot.addEventListener('change', e => {
   saveSettings();
   if (key === 'voiceVolume') setVolume('voice', settings.voiceVolume);
   if (key === 'musicVolume') setVolume('music', settings.musicVolume);
+  if (key === 'sfxVolume') setVolume('sfx', settings.sfxVolume);
   if (key === 'resolution') window.ssStage?.set(settings.resolution); // palco 16:9 (shared/stage-fit.js)
   if (key === 'cardText' || key === 'cardSize') window.ssStage?.a11y(); // acessibilidade das cartas (shared/stage-fit.js)
   if (key === 'lang') window.ssI18n?.set(settings.lang); // idioma PT-BR/EN (shared/i18n.js)
