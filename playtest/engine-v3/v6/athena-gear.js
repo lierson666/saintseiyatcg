@@ -215,8 +215,8 @@ export default {
 
   // Sanctuary Torch
   'athena-v6-051': {
-    // Sacred Flame: +1 ATK ao portador enquanto seu God tem menos Soul que o God oposto.
-    aura: (s, c, key, self, unit) => (k.bearerOf(c, self) === unit && s.players[key].soul < s.players[k.other(s, key)].soul ? {atk: 1, hp: 0} : null),
+    // Sacred Watch (autor, 01/11/2026): compra na primeira Spell inimiga do turno.
+    watchSpell: (s, c, key, self, caster) => caster !== key && k.onceTurn(s, `${self}:torch`) && (st => k.draw(st, key, 1)),
   },
 
   // Eagle Silver Cloth (+1 ATK: genérico)

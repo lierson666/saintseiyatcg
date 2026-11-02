@@ -219,7 +219,6 @@ export default {
   // Motor Enchantress (31/10/2026): "Whenever you play a non-Armor Equipment, draw a card." Uma vez por Round (§64).
   // 042 vale para qualquer Equipment (autor, 01/11/2026).
   'athena-v6-042': {watchEquipCast: (s, c, key, self) => k.once(s, `${self}:enchant`) && (st => k.draw(st, key, 1))},
-  'athena-v6-051': {watchSpell: (s, c, key, self, caster) => caster !== key && k.onceTurn(s, `${self}:torch`) && (st => k.draw(st, key, 1))},
   'athena-v6-043': {watchEquipCast: enchantress},
   // Esmeralda
   'athena-v6-038': {
