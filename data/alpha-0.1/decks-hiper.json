@@ -1,0 +1,867 @@
+{
+ "nota": "Decks HIPER competitivos (01/11/2026): 10 temas novos, com compra de 1, limite de 7 e draw engines; God e Domain fora das 50; até 3 cópias. Medição em docs/decks-hiper.md. Não são decks aprovados pelo autor.",
+ "decks": [
+  {
+   "id": "hiper-burn-ares-redline",
+   "nome": "Red Line",
+   "tema": "Burn",
+   "referencia": "Sligh Burn",
+   "god": "god-ares",
+   "domain_id": "ares-v6-333",
+   "plano": "Berserkers baratos abrem o dano e a queima direta fecha: First Blood, Crimson Fire, Lost Staff, Bloody Rain e Apocalypse.",
+   "main_deck": [
+    {
+     "card_id": "ares-v6-308",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-310",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-293",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-313",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-291",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-343",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-299",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-301",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-322",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-514",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-350",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-352",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-357",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-348",
+     "quantity": 2
+    },
+    {
+     "card_id": "ares-v6-359",
+     "quantity": 2
+    },
+    {
+     "card_id": "ares-v6-347",
+     "quantity": 2
+    },
+    {
+     "card_id": "ares-v6-351",
+     "quantity": 2
+    },
+    {
+     "card_id": "ares-v6-327",
+     "quantity": 3
+    }
+   ]
+  },
+  {
+   "id": "hiper-aristocrats-ares-carnage",
+   "nome": "Fields of Carnage",
+   "tema": "Aristocrats",
+   "referencia": "Goblin Sac",
+   "god": "god-ares",
+   "domain_id": "ares-v6-335",
+   "plano": "Berserkers que rendem ao morrer e sacrifício (Blood for Blood, Suicide Orders); Scavenger compra, Catreu e Champion crescem, Apocalypse fecha pelo Tartarus.",
+   "main_deck": [
+    {
+     "card_id": "ares-v6-312",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-293",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-313",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-301",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-343",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-295",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-292",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-299",
+     "quantity": 2
+    },
+    {
+     "card_id": "ares-v6-279",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-281",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-275",
+     "quantity": 2
+    },
+    {
+     "card_id": "ares-v6-302",
+     "quantity": 2
+    },
+    {
+     "card_id": "ares-v6-326",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-347",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-359",
+     "quantity": 2
+    },
+    {
+     "card_id": "ares-v6-322",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-514",
+     "quantity": 3
+    },
+    {
+     "card_id": "ares-v6-516",
+     "quantity": 3
+    }
+   ]
+  },
+  {
+   "id": "hiper-drain-hades-castle",
+   "nome": "Toll of Souls",
+   "tema": "Drain",
+   "referencia": "Pox / Vampiros",
+   "god": "god-hades",
+   "domain_id": "hades-v6-242",
+   "plano": "Cada entrada tira Soul do inimigo e devolve ao seu God; Souls of the Damned e The Sword That Pierced fecham à distância.",
+   "main_deck": [
+    {
+     "card_id": "hades-v6-220",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-218",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-217",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-207",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-219",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-223",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-215",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-201",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-213",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-187",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-252",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-183",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-238",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-239",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-257",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-512",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-194",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-267",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-264",
+     "quantity": 2
+    }
+   ]
+  },
+  {
+   "id": "hiper-afterlife-hades-gates",
+   "nome": "The Restless Dead",
+   "tema": "Afterlife",
+   "referencia": "Dredge lento",
+   "god": "god-hades",
+   "domain_id": "hades-v6-245",
+   "plano": "As cartas seguem valendo no Tartarus: Afterlife de Dullahan, Alraune, Gorgon, Gordon e Styx, mais recursão barata e corpos que trocam bem. Vence pela troca de cartas.",
+   "main_deck": [
+    {
+     "card_id": "hades-v6-218",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-220",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-206",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-221",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-217",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-215",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-216",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-214",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-212",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-201",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-213",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-235",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-513",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-185",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-197",
+     "quantity": 2
+    },
+    {
+     "card_id": "hades-v6-232",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-241",
+     "quantity": 3
+    },
+    {
+     "card_id": "hades-v6-511",
+     "quantity": 2
+    }
+   ]
+  },
+  {
+   "id": "hiper-freeze-poseidon-archive",
+   "nome": "Eternal Winter",
+   "tema": "Freeze",
+   "referencia": "Frozen Shade / Icy",
+   "god": "god-poseidon",
+   "domain_id": "poseidon-v6-502",
+   "plano": "Seal mantém o inimigo parado enquanto Marinas batem: Spearman e Vanguard rendem contra Seal, Herald sobe a tropa e Rising Tide compra.",
+   "main_deck": [
+    {
+     "card_id": "poseidon-v6-107",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-106",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-113",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-115",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-108",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-103",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-111",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-105",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-101",
+     "quantity": 1
+    },
+    {
+     "card_id": "poseidon-v6-114",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-097",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-091",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-137",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-165",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-153",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-157",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-168",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-132",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-135",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-508",
+     "quantity": 2
+    }
+   ]
+  },
+  {
+   "id": "hiper-spells-poseidon-tides",
+   "nome": "Pearl Tides",
+   "tema": "Spellslinger",
+   "referencia": "Spiral Tide",
+   "god": "god-poseidon",
+   "domain_id": "poseidon-v6-142",
+   "plano": "Pearl Keeper, Scout, Acolyte e feitiços baratos enchem a mão; Marinas batem, bounce atrasa a mesa até Kanon e Great Flood fecharem.",
+   "main_deck": [
+    {
+     "card_id": "poseidon-v6-116",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-115",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-113",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-107",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-108",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-103",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-111",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-118",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-105",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-091",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-095",
+     "quantity": 1
+    },
+    {
+     "card_id": "poseidon-v6-135",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-510",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-508",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-509",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-132",
+     "quantity": 3
+    },
+    {
+     "card_id": "poseidon-v6-152",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-154",
+     "quantity": 2
+    },
+    {
+     "card_id": "poseidon-v6-162",
+     "quantity": 1
+    },
+    {
+     "card_id": "poseidon-v6-178",
+     "quantity": 1
+    },
+    {
+     "card_id": "poseidon-v6-141",
+     "quantity": 1
+    }
+   ]
+  },
+  {
+   "id": "hiper-fortress-athena-gates",
+   "nome": "Sanctuary Walls",
+   "tema": "Fortress",
+   "referencia": "Soul Sisters / Wall",
+   "god": "god-athena",
+   "domain_id": "athena-v6-520",
+   "plano": "Guardians e prevenção seguram a mesa; Golden Arrow e Judgment respondem; Golds e Silvers de corpo grande fecham quando o inimigo cansa.",
+   "main_deck": [
+    {
+     "card_id": "athena-v6-040",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-034",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-003",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-011",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-072",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-015",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-017",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-013",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-029",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-071",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-075",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-024",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-035",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-037",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-505",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-056",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-082",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-506",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-079",
+     "quantity": 2
+    }
+   ]
+  },
+  {
+   "id": "hiper-artifacts-athena-jamir",
+   "nome": "Forge of Jamir",
+   "tema": "Artifacts",
+   "referencia": "Stoneblade",
+   "god": "god-athena",
+   "domain_id": "athena-v6-063",
+   "plano": "Kiki busca, Repairer e Acolyte compram por Equipment jogado; Saints de corpo grande vestem Libra Sword e Shield e fecham o jogo.",
+   "main_deck": [
+    {
+     "card_id": "athena-v6-026",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-042",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-043",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-047",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-048",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-049",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-051",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-020",
+     "quantity": 1
+    },
+    {
+     "card_id": "athena-v6-001",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-003",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-005",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-029",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-071",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-022",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-015",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-017",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-013",
+     "quantity": 2
+    },
+    {
+     "card_id": "athena-v6-505",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-082",
+     "quantity": 3
+    },
+    {
+     "card_id": "athena-v6-506",
+     "quantity": 1
+    }
+   ]
+  },
+  {
+   "id": "hiper-training-artemis-grove",
+   "nome": "Rite of the Grove",
+   "tema": "Training",
+   "referencia": "Hardened Scales",
+   "god": "god-artemis",
+   "domain_id": "artemis-v6-429",
+   "plano": "Marcadores de Training em todo corpo: Stag, Nymph e Primal Growth abastecem Hermia, Stalker e Primal Forest Guardian.",
+   "main_deck": [
+    {
+     "card_id": "artemis-v6-381",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-398",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-389",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-395",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-390",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-367",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-392",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-421",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-374",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-376",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-363",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-377",
+     "quantity": 2
+    },
+    {
+     "card_id": "artemis-v6-361",
+     "quantity": 2
+    },
+    {
+     "card_id": "artemis-v6-400",
+     "quantity": 2
+    },
+    {
+     "card_id": "artemis-v6-383",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-371",
+     "quantity": 2
+    },
+    {
+     "card_id": "artemis-v6-405",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-365",
+     "quantity": 3
+    }
+   ]
+  },
+  {
+   "id": "hiper-beasts-artemis-pack",
+   "nome": "Moonlit Pack",
+   "tema": "Beasts",
+   "referencia": "Tribal Beasts",
+   "god": "god-artemis",
+   "domain_id": "artemis-v6-430",
+   "plano": "Sacred Beasts: Wolf e Silver Fang crescem em grupo, Huntress Apprentice compra por Beast que entra, Bear e Serpent fecham.",
+   "main_deck": [
+    {
+     "card_id": "artemis-v6-382",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-403",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-381",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-401",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-392",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-402",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-404",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-383",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-384",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-385",
+     "quantity": 2
+    },
+    {
+     "card_id": "artemis-v6-417",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-444",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-518",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-421",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-411",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-405",
+     "quantity": 3
+    },
+    {
+     "card_id": "artemis-v6-389",
+     "quantity": 3
+    }
+   ]
+  }
+ ]
+}
