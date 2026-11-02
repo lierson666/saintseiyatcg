@@ -2,7 +2,7 @@
 // O textarea original segue sendo a fonte do texto (linha em branco separa habilidades); as falas ficam em data/card-voices.json.
 const split = t => t.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
-import {openSoundBrowser, soundUrl} from '/shared/sound-browser.js?v=5';
+import {openSoundBrowser, soundUrl} from '/shared/sound-browser.js?v=8';
 let falas = {}, vozes = {}, player = null;
 const ready = Promise.all([
   fetch('/biblioteca-sons/falas-pt.json', {cache: 'no-store'}).then(r => (r.ok ? r.json() : {})).catch(() => ({})),

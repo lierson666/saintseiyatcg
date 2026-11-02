@@ -16,6 +16,16 @@ let library = null, dialog = null, audio = null, opts = {};
 // Idioma só para ouvir e escolher: a fala tem o mesmo número nos 3 idiomas, e o duelo toca a do idioma do jogador (autor, 02/11/2026).
 const savedLang = () => { try { return localStorage.getItem('sb-lang'); } catch { return null; } };
 const state = {jogo: 'soldiers-soul', secao: 'voz-golpe', cod: null, grupo: null, lang: LANGS.some(([k]) => k === savedLang()) ? savedLang() : 'pt', q: '', limit: PAGE, ordem: '', playing: null};
+// O seletor reabre onde estava: jogo, seção, personagem, estilo e rolagem (autor, 02/11/2026).
+const PLACE = 'sb-lugar';
+let place = null, listScroll = 0;
+try { place = JSON.parse(localStorage.getItem(PLACE)); } catch { /* sem armazenamento */ }
+function savePlace() { // a cada mudança: o evento close chega tarde, com o dialog já oculto e a rolagem em 0
+  const {jogo, secao, cod, grupo, limit} = state;
+  if (state.q) return;
+  place = {jogo, secao, cod, grupo, limit, scroll: listScroll};
+  try { localStorage.setItem(PLACE, JSON.stringify(place)); } catch { /* vale até recarregar a página */ }
+}
 
 const NO_LIB = 'A biblioteca não respondeu. Feche e abra o STAR HILL ou o Card Forge para atualizar o servidor.';
 const toSound = ([id, secao, cod, grupo, cue, s, langs, texto]) => ({id, secao, cod, grupo, cue, s, langs, texto, jogo: 'soldiers-soul'});
@@ -112,6 +122,7 @@ function draw() {
     drawGroups(byChar);
     view = ordered(state.grupo && !state.q ? byChar.filter(x => x.grupo === state.grupo) : byChar);
     drawList(lib, view);
+    savePlace();
     dialog.querySelectorAll('[data-lang]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === state.lang)));
   });
 }
@@ -131,6 +142,7 @@ function build() {
         <ul class="sb-list"></ul><button type="button" class="sb-more" hidden></button></section></div>`;
   document.body.append(dialog);
   dialog.addEventListener('close', stop);
+  dialog.querySelector('.sb-list').addEventListener('scroll', e => { listScroll = e.target.scrollTop; savePlace(); });
   let typing;
   dialog.querySelector('.sb-search').addEventListener('input', e => { clearTimeout(typing); typing = setTimeout(() => { state.q = e.target.value; state.limit = PAGE; draw(); }, 120); });
   dialog.addEventListener('change', async e => {
@@ -154,7 +166,11 @@ function build() {
     if (!row) return;
     const x = view.find(s => s.id === row.dataset.id);
     if (d.play !== undefined) return play(x, b);
-    if (d.use !== undefined) { dialog.close(); return opts.onPick(x, state.lang); }
+    if (d.use !== undefined) {
+      if (state.q) { clearSearch(); listScroll = 0; Object.assign(state, {jogo: x.jogo, secao: x.secao, cod: x.cod, grupo: null, limit: PAGE}); savePlace(); } // achou pela busca: guarda o lugar do som
+      dialog.close();
+      return opts.onPick(x, state.lang);
+    }
   });
   // Lista inteira no teclado: setas andam, espaço ouve, Enter usa.
   dialog.querySelector('.sb-list').addEventListener('keydown', e => {
@@ -174,11 +190,14 @@ export async function openSoundBrowser({title = 'Escolher som', value = '', extr
   const lib = await loadLibrary();
   loaded = lib.sons;
   const now = allSounds(lib).find(x => x.id === value);
-  if (now) Object.assign(state, {jogo: now.jogo, secao: now.secao, cod: now.cod, grupo: null});
+  const all = allSounds(lib), there = p => all.some(x => x.jogo === p.jogo && x.secao === p.secao && (p.cod === null || x.cod === p.cod) && (!p.grupo || x.grupo === p.grupo));
+  const back = place && there(place) ? place : null; // lugar que sumiu (ex.: Meus sons no Forge) não vale
+  if (back) Object.assign(state, {jogo: back.jogo, secao: back.secao, cod: back.cod, grupo: back.grupo});
+  else if (now) Object.assign(state, {jogo: now.jogo, secao: now.secao, cod: now.cod, grupo: null});
   else if (secao) Object.assign(state, {jogo: 'soldiers-soul', secao, cod: null, grupo: null});
   if (!lib.ok && extra.length) state.jogo = 'meus';
   if (state.jogo === 'meus' && !extra.some(x => x.secao === state.secao)) state.secao = extra[0]?.secao || state.secao;
-  state.limit = PAGE;
+  state.limit = back?.limit || PAGE;
   clearSearch();
   dialog.querySelector('h2').textContent = title;
   const cur = dialog.querySelector('.sb-current');
@@ -187,5 +206,6 @@ export async function openSoundBrowser({title = 'Escolher som', value = '', extr
   dialog.showModal();
   dialog.querySelector('.sb-search').focus();
   await draw();
-  dialog.querySelector('.is-current')?.scrollIntoView({block: 'center'});
+  if (back) dialog.querySelector('.sb-list').scrollTop = back.scroll || 0;
+  else dialog.querySelector('.is-current')?.scrollIntoView({block: 'center'});
 }
