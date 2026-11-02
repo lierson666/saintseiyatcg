@@ -1,27 +1,35 @@
 import {armorCard} from './rules-policy.js';
-import {equipmentCostText} from './card-visual-values.js?v=20261031-kw1';
+import {equipmentCostText} from './card-visual-values.js?v=20261102-arroba1';
 import {KEYWORD_PT} from './card-i18n.js?v=20261031-kw1';
 // A sintaxe visual é compartilhada entre impressão e jogo; nunca altera as regras salvas.
 export const escapeText=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 // Keywords sempre em MAIÚSCULA e negrito no texto (autor, 31/10/2026); o Card Forge usa a mesma lista (forge.js).
-export const KEYWORD_WORDS=['Long Range','Guardian','Nimble','Pierce','Impulse','Hidden Cosmo','Sealed','Seal','Afterlife','Training'];
+export const KEYWORD_WORDS=['Long Range','Guardian','Nimble','Pierce','Impulse','Hidden Cosmo','Sealed','Seal','Afterlife','Training','Immune'];
 const words=KEYWORD_WORDS;
 // Mesmas keywords em PT (docs/glossario-pt-br.md), para o texto das cartas em português (campos *_pt).
-export const KEYWORD_WORDS_PT=['Longo Alcance','Guardião','Ágil','Perfurar','Impulso','Cosmo Oculto','Selado','Selo','Além-Túmulo','Treinamento'];
+export const KEYWORD_WORDS_PT=['Longo Alcance','Guardião','Ágil','Perfurar','Impulso','Cosmo Oculto','Selado','Selo','Além-Túmulo','Treinamento','Imune'];
 // Bônus de atributo ("+1 ATK / +1 HP", "+2/+2", "-1 ATK") sempre em negrito e maiúscula (autor, 31/10/2026).
 // Só "+": verde (como bônus no duelo); só "-": vermelho; misto: cor do tema.
 export const statTrend=m=>/-\d/.test(m)?(/\+\d/.test(m)?'mixed':'down'):'up';
-export const STAT_RE=/(?<![\w])[+-]\d+(?:\s*(?:ATK|ATTACK|HP|Power|ATQ|PV|Poder))?(?:\s*\/\s*[+-]\d+(?:\s*(?:ATK|ATTACK|HP|Power|ATQ|PV|Poder))?)?/gi;
+export const STAT_RE=/(?<![\w])[+-]\d+(?:\s*@?(?:ATK|ATTACK|HP|Power|ATQ|PV|Poder))?(?:\s*\/\s*[+-]\d+(?:\s*@?(?:ATK|ATTACK|HP|Power|ATQ|PV|Poder))?)?/gi;
 // Borda por letra (\p{L}), não \b: \b não enxerga letra acentuada ("Ágil", "Além-Túmulo").
-const emphasis=new RegExp(`(?<!\\p{L})(${[...words,...KEYWORD_WORDS_PT].join('|')})(?!\\p{L})`,'giu');
+// Só @Keyword puxa a keyword (autor, 02/11/2026): "Forest Guardian" sem @ é texto comum.
+const emphasis=new RegExp(`@(${[...words,...KEYWORD_WORDS_PT].join('|')})(?!\\p{L})`,'giu');
 // Símbolos do texto (autor, 31/10/2026): {N}{C} Cosmo (ícone de Base), {N}{L} Latent, {N}{B} Base, {N}{S} Soul, {T} Tap.
 // Ícones dos PSDs (CARD-TEMPLATE), pintados com a cor do texto; Soul verde ao ganhar e vermelho ao perder ou pagar.
 const SYMBOLS={B:['athena/icon_cosmo','Base Cosmo'],C:['athena/icon_cosmo','Cosmo'],L:['athena/icon_latent','Latent Cosmo'],S:['icons/soul','Soul'],T:['icons/tap','Tap'],A:['icons/atk-mini','ATK'],H:['icons/soul','HP']};
 const symbolUrl=k=>new URL(`../CARD-TEMPLATE/${k}.png`,import.meta.url).href;
 const SYMBOL_RE=/(?:\{(?:\d+|X)\})?\{[BCLSTAH]\}/;
-// ATK e HP viram símbolo só na apresentação (autor, 02/11/2026): o dado segue em palavras porque engine e IA leem "+1 ATK".
-// "Power" só com número: "Divine Power" e nomes de golpe ficam como estão.
-export const statSymbols=t=>String(t).replace(/([+-]\d+\s*)(?:Power|Poder)(?!\p{L})/giu,'$1{A}').replace(/(?<!\p{L})(?:ATK|ATTACK|ATQ)(?!\p{L})/gu,'{A}').replace(/(?<!\p{L})(?:HP|PV)(?!\p{L})/gu,'{H}');
+// @ATK, @HP, @COSMO, @BASECOSMO, @LATENT, @SOUL e @TAP puxam o símbolo (autor, 02/11/2026); a palavra sem @ fica como texto.
+const AT_SYMBOL={ATK:'A',ATQ:'A',POWER:'A',PODER:'A',HP:'H',PV:'H',COSMO:'C',BASECOSMO:'B',LATENT:'L',LATENTE:'L',SOUL:'S',ALMA:'S',TAP:'T'};
+const atWords=keys=>new RegExp(`(?:(\\d+|X)\\s+)?@(${keys.join('|')})(?!\\p{L}|\\s+Oculto)`,'giu');
+const atReplace=(_,n,word)=>{const k=AT_SYMBOL[word.toUpperCase()];return n&&'CBLS'.includes(k)?`{${n}}{${k}}`:`${n?`${n} `:''}{${k}}`;};
+const AT_COST=atWords(Object.keys(AT_SYMBOL).filter(w=>!'AH'.includes(AT_SYMBOL[w]))),AT_ALL=atWords(Object.keys(AT_SYMBOL));
+// O dado guarda custo como {N}{C}; @ATK e @HP ficam como estão porque engine e IA leem o número e o atributo.
+export const costSymbols=t=>String(t).replace(AT_COST,atReplace);
+export const statSymbols=t=>String(t).replace(AT_ALL,atReplace);
+// Linha "Hidden Cosmo {5}" é a própria keyword, com ou sem @.
+export const keywordLine=t=>String(t).replace(/^(Hidden Cosmo|Cosmo Oculto)(?=\s*\{)/i,'@$1');
 const STAT_SYMBOL_RE=/(?<![\w])[+-]\d+\s*\{[AH]\}(?:\s*\/\s*[+-]\d+\s*\{[AH]\})?/;
 function symbolMarkup(token,before=''){
   const [,n,k]=token.match(/^(?:\{(\d+|X)\})?\{([BCLSTAH])\}$/),[icon,name]=SYMBOLS[k];
@@ -30,19 +38,19 @@ function symbolMarkup(token,before=''){
 }
 export function inlineMarkup(text){
   let before='';
-  return statSymbols(text).split(new RegExp(`(\\*\\*[^*]+\\*\\*|${STAT_SYMBOL_RE.source}|${SYMBOL_RE.source})`,'g')).filter(s=>s!==undefined).map(s=>{
+  return statSymbols(keywordLine(text)).split(new RegExp(`(\\*\\*[^*]+\\*\\*|${STAT_SYMBOL_RE.source}|${SYMBOL_RE.source})`,'g')).filter(s=>s!==undefined).map(s=>{
     if(s.startsWith('**'))return `<strong>${inlineMarkup(s.slice(2,-2))}</strong>`;
     if(new RegExp(`^${STAT_SYMBOL_RE.source}$`).test(s))return `<strong class="rule-stat rule-stat--${statTrend(s)}">${s.split(/(\{[AH]\})/).map(p=>/^\{/.test(p)?symbolMarkup(p):escapeText(p)).join('')}</strong>`;
     if(new RegExp(`^${SYMBOL_RE.source}$`).test(s)){const out=symbolMarkup(s,before);before='';return out;}
     before=s;
-    return escapeText(s).replace(emphasis,m=>`<strong>${m.toUpperCase()}</strong>`).replace(STAT_RE,m=>`<strong class="rule-stat rule-stat--${statTrend(m)}">${m.toUpperCase()}</strong>`);
+    return escapeText(s).replace(emphasis,(_,k)=>`<strong>${k.toUpperCase()}</strong>`).replace(STAT_RE,m=>`<strong class="rule-stat rule-stat--${statTrend(m)}">${m.toUpperCase()}</strong>`);
   }).join('');
 }
 export function textBlocks(texts){
   const result=[];
   for(const text of texts||[]){
     // Os marcadores explícitos separam blocos. Não tentamos inferir efeitos executáveis.
-    const chunks=String(text).split(/\n\s*\n|(?<=\.)\s+(?=(?:Owner:|Dono:|Resonance\s*[—-]|Ressonância\s*[—-]|7th Sense\s*[—-]|God Cloth\s*[—-]|Activation:))/i);
+    const chunks=statSymbols(text).split(/\n\s*\n|(?<=\.)\s+(?=(?:Owner:|Dono:|Resonance\s*[—-]|Ressonância\s*[—-]|7th Sense\s*[—-]|God Cloth\s*[—-]|Activation:))/i);
     for(let chunk of chunks){
       chunk=chunk.trim();if(!chunk)continue;
       // Poder de God (autor, 31/10/2026): "NOME — Ultimate\nCost: {7}{C}\n…" vira etiqueta ULTIMATE + título "{7}{C} NOME".
@@ -72,7 +80,7 @@ export function textBlocks(texts){
       if(m&&!/^(When|Whenever|If|Once|At|As|While|Each|Until|This|Target|Choose|Put|You|Your|Quando|Sempre|Se|Uma vez|No|Na|Enquanto|Cada|Até|Este|Esta|Escolha|Coloque|Você|Seu|Sua)(?![\p{L}])/u.test(m[1])&&!/^(Resonance|Ressonância)$/i.test(m[1])){result.push({heading:m[1],body:m[2],kind:'ability'});continue;}
       m=chunk.match(/^([^.:\n]{2,40}):\s*([\s\S]*)$/);
       if(m&&!/^(When |Whenever |Once |If |Quando |Sempre que |Uma vez |Se )/i.test(m[1])){result.push({heading:m[1],body:m[2],kind:'ability'});continue;}
-      m=chunk.match(new RegExp(`^((?:(?:${[...words.slice(0,10),...KEYWORD_WORDS_PT.slice(0,10)].join('|')})[.,]?\\s*)+)$`,'iu'));
+      m=chunk.match(new RegExp(`^((?:@?(?:${[...words.slice(0,10),...KEYWORD_WORDS_PT.slice(0,10)].join('|')})[.,]?\\s*)+)$`,'iu'));
       result.push({heading:m?chunk.toUpperCase():'',body:m?'':chunk,kind:m?'keywords':/^When .*enters|^When played|^Quando .*entra|^Quando (?:for )?jogad/i.test(chunk)?'entry':'passive'});
     }
   }
@@ -80,7 +88,7 @@ export function textBlocks(texts){
 }
 // O campo próprio já exibe as keywords; só omitimos repetições isoladas na apresentação.
 export function ruleBlocksWithoutKeywords(texts,keywords=[]){
-  const normalize=value=>String(value).replace(/\*\*/g,'').trim().replace(/[.:;]+$/,'').trim().toLowerCase();
+  const normalize=value=>String(value).replace(/\*\*|@/g,'').trim().replace(/[.:;]+$/,'').trim().toLowerCase();
   const selected=new Set(keywords.flatMap(k=>[k,KEYWORD_PT[k]].filter(Boolean)).map(normalize)); // inglês e PT
   return textBlocks(texts).filter(block=>{
     const tokens=[block.heading,block.body].filter(Boolean).join('\n').split(/[,;\n]|\.\s+/).map(normalize).filter(Boolean);
@@ -99,7 +107,7 @@ export function presentationRules(card){
     return [...(equipLine&&!merged.length?[equipLine]:[]),...merged,...raw.filter(t=>!effects.includes(t)||!merged.length)];
   }
   if(!card.estagios?.length)return [...raw,...(equipLine?[equipLine]:[])];
-  const stages=card.estagios,sign=n=>`${n<0?'':'+'}${n||0}`,bonus=s=>`${sign(s.bonus_poder)} Power / ${sign(s.bonus_vida)} HP`;
+  const stages=card.estagios,sign=n=>`${n<0?'':'+'}${n||0}`,bonus=s=>`${sign(s.bonus_poder)} @ATK / ${sign(s.bonus_vida)} @HP`;
   const name=id=>id.split('-').map(s=>s.charAt(0).toUpperCase()+s.slice(1)).join(' ');
   // Os números editáveis têm uma única origem. As habilidades livres continuam no texto.
   const free=textBlocks(raw.map(t=>t.replace(/^Equip:[^.]+\.\s*/i,''))).filter(b=>!['owner','evolution','resonance'].includes(b.kind));

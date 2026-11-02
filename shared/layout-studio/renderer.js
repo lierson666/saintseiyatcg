@@ -4,7 +4,7 @@ import {bindingValue,evaluateLayer,assetURL,esc,editorialWarnings} from './model
 let measureContext;
 const flowCache=new Map();
 const symbols={B:'✺',C:'✺',L:'✺',S:'◇',T:'↷'};
-const plain=value=>String(value??'').replace(/\*\*/g,'').replace(/\{(\d+)\}/g,'$1').replace(/\{([BCLST])\}/g,(_,k)=>symbols[k]);
+const plain=value=>String(value??'').replace(/\*\*|@(?=\p{L})/gu,'').replace(/\{(\d+)\}/g,'$1').replace(/\{([BCLST])\}/g,(_,k)=>symbols[k]);
 export function valueText(value){
   if(value==null)return '';
   if(Array.isArray(value))return value.map(v=>typeof v==='object'?(v.cardData?`${v.cardData.nome_exibicao_en}\n${(v.cardData.habilidades_en||[]).join('\n')}`:v.heading?[v.heading,v.body].filter(Boolean).join('\n'):valueText(v)):String(v)).join('\n');

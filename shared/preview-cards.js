@@ -20,20 +20,20 @@ export function previewRecord(f) {
     armorBonusLine(f),
     // Keywords impressas (Guardian, Pierce…) em linha própria, como no D268, para o parseCard reconhecer (autor, 31/10/2026).
     ...(f.tipo === 'Devotee' ? f.keywords_en || [] : []),
-    ...(f.habilidades_en || [])].filter(Boolean).join('\n');
+    ...(f.habilidades_en || [])].filter(Boolean).join('\n').replace(/@/g, ''); // @ só marca keyword e símbolo na carta
   return {id: f.id, name: f.nome_exibicao_en, type, approved_current_text_as_of_d268: text};
 }
 
 // Armor (sintaxe de 30/10/2026): bonus_poder/bonus_vida e "Equipped Devotee has X." viram a linha de bônus que parseCard lê.
 function armorBonusLine(f) {
   if (f.bonus_poder == null && f.bonus_vida == null) return null;
-  const kw = (f.habilidades_en || []).map(h => h.match(/^Equipped Devotee has ([A-Z][\w ]*)\.$/)?.[1]).find(Boolean);
+  const kw = (f.habilidades_en || []).map(h => h.replace(/@/g, '').match(/^Equipped Devotee has ([A-Z][\w ]*)\.$/)?.[1]).find(Boolean);
   return `Equipped Devotee gets +${f.bonus_poder || 0} ATK / +${f.bonus_vida || 0} HP${kw ? ` and ${kw}` : ''}.`;
 }
 // Bônus, Equip e Resonance da Armor vindos do Forge por cima do texto congelado do D268 (Athena V6).
 function armorFromForge(card, f) {
   if (!card?.armor || (f.bonus_poder == null && f.bonus_vida == null)) return card;
-  const kw = (f.habilidades_en || []).map(h => h.match(/^Equipped Devotee has ([A-Z][\w ]*)\.$/)?.[1]).filter(Boolean);
+  const kw = (f.habilidades_en || []).map(h => h.replace(/@/g, '').match(/^Equipped Devotee has ([A-Z][\w ]*)\.$/)?.[1]).filter(Boolean);
   return {...card, hp: null, equipped: {atk: f.bonus_poder || 0, hp: f.bonus_vida || 0, keywords: kw},
     autoEquip: f.auto_equip_en || [], equip: f.equipar_custo_outros != null ? {amount: f.equipar_custo_outros, who: 'any'} : card.equip};
 }

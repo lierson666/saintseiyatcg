@@ -30,10 +30,13 @@ export const KEYWORD_RULES_PT = {
 };
 
 const NAMES = Object.keys(KEYWORD_RULES).sort((a, b) => b.length - a.length);
-const FIND = new RegExp(`\\b(${NAMES.join('|')})\\b`, 'gi');
+// Só @Keyword no texto puxa a ficha (autor, 02/11/2026); carta chamada "Forest Guardian" não vira Guardian.
+const FIND = new RegExp(`@(${NAMES.join('|')})(?!\\p{L})`, 'giu');
 // Texto em PT (campos *_pt): o nome em português aponta para a mesma keyword (chave em inglês).
 const FROM_PT = Object.fromEntries(Object.keys(KEYWORD_RULES_PT).map(k => [KEYWORD_PT[k].toLowerCase(), k]));
-const FIND_PT = new RegExp(`(?<!\\p{L})(${Object.keys(FROM_PT).sort((a, b) => b.length - a.length).join('|')})(?!\\p{L})`, 'giu');
+const FIND_PT = new RegExp(`@(${Object.keys(FROM_PT).sort((a, b) => b.length - a.length).join('|')})(?!\\p{L})`, 'giu');
+// Linha que define a keyword ("Hidden Cosmo {5}", "Afterlife {2}{C}: …") vale sem @.
+const DEFINES = /^(Hidden Cosmo|Afterlife|Cosmo Oculto|Além-Túmulo)(?=\s*(?:\{|—|:|$))/gimu;
 
 // Keywords da carta (impressas primeiro, depois as citadas no texto), cada uma uma vez, na ordem em que aparecem.
 export function cardKeywords(card) {
@@ -43,6 +46,7 @@ export function cardKeywords(card) {
   const text = [...(card.habilidades_en || []), card.habilidade_awaken_en || '', card.ultimate_en || ''].join('\n');
   for (const m of text.matchAll(FIND)) add(m[1]);
   for (const m of text.matchAll(FIND_PT)) add(FROM_PT[m[1].toLowerCase()]);
+  for (const m of text.matchAll(DEFINES)) add(FROM_PT[m[1].toLowerCase()] || m[1]);
   return out;
 }
 

@@ -57,7 +57,8 @@ EXEMPLOS APROVADOS (copie o estilo e as frases-padrão):
 {json.dumps(examples(), ensure_ascii=False)}
 
 REGRAS DURAS (o jogo lê o texto):
-- Mantenha cada símbolo exatamente: {{1}}{{C}}, {{2}}{{L}}, {{1}}{{S}}, {{T}}, {{B}}. Mantenha números e quebras de linha.
+- Mantenha cada símbolo exatamente: {{1}}{{C}}, {{2}}{{L}}, {{1}}{{S}}, {{T}}, {{B}}, @ATK, @HP. Mantenha números e quebras de linha.
+- Mantenha o @ antes de keyword traduzida: @Guardian vira @Guardião. Palavra sem @ continua sem @.
 - Mantenha a estrutura "Nome da habilidade — texto" (travessão com espaços); traduza o nome da habilidade.
 - "Resonance — Nome: texto" vira "Ressonância — <nome PT>: texto". "Cost:" vira "Custo:". "Divine Power" → "Poder Divino", "Awaken N" → "Despertar N", "Ultimate" → "Supremo".
 - "+1 ATK / +2 HP" → "+1 ATQ / +2 PV"; "Equipped Devotee gets +X ATK / +Y HP." → "O Devoto equipado recebe +X ATQ / +Y PV."

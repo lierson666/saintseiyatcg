@@ -100,7 +100,7 @@ function renderPsdCard(card,{src,stage,hp,power,keywords,damage,rules,equipment,
       const fs=rulesSize([kw,...rules,ownerLine].filter(Boolean),el.size,w,(cut<0?h:h-280)*(el.fit||1),el.minSize);
       // Caixa do layout (--lc-rules-h = altura máxima, com rolagem); --lc-text = tamanho do texto (Options › Accessibility).
       const box=`left:${x/14.88}%;bottom:${(2091-y-h)/20.91}%;width:${w/14.88}%;min-height:${h/20.91}%;--lc-rules-h:${cqw(h)}`;
-      out+=`<div class="lc-rules live-card__rules" style="${box};font-size:calc(${cqw(fs)} * var(--lc-text, 1))">${kw?`<p class="live-card__keywords">${keywords.map(k=>`<span class="kw-word"${keywordTipAttr(k)}>${inlineMarkup(keywordName(k))}</span>`).join(', ')}</p>`:''}${body}${ownerLine?`<p class="live-card__owners">${ownerLine}</p>`:''}</div>`;
+      out+=`<div class="lc-rules live-card__rules" style="${box};font-size:calc(${cqw(fs)} * var(--lc-text, 1))">${kw?`<p class="live-card__keywords">${keywords.map(k=>`<span class="kw-word"${keywordTipAttr(k)}>${inlineMarkup(`@${keywordName(k)}`)}</span>`).join(', ')}</p>`:''}${body}${ownerLine?`<p class="live-card__owners">${ownerLine}</p>`:''}</div>`;
     }
     // Rodapé de edição (autor, 31/10/2026): símbolo da raridade • edição • idioma • artista • ano. A gema sai do centro.
     else if(el.kind==='rarity'){
@@ -133,7 +133,7 @@ export function renderCardText(card){
   card=displayCard(card); // texto em PT quando houver (shared/card-i18n.js)
   const f=String(card.faccao||'').toLowerCase(),ink=(PSD?.T.factions[f]||NEUTRAL).color;
   const kws=card.keywords_en||[],rules=ruleBlocksWithoutKeywords(presentationRules(card),kws).map(block=>blocksMarkup([block]));
-  return `<div class="card-text" style="--psd-ink:${escape(ink)}">${kws.length?`<p class="live-card__keywords">${kws.map(k=>inlineMarkup(keywordName(k))).join(', ')}</p>`:''}${renderRules(rules)}${renderKeywordNotes(card)}</div>`;
+  return `<div class="card-text" style="--psd-ink:${escape(ink)}">${kws.length?`<p class="live-card__keywords">${kws.map(k=>inlineMarkup(`@${keywordName(k)}`)).join(', ')}</p>`:''}${renderRules(rules)}${renderKeywordNotes(card)}</div>`;
 }
 export function renderLiveCard(card,{stats=null,instance=null,art=null,compact=false,equipment:attachedEquipment=[],mode=null}={}){
   if(!card)return '<div class="live-card live-card--missing">Unknown card</div>';
@@ -162,7 +162,7 @@ export function renderLiveCard(card,{stats=null,instance=null,art=null,compact=f
     <div class="live-card__illustration" aria-hidden="true">${src?`<img src="${escape(src)}" alt="" draggable="false" loading="lazy">`:'<span class="live-card__placeholder">✧<small>Illustration pending</small></span>'}</div>
     <div class="live-card__surface"></div><header class="live-card__heading"><strong>${escape(card.nome_exibicao_en)}</strong>${card.custo!==null&&card.custo!==undefined?`<b class="live-card__cost" title="Cosmo cost">${escape(card.custo)}</b>`:''}</header>
     <div class="live-card__body"><p class="live-card__type">${escape([card.tipo,...(card.subtipos||[])].join(' · '))}${card.cosmoble?' · Cosmoble':''}</p>
-    ${keywords.length?`<p class="live-card__keywords">${keywords.map(k=>inlineMarkup(keywordName(k))).join(' · ')}</p>`:''}
+    ${keywords.length?`<p class="live-card__keywords">${keywords.map(k=>inlineMarkup(`@${keywordName(k)}`)).join(' · ')}</p>`:''}
     <div class="live-card__rules">${renderRules(rules)}</div>
     ${card.ressonancias?.length&&!resonanceAlready?`<p class="live-card__owners">Resonance: ${card.ressonancias.map(r=>escape(ownerName(r.personagem_id))).join(' / ')}</p>`:''}
     </div><footer class="live-card__footer"><small>${escape(stage?.nome||card.faccao||'')}</small>

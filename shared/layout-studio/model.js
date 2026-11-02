@@ -1,7 +1,7 @@
-import {printedEquipmentBonuses,signedBonus,equipmentCostText,armorBonusText} from '../card-visual-values.js?v=20261031-kw1';
+import {printedEquipmentBonuses,signedBonus,equipmentCostText,armorBonusText} from '../card-visual-values.js?v=20261102-arroba1';
 import {isArmor,isEquipment} from '../card-model.js';
 import {typeWord} from '../card-i18n.js?v=20261031-kw1';
-import {textBlocks,ruleBlocksWithoutKeywords} from '../card-text.js?v=20261102-sym1';
+import {textBlocks,ruleBlocksWithoutKeywords} from '../card-text.js?v=20261102-arroba1';
 
 // Contrato visual puro: lê o catálogo e o resultado da engine, sem executar regras.
 export const SCHEMA_VERSION=1;

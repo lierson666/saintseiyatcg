@@ -9,7 +9,8 @@ export function printedEquipmentBonuses(card,stageIndex=0){
   if(stage)return{power:stage.bonus_poder??null,hp:stage.bonus_vida??null};
   // Armor (sintaxe de 30/10/2026): bônus nos campos bonus_poder/bonus_vida, mostrados na faixa da base; 0 não aparece.
   if(card.bonus_poder!=null||card.bonus_vida!=null)return{power:card.bonus_poder||null,hp:card.bonus_vida||null};
-  for(const line of card.habilidades_en||[]){
+  for(const raw of card.habilidades_en||[]){
+    const line=String(raw).replace(/@/g,'');
     let match=String(line).match(/^Equipped Devotee gets ([+-]\d+) (?:ATK|Power)(?: \/ ([+-]\d+) HP)?(?: and [A-Za-z][A-Za-z ,'-]*)?\.$/i);
     if(match)return{power:Number(match[1]),hp:match[2]===undefined?null:Number(match[2])};
     match=String(line).match(/^Equipped Devotee gets ([+-]\d+)\/([+-]\d+)\.$/i);
