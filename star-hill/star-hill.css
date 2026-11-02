@@ -33,6 +33,13 @@ main.deck-mode{max-width:none;padding:28px 28px 0}.deck-mode .page-header{margin
 .chip:hover{color:var(--ink);border-color:#9aa9c366}
 .chip[aria-pressed=true]{background:#d9b76220;border-color:var(--gold);color:var(--gold)}
 .card-count{color:var(--muted);font-size:12px}
+.card-filters{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.card-filter{display:grid;gap:3px;min-width:0}
+.card-filter small{color:var(--muted);font-size:12px}
+.card-filter select{width:100%;min-width:0;min-height:40px;padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--raised);color:var(--ink);font:inherit;cursor:pointer}
+.card-filter select:hover{border-color:#9aa9c366}
+.card-filter.is-on select{border-color:var(--gold);color:var(--gold)}
+.card-filter[data-tone] small::after{content:'';display:inline-block;width:7px;height:7px;margin-left:6px;border-radius:50%;background:var(--tone)}
 #card-list{flex:1;min-height:0;overflow:auto}
 .card-row{--tone:var(--muted);display:grid;grid-template-columns:8px minmax(0,1fr) auto;gap:12px;align-items:center;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:10px 14px;color:var(--ink);cursor:pointer;font:inherit}
 .card-row:hover{background:var(--raised)}

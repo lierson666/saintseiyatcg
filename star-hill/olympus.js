@@ -103,13 +103,12 @@ function cardList() {
     <i aria-hidden="true"></i><span><b>${esc(c.nome_exibicao_en)}</b><small>${esc(c.id)}</small></span><em>${esc(c.tipo)}</em></button>`).join('') : '<p class="hint card-empty">Nenhuma carta encontrada.</p>';
 }
 function cardsPage() {
-  const chip = (f, label) => `<button class="chip" data-action="card-faction" data-faction="${f}" ${FACTIONS.includes(f) ? `data-tone="${f}"` : ''} aria-pressed="${f === cardFaction}">${label}</button>`;
-  const typeChip = (t, label) => `<button class="chip" data-action="card-type" data-type="${t}" aria-pressed="${t === cardType}">${label}</button>`;
+  // Tipo e facção em menus lado a lado (autor, 02/11/2026): os chips tomavam metade do painel e a lista ficava sem lugar.
+  const filter = (id, label, all, options, on) => `<label class="card-filter ${on ? 'is-on' : ''}" ${FACTIONS.includes(on) ? `data-tone="${on}"` : ''}><small>${label}</small><select id="${id}"><option value="">${all}</option>${options.map(o => `<option ${o === on ? 'selected' : ''}>${o}</option>`).join('')}</select></label>`;
   return `${publishBox(true)}<div class="cards-workbench" style="margin-top:16px"><aside class="card-browser" aria-label="Catálogo de cartas"><div class="card-browser-head">
     <div class="edition-bar"><a href="#cartas" title="Trocar de edição"><span aria-hidden="true">←</span> Edições</a><b>${esc(cardEdition.name)}</b><span class="tag">${esc(cardEdition.code)}</span></div>
     <input class="search" id="card-search" placeholder="Buscar nome, ID ou facção" aria-label="Buscar carta">
-    <div class="chips" role="group" aria-label="Filtrar por tipo">${typeChip('', 'Todos os tipos')}${CARD_TYPES.map(t => typeChip(t, t)).join('')}</div>
-    <div class="chips" role="group" aria-label="Filtrar por facção">${chip('', 'Todas as facções')}${FACTIONS.map(f => chip(f, f)).join('')}</div>
+    <div class="card-filters">${filter('card-type', 'Tipo', 'Todos', CARD_TYPES, cardType)}${filter('card-faction', 'Facção', 'Todas', FACTIONS, cardFaction)}</div>
     <small class="card-count" id="card-count"></small></div><div id="card-list" style="overflow:auto">${cardList()}</div></aside>
     <iframe class="forge-frame" id="forge" title="Card Forge — editor de cartas" src="${esc(forgeUrl())}"></iframe></div>`;
 }
@@ -163,11 +162,6 @@ document.addEventListener('click', async e => {
     return;
   }
   if (b.id === 'reload') return refresh();
-  if (b.dataset.action === 'card-faction' || b.dataset.action === 'card-type') {
-    if (b.dataset.action === 'card-type') cardType = b.dataset.type; else cardFaction = b.dataset.faction;
-    document.querySelectorAll(`.chip[data-action="${b.dataset.action}"]`).forEach(c => c.setAttribute('aria-pressed', String(c === b)));
-    $('#card-list').innerHTML = cardList();
-  }
   if (b.dataset.action === 'edit-card') {
     cardCurrent = b.dataset.card;
     const frame = $('#forge')?.contentWindow;
@@ -187,5 +181,14 @@ document.addEventListener('click', async e => {
   }
 });
 document.addEventListener('input', e => { if (e.target.id === 'card-search') $('#card-list').innerHTML = cardList(); });
+document.addEventListener('change', e => {
+  const {id, value} = e.target;
+  if (id !== 'card-type' && id !== 'card-faction') return;
+  if (id === 'card-type') cardType = value; else cardFaction = value;
+  const label = e.target.closest('.card-filter');
+  label.classList.toggle('is-on', !!value);
+  if (id === 'card-faction') { if (value) label.dataset.tone = value; else delete label.dataset.tone; }
+  $('#card-list').innerHTML = cardList();
+});
 window.addEventListener('hashchange', () => render().catch(e => notice(e.message)));
 refresh();
