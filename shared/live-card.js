@@ -1,6 +1,7 @@
-import {renderRules,inlineMarkup,presentationRules,ruleBlocksWithoutKeywords,blocksMarkup} from './card-text.js?v=20261102-arroba1';
+import {printedSubtypes,subtypesText} from './equipment-types.js?v=20261102-eq6';
+import {renderRules,inlineMarkup,presentationRules,ruleBlocksWithoutKeywords,blocksMarkup} from './card-text.js?v=20261102-eq2';
 import {isArmor,isEquipment} from './card-model.js?v=20261024-4';
-import {renderPublishedCard,visualProject} from './layout-studio/runtime.js?v=20261101-rules1';
+import {renderPublishedCard,visualProject} from './layout-studio/runtime.js?v=20261102-eq6';
 import {printedEquipmentBonuses,signedBonus,armorBonusText} from './card-visual-values.js?v=20261102-arroba1';
 import {renderKeywordNotes,keywordTipAttr} from './keyword-glossary.js?v=20261102-arroba1';
 import {displayCard,keywordName,typeWord,lang} from './card-i18n.js?v=20261101-tr1';
@@ -89,7 +90,7 @@ function renderPsdCard(card,{src,stage,hp,power,keywords,damage,rules,equipment,
       out+=`<span class="lc-band" style="left:${el.x/14.88}%;top:${el.y/20.91}%;font-size:${cqw(el.size)}">${parts}</span>`;
     }
     else if(el.kind==='text'){
-      const v=el.field==='name'?card.nome_exibicao_en:el.field==='typeLine'?L.typeLine.replace('{tipo}',card.tipo==='Spell'?'':typeWord(card.tipo)).replace('{faccao}',typeWord(card.faccao||'')).replace('{subtipos}',(card.subtipos||[]).map(typeWord).join(' — ')).replace(/^(\s*[—-]\s*)+/,'').replace(/(\s*[—-]\s*)+$/,'').replace(/\s*[—-]\s*(?=[—-])/g,''):el.field==='flavour'?(card.flavour_en||card.flavour):el.field==='subtitle'?(card.tagline_en||card.subtitulo_en):null;
+      const v=el.field==='name'?card.nome_exibicao_en:el.field==='typeLine'?L.typeLine.replace('{tipo}',card.tipo==='Spell'?'':typeWord(card.tipo)).replace('{faccao}',typeWord(card.faccao||'')).replace('{subtipos}',subtypesText(card,typeWord)).replace(/^(\s*[—-]\s*)+/,'').replace(/(\s*[—-]\s*)+$/,'').replace(/\s*[—-]\s*(?=[—-])/g,''):el.field==='flavour'?(card.flavour_en||card.flavour):el.field==='subtitle'?(card.tagline_en||card.subtitulo_en):null;
       if(has(v))out+=text(v,el,el.field==='name'?'live-card__heading':el.field==='typeLine'?'live-card__type':'');
     }
     else if(el.kind==='rules'){
@@ -161,7 +162,7 @@ export function renderLiveCard(card,{stats=null,instance=null,art=null,compact=f
   return `<div class="live-card live-card--${escape(card.faccao?.toLowerCase()||'neutral')} ${compact?'live-card--compact':''} ${instance&&!instance.prepared&&card.tipo==='Devotee'?'live-card--unprepared':''}" data-live-card="${escape(card.id)}">
     <div class="live-card__illustration" aria-hidden="true">${src?`<img src="${escape(src)}" alt="" draggable="false" loading="lazy">`:'<span class="live-card__placeholder">✧<small>Illustration pending</small></span>'}</div>
     <div class="live-card__surface"></div><header class="live-card__heading"><strong>${escape(card.nome_exibicao_en)}</strong>${card.custo!==null&&card.custo!==undefined?`<b class="live-card__cost" title="Cosmo cost">${escape(card.custo)}</b>`:''}</header>
-    <div class="live-card__body"><p class="live-card__type">${escape([card.tipo,...(card.subtipos||[])].join(' · '))}${card.cosmoble?' · Cosmoble':''}</p>
+    <div class="live-card__body"><p class="live-card__type">${escape([card.tipo,...printedSubtypes(card.subtipos||[])].join(' · '))}${card.cosmoble?' · Cosmoble':''}</p>
     ${keywords.length?`<p class="live-card__keywords">${keywords.map(k=>inlineMarkup(`@${keywordName(k)}`)).join(' · ')}</p>`:''}
     <div class="live-card__rules">${renderRules(rules)}</div>
     ${card.ressonancias?.length&&!resonanceAlready?`<p class="live-card__owners">Resonance: ${card.ressonancias.map(r=>escape(ownerName(r.personagem_id))).join(' / ')}</p>`:''}

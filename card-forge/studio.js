@@ -1,3 +1,4 @@
+import {matchesLayoutSubtype} from '../shared/equipment-types.js?v=20261102-eq6';
 import {BINDINGS,COMPONENTS,LEVELS,clone,esc,color,validateTemplate,resolveLayout,discoverOptions,assetURL} from '../shared/layout-studio/model.js';
 import {makeScene,exportScene} from '../shared/layout-studio/renderer.js';
 import {installLibrary,visualProject} from '../shared/layout-studio/runtime.js';
@@ -17,7 +18,7 @@ const slug=value=>String(value||'template').toLowerCase().normalize('NFD').repla
 const selectOptions=(el,values,selected)=>{el.replaceChildren(...values.map(item=>{const [value,label]=Array.isArray(item)?item:[item,item];return new Option(label,value);}));if(selected!==undefined)el.value=selected;};
 const allTemplates=()=>[...new Map([...library.bases,...library.published,...library.drafts,...locals.values(),...(draft?[draft]:[])].map(t=>[t.id,t])).values()];
 function previewTemplates(){const map=new Map([...library.bases,...library.published].map(t=>[t.id,t]));map.set(draft.id,draft);return [...map.values()];}
-const matching=(t,c)=>{const s=t.scope;return c&&(s.level==='global'||s.value===({type:c.tipo,faction:c.faccao,rarity:c.raridade,card:c.id})[s.level])&&(!s.subtype||c.subtipos?.includes(s.subtype));};
+const matching=(t,c)=>{const s=t.scope;return c&&(s.level==='global'||s.value===({type:c.tipo,faction:c.faccao,rarity:c.raridade,card:c.id})[s.level])&&(!s.subtype||matchesLayoutSubtype(c,s.subtype));};
 function api(path,payload){return fetch('/api/layout-studio'+path,{method:payload?'POST':'GET',headers:payload?{'Content-Type':'application/json'}:{},body:payload?JSON.stringify(payload):undefined}).then(async response=>{const result=await response.json().catch(()=>({}));if(!response.ok)throw Error(result.erro||`HTTP ${response.status}: reinicie python3 card-forge/serve.py.`);return result;});}
 function download(blob,name){const url=URL.createObjectURL(blob),a=Object.assign(document.createElement('a'),{href:url,download:name});a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);}
 function dialog(title,body,footer=''){const el=$('#studioDialog');if(el.open)el.close();$('#dialogBody').innerHTML=`<h2>${esc(title)}</h2>${body}${footer?`<footer>${footer}</footer>`:''}`;el.showModal();}

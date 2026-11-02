@@ -1,7 +1,8 @@
 import {printedEquipmentBonuses,signedBonus,equipmentCostText,armorBonusText} from '../card-visual-values.js?v=20261102-arroba1';
 import {isArmor,isEquipment} from '../card-model.js';
 import {typeWord} from '../card-i18n.js?v=20261031-kw1';
-import {textBlocks,ruleBlocksWithoutKeywords} from '../card-text.js?v=20261102-arroba1';
+import {formatCardTypeLine,matchesLayoutSubtype} from '../equipment-types.js?v=20261102-eq6';
+import {textBlocks,ruleBlocksWithoutKeywords} from '../card-text.js?v=20261102-eq2';
 
 // Contrato visual puro: lê o catálogo e o resultado da engine, sem executar regras.
 export const SCHEMA_VERSION=1;
@@ -40,7 +41,7 @@ export const BINDINGS={
   'card.rarity':{label:'Raridade',read:c=>c.card.raridade},
   'card.type':{label:'Tipo',read:c=>c.card.tipo},
   'card.subtypes':{label:'Subtipos',read:c=>c.card.subtipos||[]},
-  'card.typeLine':{label:'Linha de tipo',read:c=>[c.card.tipo==='Spell'?null:c.card.tipo,...(c.card.subtipos||[])].filter(Boolean).map(typeWord).join(' — ')}, // PT: shared/card-i18n.js; sem a facção: o símbolo já mostra (autor, 01/11/2026)
+  'card.typeLine':{label:'Linha de tipo',read:c=>formatCardTypeLine(c.card,typeWord)}, // PT: shared/card-i18n.js; sem a facção: o símbolo já mostra (autor, 01/11/2026)
   'card.cost':{label:'Custo impresso',read:c=>c.card.custo},
   'card.cosmoble':{label:'Cosmoble',read:c=>c.card.cosmoble},
   'card.rules':{label:'Habilidades aprovadas',read:c=>ruleParts(c.card).rules},
@@ -131,7 +132,7 @@ export function assetURL(value){
   const base=new URL('../../',import.meta.url);
   try{const url=new URL(value,base);if(url.origin!==base.origin||!['http:','https:','file:'].includes(url.protocol))return null;return url.href;}catch{return null;}
 }
-function matches(template,card,surface){const s=template.scope;if(s.surface!==surface)return false;return(s.level==='global'||s.level==='type'&&s.value===card.tipo||s.level==='faction'&&s.value===card.faccao||s.level==='rarity'&&s.value===card.raridade||s.level==='card'&&s.value===card.id)&&(!s.subtype||card.subtipos?.includes(s.subtype));}
+function matches(template,card,surface){const s=template.scope;if(s.surface!==surface)return false;return(s.level==='global'||s.level==='type'&&s.value===card.tipo||s.level==='faction'&&s.value===card.faccao||s.level==='rarity'&&s.value===card.raridade||s.level==='card'&&s.value===card.id)&&(!s.subtype||matchesLayoutSubtype(card,s.subtype));}
 export function resolveLayout(templates,card,{surface='card',through=4,previewId=null}={}){
   const byId=new Map(templates.map(t=>[t.id,t])),active=templates.filter(t=>matches(t,card,surface)&&LEVELS.indexOf(t.scope.level)<=through).sort((a,b)=>LEVELS.indexOf(a.scope.level)-LEVELS.indexOf(b.scope.level)||Number(Boolean(a.scope.subtype))-Number(Boolean(b.scope.subtype))||Number(a.id===previewId)-Number(b.id===previewId)||(a.revision||0)-(b.revision||0)||a.id.localeCompare(b.id));
   const out={canvas:{width:1488,height:2091,safe:72,bleed:36},theme:{ink:'#fff0bf',accent:'#d5b665',background:'#111019',frames:[],symbol:null},elements:[],sources:{},chain:[]},layers=new Map(),applied=new Set();

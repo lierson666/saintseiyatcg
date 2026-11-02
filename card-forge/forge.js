@@ -1,8 +1,9 @@
-import {mountRulesRows} from './rules-rows.js?v=20261102-barulho2';
+import {mountRulesRows} from './rules-rows.js?v=20261102-banco1';
 import {createHistory} from '../shared/editor-history.js';
 import {compilePlaytest} from '../shared/import-playtest.js';
-import {renderLiveCard,illustration,statLine,EDITIONS,editionOf} from '../shared/live-card.js?v=20261102-arroba1';
-import {textBlocks, blocksMarkup, presentationRules, ruleBlocksWithoutKeywords, KEYWORD_WORDS, KEYWORD_WORDS_PT, STAT_RE, statTrend, statSymbols, costSymbols, keywordLine} from '../shared/card-text.js?v=20261102-arroba1';
+import {renderLiveCard,illustration,statLine,EDITIONS,editionOf} from '../shared/live-card.js?v=20261102-eq6';
+import {EQUIPMENT_SUBTYPES,ARMOR_FAMILY,PATENTES_ARMADURA,patentesDe,belongsToEquipmentGroup,formatCardTypeLine,printedSubtypes,subtypesText,toggleSubtype,validateEquipmentSubtypes} from '../shared/equipment-types.js?v=20261102-eq6';
+import {textBlocks, blocksMarkup, presentationRules, ruleBlocksWithoutKeywords, KEYWORD_WORDS, KEYWORD_WORDS_PT, STAT_RE, statTrend, statSymbols, costSymbols, keywordLine} from '../shared/card-text.js?v=20261102-eq2';
 import {isArmor,isEquipment,validateCard,LINE_KEYWORDS,keywordsOfLine} from '../shared/card-model.js?v=20261102-kw1';
 // Card Forge — editor de cartas em vanilla JS. Renderiza no canvas nativo 1488x2091 usando
 // as peças de CARD-TEMPLATE/ (extraídas dos PSDs) e o spec CARD-TEMPLATE/templates.json.
@@ -105,7 +106,7 @@ window.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&!e.altKey&&!doc
 function blankState() {
   return {
     id: '', nome_exibicao_en: '', title: '', subtitle: '', tipo: 'Devotee', subtipos: '', faccao: 'Athena',
-    revisao_regras: '2.1', cosmoble: false, personagem_unico: false, personagem_id: '', origem_personagem: '', referencias_mitologicas_texto: '', slot_equipamento: '', donos: '', estagios: [], resonanceText: '',
+    revisao_regras: '2.1', cosmoble: false, personagem_unico: false, personagem_id: '', origem_personagem: '', referencias_mitologicas_texto: '', slot_equipamento: '', patente_armadura: '', donos: '', estagios: [], resonanceText: '',
     raridade: 'Common', custo: '', unidade_custo: 'base_cosmo', power: '', vida: '', resistance: '', bonusPower: '', bonusResistance: '', auto_equip: '', artista: '', edicao: new URLSearchParams(location.search).get('edicao') || EDITIONS[0].code,
     equipar_custo: '', equipar_custo_ressonante: '', equipar_custo_outros: '', damage_cloth: '', soul: '', attack: '', awaken: '', keywords: '', rules: '',
     habilidade_awaken_en: '', ultimate_en: '', flavour: '', art: null,
@@ -121,8 +122,9 @@ const titleCase = (s) => s.toLowerCase().replace(/(^|[\s-])(\p{L})/gu, (m, a, b)
 const TOKEN_WORD = { L: 'Latent Cosmo', B: 'Base Cosmo', C: 'Cosmo' };
 export function toMarkup(text) {
   text = text.replace(/\{(\d+|X)\}\{([BCL])\}/g, (_, n, k) => `${n} ${TOKEN_WORD[k]}`).replace(/\{(\d+|X)\}\{S\}/g, '$1 {S}');
-  if (/^Resonance — [^.:]+$/.test(text)) return `**${text}**`; // 1ª linha da Armor, inteira (30/10/2026)
-  const res = text.match(/^(Resonance — [^.:—]+): (.*)$/); // guia §27: o nome do personagem faz parte do nome da habilidade
+  if (/^(?:Resonance|Ressonância) — [^.:]+$/.test(text)) return `**${text}**`; // 1ª linha da Armor, inteira (30/10/2026)
+  const res = text.match(/^((?:Resonance|Ressonância) — [^.:—]+): (.*)$/) // guia §27: o nome do personagem faz parte do nome da habilidade
+    || text.match(/^([^\n—]+ — Divine (?:Power|Command))\s+([\s\S]*)$/); // God: etiqueta na 1ª linha, efeito embaixo
   let m = !res && text.match(/^(.+?) — Cost: (\d+) (Latent Cosmo|Base Cosmo|Cosmo)\. (.*)$/);
   let out = res ? `**${res[1]}:**\n${res[2]}` : m ? `**${m[2]} ${COST[m[3]]} ${m[1].toUpperCase()}:**\n${m[4]}` : text;
   if (res) { /* já resolvido */ }
@@ -135,9 +137,11 @@ export function toMarkup(text) {
 
 export function fromMarkup(md) {
   let s = md.trim();
+  const god = s.match(/^\*\*([^*\n]+ — Divine (?:Power|Command)):?\*\*\s*([\s\S]*)$/); // God guarda quebras de linha
+  if (god) return `${god[1]}\n${god[2]}`.replace(/(\d+|X) \{([BCLS])\}/g, '{$1}{$2}').replace(/\*\*/g, '').trim();
   let m = s.match(/^\*\*(\d+) \{([BCL])\} (.+?):\*\*\s*\n?([\s\S]*)$/);
   if (m) s = `${titleCase(m[3])} — Cost: {${m[1]}}{${m[2]}}. ${m[4]}`;
-  else if ((m = s.match(/^\*\*(Resonance — [^*:]+):\*\*\s*\n?([\s\S]*)$/))) s = `${m[1]}: ${m[2]}`;
+  else if ((m = s.match(/^\*\*((?:Resonance|Ressonância) — [^*:]+):\*\*\s*\n?([\s\S]*)$/))) s = `${m[1]}: ${m[2]}`;
   else if ((m = s.match(/^\*\*([^*—]{2,30}) — ([^*—]{1,25}):\*\*\s*\n?([\s\S]*)$/))) s = `${m[1]} — ${m[2]}. ${m[3]}`;
   else if ((m = s.match(/^\*\*([^*]{2,40}):\*\*\s*\n?([\s\S]*)$/))) s = `${m[1]} — ${m[2]}`;
   return s
@@ -160,8 +164,8 @@ const list = (v) => (Array.isArray(v) ? v : String(v || '').split(',')).map((x) 
 const has = (v) => v !== null && v !== undefined && String(v).trim() !== '';
 
 // Spell não aparece na linha de tipo: Technique e Moment já são os Spells (autor, 28/10/2026; Miracle e Event saíram em 31/10/2026).
-function typeLine(s, fmt) {
-  return fmt.replace('{tipo}', s.tipo === 'Spell' ? '' : s.tipo).replace('{faccao}', s.faccao).replace('{subtipos}', list(s.subtipos).join(' — '))
+function typeLine(s, fmt, word = (w) => w) {
+  return fmt.replace('{tipo}', s.tipo === 'Spell' ? '' : word(s.tipo)).replace('{faccao}', s.faccao).replace('{subtipos}', subtypesText({tipo: s.tipo, subtipos: list(s.subtipos), patente_armadura: s.patente_armadura}, word))
     .replace(/^\s*[—-]\s*/, '').replace(/\s*[—-]\s*$/, '').replace(/\s*[—-]\s*(?=\s*[—-])/g, '');
 }
 
@@ -529,7 +533,7 @@ async function render() {
         break;
       }
       case 'text': {
-        let v = el.field === 'typeLine' ? typeLine(S, L.typeLine).split(' — ').map(typeWord).join(' — ') : el.field === 'name' ? V.nome_exibicao_en : V[el.field];
+        let v = el.field === 'typeLine' ? typeLine(S, L.typeLine, typeWord) : el.field === 'name' ? V.nome_exibicao_en : V[el.field];
         if (!has(v)) break;
         v = String(v).trim();
         drawText(el.upper ? v.toUpperCase() : v, el.style, el.x, el.y, el.size, el.maxW);
@@ -614,10 +618,63 @@ function fillForm() {
   refreshRulesRows();syncVisibility();renderStageEditor();
 }
 
+// God: Awaken e Ultimate em nome + texto, como as outras habilidades (autor, 02/11/2026). O textarea escondido segue sendo o dado.
+function mountGodBlock(sel, field, kind) {
+  const box = $(sel), area = form.elements[field], isUlt = kind === 'Ultimate';
+  const RE = isUlt ? /^(.+?) — Ultimate\n(?:Cost: \{(\d+|X)\}\{C\}\n)?([\s\S]*)$/ : /^(.+?) — Awaken \d*\n([\s\S]*)$/;
+  box.innerHTML = `<h3 class="rr-head">${kind}</h3><div class="god-block__head"><input class="rr-name" placeholder="Nome (${kind})" aria-label="Nome do ${kind}">${isUlt ? '<label class="god-cost">Custo {C} <input class="god-cost__n" inputmode="numeric" aria-label="Custo do Ultimate"></label>' : ''}</div><textarea class="rr-text" rows="4" spellcheck="true" placeholder="Texto" aria-label="Texto do ${kind}"></textarea>`;
+  const name = box.querySelector('.rr-name'), text = box.querySelector('.rr-text'), cost = box.querySelector('.god-cost__n');
+  const compose = () => {
+    const body = text.value.trim().replace(/(\d+|X) \{([BCLS])\}/g, '{$1}{$2}');
+    if (!name.value.trim()) return body;
+    return isUlt ? `${name.value.trim()} — Ultimate\n${cost.value.trim() ? `Cost: {${cost.value.trim()}}{C}\n` : ''}${body}` : `${name.value.trim()} — Awaken ${S.awaken ?? ''}\n${body}`;
+  };
+  box.addEventListener('input', () => { area.value = compose(); area.dispatchEvent(new Event('input', {bubbles: true})); });
+  form.elements.awaken?.addEventListener('input', () => { if (!isUlt && name.value.trim()) { area.value = compose(); area.dispatchEvent(new Event('input', {bubbles: true})); } });
+  return () => {
+    if (box.contains(document.activeElement)) return;
+    const m = (area.value || '').match(RE);
+    name.value = m ? m[1] : '';
+    if (cost) cost.value = m ? m[2] || '' : '';
+    text.value = m ? m[isUlt ? 3 : 2] : area.value || '';
+  };
+}
+
+// Equipment System V1: subtipos vêm do registro; marcar traz a dependência e o campo de texto continua sendo o dado.
+const esc=(t)=>String(t).replace(/[&<>"]/g,(c)=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const EQ_GROUPS=[['Armadura',['armor']],['Arma',['weapon','weapon_kind']],['Instrumento',['instrument','instrument_kind']],['Objeto',['object']]];
+function drawEqSubtypes(){
+  const box=$('#eqSubtypes'),isEq=S.tipo==='Equipment';
+  box.hidden=!isEq;
+  form.elements.subtipos.closest('label').hidden=isEq;
+  if(!isEq)return;
+  const card={tipo:'Equipment',subtipos:list(S.subtipos),patente_armadura:S.patente_armadura||undefined},on=printedSubtypes(card.subtipos),{errors,warnings}=validateEquipmentSubtypes(card),ranks=patentesDe(card.subtipos);
+  const chip=(t)=>`<button type="button" class="eq-chip" data-eq-sub="${esc(t.name)}" aria-pressed="${on.includes(t.name)}"${t.name==='Armor'?' title="Armadura fora das cinco famílias"':''}>${esc(t.name)}</button>`;
+  const shown=(t)=>on.includes(t.name)||!t.requires.length||t.requires.every((r)=>on.some((n)=>n.toUpperCase()===r));
+  const old=on.filter((n)=>!EQUIPMENT_SUBTYPES.some((t)=>t.name===n&&t.status==='approved')).map((name)=>({name}));
+  const row=(label,html)=>`<div class="eq-group"><span>${label}</span><div class="eq-chips" translate="no">${html}</div></div>`;
+  box.innerHTML=`<div class="eq-head"><b>Classificação</b><output class="eq-line" translate="no">${esc(formatCardTypeLine(card).toUpperCase())}</output></div>`
+    +EQ_GROUPS.map(([label,kinds])=>row(label,EQUIPMENT_SUBTYPES.filter((t)=>kinds.includes(t.kind)&&shown(t)).map(chip).join(''))
+      +(label==='Armadura'&&ranks.length?row('Patente',['',...ranks].map((p)=>`<button type="button" class="eq-chip" data-eq-rank="${p}" aria-pressed="${(S.patente_armadura||'')===p}">${p||'Nenhuma'}</button>`).join('')):'')).join('')
+    +(old.length?row('Anterior ao V1',old.map(chip).join('')):'')
+    +[...errors.map((m)=>`<p class="eq-error" role="alert">${esc(m)}</p>`),...warnings.map((m)=>`<p class="hint">${esc(m)}</p>`)].join('');
+}
+form.elements.patente_armadura.innerHTML=[...new Set(['',...Object.values(PATENTES_ARMADURA).flat()])].map((p)=>`<option value="${p}">${p||'—'}</option>`).join('');
+$('#eqSubtypes').addEventListener('click',(e)=>{
+  const rank=e.target.closest('[data-eq-rank]');
+  if(rank){const f=form.elements.patente_armadura;f.value=rank.dataset.eqRank;f.dispatchEvent(new Event('input',{bubbles:true}));drawEqSubtypes();return;}
+  const b=e.target.closest('[data-eq-sub]');if(!b)return;
+  const f=form.elements.subtipos;f.value=toggleSubtype(list(f.value),b.dataset.eqSub).join(', ');
+  const r=form.elements.patente_armadura;
+  if(r.value&&!patentesDe(list(f.value)).includes(r.value)){r.value='';r.dispatchEvent(new Event('input',{bubbles:true}));}
+  f.dispatchEvent(new Event('input',{bubbles:true}));
+});
+
 function syncVisibility() {
   const lk = layoutKey(S);
   form.querySelectorAll('[data-for]').forEach((el) => { el.hidden = !el.dataset.for.split(' ').includes(lk); });
   $('#rulesV2').hidden=!isEquipment({...S,subtipos:list(S.subtipos)});
+  drawEqSubtypes();
   syncPtStatus();
 }
 
@@ -642,6 +699,7 @@ function fromCard(c, proj = {}) {
   const stage=c.estagios?.[0],printed=printedEquipmentBonuses(c);if(isEquipment(c)){s.bonusPower=signedBonus(printed.power)??'';s.bonusResistance=signedBonus(printed.hp)??'';}
   s.auto_equip=(c.auto_equip_en||[]).join(' / ');if(c.equipar_custo_outros!=null&&c.equipar_custo==null)s.equipar_custo=c.equipar_custo_outros; // Armor: Equip único
   s.subtipos = (c.subtipos || []).join(', ');
+  s.patente_armadura = c.patente_armadura || '';
   s.keywords = (c.keywords_en || []).join(', ');
   gen = (c.habilidades_en || []).map((text) => ({ text, markup: toMarkup(text) }));
   s.rules = gen.map((g) => g.markup).join('\n\n');
@@ -860,6 +918,8 @@ $('#saveProject').addEventListener('click',async()=>{
     if(!S.id)throw new Error('Carta sem ID.');
     const ptNote=await ensurePt();
     const current=buildCard(),changes=diffCards(orig,current);
+    const eqErrors=validateEquipmentSubtypes(current).errors;
+    if(eqErrors.length)throw new Error(eqErrors.join(' · '));
     if(changes.length){
       pendingSaveBoth=true;pending=current;
       $('#diffTarget').textContent=`${S.id}: salvar dados da carta + visual (confirmação necessária)`+ptNote;
@@ -910,6 +970,7 @@ function buildCard() {
   }
   // texto com marcação ({L}, **) volta para o formato do cards.json; texto intacto fica como está
   const plain = (v) => costSymbols(/\*\*|(?:\d|X) \{[BCLS]\}/.test(v || '') ? fromMarkup(v) : (v || '').trim()); // texto cru ({5}{C}, quebras de linha) fica como está
+  if (S.patente_armadura) base.patente_armadura = S.patente_armadura; else delete base.patente_armadura;
   if (S.tipo === 'God') Object.assign(base, { habilidade_awaken_en: plain(S.habilidade_awaken_en), ultimate_en: plain(S.ultimate_en) });
   // PT-BR (campos *_pt): sai do inglês pelo Claude Code (tools/translate_pt.py); campo vazio sai do cards.json.
   const ptSub=S.pt_subtitulo.trim(),ptVal={nome_exibicao_pt:S.pt_nome.trim(),habilidades_pt:splitParas(S.pt_rules),flavour_pt:S.pt_flavour.trim(),auto_equip_pt:S.pt_auto||[]};
@@ -1048,15 +1109,15 @@ $('#diffConfirm').addEventListener('click', async () => {
 // ---------- barra de símbolos e keywords ----------
 let lastText = form.elements.rules;
 form.addEventListener('focusin', (e) => { if (e.target.tagName === 'TEXTAREA') lastText = e.target; });
-const refreshRules = [mountRulesRows(form.elements.rules, {getId: () => S.id, sound: $('#soundFields'), resonanceCards: () => {
+const refreshRules = [mountGodBlock('#godAwaken', 'habilidade_awaken_en', 'Awaken'), mountGodBlock('#godUltimate', 'ultimate_en', 'Ultimate'), mountRulesRows(form.elements.rules, {tags: () => (S.tipo === 'God' ? ['Divine Power', 'Divine Command'] : null), getId: () => S.id, sound: $('#soundFields'), resonanceCards: () => {
   const titled = (n) => n.toLowerCase().replace(/(^|[\s'-])(\p{L})/gu, (m, a, b) => a + b.toUpperCase()), seen = new Set();
   return db.cartas.filter((c) => (c.tipo === 'Devotee' || c.tipo === 'God') && c.nome_exibicao_en)
     .sort((a, b) => (b.faccao === S.faccao) - (a.faccao === S.faccao) || a.nome_exibicao_en.localeCompare(b.nome_exibicao_en))
     .map((c) => ({name: titled(c.nome_exibicao_en), detail: `${c.faccao} · ${c.tipo}`}))
     .filter((o) => !seen.has(o.name) && seen.add(o.name));
-}, onResonance: (name) => { // Equipment sem ninguém na Resonance: o campo de Números acompanha, e o diff mostra antes de gravar
-  const f = form.elements.auto_equip;
-  if (f && !f.closest('[hidden]') && !f.closest('label').hidden && !f.value.trim()) { f.value = name; f.dispatchEvent(new Event('input', {bubbles: true})); }
+}, onResonance: (name) => { // Cada Resonance escolhida entra no campo do Equipment, e o diff mostra antes de gravar
+  const f = form.elements.auto_equip, names = f ? f.value.split('/').map((n) => n.trim()).filter(Boolean) : [];
+  if (f && !f.closest('[hidden]') && !f.closest('label').hidden && !names.includes(name)) { f.value = [...names, name].join(' / '); f.dispatchEvent(new Event('input', {bubbles: true})); }
 }, moments: () => [['cast', 'Ao conjurar'], ['entrada', 'Entrada no campo'], ['declarar', 'Ao declarar ataque'], ['golpe', 'Quando o ataque resolve'], ['strike', 'Ao receber Strike'], ['morte', 'Ao morrer'], ['retorno', 'Volta do Tartarus'], ['carga', 'Barulho: carga do golpe'], ['impacto', 'Barulho: impacto em Devotee'], ['impacto_deus', 'Barulho: impacto no Deus'], ...(layoutKey(S) === 'god' ? [['ultimate', 'Voz da Ultimate'], ['poder_divino', 'Barulho: Poder Divino'], ['poder_dominio', 'Barulho: poder do Domain'], ['awaken', 'Barulho: Awaken']] : [])]})];
 refreshRulesRows = () => refreshRules.forEach(r => r());
 refreshRulesRows();

@@ -39,7 +39,7 @@ export function parseCard(record) {
     type,
     kind,
     // Guia §26: Warplate (Ares) e Moonplate (Artemis) são Armor mesmo sem "Armor" no subtipo do Forge.
-    armor: /Armor|Warplate|Moonplate/.test(type),
+    armor: typeTextIsArmor(type),
     rarity: text.match(/Rarity: (\w+)/)?.[1] ?? null,
     // D196: Domains sem custo e sem Cosmoble no texto exibido.
     cost: cost ? {amount: Number(cost[1]), unit: exMiracle ? 'base' : UNITS[cost[2]]} : null,
@@ -72,4 +72,5 @@ export const loadCanon = canon => new Map([...canon.cards, ...canon.gods].map(r 
 const characterWords = name => String(name).toUpperCase().split(/\s+/).filter(w => w && w !== 'OF').sort().join(' ');
 // Resonance por classe (autor, 02/11/2026): "Gold Saint" vale para qualquer Devotee dessa classe.
 const RESONANCE_CLASSES = new Set(['Gold Saint']);
-export const resonates = (armor, devotee) => armor.autoEquip.some(n => (RESONANCE_CLASSES.has(n) ? String(devotee.type).includes(n) : characterWords(n) === characterWords(devotee.name)));
+export const resonates = (armor, devotee) => armor.autoEquip.some(n => (RESONANCE_CLASSES.has(n) ? String(devotee.type).includes(n) : characterWords(n) === characterWords(devotee.name)));import {typeTextIsArmor} from './equipment-types.js';
+

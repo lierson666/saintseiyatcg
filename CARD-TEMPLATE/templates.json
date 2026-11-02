@@ -55,7 +55,7 @@
     },
     "relic_cloth": {
       "label": "Relic — Cloth — base: FRAMES/ATHENA/CLOTH/SAGGITARIUS-CLOTH.psd",
-      "typeLine": "{tipo} - {subtipos}",
+      "typeLine": "{tipo} — {subtipos}",
       "elements": [
         { "kind": "art" },
         { "kind": "frame" },
@@ -78,7 +78,7 @@
     },
     "relic_weapon": {
       "label": "Relic — Weapon — base: FRAMES/ATHENA/RELICS/LIBRA-SWORD.psd",
-      "typeLine": "{tipo} - {subtipos}",
+      "typeLine": "{tipo} — {subtipos}",
       "elements": [
         { "kind": "art" },
         { "kind": "frame" },

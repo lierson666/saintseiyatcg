@@ -4,7 +4,8 @@ import {loadCanon} from '../shared/canon-cards.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {canonIndex, validateDeck, colorErrors, splashCount, DECK_SIZE, COPY_LIMIT, SPLASH_LIMIT} from '../shared/deck-v3.js';
 import {spellCategory} from './engine-v3/core.js';
-import {renderLiveCard, renderCardText, fullSizePieces} from '../shared/live-card.js?v=20261102-arroba1';
+import {ARMOR_FAMILY, EQUIPMENT_SUBTYPES, belongsToEquipmentGroup, hasSubtype} from '../shared/equipment-types.js?v=20261102-eq6';
+import {renderLiveCard, renderCardText, fullSizePieces} from '../shared/live-card.js?v=20261102-eq6';
 import {printedEquipmentBonuses, signedBonus} from '../shared/card-visual-values.js';
 import {displayCard, typeWord} from '../shared/card-i18n.js?v=20261031-kw1';
 import {unlock, playMusic, setVolume, volume} from './audio.js?v=20261102-voz4';
@@ -390,7 +391,7 @@ function openBuilder(deck) {
   if (deck?.preset) { base.id = null; base.nome = `${deck.alpha_nome || deck.nome} (copy)`; delete base.preset; }
   base.god ||= 'god-athena';
   // show: facções visíveis na coleção (símbolos dos Gods, várias ao mesmo tempo); começa nas cores do deck.
-  ui.builder = {deck: base, q: '', cost: [], kind: [], dirty: false, show: [...deckFactions(base)]};
+  ui.builder = {deck: base, q: '', cost: [], kind: [], subtype: [], dirty: false, show: [...deckFactions(base)]};
   ui.screen = 'builder';
 }
 const count = (b, id) => b.deck.main_deck.find(e => e.card_id === id)?.quantity || 0;
@@ -400,6 +401,7 @@ function pool(b) {
   // A coleção mostra os Gods marcados; a identidade do deck (God + Domain + neutras) é validada em deckErrors.
   return [...cards.values()].filter(c => c.kind !== 'God' && factions.has(faction(c))
     && (!b.kind.length || b.kind.includes(kindOf(c)))
+    && (!b.subtype?.length || b.subtype.some(v => (v === ARMOR_FAMILY ? belongsToEquipmentGroup(forge.get(c.id) || c, v) : hasSubtype(forge.get(c.id) || c, v))))
     && (!b.cost.length || b.cost.some(v => (v === '7+' ? (c.cost?.amount ?? 0) >= 7 : c.cost?.amount === Number(v))))
     && (!q || `${c.name} ${c.text}`.toLowerCase().includes(q))).sort(sortCards);
 }
@@ -408,9 +410,10 @@ function errorText(e) {
   return {domain: 'Choose a Domain from the collection.', size: `${e.total} / ${DECK_SIZE} cards.`, copies: `${name(e.card_id)}: ${e.count} copies (max ${COPY_LIMIT}).`,
     unknown: `${name(e.card_id)} is not in the card pool.`, outside: `${name(e.card_id)} can't go in the main deck.`, identity: `${name(e.card_id)} is outside this deck's colors (God, Domain and neutral).`, quantity: `${name(e.card_id)}: invalid quantity.`, splash: `${e.count} cards from the Domain's faction (max ${SPLASH_LIMIT}).`}[e.code] || e.code;
 }
+const SUBTYPE_FILTERS = [{value: ARMOR_FAMILY, label: 'Any armor'}, ...EQUIPMENT_SUBTYPES.filter(t => t.status === 'approved').map(t => ({value: t.name, label: t.name}))];
 const CARD_SIZES = {S: 130, M: 180, L: 250, XL: 330};
 // Barra de filtros do pool (editor de decks e Coleção): busca e dropdowns de várias escolhas (autor, 02/11/2026).
-const filterState = () => (ui.screen === 'collection' ? (ui.colPool ||= {q: '', cost: [], kind: [], show: []}) : ui.builder);
+const filterState = () => (ui.screen === 'collection' ? (ui.colPool ||= {q: '', cost: [], kind: [], subtype: [], show: []}) : ui.builder);
 function filterDrop(key, label, options, picked) {
   const open = ui.filterOpen === key, names = options.filter(o => picked.includes(o.value)).map(o => o.label);
   return `<div class="lb-drop ${open ? 'is-open' : ''}"><button class="lb-drop__btn ${picked.length ? 'is-on' : ''}" data-act="filter-open" data-key="${key}" aria-expanded="${open}" aria-haspopup="true">
@@ -423,7 +426,7 @@ function filterBar(b) {
   const size = ui.cardSize || 'M', sizes = Object.keys(CARD_SIZES), view = ui.screen === 'builder' ? ui.poolView || 'card' : 'card';
   const gods = PICKS.map(f => ({value: f, label: cards.get(`god-${f}`)?.name || 'Neutral', icon: f === 'neutral' ? '<span class="lb-godpick__neutral" aria-hidden="true"></span>' : `<img src="${symbol(f)}" alt="">`}));
   return `<div class="lb-filters"><input type="search" placeholder="Search name or text" value="${esc(b.q)}" data-act="search" aria-label="Search cards">
-        <div class="lb-drops">${filterDrop('cost', 'Cost', COSTS.map(v => ({value: v, label: v})), b.cost)}${filterDrop('kind', 'Type', KINDS.map(v => ({value: v, label: v})), b.kind)}${filterDrop('show', 'God', gods, b.show)}</div>
+        <div class="lb-drops">${filterDrop('cost', 'Cost', COSTS.map(v => ({value: v, label: v})), b.cost)}${filterDrop('kind', 'Type', KINDS.map(v => ({value: v, label: v})), b.kind)}${filterDrop('subtype', 'Equipment', SUBTYPE_FILTERS, b.subtype || [])}${filterDrop('show', 'God', gods, b.show)}</div>
         <div class="lb-viewbar">${ui.screen === 'builder' ? `<div class="lb-seg" role="group" aria-label="View">${POOL_VIEWS.map(([v, label]) => `<button class="${view === v ? 'is-active' : ''}" data-act="pool-view" data-view="${v}" aria-pressed="${view === v}">${label}</button>`).join('')}</div>` : ''}
           ${view === 'list' ? '' : `<div class="lb-zoom" role="group" aria-label="Card size"><button data-act="card-zoom" data-dir="-1" ${size === sizes[0] ? 'disabled' : ''} aria-label="Smaller cards">−</button><b>${size}</b><button data-act="card-zoom" data-dir="1" ${size === sizes.at(-1) ? 'disabled' : ''} aria-label="Bigger cards">+</button></div>`}</div></div>`;
 }

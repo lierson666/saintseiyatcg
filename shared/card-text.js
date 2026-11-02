@@ -103,8 +103,17 @@ export function presentationRules(card){
   if(!card.estagios?.length&&armorCard(card)){
     // Resonance num bloco só (autor, 30/10/2026): título "Resonance — <nome completo>" e o efeito embaixo, sem repetir o nome curto do texto.
     const effects=raw.filter(t=>/^(?:Resonance|Ressonância)\s*[—-]\s*[^.:]+:\s*/i.test(t));
-    const merged=equipLine&&effects.length?effects.map(t=>`**${equipLine}**\n${t.replace(/^(?:Resonance|Ressonância)\s*[—-]\s*[^.:]+:\s*/i,'')}`):[];
-    return [...(equipLine&&!merged.length?[equipLine]:[]),...merged,...raw.filter(t=>!effects.includes(t)||!merged.length)];
+    // Cada personagem com a sua habilidade (autor, 02/11/2026): o título traz só o nome daquela Resonance, não todos os da carta.
+    const [label,names]=equipLine?equipLine.split(/\s+—\s+/):[],all=(names||'').split(' / ').filter(Boolean),used=new Set();
+    const merged=equipLine&&effects.length?effects.map(t=>{
+      const [,short,body]=t.match(/^(?:Resonance|Ressonância)\s*[—-]\s*([^.:]+):\s*([\s\S]*)$/i);
+      const hit=n=>n.toLowerCase().includes(short.trim().toLowerCase());
+      const full=all.find(hit)||all[(card.auto_equip_en||[]).findIndex(hit)]||short.trim(); // em PT o texto pode citar o nome em inglês
+      used.add(full);
+      return `**${label} — ${full}**\n${body}`;
+    }):[];
+    const silent=merged.length?all.filter(n=>!used.has(n)).map(n=>`${label} — ${n}`):[]; // Resonance que só equipa, sem habilidade própria
+    return [...(equipLine&&!merged.length?[equipLine]:[]),...silent,...merged,...raw.filter(t=>!effects.includes(t)||!merged.length)];
   }
   if(!card.estagios?.length)return [...raw,...(equipLine?[equipLine]:[])];
   const stages=card.estagios,sign=n=>`${n<0?'':'+'}${n||0}`,bonus=s=>`${sign(s.bonus_poder)} @ATK / ${sign(s.bonus_vida)} @HP`;

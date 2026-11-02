@@ -1,6 +1,7 @@
 // Política 2.1: custos e afinidades compartilhados. A UI apenas apresenta estes resultados.
+import {ARMOR_SUBTYPE_NAMES} from './equipment-types.js';
 export const LATENT_CAP=3;
-export const ARMOR_SUBTYPES=['Armor','Cloth','Scale','Surplice','Warplate','Moonplate'];
+export const ARMOR_SUBTYPES=ARMOR_SUBTYPE_NAMES;
 export const CHARACTER_ORIGINS=['CANON — KURUMADA','SAINT SEIYA — OUTRAS OBRAS','MITOLOGIA ADAPTADA','ORIGINAL TCG'];
 export const armorCard=c=>c?.tipo!=='Devotee'&&(c?.slot_equipamento==='armadura'||(c?.subtipos||[]).some(s=>ARMOR_SUBTYPES.includes(s)));
 export const techniqueCard=c=>c?.tipo==='Technique'||c?.tipo==='Spell'&&c.subtipos?.includes('Technique');

@@ -324,6 +324,8 @@ Long Range não concede essa vantagem quando o Devotee está defendendo um Strik
 
 Armor é a categoria universal de armadura: Athena — Cloth; Poseidon — Scale; Hades — Surplice; Ares — Warplate; Artemis — Moonplate. Moonplate é nomenclatura original do TCG; o exército de Artemis é formado pelas Satellites.
 
+Linha de tipo (Equipment System V1, autor, 02/11/2026): Armor é o grupo de consulta dessas cinco famílias e não é impresso junto delas, como em `EQUIPMENT — CLOTH`. Armadura fora das famílias imprime `EQUIPMENT — ARMOR`. Patente não é subtipo, mas é impressa junto dele: `EQUIPMENT — BRONZE CLOTH`, `EQUIPMENT — GENERAL SCALE`. Cada família tem a própria progressão, do nível I (família sem patente) ao V: Cloth — Bronze, Silver, Gold, God; Scale — Marine, Captain, General, Divine; Surplice — Terrestrial, Celestial, Judge, Divine; Warplate — Berserker, Elite, Warlord, Divine; Moonplate — Crescent, Half, Full, Divine. Raridade e facção não entram na linha. Arma imprime `EQUIPMENT — WEAPON SWORD`. Relic, Artifact e Instrument são classificações próprias. Nenhum subtipo concede poder, bônus ou restrição por si só.
+
 Cada Devotee possui um slot de Armor. Armas e acessórios usam slots separados e mantêm suas regras anteriores. Qualquer Devotee elegível pode vestir qualquer Armor, independentemente de patente; custos e requisitos expressos continuam obrigatórios.
 
 A V1 está incorporada à identidade do Devotee: não é Equipment independente, não ocupa slot, não pode ser transferida nem destruída separadamente. V2 e posteriores são cartas independentes. O Vanilla Set prioriza V2; não exige criar todas as versões de todas as armaduras.

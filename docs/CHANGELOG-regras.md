@@ -4,6 +4,15 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-02 — §26 — Equipment System V1: linha de tipo e subtipos
+
+- **Antes:** `Armor` era impresso junto da família (`ARMOR — CLOTH`), e os subtipos de objeto não tinham lista fechada.
+- **Depois:** `EQUIPMENT — BRONZE CLOTH`, `EQUIPMENT — WEAPON SWORD`. Armor é grupo de consulta. A patente fica em campo próprio e é impressa; raridade e facção não. O spec tirava a patente da linha; o autor a devolveu no mesmo dia. Cada família tem a própria progressão, do nível I ao V (tabela do autor, 02/11/2026): Cloth, Bronze, Silver, Gold, God; Scale, Marine, Captain, General, Divine; Surplice, Terrestrial, Celestial, Judge, Divine; Warplate, Berserker, Elite, Warlord, Divine; Moonplate, Crescent, Half, Full, Divine.
+- **Motivo:** especificação do autor, 02/11/2026. Nenhum efeito, custo ou slot muda.
+- **Código:** `shared/equipment-types.js`, contrato em `docs/equipment-system-v1.md`.
+- **Cartas:** 54 propostas firmes gravadas em `data/cards.json`, com aprovação do autor.
+- **Pendências:** 28 classificações em revisão. Lunar Vestment, Steel Cloth e Prototype dependem de decisão, porque mudar o subtipo muda o slot na Engine.
+
 ## 2026-11-02 — Cap. IX e §53 — Sintaxe das keywords no texto da carta
 
 - **Antes:** o guia não definia a linha de keywords, e o §53 pedia efeitos de entrada antes das keywords.

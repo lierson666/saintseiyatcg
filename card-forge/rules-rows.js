@@ -2,7 +2,7 @@
 // O textarea original segue sendo a fonte do texto (linha em branco separa habilidades); as falas ficam em data/card-voices.json.
 const split = t => t.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
-import {openSoundBrowser, soundUrl} from '/shared/sound-browser.js?v=11';
+import {openSoundBrowser, soundUrl} from '/shared/sound-browser.js?v=12';
 let falas = {}, vozes = {}, player = null;
 const ready = Promise.all([
   fetch('/biblioteca-sons/falas-pt.json', {cache: 'no-store'}).then(r => (r.ok ? r.json() : {})).catch(() => ({})),
@@ -39,12 +39,14 @@ const abilityName = (t, i) => parseAbility(t).name || t.trim().slice(0, 28) || `
 // @Resonance no nome ou no texto abre a lista de personagens; escolher preenche "Resonance — Nome" (guia §27).
 const RESONANCE_TOKEN = /@res\p{L}*(?:\s+([^@\n]*))?$/iu;
 
-export function mountRulesRows(area, {getId = null, moments = null, sound = null, resonanceCards = null, onResonance = null} = {}) {
+const GOD_TAG = /\s+—\s+(Divine Power|Divine Command)$/;
+
+export function mountRulesRows(area, {getId = null, moments = null, sound = null, resonanceCards = null, onResonance = null, tags = null} = {}) {
   area.hidden = true;
   const box = document.createElement('div');
   box.className = 'rr';
   (area.closest('label') || area).after(box);
-  const current = () => [...box.querySelectorAll('.rr-row')].map(r => composeAbility(r.querySelector('.rr-name').value, r.querySelector('.rr-text').value));
+  const current = () => [...box.querySelectorAll('.rr-row')].map(r => composeAbility(r.querySelector('.rr-name').value + (r.querySelector('.rr-tag')?.value ? ` — ${r.querySelector('.rr-tag').value}` : ''), r.querySelector('.rr-text').value));
   const sync = () => {
     const value = current().filter(Boolean).join('\n\n');
     if (value !== area.value.trim()) { area.value = value; area.dispatchEvent(new Event('input', {bubbles: true})); }
@@ -57,12 +59,12 @@ export function mountRulesRows(area, {getId = null, moments = null, sound = null
   };
   const draw = (lines = split(area.value)) => {
     suggest = null; // a lista some junto com as linhas redesenhadas
-    box.innerHTML = `${lines.map((t, i) => `<div class="rr-row" data-i="${i}"><div class="rr-fields"><input class="rr-name" placeholder="Nome da habilidade (vazio se for só keyword)" aria-label="Nome da habilidade ${i + 1}" value="${esc(parseAbility(t).name)}"><textarea class="rr-text" rows="3" spellcheck="true" placeholder="Texto da habilidade" aria-label="Texto da habilidade ${i + 1}">${esc(parseAbility(t).text)}</textarea></div>
-      <div class="rr-tools"><button type="button" data-move="-1" ${i ? '' : 'disabled'} aria-label="Subir">↑</button><button type="button" data-move="1" ${i < lines.length - 1 ? '' : 'disabled'} aria-label="Descer">↓</button><button type="button" data-del aria-label="Remover">✕</button></div></div>`).join('')}
+    box.innerHTML = `${lines.map((t, i) => { const full = parseAbility(t).name, tag = full.match(GOD_TAG)?.[1] || '', list = tags?.(); return `<div class="rr-row" data-i="${i}"><div class="rr-fields"><input class="rr-name" placeholder="Nome da habilidade (vazio se for só keyword)" aria-label="Nome da habilidade ${i + 1}" value="${esc(list ? full.replace(GOD_TAG, '') : full)}">${list ? `<select class="rr-tag" aria-label="Etiqueta da habilidade ${i + 1}"><option value="">Sem etiqueta</option>${list.map(o => `<option ${o === tag ? 'selected' : ''}>${o}</option>`).join('')}</select>` : ''}<textarea class="rr-text" rows="3" spellcheck="true" placeholder="Texto da habilidade" aria-label="Texto da habilidade ${i + 1}">${esc(parseAbility(t).text)}</textarea></div>
+      <div class="rr-tools"><button type="button" data-move="-1" ${i ? '' : 'disabled'} aria-label="Subir">↑</button><button type="button" data-move="1" ${i < lines.length - 1 ? '' : 'disabled'} aria-label="Descer">↓</button><button type="button" data-del aria-label="Remover">✕</button></div></div>`; }).join('')}
       <button type="button" data-add>+ Habilidade</button>`;
     drawSound(lines);
   };
-  box.addEventListener('input', e => { if (e.target.matches('.rr-text, .rr-name')) { sync(); drawSound(current()); } });
+  box.addEventListener('input', e => { if (e.target.matches('.rr-text, .rr-name, .rr-tag')) { sync(); drawSound(current()); } });
   let suggest = null; // {field, row, options, active, el}
   const closeSuggest = () => { suggest?.el.remove(); suggest = null; };
   const paintSuggest = () => {

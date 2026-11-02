@@ -1,10 +1,11 @@
-import {resolveLayout,validateTemplate} from './model.js?v=20261101-rules1';
+import {matchesLayoutSubtype} from '../equipment-types.js?v=20261102-eq6';
+import {resolveLayout,validateTemplate} from './model.js?v=20261102-eq6';
 import {makeScene,renderScene} from './renderer.js';
 import {displayCard} from '../card-i18n.js?v=20261031-kw1';
 
 let library=null,inflight=null,lastRead=0,projects={},assetRects={},projectsInflight=null,projectsRead=0;
 const publishedKey=value=>JSON.stringify((value?.published||[]).map(t=>[t.id,t.revision]));
-const matching=(t,c,surface)=>t.scope.surface===surface&&(!t.scope.subtype||c.subtipos?.includes(t.scope.subtype))&&(t.scope.level==='global'||t.scope.value===({type:c.tipo,faction:c.faccao,rarity:c.raridade,card:c.id})[t.scope.level]);
+const matching=(t,c,surface)=>t.scope.surface===surface&&(!t.scope.subtype||matchesLayoutSubtype(c,t.scope.subtype))&&(t.scope.level==='global'||t.scope.value===({type:c.tipo,faction:c.faccao,rarity:c.raridade,card:c.id})[t.scope.level]);
 export function layoutLibrary(){return library;}
 export function visualProject(id){return projects[id]||{};}
 // Foco e visibilitychange disparam juntos ao voltar à janela: mesma trava de 15 s e de pedido em voo de refreshLayouts.
