@@ -23,7 +23,7 @@ Taxonomia de Equipment aprovada pelo autor em 02/11/2026. Muda classificação e
 
 `tools/migrate-equipment-v1.py` lê `tools/equipment-migration-v1.json`, uma tabela explícita por carta. Sem `--apply` só mostra o diff. Só mexe em `subtipos` e `patente_armadura`, repete sem efeito e volta com `--reverter`.
 
-Catálogo: 116 Equipment. 54 com proposta firme, 28 em revisão, 34 sem alteração.
+Catálogo: 116 Equipment. 55 migrados, 27 em revisão, 34 sem alteração.
 
 ## Pendências de decisão do autor
 
@@ -50,7 +50,6 @@ Hoje a Engine não trata estas cartas como Armor (`armor: false`), embora `slot_
 | `artemis-v6-414` | MOONSTONE AMULET | Artifact, Amulet | Artifact | Artifact + Amulet hoje: vira só Artifact? |
 | `artemis-v6-415` | FOREST GUARDIAN'S SHIELD | Shield | Shield | Shield sem Weapon: proteção. |
 | `artemis-v6-416` | ANCIENT ROOT ARMOR | Living Armor | Moonplate | Living Armor (Ancient Root Armor) é de Artemis, mas tem identidade própria: confirmar se é Moonplate. |
-| `athena-v6-019` | PEGASUS GOD CLOTH (KAMUI) | Armor, Cloth, God Armor | Cloth God Armor | God Armor não está na lista do V1, mas o guia §35 e o layout usam. Patente da God Cloth a definir. |
 | `athena-v6-020` | ATHENA’S SHIELD | Divine Artifact | Shield Relic | Divine Artifact hoje; o spec cita Relic para objetos divinos. |
 | `athena-v6-045` | DRAGON SHIELD | Artifact | Shield | Shield sem Weapon: proteção. Spec manda não forçar pelo nome. |
 | `athena-v6-046` | ANDROMEDA CHAIN | Artifact | Weapon Chain | Corrente: arma? |

@@ -1,3 +1,4 @@
+import {cardsToXlsx} from './cards-xlsx.js?v=20261102-xlsx1';
 import {mountRulesRows} from './rules-rows.js?v=20261102-banco1';
 import {createHistory} from '../shared/editor-history.js';
 import {compilePlaytest} from '../shared/import-playtest.js';
@@ -865,6 +866,13 @@ $('#cardLang').addEventListener('change', () => { forceLang($('#cardLang').value
 const topMenus = [...document.querySelectorAll('.forge-drop')];
 document.addEventListener('click', (e) => topMenus.forEach((m) => { if (m.open && (!m.contains(e.target) || (m.matches('.forge-drop--save') && e.target.closest('button')))) m.open = false; }));
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') topMenus.forEach((m) => { m.open = false; }); });
+$('#exportXlsx').addEventListener('click', () => { // catálogo gravado: edição ainda não salva fica de fora
+  const blob = new Blob([cardsToXlsx(db.cartas)], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const a = Object.assign(document.createElement('a'), {href: URL.createObjectURL(blob), download: `saint-seiya-cartas-${new Date().toISOString().slice(0, 10)}.xlsx`});
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  say(`Excel com ${db.cartas.length} cartas exportado.`);
+});
 $('#exportHi').addEventListener('click', async () => { await render(); download(canvas, `${fileBase()}${langSuffix()}.png`); say('PNG 1488×2091 exportado'); });
 $('#exportWeb').addEventListener('click', async () => {
   await render();
