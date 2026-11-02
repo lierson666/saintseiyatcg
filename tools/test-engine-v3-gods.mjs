@@ -83,24 +83,28 @@ function exclamationSetup(decide) {
   return {...t, saints};
 }
 
-test('Athena Exclamation (D229): custo 5 + 3 por Bronze + 2 por Silver em Base preparada; Sorcery; uso consumido no anúncio', () => {
+test('Athena Exclamation (D229, autor 02/11/2026): 5 em Base + 3 Soul por Bronze + 2 Soul por Silver; Sorcery; uso consumido no anúncio', () => {
   const {s, ctx, bases, saints} = exclamationSetup();
-  assert.equal(exclamationCost(ctx, saints), 13);
-  bases('A', 12);
+  assert.deepEqual(exclamationCost(ctx, saints), {base: 5, soul: 8});
+  const soul = s.players.A.soul;
+  bases('A', 4);
   assert.throws(() => announceExclamation(s, ctx, 'A', saints), RuleError, 'falta 1 Base');
-  assert.deepEqual([s.divine.A.ultimateUsed, s.players.A.bases.filter(b => b.prepared).length], [false, 12], 'anúncio ilegal não gasta nem consome');
+  assert.deepEqual([s.divine.A.ultimateUsed, s.players.A.bases.filter(b => b.prepared).length, s.players.A.soul], [false, 4, soul], 'anúncio ilegal não gasta nem consome');
   bases('A', 1);
+  s.players.A.soul = 7;
+  assert.throws(() => announceExclamation(s, ctx, 'A', saints), RuleError, 'falta 1 Soul');
+  s.players.A.soul = soul;
   assert.throws(() => announceExclamation(s, ctx, 'A', [saints[0], saints[0], saints[1]]), RuleError, '3 objetos distintos');
   announceExclamation(s, ctx, 'A', saints);
-  assert.deepEqual([s.divine.A.ultimateUsed, s.players.A.bases.filter(b => b.prepared).length, !!s.window], [true, 0, true]);
+  assert.deepEqual([s.divine.A.ultimateUsed, s.players.A.bases.filter(b => b.prepared).length, s.players.A.soul, !!s.window], [true, 0, soul - 8, true]);
   assert.equal(ultimateBlock(s, ctx, 'A'), 'used');
 });
 
 test('Athena Exclamation (D228/D230/D205): ATTACK fotografado antes da Defeat; Soul perdido = soma; Divine Judgment se sobreviver', () => {
   const {s, ctx, bases, saints} = exclamationSetup();
   bases('A', 13);
-  const atk = saints.reduce((n, u) => n + atkOf(s, ctx, u), 0);
   announceExclamation(s, ctx, 'A', saints);
+  const atk = saints.reduce((n, u) => n + atkOf(s, ctx, u), 0); // depois de pagar: Soul menor pode dar bônus a Seiya
   passAll(s);
   assert.ok(saints.every(u => s.players.A.tartarus.includes(u)), 'Defeat que não pode ser prevenida');
   assert.deepEqual([s.players.B.soul, s.divine.B.judgment?.deadline], [20 - atk, s.round + 1]);
@@ -111,7 +115,7 @@ test('Athena Exclamation (D228/D230/D205): ATTACK fotografado antes da Defeat; S
 
 test('G3-006/D230: Saint escolhido que sai antes da resolução → Ultimate sem efeito, uso e custo não voltam', () => {
   const {s, ctx, bases, saints} = exclamationSetup();
-  bases('A', 13);
+  bases('A', 5);
   announceExclamation(s, ctx, 'A', saints);
   s.units[saints[2]].prepared = false; // deixou de ser Prepared antes da resolução
   passAll(s);
@@ -121,7 +125,8 @@ test('G3-006/D230: Saint escolhido que sai antes da resolução → Ultimate sem
 test('G3-005: Ultimate independe de Awaken e só no próprio turno com cadeia vazia', () => {
   const {s, ctx, bases, saints} = exclamationSetup();
   bases('A', 13);
-  loseSoul(s, {A: 16}); refreshAwaken(s);
+  s.divine.A.awakenAt = 12; loseSoul(s, {A: 10}); refreshAwaken(s); // sobra Soul para a taxa de 8
+  assert.equal(s.divine.A.awaken, true);
   assert.equal(ultimateBlock(s, ctx, 'A', saints), null, 'Awaken ativo não impede');
   endTurn(s);
   assert.equal(ultimateBlock(s, ctx, 'A', saints), 'sorcery', 'janela aberta');

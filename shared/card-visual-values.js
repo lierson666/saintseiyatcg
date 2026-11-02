@@ -29,19 +29,17 @@ export const signedBonus=value=>value==null?null:Number.isFinite(Number(value))?
 export function equipmentCostText(card){
   if(!isEquipment(card))return null;
   const autoNames=pt()&&card.auto_equip_pt?.length?card.auto_equip_pt:card.auto_equip_en; // nomes PT da dublagem, se houver
-  const auto=Array.isArray(autoNames)?autoNames.join(' / '):autoNames||'';
   const owner=(card.donos||[]).map(id=>id.split('-').map(s=>s.charAt(0).toUpperCase()+s.slice(1)).join(' ')).join(' / ');
   const result=[];
-  // Armor (guia §27/§28, 30/10/2026): Resonance equipa sozinho ao conjurar; Equip N vale para qualquer portador em campo.
-  if(/armor/i.test([card.categoria_equipamento,...(card.subtipos||[])].join(' '))){
+  // Armor, arma e acessório (guia §27/§28/§33): Resonance equipa sozinho ao conjurar; Equip N vale para qualquer portador em campo.
+  if(card.equipar_auto||/armor/i.test([card.categoria_equipamento,...(card.subtipos||[])].join(' '))){
     // 1ª linha do texto (autor, 30/10/2026): "Resonance — Aries Mu". O Equip fica no selo EQUIP do canto inferior esquerdo.
     const named=(Array.isArray(autoNames)?autoNames:[autoNames]).filter(Boolean);
     return named.length?`${pt()?'Ressonância':'Resonance'} — ${named.join(' / ')}`:null;
   }
-  if(card.equipar_auto&&auto)result.push(`${pt()?'Autoequipar':'Auto-Equip'} — ${auto}.`);
-  if(card.equipar_custo_ressonante!=null&&!card.equipar_auto)result.push(`${pt()?'Equipar':'Equip'} ${card.equipar_custo_ressonante} — ${owner||(pt()?'Portador Ressonante':'Resonant Wearer')}.`);
+  if(card.equipar_custo_ressonante!=null)result.push(`${pt()?'Equipar':'Equip'} ${card.equipar_custo_ressonante} — ${owner||(pt()?'Portador Ressonante':'Resonant Wearer')}.`);
   const other=card.equipar_custo_outros??card.equipar_custo;
   // Equip para qualquer Devotee seu: só no selo EQUIP do canto inferior esquerdo (autor, 31/10/2026), sem repetir no texto.
-  if(other!=null&&(card.equipar_auto||owner))result.push(pt()?`Equipar ${other} — Outros Devotos.`:`Equip ${other} — Other Devotees.`);
+  if(other!=null&&owner)result.push(pt()?`Equipar ${other} — Outros Devotos.`:`Equip ${other} — Other Devotees.`);
   return result.join('\n')||null;
 }

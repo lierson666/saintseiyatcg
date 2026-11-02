@@ -7,7 +7,8 @@ import {canonIndex} from '../shared/deck-v3.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
 import {startTurn, endTurn, passAll, checkInvariants, RuleError} from '../playtest/engine-v3/core.js';
 import {declareStrike, atkOf, hpOf, keywordsOf} from '../playtest/engine-v3/strike.js';
-import {reequip, playEquipment} from '../playtest/engine-v3/play.js';
+import {reequip, playEquipment, playDevotee, resonant} from '../playtest/engine-v3/play.js';
+import {addPreviewCards} from '../shared/preview-cards.js';
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json');
@@ -97,6 +98,62 @@ test('Equipment não-Armor fica solto quando o portador sai e é reequipado paga
   assert.deepEqual(reequip(s, ctx, 'A', weapon, acolyte), {cost: {amount: 5, unit: 'base'}});
   assert.equal(ctx.attached[weapon], acolyte);
   assert.throws(() => reequip(s, ctx, 'A', weapon, acolyte), e => e instanceof RuleError && /solto/.test(e.message));
+});
+
+test('arma com Resonance (guia §33, 02/11/2026): presa de graça ao jogar, ao entrar o Resonant; depois paga Equip', () => {
+  const {s, ctx, field} = setup({A: fortress, B: rush});
+  const p = s.players.A;
+  const hand = id => { const uid = p.deck.find(u => u.includes(`:${id}:`)); p.deck.splice(p.deck.indexOf(uid), 1); p.hand.push(uid); return uid; };
+  const bases = n => { p.bases = p.deck.splice(0, n).map(uid => ({uid, prepared: true})); };
+
+  // Ao jogar, com o Resonant em campo: só o custo impresso.
+  const shiryu = field('A', '003'), sword = hand('048'), other = field('A', '043');
+  bases(3);
+  assert.deepEqual(playEquipment(s, ctx, 'A', sword, shiryu), {cost: {amount: 3, unit: 'base'}});
+  passAll(s);
+  assert.equal(ctx.attached[sword], shiryu);
+
+  // Sem Resonant no alvo: entra sem portador.
+  const shield = hand('049');
+  bases(3);
+  playEquipment(s, ctx, 'A', shield, other); passAll(s);
+  assert.equal(ctx.attached[shield], undefined);
+  // Depois de jogada, até o Resonant paga o Equip impresso.
+  bases(5);
+  assert.deepEqual(reequip(s, ctx, 'A', shield, shiryu), {cost: {amount: 5, unit: 'base'}});
+  assert.equal(ctx.attached[shield], shiryu);
+  assert.equal(ctx.attached[sword], shiryu, 'arma não ocupa o espaço de Armor');
+});
+
+test('Resonance por classe (guia §27, 02/11/2026): "Gold Saint" vale para qualquer Gold Saint e só para eles', () => {
+  const {s, ctx, field} = setup({A: fortress, B: rush});
+  const sword = {...cards.get('athena-v6-048'), autoEquip: ['Gold Saint']};
+  const mu = field('A', '011'), shiryu = field('A', '003');
+  assert.equal(resonant(s, ctx, 'A', sword, mu), true);
+  assert.equal(resonant(s, ctx, 'A', sword, shiryu), false);
+});
+
+test('Forge sobrepõe a Resonance do D268 em arma de Athena (Armas de Libra)', () => {
+  const copy = new Map(cards);
+  addPreviewCards(copy, null, [{id: 'athena-v6-048', tipo: 'Equipment', auto_equip_en: ['Gold Saint']}]);
+  assert.deepEqual(copy.get('athena-v6-048').autoEquip, ['Gold Saint']);
+  assert.equal(copy.get('athena-v6-048').equip.amount, 5);
+});
+
+test('Resonance ao entrar (guia §33, 02/11/2026): Devotee Resonant puxa arma solta sem Equip, se o jogador aceitar', () => {
+  for (const accept of [true, false]) {
+    const {s, ctx, equip} = setup({A: fortress, B: rush});
+    const p = s.players.A, sword = equip('A', '048');
+    delete ctx.attached[sword];
+    const shiryu = p.deck.find(u => u.includes(':003:'));
+    p.deck.splice(p.deck.indexOf(shiryu), 1); p.hand.push(shiryu);
+    p.bases = p.deck.splice(0, 5).map(uid => ({uid, prepared: true}));
+    const asked = [];
+    ctx.decide = (key, q) => { asked.push(q.ability); return accept; };
+    playDevotee(s, ctx, 'A', shiryu); passAll(s);
+    assert.ok(asked.includes('Resonance'));
+    assert.equal(ctx.attached[sword], accept ? shiryu : undefined);
+  }
 });
 
 test('item global (Equip: None — Global) paga o Casting Cost e fica no campo sem portador (guia §33, 29/10/2026)', () => {

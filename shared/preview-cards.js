@@ -56,6 +56,8 @@ export function addPreviewCards(cards, index, forgeCards) {
     index?.set(r.id, r);
   }
   for (const f of forgeCards.filter(c => !PREVIEW.test(c.id) && cards.get(c.id)?.armor)) cards.set(f.id, armorFromForge(cards.get(f.id), f));
+  // Arma e acessório de Athena: Resonance do Forge por cima do D268 congelado (Armas de Libra, autor, 02/11/2026).
+  for (const f of forgeCards.filter(c => !PREVIEW.test(c.id) && c.auto_equip_en?.length && cards.get(c.id)?.kind === 'Equipment' && !cards.get(c.id).armor)) cards.set(f.id, {...cards.get(f.id), autoEquip: f.auto_equip_en});
   // Athena → Branco (autor, 31/10/2026): custo e Moment/Technique do Forge por cima do D268; os efeitos ficam no código da engine.
   for (const f of forgeCards.filter(c => /^athena-v6-/.test(c.id) && (!cards.has(c.id) || cards.get(c.id).kind === 'Domain'))) {
     // Domains de Athena (forma do §63, 31/10/2026): texto inteiro do Forge, porque o D268 tem o texto antigo; cartas de

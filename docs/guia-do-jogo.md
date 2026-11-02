@@ -336,9 +336,9 @@ Living Armor, Broken e Repair foram retirados. Cartas que citam Repair aguardam 
 
 ### 27. Resonance
 
-Resonance é o único termo que liga uma Armor a personagens: “Resonance — Aries Mu”. Owner e Auto-Equip deixaram de existir; em cartas antigas, Owner e Auto-Equip valem como Resonance para o mesmo personagem. Uma Armor pode ter mais de um personagem Resonant. A identidade precisa corresponder exatamente.
+Resonance é o único termo que liga uma Armor, arma ou acessório a personagens: “Resonance — Aries Mu”. Owner e Auto-Equip deixaram de existir; em cartas antigas, Owner e Auto-Equip valem como Resonance para o mesmo personagem. Uma carta pode ter mais de um personagem Resonant. A identidade precisa corresponder exatamente. Uma Resonance também pode nomear uma classe (“Resonance — Gold Saint”): vale para qualquer Devotee dessa classe (autor, 02/11/2026).
 
-Resonance faz duas coisas: equipa automaticamente, sem Equip, nos momentos do §28; e ativa as habilidades marcadas “Resonance — Nome”. As demais habilidades da Armor (“Equipped Devotee…”, “This Armor…”) funcionam com qualquer portador. Vestir a Armor não transforma outro Devotee naquele personagem.
+Resonance faz duas coisas: equipa automaticamente, sem Equip, nos momentos do §28 e do §33; e ativa as habilidades marcadas “Resonance — Nome”. As demais habilidades da carta (“Equipped Devotee…”, “This Armor…”) funcionam com qualquer portador. Vestir a carta não transforma outro Devotee naquele personagem.
 
 ### 28. Custo da Armor
 
@@ -350,7 +350,7 @@ Revisado em 30/10/2026.
 
 Se o novo portador já vestia outra Armor, a anterior fica em campo sem portador.
 
-Armas e acessórios seguem o §33: entram sem portador e se prendem pagando o Equip impresso. Itens globais (“Equip: None — Global”, como Athena’s Shield) não se prendem: pagam o Casting Cost e ficam no campo sem portador, sem reequipar (autor, 29/10/2026).
+Armas e acessórios seguem o §33. Itens globais (“Equip: None — Global”, como Athena’s Shield) não se prendem: pagam o Casting Cost e ficam no campo sem portador, sem reequipar (autor, 29/10/2026).
 
 ### 29. Versões de Armor
 
@@ -376,7 +376,7 @@ Armor sem portador não tem efeito. Ela só sai do campo por um efeito explícit
 
 ### 33. Equip de armas e acessórios
 
-Revisado em 01/11/2026. **Jogar** uma arma ou acessório, no próprio turno, custa o custo impresso, pago exclusivamente em Base, e a carta entra em campo **sem portador**. Não existe mais equipar ao jogar, nem para o Devotee nomeado. **Prender** a carta num Devotee seu é outra AÇÃO, no próprio turno, e custa o **Equip impresso**, pago em Base e/ou Latent; o Devotee nomeado na Resonance paga o custo impresso no lugar do Equip. A mesma ação move a carta solta de volta a um Devotee quando o portador sai. Arma ou acessório sem portador não tem efeito. Habilidades universais funcionam com qualquer portador; apenas habilidades “Resonance — Nome” exigem aquele personagem.
+Revisado em 02/11/2026. **Jogar** uma arma ou acessório, no próprio turno, custa o custo impresso, pago exclusivamente em Base. Se você controla um Devotee Resonant dela, você pode prendê-la nele na mesma AÇÃO, sem Equip; com mais de um, escolha um. Caso contrário, ela entra em campo **sem portador**. **Prender** a carta num Devotee seu depois de jogada é outra AÇÃO, no próprio turno, e custa o **Equip impresso**, pago em Base e/ou Latent, para qualquer Devotee, inclusive o Resonant. A mesma ação move a carta solta de volta a um Devotee quando o portador sai. **Resonance ao entrar:** sempre que um Devotee Resonant entra em campo, você pode prender nele, sem Equip, uma arma ou acessório dele que você controla, mesmo que outro Devotee seu a esteja usando (como no §28). Arma ou acessório sem portador não tem efeito. Habilidades universais funcionam com qualquer portador; apenas habilidades “Resonance — Nome” exigem aquele personagem.
 
 ### 34. Bônus de atributos
 

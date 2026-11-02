@@ -70,4 +70,6 @@ export const loadCanon = canon => new Map([...canon.cards, ...canon.gods].map(r 
 // Guia §27 (identidade estável do personagem): Resonance pela identidade do personagem, não pela ordem do título: "Alcmenes of Ethon" = "Ethon Alcmenes"
 // (Devotees de Ares renomeados no Forge em 30/10/2026; o texto da Resonance manteve o nome antigo).
 const characterWords = name => String(name).toUpperCase().split(/\s+/).filter(w => w && w !== 'OF').sort().join(' ');
-export const resonates = (armor, devoteeName) => armor.autoEquip.some(n => characterWords(n) === characterWords(devoteeName));
+// Resonance por classe (autor, 02/11/2026): "Gold Saint" vale para qualquer Devotee dessa classe.
+const RESONANCE_CLASSES = new Set(['Gold Saint']);
+export const resonates = (armor, devotee) => armor.autoEquip.some(n => (RESONANCE_CLASSES.has(n) ? String(devotee.type).includes(n) : characterWords(n) === characterWords(devotee.name)));

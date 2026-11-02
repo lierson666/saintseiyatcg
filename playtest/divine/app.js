@@ -43,7 +43,7 @@ const stage = $('#stage'), boardRoot = $('#board-root'), overlayRoot = $('#overl
 const GOD_ART = {'god-athena': '../../CARDS/ATHENA/ATHENA.png', 'god-poseidon': '../../CARDS/POSEIDON/POSEIDON.png'};
 
 // Mensagens da engine (internas, em português) viram texto curto para o jogador.
-const WHY = {'G3-005': 'Athena Exclamation needs three Prepared Saints with different identities and enough prepared Bases.', D206: 'Sacrifice exactly three of your Devotees, on your turn.', D1: "It's not your turn.", D4: 'Not enough prepared Cosmo Bases.', custo: 'Not enough Latent Cosmo.', P06: 'Wait for the response window to close.',
+const WHY = {'G3-005': 'Athena Exclamation needs three Prepared Saints with different identities, enough prepared Bases and enough Soul.', D206: 'Sacrifice exactly three of your Devotees, on your turn.', D1: "It's not your turn.", D4: 'Not enough prepared Cosmo Bases.', custo: 'Not enough Latent Cosmo.', P06: 'Wait for the response window to close.',
   P05: 'A Guardian must be your target.', D22: 'This Devotee already struck this turn.', P04: 'Only a Prepared Devotee can Strike.',
   D52: 'The match is over.', '§63': 'Choose which version of that character to keep.', P01: 'Finish the mulligan first.', D192: 'It must be Prepared to use {T}.', D191: 'Already used this round.', Equip: 'That Devotee cannot wear it.', alvo: 'Choose a legal target.'};
 const why = e => WHY[e.decision] || (e.topic ? `Not in Alpha 0.1: ${e.topic}` : "That can't be done right now.");
@@ -109,7 +109,7 @@ function playableReason(key, uid) {
   }
   if (!idleFor(key)) return s.active !== key ? "It's not your turn." : 'Wait for the response window to close.';
   if (c.kind === 'Equipment' && c.global) return affordable(key, mixed(c.cost)) ? null : `Needs ${c.cost.amount} Cosmo (Base and/or Latent).`;
-  // Arma/acessório e Armor sem Resonant entram sem portador, pagando só o custo em Base (guia §28, §33).
+  // Sem Resonant, entra sem portador, pagando só o custo em Base (guia §28, §33).
   return affordable(key, c.cost) ? null : `Needs ${c.cost.amount} prepared Base Cosmo.`;
 }
 // D4: uma Base Cosmoble por turno, no próprio turno, com a janela fechada. Motivo em texto para o jogador.
@@ -312,9 +312,8 @@ function playFromHand(key, uid) {
     return begin('play', key, uid, STEPS[n] || [], choice => ({type: 'play', key, uid, choice}));
   }
   if (c.kind === 'Equipment') {
-    // Armor (guia §28, 30/10/2026): só entra vestida num Resonant seu, sem Equip; senão entra sem portador.
-    const armorPick = c.armor && candidates({pick: 'resonant', armor: uid}, key).length;
-    // Arma/acessório (§33, 01/11/2026): entra sem portador; prender é a ação Equip no campo.
+    // Armor, arma e acessório (guia §28, §33): só entra preso num Resonant seu, sem Equip; senão entra sem portador.
+    const armorPick = candidates({pick: 'resonant', armor: uid}, key).length;
     const steps = armorPick ? [{key: 'bearer', pick: 'resonant', armor: uid, optional: true, label: `Choose who wears ${c.name}`}] : [];
     if (n === '019') steps.push({key: 'target', pick: 'devotee', optional: true, label: 'Pegasus God Cloth: which Devotee gets +3/+3 (if your God is behind)?'});
     return begin('play', key, uid, steps, choice => ({type: 'play', key, uid, choice}));
@@ -392,7 +391,7 @@ function godActions(key) {
 }
 
 function startExclamation(key) {
-  begin('ultimate', key, null, [{key: 'saints', pick: 'ready-saint', multi: 3, label: 'Choose three Prepared Saints with different identities (cost 5 +3 Bronze +2 Silver)'}], choice => ({type: 'exclamation', key, choice}));
+  begin('ultimate', key, null, [{key: 'saints', pick: 'ready-saint', multi: 3, label: 'Choose three Prepared Saints with different identities (cost 5 Base, +3 Soul per Bronze, +2 Soul per Silver)'}], choice => ({type: 'exclamation', key, choice}));
   if (mode) mode.title = 'ATHENA EXCLAMATION'; // sem escolha legal, begin não abre modo (já avisou)
   render();
 }
@@ -1341,7 +1340,7 @@ function logEvent(e) {
   const t = {turn_start: `Player ${e.player} begins a turn.`, damage: e.dealt || e.prevented || e.absorbed ? `${n(e.uid)}: ${e.dealt} damage${e.prevented ? `, ${e.prevented} prevented` : ''}${e.absorbed ? `, ${e.absorbed} to Armor` : ''}.` : '',
     soul_lost: `God ${e.player} loses ${e.amount} Soul (${e.soul}).`, base_placed: `${e.player} places a Cosmo Base.`, latent_gained: `${e.player} gains ${e.amount} Latent.`,
     awaken_changed: `God ${e.player} ${e.awaken ? 'AWAKENS' : 'leaves Awaken'} (Soul ${e.soul}).`, divine_power: `God ${e.player}: ${e.ability}.`,
-    defeat_prevented: `${n(e.uid)} survives with 1 HP (${e.ability}).`, ultimate_announced: `${e.player} announces ${e.ability} (paid ${e.cost} Base).`,
+    defeat_prevented: `${n(e.uid)} survives with 1 HP (${e.ability}).`, ultimate_announced: `${e.player} announces ${e.ability} (paid ${e.cost} Base${e.soul ? ` and ${e.soul} Soul` : ''}).`,
     moon_awakened: `${n(e.uid)} awakens as a Moon Spirit.`, moon_reverted: `A Moon Spirit returns to being a Cosmo Base.`, control_changed: `${e.player} gains control of ${n(e.uid)}.`, entered: `${n(e.uid)} enters the battlefield.`, fizzled: `${n(e.uid)} fizzles: its bearer is gone.`,
     ultimate_resolved: e.loss === undefined ? `${e.ability} resolves.` : `${e.ability}: God loses ${e.loss} Soul.`, ultimate_failed: `${e.ability} fails: a chosen Saint is no longer valid. Cost not refunded.`,
     judgment_placed: `Divine Judgment on God ${e.player}: loses at the end of Round ${e.deadline}.`, judgment_removed: `Divine Judgment removed from God ${e.player}.`,
@@ -2187,14 +2186,15 @@ function applyDemo(kind) {
     p.bases = p.deck.splice(-n).map(uid => ({uid, prepared: true}));
     while (p.hand.length < 5) p.hand.push(p.deck.shift());
   }
-  s.players.A.soul = 5; s.players.B.soul = 21; s.players.A.latent = 3;
+  s.players.A.soul = 9; s.players.B.soul = 21; // 9: paga a taxa de 8 da Exclamation (3 + 3 + 2)
+  s.players.A.latent = 3;
   s.round = 7; s.turn = 13; s.players.A.ownTurns = 7; s.players.B.ownTurns = 6;
   runCheckpoint(s);
   clockStartTurn(clock, s.active, now());
   const tag = document.createElement('div');
   tag.className = 'demo-tag'; tag.textContent = 'Demo fixture · Round 7';
   stage.append(tag);
-  say('DEMO FIXTURE: Round 7, Player A with 13 prepared Bases and Seiya, Jabu and Marin. Click your God to announce Athena Exclamation.');
+  say('DEMO FIXTURE: Round 7, Player A with prepared Bases and Seiya, Jabu and Marin. Click your God to announce Athena Exclamation.');
 }
 
 function poseidonDemo(kind) {

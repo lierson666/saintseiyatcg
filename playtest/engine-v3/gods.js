@@ -76,14 +76,14 @@ export function payMixed(state, key, {base = 0, latent = 0, soul = 0}) {
 // `ctx.identities`: tabela extra (reimpressão aprovada ou fixture rotulada). Sem identidade confirmada: IdentityGap.
 const identity = (ctx, uid) => characterOf(ctx.objects[uid].cardId, ctx.identities);
 const saintClass = (ctx, uid) => (/Gold Saint/.test(card(ctx, uid).type) ? 'Gold' : /Silver Saint/.test(card(ctx, uid).type) ? 'Silver' : /Bronze Saint/.test(card(ctx, uid).type) ? 'Bronze' : null);
-const EXTRA = {Bronze: 3, Silver: 2, Gold: 0}; // D229
+const EXTRA = {Bronze: 3, Silver: 2, Gold: 0}; // D229; pago em Soul do próprio God (autor, 02/11/2026)
 
 function validSaints(state, ctx, key, saints) {
   return saints.length === 3 && new Set(saints).size === 3
     && saints.every(uid => controllerOf(state, uid) === key && isSaint(ctx, uid) && state.units[uid]?.prepared)
     && new Set(saints.map(uid => identity(ctx, uid))).size === 3;
 }
-export const exclamationCost = (ctx, saints) => 5 + saints.reduce((n, uid) => n + (EXTRA[saintClass(ctx, uid)] ?? 0), 0);
+export const exclamationCost = (ctx, saints) => ({base: 5, soul: saints.reduce((n, uid) => n + (EXTRA[saintClass(ctx, uid)] ?? 0), 0)});
 
 // Pode anunciar? Devolve null ou o motivo (para a interface). Não gasta nada.
 export function ultimateBlock(state, ctx, key, saints) {
@@ -95,21 +95,25 @@ export function ultimateBlock(state, ctx, key, saints) {
   if (saints) {
     try { if (!validSaints(state, ctx, key, saints)) return 'saints'; } catch (e) { if (e instanceof IdentityGap) return 'identity'; throw e; }
   }
-  if (saints && state.players[key].bases.filter(b => b.prepared).length < exclamationCost(ctx, saints)) return 'cost';
+  if (saints) {
+    const cost = exclamationCost(ctx, saints);
+    if (state.players[key].bases.filter(b => b.prepared).length < cost.base || state.players[key].soul < cost.soul) return 'cost';
+  }
   return null;
 }
 
-// G3-005/006 + D229: anúncio na fase de ações do próprio turno, cadeia vazia; escolhe os 3 Saints e paga tudo
-// (Base preparada, decisão do autor de 28/10/2026). Anúncio ilegal não gasta nada nem consome o uso.
+// G3-005/006 + D229: anúncio na fase de ações do próprio turno, cadeia vazia; escolhe os 3 Saints e paga tudo:
+// 5 em Base preparada e a taxa de Bronze/Silver em Soul (autor, 02/11/2026; G3-014: Soul letal encerra a partida). Anúncio ilegal não gasta nada nem consome o uso.
 // O uso é consumido no anúncio legal; anulação ou falha depois não devolve uso nem custo.
 export function announceExclamation(state, ctx, key, saints) {
   const why = ultimateBlock(state, ctx, key, saints);
   if (why) throw new RuleError('G3-005', `Athena Exclamation indisponível: ${why}`);
   assertIdle(state);
   const cost = exclamationCost(ctx, saints);
-  spendBase(state, key, cost);
+  const alive = payMixed(state, key, cost);
   state.divine[key].ultimateUsed = true;
-  emit(state, 'ultimate_announced', {player: key, ability: 'ATHENA EXCLAMATION', cost, saints: [...saints]});
+  emit(state, 'ultimate_announced', {player: key, ability: 'ATHENA EXCLAMATION', cost: cost.base, soul: cost.soul, saints: [...saints]});
+  if (!alive) return;
   pushTriggers(state, [{controller: key, activated: true, uid: `ultimate:${key}`, ability: 'ATHENA EXCLAMATION', run: st => resolveExclamation(st, ctx, key, saints)}]);
 }
 

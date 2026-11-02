@@ -487,7 +487,7 @@ function cardInfo(id) {
     <div class="lb-chips">${chip('Cost', c.cost ? `${c.cost.amount} ${c.cost.unit === 'base' ? 'Base' : 'Latent'}` : null, 'is-cost')}
       ${c.armor ? chip('Bonus', [c.equipped?.atk ? `+${c.equipped.atk} ATK` : '', c.equipped?.hp ? `+${c.equipped.hp} HP` : ''].filter(Boolean).join(' / ')) : `${chip('ATK', c.atk, 'is-atk')}${chip('HP', c.hp, 'is-hp')}`}${chip('Soul', c.soul)}${chip('Awaken', c.awaken)}
       ${chip('Rarity', c.rarity)}${chip('Cosmoble', c.cosmoble == null ? null : c.cosmoble ? 'Yes' : 'No')}
-      ${chip('Resonance', auto)}${chip('Equip', equip ? (c.armor ? equip[1] : `${equip[1]} · ${equip[2]}`) : null)}</div>
+      ${chip('Resonance', auto)}${chip('Equip', equip ? (c.armor || auto ? equip[1] : `${equip[1]} · ${equip[2]}`) : null)}</div>
     ${c.keywords.length ? `<div class="lb-kws">${c.keywords.map(k => `<span>${esc(k)}</span>`).join('')}</div>` : ''}
     <div class="lb-info__rules">${f ? renderCardText(f) : `${c.armor && c.equipped?.keywords?.length ? `<p>Equipped Devotee has ${esc(c.equipped.keywords.join(' and '))}.</p>` : ''}${rules}`}</div>
     ${f?.flavour_en ? `<p class="lb-info__flavour">${esc(f.flavour_en)}</p>` : ''}
@@ -711,6 +711,21 @@ root.addEventListener('submit', e => {
   if (!form) return;
   e.preventDefault(); submitProfile(form);
 });
+// Segurar a carta abre o preview (autor, 02/11/2026). No iOS não há contextmenu, e o toque na linha do deck remove uma cópia.
+let holdTimer = null, holdFrom = null, held = false;
+const cancelHold = () => { clearTimeout(holdTimer); holdFrom = null; };
+root.addEventListener('pointerdown', e => {
+  held = false; // gesto novo: o clique que sobra de um segurar só vem antes do próximo toque
+  cancelHold();
+  const t = e.target.closest('[data-card]');
+  if (!t || e.pointerType === 'mouse') return;
+  holdFrom = {x: e.clientX, y: e.clientY};
+  holdTimer = setTimeout(() => { held = true; ui.big = t.dataset.card; render(); }, 450);
+});
+root.addEventListener('pointermove', e => { if (holdFrom && Math.hypot(e.clientX - holdFrom.x, e.clientY - holdFrom.y) > 10) cancelHold(); });
+addEventListener('pointerup', cancelHold);
+addEventListener('pointercancel', cancelHold);
+root.addEventListener('click', e => { if (held) { held = false; e.preventDefault(); e.stopPropagation(); } }, true);
 root.addEventListener('contextmenu', e => {
   const wrap = e.target.closest('.lb-deckwrap'), deck = wrap?.querySelector('[data-act="edit-deck"]');
   if (deck) { // posição dentro do deck, já descontada a escala da tela (stage-fit)

@@ -67,7 +67,7 @@ Regra: o mesmo termo em todo lugar. Termo vetado fica em inglês. Nomes de perso
 | Divine Power / Divine Command | Poder Divino / Comando Divino |
 | Ultimate | Supremo |
 | Resonance / Resonant | Ressonância / Ressonante |
-| Equip / Auto-Equip | Equipar / Autoequipar |
+| Equip | Equipar |
 | Cast | Conjurar |
 | Sacrifice | Sacrificar |
 | Defeat | Derrotar |

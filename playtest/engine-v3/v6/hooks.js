@@ -43,16 +43,18 @@ export function v6Entered(state, ctx, key, uid) {
   pushTriggers(state, [...resonanceOnEnter(state, ctx, key, uid), ...own(state, ctx, key, uid, 'enter', [], 'enters the battlefield'),
     ...collect(state, ctx, state.order, 'watchEnter', [uid], 'enters').filter(t => t.uid !== uid)]);
 }
-// Guia §28.3 (30/10/2026): Devotee Resonant que entra pode vestir, sem Equip, uma Armor sua dele — solta ou com outro Devotee seu.
+// Guia §28.3/§33 (02/11/2026): Devotee Resonant que entra pode prender, sem Equip, uma Armor, arma ou acessório seu dele — solto ou com outro Devotee seu.
 function resonanceOnEnter(state, ctx, key, uid) {
   const dev = ctx.cards.get(ctx.objects[uid]?.cardId);
   if (dev?.kind !== 'Devotee') return [];
   const mine = a => state.players[key].battlefield.includes(a) && ctx.attached[a] !== uid;
-  const armors = state.players[key].battlefield.filter(a => ctx.objects[a]?.armor
-    && resonates(ctx.cards.get(ctx.objects[a].cardId), dev.name));
+  const armors = state.players[key].battlefield.filter(a => {
+    const c = ctx.cards.get(ctx.objects[a]?.cardId);
+    return c?.kind === 'Equipment' && c.autoEquip?.length && resonates(c, dev);
+  });
   return armors.map(armor => trigger(key, armor, `${nameOf(ctx, armor)} · Resonance`, st => {
     if (!mine(armor) || !st.players[key].battlefield.includes(uid) || !ctx.decide?.(key, {ability: 'Resonance', uid: armor, source: uid, text: `Equip ${nameOf(ctx, armor)} on ${nameOf(ctx, uid)} for free?`})) return;
-    for (const e of Object.keys(ctx.attached)) if (e !== armor && ctx.attached[e] === uid && ctx.objects[e].armor) delete ctx.attached[e];
+    if (ctx.objects[armor].armor) for (const e of Object.keys(ctx.attached)) if (e !== armor && ctx.attached[e] === uid && ctx.objects[e].armor) delete ctx.attached[e];
     ctx.attached[armor] = uid;
     emit(st, 'equipped', {player: key, uid: armor, bearer: uid});
     v6Attach(st, ctx, key, armor, uid);

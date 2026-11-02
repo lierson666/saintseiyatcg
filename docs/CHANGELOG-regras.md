@@ -4,6 +4,25 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-02 — Athena Exclamation (D229) — Taxa de Bronze e Silver passa de Cosmo a Soul
+
+- **Antes:** 5 Cosmo, mais 3 Cosmo por Bronze Saint e 2 por Silver Saint, tudo em Base preparada.
+- **Depois:** 5 Cosmo em Base preparada, mais {3}{S} por Bronze Saint e {2}{S} por Silver Saint, pagos do Soul do próprio God. Gold Saint não paga taxa. Soul letal pode ser pago e encerra a partida (G3-014).
+- **Motivo:** decisão do autor, 02/11/2026.
+- **Engine/IA/UI:** `engine-v3/gods.js`, `divine/ai.js`, `divine/app.js`, `shared/i18n-pt.js`. A IA não paga com Soul letal.
+- **Dados:** texto de `athena-001` em `data/cards.json`, diff aprovado pelo autor em 02/11/2026.
+- **Pendência:** não medido em partida: a Ultimate fica bem mais barata em Cosmo, o que pode alterar a meta de 45% do deck Combo.
+
+## 2026-11-02 — §27/§28/§33 — Arma e acessório com Resonance funcionam como Armor
+
+- **Antes:** arma ou acessório entrava sempre sem portador. Prender custava o Equip impresso, e o Devotee nomeado pagava o custo impresso. O personagem nomeado não prendia nada ao entrar. Seis cartas ainda mostravam “Auto-Equip”.
+- **Depois:** com o Devotee Resonant em campo, jogar a carta pode prendê-la nele sem Equip. Quando o Devotee Resonant entra, pode prender sem Equip uma carta dele que você controla, mesmo de outro Devotee seu. Fora desses dois momentos, todos pagam o Equip impresso. O texto dessas cartas passa a “Resonance — Nome”.
+- **Motivo:** autor, 02/11/2026, em partida no celular: Libra Sword “não equipou Shiryu quando ele entrou”; escolheu “Igual à Armor”. Substitui parte da mudança de 01/11/2026 no §33.
+- **Cartas:** athena-v6-045, 046, 047, 048, 049 e 050.
+- **Engine/UI:** `engine-v3/play.js`, `engine-v3/v6/hooks.js`, `divine/ai.js`, `divine/app.js`, `shared/card-visual-values.js`, Como Jogar.
+- **Armas de Libra (mesma data, autor):** Libra Sword e Libra Shield (athena-v6-048, 049) deixam de ter Resonance com Dragon Shiryu e passam a ter com qualquer Gold Saint. O §27 ganha Resonance por classe. Valem também os Gold Saints de outras facções. Diff de `data/cards.json` aprovado pelo autor.
+- **Pandora (mesma data, diff aprovado):** Pandora's Trident e Pandora's Harp (hades-v6-196, 228) passam a ter Resonance com Pandora; sai o Equip 1 próprio dela.
+
 ## 2026-11-02 — Cartas (sem mudança no guia) — Corpo dos doadores de Treinamento de Artemis
 
 - **Antes → depois (ATK/HP):** Sacred Stag 2/2 → 1/2; Lunar Nymph 1/3 → 1/2; Chandra 2/4 → 2/3; Moon Temple Acolyte 2/3 → 1/3; Moonlit Wolf 2/1 → 1/1.

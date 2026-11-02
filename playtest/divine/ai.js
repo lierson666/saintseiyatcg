@@ -79,7 +79,7 @@ export function createAI(h) {
     for (const uid of p.hand.filter(u => !h.playableReason(key, u) && !(h.info(u).kind === 'Devotee' && h.duplicate(key, u)) && worthPlaying(key, u))) {
       const c = h.info(uid);
       if (c.kind === 'Equipment') {
-        const bearer = c.armor ? devotees(key).find(d => h.resonant(key, c, d)) || null : null;
+        const bearer = devotees(key).find(d => h.resonant(key, c, d)) || null;
         add(`play:${uid}`, {src: uid, aim: bearer, run: () => h.playEquipment(key, uid, bearer, {})});
         continue;
       }
@@ -126,7 +126,9 @@ export function createAI(h) {
     if (s.divine[key].god !== 'god-athena' || s.divine[key].ultimateUsed || tried.has(id)) return null;
     const loss = trio => trio.reduce((n, u) => n + h.atk(u) + (/Gold Saint/.test(h.info(u).type) ? 3 : 0), 0);
     const saints = devotees(key).filter(u => h.isSaint(u) && s.units[u]?.prepared);
-    const trio = COMBO(saints, 3).filter(t => !h.ultimateBlock(key, t)).sort((a, b) => loss(b) - loss(a))[0];
+    // A taxa de Bronze/Silver sai do Soul próprio (autor, 02/11/2026): nunca paga com Soul letal.
+    const tax = trio => trio.reduce((n, u) => n + (/Bronze Saint/.test(h.info(u).type) ? 3 : /Silver Saint/.test(h.info(u).type) ? 2 : 0), 0);
+    const trio = COMBO(saints, 3).filter(t => !h.ultimateBlock(key, t) && tax(t) < s.players[key].soul).sort((a, b) => loss(b) - loss(a))[0];
     const foe = enemyOf(key);
     if (!trio || !(loss(trio) >= s.players[foe].soul || devotees(foe).length < 3 || s.round >= 6)) return null;
     return {id, must: true, run: () => h.announceExclamation(key, trio)};
@@ -179,8 +181,8 @@ export function createAI(h) {
       if (!fresh(`play:${uid}`) || !worthPlaying(key, uid)) continue;
       const c = h.info(uid);
       if (c.kind === 'Equipment') {
-        // Armor: veste só no Resonant (guia §28); arma/acessório entra sem portador e se prende depois (§33, 01/11/2026).
-        const bearer = c.armor ? devotees(key).find(d => h.resonant(key, c, d)) || null : null;
+        // Entra presa só no Resonant, sem Equip (guia §28, §33); senão entra sem portador e se prende depois.
+        const bearer = devotees(key).find(d => h.resonant(key, c, d)) || null;
         return {id: id(`play:${uid}`), src: uid, aim: bearer, run: () => h.playEquipment(key, uid, bearer, {})};
       }
       const ch = choicesFor(key, h.STEPS[h.num(uid)] || []);
@@ -290,6 +292,8 @@ export function createAI(h) {
   // Pergunta da engine para a IA: "you may" = sim; escolha obrigatória = as cartas mais baratas (descarte, Base a devolver).
   function answer(req) {
     // Custo em Soul (taxa de Ares, Rise Again…): só paga com folga, para não se matar por 1 de dano.
+    // Resonance ao entrar: não tira a carta de quem já a usa, porque quem entra vem Unprepared.
+    if (req.kind === 'optional' && req.ability === 'Resonance' && h.attached(req.uid)) return false;
     if (req.kind === 'optional') return !(req.cost?.soul || /Soul/.test(String(req.cost ?? ''))) || h.S().players[req.player].soul > 6;
     // Alvo de carta V6: God inimigo primeiro; senão o Devotee inimigo mais caro; senão o próprio mais caro.
     if (req.choose === 'mode') return (focus && req.options.find(o => /prevent|protect/i.test(String(o)))) || req.options[0]; // modo escrito: o primeiro, ou o de proteção na resposta

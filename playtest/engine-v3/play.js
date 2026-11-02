@@ -109,22 +109,20 @@ export function playDevotee(state, ctx, key, uid, choice = {}) {
   });
 }
 
-// Equipment (guia §33, 01/11/2026): arma/acessório paga o custo impresso, só Base, e entra sem portador;
-// prender é outra ação (`reequip`, Equip impresso). `bearer` só vale para Armor num Resonant (§28).
-// Vai à pilha (guia §56, 30/10/2026); ao resolver, entra em campo. Arma cujo portador saiu antes de resolver vai ao Tartarus;
-// Armor entra sem portador.
+// Equipment (guia §28/§33, 02/11/2026): paga o custo impresso, só Base; entra preso só num Resonant seu (`bearer`, sem Equip),
+// senão sem portador; prender depois é outra ação (`reequip`, Equip impresso).
+// Vai à pilha (guia §56, 30/10/2026); ao resolver, entra em campo. Se o portador saiu antes de resolver, entra sem portador.
 // `choice.target`: alvo do gatilho "When you cast" (019).
 // Item global ("Equip: None — Global"): paga o Casting Cost e fica no campo sem portador; `bearer` é ignorado.
 export function playEquipment(state, ctx, key, uid, bearer, choice = {}) {
   const card = sorceryFromHand(state, ctx, key, uid, 'Equipment');
-  if (!card.armor) bearer = null; // global e arma/acessório: sem portador (§33)
+  if (!card.armor && !(bearer && resonant(state, ctx, key, card, bearer))) bearer = null; // global e arma/acessório sem Resonant: sem portador (§33)
   // Guia §28 (30/10/2026): Armor paga só o custo impresso; entra vestida apenas num Resonant seu (sem Equip), senão sem portador.
   if (card.armor && bearer && !resonant(state, ctx, key, card, bearer)) throw new RuleError('Resonance', `${card.name} só entra vestida num Devotee Resonant; senão entra sem portador`);
   const cost = payCast(state, ctx, key, uid, card.global ? mixed(card.cost) : card.cost); // jogar: só Base (guia §5, §33)
   leaveHand(state, key, uid);
   castToStack(state, key, uid, {kind: 'Equipment', bearer}, st => {
     const holder = bearer && st.players[key].battlefield.includes(bearer) ? bearer : null;
-    if (bearer && !holder && !card.armor) { st.players[ctx.objects[uid].owner].tartarus.push(uid); emit(st, 'fizzled', {player: key, uid}); return; }
     st.players[key].battlefield.push(uid);
     if (holder) { if (card.armor) dropArmor(ctx, holder, uid); ctx.attached[uid] = holder; }
     emit(st, 'entered', {player: key, uid, kind: 'Equipment', bearer: holder});
@@ -195,8 +193,8 @@ export function activate(state, ctx, key, uid, choice = {}) {
   emit(state, 'chain_add', {player: key, uid: src});
 }
 
-// Equipment solto no campo (não-Armor recém-jogado ou cujo portador saiu) se prende a um Devotee seu pagando Equip {N}
-// (autor, 28/10/2026); no Devotee nomeado em Auto-Equip vale o Casting Cost, como ao jogar. Sorcery.
+// Equipment solto no campo (não-Armor recém-jogado ou cujo portador saiu) se prende a um Devotee seu pagando Equip {N},
+// inclusive o Resonant (guia §33, 02/11/2026). Sorcery.
 // Armor (guia §28, 30/10/2026): sem portador ou tirada de outro Devotee seu; AÇÃO + Equip impresso para qualquer um, inclusive o Resonant.
 export function reequip(state, ctx, key, uid, bearer) {
   if (state.victory) throw new RuleError('D52', 'a partida já terminou');
@@ -220,7 +218,7 @@ export function reequip(state, ctx, key, uid, bearer) {
 export function resonant(state, ctx, key, card, bearer) {
   const target = ctx.cards.get(ctx.objects[bearer]?.cardId);
   return state.players[key].battlefield.includes(bearer) && target?.kind === 'Devotee'
-    && resonates(card, target.name);
+    && resonates(card, target);
 }
 function armorEquipCost(state, ctx, key, card, bearer) {
   const target = ctx.cards.get(ctx.objects[bearer]?.cardId);
@@ -238,10 +236,10 @@ function equipCost(state, ctx, key, card, bearer) {
   if (!state.players[key].battlefield.includes(bearer) || target?.kind !== 'Devotee') {
     throw new RuleError('Equip', 'o portador precisa ser um Devotee seu no campo');
   }
-  if (resonates(card, target.name)) return card.cost;
-  if (card.equip) return {amount: card.equip.amount, unit: card.cost.unit}; // "Other" e "Any" cobrem quem não é nomeado
+  if (card.equip) return {amount: card.equip.amount, unit: card.cost.unit};
+  if (resonates(card, target)) return card.cost; // carta nomeada sem Equip impresso
   if (card.global) throw new RuleError('Equip', `${card.name} é global e não se prende a um Devotee`);
-  if (!card.autoEquip.length) throw new NotSpecified(`${card.id}: Equipment sem Auto-Equip nem Equip {N}`);
+  if (!card.autoEquip.length) throw new NotSpecified(`${card.id}: Equipment sem Resonance nem Equip {N}`);
   throw new RuleError('Equip', `${card.name} só equipa ${card.autoEquip.join(' ou ')}`);
 }
 

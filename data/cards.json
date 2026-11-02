@@ -2076,8 +2076,8 @@
       "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
       "categoria_equipamento": "Weapon",
       "slot_equipamento": "acessorio",
-      "auto_equip_en": ["Dragon Shiryu"],
-      "donos": ["dragon-shiryu"],
+      "auto_equip_en": ["Gold Saint"],
+      "donos": [],
       "equipar_custo_outros": 5,
       "equipar_custo_ressonante": 0,
       "equipar_auto": true,
@@ -2089,7 +2089,7 @@
         "Sempre que o Devoto equipado causar dano de Golpe a um Deus, o jogador desse Deus descarta 1 carta e você prepara todas as suas Bases de Cosmo."
       ],
       "tagline_pt": "A Lâmina da Justiça",
-      "auto_equip_pt": ["Shiryu de Dragão"]
+      "auto_equip_pt": ["Cavaleiros de Ouro"]
     },
     {
       "id": "athena-v6-049",
@@ -2127,8 +2127,8 @@
       "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
       "categoria_equipamento": "Weapon",
       "slot_equipamento": "acessorio",
-      "auto_equip_en": ["Dragon Shiryu"],
-      "donos": ["dragon-shiryu"],
+      "auto_equip_en": ["Gold Saint"],
+      "donos": [],
       "equipar_custo_outros": 5,
       "equipar_custo_ressonante": 0,
       "equipar_auto": true,
@@ -2140,7 +2140,7 @@
         "Sempre que o Devoto equipado causar dano de Golpe a um Deus, você ganha {2}{S} e compra 1 carta."
       ],
       "tagline_pt": "O Equilíbrio da Proteção",
-      "auto_equip_pt": ["Shiryu de Dragão"]
+      "auto_equip_pt": ["Cavaleiros de Ouro"]
     },
     {
       "id": "athena-v6-050",
@@ -3911,7 +3911,7 @@
         "HEALING LIGHT — Divine Command\nCost: {1}{C}. Activate only during your turn, once each turn.\nRemove 1 damage from target friendly Devotee.\nAwakened: remove 2 damage instead and gain {1}{S}."
       ],
       "habilidade_awaken_en": "DIVINE PROTECTION — Awaken 5\nAthena Devotees you control get +1 Power and +1 HP.\nWhen an Athena Devotee you control would be destroyed, you may pay {3}{C}. If you do, prevent that destruction and leave it with 1 HP.",
-      "ultimate_en": "ATHENA EXCLAMATION — Ultimate\nCost: {5}{C}\nChoose three Prepared Saints you control with different character identities. Pay an additional {2}{C} for each Silver Saint and {3}{C} for each Bronze Saint chosen. Gold Saints require no additional Cosmo.\nDestroy the chosen Saints. This destruction can't be prevented.\nThe enemy God loses Soul equal to their combined Power, plus {3}{S} for each Gold Saint destroyed this way.\nDivine Judgment — If the enemy God survives, place a Divine Judgment counter on that God.\nAt the end of the next round, if that God still has a Divine Judgment counter, its controller loses the game.\nThat God's controller may spend an Action and sacrifice three Devotees they control to remove the Divine Judgment counter.",
+      "ultimate_en": "ATHENA EXCLAMATION — Ultimate\nCost: {5}{C}\nChoose three Prepared Saints you control with different character identities. Pay an additional {2}{S} for each Silver Saint and {3}{S} for each Bronze Saint chosen. Gold Saints require no additional Soul.\nDestroy the chosen Saints. This destruction can't be prevented.\nThe enemy God loses Soul equal to their combined Power, plus {3}{S} for each Gold Saint destroyed this way.\nDivine Judgment — If the enemy God survives, place a Divine Judgment counter on that God.\nAt the end of the next round, if that God still has a Divine Judgment counter, its controller loses the game.\nThat God's controller may spend an Action and sacrifice three Devotees they control to remove the Divine Judgment counter.",
       "notas_pt": "Versão nova fornecida pelo autor em 24/10/2026; texto preservado.",
       "nome_exibicao_pt": "ATHENA",
       "subtitulo_pt": "SAORI KIDO",
@@ -3921,7 +3921,7 @@
         "LUZ CURADORA — Comando Divino\nCusto: {1}{C}. Ative apenas durante o seu turno, uma vez por turno.\nRemova 1 de dano do Devoto aliado alvo.\nDesperto: remova 2 de dano em vez disso e ganhe {1}{S}."
       ],
       "habilidade_awaken_pt": "PROTEÇÃO DIVINA — Despertar 5\nDevotos de Athena que você controla recebem +1 de Poder e +1 PV.\nQuando um Devoto de Athena que você controla seria destruído, você pode pagar {3}{C}. Se fizer isso, previna essa destruição e deixe-o com 1 PV.",
-      "ultimate_pt": "EXCLAMAÇÃO DE ATHENA — Supremo\nCusto: {5}{C}\nEscolha três Cavaleiros Preparados que você controla, com identidades de personagem diferentes. Pague mais {2}{C} para cada Cavaleiro de Prata e {3}{C} para cada Cavaleiro de Bronze escolhido. Cavaleiros de Ouro não exigem Cosmo adicional.\nDestrua os Cavaleiros escolhidos. Essa destruição não pode ser prevenida.\nO Deus inimigo perde Alma igual ao Poder somado deles, mais {3}{S} para cada Cavaleiro de Ouro destruído assim.\nJulgamento Divino — Se o Deus inimigo sobreviver, coloque um marcador de Julgamento Divino nesse Deus.\nNo fim da próxima rodada, se esse Deus ainda tiver um marcador de Julgamento Divino, o controlador dele perde o jogo.\nO controlador desse Deus pode gastar uma Ação e sacrificar três Devotos que controla para remover o marcador de Julgamento Divino."
+      "ultimate_pt": "EXCLAMAÇÃO DE ATHENA — Supremo\nCusto: {5}{C}\nEscolha três Cavaleiros Preparados que você controla, com identidades de personagem diferentes. Pague mais {2}{S} para cada Cavaleiro de Prata e {3}{S} para cada Cavaleiro de Bronze escolhido. Cavaleiros de Ouro não exigem Alma adicional.\nDestrua os Cavaleiros escolhidos. Essa destruição não pode ser prevenida.\nO Deus inimigo perde Alma igual ao Poder somado deles, mais {3}{S} para cada Cavaleiro de Ouro destruído assim.\nJulgamento Divino — Se o Deus inimigo sobreviver, coloque um marcador de Julgamento Divino nesse Deus.\nNo fim da próxima rodada, se esse Deus ainda tiver um marcador de Julgamento Divino, o controlador dele perde o jogo.\nO controlador desse Deus pode gastar uma Ação e sacrificar três Devotos que controla para remover o marcador de Julgamento Divino."
     },
     {
       "id": "poseidon-001",
@@ -8623,11 +8623,10 @@
       "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026.",
       "categoria_equipamento": "Artifact",
       "slot_equipamento": "acessorio",
-      "auto_equip_en": [],
+      "auto_equip_en": ["Pandora"],
       "donos": ["pandora"],
       "equipar_custo_outros": 4,
-      "equipar_custo_ressonante": 1,
-      "equipar_auto": false,
+      "equipar_auto": true,
       "nome_exibicao_pt": "TRIDENTE DE PANDORA",
       "subtitulo_pt": "O Instrumento da Autoridade Divina",
       "habilidades_pt": [
@@ -10000,11 +9999,10 @@
       "notas_pt": "Texto do autor, Hades Vanilla Set V6, 28/10/2026.",
       "categoria_equipamento": "Artifact",
       "slot_equipamento": "acessorio",
-      "auto_equip_en": [],
+      "auto_equip_en": ["Pandora"],
       "donos": ["pandora"],
       "equipar_custo_outros": 3,
-      "equipar_custo_ressonante": 1,
-      "equipar_auto": false,
+      "equipar_auto": true,
       "nome_exibicao_pt": "HARPA DE PANDORA",
       "subtitulo_pt": "A Melodia do Mundo dos Mortos",
       "habilidades_pt": [
