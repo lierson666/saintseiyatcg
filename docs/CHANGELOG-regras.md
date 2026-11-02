@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-02 — Cartas (sem mudança no guia) — Corpo dos doadores de Treinamento de Artemis
+
+- **Antes → depois (ATK/HP):** Sacred Stag 2/2 → 1/2; Lunar Nymph 1/3 → 1/2; Chandra 2/4 → 2/3; Moon Temple Acolyte 2/3 → 1/3; Moonlit Wolf 2/1 → 1/1.
+- **Motivo:** decisão do autor, 02/11/2026, após partida no celular: Lobo a 4/2 no início do jogo e marcador grátis em corpo já dentro da curva.
+- **Engine/dados:** `data/cards.json`, `card-forge/art-web/cards.json`.
+- **Pendência:** não medido em partida.
+
 ## 2026-11-02 — Cartas (sem mudança no guia) — Nerf de The Ancient Grove
 
 - **Antes:** Devotees aliados com marcador de Treinamento têm +0 ATK / +1 HP, sempre. Resonance paga {1}{C} por 1 marcador ao sobreviver a um Strike.

@@ -308,13 +308,13 @@ test('custos novos: 397 c1, 449 c5, 450 c6', () => {
   assert.deepEqual([397, 449, 450].map(n => ctx.cards.get(id(n)).cost.amount), [1, 5, 6]);
 });
 
-test('Sacred Stag: Forest Blessing só mira outro Devotee; sozinho fica 2/2 sem marcador', () => {
+test('Sacred Stag: Forest Blessing só mira outro Devotee; sozinho fica 1/2 sem marcador', () => {
   const alone = setup();
   const stag = alone.hand('A', 'artemis-v6-381');
   alone.p.bases.push({uid: 'b1', prepared: true}, {uid: 'b2', prepared: true});
   playDevotee(alone.s, alone.ctx, 'A', stag);
   assert.ok(!alone.s.units[stag].training);
-  assert.deepEqual([atkOf(alone.s, alone.ctx, stag), hpOf(alone.s, alone.ctx, stag)], [2, 2]);
+  assert.deepEqual([atkOf(alone.s, alone.ctx, stag), hpOf(alone.s, alone.ctx, stag)], [1, 2]);
 
   const pair = setup();
   const ally = pair.field('A', 'artemis-v6-381'), second = pair.hand('A', 'artemis-v6-381');
