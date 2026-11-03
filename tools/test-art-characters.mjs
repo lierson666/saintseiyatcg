@@ -59,7 +59,8 @@ test('4 e 19: cinquenta Specters viram exército, sem regra de rosto', () => {
   const {text, negative} = buildFake(fake('HADES ARMY', 'Hades'), {count: '50', order: 'specter', formation: 'march', variety: 'different', shot: 'Extreme Wide Shot', god: 'Hades'});
   assert.match(text, /about 50 Specters/);
   assert.match(text, /SCALE AND READING: .*silhouettes/);
-  assert.doesNotMatch(text, /FACE PLACEMENT|7\/10|EXPRESSION|APPEARANCE/);
+  assert.doesNotMatch(text, /FACE PLACEMENT|EXPRESSION|APPEARANCE/);
+  assert.match(text, /point of greatest attention sits at about 7\/10/);
   assert.doesNotMatch(text, SINGLE_ONLY);
   assert.match(negative, /merged silhouettes/);
   assert.match(negative, /repeated identical faces/);
@@ -194,7 +195,8 @@ test('18: em grupo a regra do rosto vale só para o protagonista', () => {
   assert.match(moderate, /7\/10 RULE \(protagonist or main face only\)/);
   assert.match(moderate, /PROTAGONIST POSE/);
   assert.match(collective, /GROUP READING/);
-  assert.doesNotMatch(collective, /7\/10|POSE:/);
+  assert.doesNotMatch(collective, /FACE PLACEMENT|POSE:/);
+  assert.match(collective, /GROUP READING: .*7\/10/);
   assert.match(build(SPEARMAN, {count: '3', variety: 'leader_uniform'}).text, /one protagonist dominates/);
 });
 

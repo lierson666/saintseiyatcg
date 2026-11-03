@@ -533,15 +533,17 @@ const anatomyLine = (c) => {
   if (c.mixed) return `ANATOMY: each species keeps its own coherent anatomy; none is a copy of another.${c.profile.hands ? ` Human figures: ${c.profile.text}.` : ''}`;
   return `ANATOMY${c.group ? ' (every figure)' : ''}: ${c.profile.text}.`;
 };
+// Regra dos 7/10 do Master, estendida pelo autor (02/11/2026) ao ponto de maior atenção de toda natureza de arte, não só ao rosto.
+const ATTENTION = 'at about 7/10 of the image height measured from the bottom, in the central part of the image and away from the edges';
 function focusLine(c, figure, faceless) {
   if (!figure) return '';
-  if (faceless) return 'FOCAL POINT: this figure is read by silhouette and placement, with no face to carry the image; build a clear visual center of interest in the central part of the image.';
-  if (c.army) return 'SCALE AND READING: the force reads through silhouettes, scale and collective organization; a few foreground figures are large enough to read, the rest resolve into ranks. No single face has to carry the image.';
+  if (faceless) return `FOCAL POINT: this figure is read by silhouette and placement, with no face to carry the image; build a clear visual center of interest ${ATTENTION}.`;
+  if (c.army) return `SCALE AND READING: the force reads through silhouettes, scale and collective organization; a few foreground figures are large enough to read, the rest resolve into ranks. No single face has to carry the image: its point of greatest attention sits ${ATTENTION}.`;
   const rule = 'place the eyes at about 7/10 of the image height measured from the bottom, never above that line, in the central part of the image and away from the edges. Keep the top free for card interface without hiding the face.';
-  if (c.group) return c.lead[0] === 'collective' || c.lead[0] === 'balanced' ? 'GROUP READING: keep the faces or heads of the front figures in the central region and away from the edges; no figure may hide another one\'s face. Keep the top free for card interface.' : `FACE PLACEMENT, 7/10 RULE (protagonist or main face only): ${rule} The other figures do not need to follow it and never cover that face.`;
+  if (c.group) return c.lead[0] === 'collective' || c.lead[0] === 'balanced' ? `GROUP READING: the faces or heads of the front figures sit ${ATTENTION}; no figure may hide another one's face. Keep the top free for card interface.` : `FACE PLACEMENT, 7/10 RULE (protagonist or main face only): ${rule} The other figures do not need to follow it and never cover that face.`;
   if (c.profile.focus === 'face') return `FACE PLACEMENT, 7/10 RULE (mandatory): ${rule}`;
-  if (c.profile.focus === 'eyes') return 'FOCAL POINT: the head, the eyes and the jaw or beak of the creature sit at about 7/10 of the image height in the central part of the image; keep the top free for card interface.';
-  return 'FOCAL POINT: this being has no face to rely on; build a clear visual center of interest in the central part of the image, at about 7/10 of its height.';
+  if (c.profile.focus === 'eyes') return `FOCAL POINT: the head, the eyes and the jaw or beak of the creature sit ${ATTENTION}; keep the top free for card interface.`;
+  return `FOCAL POINT: this being has no face to rely on; build a clear visual center of interest ${ATTENTION}.`;
 }
 function negativeLine(generic, c, figure) {
   const genericBase = 'existing anime characters, recognizable named characters, canon armor designs', backdrop = 'giant faces or ghostly figures in the background';
@@ -567,7 +569,7 @@ function modeOf(f, p, c, personSubject) {
       direction: 'Show one specific event, its emotion and its weight, with cinematic framing. The event is the subject, not the appearance of an individual. Avoid a generic poster composition.',
       subject: zero ? `${name}, ${generic ? 'an original scene created for this card' : 'as an event'}. No people appear in the image: it is told only by objects, the environment and energy.${invent}` : `${present}${invent}`,
       lines: [`SCENE: ${kind || 'a symbolic scene'}, ${moment || 'the decisive instant'}. MAIN VISUAL ELEMENT: ${focus}.`],
-      focus: figureFocus ? null : `FOCAL POINT: ${focus}, in the central part of the image.`,
+      focus: figureFocus ? null : `FOCAL POINT: ${focus}, ${ATTENTION}.`,
       faceless: !figureFocus,
       negative: [zero && NO_PEOPLE, 'generic poster composition, static posing with no event'],
       references: !zero,
@@ -581,7 +583,7 @@ function modeOf(f, p, c, personSubject) {
       direction: 'The power itself is the subject: its origin, its trajectory and its consequence must read at a glance.',
       subject: noBody ? `${name}, shown as a pure manifestation of power. No caster, no target and no people appear in the image.${invent}` : `${personSubject || name}${invent}`,
       lines: [`EFFECT: ${textOf(EFFECTS, p.effect, p.effectCustom) || 'pure cosmo'}, taking the visual form of ${textOf(FORMS, p.form) || 'an abstract form'}. ORIGIN: ${origin}. PHASE: ${textOf(PHASES, p.phase) || 'the release at full power'}.`, `VISUAL INTENSITY ${level[0]} OF 5: ${level[2]}.`, !noBody && `VISIBLE FIGURES: ${visible[3]}; they stay secondary to the effect.`],
-      focus: 'FOCAL POINT: the energy manifestation itself, in the central part of the image; no face has to carry the image.',
+      focus: `FOCAL POINT: the heart of the energy manifestation, ${ATTENTION}; no face has to carry the image.`,
       faceless: true,
       negative: [noBody && NO_PEOPLE, 'muddled energy with no readable origin or direction, written effects'],
       references: !noBody,
@@ -599,7 +601,7 @@ function modeOf(f, p, c, personSubject) {
       subject: bearer === 'none' ? (generic ? `${name} (${f.typeLine}), an original sacred object alone, with no wearer.${invent} Show its structure and materials clearly.` : `${name} (${f.typeLine}) alone as a sacred object, with no wearer; show its structure and materials clearly and preserve the symbols, colors and geometry of the attached reference images.`) : personSubject && BODY_BEARERS.has(bearer) ? personSubject : `${name} (${f.typeLine}), the main subject of the image.${invent}${canonLook}`,
       lines: [`OBJECT: ${kind ? `${kind}, ` : ''}${state || 'intact'}. PRESENTATION: ${presentation}.`, bearer !== 'none' && `BEARER: ${bearerText}; the object stays the main subject.`, bearer === 'hands' && 'HANDS: exactly five fingers on each visible hand.'],
       setting: support,
-      focus: `FOCAL POINT: the object itself, its full shape readable in the central part of the image.`,
+      focus: `FOCAL POINT: the most important part of the object, ${ATTENTION}, with its full shape readable around that point.`,
       faceless: !BODY_BEARERS.has(bearer),
       keepFace: BODY_BEARERS.has(bearer),
       negative: [bearer === 'none' && `${NO_PEOPLE}, wearer, mannequin, hands`, damaged ? 'object hidden by effects, unreadable shape' : 'unintended damage, broken geometry, object hidden by effects', 'cropped object'],
@@ -612,7 +614,7 @@ function modeOf(f, p, c, personSubject) {
       direction: 'The place is the protagonist: architecture, depth, atmosphere, scale and faction identity.',
       subject: `${name}, ${generic ? 'an original place' : 'as a place'}${zero ? ', with no characters' : ''}.${invent}${zero ? '' : ` Present in the place: ${castPhrase(c)}, small against it.`}`,
       lines: [`ENVIRONMENT: ${textOf(ENV_TYPES, p.envType, p.envCustom) || 'an epic place'}, ${textOf(ENV_STATES, p.envState) || 'intact'}. SCALE: ${textOf(ENV_SCALES, p.envScale) || 'monumental'}.`, extras.length && `ATMOSPHERE: ${extras.join('; ')}.`],
-      focus: `FOCAL POINT: the structure or landscape itself, in the central part of the image; depth and perspective lead the eye to it.${zero ? '' : ' The figures give it scale and never cover it.'}`,
+      focus: `FOCAL POINT: the main structure or landscape feature, ${ATTENTION}; depth and perspective lead the eye to it.${zero ? '' : ' The figures give it scale and never cover it.'}`,
       faceless: true,
       negative: [zero && NO_PEOPLE, 'flat perspective, incoherent architecture'],
       references: false,
@@ -624,7 +626,7 @@ function modeOf(f, p, c, personSubject) {
     direction: 'Show divine presence: scale, impact and perceptible supernatural power. Never hide a divine face with effects when one is shown.',
     subject: bodied && personSubject ? personSubject : `${name}, manifested ${man[2]}.${invent}`,
     lines: [`DIVINE MANIFESTATION: ${man[2]}, at ${textOf(DIVINE_SCALES, p.divineScale) || 'heroic scale'}.`, language && `DIVINE LANGUAGE: ${language}. This guides the identity, it is not monochrome. Do not present any invented symbol as an official emblem.`],
-    focus: bodied ? null : 'FOCAL POINT: the manifestation itself, its presence and scale, in the central part of the image; no face or human body is required.',
+    focus: bodied ? null : `FOCAL POINT: the heart of the manifestation, ${ATTENTION}; its presence and scale carry the image, and no face or human body is required.`,
     faceless: !bodied,
     negative: [!bodied && 'human body, human face, anatomy', 'small unimpressive presence'],
     references: bodied,
@@ -685,7 +687,7 @@ export function buildImagePrompt(f, p) {
     focal,
     humanoid && !c.army && !faceless && !mode?.faceless && `EXPRESSION${c.group ? ' OF THE MAIN FACE' : ''}: ${p.expression}.`,
     figure && !humanoid && p.creatureMood && `BEHAVIOR: ${p.creatureMood}.`,
-    'COMPOSITION: card interface may cover parts of the image, so concentrate the most important elements in the central region and keep a silhouette readable at small size.',
+    'COMPOSITION: card interface may cover parts of the image, so build around that point of greatest attention and keep a silhouette readable at small size.',
     figure && anatomyLine(c),
     showTechnique && `TECHNIQUE IN USE: ${p.technique}${power && !generic ? ` — ${power.text}` : ''}. Show its origin, trajectory and consequence visually with cosmo energy; no written effects.`,
     `LIGHTING: ${p.light}.`,

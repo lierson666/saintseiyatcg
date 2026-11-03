@@ -49,7 +49,7 @@ test('3: Moment representado por objeto', () => {
   const {positive, c, negative} = build(ARROW);
   assert.equal(c.active, false);
   assert.match(positive, /MAIN VISUAL ELEMENT: the object named by the card/);
-  assert.match(positive, /FOCAL POINT: the object named by the card/);
+  assert.match(positive, /FOCAL POINT: the object named by the card.*at about 7\/10/);
   assert.match(negative, /people/);
 });
 
@@ -57,6 +57,7 @@ test('4 a 7: Technique com zero, conjurador, alvo e vários', () => {
   const none = build(COFFIN);
   assert.equal(none.c.n, 0);
   assert.match(none.positive, /EFFECT: absolute freezing/);
+  assert.match(none.positive, /FOCAL POINT: the heart of the energy manifestation, at about 7\/10/);
   assert.match(none.positive, /No caster, no target and no people/);
   assert.doesNotMatch(none.positive, HUMAN);
   const caster = build('SHIRYU’S LAST DRAGON', {visible: 'caster', person: 'SHIRYU'});
@@ -80,6 +81,7 @@ test('8 a 12: Equipment isolado, equipado, quebrado, Object Form e Cloth Box', (
   const alone = build(TRIDENT);
   assert.match(alone.positive, /alone as a sacred object, with no wearer/);
   assert.doesNotMatch(alone.positive, HUMAN);
+  assert.match(alone.positive, /FOCAL POINT: the most important part of the object, at about 7\/10/);
   assert.match(alone.negative, /wearer, mannequin, hands/);
   const worn = build(CLOTH, {presentation: 'worn', person: 'PEGASUS SEIYA'});
   assert.match(worn.positive, /SUBJECT: PEGASUS SEIYA, wearing PEGASUS CLOTH V2/);
@@ -106,7 +108,7 @@ test('13 a 15: Domain vazio, com dez guardas e com exército', () => {
   const empty = build(SANCTUARY);
   assert.equal(empty.c.active, false);
   assert.match(empty.positive, /with no characters/);
-  assert.match(empty.positive, /FOCAL POINT: the structure or landscape/);
+  assert.match(empty.positive, /FOCAL POINT: the main structure or landscape feature, at about 7\/10/);
   assert.doesNotMatch(empty.positive, HUMAN);
   const ten = build(SANCTUARY, {count: '10', order: 'ocean_temple_guard', formation: 'temple_guard'});
   assert.match(ten.positive, /FORMATION: Ten Ocean Temple Guards standing/);
