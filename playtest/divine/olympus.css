@@ -1030,6 +1030,12 @@ body:has(.trigger-panel, .cast-slot) .command__clock { visibility: hidden; }
 .reduce-motion .pick-modal { animation: none; }
 @media (max-height: 520px) { .pick-modal { padding: 10px 12px; } .pick-modal .decision__opt .dcard { --card-w: clamp(96px, 16vh, 140px); } .pick-modal .decision__effect { display: none; } }
 
+/* Até 10 opções cabem na mesma linha, sem rolagem (autor, 03/11/2026); no celular em pé continua quebrando em linhas. */
+@media (min-width: 701px) {
+  .pick-modal { width: min(1400px, 96vw); }
+  .pick-modal .decision__opts { gap: 14px; }
+  .pick-modal .decision__opt .dcard { --card-w: max(72px, min(210px, (min(1400px, 96vw) - 60px - (var(--n, 5) - 1) * 14px) / var(--n, 5) - 12px, (92dvh - 230px) / 1.4)); }
+}
 /* Awaken: o avatar do God emana cosmo na cor do deus (--glow vem do godhud). */
 .godhud.is-awaken .gh-hole { box-shadow: 0 0 0 2px rgba(0, 0, 0, .7), 0 0 26px 6px rgba(var(--glow), .9), 0 0 70px 18px rgba(var(--glow), .45), inset 0 0 18px rgba(var(--glow), .55); animation: awakenAura 2.2s ease-in-out infinite; }
 .godhud.is-awaken .gh-hole::before, .godhud.is-awaken .gh-hole::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; pointer-events: none;

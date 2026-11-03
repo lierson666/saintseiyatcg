@@ -1102,7 +1102,8 @@ function render() {
     </div>${choiceBar()}`, {morphStyle: 'innerHTML'});
   if (drag?.ghost) showDragZones(drag.uid); // re-render no meio do arraste não apaga as zonas
   const focused = document.activeElement?.closest?.('.decision [data-focus]')?.dataset.focus;
-  overlayRoot.innerHTML = overlays();
+  // Popup de escolha aberto: atualiza no lugar, sem repetir a entrada, recarregar as cartas nem voltar a rolagem (autor, 03/11/2026).
+  if ($('.pick-modal', overlayRoot)) Idiomorph.morph(overlayRoot, overlays(), {morphStyle: 'innerHTML'}); else overlayRoot.innerHTML = overlays();
   paintCoin();
   if (focused) $(`.decision [data-focus="${CSS.escape(focused)}"]`)?.focus();
   for (const uid of mode?.options || []) $$(`[data-uid="${uid}"]`).forEach(el => el.classList.add('pickable'));
@@ -2388,7 +2389,7 @@ function sidePanel(req, t, fx) {
   // Busca no deck, Tartarus ou mão (tutor): popup no meio da tela com as cartas grandes, como no Arena (autor, 31/10/2026).
   const offBoard = req.kind === 'choice' && !target && req.choose !== 'mode' && req.options.every(u => ctx.objects[u] && !S().order.some(k => S().players[k].battlefield.includes(u)));
   const size = offBoard ? 'dcard--lg' : 'dcard--sm';
-  const opts = req.kind === 'choice' && !target ? `<div class="decision__opts trigger-panel__opts" role="group" aria-label="Options">${req.options.map((uid, i) => `<button class="decision__opt ${picked.includes(uid) ? 'picked' : ''}" data-dec="opt" data-opt="${esc(uid)}" data-focus="opt:${esc(uid)}" aria-pressed="${picked.includes(uid)}" aria-label="${esc(optName(uid))}${i < 9 ? `, key ${i + 1}` : ''}">${String(uid).startsWith('god:') || req.choose === 'mode' || !ctx.objects[uid] ? `<span class="dcard decision__god">${esc(optName(uid))}</span>` : cardFace(uid, {size}).replace('tabindex="0"', 'tabindex="-1"')}${i < 9 ? `<kbd>${i + 1}</kbd>` : ''}${picked.includes(uid) ? `<b class="decision__order">${picked.indexOf(uid) + 1}</b>` : ''}</button>`).join('')}</div>` : '';
+  const opts = req.kind === 'choice' && !target ? `<div class="decision__opts trigger-panel__opts" style="--n:${Math.min(req.options.length, 10)}" role="group" aria-label="Options">${req.options.map((uid, i) => `<button class="decision__opt ${picked.includes(uid) ? 'picked' : ''}" data-dec="opt" data-opt="${esc(uid)}" data-focus="opt:${esc(uid)}" aria-pressed="${picked.includes(uid)}" aria-label="${esc(optName(uid))}${i < 9 ? `, key ${i + 1}` : ''}">${String(uid).startsWith('god:') || req.choose === 'mode' || !ctx.objects[uid] ? `<span class="dcard decision__god">${esc(optName(uid))}</span>` : cardFace(uid, {size}).replace('tabindex="0"', 'tabindex="-1"')}${i < 9 ? `<kbd>${i + 1}</kbd>` : ''}${picked.includes(uid) ? `<b class="decision__order">${picked.indexOf(uid) + 1}</b>` : ''}</button>`).join('')}</div>` : '';
   const actions = waiting ? `<p class="decision__note">Waiting for Player ${req.player}…</p>`
     : req.kind === 'optional' ? `<button class="primary-action" data-dec="yes" data-focus="yes">${esc(t.yes)}</button><button class="ghost" data-dec="no" data-focus="no">${esc(t.no)}</button>`
     : opts ? `<button class="primary-action" data-dec="confirm" data-focus="confirm" ${pickedOk(req, picked) ? '' : 'disabled'}>Confirm · ${picked.length}/${req.count}</button>${cancel}` : cancel;
