@@ -2,6 +2,7 @@
 // Duas saídas: o sistema completo com o pedido da carta, para o GPT agir como diretor de arte, ou o prompt direto de imagem.
 // No prompt direto o traço vem descrito, sem nome de ilustrador: o gerador de imagem costuma recusar nome de artista vivo.
 import {printedKind} from '../shared/rules-policy.js';
+import {ANATOMY, ARMY_FROM, CREATURES, CREATURE_CHOICES, CREATURE_MOODS, CREATURE_POSES, COUNTS, CROWD_FROM, EXACT_LIMIT, FORMATIONS, LEADS, ORDERS, VARIETIES, allowedNotes, blockedNotes, countOf, countWord, creatureById, creatureFromSubtypes, creaturePool, formationById, notesAskAlone, orderById, orderFromCard, suggestFormation} from './art-taxonomy.js?v=20261102-arte15';
 import {formatCardTypeLine} from '../shared/equipment-types.js';
 
 const pair = (code, pt) => [code, `${code}: ${pt}`];
@@ -15,6 +16,8 @@ export const SHOTS = [
   pair('Full Body Silhouette against a bright background', 'silhueta contra o fundo claro'), pair('Long Shot (LS)', 'corpo inteiro com chão e cenário'), pair('Extreme Wide Shot (EWS)', 'figura minúscula, cenário imenso'),
   pair('Foreground Framing, figure seen through columns or debris', 'figura vista entre colunas ou destroços'), pair('Reflection Shot, figure and its reflection in water', 'figura e reflexo na água'), pair('Deep Focus Shot, figure in the middle ground, foreground and background sharp', 'figura no meio, tudo em foco'),
   pair('Vertical Tower Shot, figure small at the base of tall architecture', 'figura pequena sob arquitetura alta'),
+  pair('Wide Group Shot', 'grupo inteiro em cena'), pair('Extreme Wide Shot', 'figuras pequenas, escala enorme'), pair('Army Shot', 'tropa inteira em cena'), pair('Massive Army Shot', 'exército até o horizonte'), pair('Massive Crowd Shot', 'multidão'), pair('Aerial Formation Shot', 'formação vista de cima, no ar'), pair('Underwater Formation Shot', 'formação submersa'),
+  pair('Battlefield Panorama', 'panorama do campo de batalha'), pair('Establishing Shot', 'apresenta o lugar e o grupo'), pair('Creature Scale Shot', 'mostra o tamanho da criatura'), pair('Silhouette Army Shot', 'exército em silhuetas'), pair('Temple Defense Shot', 'defensores diante do templo'),
 ];
 export const POSES = [
   pair('Standing straight', 'em pé, postura reta'), pair('Casual lean against a wall', 'encostado na parede'), pair('Sitting cross-legged', 'sentado de pernas cruzadas'),
@@ -343,7 +346,7 @@ export function cardFacts(card, cards = []) {
   return {
     generic, creature: generic && isSelf && (card.subtipos || []).some((s) => CREATURE.test(s)), name, kind, typeLine: formatCardTypeLine(card), faction: card.faccao, isSelf, isSpell, armors, powers,
     subtitle: clean(card.tagline_en || card.subtitulo_en), flavour: clean(card.flavour_en || card.flavour_pt), keywords: card.keywords_en || [], rarity: card.raridade,
-    people: [...new Set([...(wearer ? [wearer] : []), ...faction])], person: isSelf ? name : isSpell ? caster || '' : '', // Equipment e Domain: só com personagem se o autor pedir (seção 10)
+    subtypes: card.subtipos || [], people: [...new Set([...(wearer ? [wearer] : []), ...faction])], person: isSelf ? name : isSpell ? caster || '' : '', // Equipment e Domain: só com personagem se o autor pedir (seção 10)
     techniques: [...new Set([...(isSpell ? [name] : []), ...powers.map((p) => p.name).filter((n) => n && !/^resonance\b/i.test(n))])],
   };
 }
@@ -355,42 +358,154 @@ export function defaultParams(f) {
     epic: f.kind === 'God' ? '5' : EPIC_BY_RARITY[f.rarity] || '3',
     shot: scene ? 'Wide Environmental Shot' : object ? SHOTS[6][0] : pickBy(`${f.name} shot`, START_SHOTS), angle: pickBy(`${f.name} angle`, START_ANGLES), pose: pickBy(`${f.name} pose`, START_POSES), motion: f.isSelf || f.isSpell ? MOTIONS[1][0] : '',
     expression: EXPRESSIONS[0][0], style: styleWith(god?.style || 'Araki'), accent: '', light: LIGHTS[god?.light ?? 0][0], before: '', now: '', next: '', viewer: '', usePowers: true, notes: '',
+    creature: 'auto', creatureCustom: '', species: '', order: '', orderCustom: '', count: '1', countCustom: '', formation: '', formationCustom: '', variety: 'same_class', lead: '', traits: '', special: '', creaturePose: pickBy(`${f.name} stance`, CREATURE_POSES.filter((x) => !x.needs)).label, creatureMood: pickBy(`${f.name} mood`, CREATURE_MOODS), shotManual: false, scope: 'all',
   };
 }
 
-// Sorteia a direção de arte. Personagem, armadura, deus e técnica de Moment/Technique vêm da carta e ficam como estão.
+const WIDE_SHOTS = ['Wide Shot (WS)', 'Wide Group Shot', 'Long Shot (LS)', 'Establishing Shot', 'Battlefield Panorama', 'Temple Defense Shot', 'Underwater Formation Shot', 'Aerial Formation Shot', 'Wide Environmental Shot'];
+const ARMY_SHOTS = ['Extreme Wide Shot', 'Army Shot', 'Massive Army Shot', 'Massive Crowd Shot', 'Battlefield Panorama', 'Silhouette Army Shot', 'Aerial Formation Shot', 'Underwater Formation Shot', 'Establishing Shot'];
+const GROUP_ONLY_SHOTS = new Set(['Wide Group Shot', 'Army Shot', 'Massive Army Shot', 'Massive Crowd Shot', 'Aerial Formation Shot', 'Underwater Formation Shot', 'Silhouette Army Shot', 'Temple Defense Shot']);
+const shotPool = (n) => (n >= ARMY_FROM ? ARMY_SHOTS : n > 1 ? WIDE_SHOTS : SHOTS.map(([en]) => en).filter((en) => !GROUP_ONLY_SHOTS.has(en)));
+// Só sugere: quem chama respeita a escolha manual do autor.
+export function suggestShot(n, formation) {
+  if (n <= 1) return 'Medium Full Shot (MFS)';
+  if (n >= 4 && formation === 'swimming') return 'Underwater Formation Shot';
+  if (n >= 4 && formation === 'flying') return 'Aerial Formation Shot';
+  if (n > EXACT_LIMIT && formation === 'temple_guard') return 'Temple Defense Shot';
+  return n <= 3 ? 'Wide Shot (WS)' : n <= EXACT_LIMIT ? 'Wide Group Shot' : n < 50 ? 'Army Shot' : n < CROWD_FROM ? 'Extreme Wide Shot' : 'Massive Army Shot';
+}
+
+const pluralOf = (noun) => noun.replace(/(y)$/, 'ie').replace(/(s|x|ch|sh)$/, '$1e') + 's';
+const originalOrder = (o) => (o.source === 'original' ? ' It is an original order created for this game, not part of any existing canon: invent its design.' : ' Its members here are anonymous and designed originally, not any named character.');
+
+// Junta o que foi escolhido com o que a carta sugere. Equipment e Domain não têm elenco; Moment e Technique só têm se o autor pedir.
+export function resolveCast(f, p) {
+  const object = f.kind === 'Equipment' || f.kind === 'Domain', customCreature = clean(p.creatureCustom);
+  const picked = !object && (p.creature === 'custom' ? Boolean(customCreature) : Boolean(creatureById(p.creature)));
+  const n = object ? 1 : countOf(p);
+  const creature = (picked && (p.creature === 'custom' ? {id: 'custom', noun: customCreature, en: customCreature, profile: 'custom'} : creatureById(p.creature)))
+    || (!object && p.generic && f.isSelf && creatureFromSubtypes(f.subtypes)) || creatureById('human');
+  const profile = ANATOMY[creature.profile];
+  const legacyFigure = Boolean(p.person) && !(p.generic && !f.isSelf);
+  const active = object ? legacyFigure : f.isSelf || picked || n > 1 || legacyFigure;
+  const humanBody = creature.profile === 'human' || creature.profile === 'divine';
+  const order = !active ? null : p.order === 'custom' ? (clean(p.orderCustom) ? {label: clean(p.orderCustom), noun: clean(p.orderCustom), en: clean(p.orderCustom), source: 'original'} : null)
+    : orderById(p.order) || (p.generic && orderFromCard(f.name, f.subtypes)) || null;
+  const variety = VARIETIES.find(([id]) => id === p.variety) || VARIETIES[0];
+  const nounOne = clean(p.species) || (order && humanBody ? order.noun : creature.noun);
+  const plain = clean(p.species) ? pluralOf(nounOne) : order && humanBody ? order.plural || pluralOf(nounOne) : creature.plural || pluralOf(nounOne);
+  const mixed = variety[0] === 'mixed';
+  const plural = mixed ? `figures of mixed species: ${order?.plural || (order ? pluralOf(order.noun) : creature.plural || pluralOf(creature.noun))} and ${clean(p.species) || 'mythological creatures'}` : plain;
+  const formationId = n > 1 ? p.formation || suggestFormation(n, profile) : 'single';
+  const lead = LEADS.find(([id]) => id === p.lead) || (variety[0].startsWith('leader') ? LEADS[1] : n >= ARMY_FROM ? LEADS[3] : LEADS[0]);
+  return {active, picked, object, n, group: n > 1, army: n >= ARMY_FROM, crowd: n >= CROWD_FROM, exact: n <= EXACT_LIMIT, creature, profile, nonHuman: !profile.humanMood, mixed, order, variety, lead, formationId, noun: nounOne, plural};
+}
+
+// Sorteia a direção de arte. Personagem, armadura, deus, ordem, tipo, quantidade e técnica de Moment/Technique ficam como estão.
 const RANDOM_LISTS = {ethnicity: ETHNICITIES, hair: HAIRSTYLES, version: VERSIONS, epic: EPIC_LEVELS, shot: SHOTS, angle: ANGLES, pose: POSES, motion: MOTIONS, expression: EXPRESSIONS, style: STYLES, accent: STYLES, light: LIGHTS, theme: THEMES, arc: ARCS, before: BEFORE, now: NOW, next: NEXT, viewer: VIEWER};
-export function randomParams(f, p, rand = Math.random) {
+export const RANDOM_SCOPES = [['all', 'Tudo'], ['appearance', 'Só aparência'], ['composition', 'Só composição'], ['camera', 'Só câmera e iluminação'], ['group', 'Só personagens do grupo']];
+const SCOPE_KEYS = {appearance: ['ethnicity', 'hair', 'expression'], composition: ['shot', 'angle', 'pose', 'motion'], camera: ['shot', 'angle', 'light'], group: []};
+export function randomParams(f, p, rand = Math.random, scope = 'all') {
   const pick = (list) => list[Math.floor(rand() * list.length)];
-  const out = {...p};
-  for (const [key, list] of Object.entries(RANDOM_LISTS)) out[key] = pick(list)[0];
-  if (out.accent === out.style) out.accent = '';
-  if (p.generic) out.theme = pick(p.god === 'Poseidon' ? [...GENERIC_THEMES, ...OCEAN_THEMES] : GENERIC_THEMES)[0];
-  if (!f.isSpell) out.technique = pick(['', ...f.techniques]);
+  const out = {...p}, all = scope === 'all', c = resolveCast(f, p), body = c.profile;
+  for (const [key, list] of Object.entries(RANDOM_LISTS)) if (all || SCOPE_KEYS[scope].includes(key)) out[key] = pick(list)[0];
+  if (out.shot !== p.shot) { out.shot = pick(shotPool(c.n)); out.shotManual = false; }
+  // Campo que não existe neste corpo fica guardado como estava.
+  if (!body.ethnicity) out.ethnicity = p.ethnicity;
+  if (!body.hair) out.hair = p.hair;
+  if (!body.humanMood) { out.expression = p.expression; out.pose = p.pose; }
+  if (all && out.accent === out.style) out.accent = '';
+  if (all && p.generic) out.theme = pick(body.swim && !body.hands ? OCEAN_THEMES : p.god === 'Poseidon' ? [...GENERIC_THEMES, ...OCEAN_THEMES] : GENERIC_THEMES)[0];
+  if (all && !f.isSpell) out.technique = pick(['', ...f.techniques]);
+  if (all && p.creature === 'random') out.creature = pick(creaturePool(p.god)).id;
+  if ((all || scope === 'appearance') && body.traits?.length) out.traits = pick(body.traits);
+  if ((all || scope === 'appearance') && !body.humanMood) out.creatureMood = pick(CREATURE_MOODS);
+  if ((all || scope === 'composition') && !body.humanMood) out.creaturePose = pick(CREATURE_POSES.filter((x) => !x.needs || body[x.needs])).label;
+  if (c.group && (all || scope === 'group')) {
+    const underwater = body.swim || p.god === 'Poseidon';
+    out.formation = pick(FORMATIONS.filter((x) => x.id !== 'single' && c.n >= x.min && c.n <= x.max && (!x.needs || (x.needs === 'swim' ? underwater : x.needs === 'fly' ? body.fly : body.humanMood)))).id;
+    if (!c.mixed) out.variety = pick(VARIETIES.filter(([id]) => id !== 'mixed'))[0];
+    out.lead = pick(LEADS)[0];
+  }
   return out;
 }
 
-function genericSubject(f, p, army) {
+// Pedidos das observações e combinações que brigam entre si: o popup avisa e oferece a saída.
+export function promptWarnings(f, p) {
+  const c = resolveCast(f, p), out = [];
+  for (const note of blockedNotes(p.notes)) out.push({text: `Regra técnica do formato vence: "${note}" ficou fora do prompt.`, action: 'fixnotes', button: 'Tirar das observações'});
+  if (c.group && notesAskAlone(p.notes)) out.push({text: `As observações pedem personagem sozinho, mas a quantidade é ${c.n}. A observação vence no prompt.`, action: 'solo', button: 'Voltar para 1 personagem'});
+  if (c.army && /Close-Up|Bust|Portrait|Tight/.test(p.shot)) out.push({text: 'Plano fechado não mostra um exército: o grupo não vai aparecer inteiro.', action: 'shot', button: 'Usar plano sugerido'});
+  return out;
+}
+
+function genericSubject(f, p, army, c) {
   const original = 'Invent the design from the card name and the faction; it is not based on any existing character or armor.';
   if (f.kind === 'Equipment') return `${f.name} (${f.typeLine}), an original sacred object alone, with no wearer. ${original} Show its structure and materials clearly.`;
   if (f.kind === 'Domain') return `${f.name}, an original place, with no characters. ${original}`;
-  if (f.isSelf) return `${f.name}, an original ${f.creature ? 'creature' : 'character'} created for this card, ${army}. ${original} Exactly one figure in the image: no other characters, no faces or giant figures in the background.`;
+  if (c.group) return `${f.name}, an original ${c.army ? 'force' : 'group'} created for this card, ${army}: ${castPhrase(c)}. ${original}${c.exact ? ` There are ${c.n} figures in the image, all of them clearly visible.` : ''}`;
+  if (f.isSelf || c.picked) return `${f.name}, an original ${c.nonHuman ? 'creature' : 'character'} created for this card, ${army}. ${original} Exactly one figure in the image: no other characters, no faces or giant figures in the background.`;
   return `${f.name}, an original scene created for this card, told by the environment and the energy, with at most one anonymous figure. ${original}`;
+}
+function castPhrase(c) {
+  if (c.crowd) return `a vast army of more than a hundred ${c.plural}, seen as a mass, with no attempt at a precise count`;
+  if (!c.exact) return `about ${c.n} ${c.plural}`;
+  return `exactly ${countWord(c.n)} ${c.mixed ? '' : c.variety[0] === 'identical' ? 'matching ' : 'distinct '}${c.plural}`;
+}
+const castShort = (c) => (c.crowd ? `More than a hundred ${c.plural}` : c.exact ? `${countWord(c.n)[0].toUpperCase()}${countWord(c.n).slice(1)} ${c.plural}` : `About ${c.n} ${c.plural}`);
+const placeOf = (god) => (god === 'Poseidon' ? "Poseidon's underwater temple" : god ? `the temple of ${god}` : 'the temple');
+const formationLine = (c, p) => { const text = c.formationId === 'custom' ? clean(p.formationCustom) : formationById(c.formationId)?.text; return text ? `FORMATION: ${castShort(c)} ${text.replace('{place}', placeOf(p.god))}.` : ''; };
+const anatomyLine = (c) => {
+  if (c.mixed) return `ANATOMY: each species keeps its own coherent anatomy; none is a copy of another.${c.profile.hands ? ` Human figures: ${c.profile.text}.` : ''}`;
+  return `ANATOMY${c.group ? ' (every figure)' : ''}: ${c.profile.text}.`;
+};
+function focusLine(c, figure) {
+  if (!figure) return '';
+  if (c.army) return 'SCALE AND READING: the force reads through silhouettes, scale and collective organization; a few foreground figures are large enough to read, the rest resolve into ranks. No single face has to carry the image.';
+  const rule = 'place the eyes at about 7/10 of the image height measured from the bottom, never above that line, in the central part of the image and away from the edges. Keep the top free for card interface without hiding the face.';
+  if (c.group) return c.lead[0] === 'collective' || c.lead[0] === 'balanced' ? 'GROUP READING: keep the faces or heads of the front figures in the central region and away from the edges; no figure may hide another one\'s face. Keep the top free for card interface.' : `FACE PLACEMENT, 7/10 RULE (protagonist or main face only): ${rule} The other figures do not need to follow it and never cover that face.`;
+  if (c.profile.focus === 'face') return `FACE PLACEMENT, 7/10 RULE (mandatory): ${rule}`;
+  if (c.profile.focus === 'eyes') return 'FOCAL POINT: the head, the eyes and the jaw or beak of the creature sit at about 7/10 of the image height in the central part of the image; keep the top free for card interface.';
+  return 'FOCAL POINT: this being has no face to rely on; build a clear visual center of interest in the central part of the image, at about 7/10 of its height.';
+}
+function negativeLine(generic, c, figure) {
+  const genericBase = 'existing anime characters, recognizable named characters, canon armor designs', backdrop = 'giant faces or ghostly figures in the background';
+  const always = !generic && !c.nonHuman ? NEGATIVE_ALWAYS : NEGATIVE_ALWAYS.replace('inaccurate armor, ', '');
+  const figureBan = c.profile.hands ? (generic ? NEGATIVE_FIGURE.replace(', incorrect character design', '') : NEGATIVE_FIGURE) : c.profile.humanMood ? 'broken anatomy, distorted face, cropped face, incoherent joints' : 'incoherent anatomy, muddled silhouette';
+  const own = c.mixed ? '' : c.profile.neg;
+  if (!c.group) return [figure && figureBan, figure && own, generic && `${genericBase}, extra characters, crowd, ${backdrop}`, always].filter(Boolean).join(', ');
+  const repeated = c.variety[0] !== 'identical' && 'repeated identical faces when variation is requested';
+  const groupBan = c.army ? ['incoherent armor', 'merged silhouettes', 'visual noise', 'unreadable foreground', repeated] : ['unintended additional characters beyond the requested count', 'duplicate body parts', 'merged figures', 'incoherent anatomy', 'unreadable group composition', repeated, c.profile.hands && 'malformed hands, extra fingers, fused fingers'];
+  return [...groupBan, own, generic && `${genericBase}, ${backdrop}`, always].filter(Boolean).join(', ');
 }
 
 export function buildImagePrompt(f, p) {
-  const generic = p.generic, god = GODS[p.god], person = p.person, figure = person && !(generic && (f.creature || !f.isSelf)), isEquipment = f.kind === 'Equipment', power = f.powers.find((x) => x.name === p.technique), epic = EPIC_LEVELS.find(([v]) => v === p.epic);
-  const subject = generic ? genericSubject(f, p, god ? `serving ${p.god}` : 'an independent warrior') : person
-    ? `${person}${isEquipment ? `, wearing ${f.name} (${f.typeLine})` : p.armor ? `, wearing ${p.armor}` : ''}. Match the attached reference images: face, hair, eyes, armor, ornaments, helmet and characteristic colors. Do not invent armor changes.`
+  const generic = p.generic, god = GODS[p.god], person = p.person, c = resolveCast(f, p), figure = c.active, isEquipment = f.kind === 'Equipment', power = f.powers.find((x) => x.name === p.technique), epic = EPIC_LEVELS.find(([v]) => v === p.epic);
+  const companions = c.group && person ? ` ${person} is the protagonist, with ${c.crowd ? 'a vast army' : c.exact ? countWord(c.n - 1) : `about ${c.n - 1}`} of anonymous ${c.plural} around.` : '';
+  const subject = generic ? genericSubject(f, p, god ? `serving ${p.god}` : 'an independent warrior', c) : person
+    ? `${person}${isEquipment ? `, wearing ${f.name} (${f.typeLine})` : p.armor ? `, wearing ${p.armor}` : ''}. Match the attached reference images: face, hair, eyes, armor, ornaments, helmet and characteristic colors. Do not invent armor changes.${companions}`
     : isEquipment ? `${f.name} (${f.typeLine}) alone as a sacred object, with no wearer; show its structure and materials clearly and preserve the symbols, colors and geometry of the attached reference images.`
-      : f.kind === 'Domain' ? `${f.name}, as a place, with no characters.` : `${f.name}, as an event, with no main character.`;
+      : f.kind === 'Domain' ? `${f.name}, as a place, with no characters.` : figure ? `${f.name}: ${c.group ? castPhrase(c) : c.creature.en}.` : `${f.name}, as an event, with no main character.`;
   const story = [p.before && `Just happened: ${p.before}.`, p.now && `Happening now: ${p.now}.`, p.next && `About to happen: ${p.next}.`, p.viewer && `The viewer must feel: ${p.viewer}.`].filter(Boolean).join(' ');
+  const direction = c.group ? (c.army ? 'The collective force is the subject: mass, order and scale, with the card name as its identity.' : 'The group is the main focal point, composed as one readable image and not as separate portraits.') : c.nonHuman && figure ? 'The creature is the main focal point, with a clear readable silhouette.' : (generic && GENERIC_RULES[f.kind]) || TYPE_RULES[f.kind] || TYPE_RULES.Devotee;
+  const morphology = figure && !c.mixed && c.creature.id !== 'human' && `CREATURE MORPHOLOGY: ${c.group ? `every figure is ${c.creature.en}` : c.creature.en}${clean(p.species) ? `, of the kind: ${clean(p.species)}` : ''}.${c.nonHuman ? ` ${c.group ? 'They are' : 'It is'} not ${c.group ? 'humans' : 'a human'} in armor, and no human warrior stands in front of ${c.group ? 'them' : 'it'}.` : ''}`;
+  const skin = generic && figure && !c.army && !c.mixed && (f.isSelf || c.group || c.picked);
+  const appearance = skin && [c.profile.ethnicity && `APPEARANCE (mandatory, clearly visible in the face and skin): ${c.group ? 'main figure: ' : ''}${p.ethnicity}.`, c.profile.hair && `HAIR, visible and not hidden by a helmet: ${p.hair}.`].filter(Boolean).join(' ');
+  const traits = figure && [c.profile.trait && clean(p.traits), clean(p.special)].filter(Boolean).join('; ');
+  const humanoid = figure && c.profile.humanMood;
+  const notes = clean(allowedNotes(p.notes));
   const body = [
     `Vertical 3:4 high-resolution illustration for ${generic ? 'a mythological anime trading card, in a world of sacred armors and Greek gods' : 'a Saint Seiya trading card'}. Illustration only: no card frame, no text, no names, no logos, no numbers, no stats, no interface symbols, no watermarks.`,
     `CARD: ${f.name}${f.subtitle ? ` — "${f.subtitle}"` : ''} (${f.typeLine || f.kind}, ${f.rarity || 'Common'}).`,
-    `CARD TYPE DIRECTION: ${f.creature ? 'The creature is the main focal point, with a clear readable silhouette.' : (generic && GENERIC_RULES[f.kind]) || TYPE_RULES[f.kind] || TYPE_RULES.Devotee}`,
+    `CARD TYPE DIRECTION: ${direction}`,
     `SUBJECT: ${subject}`,
-    generic && figure && f.isSelf && `APPEARANCE (mandatory, clearly visible in the face and skin): ${p.ethnicity}. HAIR, visible and not hidden by a helmet: ${p.hair}.`,
+    morphology,
+    c.order && `ARCHETYPE (visual only): ${c.order.label}: ${c.order.en}.${originalOrder(c.order)}`,
+    c.group && `GROUP VARIATION: ${c.variety[2]}.`,
+    c.group && !(c.variety[0].startsWith('leader') && c.lead[0] === 'collective') && `GROUP FOCUS: ${c.lead[2]}.`,
+    c.group && formationLine(c, p),
+    appearance,
+    traits && `SPECIAL FEATURES: ${traits}.`,
     `CAMERA VIEWPOINT (mandatory, overrides any other hint about viewpoint): ${p.angle}: ${ANGLE_VIEW[p.angle] || p.angle}.`,
     `ART STYLE (top priority for the whole image: line, shading, color treatment and rendering): ${p.style}.${p.accent ? ` Complementary finish: ${p.accent}.` : ''}`,
     !generic && p.version && `DESIGN CANON: costume and armor shapes follow ${p.version}, only as design. Draw them in the ART STYLE above, not in the look of that version.`,
@@ -398,20 +513,21 @@ export function buildImagePrompt(f, p) {
     god && `FACTION IDENTITY: ${p.god}, ${god.title}. Palette identity, not monochrome: ${god.palette}. Feeling: ${god.mood}.`,
     `SETTING: ${p.theme || (god ? god.setting : generic ? 'an epic mythological setting' : 'an epic mythological setting from the Saint Seiya universe')}.${p.arc && !generic ? ` Inspired by: ${p.arc}.` : ''}`,
     story && `STORY: ${story}`,
-    `FRAMING: ${p.shot}.${figure ? ` POSE: ${p.pose}.` : ''}${p.motion ? ` MOTION: ${p.motion}.` : ''}`,
-    figure && 'FACE PLACEMENT, 7/10 RULE (mandatory): place the eyes at about 7/10 of the image height measured from the bottom, never above that line, in the central part of the image and away from the edges. Keep the top free for card interface without hiding the face.',
-    figure && `EXPRESSION: ${p.expression}.`,
+    `FRAMING: ${p.shot}.${humanoid && !c.army && c.lead[0] !== 'collective' && c.lead[0] !== 'balanced' ? ` ${c.group ? 'PROTAGONIST POSE' : 'POSE'}: ${p.pose}.` : ''}${figure && !humanoid && !c.group && p.creaturePose ? ` STANCE: ${p.creaturePose}.` : ''}${p.motion ? ` MOTION: ${p.motion}.` : ''}`,
+    focusLine(c, figure),
+    humanoid && !c.army && `EXPRESSION${c.group ? ' OF THE MAIN FACE' : ''}: ${p.expression}.`,
+    figure && !humanoid && p.creatureMood && `BEHAVIOR: ${p.creatureMood}.`,
     'COMPOSITION: card interface may cover parts of the image, so concentrate the most important elements in the central region and keep a silhouette readable at small size.',
-    figure && 'ANATOMY: exactly five fingers on each visible hand; no duplicate limbs; coherent joints, hands, feet and neck; the armor follows the body correctly.',
+    figure && anatomyLine(c),
     p.technique && `TECHNIQUE IN USE: ${p.technique}${power && !generic ? ` — ${power.text}` : ''}. Show its origin, trajectory and consequence visually with cosmo energy; no written effects.`,
     `LIGHTING: ${p.light}.`,
     epic && `EPIC LEVEL ${epic[0]} OF 5: ${epic[2]}, without hurting character fidelity or card legibility.`,
     !generic && p.usePowers && f.powers.length ? `POWERS TO EVOKE (visual inspiration, do not write them): ${f.powers.slice(0, 4).map((x) => x.name ? `${x.name}: ${x.text}` : x.text).join(' | ')}` : '',
     !generic && p.usePowers && f.keywords.length ? `KEYWORDS: ${f.keywords.join(', ')}.` : '',
     f.flavour && `MOOD LINE: ${f.flavour}`,
-    clean(p.notes) && `NOTES: ${clean(p.notes)}`,
+    notes && `NOTES (author's direction, overrides the fields above, never the format rules): ${notes}`,
   ].filter(Boolean).join('\n');
-  return `${body}\n\nNEGATIVE PROMPT: ${figure ? `${(generic ? NEGATIVE_FIGURE.replace(', incorrect character design', '') : NEGATIVE_FIGURE)}, ` : ''}${generic ? `${NEGATIVE_GENERIC}, ${NEGATIVE_ALWAYS.replace('inaccurate armor, ', '')}` : NEGATIVE_ALWAYS}.`;
+  return `${body}\n\nNEGATIVE PROMPT: ${negativeLine(generic, c, figure)}.`;
 }
 
 // Sistema completo: o GPT recebe o Master, trata o que veio escolhido como decisão do autor e responde no formato da seção 12.
@@ -419,8 +535,9 @@ export const buildDirectorPrompt = (master, f, p) => `${master.trim()}\n\n---\nS
 
 const esc = (t) => String(t ?? '').replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
 const select = (name, label, opts, value) => `<label>${label}<select name="${name}">${opts.map(([v, t]) => `<option value="${esc(v)}"${v === value ? ' selected' : ''}>${esc(t ?? v)}</option>`).join('')}</select></label>`;
-const groupedSelect = (name, label, first, value) => `<label>${label}<select name="${name}">${first.map(([v, t]) => `<option value="${esc(v)}"${v === value ? ' selected' : ''}>${esc(t)}</option>`).join('')}${Object.entries(STYLE_GROUPS).map(([group, opts]) => `<optgroup label="${esc(group)}">${opts.map(([v, t]) => `<option value="${esc(v)}"${v === value ? ' selected' : ''}>${esc(t)}</option>`).join('')}</optgroup>`).join('')}</select></label>`;
+const groupedSelect = (name, label, first, value, groups = STYLE_GROUPS) => `<label>${label}<select name="${name}">${first.map(([v, t]) => `<option value="${esc(v)}"${v === value ? ' selected' : ''}>${esc(t)}</option>`).join('')}${Object.entries(groups).map(([group, opts]) => `<optgroup label="${esc(group)}">${opts.map(([v, t]) => `<option value="${esc(v)}"${v === value ? ' selected' : ''}>${esc(t)}</option>`).join('')}</optgroup>`).join('')}</select></label>`;
 const input = (name, label, value, placeholder = '') => `<label>${label}<input name="${name}" value="${esc(value)}" placeholder="${esc(placeholder)}"></label>`;
+const warningHtml = (f, p) => promptWarnings(f, p).map((w) => `<p class="ap-warn">${esc(w.text)}<button type="button" data-ap="${w.action}">${esc(w.button)}</button></p>`).join('');
 const GPT_URL = 'https://chatgpt.com/';
 const URL_LIMIT = 7000; // acima disso o link pode falhar: o GPT abre vazio e o prompt fica copiado
 
@@ -435,41 +552,91 @@ export function mountArtPrompt(dialog, {getCard, getCards, say, masterUrl}) {
     output().select(); // dentro do iframe do Star Hill a área de transferência pode ser negada
     try { return document.execCommand('copy'); } catch { return false; }
   }
+  const suggest = () => {
+    if (params.shotManual) return;
+    const c = resolveCast(facts, params);
+    params.shot = suggestShot(c.n, c.formationId);
+  };
   function draw() {
-    const f = facts, p = params, none = (t) => [['', t]];
+    const f = facts, p = params, none = (t) => [['', t]], c = resolveCast(f, p), body = c.profile, cast = !c.object;
+    const groupBy = (list) => list.reduce((all, x) => ({...all, [x[0]]: [...(all[x[0]] || []), x.slice(1)]}), {});
+    const creatures = groupBy(CREATURES.map((x) => [x.group, x.id, x.label]));
+    const sourceTag = {original: ' (original do jogo)', adaptation: ' (adaptação)', canon: ''};
+    const orders = groupBy(ORDERS.map((o) => [o.god || 'Outros', o.id, `${o.label}${sourceTag[o.source]}`]));
+    const formations = FORMATIONS.filter((x) => x.id !== 'single' && ((c.n >= x.min && c.n <= x.max) || x.id === p.formation)).map((x) => [x.id, x.label]);
+    const stances = CREATURE_POSES.filter((x) => !x.needs || body[x.needs]).map((x) => [x.label]);
+    const scroll = dialog.scrollTop, focused = dialog.querySelector(':focus')?.name;
     dialog.innerHTML = `<form method="dialog" class="ap"><h2>Gerar arte: <span translate="no">${esc(f.name)}</span></h2><div class="ap-grid"><div class="ap-fields">
       <label class="ap-check ap-wide"><input type="checkbox" name="generic"${p.generic ? ' checked' : ''}> Carta genérica: sem história no cânone, personagem original e sem referências</label>
       <div class="ap-wide">${select('mode', 'Saída', [['director', 'Diretor de arte: Master completo + pedido da carta'], ['image', 'Prompt direto de imagem']], p.mode)}</div>
+      <h3 class="ap-section">Identidade</h3>
+      ${select('god', 'Deus', [...none('Nenhum'), ...Object.keys(GODS).map((g) => [g])], p.god)}
+      ${cast ? groupedSelect('order', 'Ordem ou arquétipo', [['', 'Automático pela carta'], ['custom', 'Personalizado']], p.order || '', orders) : ''}
+      ${cast ? groupedSelect('creature', 'Tipo de personagem', CREATURE_CHOICES, p.creature || 'auto', creatures) : ''}
+      ${cast && p.order === 'custom' ? input('orderCustom', 'Ordem personalizada', p.orderCustom, 'Ex.: Guarda do Farol') : ''}
+      ${cast && p.creature === 'custom' ? input('creatureCustom', 'Tipo personalizado', p.creatureCustom, 'Ex.: caranguejo colossal') : ''}
+      ${cast ? input('species', 'Subtipo ou espécie', p.species, 'Ex.: lobo das neves') : ''}
       ${f.isSelf || p.generic ? '' : select('person', 'Personagem', [...none('Sem personagem'), ...f.people.map((n) => [n])], p.person)}
       ${f.armors.length ? select('armor', 'Armadura', [...none('Sem armadura'), ...f.armors.map((a) => [a.name, `${a.name} (${a.line})`])], p.armor) : ''}
-      ${select('god', 'Deus', [...none('Nenhum'), ...Object.keys(GODS).map((g) => [g])], p.god)}${p.generic ? '' : select('version', 'Base do design', VERSIONS, p.version)}
-      ${select('epic', 'Grandiosidade', EPIC_LEVELS, p.epic)}${select('technique', 'Técnica em uso', [...none('Nenhuma'), ...f.techniques.map((t) => [t])], p.technique)}
+      ${p.generic ? '' : select('version', 'Base do design', VERSIONS, p.version)}
+      ${cast ? `<h3 class="ap-section">Personagens na cena</h3>
+      ${select('count', 'Quantidade', COUNTS, p.count ?? '1')}
+      ${p.count === 'custom' ? input('countCustom', 'Número exato', p.countCustom, 'Ex.: 12') : ''}
+      ${c.group ? `${select('formation', 'Formação', [['', `Automática: ${formationById(c.formationId)?.label || ''}`], ...formations, ['custom', 'Personalizada']], p.formation || '')}
+      ${p.formation === 'custom' ? input('formationCustom', 'Formação personalizada', p.formationCustom, 'in a line along the cliff') : ''}
+      ${select('variety', 'Variedade', VARIETIES, p.variety || 'same_class')}${select('lead', 'Protagonista ou liderança', [...none('Automático'), ...LEADS], p.lead || '')}` : ''}
+      ${c.active ? `<h3 class="ap-section">Aparência</h3>
+      <p class="ap-note">Anatomia: ${esc(body.label)}</p>
+      ${p.generic && body.ethnicity && !c.army && !c.mixed ? select('ethnicity', 'Etnia', ETHNICITIES, p.ethnicity) : ''}
+      ${p.generic && body.hair && !c.army && !c.mixed ? select('hair', 'Cabelo', HAIRSTYLES, p.hair) : ''}
+      ${body.trait && body.traits?.length ? select('traits', body.trait, [...none('Automático'), ...body.traits.map((t) => [t])], p.traits || '') : ''}
+      ${body.humanMood ? select('expression', 'Expressão', EXPRESSIONS, p.expression) : select('creatureMood', 'Comportamento', CREATURE_MOODS.map((m) => [m]), p.creatureMood)}
+      ${input('special', 'Características especiais', p.special, 'Ex.: cicatriz no olho')}` : ''}` : ''}
+      <h3 class="ap-section">Composição</h3>
       ${select('shot', 'Plano', SHOTS, p.shot)}${select('angle', 'Ângulo', ANGLES, p.angle)}
-      ${p.generic && f.isSelf && !f.creature ? `${select('ethnicity', 'Etnia', ETHNICITIES, p.ethnicity)}${select('hair', 'Cabelo', HAIRSTYLES, p.hair)}` : ''}
-      ${select('pose', 'Pose', POSES, p.pose)}${select('expression', 'Expressão', EXPRESSIONS, p.expression)}
-      ${select('motion', 'Movimento', MOTIONS, p.motion)}${select('light', 'Luz', LIGHTS, p.light)}
+      ${cast && !body.humanMood ? select('creaturePose', 'Postura da criatura', stances, p.creaturePose) : select('pose', c.group ? 'Pose do protagonista' : 'Pose', POSES, p.pose)}
+      ${select('motion', 'Movimento', MOTIONS, p.motion)}
+      <h3 class="ap-section">Direção artística</h3>
       ${groupedSelect('style', 'Traço dominante', [], p.style)}${groupedSelect('accent', 'Traço complementar', none('Nenhum'), p.accent)}
+      ${select('epic', 'Grandiosidade', EPIC_LEVELS, p.epic)}${select('light', 'Luz', LIGHTS, p.light)}
       ${select('theme', 'Tema e cenário', THEMES, p.theme)}${p.generic ? '' : select('arc', 'Arco ou acontecimento', ARCS, p.arc)}
+      ${select('technique', 'Técnica em uso', [...none('Nenhuma'), ...f.techniques.map((t) => [t])], p.technique)}
+      <h3 class="ap-section">Narrativa</h3>
       ${select('before', 'Acabou de acontecer', BEFORE, p.before)}${select('now', 'Está acontecendo', NOW, p.now)}${select('next', 'Vai acontecer', NEXT, p.next)}${select('viewer', 'O observador sente', VIEWER, p.viewer)}
+      <h3 class="ap-section">Resultado</h3>
       <div class="ap-wide">${input('notes', 'Observações', p.notes, 'Algo mais para a imagem')}</div>
       ${p.generic ? '' : `<label class="ap-check ap-wide"><input type="checkbox" name="usePowers"${p.usePowers ? ' checked' : ''}> Incluir poderes e keywords da carta</label>`}
     </div><label class="ap-out">Prompt (pode editar)<textarea name="prompt" rows="20" spellcheck="false" translate="no"></textarea></label></div>
+    <div class="ap-warnings">${warningHtml(f, p)}</div>
     <p class="hint">${p.generic ? 'Sem referência: é só colar o prompt direto no ChatGPT e pedir a imagem.' : 'Anexe as imagens de referência junto do prompt.'} O Master completo não cabe no link: o ChatGPT abre vazio e você cola o prompt, que já fica copiado.</p>
-    <div class="row"><button type="button" data-ap="copy" class="primary">Copiar prompt</button><button type="button" data-ap="gpt">Abrir no ChatGPT</button><button type="button" data-ap="random">Randomizar</button><button type="button" data-ap="reset">Restaurar</button><button value="close">Fechar</button></div></form>`;
+    <div class="row"><button type="button" data-ap="copy" class="primary">Copiar prompt</button><button type="button" data-ap="gpt">Abrir no ChatGPT</button>${select('scope', 'Sortear', RANDOM_SCOPES, p.scope || 'all')}<button type="button" data-ap="random">Randomizar</button><button type="button" data-ap="reset">Restaurar</button><button value="close">Fechar</button></div></form>`;
     refresh();
+    dialog.scrollTop = scroll;
+    if (focused) dialog.querySelector(`[name="${focused}"]`)?.focus();
   }
+  const REDRAW = new Set(['creature', 'order', 'count', 'formation', 'variety', 'shot']);
   dialog.addEventListener('input', (e) => {
     const {name, type, value, checked} = e.target;
     if (name === 'prompt' || !(name in params)) return;
     params[name] = type === 'checkbox' ? checked : value;
     if (name === 'generic') { params.mode = checked ? 'image' : 'director'; if (checked && !facts.isSelf) params.person = ''; return draw(); }
+    if (name === 'creature' && value === 'random') params.creature = creaturePool(params.god)[Math.floor(Math.random() * creaturePool(params.god).length)].id;
+    if (name === 'shot') params.shotManual = true;
+    if (name === 'count' || name === 'formation' || name === 'countCustom') suggest();
+    if (name === 'countCustom') { const shot = dialog.querySelector('[name=shot]'); if (shot) shot.value = params.shot; }
+    if (name === 'scope') return;
+    if (REDRAW.has(name)) return draw();
+    if (name === 'notes') dialog.querySelector('.ap-warnings').innerHTML = warningHtml(facts, params);
     refresh();
   });
   dialog.addEventListener('click', async (e) => {
     const action = e.target.closest('[data-ap]')?.dataset.ap;
     if (!action) return;
     if (action === 'reset') { params = defaultParams(facts); draw(); return; }
-    if (action === 'random') { params = randomParams(facts, params); draw(); return; }
+    if (action === 'random') { params = randomParams(facts, params, Math.random, params.scope || 'all'); draw(); return; }
+    if (action === 'fixnotes') { params.notes = allowedNotes(params.notes); draw(); return; }
+    if (action === 'solo') { params.count = '1'; suggest(); draw(); return; }
+    if (action === 'shot') { params.shotManual = false; suggest(); draw(); return; }
     const copied = await copy();
     if (action === 'copy') return void say(copied ? 'Prompt copiado.' : 'Não consegui copiar: selecione o texto do prompt.', !copied);
     const url = `${GPT_URL}?q=${encodeURIComponent(output().value)}`, fits = url.length <= URL_LIMIT;

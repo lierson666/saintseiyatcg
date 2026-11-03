@@ -202,9 +202,14 @@ form > fieldset:not([data-tab="Informações"]) > legend { display: none; }
 .ap-fields label, .ap-out { display: grid; gap: 3px; color: var(--muted); font-size: 12px; }
 .ap-fields select, .ap-fields input:not([type=checkbox]) { width: 100%; min-width: 0; box-sizing: border-box; }
 .ap-wide { grid-column: 1 / -1; }
+.ap-section { grid-column: 1 / -1; margin: 10px 0 0; padding-top: 8px; border-top: 1px solid var(--line, rgba(127, 127, 127, .3)); color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.ap-section:first-of-type { margin-top: 2px; }
+.ap-note { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 12px; }
+.ap-warn { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0; padding: 6px 8px; border-left: 3px solid #d9a441; font-size: 12px; }
+.ap .row label { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: var(--muted); }
 .ap-fields .ap-check { display: flex; flex-direction: row; align-items: center; justify-content: flex-start; gap: 6px; }
 .ap-out { grid-template-rows: auto 1fr; }
 .ap-out textarea { width: 100%; height: 100%; min-height: 380px; box-sizing: border-box; resize: vertical; font: 12px/1.45 ui-monospace, SFMono-Regular, Menlo, monospace; }
 .ap .hint { margin: 0; }
-.ap .row { position: sticky; bottom: -1px; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; padding: 8px 0; background: var(--panel); }
+.ap .row { position: sticky; bottom: -1px; display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 6px; padding: 8px 0; background: var(--panel); }
 @media (max-width: 760px) { .ap-grid { grid-template-columns: minmax(0, 1fr); } .ap-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
