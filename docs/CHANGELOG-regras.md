@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-03 — §56 — Habilidade ativada em velocidade de Moment
+
+- **Antes → depois:** "Só Moment responde" → Moment e habilidade ativada em velocidade de Moment respondem. Technique continua só no próprio turno, com a pilha vazia.
+- **Custo:** paga como Moment (turno do adversário, só Latent; próprio turno, Base e/ou Latent). Derivado de "velocidade de Moment"; confirmar com o autor.
+- **Motivo:** decisão do autor, 03/11/2026, ao pedir combat tricks na janela do Strike.
+- **Pendências:** nenhuma carta tem hoje essa velocidade. A engine aceita `speed: 'moment'` na habilidade; marcar cartas exige novo diff de `data/cards.json` aprovado. Na interface, o Strike sem resposta agora fica visível cerca de 1 s antes do dano.
+
 ## 2026-11-02 — §26 — Steel, Cracked, Kamui e armaduras especiais
 
 - **Antes:** Steel, Lunar Vestment, Living Armor e Prototype não tinham família nem patente, e a partida não tratava Steel, Lunar Vestment e Prototype como Armor, apesar do `slot_equipamento`. Cracked e Kamui constavam só como marca da auditoria.

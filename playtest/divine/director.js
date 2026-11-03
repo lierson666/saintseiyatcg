@@ -21,6 +21,12 @@ const DEATH_FX = {
 };
 const STYLE_BY_TYPE = [[/Gold Saint/, 'energy', '#ffd36e'], [/Silver Saint/, 'energy', '#d8e4ff'], [/Bronze Saint/, 'physical', '#ffe0a0']];
 
+// O lote já traz o dano do Strike, sem nada jogado no meio: ninguém respondeu e ninguém parou na janela.
+const unanswered = rest => {
+  const end = rest.findIndex(x => x.type === 'strike_resolve' || x.type === 'strike_fizzled');
+  return end >= 0 && !rest.slice(0, end).some(x => x.type === 'chain_add' || x.type === 'card_played');
+};
+
 export function createDirector({ui, getFx, settings}) {
   const equipSound = uid => { if (!skipping) sound(ui.isArmor?.(uid) ? 'equipar_armadura' : 'equipar_arma'); };
   let skipping = false, busy = false;
@@ -330,7 +336,7 @@ export function createDirector({ui, getFx, settings}) {
       busy = true; skipping = false;
       try {
         let last = null;
-        for (const e of events) {
+        for (const [i, e] of events.entries()) {
           const group = ANIM_OF[e.type];
           cur = group ? anim(group) : {ligada: true, velocidade: 1};
           const som = somDe(e);
@@ -338,6 +344,8 @@ export function createDirector({ui, getFx, settings}) {
           last = som;
           ui.onEvent?.(e); // zoom da pilha acompanha a animação, não o render
           await (handlers[e.type] || (async () => {}))(e);
+          // A janela do Strike que o auto-pass fecha fica visível antes do dano (autor, 03/11/2026).
+          if (e.type === 'strike_declared' && unanswered(events.slice(i + 1))) { ui.notice?.('No response'); await pause(1000); }
         }
       } finally { busy = false; skipping = false; cur = {ligada: true, velocidade: 1}; }
     },

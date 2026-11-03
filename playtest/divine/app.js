@@ -22,7 +22,7 @@ import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudg
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout, clockBonus} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
-import {createDirector} from './director.js?v=20261102-barulho2';
+import {createDirector} from './director.js?v=20261103-janela1';
 import {createAI} from './ai.js?v=14';
 import {findDeck} from '../deck-store.js';
 import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-face3';
@@ -158,7 +158,8 @@ const ordered = new Set();
 const batchKey = key => `${S().lastBatch?.id}:${key}`;
 const mustOrder = key => key !== settings.ai && ownBatch(S(), key).length > 1 && !ordered.has(batchKey(key));
 const hasResponse = key => mustOrder(key) || S().players[key].hand.some(u => info(u).kind === 'Spell' && spellCat(u)?.speed === 'instant' && !playableReason(key, u))
-  || S().players[key].tartarus.some(u => !afterlifeBlock(S(), ctx, key, u));
+  || S().players[key].tartarus.some(u => !afterlifeBlock(S(), ctx, key, u))
+  || S().players[key].battlefield.some(u => cardAbilities(u).some(a => a.fast && !a.why));
 
 // ---------- Execução de ações ----------
 
@@ -1237,6 +1238,7 @@ function syncZoom() {
 
 const rectOf = el => (el ? el.getBoundingClientRect() : null);
 const ui = {
+  notice: warn,
   onEvent: zoomEvent,
   number: num, type: uid => info(uid).type, enemyOf: key => other(key),
   // Cor do God de quem controla o Devotee (golpes básicos no tema do deus, autor 31/10/2026).
@@ -1478,7 +1480,10 @@ function cardAbilities(uid) {
   const v6a = entryOf(ctx, uid)?.activate; // habilidade ativada V6 (Devotee ou Equipment)
   if (v6a) out.push({name: v6a.name, label: `${v6a.name}${v6a.tap === false ? '' : ' ({T}'}${v6a.cost ? `${v6a.tap === false ? ' (' : ', '}${v6a.cost} Base)` : v6a.tap === false ? '' : ')'}`,
     cost: [v6a.tap === false ? '' : '{T}', v6a.cost ? `${v6a.cost} Base` : ''].filter(Boolean).join(' · '),
-    why: !idle ? "Wait for your turn's main phase." : v6a.tap !== false && !s.units[uid]?.prepared ? 'Unprepared: it readies at the start of your turn.'
+    fast: v6a.speed === 'moment' && Boolean(s.window), // guia §56: velocidade de Moment responde na janela e paga como Moment
+    why: v6a.speed === 'moment' && s.window ? (s.window.priority !== key ? 'You need priority.' : v6a.tap !== false && !s.units[uid]?.prepared ? 'Unprepared: it readies at the start of your turn.'
+      : v6a.once && s.roundUses.has(`ability:${uid}`) ? 'Already used this round.' : (s.active === key ? readyBases(key) + s.players[key].latent : s.players[key].latent) < (v6a.cost || 0) ? `Needs ${v6a.cost} ${s.active === key ? 'Cosmo (Base and/or Latent)' : 'Latent'}.` : '')
+      : !idle ? "Wait for your turn's main phase." : v6a.tap !== false && !s.units[uid]?.prepared ? 'Unprepared: it readies at the start of your turn.'
       : v6a.once && s.roundUses.has(`ability:${uid}`) ? 'Already used this round.' : '',
     run: () => act({type: 'activate', key, uid, choice: {}})});
   return out;
@@ -1487,7 +1492,7 @@ function cardAbilities(uid) {
 function fieldActions(uid) {
   const s = S(), key = owner(uid), c = info(uid), idle = idleFor(key), items = [];
   if (idle && c.kind === 'Devotee' && strikeTargets(s, ctx, uid).length) items.push({label: 'Strike', run: () => startStrike(uid)});
-  for (const a of cardAbilities(uid)) items.push({label: `${a.name}${/\d/.test(a.cost || '') ? ` (${a.cost.replace(/\{T\}( · )?/, '')})` : ''}`, run: a.run, why: a.why || (idle ? '' : "Wait for your turn's main phase.")});
+  for (const a of cardAbilities(uid)) items.push({label: `${a.name}${/\d/.test(a.cost || '') ? ` (${a.cost.replace(/\{T\}( · )?/, '')})` : ''}`, run: a.run, why: a.why || (idle || a.fast ? '' : "Wait for your turn's main phase.")});
   if (idle && c.kind === 'Equipment' && !c.global && !ctx.attached[uid]) items.push({label: `Equip (${c.equip?.amount ?? c.cost.amount})`, run: () => begin('reequip', key, uid, [{key: 'bearer', pick: c.armor ? 'wearer' : 'devotee', armor: uid, label: `Equip ${c.name} to which Devotee?`}], choice => ({type: 'reequip', key, uid, choice}))});
   // Armor vestida pode passar a outro Devotee seu: AÇÃO + Equip impresso (guia §28).
   else if (idle && c.armor && ctx.attached[uid] && c.equip) items.push({label: `Move (Equip ${c.equip.amount})`, run: () => begin('reequip', key, uid, [{key: 'bearer', pick: 'wearer', armor: uid, label: `Move ${c.name} to which Devotee?`}], choice => ({type: 'reequip', key, uid, choice}))});
@@ -2549,8 +2554,17 @@ async function applyView(view) {
   render();
   focusDecision();
   // Auto-pass do lado do jogador: sem resposta possível, passa a prioridade sozinho.
-  if (s.window && !s.victory && !pending && s.window.priority === view.you && settings.autoPass && !hasResponse(view.you)) sendOnline('action', {action: {type: 'pass'}});
+  if (s.window && !s.victory && !pending && s.window.priority === view.you && settings.autoPass && !hasResponse(view.you)) {
+    // Online cada passe vem em outra visão: o defensor segura o dele para a janela do Strike aparecer dos dois lados (autor, 03/11/2026).
+    const at = s.events.length, hold = s.active !== view.you && !s.chain.length && pendingStrike(s);
+    if (!hold) return void sendOnline('action', {action: {type: 'pass'}});
+    if (strikeHold === at) return;
+    strikeHold = at;
+    warn('No response');
+    setTimeout(() => { if (S().events.length === at && S().window?.priority === view.you && !pending) sendOnline('action', {action: {type: 'pass'}}); }, 1000);
+  }
 }
+let strikeHold = null;
 // Relógio online: o do servidor manda; entre uma visão e outra a tela só conta para mostrar.
 function serverClock(c) {
   if (!c) return;

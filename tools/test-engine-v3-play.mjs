@@ -351,3 +351,36 @@ test('custo misto: 1 Base + 2 Latent pagam uma Spell de custo 3 no próprio turn
   p.bases[0].prepared = true; p.latent = 2;
   assert.throws(() => payCost(s, 'A', {amount: 3, unit: 'base'}), RuleError);
 });
+
+// Guia §56 (autor, 03/11/2026): habilidade ativada em velocidade de Moment responde na janela e paga como Moment.
+test('habilidade em velocidade de Moment responde ao Strike; sem a marca, é recusada', async t => {
+  const {V6} = await import('../playtest/engine-v3/v6/registry.js');
+  const {activate} = await import('../playtest/engine-v3/play.js');
+  const {s, ctx, field, objects} = setup();
+  const attacker = field('A', '001'), guard = field('B', '040');
+  const id = objects[guard].cardId, original = V6[id], ran = [];
+  t.after(() => { if (original) V6[id] = original; else delete V6[id]; });
+  V6[id] = {...original, activate: {name: 'Fast', cost: 2, speed: 'moment', check() {}, run: (st, c, k) => ran.push(k)}};
+  startTurn(s);
+  declareStrike(s, ctx, attacker, {kind: 'devotee', uid: guard});
+  assert.equal(s.window.priority, 'B');
+  assert.throws(() => activate(s, ctx, 'A', attacker), /prioridade|D1|P06/, 'A não tem prioridade');
+  s.players.B.latent = 1;
+  s.players.B.bases = [{uid: 'x', prepared: true}, {uid: 'y', prepared: true}];
+  assert.throws(() => activate(s, ctx, 'B', guard), RuleError, 'turno do adversário: só Latent, Bases não pagam');
+  assert.equal(s.units[guard].prepared, true, 'recusada antes de virar a carta');
+  s.players.B.latent = 2;
+  activate(s, ctx, 'B', guard);
+  assert.equal(s.players.B.latent, 0);
+  assert.equal(s.units[guard].prepared, false);
+  assert.equal(s.window.priority, 'A');
+  assert.equal(s.chain.length, 1);
+  passAll(s);
+  assert.deepEqual(ran, ['B'], 'resolve antes do dano');
+  assert.ok(s.events.some(e => e.type === 'strike_resolve'));
+  V6[id] = {...original, activate: {name: 'Slow', cost: 0, check() {}, run() {}}};
+  s.units[guard].prepared = true;
+  endTurn(s);
+  assert.equal(s.window.priority, 'B');
+  assert.throws(() => activate(s, ctx, 'B', guard), RuleError, 'sem a marca, não responde');
+});

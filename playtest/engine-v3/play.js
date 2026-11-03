@@ -163,8 +163,12 @@ export function activateAfterlife(state, ctx, key, uid) {
 
 export function activate(state, ctx, key, uid, choice = {}) {
   if (state.victory) throw new RuleError('D52', 'a partida já terminou');
-  if (key !== state.active) throw new RuleError('D1', 'só o jogador ativo age, no próprio turno');
-  assertIdle(state); // D173: Sorcery
+  // Guia §56 (autor, 03/11/2026): `speed: 'moment'` responde numa janela em que o jogador tem prioridade e paga como Moment.
+  const answering = entryOf(ctx, uid)?.activate?.speed === 'moment' && Boolean(state.window);
+  if (answering) { if (state.window.priority !== key) throw new RuleError('P06', `${key} não tem prioridade`); } else {
+    if (key !== state.active) throw new RuleError('D1', 'só o jogador ativo age, no próprio turno');
+    assertIdle(state); // D173: Sorcery
+  }
   // Domain (`domain:${key}`): ativada da linha geral do Domain do próprio jogador (vale com qualquer God); não é objeto de deck nem tem {T}.
   // `domain:${key}:res`: Ressonância (rebalanceamento dos Domains, autor 01/11/2026): só com God da facção do Domain, uma vez por turno.
   const domain = String(uid).startsWith('domain:'), res = uid === `domain:${key}:res`, dom = domain && domainEntry(state, key);
@@ -181,15 +185,18 @@ export function activate(state, ctx, key, uid, choice = {}) {
   const once = typeof ability.once === 'function' ? ability.once(state, ctx, key, uid) : ability.once; // ex.: 016 com Ikki não tem limite
   if (once && state.roundUses.has(`ability:${uid}`)) throw new RuleError('D191', `${ability.name} já foi usada neste Round`);
   ability.check(state, ctx, key, choice);
-  payCost(state, key, mixed({amount: ability.cost || 0, unit: 'base'})); // {N}{C}: Base e/ou Latent (guia §5)
+  const printed = {amount: ability.cost || 0, unit: 'base'};
+  payCost(state, key, answering ? responseCost(state, key, printed) : mixed(printed)); // {N}{C}: Base e/ou Latent (guia §5)
   if (res) state.roundUses.add(resTag);
   if (once) state.roundUses.add(`ability:${uid}`);
   if (ability.tap !== false) state.units[uid].prepared = false;
   const src = res ? `domain:${key}` : uid; // a interface acha o Domain por `domain:${key}`
   emit(state, 'ability', {player: key, uid: src, name: ability.name, target: choice.target});
   // Guia §56 (30/10/2026): a habilidade ativada vai à pilha com janela de resposta; custo e {T} já foram pagos.
+  const item = {uid: src, speed: 'instant', ability: ability.name, target: choice.target ?? null, run: st => { ability.run(st, ctx, key, choice); checkDefeats(st, ctx); }};
+  if (answering) return void respond(state, key, item);
   openWindow(state);
-  state.chain.push({controller: key, uid: src, speed: 'instant', ability: ability.name, target: choice.target ?? null, run: st => { ability.run(st, ctx, key, choice); checkDefeats(st, ctx); }});
+  state.chain.push({controller: key, ...item});
   emit(state, 'chain_add', {player: key, uid: src});
 }
 
