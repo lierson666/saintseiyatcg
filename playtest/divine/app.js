@@ -203,7 +203,16 @@ async function present(r, run, from) {
   focusDecision();
 }
 // Resposta à decisão pendente: {value} ou {timeout: true}. Resposta recusada pela engine volta ao ponto da pergunta.
+// Passos já respondidos da habilidade em andamento: a engine pergunta um de cada vez, então o total só se sabe no fim.
+let stepTrail = [];
+function rememberStep(p, answer) {
+  const req = p.pending;
+  stepTrail = stepTrail.filter(x => x.ability === req.ability && x.index < req.index);
+  stepTrail.push({ability: req.ability, player: req.player, index: req.index, names: [].concat(answer.value ?? []).filter(v => typeof v === 'string').map(optName)});
+}
+const stepsDone = req => stepTrail.filter(x => x.ability === req.ability && x.player === req.player && x.index < req.index);
 function reply(answer) {
+  if (pending && !director.busy && !answer.timeout) rememberStep(pending, answer);
   if (online) return pending && !director.busy ? sendOnline('answer', {answer}) : undefined;
   if (!pending || director.busy) return;
   const p = pending, s = S();
@@ -2326,7 +2335,7 @@ function decisionModal() {
   } else {
     const picked = pending.picked;
     const opts = req.options.map((uid, i) => `<button class="decision__opt ${picked.includes(uid) ? 'picked' : ''}" data-dec="opt" data-opt="${esc(uid)}" data-focus="opt:${esc(uid)}" aria-pressed="${picked.includes(uid)}" aria-label="${esc(optName(uid))}${i < 9 ? `, key ${i + 1}` : ''}">${String(uid).startsWith('god:') || req.choose === 'mode' ? `<span class="dcard decision__god">${esc(optName(uid))}</span>` : cardFace(uid).replace('tabindex="0"', 'tabindex="-1"')}${i < 9 ? `<kbd>${i + 1}</kbd>` : ''}</button>`).join('');
-    body = `<div class="decision__opts" role="group" aria-label="Options">${opts}</div>
+    body = `<div class="decision__opts ${picked.length >= req.count ? 'is-full' : ''}" role="group" aria-label="Options">${opts}</div>
       <div class="decision__actions"><button class="primary-action" data-dec="confirm" data-focus="confirm" ${pickedOk(req, picked) ? '' : 'disabled'}>Confirm · ${picked.length}/${req.count}</button></div>`;
   }
   return `<div class="decision-veil"></div><section class="decision decision--${req.kind}" role="dialog" aria-modal="true" aria-labelledby="decision-title" aria-describedby="decision-body">
@@ -2389,17 +2398,25 @@ function sidePanel(req, t, fx) {
   // Busca no deck, Tartarus ou mão (tutor): popup no meio da tela com as cartas grandes, como no Arena (autor, 31/10/2026).
   const offBoard = req.kind === 'choice' && !target && req.choose !== 'mode' && req.options.every(u => ctx.objects[u] && !S().order.some(k => S().players[k].battlefield.includes(u)));
   const size = offBoard ? 'dcard--lg' : 'dcard--sm';
-  const opts = req.kind === 'choice' && !target ? `<div class="decision__opts trigger-panel__opts" style="--n:${Math.min(req.options.length, 10)}" role="group" aria-label="Options">${req.options.map((uid, i) => `<button class="decision__opt ${picked.includes(uid) ? 'picked' : ''}" data-dec="opt" data-opt="${esc(uid)}" data-focus="opt:${esc(uid)}" aria-pressed="${picked.includes(uid)}" aria-label="${esc(optName(uid))}${i < 9 ? `, key ${i + 1}` : ''}">${String(uid).startsWith('god:') || req.choose === 'mode' || !ctx.objects[uid] ? `<span class="dcard decision__god">${esc(optName(uid))}</span>` : cardFace(uid, {size}).replace('tabindex="0"', 'tabindex="-1"')}${i < 9 ? `<kbd>${i + 1}</kbd>` : ''}${picked.includes(uid) ? `<b class="decision__order">${picked.indexOf(uid) + 1}</b>` : ''}</button>`).join('')}</div>` : '';
+  const opts = req.kind === 'choice' && !target ? `<div class="decision__opts trigger-panel__opts ${picked.length >= req.count ? 'is-full' : ''}" style="--n:${Math.min(req.options.length, 10)}" role="group" aria-label="Options">${req.options.map((uid, i) => `<button class="decision__opt ${picked.includes(uid) ? 'picked' : ''}" data-dec="opt" data-opt="${esc(uid)}" data-focus="opt:${esc(uid)}" aria-pressed="${picked.includes(uid)}" aria-label="${esc(optName(uid))}${i < 9 ? `, key ${i + 1}` : ''}">${String(uid).startsWith('god:') || req.choose === 'mode' || !ctx.objects[uid] ? `<span class="dcard decision__god">${esc(optName(uid))}</span>` : cardFace(uid, {size}).replace('tabindex="0"', 'tabindex="-1"')}${i < 9 ? `<kbd>${i + 1}</kbd>` : ''}${picked.includes(uid) ? `<b class="decision__order">${picked.indexOf(uid) + 1}</b>` : ''}</button>`).join('')}</div>` : '';
   const actions = waiting ? `<p class="decision__note">Waiting for Player ${req.player}…</p>`
     : req.kind === 'optional' ? `<button class="primary-action" data-dec="yes" data-focus="yes">${esc(t.yes)}</button><button class="ghost" data-dec="no" data-focus="no">${esc(t.no)}</button>`
     : opts ? `<button class="primary-action" data-dec="confirm" data-focus="confirm" ${pickedOk(req, picked) ? '' : 'disabled'}>Confirm · ${picked.length}/${req.count}</button>${cancel}` : cancel;
   // Fila: o item que está resolvendo e os que vêm depois (topo da cadeia primeiro).
   const next = [...S().chain].reverse(), queue = next.length ? `<div class="trigger-queue"><small>Trigger 1 of ${next.length + 1}</small><ol>${next.slice(0, 4).map(c => `<li ${srcAttrs(c)}>${esc(chainLabel(c).title)}</li>`).join('')}${next.length > 4 ? `<li>+${next.length - 4} more</li>` : ''}</ol></div>` : '';
-  if (offBoard && !waiting) return `<div class="pick-veil" aria-hidden="true"></div><section class="pick-modal" role="dialog" aria-modal="true" aria-labelledby="trigger-title" ${godFx(req.player)}>
-    <header class="pick-modal__head"><span class="decision__who">${esc(t.who)} decides</span><span class="decision__clock" data-decision-clock></span></header>
-    <small class="decision__kicker">${esc(t.kicker)}</small><h3 id="trigger-title">${esc(t.title)}</h3>
-    ${fx ? `<div class="decision__effect card-text">${fx.lines.map(l => `<p>${inlineMarkup(l)}</p>`).join('')}</div>` : ''}
-    <p class="pick-modal__ask">${inlineMarkup(t.body)}</p>${opts}<div class="trigger-panel__actions">${actions}</div></section>`;
+  if (offBoard && !waiting) {
+    // O pedido é o título e as cartas são o foco; efeito longo (Ultimate) abre por cima, sem empurrar nada (autor, 03/11/2026).
+    const effect = fx ? `<div class="decision__effect card-text">${fx.lines.map(l => `<p>${inlineMarkup(l)}</p>`).join('')}</div>` : '';
+    const long = fx && fx.lines.join(' ').length > 140, done = stepsDone(req), missing = (req.min ?? req.count) - picked.length;
+    const steps = done.length ? `<ol class="pick-steps">${done.slice(-3).map(x => `<li class="is-done"><i aria-hidden="true">✓</i><span>${esc(x.names.join(', ') || t.title)}</span></li>`).join('')}<li class="is-now" aria-current="step">${esc(`Step ${done.length + 1}`)}</li></ol>` : '';
+    return `<div class="pick-veil" aria-hidden="true"></div><section class="pick-modal" role="dialog" aria-modal="true" aria-labelledby="trigger-title" ${godFx(req.player)}>
+    <header class="pick-modal__head"><span class="pick-modal__who"><span class="decision__who">${esc(t.who)} decides</span><small class="decision__kicker">${esc(t.kicker)}</small></span>
+      <span class="pick-modal__source"><h3 id="trigger-title">${esc(t.title)}</h3>${long ? `<button class="pick-modal__fx-btn" data-dec="fx" aria-expanded="${Boolean(pending.fxOpen)}">${pending.fxOpen ? 'Hide effect' : 'View effect'}</button>` : ''}</span>
+      <span class="decision__clock" data-decision-clock></span></header>
+    ${long ? (pending.fxOpen ? `<div class="pick-modal__fx">${effect}</div>` : '') : effect}
+    ${steps}<p class="pick-modal__ask">${inlineMarkup(t.body)}</p>${opts}
+    <div class="trigger-panel__actions">${req.count > 1 && missing > 0 ? `<span class="pick-modal__left">${esc(`Choose ${missing} more`)}</span>` : ''}${actions}</div></section>`;
+  }
   // Decisão estilo Arena (autor, 31/10/2026): bloco central (carta grande + opções) sobre a mesa escurecida; "View board" espia a mesa.
   const peek = target ? '' : '<button class="ghost decision__peek" data-peek>View board</button>';
   const mainUid = src || alt || null, others = u => u && ctx.objects[u] && u !== mainUid && canShowPanel(u);
@@ -2461,6 +2478,7 @@ const pickedOk = (req, picked) => picked.length <= req.count && picked.length >=
 function togglePick(uid) {
   const req = pending.pending, picked = pending.picked;
   if (!req.options.includes(uid)) return;
+  pending.fxOpen = false;
   if (picked.includes(uid)) picked.splice(picked.indexOf(uid), 1);
   else if (req.count === 1) picked.splice(0, picked.length, uid);
   else if (picked.length < req.count) picked.push(uid);
@@ -2469,6 +2487,7 @@ function togglePick(uid) {
 function decisionClick(btn) {
   if (!pending || director.busy) return;
   const req = pending.pending, a = btn.dataset.dec;
+  if (a === 'fx') { pending.fxOpen = !pending.fxOpen; return render(); }
   if (a === 'peek') { pending.peek = !pending.peek; render(); return focusDecision(); }
   // Desistir da conjuração enquanto escolhe o alvo: nada foi pago ainda (os alvos são perguntados antes do custo).
   if (a === 'cancel' && casting && !online) { restore(S(), ctx, pending.snap); pending = casting = null; seenEvents = S().events.length; return render(); }

@@ -33,7 +33,7 @@
 body:has(#overlay-root > :not(.gear-btn), .pick-modal, .decision-veil, #bigcard) .rk-plate { visibility: hidden; }
 /* Escolha de cartas (autor, 01/11/2026): todas apagadas até escolher; a escolhida sobe acesa e as outras ficam em preto e branco. */
 .decision__opt .dcard { filter: brightness(.72) saturate(.8); transition: filter .15s; }
-.decision__opts:has(.picked) .decision__opt:not(.picked) .dcard { filter: grayscale(1) brightness(.5); }
+.decision__opts.is-full .decision__opt:not(.picked) .dcard { filter: grayscale(1) brightness(.5); } /* só quando já não dá para escolher mais */
 .decision__opt.picked { transform: translateY(-14px); }
 .pick-modal .decision__opt .dcard { animation: none; box-shadow: none; }
 .pick-modal .decision__opt.picked .dcard { box-shadow: 0 0 0 2px var(--kv-gold), 0 0 18px #e6c36a99; }
@@ -42,14 +42,32 @@ body:has(#overlay-root > :not(.gear-btn), .pick-modal, .decision-veil, #bigcard)
 .decision__order { position: absolute; z-index: 3; left: -6px; top: -6px; width: 26px; height: 26px; border-radius: 50%; font: 700 15px/26px var(--kv-title); text-align: center; color: #1a1204; background: var(--kv-gold); box-shadow: 0 2px 8px #000a; }
 @media (pointer: coarse) { .decision__opt kbd { display: none; } }
 .decision__opt.picked .dcard { filter: none; }
-/* Tela de busca: título à esquerda, o que a carta faz à direita, em texto corrido. */
-.pick-modal { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); column-gap: 20px; row-gap: 2px; align-items: start; }
-.pick-modal > :is(.pick-modal__head, .decision__opts, .trigger-panel__actions) { grid-column: 1 / -1; }
-.pick-modal > .decision__kicker { grid-column: 1; grid-row: 2; }
-.pick-modal > h3 { grid-column: 1; grid-row: 3; }
-.pick-modal > .decision__effect { grid-column: 2; grid-row: 2; max-width: none; margin: 0; padding: 0; border: 0; background: none; }
-.pick-modal > .decision__effect p { font: 400 14px/1.35 var(--kv-sans); color: var(--kv-ink); }
-.pick-modal > .pick-modal__ask { grid-column: 2; grid-row: 3; margin: 2px 0 0; font: 400 13px/1.35 var(--kv-sans); color: var(--kv-muted); }
+/* Popup de escolha (autor, 03/11/2026): de cima para baixo, de onde vem, o que fazer, as cartas, confirmar. */
+.pick-modal { justify-items: center; gap: 10px; text-align: center; }
+.pick-modal__head { justify-self: stretch; display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: start; gap: 12px; }
+.pick-modal__who { display: grid; gap: 2px; justify-items: start; text-align: left; }
+.pick-modal__source { display: grid; gap: 4px; justify-items: center; }
+.pick-modal__source h3 { font-size: 15px; letter-spacing: .14em; }
+.pick-modal .decision__clock { justify-self: end; }
+.pick-modal__fx-btn { min-height: 28px; padding: 2px 12px; border: 1px solid #e6c36a66; border-radius: 999px; background: none; color: var(--kv-gold); font: 500 12px/1.2 var(--kv-sans); cursor: pointer; transition: background .15s; }
+.pick-modal__fx-btn:hover, .pick-modal__fx-btn[aria-expanded="true"] { background: #e6c36a22; }
+@media (pointer: coarse) { .pick-modal__fx-btn { min-height: 44px; padding-inline: 18px; } }
+.pick-modal__fx { position: absolute; z-index: 5; left: 50%; top: 68px; translate: -50% 0; width: min(680px, 92%); max-height: calc(100% - 84px); box-sizing: border-box; overflow: auto; padding: 14px 18px; border: 1px solid var(--kv-gold); border-radius: 12px; background: #0b0e28; box-shadow: 0 14px 40px #000c; text-align: left; animation: fx-in .14s ease-out; }
+@keyframes fx-in { from { opacity: 0; translate: -50% -6px; } }
+.reduce-motion .pick-modal__fx { animation: none; }
+.pick-modal .decision__effect { max-width: 70ch; margin: 0; padding: 0; border: 0; background: none; }
+.pick-modal .decision__effect p { font: 400 14px/1.45 var(--kv-sans); color: var(--kv-ink); }
+.pick-modal > .decision__effect p { color: var(--kv-muted); }
+.pick-modal__ask { max-width: 60ch; margin: 4px 0 2px; font: 600 clamp(17px, 1.7vw, 23px)/1.25 var(--kv-title); color: var(--kv-ink); text-wrap: balance; }
+.pick-modal__left { align-self: center; font: 400 13px/1.2 var(--kv-sans); color: var(--kv-muted); }
+.pick-modal .trigger-panel__actions { align-items: center; gap: 14px; }
+/* Passo a passo: o que já foi escolhido e onde o jogador está. */
+.pick-steps { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 6px 8px; margin: 0; padding: 0; list-style: none; font: 500 12px/1.2 var(--kv-sans); }
+.pick-steps li { display: inline-flex; align-items: center; gap: 5px; max-width: 26ch; padding: 4px 10px; border-radius: 999px; }
+.pick-steps span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pick-steps .is-done { border: 1px solid #e6c36a44; color: var(--kv-muted); }
+.pick-steps .is-done i { font-style: normal; color: var(--kv-gold); }
+.pick-steps .is-now { background: var(--kv-gold); color: #1a1204; font-weight: 700; }
 
 /* Carta inteira (autor, 01/11/2026): ações e fechar numa coluna à direita, o conjunto centrado na tela; nada cobre a carta. */
 .bigcard__actions { display: grid; gap: 8px; width: 100%; box-sizing: border-box; cursor: default; }
