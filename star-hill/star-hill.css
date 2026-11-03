@@ -58,6 +58,8 @@ main.deck-mode{max-width:none;padding:28px 28px 0}.deck-mode .page-header{margin
 
 /* Barra de publicação compacta na página Cartas: o editor ganha altura (auditoria ui-ux-pro-max, 29/10/2026). */
 .publish-bar{display:flex;align-items:center;gap:12px 16px;flex-wrap:wrap;padding:12px 16px}.publish-bar h2{font-size:18px;margin:0}.publish-bar .actions{margin:0 0 0 auto}.publish-bar small{color:var(--muted)}
+small.publish-result{color:#8fe3a8;font-weight:600}
+.publish-result::before{content:"✓ "}
 /* Telas e som (telas-editor.js) */
 .tl-bar{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}
 .tl h3{margin:18px 0 8px;font-size:.95rem;color:var(--muted)}

@@ -30,6 +30,7 @@ async function api(path, body) {
 const json = url => fetch(`${url}?t=${Date.now()}`, {cache: 'no-store'}).then(r => r.json());
 // Aviso fixo na tela, para aparecer mesmo com a página rolada (autor, 02/11/2026). ok: confirmação verde que some sozinha; erro fica até clicar.
 let noticeTimer = 0;
+let publishResult = ''; // resultado da publicação fica na faixa de cima: o aviso flutuante cobria o Forge (autor, 02/11/2026)
 function notice(text, ok = false) {
   const box = $('#notice');
   clearTimeout(noticeTimer);
@@ -58,12 +59,13 @@ const name = id => cards.get(id)?.name || id || '—';
 // `compact`: uma linha só, na página Cartas, para o editor ganhar altura.
 function publishBox(compact = false) {
   const when = status?.publicado_em ? new Date(status.publicado_em * 1000).toLocaleString('pt-BR') : 'nunca';
+  const result = publishResult ? ` <small class="publish-result">${esc(publishResult)}</small>` : '';
   const tag = status?.pendente ? '<span class="tag">Há mudanças não publicadas</span>' : '<span class="tag">Jogo em dia com o Forge</span>';
-  if (compact) return `<section class="panel publish-bar" title="O jogo usa uma cópia leve das cartas do Card Forge. Publique depois de editar cartas, textos ou artes."><h2>Cartas no jogo</h2>${tag}<small>Última publicação: ${esc(when)}</small>
+  if (compact) return `<section class="panel publish-bar" title="O jogo usa uma cópia leve das cartas do Card Forge. Publique depois de editar cartas, textos ou artes."><h2>Cartas no jogo</h2>${tag}<small>Última publicação: ${esc(when)}</small>${result}
     <div class="actions"><button class="primary" data-action="publish">Publicar cartas no jogo</button><button data-action="publish-site" title="Envia cartas e artes ao saintseiyatcg.com. A próxima partida online já usa a versão nova.">Publicar no site</button><a href="../playtest/" target="_blank" rel="noopener">Abrir jogo ↗</a></div></section>`;
   return `<section class="panel"><h2>Cartas no jogo</h2>
     <p class="hint">O jogo usa uma cópia leve das cartas do Card Forge. Depois de editar cartas, textos ou artes, publique para a próxima partida usar a versão nova.</p>
-    <p>${status?.pendente ? '<span class="tag">Há mudanças não publicadas</span>' : '<span class="tag">Jogo em dia com o Forge</span>'} <small>Última publicação: ${esc(when)}</small></p>
+    <p>${status?.pendente ? '<span class="tag">Há mudanças não publicadas</span>' : '<span class="tag">Jogo em dia com o Forge</span>'} <small>Última publicação: ${esc(when)}</small>${result}</p>
     <div class="actions"><button class="primary" data-action="publish">Publicar cartas no jogo</button><button data-action="publish-site" title="Envia cartas e artes ao saintseiyatcg.com. A próxima partida online já usa a versão nova.">Publicar no site</button><a href="../playtest/" target="_blank" rel="noopener">Abrir jogo ↗</a></div></section>`;
 }
 function overview() {
@@ -180,12 +182,12 @@ document.addEventListener('click', async e => {
   }
   if (b.dataset.action === 'publish') {
     b.disabled = true; b.textContent = 'Publicando…';
-    try { const r = await api('publicar', {}); notice(`Publicado: ${r.mensagem}`); await load(); await render(); }
+    try { const r = await api('publicar', {}); publishResult = `Publicado: ${r.mensagem}`; await load(); await render(); }
     catch (err) { notice(err.message); b.disabled = false; b.textContent = 'Publicar cartas no jogo'; }
   }
   if (b.dataset.action === 'publish-site') {
     b.disabled = true; b.textContent = 'Enviando ao site…';
-    try { const r = await api('publicar-site', {}); notice(r.mensagem); await load(); await render(); }
+    try { const r = await api('publicar-site', {}); publishResult = r.mensagem; await load(); await render(); }
     catch (err) { notice(err.message); b.disabled = false; b.textContent = 'Publicar no site'; }
   }
 });
