@@ -1,16 +1,17 @@
 <!doctype html>
-<!-- Página de download do app de desktop (desktop/, decisões do autor em 31/10/2026): instaladores sem assinatura,
-     hospedados em /download/files/. O app só abre o site oficial; tutorial cobre os avisos do macOS e do Windows. -->
+<!-- Página de instalação: app de desktop (desktop/, decisões do autor em 31/10/2026), com instaladores sem assinatura,
+     hospedados em /download/files/. O app só abre o site oficial; tutorial cobre os avisos do macOS e do Windows. Android e iPhone instalam o webapp pelo navegador; Android também baixa o APK (TWA, fonte e chave em ~/.sstcg-android, fora do repositório) (03/11/2026). -->
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <script src="/shared/i18n-pt.js?v=20261101-tr1"></script><script src="/shared/i18n-pt-site.js?v=20261101-kw7"></script><script src="/shared/i18n.js?v=20261101-tr1"></script> <!-- idioma PT-BR/EN -->
+  <script src="/shared/i18n-pt.js?v=20261101-tr1"></script><script src="/shared/i18n-pt-site.js?v=20261103-inst2"></script><script src="/shared/i18n.js?v=20261101-tr1"></script> <!-- idioma PT-BR/EN -->
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="robots" content="noindex, nofollow"> <!-- site fora das buscas por enquanto (autor, 31/10/2026) -->
   <title>Saint Seiya TCG — Download</title>
-  <meta name="description" content="Download the Saint Seiya TCG desktop app for Windows and macOS, with step-by-step install instructions.">
+  <meta name="description" content="Install Saint Seiya TCG on Windows, macOS, Android, iPhone or iPad, with step-by-step instructions.">
   <meta name="theme-color" content="#05060c">
   <link rel="icon" href="/LOGO/favicon.png?v=20261030">
+  <link rel="manifest" href="/manifest.webmanifest"> <!-- sem ele o Chrome não oferece instalar a partir desta página -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Cormorant+Garamond:ital,wght@1,400&family=Jost:wght@300;400;500&display=swap">
   <link rel="stylesheet" href="/shared/kv.css?v=20261031-native">
   <link rel="stylesheet" href="/shared/site-nav.css?v=20261031-1">
@@ -18,6 +19,7 @@
     html, body { margin: 0; background: var(--kv-bg); color: var(--kv-ink); font: 300 17px/1.6 var(--kv-sans); }
     .page { position: relative; z-index: 1; min-height: 100dvh; display: grid; grid-template-rows: auto 1fr auto; }
     a { color: var(--kv-gold-2); }
+    [hidden] { display: none !important; } /* kv-button e kv-ghost definem display */
     main { width: min(1080px, 100%); margin: 0 auto; padding: clamp(32px, 8vh, 88px) clamp(16px, 4vw, 40px) 64px; box-sizing: border-box; }
     .hero { max-width: 720px; }
     .hero h1 { margin: 18px 0 20px; display: grid; gap: 6px; }
@@ -40,7 +42,7 @@
     strong { color: var(--kv-ink); font-weight: 500; }
     kbd { font: 500 13px var(--kv-sans); padding: 1px 7px; border: 1px solid var(--kv-line); border-radius: 6px; background: #f5f1e60d; color: var(--kv-ink); }
     .section-title { margin: 0 0 20px; font: italic 400 clamp(32px, 4.4vw, 52px)/1 var(--kv-serif); }
-    .guide p { margin: 0 0 12px; color: var(--kv-muted); } .guide p:last-child { margin-bottom: 0; }
+    .guide p { margin: 0 0 12px; color: var(--kv-muted); } .guide p:last-child { margin-bottom: 0; } .guide p.alt { margin-top: 18px; }
     dl { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 8px 20px; color: var(--kv-muted); }
     dt { color: var(--kv-ink); font-weight: 400; }
     dd { margin: 0; }
@@ -53,7 +55,7 @@
     <header class="site-top"><a class="site-top__logo" href="/"><img src="/LOGO/logo-web.webp" alt="Saint Seiya TCG"></a><nav class="site-tabs" aria-label="Site"><a class="site-tab" href="/about/">The game</a><a class="site-tab" href="/how-to-play/">How to play</a><a class="site-tab" href="/download/" aria-current="page">Install</a><a class="site-tab" href="/gallery/">Card gallery</a></nav><a class="kv-button site-top__play" href="/playtest/">Play</a></header>
     <main>
       <section class="hero" aria-labelledby="title">
-        <p class="kv-stamp kv-stamp--gold"><span class="kv-dot" aria-hidden="true"></span>&nbsp; Desktop app · Closed beta</p>
+        <p class="kv-stamp kv-stamp--gold"><span class="kv-dot" aria-hidden="true"></span>&nbsp; App · Closed beta</p>
         <h1 id="title"><span class="kv-lyric">Bring the Sanctuary</span><span class="kv-cosmo">Home</span></h1>
         <p class="lead">The Saint Seiya TCG app opens Olympus Arena in its own window, full screen, without browser tabs. Your account, decks, rank and friends are the same as on the website.</p>
       </section>
@@ -70,6 +72,20 @@
           <h2 id="mac-title">macOS</h2>
           <p>macOS 12 or later · Apple silicon and Intel · about 190 MB</p>
           <a class="kv-button" href="/download/files/SaintSeiyaTCG-1.0.0-mac-universal.dmg" download>Download .dmg</a>
+        </section>
+        <section class="kv-card" data-os="android" aria-labelledby="android-title">
+          <span class="yours" hidden>Your system</span>
+          <h2 id="android-title">Android</h2>
+          <p>Android 7 or later · Install from Chrome, or download the app · about 2 MB</p>
+          <a class="kv-button" data-install href="#android">See how</a>
+          <a class="kv-ghost" href="/download/files/SaintSeiyaTCG-1.0.0-android.apk" download>Download .apk</a>
+          <p data-install-status role="status" hidden>Installed. Open Saint Seiya TCG from your home screen.</p>
+        </section>
+        <section class="kv-card" data-os="ios" aria-labelledby="ios-title">
+          <span class="yours" hidden>Your system</span>
+          <h2 id="ios-title">iPhone and iPad</h2>
+          <p>Add to your Home Screen from Safari, no download</p>
+          <a class="kv-button" href="#ios">See how</a>
         </section>
       </div>
       <p class="fine">Version 1.0.0. You need a beta account to play; access is by invitation. The app needs an internet connection.</p>
@@ -93,6 +109,29 @@
             <li>Open the app from Applications. macOS warns that it cannot verify the developer, because the beta app is not notarized yet. Select <strong>Done</strong>.</li>
             <li>Open <strong>System Settings → Privacy &amp; Security</strong>, scroll down and select <strong>Open Anyway</strong> next to Saint Seiya TCG. Confirm with your password.</li>
             <li>From now on, the app opens normally.</li>
+          </ol>
+        </section>
+        <section class="kv-card" id="android" aria-labelledby="g-android">
+          <h3 id="g-android">Android</h3>
+          <ol>
+            <li>Open this page in <strong>Chrome</strong> and select <strong>Install app</strong> above.</li>
+            <li>No button? Open the Chrome menu <strong>⋮</strong> and choose <strong>Install app</strong> or <strong>Add to Home screen</strong>.</li>
+            <li>Confirm with <strong>Install</strong>. Saint Seiya TCG appears on your home screen.</li>
+          </ol>
+          <p class="alt"><strong>Or install the .apk file:</strong></p>
+          <ol>
+            <li>Select <strong>Download .apk</strong> above and open <strong>SaintSeiyaTCG-1.0.0-android.apk</strong>.</li>
+            <li>If Android blocks it, open <strong>Settings</strong> from the warning and turn on <strong>Allow from this source</strong> for your browser. This appears because the beta app is not on Google Play yet.</li>
+            <li>Go back and select <strong>Install</strong>. If Play Protect warns you, choose <strong>More details</strong>, then <strong>Install anyway</strong>.</li>
+          </ol>
+        </section>
+        <section class="kv-card" id="ios" aria-labelledby="g-ios">
+          <h3 id="g-ios">iPhone and iPad</h3>
+          <ol>
+            <li>Open this page in <strong>Safari</strong>.</li>
+            <li>Tap <strong>Share</strong>.</li>
+            <li>Choose <strong>Add to Home Screen</strong>. If you don't see it, scroll down the list.</li>
+            <li>Tap <strong>Add</strong>. Saint Seiya TCG appears on your Home Screen.</li>
           </ol>
         </section>
         <section class="kv-card" aria-labelledby="g-first">
@@ -120,6 +159,7 @@
           <h3 id="g-req">Requirements</h3>
           <ul>
             <li>Windows 10/11 64-bit, or macOS 12 Monterey or later.</li>
+            <li>Android 7 or later with Chrome, or iPhone and iPad with Safari.</li>
             <li>A graphics card with WebGL (any computer from the last 8 years).</li>
             <li>4 GB of RAM and a stable internet connection.</li>
           </ul>
@@ -137,11 +177,13 @@
           <h3 id="g-remove">Uninstall</h3>
           <p><strong>Windows:</strong> Settings → Apps → Installed apps → Saint Seiya TCG → Uninstall.</p>
           <p><strong>macOS:</strong> drag Saint Seiya TCG from Applications to the Trash.</p>
+          <p><strong>Android, iPhone and iPad:</strong> press and hold the app icon, then remove it.</p>
           <p>Your decks and rank stay safe in your account.</p>
         </section>
         <section class="kv-card wide" aria-labelledby="g-browser">
           <h3 id="g-browser">Prefer not to install?</h3>
           <p>Play at <a href="/playtest/">saintseiyatcg.com/playtest</a> in Chrome, Edge or Safari. In Chrome or Edge you can also choose <strong>Install Saint Seiya TCG</strong> in the address bar to get a window of its own, with no download.</p>
+          <button class="kv-ghost" type="button" data-install-desktop hidden>Install in this browser</button>
         </section>
       </div>
     </main>
@@ -152,14 +194,32 @@
     mountKV({anchor: 'h1 .kv-cosmo'});
     document.querySelector('.site-tab[aria-current]')?.scrollIntoView({inline: 'center', block: 'nearest'}); // celular: aba atual visível
     // Destaca o sistema de quem visita; o outro botão vira secundário.
-    const ua = navigator.userAgentData?.platform || navigator.platform || navigator.userAgent;
-    const os = /win/i.test(ua) ? 'win' : /mac/i.test(ua) ? 'mac' : null;
+    const ua = navigator.userAgentData?.platform || navigator.platform || navigator.userAgent, agent = navigator.userAgent;
+    const os = /iphone|ipad|ipod/i.test(agent) || (/mac/i.test(ua) && navigator.maxTouchPoints > 1) ? 'ios' : /android/i.test(agent) ? 'android' : /win/i.test(ua) ? 'win' : /mac/i.test(ua) ? 'mac' : null; // iPad se apresenta como Mac
     if (os) for (const card of document.querySelectorAll('[data-os]')) {
       const mine = card.dataset.os === os;
       card.classList.toggle('is-yours', mine); card.querySelector('.yours').hidden = !mine;
       if (!mine) card.querySelector('.kv-button').className = 'kv-ghost';
       if (mine) card.parentElement.prepend(card);
     }
+    // O navegador só abre a instalação por um toque de quem visita; sem o evento, o botão segue levando ao passo a passo.
+    const androidButton = document.querySelector('[data-install]'), desktopButton = document.querySelector('[data-install-desktop]'), done = document.querySelector('[data-install-status]');
+    let installPrompt = null;
+    addEventListener('beforeinstallprompt', event => {
+      event.preventDefault();
+      installPrompt = event;
+      if (os === 'android') androidButton.textContent = 'Install app'; else if (os !== 'ios') desktopButton.hidden = false;
+    });
+    const install = async event => {
+      if (!installPrompt) return;
+      event.preventDefault();
+      installPrompt.prompt();
+      await installPrompt.userChoice;
+      installPrompt = null;
+    };
+    const button = os === 'android' ? androidButton : desktopButton;
+    button.addEventListener('click', install);
+    addEventListener('appinstalled', () => { button.hidden = true; done.hidden = os !== 'android'; });
   </script>
 </body>
 </html>

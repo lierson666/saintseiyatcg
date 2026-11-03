@@ -1,0 +1,10 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.saintseiyatcg.app",
+      "sha256_cert_fingerprints": ["4A:87:B1:D3:6C:A6:BF:4B:F7:1C:5C:A5:AC:4A:43:D7:90:DE:FE:84:65:AA:93:BD:D8:AE:26:4D:CC:F2:ED:D8"]
+    }
+  }
+]
