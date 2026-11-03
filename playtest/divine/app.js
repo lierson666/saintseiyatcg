@@ -2323,6 +2323,11 @@ function abilityEffect(name) {
   return null;
 }
 // Opção de decisão: uid de carta ou God ('god:A', alvo de dano das cartas V6).
+// No celular o popup lista as cartas em linhas, como no deck builder (autor, 03/11/2026); data-src: segurar abre a carta.
+const pickRow = uid => {
+  const c = info(uid), art = FORGE.get(ctx.objects[uid].cardId)?.ilustracao;
+  return `<span class="pick-row" data-src="${esc(uid)}" ${art ? `style="--art:url('${forgeArt(art)}')"` : ''}>${c.cost ? `<b class="pick-row__cost ${c.cost.unit}">${c.cost.amount}</b>` : ''}<span class="pick-row__text"><strong>${esc(c.name)}</strong><small>${esc(ui.type(uid) || c.kind)}</small></span></span>`;
+};
 const optName = uid => (String(uid).startsWith('god:') ? `${cards.get(S().gods[uid.slice(4)]).name} (Player ${uid.slice(4)})` : pending?.pending.choose === 'mode' ? String(uid) : info(uid).name);
 function decisionModal() {
   const req = pending.pending, t = decisionText(req), fx = abilityEffect(req.ability);
@@ -2398,7 +2403,7 @@ function sidePanel(req, t, fx) {
   // Busca no deck, Tartarus ou mão (tutor): popup no meio da tela com as cartas grandes, como no Arena (autor, 31/10/2026).
   const offBoard = req.kind === 'choice' && !target && req.choose !== 'mode' && req.options.every(u => ctx.objects[u] && !S().order.some(k => S().players[k].battlefield.includes(u)));
   const size = offBoard ? 'dcard--lg' : 'dcard--sm';
-  const opts = req.kind === 'choice' && !target ? `<div class="decision__opts trigger-panel__opts ${picked.length >= req.count ? 'is-full' : ''}" style="--n:${Math.min(req.options.length, 10)}" role="group" aria-label="Options">${req.options.map((uid, i) => `<button class="decision__opt ${picked.includes(uid) ? 'picked' : ''}" data-dec="opt" data-opt="${esc(uid)}" data-focus="opt:${esc(uid)}" aria-pressed="${picked.includes(uid)}" aria-label="${esc(optName(uid))}${i < 9 ? `, key ${i + 1}` : ''}">${String(uid).startsWith('god:') || req.choose === 'mode' || !ctx.objects[uid] ? `<span class="dcard decision__god">${esc(optName(uid))}</span>` : cardFace(uid, {size}).replace('tabindex="0"', 'tabindex="-1"')}${i < 9 ? `<kbd>${i + 1}</kbd>` : ''}${picked.includes(uid) ? `<b class="decision__order">${picked.indexOf(uid) + 1}</b>` : ''}</button>`).join('')}</div>` : '';
+  const opts = req.kind === 'choice' && !target ? `<div class="decision__opts trigger-panel__opts ${picked.length >= req.count ? 'is-full' : ''}" style="--n:${Math.min(req.options.length, 10)}" role="group" aria-label="Options">${req.options.map((uid, i) => `<button class="decision__opt ${picked.includes(uid) ? 'picked' : ''}" data-dec="opt" data-opt="${esc(uid)}" data-focus="opt:${esc(uid)}" aria-pressed="${picked.includes(uid)}" aria-label="${esc(optName(uid))}${i < 9 ? `, key ${i + 1}` : ''}">${String(uid).startsWith('god:') || req.choose === 'mode' || !ctx.objects[uid] ? `<span class="dcard decision__god">${esc(optName(uid))}</span>` : cardFace(uid, {size}).replace('tabindex="0"', 'tabindex="-1"') + (offBoard ? pickRow(uid) : '')}${i < 9 ? `<kbd>${i + 1}</kbd>` : ''}${picked.includes(uid) ? `<b class="decision__order">${picked.indexOf(uid) + 1}</b>` : ''}</button>`).join('')}</div>` : '';
   const actions = waiting ? `<p class="decision__note">Waiting for Player ${req.player}…</p>`
     : req.kind === 'optional' ? `<button class="primary-action" data-dec="yes" data-focus="yes">${esc(t.yes)}</button><button class="ghost" data-dec="no" data-focus="no">${esc(t.no)}</button>`
     : opts ? `<button class="primary-action" data-dec="confirm" data-focus="confirm" ${pickedOk(req, picked) ? '' : 'disabled'}>Confirm · ${picked.length}/${req.count}</button>${cancel}` : cancel;
@@ -2414,7 +2419,7 @@ function sidePanel(req, t, fx) {
       <span class="pick-modal__source"><h3 id="trigger-title">${esc(t.title)}</h3>${long ? `<button class="pick-modal__fx-btn" data-dec="fx" aria-expanded="${Boolean(pending.fxOpen)}">${pending.fxOpen ? 'Hide effect' : 'View effect'}</button>` : ''}</span>
       <span class="decision__clock" data-decision-clock></span></header>
     ${long ? (pending.fxOpen ? `<div class="pick-modal__fx">${effect}</div>` : '') : effect}
-    ${steps}<p class="pick-modal__ask">${inlineMarkup(t.body)}</p>${opts}
+    ${steps}<p class="pick-modal__ask">${inlineMarkup(t.body)}</p><small class="pick-modal__hold">Hold a card to read it</small>${opts}
     <div class="trigger-panel__actions">${req.count > 1 && missing > 0 ? `<span class="pick-modal__left">${esc(`Choose ${missing} more`)}</span>` : ''}${actions}</div></section>`;
   }
   // Decisão estilo Arena (autor, 31/10/2026): bloco central (carta grande + opções) sobre a mesa escurecida; "View board" espia a mesa.

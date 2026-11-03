@@ -69,6 +69,33 @@ body:has(#overlay-root > :not(.gear-btn), .pick-modal, .decision-veil, #bigcard)
 .pick-steps .is-done i { font-style: normal; color: var(--kv-gold); }
 .pick-steps .is-now { background: var(--kv-gold); color: #1a1204; font-weight: 700; }
 
+/* Celular: cartas em lista, um pouco mais altas que as do deck builder; a lista rola e o Confirmar fica sempre à vista. */
+.pick-row, .pick-modal__hold { display: none; }
+@media (max-width: 700px), (max-height: 520px) {
+  .pick-modal { display: flex; flex-direction: column; align-items: stretch; width: 96vw; min-width: 0; max-width: 96vw; padding: 12px; overflow: hidden; }
+  .pick-modal__ask { align-self: center; font-size: 17px; }
+  .pick-modal__head { grid-template-columns: minmax(0, 1fr) auto; row-gap: 6px; }
+  .pick-modal__who .decision__kicker { display: none; }
+  .pick-modal__source { grid-row: 2; grid-column: 1 / -1; }
+  .pick-modal__hold { display: block; font: 400 12px/1.2 var(--kv-sans); color: var(--kv-muted); }
+  .pick-modal .decision__opts { flex: 1 1 auto; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; padding: 2px; overflow-y: auto; }
+  .pick-modal .decision__opt { width: 100%; padding: 0; border: 0; }
+  .pick-modal .decision__opt, .pick-modal .decision__opt:hover { transform: none; }
+  .pick-modal .decision__opt .dcard, .pick-modal .decision__opt kbd { display: none; }
+  .pick-row { display: flex; align-items: center; gap: 10px; box-sizing: border-box; height: 64px; padding: 0 44px 0 8px; border: 1px solid #2b3552; border-radius: 8px; text-align: left; color: var(--kv-ink);
+    background: linear-gradient(90deg, #0b1020f2 0%, #0b1020c8 45%, #0b102066 75%, #0b1020b8 100%), var(--art, none) center 30% / 100% auto no-repeat, #0b1020; -webkit-touch-callout: none; user-select: none; }
+  .pick-row__cost { flex: none; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font: 700 15px/1 var(--kv-title); color: #1a1204; background: var(--kv-gold); }
+  .pick-row__cost.latent { background: #7a4fd0; color: #fff; }
+  .pick-row__text { min-width: 0; display: grid; gap: 2px; }
+  .pick-row__text :is(strong, small) { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; text-shadow: 0 1px 3px #000; }
+  .pick-row__text strong { font: 600 14px/1.2 var(--kv-title); }
+  .pick-row__text small { font: 400 12px/1.2 var(--kv-sans); color: var(--kv-muted); }
+  .decision__opt.picked .pick-row { border-color: var(--kv-gold); box-shadow: inset 0 0 0 1px var(--kv-gold), 0 0 12px #e6c36a66; }
+  .decision__opts.is-full .decision__opt:not(.picked) .pick-row { filter: grayscale(1) brightness(.55); }
+  .pick-modal .decision__order { left: auto; right: 10px; top: 19px; }
+}
+@media (max-height: 520px) and (min-width: 701px) { .pick-modal .decision__opts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
 /* Carta inteira (autor, 01/11/2026): ações e fechar numa coluna à direita, o conjunto centrado na tela; nada cobre a carta. */
 .bigcard__actions { display: grid; gap: 8px; width: 100%; box-sizing: border-box; cursor: default; }
 .bigcard__actions button { box-sizing: border-box; width: 100%; min-height: 44px; padding: 8px 14px; letter-spacing: .04em; text-align: center; white-space: normal; overflow-wrap: anywhere; cursor: pointer; }

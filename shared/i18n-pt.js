@@ -187,7 +187,7 @@ self.ssI18nPT = {
     'Athena Exclamation needs three Prepared Saints with different identities, enough prepared Bases and enough Soul.': 'A Exclamação de Athena precisa de três Cavaleiros Preparados com identidades diferentes, Bases preparadas e Alma suficientes.',
     'Sacrifice exactly three of your Devotees, on your turn.': 'Sacrifique exatamente três dos seus Devotos, no seu turno.', "It's not your turn.": 'Não é seu turno.',
     'Not enough prepared Cosmo Bases.': 'Cosmo Bases preparadas insuficientes.', 'Not enough Latent Cosmo.': 'Cosmo Latente insuficiente.',
-    'Wait for the response window to close.': 'Espere a janela de resposta fechar.', 'No response': 'Sem resposta', 'View effect': 'Ver efeito', 'Hide effect': 'Fechar efeito', 'You need priority.': 'Você precisa ter prioridade.', 'A Guardian must be your target.': 'Um Guardião tem que ser seu alvo.',
+    'Wait for the response window to close.': 'Espere a janela de resposta fechar.', 'No response': 'Sem resposta', 'View effect': 'Ver efeito', 'Hold a card to read it': 'Segure uma carta para ler', 'Hide effect': 'Fechar efeito', 'You need priority.': 'Você precisa ter prioridade.', 'A Guardian must be your target.': 'Um Guardião tem que ser seu alvo.',
     'This Devotee already struck this turn.': 'Este Devoto já golpeou neste turno.', 'Only a Prepared Devotee can Strike.': 'Só um Devoto Preparado pode Golpear.',
     'The match is over.': 'A partida acabou.', 'Choose which version of that character to keep.': 'Escolha qual versão desse personagem manter.',
     'Finish the mulligan first.': 'Termine o mulligan primeiro.', 'It must be Prepared to use {T}.': 'Precisa estar Preparado para usar {T}.',
