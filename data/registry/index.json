@@ -1,6 +1,6 @@
 {
  "current": {
-  "rules": "b4c2c9fcb7e8",
+  "rules": "a2406168ee52",
   "catalog": "97e941149b1d",
   "catalog_version": "athena-vanilla-v6",
   "set_name": "ATHENA + POSEIDON — VANILLA SET V6"
@@ -150,6 +150,11 @@
    "rules": "b4c2c9fcb7e8",
    "catalog": "97e941149b1d",
    "at": 1793655944
+  },
+  {
+   "rules": "a2406168ee52",
+   "catalog": "97e941149b1d",
+   "at": 1793706855
   }
  ]
 }
