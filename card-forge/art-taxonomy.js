@@ -173,7 +173,7 @@ export const COUNTS = [['1', '1: Individual'], ['2', '2: Dupla'], ['3', '3: Trio
 export const EXACT_LIMIT = 10, ARMY_FROM = 15, CROWD_FROM = 100;
 export function countOf(p) {
   const n = p.count === 'custom' ? Math.floor(Number(p.countCustom)) : Number(p.count ?? 1);
-  return Number.isFinite(n) && n >= 1 ? Math.min(n, 999) : 1;
+  return Number.isFinite(n) && n >= 0 ? Math.min(n, 999) : 1; // zero só vale nas naturezas que aceitam arte sem personagens
 }
 const WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'];
 export const countWord = (n) => WORDS[n] || String(n);

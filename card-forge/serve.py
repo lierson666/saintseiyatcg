@@ -61,6 +61,9 @@ _hill_spec.loader.exec_module(star_hill)
 _studio_spec = importlib.util.spec_from_file_location("layout_studio", Path(__file__).with_name("layout_studio.py"))
 layout_studio = importlib.util.module_from_spec(_studio_spec)
 _studio_spec.loader.exec_module(layout_studio)
+_direction_spec = importlib.util.spec_from_file_location("art_direction", Path(__file__).with_name("art_direction.py"))
+art_direction = importlib.util.module_from_spec(_direction_spec)
+_direction_spec.loader.exec_module(art_direction)
 
 
 def fmt(value, indent, expand=False):
@@ -155,6 +158,8 @@ class Handler(SimpleHTTPRequestHandler):
         path = self.path.split('?', 1)[0]
         if path.startswith('/api/layout-studio'):
             return layout_studio.handle(self, path)
+        if path == '/api/art-direction':
+            return art_direction.get(self)
         if path == '/api/boosters':
             return self.reply(200, sorted(f.stem for f in BOOSTERS.glob('*.webp')))
         if path.startswith('/biblioteca-sons/'):  # sons extraídos ficam fora do projeto: só o servidor local os lê
@@ -182,6 +187,8 @@ class Handler(SimpleHTTPRequestHandler):
             raw = self.rfile.read(n)
             if self.path.startswith('/api/layout-studio'):
                 return layout_studio.handle(self, self.path.split('?', 1)[0], raw, atomic_write)
+            if self.path.split('?', 1)[0] == '/api/art-direction':
+                return art_direction.post(self, raw, atomic_write)
             if self.path.startswith('/api/star-hill/'):
                 return star_hill.post(self, self.path.split('?', 1)[0], raw, atomic_write)
             parts = self.path.strip("/").split("/")
