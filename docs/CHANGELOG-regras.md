@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-03 — G3-024 — Sem tempo contra a IA
+
+- **Antes:** o relógio de 90 s por ação valia em toda partida, inclusive contra a IA, com os efeitos de timeout (G3-027, G3-030).
+- **Depois:** contra a IA o relógio continua na tela, mas não conta e não há timeout. Duelo online e hot-seat não mudam.
+- **Motivo:** autor, 03/11/2026: "tira o tempo de jogo contra IA ok, o povo ta aprendendo a joga"; "deixa o relogio la na UX mas nao conte o tempo ok?".
+- **Pendências:** nenhuma. Interface: `playtest/divine/app.js` (`vsAI`).
+
 ## 2026-11-03 — §56 — Habilidade ativada em velocidade de Moment
 
 - **Antes → depois:** "Só Moment responde" → Moment e habilidade ativada em velocidade de Moment respondem. Technique continua só no próprio turno, com a pilha vazia.

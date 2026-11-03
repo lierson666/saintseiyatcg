@@ -409,7 +409,9 @@ function startExclamation(key) {
 
 // ---------- Relógio competitivo (G3-024..028) ----------
 
-const now = () => performance.now() / 1000;
+// Contra a IA o tempo não corre (autor, 03/11/2026: quem joga ainda está aprendendo). Tempo parado: o relógio fica cheio na tela e nunca esgota.
+const vsAI = () => !online && settings.ai !== 'none';
+const now = () => vsAI() ? 0 : performance.now() / 1000;
 // Fim da partida: XP contra a IA, rank e XP online (docs/ranking-xp.md). Hot-seat não conta.
 const rankHook = events => { const v = events.find(e => e.type === 'victory'); if (v) rankAfterMatch({victory: v, online: !!online, me: online ? online.key : settings.ai === 'A' ? 'B' : settings.ai === 'B' ? 'A' : null}); };
 function syncClock(events) {
@@ -435,7 +437,7 @@ function updateClock(force = false) {
   write(time, key ? `${String(Math.floor(t / 60)).padStart(2, '0')}:${String(t % 60).padStart(2, '0')}` : '--:--');
   write(label, !key ? 'Clock' : key === S().active ? `Turn · ${key}` : `Response · ${key}`);
   const dc = $('[data-decision-clock]');
-  if (dc && key) { write(dc, `${t}s left`); dc.classList.toggle('urgent', r.total <= 20); }
+  if (dc && key && !vsAI()) { write(dc, `${t}s left`); dc.classList.toggle('urgent', r.total <= 20); }
 }
 // Timeout (sempre ligado; ?timeouts=0 desliga para QA; online quem aplica é o arena-server). G3-027: escolha opcional pendente →
 // TIMEOUT_DECLINED; obrigatória → TIMEOUT_AUTO_CHOICE (G3-030, na engine); janela → TIMEOUT_PASS_PRIORITY; fase de
