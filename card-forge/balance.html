@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cosmo Balance · Card Forge</title>
+  <link rel="icon" href="../LOGO/favicon.png?v=20261030">
+  <link rel="stylesheet" href="forge.css">
+  <style>
+    body { overflow: auto; }
+    main.cb { padding: 16px 24px 48px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; height: auto; max-width: 100%; }
+    .cb__banner { margin: 0; }
+    .cb__banner { border: 1px solid var(--gold); padding: 8px 12px; font-size: 13px; }
+    .cb__stats { display: flex; flex-wrap: wrap; gap: 8px; }
+    .cb__stat { border: 1px solid #ffffff22; padding: 8px 12px; min-width: 112px; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+    .cb__stat[aria-pressed="true"] { border-color: var(--gold); }
+    .cb__stat b { display: block; font-size: 20px; font-variant-numeric: tabular-nums; }
+    .cb__stat small { opacity: .75; }
+    .cb__filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; }
+    .cb__filters label { display: grid; gap: 2px; font-size: 12px; }
+    .cb__layout { display: grid; grid-template-columns: minmax(0, 3fr) minmax(320px, 2fr); gap: 16px; align-items: start; }
+    .cb__scroll { overflow: auto; max-height: 72vh; border: 1px solid #ffffff22; }
+    table.cb__table { border-collapse: collapse; width: 100%; font-size: 13px; }
+    .cb__table th, .cb__table td { padding: 4px 8px; text-align: right; border-bottom: 1px solid #ffffff14; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .cb__table th { position: sticky; top: 0; background: #14110c; cursor: pointer; }
+    .cb__table th:first-child, .cb__table td:first-child, .cb__table td.t { text-align: left; }
+    .cb__table tbody tr { cursor: pointer; }
+    .cb__table tbody tr:hover, .cb__table tbody tr.is-on { background: #ffffff12; }
+    .cb__detail { border: 1px solid #ffffff22; padding: 12px 16px; max-height: 72vh; overflow: auto; font-size: 13px; }
+    .cb__detail h2 { margin: 0 0 4px; font-size: 16px; }
+    .cb__detail h3 { margin: 16px 0 4px; font-size: 13px; color: var(--gold); }
+    .cb__bars { display: grid; grid-template-columns: 110px 1fr 56px; gap: 4px 8px; align-items: center; }
+    .cb__bar { height: 8px; background: var(--gold); min-width: 1px; }
+    .cb__bar.neg { background: #d9705f; }
+    .cb__ability { border-top: 1px solid #ffffff14; padding: 6px 0; }
+    .cb__ability p { margin: 0 0 2px; }
+    .cb__muted { opacity: .7; }
+    .cb__warn { color: #e8a33d; }
+    .cb__config { width: 100%; min-height: 96px; font: 12px ui-monospace, monospace; }
+    @media (max-width: 960px) { .cb__layout { grid-template-columns: 1fr; } .cb__scroll, .cb__detail { max-height: none; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Card Forge <small>Developer › Cosmo Balance</small></h1>
+    <a href="index.html" style="color:var(--gold);font-weight:600">← Cartas</a>
+    <span id="status" role="status"></span>
+  </header>
+  <main class="cb" id="main">
+    <p class="cb__banner"><b>Developer.</b> Classificação preliminar e sem calibragem por partidas. Só leitura: nenhuma proposta grava em <code>data/cards.json</code>, regra ou jogo oficial.</p>
+    <div class="cb__stats" id="stats" aria-label="Distribuição das classificações"></div>
+    <div class="cb__filters">
+      <label>Buscar <input id="q" type="search" placeholder="nome ou id"></label>
+      <label>Tipo <select id="fType"></select></label>
+      <label>Facção <select id="fFaction"></select></label>
+      <label>Confiança <select id="fConf"><option value="">Todas</option><option>alta</option><option>média</option><option>baixa</option></select></label>
+      <label><span><input id="fUnres" type="checkbox"> Só com UNRESOLVED</span></label>
+    </div>
+    <div class="cb__layout">
+      <div class="cb__scroll"><table class="cb__table"><thead id="head"></thead><tbody id="rows"></tbody></table></div>
+      <aside class="cb__detail" id="detail" aria-live="polite"><p class="cb__muted">Escolha uma carta.</p></aside>
+    </div>
+    <details>
+      <summary>Versões e parâmetros</summary>
+      <p id="meta" class="cb__muted"></p>
+      <label>Ajuste de parâmetros em JSON, só nesta sessão (ex.: <code>{"bands":{"near":0.15}}</code>)
+        <textarea class="cb__config" id="config" spellcheck="false">{}</textarea></label>
+      <button id="apply" type="button">Recalcular</button>
+    </details>
+  </main>
+  <script type="module" src="cosmo-balance/dashboard.js"></script>
+</body>
+</html>
