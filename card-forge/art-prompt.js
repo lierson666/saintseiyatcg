@@ -5,7 +5,7 @@ import {printedKind} from '../shared/rules-policy.js';
 import {ANATOMY, ARMY_FROM, CREATURES, CREATURE_CHOICES, CREATURE_MOODS, CREATURE_POSES, COUNTS, CROWD_FROM, EXACT_LIMIT, FORMATIONS, LEADS, ORDERS, VARIETIES, allowedNotes, blockedNotes, countOf, countWord, creatureById, creatureFromSubtypes, creaturePool, formationById, notesAskAlone, orderById, orderFromCard, suggestFormation} from './art-taxonomy.js?v=20261102-arte16';
 import {BEARERS, BODY_BEARERS, DAMAGED_STATES, DIVINE_LANGUAGE, DIVINE_SCALES, EFFECTS, ENV_EXTRAS, ENV_SCALES, ENV_STATES, ENV_TYPES, EQUIP_STATES, FACELESS_ROLES, FIGURE_FOCI, FORMS, INTENSITIES, MANIFESTATIONS, NATURES, OBJECT_KINDS, ORIGINS, PHASES, PRESENTATIONS, PROMPT_VERSION, ROLES, SCENE_FOCI, SCENE_MOMENTS, SCENE_TYPES, SUPPORTS, VARIANTS, VISIBLE, classifyFacts, textOf} from './art-natures.js?v=20261102-arte16';
 import {formatCardTypeLine} from '../shared/equipment-types.js';
-import {FAMILIES, STATE_LABELS, armorForArt, consistencySummary, imageUrl, latestVersions, lockLines, lockNegative} from './armor-model.js';
+import {FAMILIES, GAUNTLET_BAN, HAND_FINISHES, STATE_LABELS, armorForArt, consistencySummary, gauntletApplies, gauntletRule, imageUrl, latestVersions, lockLines, lockNegative} from './armor-model.js';
 
 const pair = (code, pt) => [code, `${code}: ${pt}`];
 export const SHOTS = [
@@ -367,7 +367,7 @@ export function defaultParams(f) {
     objectKind: cl.objectKind, objectCustom: '', presentation: cl.presentation, equipState: cl.equipState, support: cl.support, supportCustom: '', bearer: 'auto',
     envType: cl.envType, envCustom: '', envState: cl.envState, envScale: cl.envScale, hour: '', weather: '', fog: '', depth: '', visibility: '', sky: '', lightSource: '', perspective: '', focal: '', phenomena: '',
     manifestation: cl.manifestation, divineScale: cl.divineScale,
-    armorSource: 'auto', armorType: '', armorProject: '', armorVersion: '', armorUse: true, armorAdjust: '',
+    armorSource: 'auto', armorType: '', armorProject: '', armorVersion: '', armorUse: true, armorAdjust: '', handFinish: 'skin', lycraColor: '',
   };
 }
 
@@ -643,16 +643,18 @@ export function armorChoice(p) {
   if (p.armorSource === 'original' && p.armorUse && p.armorDesign) return {kind: 'locked', ...p.armorDesign};
   return null;
 }
-function armorPromptLines(choice, generic, c, figure) {
+function armorPromptLines(choice, generic, c, figure, handRule) {
   if (!choice || (!figure && c.nature !== 'equipment')) return [];
   if (choice.kind === 'none') return figure ? ['ARMOR: this figure wears no armor at all; clothing and body only.'] : [];
   if (choice.kind === 'existing') return generic ? [`ARMOR: ${choice.name}, an existing armor of this game. Match its attached reference images: plates, ornaments and colors. Do not invent armor changes.`] : [];
-  return lockLines(choice.lock, {adjustments: choice.adjustments, referenceCount: choice.references.length, group: c.group, noWearer: !figure});
+  return lockLines(choice.lock, {adjustments: choice.adjustments, referenceCount: choice.references.length, group: c.group, noWearer: !figure, handRule});
 }
 
 export function buildImagePrompt(f, p) {
   const choice = armorChoice(p), generic = p.generic, god = GODS[p.god], c = resolveCast(f, p), figure = c.active, isEquipment = f.kind === 'Equipment', power = f.powers.find((x) => x.name === p.technique), epic = EPIC_LEVELS.find(([v]) => v === p.epic);
   const modal = c.nature !== 'legacy' && c.nature !== 'character';
+  const divine = c.nature === 'divine' || (c.nature === 'legacy' && classifyFacts(f).nature === 'divine');
+  const handRule = (c.nature === 'equipment' && bearerOf(p) === 'hands' || (figure && c.profile.hands)) && !divine && choice?.kind !== 'none' && (choice?.kind !== 'locked' || gauntletApplies(choice.lock));
   const castingCaster = c.nature !== 'technique' || ['caster', 'both', 'casters'].includes(p.visible);
   const person = figure && castingCaster ? p.person : c.nature === 'legacy' ? p.person : '';
   const companions = c.group && person ? ` ${person} is the protagonist, with ${c.crowd ? 'a vast army' : c.exact ? countWord(c.n - 1) : `about ${c.n - 1}`} of anonymous ${c.plural} around.` : '';
@@ -690,7 +692,8 @@ export function buildImagePrompt(f, p) {
     role && `CHARACTER ROLE (visual only): ${role}.`,
     morphology,
     c.order && `ARCHETYPE (visual only): ${c.order.label}${choice ? '' : `: ${c.order.en}`}.${originalOrder(c.order)}`,
-    ...armorPromptLines(choice, generic, c, figure),
+    ...armorPromptLines(choice, generic, c, figure, handRule),
+    handRule && gauntletRule({finish: p.handFinish, lycra: p.lycraColor}),
     c.group && `GROUP VARIATION: ${c.variety[2]}.`,
     c.group && !(c.variety[0].startsWith('leader') && c.lead[0] === 'collective') && `GROUP FOCUS: ${c.lead[2]}.`,
     c.group && formationLine(c, p),
@@ -717,7 +720,7 @@ export function buildImagePrompt(f, p) {
     f.flavour && `MOOD LINE: ${f.flavour}`,
     notes && `NOTES (author's direction, overrides the fields above, never the format rules): ${notes}`,
   ].filter(Boolean).join('\n');
-  const own = [mode ? mode.negative.filter(Boolean).join(', ') : '', choice?.kind === 'locked' && lockNegative(choice.lock), choice?.kind === 'none' && figure && 'armor, armor plates, pauldrons'].filter(Boolean).join(', ');
+  const own = [mode ? mode.negative.filter(Boolean).join(', ') : '', choice?.kind === 'locked' && lockNegative(choice.lock), choice?.kind === 'none' && figure && 'armor, armor plates, pauldrons', handRule && GAUNTLET_BAN].filter(Boolean).join(', ');
   return `${body}\n\nNEGATIVE PROMPT: ${own ? `${own}, ` : ''}${negativeLine(generic, c, figure)}.`;
 }
 
@@ -841,6 +844,7 @@ export function mountArtPrompt(dialog, {getCard, getCards, say, masterUrl, openA
       ${p.generic && body.hair && !c.army && !c.mixed ? select('hair', 'Cabelo', HAIRSTYLES, p.hair) : ''}
       ${body.trait && body.traits?.length ? select('traits', body.trait, [...none('Automático'), ...body.traits.map((t) => [t])], p.traits || '') : ''}
       ${body.humanMood ? select('expression', 'Expressão', EXPRESSIONS, p.expression) : select('creatureMood', 'Comportamento', CREATURE_MOODS.map((m) => [m]), p.creatureMood)}
+      ${body.hands && nature !== 'divine' && p.armorSource !== 'none' ? `${select('handFinish', 'Partes livres dos dedos', HAND_FINISHES, p.handFinish || 'skin')}${input('lycraColor', 'Cor da lycra (vazio: automática)', p.lycraColor, 'Ex.: azul-marinho')}` : ''}
       ${input('special', 'Características especiais', p.special, 'Ex.: cicatriz no olho')}`
       : hasCount ? `<h3 class="ap-section">Personagens</h3>${select('count', 'Quantidade', [['0', '0: Nenhum'], ...COUNTS], p.count ?? '0')}` : '';
     const subject = `<h3 class="ap-section">Sujeito</h3>

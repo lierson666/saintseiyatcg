@@ -128,3 +128,34 @@ test('a consistência nunca afirma correspondência sem o autor conferir', () =>
   assert.equal(done.state, 'REVIEWED');
   assert.doesNotMatch(done.text, /perfeit|idêntic/i);
 });
+
+test('regra das mãos: só a falange da base, em toda arte com armadura e fora da natureza divina', () => {
+  const armored = buildImagePrompt(ISEU, withArmor());
+  assert.match(armored, /only the GAUNTLET RULE overrides it/);
+  assert.match(armored, /two outer phalanges stay free/);
+  assert.match(armored, /tip phalanx stays free/);
+  assert.match(armored, /show bare skin/);
+  assert.match(armored, /a dark tone matching the armor/);
+  assert.match(armored.split('NEGATIVE PROMPT:')[1], /armored fingertips/);
+  const custom = buildImagePrompt(ISEU, withArmor({handFinish: 'mesh', lycraColor: 'navy blue'}));
+  assert.match(custom, /fitted mesh/);
+  assert.match(custom, /lycra glove in navy blue/);
+  assert.match(buildImagePrompt(ISEU, defaultParams(ISEU)), /GAUNTLET RULE/);
+  assert.doesNotMatch(buildImagePrompt(ISEU, {...defaultParams(ISEU), armorSource: 'none'}), /GAUNTLET RULE/);
+  const godCard = cardFacts(cartas.find((c) => c.tipo === 'God'), cartas);
+  assert.doesNotMatch(buildImagePrompt(godCard, defaultParams(godCard)), /GAUNTLET RULE/);
+  const plate = cardFacts(cartas.find((c) => c.id === 'ares-v6-280'), cartas);
+  assert.match(buildImagePrompt(plate, {...defaultParams(plate), bearer: 'hands'}), /GAUNTLET RULE/);
+  assert.doesNotMatch(buildImagePrompt(plate, {...defaultParams(plate), bearer: 'none'}), /GAUNTLET RULE/);
+  const noGauntlets = computeDesign(P.spec, P.components.map((c) => (c.key === 'gauntlets' ? {...c, mode: 'absent'} : c)));
+  assert.doesNotMatch(buildImagePrompt(ISEU, withArmor({armorDesign: {...armorDesign, lock: buildLock(noGauntlets, [], 'x')}})), /GAUNTLET RULE/);
+});
+test('regra das mãos no Armor Forge: anéis abertos sem portador; o rascunho nasce certo', () => {
+  for (const m of ['concept', 'blueprint', 'detail']) assert.match(modePrompt(m, design, {focus: 'gauntlets'}), /short open ring/);
+  assert.doesNotMatch(modePrompt('totem', design), /GAUNTLET RULE/);
+  assert.match(modePrompt('equipped', lock, {card: {name: 'ISEU OF PYTHON'}}), /two outer phalanges stay free/);
+  assert.doesNotMatch(modePrompt('concept', computeDesign({...P.spec, divine: true}, P.components)), /GAUNTLET RULE/);
+  assert.doesNotMatch(design.anatomy.find((x) => x.key === 'gauntlets').text, /plated fingers/);
+  const auto = computeDesign(newSpec({name: 'X', faction: 'Ares'}), newComponents());
+  assert.match(auto.anatomy.find((x) => x.key === 'gauntlets').text, /base phalanx/);
+});

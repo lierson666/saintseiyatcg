@@ -93,7 +93,8 @@ function renderEditor() {
     <div class="af-card"><h2>Identidade</h2>
       <label>Nome oficial<input data-spec="name" value="${esc(spec.name)}" translate="no"${ro ? ' readonly' : ''}></label>
       <label>Facção e Deus<select data-spec="faction"${ro ? ' disabled' : ''}>${options(FACTIONS.map((f) => [f, f]), spec.faction)}</select></label>
-      <div>${IDENTITY_FIELDS.map(([k, l, ph]) => fieldRow(k, l, ph, spec, ro)).join('')}</div></div>
+      <div>${IDENTITY_FIELDS.map(([k, l, ph]) => fieldRow(k, l, ph, spec, ro)).join('')}</div>
+      <label><input type="checkbox" data-divine${spec.divine ? ' checked' : ''}${ro ? ' disabled' : ''}> Armadura de deus: fora da regra das mãos</label></div>
     ${fold('design', 'Design', DESIGN_FIELDS.map(([k, l, ph]) => fieldRow(k, l, ph, spec, ro)).join('') + fieldRow('totem', 'Forma totêmica (modo C)', 'Só quando fizer sentido para a facção', spec, ro))}
     ${fold('anatomy', 'Anatomia da armadura', group(ANATOMY))}
     ${fold('mythic', 'Elementos mitológicos', group(MYTHIC))}`;
@@ -217,6 +218,7 @@ $('#editor').addEventListener('change', (e) => {
   if (!v || !editableNow()) return;
   if (t.dataset.fieldMode) { v.spec.fields[t.dataset.fieldMode].mode = t.value; return afterMode(); }
   if (t.dataset.compMode) { store.components[t.dataset.compMode].mode = t.value; return afterMode(); }
+  if ('divine' in t.dataset) { v.spec.divine = t.checked; return afterMode(); }
   if (t.dataset.compReq) { store.components[t.dataset.compReq].required = t.checked; scheduleSave(); refreshPrompt(); renderSide(); }
 });
 

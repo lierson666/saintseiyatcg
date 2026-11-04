@@ -205,6 +205,16 @@ def main():
             forge.evaluate("window.dispatchEvent(new Event('focus'))")
             forge.wait_for_function("document.querySelector('#artPromptDialog textarea[name=prompt]').value.includes('ARMOR REFERENCES: 1 approved image')")
             final = dialog.locator("textarea[name=prompt]").input_value()
+            # Regra das mãos: o campo por personagem chega ao prompt.
+            assert "two outer phalanges stay free" in final and "show bare skin" in final
+            dialog.locator("[name=handFinish]").select_option("mesh")
+            dialog.locator("[name=lycraColor]").fill("navy blue")
+            dialog.locator("[name=lycraColor]").press("Tab")
+            forge.wait_for_function("(() => { const v = document.querySelector('#artPromptDialog textarea[name=prompt]').value; return v.includes('fitted mesh') && v.includes('lycra glove in navy blue'); })()")
+            dialog.locator("[name=handFinish]").select_option("skin")
+            dialog.locator("[name=lycraColor]").fill("")
+            dialog.locator("[name=lycraColor]").press("Tab")
+            forge.wait_for_function("document.querySelector('#artPromptDialog textarea[name=prompt]').value.includes('show bare skin')")
             assert "brutal blood-red" not in final and "sawtooth" in final and "ARMOR REFERENCES: 1 approved image" in final
             forge.locator("#artPromptDialog [name=armorProject]").scroll_into_view_if_needed()
             forge.screenshot(path=str(SHOTS / "09-modal-lock.png"))
