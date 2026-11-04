@@ -2,6 +2,7 @@ import {mountArtPrompt} from './art-prompt.js?v=20261104-rosto1';
 import {cardsToXlsx} from './cards-xlsx.js?v=20261102-momento1';
 import {AUDIT_STATUS,auditOf,mountCardFinder,reviewQueue} from './card-finder.js?v=20261102-momento1';
 import {mountRulesRows} from './rules-rows.js?v=20261104-anim4';
+import {renameLinks} from './rename-links.js';
 import {createHistory} from '../shared/editor-history.js';
 import {compilePlaytest} from '../shared/import-playtest.js';
 import {renderLiveCard,illustration,EDITIONS,editionOf} from '../shared/live-card.js?v=20261102-escala1';
@@ -986,14 +987,15 @@ $('#saveProject').addEventListener('click',async()=>{
     const eqErrors=validateEquipmentSubtypes(current).errors;
     if(eqErrors.length)throw new Error(eqErrors.join(' · '));
     if(changes.length){
-      pendingSaveBoth=true;pending=current;
-      $('#diffTarget').textContent=`${S.id}: salvar dados da carta + visual (confirmação necessária)`+ptNote;
+      pendingSaveBoth=true;pending=current;pendingLinks=orig?renameLinks(db.cartas,orig,current):[];
+      $('#diffTarget').textContent=`${S.id}: salvar dados da carta + visual (confirmação necessária)`+(pendingLinks.length?` + ${pendingLinks.length} carta(s) que citam o nome`:'')+ptNote;
       const body=$('#diffBody');
       body.replaceChildren(...changes.flatMap(({k,x,y})=>{
         const before=Object.assign(document.createElement('div'),{className:'del',textContent:`- ${k}: ${x}`});
         const after=Object.assign(document.createElement('div'),{className:'add',textContent:`+ ${k}: ${y}`});
         return orig?[before,after]:[after];
       }));
+      appendLinkedDiff(body);
       $('#diffDialog').showModal();return;
     }
     await saveVisualProject();
@@ -1133,6 +1135,11 @@ async function ensurePt(){
 }
 
 let pending = null;
+let pendingLinks = [];
+function appendLinkedDiff(body) {
+  const row = (className, textContent) => Object.assign(document.createElement('div'), {className, textContent});
+  for (const linked of pendingLinks) body.append(row('', `Carta ligada ${linked.id}: ${linked.nome_exibicao_en}`), ...diffCards(db.cartas.find((c) => c.id === linked.id), linked).flatMap(({k, x, y}) => [row('del', `- ${k}: ${x}`), row('add', `+ ${k}: ${y}`)]));
+}
 $('#saveCards').addEventListener('click', async () => {
   pendingSaveBoth=false;
   if (!S.id) return say('carta sem id', true);
@@ -1140,20 +1147,22 @@ $('#saveCards').addEventListener('click', async () => {
   pending = buildCard();
   const d = diffCards(orig, pending);
   if (!d.length) return say('nada mudou em relação ao cards.json');
-  $('#diffTarget').textContent = (orig ? `Carta ${S.id} (substitui)` : `Carta nova ${S.id} (adiciona ao fim)`) + ptNote;
+  pendingLinks = orig ? renameLinks(db.cartas, orig, pending) : [];
+  $('#diffTarget').textContent = (orig ? `Carta ${S.id} (substitui)` : `Carta nova ${S.id} (adiciona ao fim)`) + (pendingLinks.length ? ` + ${pendingLinks.length} carta(s) que citam o nome` : '') + ptNote;
   const body = $('#diffBody');
   body.replaceChildren(...d.flatMap(({ k, x, y }) => {
     const del = Object.assign(document.createElement('div'), { className: 'del', textContent: `- ${k}: ${x}` });
     const add = Object.assign(document.createElement('div'), { className: 'add', textContent: `+ ${k}: ${y}` });
     return orig ? [del, add] : [add];
   }));
+  appendLinkedDiff(body);
   $('#diffDialog').showModal();
 });
 $('#diffCancel').addEventListener('click', () => { pendingSaveBoth=false; $('#diffDialog').close(); });
 $('#diffConfirm').addEventListener('click', async () => {
   $('#diffDialog').close();
   try {
-    await post('/api/card', JSON.stringify(pending));
+    await (pendingLinks.length ? post('/api/cards', JSON.stringify([pending, ...pendingLinks])) : post('/api/card', JSON.stringify(pending)));
     if(pendingSaveBoth){
       await saveVisualProject();
       say(`✓ ${pending.id}: salvo no Mac. Publicando arte no Playtest…`);
@@ -1167,7 +1176,7 @@ $('#diffConfirm').addEventListener('click', async () => {
     gen=(orig.habilidades_en||[]).map(text=>({text,markup:toMarkup(text)}));
     fillCardSelect(orig.id);
     drawFinder();drawEqSubtypes();
-    say(pendingSaveBoth?`✓ ${pending.id}: carta + visual gravados e conferidos.`:`✓ ${pending.id}: cards.json gravado e conferido.`);
+    say((pendingSaveBoth?`✓ ${pending.id}: carta + visual gravados e conferidos.`:`✓ ${pending.id}: cards.json gravado e conferido.`)+(pendingLinks.length?` ${pendingLinks.length} carta(s) ligada(s) atualizada(s).`:''));
     pendingSaveBoth=false;
   } catch (e) { say(e.message, true); }
 });

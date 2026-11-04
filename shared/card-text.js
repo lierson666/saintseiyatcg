@@ -107,7 +107,7 @@ export function presentationRules(card){
     const [label,names]=equipLine?equipLine.split(/\s+—\s+/):[],all=(names||'').split(' / ').filter(Boolean),used=new Set();
     const merged=equipLine&&effects.length?effects.map(t=>{
       const [,short,body]=t.match(/^(?:Resonance|Ressonância)\s*[—-]\s*([^.:]+):\s*([\s\S]*)$/i);
-      const hit=n=>n.toLowerCase().includes(short.trim().toLowerCase());
+      const hit=n=>n.toLowerCase().includes(short.trim().replace(/^@/,'').toLowerCase());
       const full=all.find(hit)||all[(card.auto_equip_en||[]).findIndex(hit)]||short.trim(); // em PT o texto pode citar o nome em inglês
       used.add(full);
       return `**${label} — ${full}**\n${body}`;
