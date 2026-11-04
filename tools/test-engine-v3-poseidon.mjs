@@ -16,6 +16,7 @@ import {declareStrike, strikeTargets} from '../playtest/engine-v3/strike.js';
 import {playDevotee, duplicateCharacter} from '../playtest/engine-v3/play.js';
 import {refreshAwaken, announceGreatFlood, greatFloodBlock} from '../playtest/engine-v3/gods.js';
 import {timeoutAutoChoice} from '../playtest/engine-v3/clock.js';
+import {summonToken} from '../playtest/engine-v3/v6/kit.js';
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json');
@@ -209,20 +210,20 @@ function floodSetup() {
   return {...env, seiya, jabu, cloth, picks};
 }
 
-test('D207/D231/D232/D253/G3-034: Great Flood devolve Devotees e Equipment juntos, uma Base por Devotee, descarta metade, Mill 3 por descarte', () => {
+test('Great Flood (autor, 03/11/2026): devolve Devotees e Equipment inimigos, Bases ficam, sem descarte, Mill 2 por carta', () => {
   const {s, ctx, seiya, jabu, cloth, picks} = floodSetup();
-  const handBefore = s.players.A.hand.length, deck = s.players.A.deck.length;
+  const handBefore = s.players.A.hand.length, deck = s.players.A.deck.length, bases = s.players.A.bases.length;
   announceGreatFlood(s, ctx, 'B'); passAll(s);
   assert.equal(s.players.A.battlefield.length, 0);
   assert.equal(Object.keys(ctx.attached).length, 0);
-  assert.equal(s.players.A.bases.length, 1, '2 Devotees devolvidos → 2 Bases');
-  const hand = handBefore + 3 + 2, discard = Math.ceil(hand / 2);
-  assert.equal(s.players.A.hand.length, hand - discard);
-  assert.equal(s.players.A.deck.length, deck - 3 * discard);
-  assert.ok([seiya, jabu, cloth].every(uid => s.players.A.hand.includes(uid) || s.players.A.tartarus.includes(uid)));
-  assert.deepEqual(picks.map(p => p.slice(0, 2)), [['base', 'A'], ['base', 'A'], ['discard', 'A']], 'D231: quem controla as Bases escolhe; G3-034: quem descarta escolhe');
+  assert.equal(s.players.A.bases.length, bases);
+  assert.equal(s.players.A.hand.length, handBefore + 3);
+  assert.ok([seiya, jabu, cloth].every(uid => s.players.A.hand.includes(uid)));
+  assert.equal(s.players.A.deck.length, deck - 2 * 3);
+  assert.deepEqual(picks, [], 'ninguém escolhe nada');
   assert.equal(s.divine.B.ultimateUsed, true);
 });
+
 
 test('G3-005/006: Great Flood custo 8 em Base; anúncio ilegal não gasta nada; uma por partida', () => {
   const {s, ctx} = floodSetup();
@@ -235,26 +236,14 @@ test('G3-005/006: Great Flood custo 8 em Base; anúncio ilegal não gasta nada; 
   assert.equal(greatFloodBlock(s, 'B'), 'used');
 });
 
-test('G3-034: Poseidon não escolhe a mão adversária; resposta fora das opções é recusada; timeout usa G3-030', () => {
-  const {s, ctx} = floodSetup();
-  const asked = [];
-  ctx.decide = (player, q) => {
-    asked.push([player, q.choose]);
-    if (q.choose === 'discard') return timeoutAutoChoice(s, {player, options: q.options, count: q.count, legal: o => s.players[player].hand.includes(o)});
-    return q.options[0];
-  };
-  announceGreatFlood(s, ctx, 'B'); passAll(s);
-  assert.ok(asked.every(([player]) => player === 'A'));
-  const auto = s.events.find(e => e.type === 'TIMEOUT_AUTO_CHOICE');
-  assert.deepEqual(s.events.find(e => e.type === 'discarded').uids, auto.result);
-  assert.deepEqual(auto.result, [...auto.eligible].slice(0, auto.count), 'menor id estável primeiro');
-});
 
-test('G3-034: descarte inválido (carta fora da mão) é erro de regra, não escolha automática', () => {
+test('Great Flood: token inimigo some e não conta para o Mill', () => {
   const {s, ctx} = floodSetup();
-  ctx.decide = (player, q) => (q.choose === 'discard' ? ['B:999:1'] : q.options[0]);
-  announceGreatFlood(s, ctx, 'B');
-  assert.throws(() => passAll(s), RuleError);
+  const token = summonToken(s, ctx, 'A', {id: 'neutral-token-test', name: 'Token', atk: 1, hp: 1});
+  const deck = s.players.A.deck.length;
+  announceGreatFlood(s, ctx, 'B'); passAll(s);
+  assert.ok(!s.players.A.hand.includes(token) && !s.players.A.battlefield.includes(token));
+  assert.equal(s.players.A.deck.length, deck - 2 * 3);
 });
 
 // ---------- Catálogo ----------

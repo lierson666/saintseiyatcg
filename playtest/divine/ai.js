@@ -119,18 +119,17 @@ export function createAI(h) {
     return best;
   }
 
-  // Athena Exclamation: o trio Prepared de maior perda de Soul, se for letal, se o adversário não tiver 3 Devotees para
-  // pagar o Divine Judgment agora, ou do Round 6 em diante.
+  // Athena Exclamation: o trio de maior dano, se for letal ou do Round 6 em diante.
   function exclamation(key) {
     const s = h.S(), id = `${s.turn}:ultimate`;
     if (s.divine[key].god !== 'god-athena' || s.divine[key].ultimateUsed || tried.has(id)) return null;
-    const loss = trio => trio.reduce((n, u) => n + h.atk(u) + (/Gold Saint/.test(h.info(u).type) ? 3 : 0), 0);
-    const saints = devotees(key).filter(u => h.isSaint(u) && s.units[u]?.prepared);
+    const loss = trio => trio.reduce((n, u) => n + h.atk(u), 0);
+    const saints = devotees(key).filter(u => h.isSaint(u));
     // A taxa de Bronze/Silver sai do Soul próprio (autor, 02/11/2026): nunca paga com Soul letal.
     const tax = trio => trio.reduce((n, u) => n + (/Bronze Saint/.test(h.info(u).type) ? 3 : /Silver Saint/.test(h.info(u).type) ? 2 : 0), 0);
     const trio = COMBO(saints, 3).filter(t => !h.ultimateBlock(key, t) && tax(t) < s.players[key].soul).sort((a, b) => loss(b) - loss(a))[0];
     const foe = enemyOf(key);
-    if (!trio || !(loss(trio) >= s.players[foe].soul || devotees(foe).length < 3 || s.round >= 6)) return null;
+    if (!trio || !(loss(trio) >= s.players[foe].soul || s.round >= 6)) return null;
     return {id, must: true, run: () => h.announceExclamation(key, trio)};
   }
   // Divine Judgment (D206): no último Round do prazo, paga com os 3 Devotees mais baratos. easy não se defende.

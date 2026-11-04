@@ -237,7 +237,7 @@ function play(g, maxTurns = 240) { // G3-037 (1 compra por turno): partidas mais
   if (has('divine_power', e => e.ability === 'WATER PRISON')) mark(g, 'water-prison');
   if (has('divine_power', e => e.ability === 'PRESSURE OF THE DEEP')) mark(g, 'pressure');
   if (has('ultimate_resolved', e => e.ability === 'GREAT FLOOD')) mark(g, 'great-flood-resolved');
-  if (has('discarded', e => e.uids?.length)) mark(g, 'discard');
+  if (has('discarded')) mark(g, 'discard');
   if (has('mill', e => e.moved > 0)) mark(g, 'mill');
   if (has('awaken_changed', e => e.awaken)) mark(g, 'awaken-on');
   if (has('awaken_changed', e => !e.awaken)) mark(g, 'awaken-off');
@@ -271,7 +271,7 @@ const REQUIRED = {
   '1 mulligan e início': ['mulligan', 'start'], '2 compra e Cosmoble': ['draw', 'cosmoble'], '4 Devotees': ['devotee-played'],
   '5 Strike e alvos': ['strike-god', 'strike-devotee'], '6 Guardian': ['guardian-forced'], '7 Water Prison': ['water-prison-asked', 'water-prison'],
  '9 Prepare com Seal': ['prepare-with-seal'], '10 Pressure of the Deep': ['pressure'],
-  '11 Great Flood': ['great-flood', 'great-flood-resolved', 'flood-base-choice', 'flood-discard-choice'], '12 descarte e Mill': ['discard', 'mill'],
+  '11 Great Flood': ['great-flood', 'great-flood-resolved'], '12 descarte e Mill': ['discard', 'mill'],
   '13 Awaken liga': ['awaken-on'], '14 Ultimate uma vez': ['ultimate-blocked-after-use'], '15 resposta e LIFO': ['moment-response', 'chain-lifo'],
   '17 timeouts': [], '18 reconexão': ['reconnect', 'reconnect-pending'], '19 Soul zero': ['victory-soul-zero'],
 };

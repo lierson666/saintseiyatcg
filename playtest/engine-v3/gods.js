@@ -80,10 +80,10 @@ const EXTRA = {Bronze: 3, Silver: 2, Gold: 0}; // D229; pago em Soul do próprio
 
 function validSaints(state, ctx, key, saints) {
   return saints.length === 3 && new Set(saints).size === 3
-    && saints.every(uid => controllerOf(state, uid) === key && isSaint(ctx, uid) && state.units[uid]?.prepared)
+    && saints.every(uid => controllerOf(state, uid) === key && isSaint(ctx, uid))
     && new Set(saints.map(uid => identity(ctx, uid))).size === 3;
 }
-export const exclamationCost = (ctx, saints) => ({base: 5, soul: saints.reduce((n, uid) => n + (EXTRA[saintClass(ctx, uid)] ?? 0), 0)});
+export const exclamationCost = (ctx, saints) => ({base: 10, soul: saints.reduce((n, uid) => n + (EXTRA[saintClass(ctx, uid)] ?? 0), 0)});
 
 // Pode anunciar? Devolve null ou o motivo (para a interface). Não gasta nada.
 export function ultimateBlock(state, ctx, key, saints) {
@@ -103,7 +103,7 @@ export function ultimateBlock(state, ctx, key, saints) {
 }
 
 // G3-005/006 + D229: anúncio na fase de ações do próprio turno, cadeia vazia; escolhe os 3 Saints e paga tudo:
-// 5 em Base preparada e a taxa de Bronze/Silver em Soul (autor, 02/11/2026; G3-014: Soul letal encerra a partida). Anúncio ilegal não gasta nada nem consome o uso.
+// 10 em Base preparada e a taxa de Bronze/Silver em Soul (autor, 02/11/2026; G3-014: Soul letal encerra a partida). Anúncio ilegal não gasta nada nem consome o uso.
 // O uso é consumido no anúncio legal; anulação ou falha depois não devolve uso nem custo.
 export function announceExclamation(state, ctx, key, saints) {
   const why = ultimateBlock(state, ctx, key, saints);
@@ -119,23 +119,22 @@ export function announceExclamation(state, ctx, key, saints) {
 
 function resolveExclamation(state, ctx, key, saints) {
   const enemy = other(state, key);
-  // D230: os mesmos 3 objetos, ainda Saints Prepared do jogador e com identidades distintas; senão nada acontece.
+  // D230: os mesmos 3 objetos, ainda Saints do jogador (Prepared ou não, autor 03/11/2026) e com identidades distintas; senão nada acontece.
   if (!validSaints(state, ctx, key, saints)) { emit(state, 'ultimate_failed', {player: key, ability: 'ATHENA EXCLAMATION'}); return; }
   // D228: ATTACK efetivo de todos, no mesmo instante, logo antes da Defeat.
-  const snapshot = saints.map(uid => ({uid, atk: atkOf(state, ctx, uid), gold: saintClass(ctx, uid) === 'Gold'}));
+  const snapshot = saints.map(uid => ({uid, atk: atkOf(state, ctx, uid)}));
   for (const {uid} of snapshot) destroyDevotee(state, uid, ctx.objects, ctx.attached); // D205: Defeat que não pode ser prevenida
-  const loss = snapshot.reduce((n, s) => n + s.atk + (s.gold ? 3 : 0), 0);
-  emit(state, 'ultimate_resolved', {player: key, ability: 'ATHENA EXCLAMATION', snapshot, loss});
-  if (loseSoul(state, {[enemy]: loss}, 'loss')) return;
-  placeJudgment(state, key, enemy);
-}
-
-// D218: no máximo um contador por God; sem renovar prazo. Prazo: checkpoint de fim do Round seguinte (D204).
-function placeJudgment(state, source, target) {
-  const d = state.divine[target];
-  if (d.judgment) return;
-  d.judgment = {id: `dj-${state.events.length + 1}`, source, deadline: state.round + 1};
-  emit(state, 'judgment_placed', {player: target, source, deadline: d.judgment.deadline, id: d.judgment.id});
+  let left = snapshot.reduce((n, s) => n + s.atk, 0);
+  emit(state, 'ultimate_resolved', {player: key, ability: 'ATHENA EXCLAMATION', snapshot, loss: left});
+  // Dano dividido entre God e Devotees (autor, 03/11/2026), um alvo por vez: Devotee recebe o que falta para cair; God, o resto.
+  // shortcut: não dá para pôr dano parcial num Devotee além do último; pedir valor exige tela nova, se o autor quiser.
+  while (left > 0 && !state.victory) {
+    const t = k.choose(ctx, key, 'ATHENA EXCLAMATION', [k.godTarget(enemy), ...k.enemies(state, ctx, key)], {text: 'Choose who takes the damage: a Devotee takes what it needs to fall, the God takes the rest.'});
+    if (!t) return;
+    const n = k.isGod(t) ? left : Math.min(left, Math.max(1, k.hpOf(state, ctx, t) - state.units[t].damage));
+    k.damage(state, ctx, t, n);
+    left -= n;
+  }
 }
 
 // Prazo vencido vira gatilho do checkpoint de fim de Round; só o mesmo contador ainda presente derrota (D218).
@@ -227,47 +226,21 @@ export function announceGreatFlood(state, ctx, key) {
   pushTriggers(state, [{controller: key, activated: true, uid: `ultimate:${key}`, ability: 'GREAT FLOOD', run: st => resolveGreatFlood(st, ctx, key)}]);
 }
 
-// Escolha de quem decide (D231; descarte pela G3-034): `ctx.decide` devolve a escolha; fora das opções legais é erro,
-// não palpite. No timeout, a interface responde com `timeoutAutoChoice` (G3-030).
-function choose(ctx, player, question, options, count) {
-  const picked = count === 1 ? [ctx.decide?.(player, {...question, options})] : ctx.decide?.(player, {...question, options, count});
-  if (!Array.isArray(picked) || picked.length !== count || new Set(picked).size !== count || !picked.every(o => options.includes(o))) {
-    throw new RuleError(question.decision, `${player} precisa escolher ${count} entre ${options.length}`);
-  }
-  return picked;
-}
-
 function resolveGreatFlood(state, ctx, key) {
   for (const enemy of state.order.filter(k => k !== key)) {
     const p = state.players[enemy];
     // D207: Devotees e Equipment inimigos (inclusive Armor presa) voltam juntos, cada um para a mão do Owner.
     const moving = p.battlefield.filter(uid => ['Devotee', 'Equipment'].includes(card(ctx, uid).kind));
-    const returnedDevotees = moving.filter(uid => card(ctx, uid).kind === 'Devotee');
     for (const uid of moving) {
       p.battlefield = p.battlefield.filter(x => x !== uid);
-      state.players[ctx.objects[uid].owner].hand.push(uid);
+      if (!ctx.objects[uid].token) state.players[ctx.objects[uid].owner].hand.push(uid); // token some e não conta para moer
       delete state.units[uid];
       delete ctx.attached[uid];
       state.effects = state.effects.filter(e => e.target !== uid);
     }
     for (const e of Object.keys(ctx.attached)) if (moving.includes(ctx.attached[e])) delete ctx.attached[e];
     emit(state, 'returned_to_hand', {ability: 'GREAT FLOOD', uids: [...moving]});
-    // D207/D231/D253: para cada Devotee devolvido, uma Base controlada pelo Owner dele, escolhida por quem a controla.
-    for (const uid of returnedDevotees) {
-      const owner = ctx.objects[uid].owner, bases = state.players[owner].bases.map(b => b.uid);
-      if (!bases.length) continue;
-      const [base] = choose(ctx, owner, {ability: 'GREAT FLOOD', decision: 'D231', choose: 'base', for: uid}, bases, 1);
-      state.players[owner].bases = state.players[owner].bases.filter(b => b.uid !== base);
-      state.players[ctx.objects[base].owner].hand.push(base);
-      emit(state, 'base_returned', {player: owner, uid: base});
-    }
-    // D232: metade da mão atual, para cima; Mill 3 por carta descartada de fato. G3-034: quem descarta escolhe.
-    const need = Math.ceil(p.hand.length / 2);
-    const discarded = need ? choose(ctx, enemy, {ability: 'GREAT FLOOD', decision: 'D232', choose: 'discard', player: enemy}, [...p.hand], need) : [];
-    p.hand = p.hand.filter(uid => !discarded.includes(uid));
-    p.tartarus.push(...discarded);
-    emit(state, 'discarded', {player: enemy, uids: discarded});
-    mill(state, enemy, 3 * discarded.length);
+    mill(state, enemy, 2 * moving.filter(uid => !ctx.objects[uid].token).length); // autor, 03/11/2026: sem perda de Base nem descarte
   }
   emit(state, 'ultimate_resolved', {player: key, ability: 'GREAT FLOOD'});
 }
@@ -301,7 +274,7 @@ function announceUltimate(state, ctx, key, god, ability, cost, resolve) {
 }
 
 // ---------- Hades ----------
-export const GREAT_ECLIPSE_COST = 7;
+export const GREAT_ECLIPSE_COST = 8;
 export const greatEclipseBlock = (state, key) => ultimateBlockOf(state, key, 'god-hades', GREAT_ECLIPSE_COST);
 export const announceGreatEclipse = (state, ctx, key) => announceUltimate(state, ctx, key, 'god-hades', 'GREAT ECLIPSE', GREAT_ECLIPSE_COST, resolveGreatEclipse);
 
@@ -323,7 +296,7 @@ function resolveGreatEclipse(state, ctx, key) {
 }
 
 // ---------- Ares ----------
-export const BLOODLUST_COST = 3, OBLITERATION_COST = 6;
+export const BLOODLUST_COST = 3, OBLITERATION_COST = 7;
 export const obliterationBlock = (state, key) => ultimateBlockOf(state, key, 'god-ares', OBLITERATION_COST);
 export const announceObliteration = (state, ctx, key) => announceUltimate(state, ctx, key, 'god-ares', 'OBLITERATION', OBLITERATION_COST, resolveObliteration);
 
@@ -331,7 +304,7 @@ function resolveObliteration(state, ctx, key) {
   const mine = k.devotees(state, ctx, key);
   for (const uid of mine) {
     k.prepare(state, uid);
-    k.buff(state, uid, 3, 0, 'this_round', ['Pierce', 'Long Range', 'Impulse']);
+    k.buff(state, uid, 2, 0, 'this_round', ['Pierce', 'Long Range', 'Impulse']);
   }
   state.divine[key].obliteration = state.round; // vale no Round do anúncio; ver gatilho "completes a Strike" em scanGods
   emit(state, 'ultimate_resolved', {player: key, ability: 'OBLITERATION', devotees: [...mine]});
@@ -434,7 +407,7 @@ export function placeBaseMoonHarvest(state, ctx, key, uid) {
 // Moon Awakening (Ultimate, custo 9; D209, D214–D216, D223; autor 30/10/2026: implementar como o D268).
 // Na resolução escolhe até 5 Bases suas; viram Moon Spirit 3/3 com Impulse, Long Range e Pierce até o fim do Round
 // (saem de `bases`, não geram Cosmo, entram Prepared — autor, 30/10/2026, desvio do D268; objects[uid].moon guarda a carta real).
-// Strike: God não causa dano de retaliação a Moon Spirit; dano dela ao God inimigo tira +2 Soul (strike.js).
+// Strike: God não causa dano de retaliação a Moon Spirit.
 // Derrotada vai ao Tartarus do dono como a carta real (D209); no fim do Round, a que segue em campo volta a ser Base Unprepared.
 export const MOON_AWAKENING_COST = 9, MOON_SPIRIT = 'artemis-token-moon-spirit';
 export const moonAwakeningBlock = (state, key) => ultimateBlockOf(state, key, 'god-artemis', MOON_AWAKENING_COST);

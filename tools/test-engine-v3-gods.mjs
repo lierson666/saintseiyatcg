@@ -6,7 +6,7 @@ import {readFileSync} from 'node:fs';
 import {loadCanon} from '../shared/canon-cards.js';
 import {canonIndex} from '../shared/deck-v3.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
-import {startTurn, endTurn, passAll, pass, loseSoul, checkInvariants, eventsFor, RuleError, NotSpecified} from '../playtest/engine-v3/core.js';
+import {startTurn, endTurn, passAll, pass, loseSoul, checkInvariants, eventsFor, RuleError, NotSpecified, destroyDevotee} from '../playtest/engine-v3/core.js';
 import {declareStrike} from '../playtest/engine-v3/strike.js';
 import {atkOf, hpOf, damageDevotee, checkDefeats} from '../playtest/engine-v3/effects.js';
 import {announceExclamation, exclamationCost, ultimateBlock, removeJudgment, computeSoulMax, soulMax, addSoulMaxEffect, gainSoul, payMixed, refreshAwaken} from '../playtest/engine-v3/gods.js';
@@ -83,13 +83,13 @@ function exclamationSetup(decide) {
   return {...t, saints};
 }
 
-test('Athena Exclamation (D229, autor 02/11/2026): 5 em Base + 3 Soul por Bronze + 2 Soul por Silver; Sorcery; uso consumido no anúncio', () => {
+test('Athena Exclamation (D229, autor 02/11/2026): 10 em Base + 3 Soul por Bronze + 2 Soul por Silver; Sorcery; uso consumido no anúncio', () => {
   const {s, ctx, bases, saints} = exclamationSetup();
-  assert.deepEqual(exclamationCost(ctx, saints), {base: 5, soul: 8});
+  assert.deepEqual(exclamationCost(ctx, saints), {base: 10, soul: 8});
   const soul = s.players.A.soul;
-  bases('A', 4);
+  bases('A', 9);
   assert.throws(() => announceExclamation(s, ctx, 'A', saints), RuleError, 'falta 1 Base');
-  assert.deepEqual([s.divine.A.ultimateUsed, s.players.A.bases.filter(b => b.prepared).length, s.players.A.soul], [false, 4, soul], 'anúncio ilegal não gasta nem consome');
+  assert.deepEqual([s.divine.A.ultimateUsed, s.players.A.bases.filter(b => b.prepared).length, s.players.A.soul], [false, 9, soul], 'anúncio ilegal não gasta nem consome');
   bases('A', 1);
   s.players.A.soul = 7;
   assert.throws(() => announceExclamation(s, ctx, 'A', saints), RuleError, 'falta 1 Soul');
@@ -100,24 +100,36 @@ test('Athena Exclamation (D229, autor 02/11/2026): 5 em Base + 3 Soul por Bronze
   assert.equal(ultimateBlock(s, ctx, 'A'), 'used');
 });
 
-test('Athena Exclamation (D228/D230/D205): ATTACK fotografado antes da Defeat; Soul perdido = soma; Divine Judgment se sobreviver', () => {
-  const {s, ctx, bases, saints} = exclamationSetup();
+test('Athena Exclamation (autor, 03/11/2026): dano = soma do ATK, dividido; God leva o resto; sem Divine Judgment', () => {
+  const {s, ctx, bases, saints} = exclamationSetup((p, q) => (q.options ? q.options[0] : true)); // o God vem primeiro
   bases('A', 13);
+  s.units[saints[2]].prepared = false; // Saint virado também vale
   announceExclamation(s, ctx, 'A', saints);
   const atk = saints.reduce((n, u) => n + atkOf(s, ctx, u), 0); // depois de pagar: Soul menor pode dar bônus a Seiya
   passAll(s);
   assert.ok(saints.every(u => s.players.A.tartarus.includes(u)), 'Defeat que não pode ser prevenida');
-  assert.deepEqual([s.players.B.soul, s.divine.B.judgment?.deadline], [20 - atk, s.round + 1]);
-  const lost = s.events.find(e => e.type === 'soul_lost' && e.player === 'B');
-  assert.equal(lost.cause, 'loss', 'Lose Soul, não dano (G3-013)');
+  assert.deepEqual([s.players.B.soul, s.divine.B.judgment ?? null], [20 - atk, null]);
   checkInvariants(s, ctx.objects);
 });
 
+test('Athena Exclamation: Devotee escolhido recebe o que falta para cair; o resto vai ao God', () => {
+  let foe;
+  const {s, ctx, bases, saints, field} = exclamationSetup((p, q) => (q.options ? (q.options.includes(foe) ? foe : q.options[0]) : true));
+  foe = field('B', '040');
+  bases('A', 13);
+  announceExclamation(s, ctx, 'A', saints);
+  const atk = saints.reduce((n, u) => n + atkOf(s, ctx, u), 0), hp = hpOf(s, ctx, foe);
+  passAll(s);
+  assert.ok(!s.players.B.battlefield.includes(foe));
+  assert.equal(s.players.B.soul, 20 - (atk - hp));
+});
+
+
 test('G3-006/D230: Saint escolhido que sai antes da resolução → Ultimate sem efeito, uso e custo não voltam', () => {
   const {s, ctx, bases, saints} = exclamationSetup();
-  bases('A', 5);
+  bases('A', 10);
   announceExclamation(s, ctx, 'A', saints);
-  s.units[saints[2]].prepared = false; // deixou de ser Prepared antes da resolução
+  destroyDevotee(s, saints[2], ctx.objects, ctx.attached); // saiu do campo antes da resolução
   passAll(s);
   assert.deepEqual([s.players.B.soul, s.divine.A.ultimateUsed, s.players.A.bases.filter(b => b.prepared).length, types(s).includes('ultimate_failed')], [20, true, 0, true]);
 });
@@ -130,28 +142,6 @@ test('G3-005: Ultimate independe de Awaken e só no próprio turno com cadeia va
   assert.equal(ultimateBlock(s, ctx, 'A', saints), null, 'Awaken ativo não impede');
   endTurn(s);
   assert.equal(ultimateBlock(s, ctx, 'A', saints), 'sorcery', 'janela aberta');
-});
-
-test('Divine Judgment (D218/D206): vence no fim do Round seguinte; remover com 3 sacrifícios cancela só aquele contador', () => {
-  const run = remove => {
-    const {s, ctx, bases, saints, field} = exclamationSetup();
-    bases('A', 13);
-    announceExclamation(s, ctx, 'A', saints); passAll(s);
-    const deadline = s.divine.B.judgment.deadline;
-    endTurn(s); passAll(s); startTurn(s); // turno de B no Round 1
-    if (remove) {
-      const three = [field('B', '040'), field('B', '041'), field('B', '042')];
-      removeJudgment(s, ctx, 'B', three); passAll(s);
-      assert.equal(s.divine.B.judgment, null);
-    }
-    endTurn(s); passAll(s); // fim do Round 1
-    for (let r = s.round; r <= deadline && !s.victory; r = s.round) { startTurn(s); endTurn(s); passAll(s); if (s.victory) break; startTurn(s); endTurn(s); passAll(s); }
-    return s;
-  };
-  const kept = run(false);
-  assert.deepEqual(kept.victory, {winner: 'A', reason: 'divine_judgment'});
-  const removed = run(true);
-  assert.equal(removed.victory, null);
 });
 
 test('G3-009/010/011: Soul máximo em camadas, mínimo 1; recuperação para no máximo; redução ajusta sem ser dano', () => {

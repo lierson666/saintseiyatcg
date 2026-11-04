@@ -31,11 +31,10 @@ function divine({god = 'god-athena', mine = ['g1', 'g2', 'g3'], foes = [], round
   return {ai, shots};
 }
 
-test('Exclamation: dispara se o adversário não tem 3 Devotees; com 3, só se for letal ou no Round 6', () => {
+test('Exclamation: só dispara se for letal ou no Round 6', () => {
   const fires = o => { const {ai, shots} = divine(o); ai.next('A')?.run(); return shots.length === 1; };
-  assert.equal(fires({foes: ['x', 'y']}), true);
   assert.equal(fires({foes: ['x', 'y', 'z']}), false);
-  assert.equal(fires({foes: ['x', 'y', 'z'], soul: 15}), true); // 3 + 3 + 3 + 3 de cada Gold = 15
+  assert.equal(fires({foes: ['x', 'y', 'z'], soul: 9}), true); // 3 + 3 + 3
   assert.equal(fires({foes: ['x', 'y', 'z'], round: 6}), true);
 });
 

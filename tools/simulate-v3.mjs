@@ -61,7 +61,7 @@ export function playMatch({cards, index}, deckA, deckB, seed, first, trace = fal
     const field = s.players[key].battlefield, devs = field.filter(u => info(u).kind === 'Devotee');
     switch (step.pick) {
       case 'saint': return devs.filter(u => isSaint(ctx, u));
-      case 'ready-saint': return devs.filter(u => isSaint(ctx, u) && s.units[u]?.prepared);
+      case 'ready-saint': return devs.filter(u => isSaint(ctx, u));
       case 'bronze': return devs.filter(u => isBronze(ctx, u));
       case 'devotee': return devs;
       case 'armor': return devs.filter(u => Object.keys(ctx.attached).some(g => ctx.attached[g] === u && info(g).armor));

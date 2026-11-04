@@ -85,9 +85,9 @@ test('Hades King of Tartarus (Awaken 7): Devotee que volta do próprio Tartarus 
   }
 });
 
-test('Hades Great Eclipse (Ultimate 7): até 3 Devotees do Tartarus voltam Unprepared sem Impulse; inimigo perde 2 por Devotee; Hades ganha metade (arredondada para cima)', () => {
+test('Hades Great Eclipse (Ultimate 8): até 3 Devotees do Tartarus voltam Unprepared sem Impulse; inimigo perde 2 por Devotee; Hades ganha metade (arredondada para cima)', () => {
   const {s, ctx, bases, take, soul, A, B} = setup('god-hades');
-  bases('A', 7); soul('A', 10);
+  bases('A', 8); soul('A', 10);
   const dead = ['001', '028'].map(id => take('A', id)); A.tartarus.push(...dead);
   assert.equal(greatEclipseBlock(s, 'A'), null);
   announceGreatEclipse(s, ctx, 'A'); passAll(s);
@@ -98,10 +98,10 @@ test('Hades Great Eclipse (Ultimate 7): até 3 Devotees do Tartarus voltam Unpre
   assert.equal(greatEclipseBlock(s, 'A'), 'used');
 });
 
-test('Hades Great Eclipse: sem Devotee no Tartarus gasta o custo e não muda Soul; sem 7 Bases preparadas é bloqueada', () => {
+test('Hades Great Eclipse: sem Devotee no Tartarus gasta o custo e não muda Soul; sem 8 Bases preparadas é bloqueada', () => {
   const {s, ctx, bases, soul, B} = setup('god-hades');
   assert.equal(greatEclipseBlock(s, 'A'), 'cost');
-  bases('A', 7); soul('A', 10);
+  bases('A', 8); soul('A', 10);
   announceGreatEclipse(s, ctx, 'A'); passAll(s);
   assert.deepEqual([B.soul, s.players.A.soul], [20, 10]);
 });
@@ -143,17 +143,17 @@ test('Ares Butchery (Awaken 7): Devotee seu derrota Devotee inimigo em Strike �
   }
 });
 
-test('Ares Obliteration (Ultimate 6): prepara todos, +3 ATK/Pierce/Long Range no Round; Devotee que completa um Strike é destruído', () => {
+test('Ares Obliteration (Ultimate 7): prepara todos, +2 ATK/Pierce/Long Range no Round; Devotee que completa um Strike é destruído', () => {
   const {s, ctx, field, bases, A, B} = setup('god-ares');
   const one = field('A', '001', false), two = field('A', '028');
-  bases('A', 6);
+  bases('A', 7);
   const before = atkOf(s, ctx, two);
   announceObliteration(s, ctx, 'A'); passAll(s);
   assert.equal(s.units[one].prepared, true);
-  assert.equal(atkOf(s, ctx, two), before + 3);
+  assert.equal(atkOf(s, ctx, two), before + 2);
   assert.ok(['Pierce', 'Long Range'].every(w => keywordsOf(s, ctx, two).includes(w)));
   declareStrike(s, ctx, two, {kind: 'god', player: 'B'}); passAll(s);
-  assert.equal(B.soul, 20 - (before + 3), 'Pierce/ATK +3 contam; Soul de B é 20');
+  assert.equal(B.soul, 20 - (before + 2), 'Pierce/ATK +2 contam; Soul de B é 20');
   assert.ok(A.tartarus.includes(two), 'quem completou o Strike foi destruído');
   assert.ok(s.players.A.battlefield.includes(one), 'quem não atacou fica');
 });
@@ -190,7 +190,7 @@ test('Artemis Moonlight Blessing: respeita o teto de 3', () => {
   assert.equal(A.latent, 3);
 });
 
-test('Artemis Moon Awakening (Ultimate 9): até 5 Bases viram Moon Spirit 3/3; sem dano de retaliação do God; +2 Soul; derrotada vai ao Tartarus como a carta real', () => {
+test('Artemis Moon Awakening (Ultimate 9): até 5 Bases viram Moon Spirit 3/3; sem dano de retaliação do God; derrotada vai ao Tartarus como a carta real', () => {
   const {s, ctx, bases, A, B} = setup('god-artemis', (p, q) => (q.options ? q.options[q.options.length - 1] : true));
   bases('A', 11);
   assert.equal(moonAwakeningBlock(s, 'A'), null);
@@ -203,7 +203,7 @@ test('Artemis Moon Awakening (Ultimate 9): até 5 Bases viram Moon Spirit 3/3; s
   const ready = spirits[0], soul = B.soul;
   assert.equal(moonAwakeningBlock(s, 'A'), 'used');
   declareStrike(s, ctx, ready, {kind: 'god', player: 'B'}); passAll(s);
-  assert.equal(B.soul, soul - 5, '3 de dano + 2 de Moon Spirit');
+  assert.equal(B.soul, soul - 3, 'só os 3 de dano (autor, 03/11/2026)');
   assert.equal(s.units[ready].damage, 0, 'God não causa dano de retaliação');
   const real = ctx.objects[ready].moon.cardId;
   kill(s, ctx, ready);

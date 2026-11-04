@@ -9,13 +9,13 @@ import {canonIndex} from '../shared/deck-v3.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
 import {startTurn, endTurn, pass, passAll, checkInvariants, RuleError} from '../playtest/engine-v3/core.js';
 import {declareStrike} from '../playtest/engine-v3/strike.js';
-import {refreshAwaken, announceGreatFlood} from '../playtest/engine-v3/gods.js';
+import {refreshAwaken} from '../playtest/engine-v3/gods.js';
 import {createClock, clockStartTurn, clockHandTo, clockExpired, clockRemaining, clockEndTurn, applyTimeout} from '../playtest/engine-v3/clock.js';
 // Valores de 3 minutos (antes de 01/11/2026): os testes conferem a lógica G3-024/031, não os números do ALPHA_CLOCK.
 const CLOCK_3MIN = {basic: 60, reserveStart: 90, reserveMax: 180, carry: 0.5};
 import {runDecisions, resume, PendingDecision} from '../playtest/engine-v3/decision.js';
 import {resumeFor} from '../playtest/engine-v3/sync.js';
-import {summonToken, toHand} from '../playtest/engine-v3/v6/kit.js';
+import {summonToken, toHand, discard} from '../playtest/engine-v3/v6/kit.js';
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json');
@@ -101,44 +101,29 @@ test('G3-027: timeout em escolha opcional pendente = TIMEOUT_DECLINED (registrad
   assert.equal(count(s, 'divine_power', 'WATER PRISON'), 0);
 });
 
-// Great Flood com A tendo 2 Devotees em campo: 2 escolhas de Base (dono dos Devotees, D231) e depois o descarte (G3-034).
-function flood() {
+// Descarte de 2 cartas de A: duas decisões seguidas, com informação oculta, do mesmo jogador.
+function discardTwo() {
   const t = setup();
-  const sa = t.field('A', '001'), sb = t.field('A', '028');
-  t.bases('A', 3);
-  endTurn(t.s); passAll(t.s); startTurn(t.s); // turno de B
-  t.bases('B', 8);
   for (let i = 0; i < 3; i++) t.s.players.A.hand.push(t.s.players.A.deck.shift());
-  const run = () => { announceGreatFlood(t.s, t.ctx, 'B'); passAll(t.s); };
-  return {...t, sa, sb, run};
+  const run = () => discard(t.s, t.ctx, 'A', 2, 'TEST');
+  return {...t, run};
 }
 
-test('decisão pendente: Great Flood pede Base duas vezes e o descarte, cada uma de quem decide, só com opções legais', () => {
-  const {s, ctx, m, run} = flood();
-  const baseA = s.players.A.bases.map(b => b.uid);
+test('decisão pendente: duas escolhas seguidas de quem decide, só com opções legais', () => {
+  const {s, ctx, m, run} = discardTwo();
   let r = runDecisions(s, ctx, run);
-  assert.equal(r.pending.choose, 'base'); assert.equal(r.pending.player, 'A');
-  assert.deepEqual(r.pending.options, baseA);
-  r = resume(s, ctx, run, r, {value: baseA[2]});
-  assert.equal(r.pending.choose, 'base'); assert.equal(r.pending.index, 1);
-  assert.deepEqual(r.pending.options, baseA.slice(0, 2), 'a Base já devolvida não é mais opção');
-  r = resume(s, ctx, run, r, {value: baseA[0]});
-  assert.equal(r.pending.choose, 'discard'); assert.equal(r.pending.player, 'A');
-  const hand = r.pending.options, need = Math.ceil(hand.length / 2);
-  assert.equal(r.pending.count, need);
-  assert.equal(hand.length, 3 + 2 + 2, '3 da mão + 2 Devotees + 2 Bases devolvidos');
-  const chosen = hand.slice(-need);
-  const done = resume(s, ctx, run, r, {value: chosen});
+  assert.equal(r.pending.player, 'A');
+  const hand = [...r.pending.options];
+  r = resume(s, ctx, run, r, {value: hand[2]});
+  assert.deepEqual(r.pending.options, hand.filter(u => u !== hand[2]), 'a carta descartada não é mais opção');
+  const done = resume(s, ctx, run, r, {value: hand[0]});
   assert.ok(done.done);
-  assert.equal(count(s, 'ultimate_announced', 'GREAT FLOOD'), 1, 'anúncio e custo de 8 Bases uma vez');
-  assert.equal(s.events.filter(e => e.type === 'cosmo_spent' && e.player === 'B' && e.amount === 8).length, 1);
-  assert.equal(count(s, 'base_returned'), 2);
-  assert.ok(chosen.every(u => s.players.A.tartarus.includes(u)), 'descartou exatamente o que A escolheu');
+  assert.ok([hand[2], hand[0]].every(u => s.players.A.tartarus.includes(u)), 'descartou exatamente o que A escolheu');
   checkInvariants(s, m.objects);
 });
 
 test('decisão pendente: resposta fora das opções legais é recusada pela engine; a pendência continua', () => {
-  const {s, ctx, run} = flood();
+  const {s, ctx, run} = discardTwo();
   const r = runDecisions(s, ctx, run);
   assert.throws(() => resume(s, ctx, run, r, {value: 'A:999:1'}), RuleError);
   assert.throws(() => resume(s, ctx, run, r, {value: [r.pending.options[0]]}), RuleError, 'escolha simples não aceita lista');
@@ -146,34 +131,29 @@ test('decisão pendente: resposta fora das opções legais é recusada pela engi
   assert.ok(again.pending, 'depois do erro, a mesma ação continua do snapshot normalmente');
 });
 
-test('G3-027/G3-030: timeout nas escolhas obrigatórias do Great Flood = menor id estável, revalidado, com TIMEOUT_AUTO_CHOICE', () => {
-  const {s, ctx, run} = flood();
+test('G3-027/G3-030: timeout em escolha obrigatória = menor id estável, revalidado, com TIMEOUT_AUTO_CHOICE', () => {
+  const {s, ctx, run} = discardTwo();
   let r = runDecisions(s, ctx, run);
   const opts = [...r.pending.options].sort((a, b) => a.localeCompare(b, 'en', {numeric: true}));
   r = resume(s, ctx, run, r, {timeout: true});
-  r = resume(s, ctx, run, r, {timeout: true});
-  const hand = [...r.pending.options], need = r.pending.count;
   const done = resume(s, ctx, run, r, {timeout: true});
   assert.ok(done.done);
   const auto = s.events.filter(e => e.type === 'TIMEOUT_AUTO_CHOICE');
-  assert.equal(auto.length, 3);
+  assert.equal(auto.length, 2);
   assert.deepEqual(auto[0].result, [opts[0]]);
-  assert.ok(!auto[1].eligible.includes(opts[0]), 'segunda escolha revalidada sem a Base já devolvida');
-  assert.deepEqual(auto[2].result, hand.sort((a, b) => a.localeCompare(b, 'en', {numeric: true})).slice(0, need));
+  assert.ok(!auto[1].eligible.includes(opts[0]), 'segunda escolha revalidada sem a carta já descartada');
 });
 
 test('reconexão com decisão pendente: quem decide recebe a pergunta; o outro não vê as opções (informação oculta)', () => {
-  const {s, ctx, run} = flood();
+  const {s, ctx, run} = discardTwo();
   let r = runDecisions(s, ctx, run);
   r = resume(s, ctx, run, r, {value: r.pending.options[0]});
-  r = resume(s, ctx, run, r, {value: r.pending.options[0]});
   const mine = resumeFor(s, 'A'), theirs = resumeFor(s, 'B');
-  assert.equal(mine.pending.choose, 'discard');
   assert.deepEqual(mine.pending.options, r.pending.options);
-  assert.deepEqual(Object.keys(theirs.pending).sort(), ['ability', 'count', 'kind', 'player']);
+  assert.ok(!('options' in theirs.pending));
   assert.equal(typeof theirs.players.A.hand, 'number');
   // Depois da reconexão a autoridade continua do mesmo ponto, sem repetir nada.
-  const done = resume(s, ctx, run, r, {value: r.pending.options.slice(0, r.pending.count)});
+  const done = resume(s, ctx, run, r, {value: r.pending.options[0]});
   assert.ok(done.done);
   assert.equal(resumeFor(s, 'A').pending, null);
 });

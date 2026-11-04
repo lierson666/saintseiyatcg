@@ -43,7 +43,7 @@ const stage = $('#stage'), boardRoot = $('#board-root'), overlayRoot = $('#overl
 const GOD_ART = {'god-athena': '../../CARDS/ATHENA/ATHENA.png', 'god-poseidon': '../../CARDS/POSEIDON/POSEIDON.png'};
 
 // Mensagens da engine (internas, em português) viram texto curto para o jogador.
-const WHY = {'G3-005': 'Athena Exclamation needs three Prepared Saints with different identities, enough prepared Bases and enough Soul.', D206: 'Sacrifice exactly three of your Devotees, on your turn.', D1: "It's not your turn.", D4: 'Not enough prepared Cosmo Bases.', custo: 'Not enough Latent Cosmo.', P06: 'Wait for the response window to close.',
+const WHY = {'G3-005': 'Athena Exclamation needs three Saints with different identities, enough prepared Bases and enough Soul.', D206: 'Sacrifice exactly three of your Devotees, on your turn.', D1: "It's not your turn.", D4: 'Not enough prepared Cosmo Bases.', custo: 'Not enough Latent Cosmo.', P06: 'Wait for the response window to close.',
   P05: 'A Guardian must be your target.', D22: 'This Devotee already struck this turn.', P04: 'Only a Prepared Devotee can Strike.',
   D52: 'The match is over.', '§63': 'Choose which version of that character to keep.', P01: 'Finish the mulligan first.', D192: 'It must be Prepared to use {T}.', D191: 'Already used this round.', Equip: 'That Devotee cannot wear it.', alvo: 'Choose a legal target.'};
 const why = e => WHY[e.decision] || (e.topic ? `Not in Alpha 0.1: ${e.topic}` : "That can't be done right now.");
@@ -280,7 +280,7 @@ function candidates(step, key) {
   const s = S(), field = s.players[key].battlefield, devs = field.filter(u => info(u).kind === 'Devotee');
   switch (step.pick) {
     case 'saint': return devs.filter(u => isSaint(ctx, u));
-    case 'ready-saint': return devs.filter(u => isSaint(ctx, u) && s.units[u]?.prepared);
+    case 'ready-saint': return devs.filter(u => isSaint(ctx, u));
     case 'bronze': return devs.filter(u => isBronze(ctx, u));
     case 'devotee': return devs;
     case 'armor': return devs.filter(u => Object.keys(ctx.attached).some(g => ctx.attached[g] === u && info(g).armor)); // Devotee seu que veste Armor
@@ -402,7 +402,7 @@ function godActions(key) {
 }
 
 function startExclamation(key) {
-  begin('ultimate', key, null, [{key: 'saints', pick: 'ready-saint', multi: 3, label: 'Choose three Prepared Saints with different identities (cost 5 Base, +3 Soul per Bronze, +2 Soul per Silver)'}], choice => ({type: 'exclamation', key, choice}));
+  begin('ultimate', key, null, [{key: 'saints', pick: 'ready-saint', multi: 3, label: 'Choose three Saints with different identities (cost 10 Base, +3 Soul per Bronze, +2 Soul per Silver)'}], choice => ({type: 'exclamation', key, choice}));
   if (mode) mode.title = 'ATHENA EXCLAMATION'; // sem escolha legal, begin não abre modo (já avisou)
   render();
 }

@@ -116,14 +116,14 @@ export function resolveStrike(state, ctx, strike) {
     strike.dealtBack = (state.units[attacker]?.damage ?? Infinity) - backBefore;
     // P05 A: Pierce leva o dano acima do HP restante do alvo ao Soul do God dele (prevenível como dano de Strike ao God).
     const toGod = pierce && excess > 0 ? preventGod(state, ctx, enemy, excess) : 0;
-    if (toGod > 0 && loseSoul(state, {[enemy]: toGod + (ctx.objects[attacker]?.moon ? 2 : 0)}, 'damage')) return state.victory; // Moon Spirit: +2 Soul
+    if (toGod > 0 && loseSoul(state, {[enemy]: toGod}, 'damage')) return state.victory;
   } else {
     // §24 (autor, 01/11/2026): Gods não retaliam.
     const toGod = preventGod(state, ctx, enemy, atk);
     emit(state, 'god_damage', {player: enemy, incoming: atk, dealt: toGod});
     strike.godDealt = toGod;
     strike.godHit = {incoming: atk, prevented: atk - toGod, absorbed: 0, dealt: toGod}; // gancho damagePrevented (observadores)
-    if (toGod > 0 && loseSoul(state, {[enemy]: toGod + (ctx.objects[attacker]?.moon ? 2 : 0)}, 'damage')) return state.victory; // D52; Moon Spirit: +2 Soul
+    if (toGod > 0 && loseSoul(state, {[enemy]: toGod}, 'damage')) return state.victory; // D52
   }
   checkDefeats(state, ctx);
   afterStrike(state, ctx, strike);

@@ -184,7 +184,7 @@ self.ssI18nPT = {
     'Opponent resources': 'Recursos do oponente', 'Your resources': 'Seus recursos', 'No Devotees': 'Nenhum Devoto', 'Opponent': 'Oponente',
 
     // Recusas da engine (por que não deu)
-    'Athena Exclamation needs three Prepared Saints with different identities, enough prepared Bases and enough Soul.': 'A Exclamação de Athena precisa de três Cavaleiros Preparados com identidades diferentes, Bases preparadas e Alma suficientes.',
+    'Athena Exclamation needs three Saints with different identities, enough prepared Bases and enough Soul.': 'A Exclamação de Athena precisa de três Cavaleiros com identidades diferentes, Bases preparadas e Alma suficientes.',
     'Sacrifice exactly three of your Devotees, on your turn.': 'Sacrifique exatamente três dos seus Devotos, no seu turno.', "It's not your turn.": 'Não é seu turno.',
     'Not enough prepared Cosmo Bases.': 'Cosmo Bases preparadas insuficientes.', 'Not enough Latent Cosmo.': 'Cosmo Latente insuficiente.',
     'Wait for the response window to close.': 'Espere a janela de resposta fechar.', 'No response': 'Sem resposta', 'View effect': 'Ver efeito', 'Hold a card to read it': 'Segure uma carta para ler', 'Hide effect': 'Fechar efeito', 'You need priority.': 'Você precisa ter prioridade.', 'A Guardian must be your target.': 'Um Guardião tem que ser seu alvo.',
@@ -205,7 +205,7 @@ self.ssI18nPT = {
     'Bloodlust: your turn, with no response pending.': 'Sede de Sangue: no seu turno, sem resposta pendente.', 'Bloodlust already used this round.': 'Sede de Sangue já usada nesta rodada.',
     'You control no Devotee.': 'Você não controla nenhum Devoto.', 'Bloodlust: choose a Devotee you control (Prepare it, +1 ATK this round)': 'Sede de Sangue: escolha um Devoto que você controla (Prepare-o, +1 ATQ nesta rodada)',
     "Only the God's controller uses it.": 'Só o controlador do Deus pode usar.', 'Sacrifice exactly three Devotees you control': 'Sacrifique exatamente três Devotos que você controla',
-    'Choose three Prepared Saints with different identities (cost 5 Base, +3 Soul per Bronze, +2 Soul per Silver)': 'Escolha três Cavaleiros Preparados com identidades diferentes (custo 5 Base, +3 Alma por Bronze, +2 Alma por Prata)',
+    'Choose three Saints with different identities (cost 10 Base, +3 Soul per Bronze, +2 Soul per Silver)': 'Escolha três Cavaleiros com identidades diferentes (custo 10 Base, +3 Alma por Bronze, +2 Alma por Prata)', 'Choose who takes the damage: a Devotee takes what it needs to fall, the God takes the rest.': 'Escolha quem recebe o dano: o Devoto recebe o que falta para cair; o Deus, o resto.',
     'ATHENA EXCLAMATION': 'EXCLAMAÇÃO DE ATHENA', 'Pegasus God Cloth: which Devotee gets +3/+3 (if your God is behind)?': 'Armadura Divina de Pégaso: qual Devoto ganha +3/+3 (se seu Deus estiver atrás)?',
     'a friendly Saint': 'um Cavaleiro aliado', 'a Prepared friendly Saint': 'um Cavaleiro aliado Preparado', 'a friendly Bronze Saint': 'um Cavaleiro de Bronze aliado',
     'a friendly Devotee': 'um Devoto aliado', 'a friendly Armor': 'uma Armadura aliada', 'an enemy Devotee': 'um Devoto inimigo',

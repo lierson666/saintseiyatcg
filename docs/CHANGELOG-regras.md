@@ -4,6 +4,17 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-03 — Cartas (sem mudança no guia) — Ultimates dos cinco Gods
+
+- **Athena Exclamation:** custo {5}{C} → {10}{C}. Os 3 Saints podem estar Prepared ou não. Sem Divine Judgment e sem +3 por Gold. O dano é a soma do Power, dividido entre o God inimigo e Devotees inimigos.
+- **Great Flood (Poseidon):** segue custo 8 e devolve Devotees e Equipment inimigos. Sai a perda de Base, o descarte e o Mill 3 por descarte. Agora, Mill 2 por carta devolvida; token não conta.
+- **Great Eclipse (Hades):** custo {7}{C} → {8}{C}.
+- **Moon Awakening (Artemis):** sem os {2}{S} adicionais por acerto no God. Máximo de 15 com 5 Moon Spirits.
+- **Obliteration (Ares):** custo {6}{C} → {7}{C}; +3 → +2 de Power.
+- **Motivo:** decisão do autor, 03/11/2026: Ultimate vira a partida, não ganha sozinha.
+- **Engine/dados:** `data/cards.json`, `card-forge/art-web/cards.json`, `playtest/engine-v3/gods.js`, `strike.js`, `playtest/divine/ai.js`, `app.js`, `shared/i18n-pt.js`.
+- **Pendência:** não medido. A Exclamation divide por alvo: Devotee recebe o que falta para cair, God recebe o resto, sem valor parcial à escolha. O código e a tela de Divine Judgment ficaram sem uso. A IA manda o dano sempre que o God vem primeiro.
+
 ## 2026-11-03 — G3-024 — Sem tempo contra a IA
 
 - **Antes:** o relógio de 90 s por ação valia em toda partida, inclusive contra a IA, com os efeitos de timeout (G3-027, G3-030).
