@@ -1,7 +1,7 @@
 import {mountArtPrompt} from './art-prompt.js?v=20261102-arte17';
 import {cardsToXlsx} from './cards-xlsx.js?v=20261102-momento1';
 import {AUDIT_STATUS,auditOf,mountCardFinder,reviewQueue} from './card-finder.js?v=20261102-momento1';
-import {mountRulesRows} from './rules-rows.js?v=20261104-anim2';
+import {mountRulesRows} from './rules-rows.js?v=20261104-anim4';
 import {createHistory} from '../shared/editor-history.js';
 import {compilePlaytest} from '../shared/import-playtest.js';
 import {renderLiveCard,illustration,EDITIONS,editionOf} from '../shared/live-card.js?v=20261102-escala1';
@@ -17,6 +17,7 @@ import {publishedScene,visualProject} from '../shared/layout-studio/runtime.js';
 import {displayCard,forceLang,keywordName,typeWord,lang} from '../shared/card-i18n.js?v=20261102-escala1';
 import {sceneCanvas} from '../shared/layout-studio/renderer.js';
 import {simulateCard} from './studio-preview.js';
+import {mountVfxFields,syncVfxFields} from './vfx-fields.js';
 import {printedEquipmentBonuses,signedBonus,armorBonusText} from '../shared/card-visual-values.js?v=20261102-arroba1';
 
 const T = await (await fetch('../CARD-TEMPLATE/templates.json')).json();
@@ -70,7 +71,7 @@ function travelEdit(direction){
 $('#forgeUndo').addEventListener('click',()=>travelEdit('undo'));
 $('#forgeRedo').addEventListener('click',()=>travelEdit('redo'));
 form.addEventListener('focusout',()=>editHistory?.breakGroup());
-// Abas do formulário (autor, 02/11/2026): Informações, Habilidades (Inglês e Português) e Sons. Saem de data-tab e data-sub das seções.
+// Abas do formulário (autor, 02/11/2026): Informações, Habilidades (Inglês e Português), Sons e Animações. Saem de data-tab e data-sub das seções.
 const formSections = [...form.querySelectorAll(':scope > fieldset')];
 const unique = (list) => [...new Set(list.filter(Boolean))];
 const makeTabs = (className, label, names, onPick) => {
@@ -593,6 +594,7 @@ async function updateLivePreview(){
   const revision=++livePreviewRevision;
   const live=$('#representation').value==='live';$('#livePreview').hidden=!live;$('#liveControls').hidden=!live;$('#cardWrap').hidden=live;
   const c=buildCard();
+  syncVfxFields(c);
   $('#rulesReview').textContent=c.motor_revisao_pendente?'Texto alterado: os efeitos jogáveis precisam de revisão antes de usar esta carta numa partida.':validateCard(c).join(' · ');
   // Aviso de acessibilidade (autor, 31/10/2026): texto que não cabe a 100% ganha rolagem no jogo.
   if(rulesOverflow(renderLiveCard(c,{art:S.art?.src}))||c.tipo==='God'&&rulesOverflow(renderLiveCard(c,{art:S.art?.src,face:'back'})))$('#rulesReview').textContent=[$('#rulesReview').textContent,'Texto de regras não cabe a 100%: no jogo ganha rolagem dentro do frame (encurte o texto para ler sem rolar).'].filter(Boolean).join(' · ');
@@ -614,6 +616,7 @@ function rulesOverflow(html){
   return [...box.querySelectorAll('.lc-rules')].some(r=>r.scrollHeight>r.clientHeight+1);
 }
 for(const id of ['representation','previewDamage','previewPrepared','previewStage'])$('#'+id).addEventListener('input',updateLivePreview);
+mountVfxFields();
 
 let refreshRulesRows = () => {};
 function fillForm() {
@@ -1160,7 +1163,7 @@ $('#diffConfirm').addEventListener('click', async () => {
 // ---------- barra de símbolos e keywords ----------
 let lastText = form.elements.rules;
 form.addEventListener('focusin', (e) => { if (e.target.tagName === 'TEXTAREA') lastText = e.target; });
-const refreshRules = [mountGodBlock('#godAwaken', 'habilidade_awaken_en', 'Awaken'), mountGodBlock('#godUltimate', 'ultimate_en', 'Ultimate'), mountRulesRows(form.elements.rules, {tags: () => (S.tipo === 'God' ? ['Divine Power', 'Divine Command'] : null), getId: () => S.id, sound: $('#soundFields'), resonanceCards: () => {
+const refreshRules = [mountGodBlock('#godAwaken', 'habilidade_awaken_en', 'Awaken'), mountGodBlock('#godUltimate', 'ultimate_en', 'Ultimate'), mountRulesRows(form.elements.rules, {tags: () => (S.tipo === 'God' ? ['Divine Power', 'Divine Command'] : null), getId: () => S.id, sound: $('#soundFields'), anim: $('#animFields'), resonanceCards: () => {
   const titled = (n) => n.toLowerCase().replace(/(^|[\s'-])(\p{L})/gu, (m, a, b) => a + b.toUpperCase()), seen = new Set();
   return db.cartas.filter((c) => (c.tipo === 'Devotee' || c.tipo === 'God') && c.nome_exibicao_en)
     .sort((a, b) => (b.faccao === S.faccao) - (a.faccao === S.faccao) || a.nome_exibicao_en.localeCompare(b.nome_exibicao_en))

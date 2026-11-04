@@ -14,10 +14,14 @@
 .ap-card { position: absolute; width: 84px; aspect-ratio: 63 / 88; transform: translate(-50%, -50%); background: linear-gradient(160deg, #2c3a55, #101725); border: 1px solid var(--ap-gold, #e0bb62); border-radius: 6px; }
 .ap-card--from { left: 26%; top: 70%; }
 .ap-card--to { left: 68%; top: 40%; }
-.ap-list { margin: 0; padding: 6px; max-height: 480px; overflow: auto; list-style: none; border-left: 1px solid var(--ap-line); }
+.ap-side { display: flex; flex-direction: column; min-width: 0; border-left: 1px solid var(--ap-line); }
+.ap-tools { display: grid; gap: 6px; padding: 8px; border-bottom: 1px solid var(--ap-line); }
+.ap-tools input, .ap-tools select { min-height: 36px; padding: 0 8px; color: inherit; font: inherit; background: var(--ap-raised); border: 1px solid var(--ap-line); border-radius: 8px; }
+.ap-list { margin: 0; padding: 6px; max-height: 400px; overflow: auto; list-style: none; }
+.ap-list small { display: block; color: var(--ap-muted); font-size: 11px; font-weight: 400; }
 .ap-list li { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 8px; padding: 4px 6px; border-radius: 8px; }
 .ap-list li.is-current { background: #e0bb6222; }
 .ap-use { color: var(--ap-gold) !important; }
-@media (max-width: 640px) { .ap-body { grid-template-columns: 1fr; } .ap-list { border-left: 0; max-height: 40vh; } }
+@media (max-width: 640px) { .ap-body { grid-template-columns: 1fr; } .ap-side { border-left: 0; } .ap-list { max-height: 40vh; } }
 .ap--preview { width: min(560px, 96vw); }
 .ap--preview .ap-preview { height: min(420px, 60vh); }

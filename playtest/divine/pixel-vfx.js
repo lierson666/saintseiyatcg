@@ -64,10 +64,48 @@ export const RECIPES = {
   leaves: g => ['falling-leaves', {area: around(g), ground: g.bottom, leaves: 20, litter: false}],
   bubbles: g => ['bubbles', {area: around(g), ground: g.bottom, density: 3, surface: false, caustics: false, tint: false}],
 };
+// Efeito importado (data/vfx-catalog.json): sprite sheet desenhado na mesma camada dos outros. `s`: {px, sw, w, h, cols, quadros, fps, loop}.
+export function sheetFx(s, g) {
+  const scale = g.h / WORLD_PX * 1.35 * (g.size || 1) / Math.max(s.w, s.h), dw = Math.max(1, Math.round(s.w * scale)), dh = Math.max(1, Math.round(s.h * scale));
+  const x0 = Math.round(g.x / WORLD_PX - dw / 2), y0 = Math.round(g.y / WORLD_PX - dh / 2), span = s.quadros / s.fps;
+  let t = 0;
+  return {
+    update(dt) { t += dt; },
+    done: () => !s.loop && t >= span,
+    draw(f, layer) {
+      if (layer !== 'front' || (!s.loop && t >= span)) return;
+      const n = Math.floor(t * s.fps) % s.quadros, cx = (n % s.cols) * s.w, cy = Math.floor(n / s.cols) * s.h;
+      for (let y = Math.max(0, y0 - (f.oy || 0)), yEnd = Math.min(f.h, y0 - (f.oy || 0) + dh); y < yEnd; y++) {
+        const sy = cy + Math.floor((y + (f.oy || 0) - y0) * s.h / dh);
+        for (let x = Math.max(0, x0 - (f.ox || 0)), xEnd = Math.min(f.w, x0 - (f.ox || 0) + dw); x < xEnd; x++) {
+          const v = s.px[sy * s.sw + cx + Math.floor((x + (f.ox || 0) - x0) * s.w / dw)], a = v >>> 24;
+          if (!a) continue;
+          const at = y * f.w + x, d = f.color[at];
+          if (a === 255 || !d) { f.color[at] = v; continue; }
+          const da = d >>> 24, oa = a + da * (255 - a) / 255, mix = (sh) => Math.round((((v >>> sh) & 255) * a + ((d >>> sh) & 255) * da * (255 - a) / 255) / oa);
+          f.color[at] = ((Math.round(oa) << 24) | (mix(16) << 16) | (mix(8) << 8) | mix(0)) >>> 0;
+        }
+      }
+    },
+  };
+}
+const sheets = new Map();
+const loadSheet = entry => {
+  if (!sheets.has(entry.id)) sheets.set(entry.id, new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => { const c = document.createElement('canvas'); c.width = img.width; c.height = img.height; const x = c.getContext('2d', {willReadFrequently: true}); x.drawImage(img, 0, 0);
+      resolve({...entry, sw: img.width, px: new Uint32Array(x.getImageData(0, 0, img.width, img.height).data.buffer)}); };
+    img.onerror = reject;
+    img.src = new URL(`./vfx/${entry.arquivo.split('/').pop()}`, import.meta.url).href;
+  }));
+  return sheets.get(entry.id);
+};
+export const catalogIndex = catalog => Object.fromEntries((catalog?.efeitos || []).map(e => [e.id, e]));
+
 const FILES = [...new Set(Object.values(RECIPES).map(r => r({x: 0, y: 0, top: 0, bottom: 0, w: 1, h: 1, s: 1, power: 0, color: '#fff'})[0]))];
 export const effectFiles = () => FILES;
 
-export function createPixelFx(stage, {flashes = () => true, tuning = () => ({})} = {}) {
+export function createPixelFx(stage, {flashes = () => true, tuning = () => ({}), catalog = () => ({})} = {}) {
   let cColor, cLight, color, light, art = 0, frame, imgColor, imgLight, live = [], raf = 0, last = 0;
 
   function mount() {
@@ -110,18 +148,21 @@ export function createPixelFx(stage, {flashes = () => true, tuning = () => ({})}
     const s = stage.getBoundingClientRect(), k = WORLD_PX / art, w = rect.width || 110, h = rect.height || 150;
     const left = (rect.left ?? rect.x - w / 2) - s.left, top = (rect.top ?? rect.y - h / 2) - s.top;
     return {x: (left + w / 2) * k, y: (top + h / 2) * k, top: top * k, bottom: (top + h) * k, w: w * k, h: h * k,
-      from: from ? [(from.x - s.left) * k, (from.y - s.top) * k] : null, s: Math.max(.55, w / 190 * 1.5 * 3 / art) * k0, color: c, power, strength};
+      from: from ? [(from.x - s.left) * k, (from.y - s.top) * k] : null, s: Math.max(.55, w / 190 * 1.5 * 3 / art) * k0, size: k0, color: c, power, strength};
   }
   // Ajustes do gestor (Star Hill): ligado, tamanho, velocidade e cor de cada efeito.
   function play(recipe, rect, opts = {}) {
     const tune = tuning()?.[recipe] || {};
-    if (!RECIPES[recipe] || tune.ligado === false) return Promise.resolve();
-    const [file, options] = RECIPES[recipe](geometry(rect, {...opts, color: tune.cor || opts.color || ELEMENT_COLOR[recipe], size: tune.tamanho || 1}));
-    return load(file).then(m => {
-      live.push({fx: m.default({...options, seed: 1 + Math.floor(Math.random() * 1e6)}), age: 0, speed: tune.velocidade || 1});
+    const sheet = catalog()?.[recipe];
+    if ((!RECIPES[recipe] && !sheet) || tune.ligado === false) return Promise.resolve();
+    const start = fx => {
+      live.push({fx, age: 0, speed: tune.velocidade || 1});
       show(true);
       if (!raf) { last = performance.now(); raf = requestAnimationFrame(tick); }
-    }).catch(err => console.debug(err)); // efeito que não carrega não pode travar a partida
+    };
+    if (sheet) { const g = geometry(rect, {...opts, size: tune.tamanho || 1}); return loadSheet(sheet).then(s => start(sheetFx(s, g))).catch(err => console.debug(err)); }
+    const [file, options] = RECIPES[recipe](geometry(rect, {...opts, color: tune.cor || opts.color || ELEMENT_COLOR[recipe], size: tune.tamanho || 1}));
+    return load(file).then(m => start(m.default({...options, seed: 1 + Math.floor(Math.random() * 1e6)}))).catch(err => console.debug(err)); // efeito que não carrega não pode travar a partida
   }
   return {
     play,

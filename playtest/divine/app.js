@@ -22,8 +22,8 @@ import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudg
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout, clockBonus} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
-import {createDirector} from './director.js?v=20261104-anim2';
-import {createPixelFx, animFor} from './pixel-vfx.js?v=20261104-anim2';
+import {createDirector} from './director.js?v=20261104-anim3';
+import {createPixelFx, animFor, catalogIndex} from './pixel-vfx.js?v=20261104-anim3';
 import {createComposer, withCompositions} from '../../shared/vfx/composer.js?v=20261104-vfx1';
 import {startCardFx} from '../../shared/vfx/card-mount.js?v=20261104-vfx1';
 import {createAI} from './ai.js?v=14';
@@ -467,6 +467,7 @@ const CARD_FACTIONS = new Set(['athena', 'poseidon', 'hades', 'ares', 'artemis']
 const cardAnims = await fetch('../../data/card-animations.json', {cache: 'no-cache'}).then(r => (r.ok ? r.json() : {})).catch(() => ({}));
 // VFX Forge V3: shaders, Lottie e composições. Só apresentação; sem efeito escolhido o Pixi nem é baixado.
 const vfxStudio = await fetch('../../data/vfx-studio.json', {cache: 'no-cache'}).then(r => (r.ok ? r.json() : {})).catch(() => ({}));
+const vfxSheets = catalogIndex(await fetch('../../data/vfx-catalog.json', {cache: 'no-cache'}).then(r => (r.ok ? r.json() : {})).catch(() => ({})));
 const FORGE = new Map((await fetch(`${FORGE_ART}cards.json`).then(r => (r.ok ? r.json() : {cartas: []})).catch(() => ({cartas: []}))).cartas.map(c => [c.id, c]));
 useGodPortraits(FORGE.values()); // avatar do Deus nas placas = rosto da placa do God (rank.js)
 // Item da cadeia em texto de jogador: carta de origem, nome da habilidade, a linha impressa dela e o alvo.
@@ -1255,7 +1256,7 @@ function syncZoom() {
 // ---------- Adaptador do DOM para o orquestrador ----------
 
 const rectOf = el => (el ? el.getBoundingClientRect() : null);
-const rawPixel = createPixelFx(stage, {flashes: () => !settings.reduceFlashes, tuning: () => cardAnims.efeitos});
+const rawPixel = createPixelFx(stage, {flashes: () => !settings.reduceFlashes, tuning: () => cardAnims.efeitos, catalog: () => vfxSheets});
 let vfxComposer = null, cardFx = null;
 const ui = {
   pixel: withCompositions(rawPixel, () => (vfxComposer ??= createComposer({stage, pixel: rawPixel, studio: () => vfxStudio, quality: () => settings.quality, reduced: () => !!settings.reduceMotion}))),

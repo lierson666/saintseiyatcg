@@ -26,6 +26,9 @@ LOCK = threading.Lock()
 _engine_spec = importlib.util.spec_from_file_location('star_hill_engine_updates', Path(__file__).with_name('engine_updates.py'))
 engine_updates = importlib.util.module_from_spec(_engine_spec)
 _engine_spec.loader.exec_module(engine_updates)
+_vfx_spec = importlib.util.spec_from_file_location('star_hill_vfx_import', Path(__file__).with_name('vfx_import.py'))
+vfx_import = importlib.util.module_from_spec(_vfx_spec)
+_vfx_spec.loader.exec_module(vfx_import)
 
 
 def encoded(value):
@@ -542,9 +545,16 @@ ANIM_EFFECTS = ('slash', 'impact', 'ice', 'fire', 'lightning', 'poison', 'light'
 ANIM_MOMENTS = ('golpe', 'impacto', 'impacto_deus', 'strike', 'carga', 'declarar', 'cast', 'entrada', 'retorno', 'morte', 'dano', 'soul', 'escudo', 'cura', 'habilidade', 'ultimate', 'poder_divino', 'poder_dominio', 'awaken')
 
 
-def _anim_tuning(value):
+def anim_ids(root=ROOT):
+    """Efeitos que se pode escolher: os do jogo e os importados no catálogo (data/vfx-catalog.json)."""
+    path = root / 'data/vfx-catalog.json'
+    imported = json.loads(path.read_text(encoding='utf-8')).get('efeitos', []) if path.exists() else []
+    return {*ANIM_EFFECTS, *(e['id'] for e in imported)}
+
+
+def _anim_tuning(value, root=ROOT):
     """Ajustes do gestor por efeito: ligado, tamanho, velocidade e cor."""
-    if not isinstance(value, dict) or set(value) - set(ANIM_EFFECTS):
+    if not isinstance(value, dict) or set(value) - anim_ids(root):
         raise ValueError('Efeito inválido.')
     for tune in value.values():
         if not isinstance(tune, dict) or set(tune) != {'ligado', 'tamanho', 'velocidade', 'cor'} or not isinstance(tune['ligado'], bool):
@@ -567,12 +577,12 @@ def save_card_anim(body, atomic_write, root=ROOT):
     if card == 'efeitos':
         if set(body) != {'id', 'efeitos'}:
             raise ValueError('Animação inválida.')
-        anims['efeitos'] = _anim_tuning(body['efeitos'])
+        anims['efeitos'] = _anim_tuning(body['efeitos'], root)
     else:
         if set(body) - {'id', 'linhas', *ANIM_MOMENTS} or not isinstance(body.get('linhas'), list):
             raise ValueError('Animação inválida.')
-        chosen = [*(body.get(k) for k in ANIM_MOMENTS), *body['linhas']]
-        if any(v is not None and v is not False and v not in ANIM_EFFECTS and not NEW_FX.fullmatch(str(v)) for v in chosen):  # False: sem animação de propósito
+        chosen, known = [*(body.get(k) for k in ANIM_MOMENTS), *body['linhas']], anim_ids(root)
+        if any(v is not None and v is not False and v not in known and not NEW_FX.fullmatch(str(v)) for v in chosen):  # False: sem animação de propósito
             raise ValueError('Efeito inválido.')
         entry = {k: body[k] for k in ANIM_MOMENTS if body.get(k) is not None}
         lines = body['linhas']
@@ -716,6 +726,10 @@ def post(handler, path, raw, atomic_write):
             return handler.reply(200, {'animacoes': save_card_anim(body, atomic_write)})
         if path == '/api/star-hill/vfx-studio':
             return handler.reply(200, {'studio': save_vfx_studio(body, atomic_write)})
+        if path == '/api/star-hill/vfx-import':
+            return handler.reply(200, vfx_import.import_body(body))
+        if path == '/api/star-hill/vfx-meta':
+            return handler.reply(200, vfx_import.edit_body(body))
         if path == '/api/star-hill/som-biblioteca':
             return handler.reply(200, import_library_sound(body))
         if path.startswith('/api/star-hill/motor/'):

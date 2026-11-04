@@ -156,6 +156,16 @@ small.publish-result{color:#8fe3a8;font-weight:600}
 .an-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:8px 0;border-top:1px solid var(--line)}
 .an-row>b{min-width:80px}
 .an-row.is-off>:not(.tl-switch):not(b){opacity:.45}
+.an-row>b small,.an-source small{display:block;color:var(--muted,#a3afbf);font-size:12px;font-weight:400}
+.an-source{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;padding:8px 0;border-top:1px solid var(--line)}
+.an-source small{flex-basis:100%}
+.an-import{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px 14px;align-items:end}
+.an-loop{display:flex;align-items:center;gap:8px;min-height:44px}
+.an-filters{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+.an-filters>*{min-height:40px}
+.an-meta{flex-basis:100%}
+.an-meta fieldset{display:flex;flex-wrap:wrap;gap:4px 12px;margin:6px 0;border:1px solid var(--line);border-radius:8px}
+.an-meta small{display:block;overflow-wrap:anywhere;color:var(--muted,#a3afbf)}
 .an-cards{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0;max-height:200px;overflow:auto}
 .an-cards button[aria-pressed=true]{color:var(--gold);border-color:var(--gold)}
 /* VFX Forge V3: Animation Composer e Living Cards (animacoes-composer.js) */

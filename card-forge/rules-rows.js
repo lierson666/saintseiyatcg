@@ -3,7 +3,7 @@
 const split = t => t.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
 import {openSoundBrowser, soundUrl} from '/shared/sound-browser.js?v=12';
-import {loadAnims, animsNow, saveAnim, openAnimPicker, openAnimPreview, animLabel, ANIM_MOMENTS} from '/shared/anim-picker.js?v=2';
+import {loadAnims, animsNow, saveAnim, openAnimPicker, openAnimPreview, animLabel, ANIM_MOMENTS} from '/shared/anim-picker.js?v=3';
 let falas = {}, vozes = {}, player = null;
 const ready = Promise.all([
   fetch('/biblioteca-sons/falas-pt.json', {cache: 'no-store'}).then(r => (r.ok ? r.json() : {})).catch(() => ({})),
@@ -47,7 +47,7 @@ const RESONANCE_TOKEN = /@res\p{L}*(?:\s+([^@\n]*))?$/iu;
 
 const GOD_TAG = /\s+—\s+(Divine Power|Divine Command)$/;
 
-export function mountRulesRows(area, {getId = null, moments = null, sound = null, resonanceCards = null, onResonance = null, tags = null} = {}) {
+export function mountRulesRows(area, {getId = null, moments = null, sound = null, anim = null, resonanceCards = null, onResonance = null, tags = null} = {}) {
   area.hidden = true;
   const box = document.createElement('div');
   box.className = 'rr';
@@ -59,13 +59,16 @@ export function mountRulesRows(area, {getId = null, moments = null, sound = null
   };
   const drawSound = lines => {
     if (!sound || !getId) return;
-    const v = entry(getId()), a = animEntry(getId());
-    const row = (label, key, value, anim) => `<div class="rr-sound"><span title="${esc(label)}">${esc(label)}</span><div class="rr-controls">${picker(key, value ?? '')}${anim === undefined ? '' : animPicker(key, anim)}</div></div>`;
-    const animKeys = new Set(ANIM_MOMENTS.map(([k]) => k)), soundKeys = new Set(moments ? moments().map(([k]) => k) : []);
-    const onlyAnim = ANIM_MOMENTS.filter(([k]) => !soundKeys.has(k));
-    sound.innerHTML = `<h3 class="rr-head">Habilidades</h3>${lines.map((t, i) => row(abilityName(t, i), i, v.linhas[i], a.linhas[i] ?? null)).join('') || '<p class="hint">Esta carta não tem habilidades.</p>'}
-      ${moments ? `<h3 class="rr-head">Momentos da carta</h3>${moments().map(([key, label]) => row(label, key, v[key], animKeys.has(key) ? a[key] ?? null : undefined)).join('')}
-      <h3 class="rr-head">Só animação</h3>${onlyAnim.map(([key, label]) => `<div class="rr-sound"><span title="${esc(label)}">${esc(label)}</span><div class="rr-controls">${animPicker(key, a[key] ?? null)}</div></div>`).join('')}` : ''}`;
+    const v = entry(getId());
+    const row = (label, key, value) => `<div class="rr-sound"><span title="${esc(label)}">${esc(label)}</span><div class="rr-controls">${picker(key, value ?? '')}</div></div>`;
+    sound.innerHTML = `<h3 class="rr-head">Habilidades</h3>${lines.map((t, i) => row(abilityName(t, i), i, v.linhas[i])).join('') || '<p class="hint">Esta carta não tem habilidades.</p>'}
+      ${moments ? `<h3 class="rr-head">Momentos da carta</h3>${moments().map(([key, label]) => row(label, key, v[key])).join('')}` : ''}`;
+    if (!anim) return;
+    // Aba Animações (autor, 04/11/2026): mesmas habilidades da aba Sons, mais todos os momentos que têm animação.
+    const a = animEntry(getId());
+    const animRow = (label, key, value) => `<div class="rr-sound"><span title="${esc(label)}">${esc(label)}</span><div class="rr-controls">${animPicker(key, value ?? null)}</div></div>`;
+    anim.innerHTML = `<h3 class="rr-head">Habilidades</h3>${lines.map((t, i) => animRow(abilityName(t, i), i, a.linhas[i])).join('') || '<p class="hint">Esta carta não tem habilidades.</p>'}
+      <h3 class="rr-head">Momentos da carta</h3>${ANIM_MOMENTS.map(([key, label]) => animRow(label, key, a[key])).join('')}`;
   };
   const draw = (lines = split(area.value)) => {
     suggest = null; // a lista some junto com as linhas redesenhadas
@@ -165,6 +168,7 @@ export function mountRulesRows(area, {getId = null, moments = null, sound = null
   };
   box.addEventListener('click', onClick);
   sound?.addEventListener('click', onClick);
+  anim?.addEventListener('click', onClick);
   // Texto trocado de fora (outra carta, desfazer): redesenha sem atrapalhar quem está digitando.
   let drawnId = null;
   const refresh = () => {

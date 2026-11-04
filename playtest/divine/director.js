@@ -4,7 +4,7 @@
 import {wait} from './scene.js?v=20261031-pool1';
 import {strikeSound, chargeSound} from '../audio.js?v=20261102-voz4';
 import {anim, ANIM_OF, sound} from '../telas.js?v=20261102-barulho1';
-import {ELEMENT_COLOR} from './pixel-vfx.js?v=20261104-anim2';
+import {ELEMENT_COLOR} from './pixel-vfx.js?v=20261104-anim3';
 
 // Quanto o golpe em pixel art leva até o instante do acerto (ms): o som e o impacto saem nele.
 const HIT_MS = {slash: 60, impact: 40, ice: 220, fire: 160, lightning: 140, poison: 650, light: 420, dark: 450, explosion: 60, energy: 260, shield: 200, heal: 200, power: 300, muzzle: 30, blood: 40, pickup: 400, dash: 200, blink: 250, sparkle: 300, rain: 300, snow: 300, fog: 300, embers: 200, fireflies: 300, leaves: 300, bubbles: 300};
@@ -77,7 +77,7 @@ export function createDirector({ui, getFx, settings}) {
     await pause((style.style === 'physical' ? 140 : 260) + p * 420);
     if (style.element && ui.pixel) {
       pixel(style.element, targetRect, {from, color: style.color, power: p});
-      await pause(HIT_MS[style.element]);
+      await pause(HIT_MS[style.element] ?? 200);
     } else if (style.style === 'meteor') {
       // Pegasus Ryuseiken: rajada de meteoros com leve dispersão, todos convergindo no alvo.
       const shots = [];
