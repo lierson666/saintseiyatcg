@@ -127,6 +127,205 @@
           "easing": "ease-in-out"
         }
       ]
+    },
+    "meteoro-pegaso-a": {
+      "nome": "Meteoro de Pégaso A · Rajada",
+      "camadas": [
+        {
+          "tipo": "particulas",
+          "inicio": 0,
+          "duracao": 800,
+          "efeito": "vx-7505372ff770",
+          "cor": "#008cb4",
+          "escala": 1
+        },
+        {
+          "tipo": "camera",
+          "inicio": 150,
+          "duracao": 70,
+          "x": 2,
+          "escala": 1,
+          "easing": "linear"
+        },
+        {
+          "tipo": "camera",
+          "inicio": 220,
+          "duracao": 70,
+          "x": -2,
+          "escala": 1,
+          "easing": "linear"
+        },
+        {
+          "tipo": "camera",
+          "inicio": 330,
+          "duracao": 70,
+          "x": 2,
+          "escala": 1,
+          "easing": "linear"
+        },
+        {
+          "tipo": "camera",
+          "inicio": 400,
+          "duracao": 70,
+          "x": -2,
+          "escala": 1,
+          "easing": "linear"
+        },
+        {
+          "tipo": "camera",
+          "inicio": 510,
+          "duracao": 70,
+          "x": 2,
+          "escala": 1,
+          "easing": "linear"
+        },
+        {
+          "tipo": "camera",
+          "inicio": 580,
+          "duracao": 70,
+          "x": -2,
+          "escala": 1,
+          "easing": "linear"
+        },
+        {
+          "tipo": "ui",
+          "inicio": 140,
+          "duracao": 160,
+          "alvo": "carta",
+          "cor": "#94e3fe",
+          "opacidade": 0.14
+        },
+        {
+          "tipo": "ui",
+          "inicio": 420,
+          "duracao": 160,
+          "alvo": "carta",
+          "cor": "#94e3fe",
+          "opacidade": 0.14
+        }
+      ]
+    },
+    "meteoro-pegaso-b": {
+      "nome": "Meteoro de Pégaso B · Constelação",
+      "camadas": [
+        {
+          "tipo": "particulas",
+          "inicio": 0,
+          "duracao": 800,
+          "efeito": "vx-04df735e2e5a",
+          "cor": "#008cb4",
+          "escala": 1
+        },
+        {
+          "tipo": "camera",
+          "inicio": 200,
+          "duracao": 70,
+          "x": 1,
+          "escala": 1,
+          "easing": "linear"
+        },
+        {
+          "tipo": "camera",
+          "inicio": 270,
+          "duracao": 70,
+          "x": -1,
+          "escala": 1,
+          "easing": "linear"
+        },
+        {
+          "tipo": "camera",
+          "inicio": 400,
+          "duracao": 70,
+          "x": 2,
+          "escala": 1,
+          "easing": "linear"
+        },
+        {
+          "tipo": "camera",
+          "inicio": 470,
+          "duracao": 70,
+          "x": -2,
+          "escala": 1,
+          "easing": "linear"
+        },
+        {
+          "tipo": "camera",
+          "inicio": 560,
+          "duracao": 70,
+          "x": 3,
+          "escala": 1,
+          "easing": "linear"
+        },
+        {
+          "tipo": "camera",
+          "inicio": 630,
+          "duracao": 70,
+          "x": -3,
+          "escala": 1,
+          "easing": "linear"
+        },
+        {
+          "tipo": "ui",
+          "inicio": 550,
+          "duracao": 160,
+          "alvo": "carta",
+          "cor": "#94e3fe",
+          "opacidade": 0.2
+        }
+      ]
+    },
+    "meteoro-pegaso-c": {
+      "nome": "Meteoro de Pégaso C · Cometa",
+      "camadas": [
+        {
+          "tipo": "particulas",
+          "inicio": 0,
+          "duracao": 800,
+          "efeito": "vx-46d2c80dc46c",
+          "cor": "#008cb4",
+          "escala": 1
+        },
+        {
+          "tipo": "camera",
+          "inicio": 250,
+          "duracao": 70,
+          "x": 1,
+          "escala": 1,
+          "easing": "linear"
+        },
+        {
+          "tipo": "camera",
+          "inicio": 320,
+          "duracao": 70,
+          "x": -1,
+          "escala": 1,
+          "easing": "linear"
+        },
+        {
+          "tipo": "camera",
+          "inicio": 500,
+          "duracao": 70,
+          "x": 3,
+          "escala": 1,
+          "easing": "linear"
+        },
+        {
+          "tipo": "camera",
+          "inicio": 570,
+          "duracao": 70,
+          "x": -3,
+          "escala": 1,
+          "easing": "linear"
+        },
+        {
+          "tipo": "ui",
+          "inicio": 500,
+          "duracao": 160,
+          "alvo": "carta",
+          "cor": "#94e3fe",
+          "opacidade": 0.22
+        }
+      ]
     }
   }
 }
