@@ -24,7 +24,7 @@ const inStrike = (attacker, target, uid) => attacker === uid || (target.kind ===
 const againstAlly = (s, c, key, self, attacker, target) => k.controllerOf(s, attacker) !== key && (
   (target.kind === 'god' && target.player === key) ||
   (target.kind === 'devotee' && target.uid !== self && k.controllerOf(s, target.uid) === key && isSaint(c, target.uid)));
-// "Cannot declare another Strike this round" (gancho cannotStrike): marca exata, vale até o fim do Round nos dois turnos.
+// "Cannot declare another Strike this round" (gancho cannotStrike): marca exata, vale até o fim deste Round.
 const lockStrike = (s, uid) => { if (s.units[uid]) forbidStrike(s, uid); };
 // "Choose one: Remove N damage from target friendly Devotee; or your God gains {S}{S}" (Miho 035, Healer 041; 31/10/2026).
 // `choice` ({target} ou {mode: 'soul'}) vem de play.activate; sem ele, pergunta. Sem Devotee ferido, só resta o Soul.
@@ -164,20 +164,20 @@ export default {
   // Perseus Algol
   'athena-v6-024': {
     // Medusa Shield: Devotee inimigo declara Strike contra Algol; pague {2}{C} e ele não é Prepared nem declara Strike
-    // neste Round (ganchos cannotPrepare/cannotStrike). Resonance (Perseus Silver Cloth 069): -1 ATK dele durante o Strike.
+    // até o fim do próximo Round dele (ganchos cannotPrepare/cannotStrike). Resonance (Perseus Silver Cloth 069): -1 ATK dele durante o Strike.
     watchDeclare: (s, c, key, self, attacker, target) => {
       const tag = `${self}:medusa`;
       if (target.kind !== 'devotee' || target.uid !== self || k.controllerOf(s, attacker) === key || s.roundUses.has(tag) || ready(s, key) < 2) return;
       return st => {
         if (!st.units[attacker] || st.roundUses.has(tag) || !pay(st, c, key, 2, 'MEDUSA SHIELD', self)) return;
         k.once(st, tag);
-        forbidPrepare(st, attacker);
-        forbidStrike(st, attacker);
+        forbidPrepare(st, attacker, 'next_round');
+        forbidStrike(st, attacker, 'next_round');
         if (k.gearOf(c, self).some(g => c.objects[g].cardId === 'athena-v6-069')) k.buff(st, attacker, -1, 0, 'this_strike');
       };
     },
     // Stone Gaze (gancho survive): sobreviveu como defensor, +1/+1 até o fim do Round.
-    survive: (s, c, key, self, role) => role === 'defender' && (st => { if (st.units[self]) k.buff(st, self, 1, 1); }),
+    survive: (s, c, key, self, role) => role === 'defender' && (st => { if (st.units[self]) k.buff(st, self, 1, 1); }), // criado no Round inimigo: vale até o fim do próximo Round dele
   },
   // Lyra Orphee
   'athena-v6-025': {
@@ -198,7 +198,7 @@ export default {
   // Kiki: busca um Equipment (autor, 01/11/2026)
   'athena-v6-026': {enter: (s, c, key) => st => { k.search(st, c, key, 'FORGE OF JAMIR', cd => cd?.kind === 'Equipment'); }},
   // Bear Geki: Hanging Bear
-  'athena-v6-029': {combatDamage: onHit('hanging', (st, c, key, self, victim) => lockStrike(st, victim))},
+  'athena-v6-029': {combatDamage: onHit('hanging', (st, c, key, self, victim) => { if (st.units[victim]) forbidStrike(st, victim, 'next_round'); })},
   // Hydra Ichi: Poisonous Claws
   'athena-v6-030': {combatDamage: weaken('claws')},
   // Wolf Nachi: Wolf Pack
@@ -276,7 +276,7 @@ export default {
     // Cerberus Chains (31/10/2026): "can't declare a Strike during its controller's next turn". O próximo turno do dono do alvo
     // ainda é neste Round só se agora é o seu turno e você é o primeiro jogador (§7); senão é no Round seguinte.
     combatDamage: onHit('chains', (st, c, key, self, victim) =>
-      forbidStrike(st, victim, st.active === key && st.order[0] === key ? 'this_round' : 'next_round')),
+      forbidStrike(st, victim, 'next_round')),
     // Three-Headed Assault: sem limite por Round.
     declare: (s, c, key, self, target) => target.kind === 'devotee' && sealed(s, target.uid) && (st => k.buff(st, self, 1, 0, 'this_strike')),
   },

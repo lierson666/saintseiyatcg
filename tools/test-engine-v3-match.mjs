@@ -86,7 +86,7 @@ test('simulação reproduzível de compra e Base até o deck vazio (§55) encerr
   assert.deepEqual(state.victory, {winner: 'A', reason: 'deck_out'});
   assert.equal(log.length, 87);
   assert.match(log[0], /^R1 A mão 6 deck 43 bases 1/);
-  assert.match(log.at(-1), /^R44 A mão \d+ deck 0 bases \d+/);
+  assert.match(log.at(-1), /^R87 A mão \d+ deck 0 bases \d+/);
   assert.ok(state.players.A.latent <= 3 && state.players.B.latent <= 3);
 });
 

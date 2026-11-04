@@ -722,7 +722,7 @@ export default {
   'poseidon-v6-160': {
     spell: {run: (s, c, key) => {
       const t = enemy(s, c, key, 'ABYSSAL SILENCE');
-      if (t) silence(s, t);
+      if (t) silence(s, t, 'next_round');
       if (t && sealed(s, t)) debuff(s, t, 1);
     }},
   },
@@ -800,7 +800,7 @@ export default {
     spell: {run: (s, c, key) => {
       const t = enemy(s, c, key, 'ABSOLUTE CONFINEMENT');
       if (t) seal(s, c, [t], 3, 'ABSOLUTE CONFINEMENT');
-      if (t) silence(s, t); // Absolute Confinement
+      if (t) silence(s, t, 'next_round'); // Absolute Confinement
       if (controls(s, c, key, ISAAC) || controls(s, c, key, HYOGA)) k.draw(s, key, 1);
     }},
   },

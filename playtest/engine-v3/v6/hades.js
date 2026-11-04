@@ -107,8 +107,8 @@ const curse = (atk, hp, ability) => (s, c, key) => st => { const t = enemy(st, c
 const sealOnEnter = (n, ability) => (s, c, key) => st => seal(st, c, [enemy(st, c, key, ability)], n, ability);
 // Hades → Preto (31/10/2026): o Seal ficou só em Hypnos; o resto vira −X/−X ou "can't declare a Strike".
 const weakenOnEnter = (n, ability) => (s, c, key) => st => { const t = enemy(st, c, key, ability); if (t) weaken(st, c, t, n, n); };
-// "Can't declare a Strike during its controller's next turn": neste Round se o turno dele ainda vem; senão, no próximo.
-const lockNextTurn = (st, key, uid) => { if (uid && st.units[uid]) forbidStrike(st, uid, st.active === key && st.order[0] === key ? 'this_round' : 'next_round'); };
+// "Can't declare a Strike during its controller's next round".
+const lockNextTurn = (st, key, uid) => { if (uid && st.units[uid]) forbidStrike(st, uid, 'next_round'); };
 const lockOnEnter = ability => (s, c, key) => st => lockNextTurn(st, key, enemy(st, c, key, ability));
 // "When X enters …, you may sacrifice another friendly Devotee. If you do, <effect>." `ready`: há alvo para o efeito.
 const offering = (ability, ready, effect) => (s, c, key, self) => st => {

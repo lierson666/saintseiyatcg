@@ -23,7 +23,7 @@ import {applyAction, advance} from '../playtest/engine-v3/actions.js';
 import {createAI} from '../playtest/divine/ai.js';
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
-const MAX_ROUNDS = 80, MAX_STEPS = 20000;
+const MAX_ROUNDS = 160, MAX_STEPS = 20000;
 
 export function loadDecks(files) {
   if (files) return files.split(',').flatMap(f => read(`../data/alpha-0.1/${f}`).decks.map(d => ({...d, grupo: f.replace(/^decks-|\.json$/g, '')})));

@@ -4,7 +4,7 @@ OFFICIAL RULEBOOK — VERSION 2.1
 
 Core Rules · Combat · Cosmo · Armor · Resonance · Tartarus
 
-Status: regras aprovadas em 23–24/10/2026, consolidadas na versão 2.1. **Atualização de 31/10/2026:** o fluxo do jogo é por **turnos dentro de cada Round** (regras Alpha ALPHA-P01 a P07, aprovadas em 28/10/2026, e decisões G3 seguintes), como implementado no `playtest/engine-v3`; o sistema de AÇÕES alternadas foi retirado. Valores de cartas continuam sujeitos a balanceamento. Este guia é a única referência de regra vigente.
+Status: regras aprovadas em 23–24/10/2026, consolidadas na versão 2.1. **Atualização de 31/10/2026:** **cada turno de um jogador é um Round** (autor, 04/11/2026; §64); antes, o fluxo era por **turnos dentro de cada Round** (regras Alpha ALPHA-P01 a P07, aprovadas em 28/10/2026, e decisões G3 seguintes), como implementado no `playtest/engine-v3`; o sistema de AÇÕES alternadas foi retirado. Valores de cartas continuam sujeitos a balanceamento. Este guia é a única referência de regra vigente.
 
 Princípio fundamental: Saint Seiya TCG é um jogo de cartas estratégico em que cada jogador controla um God e seus Devotees. Os jogadores desenvolvem Cosmo, estabelecem confrontos individuais, despertam o poder de seus Cavaleiros e procuram derrotar o God adversário.
 
@@ -151,7 +151,7 @@ Revisado em 31/10/2026. O sistema de AÇÕES alternadas foi retirado: o jogo seg
 
 ### 7. Estrutura geral
 
-A partida é jogada em **Rounds**. Cada Round tem **dois turnos**, um de cada jogador. O primeiro jogador é sorteado e começa todos os Rounds.
+A partida é jogada em **Rounds**. **Cada Round é o turno de um jogador**: o primeiro joga o Round 1, o outro o Round 2, e assim por diante (autor, 04/11/2026). O primeiro jogador é definido na §55.
 
 Estrutura de um turno
 
@@ -169,10 +169,10 @@ O jogador ativo faz, em qualquer ordem e quantas vezes puder pagar, as jogadas d
 
 * Bases ainda Prepared viram Latent (seção 5).
 * Resolvem-se os gatilhos de fim de turno.
-* No segundo turno do Round, resolvem-se também os gatilhos de fim de Round.
-* Cleanup: expiram os efeitos “until end of turn”; no segundo turno do Round, também os de “this round” e renovam-se os limites “once each round”. O dano marcado não sai.
+* Resolvem-se também os gatilhos de fim de Round.
+* Cleanup: expiram as durações vencidas (§64) e renovam-se os limites “once each round”. O dano marcado não sai.
 
-Depois do Cleanup, o turno passa ao outro jogador ou começa um novo Round.
+Depois do Cleanup, o outro jogador começa o Round seguinte.
 
 ### 8. O que o jogador ativo pode fazer
 
@@ -611,11 +611,11 @@ O autor aprovou a aplicação das recomendações de fechamento ao sistema do jo
 Revisado em 31/10/2026 (ALPHA-P01, P02, P03 e P06, aprovadas em 28/10/2026; limite de mão, 01/11/2026; cara ou coroa e compra do segundo jogador, 01/11/2026; compra de 1 carta, 01/11/2026).
 
 - O primeiro jogador é definido por **cara ou coroa** antes de qualquer compra (autor, 01/11/2026). Cada jogador já tem uma face da moeda; ninguém escolhe a face. Quem vence escolhe começar ou passar o início ao adversário.
-- O primeiro jogador começa **todos** os Rounds. Cada Round tem um turno de cada jogador.
+- Os jogadores se alternam: cada Round é o turno de um deles (autor, 04/11/2026). O primeiro jogador joga os Rounds ímpares; o outro, os pares.
 - Depois dessa escolha, ambos compram 7 cartas. Começando pelo primeiro jogador, cada um pode, uma vez, devolver qualquer quantidade de cartas da mão ao deck, embaralhar e comprar o mesmo número. O primeiro turno só começa depois dos dois mulligans.
 - Início do turno: o ativo prepara seus Devotees, Equipment e Bases; resolvem-se os gatilhos de início de turno; ele compra **1 carta**. Só quem começa a partida não compra no primeiro turno dele; o outro jogador já compra no primeiro turno dele (autor, 01/11/2026).
 - O ativo pode colocar uma Base Cosmoble por turno, com a pilha vazia. A Base entra Prepared e paga no mesmo turno (G3-035). Colocar Base não entra na pilha.
-- O turno termina quando o ativo declara END TURN com a pilha vazia. End Phase: conversão das Bases Prepared em Latent (§5); gatilhos de fim de turno; no 2º turno do Round, gatilhos de fim de Round (D204); Cleanup.
+- O turno termina quando o ativo declara END TURN com a pilha vazia. End Phase: conversão das Bases Prepared em Latent (§5); gatilhos de fim de Round (D204); Cleanup.
 - Limite de **7 cartas na mão** (autor, 01/11/2026): na End Phase do próprio turno, ao passar o turno, logo após a conversão das Bases em Latent, quem tem mais de 7 cartas escolhe e descarta o excesso para o Tartarus. Isso conta como descarte para efeitos de carta. Fora desse momento a mão pode passar de 7.
 - Deck vazio: quem precisa comprar uma carta e não tem carta no deck perde a partida na hora. Vale para a compra do turno e para qualquer compra por efeito. Ficar com o deck vazio (por Mill, por exemplo) não derrota sozinho; a derrota vem na próxima compra. Por isso Mill é condição de vitória. Se um mesmo efeito fizer os dois jogadores comprarem de deck vazio, a partida empata. Não existe Fatigue (autor, 01/11/2026; `draw` no engine-v3).
 
@@ -736,9 +736,15 @@ Se um Strike causar Soul zero aos dois Gods simultaneamente por efeitos aplicáv
 
 ### 64. Duração dos efeitos e Card Craft
 
-- Textos usam **turn** para o turno de um jogador e **round** para o par de turnos (31/10/2026). “Once each round” renova no fim do Round; “until end of turn” acaba no Cleanup do turno.
-- Em textos existentes, **“once per turn” vale “once each round”** e **“until end of turn” vale “until end of round”** (autor, 29/10/2026).
-- “Until end of round” termina no encerramento atual; “until the beginning of the next round” termina no início da seguinte, antes da preparação. Uma duração diferente deve identificar precisamente o evento.
+- **Round e turno são a mesma coisa (autor, 04/11/2026; substitui as definições de 29 e 31/10/2026).** Cada Round é o turno de um jogador, e os textos só usam **round/rodada**.
+- **“Until the end of your round” / “até o fim da sua rodada”:** termina no Cleanup do Round de quem criou o efeito. Criado no Round inimigo, vale até o fim do próximo Round de quem o criou.
+- **“Until the end of your next round” / “até o fim da sua próxima rodada”:** termina no Cleanup do próximo Round de quem criou o efeito.
+- **“Until the start of your next round” / “até o início da sua próxima rodada”:** termina no início do próximo Round de quem criou o efeito, antes da preparação.
+- **“Until the end of this round” / “até o fim desta rodada”, “this round” / “nesta rodada”:** termina no Cleanup do Round em andamento, seja de quem for.
+- **“Until the end of its controller's next round” / “até o fim da próxima rodada do controlador dele”:** termina no Cleanup do próximo Round do controlador daquele Devotee.
+- **“Once each round” / “uma vez por rodada”:** renova em todo Cleanup, portanto pode ser usado de novo no Round do adversário.
+- **“Once each cycle” / “uma vez por ciclo”:** renova só no início do Round do dono da carta. Pode ser usado no Round de qualquer jogador, mas só uma vez entre um início e o outro. Vale para os efeitos fortes de compra, Latent, Selo, moagem e Preparar.
+- Contagens de Round dobram em relação às antigas: o Round 12 de hoje corresponde ao antigo Round 6.
 - “During your opponent's turn” volta a valer literalmente.
 - **Distribuir dano** (“distribute N damage among …”): cada alvo escolhido recebe pelo menos 1 (autor, 30/10/2026).
 - Habilidades de entrada aparecem primeiro na carta. A posição gráfica não antecipa a resolução de um gatilho em relação à pilha.

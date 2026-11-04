@@ -19,15 +19,15 @@ const {t} = ctx.ssI18n;
 
 assert.equal(ctx.ssI18n.lang, 'pt'); // escolha salva vence o navegador
 assert.equal(ctx.document.documentElement.lang, 'pt-BR');
-assert.equal(t('Player A begins a turn.'), 'Jogador A começa um turno.'); // {w} não deixa "Player {0}" engolir a frase
+assert.equal(t('Player A begins a round.'), 'Jogador A começa uma rodada.'); // {w} não deixa "Player {0}" engolir a frase
 assert.equal(t('Player B'), 'Jogador B');
 assert.equal(t('Round 3 · Player A'), 'Rodada 3 · Jogador A');
 assert.equal(t('Round 3 · Seiya'), 'Rodada 3 · Seiya');
-assert.equal(t("Seiya's turn"), 'Turno do Seiya');
+assert.equal(t("Seiya's round"), 'Rodada de Seiya');
 assert.equal(t('Seiya · Opening hand'), 'Seiya · Mão inicial');
 assert.equal(t('Response · Seiya to act'), 'Resposta · vez de Seiya');
 assert.equal(t('Hand|7 cards.'), 'Mão|7 cartas.'); // captura traduzida por outro padrão
-assert.equal(t('  End Turn '), '  Encerrar turno '); // espaços das pontas preservados
+assert.equal(t('  End Round '), '  Encerrar rodada '); // espaços das pontas preservados
 assert.equal(t('Pegasus Seiya enters the battlefield.'), 'Pegasus Seiya entra no campo de batalha.'); // nome de carta fica (fase 3)
 assert.equal(t('Seiya · Ikki'), 'Seiya · Ikki'); // {t}: genérico só vale com um lado traduzido
 assert.equal(t('Bronze · Lv 3'), 'Bronze · Nv 3');
@@ -38,6 +38,6 @@ assert.equal(t('Some new sentence.'), 'Some new sentence.'); // sem tradução: 
 assert.ok(ctx.ssI18n.missing.has('Some new sentence.'));
 assert.equal(t('Jogador A'), 'Jogador A'); // já traduzido não volta a passar
 ctx.ssI18n.set('en');
-assert.equal(t('End Turn'), 'End Turn');
+assert.equal(t('End Round'), 'End Round');
 assert.equal(JSON.parse(store.ssTcgOlympusArena).lang, 'en');
 console.log('i18n ok');

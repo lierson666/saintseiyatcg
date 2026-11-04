@@ -4,6 +4,20 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-04 — §7, §55, §64 — Cada turno é um Round
+
+- **Antes:** cada Round tinha dois turnos, um de cada jogador; “once each round” renovava no fim do par; efeitos “until end of round” cobriam os dois turnos.
+- **Depois:** cada turno é um Round (A joga o 1, B o 2, A o 3). Os textos só falam em round/rodada. O contador sobe a cada turno, e quem começa continua igual.
+- **“Once each round”:** renova a cada Round. **58 habilidades fortes** (compra, Latent, Selo, moagem, Preparar) viram **“once each cycle”**: renovam só no início do Round do dono e podem ser usadas no Round de qualquer jogador.
+- **Durações por carta:** buff e debuff até o fim do seu Round; Guardian até o início do seu próximo Round; efeitos que nascem como defensor (003, 024, 069, 073, 474) até o fim do seu próximo Round.
+- **Moments defensivos, até o fim desta rodada:** 054, 056, 058, 061, 076, 079, 081, 505, 176, 179, 445.
+- **Techniques defensivas, até o início do seu próximo Round:** 087, 088, 089, 090, 150, 164, 497.
+- **Travas, até o fim do próximo Round do controlador:** 024 (Medusa Shield), 029, 160, 169; 075, 216 e 254 seguem “próximo Round do controlador”.
+- **“Neste Round” mantido:** 080, 090, 177, 232, 240, 259, 270, além de “cannot declare another Strike” no próprio Devotee.
+- **Ultimates:** Moon Awakening e Obliteration acabam no fim do seu Round.
+- **Motivo:** decisão do autor, 04/11/2026: “cada round é um round”, com a duração especificada carta a carta.
+- **Pendências:** publicado sem medição de winrate, por decisão do autor. `data/cards.json` e `playtest/engine-v3` ajustados; a IA usa o Round 12 no lugar do Round 6.
+
 ## 2026-11-03 — Cartas (sem mudança no guia) — Ultimates dos cinco Gods
 
 - **Athena Exclamation:** custo {5}{C} → {10}{C}. Os 3 Saints podem estar Prepared ou não. Sem Divine Judgment e sem +3 por Gold. O dano é a soma do Power, dividido entre o God inimigo e Devotees inimigos.

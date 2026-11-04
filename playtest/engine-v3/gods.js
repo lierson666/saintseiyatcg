@@ -378,7 +378,7 @@ export function activateCommand(state, ctx, key, uid) {
   if (why) throw new RuleError('§63', `Divine Command indisponível: ${why}`);
   const cmd = COMMANDS[state.divine[key].god];
   payMixed(state, key, commandSplit(state, key));
-  useOncePerRound(state, `god:${key}:command`); // cada jogador tem um turno por Round: equivale a "uma vez por turno"
+  useOncePerRound(state, `god:${key}:command`);
   emit(state, 'divine_power', {player: key, ability: cmd.ability, uid, command: true});
   pushTriggers(state, [{controller: key, activated: true, uid: `command:${uid}`, ability: cmd.ability, run: st => {
     if (!k.onField(st, commandSide(st, key), uid)) return; // alvo saiu do campo: não resolve

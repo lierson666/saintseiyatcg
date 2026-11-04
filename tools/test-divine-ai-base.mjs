@@ -31,11 +31,11 @@ function divine({god = 'god-athena', mine = ['g1', 'g2', 'g3'], foes = [], round
   return {ai, shots};
 }
 
-test('Exclamation: só dispara se for letal ou no Round 6', () => {
+test('Exclamation: só dispara se for letal ou no Round 12', () => {
   const fires = o => { const {ai, shots} = divine(o); ai.next('A')?.run(); return shots.length === 1; };
   assert.equal(fires({foes: ['x', 'y', 'z']}), false);
   assert.equal(fires({foes: ['x', 'y', 'z'], soul: 9}), true); // 3 + 3 + 3
-  assert.equal(fires({foes: ['x', 'y', 'z'], round: 6}), true);
+  assert.equal(fires({foes: ['x', 'y', 'z'], round: 12}), true);
 });
 
 test('Judgment: a IA espera o último Round do prazo e easy não paga', () => {

@@ -1,5 +1,5 @@
 // Efeitos de carta da engine 3.0: valores em jogo, modificadores com duração e prevenção de dano de Strike.
-// Texto das cartas: snapshot D268, sem alteração. Durações: D191 ('this_round', 'next_round'), 'this_strike' e 'until_next_turn' (com `owner`).
+// Texto das cartas: snapshot D268, sem alteração. Durações: ver core.addEffect, além de 'this_strike'.
 // Prevenção checada antes do evento (D199). Escolhas opcionais ("you may") vêm de `ctx.decide(player, pergunta)`;
 // sem `decide`, o jogador recusa.
 // Ordem de aplicação numa mesma porção de dano (confirmada pelo autor em 28/10/2026):
@@ -75,20 +75,19 @@ export const keywordsOf = (state, ctx, uid) => [...card(ctx, uid).keywords, ...m
 export const modify = (state, target, {atk = 0, hp = 0, keywords = []}, duration = 'this_round') =>
   addEffect(state, {kind: 'mod', target, atk, hp, keywords, duration});
 // Escudo "prevent the next N [Strike] damage": `target` é um uid ou 'god:A'; amount Infinity = todo o dano.
-// `owner` só com duration 'until_next_turn' ("before the start of your next turn"): vence no início do turno dele (core.startTurn).
-export const shield = (state, target, amount, {strikeOnly = true, duration = 'this_round', owner} = {}) =>
+export const shield = (state, target, amount, {strikeOnly = true, duration = 'this_turn', owner} = {}) =>
   addEffect(state, {kind: 'prevent', target, amount, strikeOnly, duration, ...(owner && {owner})});
 // "When target … would be defeated by Strike damage this round, prevent that damage instead."
-export const save = (state, target, onSave, {anyDamage = false} = {}) => addEffect(state, {kind: 'save', target, onSave, anyDamage, duration: 'this_round'});
+export const save = (state, target, onSave, {anyDamage = false} = {}) => addEffect(state, {kind: 'save', target, onSave, anyDamage, duration: 'this_turn'});
 // Gancho cannotStrike / cannotPrepare (v6/registry.js): marcas com duração, lidas por checkStrike (strike.js) e prepareUnit (core.js).
-export const forbidStrike = (state, target, duration = 'this_round') => addEffect(state, {kind: 'noStrike', target, duration});
-export const forbidPrepare = (state, target, duration = 'this_round') => addEffect(state, {kind: 'noPrepare', target, duration});
+export const forbidStrike = (state, target, duration = 'this_turn') => addEffect(state, {kind: 'noStrike', target, duration});
+export const forbidPrepare = (state, target, duration = 'this_turn') => addEffect(state, {kind: 'noPrepare', target, duration});
 // "Loses all activated abilities until the end of the round" (Poseidon 160, 169): lido por play.activate.
-export const silence = (state, target, duration = 'this_round') => addEffect(state, {kind: 'noAbilities', target, duration});
+export const silence = (state, target, duration = 'this_turn') => addEffect(state, {kind: 'noAbilities', target, duration});
 export const silenced = (state, uid) => state.effects.some(e => e.kind === 'noAbilities' && e.target === uid);
 export const cannotStrike = (state, uid) => state.effects.some(e => e.kind === 'noStrike' && e.target === uid);
 // Bloodlust (autor, 29/10/2026): o Devotee pode atacar, mas não um God, até o fim da rodada.
-export const forbidGodStrike = (state, target, duration = 'this_round') => addEffect(state, {kind: 'noGodStrike', target, duration});
+export const forbidGodStrike = (state, target, duration = 'this_turn') => addEffect(state, {kind: 'noGodStrike', target, duration});
 export const cannotStrikeGod = (state, uid) => state.effects.some(e => e.kind === 'noGodStrike' && e.target === uid);
 
 function useShields(state, target, amount, strike) {
@@ -114,9 +113,9 @@ function preventDevotee(state, ctx, uid, amount, strike) {
     if ((n === '044' || n === '045') && useOncePerRound(state, `prevent:${e}`)) {
       const before = amount;
       amount = Math.max(0, amount - 1);
-      // Dragon's Guard, Resonance: ao prevenir dano em Dragon Shiryu, 1 de escudo numa Armor dele até o fim do Round seguinte.
+      // Dragon's Guard, Resonance: ao prevenir dano em Dragon Shiryu, 1 de escudo numa Armor dele até o fim do seu próximo Round.
       const armor = gear.find(g => card(ctx, g).armor);
-      if (n === '045' && shiryu && before > amount && armor) shield(state, armor, 1, {strikeOnly: false, duration: 'next_round'});
+      if (n === '045' && shiryu && before > amount && armor) shield(state, armor, 1, {strikeOnly: false, duration: 'your_next_round'});
     }
   }
   amount = Math.max(0, amount - v6Prevent(state, ctx, key, uid, amount, strike)); // cartas V6: prevenção obrigatória (gancho prevent)

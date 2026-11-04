@@ -20,7 +20,7 @@ export const bearerOf = (c, gear) => c.attached[gear] || null;
 export const gearOf = (c, uid) => Object.keys(c.attached).filter(e => c.attached[e] === uid);
 // "Once each round" de uma fonte: marca na hora em que o gatilho é gerado (o segundo evento do Round não gera).
 export const once = (s, tag) => (s.roundUses.has(tag) ? false : (useOncePerRound(s, tag), true));
-// Guia §64 (autor, 29/10/2026): "once per turn" vale uma vez por rodada.
+// Guia §64: turno e Round são a mesma coisa (autor, 04/11/2026).
 export const onceTurn = (s, tag) => once(s, tag);
 // Ressonância dos Domains (autor, 01/11/2026): só com God da facção; "once each turn" de verdade (tag com o turno).
 export {domainResonant} from './registry.js';

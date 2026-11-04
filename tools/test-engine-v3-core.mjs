@@ -1,7 +1,7 @@
 // Núcleo 3.0: só regras canônicas e confirmadas. node --test tools/test-engine-v3-core.mjs
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createCore, startTurn, endTurn, draw, mill, placeBase, spendBase, gainLatent, loseSoul, recordStrike,
+import {cycleOwner, createCore, startTurn, endTurn, draw, mill, placeBase, spendBase, gainLatent, loseSoul, recordStrike,
   useOncePerRound, addEffect, spellCategory, passAll, respond, RuleError, NotSpecified} from '../playtest/engine-v3/core.js';
 
 const deck = n => Array.from({length: n}, (_, i) => `c${i}`);
@@ -16,11 +16,11 @@ test('§55: só quem começa não compra no 1º turno; o outro já compra 1', ()
   end(s); startTurn(s); assert.equal(s.players.A.hand.length, 1, '§55: 1 carta por turno (autor, 01/11/2026)');
 });
 
-test('D191: Round = um turno de cada jogador, na ordem do jogador inicial', () => {
+test('§64: cada turno é um Round e os jogadores se alternam', () => {
   const s = core();
   startTurn(s); assert.deepEqual([s.round, s.active], [1, 'A']);
-  end(s); assert.deepEqual([s.round, s.active], [1, 'B']);
-  startTurn(s); end(s); assert.deepEqual([s.round, s.active, s.turnInRound], [2, 'A', 0]);
+  end(s); assert.deepEqual([s.round, s.active], [2, 'B']);
+  startTurn(s); end(s); assert.deepEqual([s.round, s.active], [3, 'A']);
 });
 
 test('D4/G3-035: uma Base Cosmoble por turno, só no próprio turno; a Base nova entra Prepared e paga no mesmo turno', () => {
@@ -65,32 +65,63 @@ test('D52 + D174: Soul 0 encerra na hora; os dois em 0 empatam; nada age depois'
 test('D204: gatilhos de fim de Round em APNAP e LIFO; Soul 0 corta os pendentes e o Cleanup', () => {
   const s = core(), log = [];
   const t = (controller, name, fn = () => {}) => ({controller, run: st => { log.push(name); fn(st); }});
-  startTurn(s); end(s); startTurn(s); // turno de B, 2º do Round
+  startTurn(s); end(s); startTurn(s); // Round 2, de B
   end(s, {endOfRound: [t('A', 'a1'), t('B', 'b1'), t('B', 'b2')]});
   // B (ativo) empilha primeiro e A por último: A resolve primeiro (LIFO)
   assert.deepEqual(log, ['a1', 'b2', 'b1']);
-  assert.equal(s.round, 2);
+  assert.equal(s.round, 3);
   const k = core(); log.length = 0;
   startTurn(k); end(k); startTurn(k);
   assert.deepEqual(end(k, {endOfRound: [t('B', 'pending'), t('A', 'kill', st => loseSoul(st, {B: 30}))]}), {winner: 'A'});
   assert.deepEqual(log, ['kill']);
-  assert.equal(k.round, 1);
+  assert.equal(k.round, 2);
 });
 
-test('D191: once each round e durações atravessam o turno adversário e expiram na fronteira certa', () => {
+test('§64: once each round renova a cada Round; once each cycle só no início do Round do dono', () => {
   const s = core();
   startTurn(s);
-  assert.equal(useOncePerRound(s, 'cosmo-of-hope'), true);
-  addEffect(s, {id: 'this', duration: 'this_round'});
-  addEffect(s, {id: 'next', duration: 'next_round'});
+  assert.equal(useOncePerRound(s, 'A:900:1:comum'), true);
+  assert.equal(useOncePerRound(s, 'god:A:water-prison'), true);
+  assert.equal(useOncePerRound(s, 'god:A:water-prison'), false);
   end(s); startTurn(s);
-  assert.equal(useOncePerRound(s, 'cosmo-of-hope'), false, 'não renova no turno do 2º jogador');
-  assert.deepEqual(s.effects.map(e => e.id), ['this', 'next']);
+  assert.equal(useOncePerRound(s, 'A:900:1:comum'), true, 'renova no Round do adversário');
+  assert.equal(useOncePerRound(s, 'god:A:water-prison'), false, 'ciclo não renova no Round do adversário');
+  assert.equal(useOncePerRound(s, 'god:B:water-prison'), true);
   end(s);
-  assert.equal(useOncePerRound(s, 'cosmo-of-hope'), true, 'renova no Round seguinte');
-  assert.deepEqual(s.effects.map(e => e.id), ['next']);
-  startTurn(s); end(s); startTurn(s); end(s);
-  assert.deepEqual(s.effects, []);
+  assert.equal(useOncePerRound(s, 'god:A:water-prison'), false, 'ciclo só renova no início do Round do dono');
+  startTurn(s);
+  assert.equal(useOncePerRound(s, 'god:A:water-prison'), true);
+  assert.equal(useOncePerRound(s, 'god:B:water-prison'), false, 'o ciclo de B continua gasto');
+});
+
+test('§64: cada duração expira na fronteira certa, conforme quem a criou', () => {
+  const s = core(), ids = () => s.effects.map(e => e.id);
+  startTurn(s); // Round 1, de A
+  for (const [id, duration] of [['este', 'this_turn'], ['seu', 'this_round'], ['inicio', 'until_next_turn'], ['dele', 'next_round'], ['seu2', 'your_next_round']]) addEffect(s, {id, duration});
+  end(s);
+  assert.deepEqual(ids(), ['inicio', 'dele', 'seu2'], 'fim do Round de A');
+  startTurn(s); // Round 2, de B
+  addEffect(s, {id: 'reacao', duration: 'this_round', owner: 'A'});
+  end(s);
+  assert.deepEqual(ids(), ['inicio', 'seu2', 'reacao'], 'fim do próximo Round do inimigo; reação de A no Round de B continua');
+  startTurn(s); // Round 3, de A
+  assert.deepEqual(ids(), ['seu2', 'reacao'], 'início do próximo Round de A');
+  end(s);
+  assert.deepEqual(ids(), [], 'fim do próximo Round de A');
+});
+
+test('§64: habilidades da lista E por ciclo, as demais por Round', () => {
+  assert.equal(cycleOwner('A:005:1:diamond-dust'), 'A');
+  assert.equal(cycleOwner('freezing:B:006:2'), 'B');
+  assert.equal(cycleOwner('ability:A:178:1'), 'A');
+  assert.equal(cycleOwner('ability:domain:B'), 'B');
+  assert.equal(cycleOwner('domain:A:drowned'), 'A');
+  assert.equal(cycleOwner('crushing:domain:B'), 'B');
+  assert.equal(cycleOwner('god:A:bloodlust'), 'A');
+  assert.equal(cycleOwner('god:A:command'), null);
+  assert.equal(cycleOwner('A:029:1:hanging'), null);
+  assert.equal(cycleOwner('ability:A:029:1'), null);
+  assert.equal(cycleOwner('return:A:005:1'), null);
 });
 
 test('D22: um Strike por Devotee por turno próprio', () => {

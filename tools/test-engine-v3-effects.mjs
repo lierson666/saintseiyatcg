@@ -46,10 +46,8 @@ test('052 The Galaxian Wars: +1 ATK em até dois Bronze Saints até o fim do Rou
   const hand = s.players.A.hand.length;
   cast('A', '052', {targets: [seiya, jabu]});
   assert.deepEqual([atkOf(s, ctx, seiya), atkOf(s, ctx, jabu), s.players.A.hand.length - hand], [3, 3, 0], 'só dois Bronze: sem compra');
-  end(); startTurn(s);
-  assert.equal(atkOf(s, ctx, seiya), 3, 'atravessa o turno adversário');
   end();
-  assert.equal(atkOf(s, ctx, seiya), 2, 'expira no Cleanup do Round');
+  assert.equal(atkOf(s, ctx, seiya), 2, 'expira no fim do Round de quem conjurou');
 });
 
 test('077 Shiryu\'s Sacrificed Sight: +2/+2 e Pierce em Shiryu; no fim do Round fica Unprepared e não prepara no próximo início', () => {

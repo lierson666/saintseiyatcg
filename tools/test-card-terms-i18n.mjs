@@ -22,7 +22,7 @@ test('efeito na pilha: PT quando a tela está em PT, sem o nome e sem a etiqueta
   forceLang('pt');
   assert.match(abilityText(scav, "SCAVENGER'S REWARD"), /^Sempre que outro Berserker aliado é derrotado/);
   const poseidon = cards.find(c => c.id === 'poseidon-001');
-  assert.match(abilityText(poseidon, 'WATER PRISON'), /^Uma vez por rodada/);
+  assert.match(abilityText(poseidon, 'WATER PRISON'), /^Uma vez por ciclo/);
   assert.match(abilityText(poseidon, 'GREAT FLOOD'), /^Devolva todos os Devotos/);
   forceLang('en');
   assert.match(abilityText(scav, "SCAVENGER'S REWARD"), /^Whenever another friendly Berserker/);

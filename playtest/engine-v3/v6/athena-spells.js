@@ -147,7 +147,7 @@ export default {
   'athena-v6-064': {res: {name: 'RESONANCE', cost: 1, check: k.needTarget((s, c, key) => saints(s, c, key), 'sem Saint aliado'),
     run: (s, c, key) => {
       const t = friendlySaint(s, c, key, 'RESONANCE');
-      if (t) { k.buff(s, t, 0, 0, 'this_round', ['Guardian']); k.removeDamage(s, t, 1); }
+      if (t) { k.buff(s, t, 0, 0, 'until_next_turn', ['Guardian']); k.removeDamage(s, t, 1); }
     }}},
   // Jamir Tower: Cloth Restoration, once each round, {1}{C}, sem {T}; "target friendly Devotee equipped with an Armor".
   'athena-v6-063': {

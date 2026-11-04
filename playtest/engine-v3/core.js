@@ -22,7 +22,7 @@ export class NotSpecified extends Error {
 
 export function createCore({first = 'A', second = 'B', soul, decks}) {
   const player = key => ({soul: soul[key], latent: 0, deck: [...decks[key]], hand: [], battlefield: [], tartarus: [], void: [], stack: [], bases: [], ownTurns: 0, baseTurn: 0});
-  return {round: 1, turn: 0, turnInRound: 0, order: [first, second], active: first, victory: null,
+  return {round: 1, turn: 0, order: [first, second], active: first, victory: null,
     players: {[first]: player(first), [second]: player(second)}, roundUses: new Set(), strikes: new Map(), effects: [], chain: [], window: null, units: {}, delayed: [], events: []};
 }
 
@@ -62,6 +62,7 @@ export function startTurn(state, startOfTurn = []) {
   p.ownTurns++;
   // Duração 'until_next_turn' ("before the start of your next turn", Domains de 01/11/2026): vence no início do turno de `owner`.
   state.effects = state.effects.filter(e => !(e.duration === 'until_next_turn' && e.owner === key));
+  for (const tag of [...state.roundUses]) if (cycleOwner(tag) === key) state.roundUses.delete(tag); // "once each cycle" renova aqui
   for (const base of p.bases) base.prepared = true;
   for (const uid of p.battlefield) {
     const unit = state.units[uid];
@@ -202,17 +203,51 @@ export function recordStrike(state, uid) {
   state.strikes.set(uid, state.turn);
 }
 
-// D191: "once each round" vale para o Round inteiro e renova só no Round seguinte.
+// "Once each round" renova em todo Cleanup, exceto "once each cycle", que renova no início do Round do dono (guia §64).
 export function useOncePerRound(state, id) {
   if (state.roundUses.has(id)) return false;
   state.roundUses.add(id);
   return true;
 }
 
-// 'this_turn' ("until end of turn") expira em todo Cleanup (P06); D191: 'this_round' cobre os dois turnos;
-// 'next_round' termina no fim do Round seguinte ao da criação.
+// Durações (guia §64; cada Round é o turno de um jogador). `owner`: quem criou o efeito.
+// 'this_turn': fim deste Round. 'this_round': fim do Round do dono (criado no Round inimigo, vale até o fim do próximo Round dele).
+// 'until_next_turn': início do próximo Round do dono. 'next_round': fim do próximo Round do inimigo do dono.
+// 'your_next_round': fim do próximo Round do dono.
+// Moments da lista A e Techniques da lista B do autor (04/11/2026): a duração vem da carta inteira, não de cada efeito.
+const SPELL_DURATION = Object.fromEntries([
+  ...'054 056 058 061 076 079 081 505 176 179 445'.split(' ').map(n => [n, 'this_turn']),
+  ...'087 088 089 090 150 164 497'.split(' ').map(n => [n, 'until_next_turn']),
+]);
 // `from`: de onde veio o efeito (item da cadeia em resolução), para o rastreio de status na carta.
-export function addEffect(state, effect) { state.effects.push({...effect, round: state.round, ...(state.resolving && {from: state.resolving})}); }
+export function addEffect(state, effect) {
+  const spell = /:(\d{3}):/.exec(state.resolving?.uid || '')?.[1];
+  const fixed = effect.kind !== 'noStrike' && ['this_round', 'this_turn'].includes(effect.duration) && SPELL_DURATION[spell];
+  state.effects.push({...effect, duration: fixed || effect.duration, owner: effect.owner ?? state.resolving?.controller ?? state.active,
+    round: state.round, ...(state.resolving && {from: state.resolving})});
+}
+
+// "Once each cycle" (lista E do autor, 04/11/2026; guia §64): marcas de `roundUses` que só renovam no início do Round do dono.
+// Tags trazem o uid (`A:123:1`), `domain:A` ou `god:A`; a tabela diz quais habilidades de cada carta são por ciclo.
+const CYCLE_CARDS = {
+  '002': ['resonance'], '005': ['diamond-dust'], '006': ['freezing'], '007': ['nebula'], '023': ['untouchable'], '024': ['medusa'], '074': ['escape'],
+  '091': ['shadow'], '097': ['aurora'], '099': ['devotion'], '100': ['resonance'], '101': ['emperors-will'], '102': ['whispers'], '107': ['thrust'],
+  '108': ['advance'], '114': ['insight'], '116': ['pearl'], '117': ['rejection'], '119': ['interdiction'], '120': ['prophecy'], '121': ['retreat'],
+  '123': ['oceanic-thrust'], '125': ['piercing'], '170': ['royal'], '178': ['sovereignty', 'ability'],
+  '187': ['symphony'], '188': ['resonance'], '191': ['slumber'], '195': ['queen'], '196': ['resonance'], '198': ['resonance'], '223': ['ability'], '247': ['resonance'],
+  '361': ['lunar-command'], '371': ['communion'], '380': ['aim'], '407': ['wisdom'], '410': ['supply'], '436': ['accuracy'], '438': ['blessing'],
+  '470': ['ability'], '478': ['crystal'], '493': ['ability'],
+};
+const CYCLE_DOMAIN = ['ability', 'currents', 'crushing', 'drowned'];
+const CYCLE_GOD = ['cosmo-of-hope', 'water-prison', 'offering', 'moonlight', 'bloodlust'];
+export function cycleOwner(tag) {
+  const unit = /(?:^|:)([AB]):(\d{3}):\d+(?::|$)/.exec(tag);
+  if (unit) return CYCLE_CARDS[unit[2]]?.includes(tag.replace(unit[0], '')) ? unit[1] : null;
+  const domain = /(?:^|:)domain:([AB])(?::|$)/.exec(tag);
+  if (domain) return CYCLE_DOMAIN.includes(tag.replace(domain[0], '')) ? domain[1] : null;
+  const god = /^god:([AB]):(.+)$/.exec(tag);
+  return god && CYCLE_GOD.includes(god[2]) ? god[1] : null;
+}
 
 // Destroy (D197) de um Devotee: vai para o Tartarus do Owner.
 // `event`: 'unique_removed' para a saída do guia §63, que move igual mas não é destruição.
@@ -398,25 +433,20 @@ export function endTurn(state, {endOfTurn = [], endOfRound = []} = {}) {
 // D204: gatilhos de fim de Round depois dos de fim de turno e antes do Cleanup.
 // Gatilhos atrasados de carta ("at the end of the round", em `state.delayed`) entram aqui também.
 function roundCheckpoint(state, triggers) {
-  if (state.turnInRound === 1) triggers = [...triggers, ...state.delayed.splice(0), ...hooks.roundEnd.flatMap(fn => fn(state))];
-  if (state.turnInRound === 1 && triggers.length) pushTriggers(state, triggers, () => cleanup(state));
+  triggers = [...triggers, ...state.delayed.splice(0), ...hooks.roundEnd.flatMap(fn => fn(state))];
+  if (triggers.length) pushTriggers(state, triggers, () => cleanup(state));
   else cleanup(state);
 }
 
-// Cleanup: expira "until end of turn"; no 2º turno, também "this round" e "next round" vencidos, e renova
-// o "once each round" (D191). O dano marcado não sai (P04). Depois passa o turno ou o Round.
+// Cleanup de cada Round: expira as durações vencidas (ver addEffect) e renova os limites "once each round".
+// O dano marcado não sai (P04). Depois o outro jogador começa o Round seguinte.
 function cleanup(state) {
-  const last = state.turnInRound === 1;
+  const ended = state.active;
   state.effects = state.effects.filter(e => !(e.duration === 'this_turn'
-    || (last && (e.duration === 'this_round' || (e.duration === 'next_round' && e.round < state.round)))));
-  if (!last) {
-    state.turnInRound = 1;
-    state.active = state.order[1];
-    return;
-  }
-  state.roundUses.clear();
+    || (e.duration === 'this_round' && e.owner === ended)
+    || (e.round < state.round && (e.duration === 'next_round' ? e.owner !== ended : e.duration === 'your_next_round' && e.owner === ended))));
+  for (const tag of [...state.roundUses]) if (!cycleOwner(tag)) state.roundUses.delete(tag);
   emit(state, 'round_end', {});
   state.round++;
-  state.turnInRound = 0;
-  state.active = state.order[0];
+  state.active = other(state, ended);
 }

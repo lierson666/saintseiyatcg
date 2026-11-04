@@ -717,7 +717,7 @@ test('499 Humanity\'s Defiance: +2/+2 e Pierce na rodada; sacrifica um Devotee n
   assert.ok(k.keywordsOf(s, ctx, a).includes('Pierce'));
   endTurn(s); passAll(s);
   assert.equal(s.players.A.battlefield.length, 1);
-  assert.equal(atkOf(s, ctx, s.players.A.battlefield[0]), k.card(ctx, b).atk + 2); // "until end of turn" = fim da rodada (§64)
+  assert.equal(atkOf(s, ctx, s.players.A.battlefield[0]), k.card(ctx, b).atk); // acaba no fim da sua rodada (§64)
 });
 
 test('500 The Eighth Sense: devolve até 2 Devotees exhausted, imortais; perde 5 Soul', () => {

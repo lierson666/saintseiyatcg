@@ -58,7 +58,7 @@ test('três gatilhos simultâneos: APNAP + LIFO (o não ativo resolve primeiro)'
   assert.deepEqual(log, ['b1', 'a2', 'a1']);
 });
 
-test('End Phase: gatilhos de fim de turno antes do checkpoint D204; Cleanup expira this_turn sempre e this_round só no 2º turno', () => {
+test('End Phase: gatilhos de fim de turno antes do checkpoint D204; Cleanup expira this_turn sempre e this_round no Round do dono', () => {
   const s = core(), log = [];
   const t = (controller, name) => ({controller, run: () => log.push(name)});
   startTurn(s);
@@ -68,12 +68,12 @@ test('End Phase: gatilhos de fim de turno antes do checkpoint D204; Cleanup expi
   assert.equal(s.active, 'A', 'End Phase abre janela mesmo sem gatilhos');
   respond(s, 'B', instant(log, 'resposta na End Phase'));
   passAll(s);
-  assert.deepEqual([s.active, s.effects.map(e => e.id)], ['B', ['round']]);
+  assert.deepEqual([s.active, s.effects], ['B', []]);
   startTurn(s);
   endTurn(s, {endOfTurn: [t('B', 'fim do turno')], endOfRound: [t('A', 'fim do Round')]});
   passAll(s);
   assert.deepEqual(log, ['resposta na End Phase', 'fim do turno', 'fim do Round']);
-  assert.deepEqual([s.round, s.active, s.effects], [2, 'A', []]);
+  assert.deepEqual([s.round, s.active, s.effects], [3, 'A', []]);
 });
 
 test('Strike declarado abre janela; Moment do defensor resolve antes do dano', () => {

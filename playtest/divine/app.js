@@ -46,8 +46,8 @@ const stage = $('#stage'), boardRoot = $('#board-root'), overlayRoot = $('#overl
 const GOD_ART = {'god-athena': '../../CARDS/ATHENA/ATHENA.png', 'god-poseidon': '../../CARDS/POSEIDON/POSEIDON.png'};
 
 // Mensagens da engine (internas, em português) viram texto curto para o jogador.
-const WHY = {'G3-005': 'Athena Exclamation needs three Saints with different identities, enough prepared Bases and enough Soul.', D206: 'Sacrifice exactly three of your Devotees, on your turn.', D1: "It's not your turn.", D4: 'Not enough prepared Cosmo Bases.', custo: 'Not enough Latent Cosmo.', P06: 'Wait for the response window to close.',
-  P05: 'A Guardian must be your target.', D22: 'This Devotee already struck this turn.', P04: 'Only a Prepared Devotee can Strike.',
+const WHY = {'G3-005': 'Athena Exclamation needs three Saints with different identities, enough prepared Bases and enough Soul.', D206: 'Sacrifice exactly three of your Devotees, on your round.', D1: "It's not your round.", D4: 'Not enough prepared Cosmo Bases.', custo: 'Not enough Latent Cosmo.', P06: 'Wait for the response window to close.',
+  P05: 'A Guardian must be your target.', D22: 'This Devotee already struck this round.', P04: 'Only a Prepared Devotee can Strike.',
   D52: 'The match is over.', '§63': 'Choose which version of that character to keep.', P01: 'Finish the mulligan first.', D192: 'It must be Prepared to use {T}.', D191: 'Already used this round.', Equip: 'That Devotee cannot wear it.', alvo: 'Choose a legal target.'};
 const why = e => WHY[e.decision] || (e.topic ? `Not in Alpha 0.1: ${e.topic}` : "That can't be done right now.");
 
@@ -106,11 +106,11 @@ function playableReason(key, uid) {
   if (c.kind === 'Spell') {
     const cat = spellCat(uid);
     if (!cat) return 'This Technique or Moment is not playable yet.';
-    if (cat.speed === 'instant' ? !(s.window ? s.window.priority === key : s.active === key && !s.chain.length) : !idleFor(key)) return cat.speed === 'instant' ? 'You need priority to cast a Moment.' : 'Techniques are cast on your turn, with no response pending.';
+    if (cat.speed === 'instant' ? !(s.window ? s.window.priority === key : s.active === key && !s.chain.length) : !idleFor(key)) return cat.speed === 'instant' ? 'You need priority to cast a Moment.' : 'Techniques are cast on your round, with no response pending.';
     const cost = s.window && s.active !== key ? castCost(s, ctx, key, uid, {amount: c0.cost.amount, unit: 'latent'}) : mixed(c.cost); // guia §5: resposta no turno do adversário só Latent; no próprio turno, Base e/ou Latent
     return affordable(key, cost) ? missingTarget(key, uid) : `Needs ${cost.amount} ${cost.unit === 'latent' ? 'Latent' : 'Cosmo (Base and/or Latent)'}.`;
   }
-  if (!idleFor(key)) return s.active !== key ? "It's not your turn." : 'Wait for the response window to close.';
+  if (!idleFor(key)) return s.active !== key ? "It's not your round." : 'Wait for the response window to close.';
   if (c.kind === 'Equipment' && c.global) return affordable(key, mixed(c.cost)) ? null : `Needs ${c.cost.amount} Cosmo (Base and/or Latent).`;
   // Sem Resonant, entra sem portador, pagando só o custo em Base (guia §28, §33).
   return affordable(key, c.cost) ? null : `Needs ${c.cost.amount} prepared Base Cosmo.`;
@@ -118,8 +118,8 @@ function playableReason(key, uid) {
 // D4: uma Base Cosmoble por turno, no próprio turno, com a janela fechada. Motivo em texto para o jogador.
 function baseReason(key, uid) {
   if (!info(uid).cosmoble) return 'This card is not Cosmoble: it cannot become a Cosmo Base.';
-  if (!idleFor(key)) return S().active !== key ? "It's not your turn." : 'Wait for the response window to close.';
-  if (S().players[key].baseTurn === S().turn) return 'You already placed a Cosmo Base this turn.';
+  if (!idleFor(key)) return S().active !== key ? "It's not your round." : 'Wait for the response window to close.';
+  if (S().players[key].baseTurn === S().turn) return 'You already placed a Cosmo Base this round.';
   return null;
 }
 const canBase = (key, uid) => !baseReason(key, uid);
@@ -130,7 +130,7 @@ function hiddenReason(key, uid) {
   if (s.victory || s.setup) return 'The match is not running.';
   if (pending) return 'Answer the pending decision first.';
   const moment = c.kind === 'Spell' && spellCat(uid)?.speed === 'instant', response = !!s.window;
-  if (moment ? !(response ? s.window.priority === key : idleFor(key)) : !idleFor(key)) return moment ? 'You need priority to cast a Moment.' : s.active !== key ? "It's not your turn." : 'Wait for the response window to close.';
+  if (moment ? !(response ? s.window.priority === key : idleFor(key)) : !idleFor(key)) return moment ? 'You need priority to cast a Moment.' : s.active !== key ? "It's not your round." : 'Wait for the response window to close.';
   const self = base.prepared && !response ? 1 : 0, others = readyBases(key) - self, latent = s.players[key].latent, need = x - self;
   const ok = response ? latent >= x : c.kind === 'Devotee' ? others >= need : others + latent >= need;
   return ok ? null : `Needs ${x} ${response ? 'Latent' : c.kind === 'Devotee' ? 'Base Cosmo' : 'Cosmo (Base and/or Latent)'}${self ? ', this Base pays 1' : ''}.`;
@@ -388,15 +388,15 @@ function godActions(key) {
     'god-artemis': [() => moonAwakeningBlock(s, key), () => act({type: 'moonAwakening', key}), `Moon Awakening needs ${MOON_AWAKENING_COST} prepared Bases.`],
   }[d.god] || [() => ultimateBlock(s, ctx, key), () => startExclamation(key), ''];
   const block = ULT[0](), run = ULT[1];
-  const why = {used: 'Ultimate already used this match.', sorcery: 'Ultimate: your turn, with no response pending.', cost: ULT[2] || 'Not enough prepared Bases.', 'only-athena': 'No Ultimate available.', pendente: 'This Ultimate is not available in the playtest yet.'}[block] || (block ? 'Not available now.' : '');
+  const why = {used: 'Ultimate already used this match.', sorcery: 'Ultimate: your round, with no response pending.', cost: ULT[2] || 'Not enough prepared Bases.', 'only-athena': 'No Ultimate available.', pendente: 'This Ultimate is not available in the playtest yet.'}[block] || (block ? 'Not available now.' : '');
   // Bloodlust (Ares): Divine Power ativado, escolhe o Devotee na barra de escolha.
   const blood = d.god === 'god-ares' && mine ? bloodlustBlock(s, ctx, key) : 'only-ares';
   // Divine Command (guia §63, 01/11/2026): {1}{C}, no próprio turno, uma vez por turno; alvo na barra de escolha.
   const cmd = COMMANDS[d.god], cmdWhy = mine ? commandBlock(s, ctx, key) : 'owner';
   return {
-    command: !cmd ? null : {ok: mine && !cmdWhy, why: {sorcery: 'Divine Command: your turn, with no response pending.', used: 'Divine Command already used this turn.', cost: 'Divine Command costs 1 Cosmo (prepared Base or Latent).', target: 'No legal target.', owner: "Only the God's controller uses it."}[cmdWhy] || 'Not available now.',
+    command: !cmd ? null : {ok: mine && !cmdWhy, why: {sorcery: 'Divine Command: your round, with no response pending.', used: 'Divine Command already used this round.', cost: 'Divine Command costs 1 Cosmo (prepared Base or Latent).', target: 'No legal target.', owner: "Only the God's controller uses it."}[cmdWhy] || 'Not available now.',
       run: () => begin('command', key, null, [{key: 'uid', pick: 'command', label: `${godPowers(cards.get(s.gods[key])).find(pw => pw.kind === 'command')?.label || cmd.ability}: choose ${cmd.side === 'friendly' ? 'a Devotee you control' : 'an enemy Devotee'}`}], choice => ({type: 'command', key, choice}))},
-    bloodlust: d.god !== 'god-ares' ? null : {ok: mine && !blood, why: {sorcery: 'Bloodlust: your turn, with no response pending.', used: 'Bloodlust already used this round.', cost: `Bloodlust costs ${BLOODLUST_COST} Cosmo (prepared Base or Latent).`, target: 'You control no Devotee.'}[blood] || 'Not available now.',
+    bloodlust: d.god !== 'god-ares' ? null : {ok: mine && !blood, why: {sorcery: 'Bloodlust: your round, with no response pending.', used: 'Bloodlust already used this round.', cost: `Bloodlust costs ${BLOODLUST_COST} Cosmo (prepared Base or Latent).`, target: 'You control no Devotee.'}[blood] || 'Not available now.',
       run: () => begin('bloodlust', key, null, [{key: 'uid', pick: 'devotee', label: 'Bloodlust: choose a Devotee you control (Prepare it, +1 ATK this round)'}], choice => ({type: 'bloodlust', key, choice}))},
     ultimate: {ok: mine && !block, why: mine ? why : "Only the God's controller uses it.", run},
     judgment: mine && d.judgment && idleFor(key) ? () => begin('judgment', key, null,
@@ -544,7 +544,7 @@ function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
   const statBuffed = (v, base) => (v > base ? 'up' : v < base ? 'down' : '');
   // Dano não tem marcador: o HP impresso já mostra a vida restante, em vermelho.
   const markList = [unit?.training > 0 && token('training', unit.training, `Training|${unit.training} counter${unit.training > 1 ? 's' : ''}: +1 ATK / +1 HP each.`),
-    unit?.seal && token('seal', unit.seal, `Seal|At the start of its owner's turn, it removes one counter and does not Prepare.`),
+    unit?.seal && token('seal', unit.seal, `Seal|At the start of its owner's round, it removes one counter and does not Prepare.`),
     ...(field && c.kind === 'Devotee' ? fadingTokens(s, uid, unit) : [])].filter(Boolean);
   const marks = markList.length ? `<span class="dcard__tokens">${markList.join('')}</span>` : '';
   // Equipamento solto na mesa (Armor sem portador, arma caída): token compacto com arte, nome, bônus e selo EQUIP (autor, 30/10/2026).
@@ -673,7 +673,7 @@ function sanctum(key, side) {
         `Cosmo Base|${ready} of ${p.bases.length} prepared${pooled ? `, ${pooled} burning in your pool` : ''}. Prepared Bases pay card and ability costs. Click a Base on the field to burn it into your pool. Once per round you may place a Cosmoble card as a Base.`, 'data-bank-unit="base"')}
       ${row(`rail__row--latent ${p.latent ? '' : 'is-zero'}`, `<i class="rail__sym rail__sym--latent"></i>${flames}`, 'Latent', `${p.latent}<small>/3</small>`, `Latent Cosmo|${p.latent} of 3 stored. At round end, unused Bases can be stored here.`, 'data-bank-unit="latent"')}
     </div>
-    ${row(`zdeck ${n ? '' : 'is-empty'}`, '<i class="zdeck__back"></i>', 'Deck', n, `Deck|${plural(n, 'card')} left. Each player draws 1 card per turn.`, `data-deck="${key}" style="${sleeveVar(key)}"`)}
+    ${row(`zdeck ${n ? '' : 'is-empty'}`, '<i class="zdeck__back"></i>', 'Deck', n, `Deck|${plural(n, 'card')} left. Each player draws 1 card per round.`, `data-deck="${key}" style="${sleeveVar(key)}"`)}
     ${row('rail__row--hand', '<i class="rail__hand"></i>', 'Hand', p.hand.length, `Hand|${plural(p.hand.length, 'card')}.`)}
     ${row('zpile zpile--tartarus', '<img class="zicon" src="./assets/tartarus.png" alt="">', 'Tartarus', p.tartarus.length, `Tartarus|${plural(p.tartarus.length, 'card')}. Destroyed Devotees go here. Afterlife abilities work from here. Click to view.`, `data-pile="${key}:tartarus"`)}
     ${row('zpile zpile--void', '<img class="zicon" src="./assets/void.png" alt="">', 'Void', p.void.length, `Void|${plural(p.void.length, 'card')}. Exiled cards go here. Click to view.`, `data-pile="${key}:void"`)}
@@ -685,8 +685,8 @@ const resonanceTitle = a => { const m = /^(?:resonance|ressonância)$/i.test(a.n
 function domainUses(key) {
   const s = S(), dom = domainEntry(s, key), mine = key === viewer(), idle = mine && idleFor(key);
   const use = (v6, uid, res) => {
-    let why = !mine ? 'Opponent\u2019s ability.' : !idle ? "Wait for your turn's main phase."
-      : res ? (s.roundUses.has(resonanceTag(s, key, 'activate')) ? 'Already used this turn.' : '') : v6.once && s.roundUses.has(`ability:${uid}`) ? 'Already used this round.' : '';
+    let why = !mine ? 'Opponent\u2019s ability.' : !idle ? "Wait for your round's main phase."
+      : res ? (s.roundUses.has(resonanceTag(s, key, 'activate')) ? 'Already used this round.' : '') : v6.once && s.roundUses.has(`ability:${uid}`) ? 'Already used this round.' : '';
     if (!why && !affordable(key, mixed({amount: v6.cost || 0, unit: 'base'}))) why = `Needs ${v6.cost} Cosmo (Base and/or Latent).`;
     if (!why) try { v6.check?.(s, ctx, key, uid, {}); } catch { why = 'Needs a legal target.'; }
     return {uid, res, name: v6.name, cost: v6.cost || 0, why};
@@ -753,7 +753,7 @@ function cosmoLane(key, side) {
     // Base fica virada (autor, 28/10/2026): o verso para todos; o dono consulta passando o mouse (data-base).
     const face = `<div class="dcard dcard--back dcard--land" ${ctx.objects[b.uid] ? `data-base="${b.uid}"` : ''}><span></span></div>`;
     const pooled = b.prepared && pool.has(b.uid), mine = key === viewer();
-    const tip = !b.prepared ? 'Cosmo Base|Used. Readies at the start of your turn.' : pooled ? 'Cosmo Base|Burning in your pool: your next cost uses it first. Click to take it back.'
+    const tip = !b.prepared ? 'Cosmo Base|Used. Readies at the start of your round.' : pooled ? 'Cosmo Base|Burning in your pool: your next cost uses it first. Click to take it back.'
       : mine ? 'Cosmo Base|Prepared. Click to burn its Cosmo into your pool.' : 'Cosmo Base|Prepared.';
     // Cosmo Oculto (§4A): o dono joga a carta direto da Base pelo selo; brilha quando dá para jogar agora.
     const x = mine && ctx.objects[b.uid] && info(b.uid).hiddenCosmo, why = x && hiddenReason(key, b.uid);
@@ -817,7 +817,7 @@ function phaseBar() {
   if (s.victory || s.setup) return `<div class="phasebar"><div class="phasebar__turn">${esc(phaseText())}</div></div>`;
   const now = PHASES.indexOf(currentPhase(s)), mine = s.active === v;
   return `<div class="phasebar ${mine ? 'is-mine' : 'is-theirs'}" aria-label="${esc(phaseText())}">
-    <div class="phasebar__turn"><strong>${mine ? 'Your turn' : `Opponent's turn`}</strong><small>Round ${s.round} · ${esc(seatName(s.active))}</small><b class="phasebar__now">${PHASES[now] || ''}</b><i class="phasebar__line"><span>Round ${s.round}</span> · <span>${PHASES[now] || ''}</span></i></div>
+    <div class="phasebar__turn"><strong>${mine ? 'Your round' : `Opponent's round`}</strong><small>Round ${s.round} · ${esc(seatName(s.active))}</small><b class="phasebar__now">${PHASES[now] || ''}</b><i class="phasebar__line"><span>Round ${s.round}</span> · <span>${PHASES[now] || ''}</span></i></div>
     <ol class="phasebar__steps">${PHASES.map((p, i) => `<li class="${i < now ? 'done' : i === now ? 'on' : ''}">${p}</li>`).join('')}</ol>
     ${s.window ? `<div class="phasebar__window">${s.chain.length ? `Chain of ${s.chain.length} · ` : ''}Response · ${esc(seatName(s.window.priority))} to act</div>` : ''}
   </div>`;
@@ -842,12 +842,12 @@ function chainArt(c) {
 function command() {
   const s = S(), v = viewer();
   // Botão único estilo Arena (autor, 31/10/2026): o texto diz a próxima ação; azul quando é a sua vez de responder.
-  let label = 'End Turn', state = 'end';
+  let label = 'End Round', state = 'end';
   if (s.victory) { label = 'Match over'; state = 'wait'; }
-  else if (aiControls()) { label = s.active === v ? 'Opponent thinking…' : "Opponent's turn"; state = 'wait'; }
+  else if (aiControls()) { label = s.active === v ? 'Opponent thinking…' : "Opponent's round"; state = 'wait'; }
   else if (s.setup) label = marked.size ? `Return ${marked.size}` : 'Keep Hand';
-  else if (s.window) { label = s.chain.length ? 'Resolve' : s.active !== v && currentPhase(s) === 'End' ? 'Start my turn' : 'Pass'; state = 'respond'; }
-  return `<aside class="command" aria-label="Turn actions">
+  else if (s.window) { label = s.chain.length ? 'Resolve' : s.active !== v && currentPhase(s) === 'End' ? 'Start my round' : 'Pass'; state = 'respond'; }
+  return `<aside class="command" aria-label="Round actions">
     <div class="command__clock">${clockMarkup()}</div>
     ${phaseBar()}
     <button class="action-btn" data-primary data-state="${state}" ${s.victory || aiControls() ? 'disabled' : ''}><span>${esc(label)}</span><i aria-hidden="true">›</i></button>
@@ -861,15 +861,15 @@ function command() {
 // as cartas), a pilha fica aqui (topo primeiro, LIFO D186; APNAP §56) e, com decisão, o painel de trigger ocupa o mesmo lugar.
 let ctrlOpen = false, hintRefs = {};
 const HINTS = {
-  base: ['PLACE A COSMO BASE', 'Once per turn: turn a card from your hand into a Cosmo Base.'],
+  base: ['PLACE A COSMO BASE', 'Once per round: turn a card from your hand into a Cosmo Base.'],
   devotee: ['PLAY A DEVOTEE', 'Pay its cost with your ready Cosmo Bases.'],
   equip: ['EQUIP', 'Attach an Equipment or Cloth to one of your Devotees.'],
-  technique: ['CAST A TECHNIQUE', 'Only on your turn, with the chain empty.'],
+  technique: ['CAST A TECHNIQUE', 'Only on your round, with the chain empty.'],
   moment: ['CAST A MOMENT', 'Now, or later as a response.'],
   strike: ['STRIKE', 'A Prepared Devotee Strikes an enemy Devotee or God.'],
   ability: ['USE AN ABILITY', '{T} and Cosmo abilities on your cards.'],
   ultimate: ['ULTIMATE', "Your God's once-per-match power is ready."],
-  end: ['END TURN', "When you're done."],
+  end: ['END ROUND', "When you're done."],
 };
 function phaseHints() {
   const s = S(), v = viewer(), p = s.players[v], phase = currentPhase(s);
@@ -878,7 +878,7 @@ function phaseHints() {
   if (s.setup) return {title: 'OPENING HAND', note: 'Send any cards to the bottom and draw that many. Once.', refs: {}};
   if (s.window && s.window.priority === v) return {title: 'RESPOND', note: s.active === v ? 'Play a Moment, paid with Base and/or Latent Cosmo, or Pass. When both players pass, the top of the chain resolves.' : 'Play a Moment, paid with Latent Cosmo, or Pass. When both players pass, the top of the chain resolves.', refs: {moment: moments}};
   if (s.active !== v) return {title: `${phase.toUpperCase()} PHASE`, note: moments.length ? 'You can respond with a Moment when you get priority.' : '', refs: {}};
-  if (phase !== 'Main') return {title: `${phase.toUpperCase()} PHASE`, note: {Prepare: 'Your Cosmo Bases and Devotees become Prepared.', Draw: 'You draw 1 card.', End: 'End-of-turn effects resolve.'}[phase], refs: {}};
+  if (phase !== 'Main') return {title: `${phase.toUpperCase()} PHASE`, note: {Prepare: 'Your Cosmo Bases and Devotees become Prepared.', Draw: 'You draw 1 card.', End: 'End-of-round effects resolve.'}[phase], refs: {}};
   const field = p.battlefield.filter(u => ctx.objects[u]);
   return {title: 'MAIN PHASE', note: '', refs: {
     base: p.hand.filter(u => canBase(v, u)).map(u => `.hand [data-uid="${u}"]`),
@@ -903,7 +903,7 @@ function controlPanel() {
   if (!tips && !s.window) return '';
   // Com pilha, ela ocupa o box e a dica encolhe numa linha.
   return `<section class="ctrl ${busy ? 'is-busy' : ''} ${ctrlOpen ? 'is-open' : ''} ${s.window ? 'has-chain' : ''}" aria-label="Control panel">
-    ${tips ? `<button class="ctrl__head" data-ctrl-toggle aria-expanded="${ctrlOpen}"><small>${s.active === viewer() ? 'Your turn' : esc(`${seatName(s.active)}'s turn`)}</small><strong>${esc(h.title)}</strong></button>
+    ${tips ? `<button class="ctrl__head" data-ctrl-toggle aria-expanded="${ctrlOpen}"><small>${s.active === viewer() ? 'Your round' : esc(`${seatName(s.active)}'s turn`)}</small><strong>${esc(h.title)}</strong></button>
       ${h.note ? `<p class="ctrl__note">${inlineMarkup(h.note)}</p>` : ''}${items && !s.window ? `<ul class="ctrl__hints">${items}</ul>` : ''}` : ''}
     ${s.window ? `<div class="priority ctrl__chain"><small>Priority</small><strong>${s.window.priority === viewer() ? 'You' : settings.ai !== 'none' ? 'AI' : `Player ${s.window.priority}`}</strong></div>` : ''}
   </section>`;
@@ -1367,7 +1367,7 @@ const ui = {
     const n = uid => (uid ? info(uid).name : '');
     const t = {card_played: `${e.player} plays ${n(e.uid)}${e.bearer ? ` on ${n(e.bearer)}` : ''}.`, spell_resolved: `${n(e.uid)} resolves.`, ability: `${e.player} uses ${e.name}.`,
       strike_declared: `${e.player}: ${n(e.attacker)} strikes ${e.target?.kind === 'god' ? `God ${e.target.player}` : n(e.target?.uid)}${e.bypass ? ` past Guardian (${e.bypass} ignores Guardian)` : ''}.`, strike_fizzled: `${n(e.attacker)}'s Strike fizzles: attacker or target left the battlefield.`, destroyed: `${n(e.uid)} is destroyed.`, unique_removed: `${n(e.uid)} goes to the Tartarus: only one version of a character (not destroyed).`,
-      pass: `${e.player} passes.`, end_phase: `${e.player} ends the turn.`, equipped: `${n(e.uid)} equipped to ${n(e.bearer)}.`,
+      pass: `${e.player} passes.`, end_phase: `${e.player} ends the round.`, equipped: `${n(e.uid)} equipped to ${n(e.bearer)}.`,
       returned_to_hand: `${n(e.uid)} returns to ${e.player}'s hand (${e.ability}).`,
       trigger: `${e.player}: ${chainLabel({uid: e.uid, controller: e.player, ability: e.ability}).title} triggers.`,
       resolved: `${chainLabel({uid: e.uid, controller: e.player, ability: e.ability}).title}: ${(e.results || []).map(r => `${r.text} on ${String(r.ref).startsWith('god:') ? `God ${r.ref.slice(4)}` : n(r.ref)}`).join(', ')}.`}[e.type];
@@ -1388,7 +1388,7 @@ function lookedHook(events) {
 }
 function logEvent(e) {
   const n = uid => (uid && ctx.objects[uid] ? info(uid).name : '');
-  const t = {turn_start: `Player ${e.player} begins a turn.`, damage: e.dealt || e.prevented || e.absorbed ? `${n(e.uid)}: ${e.dealt} damage${e.prevented ? `, ${e.prevented} prevented` : ''}${e.absorbed ? `, ${e.absorbed} to Armor` : ''}.` : '',
+  const t = {turn_start: `Player ${e.player} begins a round.`, damage: e.dealt || e.prevented || e.absorbed ? `${n(e.uid)}: ${e.dealt} damage${e.prevented ? `, ${e.prevented} prevented` : ''}${e.absorbed ? `, ${e.absorbed} to Armor` : ''}.` : '',
     soul_lost: `God ${e.player} loses ${e.amount} Soul (${e.soul}).`, base_placed: `${e.player} places a Cosmo Base.`, latent_gained: `${e.player} gains ${e.amount} Latent.`,
     awaken_changed: `God ${e.player} ${e.awaken ? 'AWAKENS' : 'leaves Awaken'} (Soul ${e.soul}).`, divine_power: `God ${e.player}: ${e.ability}.`,
     defeat_prevented: `${n(e.uid)} survives with 1 HP (${e.ability}).`, ultimate_announced: `${e.player} announces ${e.ability} (paid ${e.cost} Base${e.soul ? ` and ${e.soul} Soul` : ''}).`,
@@ -1502,15 +1502,15 @@ function cardAbilities(uid) {
   const s = S(), key = owner(uid), c = info(uid), out = [], idle = idleFor(key);
   const ab = c.kind === 'Devotee' && ABILITIES[num(uid)];
   if (ab) out.push({name: ab.name, label: `${ab.name} ({T}, ${ab.cost} Base)`, cost: `{T} · ${ab.cost} Base`,
-    why: !idle ? "Wait for your turn's main phase." : !s.units[uid]?.prepared ? 'Unprepared: it readies at the start of your turn.' : '',
+    why: !idle ? "Wait for your round's main phase." : !s.units[uid]?.prepared ? 'Unprepared: it readies at the start of your round.' : '',
     run: () => begin('activate', key, uid, ABILITY_STEPS[num(uid)] || [], choice => ({type: 'activate', key, uid, choice}))});
   const v6a = entryOf(ctx, uid)?.activate; // habilidade ativada V6 (Devotee ou Equipment)
   if (v6a) out.push({name: v6a.name, label: `${v6a.name}${v6a.tap === false ? '' : ' ({T}'}${v6a.cost ? `${v6a.tap === false ? ' (' : ', '}${v6a.cost} Base)` : v6a.tap === false ? '' : ')'}`,
     cost: [v6a.tap === false ? '' : '{T}', v6a.cost ? `${v6a.cost} Base` : ''].filter(Boolean).join(' · '),
     fast: v6a.speed === 'moment' && Boolean(s.window), // guia §56: velocidade de Moment responde na janela e paga como Moment
-    why: v6a.speed === 'moment' && s.window ? (s.window.priority !== key ? 'You need priority.' : v6a.tap !== false && !s.units[uid]?.prepared ? 'Unprepared: it readies at the start of your turn.'
+    why: v6a.speed === 'moment' && s.window ? (s.window.priority !== key ? 'You need priority.' : v6a.tap !== false && !s.units[uid]?.prepared ? 'Unprepared: it readies at the start of your round.'
       : v6a.once && s.roundUses.has(`ability:${uid}`) ? 'Already used this round.' : (s.active === key ? readyBases(key) + s.players[key].latent : s.players[key].latent) < (v6a.cost || 0) ? `Needs ${v6a.cost} ${s.active === key ? 'Cosmo (Base and/or Latent)' : 'Latent'}.` : '')
-      : !idle ? "Wait for your turn's main phase." : v6a.tap !== false && !s.units[uid]?.prepared ? 'Unprepared: it readies at the start of your turn.'
+      : !idle ? "Wait for your round's main phase." : v6a.tap !== false && !s.units[uid]?.prepared ? 'Unprepared: it readies at the start of your round.'
       : v6a.once && s.roundUses.has(`ability:${uid}`) ? 'Already used this round.' : '',
     run: () => act({type: 'activate', key, uid, choice: {}})});
   return out;
@@ -1519,7 +1519,7 @@ function cardAbilities(uid) {
 function fieldActions(uid) {
   const s = S(), key = owner(uid), c = info(uid), idle = idleFor(key), items = [];
   if (idle && c.kind === 'Devotee' && strikeTargets(s, ctx, uid).length) items.push({label: 'Strike', run: () => startStrike(uid)});
-  for (const a of cardAbilities(uid)) items.push({label: `${a.name}${/\d/.test(a.cost || '') ? ` (${a.cost.replace(/\{T\}( · )?/, '')})` : ''}`, run: a.run, why: a.why || (idle || a.fast ? '' : "Wait for your turn's main phase.")});
+  for (const a of cardAbilities(uid)) items.push({label: `${a.name}${/\d/.test(a.cost || '') ? ` (${a.cost.replace(/\{T\}( · )?/, '')})` : ''}`, run: a.run, why: a.why || (idle || a.fast ? '' : "Wait for your round's main phase.")});
   if (idle && c.kind === 'Equipment' && !c.global && !ctx.attached[uid]) items.push({label: `Equip (${c.equip?.amount ?? c.cost.amount})`, run: () => begin('reequip', key, uid, [{key: 'bearer', pick: c.armor ? 'wearer' : 'devotee', armor: uid, label: `Equip ${c.name} to which Devotee?`}], choice => ({type: 'reequip', key, uid, choice}))});
   // Armor vestida pode passar a outro Devotee seu: AÇÃO + Equip impresso (guia §28).
   else if (idle && c.armor && ctx.attached[uid] && c.equip) items.push({label: `Move (Equip ${c.equip.amount})`, run: () => begin('reequip', key, uid, [{key: 'bearer', pick: 'wearer', armor: uid, label: `Move ${c.name} to which Devotee?`}], choice => ({type: 'reequip', key, uid, choice}))});
@@ -1767,7 +1767,7 @@ function trailSource(uid, name, self) {
   const label = i >= 0 ? resonanceTitle((([n, ...r]) => ({name: n, text: r.join(' — ')}))(String(displayCard(f).habilidades_en?.[i] || f.habilidades_en[i]).split(' — '))).name : name;
   return {who, label: label && label.toLowerCase() !== String(who).toLowerCase() ? label : '', open: ctx.objects[uid] && uid !== self ? uid : ''};
 }
-const TRAIL_TIME = {this_round: 'Until end of round', next_round: 'Until end of next round', this_strike: 'This Strike', until_next_turn: 'Until your next turn'};
+const TRAIL_TIME = {this_turn: 'This round', this_round: 'Until the end of your round', next_round: 'Until the end of its next round', your_next_round: 'Until the end of your next round', this_strike: 'This Strike', until_next_turn: 'Until your next round'};
 const TRAIL_STATUS = {noStrike: "Can't Strike", noGodStrike: "Can't Strike a God", noPrepare: "Doesn't prepare", noAbilities: 'No activated abilities', save: 'Survives the next defeat'};
 function statTrail(uid) {
   const s = S(), sign = n => (n ? (n > 0 ? `+${n}` : `${n}`) : '');
@@ -1901,7 +1901,7 @@ function showPile(key, zone) {
   document.body.append(box);
 }
 // §40: botão de Afterlife na carta do seu Tartarus. Desabilitado mostra o motivo.
-const AFTERLIFE_WHY = {chain: 'Already on the stack.', timing: 'You need priority or an empty stack on your turn.', cost: 'Not enough Cosmo. In response, pay with Latent only.', target: 'No legal target.'};
+const AFTERLIFE_WHY = {chain: 'Already on the stack.', timing: 'You need priority or an empty stack on your round.', cost: 'Not enough Cosmo. In response, pay with Latent only.', target: 'No legal target.'};
 function afterlifeButton(key, zone, uid) {
   const ability = zone === 'tartarus' && key === viewer() && AFTERLIFE[ctx.objects[uid]?.cardId];
   if (!ability) return '';
@@ -2253,7 +2253,7 @@ function applyDemo(kind) {
   }
   s.players.A.soul = 9; s.players.B.soul = 21; // 9: paga a taxa de 8 da Exclamation (3 + 3 + 2)
   s.players.A.latent = 3;
-  s.round = 7; s.turn = 13; s.players.A.ownTurns = 7; s.players.B.ownTurns = 6;
+  s.round = 13; s.turn = 13; s.players.A.ownTurns = 7; s.players.B.ownTurns = 6;
   runCheckpoint(s);
   clockStartTurn(clock, s.active, now());
   const tag = document.createElement('div');
@@ -2276,10 +2276,10 @@ function poseidonDemo(kind) {
     while (p.hand.length < 5) p.hand.push(p.deck.shift());
   }
   s.players.B.soul = 4; s.players.B.latent = 3; s.players.A.soul = 18;
-  // startTurn conta o turno e o turno próprio de quem começa: Round 6, A no 11º turno ou B no 12º.
+  // startTurn conta o Round e o turno próprio de quem começa: A no Round 11 ou B no 12.
   const flood = kind === 'great-flood';
-  s.round = 6; s.turn = flood ? 11 : 10; s.players.A.ownTurns = flood ? 6 : 5; s.players.B.ownTurns = 5;
-  if (flood) { s.active = 'B'; s.turnInRound = 1; }
+  s.round = flood ? 11 : 10; s.turn = flood ? 11 : 10; s.players.A.ownTurns = flood ? 6 : 5; s.players.B.ownTurns = 5;
+  if (flood) { s.active = 'B'; }
   startTurn(s);
   runCheckpoint(s);
   clockStartTurn(clock, s.active, now());

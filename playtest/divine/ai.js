@@ -129,7 +129,7 @@ export function createAI(h) {
     const tax = trio => trio.reduce((n, u) => n + (/Bronze Saint/.test(h.info(u).type) ? 3 : /Silver Saint/.test(h.info(u).type) ? 2 : 0), 0);
     const trio = COMBO(saints, 3).filter(t => !h.ultimateBlock(key, t) && tax(t) < s.players[key].soul).sort((a, b) => loss(b) - loss(a))[0];
     const foe = enemyOf(key);
-    if (!trio || !(loss(trio) >= s.players[foe].soul || s.round >= 6)) return null;
+    if (!trio || !(loss(trio) >= s.players[foe].soul || s.round >= 12)) return null;
     return {id, must: true, run: () => h.announceExclamation(key, trio)};
   }
   // Divine Judgment (D206): no último Round do prazo, paga com os 3 Devotees mais baratos. easy não se defende.

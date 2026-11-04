@@ -123,7 +123,7 @@ export function createDirector({ui, getFx, settings}) {
   const pool = {A: 0, B: 0}; // Cosmo pago e ainda não entregue a uma carta
   const handlers = {
     async turn_start(e) { if (ui.isViewer(e.player)) sound('receber_turno'); pool.A = pool.B = 0; ui.clearPool(); // o que sobrou na pool volta sem perda
-      await ui.banner(ui.isViewer(e.player) ? 'Your turn' : `${ui.seatName(e.player)}'s turn`, e.player, t(900)); },
+      await ui.banner(ui.isViewer(e.player) ? 'Your round' : `${ui.seatName(e.player)}'s round`, e.player, t(900)); },
     async draw(e) { if (!settings.skipDraws && !e.opening) await ui.flyCard(e.uid, ui.deckRect(e.player), ui.handRect(e.player), t(220), !ui.isViewer(e.player)); },
     async mulligan() {},
     async base_placed(e) {

@@ -69,9 +69,9 @@ function distribute(s, c, key, ability, total) {
 }
 
 // "Cannot be defeated until the end of your next turn" (500): efeito 'save' re-armado a cada uso (mantém o `round` original).
-// pendente: ao salvar, o dano fica em HP − 1 (convenção de Moonlight Protection); 'next_round' aproxima "end of your next turn".
+// pendente: ao salvar, o dano fica em HP − 1 (convenção de Moonlight Protection); "until the end of your next round".
 function immortal(s, c, uid) {
-  k.addEffect(s, {kind: 'save', target: uid, anyDamage: true, duration: 'next_round', onSave: st => {
+  k.addEffect(s, {kind: 'save', target: uid, anyDamage: true, duration: 'your_next_round', onSave: st => {
     if (st.units[uid]) st.units[uid].damage = Math.max(0, k.hpOf(st, c, uid) - 1);
     st.effects.push(eff);
   }});
