@@ -24,6 +24,8 @@ import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decis
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
 import {createDirector} from './director.js?v=20261104-anim2';
 import {createPixelFx, animFor} from './pixel-vfx.js?v=20261104-anim2';
+import {createComposer, withCompositions} from '../../shared/vfx/composer.js?v=20261104-vfx1';
+import {startCardFx} from '../../shared/vfx/card-mount.js?v=20261104-vfx1';
 import {createAI} from './ai.js?v=14';
 import {findDeck} from '../deck-store.js';
 import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-face3';
@@ -463,6 +465,8 @@ const forgeArt = file => lightArt(FORGE_ART + file);
 const BOARD_TOKENS = new URLSearchParams(location.search).get('board') !== 'classic';
 const CARD_FACTIONS = new Set(['athena', 'poseidon', 'hades', 'ares', 'artemis']);
 const cardAnims = await fetch('../../data/card-animations.json', {cache: 'no-cache'}).then(r => (r.ok ? r.json() : {})).catch(() => ({}));
+// VFX Forge V3: shaders, Lottie e composições. Só apresentação; sem efeito escolhido o Pixi nem é baixado.
+const vfxStudio = await fetch('../../data/vfx-studio.json', {cache: 'no-cache'}).then(r => (r.ok ? r.json() : {})).catch(() => ({}));
 const FORGE = new Map((await fetch(`${FORGE_ART}cards.json`).then(r => (r.ok ? r.json() : {cartas: []})).catch(() => ({cartas: []}))).cartas.map(c => [c.id, c]));
 useGodPortraits(FORGE.values()); // avatar do Deus nas placas = rosto da placa do God (rank.js)
 // Item da cadeia em texto de jogador: carta de origem, nome da habilidade, a linha impressa dela e o alvo.
@@ -546,7 +550,7 @@ function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
   if (forge && field && !size && c.kind === 'Equipment' && BOARD_TOKENS) {
     const bonus = armorBonusText({...forge, ...printedBonusFields(forge)}), equip = forge.equipar_custo_outros ?? forge.equipar_custo;
     return `<div class="${cls} dcard--board dcard--gear"${facAttr} data-uid="${uid}" tabindex="0" aria-label="${esc(c.name)}, no bearer${bonus ? `, ${bonus}` : ''}">
-      <div class="btok ${!forge.ilustracao ? 'is-noart' : ''}" style="${tokenArt(forge)}"><span class="btok__name">${esc(c.name)}</span>
+      <div class="btok ${!forge.ilustracao ? 'is-noart' : ''}" data-vfx-card="${esc(forge.id)}" style="${tokenArt(forge)}"><span class="btok__name">${esc(c.name)}</span>
         ${bonus ? `<span class="btok__band">${esc(bonus)}</span>` : ''}${equip != null && !c.global ? `<b class="btok__equip" title="Equip ${equip}"><small>EQUIP</small>${equip}</b>` : ''}</div></div>`;
   }
   // Token (Moon Spirit, Forest Guardian…): sem projeto no Forge; entra no mesmo formato de mesa, com o símbolo da facção do God
@@ -563,7 +567,7 @@ function cardFace(uid, {field = false, hidden = false, size = ''} = {}) {
     // HP: Athena tem gem_resistance; as outras facções usam gem_soul (CARD-TEMPLATE/pieces.json).
     const gem = (kind, v, trend) => `<b class="btok__stat btok__stat--${kind}" data-trend="${trend}" style="--gem:url('../../CARD-TEMPLATE/${fac}/gem_${kind === 'atk' ? 'power' : fac === 'athena' ? 'resistance' : 'soul'}.png')">${v}</b>`;
     return `<div class="${cls} dcard--board"${facAttr} data-uid="${uid}" tabindex="0" aria-label="${esc(c.name)}, ATK ${atk}, HP ${hp - dmg} of ${hp}">
-      <div class="btok ${!forge.ilustracao ? 'is-noart' : fr?.w ? 'is-framed' : ''}" style="${art}"><span class="btok__name">${esc(c.name)}</span>
+      <div class="btok ${!forge.ilustracao ? 'is-noart' : fr?.w ? 'is-framed' : ''}" data-vfx-card="${esc(forge.id)}" style="${art}"><span class="btok__name">${esc(c.name)}</span>
         ${gem('atk', atk, statBuffed(atk, c.atk))}${gem('hp', hp - dmg, dmg ? 'down' : statBuffed(hp, c.hp))}</div>${renderKeywordIcons(kws, markList)}</div>`;
   }
   if (forge) {
@@ -1251,8 +1255,10 @@ function syncZoom() {
 // ---------- Adaptador do DOM para o orquestrador ----------
 
 const rectOf = el => (el ? el.getBoundingClientRect() : null);
+const rawPixel = createPixelFx(stage, {flashes: () => !settings.reduceFlashes, tuning: () => cardAnims.efeitos});
+let vfxComposer = null, cardFx = null;
 const ui = {
-  pixel: createPixelFx(stage, {flashes: () => !settings.reduceFlashes, tuning: () => cardAnims.efeitos}),
+  pixel: withCompositions(rawPixel, () => (vfxComposer ??= createComposer({stage, pixel: rawPixel, studio: () => vfxStudio, quality: () => settings.quality, reduced: () => !!settings.reduceMotion}))),
   // Animação escolhida no Star Hill ou no Card Forge. `own`: só a da carta ou da facção, sem o padrão do jogo.
   animOf(kind, ref, ability = '', own = false) {
     const {id} = voicesOf(ref), card = FORGE.get(id);
@@ -1552,7 +1558,7 @@ overlayRoot.addEventListener('change', e => {
   if (key === 'resolution') window.ssStage?.set(settings.resolution); // palco 16:9 (shared/stage-fit.js)
   if (key === 'cardText' || key === 'cardSize') window.ssStage?.a11y(); // acessibilidade das cartas (shared/stage-fit.js)
   if (key === 'lang') window.ssI18n?.set(settings.lang); // idioma PT-BR/EN (shared/i18n.js)
-  if (key === 'quality') scene?.setQuality(settings.quality);
+  if (key === 'quality') { scene?.setQuality(settings.quality); cardFx?.setQuality(settings.quality); }
   if (key === 'theme') { scene?.setTheme(settings.theme); stage.dataset.theme = settings.theme; }
   if (key === 'reduceFlashes' && scene) scene.reduceFlashes = settings.reduceFlashes;
   if (key === 'godB' || key === 'ai') { settingsOpen = false; return newMatch(); }
@@ -2717,7 +2723,8 @@ async function init() {
   scene = await createScene($('#arena'), {quality: settings.quality, theme: settings.theme, reduceFlashes: settings.reduceFlashes});
   stage.classList.toggle('no-webgl', !scene);
   if (scene && !settings.reduceMotion) ui.pixel.preload();
-  window.__divine = {get state() { return S(); }, get ctx() { return ctx; }, get scene() { return scene; }, get clock() { return clock; }, present: (from) => present({}, null, from), settings}; // inspeção no QA
+  if (Object.keys(vfxStudio.cartas || {}).length) cardFx = startCardFx({quality: settings.quality, reduced: !!settings.reduceMotion, data: vfxStudio, card: id => FORGE.get(id), context: el => (el.closest('#inspector, .dcard--big, .dcard--lg') ? 'inspecao' : el.closest('.dcard') ? 'idle' : null)});
+  window.__divine = {vfx: {play: (id, rect) => ui.pixel.play(id, rect), stats: () => cardFx?.stats() ?? null}, get state() { return S(); }, get ctx() { return ctx; }, get scene() { return scene; }, get clock() { return clock; }, present: (from) => present({}, null, from), settings}; // inspeção no QA
 }
 // Celular: no primeiro toque, tela cheia onde o navegador deixa (Android). Joga em pé (portrait.css) ou deitado (mobile.css), sem travar.
 if (matchMedia('(pointer: coarse)').matches) addEventListener('pointerdown', () => {

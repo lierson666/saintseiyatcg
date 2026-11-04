@@ -572,7 +572,7 @@ def save_card_anim(body, atomic_write, root=ROOT):
         if set(body) - {'id', 'linhas', *ANIM_MOMENTS} or not isinstance(body.get('linhas'), list):
             raise ValueError('Animação inválida.')
         chosen = [*(body.get(k) for k in ANIM_MOMENTS), *body['linhas']]
-        if any(v is not None and v is not False and v not in ANIM_EFFECTS for v in chosen):  # False: sem animação de propósito
+        if any(v is not None and v is not False and v not in ANIM_EFFECTS and not NEW_FX.fullmatch(str(v)) for v in chosen):  # False: sem animação de propósito
             raise ValueError('Efeito inválido.')
         entry = {k: body[k] for k in ANIM_MOMENTS if body.get(k) is not None}
         lines = body['linhas']
@@ -584,6 +584,87 @@ def save_card_anim(body, atomic_write, root=ROOT):
             anims.pop(card, None)
     atomic_write(path, (json.dumps(anims, ensure_ascii=False, indent=2, sort_keys=True) + '\n').encode('utf-8'))
     return anims
+
+
+# VFX Forge V3: shaders, Lottie e composições (shared/vfx/). Só apresentação; o id da carta é o vínculo, nunca o nome.
+VFX_STUDIO = 'data/vfx-studio.json'
+NEW_FX = re.compile(r'(shader|lottie|comp):[a-z0-9-]{1,60}')
+SAFE_ID = re.compile(r'[a-z0-9-]{1,60}')
+LAYER_TYPES = ('carta', 'camera', 'shader', 'particulas', 'lottie', 'audio', 'ui')
+LAYER_NUMBERS = {'inicio': (0, 6000), 'duracao': (1, 6000), 'x': (-800, 800), 'y': (-800, 800), 'escala': (0.1, 4), 'rotacao': (-360, 360),
+                 'opacidade': (0, 1), 'forca': (0, 1), 'velocidade': (0.1, 4), 'volume': (0, 1)}
+LAYER_TEXT = {'shader': SAFE_ID, 'lottie': SAFE_ID, 'efeito': re.compile(r'[a-z0-9-]{1,60}'), 'alvo': re.compile(r'carta|mesa'),
+              'cor': re.compile(r'#[0-9a-fA-F]{6}'), 'easing': re.compile(r'linear|ease|ease-in|ease-out|ease-in-out'),
+              'som': re.compile(r'[A-Za-z0-9_./-]{1,200}\.(ogg|mp3|wav|m4a)')}
+
+
+def _number(value, low, high):
+    return not isinstance(value, bool) and isinstance(value, (int, float)) and low <= value <= high
+
+
+def _vfx_card(value):
+    if not isinstance(value, dict) or set(value) - {'idle', 'inspecao', 'holo', 'forca', 'velocidade', 'cor'}:
+        raise ValueError('Efeito de carta inválido.')
+    for key in ('idle', 'inspecao', 'holo'):
+        if value.get(key) is not None and not (isinstance(value[key], str) and SAFE_ID.fullmatch(value[key])):
+            raise ValueError('Efeito de carta inválido.')
+    if 'forca' in value and not _number(value['forca'], 0, 1) or 'velocidade' in value and not _number(value['velocidade'], 0.1, 4):
+        raise ValueError('Efeito de carta inválido.')
+    if value.get('cor') is not None and not (isinstance(value['cor'], str) and LAYER_TEXT['cor'].fullmatch(value['cor'])):
+        raise ValueError('Cor inválida.')
+    return {k: v for k, v in value.items() if v is not None}
+
+
+def _vfx_composition(value):
+    if not isinstance(value, dict) or set(value) - {'nome', 'faccao', 'camadas'} or not isinstance(value.get('nome'), str) or not 0 < len(value['nome']) <= 60:
+        raise ValueError('Composição inválida.')
+    layers = value.get('camadas')
+    if not isinstance(layers, list) or len(layers) > 24:
+        raise ValueError('Composição inválida.')
+    for layer in layers:
+        if not isinstance(layer, dict) or layer.get('tipo') not in LAYER_TYPES or not {'inicio', 'duracao'} <= set(layer):
+            raise ValueError('Camada inválida.')
+        for key, item in layer.items():
+            if key == 'tipo':
+                continue
+            if key == 'ativa' or key == 'loop':
+                ok = isinstance(item, bool)
+            elif key in LAYER_NUMBERS:
+                ok = _number(item, *LAYER_NUMBERS[key])
+            else:
+                ok = key in LAYER_TEXT and isinstance(item, str) and LAYER_TEXT[key].fullmatch(item)
+            if not ok:
+                raise ValueError(f'Camada inválida: {key}.')
+    return value
+
+
+def save_vfx_studio(body, atomic_write, root=ROOT):
+    """Uma alteração por vez: {tipo: carta|raridade|composicao, id, valor}. valor null tira a entrada."""
+    kind, key, value = body.get('tipo'), body.get('id'), body.get('valor')
+    path = root / VFX_STUDIO
+    data = json.loads(path.read_text(encoding='utf-8')) if path.exists() else {'versao': 1, 'raridades': {}, 'cartas': {}, 'composicoes': {}}
+    if kind == 'raridade':
+        known = {card.get('raridade') for card in json.loads((root / 'data/cards.json').read_text(encoding='utf-8'))['cartas']}
+        if key not in known:  # o vínculo nunca cria raridade nova
+            raise ValueError('Raridade desconhecida.')
+        if value is not None and not (isinstance(value, str) and SAFE_ID.fullmatch(value)):
+            raise ValueError('Holográfico inválido.')
+        group = 'raridades'
+    elif kind == 'carta' and isinstance(key, str) and SAFE_ID.fullmatch(key):
+        value = _vfx_card(value) if value is not None else None
+        value = value or None
+        group = 'cartas'
+    elif kind == 'composicao' and isinstance(key, str) and SAFE_ID.fullmatch(key):
+        value = _vfx_composition(value) if value is not None else None
+        group = 'composicoes'
+    else:
+        raise ValueError('Pedido de VFX inválido.')
+    if value is None:
+        data[group].pop(key, None)
+    else:
+        data[group][key] = value
+    atomic_write(path, (json.dumps(data, ensure_ascii=False, indent=2) + '\n').encode('utf-8'))
+    return data
 
 
 def save_telas(body, atomic_write, root=ROOT):
@@ -633,6 +714,8 @@ def post(handler, path, raw, atomic_write):
             return handler.reply(200, {'vozes': save_card_voice(body, atomic_write)})
         if path == '/api/star-hill/card-anim':
             return handler.reply(200, {'animacoes': save_card_anim(body, atomic_write)})
+        if path == '/api/star-hill/vfx-studio':
+            return handler.reply(200, {'studio': save_vfx_studio(body, atomic_write)})
         if path == '/api/star-hill/som-biblioteca':
             return handler.reply(200, import_library_sound(body))
         if path.startswith('/api/star-hill/motor/'):

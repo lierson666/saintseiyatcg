@@ -158,3 +158,9 @@ small.publish-result{color:#8fe3a8;font-weight:600}
 .an-row.is-off>:not(.tl-switch):not(b){opacity:.45}
 .an-cards{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0;max-height:200px;overflow:auto}
 .an-cards button[aria-pressed=true]{color:var(--gold);border-color:var(--gold)}
+/* VFX Forge V3: Animation Composer e Living Cards (animacoes-composer.js) */
+.cx-bar-top{display:flex;flex-wrap:wrap;gap:12px;align-items:end;margin-bottom:12px}.cx-bar-top .tl-field{flex:1 1 180px}.cx-stage{position:relative;height:220px;margin-bottom:14px;overflow:hidden;border:1px solid var(--line);border-radius:8px}
+.cx-ruler{position:relative;height:18px;font-size:.72rem;color:var(--muted);margin-bottom:4px}.cx-ruler span{position:absolute;transform:translateX(-50%)}.cx-ruler span:first-child{transform:none}.cx-ruler span:last-child{transform:translateX(-100%)}
+.cx-layer{padding:8px 0;border-top:1px solid var(--line)}.cx-layer.is-off{opacity:.5}.cx-track{position:relative;height:24px;background:var(--raised);border-radius:4px;overflow:hidden}.cx-bar{position:absolute;top:0;bottom:0;display:block;padding:0 6px;overflow:hidden;font-size:.72rem;font-weight:500;line-height:24px;white-space:nowrap;color:var(--night);background:var(--gold);border-radius:4px}
+.cx-params{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:end;margin-top:8px;font-size:.8rem;color:var(--muted)}.cx-params label{display:grid;gap:3px}.cx-params input[type=number]{width:74px}.cx-params select{max-width:170px}.cx-params input,.cx-params select{min-height:32px;box-sizing:border-box}.cx-wide{flex:1 1 220px}
+.cx-living{display:grid;grid-template-columns:minmax(180px,260px) 1fr;gap:18px;margin-bottom:14px}.cx-fields{display:grid;gap:10px;align-content:start}.cx-presets{display:flex;flex-wrap:wrap;gap:6px}@media(max-width:700px){.cx-living{grid-template-columns:1fr}}

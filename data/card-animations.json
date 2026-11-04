@@ -267,5 +267,10 @@
   "poseidon-v6-097": {
     "golpe": "ice",
     "linhas": []
+  },
+  "poseidon-v6-180": {
+    "linhas": [
+      "comp:great-flood"
+    ]
   }
 }

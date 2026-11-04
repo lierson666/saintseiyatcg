@@ -6,6 +6,7 @@ import {canonIndex, validateDeck, colorErrors, splashCount, DECK_SIZE, COPY_LIMI
 import {spellCategory} from './engine-v3/core.js';
 import {ARMOR_FAMILY, EQUIPMENT_SUBTYPES, belongsToEquipmentGroup, hasSubtype} from '../shared/equipment-types.js?v=20261102-escala1';
 import {renderLiveCard, renderCardText, fullSizePieces} from '../shared/live-card.js?v=20261102-escala1';
+import {startCardFx} from '../shared/vfx/card-mount.js?v=20261104-vfx1';
 import {printedEquipmentBonuses, signedBonus} from '../shared/card-visual-values.js';
 import {displayCard, typeWord} from '../shared/card-i18n.js?v=20261031-kw1';
 import {unlock, playMusic, setVolume, volume} from './audio.js?v=20261102-voz4';
@@ -862,6 +863,8 @@ async function init() {
     get(`${ART}cards.json`).catch(() => ({cartas: []})), get('../data/alpha-0.1/decks-preview.json').catch(() => ({decks: []})), get('../data/alpha-0.1/decks-competitivos.json').catch(() => ({decks: []})), get('../data/alpha-0.1/decks-ultra.json').catch(() => ({decks: []})), get('../data/alpha-0.1/decks-hiper.json').catch(() => ({decks: []}))]);
   cards = loadCanon(canon); index = canonIndex(canon);
   forge = new Map(art.cartas.map(c => [c.id, c]));
+  // Coleção: holográfico da raridade com o cursor ou o toque em cima (VFX Forge V3). Só apresentação.
+  fetch('../data/vfx-studio.json', {cache: 'no-cache'}).then(r => (r.ok ? r.json() : null)).then(studio => { if (studio) startCardFx({quality: matchMedia('(pointer: coarse)').matches ? 'medium' : 'high', data: studio, card: id => forge.get(id), context: el => (el.closest('.lb-big') ? 'inspecao' : el.closest('.lb-card') ? 'colecao' : null)}); }).catch(() => {});
   useGodPortraits(art.cartas);
   addPreviewCards(cards, index, art.cartas);
   presets = [...deckData.decks, ...previewDecks.decks, ...compDecks.decks, ...ultraDecks.decks, ...hiperDecks.decks];

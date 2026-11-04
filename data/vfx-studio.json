@@ -1,0 +1,132 @@
+{
+  "versao": 1,
+  "raridades": {
+    "Common": "common-shine",
+    "Uncommon": "rare-foil",
+    "Legendary": "mythic-cosmic",
+    "Divine": "divine-holo"
+  },
+  "cartas": {},
+  "composicoes": {
+    "great-flood": {
+      "nome": "Great Flood",
+      "faccao": "poseidon",
+      "camadas": [
+        {
+          "tipo": "carta",
+          "inicio": 0,
+          "duracao": 900,
+          "y": -24,
+          "escala": 1.12,
+          "easing": "ease-out"
+        },
+        {
+          "tipo": "camera",
+          "inicio": 200,
+          "duracao": 2600,
+          "escala": 1.06,
+          "easing": "ease-in-out"
+        },
+        {
+          "tipo": "shader",
+          "inicio": 500,
+          "duracao": 2200,
+          "shader": "cosmic-aura",
+          "alvo": "carta",
+          "cor": "#6fc8ff",
+          "forca": 0.9
+        },
+        {
+          "tipo": "shader",
+          "inicio": 800,
+          "duracao": 2000,
+          "shader": "water",
+          "alvo": "mesa",
+          "cor": "#6fc8ff",
+          "forca": 0.7
+        },
+        {
+          "tipo": "particulas",
+          "inicio": 900,
+          "duracao": 1200,
+          "efeito": "bubbles",
+          "cor": "#6fc8ff",
+          "escala": 1.2
+        },
+        {
+          "tipo": "ui",
+          "inicio": 1500,
+          "duracao": 900,
+          "alvo": "mesa",
+          "cor": "#6fc8ff",
+          "opacidade": 0.28
+        }
+      ]
+    },
+    "divine-entrance": {
+      "nome": "Entrada divina",
+      "faccao": "athena",
+      "camadas": [
+        {
+          "tipo": "carta",
+          "inicio": 0,
+          "duracao": 800,
+          "escala": 1.1,
+          "easing": "ease-out"
+        },
+        {
+          "tipo": "shader",
+          "inicio": 100,
+          "duracao": 1400,
+          "shader": "divine-light",
+          "alvo": "carta",
+          "cor": "#ffe7a3",
+          "forca": 0.9
+        },
+        {
+          "tipo": "lottie",
+          "inicio": 200,
+          "duracao": 1200,
+          "lottie": "reward-burst",
+          "alvo": "carta",
+          "loop": false
+        },
+        {
+          "tipo": "particulas",
+          "inicio": 300,
+          "duracao": 900,
+          "efeito": "light",
+          "cor": "#ffe7a3",
+          "escala": 1
+        }
+      ]
+    },
+    "card-advance": {
+      "nome": "Carta avança",
+      "camadas": [
+        {
+          "tipo": "carta",
+          "inicio": 0,
+          "duracao": 700,
+          "y": -28,
+          "escala": 1.1,
+          "easing": "ease-out"
+        }
+      ]
+    },
+    "card-recoil": {
+      "nome": "Carta recua",
+      "camadas": [
+        {
+          "tipo": "carta",
+          "inicio": 0,
+          "duracao": 500,
+          "y": 18,
+          "escala": 0.94,
+          "rotacao": -3,
+          "easing": "ease-in-out"
+        }
+      ]
+    }
+  }
+}
