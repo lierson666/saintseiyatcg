@@ -223,3 +223,6 @@ form > fieldset:not([data-tab="Informações"]) > legend { display: none; }
 .ap .hint { margin: 0; }
 .ap .row { position: sticky; bottom: -1px; display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 6px; padding: 8px 0; background: var(--panel); }
 @media (max-width: 760px) { .ap-grid { grid-template-columns: minmax(0, 1fr); } .ap-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.ap-armor-actions { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 6px; }
+.ap-armor-refs { display: flex; flex-wrap: wrap; gap: 6px; }
+.ap-armor-refs img { display: block; width: 84px; height: 112px; object-fit: contain; background: #0c0b10; border: 1px solid var(--line); border-radius: 4px; }

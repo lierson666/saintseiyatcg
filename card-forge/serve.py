@@ -12,6 +12,7 @@ Endpoints (só 127.0.0.1):
   GET  /api/boosters          lista os ids de pacote com arte em playtest/assets/boosters/
   POST /api/booster/<id>      WEBP/PNG grava a arte de fundo do pacote em playtest/assets/boosters/<id>.webp
   POST /api/booster-logo/<id> WEBP/PNG grava o logo da edição do pacote em playtest/assets/boosters/logo/<id>.webp
+  GET/POST /api/armor-forge…  armaduras: projetos, versões, lock, vínculos e imagens (ver armor_forge.py)
   POST /api/translate         {card}  devolve os campos *_pt traduzidos do EN pelo comando claude deste Mac (tools/translate_pt.py; não grava)
   POST /api/translate-flavour {text}  devolve o flavour em PT pelo comando claude deste Mac, sem chave de API (não grava)
 """
@@ -64,6 +65,9 @@ _studio_spec.loader.exec_module(layout_studio)
 _direction_spec = importlib.util.spec_from_file_location("art_direction", Path(__file__).with_name("art_direction.py"))
 art_direction = importlib.util.module_from_spec(_direction_spec)
 _direction_spec.loader.exec_module(art_direction)
+_armor_spec = importlib.util.spec_from_file_location("armor_forge", Path(__file__).with_name("armor_forge.py"))
+armor_forge = importlib.util.module_from_spec(_armor_spec)
+_armor_spec.loader.exec_module(armor_forge)
 
 
 def fmt(value, indent, expand=False):
@@ -160,6 +164,8 @@ class Handler(SimpleHTTPRequestHandler):
             return layout_studio.handle(self, path)
         if path == '/api/art-direction':
             return art_direction.get(self)
+        if path.startswith('/api/armor-forge'):
+            return armor_forge.get(self, path)
         if path == '/api/boosters':
             return self.reply(200, sorted(f.stem for f in BOOSTERS.glob('*.webp')))
         if path.startswith('/biblioteca-sons/'):  # sons extraídos ficam fora do projeto: só o servidor local os lê
@@ -189,6 +195,8 @@ class Handler(SimpleHTTPRequestHandler):
                 return layout_studio.handle(self, self.path.split('?', 1)[0], raw, atomic_write)
             if self.path.split('?', 1)[0] == '/api/art-direction':
                 return art_direction.post(self, raw, atomic_write)
+            if self.path.startswith('/api/armor-forge/'):
+                return armor_forge.post(self, self.path.split('?', 1)[0], raw, atomic_write)
             if self.path.startswith('/api/star-hill/'):
                 return star_hill.post(self, self.path.split('?', 1)[0], raw, atomic_write)
             parts = self.path.strip("/").split("/")

@@ -1,0 +1,115 @@
+// ARMOR FORGE: especificação, lock e prompts, sem navegador. A tela real é coberta por test-armor-forge-ui.py.
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {PYTHON_WARPLATE as P, armorForArt, approvalIssues, buildLock, computeDesign, consistencySummary, lockLines, modePrompt, newComponents, newSpec} from '../card-forge/armor-model.js';
+import {armorChoice, buildDirectorPrompt, buildImagePrompt, cardFacts, defaultParams, restoreEntry, savedEntry} from '../card-forge/art-prompt.js';
+
+const {cartas} = JSON.parse(readFileSync(new URL('../data/cards.json', import.meta.url), 'utf8'));
+const ISEU = cardFacts(cartas.find((c) => c.id === 'ares-v6-279'), cartas);
+const design = computeDesign(P.spec, P.components);
+const lock = buildLock(design, ['ref-1', 'ref-2'], '2026-11-04T00:00:00+00:00');
+const armorDesign = {name: lock.name, version: 1, status: 'APPROVED', lock, adjustments: '', references: ['a.png', 'b.png']};
+const withArmor = (extra = {}) => ({...defaultParams(ISEU), armorSource: 'original', armorUse: true, armorDesign, ...extra});
+
+test('os cinco modos saem separados e os isolados nunca pedem portador', () => {
+  const texts = Object.fromEntries(['concept', 'blueprint', 'totem', 'detail'].map((m) => [m, modePrompt(m, design, {focus: 'pauldrons'})]));
+  assert.equal(new Set(Object.values(texts)).size, 4);
+  for (const text of Object.values(texts)) {
+    const [positive, negative] = text.split('\n\nNEGATIVE PROMPT: ');
+    assert.match(negative, /model wearing the armor/);
+    assert.doesNotMatch(positive, /wearing the armor|worn by/i);
+    assert.match(positive, /PYTHON WARPLATE/);
+    assert.doesNotMatch(positive, /red fantasy armor/i);
+  }
+  assert.match(texts.blueprint, /FRONT view, BACK view, LEFT side view, RIGHT side view/);
+  assert.match(texts.blueprint, /identical in all views/);
+  assert.match(texts.totem, /coiled serpent/);
+  assert.match(texts.detail, /close study of pauldrons/);
+  assert.match(texts.concept, /empty on a neutral matte armature|self-supporting/);
+});
+
+test('componente manual, automático e ausente mudam o prompt de forma diferente', () => {
+  const rows = newComponents({helmet: {mode: 'manual', value: 'closed visor with a hooked beak'}, mask: {mode: 'absent'}, wings: {mode: 'absent'}});
+  const spec = newSpec({name: 'TEST PLATE', faction: 'Ares', fields: {entity: {mode: 'manual', value: 'a stone wyrm'}, silhouette: {mode: 'absent'}}});
+  const text = modePrompt('concept', computeDesign(spec, rows));
+  assert.match(text, /Helmet: closed visor with a hooked beak\./);
+  assert.match(text, /Chest plate: sculpted cuirass[^\n]*a stone wyrm/);
+  assert.match(text, /EXPLICITLY ABSENT: Mask, Wings/);
+  assert.doesNotMatch(text, /SILHOUETTE:/);
+  assert.match(text.split('NEGATIVE PROMPT: ')[1], /mask, wings/);
+});
+
+test('aprovar exige nome, silhueta manual e referência com imagem; ficha técnica vira aviso', () => {
+  const version = {id: 'v1', spec: newSpec({name: 'X'})}, rows = newComponents({helmet: {mode: 'manual', required: true, value: ''}});
+  assert.equal(approvalIssues(version, rows, [], []).blocks.length, 2);
+  const ready = {id: 'v1', spec: P.spec}, refs = [{version_id: 'v1', approved: true, image: 'a.png'}];
+  const issues = approvalIssues(ready, P.components, refs, []);
+  assert.deepEqual(issues.blocks, []);
+  assert.match(issues.warnings[0], /ficha técnica/);
+});
+
+test('o lock congela o texto: mudar a especificação depois não muda o prompt do lock', () => {
+  const before = lockLines(lock).join('\n'), frozen = JSON.stringify(lock);
+  P.spec.fields.silhouette.value += ' CHANGED';
+  assert.equal(lockLines(lock).join('\n'), before);
+  assert.equal(JSON.stringify(lock), frozen);
+  assert.match(modePrompt('equipped', lock, {card: {name: 'ISEU OF PYTHON'}, version: 1}), /ARMOR DESIGN LOCK/);
+  P.spec.fields.silhouette.value = P.spec.fields.silhouette.value.replace(' CHANGED', '');
+  assert.deepEqual(lock.required_components.sort(), ['chest', 'fangs', 'helmet', 'ornaments', 'pauldrons', 'scales', 'spikes']);
+});
+
+test('arte de carta: o lock substitui a armadura inventada, e etnia, cabelo e traço seguem iguais', () => {
+  const base = defaultParams(ISEU), plain = buildImagePrompt(ISEU, base), armored = buildImagePrompt(ISEU, withArmor());
+  assert.match(plain, /brutal blood-red war armor/);
+  assert.doesNotMatch(armored, /brutal blood-red war armor/);
+  assert.doesNotMatch(armored, /it is not based on any existing character or armor/);
+  for (const piece of [`APPEARANCE (mandatory, clearly visible in the face and skin): ${base.ethnicity}.`, `HAIR, visible and not hidden by a helmet: ${base.hair}.`, `EXPRESSION: ${base.expression}.`, `ART STYLE (top priority`, `POSE: ${base.pose}`]) assert.ok(armored.includes(piece), piece);
+  for (const piece of [lock.helmet, lock.pauldrons, lock.chest, lock.silhouette, 'ARMOR REFERENCES: 2 approved images']) assert.ok(armored.includes(piece), piece);
+  assert.match(armored.split('NEGATIVE PROMPT: ')[1], /redesigned armor/);
+});
+
+test('a mesma armadura em outra carta mantém o bloco inteiro do lock', () => {
+  const other = cardFacts(cartas.find((c) => c.tipo === 'Devotee' && c.faccao === 'Athena' && c.id !== ISEU.id), cartas);
+  const block = (text) => text.slice(text.indexOf('ARMOR DESIGN LOCK'), text.indexOf('ARMOR REFERENCES'));
+  const a = buildImagePrompt(ISEU, withArmor()), b = buildImagePrompt(other, {...defaultParams(other), armorSource: 'original', armorUse: true, armorDesign});
+  assert.equal(block(a), block(b));
+  assert.ok(block(a).length > 400);
+});
+
+test('sem armadura escolhida ou sem aprovação, o prompt fica como antes', () => {
+  const base = defaultParams(ISEU), plain = buildImagePrompt(ISEU, base);
+  assert.equal(buildImagePrompt(ISEU, {...base, armorSource: 'original', armorDesign: null}), plain);
+  assert.equal(buildImagePrompt(ISEU, {...base, armorSource: 'original', armorUse: false, armorDesign}), plain);
+  assert.equal(armorChoice(base), null);
+  const none = buildImagePrompt(ISEU, {...base, armorSource: 'none'});
+  assert.match(none, /wears no armor at all/);
+  assert.doesNotMatch(none, /brutal blood-red war armor/);
+});
+
+test('rascunho nunca chega à arte, mesmo com id certo', () => {
+  const store = {projects: {p: {id: 'p'}}, references: {r: {image: 'a.png'}}, versions: {d: {id: 'd', project_id: 'p', status: 'DRAFT', number: 1, lock: null}, a: {id: 'a', project_id: 'p', status: 'APPROVED', number: 2, lock: {name: 'X', reference_ids: ['r']}}, x: {id: 'x', project_id: 'p', status: 'ARCHIVED', number: 3, lock: {name: 'X', reference_ids: []}}}};
+  assert.equal(armorForArt(store, 'p', 'd'), null);
+  assert.equal(armorForArt(store, 'p', 'x'), null);
+  assert.deepEqual(armorForArt(store, 'p', 'a', 'taller').references, ['a.png']);
+  assert.equal(armorForArt(store, 'p', 'a', 'taller').adjustments, 'taller');
+});
+
+test('a direção salva guarda só os ids e o legado abre sem campos de armadura', () => {
+  const entry = savedEntry(ISEU, withArmor({armorProject: 'p', armorVersion: 'p-v1'}), 'x');
+  assert.equal('armorDesign' in entry.params, false);
+  assert.equal(entry.params.armorVersion, 'p-v1');
+  const legacy = restoreEntry(ISEU, {params: {notes: 'antigo'}});
+  assert.equal(legacy.armorSource, 'auto');
+  assert.match(buildDirectorPrompt('MASTER', ISEU, withArmor()), /ARMOR DESIGN LOCK/);
+});
+
+test('a consistência nunca afirma correspondência sem o autor conferir', () => {
+  assert.equal(consistencySummary({}).state, 'UNCHECKED');
+  assert.equal(consistencySummary({consistency: {checks: {helmet: 'ok', chest: 'diverge'}}}).state, 'DIVERGENT');
+  assert.equal(consistencySummary({consistency: {checks: {helmet: 'ok'}}}).state, 'PARTIAL');
+  const all = Object.fromEntries(['silhouette', 'helmet', 'pauldrons', 'chest', 'palette', 'materials', 'ornaments', 'proportions'].map((k) => [k, 'ok']));
+  const done = consistencySummary({consistency: {checks: all}});
+  assert.equal(done.state, 'REVIEWED');
+  assert.doesNotMatch(done.text, /perfeit|idêntic/i);
+});

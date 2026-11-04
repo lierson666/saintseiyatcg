@@ -11,6 +11,14 @@ O botão **Layout Studio** abre o editor visual adicional: layers, drag/resize, 
 Abra `http://localhost:8765/card-forge/studio.html`. Consulte a [documentação e os critérios verificados](../docs/layout-studio/README.md) e a [análise de layout das cartas V6](../docs/layout-studio/analise-v6.md). Nenhuma publicação é aplicada automaticamente.
 
 
+## Armor Forge
+
+O link **Armor Forge** abre `armor.html`: a armadura original nasce sem portador, é aprovada e só então vira referência da arte. Fluxo: especificar, gerar o prompt de conceito, registrar a imagem, gerar a ficha técnica, marcar a referência, revisar e aprovar. A aprovação grava o Design Lock; alterar depois cria nova versão, e cada carta continua na versão apontada.
+
+No popup **Gerar arte**, a seção **Armadura / Equipamento** escolhe entre o comportamento atual, armadura do catálogo, projeto original ou nenhuma armadura. O prompt só incorpora a armadura com versão aprovada ou canônica.
+
+O Card Forge não chama gerador de imagem: copie o prompt, anexe as referências e registre o resultado. A verificação de consistência é feita pelo autor olhando a imagem.
+
 ## Abrir
 
 Na raiz do projeto:

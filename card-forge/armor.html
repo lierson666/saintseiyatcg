@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Card Forge — Armor Forge</title>
+  <link rel="icon" href="../LOGO/favicon.png?v=20261030">
+  <link rel="stylesheet" href="forge.css?v=20261104-armor1">
+  <link rel="stylesheet" href="armor.css?v=1">
+</head>
+<body class="af">
+  <header class="af-top">
+    <h1><a href="index.html" id="backToForge">Card Forge</a> <small>/ Armor Forge</small></h1>
+    <a href="studio.html" style="color:var(--gold);font-weight:600">✧ Layout Studio</a>
+    <a href="boosters.html" style="color:var(--gold);font-weight:600">✧ Boosters</a>
+    <ol class="af-pipe" id="pipeline" aria-label="Pipeline da armadura"></ol>
+    <span id="status" role="status"></span>
+  </header>
+  <main class="af-grid">
+    <aside class="af-list" aria-label="Projetos de armadura">
+      <div class="af-row"><button id="newProject" type="button" class="primary">Nova armadura</button><button id="seedExample" type="button" hidden>Criar exemplo PYTHON WARPLATE</button></div>
+      <label>Buscar<input id="search" type="search" placeholder="Nome, facção ou carta"></label>
+      <label>Estado<select id="stateFilter"></select></label>
+      <ul id="projects"></ul>
+    </aside>
+    <section class="af-editor" id="editor" aria-label="Especificação da armadura"></section>
+    <section class="af-side" id="side" aria-label="Prompts, imagens e aprovação"></section>
+  </main>
+  <dialog id="newDialog" aria-label="Nova armadura">
+    <form method="dialog" class="af-new">
+      <h2>Nova armadura original</h2>
+      <p class="hint">Primeiro a armadura, sem portador. O personagem vem depois da aprovação.</p>
+      <label>Nome oficial<input name="name" required placeholder="PYTHON WARPLATE"></label>
+      <label>Facção e Deus<select name="faction"></select></label>
+      <label>Família de armadura<select name="family"></select></label>
+      <label>Carta de origem (opcional)<input name="card" list="cardList" placeholder="ares-v6-279 ou nome da carta"></label>
+      <div class="row"><button value="cancel" formnovalidate>Cancelar</button><button id="createProject" value="create" class="primary">Criar projeto</button></div>
+    </form>
+  </dialog>
+  <datalist id="cardList"></datalist>
+  <script type="module" src="armor.js?v=1"></script>
+</body>
+</html>

@@ -1,0 +1,450 @@
+{
+ "versao": 1,
+ "projects": {
+  "python-warplate": {
+   "id": "python-warplate",
+   "name": "PYTHON WARPLATE",
+   "faction": "Ares",
+   "head_version_id": "python-warplate-v1",
+   "canonical_version_id": null,
+   "origin_card_id": "ares-v6-279",
+   "origin_card_name": "ISEU OF PYTHON",
+   "created_at": "2026-11-04T16:41:07+00:00",
+   "updated_at": "2026-11-04T16:41:07+00:00",
+   "history": [
+    {
+     "at": "2026-11-04T16:41:07+00:00",
+     "action": "projeto criado",
+     "version_id": "python-warplate-v1",
+     "to": "DRAFT"
+    },
+    {
+     "at": "2026-11-04T16:41:07+00:00",
+     "action": "vínculo",
+     "version_id": "python-warplate-v1",
+     "card_id": "ares-v6-279",
+     "variant": "default"
+    },
+    {
+     "at": "2026-11-04T16:41:07+00:00",
+     "action": "vínculo",
+     "version_id": "python-warplate-v1",
+     "card_id": "ares-v6-280",
+     "variant": "default"
+    }
+   ]
+  }
+ },
+ "versions": {
+  "python-warplate-v1": {
+   "id": "python-warplate-v1",
+   "project_id": "python-warplate",
+   "number": 1,
+   "status": "DRAFT",
+   "parent_version_id": null,
+   "spec": {
+    "name": "PYTHON WARPLATE",
+    "faction": "Ares",
+    "fields": {
+     "family": {
+      "mode": "manual",
+      "value": "Warplate"
+     },
+     "legion": {
+      "mode": "manual",
+      "value": "Disaster Legion"
+     },
+     "bearer": {
+      "mode": "manual",
+      "value": "ISEU OF PYTHON"
+     },
+     "mythology": {
+      "mode": "manual",
+      "value": "Python, the monstrous serpent tied to Delphi, slain at the sacred spring and remembered in the oracle"
+     },
+     "entity": {
+      "mode": "manual",
+      "value": "Python, the serpent of Delphi"
+     },
+     "symbolism": {
+      "mode": "manual",
+      "value": "patient ambush, venom, the prophecy that bites back"
+     },
+     "grandeur": {
+      "mode": "manual",
+      "value": "3"
+     },
+     "silhouette": {
+      "mode": "manual",
+      "value": "a threatening narrow-waisted outline: tall serpentine crest rising behind the head, shoulders flared into open jaws, a long tapered segmented torso, curved spines breaking the outline at shoulders and forearms"
+     },
+     "coverage": {
+      "mode": "manual",
+      "value": "near-full coverage: closed plate on head sides, chest and shins; segmented plate everywhere the body bends; the face stays open"
+     },
+     "materials": {
+      "mode": "manual",
+      "value": "lacquered red steel plates mounted over darkened bronze understructure, with visible bronze rivets"
+     },
+     "primary": {
+      "mode": "manual",
+      "value": "deep war red lacquer"
+     },
+     "secondary": {
+      "mode": "manual",
+      "value": "darkened bronze"
+     },
+     "details": {
+      "mode": "manual",
+      "value": "dull ember orange in the recesses between scales"
+     },
+     "finish": {
+      "mode": "manual",
+      "value": "satin lacquer chipped at the edges to reveal bronze, scale outlines engraved into every plate"
+     },
+     "condition": {
+      "mode": "manual",
+      "value": "battle-worn and scratched, structurally intact"
+     },
+     "symmetry": {
+      "mode": "manual",
+      "value": "bilaterally symmetrical, broken only by the serpentine crest that curves slightly to the left"
+     },
+     "proportions": {
+      "mode": "manual",
+      "value": "human proportions with shoulders one and a half times the waist width; visible sliding lames at elbows, waist and knees allow real movement"
+     },
+     "totem": {
+      "mode": "manual",
+      "value": "all plates reassembled into a coiled serpent rearing to strike: pauldrons become the open jaws, cuirass segments become the coils, the crest becomes the hood"
+     }
+    }
+   },
+   "note": "",
+   "lock": null,
+   "created_at": "2026-11-04T16:41:07+00:00",
+   "updated_at": "2026-11-04T16:41:07+00:00"
+  }
+ },
+ "components": {
+  "comp-b59d8a8ea4": {
+   "id": "comp-b59d8a8ea4",
+   "version_id": "python-warplate-v1",
+   "key": "helmet",
+   "group": "anatomy",
+   "mode": "manual",
+   "value": "open-faced helmet with a tall serpentine crest running from brow to nape, scale-engraved cheek guards curving forward like closed fangs",
+   "required": true
+  },
+  "comp-fa28c0b55a": {
+   "id": "comp-fa28c0b55a",
+   "version_id": "python-warplate-v1",
+   "key": "mask",
+   "group": "anatomy",
+   "mode": "absent",
+   "value": "",
+   "required": false
+  },
+  "comp-ee5d59490d": {
+   "id": "comp-ee5d59490d",
+   "version_id": "python-warplate-v1",
+   "key": "neck",
+   "group": "anatomy",
+   "mode": "manual",
+   "value": "three overlapping scale-edged rings forming a gorget, like the throat of a snake",
+   "required": false
+  },
+  "comp-f6ae061fec": {
+   "id": "comp-f6ae061fec",
+   "version_id": "python-warplate-v1",
+   "key": "pauldrons",
+   "group": "anatomy",
+   "mode": "manual",
+   "value": "each pauldron shaped as an open serpent jaw seen from the side: upper plate with two hooked fangs, lower plate as the mandible, ember recess inside the mouth",
+   "required": true
+  },
+  "comp-bd025c8b42": {
+   "id": "comp-bd025c8b42",
+   "version_id": "python-warplate-v1",
+   "key": "chest",
+   "group": "anatomy",
+   "mode": "manual",
+   "value": "segmented cuirass of overlapping diamond scale-plates descending in a chevron from a central bronze keel; each row overlaps the row beneath",
+   "required": true
+  },
+  "comp-bbc7394399": {
+   "id": "comp-bbc7394399",
+   "version_id": "python-warplate-v1",
+   "key": "back",
+   "group": "anatomy",
+   "mode": "manual",
+   "value": "a single central spine of curved bronze plates running from nape to waist, flanked by smaller overlapping scale rows",
+   "required": false
+  },
+  "comp-25ae4fc91e": {
+   "id": "comp-25ae4fc91e",
+   "version_id": "python-warplate-v1",
+   "key": "abdomen",
+   "group": "anatomy",
+   "mode": "manual",
+   "value": "five narrow lames that slide over one another, each edge notched like a belly scale",
+   "required": false
+  },
+  "comp-e9dde036b1": {
+   "id": "comp-e9dde036b1",
+   "version_id": "python-warplate-v1",
+   "key": "waist",
+   "group": "anatomy",
+   "mode": "manual",
+   "value": "narrow bronze belt whose buckle is a coiled serpent knot",
+   "required": false
+  },
+  "comp-8c6e40eea5": {
+   "id": "comp-8c6e40eea5",
+   "version_id": "python-warplate-v1",
+   "key": "arms",
+   "group": "anatomy",
+   "mode": "manual",
+   "value": "upper arm bands of overlapping scales, open on the inner side",
+   "required": false
+  },
+  "comp-06fa755e88": {
+   "id": "comp-06fa755e88",
+   "version_id": "python-warplate-v1",
+   "key": "elbows",
+   "group": "anatomy",
+   "mode": "manual",
+   "value": "articulated couters ending in one short backward-curving spine",
+   "required": false
+  },
+  "comp-9ba7ee480e": {
+   "id": "comp-9ba7ee480e",
+   "version_id": "python-warplate-v1",
+   "key": "forearms",
+   "group": "anatomy",
+   "mode": "manual",
+   "value": "closed red vambraces with three curved spines along the outer edge",
+   "required": false
+  },
+  "comp-c94679575a": {
+   "id": "comp-c94679575a",
+   "version_id": "python-warplate-v1",
+   "key": "gauntlets",
+   "group": "anatomy",
+   "mode": "manual",
+   "value": "articulated bronze-and-red gauntlets with five separate plated fingers, knuckle plates cut as small scales",
+   "required": false
+  },
+  "comp-e5312c13c6": {
+   "id": "comp-e5312c13c6",
+   "version_id": "python-warplate-v1",
+   "key": "hips",
+   "group": "anatomy",
+   "mode": "manual",
+   "value": "overlapping scale tassets hanging lower at the back, suggesting a tail base",
+   "required": false
+  },
+  "comp-7c5cdcf50b": {
+   "id": "comp-7c5cdcf50b",
+   "version_id": "python-warplate-v1",
+   "key": "thighs",
+   "group": "anatomy",
+   "mode": "manual",
+   "value": "front thigh plates with engraved scale lines, open behind the leg",
+   "required": false
+  },
+  "comp-196dee458c": {
+   "id": "comp-196dee458c",
+   "version_id": "python-warplate-v1",
+   "key": "knees",
+   "group": "anatomy",
+   "mode": "manual",
+   "value": "poleyns with a single forward-curving spine over a sliding lame",
+   "required": false
+  },
+  "comp-823d2842f8": {
+   "id": "comp-823d2842f8",
+   "version_id": "python-warplate-v1",
+   "key": "greaves",
+   "group": "anatomy",
+   "mode": "manual",
+   "value": "closed greaves with a raised central ridge of small overlapping scales",
+   "required": false
+  },
+  "comp-659afd3eeb": {
+   "id": "comp-659afd3eeb",
+   "version_id": "python-warplate-v1",
+   "key": "boots",
+   "group": "anatomy",
+   "mode": "manual",
+   "value": "segmented bronze sabatons with a pointed toe plate",
+   "required": false
+  },
+  "comp-dd8b1cf140": {
+   "id": "comp-dd8b1cf140",
+   "version_id": "python-warplate-v1",
+   "key": "special",
+   "group": "anatomy",
+   "mode": "absent",
+   "value": "",
+   "required": false
+  },
+  "comp-484470c857": {
+   "id": "comp-484470c857",
+   "version_id": "python-warplate-v1",
+   "key": "horns",
+   "group": "mythic",
+   "mode": "absent",
+   "value": "",
+   "required": false
+  },
+  "comp-48d7899375": {
+   "id": "comp-48d7899375",
+   "version_id": "python-warplate-v1",
+   "key": "fangs",
+   "group": "mythic",
+   "mode": "manual",
+   "value": "hooked fangs on the pauldron jaws and cheek guards, in polished dark bronze",
+   "required": true
+  },
+  "comp-fdca84943f": {
+   "id": "comp-fdca84943f",
+   "version_id": "python-warplate-v1",
+   "key": "wings",
+   "group": "mythic",
+   "mode": "absent",
+   "value": "",
+   "required": false
+  },
+  "comp-146afc2dcf": {
+   "id": "comp-146afc2dcf",
+   "version_id": "python-warplate-v1",
+   "key": "tails",
+   "group": "mythic",
+   "mode": "absent",
+   "value": "",
+   "required": false
+  },
+  "comp-4f64dbe83c": {
+   "id": "comp-4f64dbe83c",
+   "version_id": "python-warplate-v1",
+   "key": "scales",
+   "group": "mythic",
+   "mode": "manual",
+   "value": "overlapping diamond scale geometry as the base pattern of every red plate",
+   "required": true
+  },
+  "comp-50bb855a42": {
+   "id": "comp-50bb855a42",
+   "version_id": "python-warplate-v1",
+   "key": "claws",
+   "group": "mythic",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-dd0c3c0fa2": {
+   "id": "comp-dd0c3c0fa2",
+   "version_id": "python-warplate-v1",
+   "key": "spikes",
+   "group": "mythic",
+   "mode": "manual",
+   "value": "curved spines at shoulders, forearms and knees, always curving backward",
+   "required": true
+  },
+  "comp-6379c60a80": {
+   "id": "comp-6379c60a80",
+   "version_id": "python-warplate-v1",
+   "key": "gems",
+   "group": "mythic",
+   "mode": "absent",
+   "value": "",
+   "required": false
+  },
+  "comp-8534a765fc": {
+   "id": "comp-8534a765fc",
+   "version_id": "python-warplate-v1",
+   "key": "symbols",
+   "group": "mythic",
+   "mode": "manual",
+   "value": "small engraved omphalos stone of Delphi at the center of the chest keel",
+   "required": false
+  },
+  "comp-2004ce876c": {
+   "id": "comp-2004ce876c",
+   "version_id": "python-warplate-v1",
+   "key": "ornaments",
+   "group": "mythic",
+   "mode": "manual",
+   "value": "serpentine crest with a sawtooth edge, the single most identifying ornament",
+   "required": true
+  },
+  "comp-49d5a092b4": {
+   "id": "comp-49d5a092b4",
+   "version_id": "python-warplate-v1",
+   "key": "weapons",
+   "group": "mythic",
+   "mode": "absent",
+   "value": "",
+   "required": false
+  },
+  "comp-0b6233bfb7": {
+   "id": "comp-0b6233bfb7",
+   "version_id": "python-warplate-v1",
+   "key": "accessories",
+   "group": "mythic",
+   "mode": "absent",
+   "value": "",
+   "required": false
+  }
+ },
+ "references": {},
+ "bindings": {
+  "bind-9025f1cb60": {
+   "id": "bind-9025f1cb60",
+   "card_id": "ares-v6-279",
+   "variant": "default",
+   "created_at": "2026-11-04T16:41:07+00:00",
+   "project_id": "python-warplate",
+   "version_id": "python-warplate-v1",
+   "card_name": "ISEU OF PYTHON",
+   "armor_type": "",
+   "adjustments": "",
+   "use": true,
+   "updated_at": "2026-11-04T16:41:07+00:00"
+  },
+  "bind-e651def056": {
+   "id": "bind-e651def056",
+   "card_id": "ares-v6-280",
+   "variant": "default",
+   "created_at": "2026-11-04T16:41:07+00:00",
+   "project_id": "python-warplate",
+   "version_id": "python-warplate-v1",
+   "card_name": "PYTHON WARPLATE",
+   "armor_type": "",
+   "adjustments": "",
+   "use": true,
+   "updated_at": "2026-11-04T16:41:07+00:00"
+  }
+ },
+ "generations": {
+  "gen-2718e9bb5d": {
+   "id": "gen-2718e9bb5d",
+   "project_id": "python-warplate",
+   "version_id": "python-warplate-v1",
+   "mode": "concept",
+   "prompt": "Vertical 3:4 high-resolution armor concept art for a mythological anime trading card universe of sacred armors and Greek gods: PYTHON WARPLATE, version 1. Illustration only: no card frame, no text, no names, no logos, no numbers, no stats, no interface symbols, no watermarks.\nDIRECTION: the complete armor is the only subject, shown assembled and whole, three-quarter view, with every part readable. This is the first design pass of an original armor.\nARMOR: PYTHON WARPLATE, a Warplate of Ares, Disaster Legion. Preserve this official name as its identity; do not write it in the image.\nMYTHOLOGY: Python, the monstrous serpent tied to Delphi, slain at the sacred spring and remembered in the oracle.\nASSOCIATED ENTITY: Python, the serpent of Delphi.\nSYMBOLIC MEANING: patient ambush, venom, the prophecy that bites back.\nGRANDEUR: epic: layered plates, deliberate ornament, strong silhouette.\nSILHOUETTE: a threatening narrow-waisted outline: tall serpentine crest rising behind the head, shoulders flared into open jaws, a long tapered segmented torso, curved spines breaking the outline at shoulders and forearms.\nCOVERAGE: near-full coverage: closed plate on head sides, chest and shins; segmented plate everywhere the body bends; the face stays open.\nMATERIALS: lacquered red steel plates mounted over darkened bronze understructure, with visible bronze rivets.\nPALETTE: primary deep war red lacquer; secondary darkened bronze; details dull ember orange in the recesses between scales.\nFINISH, TEXTURE AND ORNAMENT: satin lacquer chipped at the edges to reveal bronze, scale outlines engraved into every plate.\nCONDITION: battle-worn and scratched, structurally intact.\nSYMMETRY: bilaterally symmetrical, broken only by the serpentine crest that curves slightly to the left.\nPROPORTIONS AND ARTICULATION: human proportions with shoulders one and a half times the waist width; visible sliding lames at elbows, waist and knees allow real movement.\nCOMPONENTS (each one is a separate, visibly built part):\n- Helmet (mandatory): open-faced helmet with a tall serpentine crest running from brow to nape, scale-engraved cheek guards curving forward like closed fangs.\n- Neck guard: three overlapping scale-edged rings forming a gorget, like the throat of a snake.\n- Pauldrons (mandatory): each pauldron shaped as an open serpent jaw seen from the side: upper plate with two hooked fangs, lower plate as the mandible, ember recess inside the mouth.\n- Chest plate (mandatory): segmented cuirass of overlapping diamond scale-plates descending in a chevron from a central bronze keel; each row overlaps the row beneath.\n- Back plate: a single central spine of curved bronze plates running from nape to waist, flanked by smaller overlapping scale rows.\n- Abdomen: five narrow lames that slide over one another, each edge notched like a belly scale.\n- Waist: narrow bronze belt whose buckle is a coiled serpent knot.\n- Upper arms: upper arm bands of overlapping scales, open on the inner side.\n- Elbows: articulated couters ending in one short backward-curving spine.\n- Forearms: closed red vambraces with three curved spines along the outer edge.\n- Gauntlets: articulated bronze-and-red gauntlets with five separate plated fingers, knuckle plates cut as small scales.\n- Hips: overlapping scale tassets hanging lower at the back, suggesting a tail base.\n- Thighs: front thigh plates with engraved scale lines, open behind the leg.\n- Knees: poleyns with a single forward-curving spine over a sliding lame.\n- Greaves: closed greaves with a raised central ridge of small overlapping scales.\n- Boots: segmented bronze sabatons with a pointed toe plate.\nMYTHOLOGICAL ELEMENTS (forged into the armor):\n- Fangs (mandatory): hooked fangs on the pauldron jaws and cheek guards, in polished dark bronze.\n- Scales (mandatory): overlapping diamond scale geometry as the base pattern of every red plate.\n- Spikes (mandatory): curved spines at shoulders, forearms and knees, always curving backward.\n- Symbols: small engraved omphalos stone of Delphi at the center of the chest keel.\n- Ornaments (mandatory): serpentine crest with a sawtooth edge, the single most identifying ornament.\nOTHER MYTHOLOGICAL ELEMENTS (claws): add one only if it derives directly from Python, the serpent of Delphi; keep it restrained.\nEXPLICITLY ABSENT: Mask, Special components, Horns, Wings, Tails, Gems, Weapons, Accessories. These parts do not exist on this armor.\nPRESENTATION: the armor stands empty on a neutral matte armature of thin dark metal, or as a self-supporting construction. Visible empty space inside the helmet and at the neck and wrist openings: nobody is wearing it. Plain neutral background.\nRENDERING: clean neutral concept rendering with even studio light, so shape and material read clearly. This is not the final card art style.\n\nNEGATIVE PROMPT: person, human, human body, face, eyes or skin inside the armor, hands inside the gauntlets, mannequin with a face, model wearing the armor, character, crowd, mask, special components, horns, wings, tails, gems, weapons, accessories, generic fantasy armor, merged plates, incoherent joints, unreadable silhouette, existing anime armor designs, text, watermark.",
+   "card_id": "",
+   "card_name": "",
+   "variant": "",
+   "note": "",
+   "image": null,
+   "consistency": {
+    "checks": {},
+    "note": "",
+    "at": null
+   },
+   "created_at": "2026-11-04T16:43:40+00:00"
+  }
+ }
+}

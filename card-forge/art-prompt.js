@@ -5,6 +5,7 @@ import {printedKind} from '../shared/rules-policy.js';
 import {ANATOMY, ARMY_FROM, CREATURES, CREATURE_CHOICES, CREATURE_MOODS, CREATURE_POSES, COUNTS, CROWD_FROM, EXACT_LIMIT, FORMATIONS, LEADS, ORDERS, VARIETIES, allowedNotes, blockedNotes, countOf, countWord, creatureById, creatureFromSubtypes, creaturePool, formationById, notesAskAlone, orderById, orderFromCard, suggestFormation} from './art-taxonomy.js?v=20261102-arte16';
 import {BEARERS, BODY_BEARERS, DAMAGED_STATES, DIVINE_LANGUAGE, DIVINE_SCALES, EFFECTS, ENV_EXTRAS, ENV_SCALES, ENV_STATES, ENV_TYPES, EQUIP_STATES, FACELESS_ROLES, FIGURE_FOCI, FORMS, INTENSITIES, MANIFESTATIONS, NATURES, OBJECT_KINDS, ORIGINS, PHASES, PRESENTATIONS, PROMPT_VERSION, ROLES, SCENE_FOCI, SCENE_MOMENTS, SCENE_TYPES, SUPPORTS, VARIANTS, VISIBLE, classifyFacts, textOf} from './art-natures.js?v=20261102-arte16';
 import {formatCardTypeLine} from '../shared/equipment-types.js';
+import {FAMILIES, STATE_LABELS, armorForArt, consistencySummary, imageUrl, latestVersions, lockLines, lockNegative} from './armor-model.js';
 
 const pair = (code, pt) => [code, `${code}: ${pt}`];
 export const SHOTS = [
@@ -366,6 +367,7 @@ export function defaultParams(f) {
     objectKind: cl.objectKind, objectCustom: '', presentation: cl.presentation, equipState: cl.equipState, support: cl.support, supportCustom: '', bearer: 'auto',
     envType: cl.envType, envCustom: '', envState: cl.envState, envScale: cl.envScale, hour: '', weather: '', fog: '', depth: '', visibility: '', sky: '', lightSource: '', perspective: '', focal: '', phenomena: '',
     manifestation: cl.manifestation, divineScale: cl.divineScale,
+    armorSource: 'auto', armorType: '', armorProject: '', armorVersion: '', armorUse: true, armorAdjust: '',
   };
 }
 
@@ -633,18 +635,35 @@ function modeOf(f, p, c, personSubject) {
   };
 }
 
+// Armadura decidida antes do personagem (Armor Forge). Em Automático, o prompt sai palavra por palavra como sempre saiu.
+const INVENTED = 'Invent the design from the card name and the faction; it is not based on any existing character or armor.';
+export function armorChoice(p) {
+  if (p.armorSource === 'none') return {kind: 'none', name: ''};
+  if (p.armorSource === 'existing' && p.armor) return {kind: 'existing', name: p.armor};
+  if (p.armorSource === 'original' && p.armorUse && p.armorDesign) return {kind: 'locked', ...p.armorDesign};
+  return null;
+}
+function armorPromptLines(choice, generic, c, figure) {
+  if (!choice || (!figure && c.nature !== 'equipment')) return [];
+  if (choice.kind === 'none') return figure ? ['ARMOR: this figure wears no armor at all; clothing and body only.'] : [];
+  if (choice.kind === 'existing') return generic ? [`ARMOR: ${choice.name}, an existing armor of this game. Match its attached reference images: plates, ornaments and colors. Do not invent armor changes.`] : [];
+  return lockLines(choice.lock, {adjustments: choice.adjustments, referenceCount: choice.references.length, group: c.group, noWearer: !figure});
+}
+
 export function buildImagePrompt(f, p) {
-  const generic = p.generic, god = GODS[p.god], c = resolveCast(f, p), figure = c.active, isEquipment = f.kind === 'Equipment', power = f.powers.find((x) => x.name === p.technique), epic = EPIC_LEVELS.find(([v]) => v === p.epic);
+  const choice = armorChoice(p), generic = p.generic, god = GODS[p.god], c = resolveCast(f, p), figure = c.active, isEquipment = f.kind === 'Equipment', power = f.powers.find((x) => x.name === p.technique), epic = EPIC_LEVELS.find(([v]) => v === p.epic);
   const modal = c.nature !== 'legacy' && c.nature !== 'character';
   const castingCaster = c.nature !== 'technique' || ['caster', 'both', 'casters'].includes(p.visible);
   const person = figure && castingCaster ? p.person : c.nature === 'legacy' ? p.person : '';
   const companions = c.group && person ? ` ${person} is the protagonist, with ${c.crowd ? 'a vast army' : c.exact ? countWord(c.n - 1) : `about ${c.n - 1}`} of anonymous ${c.plural} around.` : '';
-  const personSubject = person && !generic ? `${person}${isEquipment ? `, wearing ${f.name} (${f.typeLine})` : p.armor ? `, wearing ${p.armor}` : ''}. Match the attached reference images: face, hair, eyes, armor, ornaments, helmet and characteristic colors. Do not invent armor changes.${companions}` : '';
+  const armorWorn = choice ? choice.name : p.armor;
+  const personSubject = person && !generic ? `${person}${isEquipment ? `, wearing ${f.name} (${f.typeLine})` : armorWorn ? `, wearing ${armorWorn}` : ''}. Match the attached reference images: face, hair, eyes, armor, ornaments, helmet and characteristic colors. Do not invent armor changes.${companions}` : '';
   const mode = modal ? modeOf(f, p, c, personSubject) : null;
-  const subject = mode ? mode.subject : generic ? genericSubject(f, p, god ? `serving ${p.god}` : 'an independent warrior', c) : person
+  const baseSubject = mode ? mode.subject : generic ? genericSubject(f, p, god ? `serving ${p.god}` : 'an independent warrior', c) : person
     ? personSubject
     : isEquipment ? `${f.name} (${f.typeLine}) alone as a sacred object, with no wearer; show its structure and materials clearly and preserve the symbols, colors and geometry of the attached reference images.`
       : f.kind === 'Domain' ? `${f.name}, as a place, with no characters.` : figure ? `${f.name}: ${c.group ? castPhrase(c) : c.creature.en}.` : `${f.name}, as an event, with no main character.`;
+  const subject = choice ? baseSubject.replace(INVENTED, `Invent the character from the card name and the faction, not the armor: ${choice.kind === 'none' ? 'there is none' : 'it is defined below'}.`) : baseSubject;
   const story = [p.before && `Just happened: ${p.before}.`, p.now && `Happening now: ${p.now}.`, p.next && `About to happen: ${p.next}.`, p.viewer && `The viewer must feel: ${p.viewer}.`].filter(Boolean).join(' ');
   const direction = mode ? mode.direction : c.group ? (c.army ? 'The collective force is the subject: mass, order and scale, with the card name as its identity.' : 'The group is the main focal point, composed as one readable image and not as separate portraits.') : c.nonHuman && figure ? 'The creature is the main focal point, with a clear readable silhouette.' : (generic && GENERIC_RULES[c.nature === 'character' ? 'Devotee' : f.kind]) || TYPE_RULES[c.nature === 'character' ? 'Devotee' : f.kind] || TYPE_RULES.Devotee;
   const morphology = figure && !c.mixed && c.creature.id !== 'human' && `CREATURE MORPHOLOGY: ${c.group ? `every figure is ${c.creature.en}` : c.creature.en}${clean(p.species) ? `, of the kind: ${clean(p.species)}` : ''}.${c.nonHuman ? ` ${c.group ? 'They are' : 'It is'} not ${c.group ? 'humans' : 'a human'} in armor, and no human warrior stands in front of ${c.group ? 'them' : 'it'}.` : ''}`;
@@ -670,7 +689,8 @@ export function buildImagePrompt(f, p) {
     ...(mode ? mode.lines : []),
     role && `CHARACTER ROLE (visual only): ${role}.`,
     morphology,
-    c.order && `ARCHETYPE (visual only): ${c.order.label}: ${c.order.en}.${originalOrder(c.order)}`,
+    c.order && `ARCHETYPE (visual only): ${c.order.label}${choice ? '' : `: ${c.order.en}`}.${originalOrder(c.order)}`,
+    ...armorPromptLines(choice, generic, c, figure),
     c.group && `GROUP VARIATION: ${c.variety[2]}.`,
     c.group && !(c.variety[0].startsWith('leader') && c.lead[0] === 'collective') && `GROUP FOCUS: ${c.lead[2]}.`,
     c.group && formationLine(c, p),
@@ -678,7 +698,7 @@ export function buildImagePrompt(f, p) {
     traits && `SPECIAL FEATURES: ${traits}.`,
     `CAMERA VIEWPOINT (mandatory, overrides any other hint about viewpoint): ${p.angle}: ${viewpoint}.`,
     `ART STYLE (top priority for the whole image: line, shading, color treatment and rendering): ${p.style}.${p.accent ? ` Complementary finish: ${p.accent}.` : ''}`,
-    !generic && p.version && `DESIGN CANON: costume and armor shapes follow ${p.version}, only as design. Draw them in the ART STYLE above, not in the look of that version.`,
+    !generic && p.version && choice?.kind !== 'locked' && `DESIGN CANON: costume and armor shapes follow ${p.version}, only as design. Draw them in the ART STYLE above, not in the look of that version.`,
     refs && 'REFERENCES: reference images are attached to this prompt. Use them only for character identity and armor design (face, hair, silhouette, parts, colors); follow them over any written description of those. Do not copy their drawing style, line or shading: redraw everything in the ART STYLE.',
     god && `FACTION IDENTITY: ${p.god}, ${god.title}. Palette identity, not monochrome: ${god.palette}. Feeling: ${god.mood}.`,
     setting && `SETTING: ${setting}.${p.arc && !generic ? ` Inspired by: ${p.arc}.` : ''}`,
@@ -697,16 +717,16 @@ export function buildImagePrompt(f, p) {
     f.flavour && `MOOD LINE: ${f.flavour}`,
     notes && `NOTES (author's direction, overrides the fields above, never the format rules): ${notes}`,
   ].filter(Boolean).join('\n');
-  const own = mode ? mode.negative.filter(Boolean).join(', ') : '';
+  const own = [mode ? mode.negative.filter(Boolean).join(', ') : '', choice?.kind === 'locked' && lockNegative(choice.lock), choice?.kind === 'none' && figure && 'armor, armor plates, pauldrons'].filter(Boolean).join(', ');
   return `${body}\n\nNEGATIVE PROMPT: ${own ? `${own}, ` : ''}${negativeLine(generic, c, figure)}.`;
 }
 
 // O que vai para a camada local de direção de arte. Nada de arte, custo ou texto da carta.
-export const savedEntry = (f, p, prompt) => ({params: Object.fromEntries(Object.entries(p).filter(([key]) => key !== 'scope')), prompt, prompt_version: PROMPT_VERSION, nature: natureOf(f, p)});
+export const savedEntry = (f, p, prompt) => ({params: Object.fromEntries(Object.entries(p).filter(([key]) => key !== 'scope' && key !== 'armorDesign')), prompt, prompt_version: PROMPT_VERSION, nature: natureOf(f, p)});
 export const restoreEntry = (f, entry) => ({...defaultParams(f), ...(entry?.params || {})});
 
 // Sistema completo: o GPT recebe o Master, trata o que veio escolhido como decisão do autor e responde no formato da seção 12.
-export const buildDirectorPrompt = (master, f, p) => `${master.trim()}\n\n---\nSOLICITAÇÃO DE ARTE\nExecute o processo da seção 11 para a carta abaixo e responda no formato obrigatório da seção 12. Não gere a imagem. Os parâmetros são decisões do autor; desenvolva-os com especificidade. Onde a narrativa estiver em branco, proponha a cena. ${p.generic ? 'Esta carta é genérica e não tem imagens de referência: crie um design original, sem usar personagens, armaduras ou fatos do cânone.' : 'As imagens de referência vão anexadas a esta mensagem: analise-as na Etapa 2.'}\n\n${buildImagePrompt(f, p)}`;
+export const buildDirectorPrompt = (master, f, p) => `${master.trim()}\n\n---\nSOLICITAÇÃO DE ARTE\nExecute o processo da seção 11 para a carta abaixo e responda no formato obrigatório da seção 12. Não gere a imagem. Os parâmetros são decisões do autor; desenvolva-os com especificidade. Onde a narrativa estiver em branco, proponha a cena. ${armorChoice(p)?.kind === 'locked' ? 'A armadura desta carta já está aprovada: siga o ARMOR DESIGN LOCK e as referências dela anexadas, sem redesenhar. ' : ''}${p.generic ? 'Esta carta é genérica e não tem imagens de referência: crie um design original, sem usar personagens, armaduras ou fatos do cânone.' : 'As imagens de referência vão anexadas a esta mensagem: analise-as na Etapa 2.'}\n\n${buildImagePrompt(f, p)}`;
 
 const esc = (t) => String(t ?? '').replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
 const select = (name, label, opts, value) => `<label>${label}<select name="${name}">${opts.map(([v, t]) => `<option value="${esc(v)}"${v === value ? ' selected' : ''}>${esc(t ?? v)}</option>`).join('')}</select></label>`;
@@ -717,7 +737,7 @@ const GPT_URL = 'https://chatgpt.com/';
 const URL_LIMIT = 7000; // acima disso o link pode falhar: o GPT abre vazio e o prompt fica copiado
 
 export function mountArtPrompt(dialog, {getCard, getCards, say, masterUrl}) {
-  let facts, params, master = '', decisions = null, variant = 'default', savedPrompt = '';
+  let facts, params, master = '', decisions = null, variant = 'default', savedPrompt = '', armorStore = null;
   const cardId = () => getCard().id;
   const output = () => dialog.querySelector('textarea[name=prompt]');
   const text = () => (params.mode === 'director' && master ? buildDirectorPrompt(master, facts, params) : buildImagePrompt(facts, params));
@@ -734,7 +754,69 @@ export function mountArtPrompt(dialog, {getCard, getCards, say, masterUrl}) {
     params.shot = suggestShot(c.n, c.formationId, c.nature);
   };
   const entryOf = () => decisions?.variants?.[variant];
+  // Seção Armadura / Equipamento: a loja vem do Armor Forge; o vínculo por carta e variante fica lá, nunca em cards.json.
+  const armorProjects = () => Object.values(armorStore?.projects || {});
+  const armorVersions = (id) => (armorStore && id ? latestVersions(armorStore, id) : []);
+  const armorBinding = () => Object.values(armorStore?.bindings || {}).find((b) => b.card_id === cardId() && b.variant === variant);
+  const bestVersion = (id) => { const list = armorVersions(id), project = armorStore?.projects?.[id]; return project?.canonical_version_id || [...list].reverse().find((v) => v.lock && v.status !== 'ARCHIVED')?.id || project?.head_version_id || ''; };
+  function syncArmor() { params.armorDesign = armorForArt(armorStore, params.armorProject, params.armorVersion, params.armorAdjust); }
+  function adoptBinding() {
+    const bound = armorBinding();
+    if (bound && (params.armorSource === 'auto' || params.armorSource === 'original')) Object.assign(params, {armorSource: 'original', armorProject: bound.project_id, armorVersion: bound.version_id, armorUse: bound.use, armorAdjust: bound.adjustments || '', armorType: bound.armor_type || params.armorType});
+    syncArmor();
+  }
+  async function armorPost(op, payload) {
+    try {
+      const r = await fetch(`/api/armor-forge/${op}`, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(payload)});
+      const data = await r.json();
+      if (!r.ok) { say(data.erro || 'Não consegui gravar a armadura.', true); return null; }
+      armorStore = data.store;
+      return data;
+    } catch { say('Não consegui gravar: abra o Card Forge pelo servidor local.', true); return null; }
+  }
+  const saveArmorBinding = () => { if (params.armorVersion && cardId()) return armorPost('binding', {card_id: cardId(), card_name: facts.name, variant, version_id: params.armorVersion, armor_type: params.armorType, adjustments: params.armorAdjust, use: params.armorUse}); return null; };
+  async function loadArmorStore() {
+    try { const r = await fetch('/api/armor-forge'); armorStore = r.ok ? await r.json() : null; } catch { armorStore = null; }
+  }
+  function armorRecord() {
+    const choice = armorChoice(params);
+    if (choice?.kind !== 'locked') return null;
+    const same = Object.values(armorStore.generations).find((g) => g.version_id === params.armorVersion && g.mode === 'card_art' && g.card_id === cardId() && g.variant === variant && g.prompt === output().value);
+    if (same) return Promise.resolve(same.id);
+    return armorPost('generation', {version_id: params.armorVersion, mode: 'card_art', prompt: output().value, card_id: cardId(), card_name: facts.name, variant}).then((made) => made?.generation_id);
+  }
+  function armorSection(f, p, c, fold) {
+    if (!c.active && c.nature !== 'equipment') return '';
+    const source = p.armorSource || 'auto', family = (x) => armorStore.versions[x.head_version_id]?.lock?.family || armorStore.versions[x.head_version_id]?.spec?.fields?.family?.value || '';
+    const usesArmor = p.generic && c.active && c.nature === 'character' && /armor|surplice/i.test(c.order?.en || '');
+    const offer = usesArmor && (source === 'auto' || (source === 'original' && !p.armorProject)) ? `<p class="ap-warn ap-wide">Carta genérica de arquétipo que usa armadura: desenvolva a armadura antes do personagem. É opcional.<button type="button" data-armor="new">Desenvolver armadura original</button></p>` : '';
+    const sourceField = select('armorSource', 'Armadura existente ou original', [['auto', 'Automático (como hoje)'], ['existing', 'Existente do catálogo'], ['original', 'Original (Armor Forge)'], ['none', 'Sem armadura']], source);
+    if (source === 'existing') {
+      const all = getCards().filter((x) => x.tipo === 'Equipment' && x.slot_equipamento === 'armadura').sort((a, b) => Number(b.faccao === f.faction) - Number(a.faccao === f.faction));
+      return `<h3 class="ap-section">Armadura / Equipamento</h3>${offer}${sourceField}${select('armor', 'Armadura do catálogo', [['', 'Escolha'], ...all.map((x) => [clean(x.nome_exibicao_en), `${clean(x.nome_exibicao_en)} (${x.faccao})`])], p.armor)}`;
+    }
+    if (source !== 'original') return `<h3 class="ap-section">Armadura / Equipamento</h3>${offer}${sourceField}`;
+    if (!armorStore) return `<h3 class="ap-section">Armadura / Equipamento</h3>${sourceField}<p class="ap-warn ap-wide">Armor Forge indisponível: reinicie o servidor do Card Forge.</p>`;
+    const list = armorProjects().filter((x) => x.id === p.armorProject || ((!p.armorType || family(x) === p.armorType) && armorStore.versions[x.head_version_id]?.status !== 'ARCHIVED')).sort((a, b) => Number(b.faction === f.faction) - Number(a.faction === f.faction) || a.name.localeCompare(b.name));
+    const versions = armorVersions(p.armorProject), v = armorStore.versions[p.armorVersion], ready = Boolean(p.armorDesign);
+    const refs = ready ? p.armorDesign.references : (v ? Object.values(armorStore.references).filter((r) => r.version_id === v.id && r.image).map((r) => r.image) : []);
+    const shots = v ? Object.values(armorStore.generations).filter((g) => g.version_id === v.id && g.image) : [], diverging = shots.filter((g) => consistencySummary(g).state === 'DIVERGENT').length, unchecked = shots.filter((g) => g.mode === 'card_art' && consistencySummary(g).state === 'UNCHECKED').length;
+    const newer = versions.filter((x) => x.lock && x.status !== 'ARCHIVED' && v && x.number > v.number).pop();
+    const statusText = !v ? 'Nenhuma armadura escolhida.' : `Status: ${v.status} (${STATE_LABELS[v.status]}), versão ${v.number}. ${ready ? (p.armorUse ? 'O prompt incorpora o Design Lock.' : 'Marque abaixo para usar no prompt.') : 'Ainda sem aprovação: o prompt não usa esta armadura.'}`;
+    return `<h3 class="ap-section">Armadura / Equipamento</h3>${offer}${sourceField}
+      ${select('armorType', 'Tipo de armadura', [['', 'Todos'], ...FAMILIES], p.armorType || '')}
+      ${select('armorProject', 'Armadura vinculada', [['', 'Nenhuma'], ...list.map((x) => { const s = armorStore.versions[x.head_version_id]?.status; return [x.id, `${x.name} · ${x.faction} · ${s}`]; })], p.armorProject || '')}
+      ${p.armorProject ? select('armorVersion', 'Versão da armadura', versions.map((x) => [x.id, `v${x.number} · ${x.status}`]), p.armorVersion) : ''}
+      <p class="ap-note">${esc(statusText)}</p>
+      ${newer ? `<p class="ap-note">Existe versão travada mais nova: v${newer.number}. A carta continua na versão escolhida até você trocar.</p>` : ''}
+      ${diverging ? `<p class="ap-warn ap-wide">${diverging} imagem(ns) desta versão com divergência do lock: revise no Armor Forge.</p>` : ''}
+      ${p.armorProject ? `<label class="ap-check ap-wide"><input type="checkbox" name="armorUse"${p.armorUse ? ' checked' : ''}${ready ? '' : ' disabled'}> Usar projeto aprovado na geração</label>
+      <div class="ap-wide">${input('armorAdjust', 'Ajuste ao personagem (proporção, encaixe, articulação)', p.armorAdjust, 'Taller and leaner; same plates')}</div>` : ''}
+      <div class="ap-wide ap-armor-actions"><button type="button" data-armor="new">Criar nova armadura</button>${p.armorProject ? '<button type="button" data-armor="edit">Editar projeto</button>' : ''}${ready && p.armorUse ? `<label>Registrar arte gerada no projeto<input type="file" data-armor-image accept="image/png,image/jpeg,image/webp"></label>` : ''}</div>
+      ${p.armorProject ? fold('armor-refs', `Visualizar referências (${refs.length})`, refs.length ? `<div class="ap-wide ap-armor-refs">${refs.map((name) => `<a href="${imageUrl(name)}" target="_blank" rel="noopener" download><img src="${imageUrl(name)}" alt="Referência da armadura" loading="lazy"></a>`).join('')}</div><p class="ap-note">${ready ? 'Anexe estas imagens junto do prompt, quando o gerador aceitar imagens.' : 'Ainda não aprovadas.'}${unchecked ? ` ${unchecked} arte(s) registrada(s) sem verificação visual.` : ''}</p>` : '<p class="ap-note">Sem imagens registradas.</p>') : ''}`;
+  }
   function draw() {
+    syncArmor();
     const f = facts, p = params, none = (t) => [['', t]], c = resolveCast(f, p), body = c.profile, nature = c.nature;
     const cast = nature === 'character' || nature === 'scene' || nature === 'domain', hasCount = nature === 'scene' || nature === 'domain';
     const groupBy = (list) => list.reduce((all, x) => ({...all, [x[0]]: [...(all[x[0]] || []), x.slice(1)]}), {});
@@ -769,7 +851,7 @@ export function mountArtPrompt(dialog, {getCard, getCards, say, masterUrl}) {
       ${p.creature === 'custom' ? input('creatureCustom', 'Tipo personalizado', p.creatureCustom, 'Ex.: caranguejo colossal') : ''}
       ${nature === 'equipment' || nature === 'divine' ? '' : input('species', 'Subtipo ou espécie', p.species, 'Ex.: lobo das neves')}` : ''}
       ${f.isSelf || p.generic ? '' : select('person', 'Personagem', [...none('Sem personagem'), ...f.people.map((n) => [n])], p.person)}
-      ${f.armors.length ? select('armor', 'Armadura', [...none('Sem armadura'), ...f.armors.map((a) => [a.name, `${a.name} (${a.line})`])], p.armor) : ''}
+      ${f.armors.length && (p.armorSource || 'auto') === 'auto' ? select('armor', 'Armadura', [...none('Sem armadura'), ...f.armors.map((a) => [a.name, `${a.name} (${a.line})`])], p.armor) : ''}
       ${p.generic ? '' : select('version', 'Base do design', VERSIONS, p.version)}`;
     const modeFields = {
       scene: `<h3 class="ap-section">Cena</h3>${select('sceneType', 'Tipo de cena', SCENE_TYPES, p.sceneType)}${p.sceneType === 'custom' ? input('sceneCustom', 'Cena personalizada', p.sceneCustom, 'a coronation at sea') : ''}${select('sceneMoment', 'Momento cinematográfico', SCENE_MOMENTS, p.sceneMoment)}${select('sceneFocus', 'Foco da cena', SCENE_FOCI, p.sceneFocus)}`,
@@ -786,6 +868,7 @@ export function mountArtPrompt(dialog, {getCard, getCards, say, masterUrl}) {
       <div class="ap-wide">${select('nature', 'Natureza da arte', NATURES, p.nature || 'auto')}</div>
       ${select('god', 'Deus', [...none('Nenhum'), ...Object.keys(GODS).map((g) => [g])], p.god)}${select('epic', 'Grandiosidade', EPIC_LEVELS, p.epic)}${select('mode', 'Saída', [['director', 'Diretor de arte: Master + pedido'], ['image', 'Prompt direto de imagem']], p.mode)}
       ${subject}
+      ${armorSection(f, p, c, fold)}
       ${modeFields}
       ${figureFields}
       <h3 class="ap-section">Composição</h3>
@@ -806,13 +889,14 @@ export function mountArtPrompt(dialog, {getCard, getCards, say, masterUrl}) {
       <div class="ap-variant"><label>Variante de arte<select data-variant>${VARIANTS.map(([id, label]) => `<option value="${id}"${id === variant ? ' selected' : ''}>${esc(label)}${decisions?.variants?.[id] ? (decisions.variants[id].approved ? ' (aprovada)' : ' (salva)') : ''}</option>`).join('')}</select></label>
         <button type="button" data-ap="save">Salvar direção</button><button type="button" data-ap="approve">${entry?.approved ? 'Aprovada' : 'Aprovar direção'}</button></div>
     </div></div>
-    <p class="hint">${p.generic ? 'Sem referência: é só colar o prompt direto no ChatGPT e pedir a imagem.' : 'Anexe as imagens de referência junto do prompt.'} O Master completo não cabe no link: o ChatGPT abre vazio e você cola o prompt, que já fica copiado.</p>
+    <p class="hint">${armorChoice(p)?.references?.length ? `Anexe as ${armorChoice(p).references.length} referências aprovadas da armadura junto do prompt.` : p.generic ? 'Sem referência: é só colar o prompt direto no ChatGPT e pedir a imagem.' : 'Anexe as imagens de referência junto do prompt.'} O Master completo não cabe no link: o ChatGPT abre vazio e você cola o prompt, que já fica copiado.</p>
     <div class="row"><button type="button" data-ap="copy" class="primary">Copiar prompt</button><button type="button" data-ap="gpt">Abrir no ChatGPT</button>${nature === 'character' ? select('scope', 'Sortear', RANDOM_SCOPES, p.scope || 'all') : ''}<button type="button" data-ap="random">Randomizar</button><button type="button" data-ap="reset">Restaurar</button><button value="close">Fechar</button></div></form>`;
     refresh();
     if (savedPrompt) { output().value = savedPrompt; savedPrompt = ''; }
     dialog.scrollTop = scroll;
     if (focused) dialog.querySelector(`[name="${focused}"]`)?.focus();
   }
+  let adjustTimer = null;
   const REDRAW = new Set(['nature', 'creature', 'order', 'count', 'formation', 'variety', 'shot', 'role', 'sceneType', 'sceneFocus', 'effect', 'visible', 'origin', 'objectKind', 'presentation', 'support', 'bearer', 'envType', 'manifestation', 'person']);
   dialog.addEventListener('input', (e) => {
     const {name, type, value, checked} = e.target;
@@ -824,15 +908,33 @@ export function mountArtPrompt(dialog, {getCard, getCards, say, masterUrl}) {
     if (name === 'count' || name === 'formation' || name === 'countCustom' || name === 'nature' || name === 'visible') suggest();
     if (name === 'countCustom') { const shot = dialog.querySelector('[name=shot]'); if (shot) shot.value = params.shot; }
     if (name === 'scope') return;
+    if (name === 'armorSource') { if (value !== 'original') { const bound = armorBinding(); if (bound) armorPost('binding-delete', {id: bound.id}).then(draw); } else if (params.armorProject) saveArmorBinding(); return draw(); }
+    if (name === 'armorProject') { params.armorVersion = value ? bestVersion(value) : ''; params.armorUse = true; if (value) { saveArmorBinding()?.then?.(draw); } else { const bound = armorBinding(); if (bound) armorPost('binding-delete', {id: bound.id}).then(draw); } return draw(); }
+    if (name === 'armorVersion' || name === 'armorUse') { saveArmorBinding(); return draw(); }
+    if (name === 'armorType') return draw();
+    if (name === 'armorAdjust') { syncArmor(); clearTimeout(adjustTimer); adjustTimer = setTimeout(saveArmorBinding, 500); return refresh(); }
     if (REDRAW.has(name)) return draw();
     if (name === 'notes') dialog.querySelector('.ap-warnings').innerHTML = warningHtml(facts, params);
     refresh();
   });
   dialog.addEventListener('change', async (e) => {
+    if (e.target.matches('[data-armor-image]')) {
+      const file = e.target.files[0], id = file && await armorRecord();
+      if (!id) return;
+      try {
+        const r = await fetch(`/api/armor-forge/image/${encodeURIComponent(id)}`, {method: 'POST', body: file}), data = await r.json();
+        if (!r.ok) return void say(data.erro || 'Imagem recusada.', true);
+        armorStore = data.store;
+        say('Arte registrada no projeto da armadura. A arte da carta não muda.');
+        const shown = output().value; draw(); output().value = shown;
+      } catch { say('Não consegui registrar a imagem.', true); }
+      return;
+    }
     if (!e.target.matches('[data-variant]')) return;
     variant = e.target.value;
     const entry = entryOf();
     params = entry ? restoreEntry(facts, entry) : params;
+    adoptBinding();
     savedPrompt = entry?.prompt || '';
     draw();
   });
@@ -862,6 +964,9 @@ export function mountArtPrompt(dialog, {getCard, getCards, say, masterUrl}) {
       } catch { say('Não consegui gravar: abra o Card Forge pelo servidor local.', true); }
       return;
     }
+    const armorAction = e.target.closest('[data-armor]')?.dataset.armor;
+    if (armorAction === 'new') { const q = new URLSearchParams({new: '1', card: cardId() || '', name: facts.name, faction: facts.faction || ''}); window.open(`armor.html?${q}`, '_blank'); return; }
+    if (armorAction === 'edit') { window.open(`armor.html?project=${encodeURIComponent(params.armorProject)}&version=${encodeURIComponent(params.armorVersion)}`, '_blank'); return; }
     const action = e.target.closest('[data-ap]')?.dataset.ap;
     if (!action) return;
     if (action === 'save' || action === 'approve') {
@@ -882,16 +987,24 @@ export function mountArtPrompt(dialog, {getCard, getCards, say, masterUrl}) {
     if (action === 'addcaster') { params.visible = 'caster'; draw(); return; }
     if (action === 'addbearer') { params.bearer = 'hands'; draw(); return; }
     if (action === 'nobearer') { params.bearer = 'none'; draw(); return; }
-    if (action === 'reset') { params = defaultParams(facts); savedPrompt = ''; draw(); return; }
+    if (action === 'reset') { params = defaultParams(facts); savedPrompt = ''; adoptBinding(); draw(); return; }
     if (action === 'random') { params = randomParams(facts, params, Math.random, params.scope || 'all'); draw(); return; }
     if (action === 'fixnotes') { params.notes = allowedNotes(params.notes); draw(); return; }
     if (action === 'solo') { params.count = '1'; suggest(); draw(); return; }
     if (action === 'shot') { params.shotManual = false; suggest(); draw(); return; }
     const copied = await copy();
+    armorRecord();
     if (action === 'copy') return void say(copied ? 'Prompt copiado.' : 'Não consegui copiar: selecione o texto do prompt.', !copied);
     const url = `${GPT_URL}?q=${encodeURIComponent(output().value)}`, fits = url.length <= URL_LIMIT;
     window.open(fits ? url : GPT_URL, '_blank', 'noopener');
     say(fits ? 'ChatGPT aberto com o prompt.' : copied ? 'Prompt copiado: cole no ChatGPT.' : 'Copie o prompt e cole no ChatGPT.', !fits && !copied);
+  });
+  // Volta da aba do Armor Forge: aprovação ou vínculo novo aparecem sem fechar o popup, e só redesenha se algo mudou.
+  window.addEventListener('focus', async () => {
+    if (!dialog.open) return;
+    const before = JSON.stringify(armorStore);
+    await loadArmorStore();
+    if (JSON.stringify(armorStore) !== before) { adoptBinding(); draw(); }
   });
   return async () => {
     if (!master) {
@@ -906,6 +1019,8 @@ export function mountArtPrompt(dialog, {getCard, getCards, say, masterUrl}) {
     params = saved ? restoreEntry(facts, saved) : defaultParams(facts);
     savedPrompt = saved?.prompt || '';
     if (!master) params.mode = 'image';
+    await loadArmorStore();
+    adoptBinding();
     draw();
     dialog.showModal();
   };

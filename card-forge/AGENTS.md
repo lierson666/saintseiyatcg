@@ -23,6 +23,7 @@ python3 card-forge/serve.py --selftest
 - `index.html`, `forge.css`, `forge.js`: a UI e o renderizador. Desenha no canvas nativo 1488×2091.
 - `serve.py`: serve arquivos estáticos e grava edições: `/api/card`, `/api/cards`, `/api/project/<id>`, `/api/art/<id>`, `/api/export/<nome>` e `/api/booster/<id>` e `/api/booster-logo/<id>`.
 - `boosters.html`: arte de fundo (arrastar + zoom, 800×1440) e logo da edição de cada pacote de booster. Grava `playtest/assets/boosters/<id>.webp` e `playtest/assets/boosters/logo/<id>.webp`; o lobby (`.ec-pack`) põe o logo embaixo da arte.
+- `armor.html`, `armor.js`, `armor.css`, `armor-model.js`, `armor_forge.py`: ARMOR FORGE. Armadura como recurso próprio e versionado, antes do personagem. Loja em `armor-forge/store.json` e imagens em `armor-forge/images/` (`ARMOR_FORGE_DIR` troca a pasta nos testes). Versão aprovada não muda: alterar cria versão. Nunca toca em `data/cards.json`. Testes: `node --test tools/test-armor-forge.mjs` e `uv run --with playwright python tools/test-armor-forge-ui.py`.
 - `tools/extract_template.py`: extrai as peças PNG dos PSDs. Só lê `FRAMES/`.
 
 ```bash
