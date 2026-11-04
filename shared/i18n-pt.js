@@ -321,7 +321,7 @@ self.ssI18nPT = {
     // Registro da partida (app.js logEvent/say)
     ['Awakens at Soul ≤ {0}', 'Desperta com Alma ≤ {0}'], ['at Soul ≤ {0}', 'com Alma ≤ {0}'], ['{0}: choose a Devotee you control', '{0}: escolha um Devoto que você controla'], ['{0}: choose an enemy Devotee', '{0}: escolha um Devoto inimigo'],
     ['Equip {0} to which Devotee?', 'Equipar {0} em qual Devoto?'],
-    ['Player {w0} begins a round.', 'Jogador {0} começa uma rodada.'], ['{w0} mulligans {w1}.', '{0} faz mulligan de {1}.'], ['Seed {w0}. Player {w1} goes first.', 'Semente {0}. Jogador {1} começa.'],
+    ['Round · {w0}', 'Rodada · {0}'], ['Player {w0} begins a round.', 'Jogador {0} começa uma rodada.'], ['{w0} mulligans {w1}.', '{0} faz mulligan de {1}.'], ['Seed {w0}. Player {w1} goes first.', 'Semente {0}. Jogador {1} começa.'],
     ['{0}: {w1} damage, {w2} prevented, {w3} to Armor.', '{0}: {1} de dano, {2} prevenido, {3} na Armadura.'], ['{0}: {w1} damage, {w2} prevented.', '{0}: {1} de dano, {2} prevenido.'],
     ['{0}: {w1} damage, {w2} to Armor.', '{0}: {1} de dano, {2} na Armadura.'], ['{0}: {w1} damage.', '{0}: {1} de dano.'],
     ['God {w0} loses {w1} Soul ({w2}).', 'Deus {0} perde {1} de Alma ({2}).'], ['{w0} places a Cosmo Base.', '{0} coloca uma Cosmo Base.'], ['{w0} gains {w1} Latent.', '{0} ganha {1} Latente.'],

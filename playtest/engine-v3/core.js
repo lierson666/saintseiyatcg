@@ -136,10 +136,10 @@ export function mill(state, key, requested) {
 export function placeBase(state, key, uid, card) {
   alive(state);
   const p = state.players[key];
-  if (key !== state.active) throw new RuleError('D1', 'só o jogador ativo age no turno');
+  if (key !== state.active) throw new RuleError('D1', 'só o jogador ativo age no Round');
   assertIdle(state);
   if (!card.cosmoble) throw new RuleError('D4', 'a carta não é Cosmoble');
-  if (p.baseTurn === state.turn) throw new RuleError('D4', 'já colocou uma Base neste turno');
+  if (p.baseTurn === state.turn) throw new RuleError('D4', 'já colocou uma Base neste Round');
   const at = p.hand.indexOf(uid);
   if (at < 0) throw new RuleError('D4', 'a carta não está na mão');
   p.hand.splice(at, 1);
@@ -199,7 +199,7 @@ export function loseGame(state, key, reason) {
 // D22: um Strike por Devotee por turno próprio; preparar de novo não renova.
 export function recordStrike(state, uid) {
   alive(state);
-  if (state.strikes.get(uid) === state.turn) throw new RuleError('D22', 'este Devotee já declarou Strike neste turno');
+  if (state.strikes.get(uid) === state.turn) throw new RuleError('D22', 'este Devotee já declarou Strike neste Round');
   state.strikes.set(uid, state.turn);
 }
 

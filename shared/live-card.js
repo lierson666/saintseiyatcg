@@ -3,7 +3,7 @@ import {renderRules,inlineMarkup,presentationRules,ruleBlocksWithoutKeywords,blo
 import {isArmor,isEquipment} from './card-model.js?v=20261024-4';
 import {renderPublishedCard,visualProject} from './layout-studio/runtime.js?v=20261102-eq6';
 import {printedEquipmentBonuses,signedBonus,armorBonusText} from './card-visual-values.js?v=20261102-arroba1';
-import {renderKeywordNotes,keywordTipAttr} from './keyword-glossary.js?v=20261102-arroba1';
+import {renderKeywordNotes,keywordTipAttr} from './keyword-glossary.js?v=20261104-round2';
 import {displayCard,keywordName,typeWord,lang} from './card-i18n.js?v=20261102-escala1';
 import {EDITIONS,editionOf} from './editions.js?v=20261102-1';
 import {scrimCss} from './card-scrim.js?v=20261102-escala1';

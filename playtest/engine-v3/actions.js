@@ -27,7 +27,7 @@ export function applyAction(match, ctx, action) {
     case 'base': return placeBase(s, key, uid, card());
     case 'hidden': return castHidden(s, ctx, key, uid, choice); // §4A: joga da Cosmo Base
     case 'strike': {
-      if (s.active !== key) throw new RuleError('D1', 'Strike fora do próprio turno');
+      if (s.active !== key) throw new RuleError('D1', 'Strike fora do próprio Round');
       const t = String(choice.target || '');
       return declareStrike(s, ctx, uid, t.startsWith('god:') ? {kind: 'god', player: t.slice(4)} : {kind: 'devotee', uid: t});
     }
@@ -37,8 +37,8 @@ export function applyAction(match, ctx, action) {
     case 'pass': return pass(s, key);
     case 'orderTriggers': return orderTriggers(s, key, choice.order || []);
     case 'endTurn':
-      if (s.active !== key) throw new RuleError('D1', 'END TURN fora do próprio turno');
-      if (mustStrike(s, ctx, key).length) throw new RuleError('V6', 'Uncontrolled Rage: este Devotee precisa declarar Strike antes do END TURN');
+      if (s.active !== key) throw new RuleError('D1', 'END ROUND fora do próprio Round');
+      if (mustStrike(s, ctx, key).length) throw new RuleError('V6', 'Uncontrolled Rage: este Devotee precisa declarar Strike antes do END ROUND');
       match.ending = true;
       endTurn(s);
       return handLimit(s, ctx, key);

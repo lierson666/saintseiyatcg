@@ -217,7 +217,7 @@ export function v6Mods(state, ctx, key, uid) {
 // Início e fim do turno do controlador (core.js não tem ctx: usa o da partida, registry.bindContext).
 const turnHook = hook => state => {
   const ctx = contextOf(state);
-  return ctx ? collect(state, ctx, [state.active], hook, [], hook === 'startTurn' ? 'beginning of turn' : 'end of turn') : [];
+  return ctx ? collect(state, ctx, [state.active], hook, [], hook === 'startTurn' ? 'beginning of round' : 'end of round') : [];
 };
 hooks.turnStart.push(turnHook('startTurn'));
 // Base de Cosmo posta pelo jogador (core.placeBase): observadores `watchBase(s, c, key, self, player, uid)`.

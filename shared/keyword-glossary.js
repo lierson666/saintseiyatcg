@@ -8,10 +8,10 @@ export const KEYWORD_RULES = {
   'Long Range': "When it starts a Strike, its damage resolves before retaliation. If the defender is destroyed, it doesn't retaliate.",
   'Pierce': "When it Strikes a Devotee, excess damage is dealt to that player's God Soul. Doesn't apply to retaliation.",
   'Impulse': 'Can declare a Strike the round it enters the battlefield, against any legal target, including the God.',
-  'Seal': 'This Devotee becomes Unprepared and gets a Seal counter. At the start of its owner\'s turn, it removes one Seal counter and does not Prepare.',
-  'Sealed': 'Has one or more Seal counters. It stays Unprepared until it starts a turn with none.',
+  'Seal': 'This Devotee becomes Unprepared and gets a Seal counter. At the start of its owner\'s round, it removes one Seal counter and does not Prepare.',
+  'Sealed': 'Has one or more Seal counters. It stays Unprepared until it starts a round with none.',
   'Training': 'Each Training counter gives +1 ATK / +1 HP. Counters stack while the Devotee stays on the battlefield.',
-  'Afterlife': 'Activate from your Tartarus by paying its Afterlife cost, on your turn or in response. After it resolves, this card goes to the Void.',
+  'Afterlife': 'Activate from your Tartarus by paying its Afterlife cost, on your round or in response. After it resolves, this card goes to the Void.',
   'Hidden Cosmo': 'While this card is one of your Cosmo Bases, you can play it from there by paying X instead of its cost. The top card of your deck replaces it as an Unprepared Base.', // guia §4A
 };
 
@@ -22,10 +22,10 @@ export const KEYWORD_RULES_PT = {
   'Long Range': 'Quando começa um Golpe, seu dano resolve antes do revide. Se o defensor for destruído, ele não revida.',
   'Pierce': 'Quando Golpeia um Devoto, o dano excedente vai para a Alma do Deus daquele jogador. Não vale no revide.',
   'Impulse': 'Pode declarar um Golpe na rodada em que entra no campo de batalha, contra qualquer alvo válido, inclusive o Deus.',
-  'Seal': 'Este Devoto fica Despreparado e ganha um marcador de Selo. No início do turno do dono, ele tira um marcador de Selo e não prepara.',
-  'Sealed': 'Tem um ou mais marcadores de Selo. Fica Despreparado até começar um turno sem nenhum.',
+  'Seal': 'Este Devoto fica Despreparado e ganha um marcador de Selo. No início da rodada do dono, ele tira um marcador de Selo e não prepara.',
+  'Sealed': 'Tem um ou mais marcadores de Selo. Fica Despreparado até começar uma rodada sem nenhum.',
   'Training': 'Cada marcador de Treinamento dá +1 ATQ / +1 PV. Os marcadores se acumulam enquanto o Devoto estiver no campo de batalha.',
-  'Afterlife': 'Ative do seu Tártaro pagando o custo de Além-Túmulo, no seu turno ou como resposta. Depois de resolver, esta carta vai para o Vazio.',
+  'Afterlife': 'Ative do seu Tártaro pagando o custo de Além-Túmulo, na sua rodada ou como resposta. Depois de resolver, esta carta vai para o Vazio.',
   'Hidden Cosmo': 'Enquanto esta carta for uma das suas Cosmo Bases, você pode jogá-la de lá pagando X no lugar do custo. A carta do topo do seu deck entra no lugar como Base Despreparada.', // guia §4A
 };
 

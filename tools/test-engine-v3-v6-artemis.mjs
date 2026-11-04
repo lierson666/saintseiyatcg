@@ -183,7 +183,7 @@ test('Domain 427 Temple of the Moon: Satellites +0/+1; Ressonância põe um Trai
   activate(s, ctx, 'A', 'domain:A:res', {}); passAll(s);
   assert.equal(s.units[archer].training, 1);
   assert.ok(!s.units[other].training, 'não é Satellite');
-  assert.throws(() => activate(s, ctx, 'A', 'domain:A:res', {}), /turno/);
+  assert.throws(() => activate(s, ctx, 'A', 'domain:A:res', {}), /Round/);
 });
 
 test('tokens (guia §63): The Forest Invades Sanctuary cria 2 Forest Guardian 3/3 Unprepared; token derrotado some', async () => {

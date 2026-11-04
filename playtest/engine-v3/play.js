@@ -38,7 +38,7 @@ export function payCost(state, key, cost) {
 // Sorcery: jogador ativo, partida em curso, janela fechada (D1, D173, P06). Devolve a carta da mão.
 function sorceryFromHand(state, ctx, key, uid, kind) {
   if (state.victory) throw new RuleError('D52', 'a partida já terminou');
-  if (key !== state.active) throw new RuleError('D1', 'só o jogador ativo age, no próprio turno');
+  if (key !== state.active) throw new RuleError('D1', 'só o jogador ativo age, no próprio Round');
   assertIdle(state);
   return fromHand(state, ctx, key, uid, kind);
 }
@@ -166,7 +166,7 @@ export function activate(state, ctx, key, uid, choice = {}) {
   // Guia §56 (autor, 03/11/2026): `speed: 'moment'` responde numa janela em que o jogador tem prioridade e paga como Moment.
   const answering = entryOf(ctx, uid)?.activate?.speed === 'moment' && Boolean(state.window);
   if (answering) { if (state.window.priority !== key) throw new RuleError('P06', `${key} não tem prioridade`); } else {
-    if (key !== state.active) throw new RuleError('D1', 'só o jogador ativo age, no próprio turno');
+    if (key !== state.active) throw new RuleError('D1', 'só o jogador ativo age, no próprio Round');
     assertIdle(state); // D173: Sorcery
   }
   // Domain (`domain:${key}`): ativada da linha geral do Domain do próprio jogador (vale com qualquer God); não é objeto de deck nem tem {T}.
@@ -175,7 +175,7 @@ export function activate(state, ctx, key, uid, choice = {}) {
   if (res && !domainResonant(state, key) && V6[state.domains?.[key]]?.res) throw new RuleError('§63', 'Ressonância: o seu God não é da facção do Domain');
   if (domain && !(res ? dom?.res : uid === `domain:${key}` && dom?.activate)) throw new RuleError('{T}', 'sem habilidade ativada de Domain');
   const resTag = res && resonanceTag(state, key, 'activate');
-  if (res && state.roundUses.has(resTag)) throw new RuleError('§63', 'a Ressonância já foi usada neste turno');
+  if (res && state.roundUses.has(resTag)) throw new RuleError('§63', 'a Ressonância já foi usada neste Round');
   const v6 = domain ? (res ? dom.res : dom.activate) : entryOf(ctx, uid)?.activate;
   const ability = v6 ? {...v6, ...(domain && {tap: false}), check: (s, c, k, ch) => v6.check?.(s, c, k, uid, ch), run: (s, c, k, ch) => v6.run(s, c, k, uid, ch)}
     : ABILITIES[ctx.objects[uid]?.cardId.slice(-3)];
@@ -205,7 +205,7 @@ export function activate(state, ctx, key, uid, choice = {}) {
 // Armor (guia §28, 30/10/2026): sem portador ou tirada de outro Devotee seu; AÇÃO + Equip impresso para qualquer um, inclusive o Resonant.
 export function reequip(state, ctx, key, uid, bearer) {
   if (state.victory) throw new RuleError('D52', 'a partida já terminou');
-  if (key !== state.active) throw new RuleError('D1', 'só o jogador ativo age, no próprio turno');
+  if (key !== state.active) throw new RuleError('D1', 'só o jogador ativo age, no próprio Round');
   assertIdle(state);
   const card = ctx.cards.get(ctx.objects[uid]?.cardId);
   if (!state.players[key].battlefield.includes(uid) || card?.kind !== 'Equipment' || (ctx.attached[uid] && !card.armor)) {

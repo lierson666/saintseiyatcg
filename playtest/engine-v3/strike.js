@@ -15,7 +15,7 @@ const onField = (state, key, uid) => state.players[key].battlefield.includes(uid
 export function checkStrike(state, ctx, attacker, target) {
   if (state.victory) throw new RuleError('D52', 'a partida já terminou');
   const key = controllerOf(state, attacker) ?? ctx.objects[attacker]?.owner, enemy = state.order.find(k => k !== key); // controlador (265 troca controle)
-  if (key !== state.active) throw new RuleError('D1', 'só o jogador ativo declara Strike no próprio turno');
+  if (key !== state.active) throw new RuleError('D1', 'só o jogador ativo declara Strike no próprio Round');
   assertIdle(state);
   if (!onField(state, key, attacker) || card(ctx, attacker).kind !== 'Devotee') throw new RuleError('P04', 'o atacante precisa ser um Devotee seu no campo');
   // P02: entra Unprepared; Impulse deixa declarar Strike no turno em que entrou.
@@ -44,7 +44,7 @@ export function checkStrike(state, ctx, attacker, target) {
   if (guarded && !ignores && !(target.kind === 'devotee' && isGuardian(target.uid))) {
     throw new RuleError('P05', 'há Guardian em campo: o Strike precisa mirar um Devotee com Guardian');
   }
-  if (state.strikes.get(attacker) === state.turn) throw new RuleError('D22', 'este Devotee já declarou Strike neste turno');
+  if (state.strikes.get(attacker) === state.turn) throw new RuleError('D22', 'este Devotee já declarou Strike neste Round');
   // Para a UI explicar quando um Strike passa por Guardian.
   const bypass = guarded && !(target.kind === 'devotee' && isGuardian(target.uid)) ? (flies ? 'Nimble' : 'Hunter\'s Instinct') : null;
   return {key, enemy, bypass};

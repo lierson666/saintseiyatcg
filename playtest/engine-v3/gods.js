@@ -151,7 +151,7 @@ hooks.roundEnd.push(state => state.order.flatMap(key => {
 export function removeJudgment(state, ctx, key, devotees) {
   const j = state.divine[key].judgment;
   if (!j) throw new RuleError('D206', 'não há Divine Judgment neste God');
-  if (state.active !== key) throw new RuleError('D206', 'só no próprio turno');
+  if (state.active !== key) throw new RuleError('D206', 'só no próprio Round');
   assertIdle(state);
   if (devotees.length !== 3 || new Set(devotees).size !== 3 || !devotees.every(uid => controllerOf(state, uid) === key && card(ctx, uid).kind === 'Devotee')) {
     throw new RuleError('D206', 'sacrifique exatamente 3 Devotees seus');

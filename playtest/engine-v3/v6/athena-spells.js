@@ -27,8 +27,8 @@ export default {
     if (t) shield(s, t, 2, {strikeOnly: false});
     k.draw(s, key, 1);
   }}},
-  'athena-v6-506': {spell: {check: k.needTarget(struck, 'sem Devotee inimigo que declarou Strike neste turno'), run: (s, c, key) => { // Sanctuary's Judgment
-    const t = k.choose(c, key, "SANCTUARY'S JUDGMENT", struck(s, c, key), {text: 'Choose target enemy Devotee that declared a Strike this turn.'});
+  'athena-v6-506': {spell: {check: k.needTarget(struck, 'sem Devotee inimigo que declarou Strike neste Round'), run: (s, c, key) => { // Sanctuary's Judgment
+    const t = k.choose(c, key, "SANCTUARY'S JUDGMENT", struck(s, c, key), {text: 'Choose target enemy Devotee that declared a Strike this round.'});
     if (t) k.damage(s, c, t, 3);
   }}},
   'athena-v6-507': {spell: {check: k.needTarget((s, c, key) => saints(s, c, key), 'sem Saint aliado'), run: (s, c, key) => { // Oath of the Saints

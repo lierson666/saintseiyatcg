@@ -32,7 +32,7 @@ import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-face3';
 import {unlock, playMusic, playFxFile, setVolume, volume} from '../audio.js?v=20261102-voz4';
 import {telas, cardVoices, anim, sound, voice, imageUrl, applyColors, applyTexts} from '../telas.js?v=20261102-barulho1';
 import {renderLiveCard, renderCardText, fullSizePieces} from '../../shared/live-card.js?v=20261102-escala1';
-import {renderKeywordNotes, renderKeywordIcons} from '../../shared/keyword-glossary.js?v=20261102-arroba1';
+import {renderKeywordNotes, renderKeywordIcons} from '../../shared/keyword-glossary.js?v=20261104-round2';
 import {armorBonusText, printedEquipmentBonuses} from '../../shared/card-visual-values.js?v=20261102-arroba1';
 import {lightArt} from '../../shared/light-art.js';
 import {useGodPortraits} from '../avatar-face.js?v=20261031-3';
@@ -438,7 +438,7 @@ function updateClock(force = false) {
   // só escreve se mudou: o tique é de 250 ms e cada escrita refaz layout e pintura. Compara com o original guardado: o i18n troca o texto na tela. O render reescreve a marcação, daí o force.
   const write = (el, text) => { if (el && (force || el.clockText !== text)) { el.clockText = text; el.textContent = text; } };
   write(time, key ? `${String(Math.floor(t / 60)).padStart(2, '0')}:${String(t % 60).padStart(2, '0')}` : '--:--');
-  write(label, !key ? 'Clock' : key === S().active ? `Turn · ${key}` : `Response · ${key}`);
+  write(label, !key ? 'Clock' : key === S().active ? `Round · ${key}` : `Response · ${key}`);
   const dc = $('[data-decision-clock]');
   if (dc && key && !vsAI()) { write(dc, `${t}s left`); dc.classList.toggle('urgent', r.total <= 20); }
 }
@@ -903,7 +903,7 @@ function controlPanel() {
   if (!tips && !s.window) return '';
   // Com pilha, ela ocupa o box e a dica encolhe numa linha.
   return `<section class="ctrl ${busy ? 'is-busy' : ''} ${ctrlOpen ? 'is-open' : ''} ${s.window ? 'has-chain' : ''}" aria-label="Control panel">
-    ${tips ? `<button class="ctrl__head" data-ctrl-toggle aria-expanded="${ctrlOpen}"><small>${s.active === viewer() ? 'Your round' : esc(`${seatName(s.active)}'s turn`)}</small><strong>${esc(h.title)}</strong></button>
+    ${tips ? `<button class="ctrl__head" data-ctrl-toggle aria-expanded="${ctrlOpen}"><small>${s.active === viewer() ? 'Your round' : esc(`${seatName(s.active)}'s round`)}</small><strong>${esc(h.title)}</strong></button>
       ${h.note ? `<p class="ctrl__note">${inlineMarkup(h.note)}</p>` : ''}${items && !s.window ? `<ul class="ctrl__hints">${items}</ul>` : ''}` : ''}
     ${s.window ? `<div class="priority ctrl__chain"><small>Priority</small><strong>${s.window.priority === viewer() ? 'You' : settings.ai !== 'none' ? 'AI' : `Player ${s.window.priority}`}</strong></div>` : ''}
   </section>`;
@@ -926,7 +926,7 @@ function clockMarkup() {
   const glyphs = [...SIGNS].map((g, i) => `<b style="--a:${(i + .5) / 12 * 360 - 90}deg">${g}&#xFE0E;</b>`).join('');
   // Tempo no centro do mostrador, dentro do anel de signos e chamas.
   return `<div class="zclock" data-clock role="timer" aria-live="off"><div class="zclock__dial">${glyphs}</div>${torches}
-    <div class="zclock__time"><b data-clock-time>--:--</b><small data-clock-label>Turn</small></div></div>`;
+    <div class="zclock__time"><b data-clock-time>--:--</b><small data-clock-label>Round</small></div></div>`;
 }
 
 // Slot de conjuração: a carta jogada fica aqui, fora do campo, até o alvo ser escolhido; dela sai a seta.

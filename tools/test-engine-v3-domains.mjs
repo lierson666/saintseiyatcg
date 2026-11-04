@@ -58,7 +58,7 @@ function gate(domain, prepare = () => {}) {
   prepare(off);
   assert.throws(() => activate(off.s, off.ctx, 'A', 'domain:A:res'), /facção/, `${domain}: Ressonância barrada com outro God`);
 }
-const twice = (s, ctx) => assert.throws(() => activate(s, ctx, 'A', 'domain:A:res'), /turno/);
+const twice = (s, ctx) => assert.throws(() => activate(s, ctx, 'A', 'domain:A:res'), /Round/);
 
 test('30 Domains no engine: 146, 147 e 148 saíram; cada Domain tem Ressonância', () => {
   for (const id of ['poseidon-v6-146', 'poseidon-v6-147', 'poseidon-v6-148']) assert.equal(V6[id], undefined, id);
