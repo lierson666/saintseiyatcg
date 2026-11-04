@@ -99,4 +99,57 @@ with tempfile.TemporaryDirectory() as temp:
             continue
         raise AssertionError(f'aceitou: {wrong.get("fonte")} {wrong.get("tipo")} {wrong.get("licenca")!r}')
     assert len(load_catalog(root)['efeitos']) == 1
+
+    # Rascunho do Criador: não entra sozinho; aprovar fixa, descartar apaga folha e ajuste.
+    frames = [Image.new('RGBA', (4, 4), (255, 0, 0, 255)), Image.new('RGBA', (4, 4), (0, 255, 0, 255))]
+    draft, _ = add_effect(frames, [50, 50], {'nome': 'R', 'fonte': 'criador', 'licenca': 'Projeto', 'rascunho': True}, root)
+    assert draft['rascunho'] is True
+    (root / 'data/card-animations.json').write_text(json.dumps({'efeitos': {draft['id']: {'ligado': True}}}), encoding='utf-8')
+    edit_body({'id': draft['id'], 'descartar': True}, root)
+    assert not (root / draft['arquivo']).exists() and draft['id'] not in json.loads((root / 'data/card-animations.json').read_text(encoding='utf-8'))['efeitos']
+    recipe = {'tipo': 'block', 'cor': '#112233', 'escala': 1, 'velocidade': 1.5, 'ancora': 'alvo', 'camadas': [{'ligada': True, 'atraso': 0}, {'ligada': False, 'atraso': 40}]}
+    made = edit_body({'nome': 'Bloqueio Azul', 'receita': recipe, 'duracao_ms': 500}, root)['efeito']
+    assert made['id'] == 'sf-bloqueio-azul' and made['rascunho'] and made['formato'] == 'codigo' and not made['gatilhos'] and 'arquivo' not in made and made['tipo'] == 'escudo'
+    edit_body({'nome': 'Bloqueio Azul', 'receita': {**recipe, 'velocidade': 2}, 'duracao_ms': 400}, root)
+    assert [e['receita']['velocidade'] for e in load_catalog(root)['efeitos'] if e['id'] == made['id']] == [2]
+    for wrong in ({**recipe, 'tipo': 'x'}, {**recipe, 'cor': 'azul'}, {**recipe, 'escala': 9}, {**recipe, 'ancora': 'x'}, {**recipe, 'camadas': []}, {**recipe, 'camadas': [{'ligada': False, 'atraso': 0}, {'ligada': False, 'atraso': 0}]}, {**recipe, 'extra': 1}):
+        try:
+            edit_body({'nome': 'Outro', 'receita': wrong, 'duracao_ms': 500}, root)
+        except ValueError:
+            continue
+        raise AssertionError(wrong)
+    good = {'hit': 300, 'faixas': {'impact': {'efeito': 'impact', 'inicio': 300}, 'hitstop': {'inicio': 300, 'duracao': 80}, 'knockback': {'inicio': 300, 'distancia': 1}, 'sound': {'inicio': 0, 'som': 'dano_deus'}}}
+    cb = edit_body({'nome': 'Golpe Teste', 'coreografia': good, 'duracao_ms': 800}, root, builtin=('impact',))['efeito']
+    assert cb['id'] == 'cb-golpe-teste' and cb['rascunho'] and not cb['gatilhos'] and 'arquivo' not in cb
+    for wrong in ({**good, 'hit': 9000}, {**good, 'faixas': {}}, {**good, 'faixas': {'impact': {'efeito': 'nao-existe', 'inicio': 0}}}, {**good, 'faixas': {'inventada': {'inicio': 0}}},
+                  {**good, 'faixas': {'hitstop': {'inicio': 0, 'duracao': 999}}}, {**good, 'faixas': {'sound': {'inicio': 0, 'som': '../x'}}}, {**good, 'faixas': {'impact': {'efeito': cb['id'], 'inicio': 0}}}):
+        try:
+            edit_body({'nome': 'Outra', 'coreografia': wrong, 'duracao_ms': 800}, root, builtin=('impact',))
+        except ValueError:
+            continue
+        raise AssertionError(wrong)
+    edit_body({'id': cb['id'], 'descartar': True}, root)
+    try:
+        edit_body({'id': made['id'], 'aprovar': True}, root)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError('aprovou sem testar')
+    assert edit_body({'id': made['id'], 'testado': True}, root)['efeito']['estado'] == 'teste'
+    assert edit_body({'id': made['id'], 'aprovar': True}, root)['efeito']['estado'] == 'aprovado'
+    try:
+        edit_body({'nome': 'Bloqueio Azul', 'receita': recipe, 'duracao_ms': 500}, root)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError('trocou efeito guardado')
+    kept, _ = add_effect(frames, [50, 50], {'nome': 'R', 'fonte': 'criador', 'licenca': 'Projeto', 'rascunho': True}, root)
+    edit_body({'id': kept['id'], 'testado': True}, root)
+    assert 'rascunho' not in edit_body({'id': kept['id'], 'aprovar': True}, root)['efeito']
+    try:
+        edit_body({'id': kept['id'], 'descartar': True}, root)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError('descartou efeito aprovado')
 print('ok')

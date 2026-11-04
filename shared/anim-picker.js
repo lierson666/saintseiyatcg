@@ -1,6 +1,6 @@
 // Seletor de animação do Star Hill e do Card Forge, no mesmo jeito do seletor de sons: abre, testa, usa.
 // Fonte: data/card-animations.json. A carta passa por cima da facção, e a facção por cima do padrão do jogo.
-import {createPixelFx, catalogIndex, EFFECTS, ANIM_MOMENTS, ELEMENT_COLOR} from '/playtest/divine/pixel-vfx.js?v=20261104-anim3';
+import {createPixelFx, catalogIndex, EFFECTS, ANIM_MOMENTS, ELEMENT_COLOR} from '/playtest/divine/pixel-vfx.js?v=20261104-anim4';
 import {SHADERS, LOTTIES, HOLO, FACTION_PRESETS} from './vfx/presets.js';
 import {createComposer} from './vfx/composer.js';
 export {EFFECTS, ANIM_MOMENTS, ELEMENT_COLOR};
@@ -101,7 +101,7 @@ function build() {
 }
 function paintList() {
   const q = dialog.querySelector('.ap-search').value.trim().toLowerCase(), source = dialog.querySelector('.ap-source').value;
-  const list = allEffects().filter(e => !e.soCatalogo && (!source || e.fonte === source) && (!q || e.nome.toLowerCase().includes(q)));
+  const list = allEffects().filter(e => !e.soCatalogo && !e.rascunho && (!source || e.fonte === source) && (!q || e.nome.toLowerCase().includes(q)));
   dialog.querySelector('.ap-list').innerHTML = list.map(({id, nome, fonte}) => `<li class="${id === opts.value ? 'is-current' : ''}"><button type="button" class="ap-test" data-test="${esc(id)}" aria-label="Testar ${esc(nome)}">▶</button><b>${esc(nome)}<small>${esc(catalog.fontes?.[fonte]?.nome || fonte)}</small></b><button type="button" class="ap-use" data-use="${esc(id)}">${id === opts.value ? 'Em uso' : 'Usar'}</button></li>`).join('') || '<li>Nenhum efeito.</li>';
 }
 export function openAnimPicker(options) {

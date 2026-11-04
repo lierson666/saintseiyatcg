@@ -29,6 +29,12 @@ _engine_spec.loader.exec_module(engine_updates)
 _vfx_spec = importlib.util.spec_from_file_location('star_hill_vfx_import', Path(__file__).with_name('vfx_import.py'))
 vfx_import = importlib.util.module_from_spec(_vfx_spec)
 _vfx_spec.loader.exec_module(vfx_import)
+_vfx_pub_spec = importlib.util.spec_from_file_location('star_hill_vfx_publish', Path(__file__).with_name('vfx_publish.py'))
+vfx_publish = importlib.util.module_from_spec(_vfx_pub_spec)
+_vfx_pub_spec.loader.exec_module(vfx_publish)
+_vfx_gen_spec = importlib.util.spec_from_file_location('star_hill_vfx_generate', Path(__file__).with_name('vfx_generate.py'))
+vfx_generate = importlib.util.module_from_spec(_vfx_gen_spec)
+_vfx_gen_spec.loader.exec_module(vfx_generate)
 
 
 def encoded(value):
@@ -552,12 +558,19 @@ def anim_ids(root=ROOT):
     return {*ANIM_EFFECTS, *(e['id'] for e in imported)}
 
 
+def draft_ids(root=ROOT):
+    """Rascunho e teste ainda não podem ser escolhidos num momento: só o que foi aprovado."""
+    path = root / 'data/vfx-catalog.json'
+    imported = json.loads(path.read_text(encoding='utf-8')).get('efeitos', []) if path.exists() else []
+    return {e['id'] for e in imported if e.get('rascunho')}
+
+
 def _anim_tuning(value, root=ROOT):
-    """Ajustes do gestor por efeito: ligado, tamanho, velocidade e cor."""
+    """Ajustes do gestor por efeito: ligado, tamanho, velocidade, cor e, se não for no alvo, âncora."""
     if not isinstance(value, dict) or set(value) - anim_ids(root):
         raise ValueError('Efeito inválido.')
     for tune in value.values():
-        if not isinstance(tune, dict) or set(tune) != {'ligado', 'tamanho', 'velocidade', 'cor'} or not isinstance(tune['ligado'], bool):
+        if not isinstance(tune, dict) or set(tune) - {'ancora'} != {'ligado', 'tamanho', 'velocidade', 'cor'} or not isinstance(tune['ligado'], bool) or tune.get('ancora', 'origem') not in ('origem', 'viagem'):
             raise ValueError('Ajuste de efeito inválido.')
         for key, low, high in (('tamanho', 0.5, 2), ('velocidade', 0.25, 2)):
             if isinstance(tune[key], bool) or not isinstance(tune[key], (int, float)) or not low <= tune[key] <= high:
@@ -565,6 +578,48 @@ def _anim_tuning(value, root=ROOT):
         if tune['cor'] is not None and not (isinstance(tune['cor'], str) and re.fullmatch(r'#[0-9a-fA-F]{6}', tune['cor'])):
             raise ValueError('Cor inválida.')
     return value
+
+
+def _anim_particles(value):
+    """Ajuste das partículas por grupo (playtest/divine/particle-tune.js): só apresentação, sem mudar regra."""
+    if not isinstance(value, dict):
+        raise ValueError('Ajuste de partículas inválido.')
+    for key, tune in value.items():
+        if not re.fullmatch(r'[A-Za-z_-]{1,40}', key) or not isinstance(tune, dict) or set(tune) != {'ligado', 'quantidade', 'tamanho', 'duracao', 'cor'} or not isinstance(tune['ligado'], bool):
+            raise ValueError('Ajuste de partículas inválido.')
+        for field in ('quantidade', 'tamanho', 'duracao'):
+            if isinstance(tune[field], bool) or not isinstance(tune[field], (int, float)) or not 0.25 <= tune[field] <= 3:
+                raise ValueError('Ajuste de partículas inválido.')
+        if tune['cor'] is not None and not (isinstance(tune['cor'], str) and re.fullmatch(r'#[0-9a-fA-F]{6}', tune['cor'])):
+            raise ValueError('Cor inválida.')
+    return value
+
+
+def _anim_css(value):
+    """Ajuste das animações CSS antigas pelo nome do @keyframes (shared/anim-css-adapter.js): só apresentação."""
+    if not isinstance(value, dict):
+        raise ValueError('Ajuste de animação inválido.')
+    for key, tune in value.items():
+        if not re.fullmatch(r'[\w-]{1,60}', key) or not isinstance(tune, dict) or set(tune) != {'ligado', 'velocidade'} or not isinstance(tune['ligado'], bool):
+            raise ValueError('Ajuste de animação inválido.')
+        if isinstance(tune['velocidade'], bool) or not isinstance(tune['velocidade'], (int, float)) or not 0.25 <= tune['velocidade'] <= 3:
+            raise ValueError('Ajuste de animação inválido.')
+    return value
+
+
+ANIM_SCENES = {'ceu': {'estrelas': (0.25, 2)}, 'moeda': {'duracao': (0.5, 2), 'giros': (3, 12)}}
+
+
+def _anim_scene(kind, tune):
+    """Céu de fundo (shared/kv-sky.js) e cara ou coroa (playtest/divine/coin3d.js). Só apresentação. Giros inteiros mantêm a face do vencedor."""
+    fields = ANIM_SCENES[kind]
+    if not isinstance(tune, dict) or set(tune) != {'ligado', *fields} or not isinstance(tune['ligado'], bool):
+        raise ValueError('Ajuste de animação inválido.')
+    for key, (low, high) in fields.items():
+        value = tune[key]
+        if isinstance(value, bool) or not isinstance(value, (int, float)) or not low <= value <= high or (key == 'giros' and value != int(value)):
+            raise ValueError('Ajuste de animação inválido.')
+    return tune
 
 
 def save_card_anim(body, atomic_write, root=ROOT):
@@ -578,10 +633,29 @@ def save_card_anim(body, atomic_write, root=ROOT):
         if set(body) != {'id', 'efeitos'}:
             raise ValueError('Animação inválida.')
         anims['efeitos'] = _anim_tuning(body['efeitos'], root)
+    elif card == 'particulas':
+        if set(body) != {'id', 'particulas'}:
+            raise ValueError('Animação inválida.')
+        anims['particulas'] = _anim_particles(body['particulas'])
+        if not anims['particulas']:
+            del anims['particulas']
+    elif card in ANIM_SCENES:
+        if set(body) != {'id', card}:
+            raise ValueError('Animação inválida.')
+        if body[card] is None:
+            anims.pop(card, None)
+        else:
+            anims[card] = _anim_scene(card, body[card])
+    elif card == 'css':
+        if set(body) != {'id', 'css'}:
+            raise ValueError('Animação inválida.')
+        anims['css'] = _anim_css(body['css'])
+        if not anims['css']:
+            del anims['css']
     else:
         if set(body) - {'id', 'linhas', *ANIM_MOMENTS} or not isinstance(body.get('linhas'), list):
             raise ValueError('Animação inválida.')
-        chosen, known = [*(body.get(k) for k in ANIM_MOMENTS), *body['linhas']], anim_ids(root)
+        chosen, known = [*(body.get(k) for k in ANIM_MOMENTS), *body['linhas']], anim_ids(root) - draft_ids(root)
         if any(v is not None and v is not False and v not in known and not NEW_FX.fullmatch(str(v)) for v in chosen):  # False: sem animação de propósito
             raise ValueError('Efeito inválido.')
         entry = {k: body[k] for k in ANIM_MOMENTS if body.get(k) is not None}
@@ -688,6 +762,10 @@ def save_telas(body, atomic_write, root=ROOT):
 
 
 def get(handler, path):
+    if path == '/api/star-hill/vfx-publicacao':
+        return handler.reply(200, vfx_publish.status(builtin=ANIM_EFFECTS))
+    if path == '/api/star-hill/vfx-gerar':
+        return handler.reply(200, vfx_generate.status())
     if path == '/api/star-hill/motor':
         handler.reply(200, engine_updates.manager(ROOT).info())
     elif path.startswith('/api/star-hill/motor/trabalhos/'):
@@ -726,10 +804,16 @@ def post(handler, path, raw, atomic_write):
             return handler.reply(200, {'animacoes': save_card_anim(body, atomic_write)})
         if path == '/api/star-hill/vfx-studio':
             return handler.reply(200, {'studio': save_vfx_studio(body, atomic_write)})
+        if path == '/api/star-hill/vfx-publicacao':
+            return handler.reply(200, vfx_publish.handle(body, builtin=ANIM_EFFECTS))
+        if path == '/api/star-hill/vfx-gerar':
+            return handler.reply(200, vfx_generate.start(body))
+        if path == '/api/star-hill/vfx-gerar/cancelar':
+            return handler.reply(200, vfx_generate.cancel())
         if path == '/api/star-hill/vfx-import':
             return handler.reply(200, vfx_import.import_body(body))
         if path == '/api/star-hill/vfx-meta':
-            return handler.reply(200, vfx_import.edit_body(body))
+            return handler.reply(200, vfx_import.edit_body(body, builtin=ANIM_EFFECTS))
         if path == '/api/star-hill/som-biblioteca':
             return handler.reply(200, import_library_sound(body))
         if path.startswith('/api/star-hill/motor/'):

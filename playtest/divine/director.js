@@ -4,7 +4,9 @@
 import {wait} from './scene.js?v=20261031-pool1';
 import {strikeSound, chargeSound} from '../audio.js?v=20261102-voz4';
 import {anim, ANIM_OF, sound} from '../telas.js?v=20261102-barulho1';
-import {ELEMENT_COLOR} from './pixel-vfx.js?v=20261104-anim3';
+import {ELEMENT_COLOR} from './pixel-vfx.js?v=20261104-anim4';
+import {tunedFx} from './particle-tune.js';
+import {ON_ATTACKER} from './combat-tracks.js';
 
 // Quanto o golpe em pixel art leva até o instante do acerto (ms): o som e o impacto saem nele.
 const HIT_MS = {slash: 60, impact: 40, ice: 220, fire: 160, lightning: 140, poison: 650, light: 420, dark: 450, explosion: 60, energy: 260, shield: 200, heal: 200, power: 300, muzzle: 30, blood: 40, pickup: 400, dash: 200, blink: 250, sparkle: 300, rain: 300, snow: 300, fog: 300, embers: 200, fireflies: 300, leaves: 300, bubbles: 300};
@@ -16,7 +18,7 @@ export const SIGNATURES = {
   '003': {style: 'dragon', name: 'Rozan Shoryuha', color: '#6ff0b0'},
 };
 // Partículas da morte de cada God, em dois tempos: o golpe e a queda (o resto é CSS: .die-<deus> e .ruin--<deus>).
-const DEATH_FX = {
+export const DEATH_FX = {
   athena: [(f, a) => f.charge(a.x, a.y, {color: '#ffe3a0', count: 70, radius: 120}), (f, a) => { f.burst(a.x, a.y, {color: '#e8e0cc', count: 140, speed: 320, grav: 900, life: 1.2, size: 14}); f.shockwave(a.x, a.y, {color: '#fff2c4', size: 260}); }],
   poseidon: [(f, a) => f.burst(a.x, a.y, {color: '#7cc8ff', count: 90, speed: 260, grav: -120, life: 1}), (f, a) => { f.burst(a.x, a.y, {color: '#bfe6ff', count: 160, speed: 480, grav: 700, life: 1.1}); f.shockwave(a.x, a.y, {color: '#5ab4ff', size: 320}); }],
   hades: [(f, a) => f.charge(a.x, a.y, {color: '#a064ff', count: 140, radius: 240, life: .9}), (f, a) => { f.charge(a.x, a.y, {color: '#2a0a4a', count: 120, radius: 300, life: .7}); f.shockwave(a.x, a.y, {color: '#7a3ad0', size: 360}); }],
@@ -36,10 +38,11 @@ export function createDirector({ui, getFx, settings}) {
   let skipping = false, busy = false, queue = [];
   // Grupo do evento em curso (Star Hill: ligada e velocidade por grupo); desligada = sem efeito e sem espera.
   let cur = {ligada: true, velocidade: 1};
-  const fx = () => (settings.reduceMotion || !cur.ligada ? null : getFx());
+  let curType = null; // grupo de partículas do evento em curso (particle-tune.js)
+  const fx = (key = curType) => { const f = settings.reduceMotion || !cur.ligada ? null : getFx(); return f && tunedFx(f, ui.particleTune?.(key)); };
   const t = ms => (skipping || !cur.ligada ? 0 : ms * ({fast: .55, normal: 1, cinematic: 1.35}[settings.speed] || 1) / cur.velocidade);
   const pause = ms => (t(ms) ? wait(t(ms)) : Promise.resolve());
-  const shake = amp => { if (!cur.ligada) return; const f = fx(); if (f && !skipping) { f.shake(amp * settings.shake); f.punch(amp * settings.shake * .05); } ui.shake(amp * settings.shake); };
+  const shake = (amp, key) => { if (!cur.ligada) return; const f = fx(key); if (f && !skipping) { f.shake(amp * settings.shake); f.punch(amp * settings.shake * .05); } if (ui.particleTune?.(key ?? curType)?.ligado !== false) ui.shake(amp * settings.shake); };
 
   function styleOf(uid) {
     // Ordem: animação da carta ou da facção, assinatura, estilo do tipo e padrão do jogo. false: sem animação de golpe.
@@ -65,9 +68,26 @@ export function createDirector({ui, getFx, settings}) {
   // Animação do momento (Star Hill / Card Forge) em cima de `rect`. `ability`: nome da habilidade que resolveu.
   const moment = (kind, ref, rect, opts = {}, ability = '') => pixel(ui.animOf?.(kind, ref, ability), rect, opts);
 
+  // Reação ao golpe: a carta pisca e recua para longe de quem bateu. O dano do Strike vem depois e não repete o recuo.
+  const recoiled = new Set();
+  const recoil = (uid, from, p) => { if (skipping || !cur.ligada) return; if (from) recoiled.add(uid); ui.recoil?.(uid, from, p, ui.particleTune?.('recuo')); };
+
+  // Coreografia do Combat Composer: agenda cada fase e devolve no HIT, para o resto do Strike seguir a engine. Nunca segura a fila depois do HIT.
+  async function choreography(c, {from, attacker, target, targetRect, color, p}) {
+    const later = (ms, fn) => setTimeout(() => { if (!skipping) fn(); }, t(ms));
+    let stop = 0;
+    for (const [key, b] of Object.entries(c.faixas)) {
+      if (b.efeito) later(b.inicio, () => pixel(b.efeito, ON_ATTACKER.includes(key) ? ui.rect(attacker) : targetRect, {from, color, power: p, ...(key === 'projectile' ? {ancora: 'viagem'} : {})}));
+      else if (key === 'hitstop') { later(b.inicio, () => ui.pixel?.hold(t(b.duracao))); stop = Math.max(0, b.inicio + b.duracao - c.hit); }
+      else if (key === 'knockback' && target) later(b.inicio, () => { const tune = ui.particleTune?.('recuo'); recoiled.add(target); ui.recoil?.(target, from, p, {...tune, tamanho: (tune?.tamanho ?? 1) * b.distancia}); });
+      else if (key === 'sound') later(b.inicio, () => sound(b.som));
+    }
+    await pause(c.hit + stop);
+  }
+
   // Golpe do atacante até o alvo; resolve no momento do impacto. `p` (0..1) engrossa tudo.
   async function strikeVfx(from, to, style, p = 0, attacker, targetRect) {
-    const f = fx();
+    const f = fx('strikeVfx');
     if (skipping) return;
     if (!ui.noise?.('carga', attacker)) chargeSound(p);
     if (!f || style.style === 'none') return;
@@ -80,17 +100,18 @@ export function createDirector({ui, getFx, settings}) {
       await pause(HIT_MS[style.element] ?? 200);
     } else if (style.style === 'meteor') {
       // Pegasus Ryuseiken: rajada de meteoros com leve dispersão, todos convergindo no alvo.
-      const shots = [];
+      const shots = [], g = fx('assinatura-meteor') || f;
       const n = 9 + Math.round(p * 16), spread = 60 + p * 90;
       for (let i = 0; i < n; i++) {
         const jitter = {x: from.x + (Math.random() - .5) * spread, y: from.y + (Math.random() - .5) * spread};
-        shots.push(wait(i * 28).then(() => f.projectile(jitter, to, {color: style.color, duration: .22, size: 12 * (1 + p * .6), trail: 2 + p * 2})));
+        shots.push(wait(i * 28).then(() => g.projectile(jitter, to, {color: style.color, duration: .22, size: 12 * (1 + p * .6), trail: 2 + p * 2})));
       }
       await Promise.all(shots);
     } else if (style.style === 'dragon') {
       // Rozan Shoryuha: espiral ascendente de Cosmo verde que mergulha no alvo.
-      await Promise.all([f.projectile(from, to, {color: style.color, duration: .42, size: 22 * (1 + p), trail: 5 + p * 4, arc: 140}),
-        wait(60).then(() => f.projectile(from, to, {color: '#d6ffe9', duration: .42, size: 10, trail: 2, arc: -90}))]);
+      const g = fx('assinatura-dragon') || f;
+      await Promise.all([g.projectile(from, to, {color: style.color, duration: .42, size: 22 * (1 + p), trail: 5 + p * 4, arc: 140}),
+        wait(60).then(() => g.projectile(from, to, {color: '#d6ffe9', duration: .42, size: 10, trail: 2, arc: -90}))]);
     } else if (style.style === 'energy') {
       if (ui.pixel) { pixel('energy', targetRect, {from, color: style.color, power: p}); await pause(260 + p * 200); }
       else await f.beam(from, to, {color: style.color, width: 22 * (1 + p * 1.8), duration: .3 + p * .25});
@@ -100,7 +121,7 @@ export function createDirector({ui, getFx, settings}) {
   }
 
   function impact(at, {color = '#fff2c4', strength = 1, rect = null, from = null, effect = 'impact'} = {}) {
-    const f = fx();
+    const f = fx('impact');
     if (f && !skipping) {
       pixel(effect, rect || at, {color, strength: Math.min(1.6, strength), from});
       if (!ui.pixel || strength > 1.6) f.burst(at.x, at.y, {color, count: Math.round(50 * strength), speed: 380 * strength});
@@ -108,7 +129,7 @@ export function createDirector({ui, getFx, settings}) {
       if (strength > 1.2) f.flash(Math.min(.6, .12 + strength * .1));
       if (strength > 1.8) wait(90).then(() => f.shockwave(at.x, at.y, {color: '#ffffff', size: 260 * strength})); // segunda onda
     }
-    shake(strength * 6);
+    shake(strength * 6, 'impact');
   }
 
   // Habilidade resolvendo: o efeito escolhido cai em cada alvo atingido; sem alvo, na própria carta.
@@ -187,21 +208,25 @@ export function createDirector({ui, getFx, settings}) {
     },
     async strike_resolve(e) {
       const onGod = e.target.kind === 'god';
+      recoiled.clear();
       ui.speak?.('golpe', e.attacker); // a fala do ataque sai quando ele resolve, não ao declarar (autor, 02/11/2026)
       ui.speak?.('strike', onGod ? e.target.player : e.target.uid);
       const from = ui.center(ui.rect(e.attacker)), targetRect = e.target.kind === 'god' ? ui.godRect(e.target.player) : ui.rect(e.target.uid);
       const to = ui.center(targetRect), style = styleOf(e.attacker), p = powerOf(e.atk);
       if (style.name) await ui.callout(style.name, e.player, t(650 + p * 350));
       ui.pulse(e.attacker, 'lunge');
-      await strikeVfx(from, to, style, p, e.attacker, targetRect);
-      await pause(40 + p * 160); // hit stop: mais longo quanto mais forte
-      if (!skipping && !(onGod ? ui.noise?.('impacto_deus', e.attacker, e.target.player) : ui.noise?.('impacto', e.attacker))) strikeSound(p);
-      impact(to, {color: style.color, strength: (style.name ? 1.4 : 1) * (1 + p * 1.3), rect: targetRect, from, effect: ui.animOf?.(onGod ? 'impacto_deus' : 'impacto', e.attacker) ?? 'impact'});
+      const cho = fx('strikeVfx') && !skipping && style.element ? ui.choreography?.(style.element) : null;
+      if (cho) await choreography(cho, {from, attacker: e.attacker, target: onGod ? null : e.target.uid, targetRect, color: style.color, p});
+      else { await strikeVfx(from, to, style, p, e.attacker, targetRect); await pause(40 + p * 160); } // hit stop: mais longo quanto mais forte
+      if (!cho?.faixas.sound && !skipping && !(onGod ? ui.noise?.('impacto_deus', e.attacker, e.target.player) : ui.noise?.('impacto', e.attacker))) strikeSound(p);
+      if (!onGod && !cho?.faixas.knockback) recoil(e.target.uid, from, p); // recua junto com o impacto, não depois
+      if (!cho?.faixas.impact) impact(to, {color: style.color, strength: (style.name ? 1.4 : 1) * (1 + p * 1.3), rect: targetRect, from, effect: ui.animOf?.(onGod ? 'impacto_deus' : 'impacto', e.attacker) ?? 'impact'});
       if (!onGod) moment('strike', e.target.uid, targetRect);
       // Retaliação: do Devotee alvo de volta ao atacante. God não retalia (§24, autor 01/11/2026).
       if (e.target.kind !== 'god') {
         await pause(140);
         const back = styleOf(e.target.uid);
+        recoil(e.attacker, to, .3);
         if (ui.pixel && back.style !== 'energy') { pixel('slash', ui.rect(e.attacker), {from: to, color: back.color}); await pause(220); }
         else if (fx() && !skipping) await fx().beam(to, from, {color: back.color, width: 12, duration: .22});
       }
@@ -213,7 +238,7 @@ export function createDirector({ui, getFx, settings}) {
       if (!at) return;
       if (e.prevented) { ui.float({x: at.x, y: at.y - 36}, `${e.prevented} prevented`, 'shield'); moment('escudo', e.uid, ui.rect(e.uid), {color: '#a6ecff'}); }
       if (e.absorbed) ui.float({x: at.x, y: at.y - 18}, `${e.absorbed} to Armor`, 'armor');
-      if (e.dealt) { ui.float(at, `-${e.dealt}`, 'damage'); ui.pulse(e.uid, 'hit'); impact(at, {color: '#ff9a7a', strength: Math.min(1.3, .5 + e.dealt * .15), rect: ui.rect(e.uid), effect: ui.animOf?.('dano', e.uid) ?? 'impact'}); }
+      if (e.dealt) { ui.float(at, `-${e.dealt}`, 'damage'); if (!recoiled.delete(e.uid)) recoil(e.uid, null, Math.min(1, e.dealt / 8)); impact(at, {color: '#ff9a7a', strength: Math.min(1.3, .5 + e.dealt * .15), rect: ui.rect(e.uid), effect: ui.animOf?.('dano', e.uid) ?? 'impact'}); }
       await pause(e.dealt ? 220 : 120);
     },
     async god_damage(e) { if (e.incoming > e.dealt) { ui.float(ui.center(ui.godRect(e.player)), `${e.incoming - e.dealt} prevented`, 'shield'); moment('escudo', e.player, ui.godRect(e.player), {color: '#a6ecff'}); } },
@@ -343,9 +368,9 @@ export function createDirector({ui, getFx, settings}) {
       const dead = t(1) ? ui.godDeath(e) : [];
       if (dead.length) {
         const f = fx(), at = dead.map(d => ({...d, at: ui.center(ui.godRect(d.key))}));
-        for (const d of at) if (f && d.at) DEATH_FX[d.god]?.[0](f, d.at);
+        for (const d of at) if (f && d.at && DEATH_FX[d.god]) DEATH_FX[d.god][0](fx(`morte-${d.god}`), d.at);
         shake(8); await pause(1100);
-        for (const d of at) if (f && d.at) DEATH_FX[d.god]?.[1](f, d.at);
+        for (const d of at) if (f && d.at && DEATH_FX[d.god]) DEATH_FX[d.god][1](fx(`morte-${d.god}`), d.at);
         shake(16); await pause(1700);
       }
       sound(e.draw ? 'derrota' : ui.isViewer(e.winner) ? 'vitoria' : 'derrota'); await ui.banner(e.draw ? 'Draw' : ui.isViewer(e.winner) ? 'Victory' : `Player ${e.winner} wins`, e.winner, t(1200)); },
@@ -376,6 +401,7 @@ export function createDirector({ui, getFx, settings}) {
         for (const [i, e] of events.entries()) {
           const group = ANIM_OF[e.type];
           cur = group ? anim(group) : {ligada: true, velocidade: 1};
+          curType = e.type;
           const som = somDe(e);
           if (som && som !== last && !skipping) sound(som) || (som === 'dano_deus' && sound('dano')); // um som por sequência do mesmo grupo
           last = som;
@@ -384,7 +410,7 @@ export function createDirector({ui, getFx, settings}) {
           // A janela do Strike que o auto-pass fecha fica visível antes do dano (autor, 03/11/2026).
           if (e.type === 'strike_declared' && unanswered(events.slice(i + 1))) { ui.notice?.('No response'); await pause(1000); }
         }
-      } finally { busy = false; skipping = false; cur = {ligada: true, velocidade: 1}; }
+      } finally { busy = false; skipping = false; cur = {ligada: true, velocidade: 1}; curType = null; }
     },
   };
 }

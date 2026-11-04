@@ -122,12 +122,27 @@ kbd { font: 11px/1 ui-monospace, monospace; opacity: .7; border: 1px solid curre
 .dcard.aimed { box-shadow: 0 0 0 3px var(--red), 0 0 34px rgba(255, 90, 60, .85); }
 .dcard.attacking { box-shadow: 0 0 0 2px var(--gold-hi), 0 0 30px rgba(255, 220, 140, .9); z-index: 6; }
 .dcard.lunge { animation: lunge .42s var(--ease); }
-.dcard.hit { animation: hit .38s linear; }
+.dcard.hit { animation: hit var(--recoil-time, .42s) cubic-bezier(.2, .9, .3, 1); }
+.dcard.hit.hit--calm { animation-name: hit-calm; }
 .dcard.activate { animation: activate .5s var(--ease); }
 .dcard.shatter { animation: shatter .45s ease-in forwards; }
 @keyframes pick { 50% { box-shadow: 0 0 0 2px var(--red), 0 0 34px rgba(255, 110, 90, .9); } }
 @keyframes lunge { 35% { transform: translateY(-26px) scale(1.12); } }
-@keyframes hit { 20% { transform: translateX(-6px); filter: brightness(2.2) saturate(0); } 50% { transform: translateX(5px); } 80% { transform: translateX(-2px); } }
+/* Impacto: recua rápido, segura um instante e volta devagar; o flicker fica só nos primeiros quadros. */
+@keyframes hit {
+  0% { transform: translate(0, 0); filter: brightness(3) saturate(0); }
+  10% { transform: translate(var(--recoil-x, 0), var(--recoil-y, 7%)); filter: none; }
+  20% { filter: brightness(2.4) saturate(0); }
+  30% { transform: translate(var(--recoil-x, 0), var(--recoil-y, 7%)); filter: none; }
+  40% { filter: brightness(1.5) saturate(.4); }
+  52% { filter: none; }
+  100% { transform: translate(0, 0); filter: none; }
+}
+@keyframes hit-calm {
+  0% { transform: translate(0, 0); }
+  10%, 30% { transform: translate(var(--recoil-x, 0), var(--recoil-y, 7%)); }
+  100% { transform: translate(0, 0); }
+}
 @keyframes activate { 50% { box-shadow: 0 0 0 3px var(--gold-hi), 0 0 40px var(--gold); } }
 @keyframes shatter { to { transform: scale(1.15) rotate(-6deg); opacity: 0; filter: brightness(3) blur(3px); } }
 

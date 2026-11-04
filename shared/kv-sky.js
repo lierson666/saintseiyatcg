@@ -1,6 +1,8 @@
 // KV oficial do Saint Seiya TCG (autor, 29/10/2026): céu de estrelas com as constelações dos Cavaleiros de Bronze
 // e o ponteiro com cosmo. Vale para a home, o login e todas as telas fora da partida (ver docs/kv-oficial.md).
 // Uso: import {mountKV} from '/shared/kv-sky.js'; const kv = mountKV({anchor: 'h1 .cosmo'}); kv.warm(); kv.burst(el);
+import {animFile} from './anim-data.js?v=1';
+
 const TEXT_FIELDS = 'input[type=text], input[type=email], input[type=password], input[type=search], textarea';
 const POINTER = `<div class="kv-pointer" aria-hidden="true" popover="manual"><svg width="34" height="38" viewBox="0 0 34 38">
   <defs><linearGradient id="kv-pg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3c4"/><stop offset=".45" stop-color="#e6c36a"/><stop offset="1" stop-color="#ff8a2b"/></linearGradient></defs>
@@ -29,6 +31,7 @@ export function mountKV({anchor: anchorSelector = null} = {}) {
     {name: 'Phoenix', at: [.12, .78], s: .24, p: [[.5,0],[.32,.36],[.68,.36],[.15,.74],[.85,.74],[.5,.56]], l: [[0,1],[0,2],[1,3],[2,4],[1,5],[2,5]]},
   ];
   const TINTS = ['#cfe0ff', '#ffffff', '#fff3d6', '#ffd29a', '#ffb27a', '#a9c8ff'];
+  let paused = still, looping = false, starScale = 1; // ajuste do Star Hill: data/card-animations.json, chave ceu
   let W = 0, H = 0, dpr = 1, stars = [], sparks = [], figures = [], milky = null, heat = 0, t = 0;
   const me = {x: innerWidth * .7, y: innerHeight * .5, tx: innerWidth * .7, ty: innerHeight * .5, active: false};
   function resize() {
@@ -37,7 +40,7 @@ export function mountKV({anchor: anchorSelector = null} = {}) {
     dpr = 1; W = sky.clientWidth || innerWidth; H = sky.clientHeight || innerHeight;
     sky.width = W * dpr; sky.height = H * dpr; g.setTransform(dpr, 0, 0, dpr, 0, 0);
     trail.width = W * dpr; trail.height = H * dpr; tg.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const n = Math.round(W * H / 2200);
+    const n = Math.round(W * H / 2200 * starScale);
     stars = Array.from({length: n}, () => ({x: Math.random() * W, y: Math.random() * H, z: Math.random() ** 3, tw: Math.random() * 6.28, c: TINTS[Math.random() * TINTS.length | 0]}));
     const unit = Math.min(W, H * 1.4);
     figures = FIGURES.map(f => ({...f, pts: f.p.map(([x, y]) => [f.at[0] * W + (x - .5) * f.s * unit, f.at[1] * H + (y - .5) * f.s * unit]), glow: 0}));
@@ -144,9 +147,10 @@ export function mountKV({anchor: anchorSelector = null} = {}) {
     heat *= .985;
     const ox = (me.x / W - .5) * 26, oy = (me.y / H - .5) * 18;
     if (touch || t % 2 === 0) { paintSky(ox, oy); paintFigures(ox * .6, oy * .6); } // céu a 30 fps; brasas e ponteiro a 60
-    if (still || document.hidden) return;
+    if (paused || document.hidden) { looping = false; return; }
     if (touch) { clearTimeout(nap); nap = setTimeout(() => requestAnimationFrame(frame), 100); } else requestAnimationFrame(frame);
   }
+  function start() { if (!looping) { looping = true; requestAnimationFrame(frame); } }
   function paintStill() { paintSky(0, 0); paintFigures(0, 0); } // movimento reduzido: céu e constelações parados
   const move = (x, y) => { me.tx = x; me.ty = y; me.active = true; };
   addEventListener('pointermove', e => {
@@ -154,13 +158,21 @@ export function mountKV({anchor: anchorSelector = null} = {}) {
   }, {passive: true});
   addEventListener('pointerdown', e => { move(e.clientX, e.clientY); heat = Math.min(1, heat + .3); }, {passive: true});
   document.documentElement.addEventListener('pointerleave', () => { me.active = false; tip = lastTip = null; pointer.style.opacity = '0'; });
-  new ResizeObserver(() => { if (sky.clientWidth === W && sky.clientHeight === H) return; resize(); if (still) paintStill(); }).observe(sky);
-  document.addEventListener('visibilitychange', () => { if (!document.hidden && !still) requestAnimationFrame(frame); });
+  new ResizeObserver(() => { if (sky.clientWidth === W && sky.clientHeight === H) return; resize(); if (paused) paintStill(); }).observe(sky);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && !paused) start(); });
   resize();
-  if (still) paintStill(); else requestAnimationFrame(frame);
+  if (still) paintStill(); else start();
+  // Desligado, o céu fica parado como no movimento reduzido. Preferência do sistema vence o ajuste.
+  function tune({ligado = true, estrelas = 1} = {}) {
+    if (estrelas !== starScale) { starScale = estrelas; resize(); }
+    paused = still || !ligado;
+    if (paused) paintStill(); else start();
+  }
+  fetch(new URL(`../${animFile('data/card-animations.json')}`, import.meta.url), {cache: 'no-cache'}).then(r => (r.ok ? r.json() : {})).then(d => { if (d.ceu) tune(d.ceu); }).catch(() => {});
 
 
-  return {
+  return window.__kvSky = {
+    tune,
     warm(step = .08) { heat = Math.min(1, heat + step); }, // digitar acende o cosmo
     burst(el) { // anel de brasas a partir de um elemento (ex.: botão de envio)
       if (still) return;

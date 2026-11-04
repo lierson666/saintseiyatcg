@@ -17,7 +17,7 @@ function paint() {
     <label>Força <input type="range" name="forca" min="0" max="1" step="0.05" value="${own.forca ?? .6}"></label>
     <label>Velocidade <input type="range" name="velocidade" min="0.1" max="4" step="0.1" value="${own.velocidade ?? 1}"></label>
     <label>Cor <input type="color" name="cor" value="${esc(own.cor || '#e6c36a')}"></label>
-    <button type="button" data-vfx-preview>Ver na carta viva</button><output class="hint" data-vfx-status></output>`;
+    <button type="button" data-vfx-preview>Ver na carta viva</button><button type="button" data-vfx-request>Gerar animação…</button><a class="hint" href="/star-hill/criador.html?a=${current?.id || ''}" target="_blank" rel="noopener">Testar no Criador</a><output class="hint" data-vfx-status></output>`;
 }
 async function save() {
   const f = Object.fromEntries([...box.querySelectorAll('[name]')].map(x => [x.name, x.type === 'range' ? Number(x.value) : x.value]));
@@ -37,6 +37,7 @@ export async function mountVfxFields() {
   fx = startCardFx({quality: 'high', data: studio, card: id => (current?.id === id ? current : null), context: el => (el.closest('#livePreview') ? 'inspecao' : null)});
   box.addEventListener('change', save);
   box.addEventListener('click', e => {
+    if (e.target.closest('[data-vfx-request]')) return void import('/shared/anim-request.js').then(m => m.openAnimRequest({card: current, cards: current ? [current] : []}));
     if (!e.target.closest('[data-vfx-preview]')) return;
     const select = document.querySelector('#representation');
     select.value = 'live';

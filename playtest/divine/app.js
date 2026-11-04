@@ -2,6 +2,8 @@
 // Fluxo de cada ação: engine muda o estado e registra eventos -> orquestrador dramatiza com o DOM anterior ->
 // render() mostra o estado final. Entrada travada durante a animação (Espaço pula).
 import {loadCanon} from '../../shared/canon-cards.js';
+import {sampleCssAnimation, tuneCssAnimations} from '../../shared/anim-css-adapter.js?v=2';
+import {animFile} from '../../shared/anim-data.js?v=1';
 import {canonIndex} from '../../shared/deck-v3.js';
 import {addPreviewCards} from '../../shared/preview-cards.js';
 import {abilityText, displayCard, triggerLine} from '../../shared/card-i18n.js';
@@ -16,14 +18,15 @@ import {atkOf, hpOf, keywordsOf, gearOf, isSaint, isBronze, ABILITIES, modsOf} f
 import {v6Spell, entryOf, V6} from '../engine-v3/v6/hooks.js';
 import {domainEntry, resonanceTag} from '../engine-v3/v6/registry.js';
 import {STEPS, ABILITY_STEPS} from '../choices-v3.js?v=3';
-import {createScene, THEMES} from './scene.js?v=20261101-perf3';
+import {createScene, THEMES, wait} from './scene.js?v=20261101-perf3';
 import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudgment, greatFloodBlock, announceGreatFlood, GREAT_FLOOD_COST,
   greatEclipseBlock, GREAT_ECLIPSE_COST, obliterationBlock, OBLITERATION_COST, bloodlustBlock, BLOODLUST_COST, commandBlock, commandTargets, activateCommand, COMMANDS, moonHarvestBlock, moonAwakeningBlock, MOON_AWAKENING_COST} from '../engine-v3/gods.js';
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout, clockBonus} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
-import {createDirector} from './director.js?v=20261104-anim3';
-import {createPixelFx, animFor, catalogIndex} from './pixel-vfx.js?v=20261104-anim3';
+import {createDirector, DEATH_FX} from './director.js?v=20261104-live1';
+import {tunedFx} from './particle-tune.js';
+import {createPixelFx, animFor, catalogIndex} from './pixel-vfx.js?v=20261104-live1';
 import {createComposer, withCompositions} from '../../shared/vfx/composer.js?v=20261104-vfx1';
 import {startCardFx} from '../../shared/vfx/card-mount.js?v=20261104-vfx1';
 import {createAI} from './ai.js?v=14';
@@ -464,9 +467,10 @@ const forgeArt = file => lightArt(FORGE_ART + file);
 // Mesa no estilo Arena (só arte, nome, ATK e HP); ?board=classic volta à carta inteira para comparar.
 const BOARD_TOKENS = new URLSearchParams(location.search).get('board') !== 'classic';
 const CARD_FACTIONS = new Set(['athena', 'poseidon', 'hades', 'ares', 'artemis']);
-const cardAnims = await fetch('../../data/card-animations.json', {cache: 'no-cache'}).then(r => (r.ok ? r.json() : {})).catch(() => ({}));
+const cardAnims = await fetch(`../../${animFile('data/card-animations.json')}`, {cache: 'no-cache'}).then(r => (r.ok ? r.json() : {})).catch(() => ({}));
+tuneCssAnimations(cardAnims.css);
 // VFX Forge V3: shaders, Lottie e composições. Só apresentação; sem efeito escolhido o Pixi nem é baixado.
-const vfxStudio = await fetch('../../data/vfx-studio.json', {cache: 'no-cache'}).then(r => (r.ok ? r.json() : {})).catch(() => ({}));
+const vfxStudio = await fetch(`../../${animFile('data/vfx-studio.json')}`, {cache: 'no-cache'}).then(r => (r.ok ? r.json() : {})).catch(() => ({}));
 const vfxSheets = catalogIndex(await fetch('../../data/vfx-catalog.json', {cache: 'no-cache'}).then(r => (r.ok ? r.json() : {})).catch(() => ({})));
 const FORGE = new Map((await fetch(`${FORGE_ART}cards.json`).then(r => (r.ok ? r.json() : {cartas: []})).catch(() => ({cartas: []}))).cartas.map(c => [c.id, c]));
 useGodPortraits(FORGE.values()); // avatar do Deus nas placas = rosto da placa do God (rank.js)
@@ -967,7 +971,7 @@ coinRoot.addEventListener('click', e => {
   if (go && coinStage === 'landed' && !c.first) act({type: 'chooseFirst', key: c.winner, choice: {goFirst: go === 'first'}});
 });
 async function startCoin() {
-  const run = ++coinRun, c = S().coin, still = settings.reduceMotion;
+  const coinTune = cardAnims.moeda, run = ++coinRun, c = S().coin, still = settings.reduceMotion || coinTune?.ligado === false;
   clearTimeout(coinTimer); coinTimer = null;
   coin3d?.dispose(); coin3d = null;
   coinRoot.textContent = '';
@@ -975,10 +979,10 @@ async function startCoin() {
   if (!c) return;
   coinRoot.innerHTML = '<div class="coin__air" aria-hidden="true"></div><div class="coin__text" role="status"></div>';
   const air = coinRoot.firstChild, wait = ms => new Promise(done => setTimeout(done, ms));
-  const made = await createCoin3D(air, {winner: c.winner, faces: {A: coinArt('A'), B: coinArt('B')}, still});
+  const made = await createCoin3D(air, {winner: c.winner, faces: {A: coinArt('A'), B: coinArt('B')}, still, tune: coinTune});
   if (run !== coinRun) return made?.dispose();
   coin3d = made;
-  if (made) await Promise.race([made.toss(), wait(COIN_TOSS_MS + 1000)]); // aba escondida não anda o rAF; a partida não espera por ela
+  if (made) await Promise.race([made.toss(), wait(COIN_TOSS_MS * (coinTune?.duracao ?? 1) + 1000)]); // aba escondida não anda o rAF; a partida não espera por ela
   else { // sem WebGL: moeda em CSS
     air.innerHTML = `<div class="coin__disc" style="--coin-end:${c.winner === 'A' ? 1800 : 1980}deg"><b class="coin__face">Heads</b><b class="coin__face coin__face--tails">Tails</b></div>`;
     if (!still) await wait(COIN_TOSS_MS);
@@ -1256,18 +1260,22 @@ function syncZoom() {
 // ---------- Adaptador do DOM para o orquestrador ----------
 
 const rectOf = el => (el ? el.getBoundingClientRect() : null);
-const rawPixel = createPixelFx(stage, {flashes: () => !settings.reduceFlashes, tuning: () => cardAnims.efeitos, catalog: () => vfxSheets});
+const criador = {anim: null, tune: null, particulas: null, sig: null, receita: null, coreo: null}; // Criador de animações (star-hill/criador.html): efeito e ajuste em teste, sem salvar nada
+const rawPixel = createPixelFx(stage, {flashes: () => !settings.reduceFlashes, tuning: () => (criador.tune ? {...cardAnims.efeitos, ...criador.tune} : cardAnims.efeitos), catalog: () => (criador.receita || criador.coreo ? {...vfxSheets, 'sf-teste': criador.receita, 'cb-teste': criador.coreo} : vfxSheets)});
 let vfxComposer = null, cardFx = null;
 const ui = {
   pixel: withCompositions(rawPixel, () => (vfxComposer ??= createComposer({stage, pixel: rawPixel, studio: () => vfxStudio, quality: () => settings.quality, reduced: () => !!settings.reduceMotion}))),
   // Animação escolhida no Star Hill ou no Card Forge. `own`: só a da carta ou da facção, sem o padrão do jogo.
+  particleTune: key => criador.particulas?.[key] ?? cardAnims.particulas?.[key],
+  choreography: id => (id === 'cb-teste' ? criador.coreo : vfxSheets[id])?.coreografia,
   animOf(kind, ref, ability = '', own = false) {
+    if (criador.anim?.[kind]) return criador.anim[kind];
     const {id} = voicesOf(ref), card = FORGE.get(id);
     return animFor(cardAnims, kind, {id, faction: card?.faccao?.toLowerCase(), own, line: ability && card ? triggerLine(card, ability.split(' · ').pop()) : null});
   },
   notice: warn,
   onEvent: zoomEvent,
-  number: num, type: uid => info(uid).type, enemyOf: key => other(key),
+  number: uid => criador.sig || num(uid), type: uid => info(uid).type, enemyOf: key => other(key),
   // Cor do God de quem controla o Devotee (golpes básicos no tema do deus, autor 31/10/2026).
   godColor: uid => { const k = S().order.find(k => S().players[k].battlefield.includes(uid)); return k && `rgb(${GOD_GLOW[S().divine?.[k]?.god] || GOD_GLOW['god-athena']})`; },
   cinematic(on) { stage.classList.toggle('cinematic', on); },
@@ -1319,6 +1327,19 @@ const ui = {
     setTimeout(() => el.remove(), 1300);
   },
   refRect: ref => { const r = String(ref || ''); return r.startsWith('god:') || r.startsWith('ultimate:') ? ui.godRect(r.split(':')[1]) : r.startsWith('domain:') ? ui.domainRect(r.slice(7)) : ui.rect(r); },
+  // Recuo em % da própria carta, para valer igual em qualquer tela. Sem origem (dano por efeito), recua para o lado do dono.
+  recoil(uid, from, p = 0, tune = null) {
+    if (tune?.ligado === false) return;
+    $$(`[data-uid="${uid}"]`).forEach(el => {
+      const r = el.getBoundingClientRect(), mine = S().players[viewer()]?.battlefield.includes(uid);
+      const dx = from ? r.left + r.width / 2 - from.x : 0, dy = from ? r.top + r.height / 2 - from.y : (mine ? 1 : -1), len = Math.hypot(dx, dy) || 1, far = (7 + p * 9) * (tune?.tamanho ?? 1);
+      el.style.setProperty('--recoil-x', `${(dx / len * far).toFixed(1)}%`);
+      el.style.setProperty('--recoil-y', `${(dy / len * far).toFixed(1)}%`);
+      el.style.setProperty('--recoil-time', `${(.42 * (tune?.duracao ?? 1)).toFixed(2)}s`);
+      el.classList.toggle('hit--calm', !!settings.reduceFlashes);
+      el.classList.remove('hit'); void el.offsetWidth; el.classList.add('hit');
+    });
+  },
   pulse(uid, cls, on) { $$(String(uid).startsWith('domain:') ? `[data-domain="${String(uid).slice(7)}"]` : `[data-uid="${uid}"]`).forEach(el => { if (on === false) el.classList.remove(cls); else { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); } }); },
   aim(attacker, target) {
     $$('.aimed').forEach(el => el.classList.remove('aimed'));
@@ -1803,7 +1824,7 @@ function showBigCard(uid, {sheet = false} = {}) {
   box.className = `bigcard ${sheet ? 'bigcard--sheet' : ''}`;
   const field = S().players[owner(uid)].battlefield.includes(uid);
   const bearer = ctx.attached[uid];
-  box.innerHTML = cardFace(uid, {size: 'dcard--big', field}) + (field && info(uid).kind === 'Devotee' ? loadout(uid)
+  box.innerHTML = fullSizePieces(cardFace(uid, {size: 'dcard--big', field})) + (field && info(uid).kind === 'Devotee' ? loadout(uid)
     : bearer ? `<aside class="loadout"><h3>${esc(info(uid).name)}</h3><h4>Equipped on</h4><div class="loadout__gear"><button class="loadout__card" data-open-card="${bearer}" data-tip="${esc(`${info(bearer).name}|Click to view the bearer.`)}">${cardFace(bearer, {size: 'dcard--sm', field: true})}</button></div></aside>` : '');
   // Ações à direita da carta, junto com o fechar; em pé no celular descem para baixo dela (autor, 01/11/2026).
   const actions = field && owner(uid) === viewer() ? fieldActions(uid) : [];
@@ -2238,6 +2259,7 @@ function newMatch(seed = Date.now() % 100000, first, coin = true) {
 // ?demo=water-prison / ?demo=great-flood: mesma ideia com God Poseidon (Awaken, 3 Latent, 8 Bases) no lado B.
 function applyDemo(kind) {
   if (kind === 'water-prison' || kind === 'great-flood') return poseidonDemo(kind);
+  if (kind === 'criador') return criadorDemo();
   if (kind !== 'ultimate') return;
   const s = S();
   s.setup = null;
@@ -2261,6 +2283,119 @@ function applyDemo(kind) {
   stage.append(tag);
   say('DEMO FIXTURE: Round 7, Player A with prepared Bases and Seiya, Jabu and Marin. Click your God to announce Athena Exclamation.');
 }
+
+// ?demo=criador&a=<ids>&b=<ids>: mesa real com as cartas pedidas, para testar animação na visão do jogador. Não toca em regra.
+function criadorDemo() {
+  const s = S(), query = new URLSearchParams(location.search);
+  s.setup = null;
+  startTurn(s);
+  const put = (key, id) => { const p = s.players[key], uid = p.deck.shift(); ctx.objects[uid] = {...ctx.objects[uid], cardId: id, armor: false}; p.battlefield.push(uid); s.units[uid] = {prepared: true, damage: 0, entered: 0}; };
+  for (const [key, param, fallback] of [['A', 'a', 'athena-v6-001'], ['B', 'b', 'poseidon-v6-091']]) {
+    const p = s.players[key];
+    (query.get(param) || fallback).split(',').filter(id => cards.has(id)).slice(0, 6).forEach(id => put(key, id));
+    p.bases = p.deck.splice(-8).map(uid => ({uid, prepared: true}));
+    while (p.hand.length < 5) p.hand.push(p.deck.shift());
+  }
+  runCheckpoint(s);
+}
+// Toca a sequência real do director com o efeito em teste. Os eventos são só apresentação: a partida não muda.
+async function criadorPlay(events, anim, tune) {
+  const s = S(), from = s.events.length;
+  criador.anim = anim; criador.tune = tune;
+  s.events.push(...events);
+  try { await present({}, null, from); } finally { criador.anim = criador.tune = null; }
+}
+const criadorApi = {
+  strike({anim, tune, de = 'A', deus = false}) {
+    const s = S(), para = de === 'A' ? 'B' : 'A', attacker = s.players[de].battlefield[0], uid = s.players[para].battlefield[0];
+    const atk = atkOf(s, ctx, attacker), target = deus ? {kind: 'god', player: para} : {kind: 'devotee', uid};
+    return criadorPlay([{type: 'strike_declared', player: de, attacker, target}, {type: 'strike_resolve', player: de, attacker, target, atk}, ...(deus ? [] : [{type: 'damage', uid, dealt: atk}])], anim, tune);
+  },
+  entrada({anim, tune, de = 'A'}) { return criadorPlay([{type: 'entered', uid: S().players[de].battlefield[0]}], anim, tune); },
+  // Live Preview: relógio, camadas, âncoras e métricas, sobre os componentes reais da mesa. Nada disto existe fora do teste.
+  async relogio() {
+    const {installClock} = await import('./preview-clock.js?v=3');
+    return installClock(window);
+  },
+  camadas(off = []) {
+    const pixels = $$('.pixel-fx'), layers = {cor: pixels[0], luz: pixels[1], particulas: $('.fx-canvas'), arena: $('.arena-canvas')};
+    for (const [name, el] of Object.entries(layers)) if (el) el.style.opacity = off.includes(name) ? 0 : '';
+    document.body.classList.toggle('preview-sem-cartas', off.includes('cartas'));
+  },
+  ancoras(on, de = 'A') {
+    document.querySelector('.preview-ancoras')?.remove();
+    if (!on) return;
+    const s = S(), para = de === 'A' ? 'B' : 'A', box = Object.assign(document.createElement('div'), {className: 'preview-ancoras'});
+    const mark = (uid, label, color) => { const r = ui.rect(uid); if (r) box.insertAdjacentHTML('beforeend', `<div style="position:fixed;left:${r.left}px;top:${r.top}px;width:${r.width}px;height:${r.height}px;outline:2px dashed ${color};pointer-events:none"><b style="position:absolute;left:0;top:-18px;font:12px sans-serif;color:${color}">${label}</b><i style="position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px;border:2px solid ${color};border-radius:50%"></i></div>`); };
+    mark(s.players[de].battlefield[0], 'Origem', '#7fe0ff');
+    mark(s.players[para].battlefield[0], 'Alvo', '#ff9a87');
+    box.style.cssText = 'position:fixed;inset:0;z-index:99;pointer-events:none';
+    document.body.append(box);
+  },
+  metricas() {
+    const c = window.__previewClock?.stats() ?? {}, px = $('.pixel-fx'), gl = $('.fx-canvas');
+    return {...c, efeitos: ui.pixel.live(), pixel: px ? `${px.width}×${px.height}` : null, webgl: gl ? `${gl.width}×${gl.height}` : null, memoriaMB: performance.memory ? Math.round(performance.memory.usedJSHeapSize / 1048576) : null};
+  },
+  medirRender() { const run = () => scene?.bench?.(20) ?? null, c = window.__previewClock; return c ? c.realTime(run) : run(); },
+  // Coreografia do Combat Composer, sem salvar, em eventos no formato da engine. Cenário: devotee (com revide), deus (Soul), bloqueado, semdano ou area.
+  async coreografia({coreografia, cenario = 'devotee', de = 'A'}) {
+    const s = S(), para = de === 'A' ? 'B' : 'A', attacker = s.players[de].battlefield[0], uid = s.players[para].battlefield[0], atk = atkOf(s, ctx, attacker), deus = cenario === 'deus';
+    const target = deus ? {kind: 'god', player: para} : {kind: 'devotee', uid}, inicio = performance.now();
+    criador.coreo = {id: 'cb-teste', coreografia};
+    try {
+      if (cenario === 'area') { // área: a engine resolve por alvo; toca o impacto em cada um, como numa habilidade
+        await Promise.all(s.players[para].battlefield.map(id => ui.pixel.play('cb-teste', ui.rect(id), {color: '#e0bb62'})));
+        await wait(900);
+      } else {
+        const fim = deus ? [{type: 'soul_lost', player: para, amount: atk, soul: s.players[para].soul}] : [{type: 'damage', uid, ...(cenario === 'bloqueado' ? {dealt: 0, prevented: atk} : cenario === 'semdano' ? {dealt: 0} : {dealt: atk})}];
+        await criadorPlay([{type: 'strike_declared', player: de, attacker, target}, {type: 'strike_resolve', player: de, attacker, target, atk}, ...fim], {golpe: 'cb-teste'}, null);
+      }
+      return {ms: Math.round(performance.now() - inicio)};
+    } finally { criador.coreo = null; }
+  },
+  // Tipo de combate do gerador Sprite Fusion, sem salvar: entra no lugar do impacto de um Strike real da mesa.
+  async receita({receita, de = 'A', deus = false}) {
+    criador.receita = {id: 'sf-teste', receita};
+    try { await criadorApi.strike({anim: {impacto: 'sf-teste', impacto_deus: 'sf-teste'}, tune: null, de, deus}); } finally { criador.receita = null; }
+  },
+  // Cara ou coroa com o ajuste em teste, sem salvar: mesma moeda da abertura, por cima da mesa.
+  async moeda({tune, vencedor = 'A'}) {
+    const box = Object.assign(document.createElement('div'), {className: 'overlay coin'});
+    box.innerHTML = '<div class="coin__air" aria-hidden="true"></div>';
+    overlayRoot.after(box);
+    const made = await createCoin3D(box.firstChild, {winner: vencedor, faces: {A: coinArt('A'), B: coinArt('B')}, still: tune.ligado === false, tune});
+    const inicio = performance.now();
+    try { if (made) await Promise.race([made.toss(), wait(COIN_TOSS_MS * tune.duracao + 1000)]); await wait(tune.ligado === false ? 900 : 500); return {webgl: !!made, ms: Math.round(performance.now() - inicio)}; } finally { made?.dispose(); box.remove(); }
+  },
+  // Animação CSS antiga: aplica o mapa em teste, sem salvar, e toca a animação real numa carta da mesa.
+  async interface({nome, mapa, amostra = true}) {
+    tuneCssAnimations(mapa, true);
+    if (!amostra) return null;
+    const el = document.querySelector('.dcard--board');
+    return el ? sampleCssAnimation(el, nome) : {rodando: 0, tocou: false};
+  },
+  // Toca a sequência real de um grupo de partículas com o ajuste em teste, sem salvar.
+  async particula({key, tune, de = 'A'}) {
+    const s = S(), player = de, foe = de === 'A' ? 'B' : 'A', me = s.players[de].battlefield[0], other = s.players[foe].battlefield[0], spend = {type: 'cosmo_spent', player, unit: 'base', amount: 2};
+    criador.particulas = {[key]: tune};
+    try {
+      if (key.startsWith('morte-')) {
+        const f = tunedFx(scene.fx, tune), at = ui.center(ui.godRect(foe)), steps = DEATH_FX[key.slice(6)];
+        steps[0](f, at);
+        await wait(1100);
+        steps[1](f, at);
+        return await wait(1700);
+      }
+      if (key.startsWith('assinatura-')) criador.sig = key.endsWith('meteor') ? '001' : '003';
+      if (['strikeVfx', 'impact', 'recuo'].includes(key) || criador.sig) return await criadorApi.strike({anim: {}, tune: null, de});
+      const samples = {base_placed: [{type: 'base_placed', player, uid: s.players[de].hand[0]}], cosmo_spent: [spend], latent_gained: [{type: 'latent_gained', player, amount: 1}], card_played: [spend, {type: 'card_played', player, uid: me}],
+        spell_resolved: [{type: 'spell_resolved', player}], destroyed: [{type: 'destroyed', uid: other}], awaken_changed: [{type: 'awaken_changed', player, awaken: true}], divine_power: [{type: 'divine_power', player, ability: 'Divine Power'}],
+        domain_power: [{type: 'domain_power', player, ability: 'Domain'}], seal_added: [{type: 'seal_added', uid: other, added: 1}], defeat_prevented: [{type: 'defeat_prevented', uid: other}], ultimate_announced: [{type: 'ultimate_announced', player, ability: 'Ultimate', saints: [me]}],
+        ultimate_resolved: [{type: 'ultimate_resolved', player, ability: 'Ultimate', snapshot: [{uid: me}], loss: 1}], resolved: [{type: 'resolved', uid: me, results: [{ref: other, text: '-1', trend: 'down'}]}]};
+      await criadorPlay(samples[key], null, null);
+    } finally { criador.particulas = null; criador.sig = null; }
+  },
+};
 
 function poseidonDemo(kind) {
   const s = S();
@@ -2703,6 +2838,7 @@ async function init() {
   if (params.get('godB')) settings.godB = `god-${params.get('godB')}`; // ?godB=poseidon
   if (['water-prison', 'great-flood'].includes(params.get('demo'))) settings.godB = 'god-poseidon';
   if (params.get('demo') === 'great-flood') settings.ai = 'none'; // é o turno de B: quem anuncia é o jogador, não a IA
+  if (params.get('demo') === 'criador') { settings.ai = 'none'; settings.timeouts = false; }
   if (params.get('ai')) settings.ai = params.get('ai'); // ?ai=B (padrão) ou ?ai=none (hot-seat)
   if (['easy', 'normal', 'hard'].includes(params.get('level'))) settings.aiLevel = params.get('level'); // ?level=hard (QA)
   if (params.get('timeouts')) settings.timeouts = params.get('timeouts') === '1'; // ?timeouts=1 (QA)
@@ -2725,7 +2861,7 @@ async function init() {
   stage.classList.toggle('no-webgl', !scene);
   if (scene && !settings.reduceMotion) ui.pixel.preload();
   if (Object.keys(vfxStudio.cartas || {}).length) cardFx = startCardFx({quality: settings.quality, reduced: !!settings.reduceMotion, data: vfxStudio, card: id => FORGE.get(id), context: el => (el.closest('#inspector, .dcard--big, .dcard--lg') ? 'inspecao' : el.closest('.dcard') ? 'idle' : null)});
-  window.__divine = {vfx: {play: (id, rect) => ui.pixel.play(id, rect), stats: () => cardFx?.stats() ?? null}, get state() { return S(); }, get ctx() { return ctx; }, get scene() { return scene; }, get clock() { return clock; }, present: (from) => present({}, null, from), settings}; // inspeção no QA
+  window.__divine = {criador: criadorApi, vfx: {play: (id, rect) => ui.pixel.play(id, rect), stats: () => cardFx?.stats() ?? null}, get state() { return S(); }, get ctx() { return ctx; }, get scene() { return scene; }, get clock() { return clock; }, present: (from) => present({}, null, from), settings}; // inspeção no QA
 }
 // Celular: no primeiro toque, tela cheia onde o navegador deixa (Android). Joga em pé (portrait.css) ou deitado (mobile.css), sem travar.
 if (matchMedia('(pointer: coarse)').matches) addEventListener('pointerdown', () => {

@@ -1,0 +1,33 @@
+/* Formulário do pedido de animação, no molde do gerador de arte do Card Forge. */
+.ar-dialog { width: min(1120px, calc(100vw - 32px)); max-width: none; max-height: calc(100vh - 32px); box-sizing: border-box; padding: 18px; overflow: auto; border: 1px solid #9aa9c333; border-radius: 12px; background: #151c29; color: #f0eadb; font: 14px/1.4 Jost, system-ui, sans-serif; }
+.ar-dialog::backdrop { background: #000a; }
+.ar { display: grid; gap: 10px; }
+.ar h2 { margin: 0; font-size: 18px; font-weight: 500; color: #d9b762; }
+.ar-grid { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 16px; }
+.ar-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-content: start; gap: 8px; }
+.ar-fields label, .ar-out { display: grid; gap: 3px; color: #aab5c5; font-size: 12px; }
+.ar-fields select, .ar-fields input { width: 100%; min-width: 0; min-height: 38px; box-sizing: border-box; border: 1px solid #9aa9c333; border-radius: 8px; background: #1d2737; color: #f0eadb; font: 14px Jost, system-ui, sans-serif; padding: 0 8px; }
+.ar-fields input[type=color] { padding: 3px; cursor: pointer; }
+.ar-wide { grid-column: 1 / -1; }
+.ar-section { grid-column: 1 / -1; margin: 8px 0 0; padding-top: 8px; border-top: 1px solid #9aa9c333; color: #aab5c5; font-size: 12px; font-weight: 500; }
+.ar-out { grid-template-rows: auto 1fr; }
+.ar-out textarea { width: 100%; height: 100%; min-height: 320px; box-sizing: border-box; resize: vertical; border: 1px solid #9aa9c333; border-radius: 8px; background: #0d111a; color: #f0eadb; font: 12px/1.45 ui-monospace, Menlo, monospace; padding: 10px; }
+.ar-hint { margin: 0; color: #aab5c5; font-size: 13px; }
+.ar-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.ar-row button { min-height: 44px; padding: 0 16px; border: 1px solid #9aa9c333; border-radius: 8px; background: #1d2737; color: #f0eadb; font: inherit; cursor: pointer; }
+.ar-row .ar-go { border-color: #d9b762; background: #d9b762; color: #171208; font-weight: 600; }
+.ar-row output { color: #8dcde9; font-size: 13px; }
+.ar button:focus-visible, .ar select:focus-visible, .ar input:focus-visible, .ar textarea:focus-visible { outline: 2px solid #d9b762; outline-offset: 2px; }
+@media (max-width: 800px) { .ar-grid { grid-template-columns: minmax(0, 1fr); } .ar-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.ar-result { display: grid; gap: 10px; padding: 12px; border: 1px solid #9aa9c333; border-radius: 10px; }
+.ar-progress { display: flex; align-items: center; gap: 12px; color: #d9b762; }
+.ar-progress span { color: #aab5c5; font-variant-numeric: tabular-nums; }
+.ar-progress button { margin-left: auto; }
+.ar-note { margin: 0; color: #aab5c5; font-size: 13px; }
+.ar-note.is-error { color: #ff9a87; }
+.ar-previews { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
+.ar-previews article { display: grid; gap: 6px; min-width: 0; }
+.ar-previews small { color: #aab5c5; }
+.ar-stage { position: relative; display: grid; place-items: center; aspect-ratio: 6 / 5; overflow: hidden; border-radius: 8px; background: #05060c; }
+.ar-stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; image-rendering: pixelated; }
+.ar-card { width: 60%; height: 62%; border-radius: 4px; background: #1a2030 center 20% / cover no-repeat; }

@@ -1,7 +1,7 @@
 // STAR HILL · VFX Forge V3: Animation Composer, Living Cards e Holographic Cards, dentro do gestor de animações.
 // Grava em data/vfx-studio.json. Uma composição salva aparece no seletor de cada momento (padrão, facção, carta e linha de habilidade).
 import {SHADERS, HOLO, LOTTIES, FACTION_PRESETS, LAYER_TYPES, MAX_COMPOSITION_MS} from '/shared/vfx/presets.js';
-import {allEffects, mountPreview, saveStudio, setPreviewQuality, studioNow} from '/shared/anim-picker.js?v=4';
+import {allEffects, mountPreview, saveStudio, setPreviewQuality, studioNow} from '/shared/anim-picker.js?v=5';
 import {startCardFx} from '/shared/vfx/card-mount.js';
 import {renderLiveCard} from '/shared/live-card.js';
 

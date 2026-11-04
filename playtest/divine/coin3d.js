@@ -48,7 +48,8 @@ const edgeTexture = (THREE) => {
 };
 
 // Devolve null sem WebGL (a tela usa a moeda em CSS). `winner`: 'A' cai em Cara; 'B', em Coroa. `still`: reduced motion, sem lançamento.
-export async function createCoin3D(host, {winner, faces = {}, still = false}) {
+// tune: ajuste do Star Hill (duracao, giros). Giros sempre inteiros: é o que garante a face do vencedor no fim.
+export async function createCoin3D(host, {winner, faces = {}, still = false, tune = null}) {
   const probe = document.createElement('canvas');
   if (!(probe.getContext('webgl2') || probe.getContext('webgl'))) return null;
   let THREE, renderer;
@@ -91,7 +92,7 @@ export async function createCoin3D(host, {winner, faces = {}, still = false}) {
   watcher.observe(host);
   fit();
 
-  const end = SPINS * Math.PI * 2 + (winner === 'A' ? 0 : Math.PI);
+  const end = (tune?.giros ?? SPINS) * Math.PI * 2 + (winner === 'A' ? 0 : Math.PI);
   const pose = t => {
     const air = Math.min(1, t / .86), bounce = t > .86 ? Math.sin((t - .86) / .14 * Math.PI) * .12 : 0;
     pivot.position.y = .55 * 4 * air * (1 - air) + bounce;
@@ -120,7 +121,7 @@ export async function createCoin3D(host, {winner, faces = {}, still = false}) {
       const from = performance.now();
       const step = at => {
         if (gone) return done();
-        const t = Math.min(1, (at - from) / COIN_TOSS_MS);
+        const t = Math.min(1, (at - from) / (COIN_TOSS_MS * (tune?.duracao ?? 1)));
         pose(t); draw();
         if (t < 1) frame = requestAnimationFrame(step); else done();
       };

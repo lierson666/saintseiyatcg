@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Criador de animações</title>
+<link rel="stylesheet" href="/star-hill/star-hill.css">
+<style>
+  html, body { margin: 0; background: var(--night); color: var(--ink); }
+  .cr { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 14px; padding: 12px; min-height: 100vh; box-sizing: border-box; align-items: start; }
+  .cr-view { position: relative; overflow: hidden; border: 1px solid var(--line); border-radius: 10px; background: #000; }
+  .cr-view iframe { position: absolute; left: 0; top: 0; border: 0; transform-origin: 0 0; }
+  .cr-side { display: grid; gap: 12px; }
+  .cr-side h1 { margin: 0; font-size: 22px; font-weight: 400; }
+  .cr-side p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.45; }
+  .cr-side label { display: grid; gap: 4px; font-size: 13px; color: var(--muted); }
+  .cr-side select, .cr-side input[type=range] { width: 100%; min-height: 40px; box-sizing: border-box; }
+  .cr-side select { background: var(--raised); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 0 8px; font: inherit; }
+  .cr-side button { min-height: 44px; padding: 0 12px; border-radius: 8px; border: 1px solid var(--line); background: var(--raised); color: var(--ink); font: inherit; cursor: pointer; }
+  .cr-side button:focus-visible, .cr-side select:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+  .cr-side button:disabled { opacity: .45; cursor: default; }
+  .cr-side .cr-go { background: var(--gold); border-color: var(--gold); color: #171208; font-weight: 600; }
+  .cr-two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .cr-mode { display: grid; gap: 12px; } .cr-mode[hidden] { display: none; }
+  .cr-modes { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; } .cr-modes [aria-pressed=true] { border-color: var(--gold); color: var(--gold); }
+  .cr-side .cr-check { display: flex; align-items: center; gap: 8px; min-height: 44px; } .cr-check input[type=color] { width: 44px; height: 32px; padding: 0; border: 1px solid var(--line); background: none; }
+  .cr-side label output { color: var(--ink); }
+  .cr-layers { border: 1px solid var(--line, #f5f1e626); border-radius: 12px; padding: 10px 12px; margin: 0; display: grid; gap: 10px; }
+  .cr-layers legend { padding: 0 6px; font-size: 13px; }
+  #fLayers { display: grid; gap: 10px; }
+  .lp { display: grid; gap: 8px; padding: 10px; border: 1px solid var(--line, #f5f1e626); border-radius: 12px; font-size: 12px; }
+  .lp-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+  .lp-row label { display: inline-flex; align-items: center; gap: 6px; }
+  .lp-row select { min-height: 32px; min-width: 0; max-width: 220px; font-size: 12px; }
+  .lp-row button { min-height: 36px; width: auto; padding: 0 12px; font-size: 13px; }
+  .lp-layers { margin: 0; border: 0; padding: 0; }
+  .lp-layers legend { float: left; padding: 0 8px 0 0; }
+  #lpMetrics { color: #aab5c5; font-variant-numeric: tabular-nums; }
+  .cr-main { display: grid; gap: 10px; min-width: 0; align-content: start; }
+  .cb-time { display: grid; gap: 4px; padding: 10px; border: 1px solid var(--line, #f5f1e626); border-radius: 12px; }
+  .cb-time[hidden] { display: none; }
+  #cTracks { display: grid; gap: 4px; }
+  .cb-row { display: grid; grid-template-columns: 96px minmax(0, 170px) minmax(0, 1fr); align-items: center; gap: 8px; font-size: 12px; min-height: 32px; }
+  .cb-row select, .cb-row input[type=number] { min-height: 30px; min-width: 0; width: 100%; box-sizing: border-box; font-size: 12px; }
+  .cb-lane { position: relative; height: 28px; border-radius: 6px; background: #ffffff0d; }
+  .cb-lane input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: ew-resize; }
+  .cb-lane input:focus-visible + i, .cb-lane input:hover + i { outline: 2px solid #ffe7a3; }
+  .cb-block { position: absolute; top: 4px; bottom: 4px; min-width: 6px; border-radius: 4px; background: #e6c36a; pointer-events: none; }
+  .cb-lane.is-empty .cb-block { display: none; }
+  .cb-hit { position: absolute; top: 0; bottom: 0; width: 2px; background: #ff9a87; pointer-events: none; }
+  #status { min-height: 20px; font-size: 13px; color: var(--cosmo); }
+  @media (max-width: 860px) { .cr { grid-template-columns: minmax(0, 1fr); } }
+</style>
+</head>
+<body>
+<main class="cr">
+  <div class="cr-main"><div class="cr-view" id="view"><iframe id="game" title="Mesa do jogo"></iframe></div>
+  <section class="lp" id="live" aria-label="Controles do preview">
+    <div class="lp-row"><button type="button" id="lpPause">⏸ Pausar</button><button type="button" id="lpStep" disabled>⏭ Quadro</button>
+      <label>Velocidade<select id="lpRate"><option value="1">Normal</option><option value=".5">0,5×</option><option value=".25">0,25×</option><option value=".1">0,1×</option></select></label>
+      <button type="button" id="lpBench">Medir render</button><output id="lpMetrics" aria-live="off"></output></div>
+    <fieldset class="lp-row lp-layers"><legend>Camadas</legend>
+      <label><input type="checkbox" data-layer-view="cor" checked> Pixel</label><label><input type="checkbox" data-layer-view="luz" checked> Luz</label><label><input type="checkbox" data-layer-view="particulas" checked> Partículas</label><label><input type="checkbox" data-layer-view="arena" checked> Arena</label>
+      <label><input type="checkbox" id="lpAnchors"> Âncoras</label></fieldset>
+    <div class="lp-row"><label>Comparar A<select id="lpA"></select></label><label>com B<select id="lpB"></select></label><button type="button" id="lpCompare">▶ A, depois B</button></div>
+  </section>
+  <section class="cb-time" id="cTimeline" hidden aria-label="Linha do tempo da coreografia"><div class="cb-row cb-ruler"><b>HIT <output id="cHitOut"></output></b><span></span><input type="range" id="cHit" min="0" max="2000" step="10" aria-label="Momento do HIT"></div><div id="cTracks"></div></section></div>
+  <aside class="cr-side">
+    <h1>Criador de animações</h1>
+    <div class="cr-modes" role="group" aria-label="O que editar"><button type="button" data-modo="efeitos">Efeitos</button><button type="button" data-modo="particulas">Partículas</button><button type="button" data-modo="interface">Interface</button><button type="button" data-modo="cena">Céu e moeda</button><button type="button" data-modo="sprite">Sprite Fusion</button><button type="button" data-modo="combate">Combate</button></div>
+    <section class="cr-mode" id="modoEfeitos">
+    <button type="button" class="cr-go" id="request">Gerar animação…</button>
+    <p>Escolha os parâmetros e gere: o preview aparece no próprio formulário. Depois é testar na mesa real e guardar no banco. Ligar a uma carta é opcional.</p>
+    <label>Efeito<select id="effect"></select></label>
+    <div class="cr-two">
+      <label>Momento<select id="moment"></select></label>
+      <label>Quem ataca<select id="side"><option value="A">Eu</option><option value="B">Oponente</option></select></label>
+    </div>
+    <label>Posição<select id="anchor"><option value="">No alvo</option><option value="origem">Sai do atacante</option><option value="viagem">Viaja até o alvo</option></select></label>
+    <div class="cr-two">
+      <label>Tamanho <input id="size" type="range" min=".5" max="2" step=".05" value="1"></label>
+      <label>Velocidade <input id="speed" type="range" min=".25" max="2" step=".05" value="1"></label>
+    </div>
+    <button type="button" id="play">▶ Testar na mesa</button>
+    <div class="cr-two">
+      <button type="button" id="saveTune">Salvar ajuste</button>
+      <button type="button" id="restoreTune">Restaurar original</button>
+      <button type="button" id="refresh">Atualizar lista</button>
+    </div>
+    <div class="cr-two">
+      <button type="button" id="approve">Guardar no banco</button>
+      <button type="button" id="discard">Descartar</button>
+    </div>
+    <div class="cr-two">
+      <button type="button" id="useCard">Usar só nesta carta</button>
+      <button type="button" id="useAll">Usar como padrão</button>
+    </div>
+    </section>
+    <section class="cr-mode" id="modoParticulas" hidden>
+      <p>Partículas que o jogo toca em cada evento. Teste na mesa antes de salvar.</p>
+      <label>Grupo<select id="pGroup"></select></label>
+      <p id="pWhen"></p>
+      <label class="cr-check"><input type="checkbox" id="pOn"> Ligado</label>
+      <label>Quantidade <output id="pCountOut"></output><input id="pCount" type="range" min=".25" max="3" step=".05"></label>
+      <label>Tamanho <output id="pSizeOut"></output><input id="pSize" type="range" min=".25" max="3" step=".05"></label>
+      <label>Duração <output id="pTimeOut"></output><input id="pTime" type="range" min=".25" max="3" step=".05"></label>
+      <label class="cr-check"><input type="checkbox" id="pOwnColor"> Trocar a cor <input type="color" id="pColor" value="#e0bb62" aria-label="Cor"></label>
+      <label>Quem ataca<select id="pSide"><option value="A">Eu</option><option value="B">Oponente</option></select></label>
+      <button type="button" class="cr-go" id="pPlay">▶ Testar na mesa</button>
+      <div class="cr-two"><button type="button" id="pSave">Salvar</button><button type="button" id="pReset">Voltar ao original</button></div>
+    </section>
+    <section class="cr-mode" id="modoInterface" hidden>
+      <p>Animações antigas de CSS da interface. Aqui dá para ligar, desligar e mudar a velocidade. Forma e cor seguem no CSS.</p>
+      <label>Animação<select id="iAnim"></select></label>
+      <p id="iWhen"></p>
+      <label class="cr-check"><input type="checkbox" id="iOn"> Ligado</label>
+      <label>Velocidade <output id="iSpeedOut"></output><input id="iSpeed" type="range" min=".25" max="3" step=".05"></label>
+      <button type="button" class="cr-go" id="iPlay">▶ Testar na mesa</button>
+      <div class="cr-two"><button type="button" id="iSave">Salvar</button><button type="button" id="iReset">Voltar ao original</button></div>
+    </section>
+    <section class="cr-mode" id="modoCombate" hidden>
+      <p>Coreografia de um Strike, fase por fase, com os efeitos do banco. Quem decide acerto e dano é sempre a engine: aqui é só o que se vê e se ouve.</p>
+      <label>Nome<input id="cName" maxlength="60" value="Nova coreografia"></label>
+      <label>Começar de<select id="cTemplate"><option value="fisico">Golpe físico</option><option value="projetil">Projétil</option></select></label>
+      <label>Cenário<select id="cScenario"><option value="devotee">Devotee, com revide</option><option value="deus">Dano direto na Soul</option><option value="bloqueado">Bloqueado</option><option value="semdano">Sem dano</option><option value="area">Área: impacto em cada alvo</option></select></label>
+      <div class="cr-two">
+        <label>Quem ataca<select id="cSide"><option value="A">Eu</option><option value="B">Oponente</option></select></label>
+      </div>
+      <button type="button" class="cr-go" id="cPlay">▶ Testar na mesa</button>
+      <button type="button" id="cSave">Salvar como rascunho</button>
+    </section>
+    <section class="cr-mode" id="modoSprite" hidden>
+      <p>Golpes feitos com o código do Sprite Fusion, sem arquivo. O resultado vira rascunho no banco de efeitos, sem ligar a nenhuma carta.</p>
+      <label>Tipo<select id="fType"></select></label>
+      <label>Nome<input id="fName" maxlength="60"></label>
+      <label class="cr-check"><input type="checkbox" id="fOwnColor"> Trocar a cor <input type="color" id="fColor" value="#e0bb62" aria-label="Cor"></label>
+      <p id="fColorNote"></p>
+      <label>Escala <output id="fScaleOut"></output><input id="fScale" type="range" min=".25" max="3" step=".05" value="1"></label>
+      <label>Velocidade <output id="fSpeedOut"></output><input id="fSpeed" type="range" min=".25" max="3" step=".05" value="1"></label>
+      <label>Posição<select id="fAnchor"><option value="alvo">No alvo</option><option value="origem">No atacante</option></select></label>
+      <fieldset class="cr-layers"><legend>Camadas e sincronia</legend><div id="fLayers"></div></fieldset>
+      <div class="cr-two">
+        <label>Quem ataca<select id="fSide"><option value="A">Eu</option><option value="B">Oponente</option></select></label>
+        <label>Alvo<select id="fTarget"><option value="">Devotee</option><option value="deus">Deus</option></select></label>
+      </div>
+      <button type="button" class="cr-go" id="fPlay">▶ Testar na mesa</button>
+      <button type="button" id="fSave">Salvar como rascunho</button>
+      <p id="fMeta"></p>
+    </section>
+    <section class="cr-mode" id="modoCena" hidden>
+      <h2>Cara ou coroa</h2>
+      <label class="cr-check"><input type="checkbox" id="mOn"> Girar (desligado, a moeda aparece parada no resultado)</label>
+      <label>Duração <output id="mTimeOut"></output><input id="mTime" type="range" min=".5" max="2" step=".05"></label>
+      <label>Giros <output id="mSpinOut"></output><input id="mSpin" type="range" min="3" max="12" step="1"></label>
+      <label>Quem vence<select id="mWinner"><option value="A">Cara</option><option value="B">Coroa</option></select></label>
+      <button type="button" class="cr-go" id="mPlay">▶ Testar na mesa</button>
+      <div class="cr-two"><button type="button" id="mSave">Salvar</button><button type="button" id="mReset">Voltar ao original</button></div>
+      <h2>Céu de fundo</h2>
+      <p>O céu do site, do login e do lobby. O teste abre a página real no palco.</p>
+      <label class="cr-check"><input type="checkbox" id="sOn"> Animado (desligado, o céu fica parado)</label>
+      <label>Estrelas <output id="sStarsOut"></output><input id="sStars" type="range" min=".25" max="2" step=".05"></label>
+      <button type="button" class="cr-go" id="sPlay">▶ Testar no céu</button>
+      <div class="cr-two"><button type="button" id="sSave">Salvar</button><button type="button" id="sReset">Voltar ao original</button></div>
+    </section>
+    <label>Minha carta<select id="cardA"></select></label>
+    <label>Carta do oponente<select id="cardB"></select></label>
+    <label>Tela<select id="screen"><option value="1280x720">Computador</option><option value="430x860">Celular</option></select></label>
+    <output id="status" aria-live="polite"></output>
+  </aside>
+</main>
+<script type="module" src="/star-hill/criador.js?v=2"></script>
+</body>
+</html>

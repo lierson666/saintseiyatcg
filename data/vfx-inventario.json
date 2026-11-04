@@ -1,0 +1,6517 @@
+{
+ "versao": 1,
+ "gerado_por": "tools/vfx-inventario.py",
+ "resumo": {
+  "total": 239,
+  "migradas": 66,
+  "editavel": 79,
+  "parcial": 117,
+  "legado": 24,
+  "excecao": 19,
+  "criterios": {
+   "forge": 196,
+   "edita": 187,
+   "aplica": 185,
+   "preview": 66,
+   "restaura": 185,
+   "testes": 187
+  }
+ },
+ "animacoes": [
+  {
+   "id": "momento:golpe",
+   "nome": "Golpe do Strike",
+   "categoria": "Momentos",
+   "tecnologia": "Vínculo",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/director.js",
+    "data/card-animations.json"
+   ],
+   "gatilho": "O Strike resolveu",
+   "parametros": [
+    "efeito por padrão, facção, carta e linha"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "padroes"
+  },
+  {
+   "id": "momento:impacto",
+   "nome": "Impacto em Devotee",
+   "categoria": "Momentos",
+   "tecnologia": "Vínculo",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/director.js",
+    "data/card-animations.json"
+   ],
+   "gatilho": "Strike acertou um Devotee",
+   "parametros": [
+    "efeito por padrão, facção, carta e linha"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "padroes"
+  },
+  {
+   "id": "momento:impacto_deus",
+   "nome": "Impacto no Deus",
+   "categoria": "Momentos",
+   "tecnologia": "Vínculo",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/director.js",
+    "data/card-animations.json"
+   ],
+   "gatilho": "Strike acertou o Deus",
+   "parametros": [
+    "efeito por padrão, facção, carta e linha"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "padroes"
+  },
+  {
+   "id": "momento:strike",
+   "nome": "Ao receber Strike",
+   "categoria": "Momentos",
+   "tecnologia": "Vínculo",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/director.js",
+    "data/card-animations.json"
+   ],
+   "gatilho": "Foi atingido por um Strike",
+   "parametros": [
+    "efeito por padrão, facção, carta e linha"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "padroes"
+  },
+  {
+   "id": "momento:carga",
+   "nome": "Carga do golpe",
+   "categoria": "Momentos",
+   "tecnologia": "Vínculo",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/director.js",
+    "data/card-animations.json"
+   ],
+   "gatilho": "Cosmo sobe antes do impacto",
+   "parametros": [
+    "efeito por padrão, facção, carta e linha"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "padroes"
+  },
+  {
+   "id": "momento:declarar",
+   "nome": "Ao declarar ataque",
+   "categoria": "Momentos",
+   "tecnologia": "Vínculo",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/director.js",
+    "data/card-animations.json"
+   ],
+   "gatilho": "Devotee declarou o Strike",
+   "parametros": [
+    "efeito por padrão, facção, carta e linha"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "padroes"
+  },
+  {
+   "id": "momento:cast",
+   "nome": "Ao conjurar",
+   "categoria": "Momentos",
+   "tecnologia": "Vínculo",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/director.js",
+    "data/card-animations.json"
+   ],
+   "gatilho": "A carta foi jogada",
+   "parametros": [
+    "efeito por padrão, facção, carta e linha"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "padroes",
+   "limite": "A mesa de teste ainda não simula este momento"
+  },
+  {
+   "id": "momento:entrada",
+   "nome": "Entrada no campo",
+   "categoria": "Momentos",
+   "tecnologia": "Vínculo",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/director.js",
+    "data/card-animations.json"
+   ],
+   "gatilho": "Devotee ou Equipment entrou no campo",
+   "parametros": [
+    "efeito por padrão, facção, carta e linha"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "padroes"
+  },
+  {
+   "id": "momento:retorno",
+   "nome": "Volta do Tartarus",
+   "categoria": "Momentos",
+   "tecnologia": "Vínculo",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/director.js",
+    "data/card-animations.json"
+   ],
+   "gatilho": "Voltou ao campo ou à mão",
+   "parametros": [
+    "efeito por padrão, facção, carta e linha"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "padroes",
+   "limite": "A mesa de teste ainda não simula este momento"
+  },
+  {
+   "id": "momento:morte",
+   "nome": "Ao morrer",
+   "categoria": "Momentos",
+   "tecnologia": "Vínculo",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/director.js",
+    "data/card-animations.json"
+   ],
+   "gatilho": "Foi derrotado",
+   "parametros": [
+    "efeito por padrão, facção, carta e linha"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "padroes",
+   "limite": "A mesa de teste ainda não simula este momento"
+  },
+  {
+   "id": "momento:dano",
+   "nome": "Dano em Devotee",
+   "categoria": "Momentos",
+   "tecnologia": "Vínculo",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/director.js",
+    "data/card-animations.json"
+   ],
+   "gatilho": "Devotee perdeu HP",
+   "parametros": [
+    "efeito por padrão, facção, carta e linha"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "padroes"
+  },
+  {
+   "id": "momento:soul",
+   "nome": "Dano no Soul",
+   "categoria": "Momentos",
+   "tecnologia": "Vínculo",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/director.js",
+    "data/card-animations.json"
+   ],
+   "gatilho": "O Deus perdeu Soul",
+   "parametros": [
+    "efeito por padrão, facção, carta e linha"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "padroes",
+   "limite": "A mesa de teste ainda não simula este momento"
+  },
+  {
+   "id": "momento:escudo",
+   "nome": "Dano prevenido",
+   "categoria": "Momentos",
+   "tecnologia": "Vínculo",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/director.js",
+    "data/card-animations.json"
+   ],
+   "gatilho": "Dano foi prevenido",
+   "parametros": [
+    "efeito por padrão, facção, carta e linha"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "padroes",
+   "limite": "A mesa de teste ainda não simula este momento"
+  },
+  {
+   "id": "momento:cura",
+   "nome": "Ganho de Soul",
+   "categoria": "Momentos",
+   "tecnologia": "Vínculo",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/director.js",
+    "data/card-animations.json"
+   ],
+   "gatilho": "O Deus ganhou Soul",
+   "parametros": [
+    "efeito por padrão, facção, carta e linha"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "padroes",
+   "limite": "A mesa de teste ainda não simula este momento"
+  },
+  {
+   "id": "momento:habilidade",
+   "nome": "Habilidade",
+   "categoria": "Momentos",
+   "tecnologia": "Vínculo",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/director.js",
+    "data/card-animations.json"
+   ],
+   "gatilho": "Gatilho ou habilidade resolveu",
+   "parametros": [
+    "efeito por padrão, facção, carta e linha"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "padroes",
+   "limite": "A mesa de teste ainda não simula este momento"
+  },
+  {
+   "id": "momento:ultimate",
+   "nome": "Ultimate",
+   "categoria": "Momentos",
+   "tecnologia": "Vínculo",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/director.js",
+    "data/card-animations.json"
+   ],
+   "gatilho": "A Ultimate resolveu",
+   "parametros": [
+    "efeito por padrão, facção, carta e linha"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "padroes",
+   "limite": "A mesa de teste ainda não simula este momento"
+  },
+  {
+   "id": "momento:poder_divino",
+   "nome": "Poder Divino",
+   "categoria": "Momentos",
+   "tecnologia": "Vínculo",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/director.js",
+    "data/card-animations.json"
+   ],
+   "gatilho": "God usou o Poder Divino",
+   "parametros": [
+    "efeito por padrão, facção, carta e linha"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "padroes",
+   "limite": "A mesa de teste ainda não simula este momento"
+  },
+  {
+   "id": "momento:poder_dominio",
+   "nome": "Poder do Domain",
+   "categoria": "Momentos",
+   "tecnologia": "Vínculo",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/director.js",
+    "data/card-animations.json"
+   ],
+   "gatilho": "Domain usou o poder",
+   "parametros": [
+    "efeito por padrão, facção, carta e linha"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "padroes",
+   "limite": "A mesa de teste ainda não simula este momento"
+  },
+  {
+   "id": "momento:awaken",
+   "nome": "Awaken",
+   "categoria": "Momentos",
+   "tecnologia": "Vínculo",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/director.js",
+    "data/card-animations.json"
+   ],
+   "gatilho": "God despertou",
+   "parametros": [
+    "efeito por padrão, facção, carta e linha"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "padroes",
+   "limite": "A mesa de teste ainda não simula este momento"
+  },
+  {
+   "id": "pixel:slash",
+   "nome": "Corte",
+   "categoria": "Sprite Fusion",
+   "tecnologia": "Canvas 2D (Sprite Fusion)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/pixel-vfx.js"
+   ],
+   "gatilho": "Quando escolhido num momento",
+   "parametros": [
+    "ligado",
+    "tamanho",
+    "velocidade",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "efeitos"
+  },
+  {
+   "id": "pixel:impact",
+   "nome": "Impacto",
+   "categoria": "Sprite Fusion",
+   "tecnologia": "Canvas 2D (Sprite Fusion)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/pixel-vfx.js"
+   ],
+   "gatilho": "Quando escolhido num momento",
+   "parametros": [
+    "ligado",
+    "tamanho",
+    "velocidade",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "efeitos"
+  },
+  {
+   "id": "pixel:ice",
+   "nome": "Gelo",
+   "categoria": "Sprite Fusion",
+   "tecnologia": "Canvas 2D (Sprite Fusion)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/pixel-vfx.js"
+   ],
+   "gatilho": "Quando escolhido num momento",
+   "parametros": [
+    "ligado",
+    "tamanho",
+    "velocidade",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "efeitos"
+  },
+  {
+   "id": "pixel:fire",
+   "nome": "Fogo",
+   "categoria": "Sprite Fusion",
+   "tecnologia": "Canvas 2D (Sprite Fusion)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/pixel-vfx.js"
+   ],
+   "gatilho": "Quando escolhido num momento",
+   "parametros": [
+    "ligado",
+    "tamanho",
+    "velocidade",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "efeitos"
+  },
+  {
+   "id": "pixel:lightning",
+   "nome": "Raio",
+   "categoria": "Sprite Fusion",
+   "tecnologia": "Canvas 2D (Sprite Fusion)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/pixel-vfx.js"
+   ],
+   "gatilho": "Quando escolhido num momento",
+   "parametros": [
+    "ligado",
+    "tamanho",
+    "velocidade",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "efeitos"
+  },
+  {
+   "id": "pixel:poison",
+   "nome": "Veneno",
+   "categoria": "Sprite Fusion",
+   "tecnologia": "Canvas 2D (Sprite Fusion)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/pixel-vfx.js"
+   ],
+   "gatilho": "Quando escolhido num momento",
+   "parametros": [
+    "ligado",
+    "tamanho",
+    "velocidade",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "efeitos"
+  },
+  {
+   "id": "pixel:light",
+   "nome": "Luz",
+   "categoria": "Sprite Fusion",
+   "tecnologia": "Canvas 2D (Sprite Fusion)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/pixel-vfx.js"
+   ],
+   "gatilho": "Quando escolhido num momento",
+   "parametros": [
+    "ligado",
+    "tamanho",
+    "velocidade",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "efeitos"
+  },
+  {
+   "id": "pixel:dark",
+   "nome": "Trevas",
+   "categoria": "Sprite Fusion",
+   "tecnologia": "Canvas 2D (Sprite Fusion)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/pixel-vfx.js"
+   ],
+   "gatilho": "Quando escolhido num momento",
+   "parametros": [
+    "ligado",
+    "tamanho",
+    "velocidade",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "efeitos"
+  },
+  {
+   "id": "pixel:explosion",
+   "nome": "Explosão",
+   "categoria": "Sprite Fusion",
+   "tecnologia": "Canvas 2D (Sprite Fusion)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/pixel-vfx.js"
+   ],
+   "gatilho": "Quando escolhido num momento",
+   "parametros": [
+    "ligado",
+    "tamanho",
+    "velocidade",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "efeitos"
+  },
+  {
+   "id": "pixel:energy",
+   "nome": "Energia",
+   "categoria": "Sprite Fusion",
+   "tecnologia": "Canvas 2D (Sprite Fusion)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/pixel-vfx.js"
+   ],
+   "gatilho": "Quando escolhido num momento",
+   "parametros": [
+    "ligado",
+    "tamanho",
+    "velocidade",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "efeitos"
+  },
+  {
+   "id": "pixel:shield",
+   "nome": "Escudo",
+   "categoria": "Sprite Fusion",
+   "tecnologia": "Canvas 2D (Sprite Fusion)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/pixel-vfx.js"
+   ],
+   "gatilho": "Quando escolhido num momento",
+   "parametros": [
+    "ligado",
+    "tamanho",
+    "velocidade",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "efeitos"
+  },
+  {
+   "id": "pixel:heal",
+   "nome": "Cura",
+   "categoria": "Sprite Fusion",
+   "tecnologia": "Canvas 2D (Sprite Fusion)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/pixel-vfx.js"
+   ],
+   "gatilho": "Quando escolhido num momento",
+   "parametros": [
+    "ligado",
+    "tamanho",
+    "velocidade",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "efeitos"
+  },
+  {
+   "id": "pixel:power",
+   "nome": "Aura",
+   "categoria": "Sprite Fusion",
+   "tecnologia": "Canvas 2D (Sprite Fusion)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/pixel-vfx.js"
+   ],
+   "gatilho": "Quando escolhido num momento",
+   "parametros": [
+    "ligado",
+    "tamanho",
+    "velocidade",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "efeitos"
+  },
+  {
+   "id": "pixel:muzzle",
+   "nome": "Disparo",
+   "categoria": "Sprite Fusion",
+   "tecnologia": "Canvas 2D (Sprite Fusion)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/pixel-vfx.js"
+   ],
+   "gatilho": "Quando escolhido num momento",
+   "parametros": [
+    "ligado",
+    "tamanho",
+    "velocidade",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "efeitos"
+  },
+  {
+   "id": "pixel:blood",
+   "nome": "Sangue",
+   "categoria": "Sprite Fusion",
+   "tecnologia": "Canvas 2D (Sprite Fusion)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/pixel-vfx.js"
+   ],
+   "gatilho": "Quando escolhido num momento",
+   "parametros": [
+    "ligado",
+    "tamanho",
+    "velocidade",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "efeitos"
+  },
+  {
+   "id": "pixel:pickup",
+   "nome": "Coleta",
+   "categoria": "Sprite Fusion",
+   "tecnologia": "Canvas 2D (Sprite Fusion)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/pixel-vfx.js"
+   ],
+   "gatilho": "Quando escolhido num momento",
+   "parametros": [
+    "ligado",
+    "tamanho",
+    "velocidade",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "efeitos"
+  },
+  {
+   "id": "pixel:dash",
+   "nome": "Investida",
+   "categoria": "Sprite Fusion",
+   "tecnologia": "Canvas 2D (Sprite Fusion)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/pixel-vfx.js"
+   ],
+   "gatilho": "Quando escolhido num momento",
+   "parametros": [
+    "ligado",
+    "tamanho",
+    "velocidade",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "efeitos"
+  },
+  {
+   "id": "pixel:blink",
+   "nome": "Teleporte",
+   "categoria": "Sprite Fusion",
+   "tecnologia": "Canvas 2D (Sprite Fusion)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/pixel-vfx.js"
+   ],
+   "gatilho": "Quando escolhido num momento",
+   "parametros": [
+    "ligado",
+    "tamanho",
+    "velocidade",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "efeitos"
+  },
+  {
+   "id": "pixel:sparkle",
+   "nome": "Brilho",
+   "categoria": "Sprite Fusion",
+   "tecnologia": "Canvas 2D (Sprite Fusion)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/pixel-vfx.js"
+   ],
+   "gatilho": "Quando escolhido num momento",
+   "parametros": [
+    "ligado",
+    "tamanho",
+    "velocidade",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "efeitos"
+  },
+  {
+   "id": "pixel:rain",
+   "nome": "Chuva",
+   "categoria": "Sprite Fusion",
+   "tecnologia": "Canvas 2D (Sprite Fusion)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/pixel-vfx.js"
+   ],
+   "gatilho": "Quando escolhido num momento",
+   "parametros": [
+    "ligado",
+    "tamanho",
+    "velocidade",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "efeitos"
+  },
+  {
+   "id": "pixel:snow",
+   "nome": "Neve",
+   "categoria": "Sprite Fusion",
+   "tecnologia": "Canvas 2D (Sprite Fusion)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/pixel-vfx.js"
+   ],
+   "gatilho": "Quando escolhido num momento",
+   "parametros": [
+    "ligado",
+    "tamanho",
+    "velocidade",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "efeitos"
+  },
+  {
+   "id": "pixel:fog",
+   "nome": "Névoa",
+   "categoria": "Sprite Fusion",
+   "tecnologia": "Canvas 2D (Sprite Fusion)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/pixel-vfx.js"
+   ],
+   "gatilho": "Quando escolhido num momento",
+   "parametros": [
+    "ligado",
+    "tamanho",
+    "velocidade",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "efeitos"
+  },
+  {
+   "id": "pixel:embers",
+   "nome": "Brasas",
+   "categoria": "Sprite Fusion",
+   "tecnologia": "Canvas 2D (Sprite Fusion)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/pixel-vfx.js"
+   ],
+   "gatilho": "Quando escolhido num momento",
+   "parametros": [
+    "ligado",
+    "tamanho",
+    "velocidade",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "efeitos"
+  },
+  {
+   "id": "pixel:fireflies",
+   "nome": "Vaga-lumes",
+   "categoria": "Sprite Fusion",
+   "tecnologia": "Canvas 2D (Sprite Fusion)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/pixel-vfx.js"
+   ],
+   "gatilho": "Quando escolhido num momento",
+   "parametros": [
+    "ligado",
+    "tamanho",
+    "velocidade",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "efeitos"
+  },
+  {
+   "id": "pixel:leaves",
+   "nome": "Folhas",
+   "categoria": "Sprite Fusion",
+   "tecnologia": "Canvas 2D (Sprite Fusion)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/pixel-vfx.js"
+   ],
+   "gatilho": "Quando escolhido num momento",
+   "parametros": [
+    "ligado",
+    "tamanho",
+    "velocidade",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "efeitos"
+  },
+  {
+   "id": "pixel:bubbles",
+   "nome": "Bolhas",
+   "categoria": "Sprite Fusion",
+   "tecnologia": "Canvas 2D (Sprite Fusion)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/pixel-vfx.js"
+   ],
+   "gatilho": "Quando escolhido num momento",
+   "parametros": [
+    "ligado",
+    "tamanho",
+    "velocidade",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "efeitos"
+  },
+  {
+   "id": "gerador:sprite-fusion",
+   "nome": "Gerador Sprite Fusion: 14 tipos de combate",
+   "categoria": "Sprite Fusion",
+   "tecnologia": "Canvas 2D (Sprite Fusion)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/pixel-vfx.js",
+    "star-hill/criador.js"
+   ],
+   "gatilho": "Quando o rascunho for escolhido num momento",
+   "parametros": [
+    "tipo",
+    "cor",
+    "escala",
+    "velocidade",
+    "posicao",
+    "camadas",
+    "atraso"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "sprite",
+   "limite": "Tipos sem efeito próprio no Sprite Fusion são composições aproximadas. Sem arquivo, quadros e dimensões não se aplicam. O teste entra no impacto do Strike"
+  },
+  {
+   "id": "gerador:combate",
+   "nome": "Combat Composer: coreografia do Strike",
+   "categoria": "Combate",
+   "tecnologia": "Timeline (efeitos do banco)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/director.js",
+    "star-hill/criador.js"
+   ],
+   "gatilho": "Golpe do Strike, se escolhida",
+   "parametros": [
+    "fases",
+    "inicio",
+    "hit",
+    "hit stop",
+    "knockback",
+    "som"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "combate",
+   "limite": "Uma faixa por fase. Em área e fora do Strike toca só o Impact"
+  },
+  {
+   "id": "banco",
+   "nome": "Banco de efeitos",
+   "categoria": "Banco de efeitos",
+   "tecnologia": "Sprite sheet",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/pixel-vfx.js",
+    "data/vfx-catalog.json"
+   ],
+   "gatilho": "Quando escolhido num momento",
+   "parametros": [
+    "ligado",
+    "tamanho",
+    "velocidade",
+    "posição"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "efeitos",
+   "limite": "Restaurar volta o ajuste; a folha importada não muda. Só rascunho pode ser descartado"
+  },
+  {
+   "id": "composer",
+   "nome": "Composições, shaders e Lottie",
+   "categoria": "Composições e cartas vivas",
+   "tecnologia": "WebGL (Pixi) e Lottie",
+   "origem": "Compartilhado",
+   "arquivos": [
+    "shared/vfx/composer.js",
+    "data/vfx-studio.json"
+   ],
+   "gatilho": "Quando escolhidos",
+   "parametros": [
+    "camadas e efeitos"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "composer",
+   "limite": "Efeito no jogo real ainda não verificado nesta auditoria; falta restaurar"
+  },
+  {
+   "id": "holo",
+   "nome": "Holográfico por raridade",
+   "categoria": "Composições e cartas vivas",
+   "tecnologia": "WebGL (Pixi)",
+   "origem": "Compartilhado",
+   "arquivos": [
+    "shared/vfx/composer.js",
+    "data/vfx-studio.json"
+   ],
+   "gatilho": "Quando escolhidos",
+   "parametros": [
+    "camadas e efeitos"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "holo",
+   "limite": "Efeito no jogo real ainda não verificado nesta auditoria; falta restaurar"
+  },
+  {
+   "id": "particula:strikeVfx",
+   "nome": "Golpe: carga e disparo",
+   "categoria": "Partículas da partida",
+   "tecnologia": "WebGL (partículas)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/particle-tune.js",
+    "playtest/divine/director.js"
+   ],
+   "gatilho": "O Strike sai do atacante",
+   "parametros": [
+    "ligado",
+    "quantidade",
+    "tamanho",
+    "duração",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "particulas"
+  },
+  {
+   "id": "particula:impact",
+   "nome": "Golpe: impacto",
+   "categoria": "Partículas da partida",
+   "tecnologia": "WebGL (partículas)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/particle-tune.js",
+    "playtest/divine/director.js"
+   ],
+   "gatilho": "O golpe chega ao alvo",
+   "parametros": [
+    "ligado",
+    "quantidade",
+    "tamanho",
+    "duração",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "particulas"
+  },
+  {
+   "id": "particula:assinatura-meteor",
+   "nome": "Pegasus Ryuseiken",
+   "categoria": "Partículas da partida",
+   "tecnologia": "WebGL (partículas)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/particle-tune.js",
+    "playtest/divine/director.js"
+   ],
+   "gatilho": "Golpe com assinatura da carta 001",
+   "parametros": [
+    "ligado",
+    "quantidade",
+    "tamanho",
+    "duração",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "particulas"
+  },
+  {
+   "id": "particula:assinatura-dragon",
+   "nome": "Rozan Shoryuha",
+   "categoria": "Partículas da partida",
+   "tecnologia": "WebGL (partículas)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/particle-tune.js",
+    "playtest/divine/director.js"
+   ],
+   "gatilho": "Golpe com assinatura da carta 003",
+   "parametros": [
+    "ligado",
+    "quantidade",
+    "tamanho",
+    "duração",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "particulas"
+  },
+  {
+   "id": "particula:recuo",
+   "nome": "Recuo da carta",
+   "categoria": "Recuo e impacto",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/particle-tune.js",
+    "playtest/divine/director.js"
+   ],
+   "gatilho": "A carta pisca e recua ao levar o golpe. Tamanho é a distância; duração é o tempo",
+   "parametros": [
+    "ligado",
+    "tamanho",
+    "duração"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "particulas"
+  },
+  {
+   "id": "particula:base_placed",
+   "nome": "Base colocada",
+   "categoria": "Partículas da partida",
+   "tecnologia": "WebGL (partículas)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/particle-tune.js",
+    "playtest/divine/director.js"
+   ],
+   "gatilho": "Uma carta vira Base",
+   "parametros": [
+    "ligado",
+    "quantidade",
+    "tamanho",
+    "duração",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "particulas"
+  },
+  {
+   "id": "particula:cosmo_spent",
+   "nome": "Cosmo gasto",
+   "categoria": "Partículas da partida",
+   "tecnologia": "WebGL (partículas)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/particle-tune.js",
+    "playtest/divine/director.js"
+   ],
+   "gatilho": "O jogador paga Cosmo",
+   "parametros": [
+    "ligado",
+    "quantidade",
+    "tamanho",
+    "duração",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "particulas"
+  },
+  {
+   "id": "particula:latent_gained",
+   "nome": "Cosmo Latente ganho",
+   "categoria": "Partículas da partida",
+   "tecnologia": "WebGL (partículas)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/particle-tune.js",
+    "playtest/divine/director.js"
+   ],
+   "gatilho": "Ganha Latent",
+   "parametros": [
+    "ligado",
+    "quantidade",
+    "tamanho",
+    "duração",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "particulas"
+  },
+  {
+   "id": "particula:card_played",
+   "nome": "Carta jogada",
+   "categoria": "Partículas da partida",
+   "tecnologia": "WebGL (partículas)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/particle-tune.js",
+    "playtest/divine/director.js"
+   ],
+   "gatilho": "A carta sai da mão",
+   "parametros": [
+    "ligado",
+    "quantidade",
+    "tamanho",
+    "duração",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "particulas"
+  },
+  {
+   "id": "particula:spell_resolved",
+   "nome": "Magia resolvida",
+   "categoria": "Partículas da partida",
+   "tecnologia": "WebGL (partículas)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/particle-tune.js",
+    "playtest/divine/director.js"
+   ],
+   "gatilho": "O efeito da carta resolve",
+   "parametros": [
+    "ligado",
+    "quantidade",
+    "tamanho",
+    "duração",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "particulas"
+  },
+  {
+   "id": "particula:destroyed",
+   "nome": "Carta destruída",
+   "categoria": "Partículas da partida",
+   "tecnologia": "WebGL (partículas)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/particle-tune.js",
+    "playtest/divine/director.js"
+   ],
+   "gatilho": "Uma carta vai para o Tartarus",
+   "parametros": [
+    "ligado",
+    "quantidade",
+    "tamanho",
+    "duração",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "particulas"
+  },
+  {
+   "id": "particula:awaken_changed",
+   "nome": "Awaken",
+   "categoria": "Partículas da partida",
+   "tecnologia": "WebGL (partículas)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/particle-tune.js",
+    "playtest/divine/director.js"
+   ],
+   "gatilho": "O God entra em Awaken",
+   "parametros": [
+    "ligado",
+    "quantidade",
+    "tamanho",
+    "duração",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "particulas"
+  },
+  {
+   "id": "particula:divine_power",
+   "nome": "Poder Divino",
+   "categoria": "Partículas da partida",
+   "tecnologia": "WebGL (partículas)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/particle-tune.js",
+    "playtest/divine/director.js"
+   ],
+   "gatilho": "O God usa o poder",
+   "parametros": [
+    "ligado",
+    "quantidade",
+    "tamanho",
+    "duração",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "particulas"
+  },
+  {
+   "id": "particula:domain_power",
+   "nome": "Poder de Domínio",
+   "categoria": "Partículas da partida",
+   "tecnologia": "WebGL (partículas)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/particle-tune.js",
+    "playtest/divine/director.js"
+   ],
+   "gatilho": "O Domínio é usado",
+   "parametros": [
+    "ligado",
+    "quantidade",
+    "tamanho",
+    "duração",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "particulas"
+  },
+  {
+   "id": "particula:seal_added",
+   "nome": "Seal",
+   "categoria": "Partículas da partida",
+   "tecnologia": "WebGL (partículas)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/particle-tune.js",
+    "playtest/divine/director.js"
+   ],
+   "gatilho": "Uma carta recebe Seal",
+   "parametros": [
+    "ligado",
+    "quantidade",
+    "tamanho",
+    "duração",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "particulas"
+  },
+  {
+   "id": "particula:defeat_prevented",
+   "nome": "Derrota evitada",
+   "categoria": "Partículas da partida",
+   "tecnologia": "WebGL (partículas)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/particle-tune.js",
+    "playtest/divine/director.js"
+   ],
+   "gatilho": "Um efeito impede a derrota",
+   "parametros": [
+    "ligado",
+    "quantidade",
+    "tamanho",
+    "duração",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "particulas"
+  },
+  {
+   "id": "particula:ultimate_announced",
+   "nome": "Ultimate anunciada",
+   "categoria": "Partículas da partida",
+   "tecnologia": "WebGL (partículas)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/particle-tune.js",
+    "playtest/divine/director.js"
+   ],
+   "gatilho": "O God anuncia a Ultimate",
+   "parametros": [
+    "ligado",
+    "quantidade",
+    "tamanho",
+    "duração",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "particulas"
+  },
+  {
+   "id": "particula:ultimate_resolved",
+   "nome": "Ultimate resolvida",
+   "categoria": "Partículas da partida",
+   "tecnologia": "WebGL (partículas)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/particle-tune.js",
+    "playtest/divine/director.js"
+   ],
+   "gatilho": "A Ultimate acontece",
+   "parametros": [
+    "ligado",
+    "quantidade",
+    "tamanho",
+    "duração",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "particulas"
+  },
+  {
+   "id": "particula:resolved",
+   "nome": "Efeito resolvido",
+   "categoria": "Partículas da partida",
+   "tecnologia": "WebGL (partículas)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/particle-tune.js",
+    "playtest/divine/director.js"
+   ],
+   "gatilho": "A habilidade resolve",
+   "parametros": [
+    "ligado",
+    "quantidade",
+    "tamanho",
+    "duração",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "particulas"
+  },
+  {
+   "id": "particula:morte-athena",
+   "nome": "Morte de Athena",
+   "categoria": "Partículas da partida",
+   "tecnologia": "WebGL (partículas)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/particle-tune.js",
+    "playtest/divine/director.js"
+   ],
+   "gatilho": "O God cai",
+   "parametros": [
+    "ligado",
+    "quantidade",
+    "tamanho",
+    "duração",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "particulas"
+  },
+  {
+   "id": "particula:morte-poseidon",
+   "nome": "Morte de Poseidon",
+   "categoria": "Partículas da partida",
+   "tecnologia": "WebGL (partículas)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/particle-tune.js",
+    "playtest/divine/director.js"
+   ],
+   "gatilho": "O God cai",
+   "parametros": [
+    "ligado",
+    "quantidade",
+    "tamanho",
+    "duração",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "particulas"
+  },
+  {
+   "id": "particula:morte-hades",
+   "nome": "Morte de Hades",
+   "categoria": "Partículas da partida",
+   "tecnologia": "WebGL (partículas)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/particle-tune.js",
+    "playtest/divine/director.js"
+   ],
+   "gatilho": "O God cai",
+   "parametros": [
+    "ligado",
+    "quantidade",
+    "tamanho",
+    "duração",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "particulas"
+  },
+  {
+   "id": "particula:morte-ares",
+   "nome": "Morte de Ares",
+   "categoria": "Partículas da partida",
+   "tecnologia": "WebGL (partículas)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/particle-tune.js",
+    "playtest/divine/director.js"
+   ],
+   "gatilho": "O God cai",
+   "parametros": [
+    "ligado",
+    "quantidade",
+    "tamanho",
+    "duração",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "particulas"
+  },
+  {
+   "id": "particula:morte-artemis",
+   "nome": "Morte de Artemis",
+   "categoria": "Partículas da partida",
+   "tecnologia": "WebGL (partículas)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/particle-tune.js",
+    "playtest/divine/director.js"
+   ],
+   "gatilho": "O God cai",
+   "parametros": [
+    "ligado",
+    "quantidade",
+    "tamanho",
+    "duração",
+    "cor"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "aba": "particulas"
+  },
+  {
+   "id": "tempo:impacto",
+   "nome": "Espera até o impacto, por efeito",
+   "categoria": "Tempos",
+   "tecnologia": "JavaScript",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/director.js"
+   ],
+   "gatilho": "Entre o golpe e o dano",
+   "parametros": [],
+   "estado": "legado",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Exige mudar o director para ler do Forge"
+  },
+  {
+   "id": "tempo:pausas",
+   "nome": "Pausas da sequência",
+   "categoria": "Tempos",
+   "tecnologia": "JavaScript",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/director.js"
+   ],
+   "gatilho": "Entre os passos de cada evento",
+   "parametros": [
+    "velocidade do grupo"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "aba": "telas",
+   "limite": "Só a velocidade do grupo, em Telas e som"
+  },
+  {
+   "id": "cena:ceu",
+   "nome": "Céu",
+   "categoria": "Fundo 3D",
+   "tecnologia": "WebGL (Three.js)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/scene.js"
+   ],
+   "gatilho": "Sempre na partida",
+   "parametros": [
+    "qualidade gráfica",
+    "cor do tema"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "aba": "telas",
+   "limite": "Só qualidade e tema; forma e movimento estão no código"
+  },
+  {
+   "id": "cena:chao",
+   "nome": "Chão de mármore",
+   "categoria": "Fundo 3D",
+   "tecnologia": "WebGL (Three.js)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/scene.js"
+   ],
+   "gatilho": "Sempre na partida",
+   "parametros": [
+    "qualidade gráfica",
+    "cor do tema"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "aba": "telas",
+   "limite": "Só qualidade e tema; forma e movimento estão no código"
+  },
+  {
+   "id": "cena:zodiaco",
+   "nome": "Anel do zodíaco",
+   "categoria": "Fundo 3D",
+   "tecnologia": "WebGL (Three.js)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/scene.js"
+   ],
+   "gatilho": "Sempre na partida",
+   "parametros": [
+    "qualidade gráfica",
+    "cor do tema"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "aba": "telas",
+   "limite": "Só qualidade e tema; forma e movimento estão no código"
+  },
+  {
+   "id": "cena:colunas",
+   "nome": "Colunas",
+   "categoria": "Fundo 3D",
+   "tecnologia": "WebGL (Three.js)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/scene.js"
+   ],
+   "gatilho": "Sempre na partida",
+   "parametros": [
+    "qualidade gráfica",
+    "cor do tema"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "aba": "telas",
+   "limite": "Só qualidade e tema; forma e movimento estão no código"
+  },
+  {
+   "id": "cena:raios",
+   "nome": "Raios de luz",
+   "categoria": "Fundo 3D",
+   "tecnologia": "WebGL (Three.js)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/scene.js"
+   ],
+   "gatilho": "Sempre na partida",
+   "parametros": [
+    "qualidade gráfica",
+    "cor do tema"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "aba": "telas",
+   "limite": "Só qualidade e tema; forma e movimento estão no código"
+  },
+  {
+   "id": "cena:poeira",
+   "nome": "Poeira de Cosmo",
+   "categoria": "Fundo 3D",
+   "tecnologia": "WebGL (Three.js)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/scene.js"
+   ],
+   "gatilho": "Sempre na partida",
+   "parametros": [
+    "qualidade gráfica",
+    "cor do tema"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "aba": "telas",
+   "limite": "Só qualidade e tema; forma e movimento estão no código"
+  },
+  {
+   "id": "canvas:card-forge-boosters-html",
+   "nome": "Desenho em Canvas em boosters.html",
+   "categoria": "Código de animação",
+   "tecnologia": "Canvas 2D",
+   "origem": "Card Forge",
+   "arquivos": [
+    "card-forge/boosters.html"
+   ],
+   "gatilho": "Definido no código",
+   "parametros": [],
+   "estado": "excecao",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Ferramenta: recorta a arte do booster sob comando; nada anima."
+  },
+  {
+   "id": "canvas:card-forge-forge-js",
+   "nome": "Desenho em Canvas em forge.js",
+   "categoria": "Código de animação",
+   "tecnologia": "Canvas 2D",
+   "origem": "Card Forge",
+   "arquivos": [
+    "card-forge/forge.js"
+   ],
+   "gatilho": "Definido no código",
+   "parametros": [],
+   "estado": "excecao",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Ferramenta: desenha a carta no Card Forge e exporta o PNG; nada anima."
+  },
+  {
+   "id": "raf:card-forge-studio-properties-js",
+   "nome": "Laço de animação em studio-properties.js",
+   "categoria": "Código de animação",
+   "tecnologia": "JavaScript (requestAnimationFrame)",
+   "origem": "Card Forge",
+   "arquivos": [
+    "card-forge/studio-properties.js"
+   ],
+   "gatilho": "Definido no código",
+   "parametros": [],
+   "estado": "excecao",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Não é animação: agenda a atualização do painel de propriedades do Layout Studio."
+  },
+  {
+   "id": "transicao:card-forge-studio-css",
+   "nome": "Transições de studio.css",
+   "categoria": "Hover e interação",
+   "tecnologia": "CSS transition",
+   "origem": "Card Forge",
+   "arquivos": [
+    "card-forge/studio.css"
+   ],
+   "gatilho": "Hover, foco e mudança de estado",
+   "parametros": [],
+   "estado": "legado",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Agrupadas por arquivo; sem controle no Forge"
+  },
+  {
+   "id": "raf:card-forge-studio-js",
+   "nome": "Laço de animação em studio.js",
+   "categoria": "Código de animação",
+   "tecnologia": "JavaScript (requestAnimationFrame)",
+   "origem": "Card Forge",
+   "arquivos": [
+    "card-forge/studio.js"
+   ],
+   "gatilho": "Definido no código",
+   "parametros": [],
+   "estado": "excecao",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Não é animação: agrupa o redesenho do editor do Layout Studio."
+  },
+  {
+   "id": "transicao:gallery-index-html",
+   "nome": "Transições de index.html",
+   "categoria": "Hover e interação",
+   "tecnologia": "CSS transition",
+   "origem": "Site",
+   "arquivos": [
+    "gallery/index.html"
+   ],
+   "gatilho": "Hover, foco e mudança de estado",
+   "parametros": [],
+   "estado": "legado",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Agrupadas por arquivo; sem controle no Forge"
+  },
+  {
+   "id": "transicao:how-to-play-index-html",
+   "nome": "Transições de index.html",
+   "categoria": "Hover e interação",
+   "tecnologia": "CSS transition",
+   "origem": "Site",
+   "arquivos": [
+    "how-to-play/index.html"
+   ],
+   "gatilho": "Hover, foco e mudança de estado",
+   "parametros": [],
+   "estado": "legado",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Agrupadas por arquivo; sem controle no Forge"
+  },
+  {
+   "id": "css:index-html:beat",
+   "nome": "beat",
+   "categoria": "Interface fora da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Site",
+   "arquivos": [
+    "index.html"
+   ],
+   "gatilho": ".soon .kv-dot",
+   "parametros": [],
+   "estado": "legado",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Sem controle no Forge: precisa de adapter"
+  },
+  {
+   "id": "css:playtest-chat-dock-css:cd-in",
+   "nome": "cd-in",
+   "categoria": "Interface fora da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Lobby e plataforma",
+   "arquivos": [
+    "playtest/chat-dock.css"
+   ],
+   "gatilho": ".cd-toast",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "transicao:playtest-chat-dock-css",
+   "nome": "Transições de chat-dock.css",
+   "categoria": "Hover e interação",
+   "tecnologia": "CSS transition",
+   "origem": "Lobby e plataforma",
+   "arquivos": [
+    "playtest/chat-dock.css"
+   ],
+   "gatilho": "Hover, foco e mudança de estado",
+   "parametros": [],
+   "estado": "legado",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Agrupadas por arquivo; sem controle no Forge"
+  },
+  {
+   "id": "css:playtest-deck-select-css:ds-in",
+   "nome": "ds-in",
+   "categoria": "Interface fora da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Deck Builder",
+   "arquivos": [
+    "playtest/deck-select.css"
+   ],
+   "gatilho": ".ds.is-opening",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade, mas roda no lobby e não tem teste na mesa. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "lobby"
+  },
+  {
+   "id": "transicao:playtest-deck-select-css",
+   "nome": "Transições de deck-select.css",
+   "categoria": "Hover e interação",
+   "tecnologia": "CSS transition",
+   "origem": "Deck Builder",
+   "arquivos": [
+    "playtest/deck-select.css"
+   ],
+   "gatilho": "Hover, foco e mudança de estado",
+   "parametros": [],
+   "estado": "legado",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Agrupadas por arquivo; sem controle no Forge"
+  },
+  {
+   "id": "raf:playtest-divine-app-js",
+   "nome": "Laço de animação em app.js",
+   "categoria": "Código de animação",
+   "tecnologia": "JavaScript (requestAnimationFrame)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/app.js"
+   ],
+   "gatilho": "Definido no código",
+   "parametros": [],
+   "estado": "excecao",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Não é animação: espera a carta assentar para posicionar o menu e dá a partida na leitura de eventos do log."
+  },
+  {
+   "id": "waapi:playtest-divine-app-js",
+   "nome": "Web Animations em app.js",
+   "categoria": "Código de animação",
+   "tecnologia": "JavaScript (Web Animations)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/app.js"
+   ],
+   "gatilho": "Definido no código",
+   "parametros": [],
+   "estado": "legado",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Sem controle no Forge: precisa de adapter"
+  },
+  {
+   "id": "webgl:playtest-divine-app-js",
+   "nome": "WebGL (Three.js) em app.js",
+   "categoria": "Bibliotecas",
+   "tecnologia": "WebGL (Three.js)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/app.js"
+   ],
+   "gatilho": "Definido no código",
+   "parametros": [],
+   "estado": "legado",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Sem controle no Forge: precisa de adapter"
+  },
+  {
+   "id": "css:playtest-divine-arena-ui-css:cz-in",
+   "nome": "cz-in",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/arena-ui.css"
+   ],
+   "gatilho": "#chain-zoom.is-on",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-arena-ui-css:arena-respond",
+   "nome": "arena-respond",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/arena-ui.css"
+   ],
+   "gatilho": ".action-btn[data-state=\"respond\"]",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-arena-ui-css:tp-in",
+   "nome": "tp-in",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/arena-ui.css"
+   ],
+   "gatilho": ".trigger-panel.is-targeting, .trigger-panel.is-center, body.has-chain-",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-arena-ui-css:tp-box",
+   "nome": "tp-box",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/arena-ui.css"
+   ],
+   "gatilho": ".trigger-panel__box, .cast-slot .cast-prompt",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "transicao:playtest-divine-arena-ui-css",
+   "nome": "Transições de arena-ui.css",
+   "categoria": "Hover e interação",
+   "tecnologia": "CSS transition",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/arena-ui.css"
+   ],
+   "gatilho": "Hover, foco e mudança de estado",
+   "parametros": [],
+   "estado": "legado",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Agrupadas por arquivo; sem controle no Forge"
+  },
+  {
+   "id": "css:playtest-divine-board-css:cosmo-run",
+   "nome": "cosmo-run",
+   "categoria": "Cosmo nas cartas",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/board.css"
+   ],
+   "gatilho": ".olympus .hand__slot.playable .dcard::before, .olympus .dcard:is(.can-",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-board-css:cosmo-sparks",
+   "nome": "cosmo-sparks",
+   "categoria": "Cosmo nas cartas",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/board.css"
+   ],
+   "gatilho": ".olympus .hand__slot.playable .dcard::after, .olympus .dcard:is(.can-s",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-board-css:cosmo-bubbles",
+   "nome": "cosmo-bubbles",
+   "categoria": "Cosmo nas cartas",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/board.css"
+   ],
+   "gatilho": ".olympus .dcard[data-fac=\"poseidon\"]:is(.can-strike, .is-prepared, .ha",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-board-css:cosmo-wobble",
+   "nome": "cosmo-wobble",
+   "categoria": "Cosmo nas cartas",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/board.css"
+   ],
+   "gatilho": ".olympus .dcard[data-fac=\"poseidon\"]:is(.can-strike, .is-prepared, .ha",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-board-css:cosmo-souls",
+   "nome": "cosmo-souls",
+   "categoria": "Cosmo nas cartas",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/board.css"
+   ],
+   "gatilho": ".olympus .dcard[data-fac=\"hades\"]:is(.can-strike, .is-prepared, .hand_",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-board-css:cosmo-drift",
+   "nome": "cosmo-drift",
+   "categoria": "Cosmo nas cartas",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/board.css"
+   ],
+   "gatilho": ".olympus .dcard[data-fac=\"hades\"]:is(.can-strike, .is-prepared, .hand_",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-board-css:cosmo-embers",
+   "nome": "cosmo-embers",
+   "categoria": "Cosmo nas cartas",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/board.css"
+   ],
+   "gatilho": ".olympus .dcard[data-fac=\"ares\"]:is(.can-strike, .is-prepared, .hand__",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-board-css:cosmo-flicker",
+   "nome": "cosmo-flicker",
+   "categoria": "Cosmo nas cartas",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/board.css"
+   ],
+   "gatilho": ".olympus .dcard[data-fac=\"ares\"]:is(.can-strike, .is-prepared, .hand__",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-board-css:cosmo-leaves",
+   "nome": "cosmo-leaves",
+   "categoria": "Cosmo nas cartas",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/board.css"
+   ],
+   "gatilho": ".olympus .dcard[data-fac=\"artemis\"]:is(.can-strike, .is-prepared, .han",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "transicao:playtest-divine-board-css",
+   "nome": "Transições de board.css",
+   "categoria": "Hover e interação",
+   "tecnologia": "CSS transition",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/board.css"
+   ],
+   "gatilho": "Hover, foco e mudança de estado",
+   "parametros": [],
+   "estado": "legado",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Agrupadas por arquivo; sem controle no Forge"
+  },
+  {
+   "id": "raf:playtest-divine-coin3d-js",
+   "nome": "Laço de animação em coin3d.js",
+   "categoria": "Código de animação",
+   "tecnologia": "JavaScript (requestAnimationFrame)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/coin3d.js"
+   ],
+   "gatilho": "Definido no código",
+   "parametros": [
+    "ligado",
+    "duracao",
+    "giros"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "limite": "A moeda em CSS, para quem não tem WebGL, não recebe duração nem giros",
+   "aba": "cena"
+  },
+  {
+   "id": "canvas:playtest-divine-coin3d-js",
+   "nome": "Desenho em Canvas em coin3d.js",
+   "categoria": "Código de animação",
+   "tecnologia": "Canvas 2D",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/coin3d.js"
+   ],
+   "gatilho": "Definido no código",
+   "parametros": [
+    "ligado",
+    "duracao",
+    "giros"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "limite": "A moeda em CSS, para quem não tem WebGL, não recebe duração nem giros",
+   "aba": "cena"
+  },
+  {
+   "id": "webgl:playtest-divine-coin3d-js",
+   "nome": "WebGL (Three.js) em coin3d.js",
+   "categoria": "Bibliotecas",
+   "tecnologia": "WebGL (Three.js)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/coin3d.js"
+   ],
+   "gatilho": "Definido no código",
+   "parametros": [
+    "ligado",
+    "duracao",
+    "giros"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "limite": "A moeda em CSS, para quem não tem WebGL, não recebe duração nem giros",
+   "aba": "cena"
+  },
+  {
+   "id": "css:playtest-divine-divine-css:shake",
+   "nome": "shake",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/divine.css"
+   ],
+   "gatilho": ".stage.shaking",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-divine-css:soulhit",
+   "nome": "soulhit",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/divine.css"
+   ],
+   "gatilho": ".god__soul.hit b",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-divine-css:spend",
+   "nome": "spend",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/divine.css"
+   ],
+   "gatilho": ".orb.spending",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-divine-css:orbpreview",
+   "nome": "orbpreview",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/divine.css"
+   ],
+   "gatilho": ".orb.preview",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-divine-css:foil",
+   "nome": "foil",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/divine.css"
+   ],
+   "gatilho": ".rarity-legendary::after, .rarity-mythic::after",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-divine-css:pick",
+   "nome": "pick",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/divine.css"
+   ],
+   "gatilho": ".god.pickable",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-divine-css:lunge",
+   "nome": "lunge",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/divine.css"
+   ],
+   "gatilho": ".dcard.lunge",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-divine-css:hit",
+   "nome": "hit",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/divine.css"
+   ],
+   "gatilho": ".dcard.hit",
+   "parametros": [
+    "ligado",
+    "tamanho",
+    "duracao"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "aba": "particulas",
+   "limite": "Ajuste em Partículas: Recuo da carta"
+  },
+  {
+   "id": "css:playtest-divine-divine-css:hit-calm",
+   "nome": "hit-calm",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/divine.css"
+   ],
+   "gatilho": ".dcard.hit.hit--calm",
+   "parametros": [
+    "ligado",
+    "tamanho",
+    "duracao"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "aba": "particulas",
+   "limite": "Ajuste em Partículas: Recuo da carta"
+  },
+  {
+   "id": "css:playtest-divine-divine-css:activate",
+   "nome": "activate",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/divine.css"
+   ],
+   "gatilho": ".dcard.activate",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-divine-css:shatter",
+   "nome": "shatter",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/divine.css"
+   ],
+   "gatilho": ".dcard.shatter",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-divine-css:rise",
+   "nome": "rise",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/divine.css"
+   ],
+   "gatilho": ".victory h2",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-divine-css:float",
+   "nome": "float",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/divine.css"
+   ],
+   "gatilho": ".float",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-divine-css:banner",
+   "nome": "banner",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/divine.css"
+   ],
+   "gatilho": ".banner span",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-divine-css:callout",
+   "nome": "callout",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/divine.css"
+   ],
+   "gatilho": ".callout span",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "transicao:playtest-divine-divine-css",
+   "nome": "Transições de divine.css",
+   "categoria": "Hover e interação",
+   "tecnologia": "CSS transition",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/divine.css"
+   ],
+   "gatilho": "Hover, foco e mudança de estado",
+   "parametros": [],
+   "estado": "legado",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Agrupadas por arquivo; sem controle no Forge"
+  },
+  {
+   "id": "css:playtest-divine-kv-game-css:fx-in",
+   "nome": "fx-in",
+   "categoria": "Cosmo nas cartas",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/kv-game.css"
+   ],
+   "gatilho": ".pick-modal__fx",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "transicao:playtest-divine-kv-game-css",
+   "nome": "Transições de kv-game.css",
+   "categoria": "Hover e interação",
+   "tecnologia": "CSS transition",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/kv-game.css"
+   ],
+   "gatilho": "Hover, foco e mudança de estado",
+   "parametros": [],
+   "estado": "legado",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Agrupadas por arquivo; sem controle no Forge"
+  },
+  {
+   "id": "css:playtest-divine-mobile-css:bank-pulse",
+   "nome": "bank-pulse",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/mobile.css"
+   ],
+   "gatilho": ".cosmo.is-pulse",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:awakenGlow",
+   "nome": "awakenGlow",
+   "categoria": "Awaken e God",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".godhud.is-awaken .godhud__portrait",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:flicker",
+   "nome": "flicker",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".orb.flame.ready",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:urgent",
+   "nome": "urgent",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".zclock.urgent",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:bars",
+   "nome": "bars",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".stage.cinematic::before, .stage.cinematic::after",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:dz-in",
+   "nome": "dz-in",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".drag-zones",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:dz-breathe",
+   "nome": "dz-breathe",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".drag-zone--cast",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:dz-spin",
+   "nome": "dz-spin",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".drag-zone--cosmo::after",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:hiddenPulse",
+   "nome": "hiddenPulse",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".lane__hidden.is-ready",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:land-tap",
+   "nome": "land-tap",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".lane__base.is-tapping .dcard--land",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:land-untap",
+   "nome": "land-untap",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".lane__base.is-untapping .dcard--land",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:land-in",
+   "nome": "land-in",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".lane__base.is-new .dcard--land",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:aim-flow",
+   "nome": "aim-flow",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".aim-arrow__line",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:intent-pulse",
+   "nome": "intent-pulse",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".intent circle",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:bigcard-in",
+   "nome": "bigcard-in",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".bigcard",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:power-aura",
+   "nome": "power-aura",
+   "categoria": "Awaken e God",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".power:hover::before",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:power-pulse",
+   "nome": "power-pulse",
+   "categoria": "Awaken e God",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".power:hover .power__icon",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:prio-in",
+   "nome": "prio-in",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".priority-glow",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:prio-pulse",
+   "nome": "prio-pulse",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".priority-glow",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:cosmo-burn",
+   "nome": "cosmo-burn",
+   "categoria": "Cosmo nas cartas",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".sanctum .cosmo__hex::after",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:flame-flicker",
+   "nome": "flame-flicker",
+   "categoria": "Cosmo nas cartas",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".sanctum .orb.flame.ready",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:heart-beat",
+   "nome": "heart-beat",
+   "categoria": "Awaken e God",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".godhud.is-low .gh-soulicon",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:base-burn",
+   "nome": "base-burn",
+   "categoria": "Cosmo nas cartas",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".lane__base:not(.tapped)::before, .lane__base:not(.tapped)::after",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:token-in",
+   "nome": "token-in",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".token",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:zone-shine",
+   "nome": "zone-shine",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".drag-zone strong",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:zone-marquee",
+   "nome": "zone-marquee",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".drag-zone--band strong",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:cast-in",
+   "nome": "cast-in",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".cast-slot",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:cast-glow",
+   "nome": "cast-glow",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".cast-slot .dcard",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:trigger-flash",
+   "nome": "trigger-flash",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".is-triggering",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:trigger-pop",
+   "nome": "trigger-pop",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".trigger-pop",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:note-in",
+   "nome": "note-in",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".trigger-note",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:num-fade",
+   "nome": "num-fade",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".reduce-motion .float.fx-num",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:hint-pulse",
+   "nome": "hint-pulse",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".hint-glow",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:cast-glow-god",
+   "nome": "cast-glow-god",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": "[data-godfx] .dcard",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:fx-motes",
+   "nome": "fx-motes",
+   "categoria": "Cosmo nas cartas",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": "[data-godfx=\"athena\"] .cast-aura::before",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:fx-twinkle",
+   "nome": "fx-twinkle",
+   "categoria": "Cosmo nas cartas",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": "[data-godfx=\"athena\"] .cast-aura::before",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:fx-spin",
+   "nome": "fx-spin",
+   "categoria": "Cosmo nas cartas",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": "[data-godfx=\"artemis\"] .cast-aura::before",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:fx-breathe",
+   "nome": "fx-breathe",
+   "categoria": "Cosmo nas cartas",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": "[data-godfx=\"athena\"] .cast-aura::after",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:fx-ripple",
+   "nome": "fx-ripple",
+   "categoria": "Cosmo nas cartas",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": "[data-godfx=\"poseidon\"] .cast-aura::before, [data-godfx=\"poseidon\"] .c",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:fx-smoke",
+   "nome": "fx-smoke",
+   "categoria": "Cosmo nas cartas",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": "[data-godfx=\"hades\"] .cast-aura::before",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:fx-flicker",
+   "nome": "fx-flicker",
+   "categoria": "Cosmo nas cartas",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": "[data-godfx=\"ares\"] .cast-aura::before",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:fx-embers",
+   "nome": "fx-embers",
+   "categoria": "Cosmo nas cartas",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": "[data-godfx=\"ares\"] .cast-aura::after",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:cast-in-right",
+   "nome": "cast-in-right",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".trigger-panel, .cast-slot",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:pick-in",
+   "nome": "pick-in",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".pick-modal",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:awakenAura",
+   "nome": "awakenAura",
+   "categoria": "Awaken e God",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".godhud.is-awaken .gh-hole",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:awakenWave",
+   "nome": "awakenWave",
+   "categoria": "Awaken e God",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".godhud.is-awaken .gh-hole::before, .godhud.is-awaken .gh-hole::after",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:dieAthena",
+   "nome": "dieAthena",
+   "categoria": "Morte dos Gods",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".godhud.die-athena > *",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:diePoseidon",
+   "nome": "diePoseidon",
+   "categoria": "Morte dos Gods",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".godhud.die-poseidon > *",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:dieHades",
+   "nome": "dieHades",
+   "categoria": "Morte dos Gods",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".godhud.die-hades > *",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:dieAres",
+   "nome": "dieAres",
+   "categoria": "Morte dos Gods",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".godhud.die-ares > *",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:dieArtemis",
+   "nome": "dieArtemis",
+   "categoria": "Morte dos Gods",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".godhud.die-artemis > *",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:ruinFall",
+   "nome": "ruinFall",
+   "categoria": "Morte dos Gods",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".is-falling",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:ruinCrack",
+   "nome": "ruinCrack",
+   "categoria": "Morte dos Gods",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".ruin::before",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:ruinVeil",
+   "nome": "ruinVeil",
+   "categoria": "Morte dos Gods",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".ruin::after",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:ruinFlood",
+   "nome": "ruinFlood",
+   "categoria": "Morte dos Gods",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".ruin--poseidon::after",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:ruinVoid",
+   "nome": "ruinVoid",
+   "categoria": "Morte dos Gods",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".ruin--hades::after",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:ruinBurn",
+   "nome": "ruinBurn",
+   "categoria": "Morte dos Gods",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".ruin--ares::after",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:decision-in",
+   "nome": "decision-in",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".trigger-panel.is-center, body.has-chain-zoom .trigger-panel.is-center",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:opp-think",
+   "nome": "opp-think",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".godhud.is-opp-thinking .godhud__portrait",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:cast-grace",
+   "nome": "cast-grace",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".cast-grace__bar::after",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-olympus-css:coin-toss",
+   "nome": "coin-toss",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": ".coin__disc",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "transicao:playtest-divine-olympus-css",
+   "nome": "Transições de olympus.css",
+   "categoria": "Hover e interação",
+   "tecnologia": "CSS transition",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/olympus.css"
+   ],
+   "gatilho": "Hover, foco e mudança de estado",
+   "parametros": [],
+   "estado": "legado",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Agrupadas por arquivo; sem controle no Forge"
+  },
+  {
+   "id": "raf:playtest-divine-pixel-vfx-js",
+   "nome": "Laço de animação em pixel-vfx.js",
+   "categoria": "Código de animação",
+   "tecnologia": "JavaScript (requestAnimationFrame)",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/pixel-vfx.js"
+   ],
+   "gatilho": "Definido no código",
+   "parametros": [],
+   "estado": "excecao",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Motor: toca as folhas de sprite que se ajustam na aba Efeitos, efeito por efeito."
+  },
+  {
+   "id": "canvas:playtest-divine-pixel-vfx-js",
+   "nome": "Desenho em Canvas em pixel-vfx.js",
+   "categoria": "Código de animação",
+   "tecnologia": "Canvas 2D",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/pixel-vfx.js"
+   ],
+   "gatilho": "Definido no código",
+   "parametros": [],
+   "estado": "excecao",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Motor: toca as folhas de sprite que se ajustam na aba Efeitos, efeito por efeito."
+  },
+  {
+   "id": "css:playtest-economy-css:ec-foil",
+   "nome": "ec-foil",
+   "categoria": "Interface fora da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Boosters e coleção",
+   "arquivos": [
+    "playtest/economy.css"
+   ],
+   "gatilho": ".ec-pack__foil",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade, mas roda no lobby e não tem teste na mesa. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "lobby"
+  },
+  {
+   "id": "css:playtest-economy-css:ec-tear",
+   "nome": "ec-tear",
+   "categoria": "Interface fora da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Boosters e coleção",
+   "arquivos": [
+    "playtest/economy.css"
+   ],
+   "gatilho": ".ec-open__pack.is-tearing .ec-pack",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade, mas roda no lobby e não tem teste na mesa. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "lobby"
+  },
+  {
+   "id": "css:playtest-economy-css:ec-deal",
+   "nome": "ec-deal",
+   "categoria": "Interface fora da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Boosters e coleção",
+   "arquivos": [
+    "playtest/economy.css"
+   ],
+   "gatilho": ".ec-flip",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade, mas roda no lobby e não tem teste na mesa. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "lobby"
+  },
+  {
+   "id": "css:playtest-economy-css:ec-glow",
+   "nome": "ec-glow",
+   "categoria": "Interface fora da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Boosters e coleção",
+   "arquivos": [
+    "playtest/economy.css"
+   ],
+   "gatilho": ".ec-flip.is-legendary:not(.is-open) .ec-flip__back",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade, mas roda no lobby e não tem teste na mesa. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "lobby"
+  },
+  {
+   "id": "css:playtest-economy-css:ec-halo",
+   "nome": "ec-halo",
+   "categoria": "Interface fora da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Boosters e coleção",
+   "arquivos": [
+    "playtest/economy.css"
+   ],
+   "gatilho": ".ec-flip.is-new.is-open::before",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade, mas roda no lobby e não tem teste na mesa. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "lobby"
+  },
+  {
+   "id": "css:playtest-economy-css:ec-charge",
+   "nome": "ec-charge",
+   "categoria": "Interface fora da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Boosters e coleção",
+   "arquivos": [
+    "playtest/economy.css"
+   ],
+   "gatilho": ".ec-flip.is-charging .ec-flip__back",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade, mas roda no lobby e não tem teste na mesa. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "lobby"
+  },
+  {
+   "id": "css:playtest-economy-css:ec-flash",
+   "nome": "ec-flash",
+   "categoria": "Interface fora da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Boosters e coleção",
+   "arquivos": [
+    "playtest/economy.css"
+   ],
+   "gatilho": ".ec-flash",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade, mas roda no lobby e não tem teste na mesa. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "lobby"
+  },
+  {
+   "id": "css:playtest-economy-css:ec-shake",
+   "nome": "ec-shake",
+   "categoria": "Interface fora da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Boosters e coleção",
+   "arquivos": [
+    "playtest/economy.css"
+   ],
+   "gatilho": ".ec-open.ec-shake",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade, mas roda no lobby e não tem teste na mesa. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "lobby"
+  },
+  {
+   "id": "css:playtest-economy-css:ec-spark",
+   "nome": "ec-spark",
+   "categoria": "Interface fora da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Boosters e coleção",
+   "arquivos": [
+    "playtest/economy.css"
+   ],
+   "gatilho": ".ec-spark",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade, mas roda no lobby e não tem teste na mesa. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "lobby"
+  },
+  {
+   "id": "css:playtest-economy-css:ec-strip",
+   "nome": "ec-strip",
+   "categoria": "Interface fora da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Boosters e coleção",
+   "arquivos": [
+    "playtest/economy.css"
+   ],
+   "gatilho": ".ec-strip",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade, mas roda no lobby e não tem teste na mesa. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "lobby"
+  },
+  {
+   "id": "css:playtest-economy-css:ec-body",
+   "nome": "ec-body",
+   "categoria": "Interface fora da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Boosters e coleção",
+   "arquivos": [
+    "playtest/economy.css"
+   ],
+   "gatilho": ".ec-pack.is-torn",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade, mas roda no lobby e não tem teste na mesa. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "lobby"
+  },
+  {
+   "id": "css:playtest-economy-css:ec-sum-in",
+   "nome": "ec-sum-in",
+   "categoria": "Interface fora da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Boosters e coleção",
+   "arquivos": [
+    "playtest/economy.css"
+   ],
+   "gatilho": ".ec-sum__card",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade, mas roda no lobby e não tem teste na mesa. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "lobby"
+  },
+  {
+   "id": "css:playtest-economy-css:ec-fade",
+   "nome": "ec-fade",
+   "categoria": "Interface fora da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Boosters e coleção",
+   "arquivos": [
+    "playtest/economy.css"
+   ],
+   "gatilho": ".ec-confirm",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade, mas roda no lobby e não tem teste na mesa. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "lobby"
+  },
+  {
+   "id": "transicao:playtest-economy-css",
+   "nome": "Transições de economy.css",
+   "categoria": "Hover e interação",
+   "tecnologia": "CSS transition",
+   "origem": "Boosters e coleção",
+   "arquivos": [
+    "playtest/economy.css"
+   ],
+   "gatilho": "Hover, foco e mudança de estado",
+   "parametros": [],
+   "estado": "legado",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Agrupadas por arquivo; sem controle no Forge"
+  },
+  {
+   "id": "transicao:playtest-home-css",
+   "nome": "Transições de home.css",
+   "categoria": "Hover e interação",
+   "tecnologia": "CSS transition",
+   "origem": "Lobby e plataforma",
+   "arquivos": [
+    "playtest/home.css"
+   ],
+   "gatilho": "Hover, foco e mudança de estado",
+   "parametros": [],
+   "estado": "legado",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Agrupadas por arquivo; sem controle no Forge"
+  },
+  {
+   "id": "css:playtest-lobby-css:lb-slide",
+   "nome": "lb-slide",
+   "categoria": "Interface fora da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Lobby e plataforma",
+   "arquivos": [
+    "playtest/lobby.css"
+   ],
+   "gatilho": ".lb-panel",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade, mas roda no lobby e não tem teste na mesa. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "lobby"
+  },
+  {
+   "id": "css:playtest-lobby-css:lb-fade",
+   "nome": "lb-fade",
+   "categoria": "Interface fora da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Lobby e plataforma",
+   "arquivos": [
+    "playtest/lobby.css"
+   ],
+   "gatilho": ".lb-big",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade, mas roda no lobby e não tem teste na mesa. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "lobby"
+  },
+  {
+   "id": "css:playtest-lobby-css:lb-cosmo",
+   "nome": "lb-cosmo",
+   "categoria": "Interface fora da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Lobby e plataforma",
+   "arquivos": [
+    "playtest/lobby.css"
+   ],
+   "gatilho": ".lb-card--big",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade, mas roda no lobby e não tem teste na mesa. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "lobby"
+  },
+  {
+   "id": "transicao:playtest-lobby-css",
+   "nome": "Transições de lobby.css",
+   "categoria": "Hover e interação",
+   "tecnologia": "CSS transition",
+   "origem": "Lobby e plataforma",
+   "arquivos": [
+    "playtest/lobby.css"
+   ],
+   "gatilho": "Hover, foco e mudança de estado",
+   "parametros": [],
+   "estado": "legado",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Agrupadas por arquivo; sem controle no Forge"
+  },
+  {
+   "id": "transicao:playtest-platform-platform-css",
+   "nome": "Transições de platform.css",
+   "categoria": "Hover e interação",
+   "tecnologia": "CSS transition",
+   "origem": "Lobby e plataforma",
+   "arquivos": [
+    "playtest/platform/platform.css"
+   ],
+   "gatilho": "Hover, foco e mudança de estado",
+   "parametros": [],
+   "estado": "legado",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Agrupadas por arquivo; sem controle no Forge"
+  },
+  {
+   "id": "css:playtest-rank-css:rk-in",
+   "nome": "rk-in",
+   "categoria": "Interface fora da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Lobby e plataforma",
+   "arquivos": [
+    "playtest/rank.css"
+   ],
+   "gatilho": ".rk-result",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "transicao:playtest-rank-css",
+   "nome": "Transições de rank.css",
+   "categoria": "Hover e interação",
+   "tecnologia": "CSS transition",
+   "origem": "Lobby e plataforma",
+   "arquivos": [
+    "playtest/rank.css"
+   ],
+   "gatilho": "Hover, foco e mudança de estado",
+   "parametros": [],
+   "estado": "legado",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Agrupadas por arquivo; sem controle no Forge"
+  },
+  {
+   "id": "transicao:shared-anim-css-adapter-js",
+   "nome": "Transições de anim-css-adapter.js",
+   "categoria": "Hover e interação",
+   "tecnologia": "CSS transition",
+   "origem": "Compartilhado",
+   "arquivos": [
+    "shared/anim-css-adapter.js"
+   ],
+   "gatilho": "Hover, foco e mudança de estado",
+   "parametros": [],
+   "estado": "excecao",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Não é animação nova: o adapter toca, como amostra, uma animação CSS que já está no registro."
+  },
+  {
+   "id": "lottie:shared-anim-picker-js",
+   "nome": "Lottie em anim-picker.js",
+   "categoria": "Bibliotecas",
+   "tecnologia": "Lottie",
+   "origem": "Compartilhado",
+   "arquivos": [
+    "shared/anim-picker.js"
+   ],
+   "gatilho": "Definido no código",
+   "parametros": [],
+   "estado": "excecao",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Não é animação: só lista os Lotties no catálogo do seletor."
+  },
+  {
+   "id": "raf:shared-anim-request-js",
+   "nome": "Laço de animação em anim-request.js",
+   "categoria": "Código de animação",
+   "tecnologia": "JavaScript (requestAnimationFrame)",
+   "origem": "Compartilhado",
+   "arquivos": [
+    "shared/anim-request.js"
+   ],
+   "gatilho": "Definido no código",
+   "parametros": [],
+   "estado": "excecao",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Ferramenta: preview do rascunho no formulário do Criador; não aparece no jogo."
+  },
+  {
+   "id": "canvas:shared-anim-request-js",
+   "nome": "Desenho em Canvas em anim-request.js",
+   "categoria": "Código de animação",
+   "tecnologia": "Canvas 2D",
+   "origem": "Compartilhado",
+   "arquivos": [
+    "shared/anim-request.js"
+   ],
+   "gatilho": "Definido no código",
+   "parametros": [],
+   "estado": "excecao",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Ferramenta: preview do rascunho no formulário do Criador; não aparece no jogo."
+  },
+  {
+   "id": "raf:shared-kv-sky-js",
+   "nome": "Laço de animação em kv-sky.js",
+   "categoria": "Código de animação",
+   "tecnologia": "JavaScript (requestAnimationFrame)",
+   "origem": "Compartilhado",
+   "arquivos": [
+    "shared/kv-sky.js"
+   ],
+   "gatilho": "Definido no código",
+   "parametros": [
+    "ligado",
+    "estrelas"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "limite": "Constelações, cores e brilho ficam fixos no código",
+   "aba": "cena"
+  },
+  {
+   "id": "canvas:shared-kv-sky-js",
+   "nome": "Desenho em Canvas em kv-sky.js",
+   "categoria": "Código de animação",
+   "tecnologia": "Canvas 2D",
+   "origem": "Compartilhado",
+   "arquivos": [
+    "shared/kv-sky.js"
+   ],
+   "gatilho": "Definido no código",
+   "parametros": [
+    "ligado",
+    "estrelas"
+   ],
+   "estado": "editavel",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": true,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": true,
+   "limite": "Constelações, cores e brilho ficam fixos no código",
+   "aba": "cena"
+  },
+  {
+   "id": "transicao:shared-kv-css",
+   "nome": "Transições de kv.css",
+   "categoria": "Hover e interação",
+   "tecnologia": "CSS transition",
+   "origem": "Compartilhado",
+   "arquivos": [
+    "shared/kv.css"
+   ],
+   "gatilho": "Hover, foco e mudança de estado",
+   "parametros": [],
+   "estado": "legado",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Agrupadas por arquivo; sem controle no Forge"
+  },
+  {
+   "id": "canvas:shared-layout-studio-renderer-js",
+   "nome": "Desenho em Canvas em renderer.js",
+   "categoria": "Código de animação",
+   "tecnologia": "Canvas 2D",
+   "origem": "Compartilhado",
+   "arquivos": [
+    "shared/layout-studio/renderer.js"
+   ],
+   "gatilho": "Definido no código",
+   "parametros": [],
+   "estado": "excecao",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Ferramenta: mede texto e converte layout em imagem; nada anima."
+  },
+  {
+   "id": "css:shared-live-card-css:lc-more",
+   "nome": "lc-more",
+   "categoria": "Interface fora da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Compartilhado",
+   "arquivos": [
+    "shared/live-card.css"
+   ],
+   "gatilho": ".live-card.live-card--psd .lc-rules",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "transicao:shared-live-card-css",
+   "nome": "Transições de live-card.css",
+   "categoria": "Hover e interação",
+   "tecnologia": "CSS transition",
+   "origem": "Compartilhado",
+   "arquivos": [
+    "shared/live-card.css"
+   ],
+   "gatilho": "Hover, foco e mudança de estado",
+   "parametros": [],
+   "estado": "legado",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Agrupadas por arquivo; sem controle no Forge"
+  },
+  {
+   "id": "waapi:shared-presentation-js",
+   "nome": "Web Animations em presentation.js",
+   "categoria": "Código de animação",
+   "tecnologia": "JavaScript (Web Animations)",
+   "origem": "Compartilhado",
+   "arquivos": [
+    "shared/presentation.js"
+   ],
+   "gatilho": "Definido no código",
+   "parametros": [],
+   "estado": "legado",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Sem controle no Forge: precisa de adapter"
+  },
+  {
+   "id": "transicao:shared-site-nav-css",
+   "nome": "Transições de site-nav.css",
+   "categoria": "Hover e interação",
+   "tecnologia": "CSS transition",
+   "origem": "Compartilhado",
+   "arquivos": [
+    "shared/site-nav.css"
+   ],
+   "gatilho": "Hover, foco e mudança de estado",
+   "parametros": [],
+   "estado": "legado",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Agrupadas por arquivo; sem controle no Forge"
+  },
+  {
+   "id": "raf:shared-vfx-card-mount-js",
+   "nome": "Laço de animação em card-mount.js",
+   "categoria": "Código de animação",
+   "tecnologia": "JavaScript (requestAnimationFrame)",
+   "origem": "Compartilhado",
+   "arquivos": [
+    "shared/vfx/card-mount.js"
+   ],
+   "gatilho": "Definido no código",
+   "parametros": [],
+   "estado": "excecao",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Motor: toca nas cartas os efeitos escolhidos nas abas Holográficos e Efeitos."
+  },
+  {
+   "id": "raf:shared-vfx-composer-js",
+   "nome": "Laço de animação em composer.js",
+   "categoria": "Código de animação",
+   "tecnologia": "JavaScript (requestAnimationFrame)",
+   "origem": "Compartilhado",
+   "arquivos": [
+    "shared/vfx/composer.js"
+   ],
+   "gatilho": "Definido no código",
+   "parametros": [],
+   "estado": "excecao",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Motor: toca as composições editadas na aba Composer."
+  },
+  {
+   "id": "waapi:shared-vfx-composer-js",
+   "nome": "Web Animations em composer.js",
+   "categoria": "Código de animação",
+   "tecnologia": "JavaScript (Web Animations)",
+   "origem": "Compartilhado",
+   "arquivos": [
+    "shared/vfx/composer.js"
+   ],
+   "gatilho": "Definido no código",
+   "parametros": [],
+   "estado": "excecao",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Motor: toca as composições editadas na aba Composer."
+  },
+  {
+   "id": "lottie:shared-vfx-composer-js",
+   "nome": "Lottie em composer.js",
+   "categoria": "Bibliotecas",
+   "tecnologia": "Lottie",
+   "origem": "Compartilhado",
+   "arquivos": [
+    "shared/vfx/composer.js"
+   ],
+   "gatilho": "Definido no código",
+   "parametros": [],
+   "estado": "excecao",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Motor: toca as composições editadas na aba Composer."
+  },
+  {
+   "id": "canvas:shared-vfx-shader-fx-js",
+   "nome": "Desenho em Canvas em shader-fx.js",
+   "categoria": "Código de animação",
+   "tecnologia": "Canvas 2D",
+   "origem": "Compartilhado",
+   "arquivos": [
+    "shared/vfx/shader-fx.js"
+   ],
+   "gatilho": "Definido no código",
+   "parametros": [],
+   "estado": "excecao",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Motor: toca os shaders escolhidos nas abas Holográficos e Efeitos."
+  },
+  {
+   "id": "pixi:shared-vfx-shader-fx-js",
+   "nome": "WebGL (Pixi) em shader-fx.js",
+   "categoria": "Bibliotecas",
+   "tecnologia": "WebGL (Pixi)",
+   "origem": "Compartilhado",
+   "arquivos": [
+    "shared/vfx/shader-fx.js"
+   ],
+   "gatilho": "Definido no código",
+   "parametros": [],
+   "estado": "excecao",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Motor: toca os shaders escolhidos nas abas Holográficos e Efeitos."
+  },
+  {
+   "id": "raf:star-hill-designer-js",
+   "nome": "Laço de animação em designer.js",
+   "categoria": "Código de animação",
+   "tecnologia": "JavaScript (requestAnimationFrame)",
+   "origem": "Star Hill",
+   "arquivos": [
+    "star-hill/designer.js"
+   ],
+   "gatilho": "Definido no código",
+   "parametros": [],
+   "estado": "excecao",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Não é animação: espera dois quadros para medir o layout no designer."
+  },
+  {
+   "id": "transicao:star-hill-star-hill-css",
+   "nome": "Transições de star-hill.css",
+   "categoria": "Hover e interação",
+   "tecnologia": "CSS transition",
+   "origem": "Star Hill",
+   "arquivos": [
+    "star-hill/star-hill.css"
+   ],
+   "gatilho": "Hover, foco e mudança de estado",
+   "parametros": [],
+   "estado": "legado",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Agrupadas por arquivo; sem controle no Forge"
+  }
+ ]
+}

@@ -1,13 +1,14 @@
 // STAR HILL · Gestor de animações: efeitos, padrões do jogo, facções e cartas, em data/card-animations.json (playtest/divine/pixel-vfx.js toca).
 // A carta passa por cima da facção, e a facção por cima do padrão, como nos sons. A linha de cada habilidade também se escolhe no Card Forge, aba Som.
-import {ANIM_MOMENTS, ELEMENT_COLOR, allEffects, catalogNow, importVfx, editVfx, loadAnims, animsNow, saveAnim, openAnimPreview, openAnimPicker, animLabel} from '/shared/anim-picker.js?v=4';
-import {categoryOf} from '/shared/anim-picker.js?v=4';
+import {ANIM_MOMENTS, ELEMENT_COLOR, allEffects, catalogNow, importVfx, editVfx, loadAnims, animsNow, saveAnim, openAnimPreview, openAnimPicker, animLabel} from '/shared/anim-picker.js?v=5';
+import {categoryOf} from '/shared/anim-picker.js?v=5';
 import {CATEGORIES} from '/shared/vfx/presets.js';
-import {composerSection, composerMounted, livingSection, holoSection} from './animacoes-composer.js?v=1';
+import {composerSection, composerMounted, livingSection, holoSection} from './animacoes-composer.js?v=2';
+import {loadPublicacao, mountPublicacao, publicacaoSection} from './animacoes-publicacao.js?v=1';
 
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const FACCOES = ['Athena', 'Poseidon', 'Hades', 'Ares', 'Artemis', 'Neutral'];
-let root = null, hooks = null, cards = [], faccao = 'Athena', cardId = '', busca = '';
+let root = null, tabs = null, host = null, hooks = null, cards = [], faccao = 'Athena', cardId = '', busca = '';
 
 const entryOf = id => ({linhas: [], ...animsNow()[id]});
 const tune = id => ({ligado: true, tamanho: 1, velocidade: 1, cor: null, ...animsNow().efeitos?.[id]});
@@ -78,23 +79,76 @@ function porCarta() {
     ${card ? `<h3>${esc(card.nome_exibicao_en)} · habilidades</h3>${lines.map((t, i) => `<div class="tl-anim tl-anim--faccao"><div class="tl-anim__what"><span>${esc(String(t).split(/ — |\n/)[0].slice(0, 60))}</span></div>${chooser(card.id, `linha:${i}`, own[i], 'habilidade da carta')}</div>`).join('') || '<p class="hint">Esta carta não tem habilidades.</p>'}
       ${livingSection(card)}<h3>Momentos</h3>${moments(card.id, 'facção')}` : ''}</section>`;
 }
-function page() {
-  return `<section class="panel tl"><div class="tl-head"><h2>Padrões do jogo</h2><span class="tag">Vale para toda carta sem escolha própria</span></div>${moments('padrao', 'sem animação nova')}</section>
-    <section class="panel tl"><div class="tl-head"><h2>Por facção</h2><span class="tag">Passa por cima do padrão</span></div>
-      <div class="tl-faccao-tabs" role="group" aria-label="Facção">${FACCOES.map(f => `<button type="button" data-an="faccao" data-f="${f}" aria-pressed="${f === faccao}">${f}</button>`).join('')}</div>${moments(`faccao-${faccao.toLowerCase()}`, 'padrão')}</section>
-    ${porCarta()}${composerSection()}${holoSection()}${efeitos()}`;
-}
+const ESTADO = {editavel: 'No Forge', parcial: 'Parcial', legado: 'Legado', excecao: 'Exceção'};
+const CRITERIO = {forge: 'presença no Forge', edita: 'edição', aplica: 'efeito no jogo', preview: 'teste na mesa', restaura: 'restaurar', testes: 'testes'};
+let inventario = {resumo: {}, animacoes: []}, invBusca = '';
+const invFiltro = {estado: '', categoria: '', tecnologia: '', origem: ''};
+const invRows = () => inventario.animacoes.filter(a => Object.entries(invFiltro).every(([k, v]) => !v || a[k] === v) && (!invBusca || `${a.id} ${a.nome} ${a.gatilho} ${a.arquivos.join(' ')}`.toLowerCase().includes(invBusca.toLowerCase())));
+const invFaltam = a => Object.keys(CRITERIO).filter(k => !a.criterios[k]).map(k => CRITERIO[k]).join(', ');
+const invItem = a => `<li><div><b>${esc(a.nome)}</b><small>${esc(a.categoria)} · ${esc(a.tecnologia)} · ${esc(a.origem)}${a.gatilho ? ` · ${esc(a.gatilho)}` : ''}</small>${a.parametros.length ? `<small>Ajusta: ${esc(a.parametros.join(', '))}</small>` : ''}${a.limite ? `<small>${esc(a.limite)}</small>` : ''}${a.migrada || a.estado === 'excecao' ? '' : `<small>Falta: ${esc(invFaltam(a))}</small>`}<code>${esc(a.id)} · ${esc(a.arquivos[0])}${a.arquivos.length > 1 ? ` +${a.arquivos.length - 1}` : ''}</code></div><span class="tag an-inv--${a.estado}">${a.migrada ? 'Migrada' : ESTADO[a.estado]}</span>${a.aba === 'telas' ? '<a href="#telas">Abrir Telas e som</a>' : a.aba ? `<button type="button" data-aba-ir="${a.aba}">Abrir</button>` : ''}</li>`;
+const INV_MAX = 200; // a lista inteira trava o redesenho; a busca e os filtros alcançam o resto
+const invList = () => { const list = invRows(); return `<p class="an-inv-count">${list.length} de ${inventario.animacoes.length}${list.length > INV_MAX ? `; mostrando ${INV_MAX}. Use a busca ou os filtros.` : ''}</p><ul class="an-inv">${list.slice(0, INV_MAX).map(invItem).join('')}</ul>`; };
+const invOptions = key => [...new Set(inventario.animacoes.map(a => a[key]))].sort().map(v => [v, v]);
+const todas = () => { const r = inventario.resumo; return `<section class="panel tl"><div class="tl-head"><h2>Todas as animações</h2><span class="tag">${r.migradas || 0} migradas · ${r.editavel || 0} no Forge · ${r.parcial || 0} parciais · ${r.legado || 0} legadas</span></div>
+    <p class="hint">Migrada é a animação com os oito critérios. Das ${r.total || 0} registradas, todas com id estável: ${Object.entries(CRITERIO).map(([k, nome]) => `${r.criterios?.[k] ?? 0} com ${nome}`).join(' · ')}.</p>
+    <div class="an-inv-filtros"><input type="search" data-inv="busca" value="${esc(invBusca)}" placeholder="Nome, id, arquivo ou evento" aria-label="Buscar animação"><select data-inv="estado" aria-label="Situação">${options(Object.entries(ESTADO), invFiltro.estado, 'Toda situação')}</select><select data-inv="categoria" aria-label="Categoria">${options(invOptions('categoria'), invFiltro.categoria, 'Toda categoria')}</select><select data-inv="tecnologia" aria-label="Tecnologia">${options(invOptions('tecnologia'), invFiltro.tecnologia, 'Toda tecnologia')}</select><select data-inv="origem" aria-label="Origem">${options(invOptions('origem'), invFiltro.origem, 'Toda origem')}</select></div><div data-inv-list>${invList()}</div></section>`; };
+const ABAS = {
+  criador: ['Criador', () => ''],
+  todas: ['Todas', todas],
+  particulas: ['Partículas', () => ''],
+  interface: ['Interface', () => ''],
+  cena: ['Céu e moeda', () => ''],
+  sprite: ['Sprite Fusion', () => ''],
+  combate: ['Combate', () => ''],
+  padroes: ['Padrões', () => `<section class="panel tl"><div class="tl-head"><h2>Padrões do jogo</h2><span class="tag">Vale para toda carta sem escolha própria</span></div>${moments('padrao', 'sem animação nova')}</section>`],
+  faccao: ['Por facção', () => `<section class="panel tl"><div class="tl-head"><h2>Por facção</h2><span class="tag">Passa por cima do padrão</span></div>
+      <div class="tl-faccao-tabs" role="group" aria-label="Facção">${FACCOES.map(f => `<button type="button" data-an="faccao" data-f="${f}" aria-pressed="${f === faccao}">${f}</button>`).join('')}</div>${moments(`faccao-${faccao.toLowerCase()}`, 'padrão')}</section>`],
+  carta: ['Por carta', porCarta],
+  composer: ['Composer', composerSection],
+  holo: ['Holográficos', holoSection],
+  efeitos: ['Efeitos', efeitos],
+  publicacao: ['Publicação', publicacaoSection],
+};
+let aba = 'padroes';
+try { if (ABAS[localStorage.getItem('sh-anim-aba')]) aba = localStorage.getItem('sh-anim-aba'); } catch { /* sem armazenamento: começa em Padrões */ }
+let publicando = false;
 function draw() {
   const y = scrollY;
-  root.innerHTML = page();
+  tabs.innerHTML = Object.entries(ABAS).map(([k, [nome]]) => `<button type="button" data-aba="${k}" aria-pressed="${k === aba}">${nome}</button>`).join('');
+  // O jogo do Criador fica fora do redesenho: só carrega na primeira visita à aba e não recomeça a cada troca.
+  const palco = ['criador', 'particulas', 'interface', 'cena', 'sprite', 'combate'].includes(aba), modo = aba === 'criador' ? '' : `#${aba}`;
+  host.hidden = !palco;
+  if (palco && !host.firstChild) host.innerHTML = `<iframe class="an-criador" src="/star-hill/criador.html${modo}" title="Criador de animações"></iframe>`;
+  else if (palco) host.firstChild.contentWindow.location.hash = modo;
+  root.innerHTML = ABAS[aba][1]();
+  if (aba === 'publicacao' && !publicando) { publicando = true; loadPublicacao().then(() => { draw(); publicando = false; }); }
   composerMounted(cards, draw, hooks.notice);
   scrollTo(0, y);
 }
 export async function mountAnimacoes(el, {notice}) {
-  root = el; hooks = {notice};
+  el.innerHTML = '<div class="tl-faccao-tabs an-abas" role="group" aria-label="Seções de animação"></div><div class="an-criador-host" hidden></div><div></div>';
+  [tabs, host, root] = el.children; hooks = {notice};
+  mountPublicacao(root, {notice, redraw: () => { publicando = true; draw(); publicando = false; }});
+  root.addEventListener('input', e => {
+    const kind = e.target.dataset.inv;
+    if (!kind) return;
+    if (kind === 'busca') invBusca = e.target.value; else invFiltro[kind] = e.target.value;
+    root.querySelector('[data-inv-list]').innerHTML = invList();
+  });
+  root.addEventListener('click', e => {
+    const go = e.target.closest('[data-aba-ir]')?.dataset.abaIr;
+    if (go) { aba = go; draw(); scrollTo(0, 0); }
+  });
+  tabs.addEventListener('click', e => {
+    const b = e.target.closest('[data-aba]');
+    if (!b) return;
+    aba = b.dataset.aba;
+    try { localStorage.setItem('sh-anim-aba', aba); } catch { /* sem armazenamento: só não lembra a aba */ }
+    draw();
+  });
   if (!document.querySelector('link[data-anim-picker]')) document.head.append(Object.assign(document.createElement('link'), {rel: 'stylesheet', href: '/shared/anim-picker.css?v=2'}));
-  const [, exported] = await Promise.all([loadAnims(), fetch(`../card-forge/art-web/cards.json?t=${Date.now()}`, {cache: 'no-store'}).then(r => r.json())]);
-  cards = exported.cartas;
+  const [, exported, list] = await Promise.all([loadAnims(), fetch(`../card-forge/art-web/cards.json?t=${Date.now()}`, {cache: 'no-store'}).then(r => r.json()), fetch('/data/vfx-inventario.json', {cache: 'no-store'}).then(r => (r.ok ? r.json() : inventario)).catch(() => inventario)]);
+  cards = exported.cartas; inventario = list;
   draw();
 }
 function setChoice(id, key, value) {

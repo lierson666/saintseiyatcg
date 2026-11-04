@@ -11,7 +11,8 @@ import {printedEquipmentBonuses, signedBonus} from '../shared/card-visual-values
 import {displayCard, typeWord} from '../shared/card-i18n.js?v=20261031-kw1';
 import {unlock, playMusic, setVolume, volume} from './audio.js?v=20261102-voz4';
 import {loadMyDecks, saveMyDecks, findDeck, syncDecks, onDeckStatus, deckCovers, setDeckCover} from './deck-store.js?v=20261031-2';
-import {mountKV} from '../shared/kv-sky.js?v=20261031-native';
+import {mountKV} from '../shared/kv-sky.js?v=20261104-pub1';
+import {animFile} from '../shared/anim-data.js?v=1';
 import {countryOptions, countryName} from '../shared/countries.js?v=20261031-i18n1';
 import {startPresence} from '../shared/presence.js?v=20261029-1';
 import {mountSocial} from './social.js?v=20261101-notch1';
@@ -864,7 +865,7 @@ async function init() {
   cards = loadCanon(canon); index = canonIndex(canon);
   forge = new Map(art.cartas.map(c => [c.id, c]));
   // Coleção: holográfico da raridade com o cursor ou o toque em cima (VFX Forge V3). Só apresentação.
-  fetch('../data/vfx-studio.json', {cache: 'no-cache'}).then(r => (r.ok ? r.json() : null)).then(studio => { if (studio) startCardFx({quality: matchMedia('(pointer: coarse)').matches ? 'medium' : 'high', data: studio, card: id => forge.get(id), context: el => (el.closest('.lb-big') ? 'inspecao' : el.closest('.lb-card') ? 'colecao' : null)}); }).catch(() => {});
+  fetch(`../${animFile('data/vfx-studio.json')}`, {cache: 'no-cache'}).then(r => (r.ok ? r.json() : null)).then(studio => { if (studio) startCardFx({quality: matchMedia('(pointer: coarse)').matches ? 'medium' : 'high', data: studio, card: id => forge.get(id), context: el => (el.closest('.lb-big') ? 'inspecao' : el.closest('.lb-card') ? 'colecao' : null)}); }).catch(() => {});
   useGodPortraits(art.cartas);
   addPreviewCards(cards, index, art.cartas);
   presets = [...deckData.decks, ...previewDecks.decks, ...compDecks.decks, ...ultraDecks.decks, ...hiperDecks.decks];

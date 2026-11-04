@@ -3,7 +3,7 @@
 const split = t => t.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
 import {openSoundBrowser, soundUrl} from '/shared/sound-browser.js?v=12';
-import {loadAnims, animsNow, saveAnim, openAnimPicker, openAnimPreview, animLabel, ANIM_MOMENTS} from '/shared/anim-picker.js?v=3';
+import {loadAnims, animsNow, saveAnim, openAnimPicker, openAnimPreview, animLabel, ANIM_MOMENTS} from '/shared/anim-picker.js?v=5';
 let falas = {}, vozes = {}, player = null;
 const ready = Promise.all([
   fetch('/biblioteca-sons/falas-pt.json', {cache: 'no-store'}).then(r => (r.ok ? r.json() : {})).catch(() => ({})),

@@ -64,27 +64,83 @@ export const RECIPES = {
   leaves: g => ['falling-leaves', {area: around(g), ground: g.bottom, leaves: 20, litter: false}],
   bubbles: g => ['bubbles', {area: around(g), ground: g.bottom, density: 3, surface: false, caustics: false, tint: false}],
 };
+// Tipos de combate do gerador: cada um é uma composição das receitas acima, com o código real do Sprite Fusion.
+// `cor`: a receita aceita a cor escolhida. `noAlvo`: ignora o atacante. `vida`: corta em segundos o que deixa fumaça. `opts`: opções do próprio efeito (ver vendor/sprite-fusion).
+export const COMBAT = {
+  'physical-hit': {nome: 'Physical Hit', tipo: 'impacto', camadas: [{base: 'impact', cor: true}]},
+  'energy-hit': {nome: 'Energy Hit', tipo: 'energia', camadas: [{base: 'impact', cor: true}, {base: 'lightning', escala: .8, atraso: 30, vida: .9}]},
+  slash: {nome: 'Slash', tipo: 'golpe', camadas: [{base: 'slash', cor: true}]},
+  projectile: {nome: 'Projectile', tipo: 'projetil', camadas: [{base: 'energy', cor: true, opts: {kind: 'bolt'}}, {base: 'impact', cor: true, atraso: 260}]},
+  explosion: {nome: 'Explosion', tipo: 'explosao', camadas: [{base: 'explosion', vida: 1.4}]},
+  shockwave: {nome: 'Shockwave', tipo: 'impacto', camadas: [{base: 'explosion', vida: .7, opts: {fire: 0, earth: 0, chunks: 0, scorch: 0, shockwave: 170}}, {base: 'impact', cor: true, escala: .7}]},
+  'cosmo-burst': {nome: 'Cosmo Burst', tipo: 'energia', camadas: [{base: 'power', cor: true, vida: 1.4}, {base: 'impact', cor: true, escala: .8, atraso: 140}]},
+  aura: {nome: 'Aura', tipo: 'aura', camadas: [{base: 'energy', cor: true, noAlvo: true, opts: {kind: 'charge', hold: .5}}]},
+  shield: {nome: 'Shield', tipo: 'escudo', camadas: [{base: 'shield', cor: true}]},
+  block: {nome: 'Block', tipo: 'escudo', camadas: [{base: 'shield', cor: true, opts: {hold: .25}}, {base: 'impact', cor: true, escala: .8, opts: {kind: 'ricochet'}}]},
+  dodge: {nome: 'Dodge', tipo: 'outro', camadas: [{base: 'dash', cor: true, noAlvo: true}]},
+  pierce: {nome: 'Pierce', tipo: 'golpe', camadas: [{base: 'energy', cor: true, opts: {hold: .08, width: 2}}, {base: 'impact', cor: true, atraso: 60}]},
+  defeat: {nome: 'Defeat', tipo: 'trevas', camadas: [{base: 'dark', vida: 1.3}, {base: 'explosion', escala: .7, atraso: 280, vida: 1}]},
+  'divine-impact': {nome: 'Divine Impact', tipo: 'luz', camadas: [{base: 'light', vida: 1.3}, {base: 'impact', cor: true, escala: 1.4, atraso: 60}]},
+};
+// Receita salva → efeitos a tocar. `at(k)`: geometria na escala k. Puro, para o teste rodar sem navegador.
+export function combatLayers(r, at) {
+  return COMBAT[r.tipo].camadas.flatMap((c, i) => {
+    const own = r.camadas?.[i] ?? {};
+    if (own.ligada === false) return [];
+    let g = at((c.escala ?? 1) * (r.escala ?? 1));
+    if (r.ancora === 'origem' && g.from) { const dx = g.from[0] - g.x, dy = g.from[1] - g.y; g = {...g, x: g.from[0], y: g.from[1], top: g.top + dy, bottom: g.bottom + dy, from: [g.x, g.y], dx}; }
+    if (c.noAlvo) g = {...g, from: null};
+    const [file, options] = RECIPES[c.base](g);
+    return [{file, options: {...options, ...c.opts}, atraso: own.atraso ?? c.atraso ?? 0, vida: c.vida ?? MAX_LIFE}];
+  });
+}
+// Duração real da receita, rodando o efeito sem desenhar. O jogo corta em MAX_LIFE.
+export async function measureCombat(r) {
+  const at = k => ({x: 300, y: 300, top: 200, bottom: 400, w: 200, h: 200, from: [100, 100], s: k, size: k, color: r.cor || '#ffe7a3', power: 0});
+  let longest = 0;
+  for (const {file, options, atraso, vida} of combatLayers(r, at)) {
+    const m = await load(file), fx = m.default({...options, seed: 1});
+    let t = 0;
+    while (t < vida && !fx.done()) { fx.update(1 / 60); t += 1 / 60; }
+    longest = Math.max(longest, atraso / 1000 + t);
+  }
+  return Math.round(longest / (r.velocidade || 1) * 1000);
+}
+
 // Efeito importado (data/vfx-catalog.json): sprite sheet desenhado na mesma camada dos outros. `s`: {px, sw, w, h, cols, quadros, fps, loop}.
+// g.ancora (ajuste do Criador): sem valor, no alvo; "origem", sai do atacante; "viagem", vai do atacante ao alvo apontando para ele (a folha olha para a direita).
 export function sheetFx(s, g) {
-  const scale = g.h / WORLD_PX * 1.35 * (g.size || 1) / Math.max(s.w, s.h), dw = Math.max(1, Math.round(s.w * scale)), dh = Math.max(1, Math.round(s.h * scale));
-  const x0 = Math.round(g.x / WORLD_PX - dw / 2), y0 = Math.round(g.y / WORLD_PX - dh / 2), span = s.quadros / s.fps;
+  const scale = g.h / WORLD_PX * 1.35 * (g.size || 1) / Math.max(s.w, s.h), dw = Math.max(1, Math.round(s.w * scale)), dh = Math.max(1, Math.round(s.h * scale)), span = s.quadros / s.fps;
+  const from = g.from && (g.ancora === 'origem' || g.ancora === 'viagem') ? g.from : null, travel = from && g.ancora === 'viagem';
+  const angle = travel ? Math.atan2(g.y - from[1], g.x - from[0]) : 0, cos = Math.cos(angle), sin = Math.sin(angle), reach = Math.ceil(Math.hypot(dw, dh) / 2);
   let t = 0;
+  const put = (f, at, v) => {
+    const a = v >>> 24;
+    if (!a) return;
+    const d = f.color[at];
+    if (a === 255 || !d) { f.color[at] = v; return; }
+    const da = d >>> 24, oa = a + da * (255 - a) / 255, mix = (sh) => Math.round((((v >>> sh) & 255) * a + ((d >>> sh) & 255) * da * (255 - a) / 255) / oa);
+    f.color[at] = ((Math.round(oa) << 24) | (mix(16) << 16) | (mix(8) << 8) | mix(0)) >>> 0;
+  };
   return {
     update(dt) { t += dt; },
     done: () => !s.loop && t >= span,
     draw(f, layer) {
       if (layer !== 'front' || (!s.loop && t >= span)) return;
-      const n = Math.floor(t * s.fps) % s.quadros, cx = (n % s.cols) * s.w, cy = Math.floor(n / s.cols) * s.h;
-      for (let y = Math.max(0, y0 - (f.oy || 0)), yEnd = Math.min(f.h, y0 - (f.oy || 0) + dh); y < yEnd; y++) {
-        const sy = cy + Math.floor((y + (f.oy || 0) - y0) * s.h / dh);
-        for (let x = Math.max(0, x0 - (f.ox || 0)), xEnd = Math.min(f.w, x0 - (f.ox || 0) + dw); x < xEnd; x++) {
-          const v = s.px[sy * s.sw + cx + Math.floor((x + (f.ox || 0) - x0) * s.w / dw)], a = v >>> 24;
-          if (!a) continue;
-          const at = y * f.w + x, d = f.color[at];
-          if (a === 255 || !d) { f.color[at] = v; continue; }
-          const da = d >>> 24, oa = a + da * (255 - a) / 255, mix = (sh) => Math.round((((v >>> sh) & 255) * a + ((d >>> sh) & 255) * da * (255 - a) / 255) / oa);
-          f.color[at] = ((Math.round(oa) << 24) | (mix(16) << 16) | (mix(8) << 8) | mix(0)) >>> 0;
+      const n = Math.floor(t * s.fps) % s.quadros, cx = (n % s.cols) * s.w, cy = Math.floor(n / s.cols) * s.h, k = travel ? Math.min(1, t / span) : 0;
+      const wx = (from ? from[0] + (g.x - from[0]) * k : g.x) / WORLD_PX, wy = (from ? from[1] + (g.y - from[1]) * k : g.y) / WORLD_PX, ox = f.ox || 0, oy = f.oy || 0;
+      if (travel) {
+        const mx = Math.round(wx) - ox, my = Math.round(wy) - oy;
+        for (let y = Math.max(0, my - reach), yEnd = Math.min(f.h, my + reach); y < yEnd; y++) for (let x = Math.max(0, mx - reach), xEnd = Math.min(f.w, mx + reach); x < xEnd; x++) {
+          const u = Math.floor(cos * (x - mx) + sin * (y - my) + dw / 2), v = Math.floor(-sin * (x - mx) + cos * (y - my) + dh / 2);
+          if (u >= 0 && v >= 0 && u < dw && v < dh) put(f, y * f.w + x, s.px[(cy + Math.floor(v * s.h / dh)) * s.sw + cx + Math.floor(u * s.w / dw)]);
         }
+        return;
+      }
+      const x0 = Math.round(wx - dw / 2), y0 = Math.round(wy - dh / 2);
+      for (let y = Math.max(0, y0 - oy), yEnd = Math.min(f.h, y0 - oy + dh); y < yEnd; y++) {
+        const sy = cy + Math.floor((y + oy - y0) * s.h / dh);
+        for (let x = Math.max(0, x0 - ox), xEnd = Math.min(f.w, x0 - ox + dw); x < xEnd; x++) put(f, y * f.w + x, s.px[sy * s.sw + cx + Math.floor((x + ox - x0) * s.w / dw)]);
       }
     },
   };
@@ -106,7 +162,7 @@ const FILES = [...new Set(Object.values(RECIPES).map(r => r({x: 0, y: 0, top: 0,
 export const effectFiles = () => FILES;
 
 export function createPixelFx(stage, {flashes = () => true, tuning = () => ({}), catalog = () => ({})} = {}) {
-  let cColor, cLight, color, light, art = 0, frame, imgColor, imgLight, live = [], raf = 0, last = 0;
+  let cColor, cLight, color, light, art = 0, frame, imgColor, imgLight, live = [], raf = 0, last = 0, heldUntil = 0;
 
   function mount() {
     const layer = z => { const c = document.createElement('canvas'); c.className = 'pixel-fx'; c.style.cssText = `position:absolute;inset:0;width:100%;height:100%;pointer-events:none;image-rendering:pixelated;visibility:hidden;z-index:${z}`; c.setAttribute('aria-hidden', 'true'); stage.append(c); return c; };
@@ -129,16 +185,16 @@ export function createPixelFx(stage, {flashes = () => true, tuning = () => ({}),
 
   function tick(now) {
     raf = 0;
-    const dt = Math.min(.05, (now - last) / 1000); last = now;
+    const dt = now < heldUntil ? 0 : Math.min(.05, (now - last) / 1000); last = now; // hit stop congela
     frame.color.fill(0);
     const lit = glow();
     if (lit) frame.light.fill(0);
     for (const item of live) { const step = dt * item.speed; item.age += step; item.fx.update(step); item.fx.draw(frame, 'back'); item.fx.draw(frame, 'front'); }
     cColor.putImageData(imgColor, 0, 0);
     if (lit) cLight.putImageData(imgLight, 0, 0); else cLight.clearRect(0, 0, frame.w, frame.h);
-    live = live.filter(item => item.age < MAX_LIFE && !item.fx.done());
+    live = live.filter(item => item.age < (item.vida ?? MAX_LIFE) && !item.fx.done());
     if (live.length) {
-      color.style.opacity = light.style.opacity = Math.min(1, Math.max(...live.map(item => MAX_LIFE - item.age)) / FADE);
+      color.style.opacity = light.style.opacity = Math.min(1, Math.max(...live.map(item => (item.vida ?? MAX_LIFE) - item.age)) / FADE);
       raf = requestAnimationFrame(tick);
     } else show(false);
   }
@@ -155,12 +211,18 @@ export function createPixelFx(stage, {flashes = () => true, tuning = () => ({}),
     const tune = tuning()?.[recipe] || {};
     const sheet = catalog()?.[recipe];
     if ((!RECIPES[recipe] && !sheet) || tune.ligado === false) return Promise.resolve();
-    const start = fx => {
-      live.push({fx, age: 0, speed: tune.velocidade || 1});
+    if (sheet?.coreografia) { const b = sheet.coreografia.faixas.impact?.efeito; return b ? play(b, rect, opts) : Promise.resolve(); } // fora do Strike não há fases: toca o impacto
+    const start = (fx, speed = 1, vida = MAX_LIFE) => {
+      live.push({fx, age: 0, vida, speed: (tune.velocidade || 1) * speed});
       show(true);
       if (!raf) { last = performance.now(); raf = requestAnimationFrame(tick); }
     };
-    if (sheet) { const g = geometry(rect, {...opts, size: tune.tamanho || 1}); return loadSheet(sheet).then(s => start(sheetFx(s, g))).catch(err => console.debug(err)); }
+    if (sheet?.receita) {
+      const r = sheet.receita, speed = r.velocidade || 1;
+      const at = k => geometry(rect, {...opts, color: r.cor || tune.cor || opts.color || '#ffe7a3', size: (tune.tamanho || 1) * k});
+      return Promise.all(combatLayers(r, at).map(({file, options, atraso, vida}) => load(file).then(m => new Promise(done => setTimeout(done, atraso / speed / (tune.velocidade || 1))).then(() => start(m.default({...options, seed: 1 + Math.floor(Math.random() * 1e6)}), speed, vida))))).catch(err => console.debug(err));
+    }
+    if (sheet) { const g = geometry(rect, {...opts, size: tune.tamanho || 1}); return loadSheet(sheet).then(s => start(sheetFx(s, {...g, ancora: opts.ancora ?? tune.ancora}))).catch(err => console.debug(err)); }
     const [file, options] = RECIPES[recipe](geometry(rect, {...opts, color: tune.cor || opts.color || ELEMENT_COLOR[recipe], size: tune.tamanho || 1}));
     return load(file).then(m => start(m.default({...options, seed: 1 + Math.floor(Math.random() * 1e6)}))).catch(err => console.debug(err)); // efeito que não carrega não pode travar a partida
   }
@@ -168,6 +230,7 @@ export function createPixelFx(stage, {flashes = () => true, tuning = () => ({}),
     play,
     preload() { for (const f of FILES) load(f).catch(() => {}); }, // o primeiro golpe não espera a rede
     clear() { live = []; },
+    hold(ms) { heldUntil = performance.now() + ms; },
     live: () => live.length,
   };
 }

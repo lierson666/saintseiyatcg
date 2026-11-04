@@ -15,6 +15,7 @@ import io
 import json
 import math
 import re
+import unicodedata
 import zipfile
 from datetime import date
 from pathlib import Path
@@ -252,6 +253,8 @@ def add_effect(frames, times, info, root=ROOT):
     effect = {'id': f'vx-{digest[:12]}', 'nome': nome, 'fonte': fonte, 'licenca': licenca, 'acesso': acesso, 'origem': str(info.get('origem') or ''), 'autor': str(info.get('autor') or ''),
               'formato': str(info.get('formato') or ''), 'hash': digest, 'arquivo': f'{SHEETS}/{target.name}', 'w': width, 'h': height, 'cols': cols, 'quadros': len(frames), 'fps': fps,
               'loop': bool(info.get('loop')), 'tipo': tipo, 'faccoes': faccoes, 'gatilhos': gatilhos, 'importado': date.today().isoformat()}
+    if info.get('rascunho'):
+        effect['rascunho'] = True  # feito no Criador: só aparece lá até o autor aprovar
     catalog['efeitos'].append(effect)
     write_catalog(catalog, root)
     return effect, False
@@ -284,12 +287,127 @@ def import_body(body, root=ROOT):
     return {'efeito': effect, 'duplicado': duplicate, 'catalogo': load_catalog(root)}
 
 
-def edit_body(body, root=ROOT):
+def _drop_draft(catalog, effect, root, heir=None):
+    """Tira um rascunho do catálogo e apaga a folha. O ajuste salvo passa para `heir` (nova versão) ou é descartado."""
+    catalog['efeitos'].remove(effect)
+    if effect.get('arquivo'):  # receita do gerador é só código
+        (root / effect['arquivo']).unlink(missing_ok=True)
+    path = root / 'data/card-animations.json'
+    anims = json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
+    tune = anims.get('efeitos', {}).pop(effect['id'], None)
+    if tune is not None:
+        if heir:
+            anims['efeitos'][heir] = tune
+        path.write_text(json.dumps(anims, ensure_ascii=False, indent=2, sort_keys=True) + '\n', encoding='utf-8')
+
+
+# Tipos do gerador Sprite Fusion, com a categoria e o número de camadas de COMBAT em playtest/divine/pixel-vfx.js.
+COMBAT_TYPES = {'physical-hit': ('impacto', 1), 'energy-hit': ('energia', 2), 'slash': ('golpe', 1), 'projectile': ('projetil', 2), 'explosion': ('explosao', 1), 'shockwave': ('impacto', 2), 'cosmo-burst': ('energia', 2),
+                'aura': ('aura', 1), 'shield': ('escudo', 1), 'block': ('escudo', 2), 'dodge': ('outro', 1), 'pierce': ('golpe', 2), 'defeat': ('trevas', 2), 'divine-impact': ('luz', 2)}
+
+
+def _in_range(value, low, high):
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and low <= value <= high
+
+
+def recipe_body(body, root=ROOT):
+    """Rascunho do gerador: receita em código, sem arquivo e sem carta. Mesmo nome troca o rascunho anterior; nunca um efeito já guardado."""
+    r, nome = body.get('receita'), str(body.get('nome') or '').strip()
+    if not nome or len(nome) > 60:
+        raise ValueError('Nome inválido.')
+    if not isinstance(r, dict) or set(r) != {'tipo', 'cor', 'escala', 'velocidade', 'ancora', 'camadas'} or r['tipo'] not in COMBAT_TYPES:
+        raise ValueError('Receita inválida.')
+    tipo, total = COMBAT_TYPES[r['tipo']]
+    if not (r['cor'] is None or (isinstance(r['cor'], str) and re.fullmatch(r'#[0-9a-fA-F]{6}', r['cor']))) or r['ancora'] not in ('alvo', 'origem') or not _in_range(r['escala'], 0.25, 3) or not _in_range(r['velocidade'], 0.25, 3):
+        raise ValueError('Receita inválida.')
+    layers = r['camadas']
+    if not isinstance(layers, list) or len(layers) != total or not any(isinstance(c, dict) and c.get('ligada') for c in layers):
+        raise ValueError('Receita inválida.')
+    for layer in layers:
+        if not isinstance(layer, dict) or set(layer) != {'ligada', 'atraso'} or not isinstance(layer['ligada'], bool) or not _in_range(layer['atraso'], 0, 1500):
+            raise ValueError('Receita inválida.')
+    if not _in_range(body.get('duracao_ms'), 1, 10000):
+        raise ValueError('Duração inválida.')
+    slug = re.sub(r'[^a-z0-9]+', '-', unicodedata.normalize('NFD', nome).encode('ascii', 'ignore').decode().lower()).strip('-')[:40] or 'efeito'
+    catalog, rid = load_catalog(root), f'sf-{slug}'
+    old = next((e for e in catalog['efeitos'] if e['id'] == rid), None)
+    if old and not old.get('rascunho'):
+        raise ValueError('Já existe um efeito guardado com esse nome.')
+    if old:
+        catalog['efeitos'].remove(old)  # o ajuste salvo do rascunho continua valendo: o id é o mesmo
+    effect = {'id': rid, 'nome': nome, 'fonte': 'sprite-fusion', 'licenca': 'MIT', 'acesso': 'gratis', 'origem': 'https://www.spritefusion.com/pixel-art-vfx/', 'autor': 'Hugo Duprez', 'formato': 'codigo',
+              'hash': hashlib.sha256(json.dumps(r, sort_keys=True).encode()).hexdigest(), 'receita': r, 'duracao_ms': body['duracao_ms'], 'transparencia': True, 'tipo': tipo, 'faccoes': [], 'gatilhos': [], 'importado': date.today().isoformat(), 'rascunho': True}
+    catalog['efeitos'].append(effect)
+    write_catalog(catalog, root)
+    return {'efeito': effect, 'catalogo': load_catalog(root)}
+
+
+COMBAT_EFFECT_TRACKS = ('anticipation', 'charge', 'movement', 'projectile', 'contact', 'impact', 'aftermath')
+SOUND_KEY = re.compile(r'[a-z0-9_-]{1,40}')
+
+
+def _new_draft(catalog, prefix, nome, root):
+    slug = re.sub(r'[^a-z0-9]+', '-', unicodedata.normalize('NFD', nome).encode('ascii', 'ignore').decode().lower()).strip('-')[:40] or 'efeito'
+    rid, old = f'{prefix}-{slug}', None
+    old = next((e for e in catalog['efeitos'] if e['id'] == rid), None)
+    if old and not old.get('rascunho'):
+        raise ValueError('Já existe um efeito guardado com esse nome.')
+    if old:
+        catalog['efeitos'].remove(old)  # o ajuste salvo do rascunho continua valendo: o id é o mesmo
+    return rid
+
+
+def choreography_body(body, root=ROOT, builtin=()):
+    """Rascunho do Combat Composer. Toda fase aponta para efeito que existe: referência quebrada não entra. Não liga a carta nenhuma."""
+    c, nome = body.get('coreografia'), str(body.get('nome') or '').strip()
+    if not nome or len(nome) > 60:
+        raise ValueError('Nome inválido.')
+    if not isinstance(c, dict) or set(c) != {'hit', 'faixas'} or not _in_range(c['hit'], 0, 2000) or not isinstance(c['faixas'], dict) or not c['faixas']:
+        raise ValueError('Coreografia inválida.')
+    catalog = load_catalog(root)
+    known = {*builtin, *(e['id'] for e in catalog['efeitos'] if not e.get('coreografia'))}
+    for key, block in c['faixas'].items():
+        fields = {'efeito'} if key in COMBAT_EFFECT_TRACKS else {'hitstop': {'duracao'}, 'knockback': {'distancia'}, 'sound': {'som'}}.get(key)
+        if fields is None or not isinstance(block, dict) or set(block) != {'inicio', *fields} or not _in_range(block['inicio'], 0, 4000):
+            raise ValueError('Coreografia inválida.')
+        if key in COMBAT_EFFECT_TRACKS and block['efeito'] not in known:
+            raise ValueError(f'Efeito inexistente na fase {key}.')
+        if (key == 'hitstop' and not _in_range(block['duracao'], 0, 300)) or (key == 'knockback' and not _in_range(block['distancia'], 0.25, 3)) or (key == 'sound' and not (isinstance(block['som'], str) and SOUND_KEY.fullmatch(block['som']))):
+            raise ValueError('Coreografia inválida.')
+    if not _in_range(body.get('duracao_ms'), 1, 10000):
+        raise ValueError('Duração inválida.')
+    rid = _new_draft(catalog, 'cb', nome, root)
+    effect = {'id': rid, 'nome': nome, 'fonte': 'criador', 'licenca': 'Projeto', 'acesso': 'gratis', 'origem': f'criador:{rid}', 'autor': 'Saint Seiya TCG', 'formato': 'coreografia',
+              'hash': hashlib.sha256(json.dumps(c, sort_keys=True).encode()).hexdigest(), 'coreografia': c, 'duracao_ms': body['duracao_ms'], 'tipo': 'golpe', 'faccoes': [], 'gatilhos': [], 'importado': date.today().isoformat(), 'rascunho': True}
+    catalog['efeitos'].append(effect)
+    write_catalog(catalog, root)
+    return {'efeito': effect, 'catalogo': load_catalog(root)}
+
+
+def edit_body(body, root=ROOT, builtin=()):
     """POST /api/star-hill/vfx-meta: renomeia e categoriza. Origem, licença e hash não mudam por aqui."""
+    if 'receita' in body:
+        return recipe_body(body, root)
+    if 'coreografia' in body:
+        return choreography_body(body, root, builtin)
     catalog = load_catalog(root)
     effect = next((e for e in catalog['efeitos'] if e['id'] == body.get('id')), None)
     if not effect:
         raise ValueError('Efeito não encontrado.')
+    if body.get('descartar'):
+        if not effect.get('rascunho'):
+            raise ValueError('Só rascunho pode ser descartado.')
+        _drop_draft(catalog, effect, root)
+        write_catalog(catalog, root)
+        return {'catalogo': catalog}
+    if body.get('testado'):  # rascunho → teste: tocou na mesa
+        if effect.get('rascunho'):
+            effect['estado'] = 'teste'
+    if body.get('aprovar'):  # teste → aprovado: vale para o banco, mas só vai ao ar numa versão publicada
+        if effect.get('estado') != 'teste':
+            raise ValueError('Teste na mesa antes de aprovar.')
+        effect.pop('rascunho', None)
+        effect['estado'] = 'aprovado'
     if 'nome' in body:
         nome = str(body['nome']).strip()
         if not nome or len(nome) > 60:
@@ -321,6 +439,7 @@ def main():
     parser.add_argument('--fps', type=float)
     parser.add_argument('--loop', action='store_true')
     parser.add_argument('--aparar', action='store_true')
+    parser.add_argument('--rascunho', action='store_true')
     parser.add_argument('--gatilhos', type=lambda v: v.split(','), default=[])
     args = parser.parse_args()
     if args.caminho.is_dir():
@@ -332,6 +451,11 @@ def main():
         times = [1000 / args.fps] * len(frames)
     info = vars(args)
     effect, duplicate = add_effect(frames, times, {**info, 'formato': 'png' if args.caminho.is_dir() else args.caminho.suffix.lstrip('.').lower()})
+    if args.rascunho and args.origem:  # nova versão do mesmo pedido substitui a anterior
+        catalog = load_catalog()
+        for old in [e for e in catalog['efeitos'] if e.get('rascunho') and e['origem'] == args.origem and e['id'] != effect['id']]:
+            _drop_draft(catalog, old, ROOT, effect['id'])
+        write_catalog(catalog)
     print(json.dumps({'id': effect['id'], 'quadros': effect['quadros'], 'duplicado': duplicate}))
 
 

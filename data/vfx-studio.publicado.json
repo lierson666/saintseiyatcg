@@ -1,0 +1,132 @@
+{
+  "cartas": {},
+  "composicoes": {
+    "card-advance": {
+      "camadas": [
+        {
+          "duracao": 700,
+          "easing": "ease-out",
+          "escala": 1.1,
+          "inicio": 0,
+          "tipo": "carta",
+          "y": -28
+        }
+      ],
+      "nome": "Carta avança"
+    },
+    "card-recoil": {
+      "camadas": [
+        {
+          "duracao": 500,
+          "easing": "ease-in-out",
+          "escala": 0.94,
+          "inicio": 0,
+          "rotacao": -3,
+          "tipo": "carta",
+          "y": 18
+        }
+      ],
+      "nome": "Carta recua"
+    },
+    "divine-entrance": {
+      "camadas": [
+        {
+          "duracao": 800,
+          "easing": "ease-out",
+          "escala": 1.1,
+          "inicio": 0,
+          "tipo": "carta"
+        },
+        {
+          "alvo": "carta",
+          "cor": "#ffe7a3",
+          "duracao": 1400,
+          "forca": 0.9,
+          "inicio": 100,
+          "shader": "divine-light",
+          "tipo": "shader"
+        },
+        {
+          "alvo": "carta",
+          "duracao": 1200,
+          "inicio": 200,
+          "loop": false,
+          "lottie": "reward-burst",
+          "tipo": "lottie"
+        },
+        {
+          "cor": "#ffe7a3",
+          "duracao": 900,
+          "efeito": "light",
+          "escala": 1,
+          "inicio": 300,
+          "tipo": "particulas"
+        }
+      ],
+      "faccao": "athena",
+      "nome": "Entrada divina"
+    },
+    "great-flood": {
+      "camadas": [
+        {
+          "duracao": 900,
+          "easing": "ease-out",
+          "escala": 1.12,
+          "inicio": 0,
+          "tipo": "carta",
+          "y": -24
+        },
+        {
+          "duracao": 2600,
+          "easing": "ease-in-out",
+          "escala": 1.06,
+          "inicio": 200,
+          "tipo": "camera"
+        },
+        {
+          "alvo": "carta",
+          "cor": "#6fc8ff",
+          "duracao": 2200,
+          "forca": 0.9,
+          "inicio": 500,
+          "shader": "cosmic-aura",
+          "tipo": "shader"
+        },
+        {
+          "alvo": "mesa",
+          "cor": "#6fc8ff",
+          "duracao": 2000,
+          "forca": 0.7,
+          "inicio": 800,
+          "shader": "water",
+          "tipo": "shader"
+        },
+        {
+          "cor": "#6fc8ff",
+          "duracao": 1200,
+          "efeito": "bubbles",
+          "escala": 1.2,
+          "inicio": 900,
+          "tipo": "particulas"
+        },
+        {
+          "alvo": "mesa",
+          "cor": "#6fc8ff",
+          "duracao": 900,
+          "inicio": 1500,
+          "opacidade": 0.28,
+          "tipo": "ui"
+        }
+      ],
+      "faccao": "poseidon",
+      "nome": "Great Flood"
+    }
+  },
+  "raridades": {
+    "Common": "common-shine",
+    "Divine": "divine-holo",
+    "Legendary": "mythic-cosmic",
+    "Uncommon": "rare-foil"
+  },
+  "versao": 1
+}

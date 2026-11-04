@@ -1,0 +1,21 @@
+{
+  "raf:card-forge-studio-js": "Não é animação: agrupa o redesenho do editor do Layout Studio.",
+  "raf:card-forge-studio-properties-js": "Não é animação: agenda a atualização do painel de propriedades do Layout Studio.",
+  "raf:star-hill-designer-js": "Não é animação: espera dois quadros para medir o layout no designer.",
+  "raf:playtest-divine-app-js": "Não é animação: espera a carta assentar para posicionar o menu e dá a partida na leitura de eventos do log.",
+  "canvas:card-forge-boosters-html": "Ferramenta: recorta a arte do booster sob comando; nada anima.",
+  "canvas:card-forge-forge-js": "Ferramenta: desenha a carta no Card Forge e exporta o PNG; nada anima.",
+  "canvas:shared-layout-studio-renderer-js": "Ferramenta: mede texto e converte layout em imagem; nada anima.",
+  "raf:playtest-divine-pixel-vfx-js": "Motor: toca as folhas de sprite que se ajustam na aba Efeitos, efeito por efeito.",
+  "canvas:playtest-divine-pixel-vfx-js": "Motor: toca as folhas de sprite que se ajustam na aba Efeitos, efeito por efeito.",
+  "raf:shared-vfx-card-mount-js": "Motor: toca nas cartas os efeitos escolhidos nas abas Holográficos e Efeitos.",
+  "raf:shared-vfx-composer-js": "Motor: toca as composições editadas na aba Composer.",
+  "waapi:shared-vfx-composer-js": "Motor: toca as composições editadas na aba Composer.",
+  "lottie:shared-vfx-composer-js": "Motor: toca as composições editadas na aba Composer.",
+  "canvas:shared-vfx-shader-fx-js": "Motor: toca os shaders escolhidos nas abas Holográficos e Efeitos.",
+  "pixi:shared-vfx-shader-fx-js": "Motor: toca os shaders escolhidos nas abas Holográficos e Efeitos.",
+  "lottie:shared-anim-picker-js": "Não é animação: só lista os Lotties no catálogo do seletor.",
+  "raf:shared-anim-request-js": "Ferramenta: preview do rascunho no formulário do Criador; não aparece no jogo.",
+  "canvas:shared-anim-request-js": "Ferramenta: preview do rascunho no formulário do Criador; não aparece no jogo.",
+  "transicao:shared-anim-css-adapter-js": "Não é animação nova: o adapter toca, como amostra, uma animação CSS que já está no registro."
+}
