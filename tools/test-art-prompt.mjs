@@ -14,7 +14,7 @@ test('Devotee: personagem, armadura ligada, poder, regra de 7/10 e 3:4', () => {
   const text = promptOf('athena-v6-001');
   assert.match(text, /^Vertical 3:4/);
   assert.match(text, /SUBJECT: PEGASUS SEIYA, wearing .*CLOTH/);
-  assert.match(text, /7\/10 of the image height measured from the bottom, never above that line/);
+  assert.match(text, /FACE ZONE, MAXIMUM PRIORITY[^\n]*at about 7\/10 of the image height measured from the bottom/);
   assert.match(text, /exactly five fingers/);
   assert.match(text, /FACTION IDENTITY: Athena/);
   assert.match(text, /Seventh Sense/);
@@ -54,7 +54,7 @@ test('Equipment começa sozinho, e o portador fica só como opção', () => {
   assert.equal(f.people[0], 'WYVERN RHADAMANTHYS');
   const alone = promptOf('hades-v6-182');
   assert.match(alone, /alone as a sacred object/);
-  assert.doesNotMatch(alone, /FACE PLACEMENT|POSE:|EXPRESSION:|extra fingers/);
+  assert.doesNotMatch(alone, /entire head of the (main|protagonist)|POSE:|EXPRESSION:|extra fingers/);
   assert.match(promptOf('hades-v6-182', {person: f.people[0]}), /WYVERN RHADAMANTHYS, wearing WYVERN SURPLICE \(Equipment — Judge Surplice\)/);
 });
 

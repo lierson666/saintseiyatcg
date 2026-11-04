@@ -5,7 +5,7 @@ import {printedKind} from '../shared/rules-policy.js';
 import {ANATOMY, ARMY_FROM, CREATURES, CREATURE_CHOICES, CREATURE_MOODS, CREATURE_POSES, COUNTS, CROWD_FROM, EXACT_LIMIT, FORMATIONS, LEADS, ORDERS, VARIETIES, allowedNotes, blockedNotes, countOf, countWord, creatureById, creatureFromSubtypes, creaturePool, formationById, notesAskAlone, orderById, orderFromCard, suggestFormation} from './art-taxonomy.js?v=20261102-arte16';
 import {BEARERS, BODY_BEARERS, DAMAGED_STATES, DIVINE_LANGUAGE, DIVINE_SCALES, EFFECTS, ENV_EXTRAS, ENV_SCALES, ENV_STATES, ENV_TYPES, EQUIP_STATES, FACELESS_ROLES, FIGURE_FOCI, FORMS, INTENSITIES, MANIFESTATIONS, NATURES, OBJECT_KINDS, ORIGINS, PHASES, PRESENTATIONS, PROMPT_VERSION, ROLES, SCENE_FOCI, SCENE_MOMENTS, SCENE_TYPES, SUPPORTS, VARIANTS, VISIBLE, classifyFacts, textOf} from './art-natures.js?v=20261102-arte16';
 import {formatCardTypeLine} from '../shared/equipment-types.js';
-import {FAMILIES, GAUNTLET_BAN, HAND_FINISHES, STATE_LABELS, armorForArt, consistencySummary, gauntletApplies, gauntletRule, imageUrl, latestVersions, lockLines, lockNegative} from './armor-model.js';
+import {FACE_ZONE, FACE_ZONE_BAN, FAMILIES, GAUNTLET_BAN, HAND_FINISHES, STATE_LABELS, armorForArt, consistencySummary, faceZoneRule, gauntletApplies, gauntletRule, imageUrl, latestVersions, lockLines, lockNegative} from './armor-model.js';
 
 const pair = (code, pt) => [code, `${code}: ${pt}`];
 export const SHOTS = [
@@ -536,15 +536,14 @@ const anatomyLine = (c) => {
   return `ANATOMY${c.group ? ' (every figure)' : ''}: ${c.profile.text}.`;
 };
 // Regra dos 7/10 do Master, estendida pelo autor (02/11/2026) ao ponto de maior atenção de toda natureza de arte, não só ao rosto.
-const ATTENTION = 'at about 7/10 of the image height measured from the bottom, in the central part of the image and away from the edges';
+const ATTENTION = `at about 7/10 of the image height measured from the bottom, inside the zone ${FACE_ZONE}`;
 function focusLine(c, figure, faceless) {
   if (!figure) return '';
   if (faceless) return `FOCAL POINT: this figure is read by silhouette and placement, with no face to carry the image; build a clear visual center of interest ${ATTENTION}.`;
   if (c.army) return `SCALE AND READING: the force reads through silhouettes, scale and collective organization; a few foreground figures are large enough to read, the rest resolve into ranks. No single face has to carry the image: its point of greatest attention sits ${ATTENTION}.`;
-  const rule = 'place the eyes at about 7/10 of the image height measured from the bottom, never above that line, in the central part of the image and away from the edges. Keep the top free for card interface without hiding the face.';
-  if (c.group) return c.lead[0] === 'collective' || c.lead[0] === 'balanced' ? `GROUP READING: the faces or heads of the front figures sit ${ATTENTION}; no figure may hide another one's face. Keep the top free for card interface.` : `FACE PLACEMENT, 7/10 RULE (protagonist or main face only): ${rule} The other figures do not need to follow it and never cover that face.`;
-  if (c.profile.focus === 'face') return `FACE PLACEMENT, 7/10 RULE (mandatory): ${rule}`;
-  if (c.profile.focus === 'eyes') return `FOCAL POINT: the head, the eyes and the jaw or beak of the creature sit ${ATTENTION}; keep the top free for card interface.`;
+  if (c.group) return c.lead[0] === 'collective' || c.lead[0] === 'balanced' ? `GROUP READING: the faces or heads of the front figures sit ${ATTENTION}; no figure may hide another one's face. Keep the top free for card interface.` : `${faceZoneRule('the entire head of the protagonist or main face, with helmet, crest and hair,')} The other figures do not need to follow it and never cover that face.`;
+  if (c.profile.focus === 'face') return faceZoneRule();
+  if (c.profile.focus === 'eyes') return faceZoneRule('the entire head of the creature, with its eyes and its jaw or beak');
   return `FOCAL POINT: this being has no face to rely on; build a clear visual center of interest ${ATTENTION}.`;
 }
 function negativeLine(generic, c, figure) {
@@ -603,7 +602,7 @@ function modeOf(f, p, c, personSubject) {
       subject: bearer === 'none' ? (generic ? `${name} (${f.typeLine}), an original sacred object alone, with no wearer.${invent} Show its structure and materials clearly.` : `${name} (${f.typeLine}) alone as a sacred object, with no wearer; show its structure and materials clearly and preserve the symbols, colors and geometry of the attached reference images.`) : personSubject && BODY_BEARERS.has(bearer) ? personSubject : `${name} (${f.typeLine}), the main subject of the image.${invent}${canonLook}`,
       lines: [`OBJECT: ${kind ? `${kind}, ` : ''}${state || 'intact'}. PRESENTATION: ${presentation}.`, bearer !== 'none' && `BEARER: ${bearerText}; the object stays the main subject.`, bearer === 'hands' && 'HANDS: exactly five fingers on each visible hand.'],
       setting: support,
-      focus: `FOCAL POINT: the most important part of the object, ${ATTENTION}, with its full shape readable around that point.`,
+      focus: p.presentation === 'mounted' ? faceZoneRule('the entire helmet of the empty armor') : `FOCAL POINT: the most important part of the object, ${ATTENTION}, with its full shape readable around that point.`,
       faceless: !BODY_BEARERS.has(bearer),
       keepFace: BODY_BEARERS.has(bearer),
       negative: [bearer === 'none' && `${NO_PEOPLE}, wearer, mannequin, hands`, damaged ? 'object hidden by effects, unreadable shape' : 'unintended damage, broken geometry, object hidden by effects', 'cropped object'],
@@ -684,6 +683,7 @@ export function buildImagePrompt(f, p) {
   const showTechnique = p.technique && !(c.nature === 'scene' && p.technique === f.name) && c.nature !== 'domain' && c.nature !== 'equipment';
   const body = [
     `Vertical 3:4 high-resolution illustration for ${generic ? 'a mythological anime trading card, in a world of sacred armors and Greek gods' : 'a Saint Seiya trading card'}. Illustration only: no card frame, no text, no names, no logos, no numbers, no stats, no interface symbols, no watermarks.`,
+    focal,
     `CARD: ${f.name}${f.subtitle ? ` — "${f.subtitle}"` : ''} (${f.typeLine || f.kind}, ${f.rarity || 'Common'}).`,
     `CARD TYPE DIRECTION: ${direction}`,
     `SUBJECT: ${subject}`,
@@ -707,7 +707,6 @@ export function buildImagePrompt(f, p) {
     setting && `SETTING: ${setting}.${p.arc && !generic ? ` Inspired by: ${p.arc}.` : ''}`,
     story && `STORY: ${story}`,
     `FRAMING: ${p.shot}.${showPose ? ` ${c.group ? 'PROTAGONIST POSE' : 'POSE'}: ${p.pose}.` : ''}${figure && !humanoid && !c.group && p.creaturePose ? ` STANCE: ${p.creaturePose}.` : ''}${p.motion ? ` MOTION: ${p.motion}.` : ''}`,
-    focal,
     humanoid && !c.army && !faceless && !mode?.faceless && `EXPRESSION${c.group ? ' OF THE MAIN FACE' : ''}: ${p.expression}.`,
     figure && !humanoid && p.creatureMood && `BEHAVIOR: ${p.creatureMood}.`,
     'COMPOSITION: card interface may cover parts of the image, so build around that point of greatest attention and keep a silhouette readable at small size.',
@@ -720,7 +719,7 @@ export function buildImagePrompt(f, p) {
     f.flavour && `MOOD LINE: ${f.flavour}`,
     notes && `NOTES (author's direction, overrides the fields above, never the format rules): ${notes}`,
   ].filter(Boolean).join('\n');
-  const own = [mode ? mode.negative.filter(Boolean).join(', ') : '', choice?.kind === 'locked' && lockNegative(choice.lock), choice?.kind === 'none' && figure && 'armor, armor plates, pauldrons', handRule && GAUNTLET_BAN].filter(Boolean).join(', ');
+  const own = [mode ? mode.negative.filter(Boolean).join(', ') : '', choice?.kind === 'locked' && lockNegative(choice.lock), choice?.kind === 'none' && figure && 'armor, armor plates, pauldrons', handRule && GAUNTLET_BAN, focal.includes('FACE ZONE') && FACE_ZONE_BAN].filter(Boolean).join(', ');
   return `${body}\n\nNEGATIVE PROMPT: ${own ? `${own}, ` : ''}${negativeLine(generic, c, figure)}.`;
 }
 

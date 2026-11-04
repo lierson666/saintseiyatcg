@@ -14,7 +14,7 @@ const build = (name, extra = {}) => {
   const f = cardFacts(byName(name), cartas), p = {...defaultParams(f), ...extra}, text = buildImagePrompt(f, p);
   return {f, p, text, positive: text.split('\n\nNEGATIVE PROMPT: ')[0], negative: text.split('NEGATIVE PROMPT: ')[1], c: resolveCast(f, p)};
 };
-const HUMAN = /FACE PLACEMENT|five fingers|APPEARANCE|HAIR,|POSE:|EXPRESSION/;
+const HUMAN = /entire head of the (main|protagonist)|five fingers|APPEARANCE|HAIR,|POSE:|EXPRESSION/;
 const SACRIFICE = 'CASSIOS’S SACRIFICE', ARROW = 'THE GOLDEN ARROW', COFFIN = 'FREEZING COFFIN', CLOTH = 'PEGASUS CLOTH V2', CRACKED = 'CRACKED WARPLATE', TRIDENT = "POSEIDON'S TRIDENT", SANCTUARY = 'THE UNDERSEA SANCTUARY', WATCHER = 'ABYSSAL WATCHER';
 const seq = (seed = 1) => { let x = seed; return () => (x = (x * 16807) % 2147483647) / 2147483647; };
 
@@ -41,7 +41,7 @@ test('1: Moment sem personagens não inventa ninguém', () => {
 test('2: Moment com três personagens tem formação e não bane gente', () => {
   const {positive, negative} = build(SACRIFICE, {count: '3', person: '', sceneFocus: 'interaction'});
   assert.match(positive, /FORMATION: Three /);
-  assert.match(positive, /7\/10 RULE \(protagonist or main face only\)/);
+  assert.match(positive, /entire head of the protagonist or main face/);
   assert.doesNotMatch(negative, /human figures|people,/);
 });
 
@@ -124,7 +124,7 @@ test('16 e 17: deus em forma física e em manifestação abstrata', () => {
   const body = build('ATHENA');
   assert.equal(natureOf(body.f, body.p), 'divine');
   assert.match(body.positive, /SUBJECT: ATHENA.*Match the attached/);
-  assert.match(body.positive, /FACE PLACEMENT/);
+  assert.match(body.positive, /FACE ZONE/);
   assert.match(body.positive, new RegExp(DIVINE_LANGUAGE.Athena));
   const energy = build('HADES', {manifestation: 'energy', divineScale: 'cosmic'});
   assert.match(energy.positive, /HADES, manifested as energy without a body/);
@@ -159,7 +159,7 @@ test('papel do personagem entra só em arte com personagem, e silhueta dispensa 
   const guard = build('MARINA SPEARMAN', {role: 'guardian'});
   assert.match(guard.positive, /CHARACTER ROLE \(visual only\): a guardian/);
   const far = build('MARINA SPEARMAN', {role: 'distant'});
-  assert.doesNotMatch(far.positive, /FACE PLACEMENT|EXPRESSION/);
+  assert.doesNotMatch(far.positive, /entire head of the (main|protagonist)|EXPRESSION/);
   assert.doesNotMatch(build(COFFIN, {role: 'guardian'}).positive, /CHARACTER ROLE/);
 });
 
@@ -222,7 +222,7 @@ test('nenhuma carta em nenhuma natureza gera contradição', () => {
     assert.doesNotMatch(text, /undefined|\bnull\b|\[object|\bfalse\b/, tag);
     assert.ok(negative, tag);
     if (c.group) assert.doesNotMatch(text, /Exactly one figure|extra characters/, tag);
-    if (!c.active) assert.doesNotMatch(positive, /FACE PLACEMENT|ANATOMY|APPEARANCE|POSE:/, tag);
+    if (!c.active) assert.doesNotMatch(positive, /entire head of the (main|protagonist)|ANATOMY|APPEARANCE|POSE:/, tag);
     if (c.active) assert.doesNotMatch(negative, /human figures, faces/, tag);
     if (c.active && !c.profile.hands) assert.doesNotMatch(positive, /ANATOMY.*five fingers/, tag);
   }

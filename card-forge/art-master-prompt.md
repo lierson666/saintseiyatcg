@@ -34,8 +34,11 @@ FORMATO
 COMPOSIÇÃO
 A imagem será utilizada dentro de uma carta TCG.
 O personagem deve ser enquadrado considerando que elementos da interface da carta poderão cobrir partes da ilustração.
-Regra dos 7/10:
-O rosto do personagem principal deve permanecer preferencialmente dentro dos sete décimos inferiores da imagem, medidos de baixo para cima.
+Regra máxima da área do rosto (vence enquadramento, câmera, pose e qualquer outra instrução):
+A cabeça inteira do personagem principal, com elmo, crista e cabelo, fica sempre entre 13% e 45% da altura da imagem, medidos de cima para baixo, e entre 14% e 85% da largura.
+Os olhos ficam a cerca de 7/10 da altura, medidos de baixo para cima.
+Afaste a câmera o quanto for preciso: deixe espaço vazio acima da cabeça, mantenha a cabeça com no máximo cerca de um sexto da altura da imagem e nunca a corte.
+Em armadura vazia, a mesma regra vale para o elmo.
 A parte superior deve permitir espaço para a interface da carta sem esconder o rosto.
 A região central deve concentrar os elementos visuais mais importantes.
 Evite posicionar rostos nas extremidades ou em áreas que possam sofrer cortes.

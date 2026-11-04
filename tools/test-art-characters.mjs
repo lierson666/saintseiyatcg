@@ -59,7 +59,7 @@ test('4 e 19: cinquenta Specters viram exército, sem regra de rosto', () => {
   const {text, negative} = buildFake(fake('HADES ARMY', 'Hades'), {count: '50', order: 'specter', formation: 'march', variety: 'different', shot: 'Extreme Wide Shot', god: 'Hades'});
   assert.match(text, /about 50 Specters/);
   assert.match(text, /SCALE AND READING: .*silhouettes/);
-  assert.doesNotMatch(text, /FACE PLACEMENT|EXPRESSION|APPEARANCE/);
+  assert.doesNotMatch(text, /entire head of the (main|protagonist)|EXPRESSION|APPEARANCE/);
   assert.match(text, /point of greatest attention sits at about 7\/10/);
   assert.doesNotMatch(text, SINGLE_ONLY);
   assert.match(negative, /merged silhouettes/);
@@ -75,7 +75,7 @@ test('5: monstro abissal não é humano nem traz humano na frente', () => {
   assert.equal(c.creature.id, 'abyssal_monster');
   assert.match(text, /tentacles/);
   assert.match(text, /not a human in armor/);
-  assert.match(text, /FOCAL POINT: the head, the eyes/);
+  assert.match(text, /FACE ZONE[^\n]*entire head of the creature/);
   assert.doesNotMatch(text, HUMAN_TERMS);
   assert.match(negative, /human warrior in armor/);
   assert.doesNotMatch(negative, /extra limbs|extra fingers/);
@@ -192,10 +192,10 @@ test('17: etnia e cabelo somem do prompt sem apagar o valor guardado', () => {
 
 test('18: em grupo a regra do rosto vale só para o protagonista', () => {
   const moderate = build(GUARD, {count: '4'}).text, collective = build(GUARD, {count: '4', lead: 'collective'}).text;
-  assert.match(moderate, /7\/10 RULE \(protagonist or main face only\)/);
+  assert.match(moderate, /entire head of the protagonist or main face/);
   assert.match(moderate, /PROTAGONIST POSE/);
   assert.match(collective, /GROUP READING/);
-  assert.doesNotMatch(collective, /FACE PLACEMENT|POSE:/);
+  assert.doesNotMatch(collective, /entire head of the (main|protagonist)|POSE:/);
   assert.match(collective, /GROUP READING: .*7\/10/);
   assert.match(build(SPEARMAN, {count: '3', variety: 'leader_uniform'}).text, /one protagonist dominates/);
 });

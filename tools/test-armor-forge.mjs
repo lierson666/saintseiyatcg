@@ -159,3 +159,16 @@ test('regra das mãos no Armor Forge: anéis abertos sem portador; o rascunho na
   const auto = computeDesign(newSpec({name: 'X', faction: 'Ares'}), newComponents());
   assert.match(auto.anatomy.find((x) => x.key === 'gauntlets').text, /base phalanx/);
 });
+
+test('área do rosto: regra máxima no topo do prompt, com zoom out e sem corte', () => {
+  const lines = buildImagePrompt(ISEU, defaultParams(ISEU)).split('\n');
+  assert.match(lines[1], /FACE ZONE, MAXIMUM PRIORITY/);
+  assert.match(lines[1], /from 13% to 45% of the image height measured from the top, and from 14% to 85%/);
+  assert.match(lines[1], /Zoom out as far as needed/);
+  assert.match(lines.at(-1), /cropped head/);
+  const plate = cardFacts(cartas.find((c) => c.id === 'ares-v6-282'), cartas);
+  assert.match(buildImagePrompt(plate, {...defaultParams(plate), presentation: 'mounted'}), /FACE ZONE[^\n]*the entire helmet of the empty armor/);
+  assert.match(modePrompt('concept', design), /the entire helmet of the armor stays inside/);
+  assert.match(modePrompt('equipped', lock, {card: {name: 'ISEU OF PYTHON'}}), /FACE ZONE/);
+  assert.doesNotMatch(modePrompt('blueprint', design), /FACE ZONE/);
+});

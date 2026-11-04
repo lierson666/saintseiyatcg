@@ -2,7 +2,7 @@
 // Cada opção é [id, rótulo no popup, texto em inglês do prompt]. O classificador só sugere; quem decide é o autor.
 import {creatureFromSubtypes, orderFromCard} from './art-taxonomy.js?v=20261102-arte16';
 
-export const PROMPT_VERSION = 'v4';
+export const PROMPT_VERSION = 'v5';
 export const NATURES = [
   ['auto', 'Automático pela carta'], ['character', 'Character Art: personagens e criaturas'], ['scene', 'Narrative Scene Art: acontecimento'], ['technique', 'Technique & Effect Art: poder e efeito'],
   ['equipment', 'Equipment & Artifact Art: objeto'], ['domain', 'Domain & Environment Art: lugar'], ['divine', 'Divine & Conceptual Art: manifestação'],
