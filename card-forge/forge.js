@@ -1,4 +1,4 @@
-import {mountArtPrompt} from './art-prompt.js?v=20261104-armor1';
+import {mountArtPrompt} from './art-prompt.js?v=20261104-armor2';
 import {cardsToXlsx} from './cards-xlsx.js?v=20261102-momento1';
 import {AUDIT_STATUS,auditOf,mountCardFinder,reviewQueue} from './card-finder.js?v=20261102-momento1';
 import {mountRulesRows} from './rules-rows.js?v=20261104-anim4';
@@ -903,7 +903,19 @@ $('#cardLang').addEventListener('change', () => { forceLang($('#cardLang').value
 const topMenus = [...document.querySelectorAll('.forge-drop')];
 document.addEventListener('click', (e) => topMenus.forEach((m) => { if (m.open && (!m.contains(e.target) || (m.matches('.forge-drop--save') && e.target.closest('button')))) m.open = false; }));
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') topMenus.forEach((m) => { m.open = false; }); });
-const openArtPrompt = mountArtPrompt($('#artPromptDialog'), {getCard: () => buildCard(), getCards: () => db.cartas, say, masterUrl: 'art-master-prompt.md?v=20261102-1'});
+// O editor de armaduras abre aqui dentro, por cima da carta: não troca de aba nem perde o que está na tela.
+function openArmorForge(query = '', onClose = null) {
+  const dialog = $('#armorForgeDialog');
+  dialog.onclose = onClose;
+  $('#armorForgeFrame').src = `armor.html?${query}`;
+  dialog.showModal();
+}
+$('#armorForgeClose').addEventListener('click', () => $('#armorForgeDialog').close());
+$('#armorForgeLink').addEventListener('click', (e) => {
+  e.preventDefault();
+  openArmorForge(S.id ? new URLSearchParams({card: S.id, name: S.nome_exibicao_en || S.id, faction: S.faccao || ''}).toString() : '');
+});
+const openArtPrompt = mountArtPrompt($('#artPromptDialog'), {getCard: () => buildCard(), getCards: () => db.cartas, say, masterUrl: 'art-master-prompt.md?v=20261102-1', openArmor: openArmorForge});
 $('#artPrompt').addEventListener('click', () => { $('.forge-drop--art').open = false; openArtPrompt(); });
 $('#exportXlsx').addEventListener('click', () => { // catálogo gravado: edição ainda não salva fica de fora
   const blob = new Blob([cardsToXlsx(db.cartas)], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});

@@ -101,8 +101,9 @@ function renderEditor() {
 }
 
 function promptFor() {
-  const v = version(), d = designNow(), binding = store.bindings[bindingId];
-  if (mode === 'equipped' && !v.lock) return {blocked: 'O personagem equipado só existe depois da aprovação: ele usa o Design Lock.'};
+  const v = version(), binding = store.bindings[bindingId], design = designNow();
+  // Sem aprovação, o personagem equipado usa o estado atual da armadura (autor, 04/11/2026).
+  const d = mode === 'equipped' && !v.lock ? buildLock(design, []) : design;
   if (mode === 'equipped' && !binding) return {blocked: 'Vincule a armadura a uma carta para gerar o personagem equipado.'};
   if (mode === 'totem' && !d.totem) return {blocked: 'Forma totêmica marcada como ausente neste projeto. Nem toda facção precisa dela.'};
   const focus = ALL_COMPONENTS.find(([k]) => k === focusKey)?.[2];
@@ -126,16 +127,14 @@ function statusCard() {
     ${v.lock ? lockHtml(v.lock) : ''}</div>`;
 }
 function promptCard() {
-  const built = promptFor(), v = version(), binds = bindingsOf();
+  const built = promptFor(), binds = bindingsOf();
   const extra = mode === 'detail' ? `<label>Componente em foco<select data-focus>${options(ALL_COMPONENTS.map(([k, l]) => [k, l]), focusKey)}</select></label>` : mode === 'equipped' ? `<label>Carta vinculada<select data-binding>${options([['', 'Escolha'], ...binds.map((b) => [b.id, `${b.card_name || b.card_id} (${b.variant})`])], bindingId)}</select></label>` : '';
   const isolated = ISOLATED_MODES.has(mode) ? '<p class="af-note">Geração isolada: nunca desenha pessoa usando a armadura.</p>' : '';
   return `<div class="af-card"><h2>Prompts em inglês</h2>
     <div class="af-tabs" role="tablist">${MODES.map(([id, label]) => `<button type="button" role="tab" aria-selected="${id === mode}" data-mode="${id}">${esc(label)}</button>`).join('')}</div>
     ${isolated}${extra}
     ${built.blocked ? `<p class="af-warn">${esc(built.blocked)}</p>` : `<textarea id="armorPrompt" class="af-prompt" rows="16" spellcheck="false" translate="no">${esc(typedPrompt ?? built.text)}</textarea>
-    <div class="af-row"><button type="button" class="primary" data-prompt="copy">Copiar prompt</button><button type="button" data-prompt="gpt">Abrir no ChatGPT</button><button type="button" data-prompt="save">Guardar no histórico</button>${typedPrompt !== null ? '<button type="button" data-prompt="reset">Voltar ao prompt gerado</button>' : ''}</div>
-    <label>Registrar imagem gerada com este prompt<input type="file" id="registerImage" accept="image/png,image/jpeg,image/webp"></label>
-    <p class="af-note">O Card Forge não gera a imagem: cole o prompt no gerador${referenceCount() ? ', anexe as referências aprovadas' : ''} e registre o resultado aqui.${v.lock ? ' Imagem nova nunca altera o design aprovado.' : ''}</p>`}</div>`;
+    <div class="af-row"><button type="button" class="primary" data-prompt="copy">Copiar prompt</button><button type="button" data-prompt="gpt">Abrir no ChatGPT</button><button type="button" data-prompt="save">Guardar no histórico</button>${typedPrompt !== null ? '<button type="button" data-prompt="reset">Voltar ao prompt gerado</button>' : ''}</div>`}</div>`;
 }
 function checksHtml(g) {
   const summary = consistencySummary(g), checks = g.consistency?.checks || {};
@@ -157,6 +156,8 @@ function shotHtml(g) {
 function galleryCard() {
   const list = generations(), diverging = list.filter((g) => consistencySummary(g).state === 'DIVERGENT').length;
   return `<div class="af-card"><h2>Imagens e prompts desta versão</h2>
+    ${promptFor().text ? `<label>Registrar imagem gerada com o prompt acima<input type="file" id="registerImage" accept="image/png,image/jpeg,image/webp"></label>
+    <p class="af-note">O Card Forge não gera a imagem: cole o prompt no gerador${referenceCount() ? ', anexe as referências aprovadas' : ''} e registre o resultado aqui.${version().lock ? ' Imagem nova nunca altera o design aprovado.' : ''}</p>` : ''}
     ${diverging ? `<p class="af-block">${diverging} imagem(ns) com divergência em relação ao lock: revisar.</p>` : ''}
     ${version().lock ? '<p class="af-note">A verificação é feita por você olhando a imagem. O sistema não confirma correspondência sozinho.</p>' : ''}
     <div class="af-gallery">${list.map(shotHtml).join('') || '<p class="af-note">Nenhum prompt ou imagem registrado.</p>'}</div></div>`;
@@ -176,7 +177,7 @@ function bindingsCard() {
     <label>Arte<select id="bindVariant">${options(VARIANTS, 'default')}</select></label>
     <label>Ajuste ao personagem (proporção, encaixe, articulação)<input id="bindAdjust" placeholder="Taller and leaner than the armature; same plates"></label>
     <div class="af-row"><button type="button" data-bind>Vincular à v${v.number}</button></div>
-    ${v.lock ? '' : '<p class="af-note">O vínculo fica guardado, mas a arte só usa a armadura depois da aprovação.</p>'}</div>`;
+    ${v.lock ? '' : '<p class="af-note">Sem aprovação, a arte usa o estado atual: mudar a armadura muda o próximo prompt.</p>'}</div>`;
 }
 function historyCard() {
   const rows = (project().history || []).slice().reverse();
@@ -186,7 +187,8 @@ function renderSide() {
   const el = $('#side');
   if (!version()) { el.innerHTML = ''; return; }
   const open = new Set([...el.querySelectorAll('details[open]')].map((d) => d.dataset.key).filter(Boolean)), scroll = window.scrollY;
-  el.innerHTML = statusCard() + promptCard() + galleryCard() + referencesCard() + bindingsCard() + historyCard();
+  // O prompt é o resultado principal; aprovação, imagens e vínculos ficam guardados para quando forem usados.
+  el.innerHTML = `${promptCard()}<div class="af-card"><details data-key="more"><summary>Aprovação, imagens e vínculos (opcional) · v${version().number} ${statusBadge(version().status)}</summary><div class="af-more">${statusCard()}${galleryCard()}${referencesCard()}${bindingsCard()}${historyCard()}</div></details></div>`;
   for (const d of el.querySelectorAll('details[data-key]')) if (open.has(d.dataset.key)) d.open = true;
   window.scrollTo(0, scroll);
 }
@@ -347,8 +349,8 @@ $('#projects').addEventListener('click', async (e) => {
 $('#search').addEventListener('input', renderList);
 $('#stateFilter').addEventListener('change', renderList);
 $('#newProject').addEventListener('click', () => openNew());
-function openNew(values = {}) {
-  const form = $('#newDialog form');
+function openNew(given = {}) {
+  const values = {faction: entryCard?.faction, card: entryCard?.id || '', ...given}, form = $('#newDialog form');
   form.name.value = values.name || '';
   form.faction.value = FACTIONS.includes(values.faction) ? values.faction : 'Neutral';
   form.family.value = values.family || {Athena: 'Cloth', Poseidon: 'Scale', Hades: 'Surplice', Ares: 'Warplate', Artemis: 'Moonplate'}[form.faction.value] || 'Sacred Armor';
@@ -360,7 +362,7 @@ $('#newDialog').addEventListener('close', async () => {
   const form = $('#newDialog form'), card = form.card.value.trim() ? cardFromInput(form.card.value) : null;
   try {
     const done = await api('project', {spec: newSpec({name: form.name.value, faction: form.faction.value, fields: {family: {mode: 'manual', value: form.family.value}, ...(card ? {bearer: {mode: 'manual', value: card.card_name}} : {})}}), components: newComponents(), origin: card || {}});
-    // Quem veio de uma carta já sai vinculado: a arte só usa a armadura depois da aprovação.
+    // Quem veio de uma carta já sai vinculado e a arte já pode usar a armadura.
     if (card) await api('binding', {...card, variant: 'default', version_id: done.version_id, use: true});
     say('Projeto criado em rascunho. Defina a armadura, sem portador.');
     select(done.project_id, done.version_id);
@@ -388,8 +390,11 @@ window.addEventListener('beforeunload', () => { if (savePending) flushSave(); })
   } catch { return say('Não consegui ler as armaduras: abra pelo servidor local e reinicie o card-forge.', true); }
   $('#cardList').innerHTML = cards.map((c) => `<option value="${esc(c.id)}">${esc(c.nome_exibicao_en)}</option>`).join('');
   const q = new URLSearchParams(location.search), wanted = q.get('project');
-  if (q.get('card')) entryCard = {id: q.get('card'), name: q.get('name') || q.get('card')};
+  if (q.get('card')) entryCard = {id: q.get('card'), name: q.get('name') || q.get('card'), faction: q.get('faction')};
+  const bound = entryCard && !wanted && Object.values(store.bindings).find((b) => b.card_id === entryCard.id && store.projects[b.project_id]);
   if (wanted && store.projects[wanted]) select(wanted, store.versions[q.get('version')]?.project_id === wanted ? q.get('version') : null);
+  else if (bound) select(bound.project_id, bound.version_id);
+  else if (entryCard && !q.get('new')) { render(); say(`${entryCard.name} ainda não tem armadura: use Nova armadura ou escolha uma da lista.`); }
   else { const first = Object.values(store.projects).sort((a, b) => b.updated_at.localeCompare(a.updated_at))[0]; if (first && !q.get('new')) select(first.id); else render(); }
-  if (q.get('new')) openNew({name: '', faction: q.get('faction'), card: q.get('card') || ''});
+  if (q.get('new')) openNew();
 })();

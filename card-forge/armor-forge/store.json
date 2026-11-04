@@ -10,7 +10,7 @@
    "origin_card_id": "ares-v6-279",
    "origin_card_name": "ISEU OF PYTHON",
    "created_at": "2026-11-04T16:41:07+00:00",
-   "updated_at": "2026-11-04T16:41:07+00:00",
+   "updated_at": "2026-11-04T16:45:22+00:00",
    "history": [
     {
      "at": "2026-11-04T16:41:07+00:00",
@@ -30,6 +30,20 @@
      "action": "vínculo",
      "version_id": "python-warplate-v1",
      "card_id": "ares-v6-280",
+     "variant": "default"
+    },
+    {
+     "at": "2026-11-04T16:44:49+00:00",
+     "action": "vínculo removido",
+     "version_id": "python-warplate-v1",
+     "card_id": "ares-v6-279",
+     "variant": "default"
+    },
+    {
+     "at": "2026-11-04T16:45:22+00:00",
+     "action": "vínculo",
+     "version_id": "python-warplate-v1",
+     "card_id": "ares-v6-279",
      "variant": "default"
     }
    ]
@@ -400,19 +414,6 @@
  },
  "references": {},
  "bindings": {
-  "bind-9025f1cb60": {
-   "id": "bind-9025f1cb60",
-   "card_id": "ares-v6-279",
-   "variant": "default",
-   "created_at": "2026-11-04T16:41:07+00:00",
-   "project_id": "python-warplate",
-   "version_id": "python-warplate-v1",
-   "card_name": "ISEU OF PYTHON",
-   "armor_type": "",
-   "adjustments": "",
-   "use": true,
-   "updated_at": "2026-11-04T16:41:07+00:00"
-  },
   "bind-e651def056": {
    "id": "bind-e651def056",
    "card_id": "ares-v6-280",
@@ -425,6 +426,19 @@
    "adjustments": "",
    "use": true,
    "updated_at": "2026-11-04T16:41:07+00:00"
+  },
+  "bind-eaa4a8c4a7": {
+   "id": "bind-eaa4a8c4a7",
+   "card_id": "ares-v6-279",
+   "variant": "default",
+   "created_at": "2026-11-04T16:45:22+00:00",
+   "project_id": "python-warplate",
+   "version_id": "python-warplate-v1",
+   "card_name": "ISEU OF PYTHON",
+   "armor_type": "",
+   "adjustments": "",
+   "use": true,
+   "updated_at": "2026-11-04T16:45:22+00:00"
   }
  },
  "generations": {
@@ -445,6 +459,42 @@
     "at": null
    },
    "created_at": "2026-11-04T16:43:40+00:00"
+  },
+  "gen-e3d4cfdd9b": {
+   "id": "gen-e3d4cfdd9b",
+   "project_id": "python-warplate",
+   "version_id": "python-warplate-v1",
+   "mode": "blueprint",
+   "prompt": "Landscape 16:9 high-resolution technical design sheet of one sacred armor: PYTHON WARPLATE, version 1. No readable text, no labels, no names, no numbers: use only blank leader lines and blank callout boxes.\nDIRECTION: orthographic turnaround on one sheet, on the same scale and aligned horizontally: FRONT view, BACK view, LEFT side view, RIGHT side view. Below them, an exploded row of the separate COMPONENTS and close-ups of the ARTICULATIONS of shoulder, elbow, hip and knee. The design must be identical in all views: same plates, same crest, same ornaments, same colors.\nARMOR: PYTHON WARPLATE, a Warplate of Ares, Disaster Legion. Preserve this official name as its identity; do not write it in the image.\nMYTHOLOGY: Python, the monstrous serpent tied to Delphi, slain at the sacred spring and remembered in the oracle.\nASSOCIATED ENTITY: Python, the serpent of Delphi.\nSYMBOLIC MEANING: patient ambush, venom, the prophecy that bites back.\nGRANDEUR: epic: layered plates, deliberate ornament, strong silhouette.\nSILHOUETTE: a threatening narrow-waisted outline: tall serpentine crest rising behind the head, shoulders flared into open jaws, a long tapered segmented torso, curved spines breaking the outline at shoulders and forearms.\nCOVERAGE: near-full coverage: closed plate on head sides, chest and shins; segmented plate everywhere the body bends; the face stays open.\nMATERIALS: lacquered red steel plates mounted over darkened bronze understructure, with visible bronze rivets.\nPALETTE: primary deep war red lacquer; secondary darkened bronze; details dull ember orange in the recesses between scales.\nFINISH, TEXTURE AND ORNAMENT: satin lacquer chipped at the edges to reveal bronze, scale outlines engraved into every plate.\nCONDITION: battle-worn and scratched, structurally intact.\nSYMMETRY: bilaterally symmetrical, broken only by the serpentine crest that curves slightly to the left.\nPROPORTIONS AND ARTICULATION: human proportions with shoulders one and a half times the waist width; visible sliding lames at elbows, waist and knees allow real movement.\nCOMPONENTS (each one is a separate, visibly built part):\n- Helmet (mandatory): open-faced helmet with a tall serpentine crest running from brow to nape, scale-engraved cheek guards curving forward like closed fangs.\n- Neck guard: three overlapping scale-edged rings forming a gorget, like the throat of a snake.\n- Pauldrons (mandatory): each pauldron shaped as an open serpent jaw seen from the side: upper plate with two hooked fangs, lower plate as the mandible, ember recess inside the mouth.\n- Chest plate (mandatory): segmented cuirass of overlapping diamond scale-plates descending in a chevron from a central bronze keel; each row overlaps the row beneath.\n- Back plate: a single central spine of curved bronze plates running from nape to waist, flanked by smaller overlapping scale rows.\n- Abdomen: five narrow lames that slide over one another, each edge notched like a belly scale.\n- Waist: narrow bronze belt whose buckle is a coiled serpent knot.\n- Upper arms: upper arm bands of overlapping scales, open on the inner side.\n- Elbows: articulated couters ending in one short backward-curving spine.\n- Forearms: closed red vambraces with three curved spines along the outer edge.\n- Gauntlets: articulated bronze-and-red gauntlets with five separate plated fingers, knuckle plates cut as small scales.\n- Hips: overlapping scale tassets hanging lower at the back, suggesting a tail base.\n- Thighs: front thigh plates with engraved scale lines, open behind the leg.\n- Knees: poleyns with a single forward-curving spine over a sliding lame.\n- Greaves: closed greaves with a raised central ridge of small overlapping scales.\n- Boots: segmented bronze sabatons with a pointed toe plate.\nMYTHOLOGICAL ELEMENTS (forged into the armor):\n- Fangs (mandatory): hooked fangs on the pauldron jaws and cheek guards, in polished dark bronze.\n- Scales (mandatory): overlapping diamond scale geometry as the base pattern of every red plate.\n- Spikes (mandatory): curved spines at shoulders, forearms and knees, always curving backward.\n- Symbols: small engraved omphalos stone of Delphi at the center of the chest keel.\n- Ornaments (mandatory): serpentine crest with a sawtooth edge, the single most identifying ornament.\nOTHER MYTHOLOGICAL ELEMENTS (claws): add one only if it derives directly from Python, the serpent of Delphi; keep it restrained.\nEXPLICITLY ABSENT: Mask, Special components, Horns, Wings, Tails, Gems, Weapons, Accessories. These parts do not exist on this armor.\nPRESENTATION: empty armor on a thin neutral armature, flat even light, plain light-grey sheet background.\n\nNEGATIVE PROMPT: person, human, human body, face, eyes or skin inside the armor, hands inside the gauntlets, mannequin with a face, model wearing the armor, character, crowd, different designs between views, perspective distortion, garbled lettering, mask, special components, horns, wings, tails, gems, weapons, accessories, generic fantasy armor, merged plates, incoherent joints, unreadable silhouette, existing anime armor designs, text, watermark.",
+   "card_id": "",
+   "card_name": "",
+   "variant": "",
+   "note": "",
+   "image": null,
+   "consistency": {
+    "checks": {},
+    "note": "",
+    "at": null
+   },
+   "created_at": "2026-11-04T16:46:37+00:00"
+  },
+  "gen-e51dc22577": {
+   "id": "gen-e51dc22577",
+   "project_id": "python-warplate",
+   "version_id": "python-warplate-v1",
+   "mode": "totem",
+   "prompt": "Vertical 3:4 high-resolution illustration of one sacred armor in its symbolic stored form: PYTHON WARPLATE, version 1. Illustration only: no card frame, no text, no names, no logos, no numbers, no stats, no interface symbols, no watermarks.\nDIRECTION: all plates reassembled into a coiled serpent rearing to strike: pauldrons become the open jaws, cuirass segments become the coils, the crest becomes the hood. The form is built only from the same plates listed below; each plate stays recognizable as a piece of the armor. It stands by itself as a self-sustaining metal construction.\nARMOR: PYTHON WARPLATE, a Warplate of Ares, Disaster Legion. Preserve this official name as its identity; do not write it in the image.\nMYTHOLOGY: Python, the monstrous serpent tied to Delphi, slain at the sacred spring and remembered in the oracle.\nASSOCIATED ENTITY: Python, the serpent of Delphi.\nSYMBOLIC MEANING: patient ambush, venom, the prophecy that bites back.\nGRANDEUR: epic: layered plates, deliberate ornament, strong silhouette.\nSILHOUETTE: a threatening narrow-waisted outline: tall serpentine crest rising behind the head, shoulders flared into open jaws, a long tapered segmented torso, curved spines breaking the outline at shoulders and forearms.\nCOVERAGE: near-full coverage: closed plate on head sides, chest and shins; segmented plate everywhere the body bends; the face stays open.\nMATERIALS: lacquered red steel plates mounted over darkened bronze understructure, with visible bronze rivets.\nPALETTE: primary deep war red lacquer; secondary darkened bronze; details dull ember orange in the recesses between scales.\nFINISH, TEXTURE AND ORNAMENT: satin lacquer chipped at the edges to reveal bronze, scale outlines engraved into every plate.\nCONDITION: battle-worn and scratched, structurally intact.\nSYMMETRY: bilaterally symmetrical, broken only by the serpentine crest that curves slightly to the left.\nPROPORTIONS AND ARTICULATION: human proportions with shoulders one and a half times the waist width; visible sliding lames at elbows, waist and knees allow real movement.\nCOMPONENTS (each one is a separate, visibly built part):\n- Helmet (mandatory): open-faced helmet with a tall serpentine crest running from brow to nape, scale-engraved cheek guards curving forward like closed fangs.\n- Neck guard: three overlapping scale-edged rings forming a gorget, like the throat of a snake.\n- Pauldrons (mandatory): each pauldron shaped as an open serpent jaw seen from the side: upper plate with two hooked fangs, lower plate as the mandible, ember recess inside the mouth.\n- Chest plate (mandatory): segmented cuirass of overlapping diamond scale-plates descending in a chevron from a central bronze keel; each row overlaps the row beneath.\n- Back plate: a single central spine of curved bronze plates running from nape to waist, flanked by smaller overlapping scale rows.\n- Abdomen: five narrow lames that slide over one another, each edge notched like a belly scale.\n- Waist: narrow bronze belt whose buckle is a coiled serpent knot.\n- Upper arms: upper arm bands of overlapping scales, open on the inner side.\n- Elbows: articulated couters ending in one short backward-curving spine.\n- Forearms: closed red vambraces with three curved spines along the outer edge.\n- Gauntlets: articulated bronze-and-red gauntlets with five separate plated fingers, knuckle plates cut as small scales.\n- Hips: overlapping scale tassets hanging lower at the back, suggesting a tail base.\n- Thighs: front thigh plates with engraved scale lines, open behind the leg.\n- Knees: poleyns with a single forward-curving spine over a sliding lame.\n- Greaves: closed greaves with a raised central ridge of small overlapping scales.\n- Boots: segmented bronze sabatons with a pointed toe plate.\nMYTHOLOGICAL ELEMENTS (forged into the armor):\n- Fangs (mandatory): hooked fangs on the pauldron jaws and cheek guards, in polished dark bronze.\n- Scales (mandatory): overlapping diamond scale geometry as the base pattern of every red plate.\n- Spikes (mandatory): curved spines at shoulders, forearms and knees, always curving backward.\n- Symbols: small engraved omphalos stone of Delphi at the center of the chest keel.\n- Ornaments (mandatory): serpentine crest with a sawtooth edge, the single most identifying ornament.\nOTHER MYTHOLOGICAL ELEMENTS (claws): add one only if it derives directly from Python, the serpent of Delphi; keep it restrained.\nEXPLICITLY ABSENT: Mask, Special components, Horns, Wings, Tails, Gems, Weapons, Accessories. These parts do not exist on this armor.\nPRESENTATION: centered on a plain neutral plinth, dark background, one clear light.\nRENDERING: clean neutral concept rendering with even studio light, so shape and material read clearly. This is not the final card art style.\n\nNEGATIVE PROMPT: person, human, human body, face, eyes or skin inside the armor, hands inside the gauntlets, mannequin with a face, model wearing the armor, character, crowd, living animal, organic flesh, extra parts not in the armor, mask, special components, horns, wings, tails, gems, weapons, accessories, generic fantasy armor, merged plates, incoherent joints, unreadable silhouette, existing anime armor designs, text, watermark.",
+   "card_id": "",
+   "card_name": "",
+   "variant": "",
+   "note": "",
+   "image": null,
+   "consistency": {
+    "checks": {},
+    "note": "",
+    "at": null
+   },
+   "created_at": "2026-11-04T16:50:00+00:00"
   }
  }
 }

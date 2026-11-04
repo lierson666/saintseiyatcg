@@ -1,6 +1,7 @@
 /* ARMOR FORGE: mesma paleta do Card Forge (forge.css), em três colunas. */
 .af-top { position: sticky; top: 0; z-index: 3; background: var(--bg); }
 .af-top h1 a { color: var(--gold); text-decoration: none; }
+.embedded .af-top > a { display: none; }
 .af-pipe { display: flex; flex-wrap: wrap; gap: 2px; margin: 0; padding: 0; list-style: none; font-size: 11px; letter-spacing: .03em; }
 .af-pipe li { padding: 3px 7px; border: 1px solid var(--line); border-radius: 4px; color: var(--muted); }
 .af-pipe li.done { color: var(--text); border-color: #6b5a22; }
@@ -56,5 +57,8 @@
 .af-new { display: grid; gap: 8px; min-width: 340px; }
 .af-binds { display: grid; gap: 4px; margin: 0; padding: 0; list-style: none; font-size: 12px; }
 .af-binds li { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; justify-content: space-between; padding: 4px 0; border-top: 1px solid var(--line); }
+@media (min-width: 1181px) { .af-side { position: sticky; top: 64px; max-height: calc(100vh - 80px); overflow: auto; } }
+.af-more { display: grid; gap: 10px; }
+.af-more .af-card { padding: 8px 0 0; border-width: 1px 0 0; border-radius: 0; background: none; }
 @media (max-width: 1180px) { .af-grid { grid-template-columns: minmax(0, 1fr); } .af-list { position: static; max-height: none; } .af-field { grid-template-columns: 120px 100px minmax(0, 1fr); } }
 @media (max-width: 620px) { .af-field { grid-template-columns: minmax(0, 1fr); } .af-field .af-req { grid-column: 1; } }

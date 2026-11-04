@@ -2,8 +2,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {PYTHON_WARPLATE as P, armorForArt, approvalIssues, buildLock, computeDesign, consistencySummary, lockLines, modePrompt, newComponents, newSpec} from '../card-forge/armor-model.js';
-import {armorChoice, buildDirectorPrompt, buildImagePrompt, cardFacts, defaultParams, restoreEntry, savedEntry} from '../card-forge/art-prompt.js';
+import {ARAKI_STYLE, MODES, PYTHON_WARPLATE as P, armorForArt, approvalIssues, buildLock, computeDesign, consistencySummary, lockLines, modePrompt, newComponents, newSpec} from '../card-forge/armor-model.js';
+import {STYLE_GROUPS, armorChoice, buildDirectorPrompt, buildImagePrompt, cardFacts, defaultParams, restoreEntry, savedEntry} from '../card-forge/art-prompt.js';
 
 const {cartas} = JSON.parse(readFileSync(new URL('../data/cards.json', import.meta.url), 'utf8'));
 const ISEU = cardFacts(cartas.find((c) => c.id === 'ares-v6-279'), cartas);
@@ -27,6 +27,16 @@ test('os cinco modos saem separados e os isolados nunca pedem portador', () => {
   assert.match(texts.totem, /coiled serpent/);
   assert.match(texts.detail, /close study of pauldrons/);
   assert.match(texts.concept, /empty on a neutral matte armature|self-supporting/);
+});
+
+test('todo prompt do criador de armadura sai no traço Araki, sem nome de ilustrador', () => {
+  assert.ok(STYLE_GROUPS.Anime.map(([text]) => text).includes(ARAKI_STYLE), 'mesmo texto do estilo Araki do gerador');
+  for (const [mode] of MODES) {
+    const text = modePrompt(mode, mode === 'equipped' ? lock : design, {card: {name: 'ISEU OF PYTHON'}});
+    assert.ok(text.includes(ARAKI_STYLE), mode);
+    assert.match(text, /photorealistic render/, mode);
+    assert.doesNotMatch(text, /Araki|neutral concept rendering/, mode);
+  }
 });
 
 test('componente manual, automático e ausente mudam o prompt de forma diferente', () => {
@@ -77,7 +87,7 @@ test('a mesma armadura em outra carta mantém o bloco inteiro do lock', () => {
   assert.ok(block(a).length > 400);
 });
 
-test('sem armadura escolhida ou sem aprovação, o prompt fica como antes', () => {
+test('sem armadura escolhida ou desmarcada, o prompt fica como antes', () => {
   const base = defaultParams(ISEU), plain = buildImagePrompt(ISEU, base);
   assert.equal(buildImagePrompt(ISEU, {...base, armorSource: 'original', armorDesign: null}), plain);
   assert.equal(buildImagePrompt(ISEU, {...base, armorSource: 'original', armorUse: false, armorDesign}), plain);
@@ -87,9 +97,14 @@ test('sem armadura escolhida ou sem aprovação, o prompt fica como antes', () =
   assert.doesNotMatch(none, /brutal blood-red war armor/);
 });
 
-test('rascunho nunca chega à arte, mesmo com id certo', () => {
-  const store = {projects: {p: {id: 'p'}}, references: {r: {image: 'a.png'}}, versions: {d: {id: 'd', project_id: 'p', status: 'DRAFT', number: 1, lock: null}, a: {id: 'a', project_id: 'p', status: 'APPROVED', number: 2, lock: {name: 'X', reference_ids: ['r']}}, x: {id: 'x', project_id: 'p', status: 'ARCHIVED', number: 3, lock: {name: 'X', reference_ids: []}}}};
-  assert.equal(armorForArt(store, 'p', 'd'), null);
+test('rascunho chega à arte no estado atual, sem lock; arquivada não chega', () => {
+  const store = {projects: {p: {id: 'p'}}, components: {c: {version_id: 'd', ...P.components.find((x) => x.key === 'helmet')}}, references: {r: {image: 'a.png'}, s: {id: 's', version_id: 'd', approved: true, image: 's.png'}, t: {id: 't', version_id: 'd', approved: false, image: 't.png'}}, versions: {d: {id: 'd', project_id: 'p', status: 'DRAFT', number: 1, lock: null, spec: P.spec}, a: {id: 'a', project_id: 'p', status: 'APPROVED', number: 2, lock: {name: 'X', reference_ids: ['r']}}, x: {id: 'x', project_id: 'p', status: 'ARCHIVED', number: 3, lock: {name: 'X', reference_ids: []}}}};
+  const draft = armorForArt(store, 'p', 'd');
+  assert.equal(draft.draft, true);
+  assert.deepEqual(draft.references, ['s.png']);
+  assert.match(draft.lock.helmet, /serpentine crest/);
+  assert.equal(store.versions.d.lock, null);
+  assert.equal(armorForArt(store, 'p', 'a').draft, false);
   assert.equal(armorForArt(store, 'p', 'x'), null);
   assert.deepEqual(armorForArt(store, 'p', 'a', 'taller').references, ['a.png']);
   assert.equal(armorForArt(store, 'p', 'a', 'taller').adjustments, 'taller');

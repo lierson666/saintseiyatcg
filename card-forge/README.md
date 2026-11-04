@@ -13,9 +13,9 @@ Abra `http://localhost:8765/card-forge/studio.html`. Consulte a [documentação 
 
 ## Armor Forge
 
-O link **Armor Forge** abre `armor.html`: a armadura original nasce sem portador, é aprovada e só então vira referência da arte. Fluxo: especificar, gerar o prompt de conceito, registrar a imagem, gerar a ficha técnica, marcar a referência, revisar e aprovar. A aprovação grava o Design Lock; alterar depois cria nova versão, e cada carta continua na versão apontada.
+O link **Armor Forge** abre o editor dentro do próprio Card Forge, por cima da carta. Preencha a armadura e copie o prompt: é só isso que o editor pede. Imagens, aprovação e vínculos ficam em **Aprovação, imagens e vínculos (opcional)**. Todo prompt deste editor sai no traço de Shingo Araki, descrito sem o nome, sem opção de troca; a arte final da carta continua com o traço escolhido no popup. Fluxo completo: especificar, gerar o prompt de conceito, registrar a imagem, gerar a ficha técnica, marcar a referência, revisar e aprovar. A aprovação grava o Design Lock; alterar depois cria nova versão, e cada carta continua na versão apontada.
 
-No popup **Gerar arte**, a seção **Armadura / Equipamento** escolhe entre o comportamento atual, armadura do catálogo, projeto original ou nenhuma armadura. O prompt só incorpora a armadura com versão aprovada ou canônica.
+No popup **Gerar arte**, a seção **Armadura / Equipamento** escolhe entre o comportamento atual, armadura do catálogo, projeto original ou nenhuma armadura. O prompt usa a armadura mesmo sem aprovação, no estado atual; só a versão aprovada fica congelada no Design Lock. Versão arquivada não entra.
 
 O Card Forge não chama gerador de imagem: copie o prompt, anexe as referências e registre o resultado. A verificação de consistência é feita pelo autor olhando a imagem.
 

@@ -726,7 +726,7 @@ export const savedEntry = (f, p, prompt) => ({params: Object.fromEntries(Object.
 export const restoreEntry = (f, entry) => ({...defaultParams(f), ...(entry?.params || {})});
 
 // Sistema completo: o GPT recebe o Master, trata o que veio escolhido como decisão do autor e responde no formato da seção 12.
-export const buildDirectorPrompt = (master, f, p) => `${master.trim()}\n\n---\nSOLICITAÇÃO DE ARTE\nExecute o processo da seção 11 para a carta abaixo e responda no formato obrigatório da seção 12. Não gere a imagem. Os parâmetros são decisões do autor; desenvolva-os com especificidade. Onde a narrativa estiver em branco, proponha a cena. ${armorChoice(p)?.kind === 'locked' ? 'A armadura desta carta já está aprovada: siga o ARMOR DESIGN LOCK e as referências dela anexadas, sem redesenhar. ' : ''}${p.generic ? 'Esta carta é genérica e não tem imagens de referência: crie um design original, sem usar personagens, armaduras ou fatos do cânone.' : 'As imagens de referência vão anexadas a esta mensagem: analise-as na Etapa 2.'}\n\n${buildImagePrompt(f, p)}`;
+export const buildDirectorPrompt = (master, f, p) => `${master.trim()}\n\n---\nSOLICITAÇÃO DE ARTE\nExecute o processo da seção 11 para a carta abaixo e responda no formato obrigatório da seção 12. Não gere a imagem. Os parâmetros são decisões do autor; desenvolva-os com especificidade. Onde a narrativa estiver em branco, proponha a cena. ${armorChoice(p)?.kind === 'locked' ? 'A armadura desta carta já está definida: siga o ARMOR DESIGN LOCK e as referências dela anexadas, sem redesenhar. ' : ''}${p.generic ? 'Esta carta é genérica e não tem imagens de referência: crie um design original, sem usar personagens, armaduras ou fatos do cânone.' : 'As imagens de referência vão anexadas a esta mensagem: analise-as na Etapa 2.'}\n\n${buildImagePrompt(f, p)}`;
 
 const esc = (t) => String(t ?? '').replace(/[&<>"]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
 const select = (name, label, opts, value) => `<label>${label}<select name="${name}">${opts.map(([v, t]) => `<option value="${esc(v)}"${v === value ? ' selected' : ''}>${esc(t ?? v)}</option>`).join('')}</select></label>`;
@@ -736,7 +736,7 @@ const warningHtml = (f, p) => promptWarnings(f, p).map((w) => `<p class="ap-warn
 const GPT_URL = 'https://chatgpt.com/';
 const URL_LIMIT = 7000; // acima disso o link pode falhar: o GPT abre vazio e o prompt fica copiado
 
-export function mountArtPrompt(dialog, {getCard, getCards, say, masterUrl}) {
+export function mountArtPrompt(dialog, {getCard, getCards, say, masterUrl, openArmor}) {
   let facts, params, master = '', decisions = null, variant = 'default', savedPrompt = '', armorStore = null;
   const cardId = () => getCard().id;
   const output = () => dialog.querySelector('textarea[name=prompt]');
@@ -799,10 +799,10 @@ export function mountArtPrompt(dialog, {getCard, getCards, say, masterUrl}) {
     if (!armorStore) return `<h3 class="ap-section">Armadura / Equipamento</h3>${sourceField}<p class="ap-warn ap-wide">Armor Forge indisponível: reinicie o servidor do Card Forge.</p>`;
     const list = armorProjects().filter((x) => x.id === p.armorProject || ((!p.armorType || family(x) === p.armorType) && armorStore.versions[x.head_version_id]?.status !== 'ARCHIVED')).sort((a, b) => Number(b.faction === f.faction) - Number(a.faction === f.faction) || a.name.localeCompare(b.name));
     const versions = armorVersions(p.armorProject), v = armorStore.versions[p.armorVersion], ready = Boolean(p.armorDesign);
-    const refs = ready ? p.armorDesign.references : (v ? Object.values(armorStore.references).filter((r) => r.version_id === v.id && r.image).map((r) => r.image) : []);
+    const refs = ready ? p.armorDesign.references : [];
     const shots = v ? Object.values(armorStore.generations).filter((g) => g.version_id === v.id && g.image) : [], diverging = shots.filter((g) => consistencySummary(g).state === 'DIVERGENT').length, unchecked = shots.filter((g) => g.mode === 'card_art' && consistencySummary(g).state === 'UNCHECKED').length;
     const newer = versions.filter((x) => x.lock && x.status !== 'ARCHIVED' && v && x.number > v.number).pop();
-    const statusText = !v ? 'Nenhuma armadura escolhida.' : `Status: ${v.status} (${STATE_LABELS[v.status]}), versão ${v.number}. ${ready ? (p.armorUse ? 'O prompt incorpora o Design Lock.' : 'Marque abaixo para usar no prompt.') : 'Ainda sem aprovação: o prompt não usa esta armadura.'}`;
+    const statusText = !v ? 'Nenhuma armadura escolhida.' : `Status: ${v.status} (${STATE_LABELS[v.status]}), versão ${v.number}. ${!ready ? 'Arquivada: o prompt não usa esta armadura.' : !p.armorUse ? 'Marque abaixo para usar no prompt.' : p.armorDesign.draft ? 'O prompt usa o estado atual, sem aprovação: se a armadura mudar, o próximo prompt muda junto.' : 'O prompt incorpora o Design Lock.'}`;
     return `<h3 class="ap-section">Armadura / Equipamento</h3>${offer}${sourceField}
       ${select('armorType', 'Tipo de armadura', [['', 'Todos'], ...FAMILIES], p.armorType || '')}
       ${select('armorProject', 'Armadura vinculada', [['', 'Nenhuma'], ...list.map((x) => { const s = armorStore.versions[x.head_version_id]?.status; return [x.id, `${x.name} · ${x.faction} · ${s}`]; })], p.armorProject || '')}
@@ -810,10 +810,10 @@ export function mountArtPrompt(dialog, {getCard, getCards, say, masterUrl}) {
       <p class="ap-note">${esc(statusText)}</p>
       ${newer ? `<p class="ap-note">Existe versão travada mais nova: v${newer.number}. A carta continua na versão escolhida até você trocar.</p>` : ''}
       ${diverging ? `<p class="ap-warn ap-wide">${diverging} imagem(ns) desta versão com divergência do lock: revise no Armor Forge.</p>` : ''}
-      ${p.armorProject ? `<label class="ap-check ap-wide"><input type="checkbox" name="armorUse"${p.armorUse ? ' checked' : ''}${ready ? '' : ' disabled'}> Usar projeto aprovado na geração</label>
+      ${p.armorProject ? `<label class="ap-check ap-wide"><input type="checkbox" name="armorUse"${p.armorUse ? ' checked' : ''}${ready ? '' : ' disabled'}> Usar esta armadura na geração</label>
       <div class="ap-wide">${input('armorAdjust', 'Ajuste ao personagem (proporção, encaixe, articulação)', p.armorAdjust, 'Taller and leaner; same plates')}</div>` : ''}
       <div class="ap-wide ap-armor-actions"><button type="button" data-armor="new">Criar nova armadura</button>${p.armorProject ? '<button type="button" data-armor="edit">Editar projeto</button>' : ''}${ready && p.armorUse ? `<label>Registrar arte gerada no projeto<input type="file" data-armor-image accept="image/png,image/jpeg,image/webp"></label>` : ''}</div>
-      ${p.armorProject ? fold('armor-refs', `Visualizar referências (${refs.length})`, refs.length ? `<div class="ap-wide ap-armor-refs">${refs.map((name) => `<a href="${imageUrl(name)}" target="_blank" rel="noopener" download><img src="${imageUrl(name)}" alt="Referência da armadura" loading="lazy"></a>`).join('')}</div><p class="ap-note">${ready ? 'Anexe estas imagens junto do prompt, quando o gerador aceitar imagens.' : 'Ainda não aprovadas.'}${unchecked ? ` ${unchecked} arte(s) registrada(s) sem verificação visual.` : ''}</p>` : '<p class="ap-note">Sem imagens registradas.</p>') : ''}`;
+      ${p.armorProject ? fold('armor-refs', `Visualizar referências (${refs.length})`, refs.length ? `<div class="ap-wide ap-armor-refs">${refs.map((name) => `<a href="${imageUrl(name)}" target="_blank" rel="noopener" download><img src="${imageUrl(name)}" alt="Referência da armadura" loading="lazy"></a>`).join('')}</div><p class="ap-note">${ready && refs.length ? 'Anexe as referências junto do prompt, quando o gerador aceitar imagens.' : 'Sem referência aprovada: nada a anexar.'}${unchecked ? ` ${unchecked} arte(s) registrada(s) sem verificação visual.` : ''}</p>` : '<p class="ap-note">Sem imagens registradas.</p>') : ''}`;
   }
   function draw() {
     syncArmor();
@@ -965,8 +965,10 @@ export function mountArtPrompt(dialog, {getCard, getCards, say, masterUrl}) {
       return;
     }
     const armorAction = e.target.closest('[data-armor]')?.dataset.armor;
-    if (armorAction === 'new') { const q = new URLSearchParams({new: '1', card: cardId() || '', name: facts.name, faction: facts.faction || ''}); window.open(`armor.html?${q}`, '_blank'); return; }
-    if (armorAction === 'edit') { window.open(`armor.html?project=${encodeURIComponent(params.armorProject)}&version=${encodeURIComponent(params.armorVersion)}`, '_blank'); return; }
+    // Ao voltar do editor, aprovação ou vínculo novo já aparecem no popup.
+    const armorBack = async () => { await loadArmorStore(); adoptBinding(); draw(); };
+    if (armorAction === 'new') return void openArmor(new URLSearchParams({new: '1', card: cardId() || '', name: facts.name, faction: facts.faction || ''}).toString(), armorBack);
+    if (armorAction === 'edit') return void openArmor(new URLSearchParams({project: params.armorProject, version: params.armorVersion}).toString(), armorBack);
     const action = e.target.closest('[data-ap]')?.dataset.ap;
     if (!action) return;
     if (action === 'save' || action === 'approve') {
@@ -999,7 +1001,7 @@ export function mountArtPrompt(dialog, {getCard, getCards, say, masterUrl}) {
     window.open(fits ? url : GPT_URL, '_blank', 'noopener');
     say(fits ? 'ChatGPT aberto com o prompt.' : copied ? 'Prompt copiado: cole no ChatGPT.' : 'Copie o prompt e cole no ChatGPT.', !fits && !copied);
   });
-  // Volta da aba do Armor Forge: aprovação ou vínculo novo aparecem sem fechar o popup, e só redesenha se algo mudou.
+  // O Armor Forge também pode estar aberto em outra aba: ao voltar, só redesenha se algo mudou.
   window.addEventListener('focus', async () => {
     if (!dialog.open) return;
     const before = JSON.stringify(armorStore);

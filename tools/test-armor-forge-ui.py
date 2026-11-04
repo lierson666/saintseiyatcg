@@ -78,10 +78,11 @@ def main():
             forge.screenshot(path=str(SHOTS / "01-modal-oferta.png"))
 
             # 2. Criar projeto original de armadura, a partir da carta.
-            with context.expect_page() as popup:
-                dialog.get_by_role("button", name="Desenvolver armadura original").click()
-            armor = popup.value
-            armor.on("pageerror", lambda e: errors.append(f"armor: {e}"))
+            # O editor abre dentro do Card Forge, sem aba nova, e já vem com a carta.
+            dialog.get_by_role("button", name="Desenvolver armadura original").click()
+            forge.locator("#armorForgeDialog").wait_for(state="visible")
+            assert len(context.pages) == 1
+            armor = forge.frame_locator("#armorForgeFrame")
             armor.locator("#newDialog form").wait_for(state="visible")
             assert armor.locator("#newDialog [name=card]").input_value() == "ares-v6-279"
             assert armor.locator("#newDialog [name=faction]").input_value() == "Ares"
@@ -89,12 +90,33 @@ def main():
             armor.locator("#newDialog [name=name]").fill("TEST WARPLATE")
             armor.locator("#createProject").click()
             armor.locator("[data-spec=name]").wait_for()
+            # Só o prompt à vista: gerar não pede imagem nem aprovação, e o prompt já responde ao que foi criado.
+            assert "TEST WARPLATE" in armor.locator("#armorPrompt").input_value()
+            assert not armor.locator('details[data-key="more"]').evaluate("(d) => d.open")
+            forge.screenshot(path=str(SHOTS / "02-editor-no-forge.png"))
+            forge.locator("#armorForgeClose").click()
+            forge.locator("#artPromptDialog [name=armorProject]").wait_for()
+            assert dialog.locator("[name=armorSource]").input_value() == "original"
+            # Sem aprovação, o prompt da carta já usa a armadura no estado atual e avisa disso.
+            assert "TEST WARPLATE" in dialog.locator("textarea[name=prompt]").input_value() and "brutal blood-red" not in dialog.locator("textarea[name=prompt]").input_value()
+            assert dialog.locator(".ap-note", has_text="sem aprovação").count() == 1
             data = store()
             assert len(data["projects"]) == 1 and len(data["versions"]) == 1 and len(data["components"]) == 30
             pid = next(iter(data["projects"]))
             v1 = f"{pid}-v1"
             assert data["versions"][v1]["status"] == "DRAFT"
             assert next(iter(data["bindings"].values()))["card_id"] == "ares-v6-279"
+            # O restante do fluxo roda na página direta, que continua existindo.
+            armor = context.new_page()
+            armor.on("pageerror", lambda e: errors.append(f"armor: {e}"))
+            armor.goto(f"{url}/card-forge/armor.html?project={pid}")
+            armor.locator("[data-spec=name]").wait_for()
+
+            def more():
+                box = armor.locator('details[data-key="more"]')
+                if not box.evaluate("(d) => d.open"):
+                    box.locator("summary").first.click()
+
 
             # 3. Definir componentes um a um, nos três modos, e confirmar que sobrevive ao recarregar.
             def component(key, mode, text=None, required=False):
@@ -127,6 +149,7 @@ def main():
             assert context.pages and any(g["mode"] == "concept" and "open helm" in g["prompt"] for g in store()["generations"].values())
 
             # 5. Registrar a imagem gerada no projeto: vai para o disco e é servida de volta.
+            more()
             armor.locator("#registerImage").set_input_files(image("conceito.png", (200, 30, 30)))
             armor.locator('.af-shot img').first.wait_for()
             concept = next(g for g in store()["generations"].values() if g["mode"] == "concept")
@@ -180,7 +203,7 @@ def main():
             # 9. Arte de carta com essa referência: volta ao popup, que atualiza sozinho.
             forge.bring_to_front()
             forge.evaluate("window.dispatchEvent(new Event('focus'))")
-            forge.wait_for_function("document.querySelector('#artPromptDialog textarea[name=prompt]').value.includes('ARMOR DESIGN LOCK')")
+            forge.wait_for_function("document.querySelector('#artPromptDialog textarea[name=prompt]').value.includes('ARMOR REFERENCES: 1 approved image')")
             final = dialog.locator("textarea[name=prompt]").input_value()
             assert "brutal blood-red" not in final and "sawtooth" in final and "ARMOR REFERENCES: 1 approved image" in final
             forge.locator("#artPromptDialog [name=armorProject]").scroll_into_view_if_needed()
@@ -198,6 +221,7 @@ def main():
             # A verificação de consistência só registra o que o autor apontou; divergência fica visível.
             armor.bring_to_front()
             armor.reload()
+            more()
             shot = armor.locator(f'[data-generation="{art[0]["id"]}"]')
             shot.locator("summary", has_text="Verificar consistência").click()
             shot.locator('[data-check-key="helmet"]').select_option("diverge")
@@ -229,6 +253,7 @@ def main():
             # 11. Nova versão sem perder a anterior: v1 e o lock ficam, e as cartas continuam presas à v1.
             armor.bring_to_front()
             armor.reload()
+            more()
             armor.locator("#decisionNote").fill("ombreiras maiores")
             armor.locator("[data-new-version]").click()
             armor.locator('[data-component="pauldrons"] [data-comp-value]:not([readonly])').wait_for()
