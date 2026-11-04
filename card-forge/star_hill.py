@@ -536,6 +536,56 @@ def save_card_voice(body, atomic_write, root=ROOT):
     return voices
 
 
+CARD_ANIMS = 'data/card-animations.json'
+ANIM_EFFECTS = ('slash', 'impact', 'ice', 'fire', 'lightning', 'poison', 'light', 'dark', 'explosion', 'energy', 'shield', 'heal', 'power',
+                'muzzle', 'blood', 'pickup', 'dash', 'blink', 'sparkle', 'rain', 'snow', 'fog', 'embers', 'fireflies', 'leaves', 'bubbles')  # playtest/divine/pixel-vfx.js
+ANIM_MOMENTS = ('golpe', 'impacto', 'impacto_deus', 'strike', 'carga', 'declarar', 'cast', 'entrada', 'retorno', 'morte', 'dano', 'soul', 'escudo', 'cura', 'habilidade', 'ultimate', 'poder_divino', 'poder_dominio', 'awaken')
+
+
+def _anim_tuning(value):
+    """Ajustes do gestor por efeito: ligado, tamanho, velocidade e cor."""
+    if not isinstance(value, dict) or set(value) - set(ANIM_EFFECTS):
+        raise ValueError('Efeito inválido.')
+    for tune in value.values():
+        if not isinstance(tune, dict) or set(tune) != {'ligado', 'tamanho', 'velocidade', 'cor'} or not isinstance(tune['ligado'], bool):
+            raise ValueError('Ajuste de efeito inválido.')
+        for key, low, high in (('tamanho', 0.5, 2), ('velocidade', 0.25, 2)):
+            if isinstance(tune[key], bool) or not isinstance(tune[key], (int, float)) or not low <= tune[key] <= high:
+                raise ValueError('Ajuste de efeito inválido.')
+        if tune['cor'] is not None and not (isinstance(tune['cor'], str) and re.fullmatch(r'#[0-9a-fA-F]{6}', tune['cor'])):
+            raise ValueError('Cor inválida.')
+    return value
+
+
+def save_card_anim(body, atomic_write, root=ROOT):
+    """Animações de uma carta, de uma facção (faccao-<nome>) ou do jogo (padrao): uma por momento e uma por linha de habilidade. id "efeitos": ajustes."""
+    card = body.get('id') if isinstance(body, dict) else None
+    if not isinstance(card, str) or not re.fullmatch(r'[a-z0-9-]{1,60}', card):
+        raise ValueError('Animação inválida.')
+    path = root / CARD_ANIMS
+    anims = json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
+    if card == 'efeitos':
+        if set(body) != {'id', 'efeitos'}:
+            raise ValueError('Animação inválida.')
+        anims['efeitos'] = _anim_tuning(body['efeitos'])
+    else:
+        if set(body) - {'id', 'linhas', *ANIM_MOMENTS} or not isinstance(body.get('linhas'), list):
+            raise ValueError('Animação inválida.')
+        chosen = [*(body.get(k) for k in ANIM_MOMENTS), *body['linhas']]
+        if any(v is not None and v is not False and v not in ANIM_EFFECTS for v in chosen):  # False: sem animação de propósito
+            raise ValueError('Efeito inválido.')
+        entry = {k: body[k] for k in ANIM_MOMENTS if body.get(k) is not None}
+        lines = body['linhas']
+        while lines and lines[-1] is None:
+            lines = lines[:-1]
+        if entry or lines:
+            anims[card] = {**entry, 'linhas': lines}
+        else:
+            anims.pop(card, None)
+    atomic_write(path, (json.dumps(anims, ensure_ascii=False, indent=2, sort_keys=True) + '\n').encode('utf-8'))
+    return anims
+
+
 def save_telas(body, atomic_write, root=ROOT):
     current = (root / TELAS).read_text(encoding='utf-8')
     if body.get('revisao') != revision(current):
@@ -581,6 +631,8 @@ def post(handler, path, raw, atomic_write):
             raise ValueError('Pedido inválido.')
         if path == '/api/star-hill/card-voice':
             return handler.reply(200, {'vozes': save_card_voice(body, atomic_write)})
+        if path == '/api/star-hill/card-anim':
+            return handler.reply(200, {'animacoes': save_card_anim(body, atomic_write)})
         if path == '/api/star-hill/som-biblioteca':
             return handler.reply(200, import_library_sound(body))
         if path.startswith('/api/star-hill/motor/'):

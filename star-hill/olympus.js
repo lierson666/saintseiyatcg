@@ -6,6 +6,7 @@ import {printedKind} from '../shared/rules-policy.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {canonIndex, validateDeck, colorErrors, DECK_SIZE, SPLASH_LIMIT} from '../shared/deck-v3.js';
 import {loadTelas, mountTelas} from './telas-editor.js?v=20261102-aviso2';
+import {mountAnimacoes} from './animacoes.js?v=2';
 import {EDITIONS, editionOf} from '../shared/editions.js?v=20261102-1';
 
 const $ = s => document.querySelector(s);
@@ -17,6 +18,7 @@ const PAGES = {
   cartas: ['Cartas · Card Forge', 'Cada carta, uma constelação.'],
   decks: ['Decks iniciais', 'Os decks prontos do jogo.'],
   telas: ['Telas e som', 'Telas, sons, músicas e animações do jogo.'],
+  animacoes: ['Animações', 'Efeitos dos golpes e das habilidades.'],
   regras: ['Livro de regras', 'A fonte da verdade.'],
 };
 let forge = [], cards, decks = [], status = null, rules = null;
@@ -147,6 +149,7 @@ async function render() {
   $('#page-title').textContent = id === 'cartas' && !edition ? 'Qual edição você vai abrir?' : PAGES[id][1];
   for (const a of document.querySelectorAll('.sidebar nav a')) a.toggleAttribute('aria-current', a.hash === '#' + id);
   if (id === 'telas') { await loadTelas(api); return mountTelas($('#content'), {api, notice}); }
+  if (id === 'animacoes') return mountAnimacoes($('#content'), {notice});
   $('#content').innerHTML = id === 'cartas' ? (edition ? cardsPage() : editionsPage()) : id === 'decks' ? decksPage() : id === 'regras' ? await rulesPage() : overview();
   if (edition) $('#card-list').innerHTML = cardList(); // contador só existe depois do HTML
 }

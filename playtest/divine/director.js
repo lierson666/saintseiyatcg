@@ -4,6 +4,10 @@
 import {wait} from './scene.js?v=20261031-pool1';
 import {strikeSound, chargeSound} from '../audio.js?v=20261102-voz4';
 import {anim, ANIM_OF, sound} from '../telas.js?v=20261102-barulho1';
+import {ELEMENT_COLOR} from './pixel-vfx.js?v=20261104-anim2';
+
+// Quanto o golpe em pixel art leva até o instante do acerto (ms): o som e o impacto saem nele.
+const HIT_MS = {slash: 60, impact: 40, ice: 220, fire: 160, lightning: 140, poison: 650, light: 420, dark: 450, explosion: 60, energy: 260, shield: 200, heal: 200, power: 300, muzzle: 30, blood: 40, pickup: 400, dash: 200, blink: 250, sparkle: 300, rain: 300, snow: 300, fog: 300, embers: 200, fireflies: 300, leaves: 300, bubbles: 300};
 
 // Hierarquia visual dos golpes (COMBAT_CINEMATICS.md): comum < Saint < assinatura < divino.
 // As assinaturas são só visuais e disparam pelo número da carta atacante; não criam regra.
@@ -29,7 +33,7 @@ const unanswered = rest => {
 
 export function createDirector({ui, getFx, settings}) {
   const equipSound = uid => { if (!skipping) sound(ui.isArmor?.(uid) ? 'equipar_armadura' : 'equipar_arma'); };
-  let skipping = false, busy = false;
+  let skipping = false, busy = false, queue = [];
   // Grupo do evento em curso (Star Hill: ligada e velocidade por grupo); desligada = sem efeito e sem espera.
   let cur = {ligada: true, velocidade: 1};
   const fx = () => (settings.reduceMotion || !cur.ligada ? null : getFx());
@@ -38,11 +42,15 @@ export function createDirector({ui, getFx, settings}) {
   const shake = amp => { if (!cur.ligada) return; const f = fx(); if (f && !skipping) { f.shake(amp * settings.shake); f.punch(amp * settings.shake * .05); } ui.shake(amp * settings.shake); };
 
   function styleOf(uid) {
-    const sig = SIGNATURES[ui.number(uid)];
+    // Ordem: animação da carta ou da facção, assinatura, estilo do tipo e padrão do jogo. false: sem animação de golpe.
+    const sig = SIGNATURES[ui.number(uid)], own = ui.animOf?.('golpe', uid, '', true);
+    if (own === false) return {style: 'none', name: sig?.name, color: sig?.color || ui.godColor?.(uid) || '#ffe0a0'};
+    if (own) return {style: 'pixel', element: own, name: sig?.name, color: ELEMENT_COLOR[own] || sig?.color || ui.godColor?.(uid) || '#ffe0a0'};
     if (sig) return sig;
     const type = ui.type(uid), hit = STYLE_BY_TYPE.find(([re]) => re.test(type));
     // Golpe básico na cor do God de quem ataca; a tabela por tipo só define o estilo (e a cor se não houver God).
-    return {style: hit ? hit[1] : 'physical', color: ui.godColor?.(uid) || (hit ? hit[2] : '#ffe0a0')};
+    const base = ui.animOf?.('golpe', uid);
+    return {style: hit ? hit[1] : 'physical', element: hit && hit[1] !== 'physical' ? null : base ?? 'slash', color: ui.godColor?.(uid) || (hit ? hit[2] : '#ffe0a0')};
   }
 
   // Som sai quando o gatilho resolve, não quando vai à pilha (autor, 02/11/2026); null: evento sem som próprio.
@@ -52,16 +60,25 @@ export function createDirector({ui, getFx, settings}) {
   // Força do golpe pelo ATK (autor, 28/10/2026): 0 num ATK 2, 1 num ATK 10. Só apresentação; o dano vem da engine.
   const powerOf = atk => Math.max(0, Math.min(1, ((atk || 0) - 2) / 8));
 
+  // Efeito em pixel art (pixel-vfx.js): segue os mesmos interruptores dos VFX e nunca segura a fila.
+  const pixel = (recipe, rect, opts) => { if (recipe && rect && fx() && !skipping) ui.pixel?.play(recipe, rect, opts); };
+  // Animação do momento (Star Hill / Card Forge) em cima de `rect`. `ability`: nome da habilidade que resolveu.
+  const moment = (kind, ref, rect, opts = {}, ability = '') => pixel(ui.animOf?.(kind, ref, ability), rect, opts);
+
   // Golpe do atacante até o alvo; resolve no momento do impacto. `p` (0..1) engrossa tudo.
-  async function strikeVfx(from, to, style, p = 0, attacker) {
+  async function strikeVfx(from, to, style, p = 0, attacker, targetRect) {
     const f = fx();
     if (skipping) return;
     if (!ui.noise?.('carga', attacker)) chargeSound(p);
-    if (!f) return;
+    if (!f || style.style === 'none') return;
+    moment('carga', attacker, ui.rect(attacker), {color: style.color});
     f.charge(from.x, from.y, {color: style.color, count: Math.round((style.style === 'physical' ? 30 : 60) * (1 + p * 2))});
     if (p > .6) f.shake(p * 3); // o chão treme enquanto o Cosmo sobe
     await pause((style.style === 'physical' ? 140 : 260) + p * 420);
-    if (style.style === 'meteor') {
+    if (style.element && ui.pixel) {
+      pixel(style.element, targetRect, {from, color: style.color, power: p});
+      await pause(HIT_MS[style.element]);
+    } else if (style.style === 'meteor') {
       // Pegasus Ryuseiken: rajada de meteoros com leve dispersão, todos convergindo no alvo.
       const shots = [];
       const n = 9 + Math.round(p * 16), spread = 60 + p * 90;
@@ -75,21 +92,31 @@ export function createDirector({ui, getFx, settings}) {
       await Promise.all([f.projectile(from, to, {color: style.color, duration: .42, size: 22 * (1 + p), trail: 5 + p * 4, arc: 140}),
         wait(60).then(() => f.projectile(from, to, {color: '#d6ffe9', duration: .42, size: 10, trail: 2, arc: -90}))]);
     } else if (style.style === 'energy') {
-      await f.beam(from, to, {color: style.color, width: 22 * (1 + p * 1.8), duration: .3 + p * .25});
+      if (ui.pixel) { pixel('energy', targetRect, {from, color: style.color, power: p}); await pause(260 + p * 200); }
+      else await f.beam(from, to, {color: style.color, width: 22 * (1 + p * 1.8), duration: .3 + p * .25});
     } else {
       await f.projectile(from, to, {color: style.color, duration: .18, size: 14 * (1 + p * 1.2), trail: 2 + p * 3});
     }
   }
 
-  function impact(at, {color = '#fff2c4', strength = 1} = {}) {
+  function impact(at, {color = '#fff2c4', strength = 1, rect = null, from = null, effect = 'impact'} = {}) {
     const f = fx();
     if (f && !skipping) {
-      f.burst(at.x, at.y, {color, count: Math.round(50 * strength), speed: 380 * strength});
+      pixel(effect, rect || at, {color, strength: Math.min(1.6, strength), from});
+      if (!ui.pixel || strength > 1.6) f.burst(at.x, at.y, {color, count: Math.round(50 * strength), speed: 380 * strength});
       f.shockwave(at.x, at.y, {color, size: 160 * strength});
       if (strength > 1.2) f.flash(Math.min(.6, .12 + strength * .1));
       if (strength > 1.8) wait(90).then(() => f.shockwave(at.x, at.y, {color: '#ffffff', size: 260 * strength})); // segunda onda
     }
     shake(strength * 6);
+  }
+
+  // Habilidade resolvendo: o efeito escolhido cai em cada alvo atingido; sem alvo, na própria carta.
+  function abilityVfx(e) {
+    const value = ui.animOf?.('habilidade', e.uid, e.ability || ''), rest = queue.slice(queue.indexOf(e) + 1);
+    const done = rest.find(x => x.type === 'resolved' && x.uid === e.uid), from = ui.center(ui.refRect(e.uid));
+    const rects = (done?.results || []).map(r => ui.refRect(r.ref)).filter(Boolean);
+    for (const rect of rects.length ? rects : [ui.refRect(e.uid)]) pixel(value, rect, {from, color: ELEMENT_COLOR[value]});
   }
 
   // Cada tipo de evento: o que mostrar e quanto tempo segurar a fila.
@@ -126,6 +153,7 @@ export function createDirector({ui, getFx, settings}) {
       await pause(380);
     },
     async card_played(e) {
+      moment(e.from === 'tartarus' ? 'retorno' : e.from ? 'entrada' : 'cast', e.uid, ui.rect(e.uid));
       ui.speak?.(e.from === 'tartarus' ? 'retorno' : e.from ? 'entrada' : 'cast', e.uid); // som próprio da carta (autor, 02/11/2026); `from`: posta em campo sem conjurar
       const f = fx(), poolAt = ui.center(ui.bankRect(e.player, 'base')), src = ui.center(ui.rect(e.uid) || ui.handRect(e.player));
       if (pool[e.player] && f && !skipping && poolAt && src) { // o pool encontra a carta e a energia a vira para o campo
@@ -147,10 +175,11 @@ export function createDirector({ui, getFx, settings}) {
     },
     async ability(e) { ui.pulse(e.uid, 'activate'); ui.log(e); await pause(260); },
     async equipped(e) { equipSound(e.uid); ui.log(e); await pause(120); },
-    async returned_to_hand(e) { if (e.from === 'tartarus') ui.speak?.('retorno', e.uid); },
-    async entered(e) { ui.speak?.('entrada', e.uid); if (e.bearer) equipSound(e.uid); }, // Equipment conjurado já preso no portador
+    async returned_to_hand(e) { if (e.from === 'tartarus') { ui.speak?.('retorno', e.uid); moment('retorno', e.uid, ui.rect(e.uid)); } },
+    async entered(e) { ui.speak?.('entrada', e.uid); moment('entrada', e.uid, ui.rect(e.uid)); if (e.bearer) equipSound(e.uid); }, // Equipment conjurado já preso no portador
     async strike_declared(e) {
       ui.speak?.('declarar', e.attacker);
+      moment('declarar', e.attacker, ui.rect(e.attacker));
       ui.pulse(e.attacker, 'attacking', true);
       ui.aim(e.attacker, e.target);
       ui.log(e);
@@ -164,14 +193,17 @@ export function createDirector({ui, getFx, settings}) {
       const to = ui.center(targetRect), style = styleOf(e.attacker), p = powerOf(e.atk);
       if (style.name) await ui.callout(style.name, e.player, t(650 + p * 350));
       ui.pulse(e.attacker, 'lunge');
-      await strikeVfx(from, to, style, p, e.attacker);
+      await strikeVfx(from, to, style, p, e.attacker, targetRect);
       await pause(40 + p * 160); // hit stop: mais longo quanto mais forte
       if (!skipping && !(onGod ? ui.noise?.('impacto_deus', e.attacker, e.target.player) : ui.noise?.('impacto', e.attacker))) strikeSound(p);
-      impact(to, {color: style.color, strength: (style.name ? 1.4 : 1) * (1 + p * 1.3)});
+      impact(to, {color: style.color, strength: (style.name ? 1.4 : 1) * (1 + p * 1.3), rect: targetRect, from, effect: ui.animOf?.(onGod ? 'impacto_deus' : 'impacto', e.attacker) ?? 'impact'});
+      if (!onGod) moment('strike', e.target.uid, targetRect);
       // Retaliação: do Devotee alvo de volta ao atacante. God não retalia (§24, autor 01/11/2026).
       if (e.target.kind !== 'god') {
         await pause(140);
-        if (fx() && !skipping) await fx().beam(to, from, {color: styleOf(e.target.uid).color, width: 12, duration: .22});
+        const back = styleOf(e.target.uid);
+        if (ui.pixel && back.style !== 'energy') { pixel('slash', ui.rect(e.attacker), {from: to, color: back.color}); await pause(220); }
+        else if (fx() && !skipping) await fx().beam(to, from, {color: back.color, width: 12, duration: .22});
       }
       ui.aim(null);
       ui.pulse(e.attacker, 'attacking', false);
@@ -179,23 +211,24 @@ export function createDirector({ui, getFx, settings}) {
     async damage(e) {
       const at = ui.center(ui.rect(e.uid));
       if (!at) return;
-      if (e.prevented) ui.float({x: at.x, y: at.y - 36}, `${e.prevented} prevented`, 'shield');
+      if (e.prevented) { ui.float({x: at.x, y: at.y - 36}, `${e.prevented} prevented`, 'shield'); moment('escudo', e.uid, ui.rect(e.uid), {color: '#a6ecff'}); }
       if (e.absorbed) ui.float({x: at.x, y: at.y - 18}, `${e.absorbed} to Armor`, 'armor');
-      if (e.dealt) { ui.float(at, `-${e.dealt}`, 'damage'); ui.pulse(e.uid, 'hit'); impact(at, {color: '#ff9a7a', strength: Math.min(1.3, .5 + e.dealt * .15)}); }
+      if (e.dealt) { ui.float(at, `-${e.dealt}`, 'damage'); ui.pulse(e.uid, 'hit'); impact(at, {color: '#ff9a7a', strength: Math.min(1.3, .5 + e.dealt * .15), rect: ui.rect(e.uid), effect: ui.animOf?.('dano', e.uid) ?? 'impact'}); }
       await pause(e.dealt ? 220 : 120);
     },
-    async god_damage(e) { if (e.incoming > e.dealt) ui.float(ui.center(ui.godRect(e.player)), `${e.incoming - e.dealt} prevented`, 'shield'); },
+    async god_damage(e) { if (e.incoming > e.dealt) { ui.float(ui.center(ui.godRect(e.player)), `${e.incoming - e.dealt} prevented`, 'shield'); moment('escudo', e.player, ui.godRect(e.player), {color: '#a6ecff'}); } },
     async soul_lost(e) {
       const at = ui.center(ui.godRect(e.player));
       ui.setSoul(e.player, e.soul);
       ui.float(at, `-${e.amount} Soul`, 'damage big');
-      impact(at, {color: '#ffcf6e', strength: Math.min(2, .8 + e.amount * .2)});
+      impact(at, {color: '#ffcf6e', strength: Math.min(2, .8 + e.amount * .2), rect: ui.godRect(e.player), effect: ui.animOf?.('soul', e.player) ?? 'impact'});
       await pause(420);
     },
     async destroyed(e) {
       ui.speak?.('morte', e.uid);
       const at = ui.center(ui.rect(e.uid));
       ui.pulse(e.uid, 'shatter');
+      moment('morte', e.uid, ui.rect(e.uid));
       if (at) fx()?.burst(at.x, at.y, {color: '#cbbfa8', count: 70, speed: 300, grav: 600, life: .9});
       ui.log(e);
       await pause(380);
@@ -207,6 +240,7 @@ export function createDirector({ui, getFx, settings}) {
       if (e.awaken) {
         if (!skipping) ui.noise?.('awaken', e.player);
         fx()?.charge(at.x, at.y, {color: '#9fd0ff', count: 90, radius: 140});
+        moment('awaken', e.player, ui.godRect(e.player), {color: '#9fd0ff'});
         await ui.banner('Awaken', e.player, t(900));
         fx()?.shockwave(at.x, at.y, {color: '#bfe2ff', size: 220});
       } else ui.float(at, 'Awaken ends', 'shield');
@@ -217,6 +251,7 @@ export function createDirector({ui, getFx, settings}) {
       const custom = !skipping && ui.noise?.('poder_divino', e.player);
       if (!skipping && !custom) chargeSound(.5);
       f?.charge(at.x, at.y, {color: '#bfe2ff', count: 110, radius: 170});
+      moment('poder_divino', e.player, ui.godRect(e.player), {color: '#bfe2ff'});
       await ui.callout(e.ability, e.player, t(900));
       if (!skipping && !custom) strikeSound(.35);
       f?.shockwave(at.x, at.y, {color: '#bfe2ff', size: 260});
@@ -230,6 +265,7 @@ export function createDirector({ui, getFx, settings}) {
       const from = ui.center(ui.domainRect(e.player)), to = ui.center(ui.godRect(e.player)), f = fx();
       if (!skipping && !ui.noise?.('poder_dominio', e.player)) chargeSound(.4);
       if (from) f?.charge(from.x, from.y, {color: '#ffe4a0', count: 80, radius: 110});
+      moment('poder_dominio', e.player, ui.domainRect(e.player), {color: '#ffe4a0'});
       await ui.callout(e.ability, e.player, t(800));
       if (from && to && f && !skipping) await f.beam(from, to, {color: '#ffe4a0', width: 26, duration: .35});
       if (to) { f?.shockwave(to.x, to.y, {color: '#ffe4a0', size: 200}); ui.float(to, e.ability, 'gain'); }
@@ -267,6 +303,7 @@ export function createDirector({ui, getFx, settings}) {
     async ultimate_resolved(e) {
       ui.speak?.('ultimate', e.player);
       ui.cinematic?.(true);
+      moment('ultimate', e.player, ui.godRect(ui.enemyOf(e.player)));
       if (e.ability === 'GREAT FLOOD') { // onda sobre o campo inimigo; o retorno às mãos aparece no render seguinte
         const enemy = ui.enemyOf(e.player), god = ui.center(ui.godRect(e.player)), to = ui.center(ui.godRect(enemy));
         fx()?.beam(god, to, {color: '#7fd4ff', width: 44, duration: .7});
@@ -300,7 +337,7 @@ export function createDirector({ui, getFx, settings}) {
     async judgment_placed(e) { await ui.banner('Divine Judgment', e.player, t(1100)); },
     async judgment_removal(e) { return handlers.judgment_removed(e); }, // nome que a engine emite (gods.js)
     async judgment_removed(e) { ui.float(ui.center(ui.godRect(e.player)), 'Judgment removed', 'gain'); await pause(400); },
-    async soul_gained(e) { if (e.amount) { ui.setSoul(e.player, e.soul); ui.float(ui.center(ui.godRect(e.player)), `+${e.amount} Soul`, 'gain'); } },
+    async soul_gained(e) { if (e.amount) { ui.setSoul(e.player, e.soul); ui.float(ui.center(ui.godRect(e.player)), `+${e.amount} Soul`, 'gain'); moment('cura', e.player, ui.godRect(e.player)); } },
     // Morte do God (autor, 31/10/2026): cada deus cai com o seu tema e a metade dele da arena desmorona; ~3 s antes da tela final.
     async victory(e) {
       const dead = t(1) ? ui.godDeath(e) : [];
@@ -325,7 +362,7 @@ export function createDirector({ui, getFx, settings}) {
       }
       ui.log(e);
       await pause(360);
-    }, async resolve(e) { if (e.ability) ui.speak?.('linha', e.uid, e.ability); /* a fala sai quando resolve, não quando vai à pilha (autor, 02/11/2026) */ ui.pulse(e.uid, 'trigger-pop'); await pause(300); }, async end_phase(e) { ui.log(e); },
+    }, async resolve(e) { if (e.ability) ui.speak?.('linha', e.uid, e.ability); /* a fala sai quando resolve, não quando vai à pilha (autor, 02/11/2026) */ abilityVfx(e); ui.pulse(e.uid, 'trigger-pop'); await pause(300); }, async end_phase(e) { ui.log(e); },
   };
 
   return {
@@ -333,7 +370,7 @@ export function createDirector({ui, getFx, settings}) {
     skip() { skipping = true; },
     // Toca os eventos em ordem. Retorna quando tudo terminou (ou foi pulado).
     async play(events) {
-      busy = true; skipping = false;
+      busy = true; skipping = false; queue = events;
       try {
         let last = null;
         for (const [i, e] of events.entries()) {

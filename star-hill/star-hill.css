@@ -151,3 +151,10 @@ small.publish-result{color:#8fe3a8;font-weight:600}
 .tl-faccao-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
 .tl-faccao-tabs button{min-height:36px;padding:4px 14px;border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--ink)}
 .tl-faccao-tabs [aria-pressed=true]{background:var(--gold,#e0bb62);border-color:var(--gold,#e0bb62);color:#1b1405;font-weight:700}
+
+/* Gestor de animações (animacoes.js) */
+.an-row{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;padding:8px 0;border-top:1px solid var(--line)}
+.an-row>b{min-width:80px}
+.an-row.is-off>:not(.tl-switch):not(b){opacity:.45}
+.an-cards{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0;max-height:200px;overflow:auto}
+.an-cards button[aria-pressed=true]{color:var(--gold);border-color:var(--gold)}

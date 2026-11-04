@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VFX Lab</title>
+<link rel="stylesheet" href="../../playtest/divine/olympus.css">
+<style>
+  html, body { margin: 0; height: 100%; background: #05060c; color: #f5f1e6; font: 14px/1.4 Jost, system-ui, sans-serif; overflow: hidden; }
+  .stage { position: fixed; inset: 0; overflow: hidden; display: block; }
+  #arena, #arena canvas { position: absolute; inset: 0; width: 100% !important; height: 100% !important; }
+  #table { position: absolute; inset: 0; z-index: 10; }
+  .card { position: absolute; width: clamp(92px, 15vw, 190px); aspect-ratio: 63 / 88; transform: translate(-50%, -50%); border-radius: 8px; border: 1px solid #e6c36a; object-fit: cover; object-position: center 30%; }
+  #attacker { left: 30%; top: 62%; }
+  #target { left: 70%; top: 36%; }
+  #overlay-root { display: none; }
+  .bar { position: fixed; left: 8px; right: 8px; bottom: calc(8px + env(safe-area-inset-bottom)); z-index: 60; display: flex; flex-wrap: wrap; gap: 6px; padding: 8px; border: 1px solid #f5f1e626; border-radius: 14px; background: #10111ce0; }
+  .bar button { min-height: 44px; padding: 0 12px; border-radius: 999px; border: 1px solid #f5f1e626; background: #05060c; color: inherit; font: inherit; cursor: pointer; }
+  .bar button:focus-visible { outline: 2px solid #ffe7a3; outline-offset: 2px; }
+</style>
+</head>
+<body>
+<main class="stage" id="stage">
+  <div id="arena"></div>
+  <div id="table">
+    <img class="card" id="attacker" src="../../card-forge/art-web/webp/athena-v6-001.webp" alt="Pegasus Seiya">
+    <img class="card" id="target" src="../../card-forge/art-web/webp/poseidon-v6-091.webp" alt="Sea Dragon Kanon">
+  </div>
+  <div id="overlay-root"></div>
+</main>
+<div class="bar" id="bar"></div>
+<script type="module" src="./lab.js"></script>
+</body>
+</html>

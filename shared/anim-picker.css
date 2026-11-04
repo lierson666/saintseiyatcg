@@ -1,0 +1,23 @@
+/* Seletor de animação (shared/anim-picker.js): ferramenta do autor, escura e dourada como o seletor de sons. */
+.ap { --ap-bg: #0f1722; --ap-raised: #1c2838; --ap-line: #2a384c; --ap-ink: #eef1f6; --ap-muted: #a3afbf; --ap-gold: #e0bb62;
+  width: min(860px, 96vw); max-width: none; padding: 0; overflow: hidden; color: var(--ap-ink); background: var(--ap-bg); border: 1px solid var(--ap-line); border-radius: 14px; }
+.ap::backdrop { background: #000a; }
+.ap button { min-height: 36px; padding: 0 12px; color: inherit; font: inherit; background: var(--ap-raised); border: 1px solid var(--ap-line); border-radius: 8px; cursor: pointer; }
+.ap button:focus-visible { outline: 2px solid var(--ap-gold); outline-offset: 2px; }
+.ap-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 12px 14px; border-bottom: 1px solid var(--ap-line); }
+.ap-head div { flex: 1; min-width: 180px; }
+.ap-head h2 { margin: 0; font-size: 16px; }
+.ap-target { color: var(--ap-muted); }
+.ap-body { display: grid; grid-template-columns: minmax(0, 1fr) 280px; min-height: 420px; }
+.ap-preview { min-height: 320px; }
+.ap-stage { position: relative; overflow: hidden; background: radial-gradient(circle at 50% 60%, #1b2563, #04071a 75%); }
+.ap-card { position: absolute; width: 84px; aspect-ratio: 63 / 88; transform: translate(-50%, -50%); background: linear-gradient(160deg, #2c3a55, #101725); border: 1px solid var(--ap-gold, #e0bb62); border-radius: 6px; }
+.ap-card--from { left: 26%; top: 70%; }
+.ap-card--to { left: 68%; top: 40%; }
+.ap-list { margin: 0; padding: 6px; max-height: 480px; overflow: auto; list-style: none; border-left: 1px solid var(--ap-line); }
+.ap-list li { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 8px; padding: 4px 6px; border-radius: 8px; }
+.ap-list li.is-current { background: #e0bb6222; }
+.ap-use { color: var(--ap-gold) !important; }
+@media (max-width: 640px) { .ap-body { grid-template-columns: 1fr; } .ap-list { border-left: 0; max-height: 40vh; } }
+.ap--preview { width: min(560px, 96vw); }
+.ap--preview .ap-preview { height: min(420px, 60vh); }

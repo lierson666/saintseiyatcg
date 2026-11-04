@@ -132,6 +132,8 @@ form > fieldset:not([data-tab="Informações"]) > legend { display: none; }
 .rr-sound { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 8px; align-items: center; }
 .rr-sound > span:first-child { overflow: hidden; color: var(--muted); font-size: 12px; white-space: nowrap; text-overflow: ellipsis; }
 .rr-sound button { padding: 3px 8px; }
+.rr-controls { display: grid; gap: 3px; min-width: 0; }
+.rr-anim .rr-voice-open b { color: #9fd8ff; }
 .fields--pt { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .fields--pt > * { grid-column: 1 / -1; }
 .fields--pt > .half { grid-column: auto; }

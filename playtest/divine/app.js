@@ -22,7 +22,8 @@ import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudg
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout, clockBonus} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
-import {createDirector} from './director.js?v=20261103-janela1';
+import {createDirector} from './director.js?v=20261104-anim2';
+import {createPixelFx, animFor} from './pixel-vfx.js?v=20261104-anim2';
 import {createAI} from './ai.js?v=14';
 import {findDeck} from '../deck-store.js';
 import {rankAfterMatch, mountNameplates} from '../rank.js?v=20261031-face3';
@@ -461,6 +462,7 @@ const forgeArt = file => lightArt(FORGE_ART + file);
 // Mesa no estilo Arena (só arte, nome, ATK e HP); ?board=classic volta à carta inteira para comparar.
 const BOARD_TOKENS = new URLSearchParams(location.search).get('board') !== 'classic';
 const CARD_FACTIONS = new Set(['athena', 'poseidon', 'hades', 'ares', 'artemis']);
+const cardAnims = await fetch('../../data/card-animations.json', {cache: 'no-cache'}).then(r => (r.ok ? r.json() : {})).catch(() => ({}));
 const FORGE = new Map((await fetch(`${FORGE_ART}cards.json`).then(r => (r.ok ? r.json() : {cartas: []})).catch(() => ({cartas: []}))).cartas.map(c => [c.id, c]));
 useGodPortraits(FORGE.values()); // avatar do Deus nas placas = rosto da placa do God (rank.js)
 // Item da cadeia em texto de jogador: carta de origem, nome da habilidade, a linha impressa dela e o alvo.
@@ -1250,6 +1252,12 @@ function syncZoom() {
 
 const rectOf = el => (el ? el.getBoundingClientRect() : null);
 const ui = {
+  pixel: createPixelFx(stage, {flashes: () => !settings.reduceFlashes, tuning: () => cardAnims.efeitos}),
+  // Animação escolhida no Star Hill ou no Card Forge. `own`: só a da carta ou da facção, sem o padrão do jogo.
+  animOf(kind, ref, ability = '', own = false) {
+    const {id} = voicesOf(ref), card = FORGE.get(id);
+    return animFor(cardAnims, kind, {id, faction: card?.faccao?.toLowerCase(), own, line: ability && card ? triggerLine(card, ability.split(' · ').pop()) : null});
+  },
   notice: warn,
   onEvent: zoomEvent,
   number: num, type: uid => info(uid).type, enemyOf: key => other(key),
@@ -2708,6 +2716,7 @@ async function init() {
   setInterval(aiTick, 700);
   scene = await createScene($('#arena'), {quality: settings.quality, theme: settings.theme, reduceFlashes: settings.reduceFlashes});
   stage.classList.toggle('no-webgl', !scene);
+  if (scene && !settings.reduceMotion) ui.pixel.preload();
   window.__divine = {get state() { return S(); }, get ctx() { return ctx; }, get scene() { return scene; }, get clock() { return clock; }, present: (from) => present({}, null, from), settings}; // inspeção no QA
 }
 // Celular: no primeiro toque, tela cheia onde o navegador deixa (Android). Joga em pé (portrait.css) ou deitado (mobile.css), sem travar.

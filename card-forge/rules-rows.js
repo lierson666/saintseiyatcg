@@ -3,13 +3,19 @@
 const split = t => t.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;'}[c]));
 import {openSoundBrowser, soundUrl} from '/shared/sound-browser.js?v=12';
+import {loadAnims, animsNow, saveAnim, openAnimPicker, openAnimPreview, animLabel, ANIM_MOMENTS} from '/shared/anim-picker.js?v=2';
 let falas = {}, vozes = {}, player = null;
 const ready = Promise.all([
   fetch('/biblioteca-sons/falas-pt.json', {cache: 'no-store'}).then(r => (r.ok ? r.json() : {})).catch(() => ({})),
   fetch('../data/card-voices.json', {cache: 'no-store'}).then(r => (r.ok ? r.json() : {})).catch(() => ({})),
+  loadAnims(),
 ]).then(([f, v]) => { falas = f; vozes = v; });
 
 const entry = id => (vozes[id] ||= {linhas: []});
+// Animação ao lado do som (autor, 04/11/2026): mesma linha, mesma ordem. Vazio herda da facção e do padrão do jogo.
+const animEntry = id => ({linhas: [], ...animsNow()[id]});
+const animPicker = (key, value) => `<span class="rr-voice rr-anim"><button type="button" class="rr-voice-open" data-anim="${key}" title="Escolher animação">${value ? `<b>✦ ${esc(animLabel(value))}</b>` : esc(animLabel(value, 'animação da facção'))}</button><button type="button" data-anim-test="${value || ''}" aria-label="Ver animação" title="Ver animação" ${value ? '' : 'disabled'}>▶</button></span>`;
+const saveAnimEntry = (id, e) => saveAnim(id, e).catch(err => alert(`A animação não foi salva: ${err.message}`));
 function save(id) {
   return fetch('/api/star-hill/card-voice', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({id, ...entry(id)})})
     .then(async r => { if (!r.ok) throw Error((await r.json().catch(() => ({}))).erro || 'Falha ao salvar.'); })
@@ -53,9 +59,13 @@ export function mountRulesRows(area, {getId = null, moments = null, sound = null
   };
   const drawSound = lines => {
     if (!sound || !getId) return;
-    const v = entry(getId()), row = (label, key, value) => `<div class="rr-sound"><span title="${esc(label)}">${esc(label)}</span>${picker(key, value ?? '')}</div>`;
-    sound.innerHTML = `<h3 class="rr-head">Habilidades</h3>${lines.map((t, i) => row(abilityName(t, i), i, v.linhas[i])).join('') || '<p class="hint">Esta carta não tem habilidades.</p>'}
-      ${moments ? `<h3 class="rr-head">Momentos da carta</h3>${moments().map(([key, label]) => row(label, key, v[key])).join('')}` : ''}`;
+    const v = entry(getId()), a = animEntry(getId());
+    const row = (label, key, value, anim) => `<div class="rr-sound"><span title="${esc(label)}">${esc(label)}</span><div class="rr-controls">${picker(key, value ?? '')}${anim === undefined ? '' : animPicker(key, anim)}</div></div>`;
+    const animKeys = new Set(ANIM_MOMENTS.map(([k]) => k)), soundKeys = new Set(moments ? moments().map(([k]) => k) : []);
+    const onlyAnim = ANIM_MOMENTS.filter(([k]) => !soundKeys.has(k));
+    sound.innerHTML = `<h3 class="rr-head">Habilidades</h3>${lines.map((t, i) => row(abilityName(t, i), i, v.linhas[i], a.linhas[i] ?? null)).join('') || '<p class="hint">Esta carta não tem habilidades.</p>'}
+      ${moments ? `<h3 class="rr-head">Momentos da carta</h3>${moments().map(([key, label]) => row(label, key, v[key], animKeys.has(key) ? a[key] ?? null : undefined)).join('')}
+      <h3 class="rr-head">Só animação</h3>${onlyAnim.map(([key, label]) => `<div class="rr-sound"><span title="${esc(label)}">${esc(label)}</span><div class="rr-controls">${animPicker(key, a[key] ?? null)}</div></div>`).join('')}` : ''}`;
   };
   const draw = (lines = split(area.value)) => {
     suggest = null; // a lista some junto com as linhas redesenhadas
@@ -104,6 +114,16 @@ export function mountRulesRows(area, {getId = null, moments = null, sound = null
   const onClick = e => {
     const b = e.target.closest('button');
     if (!b) return;
+    if (b.dataset.animTest) return openAnimPreview(b.dataset.animTest, b.closest('.rr-sound')?.querySelector('span')?.textContent || '');
+    if (b.dataset.anim !== undefined) {
+      const key = b.dataset.anim, line = /^\d+$/.test(key), a = animEntry(getId());
+      const what = line ? `Habilidade: ${parseAbility(current()[Number(key)] || '').name || Number(key) + 1}` : ANIM_MOMENTS.find(([k]) => k === key)?.[1] || key;
+      openAnimPicker({title: 'Escolher animação da carta', alvo: `${area.form?.elements.nome_exibicao_en?.value || getId()} · ${what}`, value: line ? a.linhas[Number(key)] : a[key], herda: 'Usar a da facção', onPick: value => {
+        if (line) { const l = [...a.linhas]; l[Number(key)] = value; for (let i = 0; i < l.length; i++) l[i] ??= null; a.linhas = l; } else a[key] = value;
+        saveAnimEntry(getId(), a).then(() => draw(current()));
+      }});
+      return;
+    }
     if (b.dataset.hear !== undefined) {
       hear(sound.querySelector(`[data-voice="${b.dataset.hear}"]`).dataset.value);
       return;
@@ -128,13 +148,17 @@ export function mountRulesRows(area, {getId = null, moments = null, sound = null
     }
     const lines = current(), i = Number(b.closest('.rr-row')?.dataset.i), v = getId && entry(getId());
     if (b.dataset.add !== undefined) lines.push('');
-    if (b.dataset.del !== undefined) { lines.splice(i, 1); v?.linhas.splice(i, 1); }
+    const a = getId && animEntry(getId());
+    let animMoved = false;
+    if (b.dataset.del !== undefined) { lines.splice(i, 1); v?.linhas.splice(i, 1); if (a?.linhas.length > i) { a.linhas.splice(i, 1); animMoved = true; } }
     if (b.dataset.move) {
       const j = i + Number(b.dataset.move);
       [lines[i], lines[j]] = [lines[j], lines[i]];
       if (v) { const l = v.linhas; [l[i], l[j]] = [l[j] ?? null, l[i] ?? null]; }
+      if (a?.linhas.length) { const l = a.linhas; [l[i], l[j]] = [l[j] ?? null, l[i] ?? null]; animMoved = true; }
     }
     if (v && !b.dataset.add) save(getId());
+    if (animMoved) saveAnimEntry(getId(), a);
     draw(lines);
     sync();
     if (b.dataset.add !== undefined) [...box.querySelectorAll('.rr-name')].at(-1)?.focus();
