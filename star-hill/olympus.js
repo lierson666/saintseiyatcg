@@ -6,7 +6,7 @@ import {printedKind} from '../shared/rules-policy.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {canonIndex, validateDeck, colorErrors, DECK_SIZE, SPLASH_LIMIT} from '../shared/deck-v3.js';
 import {loadTelas, mountTelas} from './telas-editor.js?v=20261102-aviso2';
-import {mountAnimacoes} from './animacoes.js?v=8';
+import {mountAnimacoes} from './animacoes.js?v=11';
 import {EDITIONS, editionOf} from '../shared/editions.js?v=20261102-1';
 
 const $ = s => document.querySelector(s);

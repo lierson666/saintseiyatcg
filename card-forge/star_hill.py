@@ -672,11 +672,13 @@ def save_card_anim(body, atomic_write, root=ROOT):
 
 # VFX Forge V3: shaders, Lottie e composições (shared/vfx/). Só apresentação; o id da carta é o vínculo, nunca o nome.
 VFX_STUDIO = 'data/vfx-studio.json'
+VFX_VERSOES = 'data/vfx-composicoes-versoes.json'  # histórico das composições: só o painel lê, a partida não
+VERSOES_MAX = 20
 NEW_FX = re.compile(r'(shader|lottie|comp):[a-z0-9-]{1,60}')
 SAFE_ID = re.compile(r'[a-z0-9-]{1,60}')
 LAYER_TYPES = ('carta', 'camera', 'shader', 'particulas', 'lottie', 'audio', 'ui')
 LAYER_NUMBERS = {'inicio': (0, 6000), 'duracao': (1, 6000), 'x': (-800, 800), 'y': (-800, 800), 'escala': (0.1, 4), 'rotacao': (-360, 360),
-                 'opacidade': (0, 1), 'forca': (0, 1), 'velocidade': (0.1, 4), 'volume': (0, 1)}
+                 'opacidade': (0, 1), 'forca': (0, 1), 'velocidade': (0.1, 4), 'volume': (0, 1), 'pico': (0.05, 0.95)}
 LAYER_TEXT = {'shader': SAFE_ID, 'lottie': SAFE_ID, 'efeito': re.compile(r'[a-z0-9-]{1,60}'), 'alvo': re.compile(r'carta|mesa'),
               'cor': re.compile(r'#[0-9a-fA-F]{6}'), 'easing': re.compile(r'linear|ease|ease-in|ease-out|ease-in-out'),
               'som': re.compile(r'[A-Za-z0-9_./-]{1,200}\.(ogg|mp3|wav|m4a)')}
@@ -722,6 +724,21 @@ def _vfx_composition(value):
     return value
 
 
+def _keep_version(key, previous, atomic_write, root):
+    path = root / VFX_VERSOES
+    versions = json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
+    entry = {'em': time.strftime('%Y-%m-%dT%H:%M:%S'), 'nome': previous.get('nome'), 'camadas': previous.get('camadas', [])}
+    versions[key] = ([entry] + versions.get(key, []))[:VERSOES_MAX]
+    atomic_write(path, (json.dumps(versions, ensure_ascii=False, indent=2) + '\n').encode('utf-8'))
+
+
+def vfx_versions(key, root=ROOT):
+    if not SAFE_ID.fullmatch(key):
+        raise ValueError('Composição inválida.')
+    path = root / VFX_VERSOES
+    return json.loads(path.read_text(encoding='utf-8')).get(key, []) if path.exists() else []
+
+
 def save_vfx_studio(body, atomic_write, root=ROOT):
     """Uma alteração por vez: {tipo: carta|raridade|composicao, id, valor}. valor null tira a entrada."""
     kind, key, value = body.get('tipo'), body.get('id'), body.get('valor')
@@ -741,6 +758,9 @@ def save_vfx_studio(body, atomic_write, root=ROOT):
     elif kind == 'composicao' and isinstance(key, str) and SAFE_ID.fullmatch(key):
         value = _vfx_composition(value) if value is not None else None
         group = 'composicoes'
+        previous = data.get(group, {}).get(key)
+        if previous and previous != value:  # guarda o que estava salvo antes de trocar ou excluir
+            _keep_version(key, previous, atomic_write, root)
     else:
         raise ValueError('Pedido de VFX inválido.')
     if value is None:
@@ -766,6 +786,11 @@ def get(handler, path):
         return handler.reply(200, vfx_publish.status(builtin=ANIM_EFFECTS))
     if path == '/api/star-hill/vfx-gerar':
         return handler.reply(200, vfx_generate.status())
+    if path.startswith('/api/star-hill/vfx-versoes/'):
+        try:
+            return handler.reply(200, {'versoes': vfx_versions(path.rsplit('/', 1)[1])})
+        except ValueError as error:
+            return handler.reply(400, {'erro': str(error)})
     if path == '/api/star-hill/motor':
         handler.reply(200, engine_updates.manager(ROOT).info())
     elif path.startswith('/api/star-hill/motor/trabalhos/'):

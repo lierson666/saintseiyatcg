@@ -2,12 +2,12 @@
  "versao": 1,
  "gerado_por": "tools/vfx-inventario.py",
  "resumo": {
-  "total": 239,
+  "total": 241,
   "migradas": 66,
   "editavel": 79,
   "parcial": 117,
   "legado": 24,
-  "excecao": 19,
+  "excecao": 21,
   "criterios": {
    "forge": 196,
    "edita": 187,
@@ -6466,6 +6466,52 @@
    },
    "migrada": false,
    "limite": "Motor: toca os shaders escolhidos nas abas Holográficos e Efeitos."
+  },
+  {
+   "id": "raf:star-hill-animacoes-arena-js",
+   "nome": "Laço de animação em animacoes-arena.js",
+   "categoria": "Código de animação",
+   "tecnologia": "JavaScript (requestAnimationFrame)",
+   "origem": "Star Hill",
+   "arquivos": [
+    "star-hill/animacoes-arena.js"
+   ],
+   "gatilho": "Definido no código",
+   "parametros": [],
+   "estado": "excecao",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Não é animação: ajusta a escala da mesa no quadro seguinte a uma mudança de tamanho."
+  },
+  {
+   "id": "raf:star-hill-animacoes-composer-js",
+   "nome": "Laço de animação em animacoes-composer.js",
+   "categoria": "Código de animação",
+   "tecnologia": "JavaScript (requestAnimationFrame)",
+   "origem": "Star Hill",
+   "arquivos": [
+    "star-hill/animacoes-composer.js"
+   ],
+   "gatilho": "Definido no código",
+   "parametros": [],
+   "estado": "excecao",
+   "criterios": {
+    "forge": false,
+    "edita": false,
+    "aplica": false,
+    "preview": false,
+    "restaura": false,
+    "testes": false
+   },
+   "migrada": false,
+   "limite": "Não é animação: move a marca de tempo na linha do tempo do Composer enquanto a prévia toca."
   },
   {
    "id": "raf:star-hill-designer-js",

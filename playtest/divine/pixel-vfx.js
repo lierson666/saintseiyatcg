@@ -213,7 +213,7 @@ export function createPixelFx(stage, {flashes = () => true, tuning = () => ({}),
     if ((!RECIPES[recipe] && !sheet) || tune.ligado === false) return Promise.resolve();
     if (sheet?.coreografia) { const b = sheet.coreografia.faixas.impact?.efeito; return b ? play(b, rect, opts) : Promise.resolve(); } // fora do Strike não há fases: toca o impacto
     const start = (fx, speed = 1, vida = MAX_LIFE) => {
-      live.push({fx, age: 0, vida, speed: (tune.velocidade || 1) * speed});
+      live.push({fx, age: 0, vida, speed: (tune.velocidade || 1) * speed * (opts.ritmo || 1)});
       show(true);
       if (!raf) { last = performance.now(); raf = requestAnimationFrame(tick); }
     };

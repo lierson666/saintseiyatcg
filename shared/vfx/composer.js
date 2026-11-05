@@ -17,6 +17,8 @@ export function createComposer({stage, pixel, studio, quality = () => 'high', re
   return document.elementFromPoint(rect.x + rect.width / 2, rect.y + rect.height / 2)?.closest('[data-live-card], .dcard') || null;
 }}) {
   const live = new Set(); // o que precisa ser limpo: timers, canvas, animações
+  const timers = new Set(), players = new Set(); // pausa: timers guardam o que falta; players são Lottie e áudio
+  let paused = false;
   const overlay = (rect, alvo) => {
     const s = stage.getBoundingClientRect(), r = alvo === 'mesa' || !rect ? s : rect;
     const el = document.createElement('div');
@@ -25,19 +27,27 @@ export function createComposer({stage, pixel, studio, quality = () => 'high', re
     stage.append(el);
     return el;
   };
-  const after = (ms, fn) => { const id = setTimeout(() => { live.delete(stop); fn(); }, ms); const stop = () => clearTimeout(id); live.add(stop); };
+  const after = (ms, fn) => {
+    const t = {due: performance.now() + ms, left: ms, id: 0};
+    const stop = () => { clearTimeout(t.id); timers.delete(t); };
+    t.arm = () => { t.due = performance.now() + t.left; t.id = setTimeout(() => { live.delete(stop); timers.delete(t); fn(); }, t.left); };
+    timers.add(t);
+    live.add(stop);
+    if (paused) return; // camada adiada enquanto a prévia está pausada
+    t.arm();
+  };
 
   const runners = {
     carta(l, rect) {
       const el = targetOf(rect);
       if (!el) return;
       const dx = l.x ?? 0, dy = l.y ?? 0, sc = l.escala ?? 1, rot = l.rotacao ?? 0;
-      const a = el.animate([{transform: 'none', opacity: 1}, {transform: `translate(${dx}px,${dy}px) scale(${sc}) rotate(${rot}deg)`, opacity: l.opacidade ?? 1, offset: .5}, {transform: 'none', opacity: 1}], {duration: l.duracao, easing: l.easing || 'ease-in-out'});
+      const a = el.animate([{transform: 'none', opacity: 1}, {transform: `translate(${dx}px,${dy}px) scale(${sc}) rotate(${rot}deg)`, opacity: l.opacidade ?? 1, offset: l.pico ?? .5}, {transform: 'none', opacity: 1}], {duration: l.duracao, easing: l.easing || 'ease-in-out'});
       live.add(() => a.cancel());
       a.onfinish = () => a.cancel();
     },
     camera(l) {
-      const a = stage.animate([{transform: 'none'}, {transform: `translate(${l.x ?? 0}px,${l.y ?? 0}px) scale(${l.escala ?? 1.08})`, offset: .5}, {transform: 'none'}], {duration: l.duracao, easing: l.easing || 'ease-in-out'});
+      const a = stage.animate([{transform: 'none'}, {transform: `translate(${l.x ?? 0}px,${l.y ?? 0}px) scale(${l.escala ?? 1.08})`, offset: l.pico ?? .5}, {transform: 'none'}], {duration: l.duracao, easing: l.easing || 'ease-in-out'});
       live.add(() => a.cancel());
       a.onfinish = () => a.cancel();
     },
@@ -54,11 +64,11 @@ export function createComposer({stage, pixel, studio, quality = () => 'high', re
         if (done) return layer.dispose();
         layer.canvas.style.cssText = 'width:100%;height:100%;display:block;mix-blend-mode:screen';
         box.append(layer.canvas);
-        const frame = () => { if (done) return; layer.draw(); raf = requestAnimationFrame(frame); };
+        const frame = () => { if (done) return; if (!paused) layer.draw(); raf = requestAnimationFrame(frame); };
         frame();
       } catch (error) { console.debug('VFX: camada de shader ignorada.', error); clean(); }
     },
-    particulas(l, rect) { pixel?.play(l.efeito, rect, {color: l.cor, strength: l.escala ?? 1, power: .5}); },
+    particulas(l, rect) { pixel?.play(l.efeito, rect, {color: l.cor, strength: l.escala ?? 1, power: .5, ritmo: l.velocidade}); },
     async lottie(l, rect) {
       const def = LOTTIES.find(x => x.id === l.lottie);
       if (!def) return;
@@ -67,32 +77,52 @@ export function createComposer({stage, pixel, studio, quality = () => 'high', re
       canvas.style.cssText = 'width:100%;height:100%;display:block;object-fit:contain';
       box.append(canvas);
       let player = null;
-      const clean = () => { player?.destroy(); box.remove(); live.delete(clean); };
+      const clean = () => { if (player) players.delete(player); player?.destroy(); box.remove(); live.delete(clean); };
       live.add(clean);
       after(l.duracao, clean);
       try {
         const DotLottie = await loadLottie();
-        player = new DotLottie({canvas, src: new URL(`/${def.arquivo}`, location.href).href, loop: l.loop ?? true, autoplay: true, speed: l.velocidade ?? 1});
+        player = new DotLottie({canvas, src: new URL(`/${def.arquivo}`, location.href).href, loop: l.loop ?? true, autoplay: !paused, speed: l.velocidade ?? 1});
+        players.add(player);
       } catch (error) { console.debug('VFX: camada Lottie ignorada.', error); clean(); }
     },
     audio(l) {
       if (!l.som) return;
       const a = new Audio(new URL(`/${l.som}`, location.href).href);
       a.volume = Math.min(1, (l.volume ?? 1) * volume());
+      a.playbackRate = l.velocidade ?? 1;
       a.play().catch(() => {}); // navegador sem gesto do usuário: segue em silêncio
-      live.add(() => a.pause());
+      players.add(a);
+      a.addEventListener('ended', () => players.delete(a));
+      live.add(() => { a.pause(); players.delete(a); });
     },
     ui(l, rect) {
       const box = overlay(rect, l.alvo);
       box.style.background = l.cor || '#ffffff';
-      const a = box.animate([{opacity: 0}, {opacity: l.opacidade ?? .35, offset: .3}, {opacity: 0}], {duration: l.duracao, easing: 'ease-out'});
+      const a = box.animate([{opacity: 0}, {opacity: l.opacidade ?? .35, offset: l.pico ?? .3}, {opacity: 0}], {duration: l.duracao, easing: 'ease-out'});
       const clean = () => { a.cancel(); box.remove(); live.delete(clean); };
       a.onfinish = clean;
       live.add(clean);
     },
   };
 
-  function stop() { for (const fn of [...live]) fn(); live.clear(); }
+  function stop() { for (const fn of [...live]) fn(); live.clear(); timers.clear(); players.clear(); paused = false; }
+  // Pausa de verdade em cada motor: timers guardam o que falta, animações, Lottie e áudio param onde estão; o shader para de desenhar.
+  function pause() {
+    if (paused) return;
+    paused = true;
+    const now = performance.now();
+    for (const t of timers) { clearTimeout(t.id); t.left = Math.max(0, t.due - now); }
+    for (const a of stage.getAnimations({subtree: true})) a.pause();
+    for (const p of players) p.pause();
+  }
+  function resume() {
+    if (!paused) return;
+    paused = false;
+    for (const t of timers) t.arm();
+    for (const a of stage.getAnimations({subtree: true})) a.play();
+    for (const p of players) p.play()?.catch?.(() => {});
+  }
   // `value`: 'comp:x', 'shader:x', 'lottie:x' ou a própria composição (prévia antes de salvar). Devolve a duração, 0 se nada tocou.
   function play(value, rect, {plan = null} = {}) {
     const comp = typeof value === 'object' ? value : asComposition(value, studio());
@@ -102,7 +132,7 @@ export function createComposer({stage, pixel, studio, quality = () => 'high', re
     for (const l of layers) after(l.inicio, () => { Promise.resolve(runners[l.tipo]?.(l, rect, profile)).catch(error => console.debug(error)); });
     return layers.length ? Math.min(MAX_COMPOSITION_MS, Math.max(...layers.map(l => l.inicio + l.duracao))) : 0;
   }
-  return {play, stop};
+  return {play, stop, pause, resume};
 }
 
 // Mesmo jeito do createPixelFx para o director: valor novo vai para o Composer, o resto segue para o Sprite Fusion como antes.

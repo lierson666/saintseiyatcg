@@ -3,12 +3,14 @@
 import {ANIM_MOMENTS, ELEMENT_COLOR, allEffects, catalogNow, importVfx, editVfx, loadAnims, animsNow, saveAnim, openAnimPreview, openAnimPicker, animLabel} from '/shared/anim-picker.js?v=5';
 import {categoryOf} from '/shared/anim-picker.js?v=5';
 import {CATEGORIES} from '/shared/vfx/presets.js';
-import {composerSection, composerMounted, livingSection, holoSection} from './animacoes-composer.js?v=2';
-import {loadPublicacao, mountPublicacao, publicacaoSection} from './animacoes-publicacao.js?v=1';
+import {composerSection, composerMounted, livingSection, holoSection, previewStudioFx} from './animacoes-composer.js?v=4';
+import {arenaSection, arenaMounted, arenaDefaults} from './animacoes-arena.js';
+import {loadPublicacao, mountPublicacao, publicacaoSection, publicacaoNow} from './animacoes-publicacao.js?v=3';
+import {bibliotecaSection, libraryRows, overview, visaoSection} from './animacoes-biblioteca.js?v=1';
 
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const FACCOES = ['Athena', 'Poseidon', 'Hades', 'Ares', 'Artemis', 'Neutral'];
-let root = null, tabs = null, host = null, hooks = null, cards = [], faccao = 'Athena', cardId = '', busca = '';
+let root = null, tabs = null, host = null, hooks = null, cards = [], faccao = 'Athena', cardId = '', busca = '', cartaFaccao = '', momentosAbertos = false;
 
 const entryOf = id => ({linhas: [], ...animsNow()[id]});
 const tune = id => ({ligado: true, tamanho: 1, velocidade: 1, cor: null, ...animsNow().efeitos?.[id]});
@@ -69,15 +71,20 @@ function efeitos() {
         <select data-filtro="gatilho" aria-label="Gatilho">${options(triggerList(), filtro.gatilho, 'Todos os gatilhos')}</select></div>
       <div id="an-effects">${effectRows()}</div></section>`;
 }
+// Dois painéis: à esquerda escolher a carta, à direita o que ela toca. Lista filtrada por facção, para não precisar saber o nome.
 function porCarta() {
-  const q = busca.trim().toLowerCase(), v = animsNow();
-  const list = cards.filter(c => !q ? v[c.id] : `${c.nome_exibicao_en} ${c.id}`.toLowerCase().includes(q)).slice(0, 60), card = cards.find(c => c.id === cardId);
+  const q = busca.trim().toLowerCase(), v = animsNow(), has = c => !!v[c.id];
+  const list = cards.filter(c => (cartaFaccao === 'todas' || (cartaFaccao ? c.faccao === cartaFaccao : q || has(c))) && (!q || `${c.nome_exibicao_en} ${c.nome_exibicao_pt || ''} ${c.id}`.toLowerCase().includes(q))).sort((a, b) => a.nome_exibicao_en.localeCompare(b.nome_exibicao_en)), card = cards.find(c => c.id === cardId);
   const lines = card?.habilidades_pt?.length ? card.habilidades_pt : card?.habilidades_en || [], own = card && (v[card.id]?.linhas || []);
+  const faccoes = [...new Set(cards.map(c => c.faccao).filter(Boolean))].sort();
   return `<section class="panel tl"><div class="tl-head"><h2>Por carta</h2><span class="tag">A carta passa por cima da facção</span></div>
-    <label class="tl-field"><span>Buscar carta (vazio: as que já têm animação)</span><input id="an-busca" type="search" value="${esc(busca)}" placeholder="Nome ou código"></label>
-    <div class="an-cards">${list.map(c => `<button type="button" data-an="card" data-id="${c.id}" aria-pressed="${c.id === cardId}">${esc(c.nome_exibicao_en)}</button>`).join('') || '<p class="hint">Nenhuma carta.</p>'}</div>
-    ${card ? `<h3>${esc(card.nome_exibicao_en)} · habilidades</h3>${lines.map((t, i) => `<div class="tl-anim tl-anim--faccao"><div class="tl-anim__what"><span>${esc(String(t).split(/ — |\n/)[0].slice(0, 60))}</span></div>${chooser(card.id, `linha:${i}`, own[i], 'habilidade da carta')}</div>`).join('') || '<p class="hint">Esta carta não tem habilidades.</p>'}
-      ${livingSection(card)}<h3>Momentos</h3>${moments(card.id, 'facção')}` : ''}</section>`;
+    <div class="an-carta"><aside class="an-carta__lista">
+      <label class="tl-field"><span>Facção</span><select id="an-carta-faccao"><option value="">Só as que já têm animação</option><option value="todas" ${cartaFaccao === 'todas' ? 'selected' : ''}>Todas as cartas</option>${faccoes.map(f => `<option ${f === cartaFaccao ? 'selected' : ''}>${esc(f)}</option>`).join('')}</select></label>
+      <label class="tl-field"><span>Buscar carta</span><input id="an-busca" type="search" value="${esc(busca)}" placeholder="Nome ou código"></label>
+      <p class="hint" aria-live="polite">${list.length} ${list.length === 1 ? 'carta' : 'cartas'}</p>
+      <div class="an-cards">${list.map(c => `<button type="button" data-an="card" data-id="${esc(c.id)}" aria-pressed="${c.id === cardId}">${has(c) ? '<i class="an-dot" title="Tem animação própria"></i>' : ''}<span>${esc(c.nome_exibicao_en)}<small>${esc(c.id)}</small></span></button>`).join('') || '<p class="hint">Nenhuma carta com esses filtros.</p>'}</div></aside>
+    <div class="an-carta__detalhe">${card ? `<h3>${esc(card.nome_exibicao_en)} · habilidades</h3>${lines.map((t, i) => `<div class="tl-anim tl-anim--faccao"><div class="tl-anim__what"><span>${esc(String(t).split(/ — |\n/)[0].slice(0, 60))}</span></div>${chooser(card.id, `linha:${i}`, own[i], 'habilidade da carta')}</div>`).join('') || '<p class="hint">Esta carta não tem habilidades.</p>'}
+      ${livingSection(card)}<details class="an-momentos" ${momentosAbertos ? 'open' : ''}><summary>Momentos: entrada, golpe, dano, morte e outros</summary>${moments(card.id, 'facção')}</details>` : '<p class="bl-empty">Escolha uma carta na lista para ver as habilidades, o Living Card e os momentos dela.</p>'}</div></div></section>`;
 }
 const ESTADO = {editavel: 'No Forge', parcial: 'Parcial', legado: 'Legado', excecao: 'Exceção'};
 const CRITERIO = {forge: 'presença no Forge', edita: 'edição', aplica: 'efeito no jogo', preview: 'teste na mesa', restaura: 'restaurar', testes: 'testes'};
@@ -92,9 +99,16 @@ const invOptions = key => [...new Set(inventario.animacoes.map(a => a[key]))].so
 const todas = () => { const r = inventario.resumo; return `<section class="panel tl"><div class="tl-head"><h2>Todas as animações</h2><span class="tag">${r.migradas || 0} migradas · ${r.editavel || 0} no Forge · ${r.parcial || 0} parciais · ${r.legado || 0} legadas</span></div>
     <p class="hint">Migrada é a animação com os oito critérios. Das ${r.total || 0} registradas, todas com id estável: ${Object.entries(CRITERIO).map(([k, nome]) => `${r.criterios?.[k] ?? 0} com ${nome}`).join(' · ')}.</p>
     <div class="an-inv-filtros"><input type="search" data-inv="busca" value="${esc(invBusca)}" placeholder="Nome, id, arquivo ou evento" aria-label="Buscar animação"><select data-inv="estado" aria-label="Situação">${options(Object.entries(ESTADO), invFiltro.estado, 'Toda situação')}</select><select data-inv="categoria" aria-label="Categoria">${options(invOptions('categoria'), invFiltro.categoria, 'Toda categoria')}</select><select data-inv="tecnologia" aria-label="Tecnologia">${options(invOptions('tecnologia'), invFiltro.tecnologia, 'Toda tecnologia')}</select><select data-inv="origem" aria-label="Origem">${options(invOptions('origem'), invFiltro.origem, 'Toda origem')}</select></div><div data-inv-list>${invList()}</div></section>`; };
+const BIB_VAZIA = {q: '', categoria: '', fonte: '', faccao: '', gatilho: '', estado: '', vinculo: '', ordem: 'nome'};
+let bib = {...BIB_VAZIA}, bibMax = 60;
+const bibRows = () => libraryRows({effects: allEffects(), anims: animsNow(), cards, filtro: bib, categoryOf, limit: bibMax, fonteNome, momentName: k => ANIM_MOMENTS.find(([m]) => m === k)?.[1] || k});
+function bibRedraw() { const box = root.querySelector('#bib-rows'); if (box) box.innerHTML = bibRows(); }
+const biblioteca = () => bibliotecaSection({filtro: bib, rows: bibRows(), fontes: Object.entries(catalogNow().fontes || {}).map(([id, f]) => [id, f.nome]), categorias: CATEGORIES.map(c => [c.id, c.nome]), faccoes: factionList(), momentos: triggerList()});
 const ABAS = {
-  criador: ['Criador', () => ''],
-  todas: ['Todas', todas],
+  visao: ['Resumo', () => visaoSection({numeros: overview({effects: allEffects(), anims: animsNow(), cards, inventario}), pub: publicacaoNow()})],
+  biblioteca: ['Catálogo', biblioteca],
+  criador: ['Mesa real', () => ''],
+  todas: ['Inventário', todas],
   particulas: ['Partículas', () => ''],
   interface: ['Interface', () => ''],
   cena: ['Céu e moeda', () => ''],
@@ -105,28 +119,43 @@ const ABAS = {
       <div class="tl-faccao-tabs" role="group" aria-label="Facção">${FACCOES.map(f => `<button type="button" data-an="faccao" data-f="${f}" aria-pressed="${f === faccao}">${f}</button>`).join('')}</div>${moments(`faccao-${faccao.toLowerCase()}`, 'padrão')}</section>`],
   carta: ['Por carta', porCarta],
   composer: ['Composer', composerSection],
+  arena: ['Cenários', arenaSection],
   holo: ['Holográficos', holoSection],
-  efeitos: ['Efeitos', efeitos],
+  efeitos: ['Importar e ajustar', efeitos],
   publicacao: ['Publicação', publicacaoSection],
 };
-let aba = 'padroes';
+// Cinco espaços. Toda aba antiga continua aqui, com o mesmo id, dentro do espaço a que pertence.
+const ESPACOS = [['visao', 'Visão geral', ['visao', 'publicacao']], ['biblioteca', 'Biblioteca', ['biblioteca', 'todas', 'efeitos', 'particulas', 'interface', 'cena']], ['carta', 'Por carta', ['carta', 'faccao', 'padroes']], ['composer', 'Composer', ['composer', 'sprite', 'combate', 'holo']], ['arena', 'Arena de testes', ['arena', 'criador']]];
+const espacoDe = id => ESPACOS.find(([, , abas]) => abas.includes(id));
+const ultima = {};
+let aba = 'visao';
 try { if (ABAS[localStorage.getItem('sh-anim-aba')]) aba = localStorage.getItem('sh-anim-aba'); } catch { /* sem armazenamento: começa em Padrões */ }
 let publicando = false;
+function irPara(id) {
+  aba = id;
+  try { localStorage.setItem('sh-anim-aba', aba); } catch { /* sem armazenamento: só não lembra a aba */ }
+  draw();
+  scrollTo(0, 0);
+}
 function draw() {
   const y = scrollY;
-  tabs.innerHTML = Object.entries(ABAS).map(([k, [nome]]) => `<button type="button" data-aba="${k}" aria-pressed="${k === aba}">${nome}</button>`).join('');
+  const atual = espacoDe(aba);
+  ultima[atual[0]] = aba;
+  tabs.innerHTML = `<nav class="an-espacos" aria-label="Espaços de animação">${ESPACOS.map(([id, nome, abas]) => `<button type="button" data-aba="${ultima[id] || abas[0]}" ${id === atual[0] ? 'aria-current="page"' : ''}>${nome}</button>`).join('')}</nav>${atual[2].length > 1 ? `<div class="tl-faccao-tabs an-sub" role="group" aria-label="Seções de ${atual[1]}">${atual[2].map(k => `<button type="button" data-aba="${k}" aria-pressed="${k === aba}">${ABAS[k][0]}</button>`).join('')}</div>` : ''}`;
   // O jogo do Criador fica fora do redesenho: só carrega na primeira visita à aba e não recomeça a cada troca.
   const palco = ['criador', 'particulas', 'interface', 'cena', 'sprite', 'combate'].includes(aba), modo = aba === 'criador' ? '' : `#${aba}`;
   host.hidden = !palco;
   if (palco && !host.firstChild) host.innerHTML = `<iframe class="an-criador" src="/star-hill/criador.html${modo}" title="Criador de animações"></iframe>`;
   else if (palco) host.firstChild.contentWindow.location.hash = modo;
+  if (aba === 'arena') arenaDefaults(cards);
   root.innerHTML = ABAS[aba][1]();
-  if (aba === 'publicacao' && !publicando) { publicando = true; loadPublicacao().then(() => { draw(); publicando = false; }); }
+  if (['publicacao', 'visao'].includes(aba) && !publicando) { publicando = true; loadPublicacao().then(() => { draw(); publicando = false; }); }
   composerMounted(cards, draw, hooks.notice);
+  if (aba === 'arena') arenaMounted(cards, {setStudioFx: previewStudioFx});
   scrollTo(0, y);
 }
 export async function mountAnimacoes(el, {notice}) {
-  el.innerHTML = '<div class="tl-faccao-tabs an-abas" role="group" aria-label="Seções de animação"></div><div class="an-criador-host" hidden></div><div></div>';
+  el.innerHTML = '<div class="an-abas"></div><div class="an-criador-host" hidden></div><div></div>';
   [tabs, host, root] = el.children; hooks = {notice};
   mountPublicacao(root, {notice, redraw: () => { publicando = true; draw(); publicando = false; }});
   root.addEventListener('input', e => {
@@ -137,15 +166,23 @@ export async function mountAnimacoes(el, {notice}) {
   });
   root.addEventListener('click', e => {
     const go = e.target.closest('[data-aba-ir]')?.dataset.abaIr;
-    if (go) { aba = go; draw(); scrollTo(0, 0); }
+    if (go) return irPara(go);
+    const carta = e.target.closest('[data-bib-carta]')?.dataset.bibCarta;
+    if (carta) { cardId = carta; momentosAbertos = true; return irPara('carta'); }
+    const f = e.target.closest('[data-carta-faccao]')?.dataset.cartaFaccao;
+    if (f) { cartaFaccao = f; return irPara('carta'); }
+    const vinculo = e.target.closest('[data-bib-vinculo]')?.dataset.bibVinculo, bq = e.target.closest('[data-bib-q]')?.dataset.bibQ;
+    if (vinculo || bq) { bib = {...BIB_VAZIA, vinculo: vinculo || '', q: bq || ''}; return irPara('biblioteca'); }
+    if (e.target.closest('[data-bib-limpar]')) { bib = {...BIB_VAZIA}; bibMax = 60; return draw(); }
+    if (e.target.closest('[data-bib-mais]')) { bibMax += 60; return bibRedraw(); }
   });
+  root.addEventListener('toggle', e => { if (e.target.matches?.('.an-momentos')) momentosAbertos = e.target.open; }, true);
   tabs.addEventListener('click', e => {
     const b = e.target.closest('[data-aba]');
-    if (!b) return;
-    aba = b.dataset.aba;
-    try { localStorage.setItem('sh-anim-aba', aba); } catch { /* sem armazenamento: só não lembra a aba */ }
-    draw();
+    if (b) irPara(b.dataset.aba);
   });
+  // Sem este CSS a carta de prévia fica solta, e a imagem dela cobre a página e bloqueia todos os cliques.
+  if (!document.querySelector('link[href*="live-card.css"]')) document.head.append(Object.assign(document.createElement('link'), {rel: 'stylesheet', href: '/shared/live-card.css?v=20261102-escala1'}));
   if (!document.querySelector('link[data-anim-picker]')) document.head.append(Object.assign(document.createElement('link'), {rel: 'stylesheet', href: '/shared/anim-picker.css?v=2'}));
   const [, exported, list] = await Promise.all([loadAnims(), fetch(`../card-forge/art-web/cards.json?t=${Date.now()}`, {cache: 'no-store'}).then(r => r.json()), fetch('/data/vfx-inventario.json', {cache: 'no-store'}).then(r => (r.ok ? r.json() : inventario)).catch(() => inventario)]);
   cards = exported.cartas; inventario = list;
@@ -192,6 +229,7 @@ document.addEventListener('submit', async e => {
 document.addEventListener('input', e => {
   const t = e.target;
   if (!root?.contains(t)) return;
+  if (t.dataset.bib) { bib[t.dataset.bib] = t.value; bibMax = 60; return bibRedraw(); }
   if (t.dataset.filtro === 'q') { filtro.q = t.value; root.querySelector('#an-effects').innerHTML = effectRows(); return; }
   if (t.id === 'an-busca') { busca = t.value; const at = t.selectionEnd; draw(); const n = root.querySelector('#an-busca'); n.focus(); n.setSelectionRange(at, at); return; }
   if (t.dataset.tune && t.type === 'range') { const b = t.closest('label').querySelector('b'); if (b) b.textContent = `${t.value}×`; }
@@ -199,6 +237,7 @@ document.addEventListener('input', e => {
 document.addEventListener('change', e => {
   const t = e.target;
   if (!root?.contains(t)) return;
+  if (t.id === 'an-carta-faccao') { cartaFaccao = t.value; return draw(); }
   if (t.dataset.filtro) { filtro[t.dataset.filtro] = t.value; root.querySelector('#an-effects').innerHTML = effectRows(); return; }
   const meta = t.closest('.an-meta');
   if (meta) {

@@ -2325,6 +2325,26 @@ const criadorApi = {
   ancoras(on, de = 'A') {
     document.querySelector('.preview-ancoras')?.remove();
     if (!on) return;
+  // Arena de testes do Star Hill: cada cenário com os vínculos reais da versão carregada (rascunho ou ?publicado=1). Só eventos de apresentação.
+  async cena(id, {de = 'A', ability = ''} = {}) {
+    const s = S(), para = de === 'A' ? 'B' : 'A', uid = s.players[de].battlefield[0], alvo = s.players[para].battlefield[0];
+    hideInspect();
+    if (id === 'repouso') return;
+    if (id === 'inspecao') return showInspect(uid);
+    if (id === 'deus') return criadorApi.strike({anim: null, tune: null, de, deus: true});
+    const atk = atkOf(s, ctx, uid), target = {kind: 'devotee', uid: alvo};
+    const eventos = {
+      entrada: [{type: 'entered', uid}],
+      ataque: [{type: 'strike_declared', player: de, attacker: uid, target}, {type: 'strike_resolve', player: de, attacker: uid, target, atk}],
+      dano: [{type: 'damage', uid: alvo, dealt: atk}],
+      defesa: [{type: 'damage', uid: alvo, prevented: atk, dealt: 0}],
+      habilidade: [{type: 'resolve', uid, ability}, {type: 'resolved', uid, results: []}],
+      morte: [{type: 'destroyed', uid: alvo}],
+    }[id];
+    if (!eventos) throw Error(`Cenário sem suporte: ${id}`);
+    await criadorPlay(eventos, null, null);
+    render(); // a morte só quebra a carta na tela: a mesa volta ao estado real
+  },
     const s = S(), para = de === 'A' ? 'B' : 'A', box = Object.assign(document.createElement('div'), {className: 'preview-ancoras'});
     const mark = (uid, label, color) => { const r = ui.rect(uid); if (r) box.insertAdjacentHTML('beforeend', `<div style="position:fixed;left:${r.left}px;top:${r.top}px;width:${r.width}px;height:${r.height}px;outline:2px dashed ${color};pointer-events:none"><b style="position:absolute;left:0;top:-18px;font:12px sans-serif;color:${color}">${label}</b><i style="position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px;border:2px solid ${color};border-radius:50%"></i></div>`); };
     mark(s.players[de].battlefield[0], 'Origem', '#7fe0ff');

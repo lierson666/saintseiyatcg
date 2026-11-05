@@ -1,6 +1,8 @@
 {
   "raf:card-forge-studio-js": "Não é animação: agrupa o redesenho do editor do Layout Studio.",
   "raf:card-forge-studio-properties-js": "Não é animação: agenda a atualização do painel de propriedades do Layout Studio.",
+  "raf:star-hill-animacoes-arena-js": "Não é animação: ajusta a escala da mesa no quadro seguinte a uma mudança de tamanho.",
+  "raf:star-hill-animacoes-composer-js": "Não é animação: move a marca de tempo na linha do tempo do Composer enquanto a prévia toca.",
   "raf:star-hill-designer-js": "Não é animação: espera dois quadros para medir o layout no designer.",
   "raf:playtest-divine-app-js": "Não é animação: espera a carta assentar para posicionar o menu e dá a partida na leitura de eventos do log.",
   "canvas:card-forge-boosters-html": "Ferramenta: recorta a arte do booster sob comando; nada anima.",

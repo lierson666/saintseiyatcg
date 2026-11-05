@@ -1,4 +1,6 @@
 // STAR HILL · Publicação das animações: mostra o que mudou, valida e cria uma versão. Nada vai ao ar sem o deploy do site.
+import {confirmar} from './confirmar.js';
+
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const STATE = {rascunho: 'Rascunho', teste: 'Em teste', aprovado: 'Aprovado', publicado: 'Publicado'};
 let data = null, hooks = {};
@@ -9,6 +11,7 @@ async function call(body) {
   if (!r.ok) throw Error(out.erro || 'Feche e abra o STAR HILL para atualizar o servidor.');
   return out;
 }
+export const publicacaoNow = () => data;
 export async function loadPublicacao() {
   try { data = await call(); } catch (error) { data = {erro: error.message}; }
 }
@@ -34,7 +37,7 @@ export function mountPublicacao(root, {notice, redraw}) {
     const b = e.target.closest('[data-pub]');
     if (!b) return;
     const publish = b.dataset.pub === 'publicar', version = Number(b.dataset.v);
-    if (!confirm(publish ? 'Criar a nova versão publicada? Ela vai ao ar no próximo deploy do site.' : `Voltar à versão ${version}? Isso cria uma versão nova; sua edição em andamento não muda.`)) return;
+    if (!await confirmar(publish ? 'Criar a nova versão publicada? Ela vai ao ar no próximo deploy do site.' : `Voltar à versão ${version}? Isso cria uma versão nova; sua edição em andamento não muda.`, publish ? 'Publicar' : 'Restaurar')) return;
     try {
       data = await call(publish ? {acao: 'publicar', nota: root.querySelector('[data-pub-nota]').value} : {acao: 'restaurar', versao: version});
       hooks.notice(`Versão ${data.versao} pronta. Vai ao ar no próximo deploy do site.`, true);

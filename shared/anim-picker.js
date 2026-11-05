@@ -61,13 +61,17 @@ export function mountPreview(box) {
   box.innerHTML = '<span class="ap-card ap-card--from"></span><span class="ap-card ap-card--to"></span>';
   const fx = createPixelFx(box, {tuning: () => anims.efeitos, catalog: () => sheets});
   const composer = createComposer({stage: box, pixel: fx, studio: studioNow, quality: () => previewQuality, targetOf: () => box.querySelector('.ap-card--to')});
-  return id => {
+  const run = id => {
     fx.clear();
     composer.stop();
     const a = box.querySelector('.ap-card--from').getBoundingClientRect(), to = box.querySelector('.ap-card--to').getBoundingClientRect();
     if (typeof id === 'object' || /^(shader|lottie|comp):/.test(id)) return composer.play(id, to); // objeto: composição ainda não salva
     return fx.play(id, to, {from: {x: a.left + a.width / 2, y: a.top + a.height / 2}, color: ELEMENT_COLOR[id] || '#e0bb62', power: .4, strength: 1.2});
   };
+  run.stop = () => { fx.clear(); composer.stop(); fx.hold(0); };
+  run.pause = () => { composer.pause(); fx.hold(1e9); }; // hold congela os efeitos que já estão na tela
+  run.resume = () => { fx.hold(0); composer.resume(); };
+  return run;
 }
 
 function css() {

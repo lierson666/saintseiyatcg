@@ -51,6 +51,27 @@ class VfxStudio(unittest.TestCase):
             with self.assertRaises(ValueError):
                 self.save('composicao', 'y', {'nome': 'Y', 'camadas': [layer]})
 
+    def test_versoes_guardam_o_que_estava_salvo(self):
+        one = {'nome': 'V1', 'camadas': [{'tipo': 'ui', 'inicio': 0, 'duracao': 100, 'pico': 0.2}]}
+        two = {'nome': 'V2', 'camadas': []}
+        versions = lambda: star_hill.vfx_versions('x', root=self.root)
+        self.save('composicao', 'x', one)
+        self.assertEqual(versions(), [])  # primeira gravação: nada antes dela
+        self.save('composicao', 'x', one)
+        self.assertEqual(versions(), [])  # igual não cria versão
+        self.save('composicao', 'x', two)
+        self.assertEqual(versions()[0]['nome'], 'V1')
+        self.assertEqual(versions()[0]['camadas'], one['camadas'])
+        self.save('composicao', 'x', None)
+        self.assertEqual(versions()[0]['nome'], 'V2')  # excluir também guarda
+        for n in range(30):
+            self.save('composicao', 'x', {'nome': f'N{n}', 'camadas': []})
+        self.assertEqual(len(versions()), star_hill.VERSOES_MAX)
+        with self.assertRaises(ValueError):
+            star_hill.vfx_versions('../x', root=self.root)
+        with self.assertRaises(ValueError):
+            self.save('composicao', 'y', {'nome': 'Y', 'camadas': [{'tipo': 'ui', 'inicio': 0, 'duracao': 1, 'pico': 2}]})
+
     def test_momento_aceita_novos_e_recusa_lixo(self):
         (self.root / 'data/card-animations.json').write_text('{}')
         data = star_hill.save_card_anim({'id': 'a', 'linhas': ['comp:great-flood'], 'entrada': 'shader:water'}, write, self.root)
