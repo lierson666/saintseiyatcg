@@ -30,10 +30,11 @@ const PATTERNS = [
   P('latent', `\\b(?:gain|generate|gains?|generates?) (?:an additional )?\\{?(\\d+)\\}? ?\\{(?:L|C)\\}`, m => ({amount: Number(m[1])})),
   P('latent', `\\b(?:gain|generate) ${NUM} latent cosmo`, m => ({amount: n(m[1])})),
   P('putBack', `\\bput ${NUM} cards? from your hand (?:on top|on the bottom|back)`, m => ({amount: n(m[1])})),
+  P('latentSelf', /\blose all your latent/),
   P('latentEnemy', /\bloses? (?:up to )?\{?(\d+)\}?\{L\}/, m => ({amount: Number(m[1])})),
   P('buff', /(?:\b(?:gets?|gains?|has|get|enters with) (?:an additional )?|^)([+-]\d+) ATK(?: ?\/ ?([+-]\d+) HP)?/, m => ({atk: Number(m[1]), hp: Number(m[2] || 0)})),
   P('buff', /\b(?:gets?|gains?|has) ([+-]\d+) HP/, m => ({atk: 0, hp: Number(m[1])})),
-  P('buff', /\b(?:gets?|gains?) ([+-]\d+)\/([+-]\d+)/, m => ({atk: Number(m[1]), hp: Number(m[2])})),
+  P('buff', /\b(?:gets?|gains?) ([+-]\d+)\/([+-]\d+)/, (m, s) => ({atk: Number(m[1]), hp: Number(m[2]), cap: Number(/\bup to \+(\d+)\/\+\d+/i.exec(s)?.[1]) || null})),
   P('counter', `\\bput ${NUM} ([+-]\\d+)\\/([+-]\\d+) counters?`, m => ({amount: n(m[1]), atk: Number(m[2]), hp: Number(m[3])})),
   P('training', `\\bput ${NUM} training counters?`, m => ({amount: n(m[1])})),
   P('trainingRemove', /\bremove (?:a |an |one |up to \w+ |\w+ )?training counters?/),
@@ -76,6 +77,12 @@ const PATTERNS = [
   P('control', /\bgain control\b/),
   P('equipFree', /\b(?:attach|equip)(?:ped)? [^.]*?(?:free|without paying|at no cost|to (?:target|another|a))|\bfrom your [^.]* attached/),
   P('copy', /\bcopy\b|\bbecomes? a copy/),
+];
+export const PARTIAL = 'PARTIAL';
+const VERB_CHECK = [
+  [/\bdraw\b/i, ['draw', 'drawback']], [/\bdiscards?\b/i, ['discard']], [/\bmills?\b/i, ['mill']], [/\bdeals? \d/i, ['damage']], [/(?<!you )\breturn\b/i, ['reanimate', 'recurHand', 'bounce']],
+  [/\bexile\b/i, ['exile']], [/\bsacrifices?\b/i, ['sacrifice', 'selfDefeat']], [/\bsearch\b/i, ['search']], [/\bcreate\b/i, ['token']], [/\bprevent\b/i, ['shield']],
+  [/\bdefeat\b/i, ['removal', 'selfDefeat']], [/\bdestroy\b/i, ['removal', 'selfDefeat', 'exile']], [/\bseal (?:target|that|it)\b/i, ['seal', 'sealRemove', 'forbid']],
 ];
 // Frases sem valor próprio: lembretes, ligação e organização do deck.
 const STRUCTURAL = [
@@ -189,7 +196,9 @@ export function parseAbility(raw, section = 'ability', card = {}) {
     const activation = /^(Afterlife\s+)?(?!when|whenever|if |while|resonance)([^.:]*(?:\{\d+\}\{[CLS]\}|\{T\}|sacrifice|discard)[^.:]*):\s*/i.exec(s);
     if (activation) {
       out.cost = parseCost(activation[0]);
-      if (/sacrifice/i.test(activation[0])) out.cost.sacrifice = 1;
+      const own = clean(card.nome_exibicao_en || '').toLowerCase();
+      if (/sacrifice this\b/i.test(activation[0]) || (own && activation[0].toLowerCase().includes(`sacrifice ${own}`))) out.cost.selfSpend = true; // a carta se consome: um uso só.
+      else if (/sacrifice/i.test(activation[0])) out.cost.sacrifice = 1;
       if (/discard/i.test(activation[0])) out.cost.discard = 1;
       out.kind = activation[1] ? 'afterlife' : 'activated';
       s = s.slice(activation[0].length);
@@ -237,6 +246,12 @@ export function parseAbility(raw, section = 'ability', card = {}) {
     if (/^as an additional cost/i.test(s) || /\bas an additional cost\b/i.test(s)) { out.additionalCost = {...parseCost(s), sacrifice: /sacrifice/i.test(s) ? 1 : 0, discard: /discard/i.test(s) ? 1 : 0}; rec.effects = rec.effects.filter(f => !['sacrifice', 'discard', 'soulSelf'].includes(f.kind)); if (!rec.effects.length) rec.status = 'structural'; }
     const sided = rec.effects.find(f => f.side === 'own' || f.side === 'enemy');
     if (sided) carriedSide = sided.side;
+    // Verbo de jogo sem efeito lido na frase: a leitura ficou incompleta, mesmo que outro padrão tenha casado.
+    if (rec.status !== UNRESOLVED && rec.status !== 'structural') {
+      const clause = s.replace(/\b(?:when|whenever|if|while|unless)\b[^,]*,/gi, ' ');
+      const missing = VERB_CHECK.filter(([re, kinds]) => re.test(clause) && !rec.effects.some(f => kinds.includes(f.kind))).map(([re]) => re.source.replace(/\\b/g, ''));
+      if (missing.length) { rec.status = PARTIAL; rec.missing = missing; }
+    }
     if (rec.effects.some(f => f.condition)) carriedCondition = rec.effects.find(f => f.condition).condition;
     out.effects.push(...rec.effects);
     out.sentences.push(rec);

@@ -7,7 +7,12 @@ import {CosmoBalanceEngine, CLASSES} from '../card-forge/cosmo-balance/engine.js
 import {normalizeCard, parseAbility, UNRESOLVED} from '../card-forge/cosmo-balance/normalize.js';
 import {proposalsFor} from '../card-forge/cosmo-balance/proposals.js';
 import {balanceToXlsx} from '../card-forge/cosmo-balance/export.js';
-import {DEFAULT_CONFIG, stableHash, stableStringify} from '../card-forge/cosmo-balance/config.js';
+import {DEFAULT_CONFIG, ENGINE_VERSION, stableHash, stableStringify} from '../card-forge/cosmo-balance/config.js';
+import {unresolvedLedger} from '../card-forge/cosmo-balance/engine.js';
+import {EFFECT_LIBRARY, KIT_NOT_EFFECTS} from '../card-forge/cosmo-balance/effect-library.js';
+import {applyPatch, revertPatch, validatePatch, validateProposal, compareProposal, transition, NEEDS_REVIEW, VALIDATED, SCENARIOS} from '../card-forge/cosmo-balance/patches.js';
+import {applyCostOverlay, applyEngineOverrides, OVERRIDE_KEYS} from './cosmo-balance-overrides.mjs';
+import {plan, wilson, scenarioKeys} from './cosmo-balance-sim.mjs';
 
 const CATALOG = new URL('../data/cards.json', import.meta.url);
 const INDEX = new URL('../card-forge/cosmo-balance/engine-index.json', import.meta.url);
@@ -62,7 +67,7 @@ test('ETB conta uma vez; contínuo não é multiplicado pela vida', () => {
   const a = parseAbility('When X enters the Battlefield, draw a card.', 'ability', {tipo: 'Devotee'});
   assert.equal(a.trigger, 'etb');
   const etb = score(raw({habilidades_en: ['When X enters the Battlefield, draw a card.']}));
-  near(etb.scores.EffectScore, DEFAULT_CONFIG.effects.draw);
+  near(etb.scores.EffectScore, DEFAULT_CONFIG.effects.draw * DEFAULT_CONFIG.effectScale.Devotee);
   const cont = score(raw({habilidades_en: ['Other friendly Warriors get +1 @ATK.']}));
   assert.equal(cont.abilities[0].kind, 'continuous');
   assert.equal(cont.abilities[0].uses, 1);
@@ -171,8 +176,8 @@ test('Domain não tem custo de entrada e é comparado aos pares (§63); Moment g
   const domains = [1, 2, 3].map(i => raw({id: `d${i}`, tipo: 'Domain', custo: 3, power: null, vida: null, subtipos: ['Arena'], habilidades_en: [`Once each round, {${i}}{C}: Draw a card.`]}));
   const result = e.analyze([...GODS, ...domains]);
   const d = result.cards.find(c => c.id === 'd1');
-  assert.equal(d.effectiveCost, null);
-  assert.equal(d.peerCompared, true);
+  assert.equal(d.effectiveCost.entry, 0, 'Sem custo de entrada (§63)');
+  assert.equal(d.relativeDeviation != null, true);
   assert.ok(result.cards.find(c => c.id === 'd1').power > result.cards.find(c => c.id === 'd3').power);
   const spell = c => score(raw({tipo: 'Spell', subtipos: ['Moment'], power: null, vida: null, custo: c, habilidades_en: ['Draw a card.']})).scores.TimingScore;
   assert.ok(spell(3) > 0);
@@ -273,3 +278,233 @@ test('Excel: uma linha por carta da tela, com nota, proposta e sem tocar no cat�
   assert.ok(text.includes(`<v>${Math.round(forte.normalizedDeviation * 100)}</v>`));
   assert.equal(JSON.stringify(catalog.cartas), before);
 });
+
+// ---------- 1.1: matemática, Domains, Gods, leitura pendente, patches, isolamento ----------
+const PATCH = JSON.parse(readFileSync(new URL('../card-forge/cosmo-balance/patches/balance-patch-001.json', import.meta.url), 'utf8'));
+const realEngine = () => new CosmoBalanceEngine({engineIndex: index});
+const analyzeReal = () => realEngine().analyze(catalog.cartas, catalog);
+
+test('desvio: fórmula do autor, sinal e epsilon', () => {
+  const e = engine();
+  const pos = e.deviationOf(3, 2), neg = e.deviationOf(0.4, 1.4), small = e.deviationOf(1, 0.1);
+  near(pos.absolute, 1); near(pos.relative, 0.5);
+  near(neg.absolute, -1); near(neg.relative, -1 / 1.4);
+  near(small.relative, 0.9 / DEFAULT_CONFIG.bands.epsilon, 1e-6);
+  assert.equal(e.classify(neg.relative), CLASSES.WEAK);
+  assert.notEqual(e.classify(neg.relative), CLASSES.BROKEN);
+  near(engine({bands: {epsilon: 2}}).deviationOf(1, 0.1).relative, 0.45);
+});
+
+test('custo zero: tratado à parte, com faixas absolutas', () => {
+  const e = engine();
+  const free = c => e.analyze([...GODS, raw({id: 'zero', tipo: 'Spell', subtipos: ['Technique'], power: null, vida: null, custo: 0, cosmoble: true, ...c})]).cards.find(x => x.id === 'zero');
+  const zeroEngine = engine({cardOpportunity: 0});
+  const a = zeroEngine.analyze([...GODS, raw({id: 'z', tipo: 'Spell', subtipos: ['Technique'], power: null, vida: null, custo: 0, habilidades_en: ['Draw two cards.']})]).cards.find(x => x.id === 'z');
+  assert.equal(a.zeroCost, true);
+  assert.equal(a.classification, CLASSES.BROKEN);
+  assert.equal(free({}).effectiveTotal, DEFAULT_CONFIG.cardOpportunity);
+});
+
+test('catálogo real: nenhum desvio negativo vira excesso; A Coin for the Ferryman deixa de ser quebrada', () => {
+  const r = analyzeReal();
+  assert.equal(r.summary.signConflicts, 0);
+  for (const c of r.cards) {
+    if (c.absoluteDeviation < 0) assert.ok(![CLASSES.ABOVE, CLASSES.BROKEN].includes(c.classification), c.id);
+    if (c.absoluteDeviation > 0) assert.ok(![CLASSES.BELOW, CLASSES.WEAK].includes(c.classification), c.id);
+    if (c.absoluteDeviation != null && c.effectiveTotal != null) near(c.absoluteDeviation, c.power - c.effectiveTotal, 0.002);
+  }
+  const coin = r.cards.find(c => c.id === 'hades-v6-227');
+  assert.ok(coin.absoluteDeviation < 0);
+  assert.notEqual(coin.classification, CLASSES.BROKEN);
+  assert.equal(coin.abilities[0].uses, 1, 'sacrifica a si mesma: um uso');
+});
+
+test('Domains: avaliador próprio, sem custo fixo, slot por facção e custo de entrada configurável', () => {
+  const r = analyzeReal();
+  const domains = r.cards.filter(c => c.type === 'Domain' && c.status !== 'cortado');
+  assert.equal(r.cards.filter(c => c.type === 'Domain').length, 33);
+  assert.ok(new Set(domains.map(c => c.effectiveTotal)).size > 5, 'custo efetivo varia');
+  for (const d of domains) {
+    assert.ok(d.domainProfile && d.effectiveCost.slotOpportunity != null, d.id);
+    assert.equal(d.effectiveCost.entry, 0);
+    near(d.domainProfile.general + d.domainProfile.resonance, d.domainProfile.continuous + d.domainProfile.triggered + d.domainProfile.activated, 0.01);
+  }
+  const printed = new CosmoBalanceEngine({engineIndex: index, config: {domain: {entryCostSource: 'printed'}}}).analyze(catalog.cartas, catalog).cards.find(c => c.id === 'hades-v6-245');
+  assert.equal(printed.effectiveCost.entry, catalog.cartas.find(c => c.id === 'hades-v6-245').custo);
+});
+
+test('Gods: sem custo artificial, perfil com Soul real, sem Attack e sem proposta', () => {
+  const r = analyzeReal(), gods = r.cards.filter(c => c.type === 'God');
+  assert.equal(gods.length, 5);
+  for (const g of gods) {
+    assert.equal(g.effectiveCost, null);
+    assert.equal(g.relativeDeviation, null);
+    assert.equal(g.classification, CLASSES.UNKNOWN);
+    assert.equal(g.godProfile.attack, null);
+    assert.equal(g.godProfile.soul, g.soul);
+    assert.ok(g.godProfile.proposalsBlocked);
+  }
+  assert.ok(new Set(gods.map(g => JSON.stringify(g.godProfile.axes))).size === 5);
+});
+
+test('efeitos não resolvidos: estado, INCONCLUSIVE e ledger completo', () => {
+  const r = analyzeReal();
+  const ledger = unresolvedLedger(r.cards, index);
+  const pending = r.cards.filter(c => c.unresolved.length);
+  assert.ok(pending.length);
+  for (const c of pending) { assert.equal(c.state, 'UNRESOLVED'); assert.equal(c.classification, CLASSES.UNKNOWN, c.id); }
+  for (const l of ledger) for (const f of ['id', 'text', 'engine', 'reason', 'evaluation']) assert.ok(l[f], f);
+  assert.equal(ledger.filter(l => l.state === 'UNRESOLVED').length, r.summary.unresolvedSentences);
+  const verb = parseAbility('Target friendly Saint gets +1 @ATK, then draw from the well.', 'ability', {tipo: 'Devotee'});
+  assert.equal(verb.sentences[0].status, 'PARTIAL');
+});
+
+test('contexto: Impulse e Pierce valem pelo corpo, Training supera bônus temporário, alvos restritos valem menos', () => {
+  const kw = (k, atk, hp) => score(raw({power: atk, vida: hp, keywords_en: [k]})).scores.KeywordScore;
+  assert.ok(kw('Impulse', 6, 3) > kw('Impulse', 1, 3) * 2);
+  assert.ok(kw('Pierce', 7, 3) > kw('Pierce', 2, 3) * 2);
+  const e = engine();
+  const realCtx = new CosmoBalanceEngine({engineIndex: index}).context(catalog.cartas);
+  const fx = t => e.scoreCard(raw({habilidades_en: [t]}), realCtx).scores.EffectScore;
+  assert.ok(fx('When X enters the Battlefield, put a @Training counter on target friendly Devotee.') > fx('When X enters the Battlefield, target friendly Devotee gets +1 @ATK / +1 @HP until the end of your round.'));
+  assert.ok(fx('When X enters the Battlefield, defeat target enemy Devotee.') > fx('When X enters the Battlefield, defeat target enemy Devotee with cost 1 or less.'));
+  assert.ok(realCtx.devotees.atks.length > 100);
+});
+
+test('custos alternativos, keywords combinadas e buff recorrente seguem medidos', () => {
+  const hidden = score(raw({custo: 5, power: 5, vida: 6, keywords_en: ['Pierce', 'Impulse'], habilidades_en: ['Hidden Cosmo {2}']}));
+  assert.ok(hidden.scores.KeywordScore > DEFAULT_CONFIG.keywords.hiddenCosmo.base);
+  assert.deepEqual(hidden.interactions.map(i => i.id), ['impulse_pierce']);
+  const every = score(raw({habilidades_en: ['At the beginning of your round, X gets +1 @ATK until the end of your round.']})).scores.EffectScore;
+  const once = score(raw({habilidades_en: ['When X enters the Battlefield, X gets +1 @ATK until the end of your round.']})).scores.EffectScore;
+  assert.ok(every > once);
+});
+
+test('interações não são soma simples e registram contribuição', () => {
+  const c = score(raw({habilidades_en: ['Put a @Training counter on target friendly Devotee.', 'Put the top card of your deck into your Cosmo Bank as a Cosmo Base.', 'Friendly Warriors with a @Training counter get +1 @ATK.'], tipo: 'Spell', subtipos: ['Technique'], power: null, vida: null}));
+  const ids = c.interactions.map(i => i.id);
+  assert.ok(ids.includes('training_ramp') && ids.includes('training_global'));
+  const sum = c.interactions.reduce((n, i) => n + i.value, 0);
+  assert.ok(c.scores.SynergyScore < sum + 1e-9, 'saturação');
+  assert.ok(c.scores.SynergyScore > Math.max(...c.interactions.map(i => i.value)));
+  assert.ok(c.scores.SynergyScore <= DEFAULT_CONFIG.synergy.cap);
+});
+
+test('biblioteca cobre todo efeito lido e toda ação de kit.js', () => {
+  const r = analyzeReal();
+  for (const c of r.cards) for (const k of c.kinds) assert.ok(EFFECT_LIBRARY[k], k);
+  const kit = readFileSync(new URL('../playtest/engine-v3/v6/kit.js', import.meta.url), 'utf8');
+  const exported = [...kit.matchAll(/^export (?:const|function) (\w+)/gm)].map(m => m[1]);
+  const mapped = new Set(Object.values(EFFECT_LIBRARY).flatMap(e => e.engine));
+  const orphan = exported.filter(n => !mapped.has(n) && !KIT_NOT_EFFECTS.has(n));
+  assert.deepEqual(orphan, []);
+});
+
+test('patch: as 12 propostas validam contra o catálogo e divergência vira NEEDS_REVIEW', () => {
+  const v = validatePatch(PATCH, catalog.cartas, index);
+  assert.equal(v.length, 12);
+  assert.deepEqual(v.filter(x => x.status !== VALIDATED).map(x => x.key), []);
+  assert.equal(PATCH.proposals.filter(p => p.group === 'A').length, 8);
+  assert.equal(PATCH.proposals.filter(p => p.group === 'B').length, 4);
+  const wrongCost = {...PATCH.proposals[0], changes: [{field: 'custo', from: 9, to: 2}]};
+  assert.equal(validateProposal(wrongCost, catalog.cartas, index).status, NEEDS_REVIEW);
+  const wrongText = {...PATCH.proposals[2], changes: [{field: 'habilidades_en', match: 'up to +9/+9', replace: 'x'}]};
+  assert.equal(validateProposal(wrongText, catalog.cartas, index).status, NEEDS_REVIEW);
+  assert.equal(validateProposal({...PATCH.proposals[0], cardId: 'nao-existe'}, catalog.cartas, index).status, NEEDS_REVIEW);
+  const bad = {...PATCH, proposals: [wrongCost]};
+  const applied = applyPatch(catalog.cartas, bad, {env: 'developer', engineIndex: index});
+  assert.deepEqual(applied.active, []);
+  assert.deepEqual(applied.skipped, ['001']);
+});
+
+test('patch: versiona, preserva o original e reverte exatamente; só Developer carrega', () => {
+  const before = stableStringify(catalog.cartas);
+  assert.throws(() => applyPatch(catalog.cartas, PATCH, {env: 'official'}), /Developer/);
+  assert.throws(() => applyPatch(catalog.cartas, PATCH, {}), /Developer/);
+  const {cards, active, versions} = applyPatch(catalog.cartas, PATCH, {env: 'developer', engineIndex: index});
+  assert.equal(active.length, 12);
+  assert.equal(versions.length, 12);
+  assert.equal(stableStringify(catalog.cartas), before);
+  const spearman = cards.find(c => c.id === 'poseidon-v6-107');
+  assert.equal(spearman.custo, 2);
+  assert.equal(spearman.power, catalog.cartas.find(c => c.id === 'poseidon-v6-107').power);
+  assert.match(new CosmoBalanceEngine({engineIndex: index}).analyze(cards, catalog).cards.find(c => c.id === spearman.id).cardVersion, /BALANCE-PATCH-001-EXPERIMENTAL#006/);
+  assert.equal(new CosmoBalanceEngine({engineIndex: index}).analyze(catalog.cartas, catalog).cards.find(c => c.id === spearman.id).cardVersion, `${spearman.id}@canon`);
+  assert.ok(cards.find(c => c.id === 'artemis-v6-405').habilidades_en.some(t => t.includes('up to +2/+2')));
+  assert.ok(cards.find(c => c.id === 'artemis-v6-405').habilidades_pt.some(t => t.includes('até +2 @ATQ / +2 @PV')));
+  assert.equal(stableStringify(revertPatch(cards, PATCH)), before);
+  assert.deepEqual(applyPatch(catalog.cartas, PATCH, {env: 'developer', groups: ['A'], engineIndex: index}).active, ['001', '002', '003', '004', '005', '006', '007', '008']);
+});
+
+test('patch: toda proposta muda a nota na direção pedida, sem mover a curva', () => {
+  const e = realEngine(), r = e.analyze(catalog.cartas, catalog);
+  for (const p of PATCH.proposals) {
+    const c = compareProposal(e, p, catalog.cartas, r);
+    assert.ok(c, p.key);
+    assert.notEqual(`${c.after.power}|${c.after.effective}`, `${c.before.power}|${c.before.effective}`, `${p.key} não mexe no modelo`);
+    const nerfGroup = ['001', '002', '003', '004', '005', '006', '007', '008', '009'];
+    if (nerfGroup.includes(p.key)) assert.ok(c.after.relative < c.before.relative, p.key);
+    else assert.ok(c.after.relative > c.before.relative, p.key);
+  }
+});
+
+test('patch: fluxo de status, sem pular, sem publicar, aprovação humana', () => {
+  const v = validatePatch(PATCH, catalog.cartas, index), who = {by: 'Lierson', date: '2026-11-04'};
+  assert.throws(() => transition(PATCH, 'APPROVED', who), /só se vai/);
+  assert.throws(() => transition(PATCH, 'READY_FOR_TEST', {date: '2026-11-04', validations: v}), /quem e quando/);
+  assert.throws(() => transition(PATCH, 'READY_FOR_TEST', who), /validar/);
+  const ready = transition(PATCH, 'READY_FOR_TEST', {...who, validations: v});
+  assert.equal(ready.history.length, PATCH.history.length + 1);
+  assert.equal(PATCH.status, 'DRAFT');
+  assert.throws(() => transition(ready, 'TESTED', who), /simulação/);
+  const tested = transition({...ready, simulation: {runs: [{}]}}, 'TESTED', who);
+  assert.throws(() => transition(tested, 'APPROVED', {by: 'Claude', date: 'x'}), /humana/);
+  const approved = transition(tested, 'APPROVED', who);
+  assert.equal(approved.approval.by, 'Lierson');
+  assert.throws(() => transition(approved, 'PUBLISHED', who), /não existe/);
+  assert.equal(transition(approved, 'DRAFT', who).approval, null);
+  assert.equal(PATCH.status, 'DRAFT', 'o patch registrado começa em DRAFT');
+});
+
+test('isolamento: nada oficial importa o Cosmo Balance e a simulação restaura a memória', async () => {
+  const {execFileSync} = await import('node:child_process');
+  const root = new URL('..', import.meta.url).pathname;
+  // grep sai com 1 quando não acha nada: é o resultado esperado.
+  const hits = execFileSync('sh', ['-c', "grep -rlE 'cosmo-balance|BALANCE-PATCH' playtest shared data sanctuary-api arena-server tools/publish-game.sh tools/simulate-v3.mjs --include='*.js' --include='*.mjs' --include='*.json' --include='*.sh' || true"], {cwd: root, encoding: 'utf8'}).trim();
+  assert.equal(hits, '');
+  assert.equal(stableStringify(catalog.cartas), stableStringify(JSON.parse(readFileSync(CATALOG, 'utf8')).cartas));
+});
+
+test('simulação: cenários, overlay e overrides com o motor real, reversíveis', async () => {
+  await import('../playtest/engine-v3/v6/hooks.js');
+  const {V6} = await import('../playtest/engine-v3/v6/registry.js');
+  assert.deepEqual(scenarioKeys(PATCH, 'A'), []);
+  assert.equal(scenarioKeys(PATCH, 'B').length, 8);
+  assert.equal(scenarioKeys(PATCH, 'C').length, 12);
+  assert.deepEqual(scenarioKeys(PATCH, 'A+006'), ['006']);
+  assert.equal(scenarioKeys(PATCH, 'C-006').length, 11);
+  assert.deepEqual(Object.keys(SCENARIOS), ['A', 'B', 'C']);
+  assert.deepEqual([...OVERRIDE_KEYS].sort(), PATCH.proposals.filter(p => p.engine === 'override').map(p => p.key));
+  assert.deepEqual(plan([{}, {}], 2, 1).map(j => j.first), ['A', 'B', 'A', 'B']);
+  assert.equal(plan([{}, {}], 1, 1)[0].seed, plan([{}, {}], 1, 1)[1].seed, 'iniciativa espelhada com a mesma semente');
+  const [lo, hi] = wilson(5, 10);
+  assert.ok(lo < 0.5 && hi > 0.5);
+  const originals = {mods: V6['artemis-v6-405'].mods, run: V6['hades-v6-262'].spell.run};
+  const undo = applyEngineOverrides(V6, OVERRIDE_KEYS);
+  assert.notEqual(V6['artemis-v6-405'].mods, originals.mods);
+  undo();
+  assert.equal(V6['artemis-v6-405'].mods, originals.mods);
+  assert.equal(V6['hades-v6-262'].spell.run, originals.run);
+  const stub = {'artemis-v6-405': {mods: () => [{atk: 3, hp: 3}]}, 'artemis-v6-384': {mods: () => [{atk: 1, hp: 1}]}};
+  applyEngineOverrides(stub, ['003', '005']);
+  assert.deepEqual(stub['artemis-v6-405'].mods(), [{atk: 2, hp: 2}], 'teto novo');
+  assert.deepEqual(stub['artemis-v6-384'].mods(), [{atk: 1, hp: 1}], 'abaixo do teto fica igual');
+  const cards = new Map([['poseidon-v6-107', {cost: {amount: 1, unit: 'base'}}]]);
+  const uncost = applyCostOverlay(cards, {proposals: [PATCH.proposals.find(p => p.key === '006')]}, ['006']);
+  assert.equal(cards.get('poseidon-v6-107').cost.amount, 2);
+  uncost();
+  assert.equal(cards.get('poseidon-v6-107').cost.amount, 1);
+  assert.throws(() => applyCostOverlay(new Map([['poseidon-v6-107', {cost: {amount: 3}}]]), {proposals: [PATCH.proposals.find(p => p.key === '006')]}, ['006']), /NEEDS_REVIEW/);
+});
+
+test('versão registrada é a 1.1', () => { assert.equal(ENGINE_VERSION, '1.1.0'); assert.equal(analyzeReal().meta.engineVersion, '1.1.0'); });

@@ -19,7 +19,8 @@
     .cb__filters { display: flex; flex-wrap: wrap; gap: 8px; align-items: end; }
     .cb__filters label { display: grid; gap: 2px; font-size: 12px; }
     .cb__layout { display: grid; grid-template-columns: minmax(0, 3fr) minmax(320px, 2fr); gap: 16px; align-items: start; }
-    .cb__scroll { overflow: auto; max-height: 72vh; border: 1px solid #ffffff22; }
+    #cardsTab[hidden] { display: none !important; }
+    .cb__scroll { overflow-y: auto; overflow-x: hidden; max-height: 72vh; border: 1px solid #ffffff22; }
     table.cb__table { border-collapse: collapse; width: 100%; font-size: 13px; }
     .cb__table th, .cb__table td { padding: 4px 8px; text-align: right; border-bottom: 1px solid #ffffff14; white-space: nowrap; font-variant-numeric: tabular-nums; }
     .cb__table th { position: sticky; top: 0; background: #14110c; cursor: pointer; }
@@ -37,7 +38,43 @@
     .cb__muted { opacity: .7; }
     .cb__warn { color: #e8a33d; }
     .cb__config { width: 100%; min-height: 96px; font: 12px ui-monospace, monospace; }
-    @media (max-width: 960px) { .cb__layout { grid-template-columns: 1fr; } .cb__scroll, .cb__detail { max-height: none; } }
+    .cb__tabs { display: flex; flex-wrap: wrap; gap: 4px; border-bottom: 1px solid var(--line); }
+    .cb__tabs button { background: none; border: 0; border-bottom: 2px solid transparent; padding: 8px 12px; color: var(--muted); min-height: 40px; }
+    .cb__tabs button[aria-selected="true"] { color: var(--gold); border-bottom-color: var(--gold); }
+    .cb__panel { display: grid; gap: 12px; min-width: 0; }
+    .cb__panel h3 { margin: 8px 0 0; font-size: 14px; color: var(--gold); }
+    .cb__panel p { margin: 0; }
+    .cb__tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; }
+    .cb__tile { border: 1px solid var(--line); padding: 8px 12px; }
+    .cb__tile b { display: block; font-size: 22px; font-variant-numeric: tabular-nums; }
+    .cb__tile small { color: var(--muted); }
+    .cb__chart { display: grid; gap: 4px; max-width: 760px; }
+    .cb__row { display: grid; grid-template-columns: minmax(84px, 170px) minmax(60px, 1fr) 56px; gap: 8px; align-items: center; font-size: 13px; }
+    .cb__rowvalue { text-align: right; font-variant-numeric: tabular-nums; }
+    .cb__track { position: relative; height: 10px; display: block; }
+    .cb__zero { position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: var(--line); }
+    .cb__fill { position: absolute; top: 0; bottom: 0; border-radius: 2px; min-width: 1px; }
+    .cb__fill.pos { background: var(--gold); }
+    .cb__fill.neg { background: #6fb1d6; }
+    .cb__wrap { max-width: 100%; min-width: 0; }
+    table.cb__data { border-collapse: collapse; width: 100%; font-size: 13px; }
+    .cb__data th, .cb__data td { padding: 4px 8px; text-align: left; border-bottom: 1px solid var(--line); overflow-wrap: anywhere; vertical-align: top; }
+    .cb__data th { color: var(--muted); font-weight: 500; }
+    .cb__link { background: none; border: 0; padding: 0; color: var(--gold); text-align: left; min-height: 24px; }
+    .cb__flow { list-style: none; display: flex; flex-wrap: wrap; gap: 4px; padding: 0; margin: 0; font-size: 12px; }
+    .cb__flow li { border: 1px solid var(--line); padding: 4px 8px; color: var(--muted); }
+    .cb__flow li.is-on { border-color: var(--gold); color: var(--gold); }
+    .cb__facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px; margin: 0; }
+    .cb__facts dt { color: var(--muted); font-size: 12px; }
+    .cb__facts dd { margin: 0; overflow-wrap: anywhere; }
+    .cb__props { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); gap: 12px; }
+    .cb__prop { border: 1px solid var(--line); padding: 8px 12px; display: grid; gap: 6px; min-width: 0; }
+    .cb__chip { font-size: 11px; border: 1px solid var(--line); padding: 1px 6px; }
+    .cb__chip.warn { color: #e8a33d; border-color: #e8a33d; }
+    .cb__table { table-layout: auto; }
+    .cb__table td:first-child { white-space: normal; overflow-wrap: anywhere; }
+    @media (max-width: 960px) { .cb__layout { grid-template-columns: minmax(0, 1fr); } .cb__scroll, .cb__detail { max-height: none; } main.cb { padding: 12px; } }
+    @media (max-width: 640px) { .cb__table th:nth-child(n+2):nth-child(-n+3), .cb__table td:nth-child(n+2):nth-child(-n+3), .cb__table th:nth-child(6), .cb__table td:nth-child(6), .cb__table th:nth-child(9), .cb__table td:nth-child(9) { display: none; } .cb__table td, .cb__table th { white-space: normal; padding: 4px; } .cb__data { font-size: 12px; } .cb__data th, .cb__data td { padding: 4px; } .cb__filters label { flex: 1 1 40%; } .cb__row { grid-template-columns: 84px minmax(40px, 1fr) 48px; } }
   </style>
 </head>
 <body>
@@ -47,7 +84,10 @@
     <span id="status" role="status"></span>
   </header>
   <main class="cb" id="main">
-    <p class="cb__banner"><b>Developer.</b> Classificação preliminar e sem calibragem por partidas. Só leitura: nenhuma proposta grava em <code>data/cards.json</code>, regra ou jogo oficial.</p>
+    <p class="cb__banner"><b>Developer.</b> Classificação preliminar, sem calibragem por partidas. Só leitura: nenhuma proposta grava em <code>data/cards.json</code>, regra ou jogo oficial.</p>
+    <div class="cb__tabs" id="tabs" role="tablist" aria-label="Seções do Cosmo Balance"></div>
+    <section class="cb__panel" id="panel" role="tabpanel"></section>
+    <div id="cardsTab" hidden style="display:grid;gap:16px;min-width:0">
     <div class="cb__stats" id="stats" aria-label="Distribuição das classificações"></div>
     <div class="cb__filters">
       <label>Buscar <input id="q" type="search" placeholder="nome ou id"></label>
@@ -61,6 +101,7 @@
       <div class="cb__scroll"><table class="cb__table"><thead id="head"></thead><tbody id="rows"></tbody></table></div>
       <aside class="cb__detail" id="detail" aria-live="polite"><p class="cb__muted">Escolha uma carta.</p></aside>
     </div>
+    </div>
     <details>
       <summary>Versões e parâmetros</summary>
       <p id="meta" class="cb__muted"></p>
@@ -69,6 +110,6 @@
       <button id="apply" type="button">Recalcular</button>
     </details>
   </main>
-  <script type="module" src="cosmo-balance/dashboard.js?v=20261104-balance1"></script>
+  <script type="module" src="cosmo-balance/dashboard.js?v=20261105-balance11"></script>
 </body>
 </html>

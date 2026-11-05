@@ -39,13 +39,12 @@ function candidates(raw, up) {
 
 export function proposalsFor(engine, card, rawCards, result) {
   const raw = rawCards.find(c => c.id === card.id);
-  const up = card.normalizedDeviation > 0;
-  const baselines = result.baselines;
+  const up = card.relativeDeviation > 0;
   const decks = engine.engineIndex.decks?.[card.id] || [];
   const tested = candidates(raw, up).map(({label, copy}) => {
-    const after = engine.withBaseline(engine.scoreCard(copy, result.ctx), baselines);
+    const after = engine.rescore(copy, result);
     return {
-      change: label, hypothetical: true, deviationBefore: card.normalizedDeviation, deviationAfter: after.normalizedDeviation, powerBefore: card.power, powerAfter: after.power, effectiveBefore: card.effectiveTotal, effectiveAfter: after.effectiveTotal, classificationAfter: after.classification,
+      change: label, hypothetical: true, deviationBefore: card.relativeDeviation, deviationAfter: after.relativeDeviation, powerBefore: card.power, powerAfter: after.power, effectiveBefore: card.effectiveTotal, effectiveAfter: after.effectiveTotal, classificationAfter: after.classification,
       otherDecks: decks.length ? `Muda ${decks.length} deck(s) de teste que usam a carta: ${decks.slice(0, 4).join(', ')}${decks.length > 4 ? '…' : ''}.` : 'Nenhum deck de teste em data/alpha-0.1 usa a carta.',
     };
   }).filter(p => p.deviationAfter != null && Math.abs(p.deviationAfter) < Math.abs(p.deviationBefore)).sort((a, b) => Math.abs(a.deviationAfter) - Math.abs(b.deviationAfter));
@@ -53,7 +52,7 @@ export function proposalsFor(engine, card, rawCards, result) {
   const dominant = [...card.abilities.flatMap(a => a.effects)].sort((a, b) => Math.abs(b.perUse ?? 0) - Math.abs(a.perUse ?? 0))[0];
   const parts = [['Corpo', card.scores.BodyScore], ['Keywords', card.scores.KeywordScore], ['Efeitos', card.scores.EffectScore], ['Sinergia', card.scores.SynergyScore], ['Timing', card.scores.TimingScore], ['Interação', card.scores.InteractionScore], ['Restrições', -card.scores.RestrictionScore]].filter(([, v]) => v).sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
   return {
-    diagnosis: `${card.classification} em ${card.group}: Power ${card.power} contra custo efetivo ${card.effectiveTotal}, ${Math.round((card.normalizedDeviation || 0) * 100)}% em relação à mediana do grupo.`,
+    diagnosis: `${card.classification} em ${card.group}: Power ${card.power} contra custo efetivo ${card.effectiveTotal}, ${Math.round((card.relativeDeviation || 0) * 100)}% do custo efetivo (${Math.round((card.normalizedDeviation || 0) * 100)}% em relação à mediana do grupo).`,
     components: parts.slice(0, 3).map(([k, v]) => `${k} ${v > 0 ? '+' : ''}${v}`), confidence: {level: card.confidenceLevel, value: card.confidence, coverage: card.coverage, engine: card.engine.source ?? 'sem Engine'},
     similar, strategicImpact: dominant ? `Peso principal em ${STRATEGY[dominant.kind] || dominant.kind}. ${up ? 'Reduzir tira força dessa linha.' : 'Aumentar pode empurrar essa linha.'}` : 'Peso principal nos atributos; sem efeito dominante.',
     corrections: tested.slice(0, 3), note: 'Proposta para o autor. Não altera carta, custo, atributo, habilidade nem regra.',
@@ -67,6 +66,6 @@ export function similarCards(card, cards, limit = 3) {
     .map(o => ({o, shared: o.kinds.filter(k => kinds.has(k)).length, gap: Math.abs((o.cost ?? 0) - (card.cost ?? 0))}))
     .sort((a, b) => b.shared - a.shared || a.gap - b.gap || a.o.id.localeCompare(b.o.id))
     .slice(0, limit)
-    .map(({o, shared}) => ({id: o.id, name: clean(o.name), faction: o.faction, cost: o.cost, power: o.power, deviation: o.normalizedDeviation, classification: o.classification, sharedEffects: shared}));
+    .map(({o, shared}) => ({id: o.id, name: clean(o.name), faction: o.faction, cost: o.cost, power: o.power, deviation: o.relativeDeviation, classification: o.classification, sharedEffects: shared}));
 }
 export {CLASSES};
