@@ -28,7 +28,7 @@ function listaHtml() {
 }
 function detalheHtml() {
   const c = CENARIOS.find(x => x.id === cenario), draft = rowsOf(cenario, 'rascunho'), pub = pubOk ? rowsOf(cenario, 'publicada') : null;
-  return `<h3>${esc(c.nome)}</h3><p class="hint">${esc(c.ajuda)}</p>
+  return `<h3>${esc(c.nome)}</h3><p class="hint">${esc(c.ajuda)} <button type="button" class="mo-link" data-aba-ir="momentos">Trocar animação e som</button></p>
     <table class="ar-table"><thead><tr><th scope="col">Momento</th><th scope="col">Rascunho</th><th scope="col">Publicada</th></tr></thead><tbody>${draft.map((r, i) => `<tr class="${pub && JSON.stringify(pub[i].valor) !== JSON.stringify(r.valor) ? 'is-diff' : ''}"><th scope="row">${esc(momentName(r.momento))}</th><td>${esc(fxName(r.valor))}${r.origem ? `<small>${esc(r.origem)}</small>` : ''}</td><td>${pub ? `${esc(fxName(pub[i].valor))}${pub[i].origem ? `<small>${esc(pub[i].origem)}</small>` : ''}` : '–'}</td></tr>`).join('')}</tbody></table>`;
 }
 const mesaSrc = () => `/playtest/divine/?demo=criador&a=${encodeURIComponent(cardA)}&b=${encodeURIComponent(cardB)}${versao === 'publicada' ? '&publicado=1' : ''}`;

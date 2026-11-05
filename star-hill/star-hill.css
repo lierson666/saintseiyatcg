@@ -231,3 +231,12 @@ small.publish-result{color:#8fe3a8;font-weight:600}
 @media(max-width:900px){.an-carta{grid-template-columns:minmax(0,1fr)}.an-carta__lista{position:static}.an-cards{max-height:40vh}}
 @media(max-width:640px){.bl-row{grid-template-columns:44px minmax(0,1fr) auto}.bl-thumb{width:44px;height:44px}.bl-use,.bl-none{grid-column:2/-1;grid-row:2}}
 @media(prefers-reduced-motion:reduce){.an-espacos button{transition:none}}
+/* Momentos do jogo: lista à esquerda, mesa real fixa à direita. */
+.mo-grid{display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:18px;align-items:start}.mo-lista{min-width:0}.mo-lista>input[type=search]{width:100%;min-height:44px}
+.mo-mesa{position:sticky;top:12px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.mo-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px 12px;align-items:start;padding:12px 0;border-bottom:1px solid var(--line)}
+.mo-what{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;align-items:center;min-width:0}.mo-what>b,.mo-what>small{grid-column:1}.mo-what>.mo-play{grid-column:2;grid-row:1/3}.mo-what small,.mo-col>small{color:var(--muted);font-size:.8rem}.mo-col{display:flex;flex-direction:column;gap:4px;min-width:0}
+.mo-vazio{display:block;padding:9px 0;color:var(--muted);font-size:.85rem}.mo-play{min-height:36px}.mo-link{min-height:0;padding:0;border:0;background:none;color:var(--gold,#e6c36a);text-decoration:underline}
+.mo-grupo{grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:center;gap:6px 18px;font-size:.85rem;color:var(--muted)}.mo-grupo label{display:flex;align-items:center;gap:8px}
+@media(max-width:1300px){.mo-grid{grid-template-columns:minmax(0,1fr)}.mo-mesa{position:static;order:-1}}
+@media(max-width:760px){.mo-row{grid-template-columns:minmax(0,1fr)}.mo-grupo{grid-column:auto}}

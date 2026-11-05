@@ -5,6 +5,7 @@ import {categoryOf} from '/shared/anim-picker.js?v=5';
 import {CATEGORIES} from '/shared/vfx/presets.js';
 import {composerSection, composerMounted, livingSection, holoSection, previewStudioFx} from './animacoes-composer.js?v=4';
 import {arenaSection, arenaMounted, arenaDefaults} from './animacoes-arena.js';
+import {momentosSection, momentosMounted, momentosRepaint, iniciarMomentos} from './animacoes-momentos.js';
 import {loadPublicacao, mountPublicacao, publicacaoSection, publicacaoNow} from './animacoes-publicacao.js?v=3';
 import {bibliotecaSection, libraryRows, overview, visaoSection} from './animacoes-biblioteca.js?v=1';
 
@@ -117,6 +118,7 @@ const ABAS = {
   padroes: ['Padrões', () => `<section class="panel tl"><div class="tl-head"><h2>Padrões do jogo</h2><span class="tag">Vale para toda carta sem escolha própria</span></div>${moments('padrao', 'sem animação nova')}</section>`],
   faccao: ['Por facção', () => `<section class="panel tl"><div class="tl-head"><h2>Por facção</h2><span class="tag">Passa por cima do padrão</span></div>
       <div class="tl-faccao-tabs" role="group" aria-label="Facção">${FACCOES.map(f => `<button type="button" data-an="faccao" data-f="${f}" aria-pressed="${f === faccao}">${f}</button>`).join('')}</div>${moments(`faccao-${faccao.toLowerCase()}`, 'padrão')}</section>`],
+  momentos: ['Momentos do jogo', () => momentosSection({chooser, cards})],
   carta: ['Por carta', porCarta],
   composer: ['Composer', composerSection],
   arena: ['Cenários', arenaSection],
@@ -124,11 +126,11 @@ const ABAS = {
   efeitos: ['Importar e ajustar', efeitos],
   publicacao: ['Publicação', publicacaoSection],
 };
-// Cinco espaços. Toda aba antiga continua aqui, com o mesmo id, dentro do espaço a que pertence.
-const ESPACOS = [['visao', 'Visão geral', ['visao', 'publicacao']], ['biblioteca', 'Biblioteca', ['biblioteca', 'todas', 'efeitos', 'particulas', 'interface', 'cena']], ['carta', 'Por carta', ['carta', 'faccao', 'padroes']], ['composer', 'Composer', ['composer', 'sprite', 'combate', 'holo']], ['arena', 'Arena de testes', ['arena', 'criador']]];
+// Seis espaços. Toda aba antiga continua aqui, com o mesmo id, dentro do espaço a que pertence.
+const ESPACOS = [['momentos', 'Momentos do jogo', ['momentos']], ['visao', 'Visão geral', ['visao', 'publicacao']], ['biblioteca', 'Biblioteca', ['biblioteca', 'todas', 'efeitos', 'particulas', 'interface', 'cena']], ['carta', 'Por carta', ['carta', 'faccao', 'padroes']], ['composer', 'Composer', ['composer', 'sprite', 'combate', 'holo']], ['arena', 'Arena de testes', ['arena', 'criador']]];
 const espacoDe = id => ESPACOS.find(([, , abas]) => abas.includes(id));
 const ultima = {};
-let aba = 'visao';
+let aba = 'momentos';
 try { if (ABAS[localStorage.getItem('sh-anim-aba')]) aba = localStorage.getItem('sh-anim-aba'); } catch { /* sem armazenamento: começa em Padrões */ }
 let publicando = false;
 function irPara(id) {
@@ -142,6 +144,7 @@ function draw() {
   const atual = espacoDe(aba);
   ultima[atual[0]] = aba;
   tabs.innerHTML = `<nav class="an-espacos" aria-label="Espaços de animação">${ESPACOS.map(([id, nome, abas]) => `<button type="button" data-aba="${ultima[id] || abas[0]}" ${id === atual[0] ? 'aria-current="page"' : ''}>${nome}</button>`).join('')}</nav>${atual[2].length > 1 ? `<div class="tl-faccao-tabs an-sub" role="group" aria-label="Seções de ${atual[1]}">${atual[2].map(k => `<button type="button" data-aba="${k}" aria-pressed="${k === aba}">${ABAS[k][0]}</button>`).join('')}</div>` : ''}`;
+  if (aba === 'momentos' && momentosRepaint()) return;
   // O jogo do Criador fica fora do redesenho: só carrega na primeira visita à aba e não recomeça a cada troca.
   const palco = ['criador', 'particulas', 'interface', 'cena', 'sprite', 'combate'].includes(aba), modo = aba === 'criador' ? '' : `#${aba}`;
   host.hidden = !palco;
@@ -152,9 +155,10 @@ function draw() {
   if (['publicacao', 'visao'].includes(aba) && !publicando) { publicando = true; loadPublicacao().then(() => { draw(); publicando = false; }); }
   composerMounted(cards, draw, hooks.notice);
   if (aba === 'arena') arenaMounted(cards, {setStudioFx: previewStudioFx});
+  if (aba === 'momentos') momentosMounted();
   scrollTo(0, y);
 }
-export async function mountAnimacoes(el, {notice}) {
+export async function mountAnimacoes(el, {notice, api}) {
   el.innerHTML = '<div class="an-abas"></div><div class="an-criador-host" hidden></div><div></div>';
   [tabs, host, root] = el.children; hooks = {notice};
   mountPublicacao(root, {notice, redraw: () => { publicando = true; draw(); publicando = false; }});
@@ -184,7 +188,7 @@ export async function mountAnimacoes(el, {notice}) {
   // Sem este CSS a carta de prévia fica solta, e a imagem dela cobre a página e bloqueia todos os cliques.
   if (!document.querySelector('link[href*="live-card.css"]')) document.head.append(Object.assign(document.createElement('link'), {rel: 'stylesheet', href: '/shared/live-card.css?v=20261102-escala1'}));
   if (!document.querySelector('link[data-anim-picker]')) document.head.append(Object.assign(document.createElement('link'), {rel: 'stylesheet', href: '/shared/anim-picker.css?v=2'}));
-  const [, exported, list] = await Promise.all([loadAnims(), fetch(`../card-forge/art-web/cards.json?t=${Date.now()}`, {cache: 'no-store'}).then(r => r.json()), fetch('/data/vfx-inventario.json', {cache: 'no-store'}).then(r => (r.ok ? r.json() : inventario)).catch(() => inventario)]);
+  const [, , exported, list] = await Promise.all([loadAnims(), iniciarMomentos(api, notice), fetch(`../card-forge/art-web/cards.json?t=${Date.now()}`, {cache: 'no-store'}).then(r => r.json()), fetch('/data/vfx-inventario.json', {cache: 'no-store'}).then(r => (r.ok ? r.json() : inventario)).catch(() => inventario)]);
   cards = exported.cartas; inventario = list;
   draw();
 }

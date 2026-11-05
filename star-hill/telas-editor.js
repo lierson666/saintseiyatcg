@@ -133,6 +133,7 @@ function duelo() {
       ${a ? `<label class="tl-speed"><input type="range" aria-label="Velocidade: ${esc(nome)}" min="0.25" max="3" step="0.25" data-path="animacoes.${l.anim}.velocidade" data-kind="number" value="${a.velocidade}" ${a.ligada ? '' : 'disabled'}><b>${a.velocidade}×</b></label>` : '<span class="tl-speed tl-speed--none">' + (l.nota ?? 'Usa Conjurar') + '</span>'}</div>`;
   };
   return `<section class="panel tl" id="tl-duelo"><div class="tl-head"><h2>Animações e sons do duelo</h2><span class="tag">${comSom} de ${todas.length} com som</span></div>
+    <p class="hint">Para escolher o efeito e o som juntos e ver na mesa: Animações → Momentos do jogo.</p>
     <div class="tl-anim tl-anim--head" aria-hidden="true"><span>Evento</span><span>Som</span><span>Velocidade</span></div>
     ${DUELO.map(g => `<h3>${g.titulo}</h3>${g.linhas.map(linha).join('')}`).join('')}</section>
     ${faccoes()}`;
@@ -172,20 +173,36 @@ const soundChooser = path => { const v = get(doc, path); return `<div class="tl-
 const projectSounds = () => audios.filter(a => !a.origem?.startsWith('ps3-voz-')).map(a => ({id: a.arquivo, url: `/${a.arquivo.split('/').map(encodeURIComponent).join('/')}`, nome: fxName(a.arquivo) || a.nome,
   secao: a.grupo === 'musica' ? 'Músicas' : 'Efeitos', cod: a.grupo === 'musica' ? '' : a.origem, grupo: a.origem, s: 0, langs: []}));
 const libraryId = path => { const m = /ps3-(?:voz|se)-(.+)-(?:jp|pt|es)\/(\d+)\.mp3$/.exec(path || ''); return m ? `${m[1]}/${m[2]}` : path || ''; };
-function openSounds(path) {
+function openSounds(path, after = draw) {
   openSoundBrowser({title: 'Escolher som', alvo: SOUNDS[path.split('.').pop()] ? `Todas as cartas · ${SOUNDS[path.split('.').pop()]}` : '', value: libraryId(get(doc, path)), extra: projectSounds(), secao: 'fx-golpe',
-    onUpload: async file => { try { const arquivo = await upload(file, path); if (arquivo) { set(path, arquivo); draw(); } } catch (error) { hooks.notice?.(error.message); } },
+    onUpload: async file => { try { const arquivo = await upload(file, path); if (arquivo) { set(path, arquivo); after(); } } catch (error) { hooks.notice?.(error.message); } },
     onPick: async (sound, lang) => {
-      if (!sound) { set(path, null); return draw(); }
-      if (sound.jogo === 'meus') { set(path, sound.id); return draw(); }
+      if (!sound) { set(path, null); return after(); }
+      if (sound.jogo === 'meus') { set(path, sound.id); return after(); }
       try {
         const {arquivo} = await hooks.api('som-biblioteca', {id: sound.id, lang, tipo: sound.secao.startsWith('fx') ? 'se' : 'voz'});
         library(await hooks.api('assets'));
         set(path, arquivo);
-        draw();
+        after();
       } catch (error) { hooks.notice?.(error.message); }
     }});
 }
+async function saveDoc() {
+  // Linhas de texto sem original são descartadas ao salvar.
+  doc.textos = Object.fromEntries(pairs.filter(([a]) => a.trim()));
+  const r = await hooks.api('telas', {conteudo: doc, revisao});
+  revisao = r.revisao; dirty = false;
+}
+// Momentos do jogo (animacoes-momentos.js) edita os mesmos sons, sem passar pelo botão Salvar desta tela.
+export const telasSons = {
+  usar(api, notice) { hooks = {...hooks, api, notice}; },
+  valor: k => doc.audio.efeitos[k] || null,
+  nome: fxName,
+  anim: g => doc.animacoes[g],
+  ouvir(k) { player?.pause(); player = new Audio(url(doc.audio.efeitos[k])); player.play().catch(() => {}); },
+  escolher(k, ok, erro) { const path = `audio.efeitos.${k}`, antes = get(doc, path); openSounds(path, () => saveDoc().then(ok, e => { set(path, antes); erro(e); })); },
+  async mudar(path, value) { const antes = get(doc, path); set(path, value); try { await saveDoc(); } catch (e) { set(path, antes); throw e; } },
+};
 
 function status() {
   const s = root?.querySelector('#tl-status');
@@ -269,9 +286,7 @@ document.addEventListener('click', async e => {
   if (act === 'faccao-ouvir') { player?.pause(); player = new Audio(soundUrl(b.dataset.id)); player.play().catch(() => {}); return; }
   if (act === 'clear-sound') set(b.dataset.path, null);
   if (act === 'save') {
-    // Linhas de texto sem original são descartadas ao salvar.
-    doc.textos = Object.fromEntries(pairs.filter(([a]) => a.trim()));
-    try { const r = await hooks.api('telas', {conteudo: doc, revisao}); revisao = r.revisao; dirty = false; hooks.notice('Salvo. Recarregue o jogo para ver; use Publicar no site para levar ao jogo online.', true); }
+    try { await saveDoc(); hooks.notice('Salvo. Recarregue o jogo para ver; use Publicar no site para levar ao jogo online.', true); }
     catch (err) { hooks.notice(err.message); }
   }
   draw();

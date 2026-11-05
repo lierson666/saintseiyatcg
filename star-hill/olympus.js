@@ -5,8 +5,8 @@ import {loadCanon} from '../shared/canon-cards.js';
 import {printedKind} from '../shared/rules-policy.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {canonIndex, validateDeck, colorErrors, DECK_SIZE, SPLASH_LIMIT} from '../shared/deck-v3.js';
-import {loadTelas, mountTelas} from './telas-editor.js?v=20261102-aviso2';
-import {mountAnimacoes} from './animacoes.js?v=11';
+import {loadTelas, mountTelas} from './telas-editor.js?v=20261105-momentos1';
+import {mountAnimacoes} from './animacoes.js?v=12';
 import {EDITIONS, editionOf} from '../shared/editions.js?v=20261102-1';
 
 const $ = s => document.querySelector(s);
@@ -149,7 +149,7 @@ async function render() {
   $('#page-title').textContent = id === 'cartas' && !edition ? 'Qual edição você vai abrir?' : PAGES[id][1];
   for (const a of document.querySelectorAll('.sidebar nav a')) a.toggleAttribute('aria-current', a.hash === '#' + id);
   if (id === 'telas') { await loadTelas(api); return mountTelas($('#content'), {api, notice}); }
-  if (id === 'animacoes') return mountAnimacoes($('#content'), {notice});
+  if (id === 'animacoes') return mountAnimacoes($('#content'), {notice, api});
   $('#content').innerHTML = id === 'cartas' ? (edition ? cardsPage() : editionsPage()) : id === 'decks' ? decksPage() : id === 'regras' ? await rulesPage() : overview();
   if (edition) $('#card-list').innerHTML = cardList(); // contador só existe depois do HTML
 }
