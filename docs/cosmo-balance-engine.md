@@ -169,12 +169,11 @@ A proposta 009 reduz a perda de Soul do alvo: é nerf, embora esteja no grupo de
 
 ## Simulação
 
-Resultado ainda não registrado nesta versão do documento. Só resultado de execução real entra aqui.
-
-<!-- SIMULACAO -->
+**Não executada nesta entrega, por decisão do autor (04/11/2026).** A rodada A/B/C com ablação foi interrompida antes de gravar resultado. Não há dado de partida para o patch: taxa de vitória, ablação e métricas dos cenários seguem sem medição, e os números acima vêm só do motor. O patch não pode passar de `READY_FOR_TEST` sem simulação registrada. A ferramenta segue pronta (`tools/cosmo-balance-sim.mjs`).
 
 ## Limitações
 
+- **Sem medição em partida:** nenhuma proposta foi simulada nesta entrega.
 - **`effectScale` não vem de partidas:** vem da mediana do catálogo. Uma classe inteira forte ou fraca fica escondida. Só o corpo tem âncora no guia.
 - **Dispersão alta:** 239 cartas nas pontas não significa 239 cartas erradas. A proporção reflete tanto o modelo quanto o catálogo.
 - **Leitura por padrões:** "resolvida" quer dizer que um padrão reconheceu a frase, não que captou todas as nuances.
