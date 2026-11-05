@@ -24,7 +24,7 @@ import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudg
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout, clockBonus} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
-import {createDirector, DEATH_FX} from './director.js?v=20261104-live1';
+import {createDirector, DEATH_FX} from './director.js?v=20261105-semaviso1';
 import {tunedFx} from './particle-tune.js';
 import {createPixelFx, animFor, catalogIndex} from './pixel-vfx.js?v=20261104-live1';
 import {createComposer, withCompositions} from '../../shared/vfx/composer.js?v=20261104-vfx1';
@@ -2737,7 +2737,6 @@ async function applyView(view) {
     if (!hold) return void sendOnline('action', {action: {type: 'pass'}});
     if (strikeHold === at) return;
     strikeHold = at;
-    warn('No response');
     setTimeout(() => { if (S().events.length === at && S().window?.priority === view.you && !pending) sendOnline('action', {action: {type: 'pass'}}); }, 1000);
   }
 }

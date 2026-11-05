@@ -177,6 +177,9 @@ h1, h2, h3, .lb-play, .lb-tab, .lb-hero p { font-family: "Cinzel", "Trajan Pro",
 .lb-info { position: relative; width: min(440px, 44vw); max-height: 86vh; overflow: auto; padding: 26px 26px 22px; cursor: default; display: grid; gap: 14px; align-content: start;
   border: 1px solid #e6c36a55; border-radius: 14px; background: linear-gradient(180deg, #111830f5, #080c18f8); box-shadow: 0 24px 60px #000c; animation: lb-slide .22s ease-out; }
 .lb-info__close { position: absolute; top: 14px; right: 14px; }
+.lb-big__side { display: grid; gap: 12px; width: min(440px, 44vw); }
+.lb-big__side .lb-info { width: 100%; max-height: calc(86vh - 76px); }
+.lb-big__use { width: 100%; min-width: 0; padding: 14px 16px; font-size: 18px; white-space: nowrap; }
 .lb-info__type { margin: 0; padding-right: 40px; color: var(--gold); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; }
 .lb-info h2 { margin: -6px 0 0; font-size: 28px; line-height: 1.1; color: #fff6dc; }
 .lb-info__sub { margin: -8px 0 0; color: var(--muted); font-style: italic; }
@@ -212,6 +215,9 @@ h1, h2, h3, .lb-play, .lb-tab, .lb-hero p { font-family: "Cinzel", "Trajan Pro",
   .lb-body--home, .lb-body--builder { overflow: visible; }
   .lb-big { flex-direction: column; overflow: auto; justify-content: flex-start; }
   .lb-card--big, .lb-info { width: min(380px, 100%); max-height: none; }
+  .lb-big__side { display: contents; }
+  .lb-big__side .lb-info { width: min(380px, 100%); max-height: none; }
+  .lb-big__use { position: sticky; bottom: 0; flex: none; width: min(380px, 100%); }
 }
 .lb-godpick__neutral { width: 22px; height: 22px; border-radius: 50%; background: #d6d8dd; box-shadow: inset 0 0 0 3px #9ea2ab; }
 .lb-sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

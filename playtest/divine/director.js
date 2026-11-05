@@ -407,8 +407,8 @@ export function createDirector({ui, getFx, settings}) {
           last = som;
           ui.onEvent?.(e); // zoom da pilha acompanha a animação, não o render
           await (handlers[e.type] || (async () => {}))(e);
-          // A janela do Strike que o auto-pass fecha fica visível antes do dano (autor, 03/11/2026).
-          if (e.type === 'strike_declared' && unanswered(events.slice(i + 1))) { ui.notice?.('No response'); await pause(1000); }
+          // A janela do Strike que o auto-pass fecha fica visível antes do dano (autor, 03/11/2026), sem aviso na tela (autor, 05/11/2026).
+          if (e.type === 'strike_declared' && unanswered(events.slice(i + 1))) await pause(1000);
         }
       } finally { busy = false; skipping = false; cur = {ligada: true, velocidade: 1}; curType = null; }
     },

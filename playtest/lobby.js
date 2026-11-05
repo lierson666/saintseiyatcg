@@ -584,7 +584,7 @@ function picker() {
   const title = {god: 'Choose your God', domain: 'Choose your Domain', thumb: 'Choose the deck cover'}[kind];
   return `<div class="lb-picker" role="dialog" aria-modal="true" aria-label="${title}"><div class="lb-picker__box"><header><h2>${title}</h2>
     <button class="lb-play lb-play--small" data-act="close-picker">Close</button></header>
-    <div class="lb-picker__grid">${pickerOptions(kind, d).map(id => `<button class="lb-slot ${id === current ? 'is-in' : ''}" data-act="picked" data-id="${id}" aria-label="${esc(cards.get(id).name)}">${face(id)}</button>`).join('')}</div></div></div>`;
+    <div class="lb-picker__grid">${pickerOptions(kind, d).map(id => `<button class="lb-slot ${id === current ? 'is-in' : ''}" data-act="${kind === 'domain' ? 'show-card' : 'picked'}" data-id="${id}" aria-label="${esc(cards.get(id).name)}">${face(id)}</button>`).join('')}</div></div></div>`;
 }
 
 // Aviso modal (carta fora da identidade de cor do deck).
@@ -595,9 +595,15 @@ function notice() {
 }
 // Cosmo na cor do Deus atrás da carta do zoom (autor, 31/10/2026).
 const COSMO = {Athena: '#ffd66e', Poseidon: '#3fa9ff', Hades: '#a35cff', Ares: '#ff4b3a', Artemis: '#6fe39a', Neutral: '#cfd8e6'};
+// No seletor de Domain o clique abre o zoom; é este botão que escolhe (autor, 05/11/2026).
+function useDomain() {
+  if (ui.picker !== 'domain' || cards.get(ui.big)?.kind !== 'Domain') return '';
+  const inUse = ui.builder?.deck.domain_id === ui.big;
+  return `<button class="lb-play lb-big__use" data-act="picked" data-id="${ui.big}" ${inUse ? 'disabled' : ''}>${inUse ? 'Domain in use' : 'Use Domain'}</button>`;
+}
 function bigCard() {
   const f = ui.big && (ui.big.startsWith('god-') ? godForge(ui.big) : forge.get(ui.big)), cosmo = COSMO[f?.faccao] || COSMO.Neutral;
-  return ui.big ? `<div class="lb-big" data-act="close-big" role="dialog" aria-label="Card" style="--cosmo: ${cosmo}">${fullSizePieces(face(ui.big, 'lb-card--big'))}${cardInfo(ui.big)}</div>` : '';
+  return ui.big ? `<div class="lb-big" data-act="close-big" role="dialog" aria-label="Card" style="--cosmo: ${cosmo}">${fullSizePieces(face(ui.big, 'lb-card--big'))}${useDomain() ? `<div class="lb-big__side">${cardInfo(ui.big)}${useDomain()}</div>` : cardInfo(ui.big)}</div>` : '';
 }
 
 // Redesenha tudo; guarda a rolagem das colunas para o clique não voltar a lista ao topo.
@@ -762,7 +768,7 @@ const actions = {
     if (ui.picker === 'god') { b.deck.god = id; b.show = [...new Set([...b.show, faction(cards.get(id))])]; }
     if (ui.picker === 'domain') { b.deck.domain_id = id; b.show = [...new Set([...b.show, faction(cards.get(id))])]; }
     if (ui.picker === 'thumb') b.deck.thumb = id;
-    b.dirty = true; ui.picker = null;
+    b.dirty = true; ui.picker = null; ui.big = null;
   },
 };
 

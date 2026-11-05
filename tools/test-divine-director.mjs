@@ -78,8 +78,8 @@ test('skip durante a fila termina tudo e libera a entrada', async () => {
   assert.equal(director.busy, false);
 });
 
-// Autor, 03/11/2026: a janela do Strike que o auto-pass fecha fica visível; se alguém parou ou respondeu, não há aviso.
-test('avisa "No response" só quando o lote fecha o Strike sem resposta', async () => {
+// Autor, 05/11/2026: Strike sem resposta não mostra aviso na tela.
+test('Strike sem resposta não mostra aviso', async () => {
   const notes = [];
   const ui = new Proxy({notice: text => notes.push(text)}, {get: (o, k) => o[k] ?? (k === 'then' ? undefined : () => ({}))});
   const d = createDirector({ui, getFx: () => null, settings: {speed: 'fast'}});
@@ -90,5 +90,5 @@ test('avisa "No response" só quando o lote fecha o Strike sem resposta', async 
   await d.play([declared, {type: 'window_open'}, {type: 'chain_add'}, fizzled]);
   assert.deepEqual(notes, [], 'alguém respondeu');
   await d.play([declared, {type: 'window_open'}, {type: 'pass'}, {type: 'pass'}, fizzled]);
-  assert.deepEqual(notes, ['No response']);
+  assert.deepEqual(notes, []);
 });
