@@ -26,11 +26,11 @@ function cell(value, ref, style = '') {
   return `<c r="${ref}" t="inlineStr"${style}><is><t xml:space="preserve">${xml(String(value).slice(0, 32767))}</t></is></c>`;
 }
 
-function sheet(cards) {
-  const last = `${colName(COLUNAS.length - 1)}${cards.length + 1}`;
-  const head = `<row r="1">${COLUNAS.map(([t], i) => cell(t, `${colName(i)}1`, ' s="1"')).join('')}</row>`;
-  const rows = cards.map((c, r) => `<row r="${r + 2}">${COLUNAS.map(([, get], i) => cell(get(c), `${colName(i)}${r + 2}`)).join('')}</row>`).join('');
-  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><dimension ref="A1:${last}"/><sheetViews><sheetView workbookViewId="0"><pane xSplit="3" ySplit="1" topLeftCell="D2" activePane="bottomRight" state="frozen"/></sheetView></sheetViews><cols>${COLUNAS.map(([, , w], i) => `<col min="${i + 1}" max="${i + 1}" width="${w}" customWidth="1"/>`).join('')}</cols><sheetData>${head}${rows}</sheetData><autoFilter ref="A1:${last}"/></worksheet>`;
+function sheet(columns, cards) {
+  const last = `${colName(columns.length - 1)}${cards.length + 1}`;
+  const head = `<row r="1">${columns.map(([t], i) => cell(t, `${colName(i)}1`, ' s="1"')).join('')}</row>`;
+  const rows = cards.map((c, r) => `<row r="${r + 2}">${columns.map(([, get], i) => cell(get(c), `${colName(i)}${r + 2}`)).join('')}</row>`).join('');
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><dimension ref="A1:${last}"/><sheetViews><sheetView workbookViewId="0"><pane xSplit="3" ySplit="1" topLeftCell="D2" activePane="bottomRight" state="frozen"/></sheetView></sheetViews><cols>${columns.map(([, , w], i) => `<col min="${i + 1}" max="${i + 1}" width="${w}" customWidth="1"/>`).join('')}</cols><sheetData>${head}${rows}</sheetData><autoFilter ref="A1:${last}"/></worksheet>`;
 }
 
 const crcTable = Array.from({length: 256}, (_, n) => { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xedb88320 ^ (c >>> 1) : c >>> 1; return c >>> 0; });
@@ -64,14 +64,15 @@ function zip(files) {
   return out;
 }
 
-export function cardsToXlsx(cards) {
+export function rowsToXlsx(columns, cards) {
   const x = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>', pkg = 'http://schemas.openxmlformats.org/package/2006', doc = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships', ms = 'application/vnd.openxmlformats-officedocument.spreadsheetml';
   return zip([
     ['[Content_Types].xml', `${x}<Types xmlns="${pkg}/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/xl/workbook.xml" ContentType="${ms}.sheet.main+xml"/><Override PartName="/xl/worksheets/sheet1.xml" ContentType="${ms}.worksheet+xml"/><Override PartName="/xl/styles.xml" ContentType="${ms}.styles+xml"/></Types>`],
     ['_rels/.rels', `${x}<Relationships xmlns="${pkg}/relationships"><Relationship Id="rId1" Type="${doc}/officeDocument" Target="xl/workbook.xml"/></Relationships>`],
-    ['xl/workbook.xml', `${x}<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="${doc}"><sheets><sheet name="Cartas" sheetId="1" r:id="rId1"/></sheets><definedNames><definedName name="_xlnm._FilterDatabase" localSheetId="0" hidden="1">Cartas!$A$1:$${colName(COLUNAS.length - 1)}$${cards.length + 1}</definedName></definedNames></workbook>`],
+    ['xl/workbook.xml', `${x}<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="${doc}"><sheets><sheet name="Cartas" sheetId="1" r:id="rId1"/></sheets><definedNames><definedName name="_xlnm._FilterDatabase" localSheetId="0" hidden="1">Cartas!$A$1:$${colName(columns.length - 1)}$${cards.length + 1}</definedName></definedNames></workbook>`],
     ['xl/_rels/workbook.xml.rels', `${x}<Relationships xmlns="${pkg}/relationships"><Relationship Id="rId1" Type="${doc}/worksheet" Target="worksheets/sheet1.xml"/><Relationship Id="rId2" Type="${doc}/styles" Target="styles.xml"/></Relationships>`],
     ['xl/styles.xml', `${x}<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="2"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf/></cellStyleXfs><cellXfs count="2"><xf/><xf fontId="1" applyFont="1"/></cellXfs></styleSheet>`],
-    ['xl/worksheets/sheet1.xml', sheet(cards)],
+    ['xl/worksheets/sheet1.xml', sheet(columns, cards)],
   ]);
 }
+export const cardsToXlsx = (cards) => rowsToXlsx(COLUNAS, cards);

@@ -6,6 +6,7 @@ import {readFileSync} from 'node:fs';
 import {CosmoBalanceEngine, CLASSES} from '../card-forge/cosmo-balance/engine.js';
 import {normalizeCard, parseAbility, UNRESOLVED} from '../card-forge/cosmo-balance/normalize.js';
 import {proposalsFor} from '../card-forge/cosmo-balance/proposals.js';
+import {balanceToXlsx} from '../card-forge/cosmo-balance/export.js';
 import {DEFAULT_CONFIG, stableHash, stableStringify} from '../card-forge/cosmo-balance/config.js';
 
 const CATALOG = new URL('../data/cards.json', import.meta.url);
@@ -259,4 +260,16 @@ test('o motor não grava no catálogo nem importa escrita de arquivo', () => {
     const text = readFileSync(new URL(`../card-forge/cosmo-balance/${f}`, import.meta.url), 'utf8');
     assert.doesNotMatch(text, /node:fs|writeFile|localStorage|method:\s*['"]POST/, f);
   }
+});
+
+test('Excel: uma linha por carta da tela, com nota, proposta e sem tocar no catálogo', () => {
+  const e = new CosmoBalanceEngine({engineIndex: index});
+  const before = JSON.stringify(catalog.cartas);
+  const result = e.analyze(catalog.cartas, catalog);
+  const forte = result.cards.find(c => c.classification === 'Potencialmente quebrada');
+  const text = new TextDecoder().decode(balanceToXlsx(e, [forte, result.cards[0]], catalog.cartas, result));
+  assert.equal((text.match(/<row /g) || []).length, 3);
+  for (const t of ['Desvio %', 'Correções (não aplicadas)', forte.id, 'Potencialmente quebrada']) assert.ok(text.includes(t), t);
+  assert.ok(text.includes(`<v>${Math.round(forte.normalizedDeviation * 100)}</v>`));
+  assert.equal(JSON.stringify(catalog.cartas), before);
 });

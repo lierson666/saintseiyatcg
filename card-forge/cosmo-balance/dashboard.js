@@ -1,6 +1,7 @@
 // Dashboard CARD FORGE > COSMO BALANCE. Roda no navegador, sobre as cartas carregadas; não envia nem grava nada.
 import {CosmoBalanceEngine, CLASS_ORDER} from './engine.js';
 import {proposalsFor} from './proposals.js';
+import {balanceToXlsx} from './export.js?v=20261104-balance1';
 
 const $ = id => document.getElementById(id);
 const escape = t => String(t ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
@@ -81,6 +82,14 @@ $('rows').addEventListener('click', e => { const row = e.target.closest('[data-i
 $('rows').addEventListener('keydown', e => { const row = e.target.closest('[data-id]'); if (row && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); open(row); } });
 for (const id of ['q', 'fType', 'fFaction', 'fConf', 'fUnres']) $(id).addEventListener('input', renderRows);
 $('apply').addEventListener('click', compute);
+$('exportXlsx').addEventListener('click', () => {
+  const cards = visible();
+  const blob = new Blob([balanceToXlsx(S.engine, cards, S.catalog.cartas, S.result)], {type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const a = Object.assign(document.createElement('a'), {href: URL.createObjectURL(blob), download: `cosmo-balance-preliminar-${new Date().toISOString().slice(0, 10)}.xlsx`});
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  $('status').textContent = `Excel com ${cards.length} cartas exportado.`;
+});
 
 if (!developer()) {
   $('main').innerHTML = '<p class="cb__banner">Cosmo Balance só abre no ambiente Developer.</p>';
