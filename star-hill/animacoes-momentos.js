@@ -58,7 +58,7 @@ export function momentosMounted() {
   const view = document.querySelector('#mo-view');
   if (!view) return;
   fit();
-  new ResizeObserver(() => requestAnimationFrame(fit)).observe(view);
+  new ResizeObserver(() => setTimeout(fit)).observe(view); // depois do quadro: fit muda a altura da caixa observada
 }
 export async function iniciarMomentos(api, avisar) {
   notice = avisar;
