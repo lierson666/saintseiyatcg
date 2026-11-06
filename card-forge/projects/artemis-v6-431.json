@@ -1,7 +1,7 @@
 {
   "title": "",
-  "subtitle": "Commander of the Silver Hunt",
-  "flavour": "\"Under her command, a thousand arrows fly as one.\"",
+  "subtitle": "Vanguard of the Olympian Host",
+  "flavour": "\"Heaven does not ask the earth for permission. It judges.\"",
   "art": {
     "src": "art/artemis-v6-431-ref.jpg",
     "w": 1488.0,
@@ -9,6 +9,14 @@
     "y": -276.72,
     "zoom": 1,
     "baseW": 1488.0,
-    "provisoria": true
+    "provisoria": true,
+    "nota_provisoria": "Arte provisória da carta anterior; não representa o novo personagem. Substituir pela arte aprovada (docs/artemis-v2-art-direction.md)."
+  },
+  "identidade": {
+    "versao": "artemis-v2.0",
+    "nome_anterior": "MOONLIGHT HUNTRESS CAPTAIN",
+    "continuidade": "Tenkai-hen Josō Overture (2004)",
+    "perfil_arte": "celestial_angel",
+    "arte_representa_personagem": false
   }
 }

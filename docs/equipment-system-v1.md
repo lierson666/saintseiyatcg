@@ -13,7 +13,7 @@ Taxonomia de Equipment aprovada pelo autor em 02/11/2026. Muda classificação e
 ## Contrato
 
 - Linha de tipo: `EQUIPMENT — BRONZE CLOTH`, `EQUIPMENT — WEAPON SWORD`. Equipment junta subtipos com espaço; os outros tipos seguem com `—`.
-- `ARMOR_FAMILY`: Cloth, Scale, Surplice, Warplate, Moonplate. É grupo de consulta, nunca impresso. Armor genérica fica fora do grupo e não acompanha uma família.
+- `ARMOR_FAMILY`: Cloth, Scale, Surplice, Warplate, Moonplate e, desde 1.1.0 (06/11/2026), Glory, sem patentes (`docs/glory-equipment-system.md`). É grupo de consulta, nunca impresso. Armor genérica fica fora do grupo e não acompanha uma família.
 - Patente fica em `patente_armadura`, não é subtipo e é impressa junto dos subtipos, antes deles em inglês (autor, 02/11/2026). Progressão do nível I (família sem patente) ao V: Cloth — Bronze, Silver, Gold, God; Scale — Marine, Captain, General, Divine; Surplice — Terrestrial, Celestial, Judge, Divine; Warplate — Berserker, Elite, Warlord, Divine; Moonplate — Crescent, Half, Full, Divine. Raridade e facção não são subtipos e não determinam subtipo.
 - Sword, Spear, Trident, Bow, Dagger, Axe e Whip exigem Weapon. Chain, Shield e Staff não exigem. Lyre, Flute, Harp e Horn exigem Instrument.
 - Subtipo fora do registro é erro e impede salvar no Forge. Subtipo anterior ao V1 é aviso até a migração.

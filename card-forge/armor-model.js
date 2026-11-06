@@ -5,7 +5,7 @@ export const STATES = ['DRAFT', 'IN_REVIEW', 'APPROVED', 'CANONICAL', 'ARCHIVED'
 export const STATE_LABELS = {DRAFT: 'Rascunho', IN_REVIEW: 'Em revisão', APPROVED: 'Aprovada', CANONICAL: 'Canônica', ARCHIVED: 'Arquivada'};
 export const FIELD_MODES = [['auto', 'Automático'], ['manual', 'Manual'], ['absent', 'Ausente']];
 export const FACTIONS = ['Athena', 'Poseidon', 'Hades', 'Ares', 'Artemis', 'Neutral'];
-export const FAMILIES = [['Cloth', 'Cloth'], ['Scale', 'Scale'], ['Surplice', 'Surplice'], ['Warplate', 'Warplate'], ['Moonplate', 'Moonplate'], ['God Robe', 'God Robe'], ['Sacred Armor', 'Outra armadura sagrada']];
+export const FAMILIES = [['Cloth', 'Cloth'], ['Scale', 'Scale'], ['Surplice', 'Surplice'], ['Warplate', 'Warplate'], ['Moonplate', 'Moonplate'], ['Glory', 'Glory'], ['God Robe', 'God Robe'], ['Sacred Armor', 'Outra armadura sagrada']];
 const FAMILY_BY_FACTION = {Athena: 'Cloth', Poseidon: 'Scale', Hades: 'Surplice', Ares: 'Warplate', Artemis: 'Moonplate', Neutral: 'Sacred Armor'};
 export const GRANDEUR = [['1', '1 Contida', 'restrained: few ornaments, functional armor of a common soldier'], ['2', '2 Heroica', 'heroic: clean lines with one striking emblem'], ['3', '3 Épica', 'epic: layered plates, deliberate ornament, strong silhouette'], ['4', '4 Lendária', 'legendary: monumental shapes and elaborate engraving, still wearable'], ['5', '5 Divina', 'divine: exceptional, sacred, near-architectural presence, still wearable']];
 
@@ -37,11 +37,13 @@ const FACTION_LOOK = {
   Hades: {primary: 'black obsidian-like metal', secondary: 'deep purple sheen', details: 'tarnished silver and wine-red gems', materials: 'obsidian-dark forged metal with tarnished silver'},
   Ares: {primary: 'oxblood red lacquer', secondary: 'blackened bronze', details: 'dull incandescent orange at the seams', materials: 'lacquered steel plate over blackened bronze, with visible rivets'},
   Artemis: {primary: 'pale moon-silver', secondary: 'forest green enamel', details: 'lunar white pearl', materials: 'moonsilver plate with lacquered horn and pale enamel'},
+  // Glory (Artemis V2.0, 06/11/2026): armadura dos Anjos Celestes; não herda o verde nem a prata lunar da Moonplate.
+  Glory: {primary: 'luminous celestial white-gold', secondary: 'pale sky-blue enamel', details: 'thin radiant gold filigree', materials: 'light celestial alloy plates shaped close to the anatomy, refined geometric forms'},
   Neutral: {primary: 'weathered steel', secondary: 'aged bronze', details: 'dull gold rivets', materials: 'forged steel and bronze with worn leather straps'},
 };
 const clean = (t) => String(t ?? '').replace(/\s+/g, ' ').trim();
 const dot = (t) => (/[.!?]$/.test(t) ? t : `${t}.`);
-const FAMILY_WORDS = /\b(CLOTH|SCALE|SURPLICE|WARPLATE|MOONPLATE|ROBE|ARMOR|ARMOUR|PLATE|OF|THE)\b/gi;
+const FAMILY_WORDS = /\b(CLOTH|SCALE|SURPLICE|WARPLATE|MOONPLATE|GLORY|ROBE|ARMOR|ARMOUR|PLATE|OF|THE)\b/gi;
 
 export const blankField = () => ({mode: 'auto', value: ''});
 export function newSpec({name = '', faction = 'Neutral', fields = {}} = {}) {
@@ -59,8 +61,8 @@ export function motifOf(spec) {
 }
 
 export function autoField(key, spec, ctx = {}) {
-  const look = FACTION_LOOK[spec.faction] || FACTION_LOOK.Neutral, motif = motifOf(spec);
   const family = spec.fields?.family?.mode === 'manual' && clean(spec.fields.family.value) || FAMILY_BY_FACTION[spec.faction] || 'Sacred Armor';
+  const look = FACTION_LOOK[family === 'Glory' ? 'Glory' : spec.faction] || FACTION_LOOK.Neutral, motif = motifOf(spec);
   return {
     family, legion: '', bearer: clean(ctx.originName), mythology: `the myth of ${motif}`, entity: motif, symbolism: `the threat and the bearing of ${motif}`, grandeur: '3',
     silhouette: `a broad-shouldered wearable outline whose top contour abstracts ${motif}, recognizable from its shadow alone`,

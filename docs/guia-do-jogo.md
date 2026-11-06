@@ -74,7 +74,7 @@ Possui:
 * habilidades;
 * possíveis keywords.
 
-Equipment — Armor (Cloth / Scale / Surplice / Warplate / Moonplate), armas e acessórios
+Equipment — Armor (Cloth / Scale / Surplice / Warplate / Moonplate / Glory), armas e acessórios
 
 Equipamentos que modificam os atributos e as habilidades de um Devotee.
 
@@ -324,9 +324,11 @@ Long Range não concede essa vantagem quando o Devotee está defendendo um Strik
 
 Armor é a categoria universal de armadura: Athena — Cloth; Poseidon — Scale; Hades — Surplice; Ares — Warplate; Artemis — Moonplate. Moonplate é nomenclatura original do TCG; o exército de Artemis é formado pelas Satellites.
 
-Linha de tipo (Equipment System V1, autor, 02/11/2026): Armor é o grupo de consulta dessas cinco famílias e não é impresso junto delas, como em `EQUIPMENT — CLOTH`. Armadura fora das famílias imprime `EQUIPMENT — ARMOR`. Patente não é subtipo, mas é impressa junto dele: `EQUIPMENT — BRONZE CLOTH`, `EQUIPMENT — GENERAL SCALE`. Cada família tem a própria progressão, do nível I (família sem patente) ao V: Cloth — Bronze, Silver, Gold, God; Scale — Marine, Captain, General, Divine; Surplice — Terrestrial, Celestial, Judge, Divine; Warplate — Berserker, Elite, Warlord, Divine; Moonplate — Crescent, Half, Full, Divine. Raridade e facção não entram na linha. Arma imprime `EQUIPMENT — WEAPON SWORD`. Relic, Artifact e Instrument são classificações próprias. Nenhum subtipo concede poder, bônus ou restrição por si só.
+**Glory** (Artemis V2.0, autor, 06/11/2026) é a sexta família: a armadura dos Anjos Celestes (subtipo de Devotee **Angel**), que servem os deuses do Olimpo e pertencem mecanicamente à facção Artemis. Glory não é Moonplate nem Cloth, ocupa o slot de Armor como as outras famílias e **não tem progressão de patentes**: imprime só `EQUIPMENT — GLORY`.
 
-**Steel** (autor, 02/11/2026) é patente de Cloth fora da progressão: não vale mais nem menos que outra patente, e imprime `EQUIPMENT — STEEL CLOTH`. Steel Cloth, Steel Armor Prototype, Lunar Vestment e Living Armor ocupam o slot de Armor; as duas últimas passam a Moonplate. **Cracked** só identifica a carta, sem regra própria. **Kamui** é God Cloth: Cloth com patente God, sem marca extra. Armor fora das cinco famílias, como Skeleton Armor, não tem patente.
+Linha de tipo (Equipment System V1, autor, 02/11/2026): Armor é o grupo de consulta dessas seis famílias e não é impresso junto delas, como em `EQUIPMENT — CLOTH`. Armadura fora das famílias imprime `EQUIPMENT — ARMOR`. Patente não é subtipo, mas é impressa junto dele: `EQUIPMENT — BRONZE CLOTH`, `EQUIPMENT — GENERAL SCALE`. Cada família tem a própria progressão, do nível I (família sem patente) ao V: Cloth — Bronze, Silver, Gold, God; Scale — Marine, Captain, General, Divine; Surplice — Terrestrial, Celestial, Judge, Divine; Warplate — Berserker, Elite, Warlord, Divine; Moonplate — Crescent, Half, Full, Divine. Raridade e facção não entram na linha. Arma imprime `EQUIPMENT — WEAPON SWORD`. Relic, Artifact e Instrument são classificações próprias. Nenhum subtipo concede poder, bônus ou restrição por si só.
+
+**Steel** (autor, 02/11/2026) é patente de Cloth fora da progressão: não vale mais nem menos que outra patente, e imprime `EQUIPMENT — STEEL CLOTH`. Steel Cloth, Steel Armor Prototype, Lunar Vestment e Living Armor ocupam o slot de Armor; as duas últimas passam a Moonplate. **Cracked** só identifica a carta, sem regra própria. **Kamui** é God Cloth: Cloth com patente God, sem marca extra. Armor fora das seis famílias, como Skeleton Armor, não tem patente.
 
 Cada Devotee possui um slot de Armor. Armas e acessórios usam slots separados e mantêm suas regras anteriores. Qualquer Devotee elegível pode vestir qualquer Armor, independentemente de patente; custos e requisitos expressos continuam obrigatórios.
 
@@ -688,7 +690,7 @@ Se um Strike causar Soul zero aos dois Gods simultaneamente por efeitos aplicáv
 
 ### 61. Equipamentos, estágios e remoção
 
-- Cada Devotee tem **um espaço de armadura**, ocupado por uma Cloth, Scale, Surplice, Warplate ou Moonplate. Essas armaduras não se acumulam. Armas, acessórios e outras Relics não têm limite geral de quantidade, respeitando restrições impressas e cartas únicas.
+- Cada Devotee tem **um espaço de armadura**, ocupado por uma Cloth, Scale, Surplice, Warplate, Moonplate ou Glory. Essas armaduras não se acumulam. Armas, acessórios e outras Relics não têm limite geral de quantidade, respeitando restrições impressas e cartas únicas.
 - Jogar uma Armor, no próprio turno, custa o custo impresso, só em Base. Com um Devotee Resonant seu em campo, você pode vesti-la nele sem Equip; senão ela entra sem portador (§28).
 - Vestir uma Armor em campo (sem portador ou tirada de outro Devotee seu), no próprio turno, custa o Equip impresso, em Base e/ou Latent, inclusive para o Resonant. Ao entrar em campo, um Devotee Resonant pode puxar sua Armor sem Equip. Armas/acessórios entram sem portador e se prendem por outra ação, pagando o Equip impresso (§33, 01/11/2026). Trocar de armadura deixa a anterior em campo sem portador; não a destrói.
 - Desequipar voluntariamente, no próprio turno, custa zero Cosmo. Não exige Prepared. Transferência e troca são concluídas antes de recalcular os atributos e verificar destruição, evitando mortes por um estado intermediário de interface.

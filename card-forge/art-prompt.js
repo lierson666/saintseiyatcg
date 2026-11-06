@@ -5,6 +5,7 @@ import {printedKind} from '../shared/rules-policy.js';
 import {ANATOMY, ARMY_FROM, CREATURES, CREATURE_CHOICES, CREATURE_MOODS, CREATURE_POSES, COUNTS, CROWD_FROM, EXACT_LIMIT, FORMATIONS, LEADS, ORDERS, VARIETIES, allowedNotes, blockedNotes, countOf, countWord, creatureById, creatureFromSubtypes, creaturePool, formationById, notesAskAlone, orderById, orderFromCard, suggestFormation} from './art-taxonomy.js?v=20261102-arte16';
 import {BEARERS, BODY_BEARERS, DAMAGED_STATES, DIVINE_LANGUAGE, DIVINE_SCALES, EFFECTS, ENV_EXTRAS, ENV_SCALES, ENV_STATES, ENV_TYPES, EQUIP_STATES, FACELESS_ROLES, FIGURE_FOCI, FORMS, INTENSITIES, MANIFESTATIONS, NATURES, OBJECT_KINDS, ORIGINS, PHASES, PRESENTATIONS, PROMPT_VERSION, ROLES, SCENE_FOCI, SCENE_MOMENTS, SCENE_TYPES, SUPPORTS, VARIANTS, VISIBLE, classifyFacts, textOf} from './art-natures.js?v=20261102-arte16';
 import {formatCardTypeLine} from '../shared/equipment-types.js';
+import {ARTEMIS_PROFILES, artemisDirectionLines, artemisNegative, artemisProfile, artemisProfileOf} from './art-direction/artemis-v2.js';
 import {FACE_ZONE, FACE_ZONE_BAN, FAMILIES, GAUNTLET_BAN, HAND_FINISHES, STATE_LABELS, armorForArt, consistencySummary, faceZoneRule, gauntletApplies, gauntletRule, imageUrl, latestVersions, lockLines, lockNegative} from './armor-model.js';
 
 const pair = (code, pt) => [code, `${code}: ${pt}`];
@@ -279,7 +280,8 @@ const GODS = {
   Poseidon: {title: 'oceanic majesty', setting: 'monumental oceans, water currents, submerged temples, pressure and depth', palette: 'deep blue, turquoise, gold and sea green', mood: 'majesty, ancestral power, superiority, inevitable force', style: 'Amano', light: 2},
   Hades: {title: 'dark fantasy', setting: 'the World of the Dead, ruins, mist, spectral flames, funerary architecture', palette: 'black, deep purple, wine and metallic grey', mood: 'terror, death, despair, supernatural authority', style: 'Miura', light: 3},
   Ares: {title: 'war and brutality', setting: 'battlefields, fire, stylized blood, metal, destruction', palette: 'red, black, bronze and incandescent orange', mood: 'fury, violence, impulse, chaos', style: 'Hara', light: 4},
-  Artemis: {title: 'nature and lunar power', setting: 'sacred forests, the moon, bows and arrows, vegetation, ancient temples', palette: 'green, silver, lunar white and natural tones', mood: 'precision, serenity, divine superiority, dangerous harmony', style: 'CLAMP', light: 5},
+  // Artemis V2.0 (autor, 06/11/2026): Lua, caça e autoridade divina, não só floresta. Verde é acento de identidade (art-direction/artemis-v2.js).
+  Artemis: {title: 'lunar authority and the divine hunt', setting: 'moonlit Greek temples, monumental lunar architecture, night skies, sacred hunting grounds', palette: 'silver, lunar white and celestial gold, with green as a faction accent', mood: 'precision, serenity, divine superiority, dangerous harmony', style: 'CLAMP', light: 5},
 };
 const TYPE_RULES = {
   Devotee: 'The character is the main focal point, with a recognizable face, faithful armor, and a pose coherent with personality and ability. Show action or dramatic presence.',
@@ -327,6 +329,7 @@ const CANON = new RegExp(`(^|[^A-Z])(${[
   'KANON', 'SORRENTO', 'BAIAN', 'ISAAC', 'THETIS', 'JULIAN', 'SIREN', 'SEAHORSE', 'KRAKEN', 'MERMAID', 'POSEIDON', 'GALACTIC ILLUSION', 'DEAD END', 'RISING BILLOWS', 'VIKING TIGER', 'GOLDEN TRIANGLE', 'AURORA BOREALIS', 'GOD BREATH', 'PILLAR', 'UNDERSEA SANCTUARY',
   'RHADAMANTHYS', 'MINOS', 'AIACOS', 'WYVERN', 'GRIFFON', 'GARUDA', 'SPHINX', 'PHARAOH', 'ACHERON', 'CHARON', 'HYPNOS', 'THANATOS', 'PANDORA', 'SHION', 'HARPY', 'VALENTINE', 'BALRON', 'LUNE', 'PAPILLON', 'MYU', 'NIOBE', 'BASILISK', 'SYLPHID', 'MARKINO', 'FROG ZEROS', 'GIGANTO', 'RAIMI', 'GOLEM ROCK', 'TROLL IWAN', 'DEADLY BEETLE', 'PHLEGYAS', 'MINOTAUR GORDON', 'ALRAUNE', 'GORGON OX', 'DULLAHAN CUBE', 'DEATHMASK', 'APHRODITE', 'SHURA', 'SURPLICE', 'HADES', 'COCYTUS', 'ELYSION', 'FIRST PRISON',
   'BLACK SWAN', 'JANGO', 'SHO', 'DAICHI', 'USHIO', 'ASAMORI', 'GEIST', 'GHOST SAINT', 'CRYSTAL SAINT', 'OHKO', 'LEDA', 'SPICA', 'SHIVA', 'AGORA', 'ARACHNE', 'GIGAS', 'PHAETON', 'GALAXIAN', 'JAMIR', 'FIVE OLD PEAKS', 'TWELVE', 'SANCTUARY GATES', 'GRAAD', 'DEATH QUEEN', 'STEEL CLOTH',
+  'ARTEMIS', 'CALLISTO', 'CALISTO', 'SCOUMOUNE', 'THESEUS', 'ICARUS', 'TOUMA', 'ODYSSEUS', 'GLORY', // Artemis V2.0 (06/11/2026)
   'GOLD SAINTS', 'GOLD CLOTHS', 'SPECTERS', 'THREE JUDGES', '108 STARS', 'FREEZING COFFIN', 'GOLDEN ARROW', 'EIGHTH SENSE', 'WALL OF LAMENTATION', 'DEPRIVED OF SENSES', 'MASKED SAINT',
 ].join('|')})($|[^A-Z])`);
 const CREATURE = /Beast|Wolf|Stag|Bear|Fox|Hound|Serpent|Treant|Construct|Skeleton/;
@@ -368,6 +371,7 @@ export function defaultParams(f) {
     envType: cl.envType, envCustom: '', envState: cl.envState, envScale: cl.envScale, hour: '', weather: '', fog: '', depth: '', visibility: '', sky: '', lightSource: '', perspective: '', focal: '', phenomena: '',
     manifestation: cl.manifestation, divineScale: cl.divineScale,
     armorSource: 'auto', armorType: '', armorProject: '', armorVersion: '', armorUse: true, armorAdjust: '', handFinish: 'skin', lycraColor: '',
+    artemisProfile: 'auto', // 'auto' = perfil pela carta; o autor pode trocar no editor
   };
 }
 
@@ -650,6 +654,7 @@ function armorPromptLines(choice, generic, c, figure, handRule) {
 }
 
 export function buildImagePrompt(f, p) {
+  const artemis = f.faction === 'Artemis' && p.god === 'Artemis' ? (p.artemisProfile && p.artemisProfile !== 'auto' ? artemisProfile(p.artemisProfile) : artemisProfileOf(f)) : null;
   const choice = armorChoice(p), generic = p.generic, god = GODS[p.god], c = resolveCast(f, p), figure = c.active, isEquipment = f.kind === 'Equipment', power = f.powers.find((x) => x.name === p.technique), epic = EPIC_LEVELS.find(([v]) => v === p.epic);
   const modal = c.nature !== 'legacy' && c.nature !== 'character';
   const divine = c.nature === 'divine' || (c.nature === 'legacy' && classifyFacts(f).nature === 'divine');
@@ -704,6 +709,7 @@ export function buildImagePrompt(f, p) {
     !generic && p.version && choice?.kind !== 'locked' && `DESIGN CANON: costume and armor shapes follow ${p.version}, only as design. Draw them in the ART STYLE above, not in the look of that version.`,
     refs && 'REFERENCES: reference images are attached to this prompt. Use them only for character identity and armor design (face, hair, silhouette, parts, colors); follow them over any written description of those. Do not copy their drawing style, line or shading: redraw everything in the ART STYLE.',
     god && `FACTION IDENTITY: ${p.god}, ${god.title}. Palette identity, not monochrome: ${god.palette}. Feeling: ${god.mood}.`,
+    ...artemisDirectionLines(artemis),
     setting && `SETTING: ${setting}.${p.arc && !generic ? ` Inspired by: ${p.arc}.` : ''}`,
     story && `STORY: ${story}`,
     `FRAMING: ${p.shot}.${showPose ? ` ${c.group ? 'PROTAGONIST POSE' : 'POSE'}: ${p.pose}.` : ''}${figure && !humanoid && !c.group && p.creaturePose ? ` STANCE: ${p.creaturePose}.` : ''}${p.motion ? ` MOTION: ${p.motion}.` : ''}`,
@@ -719,7 +725,7 @@ export function buildImagePrompt(f, p) {
     f.flavour && `MOOD LINE: ${f.flavour}`,
     notes && `NOTES (author's direction, overrides the fields above, never the format rules): ${notes}`,
   ].filter(Boolean).join('\n');
-  const own = [mode ? mode.negative.filter(Boolean).join(', ') : '', choice?.kind === 'locked' && lockNegative(choice.lock), choice?.kind === 'none' && figure && 'armor, armor plates, pauldrons', handRule && GAUNTLET_BAN, focal.includes('FACE ZONE') && FACE_ZONE_BAN].filter(Boolean).join(', ');
+  const own = [artemisNegative(artemis), mode ? mode.negative.filter(Boolean).join(', ') : '', choice?.kind === 'locked' && lockNegative(choice.lock), choice?.kind === 'none' && figure && 'armor, armor plates, pauldrons', handRule && GAUNTLET_BAN, focal.includes('FACE ZONE') && FACE_ZONE_BAN].filter(Boolean).join(', ');
   return `${body}\n\nNEGATIVE PROMPT: ${own ? `${own}, ` : ''}${negativeLine(generic, c, figure)}.`;
 }
 
@@ -855,7 +861,8 @@ export function mountArtPrompt(dialog, {getCard, getCards, say, masterUrl, openA
       ${nature === 'equipment' || nature === 'divine' ? '' : input('species', 'Subtipo ou espécie', p.species, 'Ex.: lobo das neves')}` : ''}
       ${f.isSelf || p.generic ? '' : select('person', 'Personagem', [...none('Sem personagem'), ...f.people.map((n) => [n])], p.person)}
       ${f.armors.length && (p.armorSource || 'auto') === 'auto' ? select('armor', 'Armadura', [...none('Sem armadura'), ...f.armors.map((a) => [a.name, `${a.name} (${a.line})`])], p.armor) : ''}
-      ${p.generic ? '' : select('version', 'Base do design', VERSIONS, p.version)}`;
+      ${p.generic ? '' : select('version', 'Base do design', VERSIONS, p.version)}
+      ${f.faction === 'Artemis' ? select('artemisProfile', 'Perfil Artemis V2', [['auto', `Automático (${artemisProfileOf(f)?.label || 'só a facção'})`], ...ARTEMIS_PROFILES.map((x) => [x.id, x.label])], p.artemisProfile || 'auto') : ''}`;
     const modeFields = {
       scene: `<h3 class="ap-section">Cena</h3>${select('sceneType', 'Tipo de cena', SCENE_TYPES, p.sceneType)}${p.sceneType === 'custom' ? input('sceneCustom', 'Cena personalizada', p.sceneCustom, 'a coronation at sea') : ''}${select('sceneMoment', 'Momento cinematográfico', SCENE_MOMENTS, p.sceneMoment)}${select('sceneFocus', 'Foco da cena', SCENE_FOCI, p.sceneFocus)}`,
       technique: `<h3 class="ap-section">Técnica</h3>${select('effect', 'Tipo de efeito', EFFECTS, p.effect)}${p.effect === 'custom' ? input('effectCustom', 'Efeito personalizado', p.effectCustom, 'a rain of black feathers') : ''}${select('visible', 'Personagens visíveis', VISIBLE, p.visible)}${select('phase', 'Fase da técnica', PHASES, p.phase)}${select('origin', 'Origem do efeito', ORIGINS, p.origin)}${select('form', 'Forma visual', FORMS, p.form)}${select('intensity', 'Intensidade visual', INTENSITIES, p.intensity)}${['casters', 'targets', 'crowd'].includes(p.visible) ? select('count', 'Quantidade', COUNTS, p.count === '0' ? '3' : p.count) : ''}`,

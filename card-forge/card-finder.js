@@ -3,7 +3,7 @@ import {formatCardTypeLine} from '../shared/equipment-types.js';
 import {printedKind} from '../shared/rules-policy.js';
 
 export const AUDIT_STATUS = {CONFIRMED_EXPORT: 'Confirmada', RECOMMENDED_VERIFY: 'A conferir', REVIEW_REQUIRED: 'Pendente', SPECIAL_NO_RANK: 'Especial', CATEGORY_REVIEW: 'Categoria a revisar'};
-const CLASSES = {CLOTH: 'Cloth', SCALE: 'Scale', SURPLICE: 'Surplice', WARPLATE: 'Warplate', MOONPLATE: 'Moonplate', STEEL_ARMOR: 'Steel', LUNAR_VESTMENT: 'Lunar Vestment', LIVING_ARMOR: 'Living Armor', OTHER_ARMOR: 'Outra armadura', WEAPON: 'Arma', OTHER_EQUIPMENT: 'Outro equipamento'};
+const CLASSES = {CLOTH: 'Cloth', SCALE: 'Scale', SURPLICE: 'Surplice', WARPLATE: 'Warplate', MOONPLATE: 'Moonplate', GLORY: 'Glory', STEEL_ARMOR: 'Steel', LUNAR_VESTMENT: 'Lunar Vestment', LIVING_ARMOR: 'Living Armor', OTHER_ARMOR: 'Outra armadura', WEAPON: 'Arma', OTHER_EQUIPMENT: 'Outro equipamento'};
 const QUEUE = ['RECOMMENDED_VERIFY', 'REVIEW_REQUIRED'];
 const QUEUE_FILTER = 'fila';
 

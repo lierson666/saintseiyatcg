@@ -8,8 +8,8 @@ import {ARMOR_FAMILY, PATENTES_ARMADURA, patentesDe, ARMOR_FAMILY_NAMES, belongs
 const eq = (...subtipos) => ({tipo: 'Equipment', subtipos});
 const line = c => formatCardTypeLine(c).toUpperCase();
 
-test('as cinco famílias são Equipment, pertencem a ARMOR_FAMILY e não se confundem', () => {
-  assert.deepEqual(ARMOR_FAMILY_NAMES, ['Cloth', 'Scale', 'Surplice', 'Warplate', 'Moonplate']);
+test('as seis famílias são Equipment, pertencem a ARMOR_FAMILY e não se confundem', () => {
+  assert.deepEqual(ARMOR_FAMILY_NAMES, ['Cloth', 'Scale', 'Surplice', 'Warplate', 'Moonplate', 'Glory']);
   for (const name of ARMOR_FAMILY_NAMES) {
     assert.equal(getCardTypes(eq(name)).cardType, 'EQUIPMENT');
     assert.equal(belongsToEquipmentGroup(eq(name), ARMOR_FAMILY), true);
@@ -17,6 +17,7 @@ test('as cinco famílias são Equipment, pertencem a ARMOR_FAMILY e não se conf
   }
   assert.equal(hasSubtype(eq('Scale'), 'Cloth'), false);
   assert.equal(hasSubtype(eq('Moonplate'), 'Warplate'), false);
+  assert.equal(hasSubtype(eq('Glory'), 'Moonplate'), false);
 });
 
 test('Armor genérica fica fora do grupo e some ao lado de uma família', () => {

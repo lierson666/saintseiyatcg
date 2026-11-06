@@ -1,7 +1,7 @@
 {
   "title": "",
-  "subtitle": "The Wilderness Incarnate",
-  "flavour": "\"The forest does not send armies. It sends its strongest children.\"",
+  "subtitle": "The Angel Who Defied the Sun",
+  "flavour": "\"He fell from the heavens once. He chose to rise again.\"",
   "art": {
     "src": "art/artemis-v6-433-ref.jpg",
     "w": 1488.0,
@@ -9,6 +9,14 @@
     "y": -277.73,
     "zoom": 1,
     "baseW": 1488.0,
-    "provisoria": true
+    "provisoria": true,
+    "nota_provisoria": "Arte provisória da carta anterior; não representa o novo personagem. Substituir pela arte aprovada (docs/artemis-v2-art-direction.md)."
+  },
+  "identidade": {
+    "versao": "artemis-v2.0",
+    "nome_anterior": "PRIMAL FOREST CHAMPION",
+    "continuidade": "Tenkai-hen Josō Overture (2004)",
+    "perfil_arte": "celestial_angel",
+    "arte_representa_personagem": false
   }
 }

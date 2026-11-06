@@ -31,7 +31,7 @@ export const TYPE_PT = {
   'Saint': 'Cavaleiro', 'Bronze Saint': 'Cavaleiro de Bronze', 'Silver Saint': 'Cavaleiro de Prata', 'Gold Saint': 'Cavaleiro de Ouro', 'Black Saint': 'Cavaleiro Negro',
   'Steel Saint': 'Cavaleiro de Aço', 'Ghost Saint': 'Cavaleiro Fantasma', 'Marina': 'Marina', 'Marina General': 'General Marina', 'Specter': 'Espectro',
   'Judge Specter': 'Juiz do Inferno', 'Berserker': 'Berserker', 'Satellite': 'Satélite', 'Warrior': 'Guerreiro', 'Support': 'Suporte', 'Armor': 'Armadura',
-  'Cloth': 'Armadura', 'Scale': 'Escama', 'Surplice': 'Súplice', 'Warplate': 'Placa de Guerra', 'Moonplate': 'Placa Lunar', 'God Armor': 'Armadura Divina',
+  'Cloth': 'Armadura', 'Scale': 'Escama', 'Surplice': 'Súplice', 'Warplate': 'Placa de Guerra', 'Moonplate': 'Placa Lunar', 'Glory': 'Glória', 'Angel': 'Anjo', 'Celestial Warrior': 'Guerreiro Celestial', 'God Armor': 'Armadura Divina',
   'Steel Cloth': 'Armadura de Aço', 'Sacred Armor': 'Armadura Sagrada', 'Satellite Armor': 'Armadura de Satélite', 'Living Armor': 'Armadura Viva',
   'Artifact': 'Artefato', 'Divine Artifact': 'Artefato Divino', 'War Artifact': 'Artefato de Guerra', 'Relic': 'Relíquia', 'Divine Relic': 'Relíquia Divina',
   'Sword': 'Espada', 'Trident': 'Tridente', 'Chain': 'Corrente', 'Dagger': 'Adaga', 'Staff': 'Cajado', 'Axe': 'Machado', 'Whip': 'Chicote', 'Instrument': 'Instrumento', 'Lyre': 'Lira', 'Flute': 'Flauta', 'Harp': 'Harpa', 'Horn': 'Trompa',

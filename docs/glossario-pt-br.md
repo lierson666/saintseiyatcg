@@ -43,6 +43,9 @@ Regra: o mesmo termo em todo lugar. Termo vetado fica em inglês. Nomes de perso
 | Surplice | Súplice |
 | Warplate | Placa de Guerra |
 | Moonplate | Placa Lunar |
+| Glory | Glória |
+| Angel | Anjo |
+| Celestial Warrior | Guerreiro Celestial |
 | Token | Ficha |
 
 ## Classes

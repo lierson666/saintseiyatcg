@@ -275,7 +275,7 @@ test('407 Primal Channeling: o próximo Devotee do turno custa 1 a menos; o segu
 });
 
 // ---- Artemis → Verde (meta Premodern, 31/10/2026): docs/rebalance-artemis-premodern.md ----
-test('435 Silver Arrow Commander: Precise Execution é fight (cada um causa o próprio ATK), não 3 de dano fixo', () => {
+test('435 Odysseus: Celestial Reversal é fight (cada um causa o próprio ATK), não 3 de dano fixo', () => {
   const {s, ctx, field, hand, id} = setup();
   const foe = field('B', id(382)), cmd = hand('A', id(435)); // Moonlit Wolf 2/1 do lado B
   const foeAtk = atkOf(s, ctx, foe);
@@ -322,4 +322,73 @@ test('Sacred Stag: Forest Blessing só mira outro Devotee; sozinho fica 1/2 sem 
   playDevotee(pair.s, pair.ctx, 'A', second);
   assert.equal(pair.s.units[ally].training, 1);
   assert.ok(!pair.s.units[second].training);
+});
+
+// ---- Artemis V2.0 (autor, 06/11/2026): Anjos Celestes 431/433/435 e Glories 432/434/436; docs/artemis-v2-card-migration.md ----
+test('431 Theseus: Celestial Vanguard dá +1/+1 só a outros Angels; Divine Judgment só escolhe Angel', () => {
+  const {s, ctx, field, hand, io, id} = setup();
+  const icarus = field('A', id(433)), sat = field('A', id(388)), foe = field('B', 'ares-v6-271');
+  const atkI = atkOf(s, ctx, icarus), atkS = atkOf(s, ctx, sat);
+  let offered = null;
+  io.answer = q => { if (q.options.includes(icarus) || q.options.includes(sat)) offered = q.options; return q.options.includes(icarus) ? icarus : q.options[0]; };
+  const theseus = hand('A', id(431));
+  playDevotee(s, ctx, 'A', theseus, {}); passAll(s);
+  assert.equal(atkOf(s, ctx, icarus), atkI + 1, 'Angel recebe o bônus');
+  assert.equal(atkOf(s, ctx, sat), atkS, 'Satellite não recebe mais');
+  assert.equal(atkOf(s, ctx, theseus), cards.get(id(431)).atk, 'Other: Theseus não se buffa');
+  assert.ok(offered && !offered.includes(sat), 'Satellite não é alvo de Divine Judgment');
+  assert.ok(!s.units[foe] || s.units[foe].damage > 0, 'o Angel escolhido causa dano ao inimigo');
+});
+
+test('433 Icarus: Pierce, Celestial Descent causa ATK e cresce +1/+1 a cada 3 na Cosmo Bank', () => {
+  const {s, ctx, p, field, hand, id} = setup();
+  const foe = field('B', 'ares-v6-271'), icarus = hand('A', id(433));
+  playDevotee(s, ctx, 'A', icarus, {}); passAll(s);
+  assert.ok(keywordsOf(s, ctx, icarus).includes('Pierce'));
+  const bonus = Math.floor(p.bases.length / 3);
+  assert.equal(atkOf(s, ctx, icarus), cards.get(id(433)).atk + bonus);
+  assert.ok(!s.units[foe], 'o alvo leva dano igual ao ATK e cai');
+});
+
+test('435 Odysseus: Angel Vanguard dá +1/+0 ao Angel que declara Strike, não a Satellite; compra ao derrotar', () => {
+  const {s, ctx, p, field, id} = setup();
+  field('A', id(435));
+  const icarus = field('A', id(433)), sat = field('A', id(388));
+  const preyA = field('B', 'artemis-v6-386'), preyB = field('B', 'artemis-v6-386');
+  const atkI = atkOf(s, ctx, icarus), atkS = atkOf(s, ctx, sat);
+  declareStrike(s, ctx, icarus, {kind: 'devotee', uid: preyA}); passAll(s); if (s.window) passAll(s);
+  assert.equal(atkOf(s, ctx, icarus), atkI + 1);
+  declareStrike(s, ctx, sat, {kind: 'devotee', uid: preyB}); passAll(s); if (s.window) passAll(s);
+  assert.equal(atkOf(s, ctx, sat), atkS);
+  const odysseus = field('A', id(435)), prey = field('B', 'artemis-v6-386'), cards0 = p.hand.length;
+  declareStrike(s, ctx, odysseus, {kind: 'devotee', uid: prey}); passAll(s); if (s.window) passAll(s);
+  assert.ok(s.players.B.tartarus.includes(prey));
+  assert.equal(p.hand.length, cards0 + 1, 'Heavenly Precision compra 1');
+});
+
+test('Glory: é Armor, ocupa o slot de armadura e não acumula com outra; sai quando o portador cai', () => {
+  const {s, ctx, p, field, hand, id} = setup();
+  const refill = () => p.bases.forEach(b => { b.prepared = true; }); // o teste paga duas Glories no mesmo turno
+  for (const n of [432, 434, 436]) assert.equal(cards.get(id(n)).armor, true, `${n} é Armor`);
+  const bearer = field('A', id(433)), g1 = hand('A', id(434)), g2 = hand('A', id(432));
+  playEquipment(s, ctx, 'A', g1, null); reequip(s, ctx, 'A', g1, bearer);
+  assert.equal(ctx.attached[g1], bearer);
+  assert.ok(keywordsOf(s, ctx, bearer).includes('Guardian'), 'Heavenly Guard');
+  refill(); playEquipment(s, ctx, 'A', g2, null); reequip(s, ctx, 'A', g2, bearer);
+  assert.equal(ctx.attached[g2], bearer);
+  assert.ok(!ctx.attached[g1], 'a Glory anterior fica sem portador');
+  damageDevotee(s, ctx, bearer, 99); checkDefeats(s, ctx); passAll(s);
+  assert.ok(!s.units[bearer]);
+  assert.ok(!ctx.attached[g2], 'Glory sem portador depois da derrota');
+});
+
+test("436 Odysseus' Glory: Celestial Strike +2/+0 contra Devotee e Divine Accuracy compra uma vez", () => {
+  const {s, ctx, p, field, hand, id} = setup();
+  const bearer = field('A', id(433)), glory = hand('A', id(436)), prey = field('B', 'artemis-v6-386');
+  playEquipment(s, ctx, 'A', glory, null); reequip(s, ctx, 'A', glory, bearer);
+  const atk = atkOf(s, ctx, bearer), cards0 = p.hand.length;
+  declareStrike(s, ctx, bearer, {kind: 'devotee', uid: prey}); passAll(s); if (s.window) passAll(s);
+  assert.equal(atkOf(s, ctx, bearer), atk + 2);
+  assert.ok(s.players.B.tartarus.includes(prey));
+  assert.equal(p.hand.length, cards0 + 1);
 });

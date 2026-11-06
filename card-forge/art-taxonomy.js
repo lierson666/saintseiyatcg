@@ -153,7 +153,8 @@ export const ORDERS = [
   order('moon_guardian', 'Artemis', 'Moon Guardian', 'Moon Guardian', 'a guardian of the moon sanctuaries in pale silver armor', 'original'),
   order('lunar_creature', 'Artemis', 'Lunar Creature', 'lunar creature', 'a creature blessed by the moon, with a pale silver glow', 'original'),
   order('god_warrior', '', 'God Warrior', 'God Warrior', 'a northern warrior in a sacred armor shaped like a mythic beast', 'canon'),
-  order('angel_order', '', 'Angel', 'Angel', 'a winged servant of the Olympian gods in shining armor', 'canon'),
+  // Artemis V2.0 (06/11/2026): Anjo de Saint Seiya (Tenkai-hen), não anjo religioso; asas só quando o desenho canônico tem.
+  order('angel_order', '', 'Angel', 'Angel', 'a celestial warrior of the Olympian gods in a Glory armor of refined geometric forms; no halo, wings only when the canonical design has them', 'canon'),
   order('titan_order', '', 'Titan', 'Titan', 'one of the ancient gods who came before Olympus', 'canon'),
   order('dryad', '', 'Dryad', 'Dryad', 'a spirit of the sacred forest', 'adaptation'),
   order('divine_servant', '', 'Divine Servant', 'Divine Servant', 'a servant of the gods in sacred ceremonial robes and armor', 'original'),
@@ -161,7 +162,7 @@ export const ORDERS = [
   order('neutral', '', 'Neutral', 'independent warrior', 'an independent warrior who serves no god', 'original'),
 ];
 export const orderById = (id) => ORDERS.find((o) => o.id === id);
-const SUBTYPE_ORDERS = {'Judge Specter': 'judge_specter', Specter: 'specter', 'Marina General': 'marina_general', Marina: 'marina', Abyssal: 'abyssal', Skeleton: 'skeleton_order', Berserker: 'berserker', 'Red Fire Legion': 'red_fire', Satellite: 'satellite', 'Lunar Guardian': 'moon_guardian', 'Bronze Saint': 'bronze_saint', 'Silver Saint': 'silver_saint', 'Gold Saint': 'gold_saint', 'Black Saint': 'black_saint', 'Steel Saint': 'steel_saint', 'Ghost Saint': 'ghost_saint', Saint: 'saint'};
+const SUBTYPE_ORDERS = {'Judge Specter': 'judge_specter', Specter: 'specter', 'Marina General': 'marina_general', Marina: 'marina', Abyssal: 'abyssal', Skeleton: 'skeleton_order', Berserker: 'berserker', 'Red Fire Legion': 'red_fire', Satellite: 'satellite', Angel: 'angel_order', 'Lunar Guardian': 'moon_guardian', 'Bronze Saint': 'bronze_saint', 'Silver Saint': 'silver_saint', 'Gold Saint': 'gold_saint', 'Black Saint': 'black_saint', 'Steel Saint': 'steel_saint', 'Ghost Saint': 'ghost_saint', Saint: 'saint'};
 export function orderFromCard(name, subtypes = []) {
   if (/TEMPLE GUARD/.test(name)) return orderById('ocean_temple_guard');
   for (const [sub, id] of Object.entries(SUBTYPE_ORDERS)) if (subtypes.includes(sub)) return orderById(id);

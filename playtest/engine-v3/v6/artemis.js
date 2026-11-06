@@ -449,31 +449,32 @@ export default {
     res: {name: 'RESONANCE', cost: 2, check: k.needTarget(k.devotees, 'sem Devotee aliado'),
       run: (s, c, key) => { const t = pickFriend(s, c, key, 'RESONANCE'); if (t) k.buff(s, t, 2, 2); }},
   },
+  // Artemis V2.0 (autor, 06/11/2026): 431–436 são os Anjos Celestes e suas Glories; a sinergia de Satellite virou Angel.
   'artemis-v6-431': {
-    aura: lord((c, u) => k.hasType(c, u, 'Satellite'), 1, 1),
+    aura: lord((c, u) => k.hasType(c, u, 'Angel'), 1, 1),
     enter: run((st, c, key) => {
-      const src = k.choose(c, key, 'MOONLIT AMBUSH', k.devotees(st, c, key).filter(u => k.hasType(c, u, 'Satellite')), {text: 'Choose a friendly Satellite.'});
-      blast(st, c, src, src && pickEnemy(st, c, key, 'MOONLIT AMBUSH'));
+      const src = k.choose(c, key, 'DIVINE JUDGMENT', k.devotees(st, c, key).filter(u => k.hasType(c, u, 'Angel')), {text: 'Choose a friendly Angel.'});
+      blast(st, c, src, src && pickEnemy(st, c, key, 'DIVINE JUDGMENT'));
     }),
   },
   'artemis-v6-432': {gearKillInCombat: run((st, c, key, self, b) =>
-    growEach(st, c, key, k.chooseUpTo(c, key, 'MOONLIGHT SUPREMACY', k.devotees(st, c, key).filter(u => u !== b), 2)))},
+    growEach(st, c, key, k.chooseUpTo(c, key, 'HEAVENLY ASCENDANCY', k.devotees(st, c, key).filter(u => u !== b), 2)))},
   'artemis-v6-433': {
-    enter: run((st, c, key, self) => blast(st, c, self, pickEnemy(st, c, key, 'PRIMAL ARRIVAL'))),
+    enter: run((st, c, key, self) => blast(st, c, self, pickEnemy(st, c, key, 'CELESTIAL DESCENT'))),
     mods: perBank,
   },
-  // Ancient Protection ("gains Guardian") não vem do parse do bônus.
+  // Heavenly Guard ("gains Guardian") não vem do parse do bônus.
   'artemis-v6-434': {
     aura: gearAura(() => true, {keywords: ['Guardian']}),
     startTurn: (s, c, key, self) => bearer(s, c, key, self) && bank(s, key) >= 6 && (st => { const b = bearer(st, c, key, self); if (b) grow(st, c, key, b, 1); }),
   },
   'artemis-v6-435': {
-    // Precise Execution (31/10/2026): fight opcional no lugar dos 3 de dano.
+    // Celestial Reversal (ex-Precise Execution, 31/10/2026): fight opcional no lugar dos 3 de dano.
     enter: run((st, c, key, self) => {
-      if (!k.enemies(st, c, key).length || !k.may(c, key, 'PRECISE EXECUTION', {uid: self, text: 'Fight target enemy Devotee?'})) return;
-      fight(st, c, self, pickEnemy(st, c, key, 'PRECISE EXECUTION'));
+      if (!k.enemies(st, c, key).length || !k.may(c, key, 'CELESTIAL REVERSAL', {uid: self, text: 'Fight target enemy Devotee?'})) return;
+      fight(st, c, self, pickEnemy(st, c, key, 'CELESTIAL REVERSAL'));
     }),
-    watchDeclare: (s, c, key, self, attacker, target) => k.controllerOf(s, attacker) === key && k.hasType(c, attacker, 'Satellite') && vsDevotee(target)
+    watchDeclare: (s, c, key, self, attacker, target) => k.controllerOf(s, attacker) === key && k.hasType(c, attacker, 'Angel') && vsDevotee(target)
       && (st => k.buff(st, attacker, 1, 0, 'this_round')),
     killInCombat: drawOne,
   },

@@ -47,6 +47,105 @@
      "variant": "default"
     }
    ]
+  },
+  "theseus-glory": {
+   "id": "theseus-glory",
+   "name": "THESEUS' GLORY",
+   "faction": "Artemis",
+   "head_version_id": "theseus-glory-v1",
+   "canonical_version_id": null,
+   "origin_card_id": "artemis-v6-432",
+   "origin_card_name": "THESEUS' GLORY",
+   "created_at": "2026-11-06T22:41:12+00:00",
+   "updated_at": "2026-11-06T22:41:12+00:00",
+   "history": [
+    {
+     "at": "2026-11-06T22:41:12+00:00",
+     "action": "projeto criado",
+     "version_id": "theseus-glory-v1",
+     "to": "DRAFT"
+    },
+    {
+     "at": "2026-11-06T22:41:12+00:00",
+     "action": "vínculo",
+     "version_id": "theseus-glory-v1",
+     "card_id": "artemis-v6-432",
+     "variant": "default"
+    },
+    {
+     "at": "2026-11-06T22:41:12+00:00",
+     "action": "vínculo",
+     "version_id": "theseus-glory-v1",
+     "card_id": "artemis-v6-431",
+     "variant": "default"
+    }
+   ]
+  },
+  "odysseus-glory": {
+   "id": "odysseus-glory",
+   "name": "ODYSSEUS' GLORY",
+   "faction": "Artemis",
+   "head_version_id": "odysseus-glory-v1",
+   "canonical_version_id": null,
+   "origin_card_id": "artemis-v6-436",
+   "origin_card_name": "ODYSSEUS' GLORY",
+   "created_at": "2026-11-06T22:41:12+00:00",
+   "updated_at": "2026-11-06T22:41:12+00:00",
+   "history": [
+    {
+     "at": "2026-11-06T22:41:12+00:00",
+     "action": "projeto criado",
+     "version_id": "odysseus-glory-v1",
+     "to": "DRAFT"
+    },
+    {
+     "at": "2026-11-06T22:41:12+00:00",
+     "action": "vínculo",
+     "version_id": "odysseus-glory-v1",
+     "card_id": "artemis-v6-436",
+     "variant": "default"
+    },
+    {
+     "at": "2026-11-06T22:41:12+00:00",
+     "action": "vínculo",
+     "version_id": "odysseus-glory-v1",
+     "card_id": "artemis-v6-435",
+     "variant": "default"
+    }
+   ]
+  },
+  "icarus-glory": {
+   "id": "icarus-glory",
+   "name": "ICARUS' GLORY",
+   "faction": "Artemis",
+   "head_version_id": "icarus-glory-v1",
+   "canonical_version_id": null,
+   "origin_card_id": "artemis-v6-434",
+   "origin_card_name": "ICARUS' GLORY",
+   "created_at": "2026-11-06T22:41:12+00:00",
+   "updated_at": "2026-11-06T22:41:12+00:00",
+   "history": [
+    {
+     "at": "2026-11-06T22:41:12+00:00",
+     "action": "projeto criado",
+     "version_id": "icarus-glory-v1",
+     "to": "DRAFT"
+    },
+    {
+     "at": "2026-11-06T22:41:12+00:00",
+     "action": "vínculo",
+     "version_id": "icarus-glory-v1",
+     "card_id": "artemis-v6-434",
+     "variant": "default"
+    },
+    {
+     "at": "2026-11-06T22:41:12+00:00",
+     "action": "vínculo",
+     "version_id": "icarus-glory-v1",
+     "card_id": "artemis-v6-433",
+     "variant": "default"
+    }
+   ]
   }
  },
  "versions": {
@@ -138,6 +237,129 @@
    "lock": null,
    "created_at": "2026-11-04T16:41:07+00:00",
    "updated_at": "2026-11-04T16:41:07+00:00"
+  },
+  "icarus-glory-v1": {
+   "id": "icarus-glory-v1",
+   "project_id": "icarus-glory",
+   "number": 1,
+   "status": "DRAFT",
+   "parent_version_id": null,
+   "spec": {
+    "name": "ICARUS' GLORY",
+    "faction": "Artemis",
+    "fields": {
+     "family": {
+      "mode": "manual",
+      "value": "Glory"
+     },
+     "bearer": {
+      "mode": "manual",
+      "value": "ICARUS (TOUMA), CELESTIAL ANGEL"
+     },
+     "mythology": {
+      "mode": "manual",
+      "value": "Icarus, son of Daedalus, who flew too close to the sun"
+     },
+     "entity": {
+      "mode": "manual",
+      "value": "Icarus, the flight toward the sun"
+     },
+     "symbolism": {
+      "mode": "manual",
+      "value": "defiance of the heavens, the fall and the will to rise again"
+     },
+     "grandeur": {
+      "mode": "manual",
+      "value": "4"
+     }
+    }
+   },
+   "note": "",
+   "lock": null,
+   "created_at": "2026-11-06T22:41:12+00:00",
+   "updated_at": "2026-11-06T22:41:12+00:00"
+  },
+  "theseus-glory-v1": {
+   "id": "theseus-glory-v1",
+   "project_id": "theseus-glory",
+   "number": 1,
+   "status": "DRAFT",
+   "parent_version_id": null,
+   "spec": {
+    "name": "THESEUS' GLORY",
+    "faction": "Artemis",
+    "fields": {
+     "family": {
+      "mode": "manual",
+      "value": "Glory"
+     },
+     "bearer": {
+      "mode": "manual",
+      "value": "THESEUS, CELESTIAL ANGEL"
+     },
+     "mythology": {
+      "mode": "manual",
+      "value": "Theseus, the Athenian hero who entered the Labyrinth and slew the Minotaur"
+     },
+     "entity": {
+      "mode": "manual",
+      "value": "Theseus, slayer of the Minotaur"
+     },
+     "symbolism": {
+      "mode": "manual",
+      "value": "leadership, courage before the monster, the thread that finds the way out"
+     },
+     "grandeur": {
+      "mode": "manual",
+      "value": "4"
+     }
+    }
+   },
+   "note": "",
+   "lock": null,
+   "created_at": "2026-11-06T22:41:12+00:00",
+   "updated_at": "2026-11-06T22:41:12+00:00"
+  },
+  "odysseus-glory-v1": {
+   "id": "odysseus-glory-v1",
+   "project_id": "odysseus-glory",
+   "number": 1,
+   "status": "DRAFT",
+   "parent_version_id": null,
+   "spec": {
+    "name": "ODYSSEUS' GLORY",
+    "faction": "Artemis",
+    "fields": {
+     "family": {
+      "mode": "manual",
+      "value": "Glory"
+     },
+     "bearer": {
+      "mode": "manual",
+      "value": "ODYSSEUS, CELESTIAL ANGEL"
+     },
+     "mythology": {
+      "mode": "manual",
+      "value": "Odysseus, the cunning king of Ithaca and the archer who strung the great bow"
+     },
+     "entity": {
+      "mode": "manual",
+      "value": "Odysseus, the archer of Ithaca"
+     },
+     "symbolism": {
+      "mode": "manual",
+      "value": "cunning, patience, the single perfect shot"
+     },
+     "grandeur": {
+      "mode": "manual",
+      "value": "4"
+     }
+    }
+   },
+   "note": "",
+   "lock": null,
+   "created_at": "2026-11-06T22:41:12+00:00",
+   "updated_at": "2026-11-06T22:41:12+00:00"
   }
  },
  "components": {
@@ -410,6 +632,816 @@
    "mode": "absent",
    "value": "",
    "required": false
+  },
+  "comp-ceb886100d": {
+   "id": "comp-ceb886100d",
+   "version_id": "theseus-glory-v1",
+   "key": "helmet",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-47681e1f37": {
+   "id": "comp-47681e1f37",
+   "version_id": "theseus-glory-v1",
+   "key": "mask",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-f1bf19cda9": {
+   "id": "comp-f1bf19cda9",
+   "version_id": "theseus-glory-v1",
+   "key": "neck",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-c95f6c6222": {
+   "id": "comp-c95f6c6222",
+   "version_id": "theseus-glory-v1",
+   "key": "pauldrons",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-b702b5e1aa": {
+   "id": "comp-b702b5e1aa",
+   "version_id": "theseus-glory-v1",
+   "key": "chest",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-aed5a88577": {
+   "id": "comp-aed5a88577",
+   "version_id": "theseus-glory-v1",
+   "key": "back",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-c382d32994": {
+   "id": "comp-c382d32994",
+   "version_id": "theseus-glory-v1",
+   "key": "abdomen",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-eed2db2fbe": {
+   "id": "comp-eed2db2fbe",
+   "version_id": "theseus-glory-v1",
+   "key": "waist",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-753c4ce35b": {
+   "id": "comp-753c4ce35b",
+   "version_id": "theseus-glory-v1",
+   "key": "arms",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-02cdd154a8": {
+   "id": "comp-02cdd154a8",
+   "version_id": "theseus-glory-v1",
+   "key": "elbows",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-ba7f962b39": {
+   "id": "comp-ba7f962b39",
+   "version_id": "theseus-glory-v1",
+   "key": "forearms",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-ac5bfec214": {
+   "id": "comp-ac5bfec214",
+   "version_id": "theseus-glory-v1",
+   "key": "gauntlets",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-34de8b4fc8": {
+   "id": "comp-34de8b4fc8",
+   "version_id": "theseus-glory-v1",
+   "key": "hips",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-943e3c6fdf": {
+   "id": "comp-943e3c6fdf",
+   "version_id": "theseus-glory-v1",
+   "key": "thighs",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-35ca084c99": {
+   "id": "comp-35ca084c99",
+   "version_id": "theseus-glory-v1",
+   "key": "knees",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-0abc2ecae5": {
+   "id": "comp-0abc2ecae5",
+   "version_id": "theseus-glory-v1",
+   "key": "greaves",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-22fe6fd36d": {
+   "id": "comp-22fe6fd36d",
+   "version_id": "theseus-glory-v1",
+   "key": "boots",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-3dbe8a6462": {
+   "id": "comp-3dbe8a6462",
+   "version_id": "theseus-glory-v1",
+   "key": "special",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-927051a11f": {
+   "id": "comp-927051a11f",
+   "version_id": "theseus-glory-v1",
+   "key": "horns",
+   "group": "mythic",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-1edce9429a": {
+   "id": "comp-1edce9429a",
+   "version_id": "theseus-glory-v1",
+   "key": "fangs",
+   "group": "mythic",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-32b8deb51f": {
+   "id": "comp-32b8deb51f",
+   "version_id": "theseus-glory-v1",
+   "key": "wings",
+   "group": "mythic",
+   "mode": "absent",
+   "value": "",
+   "required": false
+  },
+  "comp-a12fd228c6": {
+   "id": "comp-a12fd228c6",
+   "version_id": "theseus-glory-v1",
+   "key": "tails",
+   "group": "mythic",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-0ffc706ed7": {
+   "id": "comp-0ffc706ed7",
+   "version_id": "theseus-glory-v1",
+   "key": "scales",
+   "group": "mythic",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-3e647b7e1a": {
+   "id": "comp-3e647b7e1a",
+   "version_id": "theseus-glory-v1",
+   "key": "claws",
+   "group": "mythic",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-dd35972e37": {
+   "id": "comp-dd35972e37",
+   "version_id": "theseus-glory-v1",
+   "key": "spikes",
+   "group": "mythic",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-182fadf078": {
+   "id": "comp-182fadf078",
+   "version_id": "theseus-glory-v1",
+   "key": "gems",
+   "group": "mythic",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-f60414c97c": {
+   "id": "comp-f60414c97c",
+   "version_id": "theseus-glory-v1",
+   "key": "symbols",
+   "group": "mythic",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-1bf20828e9": {
+   "id": "comp-1bf20828e9",
+   "version_id": "theseus-glory-v1",
+   "key": "ornaments",
+   "group": "mythic",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-866b9533ca": {
+   "id": "comp-866b9533ca",
+   "version_id": "theseus-glory-v1",
+   "key": "weapons",
+   "group": "mythic",
+   "mode": "absent",
+   "value": "",
+   "required": false
+  },
+  "comp-5dbb2addef": {
+   "id": "comp-5dbb2addef",
+   "version_id": "theseus-glory-v1",
+   "key": "accessories",
+   "group": "mythic",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-3a3bdd51b3": {
+   "id": "comp-3a3bdd51b3",
+   "version_id": "icarus-glory-v1",
+   "key": "helmet",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-62504469fc": {
+   "id": "comp-62504469fc",
+   "version_id": "icarus-glory-v1",
+   "key": "mask",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-945ecb21ce": {
+   "id": "comp-945ecb21ce",
+   "version_id": "icarus-glory-v1",
+   "key": "neck",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-e66c0769d3": {
+   "id": "comp-e66c0769d3",
+   "version_id": "icarus-glory-v1",
+   "key": "pauldrons",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-cbbf75d278": {
+   "id": "comp-cbbf75d278",
+   "version_id": "icarus-glory-v1",
+   "key": "chest",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-3f2d2cd979": {
+   "id": "comp-3f2d2cd979",
+   "version_id": "icarus-glory-v1",
+   "key": "back",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-ea9192027b": {
+   "id": "comp-ea9192027b",
+   "version_id": "icarus-glory-v1",
+   "key": "abdomen",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-ba8acaaefe": {
+   "id": "comp-ba8acaaefe",
+   "version_id": "icarus-glory-v1",
+   "key": "waist",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-94e0d25b9f": {
+   "id": "comp-94e0d25b9f",
+   "version_id": "icarus-glory-v1",
+   "key": "arms",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-d2cf700468": {
+   "id": "comp-d2cf700468",
+   "version_id": "icarus-glory-v1",
+   "key": "elbows",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-2091b9c039": {
+   "id": "comp-2091b9c039",
+   "version_id": "icarus-glory-v1",
+   "key": "forearms",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-f91c1fe416": {
+   "id": "comp-f91c1fe416",
+   "version_id": "icarus-glory-v1",
+   "key": "gauntlets",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-4917afe1d4": {
+   "id": "comp-4917afe1d4",
+   "version_id": "icarus-glory-v1",
+   "key": "hips",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-80cab3d5f7": {
+   "id": "comp-80cab3d5f7",
+   "version_id": "icarus-glory-v1",
+   "key": "thighs",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-c68295b013": {
+   "id": "comp-c68295b013",
+   "version_id": "icarus-glory-v1",
+   "key": "knees",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-872587b203": {
+   "id": "comp-872587b203",
+   "version_id": "icarus-glory-v1",
+   "key": "greaves",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-d334d62956": {
+   "id": "comp-d334d62956",
+   "version_id": "icarus-glory-v1",
+   "key": "boots",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-30abcb91a0": {
+   "id": "comp-30abcb91a0",
+   "version_id": "icarus-glory-v1",
+   "key": "special",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-4e012a0778": {
+   "id": "comp-4e012a0778",
+   "version_id": "icarus-glory-v1",
+   "key": "horns",
+   "group": "mythic",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-07090ea5c2": {
+   "id": "comp-07090ea5c2",
+   "version_id": "icarus-glory-v1",
+   "key": "fangs",
+   "group": "mythic",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-214ebaa84f": {
+   "id": "comp-214ebaa84f",
+   "version_id": "icarus-glory-v1",
+   "key": "wings",
+   "group": "mythic",
+   "mode": "absent",
+   "value": "",
+   "required": false
+  },
+  "comp-43c9dc8e06": {
+   "id": "comp-43c9dc8e06",
+   "version_id": "icarus-glory-v1",
+   "key": "tails",
+   "group": "mythic",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-e48358d2e3": {
+   "id": "comp-e48358d2e3",
+   "version_id": "icarus-glory-v1",
+   "key": "scales",
+   "group": "mythic",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-62a6a57203": {
+   "id": "comp-62a6a57203",
+   "version_id": "icarus-glory-v1",
+   "key": "claws",
+   "group": "mythic",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-cae92bd11d": {
+   "id": "comp-cae92bd11d",
+   "version_id": "icarus-glory-v1",
+   "key": "spikes",
+   "group": "mythic",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-08570e8a7f": {
+   "id": "comp-08570e8a7f",
+   "version_id": "icarus-glory-v1",
+   "key": "gems",
+   "group": "mythic",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-8409d6e6b9": {
+   "id": "comp-8409d6e6b9",
+   "version_id": "icarus-glory-v1",
+   "key": "symbols",
+   "group": "mythic",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-65f2327d87": {
+   "id": "comp-65f2327d87",
+   "version_id": "icarus-glory-v1",
+   "key": "ornaments",
+   "group": "mythic",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-abec27e8b8": {
+   "id": "comp-abec27e8b8",
+   "version_id": "icarus-glory-v1",
+   "key": "weapons",
+   "group": "mythic",
+   "mode": "absent",
+   "value": "",
+   "required": false
+  },
+  "comp-fb018585ef": {
+   "id": "comp-fb018585ef",
+   "version_id": "icarus-glory-v1",
+   "key": "accessories",
+   "group": "mythic",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-eaecacce98": {
+   "id": "comp-eaecacce98",
+   "version_id": "odysseus-glory-v1",
+   "key": "helmet",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-843bf360c4": {
+   "id": "comp-843bf360c4",
+   "version_id": "odysseus-glory-v1",
+   "key": "mask",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-e8123052a9": {
+   "id": "comp-e8123052a9",
+   "version_id": "odysseus-glory-v1",
+   "key": "neck",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-c88b7739d3": {
+   "id": "comp-c88b7739d3",
+   "version_id": "odysseus-glory-v1",
+   "key": "pauldrons",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-a8bf7eaaaf": {
+   "id": "comp-a8bf7eaaaf",
+   "version_id": "odysseus-glory-v1",
+   "key": "chest",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-2c4278dcb8": {
+   "id": "comp-2c4278dcb8",
+   "version_id": "odysseus-glory-v1",
+   "key": "back",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-0ef51f66e6": {
+   "id": "comp-0ef51f66e6",
+   "version_id": "odysseus-glory-v1",
+   "key": "abdomen",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-668e7de97b": {
+   "id": "comp-668e7de97b",
+   "version_id": "odysseus-glory-v1",
+   "key": "waist",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-9f57de9a3f": {
+   "id": "comp-9f57de9a3f",
+   "version_id": "odysseus-glory-v1",
+   "key": "arms",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-bae0c28f56": {
+   "id": "comp-bae0c28f56",
+   "version_id": "odysseus-glory-v1",
+   "key": "elbows",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-33aedb75d7": {
+   "id": "comp-33aedb75d7",
+   "version_id": "odysseus-glory-v1",
+   "key": "forearms",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-54b004cef7": {
+   "id": "comp-54b004cef7",
+   "version_id": "odysseus-glory-v1",
+   "key": "gauntlets",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-4c2d91c064": {
+   "id": "comp-4c2d91c064",
+   "version_id": "odysseus-glory-v1",
+   "key": "hips",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-2fabcaaa6e": {
+   "id": "comp-2fabcaaa6e",
+   "version_id": "odysseus-glory-v1",
+   "key": "thighs",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-687379bade": {
+   "id": "comp-687379bade",
+   "version_id": "odysseus-glory-v1",
+   "key": "knees",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-ac4cf2ebdf": {
+   "id": "comp-ac4cf2ebdf",
+   "version_id": "odysseus-glory-v1",
+   "key": "greaves",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-836c277034": {
+   "id": "comp-836c277034",
+   "version_id": "odysseus-glory-v1",
+   "key": "boots",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-b661ae3c73": {
+   "id": "comp-b661ae3c73",
+   "version_id": "odysseus-glory-v1",
+   "key": "special",
+   "group": "anatomy",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-3a514ff9ad": {
+   "id": "comp-3a514ff9ad",
+   "version_id": "odysseus-glory-v1",
+   "key": "horns",
+   "group": "mythic",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-82cc7f6927": {
+   "id": "comp-82cc7f6927",
+   "version_id": "odysseus-glory-v1",
+   "key": "fangs",
+   "group": "mythic",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-ed531ba6a2": {
+   "id": "comp-ed531ba6a2",
+   "version_id": "odysseus-glory-v1",
+   "key": "wings",
+   "group": "mythic",
+   "mode": "absent",
+   "value": "",
+   "required": false
+  },
+  "comp-ed90f1d679": {
+   "id": "comp-ed90f1d679",
+   "version_id": "odysseus-glory-v1",
+   "key": "tails",
+   "group": "mythic",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-e31ae65667": {
+   "id": "comp-e31ae65667",
+   "version_id": "odysseus-glory-v1",
+   "key": "scales",
+   "group": "mythic",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-8607bdcd22": {
+   "id": "comp-8607bdcd22",
+   "version_id": "odysseus-glory-v1",
+   "key": "claws",
+   "group": "mythic",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-8dbcd3d8fb": {
+   "id": "comp-8dbcd3d8fb",
+   "version_id": "odysseus-glory-v1",
+   "key": "spikes",
+   "group": "mythic",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-7c0f16dc1f": {
+   "id": "comp-7c0f16dc1f",
+   "version_id": "odysseus-glory-v1",
+   "key": "gems",
+   "group": "mythic",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-be3e535306": {
+   "id": "comp-be3e535306",
+   "version_id": "odysseus-glory-v1",
+   "key": "symbols",
+   "group": "mythic",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-e7eacc0e13": {
+   "id": "comp-e7eacc0e13",
+   "version_id": "odysseus-glory-v1",
+   "key": "ornaments",
+   "group": "mythic",
+   "mode": "auto",
+   "value": "",
+   "required": false
+  },
+  "comp-ff30759156": {
+   "id": "comp-ff30759156",
+   "version_id": "odysseus-glory-v1",
+   "key": "weapons",
+   "group": "mythic",
+   "mode": "absent",
+   "value": "",
+   "required": false
+  },
+  "comp-b8951cf9b8": {
+   "id": "comp-b8951cf9b8",
+   "version_id": "odysseus-glory-v1",
+   "key": "accessories",
+   "group": "mythic",
+   "mode": "auto",
+   "value": "",
+   "required": false
   }
  },
  "references": {},
@@ -439,6 +1471,84 @@
    "adjustments": "",
    "use": true,
    "updated_at": "2026-11-04T16:45:22+00:00"
+  },
+  "bind-0dc65cf04b": {
+   "id": "bind-0dc65cf04b",
+   "card_id": "artemis-v6-432",
+   "variant": "default",
+   "created_at": "2026-11-06T22:41:12+00:00",
+   "project_id": "theseus-glory",
+   "version_id": "theseus-glory-v1",
+   "card_name": "THESEUS' GLORY",
+   "armor_type": "Glory",
+   "adjustments": "Artemis V2.0: continuidade Tenkai-hen Josō Overture (2004). DRAFT até a referência canônica ser registrada e a arte revisada.",
+   "use": true,
+   "updated_at": "2026-11-06T22:41:12+00:00"
+  },
+  "bind-03227e38f8": {
+   "id": "bind-03227e38f8",
+   "card_id": "artemis-v6-431",
+   "variant": "default",
+   "created_at": "2026-11-06T22:41:12+00:00",
+   "project_id": "theseus-glory",
+   "version_id": "theseus-glory-v1",
+   "card_name": "THESEUS, CELESTIAL ANGEL",
+   "armor_type": "Glory",
+   "adjustments": "Artemis V2.0: continuidade Tenkai-hen Josō Overture (2004). DRAFT até a referência canônica ser registrada e a arte revisada.",
+   "use": true,
+   "updated_at": "2026-11-06T22:41:12+00:00"
+  },
+  "bind-6fa5f4d3ab": {
+   "id": "bind-6fa5f4d3ab",
+   "card_id": "artemis-v6-434",
+   "variant": "default",
+   "created_at": "2026-11-06T22:41:12+00:00",
+   "project_id": "icarus-glory",
+   "version_id": "icarus-glory-v1",
+   "card_name": "ICARUS' GLORY",
+   "armor_type": "Glory",
+   "adjustments": "Artemis V2.0: continuidade Tenkai-hen Josō Overture (2004). DRAFT até a referência canônica ser registrada e a arte revisada.",
+   "use": true,
+   "updated_at": "2026-11-06T22:41:12+00:00"
+  },
+  "bind-b0d387b116": {
+   "id": "bind-b0d387b116",
+   "card_id": "artemis-v6-433",
+   "variant": "default",
+   "created_at": "2026-11-06T22:41:12+00:00",
+   "project_id": "icarus-glory",
+   "version_id": "icarus-glory-v1",
+   "card_name": "ICARUS (TOUMA), CELESTIAL ANGEL",
+   "armor_type": "Glory",
+   "adjustments": "Artemis V2.0: continuidade Tenkai-hen Josō Overture (2004). DRAFT até a referência canônica ser registrada e a arte revisada.",
+   "use": true,
+   "updated_at": "2026-11-06T22:41:12+00:00"
+  },
+  "bind-41d142fa41": {
+   "id": "bind-41d142fa41",
+   "card_id": "artemis-v6-436",
+   "variant": "default",
+   "created_at": "2026-11-06T22:41:12+00:00",
+   "project_id": "odysseus-glory",
+   "version_id": "odysseus-glory-v1",
+   "card_name": "ODYSSEUS' GLORY",
+   "armor_type": "Glory",
+   "adjustments": "Artemis V2.0: continuidade Tenkai-hen Josō Overture (2004). DRAFT até a referência canônica ser registrada e a arte revisada.",
+   "use": true,
+   "updated_at": "2026-11-06T22:41:12+00:00"
+  },
+  "bind-b0775f0edc": {
+   "id": "bind-b0775f0edc",
+   "card_id": "artemis-v6-435",
+   "variant": "default",
+   "created_at": "2026-11-06T22:41:12+00:00",
+   "project_id": "odysseus-glory",
+   "version_id": "odysseus-glory-v1",
+   "card_name": "ODYSSEUS, CELESTIAL ANGEL",
+   "armor_type": "Glory",
+   "adjustments": "Artemis V2.0: continuidade Tenkai-hen Josō Overture (2004). DRAFT até a referência canônica ser registrada e a arte revisada.",
+   "use": true,
+   "updated_at": "2026-11-06T22:41:12+00:00"
   }
  },
  "generations": {

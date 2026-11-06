@@ -1,7 +1,7 @@
 // Equipment System V1 (autor, 02/11/2026): fonte única de tipos e subtipos de Equipment, versionada.
 // Engine, Card Forge, Deck Builder, HUD e Layout Studio consultam daqui; docs/equipment-system-v1.md explica o contrato.
 // A carta guarda `name` em `subtipos`; `id` é estável e não depende do idioma.
-export const EQUIPMENT_TYPES_VERSION = '1.0.0';
+export const EQUIPMENT_TYPES_VERSION = '1.1.0';
 export const ARMOR_FAMILY = 'ARMOR_FAMILY';
 
 const s = (name, kind, order, extra = {}) => ({id: name.toUpperCase(), name, kind, order, status: 'approved', since: '1.0.0', group: null, requires: [], ...extra});
@@ -13,7 +13,9 @@ const old = (name, replacedBy) => ({id: name.toUpperCase().replace(/ /g, '_'), n
 export const EQUIPMENT_SUBTYPES = [
   s('Cloth', 'armor', 10, family), s('Scale', 'armor', 11, family), s('Surplice', 'armor', 12, family),
   s('Warplate', 'armor', 13, family), s('Moonplate', 'armor', 14, family),
-  s('Armor', 'armor', 20), // armadura fora das cinco famílias; nunca junto de uma delas
+  // Glory (Artemis V2.0, autor, 06/11/2026): armadura dos Anjos Celestes. Sexta família, sem progressão de patentes.
+  s('Glory', 'armor', 15, {...family, since: '1.1.0'}),
+  s('Armor', 'armor', 20), // armadura fora das seis famílias; nunca junto de uma delas
   s('Weapon', 'weapon', 30),
   s('Sword', 'weapon_kind', 31, weapon), s('Spear', 'weapon_kind', 32, weapon), s('Trident', 'weapon_kind', 33, weapon),
   s('Bow', 'weapon_kind', 34, weapon), s('Chain', 'weapon_kind', 35), s('Shield', 'weapon_kind', 36),
@@ -33,9 +35,10 @@ const lookup = v => byName.get(String(v).toLowerCase()) || byId.get(String(v).to
 const nameOf = v => lookup(v)?.name ?? v;
 
 export const ARMOR_FAMILY_NAMES = EQUIPMENT_SUBTYPES.filter(t => t.group === ARMOR_FAMILY).map(t => t.name);
-// Subtipos que tornam uma carta Armor no slot (guia §26): as cinco famílias e a Armor genérica.
+// Subtipos que tornam uma carta Armor no slot (guia §26): as seis famílias e a Armor genérica.
 export const ARMOR_SUBTYPE_NAMES = [...ARMOR_FAMILY_NAMES, 'Armor'];
 // Progressão das armaduras (autor, 02/11/2026): nível I é a família sem patente; a lista traz os níveis II a V, em ordem.
+// Glory não tem progressão (autor, 06/11/2026): nenhuma patente é válida para ela.
 export const PATENTES_ARMADURA = {
   Cloth: ['Bronze', 'Silver', 'Gold', 'God'],
   Scale: ['Marine', 'Captain', 'General', 'Divine'],
@@ -104,7 +107,7 @@ export function validateEquipmentSubtypes(card) {
     if (t.status === 'deprecated') warnings.push(`Subtipo anterior ao V1: ${t.name}${t.replacedBy ? ` (proposta: ${t.replacedBy})` : ''}`);
     for (const r of t.requires) if (!names.includes(byId.get(r).name)) errors.push(`${t.name} exige ${byId.get(r).name}`);
   }
-  if (names.includes('Armor') && names.some(n => ARMOR_FAMILY_NAMES.includes(n))) warnings.push('Armor não acompanha Cloth, Scale, Surplice, Warplate ou Moonplate');
+  if (names.includes('Armor') && names.some(n => ARMOR_FAMILY_NAMES.includes(n))) warnings.push('Armor não acompanha Cloth, Scale, Surplice, Warplate, Moonplate ou Glory');
   if (card?.patente_armadura && !patentesDe(names).includes(card.patente_armadura)) errors.push(`Patente inválida para ${names.join(' ') || 'esta carta'}: ${card.patente_armadura}`);
   return {errors, warnings};
 }
@@ -120,4 +123,4 @@ export function toggleSubtype(list, subtype) {
 export const matchesLayoutSubtype = (card, subtype) => Boolean(card?.subtipos?.includes(subtype) || (subtype === 'God Armor' && ['God', 'Divine'].includes(card?.patente_armadura)));
 
 // Texto `type` da Engine: é o que decide o slot de Armor (guia §26).
-export const typeTextIsArmor = type => /Armor|Warplate|Moonplate|\bScale\b|\bSurplice\b|\bCloth\b/.test(type);
+export const typeTextIsArmor = type => /Armor|Warplate|Moonplate|\bGlory\b|\bScale\b|\bSurplice\b|\bCloth\b/.test(type);

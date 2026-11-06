@@ -18802,12 +18802,12 @@
       "id_fonte": "ARTEMIS-V6-431",
       "conjunto": "artemis-vanilla-v6",
       "numero_carta": 431,
-      "nome_exibicao_en": "MOONLIGHT HUNTRESS CAPTAIN",
-      "tagline_en": "Commander of the Silver Hunt",
+      "nome_exibicao_en": "THESEUS, CELESTIAL ANGEL",
+      "tagline_en": "Vanguard of the Olympian Host",
       "nome_interno_pt": "",
       "faccao": "Artemis",
       "tipo": "Devotee",
-      "subtipos": ["Satellite", "Lunar Commander"],
+      "subtipos": ["Angel", "Celestial Warrior"],
       "raridade": "Uncommon",
       "status": "design-ready",
       "cosmoble": true,
@@ -18824,32 +18824,32 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Lunar Leadership — Other friendly Satellites get +1/+1.",
-        "Moonlit Ambush — When Moonlight Huntress Captain enters the Battlefield, target friendly Satellite deals damage equal to its @ATK to target enemy Devotee."
+        "Celestial Vanguard — Other friendly Angels get +1/+1.",
+        "Divine Judgment — When Theseus enters the Battlefield, target friendly Angel deals damage equal to its @ATK to target enemy Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026.",
-      "nome_exibicao_pt": "CAPITÃ DAS CAÇADORAS DO LUAR",
-      "subtitulo_pt": "Comandante da Caçada Prateada",
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis V2.0 (autor, 06/11/2026): ex-MOONLIGHT HUNTRESS CAPTAIN; continuidade: filme Saint Seiya Tenkai-hen Josō Overture (Prólogo do Céu).",
+      "nome_exibicao_pt": "TESEU, ANJO CELESTE",
+      "subtitulo_pt": "Vanguarda da Hoste Olímpica",
       "habilidades_pt": [
-        "Liderança Lunar — Outros Satélites aliados recebem +1 @ATQ / +1 @PV.",
-        "Emboscada ao Luar — Quando a Capitã das Caçadoras do Luar entra no Campo de Batalha, o Satélite aliado alvo causa dano igual ao seu @ATQ ao Devoto inimigo alvo."
+        "Vanguarda Celestial — Outros Anjos aliados recebem +1 @ATQ / +1 @PV.",
+        "Julgamento Divino — Quando Teseu entra no Campo de Batalha, o Anjo aliado alvo causa dano igual ao seu @ATQ ao Devoto inimigo alvo."
       ],
-      "flavour_pt": "\"Sob seu comando, mil flechas voam como uma só.\"",
-      "tagline_pt": "Comandante da Caçada Prateada"
+      "flavour_pt": "\"O céu não pede licença à terra. Ele julga.\"",
+      "tagline_pt": "Vanguarda da Hoste Olímpica"
     },
     {
       "id": "artemis-v6-432",
       "id_fonte": "ARTEMIS-V6-432",
       "conjunto": "artemis-vanilla-v6",
       "numero_carta": 432,
-      "nome_exibicao_en": "MOONLIGHT HUNTRESS ARMOR",
-      "tagline_en": "Vestment of the Silver Commander",
+      "nome_exibicao_en": "THESEUS' GLORY",
+      "tagline_en": "Armor of the Celestial Vanguard",
       "nome_interno_pt": "",
       "faccao": "Artemis",
       "tipo": "Equipment",
-      "subtipos": ["Moonplate"],
+      "subtipos": ["Glory"],
       "raridade": "Uncommon",
       "status": "design-ready",
       "cosmoble": true,
@@ -18865,11 +18865,11 @@
       "equipar_custo": 2,
       "keywords_en": [],
       "habilidades_en": [
-        "Moonlight Supremacy — Whenever equipped Devotee defeats an enemy Devotee during combat, put a @Training counter on each of up to two other target friendly Devotees."
+        "Heavenly Ascendancy — Whenever equipped Devotee defeats an enemy Devotee during combat, put a @Training counter on each of up to two other target friendly Devotees."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md.",
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md. Artemis V2.0 (autor, 06/11/2026): ex-MOONLIGHT HUNTRESS ARMOR; continuidade: filme Saint Seiya Tenkai-hen Josō Overture (Prólogo do Céu).",
       "categoria_equipamento": "Armor",
       "slot_equipamento": "armadura",
       "auto_equip_en": [],
@@ -18877,26 +18877,25 @@
       "equipar_custo_outros": 2,
       "bonus_poder": 2,
       "bonus_vida": 2,
-      "nome_exibicao_pt": "ARMADURA DAS CAÇADORAS DO LUAR",
-      "subtitulo_pt": "Vestimenta da Comandante Prateada",
+      "nome_exibicao_pt": "GLÓRIA DE TESEU",
+      "subtitulo_pt": "Armadura da Vanguarda Celeste",
       "habilidades_pt": [
-        "Supremacia do Luar — Sempre que o Devoto equipado derrota um Devoto inimigo em combate, coloque 1 marcador de @Treinamento em cada um de até dois outros Devotos aliados alvo."
+        "Ascendência Celestial — Sempre que o Devoto equipado derrota um Devoto inimigo em combate, coloque 1 marcador de @Treinamento em cada um de até dois outros Devotos aliados alvo."
       ],
-      "flavour_pt": "\"A lua recompensa a vitória com força, e a força com glória eterna.\"",
-      "tagline_pt": "Vestimenta da Comandante Prateada",
-      "patente_armadura": "Half"
+      "flavour_pt": "\"Cada vitória do Olimpo eleva quem luta ao seu lado.\"",
+      "tagline_pt": "Armadura da Vanguarda Celeste"
     },
     {
       "id": "artemis-v6-433",
       "id_fonte": "ARTEMIS-V6-433",
       "conjunto": "artemis-vanilla-v6",
       "numero_carta": 433,
-      "nome_exibicao_en": "PRIMAL FOREST CHAMPION",
-      "tagline_en": "The Wilderness Incarnate",
+      "nome_exibicao_en": "ICARUS (TOUMA), CELESTIAL ANGEL",
+      "tagline_en": "The Angel Who Defied the Sun",
       "nome_interno_pt": "",
       "faccao": "Artemis",
       "tipo": "Devotee",
-      "subtipos": ["Forest Guardian", "Champion"],
+      "subtipos": ["Angel", "Celestial Warrior"],
       "raridade": "Legendary",
       "status": "design-ready",
       "cosmoble": false,
@@ -18914,33 +18913,33 @@
       "keywords_en": ["Pierce"],
       "habilidades_en": [
         "Pierce",
-        "Primal Arrival — When Primal Forest Champion enters the Battlefield, it deals damage equal to its @ATK to target enemy Devotee.",
-        "Verdant Dominion — Primal Forest Champion gets +1/+1 for every three cards in your Cosmo Bank."
+        "Celestial Descent — When Icarus enters the Battlefield, it deals damage equal to its @ATK to target enemy Devotee.",
+        "Unbound Resolve — Icarus gets +1/+1 for every three cards in your Cosmo Bank."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
-      "nome_exibicao_pt": "CAMPEÃO PRIMORDIAL DA FLORESTA",
-      "subtitulo_pt": "A Natureza Selvagem Encarnada",
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção). Artemis V2.0 (autor, 06/11/2026): ex-PRIMAL FOREST CHAMPION; continuidade: filme Saint Seiya Tenkai-hen Josō Overture (Prólogo do Céu).",
+      "nome_exibicao_pt": "ÍCARO (TOMA), ANJO CELESTE",
+      "subtitulo_pt": "O Anjo que Desafiou o Sol",
       "habilidades_pt": [
         "Perfurar",
-        "Chegada Primitiva — Quando o Campeão Primordial da Floresta entra no Campo de Batalha, ele causa dano igual ao seu @ATQ ao Devoto inimigo alvo.",
-        "Domínio Verdejante — O Campeão Primordial da Floresta recebe +1 @ATQ / +1 @PV para cada 3 cartas no seu Banco de Cosmo."
+        "Descida Celestial — Quando Ícaro entra no Campo de Batalha, ele causa dano igual ao seu @ATQ ao Devoto inimigo alvo.",
+        "Determinação Sem Amarras — Ícaro recebe +1 @ATQ / +1 @PV para cada 3 cartas no seu Banco de Cosmo."
       ],
-      "flavour_pt": "\"A floresta não envia exércitos. Envia seus filhos mais fortes.\"",
-      "tagline_pt": "A Natureza Selvagem Encarnada"
+      "flavour_pt": "\"Ele já caiu do céu uma vez. Escolheu subir de novo.\"",
+      "tagline_pt": "O Anjo que Desafiou o Sol"
     },
     {
       "id": "artemis-v6-434",
       "id_fonte": "ARTEMIS-V6-434",
       "conjunto": "artemis-vanilla-v6",
       "numero_carta": 434,
-      "nome_exibicao_en": "PRIMAL GUARDIAN ARMOR",
-      "tagline_en": "The Living Bark of the Ancient World",
+      "nome_exibicao_en": "ICARUS' GLORY",
+      "tagline_en": "Armor of the Unbound Angel",
       "nome_interno_pt": "",
       "faccao": "Artemis",
       "tipo": "Equipment",
-      "subtipos": ["Moonplate"],
+      "subtipos": ["Glory"],
       "raridade": "Uncommon",
       "status": "design-ready",
       "cosmoble": true,
@@ -18956,12 +18955,12 @@
       "equipar_custo": 2,
       "keywords_en": [],
       "habilidades_en": [
-        "Ancient Protection — Equipped Devotee gains @Guardian.",
-        "Rooted Growth — At the beginning of your round, if you have six or more cards in your Cosmo Bank, put a @Training counter on equipped Devotee."
+        "Heavenly Guard — Equipped Devotee gains @Guardian.",
+        "Celestial Awakening — At the beginning of your round, if you have six or more cards in your Cosmo Bank, put a @Training counter on equipped Devotee."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md.",
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md. Artemis V2.0 (autor, 06/11/2026): ex-PRIMAL GUARDIAN ARMOR; continuidade: filme Saint Seiya Tenkai-hen Josō Overture (Prólogo do Céu).",
       "categoria_equipamento": "Armor",
       "slot_equipamento": "armadura",
       "auto_equip_en": [],
@@ -18969,27 +18968,26 @@
       "equipar_custo_outros": 2,
       "bonus_poder": 3,
       "bonus_vida": 3,
-      "nome_exibicao_pt": "ARMADURA GUARDIÃ PRIMORDIAL",
-      "subtitulo_pt": "A Casca Viva do Mundo Antigo",
+      "nome_exibicao_pt": "GLÓRIA DE ÍCARO",
+      "subtitulo_pt": "Armadura do Anjo Sem Amarras",
       "habilidades_pt": [
-        "Proteção Ancestral — O Devoto equipado ganha @Guardião.",
-        "Crescimento Enraizado — No início da sua rodada, se você tiver 6 ou mais cartas no seu Banco de Cosmo, coloque 1 marcador de @Treinamento no Devoto equipado."
+        "Guarda Celestial — O Devoto equipado ganha @Guardião.",
+        "Despertar Celestial — No início da sua rodada, se você tiver 6 ou mais cartas no seu Banco de Cosmo, coloque 1 marcador de @Treinamento no Devoto equipado."
       ],
-      "flavour_pt": "\"Suas raízes bebem da própria terra, e sua força não conhece estação.\"",
-      "tagline_pt": "A Casca Viva do Mundo Antigo",
-      "patente_armadura": "Full"
+      "flavour_pt": "\"Ela não brilha para ser vista. Brilha para proteger.\"",
+      "tagline_pt": "Armadura do Anjo Sem Amarras"
     },
     {
       "id": "artemis-v6-435",
       "id_fonte": "ARTEMIS-V6-435",
       "conjunto": "artemis-vanilla-v6",
       "numero_carta": 435,
-      "nome_exibicao_en": "SILVER ARROW COMMANDER",
-      "tagline_en": "The Huntress Who Never Misses",
+      "nome_exibicao_en": "ODYSSEUS, CELESTIAL ANGEL",
+      "tagline_en": "The Angel of Unerring Aim",
       "nome_interno_pt": "",
       "faccao": "Artemis",
       "tipo": "Devotee",
-      "subtipos": ["Satellite", "Archer Commander"],
+      "subtipos": ["Angel", "Celestial Warrior"],
       "raridade": "Divine",
       "status": "design-ready",
       "cosmoble": false,
@@ -19007,35 +19005,35 @@
       "keywords_en": ["Long Range"],
       "habilidades_en": [
         "Long Range",
-        "Precise Execution — When Silver Arrow Commander enters the Battlefield, you may have it fight target enemy Devotee. Each deals damage equal to its @ATK to the other.",
-        "Hunter's Mastery — Whenever a friendly Satellite declares a Strike against an enemy Devotee, that Satellite gets +1/+0 until the end of your round.",
-        "Lunar Precision — Whenever Silver Arrow Commander defeats an enemy Devotee during combat, draw 1 card."
+        "Celestial Reversal — When Odysseus enters the Battlefield, you may have it fight target enemy Devotee. Each deals damage equal to its @ATK to the other.",
+        "Angel Vanguard — Whenever a friendly Angel declares a Strike against an enemy Devotee, that Angel gets +1/+0 until the end of your round.",
+        "Heavenly Precision — Whenever Odysseus defeats an enemy Devotee during combat, draw 1 card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
-      "nome_exibicao_pt": "COMANDANTE DA FLECHA DE PRATA",
-      "subtitulo_pt": "A Caçadora que Nunca Erra",
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção). Artemis V2.0 (autor, 06/11/2026): ex-SILVER ARROW COMMANDER; continuidade: filme Saint Seiya Tenkai-hen Josō Overture (Prólogo do Céu).",
+      "nome_exibicao_pt": "ODISSEU, ANJO CELESTE",
+      "subtitulo_pt": "O Anjo da Mira Infalível",
       "habilidades_pt": [
         "Longo Alcance",
-        "Execução Precisa — Quando a Comandante da Flecha de Prata entra no Campo de Batalha, você pode fazer com que ela lute contra o Devoto inimigo alvo. Cada um causa dano igual ao seu @ATQ ao outro.",
-        "Maestria do Caçador — Sempre que um Satélite aliado declara um Golpe contra um Devoto inimigo, esse Satélite recebe +1 @ATQ até o fim da sua rodada.",
-        "Precisão Lunar — Sempre que a Comandante da Flecha de Prata derrota um Devoto inimigo em combate, compre uma carta."
+        "Reversão Celestial — Quando Odisseu entra no Campo de Batalha, você pode fazer com que ele lute contra o Devoto inimigo alvo. Cada um causa dano igual ao seu @ATQ ao outro.",
+        "Vanguarda Angelical — Sempre que um Anjo aliado declara um Golpe contra um Devoto inimigo, esse Anjo recebe +1 @ATQ até o fim da sua rodada.",
+        "Precisão Celestial — Sempre que Odisseu derrota um Devoto inimigo em combate, compre uma carta."
       ],
-      "flavour_pt": "\"A maior das caçadoras não procura a presa. Ela sabe onde a presa vai cair.\"",
-      "tagline_pt": "A Caçadora que Nunca Erra"
+      "flavour_pt": "\"Ele espera uma só brecha. Nunca precisa de outra.\"",
+      "tagline_pt": "O Anjo da Mira Infalível"
     },
     {
       "id": "artemis-v6-436",
       "id_fonte": "ARTEMIS-V6-436",
       "conjunto": "artemis-vanilla-v6",
       "numero_carta": 436,
-      "nome_exibicao_en": "SILVER ARROW ARMOR",
-      "tagline_en": "The Armor of Unerring Precision",
+      "nome_exibicao_en": "ODYSSEUS' GLORY",
+      "tagline_en": "Armor of Divine Accuracy",
       "nome_interno_pt": "",
       "faccao": "Artemis",
       "tipo": "Equipment",
-      "subtipos": ["Moonplate"],
+      "subtipos": ["Glory"],
       "raridade": "Uncommon",
       "status": "design-ready",
       "cosmoble": true,
@@ -19051,12 +19049,12 @@
       "equipar_custo": 2,
       "keywords_en": [],
       "habilidades_en": [
-        "Hunter's Precision — Whenever equipped Devotee declares a Strike against an enemy Devotee, it gets +2/+0 until the end of your round.",
+        "Celestial Strike — Whenever equipped Devotee declares a Strike against an enemy Devotee, it gets +2/+0 until the end of your round.",
         "Divine Accuracy — Whenever equipped Devotee defeats an enemy Devotee during combat, draw 1 card. This ability triggers only once each cycle."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md.",
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Artemis → Verde (meta Premodern), diff aprovado pelo autor em 31/10/2026: docs/rebalance-artemis-premodern.md. Artemis V2.0 (autor, 06/11/2026): ex-SILVER ARROW ARMOR; continuidade: filme Saint Seiya Tenkai-hen Josō Overture (Prólogo do Céu).",
       "categoria_equipamento": "Armor",
       "slot_equipamento": "armadura",
       "auto_equip_en": [],
@@ -19064,15 +19062,14 @@
       "equipar_custo_outros": 2,
       "bonus_poder": 2,
       "bonus_vida": 1,
-      "nome_exibicao_pt": "ARMADURA DA FLECHA DE PRATA",
-      "subtitulo_pt": "A Armadura da Precisão Infalível",
+      "nome_exibicao_pt": "GLÓRIA DE ODISSEU",
+      "subtitulo_pt": "Armadura da Precisão Divina",
       "habilidades_pt": [
-        "Precisão do Caçador — Sempre que o Devoto equipado declara um Golpe contra um Devoto inimigo, ele recebe +2 @ATQ até o fim da sua rodada.",
+        "Golpe Celestial — Sempre que o Devoto equipado declara um Golpe contra um Devoto inimigo, ele recebe +2 @ATQ até o fim da sua rodada.",
         "Pontaria Divina — Sempre que o Devoto equipado derrota um Devoto inimigo em combate, compre uma carta. Essa habilidade ativa apenas uma vez por ciclo."
       ],
-      "flavour_pt": "\"Nenhuma sombra pode esconder o que a lua escolheu revelar.\"",
-      "tagline_pt": "A Armadura da Precisão Infalível",
-      "patente_armadura": "Half"
+      "flavour_pt": "\"O Olimpo não erra. Apenas espera.\"",
+      "tagline_pt": "Armadura da Precisão Divina"
     },
     {
       "id": "artemis-v6-437",

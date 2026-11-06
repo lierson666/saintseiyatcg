@@ -677,59 +677,60 @@
   "f": "\"Dentro destes campos sagrados, toda criatura viva se torna caçador ou presa.\""
  },
  "artemis-v6-431": {
-  "n": "CAPITÃ DAS CAÇADORAS DO LUAR",
-  "s": "Comandante da Caçada Prateada",
+  "n": "TESEU, ANJO CELESTE",
+  "s": "Vanguarda da Hoste Olímpica",
   "h": [
-   "Liderança Lunar — Outros Satélites aliados recebem +1 ATQ / +1 PV.",
-   "Emboscada ao Luar — Quando a Capitã das Caçadoras do Luar entra no Campo de Batalha, o Satélite aliado alvo causa dano igual ao seu ATQ ao Devoto inimigo alvo."
+   "Vanguarda Celestial — Outros Anjos aliados recebem +1 ATQ / +1 PV.",
+   "Julgamento Divino — Quando Teseu entra no Campo de Batalha, o Anjo aliado alvo causa dano igual ao seu ATQ ao Devoto inimigo alvo."
   ],
-  "f": "\"Sob seu comando, mil flechas voam como uma só.\""
+  "f": "\"O céu não pede licença à terra. Ele julga.\""
  },
  "artemis-v6-432": {
-  "n": "ARMADURA DAS CAÇADORAS DO LUAR",
-  "s": "Vestimenta da Comandante Prateada",
+  "n": "GLÓRIA DE TESEU",
+  "s": "Armadura da Vanguarda Celeste",
   "h": [
-   "Supremacia do Luar — Sempre que o Devoto equipado derrota um Devoto inimigo em combate, coloque 1 marcador de Treinamento em cada um de até dois outros Devotos aliados alvo."
+   "Ascendência Celestial — Sempre que o Devoto equipado derrota um Devoto inimigo em combate, coloque 1 marcador de Treinamento em cada um de até dois outros Devotos aliados alvo."
   ],
-  "f": "\"A lua recompensa a vitória com força, e a força com glória eterna.\""
+  "f": "\"Cada vitória do Olimpo eleva quem luta ao seu lado.\""
  },
  "artemis-v6-433": {
-  "n": "CAMPEÃO PRIMORDIAL DA FLORESTA",
-  "s": "A Natureza Selvagem Encarnada",
+  "n": "ÍCARO (TOMA), ANJO CELESTE",
+  "s": "O Anjo que Desafiou o Sol",
   "h": [
    "Perfurar",
-   "Chegada Primitiva — Quando o Campeão Primordial da Floresta entra no Campo de Batalha, ele causa dano igual ao seu ATQ ao Devoto inimigo alvo.",
-   "Domínio Verdejante — O Campeão Primordial da Floresta recebe +1 ATQ / +1 PV para cada 3 cartas no seu Banco de Cosmo."
+   "Descida Celestial — Quando Ícaro entra no Campo de Batalha, ele causa dano igual ao seu ATQ ao Devoto inimigo alvo.",
+   "Determinação Sem Amarras — Ícaro recebe +1 ATQ / +1 PV para cada 3 cartas no seu Banco de Cosmo."
   ],
-  "f": "\"A floresta não envia exércitos. Envia seus filhos mais fortes.\""
+  "f": "\"Ele já caiu do céu uma vez. Escolheu subir de novo.\""
  },
  "artemis-v6-434": {
-  "n": "ARMADURA GUARDIÃ PRIMORDIAL",
-  "s": "A Casca Viva do Mundo Antigo",
+  "n": "GLÓRIA DE ÍCARO",
+  "s": "Armadura do Anjo Sem Amarras",
   "h": [
-   "Proteção Ancestral — O Devoto equipado ganha Guardião.",
-   "Crescimento Enraizado — No início do seu turno, se você tiver 6 ou mais cartas no seu Banco de Cosmo, coloque 1 marcador de Treinamento no Devoto equipado."
+   "Guarda Celestial — O Devoto equipado ganha Guardião.",
+   "Despertar Celestial — No início da sua rodada, se você tiver 6 ou mais cartas no seu Banco de Cosmo, coloque 1 marcador de Treinamento no Devoto equipado."
   ],
-  "f": "\"Suas raízes bebem da própria terra, e sua força não conhece estação.\""
+  "f": "\"Ela não brilha para ser vista. Brilha para proteger.\""
  },
  "artemis-v6-435": {
-  "n": "COMANDANTE DA FLECHA DE PRATA",
-  "s": "A Caçadora que Nunca Erra",
+  "n": "ODISSEU, ANJO CELESTE",
+  "s": "O Anjo da Mira Infalível",
   "h": [
-   "Execução Precisa — Quando a Comandante da Flecha de Prata entra no Campo de Batalha, você pode fazer com que ela lute contra o Devoto inimigo alvo. Cada um causa dano igual ao seu ATQ ao outro.",
-   "Maestria do Caçador — Sempre que um Satélite aliado declara um Golpe contra um Devoto inimigo, esse Satélite recebe +1 ATQ até o fim da rodada.",
-   "Precisão Lunar — Sempre que a Comandante da Flecha de Prata derrota um Devoto inimigo em combate, compre uma carta."
+   "Longo Alcance",
+   "Reversão Celestial — Quando Odisseu entra no Campo de Batalha, você pode fazer com que ele lute contra o Devoto inimigo alvo. Cada um causa dano igual ao seu ATQ ao outro.",
+   "Vanguarda Angelical — Sempre que um Anjo aliado declara um Golpe contra um Devoto inimigo, esse Anjo recebe +1 ATQ até o fim da sua rodada.",
+   "Precisão Celestial — Sempre que Odisseu derrota um Devoto inimigo em combate, compre uma carta."
   ],
-  "f": "\"A maior das caçadoras não procura a presa. Ela sabe onde a presa vai cair.\""
+  "f": "\"Ele espera uma só brecha. Nunca precisa de outra.\""
  },
  "artemis-v6-436": {
-  "n": "ARMADURA DA FLECHA DE PRATA",
-  "s": "A Armadura da Precisão Infalível",
+  "n": "GLÓRIA DE ODISSEU",
+  "s": "Armadura da Precisão Divina",
   "h": [
-   "Precisão do Caçador — Sempre que o Devoto equipado declara um Golpe contra um Devoto inimigo, ele recebe +2 ATQ até o fim da rodada.",
-   "Pontaria Divina — Sempre que o Devoto equipado derrota um Devoto inimigo em combate, compre uma carta. Essa habilidade ativa apenas uma vez por rodada."
+   "Golpe Celestial — Sempre que o Devoto equipado declara um Golpe contra um Devoto inimigo, ele recebe +2 ATQ até o fim da sua rodada.",
+   "Pontaria Divina — Sempre que o Devoto equipado derrota um Devoto inimigo em combate, compre uma carta. Essa habilidade ativa apenas uma vez por ciclo."
   ],
-  "f": "\"Nenhuma sombra pode esconder o que a lua escolheu revelar.\""
+  "f": "\"O Olimpo não erra. Apenas espera.\""
  },
  "artemis-v6-437": {
   "n": "A SEGUNDA GUARDIÃ LUNAR",

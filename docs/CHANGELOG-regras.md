@@ -4,6 +4,14 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-06 — §26, §61 e cartas 431–436 — Artemis V2.0: Anjos Celestes e Glory
+
+- **Antes:** cinco famílias de Armor (Cloth, Scale, Surplice, Warplate, Moonplate). 431 MOONLIGHT HUNTRESS CAPTAIN, 433 PRIMAL FOREST CHAMPION e 435 SILVER ARROW COMMANDER eram Satellite/Forest Guardian; 432, 434 e 436 eram Moonplate (Half, Full, Half).
+- **Depois:** **Glory** é a sexta família de Armor, sem patentes, para os Anjos Celestes (subtipo **Angel**). As seis cartas viram THESEUS, CELESTIAL ANGEL / THESEUS' GLORY, ICARUS (TOUMA), CELESTIAL ANGEL / ICARUS' GLORY e ODYSSEUS, CELESTIAL ANGEL / ODYSSEUS' GLORY. Ids, números, custos, ATK/HP, raridade, Cosmoble, Equip e bônus ficam iguais. A sinergia de Satellite (431 aura e alvo, 435 bônus de Strike) passa a Angel. As Glories perdem a patente.
+- **Motivo:** decisão do autor, 06/11/2026 (master prompt Artemis V2.0): Artemis é Lua, caça e autoridade divina, não só floresta; os Anjos do Olimpo entram na facção.
+- **Engine/dados:** `shared/equipment-types.js` (1.1.0), `data/cards.json`, `card-forge/art-web/cards.json`, `playtest/engine-v3/v6/artemis.js`, `shared/card-i18n.js`, `docs/traducao-pt/artemis.json`, Card Forge e Armor Forge. Detalhes: `docs/artemis-v2-card-migration.md`.
+- **Pendências:** Resonance das Glories com seus Anjos não foi ligada (daria Equip grátis; proposta separada). As listas que usavam 431/435 como lorde de Satellite perdem esse bônus e precisam ser revistas. As artes das seis cartas continuam provisórias. Balanceamento não medido.
+
 ## 2026-11-04 — §7, §55, §64 — Cada turno é um Round
 
 - **Antes:** cada Round tinha dois turnos, um de cada jogador; “once each round” renovava no fim do par; efeitos “until end of round” cobriam os dois turnos.
