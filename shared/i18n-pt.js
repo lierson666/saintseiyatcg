@@ -14,8 +14,8 @@ self.ssI18nPT = {
     'Loading…': 'Carregando…', 'Saved.': 'Salvo.', 'Not now': 'Agora não', 'Free': 'Grátis', 'New': 'Novo', 'Menu': 'Menu', 'Back': 'Voltar',
     'Something went wrong. Please try again.': 'Algo deu errado. Tente de novo.',
     'Connection lost. Reconnecting…': 'Conexão perdida. Reconectando…',
-    'Saint Seiya TCG': 'Saint Seiya TCG', 'Olympus Arena': 'Olympus Arena', 'Closed beta': 'Beta fechado', 'Language': 'Idioma',
-    'Alpha 0.1 · Engine 3.0': 'Alfa 0.1 · Engine 3.0', 'The Sanctuary': 'O Santuário', 'Olympus Arena Duel': 'Duelo no Olympus Arena', 'Card Forge': 'Card Forge',
+    'Saint Seiya TCG': 'Saint Seiya TCG', 'Cosmo System': 'Cosmo System', 'Closed beta': 'Beta fechado', 'Language': 'Idioma',
+    'Alpha 0.1 · Engine 3.0': 'Alfa 0.1 · Engine 3.0', 'The Sanctuary': 'O Santuário', 'Cosmo System Duel': 'Duelo no Cosmo System', 'Card Forge': 'Card Forge',
 
     // Termos de jogo (glossário)
     'God': 'Deus', 'Gods': 'Deuses', 'All Gods': 'Todos os Deuses', 'Devotee': 'Devoto', 'Devotees': 'Devotos', 'Domain': 'Domínio',

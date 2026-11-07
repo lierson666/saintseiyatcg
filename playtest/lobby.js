@@ -129,7 +129,7 @@ function startSocial() {
 }
 
 // Carrossel e blocos da home: editados no Star Hill (data/olympus-telas.json, playtest/telas.js).
-const HOME = telas.home || {slides: [{imagem: 'card:god-athena', carimbo: 'Olympus Arena', linha1: 'Let your', linha2: 'Cosmo burn', texto: 'Build a deck around your God and take it to the arena.'}],
+const HOME = telas.home || {slides: [{imagem: 'card:god-athena', carimbo: 'Cosmo System', linha1: 'Let your', linha2: 'Cosmo burn', texto: 'Build a deck around your God and take it to the arena.'}],
   blocos: [], botao_play: 'Play'};
 const SLIDES = HOME.slides;
 const img = v => imageUrl(v, artOf);

@@ -15,7 +15,7 @@ const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '
 const FACTIONS = ['Athena', 'Poseidon', 'Hades', 'Ares', 'Artemis', 'Neutral'];
 const DECK_FILES = ['../data/alpha-0.1/decks-proposta-d171.json', '../data/alpha-0.1/decks-preview.json', '../data/alpha-0.1/decks-competitivos.json'];
 const PAGES = {
-  visao: ['Visão geral', 'Olympus Arena, sob seu controle.'],
+  visao: ['Visão geral', 'Cosmo System, sob seu controle.'],
   cartas: ['Cartas · Card Forge', 'Cada carta, uma constelação.'],
   decks: ['Decks iniciais', 'Os decks prontos do jogo.'],
   telas: ['Telas e som', 'Telas, sons, músicas e animações do jogo.'],
@@ -129,7 +129,7 @@ function cardsPage() {
 }
 const ERR = {identity: 'carta fora das cores do God e do Domain', splash: `mais de ${SPLASH_LIMIT} cartas da facção do Domain`, copies: 'mais de 3 cópias', size: `deck sem ${DECK_SIZE} cartas`, domain: 'sem Domain', unknown: 'carta inexistente', outside: 'carta que não vai no deck', quantity: 'quantidade inválida'};
 function decksPage() {
-  return `<section class="panel"><h2>Decks prontos do Olympus Arena</h2>
+  return `<section class="panel"><h2>Decks prontos do Cosmo System</h2>
     <p class="hint">Regra de montagem (guia §63): 1 God e 1 Domain; só cartas das cores do God, do Domain ou neutras; ${DECK_SIZE} cartas; até 3 cópias. Para montar ou alterar decks, use o deckbuilder do jogo.</p>
     <div class="table-wrap"><table><thead><tr><th>Deck</th><th>God</th><th>Domain</th><th>Cartas</th><th>Situação</th></tr></thead><tbody>
     ${decks.map(d => `<tr><td><b>${esc(d.alpha_nome || d.nome)}</b><small>${esc(d.id)}</small></td><td>${esc(name(d.god))}</td><td>${esc(name(d.domain_id))}</td><td>${count(d)}</td>

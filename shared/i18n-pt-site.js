@@ -45,7 +45,7 @@ Object.assign(self.ssI18nPT.strings, {
   'Safari': 'Safari', 'Share': 'Compartilhar', 'Choose': 'Escolha', 'Add to Home Screen': 'Adicionar à Tela de Início', ". If you don't see it, scroll down the list.": '. Se não aparecer, role a lista até o fim.', 'Tap': 'Toque em', 'Add': 'Adicionar', '. Saint Seiya TCG appears on your Home Screen.': '. O Saint Seiya TCG aparece na Tela de Início.',
   'Android 7 or later with Chrome, or iPhone and iPad with Safari.': 'Android 7 ou mais novo com Chrome, ou iPhone e iPad com Safari.', 'Android, iPhone and iPad:': 'Android, iPhone e iPad:', 'press and hold the app icon, then remove it.': 'mantenha o ícone do app pressionado e remova.',
   'Saint Seiya TCG — Download': 'Saint Seiya TCG — Baixar', 'Bring the Sanctuary': 'Leve o Santuário',
-  'The Saint Seiya TCG app opens Olympus Arena in its own window, full screen, without browser tabs. Your account, decks, rank and friends are the same as on the website.': 'O app do Saint Seiya TCG abre o Olympus Arena em janela própria, em tela cheia, sem abas do navegador. Sua conta, decks, ranking e amigos são os mesmos do site.',
+  'The Saint Seiya TCG app opens Cosmo System in its own window, full screen, without browser tabs. Your account, decks, rank and friends are the same as on the website.': 'O app do Saint Seiya TCG abre o Cosmo System em janela própria, em tela cheia, sem abas do navegador. Sua conta, decks, ranking e amigos são os mesmos do site.',
   'Your system': 'Seu sistema', 'Windows 10 or 11, 64-bit · about 90 MB': 'Windows 10 ou 11, 64 bits · cerca de 90 MB', 'Download .exe': 'Baixar .exe',
   'macOS 12 or later · Apple silicon and Intel · about 190 MB': 'macOS 12 ou superior · Apple silicon e Intel · cerca de 190 MB', 'Download .dmg': 'Baixar .dmg',
   'Version 1.0.0. You need a beta account to play; access is by invitation. The app needs an internet connection.': 'Versão 1.0.0. Você precisa de uma conta do beta para jogar; o acesso é por convite. O app precisa de internet.',
@@ -214,7 +214,7 @@ Object.assign(self.ssI18nPT.strings, {
   'Training': 'Treinamento', 'Each Training counter gives the Devotee +1 Power and +1 HP while it stays in play.': 'Cada marcador de Treinamento dá ao Devoto +1 de Poder e +1 PV enquanto ele estiver em jogo.',
   'Afterlife': 'Além-Túmulo', 'Activate from your Tartarus by paying its Afterlife cost, on your round or in response. After it resolves, this card goes to the Void.': 'Ative do seu Tártaro pagando o custo de Além-Túmulo, na sua rodada ou como resposta. Depois de resolver, esta carta vai para o Vazio.',
   'Counter': 'Marcador', 'Your first duel': 'Seu primeiro duelo', 'The best way to learn is to fight': 'O melhor jeito de aprender é lutando',
-  'Challenge the AI in Olympus Arena. The duel shows your legal targets, your Cosmo and every response window as you play.': 'Desafie a IA no Olympus Arena. O duelo mostra seus alvos válidos, seu Cosmo e cada janela de resposta enquanto você joga.',
+  'Challenge the AI in Cosmo System. The duel shows your legal targets, your Cosmo and every response window as you play.': 'Desafie a IA no Cosmo System. O duelo mostra seus alvos válidos, seu Cosmo e cada janela de resposta enquanto você joga.',
   'Rounds': 'Rodadas', 'Play now': 'Jogar agora', 'Get the desktop app': 'Baixe o app para computador',
 });
 self.ssI18nPT.patterns.unshift(['Zoom: {0}', 'Zoom: {0}']);
