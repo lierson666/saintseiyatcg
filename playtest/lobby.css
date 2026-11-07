@@ -112,7 +112,8 @@ h1, h2, h3, .lb-play, .lb-tab, .lb-hero p { font-family: "Cinzel", "Trajan Pro",
 .lb-pills { display: flex; gap: 4px; }
 .lb-pill { padding: 6px 11px; border: 1px solid var(--line); border-radius: 999px; background: var(--panel); color: var(--muted); font-size: 13px; }
 .lb-pill.is-active { border-color: var(--gold); color: #1a1000; background: var(--gold); }
-.lb-grid { min-height: 0; overflow: auto; padding: 18px 20px 40px; display: grid; grid-template-columns: repeat(auto-fill, minmax(var(--slot, 180px), 1fr)); gap: 8px 14px; align-content: start; }
+/* overflow-anchor: none: só a carta tocada é redesenhada (lobby.js render); sem isso o navegador corrige a rolagem aos pulinhos. */
+.lb-grid { overflow-anchor: none; min-height: 0; overflow: auto; padding: 18px 20px 40px; display: grid; grid-template-columns: repeat(auto-fill, minmax(var(--slot, 180px), 1fr)); gap: 8px 14px; align-content: start; }
 /* Desempenho (autor, 31/10/2026: ponteiro engasgando com muitas cartas): cada slot pinta isolado e fora da tela não pinta.
    content-visibility corta o que vaza do slot, então o selo de cópias fica dentro (padding-bottom) em vez de bottom negativo. */
 .lb-slot { position: relative; padding: 0 0 10px; border: 0; background: none; transition: transform .15s; content-visibility: auto; contain-intrinsic-size: auto 280px; }
@@ -536,7 +537,7 @@ body { font: 300 15px/1.45 var(--kv-sans); }
 
 /* Deck builder no celular (em pé ou deitado) e tablet estreito: abas Cards | Deck, uma tela por vez, filtros quebram linha. */
 @media (max-width: 760px), (orientation: landscape) and (max-height: 500px) {
-  .lb-body--builder { overflow: auto; }
+  .lb-body--builder { overflow: auto; overflow-anchor: none; } /* aqui quem rola é a página do builder, não a grade */
   .lb-builder { display: flex; flex-direction: column; height: auto; }
   .lb-bview { position: sticky; top: 0; z-index: 5; display: flex; gap: 6px; padding: 10px 16px; background: #0b0c16f2; border-bottom: 1px solid var(--kv-line); }
   .lb-bview .lb-pill { flex: 1; min-height: 44px; font-size: 14px; }

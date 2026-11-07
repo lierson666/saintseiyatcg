@@ -558,11 +558,11 @@ def anim_ids(root=ROOT):
     return {*ANIM_EFFECTS, *(e['id'] for e in imported)}
 
 
-LEGEND_CLASSES = re.compile(r'Saint|Marin|Satellite|Specter|Berserker')
+LEGEND_CLASSES = re.compile(r'Saint|Marin|Satellite|Specter|Berserker|Angel')
 
 
 def plain_devotees(root=ROOT):
-    """Devotees sem a regra de lendário (guia: personagem nomeado de Saints, Marines, Satellites, Specters e Berserkers; Ikki não).
+    """Devotees sem a regra de lendário (guia: personagem nomeado de Saints, Marines, Satellites, Specters, Berserkers e Angels; Ikki não).
     Só o lendário tem animação própria; o resto usa a da facção (autor, 06/11/2026)."""
     cards_path, ids_path = root / 'data/cards.json', root / 'shared/character-identity.js'
     if not cards_path.exists() or not ids_path.exists():

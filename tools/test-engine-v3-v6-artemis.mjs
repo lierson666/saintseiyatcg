@@ -10,7 +10,7 @@ import {createMatch} from '../playtest/engine-v3/match.js';
 import {startTurn, endTurn, passAll} from '../playtest/engine-v3/core.js';
 import {playDevotee as playDevoteeRaw, playEquipment as playEquipmentRaw, playSpell, activate as activateRaw, reequip} from '../playtest/engine-v3/play.js';
 import {declareStrike} from '../playtest/engine-v3/strike.js';
-import {atkOf, hpOf, keywordsOf, damageDevotee, checkDefeats} from '../playtest/engine-v3/effects.js';
+import {atkOf, hpOf, keywordsOf, damageDevotee, checkDefeats, namedCharacter} from '../playtest/engine-v3/effects.js';
 import {bindContext} from '../playtest/engine-v3/v6/registry.js';
 // Guia §56 (30/10/2026): jogada e {T} vão à pilha; aqui os dois passam e a pilha resolve na hora.
 const resolved = fn => (s, ...a) => { const r = fn(s, ...a); passAll(s); return r; };
@@ -352,7 +352,7 @@ test('433 Icarus: Pierce, Celestial Descent causa ATK e cresce +1/+1 a cada 3 na
 
 test('435 Odysseus: Angel Vanguard dá +1/+0 ao Angel que declara Strike, não a Satellite; compra ao derrotar', () => {
   const {s, ctx, p, field, id} = setup();
-  field('A', id(435));
+  const odysseus = field('A', id(435)); // Anjo é lendário (§63): um só Odysseus no campo, o mesmo que ataca no fim
   const icarus = field('A', id(433)), sat = field('A', id(388));
   const preyA = field('B', 'artemis-v6-386'), preyB = field('B', 'artemis-v6-386');
   const atkI = atkOf(s, ctx, icarus), atkS = atkOf(s, ctx, sat);
@@ -360,7 +360,7 @@ test('435 Odysseus: Angel Vanguard dá +1/+0 ao Angel que declara Strike, não a
   assert.equal(atkOf(s, ctx, icarus), atkI + 1);
   declareStrike(s, ctx, sat, {kind: 'devotee', uid: preyB}); passAll(s); if (s.window) passAll(s);
   assert.equal(atkOf(s, ctx, sat), atkS);
-  const odysseus = field('A', id(435)), prey = field('B', 'artemis-v6-386'), cards0 = p.hand.length;
+  const prey = field('B', 'artemis-v6-386'), cards0 = p.hand.length;
   declareStrike(s, ctx, odysseus, {kind: 'devotee', uid: prey}); passAll(s); if (s.window) passAll(s);
   assert.ok(s.players.B.tartarus.includes(prey));
   assert.equal(p.hand.length, cards0 + 1, 'Heavenly Precision compra 1');
@@ -391,4 +391,10 @@ test("436 Odysseus' Glory: Celestial Strike +2/+0 contra Devotee e Divine Accura
   assert.equal(atkOf(s, ctx, bearer), atk + 2);
   assert.ok(s.players.B.tartarus.includes(prey));
   assert.equal(p.hand.length, cards0 + 1);
+});
+
+test('Anjos são lendários (§63, autor 06/11/2026): Theseus, Icarus e Odysseus têm personagem nomeado', () => {
+  const {s, ctx, field, id} = setup();
+  assert.deepEqual([431, 433, 435].map(n => namedCharacter(ctx, field('A', id(n)))), ['theseus', 'touma', 'odysseus']);
+  assert.ok(s);
 });

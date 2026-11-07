@@ -4,6 +4,15 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-06 — §63 — Anjos Celestes são lendários
+
+- **Seção:** `docs/guia-do-jogo.md`, §63 (regra de lendário).
+- **Antes:** a regra de lendário valia para Saints, Marines, Satellites, Specters e Berserkers; os Anjos (subtipo Angel, criado no mesmo dia) ficaram de fora e um jogador podia ter dois ICARUS (TOUMA) em campo.
+- **Depois:** Angels entram na lista: cada jogador controla um Devotee de cada Anjo nomeado (THESEUS, ICARUS (TOUMA) e ODYSSEUS, CELESTIAL ANGEL).
+- **Motivo:** autor, 06/11/2026 ("não aplicou regra de lendários nos anjos").
+- **Engine/dados:** `playtest/engine-v3/effects.js` (classe Angel lendária), `shared/character-identity.js` (431 theseus, 433 touma, 435 odysseus), `card-forge/star_hill.py` (animação própria só para lendários inclui Angel).
+- **Pendências:** nenhuma.
+
 ## 2026-11-06 — §26, §61 e cartas 431–436 — Artemis V2.0: Anjos Celestes e Glory
 
 - **Antes:** cinco famílias de Armor (Cloth, Scale, Surplice, Warplate, Moonplate). 431 MOONLIGHT HUNTRESS CAPTAIN, 433 PRIMAL FOREST CHAMPION e 435 SILVER ARROW COMMANDER eram Satellite/Forest Guardian; 432, 434 e 436 eram Moonplate (Half, Full, Half).

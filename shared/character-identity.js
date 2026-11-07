@@ -89,6 +89,10 @@ export const CHARACTER_IDENTITY = Object.freeze({
   'artemis-v6-361': 'calisto', // CALISTO
   'artemis-v6-363': 'la-scoumoune', // LA SCOUMOUNE
   'artemis-v6-375': 'first-moon-guardian', // THE FIRST MOON GUARDIAN
+  // Anjos Celestes (Artemis V2.0): lendários desde 06/11/2026 (guia §63).
+  'artemis-v6-431': 'theseus', // THESEUS, CELESTIAL ANGEL
+  'artemis-v6-433': 'touma', // ICARUS (TOUMA), CELESTIAL ANGEL
+  'artemis-v6-435': 'odysseus', // ODYSSEUS, CELESTIAL ANGEL
   'artemis-v6-437': 'second-moon-guardian', // THE SECOND MOON GUARDIAN
   'artemis-v6-438': 'third-moon-guardian', // THE THIRD MOON GUARDIAN
   'artemis-v6-439': 'fourth-moon-guardian', // THE FOURTH MOON GUARDIAN

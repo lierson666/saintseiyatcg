@@ -613,7 +613,11 @@ function render() {
   const body = {home, decks: decksScreen, profile: profileScreen, options, builder,
     collection: () => collectionScreen(ui.econ, pool(filterState()), face, ui.colFilter, {bar: filterBar(filterState()), slot: CARD_SIZES[ui.cardSize] || CARD_SIZES.M}),
     store: () => storeScreen(ui.econ, (id, size) => artOf(id, size), ui.user, {tab: ui.storeTab, group: ui.storeGroup, pick: ui.cosPick})}[ui.screen]();
-  root.innerHTML = `${topBar()}<div class="lb-body lb-body--${ui.screen}">${body}</div>${bigCard()}${picker()}${notice()}`;
+  const html = `${topBar()}<div class="lb-body lb-body--${ui.screen}">${body}</div>${bigCard()}${picker()}${notice()}`;
+  if (screen === ui.screen) { const next = document.createElement('div'); next.innerHTML = html; morphKids(root, next, 0); } // mesma tela: só o que mudou
+  else root.innerHTML = html;
+  root.querySelectorAll('.lb-grid > *').forEach(c => { c.__html ??= c.outerHTML; });
+  if (ui.big) upgradeArt(root.querySelector('.lb-big'));
   if (screen === ui.screen) SCROLLERS.forEach((sel, i) => { const el = root.querySelector(sel); if (el) el.scrollTop = keep[i]; });
   root.dataset.screen = ui.screen;
 }
@@ -632,6 +636,29 @@ function setCount(id, delta) {
   }
   // Guia §63: até SPLASH_LIMIT cartas da facção de um Domain de outra cor; neutras não contam.
   const deck = {...ui.builder.deck, god: deckGod(ui.builder.deck)};
+// Atualiza `el` para ficar igual a `to` mexendo só no que mudou, para não recarregar as artes (autor, 06/11/2026: a tela subia
+// e descia a cada carta adicionada ou tirada do deck). `__html`: o HTML de quando a carta da grade foi desenhada, para comparar rápido.
+const same = (o, n, html) => (o.__html ?? o.outerHTML) === html;
+// O texto na tela já pode estar traduzido (shared/i18n.js traduz depois): igual à tradução do novo também conta como igual.
+const sameText = (cur, en) => cur === en || cur === window.ssI18n?.t(en);
+function morphKids(el, to, depth) {
+  const a = [...el.childNodes], b = [...to.childNodes];
+  if (depth > 14) return el.replaceChildren(...b);
+  b.forEach((n, i) => {
+    const o = a[i];
+    if (!o) return el.append(n);
+    if (o.nodeType !== n.nodeType || o.nodeName !== n.nodeName) return o.replaceWith(n);
+    if (n.nodeType !== 1) { if (!sameText(o.nodeValue, n.nodeValue)) o.nodeValue = n.nodeValue; return; }
+    if (!same(o, n, n.outerHTML)) morph(o, n, depth + 1);
+  });
+  a.slice(b.length).forEach(o => o.remove());
+}
+function morph(el, to, depth = 0) {
+  for (const {name} of [...el.attributes]) if (!to.hasAttribute(name)) el.removeAttribute(name);
+  for (const {name, value} of [...to.attributes]) if (!sameText(el.getAttribute(name), value)) el.setAttribute(name, value);
+  delete el.__html;
+  morphKids(el, to, depth);
+}
   if (delta > 0 && card && ![factionOf(deck.god), 'neutral'].includes(faction(card)) && splashCount(deck, factionOf) >= SPLASH_LIMIT) {
     ui.big = null;
     ui.notice = {title: 'Splash limit reached', text: `This deck already has ${SPLASH_LIMIT} cards from its Domain's faction. Cards from your God's faction and neutral cards have no limit.`};
