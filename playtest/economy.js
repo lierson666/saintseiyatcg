@@ -253,13 +253,24 @@ export async function openBooster(face, done, count = 1, open = 1) {
   // Drama por raridade (autor, 31/10/2026): Uncommon dá um clarão; Legendary e Divine tremem antes de virar,
   // clarão na cor da raridade, tela treme e faíscas saem da carta. Com prefers-reduced-motion só o clarão.
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const DRAMA = {uncommon: {wait: 0, sparks: 0}, legendary: {wait: 650, sparks: 18, shake: 'ec-shake'}, divine: {wait: 1100, sparks: 32, shake: 'ec-shake--big'}};
+  // Revelação épica (autor, 06/11/2026, receita "card reveal" em 5 passos): pedestal e brilho crescendo, giro lento,
+  // raios + anel de luz no meio do giro, reflexo de arco-íris que acompanha a inclinação e partículas que ficam no ar.
+  const DRAMA = {uncommon: {wait: 0, sparks: 0}, legendary: {wait: 900, sparks: 18, shake: 'ec-shake'}, divine: {wait: 1400, sparks: 32, shake: 'ec-shake--big'}};
   const sleep = ms => new Promise(ok => setTimeout(ok, still ? 0 : ms));
   const flip = async b => {
     if (b.classList.contains('is-open') || b.classList.contains('is-charging')) return;
     const rarity = ['divine', 'legendary', 'uncommon'].find(k => b.classList.contains(`is-${k}`)), d = DRAMA[rarity];
-    if (d?.wait) { b.classList.add('is-charging'); await sleep(d.wait); b.classList.remove('is-charging'); }
+    const epic = !still && (rarity === 'legendary' || rarity === 'divine');
+    if (d?.wait) { b.style.setProperty('--wait', `${d.wait}ms`); b.classList.add('is-charging'); await sleep(d.wait); b.classList.remove('is-charging'); }
+    if (epic) b.classList.add('is-epic');
     b.classList.add('is-open');
+    if (epic) {
+      setTimeout(() => b.classList.add('is-settled'), 1100);  // fim do giro lento: a inclinação passa a seguir o ponteiro
+      await sleep(450);  // a luz explode no meio do giro
+      b.insertAdjacentHTML('afterbegin', '<i class="ec-rays" aria-hidden="true"></i><i class="ec-shock" aria-hidden="true"></i>');
+      setTimeout(() => b.querySelectorAll('.ec-rays, .ec-shock').forEach(x => x.remove()), 1900);
+      b.insertAdjacentHTML('beforeend', `<span class="ec-motes" aria-hidden="true">${Array.from({length: 8}, (_, k) => `<i style="--k:${k}"></i>`).join('')}</span>`);
+    }
     if (d) {
       dlg.insertAdjacentHTML('beforeend', `<div class="ec-flash ec-flash--${rarity}" aria-hidden="true"></div>`);
       setTimeout(() => dlg.querySelector('.ec-flash')?.remove(), 900);
@@ -272,8 +283,20 @@ export async function openBooster(face, done, count = 1, open = 1) {
     }
     const tally = dlg.querySelector('.ec-open__coins');
     if (tally && !dlg.querySelector('.ec-flip:not(.is-open)')) tally.hidden = false;  // total das repetidas só depois de virar tudo
-    return d?.wait ? 700 : 60;
+    return epic ? 1100 : d?.wait ? 700 : 60;
   };
+  // Reflexo de arco-íris: depois do giro, a carta épica inclina e o brilho corre conforme o ponteiro.
+  dlg.addEventListener('pointermove', ev => {
+    const b = ev.target.closest?.('.ec-flip.is-epic.is-settled');
+    if (!b) return;
+    const r = b.getBoundingClientRect();
+    b.style.setProperty('--tx', ((ev.clientX - r.left) / r.width - .5).toFixed(3));
+    b.style.setProperty('--ty', ((ev.clientY - r.top) / r.height - .5).toFixed(3));
+  });
+  dlg.addEventListener('pointerout', ev => {
+    const b = ev.target.closest?.('.ec-flip.is-epic');
+    if (b && !b.contains(ev.relatedTarget)) { b.style.removeProperty('--tx'); b.style.removeProperty('--ty'); }
+  });
   dlg.addEventListener('click', ev => {
     if (!zoom.hidden) return unzoom();
     const b = ev.target.closest('.ec-flip');
