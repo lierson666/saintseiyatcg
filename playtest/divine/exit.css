@@ -1,0 +1,61 @@
+/* Saída de campo por efeito (autor, 06/11/2026): destruída por habilidade ou magia, exilada ou devolvida à mão.
+   O tema vem da facção de quem causou a saída (director.js, ui.exitCard): Athena vira luz estelar, Hades se apaga em trevas,
+   Artemis some em luz da lua, Ares queima e Poseidon se desfaz em água. Morte em combate continua com o .shatter. */
+.dcard.leave { pointer-events: none; z-index: 30; animation-duration: .9s; animation-timing-function: cubic-bezier(.3, 0, .6, 1); animation-fill-mode: forwards; }
+
+/* Destruída. */
+.dcard.leave--destroy.exit-athena { animation-name: exitAthena; }
+.dcard.leave--destroy.exit-hades { animation-name: exitHades; }
+.dcard.leave--destroy.exit-artemis { animation-name: exitArtemis; }
+.dcard.leave--destroy.exit-ares { animation-name: exitAres; }
+.dcard.leave--destroy.exit-poseidon { animation-name: exitPoseidon; }
+.dcard.leave--destroy.exit-neutral { animation-name: exitNeutral; }
+@keyframes exitAthena {
+  0% { transform: none; filter: none; opacity: 1; }
+  25% { transform: scale(1.06); filter: brightness(2.2) saturate(.6) drop-shadow(0 0 22px #ffe9a8); opacity: 1; }
+  100% { transform: translateY(-34%) scale(1.12); filter: brightness(3.5) saturate(0) blur(8px) drop-shadow(0 0 30px #fff3c4); opacity: 0; }
+}
+@keyframes exitHades {
+  0% { transform: none; filter: none; opacity: 1; }
+  30% { transform: scale(.98); filter: brightness(.45) saturate(.2) drop-shadow(0 0 18px #7a3cff); opacity: 1; }
+  100% { transform: translateY(18%) scale(.86); filter: brightness(0) blur(6px) drop-shadow(0 0 26px #4a1a9a); opacity: 0; }
+}
+@keyframes exitArtemis {
+  0% { transform: none; filter: none; opacity: 1; }
+  30% { transform: rotate(-2deg); filter: brightness(1.8) saturate(.4) hue-rotate(160deg) drop-shadow(0 0 20px #cfe9ff); opacity: 1; }
+  100% { transform: translateY(-22%) rotate(4deg) scale(1.04); filter: brightness(2.6) saturate(0) blur(7px) drop-shadow(0 0 26px #e6fff3); opacity: 0; }
+}
+@keyframes exitAres {
+  0% { transform: none; filter: none; opacity: 1; }
+  30% { transform: scale(1.03); filter: sepia(1) saturate(4) hue-rotate(-20deg) brightness(1.6) drop-shadow(0 0 20px #ff7a2a); opacity: 1; }
+  65% { filter: sepia(1) saturate(2) brightness(.6) drop-shadow(0 0 14px #ff3a10); opacity: .85; }
+  100% { transform: translateY(-8%) scale(.94); filter: brightness(0) blur(4px); opacity: 0; }
+}
+@keyframes exitPoseidon {
+  0% { transform: none; filter: none; opacity: 1; }
+  30% { transform: skewX(-3deg); filter: hue-rotate(170deg) saturate(1.6) brightness(1.3) drop-shadow(0 0 18px #7fd0ff); opacity: 1; }
+  60% { transform: skewX(3deg) scaleY(.96); }
+  100% { transform: translateY(14%) scaleY(.7) scaleX(1.08); filter: hue-rotate(190deg) blur(9px) brightness(1.6); opacity: 0; }
+}
+@keyframes exitNeutral {
+  0% { transform: none; filter: none; opacity: 1; }
+  100% { transform: scale(.9); filter: brightness(2) saturate(0) blur(6px); opacity: 0; }
+}
+
+/* Exilada (Void): a carta é puxada para dentro, girando, na cor do tema. */
+.dcard.leave--exile { animation-name: exitVoid; }
+@keyframes exitVoid {
+  0% { transform: none; filter: none; opacity: 1; }
+  30% { transform: scale(1.05); filter: brightness(1.8) drop-shadow(0 0 22px var(--exit-c, #fff)); opacity: 1; }
+  100% { transform: rotate(200deg) scale(.08); filter: brightness(3) saturate(0) blur(3px) drop-shadow(0 0 30px var(--exit-c, #fff)); opacity: 0; }
+}
+
+/* Devolvida à mão: sobe e voa para o lado do dono, deixando o brilho do tema. */
+.dcard.leave--bounce { animation-name: exitBounce; animation-duration: .7s; animation-timing-function: cubic-bezier(.5, 0, .8, .4); }
+@keyframes exitBounce {
+  0% { transform: none; filter: none; opacity: 1; }
+  25% { transform: translateY(-8%) scale(1.06); filter: brightness(1.5) drop-shadow(0 0 18px var(--exit-c, #fff)); opacity: 1; }
+  100% { transform: translate(var(--exit-x, 0px), var(--exit-y, 0px)) scale(.45); filter: brightness(1.8) blur(3px) drop-shadow(0 0 20px var(--exit-c, #fff)); opacity: 0; }
+}
+
+.reduce-motion .dcard.leave { animation-duration: 1ms; }

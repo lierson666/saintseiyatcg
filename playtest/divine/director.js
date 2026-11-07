@@ -73,6 +73,26 @@ export function createDirector({ui, getFx, settings}) {
   // Reação ao golpe: a carta pisca e recua para longe de quem bateu. O dano do Strike vem depois e não repete o recuo.
   const recoiled = new Set();
   const godHitFrom = {}; // de onde veio o último Strike em cada God, para o avatar recuar para o lado certo
+  // Saída de campo por efeito (autor, 06/11/2026): quem causou a última saída. {strike: true} em combate; {ref} da
+  // habilidade, magia ou God que resolveu. O tema da saída é a facção dessa origem; sem origem, a da própria carta.
+  let cause = null;
+  const EXIT = {
+    athena: {color: '#ffe9a8', pixel: 'light', star: '#fff3c4', grav: -90},
+    hades: {color: '#9a6bff', pixel: 'dark', star: '#6a3acc', grav: 120},
+    artemis: {color: '#cfe9ff', pixel: 'sparkle', star: '#e6fff3', grav: -60},
+    ares: {color: '#ff7a3a', pixel: 'fire', star: '#ffb070', grav: -140},
+    poseidon: {color: '#7fd0ff', pixel: 'bubbles', star: '#bfe9ff', grav: 260},
+    neutral: {color: '#e8e2d4', pixel: 'sparkle', star: '#ffffff', grav: 0},
+  };
+  async function leaveField(uid, kind, own = null) {
+    const rect = ui.rect(uid), at = ui.center(rect);
+    if (!rect || skipping) return;
+    const fac = (cause?.ref && ui.factionOf?.(cause.ref)) || own || ui.factionOf?.(uid), theme = EXIT[fac] ? fac : 'neutral', t0 = EXIT[theme];
+    ui.exitCard?.(uid, theme, kind, t0.color);
+    if (kind !== 'bounce') pixel(t0.pixel, rect, {color: t0.color});
+    fx()?.burst(at.x, at.y, {color: t0.star, count: kind === 'bounce' ? 24 : 60, speed: 220, grav: t0.grav, life: 1.2, size: 4});
+    await pause(kind === 'bounce' ? 560 : 720);
+  }
   // Pose da carta no golpe: 'lift' sobe e inclina para o alvo, 'dash' avança até encostar, null volta ao slot.
   const stance = (uid, pose, to, ms) => ui.stance?.(uid, skipping ? null : pose, to, t(ms));
   // Bote do golpe físico (autor, 06/11/2026): recuo curtíssimo, avanço seco em poucos quadros e um rastro de luz atrás.
@@ -217,14 +237,19 @@ export function createDirector({ui, getFx, settings}) {
       await pause(120);
     },
     async spell_resolved(e) {
+      cause = {ref: e.uid};
       const at = ui.center(ui.fieldRect(e.player));
       fx()?.burst(at.x, at.y, {color: '#f5e2ff', count: 40, speed: 300});
       ui.log(e);
       await pause(260);
     },
-    async ability(e) { ui.pulse(e.uid, 'activate'); ui.log(e); await pause(260); },
+    async ability(e) { cause = {ref: e.uid}; ui.pulse(e.uid, 'activate'); ui.log(e); await pause(260); },
     async equipped(e) { equipSound(e.uid); ui.log(e); await pause(120); },
-    async returned_to_hand(e) { if (e.from === 'tartarus') { ui.speak?.('retorno', e.uid); moment('retorno', e.uid, ui.rect(e.uid)); } },
+    async exiled(e) { await leaveField(e.uid, 'exile'); },
+    async unique_removed(e) { await leaveField(e.uid, 'destroy', ui.factionOf?.(e.uid)); }, // §63: sai sem ser destruição
+    async returned_to_hand(e) {
+      if (e.from === 'battlefield' || e.uids) { await Promise.all((e.uids || [e.uid]).map(uid => leaveField(uid, 'bounce'))); return; } // bounce: Poseidon vira onda
+      if (e.from === 'tartarus') { ui.speak?.('retorno', e.uid); moment('retorno', e.uid, ui.rect(e.uid)); } },
     async entered(e) { ui.speak?.('entrada', e.uid); moment('entrada', e.uid, ui.rect(e.uid)); if (e.bearer) equipSound(e.uid); }, // Equipment conjurado já preso no portador
     async strike_declared(e) {
       ui.speak?.('declarar', e.attacker);
@@ -243,6 +268,7 @@ export function createDirector({ui, getFx, settings}) {
       const to = ui.center(targetRect), p = powerOf(e.atk), base = styleOf(e.attacker);
       // Golpe básico (sem nome e sem animação de Cosmo escolhida) é sempre físico: a carta vai bater na outra (autor, 06/11/2026).
       const style = {...base, physical: !base.name && (['physical', 'energy'].includes(base.style) || PHYSICAL.has(base.element))};
+      cause = {strike: true};
       const outcome = onGod ? 'hit' : outcomeOf(e, e.target.uid), stop = style.physical ? 90 + p * 90 : 60 + p * 140; // hit stop do contato
       // Fluxo do golpe (autor, 06/11/2026): mira, carga, viagem, impacto e volta, um de cada vez.
       const lift = style.physical ? 90 : 200; // físico: quase direto ao golpe
@@ -299,6 +325,7 @@ export function createDirector({ui, getFx, settings}) {
     },
     async destroyed(e) {
       ui.speak?.('morte', e.uid);
+      if (cause && !cause.strike) { moment('morte', e.uid, ui.rect(e.uid)); ui.log(e); return leaveField(e.uid, 'destroy'); }
       const at = ui.center(ui.rect(e.uid));
       ui.pulse(e.uid, 'shatter');
       moment('morte', e.uid, ui.rect(e.uid));
@@ -320,6 +347,7 @@ export function createDirector({ui, getFx, settings}) {
     },
     // Poder do God (autor, 28/10/2026: precisa ser sentido): Cosmo sobe no God, nome em destaque, onda e estrondo.
     async divine_power(e) {
+      cause = {ref: e.player};
       const at = ui.center(ui.godRect(e.player)), f = fx();
       const custom = !skipping && ui.noise?.('poder_divino', e.player);
       if (!skipping) ui.godReact?.(e.player, 'power');
@@ -376,6 +404,7 @@ export function createDirector({ui, getFx, settings}) {
       ui.cinematic?.(false); // a janela de resposta (G3-005) volta com o HUD inteiro
     },
     async ultimate_resolved(e) {
+      cause = {ref: e.player};
       ui.speak?.('ultimate', e.player);
       ui.cinematic?.(true);
       moment('ultimate', e.player, ui.godRect(ui.enemyOf(e.player)));
@@ -432,7 +461,7 @@ export function createDirector({ui, getFx, settings}) {
       }
       ui.log(e);
       await pause(360);
-    }, async resolve(e) { if (e.ability) ui.speak?.('linha', e.uid, e.ability); /* a fala sai quando resolve, não quando vai à pilha (autor, 02/11/2026) */ abilityVfx(e); ui.pulse(e.uid, 'trigger-pop'); await pause(300); }, async end_phase(e) { ui.log(e); },
+    }, async resolve(e) { cause = {ref: e.uid}; if (e.ability) ui.speak?.('linha', e.uid, e.ability); /* a fala sai quando resolve, não quando vai à pilha (autor, 02/11/2026) */ abilityVfx(e); ui.pulse(e.uid, 'trigger-pop'); await pause(300); }, async end_phase(e) { ui.log(e); },
   };
 
   return {

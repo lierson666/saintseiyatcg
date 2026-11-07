@@ -2,19 +2,19 @@
  "versao": 1,
  "gerado_por": "tools/vfx-inventario.py",
  "resumo": {
-  "total": 262,
+  "total": 270,
   "migradas": 66,
   "editavel": 79,
-  "parcial": 138,
+  "parcial": 146,
   "legado": 24,
   "excecao": 21,
   "criterios": {
-   "forge": 217,
-   "edita": 208,
-   "aplica": 206,
+   "forge": 225,
+   "edita": 216,
+   "aplica": 214,
    "preview": 66,
-   "restaura": 206,
-   "testes": 208
+   "restaura": 214,
+   "testes": 216
   }
  },
  "animacoes": [
@@ -3816,6 +3816,230 @@
    },
    "migrada": false,
    "limite": "Agrupadas por arquivo; sem controle no Forge"
+  },
+  {
+   "id": "css:playtest-divine-exit-css:exitAthena",
+   "nome": "exitAthena",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/exit.css"
+   ],
+   "gatilho": ".dcard.leave--destroy.exit-athena",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-exit-css:exitHades",
+   "nome": "exitHades",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/exit.css"
+   ],
+   "gatilho": ".dcard.leave--destroy.exit-hades",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-exit-css:exitArtemis",
+   "nome": "exitArtemis",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/exit.css"
+   ],
+   "gatilho": ".dcard.leave--destroy.exit-artemis",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-exit-css:exitAres",
+   "nome": "exitAres",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/exit.css"
+   ],
+   "gatilho": ".dcard.leave--destroy.exit-ares",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-exit-css:exitPoseidon",
+   "nome": "exitPoseidon",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/exit.css"
+   ],
+   "gatilho": ".dcard.leave--destroy.exit-poseidon",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-exit-css:exitNeutral",
+   "nome": "exitNeutral",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/exit.css"
+   ],
+   "gatilho": ".dcard.leave--destroy.exit-neutral",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-exit-css:exitVoid",
+   "nome": "exitVoid",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/exit.css"
+   ],
+   "gatilho": ".dcard.leave--exile",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-exit-css:exitBounce",
+   "nome": "exitBounce",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/exit.css"
+   ],
+   "gatilho": ".dcard.leave--bounce",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
   },
   {
    "id": "css:playtest-divine-god-react-css:ghBreath",

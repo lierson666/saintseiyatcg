@@ -24,7 +24,7 @@ import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudg
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout, clockBonus} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
-import {createDirector, DEATH_FX} from './director.js?v=20261106-deus1';
+import {createDirector, DEATH_FX} from './director.js?v=20261106-saida1';
 import {epicDeath} from './god-death.js?v=2';
 import {tunedFx} from './particle-tune.js';
 import {createPixelFx, animFor, catalogIndex} from './pixel-vfx.js?v=20261106-centro1';
@@ -1372,6 +1372,21 @@ const ui = {
     if (!attacker) return;
     const el = target.kind === 'god' ? $(`[data-god="${target.player}"]`) : $(`[data-uid="${target.uid}"]`);
     el?.classList.add('aimed');
+  },
+  // Facção de uma carta em campo, de um uid qualquer ou do God de um jogador ('A'/'B'): 'athena', 'hades'...
+  factionOf(ref) { if (!ref) return null; const {id} = voicesOf(ref); return FORGE.get(id)?.faccao?.toLowerCase() || null; },
+  // Saída de campo por efeito (exit.css): `kind` 'destroy' | 'exile' | 'bounce'; `theme`: facção de quem causou.
+  exitCard(uid, theme, kind, color) {
+    $$(`[data-uid="${uid}"]`).forEach(el => {
+      if (kind === 'bounce') {
+        const r = el.getBoundingClientRect(), mine = S().players[viewer()]?.battlefield.includes(uid);
+        el.style.setProperty('--exit-x', `${Math.round(innerWidth * .5 - (r.left + r.width / 2))}px`);
+        el.style.setProperty('--exit-y', `${Math.round((mine ? innerHeight : 0) - (r.top + r.height / 2))}px`);
+      }
+      el.style.setProperty('--exit-c', color);
+      el.classList.remove('hit', 'hit-freeze', 'shatter');
+      el.classList.add('leave', `leave--${kind}`, `exit-${theme}`);
+    });
   },
   // Reação do avatar do God (god-react.css): 'hurt', 'guard', 'heal', 'awaken' ou 'power'. `from`: centro de quem bateu; `p`: força 0..1.
   godReact(key, kind, {from = null, p = 0} = {}) {
