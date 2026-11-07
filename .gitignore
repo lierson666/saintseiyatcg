@@ -50,3 +50,7 @@ gallery/thumb/
 playtest/build.json
 playtest/divine/assets/vozes/
 playtest/divine/assets/sons/
+
+# Materiais PBR instalados pelo Arena Forge (Texture Library): binários de terceiros (CC0), fora do Git; registro em data/material-library.json
+playtest/assets/materials/
+playtest/assets/arena-production/

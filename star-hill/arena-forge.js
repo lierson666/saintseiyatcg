@@ -291,14 +291,21 @@ async function onClick(e) {
 
 export async function mountArenaForge(host, context) {
   ctx = context;
+  const sub = location.hash.split('/')[1];
+  scene?.dispose(); scene = null;
+  // Texture Library e Material Studio: seções do mesmo Arena Forge; o Three.js completo só carrega quando abertas.
+  if (sub === 'materiais' || sub === 'estudio') return (await import('./material-studio.js?v=20261107-ms2')).mountMaterials(host, context, sub);
+  if (sub === 'producao') return (await import('./arena-production.js?v=20261107-ap2')).mountProduction(host, context, (await import('./material-studio.js?v=20261107-ms2')).arenaNav());
   if (!document.querySelector('#af5-style')) document.head.append(Object.assign(document.createElement('style'), {id: 'af5-style', textContent: css}));
-  host.innerHTML = '<section id="arena-forge" class="af5" aria-label="Arena Forge"><p class="hint">Carregando biblioteca…</p></section>';
+  host.innerHTML = `<nav class="ms-tabs" aria-label="Arena Forge" style="display:flex;gap:6px;margin-bottom:12px">${[['#arenas', 'Arenas'], ['#arenas/materiais', 'Texture Library'], ['#arenas/estudio', 'Material Studio · Palácio de Poseidon'], ['#arenas/producao', 'Produção · Artboard']]
+    .map(([h, l]) => `<a href="${h}" ${location.hash === h || (h === '#arenas' && !sub) ? 'aria-current="page"' : ''} style="padding:6px 12px;border-radius:99px;border:1px solid #ffffff2a;color:inherit;text-decoration:none">${l}</a>`).join('')}</nav>
+    <section id="arena-forge" class="af5" aria-label="Arena Forge"><p class="hint">Carregando biblioteca…</p></section>`;
   try { ({biblioteca: lib, manifesto: manifest} = await ctx.api('arenas')); }
   catch (e) { host.querySelector('#arena-forge').innerHTML = `<p class="hint">${esc(e.message)}</p>`; return; }
   sel ||= lib.arenas[0]?.id; dirty = false;
   paint();
 }
-addEventListener('hashchange', () => { if (!location.hash.startsWith('#arenas')) { scene?.dispose(); scene = null; } });
+addEventListener('hashchange', () => { if (location.hash !== '#arenas') { scene?.dispose(); scene = null; } });
 addEventListener('beforeunload', e => { if (dirty && location.hash.startsWith('#arenas')) e.preventDefault(); });
 document.addEventListener('input', e => e.target.closest('#arena-forge') && onInput(e));
 document.addEventListener('click', onClick);

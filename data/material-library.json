@@ -1,0 +1,1257 @@
+{
+  "schema": 1,
+  "materiais": [
+    {
+      "id": "polyhaven-marble_01-2k",
+      "fonte": "polyhaven",
+      "provider_id": "marble_01",
+      "nome": "marble_01",
+      "tipo": "material",
+      "url_origem": "https://polyhaven.com/a/marble_01",
+      "licenca": {
+        "tipo": "CC0-1.0",
+        "url": "https://polyhaven.com/license",
+        "atribuicao": "Poly Haven (polyhaven.com)"
+      },
+      "resolucao": "2k",
+      "arquivos": {
+        "color": {
+          "caminho": "/playtest/assets/materials/polyhaven/marble_01/2k/color.jpg",
+          "bytes": 1269188,
+          "sha256": "d403786171716f86718bdd67eba923d4fb6125c0636bacef0e6a21dd5d623a48",
+          "largura": 2048,
+          "altura": 2048
+        },
+        "normal": {
+          "caminho": "/playtest/assets/materials/polyhaven/marble_01/2k/normal.jpg",
+          "bytes": 409581,
+          "sha256": "d5e17ccb2913adbf28fcb781fddf0aa711259ddea6c1c918442f9a3589aa4660",
+          "largura": 2048,
+          "altura": 2048
+        },
+        "arm": {
+          "caminho": "/playtest/assets/materials/polyhaven/marble_01/2k/arm.jpg",
+          "bytes": 214100,
+          "sha256": "28a022c868faf8d893a23082c54494fdc3381db302b05bcbf7f310d353d7464a",
+          "largura": 2048,
+          "altura": 2048
+        },
+        "height": {
+          "caminho": "/playtest/assets/materials/polyhaven/marble_01/2k/height.jpg",
+          "bytes": 231514,
+          "sha256": "7f9b2a458bb6f5b5314380a26ab800d0e8b93cfc350351326328e539fed4988e",
+          "largura": 2048,
+          "altura": 2048
+        }
+      },
+      "mapas": [
+        "arm",
+        "color",
+        "height",
+        "normal"
+      ],
+      "tamanho": 2124383,
+      "instalado_em": "2026-11-07T12:09:08+00:00",
+      "tags": [],
+      "versao": 1
+    },
+    {
+      "id": "ambientcg-travertine009-2k",
+      "fonte": "ambientcg",
+      "provider_id": "Travertine009",
+      "nome": "Travertine 009",
+      "tipo": "material",
+      "url_origem": "https://ambientcg.com/view?id=Travertine009",
+      "licenca": {
+        "tipo": "CC0-1.0",
+        "url": "https://docs.ambientcg.com/license/",
+        "atribuicao": "ambientCG (ambientcg.com)"
+      },
+      "resolucao": "2k",
+      "arquivos": {
+        "ao": {
+          "caminho": "/playtest/assets/materials/ambientcg/Travertine009/2k/ao.jpg",
+          "bytes": 136968,
+          "sha256": "628fcabb7eac5e94578a3b096335509174b01d39fa58be60ef6a4408a646c6e0",
+          "largura": 2048,
+          "altura": 2048
+        },
+        "color": {
+          "caminho": "/playtest/assets/materials/ambientcg/Travertine009/2k/color.jpg",
+          "bytes": 3798875,
+          "sha256": "d01dafb9087c7ab105307167748d922221c1de117864f2a03cb5f86243b82ecc",
+          "largura": 2048,
+          "altura": 2048
+        },
+        "height": {
+          "caminho": "/playtest/assets/materials/ambientcg/Travertine009/2k/height.jpg",
+          "bytes": 71596,
+          "sha256": "c356d901b6981b28daddcb2023dd0119dfa97b62feb5fd52c5a055f785dec0d4",
+          "largura": 2048,
+          "altura": 2048
+        },
+        "normal": {
+          "caminho": "/playtest/assets/materials/ambientcg/Travertine009/2k/normal.jpg",
+          "bytes": 1312711,
+          "sha256": "b551e18777872604bc4aaba2adc4d3212841caa0ac544c02136f27a89a05dc22",
+          "largura": 2048,
+          "altura": 2048
+        },
+        "roughness": {
+          "caminho": "/playtest/assets/materials/ambientcg/Travertine009/2k/roughness.jpg",
+          "bytes": 1135101,
+          "sha256": "c29534ccc277c598e17efa3f3abc9d6bda82f421f90b5abd340136fd3d82bebc",
+          "largura": 2048,
+          "altura": 2048
+        }
+      },
+      "mapas": [
+        "ao",
+        "color",
+        "height",
+        "normal",
+        "roughness"
+      ],
+      "tamanho": 6455251,
+      "instalado_em": "2026-11-07T12:09:12+00:00",
+      "tags": [
+        "9",
+        "beige",
+        "light",
+        "marble",
+        "stone",
+        "travertine",
+        "white"
+      ],
+      "versao": 1
+    },
+    {
+      "id": "ambientcg-metal048a-2k",
+      "fonte": "ambientcg",
+      "provider_id": "Metal048A",
+      "nome": "Metal 048 A",
+      "tipo": "material",
+      "url_origem": "https://ambientcg.com/view?id=Metal048A",
+      "licenca": {
+        "tipo": "CC0-1.0",
+        "url": "https://docs.ambientcg.com/license/",
+        "atribuicao": "ambientCG (ambientcg.com)"
+      },
+      "resolucao": "2k",
+      "arquivos": {
+        "color": {
+          "caminho": "/playtest/assets/materials/ambientcg/Metal048A/2k/color.jpg",
+          "bytes": 2540321,
+          "sha256": "04091139f43a4d59ecfbf8606b748f35b61493c0b3c6172fa73e9db8f1d1c490",
+          "largura": 2048,
+          "altura": 2048
+        },
+        "height": {
+          "caminho": "/playtest/assets/materials/ambientcg/Metal048A/2k/height.jpg",
+          "bytes": 17516,
+          "sha256": "cc6af63f697e9f678fca78b354b6fcd13afd5650aa3e030deeefc42c8b83152b",
+          "largura": 2048,
+          "altura": 2048
+        },
+        "metalness": {
+          "caminho": "/playtest/assets/materials/ambientcg/Metal048A/2k/metalness.jpg",
+          "bytes": 23766,
+          "sha256": "86928dad393b8084db75fa77356ae91c8fd23889c33763789f9dec900266a4f5",
+          "largura": 2048,
+          "altura": 2048
+        },
+        "normal": {
+          "caminho": "/playtest/assets/materials/ambientcg/Metal048A/2k/normal.jpg",
+          "bytes": 1157375,
+          "sha256": "ae1865ba7fa35527fb41915ba7dfd0b47c5d6432bc1b09b1d3daec544ae70961",
+          "largura": 2048,
+          "altura": 2048
+        },
+        "roughness": {
+          "caminho": "/playtest/assets/materials/ambientcg/Metal048A/2k/roughness.jpg",
+          "bytes": 349602,
+          "sha256": "db1f3aba87724dc4de89dea1072c250f4b4c4637e9cc33627b5555bca931c2ec",
+          "largura": 2048,
+          "altura": 2048
+        }
+      },
+      "mapas": [
+        "color",
+        "height",
+        "metalness",
+        "normal",
+        "roughness"
+      ],
+      "tamanho": 4088580,
+      "instalado_em": "2026-11-07T12:09:19+00:00",
+      "tags": [
+        "48",
+        "clean",
+        "gold",
+        "metal",
+        "smooth"
+      ],
+      "versao": 1
+    },
+    {
+      "id": "polyhaven-rock_face_03-2k",
+      "fonte": "polyhaven",
+      "provider_id": "rock_face_03",
+      "nome": "rock_face_03",
+      "tipo": "material",
+      "url_origem": "https://polyhaven.com/a/rock_face_03",
+      "licenca": {
+        "tipo": "CC0-1.0",
+        "url": "https://polyhaven.com/license",
+        "atribuicao": "Poly Haven (polyhaven.com)"
+      },
+      "resolucao": "2k",
+      "arquivos": {
+        "color": {
+          "caminho": "/playtest/assets/materials/polyhaven/rock_face_03/2k/color.jpg",
+          "bytes": 3814362,
+          "sha256": "644ee79df7ffbf5f6afc330b64dd3f33794bab8820915fe61ffe0c88ecfd7ece",
+          "largura": 2048,
+          "altura": 2048
+        },
+        "normal": {
+          "caminho": "/playtest/assets/materials/polyhaven/rock_face_03/2k/normal.jpg",
+          "bytes": 4473242,
+          "sha256": "a498cef4ba6191f6959b6d03fb835263c77271948264a289af24497ab7111dec",
+          "largura": 2048,
+          "altura": 2048
+        },
+        "arm": {
+          "caminho": "/playtest/assets/materials/polyhaven/rock_face_03/2k/arm.jpg",
+          "bytes": 3215097,
+          "sha256": "1921303981d12bccf72dd29d8a8daf823f1d9bb60400b447c64757203c1e2dad",
+          "largura": 2048,
+          "altura": 2048
+        },
+        "height": {
+          "caminho": "/playtest/assets/materials/polyhaven/rock_face_03/2k/height.jpg",
+          "bytes": 798149,
+          "sha256": "5d24ec5a7f4f7333bcf9c158f63d0059d9a3ba234eeff7570a5f6cf2f4522cd5",
+          "largura": 2048,
+          "altura": 2048
+        }
+      },
+      "mapas": [
+        "arm",
+        "color",
+        "height",
+        "normal"
+      ],
+      "tamanho": 12300850,
+      "instalado_em": "2026-11-07T12:09:20+00:00",
+      "tags": [],
+      "versao": 1
+    },
+    {
+      "id": "polyhaven-coast_sand_rocks_02-1k",
+      "fonte": "polyhaven",
+      "provider_id": "coast_sand_rocks_02",
+      "nome": "coast_sand_rocks_02",
+      "tipo": "material",
+      "url_origem": "https://polyhaven.com/a/coast_sand_rocks_02",
+      "licenca": {
+        "tipo": "CC0-1.0",
+        "url": "https://polyhaven.com/license",
+        "atribuicao": "Poly Haven (polyhaven.com)"
+      },
+      "resolucao": "1k",
+      "arquivos": {
+        "color": {
+          "caminho": "/playtest/assets/materials/polyhaven/coast_sand_rocks_02/1k/color.jpg",
+          "bytes": 839184,
+          "sha256": "78eae8ce6209f79417a15ba863fe828f983c22f7e63a9ee3ef504a0062a05ea9",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "normal": {
+          "caminho": "/playtest/assets/materials/polyhaven/coast_sand_rocks_02/1k/normal.jpg",
+          "bytes": 1265458,
+          "sha256": "52776374a8f64aaa8334a87ef8484048baa6f689428a9f8b812004871417ef3e",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "arm": {
+          "caminho": "/playtest/assets/materials/polyhaven/coast_sand_rocks_02/1k/arm.jpg",
+          "bytes": 867333,
+          "sha256": "d4493f9187a7208c7b01456bb70f7678daafb7e218d7d6a16a5a8940b152feaa",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "height": {
+          "caminho": "/playtest/assets/materials/polyhaven/coast_sand_rocks_02/1k/height.jpg",
+          "bytes": 344134,
+          "sha256": "d19f27effd0cf07d40630169488cb657358881509d2c35a6bad6a1123acf0581",
+          "largura": 1024,
+          "altura": 1024
+        }
+      },
+      "mapas": [
+        "arm",
+        "color",
+        "height",
+        "normal"
+      ],
+      "tamanho": 3316109,
+      "instalado_em": "2026-11-07T12:09:25+00:00",
+      "tags": [],
+      "versao": 1
+    },
+    {
+      "id": "polyhaven-dark_rock-1k",
+      "fonte": "polyhaven",
+      "provider_id": "dark_rock",
+      "nome": "dark_rock",
+      "tipo": "material",
+      "url_origem": "https://polyhaven.com/a/dark_rock",
+      "licenca": {
+        "tipo": "CC0-1.0",
+        "url": "https://polyhaven.com/license",
+        "atribuicao": "Poly Haven (polyhaven.com)"
+      },
+      "resolucao": "1k",
+      "arquivos": {
+        "color": {
+          "caminho": "/playtest/assets/materials/polyhaven/dark_rock/1k/color.jpg",
+          "bytes": 533128,
+          "sha256": "7e1148b1749b2200de463b943d4c8994bb24467c96418aa3c283bf65c30e7300",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "normal": {
+          "caminho": "/playtest/assets/materials/polyhaven/dark_rock/1k/normal.jpg",
+          "bytes": 1006770,
+          "sha256": "0693d68d1a01b07389c7db22f56f9519ef572135bc2c1e59afbcdb6f52130fcc",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "arm": {
+          "caminho": "/playtest/assets/materials/polyhaven/dark_rock/1k/arm.jpg",
+          "bytes": 695979,
+          "sha256": "face3801e899586af4868008705fcd5fe7a587aae88a13f18aadc3b2568300ca",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "height": {
+          "caminho": "/playtest/assets/materials/polyhaven/dark_rock/1k/height.jpg",
+          "bytes": 232629,
+          "sha256": "47e219b1000b09f27151c1a79c6b1fa01a7a7aa126e0cb449756eff7857300f3",
+          "largura": 1024,
+          "altura": 1024
+        }
+      },
+      "mapas": [
+        "arm",
+        "color",
+        "height",
+        "normal"
+      ],
+      "tamanho": 2468506,
+      "instalado_em": "2026-11-07T12:09:26+00:00",
+      "tags": [],
+      "versao": 1
+    },
+    {
+      "id": "ambientcg-lava004-1k",
+      "fonte": "ambientcg",
+      "provider_id": "Lava004",
+      "nome": "Lava 004",
+      "tipo": "material",
+      "url_origem": "https://ambientcg.com/view?id=Lava004",
+      "licenca": {
+        "tipo": "CC0-1.0",
+        "url": "https://docs.ambientcg.com/license/",
+        "atribuicao": "ambientCG (ambientcg.com)"
+      },
+      "resolucao": "1k",
+      "arquivos": {
+        "color": {
+          "caminho": "/playtest/assets/materials/ambientcg/Lava004/1k/color.jpg",
+          "bytes": 1483553,
+          "sha256": "ed619f8b336fb3c4c1dec40e3447ad437a1c06eea0e74d12c5ac4a8f87919eab",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "height": {
+          "caminho": "/playtest/assets/materials/ambientcg/Lava004/1k/height.jpg",
+          "bytes": 297350,
+          "sha256": "5cd8e8ef8e203a575ba10e35c2cad60dd1dc287004d1b211e4f3756ed03bc0e1",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "emissive": {
+          "caminho": "/playtest/assets/materials/ambientcg/Lava004/1k/emissive.jpg",
+          "bytes": 1476091,
+          "sha256": "651491faeaf46d9253c37278aac357a2991ce5c583462174b99a8fbd83f7fb04",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "normal": {
+          "caminho": "/playtest/assets/materials/ambientcg/Lava004/1k/normal.jpg",
+          "bytes": 1861084,
+          "sha256": "68ffde8869ae7aeaaab5414047fc1018f59f49f0de02800422e0f0dd0459d28e",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "roughness": {
+          "caminho": "/playtest/assets/materials/ambientcg/Lava004/1k/roughness.jpg",
+          "bytes": 525775,
+          "sha256": "1994eca3b839a9741aa68443547fb0e2dd0de608d3b99bf6b38365166e987773",
+          "largura": 1024,
+          "altura": 1024
+        }
+      },
+      "mapas": [
+        "color",
+        "emissive",
+        "height",
+        "normal",
+        "roughness"
+      ],
+      "tamanho": 5643853,
+      "instalado_em": "2026-11-07T12:09:30+00:00",
+      "tags": [
+        "4",
+        "fire",
+        "lava",
+        "magma",
+        "vulcan"
+      ],
+      "versao": 1
+    },
+    {
+      "id": "ambientcg-metal009-1k",
+      "fonte": "ambientcg",
+      "provider_id": "Metal009",
+      "nome": "Metal 009",
+      "tipo": "material",
+      "url_origem": "https://ambientcg.com/view?id=Metal009",
+      "licenca": {
+        "tipo": "CC0-1.0",
+        "url": "https://docs.ambientcg.com/license/",
+        "atribuicao": "ambientCG (ambientcg.com)"
+      },
+      "resolucao": "1k",
+      "arquivos": {
+        "color": {
+          "caminho": "/playtest/assets/materials/ambientcg/Metal009/1k/color.jpg",
+          "bytes": 616678,
+          "sha256": "e066e240ad0eaab6a73fb0f40fa7caa94365160770331babc91de2e8ce6a986f",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "height": {
+          "caminho": "/playtest/assets/materials/ambientcg/Metal009/1k/height.jpg",
+          "bytes": 698868,
+          "sha256": "73095592a8cf4bb983cb2bd2a3bf771492fa9d4697a547f4e3e430d4d871951f",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "metalness": {
+          "caminho": "/playtest/assets/materials/ambientcg/Metal009/1k/metalness.jpg",
+          "bytes": 4257,
+          "sha256": "843102638fa0a5bf897888868877efab8ccdc4cb84a48e57bdb52bfb30f5e714",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "normal": {
+          "caminho": "/playtest/assets/materials/ambientcg/Metal009/1k/normal.jpg",
+          "bytes": 814572,
+          "sha256": "45c7c88685e6b44da7e8d25e2cf6d8645d42209793ccc4354e68c16cdae15d62",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "roughness": {
+          "caminho": "/playtest/assets/materials/ambientcg/Metal009/1k/roughness.jpg",
+          "bytes": 486233,
+          "sha256": "6d06dfe8c240d3b6f33030740110284245bd8aefb2e10e8eb0c563444d9c0c5b",
+          "largura": 1024,
+          "altura": 1024
+        }
+      },
+      "mapas": [
+        "color",
+        "height",
+        "metalness",
+        "normal",
+        "roughness"
+      ],
+      "tamanho": 2620608,
+      "instalado_em": "2026-11-07T12:09:33+00:00",
+      "tags": [
+        "9",
+        "brushed",
+        "bumpy",
+        "metal",
+        "scratches",
+        "silver",
+        "steel"
+      ],
+      "versao": 1
+    },
+    {
+      "id": "polyhaven-rusty_metal_02-1k",
+      "fonte": "polyhaven",
+      "provider_id": "rusty_metal_02",
+      "nome": "rusty_metal_02",
+      "tipo": "material",
+      "url_origem": "https://polyhaven.com/a/rusty_metal_02",
+      "licenca": {
+        "tipo": "CC0-1.0",
+        "url": "https://polyhaven.com/license",
+        "atribuicao": "Poly Haven (polyhaven.com)"
+      },
+      "resolucao": "1k",
+      "arquivos": {
+        "color": {
+          "caminho": "/playtest/assets/materials/polyhaven/rusty_metal_02/1k/color.jpg",
+          "bytes": 564932,
+          "sha256": "adaf094391518b6afe787a123942110aa88ef521c844f970b124420f5ed5d3d9",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "normal": {
+          "caminho": "/playtest/assets/materials/polyhaven/rusty_metal_02/1k/normal.jpg",
+          "bytes": 403156,
+          "sha256": "995197a62cac6fbb000e6e6591a3330a3b77ef069c4ac58f505b586b9bdbd97b",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "arm": {
+          "caminho": "/playtest/assets/materials/polyhaven/rusty_metal_02/1k/arm.jpg",
+          "bytes": 153031,
+          "sha256": "2982943ffe3273a65bf788b77fc0c7a4fd8227824386d065d13a8c8c0e07db10",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "height": {
+          "caminho": "/playtest/assets/materials/polyhaven/rusty_metal_02/1k/height.jpg",
+          "bytes": 197854,
+          "sha256": "1e3ea9b808de5c194d2858777936e5e54163468ad4c8510787a3daac12956ed9",
+          "largura": 1024,
+          "altura": 1024
+        }
+      },
+      "mapas": [
+        "arm",
+        "color",
+        "height",
+        "normal"
+      ],
+      "tamanho": 1318973,
+      "instalado_em": "2026-11-07T12:09:34+00:00",
+      "tags": [],
+      "versao": 1
+    },
+    {
+      "id": "ambientcg-metal008-1k",
+      "fonte": "ambientcg",
+      "provider_id": "Metal008",
+      "nome": "Metal 008",
+      "tipo": "material",
+      "url_origem": "https://ambientcg.com/view?id=Metal008",
+      "licenca": {
+        "tipo": "CC0-1.0",
+        "url": "https://docs.ambientcg.com/license/",
+        "atribuicao": "ambientCG (ambientcg.com)"
+      },
+      "resolucao": "1k",
+      "arquivos": {
+        "color": {
+          "caminho": "/playtest/assets/materials/ambientcg/Metal008/1k/color.jpg",
+          "bytes": 1231935,
+          "sha256": "89e08ccdd93901f03556b37d6361e39dee1ce614b13a10a13c73030ba6375c59",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "height": {
+          "caminho": "/playtest/assets/materials/ambientcg/Metal008/1k/height.jpg",
+          "bytes": 307920,
+          "sha256": "bf06f01c2a75b6a38bfd7d1050ff7e65fd98329ec0c14d3242ba06d6d4834cdf",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "metalness": {
+          "caminho": "/playtest/assets/materials/ambientcg/Metal008/1k/metalness.jpg",
+          "bytes": 124530,
+          "sha256": "d53e5feef7383569fc6046f817288cf91dcce6b4440534f4e3ada807be4cd3a5",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "normal": {
+          "caminho": "/playtest/assets/materials/ambientcg/Metal008/1k/normal.jpg",
+          "bytes": 772399,
+          "sha256": "dfcc55d39b25f85494292072d2f4fe11edc7e2379176f4f9ee30d2f1c3933fc2",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "roughness": {
+          "caminho": "/playtest/assets/materials/ambientcg/Metal008/1k/roughness.jpg",
+          "bytes": 568072,
+          "sha256": "29009aec9ca06b0e7a5699e1e78dd65f16583aeb12d6d597c6324ec50bf23c51",
+          "largura": 1024,
+          "altura": 1024
+        }
+      },
+      "mapas": [
+        "color",
+        "height",
+        "metalness",
+        "normal",
+        "roughness"
+      ],
+      "tamanho": 3004856,
+      "instalado_em": "2026-11-07T12:09:38+00:00",
+      "tags": [
+        "8",
+        "bronze",
+        "bumpy",
+        "copper",
+        "metal",
+        "scratches",
+        "silver",
+        "steel"
+      ],
+      "versao": 1
+    },
+    {
+      "id": "polyhaven-rock_boulder_dry-1k",
+      "fonte": "polyhaven",
+      "provider_id": "rock_boulder_dry",
+      "nome": "rock_boulder_dry",
+      "tipo": "material",
+      "url_origem": "https://polyhaven.com/a/rock_boulder_dry",
+      "licenca": {
+        "tipo": "CC0-1.0",
+        "url": "https://polyhaven.com/license",
+        "atribuicao": "Poly Haven (polyhaven.com)"
+      },
+      "resolucao": "1k",
+      "arquivos": {
+        "color": {
+          "caminho": "/playtest/assets/materials/polyhaven/rock_boulder_dry/1k/color.jpg",
+          "bytes": 859211,
+          "sha256": "20f653a42fb24f42aa40641663070d578678da49af18cc1049dbdd4ed8679f3c",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "normal": {
+          "caminho": "/playtest/assets/materials/polyhaven/rock_boulder_dry/1k/normal.jpg",
+          "bytes": 802497,
+          "sha256": "5915fea28a97357c78a04fb31c2516f1f7ed1b3a9cef4ae25aa93e4655e6c595",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "arm": {
+          "caminho": "/playtest/assets/materials/polyhaven/rock_boulder_dry/1k/arm.jpg",
+          "bytes": 784728,
+          "sha256": "350d01c63afc01cd9bcb9bc47afdd24292198ff1c5fcef1c49281c1b85dc2872",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "height": {
+          "caminho": "/playtest/assets/materials/polyhaven/rock_boulder_dry/1k/height.jpg",
+          "bytes": 246228,
+          "sha256": "072b971e9f9e829cb616819f1de8a33484c01f3fb47bcdc6afee8b90dccc707c",
+          "largura": 1024,
+          "altura": 1024
+        }
+      },
+      "mapas": [
+        "arm",
+        "color",
+        "height",
+        "normal"
+      ],
+      "tamanho": 2692664,
+      "instalado_em": "2026-11-07T12:09:38+00:00",
+      "tags": [],
+      "versao": 1
+    },
+    {
+      "id": "polyhaven-forrest_ground_01-1k",
+      "fonte": "polyhaven",
+      "provider_id": "forrest_ground_01",
+      "nome": "forrest_ground_01",
+      "tipo": "material",
+      "url_origem": "https://polyhaven.com/a/forrest_ground_01",
+      "licenca": {
+        "tipo": "CC0-1.0",
+        "url": "https://polyhaven.com/license",
+        "atribuicao": "Poly Haven (polyhaven.com)"
+      },
+      "resolucao": "1k",
+      "arquivos": {
+        "color": {
+          "caminho": "/playtest/assets/materials/polyhaven/forrest_ground_01/1k/color.jpg",
+          "bytes": 833711,
+          "sha256": "3dd6875cb3908e022a3c45ebbffa5e84c670ff2691fbbb6dc9ea4bff88523800",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "normal": {
+          "caminho": "/playtest/assets/materials/polyhaven/forrest_ground_01/1k/normal.jpg",
+          "bytes": 1428763,
+          "sha256": "32528a7cdee962cc0b248ee4023a74d0df175737ea90e1eb425122351e0bdab4",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "arm": {
+          "caminho": "/playtest/assets/materials/polyhaven/forrest_ground_01/1k/arm.jpg",
+          "bytes": 296969,
+          "sha256": "22eb09a2ed951377f339c08be9f1665f0db7391ed9ba0b0e91e55aea2dbef315",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "height": {
+          "caminho": "/playtest/assets/materials/polyhaven/forrest_ground_01/1k/height.jpg",
+          "bytes": 321227,
+          "sha256": "a1ce10a2426d20d7fec2e48efa255638055922c809ff3ea03067257c0a594953",
+          "largura": 1024,
+          "altura": 1024
+        }
+      },
+      "mapas": [
+        "arm",
+        "color",
+        "height",
+        "normal"
+      ],
+      "tamanho": 2880670,
+      "instalado_em": "2026-11-07T12:09:40+00:00",
+      "tags": [],
+      "versao": 1
+    },
+    {
+      "id": "polyhaven-bark_brown_02-1k",
+      "fonte": "polyhaven",
+      "provider_id": "bark_brown_02",
+      "nome": "bark_brown_02",
+      "tipo": "material",
+      "url_origem": "https://polyhaven.com/a/bark_brown_02",
+      "licenca": {
+        "tipo": "CC0-1.0",
+        "url": "https://polyhaven.com/license",
+        "atribuicao": "Poly Haven (polyhaven.com)"
+      },
+      "resolucao": "1k",
+      "arquivos": {
+        "color": {
+          "caminho": "/playtest/assets/materials/polyhaven/bark_brown_02/1k/color.jpg",
+          "bytes": 659592,
+          "sha256": "920fa0bed0c9d78c1d530e99795113afd532d7db746de440f4a85d7c83ed0f1a",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "normal": {
+          "caminho": "/playtest/assets/materials/polyhaven/bark_brown_02/1k/normal.jpg",
+          "bytes": 1015623,
+          "sha256": "0d5e691e8ad8bcd093a3587887fda2a6b4a948b5708a4f256f7919584c6eb857",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "arm": {
+          "caminho": "/playtest/assets/materials/polyhaven/bark_brown_02/1k/arm.jpg",
+          "bytes": 232742,
+          "sha256": "6bd86d37b3b9b40cc30a4b661e382ec41fa7463a8b1144ff44708b19fa675af1",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "height": {
+          "caminho": "/playtest/assets/materials/polyhaven/bark_brown_02/1k/height.jpg",
+          "bytes": 176442,
+          "sha256": "03a771fd43038257bffc2ebdd12e5599ebba8a30ffae2ed4774c05e4bbab4e45",
+          "largura": 1024,
+          "altura": 1024
+        }
+      },
+      "mapas": [
+        "arm",
+        "color",
+        "height",
+        "normal"
+      ],
+      "tamanho": 2084399,
+      "instalado_em": "2026-11-07T12:09:41+00:00",
+      "tags": [],
+      "versao": 1
+    },
+    {
+      "id": "ambientcg-metal049a-1k",
+      "fonte": "ambientcg",
+      "provider_id": "Metal049A",
+      "nome": "Metal 049 A",
+      "tipo": "material",
+      "url_origem": "https://ambientcg.com/view?id=Metal049A",
+      "licenca": {
+        "tipo": "CC0-1.0",
+        "url": "https://docs.ambientcg.com/license/",
+        "atribuicao": "ambientCG (ambientcg.com)"
+      },
+      "resolucao": "1k",
+      "arquivos": {
+        "color": {
+          "caminho": "/playtest/assets/materials/ambientcg/Metal049A/1k/color.jpg",
+          "bytes": 455982,
+          "sha256": "cd7c77ceb830ebd343e0932a79eac6ce53bbea20bda4acbf90fc972e063c822a",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "height": {
+          "caminho": "/playtest/assets/materials/ambientcg/Metal049A/1k/height.jpg",
+          "bytes": 5228,
+          "sha256": "40f2f875d1704734706617058ccc9ec42170f07b0362d6f9e959c4018bdc1f2b",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "metalness": {
+          "caminho": "/playtest/assets/materials/ambientcg/Metal049A/1k/metalness.jpg",
+          "bytes": 5839,
+          "sha256": "955c204d8ad19266d274d104fcf4389fd0eb5beb13f255f9655ae9b462bafa82",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "normal": {
+          "caminho": "/playtest/assets/materials/ambientcg/Metal049A/1k/normal.jpg",
+          "bytes": 331693,
+          "sha256": "ba911be8181c6df93dd19830f49dcaa09e73f09a3465125f081625ef9db45510",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "roughness": {
+          "caminho": "/playtest/assets/materials/ambientcg/Metal049A/1k/roughness.jpg",
+          "bytes": 295377,
+          "sha256": "2a515232677e0bb8ba1f5b376d9c7650af04210cdf16a314adbec5c47cf101d2",
+          "largura": 1024,
+          "altura": 1024
+        }
+      },
+      "mapas": [
+        "color",
+        "height",
+        "metalness",
+        "normal",
+        "roughness"
+      ],
+      "tamanho": 1094119,
+      "instalado_em": "2026-11-07T12:09:45+00:00",
+      "tags": [
+        "49",
+        "clean",
+        "metal",
+        "silver",
+        "smooth"
+      ],
+      "versao": 1
+    },
+    {
+      "id": "ambientcg-moss002-1k",
+      "fonte": "ambientcg",
+      "provider_id": "Moss002",
+      "nome": "Moss 002",
+      "tipo": "material",
+      "url_origem": "https://ambientcg.com/view?id=Moss002",
+      "licenca": {
+        "tipo": "CC0-1.0",
+        "url": "https://docs.ambientcg.com/license/",
+        "atribuicao": "ambientCG (ambientcg.com)"
+      },
+      "resolucao": "1k",
+      "arquivos": {
+        "ao": {
+          "caminho": "/playtest/assets/materials/ambientcg/Moss002/1k/ao.jpg",
+          "bytes": 896972,
+          "sha256": "bf9f86b24612ee8fbb5fb2929dd5efcf09ced40005f10837dbeef49029e30952",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "color": {
+          "caminho": "/playtest/assets/materials/ambientcg/Moss002/1k/color.jpg",
+          "bytes": 1840507,
+          "sha256": "312506c2ea4cc474273dbabbf6287f1b60ec104ce0f8fbbbfa5a6e76d48d7edc",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "height": {
+          "caminho": "/playtest/assets/materials/ambientcg/Moss002/1k/height.jpg",
+          "bytes": 629196,
+          "sha256": "13e0248ac76371032183ae0717e64bc9a67869fab043927db1211265f63e10b4",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "normal": {
+          "caminho": "/playtest/assets/materials/ambientcg/Moss002/1k/normal.jpg",
+          "bytes": 2395922,
+          "sha256": "10f00f2bfc8a96e1b3995a727fee60d485e69354c75fcea48b50537e611b87a2",
+          "largura": 1024,
+          "altura": 1024
+        },
+        "roughness": {
+          "caminho": "/playtest/assets/materials/ambientcg/Moss002/1k/roughness.jpg",
+          "bytes": 728441,
+          "sha256": "39076f9a2b1ce98ca789c918bd986cfbebea9afef37be656d17cf1ba49165088",
+          "largura": 1024,
+          "altura": 1024
+        }
+      },
+      "mapas": [
+        "ao",
+        "color",
+        "height",
+        "normal",
+        "roughness"
+      ],
+      "tamanho": 6491038,
+      "instalado_em": "2026-11-07T12:09:48+00:00",
+      "tags": [
+        "2",
+        "green",
+        "moss",
+        "mossy"
+      ],
+      "versao": 1
+    },
+    {
+      "id": "polyhaven-brown_photostudio_02-1k",
+      "fonte": "polyhaven",
+      "provider_id": "brown_photostudio_02",
+      "nome": "brown_photostudio_02",
+      "tipo": "hdri",
+      "url_origem": "https://polyhaven.com/a/brown_photostudio_02",
+      "licenca": {
+        "tipo": "CC0-1.0",
+        "url": "https://polyhaven.com/license",
+        "atribuicao": "Poly Haven (polyhaven.com)"
+      },
+      "resolucao": "1k",
+      "arquivos": {
+        "hdri": {
+          "caminho": "/playtest/assets/materials/polyhaven/brown_photostudio_02/1k/hdri.hdr",
+          "bytes": 1648130,
+          "sha256": "469abc5e6035b6c450bae8adbb448f8d1fa7c51d9e384e501516c28352c91b58",
+          "largura": null,
+          "altura": null
+        }
+      },
+      "mapas": [
+        "hdri"
+      ],
+      "tamanho": 1648130,
+      "instalado_em": "2026-11-07T12:09:58+00:00",
+      "tags": [],
+      "versao": 1
+    },
+    {
+      "id": "ambientcg-marble019-2k",
+      "fonte": "ambientcg",
+      "provider_id": "Marble019",
+      "nome": "Marble 019",
+      "tipo": "material",
+      "url_origem": "https://ambientcg.com/view?id=Marble019",
+      "licenca": {
+        "tipo": "CC0-1.0",
+        "url": "https://docs.ambientcg.com/license/",
+        "atribuicao": "ambientCG (ambientcg.com)"
+      },
+      "resolucao": "2k",
+      "arquivos": {
+        "color": {
+          "caminho": "/playtest/assets/materials/ambientcg/Marble019/2k/color.jpg",
+          "bytes": 2570521,
+          "sha256": "883707695ee89857684f17313ffabd0a9c58d617dbeac47a52d8769ab3dd4534",
+          "largura": 2048,
+          "altura": 2048
+        },
+        "height": {
+          "caminho": "/playtest/assets/materials/ambientcg/Marble019/2k/height.jpg",
+          "bytes": 2617991,
+          "sha256": "4c6d7ac648e93303ea2f5f6095a5be8dde92f2f2a37d45d509de6d75fc45a7a6",
+          "largura": 2048,
+          "altura": 2048
+        },
+        "normal": {
+          "caminho": "/playtest/assets/materials/ambientcg/Marble019/2k/normal.jpg",
+          "bytes": 1328163,
+          "sha256": "0bf6345bae76463fdf2e917e84da1fc107d7f25f2344d84f3179d3f31e8d2512",
+          "largura": 2048,
+          "altura": 2048
+        },
+        "roughness": {
+          "caminho": "/playtest/assets/materials/ambientcg/Marble019/2k/roughness.jpg",
+          "bytes": 2129097,
+          "sha256": "990e082c62b9ec57233be96529ad9485b67e49d44999ddb7d5bb8d871f421917",
+          "largura": 2048,
+          "altura": 2048
+        }
+      },
+      "mapas": [
+        "color",
+        "height",
+        "normal",
+        "roughness"
+      ],
+      "tamanho": 8645772,
+      "instalado_em": "2026-11-07T12:11:14+00:00",
+      "tags": [
+        "19",
+        "bright",
+        "light",
+        "marble",
+        "rough",
+        "white"
+      ],
+      "versao": 1
+    },
+    {
+      "id": "ambientcg-marble021-2k",
+      "fonte": "ambientcg",
+      "provider_id": "Marble021",
+      "nome": "Marble 021",
+      "tipo": "material",
+      "url_origem": "https://ambientcg.com/view?id=Marble021",
+      "licenca": {
+        "tipo": "CC0-1.0",
+        "url": "https://docs.ambientcg.com/license/",
+        "atribuicao": "ambientCG (ambientcg.com)"
+      },
+      "resolucao": "2k",
+      "arquivos": {
+        "color": {
+          "caminho": "/playtest/assets/materials/ambientcg/Marble021/2k/color.jpg",
+          "bytes": 3687428,
+          "sha256": "8eae10b9fa829a88458a076cff1235da48aa2aaf3ab043535cce59ec5bce1fbf",
+          "largura": 2048,
+          "altura": 2048
+        },
+        "height": {
+          "caminho": "/playtest/assets/materials/ambientcg/Marble021/2k/height.jpg",
+          "bytes": 2557500,
+          "sha256": "630116292917654edd5eab5909ee34bd0393e15dc453b5bc65fe598c7f1c1f90",
+          "largura": 2048,
+          "altura": 2048
+        },
+        "normal": {
+          "caminho": "/playtest/assets/materials/ambientcg/Marble021/2k/normal.jpg",
+          "bytes": 1312696,
+          "sha256": "00ff3e14c44e35dfb05c171355c9b332364a0a94d7026ebd49e33bc8a75aa0bd",
+          "largura": 2048,
+          "altura": 2048
+        },
+        "roughness": {
+          "caminho": "/playtest/assets/materials/ambientcg/Marble021/2k/roughness.jpg",
+          "bytes": 1253588,
+          "sha256": "26287d257dd85cbab6b3828b609ea9df955ce84691d2898514f208cab3492489",
+          "largura": 2048,
+          "altura": 2048
+        }
+      },
+      "mapas": [
+        "color",
+        "height",
+        "normal",
+        "roughness"
+      ],
+      "tamanho": 8811212,
+      "instalado_em": "2026-11-07T12:11:16+00:00",
+      "tags": [
+        "21",
+        "bright",
+        "marble",
+        "reflective",
+        "shiny",
+        "white"
+      ],
+      "versao": 1
+    }
+  ],
+  "presets": {
+    "Athena": [
+      {
+        "nome": "Mármore branco do Santuário",
+        "material": "polyhaven-marble_01-2k",
+        "params": {}
+      },
+      {
+        "nome": "Calcário claro das colunas",
+        "material": "ambientcg-travertine009-2k",
+        "params": {}
+      },
+      {
+        "nome": "Ouro de Athena",
+        "material": "ambientcg-metal048a-2k",
+        "params": {}
+      },
+      {
+        "nome": "Mármore antigo",
+        "material": "ambientcg-marble019-2k",
+        "params": {}
+      }
+    ],
+    "Poseidon": [
+      {
+        "nome": "Pedra branca polida",
+        "material": "ambientcg-marble021-2k",
+        "params": {}
+      },
+      {
+        "nome": "Rocha submarina",
+        "material": "polyhaven-rock_face_03-2k",
+        "params": {
+          "tint": "#9fc4d0"
+        }
+      },
+      {
+        "nome": "Rocha de coral e areia",
+        "material": "polyhaven-coast_sand_rocks_02-1k",
+        "params": {}
+      },
+      {
+        "nome": "Ouro do tridente",
+        "material": "ambientcg-metal048a-2k",
+        "params": {}
+      }
+    ],
+    "Hades": [
+      {
+        "nome": "Rocha escura do submundo",
+        "material": "polyhaven-dark_rock-1k",
+        "params": {}
+      },
+      {
+        "nome": "Lava do Cocytos",
+        "material": "ambientcg-lava004-1k",
+        "params": {
+          "emissive": "#ff4a10",
+          "emissiveIntensity": 1
+        }
+      },
+      {
+        "nome": "Ferro negro",
+        "material": "ambientcg-metal009-1k",
+        "params": {
+          "tint": "#5a5560"
+        }
+      },
+      {
+        "nome": "Obsidiana",
+        "material": null,
+        "substituto": "polyhaven-dark_rock-1k",
+        "pendencia": "Busca \"obsidian\"/\"obsidiana\" sem resultado no Poly Haven e no ambientCG (07/11/2026)."
+      }
+    ],
+    "Ares": [
+      {
+        "nome": "Metal de guerra enferrujado",
+        "material": "polyhaven-rusty_metal_02-1k",
+        "params": {}
+      },
+      {
+        "nome": "Bronze",
+        "material": "ambientcg-metal008-1k",
+        "params": {}
+      },
+      {
+        "nome": "Rocha vermelha seca",
+        "material": "polyhaven-rock_boulder_dry-1k",
+        "params": {
+          "tint": "#c9866a"
+        }
+      },
+      {
+        "nome": "Basalto",
+        "material": null,
+        "substituto": "polyhaven-dark_rock-1k",
+        "pendencia": "Busca \"basalt\" sem resultado nas duas APIs (07/11/2026)."
+      }
+    ],
+    "Artemis": [
+      {
+        "nome": "Chão da floresta",
+        "material": "polyhaven-forrest_ground_01-1k",
+        "params": {}
+      },
+      {
+        "nome": "Casca de árvore",
+        "material": "polyhaven-bark_brown_02-1k",
+        "params": {}
+      },
+      {
+        "nome": "Prata da lua",
+        "material": "ambientcg-metal049a-1k",
+        "params": {}
+      },
+      {
+        "nome": "Musgo",
+        "material": "ambientcg-moss002-1k",
+        "params": {}
+      }
+    ]
+  },
+  "projetos": {
+    "poseidon-palace-pbr-v1": {
+      "nome": "POSEIDON PALACE — PBR V1",
+      "base": "arena-forge/poseidon-palace.js (poseidon-palace-canonical-v1, beauty v1)",
+      "slots": {
+        "Paredes": {
+          "material": "polyhaven-marble_01-2k",
+          "params": {
+            "repeatX": 2,
+            "repeatY": 2
+          }
+        },
+        "Colunas": {
+          "material": "ambientcg-travertine009-2k",
+          "params": {
+            "repeatX": 1,
+            "repeatY": 3
+          }
+        },
+        "Escadaria": {
+          "material": "ambientcg-marble019-2k",
+          "params": {
+            "repeatX": 4,
+            "repeatY": 1
+          }
+        },
+        "Plataformas": {
+          "material": "ambientcg-marble021-2k",
+          "params": {
+            "repeatX": 4,
+            "repeatY": 2
+          }
+        },
+        "Tridente e frisos de ouro": {
+          "material": "ambientcg-metal048a-2k",
+          "params": {
+            "repeatX": 1,
+            "repeatY": 1,
+            "metalness": 1,
+            "roughness": 0.8
+          }
+        },
+        "Rochas submarinas": {
+          "material": "polyhaven-rock_face_03-2k",
+          "params": {
+            "repeatX": 2,
+            "repeatY": 2,
+            "tint": "#9fc4d0"
+          }
+        },
+        "Rochas claras": {
+          "material": "polyhaven-rock_face_03-2k",
+          "params": {
+            "repeatX": 2,
+            "repeatY": 2,
+            "tint": "#d7e6ea"
+          }
+        }
+      },
+      "objetos": {},
+      "nota": "Peças por nome do material do palácio (beauty v1). Capitéis, entablamento, frontão, tímpano, pedestais, recessos e Grande Pilar ficam no mármore procedural. Água, brilhos e feixes são efeitos."
+    }
+  }
+}

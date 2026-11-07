@@ -1,0 +1,2127 @@
+{
+  "schema": 1,
+  "id": "poseidon-palace",
+  "nome": "POSEIDON — UNDERSEA SANCTUARY / FORTALEZA SUBMARINA",
+  "faccao": "Poseidon",
+  "versao": 1,
+  "criado_em": "2026-11-07T13:40:15+00:00",
+  "atualizado_em": "2026-11-07T13:43:25+00:00",
+  "direcao": "PAINTERLY CINEMATIC 3D",
+  "etapas": {
+    "concept": {
+      "status": "pendente",
+      "versao": 0,
+      "historico": []
+    },
+    "art-direction": {
+      "status": "pendente",
+      "versao": 0,
+      "historico": []
+    },
+    "master-artboard": {
+      "status": "pendente",
+      "versao": 0,
+      "historico": []
+    },
+    "asset-breakdown": {
+      "status": "pendente",
+      "versao": 0,
+      "historico": []
+    },
+    "asset-production": {
+      "status": "pendente",
+      "versao": 0,
+      "historico": []
+    },
+    "material-production": {
+      "status": "pendente",
+      "versao": 0,
+      "historico": []
+    },
+    "scene-assembly": {
+      "status": "pendente",
+      "versao": 0,
+      "historico": []
+    },
+    "visual-matching": {
+      "status": "pendente",
+      "versao": 0,
+      "historico": []
+    },
+    "gameplay-preview": {
+      "status": "pendente",
+      "versao": 0,
+      "historico": []
+    },
+    "validation": {
+      "status": "pendente",
+      "versao": 0,
+      "historico": []
+    },
+    "approval": {
+      "status": "pendente",
+      "versao": 0,
+      "historico": []
+    },
+    "publication": {
+      "status": "pendente",
+      "versao": 0,
+      "historico": []
+    }
+  },
+  "artboards": [],
+  "referencias": [],
+  "anotacoes": [],
+  "assets": [
+    {
+      "id": "palace",
+      "nome": "Palace",
+      "categoria": "architecture",
+      "referencia": null,
+      "dimensoes": [
+        52,
+        23.4,
+        30
+      ],
+      "posicao": [
+        0,
+        0,
+        -42
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": "POSEIDON_WHITE_MARBLE",
+      "lod": "procedural",
+      "estado": "material",
+      "dependencias": [],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": "Conjunto: pórtico, alas, cela."
+    },
+    {
+      "id": "main-portico",
+      "nome": "Main Portico",
+      "categoria": "architecture",
+      "referencia": null,
+      "dimensoes": [
+        18.9,
+        14.6,
+        8
+      ],
+      "posicao": [
+        0,
+        4.41,
+        -40.2
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": "POSEIDON_WHITE_MARBLE",
+      "lod": "procedural",
+      "estado": "model",
+      "dependencias": [
+        "palace"
+      ],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": ""
+    },
+    {
+      "id": "pediment",
+      "nome": "Pediment",
+      "categoria": "architecture",
+      "referencia": null,
+      "dimensoes": [
+        18.9,
+        3.15,
+        8
+      ],
+      "posicao": [
+        0,
+        19,
+        -40.2
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": "POSEIDON_WHITE_MARBLE",
+      "lod": "procedural",
+      "estado": "material",
+      "dependencias": [
+        "main-portico"
+      ],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": "Prisma triangular simétrico, tímpano recuado."
+    },
+    {
+      "id": "staircase",
+      "nome": "Staircase",
+      "categoria": "architecture",
+      "referencia": null,
+      "dimensoes": [
+        12,
+        4.41,
+        17.8
+      ],
+      "posicao": [
+        0,
+        0,
+        -27.5
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": "POSEIDON_WHITE_MARBLE",
+      "lod": "procedural",
+      "estado": "material",
+      "dependencias": [
+        "palace"
+      ],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": "14 degraus de 0,29 m."
+    },
+    {
+      "id": "columns",
+      "nome": "Columns",
+      "categoria": "architecture",
+      "referencia": null,
+      "dimensoes": [
+        0.62,
+        12.2,
+        0.62
+      ],
+      "posicao": [
+        0,
+        4.41,
+        -40.2
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": "POSEIDON_LIMESTONE",
+      "lod": "instanced",
+      "estado": "material",
+      "dependencias": [
+        "main-portico"
+      ],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": "8 no pórtico + 10 nas alas (InstancedMesh)."
+    },
+    {
+      "id": "capitals",
+      "nome": "Capitals",
+      "categoria": "architecture",
+      "referencia": null,
+      "dimensoes": [
+        1.7,
+        0.9,
+        1.7
+      ],
+      "posicao": [
+        0,
+        16.6,
+        -40.2
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": "POSEIDON_WHITE_MARBLE",
+      "lod": "instanced",
+      "estado": "model",
+      "dependencias": [
+        "columns"
+      ],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": ""
+    },
+    {
+      "id": "entablature",
+      "nome": "Entablature",
+      "categoria": "architecture",
+      "referencia": null,
+      "dimensoes": [
+        18.9,
+        2.38,
+        8
+      ],
+      "posicao": [
+        0,
+        16.6,
+        -40.2
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": "POSEIDON_WHITE_MARBLE",
+      "lod": "procedural",
+      "estado": "model",
+      "dependencias": [
+        "main-portico"
+      ],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": ""
+    },
+    {
+      "id": "terrace",
+      "nome": "Terrace",
+      "categoria": "architecture",
+      "referencia": null,
+      "dimensoes": [
+        18.4,
+        4.41,
+        10.5
+      ],
+      "posicao": [
+        0,
+        0,
+        -41.6
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": "POSEIDON_BLUE_MARBLE",
+      "lod": "procedural",
+      "estado": "model",
+      "dependencias": [
+        "palace"
+      ],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": ""
+    },
+    {
+      "id": "wall",
+      "nome": "Wall",
+      "categoria": "architecture",
+      "referencia": null,
+      "dimensoes": [
+        16.6,
+        12.2,
+        1.4
+      ],
+      "posicao": [
+        0,
+        4.41,
+        -46.5
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": "POSEIDON_WHITE_MARBLE",
+      "lod": "procedural",
+      "estado": "model",
+      "dependencias": [
+        "palace"
+      ],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": ""
+    },
+    {
+      "id": "balustrade",
+      "nome": "Balustrade",
+      "categoria": "architecture",
+      "referencia": null,
+      "dimensoes": [
+        12,
+        1.2,
+        0.4
+      ],
+      "posicao": [
+        0,
+        0,
+        -18
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": "POSEIDON_WHITE_MARBLE",
+      "lod": "procedural",
+      "estado": "reference",
+      "dependencias": [
+        "staircase"
+      ],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": "Ainda não existe na cena."
+    },
+    {
+      "id": "main-pillar",
+      "nome": "Main Pillar",
+      "categoria": "monuments",
+      "referencia": null,
+      "dimensoes": [
+        10.6,
+        91,
+        10.6
+      ],
+      "posicao": [
+        0,
+        0,
+        -74
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": "POSEIDON_BLUE_MARBLE",
+      "lod": "procedural",
+      "estado": "material",
+      "dependencias": [],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": "Grande Pilar Principal com anéis de ouro."
+    },
+    {
+      "id": "distant-pillars",
+      "nome": "Distant Pillars",
+      "categoria": "monuments",
+      "referencia": null,
+      "dimensoes": [
+        3,
+        47,
+        3
+      ],
+      "posicao": [
+        0,
+        0,
+        -78
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": "POSEIDON_BLUE_MARBLE",
+      "lod": "procedural",
+      "estado": "model",
+      "dependencias": [
+        "main-pillar"
+      ],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": "6 pilares (36..62 m para cada lado)."
+    },
+    {
+      "id": "statues",
+      "nome": "Statues",
+      "categoria": "monuments",
+      "referencia": null,
+      "dimensoes": [
+        2,
+        5,
+        2
+      ],
+      "posicao": [
+        0,
+        0,
+        -30
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": "POSEIDON_WHITE_MARBLE",
+      "lod": "glb",
+      "estado": "reference",
+      "dependencias": [],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": "Escultura humana: precisa de GLB modelado fora; não será feita com primitivas."
+    },
+    {
+      "id": "trident",
+      "nome": "Trident",
+      "categoria": "monuments",
+      "referencia": null,
+      "dimensoes": [
+        2.8,
+        9.2,
+        0.3
+      ],
+      "posicao": [
+        0,
+        5.9,
+        -45.55
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": "POSEIDON_ANCIENT_GOLD",
+      "lod": "procedural",
+      "estado": "material",
+      "dependencias": [
+        "wall"
+      ],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": ""
+    },
+    {
+      "id": "pedestals",
+      "nome": "Pedestals",
+      "categoria": "monuments",
+      "referencia": null,
+      "dimensoes": [
+        2.2,
+        2.4,
+        2.2
+      ],
+      "posicao": [
+        0,
+        0,
+        -18.3
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": "POSEIDON_LIMESTONE",
+      "lod": "procedural",
+      "estado": "model",
+      "dependencias": [
+        "staircase"
+      ],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": ""
+    },
+    {
+      "id": "rocks",
+      "nome": "Rocks",
+      "categoria": "terrain",
+      "referencia": null,
+      "dimensoes": [
+        60,
+        4,
+        30
+      ],
+      "posicao": [
+        0,
+        0,
+        -16
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": "POSEIDON_SEABED_ROCK",
+      "lod": "procedural",
+      "estado": "model",
+      "dependencias": [],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": "Primitivas suavizadas; candidatas a GLB."
+    },
+    {
+      "id": "cliffs",
+      "nome": "Cliffs",
+      "categoria": "terrain",
+      "referencia": null,
+      "dimensoes": [
+        300,
+        60,
+        40
+      ],
+      "posicao": [
+        0,
+        0,
+        -120
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": "POSEIDON_SEABED_ROCK",
+      "lod": "procedural",
+      "estado": "reference",
+      "dependencias": [],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": "Ainda não existe na cena."
+    },
+    {
+      "id": "stone-paths",
+      "nome": "Stone Paths",
+      "categoria": "terrain",
+      "referencia": null,
+      "dimensoes": [
+        34,
+        0.26,
+        14
+      ],
+      "posicao": [
+        0,
+        0,
+        -26.6
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": "POSEIDON_BLUE_MARBLE",
+      "lod": "procedural",
+      "estado": "model",
+      "dependencias": [
+        "staircase"
+      ],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": ""
+    },
+    {
+      "id": "ground",
+      "nome": "Ground",
+      "categoria": "terrain",
+      "referencia": null,
+      "dimensoes": [
+        200,
+        0,
+        200
+      ],
+      "posicao": [
+        0,
+        0,
+        0
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": "POSEIDON_CEREMONIAL_FLOOR",
+      "lod": "procedural",
+      "estado": "concept",
+      "dependencias": [],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": ""
+    },
+    {
+      "id": "circular-platform",
+      "nome": "Circular Platform",
+      "categoria": "battlefield",
+      "referencia": null,
+      "dimensoes": [
+        32,
+        0,
+        32
+      ],
+      "posicao": [
+        0,
+        0,
+        0
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": "POSEIDON_CEREMONIAL_FLOOR",
+      "lod": "protegido",
+      "estado": "material",
+      "dependencias": [],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": "Zona competitiva: geometria protegida (scene.js)."
+    },
+    {
+      "id": "marble-tiles",
+      "nome": "Marble Tiles",
+      "categoria": "battlefield",
+      "referencia": null,
+      "dimensoes": [
+        32,
+        0,
+        32
+      ],
+      "posicao": [
+        0,
+        0,
+        0
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": "POSEIDON_CEREMONIAL_FLOOR",
+      "lod": "protegido",
+      "estado": "texture",
+      "dependencias": [
+        "circular-platform"
+      ],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": ""
+    },
+    {
+      "id": "decorative-rings",
+      "nome": "Decorative Rings",
+      "categoria": "battlefield",
+      "referencia": null,
+      "dimensoes": [
+        29.8,
+        0,
+        29.8
+      ],
+      "posicao": [
+        0,
+        0,
+        0
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": "POSEIDON_ANCIENT_GOLD",
+      "lod": "protegido",
+      "estado": "material",
+      "dependencias": [
+        "circular-platform"
+      ],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": ""
+    },
+    {
+      "id": "gold-inlays",
+      "nome": "Gold Inlays",
+      "categoria": "battlefield",
+      "referencia": null,
+      "dimensoes": [
+        32,
+        0,
+        32
+      ],
+      "posicao": [
+        0,
+        0,
+        0
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": "POSEIDON_ANCIENT_GOLD",
+      "lod": "protegido",
+      "estado": "reference",
+      "dependencias": [
+        "circular-platform"
+      ],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": ""
+    },
+    {
+      "id": "ocean-ceiling",
+      "nome": "Ocean Ceiling",
+      "categoria": "atmosphere",
+      "referencia": null,
+      "dimensoes": [
+        280,
+        0,
+        280
+      ],
+      "posicao": [
+        0,
+        37,
+        -55
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": "POSEIDON_OCEAN_CEILING",
+      "lod": "procedural",
+      "estado": "material",
+      "dependencias": [],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": ""
+    },
+    {
+      "id": "fog",
+      "nome": "Fog",
+      "categoria": "atmosphere",
+      "referencia": null,
+      "dimensoes": [
+        0,
+        0,
+        0
+      ],
+      "posicao": [
+        0,
+        0,
+        0
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": null,
+      "lod": "procedural",
+      "estado": "material",
+      "dependencias": [],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": "Névoa perto (abertura) e longe (fundo)."
+    },
+    {
+      "id": "light-shafts",
+      "nome": "Light Shafts",
+      "categoria": "atmosphere",
+      "referencia": null,
+      "dimensoes": [
+        8,
+        36,
+        8
+      ],
+      "posicao": [
+        0,
+        18,
+        -60
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": null,
+      "lod": "procedural",
+      "estado": "material",
+      "dependencias": [],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": "0/3/5/6 feixes por perfil."
+    },
+    {
+      "id": "caustics",
+      "nome": "Caustics",
+      "categoria": "atmosphere",
+      "referencia": null,
+      "dimensoes": [
+        0,
+        0,
+        0
+      ],
+      "posicao": [
+        0,
+        0,
+        0
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": null,
+      "lod": "procedural",
+      "estado": "material",
+      "dependencias": [],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": "No shader do mármore."
+    },
+    {
+      "id": "particles",
+      "nome": "Particles",
+      "categoria": "atmosphere",
+      "referencia": null,
+      "dimensoes": [
+        0,
+        0,
+        0
+      ],
+      "posicao": [
+        0,
+        0,
+        0
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": null,
+      "lod": "procedural",
+      "estado": "material",
+      "dependencias": [],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": "Poeira da cena da partida."
+    },
+    {
+      "id": "light-key",
+      "nome": "Key",
+      "categoria": "lighting",
+      "referencia": null,
+      "dimensoes": [
+        0,
+        0,
+        0
+      ],
+      "posicao": [
+        -14,
+        60,
+        -8
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": null,
+      "lod": "procedural",
+      "estado": "approval",
+      "dependencias": [],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": ""
+    },
+    {
+      "id": "light-fill",
+      "nome": "Fill",
+      "categoria": "lighting",
+      "referencia": null,
+      "dimensoes": [
+        0,
+        0,
+        0
+      ],
+      "posicao": [
+        -10,
+        22,
+        70
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": null,
+      "lod": "procedural",
+      "estado": "approval",
+      "dependencias": [],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": ""
+    },
+    {
+      "id": "light-rim",
+      "nome": "Rim",
+      "categoria": "lighting",
+      "referencia": null,
+      "dimensoes": [
+        0,
+        0,
+        0
+      ],
+      "posicao": [
+        10,
+        26,
+        -120
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": null,
+      "lod": "procedural",
+      "estado": "approval",
+      "dependencias": [],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": ""
+    },
+    {
+      "id": "light-ambient",
+      "nome": "Ambient",
+      "categoria": "lighting",
+      "referencia": null,
+      "dimensoes": [
+        0,
+        0,
+        0
+      ],
+      "posicao": [
+        0,
+        0,
+        0
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": null,
+      "lod": "procedural",
+      "estado": "approval",
+      "dependencias": [],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": "Hemisfério turquesa/abissal."
+    },
+    {
+      "id": "light-accent",
+      "nome": "Accent",
+      "categoria": "lighting",
+      "referencia": null,
+      "dimensoes": [
+        0,
+        0,
+        0
+      ],
+      "posicao": [
+        0,
+        8,
+        30
+      ],
+      "escala": [
+        1,
+        1,
+        1
+      ],
+      "material": null,
+      "lod": "procedural",
+      "estado": "approval",
+      "dependencias": [],
+      "glb": null,
+      "thumb": null,
+      "versao": 1,
+      "nota": "Calor discreto no ouro."
+    }
+  ],
+  "materiais": [
+    {
+      "id": "POSEIDON_WHITE_MARBLE",
+      "nome": "Mármore branco",
+      "baseColor": "#e3eaee",
+      "roughness": 0.55,
+      "metalness": 0.02,
+      "normal": 1,
+      "brushTexture": "shared/painterly.js#brushCanvas",
+      "pigment": 0.45,
+      "edge": 0.45,
+      "painterly": 1,
+      "lightResponse": 1,
+      "caustic": 1,
+      "pbr": "polyhaven-marble_01-2k"
+    },
+    {
+      "id": "POSEIDON_BLUE_MARBLE",
+      "nome": "Mármore azulado",
+      "baseColor": "#c7d8e2",
+      "roughness": 0.4,
+      "metalness": 0.02,
+      "normal": 1,
+      "brushTexture": "shared/painterly.js#brushCanvas",
+      "pigment": 0.45,
+      "edge": 0.45,
+      "painterly": 1,
+      "lightResponse": 1,
+      "caustic": 1,
+      "pbr": "ambientcg-marble021-2k"
+    },
+    {
+      "id": "POSEIDON_ANCIENT_GOLD",
+      "nome": "Ouro antigo",
+      "baseColor": "#d8b465",
+      "roughness": 0.32,
+      "metalness": 0.62,
+      "normal": 1,
+      "brushTexture": "shared/painterly.js#brushCanvas",
+      "pigment": 0.25,
+      "edge": 0.45,
+      "painterly": 1,
+      "lightResponse": 1,
+      "caustic": 0.35,
+      "pbr": "ambientcg-metal048a-2k"
+    },
+    {
+      "id": "POSEIDON_LIMESTONE",
+      "nome": "Calcário claro",
+      "baseColor": "#f5f4ef",
+      "roughness": 0.42,
+      "metalness": 0.02,
+      "normal": 1,
+      "brushTexture": "shared/painterly.js#brushCanvas",
+      "pigment": 0.45,
+      "edge": 0.45,
+      "painterly": 1,
+      "lightResponse": 1,
+      "caustic": 1,
+      "pbr": "ambientcg-travertine009-2k"
+    },
+    {
+      "id": "POSEIDON_SEABED_ROCK",
+      "nome": "Rocha do leito marinho",
+      "baseColor": "#3d6272",
+      "roughness": 0.95,
+      "metalness": 0.02,
+      "normal": 1,
+      "brushTexture": "shared/painterly.js#brushCanvas",
+      "pigment": 0.45,
+      "edge": 0.45,
+      "painterly": 1,
+      "lightResponse": 1,
+      "caustic": 0.8,
+      "pbr": "polyhaven-rock_face_03-2k"
+    },
+    {
+      "id": "POSEIDON_OCEAN_CEILING",
+      "nome": "Oceano suspenso",
+      "baseColor": "#0f6f8f",
+      "roughness": 1,
+      "metalness": 0.02,
+      "normal": 1,
+      "brushTexture": "shared/painterly.js#brushCanvas",
+      "pigment": 0.45,
+      "edge": 0.45,
+      "painterly": 1,
+      "lightResponse": 1,
+      "caustic": 1,
+      "pbr": null
+    },
+    {
+      "id": "POSEIDON_CEREMONIAL_FLOOR",
+      "nome": "Piso cerimonial",
+      "baseColor": "#3d8fa6",
+      "roughness": 0.6,
+      "metalness": 0.02,
+      "normal": 1,
+      "brushTexture": "shared/painterly.js#brushCanvas",
+      "pigment": 0.45,
+      "edge": 0.45,
+      "painterly": 1,
+      "lightResponse": 1,
+      "caustic": 0.6,
+      "pbr": null
+    }
+  ],
+  "cena": {
+    "modulo": "arena-forge/poseidon-palace.js",
+    "estilo": "painterly",
+    "painterly": {
+      "preset": "poseidon",
+      "params": null
+    }
+  },
+  "template": {
+    "schema": 1,
+    "medido_em": "2026-11-07T13:43:25.693Z",
+    "resolucao": [
+      3840,
+      2160
+    ],
+    "aspecto": "16:9",
+    "janela": [
+      1600,
+      900
+    ],
+    "camera": {
+      "fov": 42,
+      "position": [
+        0,
+        13.5,
+        13
+      ],
+      "lookAt": [
+        0,
+        0,
+        -0.6
+      ],
+      "aspect": 1.7778,
+      "somenteLeitura": true
+    },
+    "horizonte": -0.786,
+    "arquitetura": {
+      "topo": -0.01,
+      "base": 0.269,
+      "pontos": {
+        "apice": [
+          0.5,
+          -0.017
+        ],
+        "podio": [
+          0.5,
+          0.276
+        ],
+        "alaEsq": [
+          0.29,
+          0.114
+        ],
+        "alaDir": [
+          0.71,
+          0.114
+        ],
+        "pilar": [
+          0.5,
+          -0.36
+        ]
+      }
+    },
+    "silhuetas": [
+      {
+        "id": "campo-16m",
+        "pontos": [
+          [
+            1.1257,
+            0.5294
+          ],
+          [
+            1.1501,
+            0.584
+          ],
+          [
+            1.1736,
+            0.643
+          ],
+          [
+            1.1959,
+            0.7067
+          ],
+          [
+            1.2168,
+            0.7754
+          ],
+          [
+            1.2358,
+            0.8493
+          ],
+          [
+            1.2526,
+            0.9287
+          ],
+          [
+            1.2666,
+            1.0136
+          ],
+          [
+            1.2774,
+            1.1043
+          ],
+          [
+            1.2843,
+            1.2006
+          ],
+          [
+            1.2866,
+            1.3025
+          ],
+          [
+            1.2835,
+            1.4095
+          ],
+          [
+            1.2742,
+            1.521
+          ],
+          [
+            1.2578,
+            1.6363
+          ],
+          [
+            1.2336,
+            1.754
+          ],
+          [
+            1.2007,
+            1.8726
+          ],
+          [
+            1.1584,
+            1.99
+          ],
+          [
+            1.1062,
+            2.104
+          ],
+          [
+            1.044,
+            2.2118
+          ],
+          [
+            0.972,
+            2.3103
+          ],
+          [
+            0.8906,
+            2.3964
+          ],
+          [
+            0.8009,
+            2.4673
+          ],
+          [
+            0.7046,
+            2.52
+          ],
+          [
+            0.6035,
+            2.5526
+          ],
+          [
+            0.5,
+            2.5636
+          ],
+          [
+            0.3965,
+            2.5526
+          ],
+          [
+            0.2954,
+            2.52
+          ],
+          [
+            0.1991,
+            2.4673
+          ],
+          [
+            0.1094,
+            2.3964
+          ],
+          [
+            0.028,
+            2.3103
+          ],
+          [
+            -0.044,
+            2.2118
+          ],
+          [
+            -0.1062,
+            2.104
+          ],
+          [
+            -0.1584,
+            1.99
+          ],
+          [
+            -0.2007,
+            1.8726
+          ],
+          [
+            -0.2336,
+            1.754
+          ],
+          [
+            -0.2578,
+            1.6363
+          ],
+          [
+            -0.2742,
+            1.521
+          ],
+          [
+            -0.2835,
+            1.4095
+          ],
+          [
+            -0.2866,
+            1.3025
+          ],
+          [
+            -0.2843,
+            1.2006
+          ],
+          [
+            -0.2774,
+            1.1043
+          ],
+          [
+            -0.2666,
+            1.0136
+          ],
+          [
+            -0.2526,
+            0.9287
+          ],
+          [
+            -0.2358,
+            0.8493
+          ],
+          [
+            -0.2168,
+            0.7754
+          ],
+          [
+            -0.1959,
+            0.7067
+          ],
+          [
+            -0.1736,
+            0.643
+          ],
+          [
+            -0.1501,
+            0.584
+          ],
+          [
+            -0.1257,
+            0.5294
+          ],
+          [
+            -0.1005,
+            0.479
+          ],
+          [
+            -0.0748,
+            0.4324
+          ],
+          [
+            -0.0488,
+            0.3896
+          ],
+          [
+            -0.0224,
+            0.3501
+          ],
+          [
+            0.0041,
+            0.3138
+          ],
+          [
+            0.0308,
+            0.2804
+          ],
+          [
+            0.0575,
+            0.2499
+          ],
+          [
+            0.0842,
+            0.2219
+          ],
+          [
+            0.1108,
+            0.1963
+          ],
+          [
+            0.1374,
+            0.173
+          ],
+          [
+            0.1639,
+            0.1518
+          ],
+          [
+            0.1903,
+            0.1327
+          ],
+          [
+            0.2166,
+            0.1155
+          ],
+          [
+            0.2428,
+            0.1
+          ],
+          [
+            0.2689,
+            0.0863
+          ],
+          [
+            0.2948,
+            0.0742
+          ],
+          [
+            0.3207,
+            0.0637
+          ],
+          [
+            0.3465,
+            0.0547
+          ],
+          [
+            0.3722,
+            0.0472
+          ],
+          [
+            0.3979,
+            0.0411
+          ],
+          [
+            0.4234,
+            0.0364
+          ],
+          [
+            0.449,
+            0.0331
+          ],
+          [
+            0.4745,
+            0.0311
+          ],
+          [
+            0.5,
+            0.0304
+          ],
+          [
+            0.5255,
+            0.0311
+          ],
+          [
+            0.551,
+            0.0331
+          ],
+          [
+            0.5766,
+            0.0364
+          ],
+          [
+            0.6021,
+            0.0411
+          ],
+          [
+            0.6278,
+            0.0472
+          ],
+          [
+            0.6535,
+            0.0547
+          ],
+          [
+            0.6793,
+            0.0637
+          ],
+          [
+            0.7052,
+            0.0742
+          ],
+          [
+            0.7311,
+            0.0863
+          ],
+          [
+            0.7572,
+            0.1
+          ],
+          [
+            0.7834,
+            0.1155
+          ],
+          [
+            0.8097,
+            0.1327
+          ],
+          [
+            0.8361,
+            0.1518
+          ],
+          [
+            0.8626,
+            0.173
+          ],
+          [
+            0.8892,
+            0.1963
+          ],
+          [
+            0.9158,
+            0.2219
+          ],
+          [
+            0.9425,
+            0.2499
+          ],
+          [
+            0.9692,
+            0.2804
+          ],
+          [
+            0.9959,
+            0.3138
+          ],
+          [
+            1.0224,
+            0.3501
+          ],
+          [
+            1.0488,
+            0.3896
+          ],
+          [
+            1.0748,
+            0.4324
+          ],
+          [
+            1.1005,
+            0.479
+          ]
+        ]
+      },
+      {
+        "id": "piso-opaco",
+        "pontos": [
+          [
+            0.9098,
+            0.5294
+          ],
+          [
+            0.9198,
+            0.5646
+          ],
+          [
+            0.9285,
+            0.6016
+          ],
+          [
+            0.9357,
+            0.6404
+          ],
+          [
+            0.9412,
+            0.6808
+          ],
+          [
+            0.9448,
+            0.7228
+          ],
+          [
+            0.9464,
+            0.7662
+          ],
+          [
+            0.9458,
+            0.811
+          ],
+          [
+            0.9428,
+            0.8568
+          ],
+          [
+            0.9371,
+            0.9035
+          ],
+          [
+            0.9287,
+            0.9508
+          ],
+          [
+            0.9173,
+            0.9982
+          ],
+          [
+            0.9029,
+            1.0454
+          ],
+          [
+            0.8852,
+            1.0919
+          ],
+          [
+            0.8642,
+            1.1373
+          ],
+          [
+            0.8398,
+            1.1809
+          ],
+          [
+            0.8122,
+            1.2221
+          ],
+          [
+            0.7815,
+            1.2604
+          ],
+          [
+            0.7476,
+            1.2952
+          ],
+          [
+            0.7111,
+            1.3258
+          ],
+          [
+            0.672,
+            1.3517
+          ],
+          [
+            0.6309,
+            1.3724
+          ],
+          [
+            0.5882,
+            1.3876
+          ],
+          [
+            0.5444,
+            1.3968
+          ],
+          [
+            0.5,
+            1.3998
+          ],
+          [
+            0.4556,
+            1.3968
+          ],
+          [
+            0.4118,
+            1.3876
+          ],
+          [
+            0.3691,
+            1.3724
+          ],
+          [
+            0.328,
+            1.3517
+          ],
+          [
+            0.2889,
+            1.3258
+          ],
+          [
+            0.2524,
+            1.2952
+          ],
+          [
+            0.2185,
+            1.2604
+          ],
+          [
+            0.1878,
+            1.2221
+          ],
+          [
+            0.1602,
+            1.1809
+          ],
+          [
+            0.1358,
+            1.1373
+          ],
+          [
+            0.1148,
+            1.0919
+          ],
+          [
+            0.0971,
+            1.0454
+          ],
+          [
+            0.0827,
+            0.9982
+          ],
+          [
+            0.0713,
+            0.9508
+          ],
+          [
+            0.0629,
+            0.9035
+          ],
+          [
+            0.0572,
+            0.8568
+          ],
+          [
+            0.0542,
+            0.811
+          ],
+          [
+            0.0536,
+            0.7662
+          ],
+          [
+            0.0552,
+            0.7228
+          ],
+          [
+            0.0588,
+            0.6808
+          ],
+          [
+            0.0643,
+            0.6404
+          ],
+          [
+            0.0715,
+            0.6016
+          ],
+          [
+            0.0802,
+            0.5646
+          ],
+          [
+            0.0902,
+            0.5294
+          ],
+          [
+            0.1014,
+            0.4959
+          ],
+          [
+            0.1137,
+            0.4642
+          ],
+          [
+            0.127,
+            0.4343
+          ],
+          [
+            0.141,
+            0.4062
+          ],
+          [
+            0.1559,
+            0.3797
+          ],
+          [
+            0.1713,
+            0.355
+          ],
+          [
+            0.1873,
+            0.3319
+          ],
+          [
+            0.2039,
+            0.3104
+          ],
+          [
+            0.2208,
+            0.2904
+          ],
+          [
+            0.2382,
+            0.272
+          ],
+          [
+            0.2558,
+            0.2551
+          ],
+          [
+            0.2737,
+            0.2396
+          ],
+          [
+            0.2919,
+            0.2254
+          ],
+          [
+            0.3103,
+            0.2127
+          ],
+          [
+            0.3288,
+            0.2012
+          ],
+          [
+            0.3475,
+            0.1911
+          ],
+          [
+            0.3663,
+            0.1822
+          ],
+          [
+            0.3853,
+            0.1746
+          ],
+          [
+            0.4043,
+            0.1681
+          ],
+          [
+            0.4233,
+            0.1629
+          ],
+          [
+            0.4425,
+            0.1588
+          ],
+          [
+            0.4616,
+            0.1559
+          ],
+          [
+            0.4808,
+            0.1542
+          ],
+          [
+            0.5,
+            0.1536
+          ],
+          [
+            0.5192,
+            0.1542
+          ],
+          [
+            0.5384,
+            0.1559
+          ],
+          [
+            0.5575,
+            0.1588
+          ],
+          [
+            0.5767,
+            0.1629
+          ],
+          [
+            0.5957,
+            0.1681
+          ],
+          [
+            0.6147,
+            0.1746
+          ],
+          [
+            0.6337,
+            0.1822
+          ],
+          [
+            0.6525,
+            0.1911
+          ],
+          [
+            0.6712,
+            0.2012
+          ],
+          [
+            0.6897,
+            0.2127
+          ],
+          [
+            0.7081,
+            0.2254
+          ],
+          [
+            0.7263,
+            0.2396
+          ],
+          [
+            0.7442,
+            0.2551
+          ],
+          [
+            0.7618,
+            0.272
+          ],
+          [
+            0.7792,
+            0.2904
+          ],
+          [
+            0.7961,
+            0.3104
+          ],
+          [
+            0.8127,
+            0.3319
+          ],
+          [
+            0.8287,
+            0.355
+          ],
+          [
+            0.8441,
+            0.3797
+          ],
+          [
+            0.859,
+            0.4062
+          ],
+          [
+            0.873,
+            0.4343
+          ],
+          [
+            0.8863,
+            0.4642
+          ],
+          [
+            0.8986,
+            0.4959
+          ]
+        ]
+      }
+    ],
+    "zonas": [
+      {
+        "id": "field-1",
+        "seletor": ".field",
+        "tipo": "protegida",
+        "x": 0.1351,
+        "y": 0.165,
+        "w": 0.7299,
+        "h": 0.2449
+      },
+      {
+        "id": "field-2",
+        "seletor": ".field",
+        "tipo": "protegida",
+        "x": 0.1351,
+        "y": 0.4451,
+        "w": 0.7299,
+        "h": 0.2449
+      },
+      {
+        "id": "field-3",
+        "seletor": ".field",
+        "tipo": "protegida",
+        "x": 0.5524,
+        "y": 0.008,
+        "w": 0.3125,
+        "h": 0.1543
+      },
+      {
+        "id": "field-4",
+        "seletor": ".field",
+        "tipo": "protegida",
+        "x": 0.5679,
+        "y": 0.7064,
+        "w": 0.297,
+        "h": 0.1969
+      },
+      {
+        "id": "god-opp",
+        "seletor": ".godhud--opp",
+        "tipo": "protegida",
+        "x": 0.4465,
+        "y": 0.008,
+        "w": 0.1071,
+        "h": 0.1522
+      },
+      {
+        "id": "god-me",
+        "seletor": ".godhud--me",
+        "tipo": "protegida",
+        "x": 0.4283,
+        "y": 0.6901,
+        "w": 0.1434,
+        "h": 0.2038
+      },
+      {
+        "id": "hand-me",
+        "seletor": ".hand--me",
+        "tipo": "protegida",
+        "x": 0.2795,
+        "y": 0.9059,
+        "w": 0.4411,
+        "h": 0.0941
+      },
+      {
+        "id": "hand-opp",
+        "seletor": ".hand--opp",
+        "tipo": "protegida",
+        "x": 0.311,
+        "y": 0,
+        "w": 0.378,
+        "h": 0.0745
+      },
+      {
+        "id": "rail",
+        "seletor": ".rail",
+        "tipo": "hud",
+        "x": 0.0075,
+        "y": 0.0111,
+        "w": 0.1176,
+        "h": 0.9778
+      },
+      {
+        "id": "clock",
+        "seletor": ".zclock",
+        "tipo": "hud",
+        "x": 0.8749,
+        "y": 0.2963,
+        "w": 0.1176,
+        "h": 0.209
+      },
+      {
+        "id": "turn",
+        "seletor": ".phasebar__turn",
+        "tipo": "hud",
+        "x": 0.8793,
+        "y": 0.5231,
+        "w": 0.1088,
+        "h": 0.0573
+      },
+      {
+        "id": "action",
+        "seletor": ".action-btn",
+        "tipo": "hud",
+        "x": 0.8749,
+        "y": 0.9356,
+        "w": 0.1176,
+        "h": 0.0511
+      }
+    ],
+    "arquivo": "/playtest/assets/arena-production/poseidon-palace/artboards/camera-composition-template-9f34074cea.png"
+  }
+}

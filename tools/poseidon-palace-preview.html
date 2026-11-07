@@ -1,0 +1,33 @@
+<!doctype html>
+<!-- Prévia fixa do Palácio de Poseidon para comparar antes/depois (beauty pass, 07/11/2026). Ferramenta local de desenvolvimento.
+     ?luz=jogo   reproduz a luz da partida (tema poseidon: hemisfério + sol, sem tone mapping, névoa 26–180)
+     ?luz=estudio luz do Material Studio (ACES)
+     ?cam=heroi  enquadramento do estúdio (fachada inteira) · ?cam=frontao close no frontão · ?cam=partida câmera competitiva
+     ?q=phone|low|medium|high|ultra   ?src=orig  usa a cópia original salva em ?orig=<url> -->
+<html><head><meta charset="utf-8"><style>html,body{margin:0;background:#000}canvas{display:block}</style></head>
+<body><script type="module">
+import * as THREE from '../star-hill/vendor/three-0.160.0.module.min.js';
+const qs = new URLSearchParams(location.search), luz = qs.get('luz') || 'jogo', camName = qs.get('cam') || 'heroi', q = qs.get('q') || 'high';
+const W = +(qs.get('w') || 1280), H = +(qs.get('h') || 720);
+const {createPoseidonPalace} = await import(qs.get('orig') || '../arena-forge/poseidon-palace.js');
+const renderer = new THREE.WebGLRenderer({antialias: true, preserveDrawingBuffer: true});
+renderer.setSize(W, H); renderer.setPixelRatio(1); document.body.append(renderer.domElement);
+const scene = new THREE.Scene();
+if (luz === 'estudio') {
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  scene.add(new THREE.HemisphereLight(0xaaccff, 0x273045, 1.2)); const sun = new THREE.DirectionalLight(0xffffff, 2.3); sun.position.set(-8, 20, 10); scene.add(sun);
+  scene.background = new THREE.Color(0x07172c); scene.fog = new THREE.Fog(0x07172c, 60, 160);
+} else { // mesma luz e névoa da cena da partida (playtest/divine/scene.js, tema poseidon)
+  scene.add(new THREE.HemisphereLight('#ffffff', '#202030', .55)); const sun = new THREE.DirectionalLight('#bff4ff', 1.6); sun.position.set(-6, 14, 8); scene.add(sun);
+  scene.background = new THREE.Color('#02101f'); scene.fog = new THREE.Fog('#0a3550', 26, 180);
+}
+const field = new THREE.Mesh(new THREE.CircleGeometry(16, 96), new THREE.MeshBasicMaterial({color: 0x123a52})); field.rotation.x = -Math.PI / 2; scene.add(field);
+const palace = createPoseidonPalace(THREE, {quality: q}); scene.add(palace.group); palace.update(12);
+const cam = new THREE.PerspectiveCamera(42, W / H, .1, 400);
+const CAMS = {heroi: [[0, 13.5, 13], [0, 4, -30]], frontao: [[0, 20, -18], [0, 18, -40]], partida: [[0, 13.5, 13], [0, 0, -.6]], lado: [[-26, 14, -12], [0, 8, -40]]};
+const [p, t] = CAMS[camName]; cam.position.set(...p); cam.lookAt(...t);
+renderer.render(scene, cam);
+const t0 = performance.now(); for (let i = 0; i < 10; i++) renderer.render(scene, cam); renderer.getContext().finish();
+window.result = {calls: renderer.info.render.calls, ms: +((performance.now() - t0) / 10).toFixed(2), programs: renderer.info.programs.length, geometries: renderer.info.memory.geometries};
+window.done = true;
+</script></body></html>

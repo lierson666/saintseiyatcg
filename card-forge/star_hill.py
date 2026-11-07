@@ -35,6 +35,12 @@ _vfx_pub_spec.loader.exec_module(vfx_publish)
 _arena_spec = importlib.util.spec_from_file_location('star_hill_arena_forge', Path(__file__).with_name('arena_forge.py'))
 arena_forge = importlib.util.module_from_spec(_arena_spec)
 _arena_spec.loader.exec_module(arena_forge)
+_material_spec = importlib.util.spec_from_file_location('star_hill_material_studio', Path(__file__).with_name('material_studio.py'))
+material_studio = importlib.util.module_from_spec(_material_spec)
+_material_spec.loader.exec_module(material_studio)
+_production_spec = importlib.util.spec_from_file_location('star_hill_arena_production', Path(__file__).with_name('arena_production.py'))
+arena_production = importlib.util.module_from_spec(_production_spec)
+_production_spec.loader.exec_module(arena_production)
 _vfx_gen_spec = importlib.util.spec_from_file_location('star_hill_vfx_generate', Path(__file__).with_name('vfx_generate.py'))
 vfx_generate = importlib.util.module_from_spec(_vfx_gen_spec)
 _vfx_gen_spec.loader.exec_module(vfx_generate)
@@ -824,6 +830,10 @@ def get(handler, path):
         handler.reply(200, {'arquivo': TELAS, 'revisao': revision(text), 'conteudo': json.loads(text)})
     elif path == '/api/star-hill/arenas':
         handler.reply(200, arena_forge.read(ROOT))
+    elif path.startswith('/api/star-hill/materiais'):
+        material_studio.get(handler, path, ROOT)
+    elif path.startswith('/api/star-hill/producao'):
+        arena_production.get(handler, path, ROOT)
     elif path == '/api/star-hill/jogo':
         handler.reply(200, game_status())
     elif path == '/api/star-hill/assets':
@@ -884,6 +894,10 @@ def post(handler, path, raw, atomic_write):
             result = save_telas(body, atomic_write)
         elif path == '/api/star-hill/arenas':
             result = arena_forge.save(ROOT, body, atomic_write)
+        elif path.startswith('/api/star-hill/materiais'):
+            result = material_studio.post(path, body, ROOT, atomic_write)
+        elif path.startswith('/api/star-hill/producao'):
+            result = arena_production.post(path, body, ROOT, atomic_write)
         elif path == '/api/star-hill/arenas/miniatura':
             result = arena_forge.thumb(ROOT, body, atomic_write)
         elif path == '/api/star-hill/preview':

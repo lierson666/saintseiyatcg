@@ -1021,6 +1021,8 @@ const COIN_TOLD = 1800;
 const coinRoot = Object.assign(document.createElement('div'), {className: 'overlay coin', hidden: true});
 overlayRoot.after(coinRoot);
 let coinStage = null, coinTimer = null, coin3d = null, coinRun = 0;
+// Abertura da arena (autor, 07/11/2026): cinemática → tela escurece → cara ou coroa. A moeda espera esta promessa.
+let introDone = () => {}, introGate = Promise.resolve();
 coinRoot.addEventListener('click', e => {
   const go = e.target.closest('[data-coin]')?.dataset.coin, c = S().coin;
   if (go && coinStage === 'landed' && !c.first) act({type: 'chooseFirst', key: c.winner, choice: {goFirst: go === 'first'}});
@@ -1030,9 +1032,12 @@ async function startCoin() {
   clearTimeout(coinTimer); coinTimer = null;
   coin3d?.dispose(); coin3d = null;
   coinRoot.textContent = '';
-  coinStage = c ? 'flip' : null;
+  coinStage = c ? 'wait' : null; // 'wait': a abertura da arena ainda passa; a moeda fica guardada
   if (!c) return;
+  await introGate;
+  if (run !== coinRun) return;
   coinRoot.innerHTML = '<div class="coin__air" aria-hidden="true"></div><div class="coin__text" role="status"></div>';
+  coinStage = 'flip'; render();
   const air = coinRoot.firstChild, wait = ms => new Promise(done => setTimeout(done, ms));
   const made = await createCoin3D(air, {winner: c.winner, faces: {A: coinArt('A'), B: coinArt('B')}, still, tune: coinTune});
   if (run !== coinRun) return made?.dispose();
@@ -1058,7 +1063,7 @@ function coinText(c) {
 }
 function paintCoin() {
   const c = S().coin;
-  coinRoot.hidden = !coinStage || !c;
+  coinRoot.hidden = !coinStage || !c || coinStage === 'wait';
   document.body.classList.toggle('is-coin-toss', !coinRoot.hidden);
   if (coinRoot.hidden) { coin3d?.dispose(); coin3d = null; return; }
   if (coinStage === 'landed' && c.first && !coinTimer) {
@@ -2993,6 +2998,7 @@ async function init() {
   if (params.get('timeouts')) settings.timeouts = params.get('timeouts') === '1'; // ?timeouts=1 (QA)
   if (MATCH_ID) connectOnline(); // duelo online: a partida vem do servidor (a primeira visão chama render)
   else {
+    if (params.get('arenaPreview') === 'poseidon-palace' && !params.get('noIntro') && !settings.reduceMotion) introGate = new Promise(done => { introDone = done; });
     newMatch(Number(params.get('seed')) || undefined, params.get('demo') ? 'A' : ['A', 'B'].includes(params.get('first')) ? params.get('first') : undefined, !params.get('demo'));
     applyDemo(params.get('demo'));
     render();
@@ -3009,7 +3015,26 @@ async function init() {
   // Arena da mesa (Arena Forge 5.0): imposta pela partida (?arena=, eventos) > deck > perfil > Cosmo Arena. Só local: não vai ao estado sincronizado.
   const arena = chooseArena({forced: params.get('arena'), deck: params.get('deckA') && decks?.A?.arena, profile: settings.theme}, await loadArenas());
   stage.dataset.theme = themeBase(arena.key);
-  scene = await createScene($('#arena'), {quality: settings.quality, theme: arena.key, reduceFlashes: settings.reduceFlashes, reduceMotion: !!settings.reduceMotion});
+  // Explicit development-only environment preview: local practice match, not online or published.
+  const environmentPreview = !MATCH_ID && params.get('arenaPreview') === 'poseidon-palace' ? 'poseidon-palace' : null;
+  scene = await createScene($('#arena'), {quality: settings.quality, theme: environmentPreview ? 'poseidon' : arena.key, reduceFlashes: settings.reduceFlashes, reduceMotion: !!settings.reduceMotion, environmentPreview});
+  if (environmentPreview) console.info('[Arena Forge] Playing with Poseidon Palace development preview (not published)');
+  // Cinemática de abertura do palácio (autor, 07/11/2026): a mesa aparece quando a câmera chega na posição competitiva. Toque ou tecla pula.
+  if (scene && environmentPreview && !params.get('noIntro') && !settings.reduceMotion) {
+    const skip = () => scene.skipIntro();
+    stage.classList.add('arena-intro', 'arena-intro-fade');
+    addEventListener('pointerdown', skip, {once: true}); addEventListener('keydown', skip, {once: true});
+    scene.intro().then(async () => {
+      removeEventListener('pointerdown', skip); removeEventListener('keydown', skip);
+      stage.classList.add('arena-black'); // a tela escurece
+      await new Promise(done => setTimeout(done, 700));
+      introDone(); // a moeda entra por cima do escuro
+      stage.classList.remove('arena-intro');
+      await new Promise(done => setTimeout(done, S().coin ? 900 : 0));
+      stage.classList.replace('arena-black', 'arena-black-out');
+      setTimeout(() => stage.classList.remove('arena-black-out', 'arena-intro-fade'), 800);
+    });
+  } else introDone();
   stage.classList.toggle('no-webgl', !scene);
   if (scene && !settings.reduceMotion) ui.pixel.preload();
   if (Object.keys(vfxStudio.cartas || {}).length) cardFx = startCardFx({quality: settings.quality, reduced: !!settings.reduceMotion, data: vfxStudio, card: id => FORGE.get(id), context: el => (el.closest('#inspector, .dcard--big, .dcard--lg') ? 'inspecao' : el.closest('.dcard') ? 'idle' : null)});
