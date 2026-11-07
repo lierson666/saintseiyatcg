@@ -450,6 +450,40 @@ export function createPoseidonPalace(THREE, {quality = 'high', reduceMotion = fa
     :Promise.resolve(null);
   root.userData.capitalV8=(style==='painterly'&&tier>=1)?'loading':'disabled';
 
+  // V9 ceremonial portal relief: two mirrored stone plaques in the shrine wall.
+  // Assets belong to the real world and are visible on cinematic approaches,
+  // without moving the competitive camera or entering the battlefield.
+  let portalV9=null,portalInstances=null,portalV9Disposed=false;
+  root.userData.portalV9='disabled';
+  const portalV9Ready=(style==='painterly'&&tier>=1&&typeof document!=='undefined')?
+    loadPoseidonSculptGLB(THREE,{
+      parent:G.landmark,
+      url:new URL('./assets/poseidon-v9/poseidon-portal-relief.glb',import.meta.url).href
+    }).then(asset=>{
+      if(portalV9Disposed){asset?.dispose();return null;}
+      if(!asset)return null;
+      portalV9=asset;
+      const mesh=asset.mesh;mesh.visible=false;
+      const instances=new THREE.InstancedMesh(mesh.geometry,mesh.material,2);
+      const mtx=new THREE.Matrix4();
+      for(let i=0;i<2;i++){
+        const sign=i===0?-1:1;
+        mtx.makeScale(sign*1.48,1.48,1.48);
+        mtx.setPosition(sign*5.22,P+7.1,backZ+1.59);
+        instances.setMatrixAt(i,mtx);
+      }
+      instances.instanceMatrix.needsUpdate=true;
+      instances.name='POS-ARC-V9-001 · Twin marine portal reliefs · 2 instances';
+      G.landmark.add(instances);portalInstances=instances;
+      root.userData.portalV9='ready';
+      return asset;
+    }).catch(err=>{
+      root.userData.portalV9='fallback';
+      console.warn('[POSEIDON V9] relief GLB unavailable; original wall remains',err);
+      return null;
+    }) :Promise.resolve(null);
+  if(style==='painterly'&&tier>=1)root.userData.portalV9='loading';
+
   // Luz do palácio: chave fria filtrada pelo oceano, preenchimento turquesa, contraluz nos contornos, calor discreto no ouro.
   // Ficam no grupo: entram e saem junto com o palácio (só no preview de desenvolvimento).
   const hemi=new THREE.HemisphereLight(0x8fdcff,0x08223a,.55);
@@ -460,11 +494,11 @@ export function createPoseidonPalace(THREE, {quality = 'high', reduceMotion = fa
   G.lighting.add(hemi,key,rim,warm,front);
   const base={hemi:hemi.intensity,key:key.intensity,rim:rim.intensity,warm:warm.intensity,front:front.intensity};
   root.userData={...root.userData,preset:'poseidon-palace-canonical-v1',beauty:'v7-glb-pipeline',source:'Saint Seiya reference study',protectedGameplay:false,quality,detailObjects:detailV4.count,sculptureObjects:sculptureV6.count};
-  return {group:root,paint,glbV7Ready,capV8Ready,
+  return {group:root,paint,glbV7Ready,capV8Ready,portalV9Ready,
     groups:G,
     // Transição de luz da cinemática: multiplica a iluminação do mundo (1 = luz da partida).
     setLight(k){ hemi.intensity=base.hemi*k; key.intensity=base.key*k; rim.intensity=base.rim*k; warm.intensity=base.warm*k; front.intensity=base.front*k; },
     update(t){ if(reduceMotion) return; shared.uTime.value=t; beams.forEach((b,i)=>{b.rotation.z=b.userData.tilt+Math.sin(t*.07+i*1.7)*.012;});
       flames.forEach((f,i)=>{const k=1+Math.sin(t*5+i*2.1)*.08+Math.sin(t*11.3+i)*.04;f.scale.set(1,k,1);}); },
-    dispose(){ capV8Disposed=true;if(capInstances)G.landmark.remove(capInstances);capV8?.dispose();v7Disposed=true;glbV7?.dispose();paintedMaps?.dispose();battlePainting?.dispose();root.traverse(n=>{ if(n.isMesh && n.geometry!==unitBox) n.geometry.dispose(); }); new Set(owned).forEach(o=>o.dispose()); root.material.dispose(); }};
+    dispose(){ portalV9Disposed=true;if(portalInstances)G.landmark.remove(portalInstances);portalV9?.dispose();capV8Disposed=true;if(capInstances)G.landmark.remove(capInstances);capV8?.dispose();v7Disposed=true;glbV7?.dispose();paintedMaps?.dispose();battlePainting?.dispose();root.traverse(n=>{ if(n.isMesh && n.geometry!==unitBox) n.geometry.dispose(); }); new Set(owned).forEach(o=>o.dispose()); root.material.dispose(); }};
 }

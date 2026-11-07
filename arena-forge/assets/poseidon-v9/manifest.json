@@ -1,0 +1,12 @@
+{
+  "id": "POS-ARC-V9-001",
+  "name": "Poseidon Marine Portal Relief",
+  "status": "dev_preview_not_art_approved",
+  "glb": "poseidon-portal-relief.glb",
+  "texture": "portal-relief-painted.png",
+  "triangles": 399,
+  "vertices": 1197,
+  "sha256": "e00f14b7dfc0dc86c098b77099622fd823b7e558dce1ad9094056a3eb1f8b091",
+  "usage": "mirrored stone plaques on either side of inner shrine portal; cinematic only",
+  "license": "original SSTCG asset"
+}

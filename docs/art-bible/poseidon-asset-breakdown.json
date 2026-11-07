@@ -211,6 +211,21 @@
       "texture": "arena-forge/assets/poseidon-v8/marine-capital-painted.png",
       "manifest": "arena-forge/assets/poseidon-v8/manifest.json",
       "instanceCount": 18
+    },
+    {
+      "id": "POS-ARC-V9-001",
+      "name": "Paired Marine Portal Bas Reliefs",
+      "layer": "architecture",
+      "priority": "P1",
+      "implementation": "original-glb2-painted-embedded-png-instanced",
+      "artDirection": "Ancient marine wall ornaments, trident, nautilus and sea waves; mirrored on sanctuary portal. Stylized study, not final artisan sculpture.",
+      "materialPreset": "painted-marble-and-gold-v9",
+      "productionStatus": "development_not_art_approved",
+      "file": "arena-forge/assets/poseidon-v9/poseidon-portal-relief.glb",
+      "visibilityUsage": "cinematic",
+      "texture": "arena-forge/assets/poseidon-v9/portal-relief-painted.png",
+      "manifest": "arena-forge/assets/poseidon-v9/manifest.json",
+      "instanceCount": 2
     }
   ],
   "rules": {
