@@ -18,7 +18,10 @@ import {atkOf, hpOf, keywordsOf, gearOf, isSaint, isBronze, ABILITIES, modsOf} f
 import {v6Spell, entryOf, V6} from '../engine-v3/v6/hooks.js';
 import {domainEntry, resonanceTag} from '../engine-v3/v6/registry.js';
 import {STEPS, ABILITY_STEPS} from '../choices-v3.js?v=3';
-import {createScene, THEMES, wait} from './scene.js?v=20261107-arenas1';
+import {createScene, THEMES, wait, loadArenas} from './scene.js?v=20261107-af5';
+import {chooseArena} from '../../shared/arena-model.js?v=20261107-af5';
+// Paleta da interface (data-theme em divine.css/olympus.css) segue o tema-base da arena: variantes e cópias herdam.
+const themeBase = key => THEMES[key]?.base || String(key).split('~')[0];
 import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudgment, greatFloodBlock, announceGreatFlood, GREAT_FLOOD_COST,
   greatEclipseBlock, GREAT_ECLIPSE_COST, obliterationBlock, OBLITERATION_COST, bloodlustBlock, BLOODLUST_COST, commandBlock, commandTargets, activateCommand, COMMANDS, moonHarvestBlock, moonAwakeningBlock, MOON_AWAKENING_COST} from '../engine-v3/gods.js';
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout, clockBonus} from '../engine-v3/clock.js';
@@ -1684,7 +1687,7 @@ overlayRoot.addEventListener('change', e => {
   if (key === 'cardText' || key === 'cardSize') window.ssStage?.a11y(); // acessibilidade das cartas (shared/stage-fit.js)
   if (key === 'lang') window.ssI18n?.set(settings.lang); // idioma PT-BR/EN (shared/i18n.js)
   if (key === 'quality') { scene?.setQuality(settings.quality); cardFx?.setQuality(settings.quality); }
-  if (key === 'theme') { scene?.setTheme(settings.theme); stage.dataset.theme = settings.theme; }
+  if (key === 'theme') { scene?.setTheme(settings.theme); stage.dataset.theme = themeBase(settings.theme); }
   if (key === 'reduceFlashes' && scene) scene.reduceFlashes = settings.reduceFlashes;
   if (key === 'reduceMotion' && scene) scene.reduceMotion = settings.reduceMotion;
   if (key === 'godB' || key === 'ai') { settingsOpen = false; return newMatch(); }
@@ -3003,7 +3006,10 @@ async function init() {
   requestAnimationFrame(watchEvents);
   setInterval(tickClock, matchMedia('(pointer: coarse)').matches ? 1000 : 250); // toque: menos despertares; o relógio mostra segundos
   setInterval(aiTick, 700);
-  scene = await createScene($('#arena'), {quality: settings.quality, theme: settings.theme, reduceFlashes: settings.reduceFlashes, reduceMotion: !!settings.reduceMotion});
+  // Arena da mesa (Arena Forge 5.0): imposta pela partida (?arena=, eventos) > deck > perfil > Cosmo Arena. Só local: não vai ao estado sincronizado.
+  const arena = chooseArena({forced: params.get('arena'), profile: settings.theme}, await loadArenas());
+  stage.dataset.theme = themeBase(arena.key);
+  scene = await createScene($('#arena'), {quality: settings.quality, theme: arena.key, reduceFlashes: settings.reduceFlashes, reduceMotion: !!settings.reduceMotion});
   stage.classList.toggle('no-webgl', !scene);
   if (scene && !settings.reduceMotion) ui.pixel.preload();
   if (Object.keys(vfxStudio.cartas || {}).length) cardFx = startCardFx({quality: settings.quality, reduced: !!settings.reduceMotion, data: vfxStudio, card: id => FORGE.get(id), context: el => (el.closest('#inspector, .dcard--big, .dcard--lg') ? 'inspecao' : el.closest('.dcard') ? 'idle' : null)});

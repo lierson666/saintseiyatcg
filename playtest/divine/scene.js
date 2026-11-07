@@ -2,6 +2,7 @@
 // Duas cenas no mesmo renderer: a arena em perspectiva (fundo) e os VFX em espaço de tela (pixels do DOM),
 // para que golpes saiam exatamente das cartas HTML. createScene() devolve null sem WebGL ou sem a CDN.
 // Three.js r160 enxuto, só as classes usadas aqui (auditoria de performance, fase 1). Classe nova: ver tools/three-slim.entry.js.
+import {themesFromManifest} from '../../shared/arena-model.js?v=20261107-af5';
 const THREE_URL = new URL('./vendor/three-0.160.0-slim.js?v=2', import.meta.url).href;
 
 // Perfis de qualidade (PERFORMANCE_BUDGET.md). Partículas = poeira de Cosmo ambiente; vfx = teto do pool de VFX.
@@ -37,14 +38,15 @@ export const THEMES = {
     orb: {color: '#eef4ff', size: 10, x: 15}},
 };
 
-// Ajustes do Arena Forge (STAR HILL): data/arenas.json por cima destes valores. DEFAULT_THEMES guarda o original do código.
+// ARENA FORGE 5.0: arenas publicadas (data/arenas-published.json, fonte única) entram como temas "id" e "id~variante".
+// DEFAULT_THEMES guarda os temas do código: base das arenas e fallback visual quando o manifesto falha ou pede recurso que a cena não tem.
 export const DEFAULT_THEMES = structuredClone(THEMES);
-const ARENAS_URL = new URL('../../data/arenas.json', import.meta.url).href;
-let arenas;
-export function applyArenas(data) {
-  for (const [k, v] of Object.entries(data?.temas || {})) if (THEMES[k]) THEMES[k] = {...structuredClone(DEFAULT_THEMES[k]), ...v};
-}
-export const loadArenas = () => arenas ||= fetch(ARENAS_URL, {cache: 'no-cache'}).then(r => (r.ok ? r.json() : null)).then(applyArenas).catch(() => {});
+const MANIFEST_URL = new URL('../../data/arenas-published.json', import.meta.url).href;
+let manifest;
+export function applyManifest(m) { Object.assign(THEMES, themesFromManifest(m, DEFAULT_THEMES)); return m; }
+export const loadArenas = () => manifest ||= fetch(MANIFEST_URL, {cache: 'no-cache'}).then(r => (r.ok ? r.json() : null)).then(applyManifest).catch(() => null);
+// Área do campo na tela (0..1, y para baixo): nada da arena pode brilhar ou ficar por cima aqui (gate do Arena Forge).
+export const FIELD_ZONE = {x0: .14, x1: .86, y0: .22, y1: .82};
 
 const VERT_PASS = `varying vec2 vUv; varying vec3 vPos; void main(){ vUv = uv; vPos = (modelMatrix * vec4(position,1.)).xyz; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.); }`;
 
@@ -144,6 +146,8 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
   // Tela densa dispensa MSAA: ele suavizava só a borda das colunas, e a 1,75x o serrilhado já não aparece.
   const renderer = new THREE.WebGLRenderer({antialias: q.antialias && (window.devicePixelRatio || 1) < 1.5, alpha: false, powerPreference: q === QUALITY.phone ? 'default' : 'high-performance'});
   renderer.autoClear = false;
+  let shaderErrors = 0;
+  renderer.debug.onShaderError = () => { shaderErrors++; };
   renderer.setPixelRatio(Math.min(q.pixelRatio, window.devicePixelRatio || 1));
   renderer.domElement.className = 'arena-canvas';
   renderer.domElement.setAttribute('aria-hidden', 'true');
@@ -252,7 +256,7 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
 
   function setTheme(name) {
     dirty = true; wake();
-    const t = cur = THEMES[name] || THEMES.athena;
+    const t = cur = THEMES[name] || THEMES.olympus;
     sky.material.uniforms.uTop.value.set(t.skyTop); sky.material.uniforms.uBottom.value.set(t.skyBottom);
     const f = floor.material.uniforms;
     marbleMat.uniforms.uA.value.set(t.floorA); marbleMat.uniforms.uB.value.set(t.floorB); marbleMat.uniforms.uMask.value = t.mask || 0; bakeMarble();
@@ -485,6 +489,29 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
     get fps() { return fps; },
     set reduceFlashes(v) { reduceFlashes = v; },
     set reduceMotion(v) { still = !!v; buildDust(still ? 0 : q.ambient); dirty = true; wake(); },
+    // Gate do Arena Forge: o que fica por cima do campo (astro, topo das colunas) e brilho/variação do fundo sob as cartas.
+    audit(zone = FIELD_ZONE) {
+      renderer.clear(); renderer.render(world, camera);
+      const hits = [], inZone = p => { const v = p.clone().project(camera), x = (v.x + 1) / 2, y = (1 - v.y) / 2; return v.z < 1 && x > zone.x0 && x < zone.x1 && y > zone.y0 && y < zone.y1; };
+      if (orb.visible && inZone(orb.position)) hits.push('astro');
+      const m = new THREE.Matrix4(), p = new THREE.Vector3();
+      for (let i = 0; i < columnMeshes[2]?.count; i++) { columnMeshes[2].getMatrixAt(i, m); p.setFromMatrixPosition(m); if (m.elements[0] && inZone(p)) { hits.push('colunas'); break; } }
+      const gl = renderer.getContext(), W = gl.drawingBufferWidth, H = gl.drawingBufferHeight, px = new Uint8Array(4), L = [];
+      for (let j = 0; j < 8; j++) for (let i = 0; i < 12; i++) {
+        const x = Math.round(W * (zone.x0 + (zone.x1 - zone.x0) * (i + .5) / 12)), y = Math.round(H * (1 - (zone.y0 + (zone.y1 - zone.y0) * (j + .5) / 8)));
+        gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px); L.push((.2126 * px[0] + .7152 * px[1] + .0722 * px[2]) / 255);
+      }
+      const mean = L.reduce((a, b) => a + b, 0) / L.length, sd = Math.sqrt(L.reduce((a, b) => a + (b - mean) ** 2, 0) / L.length);
+      return {zoneHits: hits, luma: +mean.toFixed(3), busy: +sd.toFixed(3), shaderErrors};
+    },
+    frames: () => renderer.info.render.frame,
+    // Miniatura da arena (Arena Forge): desenha e copia no mesmo quadro, antes do navegador limpar o buffer.
+    snapshot(w = 320) {
+      renderer.clear(); renderer.render(world, camera);
+      const src = renderer.domElement, c = Object.assign(document.createElement('canvas'), {width: w, height: Math.round(w * src.height / src.width)});
+      c.getContext('2d').drawImage(src, 0, 0, c.width, c.height);
+      return c.toDataURL('image/webp', .8);
+    },
     stats: () => ({fps: Math.round(fps), rafRate: Math.round(rafRate), pixelRatio: renderer.getPixelRatio(), level: Object.keys(QUALITY).find(k => QUALITY[k] === q), calls: renderer.info.render.calls, particles: P.n, alive, geometries: renderer.info.memory.geometries, textures: renderer.info.memory.textures}),
     // QA: ms reais de GPU por quadro. readPixels espera a GPU terminar; o trace do navegador não enxerga isso com Metal.
     bench(n = 20) {

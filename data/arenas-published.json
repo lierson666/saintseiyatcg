@@ -1,0 +1,298 @@
+{
+  "schema": 2,
+  "gerado_em": "2026-11-07T10:27:49.715Z",
+  "arenas": [
+    {
+      "id": "olympus",
+      "versao": 1,
+      "nome": "Cosmo Arena",
+      "faccao": "Neutral",
+      "base": "olympus",
+      "descricao": "Cosmic night over a golden zodiac dial.",
+      "autor": "Saint Seiya TCG",
+      "requer": 1,
+      "cosmetico": {
+        "tipo": "arena",
+        "aquisicao": "livre"
+      },
+      "publicado_em": "2026-11-07T10:27:49.711Z",
+      "publicado_por": "migração",
+      "nota": "Arena do código (antes do Arena Forge 5.0)",
+      "variantes": [
+        {
+          "id": "standard",
+          "nome": "Standard",
+          "tipo": "standard",
+          "thumb": null,
+          "params": {
+            "skyTop": "#02040f",
+            "skyBottom": "#1b2563",
+            "floorA": "#22306b",
+            "floorB": "#070b24",
+            "line": "#c9a45c",
+            "column": "#8d96bd",
+            "light": "#a9c0ff",
+            "dust": "#8fc4ff",
+            "fog": "#04071a",
+            "caustics": 0,
+            "zodiac": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "athena",
+      "versao": 1,
+      "nome": "Athena's Sanctuary",
+      "faccao": "Athena",
+      "base": "athena",
+      "descricao": "White marble and warm light of the Sanctuary.",
+      "autor": "Saint Seiya TCG",
+      "requer": 1,
+      "cosmetico": {
+        "tipo": "arena",
+        "aquisicao": "livre"
+      },
+      "publicado_em": "2026-11-07T10:27:49.711Z",
+      "publicado_por": "migração",
+      "nota": "Arena do código (antes do Arena Forge 5.0)",
+      "variantes": [
+        {
+          "id": "standard",
+          "nome": "Standard",
+          "tipo": "standard",
+          "thumb": null,
+          "params": {
+            "skyTop": "#0b1030",
+            "skyBottom": "#d9a54a",
+            "floorA": "#f3ede1",
+            "floorB": "#b9ab92",
+            "line": "#e8c46a",
+            "column": "#efe6d4",
+            "light": "#ffdca0",
+            "dust": "#ffd77a",
+            "fog": "#1a1530",
+            "caustics": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "poseidon",
+      "versao": 1,
+      "nome": "Poseidon's Undersea Temple",
+      "faccao": "Poseidon",
+      "base": "poseidon",
+      "descricao": "Sunken temple under moving caustics.",
+      "autor": "Saint Seiya TCG",
+      "requer": 1,
+      "cosmetico": {
+        "tipo": "arena",
+        "aquisicao": "livre"
+      },
+      "publicado_em": "2026-11-07T10:27:49.711Z",
+      "publicado_por": "migração",
+      "nota": "Arena do código (antes do Arena Forge 5.0)",
+      "variantes": [
+        {
+          "id": "standard",
+          "nome": "Standard",
+          "tipo": "standard",
+          "thumb": null,
+          "params": {
+            "skyTop": "#02101f",
+            "skyBottom": "#0c5a7a",
+            "floorA": "#3d8fa6",
+            "floorB": "#0d3346",
+            "line": "#7fe3f0",
+            "column": "#9fd6d8",
+            "light": "#8be8ff",
+            "dust": "#bff6ff",
+            "fog": "#032033",
+            "caustics": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "hades",
+      "versao": 1,
+      "nome": "Hades' Underworld",
+      "faccao": "Hades",
+      "base": "hades",
+      "descricao": "Black stone, lava fissures and broken columns.",
+      "autor": "Saint Seiya TCG",
+      "requer": 1,
+      "cosmetico": {
+        "tipo": "arena",
+        "aquisicao": "livre"
+      },
+      "publicado_em": "2026-11-07T10:27:49.711Z",
+      "publicado_por": "migração",
+      "nota": "Arena do código (antes do Arena Forge 5.0)",
+      "variantes": [
+        {
+          "id": "standard",
+          "nome": "Standard",
+          "tipo": "standard",
+          "thumb": null,
+          "params": {
+            "skyTop": "#050106",
+            "skyBottom": "#3a0710",
+            "floorA": "#2a2226",
+            "floorB": "#060405",
+            "line": "#c2401c",
+            "column": "#3b3236",
+            "cap": "#6d1b1b",
+            "light": "#ff7a4a",
+            "dust": "#ff8a3a",
+            "fog": "#120205",
+            "mask": 1,
+            "glow": "#ff4a12",
+            "pulse": 0.9,
+            "broken": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "elysion",
+      "versao": 1,
+      "nome": "Elysion",
+      "faccao": "Hades",
+      "base": "elysion",
+      "descricao": "Garden of the gods: flowers, falling petals, soft sun.",
+      "autor": "Saint Seiya TCG",
+      "requer": 1,
+      "cosmetico": {
+        "tipo": "arena",
+        "aquisicao": "livre"
+      },
+      "publicado_em": "2026-11-07T10:27:49.711Z",
+      "publicado_por": "migração",
+      "nota": "Arena do código (antes do Arena Forge 5.0)",
+      "variantes": [
+        {
+          "id": "standard",
+          "nome": "Standard",
+          "tipo": "standard",
+          "thumb": null,
+          "params": {
+            "skyTop": "#2a2350",
+            "skyBottom": "#f0d6ff",
+            "floorA": "#fbf7ff",
+            "floorB": "#cfc3dc",
+            "line": "#f3d98c",
+            "column": "#fbf8f2",
+            "light": "#fff1d6",
+            "dust": "#ffd6ec",
+            "fog": "#4a3d6e",
+            "mask": 2,
+            "glow": "#ff9fd0",
+            "pulse": 0.4,
+            "fall": 1,
+            "dustSize": 1.8,
+            "orb": {
+              "color": "#fff4d8",
+              "size": 9,
+              "x": 16
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "ares",
+      "versao": 1,
+      "nome": "Ares' War Temple",
+      "faccao": "Ares",
+      "base": "ares",
+      "descricao": "Bronze plates glowing like a forge under a red sun.",
+      "autor": "Saint Seiya TCG",
+      "requer": 1,
+      "cosmetico": {
+        "tipo": "arena",
+        "aquisicao": "livre"
+      },
+      "publicado_em": "2026-11-07T10:27:49.711Z",
+      "publicado_por": "migração",
+      "nota": "Arena do código (antes do Arena Forge 5.0)",
+      "variantes": [
+        {
+          "id": "standard",
+          "nome": "Standard",
+          "tipo": "standard",
+          "thumb": null,
+          "params": {
+            "skyTop": "#12040a",
+            "skyBottom": "#a8341c",
+            "floorA": "#8a5a2e",
+            "floorB": "#2c1a10",
+            "line": "#d08a3a",
+            "column": "#4a4648",
+            "cap": "#b8742e",
+            "metal": 0.7,
+            "light": "#ffb070",
+            "dust": "#ffc060",
+            "fog": "#2a0a08",
+            "mask": 3,
+            "glow": "#e05a14",
+            "pulse": 1.6,
+            "orb": {
+              "color": "#ff5a2a",
+              "size": 12,
+              "x": -14
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "artemis",
+      "versao": 1,
+      "nome": "Artemis' Moonlit Grove",
+      "faccao": "Artemis",
+      "base": "artemis",
+      "descricao": "Pines, moonlight and fireflies.",
+      "autor": "Saint Seiya TCG",
+      "requer": 1,
+      "cosmetico": {
+        "tipo": "arena",
+        "aquisicao": "livre"
+      },
+      "publicado_em": "2026-11-07T10:27:49.711Z",
+      "publicado_por": "migração",
+      "nota": "Arena do código (antes do Arena Forge 5.0)",
+      "variantes": [
+        {
+          "id": "standard",
+          "nome": "Standard",
+          "tipo": "standard",
+          "thumb": null,
+          "params": {
+            "skyTop": "#01040c",
+            "skyBottom": "#1c3550",
+            "floorA": "#3d5a4a",
+            "floorB": "#0c1a16",
+            "line": "#cfe4ff",
+            "column": "#3a2a20",
+            "cap": "#163a2a",
+            "light": "#c8dcff",
+            "dust": "#d8ff9a",
+            "fog": "#030a12",
+            "mask": 4,
+            "glow": "#7a9cc8",
+            "pulse": 0.3,
+            "trees": 1,
+            "blink": 1,
+            "orb": {
+              "color": "#eef4ff",
+              "size": 10,
+              "x": 15
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

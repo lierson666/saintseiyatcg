@@ -884,6 +884,8 @@ def post(handler, path, raw, atomic_write):
             result = save_telas(body, atomic_write)
         elif path == '/api/star-hill/arenas':
             result = arena_forge.save(ROOT, body, atomic_write)
+        elif path == '/api/star-hill/arenas/miniatura':
+            result = arena_forge.thumb(ROOT, body, atomic_write)
         elif path == '/api/star-hill/preview':
             result = preview(body)
         elif path == '/api/star-hill/apply':
