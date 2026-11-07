@@ -126,7 +126,8 @@ kbd { font: 11px/1 ui-monospace, monospace; opacity: .7; border: 1px solid curre
 .dcard { transition: translate var(--pose-t, .2s) cubic-bezier(.3, .7, .2, 1), rotate var(--pose-t, .2s) ease, scale var(--pose-t, .2s) ease; }
 .dcard.strike-pose { translate: var(--pose-x, 0) var(--pose-y, 0); rotate: var(--pose-rot, 0deg); scale: 1.08; z-index: 7; }
 /* Golpe físico como no Arena: o bote acelera até o contato e a volta passa um pouco do slot e assenta. */
-.dcard[data-pose="dash"] { transition-timing-function: cubic-bezier(.7, 0, 1, .55); scale: 1.14; }
+/* Avanço seco: pula em 3 quadros em vez de deslizar, como um golpe desenhado à mão. */
+.dcard[data-pose="dash"] { transition-timing-function: steps(3, jump-start); scale: 1.14; }
 .dcard[data-pose="back"] { scale: 1.1; }
 .dcard[data-pose="home"] { transition-timing-function: cubic-bezier(.2, 1.35, .4, 1); }
 .dcard.hit { animation: hit var(--recoil-time, .42s) cubic-bezier(.2, .9, .3, 1); }
@@ -142,7 +143,7 @@ kbd { font: 11px/1 ui-monospace, monospace; opacity: .7; border: 1px solid curre
 @keyframes lunge { 35% { transform: translateY(-26px) scale(1.12); } }
 /* Impacto: recua rápido, segura um instante e volta devagar; o flicker fica só nos primeiros quadros. */
 @keyframes hit {
-  0% { transform: translate(0, 0); filter: brightness(3) saturate(0); }
+  0% { transform: translate(calc(var(--recoil-x, 0px) * .3), calc(var(--recoil-y, 7%) * .3)); filter: brightness(3) saturate(0); }
   10% { transform: translate(var(--recoil-x, 0), var(--recoil-y, 7%)); filter: none; }
   20% { filter: brightness(2.4) saturate(0); }
   30% { transform: translate(var(--recoil-x, 0), var(--recoil-y, 7%)); filter: none; }

@@ -102,6 +102,15 @@ test('efeito importado sai do atacante ou viaja até o alvo sem sair da mesa', (
   fx.update(.09); fx.draw(fim, 'front');
   assert.ok(lit(fim) > lit(viagem), 'viagem avança para o alvo');
   assert.ok(lit(fim) >= 0);
+  // ambos: sai do atacante como a viagem, mas chega ao alvo antes do fim e fica lá para a explosão.
+  const s2 = {...s, quadros: 10, px: new Uint32Array(40).fill(0xff00ff00)}, ambos = sheetFx(s2, {...g, ancora: 'ambos'}), cheio = sheetFx(s2, {...g, ancora: 'viagem'});
+  const comeco = frame(); ambos.draw(comeco, 'front');
+  assert.equal(lit(comeco), lit(viagem), 'ambos começa no atacante');
+  ambos.update(.5); cheio.update(.5);
+  const meio = frame(), meioViagem = frame(); ambos.draw(meio, 'front'); cheio.draw(meioViagem, 'front');
+  cheio.update(.49); const chegou = frame(); cheio.draw(chegou, 'front');
+  assert.ok(lit(chegou) >= 0 && lit(meio) === lit(chegou), 'ambos já está no alvo na metade');
+  assert.notEqual(lit(meioViagem), lit(chegou), 'viagem ainda está no caminho');
 });
 
 test('os 14 tipos do gerador usam só receitas reais e respeitam camada e posição', () => {

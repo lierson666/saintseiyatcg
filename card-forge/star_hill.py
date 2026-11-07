@@ -585,7 +585,7 @@ def _anim_tuning(value, root=ROOT):
     if not isinstance(value, dict) or set(value) - anim_ids(root):
         raise ValueError('Efeito inválido.')
     for tune in value.values():
-        if not isinstance(tune, dict) or set(tune) - {'ancora'} != {'ligado', 'tamanho', 'velocidade', 'cor'} or not isinstance(tune['ligado'], bool) or tune.get('ancora', 'origem') not in ('origem', 'viagem'):
+        if not isinstance(tune, dict) or set(tune) - {'ancora'} != {'ligado', 'tamanho', 'velocidade', 'cor'} or not isinstance(tune['ligado'], bool) or tune.get('ancora', 'origem') not in ('origem', 'viagem', 'ambos'):
             raise ValueError('Ajuste de efeito inválido.')
         for key, low, high in (('tamanho', 0.5, 2), ('velocidade', 0.25, 2)):
             if isinstance(tune[key], bool) or not isinstance(tune[key], (int, float)) or not low <= tune[key] <= high:

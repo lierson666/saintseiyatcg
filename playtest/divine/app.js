@@ -24,10 +24,10 @@ import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudg
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout, clockBonus} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
-import {createDirector, DEATH_FX} from './director.js?v=20261106-reacao1';
+import {createDirector, DEATH_FX} from './director.js?v=20261106-ataque1';
 import {epicDeath} from './god-death.js?v=2';
 import {tunedFx} from './particle-tune.js';
-import {createPixelFx, animFor, catalogIndex} from './pixel-vfx.js?v=20261104-live1';
+import {createPixelFx, animFor, catalogIndex} from './pixel-vfx.js?v=20261106-ambos1';
 import {createComposer, withCompositions} from '../../shared/vfx/composer.js?v=20261104-vfx1';
 import {startCardFx} from '../../shared/vfx/card-mount.js?v=20261104-vfx1';
 import {createAI} from './ai.js?v=14';

@@ -108,10 +108,12 @@ export async function measureCombat(r) {
 }
 
 // Efeito importado (data/vfx-catalog.json): sprite sheet desenhado na mesma camada dos outros. `s`: {px, sw, w, h, cols, quadros, fps, loop}.
-// g.ancora (ajuste do Criador): sem valor, no alvo; "origem", sai do atacante; "viagem", vai do atacante ao alvo apontando para ele (a folha olha para a direita).
+// g.ancora (ajuste do Criador): sem valor, no alvo; "origem", sai do atacante; "viagem", vai do atacante ao alvo apontando para ele (a folha olha para a direita);
+// "ambos", sai do atacante apontando para o alvo, chega nele nos primeiros 40% da folha e o resto (a explosão) acontece no alvo.
+const ARRIVE = .4;
 export function sheetFx(s, g) {
   const scale = g.h / WORLD_PX * 1.35 * (g.size || 1) / Math.max(s.w, s.h), dw = Math.max(1, Math.round(s.w * scale)), dh = Math.max(1, Math.round(s.h * scale)), span = s.quadros / s.fps;
-  const from = g.from && (g.ancora === 'origem' || g.ancora === 'viagem') ? g.from : null, travel = from && g.ancora === 'viagem';
+  const from = g.from && ['origem', 'viagem', 'ambos'].includes(g.ancora) ? g.from : null, travel = from && g.ancora !== 'origem';
   const angle = travel ? Math.atan2(g.y - from[1], g.x - from[0]) : 0, cos = Math.cos(angle), sin = Math.sin(angle), reach = Math.ceil(Math.hypot(dw, dh) / 2);
   let t = 0;
   const put = (f, at, v) => {
@@ -127,7 +129,7 @@ export function sheetFx(s, g) {
     done: () => !s.loop && t >= span,
     draw(f, layer) {
       if (layer !== 'front' || (!s.loop && t >= span)) return;
-      const n = Math.floor(t * s.fps) % s.quadros, cx = (n % s.cols) * s.w, cy = Math.floor(n / s.cols) * s.h, k = travel ? Math.min(1, t / span) : 0;
+      const n = Math.floor(t * s.fps) % s.quadros, cx = (n % s.cols) * s.w, cy = Math.floor(n / s.cols) * s.h, k = travel ? Math.min(1, t / (span * (g.ancora === 'ambos' ? ARRIVE : 1))) : 0;
       const wx = (from ? from[0] + (g.x - from[0]) * k : g.x) / WORLD_PX, wy = (from ? from[1] + (g.y - from[1]) * k : g.y) / WORLD_PX, ox = f.ox || 0, oy = f.oy || 0;
       if (travel) {
         const mx = Math.round(wx) - ox, my = Math.round(wy) - oy;

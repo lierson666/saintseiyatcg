@@ -63,7 +63,15 @@
     "golpe": "poison",
     "linhas": []
   },
-  "efeitos": {},
+  "efeitos": {
+    "vx-9aaecec14b11": {
+      "ancora": "ambos",
+      "cor": null,
+      "ligado": true,
+      "tamanho": 1,
+      "velocidade": 1
+    }
+  },
   "hades-v6-189": {
     "golpe": "vx-0826b75ed129",
     "linhas": []

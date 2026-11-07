@@ -2,19 +2,19 @@
  "versao": 1,
  "gerado_por": "tools/vfx-inventario.py",
  "resumo": {
-  "total": 248,
+  "total": 253,
   "migradas": 66,
   "editavel": 79,
-  "parcial": 124,
+  "parcial": 129,
   "legado": 24,
   "excecao": 21,
   "criterios": {
-   "forge": 203,
-   "edita": 194,
-   "aplica": 192,
+   "forge": 208,
+   "edita": 199,
+   "aplica": 197,
    "preview": 66,
-   "restaura": 192,
-   "testes": 194
+   "restaura": 197,
+   "testes": 199
   }
  },
  "animacoes": [
@@ -5879,6 +5879,146 @@
     "playtest/economy.css"
    ],
    "gatilho": ".ec-spark",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade, mas roda no lobby e não tem teste na mesa. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "lobby"
+  },
+  {
+   "id": "css:playtest-economy-css:ec-rise",
+   "nome": "ec-rise",
+   "categoria": "Interface fora da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Boosters e coleção",
+   "arquivos": [
+    "playtest/economy.css"
+   ],
+   "gatilho": ".ec-flip.is-charging::after",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade, mas roda no lobby e não tem teste na mesa. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "lobby"
+  },
+  {
+   "id": "css:playtest-economy-css:ec-rise-back",
+   "nome": "ec-rise-back",
+   "categoria": "Interface fora da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Boosters e coleção",
+   "arquivos": [
+    "playtest/economy.css"
+   ],
+   "gatilho": ".ec-flip.is-legendary.is-charging .ec-flip__back, .ec-flip.is-divine.i",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade, mas roda no lobby e não tem teste na mesa. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "lobby"
+  },
+  {
+   "id": "css:playtest-economy-css:ec-rays",
+   "nome": "ec-rays",
+   "categoria": "Interface fora da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Boosters e coleção",
+   "arquivos": [
+    "playtest/economy.css"
+   ],
+   "gatilho": ".ec-rays",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade, mas roda no lobby e não tem teste na mesa. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "lobby"
+  },
+  {
+   "id": "css:playtest-economy-css:ec-shock",
+   "nome": "ec-shock",
+   "categoria": "Interface fora da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Boosters e coleção",
+   "arquivos": [
+    "playtest/economy.css"
+   ],
+   "gatilho": ".ec-shock",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade, mas roda no lobby e não tem teste na mesa. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "lobby"
+  },
+  {
+   "id": "css:playtest-economy-css:ec-mote",
+   "nome": "ec-mote",
+   "categoria": "Interface fora da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Boosters e coleção",
+   "arquivos": [
+    "playtest/economy.css"
+   ],
+   "gatilho": ".ec-motes i",
    "parametros": [
     "ligado",
     "velocidade"
