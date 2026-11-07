@@ -61,7 +61,8 @@ function stardust(el, i, {fx, pixel, theme}) {
 
 // `fx`: partículas da arena (falta com VFX desligado); `pixel(recipe, rect, opts)`: Sprite Fusion; `wait(ms)` já escala pela velocidade.
 // `ruin()`: põe o degradê escuro sobre a metade do derrotado.
-export async function epicDeath({god, root, godEl, cards, bases, hand, ruin, fx, pixel, wait, shake, steps}) {
+// `boom()`: estrondo da explosão, no instante do clarão; `calm`: Reduce flashes (sem estrobo).
+export async function epicDeath({god, root, godEl, cards, bases, hand, ruin, fx, pixel, wait, shake, steps, boom, calm}) {
   const theme = THEME[god] || THEME.athena, portrait = godEl?.querySelector('.godhud__portrait') || godEl;
   const pr = box(portrait), at = pr && center(pr), color = `rgb(${theme.glow})`;
   ruin?.(); // o escuro começa a tomar conta já no primeiro tempo
@@ -81,16 +82,22 @@ export async function epicDeath({god, root, godEl, cards, bases, hand, ruin, fx,
   pixel(theme.crack, pr, {color});
   await wait(950);
 
-  // 2. Retrato e moldura explodem: clarão, cacos e a moldura inteira em poeira estelar.
+  // 2. Explosão gigante (autor, 07/11/2026): tela branca piscando, terremoto longo, ondas de choque até fora da tela e estrondo em cascata.
+  boom?.();
   shatter(portrait, layer);
   godEl.classList.add('death-gone');
   stardust(godEl, 0, {fx, pixel, theme});
-  layer.insertAdjacentHTML('beforeend', '<div class="death-flash"></div>');
-  pixel(theme.burst, {left: pr.left - pr.width, top: pr.top - pr.height, width: pr.width * 3, height: pr.height * 3}, {color, strength: 1.6});
+  layer.insertAdjacentHTML('beforeend', `<div class="death-flash"></div><div class="death-blast"></div>${calm ? '' : '<div class="death-strobe"></div>'}`);
+  root.classList.remove('death-quake'); void root.offsetWidth; root.classList.add('death-quake');
+  setTimeout(() => root.classList.remove('death-quake'), 1900);
+  pixel(theme.burst, {left: pr.left - pr.width * 2, top: pr.top - pr.height * 2, width: pr.width * 5, height: pr.height * 5}, {color, strength: 2.4});
   if (fx) steps?.[1]?.(fx, at);
-  fx?.shockwave(at.x, at.y, {color, size: 420});
-  shake(18);
-  await wait(380);
+  fx?.burst(at.x, at.y, {color: '#ffffff', count: 220, speed: 900, life: 1.1, size: 6});
+  fx?.burst(at.x, at.y, {color: theme.star, count: 260, speed: 620, grav: 300, life: 1.8, size: 9});
+  [420, 900, 1600].forEach((size, i) => setTimeout(() => fx?.shockwave(at.x, at.y, {color: i ? color : '#ffffff', size}), i * 140));
+  shake(22);
+  [[260, 20], [620, 16], [1000, 12], [1400, 8]].forEach(([ms, amp]) => setTimeout(() => shake(amp), ms));
+  await wait(520);
 
   // 3. Tudo do derrotado explode em poeira estelar, do mais perto do God para longe.
   const all = [...cards, ...bases, ...hand].filter(el => box(el)?.width).map(el => ({el, d: dist(el, at)})).sort((a, b) => a.d - b.d);

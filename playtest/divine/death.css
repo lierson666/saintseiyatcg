@@ -20,6 +20,20 @@
 /* 2. Clarão e cacos do retrato. */
 .death-flash { position: absolute; inset: 0; background: radial-gradient(circle at var(--hx) var(--hy), #fff 0, rgba(var(--dglow), .85) 18%, transparent 60%); animation: deathFlash .7s ease-out forwards; }
 @keyframes deathFlash { 0% { opacity: 1; } 100% { opacity: 0; } }
+.death-flash { background: radial-gradient(circle at var(--hx) var(--hy), #fff 0, #fff 22%, rgba(var(--dglow), .9) 45%, rgba(var(--dglow), .35) 80%); animation-duration: 1.1s; }
+/* Explosão gigante (autor, 07/11/2026): anel de fogo que passa da tela, estrobo e terremoto. */
+.death-blast { position: absolute; left: var(--hx); top: var(--hy); width: 40px; height: 40px; margin: -20px 0 0 -20px; border-radius: 50%;
+  background: radial-gradient(circle, #fff 0, rgba(var(--dglow), .95) 35%, rgba(var(--dglow), .4) 60%, transparent 70%); mix-blend-mode: screen; animation: deathBlast 1.3s cubic-bezier(.1, .8, .3, 1) forwards; }
+@keyframes deathBlast { 0% { transform: scale(.2); opacity: 1; } 60% { opacity: .9; } 100% { transform: scale(90); opacity: 0; } }
+.death-strobe { position: absolute; inset: 0; background: #fff; mix-blend-mode: screen; animation: deathStrobe 1s steps(1) forwards; }
+@keyframes deathStrobe { 0% { opacity: 1; } 10% { opacity: 0; } 20% { opacity: .85; background: rgb(var(--dglow)); } 30% { opacity: 0; } 42% { opacity: .6; background: #fff; } 52% { opacity: 0; } 66% { opacity: .35; } 76%, 100% { opacity: 0; } }
+.death-quake.death-quake { animation: deathQuake 1.8s linear; }
+@keyframes deathQuake {
+  0% { transform: translate(0, 0) scale(1.04); filter: brightness(2.2) contrast(1.3); } 4% { transform: translate(-38px, 22px) rotate(-1.2deg) scale(1.03); }
+  8% { transform: translate(34px, -26px) rotate(1deg); filter: brightness(1.5); } 12% { transform: translate(-30px, -18px) rotate(-.8deg); } 16% { transform: translate(28px, 20px) rotate(.7deg); filter: brightness(1.2); }
+  22% { transform: translate(-22px, 14px) rotate(-.5deg); } 28% { transform: translate(20px, -12px); } 36% { transform: translate(-14px, 10px); filter: brightness(1); }
+  46% { transform: translate(12px, -8px); } 58% { transform: translate(-8px, 6px); } 72% { transform: translate(5px, -4px); } 86% { transform: translate(-2px, 2px); } 100% { transform: none; }
+}
 .death-shards { position: absolute; }
 .death-shard { position: absolute; inset: 0; border-radius: 50%; background-repeat: no-repeat; filter: brightness(1.4) drop-shadow(0 0 6px rgba(var(--dglow), .9));
   animation: deathShard 1.25s cubic-bezier(.12, .75, .3, 1) forwards; animation-delay: calc(var(--k, 0) * 18ms); }
@@ -50,4 +64,5 @@
 
 /* Reduce motion: só o estado final. */
 .reduce-motion .death-layer, .reduce-motion .death-cracks { display: none; }
+.reduce-motion .death-quake { animation: none; }
 .reduce-motion .death-dust, .reduce-motion .godhud.death-crack .godhud__portrait { animation-duration: 1ms; animation-delay: 0s; }

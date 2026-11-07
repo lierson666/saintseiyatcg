@@ -446,9 +446,10 @@ export function createDirector({ui, getFx, settings}) {
     async victory(e) {
       const dead = t(1) ? ui.godDeath(e) : [];
       // Deus que morre explode (autor, 07/11/2026): carta, facção ou Star Hill; sem nenhum, o estrondo sintetizado no máximo.
-      for (const d of dead) if (!skipping && !ui.noise?.('morte_deus', d.key)) strikeSound(1);
+      // Explosão gigante (autor, 07/11/2026): o som da carta/facção mais estrondos sintetizados em cascata, junto do clarão.
+      const boom = d => () => { if (skipping) return; ui.noise?.('morte_deus', d.key); [0, 160, 420, 800].forEach((ms, i) => setTimeout(() => strikeSound(1 - i * .12), ms)); };
       // Derrota épica (autor, 06/11/2026): god-death.js; as partículas de DEATH_FX seguem ajustáveis no Forge (morte-<deus>).
-      if (dead.length) await Promise.all(dead.map(d => ui.epicDeath?.(d, {fx: fx() && !skipping ? fx(`morte-${d.god}`) : null, pixel, wait: pause, shake, steps: DEATH_FX[d.god]})));
+      if (dead.length) await Promise.all(dead.map(d => ui.epicDeath?.(d, {fx: fx() && !skipping ? fx(`morte-${d.god}`) : null, pixel, wait: pause, shake, steps: DEATH_FX[d.god], boom: boom(d), calm: !!settings.reduceFlashes})));
       sound(e.draw ? 'derrota' : ui.isViewer(e.winner) ? 'vitoria' : 'derrota'); await ui.banner(e.draw ? 'Draw' : ui.isViewer(e.winner) ? 'Victory' : `Player ${e.winner} wins`, e.winner, t(1200)); },
     async window_open() {}, async window_close() {}, async pass(e) { ui.log(e); }, // Gatilho entrando na cadeia e resolvendo: a carta de origem pisca e cresce (estilo Arena), nada genérico.
     async chain_add(e) { ui.pulse(e.uid, 'trigger-pop'); await pause(240); },
