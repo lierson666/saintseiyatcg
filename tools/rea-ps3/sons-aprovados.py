@@ -14,7 +14,7 @@ for v in audio.get('vozes', []):
             pairs.append((fx / f"ps3-voz-{v['codigo']}-{lang}/{fala}.mp3", dest / f"vozes/{lang}/{v['codigo']}/{fala}.mp3"))
 voices = ROOT / 'data/card-voices.json'
 for card in (json.loads(voices.read_text(encoding='utf-8')) if voices.exists() else {}).values():
-    for line in filter(None, [*(card.get(k) for k in ('cast', 'entrada', 'declarar', 'golpe', 'strike', 'morte', 'retorno', 'habilidade', 'ultimate', 'carga', 'impacto', 'impacto_deus', 'poder_divino', 'poder_dominio', 'awaken')), *card['linhas']]):
+    for line in filter(None, [*(card.get(k) for k in ('cast', 'entrada', 'declarar', 'golpe', 'strike', 'morte', 'retorno', 'habilidade', 'ultimate', 'carga', 'impacto', 'impacto_deus', 'poder_divino', 'poder_dominio', 'awaken', 'morte_deus')), *card['linhas']]):
         code, fala = line.split('/')
         for lang in ('jp', 'pt', 'es'):
             pairs.append((fx / f'ps3-voz-{code}-{lang}/{fala}.mp3', dest / f'vozes/{lang}/{line}.mp3'))

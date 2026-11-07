@@ -399,7 +399,7 @@ TELAS = 'data/olympus-telas.json'
 ANIM_GROUPS = {'compra', 'conjurar', 'cosmo', 'gatilho', 'ataque', 'dano', 'morte', 'turno', 'ultimate'}
 SOUND_EVENTS = {'ultimate', 'clique', 'play', 'voltar', 'turno', 'compra', 'conjurar', 'equipar_armadura', 'equipar_arma', 'cosmo', 'gatilho', 'ataque', 'dano', 'morte', 'vitoria', 'derrota',
                 'hover', 'hover_mao', 'hover_base', 'passar_turno', 'receber_turno',
-                'declarar_ataque', 'carga', 'impacto', 'impacto_deus', 'dano_deus', 'poder_divino', 'poder_dominio', 'awaken'}
+                'declarar_ataque', 'carga', 'impacto', 'impacto_deus', 'dano_deus', 'poder_divino', 'poder_dominio', 'awaken', 'morte_deus'}
 IMAGE_DIRS = ('card-forge/art-web/', 'star-hill/assets/', 'playtest/assets/', 'LOGO/')
 
 
@@ -495,7 +495,7 @@ def validate_telas(value, root=ROOT):
 CARD_VOICES = 'data/card-voices.json'
 VOICE_LINE = re.compile(r'[A-Za-z0-9_]{3,40}/\d{3,4}')
 VOICE_LANGS = ('jp', 'pt', 'es')
-VOICE_MOMENTS = ('cast', 'entrada', 'declarar', 'golpe', 'strike', 'morte', 'retorno', 'habilidade', 'ultimate', 'carga', 'impacto', 'impacto_deus', 'poder_divino', 'poder_dominio', 'awaken')
+VOICE_MOMENTS = ('cast', 'entrada', 'declarar', 'golpe', 'strike', 'morte', 'retorno', 'habilidade', 'ultimate', 'carga', 'impacto', 'impacto_deus', 'poder_divino', 'poder_dominio', 'awaken', 'morte_deus')
 LIBRARY = Path(os.environ.get('SSTCG_BIBLIOTECA', Path.home() / 'worktrees/sstcg-biblioteca-sons'))  # tools/rea-ps3/biblioteca-sons.py
 
 

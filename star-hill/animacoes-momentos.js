@@ -1,7 +1,7 @@
 // STAR HILL · Momentos do jogo: uma lista só para achar e trocar a animação e o som de cada coisa da partida, e ver na mesa real.
 // Grava onde o jogo já lê: data/card-animations.json (padrao) e data/olympus-telas.json (audio e animacoes). A carta e a facção passam por cima.
 import {animsNow} from '/shared/anim-picker.js?v=5';
-import {loadTelas, telasSons} from './telas-editor.js?v=20261105-momentos1';
+import {loadTelas, telasSons} from './telas-editor.js?v=20261107-deus1';
 import {abilityNames} from './arena-model.js';
 import {filtraMomentos} from './momentos-model.js';
 

@@ -3,7 +3,7 @@
 // `ui` é o adaptador do DOM (posições e textos); `fx` é a camada WebGL (pode faltar: tudo vira só DOM).
 import {wait} from './scene.js?v=20261031-pool1';
 import {strikeSound, chargeSound} from '../audio.js?v=20261106-menu1';
-import {anim, ANIM_OF, sound} from '../telas.js?v=20261106-menu1';
+import {anim, ANIM_OF, sound} from '../telas.js?v=20261107-deus1';
 import {ELEMENT_COLOR} from './pixel-vfx.js?v=20261104-anim4';
 import {tunedFx} from './particle-tune.js';
 import {ON_ATTACKER} from './combat-tracks.js';
@@ -445,6 +445,8 @@ export function createDirector({ui, getFx, settings}) {
     // Morte do God (autor, 31/10/2026): cada deus cai com o seu tema e a metade dele da arena desmorona; ~3 s antes da tela final.
     async victory(e) {
       const dead = t(1) ? ui.godDeath(e) : [];
+      // Deus que morre explode (autor, 07/11/2026): carta, facção ou Star Hill; sem nenhum, o estrondo sintetizado no máximo.
+      for (const d of dead) if (!skipping && !ui.noise?.('morte_deus', d.key)) strikeSound(1);
       // Derrota épica (autor, 06/11/2026): god-death.js; as partículas de DEATH_FX seguem ajustáveis no Forge (morte-<deus>).
       if (dead.length) await Promise.all(dead.map(d => ui.epicDeath?.(d, {fx: fx() && !skipping ? fx(`morte-${d.god}`) : null, pixel, wait: pause, shake, steps: DEATH_FX[d.god]})));
       sound(e.draw ? 'derrota' : ui.isViewer(e.winner) ? 'vitoria' : 'derrota'); await ui.banner(e.draw ? 'Draw' : ui.isViewer(e.winner) ? 'Victory' : `Player ${e.winner} wins`, e.winner, t(1200)); },

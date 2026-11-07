@@ -234,6 +234,7 @@
     "impacto_deus": "SNS/0145",
     "linhas": [],
     "morte": null,
+    "morte_deus": "SNS/0210",
     "poder_divino": "SNS/0203",
     "poder_dominio": null,
     "retorno": null,
@@ -252,6 +253,7 @@
     "impacto_deus": "SNS/0098",
     "linhas": [],
     "morte": null,
+    "morte_deus": "SNS/0210",
     "poder_divino": "SNS/0072",
     "poder_dominio": null,
     "retorno": null,
@@ -270,6 +272,7 @@
     "impacto_deus": "SNS/0144",
     "linhas": [],
     "morte": "ATG/5042",
+    "morte_deus": "SNS/0210",
     "poder_divino": "SNS/0159",
     "poder_dominio": null,
     "retorno": null,
@@ -288,11 +291,16 @@
     "impacto_deus": "SNS/0126",
     "linhas": [],
     "morte": null,
+    "morte_deus": "SNS/0210",
     "poder_divino": "SNS/0172",
     "poder_dominio": null,
     "retorno": null,
     "strike": null,
     "ultimate": null
+  },
+  "faccao-neutral": {
+    "linhas": [],
+    "morte_deus": "SNS/0210"
   },
   "faccao-poseidon": {
     "awaken": null,
@@ -306,6 +314,7 @@
     "impacto_deus": "SNS/0154",
     "linhas": [],
     "morte": null,
+    "morte_deus": "SNS/0210",
     "poder_divino": "SNS/0154",
     "poder_dominio": null,
     "retorno": null,

@@ -16,7 +16,7 @@ import {animFile} from '../shared/anim-data.js?v=1';
 import {countryOptions, countryName} from '../shared/countries.js?v=20261031-i18n1';
 import {startPresence} from '../shared/presence.js?v=20261029-1';
 import {mountSocial} from './social.js?v=20261101-notch1';
-import {telas, imageUrl, sound, applyColors, applyTexts} from './telas.js?v=20261106-menu1';
+import {telas, imageUrl, sound, applyColors, applyTexts} from './telas.js?v=20261107-deus1';
 import {loadEconomy, ownedLimit, missingCards, coinBadge, storeScreen, collectionScreen, openBooster, buyBooster, buyCosmetic} from './economy.js?v=20261106-reveal2';
 import {lightArt} from '../shared/light-art.js';
 import {faceStyle, useGodPortraits} from './avatar-face.js?v=20261031-3';

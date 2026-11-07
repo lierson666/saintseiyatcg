@@ -1,7 +1,7 @@
 import {mountArtPrompt} from './art-prompt.js?v=20261104-rosto1';
 import {cardsToXlsx} from './cards-xlsx.js?v=20261102-momento1';
 import {AUDIT_STATUS,auditOf,mountCardFinder,reviewQueue} from './card-finder.js?v=20261102-momento1';
-import {mountRulesRows} from './rules-rows.js?v=20261104-anim4';
+import {mountRulesRows} from './rules-rows.js?v=20261107-deus1';
 import {renameLinks} from './rename-links.js';
 import {createHistory} from '../shared/editor-history.js';
 import {compilePlaytest} from '../shared/import-playtest.js';
@@ -1193,7 +1193,7 @@ const refreshRules = [mountGodBlock('#godAwaken', 'habilidade_awaken_en', 'Awake
 }, onResonance: (name) => { // Cada Resonance escolhida entra no campo do Equipment, e o diff mostra antes de gravar
   const f = form.elements.auto_equip, names = f ? f.value.split('/').map((n) => n.trim()).filter(Boolean) : [];
   if (f && !f.closest('[hidden]') && !f.closest('label').hidden && !names.includes(name)) { f.value = [...names, name].join(' / '); f.dispatchEvent(new Event('input', {bubbles: true})); }
-}, moments: () => [['cast', 'Ao conjurar'], ['entrada', 'Entrada no campo'], ['declarar', 'Ao declarar ataque'], ['golpe', 'Quando o ataque resolve'], ['strike', 'Ao receber Strike'], ['morte', 'Ao morrer'], ['retorno', 'Volta do Tartarus'], ['carga', 'Barulho: carga do golpe'], ['impacto', 'Barulho: impacto em Devotee'], ['impacto_deus', 'Barulho: impacto no Deus'], ...(layoutKey(S) === 'god' ? [['ultimate', 'Voz da Ultimate'], ['poder_divino', 'Barulho: Poder Divino'], ['poder_dominio', 'Barulho: poder do Domain'], ['awaken', 'Barulho: Awaken']] : [])]})];
+}, moments: () => [['cast', 'Ao conjurar'], ['entrada', 'Entrada no campo'], ['declarar', 'Ao declarar ataque'], ['golpe', 'Quando o ataque resolve'], ['strike', 'Ao receber Strike'], ['morte', 'Ao morrer'], ['retorno', 'Volta do Tartarus'], ['carga', 'Barulho: carga do golpe'], ['impacto', 'Barulho: impacto em Devotee'], ['impacto_deus', 'Barulho: impacto no Deus'], ...(layoutKey(S) === 'god' ? [['ultimate', 'Voz da Ultimate'], ['poder_divino', 'Barulho: Poder Divino'], ['poder_dominio', 'Barulho: poder do Domain'], ['awaken', 'Barulho: Awaken'], ['morte_deus', 'Barulho: explosão ao morrer']] : [])]})];
 refreshRulesRows = () => refreshRules.forEach(r => r());
 refreshRulesRows();
 function insertAtCursor(text) {

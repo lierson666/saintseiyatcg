@@ -5,7 +5,7 @@ import {loadCanon} from '../shared/canon-cards.js';
 import {printedKind} from '../shared/rules-policy.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {canonIndex, validateDeck, colorErrors, DECK_SIZE, SPLASH_LIMIT} from '../shared/deck-v3.js';
-import {loadTelas, mountTelas} from './telas-editor.js?v=20261105-momentos1';
+import {loadTelas, mountTelas} from './telas-editor.js?v=20261107-deus1';
 import {mountAnimacoes} from './animacoes.js?v=12';
 import {mountArenaForge} from './arena-forge.js?v=20261107-af5';
 import {EDITIONS, editionOf} from '../shared/editions.js?v=20261102-1';

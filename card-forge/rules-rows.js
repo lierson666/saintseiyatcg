@@ -141,7 +141,7 @@ export function mountRulesRows(area, {getId = null, moments = null, sound = null
     if (b.dataset.voice !== undefined) {
       const key = b.dataset.voice;
       const what = /^\d+$/.test(key) ? `Habilidade: ${parseAbility(current()[Number(key)] || '').name || Number(key) + 1}` : moments?.().find(([k]) => k === key)?.[1] || key;
-      openSoundBrowser({title: 'Escolher som da carta', alvo: `${area.form?.elements.nome_exibicao_en?.value || getId()} · ${what}`, value: b.dataset.value, silence: true, secao: /^(carga|impacto|poder|awaken)/.test(key) ? 'fx-golpe' : key === 'golpe' || key === 'ultimate' ? 'voz-golpe' : 'voz-batalha', onPick: picked => {
+      openSoundBrowser({title: 'Escolher som da carta', alvo: `${area.form?.elements.nome_exibicao_en?.value || getId()} · ${what}`, value: b.dataset.value, silence: true, secao: /^(carga|impacto|poder|awaken|morte_deus)/.test(key) ? 'fx-golpe' : key === 'golpe' || key === 'ultimate' ? 'voz-golpe' : 'voz-batalha', onPick: picked => {
         const v = entry(getId()), value = picked?.id ?? false; // o botão Sem som do seletor chega como null
         if (/^\d+$/.test(key)) { v.linhas[Number(key)] = value; for (let i = 0; i < v.linhas.length; i++) v.linhas[i] ??= null; } else v[key] = value;
         save(getId());
