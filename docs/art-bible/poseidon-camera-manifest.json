@@ -1,0 +1,220 @@
+{
+  "schema": 1,
+  "source": "playtest/divine/scene.js",
+  "purpose": "artboard composition reference only; no camera mutation",
+  "sourceArtboard": {
+    "path": "docs/art-bible/references/poseidon-master-artboard.jpg",
+    "expectedResolution": [
+      1656,
+      950
+    ],
+    "status": "pending_binary_installation"
+  },
+  "render": {
+    "width": 1656,
+    "height": 950,
+    "aspect": 1.743157894736842
+  },
+  "camera": {
+    "type": "PerspectiveCamera",
+    "fovDegrees": 42,
+    "near": 0.1,
+    "far": 200,
+    "position": [
+      0,
+      13.5,
+      13
+    ],
+    "lookAt": [
+      0,
+      0,
+      -0.6
+    ]
+  },
+  "battlefield": {
+    "radius": 16,
+    "worldPlaneY": 0,
+    "locked": true
+  },
+  "anchors": {
+    "battlefield_center": {
+      "world": [
+        0,
+        0,
+        0
+      ],
+      "normalized": [
+        0.5,
+        0.52938
+      ],
+      "pixel": [
+        828,
+        503
+      ],
+      "visible": true
+    },
+    "battlefield_far_edge": {
+      "world": [
+        0,
+        0,
+        -16
+      ],
+      "normalized": [
+        0.5,
+        0.03039
+      ],
+      "pixel": [
+        828,
+        29
+      ],
+      "visible": true
+    },
+    "battlefield_near_edge": {
+      "world": [
+        0,
+        0,
+        16
+      ],
+      "normalized": [
+        0.5,
+        2.56363
+      ],
+      "pixel": [
+        828,
+        2435
+      ],
+      "visible": false
+    },
+    "battlefield_left_edge": {
+      "world": [
+        -16,
+        0,
+        0
+      ],
+      "normalized": [
+        -0.13808,
+        0.52938
+      ],
+      "pixel": [
+        -229,
+        503
+      ],
+      "visible": false
+    },
+    "battlefield_right_edge": {
+      "world": [
+        16,
+        0,
+        0
+      ],
+      "normalized": [
+        1.13808,
+        0.52938
+      ],
+      "pixel": [
+        1885,
+        503
+      ],
+      "visible": false
+    },
+    "temple_architectural_source_front": {
+      "world": [
+        0,
+        0,
+        -19
+      ],
+      "normalized": [
+        0.5,
+        -0.02401
+      ],
+      "pixel": [
+        828,
+        -23
+      ],
+      "visible": false
+    },
+    "temple_architectural_source_center": {
+      "world": [
+        0,
+        15,
+        -42
+      ],
+      "normalized": [
+        0.5,
+        -0.86546
+      ],
+      "pixel": [
+        828,
+        -822
+      ],
+      "visible": false
+    },
+    "palace_staged_front": {
+      "world": [
+        0,
+        -5,
+        -9.370000000000001
+      ],
+      "normalized": [
+        0.5,
+        0.38151
+      ],
+      "pixel": [
+        828,
+        362
+      ],
+      "visible": true
+    },
+    "palace_staged_portico": {
+      "world": [
+        0,
+        -1.5499999999999998,
+        -14.66
+      ],
+      "normalized": [
+        0.5,
+        0.12065
+      ],
+      "pixel": [
+        828,
+        115
+      ],
+      "visible": true
+    },
+    "palace_staged_main_pillar": {
+      "world": [
+        0,
+        5.35,
+        -22.02
+      ],
+      "normalized": [
+        0.5,
+        -0.30408
+      ],
+      "pixel": [
+        828,
+        -289
+      ],
+      "visible": false
+    }
+  },
+  "notes": [
+    "Projection is reference only. HUD masks must be captured from DOM at runtime rather than inferred from 3D positions.",
+    "Landmark may be out of competitive frustum by design. Cinematic camera reveals landmark before transition to battle.",
+    "Existing anchors are spatial measurements, not approved cinematic keyframes."
+  ],
+  "artBibleVersion": 2,
+  "cameraRoles": {
+    "competitive": {
+      "locked": true,
+      "profile": "camera",
+      "required": true
+    },
+    "cinematic": {
+      "editable": true,
+      "status": "storyboard_pending",
+      "keyframes": [],
+      "mustEndAtCompetitivePose": true
+    }
+  }
+}

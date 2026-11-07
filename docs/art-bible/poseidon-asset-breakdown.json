@@ -1,0 +1,237 @@
+{
+  "schema": 1,
+  "project": "SSTCG",
+  "arena": "poseidon-palace",
+  "status": "concept-approved_production-pending",
+  "artStyle": "painterly-cinematic-3d",
+  "artboard": {
+    "path": "docs/art-bible/references/poseidon-master-artboard.jpg",
+    "resolution": [
+      1656,
+      950
+    ],
+    "sha256": "731f3c622ae65d51bef658880657f0f34be0d132a30d3071816a70029ff6b624",
+    "installed": false
+  },
+  "camera": "docs/art-bible/poseidon-camera-manifest.json",
+  "assets": [
+    {
+      "id": "POS-FLR-001",
+      "name": "Campo circular",
+      "layer": "battlefield",
+      "priority": "P0",
+      "implementation": "three-mesh",
+      "artDirection": "Mármore azul, círculos de delimitação. Bloqueado para gameplay",
+      "materialPreset": "painterly-blue-marble",
+      "productionStatus": "not_started",
+      "file": null,
+      "visibilityUsage": "battle"
+    },
+    {
+      "id": "POS-FLR-002",
+      "name": "Anéis dourados",
+      "layer": "battlefield",
+      "priority": "P0",
+      "implementation": "decal-or-geometry",
+      "artDirection": "Ondas douradas pintadas nas bordas; não sob cartas",
+      "materialPreset": "aged-gold",
+      "productionStatus": "not_started",
+      "file": null,
+      "visibilityUsage": "battle"
+    },
+    {
+      "id": "POS-ARC-001",
+      "name": "Palácio central",
+      "layer": "architecture",
+      "priority": "P0",
+      "implementation": "modular-glb",
+      "artDirection": "Fachada branca e alas simétricas; principal ponto focal",
+      "materialPreset": "cold-ivory",
+      "productionStatus": "not_started",
+      "file": null,
+      "visibilityUsage": "both"
+    },
+    {
+      "id": "POS-ARC-002",
+      "name": "Escadaria monumental",
+      "layer": "architecture",
+      "priority": "P0",
+      "implementation": "procedural-mesh",
+      "artDirection": "Escadaria central com degraus encaixados, altura crescente",
+      "materialPreset": "painted-marble",
+      "productionStatus": "not_started",
+      "file": null,
+      "visibilityUsage": "both"
+    },
+    {
+      "id": "POS-ARC-003",
+      "name": "Colunatas e capitéis",
+      "layer": "architecture",
+      "priority": "P0",
+      "implementation": "instanced-glb",
+      "artDirection": "Colunas esculpidas em dois lados; capitéis encostam no teto",
+      "materialPreset": "cold-ivory",
+      "productionStatus": "not_started",
+      "file": null,
+      "visibilityUsage": "both"
+    },
+    {
+      "id": "POS-ARC-004",
+      "name": "Frontão e frisos",
+      "layer": "architecture",
+      "priority": "P0",
+      "implementation": "glb",
+      "artDirection": "Pedimento triangular simétrico com símbolo do tridente",
+      "materialPreset": "cold-ivory-and-gold",
+      "productionStatus": "not_started",
+      "file": null,
+      "visibilityUsage": "both"
+    },
+    {
+      "id": "POS-MON-001",
+      "name": "Grande Pilar Principal",
+      "layer": "monument",
+      "priority": "P0",
+      "implementation": "mesh-and-shader",
+      "artDirection": "Pilar atrás do templo; escala heróica e haze azul",
+      "materialPreset": "painted-marble",
+      "productionStatus": "not_started",
+      "file": null,
+      "visibilityUsage": "cinematic"
+    },
+    {
+      "id": "POS-ENV-001",
+      "name": "Oceano suspenso",
+      "layer": "environment",
+      "priority": "P0",
+      "implementation": "layered-shader",
+      "artDirection": "Superfície ondulante acima do reino respirável; sem invadir gameplay",
+      "materialPreset": "deep-ocean",
+      "productionStatus": "not_started",
+      "file": null,
+      "visibilityUsage": "both"
+    },
+    {
+      "id": "POS-MON-002",
+      "name": "Estátuas de Poseidon",
+      "layer": "monument",
+      "priority": "P1",
+      "implementation": "custom-glb",
+      "artDirection": "Esculturas mitológicas detalhadas e pintadas; não placeholders geométricos",
+      "materialPreset": "stone-statue",
+      "productionStatus": "not_started",
+      "file": null,
+      "visibilityUsage": "cinematic"
+    },
+    {
+      "id": "POS-ENV-002",
+      "name": "Pilares e montanhas distantes",
+      "layer": "environment",
+      "priority": "P1",
+      "implementation": "2.5d-matte",
+      "artDirection": "Mundos distantes pintados à mão, limitados à câmera fixa",
+      "materialPreset": "atmospheric-rock",
+      "productionStatus": "not_started",
+      "file": null,
+      "visibilityUsage": "cinematic"
+    },
+    {
+      "id": "POS-ENV-003",
+      "name": "Rochas laterais",
+      "layer": "environment",
+      "priority": "P1",
+      "implementation": "low-poly-painted-glb",
+      "artDirection": "Recortes nas laterais, sem competir com cartas",
+      "materialPreset": "rock",
+      "productionStatus": "not_started",
+      "file": null,
+      "visibilityUsage": "battle"
+    },
+    {
+      "id": "POS-FX-001",
+      "name": "Cáusticas",
+      "layer": "fx",
+      "priority": "P1",
+      "implementation": "shader-projection",
+      "artDirection": "Reflexos aqua lentos com limitação de intensidade sob cartas",
+      "materialPreset": "light-caustics",
+      "productionStatus": "not_started",
+      "file": null,
+      "visibilityUsage": "battle"
+    },
+    {
+      "id": "POS-FX-002",
+      "name": "Raios e partículas",
+      "layer": "fx",
+      "priority": "P1",
+      "implementation": "vfx-forge",
+      "artDirection": "Raios solares da água e poeira submarina em baixa densidade",
+      "materialPreset": "particles",
+      "productionStatus": "not_started",
+      "file": null,
+      "visibilityUsage": "both"
+    },
+    {
+      "id": "POS-DEC-001",
+      "name": "Estandartes tridente",
+      "layer": "decor",
+      "priority": "P2",
+      "implementation": "plane-and-paint",
+      "artDirection": "Ornamento opcional; não obrigatório nem sobre HUD",
+      "materialPreset": "fabric-painted",
+      "productionStatus": "not_started",
+      "file": null,
+      "visibilityUsage": "cinematic"
+    }
+  ],
+  "rules": {
+    "cameraLocked": true,
+    "gameplayCoordinatesLocked": true,
+    "publishOfficial": false,
+    "noFakeAssets": true,
+    "requiresVisualApproval": true,
+    "landmarkRequiredInBattleFrustum": false,
+    "sameWorldForCinematicAndBattle": true,
+    "battlefieldEnvironmentMustFrameNotEnclose": true
+  },
+  "artBibleVersion": 2,
+  "sceneConcept": "continuous_3d_world_cinematic_reveal_then_battlefield",
+  "requiredArtboards": [
+    {
+      "id": "cinematic-master",
+      "status": "not_started",
+      "description": "Apresentação ampla do templo e mundo"
+    },
+    {
+      "id": "battlefield-master",
+      "status": "pending_camera_and_hud_overlay_validation",
+      "description": "Vista competitiva do campo emoldurada pelo ambiente"
+    },
+    {
+      "id": "transition-storyboard",
+      "status": "not_started",
+      "description": "4+ keyframes de câmera e transição"
+    }
+  ],
+  "cameras": {
+    "competitive": "docs/art-bible/poseidon-camera-manifest.json",
+    "cinematic": {
+      "status": "not_authored",
+      "editable": true,
+      "mustEndAtCompetitivePose": true
+    }
+  },
+  "cinematic": {
+    "status": "not_implemented",
+    "sequence": [
+      "establishing",
+      "landmark_reveal",
+      "travel",
+      "battlefield_arrival",
+      "god_reveal",
+      "gameplay_start"
+    ],
+    "skipRequired": true,
+    "reducedMotionRequired": true
+  }
+}
