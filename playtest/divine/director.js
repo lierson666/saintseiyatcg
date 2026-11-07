@@ -25,7 +25,7 @@ export const DEATH_FX = {
   ares: [(f, a) => f.burst(a.x, a.y, {color: '#ff7a3a', count: 60, speed: 200, grav: -200, life: .9}), (f, a) => { f.flash(.5); f.burst(a.x, a.y, {color: '#ff5a2a', count: 200, speed: 600, life: 1}); f.burst(a.x, a.y, {color: '#5a5048', count: 90, speed: 180, grav: -60, life: 1.6, size: 16}); f.shockwave(a.x, a.y, {color: '#ffb070', size: 380}); }],
   artemis: [(f, a) => f.burst(a.x, a.y, {color: '#d8fff0', count: 80, speed: 120, grav: -160, life: 1.4}), (f, a) => { f.burst(a.x, a.y, {color: '#e8f4ff', count: 150, speed: 260, grav: -220, life: 1.8, size: 10}); f.shockwave(a.x, a.y, {color: '#c8f0ff', size: 280}); }],
 };
-// Golpe físico: a carta avança e bate. O resto é Cosmo: a carta fica e o efeito voa (autor, 06/11/2026).
+// Golpe físico: a carta avança e bate. Golpe com nome ou animação de Cosmo: a carta fica e o efeito voa (autor, 06/11/2026).
 const PHYSICAL = new Set(['slash', 'impact', 'blood']);
 const STYLE_BY_TYPE = [[/Gold Saint/, 'energy', '#ffd36e'], [/Silver Saint/, 'energy', '#d8e4ff'], [/Bronze Saint/, 'physical', '#ffe0a0']];
 
@@ -94,7 +94,7 @@ export function createDirector({ui, getFx, settings}) {
     const f = fx('strikeVfx');
     if (skipping) return;
     if (!ui.noise?.('carga', attacker)) chargeSound(p);
-    if (!f || style.style === 'none') return;
+    if (!f || style.style === 'none') { if (style.physical) { stance(attacker, 'dash', to, 160); await pause(160); } return; } // sem VFX a carta ainda bate
     moment('carga', attacker, ui.rect(attacker), {color: style.color});
     f.charge(from.x, from.y, {color: style.color, count: Math.round((style.style === 'physical' ? 30 : 60) * (1 + p * 2))});
     if (p > .6) f.shake(p * 3); // o chão treme enquanto o Cosmo sobe
@@ -218,7 +218,8 @@ export function createDirector({ui, getFx, settings}) {
       ui.speak?.('strike', onGod ? e.target.player : e.target.uid);
       const from = ui.center(ui.rect(e.attacker)), targetRect = e.target.kind === 'god' ? ui.godRect(e.target.player) : ui.rect(e.target.uid);
       const to = ui.center(targetRect), p = powerOf(e.atk), base = styleOf(e.attacker);
-      const style = {...base, physical: base.style === 'physical' || PHYSICAL.has(base.element)};
+      // Golpe básico (sem nome e sem animação de Cosmo escolhida) é sempre físico: a carta vai bater na outra (autor, 06/11/2026).
+      const style = {...base, physical: !base.name && (['physical', 'energy'].includes(base.style) || PHYSICAL.has(base.element))};
       // Fluxo do golpe (autor, 06/11/2026): mira, carga, viagem, impacto e volta, um de cada vez.
       stance(e.attacker, 'lift', to, 200);
       await pause(200);
