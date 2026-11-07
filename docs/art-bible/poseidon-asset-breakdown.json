@@ -196,6 +196,21 @@
       "visibilityUsage": "cinematic",
       "texture": "arena-forge/assets/poseidon-v7/sacred-trident-painted.png",
       "manifest": "arena-forge/assets/poseidon-v7/manifest.json"
+    },
+    {
+      "id": "POS-ARC-V8-001",
+      "name": "Marine Acanthus Capital GLB",
+      "layer": "architecture",
+      "priority": "P0",
+      "implementation": "original-glb2-instanced-with-painted-texture",
+      "artDirection": "Marine acanthus sculptural capitals, coils and age-painted ivory. Eighteen placements; cinema only. Not art-approved",
+      "materialPreset": "poseidon-ivory-marble-v8",
+      "productionStatus": "development_not_art_approved",
+      "file": "arena-forge/assets/poseidon-v8/poseidon-marine-capital.glb",
+      "visibilityUsage": "cinematic",
+      "texture": "arena-forge/assets/poseidon-v8/marine-capital-painted.png",
+      "manifest": "arena-forge/assets/poseidon-v8/manifest.json",
+      "instanceCount": 18
     }
   ],
   "rules": {

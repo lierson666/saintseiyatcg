@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "asset_id": "POS-ARC-V8-001",
+  "name": "Poseidon Marine Capital",
+  "status": "development_not_art_approved",
+  "glb": "poseidon-marine-capital.glb",
+  "texture": "marine-capital-painted.png",
+  "triangles": 3136,
+  "vertices": 9408,
+  "sha256": "dd554fa3b4c308f95d857464869f0f1f16e2e460813c971169dcc453bda57a4b",
+  "use": "cinematic and palace background, instanced across 18 colonnade positions",
+  "license": "original SSTCG study"
+}

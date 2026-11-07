@@ -408,6 +408,48 @@ export function createPoseidonPalace(THREE, {quality = 'high', reduceMotion = fa
     landmark:G.landmark,quality,materials:{capital:M.capital,gold,deep:M.tympanum}
   });
 
+  // V8: one authentic authored GLB capital with painterly material, instanced
+  // across the 18 column locations. No repeated GLB downloads or draw calls.
+  // Safe fallback to V6 sculptural collars on any loading/validation failure.
+  const v8Sources=[];
+  G.landmark.traverse(o=>{if(o.name==='Poseidon sculpted marine acanthus capital collars' ||
+    o.name==='Poseidon marine capital gilded bosses') v8Sources.push(o);});
+  const capitalRows=[];
+  const v8P=.35+14*.29,v8ENT=v8P+12.2;
+  const v8Front=-19.2-(14-1)*1.27-1.27/2;
+  const v8ZF=v8Front-1.15,v8ZB=-41.6-1.3;
+  for(const z of [v8ZF,v8ZB])for(const x of [-7.6,-4.7,4.7,7.6])
+    capitalRows.push({x,y:v8ENT,z,r:.62});
+  const v8Sy=6.1,v8Sh=7.2,v8Sz=-41.6+.6,v8Cz=v8Sz-2.4;
+  for(const side of [-1,1])for(let j=0;j<5;j++)
+    capitalRows.push({x:side*(11.6+j*2.7),y:v8Sy+v8Sh,z:v8Cz,r:.48});
+  let capV8=null,capInstances=null,capV8Disposed=false;
+  const capV8Ready=(style==='painterly'&&tier>=1&&typeof document!=='undefined')?
+    loadPoseidonSculptGLB(THREE,{
+      parent:G.landmark,
+      url:new URL('./assets/poseidon-v8/poseidon-marine-capital.glb',import.meta.url).href
+    }).then(asset=>{
+      if(capV8Disposed){asset?.dispose();return null;}
+      if(!asset)return null;
+      capV8=asset;
+      const original=asset.mesh;
+      const inst=new THREE.InstancedMesh(original.geometry,original.material,capitalRows.length);
+      inst.name='POS-ARC-V8-001 · Painted marine capitals · 18 instances';
+      const mtx=new THREE.Matrix4();
+      capitalRows.forEach((row,i)=>{
+        mtx.makeScale(row.r,row.r,row.r).setPosition(row.x,row.y,row.z);
+        inst.setMatrixAt(i,mtx);
+      });
+      inst.instanceMatrix.needsUpdate=true;
+      G.landmark.add(inst);capInstances=inst;original.visible=false;
+      v8Sources.forEach(o=>o.visible=false);
+      root.userData.capitalV8='ready';
+      return asset;
+    }).catch(err=>{root.userData.capitalV8='fallback';
+      console.warn('[POSEIDON V8] capital GLB unavailable, retaining V6 geometry',err);return null;})
+    :Promise.resolve(null);
+  root.userData.capitalV8=(style==='painterly'&&tier>=1)?'loading':'disabled';
+
   // Luz do palácio: chave fria filtrada pelo oceano, preenchimento turquesa, contraluz nos contornos, calor discreto no ouro.
   // Ficam no grupo: entram e saem junto com o palácio (só no preview de desenvolvimento).
   const hemi=new THREE.HemisphereLight(0x8fdcff,0x08223a,.55);
@@ -418,11 +460,11 @@ export function createPoseidonPalace(THREE, {quality = 'high', reduceMotion = fa
   G.lighting.add(hemi,key,rim,warm,front);
   const base={hemi:hemi.intensity,key:key.intensity,rim:rim.intensity,warm:warm.intensity,front:front.intensity};
   root.userData={...root.userData,preset:'poseidon-palace-canonical-v1',beauty:'v7-glb-pipeline',source:'Saint Seiya reference study',protectedGameplay:false,quality,detailObjects:detailV4.count,sculptureObjects:sculptureV6.count};
-  return {group:root,paint,glbV7Ready,
+  return {group:root,paint,glbV7Ready,capV8Ready,
     groups:G,
     // Transição de luz da cinemática: multiplica a iluminação do mundo (1 = luz da partida).
     setLight(k){ hemi.intensity=base.hemi*k; key.intensity=base.key*k; rim.intensity=base.rim*k; warm.intensity=base.warm*k; front.intensity=base.front*k; },
     update(t){ if(reduceMotion) return; shared.uTime.value=t; beams.forEach((b,i)=>{b.rotation.z=b.userData.tilt+Math.sin(t*.07+i*1.7)*.012;});
       flames.forEach((f,i)=>{const k=1+Math.sin(t*5+i*2.1)*.08+Math.sin(t*11.3+i)*.04;f.scale.set(1,k,1);}); },
-    dispose(){ v7Disposed=true;glbV7?.dispose();paintedMaps?.dispose();battlePainting?.dispose();root.traverse(n=>{ if(n.isMesh && n.geometry!==unitBox) n.geometry.dispose(); }); new Set(owned).forEach(o=>o.dispose()); root.material.dispose(); }};
+    dispose(){ capV8Disposed=true;if(capInstances)G.landmark.remove(capInstances);capV8?.dispose();v7Disposed=true;glbV7?.dispose();paintedMaps?.dispose();battlePainting?.dispose();root.traverse(n=>{ if(n.isMesh && n.geometry!==unitBox) n.geometry.dispose(); }); new Set(owned).forEach(o=>o.dispose()); root.material.dispose(); }};
 }
