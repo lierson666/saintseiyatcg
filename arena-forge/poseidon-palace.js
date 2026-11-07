@@ -7,6 +7,8 @@
 // opts: {quality: 'phone'|'low'|'medium'|'high'|'ultra', reduceMotion, style: 'painterly'|'classic', painterly: preset}. Sem opts = 'high', pintado (editor).
 import {painterlyUniforms, PAINT_UNIFORMS_GLSL, PAINT_COLOR_GLSL, PAINT_OUTPUT_GLSL} from '../shared/painterly.js';
 import {addPoseidonV4Detail} from './poseidon-v4-detail.js';
+import {attachPoseidonPaintedMaps} from './poseidon-painted-maps.js';
+import {attachPoseidonBattlefieldPainting} from './poseidon-battlefield-paint.js';
 // Abertura padrão de Poseidon (editável no Arena Forge → Produção → Cinemática; o jogo lê arena-forge/cinematics/poseidon.json).
 // Cada chave: pos, look (ponto focal), fov, roll (°), dur (ms até chegar nela; na primeira, tempo parado no plano de abertura), ease, stage, light (1 = luz da partida), vfx, sound.
 // A última chave é sempre a câmera competitiva (bloqueada): a cinemática termina exatamente nela.
@@ -95,6 +97,11 @@ export function createPoseidonPalace(THREE, {quality = 'high', reduceMotion = fa
     rock:marble('Rochas submarinas',0x3d6272,{rough:.95,vein:0,scale:.6,caustic:.8}),
     rockLite:marble('Rochas claras',0x7c98a0,{rough:.92,vein:0,scale:.6,caustic:.8}),
   };
+  // V5: original brush-authored PNG pigments, layered over Three.js PBR and
+  // the reusable painterly shader. The slim game bundle has no TextureLoader.
+  // Load only for painterly mode; classic preserves its existing material colors.
+  const paintedMaps=style==='painterly'?attachPoseidonPaintedMaps(THREE,M):null;
+
   // Ouro antigo: metal de verdade (não amarelo puro) com um calor próprio para ler sob a luz azul.
   const gold=marble('Tridente e frisos de ouro',0xd8b465,{rough:.32,metal:.62,vein:0,caustic:.35,emissive:0x5a3a0c,emissiveIntensity:.6});
   // Sombra de contato: mancha escura e suave sob bases, degraus e paredes (sem shadow map).
@@ -367,6 +374,11 @@ export function createPoseidonPalace(THREE, {quality = 'high', reduceMotion = fa
   contacts.forEach(([x,y,z,w,d],i)=>{cm.makeScale(w,1,d).setPosition(x,y,z);cInst.setMatrixAt(i,cm);});
   cInst.renderOrder=1;G.fx.add(cInst);
 
+  // V5 original painted ceremonial floor. It is a visual-only overlay;
+  // underlying game floor remains where gameplay expects it.
+  const battlePainting=style==='painterly'?
+    attachPoseidonBattlefieldPainting(THREE,G.battlefield,{quality}):null;
+
   // V4 additive art pass: maritime ornament, architectural relief and faceted rock edges.
   // Materials are shared with the main world; no camera or gameplay coordinates modified.
   const detailV4=addPoseidonV4Detail(THREE,{
@@ -389,5 +401,5 @@ export function createPoseidonPalace(THREE, {quality = 'high', reduceMotion = fa
     setLight(k){ hemi.intensity=base.hemi*k; key.intensity=base.key*k; rim.intensity=base.rim*k; warm.intensity=base.warm*k; front.intensity=base.front*k; },
     update(t){ if(reduceMotion) return; shared.uTime.value=t; beams.forEach((b,i)=>{b.rotation.z=b.userData.tilt+Math.sin(t*.07+i*1.7)*.012;});
       flames.forEach((f,i)=>{const k=1+Math.sin(t*5+i*2.1)*.08+Math.sin(t*11.3+i)*.04;f.scale.set(1,k,1);}); },
-    dispose(){ root.traverse(n=>{ if(n.isMesh && n.geometry!==unitBox) n.geometry.dispose(); }); new Set(owned).forEach(o=>o.dispose()); root.material.dispose(); }};
+    dispose(){ paintedMaps?.dispose(); battlePainting?.dispose(); root.traverse(n=>{ if(n.isMesh && n.geometry!==unitBox) n.geometry.dispose(); }); new Set(owned).forEach(o=>o.dispose()); root.material.dispose(); }};
 }
