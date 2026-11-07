@@ -16,3 +16,7 @@
 ## Current preproduction — V10
 - [Poseidon V10 Guardian Statues — production brief](POSEIDON_V10_GUARDIAN_ART_PRODUCTION.md): two cinematic stone guardians; concept only, no GLBs yet.
 - [Poseidon V10 projected anchors](poseidon-v10-guardian-layout.json): proposal validated in existing camera keys; no occlusion guarantees.
+
+## V11 sculptural preproduction
+- [Poseidon V11 Sculpture Bible](POSEIDON_V11_SCULPTURE_BIBLE.md) — distinct statues, sculpt/material gates, no GLBs claimed.
+- [Poseidon V11 asset preflight](../../arena-forge/assets/poseidon-v11/preflight.json) — models absent, camera anchors validated.

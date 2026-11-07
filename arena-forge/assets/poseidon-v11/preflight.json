@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "subject": "poseidon-v11-guardian-sculpture",
+  "artBibleVersion": 2,
+  "concept": "illustrations_created_not_author_approved",
+  "orthographicTechnicalSheets": "not_authored",
+  "models": [
+    {
+      "id": "POS-MON-V10-001",
+      "filename": "guardian-tides.glb",
+      "position": [
+        -10.8,
+        4.41,
+        -34.8
+      ],
+      "exists": false,
+      "validGLB": false,
+      "modelStatus": "not_started"
+    },
+    {
+      "id": "POS-MON-V10-002",
+      "filename": "guardian-depths.glb",
+      "position": [
+        10.8,
+        4.41,
+        -34.8
+      ],
+      "exists": false,
+      "validGLB": false,
+      "modelStatus": "not_started"
+    }
+  ],
+  "earlyCinematicFrustumValid": true,
+  "absentInBattleFrustum": true,
+  "officialPublished": false,
+  "notes": [
+    "Frustum checks are projected anchor points only; no occlusion tests.",
+    "GLB header checks are preliminary; successful decode and art approval are additional gates."
+  ]
+}
