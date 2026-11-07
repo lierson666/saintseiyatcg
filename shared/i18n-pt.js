@@ -78,7 +78,7 @@ self.ssI18nPT = {
     'Deck name': 'Nome do deck', 'No Domain yet': 'Sem Domínio ainda', 'Cost curve': 'Curva de custo', 'Click cards in the collection to add them.': 'Clique nas cartas da coleção para adicioná-las.',
     'Deck ready to play.': 'Deck pronto para jogar.', 'No cards for this God yet.': 'Ainda não há cartas para este Deus.', 'In deck': 'No deck',
     'Remove one': 'Remover uma', 'Add one': 'Adicionar uma', 'Choose your God': 'Escolha seu Deus', 'Choose your Domain': 'Escolha seu Domínio', 'Use Domain': 'Usar Domínio', 'Domain in use': 'Domínio em uso', 'Choose the deck cover': 'Escolha a capa do deck',
-    'Splash limit reached': 'Limite de splash atingido', 'Too many cards': 'Cartas demais', 'Not in your collection': 'Fora da sua coleção', 'Missing cards': 'Cartas faltando',
+    'Splash limit reached': 'Limite de splash atingido', 'Too many cards': 'Cartas demais', 'OVERGROWTH': 'CRESCIMENTO SELVAGEM', 'Not in your collection': 'Fora da sua coleção', 'Missing cards': 'Cartas faltando',
     'Right-click a card to see it big.': 'Clique com o botão direito numa carta para vê-la grande.',
 
     // Coleção e loja
