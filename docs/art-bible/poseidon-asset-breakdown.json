@@ -226,6 +226,44 @@
       "texture": "arena-forge/assets/poseidon-v9/portal-relief-painted.png",
       "manifest": "arena-forge/assets/poseidon-v9/manifest.json",
       "instanceCount": 2
+    },
+    {
+      "id": "POS-MON-V10-001",
+      "name": "Guardian of Tides",
+      "layer": "monument",
+      "priority": "P1",
+      "implementation": "proposed_unique_sculpted_glb",
+      "artDirection": "Unique humanoid carved-marine statue with trident, drapery and sculpted wave base. Not a mirrored clone, requires actual authored model and artistic approval.",
+      "materialPreset": "poseidon-statue-aged-ivory-v10",
+      "productionStatus": "concept_not_approved_model_not_started",
+      "file": null,
+      "visibilityUsage": "cinematic",
+      "proposedAnchor": [
+        -10.8,
+        4.41,
+        -34.8
+      ],
+      "expectedModelFile": "arena-forge/assets/poseidon-v10/guardian-tides.glb",
+      "cameraLayout": "docs/art-bible/poseidon-v10-guardian-layout.json"
+    },
+    {
+      "id": "POS-MON-V10-002",
+      "name": "Guardian of Depths",
+      "layer": "monument",
+      "priority": "P1",
+      "implementation": "proposed_unique_sculpted_glb",
+      "artDirection": "Unique humanoid carved-marine statue with trident, drapery and sculpted wave base. Not a mirrored clone, requires actual authored model and artistic approval.",
+      "materialPreset": "poseidon-statue-aged-ivory-v10",
+      "productionStatus": "concept_not_approved_model_not_started",
+      "file": null,
+      "visibilityUsage": "cinematic",
+      "proposedAnchor": [
+        10.8,
+        4.41,
+        -34.8
+      ],
+      "expectedModelFile": "arena-forge/assets/poseidon-v10/guardian-depths.glb",
+      "cameraLayout": "docs/art-bible/poseidon-v10-guardian-layout.json"
     }
   ],
   "rules": {

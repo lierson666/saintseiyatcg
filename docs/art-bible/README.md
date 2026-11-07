@@ -12,3 +12,7 @@
 - [Instalador de referência](install-poseidon-master.py): exige JPG original e valida SHA256.
 
 **Estado:** documentação de produção, não sinal de cena/pipeline implementado nem de publicação oficial.
+
+## Current preproduction — V10
+- [Poseidon V10 Guardian Statues — production brief](POSEIDON_V10_GUARDIAN_ART_PRODUCTION.md): two cinematic stone guardians; concept only, no GLBs yet.
+- [Poseidon V10 projected anchors](poseidon-v10-guardian-layout.json): proposal validated in existing camera keys; no occlusion guarantees.

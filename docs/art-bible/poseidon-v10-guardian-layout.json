@@ -1,0 +1,272 @@
+{
+  "schema": 1,
+  "kind": "preproduction_camera_projection",
+  "scene": "poseidon",
+  "status": "proposed_not_author_approved",
+  "cinemaManifest": "arena-forge/cinematics/poseidon.json",
+  "aspect": 1.7777777777777777,
+  "viewport": [
+    1600,
+    900
+  ],
+  "anchors": [
+    {
+      "asset_id": "POS-MON-V10-001",
+      "name": "Guardian of Tides",
+      "world": [
+        -10.8,
+        4.41,
+        -34.8
+      ],
+      "height": 10,
+      "projections": [
+        {
+          "stage": "ESTABLISHING SHOT",
+          "foot": {
+            "px": [
+              454,
+              695
+            ],
+            "ndcDepth": 0.9971,
+            "visible": true
+          },
+          "top": {
+            "px": [
+              444,
+              541
+            ],
+            "ndcDepth": 0.997,
+            "visible": true
+          }
+        },
+        {
+          "stage": "ENVIRONMENT REVEAL",
+          "foot": {
+            "px": [
+              433,
+              712
+            ],
+            "ndcDepth": 0.9949,
+            "visible": true
+          },
+          "top": {
+            "px": [
+              422,
+              430
+            ],
+            "ndcDepth": 0.9948,
+            "visible": true
+          }
+        },
+        {
+          "stage": "CAMERA TRAVEL",
+          "foot": {
+            "px": [
+              522,
+              456
+            ],
+            "ndcDepth": 0.9959,
+            "visible": true
+          },
+          "top": {
+            "px": [
+              513,
+              192
+            ],
+            "ndcDepth": 0.9958,
+            "visible": true
+          }
+        },
+        {
+          "stage": "BATTLEFIELD ARRIVAL",
+          "foot": {
+            "px": [
+              561,
+              -58
+            ],
+            "ndcDepth": 0.9968,
+            "visible": false
+          },
+          "top": {
+            "px": [
+              528,
+              -328
+            ],
+            "ndcDepth": 0.9963,
+            "visible": false
+          }
+        },
+        {
+          "stage": "GOD REVEAL",
+          "foot": {
+            "px": [
+              507,
+              -256
+            ],
+            "ndcDepth": 0.9961,
+            "visible": false
+          },
+          "top": {
+            "px": [
+              452,
+              -626
+            ],
+            "ndcDepth": 0.9952,
+            "visible": false
+          }
+        },
+        {
+          "stage": "GAMEPLAY START",
+          "foot": {
+            "px": [
+              486,
+              -341
+            ],
+            "ndcDepth": 0.9958,
+            "visible": false
+          },
+          "top": {
+            "px": [
+              420,
+              -759
+            ],
+            "ndcDepth": 0.9948,
+            "visible": false
+          }
+        }
+      ]
+    },
+    {
+      "asset_id": "POS-MON-V10-002",
+      "name": "Guardian of Depths",
+      "world": [
+        10.8,
+        4.41,
+        -34.8
+      ],
+      "height": 10,
+      "projections": [
+        {
+          "stage": "ESTABLISHING SHOT",
+          "foot": {
+            "px": [
+              721,
+              800
+            ],
+            "ndcDepth": 0.9961,
+            "visible": true
+          },
+          "top": {
+            "px": [
+              719,
+              605
+            ],
+            "ndcDepth": 0.9959,
+            "visible": true
+          }
+        },
+        {
+          "stage": "ENVIRONMENT REVEAL",
+          "foot": {
+            "px": [
+              1066,
+              778
+            ],
+            "ndcDepth": 0.9939,
+            "visible": true
+          },
+          "top": {
+            "px": [
+              1075,
+              444
+            ],
+            "ndcDepth": 0.9936,
+            "visible": true
+          }
+        },
+        {
+          "stage": "CAMERA TRAVEL",
+          "foot": {
+            "px": [
+              1078,
+              456
+            ],
+            "ndcDepth": 0.9959,
+            "visible": true
+          },
+          "top": {
+            "px": [
+              1087,
+              192
+            ],
+            "ndcDepth": 0.9958,
+            "visible": true
+          }
+        },
+        {
+          "stage": "BATTLEFIELD ARRIVAL",
+          "foot": {
+            "px": [
+              1039,
+              -58
+            ],
+            "ndcDepth": 0.9968,
+            "visible": false
+          },
+          "top": {
+            "px": [
+              1072,
+              -328
+            ],
+            "ndcDepth": 0.9963,
+            "visible": false
+          }
+        },
+        {
+          "stage": "GOD REVEAL",
+          "foot": {
+            "px": [
+              1093,
+              -256
+            ],
+            "ndcDepth": 0.9961,
+            "visible": false
+          },
+          "top": {
+            "px": [
+              1148,
+              -626
+            ],
+            "ndcDepth": 0.9952,
+            "visible": false
+          }
+        },
+        {
+          "stage": "GAMEPLAY START",
+          "foot": {
+            "px": [
+              1114,
+              -341
+            ],
+            "ndcDepth": 0.9958,
+            "visible": false
+          },
+          "top": {
+            "px": [
+              1180,
+              -759
+            ],
+            "ndcDepth": 0.9948,
+            "visible": false
+          }
+        }
+      ]
+    }
+  ],
+  "warnings": [
+    "No 3D statue GLBs installed",
+    "Projection does not test occlusion",
+    "Proposed x±10.8 require structural plinth beyond x±9.2 main temple podium",
+    "Battlefield camera must stay locked; monuments are cinematic-only"
+  ]
+}
