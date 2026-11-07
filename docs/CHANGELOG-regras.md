@@ -4,11 +4,19 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-07 — Carta neutral-v6-464 — Steel Innovation (Dr. Asamori) custa 5
+
+- **Antes:** pague {2}{C} e deixe Dr. Asamori Unprepared para buscar um Equipment no deck.
+- **Depois:** pague {5}{C} (mesmo efeito).
+- **Motivo:** autor, 07/11/2026: tutor de Equipment forte demais por 2.
+- **Feito:** cards.json (EN/PT), rascunho PT, motor (`neutral.js`) e teste.
+
 ## 2026-11-06 — Carta athena-v6-020 — Athena’s Shield vale para todos os Devotees de Athena
 
 - **Antes:** Divine Aegis dava +0/+1 a Saints amigos; Miracle, +1/+1 a mais com 5 ou menos Soul.
 - **Depois:** "Friendly Athena Devotees get +1 @ATK / +1 @HP." Miracle: "+2 @ATK / +2 @HP" a mais com 5 ou menos Soul (total +3/+3).
 - **Motivo:** autor, 06/11/2026 (o jogo ainda dava +0/+1 a Jabu; sintaxe "Athena’s devotees" corrigida para "Athena Devotees").
+- **Santuário Divino (07/11/2026, autor):** custo {3}{C} → {3}{L}, pago só em Latent, como no texto canônico do D268.
 - **Engine/dados:** `data/cards.json`, `data/canon/d268.json`, `playtest/engine-v3/v6/athena-gear.js`.
 - **Pendências:** nenhuma.
 

@@ -739,6 +739,10 @@ body { font-family: "Jost", system-ui, sans-serif; }
     min-height: var(--land-h); display: flex; align-items: center; justify-content: flex-start; pointer-events: auto; }
   .band .lane__base { flex: 0 1 calc(var(--land-w) + var(--u) * .6); min-width: calc(var(--land-w) * .16); height: var(--land-h); justify-content: start; }
   .band .lane__empty { margin: 0; opacity: .45; font-size: calc(var(--u) * 1.2); }
+  /* Equipment solto à direita do God (autor, 07/11/2026), do mesmo tamanho das Bases. */
+  .olympus .band .field.field--gear { --card-w: calc(var(--m) * 1.22); --card-h: calc(var(--card-w) * 1.4); grid-column: 3; display: flex; align-items: center; justify-content: flex-start;
+    gap: calc(var(--u) * .6); margin: 0; padding: 0; min-width: 0; pointer-events: auto; }
+  .olympus .band .field--gear .slot { flex: 0 1 var(--card-w); min-width: calc(var(--card-w) * .3); }
   .drag-zone--band { position: absolute; inset: calc(var(--u) * -.6) 0; z-index: 20; } /* a linha inteira do God */
   .drag-zone--band strong { font-size: calc(var(--u) * 2.2); }
   .arena-field { grid-template-rows: auto auto auto; }

@@ -215,7 +215,7 @@ export default {
   // Dr. Asamori
   'neutral-v6-464': {
     costLess: (s, c, key, self, uid) => k.card(c, uid)?.kind === 'Equipment' && {n: 1, min: 1}, // Mechanical Engineering
-    activate: {name: 'Steel Innovation', cost: 2, once: true, tap: true,
+    activate: {name: 'Steel Innovation', cost: 5, once: true, tap: true,
       run: (s, c, key) => { k.search(s, c, key, 'STEEL INNOVATION', card => card.kind === 'Equipment'); }},
   },
   // Sky Steel Cloth

@@ -698,19 +698,61 @@ function domainUses(key) {
   };
   return [dom?.activate && use(dom.activate, `domain:${key}`, false), dom?.res && use(dom.res, `domain:${key}:res`, true)].filter(Boolean);
 }
+// Linhas do Domain com a ativada/Ressonância correspondente (u) e se a Ressonância está fora (Deus de outra facção).
+function domainLines(key, f) {
+  const uses = domainUses(key), parse = t => { const [name, ...rest] = t.split(' — '); return {name, text: rest.join(' — ')}; };
+  const shown = displayCard(f).habilidades_en || [];
+  return (f.habilidades_en || []).map((t, i) => {
+    const en = parse(t), pt = resonanceTitle(parse(shown[i] || t)), u = uses.find(a => (/^resonance/i.test(en.name) ? a.res : !a.res && a.name.toLowerCase() === en.name.toLowerCase()));
+    const off = /^resonance/i.test(en.name) && !u;
+    return {u, off, pt, order: u ? u.cost : off ? 90 : 99};
+  }).sort((a, b) => a.order - b.order);
+}
+// Desktop (autor, 07/11/2026): clicar no Domain abre o mesmo painel do Deus, com a carta e um botão por habilidade.
+function showDomainPanel(key) {
+  const f = FORGE.get(S().domains[key]);
+  if (!f) return;
+  closeBigCard(); hideInspect();
+  const name = displayCard(f).nome_exibicao_en || f.nome_exibicao_en || '';
+  const powers = domainLines(key, f).map(({u, off, pt}, i) => {
+    const [st, label] = u ? (u.why ? ['locked', u.why] : ['ready', 'Ready · click to use']) : off ? ['locked', 'Only with a God of this faction.'] : ['active', 'Always on'];
+    return `<button class="power power--${u ? 'command' : 'divine'} is-${st}" ${st === 'ready' ? `data-dom-use="${u.uid}"` : 'aria-disabled="true"'} data-power="${i}" title="${esc(label)}">
+      <span class="power__icon" aria-hidden="true">${u ? '⚔' : '✦'}</span>
+      <span class="power__head"><strong>${esc(pt.name)}</strong><small>${u ? `${u.cost} Cosmo` : 'Domain'}</small></span>
+      <em class="power__state">${esc(label)}</em>
+      <span class="power__text"><span>${inlineMarkup(pt.text)}</span></span>
+    </button>`;
+  });
+  const box = document.createElement('div');
+  box.id = 'bigcard';
+  box.className = 'bigcard godpanel-wrap';
+  box.innerHTML = `<section class="godpanel godpanel--domain" role="dialog" aria-label="${esc(name)}, Player ${key}">
+    <div class="godpanel__card">${renderLiveCard(f, {art: f.ilustracao && forgeArt(f.ilustracao)})}</div>
+    <div class="godpanel__info">
+      <header><h2>${esc(name)}</h2><small>Domain · Player ${key}</small></header>
+      <div class="godpanel__powers">${powers.join('')}</div>
+    </div>
+    <button class="godpanel__close" aria-label="Close">×</button>
+  </section><div class="power-tip" role="tooltip" hidden></div>`;
+  powerTip(box);
+  box.addEventListener('pointerdown', e => { if (e.target === box || e.target.closest('.godpanel__close')) closeBigCard(); });
+  box.addEventListener('contextmenu', e => { e.preventDefault(); closeBigCard(); });
+  box.addEventListener('click', e => {
+    const b = e.target.closest('[data-power]');
+    if (!b) return;
+    if (!b.dataset.domUse) return warn(`${b.querySelector('strong')?.textContent}: ${b.title}`);
+    closeBigCard();
+    act({type: 'activate', key, uid: b.dataset.domUse, choice: {}});
+  });
+  document.body.append(box); upgradeArt(box);
+}
 // Em pé, tocar no Domain (autor, 01/11/2026): habilidades no mesmo formato dos atalhos do Deus; o que dá para usar fica aceso.
 function showDomainSheet(key) {
   const f = FORGE.get(S().domains[key]);
   if (!f) return;
   closeBigCard(); hideInspect();
-  const uses = domainUses(key), parse = t => { const [name, ...rest] = t.split(' — '); return {name, text: rest.join(' — ')}; };
-  const shown = displayCard(f).habilidades_en || [];
-  const rows = (f.habilidades_en || []).map((t, i) => {
-    const en = parse(t), pt = resonanceTitle(parse(shown[i] || t)), u = uses.find(a => (/^resonance/i.test(en.name) ? a.res : !a.res && a.name.toLowerCase() === en.name.toLowerCase()));
-    const off = /^resonance/i.test(en.name) && !u; // Ressonância com Deus de outra facção
-    return {u, order: u ? u.cost : off ? 90 : 99, html: `<button class="gs-act ${u ? (u.why ? 'is-locked' : 'is-ready') : off ? 'is-locked' : 'is-active'}" ${u && !u.why ? `data-gs="${u.uid}"` : 'aria-disabled="true"'}>
-      <span class="gs-act__cost">${u ? u.cost : '✦'}</span><span class="gs-act__txt"><strong>${esc(pt.name)}</strong><small>${esc(u ? u.why || 'Ready · click to use' : off ? 'Only with a God of this faction.' : 'Always on')}</small><span class="gs-act__rule card-text">${inlineMarkup(pt.text)}</span></span></button>`};
-  }).sort((a, b) => a.order - b.order);
+  const rows = domainLines(key, f).map(({u, off, pt, order}) => ({u, order, html: `<button class="gs-act ${u ? (u.why ? 'is-locked' : 'is-ready') : off ? 'is-locked' : 'is-active'}" ${u && !u.why ? `data-gs="${u.uid}"` : 'aria-disabled="true"'}>
+      <span class="gs-act__cost">${u ? u.cost : '✦'}</span><span class="gs-act__txt"><strong>${esc(pt.name)}</strong><small>${esc(u ? u.why || 'Ready · click to use' : off ? 'Only with a God of this faction.' : 'Always on')}</small><span class="gs-act__rule card-text">${inlineMarkup(pt.text)}</span></span></button>`}));
   const box = document.createElement('div');
   box.id = 'bigcard'; box.className = 'bigcard god-sheet';
   box.innerHTML = `<section class="gs" role="dialog" aria-label="${esc(displayCard(f).nome_exibicao_en || f.nome_exibicao_en || '')}">
@@ -776,9 +818,18 @@ function victoryWho(key) {
   const avatar = plate?.querySelector('.rk-plate__avatar') ? '' : `<i class="rk-plate__avatar" style="${godFace(key)}" aria-hidden="true"></i>`;
   return {name, html: `<div class="victory__who">${avatar}${plate?.innerHTML || `<span><b>${esc(name)}</b></span>`}</div>`};
 }
+// Desktop (autor, 07/11/2026): o que não é Devotee e não está equipado fica à direita do God, como as Bases à esquerda.
+const sideGear = () => matchMedia('(min-width: 761px)').matches;
+const looseGear = key => S().players[key].battlefield.filter(u => !ctx.attached[u] && info(u).kind !== 'Devotee');
+matchMedia('(min-width: 761px)').addEventListener('change', () => { if (match) render(); });
+function gearLane(key) {
+  const row = looseGear(key);
+  // Classe "field": alvo, inspeção e mira tratam estas cartas como as do campo.
+  return `<section class="field field--gear" data-gearlane="${key}" aria-label="Player ${key} Equipment">${row.map(u => `<div class="slot">${cardFace(u, {field: true})}</div>`).join('')}</section>`;
+}
 function fieldRow(key) {
-  const s = S(), p = s.players[key];
-  const row = p.battlefield.filter(u => !ctx.attached[u]), n = row.length;
+  const s = S(), p = s.players[key], side = sideGear() ? new Set(looseGear(key)) : new Set();
+  const row = p.battlefield.filter(u => !ctx.attached[u] && !side.has(u)), n = row.length;
   const units = row.map(u => {
     // Equipamento preso: mini-token com arte, nome e bônus, ligado ao portador (clique abre o inspetor da carta).
     const gear = gearOf(ctx, u).map(g => {
@@ -1112,8 +1163,8 @@ function render() {
     <div class="olympus ${mode ? 'is-choosing' : ''} ${pending ? 'is-deciding' : ''} ${losers(s).map(k => `fallen-${k === me ? 'me' : 'opp'}`).join(' ')}" ${pending && !pending.peek ? 'data-locked' : ''}>
       ${handRow(them, settings.hideOpponent || settings.ai === them)}
       <main class="arena-field">${fieldRow(them)}<div class="midline"></div>${fieldRow(me)}</main>
-      <div class="band band--opp">${cosmoLane(them, 'opp')}</div>
-      <div class="band band--me">${cosmoLane(me, 'me')}</div>
+      <div class="band band--opp">${cosmoLane(them, 'opp')}${sideGear() ? gearLane(them) : ''}</div>
+      <div class="band band--me">${cosmoLane(me, 'me')}${sideGear() ? gearLane(me) : ''}</div>
       <aside class="rail">${sanctum(them, 'opp')}${controlPanel()}${sanctum(me, 'me')}</aside>
       ${godHud(them, 'opp')}${godHud(me, 'me')}
       ${handRow(me, false)}
@@ -1516,7 +1567,7 @@ boardRoot.addEventListener('click', e => {
   const godEl = t.closest('[data-god]');
   if (godEl) return sheetUp() ? showGodSheet(godEl.dataset.god) : showGodPanel(godEl.dataset.god);
   const domEl = t.closest('[data-domain]');
-  if (domEl) return sheetUp() ? showDomainSheet(domEl.dataset.domain) : showDomainCard(domEl.dataset.domain);
+  if (domEl) return sheetUp() ? showDomainSheet(domEl.dataset.domain) : showDomainPanel(domEl.dataset.domain);
   const cardEl = t.closest('.dcard[data-uid]');
   if (!cardEl || cardEl.classList.contains('dcard--back')) return;
   const uid = cardEl.dataset.uid, key = owner(uid), me = viewer();
@@ -1758,6 +1809,25 @@ function showGodSheet(key) {
   });
   document.body.append(box);
 }
+// Texto inteiro do poder sobre o botão, ao passar o mouse ou com foco (painel do Deus e do Domain).
+function powerTip(box) {
+  const tip = box.querySelector('.power-tip');
+  const showTip = b => {
+    const src = b?.closest('[data-power]');
+    if (!src) { tip.hidden = true; return; }
+    const head = src.querySelector('.power__head')?.innerHTML || '', state = src.querySelector('.power__state')?.textContent || '';
+    tip.innerHTML = `<div class="power-tip__head">${head}${state ? `<em>${esc(state)}</em>` : ''}</div>${src.querySelector('.power__text')?.innerHTML || ''}`;
+    tip.style.setProperty('--c', getComputedStyle(src).getPropertyValue('--c'));
+    tip.hidden = false;
+    const r = src.getBoundingClientRect(), h = tip.offsetHeight, above = r.top - h - 10 >= 8;
+    tip.style.left = `${Math.round(r.left)}px`; tip.style.width = `${Math.round(r.width)}px`;
+    tip.style.top = `${Math.round(above ? r.top - h - 10 : Math.min(innerHeight - h - 8, r.bottom + 10))}px`;
+  };
+  box.addEventListener('pointerover', e => showTip(e.target));
+  box.addEventListener('focusin', e => showTip(e.target));
+  box.addEventListener('pointerleave', () => { tip.hidden = true; });
+  box.querySelector('.godpanel__info')?.addEventListener('scroll', () => { tip.hidden = true; });
+}
 function showGodPanel(key) {
   closeBigCard();
   hideInspect();
@@ -1794,22 +1864,7 @@ function showGodPanel(key) {
     <button class="godpanel__close" aria-label="Close">×</button>
   </section><div class="power-tip" role="tooltip" hidden></div>`;
   // Painel simples (autor, 06/11/2026): só o nome de cada poder; passando o mouse (ou com foco), o texto inteiro aparece em cima dele.
-  const tip = box.querySelector('.power-tip');
-  const showTip = b => {
-    const src = b?.closest('[data-power]');
-    if (!src) { tip.hidden = true; return; }
-    const head = src.querySelector('.power__head')?.innerHTML || '', state = src.querySelector('.power__state')?.textContent || '';
-    tip.innerHTML = `<div class="power-tip__head">${head}${state ? `<em>${esc(state)}</em>` : ''}</div>${src.querySelector('.power__text')?.innerHTML || ''}`;
-    tip.style.setProperty('--c', getComputedStyle(src).getPropertyValue('--c'));
-    tip.hidden = false;
-    const r = src.getBoundingClientRect(), h = tip.offsetHeight, above = r.top - h - 10 >= 8;
-    tip.style.left = `${Math.round(r.left)}px`; tip.style.width = `${Math.round(r.width)}px`;
-    tip.style.top = `${Math.round(above ? r.top - h - 10 : Math.min(innerHeight - h - 8, r.bottom + 10))}px`;
-  };
-  box.addEventListener('pointerover', e => showTip(e.target));
-  box.addEventListener('focusin', e => showTip(e.target));
-  box.addEventListener('pointerleave', () => { tip.hidden = true; });
-  box.querySelector('.godpanel__info')?.addEventListener('scroll', () => { tip.hidden = true; });
+  powerTip(box);
   box.addEventListener('pointerdown', e => { if (e.target === box || e.target.closest('.godpanel__close')) closeBigCard(); });
   box.addEventListener('contextmenu', e => { e.preventDefault(); closeBigCard(); });
   box.addEventListener('click', e => {
@@ -1825,7 +1880,7 @@ document.addEventListener('contextmenu', e => {
   const god = e.target.closest?.('[data-god]');
   if (god) { e.preventDefault(); return showGodPanel(god.dataset.god); }
   const dom = e.target.closest?.('[data-domain]');
-  if (dom) { e.preventDefault(); return showDomainCard(dom.dataset.domain); }
+  if (dom) { e.preventDefault(); return showDomainPanel(dom.dataset.domain); }
   // Clique direito numa carta aberta (ou na própria Base): a carta real grande no centro da tela.
   const base = e.target.closest?.('.dcard[data-base]'), el = e.target.closest?.('.dcard[data-uid]:not(.dcard--back)');
   const uid = base && owner(base.dataset.base) === viewer() ? base.dataset.base : el?.dataset.uid;

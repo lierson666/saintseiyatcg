@@ -34,12 +34,14 @@ const hadSeal = (s, uid) => !!s.sealAtStrike?.[uid];
 // "Quando X receberia dano de Strike, previna N": não há gancho "would take damage". O escudo nasce na declaração do Strike
 // em que X participa e vale só nesse Strike (mesma aproximação de v6/poseidon.js). `unit`: uid do escudo ('god:A' = God).
 // shortcut: Strike anulado deixa o escudo 'this_strike' até o próximo Strike que limpe.
-function ward({tag, ability, cost, amount, unit, applies}) {
+// `latent`: o custo sai só do Latent (Santuário Divino do Escudo, {3}{L}; autor, 07/11/2026).
+const payLatent = (st, c, key, n, ability, uid) => st.players[key].latent >= n && k.may(c, key, ability, {uid, cost: `${n} Latent`}) && k.payLatent(st, key, n);
+function ward({tag, ability, cost, amount, unit, applies, latent = false}) {
   return (s, c, key, self, attacker, target) => {
     const t = `${tag}:${self}`, uid = unit(s, c, key, self);
     if (!uid || s.roundUses.has(t) || !applies(s, c, key, self, attacker, target, uid)) return;
     return st => {
-      if (st.roundUses.has(t) || (!uid.startsWith('god:') && !st.units[uid]) || !pay(st, c, key, cost, ability, self)) return;
+      if (st.roundUses.has(t) || (!uid.startsWith('god:') && !st.units[uid]) || !(latent ? payLatent : pay)(st, c, key, cost, ability, self)) return;
       k.once(st, t);
       shield(st, uid, amount, {duration: 'this_strike'});
     };
@@ -168,7 +170,7 @@ export default {
       return {atk: n, hp: n};
     },
     // Divine Sanctuary — {3}{C}: uma vez por Round, quando seu God receberia dano de Strike, previne até 3.
-    watchDeclare: ward({tag: 'sanctuary', ability: 'DIVINE SANCTUARY', cost: 3, amount: 3, unit: (s, c, key) => k.godTarget(key),
+    watchDeclare: ward({tag: 'sanctuary', ability: 'DIVINE SANCTUARY', cost: 3, latent: true, amount: 3, unit: (s, c, key) => k.godTarget(key),
       applies: (s, c, key, self, attacker, target) => target.kind === 'god' && target.player === key}),
   },
 

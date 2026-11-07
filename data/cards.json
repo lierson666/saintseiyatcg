@@ -916,7 +916,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Divine Aegis — Friendly Athena Devotees get +1 @ATK / +1 @HP.",
-        "Divine Sanctuary — {3}{C}: Once each round, when your God would take Strike damage, prevent up to 3 of that damage.",
+        "Divine Sanctuary — {3}{L}: Once each round, when your God would take Strike damage, prevent up to 3 of that damage.",
         "Miracle — While your God has 5 or less Soul, friendly Athena Devotees get an additional +2 @ATK / +2 @HP."
       ],
       "habilidade_awaken_en": "",
@@ -933,7 +933,7 @@
       "subtitulo_pt": "O Último Milagre",
       "habilidades_pt": [
         "Égide Divina — Devotos de Athena aliados recebem +1 @ATQ / +1 @PV.",
-        "Santuário Divino — {3}{C}: Uma vez por rodada, quando seu Deus sofreria dano de Golpe, previna até 3 desse dano.",
+        "Santuário Divino — {3}{L}: Uma vez por rodada, quando seu Deus sofreria dano de Golpe, previna até 3 desse dano.",
         "Milagre — Enquanto seu Deus tiver 5 ou menos de Alma, Devotos de Athena aliados recebem adicionalmente +2 @ATQ / +2 @PV."
       ],
       "tagline_pt": "O Último Milagre"
@@ -20232,7 +20232,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Mechanical Engineering — Equipment cards you cast cost 1 less Cosmo, to a minimum of 1.",
-        "Steel Innovation — Once during your round, you may pay {2}{C} and make Dr. Asamori Unprepared. If you do, search your deck for an Equipment card, reveal it, put it into your hand, then shuffle your deck."
+        "Steel Innovation — Once during your round, you may pay {5}{C} and make Dr. Asamori Unprepared. If you do, search your deck for an Equipment card, reveal it, put it into your hand, then shuffle your deck."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -20241,7 +20241,7 @@
       "subtitulo_pt": "O Gênio por Trás dos Cavaleiros de Aço",
       "habilidades_pt": [
         "Engenharia Mecânica — Os Equipamentos que você conjura custam 1 Cosmo a menos, no mínimo 1.",
-        "Inovação em Aço — Uma vez durante a sua rodada, você pode pagar {2}{C} e deixar Doutor Asamori Despreparado. Se fizer isso, procure em seu Deck um Equipamento, revele-o, coloque-o na sua mão e embaralhe seu Deck."
+        "Inovação em Aço — Uma vez durante a sua rodada, você pode pagar {5}{C} e deixar Doutor Asamori Despreparado. Se fizer isso, procure em seu Deck um Equipamento, revele-o, coloque-o na sua mão e embaralhe seu Deck."
       ],
       "flavour_pt": "\"Onde outros buscavam poder divino, ele descobriu que a engenhosidade humana podia desafiar os deuses.\"",
       "tagline_pt": "O Gênio por Trás dos Cavaleiros de Aço"

@@ -268,14 +268,14 @@ test('463 Ushio: compra 1 e descarta 1 ao entrar; Resonance Engine devolve Devot
   assert.ok(s.players.B.battlefield.includes(pricey));
 });
 
-test('464 Steel Innovation: paga 2 e exaure Asamori para buscar um Equipment no deck', () => {
+test('464 Steel Innovation: paga 5 e exaure Asamori para buscar um Equipment no deck', () => {
   const {s, ctx, give} = setup();
   const asa = give('A', N(464)), gear = give('A', N(469), 'deck'), r = ready(s, 'A');
   ability(s, ctx, asa);
   assert.equal(s.players.A.hand.length, 1);
   assert.equal(k.card(ctx, s.players.A.hand[0]).kind, 'Equipment');
   assert.equal(s.units[asa].prepared, false);
-  assert.equal(ready(s, 'A'), r - 2);
+  assert.equal(ready(s, 'A'), r - 5);
 });
 
 test('466 Land Steel Cloth: previne 1 do primeiro dano do turno; Steel Saint portador ganha +1/+1', () => {

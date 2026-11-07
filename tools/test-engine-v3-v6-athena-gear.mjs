@@ -232,14 +232,16 @@ test('020 Athena\'s Shield (31/10/2026): sem The Last Miracle, mesmo com 5 ou me
   assert.ok(!s.effects.some(e => e.kind === 'prevent'));
 });
 
-test('020 Divine Sanctuary: Strike contra seu God, paga 3 e previne até 3', () => {
+test('020 Divine Sanctuary: Strike contra seu God, paga 3 Latent e previne até 3', () => {
   const {s, ctx, give} = setup();
   give('A', G(20));
-  const foe = give('B', FOE), soul = s.players.A.soul;
+  const foe = give('B', FOE), soul = s.players.A.soul, bases = ready(s);
+  s.players.A.latent = 3;
   s.active = 'B';
   declareStrike(s, ctx, foe, {kind: 'god', player: 'A'}); passAll(s);
   assert.equal(s.players.A.soul, soul); // ATK 3 inteiro prevenido
-  assert.equal(ready(s), 7);
+  assert.equal(s.players.A.latent, 0);
+  assert.equal(ready(s), bases); // Base não paga
   assert.ok([...s.roundUses].some(t => String(t).startsWith('sanctuary:')));
 });
 
