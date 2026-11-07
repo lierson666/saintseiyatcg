@@ -122,6 +122,9 @@ kbd { font: 11px/1 ui-monospace, monospace; opacity: .7; border: 1px solid curre
 .dcard.aimed { box-shadow: 0 0 0 3px var(--red), 0 0 34px rgba(255, 90, 60, .85); }
 .dcard.attacking { box-shadow: 0 0 0 2px var(--gold-hi), 0 0 30px rgba(255, 220, 140, .9); z-index: 6; }
 .dcard.lunge { animation: lunge .42s var(--ease); }
+/* Pose do golpe (director.js stance): a carta sobe, inclina para o alvo e, no golpe físico, avança até encostar. */
+.dcard { transition: translate var(--pose-t, .2s) cubic-bezier(.3, .7, .2, 1), rotate var(--pose-t, .2s) ease, scale var(--pose-t, .2s) ease; }
+.dcard.strike-pose { translate: var(--pose-x, 0) var(--pose-y, 0); rotate: var(--pose-rot, 0deg); scale: 1.08; z-index: 7; }
 .dcard.hit { animation: hit var(--recoil-time, .42s) cubic-bezier(.2, .9, .3, 1); }
 .dcard.hit.hit--calm { animation-name: hit-calm; }
 .dcard.activate { animation: activate .5s var(--ease); }

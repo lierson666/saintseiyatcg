@@ -25,6 +25,8 @@ export const DEATH_FX = {
   ares: [(f, a) => f.burst(a.x, a.y, {color: '#ff7a3a', count: 60, speed: 200, grav: -200, life: .9}), (f, a) => { f.flash(.5); f.burst(a.x, a.y, {color: '#ff5a2a', count: 200, speed: 600, life: 1}); f.burst(a.x, a.y, {color: '#5a5048', count: 90, speed: 180, grav: -60, life: 1.6, size: 16}); f.shockwave(a.x, a.y, {color: '#ffb070', size: 380}); }],
   artemis: [(f, a) => f.burst(a.x, a.y, {color: '#d8fff0', count: 80, speed: 120, grav: -160, life: 1.4}), (f, a) => { f.burst(a.x, a.y, {color: '#e8f4ff', count: 150, speed: 260, grav: -220, life: 1.8, size: 10}); f.shockwave(a.x, a.y, {color: '#c8f0ff', size: 280}); }],
 };
+// Golpe físico: a carta avança e bate. O resto é Cosmo: a carta fica e o efeito voa (autor, 06/11/2026).
+const PHYSICAL = new Set(['slash', 'impact', 'blood']);
 const STYLE_BY_TYPE = [[/Gold Saint/, 'energy', '#ffd36e'], [/Silver Saint/, 'energy', '#d8e4ff'], [/Bronze Saint/, 'physical', '#ffe0a0']];
 
 // O lote já traz o dano do Strike, sem nada jogado no meio: ninguém respondeu e ninguém parou na janela.
@@ -70,6 +72,8 @@ export function createDirector({ui, getFx, settings}) {
 
   // Reação ao golpe: a carta pisca e recua para longe de quem bateu. O dano do Strike vem depois e não repete o recuo.
   const recoiled = new Set();
+  // Pose da carta no golpe: 'lift' sobe e inclina para o alvo, 'dash' avança até encostar, null volta ao slot.
+  const stance = (uid, pose, to, ms) => ui.stance?.(uid, skipping ? null : pose, to, t(ms));
   const recoil = (uid, from, p) => { if (skipping || !cur.ligada) return; if (from) recoiled.add(uid); ui.recoil?.(uid, from, p, ui.particleTune?.('recuo')); };
 
   // Coreografia do Combat Composer: agenda cada fase e devolve no HIT, para o resto do Strike seguir a engine. Nunca segura a fila depois do HIT.
@@ -95,6 +99,7 @@ export function createDirector({ui, getFx, settings}) {
     f.charge(from.x, from.y, {color: style.color, count: Math.round((style.style === 'physical' ? 30 : 60) * (1 + p * 2))});
     if (p > .6) f.shake(p * 3); // o chão treme enquanto o Cosmo sobe
     await pause((style.style === 'physical' ? 140 : 260) + p * 420);
+    if (style.physical) { stance(attacker, 'dash', to, 160); await pause(160); }
     if (style.element && ui.pixel) {
       pixel(style.element, targetRect, {from, color: style.color, power: p});
       await pause(HIT_MS[style.element] ?? 200);
@@ -212,9 +217,12 @@ export function createDirector({ui, getFx, settings}) {
       ui.speak?.('golpe', e.attacker); // a fala do ataque sai quando ele resolve, não ao declarar (autor, 02/11/2026)
       ui.speak?.('strike', onGod ? e.target.player : e.target.uid);
       const from = ui.center(ui.rect(e.attacker)), targetRect = e.target.kind === 'god' ? ui.godRect(e.target.player) : ui.rect(e.target.uid);
-      const to = ui.center(targetRect), style = styleOf(e.attacker), p = powerOf(e.atk);
+      const to = ui.center(targetRect), p = powerOf(e.atk), base = styleOf(e.attacker);
+      const style = {...base, physical: base.style === 'physical' || PHYSICAL.has(base.element)};
+      // Fluxo do golpe (autor, 06/11/2026): mira, carga, viagem, impacto e volta, um de cada vez.
+      stance(e.attacker, 'lift', to, 200);
+      await pause(200);
       if (style.name) await ui.callout(style.name, e.player, t(650 + p * 350));
-      ui.pulse(e.attacker, 'lunge');
       const cho = fx('strikeVfx') && !skipping && style.element ? ui.choreography?.(style.element) : null;
       if (cho) await choreography(cho, {from, attacker: e.attacker, target: onGod ? null : e.target.uid, targetRect, color: style.color, p});
       else { await strikeVfx(from, to, style, p, e.attacker, targetRect); await pause(40 + p * 160); } // hit stop: mais longo quanto mais forte
@@ -222,13 +230,18 @@ export function createDirector({ui, getFx, settings}) {
       if (!onGod && !cho?.faixas.knockback) recoil(e.target.uid, from, p); // recua junto com o impacto, não depois
       if (!cho?.faixas.impact) impact(to, {color: style.color, strength: (style.name ? 1.4 : 1) * (1 + p * 1.3), rect: targetRect, from, effect: ui.animOf?.(onGod ? 'impacto_deus' : 'impacto', e.attacker) ?? 'impact'});
       if (!onGod) moment('strike', e.target.uid, targetRect);
-      // Retaliação: do Devotee alvo de volta ao atacante. God não retalia (§24, autor 01/11/2026).
+      stance(e.attacker, null, null, 220);
+      await pause(220);
+      // Retaliação: o mesmo fluxo, menor e ao contrário. God não retalia (§24, autor 01/11/2026).
       if (e.target.kind !== 'god') {
-        await pause(140);
         const back = styleOf(e.target.uid);
+        stance(e.target.uid, 'lift', from, 140);
+        await pause(140);
         recoil(e.attacker, to, .3);
         if (ui.pixel && back.style !== 'energy') { pixel('slash', ui.rect(e.attacker), {from: to, color: back.color}); await pause(220); }
         else if (fx() && !skipping) await fx().beam(to, from, {color: back.color, width: 12, duration: .22});
+        stance(e.target.uid, null, null, 180);
+        await pause(180);
       }
       ui.aim(null);
       ui.pulse(e.attacker, 'attacking', false);

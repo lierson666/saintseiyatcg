@@ -24,7 +24,7 @@ import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudg
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout, clockBonus} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
-import {createDirector, DEATH_FX} from './director.js?v=20261105-semaviso1';
+import {createDirector, DEATH_FX} from './director.js?v=20261106-fluxo1';
 import {tunedFx} from './particle-tune.js';
 import {createPixelFx, animFor, catalogIndex} from './pixel-vfx.js?v=20261104-live1';
 import {createComposer, withCompositions} from '../../shared/vfx/composer.js?v=20261104-vfx1';
@@ -1338,6 +1338,20 @@ const ui = {
       el.style.setProperty('--recoil-time', `${(.42 * (tune?.duracao ?? 1)).toFixed(2)}s`);
       el.classList.toggle('hit--calm', !!settings.reduceFlashes);
       el.classList.remove('hit'); void el.offsetWidth; el.classList.add('hit');
+    });
+  },
+  // Pose do golpe: sobe e inclina para o alvo ('lift'), avança até encostar nele ('dash') ou volta ao slot (null).
+  // Usa translate/rotate/scale, separados do transform: o recuo do alvo (animação .hit) não briga com a pose.
+  stance(uid, pose, to, ms = 200) {
+    $$(`[data-uid="${uid}"]`).forEach(el => {
+      el.style.setProperty('--pose-t', `${Math.round(ms)}ms`);
+      if (!pose || !to || settings.reduceMotion) { el.classList.remove('strike-pose'); el.style.removeProperty('--pose-x'); el.style.removeProperty('--pose-y'); return; }
+      const r = el.getBoundingClientRect(), dx = to.x - (r.left + r.width / 2), dy = to.y - (r.top + r.height / 2), len = Math.hypot(dx, dy) || 1;
+      const reach = pose === 'dash' ? Math.max(0, len - r.height * .75) / len : 0; // para encostado no alvo, não por cima dele
+      el.style.setProperty('--pose-x', `${(dx * reach).toFixed(1)}px`);
+      el.style.setProperty('--pose-y', pose === 'dash' ? `${(dy * reach).toFixed(1)}px` : `${-r.height * .08 * Math.sign(-dy || 1)}px`);
+      el.style.setProperty('--pose-rot', `${Math.max(-14, Math.min(14, Math.atan2(dx, Math.abs(dy)) * 57.3 * .35)).toFixed(1)}deg`);
+      el.classList.add('strike-pose');
     });
   },
   pulse(uid, cls, on) { $$(String(uid).startsWith('domain:') ? `[data-domain="${String(uid).slice(7)}"]` : `[data-uid="${uid}"]`).forEach(el => { if (on === false) el.classList.remove(cls); else { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); } }); },
