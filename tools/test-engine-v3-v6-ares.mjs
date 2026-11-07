@@ -116,15 +116,21 @@ test('Moment em área: Eternal Bloodshed derrota todos, 1 por Berserker ao God, 
   assert.equal(s.players.A.hand.length, hand + 1);
 });
 
-test('fim do turno: Reckless Bloodlust e Uncontrolled Power derrotam no fim do turno', () => {
+test('fim do turno: Reckless Bloodlust derrota no fim do turno', () => {
   const {s, ctx, give} = setup();
-  const reckless = give('A', '295'), other = give('A', '292'), spell = give('A', '324', 'hand');
-  ctx.decide = (player, q) => (q.options ? (q.options.includes(other) ? other : q.options[0]) : player === 'A');
-  playSpell(s, ctx, 'A', spell); if (s.window) passAll(s);
+  const reckless = give('A', '295');
   strike(s, ctx, reckless, god);
   endTurn(s); passAll(s);
   assert.ok(s.players.A.tartarus.includes(reckless));
-  assert.ok(s.players.A.tartarus.includes(other));
+});
+
+test('324 Unleash the Fury: Shatter destrói o Equipment e causa 1 ao Devotee que o usava', () => {
+  const {s, ctx, give} = setup();
+  const foe = give('B', '292'), helmet = give('B', '315', 'battlefield', foe), spell = give('A', '324', 'hand');
+  playSpell(s, ctx, 'A', spell); if (s.window) passAll(s);
+  assert.ok(s.players.B.tartarus.includes(helmet));
+  assert.equal(ctx.attached[helmet], undefined);
+  assert.equal(s.units[foe].damage, 1);
 });
 
 test('mods: Royal Guard ganha +1 por outro Berserker que declarou Strike no turno', () => {

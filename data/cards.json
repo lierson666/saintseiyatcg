@@ -915,9 +915,9 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Divine Aegis — Friendly Saints get +0 @ATK / +1 @HP.",
+        "Divine Aegis — Friendly Athena Devotees get +1 @ATK / +1 @HP.",
         "Divine Sanctuary — {3}{C}: Once each round, when your God would take Strike damage, prevent up to 3 of that damage.",
-        "Miracle — While your God has 5 or less Soul, friendly Saints get an additional +1 @ATK / +1 @HP."
+        "Miracle — While your God has 5 or less Soul, friendly Athena Devotees get an additional +2 @ATK / +2 @HP."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -932,9 +932,9 @@
       "nome_exibicao_pt": "ESCUDO DE ATHENA",
       "subtitulo_pt": "O Último Milagre",
       "habilidades_pt": [
-        "Égide Divina — Cavaleiros aliados recebem +0 @ATQ / +1 @PV.",
+        "Égide Divina — Devotos de Athena aliados recebem +1 @ATQ / +1 @PV.",
         "Santuário Divino — {3}{C}: Uma vez por rodada, quando seu Deus sofreria dano de Golpe, previna até 3 desse dano.",
-        "Milagre — Enquanto seu Deus tiver 5 de Alma ou menos, Cavaleiros aliados recebem mais +1 @ATQ / +1 @PV."
+        "Milagre — Enquanto seu Deus tiver 5 ou menos de Alma, Devotos de Athena aliados recebem adicionalmente +2 @ATQ / +2 @PV."
       ],
       "tagline_pt": "O Último Milagre"
     },
@@ -2479,16 +2479,16 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Return target friendly Equipment to its owner’s hand.",
+        "Send target Equipment to the Void.",
         "If you control Kiki, Apprentice of Jamir, draw a card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção). Resposta a Equipment da facção (autor, 06/11/2026).",
       "nome_exibicao_pt": "TELECINESE DE KIKI",
       "subtitulo_pt": "O Poder Oculto do Aprendiz",
       "habilidades_pt": [
-        "Devolva o Equipamento aliado alvo para a mão do dono.",
+        "Mande ao Vazio o Equipamento alvo.",
         "Se você controlar Kiki, Aprendiz de Jamir, compre uma carta."
       ],
       "tagline_pt": "O Poder Oculto do Aprendiz"
@@ -14223,15 +14223,15 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Uncontrolled Power — Target friendly Devotee gains +4 @ATK until the end of your round. At the end of your round, defeat that Devotee."
+        "Shatter — Destroy target Equipment. Deal 1 damage to the Devotee it was attached to."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026.",
+      "notas_pt": "Texto do autor, Ares Vanilla Set V4 (propostas revisadas, pendentes de playtest), 29/10/2026. Resposta a Equipment da facção (autor, 06/11/2026).",
       "nome_exibicao_pt": "LIBERTE A FÚRIA",
       "subtitulo_pt": "Raiva Sem Limites",
       "habilidades_pt": [
-        "Poder Descontrolado — O Devoto aliado alvo recebe +4 @ATQ até o fim da sua rodada. No fim da sua rodada, derrote esse Devoto."
+        "Estilhaçar — Destrua o Equipamento alvo. Cause 1 de dano ao Devoto ao qual ele estava equipado."
       ],
       "flavour_pt": "\"A maior força de um Berserker é também o seu último suspiro.\"",
       "tagline_pt": "Raiva Sem Limites"
@@ -18286,15 +18286,15 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Primal Strike — Target friendly Devotee deals damage equal to its @ATK to target enemy Devotee."
+        "Choose one: Primal Strike — Target friendly Devotee deals damage equal to its @ATK to target enemy Devotee; or Overgrowth — Destroy target Equipment."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026.",
+      "notas_pt": "Texto do autor, Artemis Vanilla Set, 29/10/2026. Resposta a Equipment da facção (autor, 06/11/2026).",
       "nome_exibicao_pt": "A FLORESTA RESPONDE",
       "subtitulo_pt": "A Ira da Natureza Ancestral",
       "habilidades_pt": [
-        "Golpe Primitivo — O Devoto aliado alvo causa dano igual ao seu @ATQ ao Devoto inimigo alvo."
+        "Escolha um: Golpe Primitivo — o Devoto aliado alvo causa dano igual ao seu @ATQ ao Devoto inimigo alvo; ou Crescimento Selvagem — destrua o Equipamento alvo."
       ],
       "flavour_pt": "\"Quando a floresta golpeia, nem a armadura mais forte pode silenciar sua fúria.\"",
       "tagline_pt": "A Ira da Natureza Ancestral"

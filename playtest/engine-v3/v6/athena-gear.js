@@ -161,11 +161,11 @@ export default {
 
   // Athena's Shield (global; sem bônus fixo)
   'athena-v6-020': {
-    // Divine Aegis (+0/+1) e Miracle (+1/+1 a mais com 5 ou menos Soul): Saints amigos.
+    // Divine Aegis (+1/+1) e Miracle (+2/+2 a mais com 5 ou menos Soul): Devotees de Athena amigos (autor, 06/11/2026).
     aura: (s, c, key, self, unit) => {
-      if (k.controllerOf(s, unit) !== key || !isSaint(c, unit)) return null;
-      const low = s.players[key].soul <= 5;
-      return {atk: low ? 1 : 0, hp: low ? 2 : 1};
+      if (k.controllerOf(s, unit) !== key || !k.isDevotee(c, unit) || !/^athena-/.test(c.objects[unit]?.cardId || '')) return null;
+      const n = s.players[key].soul <= 5 ? 3 : 1;
+      return {atk: n, hp: n};
     },
     // Divine Sanctuary — {3}{C}: uma vez por Round, quando seu God receberia dano de Strike, previne até 3.
     watchDeclare: ward({tag: 'sanctuary', ability: 'DIVINE SANCTUARY', cost: 3, amount: 3, unit: (s, c, key) => k.godTarget(key),

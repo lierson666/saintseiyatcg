@@ -1594,8 +1594,8 @@ function fieldActions(uid) {
   if (idle && c.kind === 'Devotee' && strikeTargets(s, ctx, uid).length) items.push({label: 'Strike', run: () => startStrike(uid)});
   for (const a of cardAbilities(uid)) items.push({label: `${a.name}${/\d/.test(a.cost || '') ? ` (${a.cost.replace(/\{T\}( · )?/, '')})` : ''}`, run: a.run, why: a.why || (idle || a.fast ? '' : "Wait for your round's main phase.")});
   if (idle && c.kind === 'Equipment' && !c.global && !ctx.attached[uid]) items.push({label: `Equip (${c.equip?.amount ?? c.cost.amount})`, run: () => begin('reequip', key, uid, [{key: 'bearer', pick: c.armor ? 'wearer' : 'devotee', armor: uid, label: `Equip ${c.name} to which Devotee?`}], choice => ({type: 'reequip', key, uid, choice}))});
-  // Armor vestida pode passar a outro Devotee seu: AÇÃO + Equip impresso (guia §28).
-  else if (idle && c.armor && ctx.attached[uid] && c.equip) items.push({label: `Move (Equip ${c.equip.amount})`, run: () => begin('reequip', key, uid, [{key: 'bearer', pick: 'wearer', armor: uid, label: `Move ${c.name} to which Devotee?`}], choice => ({type: 'reequip', key, uid, choice}))});
+  // Armor vestida (guia §28) ou arma/acessório preso (§33/§34, autor 06/11/2026) passa a outro Devotee seu: AÇÃO + Equip impresso.
+  else if (idle && !c.global && ctx.attached[uid] && (c.equip || !c.armor)) items.push({label: `Move (Equip ${c.equip?.amount ?? c.cost.amount})`, run: () => begin('reequip', key, uid, [{key: 'bearer', pick: 'wearer', armor: uid, label: `Move ${c.name} to which Devotee?`}], choice => ({type: 'reequip', key, uid, choice}))});
   return items;
 }
 function fieldMenu(uid, el) {

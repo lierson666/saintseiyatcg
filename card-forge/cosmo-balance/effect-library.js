@@ -22,7 +22,7 @@ export const EFFECT_LIBRARY = {
   reanimate: E('Retorno ao campo', '§41, §62', ['putOntoField'], 'Interage com ETB da facção.'),
   recurHand: E('Retorno à mão', '§41', ['toHand']),
   bounce: E('Bounce', '§58', ['toHand']),
-  removal: E('Remoção', '§23', ['defeat', 'destroyDevotee', 'exile'], 'Alvos legais vêm do catálogo (custo, ATK, HP).'),
+  removal: E('Remoção', '§23', ['defeat', 'destroyDevotee', 'exile', 'destroyEquipment'], 'Alvos legais vêm do catálogo (custo, ATK, HP).'),
   sacrifice: E('Sacrifício', '§23', ['sacrifice', 'defeat']),
   selfDefeat: E('Autodestruição', '§23', ['defeat', 'sacrifice'], 'Conta uma vez: a carta só morre uma vez.'),
   exile: E('Void', '§63', ['exile'], 'Campo, Tartarus ou mão têm valor diferente.'),
@@ -54,5 +54,5 @@ export const EFFECT_LIBRARY = {
   putBack: E('Devolve cartas da mão', '§55', ['toDeck', 'decide']),
 };
 // Funções de kit.js que não têm valor próprio: consultas, perguntas e pagamento. Toda outra exportação precisa estar na biblioteca (teste).
-export const KIT_NOT_EFFECTS = new Set(['other', 'id', 'isDevotee', 'hasType', 'devotees', 'enemies', 'allDevotees', 'onField', 'costOf', 'bearerOf', 'gearOf', 'once', 'onceTurn', 'domainResonant', 'resTag', 'canPayCosmo', 'resPay', 'payCosmo', 'needTarget', 'may', 'choose', 'chooseUpTo', 'pickUpTo', 'godTarget', 'isGod', 'paySoul', 'payLatent', 'setDamagedHooks', 'setLeavesHooks', 'setDefeatedHooks', 'setEnteredHooks', 'markers', 'watchers', 'spellOnChain', 'itemTargets', 'spellTargets', 'stillTarget', 'targetsMine', 'card', 'controllerOf', 'checkDefeats', 'atkOf', 'hpOf', 'keywordsOf', 'emit', 'RuleError', 'addEffect']);
+export const KIT_NOT_EFFECTS = new Set(['other', 'allEquipment', 'id', 'isDevotee', 'hasType', 'devotees', 'enemies', 'allDevotees', 'onField', 'costOf', 'bearerOf', 'gearOf', 'once', 'onceTurn', 'domainResonant', 'resTag', 'canPayCosmo', 'resPay', 'payCosmo', 'needTarget', 'may', 'choose', 'chooseUpTo', 'pickUpTo', 'godTarget', 'isGod', 'paySoul', 'payLatent', 'setDamagedHooks', 'setLeavesHooks', 'setDefeatedHooks', 'setEnteredHooks', 'markers', 'watchers', 'spellOnChain', 'itemTargets', 'spellTargets', 'stillTarget', 'targetsMine', 'card', 'controllerOf', 'checkDefeats', 'atkOf', 'hpOf', 'keywordsOf', 'emit', 'RuleError', 'addEffect']);
 export const engineCallsOf = kind => EFFECT_LIBRARY[kind]?.engine || [];

@@ -186,7 +186,7 @@
    "type": "Divine Artifact — Equipment",
    "original_text": "020 — ATHENA’S SHIELD\nThe Last Miracle\nRarity: Sacred\n Type: Divine Artifact — Equipment\n Casting Cost: 9 {B}\n Equip: None — Global Anthem\n Cosmoble: Yes\nDivine Aegis — Friendly Saints get +0 ATK / +1 HP.\nThe Last Miracle — Once per game, when you cast Athena’s Shield, if your God has 5 or less Soul, prevent all damage that would be dealt to your God and friendly Saints until the end of the round.\nDivine Sanctuary — {3}{C}: Once each round, when your God would take Strike damage, prevent up to 3 of that damage.\nMiracle — While your God has 5 or less Soul, friendly Saints get an additional +1 ATK / +1 HP.",
    "original_sha256": "d60f2df897161774117d76701283fa95e4f29fe272a6e308e4439ddb9f03574c",
-   "approved_current_text_as_of_d268": "020 — ATHENA’S SHIELD\nThe Last Miracle\nRarity: Sacred\n Type: Divine Artifact — Equipment\n Casting Cost: 9 {B}\n Equip: None — Global Anthem\n Cosmoble: Yes\nDivine Aegis — Friendly Saints get +0 ATK / +1 HP.\nThe Last Miracle — Once per game, when you cast Athena’s Shield, if your God has 5 or less Soul, prevent all damage that would be dealt to your God and friendly Saints until the end of the round.\nDivine Sanctuary — {3}{L}: Once each round, when your God would take Strike damage, prevent up to 3 of that damage.\nMiracle — While your God has 5 or less Soul, friendly Saints get an additional +1 ATK / +1 HP."
+   "approved_current_text_as_of_d268": "020 — ATHENA’S SHIELD\nThe Last Miracle\nRarity: Sacred\n Type: Divine Artifact — Equipment\n Casting Cost: 9 {B}\n Equip: None — Global Anthem\n Cosmoble: Yes\nDivine Aegis — Friendly Athena Devotees get +1 ATK / +1 HP.\nThe Last Miracle — Once per game, when you cast Athena’s Shield, if your God has 5 or less Soul, prevent all damage that would be dealt to your God and friendly Saints until the end of the round.\nDivine Sanctuary — {3}{L}: Once each round, when your God would take Strike damage, prevent up to 3 of that damage.\nMiracle — While your God has 5 or less Soul, friendly Athena Devotees get an additional +2 ATK / +2 HP."
   },
   {
    "id": "ATHENA-V6-021",
@@ -519,7 +519,7 @@
    "type": "Spell — Technique",
    "original_text": "057 — KIKI’S TELEKINESIS\nThe Apprentice’s Hidden Power\nRarity: Common\n Type: Spell — Technique\n Casting Cost: 2 {B}\n Cosmoble: Yes\nReturn target friendly Equipment to its owner’s hand.\nIf you control Kiki, Apprentice of Jamir, draw a card.",
    "original_sha256": "0e99aaa8a724c9f8d9aa9e0fe414004bad8bb798e318cbc7fbfad2c5178ed26c",
-   "approved_current_text_as_of_d268": "057 — KIKI’S TELEKINESIS\nThe Apprentice’s Hidden Power\nRarity: Common\n Type: Spell — Technique\n Casting Cost: 2 {B}\n Cosmoble: Yes\nReturn target friendly Equipment to its owner’s hand.\nIf you control Kiki, Apprentice of Jamir, draw a card."
+   "approved_current_text_as_of_d268": "057 — KIKI’S TELEKINESIS\nThe Apprentice’s Hidden Power\nRarity: Common\n Type: Spell — Technique\n Casting Cost: 2 {B}\n Cosmoble: Yes\nSend target Equipment to the Void.\nIf you control Kiki, Apprentice of Jamir, draw a card."
   },
   {
    "id": "ATHENA-V6-058",

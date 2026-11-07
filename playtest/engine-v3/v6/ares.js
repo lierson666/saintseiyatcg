@@ -426,11 +426,11 @@ export default {
     buff(s, t, 2, ['Impulse']);
     if (s.units[t].entered === s.turn) k.prepare(s, t);
   }}},
-  'ares-v6-324': {spell: {run: (s, c, key, self) => {
-    const t = k.choose(c, key, 'UNCONTROLLED POWER', k.devotees(s, c, key), {text: 'Choose target friendly Devotee.'});
-    if (!t) return;
-    buff(s, t, 4);
-    later(s, key, self, 'UNCONTROLLED POWER', {kind: 'defeat', target: t});
+  // Unleash the Fury (autor, 06/11/2026): Shatter destrói Equipment e causa 1 ao Devotee que o usava.
+  'ares-v6-324': {spell: {run: (s, c, key) => {
+    const t = k.choose(c, key, 'SHATTER', k.allEquipment(s, c), {text: 'Choose target Equipment.'});
+    const bearer = t && c.attached[t];
+    if (t && k.destroyEquipment(s, c, t)) hit(s, c, bearer, 1);
   }}},
   'ares-v6-325': {spell: {run: (s, c, key) => buff(s, friendlyBerserker(s, c, key, 'MERCILESS STRIKE'), 2, ['Pierce'])}},
   'ares-v6-326': {spell: {run: (s, c, key) => {

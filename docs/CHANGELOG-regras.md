@@ -4,6 +4,25 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-06 — Carta athena-v6-020 — Athena’s Shield vale para todos os Devotees de Athena
+
+- **Antes:** Divine Aegis dava +0/+1 a Saints amigos; Miracle, +1/+1 a mais com 5 ou menos Soul.
+- **Depois:** "Friendly Athena Devotees get +1 @ATK / +1 @HP." Miracle: "+2 @ATK / +2 @HP" a mais com 5 ou menos Soul (total +3/+3).
+- **Motivo:** autor, 06/11/2026 (o jogo ainda dava +0/+1 a Jabu; sintaxe "Athena’s devotees" corrigida para "Athena Devotees").
+- **Engine/dados:** `data/cards.json`, `data/canon/d268.json`, `playtest/engine-v3/v6/athena-gear.js`.
+- **Pendências:** nenhuma.
+
+## 2026-11-06 — Cartas athena-v6-057, artemis-v6-418 e ares-v6-324 — Resposta a Equipment em Athena, Artemis e Ares
+
+- **Antes:** só Poseidon (159, 166 e o Ultimate, devolvendo à mão) e Hades (262, destruindo o equipado no Devotee que derrota) tiravam Equipment do inimigo.
+- **Depois:**
+  - **057 KIKI’S TELEKINESIS** (Athena, Technique 2): "Send target Equipment to the Void." Com Kiki, Apprentice of Jamir, compra 1. Antes devolvia à mão só Equipment aliado.
+  - **418 THE FOREST ANSWERS** (Artemis, Technique 3): "Choose one: Primal Strike — (o efeito de antes); or Overgrowth — Destroy target Equipment."
+  - **324 UNLEASH THE FURY** (Ares, Technique 2): "Shatter — Destroy target Equipment. Deal 1 damage to the Devotee it was attached to." Antes: +4 ATK e derrota no fim do Round.
+- **Motivo:** autor, 06/11/2026 ("pelo menos uma resposta em cada cor para Equipment"); a 057 exila (autor).
+- **Engine/dados:** `data/cards.json`, `data/canon/d268.json` (057), `docs/traducao-pt/{athena,artemis,ares}.json`, `playtest/engine-v3/v6/kit.js` (`allEquipment`, `destroyEquipment`), `athena-spells.js`, `artemis.js`, `ares.js`.
+- **Pendências:** nomes mantidos (UNLEASH THE FURY ganhou efeito novo). Sem medição em partida.
+
 ## 2026-11-06 — Carta athena-v6-084 — Athena’s Final Decree
 
 - **Antes:** HYOGA’S ABSOLUTE ZERO (Legendary, Technique, 5 Base): 3 de dano no Devotee inimigo alvo, 5 se tiver Seal; com Cygnus Hyoga, põe 1 Seal depois.

@@ -82,14 +82,16 @@ test('055 Oath: outro Silver Saint não compra', () => {
   assert.equal(s.players.A.hand.length, hand);
 });
 
-test('057 Telekinesis: devolve Equipment à mão; compra se controla Kiki', () => {
+test('057 Telekinesis: manda ao Vazio o Equipment inimigo; compra se controla Kiki', () => {
   const {s, ctx, give} = setup();
-  const kiki = give('A', A('026')), gear = give('A', A('002'), 'battlefield', kiki), spell = give('A', A('057'), 'hand');
+  give('A', A('026'));
+  const foe = give('B', FOE), bow = give('B', 'artemis-v6-379', 'battlefield', foe), spell = give('A', A('057'), 'hand');
   const hand = s.players.A.hand.length;
   playSpell(s, ctx, 'A', spell); if (s.window) passAll(s);
-  assert.ok(s.players.A.hand.includes(gear));
-  assert.equal(s.players.A.hand.length, hand - 1 + 1 + 1); // gasta a Spell, recebe o Equipment e compra 1
-  assert.equal(ctx.attached[gear], undefined);
+  assert.ok(s.players.B.void.includes(bow));
+  assert.ok(!s.players.B.battlefield.includes(bow));
+  assert.equal(ctx.attached[bow], undefined);
+  assert.equal(s.players.A.hand.length, hand - 1 + 1); // gasta a Spell e compra 1
 });
 
 test('084 Athena’s Final Decree: derrota todos os Devotees, aliados e inimigos', () => {

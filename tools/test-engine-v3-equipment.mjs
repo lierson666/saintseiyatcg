@@ -97,7 +97,13 @@ test('Equipment não-Armor fica solto quando o portador sai e é reequipado paga
   assert.throws(() => reequip(s, ctx, 'B', weapon, acolyte), /D1/);
   assert.deepEqual(reequip(s, ctx, 'A', weapon, acolyte), {cost: {amount: 5, unit: 'base'}});
   assert.equal(ctx.attached[weapon], acolyte);
-  assert.throws(() => reequip(s, ctx, 'A', weapon, acolyte), e => e instanceof RuleError && /solto/.test(e.message));
+  assert.throws(() => reequip(s, ctx, 'A', weapon, acolyte), e => e instanceof RuleError && /já está nesse Devotee/.test(e.message));
+  // Já preso: passa a outro Devotee seu pagando o mesmo Equip (autor, 06/11/2026).
+  const deck = s.players.A.deck, other = deck.find(u => cards.get(objects[u].cardId)?.kind === 'Devotee');
+  deck.splice(deck.indexOf(other), 1); s.players.A.battlefield.push(other); s.units[other] = {prepared: true, damage: 0};
+  s.players.A.bases = deck.splice(0, 5).map(uid => ({uid, prepared: true}));
+  assert.deepEqual(reequip(s, ctx, 'A', weapon, other), {cost: {amount: 5, unit: 'base'}});
+  assert.equal(ctx.attached[weapon], other);
 });
 
 test('arma com Resonance (guia §33, 02/11/2026): presa de graça ao jogar, ao entrar o Resonant; depois paga Equip', () => {

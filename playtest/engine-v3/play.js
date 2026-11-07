@@ -201,17 +201,18 @@ export function activate(state, ctx, key, uid, choice = {}) {
 }
 
 // Equipment solto no campo (não-Armor recém-jogado ou cujo portador saiu) se prende a um Devotee seu pagando Equip {N},
-// inclusive o Resonant (guia §33, 02/11/2026). Sorcery.
+// inclusive o Resonant (guia §33, 02/11/2026). Sorcery. Arma ou acessório já preso também passa a outro Devotee seu
+// pagando o mesmo Equip: é desequipar (grátis, §34) e prender de novo (§33) numa ação só (autor, 06/11/2026).
 // Armor (guia §28, 30/10/2026): sem portador ou tirada de outro Devotee seu; AÇÃO + Equip impresso para qualquer um, inclusive o Resonant.
 export function reequip(state, ctx, key, uid, bearer) {
   if (state.victory) throw new RuleError('D52', 'a partida já terminou');
   if (key !== state.active) throw new RuleError('D1', 'só o jogador ativo age, no próprio Round');
   assertIdle(state);
   const card = ctx.cards.get(ctx.objects[uid]?.cardId);
-  if (!state.players[key].battlefield.includes(uid) || card?.kind !== 'Equipment' || (ctx.attached[uid] && !card.armor)) {
-    throw new RuleError('Equip', 'só Equipment seu, solto no campo, pode ser reequipado');
+  if (!state.players[key].battlefield.includes(uid) || card?.kind !== 'Equipment') {
+    throw new RuleError('Equip', 'só Equipment seu no campo pode ser reequipado');
   }
-  if (card.armor && ctx.attached[uid] === bearer) throw new RuleError('Equip', `${card.name} já está nesse Devotee`);
+  if (ctx.attached[uid] === bearer) throw new RuleError('Equip', `${card.name} já está nesse Devotee`);
   const cost = card.armor ? armorEquipCost(state, ctx, key, card, bearer) : equipCost(state, ctx, key, card, bearer);
   payCost(state, key, mixed(cost)); // Equip e transferência: Base e/ou Latent (guia §5, §28)
   if (card.armor) dropArmor(ctx, bearer, uid);

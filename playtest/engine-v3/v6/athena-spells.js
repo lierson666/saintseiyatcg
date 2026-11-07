@@ -44,11 +44,10 @@ export default {
     k.buff(s, t, 1, 2);
     if (named(c, t, 'EAGLE MARIN') || named(c, t, 'OPHIUCHUS SHAINA')) k.draw(s, key, 1);
   }}},
-  // Kiki's Telekinesis
+  // Kiki's Telekinesis (autor, 06/11/2026): manda ao Vazio qualquer Equipment em campo.
   'athena-v6-057': {spell: {run: (s, c, key) => {
-    const gear = s.players[key].battlefield.filter(u => k.card(c, u)?.kind === 'Equipment');
-    const t = k.choose(c, key, "KIKI'S TELEKINESIS", gear, {text: 'Choose target friendly Equipment.'});
-    if (t) k.toHand(s, c, t, 'battlefield'); // alvo ilegal: só o retorno não acontece
+    const t = k.choose(c, key, "KIKI'S TELEKINESIS", k.allEquipment(s, c), {text: 'Choose target Equipment.'});
+    if (t) k.exile(s, c, t, 'battlefield'); // alvo ilegal: só o exílio não acontece
     if (controls(s, c, key, 'athena-v6-026')) k.draw(s, key, 1);
   }}},
   // Freezing Coffin

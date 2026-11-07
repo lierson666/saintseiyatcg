@@ -102,6 +102,16 @@ test('ramp: Ancient Expansion põe 2 Bases Unprepared; Second Moon Guardian ganh
   assert.equal(atkOf(s, ctx, guard), atk0 + 2);
 });
 
+test('418 The Forest Answers: Overgrowth destrói o Equipment escolhido', () => {
+  const {s, ctx, field, hand, io} = setup();
+  const foe = field('B', 'ares-v6-292'), helmet = field('B', 'ares-v6-315');
+  ctx.attached[helmet] = foe;
+  io.answer = q => (q.options.includes('Overgrowth') ? 'Overgrowth' : q.options.includes(helmet) ? helmet : q.options[0]);
+  playSpell(s, ctx, 'A', hand('A', 'artemis-v6-418')); if (s.window) passAll(s);
+  assert.ok(s.players.B.tartarus.includes(helmet));
+  assert.ok(s.players.B.battlefield.includes(foe));
+});
+
 test('remoção: Primal Strike causa ATK; Hunter\'s Challenge luta e compra se o inimigo morrer', () => {
   const {s, ctx, p, field, hand, io} = setup();
   const beast = field('A', 'artemis-v6-392'), a = field('B', 'artemis-v6-386'), b = field('B', 'artemis-v6-392');

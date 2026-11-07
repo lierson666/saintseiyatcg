@@ -16,7 +16,9 @@ const records = [...canon.cards, ...canon.gods];
 // 01/11/2026: Aiolia, Camus e Mu 5 → 4 e Saga 6 → 5 no texto aprovado (autor; docs/CHANGELOG-regras.md).
 // 01/11/2026: Kiki, Miho, Star Hill Acolyte e Sanctuary Torch: draw engines no texto aprovado (autor; docs/CHANGELOG-regras.md).
 // 06/11/2026: 084 vira ATHENA’S FINAL DECREE, "Defeat all Devotees." (autor; docs/CHANGELOG-regras.md).
-const SNAPSHOT_SHA256 = '3da1e7cf010c0cd09387c3fca08f971897a6400e4a70a21bba656cb97de55f5e';
+// 06/11/2026: 057 KIKI’S TELEKINESIS manda ao Vazio qualquer Equipment (autor; docs/CHANGELOG-regras.md).
+// 06/11/2026: 020 ATHENA’S SHIELD dá +1/+1 (e +2/+2 a mais com 5 ou menos Soul) a todos os Devotees de Athena (autor).
+const SNAPSHOT_SHA256 = 'dab173fe79c414f4f768a892f8dff553d5cc136f933c68b4c184171ea4ae3f0a';
 const KAMUI_ORIGINAL_SHA256 = '153ad7e355b3fd87d9dc79ead14f62dfd7d2c03e8c703c56ec9bcee256ca5099';
 
 test('snapshot não foi editado desde a importação', () => {

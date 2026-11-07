@@ -207,20 +207,20 @@ test('018 Resonance Camus: com HP sobrando, remove Seals e causa o extra', () =>
   assert.equal(dmg(s, foe), 8);
 });
 
-test('020 Divine Aegis e Miracle: Saints amigos +0/+1; com 5 ou menos Soul, +1/+2', () => {
+test('020 Divine Aegis e Miracle: Devotees de Athena amigos +1/+1; com 5 ou menos Soul, +3/+3', () => {
   const {s, ctx, give} = setup();
   const saint = give('A', SAINT), foeSaint = give('B', SAINT);
   const [atk, hp, fatk, fhp] = [atkOf(s, ctx, saint), hpOf(s, ctx, saint), atkOf(s, ctx, foeSaint), hpOf(s, ctx, foeSaint)];
   give('A', G(20));
+  assert.equal(atkOf(s, ctx, saint), atk + 1);
   assert.equal(hpOf(s, ctx, saint), hp + 1);
-  assert.equal(atkOf(s, ctx, saint), atk);
-  assert.equal(hpOf(s, ctx, foeSaint), fhp); // só Saints amigos
+  assert.equal(hpOf(s, ctx, foeSaint), fhp); // só os amigos
   assert.equal(atkOf(s, ctx, foeSaint), fatk);
   s.players.A.soul = 5;
-  assert.equal(atkOf(s, ctx, saint), atk + 1);
-  assert.equal(hpOf(s, ctx, saint), hp + 2);
+  assert.equal(atkOf(s, ctx, saint), atk + 3);
+  assert.equal(hpOf(s, ctx, saint), hp + 3);
   const warrior = give('A', FOE);
-  assert.equal(hpOf(s, ctx, warrior), 4); // não-Saint: sem bônus
+  assert.equal(hpOf(s, ctx, warrior), 4); // Devotee de outra facção: sem bônus
 });
 
 test('020 Athena\'s Shield (31/10/2026): sem The Last Miracle, mesmo com 5 ou menos Soul', () => {

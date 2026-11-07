@@ -352,9 +352,13 @@ export default {
     });
   }},
   'artemis-v6-417': {spell: {run: (st, c, key) => k.topToBase(st, key)}},
+  // The Forest Answers (autor, 06/11/2026): escolha um, Primal Strike ou Overgrowth (destrói Equipment).
   'artemis-v6-418': {spell: {run: (st, c, key) => {
-    const src = pickFriend(st, c, key, 'PRIMAL STRIKE');
-    blast(st, c, src, src && pickEnemy(st, c, key, 'PRIMAL STRIKE'));
+    const gear = k.allEquipment(st, c);
+    const modes = [k.devotees(st, c, key).length && k.enemies(st, c, key).length && 'Primal Strike', gear.length && 'Overgrowth'].filter(Boolean);
+    const m = modes.length > 1 ? c.decide?.(key, {ability: 'THE FOREST ANSWERS', options: modes, choose: 'mode', text: 'Choose one.'}) : modes[0];
+    if (m === 'Primal Strike') { const src = pickFriend(st, c, key, 'PRIMAL STRIKE'); blast(st, c, src, src && pickEnemy(st, c, key, 'PRIMAL STRIKE')); }
+    if (m === 'Overgrowth') { const t = k.choose(c, key, 'OVERGROWTH', gear, {text: 'Choose target Equipment.'}); if (t) k.destroyEquipment(st, c, t); }
   }}},
   'artemis-v6-419': {spell: {run: (st, c, key) => { const t = pickFriend(st, c, key, 'WILD STRENGTH'); if (t) k.buff(st, t, 3, 3, 'this_round', ['Pierce']); }}},
   'artemis-v6-420': {spell: {run: (st, c, key) => {

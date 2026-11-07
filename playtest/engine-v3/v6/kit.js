@@ -13,6 +13,8 @@ export const isDevotee = (c, uid) => card(c, uid)?.kind === 'Devotee';
 export const hasType = (c, uid, type) => new RegExp(`\\b${type}`, 'i').test(card(c, uid)?.type || '');
 export const devotees = (s, c, key) => s.players[key].battlefield.filter(u => isDevotee(c, u));
 export const enemies = (s, c, key) => devotees(s, c, other(s, key)).filter(u => !blockedNow(s, u)); // §43A Imune
+// Equipment em campo dos dois jogadores (respostas a Equipment de Athena 057, Artemis 418 e Ares 324; autor, 06/11/2026).
+export const allEquipment = (s, c) => Object.values(s.players).flatMap(p => p.battlefield).filter(u => card(c, u)?.kind === 'Equipment');
 export const allDevotees = (s, c) => s.order.flatMap(k => devotees(s, c, k));
 export const onField = (s, key, uid) => !!uid && controllerOf(s, uid) === key;
 export const costOf = (c, uid) => card(c, uid)?.cost?.amount ?? 0;
@@ -168,6 +170,12 @@ export function toTartarus(s, c, uid, from = 'hand') {
   if (was) leavesHooks(s, c, was, uid, 'tartarus');
   if (vanish(c, uid)) return true;
   s.players[c.objects[uid].owner].tartarus.push(uid);
+  return true;
+}
+// Destrói um Equipment em campo: vai ao Tartarus do dono e avisa 'destroyed' (como Hades 262).
+export function destroyEquipment(s, c, uid) {
+  if (!toTartarus(s, c, uid, 'battlefield')) return false;
+  emit(s, 'destroyed', {uid, owner: c.objects[uid].owner});
   return true;
 }
 export function exile(s, c, uid, from = 'battlefield') {
