@@ -58,7 +58,7 @@ try:
 
         page.set_input_files('[data-up="artboard"]', str(ART))
         page.wait_for_selector('.ap-layers img[alt^="Artboard"]', timeout=20000)
-        ok('artboard importado e versionado', 'Master Artboard V' in page.locator('#ap-left').inner_text())
+        ok('artboard importado e versionado', 'Battlefield Artboard V' in page.locator('#ap-left').inner_text())
 
         stage = page.locator('#ap-stage').bounding_box()
         page.click('[data-tool="nota"]')

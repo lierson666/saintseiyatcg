@@ -124,3 +124,47 @@ Fica em `/api/star-hill/producao/manifesto`. Inclui:
 2. Decidir a composição do fundo com o template: tirar o frontão da zona do oponente.
 3. Carregar GLB na cena (GLTFLoader só no modo de produção) e trocar Rocks e Statues.
 4. Publicar o manifesto como arquivo estático e fazer o jogo ler `painterly` e os perfis dele.
+
+## Immersive World & Cinematic Transition V1 (07/11/2026)
+
+Esta seção atualiza as limitações acima sobre o frontão coberto: o palácio deixou de ser fundo da câmera competitiva. A regra completa está em `docs/art-bible/SSTCG_VISUAL_UNIVERSE_BIBLE_V1.md`, seção 12.
+
+### Mundo
+- Ambiente e campo ficam numa cena só, nas mesmas coordenadas. Saíram a câmera de fundo e a camada separada.
+- O palácio fica em grupos: `DistantEnvironment`, `LandmarkArchitecture`, `BattlefieldEnvironment`, `EnvironmentalProps`, `LightingRig` e `AtmosphericFX`.
+- O leito marinho é um anel em volta do campo, e o céu é um domo 3D.
+
+### Moldura do campo
+Fica em `BattlefieldEnvironment`:
+- balaustrada em r = 17,3 m, com vão no eixo da escadaria;
+- colunata em r = 19,4 m, com colunas partidas e lintéis;
+- quatro braseiros de ouro;
+- caminho processional até o primeiro degrau.
+
+No preview, o piso tem anéis de ouro antigo.
+
+### Câmera cinematográfica
+- É uma `cineCam` separada. A câmera competitiva não é tocada.
+- As chaves ficam em `arena-forge/cinematics/poseidon.json`.
+- A abertura padrão tem 6 chaves e dura 9,4 s.
+- **API:** `scene.cinematic(keys)`, `skipCinematic()`, `poseCinematic(key|null)` e `cinematicKeys`.
+- **Editor:** Produção → **Cinemática**. Permite:
+  - ver cada chave no jogo real;
+  - editar posição, ponto focal, FOV, roll, duração, easing, luz, VFX e som;
+  - reordenar, duplicar e remover chaves;
+  - tocar e pular;
+  - salvar, com validação no servidor;
+  - gerar o storyboard da câmera real como artboard do tipo Storyboard.
+- Os artboards agora têm tipo: Battlefield, Cinematic ou Storyboard.
+
+### Testes
+| Teste | Resultado |
+| --- | --- |
+| `tools/test-arena-production.py` | 39 ok, 10 deles da cinemática |
+| `tools/test-cinematic-editor.py` | 7 ok |
+| `tools/capture-poseidon-cinematic.py` | Abertura real, pular, reduzir movimento, partida, celular e bench. Capturas em `docs/img/arena-cinematic/`. |
+
+### Limites
+- A chave GOD REVEAL só mexe na câmera. Os retratos dos deuses são HUD e aparecem com a mesa, depois do cara ou coroa.
+- O campo "som" é guardado, mas a abertura ainda não toca áudio.
+- A moldura é procedural: primitivas com material pintado. Estátuas e rochas finais ainda dependem de GLB.

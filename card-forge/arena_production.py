@@ -8,6 +8,8 @@ Rotas (servidor local do STAR HILL, só localhost):
   POST /api/star-hill/producao                         {projeto}  grava (validado)
   POST /api/star-hill/producao/arquivo                 {id, tipo, nome, dados: dataURL}  imagem (png/jpg/webp) ou modelo GLB
   POST /api/star-hill/producao/importar                {zip: base64}  reimporta um pacote
+  GET  /api/star-hill/producao/cinematica?arena=<id>   chaves da abertura (arena-forge/cinematics/<id>.json)
+  POST /api/star-hill/producao/cinematica              {arena, keys}  grava a abertura (o jogo lê o mesmo arquivo)
 
 Nada aqui publica no jogo oficial: a etapa PUBLICATION só registra a decisão; o deploy é separado e depende do autor.
 """
@@ -33,6 +35,11 @@ ASSET_STATES = ['reference', 'concept', 'model', 'uv', 'texture', 'material', 'p
 FILE_KINDS = {'artboard': 'artboards', 'referencia': 'references', 'asset': 'assets', 'thumb': 'thumbnails', 'template': 'artboards'}
 MAX_FILE = 30 << 20
 ID_RE = re.compile(r'^[a-z0-9][a-z0-9-]{1,60}$')
+CINE_DIR = 'arena-forge/cinematics'
+CINE_EASE = {'linear', 'easeIn', 'easeOut', 'easeInOut'}
+CINE_VFX = {None, 'dust', 'shockwave', 'flash'}
+COMPETITIVE = {'pos': [0, 13.5, 13], 'look': [0, 0, -0.6], 'fov': 42, 'roll': 0}
+ARTBOARD_TYPES = {'battlefield', 'cinematic', 'storyboard'}
 PACKAGE_DIRS = ['artboards', 'references', 'assets', 'materials', 'textures', 'shaders', 'animations', 'thumbnails', 'manifests', 'reports']
 
 
@@ -193,6 +200,9 @@ def validate(root, proj, old=None):
         for d in a.get('dependencias', []):
             if d not in ids:
                 raise ValueError(f'Asset {a["id"]}: dependência ausente {d}.')
+    for b in proj.get('artboards', []):
+        if b.get('tipo', 'battlefield') not in ARTBOARD_TYPES:
+            raise ValueError(f'Artboard {b.get("id")}: tipo deve ser battlefield, cinematic ou storyboard.')
     for b in proj.get('artboards', []) + proj.get('referencias', []):
         if not _file_ok(root, b.get('arquivo')):
             raise ValueError(f'Imagem ausente: {b.get("arquivo")}')
@@ -262,6 +272,9 @@ def manifest(root, proj):
     return {
         'schema': 1, 'id': proj['id'], 'versao': proj.get('versao', 1), 'gerado_em': now(), 'direcao': proj.get('direcao'),
         'camera': {'tipo': 'PerspectiveCamera', 'fov': 42, 'position': [0, 13.5, 13], 'lookAt': [0, 0, -0.6], 'somenteLeitura': True},
+        'cameras': {'competitiva': 'camera (bloqueada no gameplay)', 'cinematica': f'{CINE_DIR}/poseidon.json (abertura; termina na competitiva)'},
+        'grupos_cena': ['WorldRoot', 'DistantEnvironment', 'LandmarkArchitecture', 'BattlefieldEnvironment', 'EnvironmentalProps',
+                        'LightingRig', 'AtmosphericFX', 'CinematicCameraRig', 'GameplayScene'],
         'cena': proj.get('cena'), 'artboard': approved and {'id': approved['id'], 'versao': approved['versao'], 'arquivo': approved['arquivo']},
         'grupos': groups, 'materiais': proj.get('materiais', []),
         'iluminacao': [a['id'] for a in proj.get('assets', []) if a['categoria'] == 'lighting'],
@@ -300,6 +313,9 @@ def export_zip(root, pid):
             p = Path(__file__).resolve().parents[1] / code
             if p.is_file():
                 z.write(p, f'shaders/{p.name}')
+        cp = cine_path(root, 'poseidon')
+        if cp.is_file():
+            z.write(cp, 'animations/poseidon-cinematic.json')
         z.writestr('reports/export-report.json', json.dumps(report, ensure_ascii=False, indent=2))
     return buf.getvalue()
 
@@ -344,6 +360,58 @@ def import_zip(root, body, atomic_write):
     return {'ok': True, 'projeto': proj, 'restaurados': restored, 'substituiu': bool(old)}
 
 
+# ---------------- Cinemática ----------------
+
+def _finite(v, lo, hi):
+    return isinstance(v, (int, float)) and not isinstance(v, bool) and lo <= v <= hi
+
+
+def validate_cinematic(keys):
+    """Câmera cinematográfica: chaves limitadas; a última é a câmera competitiva, exatamente (ela não muda)."""
+    if not isinstance(keys, list) or not 2 <= len(keys) <= 24:
+        raise ValueError('A abertura precisa de 2 a 24 chaves.')
+    for i, k in enumerate(keys):
+        if not isinstance(k, dict) or not isinstance(k.get('stage'), str) or not k['stage'].strip():
+            raise ValueError(f'Chave {i + 1}: nome da etapa obrigatório.')
+        for f in ('pos', 'look'):
+            v = k.get(f)
+            if not (isinstance(v, list) and len(v) == 3 and all(_finite(x, -600, 600) for x in v)):
+                raise ValueError(f'Chave {i + 1}: {f} precisa de 3 números entre -600 e 600.')
+        checks = [('fov', 10, 100), ('roll', -180, 180), ('dur', 0, 20000), ('light', 0, 3)]
+        for f, lo, hi in checks:
+            if not _finite(k.get(f), lo, hi):
+                raise ValueError(f'Chave {i + 1}: {f} fora de {lo}..{hi}.')
+        if k.get('ease') not in CINE_EASE or k.get('vfx') not in CINE_VFX:
+            raise ValueError(f'Chave {i + 1}: easing ou VFX desconhecido.')
+        if k.get('sound') is not None and not isinstance(k['sound'], str):
+            raise ValueError(f'Chave {i + 1}: som deve ser texto ou vazio.')
+        if bool(k.get('locked')) != (i == len(keys) - 1):
+            raise ValueError('Só a última chave é a câmera competitiva (bloqueada).')
+    last = keys[-1]
+    if any(last[f] != v for f, v in COMPETITIVE.items()):
+        raise ValueError('A última chave precisa ser exatamente a câmera competitiva: FOV 42, (0, 13.5, 13) olhando (0, 0, -0.6).')
+    total = sum(k['dur'] for k in keys)
+    if total > 30000:
+        raise ValueError('Abertura longa demais (máximo 30 s).')
+    return keys
+
+
+def cine_path(root, arena):
+    if not ID_RE.match(arena or ''):
+        raise ValueError('Arena inválida.')
+    return root_of(root) / CINE_DIR / f'{arena}.json'
+
+
+def save_cinematic(root, body, atomic_write):
+    arena = body.get('arena')
+    keys = validate_cinematic(body.get('keys'))
+    doc = {'schema': 1, 'arena': arena, 'atualizado_em': now(), 'keys': keys}
+    p = cine_path(root, arena)
+    atomic_write(p, (json.dumps(doc, ensure_ascii=False, indent=1) + '\n').encode('utf-8'))
+    p.chmod(0o644)
+    return {'ok': True, 'cinematica': doc, 'duracao_ms': sum(k['dur'] for k in keys)}
+
+
 # ---------------- Rotas ----------------
 
 def get(handler, path, root):
@@ -352,6 +420,9 @@ def get(handler, path, root):
     try:
         if path == '/api/star-hill/producao':
             return handler.reply(200, read(root, pid))
+        if path == '/api/star-hill/producao/cinematica':
+            p = cine_path(root, q.get('arena', 'poseidon'))
+            return handler.reply(200, json.loads(p.read_text(encoding='utf-8')) if p.is_file() else {'schema': 1, 'keys': None})
         if path == '/api/star-hill/producao/manifesto':
             return handler.reply(200, manifest(root, read(root, pid)))
         if path == '/api/star-hill/producao/exportar':
@@ -373,6 +444,8 @@ def post(path, body, root, atomic_write):
         return save(root, body, atomic_write)
     if path == '/api/star-hill/producao/arquivo':
         return upload(root, body, atomic_write)
+    if path == '/api/star-hill/producao/cinematica':
+        return save_cinematic(root, body, atomic_write)
     if path == '/api/star-hill/producao/importar':
         return import_zip(root, body, atomic_write)
     raise ValueError('Rota de produção desconhecida.')

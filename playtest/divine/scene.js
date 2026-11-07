@@ -89,7 +89,7 @@ void main(){
   col += uLine * .25 * smoothstep(.35, .0, r);
   col *= smoothstep(1.05, .55, r);
   if (uPaint > .5) { vec3 b = texture2D(uBrush, vUv * 7.).rgb - .5; col *= 1. + b.r * .3 + b.g * .12; } // solo pintado (prévia de arena)
-  gl_FragColor = vec4(col, mix(1., smoothstep(.72, .655, r), uEdgeFade)); // abre logo depois do anel de r=.62: as cartas ficam dentro // com cenário de fundo, a borda do piso se abre para ele
+  gl_FragColor = vec4(col, mix(1., smoothstep(1., .93, r), uEdgeFade)); // abre logo depois do anel de r=.62: as cartas ficam dentro // com cenário de fundo, a borda do piso se abre para ele
 }`;
 
 const SKY_FRAG = `uniform vec3 uTop; uniform vec3 uBottom; uniform float uTime; varying vec2 vUv; varying vec3 vPos;
@@ -183,50 +183,37 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
   floor.rotation.x = -Math.PI / 2;
   world.add(floor);
   // Environment-only development preview; never loaded for the published arena.
-  // Camada de fundo (autor, 07/11/2026): o palácio fica numa cena própria, com câmera própria, desenhada antes do campo.
-  // A câmera competitiva não muda; a câmera de fundo é enquadrada pela faixa de tela acima da borda do campo (frameBackdrop).
-  let devEnvironment = null, back = null, backCam = null, backReport = null, fogNear = null, fogFar = null;
+  // IMMERSIVE WORLD V1 (autor, 07/11/2026): o ambiente entra no MESMO mundo da partida, nas mesmas coordenadas.
+  // Duas câmeras na mesma cena: a competitiva (camera, intocada) e a cinematográfica (cineCam), que só existe na abertura.
+  let devEnvironment = null, cineCam = null, cine = null, cineKeys = null, cineLast = null;
   if (environmentPreview === 'poseidon-palace') {
     try {
-      const {createPoseidonPalace} = await import('../../arena-forge/poseidon-palace.js');
-      devEnvironment = createPoseidonPalace(THREE, {quality: Object.keys(QUALITY).find(k => QUALITY[k] === q), reduceMotion});
-      back = new THREE.Scene();
-      back.add(devEnvironment.group);
-      backCam = new THREE.PerspectiveCamera(42, 1, 1, 1200);
-      fogNear = new THREE.Fog('#0b3a55', 40, 220); fogFar = new THREE.Fog('#0b3a55', 220, 700);
-      // Céu oceânico pintado atrás de tudo: gradiente da facção, pinceladas e luz que desce da superfície.
-      const sky2 = new THREE.Mesh(new THREE.PlaneGeometry(2400, 1200), new THREE.ShaderMaterial({fog: false, depthWrite: false,
+      const mod = await import('../../arena-forge/poseidon-palace.js');
+      devEnvironment = mod.createPoseidonPalace(THREE, {quality: Object.keys(QUALITY).find(k => QUALITY[k] === q), reduceMotion});
+      world.add(devEnvironment.group);
+      cineLast = mod.COMPETITIVE_KEY;
+      cineKeys = await fetch(new URL('../../arena-forge/cinematics/poseidon.json', import.meta.url), {cache: 'no-cache'})
+        .then(r => r.ok ? r.json() : null).then(j => Array.isArray(j?.keys) ? j.keys : null).catch(() => null) || mod.CINEMATIC_POSEIDON;
+      cineCam = new THREE.PerspectiveCamera(42, 1, .1, 1200);
+      // Céu oceânico: domo de verdade em volta do mundo (a cinemática olha para cima; a câmera competitiva nunca vê o céu).
+      const dome = new THREE.Mesh(new THREE.SphereGeometry(420, 32, 16), new THREE.ShaderMaterial({fog: false, depthWrite: false, side: THREE.BackSide,
         uniforms: {uTime: uniforms.uTime, uBrush: devEnvironment.paint ? devEnvironment.paint.uBrush : {value: null}, uPaint: {value: devEnvironment.paint ? 1 : 0}},
         vertexShader: VERT_PASS,
         fragmentShader: `uniform float uTime; uniform sampler2D uBrush; uniform float uPaint; varying vec2 vUv;
           void main(){ float y = vUv.y; vec3 deep = vec3(.01,.05,.13), mid = vec3(.03,.24,.36), top = vec3(.1,.55,.66);
-            vec3 c = mix(deep, mid, smoothstep(.25, .62, y)); c = mix(c, top, smoothstep(.62, .9, y));
-            float rays = pow(max(0., sin(vUv.x * 40. + sin(vUv.x * 7.) * 2.)), 6.) * smoothstep(.4, .95, y) * .18;
-            if (uPaint > .5) { vec3 b = texture2D(uBrush, vUv * vec2(6., 3.) + vec2(uTime * .002, 0.)).rgb - .5; c *= 1. + b.r * .5 + b.b * .3; }
+            vec3 c = mix(deep, mid, smoothstep(.45, .62, y)); c = mix(c, top, smoothstep(.62, .85, y));
+            float rays = pow(max(0., sin(vUv.x * 120. + sin(vUv.x * 21.) * 2.)), 6.) * smoothstep(.55, .9, y) * .18;
+            if (uPaint > .5) { vec3 b = texture2D(uBrush, vUv * vec2(18., 4.) + vec2(uTime * .002, 0.)).rgb - .5; c *= 1. + b.r * .5 + b.b * .3; }
             gl_FragColor = vec4(c + vec3(.5,.85,.95) * rays, 1.); }`}));
-      sky2.position.set(0, 120, -520); sky2.renderOrder = -1; back.add(sky2);
+      dome.position.set(0, 0, -30); dome.renderOrder = -1; dome.name = 'DistantEnvironment · Céu oceânico'; devEnvironment.groups.distant.add(dome);
       sky.visible = false;
+      // O campo se funde no leito marinho só na borda externa: a área das cartas continua inteira.
       floor.material.transparent = true; floor.material.uniforms.uEdgeFade.value = 1;
       if (devEnvironment.paint) { floor.material.uniforms.uBrush.value = devEnvironment.paint.uBrush.value; floor.material.uniforms.uPaint.value = 1; }
     } catch (err) {
       console.error('[Arena Forge] Could not load Poseidon Palace preview:', err);
-      devEnvironment = back = null;
+      devEnvironment = cineCam = null;
     }
-  }
-  // Enquadramento por zonas da tela, calculado com a câmera competitiva de verdade (não por porcentagem fixa):
-  // a base do pórtico pousa logo acima da borda de trás do campo e o frontão fica abaixo do topo da tela.
-  const PALACE_SPAN = [4.41, 23.4], PALACE_Z = -40;
-  function frameBackdrop(w, h) {
-    if (!backCam) return;
-    const ref = camera.clone(); ref.aspect = w / h; ref.position.copy(camHome); ref.lookAt(look); ref.updateProjectionMatrix(); ref.updateMatrixWorld();
-    const rim = new THREE.Vector3(0, 0, -16 * .69).project(ref), rimY = (1 - rim.y) / 2; // borda de trás do campo, fração do topo
-    const top = -.01, base = Math.max(.12, rimY + .13), span = base - top, half = Math.tan(21 * Math.PI / 180);
-    const d = (PALACE_SPAN[1] - PALACE_SPAN[0]) / (span * 2 * half), hc = (PALACE_SPAN[0] + PALACE_SPAN[1]) / 2;
-    backCam.aspect = w / h; backCam.position.set(0, hc, PALACE_Z + d); backCam.lookAt(0, hc, PALACE_Z);
-    backCam.setViewOffset(w, h, 0, (.5 - (top + base) / 2) * h, w, h); backCam.updateMatrixWorld();
-    const pt = (x, y, z) => { const v = new THREE.Vector3(x, y, z).project(backCam); return [+((v.x + 1) / 2).toFixed(3), +((1 - v.y) / 2).toFixed(3)]; };
-    backReport = {rimY: +rimY.toFixed(3), band: [top, +base.toFixed(3)], distancia: +d.toFixed(1),
-      pontos: {apice: pt(0, PALACE_SPAN[1], PALACE_Z + 4), podio: pt(0, PALACE_SPAN[0], -36.3), alaEsq: pt(-26, 15, -42), alaDir: pt(26, 15, -42), pilar: pt(0, 60, -74)}};
   }
 
   const marbleSize = q.calm ? 1024 : 2048;
@@ -245,10 +232,12 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
   zodiac.rotation.x = -Math.PI / 2; zodiac.position.y = .02;
   world.add(zodiac);
 
-  world.add(new THREE.HemisphereLight('#ffffff', '#202030', .55));
+  const hemiTheme = new THREE.HemisphereLight('#ffffff', '#202030', .55);
+  world.add(hemiTheme);
   const sun = new THREE.DirectionalLight('#ffffff', 1.6);
   sun.position.set(-6, 14, 6);
   world.add(sun);
+  if (devEnvironment) hemiTheme.visible = sun.visible = false; // o ambiente traz o próprio LightingRig
 
   // Colunas instanciadas em anel: fuste, base e capitel numa só malha cada (3 draw calls).
   const colMat = new THREE.MeshStandardMaterial({color: '#eee', roughness: .55, metalness: .05});
@@ -272,7 +261,7 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
       cap.setMatrixAt(i, m);
     }
     columnMeshes = [shaft, base, cap];
-    columnMeshes.forEach(x => { x.visible = !back; world.add(x); }); // com cenário de fundo, o anel de colunas do tema sai
+    columnMeshes.forEach(x => { x.visible = !devEnvironment; world.add(x); }); // com ambiente, a moldura do campo é dele
   }
 
   const rays = [];
@@ -308,13 +297,13 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
     sky.material.uniforms.uTop.value.set(t.skyTop); sky.material.uniforms.uBottom.value.set(t.skyBottom);
     const f = floor.material.uniforms;
     marbleMat.uniforms.uA.value.set(t.floorA); marbleMat.uniforms.uB.value.set(t.floorB); marbleMat.uniforms.uMask.value = t.mask || 0; bakeMarble();
-    f.uLine.value.set(t.line); f.uCaustics.value = t.caustics || 0; f.uGlow.value.set(t.mask ? t.glow : '#000'); f.uPulse.value = t.pulse || 1;
+    f.uLine.value.set(devEnvironment ? '#d7ac63' : t.line); // mundo de Poseidon: anéis de ouro antigo (Bíblia Visual) f.uCaustics.value = t.caustics || 0; f.uGlow.value.set(t.mask ? t.glow : '#000'); f.uPulse.value = t.pulse || 1;
     colMat.color.set(t.column); colMat.metalness = t.metal || .05; goldMat.color.set(t.cap || '#d9b25c');
     sun.color.set(t.light); rayMat.uniforms.uColor.value.set(t.light); dustMat.uniforms.uColor.value.set(t.dust);
     dustMat.uniforms.uFall.value = t.fall || 0; dustMat.uniforms.uBlink.value = t.blink || 0; dustScale = t.dustSize || 1;
     world.fog = new THREE.Fog(t.fog, 26, devEnvironment ? 180 : 70);
     zodiac.visible = !!t.zodiac;
-    orb.visible = !!t.orb && !back;
+    orb.visible = !!t.orb && !devEnvironment;
     // no alto da tela, atrás do campo do oponente; virado para a câmera
     if (t.orb) { orb.material.uniforms.uColor.value.set(t.orb.color); orb.position.set(t.orb.x || 0, -14, -40); orb.scale.setScalar(t.orb.size * 2); orb.lookAt(camHome); }
     if (columnMeshes.length) buildColumns(q.columns);
@@ -458,7 +447,8 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
     const w = host.clientWidth || innerWidth, h = host.clientHeight || innerHeight;
     renderer.setSize(w, h, false); fxRenderer.setSize(w, h, false);
     dirty = true; wake();
-    camera.aspect = w / h; camera.updateProjectionMatrix(); frameBackdrop(w, h);
+    camera.aspect = w / h; camera.updateProjectionMatrix();
+    if (cineCam) { cineCam.aspect = w / h; cineCam.updateProjectionMatrix(); }
     fxCam.left = 0; fxCam.right = w; fxCam.top = 0; fxCam.bottom = h; fxCam.updateProjectionMatrix();
     dustMat.uniforms.uPixel.value = renderer.getPixelRatio() * h * .05 * dustScale;
   }
@@ -466,24 +456,54 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
 
   // Teto de quadros (Mac superaquecendo, 31/10/2026): 60 fps com golpe na tela, 30 fps com a arena parada.
   // Telas de 120 Hz desenhavam os dois canvas no dobro, sem ganho visível no cenário lento.
-  // Cinemática de abertura (autor, 07/11/2026): parte diante da arena, aproxima e voa até a câmera competitiva, que não muda.
-  let intro = null;
-  const introLook = new THREE.Vector3(), introA = new THREE.Vector3(), introB = new THREE.Vector3(), introL = new THREE.Vector3();
-  const ease = k => k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+  // CINEMATIC CAMERA (autor, 07/11/2026): keyframes com posição, ponto focal, FOV, roll, duração, easing, luz e eventos.
+  // Caminho Catmull-Rom entre as chaves; a última é a câmera competitiva, então a troca para `camera` não dá salto.
+  const EASE = {linear: k => k, easeIn: k => k * k * k, easeOut: k => 1 - Math.pow(1 - k, 3), easeInOut: k => k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2};
+  const v3 = a => new THREE.Vector3(...a), cr = (a, b, c, d, t) => { const t2 = t * t, t3 = t2 * t;
+    return .5 * (2 * b + (-a + c) * t + (2 * a - 5 * b + 4 * c - d) * t2 + (-a + 3 * b - 3 * c + d) * t3); };
+  const crv = (A, i, t) => { const g = j => A[Math.max(0, Math.min(A.length - 1, j))]; return new THREE.Vector3(...[0, 1, 2].map(k => cr(g(i - 2)[k], g(i - 1)[k], g(i)[k], g(i + 1)[k], t))); };
+  // Chaves válidas: números finitos, FOV 10–100, duração ≥ 0; a última vira a competitiva exatamente.
+  function cineNormalize(keys) {
+    const num = (v, d) => Number.isFinite(+v) ? +v : d, vec = (v, d) => Array.isArray(v) && v.length === 3 ? v.map((x, i) => num(x, d[i])) : d;
+    const K = (keys || []).filter(k => k && !k.locked).map(k => ({...k, pos: vec(k.pos, cineLast.pos), look: vec(k.look, cineLast.look),
+      fov: Math.min(100, Math.max(10, num(k.fov, 42))), roll: num(k.roll, 0), dur: Math.max(0, num(k.dur, 1000)), light: Math.max(0, num(k.light, 1)), ease: EASE[k.ease] ? k.ease : 'easeInOut'}));
+    const last = (keys || []).at(-1);
+    K.push({...cineLast, dur: Math.max(0, num(last?.locked ? last.dur : cineLast.dur, cineLast.dur)), ease: last?.locked && EASE[last.ease] ? last.ease : cineLast.ease});
+    return K;
+  }
+  function cinePose(k) {
+    cineCam.position.set(...k.pos); cineCam.lookAt(...k.look); cineCam.rotateZ(k.roll * Math.PI / 180);
+    if (cineCam.fov !== k.fov) { cineCam.fov = k.fov; cineCam.updateProjectionMatrix(); }
+    devEnvironment?.setLight(k.light ?? 1);
+  }
+  function cineVfx(kind) {
+    const w = renderer.domElement.clientWidth, h = renderer.domElement.clientHeight;
+    if (kind === 'shockwave') fx.shockwave(w / 2, h * .55, {color: '#9ff0ff', size: Math.min(w, h) * .6});
+    if (kind === 'dust') fx.burst(w / 2, h * .6, {color: '#bff4ff', count: 70, speed: 260, size: 8, life: 1.1});
+    if (kind === 'flash') fx.burst(w / 2, h * .45, {color: '#ffffff', count: 40, speed: 520, size: 16, life: .5});
+  }
+  function stepCine(now) {
+    if (cine.static) return cinePose(cine.static);
+    const K = cine.keys, T = []; K.reduce((acc, k, i) => (T[i] = acc + k.dur), 0);
+    const t = now - cine.t0;
+    K.forEach((k, i) => { if (t >= T[i] && !cine.fired.has(i)) { cine.fired.add(i); if (k.vfx) cineVfx(k.vfx); cine.onEvent?.(k, i); } });
+    if (t >= T.at(-1)) { const done = cine.done; cine = null; devEnvironment?.setLight(1); done(true); return; }
+    const i = Math.max(1, T.findIndex(x => x > t));
+    if (t < T[0]) return cinePose(K[0]);
+    const a = K[i - 1], b = K[i], u = EASE[b.ease]((t - T[i - 1]) / Math.max(1, b.dur));
+    cinePose({pos: crv(K.map(k => k.pos), i, u).toArray(), look: crv(K.map(k => k.look), i, u).toArray(),
+      fov: a.fov + (b.fov - a.fov) * u, roll: a.roll + (b.roll - a.roll) * u, light: a.light + (b.light - a.light) * u});
+  }
   let still = reduceMotion, dustScale = 1, last = performance.now(), running = true, frames = 0, fpsClock = last, fps = 60, lost = false, fxDrawn = false, dirty = true, sleeping = false, slow = 0, worldDrawn = 0, rafCount = 0, rafClock = last, rafRate = 60;
   const wake = () => { if (sleeping) { sleeping = false; requestAnimationFrame(frame); } };
-  // Com cenário de fundo: na abertura o palácio usa a câmera que voa (coordenadas reais); na partida, a câmera de fundo.
+  // Uma cena só: durante a abertura desenha com a câmera cinematográfica; no jogo, com a competitiva.
   function drawWorld() {
     renderer.clear();
-    if (back) {
-      if (intro) { back.fog = fogNear; renderer.render(back, camera); }
-      else { back.fog = fogFar; renderer.render(back, backCam); renderer.clearDepth(); }
-    }
-    renderer.render(world, camera);
+    renderer.render(world, cine ? cineCam : camera);
   }
   function frame(now) {
     if (!running) return;
-    const moving = shakeAmp > .01 || punch > .01 || !!intro, busy = P.n || live.length || moving;
+    const moving = shakeAmp > .01 || punch > .01 || !!cine, busy = P.n || live.length || moving;
     // Celular e Low (autor, 01/11/2026, iPhone aquecendo): a arena é desenhada uma vez e fica parada. Sem efeito na tela o laço dorme; wake() o acorda.
     const calm = q.calm || still; // reduzir movimento: arena parada como no celular
     if (calm && !busy && !fxDrawn && !dirty) { sleeping = true; return; }
@@ -505,16 +525,9 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
     }
     shakeAmp *= Math.exp(-dt * 9); punch *= Math.exp(-dt * 7);
     // Sem balanço lateral: a linha central do chão (grade de Ares) fica no eixo exato dos dois deuses (autor, 07/11/2026).
-    if (intro) {
-      const t = now - intro.t0, hold = Math.min(1, t / intro.hold), k = ease(Math.min(1, Math.max(0, (t - intro.hold) / intro.fly)));
-      introA.lerpVectors(intro.a0, intro.a1, 1 - Math.pow(1 - hold, 2)); // aproximação lenta diante do palácio
-      camera.position.lerpVectors(introA, camHome, k); introLook.lerpVectors(intro.look, look, k); camera.lookAt(introLook);
-      dirty = true;
-      if (t >= intro.hold + intro.fly) { const done = intro.done; intro = null; camera.position.copy(camHome); camera.lookAt(look); done(); }
-    } else {
-      camera.position.set(camHome.x + (Math.random() - .5) * shakeAmp * .08, camHome.y - punch * .6 + (Math.random() - .5) * shakeAmp * .08, camHome.z - punch);
-      camera.lookAt(look);
-    }
+    if (cine) { stepCine(now); dirty = true; }
+    camera.position.set(camHome.x + (Math.random() - .5) * shakeAmp * .08, camHome.y - punch * .6 + (Math.random() - .5) * shakeAmp * .08, camHome.z - punch);
+    camera.lookAt(look);
     stepParticles(dt); stepShapes(dt);
     if (devEnvironment && !still && !q.calm) devEnvironment.update(uniforms.uTime.value);
     // no celular a arena nem treme: o chão (5 oitavas de ruído por pixel) é o desenho mais caro da cena
@@ -582,21 +595,31 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
       c.getContext('2d').drawImage(src, 0, 0, c.width, c.height);
       return c.toDataURL('image/webp', .8);
     },
-    // Cinemática de abertura: devolve uma promessa que resolve quando a câmera chega na posição competitiva.
-    // Reduzir movimento: não roda. skipIntro() termina na hora (toque, tecla).
-    intro({from = [0, 12, 2], to = [0, 13.5, -5], at = [0, 11.5, -42], hold = 1800, fly = 3400} = {}) {
-      if (still) return Promise.resolve(false);
+    // CINEMATIC CAMERA: toca as chaves (padrão: as da arena) e resolve quando chega na câmera competitiva.
+    // Reduzir movimento: não roda (corte direto). skipCinematic() termina na hora, exatamente na posição competitiva.
+    cinematic(keys = cineKeys, {onEvent} = {}) {
+      if (!cineCam || still) return Promise.resolve(false);
       return new Promise(done => {
-        intro?.done(false);
-        intro = {t0: performance.now(), hold, fly, a0: introA.clone().set(...from), a1: introB.clone().set(...to), look: introL.clone().set(...at), done: () => done(true)};
-        intro.done = v => done(v ?? true);
+        cine?.done?.(false);
+        cine = {keys: cineNormalize(keys), t0: performance.now(), fired: new Set(), onEvent, done};
         dirty = true; wake();
       });
     },
-    skipIntro() { if (intro) { intro.t0 = performance.now() - intro.hold - intro.fly; wake(); } },
-    get introPlaying() { return !!intro; },
-    // Camera Composition Template: o enquadramento do cenário de fundo medido na câmera real (fração da tela, 0 = topo/esquerda).
-    composition() { return backReport && {...backReport, camera: {fov: camera.fov, position: camHome.toArray(), lookAt: look.toArray(), aspect: +camera.aspect.toFixed(4)}}; },
+    skipCinematic() { if (cine && !cine.static) { cine.t0 = -1e9; dirty = true; wake(); } },
+    // Editor: segura a câmera cinematográfica numa chave (null volta para a competitiva).
+    poseCinematic(key) {
+      if (!cineCam) return false;
+      if (cine && !cine.static) cine.done(false);
+      cine = key ? {static: cineNormalize([key, cineLast])[0]} : null;
+      if (!key) devEnvironment?.setLight(1);
+      dirty = true; wake(); return true;
+    },
+    get cinematicKeys() { return cineKeys && cineNormalize(cineKeys); },
+    get cinematicPlaying() { return !!cine && !cine.static; },
+    intro(opts) { return this.cinematic(undefined, opts); }, skipIntro() { this.skipCinematic(); }, get introPlaying() { return !!cine && !cine.static; },
+    // Camera Composition Template: câmera competitiva (somente leitura) e o mundo carregado.
+    composition() { return {camera: {fov: camera.fov, position: camHome.toArray(), lookAt: look.toArray(), aspect: +camera.aspect.toFixed(4)}, mundo: !!devEnvironment,
+      grupos: devEnvironment ? Object.keys(devEnvironment.groups).length : 0}; },
     get environment() { return devEnvironment; },
     stats: () => ({fps: Math.round(fps), rafRate: Math.round(rafRate), pixelRatio: renderer.getPixelRatio(), level: Object.keys(QUALITY).find(k => QUALITY[k] === q), calls: renderer.info.render.calls, particles: P.n, alive, geometries: renderer.info.memory.geometries, textures: renderer.info.memory.textures}),
     // QA: ms reais de GPU por quadro. readPixels espera a GPU terminar; o trace do navegador não enxerga isso com Metal.

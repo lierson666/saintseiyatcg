@@ -295,7 +295,7 @@ export async function mountArenaForge(host, context) {
   scene?.dispose(); scene = null;
   // Texture Library e Material Studio: seções do mesmo Arena Forge; o Three.js completo só carrega quando abertas.
   if (sub === 'materiais' || sub === 'estudio') return (await import('./material-studio.js?v=20261107-ms2')).mountMaterials(host, context, sub);
-  if (sub === 'producao') return (await import('./arena-production.js?v=20261107-ap2')).mountProduction(host, context, (await import('./material-studio.js?v=20261107-ms2')).arenaNav());
+  if (sub === 'producao') return (await import('./arena-production.js?v=20261107-ap3')).mountProduction(host, context, (await import('./material-studio.js?v=20261107-ms2')).arenaNav());
   if (!document.querySelector('#af5-style')) document.head.append(Object.assign(document.createElement('style'), {id: 'af5-style', textContent: css}));
   host.innerHTML = `<nav class="ms-tabs" aria-label="Arena Forge" style="display:flex;gap:6px;margin-bottom:12px">${[['#arenas', 'Arenas'], ['#arenas/materiais', 'Texture Library'], ['#arenas/estudio', 'Material Studio · Palácio de Poseidon'], ['#arenas/producao', 'Produção · Artboard']]
     .map(([h, l]) => `<a href="${h}" ${location.hash === h || (h === '#arenas' && !sub) ? 'aria-current="page"' : ''} style="padding:6px 12px;border-radius:99px;border:1px solid #ffffff2a;color:inherit;text-decoration:none">${l}</a>`).join('')}</nav>

@@ -2998,7 +2998,7 @@ async function init() {
   if (params.get('timeouts')) settings.timeouts = params.get('timeouts') === '1'; // ?timeouts=1 (QA)
   if (MATCH_ID) connectOnline(); // duelo online: a partida vem do servidor (a primeira visão chama render)
   else {
-    if (params.get('arenaPreview') === 'poseidon-palace' && !params.get('noIntro') && !settings.reduceMotion) introGate = new Promise(done => { introDone = done; });
+    if (params.get('arenaPreview') === 'poseidon-palace' && !params.get('noIntro') && !settings.reduceMotion) { introGate = new Promise(done => { introDone = done; }); stage.classList.add('arena-intro'); } // mesa escondida desde o 1º quadro
     newMatch(Number(params.get('seed')) || undefined, params.get('demo') ? 'A' : ['A', 'B'].includes(params.get('first')) ? params.get('first') : undefined, !params.get('demo'));
     applyDemo(params.get('demo'));
     render();
@@ -3022,7 +3022,7 @@ async function init() {
   // Cinemática de abertura do palácio (autor, 07/11/2026): a mesa aparece quando a câmera chega na posição competitiva. Toque ou tecla pula.
   if (scene && environmentPreview && !params.get('noIntro') && !settings.reduceMotion) {
     const skip = () => scene.skipIntro();
-    stage.classList.add('arena-intro', 'arena-intro-fade');
+    stage.classList.add('arena-intro'); requestAnimationFrame(() => stage.classList.add('arena-intro-fade'));
     addEventListener('pointerdown', skip, {once: true}); addEventListener('keydown', skip, {once: true});
     scene.intro().then(async () => {
       removeEventListener('pointerdown', skip); removeEventListener('keydown', skip);
@@ -3034,7 +3034,7 @@ async function init() {
       stage.classList.replace('arena-black', 'arena-black-out');
       setTimeout(() => stage.classList.remove('arena-black-out', 'arena-intro-fade'), 800);
     });
-  } else introDone();
+  } else { introDone(); stage.classList.remove('arena-intro'); }
   stage.classList.toggle('no-webgl', !scene);
   if (scene && !settings.reduceMotion) ui.pixel.preload();
   if (Object.keys(vfxStudio.cartas || {}).length) cardFx = startCardFx({quality: settings.quality, reduced: !!settings.reduceMotion, data: vfxStudio, card: id => FORGE.get(id), context: el => (el.closest('#inspector, .dcard--big, .dcard--lg') ? 'inspecao' : el.closest('.dcard') ? 'idle' : null)});

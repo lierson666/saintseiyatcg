@@ -129,4 +129,22 @@ with tempfile.TemporaryDirectory() as tmp:
     fails('ZIP com traversal recusado', lambda: ap.import_zip(R, {'zip': base64.b64encode(evil.getvalue()).decode()}, atomic_write), 'não permitido')
     fails('ZIP corrompido', lambda: ap.import_zip(R, {'zip': base64.b64encode(b'nope').decode()}, atomic_write), 'inválido')
 
+# Cinemática: a última chave é a câmera competitiva exata; limites de FOV, duração e VFX; arquivo lido pelo jogo.
+with tempfile.TemporaryDirectory() as tmp:
+    R = Path(tmp)
+    comp = {'stage': 'GAMEPLAY START', 'pos': [0, 13.5, 13], 'look': [0, 0, -0.6], 'fov': 42, 'roll': 0, 'dur': 600, 'ease': 'easeOut', 'light': 1, 'vfx': None, 'sound': None, 'locked': True}
+    k0 = {'stage': 'ESTABLISHING SHOT', 'pos': [36, 28, -4], 'look': [0, 18, -58], 'fov': 55, 'roll': 0, 'dur': 900, 'ease': 'linear', 'light': .55, 'vfx': None, 'sound': 'oceano'}
+    r = ap.save_cinematic(R, {'arena': 'poseidon', 'keys': [k0, comp]}, atomic_write)
+    ok('abertura gravada no arquivo do jogo', r['duracao_ms'] == 1500 and json.loads((R / 'arena-forge/cinematics/poseidon.json').read_text())['keys'][-1]['locked'])
+    fails('última chave precisa ser a competitiva', lambda: ap.save_cinematic(R, {'arena': 'poseidon', 'keys': [k0, {**comp, 'fov': 50}]}, atomic_write), 'competitiva')
+    fails('chave bloqueada só no fim', lambda: ap.save_cinematic(R, {'arena': 'poseidon', 'keys': [{**k0, 'locked': True}, comp]}, atomic_write), 'última')
+    fails('FOV fora do limite', lambda: ap.save_cinematic(R, {'arena': 'poseidon', 'keys': [{**k0, 'fov': 170}, comp]}, atomic_write), 'fov')
+    fails('VFX desconhecido', lambda: ap.save_cinematic(R, {'arena': 'poseidon', 'keys': [{**k0, 'vfx': 'nuke'}, comp]}, atomic_write), 'VFX')
+    fails('abertura longa demais', lambda: ap.save_cinematic(R, {'arena': 'poseidon', 'keys': [{**k0, 'dur': 20000}, {**k0, 'dur': 15000}, comp]}, atomic_write), '30 s')
+    fails('posição com texto', lambda: ap.save_cinematic(R, {'arena': 'poseidon', 'keys': [{**k0, 'pos': [1, 'x', 2]}, comp]}, atomic_write), 'pos')
+    fails('arena com traversal', lambda: ap.save_cinematic(R, {'arena': '../x', 'keys': [k0, comp]}, atomic_write), 'inválida')
+    pr = ap.read(R, 'poseidon-palace'); pr['artboards'] = [{'id': 'ab-x', 'tipo': 'poster', 'arquivo': None}]
+    fails('tipo de artboard desconhecido', lambda: ap.validate(R, pr), 'tipo')
+    ok('ZIP leva a abertura em animations/', 'animations/poseidon-cinematic.json' in zipfile.ZipFile(io.BytesIO(ap.export_zip(R, 'poseidon-palace'))).namelist())
+
 print(f'\n{len(passed)} testes ok')
