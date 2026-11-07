@@ -443,8 +443,8 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
       fps = frames * 1000 / (now - fpsClock); frames = 0; fpsClock = now;
     }
     shakeAmp *= Math.exp(-dt * 9); punch *= Math.exp(-dt * 7);
-    const drift = calm ? 0 : Math.sin(uniforms.uTime.value * .15) * .35;
-    camera.position.set(camHome.x + drift + (Math.random() - .5) * shakeAmp * .08, camHome.y - punch * .6 + (Math.random() - .5) * shakeAmp * .08, camHome.z - punch);
+    // Sem balanço lateral: a linha central do chão (grade de Ares) fica no eixo exato dos dois deuses (autor, 07/11/2026).
+    camera.position.set(camHome.x + (Math.random() - .5) * shakeAmp * .08, camHome.y - punch * .6 + (Math.random() - .5) * shakeAmp * .08, camHome.z - punch);
     camera.lookAt(look);
     stepParticles(dt); stepShapes(dt);
     // no celular a arena nem treme: o chão (5 oitavas de ruído por pixel) é o desenho mais caro da cena
