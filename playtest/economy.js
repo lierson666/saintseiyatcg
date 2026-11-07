@@ -261,8 +261,10 @@ export async function openBooster(face, done, count = 1, open = 1) {
     if (b.classList.contains('is-open') || b.classList.contains('is-charging')) return;
     const rarity = ['divine', 'legendary', 'uncommon'].find(k => b.classList.contains(`is-${k}`)), d = DRAMA[rarity];
     const epic = !still && (rarity === 'legendary' || rarity === 'divine');
-    if (d?.wait) { b.style.setProperty('--wait', `${d.wait}ms`); b.classList.add('is-charging'); await sleep(d.wait); b.classList.remove('is-charging'); }
+    // .is-epic entra antes da espera: a frente já fica na mesma lista de transform do giro; trocar a lista junto com
+    // .is-open fazia o navegador interpolar por matriz e a carta piscava no começo do giro.
     if (epic) b.classList.add('is-epic');
+    if (d?.wait) { b.style.setProperty('--wait', `${d.wait}ms`); b.classList.add('is-charging'); await sleep(d.wait); b.classList.remove('is-charging'); }
     b.classList.add('is-open');
     if (epic) {
       setTimeout(() => b.classList.add('is-settled'), 1100);  // fim do giro lento: a inclinação passa a seguir o ponteiro

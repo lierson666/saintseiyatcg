@@ -148,10 +148,19 @@ body.ec-opening #lobby { visibility: hidden; }
 .ec-flip.is-charging::after { animation: ec-rise var(--wait, .9s) ease-in forwards; }
 .ec-flip.is-legendary.is-charging .ec-flip__back, .ec-flip.is-divine.is-charging .ec-flip__back {
   animation: ec-charge .12s linear infinite, ec-rise-back var(--wait, .9s) ease-in forwards; }
+/* na épica, sem tremida de .12s (lia como pisca-pisca); o brilho sobe liso e o contorno fica igual na espera e no giro */
+.ec-flip.is-epic.is-charging .ec-flip__back { animation: ec-rise-back var(--wait, .9s) ease-in forwards; }
+.ec-flip.is-epic .ec-flip__back, .ec-flip.is-epic.is-charging .ec-flip__back { box-shadow: inset 0 0 0 2px var(--tone), 0 0 46px var(--tone); }
 @keyframes ec-rise { from { opacity: .15; transform: scaleX(.6); } to { opacity: 1; transform: scaleX(1); } }
-@keyframes ec-rise-back { from { filter: brightness(1); } to { filter: brightness(2); } }
+@keyframes ec-rise-back { from { filter: brightness(1.2); } to { filter: brightness(1.8); } }
 /* 2. Giro lento, com a carta subindo um pouco */
 .ec-flip.is-epic .ec-flip__back, .ec-flip.is-epic .ec-flip__front { transition: transform 1.1s cubic-bezier(.3, .1, .2, 1); }
+/* mesma lista de funções fechada e aberta, para o giro interpolar ângulo a ângulo (sem matriz, sem piscar) */
+.ec-flip.is-epic .ec-flip__front { transform: translateZ(0) rotateX(0deg) rotateY(180deg); }
+.ec-flip.is-epic .ec-flip__back { transform: translateZ(0) rotateX(0deg) rotateY(0deg); }
+.ec-flip.is-epic.is-open .ec-flip__back { transform: translateZ(0) rotateX(0deg) rotateY(-180deg); }
+/* o verso termina a espera aceso; manter aceso no giro evita o apagão quando a animação da espera acaba */
+.ec-flip.is-epic .ec-flip__back { filter: brightness(1.8); }
 .ec-flip.is-epic.is-open .ec-flip__front { transform: translateZ(30px) rotateX(calc(var(--ty, 0) * -16deg)) rotateY(calc(var(--tx, 0) * 16deg));
   box-shadow: 0 0 0 2px var(--tone), 0 0 26px var(--tone); }
 .ec-flip.is-epic.is-settled .ec-flip__front { transition: transform .18s ease-out; }
