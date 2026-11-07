@@ -72,6 +72,7 @@ export function createDirector({ui, getFx, settings}) {
 
   // Reação ao golpe: a carta pisca e recua para longe de quem bateu. O dano do Strike vem depois e não repete o recuo.
   const recoiled = new Set();
+  const godHitFrom = {}; // de onde veio o último Strike em cada God, para o avatar recuar para o lado certo
   // Pose da carta no golpe: 'lift' sobe e inclina para o alvo, 'dash' avança até encostar, null volta ao slot.
   const stance = (uid, pose, to, ms) => ui.stance?.(uid, skipping ? null : pose, to, t(ms));
   // Bote do golpe físico (autor, 06/11/2026): recuo curtíssimo, avanço seco em poucos quadros e um rastro de luz atrás.
@@ -254,6 +255,7 @@ export function createDirector({ui, getFx, settings}) {
       if (!cho?.faixas.sound && !skipping && !(onGod ? ui.noise?.('impacto_deus', e.attacker, e.target.player) : ui.noise?.('impacto', e.attacker))) strikeSound(p);
       // Reação coerente com o resultado (autor, 06/11/2026): congela no contato, depois voa para longe de quem bateu;
       // bloqueio só empurra com brilho de escudo, e quem morre cai para trás na direção do golpe.
+      if (onGod) godHitFrom[e.target.player] = from;
       if (!onGod && !cho?.faixas.knockback) recoil(e.target.uid, from, p, {outcome, hold: cho ? 0 : t(stop)});
       if (!cho?.faixas.impact) impact(to, {color: outcome === 'guard' ? '#a6ecff' : style.color, strength: (style.name ? 1.4 : 1) * (1 + p * 1.3) * (outcome === 'guard' ? .5 : 1), rect: targetRect, from, effect: ui.animOf?.(onGod ? 'impacto_deus' : 'impacto', e.attacker) ?? 'impact'});
       if (!onGod) moment('strike', e.target.uid, targetRect);
@@ -285,10 +287,12 @@ export function createDirector({ui, getFx, settings}) {
       if (e.dealt) { ui.float(at, `-${e.dealt}`, 'damage'); if (!recoiled.delete(e.uid)) recoil(e.uid, null, Math.min(1, e.dealt / 8)); impact(at, {color: '#ff9a7a', strength: Math.min(1.3, .5 + e.dealt * .15), rect: ui.rect(e.uid), effect: ui.animOf?.('dano', e.uid) ?? 'impact'}); }
       await pause(e.dealt ? 220 : 120);
     },
-    async god_damage(e) { if (e.incoming > e.dealt) { ui.float(ui.center(ui.godRect(e.player)), `${e.incoming - e.dealt} prevented`, 'shield'); moment('escudo', e.player, ui.godRect(e.player), {color: '#a6ecff'}); } },
+    async god_damage(e) { if (e.incoming > e.dealt) { if (!skipping && !e.dealt) ui.godReact?.(e.player, 'guard', {from: godHitFrom[e.player]}); ui.float(ui.center(ui.godRect(e.player)), `${e.incoming - e.dealt} prevented`, 'shield'); moment('escudo', e.player, ui.godRect(e.player), {color: '#a6ecff'}); } },
     async soul_lost(e) {
       const at = ui.center(ui.godRect(e.player));
       ui.setSoul(e.player, e.soul);
+      if (!skipping) ui.godReact?.(e.player, 'hurt', {from: godHitFrom[e.player], p: Math.min(1, e.amount / 6)});
+      delete godHitFrom[e.player];
       ui.float(at, `-${e.amount} Soul`, 'damage big');
       impact(at, {color: '#ffcf6e', strength: Math.min(2, .8 + e.amount * .2), rect: ui.godRect(e.player), effect: ui.animOf?.('soul', e.player) ?? 'impact'});
       await pause(420);
@@ -307,7 +311,7 @@ export function createDirector({ui, getFx, settings}) {
     async awaken_changed(e) {
       const at = ui.center(ui.godRect(e.player));
       if (e.awaken) {
-        if (!skipping) ui.noise?.('awaken', e.player);
+        if (!skipping) { ui.noise?.('awaken', e.player); ui.godReact?.(e.player, 'awaken'); }
         fx()?.charge(at.x, at.y, {color: '#9fd0ff', count: 90, radius: 140});
         moment('awaken', e.player, ui.godRect(e.player), {color: '#9fd0ff'});
         await ui.banner('Awaken', e.player, t(900));
@@ -318,6 +322,7 @@ export function createDirector({ui, getFx, settings}) {
     async divine_power(e) {
       const at = ui.center(ui.godRect(e.player)), f = fx();
       const custom = !skipping && ui.noise?.('poder_divino', e.player);
+      if (!skipping) ui.godReact?.(e.player, 'power');
       if (!skipping && !custom) chargeSound(.5);
       f?.charge(at.x, at.y, {color: '#bfe2ff', count: 110, radius: 170});
       moment('poder_divino', e.player, ui.godRect(e.player), {color: '#bfe2ff'});
@@ -363,6 +368,7 @@ export function createDirector({ui, getFx, settings}) {
     // Cinemática divina (nível mais alto da hierarquia): nome do Ultimate, Cosmo convergindo, raios dos Saints ao God.
     async ultimate_announced(e) {
       ui.cinematic?.(true);
+      if (!skipping) ui.godReact?.(e.player, 'power');
       for (const uid of e.saints || []) ui.pulse(uid, 'attacking', true);
       const god = ui.center(ui.godRect(e.player));
       fx()?.charge(god.x, god.y, {color: '#ffe4a0', count: 140, radius: 220});
@@ -406,7 +412,7 @@ export function createDirector({ui, getFx, settings}) {
     async judgment_placed(e) { await ui.banner('Divine Judgment', e.player, t(1100)); },
     async judgment_removal(e) { return handlers.judgment_removed(e); }, // nome que a engine emite (gods.js)
     async judgment_removed(e) { ui.float(ui.center(ui.godRect(e.player)), 'Judgment removed', 'gain'); await pause(400); },
-    async soul_gained(e) { if (e.amount) { ui.setSoul(e.player, e.soul); ui.float(ui.center(ui.godRect(e.player)), `+${e.amount} Soul`, 'gain'); moment('cura', e.player, ui.godRect(e.player)); } },
+    async soul_gained(e) { if (e.amount) { ui.setSoul(e.player, e.soul); if (!skipping) ui.godReact?.(e.player, 'heal'); ui.float(ui.center(ui.godRect(e.player)), `+${e.amount} Soul`, 'gain'); moment('cura', e.player, ui.godRect(e.player)); } },
     // Morte do God (autor, 31/10/2026): cada deus cai com o seu tema e a metade dele da arena desmorona; ~3 s antes da tela final.
     async victory(e) {
       const dead = t(1) ? ui.godDeath(e) : [];

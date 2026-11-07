@@ -163,6 +163,8 @@
   .godpanel header h2 { font-size: 26px; }
   .godpanel__stats { grid-template-columns: repeat(3, 1fr); }
   .power { grid-template-columns: 40px 1fr; }
+  .godpanel .power__text { display: grid; } /* no toque não há mouse: o texto fica no próprio poder */
+  .power-tip { display: none; }
   .power__state { grid-column: 2; justify-self: start; white-space: normal; }
   .godpanel__close { position: fixed; z-index: 2; top: calc(var(--st) + 6px); right: 8px; width: 44px; height: 44px; font-size: 24px; background: rgba(0, 0, 0, .65); }
 

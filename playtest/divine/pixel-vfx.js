@@ -34,27 +34,30 @@ const paletteOf = (color, n = 8) => TONES.slice(0, n).map(k => `#${toned(color, 
 
 const around = g => ({x: g.x - g.w * .9, y: g.top - g.h * .2, w: g.w * 1.8, h: g.h * 1.2}); // clima: em volta da carta, nunca a mesa inteira
 // Efeito + opções, em coordenadas de mundo. `g`: {x, y, top, bottom, w, h, from: [x, y], s (escala), color, power, seed}. Puro, para o teste rodar sem navegador.
+// Centro do alvo (autor, 06/11/2026): todo efeito parte do meio da carta ou do God. Os que nascem de um chão usam um chão
+// um pouco abaixo do centro, para o corpo do efeito ficar no meio do alvo; só o clima (chuva, neve...) e o fogo usam a borda de baixo.
+const floor = g => g.y + g.h * .2;
 export const RECIPES = {
   slash: g => ['slash', {x: g.x, y: g.y, facing: g.from && g.from[0] > g.x ? -1 : 1, size: g.s * 1.1 * (1 + g.power * .5), sparks: 10 + Math.round(g.power * 14), ramp: rampOf(g.color), sparkRamp: rampOf(g.color).slice(1, 5)}],
   impact: g => ['impact', {x: g.x, y: g.y, angle: g.from ? Math.atan2(g.y - g.from[1], g.x - g.from[0]) : -Math.PI / 2, size: g.s * 1.2 * (g.strength ?? 1), ramp: rampOf(g.color, 6)}],
-  ice: g => ['ice', {kind: 'nova', x: g.x, ground: g.bottom, size: g.s * .7, reach: 150 * g.s, charge: .08, hold: .12}],
+  ice: g => ['ice', {kind: 'nova', x: g.x, ground: floor(g), size: g.s * .7, reach: 150 * g.s, charge: .08, hold: .12}],
   // As chamas sobem da borda de cima da silhueta: usar a metade de baixo da carta faz o fogo passar por cima da arte.
   fire: g => { const w = Math.round(g.w / WORLD_PX), h = Math.round(g.h / 2 / WORLD_PX), data = new Uint32Array(w * h).fill(0xffffffff), x = Math.round((g.x - g.w / 2) / WORLD_PX), y = Math.round(g.y / WORLD_PX);
     return ['fire', {actor: {feet: () => [g.x, g.bottom], silhouette: () => ({x, y, w, h, data})}, size: g.s, duration: .8}]; },
   lightning: g => ['lightning', {kind: 'impact', x: g.x, y: g.y, size: g.s * .9}],
-  poison: g => ['poison', {kind: 'cloud', x: g.x, ground: g.bottom, from: g.from || undefined, size: g.s * .7}], // o frasco voa do atacante
-  light: g => ['holy-light', {x: g.x, ground: g.bottom, hold: .25, width: 13 * g.s * .8}],
+  poison: g => ['poison', {kind: 'cloud', x: g.x, ground: floor(g), from: g.from || undefined, size: g.s * .7}], // o frasco voa do atacante
+  light: g => ['holy-light', {x: g.x, ground: floor(g), hold: .25, width: 13 * g.s * .8}],
   dark: g => ['black-hole', {x: g.x, y: g.y, radius: 20 * g.s, life: .45, pull: .4}],
-  explosion: g => ['explosion', {x: g.x, ground: g.bottom, size: g.s * .55, chunks: 6}],
+  explosion: g => ['explosion', {x: g.x, ground: floor(g), size: g.s * .55, chunks: 6}],
   energy: g => ['energy', {kind: 'beam', x: g.from?.[0] ?? g.x, y: g.from?.[1] ?? g.y, to: [g.x, g.y], charge: .02, hold: .22, width: 5 * g.s * (1 + g.power * .8), colors: rampOf(g.color, 7)}],
-  shield: g => ['shield', {x: g.x, y: g.bottom, radius: 38 * g.s, hold: .7, colors: paletteOf(g.color, 7)}],
-  heal: g => ['heal', {x: g.x, y: g.bottom, count: 8}],
-  power: g => ['power-up', {x: g.x, y: g.bottom, size: g.s * .8, palette: paletteOf(g.color, 7)}],
-  muzzle: g => { const [x, y] = g.from || [g.x - g.w, g.y]; return ['muzzle-flash', {x, y, angle: Math.atan2(g.y - y, g.x - x), size: g.s, casing: false, ground: g.bottom}]; },
-  blood: g => ['blood', {x: g.x, y: g.y, angle: g.from ? Math.atan2(g.y - g.from[1], g.x - g.from[0]) : undefined, size: g.s * .8, stainLife: .6, ground: g.bottom}],
-  pickup: g => ['pickup', {x: g.x, y: g.y, item: 'orb', palette: paletteOf(g.color, 6), wait: .7, ground: g.bottom}],
-  dash: g => { const x = g.from?.[0] ?? g.x - g.w; return ['movement', {kind: 'dash', x, y: g.bottom, ground: g.bottom, facing: g.x < x ? -1 : 1, distance: Math.max(g.w, Math.abs(g.x - x)), colors: rampOf(g.color, 7)}]; },
-  blink: g => ['movement', {kind: 'blink', x: g.from?.[0] ?? g.x - g.w, y: g.bottom, to: g.x, ground: g.bottom, colors: rampOf(g.color, 7)}],
+  shield: g => ['shield', {x: g.x, y: g.y, radius: 38 * g.s, hold: .7, colors: paletteOf(g.color, 7)}],
+  heal: g => ['heal', {x: g.x, y: floor(g), count: 8}],
+  power: g => ['power-up', {x: g.x, y: floor(g), size: g.s * .8, palette: paletteOf(g.color, 7)}],
+  muzzle: g => { const [x, y] = g.from || [g.x - g.w, g.y]; return ['muzzle-flash', {x, y, angle: Math.atan2(g.y - y, g.x - x), size: g.s, casing: false, ground: floor(g)}]; },
+  blood: g => ['blood', {x: g.x, y: g.y, angle: g.from ? Math.atan2(g.y - g.from[1], g.x - g.from[0]) : undefined, size: g.s * .8, stainLife: .6, ground: floor(g)}],
+  pickup: g => ['pickup', {x: g.x, y: g.y, item: 'orb', palette: paletteOf(g.color, 6), wait: .7, ground: floor(g)}],
+  dash: g => { const x = g.from?.[0] ?? g.x - g.w; return ['movement', {kind: 'dash', x, y: floor(g), ground: floor(g), facing: g.x < x ? -1 : 1, distance: Math.max(g.w, Math.abs(g.x - x)), colors: rampOf(g.color, 7)}]; },
+  blink: g => ['movement', {kind: 'blink', x: g.from?.[0] ?? g.x - g.w, y: floor(g), to: g.x, ground: floor(g), colors: rampOf(g.color, 7)}],
   sparkle: g => ['sparkle', {x: g.x, y: g.y, size: g.s * .9}],
   rain: g => ['rain', {area: around(g), ground: g.bottom}],
   snow: g => ['snow', {area: around(g), ground: g.bottom}],

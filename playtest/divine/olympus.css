@@ -394,6 +394,18 @@ body { font-family: "Jost", system-ui, sans-serif; }
 .gstat--soul i { display: block; height: 3px; border-radius: 2px; background: rgba(255, 255, 255, .12); overflow: hidden; } .gstat--soul u { display: block; height: 100%; background: linear-gradient(90deg, #e0213a, #ffb070); }
 .godpanel__powers { display: grid; gap: 10px; }
 .power { --c: 232, 196, 106; position: relative; display: grid; grid-template-columns: 40px 1fr auto; column-gap: 12px; row-gap: 6px; align-items: center; width: 100%; padding: 12px 14px; text-align: left; color: #e8e2d4;
+/* Painel simples: no desktop só o nome; o texto vai para o balão .power-tip, em cima do poder sob o mouse. */
+.godpanel .power__text { display: none; }
+.godpanel .power { padding: 10px 14px; }
+.power-tip { --c: 232, 196, 106; position: fixed; z-index: 1001; display: grid; gap: 6px; padding: 14px 16px; border-radius: 12px; pointer-events: none;
+  border: 1px solid rgba(var(--c), .7); background: linear-gradient(160deg, rgba(20, 22, 48, .97), rgba(8, 10, 28, .97)); box-shadow: 0 14px 40px rgba(0, 0, 0, .65), 0 0 24px rgba(var(--c), .35);
+  font: 14px/1.5 "Jost", system-ui, sans-serif; color: #e6e1d4; }
+.power-tip[hidden] { display: none; }
+.power-tip > span { display: block; }
+.power-tip__head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.power-tip__head strong { font: 600 16px/1.2 "Cinzel", Georgia, serif; letter-spacing: .05em; color: rgb(var(--c)); }
+.power-tip__head small { font: 700 9px/1.4 "Jost", system-ui; letter-spacing: .16em; text-transform: uppercase; color: #8d97b8; }
+.power-tip__head em { margin-left: auto; font: 600 11px/1.2 "Jost", system-ui; font-style: normal; color: rgb(var(--c)); }
   border-radius: 12px; border: 1px solid rgba(var(--c), .35); background: linear-gradient(120deg, rgba(var(--c), .12), rgba(10, 12, 32, .6) 55%); cursor: pointer; overflow: hidden; isolation: isolate;
   transition: transform .2s ease, border-color .2s, box-shadow .2s; font: inherit; }
 .power--awaken { --c: 120, 190, 255; } .power--ultimate { --c: 190, 130, 255; } .power--judgment { --c: 255, 120, 90; }

@@ -2,19 +2,19 @@
  "versao": 1,
  "gerado_por": "tools/vfx-inventario.py",
  "resumo": {
-  "total": 253,
+  "total": 262,
   "migradas": 66,
   "editavel": 79,
-  "parcial": 129,
+  "parcial": 138,
   "legado": 24,
   "excecao": 21,
   "criterios": {
-   "forge": 208,
-   "edita": 199,
-   "aplica": 197,
+   "forge": 217,
+   "edita": 208,
+   "aplica": 206,
    "preview": 66,
-   "restaura": 197,
-   "testes": 199
+   "restaura": 206,
+   "testes": 208
   }
  },
  "animacoes": [
@@ -3816,6 +3816,258 @@
    },
    "migrada": false,
    "limite": "Agrupadas por arquivo; sem controle no Forge"
+  },
+  {
+   "id": "css:playtest-divine-god-react-css:ghBreath",
+   "nome": "ghBreath",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/god-react.css"
+   ],
+   "gatilho": ".godhud .gh-frame",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-god-react-css:ghHover",
+   "nome": "ghHover",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/god-react.css"
+   ],
+   "gatilho": ".godhud:hover .gh-frame, .godhud:focus-visible .gh-frame",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-god-react-css:ghDanger",
+   "nome": "ghDanger",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/god-react.css"
+   ],
+   "gatilho": ".godhud.is-low .gh-frame",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-god-react-css:ghHurt",
+   "nome": "ghHurt",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/god-react.css"
+   ],
+   "gatilho": ".godhud.react-hurt .gh-frame",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-god-react-css:ghHurtFace",
+   "nome": "ghHurtFace",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/god-react.css"
+   ],
+   "gatilho": ".godhud.react-hurt .gh-hole",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-god-react-css:ghGuard",
+   "nome": "ghGuard",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/god-react.css"
+   ],
+   "gatilho": ".godhud.react-guard .gh-frame",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-god-react-css:ghHeal",
+   "nome": "ghHeal",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/god-react.css"
+   ],
+   "gatilho": ".godhud.react-heal .gh-frame",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-god-react-css:ghAwaken",
+   "nome": "ghAwaken",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/god-react.css"
+   ],
+   "gatilho": ".godhud.react-awaken .gh-frame",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-god-react-css:ghPower",
+   "nome": "ghPower",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/god-react.css"
+   ],
+   "gatilho": ".godhud.react-power .gh-frame",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
   },
   {
    "id": "css:playtest-divine-kv-game-css:fx-in",

@@ -24,10 +24,10 @@ import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudg
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout, clockBonus} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
-import {createDirector, DEATH_FX} from './director.js?v=20261106-ataque1';
+import {createDirector, DEATH_FX} from './director.js?v=20261106-deus1';
 import {epicDeath} from './god-death.js?v=2';
 import {tunedFx} from './particle-tune.js';
-import {createPixelFx, animFor, catalogIndex} from './pixel-vfx.js?v=20261106-ambos1';
+import {createPixelFx, animFor, catalogIndex} from './pixel-vfx.js?v=20261106-centro1';
 import {createComposer, withCompositions} from '../../shared/vfx/composer.js?v=20261104-vfx1';
 import {startCardFx} from '../../shared/vfx/card-mount.js?v=20261104-vfx1';
 import {createAI} from './ai.js?v=14';
@@ -1373,6 +1373,17 @@ const ui = {
     const el = target.kind === 'god' ? $(`[data-god="${target.player}"]`) : $(`[data-uid="${target.uid}"]`);
     el?.classList.add('aimed');
   },
+  // Reação do avatar do God (god-react.css): 'hurt', 'guard', 'heal', 'awaken' ou 'power'. `from`: centro de quem bateu; `p`: força 0..1.
+  godReact(key, kind, {from = null, p = 0} = {}) {
+    const el = $(`[data-god="${key}"]`), frame = el?.querySelector('.gh-frame');
+    if (!el || !frame || settings.reduceMotion) return;
+    const r = frame.getBoundingClientRect(), dx = from ? r.left + r.width / 2 - from.x : 0, dy = from ? r.top + r.height / 2 - from.y : (key === viewer() ? 1 : -1);
+    const len = Math.hypot(dx, dy) || 1, far = 8 + p * 16;
+    el.style.setProperty('--gx', `${(dx / len * far).toFixed(1)}px`); el.style.setProperty('--gy', `${(dy / len * far).toFixed(1)}px`); el.style.setProperty('--gk', p.toFixed(2));
+    const cls = `react-${kind}`;
+    el.classList.remove('react-hurt', 'react-guard', 'react-heal', 'react-awaken', 'react-power'); void frame.offsetWidth; el.classList.add(cls);
+    frame.addEventListener('animationend', () => el.classList.remove(cls), {once: true});
+  },
   setSoul(key, soul) { const el = $(`[data-soul="${key}"] b`); if (el) { el.textContent = soul; el.parentElement.classList.remove('hit'); void el.offsetWidth; el.parentElement.classList.add('hit'); } },
   spendOrbs(key, unit, amount) { $$(`[data-bank="${key}"] [data-bank-unit="${unit}"] .orb.ready`).slice(-amount).forEach(o => { o.classList.remove('ready'); o.classList.add('spending'); }); },
   shake(amp) { if (!amp || settings.reduceMotion) return; stage.style.setProperty('--shake', `${Math.min(22, amp)}px`); stage.style.setProperty('--shake-t', `${Math.min(.9, .25 + amp * .03)}s`); stage.classList.remove('shaking'); void stage.offsetWidth; stage.classList.add('shaking'); },
@@ -1766,7 +1777,24 @@ function showGodPanel(key) {
       <div class="godpanel__powers">${powers.join('')}</div>
     </div>
     <button class="godpanel__close" aria-label="Close">×</button>
-  </section>`;
+  </section><div class="power-tip" role="tooltip" hidden></div>`;
+  // Painel simples (autor, 06/11/2026): só o nome de cada poder; passando o mouse (ou com foco), o texto inteiro aparece em cima dele.
+  const tip = box.querySelector('.power-tip');
+  const showTip = b => {
+    const src = b?.closest('[data-power]');
+    if (!src) { tip.hidden = true; return; }
+    const head = src.querySelector('.power__head')?.innerHTML || '', state = src.querySelector('.power__state')?.textContent || '';
+    tip.innerHTML = `<div class="power-tip__head">${head}${state ? `<em>${esc(state)}</em>` : ''}</div>${src.querySelector('.power__text')?.innerHTML || ''}`;
+    tip.style.setProperty('--c', getComputedStyle(src).getPropertyValue('--c'));
+    tip.hidden = false;
+    const r = src.getBoundingClientRect(), h = tip.offsetHeight, above = r.top - h - 10 >= 8;
+    tip.style.left = `${Math.round(r.left)}px`; tip.style.width = `${Math.round(r.width)}px`;
+    tip.style.top = `${Math.round(above ? r.top - h - 10 : Math.min(innerHeight - h - 8, r.bottom + 10))}px`;
+  };
+  box.addEventListener('pointerover', e => showTip(e.target));
+  box.addEventListener('focusin', e => showTip(e.target));
+  box.addEventListener('pointerleave', () => { tip.hidden = true; });
+  box.querySelector('.godpanel__info')?.addEventListener('scroll', () => { tip.hidden = true; });
   box.addEventListener('pointerdown', e => { if (e.target === box || e.target.closest('.godpanel__close')) closeBigCard(); });
   box.addEventListener('contextmenu', e => { e.preventDefault(); closeBigCard(); });
   box.addEventListener('click', e => {

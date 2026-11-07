@@ -1,6 +1,6 @@
 // Seletor de animação do Star Hill e do Card Forge, no mesmo jeito do seletor de sons: abre, testa, usa.
 // Fonte: data/card-animations.json. A carta passa por cima da facção, e a facção por cima do padrão do jogo.
-import {createPixelFx, catalogIndex, EFFECTS, ANIM_MOMENTS, ELEMENT_COLOR} from '/playtest/divine/pixel-vfx.js?v=20261104-anim4';
+import {createPixelFx, catalogIndex, EFFECTS, ANIM_MOMENTS, ELEMENT_COLOR} from '/playtest/divine/pixel-vfx.js?v=20261106-centro1';
 import {SHADERS, LOTTIES, HOLO, FACTION_PRESETS} from './vfx/presets.js';
 import {createComposer} from './vfx/composer.js';
 export {EFFECTS, ANIM_MOMENTS, ELEMENT_COLOR};
