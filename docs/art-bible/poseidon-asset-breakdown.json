@@ -182,6 +182,20 @@
       "productionStatus": "not_started",
       "file": null,
       "visibilityUsage": "cinematic"
+    },
+    {
+      "id": "POS-MON-V7-001",
+      "name": "Sacred Trident of Poseidon GLB",
+      "layer": "monument",
+      "priority": "P0",
+      "implementation": "original-glb2-with-embedded-painted-png",
+      "artDirection": "Ornamented trident, curved prongs and painted ancient gold; cinematic shrine; replaces primitive fallback",
+      "materialPreset": "poseidon-ancient-gold-v7",
+      "productionStatus": "development_not_art_approved",
+      "file": "arena-forge/assets/poseidon-v7/poseidon-sacred-trident.glb",
+      "visibilityUsage": "cinematic",
+      "texture": "arena-forge/assets/poseidon-v7/sacred-trident-painted.png",
+      "manifest": "arena-forge/assets/poseidon-v7/manifest.json"
     }
   ],
   "rules": {

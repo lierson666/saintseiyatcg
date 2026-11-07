@@ -10,6 +10,7 @@ import {addPoseidonV4Detail} from './poseidon-v4-detail.js';
 import {attachPoseidonPaintedMaps} from './poseidon-painted-maps.js';
 import {attachPoseidonBattlefieldPainting} from './poseidon-battlefield-paint.js';
 import {addPoseidonV6Sculptures} from './poseidon-v6-sculpture.js';
+import {loadPoseidonSculptGLB} from './poseidon-v7-glb-loader.js';
 // Abertura padrão de Poseidon (editável no Arena Forge → Produção → Cinemática; o jogo lê arena-forge/cinematics/poseidon.json).
 // Cada chave: pos, look (ponto focal), fov, roll (°), dur (ms até chegar nela; na primeira, tempo parado no plano de abertura), ease, stage, light (1 = luz da partida), vfx, sound.
 // A última chave é sempre a câmera competitiva (bloqueada): a cinemática termina exatamente nela.
@@ -184,6 +185,7 @@ export function createPoseidonPalace(THREE, {quality = 'high', reduceMotion = fa
   slab(0,P,P+.9,backZ+2,3.4,2,M.platform); // trono
   slab(0,P+.9,P+1.15,backZ+2,3.6,2.2,gold);
   // Tridente dourado (redondo, lê como metal): haste, travessa, três dentes com pontas.
+  const tridentFallbackStart=G.landmark.children.length;
   const tz=backZ+.95,ty=P+1.5;
   part(new THREE.CylinderGeometry(.15,.15,6.4,16),gold,0,ty+3.2,tz);
   part(new THREE.CylinderGeometry(.16,.16,2.8,16),gold,0,ty+6.2,tz).rotation.z=Math.PI/2;
@@ -191,6 +193,21 @@ export function createPoseidonPalace(THREE, {quality = 'high', reduceMotion = fa
     part(new THREE.CylinderGeometry(.13,.13,1.9,14),gold,x,ty+7.15,tz);
     part(new THREE.ConeGeometry(.3,.95,4),gold,x,ty+8.55,tz).rotation.y=Math.PI/4;
   }
+
+  // V7 GLB replaces only the ceremonial trident in the inner shrine. If the
+  // asset is unavailable, the original procedural sculpture remains visible.
+  const tridentFallback=G.landmark.children.slice(tridentFallbackStart);
+  let glbV7=null,v7Disposed=false;
+  root.userData.glbV7='loading';
+  const glbV7Ready=(typeof document!=='undefined'&&typeof fetch==='function')?
+    loadPoseidonSculptGLB(THREE,{
+      parent:G.landmark,
+      url:new URL('./assets/poseidon-v7/poseidon-sacred-trident.glb',import.meta.url).href,
+      position:[0,P+5.5,backZ+.95],scale:2,
+      onReady(){if(!v7Disposed)for(const part of tridentFallback)part.visible=false;}
+    }).then(v=>{if(v7Disposed){v?.dispose();return null;}glbV7=v;root.userData.glbV7=v?'ready':'unavailable';return v;})
+      .catch(err=>{root.userData.glbV7='fallback';console.warn('[POSEIDON V7] GLB not loaded: retaining procedural trident',err);return null;})
+    :Promise.resolve(null);
 
   // Pórtico: 2 fileiras de 4 colunas, simétricas no eixo x=0 (vão central largo para a escadaria).
   const CR=.62,ZF=FRONT-1.15,ZB=PZ-1.3;
@@ -400,12 +417,12 @@ export function createPoseidonPalace(THREE, {quality = 'high', reduceMotion = fa
   const front=new THREE.DirectionalLight(0xbfe9ff,.55);front.position.set(-10,22,70); // preenchimento frontal: a fachada lê de longe
   G.lighting.add(hemi,key,rim,warm,front);
   const base={hemi:hemi.intensity,key:key.intensity,rim:rim.intensity,warm:warm.intensity,front:front.intensity};
-  root.userData={preset:'poseidon-palace-canonical-v1',beauty:'v6-sculptural-pass',source:'Saint Seiya reference study',protectedGameplay:false,quality,detailObjects:detailV4.count,sculptureObjects:sculptureV6.count};
-  return {group:root,paint,
+  root.userData={...root.userData,preset:'poseidon-palace-canonical-v1',beauty:'v7-glb-pipeline',source:'Saint Seiya reference study',protectedGameplay:false,quality,detailObjects:detailV4.count,sculptureObjects:sculptureV6.count};
+  return {group:root,paint,glbV7Ready,
     groups:G,
     // Transição de luz da cinemática: multiplica a iluminação do mundo (1 = luz da partida).
     setLight(k){ hemi.intensity=base.hemi*k; key.intensity=base.key*k; rim.intensity=base.rim*k; warm.intensity=base.warm*k; front.intensity=base.front*k; },
     update(t){ if(reduceMotion) return; shared.uTime.value=t; beams.forEach((b,i)=>{b.rotation.z=b.userData.tilt+Math.sin(t*.07+i*1.7)*.012;});
       flames.forEach((f,i)=>{const k=1+Math.sin(t*5+i*2.1)*.08+Math.sin(t*11.3+i)*.04;f.scale.set(1,k,1);}); },
-    dispose(){ paintedMaps?.dispose(); battlePainting?.dispose(); root.traverse(n=>{ if(n.isMesh && n.geometry!==unitBox) n.geometry.dispose(); }); new Set(owned).forEach(o=>o.dispose()); root.material.dispose(); }};
+    dispose(){ v7Disposed=true;glbV7?.dispose();paintedMaps?.dispose();battlePainting?.dispose();root.traverse(n=>{ if(n.isMesh && n.geometry!==unitBox) n.geometry.dispose(); }); new Set(owned).forEach(o=>o.dispose()); root.material.dispose(); }};
 }

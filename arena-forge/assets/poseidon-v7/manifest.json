@@ -1,0 +1,19 @@
+{
+  "asset_id": "POS-MON-V7-001",
+  "name": "Poseidon Sacred Trident",
+  "glb": "poseidon-sacred-trident.glb",
+  "texture": "sacred-trident-painted.png",
+  "model_type": "original procedural sculpt study",
+  "status": "preview_not_approved",
+  "vertices": 5196,
+  "triangles": 1732,
+  "sha256": "08ce9c00d00dff9a0ddaeb71d34748fbfb88a82458fec366ae77ed77059be411",
+  "dimensions": [
+    2.02,
+    3.95,
+    0.42
+  ],
+  "usage": "Cinematic temple interior; never cover battlefield; original V6 as fallback",
+  "license": "original SSTCG geometry and paint",
+  "schema": 1
+}
