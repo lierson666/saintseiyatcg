@@ -76,7 +76,14 @@ export function createDirector({ui, getFx, settings}) {
   const stance = (uid, pose, to, ms) => ui.stance?.(uid, skipping ? null : pose, to, t(ms));
   // Bote do golpe físico, como no Arena: recua um instante e avança acelerando até encostar.
   const lunge = async (uid, to) => { stance(uid, 'back', to, 110); await pause(110); stance(uid, 'dash', to, 120); await pause(120); };
-  const recoil = (uid, from, p) => { if (skipping || !cur.ligada) return; if (from) recoiled.add(uid); ui.recoil?.(uid, from, p, ui.particleTune?.('recuo')); };
+  // `how`: {outcome: 'guard' | 'hit' | 'ko', hold: ms congelado no contato antes de voar}.
+  const recoil = (uid, from, p, how) => { if (skipping || !cur.ligada) return; if (from) recoiled.add(uid); ui.recoil?.(uid, from, p, ui.particleTune?.('recuo'), how); };
+  // Como o golpe termina para `uid`, olhando os eventos até o próximo Strike: bloqueado (dano 0), ferido ou destruído.
+  const outcomeOf = (e, uid) => {
+    const rest = queue.slice(queue.indexOf(e) + 1), end = rest.findIndex(x => x.type === 'strike_declared' || x.type === 'strike_resolve');
+    const after = end < 0 ? rest : rest.slice(0, end), hurt = after.find(x => x.type === 'damage' && x.uid === uid);
+    return after.some(x => x.type === 'destroyed' && x.uid === uid) ? 'ko' : hurt && !hurt.dealt ? 'guard' : 'hit';
+  };
 
   // Coreografia do Combat Composer: agenda cada fase e devolve no HIT, para o resto do Strike seguir a engine. Nunca segura a fila depois do HIT.
   async function choreography(c, {from, attacker, target, targetRect, color, p}) {
@@ -222,6 +229,7 @@ export function createDirector({ui, getFx, settings}) {
       const to = ui.center(targetRect), p = powerOf(e.atk), base = styleOf(e.attacker);
       // Golpe básico (sem nome e sem animação de Cosmo escolhida) é sempre físico: a carta vai bater na outra (autor, 06/11/2026).
       const style = {...base, physical: !base.name && (['physical', 'energy'].includes(base.style) || PHYSICAL.has(base.element))};
+      const outcome = onGod ? 'hit' : outcomeOf(e, e.target.uid), stop = 90 + p * 90; // hit stop do contato
       // Fluxo do golpe (autor, 06/11/2026): mira, carga, viagem, impacto e volta, um de cada vez.
       stance(e.attacker, 'lift', to, 200);
       await pause(200);
@@ -230,10 +238,12 @@ export function createDirector({ui, getFx, settings}) {
       if (cho) await choreography(cho, {from, attacker: e.attacker, target: onGod ? null : e.target.uid, targetRect, color: style.color, p});
       else { await strikeVfx(from, to, style, p, e.attacker, targetRect); if (!style.physical) await pause(40 + p * 160); } // hit stop: mais longo quanto mais forte; no físico vem depois do contato
       if (!cho?.faixas.sound && !skipping && !(onGod ? ui.noise?.('impacto_deus', e.attacker, e.target.player) : ui.noise?.('impacto', e.attacker))) strikeSound(p);
-      if (!onGod && !cho?.faixas.knockback) recoil(e.target.uid, from, p); // recua junto com o impacto, não depois
-      if (!cho?.faixas.impact) impact(to, {color: style.color, strength: (style.name ? 1.4 : 1) * (1 + p * 1.3), rect: targetRect, from, effect: ui.animOf?.(onGod ? 'impacto_deus' : 'impacto', e.attacker) ?? 'impact'});
+      // Reação coerente com o resultado (autor, 06/11/2026): congela no contato, depois voa para longe de quem bateu;
+      // bloqueio só empurra com brilho de escudo, e quem morre cai para trás na direção do golpe.
+      if (!onGod && !cho?.faixas.knockback) recoil(e.target.uid, from, p, {outcome, hold: style.physical && !cho ? t(stop) : 0});
+      if (!cho?.faixas.impact) impact(to, {color: outcome === 'guard' ? '#a6ecff' : style.color, strength: (style.name ? 1.4 : 1) * (1 + p * 1.3) * (outcome === 'guard' ? .5 : 1), rect: targetRect, from, effect: ui.animOf?.(onGod ? 'impacto_deus' : 'impacto', e.attacker) ?? 'impact'});
       if (!onGod) moment('strike', e.target.uid, targetRect);
-      if (style.physical && !cho) { shake(6 + p * 10, 'impact'); ui.pixel?.hold?.(t(90 + p * 90)); await pause(90 + p * 90); } // contato: tranco e a mesa congela
+      if (style.physical && !cho) { shake((6 + p * 10) * (outcome === 'guard' ? .5 : outcome === 'ko' ? 1.4 : 1), 'impact'); ui.pixel?.hold?.(t(stop)); await pause(stop); } // contato: tranco e a mesa congela
       stance(e.attacker, null, null, 260);
       await pause(260);
       // Retaliação: o mesmo fluxo, menor e ao contrário. God não retalia (§24, autor 01/11/2026).
@@ -241,7 +251,7 @@ export function createDirector({ui, getFx, settings}) {
         const back = styleOf(e.target.uid);
         stance(e.target.uid, 'lift', from, 140);
         await pause(140);
-        recoil(e.attacker, to, .3);
+        recoil(e.attacker, to, .3, {outcome: outcomeOf(e, e.attacker)});
         if (ui.pixel && back.style !== 'energy') { pixel('slash', ui.rect(e.attacker), {from: to, color: back.color}); await pause(220); }
         else if (fx() && !skipping) await fx().beam(to, from, {color: back.color, width: 12, duration: .22});
         stance(e.target.uid, null, null, 180);
@@ -383,13 +393,8 @@ export function createDirector({ui, getFx, settings}) {
     // Morte do God (autor, 31/10/2026): cada deus cai com o seu tema e a metade dele da arena desmorona; ~3 s antes da tela final.
     async victory(e) {
       const dead = t(1) ? ui.godDeath(e) : [];
-      if (dead.length) {
-        const f = fx(), at = dead.map(d => ({...d, at: ui.center(ui.godRect(d.key))}));
-        for (const d of at) if (f && d.at && DEATH_FX[d.god]) DEATH_FX[d.god][0](fx(`morte-${d.god}`), d.at);
-        shake(8); await pause(1100);
-        for (const d of at) if (f && d.at && DEATH_FX[d.god]) DEATH_FX[d.god][1](fx(`morte-${d.god}`), d.at);
-        shake(16); await pause(1700);
-      }
+      // Derrota épica (autor, 06/11/2026): god-death.js; as partículas de DEATH_FX seguem ajustáveis no Forge (morte-<deus>).
+      if (dead.length) await Promise.all(dead.map(d => ui.epicDeath?.(d, {fx: fx() && !skipping ? fx(`morte-${d.god}`) : null, pixel, wait: pause, shake, steps: DEATH_FX[d.god]})));
       sound(e.draw ? 'derrota' : ui.isViewer(e.winner) ? 'vitoria' : 'derrota'); await ui.banner(e.draw ? 'Draw' : ui.isViewer(e.winner) ? 'Victory' : `Player ${e.winner} wins`, e.winner, t(1200)); },
     async window_open() {}, async window_close() {}, async pass(e) { ui.log(e); }, // Gatilho entrando na cadeia e resolvendo: a carta de origem pisca e cresce (estilo Arena), nada genérico.
     async chain_add(e) { ui.pulse(e.uid, 'trigger-pop'); await pause(240); },

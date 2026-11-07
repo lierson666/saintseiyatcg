@@ -1,0 +1,53 @@
+/* Derrota épica do God (autor, 06/11/2026; god-death.js): o retrato racha e explode com a moldura, tudo do derrotado
+   vira poeira estelar e um degradê escuro toma a metade dele até o meio do board. --dglow: cor do deus em "r, g, b". */
+.death-layer { position: fixed; inset: 0; z-index: 70; pointer-events: none; }
+
+/* 1. O retrato treme e racha em luz do deus. */
+.godhud.death-crack { z-index: 75; pointer-events: none; }
+.godhud.death-crack .godhud__portrait { animation: deathTremble .95s linear forwards; }
+@keyframes deathTremble {
+  0% { transform: none; filter: none; }
+  20%, 60% { transform: translate(-2px, 1px) rotate(-1deg); }
+  40%, 80% { transform: translate(2px, -1px) rotate(1deg); }
+  100% { transform: scale(1.06); filter: brightness(1.5) drop-shadow(0 0 30px rgba(var(--dglow), 1)); }
+}
+.death-cracks { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.death-cracks path { fill: none; stroke: rgb(var(--dglow)); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 3px #fff) drop-shadow(0 0 8px rgba(var(--dglow), 1));
+  stroke-dasharray: 60; stroke-dashoffset: 60; animation: deathCrackDraw .55s cubic-bezier(.3, .8, .4, 1) forwards; animation-delay: calc(var(--i, 0) * 45ms + .2s); }
+@keyframes deathCrackDraw { to { stroke-dashoffset: 0; } }
+.godhud.death-gone .godhud__portrait { visibility: hidden; }
+
+/* 2. Clarão e cacos do retrato. */
+.death-flash { position: absolute; inset: 0; background: radial-gradient(circle at var(--hx) var(--hy), #fff 0, rgba(var(--dglow), .85) 18%, transparent 60%); animation: deathFlash .7s ease-out forwards; }
+@keyframes deathFlash { 0% { opacity: 1; } 100% { opacity: 0; } }
+.death-shards { position: absolute; }
+.death-shard { position: absolute; inset: 0; border-radius: 50%; background-repeat: no-repeat; filter: brightness(1.4) drop-shadow(0 0 6px rgba(var(--dglow), .9));
+  animation: deathShard 1.25s cubic-bezier(.12, .75, .3, 1) forwards; animation-delay: calc(var(--k, 0) * 18ms); }
+@keyframes deathShard {
+  0% { transform: none; opacity: 1; }
+  70% { opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scale(.55); opacity: 0; filter: brightness(2.4) blur(2px); }
+}
+
+/* 3. Moldura do God, mão, campo e Bases: estouram num clarão e se desfazem em poeira estelar subindo. */
+.death-dust { position: relative; z-index: 72; pointer-events: none; animation: deathDust 1.3s cubic-bezier(.3, 0, .6, 1) forwards; animation-delay: calc(.12s + var(--k, 0) * 55ms); }
+@keyframes deathDust {
+  0% { opacity: 1; filter: none; transform: none; }
+  14% { opacity: 1; filter: brightness(3) saturate(.2) drop-shadow(0 0 18px #fff); transform: scale(1.12); }
+  100% { opacity: 0; filter: brightness(3.4) saturate(0) blur(10px); transform: translateY(-46px) scale(1.25); }
+}
+
+/* O escuro toma a metade do derrotado: degradê da borda dele até o meio do board, sem racha. */
+.ruin.ruin--opp::before, .ruin.ruin--me::before { display: none; }
+.ruin.ruin--opp::after, .ruin.ruin--me::after { background: linear-gradient(to bottom, rgba(2, 2, 8, .96) 0%, rgba(2, 2, 8, .85) 45%, rgba(2, 2, 8, 0) 100%);
+  transform-origin: top; animation: deathDark 2.2s ease-out forwards; filter: none; }
+.ruin.ruin--me::after { background: linear-gradient(to top, rgba(2, 2, 8, .96) 0%, rgba(2, 2, 8, .85) 45%, rgba(2, 2, 8, 0) 100%); transform-origin: bottom; }
+@keyframes deathDark { from { opacity: 0; transform: scaleY(.15); } to { opacity: 1; transform: none; } }
+.ruin.is-done::after, .reduce-motion .ruin::after { animation-duration: 1ms; }
+
+/* Estado final: a mão do derrotado também sumiu. */
+.fallen-opp .hand--opp, .fallen-me .hand--me { visibility: hidden; }
+
+/* Reduce motion: só o estado final. */
+.reduce-motion .death-layer, .reduce-motion .death-cracks { display: none; }
+.reduce-motion .death-dust, .reduce-motion .godhud.death-crack .godhud__portrait { animation-duration: 1ms; animation-delay: 0s; }

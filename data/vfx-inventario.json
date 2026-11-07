@@ -2,19 +2,19 @@
  "versao": 1,
  "gerado_por": "tools/vfx-inventario.py",
  "resumo": {
-  "total": 241,
+  "total": 248,
   "migradas": 66,
   "editavel": 79,
-  "parcial": 117,
+  "parcial": 124,
   "legado": 24,
   "excecao": 21,
   "criterios": {
-   "forge": 196,
-   "edita": 187,
-   "aplica": 185,
+   "forge": 203,
+   "edita": 194,
+   "aplica": 192,
    "preview": 66,
-   "restaura": 185,
-   "testes": 187
+   "restaura": 192,
+   "testes": 194
   }
  },
  "animacoes": [
@@ -3179,6 +3179,174 @@
    "aba": "cena"
   },
   {
+   "id": "css:playtest-divine-death-css:deathTremble",
+   "nome": "deathTremble",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/death.css"
+   ],
+   "gatilho": ".godhud.death-crack .godhud__portrait",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-death-css:deathCrackDraw",
+   "nome": "deathCrackDraw",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/death.css"
+   ],
+   "gatilho": ".death-cracks path",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-death-css:deathFlash",
+   "nome": "deathFlash",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/death.css"
+   ],
+   "gatilho": ".death-flash",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-death-css:deathShard",
+   "nome": "deathShard",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/death.css"
+   ],
+   "gatilho": ".death-shard",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-death-css:deathDust",
+   "nome": "deathDust",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/death.css"
+   ],
+   "gatilho": ".death-dust",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
+   "id": "css:playtest-divine-death-css:deathDark",
+   "nome": "deathDark",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/death.css"
+   ],
+   "gatilho": ".ruin.ruin--opp::after, .ruin.ruin--me::after",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
+  },
+  {
    "id": "css:playtest-divine-divine-css:shake",
    "nome": "shake",
    "categoria": "Interface da partida",
@@ -3401,6 +3569,34 @@
    "migrada": false,
    "aba": "particulas",
    "limite": "Ajuste em Partículas: Recuo da carta"
+  },
+  {
+   "id": "css:playtest-divine-divine-css:hit-guard",
+   "nome": "hit-guard",
+   "categoria": "Interface da partida",
+   "tecnologia": "CSS animation",
+   "origem": "Olympus Arena",
+   "arquivos": [
+    "playtest/divine/divine.css"
+   ],
+   "gatilho": ".dcard.hit.hit--guard",
+   "parametros": [
+    "ligado",
+    "velocidade"
+   ],
+   "estado": "parcial",
+   "criterios": {
+    "forge": true,
+    "edita": true,
+    "aplica": true,
+    "preview": false,
+    "restaura": true,
+    "testes": true
+   },
+   "migrada": false,
+   "aba": "interface",
+   "limite": "Ajusta ligar, desligar e velocidade. O teste é uma amostra numa carta, não o gatilho real. Forma e cor seguem no CSS; o atraso não escala",
+   "pagina": "mesa"
   },
   {
    "id": "css:playtest-divine-divine-css:hit-calm",

@@ -24,7 +24,8 @@ import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudg
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout, clockBonus} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
-import {createDirector, DEATH_FX} from './director.js?v=20261106-arena1';
+import {createDirector, DEATH_FX} from './director.js?v=20261106-reacao1';
+import {epicDeath} from './god-death.js?v=2';
 import {tunedFx} from './particle-tune.js';
 import {createPixelFx, animFor, catalogIndex} from './pixel-vfx.js?v=20261104-live1';
 import {createComposer, withCompositions} from '../../shared/vfx/composer.js?v=20261104-vfx1';
@@ -1294,16 +1295,16 @@ const ui = {
     if (own) { playFxFile(`playtest/divine/assets/vozes/${voiceLang()}/${own}.mp3`); return true; }
     return sound(kind);
   },
-  // Morte do God: avatar com animação do tema (die-<deus>), cartas e Bases dele caem, ruína por cima da metade dele.
+  // Quem perdeu: o deus de cada derrotado. A sequência fica em epicDeath (god-death.js).
   godDeath(e) {
-    const s = S(), root = $('.olympus');
-    return losers({...s, victory: e}).map(key => {
-      const god = (s.divine?.[key]?.god || 'god-athena').slice(4);
-      $(`[data-god="${key}"]`)?.classList.add('is-dying', `die-${god}`);
-      $$(`[data-field="${key}"] .dcard, [data-lane="${key}"] .lane__base`).forEach((el, i) => { el.style.setProperty('--fall', i); el.classList.add('is-falling'); });
-      root?.insertAdjacentHTML('beforeend', ruin(key));
-      return {key, god};
-    });
+    const s = S();
+    return losers({...s, victory: e}).map(key => ({key, god: (s.divine?.[key]?.god || 'god-athena').slice(4)}));
+  },
+  // Derrota épica (autor, 06/11/2026): retrato estilhaça, campo implode no tema da facção, Bases viram poeira estelar.
+  async epicDeath({key, god}, deps) {
+    const root = $('.olympus'), addRuin = () => root?.insertAdjacentHTML('beforeend', ruin(key));
+    if (settings.reduceMotion) return addRuin();
+    await epicDeath({key, god, root, godEl: $(`[data-god="${key}"]`), cards: $$(`[data-field="${key}"] .dcard`), bases: $$(`[data-lane="${key}"] .lane__base`), hand: $$(`[data-hand="${key}"] .hand__slot`), ruin: addRuin, ...deps});
   },
   rect: uid => rectOf($(`[data-uid="${uid}"]`)),
   godRect: key => rectOf($(`[data-god="${key}"]`)),
@@ -1328,16 +1329,25 @@ const ui = {
   },
   refRect: ref => { const r = String(ref || ''); return r.startsWith('god:') || r.startsWith('ultimate:') ? ui.godRect(r.split(':')[1]) : r.startsWith('domain:') ? ui.domainRect(r.slice(7)) : ui.rect(r); },
   // Recuo em % da própria carta, para valer igual em qualquer tela. Sem origem (dano por efeito), recua para o lado do dono.
-  recoil(uid, from, p = 0, tune = null) {
+  // `how.outcome`: 'guard' (bloqueou: empurrão curto e brilho de escudo), 'hit' ou 'ko' (recua mais e deixa a direção para
+  // a carta cair para trás ao ser destruída). `how.hold`: ms congelada no contato, em branco, antes de recuar (hit stop).
+  recoil(uid, from, p = 0, tune = null, how = {}) {
     if (tune?.ligado === false) return;
+    const outcome = how.outcome || 'hit', hold = settings.reduceMotion ? 0 : how.hold || 0;
     $$(`[data-uid="${uid}"]`).forEach(el => {
       const r = el.getBoundingClientRect(), mine = S().players[viewer()]?.battlefield.includes(uid);
-      const dx = from ? r.left + r.width / 2 - from.x : 0, dy = from ? r.top + r.height / 2 - from.y : (mine ? 1 : -1), len = Math.hypot(dx, dy) || 1, far = (7 + p * 9) * (tune?.tamanho ?? 1);
+      const dx = from ? r.left + r.width / 2 - from.x : 0, dy = from ? r.top + r.height / 2 - from.y : (mine ? 1 : -1), len = Math.hypot(dx, dy) || 1;
+      const far = (7 + p * 9) * (tune?.tamanho ?? 1) * (outcome === 'guard' ? .4 : outcome === 'ko' ? 1.5 : 1);
       el.style.setProperty('--recoil-x', `${(dx / len * far).toFixed(1)}%`);
       el.style.setProperty('--recoil-y', `${(dy / len * far).toFixed(1)}%`);
       el.style.setProperty('--recoil-time', `${(.42 * (tune?.duracao ?? 1)).toFixed(2)}s`);
+      if (outcome === 'ko') { el.style.setProperty('--ko-x', `${(dx / len * 60).toFixed(1)}%`); el.style.setProperty('--ko-y', `${(dy / len * 60).toFixed(1)}%`); el.style.setProperty('--ko-rot', `${dx < 0 ? -18 : 18}deg`); }
       el.classList.toggle('hit--calm', !!settings.reduceFlashes);
-      el.classList.remove('hit'); void el.offsetWidth; el.classList.add('hit');
+      el.classList.toggle('hit--guard', outcome === 'guard');
+      el.classList.remove('hit', 'hit-freeze'); void el.offsetWidth;
+      if (!hold) return el.classList.add('hit');
+      el.classList.add('hit-freeze');
+      setTimeout(() => { el.classList.remove('hit-freeze'); el.classList.add('hit'); }, hold);
     });
   },
   // Pose do golpe: sobe e inclina para o alvo ('lift'), avança até encostar nele ('dash') ou volta ao slot (null).
@@ -2328,19 +2338,8 @@ const criadorApi = {
     return criadorPlay([{type: 'strike_declared', player: de, attacker, target}, {type: 'strike_resolve', player: de, attacker, target, atk}, ...(deus ? [] : [{type: 'damage', uid, dealt: atk}])], anim, tune);
   },
   entrada({anim, tune, de = 'A'}) { return criadorPlay([{type: 'entered', uid: S().players[de].battlefield[0]}], anim, tune); },
-  // Live Preview: relógio, camadas, âncoras e métricas, sobre os componentes reais da mesa. Nada disto existe fora do teste.
-  async relogio() {
-    const {installClock} = await import('./preview-clock.js?v=3');
-    return installClock(window);
-  },
-  camadas(off = []) {
-    const pixels = $$('.pixel-fx'), layers = {cor: pixels[0], luz: pixels[1], particulas: $('.fx-canvas'), arena: $('.arena-canvas')};
-    for (const [name, el] of Object.entries(layers)) if (el) el.style.opacity = off.includes(name) ? 0 : '';
-    document.body.classList.toggle('preview-sem-cartas', off.includes('cartas'));
-  },
-  ancoras(on, de = 'A') {
-    document.querySelector('.preview-ancoras')?.remove();
-    if (!on) return;
+  // Derrota do God do outro lado, só a apresentação: a partida da mesa de teste continua (recarregue para voltar).
+  morte({de = 'A'} = {}) { return criadorPlay([{type: 'victory', winner: de}], null, null); },
   // Arena de testes do Star Hill: cada cenário com os vínculos reais da versão carregada (rascunho ou ?publicado=1). Só eventos de apresentação.
   async cena(id, {de = 'A', ability = ''} = {}) {
     const s = S(), para = de === 'A' ? 'B' : 'A', uid = s.players[de].battlefield[0], alvo = s.players[para].battlefield[0];
@@ -2361,6 +2360,19 @@ const criadorApi = {
     await criadorPlay(eventos, null, null);
     render(); // a morte só quebra a carta na tela: a mesa volta ao estado real
   },
+  // Live Preview: relógio, camadas, âncoras e métricas, sobre os componentes reais da mesa. Nada disto existe fora do teste.
+  async relogio() {
+    const {installClock} = await import('./preview-clock.js?v=3');
+    return installClock(window);
+  },
+  camadas(off = []) {
+    const pixels = $$('.pixel-fx'), layers = {cor: pixels[0], luz: pixels[1], particulas: $('.fx-canvas'), arena: $('.arena-canvas')};
+    for (const [name, el] of Object.entries(layers)) if (el) el.style.opacity = off.includes(name) ? 0 : '';
+    document.body.classList.toggle('preview-sem-cartas', off.includes('cartas'));
+  },
+  ancoras(on, de = 'A') {
+    document.querySelector('.preview-ancoras')?.remove();
+    if (!on) return;
     const s = S(), para = de === 'A' ? 'B' : 'A', box = Object.assign(document.createElement('div'), {className: 'preview-ancoras'});
     const mark = (uid, label, color) => { const r = ui.rect(uid); if (r) box.insertAdjacentHTML('beforeend', `<div style="position:fixed;left:${r.left}px;top:${r.top}px;width:${r.width}px;height:${r.height}px;outline:2px dashed ${color};pointer-events:none"><b style="position:absolute;left:0;top:-18px;font:12px sans-serif;color:${color}">${label}</b><i style="position:absolute;left:50%;top:50%;width:10px;height:10px;margin:-5px;border:2px solid ${color};border-radius:50%"></i></div>`); };
     mark(s.players[de].battlefield[0], 'Origem', '#7fe0ff');
