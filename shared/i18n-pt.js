@@ -53,7 +53,7 @@ self.ssI18nPT = {
     'Steel': 'Aço', 'Iron': 'Ferro', 'Bronze': 'Bronze', 'Silver': 'Prata', 'Gold': 'Ouro', 'Kamui': 'Kamui', 'Legend': 'Lenda',
     'Athena': 'Athena', 'Poseidon': 'Poseidon', 'Hades': 'Hades', 'Ares': 'Ares', 'Artemis': 'Ártemis',
     "Athena's Sanctuary": 'Santuário de Athena', "Poseidon's Undersea Temple": 'Templo Submarino de Poseidon',
-    'Cosmo Arena': 'Arena do Cosmo', "Athena's Sanctuary — Golden Hour": 'Santuário de Athena — Hora Dourada', "Athena's Sanctuary — Twelve Houses Battle": 'Santuário de Athena — Batalha das Doze Casas', "Poseidon's Undersea Temple — Great Flood": 'Templo Submarino de Poseidon — Grande Dilúvio', "Hades' Underworld — Eclipse": 'Inferno de Hades — Eclipse', "Hades' Underworld": 'Inferno de Hades', 'Elysion': 'Elísios', "Ares' War Temple": 'Templo de Guerra de Ares', "Artemis' Moonlit Grove": 'Bosque Lunar de Ártemis',
+    'Cosmo Arena': 'Arena do Cosmo', 'Same as Options': 'Igual às Opções', 'Arena for this deck': 'Arena deste deck', "Athena's Sanctuary — Golden Hour": 'Santuário de Athena — Hora Dourada', "Athena's Sanctuary — Twelve Houses Battle": 'Santuário de Athena — Batalha das Doze Casas', "Poseidon's Undersea Temple — Great Flood": 'Templo Submarino de Poseidon — Grande Dilúvio', "Hades' Underworld — Eclipse": 'Inferno de Hades — Eclipse', "Hades' Underworld": 'Inferno de Hades', 'Elysion': 'Elísios', "Ares' War Temple": 'Templo de Guerra de Ares', "Artemis' Moonlit Grove": 'Bosque Lunar de Ártemis',
 
     // Lobby: início e jogar
     'Let your': 'Deixe seu', 'Cosmo burn': 'Cosmo queimar', 'Build a deck around your God and take it to the arena.': 'Monte um deck em torno do seu Deus e leve-o para a arena.',

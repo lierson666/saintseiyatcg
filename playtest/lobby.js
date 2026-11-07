@@ -254,6 +254,8 @@ const MATCH_DEFAULTS = {quality: 'high', theme: 'olympus', speed: 'normal', skip
   reduceFlashes: false, shake: 1, autoPass: true, phaseTips: true, aiLevel: 'normal', cardText: '1.0', cardSize: '1.0'};
 const matchSettings = () => { try { return {...MATCH_DEFAULTS, ...JSON.parse(localStorage.getItem(MATCH_KEY) || '{}')}; } catch { return {...MATCH_DEFAULTS}; } };
 const setMatch = (key, value) => { try { localStorage.setItem(MATCH_KEY, JSON.stringify({...matchSettings(), [key]: value})); } catch { /* sem armazenamento */ } };
+// Arenas publicadas (data/arenas-published.json, Arena Forge 5.0): [chave, nome]; variantes entram como "id~variante".
+let arenaList = [];
 const THEME_LABELS = {olympus: 'Cosmo Arena', athena: "Athena's Sanctuary", poseidon: "Poseidon's Undersea Temple", hades: "Hades' Underworld", elysion: 'Elysion', ares: "Ares' War Temple", artemis: "Artemis' Moonlit Grove"}; // = THEMES de divine/scene.js
 export const toggleFullscreen = () => (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.())?.catch?.(() => {});
 function options() {
@@ -266,7 +268,7 @@ function options() {
     ${window.ssI18n ? sel('lang', 'Language', window.ssI18n.LANGS) : ''}
     <label class="lb-set"><span>Full screen</span><input type="checkbox" data-act="fullscreen" ${document.fullscreenElement ? 'checked' : ''}></label>
     ${window.ssStage?.desktop ? sel('resolution', 'Resolution', window.ssStage.LIST) : ''}
-    ${sel('quality', 'Graphics', {low: 'Low', medium: 'Medium', high: 'High', ultra: 'Ultra'})}${sel('theme', 'Arena', THEME_LABELS)}
+    ${sel('quality', 'Graphics', {low: 'Low', medium: 'Medium', high: 'High', ultra: 'Ultra'})}${sel('theme', 'Arena', {...THEME_LABELS, ...Object.fromEntries(arenaList)})}
     <h2 class="lb-options__h">Sound</h2>${row('music', 'Music')}${row('sfx', 'Sound effects')}
     <h2 class="lb-options__h">Gameplay</h2>
     ${sel('aiLevel', 'AI difficulty', {easy: 'Easy', normal: 'Normal', hard: 'Hard'})}
@@ -525,6 +527,7 @@ function builder() {
         <small>${domain ? esc(domain.name) : 'No Domain yet'}</small></div>
       <div class="lb-picks">${[['god', 'God', d.god], ['domain', 'Domain', d.domain_id], ['thumb', 'Cover', d.thumb || d.god]].map(([k, label, id]) =>
         `<button class="lb-pick" data-act="open-picker" data-pick="${k}" aria-label="Choose ${label}">${id && cards.get(id) ? face(id, 'lb-card--mini') : '<span class="lb-pick__empty">+</span>'}<small>${label}</small></button>`).join('')}</div>
+      <label class="lb-set lb-deck-arena"><span>Arena</span><select class="kv-input" data-act="deck-arena" aria-label="Arena for this deck"><option value="">Same as Options</option>${arenaList.map(([k, n]) => `<option value="${esc(k)}" ${d.arena === k ? 'selected' : ''}>${esc(n)}</option>`).join('')}</select></label>
       <div class="lb-list__count ${size === DECK_SIZE ? 'is-full' : size > DECK_SIZE ? 'is-over' : ''}"><strong>${size}</strong> / ${DECK_SIZE}</div>
       ${cosmoLine(list, size)}
       ${curveHtml}
@@ -863,6 +866,7 @@ root.addEventListener('change', e => {
   const t = e.target, act = t.dataset.act;
   if (act === 'first') { ui.first = t.value; remember(); }
   else if (act === 'rename') { ui.builder.deck.nome = t.value.trim() || 'New deck'; ui.builder.dirty = true; }
+  else if (act === 'deck-arena') { if (t.value) ui.builder.deck.arena = t.value; else delete ui.builder.deck.arena; ui.builder.dirty = true; } // cosmético, só neste deck
   else return;
   render();
 });
@@ -900,6 +904,9 @@ async function init() {
   const [canon, deckData, art, previewDecks, compDecks, ultraDecks, hiperDecks] = await Promise.all([get('../data/canon/d268.json'), get('../data/alpha-0.1/decks-proposta-d171.json'),
     get(`${ART}cards.json`).catch(() => ({cartas: []})), get('../data/alpha-0.1/decks-preview.json').catch(() => ({decks: []})), get('../data/alpha-0.1/decks-competitivos.json').catch(() => ({decks: []})), get('../data/alpha-0.1/decks-ultra.json').catch(() => ({decks: []})), get('../data/alpha-0.1/decks-hiper.json').catch(() => ({decks: []}))]);
   cards = loadCanon(canon); index = canonIndex(canon);
+  fetch('../data/arenas-published.json', {cache: 'no-cache'}).then(r => (r.ok ? r.json() : null)).then(m => {
+    arenaList = (m?.arenas || []).flatMap(a => a.variantes.map(v => [v.id === 'standard' ? a.id : `${a.id}~${v.id}`, v.id === 'standard' ? a.nome : `${a.nome} — ${v.nome}`]));
+  }).catch(() => {}); // sem manifesto: só as arenas do código
   forge = new Map(art.cartas.map(c => [c.id, c]));
   // Coleção: holográfico da raridade com o cursor ou o toque em cima (VFX Forge V3). Só apresentação.
   fetch(`../${animFile('data/vfx-studio.json')}`, {cache: 'no-cache'}).then(r => (r.ok ? r.json() : null)).then(studio => { if (studio) startCardFx({quality: matchMedia('(pointer: coarse)').matches ? 'medium' : 'high', data: studio, card: id => forge.get(id), context: el => (el.closest('.lb-big') ? 'inspecao' : el.closest('.lb-card') ? 'colecao' : null)}); }).catch(() => {});

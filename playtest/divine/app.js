@@ -3007,7 +3007,7 @@ async function init() {
   setInterval(tickClock, matchMedia('(pointer: coarse)').matches ? 1000 : 250); // toque: menos despertares; o relógio mostra segundos
   setInterval(aiTick, 700);
   // Arena da mesa (Arena Forge 5.0): imposta pela partida (?arena=, eventos) > deck > perfil > Cosmo Arena. Só local: não vai ao estado sincronizado.
-  const arena = chooseArena({forced: params.get('arena'), profile: settings.theme}, await loadArenas());
+  const arena = chooseArena({forced: params.get('arena'), deck: params.get('deckA') && decks?.A?.arena, profile: settings.theme}, await loadArenas());
   stage.dataset.theme = themeBase(arena.key);
   scene = await createScene($('#arena'), {quality: settings.quality, theme: arena.key, reduceFlashes: settings.reduceFlashes, reduceMotion: !!settings.reduceMotion});
   stage.classList.toggle('no-webgl', !scene);

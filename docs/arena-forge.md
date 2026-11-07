@@ -45,6 +45,8 @@ O manifesto marca cada arena com `cosmetico: {tipo: 'arena', aquisicao: 'livre'}
 
 A prioridade da arena na mesa é: imposta pela partida (`?arena=`, futuro evento ou torneio) > arena do deck > arena do perfil (Opções › Arena) > Cosmo Arena.
 
+O editor de decks tem o seletor Arena (padrão: "Same as Options"). A escolha fica no próprio deck (`arena`) e sincroniza com a conta. As Opções do lobby e da partida listam as arenas publicadas, variantes incluídas.
+
 Só entra arena publicada e possuída. O que não estiver publicado cai na Cosmo Arena.
 
 A escolha é local. Ela nunca vai ao estado sincronizado do duelo, então cada jogador vê a própria arena e o servidor de partidas não muda. A imposta pela partida é o único caminho para os dois jogadores verem a mesma arena (evento).
@@ -102,14 +104,14 @@ A identificação `id@versão~variante` é a mesma no editor, no jogo, nas minia
 | --- | --- |
 | `node --test tools/test-arena-forge.mjs` (serialização, migração, schema, pipeline, dependências, rollback, arquivar e duplicar, troca de arena, fallback, gate) | 11/11 |
 | `python3 tools/test-arena-forge.py` (servidor: schema na fronteira, manifesto derivado, versão imutável, publicação sem validação recusada, rollback, arquivada sai, miniatura) | ok |
-| `uv run --with playwright python tools/test-arena-forge-ui.py` (Chrome real: 7 arenas em 1280×720, 375×812 e 812×375, câmera e zonas, draw calls, reduzir movimento, console, `?arena=`, manifesto ausente e corrompido, validar → aprovar → publicar → miniaturas → rollback no Star Hill) | 16/16 |
+| `uv run --with playwright python tools/test-arena-forge-ui.py` (Chrome real: 7 arenas em 1280×720, 375×812 e 812×375, câmera e zonas, draw calls, reduzir movimento, console, `?arena=`, manifesto ausente e corrompido, validar → aprovar → publicar → miniaturas → rollback no Star Hill) | 17/17 (inclui arena escolhida no deck) |
 
 Medidas da validação real: Athena v2 com 3 variantes teve 10 draw calls no desktop, 6 no celular, 2,2 ms de GPU, 2 texturas, 12 malhas, campo livre e brilho 0,67. Elísios e Hades v2 passaram sem aviso.
 
 ## Limites conhecidos
 
-- Escolha de arena por deck: a regra existe (`chooseArena`), mas o editor de decks ainda não tem o seletor.
-- As Opções do lobby listam só as 7 arenas do código. As variantes publicadas aparecem no seletor dentro da partida.
+- Arena por deck vale para partidas locais (IA e hot-seat, `?deckA=`). Online, vale a arena do perfil, porque a partida online não lê o deck local.
+- Decks Starter são só leitura: para ter arena própria, duplique o deck.
 - Brilho e zonas são medidos por amostragem (96 pontos) com as cartas de exemplo, não com a mesa real.
 - FPS em aparelho real (Redmi Pad 2) não foi medido. O gate usa draw calls, tempo de GPU do Mac e o perfil celular.
 - Não há assets externos (modelos, texturas): tudo é procedural na cena. Se um dia houver, entram no manifesto com versão no nome, como as miniaturas.

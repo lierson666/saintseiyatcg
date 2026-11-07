@@ -102,6 +102,15 @@ def main():
             check('manifesto de versão futura: fallback visual para o tema do código', fb)
             page.close()
 
+            # Arena do deck: o deck guarda `arena` e a partida local usa (prioridade deck > perfil).
+            page = browser.new_page(viewport={'width': 1280, 'height': 720})
+            page.goto(f'{base}/playtest/deck-store.js', wait_until='commit')
+            page.evaluate('''() => fetch('/data/alpha-0.1/decks-proposta-d171.json').then(r => r.json()).then(d => {
+              localStorage.setItem('sstcg.decks.v1', JSON.stringify([{...d.decks[0], id: 'my-arena-test', nome: 'Arena test', arena: 'artemis'}])); })''')
+            fr = game(page, f'{base}/playtest/divine/?deckA=my-arena-test&deckB=my-arena-test&ai=B', [])
+            check('arena escolhida no deck abre na partida', fr.evaluate("() => document.querySelector('.stage').dataset.theme") == 'artemis')
+            page.close()
+
             # STAR HILL: validar -> aprovar -> publicar -> voltar versão (só na pasta temporária).
             page = browser.new_page(viewport={'width': 1440, 'height': 900})
             notes = iter(['teste automático'])
