@@ -4,6 +4,14 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-06 — Carta athena-v6-084 — Athena’s Final Decree
+
+- **Antes:** HYOGA’S ABSOLUTE ZERO (Legendary, Technique, 5 Base): 3 de dano no Devotee inimigo alvo, 5 se tiver Seal; com Cygnus Hyoga, põe 1 Seal depois.
+- **Depois:** ATHENA’S FINAL DECREE — The End of All Conflict (Rare, Technique, 5 Base): "Defeat all Devotees." PT: O DECRETO FINAL DE ATHENA — O Fim de Todo Conflito, "Derrote todos os Devotos."
+- **Motivo:** decisão do autor, 06/11/2026 (board wipe de Athena; diff aprovado).
+- **Engine/dados:** `data/cards.json`, `data/canon/d268.json` (texto aprovado e nome; original e hash intactos), `docs/traducao-pt/athena.json`, `data/card-projects.json` (subtítulo), `playtest/engine-v3/v6/athena-spells.js`.
+- **Pendências:** a arte ainda é a do Hyoga. `tools/fixtures/decks-competitivos.json` usa a carta e agora tem um board wipe. Custo 5 contra 7 da THE FALL OF THE SANCTUARY (Hades), sem medição em partida.
+
 ## 2026-11-06 — §63 — Anjos Celestes são lendários
 
 - **Seção:** `docs/guia-do-jogo.md`, §63 (regra de lendário).

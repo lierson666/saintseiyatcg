@@ -15,7 +15,8 @@ const records = [...canon.cards, ...canon.gods];
 // 29/10/2026: GOD-ARES AWAKEN 5 → 7 no texto aprovado (autor; docs/CHANGELOG-regras.md).
 // 01/11/2026: Aiolia, Camus e Mu 5 → 4 e Saga 6 → 5 no texto aprovado (autor; docs/CHANGELOG-regras.md).
 // 01/11/2026: Kiki, Miho, Star Hill Acolyte e Sanctuary Torch: draw engines no texto aprovado (autor; docs/CHANGELOG-regras.md).
-const SNAPSHOT_SHA256 = 'fe04b9a510520b736235183b8a5d4cfa002555a97e672085b2c9a95d8607ef2b';
+// 06/11/2026: 084 vira ATHENA’S FINAL DECREE, "Defeat all Devotees." (autor; docs/CHANGELOG-regras.md).
+const SNAPSHOT_SHA256 = '3da1e7cf010c0cd09387c3fca08f971897a6400e4a70a21bba656cb97de55f5e';
 const KAMUI_ORIGINAL_SHA256 = '153ad7e355b3fd87d9dc79ead14f62dfd7d2c03e8c703c56ec9bcee256ca5099';
 
 test('snapshot não foi editado desde a importação', () => {

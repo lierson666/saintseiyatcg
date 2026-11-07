@@ -3608,13 +3608,13 @@
       "id_fonte": "ATHENA-V6-084",
       "conjunto": "athena-vanilla-v6",
       "numero_carta": 84,
-      "nome_exibicao_en": "HYOGA’S ABSOLUTE ZERO",
-      "tagline_en": "The Cold Beyond Death",
+      "nome_exibicao_en": "ATHENA’S FINAL DECREE",
+      "tagline_en": "The End of All Conflict",
       "nome_interno_pt": "",
       "faccao": "Athena",
       "tipo": "Spell",
       "subtipos": ["Technique"],
-      "raridade": "Legendary",
+      "raridade": "Rare",
       "status": "design-ready",
       "cosmoble": false,
       "caminho_imagem": null,
@@ -3630,21 +3630,17 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Deal 3 damage to target enemy Devotee.",
-        "If that Devotee has a @Seal counter, deal 5 damage instead.",
-        "Absolute Zero — If you control Cygnus Hyoga, put 1 @Seal counter on that Devotee after this Technique resolves."
+        "Defeat all Devotees."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
-      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção).",
-      "nome_exibicao_pt": "O ZERO ABSOLUTO DE HYOGA",
-      "subtitulo_pt": "O Frio Além da Morte",
+      "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção). Vira ATHENA’S FINAL DECREE, board wipe Rare (autor, 06/11/2026).",
+      "nome_exibicao_pt": "O DECRETO FINAL DE ATHENA",
+      "subtitulo_pt": "O Fim de Todo Conflito",
       "habilidades_pt": [
-        "Cause 3 de dano ao Devoto inimigo alvo.",
-        "Se esse Devoto tiver um marcador de @Selo, cause 5 de dano em vez disso.",
-        "Zero Absoluto — Se você controlar Hyoga de Cisne, coloque 1 marcador de @Selo nesse Devoto depois que esta Técnica resolver."
+        "Derrote todos os Devotos."
       ],
-      "tagline_pt": "O Frio Além da Morte"
+      "tagline_pt": "O Fim de Todo Conflito"
     },
     {
       "id": "athena-v6-085",

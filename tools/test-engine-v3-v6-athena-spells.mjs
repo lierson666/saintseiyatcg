@@ -92,6 +92,16 @@ test('057 Telekinesis: devolve Equipment à mão; compra se controla Kiki', () =
   assert.equal(ctx.attached[gear], undefined);
 });
 
+test('084 Athena’s Final Decree: derrota todos os Devotees, aliados e inimigos', () => {
+  const {s, ctx, give} = setup();
+  const mine = give('A', A('017')), theirs = give('B', FOE), spell = give('A', A('084'), 'hand');
+  const bases = s.players.A.bases.filter(x => x.prepared).length;
+  playSpell(s, ctx, 'A', spell); if (s.window) passAll(s);
+  assert.equal(s.players.A.bases.filter(x => x.prepared).length, bases - 5);
+  assert.ok(!s.units[mine] && !s.units[theirs]);
+  assert.ok(!s.players.A.battlefield.includes(mine) && !s.players.B.battlefield.includes(theirs));
+});
+
 test('078 Freezing Coffin (Spell): 2 Seal; 3 com Camus; já Sealed leva 2 de dano', () => {
   let {s, ctx, give} = setup();
   let foe = give('B', FOE), spell = give('A', A('078'), 'hand');
@@ -134,18 +144,6 @@ test('083 Twelve Flames: Flame + 1 ATK; no fim da rodada remove Flame e cura', (
   endRound(s);
   assert.equal(s.units[a].markers.Flame, 0);
   assert.equal(hp(s, a), 0);
-});
-
-test('084 Absolute Zero: 3 de dano, 5 se Sealed; com Hyoga põe 1 Seal depois', () => {
-  let {s, ctx, give} = setup();
-  let foe = give('B', FOE), spell = give('A', A('084'), 'hand');
-  playSpell(s, ctx, 'A', spell); if (s.window) passAll(s);
-  assert.equal(hp(s, foe), 3);
-  assert.equal(s.units[foe].seal, undefined);
-  ({s, ctx, give} = setup());
-  give('A', A('005')); foe = give('B', FOE); s.units[foe].seal = 1; spell = give('A', A('084'), 'hand');
-  playSpell(s, ctx, 'A', spell); if (s.window) passAll(s);
-  assert.ok(!s.units[foe] || (hp(s, foe) === 5 && s.units[foe].seal === 2)); // 5 de dano; Seal só se sobreviveu
 });
 
 test('086 Deprived: +3/+3, Ikki ganha Pierce; derrotado no fim da rodada', () => {

@@ -758,11 +758,11 @@
   {
    "id": "ATHENA-V6-084",
    "number": 84,
-   "name": "HYOGA’S ABSOLUTE ZERO",
+   "name": "ATHENA’S FINAL DECREE",
    "type": "Spell — Technique",
    "original_text": "084 — HYOGA’S ABSOLUTE ZERO\nThe Cold Beyond Death\nRarity: Rare\n Type: Spell — Technique\n Casting Cost: 5 {B}\n Cosmoble: Yes\nDeal 3 damage to target enemy Devotee.\nIf that Devotee has a Seal counter, deal 5 damage instead.\nAbsolute Zero — If you control Cygnus Hyoga, put 1 Seal counter on that Devotee after this Spell resolves.",
    "original_sha256": "52f8643e70f23a0a4d463c347fd88fd4f7942b311871d4ace8c8977e5654ebc1",
-   "approved_current_text_as_of_d268": "084 — HYOGA’S ABSOLUTE ZERO\nThe Cold Beyond Death\nRarity: Rare\n Type: Spell — Technique\n Casting Cost: 5 {B}\n Cosmoble: Yes\nDeal 3 damage to target enemy Devotee.\nIf that Devotee has a Seal counter, deal 5 damage instead.\nAbsolute Zero — If you control Cygnus Hyoga, put 1 Seal counter on that Devotee after this Spell resolves."
+   "approved_current_text_as_of_d268": "084 — ATHENA’S FINAL DECREE\nThe End of All Conflict\nRarity: Rare\n Type: Spell — Technique\n Casting Cost: 5 {B}\n Cosmoble: Yes\nDefeat all Devotees."
   },
   {
    "id": "ATHENA-V6-085",

@@ -43,9 +43,9 @@ test('randomizar muda a direção de arte e preserva o que vem da carta', () => 
 });
 
 test('Technique: conjurador vem do nome da carta e a técnica já vem marcada', () => {
-  const f = cardFacts(card('athena-v6-084'), cartas);
-  assert.equal(f.person, 'CYGNUS HYOGA');
-  assert.match(promptOf('athena-v6-084'), /TECHNIQUE IN USE: HYOGA’S ABSOLUTE ZERO/);
+  const f = cardFacts(card('athena-v6-085'), cartas);
+  assert.equal(f.person, 'DRAGON SHIRYU');
+  assert.match(promptOf('athena-v6-085'), /TECHNIQUE IN USE: SHIRYU’S LAST DRAGON/);
 });
 
 test('Equipment começa sozinho, e o portador fica só como opção', () => {
@@ -74,7 +74,7 @@ test('tem anime, mangá e HQ à escolha, sem traço repetido', () => {
 });
 
 test('grandiosidade segue a raridade e God é divino', () => {
-  assert.equal(defaultParams(cardFacts(card('athena-v6-084'), cartas)).epic, '4');
+  assert.equal(defaultParams(cardFacts(card('athena-v6-085'), cartas)).epic, '4');
   const god = cartas.find((c) => c.tipo === 'God');
   assert.equal(defaultParams(cardFacts(god, cartas)).epic, '5');
 });

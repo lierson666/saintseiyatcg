@@ -99,13 +99,8 @@ export default {
       }
     });
   }}},
-  // Hyoga's Absolute Zero
-  'athena-v6-084': {spell: {run: (s, c, key) => {
-    const t = foe(s, c, key, "HYOGA'S ABSOLUTE ZERO");
-    if (!t) return;
-    k.damage(s, c, t, sealOf(s, t) > 0 ? 5 : 3);
-    if (s.units[t] && controls(s, c, key, 'athena-v6-005')) addSeal(s, c, [t], 1, 'ABSOLUTE ZERO'); // depois de resolver
-  }}},
+  // Athena's Final Decree (autor, 06/11/2026): derrota todos os Devotees, dos dois lados.
+  'athena-v6-084': {spell: {run: (s, c) => { for (const u of k.allDevotees(s, c)) k.defeat(s, c, u); }}},
   // Deprived of Senses
   'athena-v6-086': {spell: {run: (s, c, key, self) => {
     const t = friendlySaint(s, c, key, 'DEPRIVED OF SENSES');
