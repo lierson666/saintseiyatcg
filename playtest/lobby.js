@@ -9,14 +9,14 @@ import {renderLiveCard, renderCardText, fullSizePieces} from '../shared/live-car
 import {startCardFx} from '../shared/vfx/card-mount.js?v=20261104-vfx1';
 import {printedEquipmentBonuses, signedBonus} from '../shared/card-visual-values.js';
 import {displayCard, typeWord} from '../shared/card-i18n.js?v=20261031-kw1';
-import {unlock, playMusic, setVolume, volume} from './audio.js?v=20261102-voz4';
+import {unlock, playMusic, setVolume, volume} from './audio.js?v=20261106-menu1';
 import {loadMyDecks, saveMyDecks, findDeck, syncDecks, onDeckStatus, deckCovers, setDeckCover} from './deck-store.js?v=20261031-2';
 import {mountKV} from '../shared/kv-sky.js?v=20261104-pub1';
 import {animFile} from '../shared/anim-data.js?v=1';
 import {countryOptions, countryName} from '../shared/countries.js?v=20261031-i18n1';
 import {startPresence} from '../shared/presence.js?v=20261029-1';
 import {mountSocial} from './social.js?v=20261101-notch1';
-import {telas, imageUrl, sound, applyColors, applyTexts} from './telas.js?v=20261102-voz2';
+import {telas, imageUrl, sound, applyColors, applyTexts} from './telas.js?v=20261106-menu1';
 import {loadEconomy, ownedLimit, missingCards, coinBadge, storeScreen, collectionScreen, openBooster, buyBooster, buyCosmetic} from './economy.js?v=20261106-reveal2';
 import {lightArt} from '../shared/light-art.js';
 import {faceStyle, useGodPortraits} from './avatar-face.js?v=20261031-3';

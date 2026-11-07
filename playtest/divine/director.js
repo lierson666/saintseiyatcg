@@ -2,8 +2,8 @@
 // dramatiza em sequência. Nunca decide resultado: os números exibidos vêm dos próprios eventos.
 // `ui` é o adaptador do DOM (posições e textos); `fx` é a camada WebGL (pode faltar: tudo vira só DOM).
 import {wait} from './scene.js?v=20261031-pool1';
-import {strikeSound, chargeSound} from '../audio.js?v=20261102-voz4';
-import {anim, ANIM_OF, sound} from '../telas.js?v=20261102-barulho1';
+import {strikeSound, chargeSound} from '../audio.js?v=20261106-menu1';
+import {anim, ANIM_OF, sound} from '../telas.js?v=20261106-menu1';
 import {ELEMENT_COLOR} from './pixel-vfx.js?v=20261104-anim4';
 import {tunedFx} from './particle-tune.js';
 import {ON_ATTACKER} from './combat-tracks.js';

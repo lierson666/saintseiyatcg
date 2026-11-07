@@ -1,6 +1,6 @@
 // Telas, sons, músicas e animações editados no Star Hill (data/olympus-telas.json). O lobby e o duelo leem daqui;
 // sem o arquivo valem os padrões abaixo. Imagem: "card:<id>" usa a arte atual da carta no Card Forge; senão é um caminho do projeto.
-import {configureAudio, playFxFile, playVoice} from './audio.js?v=20261102-voz4';
+import {configureAudio, playFxFile, playVoice} from './audio.js?v=20261106-menu1';
 
 const ROOT = new URL('../', import.meta.url);
 export const ANIM_GROUPS = ['compra', 'conjurar', 'cosmo', 'gatilho', 'ataque', 'dano', 'morte', 'turno', 'ultimate'];

@@ -323,10 +323,10 @@ export function playMusic(name, { restart = false } = {}) {
   if (TRACKS[name]) {
     const audio = new Audio(TRACKS[name]);
     const state = { name, audio, queue: [] };
-    audio.loop = name !== 'battle';
+    audio.loop = !BATTLE_PLAYLIST.length; // menu e batalha: a faixa de abertura é sempre a mesma, depois a playlist sorteada (autor, 06/11/2026)
     audio.volume = volume.music;
     ctx.createMediaElementSource(audio).connect(duckBus);
-    if (name === 'battle') audio.addEventListener('ended', () => {
+    audio.addEventListener('ended', () => {
       if (music !== state) return;
       if (!state.queue.length) state.queue = shuffledBattleTracks(audio.src);
       if (!state.queue.length) return;
