@@ -78,7 +78,7 @@ self.ssI18nPT = {
     'Deck name': 'Nome do deck', 'No Domain yet': 'Sem Domínio ainda', 'Cost curve': 'Curva de custo', 'Click cards in the collection to add them.': 'Clique nas cartas da coleção para adicioná-las.',
     'Deck ready to play.': 'Deck pronto para jogar.', 'No cards for this God yet.': 'Ainda não há cartas para este Deus.', 'In deck': 'No deck',
     'Remove one': 'Remover uma', 'Add one': 'Adicionar uma', 'Choose your God': 'Escolha seu Deus', 'Choose your Domain': 'Escolha seu Domínio', 'Use Domain': 'Usar Domínio', 'Domain in use': 'Domínio em uso', 'Choose the deck cover': 'Escolha a capa do deck',
-    'Splash limit reached': 'Limite de splash atingido', 'Not in your collection': 'Fora da sua coleção', 'Missing cards': 'Cartas faltando',
+    'Splash limit reached': 'Limite de splash atingido', 'Too many cards': 'Cartas demais', 'Not in your collection': 'Fora da sua coleção', 'Missing cards': 'Cartas faltando',
     'Right-click a card to see it big.': 'Clique com o botão direito numa carta para vê-la grande.',
 
     // Coleção e loja
@@ -276,7 +276,7 @@ self.ssI18nPT = {
     ['Saint Seiya TCG — {t0}', 'Saint Seiya TCG — {0}'], ['Use {0}', 'Usar {0}'],
     ['Challenge sent to {0}. The duel starts when they accept.', 'Desafio enviado para {0}. O duelo começa quando for aceito.'],
     ['Friends {0}', 'Amigos {0}'], ['{0} friend requests', '{0} pedidos de amizade'], ['Round {w0} · Soul {w1} × {w2}', 'Rodada {0} · Alma {1} × {2}'], ['{0} wins', '{0} venceu'], ['Round {w0}', 'Rodada {0}'], ['Round {w0} · Player {w1}', 'Rodada {w0} · Jogador {1}'], ['Player {w0}', 'Jogador {0}'],
-    ['Pool {w0}', 'Reserva {0}'], ['Done ({0})', 'Concluir ({0})'], ['Step {0} of {1}', 'Passo {0} de {1}'], ['Step {0}', 'Passo {0}'], ['Choose {0} more', 'Escolha mais {0}'],
+    ['Decks can have at most {w0} cards. Remove {w1} to save.', 'O deck pode ter no máximo {0} cartas. Remova {1} para salvar.'], ['Pool {w0}', 'Reserva {0}'], ['Done ({0})', 'Concluir ({0})'], ['Step {0} of {1}', 'Passo {0} de {1}'], ['Step {0}', 'Passo {0}'], ['Choose {0} more', 'Escolha mais {0}'],
     ['Player {w0} · Opening hand', 'Jogador {0} · Mão inicial'], ['Player {w0} goes first', 'Jogador {0} começa'], ['Player {w0} won the toss', 'Jogador {0} venceu a moeda'], ['Player {w0} wins the toss. Player {w1} goes first.', 'Jogador {0} vence a moeda. Jogador {1} começa.'], ['Waiting for Player {w0}…', 'Aguardando o Jogador {0}…'], ['Trigger 1 of {0}', 'Gatilho 1 de {0}'],
     ['+{0} more', '+{0} a mais'], ['Confirm · {0}', 'Confirmar · {0}'], ['{0} decides', '{0} decide'], ['Back to decision · {0}', 'Voltar à decisão · {0}'],
     ['On timeout: {0}', 'Se o tempo acabar: {0}'], ['Casting {0}', 'Conjurando {0}'], ['Cast · Hidden Cosmo {w0}', 'Conjurar · Cosmo Oculto {0}'], ['Needs {w0} Cosmo (Base and/or Latent).', 'Precisa de {0} Cosmo (Base e/ou Latente).'], ['Needs {w0} prepared Base Cosmo.', 'Precisa de Cosmo Base preparada: {0}.'], ['Needs {w0} Latent.', 'Precisa de {0} Latente.'], ['Needs {w0} Base Cosmo.', 'Precisa de Cosmo Base: {0}.'], ['Needs {w0} Base Cosmo, this Base pays 1.', 'Precisa de Cosmo Base: {0}; esta paga 1.'], ['Needs {w0} Cosmo (Base and/or Latent), this Base pays 1.', 'Precisa de {0} Cosmo (Base e/ou Latente); esta Base paga 1.'], ['Chain {w0}', 'Pilha {0}'], ['Cosmo Bases of Player {w0}', 'Cosmo Bases do Jogador {0}'],

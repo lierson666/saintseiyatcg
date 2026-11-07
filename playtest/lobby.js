@@ -435,11 +435,11 @@ function filterBar(b) {
 const POOL_VIEWS = [['card', 'Cards'], ['list', 'List'], ['field', 'Battlefield']];
 // Linha com arte e − n + no canto direito (lista do deck e visão Lista do pool). Tocar abre a carta.
 function cardRow(c, b, tag = 'div') {
-  const d = b.deck, n = count(b, c.id), max = ownedLimit(ui.econ, c.id, c.kind), full = deckSize(d) >= DECK_SIZE, isDomain = c.kind === 'Domain', on = isDomain && d.domain_id === c.id;
+  const d = b.deck, n = count(b, c.id), max = ownedLimit(ui.econ, c.id, c.kind), isDomain = c.kind === 'Domain', on = isDomain && d.domain_id === c.id;
   return `<${tag} class="lb-crow ${n || on ? 'is-in' : ''}"><button class="lb-strip" data-act="show-card" data-id="${c.id}" data-card="${c.id}" style="--art:url('${artOf(c.id) || ''}')">
     <b class="lb-gem ${c.cost?.unit || ''}">${c.cost?.amount ?? '–'}</b><span>${esc(c.name)}</span></button>
     ${isDomain ? `<button class="lb-rowset" data-act="set-domain" data-id="${c.id}" aria-pressed="${on}">${on ? 'Domain' : 'Set Domain'}</button>`
-    : `<div class="lb-rowstep" role="group" aria-label="${esc(c.name)}"><button data-act="remove" data-id="${c.id}" ${n ? '' : 'disabled'} aria-label="Remove one">−</button><b>${n}</b><button data-act="add" data-id="${c.id}" ${n >= max || full ? 'disabled' : ''} aria-label="Add one">+</button></div>`}</${tag}>`;
+    : `<div class="lb-rowstep" role="group" aria-label="${esc(c.name)}"><button data-act="remove" data-id="${c.id}" ${n ? '' : 'disabled'} aria-label="Remove one">−</button><b>${n}</b><button data-act="add" data-id="${c.id}" ${n >= max ? 'disabled' : ''} aria-label="Add one">+</button></div>`}</${tag}>`;
 }
 // Carta menor, igual à do campo no duelo (playtest/divine/board.css): arte, nome e gemas.
 function fieldFace(c) {
@@ -514,7 +514,7 @@ function builder() {
         const n = count(b, c.id), isDomain = c.kind === 'Domain', on = isDomain ? d.domain_id === c.id : n > 0, max = ownedLimit(ui.econ, c.id, c.kind);
         return `<div class="lb-cell"><button class="lb-slot ${on ? 'is-in' : ''} ${!isDomain && n >= max ? 'is-max' : ''} ${!isDomain && !max ? 'is-unowned' : ''}" data-act="${isDomain ? 'set-domain' : 'slot-tap'}" data-id="${c.id}" aria-label="${esc(c.name)}">
           ${ui.poolView === 'field' ? fieldFace(c) : face(c.id)}<i class="lb-slot__count">${isDomain ? (on ? 'Domain' : 'Set Domain') : `${n} / ${max}`}</i></button>
-          ${isDomain ? '' : `<div class="lb-step ${n ? 'is-in' : ''}" role="group" aria-label="${esc(c.name)}"><button data-act="remove" data-id="${c.id}" ${n ? '' : 'disabled'} aria-label="Remove one">−</button><b>${n} / ${max}</b><button data-act="add" data-id="${c.id}" ${n >= max || size >= DECK_SIZE ? 'disabled' : ''} aria-label="Add one">+</button></div>`}</div>`;
+          ${isDomain ? '' : `<div class="lb-step ${n ? 'is-in' : ''}" role="group" aria-label="${esc(c.name)}"><button data-act="remove" data-id="${c.id}" ${n ? '' : 'disabled'} aria-label="Remove one">−</button><b>${n} / ${max}</b><button data-act="add" data-id="${c.id}" ${n >= max ? 'disabled' : ''} aria-label="Add one">+</button></div>`}</div>`;
       }).join('') || '<p class="lb-empty">No cards for this God yet.</p>'}</div>`}
     </div>
     <aside class="lb-list">
@@ -525,7 +525,7 @@ function builder() {
         <small>${domain ? esc(domain.name) : 'No Domain yet'}</small></div>
       <div class="lb-picks">${[['god', 'God', d.god], ['domain', 'Domain', d.domain_id], ['thumb', 'Cover', d.thumb || d.god]].map(([k, label, id]) =>
         `<button class="lb-pick" data-act="open-picker" data-pick="${k}" aria-label="Choose ${label}">${id && cards.get(id) ? face(id, 'lb-card--mini') : '<span class="lb-pick__empty">+</span>'}<small>${label}</small></button>`).join('')}</div>
-      <div class="lb-list__count ${size === DECK_SIZE ? 'is-full' : ''}"><strong>${size}</strong> / ${DECK_SIZE}</div>
+      <div class="lb-list__count ${size === DECK_SIZE ? 'is-full' : size > DECK_SIZE ? 'is-over' : ''}"><strong>${size}</strong> / ${DECK_SIZE}</div>
       ${cosmoLine(list, size)}
       ${curveHtml}
       <ol class="lb-strips">${list.map(e => cardRow(e.card, b, 'li')).join('')
@@ -567,7 +567,7 @@ function cardInfo(id) {
     ${f?.flavour_en ? `<p class="lb-info__flavour">${esc(f.flavour_en)}</p>` : ''}
     ${n == null ? '' : `<div class="lb-info__deck"><span>In deck <b>${n}</b> / ${COPY_LIMIT}</span>
       <button class="lb-ghost" data-act="remove" data-id="${id}" ${n ? '' : 'disabled'} aria-label="Remove one">−</button>
-      <button class="lb-play lb-play--small" data-act="add" data-id="${id}" ${n >= COPY_LIMIT || deckSize(ui.builder.deck) >= DECK_SIZE ? 'disabled' : ''}>Add</button></div>`}
+      <button class="lb-play lb-play--small" data-act="add" data-id="${id}" ${n >= COPY_LIMIT ? 'disabled' : ''}>Add</button></div>`}
   </section>`;
 }
 // Seletor visual (como o comandante do MTG Arena): God, Domain ou a carta de capa do deck.
@@ -668,7 +668,7 @@ function morph(el, to, depth = 0) {
     if (n <= COPY_LIMIT) { ui.big = null; ui.notice = {title: 'Not in your collection', text: `You own ${ownedLimit(ui.econ, id, card?.kind)} of ${card?.name || 'this card'}. Open boosters in the Store to get more.`}; }
     return;
   }
-  if (n > COPY_LIMIT || (delta > 0 && deckSize(ui.builder.deck) >= DECK_SIZE)) return;
+  if (n > COPY_LIMIT) return; // passar de DECK_SIZE pode na montagem; salvar não (autor, 06/11/2026)
   if (!entry) list.push({card_id: id, quantity: n});
   else if (n <= 0) list.splice(list.indexOf(entry), 1);
   else entry.quantity = n;
@@ -750,7 +750,11 @@ const actions = {
   remove: t => setCount(t.dataset.id, -1),
   'set-domain': t => { ui.builder.deck.domain_id = t.dataset.id; ui.builder.dirty = true; },
   'builder-view': t => { ui.builder.view = t.dataset.view; },
-  'save-deck': () => { saveDeck(); ui.screen = 'decks'; },
+  'save-deck': () => {
+    const over = deckSize(ui.builder.deck) - DECK_SIZE;
+    if (over > 0) { ui.notice = {title: 'Too many cards', text: `Decks can have at most ${DECK_SIZE} cards. Remove ${over} to save.`}; return; }
+    saveDeck(); ui.screen = 'decks';
+  },
   'delete-deck': () => {
     if (!confirm(`Delete "${ui.builder.deck.nome}"?`)) return;
     saveMyDecks(loadMyDecks().filter(d => d.id !== ui.builder.deck.id));

@@ -141,6 +141,7 @@ h1, h2, h3, .lb-play, .lb-tab, .lb-hero p { font-family: "Cinzel", "Trajan Pro",
 .lb-list__count { font-size: 14px; color: var(--muted); }
 .lb-list__count strong { font-size: 26px; color: var(--text); }
 .lb-list__count.is-full strong { color: var(--green); }
+.lb-list__count.is-over strong { color: #ff6b6b; }
 .lb-list__cosmo { font-size: 13px; color: var(--muted); }
 .lb-list__cosmo strong { color: var(--text); }
 .lb-list__cosmo.is-low strong { color: var(--ember); }
