@@ -149,7 +149,7 @@ test('Espadas do ciclo: Imune às duas facções inimigas na roda', () => {
   const pairs = {'athena-v6-049': ['hades', 'ares'], 'poseidon-v6-123': ['ares', 'artemis'], 'hades-v6-196': ['artemis', 'athena'], 'ares-v6-318': ['athena', 'poseidon'], 'artemis-v6-411': ['poseidon', 'hades']};
   for (const [id, [a, b]] of Object.entries(pairs)) {
     assert.match(cards.get(id).text || JSON.stringify(cards.get(id)), new RegExp(`Immune to ${a} and ${b}`, 'i'));
-    assert.equal(cards.get(id).rarity ?? 'Rare', 'Rare');
+    assert.equal(cards.get(id).rarity ?? 'Legendary', 'Legendary');
   }
 });
 

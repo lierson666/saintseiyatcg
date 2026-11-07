@@ -447,7 +447,7 @@
    "type": "Equipment — Divine Weapon",
    "original_text": "049 — LIBRA SHIELD\nThe Balance of Protection\nRarity: Common\n Type: Equipment — Divine Weapon\n Casting Cost: 3 {B}\n Auto-Equip — Dragon Shiryu\n Equip {4} — Other Devotees\n Cosmoble: Yes\nEquipped Devotee gets +0 ATK / +2 HP.\nLibra Defense — Once each round, when equipped Devotee would take Strike damage, prevent 1 of that damage.\nResonance — Dragon Shiryu: While equipped to Dragon Shiryu, Libra Defense prevents 2 damage instead of 1.",
    "original_sha256": "a14757ac400c6cdf628a0ad1156fcc912448f43ef3315c34414def4a97e7a659",
-   "approved_current_text_as_of_d268": "049 — LIBRA SHIELD\nThe Balance of Protection\nRarity: Rare\n Type: Equipment — Divine Weapon\n Casting Cost: 3 {B}\n Auto-Equip — Dragon Shiryu\n Equip {5} — Other Devotees\nCosmoble: Yes\nEquipped Devotee gets +2 ATK / +2 HP.\nEquipped Devotee is Immune to Hades and Ares.\nWhenever equipped Devotee deals Strike damage to a God, your opponent discards a card and you deal 2 damage to target enemy Devotee."
+   "approved_current_text_as_of_d268": "049 — LIBRA SHIELD\nThe Balance of Protection\nRarity: Legendary\n Type: Equipment — Divine Weapon\n Casting Cost: 3 {B}\n Auto-Equip — Dragon Shiryu\n Equip {5} — Other Devotees\nCosmoble: Yes\nEquipped Devotee gets +2 ATK / +2 HP.\nEquipped Devotee is Immune to Hades and Ares.\nWhenever equipped Devotee deals Strike damage to a God, your opponent discards a card and you deal 2 damage to target enemy Devotee."
   },
   {
    "id": "ATHENA-V6-050",

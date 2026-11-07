@@ -15,6 +15,7 @@ Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências
   - 411 Silverwood Spear: Imune a Poseidon e Hades; compra + descarte. Custo 2 → 3.
 - **Motivo:** autor, 07/11/2026: ciclo no estilo das espadas do MTG (Feast and Famine etc.), respeitando a color pie.
 - **Feito:** cards.json (EN/PT), canon D268 da 049, rascunhos PT, motor (`k.sword` em `kit.js`) e testes (`test-engine-v3-immune.mjs`).
+- **Raridade (autor, 07/11/2026):** Rare → Legendary nas 5 espadas, alinhado à revisão de raridade.
 - **Pendente:** revisão geral de raridade por power level (`docs/raridade-proposta.md`).
 
 ## 2026-11-07 — Carta neutral-v6-464 — Steel Innovation (Dr. Asamori) custa 5

@@ -18,8 +18,8 @@ const records = [...canon.cards, ...canon.gods];
 // 06/11/2026: 084 vira ATHENA’S FINAL DECREE, "Defeat all Devotees." (autor; docs/CHANGELOG-regras.md).
 // 06/11/2026: 057 KIKI’S TELEKINESIS manda ao Vazio qualquer Equipment (autor; docs/CHANGELOG-regras.md).
 // 06/11/2026: 020 ATHENA’S SHIELD dá +1/+1 (e +2/+2 a mais com 5 ou menos Soul) a todos os Devotees de Athena (autor).
-// 07/11/2026: 049 LIBRA SHIELD vira espada Rare do ciclo: Imune a Hades e Ares; descarte + 2 de dano ao acertar o God (autor).
-const SNAPSHOT_SHA256 = '644338c0adeb09ded6ff51ce154a4725527214dcc88eba63ccdc53577f160571';
+// 07/11/2026: 049 LIBRA SHIELD vira espada Legendary do ciclo: Imune a Hades e Ares; descarte + 2 de dano ao acertar o God (autor).
+const SNAPSHOT_SHA256 = 'd20b66feeb3860563e47bc503ac0409f59ca505c9713ad11396a7bba1a036c1d';
 const KAMUI_ORIGINAL_SHA256 = '153ad7e355b3fd87d9dc79ead14f62dfd7d2c03e8c703c56ec9bcee256ca5099';
 
 test('snapshot não foi editado desde a importação', () => {
