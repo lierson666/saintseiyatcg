@@ -9,6 +9,7 @@ import {painterlyUniforms, PAINT_UNIFORMS_GLSL, PAINT_COLOR_GLSL, PAINT_OUTPUT_G
 import {addPoseidonV4Detail} from './poseidon-v4-detail.js';
 import {attachPoseidonPaintedMaps} from './poseidon-painted-maps.js';
 import {attachPoseidonBattlefieldPainting} from './poseidon-battlefield-paint.js';
+import {addPoseidonV6Sculptures} from './poseidon-v6-sculpture.js';
 // Abertura padrão de Poseidon (editável no Arena Forge → Produção → Cinemática; o jogo lê arena-forge/cinematics/poseidon.json).
 // Cada chave: pos, look (ponto focal), fov, roll (°), dur (ms até chegar nela; na primeira, tempo parado no plano de abertura), ease, stage, light (1 = luz da partida), vfx, sound.
 // A última chave é sempre a câmera competitiva (bloqueada): a cinemática termina exatamente nela.
@@ -385,6 +386,11 @@ export function createPoseidonPalace(THREE, {quality = 'high', reduceMotion = fa
     root, groups:G, materials:{gold,stone:M.entab,accent:M.tympanum,rock:M.rock},quality
   });
 
+  // V6: original sculptural ornament, independent of the cinematic and gameplay.
+  const sculptureV6=addPoseidonV6Sculptures(THREE,{
+    landmark:G.landmark,quality,materials:{capital:M.capital,gold,deep:M.tympanum}
+  });
+
   // Luz do palácio: chave fria filtrada pelo oceano, preenchimento turquesa, contraluz nos contornos, calor discreto no ouro.
   // Ficam no grupo: entram e saem junto com o palácio (só no preview de desenvolvimento).
   const hemi=new THREE.HemisphereLight(0x8fdcff,0x08223a,.55);
@@ -394,7 +400,7 @@ export function createPoseidonPalace(THREE, {quality = 'high', reduceMotion = fa
   const front=new THREE.DirectionalLight(0xbfe9ff,.55);front.position.set(-10,22,70); // preenchimento frontal: a fachada lê de longe
   G.lighting.add(hemi,key,rim,warm,front);
   const base={hemi:hemi.intensity,key:key.intensity,rim:rim.intensity,warm:warm.intensity,front:front.intensity};
-  root.userData={preset:'poseidon-palace-canonical-v1',beauty:'v4-detail-pass',source:'Saint Seiya reference study',protectedGameplay:false,quality,detailObjects:detailV4.count};
+  root.userData={preset:'poseidon-palace-canonical-v1',beauty:'v6-sculptural-pass',source:'Saint Seiya reference study',protectedGameplay:false,quality,detailObjects:detailV4.count,sculptureObjects:sculptureV6.count};
   return {group:root,paint,
     groups:G,
     // Transição de luz da cinemática: multiplica a iluminação do mundo (1 = luz da partida).
