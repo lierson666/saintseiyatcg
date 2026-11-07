@@ -558,6 +558,21 @@ def anim_ids(root=ROOT):
     return {*ANIM_EFFECTS, *(e['id'] for e in imported)}
 
 
+LEGEND_CLASSES = re.compile(r'Saint|Marin|Satellite|Specter|Berserker')
+
+
+def plain_devotees(root=ROOT):
+    """Devotees sem a regra de lendário (guia: personagem nomeado de Saints, Marines, Satellites, Specters e Berserkers; Ikki não).
+    Só o lendário tem animação própria; o resto usa a da facção (autor, 06/11/2026)."""
+    cards_path, ids_path = root / 'data/cards.json', root / 'shared/character-identity.js'
+    if not cards_path.exists() or not ids_path.exists():
+        return set()
+    named = {k for k, v in re.findall(r"'([\w-]+)':\s*('[^']*'|null)", ids_path.read_text(encoding='utf-8')) if v != 'null'}
+    cards = json.loads(cards_path.read_text(encoding='utf-8'))
+    cards = cards.get('cartas', cards) if isinstance(cards, dict) else cards
+    return {c['id'] for c in cards if c.get('tipo') == 'Devotee' and not (c['id'] in named and c['id'] != 'athena-v6-009' and any(LEGEND_CLASSES.search(s) for s in c.get('subtipos', [])))}
+
+
 def draft_ids(root=ROOT):
     """Rascunho e teste ainda não podem ser escolhidos num momento: só o que foi aprovado."""
     path = root / 'data/vfx-catalog.json'
@@ -658,6 +673,8 @@ def save_card_anim(body, atomic_write, root=ROOT):
         chosen, known = [*(body.get(k) for k in ANIM_MOMENTS), *body['linhas']], anim_ids(root) - draft_ids(root)
         if any(v is not None and v is not False and v not in known and not NEW_FX.fullmatch(str(v)) for v in chosen):  # False: sem animação de propósito
             raise ValueError('Efeito inválido.')
+        if card in plain_devotees(root) and any(v is not None for v in chosen):
+            raise ValueError('Só personagem lendário tem animação própria. Esta carta usa a animação da facção.')
         entry = {k: body[k] for k in ANIM_MOMENTS if body.get(k) is not None}
         lines = body['linhas']
         while lines and lines[-1] is None:

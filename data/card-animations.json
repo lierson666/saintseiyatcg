@@ -7,83 +7,7 @@
     "golpe": "poison",
     "linhas": []
   },
-  "ares-v6-291": {
-    "golpe": "fire",
-    "linhas": []
-  },
-  "ares-v6-292": {
-    "golpe": "fire",
-    "linhas": []
-  },
-  "ares-v6-293": {
-    "golpe": "explosion",
-    "linhas": []
-  },
-  "ares-v6-294": {
-    "golpe": "dark",
-    "linhas": []
-  },
-  "ares-v6-297": {
-    "golpe": "fire",
-    "linhas": []
-  },
-  "ares-v6-298": {
-    "golpe": "fire",
-    "linhas": []
-  },
-  "ares-v6-299": {
-    "golpe": "fire",
-    "linhas": []
-  },
-  "ares-v6-300": {
-    "golpe": "dark",
-    "linhas": []
-  },
-  "ares-v6-301": {
-    "golpe": "explosion",
-    "linhas": []
-  },
-  "ares-v6-307": {
-    "golpe": "fire",
-    "linhas": []
-  },
-  "ares-v6-341": {
-    "golpe": "fire",
-    "linhas": []
-  },
-  "ares-v6-342": {
-    "golpe": "fire",
-    "linhas": []
-  },
-  "ares-v6-344": {
-    "golpe": "dark",
-    "linhas": []
-  },
-  "ares-v6-345": {
-    "golpe": "explosion",
-    "linhas": []
-  },
-  "artemis-v6-373": {
-    "golpe": "light",
-    "linhas": []
-  },
   "artemis-v6-375": {
-    "golpe": "light",
-    "linhas": []
-  },
-  "artemis-v6-384": {
-    "golpe": "poison",
-    "linhas": []
-  },
-  "artemis-v6-386": {
-    "golpe": "light",
-    "linhas": []
-  },
-  "artemis-v6-390": {
-    "golpe": "light",
-    "linhas": []
-  },
-  "artemis-v6-398": {
     "golpe": "light",
     "linhas": []
   },
@@ -103,6 +27,10 @@
     "golpe": "light",
     "linhas": []
   },
+  "athena-v6-001": {
+    "golpe": "vx-9aaecec14b11",
+    "linhas": []
+  },
   "athena-v6-005": {
     "golpe": "ice",
     "linhas": []
@@ -111,12 +39,8 @@
     "golpe": "lightning",
     "linhas": []
   },
-  "athena-v6-009": {
-    "golpe": "fire",
-    "linhas": []
-  },
   "athena-v6-013": {
-    "golpe": "explosion",
+    "golpe": "dark",
     "linhas": []
   },
   "athena-v6-015": {
@@ -139,33 +63,9 @@
     "golpe": "poison",
     "linhas": []
   },
-  "athena-v6-041": {
-    "golpe": "light",
-    "linhas": []
-  },
-  "athena-v6-043": {
-    "golpe": "light",
-    "linhas": []
-  },
   "efeitos": {},
-  "hades-v6-181": {
-    "golpe": "explosion",
-    "linhas": []
-  },
   "hades-v6-189": {
-    "golpe": "dark",
-    "linhas": []
-  },
-  "hades-v6-191": {
-    "golpe": "dark",
-    "linhas": []
-  },
-  "hades-v6-193": {
-    "golpe": "dark",
-    "linhas": []
-  },
-  "hades-v6-195": {
-    "golpe": "dark",
+    "golpe": "vx-0826b75ed129",
     "linhas": []
   },
   "hades-v6-203": {
@@ -180,10 +80,6 @@
     "golpe": "poison",
     "linhas": []
   },
-  "hades-v6-206": {
-    "golpe": "dark",
-    "linhas": []
-  },
   "hades-v6-215": {
     "golpe": "poison",
     "linhas": []
@@ -192,28 +88,20 @@
     "golpe": "poison",
     "linhas": []
   },
-  "hades-v6-218": {
-    "golpe": "dark",
-    "linhas": []
-  },
-  "hades-v6-220": {
-    "golpe": "dark",
-    "linhas": []
-  },
   "hades-v6-251": {
-    "golpe": "dark",
+    "golpe": "vx-a5c63aec0793",
     "linhas": []
   },
   "hades-v6-252": {
     "golpe": "poison",
     "linhas": []
   },
-  "hades-v6-254": {
-    "golpe": "ice",
+  "hades-v6-253": {
+    "golpe": "vx-fda36e0db211",
     "linhas": []
   },
-  "hades-v6-255": {
-    "golpe": "explosion",
+  "hades-v6-254": {
+    "golpe": "ice",
     "linhas": []
   },
   "neutral-v6-453": {
@@ -230,10 +118,6 @@
   },
   "neutral-v6-461": {
     "golpe": "lightning",
-    "linhas": []
-  },
-  "neutral-v6-471": {
-    "golpe": "dark",
     "linhas": []
   },
   "neutral-v6-474": {
@@ -258,7 +142,7 @@
     "impacto_deus": "impact",
     "linhas": [],
     "soul": "impact",
-    "ultimate": "explosion"
+    "ultimate": "energy"
   },
   "poseidon-v6-091": {
     "golpe": "explosion",

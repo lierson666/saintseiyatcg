@@ -125,8 +125,8 @@ def _release(anims, studio, nota, root, builtin):
             if effect['id'] in used and effect.get('estado') == 'aprovado':
                 effect['estado'] = 'publicado'
                 touched = True
-        if touched:
-            _write(root, CATALOG, catalog)
+        if touched:  # mesmo formato de vfx_import.write_catalog, para não reescrever o arquivo inteiro
+            (Path(root) / CATALOG).write_text(json.dumps(catalog, ensure_ascii=False, indent=1) + '\n', encoding='utf-8')
     index['versao'] = version
     index['historico'].append({'versao': version, 'em': when, 'nota': nota})
     _write(root, INDEX, index)

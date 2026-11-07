@@ -1,5 +1,11 @@
 {
-  "cartas": {},
+  "cartas": {
+    "ares-v6-282": {
+      "cor": "#8cffb0",
+      "forca": 0.55,
+      "inspecao": "cosmic-aura"
+    }
+  },
   "composicoes": {
     "card-advance": {
       "camadas": [
@@ -125,7 +131,7 @@
   "raridades": {
     "Common": "common-shine",
     "Divine": "divine-holo",
-    "Legendary": "mythic-cosmic",
+    "Legendary": "divine-holo",
     "Uncommon": "rare-foil"
   },
   "versao": 1

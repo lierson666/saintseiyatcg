@@ -60,3 +60,11 @@ with tempfile.TemporaryDirectory() as tmp:
             continue
         raise AssertionError(f'aceitou {bad}')
 print('ok')
+
+# Só personagem lendário tem animação própria; o resto usa a da facção (autor, 06/11/2026).
+import json as _json
+from star_hill import ROOT as _ROOT, plain_devotees as _plain
+_plain_ids = _plain(_ROOT)
+assert 'athena-v6-009' in _plain_ids and 'athena-v6-013' not in _plain_ids and 'ares-v6-291' in _plain_ids
+assert not _plain_ids & set(_json.loads((_ROOT / 'data/card-animations.json').read_text(encoding='utf-8'))), 'Devotee não lendário com animação própria'
+print('ok lendários')

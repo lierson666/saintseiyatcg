@@ -1,0 +1,303 @@
+{
+  "animacoes": {
+    "ares-v6-271": {
+      "golpe": "fire",
+      "linhas": []
+    },
+    "ares-v6-277": {
+      "golpe": "poison",
+      "linhas": []
+    },
+    "artemis-v6-375": {
+      "golpe": "light",
+      "linhas": []
+    },
+    "artemis-v6-437": {
+      "golpe": "light",
+      "linhas": []
+    },
+    "artemis-v6-438": {
+      "golpe": "light",
+      "linhas": []
+    },
+    "artemis-v6-439": {
+      "golpe": "light",
+      "linhas": []
+    },
+    "artemis-v6-440": {
+      "golpe": "light",
+      "linhas": []
+    },
+    "athena-v6-001": {
+      "golpe": "vx-9aaecec14b11",
+      "linhas": []
+    },
+    "athena-v6-005": {
+      "golpe": "ice",
+      "linhas": []
+    },
+    "athena-v6-007": {
+      "golpe": "lightning",
+      "linhas": []
+    },
+    "athena-v6-013": {
+      "golpe": "dark",
+      "linhas": []
+    },
+    "athena-v6-015": {
+      "golpe": "lightning",
+      "linhas": []
+    },
+    "athena-v6-017": {
+      "golpe": "ice",
+      "linhas": []
+    },
+    "athena-v6-022": {
+      "golpe": "lightning",
+      "linhas": []
+    },
+    "athena-v6-023": {
+      "golpe": "poison",
+      "linhas": []
+    },
+    "athena-v6-030": {
+      "golpe": "poison",
+      "linhas": []
+    },
+    "efeitos": {},
+    "hades-v6-189": {
+      "golpe": "vx-0826b75ed129",
+      "linhas": []
+    },
+    "hades-v6-203": {
+      "golpe": "poison",
+      "linhas": []
+    },
+    "hades-v6-204": {
+      "golpe": "poison",
+      "linhas": []
+    },
+    "hades-v6-205": {
+      "golpe": "poison",
+      "linhas": []
+    },
+    "hades-v6-215": {
+      "golpe": "poison",
+      "linhas": []
+    },
+    "hades-v6-216": {
+      "golpe": "poison",
+      "linhas": []
+    },
+    "hades-v6-251": {
+      "golpe": "vx-a5c63aec0793",
+      "linhas": []
+    },
+    "hades-v6-252": {
+      "golpe": "poison",
+      "linhas": []
+    },
+    "hades-v6-253": {
+      "golpe": "vx-fda36e0db211",
+      "linhas": []
+    },
+    "hades-v6-254": {
+      "golpe": "ice",
+      "linhas": []
+    },
+    "neutral-v6-453": {
+      "golpe": "ice",
+      "linhas": []
+    },
+    "neutral-v6-454": {
+      "golpe": "lightning",
+      "linhas": []
+    },
+    "neutral-v6-455": {
+      "golpe": "fire",
+      "linhas": []
+    },
+    "neutral-v6-461": {
+      "golpe": "lightning",
+      "linhas": []
+    },
+    "neutral-v6-474": {
+      "golpe": "poison",
+      "linhas": []
+    },
+    "neutral-v6-481": {
+      "golpe": "ice",
+      "linhas": []
+    },
+    "neutral-v6-487": {
+      "golpe": "poison",
+      "linhas": []
+    },
+    "padrao": {
+      "awaken": "power",
+      "cura": "heal",
+      "dano": "impact",
+      "escudo": "shield",
+      "golpe": "slash",
+      "impacto": "impact",
+      "impacto_deus": "impact",
+      "linhas": [],
+      "soul": "impact",
+      "ultimate": "energy"
+    },
+    "poseidon-v6-091": {
+      "golpe": "explosion",
+      "linhas": []
+    },
+    "poseidon-v6-097": {
+      "golpe": "ice",
+      "linhas": []
+    },
+    "poseidon-v6-180": {
+      "linhas": [
+        "comp:great-flood"
+      ]
+    }
+  },
+  "em": "2026-11-07 00:35 UTC",
+  "estudio": {
+    "cartas": {
+      "ares-v6-282": {
+        "cor": "#8cffb0",
+        "forca": 0.55,
+        "inspecao": "cosmic-aura"
+      }
+    },
+    "composicoes": {
+      "card-advance": {
+        "camadas": [
+          {
+            "duracao": 700,
+            "easing": "ease-out",
+            "escala": 1.1,
+            "inicio": 0,
+            "tipo": "carta",
+            "y": -28
+          }
+        ],
+        "nome": "Carta avança"
+      },
+      "card-recoil": {
+        "camadas": [
+          {
+            "duracao": 500,
+            "easing": "ease-in-out",
+            "escala": 0.94,
+            "inicio": 0,
+            "rotacao": -3,
+            "tipo": "carta",
+            "y": 18
+          }
+        ],
+        "nome": "Carta recua"
+      },
+      "divine-entrance": {
+        "camadas": [
+          {
+            "duracao": 800,
+            "easing": "ease-out",
+            "escala": 1.1,
+            "inicio": 0,
+            "tipo": "carta"
+          },
+          {
+            "alvo": "carta",
+            "cor": "#ffe7a3",
+            "duracao": 1400,
+            "forca": 0.9,
+            "inicio": 100,
+            "shader": "divine-light",
+            "tipo": "shader"
+          },
+          {
+            "alvo": "carta",
+            "duracao": 1200,
+            "inicio": 200,
+            "loop": false,
+            "lottie": "reward-burst",
+            "tipo": "lottie"
+          },
+          {
+            "cor": "#ffe7a3",
+            "duracao": 900,
+            "efeito": "light",
+            "escala": 1,
+            "inicio": 300,
+            "tipo": "particulas"
+          }
+        ],
+        "faccao": "athena",
+        "nome": "Entrada divina"
+      },
+      "great-flood": {
+        "camadas": [
+          {
+            "duracao": 900,
+            "easing": "ease-out",
+            "escala": 1.12,
+            "inicio": 0,
+            "tipo": "carta",
+            "y": -24
+          },
+          {
+            "duracao": 2600,
+            "easing": "ease-in-out",
+            "escala": 1.06,
+            "inicio": 200,
+            "tipo": "camera"
+          },
+          {
+            "alvo": "carta",
+            "cor": "#6fc8ff",
+            "duracao": 2200,
+            "forca": 0.9,
+            "inicio": 500,
+            "shader": "cosmic-aura",
+            "tipo": "shader"
+          },
+          {
+            "alvo": "mesa",
+            "cor": "#6fc8ff",
+            "duracao": 2000,
+            "forca": 0.7,
+            "inicio": 800,
+            "shader": "water",
+            "tipo": "shader"
+          },
+          {
+            "cor": "#6fc8ff",
+            "duracao": 1200,
+            "efeito": "bubbles",
+            "escala": 1.2,
+            "inicio": 900,
+            "tipo": "particulas"
+          },
+          {
+            "alvo": "mesa",
+            "cor": "#6fc8ff",
+            "duracao": 900,
+            "inicio": 1500,
+            "opacidade": 0.28,
+            "tipo": "ui"
+          }
+        ],
+        "faccao": "poseidon",
+        "nome": "Great Flood"
+      }
+    },
+    "raridades": {
+      "Common": "common-shine",
+      "Divine": "divine-holo",
+      "Legendary": "divine-holo",
+      "Uncommon": "rare-foil"
+    },
+    "versao": 1
+  },
+  "nota": "Golpe físico estilo Arena, animação própria só para lendários, Trevas só Saga e Kanon, Meteoro de Pégaso e edições do autor",
+  "versao": 2
+}

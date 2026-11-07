@@ -3,10 +3,16 @@
   "raridades": {
     "Common": "common-shine",
     "Uncommon": "rare-foil",
-    "Legendary": "mythic-cosmic",
+    "Legendary": "divine-holo",
     "Divine": "divine-holo"
   },
-  "cartas": {},
+  "cartas": {
+    "ares-v6-282": {
+      "inspecao": "cosmic-aura",
+      "forca": 0.55,
+      "cor": "#8cffb0"
+    }
+  },
   "composicoes": {
     "great-flood": {
       "nome": "Great Flood",

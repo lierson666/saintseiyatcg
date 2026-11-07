@@ -24,7 +24,7 @@ import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudg
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout, clockBonus} from '../engine-v3/clock.js';
 import {runDecisions, resume, restore, PendingDecision} from '../engine-v3/decision.js';
 import {applyAction, advance as advanceMatch} from '../engine-v3/actions.js';
-import {createDirector, DEATH_FX} from './director.js?v=20261106-fluxo2';
+import {createDirector, DEATH_FX} from './director.js?v=20261106-arena1';
 import {tunedFx} from './particle-tune.js';
 import {createPixelFx, animFor, catalogIndex} from './pixel-vfx.js?v=20261104-live1';
 import {createComposer, withCompositions} from '../../shared/vfx/composer.js?v=20261104-vfx1';
@@ -1345,11 +1345,13 @@ const ui = {
   stance(uid, pose, to, ms = 200) {
     $$(`[data-uid="${uid}"]`).forEach(el => {
       el.style.setProperty('--pose-t', `${Math.round(ms)}ms`);
+      el.dataset.pose = pose || 'home';
       if (!pose || !to || settings.reduceMotion) { el.classList.remove('strike-pose'); el.style.removeProperty('--pose-x'); el.style.removeProperty('--pose-y'); return; }
       const r = el.getBoundingClientRect(), dx = to.x - (r.left + r.width / 2), dy = to.y - (r.top + r.height / 2), len = Math.hypot(dx, dy) || 1;
-      const reach = pose === 'dash' ? Math.max(0, len - r.height * .75) / len : 0; // para encostado no alvo, não por cima dele
+      // dash: para encostado no alvo, não por cima dele; back: recua na direção oposta, para tomar impulso.
+      const reach = pose === 'dash' ? Math.max(0, len - r.height * .7) / len : pose === 'back' ? -r.height * .12 / len : 0;
       el.style.setProperty('--pose-x', `${(dx * reach).toFixed(1)}px`);
-      el.style.setProperty('--pose-y', pose === 'dash' ? `${(dy * reach).toFixed(1)}px` : `${-r.height * .08 * Math.sign(-dy || 1)}px`);
+      el.style.setProperty('--pose-y', pose === 'lift' ? `${-r.height * .08 * Math.sign(-dy || 1)}px` : `${(dy * reach).toFixed(1)}px`);
       el.style.setProperty('--pose-rot', `${Math.max(-14, Math.min(14, Math.atan2(dx, Math.abs(dy)) * 57.3 * .35)).toFixed(1)}deg`);
       el.classList.add('strike-pose');
     });

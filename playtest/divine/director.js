@@ -74,6 +74,8 @@ export function createDirector({ui, getFx, settings}) {
   const recoiled = new Set();
   // Pose da carta no golpe: 'lift' sobe e inclina para o alvo, 'dash' avança até encostar, null volta ao slot.
   const stance = (uid, pose, to, ms) => ui.stance?.(uid, skipping ? null : pose, to, t(ms));
+  // Bote do golpe físico, como no Arena: recua um instante e avança acelerando até encostar.
+  const lunge = async (uid, to) => { stance(uid, 'back', to, 110); await pause(110); stance(uid, 'dash', to, 120); await pause(120); };
   const recoil = (uid, from, p) => { if (skipping || !cur.ligada) return; if (from) recoiled.add(uid); ui.recoil?.(uid, from, p, ui.particleTune?.('recuo')); };
 
   // Coreografia do Combat Composer: agenda cada fase e devolve no HIT, para o resto do Strike seguir a engine. Nunca segura a fila depois do HIT.
@@ -94,12 +96,12 @@ export function createDirector({ui, getFx, settings}) {
     const f = fx('strikeVfx');
     if (skipping) return;
     if (!ui.noise?.('carga', attacker)) chargeSound(p);
-    if (!f || style.style === 'none') { if (style.physical) { stance(attacker, 'dash', to, 160); await pause(160); } return; } // sem VFX a carta ainda bate
+    if (!f || style.style === 'none') { if (style.physical) await lunge(attacker, to); return; } // sem VFX a carta ainda bate
     moment('carga', attacker, ui.rect(attacker), {color: style.color});
     f.charge(from.x, from.y, {color: style.color, count: Math.round((style.style === 'physical' ? 30 : 60) * (1 + p * 2))});
     if (p > .6) f.shake(p * 3); // o chão treme enquanto o Cosmo sobe
     await pause((style.style === 'physical' ? 140 : 260) + p * 420);
-    if (style.physical) { stance(attacker, 'dash', to, 160); await pause(160); }
+    if (style.physical) await lunge(attacker, to);
     if (style.element && ui.pixel) {
       pixel(style.element, targetRect, {from, color: style.color, power: p});
       await pause(HIT_MS[style.element] ?? 200);
@@ -226,13 +228,14 @@ export function createDirector({ui, getFx, settings}) {
       if (style.name) await ui.callout(style.name, e.player, t(650 + p * 350));
       const cho = fx('strikeVfx') && !skipping && style.element ? ui.choreography?.(style.element) : null;
       if (cho) await choreography(cho, {from, attacker: e.attacker, target: onGod ? null : e.target.uid, targetRect, color: style.color, p});
-      else { await strikeVfx(from, to, style, p, e.attacker, targetRect); await pause(40 + p * 160); } // hit stop: mais longo quanto mais forte
+      else { await strikeVfx(from, to, style, p, e.attacker, targetRect); if (!style.physical) await pause(40 + p * 160); } // hit stop: mais longo quanto mais forte; no físico vem depois do contato
       if (!cho?.faixas.sound && !skipping && !(onGod ? ui.noise?.('impacto_deus', e.attacker, e.target.player) : ui.noise?.('impacto', e.attacker))) strikeSound(p);
       if (!onGod && !cho?.faixas.knockback) recoil(e.target.uid, from, p); // recua junto com o impacto, não depois
       if (!cho?.faixas.impact) impact(to, {color: style.color, strength: (style.name ? 1.4 : 1) * (1 + p * 1.3), rect: targetRect, from, effect: ui.animOf?.(onGod ? 'impacto_deus' : 'impacto', e.attacker) ?? 'impact'});
       if (!onGod) moment('strike', e.target.uid, targetRect);
-      stance(e.attacker, null, null, 220);
-      await pause(220);
+      if (style.physical && !cho) { shake(6 + p * 10, 'impact'); ui.pixel?.hold?.(t(90 + p * 90)); await pause(90 + p * 90); } // contato: tranco e a mesa congela
+      stance(e.attacker, null, null, 260);
+      await pause(260);
       // Retaliação: o mesmo fluxo, menor e ao contrário. God não retalia (§24, autor 01/11/2026).
       if (e.target.kind !== 'god') {
         const back = styleOf(e.target.uid);
