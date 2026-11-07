@@ -6,6 +6,7 @@
 // PAINTERLY V1 (autor, 07/11/2026): estilo pintado à mão selecionável (shared/painterly.js); 'classic' mantém o mármore do beauty pass.
 // opts: {quality: 'phone'|'low'|'medium'|'high'|'ultra', reduceMotion, style: 'painterly'|'classic', painterly: preset}. Sem opts = 'high', pintado (editor).
 import {painterlyUniforms, PAINT_UNIFORMS_GLSL, PAINT_COLOR_GLSL, PAINT_OUTPUT_GLSL} from '../shared/painterly.js';
+import {addPoseidonV4Detail} from './poseidon-v4-detail.js';
 // Abertura padrão de Poseidon (editável no Arena Forge → Produção → Cinemática; o jogo lê arena-forge/cinematics/poseidon.json).
 // Cada chave: pos, look (ponto focal), fov, roll (°), dur (ms até chegar nela; na primeira, tempo parado no plano de abertura), ease, stage, light (1 = luz da partida), vfx, sound.
 // A última chave é sempre a câmera competitiva (bloqueada): a cinemática termina exatamente nela.
@@ -366,6 +367,12 @@ export function createPoseidonPalace(THREE, {quality = 'high', reduceMotion = fa
   contacts.forEach(([x,y,z,w,d],i)=>{cm.makeScale(w,1,d).setPosition(x,y,z);cInst.setMatrixAt(i,cm);});
   cInst.renderOrder=1;G.fx.add(cInst);
 
+  // V4 additive art pass: maritime ornament, architectural relief and faceted rock edges.
+  // Materials are shared with the main world; no camera or gameplay coordinates modified.
+  const detailV4=addPoseidonV4Detail(THREE,{
+    root, groups:G, materials:{gold,stone:M.entab,accent:M.tympanum,rock:M.rock},quality
+  });
+
   // Luz do palácio: chave fria filtrada pelo oceano, preenchimento turquesa, contraluz nos contornos, calor discreto no ouro.
   // Ficam no grupo: entram e saem junto com o palácio (só no preview de desenvolvimento).
   const hemi=new THREE.HemisphereLight(0x8fdcff,0x08223a,.55);
@@ -375,7 +382,7 @@ export function createPoseidonPalace(THREE, {quality = 'high', reduceMotion = fa
   const front=new THREE.DirectionalLight(0xbfe9ff,.55);front.position.set(-10,22,70); // preenchimento frontal: a fachada lê de longe
   G.lighting.add(hemi,key,rim,warm,front);
   const base={hemi:hemi.intensity,key:key.intensity,rim:rim.intensity,warm:warm.intensity,front:front.intensity};
-  root.userData={preset:'poseidon-palace-canonical-v1',beauty:'v1',source:'Saint Seiya reference study',protectedGameplay:false,quality};
+  root.userData={preset:'poseidon-palace-canonical-v1',beauty:'v4-detail-pass',source:'Saint Seiya reference study',protectedGameplay:false,quality,detailObjects:detailV4.count};
   return {group:root,paint,
     groups:G,
     // Transição de luz da cinemática: multiplica a iluminação do mundo (1 = luz da partida).
