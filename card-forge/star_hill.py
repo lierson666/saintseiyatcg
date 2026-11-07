@@ -32,6 +32,9 @@ _vfx_spec.loader.exec_module(vfx_import)
 _vfx_pub_spec = importlib.util.spec_from_file_location('star_hill_vfx_publish', Path(__file__).with_name('vfx_publish.py'))
 vfx_publish = importlib.util.module_from_spec(_vfx_pub_spec)
 _vfx_pub_spec.loader.exec_module(vfx_publish)
+_arena_spec = importlib.util.spec_from_file_location('star_hill_arena_forge', Path(__file__).with_name('arena_forge.py'))
+arena_forge = importlib.util.module_from_spec(_arena_spec)
+_arena_spec.loader.exec_module(arena_forge)
 _vfx_gen_spec = importlib.util.spec_from_file_location('star_hill_vfx_generate', Path(__file__).with_name('vfx_generate.py'))
 vfx_generate = importlib.util.module_from_spec(_vfx_gen_spec)
 _vfx_gen_spec.loader.exec_module(vfx_generate)
@@ -819,6 +822,8 @@ def get(handler, path):
     elif path == '/api/star-hill/telas':
         text = (ROOT / TELAS).read_text(encoding='utf-8')
         handler.reply(200, {'arquivo': TELAS, 'revisao': revision(text), 'conteudo': json.loads(text)})
+    elif path == '/api/star-hill/arenas':
+        handler.reply(200, arena_forge.read(ROOT))
     elif path == '/api/star-hill/jogo':
         handler.reply(200, game_status())
     elif path == '/api/star-hill/assets':
@@ -877,6 +882,8 @@ def post(handler, path, raw, atomic_write):
             result = publish_site()
         elif path == '/api/star-hill/telas':
             result = save_telas(body, atomic_write)
+        elif path == '/api/star-hill/arenas':
+            result = arena_forge.save(ROOT, body, atomic_write)
         elif path == '/api/star-hill/preview':
             result = preview(body)
         elif path == '/api/star-hill/apply':

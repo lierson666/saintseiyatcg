@@ -7,6 +7,7 @@ import {addPreviewCards} from '../shared/preview-cards.js';
 import {canonIndex, validateDeck, colorErrors, DECK_SIZE, SPLASH_LIMIT} from '../shared/deck-v3.js';
 import {loadTelas, mountTelas} from './telas-editor.js?v=20261105-momentos1';
 import {mountAnimacoes} from './animacoes.js?v=12';
+import {mountArenaForge} from './arena-forge.js?v=20261107-1';
 import {EDITIONS, editionOf} from '../shared/editions.js?v=20261102-1';
 
 const $ = s => document.querySelector(s);
@@ -19,6 +20,7 @@ const PAGES = {
   decks: ['Decks iniciais', 'Os decks prontos do jogo.'],
   telas: ['Telas e som', 'Telas, sons, músicas e animações do jogo.'],
   animacoes: ['Animações', 'Efeitos dos golpes e das habilidades.'],
+  arenas: ['Arena Forge', 'O palco 3D de cada partida.'],
   regras: ['Livro de regras', 'A fonte da verdade.'],
 };
 let forge = [], cards, decks = [], status = null, rules = null;
@@ -150,6 +152,7 @@ async function render() {
   for (const a of document.querySelectorAll('.sidebar nav a')) a.toggleAttribute('aria-current', a.hash === '#' + id);
   if (id === 'telas') { await loadTelas(api); return mountTelas($('#content'), {api, notice}); }
   if (id === 'animacoes') return mountAnimacoes($('#content'), {notice, api});
+  if (id === 'arenas') return mountArenaForge($('#content'), {notice, api});
   $('#content').innerHTML = id === 'cartas' ? (edition ? cardsPage() : editionsPage()) : id === 'decks' ? decksPage() : id === 'regras' ? await rulesPage() : overview();
   if (edition) $('#card-list').innerHTML = cardList(); // contador só existe depois do HTML
 }

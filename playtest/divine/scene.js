@@ -16,19 +16,41 @@ export const QUALITY = {
 // Temas por alinhamento: cores do céu, chão, colunas, luz e poeira. Só Athena e Poseidon têm cena nesta fatia.
 export const THEMES = {
   // Olympus Arena V1 (referência aprovada em docs/olympus-arena/): noite cósmica azul/violeta, piso zodiacal dourado.
-  olympus: {label: 'Olympus Arena', skyTop: '#02040f', skyBottom: '#1b2563', floorA: '#22306b', floorB: '#070b24', line: '#c9a45c',
+  olympus: {label: 'Cosmo Arena', skyTop: '#02040f', skyBottom: '#1b2563', floorA: '#22306b', floorB: '#070b24', line: '#c9a45c',
     column: '#8d96bd', light: '#a9c0ff', dust: '#8fc4ff', fog: '#04071a', caustics: 0, zodiac: 1},
   athena: {label: "Athena's Sanctuary", skyTop: '#0b1030', skyBottom: '#d9a54a', floorA: '#f3ede1', floorB: '#b9ab92', line: '#e8c46a',
     column: '#efe6d4', light: '#ffdca0', dust: '#ffd77a', fog: '#1a1530', caustics: 0},
   poseidon: {label: "Poseidon's Undersea Temple", skyTop: '#02101f', skyBottom: '#0c5a7a', floorA: '#3d8fa6', floorB: '#0d3346', line: '#7fe3f0',
     column: '#9fd6d8', light: '#8be8ff', dust: '#bff6ff', fog: '#032033', caustics: 1},
+  // Arenas novas (autor, 07/11/2026). Mesma cena, mesmos draw calls: só cor, desenho assado no chão (mask), forma das colunas,
+  // direção da poeira e um astro no fundo. mask: 1 fendas, 2 flores, 3 placas, 4 manchas de luar. Brilho da mask = glow.
+  hades: {label: "Hades' Underworld", skyTop: '#050106', skyBottom: '#3a0710', floorA: '#2a2226', floorB: '#060405', line: '#c2401c',
+    column: '#3b3236', cap: '#6d1b1b', light: '#ff7a4a', dust: '#ff8a3a', fog: '#120205', mask: 1, glow: '#ff4a12', pulse: .9, broken: 1},
+  elysion: {label: 'Elysion', skyTop: '#2a2350', skyBottom: '#f0d6ff', floorA: '#fbf7ff', floorB: '#cfc3dc', line: '#f3d98c',
+    column: '#fbf8f2', light: '#fff1d6', dust: '#ffd6ec', fog: '#4a3d6e', mask: 2, glow: '#ff9fd0', pulse: .4, fall: 1, dustSize: 1.8,
+    orb: {color: '#fff4d8', size: 9, x: 16}},
+  ares: {label: "Ares' War Temple", skyTop: '#12040a', skyBottom: '#a8341c', floorA: '#8a5a2e', floorB: '#2c1a10', line: '#d08a3a',
+    column: '#4a4648', cap: '#b8742e', metal: .7, light: '#ffb070', dust: '#ffc060', fog: '#2a0a08', mask: 3, glow: '#e05a14', pulse: 1.6,
+    orb: {color: '#ff5a2a', size: 12, x: -14}},
+  artemis: {label: "Artemis' Moonlit Grove", skyTop: '#01040c', skyBottom: '#1c3550', floorA: '#3d5a4a', floorB: '#0c1a16', line: '#cfe4ff',
+    column: '#3a2a20', cap: '#163a2a', light: '#c8dcff', dust: '#d8ff9a', fog: '#030a12', mask: 4, glow: '#7a9cc8', pulse: .3, trees: 1, blink: 1,
+    orb: {color: '#eef4ff', size: 10, x: 15}},
 };
+
+// Ajustes do Arena Forge (STAR HILL): data/arenas.json por cima destes valores. DEFAULT_THEMES guarda o original do código.
+export const DEFAULT_THEMES = structuredClone(THEMES);
+const ARENAS_URL = new URL('../../data/arenas.json', import.meta.url).href;
+let arenas;
+export function applyArenas(data) {
+  for (const [k, v] of Object.entries(data?.temas || {})) if (THEMES[k]) THEMES[k] = {...structuredClone(DEFAULT_THEMES[k]), ...v};
+}
+export const loadArenas = () => arenas ||= fetch(ARENAS_URL, {cache: 'no-cache'}).then(r => (r.ok ? r.json() : null)).then(applyArenas).catch(() => {});
 
 const VERT_PASS = `varying vec2 vUv; varying vec3 vPos; void main(){ vUv = uv; vPos = (modelMatrix * vec4(position,1.)).xyz; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.); }`;
 
 // Chão: mármore procedural (fbm) assado uma vez numa textura por tema (eram 15 oitavas de ruído por pixel, a cada quadro, para um desenho que não muda).
 const MARBLE_FRAG = `
-uniform vec3 uA; uniform vec3 uB; varying vec2 vUv;
+uniform vec3 uA; uniform vec3 uB; uniform float uMask; varying vec2 vUv;
 float h(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453); }
 float n(vec2 p){ vec2 i = floor(p), f = fract(p); f = f*f*(3.-2.*f);
   return mix(mix(h(i), h(i+vec2(1,0)), f.x), mix(h(i+vec2(0,1)), h(i+vec2(1,1)), f.x), f.y); }
@@ -36,15 +58,22 @@ float fbm(vec2 p){ float v = 0., a = .5; for (int i = 0; i < 5; i++){ v += a*n(p
 void main(){
   vec2 p = (vUv - .5) * 2.;
   float vein = smoothstep(.45, .5, abs(fbm(p*3.5 + fbm(p*6.)) - .5));
-  gl_FragColor = vec4(mix(uB, uA, .55 + .45*fbm(p*2.)) * (.82 + .18*vein), 1.);
+  float m = 0.;
+  if (uMask > .5 && uMask < 1.5) m = smoothstep(.014, .0, abs(fbm(p*3. + fbm(p*5.)*.6) - .5)) * (.4 + .6*fbm(p*9.));  // fendas de lava
+  else if (uMask < 2.5 && uMask > 1.5) { vec2 g = floor(p*26.), f = fract(p*26.) - .5 - (vec2(h(g), h(g+7.)) - .5)*.4;  // flores
+    m = step(h(g+3.), .3) * smoothstep(.2, .08, length(f)); }
+  else if (uMask < 3.5 && uMask > 2.5) { vec2 g = abs(fract(p*4.5) - .5); m = smoothstep(.485, .5, max(g.x, g.y)) * .7; }  // placas de bronze
+  else if (uMask > 3.5) m = smoothstep(.52, .72, fbm(p*4. + 3.));  // luar entre as folhas
+  gl_FragColor = vec4(mix(uB, uA, .55 + .45*fbm(p*2.)) * (.82 + .18*vein) * (1. - m*.35*step(.5, uMask)*step(uMask, 1.5)), m);
 }`;
 
 // Anéis e linhas de constelação dourados sobre o mármore; cáusticas animadas no tema Poseidon.
 const FLOOR_FRAG = `
-uniform float uTime; uniform sampler2D uMarble; uniform vec3 uLine; uniform float uCaustics; varying vec2 vUv;
+uniform float uTime; uniform sampler2D uMarble; uniform vec3 uLine; uniform float uCaustics; uniform vec3 uGlow; uniform float uPulse; varying vec2 vUv;
 void main(){
   vec2 p = (vUv - .5) * 2.; float r = length(p);
-  vec3 col = texture2D(uMarble, vUv).rgb;
+  vec4 mb = texture2D(uMarble, vUv); vec3 col = mb.rgb;
+  col += uGlow * mb.a * (.45 + .3*sin(uTime*uPulse - r*5. + mb.a*2.));
   float ring = smoothstep(.012, .0, abs(r - .58)) + smoothstep(.008, .0, abs(r - .62)) + smoothstep(.01, .0, abs(r - .93));
   float spokes = smoothstep(.006, .0, abs(sin(atan(p.y, p.x) * 6.))) * step(.62, r) * step(r, .93);
   float pulse = .65 + .35*sin(uTime*.8 - r*6.);
@@ -70,9 +99,11 @@ void main(){ vec3 d = normalize(vPos); float t = clamp(d.y*1.6 + .15, 0., 1.);
 const RAY_FRAG = `uniform vec3 uColor; uniform float uTime; varying vec2 vUv;
 void main(){ float a = (1. - vUv.y) * smoothstep(0., .5, vUv.y) * (.5 + .5*sin(vUv.x*40. + uTime*.7)) * .22; gl_FragColor = vec4(uColor, a); }`;
 
-const DUST_VERT = `attribute float aSeed; uniform float uTime; uniform float uPixel; varying float vA;
-void main(){ vec3 p = position; float t = mod(uTime*.25*(.4 + aSeed) + aSeed*10., 1.);
-  p.y += t * 7.; p.x += sin(uTime*.6 + aSeed*30.) * .4; vA = sin(t*3.14159);
+// uFall: 0 sobe (Cosmo, brasas), 1 cai (pétalas). uBlink: vaga-lumes que acendem e apagam e vagam mais.
+const DUST_VERT = `attribute float aSeed; uniform float uTime; uniform float uPixel; uniform float uFall; uniform float uBlink; varying float vA;
+void main(){ vec3 p = position; float t = mod(uTime*.25*(.4 + aSeed)*(1. - uBlink*.7) + aSeed*10., 1.);
+  p.y += mix(t, 1. - t, uFall) * 7. * (1. - uBlink*.75); p.x += sin(uTime*.6 + aSeed*30.) * (.4 + uFall + uBlink*1.2); p.z += cos(uTime*.5 + aSeed*20.) * uBlink;
+  vA = sin(t*3.14159) * mix(1., smoothstep(.2, 1., sin(uTime*2.5 + aSeed*60.)), uBlink);
   vec4 mv = modelViewMatrix * vec4(p, 1.); gl_Position = projectionMatrix * mv; gl_PointSize = uPixel * (1. + aSeed*2.) / -mv.z; }`;
 const DUST_FRAG = `uniform vec3 uColor; varying float vA; void main(){ float d = length(gl_PointCoord - .5); gl_FragColor = vec4(uColor, smoothstep(.5, .0, d) * vA * .55); }`;
 
@@ -103,11 +134,11 @@ function zodiacCanvas() {
   return c;
 }
 
-export async function createScene(host, {quality = 'high', theme = 'athena', reduceFlashes = false} = {}) {
+export async function createScene(host, {quality = 'high', theme = 'athena', reduceFlashes = false, reduceMotion = false} = {}) {
   const probe = document.createElement('canvas');
   if (!(probe.getContext('webgl2') || probe.getContext('webgl'))) return null;
   let THREE;
-  try { THREE = await import(THREE_URL); } catch { return null; }
+  try { [THREE] = await Promise.all([import(THREE_URL), loadArenas()]); } catch { return null; }
 
   let q = QUALITY[quality] || QUALITY.high;
   // Tela densa dispensa MSAA: ele suavizava só a borda das colunas, e a 1,75x o serrilhado já não aparece.
@@ -142,7 +173,7 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
 
   const floor = new THREE.Mesh(new THREE.CircleGeometry(16, 96), new THREE.ShaderMaterial({
     vertexShader: VERT_PASS, fragmentShader: FLOOR_FRAG,
-    uniforms: {uTime: uniforms.uTime, uMarble: {value: null}, uLine: {value: col('#fc0')}, uCaustics: {value: 0}}}));
+    uniforms: {uTime: uniforms.uTime, uMarble: {value: null}, uLine: {value: col('#fc0')}, uCaustics: {value: 0}, uGlow: {value: col('#000')}, uPulse: {value: 1}}}));
   floor.rotation.x = -Math.PI / 2;
   world.add(floor);
 
@@ -151,7 +182,7 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
   marble.texture.anisotropy = Math.min(4, renderer.capabilities.getMaxAnisotropy()); // o chão é visto de lado
   floor.material.uniforms.uMarble.value = marble.texture;
   const marbleMat = new THREE.ShaderMaterial({vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0., 1.); }`, fragmentShader: MARBLE_FRAG, depthTest: false, depthWrite: false,
-    uniforms: {uA: {value: col('#fff')}, uB: {value: col('#888')}}});
+    uniforms: {uA: {value: col('#fff')}, uB: {value: col('#888')}, uMask: {value: 0}}});
   const marbleQuad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2), marbleMat), marbleScene = new THREE.Scene();
   marbleQuad.frustumCulled = false; marbleScene.add(marbleQuad);
   const bakeMarble = () => { renderer.setRenderTarget(marble); renderer.clear(); renderer.render(marbleScene, camera); renderer.setRenderTarget(null); };
@@ -170,19 +201,23 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
   // Colunas instanciadas em anel: fuste, base e capitel numa só malha cada (3 draw calls).
   const colMat = new THREE.MeshStandardMaterial({color: '#eee', roughness: .55, metalness: .05});
   const goldMat = new THREE.MeshStandardMaterial({color: '#d9b25c', roughness: .3, metalness: .85});
-  let columnMeshes = [];
+  let columnMeshes = [], cur = THEMES.athena;
+  // Hades: colunas quebradas em alturas diferentes. Artemis: troncos com copa em cone (pinheiros). Sempre 3 malhas instanciadas.
   function buildColumns(count) {
     for (const m of columnMeshes) { world.remove(m); m.geometry.dispose(); }
-    const shaft = new THREE.InstancedMesh(new THREE.CylinderGeometry(.45, .52, 7, 20, 1, true), colMat, count);
+    const trees = !!cur.trees;
+    const shaft = new THREE.InstancedMesh(trees ? new THREE.CylinderGeometry(.3, .45, 7, 8, 1, true) : new THREE.CylinderGeometry(.45, .52, 7, 20, 1, true), colMat, count);
     const base = new THREE.InstancedMesh(new THREE.BoxGeometry(1.3, .35, 1.3), colMat, count);
-    const cap = new THREE.InstancedMesh(new THREE.BoxGeometry(1.35, .3, 1.35), goldMat, count);
-    const m = new THREE.Matrix4();
+    const cap = new THREE.InstancedMesh(trees ? new THREE.ConeGeometry(2.1, 5.5, 7) : new THREE.BoxGeometry(1.35, .3, 1.35), goldMat, count);
+    const m = new THREE.Matrix4(), rnd = i => { const v = Math.sin(i * 91.7) * 43758.5453; return v - Math.floor(v); };
     for (let i = 0; i < count; i++) {
       const a = Math.PI * (1.05 + i / (count - 1) * .9) , r = 15.5;  // arco atrás do campo
       const x = Math.cos(a) * r, z = Math.sin(a) * r * .75 - 2;
-      m.makeTranslation(x, 3.5, z); shaft.setMatrixAt(i, m);
+      const k = cur.broken ? .25 + rnd(i + 1) * .75 : trees ? .8 + rnd(i + 1) * .5 : 1, top = 7 * k;
+      m.makeScale(1, k, 1).setPosition(x, top / 2, z); shaft.setMatrixAt(i, m);
       m.makeTranslation(x, .17, z); base.setMatrixAt(i, m);
-      m.makeTranslation(x, 7.1, z); cap.setMatrixAt(i, m);
+      if (cur.broken && k < .7) m.makeScale(0, 0, 0); else m.makeTranslation(x, trees ? top + 1.6 : top + .1, z);
+      cap.setMatrixAt(i, m);
     }
     columnMeshes = [shaft, base, cap];
     columnMeshes.forEach(x => world.add(x));
@@ -196,9 +231,16 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
     ray.position.set(x, 9, z); ray.rotation.z = tilt; rays.push(ray); world.add(ray);
   }
 
+  // Astro no fundo (lua de Artemis, sol de Ares e dos Elísios): um quadrado só, disco + halo no shader, sem textura.
+  const orb = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.ShaderMaterial({vertexShader: VERT_PASS, transparent: true, depthWrite: false, fog: false,
+    blending: THREE.AdditiveBlending, uniforms: {uColor: {value: col('#fff')}},
+    fragmentShader: `uniform vec3 uColor; varying vec2 vUv; void main(){ float d = length(vUv - .5) * 2.;
+      gl_FragColor = vec4(uColor, smoothstep(.36, .33, d) + .45 * pow(max(0., 1. - d), 2.5)); }`}));
+  world.add(orb);
+
   let dust = null;
   const dustMat = new THREE.ShaderMaterial({vertexShader: DUST_VERT, fragmentShader: DUST_FRAG, transparent: true, depthWrite: false,
-    blending: THREE.AdditiveBlending, uniforms: {uTime: uniforms.uTime, uColor: {value: col('#fff')}, uPixel: {value: 1}}});
+    blending: THREE.AdditiveBlending, uniforms: {uTime: uniforms.uTime, uColor: {value: col('#fff')}, uPixel: {value: 1}, uFall: {value: 0}, uBlink: {value: 0}}});
   function buildDust(count) {
     if (dust) { world.remove(dust); dust.geometry.dispose(); dust = null; }
     if (!count) return;
@@ -210,14 +252,21 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
 
   function setTheme(name) {
     dirty = true; wake();
-    const t = THEMES[name] || THEMES.athena;
+    const t = cur = THEMES[name] || THEMES.athena;
     sky.material.uniforms.uTop.value.set(t.skyTop); sky.material.uniforms.uBottom.value.set(t.skyBottom);
     const f = floor.material.uniforms;
-    marbleMat.uniforms.uA.value.set(t.floorA); marbleMat.uniforms.uB.value.set(t.floorB); bakeMarble();
-    f.uLine.value.set(t.line); f.uCaustics.value = t.caustics;
-    colMat.color.set(t.column); sun.color.set(t.light); rayMat.uniforms.uColor.value.set(t.light); dustMat.uniforms.uColor.value.set(t.dust);
+    marbleMat.uniforms.uA.value.set(t.floorA); marbleMat.uniforms.uB.value.set(t.floorB); marbleMat.uniforms.uMask.value = t.mask || 0; bakeMarble();
+    f.uLine.value.set(t.line); f.uCaustics.value = t.caustics || 0; f.uGlow.value.set(t.mask ? t.glow : '#000'); f.uPulse.value = t.pulse || 1;
+    colMat.color.set(t.column); colMat.metalness = t.metal || .05; goldMat.color.set(t.cap || '#d9b25c');
+    sun.color.set(t.light); rayMat.uniforms.uColor.value.set(t.light); dustMat.uniforms.uColor.value.set(t.dust);
+    dustMat.uniforms.uFall.value = t.fall || 0; dustMat.uniforms.uBlink.value = t.blink || 0; dustScale = t.dustSize || 1;
     world.fog = new THREE.Fog(t.fog, 26, 70);
     zodiac.visible = !!t.zodiac;
+    orb.visible = !!t.orb;
+    // no alto da tela, atrás do campo do oponente; virado para a câmera
+    if (t.orb) { orb.material.uniforms.uColor.value.set(t.orb.color); orb.position.set(t.orb.x || 0, -14, -40); orb.scale.setScalar(t.orb.size * 2); orb.lookAt(camHome); }
+    if (columnMeshes.length) buildColumns(q.columns);
+    resize();
   }
 
   // ---------- VFX em espaço de tela ----------
@@ -359,19 +408,20 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
     dirty = true; wake();
     camera.aspect = w / h; camera.updateProjectionMatrix();
     fxCam.left = 0; fxCam.right = w; fxCam.top = 0; fxCam.bottom = h; fxCam.updateProjectionMatrix();
-    dustMat.uniforms.uPixel.value = renderer.getPixelRatio() * h * .05;
+    dustMat.uniforms.uPixel.value = renderer.getPixelRatio() * h * .05 * dustScale;
   }
   const ro = new ResizeObserver(resize); ro.observe(host);
 
   // Teto de quadros (Mac superaquecendo, 31/10/2026): 60 fps com golpe na tela, 30 fps com a arena parada.
   // Telas de 120 Hz desenhavam os dois canvas no dobro, sem ganho visível no cenário lento.
-  let last = performance.now(), running = true, frames = 0, fpsClock = last, fps = 60, lost = false, fxDrawn = false, dirty = true, sleeping = false, slow = 0, worldDrawn = 0, rafCount = 0, rafClock = last, rafRate = 60;
+  let still = reduceMotion, dustScale = 1, last = performance.now(), running = true, frames = 0, fpsClock = last, fps = 60, lost = false, fxDrawn = false, dirty = true, sleeping = false, slow = 0, worldDrawn = 0, rafCount = 0, rafClock = last, rafRate = 60;
   const wake = () => { if (sleeping) { sleeping = false; requestAnimationFrame(frame); } };
   function frame(now) {
     if (!running) return;
     const moving = shakeAmp > .01 || punch > .01, busy = P.n || live.length || moving;
     // Celular e Low (autor, 01/11/2026, iPhone aquecendo): a arena é desenhada uma vez e fica parada. Sem efeito na tela o laço dorme; wake() o acorda.
-    if (q.calm && !busy && !fxDrawn && !dirty) { sleeping = true; return; }
+    const calm = q.calm || still; // reduzir movimento: arena parada como no celular
+    if (calm && !busy && !fxDrawn && !dirty) { sleeping = true; return; }
     requestAnimationFrame(frame);
     if (document.hidden || lost) { last = now; rafClock = now; rafCount = 0; return; }
     rafCount++;
@@ -381,7 +431,7 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
       slow = rafRate < 40 && !q.calm ? slow + 1 : 0;
       if (slow >= 3) { slow = 0; shedLoad(); }
     }
-    if (now - last < (busy && !q.calm ? 1000 / 62 : 1000 / 31)) return;
+    if (now - last < (busy && !calm ? 1000 / 62 : 1000 / 31)) return;
     const dt = Math.min(.05, (now - last) / 1000); last = now;
     uniforms.uTime.value += dt;
     frames++;
@@ -389,13 +439,13 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
       fps = frames * 1000 / (now - fpsClock); frames = 0; fpsClock = now;
     }
     shakeAmp *= Math.exp(-dt * 9); punch *= Math.exp(-dt * 7);
-    const drift = q.calm ? 0 : Math.sin(uniforms.uTime.value * .15) * .35;
+    const drift = calm ? 0 : Math.sin(uniforms.uTime.value * .15) * .35;
     camera.position.set(camHome.x + drift + (Math.random() - .5) * shakeAmp * .08, camHome.y - punch * .6 + (Math.random() - .5) * shakeAmp * .08, camHome.z - punch);
     camera.lookAt(look);
     stepParticles(dt); stepShapes(dt);
     // no celular a arena nem treme: o chão (5 oitavas de ruído por pixel) é o desenho mais caro da cena
     // No desktop a arena fica a 30 fps mesmo com golpe na tela: só os efeitos pedem 60. Tremor pede 60 porque move a câmera.
-    if (dirty || (q.calm ? moving && q !== QUALITY.phone : moving || now - worldDrawn >= 1000 / 31)) { renderer.clear(); renderer.render(world, camera); dirty = false; worldDrawn = now; }
+    if (dirty || (calm ? moving && q !== QUALITY.phone : moving || now - worldDrawn >= 1000 / 31)) { renderer.clear(); renderer.render(world, camera); dirty = false; worldDrawn = now; }
     // canvas de VFX vazio: desenha uma vez para limpar o último golpe e depois fica parado
     const fxLive = P.n || live.length;
     if (fxLive || fxDrawn) fxRenderer.render(fxScene, fxCam);
@@ -421,7 +471,7 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
   function setQuality(name) {
     q = QUALITY[name] || QUALITY.high;
     renderer.setPixelRatio(Math.min(q.pixelRatio, window.devicePixelRatio || 1)); fxRenderer.setPixelRatio(renderer.getPixelRatio());
-    buildColumns(q.columns); buildDust(q.ambient);
+    buildColumns(q.columns); buildDust(still ? 0 : q.ambient);
     rays.forEach(r => { r.visible = q.rays; });
     host.parentElement.classList.toggle('is-calm', !!q.calm); // Low e celular: as animações CSS das cartas também param (olympus.css)
     resize();
@@ -434,6 +484,7 @@ export async function createScene(host, {quality = 'high', theme = 'athena', red
     fx, setTheme, setQuality, THREE,
     get fps() { return fps; },
     set reduceFlashes(v) { reduceFlashes = v; },
+    set reduceMotion(v) { still = !!v; buildDust(still ? 0 : q.ambient); dirty = true; wake(); },
     stats: () => ({fps: Math.round(fps), rafRate: Math.round(rafRate), pixelRatio: renderer.getPixelRatio(), level: Object.keys(QUALITY).find(k => QUALITY[k] === q), calls: renderer.info.render.calls, particles: P.n, alive, geometries: renderer.info.memory.geometries, textures: renderer.info.memory.textures}),
     // QA: ms reais de GPU por quadro. readPixels espera a GPU terminar; o trace do navegador não enxerga isso com Metal.
     bench(n = 20) {

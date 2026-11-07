@@ -18,7 +18,7 @@ import {atkOf, hpOf, keywordsOf, gearOf, isSaint, isBronze, ABILITIES, modsOf} f
 import {v6Spell, entryOf, V6} from '../engine-v3/v6/hooks.js';
 import {domainEntry, resonanceTag} from '../engine-v3/v6/registry.js';
 import {STEPS, ABILITY_STEPS} from '../choices-v3.js?v=3';
-import {createScene, THEMES, wait} from './scene.js?v=20261101-perf3';
+import {createScene, THEMES, wait} from './scene.js?v=20261107-arenas1';
 import {soulMax, ultimateBlock, announceExclamation, exclamationCost, removeJudgment, greatFloodBlock, announceGreatFlood, GREAT_FLOOD_COST,
   greatEclipseBlock, GREAT_ECLIPSE_COST, obliterationBlock, OBLITERATION_COST, bloodlustBlock, BLOODLUST_COST, commandBlock, commandTargets, activateCommand, COMMANDS, moonHarvestBlock, moonAwakeningBlock, MOON_AWAKENING_COST} from '../engine-v3/gods.js';
 import {createClock, clockStartTurn, clockEndTurn, clockHandTo, clockPause, clockResume, clockRemaining, clockExpired, torchesLit, applyTimeout, clockBonus} from '../engine-v3/clock.js';
@@ -1686,6 +1686,7 @@ overlayRoot.addEventListener('change', e => {
   if (key === 'quality') { scene?.setQuality(settings.quality); cardFx?.setQuality(settings.quality); }
   if (key === 'theme') { scene?.setTheme(settings.theme); stage.dataset.theme = settings.theme; }
   if (key === 'reduceFlashes' && scene) scene.reduceFlashes = settings.reduceFlashes;
+  if (key === 'reduceMotion' && scene) scene.reduceMotion = settings.reduceMotion;
   if (key === 'godB' || key === 'ai') { settingsOpen = false; return newMatch(); }
   render();
 });
@@ -3002,7 +3003,7 @@ async function init() {
   requestAnimationFrame(watchEvents);
   setInterval(tickClock, matchMedia('(pointer: coarse)').matches ? 1000 : 250); // toque: menos despertares; o relógio mostra segundos
   setInterval(aiTick, 700);
-  scene = await createScene($('#arena'), {quality: settings.quality, theme: settings.theme, reduceFlashes: settings.reduceFlashes});
+  scene = await createScene($('#arena'), {quality: settings.quality, theme: settings.theme, reduceFlashes: settings.reduceFlashes, reduceMotion: !!settings.reduceMotion});
   stage.classList.toggle('no-webgl', !scene);
   if (scene && !settings.reduceMotion) ui.pixel.preload();
   if (Object.keys(vfxStudio.cartas || {}).length) cardFx = startCardFx({quality: settings.quality, reduced: !!settings.reduceMotion, data: vfxStudio, card: id => FORGE.get(id), context: el => (el.closest('#inspector, .dcard--big, .dcard--lg') ? 'inspecao' : el.closest('.dcard') ? 'idle' : null)});

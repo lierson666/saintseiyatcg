@@ -7,6 +7,11 @@
   color-scheme: dark;
 }
 .stage[data-theme="poseidon"] { --gold: #7fe3f0; --gold-hi: #c8fbff; --line: rgba(127, 227, 240, .32); --panel: rgba(2, 18, 32, .72); }
+/* Arenas novas (07/11/2026): acento da interface e fundo sem WebGL por tema. */
+.stage[data-theme="hades"] { --gold: #ff8a5a; --gold-hi: #ffc3a0; --line: rgba(255, 110, 70, .32); --panel: rgba(18, 4, 8, .76); }
+.stage[data-theme="elysion"] { --gold: #f3d98c; --gold-hi: #fff2c8; --line: rgba(243, 217, 140, .4); --panel: rgba(36, 26, 60, .72); }
+.stage[data-theme="ares"] { --gold: #ffb04a; --gold-hi: #ffd9a0; --line: rgba(255, 160, 70, .34); --panel: rgba(24, 8, 6, .76); }
+.stage[data-theme="artemis"] { --gold: #cfe4ff; --gold-hi: #f2f8ff; --line: rgba(207, 228, 255, .32); --panel: rgba(3, 10, 20, .74); }
 * { box-sizing: border-box; }
 html, body { margin: 0; height: 100%; overflow: hidden; background: #07081a; color: var(--ink); font: 14px/1.35 "Jost", system-ui, sans-serif; }
 button, select, input { font: inherit; color: inherit; }
@@ -17,6 +22,10 @@ kbd { font: 11px/1 ui-monospace, monospace; opacity: .7; border: 1px solid curre
 .arena canvas { display: block; width: 100%; height: 100%; }
 .stage.no-webgl .arena { background: radial-gradient(ellipse at 50% 110%, #d9a54a 0, #3a2a4a 45%, #0b1030 80%); }
 .stage.no-webgl[data-theme="poseidon"] .arena { background: radial-gradient(ellipse at 50% 110%, #0c5a7a 0, #06304a 45%, #02101f 80%); }
+.stage.no-webgl[data-theme="hades"] .arena { background: radial-gradient(ellipse at 50% 110%, #7a1a10 0, #2a0608 45%, #050106 80%); }
+.stage.no-webgl[data-theme="elysion"] .arena { background: radial-gradient(ellipse at 50% 110%, #f0d6ff 0, #8a76b8 45%, #2a2350 85%); }
+.stage.no-webgl[data-theme="ares"] .arena { background: radial-gradient(ellipse at 50% 110%, #a8341c 0, #4a1410 45%, #12040a 80%); }
+.stage.no-webgl[data-theme="artemis"] .arena { background: radial-gradient(ellipse at 50% 110%, #2c4a5a 0, #10202e 45%, #01040c 80%); }
 .stage.shaking { animation: shake var(--shake-t, .32s) linear; }
 @keyframes shake { 20% { transform: translate(calc(var(--shake) * -1), calc(var(--shake) * .5)); } 40% { transform: translate(var(--shake), calc(var(--shake) * -.4)); }
   60% { transform: translate(calc(var(--shake) * -.6), calc(var(--shake) * .3)); } 80% { transform: translate(calc(var(--shake) * .3), 0); } }

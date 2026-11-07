@@ -254,7 +254,7 @@ const MATCH_DEFAULTS = {quality: 'high', theme: 'olympus', speed: 'normal', skip
   reduceFlashes: false, shake: 1, autoPass: true, phaseTips: true, aiLevel: 'normal', cardText: '1.0', cardSize: '1.0'};
 const matchSettings = () => { try { return {...MATCH_DEFAULTS, ...JSON.parse(localStorage.getItem(MATCH_KEY) || '{}')}; } catch { return {...MATCH_DEFAULTS}; } };
 const setMatch = (key, value) => { try { localStorage.setItem(MATCH_KEY, JSON.stringify({...matchSettings(), [key]: value})); } catch { /* sem armazenamento */ } };
-const THEME_LABELS = {olympus: 'Olympus Arena', athena: "Athena's Sanctuary", poseidon: "Poseidon's Undersea Temple"}; // = THEMES de divine/scene.js
+const THEME_LABELS = {olympus: 'Cosmo Arena', athena: "Athena's Sanctuary", poseidon: "Poseidon's Undersea Temple", hades: "Hades' Underworld", elysion: 'Elysion', ares: "Ares' War Temple", artemis: "Artemis' Moonlit Grove"}; // = THEMES de divine/scene.js
 export const toggleFullscreen = () => (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.())?.catch?.(() => {});
 function options() {
   const m = {...matchSettings(), lang: window.ssI18n?.lang}; // idioma: o efetivo (salvo ou do navegador), shared/i18n.js
