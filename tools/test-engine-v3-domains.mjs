@@ -383,16 +383,17 @@ test('333 The Burning Battlefield: Berserker declara Strike, paga {1}{S} e causa
   gate('ares-v6-333');
 });
 
-test('334 The Arena of Blood: Berserker derrota inimigo no combate, +1 ATK; Ressonância +2 ATK e Impulse até o fim do turno', () => {
+test('334 The Arena of Blood: Berserker derrota inimigo no combate, +1 ATK; Ressonância +2 ATK e Impulse até o fim do turno e 3 de dano a Ares', () => {
   const {s, ctx, field, strike} = setup('ares-v6-334', 'god-athena');
   const b = field('A', 'ares-v6-294'), foe = field('B', 'artemis-v6-386'), atk = k.atkOf(s, ctx, b);
   strike(b, dev(foe));
   assert.equal(k.atkOf(s, ctx, b), atk + 1);
   const o = setup('ares-v6-334'), x = o.field('A', 'ares-v6-294');
   o.s.units[x] = {prepared: false, damage: 0, entered: o.s.turn}; // entrou neste turno
-  const ax = k.atkOf(o.s, o.ctx, x);
+  const ax = k.atkOf(o.s, o.ctx, x), soul = o.s.players.A.soul;
   res(o.s, o.ctx);
   assert.equal(k.atkOf(o.s, o.ctx, x), ax + 2);
+  assert.equal(o.s.players.A.soul, soul - 3, 'Ressonância causa 3 de dano a Ares (autor, 07/11/2026)');
   assert.ok(k.keywordsOf(o.s, o.ctx, x).includes('Impulse'));
   assert.equal(o.s.units[x].prepared, true, 'Impulse: pode atacar neste turno');
   assert.ok(o.s.effects.some(e => e.target === x && e.duration === 'this_turn'));

@@ -4,6 +4,13 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-07 — Domain ares-v6-334 — The Arena of Blood: a Ressonância fere Ares
+
+- **Antes:** Resonance — Ares: {2}{C}: Devotee aliado alvo recebe +2 @ATK e @Impulse até o fim da sua rodada.
+- **Depois:** mesmo efeito e "Deal 3 damage to your God."
+- **Motivo:** autor, 07/11/2026.
+- **Feito:** cards.json (EN/PT), rascunho PT, motor (`ares.js`) e teste (`test-engine-v3-domains.mjs`).
+
 ## 2026-11-07 — Cartas 049, 123, 196, 318, 411 — Ciclo das espadas Rare
 
 - **Antes:** Libra Shield (Athena 049), Common: +2/+2, Imune a Hades e Poseidon, Soul + compra ao acertar o God. Atlantean Trident (Poseidon 123), Pandora's Trident (Hades 196), Battlefield Axe (Ares 318) e Silverwood Spear (Artemis 411) eram armas comuns com textos próprios.

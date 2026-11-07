@@ -14637,7 +14637,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Gladiator's Glory — Once each round, when a friendly Berserker defeats an enemy Devotee in combat, it gets +1 @ATK until the end of your round.",
-        "Resonance — Ares: Once each round, {2}{C}: Target friendly Devotee gets +2 @ATK and @Impulse until the end of your round."
+        "Resonance — Ares: Once each round, {2}{C}: Target friendly Devotee gets +2 @ATK and @Impulse until the end of your round. Deal 3 damage to your God."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -14646,7 +14646,7 @@
       "subtitulo_pt": "Só os Fortes Permanecerão",
       "habilidades_pt": [
         "Glória do Gladiador — Uma vez por rodada, quando um Berserker aliado derrota um Devoto inimigo em combate, ele recebe +1 @ATQ até o fim da sua rodada.",
-        "Ressonância — Ares: Uma vez por rodada, {2}{C}: O Devoto aliado alvo recebe +2 @ATQ e @Impulso até o fim da sua rodada."
+        "Ressonância — Ares: Uma vez por rodada, {2}{C}: O Devoto aliado alvo recebe +2 @ATQ e @Impulso até o fim da sua rodada. Cause 3 de dano ao seu Deus."
       ],
       "flavour_pt": "\"A multidão não aclama a vitória. Ela aclama o sangue.\"",
       "tagline_pt": "Só os Fortes Permanecerão"

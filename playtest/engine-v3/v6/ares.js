@@ -486,6 +486,7 @@ export default {
       if (!alive(s, t)) return;
       k.buff(s, t, 2, 0, 'this_turn', ['Impulse']);
       if (s.units[t].entered === s.turn) k.prepare(s, t);
+      hit(s, c, ownGod(key), 3); // autor, 07/11/2026: a Ressonância também causa 3 de dano a Ares
     }},
   },
   // The Fields of Carnage — Harvest of the Fallen: outro Berserker amigo derrotado; pode pagar {1}{S} e o God inimigo perde {1}{S}.
