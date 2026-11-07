@@ -195,8 +195,10 @@
     "n": "TRIDENTE DE PANDORA",
     "s": "O Instrumento da Autoridade Divina",
     "h": [
-      "O Devoto equipado recebe +1 ATQ / +2 PV.",
-      "Ressonância — Pandora: Uma vez por rodada, quando Pandora faz você pagar Alma por uma habilidade, seu Deus ganha {1}{L}."
+      "O Devoto equipado recebe +2 ATQ / +2 PV.",
+      "O Devoto equipado é Imune a Artemis e Athena.",
+      "Sempre que o Devoto equipado causar dano de Golpe a um Deus, você prepara até 2 das suas Bases e ganha {2}{S}.",
+      "Ressonância — Pandora: Uma vez por ciclo, quando Pandora faz você pagar Alma por uma habilidade, seu Deus ganha {1}{L}."
     ]
   },
   "hades-v6-197": {

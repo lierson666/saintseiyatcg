@@ -506,8 +506,9 @@
   "n": "LANÇA DE MADEIRA PRATEADA",
   "s": "A Arma da Caçada Ancestral",
   "h": [
-   "Força do Caçador — O Devoto equipado recebe +2 ATQ / +0 PV.",
-   "Caçada Perfurante — Sempre que o Devoto equipado declara um Golpe contra um Devoto inimigo, ele ganha Perfurar até o fim da rodada."
+   "O Devoto equipado recebe +2 ATQ / +2 PV.",
+   "O Devoto equipado é Imune a Poseidon e Hades.",
+   "Sempre que o Devoto equipado causar dano de Golpe a um Deus, você compra 1 carta e o oponente descarta 1 carta."
   ],
   "f": "\"Esculpida nas árvores mais antigas, sua ponta carrega a fúria da natureza selvagem.\""
  },

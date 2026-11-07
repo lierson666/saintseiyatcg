@@ -214,10 +214,7 @@ export default {
       for (const base of st.players[key].bases) base.prepared = true;
     },
   },
-  'athena-v6-049': {
-    immune: src => /^(god-)?(hades|poseidon)/.test(src.cardId || ''),
-    gearGodDamage: (s, c, key) => st => { gainSoul(st, key, 2); k.draw(st, key, 1); },
-  },
+  'athena-v6-049': k.sword('LIBRA SHIELD', 'hades', 'ares'),
   'athena-v6-050': {
     activate: {name: 'Repair Tools', cost: 1, once: true, tap: false,
       // Texto de 30/10/2026: "target friendly Devotee equipped with an Armor" (Armor não tem dano próprio).

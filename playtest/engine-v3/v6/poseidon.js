@@ -464,17 +464,7 @@ export default {
   'poseidon-v6-122': {
     watchDeclare: bearerWard({ability: 'LAST PROTECTION'}),
   },
-  'poseidon-v6-123': {
-    gearCombatDamage: (s, c, key, self, bearer) => {
-      const tag = `oceanic-thrust:${self}`;
-      if (s.roundUses.has(tag)) return;
-      return st => {
-        if (st.roundUses.has(tag) || !pay(st, c, key, isMarina(c, bearer) ? 0 : 1, 'OCEANIC THRUST', bearer)) return; // Resonance — Marina: {0}
-        k.once(st, tag);
-        loot(st, c, key, 'OCEANIC THRUST');
-      };
-    },
-  },
+  'poseidon-v6-123': k.sword('ATLANTEAN TRIDENT', 'ares', 'artemis'),
   // 124 Coral Barrier — Living Reef (watchSpell): o portador é alvo de Moment/Technique inimigo; paga {2}{C} e a Spell é anulada a
   // menos que o controlador pague {2}{C}. O +0/+1 já vem do Equipment. Uso do Round marcado no evento.
   'poseidon-v6-124': {

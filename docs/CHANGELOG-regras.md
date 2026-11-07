@@ -4,6 +4,19 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-07 — Cartas 049, 123, 196, 318, 411 — Ciclo das espadas Rare
+
+- **Antes:** Libra Shield (Athena 049), Common: +2/+2, Imune a Hades e Poseidon, Soul + compra ao acertar o God. Atlantean Trident (Poseidon 123), Pandora's Trident (Hades 196), Battlefield Axe (Ares 318) e Silverwood Spear (Artemis 411) eram armas comuns com textos próprios.
+- **Depois:** as 5 viram Rare, custo 3, Equip 5, +2 @ATK / +2 @HP, Imune às 2 facções inimigas na roda (Athena=Branco, Poseidon=Azul, Hades=Preto, Ares=Vermelho, Artemis=Verde). Ao causar dano de Golpe a um God, um efeito de cada cor barrada: Branco ganha {2}{S}; Azul compra 1; Preto faz o oponente descartar 1; Vermelho causa 2 a um Devoto inimigo alvo; Verde prepara até 2 Bases.
+  - 049 Libra Shield: Imune a Hades e Ares; descarte + 2 de dano. Mantém a Ressonância com Cavaleiros de Ouro.
+  - 123 Atlantean Trident: Imune a Ares e Artemis; 2 de dano + 2 Bases. Ressonância Marina vira auto-equip com Equip 0 (como o Libra).
+  - 196 Pandora's Trident: Imune a Artemis e Athena; 2 Bases + {2}{S}. Mantém a Ressonância com Pandora; vira Weapon.
+  - 318 Battlefield Axe: Imune a Athena e Poseidon; {2}{S} + compra.
+  - 411 Silverwood Spear: Imune a Poseidon e Hades; compra + descarte. Custo 2 → 3.
+- **Motivo:** autor, 07/11/2026: ciclo no estilo das espadas do MTG (Feast and Famine etc.), respeitando a color pie.
+- **Feito:** cards.json (EN/PT), canon D268 da 049, rascunhos PT, motor (`k.sword` em `kit.js`) e testes (`test-engine-v3-immune.mjs`).
+- **Pendente:** revisão geral de raridade por power level (`docs/raridade-proposta.md`).
+
 ## 2026-11-07 — Carta neutral-v6-464 — Steel Innovation (Dr. Asamori) custa 5
 
 - **Antes:** pague {2}{C} e deixe Dr. Asamori Unprepared para buscar um Equipment no deck.

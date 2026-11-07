@@ -178,6 +178,19 @@ export function destroyEquipment(s, c, uid) {
   emit(s, 'destroyed', {uid, owner: c.objects[uid].owner});
   return true;
 }
+// Ciclo das espadas Rare (autor, 07/11/2026): Imune a 2 facções; quando o portador causa dano de Golpe a um God,
+// um efeito de cada facção barrada, na ordem do texto.
+const SWORD_FX = {
+  athena: (st, c, key) => gainSoul(st, key, 2),
+  poseidon: (st, c, key) => draw(st, key, 1),
+  hades: (st, c, key, ability) => discard(st, c, other(st, key), 1, ability),
+  ares: (st, c, key, ability) => { const t = choose(c, key, ability, enemies(st, c, key), {text: 'Choose target enemy Devotee.'}); if (t) damage(st, c, t, 2); },
+  artemis: (st, c, key) => { for (const b of st.players[key].bases.filter(x => !x.prepared).slice(0, 2)) b.prepared = true; },
+};
+export const sword = (ability, a, b) => ({
+  immune: src => new RegExp(`^(god-)?(${a}|${b})`).test(src.cardId || ''),
+  gearGodDamage: (s, c, key) => st => { SWORD_FX[a](st, c, key, ability); SWORD_FX[b](st, c, key, ability); },
+});
 export function exile(s, c, uid, from = 'battlefield') {
   if (from === 'battlefield' && (!controllerOf(s, uid) || blockedNow(s, uid))) return false;
   const was = from === 'battlefield' ? controllerOf(s, uid) : null; // gancho leaves (Devotee ou Equipment)

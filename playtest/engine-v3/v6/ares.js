@@ -402,9 +402,7 @@ export default {
   'ares-v6-315': gearDeclareSelf(1),
   'ares-v6-316': gearKillGodTaxed(1, 'BLOOD HUNGER'),
   'ares-v6-317': merge(gearKeywords(['Pierce']), gearDeathGod(1, "DEATH'S TRIBUTE")),
-  'ares-v6-318': {
-    gearCombatDamage: (s, c, key, self, bearer, victim) => st => hit(st, c, enemyDevotee(st, c, key, 'SAVAGE CLEAVE', u => u !== victim), 1),
-  },
+  'ares-v6-318': k.sword('BATTLEFIELD AXE', 'athena', 'poseidon'),
   'ares-v6-319': gearDeclareOther(1, 'RHYTHM OF DESTRUCTION'),
   'ares-v6-320': gearDeclareDamage(1, 'FLAMING PROJECTILE'),
   'ares-v6-321': merge(gearDeclareSelf(2), {

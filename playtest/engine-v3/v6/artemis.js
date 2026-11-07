@@ -331,7 +331,7 @@ export default {
   'artemis-v6-410': {gearKillInCombat: (s, c, key, self) => k.onceTurn(s, `${self}:supply`) && (st => {
     if (k.may(c, key, "HUNTER'S SUPPLY", {uid: self})) { k.draw(st, key, 1); k.discard(st, c, key, 1, "HUNTER'S SUPPLY"); }
   })},
-  'artemis-v6-411': {gearDeclare: buffBearer(0, 0, ['Pierce'])},
+  'artemis-v6-411': k.sword('SILVERWOOD SPEAR', 'poseidon', 'hades'),
   // Remover marcador do portador é custo de habilidade ativada: AÇÃO (guia §56).
   'artemis-v6-412': {activate: {name: 'LUNAR SHELTER', cost: 0, tap: false,
     check: (s, c, key, self) => { const b = bearer(s, c, key, self); if (!b || !counters(s, b)) throw new k.RuleError('custo', 'portador sem marcador +1/+1'); },

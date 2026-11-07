@@ -119,13 +119,38 @@ test('Espada acerta o God: inimigo descarta 1 e as Bases preparam, sem limite', 
   assert.ok(A.bases.every(b => b.prepared));
 });
 
-test('Escudo acerta o God: ganha 2 Soul e compra 1', () => {
-  const {s, ctx, field, equip, A, B} = setup(), bearer = field('A', cheap);
-  equip('A', SHIELD, bearer);
-  A.soul = 10;
-  const hand = A.hand.length;
-  declareStrike(s, ctx, bearer, {kind: 'god', player: 'B'}); passAll(s); passAll(s);
-  assert.deepEqual([A.soul, A.hand.length], [12, hand + 1]);
+// Ciclo das espadas Rare (autor, 07/11/2026): um efeito de cada facção barrada quando o portador acerta o God.
+test('Espadas do ciclo acertam o God: os dois efeitos das facções barradas', () => {
+  const cases = {
+    'athena-v6-049': {discard: 1, dmg: 2}, // Hades + Ares
+    'poseidon-v6-123': {dmg: 2, bases: 2}, // Ares + Artemis
+    'hades-v6-196': {bases: 2, soul: 2}, // Artemis + Athena
+    'ares-v6-318': {soul: 2, draw: 1}, // Athena + Poseidon
+    'artemis-v6-411': {draw: 1, discard: 1}, // Poseidon + Hades
+  };
+  for (const [id, want] of Object.entries(cases)) {
+    const {s, ctx, field, equip, A, B} = setup(), bearer = field('A', cheap), foe = field('B', cheap);
+    s.units[foe].prepared = false; // Devotee inimigo Unprepared não guarda: o Golpe vai ao God
+    equip('A', id, bearer);
+    A.soul = 10;
+    A.bases = A.deck.splice(0, 3).map(uid => ({uid, prepared: false}));
+    B.hand.push(B.deck.shift(), B.deck.shift());
+    const hand = A.hand.length, held = [...B.hand];
+    declareStrike(s, ctx, bearer, {kind: 'god', player: 'B'}); passAll(s); passAll(s);
+    assert.equal(A.soul, 10 + (want.soul || 0), `${id} Soul`);
+    assert.equal(A.hand.length, hand + (want.draw || 0), `${id} compra`);
+    assert.equal(held.filter(u => B.tartarus.includes(u)).length, want.discard || 0, `${id} descarte`);
+    assert.equal(s.units[foe] ? s.units[foe].damage : 2, want.dmg || 0, `${id} dano`); // 2 de dano derrota o Devotee barato
+    assert.equal(A.bases.filter(b => b.prepared).length, want.bases || 0, `${id} Bases`);
+  }
+});
+
+test('Espadas do ciclo: Imune às duas facções inimigas na roda', () => {
+  const pairs = {'athena-v6-049': ['hades', 'ares'], 'poseidon-v6-123': ['ares', 'artemis'], 'hades-v6-196': ['artemis', 'athena'], 'ares-v6-318': ['athena', 'poseidon'], 'artemis-v6-411': ['poseidon', 'hades']};
+  for (const [id, [a, b]] of Object.entries(pairs)) {
+    assert.match(cards.get(id).text || JSON.stringify(cards.get(id)), new RegExp(`Immune to ${a} and ${b}`, 'i'));
+    assert.equal(cards.get(id).rarity ?? 'Rare', 'Rare');
+  }
 });
 
 test('Ninfa Lunar e Chandra não miram a si mesmas', () => {

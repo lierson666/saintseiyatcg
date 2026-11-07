@@ -284,9 +284,9 @@
   "n": "TRIDENTE ATLANTE",
   "s": "A Lança do Reino Esquecido",
   "h": [
-   "O Devoto equipado recebe +1 ATQ.",
-   "Estocada Oceânica — Uma vez por rodada, quando o Devoto equipado causa dano de Golpe a um Devoto inimigo, você pode pagar {1}{C}. Se fizer isso, compre uma carta e depois descarte uma carta.",
-   "Ressonância — Marina: Se o Devoto equipado for uma Marina, a Estocada Oceânica custa {0}{C} em vez disso."
+   "O Devoto equipado recebe +2 ATQ / +2 PV.",
+   "O Devoto equipado é Imune a Ares e Artemis.",
+   "Sempre que o Devoto equipado causar dano de Golpe a um Deus, você causa 2 de dano ao Devoto inimigo alvo e prepara até 2 das suas Bases."
   ]
  },
  "poseidon-v6-124": {

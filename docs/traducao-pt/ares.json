@@ -469,8 +469,9 @@
     "n": "MACHADO DO CAMPO DE BATALHA",
     "s": "O Gume Brutal da Guerra",
     "h": [
-      "O Devoto equipado recebe +3 ATQ.",
-      "Golpe Selvagem — Sempre que o Devoto equipado causa dano de Golpe a um Devoto inimigo, cause 1 de dano a outro Devoto inimigo alvo."
+      "O Devoto equipado recebe +2 ATQ / +2 PV.",
+      "O Devoto equipado é Imune a Athena e Poseidon.",
+      "Sempre que o Devoto equipado causar dano de Golpe a um Deus, você ganha {2}{S} e compra 1 carta."
     ],
     "f": "\"Um golpe. Dois corpos. Nenhum sobrevivente.\""
   },

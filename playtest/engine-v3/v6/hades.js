@@ -257,6 +257,7 @@ export default {
       if (pay(st, c, key, 'QUEEN OF THE UNDERWORLD', 2)) { trident(st, c, key, self); k.draw(st, key, 2); }
     }, 'queen'),
   },
+  'hades-v6-196': k.sword("PANDORA'S TRIDENT", 'artemis', 'athena'), // Resonance — Pandora: `trident`
   'hades-v6-197': { // Aries Shion + Aries Surplice (198)
     enter: (s, c, key, self) => st => {
       if (toFieldFrom(st, c, key, 'RETURN FROM THE DEAD', devCost(4)) && resonance(st, c, self, 'hades-v6-198')) k.draw(st, key, 1);
