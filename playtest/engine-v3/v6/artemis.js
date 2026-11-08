@@ -166,11 +166,15 @@ export default {
     watchCounter: (s, c, key, self, target, n, by) => by === key && target !== self && k.controllerOf(s, target) === key
       && k.onceTurn(s, `${self}:communion`) && (st => { if (k.may(c, key, 'MOONLIT COMMUNION', {uid: self})) k.gainLatent(st, key, 1); }),
   },
+  // Divine Emergence (autor, 08/11/2026; Heroic Intervention): até o fim do Round, Imune à facção do God inimigo e não morrem por dano.
   'artemis-v6-372': {spell: {run: (st, c, key) => {
-    search(st, c, key, 'DIVINE EMERGENCE', (card, uid) => isArtemis(c, uid) && card.cost.amount <= 4);
-    growEach(st, c, key, k.chooseUpTo(c, key, 'LUNAR BLESSING', k.devotees(st, c, key), 2));
+    const faction = st.divine?.[k.other(st, key)]?.god?.replace(/^god-/, '');
+    for (const u of k.devotees(st, c, key)) {
+      if (faction) (st.v6Immune ||= {})[u] = {round: st.round, faction};
+      (st.v6Unbreakable ||= {})[u] = st.round;
+    }
+    k.emit(st, 'divine_power', {player: key, ability: 'DIVINE EMERGENCE'});
   }}},
-  // SELENE
   'artemis-v6-373': {
     aura: lord(isArtemis, 1, 1),
     startTurn: run((st, c, key) => growEach(st, c, key, k.chooseUpTo(c, key, 'ETERNAL MOONLIGHT', k.devotees(st, c, key), 2))),
@@ -220,7 +224,8 @@ export default {
     gearDeclare: buffBearer(2, 0),
     gearKillInCombat: (s, c, key, self) => k.onceTurn(s, `${self}:aim`) && (st => { if (k.may(c, key, 'UNERRING AIM', {uid: self})) k.draw(st, key, 1); }),
   },
-  'artemis-v6-381': {enter: run((st, c, key, self) => { const t = pickFriend(st, c, key, 'FOREST BLESSING', {optional: true, not: self}); if (t) grow(st, c, key, t, 1); })},
+  // Forest Blessing (Exploration): Base de Cosmo adicional por Round (§58).
+  'artemis-v6-381': {extraBase: true},
   'artemis-v6-382': {mods: (s, c, key, self) => (k.devotees(s, c, key).some(u => u !== self && k.hasType(c, u, 'Sacred Beast')) ? [{atk: 1, hp: 0}] : [])},
   'artemis-v6-383': {killInCombat: growSelf(1)},
   'artemis-v6-384': {
@@ -244,22 +249,16 @@ export default {
   'artemis-v6-386': {activate: {name: 'LUNAR OFFERING', cost: 0, run: (st, c, key) => k.gainLatent(st, key, 1)}},
   'artemis-v6-387': {watchCounter: (s, c, key, self, target, n, by) => by === key && target !== self && k.controllerOf(s, target) === key
     && (st => k.buff(st, self, 1, 1, 'this_round'))},
-  'artemis-v6-388': {enter: (s, c, key) => ready(s, key) >= 1 && (st => {
-    // 31/10/2026: o dano de 1 virou Training counter num Devotee seu.
-    if (!k.may(c, key, 'PRECISE HUNT', {cost: '{1}{C}'}) || !payC(st, key, 1)) return;
-    const t = pickFriend(st, c, key, 'PRECISE HUNT');
-    if (t) grow(st, c, key, t, 1);
+  // Precise Hunt (Reclamation Sage).
+  'artemis-v6-388': {enter: (s, c, key) => k.allEquipment(s, c).length > 0 && (st => {
+    const t = k.choose(c, key, 'PRECISE HUNT', k.allEquipment(st, c), {optional: true, text: 'Destroy target Equipment?'});
+    if (t) k.destroyEquipment(st, c, t);
   })},
-  'artemis-v6-389': {declare: (s, c, key, self) => counters(s, self) > 0 && (st => k.buff(st, self, 1, 0, 'this_round'))},
-  // MOON TEMPLE ACOLYTE
-  'artemis-v6-390': {
-    enter: run((st, c, key, self) => { const t = pickFriend(st, c, key, 'CELESTIAL CULTIVATION', {not: self}); if (t) grow(st, c, key, t, 1); }),
-    declare: run((st, c, key, self) => {
-      const from = k.choose(c, key, 'LUNAR GUIDANCE', k.devotees(st, c, key).filter(u => u !== self && counters(st, u)), {optional: true, text: 'Move a Training counter to Moon Temple Acolyte?'});
-      if (from && st.units[self]) { k.addCounter(st, from, -1); grow(st, c, key, self, 1); }
-    }),
-  },
-  // ANCIENT FOREST GUARDIAN. Remover marcador é custo de habilidade ativada: AÇÃO (guia §56).
+  // Ferocious Instinct (Lotus Cobra): Base posta pelo jogador.
+  'artemis-v6-389': {watchBase: (s, c, key, self, player) => player === key && k.once(s, `${self}:cobra`) && (st => k.gainLatent(st, key, 1))},
+  // Celestial Cultivation (Hardened Scales): substituição, uma vez por Round por Acólito.
+  'artemis-v6-390': {counterBonus: (s, c, key, self, uid, n) =>
+    (k.controllerOf(s, uid) === key && k.isDevotee(c, uid) && k.once(s, `${self}:scales`) ? n + 1 : n)},
   'artemis-v6-391': {
     activate: {name: 'ANCIENT RESILIENCE', cost: 0, tap: false,
       check: (s, c, key, self) => { if (!counters(s, self)) throw new k.RuleError('custo', 'sem marcador +1/+1'); },
@@ -279,7 +278,11 @@ export default {
       && s.events.find(e => e.type === 'card_played' && e.kind === 'Devotee' && !e.from && e.player === key && e.turn === s.turn)?.uid === entered
       && (st => grow(st, c, key, entered, 1)),
   },
-  'artemis-v6-398': {enter: run((st, c, key, self) => { const t = pickFriend(st, c, key, 'MOONLIT BLESSING', {not: self}); if (t) grow(st, c, key, t, 1); })},
+  // Moonlit Blessing (Eternal Witness).
+  'artemis-v6-398': {enter: run((st, c, key) => {
+    const t = k.choose(c, key, 'MOONLIT BLESSING', st.players[key].tartarus.filter(u => k.costOf(c, u) <= 3), {text: 'Return a card with cost 3 or less from your Tartarus.'});
+    if (t) k.toHand(st, c, t, 'tartarus');
+  })},
   'artemis-v6-399': {mods: (s, c, key, self) => (k.devotees(s, c, key).some(u => u !== self && k.hasType(c, u, 'Forest Guardian')) ? [{atk: 1, hp: 1}] : [])},
   // PRIMAL FOREST GUARDIAN
   'artemis-v6-400': {
@@ -295,9 +298,12 @@ export default {
   })},
   'artemis-v6-404': {
     aura: lord((c, u) => k.hasType(c, u, 'Sacred Beast'), 1, 0),
-    watchKill: (s, c, key, self, killer) => killer !== self && k.hasType(c, killer, 'Sacred Beast') && (st => grow(st, c, key, self, 1)),
+    // Call the Pack (Scute Swarm): 1 Wolf por outro Sacred Beast seu, máximo 3.
+    enter: run((st, c, key, self) => {
+      const n = Math.min(3, k.devotees(st, c, key).filter(u => u !== self && k.hasType(c, u, 'Sacred Beast')).length);
+      for (let i = 0; i < n; i++) k.summonToken(st, c, key, {id: 'token-wolf', name: 'Wolf', atk: 1, hp: 1, type: 'Sacred Beast Wolf'});
+    }),
   },
-  // ANCIENT GROVE TREANT
   'artemis-v6-405': {
     enter: run((st, c, key, self) => growEach(st, c, key, k.chooseUpTo(c, key, 'ANCIENT GROWTH', k.devotees(st, c, key).filter(u => u !== self), 2))),
     mods: (s, c, key, self) => {
@@ -353,12 +359,12 @@ export default {
   }},
   'artemis-v6-417': {spell: {run: (st, c, key) => k.topToBase(st, key)}},
   // The Forest Answers (autor, 06/11/2026): escolha um, Primal Strike ou Overgrowth (destrói Equipment).
+  // Call of the Forest (Green Sun's Zenith): Devotee de custo 3 ou menos do deck ao campo, Unprepared.
   'artemis-v6-418': {spell: {run: (st, c, key) => {
-    const gear = k.allEquipment(st, c);
-    const modes = [k.devotees(st, c, key).length && k.enemies(st, c, key).length && 'Primal Strike', gear.length && 'Overgrowth'].filter(Boolean);
-    const m = modes.length > 1 ? c.decide?.(key, {ability: 'THE FOREST ANSWERS', options: modes, choose: 'mode', text: 'Choose one.'}) : modes[0];
-    if (m === 'Primal Strike') { const src = pickFriend(st, c, key, 'PRIMAL STRIKE'); blast(st, c, src, src && pickEnemy(st, c, key, 'PRIMAL STRIKE')); }
-    if (m === 'Overgrowth') { const t = k.choose(c, key, 'OVERGROWTH', gear, {text: 'Choose target Equipment.'}); if (t) k.destroyEquipment(st, c, t); }
+    const options = st.players[key].deck.filter(u => k.isDevotee(c, u) && k.costOf(c, u) <= 3);
+    const pick = options.length ? c.decide?.(key, {ability: 'CALL OF THE FOREST', options, choose: 'search', text: 'Choose a Devotee to put onto the Battlefield.'}) : null;
+    if (pick) k.putOntoField(st, c, key, pick, 'deck', {prepared: false});
+    k.shuffleDeck(st, key);
   }}},
   'artemis-v6-419': {spell: {run: (st, c, key) => { const t = pickFriend(st, c, key, 'WILD STRENGTH'); if (t) k.buff(st, t, 3, 3, 'this_round', ['Pierce']); }}},
   'artemis-v6-420': {spell: {run: (st, c, key) => {
@@ -375,10 +381,16 @@ export default {
     grow(st, c, key, t, 1);
     if (st.units[t] && k.atkOf(st, c, t) >= 4) maybeTopToBase(st, c, key, 'NATURAL EXPANSION');
   }}},
-  'artemis-v6-422': {spell: {run: (st, c, key) => {
-    const a = pickFriend(st, c, key, "PREDATOR'S CHALLENGE"), b = a && pickEnemy(st, c, key, "PREDATOR'S CHALLENGE");
-    if (b) fight(st, c, a, b);
-  }}},
+  // Predator's Challenge (Beast Within): destrói Devotee ou Equipment; o controlador cria um Forest Guardian 3/3.
+  'artemis-v6-422': {spell: {
+    check: k.needTarget((s, c) => [...k.allDevotees(s, c), ...k.allEquipment(s, c)], 'sem Devotee ou Equipment'),
+    run: (st, c, key) => {
+      const t = k.choose(c, key, "PREDATOR'S CHALLENGE", [...k.allDevotees(st, c), ...k.allEquipment(st, c)], {text: 'Destroy target Devotee or Equipment.'});
+      const owner = t && k.controllerOf(st, t);
+      if (!owner) return;
+      if (k.isDevotee(c, t)) k.defeat(st, c, t); else k.destroyEquipment(st, c, t);
+      k.summonToken(st, c, owner, {id: 'token-forest-guardian', name: 'Forest Guardian', atk: 3, hp: 3, type: 'Forest Guardian'});
+    }}},
   'artemis-v6-423': {spell: {run: (st, c, key) => { k.topToBase(st, key); k.topToBase(st, key); }}},
   'artemis-v6-424': {spell: {run: (st, c, key) => {
     const src = pickFriend(st, c, key, 'MOONLIT EXECUTION');
@@ -502,10 +514,14 @@ export default {
     enter: run((st, c, key, self) => blast(st, c, self, pickEnemy(st, c, key, 'LUNAR DEVASTATION'))),
     killInCombat: run((st, c, key, self) => growEach(st, c, key, k.devotees(st, c, key).filter(u => u !== self))),
   },
+  // Divine Return (Splendid Reclamation): até 2 cartas do Tartarus viram Base Unprepared.
   'artemis-v6-441': {spell: {run: (st, c, key) => {
-    lookTop(st, c, key, 'DIVINE RETURN', 4, u => isArtemis(c, u));
-    const t = pickFriend(st, c, key, 'LUNAR BLESSING');
-    if (t) grow(st, c, key, t, 1);
+    const p = st.players[key];
+    for (const u of k.chooseUpTo(c, key, 'DIVINE RETURN', [...p.tartarus], 2, {text: 'Choose up to two cards to put into your Cosmo Bank.'})) {
+      p.tartarus.splice(p.tartarus.indexOf(u), 1);
+      p.bases.push({uid: u, prepared: false});
+      k.emit(st, 'base_added', {player: key, prepared: false});
+    }
   }}},
   'artemis-v6-442': {spell: {run: (st, c, key) => {
     search(st, c, key, 'SACRED GATHERING', card => /Lunar Guardian/.test(card.type));

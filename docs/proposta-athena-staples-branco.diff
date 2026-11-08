@@ -1,0 +1,302 @@
+--- data/cards.json	2026-11-08 18:39:28
++++ data/cards.json (proposta)	2026-11-08 18:40:13
+@@ -1134,7 +1134,7 @@
+       "keywords_en": [],
+       "habilidades_en": [
+         "String Nocturne — {2}{C}, {T}: Choose up to two target friendly Saints. They get +0 @ATK / +2 @HP until the end of your round.",
+-        "Death Trip Serenade — Once each round, when an enemy Devotee declares a Strike against your God or another friendly Saint, you may pay {2}{C}. If you do, that Devotee gets -2 @ATK during that Strike."
++        "Death Trip Serenade — When Lyra Orphee enters the Battlefield and whenever it declares a Strike, return target Devotee or Equipment card with Casting Cost 3 or less from your Tartarus to the Battlefield."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -1143,7 +1143,7 @@
+       "subtitulo_pt": "A Melodia do Mundo dos Mortos",
+       "habilidades_pt": [
+         "Noturno das Cordas — {2}{C}, {T}: Escolha até dois Cavaleiros aliados alvo. Eles recebem +0 @ATQ / +2 @PV até o fim da sua rodada.",
+-        "Serenata da Viagem da Morte — Uma vez por rodada, quando um Devoto inimigo declara um Golpe contra seu Deus ou outro Cavaleiro aliado, você pode pagar {2}{C}. Se fizer isso, esse Devoto recebe -2 @ATQ durante esse Golpe."
++        "Serenata da Viagem da Morte — Quando Orfeu de Lira entra no Campo de Batalha e sempre que declara um Golpe, devolva do seu Tártaro ao Campo de Batalha a carta de Devoto ou Equipamento alvo com custo 3 ou menos."
+       ],
+       "tagline_pt": "A Melodia do Mundo dos Mortos"
+     },
+@@ -1211,7 +1211,7 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Final Sacrifice — When another friendly Saint would take Strike damage, you may defeat Cassios. If you do, prevent up to 3 of that damage."
++        "Final Sacrifice — Defeat Cassios: Until the end of this round, friendly Devotees can't be defeated by damage."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -1219,7 +1219,7 @@
+       "nome_exibicao_pt": "CÁSSIOS, O RIVAL CAÍDO",
+       "subtitulo_pt": "O Sacrifício Supremo",
+       "habilidades_pt": [
+-        "Sacrifício Final — Quando outro Cavaleiro aliado sofreria dano de Golpe, você pode derrotar Cássios. Se fizer isso, previna até 3 desse dano."
++        "Sacrifício Final — Derrote Cássios: até o fim desta rodada, os Devotos aliados não podem ser derrotados por dano."
+       ],
+       "tagline_pt": "O Sacrifício Supremo"
+     },
+@@ -1328,7 +1328,7 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Poisonous Claws — Once each round, when Hydra Ichi deals Strike damage to an enemy Devotee, that Devotee gets -1 @ATK until the end of your round."
++        "Hydra's Vitality — Whenever another friendly Devotee enters the Battlefield, your God gains {1}{S}."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -1336,7 +1336,7 @@
+       "nome_exibicao_pt": "ICHI DE HIDRA",
+       "subtitulo_pt": "A Presa Venenosa",
+       "habilidades_pt": [
+-        "Garras Venenosas — Uma vez por rodada, quando Ichi de Hidra causa dano de Golpe a um Devoto inimigo, esse Devoto recebe -1 @ATQ até o fim da sua rodada."
++        "Vitalidade da Hidra — Sempre que outro Devoto aliado entra no Campo de Batalha, seu Deus ganha {1}{S}."
+       ],
+       "tagline_pt": "A Presa Venenosa"
+     },
+@@ -1445,7 +1445,7 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Chameleon Whip — Once each round, when Chameleon June deals Strike damage to an enemy Devotee, that Devotee gets -1 @ATK until the end of your round.",
++        "Chameleon Whip — {T}: Target friendly Devotee gains @Immune to the enemy God's faction until the end of this round.",
+         "Resonance — Andromeda Shun: While you control Andromeda Shun, Chameleon June gets +0 @ATK / +1 @HP."
+       ],
+       "habilidade_awaken_en": "",
+@@ -1454,7 +1454,7 @@
+       "nome_exibicao_pt": "JUNE DE CAMALEÃO",
+       "subtitulo_pt": "A Protetora Leal",
+       "habilidades_pt": [
+-        "Chicote do Camaleão — Uma vez por rodada, quando June de Camaleão causa dano de Golpe a um Devoto inimigo, esse Devoto recebe -1 @ATQ até o fim da sua rodada.",
++        "Chicote do Camaleão — {T}: O Devoto aliado alvo ganha @Imune à facção do Deus inimigo até o fim desta rodada.",
+         "Ressonância — Shun de Andrômeda: Enquanto você controlar Shun de Andrômeda, June de Camaleão recebe +0 @ATQ / +1 @PV."
+       ],
+       "tagline_pt": "A Protetora Leal"
+@@ -1487,7 +1487,7 @@
+       "keywords_en": ["Guardian"],
+       "habilidades_en": [
+         "Guardian",
+-        "Loyal Servant — While your God has 5 or less Soul, Tatsumi gets +0 @ATK / +2 @HP."
++        "Loyal Servant — Your opponents can play cards only from their hand."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -1496,7 +1496,7 @@
+       "subtitulo_pt": "O Servo Inabalável",
+       "habilidades_pt": [
+         "Guardião",
+-        "Servo Leal — Enquanto seu Deus tiver 5 de Alma ou menos, Tatsumi recebe +0 @ATQ / +2 @PV."
++        "Servo Leal — Seus oponentes só podem jogar cartas da mão."
+       ],
+       "tagline_pt": "O Servo Inabalável"
+     },
+@@ -1689,7 +1689,7 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Training Through Pain — Once each round, when another friendly Saint survives a Strike, you may deal 1 damage to that Saint. If you do, it gets +1 @ATK until the end of your round."
++        "Master's Silence — During your round, your opponents can't cast Moments or Techniques."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -1697,7 +1697,7 @@
+       "nome_exibicao_pt": "GUILTY, MESTRE DA ILHA DA RAINHA DA MORTE",
+       "subtitulo_pt": "A Máscara do Ódio",
+       "habilidades_pt": [
+-        "Treino pela Dor — Uma vez por rodada, quando outro Cavaleiro aliado sobrevive a um Golpe, você pode causar 1 de dano a esse Cavaleiro. Se fizer isso, ele recebe +1 @ATQ até o fim da sua rodada."
++        "Silêncio do Mestre — Durante a sua rodada, seus oponentes não podem conjurar Momentos nem Técnicas."
+       ],
+       "tagline_pt": "A Máscara do Ódio"
+     },
+@@ -1728,14 +1728,18 @@
+       "equipar_custo": null,
+       "keywords_en": ["Guardian"],
+       "habilidades_en": [
+-        "Guardian"
++        "Guardian",
++        "Watchful Eye — Whenever another friendly Devotee with @ATK 2 or less enters the Battlefield, you may pay {1}{C}. If you do, draw a card."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+       "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026.",
+       "nome_exibicao_pt": "GUARDA DO SANTUÁRIO",
+       "subtitulo_pt": "Defensor das Doze Casas",
+-      "habilidades_pt": ["Guardião"],
++      "habilidades_pt": [
++        "Guardião",
++        "Olhar Vigilante — Sempre que outro Devoto aliado com @ATQ 2 ou menos entra no Campo de Batalha, você pode pagar {1}{C}. Se fizer isso, compre uma carta."
++      ],
+       "tagline_pt": "Defensor das Doze Casas"
+     },
+     {
+@@ -1765,7 +1769,7 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Sacred Recovery — {1}{C}, {T}: Choose one: Remove up to 2 damage from target friendly Devotee; or your God gains {2}{S}."
++        "Sanctuary Supplies — When Sanctuary Healer enters the Battlefield, if an opponent has more Cosmo Bases than you, put the top card of your deck into your Cosmo Bank face down as an Unprepared Cosmo Base."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -1773,7 +1777,7 @@
+       "nome_exibicao_pt": "CURANDEIRA DO SANTUÁRIO",
+       "subtitulo_pt": "Guardiã da Chama Sagrada",
+       "habilidades_pt": [
+-        "Recuperação Sagrada — {1}{C}, {T}: Escolha um: remova até 2 de dano do Devoto aliado alvo; ou seu Deus ganha {2}{S}."
++        "Provisões do Santuário — Quando a Curandeira do Santuário entra no Campo de Batalha, se um oponente tem mais Bases de Cosmo que você, ponha a carta do topo do seu deck no seu Banco de Cosmo, virada para baixo, como Base de Cosmo Despreparada."
+       ],
+       "tagline_pt": "Guardiã da Chama Sagrada"
+     },
+@@ -1932,8 +1936,7 @@
+       "equipar_custo": 3,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Dragon’s Guard — Once each round, when equipped Devotee would take Strike damage, prevent 1 of that damage.",
+-        "Resonance — Dragon Shiryu: When Dragon’s Guard prevents damage to Dragon Shiryu, you may remove 1 damage from his equipped Armor."
++        "Dragon's Tithe — Whenever an opponent draws a card, gain {1}{L} unless that player pays {1}{C}."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -1948,8 +1951,7 @@
+       "nome_exibicao_pt": "ESCUDO DO DRAGÃO",
+       "subtitulo_pt": "A Defesa Inquebrável",
+       "habilidades_pt": [
+-        "Guarda do Dragão — Uma vez por rodada, quando o Devoto equipado sofreria dano de Golpe, previna 1 desse dano.",
+-        "Ressonância — Shiryu de Dragão: Quando a Guarda do Dragão previne dano a Shiryu de Dragão, você pode remover 1 de dano da Armadura equipada nele."
++        "Tributo do Dragão — Sempre que um oponente compra uma carta, ganhe {1}{L}, a menos que esse jogador pague {1}{C}."
+       ],
+       "tagline_pt": "A Defesa Inquebrável",
+       "auto_equip_pt": ["Shiryu de Dragão"]
+@@ -2276,7 +2278,7 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Choose up to two friendly Bronze Saints. Each chosen Saint gets +1 @ATK until the end of your round.",
++        "Create two 1/1 Sanctuary Soldier Devotee Tokens.",
+         "Draw a card if you control at least three Bronze Saints."
+       ],
+       "habilidade_awaken_en": "",
+@@ -2285,7 +2287,7 @@
+       "nome_exibicao_pt": "A GUERRA GALÁCTICA",
+       "subtitulo_pt": "O Torneio Começa",
+       "habilidades_pt": [
+-        "Escolha até dois Cavaleiros de Bronze aliados. Cada Cavaleiro escolhido recebe +1 @ATQ até o fim da sua rodada.",
++        "Crie duas Fichas de Devoto Soldado do Santuário 1/1.",
+         "Compre uma carta se você controlar pelo menos três Cavaleiros de Bronze."
+       ],
+       "tagline_pt": "O Torneio Começa"
+@@ -2520,8 +2522,8 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Target friendly Saint gets +0 @ATK / +2 @HP until the end of this round.",
+-        "If that Saint is Dragon Shiryu, prevent the next 2 Strike damage that would be dealt to him this round."
++        "Return target enemy Moment or Technique on the stack to its owner's hand.",
++        "Draw a card."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -2529,8 +2531,8 @@
+       "nome_exibicao_pt": "SANGUE DO DRAGÃO",
+       "subtitulo_pt": "O Preço da Proteção",
+       "habilidades_pt": [
+-        "O Cavaleiro aliado alvo recebe +0 @ATQ / +2 @PV até o fim desta rodada.",
+-        "Se esse Cavaleiro for Shiryu de Dragão, previna os próximos 2 de dano de Golpe que seriam causados a ele nesta rodada."
++        "Devolva à mão do dono o Momento ou Técnica inimigo alvo na pilha.",
++        "Compre uma carta."
+       ],
+       "tagline_pt": "O Preço da Proteção"
+     },
+@@ -2631,7 +2633,7 @@
+       "status": "design-ready",
+       "cosmoble": true,
+       "caminho_imagem": null,
+-      "custo": 3,
++      "custo": 4,
+       "unidade_custo": "base_cosmo",
+       "soul": null,
+       "attack": null,
+@@ -2643,7 +2645,7 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Choose one: Target friendly Saint gets +2 @ATK until the end of this round; or prevent the next 3 Strike damage that would be dealt to your God this round."
++        "Friendly Devotees get +2 @ATK and gain @Nimble until the end of this round. If you control a Gold Saint, they also gain @Immune to the enemy God's faction until the end of this round."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -2651,7 +2653,7 @@
+       "nome_exibicao_pt": "O CHAMADO DE ATHENA",
+       "subtitulo_pt": "Atenda à Deusa",
+       "habilidades_pt": [
+-        "Escolha um: o Cavaleiro aliado alvo recebe +2 @ATQ até o fim desta rodada; ou previna os próximos 3 de dano de Golpe que seriam causados ao seu Deus nesta rodada."
++        "Os Devotos aliados recebem +2 @ATQ e ganham @Ágil até o fim desta rodada. Se você controla um Cavaleiro de Ouro, eles também ganham @Imune à facção do Deus inimigo até o fim desta rodada."
+       ],
+       "tagline_pt": "Atenda à Deusa"
+     },
+@@ -3296,8 +3298,7 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "When target friendly Saint would be defeated by Strike damage this round, prevent that damage instead.",
+-        "If that Saint is Pegasus Seiya, you may also Prepare him. (With a @Seal counter, remove one instead.) He cannot declare another Strike this round."
++        "Target friendly Devotee leaves the Battlefield and returns to it under your control."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -3305,8 +3306,7 @@
+       "nome_exibicao_pt": "O SACRIFÍCIO DE CÁSSIOS",
+       "subtitulo_pt": "O Amor que Desafiou a Morte",
+       "habilidades_pt": [
+-        "Quando o Cavaleiro aliado alvo seria derrotado por dano de Golpe nesta rodada, previna esse dano em vez disso.",
+-        "Se esse Cavaleiro for Seiya de Pégaso, você também pode Prepará-lo. (Com marcador de @Selo, tire um em vez disso.) Ele não pode declarar outro Golpe nesta rodada."
++        "O Devoto aliado alvo sai do Campo de Batalha e volta a ele sob o seu controle."
+       ],
+       "tagline_pt": "O Amor que Desafiou a Morte"
+     },
+@@ -3618,7 +3618,7 @@
+       "status": "design-ready",
+       "cosmoble": false,
+       "caminho_imagem": null,
+-      "custo": 5,
++      "custo": 6,
+       "unidade_custo": "base_cosmo",
+       "soul": null,
+       "attack": null,
+@@ -3630,14 +3630,16 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Defeat all Devotees."
++        "Choose two: Defeat all Devotees with Casting Cost 3 or less; or defeat all Devotees with Casting Cost 4 or more; or destroy all Equipment."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+       "notas_pt": "Texto do autor, Athena Vanilla Set V6, 24/10/2026. Cosmoble: rebalanceamento aprovado pelo autor em 31/10/2026 (70% Cosmoble por facção). Vira ATHENA’S FINAL DECREE, board wipe Rare (autor, 06/11/2026).",
+       "nome_exibicao_pt": "DECRETO FINAL DE ATHENA",
+       "subtitulo_pt": "O Fim de Todo Conflito",
+-      "habilidades_pt": ["Derrote todos os Devotos."],
++      "habilidades_pt": [
++        "Escolha dois: derrote todos os Devotos com custo 3 ou menos; ou derrote todos os Devotos com custo 4 ou mais; ou destrua todos os Equipamentos."
++      ],
+       "tagline_pt": "O Fim de Todo Conflito"
+     },
+     {
+@@ -22624,7 +22626,7 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Sacred Threshold — The first enemy Devotee that declares a Strike against your God each round gets -1 @ATK during that Strike.",
++        "Sacred Threshold — Enemy Devotees can't declare a Strike against your God unless their controller pays {1}{C} for each of them.",
+         "Resonance — Athena: Once each round, {2}{C}: Prevent the next 3 Strike damage that would be dealt to your God before the start of your next round."
+       ],
+       "habilidade_awaken_en": "",
+@@ -22633,7 +22635,7 @@
+       "nome_exibicao_pt": "OS PORTÕES DO SANTUÁRIO",
+       "subtitulo_pt": "Ninguém Passará",
+       "habilidades_pt": [
+-        "Limiar Sagrado — O primeiro Devoto inimigo que declara um Golpe contra o seu Deus a cada rodada recebe -1 @ATQ durante esse Golpe.",
++        "Limiar Sagrado — Devotos inimigos não podem declarar Golpe contra o seu Deus, a menos que o controlador deles pague {1}{C} por Devoto.",
+         "Ressonância — Athena: Uma vez por rodada, {2}{C}: Previna os próximos 3 de dano de Golpe que seriam causados ao seu Deus antes do início da sua próxima rodada."
+       ],
+       "tagline_pt": "Ninguém Passará"

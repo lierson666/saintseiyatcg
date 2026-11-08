@@ -39,17 +39,6 @@ function setup(decks = {A: rush, B: fortress}, decide) {
   return {s, ctx, objects: m.objects, field, equip, cast, strike, end};
 }
 
-test('052 The Galaxian Wars: +1 ATK em até dois Bronze Saints até o fim do Round; compra com três Bronze Saints', () => {
-  const {s, ctx, field, cast, end} = setup();
-  const seiya = field('A', '001'), jabu = field('A', '028'), marin = field('A', '021');
-  assert.throws(() => cast('A', '052', {targets: [seiya, marin]}), /Bronze Saint/, 'Marin é Silver');
-  const hand = s.players.A.hand.length;
-  cast('A', '052', {targets: [seiya, jabu]});
-  assert.deepEqual([atkOf(s, ctx, seiya), atkOf(s, ctx, jabu), s.players.A.hand.length - hand], [3, 3, 0], 'só dois Bronze: sem compra');
-  end();
-  assert.equal(atkOf(s, ctx, seiya), 2, 'expira no fim do Round de quem conjurou');
-});
-
 test('077 Shiryu\'s Sacrificed Sight: +2/+2 e Pierce em Shiryu; no fim do Round fica Unprepared e não prepara no próximo início', () => {
   const {s, ctx, field, cast, end} = setup({A: fortress, B: rush});
   const shiryu = field('A', '003');
@@ -65,20 +54,6 @@ test('077 Shiryu\'s Sacrificed Sight: +2/+2 e Pierce em Shiryu; no fim do Round 
 });
 
 // Ex-Miracle, agora Technique (guia, autor 31/10/2026): não responde ao Strike; no próprio turno, paga Base e protege o God.
-test('061 The Call of Athena (God) é Moment: responde ao Strike pagando Latent e põe escudo de 3 no God', () => {
-  const {s, ctx, field, cast} = setup();
-  const seiya = field('A', '001');
-  declareStrike(s, ctx, seiya, {kind: 'god', player: 'B'});
-  s.players.B.latent = 3;
-  const soul = s.players.B.soul, atk = atkOf(s, ctx, seiya);
-  cast('B', '061', {mode: 'god'});
-  assert.equal(s.players.B.latent, 0);
-  passAll(s);
-  // O Moment resolve antes do Strike: o escudo de 3 absorve o dano de Seiya.
-  assert.equal(s.players.B.soul, soul);
-  assert.equal(s.effects.find(e => e.target === 'god:B').amount, 3 - atk);
-});
-
 test('081 The Testament of Aiolos: "both" só com Pegasus Seiya', () => {
   const {s, ctx, field, cast} = setup();
   const jabu = field('A', '028');
@@ -103,17 +78,13 @@ test('088 The Eighth Sense: +3/+3 e salva de ser derrotado por Strike; não prep
   assert.throws(() => declareStrike(s, ctx, seiya, {kind: 'god', player: 'B'}), /D22|outro Strike/);
 });
 
-test('054 e 076: salvamento; 076 em Pegasus Seiya pode Preparar (escolha do jogador)', () => {
+test('054: salvamento (076 virou Ephemerate em 08/11/2026)', () => {
   const {s, ctx, field, cast, strike} = setup({A: rush, B: fortress}, (player, q) => q.prepare);
   const seiya = field('A', '001'), jabu = field('A', '028');
   cast('A', '054', {target: jabu});
   s.units[jabu].damage = 1;
   strike(jabu, {kind: 'devotee', uid: field('B', '043')}); // retaliação 1 derrotaria Jabu (HP 2, dano 1)
   assert.ok(s.players.A.battlefield.includes(jabu));
-  cast('A', '076', {target: seiya});
-  s.units[seiya].damage = 3;
-  strike(seiya, {kind: 'devotee', uid: field('B', '042')}); // retaliação 1 derrotaria Seiya (HP 4, dano 3)
-  assert.deepEqual([s.units[seiya].damage, s.units[seiya].prepared], [3, true]);
 });
 
 test('056 Protect Saori: 3, ou 5 se você controla um Saint com Guardian', () => {
@@ -144,12 +115,12 @@ test('087 Seiya Raises Athena\'s Shield: God sem dano no Round; remove 3 de cada
   assert.equal(s.players.A.soul, 5, 'prevenido até o fim do Round');
 });
 
-test('estáticas: Tatsumi com Soul ≤ 5, Seika com Seiya, Shunrei com Shiryu', () => {
+test('estáticas: Seika com Seiya, Shunrei com Shiryu (Tatsumi virou Drannith Magistrate em 08/11/2026)', () => {
   const {s, ctx, field} = setup();
-  const tatsumi = field('A', '034'), seika = field('A', '036');
-  assert.deepEqual([hpOf(s, ctx, tatsumi), hpOf(s, ctx, seika)], [3, 2]);
-  s.players.A.soul = 5; field('A', '001');
-  assert.deepEqual([hpOf(s, ctx, tatsumi), hpOf(s, ctx, seika)], [5, 4]);
+  const seika = field('A', '036');
+  assert.equal(hpOf(s, ctx, seika), 2);
+  field('A', '001');
+  assert.equal(hpOf(s, ctx, seika), 4);
   const t = setup({A: fortress, B: rush});
   const shunrei = t.field('A', '037');
   assert.equal(hpOf(t.s, t.ctx, shunrei), 3);
@@ -167,17 +138,7 @@ test('Dragon Shield (003/004) previne 1 uma vez por Round e não acumula', () =>
   assert.equal(s.units[cloth]?.damage ?? 0, 0, 'a Armor não tem dano próprio');
 });
 
-test('Dragon\'s Guard (045) em Shiryu: previne 1 e põe escudo de 1 na Armor dele até o fim do Round seguinte (o escudo protege o portador)', () => {
-  const {s, ctx, field, equip, strike} = setup({A: fortress, B: rush});
-  const shiryu = field('A', '003'), cloth = equip('A', '004', shiryu);
-  equip('A', '045', shiryu);
-  const seiya = field('B', '001'); s.units[seiya].training = 1; // 3/5: retaliação 3
-  strike(shiryu, {kind: 'devotee', uid: seiya});
-  assert.equal(s.units[shiryu].damage, 0, '3 - Dragon Shield 1 - Dragon\'s Guard 1 - escudo posto na Armor 1');
-  assert.equal(s.units[cloth]?.damage ?? 0, 0);
-});
-
-test('opcionais pagos: Prayer of Rozan (1 Latent), Crystal Wall (2 Latent, também no God), Final Sacrifice (derrota Cassios)', () => {
+test('opcionais pagos: Prayer of Rozan (1 Latent), Crystal Wall (2 Latent, também no God); Cassios não previne mais (08/11/2026)', () => {
   const asked = [];
   const yes = (player, q) => { asked.push(q.ability); return true; };
   const {s, ctx, field, strike, end} = setup({A: rush, B: fortress}, yes);
@@ -188,11 +149,11 @@ test('opcionais pagos: Prayer of Rozan (1 Latent), Crystal Wall (2 Latent, tamb�
   s.players.B.latent = 3;
   strike(marin, {kind: 'god', player: 'B'});
   assert.deepEqual([s.players.B.soul, s.players.B.latent, asked], [20, 1, ['Crystal Wall']], 'Crystal Wall previne os 2 no God');
-  const jabu = field('A', '028'); // ATK 2 + Unicorn Gallop 1 contra Shiryu: Dragon Shield 1, Prayer 1, Final Sacrifice o resto
+  const jabu = field('A', '028'); // ATK 2 + Unicorn Gallop 1 contra Shiryu: Dragon Shield 1, Prayer 1, o resto passa
   strike(jabu, {kind: 'devotee', uid: shiryu});
-  assert.deepEqual(asked, ['Crystal Wall', 'Prayer of Rozan', 'Final Sacrifice']);
+  assert.deepEqual(asked, ['Crystal Wall', 'Prayer of Rozan']);
   // Latent 1: Prayer gastou o último, e Shiryu (Athena Devotee) defendeu e sobreviveu: Cosmo of Hope do God Athena (D225).
-  assert.deepEqual([s.units[shiryu].damage, s.players.B.latent, s.players.B.tartarus.includes(cassios)], [0, 1, true]);
+  assert.deepEqual([s.units[shiryu].damage, s.players.B.latent, s.players.B.tartarus.includes(cassios)], [1, 1, false]);
   checkInvariants(s, ctx.objects);
 });
 

@@ -1,7 +1,7 @@
 // Kit das cartas V6: ações comuns de texto de carta sobre a engine 3.0. Toda escolha é uma pergunta da engine
 // (`ctx.decide`), respondida no modal de decisão da arena, pela IA ou pelo jogador remoto. Sem `decide`, recusa.
-import {RuleError, destroyDevotee, draw, emit, gainLatent, loseSoul, mill, prepareUnit, useOncePerRound, addEffect, restoreMoon, spendBase} from '../core.js';
-import {card, controllerOf, modify, damageDevotee, checkDefeats, atkOf, hpOf, keywordsOf, blockedNow} from '../effects.js';
+import {RuleError, destroyDevotee, draw, emit, gainLatent, loseSoul, mill, prepareUnit, useOncePerRound, addEffect, restoreMoon, spendBase, hooks} from '../core.js';
+import {card, controllerOf, modify, damageDevotee, checkDefeats, atkOf, hpOf, keywordsOf, blockedNow, redirectGod} from '../effects.js';
 import {gainSoul} from '../gods.js';
 import {collect, resonanceTag} from './registry.js';
 
@@ -10,7 +10,7 @@ export const other = (s, key) => s.order.find(k => k !== key);
 export const id = (c, uid) => c.objects[uid]?.cardId;
 export const isDevotee = (c, uid) => card(c, uid)?.kind === 'Devotee';
 // Subtipo na linha de tipo ("Devotee — Specter"): Specter, Skeleton, Berserker, Marina, Hunter…
-export const hasType = (c, uid, type) => new RegExp(`\\b${type}`, 'i').test(card(c, uid)?.type || '');
+export const hasType = (c, uid, type) => new RegExp(`\\b${type}`, 'i').test(`${card(c, uid)?.type || ''} ${c.objects[uid]?.extraType || ''}`);
 export const devotees = (s, c, key) => s.players[key].battlefield.filter(u => isDevotee(c, u));
 export const enemies = (s, c, key) => devotees(s, c, other(s, key)).filter(u => !blockedNow(s, u)); // §43A Imune
 // Equipment em campo dos dois jogadores (respostas a Equipment de Athena 057, Artemis 418 e Ares 324; autor, 06/11/2026).
@@ -74,7 +74,11 @@ export const isGod = t => typeof t === 'string' && t.startsWith('god:');
 // Dano que não é de Strike (passa pela Armor; prevenções "Strike damage" não valem). Checa derrotas depois.
 export function damage(s, c, target, amount) {
   if (!target || amount <= 0) return;
-  if (isGod(target)) return loseSoul(s, {[target.slice(4)]: amount}, 'damage');
+  if (isGod(target)) {
+    const left = redirectGod(s, c, target.slice(4), amount);
+    if (left < amount) checkDefeats(s, c);
+    return left > 0 ? loseSoul(s, {[target.slice(4)]: left}, 'damage') : null;
+  }
   if (!controllerOf(s, target)) return;
   const mark = s.events.length, key = controllerOf(s, target);
   damageDevotee(s, c, target, amount, false);
@@ -85,7 +89,7 @@ export function damage(s, c, target, amount) {
 export const loseSoulOf = (s, key, n) => loseSoul(s, {[key]: n}, 'loss');
 // "Pay N Soul": custo. Não paga se não tiver Soul suficiente (devolve false).
 export function paySoul(s, key, n) {
-  if (s.players[key].soul < n) return false;
+  if (s.players[key].soul - n < (hooks.soulFloor?.(s, key) ? 1 : 0)) return false; // Worship (539): em 1 não paga Soul
   loseSoul(s, {[key]: n}, 'payment');
   return true;
 }
@@ -120,9 +124,13 @@ export function removeDamage(s, uid, n = Infinity) { if (s.units[uid]) s.units[u
 // Marcadores +1/+1 (e -1/-1): ficam no objeto enquanto ele estiver em campo; somados em mods() (effects.js).
 export function addCounter(s, uid, n = 1) {
   if (!s.units[uid] || blockedNow(s, uid)) return;
+  if (n > 0) n = counterBonus(s, uid, n);
   s.units[uid].training = (s.units[uid].training || 0) + n; // §48A: um campo só; negativo = marcador -1/-1 (neutras)
   emit(s, 'counter', {uid, amount: n});
 }
+// Substituição "seriam postos … ponha N+1" (§58, autor 08/11/2026): ligada em v6/hooks.js.
+let counterBonus = (s, uid, n) => n;
+export const setCounterBonus = fn => { counterBonus = fn; };
 // Marcadores com nome (Rebirth, etc.): só contagem, sem bônus.
 export function addMarker(s, uid, name, n = 1) {
   if (!s.units[uid] || blockedNow(s, uid)) return;
@@ -147,6 +155,21 @@ function take(s, c, uid, from) {
   if (!p[from].includes(uid)) return false;
   p[from].splice(p[from].indexOf(uid), 1);
   return true;
+}
+// Sair e voltar (blink, §58, autor 08/11/2026): Devotee novo, Unprepared, sem marcadores nem dano; os Equipment caem e o
+// "quando entra" dispara de novo. Token não volta (deixa de existir ao sair).
+export function blink(s, c, uid) {
+  const key = controllerOf(s, uid);
+  if (!key || !exile(s, c, uid)) return false;
+  return !c.objects[uid] ? true : putOntoField(s, c, key, uid, 'void', {prepared: false});
+}
+// Entrar como cópia (clone, §58): copia só o impresso (a carta inteira, sem marcadores, dano nem bônus). `extraType`: tipo que
+// o texto mantém ("continua Marina"). restoreMoon (core) desfaz ao sair do campo.
+export function becomeCopy(c, uid, of, extraType) {
+  const o = c.objects[uid];
+  o.copied ||= {cardId: o.cardId};
+  o.cardId = c.objects[of].cardId;
+  if (extraType) o.extraType = extraType;
 }
 // Token (guia §63): ao sair do campo deixa de existir.
 const vanish = (c, uid) => (c.objects[uid]?.token ? (delete c.objects[uid], true) : false);
@@ -242,6 +265,8 @@ export function summonToken(s, c, key, spec) {
   s.units[uid] = {prepared: false, damage: 0, entered: s.turn};
   emit(s, 'card_played', {player: key, uid, kind: 'Devotee', token: true});
   enteredHooks(s, c, key, uid);
+  // §58 Doubling Season (596): cria o dobro; as cópias extras não dobram de novo.
+  if (!spec.copy) for (let i = 1; i < (hooks.tokenCount?.(s, key) || 1); i++) summonToken(s, c, key, {...spec, copy: true});
   return uid;
 }
 let enteredHooks = () => {};

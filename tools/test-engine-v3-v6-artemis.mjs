@@ -7,7 +7,7 @@ import {loadCanon} from '../shared/canon-cards.js';
 import {canonIndex} from '../shared/deck-v3.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
-import {startTurn, endTurn, passAll} from '../playtest/engine-v3/core.js';
+import {startTurn, endTurn, passAll, placeBase} from '../playtest/engine-v3/core.js';
 import {playDevotee as playDevoteeRaw, playEquipment as playEquipmentRaw, playSpell, activate as activateRaw, reequip} from '../playtest/engine-v3/play.js';
 import {declareStrike} from '../playtest/engine-v3/strike.js';
 import {atkOf, hpOf, keywordsOf, damageDevotee, checkDefeats, namedCharacter} from '../playtest/engine-v3/effects.js';
@@ -44,11 +44,11 @@ function setup() {
   return {s, ctx, p, field, hand, io, id: cardId => `artemis-v6-${cardId}`};
 }
 
-test('enter + watchCounter: Lunar Nymph põe marcador; Calisto compra 1 (uma por Round); Ancient Grove sem PV fixo (sem Soul desde 31/10/2026)', () => {
+test('enter + watchCounter: Chandra põe marcador; Calisto compra 1 (uma por Round); Ancient Grove sem PV fixo (sem Soul desde 31/10/2026)', () => {
   const {s, ctx, p, field, hand, io, id} = setup();
   s.domains.A = id(429);
   p.soul -= 5;
-  const calisto = field('A', id(361)), wolf = field('A', id(404)), nymph = hand('A', id(398));
+  const calisto = field('A', id(361)), wolf = field('A', id(404)), nymph = hand('A', id(371));
   io.answer = q => (q.options.includes(wolf) ? wolf : q.options[0]);
   const cards0 = p.hand.length, soul0 = p.soul, atk0 = atkOf(s, ctx, wolf), hp0 = hpOf(s, ctx, wolf);
   playDevotee(s, ctx, 'A', nymph, {}); passAll(s);
@@ -58,9 +58,9 @@ test('enter + watchCounter: Lunar Nymph põe marcador; Calisto compra 1 (uma por
   assert.equal(p.hand.length, cards0 - 1 + 1); // jogou a Nymph, Calisto comprou 1
   assert.equal(p.soul, soul0);
   // Segunda vez no mesmo Round/turno: nem Calisto nem o Domain disparam.
-  playDevotee(s, ctx, 'A', hand('A', id(398)), {}); passAll(s);
+  playDevotee(s, ctx, 'A', hand('A', id(371)), {}); passAll(s);
   assert.equal(s.units[wolf].training, 2);
-  assert.equal(p.hand.length, cards0); // pôs outra Nymph na mão e jogou; sem compra
+  assert.equal(p.hand.length, cards0); // pôs outra Chandra na mão e jogou; sem compra
   assert.equal(p.soul, soul0);
   assert.equal(atkOf(s, ctx, calisto), cards.get(id(361)).atk); // Divine Authority é só para os outros
 });
@@ -102,21 +102,23 @@ test('ramp: Ancient Expansion põe 2 Bases Unprepared; Second Moon Guardian ganh
   assert.equal(atkOf(s, ctx, guard), atk0 + 2);
 });
 
-test('418 The Forest Answers: Overgrowth destrói o Equipment escolhido', () => {
-  const {s, ctx, field, hand, io} = setup();
-  const foe = field('B', 'ares-v6-292'), helmet = field('B', 'ares-v6-315');
-  ctx.attached[helmet] = foe;
-  io.answer = q => (q.options.includes('Overgrowth') ? 'Overgrowth' : q.options.includes(helmet) ? helmet : q.options[0]);
-  playSpell(s, ctx, 'A', hand('A', 'artemis-v6-418')); if (s.window) passAll(s);
-  assert.ok(s.players.B.tartarus.includes(helmet));
-  assert.ok(s.players.B.battlefield.includes(foe));
+test('418 Call of the Forest: Devotee de custo 3 ou menos do deck ao campo, Unprepared', () => {
+  const {s, ctx, p, hand, io, id} = setup();
+  const big = p.deck.find(u => ctx.cards.get(ctx.objects[u].cardId).kind === 'Devotee' && ctx.cards.get(ctx.objects[u].cardId).cost.amount > 3);
+  const seen = [];
+  io.answer = q => { if (q.ability === 'CALL OF THE FOREST') seen.push(...q.options); return q.options[0]; };
+  playSpell(s, ctx, 'A', hand('A', id(418))); if (s.window) passAll(s);
+  assert.ok(seen.length && seen.every(u => ctx.cards.get(ctx.objects[u].cardId).cost.amount <= 3));
+  if (big) assert.ok(!seen.includes(big));
+  assert.ok(p.battlefield.includes(seen[0]));
+  assert.equal(s.units[seen[0]].prepared, false);
 });
 
 test('remoção: Primal Strike causa ATK; Hunter\'s Challenge luta e compra se o inimigo morrer', () => {
   const {s, ctx, p, field, hand, io} = setup();
   const beast = field('A', 'artemis-v6-392'), a = field('B', 'artemis-v6-386'), b = field('B', 'artemis-v6-392');
   io.answer = q => (q.options.includes(b) ? b : q.options[0]);
-  playSpell(s, ctx, 'A', hand('A', 'artemis-v6-418')); if (s.window) passAll(s);
+  playSpell(s, ctx, 'A', hand('A', 'artemis-v6-424')); if (s.window) passAll(s);
   assert.ok(s.players.B.tartarus.includes(b));
   io.answer = q => (q.options.includes(a) ? a : q.options[0]);
   const cards0 = p.hand.length;
@@ -294,13 +296,14 @@ test('435 Odysseus: Celestial Reversal é fight (cada um causa o próprio ATK), 
   assert.equal(s.units[cmd].damage, foeAtk, 'e leva o ATK do alvo');
 });
 
-test('388 Silver Arrow Huntress: Precise Hunt põe Training counter num Devotee seu, sem dano', () => {
+test('388 Silver Arrow Huntress: Precise Hunt pode destruir um Equipment', () => {
   const {s, ctx, field, hand, io, id} = setup();
-  const friend = field('A', id(382)), foe = field('B', 'ares-v6-271');
-  io.answer = q => (q.options.includes(friend) ? friend : q.options[0]);
+  const foe = field('B', 'ares-v6-292'), helmet = field('B', 'ares-v6-315');
+  ctx.attached[helmet] = foe;
+  io.answer = q => (q.options.includes(helmet) ? helmet : q.options[0]);
   playDevotee(s, ctx, 'A', hand('A', id(388)), {}); passAll(s);
-  assert.equal(s.units[friend].training, 1);
-  assert.equal(s.units[foe].damage, 0);
+  assert.ok(s.players.B.tartarus.includes(helmet));
+  assert.ok(s.players.B.battlefield.includes(foe));
 });
 
 test('379 Divine Bow: Celestial Arrow dá +2 ATK contra Devotee, sem dano em outro alvo', () => {
@@ -318,20 +321,86 @@ test('custos novos: 397 c1, 449 c5, 450 c6', () => {
   assert.deepEqual([397, 449, 450].map(n => ctx.cards.get(id(n)).cost.amount), [1, 5, 6]);
 });
 
-test('Sacred Stag: Forest Blessing só mira outro Devotee; sozinho fica 1/2 sem marcador', () => {
-  const alone = setup();
-  const stag = alone.hand('A', 'artemis-v6-381');
-  alone.p.bases.push({uid: 'b1', prepared: true}, {uid: 'b2', prepared: true});
-  playDevotee(alone.s, alone.ctx, 'A', stag);
-  assert.ok(!alone.s.units[stag].training);
-  assert.deepEqual([atkOf(alone.s, alone.ctx, stag), hpOf(alone.s, alone.ctx, stag)], [1, 2]);
+test('381 Sacred Stag: uma Base adicional por Round; duas cópias não somam', () => {
+  const {s, ctx, p, field, hand, id} = setup();
+  const cosmo = () => { const u = hand('A', id(386)); return u; }; // Cosmoble
+  placeBase(s, 'A', cosmo(), {cosmoble: true});
+  assert.throws(() => placeBase(s, 'A', cosmo(), {cosmoble: true}), /D4/);
+  field('A', id(381));
+  placeBase(s, 'A', cosmo(), {cosmoble: true});
+  field('A', id(381));
+  assert.throws(() => placeBase(s, 'A', cosmo(), {cosmoble: true}), /D4/);
+});
 
-  const pair = setup();
-  const ally = pair.field('A', 'artemis-v6-381'), second = pair.hand('A', 'artemis-v6-381');
-  pair.p.bases.push({uid: 'b1', prepared: true}, {uid: 'b2', prepared: true});
-  playDevotee(pair.s, pair.ctx, 'A', second);
-  assert.equal(pair.s.units[ally].training, 1);
-  assert.ok(!pair.s.units[second].training);
+test('389 Wildwood Stalker: uma vez por Round, pôr Base dá 1 Latent', () => {
+  const {s, ctx, p, field, hand, id} = setup();
+  field('A', id(389)); field('A', id(381));
+  const l0 = p.latent;
+  placeBase(s, 'A', hand('A', id(386)), {cosmoble: true}); passAll(s);
+  placeBase(s, 'A', hand('A', id(386)), {cosmoble: true}); passAll(s);
+  assert.equal(p.latent, l0 + 1);
+});
+
+test('390 Moon Temple Acolyte: o primeiro marcador do Round vira 2', () => {
+  const {s, ctx, field, hand, io, id} = setup();
+  field('A', id(390));
+  const t = field('A', id(382));
+  io.answer = q => (q.options.includes(t) ? t : q.options[0]);
+  playSpell(s, ctx, 'A', hand('A', id(421))); if (s.window) passAll(s);
+  assert.equal(s.units[t].training, 2);
+  playSpell(s, ctx, 'A', hand('A', id(421))); if (s.window) passAll(s);
+  assert.equal(s.units[t].training, 3);
+});
+
+test('398 Lunar Nymph: devolve do Tartarus carta de custo 3 ou menos', () => {
+  const {s, ctx, p, hand, io, id} = setup();
+  const cheap = hand('A', id(388)), big = hand('A', id(440));
+  p.hand.splice(p.hand.indexOf(cheap), 1); p.hand.splice(p.hand.indexOf(big), 1); p.tartarus.push(cheap, big);
+  const seen = [];
+  io.answer = q => { if (q.ability === 'MOONLIT BLESSING') seen.push(...q.options); return q.options[0]; };
+  playDevotee(s, ctx, 'A', hand('A', id(398)), {}); passAll(s);
+  assert.deepEqual(seen, [cheap]);
+  assert.ok(p.hand.includes(cheap));
+});
+
+test('404 Silver Fang Wolf: 1 Wolf por outro Sacred Beast, máximo 3', () => {
+  const {s, ctx, p, field, hand, id} = setup();
+  for (let i = 0; i < 4; i++) field('A', id(382));
+  playDevotee(s, ctx, 'A', hand('A', id(404)), {}); passAll(s);
+  assert.equal(p.battlefield.filter(u => ctx.objects[u].cardId === 'token-wolf').length, 3);
+});
+
+test('422 Predator\'s Challenge: destrói e o controlador ganha Forest Guardian 3/3', () => {
+  const {s, ctx, field, hand, io, id} = setup();
+  const foe = field('B', 'ares-v6-292');
+  io.answer = q => (q.options.includes(foe) ? foe : q.options[0]);
+  playSpell(s, ctx, 'A', hand('A', id(422))); if (s.window) passAll(s);
+  assert.ok(s.players.B.tartarus.includes(foe));
+  assert.equal(s.players.B.battlefield.filter(u => ctx.objects[u].cardId === 'token-forest-guardian').length, 1);
+});
+
+test('441 The Return of the Goddess: até 2 cartas do Tartarus viram Base Unprepared', () => {
+  const {s, ctx, p, hand, io, id} = setup();
+  const a = hand('A', id(388)), b = hand('A', id(389));
+  p.hand.splice(p.hand.indexOf(a), 1); p.hand.splice(p.hand.indexOf(b), 1); p.tartarus.push(a, b);
+  const n0 = p.bases.length;
+  io.answer = q => (q.count ? [a, b] : q.options[0]);
+  playSpell(s, ctx, 'A', hand('A', id(441))); if (s.window) passAll(s);
+  assert.equal(p.bases.length, n0 + 2);
+  assert.ok(p.bases.filter(x => [a, b].includes(x.uid)).every(x => !x.prepared));
+  assert.ok(!p.tartarus.includes(a) && !p.tartarus.includes(b));
+});
+
+test('372 The Goddess Awakens: não morre por dano até o fim do Round; depois morre', () => {
+  const {s, ctx, field, hand, id} = setup();
+  const t = field('A', id(382));
+  s.divine.B.god = 'god-ares';
+  playSpell(s, ctx, 'A', hand('A', id(372))); if (s.window) passAll(s);
+  damageDevotee(s, ctx, t, 99, false); checkDefeats(s, ctx);
+  assert.ok(s.players.A.battlefield.includes(t));
+  assert.equal(s.v6Immune[t].faction, 'ares');
+  endTurn(s); passAll(s); startTurn(s); if (s.window) passAll(s);
+  assert.ok(!s.players.A.battlefield.includes(t));
 });
 
 // ---- Artemis V2.0 (autor, 06/11/2026): Anjos Celestes 431/433/435 e Glories 432/434/436; docs/artemis-v2-card-migration.md ----

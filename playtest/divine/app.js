@@ -9,7 +9,7 @@ import {addPreviewCards} from '../../shared/preview-cards.js';
 import {abilityText, displayCard, triggerLine} from '../../shared/card-i18n.js';
 import {createMatch, mulligan} from '../engine-v3/match.js';
 import {createCoin3D, COIN_TOSS_MS} from './coin3d.js';
-import {startTurn, endTurn, pass, placeBase, spellCategory, runCheckpoint, ownBatch, loseGame} from '../engine-v3/core.js';
+import {startTurn, endTurn, pass, placeBase, baseRoom, spellCategory, runCheckpoint, ownBatch, loseGame} from '../engine-v3/core.js';
 import {inlineMarkup} from '../../shared/card-text.js?v=20261102-eq2';
 import {declareStrike, strikeTargets, mustStrike} from '../engine-v3/strike.js';
 import {playDevotee, playEquipment, playSpell, activate, reequip, duplicateCharacter, resonant, castCost, mixed, castHidden, afterlifeBlock, activateAfterlife, playableFrom, castFromZone} from '../engine-v3/play.js';
@@ -126,7 +126,7 @@ function playableReason(key, uid) {
 function baseReason(key, uid) {
   if (!info(uid).cosmoble) return 'This card is not Cosmoble: it cannot become a Cosmo Base.';
   if (!idleFor(key)) return S().active !== key ? "It's not your round." : 'Wait for the response window to close.';
-  if (S().players[key].baseTurn === S().turn) return 'You already placed a Cosmo Base this round.';
+  if (!baseRoom(S(), key)) return 'You already placed a Cosmo Base this round.';
   return null;
 }
 const canBase = (key, uid) => !baseReason(key, uid);

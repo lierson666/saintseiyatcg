@@ -94,14 +94,28 @@ test('057 Telekinesis: manda ao Vazio o Equipment inimigo; compra se controla Ki
   assert.equal(s.players.A.hand.length, hand - 1 + 1); // gasta a Spell e compra 1
 });
 
-test('084 Athena’s Final Decree: derrota todos os Devotees, aliados e inimigos', () => {
+test('084 Athena’s Final Decree (Austere Command, 08/11/2026): escolhe dois modos; custo 6', () => {
   const {s, ctx, give} = setup();
-  const mine = give('A', A('017')), theirs = give('B', FOE), spell = give('A', A('084'), 'hand');
+  const big = give('A', A('017')), small = give('B', A('028')), spell = give('A', A('084'), 'hand');
+  ctx.decide = (p, q) => (q.count ? ['Cost 3 or less', 'Cost 4 or more'] : q.options ? q.options[0] : true);
   const bases = s.players.A.bases.filter(x => x.prepared).length;
   playSpell(s, ctx, 'A', spell); if (s.window) passAll(s);
-  assert.equal(s.players.A.bases.filter(x => x.prepared).length, bases - 5);
-  assert.ok(!s.units[mine] && !s.units[theirs]);
-  assert.ok(!s.players.A.battlefield.includes(mine) && !s.players.B.battlefield.includes(theirs));
+  assert.equal(s.players.A.bases.filter(x => x.prepared).length, bases - 6);
+  assert.ok(!s.units[big] && !s.units[small]);
+});
+
+test('052, 058, 061, 076 (staples do branco, 08/11/2026)', () => {
+  const {s, ctx, give} = setup();
+  playSpell(s, ctx, 'A', give('A', A('052'), 'hand')); if (s.window) passAll(s);
+  assert.equal(s.players.A.battlefield.filter(u => ctx.objects[u]?.cardId === 'neutral-token-sanctuary-soldier').length, 2);
+  const seiya = give('A', A('001'));
+  s.divine.B.god = 'god-ares';
+  playSpell(s, ctx, 'A', give('A', A('061'), 'hand')); if (s.window) passAll(s);
+  assert.ok(atkOf(s, ctx, seiya) >= 4);
+  s.units[seiya].damage = 1; s.units[seiya].training = 1;
+  ctx.decide = (p, q) => (q.options ? (q.options.includes(seiya) ? seiya : q.options[0]) : true);
+  playSpell(s, ctx, 'A', give('A', A('076'), 'hand')); if (s.window) passAll(s);
+  assert.deepEqual([s.units[seiya].damage, s.units[seiya].training || 0, s.units[seiya].prepared], [0, 0, false]);
 });
 
 test('078 Freezing Coffin (Spell): 2 Seal; 3 com Camus; já Sealed leva 2 de dano', () => {

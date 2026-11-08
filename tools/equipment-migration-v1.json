@@ -1063,6 +1063,48 @@
    "subtipos": [
     "Relic"
    ]
+  },
+  "athena-v6-531": {
+   "nome": "SAINT'S BURDEN",
+   "subtipos": [
+    "Artifact"
+   ]
+  },
+  "athena-v6-534": {
+   "nome": "HYMN OF THE SAINTS",
+   "subtipos": [
+    "Artifact"
+   ]
+  },
+  "athena-v6-539": {
+   "nome": "NIKE, STAFF OF VICTORY",
+   "subtipos": [
+    "Divine Artifact"
+   ]
+  },
+  "poseidon-v6-549": {
+   "nome": "VEIL OF FOAM",
+   "subtipos": [
+    "Artifact"
+   ]
+  },
+  "hades-v6-562": {
+   "nome": "TOME OF THE DEAD",
+   "subtipos": [
+    "Artifact"
+   ]
+  },
+  "hades-v6-569": {
+   "nome": "GATE OF ELYSION",
+   "subtipos": [
+    "Divine Artifact"
+   ]
+  },
+  "artemis-v6-596": {
+   "nome": "GROVE OF ENDLESS GROWTH",
+   "subtipos": [
+    "Artifact"
+   ]
   }
  }
 }

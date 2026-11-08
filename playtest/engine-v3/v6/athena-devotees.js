@@ -19,6 +19,9 @@ function pay(st, c, key, n, ability, uid) {
   spendBase(st, key, n);
   return true;
 }
+// @Immune à facção do God inimigo até o fim do Round (§58; The Goddess Awakens, Mother of Runes).
+const faction = (s, key) => s.divine?.[k.other(s, key)]?.god?.replace(/^god-/, '');
+const immune = (s, key, u) => { const f = faction(s, key); if (f) (s.v6Immune ||= {})[u] = {round: s.round, faction: f}; };
 const inStrike = (attacker, target, uid) => attacker === uid || (target.kind === 'devotee' && target.uid === uid);
 // "Strike contra o seu God ou outro Saint amigo", declarado por um Devotee inimigo.
 const againstAlly = (s, c, key, self, attacker, target) => k.controllerOf(s, attacker) !== key && (
@@ -58,6 +61,17 @@ const payShade = (tag, ability, cost, amount) => (s, c, key, self, attacker, tar
     k.buff(st, attacker, -amount, 0, 'this_strike');
   };
 };
+
+// Sun Titan (Lyra Orphee 025): Devotee ou Equipment de custo 3 ou menos do Tartarus ao campo. Equipment entra solto (sem portador).
+function serenade(st, c, key, self) {
+  const p = st.players[key], options = p.tartarus.filter(u => ['Devotee', 'Equipment'].includes(k.card(c, u)?.kind) && k.costOf(c, u) <= 3);
+  const t = k.choose(c, key, 'DEATH TRIP SERENADE', options, {optional: true, text: 'Return a Devotee or Equipment with cost 3 or less from your Tartarus?'});
+  if (!t) return;
+  if (k.isDevotee(c, t)) { k.putOntoField(st, c, key, t, 'tartarus'); return; }
+  p.tartarus.splice(p.tartarus.indexOf(t), 1);
+  p.battlefield.push(t);
+  k.emit(st, 'card_played', {player: key, uid: t, kind: 'Equipment', from: 'tartarus'});
+}
 
 export default {
   // Andromeda Shun
@@ -179,43 +193,37 @@ export default {
     // Stone Gaze (gancho survive): sobreviveu como defensor, +1/+1 até o fim do Round.
     survive: (s, c, key, self, role) => role === 'defender' && (st => { if (st.units[self]) k.buff(st, self, 1, 1); }), // criado no Round inimigo: vale até o fim do próximo Round dele
   },
-  // Lyra Orphee
   'athena-v6-025': {
     activate: {name: 'STRING NOCTURNE', cost: 2, run: (s, c, key) => {
       for (const u of k.chooseUpTo(c, key, 'STRING NOCTURNE', saints(s, c, key), 2, {text: 'Choose up to two friendly Saints.'})) k.buff(s, u, 0, 2);
     }},
-    // Death Trip Serenade
-    watchDeclare: (s, c, key, self, attacker, target) => {
-      const tag = `${self}:serenade`;
-      if (!againstAlly(s, c, key, self, attacker, target) || s.roundUses.has(tag) || ready(s, key) < 2) return;
-      return st => {
-        if (!st.units[attacker] || st.roundUses.has(tag) || !pay(st, c, key, 2, 'DEATH TRIP SERENADE', self)) return;
-        k.once(st, tag);
-        k.buff(st, attacker, -2, 0, 'this_strike');
-      };
-    },
+    // Death Trip Serenade — Sun Titan: ao entrar e ao declarar Strike.
+    enter: (s, c, key, self) => st => serenade(st, c, key, self),
+    declare: (s, c, key, self) => st => serenade(st, c, key, self),
   },
   // Kiki: busca um Equipment (autor, 01/11/2026)
   'athena-v6-026': {enter: (s, c, key) => st => { k.search(st, c, key, 'FORGE OF JAMIR', cd => cd?.kind === 'Equipment'); }},
   // Bear Geki: Hanging Bear
   'athena-v6-029': {combatDamage: onHit('hanging', (st, c, key, self, victim) => { if (st.units[victim]) forbidStrike(st, victim, 'next_round'); })},
-  // Hydra Ichi: Poisonous Claws
-  'athena-v6-030': {combatDamage: weaken('claws')},
+  // Staples do branco (autor, 08/11/2026: docs/proposta-athena-staples-branco.md). Hydra Ichi — Soul Warden.
+  'athena-v6-030': {watchEnter: (s, c, key, self, entered) => entered !== self && k.controllerOf(s, entered) === key && k.isDevotee(c, entered) && (st => k.gainSoul(st, key, 1))},
   // Wolf Nachi: Wolf Pack
   'athena-v6-031': {
     mods: (s, c, key, self) => k.devotees(s, c, key).filter(u => u !== self && isBronze(c, u)).length >= 2 ? [{atk: 1, hp: 1}] : [],
   },
   // Lionet Ban: Lionet Bomber
   'athena-v6-032': {declare: boostOnDeclare('bomber', (s, c, self, foe) => k.atkOf(s, c, foe) > k.atkOf(s, c, self))},
-  // Chameleon June
+  // Chameleon June — Mother of Runes: {T}, um Devotee aliado ganha @Immune à facção do God inimigo até o fim do Round.
   'athena-v6-033': {
-    combatDamage: weaken('whip'), // Chameleon Whip
+    activate: {name: 'CHAMELEON WHIP', cost: 0,
+      check: (s, c, key) => { if (!faction(s, key)) throw new k.RuleError('alvo', 'o God inimigo não tem facção'); },
+      run: (s, c, key) => { const t = k.choose(c, key, 'CHAMELEON WHIP', k.devotees(s, c, key), {text: 'Choose target friendly Devotee.'}); if (t) immune(s, key, t); }},
     mods: (s, c, key) => hasName(s, c, key, /Andromeda Shun/i) ? [{hp: 1}] : [], // Resonance — Andromeda Shun
   },
   // Miho: Kindness
   'athena-v6-035': {watchEnter: (s, c, key, self, entered) => entered !== self && k.controllerOf(s, entered) === key && isBronze(c, entered) && k.onceTurn(s, `${self}:mentor`) && (st => k.draw(st, key, 1))},
-  // Sanctuary Healer: Sacred Recovery (substitui ABILITIES '041' de effects.js)
-  'athena-v6-041': {activate: {name: 'SACRED RECOVERY', cost: 1, run: (s, c, key, self, ch) => healOrSoul(s, c, key, 'SACRED RECOVERY', 2, 2, ch)}},
+  // Sanctuary Healer — Knight of the White Orchid: Base nova se o oponente tem mais Bases.
+  'athena-v6-041': {enter: (s, c, key) => s.players[k.other(s, key)].bases.length > s.players[key].bases.length && (st => k.topToBase(st, key))},
   // Motor Enchantress (31/10/2026): "Whenever you play a non-Armor Equipment, draw a card." Uma vez por Round (§64).
   // 042 vale para qualquer Equipment (autor, 01/11/2026).
   'athena-v6-042': {watchEquipCast: (s, c, key, self) => k.once(s, `${self}:enchant`) && (st => k.draw(st, key, 1))},
@@ -231,16 +239,8 @@ export default {
       if (t) k.toHand(st, c, t, 'tartarus');
     },
   },
-  // Guilty — Training Through Pain (gancho watchSurvive): outro Saint amigo sobreviveu a um Strike; uma vez por Round,
-  // pode causar 1 de dano a ele; se causar, +1 ATK até o fim do Round.
-  'athena-v6-039': {
-    watchSurvive: (s, c, key, self, unit) => unit !== self && k.controllerOf(s, unit) === key && isSaint(c, unit) && !s.roundUses.has(`${self}:training`) && (st => {
-      if (!st.units[unit] || st.roundUses.has(`${self}:training`) || !k.may(c, key, 'TRAINING THROUGH PAIN', {uid: unit, text: 'Deal 1 damage to that Saint? It gets +1 ATK.'})) return;
-      k.once(st, `${self}:training`);
-      k.damage(st, c, unit, 1);
-      if (st.units[unit]) k.buff(st, unit, 1, 0);
-    }),
-  },
+  // Guilty — Grand Abolisher (§58): na sua rodada, os oponentes não conjuram Moments nem Techniques (play.js, hooks.spellLock).
+  'athena-v6-039': {noEnemySpells: true},
   // Centaur Babel: Flame Whip
   'athena-v6-071': {combatDamage: onHit('flame', (st, c, key, self, victim) => k.damage(st, c, victim, 1))},
   // Whale Moses
@@ -280,4 +280,14 @@ export default {
     // Three-Headed Assault: sem limite por Round.
     declare: (s, c, key, self, target) => target.kind === 'devotee' && sealed(s, target.uid) && (st => k.buff(st, self, 1, 0, 'this_strike')),
   },
+  // Cassios — Selfless Spirit: derrote Cassios; até o fim do Round, os Devotees aliados não morrem por dano (§58).
+  'athena-v6-027': {activate: {name: 'FINAL SACRIFICE', cost: 0, tap: false, run: (s, c, key, self) => {
+    k.defeat(s, c, self);
+    for (const u of k.devotees(s, c, key)) (s.v6Unbreakable ||= {})[u] = s.round;
+  }}},
+  // Tatsumi — Drannith Magistrate (§58): os oponentes só jogam da mão (play.js, hooks.handOnly).
+  'athena-v6-034': {onlyFromHand: true},
+  // Sanctuary Guard — Mentor of the Meek.
+  'athena-v6-040': {watchEnter: (s, c, key, self, entered) => entered !== self && k.controllerOf(s, entered) === key && k.isDevotee(c, entered)
+    && k.atkOf(s, c, entered) <= 2 && ready(s, key) >= 1 && (st => { if (pay(st, c, key, 1, 'WATCHFUL EYE', self)) k.draw(st, key, 1); })},
 };

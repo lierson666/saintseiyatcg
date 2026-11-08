@@ -153,14 +153,15 @@ test("501 Athena's Statue: no seu turno põe 1 carta da mão no Void, perde {2}{
   assert.equal(survive('god-hades'), 0, 'Ressonância barrada com outro God');
 });
 
-test('520 The Sanctuary Gates: primeiro Strike inimigo no seu God, -1 ATK; Ressonância previne 3 até o seu próximo turno', () => {
+test('520 The Sanctuary Gates (Ghostly Prison, 08/11/2026): Strike contra o seu God custa {1}{C}; Ressonância previne 3 até o seu próximo turno', () => {
   const {s, ctx, p, field, strike} = setup('athena-v6-520', 'god-hades');
   const a = field('B', 'athena-v6-027'), b = field('B', 'athena-v6-028');
+  s.players.B.bases = [{uid: 'xb1', prepared: true}]; s.players.B.latent = 0;
   const soul = p.soul;
   strike(a, god('A'));
-  assert.equal(p.soul, soul - (k.atkOf(s, ctx, a) - 1), 'primeiro: -1 ATK');
-  strike(b, god('A'));
-  assert.equal(p.soul, soul - (k.atkOf(s, ctx, a) - 1) - k.atkOf(s, ctx, b), 'segundo: sem redução');
+  assert.equal(p.soul, soul - k.atkOf(s, ctx, a), 'sem redução de ATK');
+  assert.equal(s.players.B.bases.filter(x => x.prepared).length, 0, 'pagou {1}{C}');
+  assert.throws(() => strike(b, god('A')), /imposto/);
   const o = setup('athena-v6-520');
   res(o.s, o.ctx);
   const sh = o.s.effects.find(e => e.kind === 'prevent' && e.target === 'god:A');

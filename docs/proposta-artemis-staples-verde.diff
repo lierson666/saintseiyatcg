@@ -1,0 +1,212 @@
+--- data/cards.json	2026-11-08 18:13:09
++++ data/cards.json (proposta)	2026-11-08 18:29:05
+@@ -16284,8 +16284,7 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Divine Emergence — Search your deck for an Artemis Devotee with Casting Cost 4 or less, reveal it, and put it into your hand. Then shuffle your deck.",
+-        "Lunar Blessing — Put a @Training counter on up to two friendly Devotees."
++        "Divine Emergence — Until the end of this round, friendly Devotees gain @Immune to the enemy God's faction and can't be defeated by damage."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -16293,8 +16292,7 @@
+       "nome_exibicao_pt": "A DEUSA DESPERTA",
+       "subtitulo_pt": "O Retorno da Deusa da Lua",
+       "habilidades_pt": [
+-        "Surgimento Divino — Procure no seu deck um Devoto de Ártemis com custo de Conjuração 4 ou menos, revele-o e ponha-o na sua mão. Depois, embaralhe o seu deck.",
+-        "Bênção Lunar — Coloque 1 marcador de @Treinamento em até dois Devotos aliados."
++        "Surgimento Divino — Até o fim desta rodada, os Devotos aliados ganham @Imune à facção do Deus inimigo e não podem ser derrotados por dano."
+       ],
+       "flavour_pt": "\"A lua nunca abandonou o mundo. Ela apenas esperava.\"",
+       "tagline_pt": "O Retorno da Deusa da Lua"
+@@ -16691,7 +16689,7 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Forest Blessing — When Sacred Stag enters the Battlefield, you may put a @Training counter on another target friendly Devotee."
++        "Forest Blessing — You may place one additional Cosmo Base during each of your rounds."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -16699,7 +16697,7 @@
+       "nome_exibicao_pt": "CERVO SAGRADO",
+       "subtitulo_pt": "A Fera Escolhida da Lua",
+       "habilidades_pt": [
+-        "Bênção da Floresta — Quando o Cervo Sagrado entra no Campo de Batalha, você pode colocar 1 marcador de @Treinamento em outro Devoto aliado alvo."
++        "Bênção da Floresta — Você pode pôr uma Base de Cosmo adicional em cada rodada sua."
+       ],
+       "flavour_pt": "\"Onde seus cascos tocam a terra, a floresta ancestral desperta.\"",
+       "tagline_pt": "A Fera Escolhida da Lua"
+@@ -16982,7 +16980,7 @@
+       "keywords_en": ["Long Range"],
+       "habilidades_en": [
+         "Long Range",
+-        "Precise Hunt — When Silver Arrow Huntress enters the Battlefield, you may pay {1}{C}. If you do, put a @Training counter on target friendly Devotee."
++        "Precise Hunt — When Silver Arrow Huntress enters the Battlefield, you may destroy target Equipment."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -16991,7 +16989,7 @@
+       "subtitulo_pt": "Olhos sob a Lua",
+       "habilidades_pt": [
+         "Longo Alcance",
+-        "Caçada Precisa — Quando a Caçadora da Flecha de Prata entra no Campo de Batalha, você pode pagar {1}{C}. Se fizer isso, coloque 1 marcador de @Treinamento no Devoto aliado alvo."
++        "Caçada Precisa — Quando a Caçadora da Flecha de Prata entra no Campo de Batalha, você pode destruir o Equipamento alvo."
+       ],
+       "flavour_pt": "\"Sua flecha alcança a presa antes do som do arco.\"",
+       "tagline_pt": "Olhos sob a Lua"
+@@ -17023,7 +17021,7 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Ferocious Instinct — Whenever Wildwood Stalker declares a Strike, if it has a @Training counter, it gets +1/+0 until the end of your round."
++        "Ferocious Instinct — Once each round, whenever you place a Cosmo Base, gain {1}{L}."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -17031,7 +17029,7 @@
+       "nome_exibicao_pt": "PERSEGUIDOR DA MATA SELVAGEM",
+       "subtitulo_pt": "Predador da Floresta Sagrada",
+       "habilidades_pt": [
+-        "Instinto Feroz — Sempre que o Perseguidor da Mata Selvagem declara um Golpe, se ele tiver um marcador de @Treinamento, recebe +1 @ATQ até o fim da sua rodada."
++        "Instinto Feroz — Uma vez por rodada, quando você põe uma Base de Cosmo, ganhe {1}{L}."
+       ],
+       "flavour_pt": "\"A floresta recompensa aqueles que abraçam a caçada.\"",
+       "tagline_pt": "Predador da Floresta Sagrada"
+@@ -17063,8 +17061,7 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Celestial Cultivation — When Moon Temple Acolyte enters the Battlefield, put a @Training counter on another target friendly Devotee.",
+-        "Lunar Guidance — Whenever Moon Temple Acolyte declares a Strike, you may move one @Training counter from another friendly Devotee to Moon Temple Acolyte."
++        "Celestial Cultivation — Once each round, if one or more @Training counters would be put on a friendly Devotee, put that many plus one instead."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -17072,8 +17069,7 @@
+       "nome_exibicao_pt": "ACÓLITO DO TEMPLO DA LUA",
+       "subtitulo_pt": "Guardião dos Ritos Celestiais",
+       "habilidades_pt": [
+-        "Cultivo Celestial — Quando o Acólito do Templo da Lua entra no Campo de Batalha, coloque 1 marcador de @Treinamento em outro Devoto aliado alvo.",
+-        "Orientação Lunar — Sempre que o Acólito do Templo da Lua declara um Golpe, você pode mover 1 marcador de @Treinamento de outro Devoto aliado para o Acólito do Templo da Lua."
++        "Cultivo Celestial — Uma vez por rodada, se um ou mais marcadores de @Treinamento seriam postos em um Devoto aliado, ponha essa quantidade mais um em vez disso."
+       ],
+       "flavour_pt": "\"Sob o olhar de Ártemis, até o espírito mais fraco pode florescer.\"",
+       "tagline_pt": "Guardião dos Ritos Celestiais"
+@@ -17395,7 +17391,7 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Moonlit Blessing — When Lunar Nymph enters the Battlefield, put a @Training counter on another target friendly Devotee."
++        "Moonlit Blessing — When Lunar Nymph enters the Battlefield, return target card with Casting Cost 3 or less from your Tartarus to your hand."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -17403,7 +17399,7 @@
+       "nome_exibicao_pt": "NINFA LUNAR",
+       "subtitulo_pt": "O Suave Sussurro da Lua",
+       "habilidades_pt": [
+-        "Bênção do Luar — Quando a Ninfa Lunar entra no Campo de Batalha, coloque 1 marcador de @Treinamento em outro Devoto aliado alvo."
++        "Bênção do Luar — Quando a Ninfa Lunar entra no Campo de Batalha, devolva do seu Tártaro para a sua mão a carta alvo com custo 3 ou menos."
+       ],
+       "flavour_pt": "\"Até a menor das luzes pode despertar a força de mil estrelas.\"",
+       "tagline_pt": "O Suave Sussurro da Lua"
+@@ -17642,7 +17638,7 @@
+       "keywords_en": [],
+       "habilidades_en": [
+         "Pack Leadership — Other friendly Sacred Beasts get +1/+0.",
+-        "Predator's Growth — Whenever another friendly Sacred Beast defeats an enemy Devotee during combat, put a @Training counter on Silver Fang Wolf."
++        "Call the Pack — When Silver Fang Wolf enters the Battlefield, create a 1/1 Wolf Sacred Beast Devotee Token for each other Sacred Beast you control (maximum three)."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -17651,7 +17647,7 @@
+       "subtitulo_pt": "Alfa da Matilha Lunar",
+       "habilidades_pt": [
+         "Liderança da Matilha — Outras Feras Sagradas aliadas recebem +1 @ATQ.",
+-        "Crescimento do Predador — Sempre que outra Fera Sagrada aliada derrota um Devoto inimigo em combate, coloque 1 marcador de @Treinamento no Lobo Presa de Prata."
++        "Chamado da Matilha — Quando o Lobo Presa de Prata entra no Campo de Batalha, crie uma Ficha de Devoto Fera Sagrada Lobo 1/1 para cada outra Fera Sagrada que você controla (máximo três)."
+       ],
+       "flavour_pt": "\"A matilha não segue o mais forte nem o mais veloz, mas aquele escolhido pela lua.\"",
+       "tagline_pt": "Alfa da Matilha Lunar"
+@@ -18267,7 +18263,7 @@
+       "nome_interno_pt": "",
+       "faccao": "Artemis",
+       "tipo": "Spell",
+-      "subtipos": ["Technique", "Nature", "Removal"],
++      "subtipos": ["Technique", "Nature"],
+       "raridade": "Common",
+       "status": "design-ready",
+       "cosmoble": true,
+@@ -18284,7 +18280,7 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Choose one: Primal Strike — Target friendly Devotee deals damage equal to its @ATK to target enemy Devotee; or Overgrowth — Destroy target Equipment."
++        "Call of the Forest — Search your deck for a Devotee with Casting Cost 3 or less and put it onto the Battlefield Unprepared. Then shuffle your deck."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -18292,7 +18288,7 @@
+       "nome_exibicao_pt": "A FLORESTA RESPONDE",
+       "subtitulo_pt": "A Ira da Natureza Ancestral",
+       "habilidades_pt": [
+-        "Escolha um: Golpe Primitivo — o Devoto aliado alvo causa dano igual ao seu @ATQ ao Devoto inimigo alvo; ou Crescimento Selvagem — destrua o Equipamento alvo."
++        "Chamado da Floresta — Procure no seu deck um Devoto com custo 3 ou menos e ponha-o no Campo de Batalha Despreparado. Depois, embaralhe o seu deck."
+       ],
+       "flavour_pt": "\"Quando a floresta golpeia, nem a armadura mais forte pode silenciar sua fúria.\"",
+       "tagline_pt": "A Ira da Natureza Ancestral"
+@@ -18431,12 +18427,12 @@
+       "nome_interno_pt": "",
+       "faccao": "Artemis",
+       "tipo": "Spell",
+-      "subtipos": ["Technique", "Nature", "Removal"],
++      "subtipos": ["Moment", "Nature", "Removal"],
+       "raridade": "Common",
+       "status": "design-ready",
+       "cosmoble": true,
+       "caminho_imagem": null,
+-      "custo": 2,
++      "custo": 3,
+       "unidade_custo": "base_cosmo",
+       "soul": null,
+       "attack": null,
+@@ -18448,7 +18444,7 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Predator's Challenge — Target friendly Devotee fights target enemy Devotee. Each deals damage equal to its @ATK to the other."
++        "Predator's Challenge — Destroy target Devotee or Equipment. Its controller creates a 3/3 Forest Guardian Devotee Token."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -18456,7 +18452,7 @@
+       "nome_exibicao_pt": "O INSTINTO DO CAÇADOR",
+       "subtitulo_pt": "Os Fortes Devoram os Fracos",
+       "habilidades_pt": [
+-        "Desafio do Predador — O Devoto aliado alvo luta contra o Devoto inimigo alvo. Cada um causa dano igual ao seu @ATQ ao outro."
++        "Desafio do Predador — Destrua o Devoto ou Equipamento alvo. O controlador dele cria uma Ficha de Devoto @Guardião da Floresta 3/3."
+       ],
+       "flavour_pt": "\"Na natureza selvagem, a força é a única lei que não pode ser quebrada.\"",
+       "tagline_pt": "Os Fortes Devoram os Fracos"
+@@ -19268,8 +19264,7 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Divine Return — Look at the top four cards of your deck. You may reveal an Artemis Devotee among them and put it into your hand. Put the remaining cards on the bottom of your deck in any order.",
+-        "Lunar Blessing — Put a @Training counter on target friendly Devotee."
++        "Divine Return — Put up to two cards from your Tartarus into your Cosmo Bank face down as Unprepared Cosmo Base."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -19277,8 +19272,7 @@
+       "nome_exibicao_pt": "O RETORNO DA DEUSA",
+       "subtitulo_pt": "A Lua Se Ergue Mais Uma Vez",
+       "habilidades_pt": [
+-        "Retorno Divino — Olhe as 4 cartas do topo do seu deck. Você pode revelar um Devoto de Ártemis entre elas e pô-lo na sua mão. Ponha as demais no fundo do seu deck, em qualquer ordem.",
+-        "Bênção Lunar — Coloque 1 marcador de @Treinamento no Devoto aliado alvo."
++        "Retorno Divino — Ponha até 2 cartas do seu Tártaro no seu Banco de Cosmo, viradas para baixo, como Bases de Cosmo Despreparadas."
+       ],
+       "flavour_pt": "\"Após séculos de silêncio, a lua finalmente respondeu às preces de seus escolhidos.\"",
+       "tagline_pt": "A Lua Se Ergue Mais Uma Vez"

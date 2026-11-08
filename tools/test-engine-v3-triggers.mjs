@@ -110,21 +110,19 @@ test('Pegasus God Cloth (019): ao jogar com o God atrás, +3/+3 e prepara; Divin
   assert.equal(s.units[kamui]?.damage ?? 0, 0, 'a Armor não tem dano próprio');
 });
 
-test('{T}: Sacred Recovery (041), Armor Repair (042) e Cloth Restoration (011) curam o Devotee com Armor', () => {
+test('{T}: Armor Repair (042) e Cloth Restoration (011) curam o Devotee com Armor (041 virou Knight of the White Orchid, 08/11/2026)', () => {
   const {s, ctx, field, equip, bases} = setup({A: fortress, B: rush});
-  const healer = field('A', '041'), repairer = field('A', '042'), mu = field('A', '011'), shiryu = field('A', '003');
+  const healer = field('A', '042'), repairer = field('A', '042'), mu = field('A', '011'), shiryu = field('A', '003');
   const cloth = equip('A', '004', shiryu);
   s.units[shiryu].damage = 5;
   bases('A', 4);
   s.units[healer].prepared = false;
   assert.throws(() => activate(s, ctx, 'A', healer, {target: shiryu}), /Prepared/);
-  s.units[healer].prepared = true;
-  activate(s, ctx, 'A', healer, {target: shiryu}); passAll(s); // guia §56: resolve a pilha
   assert.throws(() => activate(s, ctx, 'A', repairer, {target: cloth}), /alvo/, 'a Armor não é alvo: o Devotee que a veste é');
   assert.throws(() => activate(s, ctx, 'A', repairer, {target: healer}), /alvo/, 'Devotee sem Armor');
   activate(s, ctx, 'A', repairer, {target: shiryu}); passAll(s);
   activate(s, ctx, 'A', mu, {target: shiryu}); passAll(s);
-  assert.deepEqual([s.units[shiryu].damage, s.units[healer].prepared, s.players.A.bases.filter(b => b.prepared).length], [1, false, 1]);
+  assert.deepEqual([s.units[shiryu].damage, s.units[healer].prepared, s.players.A.bases.filter(b => b.prepared).length], [3, false, 2]);
 });
 
 test('A Promise to Shunrei (059): remove 2 de dano e, com Shunrei, prepara', () => {
@@ -157,15 +155,16 @@ test('Dragon Cloth (004) Resonance: redireciona até 2 de outro Saint para Shiry
 });
 
 test('Poseidon 160/169: Devotee silenciado não ativa habilidades até o fim do Round', () => {
-  const {s, ctx, field, bases} = setup({A: fortress, B: rush});
-  const healer = field('A', '041'), shiryu = field('A', '003');
+  const {s, ctx, field, equip, bases} = setup({A: fortress, B: rush});
+  const healer = field('A', '042'), shiryu = field('A', '003'); // Armor Repair (041 mudou em 08/11/2026)
+  equip('A', '004', shiryu);
   s.units[shiryu].damage = 2;
   bases('A', 2);
   silence(s, healer);
   assert.throws(() => activate(s, ctx, 'A', healer, {target: shiryu}), /habilidades ativadas/);
   s.effects = s.effects.filter(e => e.kind !== 'noAbilities'); // fim do Round
   activate(s, ctx, 'A', healer, {target: shiryu}); passAll(s);
-  assert.equal(s.units[shiryu].damage, 0);
+  assert.equal(s.units[shiryu].damage, 1);
 });
 
 // §56 (autor, 31/10/2026): APNAP; cada jogador ordena os próprios gatilhos simultâneos.

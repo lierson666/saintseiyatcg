@@ -8,7 +8,7 @@ import {canonIndex} from '../shared/deck-v3.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
 import {startTurn, endTurn, passAll, runCheckpoint} from '../playtest/engine-v3/core.js';
-import {playDevotee, playSpell, activate} from '../playtest/engine-v3/play.js';
+import {playDevotee, playSpell, activate, playableFrom} from '../playtest/engine-v3/play.js';
 import {declareStrike} from '../playtest/engine-v3/strike.js';
 import {V6} from '../playtest/engine-v3/v6/hooks.js';
 import {checkDefeats, atkOf, hpOf, modify, enforceUniqueness} from '../playtest/engine-v3/effects.js';
@@ -201,12 +201,11 @@ test('025 String Nocturne: até dois Saints ganham +0/+2', () => {
   assert.equal(hpOf(s, ctx, orphee), oh + 2); // escolha: primeira opção, depois a segunda
 });
 
-test('025 Death Trip Serenade: atacante inimigo perde 2 ATK durante o Strike contra o God', () => {
+test('025 Death Trip Serenade (Sun Titan, 08/11/2026): ao declarar Strike, devolve do Tartarus ao campo um Devotee de custo 3 ou menos', () => {
   const {s, ctx, give} = setup();
-  const orphee = give('A', 'athena-v6-025'), foe = give('B', FOE), soul = s.players.A.soul;
-  foeStrike(s, ctx, foe, {kind: 'god', player: 'A'});
-  assert.equal(s.players.A.soul, soul - (atkOf(s, ctx, foe) - 2));
-  assert.ok(s.roundUses.has(`${orphee}:serenade`));
+  const orphee = give('A', 'athena-v6-025'), foe = give('B', 'athena-v6-007'), jabu = give('A', 'athena-v6-028', 'tartarus');
+  strike(s, ctx, orphee, {kind: 'devotee', uid: foe});
+  assert.ok(s.players.A.battlefield.includes(jabu));
 });
 
 test('026 Kiki: busca um Equipment no deck para a mão', () => {
@@ -226,13 +225,19 @@ test('029 Hanging Bear: o Devotee atingido não declara Strike no turno seguinte
   assert.ok(s.effects.some(e => e.kind === 'noStrike' && e.target === foe)); // gancho cannotStrike: até o fim do Round
 });
 
-test('030 Poisonous Claws e 033 Chameleon Whip: atingido perde 1 ATK até o fim da rodada', () => {
-  for (const id of ['athena-v6-030', 'athena-v6-033']) {
-    const {s, ctx, give} = setup();
-    const me = give('A', id), foe = give('B', 'athena-v6-007'), before = atkOf(s, ctx, foe);
-    strike(s, ctx, me, {kind: 'devotee', uid: foe});
-    assert.equal(atkOf(s, ctx, foe), before - 1);
-  }
+test('030 Hydra Ichi (Soul Warden) e 033 Chameleon June (Mother of Runes), 08/11/2026', () => {
+  const {s, ctx, give} = setup();
+  give('A', 'athena-v6-030');
+  s.players.A.soul = 10;
+  const soul = s.players.A.soul;
+  playDevotee(s, ctx, 'A', give('A', 'athena-v6-028', 'hand'), {}); passAll(s);
+  assert.equal(s.players.A.soul, soul + 1);
+  const june = give('A', 'athena-v6-033'), seiya = give('A', 'athena-v6-001');
+  s.divine.B.god = 'god-ares';
+  ctx.decide = (p, q) => (q.options ? (q.options.includes(seiya) ? seiya : q.options[0]) : true);
+  activate(s, ctx, 'A', june, {}); passAll(s);
+  assert.deepEqual(s.v6Immune[seiya], {round: s.round, faction: 'ares'});
+  assert.equal(s.units[june].prepared, false);
 });
 
 test('031 Wolf Pack: +1/+1 com dois outros Bronze Saints', () => {
@@ -263,7 +268,7 @@ test('035 Miho: compra 1 por turno quando outro Bronze Saint aliado entra', () =
   const {s, ctx, give} = setup();
   give('A', 'athena-v6-035');
   const hand = () => s.players.A.hand.length;
-  for (const [id, delta] of [['athena-v6-040', 0], ['athena-v6-028', 1], ['athena-v6-031', 0]]) {
+  for (const [id, delta] of [['athena-v6-034', 0], ['athena-v6-028', 1], ['athena-v6-031', 0]]) {
     const uid = give('A', id, 'hand'), h = hand();
     playDevotee(s, ctx, 'A', uid, {}); passAll(s);
     assert.equal(hand(), h - 1 + delta, id);
@@ -383,16 +388,37 @@ test('024 Medusa Shield: paga {2}{C}; o atacante não é Prepared nem ataca nest
   assert.equal(hpOf(s, ctx, algol), 4 + 1);
 });
 
-test('039 Guilty: outro Saint sobrevive a um Strike; Guilty pode causar 1 de dano a ele para dar +1 ATK', () => {
+test('039 Guilty (Grand Abolisher, 08/11/2026): na rodada dele, o oponente não conjura Moment nem Technique', () => {
   const {s, ctx, give} = setup();
-  const guilty = give('A', 'athena-v6-039'), ally = give('A', 'athena-v6-005'), foe = give('B', FOE);
-  const atk = atkOf(s, ctx, ally);
-  modifyAtk(s, foe, -1);
-  foeStrike(s, ctx, foe, {kind: 'devotee', uid: ally});
-  const hit = s.units[ally].damage;
-  assert.ok(hit >= 1 && s.players.A.battlefield.includes(ally));
-  assert.equal(atkOf(s, ctx, ally), atk + 1);
-  assert.ok(s.roundUses.has(`${guilty}:training`));
+  give('A', 'athena-v6-039');
+  assert.equal(s.active, 'A');
+  assert.throws(() => playSpell(s, ctx, 'B', give('B', 'athena-v6-505', 'hand')), /Moments e Techniques/);
+});
+
+test('034 Tatsumi (Drannith Magistrate) e 520 (Ghostly Prison), 08/11/2026: só da mão; imposto no Strike contra o God', () => {
+  const {s, ctx, give} = setup();
+  give('B', 'athena-v6-034');
+  s.zonePlay = [{key: 'A', zone: 'void', uid: give('A', 'athena-v6-028', 'void')}];
+  assert.deepEqual(playableFrom(s, ctx, 'A'), []);
+});
+
+test('027 Cassios (Selfless Spirit), 040 (Mentor of the Meek), 041 (Knight of the White Orchid), 08/11/2026', () => {
+  const {s, ctx, give} = setup();
+  const cassios = give('A', 'athena-v6-027'), seiya = give('A', 'athena-v6-001');
+  activate(s, ctx, 'A', cassios, {}); passAll(s);
+  assert.ok(s.players.A.tartarus.includes(cassios));
+  k.damage(s, ctx, seiya, 99); checkDefeats(s, ctx);
+  assert.ok(s.players.A.battlefield.includes(seiya));
+  const t = setup();
+  t.give('A', 'athena-v6-040');
+  const h = t.s.players.A.hand.length;
+  playDevotee(t.s, t.ctx, 'A', t.give('A', 'athena-v6-028', 'hand'), {}); passAll(t.s);
+  assert.equal(t.s.players.A.hand.length, h + 1, 'a carta dada foi jogada e o Mentor comprou 1');
+  const w = setup();
+  w.s.players.B.bases = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map(n => ({uid: `xb${n}`, prepared: true}));
+  const n0 = w.s.players.A.bases.length;
+  playDevotee(w.s, w.ctx, 'A', w.give('A', 'athena-v6-041', 'hand'), {}); passAll(w.s);
+  assert.equal(w.s.players.A.bases.length, n0 + 1);
 });
 
 test('073 Million Ghost Attack: defensor que sobrevive ganha +1 ATK', () => {

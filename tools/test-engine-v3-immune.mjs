@@ -153,8 +153,8 @@ test('Espadas do ciclo: Imune às duas facções inimigas na roda', () => {
   }
 });
 
-test('Ninfa Lunar e Chandra não miram a si mesmas', () => {
-  for (const line of ['artemis-v6-398', 'artemis-v6-371']) {
+test('Chandra não mira a si mesma', () => {
+  for (const line of ['artemis-v6-371']) {
     assert.match(cards.get(line).text || JSON.stringify(cards.get(line)), /another target friendly Devotee/);
   }
 });

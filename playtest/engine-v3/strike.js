@@ -40,14 +40,19 @@ export function checkStrike(state, ctx, attacker, target) {
   const guards = defenders.filter(uid => isGuardian(uid) && reachable(uid)), guarded = guards.length > 0;
   // La Scoumoune (363, autor 30/10/2026): mira Devotee inimigo Unprepared ignorando Guardian (gancho ignoresGuardian).
   const hunts = target.kind === 'devotee' && !!entryOf(ctx, attacker)?.ignoresGuardian?.(state, ctx, attacker, target.uid);
-  const ignores = (flies && !guards.some(uid => has(uid, 'Nimble'))) || hunts;
+  // Aqueous Form (549, autor 08/11/2026): Equipment com `bearerIgnoresGuardian` deixa o portador ignorar Guardian (qualquer alvo).
+  const gearFree = Object.keys(ctx.attached).some(g => ctx.attached[g] === attacker && entryOf(ctx, g)?.bearerIgnoresGuardian);
+  const ignores = (flies && !guards.some(uid => has(uid, 'Nimble'))) || hunts || gearFree;
   if (guarded && !ignores && !(target.kind === 'devotee' && isGuardian(target.uid))) {
     throw new RuleError('P05', 'há Guardian em campo: o Strike precisa mirar um Devotee com Guardian');
   }
   if (state.strikes.get(attacker) === state.turn) throw new RuleError('D22', 'este Devotee já declarou Strike neste Round');
   // Para a UI explicar quando um Strike passa por Guardian.
   const bypass = guarded && !(target.kind === 'devotee' && isGuardian(target.uid)) ? (flies ? 'Nimble' : 'Hunter\'s Instinct') : null;
-  return {key, enemy, bypass};
+  // Imposto de Strike contra o God (Propaganda/Ghostly Prison, §58): cada fonte do defensor cobra {N}{C}; os impostos somam.
+  const tax = target.kind === 'god' ? hooks.strikeTax?.(state, enemy) || 0 : 0;
+  if (tax && !hooks.canPayTax?.(state, key, tax)) throw new RuleError('V6', `imposto: declarar Strike contra o God custa {${tax}}{C}`);
+  return {key, enemy, bypass, tax};
 }
 
 // "Must attack each turn if able" (Ohko 482, gancho mustStrike; autor 30/10/2026): Devotees de `key` que ainda devem declarar
@@ -64,7 +69,8 @@ export function strikeTargets(state, ctx, attacker) {
 
 // Abre a janela (P06): gatilhos de declaração (D202) entram na cadeia; o dano roda quando a janela fecha.
 export function declareStrike(state, ctx, attacker, target, triggers = []) {
-  const {key, bypass} = checkStrike(state, ctx, attacker, target);
+  const {key, bypass, tax} = checkStrike(state, ctx, attacker, target);
+  if (tax) hooks.payTax(state, key, tax);
   // Gatilhos "when an enemy Devotee declares a Strike" (Water Prison): montados antes de mudar o estado.
   const declared = [...hooks.strikeDeclared.flatMap(fn => fn(state, ctx, attacker, key)),
     ...v6Declare(state, ctx, key, attacker, target)]; // cartas V6: "Whenever … declares a Strike"

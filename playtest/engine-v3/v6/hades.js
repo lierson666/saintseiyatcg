@@ -37,11 +37,15 @@ hooks.checkpoint.push(state => {
   for (const e of events) {
     if (e.type === 'seal_removed' && ctx.objects[e.uid]) out.push(...collect(state, ctx, state.order, 'watchSealRemoved', [e], 'a Seal counter is removed'));
     if (e.type === 'soul_paid') out.push(...collect(state, ctx, state.order, 'watchSoulPaid', [e], 'Soul is paid'));
+    if (e.type === 'turn_start') state.drawCounts = {};
     if (e.type === 'draw') { // 252 Bloody Rose: conta as compras do jogador no turno dele; `extra` = não é a primeira do Round dele
       const seen = (state.hadesDraws ||= {})[e.player];
       const n = seen?.turn === state.turn ? seen.n + 1 : 1;
       if (state.active === e.player) state.hadesDraws[e.player] = {turn: state.turn, n};
-      out.push(...collect(state, ctx, state.order, 'watchDraw', [e, state.active !== e.player || n > 1], 'a card is drawn'));
+      // 7º argumento: quantas cartas `e.player` já comprou nesta rodada, com esta (Serpent of the Abyss 553).
+      const m = ((state.drawCounts ||= {})[e.player] || 0) + 1; // zera no turn_start (a mão inicial não conta)
+      state.drawCounts[e.player] = m;
+      out.push(...collect(state, ctx, state.order, 'watchDraw', [e, state.active !== e.player || n > 1, m], 'a card is drawn'));
     }
   }
   if (out.length) pushTriggers(state, out);

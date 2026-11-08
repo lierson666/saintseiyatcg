@@ -664,6 +664,18 @@ Revisado em 31/10/2026 (ALPHA-P01, P02, P03 e P06, aprovadas em 28/10/2026; limi
 - **Conjurar do Tartarus:** um Moment ou Technique conjurado do Tartarus por efeito (não é Afterlife) vai para o Void depois de resolver ou se for anulado (autor, 08/11/2026).
 - **Cópia de Moment/Technique:** a cópia não é carta e não foi conjurada (não dispara “whenever you cast”); usa os mesmos modos, pode ganhar novos alvos se o efeito disser, e deixa de existir ao resolver (autor, 08/11/2026).
 - **Escolher novos alvos:** só alvos legais para aquele efeito. Sem outro alvo legal, o alvo continua o mesmo (autor, 08/11/2026).
+- **Cosmo Base adicional:** um efeito pode permitir uma Cosmo Base adicional por rodada, além do limite normal (D4). Vários efeitos iguais não se somam: o máximo é 2 por rodada (autor, 08/11/2026).
+- **Training counter adicional:** “quando Training counters seriam postos, ponha essa quantidade mais 1” é substituição aplicada na hora em que os marcadores entram (autor, 08/11/2026).
+- **Não pode ser derrotado por dano:** o dano continua marcado, mas não derrota o Devotee enquanto o efeito durar; quando o efeito acaba, o dano marcado é verificado de novo. Derrota por efeito (“defeat”), sacrifício e HP máximo 0 ou menos continuam derrotando (autor, 08/11/2026).
+- **Sair e voltar (blink):** um Devotee que sai do Campo de Batalha e volta é um Devotee novo: volta Unprepared, sem marcadores e sem dano, os Equipment presos a ele caem e o efeito "quando entra" dispara de novo (autor, 08/11/2026).
+- **Entrar como cópia (clone):** a cópia copia só o impresso do original: nome, ATK, HP, keywords e habilidades. Não copia marcadores, dano, Equipment nem bônus. Um tipo que o texto da carta mantém (ex.: "continua Marina") é somado à cópia (autor, 08/11/2026).
+- **Reduzir custo mandando cartas do Tartarus ao Void (delve):** cada carta reduz {1}{C} do custo genérico; o custo mínimo é {0}; as cartas ficam no Void e contam como Void (autor, 08/11/2026).
+- **Imposto ("a menos que pague"):** quem decide pagar é o jogador cobrado, na hora; sem Cosmo livre, não paga. Impostos de cartas diferentes se somam: com dois impostos de Strike de {1}{C}, cada Devotee paga {2}{C} para declarar Strike contra o God (autor, 08/11/2026).
+- **Só jogar da mão:** um efeito que diz "seus oponentes só podem jogar cartas da mão" impede jogar do Void, do Tartarus e da própria Base (Hidden Cosmo). Afterlife é habilidade, não jogar carta, e continua (autor, 08/11/2026).
+- **Não conjurar Spells na sua rodada:** um efeito que impede os oponentes de conjurar durante a sua rodada trava só Moments e Techniques. Habilidades ativadas, Divine Powers e Commands continuam (autor, 08/11/2026).
+- **Soul não abaixo de 1 (Worship):** um efeito que diz que o Soul do seu God não cai abaixo de 1 segura toda perda: dano, perda e pagamento. Com Soul 1, não dá para pagar Soul (autor, 08/11/2026).
+- **Rodada extra:** o mesmo jogador joga outra rodada inteira logo depois, com renovação de Bases e compra. "Até o fim da sua próxima rodada" conta a rodada extra (autor, 08/11/2026).
+- **Jogar do topo pagando Soul:** quando um efeito deixa jogar a carta do topo pagando Soul, vale qualquer carta, no momento certo dela, e o Soul substitui o custo inteiro. Não se pode pagar Soul até zerar (autor, 08/11/2026).
 - Equipamentos não mudam de controlador automaticamente. Como a ligação normal exige equipamento e portador do mesmo controlador, um equipamento incompatível fica em campo sem portador e perde a evolução. Um efeito pode transferir expressamente ambos.
 
 ### 59. Combate e textos das keywords

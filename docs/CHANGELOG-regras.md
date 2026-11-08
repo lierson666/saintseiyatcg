@@ -4,6 +4,34 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-08 — §58 — Worship, rodada extra e jogar do topo pagando Soul
+
+- **Antes:** o guia não previa piso de Soul, rodada extra nem jogar do topo do deck.
+- **Depois:** "Soul não abaixo de 1" segura dano, perda e pagamento; a rodada extra é inteira; jogar do topo troca o custo por Soul, sem zerar.
+- **Motivo:** autor, 08/11/2026: proposta das 81 cartas novas (`docs/proposta-cartas-novas.md`): Nike (539), The Endless Tide (554) e Gate of Elysion (569).
+- **Feito (08/11/2026):** motor das 45 com habilidade em `playtest/engine-v3/v6/novas.js`, com testes em `tools/test-engine-v3-v6-novas.mjs`. Revisão do autor no mesmo dia: 536–538 (Gold Saints) e 551–552 (Marina Generals) viraram genéricos (só personagens secundários ou genéricos nas cartas novas); a 595 trocou o Seedborn Muse pelo Zendikar Resurgent (Base posta → {1}{L}; Devotee conjurado → compra 1, uma vez por rodada). Pariah (531) e Doubling Season (596) seguem a proposta do doc (dano de Strike e de efeito; o dono escolhe a ordem das substituições), sem pergunta à parte.
+
+## 2026-11-08 — §58 — Imposto, "só jogar da mão" e "não conjurar na sua rodada"
+
+- **Antes:** o guia não dizia quem decide pagar um imposto, nem como ficam dois impostos juntos, jogar fora da mão sob trava, ou conjurar sob trava.
+- **Depois:** o cobrado decide e os impostos somam; "só da mão" trava Void, Tartarus e Hidden Cosmo (não Afterlife); "não conjurar na sua rodada" trava só Moments e Techniques.
+- **Motivo:** autor, 08/11/2026: propostas de Poseidon (azul) e Athena (branco), `docs/proposta-poseidon-staples-azul.md` e `docs/proposta-athena-staples-branco.md`.
+- **Feito (08/11/2026):** diffs gravados; motor e testes de Poseidon (16 cartas) e Athena (15 cartas). Clone: a cópia acontece no gatilho de entrada, não como substituição (anotado no código).
+
+## 2026-11-08 — §58 — Blink, clone e delve
+
+- **Antes:** o guia não previa Devotee que sai e volta, Devotee que entra como cópia nem redução de custo por cartas do Tartarus mandadas ao Void.
+- **Depois:** blink cria um Devotee novo; clone copia só o impresso; delve reduz {1}{C} por carta, até {0}.
+- **Motivo:** autor, 08/11/2026: proposta de Poseidon com as staples do azul (`docs/proposta-poseidon-staples-azul.md`).
+- **Feito (08/11/2026):** diff gravado; motor e testes das 16 cartas de Poseidon.
+
+## 2026-11-08 — §58 — Cosmo Base adicional, Training counter adicional e "não pode ser derrotado por dano"
+
+- **Antes:** o guia não previa Base além do limite de D4, marcador extra por substituição nem proteção contra derrota por dano.
+- **Depois:** um efeito pode dar 1 Base adicional por rodada (sem somar cópias); "+1 marcador" é substituição; "não pode ser derrotado por dano" segura a derrota por dano até o fim do efeito e depois verifica o dano marcado.
+- **Motivo:** autor, 08/11/2026: proposta de Artemis com as staples do verde (`docs/proposta-artemis-staples-verde.md`): Sacred Stag, Moon Temple Acolyte e The Goddess Awakens.
+- **Feito (08/11/2026):** diff gravado; motor e testes das 10 cartas de Artemis.
+
 ## 2026-11-08 — §58 — jogar do Void, conjurar do Tartarus, cópia e novos alvos
 
 - **Antes:** o guia não definia impulse draw, conjurar Moment do Tartarus fora do Afterlife, cópia de Moment/Technique nem troca de alvos.

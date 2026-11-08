@@ -133,18 +133,24 @@ export function mill(state, key, requested) {
 }
 
 // D4: uma Base Cosmoble por turno, no turno do próprio jogador.
+// D4 + §58 (autor, 08/11/2026): 1 Base por Round; um efeito em campo (`hooks.extraBases`) dá +1, sem somar cópias.
+export function baseRoom(state, key) {
+  const p = state.players[key], used = p.baseTurn === state.turn ? p.baseCount || 1 : 0;
+  return used < 1 + (hooks.extraBases?.(state, key) ? 1 : 0);
+}
 export function placeBase(state, key, uid, card) {
   alive(state);
   const p = state.players[key];
   if (key !== state.active) throw new RuleError('D1', 'só o jogador ativo age no Round');
   assertIdle(state);
   if (!card.cosmoble) throw new RuleError('D4', 'a carta não é Cosmoble');
-  if (p.baseTurn === state.turn) throw new RuleError('D4', 'já colocou uma Base neste Round');
+  if (!baseRoom(state, key)) throw new RuleError('D4', 'já colocou uma Base neste Round');
   const at = p.hand.indexOf(uid);
   if (at < 0) throw new RuleError('D4', 'a carta não está na mão');
   p.hand.splice(at, 1);
   // G3-035 (autor, 28/10/2026): a Base nova entra Prepared e já paga custo no mesmo turno.
   p.bases.push({uid, prepared: true});
+  p.baseCount = (p.baseTurn === state.turn ? p.baseCount || 1 : 0) + 1;
   p.baseTurn = state.turn;
   emit(state, 'base_placed', {player: key, uid});
   for (const fn of hooks.basePlaced) fn(state, key, uid); // "when you place a Cosmo Base" (v6/hooks.js, watchBase)
@@ -176,8 +182,10 @@ export function gainLatent(state, key, n) {
 // Soul atual nunca fica negativo; `amount` registra o valor integral (G3-012).
 export function loseSoul(state, losses, cause = 'loss') {
   alive(state);
-  for (const [key, n] of Object.entries(losses)) {
+  for (let [key, n] of Object.entries(losses)) {
     const p = state.players[key];
+    // §58 (autor, 08/11/2026): Worship (Nike 539) — nenhuma perda de Soul leva o God abaixo de 1.
+    if (hooks.soulFloor?.(state, key)) n = Math.max(0, Math.min(n, p.soul - 1));
     p.soul = Math.max(0, p.soul - n);
     emit(state, 'soul_lost', {player: key, amount: n, soul: p.soul, cause});
   }
@@ -254,7 +262,11 @@ export function cycleOwner(tag) {
 // Equipment e Armor ficam no campo, soltos, e podem ser reequipados (autor, 28/10/2026; Armor: guia §32, 30/10/2026).
 // `objects`: uid -> {owner, armor}; `attached`: uid do Equipment -> uid do Devotee.
 // Moon Awakening (gods.js): ao sair do campo, o objeto volta a ser a carta real.
-export function restoreMoon(objects, uid) { const o = objects[uid]; if (o?.moon) { o.cardId = o.moon.cardId; delete o.moon; } }
+export function restoreMoon(objects, uid) {
+  const o = objects[uid];
+  if (o?.moon) { o.cardId = o.moon.cardId; delete o.moon; }
+  if (o?.copied) { o.cardId = o.copied.cardId; delete o.copied; delete o.extraType; } // clone (§58): ao sair, volta a ser a carta real
+}
 export function destroyDevotee(state, uid, objects, attached, event = 'destroyed') {
   const zone = Object.values(state.players).find(p => p.battlefield.includes(uid));
   if (!zone) throw new RuleError('D197', `${uid} não está no campo`);
@@ -451,5 +463,8 @@ function cleanup(state) {
   for (const tag of [...state.roundUses]) if (!cycleOwner(tag)) state.roundUses.delete(tag);
   emit(state, 'round_end', {});
   state.round++;
-  state.active = other(state, ended);
+  // §58 (autor, 08/11/2026): rodada extra (The Endless Tide 554) — o mesmo jogador joga uma rodada inteira de novo.
+  const extra = state.extraRounds?.[ended] > 0;
+  if (extra) state.extraRounds[ended]--;
+  state.active = extra ? ended : other(state, ended);
 }

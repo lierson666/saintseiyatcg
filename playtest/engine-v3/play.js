@@ -2,7 +2,7 @@
 // Devotee: Sorcery (D173), entra Unprepared (ALPHA-P02 A). Equipment: custo alternativo, Spell: Tartarus do Owner
 // (as duas aprovadas pelo autor em 28/10/2026). Moment/Technique: D194. Janela: ALPHA-P06 A.
 // `ctx`: {cards (loadCanon), objects (uid -> {owner, cardId}), attached (uid do Equipment -> uid do portador)}.
-import {RuleError, NotSpecified, assertIdle, spendBase, spellCategory, respond, emit, openWindow, pushTriggers, useOncePerRound, loseSoul} from './core.js';
+import {RuleError, NotSpecified, assertIdle, spendBase, spellCategory, respond, emit, openWindow, pushTriggers, useOncePerRound, loseSoul, hooks} from './core.js';
 import {SPELLS, ABILITIES, onEnter, onCastEquipment, checkDefeats, namedCharacter, enforceUniqueness, silenced} from './effects.js';
 import {v6Spell, entryOf, V6, v6Attach} from './v6/hooks.js';
 import {collect, sources, domainEntry, domainResonant, resonanceTag} from './v6/registry.js';
@@ -75,6 +75,15 @@ function discount(state, ctx, key, uid, cost) {
 }
 // Custo de conjurar `uid` agora, com reduções (a interface usa para saber se dá para pagar).
 export const castCost = (state, ctx, key, uid, cost) => discount(state, ctx, key, uid, cost).cost;
+// Imposto por alvo (§58, Drakon 581): `targetTax(s, c, ctrl, self, caster)` no Devotee mirado por Spell inimiga soma ao custo.
+function taxed(state, ctx, key, targets, cost) {
+  let n = 0;
+  for (const t of new Set(targets)) {
+    const ctrl = typeof t === 'string' && !t.startsWith('god:') && state.order.find(k => state.players[k].battlefield.includes(t));
+    if (ctrl && ctrl !== key) n += entryOf(ctx, t)?.targetTax?.(state, ctx, ctrl, t, key) || 0;
+  }
+  return n ? {...cost, amount: cost.amount + n} : cost;
+}
 function payCast(state, ctx, key, uid, cost) {
   const d = discount(state, ctx, key, uid, cost);
   payCost(state, key, d.cost);
@@ -259,6 +268,7 @@ function equipCost(state, ctx, key, card, bearer) {
 // `choice`: escolhas da carta ({target, targets, mode, prepare}); o efeito vem de SPELLS (effects.js).
 // Uma função no lugar de `choice` substitui o efeito (testes de procedimento).
 export function playSpell(state, ctx, key, uid, choice = {}) {
+  if (hooks.spellLock?.(state, key)) throw new RuleError('§58', 'um efeito impede conjurar Moments e Techniques nesta rodada'); // Guilty 039
   if (typeof choice !== 'function' && v6Spell(ctx, uid)) return playSpellV6(state, ctx, key, uid, choice);
   const number = Number(ctx.objects[uid]?.cardId.slice(-3)), category = spellCategory(number);
   if (!category) throw new NotSpecified(`categoria de Spell da carta ${number} (D194 cobre 18 cartas)`);
@@ -320,7 +330,7 @@ function playSpellV6(state, ctx, key, uid, choice) {
     const card = sorceryFromHand(state, ctx, key, uid, 'Spell');
     entry.spell.check?.(state, ctx, key, choice);
     aimed = aim(state, ctx, key, uid, entry, choice); // pergunta os alvos antes de pagar (pode restaurar o estado: nada capturado antes)
-    payCast(state, ctx, key, uid, mixed(card.cost)); // Technique e Moment como AÇÃO: Base e/ou Latent (guia §5)
+    payCast(state, ctx, key, uid, taxed(state, ctx, key, aimed.values, mixed(card.cost))); // Technique e Moment como AÇÃO: Base e/ou Latent (guia §5)
     leaveHand(state, key, uid);
     entry.spell.cost?.(state, ctx, key, uid); // custo adicional (ex.: descarte do 476), pago ao conjurar
     state.players[key].stack.push(uid);
@@ -338,7 +348,7 @@ function playSpellV6(state, ctx, key, uid, choice) {
   if (state.window.priority !== key) throw new RuleError('P06', `${key} não tem prioridade`);
   entry.spell.check?.(state, ctx, key, choice);
   aimed = aim(state, ctx, key, uid, entry, choice);
-  payCast(state, ctx, key, uid, responseCost(state, key, card.cost)); // guia §5
+  payCast(state, ctx, key, uid, taxed(state, ctx, key, aimed.values, responseCost(state, key, card.cost))); // guia §5
   leaveHand(state, key, uid);
   entry.spell.cost?.(state, ctx, key, uid);
   state.players[key].stack.push(uid);
@@ -359,6 +369,7 @@ export const spellDestination = (st, uid) => {
   return 'void';
 };
 export function playableFrom(state, ctx, key) {
+  if (hooks.handOnly?.(state, key)) return []; // §58: "seus oponentes só podem jogar cartas da mão" (Tatsumi 034)
   const out = (state.zonePlay || []).filter(z => z.key === key && state.players[key][z.zone].includes(z.uid));
   for (const {self, entry} of sources(state, ctx, key)) if (entry.zonePlay) out.push(...entry.zonePlay(state, ctx, key, self));
   const seen = new Set();
@@ -370,6 +381,9 @@ export function castFromZone(state, ctx, key, uid, choice = {}, bearer = null) {
   if (!z) throw new RuleError('§58', 'esta carta não pode ser jogada daqui agora');
   const p = state.players[key], card = ctx.cards.get(ctx.objects[uid].cardId), extra = z.extraSoul || 0;
   if (p.soul < extra) throw new RuleError('custo', `Soul insuficiente (+${extra})`);
+  // §58 (autor, 08/11/2026): `soulInstead` paga Soul igual ao custo no lugar do custo de Cosmo; não pode levar o Soul a 0.
+  if (z.soulInstead && p.soul - extra < 1) throw new RuleError('custo', 'o Soul não pode chegar a 0 pagando este custo');
+  if (z.soulInstead) state.hidden = {uid, amount: 0};
   const at = p[z.zone].indexOf(uid);
   p[z.zone].splice(at, 1);
   p.hand.push(uid);
@@ -381,7 +395,7 @@ export function castFromZone(state, ctx, key, uid, choice = {}, bearer = null) {
     const h = p.hand.indexOf(uid);
     if (h >= 0) { p.hand.splice(h, 1); p[z.zone].splice(at, 0, uid); }
     throw e;
-  }
+  } finally { if (z.soulInstead) delete state.hidden; }
   if (extra) loseSoul(state, {[key]: extra}, 'cost');
   if (z.tag) useOncePerRound(state, z.tag);
   if (z.after === 'void') (state.afterVoid ||= []).push(uid);
@@ -395,6 +409,7 @@ export function castFromZone(state, ctx, key, uid, choice = {}, bearer = null) {
 export function castHidden(state, ctx, key, uid, choice = {}) {
   const card = ctx.cards.get(ctx.objects[uid]?.cardId), p = state.players[key];
   if (!card?.hiddenCosmo) throw new RuleError('§4A', 'a carta não tem Hidden Cosmo');
+  if (hooks.handOnly?.(state, key)) throw new RuleError('§58', 'um efeito só deixa jogar cartas da mão');
   const at = p.bases.findIndex(b => b.uid === uid);
   if (at < 0) throw new RuleError('§4A', 'a carta não está nas suas Cosmo Bases');
   if (!['Devotee', 'Spell'].includes(card.kind)) throw new NotSpecified('Hidden Cosmo em Equipment');

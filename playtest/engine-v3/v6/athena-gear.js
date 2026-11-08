@@ -296,4 +296,10 @@ export default {
         if (other) k.removeDamage(s, other, 1);
       }},
   },
+  // Dragon Shield — Smothering Tithe (08/11/2026): por carta que o oponente compra, ganhe {1}{L}, a menos que ele pague {1}{C}.
+  // Gancho watchDraw (v6/hades.js): um gatilho por evento 'draw'.
+  'athena-v6-045': {watchDraw: (s, c, key, self, e) => e.player !== key && (st => {
+    if (k.canPayCosmo(st, e.player, 1) && k.may(c, e.player, "DRAGON'S TITHE", {cost: '{1}{C}', text: 'Pay {1}{C} so your opponent does not gain {1}{L}?'})) k.payCosmo(st, e.player, 1);
+    else k.gainLatent(st, key, 1);
+  })},
 };

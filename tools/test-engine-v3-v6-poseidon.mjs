@@ -71,26 +71,6 @@ test('spell: Abyssal Weight põe 1 Seal, ou 2 se já tinha', () => {
 });
 
 // Priest of the Abyss, Abyssal Tide (autor, 08/11/2026): Spell de qualquer jogador; você mói 1 e o oponente mói 2.
-test('watchSpell: Priest of the Abyss mói 1 do dono e 2 do oponente a cada Spell', () => {
-  const {s, ctx, A, B, put} = poseidon();
-  s.domains.A = null;
-  put('A', P('102'), 'battlefield');
-  put('B', 'hades-v6-211', 'battlefield');
-  const [a0, b0] = [A.deck.length, B.deck.length];
-  playSpell(s, ctx, 'A', put('A', P('137')), {}); passAll(s);
-  assert.deepEqual([a0 - A.deck.length, b0 - B.deck.length], [1 + 1, 2], 'A: 1 do mill + a Spell tirada do deck');
-  const [a1, b1] = [A.deck.length, B.deck.length];
-  playSpell(s, ctx, 'A', put('A', P('137')), {}); passAll(s);
-  assert.deepEqual([a1 - A.deck.length, b1 - B.deck.length], [2, 2], 'sem limite por rodada');
-});
-
-test('watchDeclare (prevenção): Royal Trident Guard previne 1 do dano de Strike, uma vez por Round', () => {
-  const {s, ctx, put} = poseidon();
-  const guard = put('A', P('104'), 'battlefield'), foe = put('B', 'hades-v6-210', 'battlefield'); // Golem Rock: ATK 4 (Troll Iwan caiu para 3 em 30/10/2026)
-  declareStrike(s, ctx, guard, {kind: 'devotee', uid: foe}); passAll(s);
-  assert.equal(s.units[guard].damage, 3);
-});
-
 test('declare: Marina Spearman ganha +1 ATK contra inimigo Sealed, só durante o Strike', () => {
   const {s, ctx, put} = poseidon();
   const spear = put('A', P('107'), 'battlefield'), foe = put('B', 'hades-v6-183', 'battlefield'); // Griffon Minos: 3/6 (Beetle caiu para 4/3 em 30/10/2026)
@@ -121,23 +101,13 @@ test('activate em Equipment: Kraken Scale sela um inimigo, uma vez por Round, pa
   assert.throws(() => activate(s, ctx, 'A', scale, {}), RuleError);
 });
 
-test('mods e aura: Herald dá +0/+1 aos Marina; Ocean Temple Guard +0/+1 com Domain de Poseidon', () => {
+test('mods: Ocean Temple Guard +0/+1 com Domain de Poseidon', () => {
   const {s, ctx, put} = poseidon();
   s.domains.A = P('142');
-  const temple = put('A', P('106'), 'battlefield'), base = hpOf(s, ctx, temple);
-  assert.equal(base, 4, '3 impresso + 1 do Domain');
-  put('A', P('103'), 'battlefield');
-  assert.equal(hpOf(s, ctx, temple), 5);
+  const temple = put('A', P('106'), 'battlefield');
+  assert.equal(hpOf(s, ctx, temple), 4, '3 impresso + 1 do Domain');
   s.domains.A = 'athena-v6-062'; // Domain de outra facção não conta (autor, 01/11/2026)
-  assert.equal(hpOf(s, ctx, temple), 4);
-});
-
-test('enter + watchMill: Drowned Prophet faz o oponente moer 2 e Prophecy of the Abyss compra pagando {1}', () => {
-  const {s, ctx, A, B, put} = poseidon();
-  const prophet = put('A', P('120')), deckB = B.deck.length;
-  playDevotee(s, ctx, 'A', prophet, {}); passAll(s);
-  assert.equal(B.deck.length, deckB - 2);
-  assert.ok(A.hand.length >= 1, 'comprou 1');
+  assert.equal(hpOf(s, ctx, temple), 3);
 });
 
 test('modo: Marina\'s Oath em Loyalty dá +0/+2 até o fim do Round', () => {
@@ -157,22 +127,6 @@ test('174 The Wrath of the Seven Seas (Sleep, 31/10/2026): 1 Seal em cada Devote
 // ---- Completados com os ganchos novos (29/10/2026) ----
 const done = s => { while (s.window) passAll(s); };
 const bases = p => p.bases.filter(b => b.prepared).length;
-
-test('watchSpell: Pearl Sanctuary Keeper compra e descarta ao conjurar Technique (uma vez por Round, paga {1}{C})', () => {
-  const {s, ctx, A, put} = poseidon();
-  s.domains.A = null;
-  const keeper = put('A', P('116'), 'battlefield');
-  const hand0 = A.hand.length, b0 = bases(A);
-  const spell = put('A', P('137'));
-  playSpell(s, ctx, 'A', spell, {}); done(s);
-  assert.ok(s.roundUses.has(`pearldiv:${keeper}`));
-  // compra 1 e descarta 1 (+ descarta a carta paga pelo Pearl of Protection? não: paga {1}{C}); Spell paga o custo impresso
-  assert.equal(A.hand.length, hand0 + 1 /* Spell posta na mão */ - 1 /* conjurada */ + 1 - 1);
-  assert.ok(bases(A) <= b0 - 1);
-  const b1 = bases(A);
-  playSpell(s, ctx, 'A', put('A', P('137')), {}); done(s);
-  assert.equal(bases(A), b1 - cards.get(P('137')).cost.amount, 'segunda conjuração no Round: Pearl Divination não paga de novo');
-});
 
 test('watchSpell: Poseidon\'s Trident (178) compra ao conjurar Technique e Royal Scepter (170) saqueia', () => {
   const {s, ctx, A, put} = poseidon();
@@ -303,24 +257,11 @@ test('133/136/156/167: sem Moment ou Technique inimigo na cadeia não há alvo e
   assert.equal(B.stack.length, 0);
 });
 
-test('136 The Sea Never Forgives: só contra Spell que mira o seu Devotee ou God; sem pagamento', () => {
+test('136 The Sea Never Forgives (Fierce Guardianship): anula qualquer Moment ou Technique inimigo', () => {
   const {s, ctx, A, put, minos, respond, sealed} = duel();
   const x = put('B', P('118'), 'battlefield'), sp = minos(x);
   respond('136'); done(s);
   assert.equal(sealed(x), 0); assert.ok(A.tartarus.includes(sp));
-  // Spell que não mira nada seu (Serve the Lord of Darkness mira Devotee de A): 136 não tem alvo.
-  const d = duel();
-  const own = d.put('A', 'hades-v6-206', 'battlefield'), serve = d.put('A', 'hades-v6-236');
-  d.answers['SERVE THE LORD OF DARKNESS'] = () => own;
-  playSpell(d.s, d.ctx, 'A', serve);
-  assert.throws(() => playSpell(d.s, d.ctx, 'B', d.put('B', P('136'))), RuleError);
-  // Spell que mira o God (Souls of the Damned): alvo guardado sem pergunta.
-  const g = duel(), souls = g.put('A', 'hades-v6-238'), soulB = g.s.players.B.soul;
-  playSpell(g.s, g.ctx, 'A', souls);
-  assert.deepEqual(g.s.chain[0].targets, ['god:B']);
-  g.respond('136'); done(g.s);
-  assert.equal(g.s.players.B.soul, soulB); // God de B não perdeu Soul
-  assert.ok(g.A.tartarus.includes(souls));
 });
 
 test('154 The Sea Dragon\'s Command: Royal Interdiction anula a menos que pague {3}{C}; sem Spell na cadeia só oferece Reversal', () => {
@@ -395,15 +336,6 @@ test('cantrips de Poseidon (31/10/2026): 135 Opt, 138 Brainstorm, 139 Ponder, 15
     const c = cards.get(P(n));
     assert.equal(c.cost.amount, cost, n); assert.equal(c.cosmoble, true, n); assert.match(c.type, new RegExp(sub), n);
   }
-});
-
-test('135 Opt: olha o topo, pode pôr no fundo, compra 1', () => {
-  const {s, ctx, A, put} = poseidon({'BENEATH THE SURFACE': true});
-  const top = A.deck[0], second = A.deck[1], hand = A.hand.length;
-  playSpell(s, ctx, 'A', put('A', P('135'))); done(s);
-  assert.equal(A.deck.at(-1), top, 'o topo foi ao fundo');
-  assert.ok(A.hand.includes(second));
-  assert.equal(A.hand.length, hand + 1 - 1 + 1 - 1 + 1); // +Spell -Spell +1 compra
 });
 
 test('138 Brainstorm: compra 3 e devolve 2 da mão ao topo; a primeira escolhida fica por cima', () => {
@@ -491,19 +423,11 @@ test('124 Coral Barrier: portador mirado; paga {2}{C} e anula a menos que o cont
 });
 
 // ---- Poseidon → Azul (meta Premodern, 31/10/2026): docs/rebalance-poseidon-premodern.md ----
-test('103 e 118 são lordes: outras Marinas +1/+1 e +1 ATK; o próprio lorde não se conta', () => {
+test('118 é lorde: outras Marinas +1 ATK; o próprio lorde não se conta', () => {
   const {s, ctx, put} = poseidon();
-  const spear = put('A', P('107'), 'battlefield'), herald = put('A', P('103'), 'battlefield'), banner = put('A', P('118'), 'battlefield');
-  assert.deepEqual([atkOf(s, ctx, spear), hpOf(s, ctx, spear)], [4, 2], 'Spearman 2/1 + 1/1 + 1/0');
-  assert.deepEqual([atkOf(s, ctx, herald), hpOf(s, ctx, herald)], [3, 3], 'Herald só ganha o +1 ATK do Banner');
-  assert.deepEqual([atkOf(s, ctx, banner), hpOf(s, ctx, banner)], [2, 4], 'Banner só ganha o +1/+1 do Herald');
-});
-
-test('109 Abyssal Watcher: "target player" pode moer o próprio deck (Reanimator)', () => {
-  const {s, ctx, A, put} = poseidon({'EYES OF THE ABYSS': q => (q.choose === 'mode' ? 'self' : q.options ? q.options[0] : true)});
-  const watcher = put('A', P('109')), deck = A.deck.length, grave = A.tartarus.length;
-  playDevotee(s, ctx, 'A', watcher, {}); passAll(s);
-  assert.deepEqual([A.deck.length, A.tartarus.length], [deck - 2, grave + 2]);
+  const spear = put('A', P('107'), 'battlefield'), banner = put('A', P('118'), 'battlefield');
+  assert.deepEqual([atkOf(s, ctx, spear), hpOf(s, ctx, spear)], [3, 1]);
+  assert.deepEqual([atkOf(s, ctx, banner), hpOf(s, ctx, banner)], [1, 3]);
 });
 
 test('165 Viking Tiger Claw: Seal e -2 ATK, sem dano', () => {
@@ -523,4 +447,132 @@ test('099 Thetis: sem General nem Escama no topo, as 3 vão ao fundo e o dono v�
   assert.deepEqual(e.uids, plain);
   assert.equal(e.kept, null);
   assert.deepEqual(A.deck.slice(-3), plain);
+});
+
+// ---- Staples do azul (autor, 08/11/2026: docs/proposta-poseidon-staples-azul.md) ----
+test('109 Abyssal Watcher: busca Moment ou Technique de custo 2 ou menos', () => {
+  const {s, ctx, A, put, asked} = poseidon();
+  playDevotee(s, ctx, 'A', put('A', P('109')), {}); done(s);
+  const q = asked.find(x => x.ability === 'EYES OF THE ABYSS');
+  assert.ok(q && q.options.every(u => ctx.cards.get(ctx.objects[u].cardId).cost.amount <= 2 && /Moment|Technique/.test(ctx.cards.get(ctx.objects[u].cardId).type)));
+  assert.ok(A.hand.includes(q.options[0]));
+});
+
+test('102 Priest e 103 Herald: uma vez por Round, compra 1 e cria Marina Soldier', () => {
+  const {s, ctx, A, put} = poseidon();
+  put('A', P('102'), 'battlefield'); put('A', P('103'), 'battlefield');
+  const h0 = A.hand.length;
+  playSpell(s, ctx, 'A', put('A', P('139')), {}); done(s);
+  playSpell(s, ctx, 'A', put('A', P('139')), {}); done(s);
+  assert.equal(A.battlefield.filter(u => ctx.objects[u].cardId === 'token-marina-soldier').length, 1);
+  assert.ok(A.hand.length >= h0 + 1);
+});
+
+test('110 Coral Reef Defender: Strike contra o God paga {1}{C}; sem Cosmo, não pode', () => {
+  const {s, ctx, A, put} = poseidon();
+  put('B', P('110'), 'battlefield');
+  const siren = put('A', P('093'), 'battlefield'); // Nimble ignora o Guardian sem Nimble
+  const b0 = bases(A);
+  declareStrike(s, ctx, siren, {kind: 'god', player: 'B'}); done(s);
+  assert.equal(bases(A), b0 - 1);
+  const other = put('A', P('093'), 'battlefield');
+  A.bases.forEach(b => { b.prepared = false; }); A.latent = 0;
+  assert.throws(() => declareStrike(s, ctx, other, {kind: 'god', player: 'B'}), RuleError);
+});
+
+test('116 Pearl Sanctuary Keeper: blink volta Unprepared, sem marcadores e sem dano', () => {
+  const {s, ctx, A, put} = poseidon();
+  put('A', P('116'), 'battlefield');
+  const t = put('A', P('107'), 'battlefield');
+  s.units[t].damage = 1; s.units[t].seal = 1;
+  playSpell(s, ctx, 'A', put('A', P('139')), {}); done(s);
+  assert.ok(A.battlefield.includes(t));
+  assert.deepEqual([s.units[t].prepared, s.units[t].damage, s.units[t].seal || 0], [false, 0, 0]);
+});
+
+test('104 Royal Trident Guard: entra como cópia e continua Marina; ao sair volta a ser ele', () => {
+  const {s, ctx, A, put} = poseidon({'MIRROR OF THE SEA': q => (q.options ? q.options.find(u => u.startsWith('B')) : true)});
+  put('B', 'hades-v6-211', 'battlefield');
+  const g = put('A', P('104'));
+  playDevotee(s, ctx, 'A', g, {}); done(s);
+  assert.equal(ctx.objects[g].cardId, 'hades-v6-211');
+  assert.ok(/Marina/.test(ctx.objects[g].extraType));
+  assert.equal(atkOf(s, ctx, g), ctx.cards.get('hades-v6-211').atk);
+});
+
+test('120 Drowned Prophet: compra quando o oponente conjura, a menos que ele pague {1}{C}', () => {
+  const pay = poseidon({'PROPHECY OF THE ABYSS': true});
+  pay.put('B', P('120'), 'battlefield');
+  const hb = pay.B.hand.length, b0 = bases(pay.A);
+  playSpell(pay.s, pay.ctx, 'A', pay.put('A', P('139')), {}); done(pay.s);
+  assert.equal(pay.B.hand.length, hb);
+  assert.ok(bases(pay.A) < b0);
+  const no = poseidon({'PROPHECY OF THE ABYSS': false});
+  no.put('B', P('120'), 'battlefield');
+  const h1 = no.B.hand.length;
+  playSpell(no.s, no.ctx, 'A', no.put('A', P('139')), {}); done(no.s);
+  assert.equal(no.B.hand.length, h1 + 1);
+});
+
+test('135 Beneath the Surface: Moment ou Technique no topo do deck', () => {
+  const {s, ctx, A, put} = poseidon();
+  playSpell(s, ctx, 'A', put('A', P('135')), {}); done(s);
+  assert.ok(/Moment|Technique/.test(ctx.cards.get(ctx.objects[A.deck[0]].cardId).type));
+});
+
+test('134 Waves of Destruction: com {5}{C} a mais devolve todos os Devotees inimigos', () => {
+  const {s, ctx, A, B, put} = poseidon({'WAVES OF DESTRUCTION': true});
+  const x = put('B', 'hades-v6-211', 'battlefield'), y = put('B', 'hades-v6-206', 'battlefield');
+  const b0 = bases(A);
+  playSpell(s, ctx, 'A', put('A', P('134')), {}); done(s);
+  assert.ok(B.hand.includes(x) && B.hand.includes(y));
+  assert.equal(bases(A), b0 - 7);
+});
+
+test('152 Marine Whirlwind: devolve um Devotee e prepara 2 Bases', () => {
+  const {s, ctx, A, B, put} = poseidon({RETURN: q => q.options.find(u => u.startsWith('B'))});
+  const x = put('B', 'hades-v6-211', 'battlefield');
+  A.bases.forEach(b => { b.prepared = false; }); A.bases.slice(0, 3).forEach(b => { b.prepared = true; });
+  playSpell(s, ctx, 'A', put('A', P('152')), {}); done(s);
+  assert.ok(B.hand.includes(x));
+  assert.equal(bases(A), 2);
+});
+
+test('162 Galactic Illusion: o oponente separa; você fica com uma pilha e a outra vai ao Tartarus', () => {
+  const {s, ctx, A, put} = poseidon({'SEPARATE THE PILES': q => q.options.slice(0, 2), 'GALACTIC ILLUSION': q => q.options[1]});
+  const spell = put('A', P('162')), top = A.deck.slice(0, 5), h0 = A.hand.length - 1, t0 = A.tartarus.length;
+  playSpell(s, ctx, 'A', spell, {}); done(s);
+  assert.ok(top.slice(2).every(u => A.hand.includes(u)));
+  assert.ok(top.slice(0, 2).every(u => A.tartarus.includes(u)));
+  assert.equal(A.hand.length, h0 + 3);
+  assert.ok(A.tartarus.length >= t0 + 2);
+});
+
+test('175 The Unending Deluge: cada um descarta a mão e compra o maior número', () => {
+  const {s, ctx, A, B, put} = poseidon();
+  const spell = put('A', P('175'));
+  for (let i = 0; i < 3; i++) put('A', P('139'));
+  B.hand.splice(0); put('B', 'hades-v6-211');
+  const most = A.hand.length - 1;
+  playSpell(s, ctx, 'A', spell, {}); done(s);
+  assert.equal(A.hand.length, most); assert.equal(B.hand.length, most);
+});
+
+test('141 The First Great Storm: devolve quem declarou Strike nesta rodada', () => {
+  const {s, ctx, A, B, put} = poseidon();
+  const x = put('B', 'hades-v6-211', 'battlefield'), y = put('B', 'hades-v6-206', 'battlefield');
+  s.events.push({type: 'strike_declared', turn: s.turn, player: 'B', attacker: x});
+  playSpell(s, ctx, 'A', put('A', P('141')), {}); done(s);
+  assert.ok(B.hand.includes(x)); assert.ok(B.battlefield.includes(y));
+});
+
+test('173 The Fall of Atlantis: delve barateia e manda o Tartarus ao Void; compra 3', () => {
+  const {s, ctx, A, put} = poseidon();
+  for (let i = 0; i < 4; i++) A.tartarus.push(A.deck.pop());
+  const b0 = bases(A), h0 = A.hand.length;
+  playSpell(s, ctx, 'A', put('A', P('173')), {}); done(s);
+  assert.equal(bases(A), b0 - 2);
+  assert.equal(A.tartarus.filter(u => !/173/.test(u)).length, 0);
+  assert.equal(A.void.length, 4);
+  assert.equal(A.hand.length, h0 + 3);
 });

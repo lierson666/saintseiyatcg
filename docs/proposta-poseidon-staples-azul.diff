@@ -1,0 +1,358 @@
+--- data/cards.json	2026-11-08 18:31:49
++++ data/cards.json (proposta)	2026-11-08 18:38:35
+@@ -4632,7 +4632,7 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Abyssal Tide — Whenever a player casts a Moment or Technique, you mill one card and each opponent mills two cards."
++        "Abyssal Tide — Once each round, when you cast a Moment or Technique, draw a card."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -4640,7 +4640,7 @@
+       "nome_exibicao_pt": "SACERDOTE DO ABISMO",
+       "subtitulo_pt": "Guardião das Profundezas Esquecidas",
+       "habilidades_pt": [
+-        "Maré Abissal — Sempre que um jogador conjura um Momento ou Técnica, você envia ao Tártaro a carta do topo do seu deck e cada oponente envia ao Tártaro as 2 cartas do topo do deck dele."
++        "Maré Abissal — Uma vez por rodada, quando você conjura um Momento ou Técnica, compre uma carta."
+       ],
+       "tagline_pt": "Guardião das Profundezas Esquecidas"
+     },
+@@ -4671,7 +4671,7 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Emperor's Authority — Other friendly Marina Devotees get +1 @ATK / +1 @HP."
++        "Emperor's Authority — Once each round, when you cast a Moment or Technique, create a 1/1 Marina Soldier Devotee Token."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -4679,7 +4679,7 @@
+       "nome_exibicao_pt": "ARAUTO DOS SETE MARES",
+       "subtitulo_pt": "A Voz do Imperador Alcança Todos os Oceanos",
+       "habilidades_pt": [
+-        "Autoridade do Imperador — Os outros Devotos Marinas aliados recebem +1 @ATQ / +1 @PV."
++        "Autoridade do Imperador — Uma vez por rodada, quando você conjura um Momento ou Técnica, crie uma Ficha de Devoto Soldado Marina 1/1."
+       ],
+       "tagline_pt": "A Voz do Imperador Alcança Todos os Oceanos"
+     },
+@@ -4708,11 +4708,9 @@
+       "resistance": 5,
+       "damage_cloth": null,
+       "equipar_custo": null,
+-      "keywords_en": ["Guardian"],
++      "keywords_en": [],
+       "habilidades_en": [
+-        "Guardian",
+-        "Trident Formation — While you control another friendly Marina Devotee, Royal Trident Guard gets +0 @ATK / +1 @HP.",
+-        "Oceanic Defense — Once each round, when Royal Trident Guard would take Strike damage, prevent 1 of that damage."
++        "Mirror of the Sea — You may have Royal Trident Guard enter the Battlefield as a copy of another Devotee on the Battlefield, except it is still a Marina."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -4720,9 +4718,7 @@
+       "nome_exibicao_pt": "GUARDA REAL DO TRIDENTE",
+       "subtitulo_pt": "Nenhum Inimigo Alcançará o Imperador",
+       "habilidades_pt": [
+-        "Guardião",
+-        "Formação do Tridente — Enquanto você controlar outro Devoto Marina aliado, o Guarda Real do Tridente recebe +0 @ATQ / +1 @PV.",
+-        "Defesa Oceânica — Uma vez por rodada, quando o Guarda Real do Tridente sofreria dano de Golpe, previna 1 desse dano."
++        "Espelho do Mar — Você pode fazer o Guarda Real do Tridente entrar no Campo de Batalha como cópia de outro Devoto no Campo de Batalha, exceto que ele continua sendo Marina."
+       ],
+       "tagline_pt": "Nenhum Inimigo Alcançará o Imperador"
+     },
+@@ -4913,7 +4909,7 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Eyes of the Abyss — When Abyssal Watcher enters the Battlefield, target player mills two cards."
++        "Eyes of the Abyss — When Abyssal Watcher enters the Battlefield, search your deck for a Moment or Technique card with Casting Cost 2 or less, reveal it and put it into your hand. Then shuffle your deck."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -4921,7 +4917,7 @@
+       "nome_exibicao_pt": "VIGIA ABISSAL",
+       "subtitulo_pt": "Nada Escapa das Profundezas",
+       "habilidades_pt": [
+-        "Olhos do Abismo — Quando o Vigia Abissal entra no Campo de Batalha, o jogador alvo envia ao Tártaro as 2 cartas do topo do seu deck."
++        "Olhos do Abismo — Quando o Vigia Abissal entra no Campo de Batalha, procure no seu deck uma carta de Momento ou Técnica com custo 2 ou menos, revele-a e ponha-a na sua mão. Depois, embaralhe o seu deck."
+       ],
+       "tagline_pt": "Nada Escapa das Profundezas"
+     },
+@@ -4953,7 +4949,7 @@
+       "keywords_en": ["Guardian"],
+       "habilidades_en": [
+         "Guardian",
+-        "Coral Armor — Once each round, the first time Coral Reef Defender would take Strike damage, prevent 1 of that damage."
++        "Coral Maze — Enemy Devotees can't declare a Strike against your God unless their controller pays {1}{C} for each of them."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -4962,7 +4958,7 @@
+       "subtitulo_pt": "A Muralha Viva do Oceano",
+       "habilidades_pt": [
+         "Guardião",
+-        "Armadura de Coral — Uma vez por rodada, na primeira vez que o Defensor do Recife de Coral sofreria dano de Golpe, previna 1 desse dano."
++        "Labirinto de Coral — Devotos inimigos não podem declarar Golpe contra o seu Deus, a menos que o controlador deles pague {1}{C} por Devoto."
+       ],
+       "tagline_pt": "A Muralha Viva do Oceano"
+     },
+@@ -5196,8 +5192,7 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Pearl Divination — Once until the start of your next round, when you cast a Moment or Technique, you may pay {1}{C}. If you do, draw a card, then discard a card.",
+-        "Pearl of Protection — Whenever you discard a card, you may pay {1}{C}. If you do, prevent the next 1 Strike damage that would be dealt to target friendly Devotee this round. This ability triggers only once each round."
++        "Pearl Tide — Once each round, when you cast a Moment or Technique, you may have another target friendly Devotee leave the Battlefield and return to it under your control Unprepared."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -5205,8 +5200,7 @@
+       "nome_exibicao_pt": "GUARDIÃO DO SANTUÁRIO DA PÉROLA",
+       "subtitulo_pt": "A Verdade Mais Profunda Jaz Dentro da Pérola",
+       "habilidades_pt": [
+-        "Adivinhação da Pérola — Uma vez até o início da sua próxima rodada, quando você conjura um Momento ou Técnica, você pode pagar {1}{C}. Se fizer isso, compre uma carta e depois descarte uma carta.",
+-        "Pérola de Proteção — Sempre que você descarta uma carta, você pode pagar {1}{C}. Se fizer isso, previna os próximos 1 de dano de Golpe que seriam causados ao Devoto aliado alvo nesta rodada. Esta habilidade só dispara uma vez por rodada."
++        "Maré da Pérola — Uma vez por rodada, quando você conjura um Momento ou Técnica, você pode fazer outro Devoto aliado alvo sair do Campo de Batalha e voltar a ele sob o seu controle, Despreparado."
+       ],
+       "tagline_pt": "A Verdade Mais Profunda Jaz Dentro da Pérola"
+     },
+@@ -5358,8 +5352,7 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Prophecy of the Abyss — Once until the start of your next round, whenever an opponent mills one or more cards, you may pay {1}{C}. If you do, draw a card.",
+-        "Dark Revelation — When The Drowned Prophet enters the Battlefield, target player mills two cards."
++        "Prophecy of the Abyss — Whenever an opponent casts a Moment or Technique, draw a card unless that player pays {1}{C}."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -5367,8 +5360,7 @@
+       "nome_exibicao_pt": "O PROFETA AFOGADO",
+       "subtitulo_pt": "Ele Viu o Fim de Todas as Costas",
+       "habilidades_pt": [
+-        "Profecia do Abismo — Uma vez até o início da sua próxima rodada, sempre que um oponente envia uma ou mais cartas do deck ao Tártaro, você pode pagar {1}{C}. Se fizer isso, compre uma carta.",
+-        "Revelação Sombria — Quando O Profeta Afogado entra no Campo de Batalha, o jogador alvo envia ao Tártaro as 2 cartas do topo do seu deck."
++        "Profecia do Abismo — Sempre que um oponente conjura um Momento ou Técnica, compre uma carta, a menos que esse jogador pague {1}{C}."
+       ],
+       "tagline_pt": "Ele Viu o Fim de Todas as Costas"
+     },
+@@ -5778,7 +5770,7 @@
+       "keywords_en": [],
+       "habilidades_en": [
+         "Equipped Devotee gets +1 @ATK.",
+-        "Serpent's Venom — Once each round, when equipped Devotee deals Strike damage to an enemy Devotee, that Devotee gets -1 @ATK until the end of your round."
++        "Serpent's Wisdom — Whenever equipped Devotee deals Strike damage to an enemy God, draw a card."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -5794,7 +5786,7 @@
+       "subtitulo_pt": "O Veneno Sob as Ondas",
+       "habilidades_pt": [
+         "O Devoto equipado recebe +1 @ATQ.",
+-        "Veneno da Serpente — Uma vez por rodada, quando o Devoto equipado causa dano de Golpe a um Devoto inimigo, esse Devoto recebe -1 @ATQ até o fim da sua rodada."
++        "Sabedoria da Serpente — Sempre que o Devoto equipado causa dano de Golpe a um Deus inimigo, compre uma carta."
+       ],
+       "tagline_pt": "O Veneno Sob as Ondas"
+     },
+@@ -5986,12 +5978,12 @@
+       "nome_interno_pt": "",
+       "faccao": "Poseidon",
+       "tipo": "Spell",
+-      "subtipos": ["Technique"],
++      "subtipos": ["Moment"],
+       "raridade": "Common",
+       "status": "design-ready",
+       "cosmoble": true,
+       "caminho_imagem": null,
+-      "custo": 3,
++      "custo": 2,
+       "unidade_custo": "base_cosmo",
+       "soul": null,
+       "attack": null,
+@@ -6003,8 +5995,7 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Return target enemy Devotee with @ATK 3 or less to its owner's hand.",
+-        "Crashing Current — That Devotee's controller mills one card."
++        "Return target enemy Devotee or Equipment to its owner's hand. If you pay {5}{C} more to cast this Moment, return each enemy Devotee and Equipment to its owner's hand instead."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -6012,8 +6003,7 @@
+       "nome_exibicao_pt": "ONDAS DE DESTRUIÇÃO",
+       "subtitulo_pt": "O Mar Golpeia Sem Piedade",
+       "habilidades_pt": [
+-        "Devolva o Devoto inimigo alvo com @ATQ 3 ou menos à mão do dono.",
+-        "Correnteza Esmagadora — O controlador desse Devoto envia ao Tártaro a carta do topo do deck."
++        "Devolva o Devoto ou Equipamento inimigo alvo à mão do dono. Se você pagar {5}{C} a mais para conjurar este Momento, devolva cada Devoto e Equipamento inimigo à mão do dono em vez disso."
+       ],
+       "tagline_pt": "O Mar Golpeia Sem Piedade"
+     },
+@@ -6044,8 +6034,7 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Look at the top card of your deck. You may put it on the bottom of your deck.",
+-        "Draw a card."
++        "Search your deck for a Moment or Technique card and reveal it. Shuffle your deck, then put that card on top of it."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -6053,8 +6042,7 @@
+       "nome_exibicao_pt": "SOB A SUPERFÍCIE",
+       "subtitulo_pt": "A Verdade Jaz Sob as Ondas",
+       "habilidades_pt": [
+-        "Olhe a carta do topo do seu deck. Você pode colocá-la no fundo do seu deck.",
+-        "Compre uma carta."
++        "Procure no seu deck uma carta de Momento ou Técnica e revele-a. Embaralhe o seu deck e depois ponha essa carta no topo dele."
+       ],
+       "tagline_pt": "A Verdade Jaz Sob as Ondas"
+     },
+@@ -6085,7 +6073,7 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Counter target enemy Moment or Technique that targets your God or a friendly Devotee."
++        "Counter target enemy Moment or Technique. If you control a Marina General, this Moment costs {0}."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -6093,7 +6081,7 @@
+       "nome_exibicao_pt": "O MAR NUNCA PERDOA",
+       "subtitulo_pt": "Toda Dívida Volta com a Maré",
+       "habilidades_pt": [
+-        "Anule o Momento ou Técnica inimigo alvo que tem como alvo seu Deus ou um Devoto aliado."
++        "Anule o Momento ou Técnica inimigo alvo. Se você controla um General Marina, este Momento custa {0}."
+       ],
+       "tagline_pt": "Toda Dívida Volta com a Maré"
+     },
+@@ -6290,8 +6278,7 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Return up to two target enemy Devotees to their owners' hands.",
+-        "Gathering Storm — For each Devotee returned this way that had a @Seal counter, its controller mills one card."
++        "Return each enemy Devotee that declared a Strike this round to its owner's hand."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -6299,8 +6286,7 @@
+       "nome_exibicao_pt": "A PRIMEIRA GRANDE TEMPESTADE",
+       "subtitulo_pt": "Antes do Dilúvio, Há Silêncio",
+       "habilidades_pt": [
+-        "Devolva até dois Devotos inimigos alvo às mãos dos donos.",
+-        "Tempestade Crescente — Para cada Devoto devolvido assim que tinha um marcador de @Selo, seu controlador envia ao Tártaro a carta do topo do deck."
++        "Devolva à mão do dono cada Devoto inimigo que declarou Golpe nesta rodada."
+       ],
+       "tagline_pt": "Antes do Dilúvio, Há Silêncio"
+     },
+@@ -6745,9 +6731,7 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Return target enemy Devotee to its owner's hand.",
+-        "Rising Current — If you control a Marina General, you may return target friendly Devotee to its owner's hand.",
+-        "Ocean's Reward — If you returned a friendly Devotee this way, draw a card, then discard a card."
++        "Return target Devotee to its owner's hand. Prepare up to two of your Cosmo Bases."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -6755,9 +6739,7 @@
+       "nome_exibicao_pt": "TURBILHÃO MARINHO",
+       "subtitulo_pt": "O Oceano se Volta Contra Seus Inimigos",
+       "habilidades_pt": [
+-        "Devolva o Devoto inimigo alvo à mão do dono.",
+-        "Correnteza Crescente — Se você controlar um General Marina, você pode devolver o Devoto aliado alvo à mão do dono.",
+-        "Recompensa do Oceano — Se você devolveu um Devoto aliado assim, compre uma carta e depois descarte uma carta."
++        "Devolva o Devoto alvo à mão do dono. Prepare até duas das suas Bases de Cosmo."
+       ],
+       "tagline_pt": "O Oceano se Volta Contra Seus Inimigos"
+     },
+@@ -7155,7 +7137,7 @@
+       "status": "design-ready",
+       "cosmoble": false,
+       "caminho_imagem": null,
+-      "custo": 5,
++      "custo": 4,
+       "unidade_custo": "base_cosmo",
+       "soul": null,
+       "attack": null,
+@@ -7167,9 +7149,7 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Return target enemy Devotee to its owner's hand.",
+-        "Illusionary Control — Draw a card.",
+-        "Resonance — Sea Dragon Kanon: If you control Sea Dragon Kanon, that player mills two cards."
++        "Reveal the top five cards of your deck. An opponent separates them into two piles. Put one pile into your hand and the other into your Tartarus."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -7177,9 +7157,7 @@
+       "nome_exibicao_pt": "ILUSÃO GALÁCTICA",
+       "subtitulo_pt": "A Mente É o Primeiro Campo de Batalha",
+       "habilidades_pt": [
+-        "Devolva o Devoto inimigo alvo à mão do dono.",
+-        "Controle Ilusório — Compre uma carta.",
+-        "Ressonância — Kanon de Dragão Marinho: Se você controlar Kanon de Dragão Marinho, esse jogador envia ao Tártaro as 2 cartas do topo do seu deck."
++        "Revele as 5 cartas do topo do seu deck. Um oponente as separa em duas pilhas. Ponha uma pilha na sua mão e a outra no seu Tártaro."
+       ],
+       "tagline_pt": "A Mente É o Primeiro Campo de Batalha"
+     },
+@@ -7643,9 +7621,8 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Sunken Empire — Return up to two target enemy Devotees to their owners' hands.",
+-        "Buried Civilization — For each Devotee returned this way, its controller mills two cards.",
+-        "Lost Beneath the Waves — If you control a Poseidon Domain, draw a card."
++        "This Moment costs {1}{C} less to cast for each card you send from your Tartarus to the Void as you cast it.",
++        "Draw three cards."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -7653,9 +7630,8 @@
+       "nome_exibicao_pt": "A QUEDA DE ATLÂNTIDA",
+       "subtitulo_pt": "Até os Impérios Devem Afogar-se",
+       "habilidades_pt": [
+-        "Império Submerso — Devolva até dois Devotos inimigos alvo às mãos dos donos.",
+-        "Civilização Sepultada — Para cada Devoto devolvido assim, seu controlador envia ao Tártaro as 2 cartas do topo do deck.",
+-        "Perdido Sob as Ondas — Se você controlar um Domínio de Poseidon, compre uma carta."
++        "Este Momento custa {1}{C} a menos para conjurar para cada carta que você manda do seu Tártaro ao Vazio ao conjurá-lo.",
++        "Compre três cartas."
+       ],
+       "tagline_pt": "Até os Impérios Devem Afogar-se"
+     },
+@@ -7715,7 +7691,7 @@
+       "status": "design-ready",
+       "cosmoble": false,
+       "caminho_imagem": null,
+-      "custo": 6,
++      "custo": 4,
+       "unidade_custo": "base_cosmo",
+       "soul": null,
+       "attack": null,
+@@ -7727,9 +7703,7 @@
+       "equipar_custo": null,
+       "keywords_en": [],
+       "habilidades_en": [
+-        "Relentless Waters — Each opponent mills four cards.",
+-        "Rising Pressure — Each opponent who controls at least two Devotees with @Seal counters mills two additional cards.",
+-        "The Deep Remembers — Draw a card."
++        "Each player discards their hand, then draws cards equal to the greatest number of cards a player discarded this way."
+       ],
+       "habilidade_awaken_en": "",
+       "ultimate_en": "",
+@@ -7737,9 +7711,7 @@
+       "nome_exibicao_pt": "O DILÚVIO INTERMINÁVEL",
+       "subtitulo_pt": "Não Há Escapatória da Maré",
+       "habilidades_pt": [
+-        "Águas Implacáveis — Cada oponente envia ao Tártaro as 4 cartas do topo do seu deck.",
+-        "Pressão Crescente — Cada oponente que controla pelo menos dois Devotos com marcadores de @Selo envia ao Tártaro mais 2 cartas do topo do seu deck.",
+-        "O Profundo Lembra — Compre uma carta."
++        "Cada jogador descarta a mão e depois compra cartas igual ao maior número de cartas que um jogador descartou assim."
+       ],
+       "tagline_pt": "Não Há Escapatória da Maré"
+     },

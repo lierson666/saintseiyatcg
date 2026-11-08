@@ -20,6 +20,9 @@ const atRoundEnd = (s, key, self, ability, run) => s.delayed.push({controller: k
 
 // Devotees seus que vestem uma Armor (alvo do Cloth Restoration, 30/10/2026).
 const armored = (s, c, key) => s.players[key].battlefield.filter(u => k.card(c, u)?.kind === 'Devotee' && Object.keys(c.attached).some(e => c.attached[e] === u && k.card(c, e)?.armor));
+const enemyMT = (s, c, key) => s.chain.filter(i => i.spell && i.controller !== key && /Moment|Technique|Event|Miracle/.test(k.card(c, i.uid)?.type || '')).map(i => i.uid);
+const godFaction = (s, key) => s.divine?.[k.other(s, key)]?.god?.replace(/^god-/, '');
+
 export default {
   // Spells baratas da color pie (autor, 31/10/2026: docs/spells-baratas-proposta.md).
   'athena-v6-505': {spell: {check: k.needTarget(k.devotees, 'sem Devotee aliado'), run: (s, c, key) => { // Athena's Aegis
@@ -98,8 +101,16 @@ export default {
       }
     });
   }}},
-  // Athena's Final Decree (autor, 06/11/2026): derrota todos os Devotees, dos dois lados.
-  'athena-v6-084': {spell: {run: (s, c) => { for (const u of k.allDevotees(s, c)) k.defeat(s, c, u); }}},
+  // Athena's Final Decree — Austere Command (08/11/2026): escolha dois de três modos.
+  'athena-v6-084': {spell: {run: (s, c, key) => {
+    const modes = ['Cost 3 or less', 'Cost 4 or more', 'All Equipment'];
+    let picked = k.chooseUpTo(c, key, "ATHENA'S FINAL DECREE", modes, 2, {text: 'Choose two.'}).filter(m => modes.includes(m)).slice(0, 2);
+    if (picked.length < 2) picked = [...picked, ...modes.filter(m => !picked.includes(m))].slice(0, 2);
+    const dev = k.allDevotees(s, c).filter(u => (picked.includes('Cost 3 or less') && k.costOf(c, u) <= 3) || (picked.includes('Cost 4 or more') && k.costOf(c, u) >= 4));
+    const gear = picked.includes('All Equipment') ? k.allEquipment(s, c) : [];
+    for (const u of dev) if (s.units[u]) k.defeat(s, c, u);
+    for (const u of gear) if (k.controllerOf(s, u)) k.destroyEquipment(s, c, u);
+  }}},
   // Deprived of Senses
   'athena-v6-086': {spell: {run: (s, c, key, self) => {
     const t = friendlySaint(s, c, key, 'DEPRIVED OF SENSES');
@@ -190,10 +201,36 @@ export default {
     resonance: {watchSurvive: (s, c, key, self, unit) => k.controllerOf(s, unit) === key && isSaint(c, unit)
       && k.resPay(s, c, key, 'survive', 1, 'RESONANCE', st => k.gainSoul(st, key, 2), {text: 'Pay {1}{C}: your God gains {2}{S}?'})},
   },
-  // The Sanctuary Gates — Sacred Threshold: o primeiro Devotee inimigo que declara Strike contra o seu God em cada Round, -1 ATK nesse Strike.
+  // The Sanctuary Gates — Ghostly Prison (08/11/2026, §58): Strike contra o seu God custa {1}{C} por Devotee; soma com outros impostos.
   'athena-v6-520': {
-    watchDeclare: (s, c, key, self, attacker, target) => target.kind === 'god' && target.player === key && k.controllerOf(s, attacker) !== key
-      && k.once(s, `${self}:threshold`) && (st => { if (st.units[attacker]) k.buff(st, attacker, -1, 0, 'this_strike'); }),
+    strikeTax: () => 1,
     res: {name: 'RESONANCE', cost: 2, run: (s, c, key) => shield(s, k.godTarget(key), 3, {duration: 'until_next_turn', owner: key})},
   },
+  // Staples do branco (autor, 08/11/2026: docs/proposta-athena-staples-branco.md).
+  // Blood of the Dragon — Reprieve: o Moment/Technique inimigo na pilha volta à mão do dono; compre 1.
+  'athena-v6-058': {spell: {
+    check: (s, c, key) => { if (!enemyMT(s, c, key).length) throw new k.RuleError('alvo', 'sem Moment ou Technique inimigo na cadeia'); },
+    run: (s, c, key) => {
+      const t = k.choose(c, key, 'BLOOD OF THE DRAGON', enemyMT(s, c, key), {text: 'Choose target enemy Moment or Technique.'});
+      if (t && k.counterSpell(s, c, t)) { const o = s.players[c.objects[t].owner]; for (const z of ['tartarus', 'void']) if (o[z].includes(t)) o[z].splice(o[z].indexOf(t), 1); o.hand.push(t); }
+      k.draw(s, key, 1);
+    }}},
+  // The Galaxian Wars — Elspeth: 2 Sanctuary Soldier 1/1; com 3 Bronze Saints, compre 1.
+  'athena-v6-052': {spell: {run: (s, c, key) => {
+    for (let i = 0; i < 2; i++) k.summonToken(s, c, key, {id: 'neutral-token-sanctuary-soldier', name: 'Sanctuary Soldier', atk: 1, hp: 1, type: 'Soldier'});
+    if (k.devotees(s, c, key).filter(u => isBronze(c, u)).length >= 3) k.draw(s, key, 1);
+  }}},
+  // Cassios's Sacrifice — Ephemerate: blink de um Devotee aliado (§58).
+  'athena-v6-076': {spell: {
+    check: k.needTarget((s, c, key) => k.devotees(s, c, key), 'sem Devotee aliado'),
+    run: (s, c, key) => { const t = k.choose(c, key, "CASSIOS'S SACRIFICE", k.devotees(s, c, key), {text: 'Choose target friendly Devotee.'}); if (t) k.blink(s, c, t); },
+  }},
+  // The Call of Athena — Akroma's Will: +2 ATK e Nimble no time; com Gold Saint, @Immune à facção do God inimigo.
+  'athena-v6-061': {spell: {run: (s, c, key) => {
+    const gold = k.devotees(s, c, key).some(u => k.hasType(c, u, 'Gold Saint')), f = godFaction(s, key);
+    for (const u of k.devotees(s, c, key)) {
+      k.buff(s, u, 2, 0, 'this_round', ['Nimble']);
+      if (gold && f) (s.v6Immune ||= {})[u] = {round: s.round, faction: f};
+    }
+  }}},
 };

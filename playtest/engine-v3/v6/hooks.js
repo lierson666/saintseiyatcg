@@ -3,7 +3,7 @@ import {hooks, pushTriggers, emit} from '../core.js';
 import {resonates} from '../../../shared/canon-cards.js';
 import {V6, entryOf, collect, trigger, contextOf, bindContext, register, sources, domainEntry} from './registry.js';
 import {clone} from '../decision.js';
-import {setDefeatedHooks, setEnteredHooks, setLeavesHooks, setDamagedHooks} from './kit.js';
+import {canPayCosmo, payCosmo, setCounterBonus, setDefeatedHooks, setEnteredHooks, setLeavesHooks, setDamagedHooks} from './kit.js';
 import hades from './hades.js';
 import poseidon from './poseidon.js';
 import ares from './ares.js';
@@ -13,8 +13,9 @@ import athenaDevotees from './athena-devotees.js';
 import athenaGear from './athena-gear.js';
 import athenaSpells from './athena-spells.js';
 import neutral from './neutral.js';
+import novas from './novas.js';
 
-register(hades); register(poseidon); register(ares); register(artemis); register(athena); register(athenaDevotees); register(athenaGear); register(athenaSpells); register(neutral);
+register(hades); register(poseidon); register(ares); register(artemis); register(athena); register(athenaDevotees); register(athenaGear); register(athenaSpells); register(neutral); register(novas);
 export {V6, entryOf, bindContext, contextOf} from './registry.js';
 
 const nameOf = (ctx, uid) => ctx.cards.get(ctx.objects[uid]?.cardId)?.name || uid;
@@ -226,6 +227,53 @@ hooks.basePlaced.push((state, player, uid) => {
   if (ctx) pushTriggers(state, collect(state, ctx, state.order, 'watchBase', [player, uid], 'a Cosmo Base is placed'));
 });
 hooks.turnEnd.push(turnHook('endTurn'));
+// Imposto de Strike contra o God (§58): soma `strikeTax(s, c, key, self)` das fontes do defensor; quem ataca paga (Base ou Latent).
+hooks.strikeTax = (state, defender) => {
+  const ctx = contextOf(state);
+  return ctx ? sources(state, ctx, defender).reduce((n, {self, entry}) => n + (entry.strikeTax?.(state, ctx, defender, self) || 0), 0) : 0;
+};
+hooks.canPayTax = (state, key, n) => canPayCosmo(state, key, n);
+hooks.payTax = (state, key, n) => payCosmo(state, key, n);
+// §58: `onlyFromHand` trava jogar fora da mão para os oponentes; `noEnemySpells` trava Moment/Technique do oponente na sua rodada.
+const opposing = (state, key, flag) => { const ctx = contextOf(state); return !!ctx && state.order.some(o => o !== key && sources(state, ctx, o).some(x => x.entry[flag])); };
+hooks.handOnly = (state, key) => opposing(state, key, 'onlyFromHand');
+hooks.spellLock = (state, key) => state.active !== key && opposing(state, key, 'noEnemySpells');
+// Cosmo Base adicional (§58): carta em campo com `extraBase: true`.
+hooks.extraBases = (state, key) => { const ctx = contextOf(state); return !!ctx && sources(state, ctx, key).some(x => x.entry.extraBase); };
+// Marcadores adicionais (§58): `counterBonus(s, c, key, self, uid, n)` devolve o novo N; cada carta aplica uma vez por chamada.
+// Doubling Season (596) dobra depois dos "+1" (§58: o dono escolhe a ordem das substituições; dobrar por último dá mais).
+setCounterBonus((state, uid, n) => {
+  const ctx = contextOf(state);
+  if (!ctx) return n;
+  for (const key of state.order) for (const {self, entry} of sources(state, ctx, key)) if (entry.counterBonus) n = entry.counterBonus(state, ctx, key, self, uid, n);
+  const ctrl = state.order.find(k => state.players[k].battlefield.includes(uid));
+  return ctrl ? n * (hooks.tokenCount(state, ctrl) || 1) : n;
+});
+// §58 (autor, 08/11/2026): `doubles: true` dobra tokens e marcadores dos efeitos de quem a controla. shortcut: o "efeito que
+// você controla" é lido pelo controlador do token/Devotee que recebe; trocar pela fonte do efeito se o kit passar a sabê-la.
+hooks.tokenCount = (state, key) => { const ctx = contextOf(state); return ctx ? 2 ** sources(state, ctx, key).filter(x => x.entry.doubles).length : 1; };
+// Pariah (531): `godRedirect(s, c, key, self)` devolve o Devotee que recebe o dano do God de `key`.
+hooks.godRedirect = (state, key) => {
+  const ctx = contextOf(state);
+  if (!ctx) return null;
+  for (const {self, entry} of sources(state, ctx, key)) { const to = entry.godRedirect?.(state, ctx, key, self); if (to) return to; }
+  return null;
+};
+// Worship (539): `soulFloor(s, c, key, self)` verdadeiro trava o Soul de `key` em 1.
+hooks.soulFloor = (state, key) => { const ctx = contextOf(state); return !!ctx && sources(state, ctx, key).some(x => x.entry.soulFloor?.(state, ctx, key, x.self)); };
+// Controle emprestado até o fim da rodada (Insurrection 584): `state.v6Borrowed` = [{uid, from, round}] volta no fim da rodada.
+hooks.roundEnd.push(state => {
+  const back = (state.v6Borrowed || []).filter(b => b.round <= state.round);
+  state.v6Borrowed = (state.v6Borrowed || []).filter(b => b.round > state.round);
+  for (const {uid, from} of back) {
+    const holder = state.order.find(k => state.players[k].battlefield.includes(uid));
+    if (!holder || holder === from) continue;
+    state.players[holder].battlefield.splice(state.players[holder].battlefield.indexOf(uid), 1);
+    state.players[from].battlefield.push(uid);
+    emit(state, 'control_returned', {uid, player: from});
+  }
+  return [];
+});
 
 // Spell V6: categoria pelo subtipo impresso (Technique/Moment), não pela tabela D194 (números do D268).
 export function v6Spell(ctx, uid) {

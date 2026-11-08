@@ -44,7 +44,6 @@ function mods(state, ctx, uid) {
   const key = controllerOf(state, uid);
   if (key) {
     const n = id(ctx, uid);
-    if (n === '034' && state.players[key].soul <= 5) list.push({atk: 0, hp: 2, from: {uid, ability: 'Loyal Servant'}}); // Loyal Servant
     if (n === '036' && controls(state, ctx, key, '001')) list.push({atk: 0, hp: 2, from: {uid, ability: 'Sibling Bond'}}); // Sibling Bond
     if (n === '037' && controls(state, ctx, key, '003')) list.push({atk: 0, hp: 1, from: {uid, ability: "Dragon's Promise"}}); // Dragon's Promise
     if (n === '001' && behind(state, key)) list.push({atk: 1, hp: 0, from: {uid, ability: 'Miracle'}}); // Miracle
@@ -110,13 +109,7 @@ function preventDevotee(state, ctx, uid, amount, strike) {
   for (const e of gear) {
     const n = id(ctx, e);
     if (amount <= 0) break;
-    if ((n === '044' || n === '045') && useOncePerRound(state, `prevent:${e}`)) {
-      const before = amount;
-      amount = Math.max(0, amount - 1);
-      // Dragon's Guard, Resonance: ao prevenir dano em Dragon Shiryu, 1 de escudo numa Armor dele até o fim do seu próximo Round.
-      const armor = gear.find(g => card(ctx, g).armor);
-      if (n === '045' && shiryu && before > amount && armor) shield(state, armor, 1, {strikeOnly: false, duration: 'your_next_round'});
-    }
+    if (n === '044' && useOncePerRound(state, `prevent:${e}`)) amount = Math.max(0, amount - 1); // 045 virou Dragon's Tithe (08/11/2026)
   }
   amount = Math.max(0, amount - v6Prevent(state, ctx, key, uid, amount, strike)); // cartas V6: prevenção obrigatória (gancho prevent)
   // 2. Escudos de Spell.
@@ -161,11 +154,6 @@ function optionalPrevention(state, ctx, key, uid, amount) {
       amount -= moved;
       damageDevotee(state, ctx, source, moved, true);
     }
-    // Final Sacrifice: another friendly Saint; defeat Cassios, prevent up to 3 (sem limite por Round).
-    if (n === '027' && source !== uid && ask(ctx, key, {ability: 'Final Sacrifice', source, uid, amount})) {
-      destroyDevotee(state, source, ctx.objects, ctx.attached); amount -= Math.min(3, amount);
-      pushTriggers(state, v6Leaves(state, ctx, key, source, 'tartarus'));
-    }
   }
   return amount;
 }
@@ -179,7 +167,16 @@ export function preventGod(state, ctx, key, amount, strike = true) {
       useOncePerRound(state, once); state.players[key].latent -= 2; amount -= Math.min(3, amount);
     }
   }
-  return amount;
+  return redirectGod(state, ctx, key, amount, strike);
+}
+// §58 (autor, 08/11/2026): Pariah (Saint's Burden 531) — o dano que iria ao God vai ao Devotee equipado (Strike e efeito).
+// Devolve o que ainda chega ao God (0 se redirecionou).
+export function redirectGod(state, ctx, key, amount, strike = false) {
+  const to = amount > 0 && hooks.godRedirect?.(state, key);
+  if (!to) return amount;
+  emit(state, 'god_damage_redirected', {player: key, uid: to, amount});
+  damageDevotee(state, ctx, to, amount, strike);
+  return 0;
 }
 
 // Dano num Devotee (`strike`: se é dano de Strike): prevenção, escudos das Armor, depois o Devotee.
@@ -191,7 +188,9 @@ export const godSource = (state, key) => ({controller: key, cardId: state.divine
 export const cardSource = (state, ctx, uid) => ({controller: controllerOf(state, uid), cardId: ctx.objects[uid]?.cardId, card: card(ctx, uid)});
 export function immuneFrom(state, ctx, uid, src) {
   const key = controllerOf(state, uid);
-  return !!key && !!src && src.controller !== key && gearOf(ctx, uid).some(e => entryOf(ctx, e)?.immune?.(src));
+  if (!key || !src || src.controller === key) return false;
+  const g = state.v6Immune?.[uid]; // efeito até o fim do Round (The Goddess Awakens): {turn, faction}
+  return gearOf(ctx, uid).some(e => entryOf(ctx, e)?.immune?.(src)) || (g?.round === state.round && new RegExp(`^(god-${g.faction}$|${g.faction}-)`).test(src.cardId || ''));
 }
 export function blockedNow(state, uid) {
   const r = state.resolving, ctx = r?.controller && contextOf(state);
@@ -227,6 +226,7 @@ const removeDamage = (state, uid, n) => { state.units[uid].damage = Math.max(0, 
 // Angels (Anjos Celestes) também, autor 06/11/2026.
 const LEGENDARY = /\b(Saint|Marines?|Marinas?|Satellites?|Spect(?:er|re)s?|Berserk(?:er)?s?|Angels?)\b/i;
 export function namedCharacter(ctx, uid) {
+  if (ctx.objects[uid].token) return null; // token não é personagem nomeado (guia §63)
   const id = ctx.objects[uid].cardId.toLowerCase();
   if (!LEGENDARY.test(ctx.cards.get(ctx.objects[uid].cardId)?.type || '')) return null;
   if (id === 'athena-v6-009') return null; // Phoenix Ikki não é lendário (guia §63, autor 01/11/2026)
@@ -266,6 +266,9 @@ export function checkDefeats(state, ctx) {
   for (const key of state.order) {
     for (const uid of devotees(state, ctx, key)) {
       if (!state.units[uid] || state.units[uid].damage < hpOf(state, ctx, uid)) continue;
+      // §58 (autor, 08/11/2026): "não pode ser derrotado por dano" até o fim do Round; HP 0 ou menos derrota. O dano fica e é
+      // verificado de novo no checkpoint da passagem de turno.
+      if (state.v6Unbreakable?.[uid] === state.round && hpOf(state, ctx, uid) > 0) continue;
       // God Athena, Divine Protection (D200): Defeat prevenível de Athena Devotee; pode pagar 3 Latent, fica com 1 HP.
       const p = state.players[key];
       if (athenaAwaken(state, ctx, key, uid) && p.latent >= 3 && ask(ctx, key, {ability: 'Divine Protection', god: true, uid, cost: '3 Latent'})) {

@@ -87,7 +87,8 @@ hooks.turnEnd.push(state => {
 
 // Jogar do Void (Tactician 342): o prazo "até o fim da sua próxima rodada" vence no fim desse turno (guia §58, 08/11/2026).
 hooks.turnEnd.push(state => {
-  if (state.zonePlay) state.zonePlay = state.zonePlay.filter(z => !(z.key === state.active && state.players[z.key].ownTurns >= z.until));
+  // `round` (Jeska's Will 578): vence no fim da rodada em que foi criado, de quem quer que seja a rodada.
+  if (state.zonePlay) state.zonePlay = state.zonePlay.filter(z => !(z.round != null ? z.round <= state.round : z.key === state.active && state.players[z.key].ownTurns >= z.until));
   return [];
 });
 // Spell na cadeia controlada por `key` (copiar) ou qualquer uma (redirecionar), menos a própria.

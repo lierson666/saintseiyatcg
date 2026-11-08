@@ -3,7 +3,7 @@
 import * as k from './kit.js';
 import {hooks, spendBase, addSeal} from '../core.js';
 import {shield, silence} from '../effects.js';
-import {collect} from './registry.js';
+import {collect, entryOf} from './registry.js';
 
 // ---------- leitura ----------
 const name = (c, uid) => k.card(c, uid)?.name || '';
@@ -319,18 +319,21 @@ export default {
     // Poseidon → Azul (31/10/2026): o ganho de Soul virou loot.
     watchSealed: onSealed('emperors-will', (st, c, key, self) => (pay(st, c, key, 1, 'THE EMPEROR\'S WILL', self) ? (loot(st, c, key, 'THE EMPEROR\'S WILL'), true) : false)),
   },
-  // Abyssal Tide (autor, 08/11/2026): qualquer jogador conjura Moment ou Technique; você mói 1 e cada oponente mói 2.
-  'poseidon-v6-102': {
-    watchSpell: (s, c, key) => st => { k.mill(st, key, 1); k.mill(st, k.other(st, key), 2); },
-  },
-  'poseidon-v6-103': {
-    // Lord of Atlantis (31/10/2026): outras Marinas +1/+1; Royal Summons saiu.
-    aura: (s, c, key, self, unit) => (unit !== self && k.controllerOf(s, unit) === key && isMarina(c, unit) ? {atk: 1, hp: 1} : null),
-  },
-  'poseidon-v6-104': {
-    mods: (s, c, key, self) => (k.devotees(s, c, key).some(u => u !== self && isMarina(c, u)) ? [{atk: 0, hp: 1}] : []),
-    watchDeclare: selfWard({ability: 'OCEANIC DEFENSE'}),
-  },
+  // Archmage Emeritus: uma vez por Round.
+  'poseidon-v6-102': {watchSpell: (s, c, key, self, caster, spellUid) => caster === key && castMT(c, spellUid) && k.once(s, `tide:${self}`) && (st => k.draw(st, key, 1))},
+  // Talrand: uma vez por Round, token Marina Soldier 1/1.
+  'poseidon-v6-103': {watchSpell: (s, c, key, self, caster, spellUid) => caster === key && castMT(c, spellUid) && k.once(s, `emperor:${self}`)
+    && (st => k.summonToken(st, c, key, {id: 'token-marina-soldier', name: 'Marina Soldier', atk: 1, hp: 1, type: 'Marina Soldier'}))},
+  // Phyrexian Metamorph: pode entrar como cópia de outro Devotee e continua Marina (§58). shortcut: a cópia é feita no gatilho de
+  // entrada (não substituição); o "quando entra" do original roda logo depois. Upgrade: replacement no putOntoField/playDevotee.
+  'poseidon-v6-104': {enter: (s, c, key, self) => k.allDevotees(s, c).some(u => u !== self) && (st => {
+    const t = k.choose(c, key, 'MIRROR OF THE SEA', k.allDevotees(st, c).filter(u => u !== self), {optional: true, text: 'Enter as a copy of another Devotee?'});
+    if (!t || !st.units[self]) return;
+    k.becomeCopy(c, self, t, 'Marina');
+    k.emit(st, 'copied', {uid: self, of: t});
+    const run = entryOf(c, self)?.enter?.(st, c, key, self);
+    if (typeof run === 'function') run(st);
+  })},
   // 105 Atlantean Sentinel — Ancient Vigil (gancho survive): sobreviveu como defensor; pode pagar {1}{C} e pôr 1 Seal no atacante.
   'poseidon-v6-105': {
     survive: (s, c, key, self, role, foe) => role === 'defender' && !!foe && ready(s, key) >= 1 && (st => {
@@ -357,12 +360,10 @@ export default {
       };
     },
   },
-  'poseidon-v6-109': {
-    enter: (s, c, key) => st => mill(st, c, targetPlayer(st, c, key, 'EYES OF THE ABYSS'), 2),
-  },
-  'poseidon-v6-110': {
-    watchDeclare: selfWard({ability: 'CORAL ARMOR'}),
-  },
+  // // Staples do azul (autor, 08/11/2026: docs/proposta-poseidon-staples-azul.md). Spellseeker: Moment/Technique de custo 2 ou menos.
+  'poseidon-v6-109': {enter: (s, c, key) => st => { k.search(st, c, key, 'EYES OF THE ABYSS', (card, uid) => castMT(c, uid) && k.costOf(c, uid) <= 2); k.shuffleDeck(st, key); }},
+  // Propaganda (§58): Strike contra o seu God custa {1}{C} por Devotee; soma com outros impostos.
+  'poseidon-v6-110': {strikeTax: () => 1},
   'poseidon-v6-111': {
     declare: (s, c, key, self, target) => {
       const tag = `wave:${self}`;
@@ -395,18 +396,12 @@ export default {
       };
     },
   },
-  'poseidon-v6-116': {
-    // Pearl Divination (gancho watchSpell): paga {1}{C}, compra 1 e descarta 1.
-    watchSpell: onCast('pearldiv', 'PEARL DIVINATION', 1, (st, c, key) => loot(st, c, key, 'PEARL DIVINATION')),
-    watchDiscard: (s, c, key, self, player) => {
-      if (player !== key || !k.once(s, `pearl:${self}`)) return;
-      return st => {
-        if (!k.devotees(st, c, key).length || !pay(st, c, key, 1, 'PEARL OF PROTECTION', self)) return;
-        const t = k.choose(c, key, 'PEARL OF PROTECTION', k.devotees(st, c, key), {text: 'Prevent the next 1 Strike damage to target friendly Devotee this round.'});
-        if (t) shield(st, t, 1, {duration: 'this_round'});
-      };
-    },
-  },
+  // Displacer Kitten: uma vez por Round, blink de outro Devotee aliado (§58).
+  'poseidon-v6-116': {watchSpell: (s, c, key, self, caster, spellUid) => caster === key && castMT(c, spellUid) && k.devotees(s, c, key).some(u => u !== self)
+    && k.once(s, `pearltide:${self}`) && (st => {
+      const t = k.choose(c, key, 'PEARL TIDE', k.devotees(st, c, key).filter(u => u !== self), {optional: true, text: 'Blink another friendly Devotee?'});
+      if (t) k.blink(st, c, t);
+    })},
   // 117 Ancient Sea Guardian — Tidal Rejection (watchSpell): Moment/Technique inimigo que mira o seu God ou um Devotee seu (alvos
   // guardados ao conjurar); pague {2}{C} e Exhaust nele (Prepared) para anular. Uso do Round marcado no evento (como o 119).
   'poseidon-v6-117': {
@@ -433,14 +428,11 @@ export default {
         k.counterSpell(st, c, spellUid);
       }),
   },
-  'poseidon-v6-120': {
-    watchMill: (s, c, key, self, player) => {
-      const tag = `prophecy:${self}`;
-      if (player === key || s.roundUses.has(tag)) return;
-      return st => { if (!st.roundUses.has(tag) && pay(st, c, key, 1, 'PROPHECY OF THE ABYSS', self)) { k.once(st, tag); k.draw(st, key, 1); } };
-    },
-    enter: (s, c, key) => st => mill(st, c, targetPlayer(st, c, key, 'DARK REVELATION'), 2),
-  },
+  // Rhystic Study: o oponente decide pagar {1}{C} na hora (§58).
+  'poseidon-v6-120': {watchSpell: (s, c, key, self, caster, spellUid) => caster !== key && castMT(c, spellUid) && (st => {
+    if (k.canPayCosmo(st, caster, 1) && k.may(c, caster, 'PROPHECY OF THE ABYSS', {cost: '{1}{C}', text: 'Pay {1}{C} so your opponent does not draw a card?'})) k.payCosmo(st, caster, 1);
+    else k.draw(st, key, 1);
+  })},
   'poseidon-v6-121': {
     // Countercurrent (watchSpell): Moment/Technique inimigo que mira um Marina seu (alvos guardados ao conjurar); paga {1}{C}, devolve
     // esse Marina à mão e, se a Spell ficou sem alvo legal, anula. Uso do Round marcado no evento.
@@ -512,12 +504,8 @@ export default {
         if (t) k.removeDamage(s, t, bearer && isMarina(c, bearer) ? 2 : 1); // Resonance — Marina: até 2
       }},
   },
-  'poseidon-v6-129': {
-    gearCombatDamage: (s, c, key, self, bearer, victim) => {
-      if (!k.once(s, `venom:${self}`)) return;
-      return st => debuff(st, victim, 1);
-    },
-  },
+  // Curiosity.
+  'poseidon-v6-129': {gearGodDamage: (s, c, key) => st => k.draw(st, key, 1)},
   // 130 Battle Awareness (gancho gearSurvive): portador sobreviveu como defensor; uma vez por Round, olha o topo do deck e pode pô-lo no fundo.
   'poseidon-v6-130': {
     gearSurvive: (s, c, key, self, bearer, role) => role === 'defender' && !s.roundUses.has(`awareness:${self}`) && k.once(s, `awareness:${self}`) && (st => scry(st, c, key, 'BATTLE AWARENESS')),
@@ -532,19 +520,29 @@ export default {
   'poseidon-v6-133': {
     spell: {check: needCounter(), run: (s, c, key) => { const t = counterTarget(c, s, key, 'CALL OF THE OCEAN'); if (t) counter(s, c, t, 'CALL OF THE OCEAN', 2); }},
   },
-  'poseidon-v6-134': {
-    spell: {run: (s, c, key) => {
-      const r = bounce(s, c, key, enemy(s, c, key, 'RETURN', 'Return target enemy Devotee with ATK 3 or less.', u => k.atkOf(s, c, u) <= 3));
-      if (r) mill(s, c, r.ctrl, 1);
-    }},
-  },
-  // Cantrips de Poseidon (autor, 31/10/2026): 135 Opt, 138 Brainstorm, 139 Ponder, 158 Accumulated Knowledge.
-  'poseidon-v6-135': {
-    spell: {run: (s, c, key) => { scry(s, c, key, 'BENEATH THE SURFACE'); k.draw(s, key, 1); }},
-  },
-  // 136 The Sea Never Forgives: só contra Spell que mira o seu God ou um Devotee seu (alvos guardados ao conjurar).
+  // Cyclonic Rift: {5}{C} a mais (custo adicional opcional, pago ao conjurar) devolve todos os Devotees e Equipment inimigos.
+  'poseidon-v6-134': {spell: {
+    check: k.needTarget((s, c, key) => [...k.enemies(s, c, key), ...k.allEquipment(s, c).filter(u => k.controllerOf(s, u) === k.other(s, key))], 'sem Devotee ou Equipment inimigo'),
+    cost: (st, c, key, uid) => { if (k.canPayCosmo(st, key, 5) && k.may(c, key, 'WAVES OF DESTRUCTION', {cost: '{5}{C}', text: 'Pay {5}{C} more to return each enemy Devotee and Equipment?'}) && k.payCosmo(st, key, 5)) (st.v6Overload ||= {})[uid] = true; },
+    run: (s, c, key, uid) => {
+      const foe = k.other(s, key), list = [...k.enemies(s, c, key), ...k.allEquipment(s, c).filter(u => k.controllerOf(s, u) === foe)];
+      const all = s.v6Overload?.[uid];
+      if (all) delete s.v6Overload[uid];
+      const picked = all ? list : [k.choose(c, key, 'WAVES OF DESTRUCTION', list, {text: 'Return target enemy Devotee or Equipment.'})];
+      for (const t of picked.filter(Boolean)) k.toHand(s, c, t, 'battlefield', key);
+    }}},
+  // Mystical Tutor: Moment/Technique no topo do deck, depois de embaralhar.
+  'poseidon-v6-135': {spell: {run: (s, c, key) => {
+    const deck = s.players[key].deck, options = deck.filter(u => castMT(c, u));
+    const pick = options.length ? c.decide?.(key, {ability: 'BENEATH THE SURFACE', options, choose: 'search', text: 'Choose a Moment or Technique to put on top of your deck.'}) : null;
+    if (pick) { deck.splice(deck.indexOf(pick), 1); k.emit(s, 'revealed', {player: key, uid: pick}); }
+    k.shuffleDeck(s, key);
+    if (pick) deck.unshift(pick);
+  }}},
+  // Fierce Guardianship: counter; custa {0} com um Marina General.
   'poseidon-v6-136': {
-    spell: {check: needCounter(aimsAtMe), run: (s, c, key) => { const t = counterTarget(c, s, key, 'THE SEA NEVER FORGIVES', aimsAtMe(s, c, key)); if (t) k.counterSpell(s, c, t); }},
+    selfCostLess: (s, c, key) => (generals(s, c, key) ? {n: 99} : null),
+    spell: {check: needCounter(), run: (s, c, key) => { const t = counterTarget(c, s, key, 'THE SEA NEVER FORGIVES'); if (t) k.counterSpell(s, c, t); }},
   },
   'poseidon-v6-137': {
     spell: {run: (s, c, key) => { const t = enemy(s, c, key, 'ABYSSAL WEIGHT'); if (t) seal(s, c, [t], sealed(s, t) ? 2 : 1, 'ABYSSAL WEIGHT'); }},
@@ -572,11 +570,11 @@ export default {
       if (generals(s, c, key)) loot(s, c, key, 'OCEAN\'S REWARD');
     }},
   },
-  'poseidon-v6-141': {
-    spell: {run: (s, c, key) => {
-      for (const t of enemies(s, c, key, 'GATHERING STORM', 2)) { const r = bounce(s, c, key, t); if (r?.hadSeal) mill(s, c, r.ctrl, 1); }
-    }},
-  },
+  // Aetherize: devolve cada Devotee inimigo que declarou Strike nesta rodada.
+  'poseidon-v6-141': {spell: {run: (s, c, key) => {
+    const foe = k.other(s, key), struck = new Set(s.events.filter(e => e.type === 'strike_declared' && e.turn === s.turn && e.player === foe).map(e => e.attacker));
+    for (const u of struck) if (k.controllerOf(s, u) === foe) bounce(s, c, key, u);
+  }}},
   // ---------- Domains (rebalanceamento aprovado pelo autor em 01/11/2026, docs/domains-rebalance-proposta.md) ----------
   // Linha geral (qualquer God): ganchos e `activate`. Ressonância — Poseidon (só com God Poseidon): `res` (ativada, uid
   // `domain:${key}:res`, uma vez por turno) e `resonance` (gatilhos). 146, 147 e 148 saíram do jogo.
@@ -643,14 +641,13 @@ export default {
       if (done.length) k.discard(s, c, key, 1, 'FINAL NOTE');
     }},
   },
-  'poseidon-v6-152': {
-    spell: {run: (s, c, key) => {
-      bounce(s, c, key, enemy(s, c, key, 'RETURN'));
-      if (!generals(s, c, key)) return;
-      const t = k.choose(c, key, 'RISING CURRENT', k.devotees(s, c, key), {optional: true, text: 'Return target friendly Devotee to its owner\'s hand?'});
-      if (t && bounce(s, c, key, t)) loot(s, c, key, 'OCEAN\'S REWARD');
-    }},
-  },
+  // Snap: devolve um Devotee e prepara até 2 Bases suas.
+  'poseidon-v6-152': {spell: {
+    check: k.needTarget((s, c) => k.allDevotees(s, c), 'sem Devotee'),
+    run: (s, c, key) => {
+      bounce(s, c, key, k.choose(c, key, 'RETURN', k.allDevotees(s, c), {text: "Return target Devotee to its owner's hand."}));
+      s.players[key].bases.filter(b => !b.prepared).slice(0, 2).forEach(b => { b.prepared = true; });
+    }}},
   'poseidon-v6-153': {
     spell: {run: (s, c, key) => {
       const t = enemy(s, c, key, 'FROZEN VENGEANCE');
@@ -724,14 +721,18 @@ export default {
       if (t) k.removeDamage(s, t, 2);
     }},
   },
-  'poseidon-v6-162': {
-    spell: {run: (s, c, key) => {
-      const r = bounce(s, c, key, enemy(s, c, key, 'RETURN'));
-      if (!r) return;
-      k.draw(s, key, 1); // Illusionary Control (31/10/2026): o discard virou compra
-      if (controls(s, c, key, KANON)) mill(s, c, r.ctrl, 2);
-    }},
-  },
+  // Fact or Fiction: o oponente separa as 5 do topo em duas pilhas; você fica com uma, a outra vai ao Tartarus.
+  'poseidon-v6-162': {spell: {run: (s, c, key) => {
+    const p = s.players[key], look = p.deck.splice(0, 5), foe = k.other(s, key);
+    if (!look.length) return;
+    look.forEach(uid => k.emit(s, 'revealed', {player: key, uid}));
+    const first = k.chooseUpTo(c, foe, 'SEPARATE THE PILES', look, look.length, {text: 'Choose the cards of the first pile.'}).filter(u => look.includes(u));
+    const second = look.filter(u => !first.includes(u));
+    const pick = c.decide?.(key, {ability: 'GALACTIC ILLUSION', options: ['Pile 1', 'Pile 2'], choose: 'mode', text: `Choose a pile to put into your hand (pile 1: ${first.length}, pile 2: ${second.length}).`});
+    const [hand, rest] = pick === 'Pile 2' ? [second, first] : [first, second];
+    p.hand.push(...hand);
+    p.tartarus.push(...rest);
+  }}},
   'poseidon-v6-163': {
     spell: {run: (s, c, key) => {
       for (const t of enemies(s, c, key, 'SIREN\'S REQUIEM', 2)) debuff(s, t, 3);
@@ -820,11 +821,19 @@ export default {
       if (poseidon(s, key)) k.draw(s, key, 1);
     }},
   },
+  // Treasure Cruise (delve, §58): {1}{C} a menos por carta do Tartarus mandada ao Void, até {0}.
+  // shortcut: manda ao Void o máximo que o desconto usa (min(Tartarus, custo impresso)); upgrade: perguntar quantas ao conjurar.
   'poseidon-v6-173': {
-    spell: {run: (s, c, key) => {
-      for (const t of enemies(s, c, key, 'SUNKEN EMPIRE', 2)) { const r = bounce(s, c, key, t); if (r) mill(s, c, r.ctrl, 2); }
-      if (poseidonDomain(s, key)) k.draw(s, key, 1); // Lost Beneath the Waves (31/10/2026): discard → compra
-    }},
+    selfCostLess: (s, c, key) => (s.players[key].tartarus.length ? {n: s.players[key].tartarus.length} : null),
+    spell: {
+      cost: (st, c, key, uid) => {
+        const p = st.players[key], n = Math.min(p.tartarus.length, k.costOf(c, uid));
+        let pick = k.chooseUpTo(c, key, 'DELVE', [...p.tartarus], n, {text: `Choose ${n} cards to send to the Void.`}).filter(u => p.tartarus.includes(u)).slice(0, n);
+        if (pick.length < n) pick = [...pick, ...p.tartarus.filter(u => !pick.includes(u))].slice(0, n);
+        for (const u of pick) k.exile(st, c, u, 'tartarus');
+      },
+      run: (s, c, key) => k.draw(s, key, 3),
+    },
   },
   'poseidon-v6-174': {
     spell: {run: (s, c, key) => {
@@ -833,13 +842,12 @@ export default {
       if (generals(s, c, key) >= 2) k.draw(s, key, 1);
     }},
   },
-  'poseidon-v6-175': {
-    spell: {run: (s, c, key) => {
-      // 31/10/2026: Rising Pressure moe 2 a mais (era discard); The Deep Remembers compra 1.
-      for (const p of opponents(s, key)) mill(s, c, p, 4 + (k.devotees(s, c, p).filter(u => sealed(s, u)).length >= 2 ? 2 : 0));
-      k.draw(s, key, 1);
-    }},
-  },
+  // Windfall: cada jogador descarta a mão e compra o maior número descartado.
+  'poseidon-v6-175': {spell: {run: (s, c, key) => {
+    let most = 0;
+    for (const pl of s.order) { const n = s.players[pl].hand.length; most = Math.max(most, n); if (n) k.discard(s, c, pl, n, 'THE UNENDING DELUGE'); }
+    for (const pl of s.order) k.draw(s, pl, most);
+  }}},
   'poseidon-v6-176': {
     spell: {run: (s, c, key) => {
       for (const t of k.chooseUpTo(c, key, 'SOVEREIGN POWER', k.devotees(s, c, key), 2, {text: 'Choose target friendly Devotees.'})) {

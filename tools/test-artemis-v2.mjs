@@ -17,12 +17,12 @@ const {cartas} = read('../data/cards.json');
 const byId = id => cartas.find(c => c.id === id);
 const ANGELS = ['artemis-v6-431', 'artemis-v6-433', 'artemis-v6-435'], GLORIES = ['artemis-v6-432', 'artemis-v6-434', 'artemis-v6-436'];
 
-test('catálogo: 529 cartas, ids únicos, 431–436 nas mesmas posições e nenhum id perdido', () => {
-  assert.equal(cartas.length, 529);
-  assert.equal(new Set(cartas.map(c => c.id)).size, 529);
+test('catálogo: 610 cartas (81 novas em 08/11/2026), ids únicos, 431–436 nas mesmas posições e nenhum id perdido', () => {
+  assert.equal(cartas.length, 610);
+  assert.equal(new Set(cartas.map(c => c.id)).size, 610);
   const before = JSON.parse(execFileSync('git', ['show', '61db6e8:data/cards.json'], {cwd: new URL('..', import.meta.url), maxBuffer: 64 << 20})).cartas;
-  assert.deepEqual(cartas.map(c => c.id), before.map(c => c.id));
-  assert.equal(cartas.filter(c => c.faccao === 'Artemis').length, 96);
+  assert.deepEqual(cartas.slice(0, before.length).map(c => c.id), before.map(c => c.id)); // as novas entram no fim
+  assert.equal(cartas.filter(c => c.faccao === 'Artemis').length, 111);
 });
 
 test('Anjos: nomes novos, subtipo Angel e atributos preservados', () => {

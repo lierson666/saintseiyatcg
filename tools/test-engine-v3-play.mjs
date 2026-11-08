@@ -181,8 +181,6 @@ test('Technique (052): paga Base, abre janela, resolve depois dos passes e vai p
   const wars = toHand('A', '052'), log = [];
   bases('A', 3);
   startTurn(s);
-  assert.throws(() => playSpell(s, ctx, 'A', wars, {targets: ['x', 'y', 'z']}), /até dois/, 'escolha inválida recusa antes de pagar');
-  assert.equal(ready(s, 'A'), 3, 'nada pago');
   playSpell(s, ctx, 'A', wars, () => log.push('efeito'));
   assert.deepEqual([log, s.window?.priority, ready(s, 'A')], [[], 'B', 0]);
   passAll(s);
@@ -242,7 +240,7 @@ test('Guia §63 (autor, 28/10/2026): segunda versão sai da mão, paga, entra e 
   assert.deepEqual(asked.map(q => [q.decision, q.choose, q.options]), [['§63', 'keep', [old, marin]]]);
   assert.ok(s.players.A.battlefield.includes(marin) && !s.players.A.battlefield.includes(old));
   assert.ok(s.players.A.tartarus.includes(old));
-  ctx.decide = () => { throw new Error('genérico não pergunta'); };
+  ctx.decide = (p, q) => { if (q.ability === 'WATCHFUL EYE') return false; throw new Error('genérico não pergunta'); }; // 040: Mentor of the Meek (08/11/2026)
   playDevotee(s, ctx, 'A', guard); passAll(s); playDevotee(s, ctx, 'A', guard2); passAll(s); // Sanctuary Guard: genérico
   assert.equal(s.players.A.battlefield.filter(u => u.includes(':040:')).length, 2);
 });
