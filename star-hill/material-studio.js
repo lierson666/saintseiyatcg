@@ -7,6 +7,7 @@ import * as THREE from './vendor/three-0.160.0.module.min.js';
 import {OrbitControls} from './vendor/OrbitControls-0.160.0.js';
 import {RGBELoader} from './vendor/RGBELoader-0.160.0.js';
 import {PAINTERLY_PRESETS, PAINTERLY_PARAMS, applyPainterly, readPainterly} from '../shared/painterly.js';
+import {ART_PARAMS, ART_DEFAULTS} from '../arena-forge/poseidon-v15-architecture.js';
 
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const FILTERS = [['marble', 'Marble'], ['stone', 'Stone'], ['rock', 'Rock'], ['metal', 'Metal'], ['gold', 'Gold'], ['concrete', 'Concrete'], ['wood', 'Wood'],
@@ -315,7 +316,8 @@ function selPanel() {
     </fieldset>
     <fieldset><legend>Projeto ${esc(p.nome)}</legend>${Object.entries(p.slots).map(([s, a]) => `<div class="ms-row"><span>${esc(s)}</span><small>${esc(lib.materiais.find(m => m.id === a.material)?.nome || `ausente: ${a.material}`)}</small></div>`).join('') || '<small class="hint">Sem materiais aplicados (visual original).</small>'}
       <small class="hint">${Object.keys(p.objetos).length} objeto(s) com material próprio. O original (arena-forge/poseidon-palace.js) não é alterado.</small></fieldset>
-    ${paintPanel()}`;
+    ${paintPanel()}
+    ${artPanel()}`;
 }
 // Painterly Material Inspector: mexe nos uniformes compartilhados do palácio (todos os materiais pintados de uma vez).
 function paintPanel() {
@@ -328,6 +330,15 @@ function paintPanel() {
     ${['shadow', 'high', 'rim'].map(k => `<label class="ms-row"><span>${{shadow: 'Cor da sombra', high: 'Cor da luz alta', rim: 'Cor da borda'}[k]}</span><input type="color" data-ms-paint="${k}" value="${v[k]}"></label>`).join('')}
     <small class="hint">Vale para os materiais originais do palácio; materiais PBR aplicados aqui ficam sem o tratamento pintado. Salvo no projeto.</small></fieldset>`;
 }
+// V15 · Arte de material (pigmentação, pátina, veios, rugosidade, relevo, cavidade, ouro, desgaste de quina). Só no palácio V15.
+function artPanel() {
+  const on = store('af.palaceV15', false), v = st.palace.readArt?.();
+  return `<fieldset><legend>Material Art · Palácio V15</legend>
+    <label class="ms-row"><span>Palácio V15 (desenvolvimento)</span><input type="checkbox" data-ms-art="v15" ${on ? 'checked' : ''}></label>
+    ${v ? ART_PARAMS.map(([k, l, min, max, step]) => `<label class="ms-row"><span>${l}</span><span><input type="range" data-ms-art="${k}" min="${min}" max="${max}" step="${step}" value="${v[k]}"> <output>${v[k]}</output></span></label>`).join('')
+      + '<div class="ms-row"><span></span><button class="secondary" data-ms-art-reset>Valores padrão</button></div>' : ''}
+    <small class="hint">Vale para todos os mármores e o ouro do palácio V15 (no jogo: ?palaceV15=1). Salvo no projeto, em arteV15.</small></fieldset>`;
+}
 function savePaint() {
   const u = st.palace.paint, pp = proj().painterly ||= {preset: 'poseidon'};
   pp.on = u.uPaintOn.value > .5; pp.params = readPainterly(u);
@@ -336,6 +347,7 @@ function snapshot() { return JSON.stringify(proj()); }
 function pushUndo() { st.undo.push(snapshot()); st.redo = []; if (st.undo.length > 60) st.undo.shift(); }
 function applyProject(showOriginal = false) {
   const pp = proj().painterly, pu = st?.palace.paint; // estilo pintado salvo no projeto (também volta no desfazer)
+  st?.palace.setArt?.({...ART_DEFAULTS, ...(proj().arteV15 || {})});
   if (pu) { applyPainterly(pu, {...PAINTERLY_PRESETS[pp?.preset || 'poseidon'], ...(pp?.params || {})}); pu.uPaintOn.value = pp?.on === false ? 0 : 1; }
   const p = proj(), byId = id => lib.materiais.find(m => m.id === id), missing = new Set();
   const pick = id => { // perfil de qualidade: usa a resolução instalada mais próxima do teto do perfil
@@ -366,7 +378,7 @@ function mountStudio() {
     // Piso do campo: protegido (não recebe material). Mesmo raio da arena da partida.
     const field = new THREE.Mesh(new THREE.CircleGeometry(16, 96), new THREE.MeshStandardMaterial({color: 0x28334f, roughness: .7, metalness: .28}));
     field.rotation.x = -Math.PI / 2; field.userData.locked = 'Campo de batalha (zona competitiva protegida)'; scene.add(field);
-    const palace = createPoseidonPalace(THREE); scene.add(palace.group);
+    const palace = createPoseidonPalace(THREE, {v15: store('af.palaceV15', false), art: proj().arteV15 || {}}); scene.add(palace.group);
     const meshes = [], slotOf = new Map(), originals = new Map();
     palace.group.traverse(n => {
       if (!n.isMesh || !n.material?.isMeshStandardMaterial || n.geometry.parameters?.width === .001) return;
@@ -441,6 +453,7 @@ async function onClick(e) {
     if (b.dataset.msPick) { const x = ui.results.resultados.find(r => `${r.fonte}:${r.id}` === b.dataset.msPick); const m = lib.materiais.filter(y => y.fonte === x.fonte && y.provider_id === x.id).sort((a, c) => parseInt(c.resolucao) - parseInt(a.resolucao))[0];
       ui.sel = {key: b.dataset.msPick, result: x, lib: m?.id}; ui.res = x.resolucoes.includes('2k') ? '2k' : x.resolucoes[0]; ui.job = null; ui.params = {...DEFAULT_PARAMS};
       document.querySelectorAll('.ms-card').forEach(c => c.setAttribute('aria-current', String(c === b))); return paintRight(); }
+    if (b.matches('[data-ms-art-reset]') && st) { pushUndo(); st.palace.setArt(ART_DEFAULTS); proj().arteV15 = st.palace.readArt(); return selPanel(); }
     if (b.dataset.mat && tab === 'studio') { const s = document.querySelector('[data-ms-applymat]'); if (s) s.value = b.dataset.mat; return; }
     if (b.dataset.mat && tab === 'library') { const m = lib.materiais.find(x => x.id === b.dataset.mat); ui.sel = {key: `${m.fonte}:${m.provider_id}`, lib: m.id, result: null}; ui.params = {...DEFAULT_PARAMS}; return paint(); }
     if (b.dataset.msGeo) { ui.geometry = b.dataset.msGeo; return paintRight(); }
@@ -483,6 +496,14 @@ function onInput(e) {
   if (el.matches('[data-ms-light]')) { ui.light = +el.value; return mountPreview(); }
   if (el.matches('[data-ms-hdri]')) { ui.hdri = el.value; return mountPreview(); }
   if (el.matches('[data-ms-profile]')) { ui.profile = el.value; return applyProject(); }
+  if (el.dataset.msArt && st) {
+    const k = el.dataset.msArt;
+    if (k === 'v15') { keep('af.palaceV15', el.checked); return mountStudio(); }
+    if (e.type === 'change') pushUndo();
+    st.palace.setArt({[k]: +el.value}); proj().arteV15 = st.palace.readArt();
+    const out = el.parentElement.querySelector('output'); if (out) out.textContent = el.value;
+    return;
+  }
   if (el.dataset.msPaint && st?.palace.paint) {
     const k = el.dataset.msPaint, u = st.palace.paint;
     if (e.type === 'change' && k !== 'on' && k !== 'preset') pushUndo();

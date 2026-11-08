@@ -1,0 +1,547 @@
+{
+ "data": "2026-11-08 20:23",
+ "condicoes": {
+  "navegador": "Chrome (Playwright) --use-angle=metal",
+  "quadrosPorAmostra": 10,
+  "amostrasPorRodada": 10,
+  "rodadas": 2,
+  "ordem": "versões intercaladas em cada rodada e perfil",
+  "perfis": {
+   "alto": {
+    "viewport": {
+     "width": 1600,
+     "height": 900
+    },
+    "device_scale_factor": 2,
+    "quality": "high"
+   },
+   "medio": {
+    "viewport": {
+     "width": 1600,
+     "height": 900
+    },
+    "device_scale_factor": 2,
+    "quality": "medium"
+   },
+   "celular": {
+    "viewport": {
+     "width": 390,
+     "height": 844
+    },
+    "device_scale_factor": 3,
+    "is_mobile": true,
+    "has_touch": true,
+    "quality": "phone"
+   }
+  }
+ },
+ "resultados": {
+  "v11|alto|chave0": {
+   "rodadas": [
+    10.23,
+    10.16
+   ],
+   "drawCalls": 261,
+   "triangulos": 140718,
+   "texturas": 27,
+   "geometrias": 200,
+   "pixelRatio": 1.75,
+   "nivel": "high",
+   "memGeoMB": 3.8,
+   "memTexMB": 313.5,
+   "heapMB": 29.5,
+   "gpuMsMediana": 10.2,
+   "gpuMsP95": 10.93,
+   "gpuMsMin": 8.37,
+   "gpuMsMax": 11.46,
+   "n": 20
+  },
+  "v11|alto|chave1": {
+   "rodadas": [
+    10.96,
+    10.25
+   ],
+   "drawCalls": 223,
+   "triangulos": 136270,
+   "texturas": 27,
+   "geometrias": 201,
+   "pixelRatio": 1.75,
+   "nivel": "high",
+   "memGeoMB": 3.8,
+   "memTexMB": 313.5,
+   "heapMB": 30.2,
+   "gpuMsMediana": 10.41,
+   "gpuMsP95": 11.3,
+   "gpuMsMin": 8.62,
+   "gpuMsMax": 11.41,
+   "n": 20
+  },
+  "v11|alto|chave2": {
+   "rodadas": [
+    11.08,
+    10.54
+   ],
+   "drawCalls": 281,
+   "triangulos": 141546,
+   "texturas": 27,
+   "geometrias": 210,
+   "pixelRatio": 1.75,
+   "nivel": "high",
+   "memGeoMB": 3.8,
+   "memTexMB": 313.5,
+   "heapMB": 30.8,
+   "gpuMsMediana": 10.63,
+   "gpuMsP95": 11.76,
+   "gpuMsMin": 8.47,
+   "gpuMsMax": 13.13,
+   "n": 20
+  },
+  "v11|alto|partida": {
+   "rodadas": [
+    5.13,
+    5.82
+   ],
+   "drawCalls": 123,
+   "triangulos": 75256,
+   "texturas": 27,
+   "geometrias": 210,
+   "pixelRatio": 1.75,
+   "nivel": "high",
+   "memGeoMB": 3.8,
+   "memTexMB": 313.5,
+   "heapMB": 31.8,
+   "gpuMsMediana": 5.58,
+   "gpuMsP95": 6.56,
+   "gpuMsMin": 3.12,
+   "gpuMsMax": 7.33,
+   "n": 20
+  },
+  "v11|medio|chave0": {
+   "rodadas": [
+    7.29,
+    7.25
+   ],
+   "drawCalls": 257,
+   "triangulos": 139894,
+   "texturas": 27,
+   "geometrias": 195,
+   "pixelRatio": 1.25,
+   "nivel": "medium",
+   "memGeoMB": 3.7,
+   "memTexMB": 304.6,
+   "heapMB": 31.7,
+   "gpuMsMediana": 7.29,
+   "gpuMsP95": 8.22,
+   "gpuMsMin": 5.72,
+   "gpuMsMax": 10.74,
+   "n": 20
+  },
+  "v11|medio|chave1": {
+   "rodadas": [
+    7.43,
+    7.45
+   ],
+   "drawCalls": 221,
+   "triangulos": 136198,
+   "texturas": 27,
+   "geometrias": 196,
+   "pixelRatio": 1.25,
+   "nivel": "medium",
+   "memGeoMB": 3.7,
+   "memTexMB": 304.6,
+   "heapMB": 34.2,
+   "gpuMsMediana": 7.45,
+   "gpuMsP95": 8.39,
+   "gpuMsMin": 5.55,
+   "gpuMsMax": 10.27,
+   "n": 20
+  },
+  "v11|medio|chave2": {
+   "rodadas": [
+    7.86,
+    7.91
+   ],
+   "drawCalls": 275,
+   "triangulos": 140610,
+   "texturas": 27,
+   "geometrias": 204,
+   "pixelRatio": 1.25,
+   "nivel": "medium",
+   "memGeoMB": 3.7,
+   "memTexMB": 304.6,
+   "heapMB": 35.7,
+   "gpuMsMediana": 7.9,
+   "gpuMsP95": 8.68,
+   "gpuMsMin": 7.29,
+   "gpuMsMax": 9.76,
+   "n": 20
+  },
+  "v11|medio|partida": {
+   "rodadas": [
+    4.19,
+    4.64
+   ],
+   "drawCalls": 120,
+   "triangulos": 74448,
+   "texturas": 27,
+   "geometrias": 204,
+   "pixelRatio": 1.25,
+   "nivel": "medium",
+   "memGeoMB": 3.7,
+   "memTexMB": 304.6,
+   "heapMB": 28.8,
+   "gpuMsMediana": 4.38,
+   "gpuMsP95": 4.98,
+   "gpuMsMin": 2.3,
+   "gpuMsMax": 5.06,
+   "n": 20
+  },
+  "v11|celular|chave0": {
+   "rodadas": [
+    3.48,
+    3.78
+   ],
+   "drawCalls": 130,
+   "triangulos": 46501,
+   "texturas": 16,
+   "geometrias": 78,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 3.2,
+   "memTexMB": 300.2,
+   "heapMB": 28.8,
+   "gpuMsMediana": 3.52,
+   "gpuMsP95": 4.16,
+   "gpuMsMin": 3.12,
+   "gpuMsMax": 4.31,
+   "n": 20
+  },
+  "v11|celular|chave1": {
+   "rodadas": [
+    3.17,
+    3.38
+   ],
+   "drawCalls": 124,
+   "triangulos": 35000,
+   "texturas": 16,
+   "geometrias": 87,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 3.2,
+   "memTexMB": 300.2,
+   "heapMB": 32.6,
+   "gpuMsMediana": 3.26,
+   "gpuMsP95": 3.58,
+   "gpuMsMin": 2.72,
+   "gpuMsMax": 3.78,
+   "n": 20
+  },
+  "v11|celular|chave2": {
+   "rodadas": [
+    3.02,
+    3.19
+   ],
+   "drawCalls": 140,
+   "triangulos": 34464,
+   "texturas": 22,
+   "geometrias": 98,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 3.2,
+   "memTexMB": 300.2,
+   "heapMB": 29.2,
+   "gpuMsMediana": 3.09,
+   "gpuMsP95": 3.62,
+   "gpuMsMin": 2.83,
+   "gpuMsMax": 3.65,
+   "n": 20
+  },
+  "v11|celular|partida": {
+   "rodadas": [
+    1.6,
+    1.99
+   ],
+   "drawCalls": 68,
+   "triangulos": 14656,
+   "texturas": 22,
+   "geometrias": 100,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 3.2,
+   "memTexMB": 300.2,
+   "heapMB": 33.3,
+   "gpuMsMediana": 1.65,
+   "gpuMsP95": 2.31,
+   "gpuMsMin": 1.46,
+   "gpuMsMax": 2.33,
+   "n": 20
+  },
+  "v15|alto|chave0": {
+   "rodadas": [
+    13.01,
+    13.25
+   ],
+   "drawCalls": 277,
+   "triangulos": 194286,
+   "texturas": 27,
+   "geometrias": 188,
+   "pixelRatio": 1.75,
+   "nivel": "high",
+   "memGeoMB": 4.2,
+   "memTexMB": 313.5,
+   "heapMB": 35.3,
+   "gpuMsMediana": 13.25,
+   "gpuMsP95": 13.94,
+   "gpuMsMin": 11.27,
+   "gpuMsMax": 14.59,
+   "n": 20
+  },
+  "v15|alto|chave1": {
+   "rodadas": [
+    12.36,
+    10.89
+   ],
+   "drawCalls": 254,
+   "triangulos": 189674,
+   "texturas": 27,
+   "geometrias": 188,
+   "pixelRatio": 1.4000000000000001,
+   "nivel": "high",
+   "memGeoMB": 4.2,
+   "memTexMB": 313.5,
+   "heapMB": 31.1,
+   "gpuMsMediana": 11.36,
+   "gpuMsP95": 13.78,
+   "gpuMsMin": 9.9,
+   "gpuMsMax": 13.78,
+   "n": 20
+  },
+  "v15|alto|chave2": {
+   "rodadas": [
+    10.71,
+    11.73
+   ],
+   "drawCalls": 302,
+   "triangulos": 197391,
+   "texturas": 27,
+   "geometrias": 196,
+   "pixelRatio": 1.4000000000000001,
+   "nivel": "high",
+   "memGeoMB": 4.2,
+   "memTexMB": 313.5,
+   "heapMB": 36,
+   "gpuMsMediana": 11.25,
+   "gpuMsP95": 11.99,
+   "gpuMsMin": 10,
+   "gpuMsMax": 12.13,
+   "n": 20
+  },
+  "v15|alto|partida": {
+   "rodadas": [
+    4.46,
+    5.81
+   ],
+   "drawCalls": 119,
+   "triangulos": 123002,
+   "texturas": 27,
+   "geometrias": 196,
+   "pixelRatio": 1.4000000000000001,
+   "nivel": "high",
+   "memGeoMB": 4.2,
+   "memTexMB": 313.5,
+   "heapMB": 32.8,
+   "gpuMsMediana": 4.79,
+   "gpuMsP95": 6.01,
+   "gpuMsMin": 2.7,
+   "gpuMsMax": 6.16,
+   "n": 20
+  },
+  "v15|medio|chave0": {
+   "rodadas": [
+    9.64,
+    9.61
+   ],
+   "drawCalls": 273,
+   "triangulos": 193462,
+   "texturas": 27,
+   "geometrias": 183,
+   "pixelRatio": 1.25,
+   "nivel": "medium",
+   "memGeoMB": 4.1,
+   "memTexMB": 304.6,
+   "heapMB": 34.4,
+   "gpuMsMediana": 9.64,
+   "gpuMsP95": 10.26,
+   "gpuMsMin": 7.8,
+   "gpuMsMax": 10.36,
+   "n": 20
+  },
+  "v15|medio|chave1": {
+   "rodadas": [
+    9.72,
+    9.54
+   ],
+   "drawCalls": 252,
+   "triangulos": 189602,
+   "texturas": 27,
+   "geometrias": 183,
+   "pixelRatio": 1.25,
+   "nivel": "medium",
+   "memGeoMB": 4.1,
+   "memTexMB": 304.6,
+   "heapMB": 30.9,
+   "gpuMsMediana": 9.64,
+   "gpuMsP95": 10.74,
+   "gpuMsMin": 7.94,
+   "gpuMsMax": 10.85,
+   "n": 20
+  },
+  "v15|medio|chave2": {
+   "rodadas": [
+    9.73,
+    9.61
+   ],
+   "drawCalls": 296,
+   "triangulos": 196455,
+   "texturas": 27,
+   "geometrias": 190,
+   "pixelRatio": 1.25,
+   "nivel": "medium",
+   "memGeoMB": 4.1,
+   "memTexMB": 304.6,
+   "heapMB": 35.5,
+   "gpuMsMediana": 9.64,
+   "gpuMsP95": 10.44,
+   "gpuMsMin": 8.04,
+   "gpuMsMax": 10.44,
+   "n": 20
+  },
+  "v15|medio|partida": {
+   "rodadas": [
+    5.16,
+    5.05
+   ],
+   "drawCalls": 116,
+   "triangulos": 122194,
+   "texturas": 27,
+   "geometrias": 190,
+   "pixelRatio": 1.25,
+   "nivel": "medium",
+   "memGeoMB": 4.1,
+   "memTexMB": 304.6,
+   "heapMB": 31,
+   "gpuMsMediana": 5.13,
+   "gpuMsP95": 5.57,
+   "gpuMsMin": 3.19,
+   "gpuMsMax": 5.96,
+   "n": 20
+  },
+  "v15|celular|chave0": {
+   "rodadas": [
+    4.32,
+    4.27
+   ],
+   "drawCalls": 162,
+   "triangulos": 68770,
+   "texturas": 16,
+   "geometrias": 98,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 3.5,
+   "memTexMB": 300.2,
+   "heapMB": 29.2,
+   "gpuMsMediana": 4.31,
+   "gpuMsP95": 4.65,
+   "gpuMsMin": 3.87,
+   "gpuMsMax": 4.94,
+   "n": 20
+  },
+  "v15|celular|chave1": {
+   "rodadas": [
+    4.11,
+    4.11
+   ],
+   "drawCalls": 156,
+   "triangulos": 56929,
+   "texturas": 16,
+   "geometrias": 107,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 3.5,
+   "memTexMB": 300.2,
+   "heapMB": 33.8,
+   "gpuMsMediana": 4.11,
+   "gpuMsP95": 4.46,
+   "gpuMsMin": 3.69,
+   "gpuMsMax": 5.05,
+   "n": 20
+  },
+  "v15|celular|chave2": {
+   "rodadas": [
+    4.42,
+    3.95
+   ],
+   "drawCalls": 175,
+   "triangulos": 56847,
+   "texturas": 22,
+   "geometrias": 122,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 3.5,
+   "memTexMB": 300.2,
+   "heapMB": 30.5,
+   "gpuMsMediana": 4.18,
+   "gpuMsP95": 4.99,
+   "gpuMsMin": 3.3,
+   "gpuMsMax": 5.04,
+   "n": 20
+  },
+  "v15|celular|partida": {
+   "rodadas": [
+    2.29,
+    2.53
+   ],
+   "drawCalls": 82,
+   "triangulos": 32162,
+   "texturas": 22,
+   "geometrias": 124,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 3.5,
+   "memTexMB": 300.2,
+   "heapMB": 29.2,
+   "gpuMsMediana": 2.42,
+   "gpuMsP95": 3.05,
+   "gpuMsMin": 1.55,
+   "gpuMsMax": 3.11,
+   "n": 20
+  }
+ },
+ "cargaSegundos": {
+  "v11:alto": [
+   1.2,
+   1.1
+  ],
+  "v15:alto": [
+   1.0,
+   1.0
+  ],
+  "v11:medio": [
+   1.0,
+   1.0
+  ],
+  "v15:medio": [
+   1.0,
+   1.0
+  ],
+  "v11:celular": [
+   0.7,
+   0.7
+  ],
+  "v15:celular": [
+   0.8,
+   0.8
+  ]
+ },
+ "errosDePagina": []
+}

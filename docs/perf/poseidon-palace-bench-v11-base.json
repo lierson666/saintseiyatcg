@@ -1,0 +1,577 @@
+{
+ "data": "2026-11-08 19:58",
+ "condicoes": {
+  "navegador": "Chrome (Playwright) --use-angle=metal",
+  "quadrosPorAmostra": 10,
+  "amostrasPorRodada": 12,
+  "rodadas": 3,
+  "ordem": "versões intercaladas em cada rodada e perfil",
+  "perfis": {
+   "alto": {
+    "viewport": {
+     "width": 1600,
+     "height": 900
+    },
+    "device_scale_factor": 2,
+    "quality": "high"
+   },
+   "medio": {
+    "viewport": {
+     "width": 1600,
+     "height": 900
+    },
+    "device_scale_factor": 2,
+    "quality": "medium"
+   },
+   "celular": {
+    "viewport": {
+     "width": 390,
+     "height": 844
+    },
+    "device_scale_factor": 3,
+    "is_mobile": true,
+    "has_touch": true,
+    "quality": "phone"
+   }
+  }
+ },
+ "resultados": {
+  "semFlags|alto|chave0": {
+   "rodadas": [
+    8.65,
+    8.63,
+    8.73
+   ],
+   "drawCalls": 237,
+   "triangulos": 82477,
+   "texturas": 9,
+   "geometrias": 170,
+   "pixelRatio": 1.75,
+   "nivel": "high",
+   "memGeoMB": 1.2,
+   "memTexMB": 26.3,
+   "heapMB": 24.3,
+   "gpuMsMediana": 8.66,
+   "gpuMsP95": 9.07,
+   "gpuMsMin": 7.06,
+   "gpuMsMax": 10.51,
+   "n": 36
+  },
+  "semFlags|alto|chave1": {
+   "rodadas": [
+    8.9,
+    8.71,
+    8.79
+   ],
+   "drawCalls": 199,
+   "triangulos": 78029,
+   "texturas": 9,
+   "geometrias": 171,
+   "pixelRatio": 1.75,
+   "nivel": "high",
+   "memGeoMB": 1.2,
+   "memTexMB": 26.3,
+   "heapMB": 19.6,
+   "gpuMsMediana": 8.73,
+   "gpuMsP95": 9.51,
+   "gpuMsMin": 7.09,
+   "gpuMsMax": 9.64,
+   "n": 36
+  },
+  "semFlags|alto|chave2": {
+   "rodadas": [
+    9.59,
+    9.3,
+    9.79
+   ],
+   "drawCalls": 257,
+   "triangulos": 83305,
+   "texturas": 9,
+   "geometrias": 180,
+   "pixelRatio": 1.75,
+   "nivel": "high",
+   "memGeoMB": 1.2,
+   "memTexMB": 26.3,
+   "heapMB": 23.4,
+   "gpuMsMediana": 9.44,
+   "gpuMsP95": 10.59,
+   "gpuMsMin": 7.87,
+   "gpuMsMax": 12.27,
+   "n": 36
+  },
+  "semFlags|alto|partida": {
+   "rodadas": [
+    4.49,
+    4.5,
+    4.42
+   ],
+   "drawCalls": 125,
+   "triangulos": 75328,
+   "texturas": 9,
+   "geometrias": 180,
+   "pixelRatio": 1.75,
+   "nivel": "high",
+   "memGeoMB": 1.2,
+   "memTexMB": 26.3,
+   "heapMB": 19.6,
+   "gpuMsMediana": 4.46,
+   "gpuMsP95": 5.08,
+   "gpuMsMin": 3.01,
+   "gpuMsMax": 5.32,
+   "n": 36
+  },
+  "semFlags|medio|chave0": {
+   "rodadas": [
+    6.12,
+    6.12,
+    7.34
+   ],
+   "drawCalls": 233,
+   "triangulos": 81653,
+   "texturas": 9,
+   "geometrias": 165,
+   "pixelRatio": 1.25,
+   "nivel": "medium",
+   "memGeoMB": 1.1,
+   "memTexMB": 17.3,
+   "heapMB": 25.4,
+   "gpuMsMediana": 6.19,
+   "gpuMsP95": 8.46,
+   "gpuMsMin": 4.67,
+   "gpuMsMax": 8.69,
+   "n": 36
+  },
+  "semFlags|medio|chave1": {
+   "rodadas": [
+    6.13,
+    6.22,
+    7.29
+   ],
+   "drawCalls": 197,
+   "triangulos": 77957,
+   "texturas": 9,
+   "geometrias": 166,
+   "pixelRatio": 1.25,
+   "nivel": "medium",
+   "memGeoMB": 1.1,
+   "memTexMB": 17.3,
+   "heapMB": 18.5,
+   "gpuMsMediana": 6.25,
+   "gpuMsP95": 9.95,
+   "gpuMsMin": 4.47,
+   "gpuMsMax": 11.55,
+   "n": 36
+  },
+  "semFlags|medio|chave2": {
+   "rodadas": [
+    6.58,
+    7.3,
+    8.3
+   ],
+   "drawCalls": 251,
+   "triangulos": 82369,
+   "texturas": 9,
+   "geometrias": 174,
+   "pixelRatio": 1.25,
+   "nivel": "medium",
+   "memGeoMB": 1.1,
+   "memTexMB": 17.3,
+   "heapMB": 20.1,
+   "gpuMsMediana": 7.3,
+   "gpuMsP95": 8.96,
+   "gpuMsMin": 5.04,
+   "gpuMsMax": 9.83,
+   "n": 36
+  },
+  "semFlags|medio|partida": {
+   "rodadas": [
+    3.62,
+    3.63,
+    4.59
+   ],
+   "drawCalls": 122,
+   "triangulos": 74520,
+   "texturas": 9,
+   "geometrias": 174,
+   "pixelRatio": 1.25,
+   "nivel": "medium",
+   "memGeoMB": 1.1,
+   "memTexMB": 17.3,
+   "heapMB": 18.2,
+   "gpuMsMediana": 3.68,
+   "gpuMsP95": 6.68,
+   "gpuMsMin": 2.15,
+   "gpuMsMax": 8.49,
+   "n": 36
+  },
+  "semFlags|celular|chave0": {
+   "rodadas": [
+    3.08,
+    3.09,
+    2.51
+   ],
+   "drawCalls": 118,
+   "triangulos": 17499,
+   "texturas": 7,
+   "geometrias": 64,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 0.6,
+   "memTexMB": 13,
+   "heapMB": 21.7,
+   "gpuMsMediana": 2.84,
+   "gpuMsP95": 4.29,
+   "gpuMsMin": 2.26,
+   "gpuMsMax": 4.7,
+   "n": 36
+  },
+  "semFlags|celular|chave1": {
+   "rodadas": [
+    3.27,
+    3.63,
+    2.3
+   ],
+   "drawCalls": 116,
+   "triangulos": 17167,
+   "texturas": 7,
+   "geometrias": 73,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 0.6,
+   "memTexMB": 13,
+   "heapMB": 20.1,
+   "gpuMsMediana": 2.98,
+   "gpuMsP95": 4.54,
+   "gpuMsMin": 2.03,
+   "gpuMsMax": 4.63,
+   "n": 36
+  },
+  "semFlags|celular|chave2": {
+   "rodadas": [
+    3.25,
+    3.1,
+    2.46
+   ],
+   "drawCalls": 130,
+   "triangulos": 17963,
+   "texturas": 7,
+   "geometrias": 79,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 0.6,
+   "memTexMB": 13,
+   "heapMB": 17.5,
+   "gpuMsMediana": 2.83,
+   "gpuMsP95": 4.4,
+   "gpuMsMin": 2.19,
+   "gpuMsMax": 4.73,
+   "n": 36
+  },
+  "semFlags|celular|partida": {
+   "rodadas": [
+    1.63,
+    1.83,
+    1.57
+   ],
+   "drawCalls": 68,
+   "triangulos": 14656,
+   "texturas": 7,
+   "geometrias": 79,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 0.6,
+   "memTexMB": 13,
+   "heapMB": 22.2,
+   "gpuMsMediana": 1.65,
+   "gpuMsP95": 1.98,
+   "gpuMsMin": 1.1,
+   "gpuMsMax": 2.44,
+   "n": 36
+  },
+  "v11|alto|chave0": {
+   "rodadas": [
+    8.88,
+    9.09,
+    8.94
+   ],
+   "drawCalls": 261,
+   "triangulos": 140718,
+   "texturas": 27,
+   "geometrias": 200,
+   "pixelRatio": 1.75,
+   "nivel": "high",
+   "memGeoMB": 3.8,
+   "memTexMB": 313.5,
+   "heapMB": 32.3,
+   "gpuMsMediana": 8.98,
+   "gpuMsP95": 9.38,
+   "gpuMsMin": 7.24,
+   "gpuMsMax": 11.04,
+   "n": 36
+  },
+  "v11|alto|chave1": {
+   "rodadas": [
+    9.14,
+    8.49,
+    9.35
+   ],
+   "drawCalls": 223,
+   "triangulos": 136270,
+   "texturas": 27,
+   "geometrias": 201,
+   "pixelRatio": 1.75,
+   "nivel": "high",
+   "memGeoMB": 3.8,
+   "memTexMB": 313.5,
+   "heapMB": 31.3,
+   "gpuMsMediana": 9.18,
+   "gpuMsP95": 9.57,
+   "gpuMsMin": 7.06,
+   "gpuMsMax": 9.8,
+   "n": 36
+  },
+  "v11|alto|chave2": {
+   "rodadas": [
+    7.49,
+    7.65,
+    10.48
+   ],
+   "drawCalls": 281,
+   "triangulos": 141546,
+   "texturas": 27,
+   "geometrias": 210,
+   "pixelRatio": 1.75,
+   "nivel": "high",
+   "memGeoMB": 3.8,
+   "memTexMB": 313.5,
+   "heapMB": 35.7,
+   "gpuMsMediana": 7.73,
+   "gpuMsP95": 10.66,
+   "gpuMsMin": 6.36,
+   "gpuMsMax": 13.09,
+   "n": 36
+  },
+  "v11|alto|partida": {
+   "rodadas": [
+    3.67,
+    3.9,
+    5.08
+   ],
+   "drawCalls": 124,
+   "triangulos": 75292,
+   "texturas": 27,
+   "geometrias": 210,
+   "pixelRatio": 1.4000000000000001,
+   "nivel": "high",
+   "memGeoMB": 3.8,
+   "memTexMB": 313.5,
+   "heapMB": 30.3,
+   "gpuMsMediana": 3.91,
+   "gpuMsP95": 5.93,
+   "gpuMsMin": 2.28,
+   "gpuMsMax": 6.96,
+   "n": 36
+  },
+  "v11|medio|chave0": {
+   "rodadas": [
+    6.47,
+    6.38,
+    10.54
+   ],
+   "drawCalls": 257,
+   "triangulos": 139894,
+   "texturas": 27,
+   "geometrias": 195,
+   "pixelRatio": 1.25,
+   "nivel": "medium",
+   "memGeoMB": 3.7,
+   "memTexMB": 304.6,
+   "heapMB": 31.4,
+   "gpuMsMediana": 6.51,
+   "gpuMsP95": 11.18,
+   "gpuMsMin": 5.24,
+   "gpuMsMax": 13.03,
+   "n": 36
+  },
+  "v11|medio|chave1": {
+   "rodadas": [
+    6.5,
+    6.49,
+    10.82
+   ],
+   "drawCalls": 221,
+   "triangulos": 136198,
+   "texturas": 27,
+   "geometrias": 196,
+   "pixelRatio": 1,
+   "nivel": "medium",
+   "memGeoMB": 3.7,
+   "memTexMB": 304.6,
+   "heapMB": 28.5,
+   "gpuMsMediana": 6.74,
+   "gpuMsP95": 12.46,
+   "gpuMsMin": 5.04,
+   "gpuMsMax": 13.87,
+   "n": 36
+  },
+  "v11|medio|chave2": {
+   "rodadas": [
+    7.79,
+    6.62,
+    10.07
+   ],
+   "drawCalls": 275,
+   "triangulos": 140610,
+   "texturas": 27,
+   "geometrias": 204,
+   "pixelRatio": 1,
+   "nivel": "medium",
+   "memGeoMB": 3.7,
+   "memTexMB": 304.6,
+   "heapMB": 30.8,
+   "gpuMsMediana": 7.79,
+   "gpuMsP95": 11.35,
+   "gpuMsMin": 5.25,
+   "gpuMsMax": 11.93,
+   "n": 36
+  },
+  "v11|medio|partida": {
+   "rodadas": [
+    3.98,
+    3.83,
+    4.34
+   ],
+   "drawCalls": 121,
+   "triangulos": 74484,
+   "texturas": 27,
+   "geometrias": 204,
+   "pixelRatio": 1,
+   "nivel": "medium",
+   "memGeoMB": 3.7,
+   "memTexMB": 304.6,
+   "heapMB": 32.9,
+   "gpuMsMediana": 3.96,
+   "gpuMsP95": 4.91,
+   "gpuMsMin": 2.11,
+   "gpuMsMax": 5.42,
+   "n": 36
+  },
+  "v11|celular|chave0": {
+   "rodadas": [
+    3.5,
+    3.19,
+    4.72
+   ],
+   "drawCalls": 130,
+   "triangulos": 46501,
+   "texturas": 16,
+   "geometrias": 78,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 3.2,
+   "memTexMB": 300.2,
+   "heapMB": 30.9,
+   "gpuMsMediana": 4.41,
+   "gpuMsP95": 5.41,
+   "gpuMsMin": 2.59,
+   "gpuMsMax": 5.47,
+   "n": 36
+  },
+  "v11|celular|chave1": {
+   "rodadas": [
+    3.46,
+    3.19,
+    4.74
+   ],
+   "drawCalls": 124,
+   "triangulos": 35000,
+   "texturas": 16,
+   "geometrias": 87,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 3.2,
+   "memTexMB": 300.2,
+   "heapMB": 29.6,
+   "gpuMsMediana": 3.83,
+   "gpuMsP95": 5.3,
+   "gpuMsMin": 2.76,
+   "gpuMsMax": 5.54,
+   "n": 36
+  },
+  "v11|celular|chave2": {
+   "rodadas": [
+    3.4,
+    3.13,
+    2.5
+   ],
+   "drawCalls": 140,
+   "triangulos": 34464,
+   "texturas": 22,
+   "geometrias": 98,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 3.2,
+   "memTexMB": 300.2,
+   "heapMB": 33.1,
+   "gpuMsMediana": 3.13,
+   "gpuMsP95": 4.59,
+   "gpuMsMin": 2.16,
+   "gpuMsMax": 4.64,
+   "n": 36
+  },
+  "v11|celular|partida": {
+   "rodadas": [
+    1.37,
+    1.5,
+    1.38
+   ],
+   "drawCalls": 68,
+   "triangulos": 14656,
+   "texturas": 22,
+   "geometrias": 100,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 3.2,
+   "memTexMB": 300.2,
+   "heapMB": 31.5,
+   "gpuMsMediana": 1.42,
+   "gpuMsP95": 1.66,
+   "gpuMsMin": 0.96,
+   "gpuMsMax": 1.77,
+   "n": 36
+  }
+ },
+ "cargaSegundos": {
+  "semFlags:alto": [
+   0.9,
+   0.7,
+   0.9
+  ],
+  "v11:alto": [
+   1.1,
+   1.0,
+   0.9
+  ],
+  "semFlags:medio": [
+   0.9,
+   0.8,
+   0.9
+  ],
+  "v11:medio": [
+   1.1,
+   1.1,
+   1.2
+  ],
+  "semFlags:celular": [
+   0.7,
+   0.7,
+   0.9
+  ],
+  "v11:celular": [
+   0.7,
+   0.8,
+   0.7
+  ]
+ },
+ "errosDePagina": []
+}

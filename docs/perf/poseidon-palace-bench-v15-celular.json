@@ -1,0 +1,195 @@
+{
+ "data": "2026-11-08 20:24",
+ "condicoes": {
+  "navegador": "Chrome (Playwright) --use-angle=metal",
+  "quadrosPorAmostra": 10,
+  "amostrasPorRodada": 10,
+  "rodadas": 2,
+  "ordem": "versões intercaladas em cada rodada e perfil",
+  "perfis": {
+   "celular": {
+    "viewport": {
+     "width": 390,
+     "height": 844
+    },
+    "device_scale_factor": 3,
+    "is_mobile": true,
+    "has_touch": true,
+    "quality": "phone"
+   }
+  }
+ },
+ "resultados": {
+  "v11|celular|chave0": {
+   "rodadas": [
+    3.52,
+    3.63
+   ],
+   "drawCalls": 130,
+   "triangulos": 46501,
+   "texturas": 16,
+   "geometrias": 78,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 3.2,
+   "memTexMB": 300.2,
+   "heapMB": 29.3,
+   "gpuMsMediana": 3.63,
+   "gpuMsP95": 4.12,
+   "gpuMsMin": 3.03,
+   "gpuMsMax": 4.14,
+   "n": 20
+  },
+  "v11|celular|chave1": {
+   "rodadas": [
+    3.13,
+    3.14
+   ],
+   "drawCalls": 124,
+   "triangulos": 35000,
+   "texturas": 16,
+   "geometrias": 87,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 3.2,
+   "memTexMB": 300.2,
+   "heapMB": 26.6,
+   "gpuMsMediana": 3.13,
+   "gpuMsP95": 3.7,
+   "gpuMsMin": 2.77,
+   "gpuMsMax": 4.07,
+   "n": 20
+  },
+  "v11|celular|chave2": {
+   "rodadas": [
+    2.94,
+    2.98
+   ],
+   "drawCalls": 140,
+   "triangulos": 34464,
+   "texturas": 22,
+   "geometrias": 98,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 3.2,
+   "memTexMB": 300.2,
+   "heapMB": 29.6,
+   "gpuMsMediana": 2.96,
+   "gpuMsP95": 3.49,
+   "gpuMsMin": 2.51,
+   "gpuMsMax": 4.69,
+   "n": 20
+  },
+  "v11|celular|partida": {
+   "rodadas": [
+    1.92,
+    2.33
+   ],
+   "drawCalls": 68,
+   "triangulos": 14656,
+   "texturas": 22,
+   "geometrias": 100,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 3.2,
+   "memTexMB": 300.2,
+   "heapMB": 27.2,
+   "gpuMsMediana": 2.17,
+   "gpuMsP95": 2.67,
+   "gpuMsMin": 1.39,
+   "gpuMsMax": 2.97,
+   "n": 20
+  },
+  "v15|celular|chave0": {
+   "rodadas": [
+    4.44,
+    4.05
+   ],
+   "drawCalls": 162,
+   "triangulos": 68770,
+   "texturas": 16,
+   "geometrias": 98,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 3.5,
+   "memTexMB": 300.2,
+   "heapMB": 29.9,
+   "gpuMsMediana": 4.17,
+   "gpuMsP95": 4.86,
+   "gpuMsMin": 3.63,
+   "gpuMsMax": 5.12,
+   "n": 20
+  },
+  "v15|celular|chave1": {
+   "rodadas": [
+    4.06,
+    4.12
+   ],
+   "drawCalls": 156,
+   "triangulos": 56929,
+   "texturas": 16,
+   "geometrias": 107,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 3.5,
+   "memTexMB": 300.2,
+   "heapMB": 33.7,
+   "gpuMsMediana": 4.1,
+   "gpuMsP95": 4.66,
+   "gpuMsMin": 3.47,
+   "gpuMsMax": 4.88,
+   "n": 20
+  },
+  "v15|celular|chave2": {
+   "rodadas": [
+    4.08,
+    4.35
+   ],
+   "drawCalls": 175,
+   "triangulos": 56847,
+   "texturas": 22,
+   "geometrias": 122,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 3.5,
+   "memTexMB": 300.2,
+   "heapMB": 30.3,
+   "gpuMsMediana": 4.11,
+   "gpuMsP95": 4.75,
+   "gpuMsMin": 3.67,
+   "gpuMsMax": 4.78,
+   "n": 20
+  },
+  "v15|celular|partida": {
+   "rodadas": [
+    1.78,
+    1.85
+   ],
+   "drawCalls": 82,
+   "triangulos": 32162,
+   "texturas": 22,
+   "geometrias": 124,
+   "pixelRatio": 1.25,
+   "nivel": "phone",
+   "memGeoMB": 3.5,
+   "memTexMB": 300.2,
+   "heapMB": 29,
+   "gpuMsMediana": 1.79,
+   "gpuMsP95": 2.31,
+   "gpuMsMin": 1.39,
+   "gpuMsMax": 2.77,
+   "n": 20
+  }
+ },
+ "cargaSegundos": {
+  "v11:celular": [
+   1.0,
+   0.7
+  ],
+  "v15:celular": [
+   1.2,
+   0.7
+  ]
+ },
+ "errosDePagina": []
+}
