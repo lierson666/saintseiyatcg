@@ -8,11 +8,12 @@ import {canonIndex} from '../shared/deck-v3.js';
 import {addPreviewCards} from '../shared/preview-cards.js';
 import {createMatch} from '../playtest/engine-v3/match.js';
 import {startTurn, endTurn, passAll} from '../playtest/engine-v3/core.js';
-import {playDevotee, playSpell, playEquipment, activate} from '../playtest/engine-v3/play.js';
+import {playDevotee, playSpell, playEquipment, activate, activateAfterlife, castCost, castFromZone, playableFrom} from '../playtest/engine-v3/play.js';
 import {declareStrike} from '../playtest/engine-v3/strike.js';
 import {checkDefeats, atkOf, keywordsOf} from '../playtest/engine-v3/effects.js';
 import * as k from '../playtest/engine-v3/v6/kit.js';
 import {V6} from '../playtest/engine-v3/v6/hooks.js';
+import {applyAction} from '../playtest/engine-v3/actions.js';
 
 const read = file => JSON.parse(readFileSync(new URL(file, import.meta.url)));
 const canon = read('../data/canon/d268.json'), cards = loadCanon(canon), index = canonIndex(canon);
@@ -52,21 +53,23 @@ test('enter: Alcmenes causa 3 a um Devotee inimigo', () => {
   assert.ok(s.players.B.tartarus.includes(foe));
 });
 
-test('declare + watchDeclare: Burning Assault tira 1 do God; Coordinated Assault dá +1 ao outro Berserker', () => {
+test('declare: Burning Assault tira 1 do God; Coordinated Assault (Guttersnipe, 08/11/2026) dá 1 por Spell sua', () => {
   const {s, ctx, give} = setup();
-  const a = give('A', '291'), b = give('A', '292');
-  const soul = s.players.B.soul, atk = atkOf(s, ctx, a), before = atkOf(s, ctx, b);
+  const a = give('A', '291'); give('A', '292');
+  const soul = s.players.B.soul, atk = atkOf(s, ctx, a);
   strike(s, ctx, a, god);
   assert.equal(s.players.B.soul, soul - 1 - atk);
-  assert.equal(atkOf(s, ctx, b), before + 1);
+  const after = s.players.B.soul;
+  playSpell(s, ctx, 'A', give('A', '516', 'hand'), {}); passAll(s);
+  assert.equal(s.players.B.soul, after - 1);
 });
 
-test('Berserker morto: Glorious Demise, Cruel Entertainment (God) e Lethal Opportunist (+2)', () => {
+test('Berserker morto: Cruel Entertainment (God) e Lethal Opportunist (+2)', () => {
   const {s, ctx, give} = setup();
   const dead = give('A', '293'); give('A', '275'); const iseu = give('A', '279');
   const soul = s.players.B.soul, atk = atkOf(s, ctx, iseu);
   s.units[dead].damage = 99; checkDefeats(s, ctx); passAll(s);
-  assert.equal(s.players.B.soul, soul - 2);
+  assert.equal(s.players.B.soul, soul - 1); // 293 perdeu Glorious Demise (08/11/2026)
   assert.equal(atkOf(s, ctx, iseu), atk + 2);
 });
 
@@ -92,7 +95,7 @@ test('activate: Suicide Orders derrota outro Berserker e dá +3/Pierce a Lior; u
   assert.ok(s.players.A.tartarus.includes(dead));
   assert.equal(atkOf(s, ctx, lior), atk + 3);
   assert.ok(keywordsOf(s, ctx, lior).includes('Pierce'));
-  assert.equal(s.players.B.soul, soul - 2); // Glorious Demise + Cruel Entertainment
+  assert.equal(s.players.B.soul, soul - 1); // Cruel Entertainment
   assert.throws(() => activate(s, ctx, 'A', lior));
 });
 
@@ -175,17 +178,16 @@ test('303 Bloodied Pride: tomar dano (Strike ou efeito) causa 1 ao próprio God'
   assert.ok(V6['ares-v6-303']);
 });
 
-test('341 Crimson Retaliation: dano de combate de Devotee inimigo volta em 2 para ele', () => {
+test('341 Crimson Fire Guardian (Brash Taunter, 08/11/2026): Guardian; dano recebido vai ao God inimigo, uma vez por rodada', () => {
   const {s, ctx, give} = setup();
-  const guard = give('A', '341'), foe = give('B', '304'); // 304: 3/2, o Guardian leva 3
+  const guard = give('A', '341'), foe = give('B', '304'); // 304: 3/2
+  assert.ok(keywordsOf(s, ctx, guard).includes('Guardian'));
+  const soul = s.players.B.soul;
   s.active = 'B'; strike(s, ctx, foe, {kind: 'devotee', uid: guard});
-  assert.ok(s.players.B.tartarus.includes(foe)); // morre na retaliação (5) de qualquer jeito
-  const {s: s2, ctx: c2, give: g2} = setup();
-  const guard2 = g2('A', '341'), foe2 = g2('B', '309'); // 4/5: sobrevive ao 5 de retaliação? HP 5 -> morre; usa 2 de HP extra
-  s2.effects.push({kind: 'mod', target: foe2, atk: 0, hp: 10, keywords: [], duration: 'this_round'});
-  s2.active = 'B'; strike(s2, c2, foe2, {kind: 'devotee', uid: guard2});
-  const back = s2.events.find(e => e.type === 'damage' && e.uid === foe2 && e.strike).dealt;
-  assert.equal(s2.units[foe2].damage, back + 2); // retaliação + 2 de Crimson Retaliation
+  const took = s.events.find(e => e.type === 'damage' && e.uid === guard && e.strike).dealt;
+  assert.equal(s.players.B.soul, soul - took);
+  k.damage(s, ctx, guard, 1); passAll(s);
+  assert.equal(s.players.B.soul, soul - took, 'uma vez por rodada');
 });
 
 test('309 War God\'s Protection: outro Berserker amigo tomou dano; pode causar 1 a um Devotee inimigo', () => {
@@ -312,4 +314,137 @@ test('Warplate é Armor (guia §26/§28): só entra vestida no Resonant; sem ele
   assert.equal(ctx.attached[loose], undefined);
   playEquipment(s, ctx, 'A', worn, alc); passAll(s);
   assert.equal(ctx.attached[worn], alc);
+});
+
+// ---------- Ares com as staples do vermelho (autor, 08/11/2026) ----------
+test('306 Drums of War (Impact Tremors): outro Devotee aliado entra, 1 no God inimigo, uma vez por rodada', () => {
+  const {s, ctx, give} = setup();
+  give('A', '306');
+  const soul = s.players.B.soul;
+  playDevotee(s, ctx, 'A', give('A', '313', 'hand'), {}); passAll(s);
+  playDevotee(s, ctx, 'A', give('A', '313', 'hand'), {}); passAll(s);
+  assert.equal(s.players.B.soul, soul - 1);
+});
+
+test('298 Tactical Opening e 331 Divine Command (Big Score): Spell dá {1}{L}; Big Score descarta, compra 2 e dá {2}{L}', () => {
+  const {s, ctx, give} = setup();
+  give('A', '298');
+  const p = s.players.A; p.latent = 0;
+  give('A', '314', 'hand'); // carta para descartar
+  const hand = p.hand.length;
+  playSpell(s, ctx, 'A', give('A', '331', 'hand'), {}); passAll(s);
+  assert.equal(p.latent, 3, '1 (Vanguard) + 2');
+  assert.equal(p.hand.length, hand - 1 + 2);
+});
+
+test('302 Blood Champion e 316 Blood Hunger (Reaver Cleaver): dano de Strike no God dá {1}{L} cada', () => {
+  const {s, ctx, give} = setup();
+  const champ = give('A', '302'); give('A', '316', 'battlefield', champ);
+  s.players.A.latent = 0;
+  strike(s, ctx, champ, god);
+  assert.equal(s.players.A.latent, 2);
+});
+
+test('293 Afterlife (Anger) e 314 Cracked Warplate: Impulse para quem entra no turno', () => {
+  const {s, ctx, give} = setup();
+  const dead = give('A', '293', 'tartarus');
+  activateAfterlife(s, ctx, 'A', dead); passAll(s);
+  const fresh = give('A', '313', 'hand');
+  playDevotee(s, ctx, 'A', fresh, {}); passAll(s);
+  assert.ok(s.units[fresh].prepared);
+  strike(s, ctx, fresh, god);
+  assert.ok(s.players.A.void.includes(dead));
+});
+
+test('346 Relentless Advance: prepara quem declarou Strike neste turno', () => {
+  const {s, ctx, give} = setup();
+  const a = give('A', '291'), idle = give('A', '292');
+  strike(s, ctx, a, god);
+  assert.equal(s.units[a].prepared, false);
+  s.units[idle].prepared = false;
+  playSpell(s, ctx, 'A', give('A', '346', 'hand'), {}); passAll(s);
+  assert.ok(s.units[a].prepared);
+  assert.equal(s.units[idle].prepared, false);
+});
+
+test('355 Divine Rage (Chaos Warp): Devotee inimigo vai para o deck do dono, que compra 1', () => {
+  const {s, ctx, give} = setup();
+  const foe = give('B', '304'), hand = s.players.B.hand.length;
+  playSpell(s, ctx, 'A', give('A', '355', 'hand'), {}); passAll(s);
+  assert.ok(!s.players.B.battlefield.includes(foe));
+  assert.ok(s.players.B.deck.includes(foe) || s.players.B.hand.includes(foe));
+  assert.equal(s.players.B.hand.length, hand + 1);
+});
+
+test('360 Endless Holy War (Blasphemous Act) e 289 Enyo (Embercleave): custam menos', () => {
+  const {s, ctx, give} = setup();
+  for (let i = 0; i < 4; i++) give('B', '304');
+  const war = give('A', '360', 'hand');
+  assert.equal(castCost(s, ctx, 'A', war, {amount: 9, unit: 'base'}).amount, 5);
+  const a = give('A', '291'); strike(s, ctx, a, god);
+  const enyo = give('A', '289', 'hand');
+  assert.equal(castCost(s, ctx, 'A', enyo, {amount: 5, unit: 'base'}).amount, 4);
+  playEquipment(s, ctx, 'A', enyo, null, {}); passAll(s);
+  assert.ok(ctx.attached[enyo], 'entrou presa');
+});
+
+test('342 Tactician (impulse draw): 2 do topo ao Void, jogáveis até o fim do próximo turno, depois somem', () => {
+  const {s, ctx, give} = setup();
+  const p = s.players.A, top = p.deck.slice(0, 2);
+  playDevotee(s, ctx, 'A', give('A', '342', 'hand'), {}); passAll(s);
+  assert.ok(top.every(u => p.void.includes(u)));
+  assert.deepEqual(playableFrom(s, ctx, 'A').map(z => z.uid).sort(), [...top].sort());
+  endTurn(s); passAll(s); startTurn(s); passAll(s); // turno de B
+  assert.equal(playableFrom(s, ctx, 'A').length, 2, 'ainda vale no turno do oponente');
+  endTurn(s); passAll(s); startTurn(s); passAll(s); endTurn(s); passAll(s); // próximo turno de A acaba
+  assert.equal(playableFrom(s, ctx, 'A').length, 0);
+  assert.ok(top.every(u => p.void.includes(u)), 'ficam no Void');
+});
+
+test('273 Ofir (Underworld Breach): Moment do Tartarus pagando +{1}{S}, depois vai ao Void; uma vez por rodada', () => {
+  const {s, ctx, give} = setup();
+  give('A', '273');
+  const spark = give('A', '514', 'tartarus'), other = give('A', '516', 'tartarus'), foe = give('B', '304');
+  const soul = s.players.A.soul;
+  assert.ok(playableFrom(s, ctx, 'A').some(z => z.uid === spark));
+  castFromZone(s, ctx, 'A', spark, {}); passAll(s);
+  assert.ok(s.players.A.void.includes(spark));
+  assert.equal(s.players.A.soul, soul - 1);
+  assert.ok(!playableFrom(s, ctx, 'A').some(z => z.uid === other), 'uma vez por rodada');
+  assert.ok(s.events.some(e => e.type === 'damage' && e.uid === foe));
+});
+
+test('349 Flame Coordination (Reverberate): copia uma Spell sua; a cópia não conta como conjurada', () => {
+  const {s, ctx, give} = setup();
+  give('A', '292'); // Guttersnipe conta só conjuradas
+  const foe = give('B', '309'), soul = s.players.B.soul;
+  playSpell(s, ctx, 'A', give('A', '514', 'hand'), {}); // Spark of War: 1 de dano e compra 1
+  s.window.priority = 'A';
+  playSpell(s, ctx, 'A', give('A', '349', 'hand'), {});
+  passAll(s);
+  assert.equal(s.events.filter(e => e.type === 'damage' && e.uid === foe).length, 2, 'original + cópia');
+  assert.equal(s.players.B.soul, soul - 2, 'Guttersnipe: 2 conjuradas (Spark e Flame), cópia não');
+});
+
+test('325 Merciless Strike (Deflecting Swat): troca o alvo da Spell; grátis com Berserker', () => {
+  const {s, ctx, give} = setup();
+  give('A', '291');
+  const mine = give('A', '292'), other = give('A', '313'); // Spark de B só mira Devotee de A: o novo alvo é outro meu
+  s.active = 'B'; s.players.B.latent = 3;
+  ctx.decide = (player, q) => (q.options ? (q.options.includes(mine) ? mine : q.options.includes(other) ? other : q.options[0]) : true);
+  playSpell(s, ctx, 'B', give('B', '514', 'hand'), {}); // B mira o meu
+  s.window.priority = 'A'; s.players.A.latent = 0;
+  playSpell(s, ctx, 'A', give('A', '325', 'hand'), {});
+  passAll(s);
+  assert.ok(!s.events.some(e => e.type === 'damage' && e.uid === mine), 'o Devotee mirado foi poupado');
+  assert.ok(s.events.some(e => e.type === 'damage' && e.uid === other));
+});
+
+test('§58: Devotee jogado do Void pela ação `zone` (actions.js) entra em campo e sai da lista', () => {
+  const {s, ctx, give} = setup();
+  const dev = give('A', '313', 'void');
+  s.zonePlay = [{uid: dev, key: 'A', zone: 'void', until: s.players.A.ownTurns + 1}];
+  applyAction({state: s}, ctx, {type: 'zone', key: 'A', uid: dev, choice: {}}); passAll(s);
+  assert.ok(s.players.A.battlefield.includes(dev));
+  assert.equal(playableFrom(s, ctx, 'A').length, 0);
 });

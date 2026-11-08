@@ -97,6 +97,10 @@ export function createAI(h) {
       const ch = choicesFor(key, h.STEPS[h.num(uid)] || []);
       if (ch) add(`hidden:${uid}`, {src: uid, aim: aimOf(ch), run: () => h.castHidden(key, uid, ch)});
     }
+    for (const uid of h.zonePlays ? h.zonePlays(key) : []) { // §58: do Void (impulse draw) ou do Tartarus (Ofir)
+      const ch = choicesFor(key, h.STEPS[h.num(uid)] || []);
+      if (ch) add(`zone:${uid}`, {src: uid, aim: aimOf(ch), run: () => h.castFromZone(key, uid, ch)});
+    }
     for (const uid of p.tartarus.filter(u => h.afterlifeBlock && !h.afterlifeBlock(key, u))) add(`afterlife:${uid}`, {src: uid, run: () => h.activateAfterlife(key, uid)});
     if (h.commandBlock && !h.commandBlock(key)) for (const uid of h.commandTargets(key)) add(`command:${uid}`, {aim: uid, run: () => h.activateCommand(key, uid)});
     const dom = h.domainUses?.(key);
@@ -192,6 +196,11 @@ export function createAI(h) {
     for (const uid of h.hiddenReason ? p.bases.map(b => b.uid).filter(u => !h.hiddenReason(key, u)) : []) {
       const ch = fresh(`hidden:${uid}`) && choicesFor(key, h.STEPS[h.num(uid)] || []);
       if (ch) return {id: id(`hidden:${uid}`), src: uid, aim: aimOf(ch), run: () => h.castHidden(key, uid, ch)};
+    }
+    // 5b1. De outra zona (§58, 08/11/2026): impulse draw do Void e Moment do Tartarus (Ofir).
+    for (const uid of h.zonePlays ? h.zonePlays(key) : []) {
+      const ch = fresh(`zone:${uid}`) && choicesFor(key, h.STEPS[h.num(uid)] || []);
+      if (ch) return {id: id(`zone:${uid}`), src: uid, aim: aimOf(ch), run: () => h.castFromZone(key, uid, ch)};
     }
     // 5b2. Afterlife (§40, 01/11/2026): o que sobrou de Cosmo, depois da mão.
     for (const uid of h.afterlifeBlock ? p.tartarus.filter(u => !h.afterlifeBlock(key, u)) : []) {

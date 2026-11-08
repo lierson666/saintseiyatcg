@@ -4,6 +4,21 @@ Toda mudança em `docs/guia-do-jogo.md` entra aqui, mais recente no topo.
 
 Formato: `AAAA-MM-DD — Seção — antes → depois — motivo — pendências (cartas/engine/UI)`
 
+## 2026-11-08 — §58 — jogar do Void, conjurar do Tartarus, cópia e novos alvos
+
+- **Antes:** o guia não definia impulse draw, conjurar Moment do Tartarus fora do Afterlife, cópia de Moment/Technique nem troca de alvos.
+- **Depois:** jogar do Void paga o custo e a carta não jogada fica no Void; Moment conjurado do Tartarus vai ao Void; cópia não é carta, não conta como conjurada e some; novos alvos só se legais, senão fica o antigo.
+- **Motivo:** autor, 08/11/2026: proposta de Ares com as staples do vermelho (`docs/proposta-ares-staples-vermelho.md`): Tactician, Ofir, Divine Flames of War e No Mercy.
+- **Feito:** motor: `play.js` (`castFromZone`, `playableFrom`, `selfCostLess`, `afterVoid`, `targetOptions`), `kit.toDeck`, `strike.js` (`impulseAll`); interface: jogáveis de outra zona aparecem apagadas na mão com a origem (Void/Tartarus), e a carta exilada "até X sair" fica embaixo de X (autor, 08/11/2026, estilo Arena).
+
+## 2026-11-08 — 17 cartas de Ares — staples do vermelho (EDH)
+
+- **Antes:** bônus de +1 ATK ao declarar Strike em 9 cartas; "morre e causa 1" em 8; "derrota em combate, paga Soul, dano ao God" em 7; 10 Spells de +ATK; nenhum Devotee acima de custo 5.
+- **Depois** (`docs/proposta-ares-staples-vermelho.md`): 306 Impact Tremors; 293 Anger (Afterlife); 292 Guttersnipe; 298 Storm-Kiln ({1}{L}); 342 Light Up the Stage; 302 Face-Breaker ({1}{L}); 341 Brash Taunter + Guardian; 273 Underworld Breach; 325 Deflecting Swat; 331 Big Score; 349 Reverberate; 346 Relentless Assault; 355 Chaos Warp; 360 Blasphemous Act; 314 Impulse; 316 Reaver Cleaver; 289 Embercleave. 325 e 349 passam de Technique a Moment (autor, 08/11/2026: senão não há Spell na pilha para copiar ou redirecionar).
+- **Motivo:** autor, 08/11/2026: Ares mais diverso, com arquétipos do vermelho no Commander.
+- **Feito:** cards.json (EN/PT, keywords e subtipos), rascunho PT, motor (`ares.js`, `afterlife.js`) e testes (`test-engine-v3-v6-ares.mjs`, 37/37).
+- **Pendente:** 325 só redireciona Spell (habilidade na pilha não guarda alvo). A cópia de 349 pergunta os alvos de novo. Ares ainda não tem Devotee de custo 6+.
+
 ## 2026-11-08 — §58 (Alvos, Guardian e controle) — reanimar do oponente, edito e Void em vez do Tartarus
 
 - **Antes:** o guia não definia sacrifício pelo oponente (edito), reanimação a partir do Tartarus inimigo nem a substituição do Tartarus pelo Void.

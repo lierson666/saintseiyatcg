@@ -63,7 +63,9 @@ function discount(state, ctx, key, uid, cost) {
   if (cost && state.hidden?.uid === uid) cost = {...cost, amount: state.hidden.amount}; // Hidden Cosmo (§4A): {X} no lugar do impresso
   let n = 0, min = 0;
   const tags = [];
-  for (const {self, entry} of cost ? sources(state, ctx, key) : []) {
+  // `selfCostLess`: a própria carta se barateia ("This Spell costs {1} less for each …", Ares 360/289, 08/11/2026).
+  const own = cost && entryOf(ctx, uid)?.selfCostLess ? [{self: uid, entry: {costLess: entryOf(ctx, uid).selfCostLess}}] : [];
+  for (const {self, entry} of cost ? [...own, ...sources(state, ctx, key)] : []) {
     const r = entry.costLess?.(state, ctx, key, self, uid);
     if (!r) continue;
     n += r.n; min = Math.max(min, r.min ?? 0);
@@ -102,7 +104,8 @@ export function playDevotee(state, ctx, key, uid, choice = {}) {
   castToStack(state, key, uid, {kind: 'Devotee'}, st => {
     st.players[key].battlefield.push(uid);
     // P02: entra Unprepared; com Impulse entra Prepared, pronto para o Strike (autor, 29/10/2026).
-    st.units[uid] = {prepared: card.keywords.includes('Impulse'), damage: 0, entered: st.turn};
+    // Ares 293 (Anger, 08/11/2026): `impulseAll[key] = turno` dá Impulse a quem entra neste turno.
+    st.units[uid] = {prepared: card.keywords.includes('Impulse') || st.impulseAll?.[key] === st.turn, damage: 0, entered: st.turn};
     emit(st, 'entered', {player: key, uid, kind: 'Devotee'});
     onEnter(st, ctx, key, uid, choice);
     enforceUniqueness(st, ctx); // §63 (autor, 28/10/2026): pode jogar a segunda versão; o controlador escolhe quem fica
@@ -306,11 +309,13 @@ function playSpellV6(state, ctx, key, uid, choice) {
     const records = aimed.records && aimed.records.map(r => ({...r, value: to(r.value)}));
     withTargets(ctx, key, records, () => entry.spell.run(st, ctx, key, uid, choice, aimed.values.map(to)));
     st.players[key].stack.splice(st.players[key].stack.indexOf(uid), 1);
-    st.players[ctx.objects[uid].owner].tartarus.push(uid);
+    st.players[ctx.objects[uid].owner][spellDestination(st, uid)].push(uid);
     checkDefeats(st, ctx);
   };
   const announce = () => emit(state, 'card_played', {player: key, uid, kind: 'Spell', category, targets: aimed.values});
-  const item = () => ({speed: 'instant', uid, run: finish, target: aimed.values[0] ?? null, targets: aimed.values, spell: true});
+  // `targetOptions`: alvos legais da 1ª pergunta de alvo, ao conjurar (troca de alvo, Ares 325).
+  const item = () => ({speed: 'instant', uid, run: finish, target: aimed.values[0] ?? null, targets: aimed.values, spell: true,
+    targetOptions: aimed.records?.find(r => r.kind !== 'may' && r.kind !== 'mode')?.options ?? null});
   if (!response) {
     const card = sorceryFromHand(state, ctx, key, uid, 'Spell');
     entry.spell.check?.(state, ctx, key, choice);
@@ -340,6 +345,48 @@ function playSpellV6(state, ctx, key, uid, choice) {
   announce();
   respond(state, key, item());
   pushTriggers(state, collect(state, ctx, state.order, 'watchSpell', [key, uid, aimed.values], 'a Moment or Technique is cast')); // gancho watchSpell (resposta)
+}
+
+// ---------- Jogar de outra zona (guia §58, autor 08/11/2026) ----------
+// `state.zonePlay`: cartas que `key` pode jogar do Void (impulse draw, Ares 342) até o fim do turno próprio `until`.
+// Gancho `zonePlay(s, c, key, self)` em cartas em campo devolve [{uid, zone, extraSoul, after, tag}] (Ofir 273: Tartarus).
+// `after: 'void'`: a Spell vai ao Void ao resolver ou ser contrariada (`state.afterVoid`).
+// O prazo de `zonePlay` vence no fim do turno (v6/ares.js, hooks.turnEnd).
+export const spellDestination = (st, uid) => {
+  const at = (st.afterVoid || []).indexOf(uid);
+  if (at < 0) return 'tartarus';
+  st.afterVoid.splice(at, 1);
+  return 'void';
+};
+export function playableFrom(state, ctx, key) {
+  const out = (state.zonePlay || []).filter(z => z.key === key && state.players[key][z.zone].includes(z.uid));
+  for (const {self, entry} of sources(state, ctx, key)) if (entry.zonePlay) out.push(...entry.zonePlay(state, ctx, key, self));
+  const seen = new Set();
+  return out.filter(z => !seen.has(z.uid) && seen.add(z.uid));
+}
+// Como castHidden: a carta vai à mão só para usar o caminho normal de jogar; erro antes de pagar desfaz tudo.
+export function castFromZone(state, ctx, key, uid, choice = {}, bearer = null) {
+  const z = playableFrom(state, ctx, key).find(x => x.uid === uid);
+  if (!z) throw new RuleError('§58', 'esta carta não pode ser jogada daqui agora');
+  const p = state.players[key], card = ctx.cards.get(ctx.objects[uid].cardId), extra = z.extraSoul || 0;
+  if (p.soul < extra) throw new RuleError('custo', `Soul insuficiente (+${extra})`);
+  const at = p[z.zone].indexOf(uid);
+  p[z.zone].splice(at, 1);
+  p.hand.push(uid);
+  try {
+    if (card.kind === 'Devotee') playDevotee(state, ctx, key, uid, choice);
+    else if (card.kind === 'Equipment') playEquipment(state, ctx, key, uid, bearer, choice);
+    else playSpell(state, ctx, key, uid, choice);
+  } catch (e) {
+    const h = p.hand.indexOf(uid);
+    if (h >= 0) { p.hand.splice(h, 1); p[z.zone].splice(at, 0, uid); }
+    throw e;
+  }
+  if (extra) loseSoul(state, {[key]: extra}, 'cost');
+  if (z.tag) useOncePerRound(state, z.tag);
+  if (z.after === 'void') (state.afterVoid ||= []).push(uid);
+  if (state.zonePlay) state.zonePlay = state.zonePlay.filter(x => x.uid !== uid);
+  emit(state, 'zone_play', {player: key, uid, zone: z.zone});
 }
 
 // Guia §4A Hidden Cosmo {X} (autor, 31/10/2026): joga `uid` da própria Cosmo Base pagando X no lugar do custo impresso,

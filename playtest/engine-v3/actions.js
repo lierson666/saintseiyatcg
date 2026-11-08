@@ -3,7 +3,7 @@
 import {startTurn, endTurn, pass, placeBase, orderTriggers, RuleError, HAND_LIMIT} from './core.js';
 import {discard} from './v6/kit.js';
 import {declareStrike, mustStrike} from './strike.js';
-import {playDevotee, playEquipment, playSpell, activate, activateAfterlife, reequip, castHidden} from './play.js';
+import {playDevotee, playEquipment, playSpell, activate, activateAfterlife, reequip, castHidden, castFromZone} from './play.js';
 import {announceExclamation, removeJudgment, announceGreatFlood, announceGreatEclipse, announceObliteration, activateBloodlust, activateCommand, placeBaseMoonHarvest, announceMoonAwakening} from './gods.js';
 import {mulligan, chooseFirst} from './match.js';
 import {applyTimeout} from './clock.js';
@@ -26,6 +26,7 @@ export function applyAction(match, ctx, action) {
     }
     case 'base': return placeBase(s, key, uid, card());
     case 'hidden': return castHidden(s, ctx, key, uid, choice); // §4A: joga da Cosmo Base
+    case 'zone': return castFromZone(s, ctx, key, uid, choice, choice.bearer); // §58: do Void/Tartarus (Ares 342, 273)
     case 'strike': {
       if (s.active !== key) throw new RuleError('D1', 'Strike fora do próprio Round');
       const t = String(choice.target || '');

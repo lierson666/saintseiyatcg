@@ -192,6 +192,19 @@ export const sword = (ability, a, b) => ({
   immune: src => new RegExp(`^(god-)?(${a}|${b})`).test(src.cardId || ''),
   gearGodDamage: (s, c, key) => st => { SWORD_FX[a](st, c, key, ability); SWORD_FX[b](st, c, key, ability); },
 });
+// Embaralha no deck do dono (Chaos Warp, Ares 355, 08/11/2026). Token some.
+export function toDeck(s, c, uid, from = 'battlefield') {
+  if (from === 'battlefield' && (!controllerOf(s, uid) || blockedNow(s, uid))) return false;
+  const was = from === 'battlefield' ? controllerOf(s, uid) : null;
+  if (!take(s, c, uid, from)) return false;
+  if (was) leavesHooks(s, c, was, uid, 'deck');
+  if (vanish(c, uid)) return true;
+  const owner = c.objects[uid].owner;
+  s.players[owner].deck.push(uid);
+  emit(s, 'shuffled_into_deck', {uid, player: owner});
+  shuffleDeck(s, owner);
+  return true;
+}
 export function exile(s, c, uid, from = 'battlefield') {
   if (from === 'battlefield' && (!controllerOf(s, uid) || blockedNow(s, uid))) return false;
   const was = from === 'battlefield' ? controllerOf(s, uid) : null; // gancho leaves (Devotee ou Equipment)
@@ -294,7 +307,9 @@ export function counterSpell(s, c, spellUid) {
   if (at < 0) return false;
   const [item] = s.chain.splice(at, 1);
   for (const p of Object.values(s.players)) if (p.stack.includes(spellUid)) p.stack.splice(p.stack.indexOf(spellUid), 1);
-  s.players[c.objects[spellUid].owner].tartarus.push(spellUid);
+  const v = (s.afterVoid || []).indexOf(spellUid); // conjurada do Tartarus por efeito: vai ao Void (§58)
+  if (v >= 0) s.afterVoid.splice(v, 1);
+  s.players[c.objects[spellUid].owner][v >= 0 ? 'void' : 'tartarus'].push(spellUid);
   emit(s, 'spell_countered', {player: item.controller, uid: spellUid});
   return true;
 }

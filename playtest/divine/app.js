@@ -12,7 +12,7 @@ import {createCoin3D, COIN_TOSS_MS} from './coin3d.js';
 import {startTurn, endTurn, pass, placeBase, spellCategory, runCheckpoint, ownBatch, loseGame} from '../engine-v3/core.js';
 import {inlineMarkup} from '../../shared/card-text.js?v=20261102-eq2';
 import {declareStrike, strikeTargets, mustStrike} from '../engine-v3/strike.js';
-import {playDevotee, playEquipment, playSpell, activate, reequip, duplicateCharacter, resonant, castCost, mixed, castHidden, afterlifeBlock, activateAfterlife} from '../engine-v3/play.js';
+import {playDevotee, playEquipment, playSpell, activate, reequip, duplicateCharacter, resonant, castCost, mixed, castHidden, afterlifeBlock, activateAfterlife, playableFrom, castFromZone} from '../engine-v3/play.js';
 import {AFTERLIFE} from '../engine-v3/v6/afterlife.js';
 import {atkOf, hpOf, keywordsOf, gearOf, isSaint, isBronze, ABILITIES, modsOf} from '../engine-v3/effects.js';
 import {v6Spell, entryOf, V6} from '../engine-v3/v6/hooks.js';
@@ -323,22 +323,25 @@ function boardPick() {
   return {uid: src || null, refs: req.options, pick: v => reply({value: req.multiple ? [v] : v})};
 }
 
+// Jogáveis de outra zona (guia §58: impulse draw do Void, Moment do Tartarus com Ofir): aparecem apagadas na mão, estilo Arena.
+const zoneOf = (key, uid) => playableFrom(S(), ctx, key).find(z => z.uid === uid) || null;
+const zoneReason = (key, uid, z = zoneOf(key, uid)) => playableReason(key, uid) || (z && S().players[key].soul < (z.extraSoul || 0) ? `Needs {${z.extraSoul}}{S}.` : null);
 function playFromHand(key, uid) {
-  const c = info(uid), n = num(uid), reason = playableReason(key, uid);
+  const c = info(uid), n = num(uid), z = zoneOf(key, uid), reason = zoneReason(key, uid, z), type = z ? 'zone' : 'play';
   if (reason) return warn(reason);
   casting = uid;
   if (c.kind === 'Devotee') {
     if (duplicateCharacter(S(), ctx, key, uid)) warn(`You already control ${c.name.split(',')[0]}: after it enters, choose which version stays.`);
-    return begin('play', key, uid, STEPS[n] || [], choice => ({type: 'play', key, uid, choice}));
+    return begin('play', key, uid, STEPS[n] || [], choice => ({type, key, uid, choice}));
   }
   if (c.kind === 'Equipment') {
     // Armor, arma e acessório (guia §28, §33): só entra preso num Resonant seu, sem Equip; senão entra sem portador.
     const armorPick = candidates({pick: 'resonant', armor: uid}, key).length;
     const steps = armorPick ? [{key: 'bearer', pick: 'resonant', armor: uid, optional: true, label: `Choose who wears ${c.name}`}] : [];
     if (n === '019') steps.push({key: 'target', pick: 'devotee', optional: true, label: 'Pegasus God Cloth: which Devotee gets +3/+3 (if your God is behind)?'});
-    return begin('play', key, uid, steps, choice => ({type: 'play', key, uid, choice}));
+    return begin('play', key, uid, steps, choice => ({type, key, uid, choice}));
   }
-  return begin('play', key, uid, STEPS[n] || [], choice => ({type: 'play', key, uid, choice}));
+  return begin('play', key, uid, STEPS[n] || [], choice => ({type, key, uid, choice}));
 }
 
 function startStrike(uid) {
@@ -839,17 +842,21 @@ function fieldRow(key) {
       const f = FORGE.get(ctx.objects[g].cardId), bonus = f && armorBonusText({...f, ...printedBonusFields(f)});
       return `<div class="gear ${info(g).armor ? 'gear--armor' : ''}" data-uid="${g}" tabindex="0" aria-label="${esc(info(g).name)}${bonus ? ` · ${esc(bonus)}` : ''}"${f ? ` style="${tokenArt(f)}"` : ''}><span>${esc(info(g).name)}</span>${bonus ? `<b>${esc(bonus)}</b>` : ''}</div>`;
     }).join('');
-    return `<div class="slot">${cardFace(u, {field: true})}${gear ? `<div class="gears">${gear}</div>` : ''}</div>`;
+    // Exilada "até X sair do campo" (Gemini Saga): fica embaixo da carta que a exilou, com a ponta à mostra (estilo Arena).
+    const under = [...(s.dimension?.[u] || []), s.hadesExile?.[u]].filter(t => t && Object.values(s.players).some(pl => pl.void.includes(t)));
+    const tucked = under.map(t => `<div class="slot__under" aria-label="Exiled by ${esc(info(u).name)}: ${esc(info(t).name)}">${cardFace(t, {size: 'dcard--sm'})}</div>`).join('');
+    return `<div class="slot ${tucked ? 'slot--holds' : ''}">${tucked}${cardFace(u, {field: true})}${gear ? `<div class="gears">${gear}</div>` : ''}</div>`;
   }).join('');
   return `<section class="field field--${key === viewer() ? 'me' : 'opp'}" data-field="${key}" style="--cols:${Math.max(1, Math.min(n, 8))};--fit:${n > 16 ? .5 : n > 8 ? .7 : 1}" aria-label="Player ${key} battlefield">${units || '<p class="field__empty">No Devotees</p>'}</section>`;
 }
 
+const ZONE_LABEL = {void: 'Void', tartarus: 'Tartarus'};
 function handRow(key, hidden) {
-  const hand = S().players[key].hand, n = hand.length;
+  const hand = S().players[key].hand, ghosts = hidden ? [] : playableFrom(S(), ctx, key), n = hand.length + ghosts.length;
   return `<div class="hand hand--${hidden ? 'opp' : 'me'}" data-hand="${key}" style="--n:${n};${sleeveVar(key)}">${hand.map((u, i) => {
     const playable = !hidden && !playableReason(key, u), base = !hidden && canBase(key, u);
     return `<div class="hand__slot ${playable ? 'playable' : ''} ${base ? 'baseable' : ''}" style="--i:${i}">${cardFace(u, {hidden, size: hidden ? 'dcard--sm' : ''})}</div>`;
-  }).join('')}</div>`;
+  }).join('')}${ghosts.map((z, i) => `<div class="hand__slot is-ghost ${zoneReason(key, z.uid, z) ? '' : 'playable'}" style="--i:${hand.length + i}" data-zone="${z.zone}">${cardFace(z.uid)}<span class="hand__from">${ZONE_LABEL[z.zone]}${z.extraSoul ? ` · +${z.extraSoul} Soul` : ''}</span></div>`).join('')}</div>`;
 }
 
 function phaseText() {
@@ -1580,7 +1587,7 @@ boardRoot.addEventListener('click', e => {
   if (!cardEl || cardEl.classList.contains('dcard--back')) return;
   const uid = cardEl.dataset.uid, key = owner(uid), me = viewer();
   if (key !== me) return s.players[key].battlefield.includes(uid) ? quickMenu(cardEl, [['Info', () => showBigCard(uid, {sheet: sheetUp()})]], {always: true}) : undefined; // Info em toda carta visível
-  if (s.players[key].hand.includes(uid)) return handMenu(uid, cardEl);
+  if (s.players[key].hand.includes(uid) || (cardEl.closest('.hand__slot.is-ghost') && zoneOf(key, uid))) return handMenu(uid, cardEl); // jogável de outra zona (§58)
   if (s.players[key].battlefield.includes(uid)) return fieldMenu(uid, cardEl);
 });
 
@@ -1612,9 +1619,11 @@ function handMenu(uid, el) {
   if (lifted === uid) return closeQuick(); // tocar de novo abaixa a carta
   const key = owner(uid), items = [];
   // Sempre Jogar, Cosmo Base e Info; o que não dá agora vem apagado e diz o motivo (autor, 01/11/2026).
-  items.push(['Play', () => playFromHand(key, uid), playableReason(key, uid)], ['Cosmo Base', () => placeAsBase(key, uid), baseReason(key, uid)]);
+  const z = zoneOf(key, uid);
+  items.push(['Play', () => playFromHand(key, uid), zoneReason(key, uid, z)]);
+  if (!z) items.push(['Cosmo Base', () => placeAsBase(key, uid), baseReason(key, uid)]); // de outra zona: só jogar
   // Moon Harvest (Artemis): carta não Cosmoble vira Base, uma vez por rodada, perdendo 2 Soul.
-  if (!info(uid).cosmoble && S().divine?.[key]?.god === 'god-artemis' && !moonHarvestBlock(S(), ctx, key, uid) && idleFor(key) && S().players[key].baseTurn !== S().turn)
+  if (!z && !info(uid).cosmoble && S().divine?.[key]?.god === 'god-artemis' && !moonHarvestBlock(S(), ctx, key, uid) && idleFor(key) && S().players[key].baseTurn !== S().turn)
     items.push(['Moon Harvest (−2 Soul)', () => act({type: 'moonHarvest', key, uid})]);
   items.push(['Info', () => showBigCard(uid, {sheet: sheetUp()})]);
   closeQuick();
@@ -2242,10 +2251,11 @@ document.addEventListener('pointerup', e => {
   const key = owner(uid), drop = document.elementsFromPoint(e.clientX, e.clientY);
   const onUnit = drop.find(d => d.dataset?.uid && S().players[key].battlefield.includes(d.dataset.uid));
   // Área de Cosmo ou metade COSMO vira Base; sobre um Devotee seu com a carta jogável, vale o portador/alvo.
-  if (bankAt(key, e.clientX, e.clientY) || (zone === 'cosmo' && !(onUnit && !playableReason(key, uid)))) { ghost.remove(); return placeAsBase(key, uid); }
+  const fromZone = !S().players[key].hand.includes(uid) && zoneOf(key, uid); // de outra zona (§58): não vira Base
+  if (!fromZone && (bankAt(key, e.clientX, e.clientY) || (zone === 'cosmo' && !(onUnit && !playableReason(key, uid))))) { ghost.remove(); return placeAsBase(key, uid); }
   const onField = zone === 'cast' || drop.some(d => d.dataset?.field === key);
   if (!onField && !onUnit) return ghost.remove();
-  const reason = playableReason(key, uid);
+  const reason = fromZone ? zoneReason(key, uid) : playableReason(key, uid);
   if (reason) { ghost.remove(); return warn(reason); }
   holdCast(uid, ghost);
   playFromHand(key, uid); // nada é escolhido pelo ponto onde a carta caiu: o alvo sai da seta do slot (autor, 30/10/2026)
@@ -2926,6 +2936,7 @@ const ai = createAI({
   domainUses: key => { const d = domainEntry(S(), key); return {res: !!d?.res, general: d?.activate || null}; }, activate: (key, uid) => activate(S(), ctx, key, uid, {}),
   playSpell: (key, uid, ch) => playSpell(S(), ctx, key, uid, ch), declareStrike: (uid, target) => declareStrike(S(), ctx, uid, target),
   hiddenReason, castHidden: (key, uid, ch) => castHidden(S(), ctx, key, uid, ch),
+  zonePlays: key => playableFrom(S(), ctx, key).filter(z => !zoneReason(key, z.uid, z)).map(z => z.uid), castFromZone: (key, uid, ch) => castFromZone(S(), ctx, key, uid, ch, ch?.bearer),
   afterlifeBlock: (key, uid) => afterlifeBlock(S(), ctx, key, uid), activateAfterlife: (key, uid) => activateAfterlife(S(), ctx, key, uid),
   announceExclamation: (key, trio) => announceExclamation(S(), ctx, key, trio), announceGreatFlood: key => announceGreatFlood(S(), ctx, key),
 });

@@ -19,7 +19,7 @@ export function checkStrike(state, ctx, attacker, target) {
   assertIdle(state);
   if (!onField(state, key, attacker) || card(ctx, attacker).kind !== 'Devotee') throw new RuleError('P04', 'o atacante precisa ser um Devotee seu no campo');
   // P02: entra Unprepared; Impulse deixa declarar Strike no turno em que entrou.
-  const unit = state.units[attacker], impulse = unit?.entered === state.turn && keywordsOf(state, ctx, attacker).includes('Impulse'); // inclui Impulse dado por efeito (V6)
+  const unit = state.units[attacker], impulse = unit?.entered === state.turn && (keywordsOf(state, ctx, attacker).includes('Impulse') || state.impulseAll?.[controllerOf(state, attacker)] === state.turn); // inclui Impulse dado por efeito (V6)
   if (unit?.prepared !== true && !impulse) throw new RuleError('P04', 'o atacante precisa estar Prepared');
   if (cannotStrike(state, attacker)) throw new RuleError('V6', 'este Devotee não pode declarar Strike neste Round'); // gancho cannotStrike
   // §47 (autor, 30/10/2026): o Strike de Impulse na rodada de entrada pode mirar o God (restrição de 29/10 revertida).

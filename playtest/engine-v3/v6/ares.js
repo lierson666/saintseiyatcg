@@ -10,7 +10,7 @@ import * as k from './kit.js';
 // "Target enemy God": único alvo possível, guardado ao conjurar sem pergunta (v6/targets.js; reações como Poseidon 136 o enxergam).
 const godOfFoe = (s, c, key) => [k.godTarget(k.other(s, key))];
 import {hooks} from '../core.js';
-import {contextOf, trigger} from './registry.js';
+import {contextOf, trigger, entryOf} from './registry.js';
 
 const foeGod = (s, key) => k.godTarget(k.other(s, key));
 const ownGod = key => k.godTarget(key);
@@ -84,6 +84,14 @@ hooks.turnEnd.push(state => {
       return trigger(d.key, d.uid, `${k.card(c, d.uid)?.name || 'Spell'} · ${d.ability}`, st => LATER_RUN[d.kind](st, c, d));
     });
 });
+
+// Jogar do Void (Tactician 342): o prazo "até o fim da sua próxima rodada" vence no fim desse turno (guia §58, 08/11/2026).
+hooks.turnEnd.push(state => {
+  if (state.zonePlay) state.zonePlay = state.zonePlay.filter(z => !(z.key === state.active && state.players[z.key].ownTurns >= z.until));
+  return [];
+});
+// Spell na cadeia controlada por `key` (copiar) ou qualquer uma (redirecionar), menos a própria.
+const spellsOnChain = (s, self, key) => s.chain.filter(i => i.spell && i.uid !== self && (!key || i.controller === key));
 
 // ---------- famílias ----------
 // Sem alvo legal ao entrar, o gatilho não vai para a cadeia (não abre janela à toa; guia §56: sem alvo, sem efeito).
@@ -181,9 +189,12 @@ export default {
     gearCombatDamage: (s, c, key, self) => st => { if (taxed(st, c, key, 'SCORCHING IMPACT', 1, self)) hit(st, c, foeGod(st, key), 1); },
   }),
   // Ofir of Ouroboros
+  // Divine War Flames (Underworld Breach, 08/11/2026): uma vez por rodada, Moment/Technique do seu Tartarus, custo + {1}{S}, depois Void.
   'ares-v6-273': {
     enter: (s, c, key) => st => lookTop(st, c, key, 3, 'BATTLEFIELD INSIGHT'),
-    watchDeclare: (s, c, key, self, attacker) => friendlyBerserkerDeclared(s, c, key, self, attacker) && (st => buff(st, attacker, 1)),
+    zonePlay: (s, c, key, self) => (s.roundUses.has(`${self}:breach`) ? [] : s.players[key].tartarus
+      .filter(u => k.card(c, u)?.kind === 'Spell' && /Moment|Technique/.test(k.card(c, u).type))
+      .map(uid => ({uid, key, zone: 'tartarus', extraSoul: 1, after: 'void', tag: `${self}:breach`, source: self}))),
   },
   // Ouroboros Warplate
   'ares-v6-274': merge(gearDeclareOther(2, 'FLAME COORDINATION'), {
@@ -299,7 +310,14 @@ export default {
     },
   },
   // Enyo, Spear of Destruction
-  'ares-v6-289': merge(gearKillGodTaxed(3, 'DIVINE DESTRUCTION'), gearKeywords(['Pierce'], berserker)),
+  // Divine Destruction (Embercleave, 08/11/2026): -{1} por Devotee seu que declarou Strike neste turno; entra preso de graça.
+  'ares-v6-289': merge(gearKeywords(['Pierce'], berserker), {
+    selfCostLess: (s, c, key) => { const n = new Set(thisTurn(s, 'strike_declared').filter(e => e.player === key).map(e => e.attacker)).size; return n ? {n} : null; },
+    cast: (s, c, key, self) => !c.attached[self] && k.devotees(s, c, key).length > 0 && (st => {
+      const t = k.choose(c, key, 'DIVINE DESTRUCTION', k.devotees(st, c, key), {text: 'Choose target friendly Devotee to attach Enyo to.'});
+      if (t && alive(st, t) && st.players[key].battlefield.includes(self)) { c.attached[self] = t; k.emit(st, 'equipped', {player: key, uid: self, bearer: t}); }
+    }),
+  }),
   // 290 Shield of the War God. Warborn Defiance (gancho gearSurvive): o portador sobreviveu ao combate; 2 de dano ao Devotee inimigo
   // envolvido. Unyielding Fury (gancho gearTookDamage): ao tomar dano, +2 ATK até o fim do turno (aproximado por 'this_round', como o buff).
   'ares-v6-290': {
@@ -307,8 +325,8 @@ export default {
     gearTookDamage: (s, c, key, self, bearer) => st => buff(st, bearer, 2),
   },
   'ares-v6-291': declareGod(1, 'BURNING ASSAULT'),
-  'ares-v6-292': {watchDeclare: (s, c, key, self, attacker) => friendlyBerserkerDeclared(s, c, key, self, attacker) && (st => buff(st, self, 1))},
-  'ares-v6-293': deathGod(1, 'GLORIOUS DEMISE'),
+  'ares-v6-292': {watchSpell: (s, c, key, self, caster) => caster === key && (st => hit(st, c, foeGod(st, key), 1))}, // Guttersnipe (08/11/2026)
+  // 293: só Afterlife (Anger, 08/11/2026), em v6/afterlife.js.
   'ares-v6-294': {godDamage: (s, c, key) => st => drainLatent(st, c, key, 1, 'PSYCHOLOGICAL WARFARE')},
   'ares-v6-295': {
     declare: (s, c, key, self) => st => buff(st, self, 1),
@@ -322,7 +340,7 @@ export default {
     if (st.units[t].entered === st.turn) k.prepare(st, t);
   }},
   'ares-v6-297': enterDamage(1, 'BURNING EXECUTION', damagedThisTurn),
-  'ares-v6-298': {enter: (s, c, key, self) => st => buff(st, friendlyBerserker(st, c, key, 'TACTICAL OPENING', u => u !== self), 1)},
+  'ares-v6-298': {watchSpell: (s, c, key, self, caster) => caster === key && k.once(s, `${self}:opening`) && (st => k.gainLatent(st, key, 1))}, // Storm-Kiln (08/11/2026)
   'ares-v6-299': {godDamage: (s, c, key) => st => hit(st, c, enemyDevotee(st, c, key, 'SCORCHED EARTH'), 1)},
   'ares-v6-300': {
     enter: (s, c, key) => st => buff(st, enemyDevotee(st, c, key, 'CRIPPLING TERROR'), -1),
@@ -330,8 +348,8 @@ export default {
   },
   'ares-v6-301': deathDevotee(1, 'CATASTROPHIC END'),
   // Berserker Champion
-  'ares-v6-302': {
-    watchDeclare: (s, c, key, self, attacker) => friendlyBerserkerDeclared(s, c, key, self, attacker) && (st => buff(st, self, 1)),
+  'ares-v6-302': { // Blood Champion (Face-Breaker, 08/11/2026): dano de Strike num God dá {1}{L}
+    godDamage: (s, c, key) => st => k.gainLatent(st, key, 1),
     killInCombat: (s, c, key, self) => st => { if (taxed(st, c, key, 'UNQUENCHABLE FURY', 2, self)) hit(st, c, foeGod(st, key), 2); },
   },
   // 303 Bloodstained Gladiator: Bloodied Pride (gancho tookDamage), Strike ou efeito.
@@ -341,10 +359,9 @@ export default {
       target.kind === 'devotee' && k.keywordsOf(s, c, target.uid).includes('Guardian') && (st => buff(st, self, 2)),
   },
   'ares-v6-305': {declare: (s, c, key) => st => hit(st, c, ownGod(key), 1)},
-  'ares-v6-306': {
-    watchDeclare: (s, c, key, self, attacker) => friendlyBerserkerDeclared(s, c, key, self, attacker)
-      && k.onceTurn(s, `${self}:drums`) && (st => buff(st, attacker, 1)),
-  },
+  // Drums of War (Impact Tremors, 08/11/2026): outro Devotee aliado entra, 1 de dano no God inimigo, uma vez por rodada.
+  'ares-v6-306': {watchEnter: (s, c, key, self, entered) => entered !== self && k.controllerOf(s, entered) === key && k.isDevotee(c, entered)
+    && k.once(s, `${self}:drums`) && (st => hit(st, c, foeGod(st, key), 1))},
   // Divine Flame Disciple: {1}{C}, {T}, 2 cartas do Tartarus para o Void.
   'ares-v6-307': {
     activate: {
@@ -398,9 +415,10 @@ export default {
   'ares-v6-313': merge(deathAny(1, 'FINAL EXPLOSION'), {
     endTurn: (s, c, key, self) => st => { if (alive(st, self)) k.defeat(st, c, self); },
   }),
-  'ares-v6-314': gearDeathGod(1, 'LAST PROTECTION'),
+  // 314 (08/11/2026): "Equipped Devotee has Impulse" = o portador que entrou neste turno fica Prepared ao ser equipado.
+  'ares-v6-314': {...gearKeywords(['Impulse']), attach: (s, c, key, self, bearer) => s.units[bearer]?.entered === s.turn && !s.units[bearer].prepared && (st => { if (alive(st, bearer)) k.prepare(st, bearer); })},
   'ares-v6-315': gearDeclareSelf(1),
-  'ares-v6-316': gearKillGodTaxed(1, 'BLOOD HUNGER'),
+  'ares-v6-316': {gearGodDamage: (s, c, key) => st => k.gainLatent(st, key, 1)}, // Reaver Cleaver (08/11/2026)
   'ares-v6-317': merge(gearKeywords(['Pierce']), gearDeathGod(1, "DEATH'S TRIBUTE")),
   'ares-v6-318': k.sword('BATTLEFIELD AXE', 'athena', 'poseidon'),
   'ares-v6-319': gearDeclareOther(1, 'RHYTHM OF DESTRUCTION'),
@@ -430,7 +448,22 @@ export default {
     const bearer = t && c.attached[t];
     if (t && k.destroyEquipment(s, c, t)) hit(s, c, bearer, 1);
   }}},
-  'ares-v6-325': {spell: {run: (s, c, key) => buff(s, friendlyBerserker(s, c, key, 'MERCILESS STRIKE'), 2, ['Pierce'])}},
+  // Merciless Strike (Deflecting Swat, 08/11/2026; Moment): novos alvos para uma Spell na cadeia (v6Redirect, lido em play.js).
+  // shortcut: só Spell (habilidade na pilha não guarda alvo); alvos legais = opções da 1ª pergunta de alvo ao conjurar, ainda em jogo.
+  'ares-v6-325': {
+    selfCostLess: (s, c, key) => (friends(s, c, key).length ? {n: 99} : null),
+    spell: {check: (s, c, key, choice) => { if (!s.chain.some(i => i.spell && i.targets?.length)) throw new k.RuleError('alvo', 'MERCILESS STRIKE: nenhuma Spell com alvo na cadeia'); },
+      run: (s, c, key, self) => {
+        const t = k.choose(c, key, 'MERCILESS STRIKE', spellsOnChain(s, self).filter(i => i.targets?.length).map(i => i.uid), {text: 'Choose target Moment or Technique.'});
+        const item = t && s.chain.find(i => i.uid === t && i.spell);
+        if (!item) return;
+        const from = s.v6Redirect?.[t]?.to ?? item.targets[0], god = String(from).startsWith('god:');
+        const field = god ? s.order.map(p => k.godTarget(p)) : k.allDevotees(s, c); // ainda em jogo
+        const legal = (item.targetOptions || field).filter(u => u !== from && field.includes(u));
+        const to = legal.length ? k.choose(c, key, 'MERCILESS STRIKE', legal, {text: 'Choose the new target.'}) : null;
+        if (to) (s.v6Redirect ||= {})[t] = {from: item.targets[0], to}; // sem alvo legal novo, fica o antigo (§58)
+      }},
+  },
   'ares-v6-326': {spell: {run: (s, c, key) => {
     const mine = friendlyBerserker(s, c, key, 'BLOOD EXCHANGE');
     if (!mine) return;
@@ -453,10 +486,11 @@ export default {
     draw(s, key, n + 1);
     hit(s, c, ownGod(key), 1);
   }}},
-  'ares-v6-331': {spell: {run: (s, c, key, self) => {
-    for (const u of friends(s, c, key)) buff(s, u, 2);
-    later(s, key, self, 'BLOOD OFFERING', {kind: 'bloodOffering'});
-  }}},
+  'ares-v6-331': {spell: { // Divine Command (Big Score, 08/11/2026): descarta 1 de custo, compra 2 e ganha {2}{L}
+    check: (s, c, key) => { if (s.players[key].hand.length < 2) throw new k.RuleError('custo', 'DIVINE COMMAND: precisa descartar 1 carta'); },
+    cost: (s, c, key) => k.discard(s, c, key, 1, 'DIVINE COMMAND'),
+    run: (s, c, key) => { draw(s, key, 2); k.gainLatent(s, key, 2); },
+  }},
 
   // ---------- Domains (rebalanceamento aprovado pelo autor em 01/11/2026, docs/domains-rebalance-proposta.md) ----------
   // self = `domain:${key}`. Linha geral (qualquer God): ganchos e `activate`. Ressonância — Ares (só com God Ares): `res`
@@ -543,11 +577,13 @@ export default {
     },
   }),
   // Crimson Fire Guardian. Crimson Retaliation (gancho tookDamage): dano de combate de Devotee inimigo, 2 de volta nele.
-  'ares-v6-341': {
-    tookDamage: (s, c, key, self, info) => info.combat && !!info.foe && (st => { if (alive(st, info.foe)) hit(st, c, info.foe, 2); }),
-    killInCombat: (s, c, key, self) => st => { if (taxed(st, c, key, 'BURNING PRIDE', 2, self)) hit(st, c, foeGod(st, key), 2); }},
-  'ares-v6-342': {
-    enter: (s, c, key) => st => lookTop(st, c, key, 3, 'STRATEGIC DEPLOYMENT'),
+  // Crimson Fire Guardian (Brash Taunter, 08/11/2026): Guardian (keywords_en); dano recebido vai ao God inimigo, uma vez por rodada.
+  'ares-v6-341': {tookDamage: (s, c, key, self, info) => info.dealt > 0 && k.once(s, `${self}:pride`) && (st => hit(st, c, foeGod(st, key), info.dealt))},
+  'ares-v6-342': { // Strategic Deployment (Light Up the Stage, 08/11/2026): 2 do topo ao Void, jogáveis até o fim do seu próximo turno
+    enter: (s, c, key, self) => st => {
+      const p = st.players[key];
+      for (const uid of p.deck.slice(0, 2)) if (k.exile(st, c, uid, 'deck')) (st.zonePlay ||= []).push({uid, key, zone: 'void', until: p.ownTurns + 1, source: self});
+    },
     watchDeclare: (s, c, key, self, attacker) => friendlyBerserkerDeclared(s, c, key, self, attacker)
       && k.onceTurn(s, `${self}:calculated`) && (st => {
         if (!alive(st, attacker) || !st.players[key].hand.length || !k.may(c, key, 'CALCULATED ASSAULT', {uid: attacker, cost: 'Discard a card'})) return;
@@ -564,9 +600,9 @@ export default {
     enter: (s, c, key, self) => st => { sweep(st, c, k.allDevotees(st, c).filter(u => u !== self), 1); },
     watchDefeat: (s, c, key, self, dead) => dead !== self && (st => buff(st, self, 1)),
   },
-  'ares-v6-346': {spell: {run: (s, c, key, self) => {
-    for (const u of friends(s, c, key)) buff(s, u, 2, ['Pierce']);
-    later(s, key, self, 'MARCH TO OBLIVION', {kind: 'march'});
+  'ares-v6-346': {spell: {run: (s, c, key) => { // Relentless Advance (Relentless Assault, 08/11/2026)
+    const struck = new Set(thisTurn(s, 'strike_declared').filter(e => e.player === key).map(e => e.attacker));
+    for (const u of struck) if (k.controllerOf(s, u) === key) k.prepare(s, u);
   }}},
   'ares-v6-347': {spell: {run: (s, c, key) => {
     const picked = k.chooseUpTo(c, key, 'DISPOSABLE SOLDIERS', friends(s, c, key), 2, {text: 'Choose up to two target friendly Berserkers.'});
@@ -577,10 +613,18 @@ export default {
   'ares-v6-348': {spell: {run: (s, c, key) => {
     hit(s, c, foeGod(s, key), drainLatent(s, c, key, 2, 'LIVING NIGHTMARE'));
   }}},
-  'ares-v6-349': {spell: {run: (s, c, key) => {
-    lookTop(s, c, key, 4, 'DIVINE INSIGHT');
-    for (const u of k.chooseUpTo(c, key, 'FLAME COORDINATION', friends(s, c, key), 2, {text: 'Choose up to two target friendly Berserkers.'})) buff(s, u, 2);
-  }}},
+  // Flame Coordination (Reverberate, 08/11/2026; Moment): copia uma Spell sua na cadeia. A cópia não é carta, não foi conjurada
+  // (sem watchSpell) e some ao resolver (§58). shortcut: a cópia pergunta os alvos de novo na resolução ("may choose new targets").
+  'ares-v6-349': {spell: {
+    check: (s, c, key) => { if (!s.chain.some(i => i.spell && i.controller === key)) throw new k.RuleError('alvo', 'FLAME COORDINATION: nenhuma Spell sua na cadeia'); },
+    run: (s, c, key, self) => {
+      const t = k.choose(c, key, 'FLAME COORDINATION', spellsOnChain(s, self, key).map(i => i.uid), {text: 'Choose target Moment or Technique you control.'});
+      const run = t && entryOf(c, t)?.spell?.run;
+      if (!run) return;
+      k.emit(s, 'spell_copied', {player: key, uid: t});
+      s.chain.push(trigger(key, t, `${k.card(c, t)?.name || 'Spell'} · copy`, st => { run(st, c, key, t, {}, []); k.checkDefeats(st, c); }));
+    },
+  }},
   'ares-v6-350': {spell: {run: (s, c, key) => {
     const t = enemyDevotee(s, c, key, 'PROMETHEAN INFERNO');
     if (!t) return;
@@ -606,9 +650,11 @@ export default {
     const [dead] = t ? sweep(s, c, [t], 5) : [];
     if (dead) hit(s, c, k.godTarget(dead.owner), 2);
   }}},
-  'ares-v6-355': {spell: {run: (s, c, key, self) => {
-    buff(s, friendlyBerserker(s, c, key, 'DIVINE RAGE'), 5, ['Pierce']);
-    later(s, key, self, 'BLOOD PRICE', {kind: 'selfDamage', amount: 3});
+  'ares-v6-355': {spell: {run: (s, c, key) => { // Divine Rage (Chaos Warp, 08/11/2026): Devotee ou Equipment inimigo para o deck do dono
+    const foe = k.other(s, key), gear = s.players[foe].battlefield.filter(u => k.card(c, u)?.kind === 'Equipment');
+    const t = k.choose(c, key, 'DIVINE RAGE', [...k.enemies(s, c, key), ...gear], {text: 'Choose target enemy Devotee or Equipment.'});
+    const owner = t && c.objects[t].owner;
+    if (t && k.toDeck(s, c, t)) draw(s, owner, 1);
   }}},
   'ares-v6-356': {spell: {run: (s, c, key) => {
     const t = enemyDevotee(s, c, key, 'SHATTERED SANCTUARY', u => k.keywordsOf(s, c, u).includes('Guardian'));
@@ -626,7 +672,8 @@ export default {
   }}},
   'ares-v6-359': {spell: {targets: godOfFoe, run: (s, c, key) =>
     hit(s, c, foeGod(s, key), Math.min(5, s.players[key].tartarus.filter(u => k.isDevotee(c, u)).length))}},
-  'ares-v6-360': {spell: {run: (s, c, key) => {
+  'ares-v6-360': {selfCostLess: s => { const n = Object.values(s.players).reduce((a, p) => a + p.battlefield.filter(u => s.units[u]).length, 0); return n ? {n} : null; }, // Blasphemous Act (08/11/2026)
+    spell: {run: (s, c, key) => {
     const all = k.allDevotees(s, c);
     for (const u of all) k.defeat(s, c, u);
     hit(s, c, foeGod(s, key), all.filter(u => berserker(c, u)).length);

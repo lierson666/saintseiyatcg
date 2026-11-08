@@ -35,7 +35,7 @@ export function aim(s, c, key, self, entry, choice = {}) {
     if (!isTargetQ(key, player, q)) return dummy(q);
     let value;
     try { value = real(player, q); } catch (e) { asked = e; throw e; } // PendingDecision e resposta ilegal sobem daqui
-    records.push({ability: q.ability, kind: kindOf(q), value});
+    records.push({ability: q.ability, kind: kindOf(q), value, options: q.options}); // `options`: alvos legais (Ares 325 troca de alvo)
     return value;
   };
   try { entry.spell.run(s2, c2, key, self, choice, []); } catch (e) { if (asked) throw asked; /* resposta neutra no ensaio: o erro real, se houver, vem na resolução */ }

@@ -11961,7 +11961,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Battlefield Insight — When Ofir enters the Battlefield, look at the top three cards of your deck. Put one into your hand and the rest on the bottom of your deck in any order.",
-        "Divine War Flames — Whenever another friendly Berserker declares a Strike, that Berserker gains +1 @ATK until the end of your round."
+        "Divine War Flames — Once each round, you may cast a Moment or Technique card from your Tartarus by paying its cost plus {1}{S}. Then send it to the Void."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -11970,7 +11970,7 @@
       "subtitulo_pt": "O Estrategista Divino",
       "habilidades_pt": [
         "Visão do Campo de Batalha — Quando Ofir entra no Campo de Batalha, olhe as 3 cartas do topo do seu deck. Ponha uma na sua mão e as outras no fundo do deck, em qualquer ordem.",
-        "Chamas Divinas da Guerra — Sempre que outro Berserker aliado declara um Golpe, esse Berserker recebe +1 @ATQ até o fim da sua rodada."
+        "Chamas Divinas da Guerra — Uma vez por rodada, você pode conjurar um Momento ou Técnica do seu Tártaro pagando o custo dele mais {1}{S}. Depois, mande-o ao Vazio."
       ],
       "flavour_pt": "\"Eu já vi cada movimento que você está prestes a fazer.\"",
       "tagline_pt": "O Estrategista Divino"
@@ -12701,7 +12701,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Equipped Devotee gets +3 @ATK.",
-        "Divine Destruction — Whenever equipped Devotee defeats an enemy Devotee during combat, you may pay {3}{S}. If you do, deal 3 damage to the opposing God.",
+        "Divine Destruction — This Equipment costs {1}{C} less to cast for each friendly Devotee that declared a Strike this round. When it enters the Battlefield, attach it to target friendly Devotee without paying its Equip cost.",
         "Ares' Sacred Weapon — If equipped Devotee is a Berserker, it gains @Pierce."
       ],
       "habilidade_awaken_en": "",
@@ -12718,7 +12718,7 @@
       "subtitulo_pt": "A Chama Divina da Obliteração",
       "habilidades_pt": [
         "O Devoto equipado recebe +3 @ATQ.",
-        "Destruição Divina — Sempre que o Devoto equipado derrota um Devoto inimigo em combate, você pode pagar {3}{S}. Se fizer isso, cause 3 de dano ao Deus oponente.",
+        "Destruição Divina — Este Equipamento custa {1}{C} a menos para conjurar para cada Devoto aliado que declarou um Golpe nesta rodada. Quando entra no Campo de Batalha, prenda-o ao Devoto aliado alvo sem pagar o custo de Equipar.",
         "Arma Sagrada de Ares — Se o Devoto equipado é um Berserker, ele ganha @Perfurar."
       ],
       "flavour_pt": "\"Enio não é apenas a lança da guerra. Ela é a destruição que vem depois.\"",
@@ -12842,7 +12842,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Coordinated Assault — Whenever another friendly Berserker declares a Strike, this Devotee gains +1 @ATK until the end of your round."
+        "Coordinated Assault — Whenever you cast a Moment or Technique, deal 1 damage to target enemy God."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -12850,7 +12850,7 @@
       "nome_exibicao_pt": "BERSERKER DA LEGIÃO DA CHAMA",
       "subtitulo_pt": "A Chama que Guia a Lâmina",
       "habilidades_pt": [
-        "Ataque Coordenado — Sempre que outro Berserker aliado declara um Golpe, este Devoto recebe +1 @ATQ até o fim da sua rodada."
+        "Ataque Coordenado — Sempre que você conjura um Momento ou Técnica, cause 1 de dano ao Deus inimigo alvo."
       ],
       "flavour_pt": "\"Não atacamos primeiro. Atacamos onde o inimigo é mais fraco.\"",
       "tagline_pt": "A Chama que Guia a Lâmina"
@@ -12882,8 +12882,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Glorious Demise — When this Devotee is defeated, you may pay {1}{S}. If you do, deal 1 damage to target enemy God.",
-        "Afterlife {1}{C}: Deal 1 damage to target enemy Devotee."
+        "Afterlife {1}{C}: Friendly Devotees gain @Impulse until the end of your round."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -12891,8 +12890,7 @@
       "nome_exibicao_pt": "BERSERKER DA LEGIÃO DO DESASTRE",
       "subtitulo_pt": "Uma Vida Feita para Ser Gasta",
       "habilidades_pt": [
-        "Morte Gloriosa — Quando este Devoto é derrotado, você pode pagar {1}{S}. Se fizer isso, cause 1 de dano ao Deus inimigo alvo.",
-        "Além-Túmulo {1}{C}: Cause 1 de dano ao Devoto inimigo alvo."
+        "Além-Túmulo {1}{C}: Os Devotos aliados ganham @Impulso até o fim da sua rodada."
       ],
       "flavour_pt": "\"O Lorde Lior nos prometeu glória. Nunca prometeu que sobreviveríamos.\"",
       "tagline_pt": "Uma Vida Feita para Ser Gasta"
@@ -13088,7 +13086,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Tactical Opening — When Flame Legion Vanguard enters the Battlefield, another target friendly Berserker gains +1 @ATK until the end of your round."
+        "Tactical Opening — Once each round, when you cast a Moment or Technique, gain {1}{L}."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -13096,7 +13094,7 @@
       "nome_exibicao_pt": "VANGUARDA DA LEGIÃO DA CHAMA",
       "subtitulo_pt": "O Primeiro Movimento da Vitória",
       "habilidades_pt": [
-        "Abertura Tática — Quando a Vanguarda da Legião da Chama entra no Campo de Batalha, outro Berserker aliado alvo recebe +1 @ATQ até o fim da sua rodada."
+        "Abertura Tática — Uma vez por rodada, quando você conjura um Momento ou Técnica, ganhe {1}{L}."
       ],
       "flavour_pt": "\"Um único golpe preciso vale mais que mil cargas imprudentes.\"",
       "tagline_pt": "O Primeiro Movimento da Vitória"
@@ -13254,7 +13252,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Blood Champion — Whenever another friendly Berserker declares a Strike, Berserker Champion gains +1 @ATK until the end of your round.",
+        "Blood Champion — Whenever Berserker Champion deals Strike damage to a God, gain {1}{L}.",
         "Unquenchable Fury — Whenever Berserker Champion defeats an enemy Devotee during combat, you may pay {2}{S}. If you do, deal 2 damage to that Devotee's God."
       ],
       "habilidade_awaken_en": "",
@@ -13263,7 +13261,7 @@
       "nome_exibicao_pt": "CAMPEÃO BERSERKER",
       "subtitulo_pt": "Nascido para o Massacre",
       "habilidades_pt": [
-        "Campeão de Sangue — Sempre que outro Berserker aliado declara um Golpe, o Campeão Berserker recebe +1 @ATQ até o fim da sua rodada.",
+        "Campeão de Sangue — Sempre que o Campeão Berserker causa dano de Golpe a um Deus, ganhe {1}{L}.",
         "Fúria Inesgotável — Sempre que o Campeão Berserker derrota um Devoto inimigo em combate, você pode pagar {2}{S}. Se fizer isso, cause 2 de dano ao Deus desse Devoto."
       ],
       "flavour_pt": "\"A vitória se mede pelos inimigos que continuam de pé. Pretendo não deixar nenhum.\"",
@@ -13420,7 +13418,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Drums of War — Whenever another friendly Berserker declares a Strike, that Berserker gains +1 @ATK until the end of your round. This ability triggers only once each round."
+        "Drums of War — Once each round, when another friendly Devotee enters the Battlefield, deal 1 damage to target enemy God."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -13428,7 +13426,7 @@
       "nome_exibicao_pt": "TAMBOREIRO DE GUERRA",
       "subtitulo_pt": "O Ritmo da Carnificina",
       "habilidades_pt": [
-        "Tambores de Guerra — Sempre que outro Berserker aliado declara um Golpe, esse Berserker recebe +1 @ATQ até o fim da sua rodada. Esta habilidade só dispara uma vez por rodada."
+        "Tambores de Guerra — Uma vez por rodada, quando outro Devoto aliado entra no Campo de Batalha, cause 1 de dano ao Deus inimigo alvo."
       ],
       "flavour_pt": "\"Cada batida é mais um coração roubado do inimigo.\"",
       "tagline_pt": "O Ritmo da Carnificina"
@@ -13747,7 +13745,7 @@
       "equipar_custo": 1,
       "keywords_en": [],
       "habilidades_en": [
-        "Last Protection — When equipped Devotee is defeated, you may pay {1}{S}. If you do, deal 1 damage to target enemy God."
+        "Equipped Devotee has @Impulse."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -13762,7 +13760,7 @@
       "nome_exibicao_pt": "PLACA DE GUERRA RACHADA",
       "subtitulo_pt": "Armadura dos Caídos",
       "habilidades_pt": [
-        "Última Proteção — Quando o Devoto equipado é derrotado, você pode pagar {1}{S}. Se fizer isso, cause 1 de dano ao Deus inimigo alvo."
+        "O Devoto equipado tem @Impulso."
       ],
       "flavour_pt": "\"Uma Placa de Guerra quebrada ainda é capaz de tirar uma última vida.\"",
       "tagline_pt": "Armadura dos Caídos",
@@ -13845,7 +13843,7 @@
       "keywords_en": [],
       "habilidades_en": [
         "Equipped Devotee gets +2 @ATK.",
-        "Blood Hunger — Whenever equipped Devotee defeats an enemy Devotee during combat, you may pay {1}{S}. If you do, deal 1 damage to the opposing God."
+        "Blood Hunger — Whenever equipped Devotee deals Strike damage to a God, gain {1}{L}."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -13861,7 +13859,7 @@
       "subtitulo_pt": "Uma Arma que Nunca Descansa",
       "habilidades_pt": [
         "O Devoto equipado recebe +2 @ATQ.",
-        "Fome de Sangue — Sempre que o Devoto equipado derrota um Devoto inimigo em combate, você pode pagar {1}{S}. Se fizer isso, cause 1 de dano ao Deus oponente."
+        "Fome de Sangue — Sempre que o Devoto equipado causa dano de Golpe a um Deus, ganhe {1}{L}."
       ],
       "flavour_pt": "\"A lâmina se lembra de cada vida que tomou.\"",
       "tagline_pt": "Uma Arma que Nunca Descansa"
@@ -14245,7 +14243,7 @@
       "nome_interno_pt": "",
       "faccao": "Ares",
       "tipo": "Spell",
-      "subtipos": ["Technique"],
+      "subtipos": ["Moment"],
       "raridade": "Common",
       "status": "design-ready",
       "cosmoble": true,
@@ -14262,7 +14260,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Merciless Strike — Target friendly Berserker gains @Pierce and +2 @ATK until the end of your round."
+        "Merciless Strike — Choose new targets for target Moment, Technique or ability. If you control a Berserker, this Moment costs {0}."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -14270,7 +14268,7 @@
       "nome_exibicao_pt": "SEM PIEDADE",
       "subtitulo_pt": "Os Fracos Cairão",
       "habilidades_pt": [
-        "Golpe Impiedoso — O Berserker aliado alvo ganha @Perfurar e recebe +2 @ATQ até o fim da sua rodada."
+        "Golpe Impiedoso — Escolha novos alvos para o Momento, Técnica ou habilidade alvo. Se você controla um Berserker, este Momento custa {0}."
       ],
       "flavour_pt": "\"Piedade é um luxo reservado a quem sobrevive.\"",
       "tagline_pt": "Os Fracos Cairão"
@@ -14502,8 +14500,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Divine Command — Friendly Berserkers gain +2 @ATK until the end of your round.",
-        "Blood Offering — At the end of your round, deal 1 damage to your God for each friendly Berserker that declared a Strike this round."
+        "Divine Command — As an additional cost to cast this Spell, discard a card. Draw two cards and gain {2}{L}."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -14511,8 +14508,7 @@
       "nome_exibicao_pt": "A VONTADE DE ARES",
       "subtitulo_pt": "A Guerra É a Única Verdade",
       "habilidades_pt": [
-        "Comando Divino — Os Berserkers aliados recebem +2 @ATQ até o fim da sua rodada.",
-        "Oferenda de Sangue — No fim da sua rodada, cause 1 de dano ao seu Deus para cada Berserker aliado que declarou um Golpe nesta rodada."
+        "Comando Divino — Como custo adicional para conjurar esta Magia, descarte uma carta. Compre duas cartas e ganhe {2}{L}."
       ],
       "flavour_pt": "\"A paz é uma mentira contada por quem é fraco demais para guerrear.\"",
       "tagline_pt": "A Guerra É a Única Verdade"
@@ -14956,10 +14952,12 @@
       "resistance": 4,
       "damage_cloth": null,
       "equipar_custo": null,
-      "keywords_en": [],
+      "keywords_en": [
+        "Guardian"
+      ],
       "habilidades_en": [
-        "Crimson Retaliation — Whenever Crimson Fire Guardian is dealt combat damage by an enemy Devotee, deal 2 damage to that Devotee.",
-        "Burning Pride — Whenever Crimson Fire Guardian defeats an enemy Devotee during combat, you may pay {2}{S}. If you do, deal 2 damage to the opposing God."
+        "Guardian — Crimson Fire Guardian has @Guardian.",
+        "Burning Pride — Once each round, whenever Crimson Fire Guardian is dealt damage, deal that much damage to target enemy God."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -14967,8 +14965,8 @@
       "nome_exibicao_pt": "GUARDIÃO DO FOGO CARMESIM",
       "subtitulo_pt": "A Chama Inabalável",
       "habilidades_pt": [
-        "Revide Carmesim — Sempre que o Guardião do Fogo Carmesim sofre dano de Golpe de um Devoto inimigo, cause 2 de dano a esse Devoto.",
-        "Orgulho Ardente — Sempre que o Guardião do Fogo Carmesim derrota um Devoto inimigo em combate, você pode pagar {2}{S}. Se fizer isso, cause 2 de dano ao Deus oponente."
+        "Guardião — O Guardião do Fogo Carmesim tem @Guardião.",
+        "Orgulho Ardente — Uma vez por rodada, sempre que o Guardião do Fogo Carmesim sofre dano, cause a mesma quantidade de dano ao Deus inimigo alvo."
       ],
       "flavour_pt": "\"Os guerreiros de Éton não recuam. Eles transformam o chão sob os inimigos em cinzas.\"",
       "tagline_pt": "A Chama Inabalável"
@@ -15000,7 +14998,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Strategic Deployment — When Divine Flame Tactician enters the Battlefield, look at the top three cards of your deck. Put one into your hand and the rest on the bottom of your deck in any order.",
+        "Strategic Deployment — When Divine Flame Tactician enters the Battlefield, send the top two cards of your deck to the Void. Until the end of your next round, you may play those cards.",
         "Calculated Assault — Once each round, whenever another friendly Berserker declares a Strike, you may discard a card. If you do, that Berserker gains +2 @ATK and @Pierce until the end of your round."
       ],
       "habilidade_awaken_en": "",
@@ -15009,7 +15007,7 @@
       "nome_exibicao_pt": "TÁTICO DA CHAMA DIVINA",
       "subtitulo_pt": "A Mente por Trás da Lâmina",
       "habilidades_pt": [
-        "Posicionamento Estratégico — Quando o Tático da Chama Divina entra no Campo de Batalha, olhe as 3 cartas do topo do seu deck. Ponha uma na sua mão e as outras no fundo do deck, em qualquer ordem.",
+        "Posicionamento Estratégico — Quando o Tático da Chama Divina entra no Campo de Batalha, mande as 2 cartas do topo do seu deck ao Vazio. Até o fim da sua próxima rodada, você pode jogar essas cartas.",
         "Ataque Calculado — Uma vez por rodada, sempre que outro Berserker aliado declara um Golpe, você pode descartar uma carta. Se fizer isso, esse Berserker recebe +2 @ATQ e @Perfurar até o fim da sua rodada."
       ],
       "flavour_pt": "\"Sob o comando de Ofir, até o menor soldado pode decidir o destino de uma guerra.\"",
@@ -15172,8 +15170,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Relentless Advance — Friendly Berserkers gain +2 @ATK and @Pierce until the end of your round.",
-        "March to Oblivion — At the end of your round, defeat each friendly Berserker that declared a Strike this round."
+        "Relentless Advance — Prepare each friendly Devotee that declared a Strike this round. (With a @Seal counter, remove one instead.)"
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -15181,8 +15178,7 @@
       "nome_exibicao_pt": "A MARCHA DOS BERSERKERS",
       "subtitulo_pt": "O Exército do Deus da Guerra Avança",
       "habilidades_pt": [
-        "Avanço Implacável — Os Berserkers aliados ganham +2 @ATQ e @Perfurar até o fim da sua rodada.",
-        "Marcha para o Esquecimento — No fim da sua rodada, derrote cada Berserker aliado que declarou um Golpe nesta rodada."
+        "Avanço Implacável — Prepare cada Devoto aliado que declarou um Golpe nesta rodada. (Com um marcador de @Selo, remova um em vez disso.)"
       ],
       "flavour_pt": "\"A terra tremeu sob seus passos, e os céus souberam que Ares havia retornado.\"",
       "tagline_pt": "O Exército do Deus da Guerra Avança"
@@ -15277,7 +15273,7 @@
       "nome_interno_pt": "",
       "faccao": "Ares",
       "tipo": "Spell",
-      "subtipos": ["Technique"],
+      "subtipos": ["Moment"],
       "raridade": "Uncommon",
       "status": "design-ready",
       "cosmoble": true,
@@ -15294,8 +15290,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Divine Insight — Look at the top four cards of your deck. Put one into your hand and the rest on the bottom of your deck in any order.",
-        "Flame Coordination — Up to two target friendly Berserkers gain +2 @ATK until the end of your round."
+        "Flame Coordination — Copy target Moment or Technique you control. You may choose new targets for the copy."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -15303,8 +15298,7 @@
       "nome_exibicao_pt": "CHAMAS DIVINAS DA GUERRA",
       "subtitulo_pt": "A Sabedoria Concedida por Ares",
       "habilidades_pt": [
-        "Visão Divina — Olhe as 4 cartas do topo do seu deck. Ponha uma na sua mão e as outras no fundo do deck, em qualquer ordem.",
-        "Coordenação das Chamas — Até dois Berserkers aliados alvo recebem +2 @ATQ até o fim da sua rodada."
+        "Coordenação das Chamas — Copie o Momento ou Técnica alvo que você controla. Você pode escolher novos alvos para a cópia."
       ],
       "flavour_pt": "\"As chamas divinas não apenas queimam. Elas revelam o caminho para a vitória.\"",
       "tagline_pt": "A Sabedoria Concedida por Ares"
@@ -15542,8 +15536,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
-        "Divine Rage — Target friendly Berserker gains +5 @ATK and @Pierce until the end of your round.",
-        "Blood Price — At the end of your round, deal 3 damage to your God."
+        "Divine Rage — Shuffle target enemy Devotee or Equipment into its owner's deck. That player draws a card."
       ],
       "habilidade_awaken_en": "",
       "ultimate_en": "",
@@ -15551,8 +15544,7 @@
       "nome_exibicao_pt": "A FÚRIA DO DEUS DA GUERRA",
       "subtitulo_pt": "Não Haverá Paz",
       "habilidades_pt": [
-        "Ira Divina — O Berserker aliado alvo recebe +5 @ATQ e ganha @Perfurar até o fim da sua rodada.",
-        "Preço de Sangue — No fim da sua rodada, cause 3 de dano ao seu Deus."
+        "Ira Divina — Embaralhe o Devoto ou Equipamento inimigo alvo no deck do dono. Esse jogador compra uma carta."
       ],
       "flavour_pt": "\"Ares não exige vitória. Ele exige destruição.\"",
       "tagline_pt": "Não Haverá Paz"
@@ -15750,6 +15742,7 @@
       "equipar_custo": null,
       "keywords_en": [],
       "habilidades_en": [
+        "This Spell costs {1}{C} less to cast for each Devotee on the Battlefield.",
         "Eternal Bloodshed — Defeat all Devotees.",
         "Last Act of War — For each Berserker defeated this way, deal 1 damage to the opposing God.",
         "Unending Conflict — Draw three cards, then discard two cards."
@@ -15760,6 +15753,7 @@
       "nome_exibicao_pt": "A GUERRA SANTA SEM FIM",
       "subtitulo_pt": "A Guerra Nunca Termina de Verdade",
       "habilidades_pt": [
+        "Esta Magia custa {1}{C} a menos para conjurar para cada Devoto no Campo de Batalha.",
         "Derramamento de Sangue Eterno — Derrote todos os Devotos.",
         "Último Ato de Guerra — Para cada Berserker derrotado dessa forma, cause 1 de dano ao Deus oponente.",
         "Conflito Sem Fim — Compre três cartas e depois descarte duas cartas."

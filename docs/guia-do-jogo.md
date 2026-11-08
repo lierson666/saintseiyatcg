@@ -660,6 +660,10 @@ Revisado em 31/10/2026 (ALPHA-P01, P02, P03 e P06, aprovadas em 28/10/2026; limi
 - **Reanimar do Tartarus inimigo:** um efeito que põe em campo, sob o seu controle, um Devotee do Tartarus de outro jogador dá a você o controle dele; quando ele sai do campo, vai para as zonas do proprietário (autor, 08/11/2026).
 - **Sacrifício e edito:** sacrificar é tirar do campo um Devotee que você controla e mandá-lo ao Tartarus; conta como derrota. Em “o oponente sacrifica um Devotee”, o oponente escolhe qual, na resolução; não é alvo, então Guardian, Nimble e Imune não impedem. Sem Devotee, nada acontece (autor, 08/11/2026).
 - **Void no lugar do Tartarus:** quando um efeito manda ao Void um Devotee que iria ao Tartarus ao ser derrotado, ele continua derrotado e os gatilhos de derrota disparam; só o destino muda. Afterlife e retornos do Tartarus não o alcançam (autor, 08/11/2026).
+- **Jogar do Void:** quando um efeito diz que você pode jogar cartas do Void até um prazo, você paga o custo normal e respeita o momento de jogar de cada tipo. Carta não jogada no prazo continua no Void (autor, 08/11/2026).
+- **Conjurar do Tartarus:** um Moment ou Technique conjurado do Tartarus por efeito (não é Afterlife) vai para o Void depois de resolver ou se for anulado (autor, 08/11/2026).
+- **Cópia de Moment/Technique:** a cópia não é carta e não foi conjurada (não dispara “whenever you cast”); usa os mesmos modos, pode ganhar novos alvos se o efeito disser, e deixa de existir ao resolver (autor, 08/11/2026).
+- **Escolher novos alvos:** só alvos legais para aquele efeito. Sem outro alvo legal, o alvo continua o mesmo (autor, 08/11/2026).
 - Equipamentos não mudam de controlador automaticamente. Como a ligação normal exige equipamento e portador do mesmo controlador, um equipamento incompatível fica em campo sem portador e perde a evolução. Um efeito pode transferir expressamente ambos.
 
 ### 59. Combate e textos das keywords

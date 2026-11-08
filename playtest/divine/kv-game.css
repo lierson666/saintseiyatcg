@@ -163,3 +163,13 @@ body:has(#overlay-root > :not(.gear-btn), .pick-modal, .decision-veil, #bigcard)
 
 /* Preview da carta levantada na mão: só a linha de tipo da própria carta, discreta (autor, 02/11/2026). */
 .olympus .hand--me .hand__slot.is-lifted .lc-text--typeline { visibility: visible; font-family: Avenir, 'Avenir Next', sans-serif; font-size: calc(var(--hand-w, 120px) * .065) !important; font-weight: 300; letter-spacing: .04em; -webkit-text-stroke: 0; }
+
+/* Jogáveis de outra zona (guia §58): apagadas na mão, com a origem (Void/Tartarus) embaixo. */
+.olympus .hand--me .hand__slot.is-ghost .dcard { opacity: .55; filter: saturate(.55); }
+.olympus .hand--me .hand__slot.is-ghost.playable .dcard, .olympus .hand--me .hand__slot.is-ghost.is-lifted .dcard { opacity: .8; }
+.olympus .hand__from { position: absolute; left: 50%; bottom: 4%; transform: translateX(-50%); padding: .15em .6em; border-radius: 99px; background: rgba(10, 8, 30, .85); color: #d9c8ff; font: 600 clamp(9px, calc(var(--hand-w, 120px) * .08), 13px) / 1.2 Avenir, 'Avenir Next', sans-serif; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; pointer-events: none; }
+/* Exilada embaixo da carta que a exilou (Gemini Saga): a ponta aparece acima e à esquerda. */
+.olympus .slot--holds { position: relative; }
+.olympus .slot__under { position: absolute; inset: 0; transform: translate(-14%, -12%) rotate(-6deg); filter: grayscale(.4) brightness(.7); pointer-events: auto; z-index: 0; }
+.olympus .slot__under .dcard { width: 100%; height: 100%; }
+.olympus .slot--holds > .dcard { position: relative; z-index: 1; }

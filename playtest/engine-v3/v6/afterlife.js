@@ -19,7 +19,11 @@ export const AFTERLIFE = {
     run: (s, c, key, self) => { const uid = k.choose(c, key, 'LAST CROSSING', herded(s, c, key, self), {text: 'Choose a Devotee in your Tartarus to return to your hand.'}); if (uid) k.toHand(s, c, uid, 'tartarus', self); },
   }),
   'ares-v6-330': entry('RAGE RETURNS', 3, {run: (s, c, key) => k.draw(s, key, 1)}), // Fuel the Rage
-  'ares-v6-293': entry('EMBERS OF DISASTER', 1, foe('EMBERS OF DISASTER', (s, c, uid) => k.damage(s, c, uid, 1))), // Disaster Legion Berserker
+  // Disaster Legion Berserker (Anger, 08/11/2026): Devotees aliados ganham Impulse até o fim do turno (`impulseAll`, lido em play.js e strike.js).
+  'ares-v6-293': entry('EMBERS OF DISASTER', 1, {run: (s, c, key) => {
+    (s.impulseAll ||= {})[key] = s.turn;
+    for (const u of k.devotees(s, c, key)) if (s.units[u]?.entered === s.turn) k.prepare(s, u);
+  }}),
   'ares-v6-301': entry('LAST DESTRUCTION', 2, foe('LAST DESTRUCTION', (s, c, uid) => k.damage(s, c, uid, 2))), // Disaster Legion Destroyer
   'ares-v6-303': entry('BLOOD REMEMBERED', 2, { // Bloodstained Gladiator
     check: (s, c, key) => { if (!k.devotees(s, c, key).length) throw new k.RuleError('BLOOD REMEMBERED', 'sem Devotee aliado'); },
